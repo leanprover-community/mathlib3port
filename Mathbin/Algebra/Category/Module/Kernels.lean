@@ -15,11 +15,11 @@ universe u v
 
 namespace ModuleCat
 
-variable{R : Type u}[Ringₓ R]
+variable {R : Type u} [Ringₓ R]
 
 section 
 
-variable{M N : ModuleCat.{v} R}(f : M ⟶ N)
+variable {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
 /-- The kernel cone induced by the concrete kernel. -/
 def kernel_cone : kernel_fork f :=
@@ -35,7 +35,7 @@ def kernel_is_limit : is_limit (kernel_cone f) :=
         fun c =>
           LinearMap.mem_ker.2$
             by 
-              rw [←@Function.comp_apply _ _ _ f (fork.ι s) c, ←coe_comp, fork.condition,
+              rw [←@Function.comp_applyₓ _ _ _ f (fork.ι s) c, ←coe_comp, fork.condition,
                 has_zero_morphisms.comp_zero (fork.ι s) N]
               rfl)
     (fun s => LinearMap.subtype_comp_cod_restrict _ _ _)
@@ -82,7 +82,7 @@ attribute [local instance] has_kernels_Module
 
 attribute [local instance] has_cokernels_Module
 
-variable{G H : ModuleCat.{v} R}(f : G ⟶ H)
+variable {G H : ModuleCat.{v} R} (f : G ⟶ H)
 
 /--
 The categorical kernel of a morphism in `Module`

@@ -22,7 +22,7 @@ the two must be equal.
 -/
 
 
-variable{α β : Type _}(f : α → β → β)(op : α → α → α)
+variable {α β : Type _} (f : α → β → β) (op : α → α → α)
 
 namespace Multiset
 
@@ -59,7 +59,7 @@ theorem noncomm_foldr_eq_foldr (s : Multiset α) (h : LeftCommutative f) (b : β
     induction s using Quotientₓ.induction_on 
     simp 
 
-variable[assoc : IsAssociative α op]
+variable [assoc : IsAssociative α op]
 
 include assoc
 
@@ -98,7 +98,7 @@ theorem noncomm_fold_eq_fold (s : Multiset α) [IsCommutative α op] (a : α) :
 
 omit assoc
 
-variable[Monoidₓ α]
+variable [Monoidₓ α]
 
 /-- Product of a `s : multiset α` with `[monoid α]`, given a proof that `*` commutes
 on all elements `x ∈ s`. -/
@@ -168,7 +168,7 @@ end Multiset
 
 namespace Finset
 
-variable[Monoidₓ β]
+variable [Monoidₓ β]
 
 /-- Product of a `s : finset α` mapped with `f : α → β` with `[monoid β]`,
 given a proof that `*` commutes on all elements `f x` for `x ∈ s`. -/

@@ -21,11 +21,11 @@ universe u
 
 open_locale Classical
 
-variable(R : Type u)
+variable (R : Type u)
 
 section 
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
 /--
 The free functor `Type u ⥤ Module R` sending a type `X` to the
@@ -56,14 +56,14 @@ def adj : free R ⊣ forget (ModuleCat.{u} R) :=
               LinearMap.ext_ring
                 (Finsupp.sum_map_domain_index_add_monoid_hom fun y => (smulAddHom R M).flip (g y)).symm }
 
-instance  : is_right_adjoint (forget (ModuleCat.{u} R)) :=
+instance : is_right_adjoint (forget (ModuleCat.{u} R)) :=
   ⟨_, adj R⟩
 
 end 
 
 namespace Free
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 attribute [local ext] TensorProduct.ext
 
@@ -113,7 +113,7 @@ theorem associativity (X Y Z : Type u) :
       CategoryTheory.associator_hom_apply]
 
 /-- The free R-module functor is lax monoidal. -/
-instance  : lax_monoidal.{u} (free R).obj :=
+instance : lax_monoidal.{u} (free R).obj :=
   { ε := ε R, μ := μ R, μ_natural' := fun X Y X' Y' f g => μ_natural R f g, left_unitality' := left_unitality R,
     right_unitality' := right_unitality R, associativity' := associativity R }
 
@@ -140,7 +140,7 @@ Consider an object of `C` as an object of the `R`-linear completion.
 def Free.of (R : Type _) {C : Type u} (X : C) : Free R C :=
   X
 
-variable(R : Type _)[CommRingₓ R](C : Type u)[category.{v} C]
+variable (R : Type _) [CommRingₓ R] (C : Type u) [category.{v} C]
 
 open Finsupp
 
@@ -167,7 +167,7 @@ theorem single_comp_single {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (r s : R) :
     dsimp 
     simp 
 
-instance  : preadditive (Free R C) :=
+instance : preadditive (Free R C) :=
   { homGroup := fun X Y => Finsupp.addCommGroup,
     add_comp' :=
       fun X Y Z f f' g =>
@@ -187,7 +187,7 @@ instance  : preadditive (Free R C) :=
             ·
               simp [mul_addₓ] }
 
-instance  : linear R (Free R C) :=
+instance : linear R (Free R C) :=
   { homModule := fun X Y => Finsupp.module (X ⟶ Y) R,
     smul_comp' :=
       fun X Y Z r f g =>
@@ -216,7 +216,7 @@ def embedding : C ⥤ Free R C :=
         by 
           simp  }
 
-variable(R){C}{D : Type u}[category.{v} D][preadditive D][linear R D]
+variable (R) {C} {D : Type u} [category.{v} D] [preadditive D] [linear R D]
 
 open Preadditive Linear
 

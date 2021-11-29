@@ -27,13 +27,13 @@ open CategoryTheory.Limits.Types.FilteredColimit
 
 namespace CategoryTheory.Limits
 
-variable{J K : Type v}[small_category J][small_category K]
+variable {J K : Type v} [small_category J] [small_category K]
 
-variable(F : J × K ⥤ Type v)
+variable (F : J × K ⥤ Type v)
 
 open CategoryTheory.prod
 
-variable[is_filtered K]
+variable [is_filtered K]
 
 section 
 
@@ -43,7 +43,7 @@ only that there are finitely many objects.
 -/
 
 
-variable[Fintype J]
+variable [Fintype J]
 
 -- error in CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -105,7 +105,7 @@ end
 
 end 
 
-variable[fin_category J]
+variable [fin_category J]
 
 -- error in CategoryTheory.Limits.FilteredColimitCommutesFiniteLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

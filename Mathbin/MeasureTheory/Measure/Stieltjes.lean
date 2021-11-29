@@ -37,12 +37,12 @@ structure StieltjesFunction where
 
 namespace StieltjesFunction
 
-instance  : CoeFun StieltjesFunction fun _ => ℝ → ℝ :=
+instance : CoeFun StieltjesFunction fun _ => ℝ → ℝ :=
   ⟨to_fun⟩
 
 initialize_simps_projections StieltjesFunction (toFun → apply)
 
-variable(f : StieltjesFunction)
+variable (f : StieltjesFunction)
 
 theorem mono : Monotone f :=
   f.mono'
@@ -92,7 +92,7 @@ protected def id : StieltjesFunction :=
 theorem id_left_lim (x : ℝ) : StieltjesFunction.id.leftLim x = x :=
   tendsto_nhds_unique (StieltjesFunction.id.tendsto_left_lim x)$ continuous_at_id.Tendsto.mono_left nhds_within_le_nhds
 
-instance  : Inhabited StieltjesFunction :=
+instance : Inhabited StieltjesFunction :=
   ⟨StieltjesFunction.id⟩
 
 /-! ### The outer measure associated to a Stieltjes function -/

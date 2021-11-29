@@ -38,22 +38,22 @@ open_locale BigOperators
 
 universe u v
 
-variable{R : Type u}{S : Type v}
+variable {R : Type u} {S : Type v}
 
 namespace MvPolynomial
 
-variable{σ : Type _}{a a' a₁ a₂ : R}{e : ℕ}{n m : σ}{s : σ →₀ ℕ}
+variable {σ : Type _} {a a' a₁ a₂ : R} {e : ℕ} {n m : σ} {s : σ →₀ ℕ}
 
 section CommRingₓ
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
-variable{p q : MvPolynomial σ R}
+variable {p q : MvPolynomial σ R}
 
-instance  : CommRingₓ (MvPolynomial σ R) :=
+instance : CommRingₓ (MvPolynomial σ R) :=
   AddMonoidAlgebra.commRing
 
-variable(σ a a')
+variable (σ a a')
 
 @[simp]
 theorem C_sub : (C (a - a') : MvPolynomial σ R) = C a - C a' :=
@@ -75,7 +75,7 @@ theorem coeff_sub (m : σ →₀ ℕ) (p q : MvPolynomial σ R) : coeff m (p - q
 theorem support_neg : (-p).support = p.support :=
   Finsupp.support_neg
 
-variable{σ}(p)
+variable {σ} (p)
 
 section Degrees
 
@@ -94,7 +94,7 @@ end Degrees
 
 section Vars
 
-variable(p q)
+variable (p q)
 
 @[simp]
 theorem vars_neg : (-p).vars = p.vars :=
@@ -105,7 +105,7 @@ theorem vars_sub_subset : (p - q).vars ⊆ p.vars ∪ q.vars :=
   by 
     convert vars_add_subset p (-q) using 2 <;> simp [sub_eq_add_neg]
 
-variable{p q}
+variable {p q}
 
 @[simp]
 theorem vars_sub_of_disjoint (hpq : Disjoint p.vars q.vars) : (p - q).vars = p.vars ∪ q.vars :=
@@ -117,9 +117,9 @@ end Vars
 
 section Eval₂
 
-variable[CommRingₓ S]
+variable [CommRingₓ S]
 
-variable(f : R →+* S)(g : σ → S)
+variable (f : R →+* S) (g : σ → S)
 
 @[simp]
 theorem eval₂_sub : (p - q).eval₂ f g = p.eval₂ f g - q.eval₂ f g :=

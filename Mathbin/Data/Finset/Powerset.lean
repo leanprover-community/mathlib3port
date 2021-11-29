@@ -9,7 +9,7 @@ namespace Finset
 
 open Multiset
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-! ### powerset -/
 
@@ -102,7 +102,7 @@ end Powerset
 
 section Ssubsets
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- For `s` a finset, `s.ssubsets` is the finset comprising strict subsets of `s`. -/
 def ssubsets (s : Finset α) : Finset (Finset α) :=

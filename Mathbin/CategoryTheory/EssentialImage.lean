@@ -22,7 +22,7 @@ noncomputable theory
 
 namespace CategoryTheory
 
-variable{C : Type u₁}{D : Type u₂}[category.{v₁} C][category.{v₂} D]{F : C ⥤ D}
+variable {C : Type u₁} {D : Type u₂} [category.{v₁} C] [category.{v₂} D] {F : C ⥤ D}
 
 namespace Functor
 
@@ -62,7 +62,7 @@ theorem ess_image_eq_of_nat_iso {F' : C ⥤ D} (h : F ≅ F') : ess_image F = es
 theorem obj_mem_ess_image (F : D ⥤ C) (Y : D) : F.obj Y ∈ ess_image F :=
   ⟨Y, ⟨iso.refl _⟩⟩
 
-instance  : category F.ess_image :=
+instance : category F.ess_image :=
   CategoryTheory.fullSubcategory _
 
 -- error in CategoryTheory.EssentialImage: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
@@ -97,13 +97,13 @@ of `F`. In other words, for every `Y : D`, there is some `X : C` with `F.obj X �
 
 See https://stacks.math.columbia.edu/tag/001C.
 -/
-class ess_surj(F : C ⥤ D) : Prop where 
+class ess_surj (F : C ⥤ D) : Prop where 
   mem_ess_image{} (Y : D) : Y ∈ F.ess_image
 
-instance  : ess_surj F.to_ess_image :=
+instance : ess_surj F.to_ess_image :=
   { mem_ess_image := fun ⟨Y, hY⟩ => ⟨_, ⟨⟨_, _, hY.get_iso.hom_inv_id, hY.get_iso.inv_hom_id⟩⟩⟩ }
 
-variable(F)[ess_surj F]
+variable (F) [ess_surj F]
 
 /-- Given an essentially surjective functor, we can find a preimage for every object `Y` in the
     codomain. Applying the functor to this preimage will yield an object isomorphic to `Y`, see

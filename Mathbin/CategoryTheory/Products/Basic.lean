@@ -24,7 +24,7 @@ universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
 section 
 
-variable(C : Type u₁)[category.{v₁} C](D : Type u₂)[category.{v₂} D]
+variable (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D]
 
 /--
 `prod C D` gives the cartesian product of two categories.
@@ -50,7 +50,7 @@ end
 
 section 
 
-variable(C : Type u₁)[category.{v₁} C](D : Type u₁)[category.{v₁} D]
+variable (C : Type u₁) [category.{v₁} C] (D : Type u₁) [category.{v₁} D]
 
 /--
 `prod.category.uniform C D` is an additional instance specialised so both factors have the same
@@ -73,7 +73,7 @@ def sectl (C : Type u₁) [category.{v₁} C] {D : Type u₂} [category.{v₂} D
 def sectr {C : Type u₁} [category.{v₁} C] (Z : C) (D : Type u₂) [category.{v₂} D] : D ⥤ C × D :=
   { obj := fun X => (Z, X), map := fun X Y f => (𝟙 Z, f) }
 
-variable(C : Type u₁)[category.{v₁} C](D : Type u₂)[category.{v₂} D]
+variable (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D]
 
 /-- `fst` is the functor `(X, Y) ↦ X`. -/
 @[simps]
@@ -128,7 +128,7 @@ end Prod
 
 section 
 
-variable(C : Type u₁)[category.{v₁} C](D : Type u₂)[category.{v₂} D]
+variable (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D]
 
 /--
 The "evaluation at `X`" functor, such that
@@ -160,8 +160,8 @@ def evaluation_uncurried : C × (C ⥤ D) ⥤ D :=
 
 end 
 
-variable{A :
-    Type u₁}[category.{v₁} A]{B : Type u₂}[category.{v₂} B]{C : Type u₃}[category.{v₃} C]{D : Type u₄}[category.{v₄} D]
+variable {A : Type u₁} [category.{v₁} A] {B : Type u₂} [category.{v₂} B] {C : Type u₃} [category.{v₃} C] {D : Type u₄}
+  [category.{v₄} D]
 
 namespace Functor
 

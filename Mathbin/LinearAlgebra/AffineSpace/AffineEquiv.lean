@@ -34,41 +34,28 @@ and inverse maps are affine.
 We define it using an `equiv` for the map and a `linear_equiv` for the linear part in order
 to allow affine equivalences with good definitional equalities. -/
 @[nolint has_inhabited_instance]
-structure
-  AffineEquiv(k P₁ P₂ :
-    Type
-      _){V₁ V₂ :
-    Type
-      _}[Ringₓ
-      k][AddCommGroupₓ V₁][Module k V₁][AddTorsor V₁ P₁][AddCommGroupₓ V₂][Module k V₂][AddTorsor V₂ P₂] extends
-  P₁ ≃ P₂ where 
+structure AffineEquiv (k P₁ P₂ : Type _) {V₁ V₂ : Type _} [Ringₓ k] [AddCommGroupₓ V₁] [Module k V₁] [AddTorsor V₁ P₁]
+  [AddCommGroupₓ V₂] [Module k V₂] [AddTorsor V₂ P₂] extends P₁ ≃ P₂ where 
   linear : V₁ ≃ₗ[k] V₂ 
   map_vadd' : ∀ p : P₁ v : V₁, to_equiv (v +ᵥ p) = linear v +ᵥ to_equiv p
 
 notation:25 P₁ " ≃ᵃ[" k:25 "] " P₂:0 => AffineEquiv k P₁ P₂
 
-variable{k V₁ V₂ V₃ V₄ P₁ P₂ P₃ P₄ :
-    Type
-      _}[Ringₓ
-      k][AddCommGroupₓ
-      V₁][Module k
-      V₁][AddTorsor V₁
-      P₁][AddCommGroupₓ
-      V₂][Module k
-      V₂][AddTorsor V₂
-      P₂][AddCommGroupₓ V₃][Module k V₃][AddTorsor V₃ P₃][AddCommGroupₓ V₄][Module k V₄][AddTorsor V₄ P₄]
+variable {k V₁ V₂ V₃ V₄ P₁ P₂ P₃ P₄ : Type _} [Ringₓ k] [AddCommGroupₓ V₁] [Module k V₁] [AddTorsor V₁ P₁]
+  [AddCommGroupₓ V₂] [Module k V₂] [AddTorsor V₂ P₂] [AddCommGroupₓ V₃] [Module k V₃] [AddTorsor V₃ P₃]
+  [AddCommGroupₓ V₄] [Module k V₄] [AddTorsor V₄ P₄]
 
 namespace AffineEquiv
 
 include V₁ V₂
 
-instance  : CoeFun (P₁ ≃ᵃ[k] P₂) fun _ => P₁ → P₂ :=
+instance : CoeFun (P₁ ≃ᵃ[k] P₂) fun _ => P₁ → P₂ :=
   ⟨fun e => e.to_fun⟩
 
-instance  : Coe (P₁ ≃ᵃ[k] P₂) (P₁ ≃ P₂) :=
+instance : Coe (P₁ ≃ᵃ[k] P₂) (P₁ ≃ P₂) :=
   ⟨AffineEquiv.toEquiv⟩
 
-variable(k P₁)
+variable (k P₁)
 
 omit V₂
 
@@ -92,7 +79,7 @@ theorem to_equiv_refl : (refl k P₁).toEquiv = Equiv.refl P₁ :=
 theorem linear_refl : (refl k P₁).linear = LinearEquiv.refl k V₁ :=
   rfl
 
-variable{k P₁}
+variable {k P₁}
 
 include V₂
 
@@ -108,7 +95,7 @@ theorem coe_to_equiv (e : P₁ ≃ᵃ[k] P₂) : «expr⇑ » e.to_equiv = e :=
 def to_affine_map (e : P₁ ≃ᵃ[k] P₂) : P₁ →ᵃ[k] P₂ :=
   { e with toFun := e }
 
-instance  : Coe (P₁ ≃ᵃ[k] P₂) (P₁ →ᵃ[k] P₂) :=
+instance : Coe (P₁ ≃ᵃ[k] P₂) (P₁ →ᵃ[k] P₂) :=
   ⟨to_affine_map⟩
 
 @[simp]
@@ -289,7 +276,7 @@ theorem apply_line_map (e : P₁ ≃ᵃ[k] P₂) (a b : P₁) (c : k) :
 
 omit V₂
 
-instance  : Groupₓ (P₁ ≃ᵃ[k] P₁) :=
+instance : Groupₓ (P₁ ≃ᵃ[k] P₁) :=
   { one := refl k P₁, mul := fun e e' => e'.trans e, inv := symm, mul_assoc := fun e₁ e₂ e₃ => trans_assoc _ _ _,
     one_mul := trans_refl, mul_one := refl_trans, mul_left_inv := self_trans_symm }
 
@@ -310,7 +297,7 @@ theorem coe_mul (e e' : P₁ ≃ᵃ[k] P₁) : «expr⇑ » (e*e') = e ∘ e' :=
 theorem inv_def (e : P₁ ≃ᵃ[k] P₁) : e⁻¹ = e.symm :=
   rfl
 
-variable(k)
+variable (k)
 
 /-- The map `v ↦ v +ᵥ b` as an affine equivalence between a module `V` and an affine space `P` with
 tangent space `V`. -/
@@ -345,7 +332,7 @@ theorem coe_const_vsub (p : P₁) : «expr⇑ » (const_vsub k p) = (· -ᵥ ·)
 theorem coe_const_vsub_symm (p : P₁) : «expr⇑ » (const_vsub k p).symm = fun v => -v +ᵥ p :=
   rfl
 
-variable(P₁)
+variable (P₁)
 
 /-- The map `p ↦ v +ᵥ p` as an affine automorphism of an affine space. -/
 def const_vadd (v : V₁) : P₁ ≃ᵃ[k] P₁ :=
@@ -367,7 +354,7 @@ section Homothety
 
 omit V₁
 
-variable{R V P : Type _}[CommRingₓ R][AddCommGroupₓ V][Module R V][affine_space V P]
+variable {R V P : Type _} [CommRingₓ R] [AddCommGroupₓ V] [Module R V] [affine_space V P]
 
 include V
 
@@ -429,7 +416,7 @@ theorem coe_homothety_units_mul_hom_eq_homothety_hom_coe (p : P) :
 
 end Homothety
 
-variable{P₁}
+variable {P₁}
 
 open Function
 
@@ -507,7 +494,7 @@ theorem vsub_line_map (p₁ p₂ p₃ : P₁) (c : k) : p₁ -ᵥ line_map p₂ 
 theorem vadd_line_map (v : V₁) (p₁ p₂ : P₁) (c : k) : v +ᵥ line_map p₁ p₂ c = line_map (v +ᵥ p₁) (v +ᵥ p₂) c :=
   (const_vadd k P₁ v).apply_line_map p₁ p₂ c
 
-variable{R' : Type _}[CommRingₓ R'][Module R' V₁]
+variable {R' : Type _} [CommRingₓ R'] [Module R' V₁]
 
 theorem homothety_neg_one_apply (c p : P₁) : homothety c (-1 : R') p = point_reflection R' c p :=
   by 

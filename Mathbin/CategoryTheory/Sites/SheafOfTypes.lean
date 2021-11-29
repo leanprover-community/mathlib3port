@@ -88,13 +88,13 @@ open Opposite CategoryTheory Category Limits Sieve Classical
 
 namespace Presieve
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable{P Q U : «expr ᵒᵖ» C ⥤ Type w}
+variable {P Q U : «expr ᵒᵖ» C ⥤ Type w}
 
-variable{X Y : C}{S : sieve X}{R : presieve X}
+variable {X Y : C} {S : sieve X} {R : presieve X}
 
-variable(J J₂ : grothendieck_topology C)
+variable (J J₂ : grothendieck_topology C)
 
 /--
 A family of elements for a presheaf `P` given a collection of arrows `R` with fixed codomain `X`
@@ -109,7 +109,7 @@ more useful for direct calculations. It is also used implicitly in Definition C2
 def family_of_elements (P : «expr ᵒᵖ» C ⥤ Type w) (R : presieve X) :=
   ∀ ⦃Y : C⦄ f : Y ⟶ X, R f → P.obj (op Y)
 
-instance  : Inhabited (family_of_elements P (⊥ : presieve X)) :=
+instance : Inhabited (family_of_elements P (⊥ : presieve X)) :=
   ⟨fun Y f => False.elim⟩
 
 /--
@@ -272,9 +272,9 @@ theorem family_of_elements.comp_of_compatible (S : sieve X) {x : family_of_eleme
 
 section FunctorPullback
 
-variable{D : Type u₂}[category.{v₂} D](F : D ⥤ C){Z : D}
+variable {D : Type u₂} [category.{v₂} D] (F : D ⥤ C) {Z : D}
 
-variable{T : presieve (F.obj Z)}{x : family_of_elements P T}
+variable {T : presieve (F.obj Z)} {x : family_of_elements P T}
 
 /--
 Given a family of elements of a sieve `S` on `F(X)`, we can realize it as a family of elements of
@@ -791,7 +791,7 @@ end Presieve
 
 namespace Equalizer
 
-variable{C : Type u₁}[category.{v₁} C](P : «expr ᵒᵖ» C ⥤ Type max v₁ u₁){X : C}(R : presieve X)(S : sieve X)
+variable {C : Type u₁} [category.{v₁} C] (P : «expr ᵒᵖ» C ⥤ Type max v₁ u₁) {X : C} (R : presieve X) (S : sieve X)
 
 noncomputable theory
 
@@ -816,7 +816,7 @@ def first_obj_eq_family : first_obj P R ≅ R.family_of_elements P :=
         ext x Y f hf 
         apply limits.types.limit.lift_π_apply }
 
-instance  : Inhabited (first_obj P (⊥ : presieve X)) :=
+instance : Inhabited (first_obj P (⊥ : presieve X)) :=
   (first_obj_eq_family P _).toEquiv.Inhabited
 
 /--
@@ -845,7 +845,7 @@ def second_obj : Type max v₁ u₁ :=
 def first_map : first_obj P S ⟶ second_obj P S :=
   pi.lift fun fg => pi.π _ (⟨_, _, S.downward_closed fg.2.2.2.2 fg.2.2.1⟩ : ΣY, { f : Y ⟶ X // S f })
 
-instance  : Inhabited (second_obj P (⊥ : sieve X)) :=
+instance : Inhabited (second_obj P (⊥ : sieve X)) :=
   ⟨first_map _ _ (default _)⟩
 
 /-- The map `a` of Equations (3,4) [MM92]. -/
@@ -908,7 +908,7 @@ https://stacks.math.columbia.edu/tag/00VM and the definition of `is_sheaf_for`.
 
 namespace Presieve
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 /--
 The rightmost object of the fork diagram of https://stacks.math.columbia.edu/tag/00VM, which
@@ -921,7 +921,7 @@ def second_obj : Type max v₁ u₁ :=
 def first_map : first_obj P R ⟶ second_obj P R :=
   pi.lift fun fg => pi.π _ _ ≫ P.map pullback.fst.op
 
-instance  : Inhabited (second_obj P (⊥ : presieve X)) :=
+instance : Inhabited (second_obj P (⊥ : presieve X)) :=
   ⟨first_map _ _ (default _)⟩
 
 /-- The map `pr₁*` of https://stacks.math.columbia.edu/tag/00VL. -/
@@ -983,9 +983,9 @@ end Presieve
 
 end Equalizer
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable(J : grothendieck_topology C)
+variable (J : grothendieck_topology C)
 
 -- error in CategoryTheory.Sites.SheafOfTypes: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- The category of sheaves on a grothendieck topology. -/
@@ -1010,7 +1010,7 @@ def SheafOfTypes_bot_equiv : SheafOfTypes (⊥ : grothendieck_topology C) ≌ «
       { obj := fun P => ⟨P, presieve.is_sheaf_bot⟩, map := fun P₁ P₂ f => (SheafOfTypes_to_presheaf _).Preimage f },
     unitIso := { Hom := { app := fun _ => 𝟙 _ }, inv := { app := fun _ => 𝟙 _ } }, counitIso := iso.refl _ }
 
-instance  : Inhabited (SheafOfTypes (⊥ : grothendieck_topology C)) :=
+instance : Inhabited (SheafOfTypes (⊥ : grothendieck_topology C)) :=
   ⟨SheafOfTypes_bot_equiv.inverse.obj ((Functor.Const _).obj PUnit)⟩
 
 end CategoryTheory

@@ -17,7 +17,7 @@ open CategoryTheory.Limits
 
 open CategoryTheory.MonoidalCategory
 
-variable(C : Type _)[category C][preadditive C][monoidal_category C]
+variable (C : Type _) [category C] [preadditive C] [monoidal_category C]
 
 /--
 A category is `monoidal_preadditive` if tensoring is linear in both factors.
@@ -49,7 +49,7 @@ restate_axiom monoidal_preadditive.add_tensor'
 
 attribute [simp] monoidal_preadditive.tensor_zero monoidal_preadditive.zero_tensor
 
-variable[monoidal_preadditive C]
+variable [monoidal_preadditive C]
 
 attribute [local simp] monoidal_preadditive.tensor_add monoidal_preadditive.add_tensor
 

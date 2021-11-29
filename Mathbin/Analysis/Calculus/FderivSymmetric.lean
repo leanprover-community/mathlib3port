@@ -47,26 +47,10 @@ open Asymptotics Set
 
 open_locale TopologicalSpace
 
-variable{E F :
-    Type
-      _}[NormedGroup
-      E][NormedSpace ℝ
-      E][NormedGroup
-      F][NormedSpace ℝ
-      F]{s :
-    Set
-      E}(s_conv :
-    Convex ℝ
-      s){f :
-    E →
-      F}{f' :
-    E →
-      E →L[ℝ]
-        F}{f'' :
-    E →L[ℝ]
-      E →L[ℝ]
-        F}(hf :
-    ∀ x _ : x ∈ Interior s, HasFderivAt f (f' x) x){x : E}(xs : x ∈ s)(hx : HasFderivWithinAt f' f'' (Interior s) x)
+variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F] [NormedSpace ℝ F] {s : Set E}
+  (s_conv : Convex ℝ s) {f : E → F} {f' : E → E →L[ℝ] F} {f'' : E →L[ℝ] E →L[ℝ] F}
+  (hf : ∀ x _ : x ∈ Interior s, HasFderivAt f (f' x) x) {x : E} (xs : x ∈ s)
+  (hx : HasFderivWithinAt f' f'' (Interior s) x)
 
 include s_conv xs hx hf
 

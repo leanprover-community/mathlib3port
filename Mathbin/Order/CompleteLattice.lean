@@ -29,14 +29,14 @@ also use `bsupr`/`binfi` for "bounded" supremum or infimum, i.e. one of `⨆ i �
 
 open Set
 
-variable{α β β₂ : Type _}{ι ι₂ : Sort _}
+variable {α β β₂ : Type _} {ι ι₂ : Sort _}
 
 /-- class for the `Sup` operator -/
-class HasSupₓ(α : Type _) where 
+class HasSupₓ (α : Type _) where 
   sup : Set α → α
 
 /-- class for the `Inf` operator -/
-class HasInfₓ(α : Type _) where 
+class HasInfₓ (α : Type _) where 
   inf : Set α → α
 
 export HasSupₓ(sup)
@@ -57,20 +57,20 @@ def supr [HasSupₓ α] {ι} (s : ι → α) : α :=
 def infi [HasInfₓ α] {ι} (s : ι → α) : α :=
   Inf (range s)
 
-instance (priority := 50)has_Inf_to_nonempty α [HasInfₓ α] : Nonempty α :=
+instance (priority := 50) has_Inf_to_nonempty α [HasInfₓ α] : Nonempty α :=
   ⟨Inf ∅⟩
 
-instance (priority := 50)has_Sup_to_nonempty α [HasSupₓ α] : Nonempty α :=
+instance (priority := 50) has_Sup_to_nonempty α [HasSupₓ α] : Nonempty α :=
   ⟨Sup ∅⟩
 
 notation3  "⨆" (...) ", " r:(scoped f => supr f) => r
 
 notation3  "⨅" (...) ", " r:(scoped f => infi f) => r
 
-instance  α [HasInfₓ α] : HasSupₓ (OrderDual α) :=
+instance α [HasInfₓ α] : HasSupₓ (OrderDual α) :=
   ⟨(Inf : Set α → α)⟩
 
-instance  α [HasSupₓ α] : HasInfₓ (OrderDual α) :=
+instance α [HasSupₓ α] : HasInfₓ (OrderDual α) :=
   ⟨(Sup : Set α → α)⟩
 
 /--
@@ -79,13 +79,14 @@ Note that we rarely use `complete_semilattice_Sup`
 
 Nevertheless it is sometimes a useful intermediate step in constructions.
 -/
-class CompleteSemilatticeSup(α : Type _) extends PartialOrderₓ α, HasSupₓ α where 
+@[ancestor PartialOrderₓ HasSupₓ]
+class CompleteSemilatticeSup (α : Type _) extends PartialOrderₓ α, HasSupₓ α where 
   le_Sup : ∀ s, ∀ a _ : a ∈ s, a ≤ Sup s 
   Sup_le : ∀ s a, (∀ b _ : b ∈ s, b ≤ a) → Sup s ≤ a
 
 section 
 
-variable[CompleteSemilatticeSup α]{s t : Set α}{a b : α}
+variable [CompleteSemilatticeSup α] {s t : Set α} {a b : α}
 
 @[ematch]
 theorem le_Sup : a ∈ s → a ≤ Sup s :=
@@ -134,13 +135,14 @@ Note that we rarely use `complete_semilattice_Inf`
 
 Nevertheless it is sometimes a useful intermediate step in constructions.
 -/
-class CompleteSemilatticeInf(α : Type _) extends PartialOrderₓ α, HasInfₓ α where 
+@[ancestor PartialOrderₓ HasInfₓ]
+class CompleteSemilatticeInf (α : Type _) extends PartialOrderₓ α, HasInfₓ α where 
   Inf_le : ∀ s, ∀ a _ : a ∈ s, Inf s ≤ a 
   le_Inf : ∀ s a, (∀ b _ : b ∈ s, a ≤ b) → a ≤ Inf s
 
 section 
 
-variable[CompleteSemilatticeInf α]{s t : Set α}{a b : α}
+variable [CompleteSemilatticeInf α] {s t : Set α} {a b : α}
 
 @[ematch]
 theorem Inf_le : a ∈ s → Inf s ≤ a :=
@@ -185,8 +187,14 @@ end
 
 /-- A complete lattice is a bounded lattice which
   has suprema and infima for every subset. -/
-@[protectProj]
-class CompleteLattice(α : Type _) extends BoundedLattice α, CompleteSemilatticeSup α, CompleteSemilatticeInf α
+@[protectProj, ancestor Lattice CompleteSemilatticeSup CompleteSemilatticeInf HasTop HasBot]
+class CompleteLattice (α : Type _) extends Lattice α, CompleteSemilatticeSup α, CompleteSemilatticeInf α, HasTop α,
+  HasBot α where 
+  le_top : ∀ x : α, x ≤ ⊤
+  bot_le : ∀ x : α, ⊥ ≤ x
+
+instance (priority := 100) CompleteLattice.toBoundedOrder [h : CompleteLattice α] : BoundedOrder α :=
+  { h with  }
 
 /-- Create a `complete_lattice` from a `partial_order` and `Inf` function
 that returns the greatest lower bound of a set. Usually this constructor provides
@@ -292,25 +300,25 @@ def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSu
   completeLatticeOfSup α fun s => is_lub_Sup s
 
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
-class CompleteLinearOrder(α : Type _) extends CompleteLattice α, LinearOrderₓ α
+class CompleteLinearOrder (α : Type _) extends CompleteLattice α, LinearOrderₓ α
 
 namespace OrderDual
 
-variable(α)
+variable (α)
 
-instance  [CompleteLattice α] : CompleteLattice (OrderDual α) :=
-  { OrderDual.boundedLattice α, OrderDual.hasSupₓ α, OrderDual.hasInfₓ α with le_Sup := @CompleteLattice.Inf_le α _,
-    Sup_le := @CompleteLattice.le_Inf α _, Inf_le := @CompleteLattice.le_Sup α _,
+instance [CompleteLattice α] : CompleteLattice (OrderDual α) :=
+  { OrderDual.lattice α, OrderDual.hasSupₓ α, OrderDual.hasInfₓ α, OrderDual.boundedOrder α with
+    le_Sup := @CompleteLattice.Inf_le α _, Sup_le := @CompleteLattice.le_Inf α _, Inf_le := @CompleteLattice.le_Sup α _,
     le_Inf := @CompleteLattice.Sup_le α _ }
 
-instance  [CompleteLinearOrder α] : CompleteLinearOrder (OrderDual α) :=
+instance [CompleteLinearOrder α] : CompleteLinearOrder (OrderDual α) :=
   { OrderDual.completeLattice α, OrderDual.linearOrder α with  }
 
 end OrderDual
 
 section 
 
-variable[CompleteLattice α]{s t : Set α}{a b : α}
+variable [CompleteLattice α] {s t : Set α} {a b : α}
 
 theorem Inf_le_Sup (hs : s.nonempty) : Inf s ≤ Sup s :=
   is_glb_le_is_lub (is_glb_Inf s) (is_lub_Sup s) hs
@@ -412,7 +420,7 @@ end
 
 section CompleteLinearOrder
 
-variable[CompleteLinearOrder α]{s t : Set α}{a b : α}
+variable [CompleteLinearOrder α] {s t : Set α} {a b : α}
 
 theorem Inf_lt_iff : Inf s < b ↔ ∃ (a : _)(_ : a ∈ s), a < b :=
   is_glb_lt_iff (is_glb_Inf s)
@@ -445,7 +453,7 @@ end CompleteLinearOrder
 
 section 
 
-variable[CompleteLattice α]{s t : ι → α}{a b : α}
+variable [CompleteLattice α] {s t : ι → α} {a b : α}
 
 theorem le_supr (s : ι → α) (i : ι) : s i ≤ supr s :=
   le_Sup ⟨i, rfl⟩
@@ -873,7 +881,7 @@ theorem supr_or {p q : Prop} {s : p ∨ q → α} : (⨆x, s x) = (⨆i, s (Or.i
 
 section 
 
-variable(p : ι → Prop)[DecidablePred p]
+variable (p : ι → Prop) [DecidablePred p]
 
 theorem supr_dite (f : ∀ i, p i → α) (g : ∀ i, ¬p i → α) :
   (⨆i, if h : p i then f i h else g i h) = (⨆(i : _)(h : p i), f i h)⊔⨆(i : _)(h : ¬p i), g i h :=
@@ -1176,7 +1184,7 @@ end
 
 section CompleteLinearOrder
 
-variable[CompleteLinearOrder α]
+variable [CompleteLinearOrder α]
 
 theorem supr_eq_top (f : ι → α) : supr f = ⊤ ↔ ∀ b _ : b < ⊤, ∃ i, b < f i :=
   by 
@@ -1194,9 +1202,9 @@ end CompleteLinearOrder
 
 
 instance Prop.completeLattice : CompleteLattice Prop :=
-  { Prop.boundedDistribLattice with sup := fun s => ∃ (a : _)(_ : a ∈ s), a, le_Sup := fun s a h p => ⟨a, h, p⟩,
-    Sup_le := fun s a h ⟨b, h', p⟩ => h b h' p, inf := fun s => ∀ a : Prop, a ∈ s → a, Inf_le := fun s a h p => p a h,
-    le_Inf := fun s a h p b hb => h b hb p }
+  { Prop.boundedOrder, Prop.distribLattice with sup := fun s => ∃ (a : _)(_ : a ∈ s), a,
+    le_Sup := fun s a h p => ⟨a, h, p⟩, Sup_le := fun s a h ⟨b, h', p⟩ => h b h' p,
+    inf := fun s => ∀ a : Prop, a ∈ s → a, Inf_le := fun s a h p => p a h, le_Inf := fun s a h p b hb => h b hb p }
 
 @[simp]
 theorem Inf_Prop_eq {s : Set Prop} : Inf s = ∀ p _ : p ∈ s, p :=
@@ -1221,7 +1229,7 @@ instance Pi.hasInfₓ {α : Type _} {β : α → Type _} [∀ i, HasInfₓ (β i
   ⟨fun s i => ⨅f : s, (f : ∀ i, β i) i⟩
 
 instance Pi.completeLattice {α : Type _} {β : α → Type _} [∀ i, CompleteLattice (β i)] : CompleteLattice (∀ i, β i) :=
-  { Pi.boundedLattice with sup := Sup, inf := Inf,
+  { Pi.boundedOrder, Pi.lattice with sup := Sup, inf := Inf,
     le_Sup := fun s f hf i => le_supr (fun f : s => (f : ∀ i, β i) i) ⟨f, hf⟩,
     Inf_le := fun s f hf i => infi_le (fun f : s => (f : ∀ i, β i) i) ⟨f, hf⟩,
     Sup_le := fun s f hf i => supr_le$ fun g => hf g g.2 i, le_Inf := fun s f hf i => le_infi$ fun g => hf g g.2 i }
@@ -1258,7 +1266,7 @@ theorem supr_apply {α : Type _} {β : α → Type _} {ι : Sort _} [∀ i, HasS
 
 section CompleteLattice
 
-variable[Preorderₓ α][CompleteLattice β]
+variable [Preorderₓ α] [CompleteLattice β]
 
 theorem monotone_Sup_of_monotone {s : Set (α → β)} (m_s : ∀ f _ : f ∈ s, Monotone f) : Monotone (Sup s) :=
   fun x y h => supr_le$ fun f => le_supr_of_le f$ m_s f f.2 h
@@ -1270,16 +1278,16 @@ end CompleteLattice
 
 namespace Prod
 
-variable(α β)
+variable (α β)
 
-instance  [HasInfₓ α] [HasInfₓ β] : HasInfₓ (α × β) :=
+instance [HasInfₓ α] [HasInfₓ β] : HasInfₓ (α × β) :=
   ⟨fun s => (Inf (Prod.fst '' s), Inf (Prod.snd '' s))⟩
 
-instance  [HasSupₓ α] [HasSupₓ β] : HasSupₓ (α × β) :=
+instance [HasSupₓ α] [HasSupₓ β] : HasSupₓ (α × β) :=
   ⟨fun s => (Sup (Prod.fst '' s), Sup (Prod.snd '' s))⟩
 
-instance  [CompleteLattice α] [CompleteLattice β] : CompleteLattice (α × β) :=
-  { Prod.boundedLattice α β, Prod.hasSupₓ α β, Prod.hasInfₓ α β with
+instance [CompleteLattice α] [CompleteLattice β] : CompleteLattice (α × β) :=
+  { Prod.lattice α β, Prod.boundedOrder α β, Prod.hasSupₓ α β, Prod.hasInfₓ α β with
     le_Sup := fun s p hab => ⟨le_Sup$ mem_image_of_mem _ hab, le_Sup$ mem_image_of_mem _ hab⟩,
     Sup_le :=
       fun s p h =>
@@ -1293,7 +1301,7 @@ end Prod
 
 section CompleteLattice
 
-variable[CompleteLattice α]{a : α}{s : Set α}
+variable [CompleteLattice α] {a : α} {s : Set α}
 
 /-- This is a weaker version of `sup_Inf_eq` -/
 theorem sup_Inf_le_infi_sup : a⊔Inf s ≤ ⨅(b : _)(_ : b ∈ s), a⊔b :=
@@ -1321,14 +1329,14 @@ end CompleteLattice
 
 namespace CompleteLattice
 
-variable[CompleteLattice α]
+variable [CompleteLattice α]
 
 /-- An independent set of elements in a complete lattice is one in which every element is disjoint
   from the `Sup` of the rest. -/
 def set_independent (s : Set α) : Prop :=
   ∀ ⦃a⦄, a ∈ s → Disjoint a (Sup (s \ {a}))
 
-variable{s : Set α}(hs : set_independent s)
+variable {s : Set α} (hs : set_independent s)
 
 @[simp]
 theorem set_independent_empty : set_independent (∅ : Set α) :=
@@ -1388,7 +1396,7 @@ theorem set_independent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
     convert supr_subtype.symm 
     simp [supr_and]
 
-variable{t : ι → α}(ht : independent t)
+variable {t : ι → α} (ht : independent t)
 
 theorem independent_def : independent t ↔ ∀ i : ι, Disjoint (t i) (⨆(j : _)(_ : j ≠ i), t j) :=
   Iff.rfl

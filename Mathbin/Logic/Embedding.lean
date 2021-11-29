@@ -13,13 +13,13 @@ namespace Function
 
 /-- `α ↪ β` is a bundled injective function. -/
 @[nolint has_inhabited_instance]
-structure embedding(α : Sort _)(β : Sort _) where 
+structure embedding (α : Sort _) (β : Sort _) where 
   toFun : α → β 
   inj' : injective to_fun
 
 infixr:25 " ↪ " => embedding
 
-instance  {α : Sort u} {β : Sort v} : CoeFun (α ↪ β) fun _ => α → β :=
+instance {α : Sort u} {β : Sort v} : CoeFun (α ↪ β) fun _ => α → β :=
   ⟨embedding.to_fun⟩
 
 initialize_simps_projections Embedding (toFun → apply)
@@ -28,7 +28,7 @@ end Function
 
 section Equiv
 
-variable{α : Sort u}{β : Sort v}(f : α ≃ β)
+variable {α : Sort u} {β : Sort v} (f : α ≃ β)
 
 /-- Convert an `α ≃ β` to `α ↪ β`.
 
@@ -219,10 +219,10 @@ theorem cod_restrict_apply {α β} p (f : α ↪ β) H a : cod_restrict p f H a 
 
 /-- If `e₁` and `e₂` are embeddings, then so is `prod.map e₁ e₂ : (a, b) ↦ (e₁ a, e₂ b)`. -/
 def prod_mapₓ {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : α × γ ↪ β × δ :=
-  ⟨Prod.mapₓ e₁ e₂, e₁.injective.prod_map e₂.injective⟩
+  ⟨Prod.map e₁ e₂, e₁.injective.prod_map e₂.injective⟩
 
 @[simp]
-theorem coe_prod_map {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : «expr⇑ » (e₁.prod_map e₂) = Prod.mapₓ e₁ e₂ :=
+theorem coe_prod_map {α β γ δ : Type _} (e₁ : α ↪ β) (e₂ : γ ↪ δ) : «expr⇑ » (e₁.prod_map e₂) = Prod.map e₁ e₂ :=
   rfl
 
 section Sum
@@ -255,7 +255,7 @@ end Sum
 
 section Sigma
 
-variable{α α' : Type _}{β : α → Type _}{β' : α' → Type _}
+variable {α α' : Type _} {β : α → Type _} {β' : α' → Type _}
 
 /-- `sigma.mk` as an `function.embedding`. -/
 @[simps apply]
@@ -405,7 +405,7 @@ end Set
 
 section Subtype
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- A subtype `{x // p x ∨ q x}` over a disjunction of `p q : α → Prop` can be injectively split
 into a sum of subtypes `{x // p x} ⊕ {x // q x}` such that `¬ p x` is sent to the right. -/

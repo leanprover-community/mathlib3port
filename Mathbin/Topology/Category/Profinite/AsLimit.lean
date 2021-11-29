@@ -32,7 +32,7 @@ namespace Profinite
 
 universe u
 
-variable(X : Profinite.{u})
+variable (X : Profinite.{u})
 
 /-- The functor `discrete_quotient X ⥤ Fintype` whose limit is isomorphic to `X`. -/
 def fintype_diagram : DiscreteQuotient X ⥤ Fintypeₓ :=

@@ -18,7 +18,7 @@ import Mathbin.Algebra.Algebra.Bilinear
 
 universe u v
 
-variable{R : Type u}{x y : R}
+variable {R : Type u} {x y : R}
 
 /-- An element is said to be nilpotent if some natural-number-power of it equals zero.
 
@@ -54,7 +54,7 @@ namespace Commute
 
 section Semiringₓ
 
-variable[Semiringₓ R](h_comm : Commute x y)
+variable [Semiringₓ R] (h_comm : Commute x y)
 
 include h_comm
 
@@ -90,7 +90,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R](h_comm : Commute x y)
+variable [Ringₓ R] (h_comm : Commute x y)
 
 include h_comm
 
@@ -107,7 +107,7 @@ end Commute
 
 namespace Algebra
 
-variable(R){A : Type v}[CommSemiringₓ R][Semiringₓ A][Algebra R A]
+variable (R) {A : Type v} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
 @[simp]
 theorem is_nilpotent_lmul_left_iff (a : A) : IsNilpotent (lmul_left R a) ↔ IsNilpotent a :=

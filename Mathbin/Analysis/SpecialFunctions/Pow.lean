@@ -27,7 +27,7 @@ determination of the logarithm), unless `x = 0` where one sets `0^0 = 1` and `0^
 noncomputable def cpow (x y : ℂ) : ℂ :=
   if x = 0 then if y = 0 then 1 else 0 else exp (log x*y)
 
-noncomputable instance  : Pow ℂ ℂ :=
+noncomputable instance : Pow ℂ ℂ :=
   ⟨cpow⟩
 
 @[simp]
@@ -175,7 +175,7 @@ section limₓ
 
 open Complex
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem zero_cpow_eq_nhds {b : ℂ} (hb : b ≠ 0) : (0 : ℂ).cpow =ᶠ[𝓝 b] 0 :=
   by 
@@ -274,7 +274,7 @@ theorem Filter.Tendsto.const_cpow {l : Filter α} {f : α → ℂ} {a b : ℂ} (
     ·
       exact (continuous_at_const_cpow' h).Tendsto.comp hf
 
-variable[TopologicalSpace α]{f g : α → ℂ}{s : Set α}{a : α}
+variable [TopologicalSpace α] {f g : α → ℂ} {s : Set α} {a : α}
 
 theorem ContinuousWithinAt.cpow (hf : ContinuousWithinAt f s a) (hg : ContinuousWithinAt g s a)
   (h0 : 0 < (f a).re ∨ (f a).im ≠ 0) : ContinuousWithinAt (fun x => f x^g x) s a :=
@@ -318,7 +318,7 @@ determination of the logarithm. With our conventions, it is equal to `exp (y log
 noncomputable def rpow (x y : ℝ) :=
   ((x : ℂ)^(y : ℂ)).re
 
-noncomputable instance  : Pow ℝ ℝ :=
+noncomputable instance : Pow ℝ ℝ :=
   ⟨rpow⟩
 
 @[simp]
@@ -494,7 +494,7 @@ end Complex
 
 namespace Real
 
-variable{x y z : ℝ}
+variable {x y z : ℝ}
 
 theorem rpow_add {x : ℝ} (hx : 0 < x) (y z : ℝ) : (x^y+z) = (x^y)*x^z :=
   by 
@@ -890,7 +890,7 @@ end Real
 
 section 
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem Filter.Tendsto.rpow {l : Filter α} {f g : α → ℝ} {x y : ℝ} (hf : tendsto f l (𝓝 x)) (hg : tendsto g l (𝓝 y))
   (h : x ≠ 0 ∨ 0 < y) : tendsto (fun t => f t^g t) l (𝓝 (x^y)) :=
@@ -904,7 +904,7 @@ theorem Filter.Tendsto.rpow_const {l : Filter α} {f : α → ℝ} {x p : ℝ} (
         simp [tendsto_const_nhds]
   else hf.rpow tendsto_const_nhds (h.imp id$ fun h' => h'.lt_of_ne h0)
 
-variable[TopologicalSpace α]{f g : α → ℝ}{s : Set α}{x : α}{p : ℝ}
+variable [TopologicalSpace α] {f g : α → ℝ} {s : Set α} {x : α} {p : ℝ}
 
 theorem ContinuousAt.rpow (hf : ContinuousAt f x) (hg : ContinuousAt g x) (h : f x ≠ 0 ∨ 0 < g x) :
   ContinuousAt (fun t => f t^g t) x :=
@@ -940,7 +940,7 @@ end
 
 namespace Real
 
-variable{z x y : ℝ}
+variable {z x y : ℝ}
 
 section Sqrt
 
@@ -1023,7 +1023,7 @@ one sets `0 ^ 0 = 1` and `0 ^ y = 0` for `y ≠ 0`. -/
 noncomputable def rpow (x :  ℝ≥0 ) (y : ℝ) :  ℝ≥0  :=
   ⟨(x : ℝ)^y, Real.rpow_nonneg_of_nonneg x.2 y⟩
 
-noncomputable instance  : Pow ℝ≥0  ℝ :=
+noncomputable instance : Pow ℝ≥0  ℝ :=
   ⟨rpow⟩
 
 @[simp]
@@ -1229,7 +1229,7 @@ noncomputable def rpow : ℝ≥0∞ → ℝ → ℝ≥0∞
 | some x, y => if x = 0 ∧ y < 0 then ⊤ else (x^y :  ℝ≥0 )
 | none, y => if 0 < y then ⊤ else if y = 0 then 1 else 0
 
-noncomputable instance  : Pow ℝ≥0∞ ℝ :=
+noncomputable instance : Pow ℝ≥0∞ ℝ :=
   ⟨rpow⟩
 
 @[simp]

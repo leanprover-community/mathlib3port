@@ -34,9 +34,9 @@ namespace InnerProductSpace
 
 open IsROrC ContinuousLinearMap
 
-variable(𝕜 : Type _)
+variable (𝕜 : Type _)
 
-variable(E : Type _)[IsROrC 𝕜][InnerProductSpace 𝕜 E]
+variable (E : Type _) [IsROrC 𝕜] [InnerProductSpace 𝕜 E]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
@@ -76,13 +76,13 @@ see `to_dual`.
           «expr ≤ »(..., «expr * »(«expr∥ ∥»(linear_map.mk_continuous _ _ _), «expr∥ ∥»(x))) : le_op_norm _ x } }
   end }
 
-variable{E}
+variable {E}
 
 @[simp]
 theorem to_dual_map_apply {x y : E} : to_dual_map 𝕜 E x y = ⟪x, y⟫ :=
   rfl
 
-variable(E)[CompleteSpace E]
+variable (E) [CompleteSpace E]
 
 -- error in Analysis.InnerProductSpace.Dual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -128,7 +128,7 @@ linear_isometry_equiv.of_surjective (to_dual_map 𝕜 E) (begin
      exact [expr h₄] }
  end)
 
-variable{E}
+variable {E}
 
 @[simp]
 theorem to_dual_apply {x y : E} : to_dual 𝕜 E x y = ⟪x, y⟫ :=

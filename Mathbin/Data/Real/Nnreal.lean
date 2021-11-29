@@ -47,11 +47,11 @@ open_locale Classical BigOperators
 
 -- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler ordered_semiring
 /-- Nonnegative real numbers. -/
-@[derive #["[", expr ordered_semiring, ",", expr comm_monoid_with_zero, ",", expr semilattice_inf_bot, ",",
-   expr densely_ordered, ",", expr canonically_linear_ordered_add_monoid, ",", expr linear_ordered_comm_group_with_zero,
-   ",", expr archimedean, ",", expr linear_ordered_semiring, ",", expr ordered_comm_semiring, ",",
-   expr canonically_ordered_comm_semiring, ",", expr has_sub, ",", expr has_ordered_sub, ",", expr has_div, ",",
-   expr inhabited, "]"]]
+@[derive #["[", expr ordered_semiring, ",", expr comm_monoid_with_zero, ",", expr semilattice_inf, ",",
+   expr densely_ordered, ",", expr order_bot, ",", expr canonically_linear_ordered_add_monoid, ",",
+   expr linear_ordered_comm_group_with_zero, ",", expr archimedean, ",", expr linear_ordered_semiring, ",",
+   expr ordered_comm_semiring, ",", expr canonically_ordered_comm_semiring, ",", expr has_sub, ",",
+   expr has_ordered_sub, ",", expr has_div, ",", expr inhabited, "]"]]
 def nnreal :=
 {r : exprℝ() // «expr ≤ »(0, r)}
 
@@ -59,14 +59,14 @@ localized [Nnreal] notation " ℝ≥0 " => Nnreal
 
 namespace Nnreal
 
-instance  : Coe ℝ≥0  ℝ :=
+instance : Coe ℝ≥0  ℝ :=
   ⟨Subtype.val⟩
 
 @[simp]
 theorem val_eq_coe (n :  ℝ≥0 ) : n.val = n :=
   rfl
 
-instance  : CanLift ℝ ℝ≥0  :=
+instance : CanLift ℝ ℝ≥0  :=
   { coe := coeₓ, cond := fun r => 0 ≤ r, prf := fun x hx => ⟨⟨x, hx⟩, rfl⟩ }
 
 protected theorem Eq {n m :  ℝ≥0 } : (n : ℝ) = (m : ℝ) → n = m :=
@@ -95,47 +95,47 @@ theorem coe_nonneg (r :  ℝ≥0 ) : (0 : ℝ) ≤ r :=
 theorem coe_mk (a : ℝ) ha : ((⟨a, ha⟩ :  ℝ≥0 ) : ℝ) = a :=
   rfl
 
-example  : HasZero ℝ≥0  :=
+example : HasZero ℝ≥0  :=
   by 
     infer_instance
 
-example  : HasOne ℝ≥0  :=
+example : HasOne ℝ≥0  :=
   by 
     infer_instance
 
-example  : Add ℝ≥0  :=
+example : Add ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : Sub ℝ≥0  :=
+noncomputable example : Sub ℝ≥0  :=
   by 
     infer_instance
 
-example  : Mul ℝ≥0  :=
+example : Mul ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : HasInv ℝ≥0  :=
+noncomputable example : HasInv ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : Div ℝ≥0  :=
+noncomputable example : Div ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : LE ℝ≥0  :=
+noncomputable example : LE ℝ≥0  :=
   by 
     infer_instance
 
-example  : HasBot ℝ≥0  :=
+example : HasBot ℝ≥0  :=
   by 
     infer_instance
 
-example  : Inhabited ℝ≥0  :=
+example : Inhabited ℝ≥0  :=
   by 
     infer_instance
 
-example  : Nontrivial ℝ≥0  :=
+example : Nontrivial ℝ≥0  :=
   by 
     infer_instance
 
@@ -193,7 +193,7 @@ theorem coe_ne_zero {r :  ℝ≥0 } : (r : ℝ) ≠ 0 ↔ r ≠ 0 :=
   by 
     normCast
 
-example  : CommSemiringₓ ℝ≥0  :=
+example : CommSemiringₓ ℝ≥0  :=
   by 
     infer_instance
 
@@ -208,13 +208,13 @@ theorem coe_to_real_hom : «expr⇑ » to_real_hom = coeₓ :=
 section Actions
 
 /-- A `mul_action` over `ℝ` restricts to a `mul_action` over `ℝ≥0`. -/
-instance  {M : Type _} [MulAction ℝ M] : MulAction ℝ≥0  M :=
+instance {M : Type _} [MulAction ℝ M] : MulAction ℝ≥0  M :=
   MulAction.compHom M to_real_hom.toMonoidHom
 
 theorem smul_def {M : Type _} [MulAction ℝ M] (c :  ℝ≥0 ) (x : M) : c • x = (c : ℝ) • x :=
   rfl
 
-instance  {M N : Type _} [MulAction ℝ M] [MulAction ℝ N] [HasScalar M N] [IsScalarTower ℝ M N] :
+instance {M N : Type _} [MulAction ℝ M] [MulAction ℝ N] [HasScalar M N] [IsScalarTower ℝ M N] :
   IsScalarTower ℝ≥0  M N :=
   { smul_assoc := fun r => (smul_assoc (r : ℝ) : _) }
 
@@ -227,15 +227,15 @@ instance smul_comm_class_right {M N : Type _} [MulAction ℝ N] [HasScalar M N] 
   { smul_comm := fun m r => (smul_comm m (r : ℝ) : _) }
 
 /-- A `distrib_mul_action` over `ℝ` restricts to a `distrib_mul_action` over `ℝ≥0`. -/
-instance  {M : Type _} [AddMonoidₓ M] [DistribMulAction ℝ M] : DistribMulAction ℝ≥0  M :=
+instance {M : Type _} [AddMonoidₓ M] [DistribMulAction ℝ M] : DistribMulAction ℝ≥0  M :=
   DistribMulAction.compHom M to_real_hom.toMonoidHom
 
 /-- A `module` over `ℝ` restricts to a `module` over `ℝ≥0`. -/
-instance  {M : Type _} [AddCommMonoidₓ M] [Module ℝ M] : Module ℝ≥0  M :=
+instance {M : Type _} [AddCommMonoidₓ M] [Module ℝ M] : Module ℝ≥0  M :=
   Module.compHom M to_real_hom
 
 /-- An `algebra` over `ℝ` restricts to an `algebra` over `ℝ≥0`. -/
-instance  {A : Type _} [Semiringₓ A] [Algebra ℝ A] : Algebra ℝ≥0  A :=
+instance {A : Type _} [Semiringₓ A] [Algebra ℝ A] : Algebra ℝ≥0  A :=
   { smul := · • ·,
     commutes' :=
       fun r x =>
@@ -247,25 +247,25 @@ instance  {A : Type _} [Semiringₓ A] [Algebra ℝ A] : Algebra ℝ≥0  A :=
           simp [←Algebra.smul_def (r : ℝ) x, smul_def],
     toRingHom := (algebraMap ℝ A).comp (to_real_hom :  ℝ≥0  →+* ℝ) }
 
-example  : Algebra ℝ≥0  ℝ :=
+example : Algebra ℝ≥0  ℝ :=
   by 
     infer_instance
 
-example  : DistribMulAction (Units ℝ≥0 ) ℝ :=
+example : DistribMulAction (Units ℝ≥0 ) ℝ :=
   by 
     infer_instance
 
 end Actions
 
-example  : MonoidWithZeroₓ ℝ≥0  :=
+example : MonoidWithZeroₓ ℝ≥0  :=
   by 
     infer_instance
 
-example  : CommMonoidWithZero ℝ≥0  :=
+example : CommMonoidWithZero ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : CommGroupWithZero ℝ≥0  :=
+noncomputable example : CommGroupWithZero ℝ≥0  :=
   by 
     infer_instance
 
@@ -335,7 +335,7 @@ theorem nsmul_coe (r :  ℝ≥0 ) (n : ℕ) : «expr↑ » (n • r) = n • (r 
 protected theorem coe_nat_cast (n : ℕ) : («expr↑ » («expr↑ » n :  ℝ≥0 ) : ℝ) = n :=
   to_real_hom.map_nat_cast n
 
-noncomputable example  : LinearOrderₓ ℝ≥0  :=
+noncomputable example : LinearOrderₓ ℝ≥0  :=
   by 
     infer_instance
 
@@ -375,63 +375,63 @@ theorem to_nnreal_coe_nat (n : ℕ) : Real.toNnreal n = n :=
 noncomputable def gi : GaloisInsertion Real.toNnreal coeₓ :=
   GaloisInsertion.monotoneIntro Nnreal.coe_mono Real.to_nnreal_mono Real.le_coe_to_nnreal fun _ => Real.to_nnreal_coe
 
-example  : OrderBot ℝ≥0  :=
+example : OrderBot ℝ≥0  :=
   by 
     infer_instance
 
-example  : PartialOrderₓ ℝ≥0  :=
+example : PartialOrderₓ ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : CanonicallyLinearOrderedAddMonoid ℝ≥0  :=
+noncomputable example : CanonicallyLinearOrderedAddMonoid ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : LinearOrderedAddCommMonoid ℝ≥0  :=
+noncomputable example : LinearOrderedAddCommMonoid ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : DistribLattice ℝ≥0  :=
+noncomputable example : DistribLattice ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : SemilatticeInfBot ℝ≥0  :=
+noncomputable example : SemilatticeInf ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : SemilatticeSupBot ℝ≥0  :=
+noncomputable example : SemilatticeSup ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : LinearOrderedSemiring ℝ≥0  :=
+noncomputable example : LinearOrderedSemiring ℝ≥0  :=
   by 
     infer_instance
 
-example  : OrderedCommSemiring ℝ≥0  :=
+example : OrderedCommSemiring ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : LinearOrderedCommMonoid ℝ≥0  :=
+noncomputable example : LinearOrderedCommMonoid ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : LinearOrderedCommMonoidWithZero ℝ≥0  :=
+noncomputable example : LinearOrderedCommMonoidWithZero ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : LinearOrderedCommGroupWithZero ℝ≥0  :=
+noncomputable example : LinearOrderedCommGroupWithZero ℝ≥0  :=
   by 
     infer_instance
 
-example  : CanonicallyOrderedCommSemiring ℝ≥0  :=
+example : CanonicallyOrderedCommSemiring ℝ≥0  :=
   by 
     infer_instance
 
-example  : DenselyOrdered ℝ≥0  :=
+example : DenselyOrdered ℝ≥0  :=
   by 
     infer_instance
 
-example  : NoTopOrder ℝ≥0  :=
+example : NoTopOrder ℝ≥0  :=
   by 
     infer_instance
 
@@ -444,7 +444,7 @@ theorem bdd_above_coe {s : Set ℝ≥0 } : BddAbove ((coeₓ :  ℝ≥0  → ℝ
 theorem bdd_below_coe (s : Set ℝ≥0 ) : BddBelow ((coeₓ :  ℝ≥0  → ℝ) '' s) :=
   ⟨0, fun r ⟨q, _, Eq⟩ => Eq ▸ q.2⟩
 
-noncomputable instance  : ConditionallyCompleteLinearOrderBot ℝ≥0  :=
+noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0  :=
   Nonneg.conditionallyCompleteLinearOrderBot Real.Sup_empty.le
 
 theorem coe_Sup (s : Set ℝ≥0 ) : («expr↑ » (Sup s) : ℝ) = Sup ((coeₓ :  ℝ≥0  → ℝ) '' s) :=
@@ -453,9 +453,18 @@ theorem coe_Sup (s : Set ℝ≥0 ) : («expr↑ » (Sup s) : ℝ) = Sup ((coeₓ
 theorem coe_Inf (s : Set ℝ≥0 ) : («expr↑ » (Inf s) : ℝ) = Inf ((coeₓ :  ℝ≥0  → ℝ) '' s) :=
   Eq.symm$ @subset_Inf_of_within ℝ (Set.Ici 0) _ ⟨(0 :  ℝ≥0 )⟩ s$ Real.Inf_nonneg _$ fun y ⟨x, _, hy⟩ => hy ▸ x.2
 
-example  : Archimedean ℝ≥0  :=
+example : Archimedean ℝ≥0  :=
   by 
     infer_instance
+
+instance covariant_add : CovariantClass ℝ≥0  ℝ≥0  (·+·) (· ≤ ·) :=
+  OrderedAddCommMonoid.to_covariant_class_left ℝ≥0 
+
+instance contravariant_add : ContravariantClass ℝ≥0  ℝ≥0  (·+·) (· < ·) :=
+  OrderedCancelAddCommMonoid.to_contravariant_class_left ℝ≥0 
+
+instance covariant_mul : CovariantClass ℝ≥0  ℝ≥0  (·*·) (· ≤ ·) :=
+  OrderedCommMonoid.to_covariant_class_left ℝ≥0 
 
 theorem le_of_forall_pos_le_add {a b :  ℝ≥0 } (h : ∀ ε, 0 < ε → a ≤ b+ε) : a ≤ b :=
   le_of_forall_le_of_dense$
@@ -708,7 +717,7 @@ theorem sub_def {r p :  ℝ≥0 } : r - p = Real.toNnreal (r - p) :=
 theorem coe_sub_def {r p :  ℝ≥0 } : «expr↑ » (r - p) = max (r - p : ℝ) 0 :=
   rfl
 
-noncomputable example  : HasOrderedSub ℝ≥0  :=
+noncomputable example : HasOrderedSub ℝ≥0  :=
   by 
     infer_instance
 

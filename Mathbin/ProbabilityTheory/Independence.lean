@@ -375,7 +375,7 @@ We prove the following equivalences on `indep_set`, for measurable sets `s, t`.
 -/
 
 
-variable{α : Type _}[MeasurableSpace α]{s t : Set α}(S T : Set (Set α))
+variable {α : Type _} [MeasurableSpace α] {s t : Set α} (S T : Set (Set α))
 
 theorem indep_set_iff_indep_sets_singleton (hs_meas : MeasurableSet s) (ht_meas : MeasurableSet t)
   (μ : Measureₓ α :=  by 

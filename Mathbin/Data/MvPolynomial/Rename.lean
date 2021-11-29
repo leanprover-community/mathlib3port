@@ -39,7 +39,7 @@ open Set Function Finsupp AddMonoidAlgebra
 
 open_locale BigOperators
 
-variable{σ τ α R S : Type _}[CommSemiringₓ R][CommSemiringₓ S]
+variable {σ τ α R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S]
 
 namespace MvPolynomial
 
@@ -108,7 +108,7 @@ theorem rename_injective (f : σ → τ) (hf : Function.Injective f) :
 
 section 
 
-variable(R)
+variable (R)
 
 /-- `mv_polynomial.rename e` is an equivalence when `e` is. -/
 @[simps apply]
@@ -140,7 +140,7 @@ end
 
 section 
 
-variable(f : R →+* S)(k : σ → τ)(g : τ → S)(p : MvPolynomial σ R)
+variable (f : R →+* S) (k : σ → τ) (g : τ → S) (p : MvPolynomial σ R)
 
 theorem eval₂_rename : (rename k p).eval₂ f g = p.eval₂ f (g ∘ k) :=
   by 

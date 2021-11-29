@@ -12,19 +12,19 @@ This structure itself is provided elsewhere as `polynomial.is_scalar_tower`
 
 universe u v w u₁
 
-variable(R : Type u)(S : Type v)(A : Type w)(B : Type u₁)
+variable (R : Type u) (S : Type v) (A : Type w) (B : Type u₁)
 
 namespace IsScalarTower
 
 section Semiringₓ
 
-variable[CommSemiringₓ R][CommSemiringₓ S][Semiringₓ A][Semiringₓ B]
+variable [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A] [Semiringₓ B]
 
-variable[Algebra R S][Algebra S A][Algebra S B][Algebra R A][Algebra R B]
+variable [Algebra R S] [Algebra S A] [Algebra S B] [Algebra R A] [Algebra R B]
 
-variable[IsScalarTower R S A][IsScalarTower R S B]
+variable [IsScalarTower R S A] [IsScalarTower R S B]
 
-variable(R S A){B}
+variable (R S A) {B}
 
 theorem aeval_apply (x : A) (p : Polynomial R) :
   Polynomial.aeval x p = Polynomial.aeval x (Polynomial.map (algebraMap R S) p) :=
@@ -35,9 +35,9 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R][CommSemiringₓ A][CommSemiringₓ B]
+variable [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B]
 
-variable[Algebra R A][Algebra A B][Algebra R B][IsScalarTower R A B]
+variable [Algebra R A] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
 
 theorem algebra_map_aeval (x : A) (p : Polynomial R) :
   algebraMap A B (Polynomial.aeval x p) = Polynomial.aeval (algebraMap A B x) p :=
@@ -65,9 +65,9 @@ open IsScalarTower
 
 section CommSemiringₓ
 
-variable(R){S A}[CommSemiringₓ R][CommSemiringₓ S][CommSemiringₓ A]
+variable (R) {S A} [CommSemiringₓ R] [CommSemiringₓ S] [CommSemiringₓ A]
 
-variable[Algebra R S][Algebra S A][Algebra R A][IsScalarTower R S A]
+variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 
 @[simp]
 theorem aeval_coe {S : Subalgebra R A} {x : S} {p : Polynomial R} : Polynomial.aeval (x : A) p = Polynomial.aeval x p :=

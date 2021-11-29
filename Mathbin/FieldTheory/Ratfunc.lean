@@ -50,7 +50,9 @@ open_locale nonZeroDivisors
 
 universe u v
 
-variable(K : Type u)[Field K]
+variable (K : Type u) [hring : CommRingₓ K] [hdomain : IsDomain K]
+
+include hring
 
 /-- `ratfunc K` is `K(x)`, the field of rational functions over `K`.
 
@@ -63,7 +65,7 @@ structure Ratfunc : Type u where of_fraction_ring ::
 
 namespace Ratfunc
 
-variable{K}
+variable {K}
 
 section Rec
 
@@ -75,6 +77,8 @@ theorem of_fraction_ring_injective : Function.Injective (of_fraction_ring : _ �
 
 theorem to_fraction_ring_injective : Function.Injective (to_fraction_ring : _ → FractionRing (Polynomial K))
 | ⟨x⟩, ⟨y⟩, rfl => rfl
+
+include hdomain
 
 /-- `ratfunc.mk (p q : polynomial K)` is `p / q` as a rational function.
 
@@ -219,7 +223,7 @@ section Field
 protected def zero : Ratfunc K :=
   ⟨0⟩
 
-instance  : HasZero (Ratfunc K) :=
+instance : HasZero (Ratfunc K) :=
   ⟨Ratfunc.zero⟩
 
 theorem of_fraction_ring_zero : (of_fraction_ring 0 : Ratfunc K) = 0 :=
@@ -231,7 +235,7 @@ theorem of_fraction_ring_zero : (of_fraction_ring 0 : Ratfunc K) = 0 :=
 protected def add : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p+q⟩
 
-instance  : Add (Ratfunc K) :=
+instance : Add (Ratfunc K) :=
   ⟨Ratfunc.add⟩
 
 theorem of_fraction_ring_add (p q : FractionRing (Polynomial K)) :
@@ -244,7 +248,7 @@ theorem of_fraction_ring_add (p q : FractionRing (Polynomial K)) :
 protected def sub : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p - q⟩
 
-instance  : Sub (Ratfunc K) :=
+instance : Sub (Ratfunc K) :=
   ⟨Ratfunc.sub⟩
 
 theorem of_fraction_ring_sub (p q : FractionRing (Polynomial K)) :
@@ -257,7 +261,7 @@ theorem of_fraction_ring_sub (p q : FractionRing (Polynomial K)) :
 protected def neg : Ratfunc K → Ratfunc K
 | ⟨p⟩ => ⟨-p⟩
 
-instance  : Neg (Ratfunc K) :=
+instance : Neg (Ratfunc K) :=
   ⟨Ratfunc.neg⟩
 
 theorem of_fraction_ring_neg (p : FractionRing (Polynomial K)) : of_fraction_ring (-p) = -of_fraction_ring p :=
@@ -269,7 +273,7 @@ theorem of_fraction_ring_neg (p : FractionRing (Polynomial K)) : of_fraction_rin
 protected def one : Ratfunc K :=
   ⟨1⟩
 
-instance  : HasOne (Ratfunc K) :=
+instance : HasOne (Ratfunc K) :=
   ⟨Ratfunc.one⟩
 
 theorem of_fraction_ring_one : (of_fraction_ring 1 : Ratfunc K) = 1 :=
@@ -281,7 +285,7 @@ theorem of_fraction_ring_one : (of_fraction_ring 1 : Ratfunc K) = 1 :=
 protected def mul : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p*q⟩
 
-instance  : Mul (Ratfunc K) :=
+instance : Mul (Ratfunc K) :=
   ⟨Ratfunc.mul⟩
 
 theorem of_fraction_ring_mul (p q : FractionRing (Polynomial K)) :
@@ -289,12 +293,14 @@ theorem of_fraction_ring_mul (p q : FractionRing (Polynomial K)) :
   by 
     unfold Mul.mul Ratfunc.mul
 
+include hdomain
+
 /-- Division of rational functions. -/
 @[irreducible]
 protected def div : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p / q⟩
 
-instance  : Div (Ratfunc K) :=
+instance : Div (Ratfunc K) :=
   ⟨Ratfunc.div⟩
 
 theorem of_fraction_ring_div (p q : FractionRing (Polynomial K)) :
@@ -307,7 +313,7 @@ theorem of_fraction_ring_div (p q : FractionRing (Polynomial K)) :
 protected def inv : Ratfunc K → Ratfunc K
 | ⟨p⟩ => ⟨p⁻¹⟩
 
-instance  : HasInv (Ratfunc K) :=
+instance : HasInv (Ratfunc K) :=
   ⟨Ratfunc.inv⟩
 
 theorem of_fraction_ring_inv (p : FractionRing (Polynomial K)) : of_fraction_ring (p⁻¹) = of_fraction_ring p⁻¹ :=
@@ -326,11 +332,13 @@ theorem mul_inv_cancel : ∀ {p : Ratfunc K} hp : p ≠ 0, (p*p⁻¹) = 1
 
 section HasScalar
 
-variable{R : Type _}[Monoidₓ R][DistribMulAction R (Polynomial K)]
+variable {R : Type _} [Monoidₓ R] [DistribMulAction R (Polynomial K)]
 
-variable[IsScalarTower R (Polynomial K) (Polynomial K)]
+variable [htower : IsScalarTower R (Polynomial K) (Polynomial K)]
 
-instance  : HasScalar R (Ratfunc K) :=
+include htower
+
+instance : HasScalar R (Ratfunc K) :=
   ⟨fun c p =>
       p.lift_on (fun p q => Ratfunc.mk (c • p) q)
         fun p q p' q' hq hq' h =>
@@ -347,7 +355,7 @@ theorem mk_smul (c : R) (p q : Polynomial K) : Ratfunc.mk (c • p) q = c • Ra
             rw [mk_zero, smul_zero, mk_eq_localization_mk (0 : Polynomial K) one_ne_zero, Localization.mk_zero])
         _
 
-instance  : IsScalarTower R (Polynomial K) (Ratfunc K) :=
+instance : IsScalarTower R (Polynomial K) (Ratfunc K) :=
   ⟨fun c p q =>
       q.induction_on'
         fun q r _ =>
@@ -356,16 +364,20 @@ instance  : IsScalarTower R (Polynomial K) (Ratfunc K) :=
 
 end HasScalar
 
-variable(K)
+variable (K)
 
-instance  : Inhabited (Ratfunc K) :=
+omit hdomain
+
+instance : Inhabited (Ratfunc K) :=
   ⟨0⟩
 
-instance  : Nontrivial (Ratfunc K) :=
+instance [IsDomain K] : Nontrivial (Ratfunc K) :=
   ⟨⟨0, 1,
       mt (congr_argₓ to_fraction_ring)$
         by 
           simpa only [←of_fraction_ring_zero, ←of_fraction_ring_one] using zero_ne_one⟩⟩
+
+omit hring
 
 /-- Solve equations for `ratfunc K` by working in `fraction_ring (polynomial K)`. -/
 unsafe def frac_tac : tactic Unit :=
@@ -375,7 +387,9 @@ unsafe def frac_tac : tactic Unit :=
 unsafe def smul_tac : tactic Unit :=
   sorry
 
-instance  : Field (Ratfunc K) :=
+include hring hdomain
+
+instance : Field (Ratfunc K) :=
   { Ratfunc.nontrivial K with add := ·+·,
     add_assoc :=
       by 
@@ -471,7 +485,9 @@ section IsFractionRing
 /-! ### `ratfunc` as field of fractions of `polynomial` -/
 
 
-instance  (R : Type _) [CommSemiringₓ R] [Algebra R (Polynomial K)] : Algebra R (Ratfunc K) :=
+include hdomain
+
+instance (R : Type _) [CommSemiringₓ R] [Algebra R (Polynomial K)] : Algebra R (Ratfunc K) :=
   { toFun := fun x => Ratfunc.mk (algebraMap _ _ x) 1,
     map_add' :=
       fun x y =>
@@ -497,7 +513,7 @@ instance  (R : Type _) [CommSemiringₓ R] [Algebra R (Polynomial K)] : Algebra 
                 IsLocalization.mul_mk'_eq_mk'_of_mul, Algebra.smul_def],
     commutes' := fun c x => mul_commₓ _ _ }
 
-variable{K}
+variable {K}
 
 theorem mk_one (x : Polynomial K) : Ratfunc.mk x 1 = algebraMap _ _ x :=
   rfl
@@ -512,7 +528,7 @@ theorem mk_eq_div (p q : Polynomial K) : Ratfunc.mk p q = algebraMap _ _ p / alg
   by 
     simp only [mk_eq_div', of_fraction_ring_div, of_fraction_ring_algebra_map]
 
-variable(K)
+variable (K)
 
 theorem of_fraction_ring_comp_algebra_map :
   of_fraction_ring ∘ algebraMap (Polynomial K) (FractionRing (Polynomial K)) = algebraMap _ _ :=
@@ -530,12 +546,14 @@ theorem algebra_map_eq_zero_iff {x : Polynomial K} : algebraMap (Polynomial K) (
       by 
         rw [hx, RingHom.map_zero]⟩
 
-variable{K}
+variable {K}
 
 theorem algebra_map_ne_zero {x : Polynomial K} (hx : x ≠ 0) : algebraMap (Polynomial K) (Ratfunc K) x ≠ 0 :=
   mt (algebra_map_eq_zero_iff K).mp hx
 
-variable(K)
+variable (K)
+
+omit hdomain
 
 /-- `ratfunc K` is isomorphic to the field of fractions of `polynomial K`, as rings.
 
@@ -545,8 +563,10 @@ def aux_equiv : FractionRing (Polynomial K) ≃+* Ratfunc K :=
   { toFun := of_fraction_ring, invFun := to_fraction_ring, left_inv := fun x => rfl, right_inv := fun ⟨x⟩ => rfl,
     map_add' := of_fraction_ring_add, map_mul' := of_fraction_ring_mul }
 
+include hdomain
+
 /-- `ratfunc K` is the field of fractions of the polynomials over `K`. -/
-instance  : IsFractionRing (Polynomial K) (Ratfunc K) :=
+instance : IsFractionRing (Polynomial K) (Ratfunc K) :=
   { map_units :=
       fun y =>
         by 
@@ -564,7 +584,7 @@ instance  : IsFractionRing (Polynomial K) (Ratfunc K) :=
         ext ⟨x, y⟩
         simp only [←of_fraction_ring_algebra_map, Function.comp_app, ←of_fraction_ring_mul] }
 
-variable{K}
+variable {K}
 
 @[simp]
 theorem lift_on_div {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K, P) (f0 : ∀ p, f p 0 = f 0 1)
@@ -636,8 +656,14 @@ section NumDenom
 
 open GcdMonoid Polynomial
 
+omit hring
+
+variable [hfield : Field K]
+
+include hfield
+
 -- error in FieldTheory.Ratfunc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- `ratfunc.num_denom` are numerator and denominator of a rational function,
+/-- `ratfunc.num_denom` are numerator and denominator of a rational function over a field,
 normalized such that the denominator is monic. -/
 def num_denom (x : ratfunc K) : «expr × »(polynomial K, polynomial K) :=
 x.lift_on' (λ p q, if «expr = »(q, 0) then ⟨0, 1⟩ else let r := gcd p q in
@@ -868,6 +894,8 @@ section Eval
 /-! ### Polynomial structure: `C`, `X`, `eval` -/
 
 
+include hdomain
+
 /-- `ratfunc.C a` is the constant rational function `a`. -/
 def C : K →+* Ratfunc K :=
   algebraMap _ _
@@ -884,14 +912,6 @@ theorem algebra_map_C (a : K) : algebraMap (Polynomial K) (Ratfunc K) (Polynomia
 theorem algebra_map_comp_C : (algebraMap (Polynomial K) (Ratfunc K)).comp Polynomial.c = C :=
   rfl
 
-@[simp]
-theorem num_C (c : K) : Num (C c) = Polynomial.c c :=
-  num_algebra_map _
-
-@[simp]
-theorem denom_C (c : K) : denom (C c) = 1 :=
-  denom_algebra_map _
-
 /-- `ratfunc.X` is the polynomial variable (aka indeterminate). -/
 def X : Ratfunc K :=
   algebraMap (Polynomial K) (Ratfunc K) Polynomial.x
@@ -899,6 +919,20 @@ def X : Ratfunc K :=
 @[simp]
 theorem algebra_map_X : algebraMap (Polynomial K) (Ratfunc K) Polynomial.x = X :=
   rfl
+
+omit hring hdomain
+
+variable [hfield : Field K]
+
+include hfield
+
+@[simp]
+theorem num_C (c : K) : Num (C c) = Polynomial.c c :=
+  num_algebra_map _
+
+@[simp]
+theorem denom_C (c : K) : denom (C c) = 1 :=
+  denom_algebra_map _
 
 @[simp]
 theorem num_X : Num (X : Ratfunc K) = Polynomial.x :=
@@ -908,7 +942,7 @@ theorem num_X : Num (X : Ratfunc K) = Polynomial.x :=
 theorem denom_X : denom (X : Ratfunc K) = 1 :=
   denom_algebra_map _
 
-variable{L : Type _}[Field L]
+variable {L : Type _} [Field L]
 
 /-- Evaluate a rational function `p` given a ring hom `f` from the scalar field
 to the target and a value `x` for the variable in the target.
@@ -919,7 +953,7 @@ Fractions are reduced by clearing common denominators before evaluating:
 def eval (f : K →+* L) (a : L) (p : Ratfunc K) : L :=
   (Num p).eval₂ f a / (denom p).eval₂ f a
 
-variable{f : K →+* L}{a : L}
+variable {f : K →+* L} {a : L}
 
 theorem eval_eq_zero_of_eval₂_denom_eq_zero {x : Ratfunc K} (h : Polynomial.eval₂ f a (denom x) = 0) : eval f a x = 0 :=
   by 
@@ -928,7 +962,7 @@ theorem eval_eq_zero_of_eval₂_denom_eq_zero {x : Ratfunc K} (h : Polynomial.ev
 theorem eval₂_denom_ne_zero {x : Ratfunc K} (h : eval f a x ≠ 0) : Polynomial.eval₂ f a (denom x) ≠ 0 :=
   mt eval_eq_zero_of_eval₂_denom_eq_zero h
 
-variable(f a)
+variable (f a)
 
 @[simp]
 theorem eval_C {c : K} : eval f a (C c) = f c :=

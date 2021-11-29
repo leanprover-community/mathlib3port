@@ -17,7 +17,7 @@ open CategoryTheory
 
 open_locale TensorProduct
 
-variable{R A B : CommRingₓₓ.{u}}(f : R ⟶ A)(g : R ⟶ B)
+variable {R A B : CommRingₓₓ.{u}} (f : R ⟶ A) (g : R ⟶ B)
 
 namespace CommRingₓₓ
 

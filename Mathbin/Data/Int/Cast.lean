@@ -35,18 +35,18 @@ def of_nat_hom : ℕ →+* ℤ :=
 
 section cast
 
-variable{α : Type _}
+variable {α : Type _}
 
 section 
 
-variable[HasZero α][HasOne α][Add α][Neg α]
+variable [HasZero α] [HasOne α] [Add α] [Neg α]
 
 /-- Canonical homomorphism from the integers to any ring(-like) structure `α` -/
 protected def cast : ℤ → α
 | (n : ℕ) => n
 | -[1+ n] => -n+1
 
-instance (priority := 900)cast_coe : CoeTₓ ℤ α :=
+instance (priority := 900) cast_coe : CoeTₓ ℤ α :=
   ⟨Int.cast⟩
 
 @[simp, normCast]
@@ -262,7 +262,7 @@ end Int
 
 namespace Prod
 
-variable{α : Type _}{β : Type _}[HasZero α][HasOne α][Add α][Neg α][HasZero β][HasOne β][Add β][Neg β]
+variable {α : Type _} {β : Type _} [HasZero α] [HasOne α] [Add α] [Neg α] [HasZero β] [HasOne β] [Add β] [Neg β]
 
 @[simp]
 theorem fst_int_cast (n : ℤ) : (n : α × β).fst = n :=
@@ -280,7 +280,7 @@ open Int
 
 namespace AddMonoidHom
 
-variable{A : Type _}
+variable {A : Type _}
 
 /-- Two additive monoid homomorphisms `f`, `g` from `ℤ` to an additive monoid are equal
 if `f 1 = g 1`. -/
@@ -290,7 +290,7 @@ theorem ext_int [AddMonoidₓ A] {f g : ℤ →+ A} (h1 : f 1 = g 1) : f = g :=
   have  : ∀ n : ℕ, f n = g n := ext_iff.1 this 
   ext$ fun n => Int.casesOn n this$ fun n => eq_on_neg (this$ n+1)
 
-variable[AddGroupₓ A][HasOne A]
+variable [AddGroupₓ A] [HasOne A]
 
 theorem eq_int_cast_hom (f : ℤ →+ A) (h1 : f 1 = 1) : f = Int.castAddHom A :=
   ext_int$
@@ -304,7 +304,7 @@ end AddMonoidHom
 
 namespace MonoidHom
 
-variable{M : Type _}[Monoidₓ M]
+variable {M : Type _} [Monoidₓ M]
 
 open Multiplicative
 
@@ -329,7 +329,7 @@ end MonoidHom
 
 namespace MonoidWithZeroHom
 
-variable{M : Type _}[MonoidWithZeroₓ M]
+variable {M : Type _} [MonoidWithZeroₓ M]
 
 /-- If two `monoid_with_zero_hom`s agree on `-1` and the naturals then they are equal. -/
 @[ext]
@@ -346,7 +346,7 @@ end MonoidWithZeroHom
 
 namespace RingHom
 
-variable{α : Type _}{β : Type _}[Ringₓ α][Ringₓ β]
+variable {α : Type _} {β : Type _} [Ringₓ α] [Ringₓ β]
 
 @[simp]
 theorem eq_int_cast (f : ℤ →+* α) (n : ℤ) : f n = n :=
@@ -373,7 +373,7 @@ theorem Int.cast_id (n : ℤ) : «expr↑ » n = n :=
 
 namespace Pi
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 theorem int_apply [HasZero β] [HasOne β] [Add β] [Neg β] : ∀ n : ℤ a : α, (n : α → β) a = n
 | (n : ℕ), a => Pi.nat_apply n a

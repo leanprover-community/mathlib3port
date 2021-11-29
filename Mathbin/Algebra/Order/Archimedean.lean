@@ -26,11 +26,11 @@ number `n` such that `x ≤ n • y`.
 
 open Int Set
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- An ordered additive commutative monoid is called `archimedean` if for any two elements `x`, `y`
 such that `0 < y` there exists a natural number `n` such that `x ≤ n • y`. -/
-class Archimedean(α)[OrderedAddCommMonoid α] : Prop where 
+class Archimedean (α) [OrderedAddCommMonoid α] : Prop where 
   arch : ∀ x : α {y}, 0 < y → ∃ n : ℕ, x ≤ n • y
 
 instance OrderDual.archimedean [OrderedAddCommGroup α] [Archimedean α] : Archimedean (OrderDual α) :=
@@ -42,7 +42,7 @@ instance OrderDual.archimedean [OrderedAddCommGroup α] [Archimedean α] : Archi
 
 section LinearOrderedAddCommGroup
 
-variable[LinearOrderedAddCommGroup α][Archimedean α]
+variable [LinearOrderedAddCommGroup α] [Archimedean α]
 
 -- error in Algebra.Order.Archimedean: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An archimedean decidable linearly ordered `add_comm_group` has a version of the floor: for
@@ -118,7 +118,7 @@ theorem add_one_pow_unbounded_of_pos [OrderedSemiring α] [Nontrivial α] [Archi
 
 section LinearOrderedRing
 
-variable[LinearOrderedRing α][Archimedean α]
+variable [LinearOrderedRing α] [Archimedean α]
 
 theorem pow_unbounded_of_one_lt (x : α) {y : α} (hy1 : 1 < y) : ∃ n : ℕ, x < y ^ n :=
   sub_add_cancel y 1 ▸ add_one_pow_unbounded_of_pos _ (sub_pos.2 hy1)
@@ -175,7 +175,7 @@ end LinearOrderedRing
 
 section LinearOrderedField
 
-variable[LinearOrderedField α]
+variable [LinearOrderedField α]
 
 /-- Every positive `x` is between two successive integer powers of
 another `y` greater than one. This is the same as `exists_mem_Ioc_zpow`,
@@ -245,7 +245,7 @@ theorem exists_nat_pow_near_of_lt_one [Archimedean α] {x : α} {y : α} (xpos :
     ·
       rwa [inv_pow₀, inv_le_inv (pow_pos ypos _) xpos] at hn
 
-variable[FloorRing α]
+variable [FloorRing α]
 
 theorem sub_floor_div_mul_nonneg (x : α) {y : α} (hy : 0 < y) : 0 ≤ x - ⌊x / y⌋*y :=
   by 
@@ -266,13 +266,13 @@ theorem sub_floor_div_mul_lt (x : α) {y : α} (hy : 0 < y) : (x - ⌊x / y⌋*y
 
 end LinearOrderedField
 
-instance  : Archimedean ℕ :=
+instance : Archimedean ℕ :=
   ⟨fun n m m0 =>
       ⟨n,
         by 
           simpa only [mul_oneₓ, Nat.nsmul_eq_mul] using Nat.mul_le_mul_leftₓ n m0⟩⟩
 
-instance  : Archimedean ℤ :=
+instance : Archimedean ℤ :=
   ⟨fun n m m0 =>
       ⟨n.to_nat,
         le_transₓ (Int.le_to_nat _)$
@@ -288,7 +288,7 @@ noncomputable def Archimedean.floorRing α [LinearOrderedRing α] [Archimedean �
 
 section LinearOrderedField
 
-variable[LinearOrderedField α]
+variable [LinearOrderedField α]
 
 theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x < n :=
   ⟨@exists_nat_gt α _ _,
@@ -331,7 +331,7 @@ theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x �
         let ⟨n, h⟩ := H x
         ⟨n+1, lt_of_le_of_ltₓ h (Rat.cast_lt.2 (lt_add_one _))⟩⟩
 
-variable[Archimedean α]
+variable [Archimedean α]
 
 theorem exists_rat_lt (x : α) : ∃ q : ℚ, (q : α) < x :=
   let ⟨n, h⟩ := exists_int_lt x
@@ -383,7 +383,7 @@ end LinearOrderedField
 
 section 
 
-variable[LinearOrderedField α][FloorRing α]
+variable [LinearOrderedField α] [FloorRing α]
 
 /-- `round` rounds a number to the nearest integer. `round (1 / 2) = 1` -/
 def round (x : α) : ℤ :=
@@ -439,13 +439,13 @@ end
 
 section 
 
-variable[LinearOrderedField α][Archimedean α]
+variable [LinearOrderedField α] [Archimedean α]
 
 theorem exists_rat_near (x : α) {ε : α} (ε0 : 0 < ε) : ∃ q : ℚ, |x - q| < ε :=
   let ⟨q, h₁, h₂⟩ := exists_rat_btwn$ lt_transₓ ((sub_lt_self_iff x).2 ε0) ((lt_add_iff_pos_left x).2 ε0)
   ⟨q, abs_sub_lt_iff.2 ⟨sub_lt.1 h₁, sub_lt_iff_lt_add.2 h₂⟩⟩
 
-instance  : Archimedean ℚ :=
+instance : Archimedean ℚ :=
   archimedean_iff_rat_le.2$
     fun q =>
       ⟨q,

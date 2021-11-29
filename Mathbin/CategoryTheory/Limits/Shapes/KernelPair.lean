@@ -32,9 +32,9 @@ namespace CategoryTheory
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{R X Y Z : C}(f : X ⟶ Y)(a b : R ⟶ X)
+variable {R X Y Z : C} (f : X ⟶ Y) (a b : R ⟶ X)
 
 /--
 `is_kernel_pair f a b` expresses that `(a, b)` is a kernel pair for `f`, i.e. `a ≫ f = b ≫ f`
@@ -54,7 +54,7 @@ attribute [reassoc] is_kernel_pair.comm
 namespace IsKernelPair
 
 /-- The data expressing that `(a, b)` is a kernel pair is subsingleton. -/
-instance  : Subsingleton (is_kernel_pair f a b) :=
+instance : Subsingleton (is_kernel_pair f a b) :=
   ⟨fun P Q =>
       by 
         cases P 
@@ -65,10 +65,10 @@ instance  : Subsingleton (is_kernel_pair f a b) :=
 def id_of_mono [mono f] : is_kernel_pair f (𝟙 _) (𝟙 _) :=
   ⟨rfl, pullback_cone.is_limit_mk_id_id _⟩
 
-instance  [mono f] : Inhabited (is_kernel_pair f (𝟙 _) (𝟙 _)) :=
+instance [mono f] : Inhabited (is_kernel_pair f (𝟙 _) (𝟙 _)) :=
   ⟨id_of_mono f⟩
 
-variable{f a b}
+variable {f a b}
 
 /--
 Given a pair of morphisms `p`, `q` to `X` which factor through `f`, they factor through any kernel

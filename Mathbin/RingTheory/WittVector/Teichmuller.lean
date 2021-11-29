@@ -25,7 +25,7 @@ namespace WittVector
 
 open MvPolynomial
 
-variable(p : ℕ){R S : Type _}[hp : Fact p.prime][CommRingₓ R][CommRingₓ S]
+variable (p : ℕ) {R S : Type _} [hp : Fact p.prime] [CommRingₓ R] [CommRingₓ S]
 
 local notation "𝕎" => WittVector p
 

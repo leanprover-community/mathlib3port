@@ -14,7 +14,7 @@ open Function Equiv
 
 namespace Dlist
 
-variable(α : Type _)
+variable (α : Type _)
 
 /-- The natural equivalence between lists and difference lists, using
 `dlist.of_list` and `dlist.to_list`. -/
@@ -23,13 +23,13 @@ def list_equiv_dlist : List α ≃ Dlist α :=
     refine' { toFun := Dlist.ofList, invFun := Dlist.toList, .. } <;>
       simp [Function.RightInverse, left_inverse, to_list_of_list, of_list_to_list]
 
-instance  : Traversable Dlist :=
+instance : Traversable Dlist :=
   Equiv.traversable list_equiv_dlist
 
-instance  : IsLawfulTraversable Dlist :=
+instance : IsLawfulTraversable Dlist :=
   Equiv.isLawfulTraversable list_equiv_dlist
 
-instance  {α} : Inhabited (Dlist α) :=
+instance {α} : Inhabited (Dlist α) :=
   ⟨Dlist.empty⟩
 
 end Dlist

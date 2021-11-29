@@ -8,13 +8,8 @@ the formal power series `f x = f a + f (x - a)`.
 -/
 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]{G : Type _}[NormedGroup G][NormedSpace 𝕜 G]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
 
 open_locale TopologicalSpace Classical BigOperators Nnreal Ennreal
 

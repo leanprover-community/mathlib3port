@@ -19,7 +19,7 @@ fixed point
 
 universe u v
 
-variable{α : Type u}{β : Type v}{f fa g : α → α}{x y : α}{fb : β → β}{m n k : ℕ}
+variable {α : Type u} {β : Type v} {f fa g : α → α} {x y : α} {fb : β → β} {m n k : ℕ}
 
 namespace Function
 
@@ -33,7 +33,7 @@ theorem is_fixed_pt_id (x : α) : is_fixed_pt id x :=
 
 namespace IsFixedPt
 
-instance  [h : DecidableEq α] {f : α → α} {x : α} : Decidable (is_fixed_pt f x) :=
+instance [h : DecidableEq α] {f : α → α} {x : α} : Decidable (is_fixed_pt f x) :=
   h (f x) x
 
 /-- If `x` is a fixed point of `f`, then `f x = x`. This is useful, e.g., for `rw` or `simp`.-/

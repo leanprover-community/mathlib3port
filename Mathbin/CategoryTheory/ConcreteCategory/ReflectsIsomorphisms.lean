@@ -11,12 +11,12 @@ universe u
 
 namespace CategoryTheory
 
-instance  : reflects_isomorphisms (forget (Type u)) :=
+instance : reflects_isomorphisms (forget (Type u)) :=
   { reflects := fun X Y f i => i }
 
-variable(C : Type (u + 1))[category C][concrete_category.{u} C]
+variable (C : Type (u + 1)) [category C] [concrete_category.{u} C]
 
-variable(D : Type (u + 1))[category D][concrete_category.{u} D]
+variable (D : Type (u + 1)) [category D] [concrete_category.{u} D]
 
 -- error in CategoryTheory.ConcreteCategory.ReflectsIsomorphisms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

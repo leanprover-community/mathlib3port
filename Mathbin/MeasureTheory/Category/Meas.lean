@@ -36,10 +36,10 @@ def Meas : Type (u + 1) :=
 
 namespace Meas
 
-instance  : CoeSort Meas (Type _) :=
+instance : CoeSort Meas (Type _) :=
   bundled.has_coe_to_sort
 
-instance  (X : Meas) : MeasurableSpace X :=
+instance (X : Meas) : MeasurableSpace X :=
   X.str
 
 /-- Construct a bundled `Meas` from the underlying type and the typeclass. -/
@@ -56,7 +56,7 @@ instance unbundled_hom : unbundled_hom @Measurable :=
 -- error in MeasureTheory.Category.Meas: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Meas
 
-instance  : Inhabited Meas :=
+instance : Inhabited Meas :=
   ⟨Meas.of Empty⟩
 
 /-- `Measure X` is the measurable space of measures over the measurable space `X`. It is the

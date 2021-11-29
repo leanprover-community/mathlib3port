@@ -25,9 +25,9 @@ open Finset Polynomial Fintype
 
 namespace MvPolynomial
 
-variable{R : Type u}[CommSemiringₓ R]
+variable {R : Type u} [CommSemiringₓ R]
 
-variable(σ : Type u)[Fintype σ]
+variable (σ : Type u) [Fintype σ]
 
 -- error in RingTheory.Polynomial.Vieta: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A sum version of Vieta's formula. Viewing `X i` as variables,

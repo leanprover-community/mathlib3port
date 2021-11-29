@@ -52,15 +52,15 @@ open Category Limits
 
 universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
-variable{A : Type u₁}{B : Type u₂}{C : Type u₃}
+variable {A : Type u₁} {B : Type u₂} {C : Type u₃}
 
-variable[category.{v₁} A][category.{v₂} B][category.{v₃} C]
+variable [category.{v₁} A] [category.{v₂} B] [category.{v₃} C]
 
 namespace LiftAdjoint
 
-variable{U : B ⥤ C}{F : C ⥤ B}(R : A ⥤ B)(F' : C ⥤ A)
+variable {U : B ⥤ C} {F : C ⥤ B} (R : A ⥤ B) (F' : C ⥤ A)
 
-variable(adj₁ : F ⊣ U)(adj₂ : F' ⊣ R ⋙ U)
+variable (adj₁ : F ⊣ U) (adj₂ : F' ⊣ R ⋙ U)
 
 /--
 To show that `ε_X` is a coequalizer for `(FUε_X, ε_FUX)`, it suffices to assume it's always a
@@ -104,7 +104,7 @@ def other_map X : F'.obj (U.obj (F.obj (U.obj X))) ⟶ F'.obj (U.obj X) :=
 `(F'Uε_X, other_map X)` is a reflexive pair: in particular if `A` has reflexive coequalizers then
 it has a coequalizer.
 -/
-instance  (X : B) : is_reflexive_pair (F'.map (U.map (adj₁.counit.app X))) (other_map _ _ adj₁ adj₂ X) :=
+instance (X : B) : is_reflexive_pair (F'.map (U.map (adj₁.counit.app X))) (other_map _ _ adj₁ adj₂ X) :=
   is_reflexive_pair.mk' (F'.map (adj₁.unit.app (U.obj X)))
     (by 
       rw [←F'.map_comp, adj₁.right_triangle_components]
@@ -114,7 +114,7 @@ instance  (X : B) : is_reflexive_pair (F'.map (U.map (adj₁.counit.app X))) (ot
       rw [←F'.map_comp_assoc, U.map_comp, adj₁.unit_naturality_assoc, adj₁.right_triangle_components, comp_id,
         adj₂.left_triangle_components])
 
-variable[has_reflexive_coequalizers A]
+variable [has_reflexive_coequalizers A]
 
 /--
 Construct the object part of the desired left adjoint as the coequalizer of `F'Uε_Y` with
@@ -208,9 +208,9 @@ begin
   exact [expr adjoint_triangle_lift R' (monad.adj _)]
 end
 
-variable{D : Type u₄}
+variable {D : Type u₄}
 
-variable[category.{v₄} D]
+variable [category.{v₄} D]
 
 /--
 Suppose we have a commutative square of functors

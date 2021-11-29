@@ -40,13 +40,13 @@ This file is almost identical to `linear_algebra/exterior_algebra.lean`.
 -/
 
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
-variable{M : Type _}[AddCommGroupₓ M][Module R M]
+variable {M : Type _} [AddCommGroupₓ M] [Module R M]
 
-variable(Q : QuadraticForm R M)
+variable (Q : QuadraticForm R M)
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 namespace CliffordAlgebra
 
@@ -82,14 +82,14 @@ theorem ι_sq_scalar (m : M) : (ι Q m*ι Q m) = algebraMap R _ (Q m) :=
     erw [←AlgHom.map_mul, RingQuot.mk_alg_hom_rel R (rel.of m), AlgHom.commutes]
     rfl
 
-variable{Q}{A : Type _}[Semiringₓ A][Algebra R A]
+variable {Q} {A : Type _} [Semiringₓ A] [Algebra R A]
 
 @[simp]
 theorem comp_ι_sq_scalar (g : CliffordAlgebra Q →ₐ[R] A) (m : M) : (g (ι Q m)*g (ι Q m)) = algebraMap _ _ (Q m) :=
   by 
     rw [←AlgHom.map_mul, ι_sq_scalar, AlgHom.commutes]
 
-variable(Q)
+variable (Q)
 
 /--
 Given a linear map `f : M →ₗ[R] A` into an `R`-algebra `A`, which satisfies the condition:
@@ -125,7 +125,7 @@ def lift : { f : M →ₗ[R] A // ∀ m, (f m*f m) = algebraMap _ _ (Q m) } ≃ 
           simp only [ι, AlgHom.comp_to_linear_map, AlgHom.to_linear_map_apply, Function.comp_app, LinearMap.coe_comp,
             Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply] }
 
-variable{Q}
+variable {Q}
 
 @[simp]
 theorem ι_comp_lift (f : M →ₗ[R] A) (cond : ∀ m, (f m*f m) = algebraMap _ _ (Q m)) :
@@ -232,13 +232,13 @@ theorem ι_mul_ι_add_swap (a b : M) : ((ι Q a*ι Q b)+ι Q b*ι Q a) = algebra
 
 section Map
 
-variable{M₁ M₂ M₃ : Type _}
+variable {M₁ M₂ M₃ : Type _}
 
-variable[AddCommGroupₓ M₁][AddCommGroupₓ M₂][AddCommGroupₓ M₃]
+variable [AddCommGroupₓ M₁] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
 
-variable[Module R M₁][Module R M₂][Module R M₃]
+variable [Module R M₁] [Module R M₂] [Module R M₃]
 
-variable(Q₁ : QuadraticForm R M₁)(Q₂ : QuadraticForm R M₂)(Q₃ : QuadraticForm R M₃)
+variable (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) (Q₃ : QuadraticForm R M₃)
 
 /-- Any linear map that preserves the quadratic form lifts to an `alg_hom` between algebras.
 
@@ -268,7 +268,7 @@ theorem map_comp_map (f : M₂ →ₗ[R] M₃) hf (g : M₁ →ₗ[R] M₂) hg :
     dsimp only [LinearMap.comp_apply, AlgHom.comp_apply, AlgHom.to_linear_map_apply, AlgHom.id_apply]
     rw [map_apply_ι, map_apply_ι, map_apply_ι, LinearMap.comp_apply]
 
-variable{Q₁ Q₂ Q₃}
+variable {Q₁ Q₂ Q₃}
 
 /-- Two `clifford_algebra`s are equivalent as algebras if their quadratic forms are
 equivalent. -/
@@ -309,7 +309,7 @@ end CliffordAlgebra
 
 namespace TensorAlgebra
 
-variable{Q}
+variable {Q}
 
 /-- The canonical image of the `tensor_algebra` in the `clifford_algebra`, which maps
 `tensor_algebra.ι R x` to `clifford_algebra.ι Q x`. -/

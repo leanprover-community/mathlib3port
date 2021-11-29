@@ -18,7 +18,7 @@ open Nat
 
 namespace List
 
-variable{α : Type u}{β : Type v}{R : α → α → Prop}
+variable {α : Type u} {β : Type v} {R : α → α → Prop}
 
 mk_iff_of_inductive_prop List.Chain List.chain_iff
 
@@ -313,7 +313,7 @@ theorem chain'.append_overlap :
     simp only [←cons_append] at h₁ h₂⊢
     exact ⟨h₁.1, chain'.append_overlap h₁.2 h₂ (cons_ne_nil _ _)⟩
 
-variable{r : α → α → Prop}{a b : α}
+variable {r : α → α → Prop} {a b : α}
 
 /--
 If `a` and `b` are related by the reflexive transitive closure of `r`, then there is a `r`-chain

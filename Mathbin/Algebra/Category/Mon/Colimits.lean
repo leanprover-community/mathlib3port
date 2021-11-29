@@ -40,7 +40,7 @@ and the identifications given by the morphisms in the diagram.
 -/
 
 
-variable{J : Type v}[small_category J](F : J ⥤ Mon.{v})
+variable {J : Type v} [small_category J] (F : J ⥤ Mon.{v})
 
 /--
 An inductive type representing all monoid expressions (without relations)
@@ -51,7 +51,7 @@ inductive prequotient
   | one : prequotient
   | mul : prequotient → prequotient → prequotient
 
-instance  : Inhabited (prequotient F) :=
+instance : Inhabited (prequotient F) :=
   ⟨prequotient.one⟩
 
 open Prequotient

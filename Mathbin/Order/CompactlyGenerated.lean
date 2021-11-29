@@ -42,11 +42,11 @@ complete lattice, well-founded, compact
 -/
 
 
-variable{α : Type _}[CompleteLattice α]
+variable {α : Type _} [CompleteLattice α]
 
 namespace CompleteLattice
 
-variable(α)
+variable (α)
 
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
@@ -286,12 +286,12 @@ end CompleteLattice
 
 /-- A complete lattice is said to be compactly generated if any
 element is the `Sup` of compact elements. -/
-class IsCompactlyGenerated(α : Type _)[CompleteLattice α] : Prop where 
+class IsCompactlyGenerated (α : Type _) [CompleteLattice α] : Prop where 
   exists_Sup_eq : ∀ x : α, ∃ s : Set α, (∀ x _ : x ∈ s, CompleteLattice.IsCompactElement x) ∧ Sup s = x
 
 section 
 
-variable{α}[IsCompactlyGenerated α]{a b : α}{s : Set α}
+variable {α} [IsCompactlyGenerated α] {a b : α} {s : Set α}
 
 @[simp]
 theorem Sup_compact_le_eq b : Sup { c:α | CompleteLattice.IsCompactElement c ∧ c ≤ b } = b :=
@@ -425,7 +425,7 @@ end CompleteLattice
 
 section 
 
-variable[IsModularLattice α][IsCompactlyGenerated α]
+variable [IsModularLattice α] [IsCompactlyGenerated α]
 
 -- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[priority 100] instance is_atomic_of_is_complemented [is_complemented α] : is_atomic α :=

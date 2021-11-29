@@ -16,7 +16,7 @@ We also provide `ulift.mul_equiv : ulift R ≃* R` (and its additive analogue).
 
 universe u v
 
-variable{α : Type u}{x y : Ulift.{v} α}
+variable {α : Type u} {x y : Ulift.{v} α}
 
 namespace Ulift
 

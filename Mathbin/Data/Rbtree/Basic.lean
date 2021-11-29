@@ -8,7 +8,7 @@ unsafe def tactic.interactive.blast_disjs : tactic Unit :=
 
 namespace Rbnode
 
-variable{α : Type u}
+variable {α : Type u}
 
 open Color Nat
 
@@ -36,7 +36,7 @@ open IsSearchable
 
 section IsSearchableLemmas
 
-variable{lt : α → α → Prop}
+variable {lt : α → α → Prop}
 
 -- error in Data.Rbtree.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lo_lt_hi {t : rbnode α} {lt} [is_trans α lt] : ∀ {lo hi}, is_searchable lt t lo hi → lift lt lo hi :=

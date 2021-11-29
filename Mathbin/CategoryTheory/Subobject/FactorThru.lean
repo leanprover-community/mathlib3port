@@ -16,9 +16,9 @@ noncomputable theory
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
-variable{C : Type u₁}[category.{v₁} C]{X Y Z : C}
+variable {C : Type u₁} [category.{v₁} C] {X Y Z : C}
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 namespace CategoryTheory
 
@@ -172,7 +172,7 @@ theorem factor_thru_of_le {Y Z : C} {P Q : subobject Y} {f : Z ⟶ Y} (h : P ≤
 
 section Preadditive
 
-variable[preadditive C]
+variable [preadditive C]
 
 theorem factors_add {X Y : C} {P : subobject Y} (f g : X ⟶ Y) (wf : P.factors f) (wg : P.factors g) : P.factors (f+g) :=
   (factors_iff _ _).mpr

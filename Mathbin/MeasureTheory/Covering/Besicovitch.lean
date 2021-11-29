@@ -101,7 +101,7 @@ This is the condition `h`.
 Finally, the last ball is chosen after all the other ones, meaning that `h` can be strengthened
 by keeping only one side of the alternative in `hlast`.
 -/
-structure Besicovitch.SatelliteConfig(α : Type _)[MetricSpace α](N : ℕ)(τ : ℝ) where 
+structure Besicovitch.SatelliteConfig (α : Type _) [MetricSpace α] (N : ℕ) (τ : ℝ) where 
   c : Finₓ N.succ → α 
   R : Finₓ N.succ → ℝ 
   rpos : ∀ i, 0 < r i 
@@ -113,11 +113,11 @@ structure Besicovitch.SatelliteConfig(α : Type _)[MetricSpace α](N : ℕ)(τ :
 there are no satellite configuration of parameter `τ` with `N+1` points. This is the condition that
 guarantees that the measurable Besicovitch covering theorem holds. It is satified by
 finite-dimensional real vector spaces. -/
-class HasBesicovitchCovering(α : Type _)[MetricSpace α] : Prop where 
+class HasBesicovitchCovering (α : Type _) [MetricSpace α] : Prop where 
   no_satellite_config : ∃ (N : ℕ)(τ : ℝ), 1 < τ ∧ IsEmpty (Besicovitch.SatelliteConfig α N τ)
 
 /-- There is always a satellite configuration with a single point. -/
-instance  {α : Type _} {τ : ℝ} [Inhabited α] [MetricSpace α] : Inhabited (Besicovitch.SatelliteConfig α 0 τ) :=
+instance {α : Type _} {τ : ℝ} [Inhabited α] [MetricSpace α] : Inhabited (Besicovitch.SatelliteConfig α 0 τ) :=
   ⟨{ c := fun i => default α, R := fun i => 1, rpos := fun i => zero_lt_one,
       h := fun i j hij => (hij (Subsingleton.elimₓ i j)).elim,
       hlast :=
@@ -135,7 +135,7 @@ namespace Besicovitch
 
 namespace SatelliteConfig
 
-variable{α : Type _}[MetricSpace α]{N : ℕ}{τ : ℝ}(a : satellite_config α N τ)
+variable {α : Type _} [MetricSpace α] {N : ℕ} {τ : ℝ} (a : satellite_config α N τ)
 
 -- error in MeasureTheory.Covering.Besicovitch: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem inter' (i : fin N.succ) : «expr ≤ »(dist (a.c i) (a.c (last N)), «expr + »(a.r i, a.r (last N))) :=
@@ -163,7 +163,7 @@ end SatelliteConfig
 
 
 /-- A ball package is a family of balls in a metric space with positive bounded radii. -/
-structure ball_package(β : Type _)(α : Type _) where 
+structure ball_package (β : Type _) (α : Type _) where 
   c : β → α 
   R : β → ℝ 
   rpos : ∀ b, 0 < r b 
@@ -174,25 +174,25 @@ structure ball_package(β : Type _)(α : Type _) where
 def unit_ball_package (α : Type _) : ball_package α α :=
   { c := id, R := fun _ => 1, rpos := fun _ => zero_lt_one, rBound := 1, r_le := fun _ => le_rfl }
 
-instance  (α : Type _) : Inhabited (ball_package α α) :=
+instance (α : Type _) : Inhabited (ball_package α α) :=
   ⟨unit_ball_package α⟩
 
 /-- A Besicovitch tau-package is a family of balls in a metric space with positive bounded radii,
 together with enough data to proceed with the Besicovitch greedy algorithm. We register this in
 a single structure to make sure that all our constructions in this algorithm only depend on
 one variable. -/
-structure tau_package(β : Type _)(α : Type _) extends ball_package β α where 
+structure tau_package (β : Type _) (α : Type _) extends ball_package β α where 
   τ : ℝ 
   one_lt_tau : 1 < τ
 
-instance  (α : Type _) : Inhabited (tau_package α α) :=
+instance (α : Type _) : Inhabited (tau_package α α) :=
   ⟨{ unit_ball_package α with τ := 2, one_lt_tau := one_lt_two }⟩
 
-variable{α : Type _}[MetricSpace α]{β : Type u}
+variable {α : Type _} [MetricSpace α] {β : Type u}
 
 namespace TauPackage
 
-variable[Nonempty β](p : tau_package β α)
+variable [Nonempty β] (p : tau_package β α)
 
 include p
 

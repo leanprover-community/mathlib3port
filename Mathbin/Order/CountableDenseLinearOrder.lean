@@ -53,7 +53,7 @@ theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered
         fun m hm => ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => lt_of_lt_of_leₓ hm (Finset.min'_le hi y hy)⟩
     else nonem.elim fun m => ⟨m, fun x hx => (nlo ⟨x, hx⟩).elim, fun y hy => (nhi ⟨y, hy⟩).elim⟩
 
-variable(α β : Type _)[LinearOrderₓ α][LinearOrderₓ β]
+variable (α β : Type _) [LinearOrderₓ α] [LinearOrderₓ β]
 
 /-- The type of partial order isomorphisms between `α` and `β` defined on finite subsets.
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
@@ -63,13 +63,13 @@ def partial_iso : Type _ :=
 
 namespace PartialIso
 
-instance  : Inhabited (partial_iso α β) :=
+instance : Inhabited (partial_iso α β) :=
   ⟨⟨∅, fun p q h => h.elim⟩⟩
 
-instance  : Preorderₓ (partial_iso α β) :=
+instance : Preorderₓ (partial_iso α β) :=
   Subtype.preorder _
 
-variable{α β}
+variable {α β}
 
 -- error in Order.CountableDenseLinearOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For each `a`, we can find a `b` in the codomain, such that `a`'s relation to
@@ -124,7 +124,7 @@ protected def comm : partial_iso α β → partial_iso β α :=
             rw [←Finset.mem_coe, Finset.coe_image, Equiv.image_eq_preimage] at hq 
             rwa [←Finset.mem_coe])
 
-variable(β)
+variable (β)
 
 /-- The set of partial isomorphisms defined at `a : α`, together with a proof that any
     partial isomorphism can be extended to one defined at `a`. -/
@@ -148,7 +148,7 @@ def defined_at_left [DenselyOrdered β] [NoBotOrder β] [NoTopOrder β] [Nonempt
         ·
           exact f.property _ _ pf qf }
 
-variable(α){β}
+variable (α) {β}
 
 /-- The set of partial isomorphisms defined at `b : β`, together with a proof that any
     partial isomorphism can be extended to include `b`. We prove this by symmetry. -/
@@ -171,7 +171,7 @@ def defined_at_right [DenselyOrdered α] [NoBotOrder α] [NoTopOrder α] [Nonemp
           change f.val.image _ ⊆ _ at hl 
           rwa [←Finset.coe_subset, Finset.coe_image] at hl }
 
-variable{α}
+variable {α}
 
 /-- Given an ideal which intersects `defined_at_left β a`, pick `b : β` such that
     some partial function in the ideal maps `a` to `b`. -/
@@ -189,7 +189,7 @@ end PartialIso
 
 open PartialIso
 
-variable(α β)
+variable (α β)
 
 /-- Any countable linear order embeds in any nonempty dense linear order without endpoints. -/
 def embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [NoBotOrder β] [NoTopOrder β] [Nonempty β] :

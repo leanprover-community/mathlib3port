@@ -37,7 +37,7 @@ namespace Equiv.Perm
 
 open Equiv Function Finset
 
-variable{α : Type _}{β : Type _}[DecidableEq α]
+variable {α : Type _} {β : Type _} [DecidableEq α]
 
 section SignCycle
 
@@ -46,7 +46,7 @@ section SignCycle
 -/
 
 
-variable[Fintype α]
+variable [Fintype α]
 
 /-- A permutation is a cycle when any two nonfixed points of the permutation are related by repeated
   application of the permutation. -/
@@ -469,7 +469,7 @@ theorem same_cycle.nat'' [Fintype β] {f : perm β} {x y : β} (h : same_cycle f
     ·
       exact ⟨i.succ, i.zero_lt_succ, hi.le, rfl⟩
 
-instance  [Fintype α] (f : perm α) : DecidableRel (same_cycle f) :=
+instance [Fintype α] (f : perm α) : DecidableRel (same_cycle f) :=
   fun x y =>
     decidableOfIff (∃ (n : _)(_ : n ∈ List.range (Fintype.card (perm α))), (f ^ n) x = y)
       ⟨fun ⟨n, _, hn⟩ => ⟨n, hn⟩,
@@ -1082,7 +1082,7 @@ def trunc_cycle_factors [Fintype α] (f : perm α) :
 
 section CycleFactorsFinset
 
-variable[Fintype α](f : perm α)
+variable [Fintype α] (f : perm α)
 
 /-- Factors a permutation `f` into a `finset` of disjoint cyclic permutations that multiply to `f`.
 -/
@@ -1456,7 +1456,7 @@ theorem same_cycle.nat [Fintype α] (f : perm α) {x y : α} (h : same_cycle f x
 
 section Generation
 
-variable[Fintype α][Fintype β]
+variable [Fintype α] [Fintype β]
 
 open Subgroup
 
@@ -1555,7 +1555,7 @@ end Generation
 
 section 
 
-variable[Fintype α]{σ τ : perm α}
+variable [Fintype α] {σ τ : perm α}
 
 noncomputable theory
 

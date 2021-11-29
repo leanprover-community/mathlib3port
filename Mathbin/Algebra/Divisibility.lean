@@ -23,15 +23,15 @@ divisibility, divides
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 section Monoidₓ
 
-variable[Monoidₓ α]{a b c : α}
+variable [Monoidₓ α] {a b c : α}
 
 /-- There are two possible conventions for divisibility, which coincide in a `comm_monoid`.
     This matches the convention for ordinals. -/
-instance (priority := 100)monoidHasDvd : HasDvd α :=
+instance (priority := 100) monoidHasDvd : HasDvd α :=
   HasDvd.mk fun a b => ∃ c, b = a*c
 
 theorem Dvd.intro (c : α) (h : (a*c) = b) : a ∣ b :=
@@ -81,7 +81,7 @@ theorem dvd_of_mul_right_dvd (h : (a*b) ∣ c) : a ∣ c :=
 
 section MapDvd
 
-variable{M N : Type _}
+variable {M N : Type _}
 
 theorem MulHom.map_dvd [Monoidₓ M] [Monoidₓ N] (f : MulHom M N) {a b} : a ∣ b → f a ∣ f b
 | ⟨c, h⟩ => ⟨f c, h.symm ▸ f.map_mul a c⟩
@@ -95,7 +95,7 @@ end Monoidₓ
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ α]{a b c : α}
+variable [CommMonoidₓ α] {a b c : α}
 
 theorem Dvd.intro_left (c : α) (h : (c*a) = b) : a ∣ b :=
   Dvd.intro _
@@ -153,7 +153,7 @@ end CommMonoidₓ
 
 section MonoidWithZeroₓ
 
-variable[MonoidWithZeroₓ α]{a : α}
+variable [MonoidWithZeroₓ α] {a : α}
 
 theorem eq_zero_of_zero_dvd (h : 0 ∣ a) : a = 0 :=
   Dvd.elim h fun c => fun H' : a = 0*c => Eq.trans H' (zero_mul c)
@@ -200,7 +200,7 @@ namespace Units
 
 section Monoidₓ
 
-variable[Monoidₓ α]{a b : α}{u : Units α}
+variable [Monoidₓ α] {a b : α} {u : Units α}
 
 /-- Elements of the unit group of a monoid represented as elements of the monoid
     divide any element of the monoid. -/
@@ -233,7 +233,7 @@ end Monoidₓ
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ α]{a b : α}{u : Units α}
+variable [CommMonoidₓ α] {a b : α} {u : Units α}
 
 /-- In a commutative monoid, an element `a` divides an element `b` iff `a` divides all left
     associates of `b`. -/
@@ -257,7 +257,7 @@ namespace IsUnit
 
 section Monoidₓ
 
-variable[Monoidₓ α]{a b u : α}(hu : IsUnit u)
+variable [Monoidₓ α] {a b u : α} (hu : IsUnit u)
 
 include hu
 
@@ -285,7 +285,7 @@ end Monoidₓ
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ α](a b u : α)(hu : IsUnit u)
+variable [CommMonoidₓ α] (a b u : α) (hu : IsUnit u)
 
 include hu
 
@@ -311,7 +311,7 @@ end IsUnit
 
 section CommMonoidWithZero
 
-variable[CommMonoidWithZero α]
+variable [CommMonoidWithZero α]
 
 /-- `dvd_not_unit a b` expresses that `a` divides `b` "strictly", i.e. that `b` divided by `a`
 is not a unit. -/

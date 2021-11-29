@@ -27,12 +27,12 @@ universe u v w
 
 /-- A commutative ring is local if it has a unique maximal ideal. Note that
   `local_ring` is a predicate. -/
-class LocalRing(R : Type u)[CommRingₓ R] extends Nontrivial R : Prop where 
+class LocalRing (R : Type u) [CommRingₓ R] extends Nontrivial R : Prop where 
   is_local : ∀ a : R, IsUnit a ∨ IsUnit (1 - a)
 
 namespace LocalRing
 
-variable{R : Type u}[CommRingₓ R][LocalRing R]
+variable {R : Type u} [CommRingₓ R] [LocalRing R]
 
 theorem is_unit_or_is_unit_one_sub_self (a : R) : IsUnit a ∨ IsUnit (1 - a) :=
   is_local a
@@ -62,7 +62,7 @@ theorem nonunits_add {x y} (hx : x ∈ Nonunits R) (hy : y ∈ Nonunits R) : (x+
     apply is_unit_one_sub_self_of_mem_nonunits 
     exact mul_mem_nonunits_right hx
 
-variable(R)
+variable (R)
 
 /-- The ideal of elements that are not units. -/
 def maximal_ideal : Ideal R :=
@@ -87,7 +87,7 @@ theorem maximal_ideal_unique : ∃!I : Ideal R, I.is_maximal :=
   ⟨maximal_ideal R, maximal_ideal.is_maximal R,
     fun I hI => hI.eq_of_le (maximal_ideal.is_maximal R).1.1$ fun x hx => hI.1.1 ∘ I.eq_top_of_is_unit_mem hx⟩
 
-variable{R}
+variable {R}
 
 theorem eq_maximal_ideal {I : Ideal R} (hI : I.is_maximal) : I = maximal_ideal R :=
   unique_of_exists_unique (maximal_ideal_unique R) hI$ maximal_ideal.is_maximal R
@@ -103,7 +103,7 @@ theorem mem_maximal_ideal x : x ∈ maximal_ideal R ↔ x ∈ Nonunits R :=
 
 end LocalRing
 
-variable{R : Type u}{S : Type v}{T : Type w}
+variable {R : Type u} {S : Type v} {T : Type w}
 
 theorem local_of_nonunits_ideal [CommRingₓ R] (hnze : (0 : R) ≠ 1)
   (h : ∀ x y _ : x ∈ Nonunits R _ : y ∈ Nonunits R, (x+y) ∈ Nonunits R) : LocalRing R :=
@@ -156,7 +156,7 @@ theorem local_of_surjective [CommRingₓ R] [LocalRing R] [CommRingₓ S] [Nontr
 /-- A local ring homomorphism is a homomorphism between local rings
   such that the image of the maximal ideal of the source is contained within
   the maximal ideal of the target. -/
-class IsLocalRingHom[Semiringₓ R][Semiringₓ S](f : R →+* S) : Prop where 
+class IsLocalRingHom [Semiringₓ R] [Semiringₓ S] (f : R →+* S) : Prop where 
   map_nonunit : ∀ a, IsUnit (f a) → IsUnit a
 
 instance is_local_ring_hom_id (R : Type _) [Semiringₓ R] : IsLocalRingHom (RingHom.id R) :=
@@ -200,7 +200,7 @@ theorem is_local_ring_hom_of_iso {R S : CommRingₓₓ} (f : R ≅ S) : IsLocalR
           convert f.inv.is_unit_map ha 
           rw [CategoryTheory.coe_hom_inv_id] }
 
-instance (priority := 100)is_local_ring_hom_of_is_iso {R S : CommRingₓₓ} (f : R ⟶ S) [is_iso f] : IsLocalRingHom f :=
+instance (priority := 100) is_local_ring_hom_of_is_iso {R S : CommRingₓₓ} (f : R ⟶ S) [is_iso f] : IsLocalRingHom f :=
   is_local_ring_hom_of_iso (as_iso f)
 
 end 
@@ -209,9 +209,9 @@ section
 
 open LocalRing
 
-variable[CommRingₓ R][LocalRing R][CommRingₓ S][LocalRing S]
+variable [CommRingₓ R] [LocalRing R] [CommRingₓ S] [LocalRing S]
 
-variable(f : R →+* S)[IsLocalRingHom f]
+variable (f : R →+* S) [IsLocalRingHom f]
 
 theorem map_nonunit (a : R) (h : a ∈ maximal_ideal R) : f a ∈ maximal_ideal S :=
   fun H => h$ is_unit_of_map_unit f a H
@@ -220,7 +220,7 @@ end
 
 namespace LocalRing
 
-variable[CommRingₓ R][LocalRing R][CommRingₓ S][LocalRing S]
+variable [CommRingₓ R] [LocalRing R] [CommRingₓ S] [LocalRing S]
 
 /--
 A ring homomorphism between local rings is a local ring hom iff it reflects units,
@@ -252,7 +252,7 @@ theorem local_hom_tfae (f : R →+* S) :
     exact fun h => le_of_eqₓ h.symm 
     tfaeFinish
 
-variable(R)
+variable (R)
 
 /-- The residue field of a local ring is the quotient of the ring by its maximal ideal. -/
 def residue_field :=
@@ -261,7 +261,7 @@ def residue_field :=
 noncomputable instance residue_field.field : Field (residue_field R) :=
   Ideal.Quotient.field (maximal_ideal R)
 
-noncomputable instance  : Inhabited (residue_field R) :=
+noncomputable instance : Inhabited (residue_field R) :=
   ⟨37⟩
 
 /-- The quotient map from a local ring to its residue field. -/
@@ -273,7 +273,7 @@ noncomputable instance residue_field.algebra : Algebra R (residue_field R) :=
 
 namespace ResidueField
 
-variable{R S}
+variable {R S}
 
 /-- The map on residue fields induced by a local homomorphism between local rings -/
 noncomputable def map (f : R →+* S) [IsLocalRingHom f] : residue_field R →+* residue_field S :=
@@ -285,7 +285,7 @@ noncomputable def map (f : R →+* S) [IsLocalRingHom f] : residue_field R →+*
 
 end ResidueField
 
-variable{R}
+variable {R}
 
 theorem ker_eq_maximal_ideal {K : Type _} [Field K] (φ : R →+* K) (hφ : Function.Surjective φ) :
   φ.ker = maximal_ideal R :=
@@ -295,7 +295,7 @@ end LocalRing
 
 namespace Field
 
-variable[Field R]
+variable [Field R]
 
 open_locale Classical
 

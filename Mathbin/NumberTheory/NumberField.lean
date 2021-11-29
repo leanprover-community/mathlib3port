@@ -31,7 +31,7 @@ number field, ring of integers
 
 /-- A number field is a field which has characteristic zero and is finite
 dimensional over ℚ. -/
-class NumberField(K : Type _)[Field K] : Prop where 
+class NumberField (K : Type _) [Field K] : Prop where 
   [to_char_zero : CharZero K]
   [to_finite_dimensional : FiniteDimensional ℚ K]
 
@@ -41,7 +41,7 @@ open_locale Classical BigOperators
 
 namespace NumberField
 
-variable(K : Type _)[Field K][nf : NumberField K]
+variable (K : Type _) [Field K] [nf : NumberField K]
 
 include nf
 
@@ -59,15 +59,15 @@ def ring_of_integers :=
 
 namespace RingOfIntegers
 
-variable{K}
+variable {K}
 
-instance  [NumberField K] : IsFractionRing (ring_of_integers K) K :=
+instance [NumberField K] : IsFractionRing (ring_of_integers K) K :=
   integralClosure.is_fraction_ring_of_finite_extension ℚ _
 
-instance  : IsIntegralClosure (ring_of_integers K) ℤ K :=
+instance : IsIntegralClosure (ring_of_integers K) ℤ K :=
   integralClosure.is_integral_closure _ _
 
-instance  [NumberField K] : IsIntegrallyClosed (ring_of_integers K) :=
+instance [NumberField K] : IsIntegrallyClosed (ring_of_integers K) :=
   integralClosure.is_integrally_closed_of_finite_extension ℚ
 
 theorem is_integral_coe (x : ring_of_integers K) : IsIntegral ℤ (x : K) :=
@@ -78,12 +78,12 @@ protected noncomputable def Equiv (R : Type _) [CommRingₓ R] [Algebra R K] [Is
   ring_of_integers K ≃+* R :=
   (IsIntegralClosure.equiv ℤ R K _).symm.toRingEquiv
 
-variable(K)
+variable (K)
 
-instance  [NumberField K] : CharZero (ring_of_integers K) :=
+instance [NumberField K] : CharZero (ring_of_integers K) :=
   CharZero.of_algebra K
 
-instance  [NumberField K] : IsDedekindDomain (ring_of_integers K) :=
+instance [NumberField K] : IsDedekindDomain (ring_of_integers K) :=
   IsIntegralClosure.is_dedekind_domain ℤ ℚ K _
 
 end RingOfIntegers

@@ -7,7 +7,7 @@ import Mathbin.Logic.Function.Basic
 
 universe u v w x
 
-variable{α : Type u}{α' : Type w}{β : Type v}{β' : Type x}
+variable {α : Type u} {α' : Type w} {β : Type v} {β' : Type x}
 
 open Sum
 
@@ -203,7 +203,7 @@ theorem update_inr_apply_inr {α β γ} [DecidableEq β] [DecidableEq (Sum α β
 
 section 
 
-variable(ra : α → α → Prop)(rb : β → β → Prop)
+variable (ra : α → α → Prop) (rb : β → β → Prop)
 
 /-- Lexicographic order for sum. Sort all the `inl a` before the `inr b`,
     otherwise use the respective order on `α` or `β`. -/
@@ -212,7 +212,7 @@ inductive lex : Sum α β → Sum α β → Prop
   | inr {b₁ b₂} (h : rb b₁ b₂) : lex (inr b₁) (inr b₂)
   | sep a b : lex (inl a) (inr b)
 
-variable{ra rb}
+variable {ra rb}
 
 @[simp]
 theorem lex_inl_inl {a₁ a₂} : lex ra rb (inl a₁) (inl a₂) ↔ ra a₁ a₂ :=

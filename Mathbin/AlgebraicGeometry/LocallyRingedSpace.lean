@@ -38,7 +38,7 @@ attribute [instance] LocallyRingedSpace.local_ring
 
 namespace LocallyRingedSpace
 
-variable(X : LocallyRingedSpace)
+variable (X : LocallyRingedSpace)
 
 /--
 An alias for `to_SheafedSpace`, where the result type is a `RingedSpace`.
@@ -51,7 +51,7 @@ def to_RingedSpace : RingedSpace :=
 def to_Top : Top :=
   X.1.Carrier
 
-instance  : CoeSort LocallyRingedSpace (Type u) :=
+instance : CoeSort LocallyRingedSpace (Type u) :=
   ⟨fun X : LocallyRingedSpace => (X.to_Top : Type u)⟩
 
 /-- The structure sheaf of a locally ringed space. -/
@@ -63,7 +63,7 @@ def 𝒪 : sheaf CommRingₓₓ X.to_Top :=
 def hom (X Y : LocallyRingedSpace) : Type _ :=
   { f : X.to_SheafedSpace ⟶ Y.to_SheafedSpace // ∀ x, IsLocalRingHom (PresheafedSpace.stalk_map f x) }
 
-instance  : Quiver LocallyRingedSpace :=
+instance : Quiver LocallyRingedSpace :=
   ⟨hom⟩
 
 @[ext]
@@ -83,7 +83,7 @@ a local ring homomorphism from `Y.stalk (f x)` to `X.stalk x` for any `x : X`.
 noncomputable def stalk_map {X Y : LocallyRingedSpace} (f : X ⟶ Y) (x : X) : Y.stalk (f.1.1 x) ⟶ X.stalk x :=
   PresheafedSpace.stalk_map f.1 x
 
-instance  {X Y : LocallyRingedSpace} (f : X ⟶ Y) (x : X) : IsLocalRingHom (stalk_map f x) :=
+instance {X Y : LocallyRingedSpace} (f : X ⟶ Y) (x : X) : IsLocalRingHom (stalk_map f x) :=
   f.2 x
 
 /-- The identity morphism on a locally ringed space. -/
@@ -95,7 +95,7 @@ def id (X : LocallyRingedSpace) : hom X X :=
         erw [PresheafedSpace.stalk_map.id]
         apply is_local_ring_hom_id⟩
 
-instance  (X : LocallyRingedSpace) : Inhabited (hom X X) :=
+instance (X : LocallyRingedSpace) : Inhabited (hom X X) :=
   ⟨id X⟩
 
 /-- Composition of morphisms of locally ringed spaces. -/
@@ -108,7 +108,7 @@ def comp {X Y Z : LocallyRingedSpace} (f : hom X Y) (g : hom Y Z) : hom X Z :=
         exact @is_local_ring_hom_comp _ _ _ _ _ _ _ _ (f.2 _) (g.2 _)⟩
 
 /-- The category of locally ringed spaces. -/
-instance  : category LocallyRingedSpace :=
+instance : category LocallyRingedSpace :=
   { Hom := hom, id := id, comp := fun X Y Z f g => comp f g,
     comp_id' :=
       by 
@@ -130,7 +130,7 @@ instance  : category LocallyRingedSpace :=
 def forget_to_SheafedSpace : LocallyRingedSpace ⥤ SheafedSpace CommRingₓₓ :=
   { obj := fun X => X.to_SheafedSpace, map := fun X Y f => f.1 }
 
-instance  : faithful forget_to_SheafedSpace :=
+instance : faithful forget_to_SheafedSpace :=
   {  }
 
 /--
@@ -159,7 +159,7 @@ def iso_of_SheafedSpace_iso {X Y : LocallyRingedSpace} (f : X.to_SheafedSpace �
   { Hom := hom_of_SheafedSpace_hom_of_is_iso f.hom, inv := hom_of_SheafedSpace_hom_of_is_iso f.inv,
     hom_inv_id' := hom_ext _ _ f.hom_inv_id, inv_hom_id' := hom_ext _ _ f.inv_hom_id }
 
-instance  : reflects_isomorphisms forget_to_SheafedSpace :=
+instance : reflects_isomorphisms forget_to_SheafedSpace :=
   { reflects :=
       fun X Y f i =>
         { out :=

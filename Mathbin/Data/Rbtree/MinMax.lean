@@ -4,7 +4,7 @@ universe u
 
 namespace Rbnode
 
-variable{α : Type u}{lt : α → α → Prop}
+variable {α : Type u} {lt : α → α → Prop}
 
 theorem mem_of_min_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : Rbnode α} : t.min = some a → mem lt a t :=
   by 
@@ -36,7 +36,7 @@ theorem mem_of_max_eq (lt : α → α → Prop) [IsIrrefl α lt] {a : α} {t : R
         rw [mem]
         simp [t_ih_rchild h]
 
-variable[IsStrictWeakOrder α lt]
+variable [IsStrictWeakOrder α lt]
 
 -- error in Data.Rbtree.MinMax: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eq_leaf_of_min_eq_none {t : rbnode α} : «expr = »(t.min, none) → «expr = »(t, leaf) :=

@@ -60,7 +60,7 @@ graded ring, filtered ring, direct sum, add_submonoid
 -/
 
 
-variable{ι : Type _}[DecidableEq ι]
+variable {ι : Type _} [DecidableEq ι]
 
 namespace DirectSum
 
@@ -71,10 +71,10 @@ open_locale DirectSum
 
 section Defs
 
-variable(A : ι → Type _)
+variable (A : ι → Type _)
 
 /-- A graded version of `non_unital_non_assoc_semiring`. -/
-class gnon_unital_non_assoc_semiring[Add ι][∀ i, AddCommMonoidₓ (A i)] extends GradedMonoid.GhasMul A where 
+class gnon_unital_non_assoc_semiring [Add ι] [∀ i, AddCommMonoidₓ (A i)] extends GradedMonoid.GhasMul A where 
   mul_zero : ∀ {i j} a : A i, mul a (0 : A j) = 0
   zero_mul : ∀ {i j} b : A j, mul (0 : A i) b = 0
   mul_add : ∀ {i j} a : A i b c : A j, mul a (b+c) = mul a b+mul a c 
@@ -84,14 +84,14 @@ end Defs
 
 section Defs
 
-variable(A : ι → Type _)
+variable (A : ι → Type _)
 
 /-- A graded version of `semiring`. -/
-class gsemiring[AddMonoidₓ ι][∀ i, AddCommMonoidₓ (A i)] extends gnon_unital_non_assoc_semiring A,
+class gsemiring [AddMonoidₓ ι] [∀ i, AddCommMonoidₓ (A i)] extends gnon_unital_non_assoc_semiring A,
   GradedMonoid.Gmonoid A
 
 /-- A graded version of `comm_semiring`. -/
-class gcomm_semiring[AddCommMonoidₓ ι][∀ i, AddCommMonoidₓ (A i)] extends gsemiring A, GradedMonoid.GcommMonoid A
+class gcomm_semiring [AddCommMonoidₓ ι] [∀ i, AddCommMonoidₓ (A i)] extends gsemiring A, GradedMonoid.GcommMonoid A
 
 end Defs
 
@@ -99,23 +99,23 @@ theorem of_eq_of_graded_monoid_eq {A : ι → Type _} [∀ i : ι, AddCommMonoid
   (h : GradedMonoid.mk i a = GradedMonoid.mk j b) : DirectSum.of A i a = DirectSum.of A j b :=
   Dfinsupp.single_eq_of_sigma_eq h
 
-variable(A : ι → Type _)
+variable (A : ι → Type _)
 
 /-! ### Instances for `⨁ i, A i` -/
 
 
 section One
 
-variable[HasZero ι][GradedMonoid.GhasOne A][∀ i, AddCommMonoidₓ (A i)]
+variable [HasZero ι] [GradedMonoid.GhasOne A] [∀ i, AddCommMonoidₓ (A i)]
 
-instance  : HasOne (⨁i, A i) :=
+instance : HasOne (⨁i, A i) :=
   { one := DirectSum.of (fun i => A i) 0 GradedMonoid.GhasOne.one }
 
 end One
 
 section Mul
 
-variable[Add ι][∀ i, AddCommMonoidₓ (A i)][gnon_unital_non_assoc_semiring A]
+variable [Add ι] [∀ i, AddCommMonoidₓ (A i)] [gnon_unital_non_assoc_semiring A]
 
 open add_monoid_hom(map_zero map_add flip_apply coe_comp comp_hom_apply_apply)
 
@@ -135,7 +135,7 @@ def MulHom : (⨁i, A i) →+ (⨁i, A i) →+ ⨁i, A i :=
     fun i =>
       AddMonoidHom.flip$ DirectSum.toAddMonoid$ fun j => AddMonoidHom.flip$ (DirectSum.of A _).compHom.comp$ gmul_hom A
 
-instance  : NonUnitalNonAssocSemiring (⨁i, A i) :=
+instance : NonUnitalNonAssocSemiring (⨁i, A i) :=
   { DirectSum.addCommMonoid _ _ with mul := fun a b => MulHom A a b, zero := 0, add := ·+·,
     zero_mul :=
       fun a =>
@@ -154,7 +154,7 @@ instance  : NonUnitalNonAssocSemiring (⨁i, A i) :=
         by 
           simp only [map_add, AddMonoidHom.add_apply] }
 
-variable{A}
+variable {A}
 
 theorem mul_hom_of_of {i j} (a : A i) (b : A j) :
   MulHom A (of _ i a) (of _ j b) = of _ (i+j) (GradedMonoid.GhasMul.mul a b) :=
@@ -170,7 +170,7 @@ end Mul
 
 section Semiringₓ
 
-variable[∀ i, AddCommMonoidₓ (A i)][AddMonoidₓ ι][gsemiring A]
+variable [∀ i, AddCommMonoidₓ (A i)] [AddMonoidₓ ι] [gsemiring A]
 
 open add_monoid_hom(flipHom coe_comp comp_hom_apply_apply flip_apply flip_hom_apply)
 
@@ -221,7 +221,7 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[∀ i, AddCommMonoidₓ (A i)][AddCommMonoidₓ ι][gcomm_semiring A]
+variable [∀ i, AddCommMonoidₓ (A i)] [AddCommMonoidₓ ι] [gcomm_semiring A]
 
 private theorem mul_commₓ (a b : ⨁i, A i) : (a*b) = b*a :=
   suffices MulHom A = (MulHom A).flip from AddMonoidHom.congr_fun (AddMonoidHom.congr_fun this a) b 
@@ -241,7 +241,7 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable[∀ i, AddCommGroupₓ (A i)][AddCommMonoidₓ ι][gsemiring A]
+variable [∀ i, AddCommGroupₓ (A i)] [AddCommMonoidₓ ι] [gsemiring A]
 
 /-- The `ring` derived from `gsemiring A`. -/
 instance Ringₓ : Ringₓ (⨁i, A i) :=
@@ -251,7 +251,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[∀ i, AddCommGroupₓ (A i)][AddCommMonoidₓ ι][gcomm_semiring A]
+variable [∀ i, AddCommGroupₓ (A i)] [AddCommMonoidₓ ι] [gcomm_semiring A]
 
 /-- The `comm_ring` derived from `gcomm_semiring A`. -/
 instance CommRingₓ : CommRingₓ (⨁i, A i) :=
@@ -270,7 +270,7 @@ section GradeZero
 
 section One
 
-variable[HasZero ι][GradedMonoid.GhasOne A][∀ i, AddCommMonoidₓ (A i)]
+variable [HasZero ι] [GradedMonoid.GhasOne A] [∀ i, AddCommMonoidₓ (A i)]
 
 @[simp]
 theorem of_zero_one : of _ 0 (1 : A 0) = 1 :=
@@ -280,7 +280,7 @@ end One
 
 section Mul
 
-variable[AddMonoidₓ ι][∀ i, AddCommMonoidₓ (A i)][gnon_unital_non_assoc_semiring A]
+variable [AddMonoidₓ ι] [∀ i, AddCommMonoidₓ (A i)] [gnon_unital_non_assoc_semiring A]
 
 @[simp]
 theorem of_zero_smul {i} (a : A 0) (b : A i) : of _ _ (a • b) = of _ _ a*of _ _ b :=
@@ -305,7 +305,7 @@ end Mul
 
 section Semiringₓ
 
-variable[∀ i, AddCommMonoidₓ (A i)][AddMonoidₓ ι][gsemiring A]
+variable [∀ i, AddCommMonoidₓ (A i)] [AddMonoidₓ ι] [gsemiring A]
 
 /-- The `semiring` structure derived from `gsemiring A`. -/
 instance grade_zero.semiring : Semiringₓ (A 0) :=
@@ -329,7 +329,7 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[∀ i, AddCommMonoidₓ (A i)][AddCommMonoidₓ ι][gcomm_semiring A]
+variable [∀ i, AddCommMonoidₓ (A i)] [AddCommMonoidₓ ι] [gcomm_semiring A]
 
 /-- The `comm_semiring` structure derived from `gcomm_semiring A`. -/
 instance grade_zero.comm_semiring : CommSemiringₓ (A 0) :=
@@ -340,7 +340,7 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable[∀ i, AddCommGroupₓ (A i)][AddCommMonoidₓ ι][gsemiring A]
+variable [∀ i, AddCommGroupₓ (A i)] [AddCommMonoidₓ ι] [gsemiring A]
 
 /-- The `ring` derived from `gsemiring A`. -/
 instance grade_zero.ring : Ringₓ (A 0) :=
@@ -351,7 +351,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[∀ i, AddCommGroupₓ (A i)][AddCommMonoidₓ ι][gcomm_semiring A]
+variable [∀ i, AddCommGroupₓ (A i)] [AddCommMonoidₓ ι] [gcomm_semiring A]
 
 /-- The `comm_ring` derived from `gcomm_semiring A`. -/
 instance grade_zero.comm_ring : CommRingₓ (A 0) :=
@@ -364,9 +364,9 @@ end GradeZero
 
 section ToSemiring
 
-variable{R : Type _}[∀ i, AddCommMonoidₓ (A i)][AddMonoidₓ ι][gsemiring A][Semiringₓ R]
+variable {R : Type _} [∀ i, AddCommMonoidₓ (A i)] [AddMonoidₓ ι] [gsemiring A] [Semiringₓ R]
 
-variable{A}
+variable {A}
 
 /-- If two ring homomorphisms from `⨁ i, A i` are equal on each `of A i y`,
 then they are equal.
@@ -460,7 +460,7 @@ end DirectSum
 
 section Uniform
 
-variable(ι)
+variable (ι)
 
 /-- A direct sum of copies of a `semiring` inherits the multiplication structure. -/
 instance NonUnitalNonAssocSemiring.directSumGnonUnitalNonAssocSemiring {R : Type _} [AddMonoidₓ ι]
@@ -474,7 +474,7 @@ instance Semiringₓ.directSumGsemiring {R : Type _} [AddMonoidₓ ι] [Semiring
 
 open_locale DirectSum
 
-example  {R : Type _} [AddMonoidₓ ι] [Semiringₓ R] (i j : ι) (a b : R) :
+example {R : Type _} [AddMonoidₓ ι] [Semiringₓ R] (i j : ι) (a b : R) :
   (DirectSum.of _ i a*DirectSum.of _ j b : ⨁i, R) =
     DirectSum.of _ (i+j)
       (by 

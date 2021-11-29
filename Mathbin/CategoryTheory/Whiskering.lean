@@ -29,7 +29,7 @@ universe u₁ v₁ u₂ v₂ u₃ v₃ u₄ v₄
 
 section 
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]{E : Type u₃}[category.{v₃} E]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
 
 /--
 If `α : G ⟶ H` then
@@ -55,7 +55,7 @@ def whisker_right {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) : G ⋙ F ⟶ H �
         by 
           rw [functor.comp_map, functor.comp_map, ←F.map_comp, ←F.map_comp, α.naturality] }
 
-variable(C D E)
+variable (C D E)
 
 /--
 Left-composition gives a functor `(C ⥤ D) ⥤ ((D ⥤ E) ⥤ (C ⥤ E))`.
@@ -109,7 +109,7 @@ def whiskering_right : (D ⥤ E) ⥤ (C ⥤ D) ⥤ C ⥤ E :=
                 dsimp 
                 rw [←nat_trans.naturality] } }
 
-variable{C}{D}{E}
+variable {C} {D} {E}
 
 @[simp]
 theorem whisker_left_id (F : C ⥤ D) {G : D ⥤ E} : whisker_left F (nat_trans.id G) = nat_trans.id (F.comp G) :=
@@ -177,7 +177,7 @@ instance is_iso_whisker_left (F : C ⥤ D) {G H : D ⥤ E} (α : G ⟶ H) [is_is
 instance is_iso_whisker_right {G H : C ⥤ D} (α : G ⟶ H) (F : D ⥤ E) [is_iso α] : is_iso (whisker_right α F) :=
   is_iso.of_iso (iso_whisker_right (as_iso α) F)
 
-variable{B : Type u₄}[category.{v₄} B]
+variable {B : Type u₄} [category.{v₄} B]
 
 attribute [local elabWithoutExpectedType] whisker_left whisker_right
 
@@ -201,9 +201,9 @@ namespace Functor
 
 universe u₅ v₅
 
-variable{A : Type u₁}[category.{v₁} A]
+variable {A : Type u₁} [category.{v₁} A]
 
-variable{B : Type u₂}[category.{v₂} B]
+variable {B : Type u₂} [category.{v₂} B]
 
 /--
 The left unitor, a natural isomorphism `((𝟭 _) ⋙ F) ≅ F`.
@@ -219,9 +219,9 @@ The right unitor, a natural isomorphism `(F ⋙ (𝟭 B)) ≅ F`.
 def right_unitor (F : A ⥤ B) : F ⋙ 𝟭 B ≅ F :=
   { Hom := { app := fun X => 𝟙 (F.obj X) }, inv := { app := fun X => 𝟙 (F.obj X) } }
 
-variable{C : Type u₃}[category.{v₃} C]
+variable {C : Type u₃} [category.{v₃} C]
 
-variable{D : Type u₄}[category.{v₄} D]
+variable {D : Type u₄} [category.{v₄} D]
 
 /--
 The associator for functors, a natural isomorphism `((F ⋙ G) ⋙ H) ≅ (F ⋙ (G ⋙ H))`.
@@ -240,9 +240,9 @@ theorem triangle (F : A ⥤ B) (G : B ⥤ C) :
     dsimp 
     simp 
 
-variable{E : Type u₅}[category.{v₅} E]
+variable {E : Type u₅} [category.{v₅} E]
 
-variable(F : A ⥤ B)(G : B ⥤ C)(H : C ⥤ D)(K : D ⥤ E)
+variable (F : A ⥤ B) (G : B ⥤ C) (H : C ⥤ D) (K : D ⥤ E)
 
 theorem pentagon :
   whisker_right (associator F G H).Hom K ≫ (associator F (G ⋙ H) K).Hom ≫ whisker_left F (associator G H K).Hom =

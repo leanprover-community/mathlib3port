@@ -128,7 +128,7 @@ equivalent to some element of the second family.-/
 protected def subset : PSet → PSet → Prop
 | ⟨α, A⟩, ⟨β, B⟩ => ∀ a, ∃ b, Equiv (A a) (B b)
 
-instance  : HasSubset PSet :=
+instance : HasSubset PSet :=
   ⟨PSet.Subset⟩
 
 theorem Equiv.ext : ∀ x y : PSet, Equiv x y ↔ x ⊆ y ∧ y ⊆ x
@@ -170,7 +170,7 @@ theorem subset.congr_right : ∀ {x y z : PSet}, Equiv x y → (z ⊆ x ↔ z �
 def mem : PSet → PSet → Prop
 | x, ⟨β, B⟩ => ∃ b, Equiv x (B b)
 
-instance  : HasMem PSet.{u} PSet.{u} :=
+instance : HasMem PSet.{u} PSet.{u} :=
   ⟨mem⟩
 
 theorem mem.mk {α : Type u} (A : α → PSet) (a : α) : A a ∈ mk α A :=
@@ -212,17 +212,17 @@ def to_set (u : PSet.{u}) : Set PSet.{u} :=
 theorem equiv.eq {x y : PSet} : Equiv x y ↔ to_set x = to_set y :=
   equiv_iff_mem.trans Set.ext_iff.symm
 
-instance  : Coe PSet (Set PSet) :=
+instance : Coe PSet (Set PSet) :=
   ⟨to_set⟩
 
 /-- The empty pre-set -/
 protected def Empty : PSet :=
   ⟨Ulift Empty, fun e => nomatch e⟩
 
-instance  : HasEmptyc PSet :=
+instance : HasEmptyc PSet :=
   ⟨PSet.empty⟩
 
-instance  : Inhabited PSet :=
+instance : Inhabited PSet :=
   ⟨∅⟩
 
 theorem mem_empty (x : PSet.{u}) : x ∉ (∅ : PSet.{u}) :=
@@ -232,13 +232,13 @@ theorem mem_empty (x : PSet.{u}) : x ∉ (∅ : PSet.{u}) :=
 protected def insert : PSet → PSet → PSet
 | u, ⟨α, A⟩ => ⟨Option α, fun o => Option.rec u A o⟩
 
-instance  : HasInsert PSet PSet :=
+instance : HasInsert PSet PSet :=
   ⟨PSet.insert⟩
 
-instance  : HasSingleton PSet PSet :=
+instance : HasSingleton PSet PSet :=
   ⟨fun s => insert s ∅⟩
 
-instance  : IsLawfulSingleton PSet PSet :=
+instance : IsLawfulSingleton PSet PSet :=
   ⟨fun _ => rfl⟩
 
 /-- The n-th von Neumann ordinal -/
@@ -254,7 +254,7 @@ def omega : PSet :=
 protected def sep (p : Set PSet) : PSet → PSet
 | ⟨α, A⟩ => ⟨{ a // p (A a) }, fun x => A x.1⟩
 
-instance  : HasSep PSet PSet :=
+instance : HasSep PSet PSet :=
   ⟨PSet.sep⟩
 
 /-- The pre-set powerset operator -/
@@ -446,7 +446,7 @@ theorem eval_mk {n f x} : (@resp.eval (n+1) f : Setₓ → Arity Setₓ n) (mk x
 def mem : Setₓ → Setₓ → Prop :=
   Quotientₓ.lift₂ PSet.Mem fun x y x' y' hx hy => propext ((mem.congr_left hx).trans (mem.congr_right hy))
 
-instance  : HasMem Setₓ Setₓ :=
+instance : HasMem Setₓ Setₓ :=
   ⟨mem⟩
 
 /-- Convert a ZFC set into a `set` of ZFC sets -/
@@ -485,10 +485,10 @@ theorem ext_iff {x y : Setₓ.{u}} : (∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y) �
 def Empty : Setₓ :=
   mk ∅
 
-instance  : HasEmptyc Setₓ :=
+instance : HasEmptyc Setₓ :=
   ⟨Empty⟩
 
-instance  : Inhabited Setₓ :=
+instance : Inhabited Setₓ :=
   ⟨∅⟩
 
 @[simp]
@@ -517,13 +517,13 @@ protected def insert : Setₓ → Setₓ → Setₓ :=
               ⟨some a, ha⟩
             | none => ⟨none, uv⟩⟩⟩
 
-instance  : HasInsert Setₓ Setₓ :=
+instance : HasInsert Setₓ Setₓ :=
   ⟨Setₓ.insert⟩
 
-instance  : HasSingleton Setₓ Setₓ :=
+instance : HasSingleton Setₓ Setₓ :=
   ⟨fun x => insert x ∅⟩
 
-instance  : IsLawfulSingleton Setₓ Setₓ :=
+instance : IsLawfulSingleton Setₓ Setₓ :=
   ⟨fun x => rfl⟩
 
 @[simp]
@@ -584,7 +584,7 @@ protected def sep (p : Setₓ → Prop) : Setₓ → Setₓ :=
                   rwa [@Quotientₓ.sound PSet _ _ _ ha]⟩,
               ha⟩⟩⟩
 
-instance  : HasSep Setₓ Setₓ :=
+instance : HasSep Setₓ Setₓ :=
   ⟨Setₓ.sep⟩
 
 @[simp]
@@ -689,13 +689,13 @@ protected def inter (x y : Setₓ.{u}) : Setₓ.{u} :=
 protected def diff (x y : Setₓ.{u}) : Setₓ.{u} :=
   { z∈x | z ∉ y }
 
-instance  : HasUnion Setₓ :=
+instance : HasUnion Setₓ :=
   ⟨Setₓ.unionₓ⟩
 
-instance  : HasInter Setₓ :=
+instance : HasInter Setₓ :=
   ⟨Setₓ.inter⟩
 
-instance  : HasSdiff Setₓ :=
+instance : HasSdiff Setₓ :=
   ⟨Setₓ.diff⟩
 
 @[simp]
@@ -913,38 +913,38 @@ def Class :=
 
 namespace Class
 
-instance  : HasSubset Class :=
+instance : HasSubset Class :=
   ⟨Set.Subset⟩
 
-instance  : HasSep Setₓ Class :=
+instance : HasSep Setₓ Class :=
   ⟨Set.Sep⟩
 
-instance  : HasEmptyc Class :=
+instance : HasEmptyc Class :=
   ⟨fun a => False⟩
 
-instance  : Inhabited Class :=
+instance : Inhabited Class :=
   ⟨∅⟩
 
-instance  : HasInsert Setₓ Class :=
+instance : HasInsert Setₓ Class :=
   ⟨Set.Insert⟩
 
-instance  : HasUnion Class :=
+instance : HasUnion Class :=
   ⟨Set.Union⟩
 
-instance  : HasInter Class :=
+instance : HasInter Class :=
   ⟨Set.Inter⟩
 
-instance  : Neg Class :=
+instance : Neg Class :=
   ⟨Set.Compl⟩
 
-instance  : HasSdiff Class :=
+instance : HasSdiff Class :=
   ⟨Set.Diff⟩
 
 /-- Coerce a ZFC set into a class -/
 def of_Set (x : Setₓ.{u}) : Class.{u} :=
   { y | y ∈ x }
 
-instance  : Coe Setₓ Class :=
+instance : Coe Setₓ Class :=
   ⟨of_Set⟩
 
 /-- The universal class -/
@@ -959,7 +959,7 @@ def to_Set (p : Setₓ.{u} → Prop) (A : Class.{u}) : Prop :=
 protected def mem (A B : Class.{u}) : Prop :=
   to_Set.{u} B A
 
-instance  : HasMem Class Class :=
+instance : HasMem Class Class :=
   ⟨Class.Mem⟩
 
 theorem mem_univ {A : Class.{u}} : A ∈ univ.{u} ↔ ∃ x : Setₓ.{u}, «expr↑ » x = A :=
@@ -1095,7 +1095,7 @@ theorem map_fval {f : Setₓ.{u} → Setₓ.{u}} [H : PSet.Definable 1 f] {x y :
                 subst e 
                 exact ⟨_, h, rfl⟩⟩
 
-variable(x : Setₓ.{u})(h : ∅ ∉ x)
+variable (x : Setₓ.{u}) (h : ∅ ∉ x)
 
 /-- A choice function on the class of nonempty ZFC sets. -/
 noncomputable def choice : Setₓ :=

@@ -21,13 +21,13 @@ namespace Polynomial
 
 universe u v w y z
 
-variable{R : Type u}{S : Type v}{k : Type y}{A : Type z}{a b : R}{n : ℕ}
+variable {R : Type u} {S : Type v} {k : Type y} {A : Type z} {a b : R} {n : ℕ}
 
 section IsDomain
 
-variable[CommRingₓ R][IsDomain R][NormalizationMonoid R]
+variable [CommRingₓ R] [IsDomain R] [NormalizationMonoid R]
 
-instance  : NormalizationMonoid (Polynomial R) :=
+instance : NormalizationMonoid (Polynomial R) :=
   { normUnit :=
       fun p =>
         ⟨C («expr↑ » (norm_unit p.leading_coeff)), C («expr↑ » (norm_unit p.leading_coeff⁻¹)),
@@ -73,7 +73,7 @@ end IsDomain
 
 section Field
 
-variable[Field R]{p q : Polynomial R}
+variable [Field R] {p q : Polynomial R}
 
 theorem is_unit_iff_degree_eq_zero : IsUnit p ↔ degree p = 0 :=
   ⟨degree_eq_zero_of_is_unit,
@@ -161,10 +161,10 @@ private theorem remainder_lt_aux (p : Polynomial R) (hq : q ≠ 0) : degree (mod
   by 
     rw [←degree_mul_leading_coeff_inv q hq] <;> exact degree_mod_by_monic_lt p (monic_mul_leading_coeff_inv hq)
 
-instance  : Div (Polynomial R) :=
+instance : Div (Polynomial R) :=
   ⟨div⟩
 
-instance  : Mod (Polynomial R) :=
+instance : Mod (Polynomial R) :=
   ⟨mod⟩
 
 theorem div_def : p / q = C (leading_coeff q⁻¹)*p /ₘ q*C (leading_coeff q⁻¹) :=
@@ -187,7 +187,7 @@ theorem mod_X_sub_C_eq_C_eval (p : Polynomial R) (a : R) : p % (X - C a) = C (p.
 theorem mul_div_eq_iff_is_root : ((X - C a)*p / (X - C a)) = p ↔ is_root p a :=
   div_by_monic_eq_div p (monic_X_sub_C a) ▸ mul_div_by_monic_eq_iff_is_root
 
-instance  : EuclideanDomain (Polynomial R) :=
+instance : EuclideanDomain (Polynomial R) :=
   { Polynomial.commRing, Polynomial.nontrivial with Quotient := · / ·,
     quotient_zero :=
       by 
@@ -332,7 +332,7 @@ theorem is_root_gcd_iff_is_root_left_right {f g : Polynomial R} {α : R} :
 
 theorem is_coprime_map [Field k] (f : R →+* k) : IsCoprime (p.map f) (q.map f) ↔ IsCoprime p q :=
   by 
-    rw [←gcd_is_unit_iff, ←gcd_is_unit_iff, gcd_map, is_unit_map]
+    rw [←EuclideanDomain.gcd_is_unit_iff, ←EuclideanDomain.gcd_is_unit_iff, gcd_map, is_unit_map]
 
 @[simp]
 theorem map_eq_zero [Semiringₓ S] [Nontrivial S] (f : R →+* S) : p.map f = 0 ↔ p = 0 :=
@@ -355,7 +355,7 @@ theorem mem_root_set [Field k] [Algebra R k] {x : k} (hp : p ≠ 0) : x ∈ p.ro
   Iff.trans Multiset.mem_to_finset (mem_roots_map hp)
 
 theorem root_set_C_mul_X_pow {R S : Type _} [Field R] [Field S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) {a : R}
-  (ha : a ≠ 0) : (C a*X ^ n).RootSet S = {0} :=
+  (ha : a ≠ 0) : (C a*X^n).RootSet S = {0} :=
   by 
     ext x 
     rw [Set.mem_singleton_iff, mem_root_set, aeval_mul, aeval_C, aeval_X_pow, mul_eq_zero]
@@ -371,9 +371,9 @@ theorem root_set_monomial {R S : Type _} [Field R] [Field S] [Algebra R S] {n : 
     rw [←C_mul_X_pow_eq_monomial, root_set_C_mul_X_pow hn ha]
 
 theorem root_set_X_pow {R S : Type _} [Field R] [Field S] [Algebra R S] {n : ℕ} (hn : n ≠ 0) :
-  (X ^ n : Polynomial R).RootSet S = {0} :=
+  (X^n : Polynomial R).RootSet S = {0} :=
   by 
-    rw [←one_mulₓ (X ^ n : Polynomial R), ←C_1, root_set_C_mul_X_pow hn]
+    rw [←one_mulₓ (X^n : Polynomial R), ←C_1, root_set_C_mul_X_pow hn]
     exact one_ne_zero
 
 theorem exists_root_of_degree_eq_one (h : degree p = 1) : ∃ x, is_root p x :=
@@ -519,7 +519,7 @@ theorem is_coprime_of_is_root_of_eval_derivative_ne_zero
 (a : K)
 (hf' : «expr ≠ »(f.derivative.eval a, 0)) : is_coprime («expr - »(X, C a) : polynomial K) «expr /ₘ »(f, «expr - »(X, C a)) :=
 begin
-  refine [expr or.resolve_left (dvd_or_coprime «expr - »(X, C a) «expr /ₘ »(f, «expr - »(X, C a)) (irreducible_of_degree_eq_one (polynomial.degree_X_sub_C a))) _],
+  refine [expr or.resolve_left (euclidean_domain.dvd_or_coprime «expr - »(X, C a) «expr /ₘ »(f, «expr - »(X, C a)) (irreducible_of_degree_eq_one (polynomial.degree_X_sub_C a))) _],
   contrapose ["!"] [ident hf', "with", ident h],
   have [ident key] [":", expr «expr = »(«expr * »(«expr - »(X, C a), «expr /ₘ »(f, «expr - »(X, C a))), «expr - »(f, «expr %ₘ »(f, «expr - »(X, C a))))] [],
   { rw ["[", expr eq_sub_iff_add_eq, ",", "<-", expr eq_sub_iff_add_eq', ",", expr mod_by_monic_eq_sub_mul_div, "]"] [],
@@ -533,7 +533,7 @@ end
 
 theorem prod_multiset_root_eq_finset_root {p : Polynomial R} (hzero : p ≠ 0) :
   (Multiset.map (fun a : R => X - C a) p.roots).Prod =
-    ∏a in Multiset.toFinset p.roots, (fun a : R => (X - C a) ^ root_multiplicity a p) a :=
+    ∏a in Multiset.toFinset p.roots, (fun a : R => X - C a^root_multiplicity a p) a :=
   by 
     simp only [count_roots hzero, Finset.prod_multiset_map_count]
 

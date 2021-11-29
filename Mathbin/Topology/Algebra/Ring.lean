@@ -1,6 +1,6 @@
 import Mathbin.Algebra.Ring.Prod 
 import Mathbin.RingTheory.Ideal.Quotient 
-import Mathbin.RingTheory.Subring 
+import Mathbin.RingTheory.Subring.Basic 
 import Mathbin.Topology.Algebra.Group
 
 /-!
@@ -30,15 +30,26 @@ open_locale Classical TopologicalSpace Filter
 
 section TopologicalRing
 
-variable(α : Type _)
+variable (α : Type _)
 
 /-- A topological (semi)ring is a (semi)ring `R` where addition and multiplication are continuous.
 If `R` is a ring, then negation is automatically continuous, as it is multiplication with `-1`. -/
-class TopologicalRing[TopologicalSpace α][Semiringₓ α] extends HasContinuousAdd α, HasContinuousMul α : Prop
+class TopologicalRing [TopologicalSpace α] [Semiringₓ α] extends HasContinuousAdd α, HasContinuousMul α : Prop
+
+instance (priority := 50) DiscreteTopology.topological_ring {α} [TopologicalSpace α] [Semiringₓ α]
+  [DiscreteTopology α] : TopologicalRing α :=
+  ⟨⟩
 
 section 
 
-variable{α}[TopologicalSpace α][Semiringₓ α][TopologicalRing α]
+variable {α} [TopologicalSpace α] [Semiringₓ α] [TopologicalRing α]
+
+namespace Subsemiring
+
+instance (S : Subsemiring α) : TopologicalRing S :=
+  { S.to_submonoid.has_continuous_mul, S.to_add_submonoid.has_continuous_add with  }
+
+end Subsemiring
 
 /-- The (topological-space) closure of a subsemiring of a topological semiring is
 itself a subsemiring. -/
@@ -67,10 +78,10 @@ theorem Subsemiring.topological_closure_minimal (s : Subsemiring α) {t : Subsem
 
 /-- The product topology on the cartesian product of two topological semirings
   makes the product into a topological semiring. -/
-instance  {β : Type _} [Semiringₓ β] [TopologicalSpace β] [TopologicalRing β] : TopologicalRing (α × β) :=
+instance {β : Type _} [Semiringₓ β] [TopologicalSpace β] [TopologicalRing β] : TopologicalRing (α × β) :=
   {  }
 
-instance  {β : Type _} {C : β → Type _} [∀ b, TopologicalSpace (C b)] [∀ b, Semiringₓ (C b)]
+instance {β : Type _} {C : β → Type _} [∀ b, TopologicalSpace (C b)] [∀ b, Semiringₓ (C b)]
   [∀ b, TopologicalRing (C b)] : TopologicalRing (∀ b, C b) :=
   {  }
 
@@ -78,7 +89,7 @@ end
 
 section 
 
-variable{R : Type _}[Ringₓ R][TopologicalSpace R]
+variable {R : Type _} [Ringₓ R] [TopologicalSpace R]
 
 -- error in Topology.Algebra.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem topological_ring.of_add_group_of_nhds_zero
@@ -126,9 +137,9 @@ end
 
 end 
 
-variable{α}[Ringₓ α][TopologicalSpace α][TopologicalRing α]
+variable {α} [Ringₓ α] [TopologicalSpace α] [TopologicalRing α]
 
-instance (priority := 100)TopologicalRing.to_topological_add_group : TopologicalAddGroup α :=
+instance (priority := 100) TopologicalRing.to_topological_add_group : TopologicalAddGroup α :=
   { continuous_add := continuous_add,
     continuous_neg :=
       by 
@@ -141,6 +152,13 @@ theorem mul_left_continuous (x : α) : Continuous (AddMonoidHom.mulLeft x) :=
 /-- In a topological ring, the right-multiplication `add_monoid_hom` is continuous. -/
 theorem mul_right_continuous (x : α) : Continuous (AddMonoidHom.mulRight x) :=
   continuous_id.mul continuous_const
+
+namespace Subring
+
+instance (S : Subring α) : TopologicalRing S :=
+  S.to_subsemiring.topological_ring
+
+end Subring
 
 /-- The (topological-space) closure of a subring of a topological semiring is
 itself a subring. -/
@@ -166,7 +184,7 @@ end TopologicalRing
 
 section TopologicalCommRing
 
-variable{α : Type _}[TopologicalSpace α][CommRingₓ α][TopologicalRing α]
+variable {α : Type _} [TopologicalSpace α] [CommRingₓ α] [TopologicalRing α]
 
 /-- The closure of an ideal in a topological ring as an ideal. -/
 def Ideal.closure (S : Ideal α) : Ideal α :=
@@ -181,7 +199,7 @@ end TopologicalCommRing
 
 section TopologicalRing
 
-variable{α : Type _}[TopologicalSpace α][CommRingₓ α](N : Ideal α)
+variable {α : Type _} [TopologicalSpace α] [CommRingₓ α] (N : Ideal α)
 
 open Ideal.Quotient
 
@@ -189,7 +207,7 @@ instance topologicalRingQuotientTopology : TopologicalSpace N.quotient :=
   by 
     dunfold Ideal.Quotient Submodule.Quotient <;> infer_instance
 
-variable[TopologicalRing α]
+variable [TopologicalRing α]
 
 theorem QuotientRing.is_open_map_coe : IsOpenMap (mk N) :=
   by 
@@ -230,11 +248,11 @@ universe u v
 /-- A ring topology on a ring `α` is a topology for which addition, negation and multiplication
 are continuous. -/
 @[ext]
-structure RingTopology(α : Type u)[Ringₓ α] extends TopologicalSpace α, TopologicalRing α : Type u
+structure RingTopology (α : Type u) [Ringₓ α] extends TopologicalSpace α, TopologicalRing α : Type u
 
 namespace RingTopology
 
-variable{α : Type _}[Ringₓ α]
+variable {α : Type _} [Ringₓ α]
 
 instance Inhabited {α : Type u} [Ringₓ α] : Inhabited (RingTopology α) :=
   ⟨{ toTopologicalSpace := ⊤, continuous_add := continuous_top, continuous_mul := continuous_top }⟩
@@ -247,7 +265,7 @@ theorem ext' {f g : RingTopology α} (h : f.is_open = g.is_open) : f = g :=
 
 /-- The ordering on ring topologies on the ring `α`.
   `t ≤ s` if every set open in `s` is also open in `t` (`t` is finer than `s`). -/
-instance  : PartialOrderₓ (RingTopology α) :=
+instance : PartialOrderₓ (RingTopology α) :=
   PartialOrderₓ.lift RingTopology.toTopologicalSpace$ ext
 
 local notation "cont" => @Continuous _ _
@@ -285,7 +303,7 @@ The infimum of a collection of ring topologies is the topology generated by all 
 
 The supremum of two ring topologies `s` and `t` is the infimum of the family of all ring topologies
 contained in the intersection of `s` and `t`. -/
-instance  : CompleteSemilatticeInf (RingTopology α) :=
+instance : CompleteSemilatticeInf (RingTopology α) :=
   { RingTopology.partialOrder with inf := def_Inf,
     Inf_le :=
       fun S a haS =>
@@ -299,7 +317,7 @@ instance  : CompleteSemilatticeInf (RingTopology α) :=
         rintro _ ⟨b, hbS, rfl⟩
         exact hab b hbS }
 
-instance  : CompleteLattice (RingTopology α) :=
+instance : CompleteLattice (RingTopology α) :=
   completeLatticeOfCompleteSemilatticeInf _
 
 /--  Given `f : α → β` and a topology on `α`, the coinduced ring topology on `β` is the finest

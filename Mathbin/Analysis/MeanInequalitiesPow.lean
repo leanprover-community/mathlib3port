@@ -41,7 +41,7 @@ open_locale Classical BigOperators Nnreal Ennreal
 
 noncomputable theory
 
-variable{ι : Type u}(s : Finset ι)
+variable {ι : Type u} (s : Finset ι)
 
 namespace Real
 
@@ -200,7 +200,7 @@ end Ennreal
 
 namespace Ennreal
 
-variable(f g : ι → ℝ≥0∞){p q : ℝ}
+variable (f g : ι → ℝ≥0∞) {p q : ℝ}
 
 -- error in Analysis.MeanInequalitiesPow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private

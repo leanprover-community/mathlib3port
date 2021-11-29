@@ -33,7 +33,7 @@ open Opposite
 
 open MonoidalCategory
 
-variable(V : Type v)[category.{w} V][monoidal_category V]
+variable (V : Type v) [category.{w} V] [monoidal_category V]
 
 -- error in CategoryTheory.Enriched.Basic: ././Mathport/Syntax/Translate/Basic.lean:990:29: unsupported: (notation) in structure
 /--
@@ -62,7 +62,7 @@ class enriched_category
 
 notation X " ⟶[" V "] " Y:10 => (enriched_category.hom X Y : V)
 
-variable(V){C : Type u₁}[enriched_category V C]
+variable (V) {C : Type u₁} [enriched_category V C]
 
 /--
 The `𝟙_ V`-shaped generalized element giving the identity in a `V`-enriched category.
@@ -91,7 +91,7 @@ theorem e_assoc (W X Y Z : C) :
 
 section 
 
-variable{V}{W : Type v}[category.{w} W][monoidal_category W]
+variable {V} {W : Type v} [category.{w} W] [monoidal_category W]
 
 /--
 A type synonym for `C`, which should come equipped with a `V`-enriched category structure.
@@ -102,7 +102,7 @@ obtained by applying the functor `F : lax_monoidal_functor V W` to each hom obje
 def transport_enrichment (F : lax_monoidal_functor V W) (C : Type u₁) :=
   C
 
-instance  (F : lax_monoidal_functor V W) : enriched_category W (transport_enrichment F C) :=
+instance (F : lax_monoidal_functor V W) : enriched_category W (transport_enrichment F C) :=
   { Hom := fun X Y : C => F.obj (X ⟶[V] Y), id := fun X : C => F.ε ≫ F.map (e_id V X),
     comp := fun X Y Z : C => F.μ _ _ ≫ F.map (e_comp V X Y Z),
     id_comp :=
@@ -188,7 +188,7 @@ def enriched_category_Type_equiv_category (C : Type u₁) : enriched_category (T
 
 section 
 
-variable{W : Type (v + 1)}[category.{v} W][monoidal_category W][enriched_category W C]
+variable {W : Type (v + 1)} [category.{v} W] [monoidal_category W] [enriched_category W C]
 
 /-- A type synonym for `C`, which should come equipped with a `V`-enriched category structure.
 In a moment we will equip this with the (honest) category structure
@@ -211,7 +211,7 @@ For `V = Algebra R`, the usual forgetful functor is coyoneda of `polynomial R`, 
 def forget_enrichment (W : Type (v + 1)) [category.{v} W] [monoidal_category W] (C : Type u₁) [enriched_category W C] :=
   C
 
-variable(W)
+variable (W)
 
 /-- Typecheck an object of `C` as an object of `forget_enrichment W C`. -/
 def forget_enrichment.of (X : C) : forget_enrichment W C :=
@@ -237,7 +237,7 @@ instance category_forget_enrichment : category (forget_enrichment W C) :=
 /--
 We verify that the morphism types in `forget_enrichment W C` are `(𝟙_ W) ⟶ (X ⟶[W] Y)`.
 -/
-example  (X Y : forget_enrichment W C) : (X ⟶ Y) = (𝟙_ W ⟶ forget_enrichment.to W X ⟶[W] forget_enrichment.to W Y) :=
+example (X Y : forget_enrichment W C) : (X ⟶ Y) = (𝟙_ W ⟶ forget_enrichment.to W X ⟶[W] forget_enrichment.to W Y) :=
   rfl
 
 /-- Typecheck a `(𝟙_ W)`-shaped `W`-morphism as a morphism in `forget_enrichment W C`. -/
@@ -283,7 +283,7 @@ A `V`-functor `F` between `V`-enriched categories
 has a `V`-morphism from `X ⟶[V] Y` to `F.obj X ⟶[V] F.obj Y`,
 satisfying the usual axioms.
 -/
-structure enriched_functor(C : Type u₁)[enriched_category V C](D : Type u₂)[enriched_category V D] where 
+structure enriched_functor (C : Type u₁) [enriched_category V C] (D : Type u₂) [enriched_category V D] where 
   obj : C → D 
   map : ∀ X Y : C, (X ⟶[V] Y) ⟶ obj X ⟶[V] obj Y 
   map_id' : ∀ X : C, e_id V X ≫ map X X = e_id V (obj X) :=  by 
@@ -306,7 +306,7 @@ attribute [simp, reassoc] enriched_functor.map_comp
 def enriched_functor.id (C : Type u₁) [enriched_category V C] : enriched_functor V C C :=
   { obj := fun X => X, map := fun X Y => 𝟙 _ }
 
-instance  : Inhabited (enriched_functor V C C) :=
+instance : Inhabited (enriched_functor V C C) :=
   ⟨enriched_functor.id V C⟩
 
 /-- Composition of enriched functors. -/
@@ -317,7 +317,7 @@ def enriched_functor.comp {C : Type u₁} {D : Type u₂} {E : Type u₃} [enric
 
 section 
 
-variable{W : Type (v + 1)}[category.{v} W][monoidal_category W]
+variable {W : Type (v + 1)} [category.{v} W] [monoidal_category W]
 
 /--
 An enriched functor induces an honest functor of the underlying categories,
@@ -348,9 +348,9 @@ end
 
 section 
 
-variable{V}
+variable {V}
 
-variable{D : Type u₂}[enriched_category V D]
+variable {D : Type u₂} [enriched_category V D]
 
 /-!
 We now turn to natural transformations between `V`-functors.
@@ -402,12 +402,12 @@ The type of `A`-graded natural transformations between `V`-functors `F` and `G`.
 This is the type of morphisms in `V` from `A` to the `V`-object of natural transformations.
 -/
 @[ext, nolint has_inhabited_instance]
-structure graded_nat_trans(A : center V)(F G : enriched_functor V C D) where 
+structure graded_nat_trans (A : center V) (F G : enriched_functor V C D) where 
   app : ∀ X : C, A.1 ⟶ F.obj X ⟶[V] G.obj X 
   naturality :
   ∀ X Y : C, (A.2.β (X ⟶[V] Y)).Hom ≫ (F.map X Y ⊗ app Y) ≫ e_comp V _ _ _ = (app X ⊗ G.map X Y) ≫ e_comp V _ _ _
 
-variable[braided_category V]
+variable [braided_category V]
 
 open BraidedCategory
 

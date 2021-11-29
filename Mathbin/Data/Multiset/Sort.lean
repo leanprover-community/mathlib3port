@@ -11,11 +11,11 @@ namespace Multiset
 
 open List
 
-variable{α : Type _}
+variable {α : Type _}
 
 section Sort
 
-variable(r : α → α → Prop)[DecidableRel r][IsTrans α r][IsAntisymm α r][IsTotal α r]
+variable (r : α → α → Prop) [DecidableRel r] [IsTrans α r] [IsAntisymm α r] [IsTotal α r]
 
 /-- `sort s` constructs a sorted list from the multiset `s`.
   (Uses merge sort algorithm.) -/
@@ -48,7 +48,7 @@ theorem length_sort {s : Multiset α} : (sort r s).length = s.card :=
 
 end Sort
 
-instance  [HasRepr α] : HasRepr (Multiset α) :=
+instance [HasRepr α] : HasRepr (Multiset α) :=
   ⟨fun s => "{" ++ Stringₓ.intercalate ", " ((s.map reprₓ).sort (· ≤ ·)) ++ "}"⟩
 
 end Multiset

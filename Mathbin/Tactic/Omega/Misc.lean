@@ -1,6 +1,6 @@
 import Mathbin.Tactic.Localized
 
-variable{α β γ : Type}
+variable {α β γ : Type}
 
 namespace Omega
 

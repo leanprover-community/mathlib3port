@@ -5,22 +5,22 @@ open Set Filter
 /-- A `cfilter α σ` is a realization of a filter (base) on `α`,
   represented by a type `σ` together with operations for the top element and
   the binary inf operation. -/
-structure Cfilter(α σ : Type _)[PartialOrderₓ α] where 
+structure Cfilter (α σ : Type _) [PartialOrderₓ α] where 
   f : σ → α 
   pt : σ 
   inf : σ → σ → σ 
   inf_le_left : ∀ a b : σ, f (inf a b) ≤ f a 
   inf_le_right : ∀ a b : σ, f (inf a b) ≤ f b
 
-variable{α : Type _}{β : Type _}{σ : Type _}{τ : Type _}
+variable {α : Type _} {β : Type _} {σ : Type _} {τ : Type _}
 
 namespace Cfilter
 
 section 
 
-variable[PartialOrderₓ α](F : Cfilter α σ)
+variable [PartialOrderₓ α] (F : Cfilter α σ)
 
-instance  : CoeFun (Cfilter α σ) fun _ => σ → α :=
+instance : CoeFun (Cfilter α σ) fun _ => σ → α :=
   ⟨Cfilter.f⟩
 
 @[simp]
@@ -63,7 +63,7 @@ theorem mem_to_filter_sets (F : Cfilter (Set α) σ) {a : Set α} : a ∈ F.to_f
 end Cfilter
 
 /-- A realizer for filter `f` is a cfilter which generates `f`. -/
-structure Filter.Realizer(f : Filter α) where 
+structure Filter.Realizer (f : Filter α) where 
   σ : Type _ 
   f : Cfilter (Set α) σ 
   Eq : F.to_filter = f

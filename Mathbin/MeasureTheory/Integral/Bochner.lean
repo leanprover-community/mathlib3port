@@ -148,13 +148,13 @@ attribute [local instance] fact_one_le_one_ennreal
 
 namespace MeasureTheory
 
-variable{α E F 𝕜 : Type _}
+variable {α E F 𝕜 : Type _}
 
 section WeightedSmul
 
 open ContinuousLinearMap
 
-variable[NormedGroup F][NormedSpace ℝ F]{m : MeasurableSpace α}{μ : Measureₓ α}
+variable [NormedGroup F] [NormedSpace ℝ F] {m : MeasurableSpace α} {μ : Measureₓ α}
 
 /-- Given a set `s`, return the continuous linear map `λ x, (μ s).to_real • x`. The extension of
 that set function through `set_to_L1` gives the Bochner integral of L1 functions. -/
@@ -232,7 +232,7 @@ namespace SimpleFunc
 
 section PosPart
 
-variable[LinearOrderₓ E][HasZero E][MeasurableSpace α]
+variable [LinearOrderₓ E] [HasZero E] [MeasurableSpace α]
 
 /-- Positive part of a simple function. -/
 def pos_part (f : α →ₛ E) : α →ₛ E :=
@@ -274,12 +274,8 @@ and prove basic property of this integral.
 
 open Finset
 
-variable[NormedGroup
-      E][MeasurableSpace
-      E][NormedGroup
-      F][NormedSpace ℝ
-      F]{p :
-    ℝ≥0∞}{G F' : Type _}[NormedGroup G][NormedGroup F'][NormedSpace ℝ F']{m : MeasurableSpace α}{μ : Measureₓ α}
+variable [NormedGroup E] [MeasurableSpace E] [NormedGroup F] [NormedSpace ℝ F] {p : ℝ≥0∞} {G F' : Type _}
+  [NormedGroup G] [NormedGroup F'] [NormedSpace ℝ F'] {m : MeasurableSpace α} {μ : Measureₓ α}
 
 /-- Bochner integral of simple functions whose codomain is a real `normed_space`.
 This is equal to `∑ x in f.range, (μ (f ⁻¹' {x})).to_real • x` (see `integral_eq`). -/
@@ -368,7 +364,7 @@ begin
   { simp [] [] [] ["[", expr hg0, "]"] [] [] }
 end
 
-variable[NormedField 𝕜][NormedSpace 𝕜 E][NormedSpace ℝ E][SmulCommClass ℝ 𝕜 E]
+variable [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace ℝ E] [SmulCommClass ℝ 𝕜 E]
 
 theorem integral_congr {f g : α →ₛ E} (hf : integrable f μ) (h : f =ᵐ[μ] g) : f.integral μ = g.integral μ :=
   set_to_simple_func_congr (weighted_smul μ) (fun s hs => weighted_smul_null) weighted_smul_union hf h
@@ -433,14 +429,10 @@ namespace L1
 
 open AeEqFun Lp.SimpleFunc Lp
 
-variable[NormedGroup
-      E][second_countable_topology
-      E][MeasurableSpace
-      E][BorelSpace
-      E][NormedGroup
-      F][second_countable_topology F][MeasurableSpace F][BorelSpace F]{m : MeasurableSpace α}{μ : Measureₓ α}
+variable [NormedGroup E] [second_countable_topology E] [MeasurableSpace E] [BorelSpace E] [NormedGroup F]
+  [second_countable_topology F] [MeasurableSpace F] [BorelSpace F] {m : MeasurableSpace α} {μ : Measureₓ α}
 
-variable{α E μ}
+variable {α E μ}
 
 namespace SimpleFunc
 
@@ -483,8 +475,8 @@ Define the Bochner integral on `α →₁ₛ[μ] E` by extension from the simple
 and prove basic properties of this integral. -/
 
 
-variable[NormedField
-      𝕜][NormedSpace 𝕜 E][NormedSpace ℝ E][SmulCommClass ℝ 𝕜 E]{F' : Type _}[NormedGroup F'][NormedSpace ℝ F']
+variable [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace ℝ E] [SmulCommClass ℝ 𝕜 E] {F' : Type _} [NormedGroup F']
+  [NormedSpace ℝ F']
 
 attribute [local instance] simple_func.normed_space
 
@@ -518,14 +510,10 @@ theorem norm_integral_le_norm (f : α →₁ₛ[μ] E) : ∥integral f∥ ≤ �
     rw [integral, norm_eq_integral]
     exact (to_simple_func f).norm_integral_le_integral_norm (simple_func.integrable f)
 
-variable{E' :
-    Type
-      _}[NormedGroup
-      E'][second_countable_topology
-      E'][MeasurableSpace
-      E'][BorelSpace E'][NormedSpace ℝ E'][NormedSpace 𝕜 E'][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable {E' : Type _} [NormedGroup E'] [second_countable_topology E'] [MeasurableSpace E'] [BorelSpace E']
+  [NormedSpace ℝ E'] [NormedSpace 𝕜 E'] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
-variable(α E μ 𝕜)
+variable (α E μ 𝕜)
 
 /-- The Bochner integral over simple functions in L1 space as a continuous linear map. -/
 def integral_clm' : (α →₁ₛ[μ] E) →L[𝕜] E :=
@@ -539,7 +527,7 @@ def integral_clm' : (α →₁ₛ[μ] E) →L[𝕜] E :=
 def integral_clm : (α →₁ₛ[μ] E) →L[ℝ] E :=
   integral_clm' α E ℝ μ
 
-variable{α E μ 𝕜}
+variable {α E μ 𝕜}
 
 local notation "Integral" => integral_clm α E μ
 
@@ -616,8 +604,8 @@ open SimpleFunc
 
 local notation "Integral" => @integral_clm α E _ _ _ _ _ μ _
 
-variable[NormedSpace ℝ
-      E][NondiscreteNormedField 𝕜][NormedSpace 𝕜 E][SmulCommClass ℝ 𝕜 E][NormedSpace ℝ F][CompleteSpace E]
+variable [NormedSpace ℝ E] [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] [NormedSpace ℝ F]
+  [CompleteSpace E]
 
 section IntegrationInL1
 
@@ -625,13 +613,13 @@ attribute [local instance] simple_func.normed_space
 
 open ContinuousLinearMap
 
-variable(𝕜)[MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable (𝕜) [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
 /-- The Bochner integral in L1 space as a continuous linear map. -/
 def integral_clm' : (α →₁[μ] E) →L[𝕜] E :=
   (integral_clm' α E 𝕜 μ).extend (coe_to_Lp α E 𝕜) (simple_func.dense_range one_ne_top) simple_func.uniform_inducing
 
-variable{𝕜}
+variable {𝕜}
 
 /-- The Bochner integral in L1 space as a continuous linear map over ℝ. -/
 def integral_clm : (α →₁[μ] E) →L[ℝ] E :=
@@ -652,13 +640,13 @@ theorem integral_eq_set_to_L1 (f : α →₁[μ] E) :
 theorem simple_func.integral_L1_eq_integral (f : α →₁ₛ[μ] E) : integral (f : α →₁[μ] E) = simple_func.integral f :=
   set_to_L1_eq_set_to_L1s_clm (dominated_fin_meas_additive_weighted_smul μ) f
 
-variable(α E)
+variable (α E)
 
 @[simp]
 theorem integral_zero : integral (0 : α →₁[μ] E) = 0 :=
   map_zero integral_clm
 
-variable{α E}
+variable {α E}
 
 theorem integral_add (f g : α →₁[μ] E) : integral (f+g) = integral f+integral g :=
   map_add integral_clm f g
@@ -724,16 +712,9 @@ functions, and 0 otherwise; prove its basic properties.
 -/
 
 
-variable[NormedGroup
-      E][second_countable_topology
-      E][NormedSpace ℝ
-      E][CompleteSpace
-      E][MeasurableSpace
-      E][BorelSpace
-      E][NondiscreteNormedField
-      𝕜][NormedSpace 𝕜
-      E][SmulCommClass ℝ 𝕜
-      E][NormedGroup F][second_countable_topology F][NormedSpace ℝ F][CompleteSpace F][MeasurableSpace F][BorelSpace F]
+variable [NormedGroup E] [second_countable_topology E] [NormedSpace ℝ E] [CompleteSpace E] [MeasurableSpace E]
+  [BorelSpace E] [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [SmulCommClass ℝ 𝕜 E] [NormedGroup F]
+  [second_countable_topology F] [NormedSpace ℝ F] [CompleteSpace F] [MeasurableSpace F] [BorelSpace F]
 
 /-- The Bochner integral -/
 def integral {m : MeasurableSpace α} (μ : Measureₓ α) (f : α → E) : E :=
@@ -756,7 +737,7 @@ section Properties
 
 open ContinuousLinearMap MeasureTheory.SimpleFunc
 
-variable{f g : α → E}{m : MeasurableSpace α}{μ : Measureₓ α}
+variable {f g : α → E} {m : MeasurableSpace α} {μ : Measureₓ α}
 
 theorem integral_eq (f : α → E) (hf : integrable f μ) : (∫a, f a ∂μ) = L1.integral (hf.to_L1 f) :=
   dif_pos hf
@@ -774,7 +755,7 @@ theorem integral_undef (h : ¬integrable f μ) : (∫a, f a ∂μ) = 0 :=
 theorem integral_non_ae_measurable (h : ¬AeMeasurable f μ) : (∫a, f a ∂μ) = 0 :=
   integral_undef$ not_and_of_not_left _ h
 
-variable(α E)
+variable (α E)
 
 theorem integral_zero : (∫a : α, (0 : E) ∂μ) = 0 :=
   set_to_fun_zero (dominated_fin_meas_additive_weighted_smul μ)
@@ -783,13 +764,23 @@ theorem integral_zero : (∫a : α, (0 : E) ∂μ) = 0 :=
 theorem integral_zero' : integral μ (0 : α → E) = 0 :=
   integral_zero α E
 
-variable{α E}
+variable {α E}
 
 theorem integral_add (hf : integrable f μ) (hg : integrable g μ) : (∫a, f a+g a ∂μ) = (∫a, f a ∂μ)+∫a, g a ∂μ :=
   set_to_fun_add (dominated_fin_meas_additive_weighted_smul μ) hf hg
 
 theorem integral_add' (hf : integrable f μ) (hg : integrable g μ) : (∫a, (f+g) a ∂μ) = (∫a, f a ∂μ)+∫a, g a ∂μ :=
   integral_add hf hg
+
+theorem integral_finset_sum {ι} (s : Finset ι) {f : ι → α → E} (hf : ∀ i _ : i ∈ s, integrable (f i) μ) :
+  (∫a, ∑i in s, f i a ∂μ) = ∑i in s, ∫a, f i a ∂μ :=
+  by 
+    induction' s using Finset.induction_on with i s hi ihs
+    ·
+      simp only [integral_zero, Finset.sum_empty]
+    ·
+      rw [Finset.forall_mem_insert] at hf 
+      simp only [Finset.sum_insert hi, ←ihs hf.2, integral_add hf.1 (integrable_finset_sum s hf.2)]
 
 theorem integral_neg (f : α → E) : (∫a, -f a ∂μ) = -∫a, f a ∂μ :=
   set_to_fun_neg (dominated_fin_meas_additive_weighted_smul μ) f
@@ -900,7 +891,46 @@ theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l
   tendsto_set_to_fun_filter_of_dominated_convergence (dominated_fin_meas_additive_weighted_smul μ) bound hF_meas h_bound
     bound_integrable h_lim
 
-variable{X : Type _}[TopologicalSpace X][first_countable_topology X]
+-- error in MeasureTheory.Integral.Bochner: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- Lebesgue dominated convergence theorem for series. -/
+theorem has_sum_integral_of_dominated_convergence
+{ι}
+[encodable ι]
+{F : ι → α → E}
+{f : α → E}
+(bound : ι → α → exprℝ())
+(hF_meas : ∀ n, ae_measurable (F n) μ)
+(h_bound : ∀ n, «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(«expr∥ ∥»(F n a), bound n a)))
+(bound_summable : «expr∀ᵐ ∂ , »((a), μ, summable (λ n, bound n a)))
+(bound_integrable : integrable (λ a, «expr∑' , »((n), bound n a)) μ)
+(h_lim : «expr∀ᵐ ∂ , »((a), μ, has_sum (λ
+   n, F n a) (f a))) : has_sum (λ n, «expr∫ , ∂ »((a), F n a, μ)) «expr∫ , ∂ »((a), f a, μ) :=
+begin
+  have [ident hb_nonneg] [":", expr «expr∀ᵐ ∂ , »((a), μ, ∀
+    n, «expr ≤ »(0, bound n a))] [":=", expr eventually_countable_forall.2 (λ
+    n, «expr $ »((h_bound n).mono, λ a, (norm_nonneg _).trans))],
+  have [ident hb_le_tsum] [":", expr ∀ n, «expr ≤ᵐ[ ] »(bound n, μ, λ a, «expr∑' , »((n), bound n a))] [],
+  { intro [ident n],
+    filter_upwards ["[", expr hb_nonneg, ",", expr bound_summable, "]"] [],
+    intros [ident a, ident ha0, ident ha_sum],
+    exact [expr le_tsum ha_sum _ (λ i _, ha0 i)] },
+  have [ident hF_integrable] [":", expr ∀ n, integrable (F n) μ] [],
+  { refine [expr λ n, bound_integrable.mono' (hF_meas n) _],
+    exact [expr eventually_le.trans (h_bound n) (hb_le_tsum n)] },
+  simp [] [] ["only"] ["[", expr has_sum, ",", "<-", expr integral_finset_sum _ (λ n _, hF_integrable n), "]"] [] [],
+  refine [expr tendsto_integral_filter_of_dominated_convergence (λ
+    a, «expr∑' , »((n), bound n a)) _ _ bound_integrable h_lim],
+  { exact [expr eventually_of_forall (λ s, «expr $ »(s.ae_measurable_sum, λ n hn, hF_meas n))] },
+  { refine [expr eventually_of_forall (λ s, _)],
+    filter_upwards ["[", expr eventually_countable_forall.2 h_bound, ",", expr hb_nonneg, ",", expr bound_summable, "]"] [],
+    intros [ident a, ident hFa, ident ha0, ident has],
+    calc
+      «expr ≤ »(«expr∥ ∥»(«expr∑ in , »((n), s, F n a)), «expr∑ in , »((n), s, bound n a)) : norm_sum_le_of_le _ (λ
+       n hn, hFa n)
+      «expr ≤ »(..., «expr∑' , »((n), bound n a)) : sum_le_tsum _ (λ n hn, ha0 n) has }
+end
+
+variable {X : Type _} [TopologicalSpace X] [first_countable_topology X]
 
 theorem continuous_at_of_dominated {F : X → α → E} {x₀ : X} {bound : α → ℝ}
   (hF_meas : ∀ᶠx in 𝓝 x₀, AeMeasurable (F x) μ) (h_bound : ∀ᶠx in 𝓝 x₀, ∀ᵐa ∂μ, ∥F x a∥ ≤ bound a)
@@ -1079,7 +1109,7 @@ theorem integral_pos_iff_support_of_nonneg {f : α → ℝ} (hf : 0 ≤ f) (hfi 
 
 section NormedGroup
 
-variable{H : Type _}[NormedGroup H][second_countable_topology H][MeasurableSpace H][BorelSpace H]
+variable {H : Type _} [NormedGroup H] [second_countable_topology H] [MeasurableSpace H] [BorelSpace H]
 
 theorem L1.norm_eq_integral_norm (f : α →₁[μ] H) : ∥f∥ = ∫a, ∥f a∥ ∂μ :=
   by 
@@ -1142,17 +1172,6 @@ theorem norm_integral_le_of_norm_le {f : α → E} {g : α → ℝ} (hg : integr
     _ ≤ ∫x, g x ∂μ := integral_mono_of_nonneg (eventually_of_forall$ fun x => norm_nonneg _) hg h
     
 
-theorem integral_finset_sum {ι} (s : Finset ι) {f : ι → α → E} (hf : ∀ i, integrable (f i) μ) :
-  (∫a, ∑i in s, f i a ∂μ) = ∑i in s, ∫a, f i a ∂μ :=
-  by 
-    refine' Finset.induction_on s _ _
-    ·
-      simp only [integral_zero, Finset.sum_empty]
-    ·
-      intro i s his ih 
-      simp only [his, Finset.sum_insert, not_false_iff]
-      rw [integral_add (hf _) (integrable_finset_sum s hf), ih]
-
 theorem simple_func.integral_eq_integral (f : α →ₛ E) (hfi : integrable f μ) : f.integral μ = ∫x, f x ∂μ :=
   by 
     rw [integral_eq f hfi, ←L1.simple_func.to_Lp_one_eq_to_L1, L1.simple_func.integral_L1_eq_integral,
@@ -1201,7 +1220,7 @@ begin
   simpa [] [] ["only"] ["[", expr simple_func.integral_eq_integral, ",", expr simple_func.integrable_approx_on_univ fmeas hf, "]"] [] []
 end
 
-variable{ν : Measureₓ α}
+variable {ν : Measureₓ α}
 
 -- error in MeasureTheory.Integral.Bochner: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private
@@ -1358,9 +1377,9 @@ end Properties
 
 section Groupₓ
 
-variable{G : Type _}[MeasurableSpace G][TopologicalSpace G][Groupₓ G][HasContinuousMul G][BorelSpace G]
+variable {G : Type _} [MeasurableSpace G] [TopologicalSpace G] [Groupₓ G] [HasContinuousMul G] [BorelSpace G]
 
-variable{μ : Measureₓ G}
+variable {μ : Measureₓ G}
 
 open Measureₓ
 
@@ -1448,7 +1467,7 @@ attribute [irreducible] integral L1.integral
 
 section IntegralTrim
 
-variable{H β γ : Type _}[NormedGroup H][MeasurableSpace H]{m m0 : MeasurableSpace β}{μ : Measureₓ β}
+variable {H β γ : Type _} [NormedGroup H] [MeasurableSpace H] {m m0 : MeasurableSpace β} {μ : Measureₓ β}
 
 /-- Simple function seen as simple function of a larger `measurable_space`. -/
 def simple_func.to_larger_space (hm : m ≤ m0) (f : @simple_func β m γ) : simple_func β γ :=
@@ -1481,7 +1500,7 @@ begin
   have [ident hf] [":", expr @measurable _ _ m _ f] [],
   from [expr @simple_func.measurable β F m _ f],
   have [ident hf_int_m] [] [":=", expr hf_int.trim hm hf],
-  rw ["[", expr integral_simple_func_larger_space le_rfl f hf_int_m, ",", expr integral_simple_func_larger_space hm f hf_int, "]"] [],
+  rw ["[", expr integral_simple_func_larger_space (le_refl m) f hf_int_m, ",", expr integral_simple_func_larger_space hm f hf_int, "]"] [],
   congr,
   ext1 [] [ident x],
   congr,

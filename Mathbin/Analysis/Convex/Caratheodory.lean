@@ -38,7 +38,7 @@ open_locale BigOperators
 
 universe u
 
-variable{𝕜 : Type _}{E : Type u}[LinearOrderedField 𝕜][AddCommGroupₓ E][Module 𝕜 E]
+variable {𝕜 : Type _} {E : Type u} [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
 
 namespace Caratheodory
 
@@ -94,7 +94,7 @@ begin
     simp [] [] ["only"] ["[", expr sub_smul, ",", expr mul_smul, ",", expr sum_sub_distrib, ",", "<-", expr smul_sum, ",", expr gcombo, ",", expr smul_zero, ",", expr sub_zero, ",", expr center_mass, ",", expr fsum, ",", expr inv_one, ",", expr one_smul, ",", expr id.def, "]"] [] [] }
 end
 
-variable{s : Set E}{x : E}(hx : x ∈ convexHull 𝕜 s)
+variable {s : Set E} {x : E} (hx : x ∈ convexHull 𝕜 s)
 
 include hx
 
@@ -138,7 +138,7 @@ end
 
 end Caratheodory
 
-variable{s : Set E}
+variable {s : Set E}
 
 /-- **Carathéodory's convexity theorem** -/
 theorem convex_hull_eq_union :
@@ -154,7 +154,7 @@ theorem convex_hull_eq_union :
           Caratheodory.affine_independent_min_card_finset_of_mem_convex_hull hx,
           Caratheodory.mem_min_card_finset_of_mem_convex_hull hx⟩
     ·
-      iterate 3
+      iterate 3 
         convert Set.Union_subset _ 
         intro 
       exact convex_hull_mono ‹_›

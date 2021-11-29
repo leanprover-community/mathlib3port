@@ -35,7 +35,7 @@ section RealDerivOfComplex
 
 open Complex
 
-variable{e : ℂ → ℂ}{e' : ℂ}{z : ℝ}
+variable {e : ℂ → ℂ} {e' : ℂ} {z : ℝ}
 
 -- error in Analysis.Complex.RealDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a complex function is differentiable at a real point, then the induced real function is also
@@ -77,7 +77,7 @@ theorem TimesContDiff.real_of_complex {n : WithTop ℕ} (h : TimesContDiff ℂ n
   TimesContDiff ℝ n fun x : ℝ => (e x).re :=
   times_cont_diff_iff_times_cont_diff_at.2$ fun x => h.times_cont_diff_at.real_of_complex
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℂ E]
+variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E]
 
 theorem HasStrictDerivAt.complex_to_real_fderiv' {f : ℂ → E} {x : ℂ} {f' : E} (h : HasStrictDerivAt f f' x) :
   HasStrictFderivAt f (re_clm.smulRight f'+I • im_clm.smulRight f') x :=
@@ -120,7 +120,7 @@ open Complex ContinuousLinearMap
 
 open_locale ComplexConjugate
 
-variable()
+variable ()
 
 /-- A real differentiable function of the complex plane into some complex normed space `E` is
     conformal at a point `z` if it is holomorphic at that point with a nonvanishing differential.

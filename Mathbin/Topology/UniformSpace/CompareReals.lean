@@ -99,7 +99,7 @@ but they are not definitionaly equal, so it would confuse the type class system 
 also human readers). -/ @[derive #[expr comm_ring], derive #[expr inhabited]] def Q :=
 exprℚ()
 
-instance  : UniformSpace Q :=
+instance : UniformSpace Q :=
   IsAbsoluteValue.uniformSpace (abs : ℚ → ℚ)
 
 -- error in Topology.UniformSpace.CompareReals: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited

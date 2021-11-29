@@ -72,9 +72,9 @@ noncomputable theory
 
 universe u v v' v'' u₁' w w'
 
-variable{K : Type u}{V V₁ V₂ V₃ : Type v}{V' V'₁ : Type v'}{V'' : Type v''}
+variable {K : Type u} {V V₁ V₂ V₃ : Type v} {V' V'₁ : Type v'} {V'' : Type v''}
 
-variable{ι : Type w}{ι' : Type w'}{η : Type u₁'}{φ : η → Type _}
+variable {ι : Type w} {ι' : Type w'} {η : Type u₁'} {φ : η → Type _}
 
 open_locale Classical BigOperators Cardinal
 
@@ -84,11 +84,11 @@ section Module
 
 section 
 
-variable[Semiringₓ K][AddCommMonoidₓ V][Module K V]
+variable [Semiringₓ K] [AddCommMonoidₓ V] [Module K V]
 
 include K
 
-variable(K V)
+variable (K V)
 
 /-- The rank of a module, defined as a term of type `cardinal`.
 
@@ -110,13 +110,13 @@ end
 
 section 
 
-variable{R : Type u}[Ringₓ R]
+variable {R : Type u} [Ringₓ R]
 
-variable{M : Type v}[AddCommGroupₓ M][Module R M]
+variable {M : Type v} [AddCommGroupₓ M] [Module R M]
 
-variable{M' : Type v'}[AddCommGroupₓ M'][Module R M']
+variable {M' : Type v'} [AddCommGroupₓ M'] [Module R M']
 
-variable{M₁ : Type v}[AddCommGroupₓ M₁][Module R M₁]
+variable {M₁ : Type v} [AddCommGroupₓ M₁] [Module R M₁]
 
 theorem LinearMap.lift_dim_le_of_injective (f : M →ₗ[R] M') (i : injective f) :
   Cardinal.lift.{v'} (Module.rank R M) ≤ Cardinal.lift.{v} (Module.rank R M') :=
@@ -202,7 +202,7 @@ theorem LinearEquiv.dim_map_eq (f : M ≃ₗ[R] M₁) (p : Submodule R M) :
   Module.rank R (p.map (f : M →ₗ[R] M₁)) = Module.rank R p :=
   (f.of_submodule p).dim_eq.symm
 
-variable(R M)
+variable (R M)
 
 -- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp] theorem dim_top : «expr = »(module.rank R («expr⊤»() : submodule R M), module.rank R M) :=
@@ -211,7 +211,7 @@ begin
   rw [expr this.dim_eq] []
 end
 
-variable{R M}
+variable {R M}
 
 theorem dim_range_of_surjective (f : M →ₗ[R] M') (h : surjective f) : Module.rank R f.range = Module.rank R M' :=
   by 
@@ -230,7 +230,7 @@ theorem LinearMap.dim_le_of_surjective (f : M →ₗ[R] M₁) (h : surjective f)
 theorem dim_quotient_le (p : Submodule R M) : Module.rank R p.quotient ≤ Module.rank R M :=
   (mkq p).dim_le_of_surjective (surjective_quot_mk _)
 
-variable[Nontrivial R]
+variable [Nontrivial R]
 
 theorem cardinal_lift_le_dim_of_linear_independent.{m} {ι : Type w} {v : ι → M} (hv : LinearIndependent R v) :
   Cardinal.lift.{max v m} (# ι) ≤ Cardinal.lift.{max w m} (Module.rank R M) :=
@@ -258,7 +258,7 @@ theorem cardinal_le_dim_of_linear_independent' {s : Set M} (hs : LinearIndepende
   # s ≤ Module.rank R M :=
   cardinal_le_dim_of_linear_independent hs
 
-variable(R M)
+variable (R M)
 
 -- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp] theorem dim_punit : «expr = »(module.rank R punit, 0) :=
@@ -281,7 +281,7 @@ begin
   rw ["[", expr this.dim_eq, ",", expr dim_punit, "]"] []
 end
 
-variable{R M}
+variable {R M}
 
 -- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -434,9 +434,9 @@ end
 
 section rank_zero
 
-variable{R : Type u}{M : Type v}
+variable {R : Type u} {M : Type v}
 
-variable[Ringₓ R][Nontrivial R][AddCommGroupₓ M][Module R M][NoZeroSmulDivisors R M]
+variable [Ringₓ R] [Nontrivial R] [AddCommGroupₓ M] [Module R M] [NoZeroSmulDivisors R M]
 
 -- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem dim_zero_iff_forall_zero : «expr ↔ »(«expr = »(module.rank R M, 0), ∀ x : M, «expr = »(x, 0)) :=
@@ -474,9 +474,9 @@ end rank_zero
 
 section InvariantBasisNumber
 
-variable{R : Type u}[Ringₓ R][InvariantBasisNumber R]
+variable {R : Type u} [Ringₓ R] [InvariantBasisNumber R]
 
-variable{M : Type v}[AddCommGroupₓ M][Module R M]
+variable {M : Type v} [AddCommGroupₓ M] [Module R M]
 
 -- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The dimension theorem: if `v` and `v'` are two bases, their index types
@@ -519,9 +519,9 @@ end InvariantBasisNumber
 
 section RankCondition
 
-variable{R : Type u}[Ringₓ R][RankCondition R]
+variable {R : Type u} [Ringₓ R] [RankCondition R]
 
-variable{M : Type v}[AddCommGroupₓ M][Module R M]
+variable {M : Type v} [AddCommGroupₓ M] [Module R M]
 
 /--
 An auxiliary lemma for `basis.le_span`.
@@ -604,9 +604,9 @@ end RankCondition
 
 section StrongRankCondition
 
-variable{R : Type u}[Ringₓ R][StrongRankCondition R]
+variable {R : Type u} [Ringₓ R] [StrongRankCondition R]
 
-variable{M : Type v}[AddCommGroupₓ M][Module R M]
+variable {M : Type v} [AddCommGroupₓ M] [Module R M]
 
 open Submodule
 
@@ -920,7 +920,7 @@ begin
   exact [expr le_antisymm (b.card_le_card_of_linear_independent (c.linear_independent.map' (submodule.subtype I) (linear_map.ker_eq_bot.mpr subtype.coe_injective))) (c.card_le_card_of_linear_independent this)]
 end
 
-variable(R)
+variable (R)
 
 @[simp]
 theorem dim_self : Module.rank R R = 1 :=
@@ -931,16 +931,16 @@ end StrongRankCondition
 
 section DivisionRing
 
-variable[DivisionRing K][AddCommGroupₓ V][Module K V][AddCommGroupₓ V₁][Module K V₁]
+variable [DivisionRing K] [AddCommGroupₓ V] [Module K V] [AddCommGroupₓ V₁] [Module K V₁]
 
-variable{K V}
+variable {K V}
 
 /-- If a vector space has a finite dimension, the index set of `basis.of_vector_space` is finite. -/
 theorem Basis.finite_of_vector_space_index_of_dim_lt_omega (h : Module.rank K V < ω) :
   (Basis.OfVectorSpaceIndex K V).Finite :=
   finite_def.2$ (Basis.ofVectorSpace K V).nonempty_fintype_index_of_dim_lt_omega h
 
-variable[AddCommGroupₓ V'][Module K V']
+variable [AddCommGroupₓ V'] [Module K V']
 
 -- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two vector spaces are isomorphic if they have the same dimension. -/
@@ -960,7 +960,7 @@ theorem nonempty_linear_equiv_of_dim_eq (cond : Module.rank K V = Module.rank K 
 
 section 
 
-variable(V V' V₁)
+variable (V V' V₁)
 
 /-- Two vector spaces are isomorphic if they have the same dimension. -/
 def LinearEquiv.ofLiftDimEq (cond : Cardinal.lift.{v'} (Module.rank K V) = Cardinal.lift.{v} (Module.rank K V')) :
@@ -1006,9 +1006,9 @@ theorem dim_prod : Module.rank K (V × V₁) = Module.rank K V+Module.rank K V�
 
 section Fintype
 
-variable[Fintype η]
+variable [Fintype η]
 
-variable[∀ i, AddCommGroupₓ (φ i)][∀ i, Module K (φ i)]
+variable [∀ i, AddCommGroupₓ (φ i)] [∀ i, Module K (φ i)]
 
 open LinearMap
 
@@ -1043,11 +1043,11 @@ end DivisionRing
 
 section Field
 
-variable[Field K][AddCommGroupₓ V][Module K V][AddCommGroupₓ V₁][Module K V₁]
+variable [Field K] [AddCommGroupₓ V] [Module K V] [AddCommGroupₓ V₁] [Module K V₁]
 
-variable[AddCommGroupₓ V'][Module K V']
+variable [AddCommGroupₓ V'] [Module K V']
 
-variable{K V}
+variable {K V}
 
 theorem dim_quotient_add_dim (p : Submodule K V) : (Module.rank K p.quotient+Module.rank K p) = Module.rank K V :=
   by 
@@ -1072,9 +1072,9 @@ theorem dim_eq_of_surjective (f : V →ₗ[K] V₁) (h : surjective f) :
 
 section 
 
-variable[AddCommGroupₓ V₂][Module K V₂]
+variable [AddCommGroupₓ V₂] [Module K V₂]
 
-variable[AddCommGroupₓ V₃][Module K V₃]
+variable [AddCommGroupₓ V₃] [Module K V₃]
 
 open LinearMap
 
@@ -1181,7 +1181,7 @@ theorem rank_finset_sum_le {η} (s : Finset η) (f : η → V →ₗ[K] V') : ra
   @Finset.sum_hom_rel _ _ _ _ _ (fun a b => rank a ≤ b) f (fun d => rank (f d)) s (le_of_eqₓ rank_zero)
     fun i g c h => le_transₓ (rank_add_le _ _) (add_le_add_left h _)
 
-variable[AddCommGroupₓ V''][Module K V'']
+variable [AddCommGroupₓ V''] [Module K V'']
 
 theorem rank_comp_le1 (g : V →ₗ[K] V') (f : V' →ₗ[K] V'') : rank (f.comp g) ≤ rank f :=
   by 
@@ -1189,7 +1189,7 @@ theorem rank_comp_le1 (g : V →ₗ[K] V') (f : V' →ₗ[K] V'') : rank (f.comp
     rw [LinearMap.range_comp]
     exact LinearMap.map_le_range
 
-variable[AddCommGroupₓ V'₁][Module K V'₁]
+variable [AddCommGroupₓ V'₁] [Module K V'₁]
 
 theorem rank_comp_le2 (g : V →ₗ[K] V') (f : V' →ₗ[K] V'₁) : rank (f.comp g) ≤ rank g :=
   by 

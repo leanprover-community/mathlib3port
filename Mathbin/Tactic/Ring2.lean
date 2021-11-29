@@ -40,7 +40,7 @@ expressions - see `horner_expr` for a normal form. -/ @[derive #[expr has_reflec
 
 namespace CsringExpr
 
-instance  : Inhabited csring_expr :=
+instance : Inhabited csring_expr :=
   ⟨const 0⟩
 
 /-- Evaluates a reflected `csring_expr` into an element of the
@@ -72,13 +72,13 @@ def is_cs : horner_expr → Prop
 | const n => ∃ m : Num, n = m.to_znum
 | horner a x n b => is_cs a ∧ is_cs b
 
-instance  : HasZero horner_expr :=
+instance : HasZero horner_expr :=
   ⟨const 0⟩
 
-instance  : HasOne horner_expr :=
+instance : HasOne horner_expr :=
   ⟨const 1⟩
 
-instance  : Inhabited horner_expr :=
+instance : Inhabited horner_expr :=
   ⟨0⟩
 
 /-- Represent a `csring_expr.atom` in Horner form. -/
@@ -89,7 +89,7 @@ def toString : horner_expr → Stringₓ
 | const n => _root_.repr n
 | horner a x n b => "(" ++ toString a ++ ") * x" ++ _root_.repr x ++ "^" ++ _root_.repr n ++ " + " ++ toString b
 
-instance  : HasToString horner_expr :=
+instance : HasToString horner_expr :=
   ⟨toString⟩
 
 /-- Alternative constructor for (horner a x n b) which maintains canonical
@@ -158,13 +158,13 @@ def mul : horner_expr → horner_expr → horner_expr
 | const n₁ => mul_const n₁
 | horner a₁ x₁ n₁ b₁ => mul_aux a₁ x₁ n₁ b₁ (mul a₁) (mul b₁)
 
-instance  : Add horner_expr :=
+instance : Add horner_expr :=
   ⟨add⟩
 
-instance  : Neg horner_expr :=
+instance : Neg horner_expr :=
   ⟨neg⟩
 
-instance  : Mul horner_expr :=
+instance : Mul horner_expr :=
   ⟨mul⟩
 
 def pow (e : horner_expr) : Num → horner_expr

@@ -24,16 +24,16 @@ We also add an `instance`:
 -/
 
 
-variable{R R' M M' : Type _}
+variable {R R' M M' : Type _}
 
 section HasZero
 
-variable(R M)
+variable (R M)
 
 /--  `smul_with_zero` is a class consisting of a Type `R` with `0 ∈ R` and a scalar multiplication
 of `R` on a Type `M` with `0`, such that the equality `r • m = 0` holds if at least one among `r`
 or `m` equals `0`. -/
-class SmulWithZero[HasZero R][HasZero M] extends HasScalar R M where 
+class SmulWithZero [HasZero R] [HasZero M] extends HasScalar R M where 
   smul_zero : ∀ r : R, r • (0 : M) = 0
   zero_smul : ∀ m : M, (0 : R) • m = 0
 
@@ -47,20 +47,20 @@ instance MulZeroClass.toOppositeSmulWithZero [MulZeroClass R] : SmulWithZero («
 instance AddMonoidₓ.toSmulWithZero [AddMonoidₓ M] : SmulWithZero ℕ M :=
   { smul_zero := nsmul_zero, zero_smul := zero_nsmul }
 
-variable(R){M}[HasZero R][HasZero M][SmulWithZero R M]
+variable (R) {M} [HasZero R] [HasZero M] [SmulWithZero R M]
 
 @[simp]
 theorem zero_smul (m : M) : (0 : R) • m = 0 :=
   SmulWithZero.zero_smul m
 
-variable{R}(M)
+variable {R} (M)
 
 /-- Note that this lemma has different typeclass assumptions to `smul_zero`. -/
 @[simp]
 theorem smul_zero' (r : R) : r • (0 : M) = 0 :=
   SmulWithZero.smul_zero r
 
-variable{R M}[HasZero R'][HasZero M'][HasScalar R M']
+variable {R M} [HasZero R'] [HasZero M'] [HasScalar R M']
 
 /-- Pullback a `smul_with_zero` structure along an injective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
@@ -95,7 +95,7 @@ protected def Function.Surjective.smulWithZero (f : ZeroHom M M') (hf : Function
         by 
           simp only [←f.map_zero, ←smul, smul_zero'] }
 
-variable(M)
+variable (M)
 
 /-- Compose a `smul_with_zero` with a `zero_hom`, with action `f r' • m` -/
 def SmulWithZero.compHom (f : ZeroHom R' R) : SmulWithZero R' M :=
@@ -113,9 +113,9 @@ end HasZero
 
 section MonoidWithZeroₓ
 
-variable[MonoidWithZeroₓ R][MonoidWithZeroₓ R'][HasZero M]
+variable [MonoidWithZeroₓ R] [MonoidWithZeroₓ R'] [HasZero M]
 
-variable(R M)
+variable (R M)
 
 /--  An action of a monoid with zero `R` on a Type `M`, also with `0`, extends `mul_action` and
 is compatible with `0` (both in `R` and in `M`), with `1 ∈ R`, and with associativity of
@@ -124,7 +124,7 @@ class MulActionWithZero extends MulAction R M where
   smul_zero : ∀ r : R, r • (0 : M) = 0
   zero_smul : ∀ m : M, (0 : R) • m = 0
 
-instance (priority := 100)MulActionWithZero.toSmulWithZero [m : MulActionWithZero R M] : SmulWithZero R M :=
+instance (priority := 100) MulActionWithZero.toSmulWithZero [m : MulActionWithZero R M] : SmulWithZero R M :=
   { m with  }
 
 /-- See also `semiring.to_module` -/
@@ -136,7 +136,7 @@ instance MonoidWithZeroₓ.toMulActionWithZero : MulActionWithZero R R :=
 instance MonoidWithZeroₓ.toOppositeMulActionWithZero : MulActionWithZero («expr ᵐᵒᵖ» R) R :=
   { MulZeroClass.toOppositeSmulWithZero R, Monoidₓ.toOppositeMulAction R with  }
 
-variable{R M}[MulActionWithZero R M][HasZero M'][HasScalar R M']
+variable {R M} [MulActionWithZero R M] [HasZero M'] [HasScalar R M']
 
 /-- Pullback a `mul_action_with_zero` structure along an injective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
@@ -152,7 +152,7 @@ protected def Function.Surjective.mulActionWithZero (f : ZeroHom M M') (hf : Fun
   (smul : ∀ a : R b, f (a • b) = a • f b) : MulActionWithZero R M' :=
   { hf.mul_action f smul, hf.smul_with_zero f smul with  }
 
-variable(M)
+variable (M)
 
 /-- Compose a `mul_action_with_zero` with a `monoid_with_zero_hom`, with action `f r' • m` -/
 def MulActionWithZero.compHom (f : MonoidWithZeroHom R' R) : MulActionWithZero R' M :=

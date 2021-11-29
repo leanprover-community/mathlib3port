@@ -40,15 +40,15 @@ open_locale BigOperators
 
 section 
 
-variable{k : Type u}[CommRingₓ k]{G : Type u}[Groupₓ G]
+variable {k : Type u} [CommRingₓ k] {G : Type u} [Groupₓ G]
 
-variable{V : Type u}[AddCommGroupₓ V][Module k V][Module (MonoidAlgebra k G) V]
+variable {V : Type u} [AddCommGroupₓ V] [Module k V] [Module (MonoidAlgebra k G) V]
 
-variable[IsScalarTower k (MonoidAlgebra k G) V]
+variable [IsScalarTower k (MonoidAlgebra k G) V]
 
-variable{W : Type u}[AddCommGroupₓ W][Module k W][Module (MonoidAlgebra k G) W]
+variable {W : Type u} [AddCommGroupₓ W] [Module k W] [Module (MonoidAlgebra k G) W]
 
-variable[IsScalarTower k (MonoidAlgebra k G) W]
+variable [IsScalarTower k (MonoidAlgebra k G) W]
 
 /-!
 We now do the key calculation in Maschke's theorem.
@@ -66,7 +66,7 @@ $$ \frac{1}{|G|} \sum_{g \in G} g⁻¹ • π(g • -). $$
 
 namespace LinearMap
 
-variable(π : W →ₗ[k] V)
+variable (π : W →ₗ[k] V)
 
 include π
 
@@ -76,7 +76,7 @@ We define the conjugate of `π` by `g`, as a `k`-linear map.
 def conjugate (g : G) : W →ₗ[k] V :=
   ((group_smul.linear_map k V (g⁻¹)).comp π).comp (group_smul.linear_map k W g)
 
-variable(i : V →ₗ[MonoidAlgebra k G] W)(h : ∀ v : V, π (i v) = v)
+variable (i : V →ₗ[MonoidAlgebra k G] W) (h : ∀ v : V, π (i v) = v)
 
 section 
 
@@ -91,7 +91,7 @@ theorem conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v :=
 
 end 
 
-variable(G)[Fintype G]
+variable (G) [Fintype G]
 
 /--
 The sum of the conjugates of `π` by each element `g : G`, as a `k`-linear map.
@@ -118,7 +118,7 @@ def sum_of_conjugates_equivariant : W →ₗ[MonoidAlgebra k G] V :=
 
 section 
 
-variable[inv : Invertible (Fintype.card G : k)]
+variable [inv : Invertible (Fintype.card G : k)]
 
 include inv
 
@@ -147,9 +147,9 @@ end
 
 namespace CharZero
 
-variable{k : Type u}[Field k]{G : Type u}[Fintype G][Groupₓ G][CharZero k]
+variable {k : Type u} [Field k] {G : Type u} [Fintype G] [Groupₓ G] [CharZero k]
 
-instance  : Invertible (Fintype.card G : k) :=
+instance : Invertible (Fintype.card G : k) :=
   invertibleOfRingCharNotDvd
     (by 
       simp [Fintype.card_eq_zero_iff])
@@ -158,17 +158,17 @@ end CharZero
 
 namespace MonoidAlgebra
 
-variable{k : Type u}[Field k]{G : Type u}[Fintype G][Invertible (Fintype.card G : k)]
+variable {k : Type u} [Field k] {G : Type u} [Fintype G] [Invertible (Fintype.card G : k)]
 
-variable[Groupₓ G]
+variable [Groupₓ G]
 
-variable{V : Type u}[AddCommGroupₓ V][Module k V][Module (MonoidAlgebra k G) V]
+variable {V : Type u} [AddCommGroupₓ V] [Module k V] [Module (MonoidAlgebra k G) V]
 
-variable[IsScalarTower k (MonoidAlgebra k G) V]
+variable [IsScalarTower k (MonoidAlgebra k G) V]
 
-variable{W : Type u}[AddCommGroupₓ W][Module k W][Module (MonoidAlgebra k G) W]
+variable {W : Type u} [AddCommGroupₓ W] [Module k W] [Module (MonoidAlgebra k G) W]
 
-variable[IsScalarTower k (MonoidAlgebra k G) W]
+variable [IsScalarTower k (MonoidAlgebra k G) W]
 
 -- error in RepresentationTheory.Maschke: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_left_inverse_of_injective

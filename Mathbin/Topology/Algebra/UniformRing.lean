@@ -33,26 +33,26 @@ namespace UniformSpace.Completion
 
 open DenseInducing UniformSpace Function
 
-variable(α : Type _)[Ringₓ α][UniformSpace α]
+variable (α : Type _) [Ringₓ α] [UniformSpace α]
 
-instance  : HasOne (completion α) :=
+instance : HasOne (completion α) :=
   ⟨(1 : α)⟩
 
-instance  : Mul (completion α) :=
+instance : Mul (completion α) :=
   ⟨curry$ (dense_inducing_coe.Prod dense_inducing_coe).extend (coeₓ ∘ uncurry (·*·))⟩
 
 @[normCast]
 theorem coe_one : ((1 : α) : completion α) = 1 :=
   rfl
 
-variable{α}[TopologicalRing α]
+variable {α} [TopologicalRing α]
 
 @[normCast]
 theorem coe_mul (a b : α) : ((a*b : α) : completion α) = a*b :=
   ((dense_inducing_coe.Prod dense_inducing_coe).extend_eq ((continuous_coe α).comp (@continuous_mul α _ _ _))
       (a, b)).symm
 
-variable[UniformAddGroup α]
+variable [UniformAddGroup α]
 
 -- error in Topology.Algebra.UniformRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_mul : continuous (λ p : «expr × »(completion α, completion α), «expr * »(p.1, p.2)) :=
@@ -71,7 +71,7 @@ theorem Continuous.mul {β : Type _} [TopologicalSpace β] {f g : β → complet
   (hg : Continuous g) : Continuous fun b => f b*g b :=
   continuous_mul.comp (hf.prod_mk hg : _)
 
-instance  : Ringₓ (completion α) :=
+instance : Ringₓ (completion α) :=
   { completion.add_comm_group, completion.has_mul α, completion.has_one α with
     one_mul :=
       fun a =>
@@ -128,7 +128,8 @@ theorem continuous_coe_ring_hom : Continuous (coe_ring_hom : α → completion �
 
 universe u
 
-variable{β : Type u}[UniformSpace β][Ringₓ β][UniformAddGroup β][TopologicalRing β](f : α →+* β)(hf : Continuous f)
+variable {β : Type u} [UniformSpace β] [Ringₓ β] [UniformAddGroup β] [TopologicalRing β] (f : α →+* β)
+  (hf : Continuous f)
 
 /-- The completion extension as a ring morphism. -/
 def extension_hom [CompleteSpace β] [SeparatedSpace β] : completion α →+* β :=
@@ -165,9 +166,9 @@ instance top_ring_compl : TopologicalRing (completion α) :=
 def map_ring_hom (hf : Continuous f) : completion α →+* completion β :=
   extension_hom (coe_ring_hom.comp f) (continuous_coe_ring_hom.comp hf)
 
-variable(R : Type _)[CommRingₓ R][UniformSpace R][UniformAddGroup R][TopologicalRing R]
+variable (R : Type _) [CommRingₓ R] [UniformSpace R] [UniformAddGroup R] [TopologicalRing R]
 
-instance  : CommRingₓ (completion R) :=
+instance : CommRingₓ (completion R) :=
   { completion.ring with
     mul_comm :=
       fun a b =>
@@ -181,7 +182,7 @@ end UniformSpace.Completion
 
 namespace UniformSpace
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem ring_sep_rel α [CommRingₓ α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
   separation_setoid α = Submodule.quotientRel (Ideal.closure ⊥) :=

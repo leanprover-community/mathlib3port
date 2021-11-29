@@ -28,15 +28,15 @@ function with finite support, module, linear algebra
 -/
 
 
-variable{ι : Type _}{R : Type _}{S : Type _}{M : ι → Type _}{N : Type _}
+variable {ι : Type _} {R : Type _} {S : Type _} {M : ι → Type _} {N : Type _}
 
-variable[dec_ι : DecidableEq ι]
+variable [dec_ι : DecidableEq ι]
 
 namespace Dfinsupp
 
-variable[Semiringₓ R][∀ i, AddCommMonoidₓ (M i)][∀ i, Module R (M i)]
+variable [Semiringₓ R] [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)]
 
-variable[AddCommMonoidₓ N][Module R N]
+variable [AddCommMonoidₓ N] [Module R N]
 
 include dec_ι
 
@@ -99,7 +99,7 @@ we have with the `Π i, has_zero (M i →ₗ[R] N)` instance which appears as a 
 instance module_of_linear_map [Semiringₓ S] [Module S N] [SmulCommClass R S N] : Module S (Π₀i : ι, M i →ₗ[R] N) :=
   @Dfinsupp.module _ _ (fun i => M i →ₗ[R] N) _ _ _
 
-variable(S)
+variable (S)
 
 include dec_ι
 
@@ -161,11 +161,11 @@ The names should match the equivalent bundled `finsupp.map_range` definitions.
 
 section MapRange
 
-variable{β β₁ β₂ : ι → Type _}
+variable {β β₁ β₂ : ι → Type _}
 
-variable[∀ i, AddCommMonoidₓ (β i)][∀ i, AddCommMonoidₓ (β₁ i)][∀ i, AddCommMonoidₓ (β₂ i)]
+variable [∀ i, AddCommMonoidₓ (β i)] [∀ i, AddCommMonoidₓ (β₁ i)] [∀ i, AddCommMonoidₓ (β₂ i)]
 
-variable[∀ i, Module R (β i)][∀ i, Module R (β₁ i)][∀ i, Module R (β₂ i)]
+variable [∀ i, Module R (β i)] [∀ i, Module R (β₁ i)] [∀ i, Module R (β₂ i)]
 
 theorem map_range_smul (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) (r : R) (hf' : ∀ i x, f i (r • x) = r • f i x)
   (g : Π₀i, β₁ i) : map_range f hf (r • g) = r • map_range f hf g :=
@@ -245,7 +245,7 @@ include dec_ι
 
 namespace Submodule
 
-variable[Semiringₓ R][AddCommMonoidₓ N][Module R N]
+variable [Semiringₓ R] [AddCommMonoidₓ N] [Module R N]
 
 open Dfinsupp
 
@@ -319,7 +319,7 @@ open Dfinsupp
 
 section Semiringₓ
 
-variable[Semiringₓ R][AddCommMonoidₓ N][Module R N]
+variable [Semiringₓ R] [AddCommMonoidₓ N] [Module R N]
 
 /-- Independence of a family of submodules can be expressed as a quantifier over `dfinsupp`s.
 
@@ -371,7 +371,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R][AddCommGroupₓ N][Module R N]
+variable [Ringₓ R] [AddCommGroupₓ N] [Module R N]
 
 theorem independent_of_dfinsupp_sum_add_hom_injective' (p : ι → AddSubgroup N)
   (h : Function.Injective (sum_add_hom fun i => (p i).Subtype)) : independent p :=

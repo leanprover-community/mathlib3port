@@ -20,11 +20,11 @@ namespace Polynomial
 
 universe u v w
 
-variable{R : Type u}{S : Type v}{ι : Type w}{a b : R}{m n : ℕ}
+variable {R : Type u} {S : Type v} {ι : Type w} {a b : R} {m n : ℕ}
 
 section Semiringₓ
 
-variable[Semiringₓ R]{p q r : Polynomial R}
+variable [Semiringₓ R] {p q r : Polynomial R}
 
 section Degree
 
@@ -137,7 +137,7 @@ theorem nat_degree_add_coeff_mul (f g : Polynomial R) :
 theorem nat_degree_lt_coeff_mul (h : (p.nat_degree+q.nat_degree) < m+n) : (p*q).coeff (m+n) = 0 :=
   coeff_eq_zero_of_nat_degree_lt (nat_degree_mul_le.trans_lt h)
 
-variable[Semiringₓ S]
+variable [Semiringₓ S]
 
 -- error in Data.Polynomial.Degree.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem nat_degree_pos_of_eval₂_root
@@ -172,7 +172,7 @@ end Semiringₓ
 
 section NoZeroDivisors
 
-variable[Semiringₓ R][NoZeroDivisors R]{p q : Polynomial R}
+variable [Semiringₓ R] [NoZeroDivisors R] {p q : Polynomial R}
 
 theorem nat_degree_mul_C_eq_of_no_zero_divisors (a0 : a ≠ 0) : (p*C a).natDegree = p.nat_degree :=
   by 

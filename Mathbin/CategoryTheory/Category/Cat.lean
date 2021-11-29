@@ -28,10 +28,10 @@ def Cat :=
 
 namespace Cat
 
-instance  : Inhabited Cat :=
+instance : Inhabited Cat :=
   ⟨⟨Type u, CategoryTheory.types⟩⟩
 
-instance  : CoeSort Cat (Type u) :=
+instance : CoeSort Cat (Type u) :=
   ⟨bundled.α⟩
 
 instance str (C : Cat.{v, u}) : category.{v, u} C :=
@@ -87,10 +87,10 @@ def Type_to_Cat : Type u ⥤ Cat :=
           apply Functor.ext 
           tidy }
 
-instance  : faithful Type_to_Cat.{u} :=
+instance : faithful Type_to_Cat.{u} :=
   {  }
 
-instance  : full Type_to_Cat.{u} :=
+instance : full Type_to_Cat.{u} :=
   { Preimage := fun X Y F => F.obj,
     witness' :=
       by 

@@ -13,7 +13,7 @@ open IsAbsoluteValue Finset CauSeq Complex
 theorem exp_one_near_10 : |exp 1 - 2244083 / 825552| ≤ 1 / (10^10) :=
   by 
     apply exp_approx_start 
-    iterate 13
+    iterate 13 
       refine'
         exp_1_approx_succ_eq
           (by 
@@ -37,7 +37,7 @@ theorem exp_one_near_10 : |exp 1 - 2244083 / 825552| ≤ 1 / (10^10) :=
 theorem exp_one_near_20 : |exp 1 - 363916618873 / 133877442384| ≤ 1 / (10^20) :=
   by 
     apply exp_approx_start 
-    iterate 21
+    iterate 21 
       refine'
         exp_1_approx_succ_eq
           (by 

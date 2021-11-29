@@ -33,13 +33,13 @@ For now, the definitions assume `S` is commutative, so the choice doesn't matter
 
 universe u v w
 
-variable{R S T : Type _}[CommRingₓ R][CommRingₓ S][CommRingₓ T]
+variable {R S T : Type _} [CommRingₓ R] [CommRingₓ S] [CommRingₓ T]
 
-variable[Algebra R S][Algebra R T]
+variable [Algebra R S] [Algebra R T]
 
-variable{K L : Type _}[Field K][Field L][Algebra K L]
+variable {K L : Type _} [Field K] [Field L] [Algebra K L]
 
-variable{ι : Type w}[Fintype ι]
+variable {ι : Type w} [Fintype ι]
 
 open FiniteDimensional
 
@@ -53,16 +53,16 @@ open_locale Matrix
 
 namespace Algebra
 
-variable(b : Basis ι R S)
+variable (b : Basis ι R S)
 
-variable(R S)
+variable (R S)
 
 /-- The trace of an element `s` of an `R`-algebra is the trace of `(*) s`,
 as an `R`-linear map. -/
 noncomputable def trace : S →ₗ[R] R :=
   (LinearMap.trace R S).comp (lmul R S).toLinearMap
 
-variable{S}
+variable {S}
 
 theorem trace_apply x : trace R S x = LinearMap.trace R S (lmul R S x) :=
   rfl
@@ -74,7 +74,7 @@ theorem trace_eq_zero_of_not_exists_basis (h : ¬∃ s : Finset S, Nonempty (Bas
 
 include b
 
-variable{R}
+variable {R}
 
 theorem trace_eq_matrix_trace [DecidableEq ι] (b : Basis ι R S) (s : S) :
   trace R S s = Matrix.trace _ R _ (Algebra.leftMulMatrix b s) :=
@@ -146,14 +146,14 @@ theorem trace_comp_trace [Algebra K T] [Algebra L T] [IsScalarTower K L T] [Fini
 
 section TraceForm
 
-variable(R S)
+variable (R S)
 
 /-- The `trace_form` maps `x y : S` to the trace of `x * y`.
 It is a symmetric bilinear form and is nondegenerate if the extension is separable. -/
 noncomputable def trace_form : BilinForm R S :=
   (LinearMap.compr₂ (lmul R S).toLinearMap (trace R S)).toBilin
 
-variable{S}
+variable {S}
 
 @[simp]
 theorem trace_form_apply (x y : S) : trace_form R S x y = trace R S (x*y) :=
@@ -180,9 +180,9 @@ section EqSumRoots
 
 open Algebra Polynomial
 
-variable{F : Type _}[Field F]
+variable {F : Type _} [Field F]
 
-variable[Algebra K S][Algebra K F]
+variable [Algebra K S] [Algebra K F]
 
 -- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem power_basis.trace_gen_eq_sum_roots
@@ -245,7 +245,7 @@ end IntermediateField.AdjoinSimple
 
 open IntermediateField
 
-variable(K)
+variable (K)
 
 -- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:341:40: in rw: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_eq_trace_adjoin
@@ -257,7 +257,7 @@ begin
   rw ["[", expr trace_algebra_map, ",", expr linear_map.map_smul_of_tower, "]"] []
 end
 
-variable{K}
+variable {K}
 
 -- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem trace_eq_sum_roots
@@ -268,9 +268,9 @@ by rw ["[", expr trace_eq_trace_adjoin K x, ",", expr algebra.smul_def, ",", exp
 
 end EqSumRoots
 
-variable{F : Type _}[Field F]
+variable {F : Type _} [Field F]
 
-variable[Algebra R L][Algebra L F][Algebra R F][IsScalarTower R L F]
+variable [Algebra R L] [Algebra L F] [Algebra R F] [IsScalarTower R L F]
 
 open Polynomial
 
@@ -294,11 +294,11 @@ end
 
 section EqSumEmbeddings
 
-variable[Algebra K F][IsScalarTower K L F]
+variable [Algebra K F] [IsScalarTower K L F]
 
 open Algebra IntermediateField
 
-variable(F)(E : Type _)[Field E][Algebra K E]
+variable (F) (E : Type _) [Field E] [Algebra K E]
 
 -- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem trace_eq_sum_embeddings_gen
@@ -308,14 +308,15 @@ theorem trace_eq_sum_embeddings_gen
   σ, σ pb.gen)) :=
 begin
   letI [] [] [":=", expr classical.dec_eq E],
-  rw ["[", expr pb.trace_gen_eq_sum_roots hE, ",", expr fintype.sum_equiv pb.lift_equiv', ",", expr finset.sum_mem_multiset, ",", expr finset.sum_eq_multiset_sum, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr (nodup_roots ((separable_map _).mpr hfx)), ",", expr multiset.map_id, "]"] [],
+  rw ["[", expr pb.trace_gen_eq_sum_roots hE, ",", expr fintype.sum_equiv pb.lift_equiv', ",", expr finset.sum_mem_multiset, ",", expr finset.sum_eq_multiset_sum, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr _, ",", expr multiset.map_id, "]"] [],
+  { exact [expr nodup_roots ((separable_map _).mpr hfx)] },
   { intro [ident x],
     refl },
   { intro [ident σ],
     rw ["[", expr power_basis.lift_equiv'_apply_coe, ",", expr id.def, "]"] [] }
 end
 
-variable[IsAlgClosed E]
+variable [IsAlgClosed E]
 
 -- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem sum_embeddings_eq_finrank_mul
@@ -359,7 +360,7 @@ section DetNeZero
 
 open Algebra
 
-variable(pb : PowerBasis K L)
+variable (pb : PowerBasis K L)
 
 -- error in RingTheory.Trace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem det_trace_form_ne_zero'
@@ -405,7 +406,7 @@ begin
     «expr = »(..., 1) : by simp [] [] ["only"] ["[", expr basis.to_matrix_mul_to_matrix_flip, ",", expr matrix.transpose_one, ",", expr matrix.mul_one, ",", expr matrix.det_one, "]"] [] []
 end
 
-variable(K L)
+variable (K L)
 
 theorem trace_form_nondegenerate [FiniteDimensional K L] [IsSeparable K L] : (trace_form K L).Nondegenerate :=
   BilinForm.nondegenerate_of_det_ne_zero (trace_form K L) _ (det_trace_form_ne_zero (FiniteDimensional.finBasis K L))

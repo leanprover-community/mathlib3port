@@ -8,14 +8,14 @@ import Mathbin.Data.Multiset.Fold
 
 namespace Multiset
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-! ### sup -/
 
 
 section Sup
 
-variable[SemilatticeSupBot α]
+variable [SemilatticeSup α] [OrderBot α]
 
 /-- Supremum of a multiset: `sup {a, b, c} = a ⊔ b ⊔ c` -/
 def sup (s : Multiset α) : α :=
@@ -50,7 +50,7 @@ theorem le_sup {s : Multiset α} {a : α} (h : a ∈ s) : a ≤ s.sup :=
 theorem sup_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₁.sup ≤ s₂.sup :=
   sup_le.2$ fun b hb => le_sup (h hb)
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 @[simp]
 theorem sup_erase_dup (s : Multiset α) : (erase_dup s).sup = s.sup :=
@@ -88,7 +88,7 @@ end Sup
 
 section Inf
 
-variable[SemilatticeInfTop α]
+variable [SemilatticeInf α] [OrderTop α]
 
 /-- Infimum of a multiset: `inf {a, b, c} = a ⊓ b ⊓ c` -/
 def inf (s : Multiset α) : α :=
@@ -123,7 +123,7 @@ theorem inf_le {s : Multiset α} {a : α} (h : a ∈ s) : s.inf ≤ a :=
 theorem inf_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₂.inf ≤ s₁.inf :=
   le_inf.2$ fun b hb => inf_le (h hb)
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 @[simp]
 theorem inf_erase_dup (s : Multiset α) : (erase_dup s).inf = s.inf :=

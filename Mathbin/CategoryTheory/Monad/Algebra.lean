@@ -23,13 +23,13 @@ open Category
 
 universe v₁ u₁
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
 namespace Monadₓ
 
 /-- An Eilenberg-Moore algebra for a monad `T`.
     cf Definition 5.2.3 in [Riehl][riehl2017]. -/
-structure algebra(T : Monadₓ C) : Type max u₁ v₁ where 
+structure algebra (T : Monadₓ C) : Type max u₁ v₁ where 
   a : C 
   a : (T : C ⥤ C).obj A ⟶ A 
   unit' : T.η.app A ≫ a = 𝟙 A :=  by 
@@ -47,11 +47,11 @@ attribute [reassoc] algebra.unit algebra.assoc
 
 namespace Algebra
 
-variable{T : Monadₓ C}
+variable {T : Monadₓ C}
 
 /-- A morphism of Eilenberg–Moore algebras for the monad `T`. -/
 @[ext]
-structure hom(A B : algebra T) where 
+structure hom (A B : algebra T) where 
   f : A.A ⟶ B.A 
   h' : (T : C ⥤ C).map f ≫ B.a = A.a ≫ f :=  by 
   runTac 
@@ -67,7 +67,7 @@ namespace Hom
 def id (A : algebra T) : hom A A :=
   { f := 𝟙 A.A }
 
-instance  (A : algebra T) : Inhabited (hom A A) :=
+instance (A : algebra T) : Inhabited (hom A A) :=
   ⟨{ f := 𝟙 _ }⟩
 
 /-- Composition of Eilenberg–Moore algebra homomorphisms. -/
@@ -76,7 +76,7 @@ def comp {P Q R : algebra T} (f : hom P Q) (g : hom Q R) : hom P R :=
 
 end Hom
 
-instance  : category_struct (algebra T) :=
+instance : category_struct (algebra T) :=
   { Hom := hom, id := hom.id, comp := @hom.comp _ _ _ }
 
 @[simp]
@@ -116,7 +116,7 @@ def iso_mk {A B : algebra T} (h : A.A ≅ B.A) (w : (T : C ⥤ C).map h.hom ≫ 
 
 end Algebra
 
-variable(T : Monadₓ C)
+variable (T : Monadₓ C)
 
 /-- The forgetful functor from the Eilenberg-Moore category, forgetting the algebraic structure. -/
 @[simps]
@@ -129,7 +129,7 @@ def free : C ⥤ algebra T :=
   { obj := fun X => { a := T.obj X, a := T.μ.app X, assoc' := (T.assoc _).symm },
     map := fun X Y f => { f := T.map f, h' := T.μ.naturality _ } }
 
-instance  [Inhabited C] : Inhabited (algebra T) :=
+instance [Inhabited C] : Inhabited (algebra T) :=
   ⟨(free T).obj (default C)⟩
 
 /-- The adjunction between the free and forgetful constructions for Eilenberg-Moore algebras for
@@ -178,7 +178,7 @@ instance forget_reflects_iso : reflects_isomorphisms T.forget :=
 instance forget_faithful : faithful T.forget :=
   {  }
 
-instance  : is_right_adjoint T.forget :=
+instance : is_right_adjoint T.forget :=
   ⟨T.free, T.adj⟩
 
 @[simp]
@@ -295,7 +295,7 @@ namespace Comonad
 
 /-- An Eilenberg-Moore coalgebra for a comonad `T`. -/
 @[nolint has_inhabited_instance]
-structure coalgebra(G : comonad C) : Type max u₁ v₁ where 
+structure coalgebra (G : comonad C) : Type max u₁ v₁ where 
   a : C 
   a : A ⟶ (G : C ⥤ C).obj A 
   counit' : a ≫ G.ε.app A = 𝟙 A :=  by 
@@ -313,11 +313,11 @@ attribute [reassoc] coalgebra.counit coalgebra.coassoc
 
 namespace Coalgebra
 
-variable{G : comonad C}
+variable {G : comonad C}
 
 /-- A morphism of Eilenberg-Moore coalgebras for the comonad `G`. -/
 @[ext, nolint has_inhabited_instance]
-structure hom(A B : coalgebra G) where 
+structure hom (A B : coalgebra G) where 
   f : A.A ⟶ B.A 
   h' : A.a ≫ (G : C ⥤ C).map f = f ≫ B.a :=  by 
   runTac 
@@ -340,7 +340,7 @@ def comp {P Q R : coalgebra G} (f : hom P Q) (g : hom Q R) : hom P R :=
 end Hom
 
 /-- The category of Eilenberg-Moore coalgebras for a comonad. -/
-instance  : category_struct (coalgebra G) :=
+instance : category_struct (coalgebra G) :=
   { Hom := hom, id := hom.id, comp := @hom.comp _ _ _ }
 
 @[simp]
@@ -379,7 +379,7 @@ def iso_mk {A B : coalgebra G} (h : A.A ≅ B.A) (w : A.a ≫ (G : C ⥤ C).map 
 
 end Coalgebra
 
-variable(G : comonad C)
+variable (G : comonad C)
 
 /-- The forgetful functor from the Eilenberg-Moore category, forgetting the coalgebraic
 structure. -/
@@ -442,7 +442,7 @@ instance forget_reflects_iso : reflects_isomorphisms G.forget :=
 instance forget_faithful : faithful (forget G) :=
   {  }
 
-instance  : is_left_adjoint G.forget :=
+instance : is_left_adjoint G.forget :=
   ⟨_, G.adj⟩
 
 @[simp]

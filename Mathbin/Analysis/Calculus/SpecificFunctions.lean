@@ -224,7 +224,7 @@ namespace Real
 
 namespace SmoothTransition
 
-variable{x : ℝ}
+variable {x : ℝ}
 
 open expNegInvGlue
 
@@ -266,7 +266,7 @@ end SmoothTransition
 
 end Real
 
-variable{E : Type _}
+variable {E : Type _}
 
 /-- `f : times_cont_diff_bump_of_inner c`, where `c` is a point in an inner product space, is a
 bundled smooth function such that
@@ -278,7 +278,7 @@ bundled smooth function such that
 The structure `times_cont_diff_bump_of_inner` contains the data required to construct the function:
 real numbers `r`, `R`, and proofs of `0 < r < R`. The function itself is available through
 `coe_fn`. -/
-structure TimesContDiffBumpOfInner(c : E) where 
+structure TimesContDiffBumpOfInner (c : E) where 
   (R r : ℝ)
   r_pos : 0 < r 
   r_lt_R : r < R
@@ -288,17 +288,17 @@ namespace TimesContDiffBumpOfInner
 theorem R_pos {c : E} (f : TimesContDiffBumpOfInner c) : 0 < f.R :=
   f.r_pos.trans f.r_lt_R
 
-instance  (c : E) : Inhabited (TimesContDiffBumpOfInner c) :=
+instance (c : E) : Inhabited (TimesContDiffBumpOfInner c) :=
   ⟨⟨1, 2, zero_lt_one, one_lt_two⟩⟩
 
-variable[InnerProductSpace ℝ E]{c : E}(f : TimesContDiffBumpOfInner c){x : E}
+variable [InnerProductSpace ℝ E] {c : E} (f : TimesContDiffBumpOfInner c) {x : E}
 
 /-- The function defined by `f : times_cont_diff_bump_of_inner c`. Use automatic coercion to
 function instead. -/
 def to_fun (f : TimesContDiffBumpOfInner c) : E → ℝ :=
   fun x => Real.smoothTransition ((f.R - dist x c) / (f.R - f.r))
 
-instance  : CoeFun (TimesContDiffBumpOfInner c) fun _ => E → ℝ :=
+instance : CoeFun (TimesContDiffBumpOfInner c) fun _ => E → ℝ :=
   ⟨to_fun⟩
 
 open real(smoothTransition)
@@ -372,22 +372,22 @@ a bundled smooth function such that
 
 The structure `times_cont_diff_bump` contains the data required to construct the function: real
 numbers `r`, `R`, and proofs of `0 < r < R`. The function itself is available through `coe_fn`.-/
-structure TimesContDiffBump[NormedGroup E][NormedSpace ℝ E][FiniteDimensional ℝ E](c : E) extends
+structure TimesContDiffBump [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] (c : E) extends
   TimesContDiffBumpOfInner (toEuclidean c)
 
 namespace TimesContDiffBump
 
-variable[NormedGroup E][NormedSpace ℝ E][FiniteDimensional ℝ E]{c x : E}(f : TimesContDiffBump c)
+variable [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {c x : E} (f : TimesContDiffBump c)
 
 /-- The function defined by `f : times_cont_diff_bump c`. Use automatic coercion to function
 instead. -/
 def to_fun (f : TimesContDiffBump c) : E → ℝ :=
   f.to_times_cont_diff_bump_of_inner ∘ toEuclidean
 
-instance  : CoeFun (TimesContDiffBump c) fun _ => E → ℝ :=
+instance : CoeFun (TimesContDiffBump c) fun _ => E → ℝ :=
   ⟨to_fun⟩
 
-instance  (c : E) : Inhabited (TimesContDiffBump c) :=
+instance (c : E) : Inhabited (TimesContDiffBump c) :=
   ⟨⟨default _⟩⟩
 
 theorem R_pos : 0 < f.R :=

@@ -5,16 +5,16 @@ universe u v w
 
 namespace DArray
 
-variable{n : ℕ}{α : Finₓ n → Type u}
+variable {n : ℕ} {α : Finₓ n → Type u}
 
-instance  [∀ i, Inhabited (α i)] : Inhabited (DArray n α) :=
+instance [∀ i, Inhabited (α i)] : Inhabited (DArray n α) :=
   ⟨⟨fun _ => default _⟩⟩
 
 end DArray
 
 namespace Arrayₓ
 
-instance  {n α} [Inhabited α] : Inhabited (Arrayₓ n α) :=
+instance {n α} [Inhabited α] : Inhabited (Arrayₓ n α) :=
   DArray.inhabited
 
 theorem to_list_of_heq {n₁ n₂ α} {a₁ : Arrayₓ n₁ α} {a₂ : Arrayₓ n₂ α} (hn : n₁ = n₂) (ha : HEq a₁ a₂) :
@@ -24,7 +24,7 @@ theorem to_list_of_heq {n₁ n₂ α} {a₁ : Arrayₓ n₁ α} {a₂ : Arrayₓ
 
 section RevList
 
-variable{n : ℕ}{α : Type u}{a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {a : Arrayₓ n α}
 
 theorem rev_list_reverse_aux :
   ∀ i h : i ≤ n t : List α,
@@ -45,7 +45,7 @@ end RevList
 
 section Mem
 
-variable{n : ℕ}{α : Type u}{v : α}{a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {v : α} {a : Arrayₓ n α}
 
 theorem mem.def : v ∈ a ↔ ∃ i, a.read i = v :=
   Iff.rfl
@@ -83,7 +83,7 @@ end Mem
 
 section Foldr
 
-variable{n : ℕ}{α : Type u}{β : Type w}{b : β}{f : α → β → β}{a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : α → β → β} {a : Arrayₓ n α}
 
 theorem rev_list_foldr_aux :
   ∀ {i} h : i ≤ n, (DArray.iterateAux a (fun _ => · :: ·) i h []).foldr f b = DArray.iterateAux a (fun _ => f) i h b
@@ -97,7 +97,7 @@ end Foldr
 
 section Foldl
 
-variable{n : ℕ}{α : Type u}{β : Type w}{b : β}{f : β → α → β}{a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {β : Type w} {b : β} {f : β → α → β} {a : Arrayₓ n α}
 
 theorem to_list_foldl : a.to_list.foldl f b = a.foldl b (Function.swap f) :=
   by 
@@ -107,7 +107,7 @@ end Foldl
 
 section Length
 
-variable{n : ℕ}{α : Type u}
+variable {n : ℕ} {α : Type u}
 
 theorem rev_list_length_aux (a : Arrayₓ n α) i h : (a.iterate_aux (fun _ => · :: ·) i h []).length = i :=
   by 
@@ -126,7 +126,7 @@ end Length
 
 section Nth
 
-variable{n : ℕ}{α : Type u}{a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {a : Arrayₓ n α}
 
 theorem to_list_nth_le_aux (i : ℕ) (ih : i < n) :
   ∀ j {jh t h'},
@@ -187,7 +187,7 @@ end Nth
 
 section Enum
 
-variable{n : ℕ}{α : Type u}{a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {a : Arrayₓ n α}
 
 theorem mem_to_list_enum {i v} : (i, v) ∈ a.to_list.enum ↔ ∃ h, a.read ⟨i, h⟩ = v :=
   by 
@@ -197,7 +197,7 @@ end Enum
 
 section ToArray
 
-variable{n : ℕ}{α : Type u}
+variable {n : ℕ} {α : Type u}
 
 @[simp]
 theorem to_list_to_array (a : Arrayₓ n α) : HEq a.to_list.to_array a :=
@@ -217,7 +217,7 @@ end ToArray
 
 section PushBack
 
-variable{n : ℕ}{α : Type u}{v : α}{a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {v : α} {a : Arrayₓ n α}
 
 theorem push_back_rev_list_aux :
   ∀ i h h', DArray.iterateAux (a.push_back v) (fun _ => · :: ·) i h [] = DArray.iterateAux a (fun _ => · :: ·) i h' []
@@ -265,7 +265,7 @@ end PushBack
 
 section Foreach
 
-variable{n : ℕ}{α : Type u}{β : Type v}{i : Finₓ n}{f : Finₓ n → α → β}{a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {β : Type v} {i : Finₓ n} {f : Finₓ n → α → β} {a : Arrayₓ n α}
 
 @[simp]
 theorem read_foreach : (foreach a f).read i = f i (a.read i) :=
@@ -275,7 +275,7 @@ end Foreach
 
 section Map
 
-variable{n : ℕ}{α : Type u}{β : Type v}{i : Finₓ n}{f : α → β}{a : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {β : Type v} {i : Finₓ n} {f : α → β} {a : Arrayₓ n α}
 
 theorem read_map : (a.map f).read i = f (a.read i) :=
   read_foreach
@@ -284,7 +284,7 @@ end Map
 
 section Map₂
 
-variable{n : ℕ}{α : Type u}{i : Finₓ n}{f : α → α → α}{a₁ a₂ : Arrayₓ n α}
+variable {n : ℕ} {α : Type u} {i : Finₓ n} {f : α → α → α} {a₁ a₂ : Arrayₓ n α}
 
 @[simp]
 theorem read_map₂ : (map₂ f a₁ a₂).read i = f (a₁.read i) (a₂.read i) :=
@@ -315,12 +315,12 @@ namespace Arrayₓ
 
 open Function
 
-variable{n : ℕ}
+variable {n : ℕ}
 
-instance  : Traversable (Arrayₓ n) :=
+instance : Traversable (Arrayₓ n) :=
   @Equiv.traversable (flip Vector n) _ (fun α => Equiv.vectorEquivArray α n) _
 
-instance  : IsLawfulTraversable (Arrayₓ n) :=
+instance : IsLawfulTraversable (Arrayₓ n) :=
   @Equiv.isLawfulTraversable (flip Vector n) _ (fun α => Equiv.vectorEquivArray α n) _ _
 
 end Arrayₓ

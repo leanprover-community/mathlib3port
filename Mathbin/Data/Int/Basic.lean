@@ -25,13 +25,13 @@ open Nat
 
 namespace Int
 
-instance  : Inhabited ℤ :=
+instance : Inhabited ℤ :=
   ⟨Int.zero⟩
 
-instance  : Nontrivial ℤ :=
+instance : Nontrivial ℤ :=
   ⟨⟨0, 1, Int.zero_ne_one⟩⟩
 
-instance  : CommRingₓ Int :=
+instance : CommRingₓ Int :=
   { add := Int.add, add_assoc := Int.add_assoc, zero := Int.zero, zero_add := Int.zero_add, add_zero := Int.add_zero,
     neg := Int.neg, add_left_neg := Int.add_left_neg, add_comm := Int.add_comm, mul := Int.mul,
     mul_assoc := Int.mul_assoc, one := Int.one, one_mul := Int.one_mul, mul_one := Int.mul_one, sub := Int.sub,
@@ -50,67 +50,67 @@ these instances non-computably.
 -/
 
 
-instance  : AddCommMonoidₓ Int :=
+instance : AddCommMonoidₓ Int :=
   by 
     infer_instance
 
-instance  : AddMonoidₓ Int :=
+instance : AddMonoidₓ Int :=
   by 
     infer_instance
 
-instance  : Monoidₓ Int :=
+instance : Monoidₓ Int :=
   by 
     infer_instance
 
-instance  : CommMonoidₓ Int :=
+instance : CommMonoidₓ Int :=
   by 
     infer_instance
 
-instance  : CommSemigroupₓ Int :=
+instance : CommSemigroupₓ Int :=
   by 
     infer_instance
 
-instance  : Semigroupₓ Int :=
+instance : Semigroupₓ Int :=
   by 
     infer_instance
 
-instance  : AddCommGroupₓ Int :=
+instance : AddCommGroupₓ Int :=
   by 
     infer_instance
 
-instance  : AddGroupₓ Int :=
+instance : AddGroupₓ Int :=
   by 
     infer_instance
 
-instance  : AddCommSemigroupₓ Int :=
+instance : AddCommSemigroupₓ Int :=
   by 
     infer_instance
 
-instance  : AddSemigroupₓ Int :=
+instance : AddSemigroupₓ Int :=
   by 
     infer_instance
 
-instance  : CommSemiringₓ Int :=
+instance : CommSemiringₓ Int :=
   by 
     infer_instance
 
-instance  : Semiringₓ Int :=
+instance : Semiringₓ Int :=
   by 
     infer_instance
 
-instance  : Ringₓ Int :=
+instance : Ringₓ Int :=
   by 
     infer_instance
 
-instance  : Distrib Int :=
+instance : Distrib Int :=
   by 
     infer_instance
 
-instance  : LinearOrderedCommRing Int :=
+instance : LinearOrderedCommRing Int :=
   { Int.commRing, Int.linearOrder, Int.nontrivial with add_le_add_left := @Int.add_le_add_left, mul_pos := @Int.mul_pos,
     zero_le_one := le_of_ltₓ Int.zero_lt_one }
 
-instance  : LinearOrderedAddCommGroup Int :=
+instance : LinearOrderedAddCommGroup Int :=
   by 
     infer_instance
 
@@ -134,10 +134,10 @@ theorem sign_mul_abs (a : ℤ) : (sign a*|a|) = a :=
 theorem default_eq_zero : default ℤ = 0 :=
   rfl
 
-unsafe instance  : has_to_format ℤ :=
+unsafe instance : has_to_format ℤ :=
   ⟨fun z => toString z⟩
 
-unsafe instance  : has_reflect ℤ :=
+unsafe instance : has_reflect ℤ :=
   by 
     runTac 
       tactic.mk_has_reflect_instance

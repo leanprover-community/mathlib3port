@@ -76,7 +76,7 @@ The physical interpretation is that `A₀` and `A₁` are a pair of boolean obse
 are spacelike separated from another pair `B₀` and `B₁` of boolean observables.
 -/
 @[nolint has_inhabited_instance]
-structure IsCHSHTuple{R}[Monoidₓ R][StarMonoid R](A₀ A₁ B₀ B₁ : R) where 
+structure IsCHSHTuple {R} [Monoidₓ R] [StarMonoid R] (A₀ A₁ B₀ B₁ : R) where 
   A₀_inv : (A₀^2) = 1
   A₁_inv : (A₁^2) = 1
   B₀_inv : (B₀^2) = 1
@@ -90,7 +90,7 @@ structure IsCHSHTuple{R}[Monoidₓ R][StarMonoid R](A₀ A₁ B₀ B₁ : R) whe
   A₁B₀_commutes : (A₁*B₀) = B₀*A₁ 
   A₁B₁_commutes : (A₁*B₁) = B₁*A₁
 
-variable{R : Type u}
+variable {R : Type u}
 
 -- error in Algebra.Star.Chsh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

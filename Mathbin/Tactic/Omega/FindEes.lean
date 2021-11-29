@@ -1,6 +1,6 @@
 import Mathbin.Tactic.Omega.EqElim
 
-variable{α β : Type}
+variable {α β : Type}
 
 open Tactic
 

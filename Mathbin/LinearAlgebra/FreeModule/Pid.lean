@@ -47,9 +47,9 @@ universe u v
 
 section Ringₓ
 
-variable{R : Type u}{M : Type v}[Ringₓ R][AddCommGroupₓ M][Module R M]
+variable {R : Type u} {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
-variable{ι : Type _}(b : Basis ι R M)
+variable {ι : Type _} (b : Basis ι R M)
 
 open Submodule.IsPrincipal Submodule
 
@@ -81,9 +81,9 @@ end Ringₓ
 
 section IsDomain
 
-variable{ι : Type _}{R : Type _}[CommRingₓ R][IsDomain R]
+variable {ι : Type _} {R : Type _} [CommRingₓ R] [IsDomain R]
 
-variable{M : Type _}[AddCommGroupₓ M][Module R M]{b : ι → M}
+variable {M : Type _} [AddCommGroupₓ M] [Module R M] {b : ι → M}
 
 open Submodule.IsPrincipal Set Submodule
 
@@ -99,9 +99,9 @@ section PrincipalIdealDomain
 
 open Submodule.IsPrincipal Set Submodule
 
-variable{ι : Type _}{R : Type _}[CommRingₓ R][IsDomain R][IsPrincipalIdealRing R]
+variable {ι : Type _} {R : Type _} [CommRingₓ R] [IsDomain R] [IsPrincipalIdealRing R]
 
-variable{M : Type _}[AddCommGroupₓ M][Module R M]{b : ι → M}
+variable {M : Type _} [AddCommGroupₓ M] [Module R M] {b : ι → M}
 
 open Submodule.IsPrincipal
 
@@ -341,7 +341,7 @@ noncomputable def Submodule.basisOfPidOfLeSpan {ι : Type _} [Fintype ι] {b : �
   {N : Submodule R M} (le : N ≤ Submodule.span R (Set.Range b)) : Σn : ℕ, Basis (Finₓ n) R N :=
   Submodule.basisOfPidOfLe le (Basis.span hb)
 
-variable{M}
+variable {M}
 
 -- error in LinearAlgebra.FreeModule.Pid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite type torsion free module over a PID is free. -/
@@ -402,7 +402,7 @@ section SmithNormal
 bases for `M` and `N` such that the inclusion map `N → M` can be written as a
 (rectangular) matrix with `a` along the diagonal: in Smith normal form. -/
 @[nolint has_inhabited_instance]
-structure Basis.SmithNormalForm(N : Submodule R M)(ι : Type _)(n : ℕ) where 
+structure Basis.SmithNormalForm (N : Submodule R M) (ι : Type _) (n : ℕ) where 
   bM : Basis ι R M 
   bN : Basis (Finₓ n) R N 
   f : Finₓ n ↪ ι 

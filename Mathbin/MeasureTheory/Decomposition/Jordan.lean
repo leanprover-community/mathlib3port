@@ -15,7 +15,7 @@ is useful for the Lebesgue decomposition theorem.
 
 * `measure_theory.jordan_decomposition`: a Jordan decomposition of a measurable space is a
   pair of mutually singular finite measures. We say `j` is a Jordan decomposition of a signed
-  meausre `s` if `s = j.pos_part - j.neg_part`.
+  measure `s` if `s = j.pos_part - j.neg_part`.
 * `measure_theory.signed_measure.to_jordan_decomposition`: the Jordan decomposition of a
   signed measure.
 * `measure_theory.signed_measure.to_jordan_decomposition_equiv`: is the `equiv` between
@@ -39,14 +39,14 @@ noncomputable theory
 
 open_locale Classical MeasureTheory Ennreal Nnreal
 
-variable{α β : Type _}[MeasurableSpace α]
+variable {α β : Type _} [MeasurableSpace α]
 
 namespace MeasureTheory
 
 /-- A Jordan decomposition of a measurable space is a pair of mutually singular,
 finite measures. -/
 @[ext]
-structure jordan_decomposition(α : Type _)[MeasurableSpace α] where 
+structure jordan_decomposition (α : Type _) [MeasurableSpace α] where 
   (posPart negPart : Measureₓ α)
   [pos_part_finite : is_finite_measure pos_part]
   [neg_part_finite : is_finite_measure neg_part]
@@ -60,18 +60,18 @@ namespace JordanDecomposition
 
 open Measureₓ VectorMeasure
 
-variable(j : jordan_decomposition α)
+variable (j : jordan_decomposition α)
 
-instance  : HasZero (jordan_decomposition α) :=
+instance : HasZero (jordan_decomposition α) :=
   { zero := ⟨0, 0, mutually_singular.zero_right⟩ }
 
-instance  : Inhabited (jordan_decomposition α) :=
+instance : Inhabited (jordan_decomposition α) :=
   { default := 0 }
 
-instance  : Neg (jordan_decomposition α) :=
+instance : Neg (jordan_decomposition α) :=
   { neg := fun j => ⟨j.neg_part, j.pos_part, j.mutually_singular.symm⟩ }
 
-instance  : HasScalar ℝ≥0  (jordan_decomposition α) :=
+instance : HasScalar ℝ≥0  (jordan_decomposition α) :=
   { smul :=
       fun r j =>
         ⟨r • j.pos_part, r • j.neg_part,
@@ -189,7 +189,7 @@ namespace SignedMeasure
 
 open Measureₓ VectorMeasure JordanDecomposition Classical
 
-variable{s : signed_measure α}{μ ν : Measureₓ α}[is_finite_measure μ][is_finite_measure ν]
+variable {s : signed_measure α} {μ ν : Measureₓ α} [is_finite_measure μ] [is_finite_measure ν]
 
 /-- Given a signed measure `s`, `s.to_jordan_decomposition` is the Jordan decomposition `j`,
 such that `s = j.to_signed_measure`. This property is known as the Jordan decomposition
@@ -247,7 +247,7 @@ theorem to_signed_measure_to_jordan_decomposition (s : signed_measure α) :
 
 section 
 
-variable{u v w : Set α}
+variable {u v w : Set α}
 
 -- error in MeasureTheory.Decomposition.Jordan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A subset `v` of a null-set `w` has zero measure if `w` is a subset of a positive set `u`. -/

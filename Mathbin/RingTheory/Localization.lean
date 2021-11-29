@@ -92,9 +92,9 @@ commutative ring, field of fractions
 -/
 
 
-variable{R : Type _}[CommRingₓ R](M : Submonoid R)(S : Type _)[CommRingₓ S]
+variable {R : Type _} [CommRingₓ R] (M : Submonoid R) (S : Type _) [CommRingₓ S]
 
-variable[Algebra R S]{P : Type _}[CommRingₓ P]
+variable [Algebra R S] {P : Type _} [CommRingₓ P]
 
 open Function
 
@@ -107,17 +107,17 @@ class IsLocalization : Prop where
   surj{} : ∀ z : S, ∃ x : R × M, (z*algebraMap R S x.2) = algebraMap R S x.1 
   eq_iff_exists{} : ∀ {x y}, algebraMap R S x = algebraMap R S y ↔ ∃ c : M, (x*c) = y*c
 
-variable{M S}
+variable {M S}
 
 namespace IsLocalization
 
 section IsLocalization
 
-variable[IsLocalization M S]
+variable [IsLocalization M S]
 
 section 
 
-variable(M S)
+variable (M S)
 
 /-- `is_localization.to_localization_map M S` shows `S` is the monoid localization of `R` at `M`. -/
 @[simps]
@@ -136,7 +136,7 @@ end
 
 section 
 
-variable(R)
+variable (R)
 
 /-- Given `a : S`, `S` a localization of `R`, `is_integer R a` iff `a` is in the image of
 the localization map from `R` to `S`. -/
@@ -163,7 +163,7 @@ theorem is_integer_smul {a : R} {b : S} (hb : is_integer R b) : is_integer R (a 
     use a*b' 
     rw [←hb, (algebraMap R S).map_mul, Algebra.smul_def]
 
-variable(M)
+variable (M)
 
 /-- Each element `a : S` has an `M`-multiple which is an integer.
 
@@ -232,7 +232,7 @@ theorem exist_integer_multiples_of_fintype {ι : Type _} [Fintype ι] (f : ι �
 theorem exist_integer_multiples_of_finset (s : Finset S) : ∃ b : M, ∀ a _ : a ∈ s, is_integer R ((b : R) • a) :=
   exist_integer_multiples M s id
 
-variable{R M}
+variable {R M}
 
 theorem map_right_cancel {x y} {c : M} (h : algebraMap R S (c*x) = algebraMap R S (c*y)) :
   algebraMap R S x = algebraMap R S y :=
@@ -247,7 +247,7 @@ theorem eq_zero_of_fst_eq_zero {z x} {y : M} (h : (z*algebraMap R S y) = algebra
     rw [hx, (algebraMap R S).map_zero] at h 
     exact (IsUnit.mul_left_eq_zero (IsLocalization.map_units S y)).1 h
 
-variable(S)
+variable (S)
 
 /-- `is_localization.mk' S` is the surjection sending `(x, y) : R × M` to
 `f x * (f y)⁻¹`. -/
@@ -280,7 +280,7 @@ theorem mk'_spec_mk x (y : R) (hy : y ∈ M) : (mk' S x ⟨y, hy⟩*algebraMap R
 theorem mk'_spec'_mk x (y : R) (hy : y ∈ M) : (algebraMap R S y*mk' S x ⟨y, hy⟩) = algebraMap R S x :=
   mk'_spec' S x ⟨y, hy⟩
 
-variable{S}
+variable {S}
 
 theorem eq_mk'_iff_mul_eq {x} {y : M} {z} : z = mk' S x y ↔ (z*algebraMap R S y) = algebraMap R S x :=
   (to_localization_map M S).eq_mk'_iff_mul_eq
@@ -288,13 +288,13 @@ theorem eq_mk'_iff_mul_eq {x} {y : M} {z} : z = mk' S x y ↔ (z*algebraMap R S 
 theorem mk'_eq_iff_eq_mul {x} {y : M} {z} : mk' S x y = z ↔ algebraMap R S x = z*algebraMap R S y :=
   (to_localization_map M S).mk'_eq_iff_eq_mul
 
-variable(M)
+variable (M)
 
 theorem mk'_surjective (z : S) : ∃ (x : _)(y : M), mk' S x y = z :=
   let ⟨r, hr⟩ := IsLocalization.surj _ z
   ⟨r.1, r.2, (eq_mk'_iff_mul_eq.2 hr).symm⟩
 
-variable{M}
+variable {M}
 
 theorem mk'_eq_iff_eq {x₁ x₂} {y₁ y₂ : M} :
   mk' S x₁ y₁ = mk' S x₂ y₂ ↔ algebraMap R S (x₁*y₂) = algebraMap R S (x₂*y₁) :=
@@ -317,7 +317,7 @@ protected theorem Eq {a₁ b₁} {a₂ b₂ : M} : mk' S a₁ a₂ = mk' S b₁ 
 
 section Ext
 
-variable[Algebra R P][IsLocalization M P]
+variable [Algebra R P] [IsLocalization M P]
 
 theorem eq_iff_eq {x y} : algebraMap R S x = algebraMap R S y ↔ algebraMap R P x = algebraMap R P y :=
   (to_localization_map M S).eq_iff_eq (to_localization_map M P)
@@ -328,7 +328,7 @@ theorem mk'_eq_iff_mk'_eq {x₁ x₂} {y₁ y₂ : M} : mk' S x₁ y₁ = mk' S 
 theorem mk'_eq_of_eq {a₁ b₁ : R} {a₂ b₂ : M} (H : (b₁*a₂) = a₁*b₂) : mk' S a₁ a₂ = mk' S b₁ b₂ :=
   (to_localization_map M S).mk'_eq_of_eq H
 
-variable(S)
+variable (S)
 
 @[simp]
 theorem mk'_self {x : R} (hx : x ∈ M) : mk' S x ⟨x, hx⟩ = 1 :=
@@ -366,7 +366,7 @@ theorem mk'_mul_mk'_eq_one' (x : R) (y : M) (h : x ∈ M) : (mk' S x y*mk' S (y 
 
 section 
 
-variable(M)
+variable (M)
 
 theorem is_unit_comp (j : S →+* P) (y : M) : IsUnit (j.comp (algebraMap R S) y) :=
   (to_localization_map M S).is_unit_comp j.to_monoid_hom _
@@ -408,7 +408,7 @@ noncomputable def lift {g : R →+* P} (hg : ∀ y : M, IsUnit (g y)) : S →+* 
       ring 
       assumption
 
-variable{g : R →+* P}(hg : ∀ y : M, IsUnit (g y))
+variable {g : R →+* P} (hg : ∀ y : M, IsUnit (g y))
 
 /-- Given a localization map `f : R →+* S` for a submonoid `M ⊆ R` and a map of `comm_ring`s
 `g : R →* P` such that `g y` is invertible for all `y : M`, the homomorphism induced from
@@ -434,7 +434,7 @@ theorem lift_comp : (lift hg).comp (algebraMap R S) = g :=
 theorem lift_of_comp (j : S →+* P) : lift (is_unit_comp M j) = j :=
   RingHom.ext$ MonoidHom.ext_iff.1$ (to_localization_map M S).lift_of_comp j.to_monoid_hom
 
-variable(M)
+variable (M)
 
 /-- See note [partially-applied ext lemmas] -/
 theorem monoid_hom_ext ⦃j k : S →* P⦄ (h : j.comp (algebraMap R S : R →* S) = k.comp (algebraMap R S)) : j = k :=
@@ -450,7 +450,7 @@ protected theorem ext (j k : S → P) (hj1 : j 1 = 1) (hk1 : k 1 = 1) (hjm : ∀
   (hkm : ∀ a b, k (a*b) = k a*k b) (h : ∀ a, j (algebraMap R S a) = k (algebraMap R S a)) : j = k :=
   MonoidHom.mk.inj (monoid_hom_ext M$ MonoidHom.ext h : (⟨j, hj1, hjm⟩ : S →* P) = ⟨k, hk1, hkm⟩)
 
-variable{M}
+variable {M}
 
 theorem lift_unique {j : S →+* P} (hj : ∀ x, j ((algebraMap R S) x) = g x) : lift hg = j :=
   RingHom.ext$
@@ -470,13 +470,13 @@ theorem lift_injective_iff : injective (lift hg : S → P) ↔ ∀ x y, algebraM
 
 section Map
 
-variable{T : Submonoid P}{Q : Type _}[CommRingₓ Q](hy : M ≤ T.comap g)
+variable {T : Submonoid P} {Q : Type _} [CommRingₓ Q] (hy : M ≤ T.comap g)
 
-variable[Algebra P Q][IsLocalization T Q]
+variable [Algebra P Q] [IsLocalization T Q]
 
 section 
 
-variable(Q)
+variable (Q)
 
 /-- Map a homomorphism `g : R →+* P` to `S →+* Q`, where `S` and `Q` are
 localizations of `R` and `P` at `M` and `T` respectively,
@@ -527,7 +527,7 @@ theorem map_map {A : Type _} [CommRingₓ A] {U : Submonoid A} {W} [CommRingₓ 
 
 section 
 
-variable(S Q)
+variable (S Q)
 
 /-- If `S`, `Q` are localizations of `R` and `P` at submonoids `M, T` respectively, an
 isomorphism `j : R ≃+* P` such that `j(M) = T` induces an isomorphism of localizations
@@ -597,11 +597,11 @@ end Map
 
 section AlgEquiv
 
-variable{Q : Type _}[CommRingₓ Q][Algebra R Q][IsLocalization M Q]
+variable {Q : Type _} [CommRingₓ Q] [Algebra R Q] [IsLocalization M Q]
 
 section 
 
-variable(M S Q)
+variable (M S Q)
 
 /-- If `S`, `Q` are localizations of `R` at the submonoid `M` respectively,
 there is an isomorphism of localizations `S ≃ₐ[R] Q`. -/
@@ -625,7 +625,7 @@ end IsLocalization
 
 section Away
 
-variable(x : R)
+variable (x : R)
 
 /-- Given `x : R`, the typeclass `is_localization.away x S` states that `S` is
 isomorphic to the localization of `R` at the submonoid generated by `x`. -/
@@ -634,13 +634,13 @@ abbrev away (S : Type _) [CommRingₓ S] [Algebra R S] :=
 
 namespace Away
 
-variable[IsLocalization.Away x S]
+variable [IsLocalization.Away x S]
 
 /-- Given `x : R` and a localization map `F : R →+* S` away from `x`, `inv_self` is `(F x)⁻¹`. -/
 noncomputable def inv_self : S :=
   mk' S (1 : R) ⟨x, Submonoid.mem_powers _⟩
 
-variable{g : R →+* P}
+variable {g : R →+* P}
 
 /-- Given `x : R`, a localization map `F : R →+* S` away from `x`, and a map of `comm_ring`s
 `g : R →+* P` such that `g x` is invertible, the homomorphism induced from `S` to `P` sending
@@ -683,7 +683,7 @@ open IsLocalization
 /-! ### Constructing a localization at a given submonoid -/
 
 
-variable{M}
+variable {M}
 
 section 
 
@@ -708,7 +708,7 @@ protected def add (z w : Localization M) : Localization M :=
             by 
               rw [ht₆, ht₅] <;> ring)
 
-instance  : Add (Localization M) :=
+instance : Add (Localization M) :=
   ⟨Localization.add⟩
 
 theorem add_mk a b c d : ((mk a b : Localization M)+mk c d) = mk ((b*c)+d*a) (b*d) :=
@@ -736,7 +736,7 @@ protected def neg (z : Localization M) : Localization M :=
           rw [neg_mul_eq_neg_mul_symm, neg_mul_eq_neg_mul_symm, ht]
           ringNF)
 
-instance  : Neg (Localization M) :=
+instance : Neg (Localization M) :=
   ⟨Localization.neg⟩
 
 theorem neg_mk a b : -(mk a b : Localization M) = mk (-a) b :=
@@ -751,7 +751,7 @@ Should not be confused with `add_localization.zero` which is `⟨0, 0⟩`. -/
 protected def zero : Localization M :=
   mk 0 1
 
-instance  : HasZero (Localization M) :=
+instance : HasZero (Localization M) :=
   ⟨Localization.zero⟩
 
 theorem mk_zero b : (mk 0 b : Localization M) = 0 :=
@@ -788,7 +788,7 @@ theorem smul_mk {S : Type _} [HasScalar S R] [IsScalarTower S R R] (c : S) a b :
 private unsafe def tac :=
   sorry
 
-instance  : CommRingₓ (Localization M) :=
+instance : CommRingₓ (Localization M) :=
   { Localization.commMonoid M with zero := 0, one := 1, add := ·+·, mul := ·*·, npow := Localization.npow _,
     nsmul := Localization.smul,
     nsmul_zero' :=
@@ -869,7 +869,7 @@ instance  : CommRingₓ (Localization M) :=
             runTac 
               tac) }
 
-instance  : Algebra R (Localization M) :=
+instance : Algebra R (Localization M) :=
   RingHom.toAlgebra$
     { Localization.monoidOf M with toFun := (monoid_of M).toMap,
       map_zero' :=
@@ -880,7 +880,7 @@ instance  : Algebra R (Localization M) :=
           by 
             simp only [←mk_one_eq_monoid_of_mk, add_mk, Submonoid.coe_one, one_mulₓ, add_commₓ] }
 
-instance  : IsLocalization M (Localization M) :=
+instance : IsLocalization M (Localization M) :=
   { map_units := (Localization.monoidOf M).map_units, surj := (Localization.monoidOf M).surj,
     eq_iff_exists := fun _ _ => (Localization.monoidOf M).eq_iff_exists }
 
@@ -904,11 +904,11 @@ theorem mk_eq_mk'_apply x y : mk x y = IsLocalization.mk' (Localization M) x y :
 theorem mk_eq_mk' : (mk : R → M → Localization M) = IsLocalization.mk' (Localization M) :=
   mk_eq_monoid_of_mk'
 
-variable[IsLocalization M S]
+variable [IsLocalization M S]
 
 section 
 
-variable(M S)
+variable (M S)
 
 /-- The localization of `R` at `M` as a quotient type is isomorphic to any other localization. -/
 @[simps]
@@ -935,11 +935,11 @@ theorem alg_equiv_symm_mk (x : R) (y : M) : (AlgEquiv M S).symm (mk' S x y) = mk
 
 end Localization
 
-variable{M}
+variable {M}
 
 section AtPrime
 
-variable(I : Ideal R)[hp : I.is_prime]
+variable (I : Ideal R) [hp : I.is_prime]
 
 include hp
 
@@ -955,7 +955,7 @@ def prime_compl : Submonoid R :=
 
 end Ideal
 
-variable(S)
+variable (S)
 
 /-- Given a prime ideal `P`, the typeclass `is_localization.at_prime S P` states that `S` is
 isomorphic to the localization of `R` at the complement of `P`. -/
@@ -1014,11 +1014,11 @@ end AtPrime
 
 namespace IsLocalization
 
-variable[IsLocalization M S]
+variable [IsLocalization M S]
 
 section Ideals
 
-variable(M)(S)
+variable (M) (S)
 
 include M
 
@@ -1198,7 +1198,7 @@ end Ideals
 
 section AtUnits
 
-variable(R)(S)(M)
+variable (R) (S) (M)
 
 /-- The localization at a module of units is isomorphic to the ring -/
 noncomputable def at_units (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S :=
@@ -1234,7 +1234,7 @@ noncomputable def at_one [IsLocalization.Away (1 : R) S] : R ≃ₐ[R] S :=
 
 end AtUnits
 
-variable(S)
+variable (S)
 
 /-- Map from ideals of `R` to submodules of `S` induced by `f`. -/
 def coe_submodule (I : Ideal R) : Submodule R S :=
@@ -1280,11 +1280,11 @@ theorem coe_submodule_span_singleton (x : R) :
   by 
     rw [coe_submodule_span, Set.image_singleton]
 
-variable{g : R →+* P}
+variable {g : R →+* P}
 
-variable{T : Submonoid P}(hy : M ≤ T.comap g){Q : Type _}[CommRingₓ Q]
+variable {T : Submonoid P} (hy : M ≤ T.comap g) {Q : Type _} [CommRingₓ Q]
 
-variable[Algebra P Q][IsLocalization T Q]
+variable [Algebra P Q] [IsLocalization T Q]
 
 theorem map_smul (x : S) (z : R) : map Q g hy (z • x : S) = g z • map Q g hy x :=
   by 
@@ -1307,7 +1307,7 @@ open Polynomial
 
 open_locale Classical
 
-variable(M){S}
+variable (M) {S}
 
 /-- `coeff_integer_normalization p` gives the coefficients of the polynomial
 `integer_normalization p` -/
@@ -1371,7 +1371,7 @@ theorem integer_normalization_map_to_map (p : Polynomial S) :
           rw [coeff_map, coeff_smul]
           exact hb i⟩
 
-variable{R' : Type _}[CommRingₓ R']
+variable {R' : Type _} [CommRingₓ R']
 
 theorem integer_normalization_eval₂_eq_zero (g : S →+* R') (p : Polynomial S) {x : R'} (hx : eval₂ g x p = 0) :
   eval₂ (g.comp (algebraMap R S)) x (integer_normalization M p) = 0 :=
@@ -1387,7 +1387,7 @@ theorem integer_normalization_aeval_eq_zero [Algebra R R'] [Algebra S R'] [IsSca
 
 end IntegerNormalization
 
-variable{R M}(S){K : Type _}
+variable {R M} (S) {K : Type _}
 
 theorem to_map_eq_zero_iff {x : R} (hM : M ≤ nonZeroDivisors R) : algebraMap R S x = 0 ↔ x = 0 :=
   by 
@@ -1411,7 +1411,7 @@ protected theorem to_map_ne_zero_of_mem_non_zero_divisors [Nontrivial R] (hM : M
   show (algebraMap R S).toMonoidWithZeroHom x ≠ 0 from
     (algebraMap R S).map_ne_zero_of_mem_non_zero_divisors (IsLocalization.injective S hM) hx
 
-variable(S Q M)
+variable (S Q M)
 
 /-- Injectivity of a map descends to the map induced on localizations. -/
 theorem map_injective_of_injective (hg : Function.Injective g) [IsLocalization (M.map g : Submonoid P) Q]
@@ -1424,7 +1424,7 @@ theorem map_injective_of_injective (hg : Function.Injective g) [IsLocalization (
     refine' mk'_eq_iff_eq.2 (congr_argₓ (algebraMap _ _) (hg _))
     convert IsLocalization.injective _ hM hxy <;> simp 
 
-variable{S Q M}
+variable {S Q M}
 
 @[mono]
 theorem coe_submodule_le_coe_submodule (h : M ≤ nonZeroDivisors R) {I J : Ideal R} :
@@ -1436,7 +1436,7 @@ theorem coe_submodule_strict_mono (h : M ≤ nonZeroDivisors R) :
   StrictMono (coe_submodule S : Ideal R → Submodule R S) :=
   strict_mono_of_le_iff_le fun _ _ => (coe_submodule_le_coe_submodule h).symm
 
-variable(S){Q M}
+variable (S) {Q M}
 
 theorem coe_submodule_injective (h : M ≤ nonZeroDivisors R) :
   Function.Injective (coe_submodule S : Ideal R → Submodule R S) :=
@@ -1456,7 +1456,7 @@ begin
     rw ["[", expr hx, ",", expr ideal.submodule_span_eq, ",", expr coe_submodule_span_singleton, "]"] [] }
 end
 
-variable{A : Type _}[CommRingₓ A][IsDomain A]
+variable {A : Type _} [CommRingₓ A] [IsDomain A]
 
 -- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A `comm_ring` `S` which is the localization of an integral domain `R` at a subset of
@@ -1495,7 +1495,7 @@ instance is_domain_of_local_at_prime {P : Ideal A} (hp : P.is_prime) : IsDomain 
 
 namespace AtPrime
 
-variable(I : Ideal R)[hI : I.is_prime][IsLocalization.AtPrime S I]
+variable (I : Ideal R) [hI : I.is_prime] [IsLocalization.AtPrime S I]
 
 include hI
 
@@ -1531,11 +1531,11 @@ open IsLocalization
 
 attribute [local instance] Classical.propDecidable
 
-variable(I : Ideal R)[hI : I.is_prime]
+variable (I : Ideal R) [hI : I.is_prime]
 
 include hI
 
-variable{I}
+variable {I}
 
 /-- The unique maximal ideal of the localization at `I.prime_compl` lies over the ideal `I`. -/
 theorem at_prime.comap_maximal_ideal :
@@ -1561,7 +1561,7 @@ theorem le_comap_prime_compl_iff {J : Ideal P} [hJ : J.is_prime] {f : R →+* P}
         exact h hx,
     fun h x hx hfxJ => hx (h hfxJ)⟩
 
-variable(I)
+variable (I)
 
 /--
 For a ring hom `f : R →+* S` and a prime ideal `J` in `S`, the induced ring hom from the
@@ -1632,9 +1632,9 @@ theorem localization_map_bijective_of_field {R Rₘ : Type _} [CommRingₓ R] [I
         by 
           erw [eq_mk'_iff_mul_eq, ←RingHom.map_mul, mul_assocₓ, mul_commₓ n, hn, mul_oneₓ]⟩
 
-variable(R){A : Type _}[CommRingₓ A][IsDomain A]
+variable (R) {A : Type _} [CommRingₓ A] [IsDomain A]
 
-variable(K : Type _)
+variable (K : Type _)
 
 /-- `is_fraction_ring R K` states `K` is the field of fractions of an integral domain `R`. -/
 abbrev IsFractionRing [CommRingₓ K] [Algebra R K] :=
@@ -1667,21 +1667,21 @@ instance Rat.is_fraction_ring : IsFractionRing ℤ ℚ :=
 
 namespace IsFractionRing
 
-variable{R K}
+variable {R K}
 
 section CommRingₓ
 
-variable[CommRingₓ K][Algebra R K][IsFractionRing R K][Algebra A K][IsFractionRing A K]
+variable [CommRingₓ K] [Algebra R K] [IsFractionRing R K] [Algebra A K] [IsFractionRing A K]
 
 theorem to_map_eq_zero_iff {x : R} : algebraMap R K x = 0 ↔ x = 0 :=
   to_map_eq_zero_iff _ (le_of_eqₓ rfl)
 
-variable(R K)
+variable (R K)
 
 protected theorem injective : Function.Injective (algebraMap R K) :=
   IsLocalization.injective _ (le_of_eqₓ rfl)
 
-variable{R K}
+variable {R K}
 
 @[simp, mono]
 theorem coe_submodule_le_coe_submodule {I J : Ideal R} : coe_submodule K I ≤ coe_submodule K J ↔ I ≤ J :=
@@ -1691,7 +1691,7 @@ theorem coe_submodule_le_coe_submodule {I J : Ideal R} : coe_submodule K I ≤ c
 theorem coe_submodule_strict_mono : StrictMono (coe_submodule K : Ideal R → Submodule R K) :=
   strict_mono_of_le_iff_le fun _ _ => coe_submodule_le_coe_submodule.symm
 
-variable(R K)
+variable (R K)
 
 theorem coe_submodule_injective : Function.Injective (coe_submodule K : Ideal R → Submodule R K) :=
   injective_of_le_imp_le _ fun _ _ => coe_submodule_le_coe_submodule.mp
@@ -1700,13 +1700,13 @@ theorem coe_submodule_injective : Function.Injective (coe_submodule K : Ideal R 
 theorem coe_submodule_is_principal {I : Ideal R} : (coe_submodule K I).IsPrincipal ↔ I.is_principal :=
   IsLocalization.coe_submodule_is_principal _ (le_reflₓ _)
 
-variable{R K}
+variable {R K}
 
 protected theorem to_map_ne_zero_of_mem_non_zero_divisors [Nontrivial R] {x : R} (hx : x ∈ nonZeroDivisors R) :
   algebraMap R K x ≠ 0 :=
   IsLocalization.to_map_ne_zero_of_mem_non_zero_divisors _ (le_reflₓ _) hx
 
-variable(A)
+variable (A)
 
 /-- A `comm_ring` `K` which is the localization of an integral domain `R` at `R - {0}` is an
 integral domain. -/
@@ -1747,8 +1747,8 @@ noncomputable def to_field : Field K :=
 
 end CommRingₓ
 
-variable{B :
-    Type _}[CommRingₓ B][IsDomain B][Field K]{L : Type _}[Field L][Algebra A K][IsFractionRing A K]{g : A →+* L}
+variable {B : Type _} [CommRingₓ B] [IsDomain B] [Field K] {L : Type _} [Field L] [Algebra A K] [IsFractionRing A K]
+  {g : A →+* L}
 
 theorem mk'_mk_eq_div {r s} (hs : s ∈ nonZeroDivisors A) : mk' K r ⟨s, hs⟩ = algebraMap A K r / algebraMap A K s :=
   mk'_eq_iff_eq_mul.2$
@@ -1828,7 +1828,7 @@ begin
     exact [expr to_map_eq_zero_iff.mp h] }
 end
 
-variable(A K)
+variable (A K)
 
 -- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An element of a field is algebraic over the ring `A` iff it is algebraic
@@ -1848,7 +1848,7 @@ begin
   { exact [expr ⟨integer_normalization _ p, mt integer_normalization_eq_zero_iff.mp hp, integer_normalization_aeval_eq_zero _ p px⟩] }
 end
 
-variable{A K}
+variable {A K}
 
 /-- A field is algebraic over the ring `A` iff it is algebraic over the field of fractions of `A`.
 -/
@@ -1858,7 +1858,7 @@ theorem comap_is_algebraic_iff [Algebra A L] [Algebra K L] [IsScalarTower A K L]
 
 section NumDenom
 
-variable(A)[UniqueFactorizationMonoid A]
+variable (A) [UniqueFactorizationMonoid A]
 
 theorem exists_reduced_fraction (x : K) :
   ∃ (a : A)(b : nonZeroDivisors A), (∀ {d}, d ∣ a → d ∣ b → IsUnit d) ∧ mk' K a b = x :=
@@ -1887,7 +1887,7 @@ theorem num_denom_reduced (x : K) : ∀ {d}, d ∣ Num A x → d ∣ denom A x �
 theorem mk'_num_denom (x : K) : mk' K (Num A x) (denom A x) = x :=
   (Classical.some_spec (Classical.some_spec (exists_reduced_fraction A x))).2
 
-variable{A}
+variable {A}
 
 theorem num_mul_denom_eq_num_iff_eq {x y : K} : (x*algebraMap A K (denom A y)) = algebraMap A K (Num A y) ↔ x = y :=
   ⟨fun h =>
@@ -1943,15 +1943,15 @@ section Algebra
 
 section IsIntegral
 
-variable{R S}{Rₘ Sₘ : Type _}[CommRingₓ Rₘ][CommRingₓ Sₘ]
+variable {R S} {Rₘ Sₘ : Type _} [CommRingₓ Rₘ] [CommRingₓ Sₘ]
 
-variable[Algebra R Rₘ][IsLocalization M Rₘ]
+variable [Algebra R Rₘ] [IsLocalization M Rₘ]
 
-variable[Algebra S Sₘ][IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ]
+variable [Algebra S Sₘ] [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ]
 
 section 
 
-variable(S M)
+variable (S M)
 
 /-- Definition of the natural algebra induced by the localization of an algebra.
 Given an algebra `R → S`, a submonoid `R` of `M`, and a localization `Rₘ` for `M`,
@@ -1969,7 +1969,7 @@ theorem algebra_map_mk' (r : R) (m : M) :
     mk' Sₘ (algebraMap R S r) ⟨algebraMap R S m, Algebra.mem_algebra_map_submonoid_of_mem m⟩ :=
   map_mk' _ _ _
 
-variable(Rₘ Sₘ)
+variable (Rₘ Sₘ)
 
 /-- Injectivity of the underlying `algebra_map` descends to the algebra induced by localization. -/
 theorem localization_algebra_injective (hRS : Function.Injective (algebraMap R S))
@@ -1977,7 +1977,7 @@ theorem localization_algebra_injective (hRS : Function.Injective (algebraMap R S
   Function.Injective (@algebraMap Rₘ Sₘ _ _ (localizationAlgebra M S)) :=
   IsLocalization.map_injective_of_injective M Rₘ Sₘ hRS hM
 
-variable{Rₘ Sₘ}
+variable {Rₘ Sₘ}
 
 open Polynomial
 
@@ -2056,11 +2056,11 @@ end IsIntegral
 
 namespace IsIntegralClosure
 
-variable(A){L : Type _}[Field K][Field L][Algebra A K][Algebra A L][IsFractionRing A K]
+variable (A) {L : Type _} [Field K] [Field L] [Algebra A K] [Algebra A L] [IsFractionRing A K]
 
-variable(C : Type _)[CommRingₓ C][IsDomain C][Algebra C L][IsIntegralClosure C A L]
+variable (C : Type _) [CommRingₓ C] [IsDomain C] [Algebra C L] [IsIntegralClosure C A L]
 
-variable[Algebra A C][IsScalarTower A C L]
+variable [Algebra A C] [IsScalarTower A C L]
 
 open Algebra
 
@@ -2096,7 +2096,7 @@ theorem is_fraction_ring_of_algebraic (alg : IsAlgebraic A L) (inj : ∀ x, alge
           fun ⟨c, hc⟩ =>
             congr_argₓ (algebraMap _ L) (mul_right_cancel₀ (mem_non_zero_divisors_iff_ne_zero.mp c.2) hc)⟩ }
 
-variable(K L)
+variable (K L)
 
 /-- If the field `L` is a finite extension of the fraction field of the integral domain `A`,
 the integral closure `C` of `A` in `L` has fraction field `L`. -/
@@ -2112,7 +2112,7 @@ end IsIntegralClosure
 
 namespace integralClosure
 
-variable{L : Type _}[Field K][Field L][Algebra A K][IsFractionRing A K]
+variable {L : Type _} [Field K] [Field L] [Algebra A K] [IsFractionRing A K]
 
 open Algebra
 
@@ -2122,7 +2122,7 @@ theorem is_fraction_ring_of_algebraic [Algebra A L] (alg : IsAlgebraic A L) (inj
   IsFractionRing (integralClosure A L) L :=
   IsIntegralClosure.is_fraction_ring_of_algebraic A (integralClosure A L) alg inj
 
-variable(K L)
+variable (K L)
 
 /-- If the field `L` is a finite extension of the fraction field of the integral domain `A`,
 the integral closure of `A` in `L` has fraction field `L`. -/
@@ -2134,7 +2134,7 @@ end integralClosure
 
 end Algebra
 
-variable(R A)
+variable (R A)
 
 /-- The fraction ring of a commutative ring `R` as a quotient type.
 
@@ -2147,9 +2147,9 @@ def FractionRing :=
 
 namespace FractionRing
 
-variable{A}
+variable {A}
 
-noncomputable instance  : Field (FractionRing A) :=
+noncomputable instance : Field (FractionRing A) :=
   { Localization.commRing, IsFractionRing.toField A with add := ·+·, mul := ·*·, neg := Neg.neg, sub := Sub.sub,
     one := 1, zero := 0, nsmul := AddMonoidₓ.nsmul, zsmul := SubNegMonoidₓ.zsmul, npow := Localization.npow _ }
 
@@ -2159,7 +2159,7 @@ theorem mk_eq_div {r s} :
   by 
     rw [Localization.mk_eq_mk', IsFractionRing.mk'_eq_div]
 
-variable(A)
+variable (A)
 
 /-- Given an integral domain `A` and a localization map to a field of fractions
 `f : A →+* K`, we get an `A`-isomorphism between the field of fractions of `A` as a quotient

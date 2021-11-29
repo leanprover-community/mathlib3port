@@ -27,9 +27,9 @@ In this file, we define a `homotopy` between two `path`s. In addition, we define
 
 universe u v
 
-variable{X : Type u}{Y : Type v}[TopologicalSpace X][TopologicalSpace Y]
+variable {X : Type u} {Y : Type v} [TopologicalSpace X] [TopologicalSpace Y]
 
-variable{x₀ x₁ x₂ : X}
+variable {x₀ x₁ x₂ : X}
 
 noncomputable theory
 
@@ -47,9 +47,9 @@ namespace Homotopy
 
 section 
 
-variable{p₀ p₁ : Path x₀ x₁}
+variable {p₀ p₁ : Path x₀ x₁}
 
-instance  : CoeFun (homotopy p₀ p₁) fun _ => I × I → X :=
+instance : CoeFun (homotopy p₀ p₁) fun _ => I × I → X :=
   ⟨fun F => F.to_fun⟩
 
 theorem coe_fn_injective : @Function.Injective (homotopy p₀ p₁) (I × I → X) coeFn :=
@@ -97,7 +97,7 @@ end
 
 section 
 
-variable{p₀ p₁ p₂ : Path x₀ x₁}
+variable {p₀ p₁ p₂ : Path x₀ x₁}
 
 /--
 Given a path `p`, we can define a `homotopy p p` by `F (t, x) = p x`
@@ -144,7 +144,7 @@ end
 
 section 
 
-variable{p₀ q₀ : Path x₀ x₁}{p₁ q₁ : Path x₁ x₂}
+variable {p₀ q₀ : Path x₀ x₁} {p₁ q₁ : Path x₁ x₂}
 
 /--
 Suppose `p₀` and `q₀` are paths from `x₀` to `x₁`, `p₁` and `q₁` are paths from `x₁` to `x₂`.
@@ -338,7 +338,7 @@ The quotient on `path x₀ x₁` by the equivalence relation `path.homotopic`.
 protected def Quotientₓ (x₀ x₁ : X) :=
   Quotientₓ (homotopic.setoid x₀ x₁)
 
-instance  : Inhabited (homotopic.quotient () ()) :=
+instance : Inhabited (homotopic.quotient () ()) :=
   ⟨@Quotientₓ.mk _ (homotopic.setoid _ _)$ Path.refl ()⟩
 
 end Homotopic

@@ -12,9 +12,9 @@ open Opposite
 
 namespace CategoryTheory
 
-variable(C : Type _)[category C][preadditive C]
+variable (C : Type _) [category C] [preadditive C]
 
-instance  : preadditive («expr ᵒᵖ» C) :=
+instance : preadditive («expr ᵒᵖ» C) :=
   { homGroup := fun X Y => Equiv.addCommGroup (op_equiv X Y),
     add_comp' := fun X Y Z f f' g => congr_argₓ Quiver.Hom.op (preadditive.comp_add _ _ _ g.unop f.unop f'.unop),
     comp_add' := fun X Y Z f g g' => congr_argₓ Quiver.Hom.op (preadditive.add_comp _ _ _ g.unop g'.unop f.unop) }
@@ -35,7 +35,7 @@ theorem op_zero (X Y : C) : (0 : X ⟶ Y).op = 0 :=
 theorem op_add {X Y : C} (f g : X ⟶ Y) : (f+g).op = f.op+g.op :=
   rfl
 
-variable{C}{D : Type _}[category D][preadditive D]
+variable {C} {D : Type _} [category D] [preadditive D]
 
 instance functor.op_additive (F : C ⥤ D) [F.additive] : F.op.additive :=
   {  }

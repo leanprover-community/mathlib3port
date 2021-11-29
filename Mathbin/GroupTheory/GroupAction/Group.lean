@@ -10,7 +10,7 @@ This file contains lemmas about `smul` on `group_with_zero`, and `group`.
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 section MulAction
 
@@ -21,7 +21,7 @@ instance RightCancelMonoid.to_has_faithful_scalar [RightCancelMonoid α] : HasFa
 
 section Groupₓ
 
-variable[Groupₓ α][MulAction α β]
+variable [Groupₓ α] [MulAction α β]
 
 @[simp, toAdditive]
 theorem inv_smul_smul (c : α) (x : β) : c⁻¹ • c • x = x :=
@@ -47,7 +47,7 @@ theorem MulAction.to_perm_injective [HasFaithfulScalar α β] :
   Function.Injective (MulAction.toPerm : α → Equiv.Perm β) :=
   (show Function.Injective (Equiv.toFun ∘ MulAction.toPerm) from smul_left_injective').of_comp
 
-variable(α)(β)
+variable (α) (β)
 
 /-- Given an action of a group `α` on a set `β`, each `g : α` defines a permutation of `β`. -/
 @[simps]
@@ -76,7 +76,7 @@ protected theorem Equiv.Perm.smul_def {α : Type _} (f : Equiv.Perm α) (a : α)
 instance Equiv.Perm.apply_has_faithful_scalar (α : Type _) : HasFaithfulScalar (Equiv.Perm α) α :=
   ⟨fun x y => Equiv.ext⟩
 
-variable{α}{β}
+variable {α} {β}
 
 @[toAdditive]
 theorem inv_smul_eq_iff {a : α} {x y : β} : a⁻¹ • x = y ↔ x = a • y :=
@@ -123,7 +123,7 @@ instance CancelMonoidWithZero.to_has_faithful_scalar [CancelMonoidWithZero α] [
 
 section Gwz
 
-variable[GroupWithZeroₓ α][MulAction α β]
+variable [GroupWithZeroₓ α] [MulAction α β]
 
 @[simp]
 theorem inv_smul_smul₀ {c : α} (hc : c ≠ 0) (x : β) : c⁻¹ • c • x = x :=
@@ -147,9 +147,9 @@ section DistribMulAction
 
 section Groupₓ
 
-variable[Groupₓ α][AddMonoidₓ β][DistribMulAction α β]
+variable [Groupₓ α] [AddMonoidₓ β] [DistribMulAction α β]
 
-variable(β)
+variable (β)
 
 /-- Each element of the group defines an additive monoid isomorphism.
 
@@ -158,7 +158,7 @@ This is a stronger version of `mul_action.to_perm`. -/
 def DistribMulAction.toAddEquiv (x : α) : β ≃+ β :=
   { DistribMulAction.toAddMonoidHom β x, MulAction.toPermHom α β x with  }
 
-variable(α β)
+variable (α β)
 
 /-- Each element of the group defines an additive monoid isomorphism.
 
@@ -168,7 +168,7 @@ def DistribMulAction.toAddAut : α →* AddAut β :=
   { toFun := DistribMulAction.toAddEquiv β, map_one' := AddEquiv.ext (one_smul _),
     map_mul' := fun a₁ a₂ => AddEquiv.ext (mul_smul _ _) }
 
-variable{α β}
+variable {α β}
 
 theorem smul_eq_zero_iff_eq (a : α) {x : β} : a • x = 0 ↔ x = 0 :=
   ⟨fun h =>
@@ -183,7 +183,7 @@ end Groupₓ
 
 section Gwz
 
-variable[GroupWithZeroₓ α][AddMonoidₓ β][DistribMulAction α β]
+variable [GroupWithZeroₓ α] [AddMonoidₓ β] [DistribMulAction α β]
 
 theorem smul_eq_zero_iff_eq' {a : α} (ha : a ≠ 0) {x : β} : a • x = 0 ↔ x = 0 :=
   smul_eq_zero_iff_eq (Units.mk0 a ha)
@@ -197,9 +197,9 @@ end DistribMulAction
 
 section MulDistribMulAction
 
-variable[Groupₓ α][Monoidₓ β][MulDistribMulAction α β]
+variable [Groupₓ α] [Monoidₓ β] [MulDistribMulAction α β]
 
-variable(β)
+variable (β)
 
 /-- Each element of the group defines a multiplicative monoid isomorphism.
 
@@ -208,7 +208,7 @@ This is a stronger version of `mul_action.to_perm`. -/
 def MulDistribMulAction.toMulEquiv (x : α) : β ≃* β :=
   { MulDistribMulAction.toMonoidHom β x, MulAction.toPermHom α β x with  }
 
-variable(α β)
+variable (α β)
 
 /-- Each element of the group defines an multiplicative monoid isomorphism.
 
@@ -218,7 +218,7 @@ def MulDistribMulAction.toMulAut : α →* MulAut β :=
   { toFun := MulDistribMulAction.toMulEquiv β, map_one' := MulEquiv.ext (one_smul _),
     map_mul' := fun a₁ a₂ => MulEquiv.ext (mul_smul _ _) }
 
-variable{α β}
+variable {α β}
 
 end MulDistribMulAction
 
@@ -257,7 +257,7 @@ namespace IsUnit
 
 section MulAction
 
-variable[Monoidₓ α][MulAction α β]
+variable [Monoidₓ α] [MulAction α β]
 
 @[toAdditive]
 theorem smul_left_cancel {a : α} (ha : IsUnit a) {x y : β} : a • x = a • y ↔ x = y :=
@@ -268,7 +268,7 @@ end MulAction
 
 section DistribMulAction
 
-variable[Monoidₓ α][AddMonoidₓ β][DistribMulAction α β]
+variable [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β]
 
 @[simp]
 theorem smul_eq_zero {u : α} (hu : IsUnit u) {x : β} : u • x = 0 ↔ x = 0 :=
@@ -277,4 +277,9 @@ theorem smul_eq_zero {u : α} (hu : IsUnit u) {x : β} : u • x = 0 ↔ x = 0 :
 end DistribMulAction
 
 end IsUnit
+
+@[simp]
+theorem is_unit_smul_iff [Groupₓ α] [Monoidₓ β] [MulAction α β] [SmulCommClass α β β] [IsScalarTower α β β] {g : α}
+  {m : β} : IsUnit (g • m) ↔ IsUnit m :=
+  ⟨fun h => inv_smul_smul g m ▸ h.smul (g⁻¹), IsUnit.smul g⟩
 

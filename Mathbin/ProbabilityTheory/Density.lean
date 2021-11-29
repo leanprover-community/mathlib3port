@@ -52,15 +52,14 @@ namespace MeasureTheory
 
 open TopologicalSpace MeasureTheory.Measure
 
-variable{α E :
-    Type
-      _}[NormedGroup E][MeasurableSpace E][second_countable_topology E][NormedSpace ℝ E][CompleteSpace E][BorelSpace E]
+variable {α E : Type _} [NormedGroup E] [MeasurableSpace E] [second_countable_topology E] [NormedSpace ℝ E]
+  [CompleteSpace E] [BorelSpace E]
 
 /-- A random variable `X : α → E` is said to `has_pdf` with respect to the measure `ℙ` on `α` and
 `μ` on `E` if there exists a measurable function `f` such that the push-forward measure of `ℙ`
 along `X` equals `μ.with_density f`. -/
-class
-  has_pdf{m : MeasurableSpace α}(X : α → E)(ℙ : Measureₓ α)(μ : Measureₓ E :=  by 
+class has_pdf {m : MeasurableSpace α} (X : α → E) (ℙ : Measureₓ α)
+  (μ : Measureₓ E :=  by 
     runTac 
       volume_tac) :
   Prop where 
@@ -138,7 +137,7 @@ theorem map_eq_set_lintegral_pdf {m : MeasurableSpace α} (X : α → E) (ℙ : 
 
 namespace Pdf
 
-variable{m : MeasurableSpace α}{ℙ : Measureₓ α}{μ : Measureₓ E}
+variable {m : MeasurableSpace α} {ℙ : Measureₓ α} {μ : Measureₓ E}
 
 theorem lintegral_eq_measure_univ {X : α → E} [has_pdf X ℙ μ] : (∫⁻x, pdf X ℙ μ x ∂μ) = ℙ Set.Univ :=
   by 
@@ -259,10 +258,8 @@ theorem has_pdf_iff_of_measurable {X : α → E} (hX : Measurable X) :
 
 section 
 
-variable{F :
-    Type
-      _}[NormedGroup
-      F][MeasurableSpace F][second_countable_topology F][NormedSpace ℝ F][CompleteSpace F][BorelSpace F]{ν : Measureₓ F}
+variable {F : Type _} [NormedGroup F] [MeasurableSpace F] [second_countable_topology F] [NormedSpace ℝ F]
+  [CompleteSpace F] [BorelSpace F] {ν : Measureₓ F}
 
 -- error in ProbabilityTheory.Density: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A random variable that `has_pdf` transformed under a `quasi_measure_preserving`
@@ -295,7 +292,7 @@ end
 
 section Real
 
-variable[is_finite_measure ℙ]{X : α → ℝ}
+variable [is_finite_measure ℙ] {X : α → ℝ}
 
 /-- A real-valued random variable `X` `has_pdf X ℙ λ` (where `λ` is the Lebesgue measure) if and
 only if the push-forward measure of `ℙ` along `X` is absolutely continuous with respect to `λ`. -/
@@ -386,9 +383,9 @@ theorem pdf_to_real_ae_eq {m : MeasurableSpace α} {X : α → E} {ℙ : Measure
   (fun x => (pdf X ℙ μ x).toReal) =ᵐ[μ] fun x => (s.indicator (μ s⁻¹ • (1 : E → ℝ≥0∞)) x).toReal :=
   Filter.EventuallyEq.fun_comp hX Ennreal.toReal
 
-variable[is_finite_measure ℙ]{X : α → ℝ}
+variable [is_finite_measure ℙ] {X : α → ℝ}
 
-variable{s : Set ℝ}(hms : MeasurableSet s)(hns : volume s ≠ 0)
+variable {s : Set ℝ} (hms : MeasurableSet s) (hns : volume s ≠ 0)
 
 include hms hns
 

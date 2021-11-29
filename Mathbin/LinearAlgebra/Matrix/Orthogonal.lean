@@ -20,11 +20,11 @@ orthogonal
 
 namespace Matrix
 
-variable{α n m : Type _}
+variable {α n m : Type _}
 
-variable[Mul α][AddCommMonoidₓ α]
+variable [Mul α] [AddCommMonoidₓ α]
 
-variable(A : Matrix m n α)
+variable (A : Matrix m n α)
 
 open_locale Matrix
 
@@ -50,7 +50,7 @@ theorem transpose_has_orthogonal_cols_iff_has_orthogonal_rows [Fintype n] :
   (A)ᵀ.HasOrthogonalCols ↔ A.has_orthogonal_rows :=
   Iff.rfl
 
-variable{A}
+variable {A}
 
 theorem has_orthogonal_rows.has_orthogonal_cols [Fintype m] (h : (A)ᵀ.HasOrthogonalRows) : A.has_orthogonal_cols :=
   h

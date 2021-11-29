@@ -14,7 +14,7 @@ In this file, `x ∈+ l` notation is shorthand for `list.duplicate x l`.
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace List
 
@@ -25,7 +25,7 @@ inductive duplicate (x : α) : List α → Prop
 
 local infixl:50 " ∈+ " => List.Duplicate
 
-variable{l : List α}{x : α}
+variable {l : List α} {x : α}
 
 theorem mem.duplicate_cons_self (h : x ∈ l) : x ∈+ x :: l :=
   duplicate.cons_mem h

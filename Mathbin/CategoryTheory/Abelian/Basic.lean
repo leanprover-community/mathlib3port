@@ -84,9 +84,9 @@ universe v u
 
 namespace CategoryTheory
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable(C)
+variable (C)
 
 /--
 A (preadditive) category `C` is called abelian if it has all finite products,
@@ -114,16 +114,16 @@ open CategoryTheory
 
 namespace CategoryTheory.Abelian
 
-variable{C : Type u}[category.{v} C][abelian C]
+variable {C : Type u} [category.{v} C] [abelian C]
 
 /-- An abelian category has finite biproducts. -/
-instance (priority := 100)has_finite_biproducts : has_finite_biproducts C :=
+instance (priority := 100) has_finite_biproducts : has_finite_biproducts C :=
   limits.has_finite_biproducts.of_has_finite_products
 
-instance (priority := 100)has_binary_biproducts : has_binary_biproducts C :=
+instance (priority := 100) has_binary_biproducts : has_binary_biproducts C :=
   limits.has_binary_biproducts_of_finite_biproducts _
 
-instance (priority := 100)has_zero_object : has_zero_object C :=
+instance (priority := 100) has_zero_object : has_zero_object C :=
   has_zero_object_of_has_initial_object
 
 section ToNonPreadditiveAbelian
@@ -147,7 +147,7 @@ end Strong
 
 section MonoEpiIso
 
-variable{X Y : C}(f : X ⟶ Y)
+variable {X Y : C} (f : X ⟶ Y)
 
 attribute [local instance] strong_epi_of_epi
 
@@ -161,7 +161,7 @@ section Factor
 
 attribute [local instance] non_preadditive_abelian
 
-variable{P Q : C}(f : P ⟶ Q)
+variable {P Q : C} (f : P ⟶ Q)
 
 section 
 
@@ -214,13 +214,13 @@ protected theorem image.fac : images.factor_thru_image f ≫ image.ι f = f :=
   kernel.lift_ι _ _ _
 
 /-- The map `p : P ⟶ image f` is an epimorphism -/
-instance  : epi (images.factor_thru_image f) :=
+instance : epi (images.factor_thru_image f) :=
   show epi (non_preadditive_abelian.factor_thru_image f)by 
     infer_instance
 
 section 
 
-variable{f}
+variable {f}
 
 theorem image_ι_comp_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : images.image.ι f ≫ g = 0 :=
   zero_of_epi_comp (images.factor_thru_image f)$
@@ -265,13 +265,13 @@ protected theorem coimage.fac : coimage.π f ≫ coimages.factor_thru_coimage f 
   cokernel.π_desc _ _ _
 
 /-- The canonical morphism `i : coimage f ⟶ Q` is a monomorphism -/
-instance  : mono (coimages.factor_thru_coimage f) :=
+instance : mono (coimages.factor_thru_coimage f) :=
   show mono (non_preadditive_abelian.factor_thru_coimage f)by 
     infer_instance
 
 section 
 
-variable{f}
+variable {f}
 
 theorem comp_coimage_π_eq_zero {R : C} {g : Q ⟶ R} (h : f ≫ g = 0) : f ≫ coimages.coimage.π g = 0 :=
   zero_of_comp_mono (coimages.factor_thru_coimage g)$
@@ -305,11 +305,11 @@ section HasStrongEpiMonoFactorisations
 instance (priority := 100) : has_strong_epi_mono_factorisations C :=
   has_strong_epi_mono_factorisations.mk$ fun X Y f => images.image_strong_epi_mono_factorisation f
 
-example  : has_images C :=
+example : has_images C :=
   by 
     infer_instance
 
-example  : has_image_maps C :=
+example : has_image_maps C :=
   by 
     infer_instance
 
@@ -317,7 +317,7 @@ end HasStrongEpiMonoFactorisations
 
 section Images
 
-variable{X Y : C}(f : X ⟶ Y)
+variable {X Y : C} (f : X ⟶ Y)
 
 /-- There is a canonical isomorphism between the coimage and the image of a morphism. -/
 abbrev coimage_iso_image : coimages.coimage f ≅ images.image f :=
@@ -343,7 +343,7 @@ end Images
 
 section CokernelOfKernel
 
-variable{X Y : C}{f : X ⟶ Y}
+variable {X Y : C} {f : X ⟶ Y}
 
 attribute [local instance] non_preadditive_abelian
 
@@ -365,29 +365,29 @@ end CokernelOfKernel
 
 section 
 
-instance (priority := 100)has_equalizers : has_equalizers C :=
+instance (priority := 100) has_equalizers : has_equalizers C :=
   preadditive.has_equalizers_of_has_kernels
 
 /-- Any abelian category has pullbacks -/
-instance (priority := 100)has_pullbacks : has_pullbacks C :=
+instance (priority := 100) has_pullbacks : has_pullbacks C :=
   has_pullbacks_of_has_binary_products_of_has_equalizers C
 
 end 
 
 section 
 
-instance (priority := 100)has_coequalizers : has_coequalizers C :=
+instance (priority := 100) has_coequalizers : has_coequalizers C :=
   preadditive.has_coequalizers_of_has_cokernels
 
 /-- Any abelian category has pushouts -/
-instance (priority := 100)has_pushouts : has_pushouts C :=
+instance (priority := 100) has_pushouts : has_pushouts C :=
   has_pushouts_of_has_binary_coproducts_of_has_coequalizers C
 
 end 
 
 namespace PullbackToBiproductIsKernel
 
-variable[limits.has_pullbacks C]{X Y Z : C}(f : X ⟶ Z)(g : Y ⟶ Z)
+variable [limits.has_pullbacks C] {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
 
 /-! This section contains a slightly technical result about pullbacks and biproducts.
     We will need it in the proof that the pullback of an epimorphism is an epimorpism. -/
@@ -431,7 +431,7 @@ end PullbackToBiproductIsKernel
 
 namespace BiproductToPushoutIsCokernel
 
-variable[limits.has_pushouts C]{W X Y Z : C}(f : X ⟶ Y)(g : X ⟶ Z)
+variable [limits.has_pushouts C] {W X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z)
 
 /-- The canonical map `Y ⊞ Z ⟶ pushout f g` -/
 abbrev biproduct_to_pushout : Y ⊞ Z ⟶ pushout f g :=
@@ -465,7 +465,7 @@ end BiproductToPushoutIsCokernel
 
 section EpiPullback
 
-variable[limits.has_pullbacks C]{W X Y Z : C}(f : X ⟶ Z)(g : Y ⟶ Z)
+variable [limits.has_pullbacks C] {W X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z)
 
 -- error in CategoryTheory.Abelian.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In an abelian category, the pullback of an epimorphism is an epimorphism.
@@ -544,7 +544,7 @@ end EpiPullback
 
 section MonoPushout
 
-variable[limits.has_pushouts C]{W X Y Z : C}(f : X ⟶ Y)(g : X ⟶ Z)
+variable [limits.has_pushouts C] {W X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z)
 
 -- error in CategoryTheory.Abelian.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance mono_pushout_of_mono_f [mono f] : mono (pushout.inr : «expr ⟶ »(Z, pushout f g)) :=
@@ -623,7 +623,7 @@ end CategoryTheory.Abelian
 
 namespace CategoryTheory.NonPreadditiveAbelian
 
-variable(C : Type u)[category.{v} C][non_preadditive_abelian C]
+variable (C : Type u) [category.{v} C] [non_preadditive_abelian C]
 
 /-- Every non_preadditive_abelian category can be promoted to an abelian category. -/
 def abelian : abelian C :=

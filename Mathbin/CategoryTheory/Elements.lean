@@ -31,7 +31,7 @@ namespace CategoryTheory
 
 universe w v u
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /--
 The type of objects for the category of elements of a functor `F : C ⥤ Type`
@@ -93,7 +93,7 @@ noncomputable instance groupoid_of_elements {G : Type u} [groupoid.{v} G] (F : G
 
 namespace CategoryOfElements
 
-variable(F : C ⥤ Type w)
+variable (F : C ⥤ Type w)
 
 /-- The functor out of the category of elements which forgets the element. -/
 @[simps]

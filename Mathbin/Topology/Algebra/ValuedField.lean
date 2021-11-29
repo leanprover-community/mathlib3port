@@ -29,13 +29,13 @@ open_locale TopologicalSpace
 
 section DivisionRing
 
-variable{K : Type _}[DivisionRing K]
+variable {K : Type _} [DivisionRing K]
 
 section ValuationTopologicalDivisionRing
 
 section InversionEstimate
 
-variable{Γ₀ : Type _}[LinearOrderedCommGroupWithZero Γ₀](v : Valuation K Γ₀)
+variable {Γ₀ : Type _} [LinearOrderedCommGroupWithZero Γ₀] (v : Valuation K Γ₀)
 
 -- error in Topology.Algebra.ValuedField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem valuation.inversion_estimate
@@ -146,7 +146,7 @@ section ValuationOnValuedFieldCompletion
 
 open UniformSpace
 
-variable{K : Type _}[Field K][Valued K]
+variable {K : Type _} [Field K] [Valued K]
 
 open Valued UniformSpace
 

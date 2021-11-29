@@ -11,7 +11,7 @@ import Mathbin.FieldTheory.Finite.Basic
 
 namespace MvPolynomial
 
-variable{σ : Type _}
+variable {σ : Type _}
 
 /-- A polynomial over the integers is divisible by `n : ℕ`
 if and only if it is zero over `zmod n`. -/
@@ -20,7 +20,7 @@ theorem C_dvd_iff_zmod (n : ℕ) (φ : MvPolynomial σ ℤ) : C (n : ℤ) ∣ φ
 
 section frobenius
 
-variable{p : ℕ}[Fact p.prime]
+variable {p : ℕ} [Fact p.prime]
 
 theorem frobenius_zmod (f : MvPolynomial σ (Zmod p)) : frobenius _ p f = expand p f :=
   by 
@@ -52,9 +52,9 @@ open_locale BigOperators Classical
 
 open Set LinearMap Submodule
 
-variable{K : Type _}{σ : Type _}
+variable {K : Type _} {σ : Type _}
 
-variable[Field K][Fintype K][Fintype σ]
+variable [Field K] [Fintype K] [Fintype σ]
 
 def indicator (a : σ → K) : MvPolynomial σ K :=
   ∏n, 1 - (X n - C (a n)^Fintype.card K - 1)
@@ -111,7 +111,7 @@ theorem indicator_mem_restrict_degree (c : σ → K) : indicator c ∈ restrict_
 
 section 
 
-variable(K σ)
+variable (K σ)
 
 def evalₗ : MvPolynomial σ K →ₗ[K] (σ → K) → K :=
   { toFun := fun p e => eval e p,
@@ -164,7 +164,7 @@ open LinearMap Submodule
 
 universe u
 
-variable(σ : Type u)(K : Type u)[Fintype σ][Field K][Fintype K]
+variable (σ : Type u) (K : Type u) [Fintype σ] [Field K] [Fintype K]
 
 -- error in FieldTheory.Finite.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_group
 @[derive #["[", expr add_comm_group, ",", expr module K, ",", expr inhabited, "]"]] def R : Type u :=
@@ -192,7 +192,7 @@ theorem dim_R : Module.rank K (R σ K) = Fintype.card (σ → K) :=
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
     
 
-instance  : FiniteDimensional K (R σ K) :=
+instance : FiniteDimensional K (R σ K) :=
   IsNoetherian.iff_fg.1$
     IsNoetherian.iff_dim_lt_omega.mpr
       (by 

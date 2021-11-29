@@ -1,4 +1,5 @@
 import Mathbin.Topology.Maps 
+import Mathbin.Order.Filter.Pi 
 import Mathbin.Data.Fin.Tuple
 
 /-!
@@ -34,26 +35,26 @@ open_locale Classical TopologicalSpace Filter
 
 universe u v w x
 
-variable{α : Type u}{β : Type v}{γ : Type w}{δ : Type x}
+variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 
 section Constructions
 
-instance  {p : α → Prop} [t : TopologicalSpace α] : TopologicalSpace (Subtype p) :=
+instance {p : α → Prop} [t : TopologicalSpace α] : TopologicalSpace (Subtype p) :=
   induced coeₓ t
 
-instance  {r : α → α → Prop} [t : TopologicalSpace α] : TopologicalSpace (Quot r) :=
+instance {r : α → α → Prop} [t : TopologicalSpace α] : TopologicalSpace (Quot r) :=
   coinduced (Quot.mk r) t
 
-instance  {s : Setoidₓ α} [t : TopologicalSpace α] : TopologicalSpace (Quotientₓ s) :=
+instance {s : Setoidₓ α} [t : TopologicalSpace α] : TopologicalSpace (Quotientₓ s) :=
   coinduced Quotientₓ.mk t
 
-instance  [t₁ : TopologicalSpace α] [t₂ : TopologicalSpace β] : TopologicalSpace (α × β) :=
+instance [t₁ : TopologicalSpace α] [t₂ : TopologicalSpace β] : TopologicalSpace (α × β) :=
   induced Prod.fst t₁⊓induced Prod.snd t₂
 
-instance  [t₁ : TopologicalSpace α] [t₂ : TopologicalSpace β] : TopologicalSpace (Sum α β) :=
+instance [t₁ : TopologicalSpace α] [t₂ : TopologicalSpace β] : TopologicalSpace (Sum α β) :=
   coinduced Sum.inl t₁⊔coinduced Sum.inr t₂
 
-instance  {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] : TopologicalSpace (Sigma β) :=
+instance {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] : TopologicalSpace (Sigma β) :=
   ⨆a, coinduced (Sigma.mk a) (t₂ a)
 
 instance Pi.topologicalSpace {β : α → Type v} [t₂ : ∀ a, TopologicalSpace (β a)] : TopologicalSpace (∀ a, β a) :=
@@ -75,7 +76,7 @@ theorem DenseRange.quotient [Setoidₓ α] [TopologicalSpace α] {f : β → α}
   DenseRange (Quotientₓ.mk ∘ f) :=
   (surjective_quotient_mk α).DenseRange.comp hf continuous_coinduced_rng
 
-instance  {p : α → Prop} [TopologicalSpace α] [DiscreteTopology α] : DiscreteTopology (Subtype p) :=
+instance {p : α → Prop} [TopologicalSpace α] [DiscreteTopology α] : DiscreteTopology (Subtype p) :=
   ⟨bot_unique$ fun s hs => ⟨coeₓ '' s, is_open_discrete _, Set.preimage_image_eq _ Subtype.coe_injective⟩⟩
 
 instance Sum.discrete_topology [TopologicalSpace α] [TopologicalSpace β] [hα : DiscreteTopology α]
@@ -91,7 +92,7 @@ instance Sigma.discrete_topology {β : α → Type v} [∀ a, TopologicalSpace (
 
 section Topα
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 theorem mem_nhds_subtype (s : Set α) (a : { x // x ∈ s }) (t : Set { x // x ∈ s }) :
   t ∈ 𝓝 a ↔ ∃ (u : _)(_ : u ∈ 𝓝 (a : α)), coeₓ ⁻¹' u ⊆ t :=
@@ -106,7 +107,7 @@ end Constructions
 
 section Prod
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ][TopologicalSpace δ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
 @[continuity]
 theorem continuous_fst : Continuous (@Prod.fst α β) :=
@@ -221,7 +222,7 @@ theorem Filter.HasBasis.prod_nhds' {ιa ιb : Type _} {pa : ιa → Prop} {pb : 
     cases ab 
     exact ha.prod_nhds hb
 
-instance  [DiscreteTopology α] [DiscreteTopology β] : DiscreteTopology (α × β) :=
+instance [DiscreteTopology α] [DiscreteTopology β] : DiscreteTopology (α × β) :=
   ⟨eq_of_nhds_eq_nhds$
       fun ⟨a, b⟩ =>
         by 
@@ -465,7 +466,7 @@ theorem Dense.prod {s : Set α} {t : Set β} (hs : Dense s) (ht : Dense t) : Den
 
 /-- If `f` and `g` are maps with dense range, then `prod.map f g` has dense range. -/
 theorem DenseRange.prod_map {ι : Type _} {κ : Type _} {f : ι → β} {g : κ → γ} (hf : DenseRange f) (hg : DenseRange g) :
-  DenseRange (Prod.mapₓ f g) :=
+  DenseRange (Prod.map f g) :=
   by 
     simpa only [DenseRange, prod_range_range_eq] using hf.prod hg
 
@@ -504,7 +505,7 @@ section Sum
 
 open Sum
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 @[continuity]
 theorem continuous_inl : Continuous (@inl α β) :=
@@ -600,7 +601,7 @@ end Sum
 
 section Subtype
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]{p : α → Prop}
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {p : α → Prop}
 
 theorem embedding_subtype_coe : Embedding (coeₓ : Subtype p → α) :=
   ⟨⟨rfl⟩, Subtype.coe_injective⟩
@@ -702,9 +703,9 @@ end Subtype
 
 section Quotientₓ
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
-variable{r : α → α → Prop}{s : Setoidₓ α}
+variable {r : α → α → Prop} {s : Setoidₓ α}
 
 theorem quotient_map_quot_mk : QuotientMap (@Quot.mk α r) :=
   ⟨Quot.exists_rep, rfl⟩
@@ -732,7 +733,7 @@ end Quotientₓ
 
 section Pi
 
-variable{ι : Type _}{π : ι → Type _}
+variable {ι : Type _} {π : ι → Type _}
 
 @[continuity]
 theorem continuous_pi [TopologicalSpace α] [∀ i, TopologicalSpace (π i)] {f : α → ∀ i : ι, π i}
@@ -742,6 +743,11 @@ theorem continuous_pi [TopologicalSpace α] [∀ i, TopologicalSpace (π i)] {f 
 @[continuity]
 theorem continuous_apply [∀ i, TopologicalSpace (π i)] (i : ι) : Continuous fun p : ∀ i, π i => p i :=
   continuous_infi_dom continuous_induced_dom
+
+@[continuity]
+theorem continuous_apply_apply {κ : Type _} {ρ : κ → ι → Type _} [∀ j i, TopologicalSpace (ρ j i)] (j : κ) (i : ι) :
+  Continuous fun p : ∀ j, ∀ i, ρ j i => p j i :=
+  (continuous_apply i).comp (continuous_apply j)
 
 theorem continuous_at_apply [∀ i, TopologicalSpace (π i)] (i : ι) (x : ∀ i, π i) :
   ContinuousAt (fun p : ∀ i, π i => p i) x :=
@@ -755,26 +761,26 @@ theorem continuous_pi_iff [TopologicalSpace α] [∀ i, TopologicalSpace (π i)]
   Continuous f ↔ ∀ i, Continuous fun y => f y i :=
   Iff.intro (fun h i => (continuous_apply i).comp h) continuous_pi
 
-theorem nhds_pi [t : ∀ i, TopologicalSpace (π i)] {a : ∀ i, π i} : 𝓝 a = ⨅i, comap (fun x => x i) (𝓝 (a i)) :=
+theorem nhds_pi [t : ∀ i, TopologicalSpace (π i)] {a : ∀ i, π i} : 𝓝 a = pi fun i => 𝓝 (a i) :=
   calc 𝓝 a = ⨅i, @nhds _ (@TopologicalSpace.induced _ _ (fun x : ∀ i, π i => x i) (t i)) a := nhds_infi 
     _ = ⨅i, comap (fun x => x i) (𝓝 (a i)) :=
     by 
       simp [nhds_induced]
     
 
-theorem tendsto_pi [t : ∀ i, TopologicalSpace (π i)] {f : α → ∀ i, π i} {g : ∀ i, π i} {u : Filter α} :
+theorem tendsto_pi_nhds [t : ∀ i, TopologicalSpace (π i)] {f : α → ∀ i, π i} {g : ∀ i, π i} {u : Filter α} :
   tendsto f u (𝓝 g) ↔ ∀ x, tendsto (fun i => f i x) u (𝓝 (g x)) :=
   by 
-    simp [nhds_pi, Filter.tendsto_comap_iff]
+    rw [nhds_pi, Filter.tendsto_pi]
 
 theorem continuous_at_pi [∀ i, TopologicalSpace (π i)] [TopologicalSpace α] {f : α → ∀ i, π i} {x : α} :
   ContinuousAt f x ↔ ∀ i, ContinuousAt (fun y => f y i) x :=
-  tendsto_pi
+  tendsto_pi_nhds
 
 theorem Filter.Tendsto.update [∀ i, TopologicalSpace (π i)] [DecidableEq ι] {l : Filter α} {f : α → ∀ i, π i}
   {x : ∀ i, π i} (hf : tendsto f l (𝓝 x)) (i : ι) {g : α → π i} {xi : π i} (hg : tendsto g l (𝓝 xi)) :
   tendsto (fun a => Function.update (f a) i (g a)) l (𝓝$ Function.update x i xi) :=
-  tendsto_pi.2$
+  tendsto_pi_nhds.2$
     fun j =>
       by 
         rcases em (j = i) with (rfl | hj) <;> simp [hf.apply]
@@ -798,13 +804,13 @@ theorem Filter.Tendsto.fin_insert_nth {n} {π : Finₓ (n+1) → Type _} [∀ i,
   {f : α → π i} {l : Filter α} {x : π i} (hf : tendsto f l (𝓝 x)) {g : α → ∀ j : Finₓ n, π (i.succ_above j)}
   {y : ∀ j, π (i.succ_above j)} (hg : tendsto g l (𝓝 y)) :
   tendsto (fun a => i.insert_nth (f a) (g a)) l (𝓝$ i.insert_nth x y) :=
-  tendsto_pi.2
+  tendsto_pi_nhds.2
     fun j =>
       Finₓ.succAboveCases i
         (by 
           simpa)
         (by 
-          simpa using tendsto_pi.1 hg)
+          simpa using tendsto_pi_nhds.1 hg)
         j
 
 theorem ContinuousAt.fin_insert_nth {n} {π : Finₓ (n+1) → Type _} [∀ i, TopologicalSpace (π i)] [TopologicalSpace α]
@@ -827,35 +833,11 @@ theorem is_closed_set_pi [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ 
   by 
     rw [pi_def] <;> exact is_closed_Inter$ fun a => is_closed_Inter$ fun ha => (hs _ ha).Preimage (continuous_apply _)
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_nhds_pi
-{ι : Type*}
-{α : ι → Type*}
-[∀ i : ι, topological_space (α i)]
-{I : set ι}
-{s : ∀ i, set (α i)}
-(a : ∀ i, α i)
-(hs : «expr ∈ »(I.pi s, expr𝓝() a))
-{i : ι}
-(hi : «expr ∈ »(i, I)) : «expr ∈ »(s i, expr𝓝() (a i)) :=
-begin
-  set [] [ident p] [] [":="] [expr λ i, λ x : ∀ i : ι, α i, x i] [],
-  rw ["[", expr nhds_pi, ",", expr pi_def, "]"] ["at", ident hs],
-  obtain ["⟨", ident t, ":", expr ι → set (∀
-    i, α i), ",", ident ht, ":", expr ∀
-   i, «expr ∈ »(t i, comap (p i) (expr𝓝() (a i))), ",", ident ht', ":", expr «expr = »(«expr⋂ , »((i «expr ∈ » I), «expr ⁻¹' »(p i, s i)), «expr⋂ , »((i : ι), t i)), "⟩", ":=", expr exists_Inter_of_mem_infi hs],
-  simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_comap, "]"] [] ["at", ident ht],
-  choose [] [ident v] [ident hv, ident hv'] ["using", expr ht],
-  apply [expr mem_of_superset (hv i)],
-  have [] [] [":=", expr calc
-     «expr ⊆ »(«expr⋂ , »((i), «expr ⁻¹' »(p i, v i)), «expr⋂ , »((i), t i)) : Inter_subset_Inter hv'
-     «expr = »(..., «expr⋂ , »((i «expr ∈ » I), «expr ⁻¹' »(p i, s i))) : by simp_rw [expr ht'] []
-     «expr ⊆ »(..., «expr ⁻¹' »(p i, s i)) : bInter_subset_of_mem hi],
-  rwa ["[", "<-", expr image_subset_iff, ",", expr image_projection_prod, "]"] ["at", ident this],
-  use [expr a],
-  rw ["[", expr mem_univ_pi, "]"] [],
-  exact [expr λ j, mem_of_mem_nhds (hv j)]
-end
+theorem mem_nhds_of_pi_mem_nhds {ι : Type _} {α : ι → Type _} [∀ i : ι, TopologicalSpace (α i)] {I : Set ι}
+  {s : ∀ i, Set (α i)} (a : ∀ i, α i) (hs : I.pi s ∈ 𝓝 a) {i : ι} (hi : i ∈ I) : s i ∈ 𝓝 (a i) :=
+  by 
+    rw [nhds_pi] at hs 
+    exact mem_of_pi_mem_pi hs hi
 
 theorem set_pi_mem_nhds [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)} {x : ∀ a, π a} (hi : finite i)
   (hs : ∀ a _ : a ∈ i, s a ∈ 𝓝 (x a)) : pi i s ∈ 𝓝 x :=
@@ -863,26 +845,25 @@ theorem set_pi_mem_nhds [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a
     rw [pi_def, bInter_mem hi]
     exact fun a ha => (continuous_apply a).ContinuousAt (hs a ha)
 
-theorem set_pi_mem_nhds_iff [Fintype ι] {α : ι → Type _} [∀ i : ι, TopologicalSpace (α i)] {I : Set ι}
+theorem set_pi_mem_nhds_iff {α : ι → Type _} [∀ i : ι, TopologicalSpace (α i)] {I : Set ι} (hI : I.finite)
   {s : ∀ i, Set (α i)} (a : ∀ i, α i) : I.pi s ∈ 𝓝 a ↔ ∀ i : ι, i ∈ I → s i ∈ 𝓝 (a i) :=
-  ⟨by 
-      apply mem_nhds_pi,
-    set_pi_mem_nhds$ finite.of_fintype I⟩
+  by 
+    rw [nhds_pi, pi_mem_pi_iff hI]
+    infer_instance
 
-theorem interior_pi_set [Fintype ι] {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} {s : ∀ i, Set (α i)} :
-  Interior (pi I s) = I.pi fun i => Interior (s i) :=
+theorem interior_pi_set {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : I.finite)
+  {s : ∀ i, Set (α i)} : Interior (pi I s) = I.pi fun i => Interior (s i) :=
   by 
     ext a 
-    simp only [mem_pi, mem_interior_iff_mem_nhds, set_pi_mem_nhds_iff]
+    simp only [Set.mem_pi, mem_interior_iff_mem_nhds, set_pi_mem_nhds_iff hI]
 
 theorem exists_finset_piecewise_mem_of_mem_nhds [DecidableEq ι] [∀ i, TopologicalSpace (π i)] {s : Set (∀ a, π a)}
   {x : ∀ a, π a} (hs : s ∈ 𝓝 x) (y : ∀ a, π a) : ∃ I : Finset ι, I.piecewise x y ∈ s :=
   by 
-    simp only [nhds_pi, mem_infi', mem_comap] at hs 
-    rcases hs with ⟨I, hI, V, hV, hV_univ, rfl, -⟩
-    choose t ht htV using hV 
-    refine' ⟨hI.to_finset, mem_bInter$ fun i hi => htV i _⟩
-    simpa [hI.mem_to_finset.2 hi] using mem_of_mem_nhds (ht i)
+    simp only [nhds_pi, Filter.mem_pi'] at hs 
+    rcases hs with ⟨I, t, htx, hts⟩
+    refine' ⟨I, hts$ fun i hi => _⟩
+    simpa [Finset.mem_coe.1 hi] using mem_of_mem_nhds (htx i)
 
 theorem pi_eq_generate_from [∀ a, TopologicalSpace (π a)] :
   Pi.topologicalSpace =
@@ -894,8 +875,9 @@ theorem pi_eq_generate_from [∀ a, TopologicalSpace (π a)] :
           ⟨Function.update (fun a => univ) a t, {a},
             by 
               simpa using ht,
-            by 
-              ext f <;> simp [s_eq.symm, pi]⟩)
+            s_eq ▸
+              by 
+                ext f <;> simp [Set.Pi]⟩)
 
 theorem pi_generate_from_eq {g : ∀ a, Set (Set (π a))} :
   (@Pi.topologicalSpace ι π fun a => generate_from (g a)) =
@@ -943,9 +925,9 @@ begin
     refine [expr ⟨pi univ (λ a, if «expr ∈ »(a, i) then t a else (c : ∀ a, set (π a)) a), _, _, _⟩],
     { simp [] [] [] ["[", expr pi_if, "]"] [] [] },
     { refine [expr generate_open.basic _ ⟨_, assume a, _, rfl⟩],
-      by_cases [expr «expr ∈ »(a, i)]; simp [] [] [] ["[", "*", ",", expr pi, "]"] [] ["at", "*"] },
+      by_cases [expr «expr ∈ »(a, i)]; simp [] [] [] ["[", "*", ",", expr set.pi, "]"] [] ["at", "*"] },
     { have [] [":", expr «expr ∈ »(f, pi {a | «expr ∉ »(a, i)} c)] [],
-      { simp [] [] [] ["[", "*", ",", expr pi, "]"] [] ["at", "*"] },
+      { simp [] [] [] ["[", "*", ",", expr set.pi, "]"] [] ["at", "*"] },
       simpa [] [] [] ["[", expr pi_if, ",", expr hf, "]"] [] [] } }
 end
 
@@ -963,7 +945,7 @@ theorem inducing_infi_to_pi {X : Type _} [∀ i, TopologicalSpace (π i)] (f : �
     funext 
     erw [induced_compose]
 
-variable[Fintype ι][∀ i, TopologicalSpace (π i)][∀ i, DiscreteTopology (π i)]
+variable [Fintype ι] [∀ i, TopologicalSpace (π i)] [∀ i, DiscreteTopology (π i)]
 
 /-- A finite product of discrete spaces is discrete. -/
 instance Pi.discrete_topology : DiscreteTopology (∀ i, π i) :=
@@ -980,7 +962,7 @@ end Pi
 
 section Sigma
 
-variable{ι : Type _}{σ : ι → Type _}[∀ i, TopologicalSpace (σ i)]
+variable {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)]
 
 @[continuity]
 theorem continuous_sigma_mk {i : ι} : Continuous (@Sigma.mk ι σ i) :=
@@ -992,7 +974,7 @@ theorem is_open_sigma_iff {s : Set (Sigma σ)} : IsOpen s ↔ ∀ i, IsOpen (Sig
 
 theorem is_closed_sigma_iff {s : Set (Sigma σ)} : IsClosed s ↔ ∀ i, IsClosed (Sigma.mk i ⁻¹' s) :=
   by 
-    simp [←is_open_compl_iff, is_open_sigma_iff]
+    simp only [←is_open_compl_iff, is_open_sigma_iff, preimage_compl]
 
 -- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_open_map_sigma_mk {i : ι} : is_open_map (@sigma.mk ι σ i) :=
@@ -1000,11 +982,8 @@ begin
   intros [ident s, ident hs],
   rw [expr is_open_sigma_iff] [],
   intro [ident j],
-  classical,
-  by_cases [expr h, ":", expr «expr = »(i, j)],
-  { subst [expr j],
-    convert [] [expr hs] [],
-    exact [expr set.preimage_image_eq _ sigma_mk_injective] },
+  rcases [expr eq_or_ne i j, "with", "(", ident rfl, "|", ident hne, ")"],
+  { rwa [expr set.preimage_image_eq _ sigma_mk_injective] [] },
   { convert [] [expr is_open_empty] [],
     apply [expr set.eq_empty_of_subset_empty],
     rintro [ident x, "⟨", ident y, ",", "_", ",", ident hy, "⟩"],
@@ -1014,9 +993,7 @@ begin
 end
 
 theorem is_open_range_sigma_mk {i : ι} : IsOpen (Set.Range (@Sigma.mk ι σ i)) :=
-  by 
-    rw [←Set.image_univ]
-    exact is_open_map_sigma_mk _ is_open_univ
+  is_open_map_sigma_mk.is_open_range
 
 -- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_closed_map_sigma_mk {i : ι} : is_closed_map (@sigma.mk ι σ i) :=
@@ -1024,11 +1001,8 @@ begin
   intros [ident s, ident hs],
   rw [expr is_closed_sigma_iff] [],
   intro [ident j],
-  classical,
-  by_cases [expr h, ":", expr «expr = »(i, j)],
-  { subst [expr j],
-    convert [] [expr hs] [],
-    exact [expr set.preimage_image_eq _ sigma_mk_injective] },
+  rcases [expr eq_or_ne i j, "with", "(", ident rfl, "|", ident hne, ")"],
+  { rwa [expr set.preimage_image_eq _ sigma_mk_injective] [] },
   { convert [] [expr is_closed_empty] [],
     apply [expr set.eq_empty_of_subset_empty],
     rintro [ident x, "⟨", ident y, ",", "_", ",", ident hy, "⟩"],
@@ -1062,23 +1036,15 @@ theorem continuous_sigma_map {κ : Type _} {τ : κ → Type _} [∀ k, Topologi
   {f₂ : ∀ i, σ i → τ (f₁ i)} (hf : ∀ i, Continuous (f₂ i)) : Continuous (Sigma.map f₁ f₂) :=
   continuous_sigma$ fun i => show Continuous fun a => Sigma.mk (f₁ i) (f₂ i a) from continuous_sigma_mk.comp (hf i)
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_open_map_sigma
-[topological_space β]
-{f : sigma σ → β}
-(h : ∀ i, is_open_map (λ a, f ⟨i, a⟩)) : is_open_map f :=
-begin
-  intros [ident s, ident hs],
-  rw [expr is_open_sigma_iff] ["at", ident hs],
-  have [] [":", expr «expr = »(s, «expr⋃ , »((i), «expr '' »(sigma.mk i, «expr ⁻¹' »(sigma.mk i, s))))] [],
-  { rw [expr Union_image_preimage_sigma_mk_eq_self] [] },
-  rw [expr this] [],
-  rw ["[", expr image_Union, "]"] [],
-  apply [expr is_open_Union],
-  intro [ident i],
-  rw ["[", expr image_image, "]"] [],
-  exact [expr h i _ (hs i)]
-end
+theorem is_open_map_sigma [TopologicalSpace β] {f : Sigma σ → β} (h : ∀ i, IsOpenMap fun a => f ⟨i, a⟩) : IsOpenMap f :=
+  by 
+    intro s hs 
+    rw [is_open_sigma_iff] at hs 
+    rw [←Union_image_preimage_sigma_mk_eq_self s, image_Union]
+    apply is_open_Union 
+    intro i 
+    rw [image_image]
+    exact h i _ (hs i)
 
 -- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of embeddings is an embedding. -/

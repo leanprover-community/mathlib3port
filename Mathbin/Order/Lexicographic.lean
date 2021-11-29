@@ -26,15 +26,15 @@ universe u v
 def Lex (α : Type u) (β : Type v) :=
   α × β
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
-unsafe instance  [has_to_format α] [has_to_format β] : has_to_format (Lex α β) :=
+unsafe instance [has_to_format α] [has_to_format β] : has_to_format (Lex α β) :=
   prod.has_to_format
 
-instance  [DecidableEq α] [DecidableEq β] : DecidableEq (Lex α β) :=
+instance [DecidableEq α] [DecidableEq β] : DecidableEq (Lex α β) :=
   Prod.decidableEq
 
-instance  [Inhabited α] [Inhabited β] : Inhabited (Lex α β) :=
+instance [Inhabited α] [Inhabited β] : Inhabited (Lex α β) :=
   Prod.inhabited
 
 /-- Dictionary / lexicographic ordering on pairs.  -/
@@ -216,7 +216,7 @@ instance lexLinearOrder [LinearOrderₓ α] [LinearOrderₓ β] : LinearOrderₓ
             repeat' 
               assumption }
 
-variable{Z : α → Type v}
+variable {Z : α → Type v}
 
 /--
 Dictionary / lexicographic ordering on dependent pairs.

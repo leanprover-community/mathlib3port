@@ -26,7 +26,7 @@ affine space, ordered module, slope
 
 open AffineMap
 
-variable{k E PE : Type _}
+variable {k E PE : Type _}
 
 /-!
 ### Definition of `slope` and basic properties
@@ -37,7 +37,7 @@ codomain.  -/
 
 section NoOrder
 
-variable[Field k][AddCommGroupₓ E][Module k E][AddTorsor E PE]
+variable [Field k] [AddCommGroupₓ E] [Module k E] [AddTorsor E PE]
 
 include E
 
@@ -121,9 +121,9 @@ other arguments belong to specific domains.
 
 section OrderedRing
 
-variable[OrderedRing k][OrderedAddCommGroup E][Module k E][OrderedSmul k E]
+variable [OrderedRing k] [OrderedAddCommGroup E] [Module k E] [OrderedSmul k E]
 
-variable{a a' b b' : E}{r r' : k}
+variable {a a' b b' : E} {r r' : k}
 
 theorem line_map_mono_left (ha : a ≤ a') (hr : r ≤ 1) : line_map a b r ≤ line_map a' b r :=
   by 
@@ -186,8 +186,8 @@ end OrderedRing
 
 section LinearOrderedRing
 
-variable[LinearOrderedRing
-      k][OrderedAddCommGroup E][Module k E][OrderedSmul k E][Invertible (2 : k)]{a a' b b' : E}{r r' : k}
+variable [LinearOrderedRing k] [OrderedAddCommGroup E] [Module k E] [OrderedSmul k E] [Invertible (2 : k)]
+  {a a' b b' : E} {r r' : k}
 
 theorem midpoint_le_midpoint (ha : a ≤ a') (hb : b ≤ b') : midpoint k a b ≤ midpoint k a' b' :=
   line_map_mono_endpoints ha hb (inv_of_nonneg.2 zero_le_two)$ inv_of_le_one one_le_two
@@ -196,13 +196,13 @@ end LinearOrderedRing
 
 section LinearOrderedField
 
-variable[LinearOrderedField k][OrderedAddCommGroup E]
+variable [LinearOrderedField k] [OrderedAddCommGroup E]
 
-variable[Module k E][OrderedSmul k E]
+variable [Module k E] [OrderedSmul k E]
 
 section 
 
-variable{a b : E}{r r' : k}
+variable {a b : E} {r r' : k}
 
 theorem line_map_le_line_map_iff_of_lt (h : r < r') : line_map a b r ≤ line_map a b r' ↔ a ≤ b :=
   by 
@@ -277,7 +277,7 @@ slope.
 -/
 
 
-variable{f : k → E}{a b r : k}
+variable {f : k → E} {a b r : k}
 
 local notation "c" => line_map a b r
 

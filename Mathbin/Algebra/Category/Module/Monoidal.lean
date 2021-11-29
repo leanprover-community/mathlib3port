@@ -20,7 +20,7 @@ open CategoryTheory
 
 namespace ModuleCat
 
-variable{R : Type u}[CommRingₓ R]
+variable {R : Type u} [CommRingₓ R]
 
 namespace MonoidalCategory
 
@@ -69,7 +69,7 @@ private theorem associator_naturality_aux {X₁ X₂ X₃ : Type _} [AddCommMono
     intro x y z 
     rfl
 
-variable(R)
+variable (R)
 
 private theorem pentagon_aux (W X Y Z : Type _) [AddCommMonoidₓ W] [AddCommMonoidₓ X] [AddCommMonoidₓ Y]
   [AddCommMonoidₓ Z] [Module R W] [Module R X] [Module R Y] [Module R Z] :
@@ -147,7 +147,7 @@ instance monoidal_category : monoidal_category (ModuleCat.{u} R) :=
     triangle' := fun M N => triangle M N }
 
 /-- Remind ourselves that the monoidal unit, being just `R`, is still a commutative ring. -/
-instance  : CommRingₓ ((𝟙_ (ModuleCat.{u} R) : ModuleCat.{u} R) : Type u) :=
+instance : CommRingₓ ((𝟙_ (ModuleCat.{u} R) : ModuleCat.{u} R) : Type u) :=
   (by 
     infer_instance :
   CommRingₓ R)

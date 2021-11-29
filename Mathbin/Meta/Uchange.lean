@@ -36,9 +36,9 @@ unsafe def uchange (α : Type v) : Type u :=
 
 namespace Uchange
 
-variable{α : Type v}(a : α)
+variable {α : Type v} (a : α)
 
-unsafe instance  [DecidableEq α] : DecidableEq (uchange α) :=
+unsafe instance [DecidableEq α] : DecidableEq (uchange α) :=
   unchecked_cast'
     (by 
       infer_instance :

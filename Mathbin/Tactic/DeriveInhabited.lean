@@ -85,21 +85,21 @@ unification_hint
 doc_category
 tactic_doc_entry
 
-instance  {α} : Inhabited (BinTree α) :=
+instance {α} : Inhabited (BinTree α) :=
   ⟨BinTree.empty⟩
 
-instance  : Inhabited Unsigned :=
+instance : Inhabited Unsigned :=
   ⟨0⟩
 
-instance  : Inhabited Stringₓ.Iterator :=
+instance : Inhabited Stringₓ.Iterator :=
   Stringₓ.IteratorImp.inhabited
 
-instance  {α} : Inhabited (Rbnode α) :=
+instance {α} : Inhabited (Rbnode α) :=
   ⟨Rbnode.leaf⟩
 
-instance  {α lt} : Inhabited (Rbtree α lt) :=
+instance {α lt} : Inhabited (Rbtree α lt) :=
   ⟨mkRbtree _ _⟩
 
-instance  {α β lt} : Inhabited (Rbmap α β lt) :=
+instance {α β lt} : Inhabited (Rbmap α β lt) :=
   ⟨mkRbmap _ _ _⟩
 

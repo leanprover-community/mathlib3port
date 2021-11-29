@@ -28,7 +28,7 @@ open_locale Classical BigOperators
 
 open Polynomial
 
-variable(k : Type u)[Field k]
+variable (k : Type u) [Field k]
 
 namespace AlgebraicClosure
 
@@ -214,10 +214,10 @@ def AlgebraicClosure : Type u :=
 
 namespace AlgebraicClosure
 
-instance  : Field (AlgebraicClosure k) :=
+instance : Field (AlgebraicClosure k) :=
   Field.DirectLimit.field _ _
 
-instance  : Inhabited (AlgebraicClosure k) :=
+instance : Inhabited (AlgebraicClosure k) :=
   ⟨37⟩
 
 /-- The canonical ring embedding from the `n`th step to the algebraic closure. -/
@@ -254,17 +254,17 @@ begin
   rw ["[", "<-", expr of_step_succ k n, ",", expr eval_map, ",", "<-", expr hom_eval₂, ",", expr hx, ",", expr ring_hom.map_zero, "]"] []
 end
 
-instance  : IsAlgClosed (AlgebraicClosure k) :=
+instance : IsAlgClosed (AlgebraicClosure k) :=
   IsAlgClosed.of_exists_root _$ fun f => exists_root k
 
-instance  {R : Type _} [CommSemiringₓ R] [alg : Algebra R k] : Algebra R (AlgebraicClosure k) :=
+instance {R : Type _} [CommSemiringₓ R] [alg : Algebra R k] : Algebra R (AlgebraicClosure k) :=
   ((of_step k 0).comp (@algebraMap _ _ _ _ alg)).toAlgebra
 
 theorem algebra_map_def {R : Type _} [CommSemiringₓ R] [alg : Algebra R k] :
   algebraMap R (AlgebraicClosure k) = (of_step k 0 : k →+* _).comp (@algebraMap _ _ _ _ alg) :=
   rfl
 
-instance  {R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [Algebra R S] [Algebra S k] [Algebra R k]
+instance {R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [Algebra R S] [Algebra S k] [Algebra R k]
   [IsScalarTower R S k] : IsScalarTower R S (AlgebraicClosure k) :=
   IsScalarTower.of_algebra_map_eq fun x => RingHom.congr_arg _ (IsScalarTower.algebra_map_apply R S k x : _)
 
@@ -278,7 +278,7 @@ theorem IsAlgebraic : Algebra.IsAlgebraic k (AlgebraicClosure k) :=
       let ⟨n, x, hx⟩ := exists_of_step k z 
       hx ▸ is_integral_alg_hom (of_step_hom k n) (step.is_integral k n x)
 
-instance  : IsAlgClosure k (AlgebraicClosure k) :=
+instance : IsAlgClosure k (AlgebraicClosure k) :=
   ⟨AlgebraicClosure.is_alg_closed k, IsAlgebraic k⟩
 
 end AlgebraicClosure

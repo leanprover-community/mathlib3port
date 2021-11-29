@@ -43,7 +43,7 @@ functions are an example of how complicated it can get.
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Sort w}
+variable {α : Type u} {β : Type v} {γ : Sort w}
 
 namespace SlimCheck
 
@@ -85,7 +85,7 @@ The output is of the form `[x₀ ↦ f x₀, .. xₙ ↦ f xₙ, _ ↦ y]`.
 protected def reprₓ [HasRepr α] [HasRepr β] : total_function α β → Stringₓ
 | total_function.with_default m y => s!"[{(repr_aux m)}_ ↦ {HasRepr.repr y}]"
 
-instance  (α : Type u) (β : Type v) [HasRepr α] [HasRepr β] : HasRepr (total_function α β) :=
+instance (α : Type u) (β : Type v) [HasRepr α] [HasRepr β] : HasRepr (total_function α β) :=
   ⟨total_function.repr⟩
 
 /-- Create a `finmap` from a list of pairs. -/
@@ -94,7 +94,7 @@ def list.to_finmap' (xs : List (α × β)) : List (Σ_ : α, β) :=
 
 section 
 
-variable[sampleable α][sampleable β]
+variable [sampleable α] [sampleable β]
 
 /-- Redefine `sizeof` to follow the structure of `sampleable` instances. -/
 def total.sizeof : total_function α β → ℕ
@@ -103,7 +103,7 @@ def total.sizeof : total_function α β → ℕ
 instance (priority := 2000) : SizeOf (total_function α β) :=
   ⟨total.sizeof⟩
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- Shrink a total function by shrinking the lists that represent it. -/
 protected def shrink : shrink_fn (total_function α β)
@@ -116,7 +116,7 @@ protected def shrink : shrink_fn (total_function α β)
             unfoldWf <;> refine' @List.sizeof_erase_dupkeys _ _ _ (@sampleable.wf _ _) _)
           h⟩
 
-variable[HasRepr α][HasRepr β]
+variable [HasRepr α] [HasRepr β]
 
 instance pi.sampleable_ext : sampleable_ext (α → β) :=
   { ProxyRepr := total_function α β, interp := total_function.apply,
@@ -133,11 +133,11 @@ section SampleableExt
 
 open SampleableExt
 
-instance (priority := 2000)pi_pred.sampleable_ext [sampleable_ext (α → Bool)] : sampleable_ext.{u + 1} (α → Prop) :=
+instance (priority := 2000) pi_pred.sampleable_ext [sampleable_ext (α → Bool)] : sampleable_ext.{u + 1} (α → Prop) :=
   { ProxyRepr := proxy_repr (α → Bool), interp := fun m x => interp (α → Bool) m x, sample := sample (α → Bool),
     shrink := shrink }
 
-instance (priority := 2000)pi_uncurry.sampleable_ext [sampleable_ext (α × β → γ)] :
+instance (priority := 2000) pi_uncurry.sampleable_ext [sampleable_ext (α × β → γ)] :
   sampleable_ext.{imax (u + 1) (v + 1) w} (α → β → γ) :=
   { ProxyRepr := proxy_repr (α × β → γ), interp := fun m x y => interp (α × β → γ) m (x, y),
     sample := sample (α × β → γ), shrink := shrink }
@@ -161,7 +161,7 @@ inductive injective_function (α : Type u) : Type u
   | map_to_self (xs : List (Σ_ : α, α)) :
   xs.map Sigma.fst ~ xs.map Sigma.snd → List.Nodup (xs.map Sigma.snd) → injective_function
 
-instance  : Inhabited (injective_function α) :=
+instance : Inhabited (injective_function α) :=
   ⟨⟨[], List.Perm.nil, List.nodup_nil⟩⟩
 
 namespace InjectiveFunction
@@ -179,7 +179,7 @@ but the identity function.
 protected def reprₓ [HasRepr α] : injective_function α → Stringₓ
 | injective_function.map_to_self m _ _ => s! "[{total_function.repr_aux m}x ↦ x]"
 
-instance  (α : Type u) [HasRepr α] : HasRepr (injective_function α) :=
+instance (α : Type u) [HasRepr α] : HasRepr (injective_function α) :=
   ⟨injective_function.repr⟩
 
 /-- Interpret a list of pairs as a total function, defaulting to
@@ -368,7 +368,7 @@ protected def shrink_perm {α : Type} [DecidableEq α] [SizeOf α] : shrink_fn (
               dsimp [sizeof_lt] <;>
                 unfoldWf <;> simp only [perm.slice] <;> unfoldWf <;> apply List.sizeof_slice_lt _ _ n.2 _ this⟩
 
-instance  [SizeOf α] : SizeOf (injective_function α) :=
+instance [SizeOf α] : SizeOf (injective_function α) :=
   ⟨fun ⟨xs, _, _⟩ => sizeof (xs.map Sigma.fst)⟩
 
 /--

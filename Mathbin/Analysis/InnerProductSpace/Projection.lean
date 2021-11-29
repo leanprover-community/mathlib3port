@@ -44,9 +44,9 @@ open IsROrC Real Filter
 
 open_locale BigOperators TopologicalSpace
 
-variable{𝕜 E F : Type _}[IsROrC 𝕜]
+variable {𝕜 E F : Type _} [IsROrC 𝕜]
 
-variable[InnerProductSpace 𝕜 E][InnerProductSpace ℝ F]
+variable [InnerProductSpace 𝕜 E] [InnerProductSpace ℝ F]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
@@ -284,7 +284,7 @@ iff.intro (begin
      exact [expr norm_nonneg _] }
  end)
 
-variable(K : Submodule 𝕜 E)
+variable (K : Submodule 𝕜 E)
 
 -- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -394,7 +394,7 @@ end
 
 section orthogonalProjection
 
-variable[CompleteSpace K]
+variable [CompleteSpace K]
 
 /-- The orthogonal projection onto a complete subspace, as an
 unbundled function.  This definition is only intended for use in
@@ -403,7 +403,7 @@ be used once that is defined. -/
 def orthogonalProjectionFn (v : E) :=
   (exists_norm_eq_infi_of_complete_subspace K (complete_space_coe_iff_is_complete.mp ‹_›) v).some
 
-variable{K}
+variable {K}
 
 /-- The unbundled orthogonal projection is in the given subspace.
 This lemma is only intended for use in setting up the bundled version
@@ -438,7 +438,7 @@ begin
   rwa [expr sub_sub_sub_cancel_left] ["at", ident houv]
 end
 
-variable(K)
+variable (K)
 
 -- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem orthogonal_projection_fn_norm_sq
@@ -477,7 +477,7 @@ linear_map.mk_continuous { to_fun := λ v, ⟨orthogonal_projection_fn K v, orth
    nlinarith [] [] ["[", expr orthogonal_projection_fn_norm_sq K x, "]"]
  end)
 
-variable{K}
+variable {K}
 
 @[simp]
 theorem orthogonal_projection_fn_eq (v : E) : orthogonalProjectionFn K v = (orthogonalProjection K v : E) :=
@@ -551,7 +551,7 @@ theorem orthogonal_projection_bot : orthogonalProjection (⊥ : Submodule 𝕜 E
   by 
     ext
 
-variable(K)
+variable (K)
 
 /-- The orthogonal projection has norm `≤ 1`. -/
 theorem orthogonal_projection_norm_le : ∥orthogonalProjection K∥ ≤ 1 :=
@@ -560,7 +560,7 @@ theorem orthogonal_projection_norm_le : ∥orthogonalProjection K∥ ≤ 1 :=
       normNum)
     _
 
-variable(𝕜)
+variable (𝕜)
 
 -- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem smul_orthogonal_projection_singleton
@@ -606,7 +606,7 @@ end orthogonalProjection
 
 section reflection
 
-variable{𝕜}(K)[CompleteSpace K]
+variable {𝕜} (K) [CompleteSpace K]
 
 /-- Auxiliary definition for `reflection`: the reflection as a linear equivalence. -/
 def reflectionLinearEquiv : E ≃ₗ[𝕜] E :=
@@ -634,7 +634,7 @@ cases. -/ def reflection : «expr ≃ₗᵢ[ ] »(E, 𝕜, E) :=
   end,
   ..reflection_linear_equiv K }
 
-variable{K}
+variable {K}
 
 /-- The result of reflecting. -/
 theorem reflection_apply (p : E) : reflection K p = bit0 («expr↑ » (orthogonalProjection K p)) - p :=
@@ -645,7 +645,7 @@ theorem reflection_apply (p : E) : reflection K p = bit0 («expr↑ » (orthogon
 theorem reflection_symm : (reflection K).symm = reflection K :=
   rfl
 
-variable(K)
+variable (K)
 
 /-- Reflecting twice in the same subspace. -/
 @[simp]
@@ -661,7 +661,7 @@ theorem reflection_involutive : Function.Involutive (reflection K) :=
 theorem reflection_trans_reflection : (reflection K).trans (reflection K) = LinearIsometryEquiv.refl 𝕜 E :=
   LinearIsometryEquiv.ext$ reflection_involutive K
 
-variable{K}
+variable {K}
 
 /-- A point is its own reflection if and only if it is in the subspace. -/
 theorem reflection_eq_self_iff (x : E) : reflection K x = x ↔ x ∈ K :=
@@ -713,7 +713,7 @@ begin
   { exact [expr λ hx, ⟨v, v.prop, «expr - »(x, v), ⟨hvm, K₂.sub_mem hx (h v.prop)⟩, add_sub_cancel'_right _ _⟩] }
 end
 
-variable{K}
+variable {K}
 
 /-- If `K` is complete, `K` and `Kᗮ` span the whole space. -/
 theorem Submodule.sup_orthogonal_of_complete_space [CompleteSpace K] : K⊔Kᗮ = ⊤ :=
@@ -721,7 +721,7 @@ theorem Submodule.sup_orthogonal_of_complete_space [CompleteSpace K] : K⊔Kᗮ 
     convert Submodule.sup_orthogonal_inf_of_complete_space (le_top : K ≤ ⊤)
     simp 
 
-variable(K)
+variable (K)
 
 -- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `K` is complete, any `v` in `E` can be expressed as a sum of elements of `K` and `Kᗮ`. -/
@@ -763,7 +763,7 @@ begin
   { exact [expr K.topological_closure_minimal K.le_orthogonal_orthogonal «expr ᗮ»(K).is_closed_orthogonal] }
 end
 
-variable{K}
+variable {K}
 
 /-- If `K` is complete, `K` and `Kᗮ` are complements of each other. -/
 theorem Submodule.is_compl_orthogonal_of_complete_space [CompleteSpace K] : IsCompl K Kᗮ :=
@@ -847,7 +847,7 @@ begin
   { abel [] [] [] }
 end
 
-variable(K)
+variable (K)
 
 /-- In a complete space `E`, a vector splits as the sum of its orthogonal projections onto a
 complete submodule `K` and onto the orthogonal complement of `K`.-/
@@ -1031,7 +1031,7 @@ end Orthogonal
 
 section OrthogonalFamily
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 /-- An orthogonal family of subspaces of `E` satisfies `direct_sum.submodule_is_internal` (that is,
 they provide an internal direct sum decomposition of `E`) if and only if their span has trivial
@@ -1049,7 +1049,7 @@ section orthonormalBasis
 /-! ### Existence of Hilbert basis, orthonormal basis, etc. -/
 
 
-variable{𝕜 E}{v : Set E}
+variable {𝕜 E} {v : Set E}
 
 open FiniteDimensional Submodule Set
 
@@ -1129,7 +1129,7 @@ theorem exists_subset_is_orthonormal_dense_span [CompleteSpace E] (hv : Orthonor
     rw [maximal_orthonormal_iff_dense_span hu] at hu_max 
     exact ⟨u, hus, hu, hu_max⟩
 
-variable(𝕜 E)
+variable (𝕜 E)
 
 /-- An inner product space admits an orthonormal set whose span is dense. -/
 theorem exists_is_orthonormal_dense_span [CompleteSpace E] :
@@ -1137,11 +1137,11 @@ theorem exists_is_orthonormal_dense_span [CompleteSpace E] :
   let ⟨u, hus, hu, hu_max⟩ := exists_subset_is_orthonormal_dense_span (orthonormal_empty 𝕜 E)
   ⟨u, hu, hu_max⟩
 
-variable{𝕜 E}
+variable {𝕜 E}
 
 section FiniteDimensional
 
-variable[FiniteDimensional 𝕜 E]
+variable [FiniteDimensional 𝕜 E]
 
 -- error in Analysis.InnerProductSpace.Projection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An orthonormal set in a finite-dimensional `inner_product_space` is maximal, if and only if it
@@ -1174,7 +1174,7 @@ theorem exists_subset_is_orthonormal_basis (hv : Orthonormal 𝕜 (coeₓ : v �
           rwa [hb],
         hb⟩
 
-variable(𝕜 E)
+variable (𝕜 E)
 
 /-- Index for an arbitrary orthonormal basis on a finite-dimensional `inner_product_space`. -/
 def OrthonormalBasisIndex : Set E :=
@@ -1191,10 +1191,10 @@ theorem orthonormal_basis_orthonormal : Orthonormal 𝕜 (orthonormalBasis 𝕜 
 theorem coe_orthonormal_basis : «expr⇑ » (orthonormalBasis 𝕜 E) = coeₓ :=
   (exists_subset_is_orthonormal_basis (orthonormal_empty 𝕜 E)).some_spec.some_spec.some_spec.2
 
-instance  : Fintype (OrthonormalBasisIndex 𝕜 E) :=
+instance : Fintype (OrthonormalBasisIndex 𝕜 E) :=
   @IsNoetherian.fintypeBasisIndex _ _ _ _ _ _ _ (IsNoetherian.iff_fg.2 inferInstance) (orthonormalBasis 𝕜 E)
 
-variable{𝕜 E}
+variable {𝕜 E}
 
 /-- An `n`-dimensional `inner_product_space` has an orthonormal basis indexed by `fin n`. -/
 def finOrthonormalBasis {n : ℕ} (hn : finrank 𝕜 E = n) : Basis (Finₓ n) 𝕜 E :=
@@ -1213,8 +1213,8 @@ section SubordinateOrthonormalBasis
 
 open DirectSum
 
-variable{n :
-    ℕ}(hn : finrank 𝕜 E = n){ι : Type _}[Fintype ι][DecidableEq ι]{V : ι → Submodule 𝕜 E}(hV : submodule_is_internal V)
+variable {n : ℕ} (hn : finrank 𝕜 E = n) {ι : Type _} [Fintype ι] [DecidableEq ι] {V : ι → Submodule 𝕜 E}
+  (hV : submodule_is_internal V)
 
 /-- Exhibit a bijection between `fin n` and the index set of a certain basis of an `n`-dimensional
 inner product space `E`.  This should not be accessed directly, but only via the subsequent API. -/

@@ -23,9 +23,9 @@ universe v u
 
 noncomputable theory
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
-variable{C : Type u}[category.{v} C][has_limits C]
+variable {C : Type u} [category.{v} C] [has_limits C]
 
 instance limit_functorial : functorial fun F : J ⥤ C => limit F :=
   { limits.lim with  }
@@ -34,7 +34,7 @@ instance limit_functorial : functorial fun F : J ⥤ C => limit F :=
 theorem limit_functorial_map {F G : J ⥤ C} (α : F ⟶ G) : map (fun F : J ⥤ C => limit F) α = limits.lim.map α :=
   rfl
 
-variable[monoidal_category.{v} C]
+variable [monoidal_category.{v} C]
 
 @[simps]
 instance limit_lax_monoidal : lax_monoidal fun F : J ⥤ C => limit F :=

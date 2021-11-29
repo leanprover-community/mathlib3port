@@ -41,25 +41,25 @@ Every field with the same cardinality is (non-canonically)
 isomorphic to this field. -/ @[derive #[expr field]] def galois_field (p : exprℕ()) [fact p.prime] (n : exprℕ()) :=
 splitting_field («expr - »(«expr ^ »(X, «expr ^ »(p, n)), X) : polynomial (zmod p))
 
-instance  : Inhabited (@GaloisField 2 (Fact.mk Nat.prime_two) 1) :=
+instance : Inhabited (@GaloisField 2 (Fact.mk Nat.prime_two) 1) :=
   ⟨37⟩
 
 namespace GaloisField
 
-variable(p : ℕ)[Fact p.prime](n : ℕ)
+variable (p : ℕ) [Fact p.prime] (n : ℕ)
 
-instance  : Algebra (Zmod p) (GaloisField p n) :=
+instance : Algebra (Zmod p) (GaloisField p n) :=
   splitting_field.algebra _
 
-instance  : is_splitting_field (Zmod p) (GaloisField p n) ((X^p^n) - X) :=
+instance : is_splitting_field (Zmod p) (GaloisField p n) ((X^p^n) - X) :=
   Polynomial.IsSplittingField.splitting_field _
 
-instance  : CharP (GaloisField p n) p :=
+instance : CharP (GaloisField p n) p :=
   (Algebra.char_p_iff (Zmod p) (GaloisField p n) p).mp
     (by 
       infer_instance)
 
-instance  : Fintype (GaloisField p n) :=
+instance : Fintype (GaloisField p n) :=
   by 
     dsimp only [GaloisField]
     exact FiniteDimensional.fintypeOfFintype (Zmod p) (GaloisField p n)
@@ -141,7 +141,7 @@ def equiv_zmod_p : GaloisField p 1 ≃ₐ[Zmod p] Zmod p :=
   by 
     exact (is_splitting_field.alg_equiv (Zmod p) ((X^p^1) - X : Polynomial (Zmod p))).symm
 
-variable{K : Type _}[Field K][Fintype K][Algebra (Zmod p) K]
+variable {K : Type _} [Field K] [Fintype K] [Algebra (Zmod p) K]
 
 theorem splits_X_pow_card_sub_X : splits (algebraMap (Zmod p) K) ((X^Fintype.card K) - X) :=
   by 
@@ -176,7 +176,7 @@ end GaloisField
 
 namespace FiniteField
 
-variable{K : Type _}[Field K][Fintype K]{K' : Type _}[Field K'][Fintype K']
+variable {K : Type _} [Field K] [Fintype K] {K' : Type _} [Field K'] [Fintype K']
 
 -- error in FieldTheory.Finite.GaloisField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Uniqueness of finite fields:

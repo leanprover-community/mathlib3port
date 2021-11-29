@@ -12,7 +12,7 @@ attribute [local simp] add_assocₓ
 
 namespace PosNum
 
-variable{α : Type _}
+variable {α : Type _}
 
 @[simp, normCast]
 theorem cast_one [HasOne α] [Add α] : ((1 : PosNum) : α) = 1 :=
@@ -218,7 +218,7 @@ end PosNum
 
 namespace Num
 
-variable{α : Type _}
+variable {α : Type _}
 
 open PosNum
 
@@ -413,7 +413,7 @@ example (n : num) (m : num) : n ≤ n + m := by num.transfer
 unsafe def transfer : tactic Unit :=
   sorry
 
-instance  : CommSemiringₓ Num :=
+instance : CommSemiringₓ Num :=
   by 
     refineStruct
         { add := ·+·, zero := 0, zero_add, add_zero, mul := ·*·, one := 1, nsmul := @nsmulRec Num ⟨0⟩ ⟨·+·⟩,
@@ -426,7 +426,7 @@ instance  : CommSemiringₓ Num :=
               transfer <;>
           simp [mul_addₓ, mul_left_commₓ, mul_commₓ, add_commₓ]
 
-instance  : OrderedCancelAddCommMonoid Num :=
+instance : OrderedCancelAddCommMonoid Num :=
   { Num.commSemiring with
     add_left_cancel :=
       by 
@@ -472,7 +472,7 @@ instance  : OrderedCancelAddCommMonoid Num :=
           transfer_rw 
         apply le_of_add_le_add_left }
 
-instance  : LinearOrderedSemiring Num :=
+instance : LinearOrderedSemiring Num :=
   { Num.commSemiring, Num.orderedCancelAddCommMonoid with
     le_total :=
       by 
@@ -516,7 +516,7 @@ end Num
 
 namespace PosNum
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Num
 
@@ -555,7 +555,7 @@ theorem succ'_pred' n : succ' (pred' n) = n :=
     by 
       rw [succ'_to_nat, pred'_to_nat, Nat.add_one, Nat.succ_pred_eq_of_posₓ (to_nat_pos _)]
 
-instance  : HasDvd PosNum :=
+instance : HasDvd PosNum :=
   ⟨fun m n => Pos m ∣ Pos n⟩
 
 @[normCast]
@@ -611,13 +611,13 @@ example (n : pos_num) (m : pos_num) : n ≤ n + m := by pos_num.transfer
 unsafe def transfer : tactic Unit :=
   sorry
 
-instance  : AddCommSemigroupₓ PosNum :=
+instance : AddCommSemigroupₓ PosNum :=
   by 
     refine' { add := ·+·, .. } <;>
       runTac 
         transfer
 
-instance  : CommMonoidₓ PosNum :=
+instance : CommMonoidₓ PosNum :=
   by 
     refineStruct { mul := ·*·, one := (1 : PosNum), npow := @npowRec PosNum ⟨1⟩ ⟨·*·⟩ } <;>
       try 
@@ -626,7 +626,7 @@ instance  : CommMonoidₓ PosNum :=
         runTac 
           transfer
 
-instance  : Distrib PosNum :=
+instance : Distrib PosNum :=
   by 
     refine' { add := ·+·, mul := ·*·, .. } <;>
       ·
@@ -634,7 +634,7 @@ instance  : Distrib PosNum :=
           transfer 
         simp [mul_addₓ, mul_commₓ]
 
-instance  : LinearOrderₓ PosNum :=
+instance : LinearOrderₓ PosNum :=
   { lt := · < ·,
     lt_iff_le_not_le :=
       by 
@@ -736,7 +736,7 @@ end PosNum
 
 namespace Num
 
-variable{α : Type _}
+variable {α : Type _}
 
 open PosNum
 
@@ -877,7 +877,7 @@ end PosNum
 
 namespace Num
 
-variable{α : Type _}
+variable {α : Type _}
 
 open PosNum
 
@@ -1132,7 +1132,7 @@ end Num
 
 namespace Znum
 
-variable{α : Type _}
+variable {α : Type _}
 
 open PosNum
 
@@ -1292,7 +1292,7 @@ end Znum
 
 namespace PosNum
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem cast_to_znum : ∀ n : PosNum, (n : Znum) = Znum.pos n
 | 1 => rfl
@@ -1342,7 +1342,7 @@ end PosNum
 
 namespace Num
 
-variable{α : Type _}
+variable {α : Type _}
 
 @[simp]
 theorem cast_sub' [AddGroupₓ α] [HasOne α] : ∀ m n : Num, (sub' m n : α) = m - n
@@ -1424,7 +1424,7 @@ end Num
 
 namespace Znum
 
-variable{α : Type _}
+variable {α : Type _}
 
 @[simp, normCast]
 theorem cast_add [AddGroupₓ α] [HasOne α] : ∀ m n, ((m+n : Znum) : α) = m+n
@@ -1605,7 +1605,7 @@ end
 unsafe def transfer : tactic Unit :=
   sorry
 
-instance  : LinearOrderₓ Znum :=
+instance : LinearOrderₓ Znum :=
   { lt := · < ·,
     lt_iff_le_not_le :=
       by 
@@ -1638,7 +1638,7 @@ instance  : LinearOrderₓ Znum :=
         apply le_totalₓ,
     DecidableEq := Znum.decidableEq, decidableLe := Znum.decidableLe, decidableLt := Znum.decidableLt }
 
-instance  : AddCommGroupₓ Znum :=
+instance : AddCommGroupₓ Znum :=
   { add := ·+·,
     add_assoc :=
       by 
@@ -1655,7 +1655,7 @@ instance  : AddCommGroupₓ Znum :=
         runTac 
           transfer }
 
-instance  : LinearOrderedCommRing Znum :=
+instance : LinearOrderedCommRing Znum :=
   { Znum.linearOrder, Znum.addCommGroup with mul := ·*·,
     mul_assoc :=
       by 
@@ -1938,7 +1938,7 @@ theorem dvd_iff_mod_eq_zero {m n : Znum} : m ∣ n ↔ n % m = 0 :=
   by 
     rw [←dvd_to_int, Int.dvd_iff_mod_eq_zero, ←to_int_inj, mod_to_int] <;> rfl
 
-instance  : DecidableRel (· ∣ · : Znum → Znum → Prop)
+instance : DecidableRel (· ∣ · : Znum → Znum → Prop)
 | a, b => decidableOfIff' _ dvd_iff_mod_eq_zero
 
 end Znum
@@ -1954,9 +1954,9 @@ instance snum_coe : Coe Snum ℤ :=
 
 end Int
 
-instance  : LT Snum :=
+instance : LT Snum :=
   ⟨fun a b => (a : ℤ) < b⟩
 
-instance  : LE Snum :=
+instance : LE Snum :=
   ⟨fun a b => (a : ℤ) ≤ b⟩
 

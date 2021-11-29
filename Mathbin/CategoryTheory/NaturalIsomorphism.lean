@@ -34,7 +34,7 @@ namespace CategoryTheory
 
 open NatTrans
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]{E : Type u₃}[category.{v₃} E]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
 
 namespace Iso
 
@@ -76,7 +76,7 @@ theorem app_hom {F G : C ⥤ D} (α : F ≅ G) (X : C) : (α.app X).Hom = α.hom
 theorem app_inv {F G : C ⥤ D} (α : F ≅ G) (X : C) : (α.app X).inv = α.inv.app X :=
   rfl
 
-variable{F G : C ⥤ D}
+variable {F G : C ⥤ D}
 
 instance hom_app_is_iso (α : F ≅ G) (X : C) : is_iso (α.hom.app X) :=
   ⟨⟨α.inv.app X,
@@ -106,7 +106,7 @@ but for now it breaks too many proofs.
 -/
 
 
-variable(α : F ≅ G)
+variable (α : F ≅ G)
 
 @[simp]
 theorem cancel_nat_iso_hom_left {X : C} {Z : D} (g g' : G.obj X ⟶ Z) : α.hom.app X ≫ g = α.hom.app X ≫ g' ↔ g = g' :=
@@ -142,7 +142,7 @@ theorem cancel_nat_iso_inv_right_assoc {W X X' : D} {Y : C} (f : W ⟶ X) (g : X
 
 end 
 
-variable{X Y : C}
+variable {X Y : C}
 
 theorem naturality_1 (α : F ≅ G) (f : X ⟶ Y) : α.inv.app X ≫ F.map f ≫ α.hom.app Y = G.map f :=
   by 

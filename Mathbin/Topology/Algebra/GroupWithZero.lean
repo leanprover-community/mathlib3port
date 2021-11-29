@@ -39,17 +39,17 @@ operations on `filter.tendsto`, `continuous_at`, `continuous_within_at`, `contin
 -/
 
 
-variable{α β G₀ : Type _}
+variable {α β G₀ : Type _}
 
 section DivConst
 
-variable[GroupWithZeroₓ G₀][TopologicalSpace G₀][HasContinuousMul G₀]{f : α → G₀}{s : Set α}{l : Filter α}
+variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousMul G₀] {f : α → G₀} {s : Set α} {l : Filter α}
 
 theorem Filter.Tendsto.div_const {x y : G₀} (hf : tendsto f l (𝓝 x)) : tendsto (fun a => f a / y) l (𝓝 (x / y)) :=
   by 
     simpa only [div_eq_mul_inv] using hf.mul tendsto_const_nhds
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 theorem ContinuousAt.div_const {a : α} (hf : ContinuousAt f a) {y : G₀} : ContinuousAt (fun x => f x / y) a :=
   by 
@@ -72,14 +72,15 @@ end DivConst
 
 /-- A type with `0` and `has_inv` such that `λ x, x⁻¹` is continuous at all nonzero points. Any
 normed (semi)field has this property. -/
-class HasContinuousInv₀(G₀ : Type _)[HasZero G₀][HasInv G₀][TopologicalSpace G₀] where 
+class HasContinuousInv₀ (G₀ : Type _) [HasZero G₀] [HasInv G₀] [TopologicalSpace G₀] where 
   continuous_at_inv₀ : ∀ ⦃x : G₀⦄, x ≠ 0 → ContinuousAt HasInv.inv x
 
 export HasContinuousInv₀(continuous_at_inv₀)
 
 section Inv₀
 
-variable[HasZero G₀][HasInv G₀][TopologicalSpace G₀][HasContinuousInv₀ G₀]{l : Filter α}{f : α → G₀}{s : Set α}{a : α}
+variable [HasZero G₀] [HasInv G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] {l : Filter α} {f : α → G₀} {s : Set α}
+  {a : α}
 
 /-!
 ### Continuity of `λ x, x⁻¹` at a non-zero point
@@ -102,7 +103,7 @@ groups. -/
 theorem Filter.Tendsto.inv₀ {a : G₀} (hf : tendsto f l (𝓝 a)) (ha : a ≠ 0) : tendsto (fun x => f x⁻¹) l (𝓝 (a⁻¹)) :=
   (tendsto_inv₀ ha).comp hf
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 theorem ContinuousWithinAt.inv₀ (hf : ContinuousWithinAt f s a) (ha : f a ≠ 0) :
   ContinuousWithinAt (fun x => f x⁻¹) s a :=
@@ -130,14 +131,14 @@ division `(/)` is continuous at any point where the denominator is continuous.
 
 section Div
 
-variable[GroupWithZeroₓ G₀][TopologicalSpace G₀][HasContinuousInv₀ G₀][HasContinuousMul G₀]{f g : α → G₀}
+variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀] {f g : α → G₀}
 
 theorem Filter.Tendsto.div {l : Filter α} {a b : G₀} (hf : tendsto f l (𝓝 a)) (hg : tendsto g l (𝓝 b)) (hy : b ≠ 0) :
   tendsto (f / g) l (𝓝 (a / b)) :=
   by 
     simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ hy)
 
-variable[TopologicalSpace α][TopologicalSpace β]{s : Set α}{a : α}
+variable [TopologicalSpace α] [TopologicalSpace β] {s : Set α} {a : α}
 
 theorem ContinuousWithinAt.div (hf : ContinuousWithinAt f s a) (hg : ContinuousWithinAt g s a) (h₀ : g a ≠ 0) :
   ContinuousWithinAt (f / g) s a :=
@@ -193,7 +194,7 @@ end Div
 
 namespace Homeomorph
 
-variable[TopologicalSpace α][GroupWithZeroₓ α][HasContinuousMul α]
+variable [TopologicalSpace α] [GroupWithZeroₓ α] [HasContinuousMul α]
 
 /-- Left multiplication by a nonzero element in a `group_with_zero` with continuous multiplication
 is a homeomorphism of the underlying type. -/
@@ -226,7 +227,7 @@ end Homeomorph
 
 section Zpow
 
-variable[GroupWithZeroₓ G₀][TopologicalSpace G₀][HasContinuousInv₀ G₀][HasContinuousMul G₀]
+variable [GroupWithZeroₓ G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀] [HasContinuousMul G₀]
 
 -- error in Topology.Algebra.GroupWithZero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_at_zpow
@@ -249,7 +250,7 @@ theorem Filter.Tendsto.zpow {f : α → G₀} {l : Filter α} {a : G₀} (hf : t
   tendsto (fun x => f x ^ m) l (𝓝 (a ^ m)) :=
   (continuous_at_zpow _ m h).Tendsto.comp hf
 
-variable{X : Type _}[TopologicalSpace X]{a : X}{s : Set X}{f : X → G₀}
+variable {X : Type _} [TopologicalSpace X] {a : X} {s : Set X} {f : X → G₀}
 
 theorem ContinuousAt.zpow (hf : ContinuousAt f a) (m : ℤ) (h : f a ≠ 0 ∨ 0 ≤ m) : ContinuousAt (fun x => f x ^ m) a :=
   hf.zpow m h

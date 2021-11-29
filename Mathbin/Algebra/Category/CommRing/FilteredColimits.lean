@@ -46,7 +46,7 @@ instance semiring_obj (j : J) : Semiringₓ (((F ⋙ forget₂ SemiRing Mon.{v})
   show Semiringₓ (F.obj j)by 
     infer_instance
 
-variable[is_filtered J]
+variable [is_filtered J]
 
 /--
 The colimit of `F ⋙ forget₂ SemiRing Mon` in the category `Mon`.

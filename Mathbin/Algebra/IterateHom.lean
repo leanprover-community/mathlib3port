@@ -22,7 +22,7 @@ homomorphism, iterate
 
 open Function
 
-variable{M : Type _}{N : Type _}{G : Type _}{H : Type _}
+variable {M : Type _} {N : Type _} {G : Type _} {H : Type _}
 
 /-- An auxiliary lemma that can be used to prove `⇑(f ^ n) = (⇑f^[n])`. -/
 theorem hom_coe_pow {F : Type _} [Monoidₓ F] (c : F → M → M) (h1 : c 1 = id) (hmul : ∀ f g, c (f*g) = c f ∘ c g)
@@ -39,7 +39,7 @@ namespace MonoidHom
 
 section 
 
-variable[MulOneClass M][MulOneClass N]
+variable [MulOneClass M] [MulOneClass N]
 
 @[simp, toAdditive]
 theorem iterate_map_one (f : M →* M) (n : ℕ) : (f^[n]) 1 = 1 :=
@@ -51,7 +51,7 @@ theorem iterate_map_mul (f : M →* M) (n : ℕ) x y : (f^[n]) (x*y) = (f^[n]) x
 
 end 
 
-variable[Monoidₓ M][Monoidₓ N][Groupₓ G][Groupₓ H]
+variable [Monoidₓ M] [Monoidₓ N] [Groupₓ G] [Groupₓ H]
 
 @[simp, toAdditive]
 theorem iterate_map_inv (f : G →* G) (n : ℕ) x : (f^[n]) (x⁻¹) = (f^[n]) x⁻¹ :=
@@ -70,7 +70,7 @@ end MonoidHom
 
 namespace AddMonoidHom
 
-variable[AddMonoidₓ M][AddMonoidₓ N][AddGroupₓ G][AddGroupₓ H]
+variable [AddMonoidₓ M] [AddMonoidₓ N] [AddGroupₓ G] [AddGroupₓ H]
 
 @[simp]
 theorem iterate_map_sub (f : G →+ G) (n : ℕ) x y : (f^[n]) (x - y) = (f^[n]) x - (f^[n]) y :=
@@ -88,7 +88,7 @@ namespace RingHom
 
 section Semiringₓ
 
-variable{R : Type _}[Semiringₓ R](f : R →+* R)(n : ℕ)(x y : R)
+variable {R : Type _} [Semiringₓ R] (f : R →+* R) (n : ℕ) (x y : R)
 
 theorem coe_pow (n : ℕ) : «expr⇑ » (f ^ n) = f^[n] :=
   hom_coe_pow _ rfl (fun f g => rfl) f n
@@ -113,7 +113,7 @@ theorem iterate_map_smul (n m : ℕ) (x : R) : (f^[n]) (m • x) = m • (f^[n])
 
 end Semiringₓ
 
-variable{R : Type _}[Ringₓ R](f : R →+* R)(n : ℕ)(x y : R)
+variable {R : Type _} [Ringₓ R] (f : R →+* R) (n : ℕ) (x y : R)
 
 theorem iterate_map_sub : (f^[n]) (x - y) = (f^[n]) x - (f^[n]) y :=
   f.to_add_monoid_hom.iterate_map_sub n x y
@@ -131,7 +131,7 @@ theorem Equiv.Perm.coe_pow {α : Type _} (f : Equiv.Perm α) (n : ℕ) : «expr�
 
 section Monoidₓ
 
-variable[Monoidₓ G](a : G)(n : ℕ)
+variable [Monoidₓ G] (a : G) (n : ℕ)
 
 @[simp, toAdditive]
 theorem mul_left_iterate : (·*·) a^[n] = (·*·) (a ^ n) :=
@@ -164,7 +164,7 @@ end Monoidₓ
 
 section Semigroupₓ
 
-variable[Semigroupₓ G]{a b c : G}
+variable [Semigroupₓ G] {a b c : G}
 
 @[toAdditive]
 theorem SemiconjBy.function_semiconj_mul_left (h : SemiconjBy a b c) :

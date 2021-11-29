@@ -10,7 +10,7 @@ also provide a `pilex` analog of `pi.ordered_comm_group` (see `algebra.order.pi`
 -/
 
 
-variable{ι : Type _}{β : ι → Type _}(r : ι → ι → Prop)(s : ∀ {i}, β i → β i → Prop)
+variable {ι : Type _} {β : ι → Type _} (r : ι → ι → Prop) (s : ∀ {i}, β i → β i → Prop)
 
 /-- The lexicographic relation on `Π i : ι, β i`, where `ι` is ordered by `r`,
   and each `β i` is ordered by `s`. -/
@@ -21,10 +21,10 @@ def Pi.Lex (x y : ∀ i, β i) : Prop :=
 def Pilex (α : Type _) (β : α → Type _) : Type _ :=
   ∀ a, β a
 
-instance  [LT ι] [∀ a, LT (β a)] : LT (Pilex ι β) :=
+instance [LT ι] [∀ a, LT (β a)] : LT (Pilex ι β) :=
   { lt := Pi.Lex (· < ·) fun _ => · < · }
 
-instance  [∀ a, Inhabited (β a)] : Inhabited (Pilex ι β) :=
+instance [∀ a, Inhabited (β a)] : Inhabited (Pilex ι β) :=
   by 
     unfold Pilex <;> infer_instance
 
@@ -38,7 +38,7 @@ instance Pilex.is_strict_order [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a
           ⟨N₁, fun j hj => (lt_N₁ _ hj).trans (lt_N₂ _ hj), a_lt_b.trans b_lt_c⟩,
           ⟨N₂, fun j hj => (lt_N₁ _ (hj.trans H)).trans (lt_N₂ _ hj), (lt_N₁ _ H).symm ▸ b_lt_c⟩] }
 
-instance  [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a)] : PartialOrderₓ (Pilex ι β) :=
+instance [LinearOrderₓ ι] [∀ a, PartialOrderₓ (β a)] : PartialOrderₓ (Pilex ι β) :=
   partialOrderOfSO (· < ·)
 
 -- error in Order.Pilex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -80,7 +80,7 @@ begin
 end
 
 @[toAdditive]
-instance  [LinearOrderₓ ι] [∀ a, OrderedCommGroup (β a)] : OrderedCommGroup (Pilex ι β) :=
+instance [LinearOrderₓ ι] [∀ a, OrderedCommGroup (β a)] : OrderedCommGroup (Pilex ι β) :=
   { Pilex.partialOrder, Pi.commGroup with
     mul_le_mul_left :=
       fun x y hxy z =>

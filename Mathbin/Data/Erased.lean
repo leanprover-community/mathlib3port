@@ -66,13 +66,13 @@ theorem out_inj {α} (a b : Erased α) (h : a.out = b.out) : a = b :=
 noncomputable def Equiv α : Erased α ≃ α :=
   ⟨out, mk, mk_out, out_mk⟩
 
-instance  (α : Type u) : HasRepr (Erased α) :=
+instance (α : Type u) : HasRepr (Erased α) :=
   ⟨fun _ => "erased"⟩
 
-instance  (α : Type u) : HasToString (Erased α) :=
+instance (α : Type u) : HasToString (Erased α) :=
   ⟨fun _ => "erased"⟩
 
-unsafe instance  (α : Type u) : has_to_format (Erased α) :=
+unsafe instance (α : Type u) : has_to_format (Erased α) :=
   ⟨fun _ => ("erased" : format)⟩
 
 /-- Computably produce an erased value from a proof of nonemptiness. -/
@@ -83,7 +83,7 @@ def choice {α} (h : Nonempty α) : Erased α :=
 theorem nonempty_iff {α} : Nonempty (Erased α) ↔ Nonempty α :=
   ⟨fun ⟨a⟩ => ⟨a.out⟩, fun ⟨a⟩ => ⟨mk a⟩⟩
 
-instance  {α} [h : Nonempty α] : Inhabited (Erased α) :=
+instance {α} [h : Nonempty α] : Inhabited (Erased α) :=
   ⟨choice h⟩
 
 /--
@@ -124,7 +124,7 @@ theorem map_out {α β} {f : α → β} (a : Erased α) : (a.map f).out = f a.ou
   by 
     simp [map]
 
-instance  : Monadₓ Erased :=
+instance : Monadₓ Erased :=
   { pure := @mk, bind := @bind, map := @map }
 
 @[simp]
@@ -139,7 +139,7 @@ theorem bind_def {α β} : (· >>= · : Erased α → (α → Erased β) → Era
 theorem map_def {α β} : (· <$> · : (α → β) → Erased α → Erased β) = @map _ _ :=
   rfl
 
-instance  : IsLawfulMonad Erased :=
+instance : IsLawfulMonad Erased :=
   by 
     refine' { .. } <;> intros  <;> ext <;> simp 
 

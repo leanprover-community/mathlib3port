@@ -17,7 +17,7 @@ open Cardinal
 
 noncomputable theory
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Nat
 

@@ -9,7 +9,7 @@ namespace Multiset
 
 open List
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-! ### powerset -/
 

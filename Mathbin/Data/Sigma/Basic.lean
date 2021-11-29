@@ -28,14 +28,14 @@ universe signature in consequence.
 
 section Sigma
 
-variable{α α₁ α₂ : Type _}{β : α → Type _}{β₁ : α₁ → Type _}{β₂ : α₂ → Type _}
+variable {α α₁ α₂ : Type _} {β : α → Type _} {β₁ : α₁ → Type _} {β₂ : α₂ → Type _}
 
 namespace Sigma
 
-instance  [Inhabited α] [Inhabited (β (default α))] : Inhabited (Sigma β) :=
+instance [Inhabited α] [Inhabited (β (default α))] : Inhabited (Sigma β) :=
   ⟨⟨default α, default (β (default α))⟩⟩
 
-instance  [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableEq (Sigma β)
+instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableEq (Sigma β)
 | ⟨a₁, b₁⟩, ⟨a₂, b₂⟩ =>
   match a₁, b₁, a₂, b₂, h₁ a₁ a₂ with 
   | _, b₁, _, b₂, is_true (Eq.refl a) =>
@@ -161,7 +161,7 @@ end Sigma
 
 section Psigma
 
-variable{α : Sort _}{β : α → Sort _}
+variable {α : Sort _} {β : α → Sort _}
 
 namespace Psigma
 
@@ -173,10 +173,10 @@ def elim {γ} (f : ∀ a, β a → γ) (a : Psigma β) : γ :=
 theorem elim_val {γ} (f : ∀ a, β a → γ) a b : Psigma.elim f ⟨a, b⟩ = f a b :=
   rfl
 
-instance  [Inhabited α] [Inhabited (β (default α))] : Inhabited (Psigma β) :=
+instance [Inhabited α] [Inhabited (β (default α))] : Inhabited (Psigma β) :=
   ⟨⟨default α, default (β (default α))⟩⟩
 
-instance  [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableEq (Psigma β)
+instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableEq (Psigma β)
 | ⟨a₁, b₁⟩, ⟨a₂, b₂⟩ =>
   match a₁, b₁, a₂, b₂, h₁ a₁ a₂ with 
   | _, b₁, _, b₂, is_true (Eq.refl a) =>
@@ -217,7 +217,7 @@ theorem subtype_ext_iff {β : Sort _} {p : α → β → Prop} {x₀ x₁ : Σ'a
   x₀ = x₁ ↔ x₀.fst = x₁.fst ∧ (x₀.snd : β) = x₁.snd :=
   ⟨fun h => h ▸ ⟨rfl, rfl⟩, fun ⟨h₁, h₂⟩ => subtype_ext h₁ h₂⟩
 
-variable{α₁ : Sort _}{α₂ : Sort _}{β₁ : α₁ → Sort _}{β₂ : α₂ → Sort _}
+variable {α₁ : Sort _} {α₂ : Sort _} {β₁ : α₁ → Sort _} {β₂ : α₂ → Sort _}
 
 /-- Map the left and right components of a sigma -/
 def map (f₁ : α₁ → α₂) (f₂ : ∀ a, β₁ a → β₂ (f₁ a)) : Psigma β₁ → Psigma β₂

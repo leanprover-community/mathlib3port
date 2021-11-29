@@ -18,7 +18,7 @@ open Nat
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 /-! ### lexicographic ordering -/
 
@@ -157,7 +157,7 @@ instance has_lt' [LT α] : LT (List α) :=
 theorem nil_lt_cons [LT α] (a : α) (l : List α) : [] < a :: l :=
   lex.nil
 
-instance  [LinearOrderₓ α] : LinearOrderₓ (List α) :=
+instance [LinearOrderₓ α] : LinearOrderₓ (List α) :=
   linearOrderOfSTO' (lex (· < ·))
 
 instance has_le' [LinearOrderₓ α] : LE (List α) :=

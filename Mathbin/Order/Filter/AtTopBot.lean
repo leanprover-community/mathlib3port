@@ -13,7 +13,7 @@ Then we prove many lemmas like “if `f → +∞`, then `f ± c → +∞`”.
 -/
 
 
-variable{ι ι' α β γ : Type _}
+variable {ι ι' α β γ : Type _}
 
 open Set
 
@@ -116,11 +116,11 @@ theorem at_bot_countable_basis [Nonempty α] [SemilatticeInf α] [Encodable α] 
   has_countable_basis (at_bot : Filter α) (fun _ => True) Iic :=
   { at_bot_basis with Countable := countable_encodable _ }
 
-instance (priority := 200)at_top.is_countably_generated [Preorderₓ α] [Encodable α] :
+instance (priority := 200) at_top.is_countably_generated [Preorderₓ α] [Encodable α] :
   (at_top : Filter$ α).IsCountablyGenerated :=
   is_countably_generated_seq _
 
-instance (priority := 200)at_bot.is_countably_generated [Preorderₓ α] [Encodable α] :
+instance (priority := 200) at_bot.is_countably_generated [Preorderₓ α] [Encodable α] :
   (at_bot : Filter$ α).IsCountablyGenerated :=
   is_countably_generated_seq _
 
@@ -377,7 +377,7 @@ theorem _root_.strict_mono.tendsto_at_top {φ : ℕ → ℕ} (h : StrictMono φ)
 
 section OrderedAddCommMonoid
 
-variable[OrderedAddCommMonoid β]{l : Filter α}{f g : α → β}
+variable [OrderedAddCommMonoid β] {l : Filter α} {f g : α → β}
 
 theorem tendsto_at_top_add_nonneg_left' (hf : ∀ᶠx in l, 0 ≤ f x) (hg : tendsto g l at_top) :
   tendsto (fun x => f x+g x) l at_top :=
@@ -441,7 +441,7 @@ end OrderedAddCommMonoid
 
 section OrderedCancelAddCommMonoid
 
-variable[OrderedCancelAddCommMonoid β]{l : Filter α}{f g : α → β}
+variable [OrderedCancelAddCommMonoid β] {l : Filter α} {f g : α → β}
 
 theorem tendsto_at_top_of_add_const_left (C : β) (hf : tendsto (fun x => C+f x) l at_top) : tendsto f l at_top :=
   tendsto_at_top.2$ fun b => (tendsto_at_top.1 hf (C+b)).mono fun x => le_of_add_le_add_left
@@ -491,7 +491,7 @@ end OrderedCancelAddCommMonoid
 
 section OrderedGroup
 
-variable[OrderedAddCommGroup β](l : Filter α){f g : α → β}
+variable [OrderedAddCommGroup β] (l : Filter α) {f g : α → β}
 
 theorem tendsto_at_top_add_left_of_le' (C : β) (hf : ∀ᶠx in l, C ≤ f x) (hg : tendsto g l at_top) :
   tendsto (fun x => f x+g x) l at_top :=
@@ -557,7 +557,7 @@ end OrderedGroup
 
 section OrderedSemiring
 
-variable[OrderedSemiring α]{l : Filter β}{f g : β → α}
+variable [OrderedSemiring α] {l : Filter β} {f g : β → α}
 
 theorem tendsto_bit1_at_top : tendsto bit1 (at_top : Filter α) at_top :=
   tendsto_at_top_add_nonneg_right tendsto_bit0_at_top fun _ => zero_le_one
@@ -579,6 +579,9 @@ theorem tendsto_pow_at_top {n : ℕ} (hn : 1 ≤ n) : tendsto (fun x : α => x ^
     refine' tendsto_at_top_mono' _ ((eventually_ge_at_top 1).mono$ fun x hx => _) tendsto_id 
     simpa only [pow_oneₓ] using pow_le_pow hx hn
 
+theorem eventually_ne_of_tendsto_at_top [Nontrivial α] (hf : tendsto f l at_top) (c : α) : ∀ᶠx in l, f x ≠ c :=
+  (tendsto_at_top.1 hf$ c+1).mono fun x hx => ne_of_gtₓ (lt_of_lt_of_leₓ (lt_add_one c) hx)
+
 end OrderedSemiring
 
 theorem zero_pow_eventually_eq [MonoidWithZeroₓ α] : (fun n : ℕ => (0 : α) ^ n) =ᶠ[at_top] fun n => 0 :=
@@ -586,7 +589,10 @@ theorem zero_pow_eventually_eq [MonoidWithZeroₓ α] : (fun n : ℕ => (0 : α)
 
 section OrderedRing
 
-variable[OrderedRing α]{l : Filter β}{f g : β → α}
+variable [OrderedRing α] {l : Filter β} {f g : β → α}
+
+theorem eventually_ne_of_tendsto_at_bot [Nontrivial α] (hf : tendsto f l at_bot) (c : α) : ∀ᶠx in l, f x ≠ c :=
+  (tendsto_at_bot.1 hf$ c - 1).mono fun x hx => ne_of_ltₓ (lt_of_le_of_ltₓ hx ((sub_lt_self_iff c).2 zero_lt_one))
 
 theorem tendsto.at_top_mul_at_bot (hf : tendsto f l at_top) (hg : tendsto g l at_bot) :
   tendsto (fun x => f x*g x) l at_bot :=
@@ -611,7 +617,7 @@ end OrderedRing
 
 section LinearOrderedAddCommGroup
 
-variable[LinearOrderedAddCommGroup α]
+variable [LinearOrderedAddCommGroup α]
 
 /-- $\lim_{x\to+\infty}|x|=+\infty$ -/
 theorem tendsto_abs_at_top_at_top : tendsto (abs : α → α) at_top at_top :=
@@ -625,7 +631,7 @@ end LinearOrderedAddCommGroup
 
 section LinearOrderedSemiring
 
-variable[LinearOrderedSemiring α]{l : Filter β}{f : β → α}
+variable [LinearOrderedSemiring α] {l : Filter β} {f : β → α}
 
 theorem tendsto.at_top_of_const_mul {c : α} (hc : 0 < c) (hf : tendsto (fun x => c*f x) l at_top) :
   tendsto f l at_top :=
@@ -643,7 +649,7 @@ theorem nonneg_of_eventually_pow_nonneg [LinearOrderedRing α] {a : α} (h : ∀
 
 section LinearOrderedField
 
-variable[LinearOrderedField α]{l : Filter β}{f : β → α}{r : α}
+variable [LinearOrderedField α] {l : Filter β} {f : β → α} {r : α}
 
 /-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the left) also tends to infinity. For a version working in `ℕ` or `ℤ`, use
@@ -893,12 +899,12 @@ theorem prod_at_bot_at_bot_eq {β₁ β₂ : Type _} [SemilatticeInf β₁] [Sem
   @prod_at_top_at_top_eq (OrderDual β₁) (OrderDual β₂) _ _
 
 theorem prod_map_at_top_eq {α₁ α₂ β₁ β₂ : Type _} [SemilatticeSup β₁] [SemilatticeSup β₂] (u₁ : β₁ → α₁)
-  (u₂ : β₂ → α₂) : map u₁ at_top ×ᶠ map u₂ at_top = map (Prod.mapₓ u₁ u₂) at_top :=
+  (u₂ : β₂ → α₂) : map u₁ at_top ×ᶠ map u₂ at_top = map (Prod.map u₁ u₂) at_top :=
   by 
     rw [prod_map_map_eq, prod_at_top_at_top_eq, Prod.map_defₓ]
 
 theorem prod_map_at_bot_eq {α₁ α₂ β₁ β₂ : Type _} [SemilatticeInf β₁] [SemilatticeInf β₂] (u₁ : β₁ → α₁)
-  (u₂ : β₂ → α₂) : map u₁ at_bot ×ᶠ map u₂ at_bot = map (Prod.mapₓ u₁ u₂) at_bot :=
+  (u₂ : β₂ → α₂) : map u₁ at_bot ×ᶠ map u₂ at_bot = map (Prod.map u₁ u₂) at_bot :=
   @prod_map_at_top_eq _ _ (OrderDual β₁) (OrderDual β₂) _ _ _ _
 
 theorem tendsto.subseq_mem {F : Filter α} {V : ℕ → Set α} (h : ∀ n, V n ∈ F) {u : ℕ → α} (hu : tendsto u at_top F) :
@@ -916,25 +922,25 @@ theorem tendsto_at_top_diagonal [SemilatticeSup α] : tendsto (fun a : α => (a,
     exact tendsto_id.prod_mk tendsto_id
 
 theorem tendsto.prod_map_prod_at_bot [SemilatticeInf γ] {F : Filter α} {G : Filter β} {f : α → γ} {g : β → γ}
-  (hf : tendsto f F at_bot) (hg : tendsto g G at_bot) : tendsto (Prod.mapₓ f g) (F ×ᶠ G) at_bot :=
+  (hf : tendsto f F at_bot) (hg : tendsto g G at_bot) : tendsto (Prod.map f g) (F ×ᶠ G) at_bot :=
   by 
     rw [←prod_at_bot_at_bot_eq]
     exact hf.prod_map hg
 
 theorem tendsto.prod_map_prod_at_top [SemilatticeSup γ] {F : Filter α} {G : Filter β} {f : α → γ} {g : β → γ}
-  (hf : tendsto f F at_top) (hg : tendsto g G at_top) : tendsto (Prod.mapₓ f g) (F ×ᶠ G) at_top :=
+  (hf : tendsto f F at_top) (hg : tendsto g G at_top) : tendsto (Prod.map f g) (F ×ᶠ G) at_top :=
   by 
     rw [←prod_at_top_at_top_eq]
     exact hf.prod_map hg
 
 theorem tendsto.prod_at_bot [SemilatticeInf α] [SemilatticeInf γ] {f g : α → γ} (hf : tendsto f at_bot at_bot)
-  (hg : tendsto g at_bot at_bot) : tendsto (Prod.mapₓ f g) at_bot at_bot :=
+  (hg : tendsto g at_bot at_bot) : tendsto (Prod.map f g) at_bot at_bot :=
   by 
     rw [←prod_at_bot_at_bot_eq]
     exact hf.prod_map_prod_at_bot hg
 
 theorem tendsto.prod_at_top [SemilatticeSup α] [SemilatticeSup γ] {f g : α → γ} (hf : tendsto f at_top at_top)
-  (hg : tendsto g at_top at_top) : tendsto (Prod.mapₓ f g) at_top at_top :=
+  (hg : tendsto g at_top at_top) : tendsto (Prod.map f g) at_top at_top :=
   by 
     rw [←prod_at_top_at_top_eq]
     exact hf.prod_map_prod_at_top hg
@@ -1291,7 +1297,7 @@ open Filter Finset
 
 section 
 
-variable{R : Type _}[LinearOrderedSemiring R]
+variable {R : Type _} [LinearOrderedSemiring R]
 
 theorem exists_lt_mul_self (a : R) : ∃ (x : _)(_ : x ≥ 0), a < x*x :=
   let ⟨x, hxa, hx0⟩ :=
@@ -1306,7 +1312,7 @@ end
 
 namespace OrderIso
 
-variable[Preorderₓ α][Preorderₓ β]
+variable [Preorderₓ α] [Preorderₓ β]
 
 @[simp]
 theorem comap_at_top (e : α ≃o β) : comap e at_top = at_top :=

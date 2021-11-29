@@ -29,16 +29,16 @@ open_locale Classical BigOperators Ennreal
 
 open Classical Set Filter
 
-variable{α β γ δ ε : Type _}
+variable {α β γ δ ε : Type _}
 
 namespace MeasureTheory
 
 namespace Measureₓ
 
-variable[MeasurableSpace α][MeasurableSpace β]
+variable [MeasurableSpace α] [MeasurableSpace β]
 
 /-- Measurability structure on `measure`: Measures are measurable w.r.t. all projections -/
-instance  : MeasurableSpace (Measureₓ α) :=
+instance : MeasurableSpace (Measureₓ α) :=
   ⨆(s : Set α)(hs : MeasurableSet s), (borel ℝ≥0∞).comap fun μ => μ s
 
 theorem measurable_coe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ : Measureₓ α => μ s :=

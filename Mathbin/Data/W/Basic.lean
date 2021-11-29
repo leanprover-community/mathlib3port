@@ -28,12 +28,12 @@ elements of `α` and the children of a node labeled `a` are indexed by elements 
 inductive WType {α : Type _} (β : α → Type _)
   | mk (a : α) (f : β a → WType) : WType
 
-instance  : Inhabited (WType fun _ : Unit => Empty) :=
+instance : Inhabited (WType fun _ : Unit => Empty) :=
   ⟨WType.mk Unit.star Empty.elimₓ⟩
 
 namespace WType
 
-variable{α : Type _}{β : α → Type _}
+variable {α : Type _} {β : α → Type _}
 
 /-- The canonical map to the corresponding sigma type, returning the label of a node as an
   element `a` of `α`, and the children of the node as a function `β a → W_type β`. -/
@@ -53,7 +53,7 @@ theorem of_sigma_to_sigma : ∀ w : WType β, of_sigma (to_sigma w) = w
 theorem to_sigma_of_sigma : ∀ s : Σa : α, β a → WType β, to_sigma (of_sigma s) = s
 | ⟨a, f⟩ => rfl
 
-variable(β)
+variable (β)
 
 /-- The canonical bijection with the sigma type, showing that `W_type` is a fixed point of
   the polynomial `Σ a : α, β a → W_type β`.  -/
@@ -61,7 +61,7 @@ variable(β)
 def equiv_sigma : WType β ≃ Σa : α, β a → WType β :=
   { toFun := to_sigma, invFun := of_sigma, left_inv := of_sigma_to_sigma, right_inv := to_sigma_of_sigma }
 
-variable{β}
+variable {β}
 
 /-- The canonical map from `W_type β` into any type `γ` given a map `(Σ a : α, β a → γ) → γ`. -/
 def elim (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) : WType β → γ
@@ -75,7 +75,7 @@ theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) (fγ
     congr with x 
     exact elim_injective (congr_funₓ (eq_of_heq h) x : _)
 
-instance  [hα : IsEmpty α] : IsEmpty (WType β) :=
+instance [hα : IsEmpty α] : IsEmpty (WType β) :=
   ⟨fun w => WType.recOn w (IsEmpty.elim hα)⟩
 
 -- error in Data.W.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -95,7 +95,7 @@ theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : nonempty (β a)] [he :
        simp [] [] [] ["[", expr function.funext_iff, ",", "*", "]"] [] ["at", "*"] } }
  end⟩
 
-variable[∀ a : α, Fintype (β a)]
+variable [∀ a : α, Fintype (β a)]
 
 /-- The depth of a finitely branching tree. -/
 def depth : WType β → ℕ
@@ -117,7 +117,7 @@ namespace Encodable
 private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintype (β a)] [∀ a : α, Encodable (β a)] (n : ℕ) :=
   { t : WType β // t.depth ≤ n }
 
-variable{α : Type _}{β : α → Type _}[∀ a : α, Fintype (β a)][∀ a : α, Encodable (β a)]
+variable {α : Type _} {β : α → Type _} [∀ a : α, Fintype (β a)] [∀ a : α, Encodable (β a)]
 
 private def encodable_zero : Encodable (W_type' β 0) :=
   let f : W_type' β 0 → Empty := fun ⟨x, h⟩ => False.elim$ not_lt_of_geₓ h (WType.depth_pos _)
@@ -143,7 +143,7 @@ private def finv (n : ℕ) : (Σa : α, β a → W_type' β n) → W_type' β (n
   have  : WType.depth ⟨a, f'⟩ ≤ n+1 := add_le_add_right (Finset.sup_le fun b h => (f b).2) 1
   ⟨⟨a, f'⟩, this⟩
 
-variable[Encodable α]
+variable [Encodable α]
 
 private def encodable_succ (n : Nat) (h : Encodable (W_type' β n)) : Encodable (W_type' β (n+1)) :=
   Encodable.ofLeftInverse (f n) (finv n)

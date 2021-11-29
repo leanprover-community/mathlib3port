@@ -27,7 +27,7 @@ open Polynomial
 
 section Semiringₓ
 
-variable(S : Type u)[Semiringₓ S]
+variable (S : Type u) [Semiringₓ S]
 
 /--
 `pochhammer S n` is the polynomial `X * (X+1) * ... * (X + n - 1)`,
@@ -52,7 +52,7 @@ theorem pochhammer_succ_left (n : ℕ) : pochhammer S (n+1) = X*(pochhammer S n)
 
 section 
 
-variable{S}{T : Type v}[Semiringₓ T]
+variable {S} {T : Type v} [Semiringₓ T]
 
 @[simp]
 theorem pochhammer_map (f : S →+* T) (n : ℕ) : (pochhammer S n).map f = pochhammer T n :=
@@ -144,7 +144,7 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable{S : Type _}[CommSemiringₓ S]
+variable {S : Type _} [CommSemiringₓ S]
 
 theorem pochhammer_succ_eval (n : ℕ) (k : S) : (pochhammer S n.succ).eval k = (pochhammer S n).eval k*k+«expr↑ » n :=
   by 
@@ -154,7 +154,7 @@ end CommSemiringₓ
 
 section OrderedSemiring
 
-variable{S : Type _}[OrderedSemiring S][Nontrivial S]
+variable {S : Type _} [OrderedSemiring S] [Nontrivial S]
 
 theorem pochhammer_pos (n : ℕ) (s : S) (h : 0 < s) : 0 < (pochhammer S n).eval s :=
   by 
@@ -173,7 +173,7 @@ section Factorial
 
 open_locale Nat
 
-variable(S : Type _)[Semiringₓ S](r n : ℕ)
+variable (S : Type _) [Semiringₓ S] (r n : ℕ)
 
 @[simp]
 theorem pochhammer_eval_one (S : Type _) [Semiringₓ S] (n : ℕ) : (pochhammer S n).eval (1 : S) = (n ! : S) :=

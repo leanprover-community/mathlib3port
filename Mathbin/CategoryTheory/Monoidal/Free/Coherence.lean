@@ -38,11 +38,11 @@ open MonoidalCategory
 
 namespace FreeMonoidalCategory
 
-variable{C : Type u}
+variable {C : Type u}
 
 section 
 
-variable(C)
+variable (C)
 
 /-- We say an object in the free monoidal category is in normal form if it is of the form
     `(((𝟙_ C) ⊗ X₁) ⊗ X₂) ⊗ ⋯`. -/
@@ -113,7 +113,7 @@ end
 
 section 
 
-variable(C)
+variable (C)
 
 /-- Our normalization procedure works by first defining a functor `F C ⥤ (N C ⥤ N C)` (which turns
     out to be very easy), and then obtain a functor `F C ⥤ N C` by plugging in the normal object
@@ -294,7 +294,7 @@ def inverse_aux : ∀ {X Y : F C}, (X ⟶ᵐ Y) → (Y ⟶ᵐ X)
 
 end 
 
-instance  : groupoid.{u} (F C) :=
+instance : groupoid.{u} (F C) :=
   { (inferInstance : category (F C)) with
     inv :=
       fun X Y =>

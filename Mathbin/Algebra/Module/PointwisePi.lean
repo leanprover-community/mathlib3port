@@ -17,7 +17,7 @@ open_locale Pointwise
 
 open Set
 
-variable{K ι : Type _}{R : ι → Type _}
+variable {K ι : Type _} {R : ι → Type _}
 
 @[toAdditive]
 theorem smul_pi_subset [∀ i, HasScalar K (R i)] (r : K) (s : Set ι) (t : ∀ i, Set (R i)) : r • pi s t ⊆ pi s (r • t) :=

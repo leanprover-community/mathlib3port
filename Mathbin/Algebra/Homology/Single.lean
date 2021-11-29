@@ -23,11 +23,11 @@ open CategoryTheory.Limits
 
 universe v u
 
-variable(V : Type u)[category.{v} V][has_zero_morphisms V][has_zero_object V]
+variable (V : Type u) [category.{v} V] [has_zero_morphisms V] [has_zero_object V]
 
 namespace HomologicalComplex
 
-variable{ι : Type _}[DecidableEq ι](c : ComplexShape ι)
+variable {ι : Type _} [DecidableEq ι] (c : ComplexShape ι)
 
 attribute [local instance] has_zero_object.has_zero
 
@@ -106,7 +106,7 @@ instance (j : ι) : faithful (single V c j) :=
     exact [expr this]
   end }
 
-instance  (j : ι) : full (single V c j) :=
+instance (j : ι) : full (single V c j) :=
   { Preimage :=
       fun X Y f =>
         eq_to_hom
@@ -219,7 +219,7 @@ theorem single₀_map_f_succ {X Y : V} (f : X ⟶ Y) (n : ℕ) : ((single₀ V).
 
 section 
 
-variable[has_equalizers V][has_cokernels V][has_images V][has_image_maps V]
+variable [has_equalizers V] [has_cokernels V] [has_images V] [has_image_maps V]
 
 /--
 Sending objects to chain complexes supported at `0` then taking `0`-th homology
@@ -259,7 +259,7 @@ noncomputable def homology_functor_succ_single₀ (n : ℕ) : single₀ V ⋙ ho
 
 end 
 
-variable{V}
+variable {V}
 
 /--
 Morphisms from a `ℕ`-indexed chain complex `C`
@@ -306,7 +306,7 @@ def to_single₀_equiv (C : ChainComplex V ℕ) (X : V) : (C ⟶ (single₀ V).o
       by 
         tidy }
 
-variable(V)
+variable (V)
 
 /-- `single₀` is the same as `single V _ 0`. -/
 def single₀_iso_single : single₀ V ≅ single V _ 0 :=
@@ -342,10 +342,10 @@ def single₀_iso_single : single₀ V ≅ single V _ 0 :=
             dsimp 
             simp 
 
-instance  : faithful (single₀ V) :=
+instance : faithful (single₀ V) :=
   faithful.of_iso (single₀_iso_single V).symm
 
-instance  : full (single₀ V) :=
+instance : full (single₀ V) :=
   full.of_iso (single₀_iso_single V).symm
 
 end ChainComplex
@@ -434,7 +434,7 @@ theorem single₀_map_f_succ {X Y : V} (f : X ⟶ Y) (n : ℕ) : ((single₀ V).
 
 section 
 
-variable[has_equalizers V][has_cokernels V][has_images V][has_image_maps V]
+variable [has_equalizers V] [has_cokernels V] [has_images V] [has_image_maps V]
 
 /--
 Sending objects to cochain complexes supported at `0` then taking `0`-th homology
@@ -474,7 +474,7 @@ noncomputable def homology_functor_succ_single₀ (n : ℕ) : single₀ V ⋙ ho
 
 end 
 
-variable{V}
+variable {V}
 
 /--
 Morphisms from a single object cochain complex with `X` concentrated in degree 0
@@ -525,7 +525,7 @@ def from_single₀_equiv (C : CochainComplex V ℕ) (X : V) :
       by 
         tidy }
 
-variable(V)
+variable (V)
 
 /-- `single₀` is the same as `single V _ 0`. -/
 def single₀_iso_single : single₀ V ≅ single V _ 0 :=
@@ -561,10 +561,10 @@ def single₀_iso_single : single₀ V ≅ single V _ 0 :=
             dsimp 
             simp 
 
-instance  : faithful (single₀ V) :=
+instance : faithful (single₀ V) :=
   faithful.of_iso (single₀_iso_single V).symm
 
-instance  : full (single₀ V) :=
+instance : full (single₀ V) :=
   full.of_iso (single₀_iso_single V).symm
 
 end CochainComplex

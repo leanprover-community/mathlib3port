@@ -48,20 +48,20 @@ open CategoryTheory.Limits
 
 namespace CategoryTheory
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
-variable{A : Type u₃}[category.{v₃} A]
+variable {A : Type u₃} [category.{v₃} A]
 
-variable(J : grothendieck_topology C)(K : grothendieck_topology D)
+variable (J : grothendieck_topology C) (K : grothendieck_topology D)
 
-variable{L : grothendieck_topology A}
+variable {L : grothendieck_topology A}
 
 /--
 A functor `G : (C, J) ⥤ (D, K)` between sites is *cover-preserving*
 if for all covering sieves `R` in `C`, `R.pushforward_functor G` is a covering sieve in `D`.
 -/
 @[nolint has_inhabited_instance]
-structure cover_preserving(G : C ⥤ D) : Prop where 
+structure cover_preserving (G : C ⥤ D) : Prop where 
   cover_preserve : ∀ {U : C} {S : sieve U} hS : S ∈ J U, S.functor_pushforward G ∈ K (G.obj U)
 
 /-- The identity functor on a site is cover-preserving. -/
@@ -70,7 +70,7 @@ theorem id_cover_preserving : cover_preserving J J (𝟭 _) :=
       by 
         simpa using hS⟩
 
-variable(J)(K)
+variable (J) (K)
 
 /-- The composition of two cover-preserving functors is cover-preserving. -/
 theorem cover_preserving.comp {F} (hF : cover_preserving J K F) {G} (hG : cover_preserving K L G) :
@@ -88,15 +88,15 @@ This is actually stronger than merely preserving compatible families because of 
 `functor_pushforward` used.
 -/
 @[nolint has_inhabited_instance]
-structure compatible_preserving(K : grothendieck_topology D)(G : C ⥤ D) : Prop where 
+structure compatible_preserving (K : grothendieck_topology D) (G : C ⥤ D) : Prop where 
   Compatible :
   ∀ ℱ : SheafOfTypes.{w} K {Z} {T : presieve Z} {x : family_of_elements (G.op ⋙ ℱ.val) T} h : x.compatible {Y₁ Y₂} {X}
     f₁ : X ⟶ G.obj Y₁ f₂ : X ⟶ G.obj Y₂ {g₁ : Y₁ ⟶ Z} {g₂ : Y₂ ⟶ Z} hg₁ : T g₁ hg₂ : T g₂ eq :
     f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂, ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
 
-variable{J K}{G : C ⥤ D}(hG : compatible_preserving.{w} K G)(ℱ : SheafOfTypes.{w} K){Z : C}
+variable {J K} {G : C ⥤ D} (hG : compatible_preserving.{w} K G) (ℱ : SheafOfTypes.{w} K) {Z : C}
 
-variable{T : presieve Z}{x : family_of_elements (G.op ⋙ ℱ.val) T}(h : x.compatible)
+variable {T : presieve Z} {x : family_of_elements (G.op ⋙ ℱ.val) T} (h : x.compatible)
 
 include h hG
 
@@ -160,7 +160,7 @@ def pullback_sheaf {G : C ⥤ D} (hG₁ : compatible_preserving K G) (hG₂ : co
   Sheaf J A :=
   ⟨G.op ⋙ ℱ.val, pullback_is_sheaf_of_cover_preserving hG₁ hG₂ ℱ⟩
 
-variable(A)
+variable (A)
 
 /--
 The induced functor from `Sheaf K A ⥤ Sheaf J A` given by `G.op ⋙ _`

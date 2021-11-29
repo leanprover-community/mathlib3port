@@ -1,5 +1,5 @@
 import Mathbin.Algebra.CharP.Basic 
-import Mathbin.RingTheory.Subring
+import Mathbin.RingTheory.Subring.Basic
 
 /-!
 # Characteristic of subrings

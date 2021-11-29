@@ -29,14 +29,14 @@ namespace CategoryTheory
 
 universe v u
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 section 
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 /-- An object is simple if monomorphisms into it are (exclusively) either isomorphisms or zero. -/
-class simple(X : C) : Prop where 
+class simple (X : C) : Prop where 
   mono_is_iso_iff_nonzero : ∀ {Y : C} f : Y ⟶ X [mono f], is_iso f ↔ f ≠ 0
 
 /-- A nonzero monomorphism to a simple object is an isomorphism. -/
@@ -69,12 +69,12 @@ theorem id_nonzero (X : C) [simple.{v} X] : 𝟙 X ≠ 0 :=
     (by 
       infer_instance)
 
-instance  (X : C) [simple.{v} X] : Nontrivial (End X) :=
+instance (X : C) [simple.{v} X] : Nontrivial (End X) :=
   nontrivial_of_ne 1 0 (id_nonzero X)
 
 section 
 
-variable[has_zero_object C]
+variable [has_zero_object C]
 
 open_locale ZeroObject
 
@@ -92,7 +92,7 @@ end
 
 section Abelian
 
-variable[abelian C]
+variable [abelian C]
 
 -- error in CategoryTheory.Simple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In an abelian category, an object satisfying the dual of the definition of a simple object is

@@ -15,18 +15,18 @@ matrix determinant, multivariate polynomial
 -/
 
 
-variable{m n R S : Type _}
+variable {m n R S : Type _}
 
 namespace Matrix
 
-variable(m n R)
+variable (m n R)
 
 /-- The matrix with variable `X (i,j)` at location `(i,j)`. -/
 @[simp]
 noncomputable def mv_polynomial_X [CommSemiringₓ R] : Matrix m n (MvPolynomial (m × n) R)
 | i, j => MvPolynomial.x (i, j)
 
-variable{m n R S}
+variable {m n R S}
 
 /-- Any matrix `A` can be expressed as the evaluation of `matrix.mv_polynomial_X`.
 
@@ -42,14 +42,14 @@ theorem mv_polynomial_X_map_matrix_eval [Fintype m] [DecidableEq m] [CommSemirin
   (MvPolynomial.eval$ fun p : m × m => A p.1 p.2).mapMatrix (mv_polynomial_X m m R) = A :=
   mv_polynomial_X_map_eval₂ _ A
 
-variable(R)
+variable (R)
 
 /-- A variant of `matrix.mv_polynomial_X_map_eval₂` with a bundled `alg_hom` on the LHS. -/
 theorem mv_polynomial_X_map_matrix_aeval [Fintype m] [DecidableEq m] [CommSemiringₓ R] [CommSemiringₓ S] [Algebra R S]
   (A : Matrix m m S) : (MvPolynomial.aeval$ fun p : m × m => A p.1 p.2).mapMatrix (mv_polynomial_X m m R) = A :=
   mv_polynomial_X_map_eval₂ _ A
 
-variable(m R)
+variable (m R)
 
 -- error in LinearAlgebra.Matrix.MvPolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a nontrivial ring, `matrix.mv_polynomial_X m m R` has non-zero determinant. -/

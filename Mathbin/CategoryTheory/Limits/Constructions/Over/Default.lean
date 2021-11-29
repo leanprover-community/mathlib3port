@@ -16,21 +16,21 @@ universe v u
 
 open CategoryTheory CategoryTheory.Limits
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{X : C}
+variable {X : C}
 
 namespace CategoryTheory.Over
 
 /-- Make sure we can derive pullbacks in `over B`. -/
-example  {B : C} [has_pullbacks C] : has_pullbacks (over B) :=
+example {B : C} [has_pullbacks C] : has_pullbacks (over B) :=
   by 
     infer_instance
 
 /-- Make sure we can derive equalizers in `over B`. -/
-example  {B : C} [has_equalizers C] : has_equalizers (over B) :=
+example {B : C} [has_equalizers C] : has_equalizers (over B) :=
   by 
     infer_instance
 

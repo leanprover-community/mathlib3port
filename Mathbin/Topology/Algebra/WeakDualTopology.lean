@@ -79,9 +79,9 @@ section WeakStarTopology
 -/
 
 
-variable(𝕜 : Type _)[TopologicalSpace 𝕜][Semiringₓ 𝕜]
+variable (𝕜 : Type _) [TopologicalSpace 𝕜] [Semiringₓ 𝕜]
 
-variable(E : Type _)[TopologicalSpace E][AddCommMonoidₓ E][Module 𝕜 E]
+variable (E : Type _) [TopologicalSpace E] [AddCommMonoidₓ E] [Module 𝕜 E]
 
 -- error in Topology.Algebra.WeakDualTopology: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- The weak dual of a topological module `E` over a topological semiring `𝕜` consists of
@@ -91,7 +91,7 @@ continuous linear functionals from `E` to scalars `𝕜`. It is a type synonym w
 def weak_dual :=
 «expr →L[ ] »(E, 𝕜, 𝕜)
 
-instance  [HasContinuousAdd 𝕜] : AddCommMonoidₓ (WeakDual 𝕜 E) :=
+instance [HasContinuousAdd 𝕜] : AddCommMonoidₓ (WeakDual 𝕜 E) :=
   ContinuousLinearMap.addCommMonoid
 
 namespace WeakDual
@@ -100,7 +100,7 @@ namespace WeakDual
 `E` over a topological semiring `𝕜` is defined as the induced topology under the mapping that
 associates to a dual element `x' : weak_dual 𝕜 E` the functional `E → 𝕜`, when the space `E → 𝕜`
 of functionals is equipped with the topology of pointwise convergence (product topology). -/
-instance  : TopologicalSpace (WeakDual 𝕜 E) :=
+instance : TopologicalSpace (WeakDual 𝕜 E) :=
   TopologicalSpace.induced (fun x' : WeakDual 𝕜 E => fun z : E => x' z) Pi.topologicalSpace
 
 theorem coe_fn_continuous : Continuous fun x' : WeakDual 𝕜 E => fun z : E => x' z :=
@@ -116,7 +116,7 @@ theorem continuous_of_continuous_eval {α : Type u} [TopologicalSpace α] {g : �
 theorem tendsto_iff_forall_eval_tendsto {γ : Type u} {F : Filter γ} {ψs : γ → WeakDual 𝕜 E} {ψ : WeakDual 𝕜 E} :
   tendsto ψs F (𝓝 ψ) ↔ ∀ z : E, tendsto (fun i => ψs i z) F (𝓝 (ψ z)) :=
   by 
-    rw [←tendsto_pi]
+    rw [←tendsto_pi_nhds]
     split 
     ·
       intro weak_star_conv 
@@ -136,7 +136,7 @@ instance [has_continuous_add 𝕜] : has_continuous_add (weak_dual 𝕜 E) :=
   end }
 
 /-- If the scalars `𝕜` are a commutative semiring, then `weak_dual 𝕜 E` is a module over `𝕜`. -/
-instance  (𝕜 : Type u) [TopologicalSpace 𝕜] [CommSemiringₓ 𝕜] [HasContinuousAdd 𝕜] [HasContinuousMul 𝕜] (E : Type _)
+instance (𝕜 : Type u) [TopologicalSpace 𝕜] [CommSemiringₓ 𝕜] [HasContinuousAdd 𝕜] [HasContinuousMul 𝕜] (E : Type _)
   [TopologicalSpace E] [AddCommGroupₓ E] [Module 𝕜 E] : Module 𝕜 (WeakDual 𝕜 E) :=
   ContinuousLinearMap.module
 

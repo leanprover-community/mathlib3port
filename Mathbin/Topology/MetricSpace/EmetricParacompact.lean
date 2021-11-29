@@ -17,7 +17,7 @@ metric space, paracompact space, normal space
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 open_locale Ennreal TopologicalSpace
 
@@ -148,7 +148,7 @@ begin
     exact [expr not_lt.1 (λ hlt, Hgt I.1 hlt I.2 hI.some_spec)] }
 end
 
-instance (priority := 100)normal_of_emetric [EmetricSpace α] : NormalSpace α :=
+instance (priority := 100) normal_of_emetric [EmetricSpace α] : NormalSpace α :=
   normal_of_paracompact_t2
 
 end Emetric

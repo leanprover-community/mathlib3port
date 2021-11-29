@@ -32,7 +32,7 @@ open_locale Classical uniformity TopologicalSpace
 
 open Set UniformSpace UniformSpace.Completion Filter
 
-variable(K : Type _)[Field K][UniformSpace K]
+variable (K : Type _) [Field K] [UniformSpace K]
 
 local notation "hat" => completion
 
@@ -49,7 +49,7 @@ a field.
 class CompletableTopField extends SeparatedSpace K : Prop where 
   nice : ∀ F : Filter K, Cauchy F → 𝓝 0⊓F = ⊥ → Cauchy (map (fun x => x⁻¹) F)
 
-variable{K}
+variable {K}
 
 /-- extension of inversion to the completion of a field. -/
 def hatInv : hat K → hat K :=
@@ -84,12 +84,12 @@ end
 instance Completion.hasInv : HasInv (hat K) :=
   ⟨fun x => if x = 0 then 0 else hatInv x⟩
 
-variable[TopologicalDivisionRing K]
+variable [TopologicalDivisionRing K]
 
 theorem hat_inv_extends {x : K} (h : x ≠ 0) : hatInv (x : hat K) = coeₓ (x⁻¹ : K) :=
   dense_inducing_coe.extend_eq_at ((continuous_coe K).ContinuousAt.comp (TopologicalDivisionRing.continuous_inv x h))
 
-variable[CompletableTopField K]
+variable [CompletableTopField K]
 
 @[normCast]
 theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) :=
@@ -109,7 +109,7 @@ theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) :=
       ·
         exact fun H => h (dense_embedding_coe.inj H)
 
-variable[UniformAddGroup K][TopologicalRing K]
+variable [UniformAddGroup K] [TopologicalRing K]
 
 -- error in Topology.Algebra.UniformField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mul_hat_inv_cancel {x : exprhat() K} (x_ne : «expr ≠ »(x, 0)) : «expr = »(«expr * »(x, hat_inv x), 1) :=

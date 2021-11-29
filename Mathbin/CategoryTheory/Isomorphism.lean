@@ -42,7 +42,7 @@ the role of morphisms.
 
 See https://stacks.math.columbia.edu/tag/0017.
 -/
-structure iso{C : Type u}[category.{v} C](X Y : C) where 
+structure iso {C : Type u} [category.{v} C] (X Y : C) where 
   Hom : X ⟶ Y 
   inv : Y ⟶ X 
   hom_inv_id' : hom ≫ inv = 𝟙 X :=  by 
@@ -60,9 +60,9 @@ attribute [simp, reassoc] iso.hom_inv_id iso.inv_hom_id
 
 infixr:10 " ≅ " => iso
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{X Y Z : C}
+variable {X Y Z : C}
 
 namespace Iso
 
@@ -114,7 +114,7 @@ theorem symm_eq_iff {X Y : C} {α β : X ≅ Y} : α.symm = β.symm ↔ α = β 
 def refl (X : C) : X ≅ X :=
   { Hom := 𝟙 X, inv := 𝟙 X }
 
-instance  : Inhabited (X ≅ X) :=
+instance : Inhabited (X ≅ X) :=
   ⟨iso.refl X⟩
 
 @[simp]
@@ -218,7 +218,7 @@ theorem hom_eq_inv (α : X ≅ Y) (β : Y ≅ X) : α.hom = β.inv ↔ β.hom = 
 end Iso
 
 /-- `is_iso` typeclass expressing that a morphism is invertible. -/
-class is_iso(f : X ⟶ Y) : Prop where 
+class is_iso (f : X ⟶ Y) : Prop where 
   out : ∃ inv : Y ⟶ X, f ≫ inv = 𝟙 X ∧ inv ≫ f = 𝟙 Y
 
 /--
@@ -255,13 +255,13 @@ theorem as_iso_inv (f : X ⟶ Y) [is_iso f] : (as_iso f).inv = inv f :=
 
 namespace IsIso
 
-instance (priority := 100)epi_of_iso (f : X ⟶ Y) [is_iso f] : epi f :=
+instance (priority := 100) epi_of_iso (f : X ⟶ Y) [is_iso f] : epi f :=
   { left_cancellation :=
       fun Z g h w =>
         by 
           rw [←is_iso.inv_hom_id_assoc f g, w, is_iso.inv_hom_id_assoc f h] }
 
-instance (priority := 100)mono_of_iso (f : X ⟶ Y) [is_iso f] : mono f :=
+instance (priority := 100) mono_of_iso (f : X ⟶ Y) [is_iso f] : mono f :=
   { right_cancellation :=
       fun Z g h w =>
         by 
@@ -298,12 +298,12 @@ instance of_iso (f : X ≅ Y) : is_iso f.hom :=
 instance of_iso_inv (f : X ≅ Y) : is_iso f.inv :=
   is_iso.of_iso f.symm
 
-variable{f g : X ⟶ Y}{h : Y ⟶ Z}
+variable {f g : X ⟶ Y} {h : Y ⟶ Z}
 
 instance inv_is_iso [is_iso f] : is_iso (inv f) :=
   is_iso.of_iso_inv (as_iso f)
 
-instance (priority := 900)comp_is_iso [is_iso f] [is_iso h] : is_iso (f ≫ h) :=
+instance (priority := 900) comp_is_iso [is_iso f] [is_iso h] : is_iso (f ≫ h) :=
   is_iso.of_iso$ as_iso f ≪≫ as_iso h
 
 @[simp]
@@ -437,9 +437,9 @@ namespace Functor
 
 universe u₁ v₁ u₂ v₂
 
-variable{D : Type u₂}
+variable {D : Type u₂}
 
-variable[category.{v₂} D]
+variable [category.{v₂} D]
 
 /-- A functor `F : C ⥤ D` sends isomorphisms `i : X ≅ Y` to isomorphisms `F.obj X ≅ F.obj Y` -/
 @[simps]

@@ -28,14 +28,14 @@ def RingAut (R : Type _) [Mul R] [Add R] :=
 
 namespace RingAut
 
-variable(R : Type _)[Mul R][Add R]
+variable (R : Type _) [Mul R] [Add R]
 
 /--
 The group operation on automorphisms of a ring is defined by
 `λ g h, ring_equiv.trans h g`.
 This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
-instance  : Groupₓ (RingAut R) :=
+instance : Groupₓ (RingAut R) :=
   by 
     refineStruct
         { mul := fun g h => RingEquiv.trans h g, one := RingEquiv.refl R, inv := RingEquiv.symm, div := _,
@@ -47,7 +47,7 @@ instance  : Groupₓ (RingAut R) :=
               rfl <;>
             apply Equiv.left_inv
 
-instance  : Inhabited (RingAut R) :=
+instance : Inhabited (RingAut R) :=
   ⟨1⟩
 
 /-- Monoid homomorphism from ring automorphisms to additive automorphisms. -/

@@ -24,7 +24,7 @@ Relations are also known as set-valued functions, or partial multifunctions.
 -/
 
 
-variable{α β γ : Type _}
+variable {α β γ : Type _}
 
 -- error in Data.Rel: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler complete_lattice
 /-- A relation on `α` and `β`, aka a set-valued function, aka a partial multifunction --/
@@ -34,7 +34,7 @@ def rel (α β : Type*) :=
 
 namespace Rel
 
-variable{δ : Type _}(r : Rel α β)
+variable {δ : Type _} (r : Rel α β)
 
 /-- The inverse relation : `r.inv x y ↔ r y x`. Note that this is *not* a groupoid inverse. -/
 def inv : Rel β α :=

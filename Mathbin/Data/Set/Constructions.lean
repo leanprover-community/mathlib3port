@@ -17,7 +17,7 @@ set of subsets of `α` which is closed under finite intersections.
 -/
 
 
-variable{α : Type _}(S : Set (Set α))
+variable {α : Type _} (S : Set (Set α))
 
 /-- A structure encapsulating the fact that a set of sets is closed under finite intersection. -/
 structure HasFiniteInter where 
@@ -26,7 +26,7 @@ structure HasFiniteInter where
 
 namespace HasFiniteInter
 
-instance  : Inhabited (HasFiniteInter ({Set.Univ} : Set (Set α))) :=
+instance : Inhabited (HasFiniteInter ({Set.Univ} : Set (Set α))) :=
   ⟨⟨by 
         tauto,
       fun _ _ h1 h2 =>
@@ -43,7 +43,7 @@ inductive finite_inter_closure : Set (Set α)
 def finite_inter_closure_has_finite_inter : HasFiniteInter (finite_inter_closure S) :=
   { univ_mem := finite_inter_closure.univ, inter_mem := fun _ _ => finite_inter_closure.inter }
 
-variable{S}
+variable {S}
 
 theorem finite_inter_mem (cond : HasFiniteInter S) (F : Finset (Set α)) :
   «expr↑ » F ⊆ S → ⋂₀(«expr↑ » F : Set (Set α)) ∈ S :=

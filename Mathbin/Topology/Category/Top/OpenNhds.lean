@@ -28,7 +28,7 @@ open Opposite
 
 universe u
 
-variable{X Y : Top.{u}}(f : X ⟶ Y)
+variable {X Y : Top.{u}} (f : X ⟶ Y)
 
 namespace TopologicalSpace
 
@@ -38,19 +38,22 @@ def open_nhds (x : X) :=
 
 namespace OpenNhds
 
-instance  (x : X) : PartialOrderₓ (open_nhds x) :=
+instance (x : X) : PartialOrderₓ (open_nhds x) :=
   { le := fun U V => U.1 ≤ V.1, le_refl := fun _ => le_reflₓ _, le_trans := fun _ _ _ => le_transₓ,
     le_antisymm := fun _ _ i j => Subtype.eq$ le_antisymmₓ i j }
 
-instance  (x : X) : Lattice (open_nhds x) :=
+instance (x : X) : Lattice (open_nhds x) :=
   { open_nhds.partial_order x with inf := fun U V => ⟨U.1⊓V.1, ⟨U.2, V.2⟩⟩,
     le_inf := fun U V W => @le_inf _ _ U.1.1 V.1.1 W.1.1, inf_le_left := fun U V => @inf_le_left _ _ U.1.1 V.1.1,
     inf_le_right := fun U V => @inf_le_right _ _ U.1.1 V.1.1, sup := fun U V => ⟨U.1⊔V.1, V.1.1.mem_union_left U.2⟩,
     sup_le := fun U V W => @sup_le _ _ U.1.1 V.1.1 W.1.1, le_sup_left := fun U V => @le_sup_left _ _ U.1.1 V.1.1,
     le_sup_right := fun U V => @le_sup_right _ _ U.1.1 V.1.1 }
 
-instance  (x : X) : OrderTop (open_nhds x) :=
+instance (x : X) : OrderTop (open_nhds x) :=
   { top := ⟨⊤, trivialₓ⟩, le_top := fun _ => le_top }
+
+instance (x : X) : Inhabited (open_nhds x) :=
+  ⟨⊤⟩
 
 instance open_nhds_category (x : X) : category.{u} (open_nhds x) :=
   by 
@@ -147,7 +150,7 @@ namespace IsOpenMap
 
 open TopologicalSpace
 
-variable{f}
+variable {f}
 
 /--
 An open map `f : X ⟶ Y` induces a functor `open_nhds x ⥤ open_nhds (f x)`.

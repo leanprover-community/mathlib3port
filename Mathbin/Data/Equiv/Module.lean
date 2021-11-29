@@ -34,31 +34,19 @@ open_locale BigOperators
 
 universe u u' v w x y z
 
-variable{R : Type _}{R₁ : Type _}{R₂ : Type _}{R₃ : Type _}
+variable {R : Type _} {R₁ : Type _} {R₂ : Type _} {R₃ : Type _}
 
-variable{k : Type _}{S : Type _}{M : Type _}{M₁ : Type _}{M₂ : Type _}{M₃ : Type _}
+variable {k : Type _} {S : Type _} {M : Type _} {M₁ : Type _} {M₂ : Type _} {M₃ : Type _}
 
-variable{N₁ : Type _}{N₂ : Type _}{N₃ : Type _}{N₄ : Type _}{ι : Type _}
+variable {N₁ : Type _} {N₂ : Type _} {N₃ : Type _} {N₄ : Type _} {ι : Type _}
 
 section 
 
 /-- A linear equivalence is an invertible linear map. -/
 @[nolint has_inhabited_instance]
-structure
-  LinearEquiv{R :
-    Type
-      _}{S :
-    Type
-      _}[Semiringₓ
-      R][Semiringₓ
-      S](σ :
-    R →+*
-      S){σ' :
-    S →+*
-      R}[RingHomInvPair σ
-      σ'][RingHomInvPair σ'
-      σ](M : Type _)(M₂ : Type _)[AddCommMonoidₓ M][AddCommMonoidₓ M₂][Module R M][Module S M₂] extends
-  LinearMap σ M M₂, M ≃+ M₂
+structure LinearEquiv {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] (σ : R →+* S) {σ' : S →+* R}
+  [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type _) (M₂ : Type _) [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
+  [Module R M] [Module S M₂] extends LinearMap σ M M₂, M ≃+ M₂
 
 end 
 
@@ -76,26 +64,26 @@ namespace LinearEquiv
 
 section AddCommMonoidₓ
 
-variable{M₄ : Type _}
+variable {M₄ : Type _}
 
-variable[Semiringₓ R][Semiringₓ S]
+variable [Semiringₓ R] [Semiringₓ S]
 
 section 
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₁][AddCommMonoidₓ M₂]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
 
-variable[Module R M][Module S M₂]{σ : R →+* S}{σ' : S →+* R}
+variable [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R}
 
-variable[RingHomInvPair σ σ'][RingHomInvPair σ' σ]
+variable [RingHomInvPair σ σ'] [RingHomInvPair σ' σ]
 
 include R
 
 include σ'
 
-instance  : Coe (M ≃ₛₗ[σ] M₂) (M →ₛₗ[σ] M₂) :=
+instance : Coe (M ≃ₛₗ[σ] M₂) (M →ₛₗ[σ] M₂) :=
   ⟨to_linear_map⟩
 
-instance  : CoeFun (M ≃ₛₗ[σ] M₂) fun _ => M → M₂ :=
+instance : CoeFun (M ≃ₛₗ[σ] M₂) fun _ => M → M₂ :=
   ⟨to_fun⟩
 
 @[simp]
@@ -128,19 +116,19 @@ end
 
 section 
 
-variable[Semiringₓ R₁][Semiringₓ R₂][Semiringₓ R₃]
+variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₁][AddCommMonoidₓ M₂]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
 
-variable[AddCommMonoidₓ M₃][AddCommMonoidₓ M₄]
+variable [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄]
 
-variable[AddCommMonoidₓ N₁][AddCommMonoidₓ N₂]
+variable [AddCommMonoidₓ N₁] [AddCommMonoidₓ N₂]
 
-variable{module_M : Module R M}{module_S_M₂ : Module S M₂}{σ : R →+* S}{σ' : S →+* R}
+variable {module_M : Module R M} {module_S_M₂ : Module S M₂} {σ : R →+* S} {σ' : S →+* R}
 
-variable{re₁ : RingHomInvPair σ σ'}{re₂ : RingHomInvPair σ' σ}
+variable {re₁ : RingHomInvPair σ σ'} {re₂ : RingHomInvPair σ' σ}
 
-variable(e e' : M ≃ₛₗ[σ] M₂)
+variable (e e' : M ≃ₛₗ[σ] M₂)
 
 theorem to_linear_map_eq_coe : e.to_linear_map = (e : M →ₛₗ[σ] M₂) :=
   rfl
@@ -163,7 +151,7 @@ theorem to_fun_eq_coe : e.to_fun = e :=
 
 section 
 
-variable{e e'}
+variable {e e'}
 
 @[ext]
 theorem ext (h : ∀ x, e x = e' x) : e = e' :=
@@ -182,7 +170,7 @@ end
 
 section 
 
-variable(M R)
+variable (M R)
 
 /-- The identity map is a linear equivalence. -/
 @[refl]
@@ -225,25 +213,25 @@ theorem inv_fun_eq_symm : e.inv_fun = e.symm :=
 
 omit σ'
 
-variable{module_M₁ : Module R₁ M₁}{module_M₂ : Module R₂ M₂}{module_M₃ : Module R₃ M₃}
+variable {module_M₁ : Module R₁ M₁} {module_M₂ : Module R₂ M₂} {module_M₃ : Module R₃ M₃}
 
-variable{module_N₁ : Module R₁ N₁}{module_N₂ : Module R₁ N₂}
+variable {module_N₁ : Module R₁ N₁} {module_N₂ : Module R₁ N₂}
 
-variable{σ₁₂ : R₁ →+* R₂}{σ₂₃ : R₂ →+* R₃}{σ₁₃ : R₁ →+* R₃}
+variable {σ₁₂ : R₁ →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R₁ →+* R₃}
 
-variable{σ₂₁ : R₂ →+* R₁}{σ₃₂ : R₃ →+* R₂}{σ₃₁ : R₃ →+* R₁}
+variable {σ₂₁ : R₂ →+* R₁} {σ₃₂ : R₃ →+* R₂} {σ₃₁ : R₃ →+* R₁}
 
-variable[RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
+variable [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
-variable[RingHomCompTriple σ₃₂ σ₂₁ σ₃₁]
+variable [RingHomCompTriple σ₃₂ σ₂₁ σ₃₁]
 
-variable{re₁₂ : RingHomInvPair σ₁₂ σ₂₁}{re₂₃ : RingHomInvPair σ₂₃ σ₃₂}
+variable {re₁₂ : RingHomInvPair σ₁₂ σ₂₁} {re₂₃ : RingHomInvPair σ₂₃ σ₃₂}
 
-variable[RingHomInvPair σ₁₃ σ₃₁]{re₂₁ : RingHomInvPair σ₂₁ σ₁₂}
+variable [RingHomInvPair σ₁₃ σ₃₁] {re₂₁ : RingHomInvPair σ₂₁ σ₁₂}
 
-variable{re₃₂ : RingHomInvPair σ₃₂ σ₂₃}[RingHomInvPair σ₃₁ σ₁₃]
+variable {re₃₂ : RingHomInvPair σ₃₂ σ₂₃} [RingHomInvPair σ₃₁ σ₁₃]
 
-variable(e₁₂ : M₁ ≃ₛₗ[σ₁₂] M₂)(e₂₃ : M₂ ≃ₛₗ[σ₂₃] M₃)
+variable (e₁₂ : M₁ ≃ₛₗ[σ₁₂] M₂) (e₂₃ : M₂ ≃ₛₗ[σ₂₃] M₃)
 
 include σ₃₁
 
@@ -259,7 +247,7 @@ infixl:80 " ≪≫ₗ " =>
     (RingHom.id _) (RingHom.id _) RingHomCompTriple.ids RingHomCompTriple.ids RingHomInvPair.ids RingHomInvPair.ids
     RingHomInvPair.ids RingHomInvPair.ids RingHomInvPair.ids RingHomInvPair.ids
 
-variable{e₁₂}{e₂₃}
+variable {e₁₂} {e₂₃}
 
 @[simp]
 theorem coe_to_add_equiv : «expr⇑ » e.to_add_equiv = e :=
@@ -425,9 +413,16 @@ omit σ'
 
 end 
 
-variable[Semiringₓ R₁][Semiringₓ R₂][Semiringₓ R₃]
+-- error in Data.Equiv.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- Interpret a `ring_equiv` `f` as an `f`-semilinear equiv. -/
+@[simps #[]]
+def _root_.ring_equiv.to_semilinear_equiv
+(f : «expr ≃+* »(R, S)) : by haveI [] [] [":=", expr ring_hom_inv_pair.of_ring_equiv f]; haveI [] [] [":=", expr ring_hom_inv_pair.symm («expr↑ »(f) : «expr →+* »(R, S)) (f.symm : «expr →+* »(S, R))]; exact [expr «expr ≃ₛₗ[ ] »(R, («expr↑ »(f) : «expr →+* »(R, S)), S)] :=
+by exact [expr { to_fun := f, map_smul' := f.map_mul, ..f }]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₁][AddCommMonoidₓ M₂]
+variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
+
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
 
 /-- An involutive linear map is a linear equivalence. -/
 def of_involutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] {module_M : Module R M} (f : M →ₛₗ[σ] M)
@@ -441,7 +436,7 @@ theorem coe_of_involutive {σ σ' : R →+* R} [RingHomInvPair σ σ'] [RingHomI
 
 section RestrictScalars
 
-variable(R)[Module R M][Module R M₂][Module S M][Module S M₂][LinearMap.CompatibleSmul M M₂ R S]
+variable (R) [Module R M] [Module R M₂] [Module S M] [Module S M₂] [LinearMap.CompatibleSmul M M₂ R S]
 
 /-- If `M` and `M₂` are both `R`-semimodules and `S`-semimodules and `R`-semimodule structures
 are defined by an action of `R` on `S` (formally, we have two scalar towers), then any `S`-linear
@@ -464,7 +459,7 @@ end RestrictScalars
 
 section Automorphisms
 
-variable[Module R M]
+variable [Module R M]
 
 instance automorphism_group : Groupₓ (M ≃ₗ[R] M) :=
   { mul := fun f g => g.trans f, one := LinearEquiv.refl R M, inv := fun f => f.symm, mul_assoc := fun f g h => rfl,
@@ -520,9 +515,9 @@ end Module
 
 namespace DistribMulAction
 
-variable(R M)[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-variable[Groupₓ S][DistribMulAction S M][SmulCommClass S R M]
+variable [Groupₓ S] [DistribMulAction S M] [SmulCommClass S R M]
 
 /-- Each element of the group defines a linear equivalence.
 

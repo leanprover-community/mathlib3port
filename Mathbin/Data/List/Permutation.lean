@@ -40,7 +40,7 @@ Show that `l.nodup → l.permutations.nodup`. See `data.fintype.list`.
 
 open Nat
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 namespace List
 

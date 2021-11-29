@@ -12,7 +12,7 @@ namespace Function
 
 section 
 
-variable{α β γ : Sort _}{f : α → β}
+variable {α β γ : Sort _} {f : α → β}
 
 /-- Evaluate a function at an argument. Useful if you want to talk about the partially applied
   `function.eval x : (Π x, β x) → β x`. -/
@@ -109,6 +109,11 @@ theorem injective.of_comp_iff' (f : α → β) {g : γ → α} (hg : bijective g
       let ⟨y', hy⟩ := hg.surjective y 
       hx ▸ hy ▸ fun hf => h hf ▸ rfl,
     fun h => h.comp hg.injective⟩
+
+/-- Composition by an injective function on the left is itself injective. -/
+theorem injective.comp_left {g : β → γ} (hg : Function.Injective g) :
+  Function.Injective ((· ∘ ·) g : (α → β) → α → γ) :=
+  fun f₁ f₂ hgf => funext$ fun i => hg$ (congr_funₓ hgf i : _)
 
 theorem injective_of_subsingleton [Subsingleton α] (f : α → β) : injective f :=
   fun a b ab => Subsingleton.elimₓ _ _
@@ -327,7 +332,7 @@ end
 
 section InvFun
 
-variable{α : Type u}[n : Nonempty α]{β : Sort v}{f : α → β}{s : Set α}{a : α}{b : β}
+variable {α : Type u} [n : Nonempty α] {β : Sort v} {f : α → β} {s : Set α} {a : α} {b : β}
 
 include n
 
@@ -397,7 +402,7 @@ end InvFun
 
 section InvFun
 
-variable{α : Type u}[Nonempty α]{β : Sort v}{f : α → β}
+variable {α : Type u} [Nonempty α] {β : Sort v} {f : α → β}
 
 theorem injective.has_left_inverse (hf : injective f) : has_left_inverse f :=
   ⟨inv_fun f, left_inverse_inv_fun hf⟩
@@ -409,7 +414,7 @@ end InvFun
 
 section SurjInv
 
-variable{α : Sort u}{β : Sort v}{f : α → β}
+variable {α : Sort u} {β : Sort v} {γ : Sort w} {f : α → β}
 
 /-- The inverse of a surjective function. (Unlike `inv_fun`, this does not require
   `α` to be inhabited.) -/
@@ -443,11 +448,21 @@ theorem surjective_to_subsingleton [na : Nonempty α] [Subsingleton β] (f : α 
     let ⟨a⟩ := na
     ⟨a, Subsingleton.elimₓ _ _⟩
 
+/-- Composition by an surjective function on the left is itself surjective. -/
+theorem surjective.comp_left {g : β → γ} (hg : Function.Surjective g) :
+  Function.Surjective ((· ∘ ·) g : (α → β) → α → γ) :=
+  fun f => ⟨surj_inv hg ∘ f, funext$ fun x => right_inverse_surj_inv _ _⟩
+
+/-- Composition by an bijective function on the left is itself bijective. -/
+theorem bijective.comp_left {g : β → γ} (hg : Function.Bijective g) :
+  Function.Bijective ((· ∘ ·) g : (α → β) → α → γ) :=
+  ⟨hg.injective.comp_left, hg.surjective.comp_left⟩
+
 end SurjInv
 
 section Update
 
-variable{α : Sort u}{β : α → Sort v}{α' : Sort w}[DecidableEq α][DecidableEq α']
+variable {α : Sort u} {β : α → Sort v} {α' : Sort w} [DecidableEq α] [DecidableEq α']
 
 /-- Replacing the value of a function at a given point by a given value. -/
 def update (f : ∀ a, β a) (a' : α) (v : β a') (a : α) : β a :=
@@ -573,7 +588,7 @@ noncomputable theory
 
 attribute [local instance] Classical.propDecidable
 
-variable{α β γ : Sort _}{f : α → β}
+variable {α β γ : Sort _} {f : α → β}
 
 /-- `extend f g e'` extends a function `g : α → γ`
 along a function `f : α → β` to a function `β → γ`,
@@ -630,7 +645,7 @@ theorem curry_apply {α β γ} (f : α × β → γ) (x : α) (y : β) : curry f
 
 section Bicomp
 
-variable{α β γ δ ε : Type _}
+variable {α β γ δ ε : Type _}
 
 /-- Compose a binary function `f` with a pair of unary functions `g` and `h`.
 If both arguments of `f` have the same type and `g = h`, then `bicompl f g g = f on g`. -/
@@ -646,19 +661,19 @@ local notation f "∘₂" g => bicompr f g
 theorem uncurry_bicompr (f : α → β → γ) (g : γ → δ) : uncurry (g∘₂f) = g ∘ uncurry f :=
   rfl
 
-theorem uncurry_bicompl (f : γ → δ → ε) (g : α → γ) (h : β → δ) : uncurry (bicompl f g h) = uncurry f ∘ Prod.mapₓ g h :=
+theorem uncurry_bicompl (f : γ → δ → ε) (g : α → γ) (h : β → δ) : uncurry (bicompl f g h) = uncurry f ∘ Prod.map g h :=
   rfl
 
 end Bicomp
 
 section Uncurry
 
-variable{α β γ δ : Type _}
+variable {α β γ δ : Type _}
 
 /-- Records a way to turn an element of `α` into a function from `β` to `γ`. The most generic use
 is to recursively uncurry. For instance `f : α → β → γ → δ` will be turned into
 `↿f : α × β × γ → δ`. One can also add instances for bundled maps. -/
-class has_uncurry(α : Type _)(β : outParam (Type _))(γ : outParam (Type _)) where 
+class has_uncurry (α : Type _) (β : outParam (Type _)) (γ : outParam (Type _)) where 
   uncurry : α → β → γ
 
 /-- Uncurrying operator. The most generic use is to recursively uncurry. For instance
@@ -686,7 +701,7 @@ theorem involutive_iff_iter_2_eq_id {α} {f : α → α} : involutive f ↔ f^[2
 
 namespace Involutive
 
-variable{α : Sort u}{f : α → α}(h : involutive f)
+variable {α : Sort u} {f : α → α} (h : involutive f)
 
 include h
 
@@ -729,7 +744,7 @@ def injective2 {α β γ} (f : α → β → γ) : Prop :=
 
 namespace Injective2
 
-variable{α β γ : Type _}(f : α → β → γ)
+variable {α β γ : Type _} (f : α → β → γ)
 
 protected theorem left (hf : injective2 f) ⦃a₁ a₂ b₁ b₂⦄ (h : f a₁ b₁ = f a₂ b₂) : a₁ = a₂ :=
   (hf h).1

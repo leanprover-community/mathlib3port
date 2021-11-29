@@ -29,7 +29,7 @@ along with a term `a : α` if the value is `true`.
 
 namespace Option
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 theorem coe_def : (coeₓ : α → Option α) = some :=
   rfl
@@ -267,7 +267,7 @@ theorem mem_of_mem_join {a : α} {x : Option (Option α)} (h : a ∈ x.join) : s
 
 section Pmap
 
-variable{p : α → Prop}(f : ∀ a : α, p a → β)(x : Option α)
+variable {p : α → Prop} (f : ∀ a : α, p a → β) (x : Option α)
 
 @[simp]
 theorem pbind_eq_bind (f : α → Option β) (x : Option α) : (x.pbind fun a _ => f a) = x.bind f :=
@@ -333,7 +333,7 @@ theorem bind_pmap {α β γ} {p : α → Prop} (f : ∀ a, p a → β) (x : Opti
   by 
     cases x <;> simp only [pmap, none_bind, some_bind, pbind]
 
-variable{f x}
+variable {f x}
 
 theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀ a _ : a ∈ x, f a H = none → x = none) :
   x.pbind f = none ↔ x = none :=

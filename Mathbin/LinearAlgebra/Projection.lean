@@ -19,20 +19,14 @@ projection, complement subspace
 -/
 
 
-variable{R :
-    Type
-      _}[Ringₓ
-      R]{E :
-    Type
-      _}[AddCommGroupₓ
-      E][Module R
-      E]{F : Type _}[AddCommGroupₓ F][Module R F]{G : Type _}[AddCommGroupₓ G][Module R G](p q : Submodule R E)
+variable {R : Type _} [Ringₓ R] {E : Type _} [AddCommGroupₓ E] [Module R E] {F : Type _} [AddCommGroupₓ F] [Module R F]
+  {G : Type _} [AddCommGroupₓ G] [Module R G] (p q : Submodule R E)
 
 noncomputable theory
 
 namespace LinearMap
 
-variable{p}
+variable {p}
 
 open Submodule
 
@@ -150,7 +144,7 @@ theorem prod_equiv_of_is_compl_symm_apply_snd_eq_zero (h : IsCompl p q) {x : E} 
 def linear_proj_of_is_compl (h : IsCompl p q) : E →ₗ[R] p :=
   LinearMap.fst R p q ∘ₗ «expr↑ » (prod_equiv_of_is_compl p q h).symm
 
-variable{p q}
+variable {p q}
 
 @[simp]
 theorem linear_proj_of_is_compl_apply_left (h : IsCompl p q) (x : p) : linear_proj_of_is_compl p q h x = x :=
@@ -205,7 +199,7 @@ the induced linear map over the entire module. -/
 def of_is_compl {p q : Submodule R E} (h : IsCompl p q) (φ : p →ₗ[R] F) (ψ : q →ₗ[R] F) : E →ₗ[R] F :=
   LinearMap.coprod φ ψ ∘ₗ «expr↑ » (Submodule.prodEquivOfIsCompl _ _ h).symm
 
-variable{p q}
+variable {p q}
 
 @[simp]
 theorem of_is_compl_left_apply (h : IsCompl p q) {φ : p →ₗ[R] F} {ψ : q →ₗ[R] F} (u : p) :
@@ -255,7 +249,7 @@ theorem of_is_compl_smul {R : Type _} [CommRingₓ R] {E : Type _} [AddCommGroup
 
 section 
 
-variable{R₁ : Type _}[CommRingₓ R₁][Module R₁ E][Module R₁ F]
+variable {R₁ : Type _} [CommRingₓ R₁] [Module R₁ E] [Module R₁ F]
 
 /-- The linear map from `(p →ₗ[R₁] F) × (q →ₗ[R₁] F)` to `E →ₗ[R₁] F`. -/
 def of_is_compl_prod {p q : Submodule R₁ E} (h : IsCompl p q) : (p →ₗ[R₁] F) × (q →ₗ[R₁] F) →ₗ[R₁] E →ₗ[R₁] F :=

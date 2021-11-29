@@ -166,29 +166,19 @@ open Set Finₓ Filter
 
 open_locale TopologicalSpace
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{F :
-    Type
-      _}[NormedGroup
-      F][NormedSpace 𝕜
-      F]{G :
-    Type _}[NormedGroup G][NormedSpace 𝕜 G]{s s₁ t u : Set E}{f f₁ : E → F}{g : F → G}{x : E}{c : F}{b : E × F → G}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G] {s s₁ t u : Set E} {f f₁ : E → F}
+  {g : F → G} {x : E} {c : F} {b : E × F → G}
 
 /-! ### Functions with a Taylor series on a domain -/
 
 
-variable{p : E → FormalMultilinearSeries 𝕜 E F}
+variable {p : E → FormalMultilinearSeries 𝕜 E F}
 
 /-- `has_ftaylor_series_up_to_on n f p s` registers the fact that `p 0 = f` and `p (m+1)` is a
 derivative of `p m` for `m < n`, and is continuous for `m ≤ n`. This is a predicate analogous to
 `has_fderiv_within_at` but for higher order derivatives. -/
-structure HasFtaylorSeriesUpToOn(n : WithTop ℕ)(f : E → F)(p : E → FormalMultilinearSeries 𝕜 E F)(s : Set E) :
+structure HasFtaylorSeriesUpToOn (n : WithTop ℕ) (f : E → F) (p : E → FormalMultilinearSeries 𝕜 E F) (s : Set E) :
   Prop where 
   zero_eq : ∀ x _ : x ∈ s, (p x 0).uncurry0 = f x 
   fderivWithin :
@@ -409,7 +399,7 @@ end
 /-! ### Smooth functions within a set around a point -/
 
 
-variable(𝕜)
+variable (𝕜)
 
 /-- A function is continuously differentiable up to order `n` within a set `s` at a point `x` if
 it admits continuous derivatives up to order `n` in a neighborhood of `x` in `s ∪ {x}`.
@@ -424,7 +414,7 @@ def TimesContDiffWithinAt (n : WithTop ℕ) (f : E → F) (s : Set E) (x : E) :=
     (m : WithTop ℕ) ≤ n →
       ∃ (u : _)(_ : u ∈ 𝓝[insert x s] x), ∃ p : E → FormalMultilinearSeries 𝕜 E F, HasFtaylorSeriesUpToOn m f p u
 
-variable{𝕜}
+variable {𝕜}
 
 theorem times_cont_diff_within_at_nat {n : ℕ} :
   TimesContDiffWithinAt 𝕜 n f s x ↔
@@ -571,7 +561,7 @@ end
 /-! ### Smooth functions within a set -/
 
 
-variable(𝕜)
+variable (𝕜)
 
 /-- A function is continuously differentiable up to `n` on `s` if, for any point `x` in `s`, it
 admits continuous derivatives up to order `n` on a neighborhood of `x` in `s`.
@@ -582,7 +572,7 @@ depend on the finite order we consider).
 def TimesContDiffOn (n : WithTop ℕ) (f : E → F) (s : Set E) :=
   ∀ x _ : x ∈ s, TimesContDiffWithinAt 𝕜 n f s x
 
-variable{𝕜}
+variable {𝕜}
 
 theorem TimesContDiffOn.times_cont_diff_within_at {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s) (hx : x ∈ s) :
   TimesContDiffWithinAt 𝕜 n f s x :=
@@ -691,7 +681,7 @@ end
 /-! ### Iterated derivative within a set -/
 
 
-variable(𝕜)
+variable (𝕜)
 
 /--
 The `n`-th derivative of a function along a set, defined inductively by saying that the `n+1`-th
@@ -706,7 +696,7 @@ noncomputable def iteratedFderivWithin (n : ℕ) (f : E → F) (s : Set E) : E �
 def ftaylorSeriesWithin (f : E → F) (s : Set E) (x : E) : FormalMultilinearSeries 𝕜 E F :=
   fun n => iteratedFderivWithin 𝕜 n f s x
 
-variable{𝕜}
+variable {𝕜}
 
 @[simp]
 theorem iterated_fderiv_within_zero_apply (m : Finₓ 0 → E) :
@@ -1121,7 +1111,7 @@ end
 /-- `has_ftaylor_series_up_to n f p` registers the fact that `p 0 = f` and `p (m+1)` is a
 derivative of `p m` for `m < n`, and is continuous for `m ≤ n`. This is a predicate analogous to
 `has_fderiv_at` but for higher order derivatives. -/
-structure HasFtaylorSeriesUpTo(n : WithTop ℕ)(f : E → F)(p : E → FormalMultilinearSeries 𝕜 E F) : Prop where 
+structure HasFtaylorSeriesUpTo (n : WithTop ℕ) (f : E → F) (p : E → FormalMultilinearSeries 𝕜 E F) : Prop where 
   zero_eq : ∀ x, (p x 0).uncurry0 = f x 
   fderiv : ∀ m : ℕ hm : (m : WithTop ℕ) < n, ∀ x, HasFderivAt (fun y => p y m) (p x m.succ).curryLeft x 
   cont : ∀ m : ℕ hm : (m : WithTop ℕ) ≤ n, Continuous fun x => p x m
@@ -1211,7 +1201,7 @@ theorem has_ftaylor_series_up_to_succ_iff_right {n : ℕ} :
 /-! ### Smooth functions at a point -/
 
 
-variable(𝕜)
+variable (𝕜)
 
 /-- A function is continuously differentiable up to `n` at a point `x` if, for any integer `k ≤ n`,
 there is a neighborhood of `x` where `f` admits derivatives up to order `n`, which are continuous.
@@ -1219,7 +1209,7 @@ there is a neighborhood of `x` where `f` admits derivatives up to order `n`, whi
 def TimesContDiffAt (n : WithTop ℕ) (f : E → F) (x : E) :=
   TimesContDiffWithinAt 𝕜 n f univ x
 
-variable{𝕜}
+variable {𝕜}
 
 theorem times_cont_diff_within_at_univ {n : WithTop ℕ} : TimesContDiffWithinAt 𝕜 n f univ x ↔ TimesContDiffAt 𝕜 n f x :=
   Iff.rfl
@@ -1287,7 +1277,7 @@ protected theorem TimesContDiffAt.eventually {n : ℕ} (h : TimesContDiffAt 𝕜
 /-! ### Smooth functions -/
 
 
-variable(𝕜)
+variable (𝕜)
 
 /-- A function is continuously differentiable up to `n` if it admits derivatives up to
 order `n`, which are continuous. Contrary to the case of definitions in domains (where derivatives
@@ -1296,7 +1286,7 @@ might not be unique) we do not need to localize the definition in space or time.
 def TimesContDiff (n : WithTop ℕ) (f : E → F) :=
   ∃ p : E → FormalMultilinearSeries 𝕜 E F, HasFtaylorSeriesUpTo n f p
 
-variable{𝕜}
+variable {𝕜}
 
 theorem times_cont_diff_on_univ {n : WithTop ℕ} : TimesContDiffOn 𝕜 n f univ ↔ TimesContDiff 𝕜 n f :=
   by 
@@ -1356,7 +1346,7 @@ theorem TimesContDiff.differentiable {n : WithTop ℕ} (h : TimesContDiff 𝕜 n
 /-! ### Iterated derivative -/
 
 
-variable(𝕜)
+variable (𝕜)
 
 /-- The `n`-th derivative of a function, as a multilinear map, defined inductively. -/
 noncomputable def iteratedFderiv (n : ℕ) (f : E → F) : E → E[×n]→L[𝕜] F :=
@@ -1367,7 +1357,7 @@ noncomputable def iteratedFderiv (n : ℕ) (f : E → F) : E → E[×n]→L[𝕜
 def ftaylorSeries (f : E → F) (x : E) : FormalMultilinearSeries 𝕜 E F :=
   fun n => iteratedFderiv 𝕜 n f x
 
-variable{𝕜}
+variable {𝕜}
 
 @[simp]
 theorem iterated_fderiv_zero_apply (m : Finₓ 0 → E) : (iteratedFderiv 𝕜 0 f x : (Finₓ 0 → E) → F) m = f x :=
@@ -1883,27 +1873,9 @@ theorem TimesContDiff.prod {n : WithTop ℕ} {f : E → F} {g : E → G} (hf : T
 
 section Pi
 
-variable{ι :
-    Type
-      _}[Fintype
-      ι]{F' :
-    ι →
-      Type
-        _}[∀ i,
-      NormedGroup
-        (F'
-          i)][∀ i,
-      NormedSpace 𝕜
-        (F'
-          i)]{φ :
-    ∀ i,
-      E →
-        F'
-          i}{p' :
-    ∀ i,
-      E →
-        FormalMultilinearSeries 𝕜 E
-          (F' i)}{Φ : E → ∀ i, F' i}{P' : E → FormalMultilinearSeries 𝕜 E (∀ i, F' i)}{n : WithTop ℕ}
+variable {ι : Type _} [Fintype ι] {F' : ι → Type _} [∀ i, NormedGroup (F' i)] [∀ i, NormedSpace 𝕜 (F' i)]
+  {φ : ∀ i, E → F' i} {p' : ∀ i, E → FormalMultilinearSeries 𝕜 E (F' i)} {Φ : E → ∀ i, F' i}
+  {P' : E → FormalMultilinearSeries 𝕜 E (∀ i, F' i)} {n : WithTop ℕ}
 
 -- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_ftaylor_series_up_to_on_pi : «expr ↔ »(has_ftaylor_series_up_to_on n (λ
@@ -2430,32 +2402,33 @@ theorem TimesContDiffOn.smul {n : WithTop ℕ} {s : Set E} {f : E → 𝕜} {g :
 
 section prod_mapₓ
 
-variable{E' : Type _}[NormedGroup E'][NormedSpace 𝕜 E']{F' : Type _}[NormedGroup F'][NormedSpace 𝕜 F']{n : WithTop ℕ}
+variable {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {F' : Type _} [NormedGroup F'] [NormedSpace 𝕜 F']
+  {n : WithTop ℕ}
 
 /-- The product map of two `C^n` functions within a set at a point is `C^n`
 within the product set at the product point. -/
 theorem TimesContDiffWithinAt.prod_map' {s : Set E} {t : Set E'} {f : E → F} {g : E' → F'} {p : E × E'}
   (hf : TimesContDiffWithinAt 𝕜 n f s p.1) (hg : TimesContDiffWithinAt 𝕜 n g t p.2) :
-  TimesContDiffWithinAt 𝕜 n (Prod.mapₓ f g) (Set.Prod s t) p :=
+  TimesContDiffWithinAt 𝕜 n (Prod.map f g) (Set.Prod s t) p :=
   (hf.comp p times_cont_diff_within_at_fst (prod_subset_preimage_fst _ _)).Prod
     (hg.comp p times_cont_diff_within_at_snd (prod_subset_preimage_snd _ _))
 
 theorem TimesContDiffWithinAt.prod_map {s : Set E} {t : Set E'} {f : E → F} {g : E' → F'} {x : E} {y : E'}
   (hf : TimesContDiffWithinAt 𝕜 n f s x) (hg : TimesContDiffWithinAt 𝕜 n g t y) :
-  TimesContDiffWithinAt 𝕜 n (Prod.mapₓ f g) (Set.Prod s t) (x, y) :=
+  TimesContDiffWithinAt 𝕜 n (Prod.map f g) (Set.Prod s t) (x, y) :=
   TimesContDiffWithinAt.prod_map' hf hg
 
 /-- The product map of two `C^n` functions on a set is `C^n` on the product set. -/
 theorem TimesContDiffOn.prod_map {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {F' : Type _} [NormedGroup F']
   [NormedSpace 𝕜 F'] {s : Set E} {t : Set E'} {n : WithTop ℕ} {f : E → F} {g : E' → F'} (hf : TimesContDiffOn 𝕜 n f s)
-  (hg : TimesContDiffOn 𝕜 n g t) : TimesContDiffOn 𝕜 n (Prod.mapₓ f g) (Set.Prod s t) :=
+  (hg : TimesContDiffOn 𝕜 n g t) : TimesContDiffOn 𝕜 n (Prod.map f g) (Set.Prod s t) :=
   (hf.comp times_cont_diff_on_fst (prod_subset_preimage_fst _ _)).Prod
     (hg.comp times_cont_diff_on_snd (prod_subset_preimage_snd _ _))
 
 /-- The product map of two `C^n` functions within a set at a point is `C^n`
 within the product set at the product point. -/
 theorem TimesContDiffAt.prod_map {f : E → F} {g : E' → F'} {x : E} {y : E'} (hf : TimesContDiffAt 𝕜 n f x)
-  (hg : TimesContDiffAt 𝕜 n g y) : TimesContDiffAt 𝕜 n (Prod.mapₓ f g) (x, y) :=
+  (hg : TimesContDiffAt 𝕜 n g y) : TimesContDiffAt 𝕜 n (Prod.map f g) (x, y) :=
   by 
     rw [TimesContDiffAt] at *
     convert hf.prod_map hg 
@@ -2464,14 +2437,14 @@ theorem TimesContDiffAt.prod_map {f : E → F} {g : E' → F'} {x : E} {y : E'} 
 /-- The product map of two `C^n` functions within a set at a point is `C^n`
 within the product set at the product point. -/
 theorem TimesContDiffAt.prod_map' {f : E → F} {g : E' → F'} {p : E × E'} (hf : TimesContDiffAt 𝕜 n f p.1)
-  (hg : TimesContDiffAt 𝕜 n g p.2) : TimesContDiffAt 𝕜 n (Prod.mapₓ f g) p :=
+  (hg : TimesContDiffAt 𝕜 n g p.2) : TimesContDiffAt 𝕜 n (Prod.map f g) p :=
   by 
     rcases p with ⟨⟩
     exact TimesContDiffAt.prod_map hf hg
 
 /-- The product map of two `C^n` functions is `C^n`. -/
 theorem TimesContDiff.prod_map {f : E → F} {g : E' → F'} (hf : TimesContDiff 𝕜 n f) (hg : TimesContDiff 𝕜 n g) :
-  TimesContDiff 𝕜 n (Prod.mapₓ f g) :=
+  TimesContDiff 𝕜 n (Prod.map f g) :=
   by 
     rw [times_cont_diff_iff_times_cont_diff_at] at *
     exact fun ⟨x, y⟩ => (hf x).prod_map (hg y)
@@ -2483,7 +2456,7 @@ end prod_mapₓ
 
 section AlgebraInverse
 
-variable(𝕜){R : Type _}[NormedRing R][NormedAlgebra 𝕜 R]
+variable (𝕜) {R : Type _} [NormedRing R] [NormedAlgebra 𝕜 R]
 
 open NormedRing ContinuousLinearMap Ringₓ
 
@@ -2522,7 +2495,7 @@ theorem times_cont_diff_at_ring_inverse [CompleteSpace R] {n : WithTop ℕ} (x :
     ·
       exact times_cont_diff_at_top.mpr Itop
 
-variable(𝕜){𝕜' : Type _}[NormedField 𝕜'][NormedAlgebra 𝕜 𝕜'][CompleteSpace 𝕜']
+variable (𝕜) {𝕜' : Type _} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [CompleteSpace 𝕜']
 
 theorem times_cont_diff_at_inv {x : 𝕜'} (hx : x ≠ 0) {n} : TimesContDiffAt 𝕜 n HasInv.inv x :=
   by 
@@ -2531,7 +2504,7 @@ theorem times_cont_diff_at_inv {x : 𝕜'} (hx : x ≠ 0) {n} : TimesContDiffAt 
 theorem times_cont_diff_on_inv {n} : TimesContDiffOn 𝕜 n (HasInv.inv : 𝕜' → 𝕜') («expr ᶜ» {0}) :=
   fun x hx => (times_cont_diff_at_inv 𝕜 hx).TimesContDiffWithinAt
 
-variable{𝕜}
+variable {𝕜}
 
 theorem TimesContDiffWithinAt.inv {f : E → 𝕜'} {n} (hf : TimesContDiffWithinAt 𝕜 n f s x) (hx : f x ≠ 0) :
   TimesContDiffWithinAt 𝕜 n (fun x => f x⁻¹) s x :=
@@ -2686,8 +2659,8 @@ section Real
 -/
 
 
-variable{𝕂 :
-    Type _}[IsROrC 𝕂]{E' : Type _}[NormedGroup E'][NormedSpace 𝕂 E']{F' : Type _}[NormedGroup F'][NormedSpace 𝕂 F']
+variable {𝕂 : Type _} [IsROrC 𝕂] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕂 E'] {F' : Type _} [NormedGroup F']
+  [NormedSpace 𝕂 F']
 
 /-- If a function has a Taylor series at order at least 1, then at points in the interior of the
     domain of definition, the term of order 1 of this series is a strict derivative of `f`. -/
@@ -2818,7 +2791,7 @@ paragraph, we reformulate some higher smoothness results in terms of `deriv`.
 -/
 
 
-variable{f₂ : 𝕜 → F}{s₂ : Set 𝕜}
+variable {f₂ : 𝕜 → F} {s₂ : Set 𝕜}
 
 open continuous_linear_map(smulRight)
 
@@ -2942,13 +2915,13 @@ over `𝕜`.
 -/
 
 
-variable(𝕜){𝕜' : Type _}[NondiscreteNormedField 𝕜'][NormedAlgebra 𝕜 𝕜']
+variable (𝕜) {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
-variable[NormedSpace 𝕜' E][IsScalarTower 𝕜 𝕜' E]
+variable [NormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E]
 
-variable[NormedSpace 𝕜' F][IsScalarTower 𝕜 𝕜' F]
+variable [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
 
-variable{p' : E → FormalMultilinearSeries 𝕜' E F}{n : WithTop ℕ}
+variable {p' : E → FormalMultilinearSeries 𝕜' E F} {n : WithTop ℕ}
 
 theorem HasFtaylorSeriesUpToOn.restrict_scalars (h : HasFtaylorSeriesUpToOn n f p' s) :
   HasFtaylorSeriesUpToOn n f (fun x => (p' x).restrictScalars 𝕜) s :=

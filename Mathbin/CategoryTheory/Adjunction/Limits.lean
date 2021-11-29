@@ -33,15 +33,15 @@ open CategoryTheory.Limits
 
 universe u₁ u₂ v
 
-variable{C : Type u₁}[category.{v} C]{D : Type u₂}[category.{v} D]
+variable {C : Type u₁} [category.{v} C] {D : Type u₂} [category.{v} D]
 
-variable{F : C ⥤ D}{G : D ⥤ C}(adj : F ⊣ G)
+variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
 
 include adj
 
 section PreservationColimits
 
-variable{J : Type v}[small_category J](K : J ⥤ C)
+variable {J : Type v} [small_category J] (K : J ⥤ C)
 
 /--
 The right adjoint of `cocones.functoriality K F : cocone K ⥤ cocone (K ⋙ F)`.
@@ -97,7 +97,7 @@ def left_adjoint_preserves_colimits : preserves_colimits F :=
 
 omit adj
 
-instance (priority := 100)is_equivalence_preserves_colimits (E : C ⥤ D) [is_equivalence E] : preserves_colimits E :=
+instance (priority := 100) is_equivalence_preserves_colimits (E : C ⥤ D) [is_equivalence E] : preserves_colimits E :=
   left_adjoint_preserves_colimits E.adjunction
 
 -- error in CategoryTheory.Adjunction.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -112,7 +112,7 @@ instance is_equivalence_reflects_colimits (E : «expr ⥤ »(D, C)) [is_equivale
          tidy []
        end } }] }
 
-instance (priority := 100)is_equivalence_creates_colimits (H : D ⥤ C) [is_equivalence H] : creates_colimits H :=
+instance (priority := 100) is_equivalence_creates_colimits (H : D ⥤ C) [is_equivalence H] : creates_colimits H :=
   { CreatesColimitsOfShape :=
       fun J 𝒥 =>
         by 
@@ -123,7 +123,7 @@ instance (priority := 100)is_equivalence_creates_colimits (H : D ⥤ C) [is_equi
                       fun c t =>
                         { liftedCocone := H.map_cocone_inv c, validLift := H.map_cocone_map_cocone_inv c } } } }
 
-example  (E : C ⥤ D) [is_equivalence E] (c : cocone K) (h : is_colimit c) : is_colimit (E.map_cocone c) :=
+example (E : C ⥤ D) [is_equivalence E] (c : cocone K) (h : is_colimit c) : is_colimit (E.map_cocone c) :=
   preserves_colimit.preserves h
 
 theorem has_colimit_comp_equivalence (E : C ⥤ D) [is_equivalence E] [has_colimit K] : has_colimit (K ⋙ E) :=
@@ -151,7 +151,7 @@ end PreservationColimits
 
 section PreservationLimits
 
-variable{J : Type v}[small_category J](K : J ⥤ D)
+variable {J : Type v} [small_category J] (K : J ⥤ D)
 
 /--
 The left adjoint of `cones.functoriality K G : cone K ⥤ cone (K ⋙ G)`.
@@ -207,7 +207,7 @@ def right_adjoint_preserves_limits : preserves_limits G :=
 
 omit adj
 
-instance (priority := 100)is_equivalence_preserves_limits (E : D ⥤ C) [is_equivalence E] : preserves_limits E :=
+instance (priority := 100) is_equivalence_preserves_limits (E : D ⥤ C) [is_equivalence E] : preserves_limits E :=
   right_adjoint_preserves_limits E.inv.adjunction
 
 -- error in CategoryTheory.Adjunction.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -221,7 +221,7 @@ instance (priority := 100)is_equivalence_preserves_limits (E : D ⥤ C) [is_equi
          tidy []
        end } }] }
 
-instance (priority := 100)is_equivalence_creates_limits (H : D ⥤ C) [is_equivalence H] : creates_limits H :=
+instance (priority := 100) is_equivalence_creates_limits (H : D ⥤ C) [is_equivalence H] : creates_limits H :=
   { CreatesLimitsOfShape :=
       fun J 𝒥 =>
         by 
@@ -230,7 +230,7 @@ instance (priority := 100)is_equivalence_creates_limits (H : D ⥤ C) [is_equiva
                 fun F =>
                   { lifts := fun c t => { liftedCone := H.map_cone_inv c, validLift := H.map_cone_map_cone_inv c } } } }
 
-example  (E : D ⥤ C) [is_equivalence E] (c : cone K) [h : is_limit c] : is_limit (E.map_cone c) :=
+example (E : D ⥤ C) [is_equivalence E] (c : cone K) [h : is_limit c] : is_limit (E.map_cone c) :=
   preserves_limit.preserves h
 
 theorem has_limit_comp_equivalence (E : D ⥤ C) [is_equivalence E] [has_limit K] : has_limit (K ⋙ E) :=

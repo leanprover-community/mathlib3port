@@ -45,7 +45,7 @@ open_locale Classical BigOperators Nnreal Ennreal
 
 open MeasureTheory
 
-variable{α : Type _}[MeasurableSpace α]{μ : Measureₓ α}
+variable {α : Type _} [MeasurableSpace α] {μ : Measureₓ α}
 
 namespace Ennreal
 

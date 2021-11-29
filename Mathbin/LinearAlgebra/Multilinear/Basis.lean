@@ -16,11 +16,11 @@ This file proves lemmas about the action of multilinear maps on basis vectors.
 
 open MultilinearMap
 
-variable{R : Type _}{ι : Type _}{n : ℕ}{M : Finₓ n → Type _}{M₂ : Type _}{M₃ : Type _}
+variable {R : Type _} {ι : Type _} {n : ℕ} {M : Finₓ n → Type _} {M₂ : Type _} {M₃ : Type _}
 
-variable[CommSemiringₓ R][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃][∀ i, AddCommMonoidₓ (M i)]
+variable [CommSemiringₓ R] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [∀ i, AddCommMonoidₓ (M i)]
 
-variable[∀ i, Module R (M i)][Module R M₂][Module R M₃]
+variable [∀ i, Module R (M i)] [Module R M₂] [Module R M₃]
 
 /-- Two multilinear maps indexed by `fin n` are equal if they are equal when all arguments are
 basis vectors. -/
@@ -39,7 +39,7 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin�
       apply hm (Finₓ.tail e)
       intro j 
       convert h (Finₓ.cons i j)
-      iterate 2
+      iterate 2 
         rw [curry_left_apply]
         congr 1 with x 
         refine' Finₓ.cases rfl (fun x => _) x 

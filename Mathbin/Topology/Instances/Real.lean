@@ -1,7 +1,7 @@
 import Mathbin.Topology.MetricSpace.Basic 
 import Mathbin.Topology.Algebra.UniformGroup 
 import Mathbin.Topology.Algebra.Ring 
-import Mathbin.RingTheory.Subring 
+import Mathbin.RingTheory.Subring.Basic 
 import Mathbin.GroupTheory.Archimedean 
 import Mathbin.Algebra.Periodic
 
@@ -18,9 +18,9 @@ open_locale Classical TopologicalSpace Filter uniformity Interval
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
-instance  : MetricSpace ℚ :=
+instance : MetricSpace ℚ :=
   MetricSpace.induced coeₓ Rat.cast_injective Real.metricSpace
 
 namespace Rat
@@ -57,7 +57,7 @@ end Rat
 
 namespace Int
 
-instance  : HasDist ℤ :=
+instance : HasDist ℤ :=
   ⟨fun x y => dist (x : ℝ) y⟩
 
 theorem dist_eq (x y : ℤ) : dist x y = |x - y| :=
@@ -95,7 +95,7 @@ theorem uniform_embedding_coe_real : UniformEmbedding (coeₓ : ℤ → ℝ) :=
 theorem closed_embedding_coe_real : ClosedEmbedding (coeₓ : ℤ → ℝ) :=
   closed_embedding_of_pairwise_le_dist zero_lt_one pairwise_one_le_dist
 
-instance  : MetricSpace ℤ :=
+instance : MetricSpace ℤ :=
   Int.uniform_embedding_coe_real.comapMetricSpace _
 
 theorem preimage_ball (x : ℤ) (r : ℝ) : coeₓ ⁻¹' ball (x : ℝ) r = ball x r :=
@@ -112,13 +112,13 @@ theorem closed_ball_eq (x : ℤ) (r : ℝ) : closed_ball x r = Icc ⌈«expr↑ 
   by 
     rw [←preimage_closed_ball, Real.closed_ball_eq, preimage_Icc]
 
-instance  : ProperSpace ℤ :=
+instance : ProperSpace ℤ :=
   ⟨by 
       intro x r 
       rw [closed_ball_eq]
       exact (Set.finite_Icc _ _).IsCompact⟩
 
-instance  : NoncompactSpace ℤ :=
+instance : NoncompactSpace ℤ :=
   by 
     rw [←not_compact_space_iff, Metric.compact_space_iff_bounded_univ]
     rintro ⟨r, hr⟩
@@ -127,10 +127,10 @@ instance  : NoncompactSpace ℤ :=
 
 end Int
 
-instance  : NoncompactSpace ℚ :=
+instance : NoncompactSpace ℚ :=
   Int.closed_embedding_coe_rat.NoncompactSpace
 
-instance  : NoncompactSpace ℝ :=
+instance : NoncompactSpace ℝ :=
   Int.closed_embedding_coe_real.NoncompactSpace
 
 theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.1+p.2 :=
@@ -165,31 +165,31 @@ theorem Rat.uniform_continuous_neg : UniformContinuous (@Neg.neg ℚ _) :=
           by 
             rw [dist_comm] at h <;> simpa [Rat.dist_eq] using h⟩
 
-instance  : UniformAddGroup ℝ :=
+instance : UniformAddGroup ℝ :=
   UniformAddGroup.mk' Real.uniform_continuous_add Real.uniform_continuous_neg
 
-instance  : UniformAddGroup ℚ :=
+instance : UniformAddGroup ℚ :=
   UniformAddGroup.mk' Rat.uniform_continuous_add Rat.uniform_continuous_neg
 
-instance  : TopologicalAddGroup ℝ :=
+instance : TopologicalAddGroup ℝ :=
   by 
     infer_instance
 
-instance  : TopologicalAddGroup ℚ :=
+instance : TopologicalAddGroup ℚ :=
   by 
     infer_instance
 
-instance  : OrderTopology ℚ :=
+instance : OrderTopology ℚ :=
   induced_order_topology _ (fun x y => Rat.cast_lt) (@exists_rat_btwn _ _ _)
 
-instance  : ProperSpace ℝ :=
+instance : ProperSpace ℝ :=
   { is_compact_closed_ball :=
       fun x r =>
         by 
           rw [Real.closed_ball_eq]
           apply is_compact_Icc }
 
-instance  : second_countable_topology ℝ :=
+instance : second_countable_topology ℝ :=
   second_countable_of_proper
 
 -- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -277,7 +277,7 @@ protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1*p.2
           (((is_open_gt' (|a₁|+1)).Preimage continuous_abs).Prod ((is_open_gt' (|a₂|+1)).Preimage continuous_abs))
           ⟨lt_add_one |a₁|, lt_add_one |a₂|⟩)
 
-instance  : TopologicalRing ℝ :=
+instance : TopologicalRing ℝ :=
   { Real.topological_add_group with continuous_mul := Real.continuous_mul }
 
 theorem Rat.continuous_mul : Continuous fun p : ℚ × ℚ => p.1*p.2 :=
@@ -285,7 +285,7 @@ theorem Rat.continuous_mul : Continuous fun p : ℚ × ℚ => p.1*p.2 :=
     by 
       simp [· ∘ ·] <;> exact real.continuous_mul.comp (rat.continuous_coe_real.prod_map Rat.continuous_coe_real)
 
-instance  : TopologicalRing ℚ :=
+instance : TopologicalRing ℚ :=
   { Rat.topological_add_group with continuous_mul := Rat.continuous_mul }
 
 theorem Real.ball_eq_Ioo (x ε : ℝ) : ball x ε = Ioo (x - ε) (x+ε) :=

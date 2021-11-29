@@ -27,7 +27,7 @@ attribute [inline] And.decidable Or.decidable Decidable.false Xorₓ.decidable I
 
 attribute [simp] cast_eq cast_heq
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
 /-- An identity function with its main argument implicit. This will be printed as `hidden` even
 if it is applied to a large term, so it can be used for elision,
@@ -40,7 +40,7 @@ def hidden {α : Sort _} {a : α} :=
 def Empty.elimₓ {C : Sort _} : Empty → C :=
   fun.
 
-instance  : Subsingleton Empty :=
+instance : Subsingleton Empty :=
   ⟨fun a => a.elim⟩
 
 instance Subsingleton.prod {α β : Type _} [Subsingleton α] [Subsingleton β] : Subsingleton (α × β) :=
@@ -50,7 +50,7 @@ instance Subsingleton.prod {α β : Type _} [Subsingleton α] [Subsingleton β] 
       cases b 
       congr⟩
 
-instance  : DecidableEq Empty :=
+instance : DecidableEq Empty :=
   fun a => a.elim
 
 instance Sort.inhabited : Inhabited (Sort _) :=
@@ -65,7 +65,7 @@ instance Psum.inhabitedLeft {α β} [Inhabited α] : Inhabited (Psum α β) :=
 instance Psum.inhabitedRight {α β} [Inhabited β] : Inhabited (Psum α β) :=
   ⟨Psum.inr (default _)⟩
 
-instance (priority := 10)decidableEqOfSubsingleton {α} [Subsingleton α] : DecidableEq α
+instance (priority := 10) decidableEqOfSubsingleton {α} [Subsingleton α] : DecidableEq α
 | a, b => is_true (Subsingleton.elimₓ a b)
 
 @[simp]
@@ -223,7 +223,7 @@ The compromise is to add the assumption `[fact p.prime]` to `zmod.field`.
 
 In particular, this class is not intended for turning the type class system
 into an automated theorem prover for first order logic. -/
-class Fact(p : Prop) : Prop where 
+class Fact (p : Prop) : Prop where 
   out{} : p
 
 theorem Fact.elim {p : Prop} (h : Fact p) : p :=
@@ -244,15 +244,15 @@ theorem false_ne_true : False ≠ True
 
 section Propositional
 
-variable{a b c d : Prop}
+variable {a b c d : Prop}
 
 /-! ### Declarations about `implies` -/
 
 
-instance  : IsRefl Prop Iff :=
+instance : IsRefl Prop Iff :=
   ⟨Iff.refl⟩
 
-instance  : IsTrans Prop Iff :=
+instance : IsTrans Prop Iff :=
   ⟨fun _ _ _ => Iff.trans⟩
 
 theorem iff_of_eq (e : a = b) : a ↔ b :=
@@ -337,7 +337,7 @@ theorem or_not {p : Prop} : p ∨ ¬p :=
 
 section eq_or_ne
 
-variable{α : Sort _}(x y : α)
+variable {α : Sort _} (x y : α)
 
 theorem Decidable.eq_or_ne [Decidable (x = y)] : x = y ∨ x ≠ y :=
   dec_em$ x = y
@@ -455,7 +455,7 @@ theorem xor_comm a b : Xorₓ a b = Xorₓ b a :=
   by 
     simp [Xorₓ, and_comm, or_comm]
 
-instance  : IsCommutative Prop Xorₓ :=
+instance : IsCommutative Prop Xorₓ :=
   ⟨xor_comm⟩
 
 @[simp]
@@ -834,7 +834,7 @@ end Propositional
 
 section Equality
 
-variable{α : Sort _}{a b : α}
+variable {α : Sort _} {a b : α}
 
 @[simp]
 theorem heq_iff_eq : HEq a b ↔ a = b :=
@@ -935,7 +935,7 @@ end Equality
 
 section Quantifiers
 
-variable{α : Sort _}{β : Sort _}{p q : α → Prop}{b : Prop}
+variable {α : Sort _} {β : Sort _} {p q : α → Prop} {b : Prop}
 
 theorem forall_imp (h : ∀ a, p a → q a) : (∀ a, p a) → ∀ a, q a :=
   fun h' a => h a (h' a)
@@ -1352,7 +1352,7 @@ end Quantifiers
 
 namespace Classical
 
-variable{α : Sort _}{p : α → Prop}
+variable {α : Sort _} {p : α → Prop}
 
 theorem cases {p : Prop → Prop} (h1 : p True) (h2 : p False) : ∀ a, p a :=
   fun a => cases_on a h1 h2
@@ -1412,7 +1412,7 @@ noncomputable def Exists.classicalRecOn.{u} {α} {p : α → Prop} (h : ∃ a, p
 
 section BoundedQuantifiers
 
-variable{α : Sort _}{r p q : α → Prop}{P Q : ∀ x, p x → Prop}{b : Prop}
+variable {α : Sort _} {r p q : α → Prop} {P Q : ∀ x, p x → Prop} {b : Prop}
 
 theorem bex_def : (∃ (x : _)(h : p x), q x) ↔ ∃ x, p x ∧ q x :=
   ⟨fun ⟨x, px, qx⟩ => ⟨x, px, qx⟩, fun ⟨x, px, qx⟩ => ⟨x, px, qx⟩⟩
@@ -1524,14 +1524,14 @@ theorem ite_eq_or_eq {α} {p : Prop} [Decidable p] (a b : α) : ite p a b = a �
 
 section Nonempty
 
-variable{α β : Type _}{γ : α → Type _}
+variable {α β : Type _} {γ : α → Type _}
 
 attribute [simp] nonempty_of_inhabited
 
-instance (priority := 20)HasZero.nonempty [HasZero α] : Nonempty α :=
+instance (priority := 20) HasZero.nonempty [HasZero α] : Nonempty α :=
   ⟨0⟩
 
-instance (priority := 20)HasOne.nonempty [HasOne α] : Nonempty α :=
+instance (priority := 20) HasOne.nonempty [HasOne α] : Nonempty α :=
   ⟨1⟩
 
 theorem exists_true_iff_nonempty {α : Sort _} : (∃ a : α, True) ↔ Nonempty α :=
@@ -1642,7 +1642,7 @@ protected theorem Nonempty.congr {α β} (f : α → β) (g : β → α) : Nonem
 theorem Nonempty.elim_to_inhabited {α : Sort _} [h : Nonempty α] {p : Prop} (f : Inhabited α → p) : p :=
   h.elim$ f ∘ Inhabited.mk
 
-instance  {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
+instance {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
   h.elim$ fun g => h2.elim$ fun g2 => ⟨⟨g, g2⟩⟩
 
 end Nonempty

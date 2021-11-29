@@ -22,11 +22,11 @@ noncomputable theory
 
 open_locale Classical Nnreal TopologicalSpace
 
-variable{𝕜 𝕜₂ : Type _}{E : Type _}{F : Type _}{G : Type _}
+variable {𝕜 𝕜₂ : Type _} {E : Type _} {F : Type _} {G : Type _}
 
 section SemiNormed
 
-variable[SemiNormedGroup E][SemiNormedGroup F][SemiNormedGroup G]
+variable [SemiNormedGroup E] [SemiNormedGroup F] [SemiNormedGroup G]
 
 open Metric ContinuousLinearMap
 
@@ -39,9 +39,9 @@ In this section, we just assume that `𝕜` is a normed field.
 In the remainder of the file, it will be non-discrete. -/
 
 
-variable[NormedField 𝕜][NormedField 𝕜₂][SemiNormedSpace 𝕜 E][SemiNormedSpace 𝕜₂ F]
+variable [NormedField 𝕜] [NormedField 𝕜₂] [SemiNormedSpace 𝕜 E] [SemiNormedSpace 𝕜₂ F]
 
-variable[SemiNormedSpace 𝕜 G]{σ : 𝕜 →+* 𝕜₂}(f : E →ₛₗ[σ] F)
+variable [SemiNormedSpace 𝕜 G] {σ : 𝕜 →+* 𝕜₂} (f : E →ₛₗ[σ] F)
 
 theorem LinearMap.lipschitz_of_bound (C : ℝ) (h : ∀ x, ∥f x∥ ≤ C*∥x∥) : LipschitzWith (Real.toNnreal C) f :=
   f.to_add_monoid_hom.lipschitz_of_bound C h
@@ -128,9 +128,8 @@ theorem LinearMap.to_continuous_linear_map₁_apply (f : 𝕜 →ₗ[𝕜] E) x 
 
 end NormedField
 
-variable[NondiscreteNormedField
-      𝕜][SemiNormedSpace 𝕜
-      E][SemiNormedSpace 𝕜 F][SemiNormedSpace 𝕜 G](c : 𝕜)(f g : E →L[𝕜] F)(h : F →L[𝕜] G)(x y z : E)
+variable [NondiscreteNormedField 𝕜] [SemiNormedSpace 𝕜 E] [SemiNormedSpace 𝕜 F] [SemiNormedSpace 𝕜 G] (c : 𝕜)
+  (f g : E →L[𝕜] F) (h : F →L[𝕜] G) (x y z : E)
 
 include 𝕜
 
@@ -192,7 +191,7 @@ open Filter
 def of_homothety (f : E →ₗ[𝕜] F) (a : ℝ) (hf : ∀ x, ∥f x∥ = a*∥x∥) : E →L[𝕜] F :=
   f.mk_continuous a fun x => le_of_eqₓ (hf x)
 
-variable(𝕜)
+variable (𝕜)
 
 theorem to_span_singleton_homothety (x : E) (c : 𝕜) : ∥LinearMap.toSpanSingleton 𝕜 E x c∥ = ∥x∥*∥c∥ :=
   by 
@@ -586,7 +585,7 @@ theorem flip_add (f g : E →L[𝕜] F →L[𝕜] G) : (f+g).flip = f.flip+g.fli
 theorem flip_smul (c : 𝕜) (f : E →L[𝕜] F →L[𝕜] G) : (c • f).flip = c • f.flip :=
   rfl
 
-variable(𝕜 E F G)
+variable (𝕜 E F G)
 
 /-- Flip the order of arguments of a continuous bilinear map.
 This is a version bundled as a `linear_isometry_equiv`.
@@ -595,7 +594,7 @@ def flipₗᵢ : (E →L[𝕜] F →L[𝕜] G) ≃ₗᵢ[𝕜] F →L[𝕜] E �
   { toFun := flip, invFun := flip, map_add' := flip_add, map_smul' := flip_smul, left_inv := flip_flip,
     right_inv := flip_flip, norm_map' := op_norm_flip }
 
-variable{𝕜 E F G}
+variable {𝕜 E F G}
 
 @[simp]
 theorem flipₗᵢ_symm : (flipₗᵢ 𝕜 E F G).symm = flipₗᵢ 𝕜 F E G :=
@@ -605,7 +604,7 @@ theorem flipₗᵢ_symm : (flipₗᵢ 𝕜 E F G).symm = flipₗᵢ 𝕜 F E G :
 theorem coe_flipₗᵢ : «expr⇑ » (flipₗᵢ 𝕜 E F G) = flip :=
   rfl
 
-variable(𝕜 F)
+variable (𝕜 F)
 
 /-- The continuous linear map obtained by applying a continuous linear map at a given vector.
 
@@ -613,13 +612,13 @@ This is the continuous version of `linear_map.applyₗ`. -/
 def apply : E →L[𝕜] (E →L[𝕜] F) →L[𝕜] F :=
   flip (id 𝕜 (E →L[𝕜] F))
 
-variable{𝕜 F}
+variable {𝕜 F}
 
 @[simp]
 theorem apply_apply (v : E) (f : E →L[𝕜] F) : apply 𝕜 F v f = f v :=
   rfl
 
-variable(𝕜 E F G)
+variable (𝕜 E F G)
 
 /-- Composition of continuous linear maps as a continuous bilinear map. -/
 def compL : (F →L[𝕜] G) →L[𝕜] (E →L[𝕜] F) →L[𝕜] E →L[𝕜] G :=
@@ -628,7 +627,7 @@ def compL : (F →L[𝕜] G) →L[𝕜] (E →L[𝕜] F) →L[𝕜] E →L[𝕜]
       by 
         simpa only [one_mulₓ] using op_norm_comp_le f g
 
-variable{𝕜 E F G}
+variable {𝕜 E F G}
 
 @[simp]
 theorem compL_apply (f : F →L[𝕜] G) (g : E →L[𝕜] F) : compL 𝕜 E F G f g = f.comp g :=
@@ -636,7 +635,7 @@ theorem compL_apply (f : F →L[𝕜] G) (g : E →L[𝕜] F) : compL 𝕜 E F G
 
 section MultiplicationLinear
 
-variable(𝕜)(𝕜' : Type _)[NormedRing 𝕜'][NormedAlgebra 𝕜 𝕜']
+variable (𝕜) (𝕜' : Type _) [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
 /-- Left multiplication in a normed algebra as a linear isometry to the space of
 continuous linear maps. -/
@@ -717,7 +716,7 @@ end MultiplicationLinear
 
 section SmulLinear
 
-variable(𝕜)(𝕜' : Type _)[NormedField 𝕜'][NormedAlgebra 𝕜 𝕜'][SemiNormedSpace 𝕜' E][IsScalarTower 𝕜 𝕜' E]
+variable (𝕜) (𝕜' : Type _) [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [SemiNormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E]
 
 /-- Scalar multiplication as a continuous bilinear map. -/
 def lsmul : 𝕜' →L[𝕜] E →L[𝕜] E :=
@@ -730,7 +729,7 @@ def lsmul : 𝕜' →L[𝕜] E →L[𝕜] E :=
 theorem lsmul_apply (c : 𝕜') (x : E) : lsmul 𝕜 𝕜' c x = c • x :=
   rfl
 
-variable{𝕜'}
+variable {𝕜'}
 
 theorem norm_to_span_singleton (x : E) : ∥to_span_singleton 𝕜 x∥ = ∥x∥ :=
   by 
@@ -750,28 +749,25 @@ end SmulLinear
 
 section RestrictScalars
 
-variable{𝕜' : Type _}[NondiscreteNormedField 𝕜'][NormedAlgebra 𝕜' 𝕜]
+variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜' 𝕜]
 
-variable[SemiNormedSpace 𝕜' E][IsScalarTower 𝕜' 𝕜 E]
+variable [SemiNormedSpace 𝕜' E] [IsScalarTower 𝕜' 𝕜 E]
 
-variable[SemiNormedSpace 𝕜' F][IsScalarTower 𝕜' 𝕜 F]
+variable [SemiNormedSpace 𝕜' F] [IsScalarTower 𝕜' 𝕜 F]
 
 @[simp]
 theorem norm_restrict_scalars (f : E →L[𝕜] F) : ∥f.restrict_scalars 𝕜'∥ = ∥f∥ :=
   le_antisymmₓ (op_norm_le_bound _ (norm_nonneg _)$ fun x => f.le_op_norm x)
     (op_norm_le_bound _ (norm_nonneg _)$ fun x => f.le_op_norm x)
 
-variable(𝕜 E F
-    𝕜')(𝕜'' :
-    Type
-      _)[Ringₓ
-      𝕜''][TopologicalSpace 𝕜''][Module 𝕜'' F][HasContinuousSmul 𝕜'' F][SmulCommClass 𝕜 𝕜'' F][SmulCommClass 𝕜' 𝕜'' F]
+variable (𝕜 E F 𝕜') (𝕜'' : Type _) [Ringₓ 𝕜''] [TopologicalSpace 𝕜''] [Module 𝕜'' F] [HasContinuousSmul 𝕜'' F]
+  [SmulCommClass 𝕜 𝕜'' F] [SmulCommClass 𝕜' 𝕜'' F]
 
 /-- `continuous_linear_map.restrict_scalars` as a `linear_isometry`. -/
 def restrict_scalars_isometry : (E →L[𝕜] F) →ₗᵢ[𝕜''] E →L[𝕜'] F :=
   ⟨restrict_scalarsₗ 𝕜 E F 𝕜' 𝕜'', norm_restrict_scalars⟩
 
-variable{𝕜 E F 𝕜' 𝕜''}
+variable {𝕜 E F 𝕜' 𝕜''}
 
 @[simp]
 theorem coe_restrict_scalars_isometry : «expr⇑ » (restrict_scalars_isometry 𝕜 E F 𝕜' 𝕜'') = RestrictScalars 𝕜' :=
@@ -782,13 +778,13 @@ theorem restrict_scalars_isometry_to_linear_map :
   (restrict_scalars_isometry 𝕜 E F 𝕜' 𝕜'').toLinearMap = restrict_scalarsₗ 𝕜 E F 𝕜' 𝕜'' :=
   rfl
 
-variable(𝕜 E F 𝕜' 𝕜'')
+variable (𝕜 E F 𝕜' 𝕜'')
 
 /-- `continuous_linear_map.restrict_scalars` as a `continuous_linear_map`. -/
 def restrict_scalarsL : (E →L[𝕜] F) →L[𝕜''] E →L[𝕜'] F :=
   (restrict_scalars_isometry 𝕜 E F 𝕜' 𝕜'').toContinuousLinearMap
 
-variable{𝕜 E F 𝕜' 𝕜''}
+variable {𝕜 E F 𝕜' 𝕜''}
 
 @[simp]
 theorem coe_restrict_scalarsL :
@@ -812,10 +808,8 @@ end Submodule
 
 section HasSum
 
-variable{ι R M M₂ :
-    Type
-      _}[Semiringₓ
-      R][AddCommMonoidₓ M][Module R M][AddCommMonoidₓ M₂][Module R M₂][TopologicalSpace M][TopologicalSpace M₂]
+variable {ι R M M₂ : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ M₂] [Module R M₂]
+  [TopologicalSpace M] [TopologicalSpace M₂]
 
 omit 𝕜
 
@@ -879,7 +873,7 @@ end HasSum
 
 namespace ContinuousLinearEquiv
 
-variable(e : E ≃L[𝕜] F)
+variable (e : E ≃L[𝕜] F)
 
 protected theorem lipschitz : LipschitzWith ∥(e : E →L[𝕜] F)∥₊ e :=
   (e : E →L[𝕜] F).lipschitz
@@ -913,7 +907,7 @@ def of_homothety (f : E ≃ₗ[𝕜] F) (a : ℝ) (ha : 0 < a) (hf : ∀ x, ∥f
     continuous_inv_fun :=
       f.symm.to_linear_map.continuous_of_bound (a⁻¹) fun x => le_of_eqₓ (homothety_inverse a ha f hf x) }
 
-variable(𝕜)
+variable (𝕜)
 
 theorem to_span_nonzero_singleton_homothety (x : E) (h : x ≠ 0) (c : 𝕜) :
   ∥LinearEquiv.toSpanNonzeroSingleton 𝕜 E x h c∥ = ∥x∥*∥c∥ :=
@@ -930,11 +924,11 @@ def LinearEquiv.toContinuousLinearEquivOfBounds (e : E ≃ₗ[𝕜] F) (C_to C_i
 
 namespace ContinuousLinearMap
 
-variable(𝕜)(𝕜' : Type _)[NormedRing 𝕜'][NormedAlgebra 𝕜 𝕜']
+variable (𝕜) (𝕜' : Type _) [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
-variable{𝕜}
+variable {𝕜}
 
-variable{E' F' : Type _}[SemiNormedGroup E'][SemiNormedGroup F'][SemiNormedSpace 𝕜 E'][SemiNormedSpace 𝕜 F']
+variable {E' F' : Type _} [SemiNormedGroup E'] [SemiNormedGroup F'] [SemiNormedSpace 𝕜 E'] [SemiNormedSpace 𝕜 F']
 
 /--
 Compose a bilinear map `E →L[𝕜] F →L[𝕜] G` with two linear maps `E' →L[𝕜] E` and `F' →L[𝕜] F`.
@@ -967,13 +961,13 @@ end SemiNormed
 
 section Normed
 
-variable[NormedGroup E][NormedGroup F][NormedGroup G]
+variable [NormedGroup E] [NormedGroup F] [NormedGroup G]
 
 open Metric ContinuousLinearMap
 
 section NormedField
 
-variable[NormedField 𝕜][NormedSpace 𝕜 E][NormedSpace 𝕜 F](f : E →ₗ[𝕜] F)
+variable [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] (f : E →ₗ[𝕜] F)
 
 -- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem linear_map.continuous_iff_is_closed_ker
@@ -1036,8 +1030,8 @@ end
 
 end NormedField
 
-variable[NondiscreteNormedField
-      𝕜][NormedSpace 𝕜 E][NormedSpace 𝕜 F][NormedSpace 𝕜 G](c : 𝕜)(f g : E →L[𝕜] F)(h : F →L[𝕜] G)(x y z : E)
+variable [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [NormedSpace 𝕜 G] (c : 𝕜) (f g : E →L[𝕜] F)
+  (h : F →L[𝕜] G) (x y z : E)
 
 include 𝕜
 
@@ -1112,7 +1106,7 @@ instance to_normed_algebra [Nontrivial E] : NormedAlgebra 𝕜 (E →L[𝕜] E) 
           rw [norm_smul, norm_id]
           simp  }
 
-variable{f}
+variable {f}
 
 -- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem homothety_norm
@@ -1132,7 +1126,7 @@ end
 theorem to_span_singleton_norm (x : E) : ∥to_span_singleton 𝕜 x∥ = ∥x∥ :=
   homothety_norm _ (to_span_singleton_homothety 𝕜 x)
 
-variable(f)
+variable (f)
 
 theorem uniform_embedding_of_bound {K :  ℝ≥0 } (hf : ∀ x, ∥x∥ ≤ K*∥f x∥) : UniformEmbedding f :=
   (f.to_linear_map.antilipschitz_of_bound hf).UniformEmbedding f.uniform_continuous
@@ -1249,11 +1243,11 @@ end Completeness
 
 section UniformlyExtend
 
-variable[CompleteSpace F](e : E →L[𝕜] G)(h_dense : DenseRange e)
+variable [CompleteSpace F] (e : E →L[𝕜] G) (h_dense : DenseRange e)
 
 section 
 
-variable(h_e : UniformInducing e)
+variable (h_e : UniformInducing e)
 
 /-- Extension of a continuous linear map `f : E →L[𝕜] F`, with `E` a normed space and `F` a
 complete normed space, along a uniform and dense embedding `e : E →L[𝕜] G`.  -/
@@ -1297,7 +1291,7 @@ end
 
 section 
 
-variable{N :  ℝ≥0 }(h_e : ∀ x, ∥x∥ ≤ N*∥e x∥)
+variable {N :  ℝ≥0 } (h_e : ∀ x, ∥x∥ ≤ N*∥e x∥)
 
 local notation "ψ" => f.extend e h_dense (uniform_embedding_of_bound _ h_e).to_uniform_inducing
 
@@ -1408,7 +1402,7 @@ space is the product of the non-negative norms. -/
 theorem nnnorm_smul_right_apply (c : E →L[𝕜] 𝕜) (f : F) : ∥smul_right c f∥₊ = ∥c∥₊*∥f∥₊ :=
   Nnreal.eq$ c.norm_smul_right_apply f
 
-variable(𝕜 E F)
+variable (𝕜 E F)
 
 /-- `continuous_linear_map.smul_right` as a continuous trilinear map:
 `smul_rightL (c : E →L[𝕜] 𝕜) (f : F) (x : E) = c x • f`. -/
@@ -1430,7 +1424,7 @@ def smul_rightL : (E →L[𝕜] 𝕜) →L[𝕜] F →L[𝕜] E →L[𝕜] F :=
       by 
         simp 
 
-variable{𝕜 E F}
+variable {𝕜 E F}
 
 @[simp]
 theorem norm_smul_rightL_apply (c : E →L[𝕜] 𝕜) (f : F) : ∥smul_rightL 𝕜 E F c f∥ = ∥c∥*∥f∥ :=
@@ -1440,7 +1434,7 @@ theorem norm_smul_rightL_apply (c : E →L[𝕜] 𝕜) (f : F) : ∥smul_rightL 
 theorem norm_smul_rightL (c : E →L[𝕜] 𝕜) [Nontrivial F] : ∥smul_rightL 𝕜 E F c∥ = ∥c∥ :=
   ContinuousLinearMap.homothety_norm _ c.norm_smul_right_apply
 
-variable(𝕜)(𝕜' : Type _)[NormedRing 𝕜'][NormedAlgebra 𝕜 𝕜']
+variable (𝕜) (𝕜' : Type _) [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
 -- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp] theorem op_norm_lmul : «expr = »(«expr∥ ∥»(lmul 𝕜 𝕜'), 1) :=
@@ -1461,7 +1455,7 @@ end Submodule
 
 namespace ContinuousLinearEquiv
 
-variable(e : E ≃L[𝕜] F)
+variable (e : E ≃L[𝕜] F)
 
 protected theorem antilipschitz : AntilipschitzWith (nnnorm (e.symm : F →L[𝕜] E)) e :=
   e.symm.lipschitz.to_right_inverse e.left_inv
@@ -1498,7 +1492,7 @@ theorem subsingleton_or_norm_symm_pos : Subsingleton E ∨ 0 < ∥(e.symm : F �
 theorem subsingleton_or_nnnorm_symm_pos : Subsingleton E ∨ 0 < (nnnorm$ (e.symm : F →L[𝕜] E)) :=
   subsingleton_or_norm_symm_pos e
 
-variable(𝕜)
+variable (𝕜)
 
 /-- Given a nonzero element `x` of a normed space `E₁` over a field `𝕜`, the natural
     continuous linear equivalence from `E₁` to the span of `x`.-/

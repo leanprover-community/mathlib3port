@@ -20,11 +20,11 @@ universe u v
 
 open_locale Classical
 
-variable{α : Type _}{β : α → Type _}
+variable {α : Type _} {β : α → Type _}
 
 /-- `has_fix α` gives us a way to calculate the fixed point
 of function of type `α → α`. -/
-class HasFix(α : Type _) where 
+class HasFix (α : Type _) where 
   fix : (α → α) → α
 
 namespace Part
@@ -33,7 +33,7 @@ open Part Nat Nat.Upto
 
 section Basic
 
-variable(f : (∀ a, Part$ β a) → ∀ a, Part$ β a)
+variable (f : (∀ a, Part$ β a) → ∀ a, Part$ β a)
 
 /-- A series of successive, finite approximation of the fixed point of `f`, defined by
 `approx f n = f^[n] ⊥`. The limit of this chain is the fixed point of `f`. -/
@@ -106,7 +106,7 @@ end Part
 
 namespace Part
 
-instance  : HasFix (Part α) :=
+instance : HasFix (Part α) :=
   ⟨fun f => Part.fix (fun x u => f (x u)) ()⟩
 
 end Part

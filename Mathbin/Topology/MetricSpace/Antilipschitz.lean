@@ -16,7 +16,7 @@ we do not have a `posreal` type.
 -/
 
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 open_locale Nnreal Ennreal uniformity
 
@@ -37,7 +37,7 @@ theorem AntilipschitzWith.edist_ne_top [PseudoEmetricSpace α] [PseudoMetricSpac
 
 section Metric
 
-variable[PseudoMetricSpace α][PseudoMetricSpace β]{K :  ℝ≥0 }{f : α → β}
+variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K :  ℝ≥0 } {f : α → β}
 
 theorem antilipschitz_with_iff_le_mul_nndist : AntilipschitzWith K f ↔ ∀ x y, nndist x y ≤ K*nndist (f x) (f y) :=
   by 
@@ -69,9 +69,9 @@ end Metric
 
 namespace AntilipschitzWith
 
-variable[PseudoEmetricSpace α][PseudoEmetricSpace β][PseudoEmetricSpace γ]
+variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
 
-variable{K :  ℝ≥0 }{f : α → β}
+variable {K :  ℝ≥0 } {f : α → β}
 
 open Emetric
 
@@ -142,7 +142,7 @@ begin
   rwa ["[", expr hg x, ",", expr hg y, "]"] ["at", ident this]
 end
 
-theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod.mapₓ f f) ≤ 𝓤 α :=
+theorem comap_uniformity_le (hf : AntilipschitzWith K f) : (𝓤 β).comap (Prod.map f f) ≤ 𝓤 α :=
   by 
     refine' ((uniformity_basis_edist.comap _).le_basis_iff uniformity_basis_edist).2 fun ε h₀ => _ 
     refine' ⟨K⁻¹*ε, Ennreal.mul_pos (Ennreal.inv_ne_zero.2 Ennreal.coe_ne_top) h₀.ne', _⟩
@@ -189,7 +189,7 @@ namespace AntilipschitzWith
 
 open Metric
 
-variable[PseudoMetricSpace α][PseudoMetricSpace β]{K :  ℝ≥0 }{f : α → β}
+variable [PseudoMetricSpace α] [PseudoMetricSpace β] {K :  ℝ≥0 } {f : α → β}
 
 theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded s) : Bounded (f ⁻¹' s) :=
   Exists.introₓ (K*diam s)$

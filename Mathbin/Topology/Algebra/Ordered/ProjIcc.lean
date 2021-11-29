@@ -13,14 +13,14 @@ open Set Filter
 
 open_locale Filter TopologicalSpace
 
-variable{α β γ : Type _}[LinearOrderₓ α][TopologicalSpace γ]{a b c : α}{h : a ≤ b}
+variable {α β γ : Type _} [LinearOrderₓ α] [TopologicalSpace γ] {a b c : α} {h : a ≤ b}
 
 theorem Filter.Tendsto.Icc_extend (f : γ → Icc a b → β) {z : γ} {l : Filter α} {l' : Filter β}
   (hf : tendsto («expr↿ » f) (𝓝 z ×ᶠ l.map (proj_Icc a b h)) l') :
   tendsto («expr↿ » (Icc_extend h ∘ f)) (𝓝 z ×ᶠ l) l' :=
-  show tendsto («expr↿ » f ∘ Prod.mapₓ id (proj_Icc a b h)) (𝓝 z ×ᶠ l) l' from hf.comp$ tendsto_id.prod_map tendsto_map
+  show tendsto («expr↿ » f ∘ Prod.map id (proj_Icc a b h)) (𝓝 z ×ᶠ l) l' from hf.comp$ tendsto_id.prod_map tendsto_map
 
-variable[TopologicalSpace α][OrderTopology α][TopologicalSpace β]
+variable [TopologicalSpace α] [OrderTopology α] [TopologicalSpace β]
 
 @[continuity]
 theorem continuous_proj_Icc : Continuous (proj_Icc a b h) :=

@@ -17,15 +17,15 @@ predicate `S`) but are not completely determined.
   of the set `s`. The specific element of `s` that the VM computes
   is hidden by a quotient construction, allowing for the representation
   of nondeterministic functions. -/
-structure Semiquot.{u}(α : Type _) where mk' :: 
+structure Semiquot.{u} (α : Type _) where mk' :: 
   S : Set α 
   val : Trunc («expr↥ » s)
 
 namespace Semiquot
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
-instance  : HasMem α (Semiquot α) :=
+instance : HasMem α (Semiquot α) :=
   ⟨fun a q => a ∈ q.s⟩
 
 /-- Construct a `semiquot α` from `h : a ∈ s` where `s : set α`. -/
@@ -109,7 +109,7 @@ def bind (q : Semiquot α) (f : α → Semiquot β) : Semiquot β :=
 theorem mem_bind (q : Semiquot α) (f : α → Semiquot β) (b : β) : b ∈ bind q f ↔ ∃ (a : _)(_ : a ∈ q), b ∈ f a :=
   Set.mem_bUnion_iff
 
-instance  : Monadₓ Semiquot :=
+instance : Monadₓ Semiquot :=
   { pure := @Semiquot.pure, map := @Semiquot.map, bind := @Semiquot.bind }
 
 @[simp]
@@ -131,7 +131,7 @@ theorem mem_pure_self (a : α) : a ∈ (pure a : Semiquot α) :=
 theorem pure_inj {a b : α} : (pure a : Semiquot α) = pure b ↔ a = b :=
   ext_s.trans Set.singleton_eq_singleton_iff
 
-instance  : IsLawfulMonad Semiquot :=
+instance : IsLawfulMonad Semiquot :=
   { pure_bind :=
       fun α β x f =>
         ext.2$
@@ -156,14 +156,14 @@ instance  : IsLawfulMonad Semiquot :=
           by 
             simp [eq_comm] }
 
-instance  : LE (Semiquot α) :=
+instance : LE (Semiquot α) :=
   ⟨fun s t => s.s ⊆ t.s⟩
 
-instance  : PartialOrderₓ (Semiquot α) :=
+instance : PartialOrderₓ (Semiquot α) :=
   { le := fun s t => ∀ ⦃x⦄, x ∈ s → x ∈ t, le_refl := fun s => Set.Subset.refl _,
     le_trans := fun s t u => Set.Subset.trans, le_antisymm := fun s t h₁ h₂ => ext_s.2 (Set.Subset.antisymm h₁ h₂) }
 
-instance  : SemilatticeSup (Semiquot α) :=
+instance : SemilatticeSup (Semiquot α) :=
   { Semiquot.partialOrder with sup := fun s => blur s.s, le_sup_left := fun s t => Set.subset_union_left _ _,
     le_sup_right := fun s t => Set.subset_union_right _ _, sup_le := fun s t u => Set.union_subset }
 
@@ -217,7 +217,7 @@ theorem is_pure_of_subsingleton [Subsingleton α] (q : Semiquot α) : is_pure q
 def univ [Inhabited α] : Semiquot α :=
   mk$ Set.mem_univ (default _)
 
-instance  [Inhabited α] : Inhabited (Semiquot α) :=
+instance [Inhabited α] : Inhabited (Semiquot α) :=
   ⟨univ⟩
 
 @[simp]
@@ -234,11 +234,8 @@ theorem univ_unique (I J : Inhabited α) : @univ _ I = @univ _ J :=
 theorem is_pure_univ [Inhabited α] : @is_pure α univ ↔ Subsingleton α :=
   ⟨fun h => ⟨fun a b => h a b trivialₓ trivialₓ⟩, fun ⟨h⟩ a b _ _ => h a b⟩
 
-instance  [Inhabited α] : OrderTop (Semiquot α) :=
+instance [Inhabited α] : OrderTop (Semiquot α) :=
   { top := univ, le_top := fun s => Set.subset_univ _ }
-
-instance  [Inhabited α] : SemilatticeSupTop (Semiquot α) :=
-  { Semiquot.orderTop, Semiquot.semilatticeSup with  }
 
 end Semiquot
 

@@ -40,15 +40,15 @@ open SheafConditionEqualizerProducts
 
 universe v u₁ u₂
 
-variable{C : Type u₁}[category.{v} C][has_limits C]
+variable {C : Type u₁} [category.{v} C] [has_limits C]
 
-variable{D : Type u₂}[category.{v} D][has_limits D]
+variable {D : Type u₂} [category.{v} D] [has_limits D]
 
-variable(G : C ⥤ D)[preserves_limits G]
+variable (G : C ⥤ D) [preserves_limits G]
 
-variable{X : Top.{v}}(F : presheaf C X)
+variable {X : Top.{v}} (F : presheaf C X)
 
-variable{ι : Type v}(U : ι → opens X)
+variable {ι : Type v} (U : ι → opens X)
 
 attribute [local reducible] diagram left_res right_res
 
@@ -120,15 +120,15 @@ universe v u₁ u₂
 
 open SheafCondition SheafConditionEqualizerProducts
 
-variable{C : Type u₁}[category.{v} C]{D : Type u₂}[category.{v} D]
+variable {C : Type u₁} [category.{v} C] {D : Type u₂} [category.{v} D]
 
-variable(G : C ⥤ D)
+variable (G : C ⥤ D)
 
-variable[reflects_isomorphisms G]
+variable [reflects_isomorphisms G]
 
-variable[has_limits C][has_limits D][preserves_limits G]
+variable [has_limits C] [has_limits D] [preserves_limits G]
 
-variable{X : Top.{v}}(F : presheaf C X)
+variable {X : Top.{v}} (F : presheaf C X)
 
 -- error in Topology.Sheaves.Forget: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -172,7 +172,7 @@ begin
       let [ident d] [] [":=", expr G.map_cone (equalizer.fork (left_res F U) (right_res F U))],
       have [ident hd] [":", expr is_limit d] [":=", expr preserves_limit.preserves (limit.is_limit _)],
       let [ident d'] [] [":=", expr (cones.postcompose (diagram_comp_preserves_limits G F U).hom).obj d],
-      have [ident hd'] [":", expr is_limit d'] [":=", expr (is_limit.postcompose_hom_equiv (diagram_comp_preserves_limits G F U) d).symm hd],
+      have [ident hd'] [":", expr is_limit d'] [":=", expr (is_limit.postcompose_hom_equiv (diagram_comp_preserves_limits G F U : _) d).symm hd],
       let [ident f'] [":", expr «expr ⟶ »(c, d')] [":=", expr fork.mk_hom (G.map f) (begin
           dsimp ["only"] ["[", expr c, ",", expr d, ",", expr d', ",", expr f, ",", expr diagram_comp_preserves_limits, ",", expr res, "]"] [] [],
           dunfold [ident fork.ι] [],

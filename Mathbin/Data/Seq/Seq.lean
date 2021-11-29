@@ -23,13 +23,13 @@ def Seq1 α :=
 
 namespace Seqₓₓ
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 /-- The empty sequence -/
 def nil : Seqₓₓ α :=
   ⟨Streamₓ.const none, fun n h => rfl⟩
 
-instance  : Inhabited (Seqₓₓ α) :=
+instance : Inhabited (Seqₓₓ α) :=
   ⟨nil⟩
 
 /-- Prepend an element to a sequence -/
@@ -77,7 +77,7 @@ def tail : Seqₓₓ α → Seqₓₓ α
 protected def mem (a : α) (s : Seqₓₓ α) :=
   some a ∈ s.1
 
-instance  : HasMem α (Seqₓₓ α) :=
+instance : HasMem α (Seqₓₓ α) :=
   ⟨Seqₓₓ.Mem⟩
 
 theorem le_stable (s : Seqₓₓ α) {m n} (h : m ≤ n) : s.nth m = none → s.nth n = none :=
@@ -311,7 +311,7 @@ instance coe_list : Coe (List α) (Seqₓₓ α) :=
 
 section Bisim
 
-variable(R : Seqₓₓ α → Seqₓₓ α → Prop)
+variable (R : Seqₓₓ α → Seqₓₓ α → Prop)
 
 local infixl:50 " ~ " => R
 
@@ -509,7 +509,7 @@ def zip_with (f : α → β → γ) : Seqₓₓ α → Seqₓₓ β → Seqₓ�
           rw [h1, h2] at H 
           contradiction⟩
 
-variable{s : Seqₓₓ α}{s' : Seqₓₓ β}{n : ℕ}
+variable {s : Seqₓₓ α} {s' : Seqₓₓ β} {n : ℕ}
 
 -- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem zip_with_nth_some
@@ -700,10 +700,10 @@ theorem map_append (f : α → β) s t : map f (append s t) = append (map f s) (
 theorem map_nth (f : α → β) : ∀ s n, nth (map f s) n = (nth s n).map f
 | ⟨s, al⟩, n => rfl
 
-instance  : Functor Seqₓₓ :=
+instance : Functor Seqₓₓ :=
   { map := @map }
 
-instance  : IsLawfulFunctor Seqₓₓ :=
+instance : IsLawfulFunctor Seqₓₓ :=
   { id_map := @map_id, comp_map := @map_comp }
 
 @[simp]
@@ -899,7 +899,7 @@ end Seqₓₓ
 
 namespace Seq1
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 open Seqₓₓ
 
@@ -940,7 +940,7 @@ theorem join_cons (a b : α) s S : join ((a, cons b s), S) = (a, Seqₓₓ.join 
 def ret (a : α) : Seq1 α :=
   (a, nil)
 
-instance  [Inhabited α] : Inhabited (Seq1 α) :=
+instance [Inhabited α] : Inhabited (Seq1 α) :=
   ⟨ret (default _)⟩
 
 /-- The `bind` operator for the `seq1` monad,
@@ -1053,10 +1053,10 @@ theorem bind_assoc (s : Seq1 α) (f : α → Seq1 β) (g : β → Seq1 γ) :
     ·
       cases' x_1 with y t <;> simp 
 
-instance  : Monadₓ Seq1 :=
+instance : Monadₓ Seq1 :=
   { map := @map, pure := @ret, bind := @bind }
 
-instance  : IsLawfulMonad Seq1 :=
+instance : IsLawfulMonad Seq1 :=
   { id_map := @map_id, bind_pure_comp_eq_map := @bind_ret, pure_bind := @ret_bind, bind_assoc := @bind_assoc }
 
 end Seq1

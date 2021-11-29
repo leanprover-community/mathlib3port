@@ -24,12 +24,12 @@ attribute [local ext] TensorProduct.ext
 
 namespace ModuleCat
 
-variable{R : Type u}[CommRingₓ R]
+variable {R : Type u} [CommRingₓ R]
 
 namespace MonModuleEquivalenceAlgebra
 
 @[simps]
-instance  (A : Mon_ (ModuleCat.{u} R)) : Ringₓ A.X :=
+instance (A : Mon_ (ModuleCat.{u} R)) : Ringₓ A.X :=
   { (by 
       infer_instance :
     AddCommGroupₓ A.X) with

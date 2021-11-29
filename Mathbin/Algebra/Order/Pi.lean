@@ -11,11 +11,11 @@ This file defines instances for ordered group, monoid, and related structures on
 
 universe u v w
 
-variable{I : Type u}
+variable {I : Type u}
 
-variable{f : I → Type v}
+variable {f : I → Type v}
 
-variable(x y : ∀ i, f i)(i : I)
+variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
@@ -29,7 +29,7 @@ instance OrderedCommMonoid {ι : Type _} {Z : ι → Type _} [∀ i, OrderedComm
 /-- The product of a family of canonically ordered monoids is a canonically ordered monoid. -/
 @[toAdditive
       "The product of a family of canonically ordered additive monoids is\n  a canonically ordered additive monoid."]
-instance  {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i)] : CanonicallyOrderedMonoid (∀ i, Z i) :=
+instance {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z i)] : CanonicallyOrderedMonoid (∀ i, Z i) :=
   { Pi.orderBot, Pi.orderedCommMonoid with
     le_iff_exists_mul :=
       fun f g =>

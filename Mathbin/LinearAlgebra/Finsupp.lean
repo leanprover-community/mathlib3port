@@ -54,13 +54,13 @@ open_locale Classical BigOperators
 
 namespace Finsupp
 
-variable{α : Type _}{M : Type _}{N : Type _}{P : Type _}{R : Type _}{S : Type _}
+variable {α : Type _} {M : Type _} {N : Type _} {P : Type _} {R : Type _} {S : Type _}
 
-variable[Semiringₓ R][Semiringₓ S][AddCommMonoidₓ M][Module R M]
+variable [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ M] [Module R M]
 
-variable[AddCommMonoidₓ N][Module R N]
+variable [AddCommMonoidₓ N] [Module R N]
 
-variable[AddCommMonoidₓ P][Module R P]
+variable [AddCommMonoidₓ P] [Module R P]
 
 /-- Interpret `finsupp.single a` as a linear map. -/
 def lsingle (a : α) : M →ₗ[R] α →₀ M :=
@@ -85,7 +85,7 @@ def lapply (a : α) : (α →₀ M) →ₗ[R] M :=
 
 section LsubtypeDomain
 
-variable(s : Set α)
+variable (s : Set α)
 
 /-- Interpret `finsupp.subtype_domain s` as a linear map. -/
 def lsubtype_domain : (α →₀ M) →ₗ[R] s →₀ M :=
@@ -153,7 +153,7 @@ theorem span_single_image (s : Set M) (a : α) :
   by 
     rw [←span_image] <;> rfl
 
-variable(M R)
+variable (M R)
 
 /-- `finsupp.supported M R s` is the `R`-submodule of all `p : α →₀ M` such that `p.support ⊆ s`. -/
 def supported (s : Set α) : Submodule R (α →₀ M) :=
@@ -171,7 +171,7 @@ def supported (s : Set α) : Submodule R (α →₀ M) :=
       intro a p hp 
       refine' subset.trans (Finset.coe_subset.2 support_smul) hp
 
-variable{M}
+variable {M}
 
 theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ «expr↑ » p.support ⊆ s :=
   Iff.rfl
@@ -205,7 +205,7 @@ theorem supported_eq_span_single (s : Set α) : supported R R s = span R ((fun i
       apply subset_span 
       apply Set.mem_image_of_mem _ (hl il)
 
-variable(M R)
+variable (M R)
 
 /-- Interpret `finsupp.filter s` as a linear map from `α →₀ M` to `supported M R s`. -/
 def restrict_dom (s : Set α) : (α →₀ M) →ₗ[R] supported M R s :=
@@ -213,7 +213,7 @@ def restrict_dom (s : Set α) : (α →₀ M) →ₗ[R] supported M R s :=
     { toFun := filter (· ∈ s), map_add' := fun l₁ l₂ => filter_add, map_smul' := fun a l => filter_smul }
     fun l => (mem_supported' _ _).2$ fun x => filter_apply_neg (· ∈ s) l
 
-variable{M R}
+variable {M R}
 
 section 
 
@@ -312,7 +312,7 @@ end
 
 section Lsum
 
-variable(S)[Module S N][SmulCommClass R S N]
+variable (S) [Module S N] [SmulCommClass R S N]
 
 /-- Lift a family of linear maps `M →ₗ[R] N` indexed by `x : α` to a linear map from `α →₀ M` to
 `N` using `finsupp.sum`. This is an upgraded version of `finsupp.lift_add_hom`.
@@ -366,7 +366,7 @@ end Lsum
 
 section 
 
-variable(M)(R)(X : Type _)
+variable (M) (R) (X : Type _)
 
 /--
 A slight rearrangement from `lsum` gives us
@@ -388,7 +388,7 @@ end
 
 section LmapDomain
 
-variable{α' : Type _}{α'' : Type _}(M R)
+variable {α' : Type _} {α'' : Type _} (M R)
 
 /-- Interpret `finsupp.map_domain` as a linear map. -/
 def lmap_domain (f : α → α') : (α →₀ M) →ₗ[R] α' →₀ M :=
@@ -466,14 +466,14 @@ end LmapDomain
 
 section Total
 
-variable(α){α' : Type _}(M){M' : Type _}(R)[AddCommMonoidₓ M'][Module R M'](v : α → M){v' : α' → M'}
+variable (α) {α' : Type _} (M) {M' : Type _} (R) [AddCommMonoidₓ M'] [Module R M'] (v : α → M) {v' : α' → M'}
 
 /-- Interprets (l : α →₀ R) as linear combination of the elements in the family (v : α → M) and
     evaluates this linear combination. -/
 protected def Total : (α →₀ R) →ₗ[R] M :=
   Finsupp.lsum ℕ fun i => LinearMap.id.smulRight (v i)
 
-variable{α M v}
+variable {α M v}
 
 theorem total_apply (l : α →₀ R) : Finsupp.total α M R v l = l.sum fun i a => a • v i :=
   rfl
@@ -629,7 +629,7 @@ theorem total_fin_zero (f : Finₓ 0 → M) : Finsupp.total (Finₓ 0) M R f = 0
     ext i 
     apply finZeroElim i
 
-variable(α)(M)(v)
+variable (α) (M) (v)
 
 /-- `finsupp.total_on M v s` interprets `p : α →₀ R` as a linear combination of a
 subset of the vectors in `v`, mapping it to the span of those vectors.
@@ -640,7 +640,7 @@ protected def total_on (s : Set α) : supported R R s →ₗ[R] span R (v '' s) 
   LinearMap.codRestrict _ ((Finsupp.total _ _ _ v).comp (Submodule.subtype (supported R R s)))$
     fun ⟨l, hl⟩ => (mem_span_image_iff_total _).2 ⟨l, hl, rfl⟩
 
-variable{α}{M}{v}
+variable {α} {M} {v}
 
 theorem total_on_range (s : Set α) : (Finsupp.totalOn α M R v s).range = ⊤ :=
   by 
@@ -807,7 +807,7 @@ theorem lcongr_symm {ι κ : Sort _} (e₁ : ι ≃ κ) (e₂ : M ≃ₗ[R] N) :
 
 section Sum
 
-variable(R)
+variable (R)
 
 /-- The linear equivalence between `(α ⊕ β) →₀ M` and `(α →₀ M) × (β →₀ M)`.
 
@@ -842,9 +842,9 @@ end Sum
 
 section Sigma
 
-variable{η : Type _}[Fintype η]{ιs : η → Type _}[HasZero α]
+variable {η : Type _} [Fintype η] {ιs : η → Type _} [HasZero α]
 
-variable(R)
+variable (R)
 
 /-- On a `fintype η`, `finsupp.split` is a linear equivalence between
 `(Σ (j : η), ιs j) →₀ M` and `Π j, (ιs j →₀ M)`.
@@ -906,13 +906,13 @@ end Prod
 
 end Finsupp
 
-variable{R : Type _}{M : Type _}{N : Type _}
+variable {R : Type _} {M : Type _} {N : Type _}
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M][AddCommMonoidₓ N][Module R N]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ N] [Module R N]
 
 section 
 
-variable(R)
+variable (R)
 
 /--
 Pick some representation of `x : span R w` as a linear combination in `w`,
@@ -1014,7 +1014,7 @@ def module.subsingleton_equiv
 
 namespace LinearMap
 
-variable{R M}{α : Type _}
+variable {R M} {α : Type _}
 
 open Finsupp Function
 

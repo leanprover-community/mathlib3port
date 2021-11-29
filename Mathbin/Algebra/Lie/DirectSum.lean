@@ -22,7 +22,7 @@ open Dfinsupp
 
 open_locale DirectSum
 
-variable{R : Type u}{ι : Type v}[CommRingₓ R]
+variable {R : Type u} {ι : Type v} [CommRingₓ R]
 
 section Modules
 
@@ -30,15 +30,15 @@ section Modules
 structure. -/
 
 
-variable{L : Type w₁}{M : ι → Type w}
+variable {L : Type w₁} {M : ι → Type w}
 
-variable[LieRing L][LieAlgebra R L]
+variable [LieRing L] [LieAlgebra R L]
 
-variable[∀ i, AddCommGroupₓ (M i)][∀ i, Module R (M i)]
+variable [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)]
 
-variable[∀ i, LieRingModule L (M i)][∀ i, LieModule R L (M i)]
+variable [∀ i, LieRingModule L (M i)] [∀ i, LieModule R L (M i)]
 
-instance  : LieRingModule L (⨁i, M i) :=
+instance : LieRingModule L (⨁i, M i) :=
   { bracket := fun x m => m.map_range (fun i m' => ⁅x,m'⁆) fun i => lie_zero x,
     add_lie :=
       fun x y m =>
@@ -60,7 +60,7 @@ instance  : LieRingModule L (⨁i, M i) :=
 theorem lie_module_bracket_apply (x : L) (m : ⨁i, M i) (i : ι) : ⁅x,m⁆ i = ⁅x,m i⁆ :=
   map_range_apply _ _ m i
 
-instance  : LieModule R L (⨁i, M i) :=
+instance : LieModule R L (⨁i, M i) :=
   { smul_lie :=
       fun t x m =>
         by 
@@ -72,7 +72,7 @@ instance  : LieModule R L (⨁i, M i) :=
           ext i 
           simp only [lie_smul, lie_module_bracket_apply, smul_apply] }
 
-variable(R ι L M)
+variable (R ι L M)
 
 /-- The inclusion of each component into a direct sum as a morphism of Lie modules. -/
 def lie_module_of [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁i, M i :=
@@ -103,9 +103,9 @@ section Algebras
 /-! The direct sum of Lie algebras carries a natural Lie algebra structure. -/
 
 
-variable(L : ι → Type w)
+variable (L : ι → Type w)
 
-variable[∀ i, LieRing (L i)][∀ i, LieAlgebra R (L i)]
+variable [∀ i, LieRing (L i)] [∀ i, LieAlgebra R (L i)]
 
 instance LieRing : LieRing (⨁i, L i) :=
   { (inferInstance : AddCommGroupₓ _) with bracket := zip_with (fun i => fun x y => ⁅x,y⁆) fun i => lie_zero 0,
@@ -143,7 +143,7 @@ instance LieAlgebra : LieAlgebra R (⨁i, L i) :=
           ext 
           simp only [zip_with_apply, smul_apply, bracket_apply, lie_smul] }
 
-variable(R ι L)
+variable (R ι L)
 
 /-- The inclusion of each component into the direct sum as morphism of Lie algebras. -/
 @[simps]
@@ -211,7 +211,7 @@ theorem lie_of [DecidableEq ι] {i j : ι} (x : L i) (y : L j) :
     ·
       simp only [lie_of_of_ne R ι L hij x y, hij, dif_neg, not_false_iff]
 
-variable{R L ι}
+variable {R L ι}
 
 -- error in Algebra.Lie.DirectSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a family of Lie algebras `L i`, together with a family of morphisms of Lie algebras
@@ -268,7 +268,7 @@ end Algebras
 
 section Ideals
 
-variable{L : Type w}[LieRing L][LieAlgebra R L](I : ι → LieIdeal R L)
+variable {L : Type w} [LieRing L] [LieAlgebra R L] (I : ι → LieIdeal R L)
 
 /-- Given a Lie algebra `L` and a family of ideals `I i ⊆ L`, informally this definition is the
 statement that `L = ⨁ i, I i`.

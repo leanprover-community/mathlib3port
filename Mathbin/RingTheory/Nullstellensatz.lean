@@ -26,9 +26,9 @@ namespace MvPolynomial
 
 open MvPolynomial
 
-variable{k : Type _}[Field k]
+variable {k : Type _} [Field k]
 
-variable{σ : Type _}
+variable {σ : Type _}
 
 /-- Set of points that are zeroes of all polynomials in an ideal -/
 def zero_locus (I : Ideal (MvPolynomial σ k)) : Set (σ → k) :=
@@ -146,7 +146,7 @@ theorem point_to_point_zero_locus_le (I : Ideal (MvPolynomial σ k)) :
     (le_transₓ (le_vanishing_ideal_zero_locus I) (hx.2 ▸ vanishing_ideal_anti_mono (Set.singleton_subset_iff.2 hx.1)) :
     I ≤ J.as_ideal)
 
-variable[IsAlgClosed k][Fintype σ]
+variable [IsAlgClosed k] [Fintype σ]
 
 -- error in RingTheory.Nullstellensatz: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_maximal_iff_eq_vanishing_ideal_singleton

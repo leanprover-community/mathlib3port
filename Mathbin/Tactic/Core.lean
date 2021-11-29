@@ -12,7 +12,7 @@ universe u
 -- error in Tactic.Core: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 attribute [derive #["[", expr has_reflect, ",", expr decidable_eq, "]"]] tactic.transparency
 
-instance  : LT Pos :=
+instance : LT Pos :=
   { lt := fun x y => x.line < y.line ∨ x.line = y.line ∧ x.column < y.column }
 
 namespace Tactic
@@ -115,7 +115,7 @@ namespace InteractionMonad
 
 open Result
 
-variable{σ : Type}{α : Type u}
+variable {σ : Type} {α : Type u}
 
 /-- `get_state` returns the underlying state inside an interaction monad, from within that monad. -/
 unsafe def get_state : interaction_monad σ σ :=
@@ -1230,7 +1230,7 @@ unsafe def triv' : tactic Unit :=
     let c ← mk_const `trivial 
     exact c reducible
 
-variable{α : Type}
+variable {α : Type}
 
 /-- Apply a tactic as many times as possible, collecting the results in a list.
 Fail if the tactic does not succeed at least once. -/
@@ -1491,7 +1491,7 @@ end Lean.Parser
 
 namespace Tactic
 
-variable{α : Type}
+variable {α : Type}
 
 /--
 Hole command used to fill in a structure's field when specifying an instance.
@@ -2224,7 +2224,7 @@ unsafe def to_pfmt {α} [has_to_tactic_format α] (x : α) : pformat :=
 unsafe instance pformat.has_to_tactic_format : has_to_tactic_format pformat :=
   ⟨id⟩
 
-unsafe instance  : Append pformat :=
+unsafe instance : Append pformat :=
   ⟨fun x y => (· ++ ·) <$> x <*> y⟩
 
 unsafe instance tactic.has_to_tactic_format [has_to_tactic_format α] : has_to_tactic_format (tactic α) :=

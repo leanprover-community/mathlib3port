@@ -29,7 +29,7 @@ and shows how that polynomial interacts with `mv_polynomial.bind₁`.
 -/
 
 
-variable{p : ℕ}[hp : Fact p.prime](n : ℕ){R : Type _}[CommRingₓ R]
+variable {p : ℕ} [hp : Fact p.prime] (n : ℕ) {R : Type _} [CommRingₓ R]
 
 local notation "𝕎" => WittVector p
 
@@ -75,7 +75,7 @@ def select (P : ℕ → Prop) (x : 𝕎 R) : 𝕎 R :=
 
 section Select
 
-variable(P : ℕ → Prop)
+variable (P : ℕ → Prop)
 
 /-- The polynomial that witnesses that `witt_vector.select` is a polynomial function.
 `select_poly n` is `X n` if `P n` holds, and `0` otherwise. -/
@@ -210,7 +210,7 @@ theorem init_sub (x y : 𝕎 R) (n : ℕ) : init n (x - y) = init n (init n x - 
 
 section 
 
-variable(p)
+variable (p)
 
 omit hp
 

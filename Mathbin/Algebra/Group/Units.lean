@@ -8,12 +8,12 @@ import Mathbin.Logic.Nontrivial
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 /-- Units of a monoid, bundled version. An element of a `monoid` is a unit if it has a two-sided
 inverse. This version bundles the inverse element so that it can be computed. For a predicate
 see `is_unit`. -/
-structure Units(α : Type u)[Monoidₓ α] where 
+structure Units (α : Type u) [Monoidₓ α] where 
   val : α 
   inv : α 
   val_inv : (val*inv) = 1
@@ -22,7 +22,7 @@ structure Units(α : Type u)[Monoidₓ α] where
 /-- Units of an add_monoid, bundled version. An element of an add_monoid is a unit if it has a
     two-sided additive inverse. This version bundles the inverse element so that it can be
     computed. For a predicate see `is_add_unit`. -/
-structure AddUnits(α : Type u)[AddMonoidₓ α] where 
+structure AddUnits (α : Type u) [AddMonoidₓ α] where 
   val : α 
   neg : α 
   val_neg : (val+neg) = 0
@@ -40,14 +40,14 @@ end HasElem
 
 namespace Units
 
-variable[Monoidₓ α]
+variable [Monoidₓ α]
 
 @[toAdditive]
-instance  : Coe (Units α) α :=
+instance : Coe (Units α) α :=
   ⟨val⟩
 
 @[toAdditive]
-instance  : HasInv (Units α) :=
+instance : HasInv (Units α) :=
   ⟨fun u => ⟨u.2, u.1, u.4, u.3⟩⟩
 
 /-- See Note [custom simps projection] -/
@@ -83,7 +83,7 @@ theorem ext_iff {a b : Units α} : a = b ↔ (a : α) = b :=
   eq_iff.symm
 
 @[toAdditive]
-instance  [DecidableEq α] : DecidableEq (Units α) :=
+instance [DecidableEq α] : DecidableEq (Units α) :=
   fun a b => decidableOfIff' _ ext_iff
 
 @[simp, toAdditive]
@@ -101,7 +101,7 @@ theorem copy_eq (u : Units α) val hv inv hi : u.copy val hv inv hi = u :=
 
 /-- Units of a monoid form a group. -/
 @[toAdditive]
-instance  : Groupₓ (Units α) :=
+instance : Groupₓ (Units α) :=
   { mul :=
       fun u₁ u₂ =>
         ⟨u₁.val*u₂.val, u₂.inv*u₁.inv,
@@ -112,7 +112,7 @@ instance  : Groupₓ (Units α) :=
     one := ⟨1, 1, one_mulₓ 1, one_mulₓ 1⟩, mul_one := fun u => ext$ mul_oneₓ u, one_mul := fun u => ext$ one_mulₓ u,
     mul_assoc := fun u₁ u₂ u₃ => ext$ mul_assocₓ u₁ u₂ u₃, inv := HasInv.inv, mul_left_inv := fun u => ext u.inv_val }
 
-variable(a b : Units α){c : Units α}
+variable (a b : Units α) {c : Units α}
 
 @[simp, normCast, toAdditive]
 theorem coe_mul : («expr↑ » (a*b) : α) = a*b :=
@@ -178,15 +178,15 @@ theorem inv_mul_cancel_right (a : α) (b : Units α) : ((a*«expr↑ » (b⁻¹)
     rw [mul_assocₓ, inv_mul, mul_oneₓ]
 
 @[toAdditive]
-instance  : Inhabited (Units α) :=
+instance : Inhabited (Units α) :=
   ⟨1⟩
 
 @[toAdditive]
-instance  {α} [CommMonoidₓ α] : CommGroupₓ (Units α) :=
+instance {α} [CommMonoidₓ α] : CommGroupₓ (Units α) :=
   { Units.group with mul_comm := fun u₁ u₂ => ext$ mul_commₓ _ _ }
 
 @[toAdditive]
-instance  [HasRepr α] : HasRepr (Units α) :=
+instance [HasRepr α] : HasRepr (Units α) :=
   ⟨reprₓ ∘ val⟩
 
 @[simp, toAdditive]
@@ -269,7 +269,7 @@ theorem Units.coe_mk_of_mul_eq_one [CommMonoidₓ α] {a b : α} (h : (a*b) = 1)
 
 section Monoidₓ
 
-variable[Monoidₓ α]{a b c : α}
+variable [Monoidₓ α] {a b c : α}
 
 /-- Partial division. It is defined when the
   second argument is invertible, and unlike the division operator
@@ -332,7 +332,7 @@ end Monoidₓ
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ α]
+variable [CommMonoidₓ α]
 
 theorem divp_eq_divp_iff {x y : α} {ux uy : Units α} : x /ₚ ux = y /ₚ uy ↔ (x*uy) = y*ux :=
   by 
@@ -356,7 +356,7 @@ also `prime`, `associated`, and `irreducible` in `algebra/associated`.
 
 section IsUnit
 
-variable{M : Type _}{N : Type _}
+variable {M : Type _} {N : Type _}
 
 /-- An element `a : M` of a monoid is a unit if it has a two-sided inverse.
 The actual definition says that `a` is equal to some `u : units M`, where
@@ -370,7 +370,7 @@ def IsUnit [Monoidₓ M] (a : M) : Prop :=
 theorem is_unit_of_subsingleton [Monoidₓ M] [Subsingleton M] (a : M) : IsUnit a :=
   ⟨⟨a, a, Subsingleton.elimₓ _ _, Subsingleton.elimₓ _ _⟩, rfl⟩
 
-instance  [Monoidₓ M] [Subsingleton M] : Unique (Units M) :=
+instance [Monoidₓ M] [Subsingleton M] : Unique (Units M) :=
   { default := 1, uniq := fun a => Units.coe_eq_one.mp$ Subsingleton.elimₓ (a : M) 1 }
 
 @[simp, toAdditive is_add_unit_add_unit]
@@ -485,7 +485,7 @@ end IsUnit
 
 section NoncomputableDefs
 
-variable{M : Type _}
+variable {M : Type _}
 
 /-- Constructs a `group` structure on a `monoid` consisting only of units. -/
 noncomputable def groupOfIsUnit [hM : Monoidₓ M] (h : ∀ a : M, IsUnit a) : Groupₓ M :=

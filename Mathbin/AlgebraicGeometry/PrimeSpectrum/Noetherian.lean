@@ -11,9 +11,9 @@ namespace PrimeSpectrum
 
 open Submodule
 
-variable(R : Type u)[CommRingₓ R][IsNoetherianRing R]
+variable (R : Type u) [CommRingₓ R] [IsNoetherianRing R]
 
-variable{A : Type u}[CommRingₓ A][IsDomain A][IsNoetherianRing A]
+variable {A : Type u} [CommRingₓ A] [IsDomain A] [IsNoetherianRing A]
 
 -- error in AlgebraicGeometry.PrimeSpectrum.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--In a noetherian ring, every ideal contains a product of prime ideals

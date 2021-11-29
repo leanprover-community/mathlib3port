@@ -12,17 +12,17 @@ This file introduces the infix notation `::ᵥ` for `vector.cons`.
 
 universe u
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 namespace Vector
 
-variable{α : Type _}
+variable {α : Type _}
 
 infixr:67 "::ᵥ" => Vector.cons
 
 attribute [simp] head_cons tail_cons
 
-instance  [Inhabited α] : Inhabited (Vector α n) :=
+instance [Inhabited α] : Inhabited (Vector α n) :=
   ⟨of_fn fun _ => default α⟩
 
 theorem to_list_injective : Function.Injective (@to_list α n) :=
@@ -264,11 +264,11 @@ end
 
 section Scan
 
-variable{β : Type _}
+variable {β : Type _}
 
-variable(f : β → α → β)(b : β)
+variable (f : β → α → β) (b : β)
 
-variable(v : Vector α n)
+variable (v : Vector α n)
 
 /--
 Construct a `vector β (n + 1)` from a `vector α n` by scanning `f : β → α → β`
@@ -421,7 +421,7 @@ def induction_on {C : ∀ {n : ℕ}, Vector α n → Sort _} (v : Vector α n) (
       apply @h_cons n _ ⟨v, (add_left_injₓ 1).mp v_property⟩
       apply ih
 
-variable{β γ : Type _}
+variable {β γ : Type _}
 
 /-- Define `C v w` by induction on a pair of vectors `v : vector α n` and `w : vector β n`. -/
 @[elab_as_eliminator]
@@ -476,7 +476,7 @@ def to_array : Vector α n → Arrayₓ n α
 
 section InsertNth
 
-variable{a : α}
+variable {a : α}
 
 /-- `v.insert_nth a i` inserts `a` into the vector `v` at position `i`
 (and shifting later components to the right). -/
@@ -610,9 +610,9 @@ namespace Vector
 
 section Traverse
 
-variable{F G : Type u → Type u}
+variable {F G : Type u → Type u}
 
-variable[Applicativeₓ F][Applicativeₓ G]
+variable [Applicativeₓ F] [Applicativeₓ G]
 
 open Applicativeₓ Functor
 
@@ -634,7 +634,7 @@ protected def traverse {α β : Type u} (f : α → F β) : Vector α n → F (V
 
 section 
 
-variable{α β : Type u}
+variable {α β : Type u}
 
 @[simp]
 protected theorem traverse_def (f : α → F β) (x : α) :
@@ -656,9 +656,9 @@ end
 
 open Function
 
-variable[IsLawfulApplicative F][IsLawfulApplicative G]
+variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
-variable{α β γ : Type u}
+variable {α β γ : Type u}
 
 @[nolint unused_arguments]
 protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
@@ -673,7 +673,7 @@ protected theorem traverse_eq_map_id {α β} (f : α → β) : ∀ x : Vector α
   by 
     rintro ⟨x, rfl⟩ <;> simp  <;> induction x <;> simp' with functor_norm <;> rfl
 
-variable(η : ApplicativeTransformation F G)
+variable (η : ApplicativeTransformation F G)
 
 protected theorem naturality {α β : Type _} (f : α → F β) :
   ∀ x : Vector α n, η (x.traverse f) = x.traverse (@η _ ∘ f) :=
@@ -682,10 +682,10 @@ protected theorem naturality {α β : Type _} (f : α → F β) :
 
 end Traverse
 
-instance  : Traversable.{u} (flip Vector n) :=
+instance : Traversable.{u} (flip Vector n) :=
   { traverse := @Vector.traverse n, map := fun α β => @Vector.map.{u, u} α β n }
 
-instance  : IsLawfulTraversable.{u} (flip Vector n) :=
+instance : IsLawfulTraversable.{u} (flip Vector n) :=
   { id_traverse := @Vector.id_traverse n, comp_traverse := @Vector.comp_traverse n,
     traverse_eq_map_id := @Vector.traverse_eq_map_id n, naturality := @Vector.naturality n,
     id_map :=

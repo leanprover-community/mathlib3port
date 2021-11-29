@@ -27,11 +27,11 @@ open Category
 
 open Opposite
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
-variable{L : C ⥤ D}{R : D ⥤ C}(h : L ⊣ R)
+variable {L : C ⥤ D} {R : D ⥤ C} (h : L ⊣ R)
 
 /--
 If the left adjoint is fully faithful, then the unit is an isomorphism.
@@ -127,11 +127,47 @@ theorem R_faithful_of_counit_is_iso [is_iso h.counit] : faithful R :=
           rw [←(h.hom_equiv (R.obj X) Y).symm.apply_eq_iff_eq] at H 
           simpa using inv (h.counit.app X) ≫= H }
 
+-- error in CategoryTheory.Adjunction.FullyFaithful: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance whisker_left_counit_iso_of_L_fully_faithful [full L] [faithful L] : is_iso (whisker_left L h.counit) :=
+begin
+  have [] [] [":=", expr h.left_triangle],
+  rw ["<-", expr is_iso.eq_inv_comp] ["at", ident this],
+  rw [expr this] [],
+  apply_instance
+end
+
+-- error in CategoryTheory.Adjunction.FullyFaithful: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance whisker_right_counit_iso_of_L_fully_faithful [full L] [faithful L] : is_iso (whisker_right h.counit R) :=
+begin
+  have [] [] [":=", expr h.right_triangle],
+  rw ["<-", expr is_iso.eq_inv_comp] ["at", ident this],
+  rw [expr this] [],
+  apply_instance
+end
+
+-- error in CategoryTheory.Adjunction.FullyFaithful: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance whisker_left_unit_iso_of_R_fully_faithful [full R] [faithful R] : is_iso (whisker_left R h.unit) :=
+begin
+  have [] [] [":=", expr h.right_triangle],
+  rw ["<-", expr is_iso.eq_comp_inv] ["at", ident this],
+  rw [expr this] [],
+  apply_instance
+end
+
+-- error in CategoryTheory.Adjunction.FullyFaithful: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance whisker_right_unit_iso_of_R_fully_faithful [full R] [faithful R] : is_iso (whisker_right h.unit L) :=
+begin
+  have [] [] [":=", expr h.left_triangle],
+  rw ["<-", expr is_iso.eq_comp_inv] ["at", ident this],
+  rw [expr this] [],
+  apply_instance
+end
+
 universe v₃ v₄ u₃ u₄
 
-variable{C' : Type u₃}[category.{v₃} C']
+variable {C' : Type u₃} [category.{v₃} C']
 
-variable{D' : Type u₄}[category.{v₄} D']
+variable {D' : Type u₄} [category.{v₄} D']
 
 /--
 If `C` is a full subcategory of `C'` and `D` is a full subcategory of `D'`, then we can restrict

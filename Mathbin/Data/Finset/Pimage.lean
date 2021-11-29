@@ -13,7 +13,7 @@ finite set, image, partial function
 -/
 
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 namespace Part
 
@@ -44,7 +44,7 @@ end Part
 
 namespace Finset
 
-variable[DecidableEq β]{f g : α →. β}[∀ x, Decidable (f x).Dom][∀ x, Decidable (g x).Dom]{s t : Finset α}{b : β}
+variable [DecidableEq β] {f g : α →. β} [∀ x, Decidable (f x).Dom] [∀ x, Decidable (g x).Dom] {s t : Finset α} {b : β}
 
 /-- Image of `s : finset α` under a partially defined function `f : α →. β`. -/
 def pimage (f : α →. β) [∀ x, Decidable (f x).Dom] (s : Finset α) : Finset β :=

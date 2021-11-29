@@ -12,21 +12,21 @@ universe u
 
 namespace PUnit
 
-variable(x y : PUnit.{u + 1})(s : Set PUnit.{u + 1})
+variable (x y : PUnit.{u + 1}) (s : Set PUnit.{u + 1})
 
 @[toAdditive]
-instance  : CommGroupₓ PUnit :=
+instance : CommGroupₓ PUnit :=
   by 
     refineStruct
         { mul := fun _ _ => star, one := star, inv := fun _ => star, div := fun _ _ => star, npow := fun _ _ => star,
           zpow := fun _ _ => star, .. } <;>
       intros  <;> exact Subsingleton.elimₓ _ _
 
-instance  : CommRingₓ PUnit :=
+instance : CommRingₓ PUnit :=
   by 
     refine' { PUnit.commGroup, PUnit.addCommGroup with .. } <;> intros  <;> exact Subsingleton.elimₓ _ _
 
-instance  : CompleteBooleanAlgebra PUnit :=
+instance : CompleteBooleanAlgebra PUnit :=
   by 
     refine'
         { le := fun _ _ => True, le_antisymm := fun _ _ _ _ => Subsingleton.elimₓ _ _, lt := fun _ _ => False,
@@ -38,20 +38,20 @@ instance  : CompleteBooleanAlgebra PUnit :=
           trivial|
           simp only [eq_iff_true_of_subsingleton]
 
-instance  : CanonicallyOrderedAddMonoid PUnit :=
+instance : CanonicallyOrderedAddMonoid PUnit :=
   by 
     refine'
         { PUnit.commRing, PUnit.completeBooleanAlgebra with
           le_iff_exists_add := fun _ _ => iff_of_true _ ⟨star, Subsingleton.elimₓ _ _⟩, .. } <;>
       intros  <;> trivial
 
-instance  : LinearOrderedCancelAddCommMonoid PUnit :=
+instance : LinearOrderedCancelAddCommMonoid PUnit :=
   { PUnit.canonicallyOrderedAddMonoid with add_left_cancel := fun _ _ _ _ => Subsingleton.elimₓ _ _,
     le_of_add_le_add_left := fun _ _ _ _ => trivialₓ, le_total := fun _ _ => Or.inl trivialₓ,
     decidableLe := fun _ _ => Decidable.true, DecidableEq := PUnit.decidableEq,
     decidableLt := fun _ _ => Decidable.false }
 
-instance  (R : Type u) [Semiringₓ R] : Module R PUnit :=
+instance (R : Type u) [Semiringₓ R] : Module R PUnit :=
   Module.ofCore$
     by 
       refine' { PUnit.commRing with smul := fun _ _ => star, .. } <;> intros  <;> exact Subsingleton.elimₓ _ _

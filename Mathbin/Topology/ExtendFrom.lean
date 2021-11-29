@@ -24,7 +24,7 @@ open_locale TopologicalSpace
 
 open Filter Set
 
-variable{X Y : Type _}[TopologicalSpace X][TopologicalSpace Y]
+variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y]
 
 /-- Extend a function from a set `A`. The resulting function `g` is such that
 at any `x₀`, if `f` converges to some `y` as `x` tends to `x₀` within `A`,

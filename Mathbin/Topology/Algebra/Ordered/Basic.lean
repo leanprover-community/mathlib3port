@@ -81,26 +81,26 @@ open_locale TopologicalSpace Classical Filter
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 /-- A topology on a set which is both a topological space and a preorder is _order-closed_ if the
 set of points `(x, y)` with `x ≤ y` is closed in the product space. We introduce this as a mixin.
 This property is satisfied for the order topology on a linear order, but it can be satisfied more
 generally, and suffices to derive many interesting properties relating order and topology. -/
-class OrderClosedTopology(α : Type _)[TopologicalSpace α][Preorderₓ α] : Prop where 
+class OrderClosedTopology (α : Type _) [TopologicalSpace α] [Preorderₓ α] : Prop where 
   is_closed_le' : IsClosed { p:α × α | p.1 ≤ p.2 }
 
-instance  : ∀ [TopologicalSpace α], TopologicalSpace (OrderDual α) :=
+instance : ∀ [TopologicalSpace α], TopologicalSpace (OrderDual α) :=
   id
 
-instance  [TopologicalSpace α] [h : first_countable_topology α] : first_countable_topology (OrderDual α) :=
+instance [TopologicalSpace α] [h : first_countable_topology α] : first_countable_topology (OrderDual α) :=
   h
 
-instance  [TopologicalSpace α] [h : second_countable_topology α] : second_countable_topology (OrderDual α) :=
+instance [TopologicalSpace α] [h : second_countable_topology α] : second_countable_topology (OrderDual α) :=
   h
 
 @[toAdditive]
-instance  [TopologicalSpace α] [Mul α] [h : HasContinuousMul α] : HasContinuousMul (OrderDual α) :=
+instance [TopologicalSpace α] [Mul α] [h : HasContinuousMul α] : HasContinuousMul (OrderDual α) :=
   h
 
 theorem Dense.order_dual [TopologicalSpace α] {s : Set α} (hs : Dense s) : Dense (OrderDual.ofDual ⁻¹' s) :=
@@ -110,13 +110,13 @@ section OrderClosedTopology
 
 section Preorderₓ
 
-variable[TopologicalSpace α][Preorderₓ α][t : OrderClosedTopology α]
+variable [TopologicalSpace α] [Preorderₓ α] [t : OrderClosedTopology α]
 
 include t
 
 namespace Subtype
 
-instance  {p : α → Prop} : OrderClosedTopology (Subtype p) :=
+instance {p : α → Prop} : OrderClosedTopology (Subtype p) :=
   have this : Continuous fun p : Subtype p × Subtype p => ((p.fst : α), (p.snd : α)) :=
     (continuous_subtype_coe.comp continuous_fst).prod_mk (continuous_subtype_coe.comp continuous_snd)
   OrderClosedTopology.mk (t.is_closed_le'.preimage this)
@@ -142,7 +142,7 @@ theorem is_closed_ge' (a : α) : IsClosed { b | a ≤ b } :=
 theorem is_closed_Ici {a : α} : IsClosed (Ici a) :=
   is_closed_ge' a
 
-instance  : OrderClosedTopology (OrderDual α) :=
+instance : OrderClosedTopology (OrderDual α) :=
   ⟨(@OrderClosedTopology.is_closed_le' α _ _ _).Preimage continuous_swap⟩
 
 theorem is_closed_Icc {a b : α} : IsClosed (Icc a b) :=
@@ -229,7 +229,7 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable[TopologicalSpace α][PartialOrderₓ α][t : OrderClosedTopology α]
+variable [TopologicalSpace α] [PartialOrderₓ α] [t : OrderClosedTopology α]
 
 include t
 
@@ -237,7 +237,7 @@ private theorem is_closed_eq_aux : IsClosed { p:α × α | p.1 = p.2 } :=
   by 
     simp only [le_antisymm_iffₓ] <;> exact IsClosed.inter t.is_closed_le' (is_closed_le continuous_snd continuous_fst)
 
-instance (priority := 90)OrderClosedTopology.to_t2_space : T2Space α :=
+instance (priority := 90) OrderClosedTopology.to_t2_space : T2Space α :=
   { t2 :=
       have  : IsOpen { p:α × α | p.1 ≠ p.2 } := is_closed_eq_aux.is_open_compl 
       fun a b h =>
@@ -252,7 +252,7 @@ end PartialOrderₓ
 
 section LinearOrderₓ
 
-variable[TopologicalSpace α][LinearOrderₓ α][OrderClosedTopology α]
+variable [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α]
 
 theorem is_open_lt_prod : IsOpen { p:α × α | p.1 < p.2 } :=
   by 
@@ -264,7 +264,7 @@ theorem is_open_lt [TopologicalSpace β] {f g : β → α} (hf : Continuous f) (
   by 
     simp [lt_iff_not_geₓ, -not_leₓ] <;> exact (is_closed_le hg hf).is_open_compl
 
-variable{a b : α}
+variable {a b : α}
 
 theorem is_open_Iio : IsOpen (Iio a) :=
   is_open_lt continuous_id continuous_const
@@ -287,6 +287,30 @@ theorem interior_Iio : Interior (Iio a) = Iio a :=
 theorem interior_Ioo : Interior (Ioo a b) = Ioo a b :=
   is_open_Ioo.interior_eq
 
+theorem Iio_mem_nhds {a b : α} (h : a < b) : Iio b ∈ 𝓝 a :=
+  IsOpen.mem_nhds is_open_Iio h
+
+theorem Ioi_mem_nhds {a b : α} (h : a < b) : Ioi a ∈ 𝓝 b :=
+  IsOpen.mem_nhds is_open_Ioi h
+
+theorem Iic_mem_nhds {a b : α} (h : a < b) : Iic b ∈ 𝓝 a :=
+  mem_of_superset (Iio_mem_nhds h) Iio_subset_Iic_self
+
+theorem Ici_mem_nhds {a b : α} (h : a < b) : Ici a ∈ 𝓝 b :=
+  mem_of_superset (Ioi_mem_nhds h) Ioi_subset_Ici_self
+
+theorem Ioo_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ioo a b ∈ 𝓝 x :=
+  IsOpen.mem_nhds is_open_Ioo ⟨ha, hb⟩
+
+theorem Ioc_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ioc a b ∈ 𝓝 x :=
+  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Ioc_self
+
+theorem Ico_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ico a b ∈ 𝓝 x :=
+  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Ico_self
+
+theorem Icc_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Icc a b ∈ 𝓝 x :=
+  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Icc_self
+
 theorem eventually_le_of_tendsto_lt {l : Filter γ} {f : γ → α} {u v : α} (hv : v < u) (h : tendsto f l (𝓝 v)) :
   ∀ᶠa in l, f a ≤ u :=
   eventually.mono (tendsto_nhds.1 h (· < u) is_open_Iio hv) fun v => le_of_ltₓ
@@ -295,7 +319,7 @@ theorem eventually_ge_of_tendsto_gt {l : Filter γ} {f : γ → α} {u v : α} (
   ∀ᶠa in l, u ≤ f a :=
   eventually.mono (tendsto_nhds.1 h (· > u) is_open_Ioi hv) fun v => le_of_ltₓ
 
-variable[TopologicalSpace γ]
+variable [TopologicalSpace γ]
 
 /-!
 ### Neighborhoods to the left and to the right on an `order_closed_topology`
@@ -474,11 +498,11 @@ end LinearOrderₓ
 
 section LinearOrderₓ
 
-variable[TopologicalSpace α][LinearOrderₓ α][OrderClosedTopology α]{f g : β → α}
+variable [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α] {f g : β → α}
 
 section 
 
-variable[TopologicalSpace β]
+variable [TopologicalSpace β]
 
 theorem frontier_le_subset_eq (hf : Continuous f) (hg : Continuous g) :
   Frontier { b | f b ≤ g b } ⊆ { b | f b = g b } :=
@@ -578,12 +602,12 @@ end LinearOrderₓ
 
 end OrderClosedTopology
 
-instance  [Preorderₓ α] [TopologicalSpace α] [OrderClosedTopology α] [Preorderₓ β] [TopologicalSpace β]
+instance [Preorderₓ α] [TopologicalSpace α] [OrderClosedTopology α] [Preorderₓ β] [TopologicalSpace β]
   [OrderClosedTopology β] : OrderClosedTopology (α × β) :=
   ⟨(is_closed_le (continuous_fst.comp continuous_fst) (continuous_fst.comp continuous_snd)).inter
       (is_closed_le (continuous_snd.comp continuous_fst) (continuous_snd.comp continuous_snd))⟩
 
-instance  {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
+instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
   [∀ i, OrderClosedTopology (α i)] : OrderClosedTopology (∀ i, α i) :=
   by 
     constructor 
@@ -600,7 +624,7 @@ instance Pi.order_closed_topology' [Preorderₓ β] [TopologicalSpace β] [Order
 it on a preorder, but it is mostly interesting in linear orders, where it is also order-closed.
 We define it as a mixin. If you want to introduce the order topology on a preorder, use
 `preorder.topology`. -/
-class OrderTopology(α : Type _)[t : TopologicalSpace α][Preorderₓ α] : Prop where 
+class OrderTopology (α : Type _) [t : TopologicalSpace α] [Preorderₓ α] : Prop where 
   topology_eq_generate_intervals : t = generate_from { s | ∃ a, s = Ioi a ∨ s = Iio a }
 
 /-- (Order) topology on a partial order `α` generated by the subbase of open intervals
@@ -612,13 +636,13 @@ def Preorderₓ.topology (α : Type _) [Preorderₓ α] : TopologicalSpace α :=
 
 section OrderTopology
 
-instance  {α : Type _} [TopologicalSpace α] [PartialOrderₓ α] [OrderTopology α] : OrderTopology (OrderDual α) :=
+instance {α : Type _} [TopologicalSpace α] [PartialOrderₓ α] [OrderTopology α] : OrderTopology (OrderDual α) :=
   ⟨by 
       convert @OrderTopology.topology_eq_generate_intervals α _ _ _ <;> conv  in _ ∨ _ => rw [Or.comm] <;> rfl⟩
 
 section PartialOrderₓ
 
-variable[TopologicalSpace α][PartialOrderₓ α][t : OrderTopology α]
+variable [TopologicalSpace α] [PartialOrderₓ α] [t : OrderTopology α]
 
 include t
 
@@ -736,7 +760,7 @@ instance tendsto_Icc_class_nhds_pi
 (f : ∀ i, α i) : tendsto_Ixx_class Icc (expr𝓝() f) (expr𝓝() f) :=
 begin
   constructor,
-  conv [] ["in", expr (expr𝓝() f).lift' powerset] { rw ["[", expr nhds_pi, "]"] },
+  conv [] ["in", expr (expr𝓝() f).lift' powerset] { rw ["[", expr nhds_pi, ",", expr filter.pi, "]"] },
   simp [] [] ["only"] ["[", expr lift'_infi_powerset, ",", expr comap_lift'_eq2 monotone_powerset, ",", expr tendsto_infi, ",", expr tendsto_lift', ",", expr mem_powerset_iff, ",", expr subset_def, ",", expr mem_preimage, "]"] [] [],
   intros [ident i, ident s, ident hs],
   have [] [":", expr tendsto (λ
@@ -852,8 +876,8 @@ theorem nhds_bot_order [TopologicalSpace α] [PartialOrderₓ α] [OrderBot α] 
   by 
     simp [nhds_eq_order (⊥ : α)]
 
-theorem nhds_top_basis [TopologicalSpace α] [SemilatticeSupTop α] [IsTotal α LE.le] [OrderTopology α] [Nontrivial α] :
-  (𝓝 ⊤).HasBasis (fun a : α => a < ⊤) fun a : α => Ioi a :=
+theorem nhds_top_basis [TopologicalSpace α] [SemilatticeSup α] [OrderTop α] [IsTotal α LE.le] [OrderTopology α]
+  [Nontrivial α] : (𝓝 ⊤).HasBasis (fun a : α => a < ⊤) fun a : α => Ioi a :=
   ⟨by 
       simp only [nhds_top_order]
       refine' @Filter.mem_binfi_of_directed α α (fun a => 𝓟 (Ioi a)) (fun a => a < ⊤) _ _
@@ -866,21 +890,21 @@ theorem nhds_top_basis [TopologicalSpace α] [SemilatticeSupTop α] [IsTotal α 
         obtain ⟨a, ha⟩ : ∃ a : α, a ≠ ⊤ := exists_ne ⊤
         exact ⟨a, lt_top_iff_ne_top.mpr ha⟩⟩
 
-theorem nhds_bot_basis [TopologicalSpace α] [SemilatticeInfBot α] [IsTotal α LE.le] [OrderTopology α] [Nontrivial α] :
-  (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) fun a : α => Iio a :=
-  @nhds_top_basis (OrderDual α) _ _ _ _ _
+theorem nhds_bot_basis [TopologicalSpace α] [SemilatticeInf α] [OrderBot α] [IsTotal α LE.le] [OrderTopology α]
+  [Nontrivial α] : (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) fun a : α => Iio a :=
+  @nhds_top_basis (OrderDual α) _ _ _ _ _ _
 
-theorem nhds_top_basis_Ici [TopologicalSpace α] [SemilatticeSupTop α] [IsTotal α LE.le] [OrderTopology α] [Nontrivial α]
-  [DenselyOrdered α] : (𝓝 ⊤).HasBasis (fun a : α => a < ⊤) Ici :=
+theorem nhds_top_basis_Ici [TopologicalSpace α] [SemilatticeSup α] [OrderTop α] [IsTotal α LE.le] [OrderTopology α]
+  [Nontrivial α] [DenselyOrdered α] : (𝓝 ⊤).HasBasis (fun a : α => a < ⊤) Ici :=
   nhds_top_basis.to_has_basis
     (fun a ha =>
       let ⟨b, hab, hb⟩ := exists_between ha
       ⟨b, hb, Ici_subset_Ioi.mpr hab⟩)
     fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩
 
-theorem nhds_bot_basis_Iic [TopologicalSpace α] [SemilatticeInfBot α] [IsTotal α LE.le] [OrderTopology α] [Nontrivial α]
-  [DenselyOrdered α] : (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) Iic :=
-  @nhds_top_basis_Ici (OrderDual α) _ _ _ _ _ _
+theorem nhds_bot_basis_Iic [TopologicalSpace α] [SemilatticeInf α] [OrderBot α] [IsTotal α LE.le] [OrderTopology α]
+  [Nontrivial α] [DenselyOrdered α] : (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) Iic :=
+  @nhds_top_basis_Ici (OrderDual α) _ _ _ _ _ _ _
 
 theorem tendsto_nhds_top_mono [TopologicalSpace β] [PartialOrderₓ β] [OrderTop β] [OrderTopology β] {l : Filter α}
   {f g : α → β} (hf : tendsto f l (𝓝 ⊤)) (hg : f ≤ᶠ[l] g) : tendsto g l (𝓝 ⊤) :=
@@ -904,7 +928,7 @@ theorem tendsto_nhds_bot_mono' [TopologicalSpace β] [PartialOrderₓ β] [Order
 
 section LinearOrderₓ
 
-variable[TopologicalSpace α][LinearOrderₓ α][OrderTopology α]
+variable [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α]
 
 -- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_Ioc_subset_of_mem_nhds'
@@ -980,7 +1004,7 @@ theorem order_separated {a₁ a₂ : α} (h : a₁ < a₂) :
           _ ≤ b₂ := h₁ _ hb₂
           ⟩
 
-instance (priority := 100)OrderTopology.to_order_closed_topology : OrderClosedTopology α :=
+instance (priority := 100) OrderTopology.to_order_closed_topology : OrderClosedTopology α :=
   { is_closed_le' :=
       is_open_compl_iff.1$
         is_open_prod_iff.mpr$
@@ -993,7 +1017,7 @@ theorem OrderTopology.t2_space : T2Space α :=
   by 
     infer_instance
 
-instance (priority := 100)OrderTopology.regular_space : RegularSpace α :=
+instance (priority := 100) OrderTopology.regular_space : RegularSpace α :=
   { OrderTopology.t2_space with
     regular :=
       fun s a hs ha =>
@@ -1084,30 +1108,6 @@ theorem Filter.Eventually.exists_Ioo_subset [NoTopOrder α] [NoBotOrder α] {a :
   (hp : ∀ᶠx in 𝓝 a, p x) : ∃ l u, a ∈ Ioo l u ∧ Ioo l u ⊆ { x | p x } :=
   mem_nhds_iff_exists_Ioo_subset.1 hp
 
-theorem Iio_mem_nhds {a b : α} (h : a < b) : Iio b ∈ 𝓝 a :=
-  IsOpen.mem_nhds is_open_Iio h
-
-theorem Ioi_mem_nhds {a b : α} (h : a < b) : Ioi a ∈ 𝓝 b :=
-  IsOpen.mem_nhds is_open_Ioi h
-
-theorem Iic_mem_nhds {a b : α} (h : a < b) : Iic b ∈ 𝓝 a :=
-  mem_of_superset (Iio_mem_nhds h) Iio_subset_Iic_self
-
-theorem Ici_mem_nhds {a b : α} (h : a < b) : Ici a ∈ 𝓝 b :=
-  mem_of_superset (Ioi_mem_nhds h) Ioi_subset_Ici_self
-
-theorem Ioo_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ioo a b ∈ 𝓝 x :=
-  IsOpen.mem_nhds is_open_Ioo ⟨ha, hb⟩
-
-theorem Ioc_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ioc a b ∈ 𝓝 x :=
-  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Ioc_self
-
-theorem Ico_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ico a b ∈ 𝓝 x :=
-  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Ico_self
-
-theorem Icc_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Icc a b ∈ 𝓝 x :=
-  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Icc_self
-
 section Pi
 
 /-!
@@ -1119,14 +1119,8 @@ e.g., `ι → ℝ`.
 -/
 
 
-variable{ι :
-    Type
-      _}{π :
-    ι →
-      Type
-        _}[Fintype
-      ι][∀ i,
-      LinearOrderₓ (π i)][∀ i, TopologicalSpace (π i)][∀ i, OrderTopology (π i)]{a b x : ∀ i, π i}{a' b' x' : ι → α}
+variable {ι : Type _} {π : ι → Type _} [Fintype ι] [∀ i, LinearOrderₓ (π i)] [∀ i, TopologicalSpace (π i)]
+  [∀ i, OrderTopology (π i)] {a b x : ∀ i, π i} {a' b' x' : ι → α}
 
 theorem pi_Iic_mem_nhds (ha : ∀ i, x i < a i) : Iic a ∈ 𝓝 x :=
   pi_univ_Iic a ▸ set_pi_mem_nhds (finite.of_fintype _) fun i _ => Iic_mem_nhds (ha _)
@@ -1146,7 +1140,7 @@ theorem pi_Icc_mem_nhds (ha : ∀ i, a i < x i) (hb : ∀ i, x i < b i) : Icc a 
 theorem pi_Icc_mem_nhds' (ha : ∀ i, a' i < x' i) (hb : ∀ i, x' i < b' i) : Icc a' b' ∈ 𝓝 x' :=
   pi_Icc_mem_nhds ha hb
 
-variable[Nonempty ι]
+variable [Nonempty ι]
 
 theorem pi_Iio_mem_nhds (ha : ∀ i, x i < a i) : Iio a ∈ 𝓝 x :=
   by 
@@ -1498,9 +1492,9 @@ end LinearOrderₓ
 
 section LinearOrderedAddCommGroup
 
-variable[TopologicalSpace α][LinearOrderedAddCommGroup α][OrderTopology α]
+variable [TopologicalSpace α] [LinearOrderedAddCommGroup α] [OrderTopology α]
 
-variable{l : Filter β}{f g : β → α}
+variable {l : Filter β} {f g : β → α}
 
 theorem nhds_eq_infi_abs_sub (a : α) : 𝓝 a = ⨅(r : _)(_ : r > 0), 𝓟 { b | |a - b| < r } :=
   by 
@@ -1593,6 +1587,18 @@ theorem Filter.Tendsto.abs {f : β → α} {a : α} {l : Filter β} (h : tendsto
   tendsto (fun x => |f x|) l (𝓝 |a|) :=
   (continuous_abs.Tendsto _).comp h
 
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_zero_iff_abs_tendsto_zero
+(f : β → α)
+{l : filter β} : «expr ↔ »(tendsto f l (expr𝓝() 0), tendsto «expr ∘ »(abs, f) l (expr𝓝() 0)) :=
+begin
+  refine [expr ⟨λ h, «expr ▸ »((abs_zero : «expr = »(«expr| |»((0 : α)), 0)), h.abs), λ h, _⟩],
+  have [] [":", expr tendsto (λ
+    a, «expr- »(«expr| |»(f a))) l (expr𝓝() 0)] [":=", expr «expr ▸ »((neg_zero : «expr = »(«expr- »((0 : α)), 0)), h.neg)],
+  exact [expr tendsto_of_tendsto_of_tendsto_of_le_of_le this h (λ
+    x, «expr $ »(neg_abs_le_self, f x)) (λ x, «expr $ »(le_abs_self, f x))]
+end
+
 theorem nhds_basis_Ioo_pos [NoBotOrder α] [NoTopOrder α] (a : α) :
   (𝓝 a).HasBasis (fun ε : α => (0 : α) < ε) fun ε => Ioo (a - ε) (a+ε) :=
   ⟨by 
@@ -1626,14 +1632,14 @@ theorem nhds_basis_abs_sub_lt [NoBotOrder α] [NoTopOrder α] (a : α) :
       change |x - a| < ε ↔ a - ε < x ∧ x < a+ε 
       simp [abs_lt, sub_lt_iff_lt_add, add_commₓ ε a, add_commₓ x ε]
 
-variable(α)
+variable (α)
 
 theorem nhds_basis_zero_abs_sub_lt [NoBotOrder α] [NoTopOrder α] :
   (𝓝 (0 : α)).HasBasis (fun ε : α => (0 : α) < ε) fun ε => { b | |b| < ε } :=
   by 
     simpa using nhds_basis_abs_sub_lt (0 : α)
 
-variable{α}
+variable {α}
 
 /-- If `a` is positive we can form a basis from only nonnegative `Ioo` intervals -/
 theorem nhds_basis_Ioo_pos_of_pos [NoBotOrder α] [NoTopOrder α] {a : α} (ha : 0 < a) :
@@ -1650,7 +1656,7 @@ theorem nhds_basis_Ioo_pos_of_pos [NoBotOrder α] [NoTopOrder α] {a : α} (ha :
 
 section 
 
-variable[TopologicalSpace β]{b : β}{a : α}{s : Set β}
+variable [TopologicalSpace β] {b : β} {a : α} {s : Set β}
 
 theorem Continuous.abs (h : Continuous f) : Continuous fun x => |f x| :=
   continuous_abs.comp h
@@ -1705,9 +1711,9 @@ end LinearOrderedAddCommGroup
 
 section LinearOrderedField
 
-variable[LinearOrderedField α][TopologicalSpace α][OrderTopology α]
+variable [LinearOrderedField α] [TopologicalSpace α] [OrderTopology α]
 
-variable{l : Filter β}{f g : β → α}
+variable {l : Filter β} {f g : β → α}
 
 section continuous_mul
 
@@ -2012,7 +2018,7 @@ theorem Filter.map_neg [AddGroupₓ α] : map (Neg.neg : α → α) = comap (Neg
 
 section OrderTopology
 
-variable[TopologicalSpace α][TopologicalSpace β][LinearOrderₓ α][LinearOrderₓ β][OrderTopology α][OrderTopology β]
+variable [TopologicalSpace α] [TopologicalSpace β] [LinearOrderₓ α] [LinearOrderₓ β] [OrderTopology α] [OrderTopology β]
 
 theorem IsLub.frequently_mem {a : α} {s : Set α} (ha : IsLub s a) (hs : s.nonempty) : ∃ᶠx in 𝓝[Iic a] a, x ∈ s :=
   by 
@@ -2288,7 +2294,7 @@ theorem IsCompact.bdd_below {α : Type u} [TopologicalSpace α] [LinearOrderₓ 
       exact fun h => ⟨x, fun y hy => le_of_not_ltₓ (h.imp$ fun ys => ⟨_, hy, ys⟩)⟩
 
 /-- A compact set is bounded above -/
-theorem IsCompact.bdd_above {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α] :
+theorem IsCompact.bdd_above {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α] :
   ∀ [Nonempty α] {s : Set α}, IsCompact s → BddAbove s :=
   @IsCompact.bdd_below (OrderDual α) _ _ _
 
@@ -2296,7 +2302,7 @@ end OrderTopology
 
 section DenselyOrdered
 
-variable[TopologicalSpace α][LinearOrderₓ α][OrderTopology α][DenselyOrdered α]{a b : α}{s : Set α}
+variable [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α] [DenselyOrdered α] {a b : α} {s : Set α}
 
 /-- The closure of the interval `(a, +∞)` is the closed interval `[a, +∞)`, unless `a` is a top
 element. -/
@@ -2562,7 +2568,7 @@ theorem map_coe_Ioi_at_bot (a : α) : map (coeₓ : Ioi a → α) at_bot = 𝓝[
 theorem map_coe_Iio_at_top (a : α) : map (coeₓ : Iio a → α) at_top = 𝓝[Iio a] a :=
   @map_coe_Ioi_at_bot (OrderDual α) _ _ _ _ _
 
-variable{l : Filter β}{f : α → β}
+variable {l : Filter β} {f : α → β}
 
 @[simp]
 theorem tendsto_comp_coe_Ioo_at_top (h : a < b) :
@@ -2622,7 +2628,7 @@ theorem dense_iff_forall_lt_exists_mem [Nontrivial α] {s : Set α} :
       obtain ⟨x, xs, hx⟩ : ∃ (x : α)(H : x ∈ s), a < x ∧ x < b := h a b hab 
       exact ⟨x, ⟨H hx, xs⟩⟩
 
-instance  (x : α) [Nontrivial α] : ne_bot (𝓝[«expr ᶜ» {x}] x) :=
+instance (x : α) [Nontrivial α] : ne_bot (𝓝[«expr ᶜ» {x}] x) :=
   by 
     apply forall_mem_nonempty_iff_ne_bot.1 fun s hs => _ 
     obtain ⟨u, u_open, xu, us⟩ : ∃ u : Set α, IsOpen u ∧ x ∈ u ∧ u ∩ «expr ᶜ» {x} ⊆ s := mem_nhds_within.1 hs 
@@ -2655,7 +2661,7 @@ theorem Dense.exists_countable_dense_subset_no_bot_top [Nontrivial α] {s : Set 
       intro x hx 
       simp [hx]
 
-variable(α)
+variable (α)
 
 /-- If `α` is a nontrivial separable dense linear order, then there exists a
 countable dense set `s : set α` that contains neither top nor bottom elements of `α`.
@@ -2670,8 +2676,8 @@ end DenselyOrdered
 
 section CompleteLinearOrder
 
-variable[CompleteLinearOrder
-      α][TopologicalSpace α][OrderTopology α][CompleteLinearOrder β][TopologicalSpace β][OrderTopology β][Nonempty γ]
+variable [CompleteLinearOrder α] [TopologicalSpace α] [OrderTopology α] [CompleteLinearOrder β] [TopologicalSpace β]
+  [OrderTopology β] [Nonempty γ]
 
 theorem Sup_mem_closure {α : Type u} [TopologicalSpace α] [CompleteLinearOrder α] [OrderTopology α] {s : Set α}
   (hs : s.nonempty) : Sup s ∈ Closure s :=
@@ -2748,9 +2754,8 @@ end CompleteLinearOrder
 
 section ConditionallyCompleteLinearOrder
 
-variable[ConditionallyCompleteLinearOrder
-      α][TopologicalSpace
-      α][OrderTopology α][ConditionallyCompleteLinearOrder β][TopologicalSpace β][OrderTopology β][Nonempty γ]
+variable [ConditionallyCompleteLinearOrder α] [TopologicalSpace α] [OrderTopology α]
+  [ConditionallyCompleteLinearOrder β] [TopologicalSpace β] [OrderTopology β] [Nonempty γ]
 
 theorem cSup_mem_closure {s : Set α} (hs : s.nonempty) (B : BddAbove s) : Sup s ∈ Closure s :=
   (is_lub_cSup hs B).mem_closure hs

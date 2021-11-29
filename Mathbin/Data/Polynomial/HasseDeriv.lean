@@ -42,7 +42,7 @@ open Function
 
 open Nat hiding nsmul_eq_mul
 
-variable{R : Type _}[Semiringₓ R](k : ℕ)(f : Polynomial R)
+variable {R : Type _} [Semiringₓ R] (k : ℕ) (f : Polynomial R)
 
 /-- The `k`th Hasse derivative of a polynomial `∑ a_i X^i` is `∑ (i.choose k) a_i X^(i-k)`.
 It satisfies `k! * (hasse_deriv k f) = derivative^[k] f`. -/

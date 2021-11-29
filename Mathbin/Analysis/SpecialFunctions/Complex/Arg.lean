@@ -300,7 +300,7 @@ end
 
 section Continuity
 
-variable{x z : ℂ}
+variable {x z : ℂ}
 
 theorem arg_eq_nhds_of_re_pos (hx : 0 < x.re) : arg =ᶠ[𝓝 x] fun x => Real.arcsin (x.im / x.abs) :=
   ((continuous_re.Tendsto _).Eventually (lt_mem_nhds hx)).mono$ fun y hy => arg_of_re_nonneg hy.le

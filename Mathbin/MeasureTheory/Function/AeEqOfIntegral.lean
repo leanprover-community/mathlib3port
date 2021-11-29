@@ -44,7 +44,7 @@ namespace MeasureTheory
 
 section AeEqOfForall
 
-variable{α E 𝕜 : Type _}{m : MeasurableSpace α}{μ : Measureₓ α}[IsROrC 𝕜]
+variable {α E 𝕜 : Type _} {m : MeasurableSpace α} {μ : Measureₓ α} [IsROrC 𝕜]
 
 -- error in MeasureTheory.Function.AeEqOfIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem ae_eq_zero_of_forall_inner
@@ -66,7 +66,7 @@ end
 
 local notation "⟪" x ", " y "⟫" => y x
 
-variable(𝕜)
+variable (𝕜)
 
 -- error in MeasureTheory.Function.AeEqOfIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem ae_eq_zero_of_forall_dual
@@ -79,7 +79,7 @@ begin
   let [ident u] [] [":=", expr dense_seq E],
   have [ident hu] [":", expr dense_range u] [":=", expr dense_range_dense_seq _],
   have [] [":", expr ∀
-   n, «expr∃ , »((g : «expr →L[ ] »(E, 𝕜, 𝕜)), «expr ∧ »(«expr ≤ »(«expr∥ ∥»(g), 1), «expr = »(g (u n), norm' 𝕜 (u n))))] [":=", expr λ
+   n, «expr∃ , »((g : «expr →L[ ] »(E, 𝕜, 𝕜)), «expr ∧ »(«expr ≤ »(«expr∥ ∥»(g), 1), «expr = »(g (u n), «expr∥ ∥»(u n))))] [":=", expr λ
    n, exists_dual_vector'' 𝕜 (u n)],
   choose [] [ident s] [ident hs] ["using", expr this],
   have [ident A] [":", expr ∀ a : E, ∀ n, «expr = »(«expr⟪ , ⟫»(a, s n), (0 : 𝕜)) → «expr = »(a, 0)] [],
@@ -104,7 +104,7 @@ begin
       «expr < »(..., «expr / »(«expr∥ ∥»(a), 2)) : by { rw ["[", expr one_mul, "]"] [],
         rwa [expr dist_eq_norm'] ["at", ident hn] }
       «expr < »(..., «expr∥ ∥»(u n)) : I
-      «expr = »(..., «expr∥ ∥»(s n (u n))) : by rw ["[", expr (hs n).2, ",", expr norm_norm', "]"] [] },
+      «expr = »(..., «expr∥ ∥»(s n (u n))) : by rw ["[", expr (hs n).2, ",", expr is_R_or_C.norm_coe_norm, "]"] [] },
   have [ident hfs] [":", expr ∀ n : exprℕ(), «expr∀ᵐ ∂ , »((x), μ, «expr = »(«expr⟪ , ⟫»(f x, s n), (0 : 𝕜)))] [],
   from [expr λ n, hf (s n)],
   have [ident hf'] [":", expr «expr∀ᵐ ∂ , »((x), μ, ∀ n : exprℕ(), «expr = »(«expr⟪ , ⟫»(f x, s n), (0 : 𝕜)))] [],
@@ -112,20 +112,12 @@ begin
   exact [expr hf'.mono (λ x hx, A (f x) hx)]
 end
 
-variable{𝕜}
+variable {𝕜}
 
 end AeEqOfForall
 
-variable{α E :
-    Type
-      _}{m m0 :
-    MeasurableSpace
-      α}{μ :
-    Measureₓ
-      α}{s t :
-    Set
-      α}[NormedGroup
-      E][NormedSpace ℝ E][MeasurableSpace E][BorelSpace E][second_countable_topology E][CompleteSpace E]{p : ℝ≥0∞}
+variable {α E : Type _} {m m0 : MeasurableSpace α} {μ : Measureₓ α} {s t : Set α} [NormedGroup E] [NormedSpace ℝ E]
+  [MeasurableSpace E] [BorelSpace E] [second_countable_topology E] [CompleteSpace E] {p : ℝ≥0∞}
 
 section AeEqOfForallSetIntegralEq
 
@@ -262,7 +254,7 @@ section Real
 
 section RealFiniteMeasure
 
-variable[is_finite_measure μ]{f : α → ℝ}
+variable [is_finite_measure μ] {f : α → ℝ}
 
 -- error in MeasureTheory.Function.AeEqOfIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Don't use this lemma. Use `ae_nonneg_of_forall_set_integral_nonneg_of_finite_measure`. -/

@@ -10,7 +10,7 @@ The main use is to show convexity/concavity from monotonicity of the derivative.
 -/
 
 
-variable{𝕜 : Type _}[LinearOrderedField 𝕜]{s : Set 𝕜}{f : 𝕜 → 𝕜}
+variable {𝕜 : Type _} [LinearOrderedField 𝕜] {s : Set 𝕜} {f : 𝕜 → 𝕜}
 
 -- error in Analysis.Convex.Slope: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f : 𝕜 → 𝕜` is convex, then for any three points `x < y < z` the slope of the secant line of

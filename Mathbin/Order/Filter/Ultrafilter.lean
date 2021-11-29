@@ -17,7 +17,7 @@ In this file we define
 
 universe u v
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 open Set Zorn Filter Function
 
@@ -25,18 +25,18 @@ open_locale Classical Filter
 
 /-- An ultrafilter is a minimal (maximal in the set order) proper filter. -/
 @[protectProj]
-structure Ultrafilter(α : Type _) extends Filter α where 
+structure Ultrafilter (α : Type _) extends Filter α where 
   ne_bot' : ne_bot to_filter 
   le_of_le : ∀ g, Filter.NeBot g → g ≤ to_filter → to_filter ≤ g
 
 namespace Ultrafilter
 
-variable{f g : Ultrafilter α}{s t : Set α}{p q : α → Prop}
+variable {f g : Ultrafilter α} {s t : Set α} {p q : α → Prop}
 
-instance  : CoeTₓ (Ultrafilter α) (Filter α) :=
+instance : CoeTₓ (Ultrafilter α) (Filter α) :=
   ⟨Ultrafilter.toFilter⟩
 
-instance  : HasMem (Set α) (Ultrafilter α) :=
+instance : HasMem (Set α) (Ultrafilter α) :=
   ⟨fun s f => s ∈ (f : Filter α)⟩
 
 theorem Unique (f : Ultrafilter α) {g : Filter α} (h : g ≤ f)
@@ -194,7 +194,7 @@ theorem coe_comap {m : α → β} (u : Ultrafilter β) (inj : injective m) (larg
   rfl
 
 /-- The principal ultrafilter associated to a point `x`. -/
-instance  : Pure Ultrafilter :=
+instance : Pure Ultrafilter :=
   ⟨fun α a =>
       of_compl_not_mem_iff (pure a)$
         fun s =>
@@ -205,8 +205,11 @@ instance  : Pure Ultrafilter :=
 theorem mem_pure {a : α} {s : Set α} : s ∈ (pure a : Ultrafilter α) ↔ a ∈ s :=
   Iff.rfl
 
-instance  [Inhabited α] : Inhabited (Ultrafilter α) :=
+instance [Inhabited α] : Inhabited (Ultrafilter α) :=
   ⟨pure (default _)⟩
+
+instance [Nonempty α] : Nonempty (Ultrafilter α) :=
+  Nonempty.map pure inferInstance
 
 /-- Monadic bind for ultrafilters, coming from the one on filters
 defined in terms of map and join.-/
@@ -342,13 +345,13 @@ theorem forall_ne_bot_le_iff {g : Filter α} {p : Filter α → Prop} (hp : Mono
 
 section Hyperfilter
 
-variable(α)[Infinite α]
+variable (α) [Infinite α]
 
 /-- The ultrafilter extending the cofinite filter. -/
 noncomputable def hyperfilter : Ultrafilter α :=
   Ultrafilter.of cofinite
 
-variable{α}
+variable {α}
 
 theorem hyperfilter_le_cofinite : «expr↑ » (hyperfilter α) ≤ @cofinite α :=
   Ultrafilter.of_le cofinite

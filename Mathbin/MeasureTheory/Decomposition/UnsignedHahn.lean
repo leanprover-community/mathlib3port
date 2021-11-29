@@ -23,7 +23,7 @@ open_locale Classical TopologicalSpace Ennreal
 
 namespace MeasureTheory
 
-variable{α : Type _}[MeasurableSpace α]{μ ν : Measureₓ α}
+variable {α : Type _} [MeasurableSpace α] {μ ν : Measureₓ α}
 
 private theorem aux {m : ℕ} {γ d : ℝ} (h : γ - (1 / 2) ^ m < d) : ((γ - 2*(1 / 2) ^ m)+(1 / 2) ^ m) ≤ d :=
   by 

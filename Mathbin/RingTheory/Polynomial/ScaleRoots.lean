@@ -11,9 +11,9 @@ be the polynomial with root `r * s` for each root `r` of `p` and proves some bas
 
 section scaleRoots
 
-variable{A K R S : Type _}[CommRingₓ A][IsDomain A][Field K][CommRingₓ R][CommRingₓ S]
+variable {A K R S : Type _} [CommRingₓ A] [IsDomain A] [Field K] [CommRingₓ R] [CommRingₓ S]
 
-variable{M : Submonoid A}
+variable {M : Submonoid A}
 
 open Polynomial
 

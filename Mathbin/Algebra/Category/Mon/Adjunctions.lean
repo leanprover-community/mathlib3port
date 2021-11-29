@@ -72,6 +72,6 @@ def adj : free ⊣ forget Mon.{u} :=
             ext1 
             rfl }
 
-instance  : is_right_adjoint (forget Mon.{u}) :=
+instance : is_right_adjoint (forget Mon.{u}) :=
   ⟨_, adj⟩
 

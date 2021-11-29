@@ -29,7 +29,7 @@ open_locale TopologicalSpace Filter Pointwise
 /-- A family of additive subgroups on a ring `A` is a subgroups basis if it satisfies some
 axioms ensuring there is a topology on `A` which is compatible with the ring structure and
 admits this family as a basis of neighborhoods of zero. -/
-structure RingSubgroupsBasis{A ι : Type _}[Ringₓ A](B : ι → AddSubgroup A) : Prop where 
+structure RingSubgroupsBasis {A ι : Type _} [Ringₓ A] (B : ι → AddSubgroup A) : Prop where 
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j 
   mul : ∀ i, ∃ j, ((B j : Set A)*B j) ⊆ B i 
   leftMul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => x*y) ⁻¹' B i 
@@ -37,7 +37,7 @@ structure RingSubgroupsBasis{A ι : Type _}[Ringₓ A](B : ι → AddSubgroup A)
 
 namespace RingSubgroupsBasis
 
-variable{A ι : Type _}[Ringₓ A]
+variable {A ι : Type _} [Ringₓ A]
 
 theorem of_comm {A ι : Type _} [CommRingₓ A] (B : ι → AddSubgroup A) (inter : ∀ i j, ∃ k, B k ≤ B i⊓B j)
   (mul : ∀ i, ∃ j, ((B j : Set A)*B j) ⊆ B i)
@@ -99,7 +99,7 @@ def to_ring_filter_basis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubg
         cases' hB.right_mul x₀ i with k hk 
         use B k, k, rfl, hk }
 
-variable[Nonempty ι]{B : ι → AddSubgroup A}(hB : RingSubgroupsBasis B)
+variable [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B)
 
 theorem mem_add_group_filter_basis_iff {V : Set A} :
   V ∈ hB.to_ring_filter_basis.to_add_group_filter_basis ↔ ∃ i, V = B i :=
@@ -178,19 +178,19 @@ end
 
 end RingSubgroupsBasis
 
-variable{ι R A : Type _}[CommRingₓ R][CommRingₓ A][Algebra R A]
+variable {ι R A : Type _} [CommRingₓ R] [CommRingₓ A] [Algebra R A]
 
 /-- A family of submodules in a commutative `R`-algebra `A` is a submodules basis if it satisfies
 some axioms ensuring there is a topology on `A` which is compatible with the ring structure and
 admits this family as a basis of neighborhoods of zero. -/
-structure SubmodulesRingBasis(B : ι → Submodule R A) : Prop where 
+structure SubmodulesRingBasis (B : ι → Submodule R A) : Prop where 
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j 
   leftMul : ∀ a : A i, ∃ j, a • B j ≤ B i 
   mul : ∀ i, ∃ j, ((B j : Set A)*B j) ⊆ B i
 
 namespace SubmodulesRingBasis
 
-variable{B : ι → Submodule R A}(hB : SubmodulesRingBasis B)
+variable {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
 
 theorem to_ring_subgroups_basis (hB : SubmodulesRingBasis B) : RingSubgroupsBasis fun i => (B i).toAddSubgroup :=
   by 
@@ -207,18 +207,18 @@ def topology [Nonempty ι] (hB : SubmodulesRingBasis B) : TopologicalSpace A :=
 
 end SubmodulesRingBasis
 
-variable{M : Type _}[AddCommGroupₓ M][Module R M]
+variable {M : Type _} [AddCommGroupₓ M] [Module R M]
 
 /-- A family of submodules in an `R`-module `M` is a submodules basis if it satisfies
 some axioms ensuring there is a topology on `M` which is compatible with the module structure and
 admits this family as a basis of neighborhoods of zero. -/
-structure SubmodulesBasis[TopologicalSpace R](B : ι → Submodule R M) : Prop where 
+structure SubmodulesBasis [TopologicalSpace R] (B : ι → Submodule R M) : Prop where 
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j 
   smul : ∀ m : M i : ι, ∀ᶠa in 𝓝 (0 : R), a • m ∈ B i
 
 namespace SubmodulesBasis
 
-variable[TopologicalSpace R][Nonempty ι]{B : ι → Submodule R M}(hB : SubmodulesBasis B)
+variable [TopologicalSpace R] [Nonempty ι] {B : ι → Submodule R M} (hB : SubmodulesBasis B)
 
 include hB
 
@@ -310,13 +310,13 @@ end SubmodulesBasis
 
 section 
 
-variable[TopologicalSpace
-      R]{B : ι → Submodule R A}(hB : SubmodulesRingBasis B)(hsmul : ∀ m : A i : ι, ∀ᶠa : R in 𝓝 0, a • m ∈ B i)
+variable [TopologicalSpace R] {B : ι → Submodule R A} (hB : SubmodulesRingBasis B)
+  (hsmul : ∀ m : A i : ι, ∀ᶠa : R in 𝓝 0, a • m ∈ B i)
 
 theorem SubmodulesRingBasis.to_submodules_basis : SubmodulesBasis B :=
   { inter := hB.inter, smul := hsmul }
 
-example  [Nonempty ι] : hB.topology = (hB.to_submodules_basis hsmul).topology :=
+example [Nonempty ι] : hB.topology = (hB.to_submodules_basis hsmul).topology :=
   rfl
 
 end 
@@ -324,7 +324,7 @@ end
 /-- Given a ring filter basis on a commutative ring `R`, define a compatibility condition
 on a family of submodules of a `R`-module `M`. This compatibility condition allows to get
 a topological module structure. -/
-structure RingFilterBasis.SubmodulesBasis(BR : RingFilterBasis R)(B : ι → Submodule R M) : Prop where 
+structure RingFilterBasis.SubmodulesBasis (BR : RingFilterBasis R) (B : ι → Submodule R M) : Prop where 
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j 
   smul : ∀ m : M i : ι, ∃ (U : _)(_ : U ∈ BR), U ⊆ (fun a => a • m) ⁻¹' B i
 

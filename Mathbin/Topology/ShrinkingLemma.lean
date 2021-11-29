@@ -28,7 +28,7 @@ open_locale Classical
 
 noncomputable theory
 
-variable{ι X : Type _}[TopologicalSpace X][NormalSpace X]
+variable {ι X : Type _} [TopologicalSpace X] [NormalSpace X]
 
 namespace ShrinkingLemma
 
@@ -44,7 +44,7 @@ This type is equipped with the folowing partial order: `v ≤ v'` if `v.carrier 
 and `v i = v' i` for `i ∈ v.carrier`. We will use Zorn's lemma to prove that this type has
 a maximal element, then show that the maximal element must have `carrier = univ`. -/
 @[nolint has_inhabited_instance]
-structure partial_refinement(u : ι → Set X)(s : Set X) where 
+structure partial_refinement (u : ι → Set X) (s : Set X) where 
   toFun : ι → Set X 
   Carrier : Set ι 
   is_open' : ∀ i, IsOpen (to_fun i)
@@ -54,9 +54,9 @@ structure partial_refinement(u : ι → Set X)(s : Set X) where
 
 namespace PartialRefinement
 
-variable{u : ι → Set X}{s : Set X}
+variable {u : ι → Set X} {s : Set X}
 
-instance  : CoeFun (partial_refinement u s) fun _ => ι → Set X :=
+instance : CoeFun (partial_refinement u s) fun _ => ι → Set X :=
   ⟨to_fun⟩
 
 theorem subset_Union (v : partial_refinement u s) : s ⊆ ⋃i, v i :=
@@ -76,7 +76,7 @@ protected theorem subset (v : partial_refinement u s) (i : ι) : v i ⊆ u i :=
 
 attribute [ext] partial_refinement
 
-instance  : PartialOrderₓ (partial_refinement u s) :=
+instance : PartialOrderₓ (partial_refinement u s) :=
   { le := fun v₁ v₂ => v₁.carrier ⊆ v₂.carrier ∧ ∀ i _ : i ∈ v₁.carrier, v₁ i = v₂ i,
     le_refl := fun v => ⟨subset.refl _, fun _ _ => rfl⟩,
     le_trans := fun v₁ v₂ v₃ h₁₂ h₂₃ => ⟨subset.trans h₁₂.1 h₂₃.1, fun i hi => (h₁₂.2 i hi).trans (h₂₃.2 i$ h₁₂.1 hi)⟩,
@@ -216,7 +216,7 @@ end ShrinkingLemma
 
 open ShrinkingLemma
 
-variable{u : ι → Set X}{s : Set X}
+variable {u : ι → Set X} {s : Set X}
 
 -- error in Topology.ShrinkingLemma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"

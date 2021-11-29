@@ -39,18 +39,18 @@ open_locale BigOperators
 
 /-- A "linear recurrence relation" over a commutative semiring is given by its
   order `n` and `n` coefficients. -/
-structure LinearRecurrence(α : Type _)[CommSemiringₓ α] where 
+structure LinearRecurrence (α : Type _) [CommSemiringₓ α] where 
   order : ℕ 
   coeffs : Finₓ order → α
 
-instance  (α : Type _) [CommSemiringₓ α] : Inhabited (LinearRecurrence α) :=
+instance (α : Type _) [CommSemiringₓ α] : Inhabited (LinearRecurrence α) :=
   ⟨⟨0, default _⟩⟩
 
 namespace LinearRecurrence
 
 section CommSemiringₓ
 
-variable{α : Type _}[CommSemiringₓ α](E : LinearRecurrence α)
+variable {α : Type _} [CommSemiringₓ α] (E : LinearRecurrence α)
 
 /-- We say that a sequence `u` is solution of `linear_recurrence order coeffs` when we have
   `u (n + order) = ∑ i : fin order, coeffs i * u (n + i)` for any `n`. -/
@@ -204,7 +204,7 @@ end CommSemiringₓ
 
 section Field
 
-variable{α : Type _}[Field α](E : LinearRecurrence α)
+variable {α : Type _} [Field α] (E : LinearRecurrence α)
 
 /-- The dimension of `E.sol_space` is `E.order`. -/
 theorem sol_space_dim : Module.rank α E.sol_space = E.order :=
@@ -214,7 +214,7 @@ end Field
 
 section CommRingₓ
 
-variable{α : Type _}[CommRingₓ α](E : LinearRecurrence α)
+variable {α : Type _} [CommRingₓ α] (E : LinearRecurrence α)
 
 /-- The characteristic polynomial of `E` is
 `X ^ E.order - ∑ i : fin E.order, (E.coeffs i) * X ^ i`. -/

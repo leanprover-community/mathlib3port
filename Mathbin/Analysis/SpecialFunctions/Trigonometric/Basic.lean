@@ -77,7 +77,7 @@ end Complex
 
 namespace Real
 
-variable{x y z : ℝ}
+variable {x y z : ℝ}
 
 @[continuity]
 theorem continuous_sin : Continuous sin :=
@@ -730,7 +730,7 @@ end
 
 section CosDivSq
 
-variable(x : ℝ)
+variable (x : ℝ)
 
 /-- the series `sqrt_two_add_series x n` is `sqrt(2 + sqrt(2 + ... ))` with `n` square roots,
   starting with `x`. We define it here because `cos (pi / 2 ^ (n+1)) = sqrt_two_add_series 0 n / 2`

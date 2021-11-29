@@ -17,7 +17,7 @@ lemmas about `has_pow` since these are easiest to prove via `finset.prod`.
 
 universe u v
 
-variable{R : Type u}{I : Type v}[CommSemiringₓ R]{x y z : R}{s : I → R}{t : Finset I}
+variable {R : Type u} {I : Type v} [CommSemiringₓ R] {x y z : R} {s : I → R} {t : Finset I}
 
 open_locale BigOperators Classical
 
@@ -85,7 +85,7 @@ finset.induction_on t (λ
 theorem Fintype.prod_dvd_of_coprime [Fintype I] (Hs : Pairwise (IsCoprime on s)) (Hs1 : ∀ i, s i ∣ z) : (∏x, s x) ∣ z :=
   Finset.prod_dvd_of_coprime (Hs.set_pairwise _) fun i _ => Hs1 i
 
-variable{m n : ℕ}
+variable {m n : ℕ}
 
 theorem IsCoprime.pow_left (H : IsCoprime x y) : IsCoprime (x ^ m) y :=
   by 

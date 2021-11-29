@@ -23,7 +23,7 @@ squarefree, multiplicity
 -/
 
 
-variable{R : Type _}
+variable {R : Type _}
 
 /-- An element of a monoid is squarefree if the only squares that
   divide it are the squares of units. -/
@@ -67,7 +67,7 @@ theorem squarefree_of_dvd_of_squarefree [CommMonoidₓ R] {x y : R} (hdvd : x �
 
 namespace multiplicity
 
-variable[CommMonoidₓ R][DecidableRel (HasDvd.Dvd : R → R → Prop)]
+variable [CommMonoidₓ R] [DecidableRel (HasDvd.Dvd : R → R → Prop)]
 
 theorem squarefree_iff_multiplicity_le_one (r : R) : Squarefree r ↔ ∀ x : R, multiplicity x r ≤ 1 ∨ IsUnit x :=
   by 
@@ -83,9 +83,9 @@ end multiplicity
 
 namespace UniqueFactorizationMonoid
 
-variable[CommCancelMonoidWithZero R][Nontrivial R][UniqueFactorizationMonoid R]
+variable [CommCancelMonoidWithZero R] [Nontrivial R] [UniqueFactorizationMonoid R]
 
-variable[NormalizationMonoid R]
+variable [NormalizationMonoid R]
 
 -- error in Algebra.Squarefree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem squarefree_iff_nodup_normalized_factors
@@ -142,7 +142,7 @@ theorem squarefree_iff_nodup_factors {n : ℕ} (h0 : n ≠ 0) : Squarefree n ↔
     rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalized_factors h0, Nat.factors_eq]
     simp 
 
-instance  : DecidablePred (Squarefree : ℕ → Prop)
+instance : DecidablePred (Squarefree : ℕ → Prop)
 | 0 => is_false not_squarefree_zero
 | n+1 => decidableOfIff _ (squarefree_iff_nodup_factors (Nat.succ_ne_zero n)).symm
 

@@ -29,15 +29,15 @@ general limits can be used.
 
 noncomputable theory
 
-universe v u u₂
+universe w v u u₂
 
 open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-variable{β : Type v}
+variable {β : Type w}
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /-- A fan over `f : β → C` consists of a collection of maps from an object `P` to every `f b`. -/
 abbrev fan (f : β → C) :=
@@ -67,7 +67,7 @@ abbrev has_coproduct (f : β → C) :=
 
 section 
 
-variable(C)
+variable (C)
 
 /-- An abbreviation for `has_limits_of_shape (discrete f)`. -/
 abbrev has_products_of_shape (β : Type v) :=
@@ -155,9 +155,9 @@ abbrev sigma.map_iso {f g : β → C} [has_coproducts_of_shape β C] (p : ∀ b,
 
 section Comparison
 
-variable{D : Type u₂}[category.{v} D](G : C ⥤ D)
+variable {D : Type u₂} [category.{v} D] (G : C ⥤ D)
 
-variable(f : β → C)
+variable (f : β → C)
 
 /-- The comparison morphism for the product of `f`. This is an iso iff `G` preserves the product
 of `f`, see `preserves_product.of_iso_comparison`. -/
@@ -195,7 +195,7 @@ theorem sigma_comparison_map_desc [has_coproduct f] [has_coproduct fun b => G.ob
 
 end Comparison
 
-variable(C)
+variable (C)
 
 /-- An abbreviation for `Π J, has_limits_of_shape (discrete J) C` -/
 abbrev has_products :=

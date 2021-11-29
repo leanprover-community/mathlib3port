@@ -34,10 +34,10 @@ equiv, mul_equiv, add_equiv, ring_equiv, mul_aut, add_aut, ring_aut
 
 open_locale BigOperators
 
-variable{R : Type _}{S : Type _}{S' : Type _}
+variable {R : Type _} {S : Type _} {S' : Type _}
 
 /-- An equivalence between two (semi)rings that preserves the algebraic structure. -/
-structure RingEquiv(R S : Type _)[Mul R][Add R][Mul S][Add S] extends R ≃ S, R ≃* S, R ≃+ S
+structure RingEquiv (R S : Type _) [Mul R] [Add R] [Mul S] [Add S] extends R ≃ S, R ≃* S, R ≃+ S
 
 infixl:25 " ≃+* " => RingEquiv
 
@@ -54,9 +54,9 @@ namespace RingEquiv
 
 section Basic
 
-variable[Mul R][Add R][Mul S][Add S][Mul S'][Add S']
+variable [Mul R] [Add R] [Mul S] [Add S] [Mul S'] [Add S']
 
-instance  : CoeFun (R ≃+* S) fun _ => R → S :=
+instance : CoeFun (R ≃+* S) fun _ => R → S :=
   ⟨RingEquiv.toFun⟩
 
 @[simp]
@@ -130,10 +130,10 @@ theorem coe_to_add_equiv (f : R ≃+* S) : «expr⇑ » (f : R ≃+ S) = f :=
 def ring_equiv_of_unique_of_unique {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : M ≃+* N :=
   { AddEquiv.addEquivOfUniqueOfUnique, MulEquiv.mulEquivOfUniqueOfUnique with  }
 
-instance  {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : Unique (M ≃+* N) :=
+instance {M N} [Unique M] [Unique N] [Add M] [Mul M] [Add N] [Mul N] : Unique (M ≃+* N) :=
   { default := ring_equiv_of_unique_of_unique, uniq := fun _ => ext$ fun x => Subsingleton.elimₓ _ _ }
 
-variable(R)
+variable (R)
 
 /-- The identity map is a ring isomorphism. -/
 @[refl]
@@ -152,10 +152,10 @@ theorem coe_add_equiv_refl : (RingEquiv.refl R : R ≃+ R) = AddEquiv.refl R :=
 theorem coe_mul_equiv_refl : (RingEquiv.refl R : R ≃* R) = MulEquiv.refl R :=
   rfl
 
-instance  : Inhabited (R ≃+* R) :=
+instance : Inhabited (R ≃+* R) :=
   ⟨RingEquiv.refl R⟩
 
-variable{R}
+variable {R}
 
 /-- The inverse of a ring isomorphism is a ring isomorphism. -/
 @[symm]
@@ -242,7 +242,7 @@ protected def unop {α β} [Add α] [Mul α] [Add β] [Mul β] : «expr ᵐᵒ�
 
 section CommSemiringₓ
 
-variable(R)[CommSemiringₓ R]
+variable (R) [CommSemiringₓ R]
 
 /-- A commutative ring is isomorphic to its opposite. -/
 def to_opposite : R ≃+* «expr ᵐᵒᵖ» R :=
@@ -262,14 +262,14 @@ end Opposite
 
 section NonUnitalSemiring
 
-variable[NonUnitalNonAssocSemiring R][NonUnitalNonAssocSemiring S](f : R ≃+* S)(x y : R)
+variable [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S] (f : R ≃+* S) (x y : R)
 
 /-- A ring isomorphism sends zero to zero. -/
 @[simp]
 theorem map_zero : f 0 = 0 :=
   (f : R ≃+ S).map_zero
 
-variable{x}
+variable {x}
 
 @[simp]
 theorem map_eq_zero_iff : f x = 0 ↔ x = 0 :=
@@ -282,14 +282,14 @@ end NonUnitalSemiring
 
 section Semiringₓ
 
-variable[NonAssocSemiring R][NonAssocSemiring S](f : R ≃+* S)(x y : R)
+variable [NonAssocSemiring R] [NonAssocSemiring S] (f : R ≃+* S) (x y : R)
 
 /-- A ring isomorphism sends one to one. -/
 @[simp]
 theorem map_one : f 1 = 1 :=
   (f : R ≃* S).map_one
 
-variable{x}
+variable {x}
 
 @[simp]
 theorem map_eq_one_iff : f x = 1 ↔ x = 1 :=
@@ -313,7 +313,7 @@ end Semiringₓ
 
 section 
 
-variable[Ringₓ R][Ringₓ S](f : R ≃+* S)(x y : R)
+variable [Ringₓ R] [Ringₓ S] (f : R ≃+* S) (x y : R)
 
 @[simp]
 theorem map_neg : f (-x) = -f x :=
@@ -331,7 +331,7 @@ end
 
 section SemiringHom
 
-variable[NonAssocSemiring R][NonAssocSemiring S][NonAssocSemiring S']
+variable [NonAssocSemiring R] [NonAssocSemiring S] [NonAssocSemiring S']
 
 /-- Reinterpret a ring equivalence as a ring homomorphism. -/
 def to_ring_hom (e : R ≃+* S) : R →+* S :=
@@ -464,7 +464,7 @@ end BigOperators
 
 section DivisionRing
 
-variable{K K' : Type _}[DivisionRing K][DivisionRing K'](g : K ≃+* K')(x y : K)
+variable {K K' : Type _} [DivisionRing K] [DivisionRing K'] (g : K ≃+* K') (x y : K)
 
 theorem map_inv : g (x⁻¹) = g x⁻¹ :=
   g.to_ring_hom.map_inv x
@@ -476,7 +476,7 @@ end DivisionRing
 
 section GroupPower
 
-variable[Semiringₓ R][Semiringₓ S]
+variable [Semiringₓ R] [Semiringₓ S]
 
 @[simp]
 theorem map_pow (f : R ≃+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
@@ -497,7 +497,7 @@ end MulEquiv
 
 namespace RingEquiv
 
-variable[Add R][Add S][Mul R][Mul S]
+variable [Add R] [Add S] [Mul R] [Mul S]
 
 @[simp]
 theorem self_trans_symm (e : R ≃+* S) : e.trans e.symm = RingEquiv.refl R :=

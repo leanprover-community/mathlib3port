@@ -64,7 +64,7 @@ open_locale Classical
 
 universe u v w x
 
-variable{α β : Type u}
+variable {α β : Type u}
 
 /-- The equivalence relation on types given by equivalence (bijective correspondence) of types.
   Quotienting by this equivalence relation gives the cardinal numbers.
@@ -172,7 +172,7 @@ theorem lift_lift (a : Cardinal) : lift.{w} (lift.{v} a) = lift.{max v w} a :=
 
 /-- We define the order on cardinal numbers by `#α ≤ #β` if and only if
   there exists an embedding (injective function) from α to β. -/
-instance  : LE Cardinal.{u} :=
+instance : LE Cardinal.{u} :=
   ⟨fun q₁ q₂ =>
       (Quotientₓ.liftOn₂ q₁ q₂ fun α β => Nonempty$ α ↪ β)$
         fun α β γ δ ⟨e₁⟩ ⟨e₂⟩ => propext ⟨fun ⟨e⟩ => ⟨e.congr e₁ e₂⟩, fun ⟨e⟩ => ⟨e.congr e₁.symm e₂.symm⟩⟩⟩
@@ -199,7 +199,7 @@ theorem out_embedding {c c' : Cardinal} : c ≤ c' ↔ Nonempty (c.out ↪ c'.ou
     rw [←Quotientₓ.out_eq c, ←Quotientₓ.out_eq c']
     rfl
 
-instance  : Preorderₓ Cardinal.{u} :=
+instance : Preorderₓ Cardinal.{u} :=
   { le := · ≤ ·,
     le_refl :=
       by 
@@ -208,7 +208,7 @@ instance  : Preorderₓ Cardinal.{u} :=
       by 
         rintro ⟨α⟩ ⟨β⟩ ⟨γ⟩ ⟨e₁⟩ ⟨e₂⟩ <;> exact ⟨e₁.trans e₂⟩ }
 
-instance  : PartialOrderₓ Cardinal.{u} :=
+instance : PartialOrderₓ Cardinal.{u} :=
   { Cardinal.preorder with
     le_antisymm :=
       by 
@@ -261,10 +261,10 @@ theorem lift_inj {a b : Cardinal} : lift a = lift b ↔ a = b :=
 theorem lift_lt {a b : Cardinal} : lift a < lift b ↔ a < b :=
   lift_order_embedding.lt_iff_lt
 
-instance  : HasZero Cardinal.{u} :=
+instance : HasZero Cardinal.{u} :=
   ⟨# Pempty⟩
 
-instance  : Inhabited Cardinal.{u} :=
+instance : Inhabited Cardinal.{u} :=
   ⟨0⟩
 
 theorem mk_eq_zero (α : Type u) [IsEmpty α] : # α = 0 :=
@@ -291,10 +291,10 @@ theorem mk_ne_zero_iff {α : Type u} : # α ≠ 0 ↔ Nonempty α :=
 theorem mk_ne_zero (α : Type u) [Nonempty α] : # α ≠ 0 :=
   mk_ne_zero_iff.2 ‹_›
 
-instance  : HasOne Cardinal.{u} :=
+instance : HasOne Cardinal.{u} :=
   ⟨«expr⟦ ⟧» PUnit⟩
 
-instance  : Nontrivial Cardinal.{u} :=
+instance : Nontrivial Cardinal.{u} :=
   ⟨⟨1, 0, mk_ne_zero _⟩⟩
 
 theorem mk_eq_one (α : Type u) [Unique α] : # α = 1 :=
@@ -303,7 +303,7 @@ theorem mk_eq_one (α : Type u) [Unique α] : # α = 1 :=
 theorem le_one_iff_subsingleton {α : Type u} : # α ≤ 1 ↔ Subsingleton α :=
   ⟨fun ⟨f⟩ => ⟨fun a b => f.injective (Subsingleton.elimₓ _ _)⟩, fun ⟨h⟩ => ⟨⟨fun a => PUnit.unit, fun a b _ => h _ _⟩⟩⟩
 
-instance  : Add Cardinal.{u} :=
+instance : Add Cardinal.{u} :=
   ⟨map₂ Sum$ fun α β γ δ => Equiv.sumCongr⟩
 
 theorem add_def (α β : Type u) : (# α+# β) = # (Sum α β) :=
@@ -333,7 +333,7 @@ begin
     simp [] [] [] ["[", expr hα, "]"] [] [] }
 end
 
-instance  : Mul Cardinal.{u} :=
+instance : Mul Cardinal.{u} :=
   ⟨map₂ Prod$ fun α β γ δ => Equiv.prodCongr⟩
 
 theorem mul_def (α β : Type u) : (# α*# β) = # (α × β) :=
@@ -372,7 +372,7 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero {a b : Cardinal.{u}} : (a*b)
 protected def power (a b : Cardinal.{u}) : Cardinal.{u} :=
   map₂ (fun α β : Type u => β → α) (fun α β γ δ e₁ e₂ => e₂.arrow_congr e₁) a b
 
-instance  : Pow Cardinal Cardinal :=
+instance : Pow Cardinal Cardinal :=
   ⟨Cardinal.power⟩
 
 local infixr:0 "^" => @Pow.pow Cardinal Cardinal Cardinal.hasPow
@@ -400,7 +400,7 @@ theorem power_one {a : Cardinal} : (a^1) = a :=
 theorem power_add {a b c : Cardinal} : (a^b+c) = (a^b)*a^c :=
   induction_on₃ a b c$ fun α β γ => (Equiv.sumArrowEquivProdArrow β γ α).cardinal_eq
 
-instance  : CommSemiringₓ Cardinal.{u} :=
+instance : CommSemiringₓ Cardinal.{u} :=
   { zero := 0, one := 1, add := ·+·, mul := ·*·, zero_add := Cardinal.zero_add,
     add_zero :=
       fun a =>
@@ -526,10 +526,10 @@ protected theorem le_iff_exists_add {a b : Cardinal} : a ≤ b ↔ ∃ c, b = a+
         ⟨# («expr↥ » («expr ᶜ» (range f))), mk_congr this.symm⟩,
     fun ⟨c, e⟩ => add_zeroₓ a ▸ e.symm ▸ Cardinal.add_le_add_left _ (Cardinal.zero_le _)⟩
 
-instance  : OrderBot Cardinal.{u} :=
+instance : OrderBot Cardinal.{u} :=
   { bot := 0, bot_le := Cardinal.zero_le }
 
-instance  : CanonicallyOrderedCommSemiring Cardinal.{u} :=
+instance : CanonicallyOrderedCommSemiring Cardinal.{u} :=
   { Cardinal.orderBot, Cardinal.commSemiring, Cardinal.partialOrder with
     add_le_add_left := fun a b h c => Cardinal.add_le_add_left _ h, le_iff_exists_add := @Cardinal.le_iff_exists_add,
     eq_zero_or_eq_zero_of_mul_eq_zero := @Cardinal.eq_zero_or_eq_zero_of_mul_eq_zero }
@@ -561,20 +561,20 @@ theorem cantor (a : Cardinal.{u}) : a < (2^a) :=
     rintro ⟨⟨f, hf⟩⟩
     exact cantor_injective f hf
 
-instance  : NoTopOrder Cardinal.{u} :=
+instance : NoTopOrder Cardinal.{u} :=
   { Cardinal.partialOrder with no_top := fun a => ⟨_, cantor a⟩ }
 
-noncomputable instance  : LinearOrderₓ Cardinal.{u} :=
+noncomputable instance : LinearOrderₓ Cardinal.{u} :=
   { Cardinal.partialOrder with
     le_total :=
       by 
         rintro ⟨α⟩ ⟨β⟩ <;> exact embedding.total,
     decidableLe := Classical.decRel _ }
 
-noncomputable instance  : CanonicallyLinearOrderedAddMonoid Cardinal.{u} :=
+noncomputable instance : CanonicallyLinearOrderedAddMonoid Cardinal.{u} :=
   { (inferInstance : CanonicallyOrderedAddMonoid Cardinal.{u}), Cardinal.linearOrder with  }
 
-noncomputable instance  : DistribLattice Cardinal.{u} :=
+noncomputable instance : DistribLattice Cardinal.{u} :=
   by 
     infer_instance
 
@@ -971,7 +971,7 @@ theorem nat_cast_lt {m n : ℕ} : (m : Cardinal) < n ↔ m < n :=
   by 
     simp [lt_iff_le_not_leₓ, -not_leₓ]
 
-instance  : CharZero Cardinal :=
+instance : CharZero Cardinal :=
   ⟨StrictMono.injective$ fun m n => nat_cast_lt.2⟩
 
 theorem nat_cast_inj {m n : ℕ} : (m : Cardinal) = n ↔ m = n :=

@@ -41,7 +41,7 @@ section OrderedFieldPower
 
 open Int
 
-variable{K : Type u}[LinearOrderedField K]{a : K}{n : ℤ}
+variable {K : Type u} [LinearOrderedField K] {a : K} {n : ℤ}
 
 theorem zpow_eq_zero_iff (hn : 0 < n) : a ^ n = 0 ↔ a = 0 :=
   by 
@@ -228,7 +228,7 @@ theorem one_lt_zpow {K} [LinearOrderedField K] {p : K} (hp : 1 < p) : ∀ z : �
 
 section Ordered
 
-variable{K : Type _}[LinearOrderedField K]
+variable {K : Type _} [LinearOrderedField K]
 
 theorem Nat.zpow_pos_of_pos {p : ℕ} (h : 0 < p) (n : ℤ) : 0 < (p : K) ^ n :=
   by 
@@ -287,7 +287,7 @@ end Ordered
 
 section 
 
-variable{K : Type _}[Field K]
+variable {K : Type _} [Field K]
 
 @[simp, normCast]
 theorem Rat.cast_zpow [CharZero K] (q : ℚ) (n : ℤ) : ((q ^ n : ℚ) : K) = q ^ n :=

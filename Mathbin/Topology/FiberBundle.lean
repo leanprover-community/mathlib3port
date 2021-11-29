@@ -144,7 +144,7 @@ Fiber bundle, topological bundle, local trivialization, structure group
 -/
 
 
-variable{ι : Type _}{B : Type _}{F : Type _}
+variable {ι : Type _} {B : Type _} {F : Type _}
 
 open TopologicalSpace Filter Set
 
@@ -155,7 +155,7 @@ open_locale TopologicalSpace Classical
 
 section TopologicalFiberBundle
 
-variable(F){Z : Type _}[TopologicalSpace B][TopologicalSpace F]{proj : Z → B}
+variable (F) {Z : Type _} [TopologicalSpace B] [TopologicalSpace F] {proj : Z → B}
 
 /-- This structure contains the information left for a local trivialization (which is implemented
 below as `trivialization F proj`) if the total space has not been given a topology, but we
@@ -163,7 +163,7 @@ have a topology on both the fiber and the base space. Through the construction
 `topological_fiber_prebundle F proj` it will be possible to promote a
 `pretrivialization F proj` to a `trivialization F proj`. -/
 @[nolint has_inhabited_instance]
-structure TopologicalFiberBundle.Pretrivialization(proj : Z → B) extends LocalEquiv Z (B × F) where 
+structure TopologicalFiberBundle.Pretrivialization (proj : Z → B) extends LocalEquiv Z (B × F) where 
   open_target : IsOpen target 
   BaseSet : Set B 
   open_base_set : IsOpen base_set 
@@ -175,10 +175,10 @@ open TopologicalFiberBundle
 
 namespace TopologicalFiberBundle.Pretrivialization
 
-instance  : CoeFun (pretrivialization F proj) fun _ => Z → B × F :=
+instance : CoeFun (pretrivialization F proj) fun _ => Z → B × F :=
   ⟨fun e => e.to_fun⟩
 
-variable{F}(e : pretrivialization F proj){x : Z}
+variable {F} (e : pretrivialization F proj) {x : Z}
 
 @[simp, mfld_simps]
 theorem coe_coe : «expr⇑ » e.to_local_equiv = e :=
@@ -262,7 +262,7 @@ theorem preimage_symm_proj_inter (s : Set B) :
 
 end TopologicalFiberBundle.Pretrivialization
 
-variable[TopologicalSpace Z]
+variable [TopologicalSpace Z]
 
 /--
 A structure extending local homeomorphisms, defining a local trivialization of a projection
@@ -270,7 +270,7 @@ A structure extending local homeomorphisms, defining a local trivialization of a
 sets of the form `proj ⁻¹' base_set` and `base_set × F`, acting trivially on the first coordinate.
 -/
 @[nolint has_inhabited_instance]
-structure TopologicalFiberBundle.Trivialization(proj : Z → B) extends LocalHomeomorph Z (B × F) where 
+structure TopologicalFiberBundle.Trivialization (proj : Z → B) extends LocalHomeomorph Z (B × F) where 
   BaseSet : Set B 
   open_base_set : IsOpen base_set 
   source_eq : source = proj ⁻¹' base_set 
@@ -281,16 +281,16 @@ open TopologicalFiberBundle
 
 namespace TopologicalFiberBundle.Trivialization
 
-variable{F}(e : trivialization F proj){x : Z}
+variable {F} (e : trivialization F proj) {x : Z}
 
 /-- Natural identification as a `pretrivialization`. -/
 def to_pretrivialization : TopologicalFiberBundle.Pretrivialization F proj :=
   { e with  }
 
-instance  : CoeFun (trivialization F proj) fun _ => Z → B × F :=
+instance : CoeFun (trivialization F proj) fun _ => Z → B × F :=
   ⟨fun e => e.to_fun⟩
 
-instance  : Coe (trivialization F proj) (pretrivialization F proj) :=
+instance : Coe (trivialization F proj) (pretrivialization F proj) :=
   ⟨to_pretrivialization⟩
 
 @[simp, mfld_simps]
@@ -394,7 +394,7 @@ to `prod.fst`. -/
 def IsTrivialTopologicalFiberBundle (proj : Z → B) : Prop :=
   ∃ e : Z ≃ₜ B × F, ∀ x, (e x).1 = proj x
 
-variable{F}
+variable {F}
 
 theorem IsTrivialTopologicalFiberBundle.is_topological_fiber_bundle (h : IsTrivialTopologicalFiberBundle F proj) :
   IsTopologicalFiberBundle F proj :=
@@ -547,7 +547,7 @@ section Comap
 
 open_locale Classical
 
-variable{B' : Type _}[TopologicalSpace B']
+variable {B' : Type _} [TopologicalSpace B']
 
 -- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a bundle trivialization of `proj : Z → B` and a continuous map `f : B' → B`,
@@ -794,14 +794,14 @@ end TopologicalFiberBundle
 
 namespace Bundle
 
-variable(E : B → Type _)
+variable (E : B → Type _)
 
 attribute [mfld_simps] proj total_space_mk coe_fst coe_snd_map_apply coe_snd_map_smul
 
-instance  [I : TopologicalSpace F] : ∀ x : B, TopologicalSpace (trivialₓ B F x) :=
+instance [I : TopologicalSpace F] : ∀ x : B, TopologicalSpace (trivialₓ B F x) :=
   fun x => I
 
-instance  [t₁ : TopologicalSpace B] [t₂ : TopologicalSpace F] : TopologicalSpace (total_space (trivialₓ B F)) :=
+instance [t₁ : TopologicalSpace B] [t₂ : TopologicalSpace F] : TopologicalSpace (total_space (trivialₓ B F)) :=
   TopologicalSpace.induced (proj (trivialₓ B F)) t₁⊓TopologicalSpace.induced (trivial.proj_snd B F) t₂
 
 end Bundle
@@ -815,7 +815,8 @@ Trivialization changes from `i` to `j` are given by continuous maps `coord_chang
 `B → F → F` and require continuity on `(base_set i ∩ base_set j) × F` to avoid the topology on the
 space of continuous maps on `F`. -/
 @[nolint has_inhabited_instance]
-structure TopologicalFiberBundleCore(ι : Type _)(B : Type _)[TopologicalSpace B](F : Type _)[TopologicalSpace F] where 
+structure TopologicalFiberBundleCore (ι : Type _) (B : Type _) [TopologicalSpace B] (F : Type _)
+  [TopologicalSpace F] where 
   BaseSet : ι → Set B 
   is_open_base_set : ∀ i, IsOpen (base_set i)
   indexAt : B → ι 
@@ -831,7 +832,7 @@ structure TopologicalFiberBundleCore(ι : Type _)(B : Type _)[TopologicalSpace B
 
 namespace TopologicalFiberBundleCore
 
-variable[TopologicalSpace B][TopologicalSpace F](Z : TopologicalFiberBundleCore ι B F)
+variable [TopologicalSpace B] [TopologicalSpace F] (Z : TopologicalFiberBundleCore ι B F)
 
 include Z
 
@@ -957,7 +958,7 @@ def local_triv_as_local_equiv (i : ι) : LocalEquiv Z.total_space (B × F) :=
         ·
           simp only [hx, mem_inter_eq, and_selfₓ, mem_base_set_at] }
 
-variable(i : ι)
+variable (i : ι)
 
 theorem mem_local_triv_as_local_equiv_source (p : Z.total_space) :
   p ∈ (Z.local_triv_as_local_equiv i).Source ↔ p.1 ∈ Z.base_set i :=
@@ -989,7 +990,7 @@ theorem local_triv_as_local_equiv_trans (i j : ι) :
         LocalEquiv.coe_mk, eq_self_iff_true, LocalEquiv.coe_trans, Bundle.proj] at hx⊢
       simp only [Z.coord_change_comp, hx, mem_inter_eq, and_selfₓ, mem_base_set_at]
 
-variable(ι)
+variable (ι)
 
 /-- Topological structure on the total space of a topological bundle created from core, designed so
 that all the local trivialization are continuous. -/
@@ -998,7 +999,7 @@ instance to_topological_space : TopologicalSpace (Bundle.TotalSpace Z.fiber) :=
     ⋃(i : ι)(s : Set (B × F))(s_open : IsOpen s),
       {(Z.local_triv_as_local_equiv i).Source ∩ Z.local_triv_as_local_equiv i ⁻¹' s}
 
-variable{ι}
+variable {ι}
 
 theorem open_source' (i : ι) : IsOpen (Z.local_triv_as_local_equiv i).Source :=
   by 
@@ -1180,7 +1181,7 @@ end
 
 end TopologicalFiberBundleCore
 
-variable(F){Z : Type _}[TopologicalSpace B][TopologicalSpace F]{proj : Z → B}
+variable (F) {Z : Type _} [TopologicalSpace B] [TopologicalSpace F] {proj : Z → B}
 
 open TopologicalFiberBundle
 
@@ -1189,7 +1190,7 @@ equivalences but there is not yet a topology on the total space. The total space
 topology in such a way that there is a fiber bundle structure for which the local equivalences
 are also local homeomorphism and hence local trivializations. -/
 @[nolint has_inhabited_instance]
-structure TopologicalFiberPrebundle(proj : Z → B) where 
+structure TopologicalFiberPrebundle (proj : Z → B) where 
   pretrivializationAt : B → pretrivialization F proj 
   mem_base_pretrivialization_at : ∀ x : B, x ∈ (pretrivialization_at x).BaseSet 
   continuous_triv_change :
@@ -1199,7 +1200,7 @@ structure TopologicalFiberPrebundle(proj : Z → B) where
 
 namespace TopologicalFiberPrebundle
 
-variable{F}(a : TopologicalFiberPrebundle F proj)(x : B)
+variable {F} (a : TopologicalFiberPrebundle F proj) (x : B)
 
 /-- Topology on the total space that will make the prebundle into a bundle. -/
 def total_space_topology (a : TopologicalFiberPrebundle F proj) : TopologicalSpace Z :=

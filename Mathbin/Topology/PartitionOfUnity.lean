@@ -89,7 +89,7 @@ If `X` is a normal paracompact space, then `partition_of_unity.exists_is_subordi
 that for every open covering `U : set (set X)` of `s` there exists a partition of unity that is
 subordinate to `U`.
 -/
-structure PartitionOfUnity(ι X : Type _)[TopologicalSpace X](s : Set X := univ) where 
+structure PartitionOfUnity (ι X : Type _) [TopologicalSpace X] (s : Set X := univ) where 
   toFun : ι → C(X, ℝ)
   locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : 0 ≤ to_fun 
@@ -111,20 +111,20 @@ If `X` is a normal paracompact space, then `bump_covering.exists_is_subordinate`
 every open covering `U : set (set X)` of `s` there exists a `bump_covering` of `s` that is
 subordinate to `U`.
 -/
-structure BumpCovering(ι X : Type _)[TopologicalSpace X](s : Set X := univ) where 
+structure BumpCovering (ι X : Type _) [TopologicalSpace X] (s : Set X := univ) where 
   toFun : ι → C(X, ℝ)
   locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : 0 ≤ to_fun 
   le_one' : to_fun ≤ 1 
   eventually_eq_one' : ∀ x _ : x ∈ s, ∃ i, to_fun i =ᶠ[𝓝 x] 1
 
-variable{ι : Type u}{X : Type v}[TopologicalSpace X]
+variable {ι : Type u} {X : Type v} [TopologicalSpace X]
 
 namespace PartitionOfUnity
 
-variable{s : Set X}(f : PartitionOfUnity ι X s)
+variable {s : Set X} (f : PartitionOfUnity ι X s)
 
-instance  : CoeFun (PartitionOfUnity ι X s) fun _ => ι → C(X, ℝ) :=
+instance : CoeFun (PartitionOfUnity ι X s) fun _ => ι → C(X, ℝ) :=
   ⟨to_fun⟩
 
 protected theorem LocallyFinite : LocallyFinite fun i => support (f i) :=
@@ -154,9 +154,9 @@ end PartitionOfUnity
 
 namespace BumpCovering
 
-variable{s : Set X}(f : BumpCovering ι X s)
+variable {s : Set X} (f : BumpCovering ι X s)
 
-instance  : CoeFun (BumpCovering ι X s) fun _ => ι → C(X, ℝ) :=
+instance : CoeFun (BumpCovering ι X s) fun _ => ι → C(X, ℝ) :=
   ⟨to_fun⟩
 
 protected theorem LocallyFinite : LocallyFinite fun i => support (f i) :=
@@ -195,7 +195,7 @@ protected def single (i : ι) (s : Set X) : BumpCovering ι X s :=
 theorem coe_single (i : ι) (s : Set X) : «expr⇑ » (BumpCovering.single i s) = Pi.single i 1 :=
   rfl
 
-instance  [Inhabited ι] : Inhabited (BumpCovering ι X s) :=
+instance [Inhabited ι] : Inhabited (BumpCovering ι X s) :=
   ⟨BumpCovering.single (default ι) s⟩
 
 /-- A collection of bump functions `f i` is subordinate to a family of sets `U i` indexed by the
@@ -417,9 +417,9 @@ end BumpCovering
 
 namespace PartitionOfUnity
 
-variable{s : Set X}
+variable {s : Set X}
 
-instance  [Inhabited ι] : Inhabited (PartitionOfUnity ι X s) :=
+instance [Inhabited ι] : Inhabited (PartitionOfUnity ι X s) :=
   ⟨(default (BumpCovering ι X s)).toPartitionOfUnity⟩
 
 /-- If `X` is a normal topological space and `U` is a locally finite open covering of a closed set

@@ -31,27 +31,27 @@ namespace Complex
 
 open_locale ComplexConjugate
 
-instance  : HasNorm ℂ :=
+instance : HasNorm ℂ :=
   ⟨abs⟩
 
-instance  : NormedGroup ℂ :=
+instance : NormedGroup ℂ :=
   NormedGroup.ofCore ℂ { norm_eq_zero_iff := fun z => abs_eq_zero, triangle := abs_add, norm_neg := abs_neg }
 
-instance  : NormedField ℂ :=
+instance : NormedField ℂ :=
   { Complex.field with norm := abs, dist_eq := fun _ _ => rfl, norm_mul' := abs_mul }
 
-instance  : NondiscreteNormedField ℂ :=
+instance : NondiscreteNormedField ℂ :=
   { non_trivial :=
       ⟨2,
         by 
           simp [norm] <;> normNum⟩ }
 
-instance  {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R ℂ :=
+instance {R : Type _} [NormedField R] [NormedAlgebra R ℝ] : NormedAlgebra R ℂ :=
   { norm_algebra_map_eq := fun x => (abs_of_real$ algebraMap R ℝ x).trans (norm_algebra_map_eq ℝ x),
     toAlgebra := Complex.algebra }
 
 /-- The module structure from `module.complex_to_real` is a normed space. -/
-instance (priority := 900)_root_.normed_space.complex_to_real {E : Type _} [NormedGroup E] [NormedSpace ℂ E] :
+instance (priority := 900) _root_.normed_space.complex_to_real {E : Type _} [NormedGroup E] [NormedSpace ℂ E] :
   NormedSpace ℝ E :=
   NormedSpace.restrictScalars ℝ ℂ E
 
@@ -242,7 +242,7 @@ theorem of_real_clm_apply (x : ℝ) : of_real_clm x = x :=
 theorem of_real_clm_norm : ∥of_real_clm∥ = 1 :=
   of_real_li.norm_to_continuous_linear_map
 
-noncomputable instance  : IsROrC ℂ :=
+noncomputable instance : IsROrC ℂ :=
   { re := ⟨Complex.re, Complex.zero_re, Complex.add_re⟩, im := ⟨Complex.im, Complex.zero_im, Complex.add_im⟩,
     i := Complex.i,
     I_re_ax :=
@@ -292,7 +292,7 @@ noncomputable instance  : IsROrC ℂ :=
 
 section 
 
-variable{α β γ : Type _}[AddCommMonoidₓ α][TopologicalSpace α][AddCommMonoidₓ γ][TopologicalSpace γ]
+variable {α β γ : Type _} [AddCommMonoidₓ α] [TopologicalSpace α] [AddCommMonoidₓ γ] [TopologicalSpace γ]
 
 /-- The natural `add_equiv` from `ℂ` to `ℝ × ℝ`. -/
 def equiv_real_prod_add_hom : ℂ ≃+ ℝ × ℝ :=

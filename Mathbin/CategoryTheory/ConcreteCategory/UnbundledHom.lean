@@ -17,7 +17,7 @@ namespace CategoryTheory
 /-- A class for unbundled homs used to define a category. `hom` must
 take two types `α`, `β` and instances of the corresponding structures,
 and return a predicate on `α → β`. -/
-class unbundled_hom{c : Type u → Type u}(hom : ∀ {α β}, c α → c β → (α → β) → Prop) where 
+class unbundled_hom {c : Type u → Type u} (hom : ∀ {α β}, c α → c β → (α → β) → Prop) where 
   hom_id{} : ∀ {α} ia : c α, hom ia ia id 
   hom_comp{} :
   ∀ {α β γ} {Iα : c α} {Iβ : c β} {Iγ : c γ} {g : β → γ} {f : α → β} hg : hom Iβ Iγ g hf : hom Iα Iβ f,
@@ -25,7 +25,7 @@ class unbundled_hom{c : Type u → Type u}(hom : ∀ {α β}, c α → c β → 
 
 namespace UnbundledHom
 
-variable(c : Type u → Type u)(hom : ∀ ⦃α β⦄, c α → c β → (α → β) → Prop)[𝒞 : unbundled_hom hom]
+variable (c : Type u → Type u) (hom : ∀ ⦃α β⦄, c α → c β → (α → β) → Prop) [𝒞 : unbundled_hom hom]
 
 include 𝒞
 
@@ -44,11 +44,11 @@ instance bundled_hom : bundled_hom fun α β Iα : c α Iβ : c β => Subtype (h
 
 section HasForget₂
 
-variable{c hom}{c' : Type u → Type u}{hom' : ∀ ⦃α β⦄, c' α → c' β → (α → β) → Prop}[𝒞' : unbundled_hom hom']
+variable {c hom} {c' : Type u → Type u} {hom' : ∀ ⦃α β⦄, c' α → c' β → (α → β) → Prop} [𝒞' : unbundled_hom hom']
 
 include 𝒞'
 
-variable(obj : ∀ ⦃α⦄, c α → c' α)(map : ∀ ⦃α β Iα Iβ f⦄, @hom α β Iα Iβ f → hom' (obj Iα) (obj Iβ) f)
+variable (obj : ∀ ⦃α⦄, c α → c' α) (map : ∀ ⦃α β Iα Iβ f⦄, @hom α β Iα Iβ f → hom' (obj Iα) (obj Iβ) f)
 
 /-- A custom constructor for forgetful functor
 between concrete categories defined using `unbundled_hom`. -/

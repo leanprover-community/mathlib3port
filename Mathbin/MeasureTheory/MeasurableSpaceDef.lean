@@ -40,10 +40,10 @@ open Set Encodable Function Equiv
 
 open_locale Classical
 
-variable{α β γ δ δ' : Type _}{ι : Sort _}{s t u : Set α}
+variable {α β γ δ δ' : Type _} {ι : Sort _} {s t u : Set α}
 
 /-- A measurable space is a space equipped with a σ-algebra. -/
-structure MeasurableSpace(α : Type _) where 
+structure MeasurableSpace (α : Type _) where 
   MeasurableSet' : Set α → Prop 
   measurable_set_empty : measurable_set' ∅
   measurable_set_compl : ∀ s, measurable_set' s → measurable_set' («expr ᶜ» s)
@@ -51,12 +51,12 @@ structure MeasurableSpace(α : Type _) where
 
 attribute [class] MeasurableSpace
 
-instance  [h : MeasurableSpace α] : MeasurableSpace (OrderDual α) :=
+instance [h : MeasurableSpace α] : MeasurableSpace (OrderDual α) :=
   h
 
 section 
 
-variable[MeasurableSpace α]
+variable [MeasurableSpace α]
 
 /-- `measurable_set s` means that `s` is measurable (in the ambient measure space on `α`) -/
 def MeasurableSet : Set α → Prop :=
@@ -250,7 +250,7 @@ theorem MeasurableSpace.ext_iff {m₁ m₂ : MeasurableSpace α} :
     MeasurableSpace.ext⟩
 
 /-- A typeclass mixin for `measurable_space`s such that each singleton is measurable. -/
-class MeasurableSingletonClass(α : Type _)[MeasurableSpace α] : Prop where 
+class MeasurableSingletonClass (α : Type _) [MeasurableSpace α] : Prop where 
   measurable_set_singleton : ∀ x, MeasurableSet ({x} : Set α)
 
 export MeasurableSingletonClass(measurable_set_singleton)
@@ -259,7 +259,7 @@ attribute [simp] measurable_set_singleton
 
 section MeasurableSingletonClass
 
-variable[MeasurableSpace α][MeasurableSingletonClass α]
+variable [MeasurableSpace α] [MeasurableSingletonClass α]
 
 theorem measurable_set_eq {a : α} : MeasurableSet { x | x = a } :=
   measurable_set_singleton a
@@ -296,9 +296,16 @@ namespace MeasurableSpace
 
 section CompleteLattice
 
-instance  : PartialOrderₓ (MeasurableSpace α) :=
-  { le := fun m₁ m₂ => m₁.measurable_set' ≤ m₂.measurable_set', le_refl := fun a b => le_reflₓ _,
-    le_trans := fun a b c => le_transₓ, le_antisymm := fun a b h₁ h₂ => MeasurableSpace.ext$ fun s => ⟨h₁ s, h₂ s⟩ }
+instance : LE (MeasurableSpace α) :=
+  { le := fun m₁ m₂ => m₁.measurable_set' ≤ m₂.measurable_set' }
+
+theorem le_def {α} {a b : MeasurableSpace α} : a ≤ b ↔ a.measurable_set' ≤ b.measurable_set' :=
+  Iff.rfl
+
+instance : PartialOrderₓ (MeasurableSpace α) :=
+  { MeasurableSpace.hasLe with le_refl := fun a b => le_reflₓ _,
+    le_trans := fun a b c hab hbc => le_def.mpr (le_transₓ hab hbc),
+    le_antisymm := fun a b h₁ h₂ => MeasurableSpace.ext$ fun s => ⟨h₁ s, h₂ s⟩ }
 
 /-- The smallest σ-algebra containing a collection `s` of basic sets -/
 inductive generate_measurable (s : Set (Set α)) : Set α → Prop
@@ -351,10 +358,10 @@ def gi_generate_from : GaloisInsertion (@generate_from α) fun m => { t | @Measu
     choice := fun g hg => MeasurableSpace.mkOfClosure g$ le_antisymmₓ hg$ (generate_from_le_iff _).1 le_rfl,
     choice_eq := fun g hg => mk_of_closure_sets }
 
-instance  : CompleteLattice (MeasurableSpace α) :=
+instance : CompleteLattice (MeasurableSpace α) :=
   gi_generate_from.liftCompleteLattice
 
-instance  : Inhabited (MeasurableSpace α) :=
+instance : Inhabited (MeasurableSpace α) :=
   ⟨⊤⟩
 
 -- error in MeasureTheory.MeasurableSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -427,7 +434,7 @@ def Measurable [MeasurableSpace α] [MeasurableSpace β] (f : α → β) : Prop 
 
 localized [MeasureTheory] notation "measurable[" m "]" => @Measurable _ _ m _
 
-variable[MeasurableSpace α][MeasurableSpace β][MeasurableSpace γ]
+variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
 
 theorem measurable_id : Measurable (@id α) :=
   fun t => id

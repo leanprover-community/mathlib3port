@@ -35,9 +35,9 @@ universe v
 
 noncomputable theory
 
-variable{X : Top.{v}}
+variable {X : Top.{v}}
 
-variable(T : X → Type v)
+variable (T : X → Type v)
 
 open TopologicalSpace
 
@@ -62,7 +62,7 @@ structure prelocal_predicate where
   pred : ∀ {U : opens X}, (∀ x : U, T x) → Prop 
   res : ∀ {U V : opens X} i : U ⟶ V f : ∀ x : V, T x h : pred f, pred fun x : U => f (i x)
 
-variable(X)
+variable (X)
 
 /--
 Continuity is a "prelocal" predicate on functions to a fixed topological space `T`.
@@ -76,7 +76,7 @@ def continuous_prelocal (T : Top.{v}) : prelocal_predicate fun x : X => T :=
 instance inhabited_prelocal_predicate (T : Top.{v}) : Inhabited (prelocal_predicate fun x : X => T) :=
   ⟨continuous_prelocal X T⟩
 
-variable{X}
+variable {X}
 
 /--
 Given a topological space `X : Top` and a type family `T : X → Type`,
@@ -94,7 +94,7 @@ structure local_predicate extends prelocal_predicate T where
   ∀ {U : opens X} f : ∀ x : U, T x w : ∀ x : U, ∃ (V : opens X)(m : x.1 ∈ V)(i : V ⟶ U), pred fun x : V => f (i x : U),
     pred f
 
-variable(X)
+variable (X)
 
 /--
 Continuity is a "local" predicate on functions to a fixed topological space `T`.
@@ -117,7 +117,7 @@ def continuous_local (T : Top.{v}) : local_predicate fun x : X => T :=
 instance inhabited_local_predicate (T : Top.{v}) : Inhabited (local_predicate _) :=
   ⟨continuous_local X T⟩
 
-variable{X T}
+variable {X T}
 
 /--
 Given a `P : prelocal_predicate`, we can always construct a `local_predicate`
@@ -160,7 +160,7 @@ def subpresheaf_to_Types (P : prelocal_predicate T) : presheaf (Type v) X :=
 
 namespace SubpresheafToTypes
 
-variable(P : prelocal_predicate T)
+variable (P : prelocal_predicate T)
 
 /--
 The natural transformation including the subpresheaf of functions satisfying a local predicate

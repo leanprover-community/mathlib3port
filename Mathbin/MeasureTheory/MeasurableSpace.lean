@@ -58,13 +58,13 @@ open Set Encodable Function Equiv
 
 open_locale Classical Filter
 
-variable{α β γ δ δ' : Type _}{ι : Sort _}{s t u : Set α}
+variable {α β γ δ δ' : Type _} {ι : Sort _} {s t u : Set α}
 
 namespace MeasurableSpace
 
 section Functors
 
-variable{m m₁ m₂ : MeasurableSpace α}{m' : MeasurableSpace β}{f : α → β}{g : β → α}
+variable {m m₁ m₂ : MeasurableSpace α} {m' : MeasurableSpace β} {f : α → β} {g : β → α}
 
 /-- The forward image of a measurable space under a function. `map f m` contains the sets
   `s : set β` whose preimage under `f` is measurable. -/
@@ -200,7 +200,7 @@ theorem measurable_generate_from [MeasurableSpace α] {s : Set (Set β)} {f : α
   (h : ∀ t _ : t ∈ s, MeasurableSet (f ⁻¹' t)) : @Measurable _ _ _ (generate_from s) f :=
   Measurable.of_le_map$ generate_from_le h
 
-variable[MeasurableSpace α][MeasurableSpace β][MeasurableSpace γ]
+variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
 
 @[measurability]
 theorem measurable_set_preimage {f : α → β} {t : Set β} (hf : Measurable f) (ht : MeasurableSet t) :
@@ -299,24 +299,24 @@ end MeasurableFunctions
 
 section Constructions
 
-variable[MeasurableSpace α][MeasurableSpace β][MeasurableSpace γ]
+variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ]
 
-instance  : MeasurableSpace Empty :=
+instance : MeasurableSpace Empty :=
   ⊤
 
-instance  : MeasurableSpace PUnit :=
+instance : MeasurableSpace PUnit :=
   ⊤
 
-instance  : MeasurableSpace Bool :=
+instance : MeasurableSpace Bool :=
   ⊤
 
-instance  : MeasurableSpace ℕ :=
+instance : MeasurableSpace ℕ :=
   ⊤
 
-instance  : MeasurableSpace ℤ :=
+instance : MeasurableSpace ℤ :=
   ⊤
 
-instance  : MeasurableSpace ℚ :=
+instance : MeasurableSpace ℚ :=
   ⊤
 
 theorem measurable_to_encodable [Encodable α] {f : β → α} (h : ∀ y, MeasurableSet (f ⁻¹' {f y})) : Measurable f :=
@@ -371,14 +371,14 @@ end Nat
 
 section Quotientₓ
 
-instance  {α} {r : α → α → Prop} [m : MeasurableSpace α] : MeasurableSpace (Quot r) :=
+instance {α} {r : α → α → Prop} [m : MeasurableSpace α] : MeasurableSpace (Quot r) :=
   m.map (Quot.mk r)
 
-instance  {α} {s : Setoidₓ α} [m : MeasurableSpace α] : MeasurableSpace (Quotientₓ s) :=
+instance {α} {s : Setoidₓ α} [m : MeasurableSpace α] : MeasurableSpace (Quotientₓ s) :=
   m.map Quotientₓ.mk'
 
 @[toAdditive]
-instance  {G} [Groupₓ G] [MeasurableSpace G] (S : Subgroup G) : MeasurableSpace (QuotientGroup.Quotient S) :=
+instance {G} [Groupₓ G] [MeasurableSpace G] (S : Subgroup G) : MeasurableSpace (QuotientGroup.Quotient S) :=
   Quotientₓ.measurableSpace
 
 theorem measurable_set_quotient {s : Setoidₓ α} {t : Set (Quotientₓ s)} :
@@ -417,7 +417,7 @@ end Quotientₓ
 
 section Subtype
 
-instance  {α} {p : α → Prop} [m : MeasurableSpace α] : MeasurableSpace (Subtype p) :=
+instance {α} {p : α → Prop} [m : MeasurableSpace α] : MeasurableSpace (Subtype p) :=
   m.comap (coeₓ : _ → α)
 
 @[measurability]
@@ -498,7 +498,7 @@ end Subtype
 
 section Prod
 
-instance  {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : MeasurableSpace (α × β) :=
+instance {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : MeasurableSpace (α × β) :=
   m₁.comap Prod.fst⊔m₂.comap Prod.snd
 
 @[measurability]
@@ -541,7 +541,7 @@ theorem measurable_prod_mk_right {y : β} : Measurable fun x : α => (x, y) :=
   measurable_id.prod_mk measurable_const
 
 theorem Measurable.prod_map [MeasurableSpace δ] {f : α → β} {g : γ → δ} (hf : Measurable f) (hg : Measurable g) :
-  Measurable (Prod.mapₓ f g) :=
+  Measurable (Prod.map f g) :=
   (hf.comp measurable_fst).prod_mk (hg.comp measurable_snd)
 
 theorem Measurable.of_uncurry_left {f : α → β → γ} (hf : Measurable (uncurry f)) {x : α} : Measurable (f x) :=
@@ -617,12 +617,12 @@ end Prod
 
 section Pi
 
-variable{π : δ → Type _}
+variable {π : δ → Type _}
 
 instance MeasurableSpace.pi [m : ∀ a, MeasurableSpace (π a)] : MeasurableSpace (∀ a, π a) :=
   ⨆a, (m a).comap fun b => b a
 
-variable[∀ a, MeasurableSpace (π a)][MeasurableSpace γ]
+variable [∀ a, MeasurableSpace (π a)] [MeasurableSpace γ]
 
 theorem measurable_pi_iff {g : α → ∀ a, π a} : Measurable g ↔ ∀ a, Measurable fun x => g x a :=
   by 
@@ -689,7 +689,7 @@ theorem measurable_set_pi {s : Set δ} {t : ∀ i, Set (π i)} (hs : countable s
 
 section 
 
-variable(π)
+variable (π)
 
 -- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[measurability #[]]
@@ -746,7 +746,7 @@ section Tprod
 
 open List
 
-variable{π : δ → Type _}[∀ x, MeasurableSpace (π x)]
+variable {π : δ → Type _} [∀ x, MeasurableSpace (π x)]
 
 theorem measurable_tprod_mk (l : List δ) : Measurable (@tprod.mk δ π l) :=
   by 
@@ -779,7 +779,7 @@ theorem MeasurableSet.tprod (l : List δ) {s : ∀ i, Set (π i)} (hs : ∀ i, M
 
 end Tprod
 
-instance  {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : MeasurableSpace (Sum α β) :=
+instance {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : MeasurableSpace (Sum α β) :=
   m₁.map Sum.inl⊓m₂.map Sum.inr
 
 section Sum
@@ -839,7 +839,7 @@ theorem measurable_set_range_inr : MeasurableSet (range Sum.inr : Set (Sum α β
 
 end Sum
 
-instance  {α} {β : α → Type _} [m : ∀ a, MeasurableSpace (β a)] : MeasurableSpace (Sigma β) :=
+instance {α} {β : α → Type _} [m : ∀ a, MeasurableSpace (β a)] : MeasurableSpace (Sigma β) :=
   ⨅a, (m a).map (Sigma.mk a)
 
 end Constructions
@@ -856,14 +856,14 @@ range and the range is a measurable set. One implication is formalized as
 `measurable_equiv.measurable_embedding`, `measurable_embedding.subtype_coe`, and
 `measurable_embedding.comp`. -/
 @[protectProj]
-structure MeasurableEmbedding{α β : Type _}[MeasurableSpace α][MeasurableSpace β](f : α → β) : Prop where 
+structure MeasurableEmbedding {α β : Type _} [MeasurableSpace α] [MeasurableSpace β] (f : α → β) : Prop where 
   Injective : injective f 
   Measurable : Measurable f 
   measurable_set_image' : ∀ ⦃s⦄, MeasurableSet s → MeasurableSet (f '' s)
 
 namespace MeasurableEmbedding
 
-variable[MeasurableSpace α][MeasurableSpace β][MeasurableSpace γ]{f : α → β}{g : β → γ}
+variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α → β} {g : β → γ}
 
 theorem measurable_set_image (hf : MeasurableEmbedding f) {s : Set α} : MeasurableSet (f '' s) ↔ MeasurableSet s :=
   ⟨fun h =>
@@ -937,7 +937,7 @@ theorem MeasurableSet.exists_measurable_proj [MeasurableSpace α] {s : Set α} (
 
 /-- Equivalences between measurable spaces. Main application is the simplification of measurability
 statements along measurable equivalences. -/
-structure MeasurableEquiv(α β : Type _)[MeasurableSpace α][MeasurableSpace β] extends α ≃ β where 
+structure MeasurableEquiv (α β : Type _) [MeasurableSpace α] [MeasurableSpace β] extends α ≃ β where 
   measurable_to_fun : Measurable to_equiv 
   measurable_inv_fun : Measurable to_equiv.symm
 
@@ -945,12 +945,12 @@ infixl:25 " ≃ᵐ " => MeasurableEquiv
 
 namespace MeasurableEquiv
 
-variable(α β)[MeasurableSpace α][MeasurableSpace β][MeasurableSpace γ][MeasurableSpace δ]
+variable (α β) [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] [MeasurableSpace δ]
 
-instance  : CoeFun (α ≃ᵐ β) fun _ => α → β :=
+instance : CoeFun (α ≃ᵐ β) fun _ => α → β :=
   ⟨fun e => e.to_fun⟩
 
-variable{α β}
+variable {α β}
 
 @[simp]
 theorem coe_to_equiv (e : α ≃ᵐ β) : (e.to_equiv : α → β) = e :=
@@ -968,7 +968,7 @@ theorem coe_mk (e : α ≃ β) (h1 : Measurable e) (h2 : Measurable e.symm) : ((
 def refl (α : Type _) [MeasurableSpace α] : α ≃ᵐ α :=
   { toEquiv := Equiv.refl α, measurable_to_fun := measurable_id, measurable_inv_fun := measurable_id }
 
-instance  : Inhabited (α ≃ᵐ α) :=
+instance : Inhabited (α ≃ᵐ α) :=
   ⟨refl α⟩
 
 /-- The composition of equivalences between measurable spaces. -/
@@ -1266,7 +1266,7 @@ def sum_prod_sum α β γ δ [MeasurableSpace α] [MeasurableSpace β] [Measurab
   Sum α β × Sum γ δ ≃ᵐ Sum (Sum (α × γ) (α × δ)) (Sum (β × γ) (β × δ)) :=
   (sum_prod_distrib _ _ _).trans$ sum_congr (prod_sum_distrib _ _ _) (prod_sum_distrib _ _ _)
 
-variable{π π' : δ' → Type _}[∀ x, MeasurableSpace (π x)][∀ x, MeasurableSpace (π' x)]
+variable {π π' : δ' → Type _} [∀ x, MeasurableSpace (π x)] [∀ x, MeasurableSpace (π' x)]
 
 /-- A family of measurable equivalences `Π a, β₁ a ≃ᵐ β₂ a` generates a measurable equivalence
   between  `Π a, β₁ a` and `Π a, β₂ a`. -/
@@ -1303,7 +1303,7 @@ end MeasurableEquiv
 
 namespace MeasurableEmbedding
 
-variable[MeasurableSpace α][MeasurableSpace β][MeasurableSpace γ]{f : α → β}
+variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α → β}
 
 /-- A measurable embedding defines a measurable equivalence between its domain
 and its range. -/
@@ -1329,10 +1329,10 @@ end MeasurableEmbedding
 
 namespace Filter
 
-variable[MeasurableSpace α]
+variable [MeasurableSpace α]
 
 /-- A filter `f` is measurably generates if each `s ∈ f` includes a measurable `t ∈ f`. -/
-class is_measurably_generated(f : Filter α) : Prop where 
+class is_measurably_generated (f : Filter α) : Prop where 
   exists_measurable_subset : ∀ ⦃s⦄, s ∈ f → ∃ (t : _)(_ : t ∈ f), MeasurableSet t ∧ t ⊆ s
 
 instance is_measurably_generated_bot : is_measurably_generated (⊥ : Filter α) :=
@@ -1411,23 +1411,23 @@ namespace MeasurableSet
 -/
 
 
-variable[MeasurableSpace α]
+variable [MeasurableSpace α]
 
-instance  : HasMem α (Subtype (MeasurableSet : Set α → Prop)) :=
+instance : HasMem α (Subtype (MeasurableSet : Set α → Prop)) :=
   ⟨fun a s => a ∈ (s : Set α)⟩
 
 @[simp]
 theorem mem_coe (a : α) (s : Subtype (MeasurableSet : Set α → Prop)) : a ∈ (s : Set α) ↔ a ∈ s :=
   Iff.rfl
 
-instance  : HasEmptyc (Subtype (MeasurableSet : Set α → Prop)) :=
+instance : HasEmptyc (Subtype (MeasurableSet : Set α → Prop)) :=
   ⟨⟨∅, MeasurableSet.empty⟩⟩
 
 @[simp]
 theorem coe_empty : «expr↑ » (∅ : Subtype (MeasurableSet : Set α → Prop)) = (∅ : Set α) :=
   rfl
 
-instance  [MeasurableSingletonClass α] : HasInsert α (Subtype (MeasurableSet : Set α → Prop)) :=
+instance [MeasurableSingletonClass α] : HasInsert α (Subtype (MeasurableSet : Set α → Prop)) :=
   ⟨fun a s => ⟨HasInsert.insert a s, s.prop.insert a⟩⟩
 
 @[simp]
@@ -1435,64 +1435,67 @@ theorem coe_insert [MeasurableSingletonClass α] (a : α) (s : Subtype (Measurab
   «expr↑ » (HasInsert.insert a s) = (HasInsert.insert a s : Set α) :=
   rfl
 
-instance  : HasCompl (Subtype (MeasurableSet : Set α → Prop)) :=
+instance : HasCompl (Subtype (MeasurableSet : Set α → Prop)) :=
   ⟨fun x => ⟨«expr ᶜ» x, x.prop.compl⟩⟩
 
 @[simp]
 theorem coe_compl (s : Subtype (MeasurableSet : Set α → Prop)) : «expr↑ » («expr ᶜ» s) = («expr ᶜ» s : Set α) :=
   rfl
 
-instance  : HasUnion (Subtype (MeasurableSet : Set α → Prop)) :=
+instance : HasUnion (Subtype (MeasurableSet : Set α → Prop)) :=
   ⟨fun x y => ⟨x ∪ y, x.prop.union y.prop⟩⟩
 
 @[simp]
 theorem coe_union (s t : Subtype (MeasurableSet : Set α → Prop)) : «expr↑ » (s ∪ t) = (s ∪ t : Set α) :=
   rfl
 
-instance  : HasInter (Subtype (MeasurableSet : Set α → Prop)) :=
+instance : HasInter (Subtype (MeasurableSet : Set α → Prop)) :=
   ⟨fun x y => ⟨x ∩ y, x.prop.inter y.prop⟩⟩
 
 @[simp]
 theorem coe_inter (s t : Subtype (MeasurableSet : Set α → Prop)) : «expr↑ » (s ∩ t) = (s ∩ t : Set α) :=
   rfl
 
-instance  : HasSdiff (Subtype (MeasurableSet : Set α → Prop)) :=
+instance : HasSdiff (Subtype (MeasurableSet : Set α → Prop)) :=
   ⟨fun x y => ⟨x \ y, x.prop.diff y.prop⟩⟩
 
 @[simp]
 theorem coe_sdiff (s t : Subtype (MeasurableSet : Set α → Prop)) : «expr↑ » (s \ t) = (s \ t : Set α) :=
   rfl
 
-instance  : HasBot (Subtype (MeasurableSet : Set α → Prop)) :=
+instance : HasBot (Subtype (MeasurableSet : Set α → Prop)) :=
   ⟨⟨⊥, MeasurableSet.empty⟩⟩
 
 @[simp]
 theorem coe_bot : «expr↑ » (⊥ : Subtype (MeasurableSet : Set α → Prop)) = (⊥ : Set α) :=
   rfl
 
-instance  : HasTop (Subtype (MeasurableSet : Set α → Prop)) :=
+instance : HasTop (Subtype (MeasurableSet : Set α → Prop)) :=
   ⟨⟨⊤, MeasurableSet.univ⟩⟩
 
 @[simp]
 theorem coe_top : «expr↑ » (⊤ : Subtype (MeasurableSet : Set α → Prop)) = (⊤ : Set α) :=
   rfl
 
-instance  : PartialOrderₓ (Subtype (MeasurableSet : Set α → Prop)) :=
+instance : PartialOrderₓ (Subtype (MeasurableSet : Set α → Prop)) :=
   PartialOrderₓ.lift _ Subtype.coe_injective
 
-instance  : BoundedDistribLattice (Subtype (MeasurableSet : Set α → Prop)) :=
+instance : DistribLattice (Subtype (MeasurableSet : Set α → Prop)) :=
   { MeasurableSet.Subtype.partialOrder with sup := · ∪ ·,
     le_sup_left := fun a b => show (a : Set α) ≤ a⊔b from le_sup_left,
     le_sup_right := fun a b => show (b : Set α) ≤ a⊔b from le_sup_right,
     sup_le := fun a b c ha hb => show (a⊔b : Set α) ≤ c from sup_le ha hb, inf := · ∩ ·,
     inf_le_left := fun a b => show (a⊓b : Set α) ≤ a from inf_le_left,
     inf_le_right := fun a b => show (a⊓b : Set α) ≤ b from inf_le_right,
-    le_inf := fun a b c ha hb => show (a : Set α) ≤ b⊓c from le_inf ha hb, top := ⊤,
-    le_top := fun a => show (a : Set α) ≤ ⊤ from le_top, bot := ⊥, bot_le := fun a => show (⊥ : Set α) ≤ a from bot_le,
+    le_inf := fun a b c ha hb => show (a : Set α) ≤ b⊓c from le_inf ha hb,
     le_sup_inf := fun x y z => show ((x⊔y)⊓(x⊔z) : Set α) ≤ x⊔y⊓z from le_sup_inf }
 
-instance  : BooleanAlgebra (Subtype (MeasurableSet : Set α → Prop)) :=
-  { MeasurableSet.Subtype.boundedDistribLattice with sdiff := · \ ·,
+instance : BoundedOrder (Subtype (MeasurableSet : Set α → Prop)) :=
+  { top := ⊤, le_top := fun a => show (a : Set α) ≤ ⊤ from le_top, bot := ⊥,
+    bot_le := fun a => show (⊥ : Set α) ≤ a from bot_le }
+
+instance : BooleanAlgebra (Subtype (MeasurableSet : Set α → Prop)) :=
+  { MeasurableSet.Subtype.boundedOrder, MeasurableSet.Subtype.distribLattice with sdiff := · \ ·,
     sup_inf_sdiff := fun a b => Subtype.eq$ sup_inf_sdiff a b,
     inf_inf_sdiff := fun a b => Subtype.eq$ inf_inf_sdiff a b, Compl := HasCompl.compl,
     inf_compl_le_bot := fun a => BooleanAlgebra.inf_compl_le_bot (a : Set α),

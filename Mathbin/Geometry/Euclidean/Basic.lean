@@ -69,7 +69,7 @@ corresponding results for Euclidean affine spaces.
 -/
 
 
-variable{V : Type _}[InnerProductSpace ℝ V]
+variable {V : Type _} [InnerProductSpace ℝ V]
 
 /-- The undirected angle between two vectors. If either vector is 0,
 this is π/2. -/
@@ -403,7 +403,7 @@ Euclidean affine spaces.
 
 open InnerProductGeometry
 
-variable{V : Type _}{P : Type _}[InnerProductSpace ℝ V][MetricSpace P][NormedAddTorsor V P]
+variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
 
 local notation "⟪" x ", " y "⟫" => @inner ℝ V _ x y
 
@@ -759,7 +759,7 @@ begin
   exact [expr eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two hd' (mem_top exprℝ() V _) (mem_top exprℝ() V _) (mem_top exprℝ() V _) (mem_top exprℝ() V _) (mem_top exprℝ() V _) hc hp hp₁c₁ hp₂c₁ hpc₁ hp₁c₂ hp₂c₂ hpc₂]
 end
 
-variable{V}
+variable {V}
 
 /-- The orthogonal projection of a point onto a nonempty affine
 subspace, whose direction is complete, as an unbundled function.  This

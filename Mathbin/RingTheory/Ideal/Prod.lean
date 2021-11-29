@@ -12,7 +12,7 @@ product `I × J`, viewed as an ideal of `R × S`. In `ideal_prod_eq` we show tha
 
 universe u v
 
-variable{R : Type u}{S : Type v}[Ringₓ R][Ringₓ S](I I' : Ideal R)(J J' : Ideal S)
+variable {R : Type u} {S : Type v} [Ringₓ R] [Ringₓ S] (I I' : Ideal R) (J J' : Ideal S)
 
 namespace Ideal
 
@@ -193,7 +193,7 @@ private def prime_ideals_equiv_impl :
 
 section 
 
-variable(R S)
+variable (R S)
 
 /-- The prime ideals of `R × S` are in bijection with the disjoint union of the prime ideals
     of `R` and the prime ideals of `S`. -/

@@ -19,15 +19,15 @@ to unify the APIs where possible.
 -/
 
 
-variable{R S M : Type _}
+variable {R S M : Type _}
 
 section AddCommMonoidₓ
 
-variable[Semiringₓ R][Semiringₓ S][AddCommMonoidₓ M][Module R M][Module S M]
+variable [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ M] [Module R M] [Module S M]
 
-variable[HasScalar S R][IsScalarTower S R M]
+variable [HasScalar S R] [IsScalarTower S R M]
 
-variable{p q : Submodule R M}
+variable {p q : Submodule R M}
 
 namespace Submodule
 
@@ -48,7 +48,7 @@ theorem bot_to_add_submonoid : (⊥ : Submodule R M).toAddSubmonoid = ⊥ :=
 
 section 
 
-variable(R)
+variable (R)
 
 @[simp]
 theorem restrict_scalars_bot : restrict_scalars S (⊥ : Submodule R M) = ⊥ :=
@@ -122,7 +122,7 @@ theorem eq_bot_of_subsingleton (p : Submodule R M) [Subsingleton p] : p = ⊥ :=
     exact congr_argₓ coeₓ (Subsingleton.elimₓ (⟨v, hv⟩ : p) 0)
 
 /-- The universal set is the top element of the lattice of submodules. -/
-instance  : HasTop (Submodule R M) :=
+instance : HasTop (Submodule R M) :=
   ⟨{ (⊤ : AddSubmonoid M) with Carrier := Set.Univ, smul_mem' := fun _ _ _ => trivialₓ }⟩
 
 @[simp]
@@ -139,7 +139,7 @@ theorem mem_top {x : M} : x ∈ (⊤ : Submodule R M) :=
 
 section 
 
-variable(R)
+variable (R)
 
 @[simp]
 theorem restrict_scalars_top : restrict_scalars S (⊤ : Submodule R M) = ⊤ :=
@@ -147,7 +147,7 @@ theorem restrict_scalars_top : restrict_scalars S (⊤ : Submodule R M) = ⊤ :=
 
 end 
 
-instance  : OrderTop (Submodule R M) :=
+instance : OrderTop (Submodule R M) :=
   { top := ⊤, le_top := fun p x _ => trivialₓ }
 
 theorem eq_top_iff' {p : Submodule R M} : p = ⊤ ↔ ∀ x, x ∈ p :=
@@ -203,7 +203,7 @@ instance : has_inf (submodule R M) :=
    add_mem' := by simp [] [] [] ["[", expr add_mem, "]"] [] [] { contextual := tt },
    smul_mem' := by simp [] [] [] ["[", expr smul_mem, "]"] [] [] { contextual := tt } }⟩
 
-instance  : CompleteLattice (Submodule R M) :=
+instance : CompleteLattice (Submodule R M) :=
   { Submodule.orderTop, Submodule.orderBot, SetLike.partialOrder with sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x },
     le_sup_left := fun a b => le_Inf'$ fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf'$ fun x ⟨ha, hb⟩ => hb,
     sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := ·⊓·, le_inf := fun a b c => Set.subset_inter,
@@ -317,7 +317,7 @@ end AddCommMonoidₓ
 
 section IntSubmodule
 
-variable[AddCommGroupₓ M]
+variable [AddCommGroupₓ M]
 
 /-- An additive subgroup is equivalent to a ℤ-submodule. -/
 def AddSubgroup.toIntSubmodule : AddSubgroup M ≃o Submodule ℤ M :=

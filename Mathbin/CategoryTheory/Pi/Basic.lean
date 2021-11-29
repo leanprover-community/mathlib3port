@@ -13,7 +13,7 @@ namespace CategoryTheory
 
 universe w₀ w₁ w₂ v₁ v₂ u₁ u₂
 
-variable{I : Type w₀}(C : I → Type u₁)[∀ i, category.{v₁} (C i)]
+variable {I : Type w₀} (C : I → Type u₁) [∀ i, category.{v₁} (C i)]
 
 /--
 `pi C` gives the cartesian product of an indexed family of categories.
@@ -49,7 +49,7 @@ def eval (i : I) : (∀ i, C i) ⥤ C i :=
 
 section 
 
-variable{J : Type w₁}
+variable {J : Type w₁}
 
 /--
 Pull back an `I`-indexed family of objects to an `J`-indexed family, along a function `J → I`.
@@ -58,7 +58,7 @@ Pull back an `I`-indexed family of objects to an `J`-indexed family, along a fun
 def comap (h : J → I) : (∀ i, C i) ⥤ ∀ j, C (h j) :=
   { obj := fun f i => f (h i), map := fun f g α i => α (h i) }
 
-variable(I)
+variable (I)
 
 /--
 The natural isomorphism between
@@ -68,9 +68,9 @@ and the identity functor. -/
 def comap_id : comap C (id : I → I) ≅ 𝟭 (∀ i, C i) :=
   { Hom := { app := fun X => 𝟙 X }, inv := { app := fun X => 𝟙 X } }
 
-variable{I}
+variable {I}
 
-variable{K : Type w₂}
+variable {K : Type w₂}
 
 /--
 The natural isomorphism comparing between
@@ -92,7 +92,7 @@ end
 
 section 
 
-variable{J : Type w₀}{D : J → Type u₁}[∀ j, category.{v₁} (D j)]
+variable {J : Type w₀} {D : J → Type u₁} [∀ j, category.{v₁} (D j)]
 
 instance sum_elim_category : ∀ s : Sum I J, category.{v₁} (Sum.elim C D s)
 | Sum.inl i =>
@@ -115,7 +115,7 @@ def Sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : Sum I J, Sum.elim C D s :=
 
 end 
 
-variable{C}
+variable {C}
 
 /-- An isomorphism between `I`-indexed objects gives an isomorphism between each
 pair of corresponding components. -/
@@ -146,9 +146,9 @@ end Pi
 
 namespace Functor
 
-variable{C}
+variable {C}
 
-variable{D : I → Type u₁}[∀ i, category.{v₁} (D i)]
+variable {D : I → Type u₁} [∀ i, category.{v₁} (D i)]
 
 /--
 Assemble an `I`-indexed family of functors into a functor between the pi types.
@@ -161,11 +161,11 @@ end Functor
 
 namespace NatTrans
 
-variable{C}
+variable {C}
 
-variable{D : I → Type u₁}[∀ i, category.{v₁} (D i)]
+variable {D : I → Type u₁} [∀ i, category.{v₁} (D i)]
 
-variable{F G : ∀ i, C i ⥤ D i}
+variable {F G : ∀ i, C i ⥤ D i}
 
 /--
 Assemble an `I`-indexed family of natural transformations into a single natural transformation.

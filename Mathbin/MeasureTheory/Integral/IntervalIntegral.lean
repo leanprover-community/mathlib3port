@@ -165,7 +165,7 @@ open MeasureTheory Set Classical Filter Function
 
 open_locale Classical TopologicalSpace Filter Ennreal BigOperators Interval
 
-variable{α β 𝕜 E F : Type _}[LinearOrderₓ α][MeasurableSpace α][MeasurableSpace E][NormedGroup E]
+variable {α β 𝕜 E F : Type _} [LinearOrderₓ α] [MeasurableSpace α] [MeasurableSpace E] [NormedGroup E]
 
 /-!
 ### Almost everywhere on an interval
@@ -174,7 +174,7 @@ variable{α β 𝕜 E F : Type _}[LinearOrderₓ α][MeasurableSpace α][Measura
 
 section 
 
-variable{μ : Measureₓ α}{a b : α}{P : α → Prop}
+variable {μ : Measureₓ α} {a b : α} {P : α → Prop}
 
 theorem ae_interval_oc_iff : (∀ᵐx ∂μ, x ∈ Ι a b → P x) ↔ (∀ᵐx ∂μ, x ∈ Ioc a b → P x) ∧ ∀ᵐx ∂μ, x ∈ Ioc b a → P x :=
   by 
@@ -187,7 +187,7 @@ theorem ae_measurable_interval_oc_iff {μ : Measureₓ α} {β : Type _} [Measur
     dsimp [interval_oc]
     cases' le_totalₓ a b with hab hab <;> simp [hab]
 
-variable[TopologicalSpace α][OpensMeasurableSpace α][OrderClosedTopology α]
+variable [TopologicalSpace α] [OpensMeasurableSpace α] [OrderClosedTopology α]
 
 theorem ae_interval_oc_iff' :
   (∀ᵐx ∂μ, x ∈ Ι a b → P x) ↔ (∀ᵐx ∂μ.restrict$ Ioc a b, P x) ∧ ∀ᵐx ∂μ.restrict$ Ioc b a, P x :=
@@ -239,11 +239,21 @@ theorem MeasureTheory.IntegrableOn.interval_integrable {f : α → E} {a b : α}
   ⟨MeasureTheory.IntegrableOn.mono_set hf (Ioc_subset_Icc_self.trans Icc_subset_interval),
     MeasureTheory.IntegrableOn.mono_set hf (Ioc_subset_Icc_self.trans Icc_subset_interval')⟩
 
+theorem interval_integrable_const_iff {a b : α} {μ : Measureₓ α} {c : E} :
+  IntervalIntegrable (fun _ => c) μ a b ↔ c = 0 ∨ μ (Ι a b) < ∞ :=
+  by 
+    simp only [interval_integrable_iff, integrable_on_const]
+
+@[simp]
+theorem interval_integrable_const [TopologicalSpace α] [CompactIccSpace α] {μ : Measureₓ α}
+  [is_locally_finite_measure μ] {a b : α} {c : E} : IntervalIntegrable (fun _ => c) μ a b :=
+  interval_integrable_const_iff.2$ Or.inr measure_Ioc_lt_top
+
 namespace IntervalIntegrable
 
 section 
 
-variable{f : α → E}{a b c d : α}{μ ν : Measureₓ α}
+variable {f : α → E} {a b c d : α} {μ ν : Measureₓ α}
 
 @[symm]
 theorem symm (h : IntervalIntegrable f μ a b) : IntervalIntegrable f μ b a :=
@@ -298,7 +308,7 @@ protected theorem ae_measurable' (h : IntervalIntegrable f μ a b) : AeMeasurabl
 
 end 
 
-variable[BorelSpace E]{f g : α → E}{a b : α}{μ : Measureₓ α}
+variable [BorelSpace E] {f g : α → E} {a b : α} {μ : Measureₓ α}
 
 theorem smul [NormedField 𝕜] [NormedSpace 𝕜 E] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] {f : α → E} {a b : α}
   {μ : Measureₓ α} (h : IntervalIntegrable f μ a b) (r : 𝕜) : IntervalIntegrable (r • f) μ a b :=
@@ -331,7 +341,7 @@ end IntervalIntegrable
 
 section 
 
-variable{μ : Measureₓ ℝ}[is_locally_finite_measure μ]
+variable {μ : Measureₓ ℝ} [is_locally_finite_measure μ]
 
 theorem ContinuousOn.interval_integrable [BorelSpace E] {u : ℝ → E} {a b : ℝ} (hu : ContinuousOn u (interval a b)) :
   IntervalIntegrable u μ a b :=
@@ -351,17 +361,9 @@ end
 
 section 
 
-variable{ι :
-    Type
-      _}[TopologicalSpace
-      ι][ConditionallyCompleteLinearOrder
-      ι][OrderTopology
-      ι][MeasurableSpace
-      ι][BorelSpace
-      ι]{μ :
-    Measureₓ
-      ι}[is_locally_finite_measure
-      μ][ConditionallyCompleteLinearOrder E][OrderTopology E][second_countable_topology E][BorelSpace E]
+variable {ι : Type _} [TopologicalSpace ι] [ConditionallyCompleteLinearOrder ι] [OrderTopology ι] [MeasurableSpace ι]
+  [BorelSpace ι] {μ : Measureₓ ι} [is_locally_finite_measure μ] [ConditionallyCompleteLinearOrder E] [OrderTopology E]
+  [second_countable_topology E] [BorelSpace E]
 
 theorem MonotoneOn.interval_integrable {u : ι → E} {a b : ι} (hu : MonotoneOn u (interval a b)) :
   IntervalIntegrable u μ a b :=
@@ -420,7 +422,7 @@ and prove some basic properties.
 -/
 
 
-variable[second_countable_topology E][CompleteSpace E][NormedSpace ℝ E][BorelSpace E]
+variable [second_countable_topology E] [CompleteSpace E] [NormedSpace ℝ E] [BorelSpace E]
 
 /-- The interval integral `∫ x in a..b, f x ∂μ` is defined
 as `∫ x in Ioc a b, f x ∂μ - ∫ x in Ioc b a, f x ∂μ`. If `a ≤ b`, then it equals
@@ -436,7 +438,7 @@ namespace intervalIntegral
 
 section Basic
 
-variable{a b : α}{f g : α → E}{μ : Measureₓ α}
+variable {a b : α} {f g : α → E} {μ : Measureₓ α}
 
 @[simp]
 theorem integral_zero : (∫x in a..b, (0 : E) ∂μ) = 0 :=
@@ -502,6 +504,11 @@ theorem norm_integral_le_abs_integral_norm : ∥∫x in a..b, f x ∂μ∥ ≤ |
     simp only [←Real.norm_eq_abs, norm_integral_eq_norm_integral_Ioc]
     exact le_transₓ (norm_integral_le_integral_norm _) (le_abs_self _)
 
+theorem norm_integral_le_integral_norm (h : a ≤ b) : ∥∫x in a..b, f x ∂μ∥ ≤ ∫x in a..b, ∥f x∥ ∂μ :=
+  norm_integral_le_integral_norm_Ioc.trans_eq$
+    by 
+      rw [interval_oc_of_le h, integral_of_le h]
+
 theorem norm_integral_le_of_norm_le_const_ae {a b C : ℝ} {f : ℝ → E} (h : ∀ᵐx, x ∈ Ι a b → ∥f x∥ ≤ C) :
   ∥∫x in a..b, f x∥ ≤ C*|b - a| :=
   by 
@@ -520,8 +527,13 @@ theorem norm_integral_le_of_norm_le_const {a b C : ℝ} {f : ℝ → E} (h : ∀
 theorem integral_add (hf : IntervalIntegrable f μ a b) (hg : IntervalIntegrable g μ a b) :
   (∫x in a..b, f x+g x ∂μ) = (∫x in a..b, f x ∂μ)+∫x in a..b, g x ∂μ :=
   by 
-    simp only [intervalIntegral, integral_add hf.1 hg.1, integral_add hf.2 hg.2]
-    abel
+    simp only [interval_integral_eq_integral_interval_oc, integral_add hf.def hg.def, smul_add]
+
+theorem integral_finset_sum {ι} {s : Finset ι} {f : ι → α → E} (h : ∀ i _ : i ∈ s, IntervalIntegrable (f i) μ a b) :
+  (∫x in a..b, ∑i in s, f i x ∂μ) = ∑i in s, ∫x in a..b, f i x ∂μ :=
+  by 
+    simp only [interval_integral_eq_integral_interval_oc, integral_finset_sum s fun i hi => (h i hi).def,
+      Finset.smul_sum]
 
 @[simp]
 theorem integral_neg : (∫x in a..b, -f x ∂μ) = -∫x in a..b, f x ∂μ :=
@@ -542,6 +554,29 @@ theorem integral_smul {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedSpace
   by 
     simp only [intervalIntegral, integral_smul, smul_sub]
 
+@[simp]
+theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [IsScalarTower ℝ 𝕜 E] [MeasurableSpace 𝕜]
+  [BorelSpace 𝕜] (f : α → 𝕜) (c : E) : (∫x in a..b, f x • c ∂μ) = (∫x in a..b, f x ∂μ) • c :=
+  by 
+    simp only [interval_integral_eq_integral_interval_oc, integral_smul_const, smul_assoc]
+
+@[simp]
+theorem integral_const_mul {𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace 𝕜] [BorelSpace 𝕜] (r : 𝕜) (f : α → 𝕜) :
+  (∫x in a..b, r*f x ∂μ) = r*∫x in a..b, f x ∂μ :=
+  integral_smul r f
+
+@[simp]
+theorem integral_mul_const {𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace 𝕜] [BorelSpace 𝕜] (r : 𝕜) (f : α → 𝕜) :
+  (∫x in a..b, f x*r ∂μ) = (∫x in a..b, f x ∂μ)*r :=
+  by 
+    simpa only [mul_commₓ r] using integral_const_mul r f
+
+@[simp]
+theorem integral_div {𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace 𝕜] [BorelSpace 𝕜] (r : 𝕜) (f : α → 𝕜) :
+  (∫x in a..b, f x / r ∂μ) = (∫x in a..b, f x ∂μ) / r :=
+  by 
+    simpa only [div_eq_mul_inv] using integral_mul_const (r⁻¹) f
+
 theorem integral_const' (c : E) : (∫x in a..b, c ∂μ) = ((μ$ Ioc a b).toReal - (μ$ Ioc b a).toReal) • c :=
   by 
     simp only [intervalIntegral, set_integral_const, sub_smul]
@@ -555,7 +590,8 @@ theorem integral_smul_measure (c : ℝ≥0∞) : (∫x in a..b, f x ∂c • μ)
   by 
     simp only [intervalIntegral, measure.restrict_smul, integral_smul_measure, smul_sub]
 
-variable[NormedGroup F][second_countable_topology F][CompleteSpace F][NormedSpace ℝ F][MeasurableSpace F][BorelSpace F]
+variable [NormedGroup F] [second_countable_topology F] [CompleteSpace F] [NormedSpace ℝ F] [MeasurableSpace F]
+  [BorelSpace F]
 
 theorem _root_.continuous_linear_map.interval_integral_comp_comm (L : E →L[ℝ] F) (hf : IntervalIntegrable f μ a b) :
   (∫x in a..b, L (f x) ∂μ) = L (∫x in a..b, f x ∂μ) :=
@@ -567,7 +603,7 @@ end Basic
 
 section Comp
 
-variable{a b c d : ℝ}(f : ℝ → E)
+variable {a b c d : ℝ} (f : ℝ → E)
 
 -- error in MeasureTheory.Integral.IntervalIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
@@ -579,7 +615,7 @@ begin
   conv_rhs [] [] { rw ["[", "<-", expr real.smul_map_volume_mul_right hc, "]"] },
   simp_rw ["[", expr integral_smul_measure, ",", expr interval_integral, ",", expr A.set_integral_map, ",", expr ennreal.to_real_of_real (abs_nonneg c), "]"] [],
   cases [expr hc.lt_or_lt] [],
-  { simp [] [] [] ["[", expr h, ",", expr mul_div_cancel, ",", expr hc, ",", expr abs_of_neg, ",", expr restrict_congr_set Ico_ae_eq_Ioc, "]"] [] [] },
+  { simp [] [] [] ["[", expr h, ",", expr mul_div_cancel, ",", expr hc, ",", expr abs_of_neg, ",", expr measure.restrict_congr_set Ico_ae_eq_Ioc, "]"] [] [] },
   { simp [] [] [] ["[", expr h, ",", expr mul_div_cancel, ",", expr hc, ",", expr abs_of_pos, "]"] [] [] }
 end
 
@@ -734,7 +770,8 @@ as well as a few other identities trivially equivalent to this one. We also prov
 
 section OrderClosedTopology
 
-variable[TopologicalSpace α][OrderClosedTopology α][OpensMeasurableSpace α]{a b c d : α}{f g : α → E}{μ : Measureₓ α}
+variable [TopologicalSpace α] [OrderClosedTopology α] [OpensMeasurableSpace α] {a b c d : α} {f g : α → E}
+  {μ : Measureₓ α}
 
 -- error in MeasureTheory.Integral.IntervalIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem integrable_on_Icc_iff_integrable_on_Ioc'
@@ -903,15 +940,35 @@ begin
   all_goals { apply [expr measurable_set_Iic] }
 end
 
-end OrderClosedTopology
+/-- Lebesgue dominated convergence theorem for filters with a countable basis -/
+theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l.is_countably_generated] {F : ι → α → E}
+  (bound : α → ℝ) (hF_meas : ∀ᶠn in l, AeMeasurable (F n) (μ.restrict (Ι a b)))
+  (h_bound : ∀ᶠn in l, ∀ᵐx ∂μ, x ∈ Ι a b → ∥F n x∥ ≤ bound x) (bound_integrable : IntervalIntegrable bound μ a b)
+  (h_lim : ∀ᵐx ∂μ, x ∈ Ι a b → tendsto (fun n => F n x) l (𝓝 (f x))) :
+  tendsto (fun n => ∫x in a..b, F n x ∂μ) l (𝓝$ ∫x in a..b, f x ∂μ) :=
+  by 
+    simp only [interval_integrable_iff, interval_integral_eq_integral_interval_oc,
+      ←ae_restrict_iff' measurable_set_interval_oc] at *
+    exact
+      tendsto_const_nhds.smul
+        (tendsto_integral_filter_of_dominated_convergence bound hF_meas h_bound bound_integrable h_lim)
 
-section ContinuityWrtParameter
+/-- Lebesgue dominated convergence theorem for series. -/
+theorem has_sum_integral_of_dominated_convergence {ι} [Encodable ι] {F : ι → α → E} (bound : ι → α → ℝ)
+  (hF_meas : ∀ n, AeMeasurable (F n) (μ.restrict (Ι a b))) (h_bound : ∀ n, ∀ᵐt ∂μ, t ∈ Ι a b → ∥F n t∥ ≤ bound n t)
+  (bound_summable : ∀ᵐt ∂μ, t ∈ Ι a b → Summable fun n => bound n t)
+  (bound_integrable : IntervalIntegrable (fun t => ∑'n, bound n t) μ a b)
+  (h_lim : ∀ᵐt ∂μ, t ∈ Ι a b → HasSum (fun n => F n t) (f t)) :
+  HasSum (fun n => ∫t in a..b, F n t ∂μ) (∫t in a..b, f t ∂μ) :=
+  by 
+    simp only [interval_integrable_iff, interval_integral_eq_integral_interval_oc,
+      ←ae_restrict_iff' measurable_set_interval_oc] at *
+    exact
+      (has_sum_integral_of_dominated_convergence bound hF_meas h_bound bound_summable bound_integrable h_lim).const_smul
 
 open TopologicalSpace
 
-variable{X : Type _}[TopologicalSpace X][first_countable_topology X]
-
-variable{μ : Measureₓ α}
+variable {X : Type _} [TopologicalSpace X] [first_countable_topology X]
 
 /-- Continuity of interval integral with respect to a parameter, at a point within a set.
   Given `F : X → α → E`, assume `F x` is ae-measurable on `[a, b]` for `x` in a
@@ -921,22 +978,10 @@ variable{μ : Measureₓ α}
   then the same holds for `(λ x, ∫ t in a..b, F x t ∂μ) s x₀`. -/
 theorem continuous_within_at_of_dominated_interval {F : X → α → E} {x₀ : X} {bound : α → ℝ} {a b : α} {s : Set X}
   (hF_meas : ∀ᶠx in 𝓝[s] x₀, AeMeasurable (F x) (μ.restrict$ Ι a b))
-  (h_bound : ∀ᶠx in 𝓝[s] x₀, ∀ᵐt ∂μ.restrict$ Ι a b, ∥F x t∥ ≤ bound t)
-  (bound_integrable : IntervalIntegrable bound μ a b)
-  (h_cont : ∀ᵐt ∂μ.restrict$ Ι a b, ContinuousWithinAt (fun x => F x t) s x₀) :
+  (h_bound : ∀ᶠx in 𝓝[s] x₀, ∀ᵐt ∂μ, t ∈ Ι a b → ∥F x t∥ ≤ bound t) (bound_integrable : IntervalIntegrable bound μ a b)
+  (h_cont : ∀ᵐt ∂μ, t ∈ Ι a b → ContinuousWithinAt (fun x => F x t) s x₀) :
   ContinuousWithinAt (fun x => ∫t in a..b, F x t ∂μ) s x₀ :=
-  by 
-    cases bound_integrable 
-    cases' le_or_ltₓ a b with hab hab <;>
-        [·
-          rw [interval_oc_of_le hab] at *
-          simpRw [intervalIntegral.integral_of_le hab],
-        ·
-          rw [interval_oc_of_lt hab] at *
-          simpRw [intervalIntegral.integral_of_ge hab.le]
-          refine' tendsto.neg _] <;>
-      apply tendsto_integral_filter_of_dominated_convergence bound hF_meas h_bound 
-    exacts[bound_integrable_left, h_cont, bound_integrable_right, h_cont]
+  tendsto_integral_filter_of_dominated_convergence bound hF_meas h_bound bound_integrable h_cont
 
 /-- Continuity of interval integral with respect to a parameter at a point.
   Given `F : X → α → E`, assume `F x` is ae-measurable on `[a, b]` for `x` in a
@@ -946,15 +991,9 @@ theorem continuous_within_at_of_dominated_interval {F : X → α → E} {x₀ : 
   then the same holds for `(λ x, ∫ t in a..b, F x t ∂μ) s x₀`. -/
 theorem continuous_at_of_dominated_interval {F : X → α → E} {x₀ : X} {bound : α → ℝ} {a b : α}
   (hF_meas : ∀ᶠx in 𝓝 x₀, AeMeasurable (F x) (μ.restrict$ Ι a b))
-  (h_bound : ∀ᶠx in 𝓝 x₀, ∀ᵐt ∂μ.restrict$ Ι a b, ∥F x t∥ ≤ bound t) (bound_integrable : IntervalIntegrable bound μ a b)
-  (h_cont : ∀ᵐt ∂μ.restrict$ Ι a b, ContinuousAt (fun x => F x t) x₀) :
-  ContinuousAt (fun x => ∫t in a..b, F x t ∂μ) x₀ :=
-  by 
-    rw [←continuous_within_at_univ]
-    apply continuous_within_at_of_dominated_interval <;>
-      try 
-        rw [nhds_within_univ]
-    exacts[hF_meas, h_bound, bound_integrable, h_cont.mono fun a => (continuous_within_at_univ (fun x => F x a) x₀).mpr]
+  (h_bound : ∀ᶠx in 𝓝 x₀, ∀ᵐt ∂μ, t ∈ Ι a b → ∥F x t∥ ≤ bound t) (bound_integrable : IntervalIntegrable bound μ a b)
+  (h_cont : ∀ᵐt ∂μ, t ∈ Ι a b → ContinuousAt (fun x => F x t) x₀) : ContinuousAt (fun x => ∫t in a..b, F x t ∂μ) x₀ :=
+  tendsto_integral_filter_of_dominated_convergence bound hF_meas h_bound bound_integrable h_cont
 
 /-- Continuity of interval integral with respect to a parameter.
   Given `F : X → α → E`, assume each `F x` is ae-measurable on `[a, b]`,
@@ -962,23 +1001,23 @@ theorem continuous_at_of_dominated_interval {F : X → α → E} {x₀ : X} {bou
   If `(λ x, F x t)` is continuous for almost every `t` in `[a, b]`
   then the same holds for `(λ x, ∫ t in a..b, F x t ∂μ) s x₀`. -/
 theorem continuous_of_dominated_interval {F : X → α → E} {bound : α → ℝ} {a b : α}
-  (hF_meas : ∀ x, AeMeasurable (F x)$ μ.restrict$ Ι a b) (h_bound : ∀ x, ∀ᵐt ∂μ.restrict$ Ι a b, ∥F x t∥ ≤ bound t)
-  (bound_integrable : IntervalIntegrable bound μ a b) (h_cont : ∀ᵐt ∂μ.restrict$ Ι a b, Continuous fun x => F x t) :
+  (hF_meas : ∀ x, AeMeasurable (F x)$ μ.restrict$ Ι a b) (h_bound : ∀ x, ∀ᵐt ∂μ, t ∈ Ι a b → ∥F x t∥ ≤ bound t)
+  (bound_integrable : IntervalIntegrable bound μ a b) (h_cont : ∀ᵐt ∂μ, t ∈ Ι a b → Continuous fun x => F x t) :
   Continuous fun x => ∫t in a..b, F x t ∂μ :=
   continuous_iff_continuous_at.mpr
     fun x₀ =>
       continuous_at_of_dominated_interval (eventually_of_forall hF_meas) (eventually_of_forall h_bound)
           bound_integrable$
-        h_cont.mono$ fun _ => Continuous.continuous_at
+        h_cont.mono$ fun x himp hx => (himp hx).ContinuousAt
 
-end ContinuityWrtParameter
+end OrderClosedTopology
 
 section ContinuousPrimitive
 
 open TopologicalSpace
 
-variable[TopologicalSpace
-      α][OrderTopology α][OpensMeasurableSpace α][first_countable_topology α]{a b : α}{μ : Measureₓ α}
+variable [TopologicalSpace α] [OrderTopology α] [OpensMeasurableSpace α] [first_countable_topology α] {a b : α}
+  {μ : Measureₓ α}
 
 -- error in MeasureTheory.Integral.IntervalIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_within_at_primitive
@@ -1027,13 +1066,12 @@ begin
     { refine [expr eventually_of_forall (λ x : α, eventually_of_forall (λ t : α, _))],
       dsimp [] ["[", expr indicator, "]"] [] [],
       split_ifs [] []; simp [] [] [] [] [] [] },
-    { have [] [":", expr «expr∀ᵐ ∂ , »((t), μ.restrict (exprΙ() b₁ b₂), «expr ∨ »(«expr < »(t, b₀), «expr < »(b₀, t)))] [],
-      { apply [expr ae_restrict_of_ae],
-        apply [expr eventually.mono (compl_mem_ae_iff.mpr hb₀)],
+    { have [] [":", expr «expr∀ᵐ ∂ , »((t), μ, «expr ∨ »(«expr < »(t, b₀), «expr < »(b₀, t)))] [],
+      { apply [expr eventually.mono (compl_mem_ae_iff.mpr hb₀)],
         intros [ident x, ident hx],
         exact [expr ne.lt_or_lt hx] },
       apply [expr this.mono],
-      rintros [ident x₀, "(", ident hx₀, "|", ident hx₀, ")"],
+      rintros [ident x₀, "(", ident hx₀, "|", ident hx₀, ")", "-"],
       { have [] [":", expr «expr∀ᶠ in , »((x), «expr𝓝[ ] »(Icc b₁ b₂, b₀), «expr = »({t : α | «expr ≤ »(t, x)}.indicator f x₀, f x₀))] [],
         { apply [expr mem_nhds_within_of_mem_nhds],
           apply [expr eventually.mono (Ioi_mem_nhds hx₀)],
@@ -1109,7 +1147,7 @@ theorem continuous_on_primitive_interval_left {f : α → E} {a b : α} [has_no_
     simp only [integral_symm b]
     exact (continuous_on_primitive_interval h_int).neg
 
-variable[NoBotOrder α][NoTopOrder α][has_no_atoms μ]
+variable [NoBotOrder α] [NoTopOrder α] [has_no_atoms μ]
 
 theorem continuous_primitive {f : α → E} (h_int : ∀ a b : α, IntervalIntegrable f μ a b) (a : α) :
   Continuous fun b => ∫x in a..b, f x ∂μ :=
@@ -1129,7 +1167,7 @@ end ContinuousPrimitive
 
 section 
 
-variable{f g : α → ℝ}{a b : α}{μ : Measureₓ α}
+variable {f g : α → ℝ} {a b : α} {μ : Measureₓ α}
 
 theorem integral_eq_zero_iff_of_le_of_nonneg_ae (hab : a ≤ b) (hf : 0 ≤ᵐ[μ.restrict (Ioc a b)] f)
   (hfi : IntervalIntegrable f μ a b) : (∫x in a..b, f x ∂μ) = 0 ↔ f =ᵐ[μ.restrict (Ioc a b)] 0 :=
@@ -1162,7 +1200,7 @@ theorem integral_pos_iff_support_of_nonneg_ae (hf : 0 ≤ᵐ[μ] f) (hfi : Inter
   (0 < ∫x in a..b, f x ∂μ) ↔ a < b ∧ 0 < μ (support f ∩ Ioc a b) :=
   integral_pos_iff_support_of_nonneg_ae' (ae_mono measure.restrict_le_self hf) hfi
 
-variable(hab : a ≤ b)
+variable (hab : a ≤ b)
 
 include hab
 
@@ -1181,15 +1219,13 @@ theorem integral_nonneg [TopologicalSpace α] [OpensMeasurableSpace α] [OrderCl
   (hf : ∀ u, u ∈ Icc a b → 0 ≤ f u) : 0 ≤ ∫u in a..b, f u ∂μ :=
   integral_nonneg_of_ae_restrict hab$ (ae_restrict_iff' measurable_set_Icc).mpr$ ae_of_all μ hf
 
-theorem norm_integral_le_integral_norm : ∥∫x in a..b, f x ∂μ∥ ≤ ∫x in a..b, ∥f x∥ ∂μ :=
-  norm_integral_le_abs_integral_norm.trans_eq$ abs_of_nonneg$ integral_nonneg_of_forall hab$ fun x => norm_nonneg _
-
 theorem abs_integral_le_integral_abs : |∫x in a..b, f x ∂μ| ≤ ∫x in a..b, |f x| ∂μ :=
-  norm_integral_le_integral_norm hab
+  by 
+    simpa only [←Real.norm_eq_abs] using norm_integral_le_integral_norm hab
 
 section Mono
 
-variable(hf : IntervalIntegrable f μ a b)(hg : IntervalIntegrable g μ a b)
+variable (hf : IntervalIntegrable f μ a b) (hg : IntervalIntegrable g μ a b)
 
 include hf hg
 
@@ -1252,12 +1288,8 @@ of the integral w.r.t. Lebesgue measure. -/
 
 /-- An auxiliary typeclass for the Fundamental theorem of calculus, part 1. It is used to formulate
 theorems that work simultaneously for left and right one-sided derivatives of `∫ x in u..v, f x`. -/
-class
-  FTC_filter{β :
-    Type
-      _}[LinearOrderₓ
-      β][MeasurableSpace β][TopologicalSpace β](a : outParam β)(outer : Filter β)(inner : outParam$ Filter β) extends
-  tendsto_Ixx_class Ioc outer inner : Prop where 
+class FTC_filter {β : Type _} [LinearOrderₓ β] [MeasurableSpace β] [TopologicalSpace β] (a : outParam β)
+  (outer : Filter β) (inner : outParam$ Filter β) extends tendsto_Ixx_class Ioc outer inner : Prop where 
   pure_le : pure a ≤ outer 
   le_nhds : inner ≤ 𝓝 a
   [meas_gen : is_measurably_generated inner]
@@ -1266,7 +1298,7 @@ attribute [nolint dangerous_instance] FTC_filter.to_tendsto_Ixx_class
 
 namespace FTCFilter
 
-variable[LinearOrderₓ β][MeasurableSpace β][TopologicalSpace β]
+variable [LinearOrderₓ β] [MeasurableSpace β] [TopologicalSpace β]
 
 instance pure (a : β) : FTC_filter a (pure a) ⊥ :=
   { pure_le := le_reflₓ _, le_nhds := bot_le }
@@ -1280,7 +1312,7 @@ theorem finite_at_inner {a : β} (l : Filter β) {l'} [h : FTC_filter a l l'] {�
   [is_locally_finite_measure μ] : μ.finite_at_filter l' :=
   (μ.finite_at_nhds a).filter_mono h.le_nhds
 
-variable[OpensMeasurableSpace β][OrderTopology β]
+variable [OpensMeasurableSpace β] [OrderTopology β]
 
 instance nhds (a : β) : FTC_filter a (𝓝 a) (𝓝 a) :=
   { pure_le := pure_le_nhds a, le_nhds := le_reflₓ _ }
@@ -1312,8 +1344,8 @@ open Asymptotics
 
 section 
 
-variable{f :
-    α → E}{a b : α}{c ca cb : E}{l l' la la' lb lb' : Filter α}{lt : Filter β}{μ : Measureₓ α}{u v ua va ub vb : β → α}
+variable {f : α → E} {a b : α} {c ca cb : E} {l l' la la' lb lb' : Filter α} {lt : Filter β} {μ : Measureₓ α}
+  {u v ua va ub vb : β → α}
 
 -- error in MeasureTheory.Integral.IntervalIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Fundamental theorem of calculus-1, local version for any measure.
@@ -1395,11 +1427,11 @@ theorem measure_integral_sub_linear_is_o_of_tendsto_ae_of_ge' [is_measurably_gen
       by 
         simp [integral_symm (u t), add_commₓ]
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 section 
 
-variable[is_locally_finite_measure μ][FTC_filter a l l']
+variable [is_locally_finite_measure μ] [FTC_filter a l l']
 
 include a
 
@@ -1447,11 +1479,11 @@ theorem measure_integral_sub_linear_is_o_of_tendsto_ae_of_ge (hfm : MeasurableAt
 
 end 
 
-variable[OrderTopology α][BorelSpace α]
+variable [OrderTopology α] [BorelSpace α]
 
 attribute [local instance] FTC_filter.meas_gen
 
-variable[FTC_filter a la la'][FTC_filter b lb lb'][is_locally_finite_measure μ]
+variable [FTC_filter a la la'] [FTC_filter b lb lb'] [is_locally_finite_measure μ]
 
 -- error in MeasureTheory.Integral.IntervalIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Fundamental theorem of calculus-1, strict derivative in both limits for a locally finite
@@ -1540,11 +1572,8 @@ at `(a, b)` provided that `f` is integrable on `a..b` and is continuous at `a` a
 -/
 
 
-variable{f :
-    ℝ →
-      E}{c ca cb :
-    E}{l l' la la' lb lb' :
-    Filter ℝ}{lt : Filter β}{a b z : ℝ}{u v ua ub va vb : β → ℝ}[FTC_filter a la la'][FTC_filter b lb lb']
+variable {f : ℝ → E} {c ca cb : E} {l l' la la' lb lb' : Filter ℝ} {lt : Filter β} {a b z : ℝ} {u v ua ub va vb : β → ℝ}
+  [FTC_filter a la la'] [FTC_filter b lb lb']
 
 /-!
 #### Auxiliary `is_o` statements
@@ -1990,7 +2019,7 @@ this inequality to the right until the point `b`, where it gives the desired con
 -/
 
 
-variable{g' g : ℝ → ℝ}
+variable {g' g : ℝ → ℝ}
 
 -- error in MeasureTheory.Integral.IntervalIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Hard part of FTC-2 for integrable derivatives, real-valued functions: one has
@@ -2124,7 +2153,7 @@ begin
   exact [expr (A (left_mem_Icc.2 hab)).1]
 end
 
-variable{f' : ℝ → E}
+variable {f' : ℝ → E}
 
 /-- **Fundamental theorem of calculus-2**: If `f : ℝ → E` is continuous on `[a, b]` (where `a ≤ b`)
   and has a right derivative at `f' x` for all `x` in `(a, b)`, and `f'` is integrable on `[a, b]`,

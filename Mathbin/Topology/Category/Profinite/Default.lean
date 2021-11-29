@@ -54,7 +54,7 @@ compact, Hausdorff and totally disconnected topological space.
 def of (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X] [TotallyDisconnectedSpace X] : Profinite :=
   ⟨⟨⟨X⟩⟩⟩
 
-instance  : Inhabited Profinite :=
+instance : Inhabited Profinite :=
   ⟨Profinite.of Pempty⟩
 
 instance category : category Profinite :=
@@ -66,16 +66,16 @@ instance concrete_category : concrete_category Profinite :=
 instance has_forget₂ : has_forget₂ Profinite Top :=
   induced_category.has_forget₂ _
 
-instance  : CoeSort Profinite (Type _) :=
+instance : CoeSort Profinite (Type _) :=
   ⟨fun X => X.to_CompHaus⟩
 
-instance  {X : Profinite} : TotallyDisconnectedSpace X :=
+instance {X : Profinite} : TotallyDisconnectedSpace X :=
   X.is_totally_disconnected
 
-example  {X : Profinite} : CompactSpace X :=
+example {X : Profinite} : CompactSpace X :=
   inferInstance
 
-example  {X : Profinite} : T2Space X :=
+example {X : Profinite} : T2Space X :=
   inferInstance
 
 @[simp]
@@ -211,7 +211,7 @@ noncomputable instance forget_preserves_limits : limits.preserves_limits (forget
   by 
     apply limits.comp_preserves_limits Profinite.toTop (forget Top)
 
-variable{X Y : Profinite.{u}}(f : X ⟶ Y)
+variable {X Y : Profinite.{u}} (f : X ⟶ Y)
 
 /-- Any morphism of profinite spaces is a closed map. -/
 theorem IsClosedMap : IsClosedMap f :=

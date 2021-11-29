@@ -19,9 +19,9 @@ universe v u
 
 namespace CategoryTheory
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
-variable[has_zero_morphisms C][has_shift C]
+variable [has_zero_morphisms C] [has_shift C]
 
 /--
 A differential object in a category with zero morphisms and a shift is
@@ -40,7 +40,7 @@ restate_axiom differential_object.d_squared'
 
 attribute [simp] differential_object.d_squared
 
-variable{C}
+variable {C}
 
 namespace DifferentialObject
 
@@ -48,7 +48,7 @@ namespace DifferentialObject
 A morphism of differential objects is a morphism commuting with the differentials.
 -/
 @[ext, nolint has_inhabited_instance]
-structure hom(X Y : differential_object C) where 
+structure hom (X Y : differential_object C) where 
   f : X.X ⟶ Y.X 
   comm' : X.d ≫ f⟦1⟧' = f ≫ Y.d :=  by 
   runTac 
@@ -83,7 +83,7 @@ theorem id_f (X : differential_object C) : (𝟙 X : X ⟶ X).f = 𝟙 X.X :=
 theorem comp_f {X Y Z : differential_object C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).f = f.f ≫ g.f :=
   rfl
 
-variable(C)
+variable (C)
 
 /-- The forgetful functor taking a differential object to its underlying object. -/
 def forget : differential_object C ⥤ C :=
@@ -95,7 +95,7 @@ instance forget_faithful : faithful (forget C) :=
 instance has_zero_morphisms : has_zero_morphisms (differential_object C) :=
   { HasZero := fun X Y => ⟨{ f := 0 }⟩ }
 
-variable{C}
+variable {C}
 
 @[simp]
 theorem zero_f (P Q : differential_object C) : (0 : P ⟶ Q).f = 0 :=
@@ -133,9 +133,9 @@ namespace Functor
 
 universe v' u'
 
-variable(D : Type u')[category.{v'} D]
+variable (D : Type u') [category.{v'} D]
 
-variable[has_zero_morphisms D][has_shift D]
+variable [has_zero_morphisms D] [has_shift D]
 
 /--
 A functor `F : C ⥤ D` which commutes with shift functors on `C` and `D` and preserves zero morphisms
@@ -183,9 +183,9 @@ namespace CategoryTheory
 
 namespace DifferentialObject
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
-variable[has_zero_object C][has_zero_morphisms C][has_shift C]
+variable [has_zero_object C] [has_zero_morphisms C] [has_shift C]
 
 open_locale ZeroObject
 
@@ -208,12 +208,12 @@ end DifferentialObject
 
 namespace DifferentialObject
 
-variable(C : Type (u + 1))[large_category C][concrete_category C][has_zero_morphisms C][has_shift C]
+variable (C : Type (u + 1)) [large_category C] [concrete_category C] [has_zero_morphisms C] [has_shift C]
 
 instance concrete_category_of_differential_objects : concrete_category (differential_object C) :=
   { forget := forget C ⋙ CategoryTheory.forget C }
 
-instance  : has_forget₂ (differential_object C) C :=
+instance : has_forget₂ (differential_object C) C :=
   { forget₂ := forget C }
 
 end DifferentialObject
@@ -223,9 +223,9 @@ end DifferentialObject
 
 namespace DifferentialObject
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
-variable[has_zero_morphisms C][has_shift C]
+variable [has_zero_morphisms C] [has_shift C]
 
 /-- The shift functor on `differential_object C`. -/
 @[simps]
@@ -349,7 +349,7 @@ def shift_counit_iso : shift_inverse C ⋙ shift_functor C ≅ 𝟭 (differentia
 /--
 The category of differential objects in `C` itself has a shift functor.
 -/
-instance  : has_shift (differential_object C) :=
+instance : has_shift (differential_object C) :=
   { shift :=
       { Functor := shift_functor C, inverse := shift_inverse C, unitIso := shift_unit_iso C,
         counitIso := shift_counit_iso C } }

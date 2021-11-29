@@ -9,13 +9,8 @@ over `ℝ` is `ℝ`-linear
 -/
 
 
-variable{E :
-    Type
-      _}[AddCommGroupₓ
-      E][Module ℝ
-      E][TopologicalSpace
-      E][HasContinuousSmul ℝ
-      E]{F : Type _}[AddCommGroupₓ F][Module ℝ F][TopologicalSpace F][HasContinuousSmul ℝ F][T2Space F]
+variable {E : Type _} [AddCommGroupₓ E] [Module ℝ E] [TopologicalSpace E] [HasContinuousSmul ℝ E] {F : Type _}
+  [AddCommGroupₓ F] [Module ℝ F] [TopologicalSpace F] [HasContinuousSmul ℝ F] [T2Space F]
 
 namespace AddMonoidHom
 

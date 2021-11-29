@@ -42,9 +42,9 @@ The exterior algebra of `M` is constructed as a quotient of the tensor algebra, 
 
 universe u1 u2 u3
 
-variable(R : Type u1)[CommSemiringₓ R]
+variable (R : Type u1) [CommSemiringₓ R]
 
-variable(M : Type u2)[AddCommMonoidₓ M][Module R M]
+variable (M : Type u2) [AddCommMonoidₓ M] [Module R M]
 
 namespace ExteriorAlgebra
 
@@ -67,9 +67,9 @@ ring_quot (exterior_algebra.rel R M)
 
 namespace ExteriorAlgebra
 
-variable{M}
+variable {M}
 
-instance  {S : Type u3} [CommRingₓ S] [Module S M] : Ringₓ (ExteriorAlgebra S M) :=
+instance {S : Type u3} [CommRingₓ S] [Module S M] : Ringₓ (ExteriorAlgebra S M) :=
   RingQuot.ring (ExteriorAlgebra.Rel S M)
 
 /--
@@ -78,7 +78,7 @@ The canonical linear map `M →ₗ[R] exterior_algebra R M`.
 def ι : M →ₗ[R] ExteriorAlgebra R M :=
   (RingQuot.mkAlgHom R _).toLinearMap.comp (TensorAlgebra.ι R)
 
-variable{R}
+variable {R}
 
 /-- As well as being linear, `ι m` squares to zero -/
 @[simp]
@@ -86,14 +86,14 @@ theorem ι_sq_zero (m : M) : (ι R m*ι R m) = 0 :=
   by 
     erw [←AlgHom.map_mul, RingQuot.mk_alg_hom_rel R (rel.of m), AlgHom.map_zero _]
 
-variable{A : Type _}[Semiringₓ A][Algebra R A]
+variable {A : Type _} [Semiringₓ A] [Algebra R A]
 
 @[simp]
 theorem comp_ι_sq_zero (g : ExteriorAlgebra R M →ₐ[R] A) (m : M) : (g (ι R m)*g (ι R m)) = 0 :=
   by 
     rw [←AlgHom.map_mul, ι_sq_zero, AlgHom.map_zero]
 
-variable(R)
+variable (R)
 
 /--
 Given a linear map `f : M →ₗ[R] A` into an `R`-algebra `A`, which satisfies the condition:
@@ -145,7 +145,7 @@ theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m, (f m*f m) = 0) (g : Exter
 
 attribute [irreducible] ι lift
 
-variable{R M}
+variable {R M}
 
 @[simp]
 theorem lift_comp_ι (g : ExteriorAlgebra R M →ₐ[R] A) : lift R ⟨g.to_linear_map.comp (ι R), comp_ι_sq_zero _⟩ = g :=
@@ -198,7 +198,7 @@ def algebra_map_inv : ExteriorAlgebra R M →ₐ[R] R :=
         by 
           simp ⟩
 
-variable(M)
+variable (M)
 
 theorem algebra_map_left_inverse : Function.LeftInverse algebra_map_inv (algebraMap R$ ExteriorAlgebra R M) :=
   fun x =>
@@ -220,7 +220,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (ExteriorAlgebra R M) x = 
   by 
     rw [←algebra_map_inj M x 1, RingHom.map_one]
 
-variable{M}
+variable {M}
 
 /-- The canonical map from `exterior_algebra R M` into `triv_sq_zero_ext R M` that sends
 `exterior_algebra.ι` to `triv_sq_zero_ext.inr`. -/
@@ -243,13 +243,13 @@ theorem ι_left_inverse : Function.LeftInverse ι_inv (ι R : M → ExteriorAlge
     by 
       simp [ι_inv]
 
-variable(R)
+variable (R)
 
 @[simp]
 theorem ι_inj (x y : M) : ι R x = ι R y ↔ x = y :=
   ι_left_inverse.Injective.eq_iff
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 :=
@@ -311,7 +311,7 @@ theorem ι_mul_prod_list {n : ℕ} (f : Finₓ n → M) (i : Finₓ n) : ((ι R$
         refine' (eq_zero_iff_eq_zero_of_add_eq_zero _).mp hn 
         rw [←add_mulₓ, ι_add_mul_swap, zero_mul]
 
-variable(R)
+variable (R)
 
 /-- The product of `n` terms of the form `ι R m` is an alternating map.
 
@@ -344,7 +344,7 @@ def ι_multi (n : ℕ) : AlternatingMap R M (ExteriorAlgebra R M) (Finₓ n) :=
               exact hfxy,
     toFun := F }
 
-variable{R}
+variable {R}
 
 theorem ι_multi_apply {n : ℕ} (v : Finₓ n → M) : ι_multi R n v = (List.ofFn$ fun i => ι R (v i)).Prod :=
   rfl
@@ -353,7 +353,7 @@ end ExteriorAlgebra
 
 namespace TensorAlgebra
 
-variable{R M}
+variable {R M}
 
 /-- The canonical image of the `tensor_algebra` in the `exterior_algebra`, which maps
 `tensor_algebra.ι R x` to `exterior_algebra.ι R x`. -/

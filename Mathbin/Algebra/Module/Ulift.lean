@@ -17,11 +17,11 @@ namespace Ulift
 
 universe u v w
 
-variable{R : Type u}
+variable {R : Type u}
 
-variable{M : Type v}
+variable {M : Type v}
 
-variable{N : Type w}
+variable {N : Type w}
 
 instance has_scalar_left [HasScalar R M] : HasScalar (Ulift R) M :=
   ⟨fun s x => s.down • x⟩

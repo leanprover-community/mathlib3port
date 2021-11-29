@@ -20,7 +20,7 @@ namespace Hyperreal
 
 notation "ℝ*" => Hyperreal
 
-noncomputable instance  : CoeTₓ ℝ ℝ* :=
+noncomputable instance : CoeTₓ ℝ ℝ* :=
   ⟨fun x => («expr↑ » x : germ _ _)⟩
 
 @[simp, normCast]

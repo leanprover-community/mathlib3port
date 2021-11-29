@@ -15,7 +15,7 @@ open_locale TopologicalSpace
 
 section LinearOrderedField
 
-variable{𝕜 : Type _}[LinearOrderedField 𝕜]
+variable {𝕜 : Type _} [LinearOrderedField 𝕜]
 
 theorem pow_div_pow_eventually_eq_at_top {p q : ℕ} :
   (fun x : 𝕜 => x ^ p / x ^ q) =ᶠ[at_top] fun x => x ^ ((p : ℤ) - q) :=
@@ -53,7 +53,7 @@ end LinearOrderedField
 
 section NormedLinearOrderedField
 
-variable{𝕜 : Type _}[NormedLinearOrderedField 𝕜]
+variable {𝕜 : Type _} [NormedLinearOrderedField 𝕜]
 
 theorem Asymptotics.is_o_pow_pow_at_top_of_lt [OrderTopology 𝕜] {p q : ℕ} (hpq : p < q) :
   is_o (fun x : 𝕜 => x ^ p) (fun x => x ^ q) at_top :=

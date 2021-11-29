@@ -16,7 +16,7 @@ constructions of fiber bundles we will make will be of this form.
 
 namespace Bundle
 
-variable{B : Type _}(E : B → Type _)
+variable {B : Type _} (E : B → Type _)
 
 /--
 `total_space E` is the total space of the bundle `Σ x, E x`. This type synonym is used to avoid
@@ -25,7 +25,7 @@ conflicts with general sigma types.
 def total_space :=
   Σx, E x
 
-instance  [Inhabited B] [Inhabited (E (default B))] : Inhabited (total_space E) :=
+instance [Inhabited B] [Inhabited (E (default B))] : Inhabited (total_space E) :=
   ⟨⟨default B, default (E (default B))⟩⟩
 
 /-- `bundle.proj E` is the canonical projection `total_space E → B` on the base space. -/
@@ -38,7 +38,7 @@ def proj : total_space E → B :=
 def total_space_mk (E : B → Type _) (b : B) (a : E b) : Bundle.TotalSpace E :=
   ⟨b, a⟩
 
-instance  {x : B} : CoeTₓ (E x) (total_space E) :=
+instance {x : B} : CoeTₓ (E x) (total_space E) :=
   ⟨Sigma.mk x⟩
 
 @[simp]
@@ -52,7 +52,7 @@ theorem to_total_space_coe {x : B} (v : E x) : (v : total_space E) = ⟨x, v⟩ 
 def trivialₓ (B : Type _) (F : Type _) : B → Type _ :=
   Function.const B F
 
-instance  {F : Type _} [Inhabited F] {b : B} : Inhabited (Bundle.Trivial B F b) :=
+instance {F : Type _} [Inhabited F] {b : B} : Inhabited (Bundle.Trivial B F b) :=
   ⟨(default F : F)⟩
 
 /-- The trivial bundle, unlike other bundles, has a canonical projection on the fiber. -/
@@ -61,14 +61,14 @@ def trivial.proj_snd (B : Type _) (F : Type _) : total_space (Bundle.Trivial B F
 
 section FiberStructures
 
-variable[∀ x, AddCommMonoidₓ (E x)]
+variable [∀ x, AddCommMonoidₓ (E x)]
 
 @[simp]
 theorem coe_snd_map_apply (x : B) (v w : E x) :
   («expr↑ » (v+w) : total_space E).snd = (v : total_space E).snd+(w : total_space E).snd :=
   rfl
 
-variable(R : Type _)[Semiringₓ R][∀ x, Module R (E x)]
+variable (R : Type _) [Semiringₓ R] [∀ x, Module R (E x)]
 
 @[simp]
 theorem coe_snd_map_smul (x : B) (r : R) (v : E x) :
@@ -81,15 +81,15 @@ section TrivialInstances
 
 attribute [local reducible] Bundle.Trivial
 
-variable{F : Type _}{R : Type _}[Semiringₓ R](b : B)
+variable {F : Type _} {R : Type _} [Semiringₓ R] (b : B)
 
-instance  [AddCommMonoidₓ F] : AddCommMonoidₓ (Bundle.Trivial B F b) :=
+instance [AddCommMonoidₓ F] : AddCommMonoidₓ (Bundle.Trivial B F b) :=
   ‹AddCommMonoidₓ F›
 
-instance  [AddCommGroupₓ F] : AddCommGroupₓ (Bundle.Trivial B F b) :=
+instance [AddCommGroupₓ F] : AddCommGroupₓ (Bundle.Trivial B F b) :=
   ‹AddCommGroupₓ F›
 
-instance  [AddCommMonoidₓ F] [Module R F] : Module R (Bundle.Trivial B F b) :=
+instance [AddCommMonoidₓ F] [Module R F] : Module R (Bundle.Trivial B F b) :=
   ‹Module R F›
 
 end TrivialInstances

@@ -50,7 +50,7 @@ still involve this definition.
 -/
 
 
-variable{ι : Type _}{R : Type _}{M : Type _}{A : Type _}
+variable {ι : Type _} {R : Type _} {M : Type _} {A : Type _}
 
 open_locale DirectSum
 
@@ -65,14 +65,14 @@ def AddMonoidAlgebra.toDirectSum [Semiringₓ M] (f : AddMonoidAlgebra M ι) : �
 
 section 
 
-variable[DecidableEq ι][Semiringₓ M]
+variable [DecidableEq ι] [Semiringₓ M]
 
 @[simp]
 theorem AddMonoidAlgebra.to_direct_sum_single (i : ι) (m : M) :
   AddMonoidAlgebra.toDirectSum (Finsupp.single i m) = DirectSum.of _ i m :=
   Finsupp.to_dfinsupp_single i m
 
-variable[∀ m : M, Decidable (m ≠ 0)]
+variable [∀ m : M, Decidable (m ≠ 0)]
 
 /-- Interpret a homogenous `direct_sum` as a `add_monoid_algebra`. -/
 def DirectSum.toAddMonoidAlgebra (f : ⨁i : ι, M) : AddMonoidAlgebra M ι :=
@@ -136,7 +136,7 @@ end AddMonoidAlgebra
 
 namespace DirectSum
 
-variable[DecidableEq ι]
+variable [DecidableEq ι]
 
 @[simp]
 theorem to_add_monoid_algebra_zero [Semiringₓ M] [∀ m : M, Decidable (m ≠ 0)] :

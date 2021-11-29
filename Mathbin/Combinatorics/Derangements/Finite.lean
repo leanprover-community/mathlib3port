@@ -25,12 +25,12 @@ open Derangements Equiv Fintype
 
 open_locale BigOperators
 
-variable{α : Type _}[DecidableEq α][Fintype α]
+variable {α : Type _} [DecidableEq α] [Fintype α]
 
-instance  : DecidablePred (Derangements α) :=
+instance : DecidablePred (Derangements α) :=
   fun _ => Fintype.decidableForallFintype
 
-instance  : Fintype (Derangements α) :=
+instance : Fintype (Derangements α) :=
   by 
     deltaInstance derangements
 

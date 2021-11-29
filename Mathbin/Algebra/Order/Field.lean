@@ -17,15 +17,15 @@ A linear ordered field is a field equipped with a linear order such that
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- A linear ordered field is a field with a linear order respecting the operations. -/
 @[protectProj]
-class LinearOrderedField(α : Type _) extends LinearOrderedCommRing α, Field α
+class LinearOrderedField (α : Type _) extends LinearOrderedCommRing α, Field α
 
 section LinearOrderedField
 
-variable[LinearOrderedField α]{a b c d e : α}
+variable [LinearOrderedField α] {a b c d e : α}
 
 section 
 
@@ -775,7 +775,7 @@ theorem StrictMono.div_const {β : Type _} [Preorderₓ β] {f : β → α} (hf 
   by 
     simpa only [div_eq_mul_inv] using hf.mul_const (inv_pos.2 hc)
 
-instance (priority := 100)LinearOrderedField.to_densely_ordered : DenselyOrdered α :=
+instance (priority := 100) LinearOrderedField.to_densely_ordered : DenselyOrdered α :=
   { dense :=
       fun a₁ a₂ h =>
         ⟨(a₁+a₂) / 2,

@@ -39,9 +39,9 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-variable{V : Type u}[category.{v} V]
+variable {V : Type u} [category.{v} V]
 
-variable[has_images V]
+variable [has_images V]
 
 namespace CategoryTheory
 
@@ -55,7 +55,7 @@ In an abelian category, this is equivalent to `image_to_kernel f g w` being an i
 and hence equivalent to the usual definition,
 `image_subobject f = kernel_subobject g`.
 -/
-class exact[has_zero_morphisms V][has_kernels V]{A B C : V}(f : A ⟶ B)(g : B ⟶ C) : Prop where 
+class exact [has_zero_morphisms V] [has_kernels V] {A B C : V} (f : A ⟶ B) (g : B ⟶ C) : Prop where 
   w : f ≫ g = 0 
   Epi : epi (imageToKernel f g w)
 
@@ -65,7 +65,7 @@ attribute [simp, reassoc] exact.w
 
 section 
 
-variable[has_zero_object V][preadditive V][has_kernels V][has_cokernels V]
+variable [has_zero_object V] [preadditive V] [has_kernels V] [has_cokernels V]
 
 open_locale ZeroObject
 
@@ -113,7 +113,7 @@ end
 
 section 
 
-variable[has_zero_morphisms V][has_kernels V]
+variable [has_zero_morphisms V] [has_kernels V]
 
 theorem comp_eq_zero_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
   (p : image_subobject f = kernel_subobject g) : f ≫ g = 0 :=
@@ -145,13 +145,13 @@ theorem exact_of_image_eq_kernel
 
 end 
 
-variable{A B C D : V}{f : A ⟶ B}{g : B ⟶ C}{h : C ⟶ D}
+variable {A B C D : V} {f : A ⟶ B} {g : B ⟶ C} {h : C ⟶ D}
 
 attribute [local instance] epi_comp
 
 section 
 
-variable[has_zero_morphisms V][has_equalizers V]
+variable [has_zero_morphisms V] [has_equalizers V]
 
 instance exact_comp_hom_inv_comp [exact f g] (i : B ≅ D) : exact (f ≫ i.hom) (i.inv ≫ g) :=
   by 
@@ -234,7 +234,7 @@ theorem exact_kernel_ι : exact (kernel.ι f) f :=
     rw [←kernel_subobject_arrow', exact_iso_comp]
     exact exact_kernel_subobject_arrow
 
-instance  [exact f g] :
+instance [exact f g] :
   epi
     (factor_thru_kernel_subobject g f
       (by 
@@ -243,7 +243,7 @@ instance  [exact f g] :
     rw [←factor_thru_image_subobject_comp_image_to_kernel]
     apply epi_comp
 
-instance  [exact f g] :
+instance [exact f g] :
   epi
     (kernel.lift g f
       (by 
@@ -252,7 +252,7 @@ instance  [exact f g] :
     rw [←factor_thru_kernel_subobject_comp_kernel_subobject_iso]
     apply epi_comp
 
-variable(A)
+variable (A)
 
 theorem kernel_subobject_arrow_eq_zero_of_exact_zero_left [exact (0 : A ⟶ B) g] : (kernel_subobject g).arrow = 0 :=
   by 
@@ -273,7 +273,7 @@ end
 
 section HasCokernels
 
-variable[has_zero_morphisms V][has_equalizers V][has_cokernels V](f g)
+variable [has_zero_morphisms V] [has_equalizers V] [has_cokernels V] (f g)
 
 @[simp, reassoc]
 theorem kernel_comp_cokernel [exact f g] : kernel.ι g ≫ cokernel.π f = 0 :=
@@ -299,13 +299,13 @@ end HasCokernels
 
 section 
 
-variable[has_zero_object V]
+variable [has_zero_object V]
 
 open_locale ZeroObject
 
 section 
 
-variable[has_zero_morphisms V][has_kernels V]
+variable [has_zero_morphisms V] [has_kernels V]
 
 instance exact_of_zero {A C : V} (f : A ⟶ 0) (g : 0 ⟶ C) : exact f g :=
   by 
@@ -335,7 +335,7 @@ end
 
 section 
 
-variable[preadditive V]
+variable [preadditive V]
 
 theorem mono_iff_exact_zero_left [has_kernels V] {B C : V} (f : B ⟶ C) : mono f ↔ exact (0 : 0 ⟶ B) f :=
   ⟨fun h =>

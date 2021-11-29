@@ -345,14 +345,14 @@ theorem list_blank.nth_modify_nth {Γ} [Inhabited Γ] (f : Γ → Γ) n i (L : l
         congr
 
 /-- A pointed map of `inhabited` types is a map that sends one default value to the other. -/
-structure pointed_map.{u, v}(Γ : Type u)(Γ' : Type v)[Inhabited Γ][Inhabited Γ'] : Type max u v where 
+structure pointed_map.{u, v} (Γ : Type u) (Γ' : Type v) [Inhabited Γ] [Inhabited Γ'] : Type max u v where 
   f : Γ → Γ' 
   map_pt' : f (default _) = default _
 
-instance  {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : Inhabited (pointed_map Γ Γ') :=
+instance {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : Inhabited (pointed_map Γ Γ') :=
   ⟨⟨fun _ => default _, rfl⟩⟩
 
-instance  {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : CoeFun (pointed_map Γ Γ') fun _ => Γ → Γ' :=
+instance {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : CoeFun (pointed_map Γ Γ') fun _ => Γ → Γ' :=
   ⟨pointed_map.f⟩
 
 @[simp]
@@ -481,7 +481,7 @@ theorem list_blank.cons_bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (a : Γ) (l
 current position of the head), together with two `list_blank`s denoting the portions of the tape
 going off to the left and right. When the Turing machine moves right, an element is pulled from the
 right side and becomes the new head, while the head element is consed onto the left side. -/
-structure tape(Γ : Type _)[Inhabited Γ] where 
+structure tape (Γ : Type _) [Inhabited Γ] where 
   head : Γ 
   left : list_blank Γ 
   right : list_blank Γ
@@ -1102,13 +1102,13 @@ end
 
 section 
 
-variable{Γ : Type _}[Inhabited Γ]
+variable {Γ : Type _} [Inhabited Γ]
 
-variable{Γ' : Type _}[Inhabited Γ']
+variable {Γ' : Type _} [Inhabited Γ']
 
-variable{Λ : Type _}[Inhabited Λ]
+variable {Λ : Type _} [Inhabited Λ]
 
-variable{Λ' : Type _}[Inhabited Λ']
+variable {Λ' : Type _} [Inhabited Λ']
 
 /-- Map a TM statement across a function. This does nothing to move statements and maps the write
 values. -/
@@ -1121,13 +1121,13 @@ def stmt.map (f : pointed_map Γ Γ') : stmt Γ → stmt Γ'
 def cfg.map (f : pointed_map Γ Γ') (g : Λ → Λ') : cfg Γ Λ → cfg Γ' Λ'
 | ⟨q, T⟩ => ⟨g q, T.map f⟩
 
-variable(M : machine Γ Λ)(f₁ : pointed_map Γ Γ')(f₂ : pointed_map Γ' Γ)(g₁ : Λ → Λ')(g₂ : Λ' → Λ)
+variable (M : machine Γ Λ) (f₁ : pointed_map Γ Γ') (f₂ : pointed_map Γ' Γ) (g₁ : Λ → Λ') (g₂ : Λ' → Λ)
 
 /-- Because the state transition function uses the alphabet and machine states in both the input
 and output, to map a machine from one alphabet and machine state space to another we need functions
 in both directions, essentially an `equiv` without the laws. -/
 def machine.map : machine Γ' Λ'
-| q, l => (M (g₂ q) (f₂ l)).map (Prod.mapₓ g₁ (stmt.map f₁))
+| q, l => (M (g₂ q) (f₂ l)).map (Prod.map g₁ (stmt.map f₁))
 
 theorem machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀ q _ : q ∈ S, g₂ (g₁ q) = q) :
   ∀ c : cfg Γ Λ, c.q ∈ S → (step M c).map (cfg.map f₁ g₁) = step (M.map f₁ f₂ g₁ g₂) (cfg.map f₁ g₁ c)
@@ -1286,7 +1286,7 @@ theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ �
     intro h₁₂ q₀ h₀₁ 
     induction' q₂ with _ q IH _ q IH _ q IH <;>
       simp only [stmts₁] at h₁₂⊢ <;> simp only [Finset.mem_insert, Finset.mem_union, Finset.mem_singleton] at h₁₂ 
-    iterate 3
+    iterate 3 
       rcases h₁₂ with (rfl | h₁₂)
       ·
         unfold stmts₁  at h₀₁ 
@@ -1313,7 +1313,7 @@ theorem stmts₁_supports_stmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (
   by 
     induction' q₂ with _ q IH _ q IH _ q IH <;>
       simp only [stmts₁, supports_stmt, Finset.mem_insert, Finset.mem_union, Finset.mem_singleton] at h hs 
-    iterate 3
+    iterate 3 
       rcases h with (rfl | h) <;> [exact hs, exact IH h hs]
     case TM1.stmt.branch p q₁ q₂ IH₁ IH₂ => 
       rcases h with (rfl | h | h)
@@ -1335,7 +1335,7 @@ theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q�
     simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
       exact fun l ls h₂ => ⟨_, ls, stmts₁_trans h₂ h₁⟩
 
-variable[Inhabited Λ]
+variable [Inhabited Λ]
 
 /-- A set `S` of labels supports machine `M` if all the `goto`
   statements in the functions in `S` refer only to other functions
@@ -1371,7 +1371,7 @@ theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
     case TM1.stmt.halt => 
       apply Multiset.mem_cons_self
 
-variable[Inhabited σ]
+variable [Inhabited σ]
 
 /-- The initial state, given a finite input that is placed on the tape starting at the TM head and
 going to the right. -/
@@ -1435,7 +1435,7 @@ reachable. -/
 def Λ' :=
   Option stmt₁ × σ
 
-instance  : Inhabited Λ' :=
+instance : Inhabited Λ' :=
   ⟨(some (M (default _)), default _)⟩
 
 open TM0.Stmt
@@ -1507,7 +1507,7 @@ theorem tr_eval (l : List Γ) : TM0.eval tr l = TM1.eval M l :=
       congr with ⟨⟩
       rfl)
 
-variable[Fintype σ]
+variable [Fintype σ]
 
 /-- Given a finite set of accessible `Λ` machine states, there is a finite set of accessible
 machine states in the target (even though the type `Λ'` is infinite). -/
@@ -1623,7 +1623,7 @@ inductive Λ' : Type max u_1 u_2 u_3
   | normal : Λ → Λ'
   | write : Γ → stmt₁ → Λ'
 
-instance  : Inhabited Λ' :=
+instance : Inhabited Λ' :=
   ⟨Λ'.normal (default _)⟩
 
 local notation "stmt'" => stmt Bool Λ' σ
@@ -1961,7 +1961,7 @@ inductive Λ'
   | normal : Λ → Λ'
   | act : TM0.stmt Γ → Λ → Λ'
 
-instance  : Inhabited Λ' :=
+instance : Inhabited Λ' :=
   ⟨Λ'.normal (default _)⟩
 
 local notation "cfg₀" => TM0.cfg Γ Λ
@@ -2140,7 +2140,7 @@ theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ �
     intro h₁₂ q₀ h₀₁ 
     induction' q₂ with _ _ q IH _ _ q IH _ _ q IH _ q IH <;>
       simp only [stmts₁] at h₁₂⊢ <;> simp only [Finset.mem_insert, Finset.mem_singleton, Finset.mem_union] at h₁₂ 
-    iterate 4
+    iterate 4 
       rcases h₁₂ with (rfl | h₁₂)
       ·
         unfold stmts₁  at h₀₁ 
@@ -2167,7 +2167,7 @@ theorem stmts₁_supports_stmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (
   by 
     induction' q₂ with _ _ q IH _ _ q IH _ _ q IH _ q IH <;>
       simp only [stmts₁, supports_stmt, Finset.mem_insert, Finset.mem_union, Finset.mem_singleton] at h hs 
-    iterate 4
+    iterate 4 
       rcases h with (rfl | h) <;> [exact hs, exact IH h hs]
     case TM2.stmt.branch f q₁ q₂ IH₁ IH₂ => 
       rcases h with (rfl | h | h)
@@ -2188,7 +2188,7 @@ theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q�
     simp only [stmts, Finset.mem_insert_none, Finset.mem_bUnion, Option.mem_def, forall_eq', exists_imp_distrib] <;>
       exact fun l ls h₂ => ⟨_, ls, stmts₁_trans h₂ h₁⟩
 
-variable[Inhabited Λ]
+variable [Inhabited Λ]
 
 /-- Given a TM2 machine `M` and a set `S` of states, `supports M S` means that all states in
 `S` jump only to other states in `S`. -/
@@ -2223,7 +2223,7 @@ theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
     case TM2.stmt.halt => 
       apply Multiset.mem_cons_self
 
-variable[Inhabited σ]
+variable [Inhabited σ]
 
 /-- The initial state of the TM2 model. The input is provided on a designated stack. -/
 def init k (L : List (Γ k)) : cfg :=

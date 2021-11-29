@@ -49,7 +49,7 @@ namespace CategoryTheory
 
 open CategoryTheory Category
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 /--
 The definition of a Grothendieck topology: a set of sieves `J X` on each object `X` satisfying
@@ -73,12 +73,12 @@ structure grothendieck_topology where
 
 namespace GrothendieckTopology
 
-instance  : CoeFun (grothendieck_topology C) fun _ => ∀ X : C, Set (sieve X) :=
+instance : CoeFun (grothendieck_topology C) fun _ => ∀ X : C, Set (sieve X) :=
   ⟨sieves⟩
 
-variable{C}{X Y : C}{S R : sieve X}
+variable {C} {X Y : C} {S R : sieve X}
 
-variable(J : grothendieck_topology C)
+variable (J : grothendieck_topology C)
 
 /--
 An extensionality lemma in terms of the coercion to a pi-type.
@@ -188,7 +188,7 @@ theorem arrow_intersect (f : Y ⟶ X) (S R : sieve X) (hS : J.covers S f) (hR : 
   by 
     simpa [covers_iff] using And.intro hS hR
 
-variable(C)
+variable (C)
 
 /--
 The trivial Grothendieck topology, in which only the maximal sieve is covering. This topology is
@@ -228,19 +228,26 @@ def discrete : grothendieck_topology C :=
       by 
         simp  }
 
-variable{C}
+variable {C}
 
 theorem trivial_covering : S ∈ trivialₓ C X ↔ S = ⊤ :=
   Set.mem_singleton_iff
 
 /-- See https://stacks.math.columbia.edu/tag/00Z6 -/
-instance  : PartialOrderₓ (grothendieck_topology C) :=
-  { le := fun J₁ J₂ => (J₁ : ∀ X : C, Set (sieve X)) ≤ (J₂ : ∀ X : C, Set (sieve X)), le_refl := fun J₁ => le_reflₓ _,
-    le_trans := fun J₁ J₂ J₃ h₁₂ h₂₃ => le_transₓ h₁₂ h₂₃,
+instance : LE (grothendieck_topology C) :=
+  { le := fun J₁ J₂ => (J₁ : ∀ X : C, Set (sieve X)) ≤ (J₂ : ∀ X : C, Set (sieve X)) }
+
+theorem le_def {J₁ J₂ : grothendieck_topology C} : J₁ ≤ J₂ ↔ (J₁ : ∀ X : C, Set (sieve X)) ≤ J₂ :=
+  Iff.rfl
+
+/-- See https://stacks.math.columbia.edu/tag/00Z6 -/
+instance : PartialOrderₓ (grothendieck_topology C) :=
+  { grothendieck_topology.has_le with le_refl := fun J₁ => le_def.mpr (le_reflₓ _),
+    le_trans := fun J₁ J₂ J₃ h₁₂ h₂₃ => le_def.mpr (le_transₓ h₁₂ h₂₃),
     le_antisymm := fun J₁ J₂ h₁₂ h₂₁ => grothendieck_topology.ext (le_antisymmₓ h₁₂ h₂₁) }
 
 /-- See https://stacks.math.columbia.edu/tag/00Z7 -/
-instance  : HasInfₓ (grothendieck_topology C) :=
+instance : HasInfₓ (grothendieck_topology C) :=
   { inf :=
       fun T =>
         { Sieves := Inf (sieves '' T),
@@ -271,7 +278,7 @@ theorem is_glb_Inf (s : Set (grothendieck_topology C)) : IsGlb s (Inf s) :=
 Construct a complete lattice from the `Inf`, but make the trivial and discrete topologies
 definitionally equal to the bottom and top respectively.
 -/
-instance  : CompleteLattice (grothendieck_topology C) :=
+instance : CompleteLattice (grothendieck_topology C) :=
   CompleteLattice.copy (completeLatticeOfInf _ is_glb_Inf) _ rfl (discrete C)
     (by 
       apply le_antisymmₓ
@@ -291,7 +298,7 @@ instance  : CompleteLattice (grothendieck_topology C) :=
         refine' @CompleteLattice.bot_le _ (completeLatticeOfInf _ is_glb_Inf) (trivialₓ C))
     _ rfl _ rfl _ rfl Inf rfl
 
-instance  : Inhabited (grothendieck_topology C) :=
+instance : Inhabited (grothendieck_topology C) :=
   ⟨⊤⟩
 
 @[simp]
@@ -385,12 +392,12 @@ Grothendieck topology `J`. -/ @[derive #[expr preorder]] def cover (X : C) :=
 
 namespace Cover
 
-variable{J}
+variable {J}
 
-instance  : Coe (J.cover X) (sieve X) :=
+instance : Coe (J.cover X) (sieve X) :=
   ⟨fun S => S.1⟩
 
-instance  : CoeFun (J.cover X) fun S => ∀ ⦃Y⦄ f : Y ⟶ X, Prop :=
+instance : CoeFun (J.cover X) fun S => ∀ ⦃Y⦄ f : Y ⟶ X, Prop :=
   ⟨fun S Y f => (S : sieve X) f⟩
 
 @[simp]
@@ -404,29 +411,31 @@ theorem condition (S : J.cover X) : (S : sieve X) ∈ J X :=
 theorem ext (S T : J.cover X) (h : ∀ ⦃Y⦄ f : Y ⟶ X, S f ↔ T f) : S = T :=
   Subtype.ext$ sieve.ext h
 
-instance  : SemilatticeInfTop (J.cover X) :=
-  { (inferInstance : Preorderₓ _) with inf := fun S T => ⟨S⊓T, J.intersection_covering S.condition T.condition⟩,
-    le_antisymm := fun S T h1 h2 => ext _ _$ fun Y f => ⟨h1 _, h2 _⟩, inf_le_left := fun S T Y f hf => hf.1,
-    inf_le_right := fun S T Y f hf => hf.2, le_inf := fun S T W h1 h2 Y f h => ⟨h1 _ h, h2 _ h⟩,
-    top := ⟨⊤, J.top_mem _⟩,
+instance : OrderTop (J.cover X) :=
+  { (inferInstance : Preorderₓ _) with top := ⟨⊤, J.top_mem _⟩,
     le_top :=
       fun S Y f h =>
         by 
           tauto }
 
-instance  : Inhabited (J.cover X) :=
+instance : SemilatticeInf (J.cover X) :=
+  { (inferInstance : Preorderₓ _) with inf := fun S T => ⟨S⊓T, J.intersection_covering S.condition T.condition⟩,
+    le_antisymm := fun S T h1 h2 => ext _ _$ fun Y f => ⟨h1 _, h2 _⟩, inf_le_left := fun S T Y f hf => hf.1,
+    inf_le_right := fun S T Y f hf => hf.2, le_inf := fun S T W h1 h2 Y f h => ⟨h1 _ h, h2 _ h⟩ }
+
+instance : Inhabited (J.cover X) :=
   ⟨⊤⟩
 
 /-- An auxiliary structure, used to define `S.index` in `plus.lean`. -/
 @[nolint has_inhabited_instance, ext]
-structure arrow(S : J.cover X) where 
+structure arrow (S : J.cover X) where 
   y : C 
   f : Y ⟶ X 
   hf : S f
 
 /-- An auxiliary structure, used to define `S.index` in `plus.lean`. -/
 @[nolint has_inhabited_instance, ext]
-structure relation(S : J.cover X) where 
+structure relation (S : J.cover X) where 
   (y₁ y₂ z : C)
   g₁ : Z ⟶ Y₁ 
   g₂ : Z ⟶ Y₂ 

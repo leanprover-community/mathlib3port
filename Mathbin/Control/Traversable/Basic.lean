@@ -54,9 +54,9 @@ universe u v w
 
 section ApplicativeTransformation
 
-variable(F : Type u → Type v)[Applicativeₓ F][IsLawfulApplicative F]
+variable (F : Type u → Type v) [Applicativeₓ F] [IsLawfulApplicative F]
 
-variable(G : Type u → Type w)[Applicativeₓ G][IsLawfulApplicative G]
+variable (G : Type u → Type w) [Applicativeₓ G] [IsLawfulApplicative G]
 
 /-- A transformation between applicative functors.  It is a natural
 transformation such that `app` preserves the `has_pure.pure` and
@@ -71,14 +71,14 @@ end ApplicativeTransformation
 
 namespace ApplicativeTransformation
 
-variable(F : Type u → Type v)[Applicativeₓ F][IsLawfulApplicative F]
+variable (F : Type u → Type v) [Applicativeₓ F] [IsLawfulApplicative F]
 
-variable(G : Type u → Type w)[Applicativeₓ G][IsLawfulApplicative G]
+variable (G : Type u → Type w) [Applicativeₓ G] [IsLawfulApplicative G]
 
-instance  : CoeFun (ApplicativeTransformation F G) fun _ => ∀ {α}, F α → G α :=
+instance : CoeFun (ApplicativeTransformation F G) fun _ => ∀ {α}, F α → G α :=
   ⟨ApplicativeTransformation.app⟩
 
-variable{F G}
+variable {F G}
 
 @[simp]
 theorem app_eq_coe (η : ApplicativeTransformation F G) : η.app = η :=
@@ -113,7 +113,7 @@ theorem ext_iff {η η' : ApplicativeTransformation F G} : η = η' ↔ ∀ α :
 
 section Preserves
 
-variable(η : ApplicativeTransformation F G)
+variable (η : ApplicativeTransformation F G)
 
 @[functor_norm]
 theorem preserves_pure : ∀ {α} x : α, η (pure x) = pure x :=
@@ -146,12 +146,12 @@ def id_transformation : ApplicativeTransformation F F :=
         by 
           simp  }
 
-instance  : Inhabited (ApplicativeTransformation F F) :=
+instance : Inhabited (ApplicativeTransformation F F) :=
   ⟨id_transformation⟩
 
 universe s t
 
-variable{H : Type u → Type s}[Applicativeₓ H][IsLawfulApplicative H]
+variable {H : Type u → Type s} [Applicativeₓ H] [IsLawfulApplicative H]
 
 /-- The composition of applicative transformations. -/
 def comp (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G) : ApplicativeTransformation F H :=
@@ -192,7 +192,7 @@ with all applicative functors (see `sequence`).  For example, if `t`
 is the traversable functor `list` and `m` is the applicative functor
 `io`, then given a function `f : α → io β`, the function `functor.map f` is
 `list α → list (io β)`, but `traverse f` is `list α → io (list β)`. -/
-class Traversable(t : Type u → Type u) extends Functor t where 
+class Traversable (t : Type u → Type u) extends Functor t where 
   traverse : ∀ {m : Type u → Type u} [Applicativeₓ m] {α β}, (α → m β) → t α → m (t β)
 
 open Functor
@@ -201,13 +201,13 @@ export Traversable(traverse)
 
 section Functions
 
-variable{t : Type u → Type u}
+variable {t : Type u → Type u}
 
-variable{m : Type u → Type v}[Applicativeₓ m]
+variable {m : Type u → Type v} [Applicativeₓ m]
 
-variable{α β : Type u}
+variable {α β : Type u}
 
-variable{f : Type u → Type u}[Applicativeₓ f]
+variable {f : Type u → Type u} [Applicativeₓ f]
 
 /-- A traversable functor commutes with all applicative functors. -/
 def sequence [Traversable t] : t (f α) → f (t α) :=
@@ -221,7 +221,7 @@ send the composition of applicative functors to the composition of the
 `traverse` of each, send each function `f` to `λ x, f <$> x`, and
 satisfy a naturality condition with respect to applicative
 transformations. -/
-class IsLawfulTraversable(t : Type u → Type u)[Traversable t] extends IsLawfulFunctor t : Type (u + 1) where 
+class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends IsLawfulFunctor t : Type (u + 1) where 
   id_traverse : ∀ {α} x : t α, traverse id.mk x = x 
   comp_traverse :
   ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] {α β γ} f : β → F γ g :
@@ -231,32 +231,32 @@ class IsLawfulTraversable(t : Type u → Type u)[Traversable t] extends IsLawful
   ∀ {F G} [Applicativeₓ F] [Applicativeₓ G] [IsLawfulApplicative F] [IsLawfulApplicative G] η :
     ApplicativeTransformation F G {α β} f : α → F β x : t α, η (traverse f x) = traverse (@η _ ∘ f) x
 
-instance  : Traversable id :=
+instance : Traversable id :=
   ⟨fun _ _ _ _ => id⟩
 
-instance  : IsLawfulTraversable id :=
+instance : IsLawfulTraversable id :=
   by 
     refine' { .. } <;> intros  <;> rfl
 
 section 
 
-variable{F : Type u → Type v}[Applicativeₓ F]
+variable {F : Type u → Type v} [Applicativeₓ F]
 
-instance  : Traversable Option :=
+instance : Traversable Option :=
   ⟨@Option.traverseₓ⟩
 
-instance  : Traversable List :=
+instance : Traversable List :=
   ⟨@List.traverseₓ⟩
 
 end 
 
 namespace Sum
 
-variable{σ : Type u}
+variable {σ : Type u}
 
-variable{F : Type u → Type u}
+variable {F : Type u → Type u}
 
-variable[Applicativeₓ F]
+variable [Applicativeₓ F]
 
 /-- Defines a `traverse` function on the second component of a sum type.
 This is used to give a `traversable` instance for the functor `σ ⊕ -`. -/
@@ -266,6 +266,6 @@ protected def traverse {α β} (f : α → F β) : Sum σ α → F (Sum σ β)
 
 end Sum
 
-instance  {σ : Type u} : Traversable.{u} (Sum σ) :=
+instance {σ : Type u} : Traversable.{u} (Sum σ) :=
   ⟨@Sum.traverseₓ _⟩
 

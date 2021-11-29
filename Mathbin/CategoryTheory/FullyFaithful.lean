@@ -21,7 +21,7 @@ universe v₁ v₂ v₃ u₁ u₂ u₃
 
 namespace CategoryTheory
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 /--
 A functor `F : C ⥤ D` is full if for each `X Y : C`, `F.map` is surjective.
@@ -30,7 +30,7 @@ specifying a particular preimage of each `f : F.obj X ⟶ F.obj Y`.
 
 See https://stacks.math.columbia.edu/tag/001C.
 -/
-class full(F : C ⥤ D) where 
+class full (F : C ⥤ D) where 
   Preimage : ∀ {X Y : C} f : F.obj X ⟶ F.obj Y, X ⟶ Y 
   witness' : ∀ {X Y : C} f : F.obj X ⟶ F.obj Y, F.map (preimage f) = f :=  by 
   runTac 
@@ -45,7 +45,7 @@ A functor `F : C ⥤ D` is faithful if for each `X Y : C`, `F.map` is injective.
 
 See https://stacks.math.columbia.edu/tag/001C.
 -/
-class faithful(F : C ⥤ D) : Prop where 
+class faithful (F : C ⥤ D) : Prop where 
   map_injective'{} : ∀ {X Y : C}, Function.Injective (@Functor.map _ _ _ _ F X Y) :=  by 
   runTac 
     obviously
@@ -70,7 +70,7 @@ theorem image_preimage (F : C ⥤ D) [full F] {X Y : C} (f : F.obj X ⟶ F.obj Y
 
 end Functor
 
-variable{F : C ⥤ D}[full F][faithful F]{X Y Z : C}
+variable {F : C ⥤ D} [full F] [faithful F] {X Y Z : C}
 
 @[simp]
 theorem preimage_id : F.preimage (𝟙 (F.obj X)) = 𝟙 X :=
@@ -116,7 +116,7 @@ theorem preimage_iso_map_iso (f : X ≅ Y) : preimage_iso (F.map_iso f) = f :=
   by 
     tidy
 
-variable(F)
+variable (F)
 
 /--
 If the image of a morphism under a fully faithful functor in an isomorphism,
@@ -156,7 +156,7 @@ end CategoryTheory
 
 namespace CategoryTheory
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
 instance full.id : full (𝟭 C) :=
   { Preimage := fun _ _ f => f }
@@ -166,9 +166,9 @@ instance faithful.id : faithful (𝟭 C) :=
     runTac 
       obviously
 
-variable{D : Type u₂}[category.{v₂} D]{E : Type u₃}[category.{v₃} E]
+variable {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
 
-variable(F F' : C ⥤ D)(G : D ⥤ E)
+variable (F F' : C ⥤ D) (G : D ⥤ E)
 
 instance faithful.comp [faithful F] [faithful G] : faithful (F ⋙ G) :=
   { map_injective' := fun _ _ _ _ p => F.map_injective (G.map_injective p) }
@@ -178,7 +178,7 @@ theorem faithful.of_comp [faithful$ F ⋙ G] : faithful F :=
 
 section 
 
-variable{F F'}
+variable {F F'}
 
 /-- If `F` is full, and naturally isomorphic to some `F'`, then `F'` is also full. -/
 def full.of_iso [full F] (α : F ≅ F') : full F' :=
@@ -197,7 +197,7 @@ theorem faithful.of_iso [faithful F] (α : F ≅ F') : faithful F' :=
 
 end 
 
-variable{F G}
+variable {F G}
 
 theorem faithful.of_comp_iso {H : C ⥤ E} [ℋ : faithful H] (h : F ⋙ G ≅ H) : faithful F :=
   @faithful.of_comp _ _ _ _ _ _ F G (faithful.of_iso h.symm)
@@ -209,7 +209,7 @@ theorem faithful.of_comp_eq {H : C ⥤ E} [ℋ : faithful H] (h : F ⋙ G = H) :
 
 alias faithful.of_comp_eq ← Eq.faithful_of_comp
 
-variable(F G)
+variable (F G)
 
 /-- “Divide” a functor by a faithful functor. -/
 protected def faithful.div (F : C ⥤ E) (G : D ⥤ E) [faithful G] (obj : C → D) (h_obj : ∀ X, G.obj (obj X) = F.obj X)

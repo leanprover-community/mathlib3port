@@ -84,7 +84,7 @@ unsafe def format_aux : List Stringₓ → List Stringₓ → List Stringₓ →
     (· ++ fmt) <$> format_aux lines deps thms es
 | _, _, _, _ => return format.nil
 
-unsafe instance  : has_to_tactic_format entries :=
+unsafe instance : has_to_tactic_format entries :=
   ⟨fun es : entries =>
       let lines := pad_right$ es.l.map fun en => toString en.line 
       let deps := pad_right$ es.l.map fun en => Stringₓ.intercalate "," (en.deps.map toString)

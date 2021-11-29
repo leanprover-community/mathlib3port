@@ -88,20 +88,9 @@ such that
 * the derivatives are surjective;
 * the kernels of the derivatives are complementary subspaces of `E`. -/
 @[nolint has_inhabited_instance]
-structure
-  ImplicitFunctionData(𝕜 :
-    Type
-      _)[NondiscreteNormedField
-      𝕜](E :
-    Type
-      _)[NormedGroup
-      E][NormedSpace 𝕜
-      E][CompleteSpace
-      E](F :
-    Type
-      _)[NormedGroup
-      F][NormedSpace 𝕜 F][CompleteSpace F](G : Type _)[NormedGroup G][NormedSpace 𝕜 G][CompleteSpace G] where
-  
+structure ImplicitFunctionData (𝕜 : Type _) [NondiscreteNormedField 𝕜] (E : Type _) [NormedGroup E] [NormedSpace 𝕜 E]
+  [CompleteSpace E] (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F] [CompleteSpace F] (G : Type _) [NormedGroup G]
+  [NormedSpace 𝕜 G] [CompleteSpace G] where 
   leftFun : E → F 
   leftDeriv : E →L[𝕜] F 
   rightFun : E → G 
@@ -115,19 +104,9 @@ structure
 
 namespace ImplicitFunctionData
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E][CompleteSpace
-      E]{F :
-    Type
-      _}[NormedGroup
-      F][NormedSpace 𝕜
-      F][CompleteSpace F]{G : Type _}[NormedGroup G][NormedSpace 𝕜 G][CompleteSpace G](φ : ImplicitFunctionData 𝕜 E F G)
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] [CompleteSpace E]
+  {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] [CompleteSpace F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
+  [CompleteSpace G] (φ : ImplicitFunctionData 𝕜 E F G)
 
 /-- The function given by `x ↦ (left_fun x, right_fun x)`. -/
 def prod_fun (x : E) : F × G :=
@@ -223,18 +202,12 @@ complementary to `ker f'` lead to different maps `φ`.
 -/
 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E][CompleteSpace E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F][CompleteSpace F]{f : E → F}{f' : E →L[𝕜] F}{a : E}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] [CompleteSpace E]
+  {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] [CompleteSpace F] {f : E → F} {f' : E →L[𝕜] F} {a : E}
 
 section Defs
 
-variable(f f')
+variable (f f')
 
 /-- Data used to apply the generic implicit function theorem to the case of a strictly
 differentiable map such that its derivative is surjective and has a complemented kernel. -/
@@ -355,16 +328,9 @@ complementary to `ker f'` lead to different maps `φ`.
 
 section FiniteDimensional
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜][CompleteSpace
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E][CompleteSpace
-      E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F][FiniteDimensional 𝕜 F](f : E → F)(f' : E →L[𝕜] F){a : E}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [CompleteSpace 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+  [CompleteSpace E] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] [FiniteDimensional 𝕜 F] (f : E → F) (f' : E →L[𝕜] F)
+  {a : E}
 
 -- error in Analysis.Calculus.Implicit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a map `f : E → F` to a finite dimensional space with a surjective derivative `f'`,
@@ -378,7 +344,7 @@ by haveI [] [] [":=", expr finite_dimensional.complete 𝕜 F]; exact [expr hf.i
 def implicit_function (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) : F → f'.ker → E :=
   Function.curry$ (hf.implicit_to_local_homeomorph f f' hf').symm
 
-variable{f f'}
+variable {f f'}
 
 @[simp]
 theorem implicit_to_local_homeomorph_fst (hf : HasStrictFderivAt f f' a) (hf' : f'.range = ⊤) (x : E) :

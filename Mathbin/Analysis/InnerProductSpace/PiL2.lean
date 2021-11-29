@@ -37,9 +37,9 @@ attribute [local instance] fact_one_le_two_real
 
 noncomputable theory
 
-variable{ι : Type _}
+variable {ι : Type _}
 
-variable{𝕜 : Type _}[IsROrC 𝕜]{E : Type _}[InnerProductSpace 𝕜 E]
+variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [InnerProductSpace 𝕜 E]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
@@ -105,13 +105,13 @@ section
 
 attribute [local reducible] PiLp
 
-variable[Fintype ι]
+variable [Fintype ι]
 
-instance  : FiniteDimensional 𝕜 (EuclideanSpace 𝕜 ι) :=
+instance : FiniteDimensional 𝕜 (EuclideanSpace 𝕜 ι) :=
   by 
     infer_instance
 
-instance  : InnerProductSpace 𝕜 (EuclideanSpace 𝕜 ι) :=
+instance : InnerProductSpace 𝕜 (EuclideanSpace 𝕜 ι) :=
   by 
     infer_instance
 

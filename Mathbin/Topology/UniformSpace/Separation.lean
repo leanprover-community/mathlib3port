@@ -72,9 +72,9 @@ set_option eqn_compiler.zeta true
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
-variable[UniformSpace α][UniformSpace β][UniformSpace γ]
+variable [UniformSpace α] [UniformSpace β] [UniformSpace γ]
 
 /-!
 ### Separated uniform spaces
@@ -101,7 +101,7 @@ theorem separated_equiv : Equivalenceₓ fun x y => (x, y) ∈ 𝓢 α :=
 
 /-- A uniform space is separated if its separation relation is trivial (each point
 is related only to itself). -/
-class SeparatedSpace(α : Type u)[UniformSpace α] : Prop where 
+class SeparatedSpace (α : Type u) [UniformSpace α] : Prop where 
   out : 𝓢 α = IdRel
 
 theorem separated_space_iff {α : Type u} [UniformSpace α] : SeparatedSpace α ↔ 𝓢 α = IdRel :=
@@ -150,10 +150,10 @@ theorem id_rel_sub_separation_relation (α : Type _) [UniformSpace α] : IdRel �
     exact fun t => refl_mem_uniformity
 
 theorem separation_rel_comap {f : α → β} (h : ‹UniformSpace α› = UniformSpace.comap f ‹UniformSpace β›) :
-  𝓢 α = Prod.mapₓ f f ⁻¹' 𝓢 β :=
+  𝓢 α = Prod.map f f ⁻¹' 𝓢 β :=
   by 
     dsimp [SeparationRel]
-    simpRw [uniformity_comap h, (Filter.comap_has_basis (Prod.mapₓ f f) (𝓤 β)).sInter_sets, ←preimage_Inter,
+    simpRw [uniformity_comap h, (Filter.comap_has_basis (Prod.map f f) (𝓤 β)).sInter_sets, ←preimage_Inter,
       sInter_eq_bInter]
     rfl
 
@@ -475,15 +475,15 @@ def separation_quotient (α : Type _) [UniformSpace α] :=
 
 namespace SeparationQuotient
 
-instance  : UniformSpace (separation_quotient α) :=
+instance : UniformSpace (separation_quotient α) :=
   by 
     dunfold separation_quotient <;> infer_instance
 
-instance  : SeparatedSpace (separation_quotient α) :=
+instance : SeparatedSpace (separation_quotient α) :=
   by 
     dunfold separation_quotient <;> infer_instance
 
-instance  [Inhabited α] : Inhabited (separation_quotient α) :=
+instance [Inhabited α] : Inhabited (separation_quotient α) :=
   by 
     unfold separation_quotient <;> infer_instance
 

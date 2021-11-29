@@ -40,7 +40,7 @@ open Nat LocalRing Padic
 
 namespace PadicInt
 
-variable{p : ℕ}[hp_prime : Fact p.prime]
+variable {p : ℕ} [hp_prime : Fact p.prime]
 
 include hp_prime
 
@@ -49,7 +49,7 @@ section RingHoms
 /-! ### Ring homomorphisms to `zmod p` and `zmod (p ^ n)` -/
 
 
-variable(p)(r : ℚ)
+variable (p) (r : ℚ)
 
 omit hp_prime
 
@@ -67,7 +67,7 @@ def mod_part : ℤ :=
 
 include hp_prime
 
-variable{p}
+variable {p}
 
 theorem mod_part_lt_p : mod_part p r < p :=
   by 
@@ -186,7 +186,7 @@ begin
   simpa [] [] ["only"] ["[", expr ring_hom.map_int_cast, "]"] [] []
 end
 
-variable(x : ℤ_[p])
+variable (x : ℤ_[p])
 
 -- error in NumberTheory.Padics.RingHoms: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_mem_range : «expr∃ , »((n : exprℕ()), «expr ∧ »(«expr < »(n, p), «expr ∈ »(«expr - »(x, n), maximal_ideal «exprℤ_[ ]»(p)))) :=
@@ -520,11 +520,8 @@ section lift
 
 open CauSeq PadicSeq
 
-variable{R :
-    Type
-      _}[CommRingₓ
-      R](f :
-    ∀ k : ℕ, R →+* Zmod (p^k))(f_compat : ∀ k1 k2 hk : k1 ≤ k2, (Zmod.castHom (pow_dvd_pow p hk) _).comp (f k2) = f k1)
+variable {R : Type _} [CommRingₓ R] (f : ∀ k : ℕ, R →+* Zmod (p^k))
+  (f_compat : ∀ k1 k2 hk : k1 ≤ k2, (Zmod.castHom (pow_dvd_pow p hk) _).comp (f k2) = f k1)
 
 omit hp_prime
 
@@ -542,7 +539,7 @@ theorem nth_hom_zero : nth_hom f 0 = 0 :=
   by 
     simp [nth_hom] <;> rfl
 
-variable{f}
+variable {f}
 
 include hp_prime
 

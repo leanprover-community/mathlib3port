@@ -27,15 +27,15 @@ namespace CategoryTheory
 
 attribute [instance] is_connected.is_nonempty
 
-variable{J : Type u₁}[category.{v₁} J]
+variable {J : Type u₁} [category.{v₁} J]
 
-variable{C : Type u₂}[category.{u₁} C]
+variable {C : Type u₂} [category.{u₁} C]
 
 /-- This type indexes the connected components of the category `J`. -/
 def connected_components (J : Type u₁) [category.{v₁} J] : Type u₁ :=
   Quotientₓ (zigzag.setoid J)
 
-instance  [Inhabited J] : Inhabited (connected_components J) :=
+instance [Inhabited J] : Inhabited (connected_components J) :=
   ⟨Quotientₓ.mk' (default J)⟩
 
 -- error in CategoryTheory.ConnectedComponents: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
@@ -51,13 +51,13 @@ def component.ι (j) : «expr ⥤ »(component j, J) :=
 full_subcategory_inclusion _
 
 /-- Each connected component of the category is nonempty. -/
-instance  (j : connected_components J) : Nonempty (component j) :=
+instance (j : connected_components J) : Nonempty (component j) :=
   by 
     apply Quotientₓ.induction_on' j 
     intro k 
     refine' ⟨⟨k, rfl⟩⟩
 
-instance  (j : connected_components J) : Inhabited (component j) :=
+instance (j : connected_components J) : Inhabited (component j) :=
   Classical.inhabitedOfNonempty'
 
 -- error in CategoryTheory.ConnectedComponents: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -126,17 +126,17 @@ instance : full (decomposed_to J) :=
     refl
   end }
 
-instance  : faithful (decomposed_to J) :=
+instance : faithful (decomposed_to J) :=
   { map_injective' :=
       by 
         rintro ⟨_, j, rfl⟩ ⟨_, k, hY⟩ ⟨_, _, _, f⟩ ⟨_, _, _, g⟩ e 
         change f = g at e 
         subst e }
 
-instance  : ess_surj (decomposed_to J) :=
+instance : ess_surj (decomposed_to J) :=
   { mem_ess_image := fun j => ⟨⟨_, j, rfl⟩, ⟨iso.refl _⟩⟩ }
 
-instance  : is_equivalence (decomposed_to J) :=
+instance : is_equivalence (decomposed_to J) :=
   equivalence.of_fully_faithfully_ess_surj _
 
 /-- This gives that any category is equivalent to a disjoint union of connected categories. -/

@@ -3,7 +3,7 @@ import Mathbin.Data.Equiv.Basic
 
 universe u v w u₀ u₁ v₀ v₁
 
-structure WriterT(ω : Type u)(m : Type u → Type v)(α : Type u) : Type max u v where 
+structure WriterT (ω : Type u) (m : Type u → Type v) (α : Type u) : Type max u v where 
   run : m (α × ω)
 
 @[reducible]
@@ -16,13 +16,13 @@ namespace WriterT
 
 section 
 
-variable{ω : Type u}
+variable {ω : Type u}
 
-variable{m : Type u → Type v}
+variable {m : Type u → Type v}
 
-variable[Monadₓ m]
+variable [Monadₓ m]
 
-variable{α β : Type u}
+variable {α β : Type u}
 
 open Function
 
@@ -54,10 +54,10 @@ protected def bind [Mul ω] (x : WriterT ω m α) (f : α → WriterT ω m β) :
       let x' ← (f x.1).run 
       pure (x'.1, x.2*x'.2)⟩
 
-instance  [HasOne ω] [Mul ω] : Monadₓ (WriterT ω m) :=
+instance [HasOne ω] [Mul ω] : Monadₓ (WriterT ω m) :=
   { pure := fun α => WriterT.pure, bind := fun α β => WriterT.bind }
 
-instance  [Monoidₓ ω] [IsLawfulMonad m] : IsLawfulMonad (WriterT ω m) :=
+instance [Monoidₓ ω] [IsLawfulMonad m] : IsLawfulMonad (WriterT ω m) :=
   { id_map :=
       by 
         intros 
@@ -77,21 +77,21 @@ instance  [Monoidₓ ω] [IsLawfulMonad m] : IsLawfulMonad (WriterT ω m) :=
 protected def lift [HasOne ω] (a : m α) : WriterT ω m α :=
   ⟨flip Prod.mk 1 <$> a⟩
 
-instance  m [Monadₓ m] [HasOne ω] : HasMonadLift m (WriterT ω m) :=
+instance m [Monadₓ m] [HasOne ω] : HasMonadLift m (WriterT ω m) :=
   ⟨fun α => WriterT.lift⟩
 
 @[inline]
 protected def monad_map {m m'} [Monadₓ m] [Monadₓ m'] {α} (f : ∀ {α}, m α → m' α) : WriterT ω m α → WriterT ω m' α :=
   fun x => ⟨f x.run⟩
 
-instance  m m' [Monadₓ m] [Monadₓ m'] : MonadFunctorₓ m m' (WriterT ω m) (WriterT ω m') :=
+instance m m' [Monadₓ m] [Monadₓ m'] : MonadFunctorₓ m m' (WriterT ω m) (WriterT ω m') :=
   ⟨@WriterT.monadMap ω m m' _ _⟩
 
 @[inline]
 protected def adapt {ω' : Type u} {α : Type u} (f : ω → ω') : WriterT ω m α → WriterT ω' m α :=
-  fun x => ⟨Prod.mapₓ id f <$> x.run⟩
+  fun x => ⟨Prod.map id f <$> x.run⟩
 
-instance  ε [HasOne ω] [Monadₓ m] [MonadExcept ε m] : MonadExcept ε (WriterT ω m) :=
+instance ε [HasOne ω] [Monadₓ m] [MonadExcept ε m] : MonadExcept ε (WriterT ω m) :=
   { throw := fun α => WriterT.lift ∘ throw, catch := fun α x c => ⟨catch x.run fun e => (c e).run⟩ }
 
 end 
@@ -110,24 +110,24 @@ class monad_reader (ρ : out_param (Type u)) (n : Type u → Type u) :=
 (lift {α : Type u} : (∀ {m : Type u → Type u} [monad m], reader_t ρ m α) → n α)
 ```
 -/
-class MonadWriter(ω : outParam (Type u))(m : Type u → Type v) where 
+class MonadWriter (ω : outParam (Type u)) (m : Type u → Type v) where 
   tell (w : ω) : m PUnit 
   listen {α} : m α → m (α × ω)
   pass {α : Type u} : m (α × (ω → ω)) → m α
 
 export MonadWriter()
 
-instance  {ω : Type u} {m : Type u → Type v} [Monadₓ m] : MonadWriter ω (WriterT ω m) :=
+instance {ω : Type u} {m : Type u → Type v} [Monadₓ m] : MonadWriter ω (WriterT ω m) :=
   { tell := WriterT.tell, listen := fun α => WriterT.listen, pass := fun α => WriterT.pass }
 
-instance  {ω ρ : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (ReaderTₓ ρ m) :=
+instance {ω ρ : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (ReaderTₓ ρ m) :=
   { tell := fun x => monad_lift (tell x : m PUnit), listen := fun α ⟨cmd⟩ => ⟨fun r => listen (cmd r)⟩,
     pass := fun α ⟨cmd⟩ => ⟨fun r => pass (cmd r)⟩ }
 
 def swapRight {α β γ} : (α × β) × γ → (α × γ) × β
 | ⟨⟨x, y⟩, z⟩ => ((x, z), y)
 
-instance  {ω σ : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (StateTₓ σ m) :=
+instance {ω σ : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (StateTₓ σ m) :=
   { tell := fun x => monad_lift (tell x : m PUnit), listen := fun α ⟨cmd⟩ => ⟨fun r => swapRight <$> listen (cmd r)⟩,
     pass := fun α ⟨cmd⟩ => ⟨fun r => pass (swapRight <$> cmd r)⟩ }
 
@@ -137,7 +137,7 @@ def ExceptTₓ.passAux {ε α ω} : Except ε (α × (ω → ω)) → Except ε 
 | Except.error a => (Except.error a, id)
 | Except.ok (x, y) => (Except.ok x, y)
 
-instance  {ω ε : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (ExceptTₓ ε m) :=
+instance {ω ε : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (ExceptTₓ ε m) :=
   { tell := fun x => monad_lift (tell x : m PUnit),
     listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩,
     pass := fun α ⟨cmd⟩ => ⟨pass (ExceptTₓ.passAux <$> cmd)⟩ }
@@ -146,7 +146,7 @@ def OptionTₓ.passAux {α ω} : Option (α × (ω → ω)) → Option α × (ω
 | none => (none, id)
 | some (x, y) => (some x, y)
 
-instance  {ω : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (OptionTₓ m) :=
+instance {ω : Type u} {m : Type u → Type v} [Monadₓ m] [MonadWriter ω m] : MonadWriter ω (OptionTₓ m) :=
   { tell := fun x => monad_lift (tell x : m PUnit),
     listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩,
     pass := fun α ⟨cmd⟩ => ⟨pass (OptionTₓ.passAux <$> cmd)⟩ }
@@ -165,14 +165,14 @@ class monad_reader_functor (ρ ρ' : out_param (Type u)) (n n' : Type u → Type
   (∀ {m : Type u → Type u} [monad m], reader_t ρ m α → reader_t ρ' m α) → n α → n' α)
 ```
 -/
-class MonadWriterAdapter(ω ω' : outParam (Type u))(m m' : Type u → Type v) where 
+class MonadWriterAdapter (ω ω' : outParam (Type u)) (m m' : Type u → Type v) where 
   adaptWriter {α : Type u} : (ω → ω') → m α → m' α
 
 export MonadWriterAdapter(adaptWriter)
 
 section 
 
-variable{ω ω' : Type u}{m m' : Type u → Type v}
+variable {ω ω' : Type u} {m m' : Type u → Type v}
 
 /-- Transitivity.
 
@@ -183,16 +183,16 @@ Currently that is not a problem, as there are almost no instances of `monad_func
 
 see Note [lower instance priority] -/
 @[nolint dangerous_instance]
-instance (priority := 100)monadWriterAdapterTrans {n n' : Type u → Type v} [MonadWriterAdapter ω ω' m m']
+instance (priority := 100) monadWriterAdapterTrans {n n' : Type u → Type v} [MonadWriterAdapter ω ω' m m']
   [MonadFunctorₓ m m' n n'] : MonadWriterAdapter ω ω' n n' :=
   ⟨fun α f => monad_map fun α => (adapt_writer f : m α → m' α)⟩
 
-instance  [Monadₓ m] : MonadWriterAdapter ω ω' (WriterT ω m) (WriterT ω' m) :=
+instance [Monadₓ m] : MonadWriterAdapter ω ω' (WriterT ω m) (WriterT ω' m) :=
   ⟨fun α => WriterT.adapt⟩
 
 end 
 
-instance  (ω : Type u) m out [MonadRun out m] : MonadRun (fun α => out (α × ω)) (WriterT ω m) :=
+instance (ω : Type u) m out [MonadRun out m] : MonadRun (fun α => out (α × ω)) (WriterT ω m) :=
   ⟨fun α x => run$ x.run⟩
 
 /-- reduce the equivalence between two writer monads to the equivalence between

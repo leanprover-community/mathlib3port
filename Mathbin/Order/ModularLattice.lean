@@ -26,15 +26,15 @@ any distributive lattice.
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- A modular lattice is one with a limited associativity between `⊓` and `⊔`. -/
-class IsModularLattice(α)[Lattice α] : Prop where 
+class IsModularLattice (α) [Lattice α] : Prop where 
   sup_inf_le_assoc_of_le : ∀ {x : α} y : α {z : α}, x ≤ z → (x⊔y)⊓z ≤ x⊔y⊓z
 
 section IsModularLattice
 
-variable[Lattice α][IsModularLattice α]
+variable [Lattice α] [IsModularLattice α]
 
 theorem sup_inf_assoc_of_le {x : α} (y : α) {z : α} (h : x ≤ z) : (x⊔y)⊓z = x⊔y⊓z :=
   le_antisymmₓ (IsModularLattice.sup_inf_le_assoc_of_le y h)
@@ -47,14 +47,14 @@ theorem inf_sup_assoc_of_le {x : α} (y : α) {z : α} (h : z ≤ x) : x⊓y⊔z
   by 
     rw [inf_comm, sup_comm, ←sup_inf_assoc_of_le y h, inf_comm, sup_comm]
 
-instance  : IsModularLattice (OrderDual α) :=
+instance : IsModularLattice (OrderDual α) :=
   ⟨fun x y z xz =>
       le_of_eqₓ
         (by 
           rw [inf_comm, sup_comm, eq_comm, inf_comm, sup_comm]
           convert sup_inf_assoc_of_le (OrderDual.ofDual y) (OrderDual.dual_le.2 xz))⟩
 
-variable{x y z : α}
+variable {x y z : α}
 
 theorem IsModularLattice.sup_inf_sup_assoc : (x⊔z)⊓(y⊔z) = (x⊔z)⊓y⊔z :=
   @IsModularLattice.inf_sup_inf_assoc (OrderDual α) _ _ _ _ _
@@ -139,7 +139,7 @@ end IsModularLattice
 
 namespace IsCompl
 
-variable[BoundedLattice α][IsModularLattice α]
+variable [Lattice α] [BoundedOrder α] [IsModularLattice α]
 
 /-- The diamond isomorphism between the intervals `set.Iic a` and `set.Ici b`. -/
 def Iic_order_iso_Ici {a b : α} (h : IsCompl a b) : Set.Iic a ≃o Set.Ici b :=
@@ -164,7 +164,7 @@ instance (priority := 100) [DistribLattice α] : IsModularLattice α :=
 
 end DistribLattice
 
-theorem Disjoint.disjoint_sup_right_of_disjoint_sup_left [BoundedLattice α] [IsModularLattice α] {a b c : α}
+theorem Disjoint.disjoint_sup_right_of_disjoint_sup_left [Lattice α] [BoundedOrder α] [IsModularLattice α] {a b c : α}
   (h : Disjoint a b) (hsup : Disjoint (a⊔b) c) : Disjoint a (b⊔c) :=
   by 
     rw [Disjoint, ←h.eq_bot, sup_comm]
@@ -172,7 +172,7 @@ theorem Disjoint.disjoint_sup_right_of_disjoint_sup_left [BoundedLattice α] [Is
     apply (inf_le_inf_right (c⊔b) le_sup_right).trans 
     rw [sup_comm, IsModularLattice.sup_inf_sup_assoc, hsup.eq_bot, bot_sup_eq]
 
-theorem Disjoint.disjoint_sup_left_of_disjoint_sup_right [BoundedLattice α] [IsModularLattice α] {a b c : α}
+theorem Disjoint.disjoint_sup_left_of_disjoint_sup_right [Lattice α] [BoundedOrder α] [IsModularLattice α] {a b c : α}
   (h : Disjoint b c) (hsup : Disjoint a (b⊔c)) : Disjoint (a⊔b) c :=
   by 
     rw [Disjoint.comm, sup_comm]
@@ -181,7 +181,7 @@ theorem Disjoint.disjoint_sup_left_of_disjoint_sup_right [BoundedLattice α] [Is
 
 namespace IsModularLattice
 
-variable[BoundedLattice α][IsModularLattice α]{a : α}
+variable [Lattice α] [IsModularLattice α] {a : α}
 
 instance is_modular_lattice_Iic : IsModularLattice (Set.Iic a) :=
   ⟨fun x y z xz =>
@@ -193,7 +193,7 @@ instance is_modular_lattice_Ici : IsModularLattice (Set.Ici a) :=
 
 section IsComplemented
 
-variable[IsComplemented α]
+variable [BoundedOrder α] [IsComplemented α]
 
 instance is_complemented_Iic : IsComplemented (Set.Iic a) :=
   ⟨fun ⟨x, hx⟩ =>

@@ -51,7 +51,7 @@ namespace Language
 def Empty : language :=
   ⟨fun _ => Pempty, fun _ => Pempty⟩
 
-instance  : Inhabited language :=
+instance : Inhabited language :=
   ⟨Empty⟩
 
 /-- The type of constants in a given language. -/
@@ -59,7 +59,7 @@ instance  : Inhabited language :=
 def const (L : language) :=
   L.functions 0
 
-variable(L : language)
+variable (L : language)
 
 /-- A language is relational when it has no function symbols. -/
 class is_relational : Prop where 
@@ -69,7 +69,7 @@ class is_relational : Prop where
 class is_algebraic : Prop where 
   empty_relations : ∀ n, L.relations n → False
 
-variable{L}
+variable {L}
 
 instance is_relational_of_empty_functions {symb : ℕ → Type _} : is_relational ⟨fun _ => Pempty, symb⟩ :=
   ⟨by 
@@ -87,7 +87,7 @@ instance is_relational_empty : is_relational Empty :=
 instance is_algebraic_empty : is_algebraic Empty :=
   language.is_algebraic_of_empty_relations
 
-variable(L)(M : Type _)
+variable (L) (M : Type _)
 
 /-- A first-order structure on a type `M` consists of interpretations of all the symbols in a given
   language. Each function of arity `n` is interpreted as a function sending tuples of length `n`
@@ -97,7 +97,7 @@ class Structure where
   funMap : ∀ {n}, L.functions n → (Finₓ n → M) → M 
   RelMap : ∀ {n}, L.relations n → (Finₓ n → M) → Prop
 
-variable(N : Type _)[L.Structure M][L.Structure N]
+variable (N : Type _) [L.Structure M] [L.Structure N]
 
 open FirstOrder.Language.Structure
 
@@ -139,9 +139,9 @@ protected structure Equiv extends M ≃ N where
 
 localized [FirstOrder] notation:25 A " ≃[" L "] " B => L.equiv A B
 
-variable{L M N}{P : Type _}[L.Structure P]{Q : Type _}[L.Structure Q]
+variable {L M N} {P : Type _} [L.Structure P] {Q : Type _} [L.Structure Q]
 
-instance  : CoeTₓ L.const M :=
+instance : CoeTₓ L.const M :=
   ⟨fun c => fun_map c Finₓ.elim0⟩
 
 theorem fun_map_eq_coe_const {c : L.const} {x : Finₓ 0 → M} : fun_map c x = c :=
@@ -184,16 +184,16 @@ theorem map_const (φ : M →[L] N) (c : L.const) : φ c = c :=
 theorem map_rel (φ : M →[L] N) {n : ℕ} (r : L.relations n) (x : Finₓ n → M) : rel_map r x → rel_map r (φ ∘ x) :=
   φ.map_rel' r x
 
-variable(L)(M)
+variable (L) (M)
 
 /-- The identity map from a structure to itself -/
 @[refl]
 def id : M →[L] M :=
   { toFun := id }
 
-variable{L}{M}
+variable {L} {M}
 
-instance  : Inhabited (M →[L] M) :=
+instance : Inhabited (M →[L] M) :=
   ⟨id L M⟩
 
 @[simp]
@@ -280,16 +280,16 @@ theorem of_injective_to_hom [L.is_algebraic] {f : M →[L] N} (hf : Function.Inj
     ext 
     simp 
 
-variable(L)(M)
+variable (L) (M)
 
 /-- The identity embedding from a structure to itself -/
 @[refl]
 def refl : M ↪[L] M :=
   { toEmbedding := Function.Embedding.refl M }
 
-variable{L}{M}
+variable {L} {M}
 
-instance  : Inhabited (M ↪[L] M) :=
+instance : Inhabited (M ↪[L] M) :=
   ⟨refl L M⟩
 
 @[simp]
@@ -386,16 +386,16 @@ theorem ext_iff {f g : M ≃[L] N} : f = g ↔ ∀ x, f x = g x :=
 theorem injective (f : M ≃[L] N) : Function.Injective f :=
   f.to_embedding.injective
 
-variable(L)(M)
+variable (L) (M)
 
 /-- The identity equivalence from a structure to itself -/
 @[refl]
 def refl : M ≃[L] M :=
   { toEquiv := Equiv.refl M }
 
-variable{L}{M}
+variable {L} {M}
 
-instance  : Inhabited (M ≃[L] M) :=
+instance : Inhabited (M ≃[L] M) :=
   ⟨refl L M⟩
 
 @[simp]
@@ -421,19 +421,19 @@ section ClosedUnder
 
 open Set
 
-variable{n : ℕ}(f : L.functions n)(s : Set M)
+variable {n : ℕ} (f : L.functions n) (s : Set M)
 
 /-- Indicates that a set in a given structure is a closed under a function symbol. -/
 def closed_under : Prop :=
   ∀ x : Finₓ n → M, (∀ i : Finₓ n, x i ∈ s) → fun_map f x ∈ s
 
-variable(L)
+variable (L)
 
 @[simp]
 theorem closed_under_univ : closed_under f (univ : Set M) :=
   fun _ _ => mem_univ _
 
-variable{L f s}{t : Set M}
+variable {L f s} {t : Set M}
 
 namespace ClosedUnder
 
@@ -443,7 +443,7 @@ theorem inter (hs : closed_under f s) (ht : closed_under f t) : closed_under f (
 theorem inf (hs : closed_under f s) (ht : closed_under f t) : closed_under f (s⊓t) :=
   hs.inter ht
 
-variable{S : Set (Set M)}
+variable {S : Set (Set M)}
 
 theorem Inf (hS : ∀ s, s ∈ S → closed_under f s) : closed_under f (Inf S) :=
   fun x h s hs => hS s hs x fun i => h i s hs
@@ -452,18 +452,18 @@ end ClosedUnder
 
 end ClosedUnder
 
-variable(L)(M)
+variable (L) (M)
 
 /-- A substructure of a structure `M` is a set closed under application of function symbols. -/
 structure substructure where 
   Carrier : Set M 
   fun_mem : ∀ {n}, ∀ f : L.functions n, closed_under f carrier
 
-variable{L}{M}
+variable {L} {M}
 
 namespace Substructure
 
-instance  : SetLike (L.substructure M) M :=
+instance : SetLike (L.substructure M) M :=
   ⟨substructure.carrier,
     fun p q h =>
       by 
@@ -488,7 +488,7 @@ theorem ext {S T : L.substructure M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 protected def copy (S : L.substructure M) (s : Set M) (hs : s = S) : L.substructure M :=
   { Carrier := s, fun_mem := fun n f => hs.symm ▸ S.fun_mem f }
 
-variable{S : L.substructure M}
+variable {S : L.substructure M}
 
 @[simp]
 theorem coe_copy {s : Set M} (hs : s = S) : (S.copy s hs : Set M) = s :=
@@ -501,10 +501,10 @@ theorem const_mem {c : L.const} : «expr↑ » c ∈ S :=
   mem_carrier.2 (S.fun_mem c _ Finₓ.elim0)
 
 /-- The substructure `M` of the structure `M`. -/
-instance  : HasTop (L.substructure M) :=
+instance : HasTop (L.substructure M) :=
   ⟨{ Carrier := Set.Univ, fun_mem := fun n f x h => Set.mem_univ _ }⟩
 
-instance  : Inhabited (L.substructure M) :=
+instance : Inhabited (L.substructure M) :=
   ⟨⊤⟩
 
 @[simp]
@@ -516,7 +516,7 @@ theorem coe_top : ((⊤ : L.substructure M) : Set M) = Set.Univ :=
   rfl
 
 /-- The inf of two substructures is their intersection. -/
-instance  : HasInf (L.substructure M) :=
+instance : HasInf (L.substructure M) :=
   ⟨fun S₁ S₂ => { Carrier := S₁ ∩ S₂, fun_mem := fun n f => (S₁.fun_mem f).inf (S₂.fun_mem f) }⟩
 
 @[simp]
@@ -527,7 +527,7 @@ theorem coe_inf (p p' : L.substructure M) : ((p⊓p' : L.substructure M) : Set M
 theorem mem_inf {p p' : L.substructure M} {x : M} : x ∈ p⊓p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 
-instance  : HasInfₓ (L.substructure M) :=
+instance : HasInfₓ (L.substructure M) :=
   ⟨fun s =>
       { Carrier := ⋂(t : _)(_ : t ∈ s), «expr↑ » t,
         fun_mem :=
@@ -558,21 +558,21 @@ theorem coe_infi {ι : Sort _} {S : ι → L.substructure M} : («expr↑ » (�
     simp only [infi, coe_Inf, Set.bInter_range]
 
 /-- Substructures of a structure form a complete lattice. -/
-instance  : CompleteLattice (L.substructure M) :=
+instance : CompleteLattice (L.substructure M) :=
   { completeLatticeOfInf (L.substructure M)$
       fun s => IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe) is_glb_binfi with
     le := · ≤ ·, lt := · < ·, top := ⊤, le_top := fun S x hx => mem_top x, inf := ·⊓·, inf := HasInfₓ.inf,
     le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩, inf_le_left := fun a b x => And.left,
     inf_le_right := fun a b x => And.right }
 
-variable(L)
+variable (L)
 
 /-- The `L.substructure` generated by a set. -/
 def closure : LowerAdjoint (coeₓ : L.substructure M → Set M) :=
   ⟨fun s => Inf { S | s ⊆ S },
     fun s S => ⟨Set.Subset.trans fun x hx => mem_Inf.2$ fun S hS => hS hx, fun h => Inf_le h⟩⟩
 
-variable{L}{s : Set M}
+variable {L} {s : Set M}
 
 theorem mem_closure {x : M} : x ∈ closure L s ↔ ∀ S : L.substructure M, s ⊆ S → x ∈ S :=
   mem_Inf
@@ -604,7 +604,7 @@ theorem closure_mono ⦃s t : Set M⦄ (h : s ⊆ t) : closure L s ≤ closure L
 theorem closure_eq_of_le (h₁ : s ⊆ S) (h₂ : S ≤ closure L s) : closure L s = S :=
   (closure L).eq_of_le h₁ h₂
 
-variable(S)
+variable (S)
 
 /-- An induction principle for closure membership. If `p` holds for all elements of `s`, and
 is preserved under function symbols, then `p` holds for all elements of the closure of `s`. -/
@@ -623,14 +623,14 @@ theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure L s =
   by 
     simpa [hs] using this x
 
-variable(L)(M)
+variable (L) (M)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
 protected def gi : GaloisInsertion (@closure L M _) coeₓ :=
   { choice := fun s _ => closure L s, gc := (closure L).gc, le_l_u := fun s => subset_closure,
     choice_eq := fun s h => rfl }
 
-variable{L}{M}
+variable {L} {M}
 
 /-- Closure of a substructure `S` equals `S`. -/
 @[simp]
@@ -763,7 +763,7 @@ theorem map_id (S : L.substructure M) : S.map (hom.id L M) = S :=
 
 section GaloisCoinsertion
 
-variable{ι : Type _}{f : M →[L] N}(hf : Function.Injective f)
+variable {ι : Type _} {f : M →[L] N} (hf : Function.Injective f)
 
 include hf
 
@@ -805,7 +805,7 @@ end GaloisCoinsertion
 
 section GaloisInsertion
 
-variable{ι : Type _}{f : M →[L] N}(hf : Function.Surjective f)
+variable {ι : Type _} {f : M →[L] N} (hf : Function.Surjective f)
 
 include hf
 
@@ -904,7 +904,7 @@ theorem eq_on_closure {f g : M →[L] N} {s : Set M} (h : Set.EqOn f g s) : Set.
 theorem eq_of_eq_on_top {f g : M →[L] N} (h : Set.EqOn f g (⊤ : substructure L M)) : f = g :=
   ext$ fun x => h trivialₓ
 
-variable{s : Set M}
+variable {s : Set M}
 
 theorem eq_of_eq_on_dense (hs : closure L s = ⊤) {f g : M →[L] N} (h : s.eq_on f g) : f = g :=
   eq_of_eq_on_top$ hs ▸ eq_on_closure h

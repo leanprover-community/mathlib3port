@@ -66,11 +66,11 @@ open NormedField Set
 
 open_locale Pointwise TopologicalSpace
 
-variable{𝕜 E : Type _}
+variable {𝕜 E : Type _}
 
 section NormedField
 
-variable(𝕜)[NormedField 𝕜][AddCommGroupₓ E][Module 𝕜 E]
+variable (𝕜) [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
 
 /-- A set `A` absorbs another set `B` if `B` is contained in all scalings of
 `A` by elements of sufficiently large norms. -/
@@ -86,7 +86,7 @@ has norm less than or equal to one. -/
 def Balanced (A : Set E) :=
   ∀ a : 𝕜, ∥a∥ ≤ 1 → a • A ⊆ A
 
-variable{𝕜}(a : 𝕜){A B : Set E}
+variable {𝕜} (a : 𝕜) {A B : Set E}
 
 /-- A balanced set absorbs itself. -/
 theorem Balanced.absorbs_self (hA : Balanced 𝕜 A) : Absorbs 𝕜 A A :=
@@ -177,7 +177,7 @@ Properties of balanced and absorbent sets in a topological vector space:
 -/
 
 
-variable[TopologicalSpace E][HasContinuousSmul 𝕜 E]
+variable [TopologicalSpace E] [HasContinuousSmul 𝕜 E]
 
 -- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Every neighbourhood of the origin is absorbent. -/
@@ -245,7 +245,7 @@ end NormedField
 /-- A seminorm on a vector space over a normed field is a function to
 the reals that is positive semidefinite, positive homogeneous, and
 subadditive. -/
-structure Seminorm(𝕜 : Type _)(E : Type _)[NormedField 𝕜][AddCommGroupₓ E][Module 𝕜 E] where 
+structure Seminorm (𝕜 : Type _) (E : Type _) [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] where 
   toFun : E → ℝ 
   smul' : ∀ a : 𝕜 x : E, to_fun (a • x) = ∥a∥*to_fun x 
   triangle' : ∀ x y : E, to_fun (x+y) ≤ to_fun x+to_fun y
@@ -254,16 +254,16 @@ namespace Seminorm
 
 section NormedField
 
-variable[NormedField 𝕜][AddCommGroupₓ E][Module 𝕜 E]
+variable [NormedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E]
 
-instance  : Inhabited (Seminorm 𝕜 E) :=
+instance : Inhabited (Seminorm 𝕜 E) :=
   ⟨{ toFun := fun _ => 0, smul' := fun _ _ => (mul_zero _).symm,
       triangle' :=
         fun x y =>
           by 
             rw [add_zeroₓ] }⟩
 
-instance  : CoeFun (Seminorm 𝕜 E) fun _ => E → ℝ :=
+instance : CoeFun (Seminorm 𝕜 E) fun _ => E → ℝ :=
   ⟨fun p => p.to_fun⟩
 
 -- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -275,7 +275,7 @@ begin
   simp_rw [expr this] []
 end
 
-variable(p : Seminorm 𝕜 E)(c : 𝕜)(x y : E)(r : ℝ)
+variable (p : Seminorm 𝕜 E) (c : 𝕜) (x y : E) (r : ℝ)
 
 protected theorem smul : p (c • x) = ∥c∥*p x :=
   p.smul' _ _
@@ -389,11 +389,11 @@ end NormedField
 
 section NormedLinearOrderedField
 
-variable[NormedLinearOrderedField 𝕜][AddCommGroupₓ E][SemiNormedSpace ℝ 𝕜][Module 𝕜 E]
+variable [NormedLinearOrderedField 𝕜] [AddCommGroupₓ E] [SemiNormedSpace ℝ 𝕜] [Module 𝕜 E]
 
 section HasScalar
 
-variable[HasScalar ℝ E][IsScalarTower ℝ 𝕜 E](p : Seminorm 𝕜 E)
+variable [HasScalar ℝ E] [IsScalarTower ℝ 𝕜 E] (p : Seminorm 𝕜 E)
 
 /-- A seminorm is convex. Also see `convex_on_norm`. -/
 protected theorem ConvexOn : ConvexOn ℝ univ p :=
@@ -409,7 +409,7 @@ end HasScalar
 
 section Module
 
-variable[Module ℝ E][IsScalarTower ℝ 𝕜 E](p : Seminorm 𝕜 E)(x : E)(r : ℝ)
+variable [Module ℝ E] [IsScalarTower ℝ 𝕜 E] (p : Seminorm 𝕜 E) (x : E) (r : ℝ)
 
 /-- Seminorm-balls are convex. -/
 theorem convex_ball : Convex ℝ (ball p x r) :=
@@ -429,14 +429,14 @@ section gauge
 
 noncomputable theory
 
-variable[AddCommGroupₓ E][Module ℝ E]
+variable [AddCommGroupₓ E] [Module ℝ E]
 
 /--The Minkowski functional. Given a set `s` in a real vector space, `gauge s` is the functional
 which sends `x : E` to the smallest `r : ℝ` such that `x` is in `s` scaled by `r`. -/
 def gauge (s : Set E) (x : E) : ℝ :=
   Inf { r:ℝ | 0 < r ∧ x ∈ r • s }
 
-variable{s : Set E}{x : E}
+variable {s : Set E} {x : E}
 
 theorem gauge_def : gauge s x = Inf { r∈Set.Ioi 0 | x ∈ r • s } :=
   rfl
@@ -579,7 +579,7 @@ theorem Convex.gauge_le_one (hs : Convex ℝ s) (h₀ : (0 : E) ∈ s) (absorbs 
 
 section TopologicalSpace
 
-variable[TopologicalSpace E][HasContinuousSmul ℝ E]
+variable [TopologicalSpace E] [HasContinuousSmul ℝ E]
 
 -- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem interior_subset_gauge_lt_one (s : set E) : «expr ⊆ »(interior s, {x | «expr < »(gauge s x, 1)}) :=
@@ -624,7 +624,7 @@ theorem one_le_gauge_of_not_mem {s : Set E} (hs : Convex ℝ s) (zero_mem : (0 :
 
 end TopologicalSpace
 
-variable{α : Type _}[LinearOrderedField α][MulActionWithZero α ℝ][OrderedSmul α ℝ]
+variable {α : Type _} [LinearOrderedField α] [MulActionWithZero α ℝ] [OrderedSmul α ℝ]
 
 -- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem gauge_smul_of_nonneg

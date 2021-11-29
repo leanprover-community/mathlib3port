@@ -63,7 +63,7 @@ noncomputable def Types.monoOverEquivalenceSet (α : Type u) : mono_over α ≌ 
         (by 
           tidy) }
 
-instance  : well_powered (Type u) :=
+instance : well_powered (Type u) :=
   well_powered_of_essentially_small_mono_over fun α => essentially_small.mk' (Types.monoOverEquivalenceSet α)
 
 /--

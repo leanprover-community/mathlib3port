@@ -22,7 +22,7 @@ open Equiv Function Fintype Finset
 
 open_locale BigOperators
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 namespace Equiv.Perm
 
@@ -48,7 +48,7 @@ def mod_swap [DecidableEq α] (i j : α) : Setoidₓ (perm α) :=
                 rw [hστ, hτυ, swap_mul_self_mul] <;>
               finish⟩
 
-instance  {α : Type _} [Fintype α] [DecidableEq α] (i j : α) : DecidableRel (mod_swap i j).R :=
+instance {α : Type _} [Fintype α] [DecidableEq α] (i j : α) : DecidableRel (mod_swap i j).R :=
   fun σ τ => Or.decidable
 
 -- error in GroupTheory.Perm.Sign: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -203,11 +203,11 @@ theorem disjoint.extend_domain {α : Type _} {p : β → Prop} [DecidablePred p]
       left 
       rw [extend_domain_apply_not_subtype _ _ pb]
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 section Fintype
 
-variable[Fintype α]
+variable [Fintype α]
 
 theorem support_pow_coprime {σ : perm α} {n : ℕ} (h : Nat.Coprime n (orderOf σ)) : (σ ^ n).support = σ.support :=
   by 
@@ -580,7 +580,7 @@ def sign [Fintype α] : perm α →* Units ℤ :=
 
 section Sign
 
-variable[Fintype α]
+variable [Fintype α]
 
 @[simp]
 theorem sign_mul (f g : perm α) : sign (f*g) = sign f*sign g :=
@@ -661,7 +661,7 @@ theorem sign_prod_list_swap {l : List (perm α)} (hl : ∀ g _ : g ∈ l, is_swa
   by 
     rw [←List.prod_repeat, ←h₁, List.prod_hom _ (@sign α _ _)]
 
-variable(α)
+variable (α)
 
 theorem sign_surjective [Nontrivial α] : Function.Surjective (sign : perm α → Units ℤ) :=
   fun a =>
@@ -676,7 +676,7 @@ theorem sign_surjective [Nontrivial α] : Function.Surjective (sign : perm α �
           by 
             rw [sign_swap hxy, h]⟩
 
-variable{α}
+variable {α}
 
 theorem eq_sign_of_surjective_hom {s : perm α →* Units ℤ} (hs : surjective s) : s = sign :=
   have  : ∀ {f}, is_swap f → s f = -1 :=
@@ -808,7 +808,7 @@ theorem prod_prod_extend_right {α : Type _} [DecidableEq α] (σ : α → perm 
 
 section congr
 
-variable[DecidableEq β][Fintype β]
+variable [DecidableEq β] [Fintype β]
 
 @[simp]
 theorem sign_prod_extend_right (a : α) (σ : perm β) : (prod_extend_right a σ).sign = σ.sign :=

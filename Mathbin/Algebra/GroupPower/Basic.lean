@@ -25,7 +25,7 @@ We adopt the convention that `0^0 = 1`.
 
 universe u v w x y z u₁ u₂
 
-variable{M : Type u}{N : Type v}{G : Type w}{H : Type x}{A : Type y}{B : Type z}{R : Type u₁}{S : Type u₂}
+variable {M : Type u} {N : Type v} {G : Type w} {H : Type x} {A : Type y} {B : Type z} {R : Type u₁} {S : Type u₂}
 
 /-!
 ### Commutativity
@@ -37,7 +37,7 @@ First we prove some facts about `semiconj_by` and `commute`. They do not require
 
 section Monoidₓ
 
-variable[Monoidₓ M][Monoidₓ N][AddMonoidₓ A][AddMonoidₓ B]
+variable [Monoidₓ M] [Monoidₓ N] [AddMonoidₓ A] [AddMonoidₓ B]
 
 @[simp, toAdditive one_nsmul]
 theorem pow_oneₓ (a : M) : a ^ 1 = a :=
@@ -165,7 +165,7 @@ end Monoidₓ
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ M][AddCommMonoidₓ A]
+variable [CommMonoidₓ M] [AddCommMonoidₓ A]
 
 @[toAdditive nsmul_add]
 theorem mul_powₓ (a b : M) (n : ℕ) : (a*b) ^ n = (a ^ n)*b ^ n :=
@@ -195,7 +195,7 @@ end CommMonoidₓ
 
 section DivInvMonoidₓ
 
-variable[DivInvMonoidₓ G]
+variable [DivInvMonoidₓ G]
 
 open Int
 
@@ -214,7 +214,7 @@ end DivInvMonoidₓ
 
 section Groupₓ
 
-variable[Groupₓ G][Groupₓ H][AddGroupₓ A][AddGroupₓ B]
+variable [Groupₓ G] [Groupₓ H] [AddGroupₓ A] [AddGroupₓ B]
 
 open Int
 
@@ -301,7 +301,7 @@ end Groupₓ
 
 section CommGroupₓ
 
-variable[CommGroupₓ G][AddCommGroupₓ A]
+variable [CommGroupₓ G] [AddCommGroupₓ A]
 
 @[toAdditive zsmul_add]
 theorem mul_zpow (a b : G) (n : ℤ) : (a*b) ^ n = (a ^ n)*b ^ n :=
@@ -341,7 +341,7 @@ theorem pow_eq_zero_of_le [MonoidWithZeroₓ M] {x : M} {n m : ℕ} (hn : n ≤ 
 
 namespace RingHom
 
-variable[Semiringₓ R][Semiringₓ S]
+variable [Semiringₓ R] [Semiringₓ S]
 
 @[simp]
 theorem map_pow (f : R →+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
@@ -351,7 +351,7 @@ end RingHom
 
 section 
 
-variable(R)
+variable (R)
 
 theorem neg_one_pow_eq_or [Ringₓ R] : ∀ n : ℕ, (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
 | 0 => Or.inl (pow_zeroₓ _)
@@ -427,7 +427,7 @@ theorem pow_ne_zero [MonoidWithZeroₓ R] [NoZeroDivisors R] {a : R} (n : ℕ) (
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 theorem min_pow_dvd_add {n m : ℕ} {a b c : R} (ha : c ^ n ∣ a) (hb : c ^ m ∣ b) : c ^ min n m ∣ a+b :=
   by 
@@ -439,7 +439,7 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
 theorem add_sq (a b : R) : (a+b) ^ 2 = ((a ^ 2)+(2*a)*b)+b ^ 2 :=
   by 
@@ -485,7 +485,7 @@ theorem SemiconjBy.zpow_right [Groupₓ G] {a x y : G} (h : SemiconjBy a x y) : 
 
 namespace Commute
 
-variable[Groupₓ G]{a b : G}
+variable [Groupₓ G] {a b : G}
 
 @[simp]
 theorem zpow_right (h : Commute a b) (m : ℤ) : Commute a (b ^ m) :=
@@ -498,7 +498,7 @@ theorem zpow_left (h : Commute a b) (m : ℤ) : Commute (a ^ m) b :=
 theorem zpow_zpow (h : Commute a b) (m n : ℤ) : Commute (a ^ m) (b ^ n) :=
   (h.zpow_left m).zpow_right n
 
-variable(a)(m n : ℤ)
+variable (a) (m n : ℤ)
 
 @[simp]
 theorem self_zpow : Commute a (a ^ n) :=

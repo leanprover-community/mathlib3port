@@ -48,7 +48,7 @@ universe u v w
 
 noncomputable theory
 
-variable(R : Type u)(X : Type v)[CommRingₓ R]
+variable (R : Type u) (X : Type v) [CommRingₓ R]
 
 local notation "lib" => FreeNonUnitalNonAssocAlgebra
 
@@ -72,7 +72,7 @@ inductive rel : lib R X → lib R X → Prop
   | mul_left (a b c : lib R X) : rel b c → rel (a*b) (a*c)
   | mul_right (a b c : lib R X) : rel a b → rel (a*c) (b*c)
 
-variable{R X}
+variable {R X}
 
 theorem rel.add_left (a b c : lib R X) (h : rel R X b c) : rel R X (a+b) (a+c) :=
   by 
@@ -92,7 +92,7 @@ quot (free_lie_algebra.rel R X)
 
 namespace FreeLieAlgebra
 
-instance  : AddCommGroupₓ (FreeLieAlgebra R X) :=
+instance : AddCommGroupₓ (FreeLieAlgebra R X) :=
   { add := Quot.map₂ (·+·) rel.add_left rel.add_right,
     add_comm :=
       by 
@@ -122,7 +122,7 @@ instance  : AddCommGroupₓ (FreeLieAlgebra R X) :=
         change Quot.mk _ _ = Quot.mk _ _ 
         rw [add_left_negₓ] }
 
-instance  : Module R (FreeLieAlgebra R X) :=
+instance : Module R (FreeLieAlgebra R X) :=
   { smul := fun t => Quot.map ((· • ·) t) (rel.smul t),
     one_smul :=
       by 
@@ -157,7 +157,7 @@ instance  : Module R (FreeLieAlgebra R X) :=
 
 /-- Note that here we turn the `has_mul` coming from the `non_unital_non_assoc_semiring` structure
 on `lib R X` into a `has_bracket` on `free_lie_algebra`. -/
-instance  : LieRing (FreeLieAlgebra R X) :=
+instance : LieRing (FreeLieAlgebra R X) :=
   { bracket := Quot.map₂ (·*·) rel.mul_left rel.mul_right,
     add_lie :=
       by 
@@ -178,21 +178,21 @@ instance  : LieRing (FreeLieAlgebra R X) :=
         rintro ⟨a⟩ ⟨b⟩ ⟨c⟩
         exact Quot.sound (rel.leibniz_lie a b c) }
 
-instance  : LieAlgebra R (FreeLieAlgebra R X) :=
+instance : LieAlgebra R (FreeLieAlgebra R X) :=
   { lie_smul :=
       by 
         rintro t ⟨a⟩ ⟨c⟩
         change Quot.mk _ (a • t • c) = Quot.mk _ (t • a • c)
         rw [←smul_comm] }
 
-variable{X}
+variable {X}
 
 /-- The embedding of `X` into the free Lie algebra of `X` with coefficients in the commutative ring
 `R`. -/
 def of : X → FreeLieAlgebra R X :=
   fun x => Quot.mk _ (lib.of R x)
 
-variable{L : Type w}[LieRing L][LieAlgebra R L]
+variable {L : Type w} [LieRing L] [LieAlgebra R L]
 
 attribute [local instance] LieRing.toNonUnitalNonAssocSemiring
 
@@ -268,7 +268,7 @@ def lift : (X → L) ≃ (FreeLieAlgebra R X →ₗ⁅R⁆ L) :=
 theorem lift_symm_apply (F : FreeLieAlgebra R X →ₗ⁅R⁆ L) : (lift R).symm F = F ∘ of R :=
   rfl
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem of_comp_lift (f : X → L) : lift R f ∘ of R = f :=
@@ -299,7 +299,7 @@ theorem hom_ext {F₁ F₂ : FreeLieAlgebra R X →ₗ⁅R⁆ L} (h : ∀ x, F�
       simp [h]
   (lift R).symm.Injective h'
 
-variable(R X)
+variable (R X)
 
 /-- The universal enveloping algebra of the free Lie algebra is just the free unital associative
 algebra. -/

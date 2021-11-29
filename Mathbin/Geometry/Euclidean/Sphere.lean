@@ -38,7 +38,7 @@ open Real
 
 open_locale EuclideanGeometry RealInnerProductSpace Real
 
-variable{V : Type _}[InnerProductSpace ℝ V]
+variable {V : Type _} [InnerProductSpace ℝ V]
 
 namespace InnerProductGeometry
 
@@ -91,7 +91,7 @@ This section develops some results on spheres in Euclidean affine spaces.
 
 open InnerProductGeometry
 
-variable{P : Type _}[MetricSpace P][NormedAddTorsor V P]
+variable {P : Type _} [MetricSpace P] [NormedAddTorsor V P]
 
 include V
 

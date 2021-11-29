@@ -147,7 +147,7 @@ def finset_above.nil {α} {enum : α → ℕ} n : finset_above α enum n :=
     by 
       rintro _ ⟨⟩⟩
 
-instance  α enum n : Inhabited (finset_above α enum n) :=
+instance α enum n : Inhabited (finset_above α enum n) :=
   ⟨finset_above.nil _⟩
 
 /-- This is a finset covering a nontrivial variant (with one or more constructor arguments).

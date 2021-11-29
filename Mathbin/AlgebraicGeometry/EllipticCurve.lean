@@ -65,14 +65,14 @@ def EllipticCurve.discAux {R : Type _} [CommRingₓ R] (a1 a2 a3 a4 a6 : R) : R 
 
 /-- The category of elliptic curves over `R` (note that this definition is only mathematically
 correct for certain rings, for example if `R` is a field or a PID). -/
-structure EllipticCurve(R : Type _)[CommRingₓ R] where 
+structure EllipticCurve (R : Type _) [CommRingₓ R] where 
   (a1 a2 a3 a4 a6 : R)
   discUnit : Units R 
   disc_unit_eq : (disc_unit : R) = EllipticCurve.discAux a1 a2 a3 a4 a6
 
 namespace EllipticCurve
 
-instance  : Inhabited (EllipticCurve ℚ) :=
+instance : Inhabited (EllipticCurve ℚ) :=
   ⟨⟨0, 0, 1, -1, 0,
       ⟨37, 37⁻¹,
         by 
@@ -82,7 +82,7 @@ instance  : Inhabited (EllipticCurve ℚ) :=
       show (37 : ℚ) = _+_ by 
         normNum⟩⟩
 
-variable{R : Type _}[CommRingₓ R](E : EllipticCurve R)
+variable {R : Type _} [CommRingₓ R] (E : EllipticCurve R)
 
 /-- The discriminant of an elliptic curve. Sometimes only defined up to sign in the literature;
   we choose the sign used by the LMFDB. See

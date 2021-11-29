@@ -18,7 +18,7 @@ namespace CategoryTheory
 
 namespace Iso
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /-- If `X` is isomorphic to `X₁` and `Y` is isomorphic to `Y₁`, then
 there is a natural bijection between `X ⟶ Y` and `X₁ ⟶ Y₁`. See also `equiv.arrow_congr`. -/
@@ -57,7 +57,7 @@ theorem hom_congr_trans {X₁ Y₁ X₂ Y₂ X₃ Y₃ : C} (α₁ : X₁ ≅ X�
 theorem hom_congr_symm {X₁ Y₁ X₂ Y₂ : C} (α : X₁ ≅ X₂) (β : Y₁ ≅ Y₂) : (α.hom_congr β).symm = α.symm.hom_congr β.symm :=
   rfl
 
-variable{X Y : C}(α : X ≅ Y)
+variable {X Y : C} (α : X ≅ Y)
 
 /-- An isomorphism between two objects defines a monoid isomorphism between their
 monoid of endomorphisms. -/
@@ -136,7 +136,7 @@ namespace Functor
 
 universe v₁ u₁
 
-variable{C : Type u}[category.{v} C]{D : Type u₁}[category.{v₁} D](F : C ⥤ D)
+variable {C : Type u} [category.{v} C] {D : Type u₁} [category.{v₁} D] (F : C ⥤ D)
 
 theorem map_hom_congr {X Y X₁ Y₁ : C} (α : X ≅ X₁) (β : Y ≅ Y₁) (f : X ⟶ Y) :
   F.map (iso.hom_congr α β f) = iso.hom_congr (F.map_iso α) (F.map_iso β) (F.map f) :=

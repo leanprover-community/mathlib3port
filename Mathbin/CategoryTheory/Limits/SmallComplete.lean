@@ -28,7 +28,7 @@ open_locale Cardinal
 
 universe u
 
-variable{C : Type u}[small_category C][has_products C]
+variable {C : Type u} [small_category C] [has_products C]
 
 -- error in CategoryTheory.Limits.SmallComplete: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

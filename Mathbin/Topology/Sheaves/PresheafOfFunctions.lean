@@ -31,7 +31,7 @@ open Opposite
 
 namespace Top
 
-variable(X : Top.{v})
+variable (X : Top.{v})
 
 /--
 The presheaf of dependently typed functions on `X`, with fibres given by a type family `T`.

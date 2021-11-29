@@ -73,7 +73,7 @@ open_locale TopologicalSpace
 
 namespace ContinuousLinearMap
 
-variable{𝕜 E F : Type _}[NondiscreteNormedField 𝕜][NormedGroup E][NormedSpace 𝕜 E][NormedGroup F][NormedSpace 𝕜 F]
+variable {𝕜 E F : Type _} [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] [NormedGroup F] [NormedSpace 𝕜 F]
 
 theorem measurable_apply₂ [MeasurableSpace E] [OpensMeasurableSpace E] [second_countable_topology E]
   [second_countable_topology (E →L[𝕜] F)] [MeasurableSpace F] [BorelSpace F] :
@@ -82,13 +82,13 @@ theorem measurable_apply₂ [MeasurableSpace E] [OpensMeasurableSpace E] [second
 
 end ContinuousLinearMap
 
-variable{𝕜 : Type _}[NondiscreteNormedField 𝕜]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
 
-variable{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]
+variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]
+variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
 
-variable{f : E → F}(K : Set (E →L[𝕜] F))
+variable {f : E → F} (K : Set (E →L[𝕜] F))
 
 namespace FderivMeasurableAux
 
@@ -339,9 +339,9 @@ end FderivMeasurableAux
 
 open FderivMeasurableAux
 
-variable[MeasurableSpace E][OpensMeasurableSpace E]
+variable [MeasurableSpace E] [OpensMeasurableSpace E]
 
-variable(𝕜 f)
+variable (𝕜 f)
 
 /-- The set of differentiability points of a function, with derivative in a given complete set,
 is Borel-measurable. -/
@@ -351,7 +351,7 @@ theorem measurable_set_of_differentiable_at_of_is_complete {K : Set (E →L[𝕜
     simp [differentiable_set_eq_D K hK, D, is_open_B.measurable_set, MeasurableSet.Inter_Prop, MeasurableSet.Inter,
       MeasurableSet.Union]
 
-variable[CompleteSpace F]
+variable [CompleteSpace F]
 
 -- error in Analysis.Calculus.FderivMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The set of differentiability points of a function taking values in a complete space is
@@ -375,7 +375,7 @@ end
 theorem measurable_fderiv_apply_const [MeasurableSpace F] [BorelSpace F] (y : E) : Measurable fun x => fderiv 𝕜 f x y :=
   (ContinuousLinearMap.measurable_apply y).comp (measurable_fderiv 𝕜 f)
 
-variable{𝕜}
+variable {𝕜}
 
 theorem measurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [MeasurableSpace F] [BorelSpace F] (f : 𝕜 → F) :
   Measurable (deriv f) :=

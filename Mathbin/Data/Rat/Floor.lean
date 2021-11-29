@@ -35,7 +35,7 @@ theorem le_floor {z : exprℤ()} : ∀ {r : exprℚ()}, «expr ↔ »(«expr ≤
   exact [expr int.le_div_iff_mul_le h']
 end
 
-instance  : FloorRing ℚ :=
+instance : FloorRing ℚ :=
   FloorRing.ofFloor ℚ Rat.floor$ fun a z => Rat.le_floor.symm
 
 protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.denom :=

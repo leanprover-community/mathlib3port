@@ -62,11 +62,11 @@ fractions, recurrence, equivalence
 -/
 
 
-variable{K : Type _}{n : ℕ}
+variable {K : Type _} {n : ℕ}
 
 namespace GeneralizedContinuedFraction
 
-variable{g : GeneralizedContinuedFraction K}{s : Seqₓₓ$ pair K}
+variable {g : GeneralizedContinuedFraction K} {s : Seqₓₓ$ pair K}
 
 section Squash
 
@@ -79,7 +79,7 @@ lemmas about it are not very interesting. As a reader, you hence might want to s
 
 section WithDivisionRing
 
-variable[DivisionRing K]
+variable [DivisionRing K]
 
 /--
 Given a sequence of gcf.pairs `s = [(a₀, bₒ), (a₁, b₁), ...]`, `squash_seq s n`

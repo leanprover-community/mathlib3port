@@ -46,13 +46,12 @@ namespace MeasureTheory
 
 universe u
 
-variable{E :
-    Type
-      u}[NormedGroup E][NormedSpace ℝ E][MeasurableSpace E][BorelSpace E][second_countable_topology E][CompleteSpace E]
+variable {E : Type u} [NormedGroup E] [NormedSpace ℝ E] [MeasurableSpace E] [BorelSpace E] [second_countable_topology E]
+  [CompleteSpace E]
 
 section 
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 local notation "ℝⁿ" => Finₓ n → ℝ
 
@@ -60,7 +59,7 @@ local notation "ℝⁿ⁺¹" => Finₓ (n+1) → ℝ
 
 local notation "Eⁿ⁺¹" => Finₓ (n+1) → E
 
-variable(a b : ℝⁿ⁺¹)
+variable (a b : ℝⁿ⁺¹)
 
 local notation "face" i => Set.Icc (a ∘ Finₓ.succAbove i) (b ∘ Finₓ.succAbove i)
 

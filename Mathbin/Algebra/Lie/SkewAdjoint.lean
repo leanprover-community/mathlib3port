@@ -31,9 +31,9 @@ section SkewAdjointEndomorphisms
 
 open BilinForm
 
-variable{R : Type u}{M : Type v}[CommRingₓ R][AddCommGroupₓ M][Module R M]
+variable {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
 
-variable(B : BilinForm R M)
+variable (B : BilinForm R M)
 
 -- error in Algebra.Lie.SkewAdjoint: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bilin_form.is_skew_adjoint_bracket
@@ -58,7 +58,7 @@ Lie subalgebra of the Lie algebra of endomorphisms. -/
 def skewAdjointLieSubalgebra : LieSubalgebra R (Module.End R M) :=
   { B.skew_adjoint_submodule with lie_mem' := B.is_skew_adjoint_bracket }
 
-variable{N : Type w}[AddCommGroupₓ N][Module R N](e : N ≃ₗ[R] M)
+variable {N : Type w} [AddCommGroupₓ N] [Module R N] (e : N ≃ₗ[R] M)
 
 /-- An equivalence of modules with bilinear forms gives equivalence of Lie algebras of skew-adjoint
 endomorphisms. -/
@@ -88,9 +88,9 @@ section SkewAdjointMatrices
 
 open_locale Matrix
 
-variable{R : Type u}{n : Type w}[CommRingₓ R][DecidableEq n][Fintype n]
+variable {R : Type u} {n : Type w} [CommRingₓ R] [DecidableEq n] [Fintype n]
 
-variable(J : Matrix n n R)
+variable (J : Matrix n n R)
 
 theorem Matrix.lie_transpose (A B : Matrix n n R) : (⁅A,B⁆)ᵀ = ⁅(B)ᵀ,(A)ᵀ⁆ :=
   show ((A*B) - B*A)ᵀ = ((B)ᵀ*(A)ᵀ) - (A)ᵀ*(B)ᵀby 

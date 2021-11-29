@@ -27,16 +27,9 @@ namespace MeasureTheory
 
 namespace L2
 
-variable{α E F 𝕜 :
-    Type
-      _}[IsROrC
-      𝕜][MeasurableSpace
-      α]{μ :
-    Measureₓ
-      α}[MeasurableSpace
-      E][InnerProductSpace 𝕜
-      E][BorelSpace
-      E][second_countable_topology E][NormedGroup F][MeasurableSpace F][BorelSpace F][second_countable_topology F]
+variable {α E F 𝕜 : Type _} [IsROrC 𝕜] [MeasurableSpace α] {μ : Measureₓ α} [MeasurableSpace E] [InnerProductSpace 𝕜 E]
+  [BorelSpace E] [second_countable_topology E] [NormedGroup F] [MeasurableSpace F] [BorelSpace F]
+  [second_countable_topology F]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
@@ -78,11 +71,9 @@ section InnerProductSpace
 
 open_locale ComplexConjugate
 
-variable[MeasurableSpace 𝕜][BorelSpace 𝕜]
-
 include 𝕜
 
-instance  : HasInner 𝕜 (α →₂[μ] E) :=
+instance : HasInner 𝕜 (α →₂[μ] E) :=
   ⟨fun f g => ∫a, ⟪f a, g a⟫ ∂μ⟩
 
 theorem inner_def (f g : α →₂[μ] E) : inner f g = ∫a : α, ⟪f a, g a⟫ ∂μ :=
@@ -158,9 +149,9 @@ end InnerProductSpace
 
 section IndicatorConstLp
 
-variable[MeasurableSpace 𝕜][BorelSpace 𝕜]{s : Set α}
+variable {s : Set α}
 
-variable(𝕜)
+variable (𝕜)
 
 -- error in MeasureTheory.Function.L2Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs c` and `f` is
@@ -204,7 +195,7 @@ theorem inner_indicator_const_Lp_eq_inner_set_integral [CompleteSpace E] [Normed
     rw [←integral_inner (integrable_on_Lp_of_measure_ne_top f fact_one_le_two_ennreal.elim hμs),
       L2.inner_indicator_const_Lp_eq_set_integral_inner]
 
-variable{𝕜}
+variable {𝕜}
 
 /-- The inner product in `L2` of the indicator of a set `indicator_const_Lp 2 hs hμs (1 : 𝕜)` and
 a real or complex function `f` is equal to the integral of `f` over `s`. -/
@@ -220,10 +211,9 @@ end L2
 
 section InnerContinuous
 
-variable{α :
-    Type _}[TopologicalSpace α][measure_space α][BorelSpace α]{𝕜 : Type _}[IsROrC 𝕜][MeasurableSpace 𝕜][BorelSpace 𝕜]
+variable {α : Type _} [TopologicalSpace α] [measure_space α] [BorelSpace α] {𝕜 : Type _} [IsROrC 𝕜]
 
-variable(μ : Measureₓ α)[is_finite_measure μ]
+variable (μ : Measureₓ α) [is_finite_measure μ]
 
 open_locale BoundedContinuousFunction ComplexConjugate
 
@@ -247,7 +237,7 @@ begin
   simp [] [] [] [] [] []
 end
 
-variable[CompactSpace α]
+variable [CompactSpace α]
 
 -- error in MeasureTheory.Function.L2Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For continuous functions `f`, `g` on a compact, finite-measure topological space `α`, the L^2

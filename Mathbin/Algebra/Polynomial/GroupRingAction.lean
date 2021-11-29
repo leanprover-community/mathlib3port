@@ -10,13 +10,13 @@ This file contains instances and definitions relating `mul_semiring_action` to `
 -/
 
 
-variable(M : Type _)[Monoidₓ M]
+variable (M : Type _) [Monoidₓ M]
 
 namespace Polynomial
 
-variable(R : Type _)[Semiringₓ R]
+variable (R : Type _) [Semiringₓ R]
 
-variable{M}
+variable {M}
 
 theorem smul_eq_map [MulSemiringAction M R] (m : M) : (· • ·) m = map (MulSemiringAction.toRingHom M R m) :=
   by 
@@ -30,22 +30,22 @@ theorem smul_eq_map [MulSemiringAction M R] (m : M) : (· • ·) m = map (MulSe
     change m • monomial n r = map (MulSemiringAction.toRingHom M R m) (monomial n r)
     simpa only [Polynomial.map_monomial, Polynomial.smul_monomial]
 
-variable(M)
+variable (M)
 
-noncomputable instance  [MulSemiringAction M R] : MulSemiringAction M (Polynomial R) :=
+noncomputable instance [MulSemiringAction M R] : MulSemiringAction M (Polynomial R) :=
   { Polynomial.distribMulAction with smul := · • ·,
     smul_one := fun m => (smul_eq_map R m).symm ▸ map_one (MulSemiringAction.toRingHom M R m),
     smul_mul := fun m p q => (smul_eq_map R m).symm ▸ map_mul (MulSemiringAction.toRingHom M R m) }
 
-variable{M R}
+variable {M R}
 
-variable[MulSemiringAction M R]
+variable [MulSemiringAction M R]
 
 @[simp]
 theorem smul_X (m : M) : (m • X : Polynomial R) = X :=
   (smul_eq_map R m).symm ▸ map_X _
 
-variable(S : Type _)[CommSemiringₓ S][MulSemiringAction M S]
+variable (S : Type _) [CommSemiringₓ S] [MulSemiringAction M S]
 
 theorem smul_eval_smul (m : M) (f : Polynomial S) (x : S) : (m • f).eval (m • x) = m • f.eval x :=
   Polynomial.induction_on f
@@ -60,7 +60,7 @@ theorem smul_eval_smul (m : M) (f : Polynomial S) (x : S) : (m • f).eval (m �
         rw [smul_mul', smul_pow', smul_C, smul_X, eval_mul, eval_C, eval_pow, eval_X, eval_mul, eval_C, eval_pow,
           eval_X, smul_mul', smul_pow']
 
-variable(G : Type _)[Groupₓ G]
+variable (G : Type _) [Groupₓ G]
 
 theorem eval_smul' [MulSemiringAction G S] (g : G) (f : Polynomial S) (x : S) : f.eval (g • x) = g • (g⁻¹ • f).eval x :=
   by 
@@ -74,9 +74,9 @@ end Polynomial
 
 section CommRingₓ
 
-variable(G : Type _)[Groupₓ G][Fintype G]
+variable (G : Type _) [Groupₓ G] [Fintype G]
 
-variable(R : Type _)[CommRingₓ R][MulSemiringAction G R]
+variable (R : Type _) [CommRingₓ R] [MulSemiringAction G R]
 
 open MulAction
 
@@ -111,11 +111,11 @@ end CommRingₓ
 
 namespace MulSemiringActionHom
 
-variable{M}
+variable {M}
 
-variable{P : Type _}[CommSemiringₓ P][MulSemiringAction M P]
+variable {P : Type _} [CommSemiringₓ P] [MulSemiringAction M P]
 
-variable{Q : Type _}[CommSemiringₓ Q][MulSemiringAction M Q]
+variable {Q : Type _} [CommSemiringₓ Q] [MulSemiringAction M Q]
 
 open Polynomial
 

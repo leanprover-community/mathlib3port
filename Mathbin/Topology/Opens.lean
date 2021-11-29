@@ -1,5 +1,6 @@
 import Mathbin.Topology.Bases 
-import Mathbin.Topology.Homeomorph
+import Mathbin.Topology.Homeomorph 
+import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!
 # Open sets
@@ -12,27 +13,26 @@ We define the subtype of open sets in a topological space.
 
 - `opens α` is the type of open subsets of a topological space `α`.
 - `open_nhds_of x` is the type of open subsets of a topological space `α` containing `x : α`.
--
 -/
 
 
 open Filter Set
 
-variable{α : Type _}{β : Type _}{γ : Type _}[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 namespace TopologicalSpace
 
-variable(α)
+variable (α)
 
 /-- The type of open subsets of a topological space. -/
 def opens :=
   { s : Set α // IsOpen s }
 
-variable{α}
+variable {α}
 
 namespace Opens
 
-instance  : Coe (opens α) (Set α) :=
+instance : Coe (opens α) (Set α) :=
   { coe := Subtype.val }
 
 theorem val_eq_coe (U : opens α) : U.1 = «expr↑ » U :=
@@ -42,10 +42,10 @@ theorem val_eq_coe (U : opens α) : U.1 = «expr↑ » U :=
 theorem coe_mk {α : Type _} [TopologicalSpace α] {U : Set α} {hU : IsOpen U} : «expr↑ » (⟨U, hU⟩ : opens α) = U :=
   rfl
 
-instance  : HasSubset (opens α) :=
+instance : HasSubset (opens α) :=
   { Subset := fun U V => (U : Set α) ⊆ V }
 
-instance  : HasMem α (opens α) :=
+instance : HasMem α (opens α) :=
   { Mem := fun a U => a ∈ (U : Set α) }
 
 @[simp]
@@ -64,7 +64,7 @@ theorem ext {U V : opens α} (h : (U : Set α) = V) : U = V :=
 theorem ext_iff {U V : opens α} : (U : Set α) = V ↔ U = V :=
   ⟨opens.ext, congr_argₓ coeₓ⟩
 
-instance  : PartialOrderₓ (opens α) :=
+instance : PartialOrderₓ (opens α) :=
   Subtype.partialOrder _
 
 /-- The interior of a set, as an element of `opens`. -/
@@ -85,7 +85,7 @@ def gi : GaloisInsertion (to_dual ∘ @Interior α _ ∘ of_dual) (to_dual ∘ S
 theorem gi_choice_val {s : OrderDual (Set α)} {hs} : (gi.choice s hs).val = s :=
   rfl
 
-instance  : CompleteLattice (opens α) :=
+instance : CompleteLattice (opens α) :=
   CompleteLattice.copy (@OrderDual.completeLattice _ (GaloisInsertion.liftCompleteLattice (@gi α _))) (fun U V => U ⊆ V)
     rfl ⟨Set.Univ, is_open_univ⟩ (Subtype.ext_iff_val.mpr interior_univ.symm) ⟨∅, is_open_empty⟩ rfl
     (fun U V => ⟨«expr↑ » U ∪ «expr↑ » V, IsOpen.union U.2 V.2⟩) rfl
@@ -109,16 +109,16 @@ theorem mk_inf_mk {U V : Set α} {hU : IsOpen U} {hV : IsOpen V} :
 theorem coe_inf {U V : opens α} : ((U⊓V : opens α) : Set α) = (U : Set α)⊓(V : Set α) :=
   rfl
 
-instance  : HasInter (opens α) :=
+instance : HasInter (opens α) :=
   ⟨fun U V => U⊓V⟩
 
-instance  : HasUnion (opens α) :=
+instance : HasUnion (opens α) :=
   ⟨fun U V => U⊔V⟩
 
-instance  : HasEmptyc (opens α) :=
+instance : HasEmptyc (opens α) :=
   ⟨⊥⟩
 
-instance  : Inhabited (opens α) :=
+instance : Inhabited (opens α) :=
   ⟨∅⟩
 
 @[simp]
@@ -220,46 +220,51 @@ theorem is_basis_iff_cover {B : Set (opens α)} : is_basis B ↔ ∀ U : opens �
       exact ⟨U, hUs Us, xU, le_Sup Us⟩
 
 /-- The preimage of an open set, as an open set. -/
-def comap {f : α → β} (hf : Continuous f) (V : opens β) : opens α :=
-  ⟨f ⁻¹' V.1, V.2.Preimage hf⟩
+def comap (f : C(α, β)) : opens β →ₘ opens α :=
+  { toFun := fun V => ⟨f ⁻¹' V, V.2.Preimage f.continuous⟩, monotone' := fun V₁ V₂ hle => monotone_preimage hle }
 
 @[simp]
-theorem comap_id (U : opens α) : U.comap continuous_id = U :=
+theorem comap_id : comap (ContinuousMap.id : C(α, α)) = PreorderHom.id :=
   by 
     ext 
     rfl
 
-theorem comap_mono {f : α → β} (hf : Continuous f) {V W : opens β} (hVW : V ⊆ W) : V.comap hf ⊆ W.comap hf :=
-  fun _ h => hVW h
+theorem comap_mono (f : C(α, β)) {V W : opens β} (hVW : V ⊆ W) : comap f V ⊆ comap f W :=
+  (comap f).Monotone hVW
 
 @[simp]
-theorem coe_comap {f : α → β} (hf : Continuous f) (U : opens β) : «expr↑ » (U.comap hf) = f ⁻¹' U :=
+theorem coe_comap (f : C(α, β)) (U : opens β) : «expr↑ » (comap f U) = f ⁻¹' U :=
   rfl
 
 @[simp]
-theorem comap_val {f : α → β} (hf : Continuous f) (U : opens β) : (U.comap hf).1 = f ⁻¹' U :=
+theorem comap_val (f : C(α, β)) (U : opens β) : (comap f U).1 = f ⁻¹' U :=
   rfl
 
-protected theorem comap_comp {g : β → γ} {f : α → β} (hg : Continuous g) (hf : Continuous f) (U : opens γ) :
-  U.comap (hg.comp hf) = (U.comap hg).comap hf :=
-  by 
-    ext1 
-    simp only [coe_comap, preimage_preimage]
+protected theorem comap_comp (g : C(β, γ)) (f : C(α, β)) : comap (g.comp f) = (comap f).comp (comap g) :=
+  rfl
+
+protected theorem comap_comap (g : C(β, γ)) (f : C(α, β)) (U : opens γ) : comap f (comap g U) = comap (g.comp f) U :=
+  rfl
 
 /-- A homeomorphism induces an equivalence on open sets, by taking comaps. -/
 @[simp]
 protected def Equiv (f : α ≃ₜ β) : opens α ≃ opens β :=
-  { toFun := opens.comap f.symm.continuous, invFun := opens.comap f.continuous,
+  { toFun := opens.comap f.symm.to_continuous_map, invFun := opens.comap f.to_continuous_map,
     left_inv :=
       by 
         intro U 
         ext1 
-        simp only [coe_comap, ←preimage_comp, f.symm_comp_self, preimage_id],
+        exact f.to_equiv.preimage_symm_preimage _,
     right_inv :=
       by 
         intro U 
         ext1 
-        simp only [coe_comap, ←preimage_comp, f.self_comp_symm, preimage_id] }
+        exact f.to_equiv.symm_preimage_preimage _ }
+
+/-- A homeomorphism induces an order isomorphism on open sets, by taking comaps. -/
+@[simp]
+protected def OrderIso (f : α ≃ₜ β) : opens α ≃o opens β :=
+  { toEquiv := opens.equiv f, map_rel_iff' := fun U V => f.symm.surjective.preimage_subset_preimage_iff }
 
 end Opens
 

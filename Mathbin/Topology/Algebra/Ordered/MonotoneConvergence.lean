@@ -25,7 +25,7 @@ open Filter Set Function
 
 open_locale Filter TopologicalSpace Classical
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 /-- We say that `α` is a `Sup_convergence_class` if the following holds. Let `f : ι → α` be a
 monotone function, let `a : α` be a least upper bound of `set.range f`. Then `f x` tends to `𝓝 a` as
@@ -33,7 +33,7 @@ monotone function, let `a : α` be a least upper bound of `set.range f`. Then `f
 in the definition, then prove it for any `f` in `tendsto_at_top_is_lub`.
 
 This property holds for linear orders with order topology as well as their products. -/
-class SupConvergenceClass(α : Type _)[Preorderₓ α][TopologicalSpace α] : Prop where 
+class SupConvergenceClass (α : Type _) [Preorderₓ α] [TopologicalSpace α] : Prop where 
   tendsto_coe_at_top_is_lub : ∀ a : α s : Set α, IsLub s a → tendsto (coeₓ : s → α) at_top (𝓝 a)
 
 /-- We say that `α` is an `Inf_convergence_class` if the following holds. Let `f : ι → α` be a
@@ -42,7 +42,7 @@ as `x → -∞` (formally, at the filter `filter.at_bot`). We require this for `
 `f = coe` in the definition, then prove it for any `f` in `tendsto_at_bot_is_glb`.
 
 This property holds for linear orders with order topology as well as their products. -/
-class InfConvergenceClass(α : Type _)[Preorderₓ α][TopologicalSpace α] : Prop where 
+class InfConvergenceClass (α : Type _) [Preorderₓ α] [TopologicalSpace α] : Prop where 
   tendsto_coe_at_bot_is_glb : ∀ a : α s : Set α, IsGlb s a → tendsto (coeₓ : s → α) at_bot (𝓝 a)
 
 instance OrderDual.Sup_convergence_class [Preorderₓ α] [TopologicalSpace α] [InfConvergenceClass α] :
@@ -53,7 +53,7 @@ instance OrderDual.Inf_convergence_class [Preorderₓ α] [TopologicalSpace α] 
   InfConvergenceClass (OrderDual α) :=
   ⟨‹SupConvergenceClass α›.1⟩
 
-instance (priority := 100)LinearOrderₓ.Sup_convergence_class [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α] :
+instance (priority := 100) LinearOrderₓ.Sup_convergence_class [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α] :
   SupConvergenceClass α :=
   by 
     refine' ⟨fun a s ha => tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩⟩
@@ -64,17 +64,17 @@ instance (priority := 100)LinearOrderₓ.Sup_convergence_class [TopologicalSpace
     ·
       exact eventually_of_forall fun x => (ha.1 x.2).trans_lt hb
 
-instance (priority := 100)LinearOrderₓ.Inf_convergence_class [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α] :
+instance (priority := 100) LinearOrderₓ.Inf_convergence_class [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α] :
   InfConvergenceClass α :=
   show InfConvergenceClass (OrderDual$ OrderDual α) from OrderDual.Inf_convergence_class
 
 section 
 
-variable{ι : Type _}[Preorderₓ ι][TopologicalSpace α]
+variable {ι : Type _} [Preorderₓ ι] [TopologicalSpace α]
 
 section IsLub
 
-variable[Preorderₓ α][SupConvergenceClass α]{f : ι → α}{a : α}
+variable [Preorderₓ α] [SupConvergenceClass α] {f : ι → α} {a : α}
 
 theorem tendsto_at_top_is_lub (h_mono : Monotone f) (ha : IsLub (Set.Range f) a) : tendsto f at_top (𝓝 a) :=
   by 
@@ -89,7 +89,7 @@ end IsLub
 
 section IsGlb
 
-variable[Preorderₓ α][InfConvergenceClass α]{f : ι → α}{a : α}
+variable [Preorderₓ α] [InfConvergenceClass α] {f : ι → α} {a : α}
 
 theorem tendsto_at_bot_is_glb (h_mono : Monotone f) (ha : IsGlb (Set.Range f) a) : tendsto f at_bot (𝓝 a) :=
   @tendsto_at_top_is_lub (OrderDual α) (OrderDual ι) _ _ _ _ f a h_mono.dual ha
@@ -101,7 +101,7 @@ end IsGlb
 
 section Csupr
 
-variable[ConditionallyCompleteLattice α][SupConvergenceClass α]{f : ι → α}{a : α}
+variable [ConditionallyCompleteLattice α] [SupConvergenceClass α] {f : ι → α} {a : α}
 
 theorem tendsto_at_top_csupr (h_mono : Monotone f) (hbdd : BddAbove$ range f) : tendsto f at_top (𝓝 (⨆i, f i)) :=
   by 
@@ -115,7 +115,7 @@ end Csupr
 
 section Cinfi
 
-variable[ConditionallyCompleteLattice α][InfConvergenceClass α]{f : ι → α}{a : α}
+variable [ConditionallyCompleteLattice α] [InfConvergenceClass α] {f : ι → α} {a : α}
 
 theorem tendsto_at_bot_cinfi (h_mono : Monotone f) (hbdd : BddBelow$ range f) : tendsto f at_bot (𝓝 (⨅i, f i)) :=
   @tendsto_at_top_csupr (OrderDual α) (OrderDual ι) _ _ _ _ _ h_mono.dual hbdd
@@ -127,7 +127,7 @@ end Cinfi
 
 section supr
 
-variable[CompleteLattice α][SupConvergenceClass α]{f : ι → α}{a : α}
+variable [CompleteLattice α] [SupConvergenceClass α] {f : ι → α} {a : α}
 
 theorem tendsto_at_top_supr (h_mono : Monotone f) : tendsto f at_top (𝓝 (⨆i, f i)) :=
   tendsto_at_top_csupr h_mono (OrderTop.bdd_above _)
@@ -139,7 +139,7 @@ end supr
 
 section infi
 
-variable[CompleteLattice α][InfConvergenceClass α]{f : ι → α}{a : α}
+variable [CompleteLattice α] [InfConvergenceClass α] {f : ι → α} {a : α}
 
 theorem tendsto_at_bot_infi (h_mono : Monotone f) : tendsto f at_bot (𝓝 (⨅i, f i)) :=
   tendsto_at_bot_cinfi h_mono (OrderBot.bdd_below _)
@@ -172,18 +172,18 @@ begin
   refl
 end
 
-instance  [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α] [TopologicalSpace β] [InfConvergenceClass α]
+instance [Preorderₓ α] [Preorderₓ β] [TopologicalSpace α] [TopologicalSpace β] [InfConvergenceClass α]
   [InfConvergenceClass β] : InfConvergenceClass (α × β) :=
   show InfConvergenceClass (OrderDual$ OrderDual α × OrderDual β) from OrderDual.Inf_convergence_class
 
-instance  {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
+instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
   [∀ i, SupConvergenceClass (α i)] : SupConvergenceClass (∀ i, α i) :=
   by 
     refine' ⟨fun f s h => _⟩
     simp only [is_lub_pi, ←range_restrict] at h 
-    exact tendsto_pi.2 fun i => tendsto_at_top_is_lub ((monotone_eval _).restrict _) (h i)
+    exact tendsto_pi_nhds.2 fun i => tendsto_at_top_is_lub ((monotone_eval _).restrict _) (h i)
 
-instance  {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
+instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
   [∀ i, InfConvergenceClass (α i)] : InfConvergenceClass (∀ i, α i) :=
   show InfConvergenceClass (OrderDual$ ∀ i, OrderDual (α i)) from OrderDual.Inf_convergence_class
 

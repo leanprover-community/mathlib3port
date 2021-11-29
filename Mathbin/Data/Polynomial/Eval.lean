@@ -1,4 +1,5 @@
-import Mathbin.Data.Polynomial.Degree.Definitions
+import Mathbin.Data.Polynomial.Degree.Definitions 
+import Mathbin.Algebra.GeomSum
 
 /-!
 # Theory of univariate polynomials
@@ -18,17 +19,17 @@ namespace Polynomial
 
 universe u v w y
 
-variable{R : Type u}{S : Type v}{T : Type w}{ι : Type y}{a b : R}{m n : ℕ}
+variable {R : Type u} {S : Type v} {T : Type w} {ι : Type y} {a b : R} {m n : ℕ}
 
 section Semiringₓ
 
-variable[Semiringₓ R]{p q r : Polynomial R}
+variable [Semiringₓ R] {p q r : Polynomial R}
 
 section 
 
-variable[Semiringₓ S]
+variable [Semiringₓ S]
 
-variable(f : R →+* S)(x : S)
+variable (f : R →+* S) (x : S)
 
 /-- Evaluate a polynomial `p` given a ring hom `f` from the scalar ring
   to the target and a value `x` for the variable in the target -/
@@ -132,7 +133,7 @@ theorem eval₂_nat_cast (n : ℕ) : (n : Polynomial R).eval₂ f x = n :=
     ·
       rw [n.cast_succ, eval₂_add, ih, eval₂_one, n.cast_succ]
 
-variable[Semiringₓ T]
+variable [Semiringₓ T]
 
 -- error in Data.Polynomial.Eval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eval₂_sum
@@ -224,9 +225,9 @@ as long as target ring is commutative
 
 section Eval₂
 
-variable[CommSemiringₓ S]
+variable [CommSemiringₓ S]
 
-variable(f : R →+* S)(x : S)
+variable (f : R →+* S) (x : S)
 
 @[simp]
 theorem eval₂_mul : (p*q).eval₂ f x = p.eval₂ f x*q.eval₂ f x :=
@@ -277,7 +278,7 @@ end Eval₂
 
 section Eval
 
-variable{x : R}
+variable {x : R}
 
 /-- `eval x p` is the evaluation of the polynomial `p` at `x` -/
 def eval : R → Polynomial R → R :=
@@ -408,7 +409,7 @@ theorem eval_finset_sum (s : Finset ι) (g : ι → Polynomial R) (x : R) : (∑
 def is_root (p : Polynomial R) (a : R) : Prop :=
   p.eval a = 0
 
-instance  [DecidableEq R] : Decidable (is_root p a) :=
+instance [DecidableEq R] : Decidable (is_root p a) :=
   by 
     unfold is_root <;> infer_instance
 
@@ -578,9 +579,9 @@ end Comp
 
 section Map
 
-variable[Semiringₓ S]
+variable [Semiringₓ S]
 
-variable(f : R →+* S)
+variable (f : R →+* S)
 
 /-- `map f p` maps a polynomial `p` across a ring hom `f` -/
 def map : Polynomial R → Polynomial S :=
@@ -707,7 +708,7 @@ theorem degree_map_le (p : Polynomial R) : degree (p.map f) ≤ degree p :=
 theorem nat_degree_map_le (p : Polynomial R) : nat_degree (p.map f) ≤ nat_degree p :=
   nat_degree_le_nat_degree (degree_map_le f p)
 
-variable{f}
+variable {f}
 
 theorem map_monic_eq_zero_iff (hp : p.monic) : p.map f = 0 ↔ ∀ x, f x = 0 :=
   ⟨fun hfp x =>
@@ -748,7 +749,7 @@ theorem leading_coeff_map_of_leading_coeff_ne_zero (f : R →+* S) (hf : f (lead
     unfold leading_coeff 
     rw [coeff_map, nat_degree_map_of_leading_coeff_ne_zero f hf]
 
-variable(f)
+variable (f)
 
 @[simp]
 theorem map_ring_hom_id : map_ring_hom (RingHom.id R) = RingHom.id (Polynomial R) :=
@@ -859,9 +860,9 @@ attribute [irreducible] Polynomial.eval₂
 
 section HomEval₂
 
-variable[CommSemiringₓ S][CommSemiringₓ T]
+variable [CommSemiringₓ S] [CommSemiringₓ T]
 
-variable(f : R →+* S)(g : S →+* T)(p)
+variable (f : R →+* S) (g : S →+* T) (p)
 
 theorem hom_eval₂ (x : S) : g (p.eval₂ f x) = p.eval₂ (g.comp f) (g x) :=
   by 
@@ -883,7 +884,7 @@ section CommSemiringₓ
 
 section Eval
 
-variable[CommSemiringₓ R]{p q : Polynomial R}{x : R}
+variable [CommSemiringₓ R] {p q : Polynomial R} {x : R}
 
 theorem eval₂_comp [CommSemiringₓ S] (f : R →+* S) {x : S} : eval₂ f x (p.comp q) = eval₂ f (eval₂ f x q) p :=
   by 
@@ -957,11 +958,22 @@ theorem is_root_prod {R} [CommRingₓ R] [IsDomain R] {ι : Type _} (s : Finset 
   by 
     simp only [is_root, eval_prod, Finset.prod_eq_zero_iff]
 
+theorem eval_dvd : p ∣ q → eval x p ∣ eval x q :=
+  eval₂_dvd _ _
+
+theorem eval_eq_zero_of_dvd_of_eval_eq_zero : p ∣ q → eval x p = 0 → eval x q = 0 :=
+  eval₂_eq_zero_of_dvd_of_eval₂_eq_zero _ _
+
+@[simp]
+theorem eval_geom_sum {R} [CommSemiringₓ R] {n : ℕ} {x : R} : eval x (geomSum X n) = geomSum x n :=
+  by 
+    simp [geom_sum_def, eval_finset_sum]
+
 end Eval
 
 section Map
 
-variable[CommSemiringₓ R][CommSemiringₓ S](f : R →+* S)
+variable [CommSemiringₓ R] [CommSemiringₓ S] (f : R →+* S)
 
 theorem map_multiset_prod (m : Multiset (Polynomial R)) : m.prod.map f = (m.map$ map f).Prod :=
   Eq.symm$ Multiset.prod_hom _ (map_ring_hom f).toMonoidHom
@@ -998,7 +1010,7 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R]{p q r : Polynomial R}
+variable [Ringₓ R] {p q r : Polynomial R}
 
 theorem C_neg : C (-a) = -C a :=
   RingHom.map_neg C a

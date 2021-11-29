@@ -60,20 +60,20 @@ namespace PadicInt
 /-! ### Ring structure and coercion to `ℚ_[p]` -/
 
 
-variable{p : ℕ}[Fact p.prime]
+variable {p : ℕ} [Fact p.prime]
 
-instance  : Coe ℤ_[p] ℚ_[p] :=
+instance : Coe ℤ_[p] ℚ_[p] :=
   ⟨Subtype.val⟩
 
 theorem ext {x y : ℤ_[p]} : (x : ℚ_[p]) = y → x = y :=
   Subtype.ext_iff_val.2
 
 /-- Addition on ℤ_p is inherited from ℚ_p. -/
-instance  : Add ℤ_[p] :=
+instance : Add ℤ_[p] :=
   ⟨fun ⟨x, hx⟩ ⟨y, hy⟩ => ⟨x+y, le_transₓ (padicNormE.nonarchimedean _ _) (max_le_iff.2 ⟨hx, hy⟩)⟩⟩
 
 /-- Multiplication on ℤ_p is inherited from ℚ_p. -/
-instance  : Mul ℤ_[p] :=
+instance : Mul ℤ_[p] :=
   ⟨fun ⟨x, hx⟩ ⟨y, hy⟩ =>
       ⟨x*y,
         by 
@@ -85,14 +85,14 @@ instance  : Mul ℤ_[p] :=
                 apply norm_nonneg⟩⟩
 
 /-- Negation on ℤ_p is inherited from ℚ_p. -/
-instance  : Neg ℤ_[p] :=
+instance : Neg ℤ_[p] :=
   ⟨fun ⟨x, hx⟩ =>
       ⟨-x,
         by 
           simpa⟩⟩
 
 /-- Subtraction on ℤ_p is inherited from ℚ_p. -/
-instance  : Sub ℤ_[p] :=
+instance : Sub ℤ_[p] :=
   ⟨fun ⟨x, hx⟩ ⟨y, hy⟩ =>
       ⟨x - y,
         by 
@@ -101,16 +101,16 @@ instance  : Sub ℤ_[p] :=
           exact le_transₓ (padicNormE.nonarchimedean _ _) (max_le_iff.2 ⟨hx, hy⟩)⟩⟩
 
 /-- Zero on ℤ_p is inherited from ℚ_p. -/
-instance  : HasZero ℤ_[p] :=
+instance : HasZero ℤ_[p] :=
   ⟨⟨0,
       by 
         normNum⟩⟩
 
-instance  : Inhabited ℤ_[p] :=
+instance : Inhabited ℤ_[p] :=
   ⟨0⟩
 
 /-- One on ℤ_p is inherited from ℚ_p. -/
-instance  : HasOne ℤ_[p] :=
+instance : HasOne ℤ_[p] :=
   ⟨⟨1,
       by 
         normNum⟩⟩
@@ -163,7 +163,7 @@ theorem coe_coe_int : ∀ z : ℤ, ((z : ℤ_[p]) : ℚ_[p]) = z
 theorem coe_zero : ((0 : ℤ_[p]) : ℚ_[p]) = 0 :=
   rfl
 
-instance  : Ringₓ ℤ_[p] :=
+instance : Ringₓ ℤ_[p] :=
   by 
     refineStruct
         { add := ·+·, mul := ·*·, neg := Neg.neg, zero := (0 : ℤ_[p]), one := 1, sub := Sub.sub,
@@ -196,7 +196,7 @@ def inv : ℤ_[p] → ℤ_[p]
         simp [h]⟩
   else 0
 
-instance  : CharZero ℤ_[p] :=
+instance : CharZero ℤ_[p] :=
   { cast_injective :=
       fun m n h =>
         Nat.cast_injective$
@@ -243,19 +243,19 @@ We now show that `ℤ_[p]` is a
 -/
 
 
-variable(p : ℕ)[Fact p.prime]
+variable (p : ℕ) [Fact p.prime]
 
-instance  : MetricSpace ℤ_[p] :=
+instance : MetricSpace ℤ_[p] :=
   Subtype.metricSpace
 
 instance CompleteSpace : CompleteSpace ℤ_[p] :=
   have  : IsClosed { x:ℚ_[p] | ∥x∥ ≤ 1 } := is_closed_le continuous_norm continuous_const 
   this.complete_space_coe
 
-instance  : HasNorm ℤ_[p] :=
+instance : HasNorm ℤ_[p] :=
   ⟨fun z => ∥(z : ℚ_[p])∥⟩
 
-variable{p}
+variable {p}
 
 protected theorem mul_commₓ : ∀ z1 z2 : ℤ_[p], (z1*z2) = z2*z1
 | ⟨q1, h1⟩, ⟨q2, h2⟩ =>
@@ -282,13 +282,13 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ a b : ℤ_[p], (a*b) =
 theorem norm_def {z : ℤ_[p]} : ∥z∥ = ∥(z : ℚ_[p])∥ :=
   rfl
 
-variable(p)
+variable (p)
 
-instance  : NormedCommRing ℤ_[p] :=
+instance : NormedCommRing ℤ_[p] :=
   { dist_eq := fun ⟨_, _⟩ ⟨_, _⟩ => rfl, norm_mul := fun ⟨_, _⟩ ⟨_, _⟩ => norm_mul_le _ _,
     mul_comm := PadicInt.mul_comm }
 
-instance  : NormOneClass ℤ_[p] :=
+instance : NormOneClass ℤ_[p] :=
   ⟨norm_def.trans norm_one⟩
 
 instance IsAbsoluteValue : IsAbsoluteValue fun z : ℤ_[p] => ∥z∥ :=
@@ -303,9 +303,9 @@ instance IsAbsoluteValue : IsAbsoluteValue fun z : ℤ_[p] => ∥z∥ :=
         by 
           simp only [norm_def, padicNormE.mul, PadicInt.coe_mul] }
 
-variable{p}
+variable {p}
 
-instance  : IsDomain ℤ_[p] :=
+instance : IsDomain ℤ_[p] :=
   { PadicInt.normedCommRing p with
     eq_zero_or_eq_zero_of_mul_eq_zero := fun x y => PadicInt.eq_zero_or_eq_zero_of_mul_eq_zero x y,
     exists_pair_ne := ⟨0, 1, PadicInt.zero_ne_one⟩ }
@@ -317,7 +317,7 @@ namespace PadicInt
 /-! ### Norm -/
 
 
-variable{p : ℕ}[Fact p.prime]
+variable {p : ℕ} [Fact p.prime]
 
 theorem norm_le_one : ∀ z : ℤ_[p], ∥z∥ ≤ 1
 | ⟨_, h⟩ => h
@@ -390,7 +390,7 @@ private def cau_seq_to_rat_cau_seq (f : CauSeq ℤ_[p] norm) : CauSeq ℚ_[p] fu
       by 
         simpa [norm, norm_def] using f.cauchy hε⟩
 
-variable(p)
+variable (p)
 
 instance complete : CauSeq.IsComplete ℤ_[p] norm :=
   ⟨fun f =>
@@ -404,7 +404,7 @@ end PadicInt
 
 namespace PadicInt
 
-variable(p : ℕ)[hp_prime : Fact p.prime]
+variable (p : ℕ) [hp_prime : Fact p.prime]
 
 include hp_prime
 
@@ -436,7 +436,7 @@ theorem exists_pow_neg_lt_rat {ε : ℚ} (hε : 0 < ε) : ∃ k : ℕ, («expr�
       hk 
     exactModCast hk
 
-variable{p}
+variable {p}
 
 theorem norm_int_lt_one_iff_dvd (k : ℤ) : ∥(k : ℤ_[p])∥ < 1 ↔ «expr↑ » p ∣ k :=
   suffices ∥(k : ℚ_[p])∥ < 1 ↔ «expr↑ » p ∣ k by 
@@ -690,7 +690,7 @@ section Dvr
 /-! ### Discrete valuation ring -/
 
 
-instance  : LocalRing ℤ_[p] :=
+instance : LocalRing ℤ_[p] :=
   local_of_nonunits_ideal zero_ne_one$
     fun x y =>
       by 
@@ -727,7 +727,7 @@ theorem prime_p : Prime (p : ℤ_[p]) :=
 theorem irreducible_p : Irreducible (p : ℤ_[p]) :=
   Prime.irreducible prime_p
 
-instance  : DiscreteValuationRing ℤ_[p] :=
+instance : DiscreteValuationRing ℤ_[p] :=
   DiscreteValuationRing.of_has_unit_mul_pow_irreducible_factorization
     ⟨p, irreducible_p,
       fun x hx =>

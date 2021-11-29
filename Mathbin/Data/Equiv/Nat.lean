@@ -13,7 +13,7 @@ open Nat
 
 namespace Equiv
 
-variable{α : Type _}
+variable {α : Type _}
 
 /--
 An equivalence between `ℕ × ℕ` and `ℕ`, using the `mkpair` and `unpair` functions in

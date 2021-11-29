@@ -71,7 +71,7 @@ of isomorphism of pairs `iso`. In the example of subgroups of a group, `is_maxim
 satisfy the second isomorphism theorem `iso (H, H ⊔ K) (H ⊓ K, K)`.
 Examples include `subgroup G` if `G` is a group, and `submodule R M` if `M` is an `R`-module.
 -/
-class JordanHolderLattice(X : Type u)[Lattice X] where 
+class JordanHolderLattice (X : Type u) [Lattice X] where 
   IsMaximal : X → X → Prop 
   lt_of_is_maximal : ∀ {x y}, is_maximal x y → x < y 
   sup_eq_of_is_maximal : ∀ {x y z}, is_maximal x z → is_maximal y z → x ≠ y → x⊔y = z 
@@ -83,7 +83,7 @@ class JordanHolderLattice(X : Type u)[Lattice X] where
 
 namespace JordanHolderLattice
 
-variable{X : Type u}[Lattice X][JordanHolderLattice X]
+variable {X : Type u} [Lattice X] [JordanHolderLattice X]
 
 theorem is_maximal_inf_right_of_is_maximal_sup {x y : X} (hxz : is_maximal x (x⊔y)) (hyz : is_maximal y (x⊔y)) :
   is_maximal (x⊓y) y :=
@@ -130,22 +130,22 @@ Note that there is no stipulation that a series start from the bottom of the lat
 the top. For a composition series `s`, `s.top` is the largest element of the series,
 and `s.bot` is the least element.
 -/
-structure CompositionSeries(X : Type u)[Lattice X][JordanHolderLattice X] : Type u where 
+structure CompositionSeries (X : Type u) [Lattice X] [JordanHolderLattice X] : Type u where 
   length : ℕ 
   series : Finₓ (length+1) → X 
   step' : ∀ i : Finₓ length, is_maximal (series i.cast_succ) (series i.succ)
 
 namespace CompositionSeries
 
-variable{X : Type u}[Lattice X][JordanHolderLattice X]
+variable {X : Type u} [Lattice X] [JordanHolderLattice X]
 
-instance  : CoeFun (CompositionSeries X) fun x => Finₓ (x.length+1) → X :=
+instance : CoeFun (CompositionSeries X) fun x => Finₓ (x.length+1) → X :=
   { coe := CompositionSeries.series }
 
-instance  [Inhabited X] : Inhabited (CompositionSeries X) :=
+instance [Inhabited X] : Inhabited (CompositionSeries X) :=
   ⟨{ length := 0, series := fun _ => default X, step' := fun x => x.elim0 }⟩
 
-variable{X}
+variable {X}
 
 theorem step (s : CompositionSeries X) : ∀ i : Finₓ s.length, is_maximal (s i.cast_succ) (s i.succ) :=
   s.step'
@@ -168,7 +168,7 @@ protected theorem injective (s : CompositionSeries X) : Function.Injective s :=
 protected theorem inj (s : CompositionSeries X) {i j : Finₓ s.length.succ} : s i = s j ↔ i = j :=
   s.injective.eq_iff
 
-instance  : HasMem X (CompositionSeries X) :=
+instance : HasMem X (CompositionSeries X) :=
   ⟨fun x s => x ∈ Set.Range s⟩
 
 theorem mem_def {x : X} {s : CompositionSeries X} : x ∈ s ↔ x ∈ Set.Range s :=

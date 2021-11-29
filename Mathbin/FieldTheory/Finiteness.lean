@@ -15,9 +15,9 @@ open Cardinal Submodule Module Function
 
 namespace IsNoetherian
 
-variable{K : Type u}{V : Type v}[DivisionRing K][AddCommGroupₓ V][Module K V]
+variable {K : Type u} {V : Type v} [DivisionRing K] [AddCommGroupₓ V] [Module K V]
 
-variable[IsNoetherianRing K]
+variable [IsNoetherianRing K]
 
 /--
 A module over a division ring is noetherian if and only if
@@ -37,14 +37,14 @@ theorem iff_dim_lt_omega : IsNoetherian K V ↔ Module.rank K V < ω :=
       refine' is_noetherian_of_fg_of_noetherian _ ⟨Set.Finite.toFinset hbfinite, _⟩
       rw [Set.Finite.coe_to_finset, ←b.span_eq, Basis.coe_of_vector_space, Subtype.range_coe]
 
-variable(K V)
+variable (K V)
 
 /-- The dimension of a noetherian module over a division ring, as a cardinal,
 is strictly less than the first infinite cardinal `ω`. -/
 theorem dim_lt_omega : ∀ [IsNoetherian K V], Module.rank K V < ω :=
   IsNoetherian.iff_dim_lt_omega.1
 
-variable{K V}
+variable {K V}
 
 /-- In a noetherian module over a division ring, all bases are indexed by a finite type. -/
 noncomputable def fintype_basis_index {ι : Type _} [IsNoetherian K V] (b : Basis ι K V) : Fintype ι :=
@@ -52,7 +52,7 @@ noncomputable def fintype_basis_index {ι : Type _} [IsNoetherian K V] (b : Basi
 
 /-- In a noetherian module over a division ring,
 `basis.of_vector_space` is indexed by a finite type. -/
-noncomputable instance  [IsNoetherian K V] : Fintype (Basis.OfVectorSpaceIndex K V) :=
+noncomputable instance [IsNoetherian K V] : Fintype (Basis.OfVectorSpaceIndex K V) :=
   fintype_basis_index (Basis.ofVectorSpace K V)
 
 /-- In a noetherian module over a division ring,
@@ -60,7 +60,7 @@ if a basis is indexed by a set, that set is finite. -/
 theorem finite_basis_index {ι : Type _} {s : Set ι} [IsNoetherian K V] (b : Basis s K V) : s.finite :=
   b.finite_index_of_dim_lt_omega (dim_lt_omega K V)
 
-variable(K V)
+variable (K V)
 
 /-- In a noetherian module over a division ring,
 there exists a finite basis. This is the indexing `finset`. -/
@@ -93,7 +93,7 @@ theorem range_finset_basis [IsNoetherian K V] : Set.Range (finset_basis K V) = B
   by 
     rw [finset_basis, Basis.range_reindex, Basis.range_of_vector_space]
 
-variable{K V}
+variable {K V}
 
 /-- A module over a division ring is noetherian if and only if it is finitely generated. -/
 theorem iff_fg : IsNoetherian K V ↔ Module.Finite K V :=

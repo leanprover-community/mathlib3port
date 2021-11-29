@@ -7,7 +7,7 @@ import Mathbin.Algebra.Invertible
 -/
 
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 theorem is_unit_iff_dvd_one [CommMonoidₓ α] {x : α} : IsUnit x ↔ x ∣ 1 :=
   ⟨by 
@@ -73,7 +73,7 @@ end
 
 section Prime
 
-variable[CommMonoidWithZero α]
+variable [CommMonoidWithZero α]
 
 /-- prime element of a `comm_monoid_with_zero` -/
 def Prime (p : α) : Prop :=
@@ -81,7 +81,7 @@ def Prime (p : α) : Prop :=
 
 namespace Prime
 
-variable{p : α}(hp : Prime p)
+variable {p : α} (hp : Prime p)
 
 include hp
 
@@ -162,7 +162,7 @@ theorem Prime.left_dvd_or_dvd_right_of_dvd_mul [CommCancelMonoidWithZero α] {p 
 We explicitly avoid stating that `p` is non-zero, this would require a semiring. Assuming only a
 monoid allows us to reuse irreducible for associated elements.
 -/
-class Irreducible[Monoidₓ α](p : α) : Prop where 
+class Irreducible [Monoidₓ α] (p : α) : Prop where 
   not_unit' : ¬IsUnit p 
   is_unit_or_is_unit' : ∀ a b, (p = a*b) → IsUnit a ∨ IsUnit b
 
@@ -535,7 +535,7 @@ theorem Associated.of_mul_right [CommCancelMonoidWithZero α] {a b c d : α} : (
 
 section UniqueUnits
 
-variable[Monoidₓ α][Unique (Units α)]
+variable [Monoidₓ α] [Unique (Units α)]
 
 theorem units_eq_one (u : Units α) : u = 1 :=
   Subsingleton.elimₓ u 1
@@ -571,7 +571,7 @@ open Associated
 protected def mk {α : Type _} [Monoidₓ α] (a : α) : Associates α :=
   «expr⟦ ⟧» a
 
-instance  [Monoidₓ α] : Inhabited (Associates α) :=
+instance [Monoidₓ α] : Inhabited (Associates α) :=
   ⟨«expr⟦ ⟧» 1⟩
 
 theorem mk_eq_mk_iff_associated [Monoidₓ α] {a b : α} : Associates.mk a = Associates.mk b ↔ a ~ᵤ b :=
@@ -589,13 +589,13 @@ theorem forall_associated [Monoidₓ α] {p : Associates α → Prop} : (∀ a, 
 theorem mk_surjective [Monoidₓ α] : Function.Surjective (@Associates.mk α _) :=
   forall_associated.2 fun a => ⟨a, rfl⟩
 
-instance  [Monoidₓ α] : HasOne (Associates α) :=
+instance [Monoidₓ α] : HasOne (Associates α) :=
   ⟨«expr⟦ ⟧» 1⟩
 
 theorem one_eq_mk_one [Monoidₓ α] : (1 : Associates α) = Associates.mk 1 :=
   rfl
 
-instance  [Monoidₓ α] : HasBot (Associates α) :=
+instance [Monoidₓ α] : HasBot (Associates α) :=
   ⟨1⟩
 
 theorem exists_rep [Monoidₓ α] (a : Associates α) : ∃ a0 : α, Associates.mk a0 = a :=
@@ -603,9 +603,9 @@ theorem exists_rep [Monoidₓ α] (a : Associates α) : ∃ a0 : α, Associates.
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ α]
+variable [CommMonoidₓ α]
 
-instance  : Mul (Associates α) :=
+instance : Mul (Associates α) :=
   ⟨fun a' b' =>
       (Quotientₓ.liftOn₂ a' b' fun a b => «expr⟦ ⟧» (a*b))$
         fun a₁ a₂ b₁ b₂ ⟨c₁, h₁⟩ ⟨c₂, h₂⟩ =>
@@ -617,7 +617,7 @@ instance  : Mul (Associates α) :=
 theorem mk_mul_mk {x y : α} : (Associates.mk x*Associates.mk y) = Associates.mk (x*y) :=
   rfl
 
-instance  : CommMonoidₓ (Associates α) :=
+instance : CommMonoidₓ (Associates α) :=
   { one := 1, mul := ·*·,
     mul_one :=
       fun a' =>
@@ -644,7 +644,7 @@ instance  : CommMonoidₓ (Associates α) :=
             show «expr⟦ ⟧» (a*b) = «expr⟦ ⟧» (b*a)by 
               rw [mul_commₓ] }
 
-instance  : Preorderₓ (Associates α) :=
+instance : Preorderₓ (Associates α) :=
   { le := HasDvd.Dvd, le_refl := dvd_refl, le_trans := fun a b c => dvd_trans }
 
 @[simp]
@@ -747,22 +747,22 @@ theorem le_mul_left {a b : Associates α} : a ≤ b*a :=
   by 
     rw [mul_commₓ] <;> exact le_mul_right
 
-instance  : OrderBot (Associates α) :=
+instance : OrderBot (Associates α) :=
   { bot := 1, bot_le := fun a => one_le }
 
 end Order
 
 end CommMonoidₓ
 
-instance  [HasZero α] [Monoidₓ α] : HasZero (Associates α) :=
+instance [HasZero α] [Monoidₓ α] : HasZero (Associates α) :=
   ⟨«expr⟦ ⟧» 0⟩
 
-instance  [HasZero α] [Monoidₓ α] : HasTop (Associates α) :=
+instance [HasZero α] [Monoidₓ α] : HasTop (Associates α) :=
   ⟨0⟩
 
 section CommMonoidWithZero
 
-variable[CommMonoidWithZero α]
+variable [CommMonoidWithZero α]
 
 @[simp]
 theorem mk_eq_zero {a : α} : Associates.mk a = 0 ↔ a = 0 :=
@@ -771,7 +771,7 @@ theorem mk_eq_zero {a : α} : Associates.mk a = 0 ↔ a = 0 :=
 theorem mk_ne_zero {a : α} : Associates.mk a ≠ 0 ↔ a ≠ 0 :=
   not_congr mk_eq_zero
 
-instance  : CommMonoidWithZero (Associates α) :=
+instance : CommMonoidWithZero (Associates α) :=
   { Associates.commMonoid, Associates.hasZero with
     zero_mul :=
       by 
@@ -784,10 +784,13 @@ instance  : CommMonoidWithZero (Associates α) :=
         show Associates.mk (a*0) = Associates.mk 0
         rw [mul_zero] }
 
-instance  : OrderTop (Associates α) :=
+instance : OrderTop (Associates α) :=
   { top := 0, le_top := fun a => ⟨0, (mul_zero a).symm⟩ }
 
-instance  [Nontrivial α] : Nontrivial (Associates α) :=
+instance : BoundedOrder (Associates α) :=
+  { Associates.orderTop, Associates.orderBot with  }
+
+instance [Nontrivial α] : Nontrivial (Associates α) :=
   ⟨⟨0, 1,
       fun h =>
         have  : (0 : α) ~ᵤ 1 := Quotientₓ.exact h 
@@ -918,16 +921,16 @@ end CommMonoidWithZero
 
 section CommCancelMonoidWithZero
 
-variable[CommCancelMonoidWithZero α]
+variable [CommCancelMonoidWithZero α]
 
-instance  : PartialOrderₓ (Associates α) :=
+instance : PartialOrderₓ (Associates α) :=
   { Associates.preorder with
     le_antisymm :=
       fun a' b' =>
         Quotientₓ.induction_on₂ a' b'
           fun a b hab hba => Quot.sound$ associated_of_dvd_dvd (dvd_of_mk_le_mk hab) (dvd_of_mk_le_mk hba) }
 
-instance  : NoZeroDivisors (Associates α) :=
+instance : NoZeroDivisors (Associates α) :=
   ⟨fun x y =>
       Quotientₓ.induction_on₂ x y$
         fun a b h =>
@@ -991,7 +994,7 @@ theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p 
             simpa [mul_commₓ] using h 
         Or.inl$ bot_unique$ Associates.le_of_mul_le_mul_left d m 1 ‹d ≠ 0› this
 
-instance  : CommCancelMonoidWithZero (Associates α) :=
+instance : CommCancelMonoidWithZero (Associates α) :=
   { (inferInstance : CommMonoidWithZero (Associates α)) with mul_left_cancel_of_ne_zero := eq_of_mul_eq_mul_left,
     mul_right_cancel_of_ne_zero := eq_of_mul_eq_mul_right }
 

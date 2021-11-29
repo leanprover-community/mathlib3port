@@ -45,17 +45,17 @@ open_locale Classical BigOperators
 
 universe u v w
 
-variable{F : Type u}{K : Type v}{L : Type w}
+variable {F : Type u} {K : Type v} {L : Type w}
 
 namespace Polynomial
 
-variable[Field K][Field L][Field F]
+variable [Field K] [Field L] [Field F]
 
 open Polynomial
 
 section Splits
 
-variable(i : K →+* L)
+variable (i : K →+* L)
 
 /-- A polynomial `splits` iff it is zero or all of its irreducible factors have `degree` 1. -/
 def splits (f : Polynomial K) : Prop :=
@@ -500,7 +500,7 @@ end Polynomial
 
 section Embeddings
 
-variable(F)[Field F]
+variable (F) [Field F]
 
 /-- If `p` is the minimal polynomial of `a` over `F` then `F[a] ≃ₐ[F] F[x]/(p)` -/
 def AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly {R : Type _} [CommRingₓ R] [Algebra F R] (x : R) :
@@ -567,7 +567,7 @@ end Embeddings
 
 namespace Polynomial
 
-variable[Field K][Field L][Field F]
+variable [Field K] [Field L] [Field F]
 
 open Polynomial
 
@@ -814,9 +814,9 @@ def splitting_field (f : Polynomial K) :=
 
 namespace SplittingField
 
-variable(f : Polynomial K)
+variable (f : Polynomial K)
 
-instance  : Field (splitting_field f) :=
+instance : Field (splitting_field f) :=
   splitting_field_aux.field _ _
 
 instance Inhabited : Inhabited (splitting_field f) :=
@@ -847,13 +847,13 @@ library and not unique to this `algebra` instance.
 instance algebra' {R} [CommSemiringₓ R] [Algebra R K] : Algebra R (splitting_field f) :=
   splitting_field_aux.algebra _ _ _
 
-instance  : Algebra K (splitting_field f) :=
+instance : Algebra K (splitting_field f) :=
   splitting_field_aux.algebra _ _ _
 
 protected theorem splits : splits (algebraMap K (splitting_field f)) f :=
   splitting_field_aux.splits _ _ _
 
-variable[Algebra K L](hb : splits (algebraMap K L) f)
+variable [Algebra K L] (hb : splits (algebraMap K L) f)
 
 -- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Embeds the splitting field into any other field that splits the polynomial. -/
@@ -871,25 +871,25 @@ theorem adjoin_root_set : Algebra.adjoin K (f.root_set f.splitting_field) = ⊤ 
 
 end SplittingField
 
-variable(K L)[Algebra K L]
+variable (K L) [Algebra K L]
 
 /-- Typeclass characterising splitting fields. -/
-class is_splitting_field(f : Polynomial K) : Prop where 
+class is_splitting_field (f : Polynomial K) : Prop where 
   Splits{} : splits (algebraMap K L) f 
   adjoin_roots{} : Algebra.adjoin K («expr↑ » (f.map (algebraMap K L)).roots.toFinset : Set L) = ⊤
 
 namespace IsSplittingField
 
-variable{K}
+variable {K}
 
 instance splitting_field (f : Polynomial K) : is_splitting_field K (splitting_field f) f :=
   ⟨splitting_field.splits f, splitting_field.adjoin_roots f⟩
 
 section ScalarTower
 
-variable{K L F}[Algebra F K][Algebra F L][IsScalarTower F K L]
+variable {K L F} [Algebra F K] [Algebra F L] [IsScalarTower F K L]
 
-variable{K}
+variable {K}
 
 instance map (f : Polynomial F) [is_splitting_field F L f] : is_splitting_field K L (f.map$ algebraMap F K) :=
   ⟨by 
@@ -901,7 +901,7 @@ instance map (f : Polynomial F) [is_splitting_field F L f] : is_splitting_field 
           Algebra.adjoin_le_iff]
         exact fun x hx => @Algebra.subset_adjoin K _ _ _ _ _ _ hx⟩
 
-variable{K}(L)
+variable {K} (L)
 
 theorem splits_iff (f : Polynomial K) [is_splitting_field K L f] :
   Polynomial.Splits (RingHom.id K) f ↔ (⊤ : Subalgebra K L) = ⊥ :=
@@ -982,7 +982,7 @@ theorem FiniteDimensional (f : Polynomial K) [is_splitting_field K L f] : Finite
                             exact map_ne_zero hf).1
                       (Multiset.mem_to_finset.mp hy)⟩⟩
 
-instance  (f : Polynomial K) : _root_.finite_dimensional K f.splitting_field :=
+instance (f : Polynomial K) : _root_.finite_dimensional K f.splitting_field :=
   FiniteDimensional f.splitting_field f
 
 -- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

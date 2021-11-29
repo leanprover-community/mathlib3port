@@ -69,13 +69,13 @@ Formally, a line is represented by the function `l.idx_fun : ι → option α` w
 `l.idx_fun i = some y`).
 
 When `α` has size `1` there can be many elements of `line α ι` defining the same function. -/
-structure line(α ι : Type _) where 
+structure line (α ι : Type _) where 
   idxFun : ι → Option α 
   proper : ∃ i, idx_fun i = none
 
 namespace Line
 
-instance  α ι : CoeFun (line α ι) fun _ => α → ι → α :=
+instance α ι : CoeFun (line α ι) fun _ => α → ι → α :=
   ⟨fun l x i => (l.idx_fun i).getOrElse x⟩
 
 /-- A line is monochromatic if all its points are the same color. -/
@@ -86,16 +86,16 @@ def is_mono {α ι κ} (C : (ι → α) → κ) (l : line α ι) : Prop :=
 def diagonal α ι [Nonempty ι] : line α ι :=
   { idxFun := fun _ => none, proper := ⟨Classical.arbitrary ι, rfl⟩ }
 
-instance  α ι [Nonempty ι] : Inhabited (line α ι) :=
+instance α ι [Nonempty ι] : Inhabited (line α ι) :=
   ⟨diagonal α ι⟩
 
 /-- The type of lines that are only one color except possibly at their endpoints. -/
-structure almost_mono{α ι κ : Type _}(C : (ι → Option α) → κ) where 
+structure almost_mono {α ι κ : Type _} (C : (ι → Option α) → κ) where 
   line : line (Option α) ι 
   Color : κ 
   has_color : ∀ x : α, C (line (some x)) = color
 
-instance  {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (almost_mono fun v : ι → Option α => default κ) :=
+instance {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (almost_mono fun v : ι → Option α => default κ) :=
   ⟨{ line := default _, Color := default κ, has_color := fun _ => rfl }⟩
 
 /-- The type of collections of lines such that
@@ -103,13 +103,13 @@ instance  {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (almost_m
 - the lines all have the same endpoint
 - the colors of the lines are distinct.
 Used in the proof `exists_mono_in_high_dimension`. -/
-structure color_focused{α ι κ : Type _}(C : (ι → Option α) → κ) where 
+structure color_focused {α ι κ : Type _} (C : (ι → Option α) → κ) where 
   lines : Multiset (almost_mono C)
   focus : ι → Option α 
   is_focused : ∀ p _ : p ∈ lines, almost_mono.line p none = focus 
   distinct_colors : (lines.map almost_mono.color).Nodup
 
-instance  {α ι κ} (C : (ι → Option α) → κ) : Inhabited (color_focused C) :=
+instance {α ι κ} (C : (ι → Option α) → κ) : Inhabited (color_focused C) :=
   ⟨⟨0, fun _ => none, fun _ => False.elim, Multiset.nodup_zero⟩⟩
 
 /-- A function `f : α → α'` determines a function `line α ι → line α' ι`. For a coordinate `i`,

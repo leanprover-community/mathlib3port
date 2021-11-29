@@ -12,9 +12,9 @@ guarantee `∥x∥ ≤ R` and `∥x - y∥ ≥ 1` for any `y` in `F`. This is `r
 -/
 
 
-variable{𝕜 : Type _}[NormedField 𝕜]
+variable {𝕜 : Type _} [NormedField 𝕜]
 
-variable{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]
+variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
 -- error in Analysis.NormedSpace.RieszLemma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Riesz's lemma, which usually states that it is possible to find a

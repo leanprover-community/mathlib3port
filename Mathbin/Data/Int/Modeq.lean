@@ -24,7 +24,7 @@ namespace Int
 
 notation:50 a " ≡ " b " [ZMOD " n "]" => modeq n a b
 
-variable{m n a b c d : ℤ}
+variable {m n a b c d : ℤ}
 
 namespace Modeq
 

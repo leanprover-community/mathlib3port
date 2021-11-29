@@ -17,11 +17,11 @@ This file defines pairwise relations and pairwise disjoint indexed sets.
 
 open Set
 
-variable{α ι ι' : Type _}{r p q : α → α → Prop}
+variable {α ι ι' : Type _} {r p q : α → α → Prop}
 
 section Pairwise
 
-variable{f : ι → α}{s t u : Set α}{a b : α}
+variable {f : ι → α} {s t u : Set α} {a b : α}
 
 /-- A relation `r` holds pairwise if `r i j` for all `i ≠ j`. -/
 def Pairwise (r : α → α → Prop) :=
@@ -34,7 +34,7 @@ theorem pairwise_on_bool (hr : Symmetric r) {a b : α} : Pairwise (r on fun c =>
   by 
     simpa [Pairwise, Function.onFun] using @hr a b
 
-theorem pairwise_disjoint_on_bool [SemilatticeInfBot α] {a b : α} :
+theorem pairwise_disjoint_on_bool [SemilatticeInf α] [OrderBot α] {a b : α} :
   Pairwise (Disjoint on fun c => cond c a b) ↔ Disjoint a b :=
   pairwise_on_bool Disjoint.symm
 
@@ -49,7 +49,7 @@ theorem Symmetric.pairwise_on [LinearOrderₓ ι] (hr : Symmetric r) (f : ι →
         ·
           exact hr (h _ _ hmn')⟩
 
-theorem pairwise_disjoint_on [SemilatticeInfBot α] [LinearOrderₓ ι] (f : ι → α) :
+theorem pairwise_disjoint_on [SemilatticeInf α] [OrderBot α] [LinearOrderₓ ι] (f : ι → α) :
   Pairwise (Disjoint on f) ↔ ∀ m n, m < n → Disjoint (f m) (f n) :=
   Symmetric.pairwise_on Disjoint.symm f
 
@@ -221,7 +221,7 @@ namespace Set
 
 section SemilatticeInfBot
 
-variable[SemilatticeInfBot α]{s t : Set ι}{f g : ι → α}
+variable [SemilatticeInf α] [OrderBot α] {s t : Set ι} {f g : ι → α}
 
 /-- A set is `pairwise_disjoint` under `f`, if the images of any distinct two elements under `f`
 are disjoint. -/
@@ -298,7 +298,7 @@ end SemilatticeInfBot
 
 section CompleteLattice
 
-variable[CompleteLattice α]
+variable [CompleteLattice α]
 
 /-- Bind operation for `set.pairwise_disjoint`. If you want to only consider finsets of indices, you
 can use `set.pairwise_disjoint.bUnion_finset`. -/

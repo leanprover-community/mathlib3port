@@ -22,7 +22,7 @@ palindrome, reverse, induction
 
 open List
 
-variable{α : Type _}
+variable {α : Type _}
 
 /--
 `palindrome l` asserts that `l` is a palindrome. This is defined inductively:
@@ -64,7 +64,7 @@ theorem append_reverse (l : List α) : Palindrome (l ++ reverse l) :=
     apply of_reverse_eq 
     rw [reverse_append, reverse_reverse]
 
-instance  [DecidableEq α] (l : List α) : Decidable (Palindrome l) :=
+instance [DecidableEq α] (l : List α) : Decidable (Palindrome l) :=
   decidableOfIff' _ iff_reverse_eq
 
 end Palindrome

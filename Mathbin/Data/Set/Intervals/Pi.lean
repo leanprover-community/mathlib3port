@@ -10,13 +10,13 @@ usually include the corresponding products as proper subsets.
 -/
 
 
-variable{ι : Type _}{α : ι → Type _}
+variable {ι : Type _} {α : ι → Type _}
 
 namespace Set
 
 section PiPreorder
 
-variable[∀ i, Preorderₓ (α i)](x y : ∀ i, α i)
+variable [∀ i, Preorderₓ (α i)] (x y : ∀ i, α i)
 
 @[simp]
 theorem pi_univ_Ici : (pi univ fun i => Ici (x i)) = Ici x :=
@@ -51,7 +51,7 @@ theorem piecewise_mem_Icc' {s : Set ι} [∀ j, Decidable (j ∈ s)] {f₁ f₂ 
 
 section Nonempty
 
-variable[Nonempty ι]
+variable [Nonempty ι]
 
 theorem pi_univ_Ioi_subset : (pi univ fun i => Ioi (x i)) ⊆ Ioi x :=
   fun z hz =>
@@ -71,7 +71,7 @@ theorem pi_univ_Ico_subset : (pi univ fun i => Ico (x i) (y i)) ⊆ Ico x y :=
 
 end Nonempty
 
-variable[DecidableEq ι]
+variable [DecidableEq ι]
 
 open function(update)
 
@@ -116,7 +116,7 @@ theorem disjoint_pi_univ_Ioc_update_left_right {x y : ∀ i, α i} {i₀ : ι} {
 
 end PiPreorder
 
-variable[DecidableEq ι][∀ i, LinearOrderₓ (α i)]
+variable [DecidableEq ι] [∀ i, LinearOrderₓ (α i)]
 
 open function(update)
 

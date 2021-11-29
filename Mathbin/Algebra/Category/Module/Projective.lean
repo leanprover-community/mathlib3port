@@ -39,7 +39,7 @@ end
 
 namespace ModuleCat
 
-variable{R : Type u}[Ringₓ R]{M : ModuleCat.{max u v} R}
+variable {R : Type u} [Ringₓ R] {M : ModuleCat.{max u v} R}
 
 /-- Modules that have a basis are projective. -/
 theorem projective_of_free {ι : Type _} (b : Basis ι R M) : projective M :=

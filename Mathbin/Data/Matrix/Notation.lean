@@ -30,7 +30,7 @@ namespace Matrix
 
 universe u
 
-variable{α : Type u}{o n m : ℕ}{m' n' o' : Type _}
+variable {α : Type u} {o n m : ℕ} {m' n' o' : Type _}
 
 open_locale Matrix
 
@@ -40,7 +40,7 @@ open_locale Matrix
 #eval ![![1, 2], ![3, 4]] + ![![3, 4], ![5, 6]] -- ![![4, 6], ![8, 10]]
 ```
 -/
-instance  [HasRepr α] : HasRepr (Matrix (Finₓ m) (Finₓ n) α) :=
+instance [HasRepr α] : HasRepr (Matrix (Finₓ m) (Finₓ n) α) :=
   pi_fin.has_repr
 
 @[simp]
@@ -60,7 +60,7 @@ theorem tail_val' (B : Matrix (Finₓ m.succ) n' α) (j : n') : (vec_tail fun i 
 
 section DotProduct
 
-variable[AddCommMonoidₓ α][Mul α]
+variable [AddCommMonoidₓ α] [Mul α]
 
 @[simp]
 theorem dot_product_empty (v w : Finₓ 0 → α) : dot_product v w = 0 :=
@@ -136,7 +136,7 @@ end Transpose
 
 section Mul
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
 -- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
@@ -176,7 +176,7 @@ end Mul
 
 section VecMul
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
 @[simp]
 theorem empty_vec_mul (v : Finₓ 0 → α) (B : Matrix (Finₓ 0) o' α) : vec_mul v B = 0 :=
@@ -205,7 +205,7 @@ end VecMul
 
 section MulVec
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
 -- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]
@@ -234,7 +234,7 @@ end MulVec
 
 section VecMulVec
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
 -- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp] theorem empty_vec_mul_vec (v : fin 0 → α) (w : n' → α) : «expr = »(vec_mul_vec v w, «expr![ , ]»([])) :=
@@ -262,7 +262,7 @@ end VecMulVec
 
 section Smul
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
 -- error in Data.Matrix.Notation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp]

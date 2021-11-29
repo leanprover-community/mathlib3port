@@ -19,7 +19,7 @@ namespace PowerSeries
 
 section Ringₓ
 
-variable{R S : Type _}[Ringₓ R][Ringₓ S]
+variable {R S : Type _} [Ringₓ R] [Ringₓ S]
 
 /-- The power series for `1 / (u - x)`. -/
 def inv_units_sub (u : Units R) : PowerSeries R :=
@@ -58,7 +58,7 @@ end Ringₓ
 
 section Field
 
-variable(A A' : Type _)[Ringₓ A][Ringₓ A'][Algebra ℚ A][Algebra ℚ A']
+variable (A A' : Type _) [Ringₓ A] [Ringₓ A'] [Algebra ℚ A] [Algebra ℚ A']
 
 open_locale Nat
 
@@ -74,7 +74,7 @@ def sin : PowerSeries A :=
 def cos : PowerSeries A :=
   mk$ fun n => if Even n then algebraMap ℚ A ((-1^n / 2) / n !) else 0
 
-variable{A A'}(n : ℕ)(f : A →+* A')
+variable {A A'} (n : ℕ) (f : A →+* A')
 
 @[simp]
 theorem coeff_exp : coeff A n (exp A) = algebraMap ℚ A (1 / n !) :=
@@ -110,7 +110,7 @@ open RingHom
 
 open Finset Nat
 
-variable{A : Type _}[CommRingₓ A]
+variable {A : Type _} [CommRingₓ A]
 
 /-- Shows that $e^{aX} * e^{bX} = e^{(a + b)X}$ -/
 theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :

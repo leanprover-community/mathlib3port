@@ -28,15 +28,15 @@ open_locale BigOperators
 
 universe u w
 
-variable{R : Type u}{ι : Type w}
+variable {R : Type u} {ι : Type w}
 
 namespace Polynomial
 
-variable(s : Finset ι)
+variable (s : Finset ι)
 
 section Semiringₓ
 
-variable{α : Type _}[Semiringₓ α]
+variable {α : Type _} [Semiringₓ α]
 
 theorem nat_degree_list_sum_le (l : List (Polynomial α)) : nat_degree l.sum ≤ (l.map nat_degree).foldr max 0 :=
   List.sum_le_foldr_max nat_degree
@@ -113,7 +113,7 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R](f : ι → Polynomial R)(t : Multiset (Polynomial R))
+variable [CommSemiringₓ R] (f : ι → Polynomial R) (t : Multiset (Polynomial R))
 
 theorem nat_degree_multiset_prod_le : t.prod.nat_degree ≤ (t.map nat_degree).Sum :=
   Quotientₓ.induction_on t
@@ -254,7 +254,7 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 open Monic
 
@@ -310,7 +310,7 @@ end CommRingₓ
 
 section NoZeroDivisors
 
-variable[CommRingₓ R][NoZeroDivisors R](f : ι → Polynomial R)(t : Multiset (Polynomial R))
+variable [CommRingₓ R] [NoZeroDivisors R] (f : ι → Polynomial R) (t : Multiset (Polynomial R))
 
 /--
 The degree of a product of polynomials is equal to

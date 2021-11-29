@@ -46,7 +46,7 @@ instance bundled_hom : bundled_hom assoc_ring_hom :=
 -- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] SemiRing
 
-instance  : CoeSort SemiRing (Type _) :=
+instance : CoeSort SemiRing (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled SemiRing from the underlying type and typeclass. -/
@@ -57,10 +57,10 @@ def of (R : Type u) [Semiringₓ R] : SemiRing :=
 def of_hom {R S : Type u} [Semiringₓ R] [Semiringₓ S] (f : R →+* S) : of R ⟶ of S :=
   f
 
-instance  : Inhabited SemiRing :=
+instance : Inhabited SemiRing :=
   ⟨of PUnit⟩
 
-instance  (R : SemiRing) : Semiringₓ R :=
+instance (R : SemiRing) : Semiringₓ R :=
   R.str
 
 @[simp]
@@ -82,7 +82,7 @@ def Ringₓₓ : Type (u + 1) :=
 
 namespace Ringₓₓ
 
-instance  : bundled_hom.parent_projection @Ringₓ.toSemiring :=
+instance : bundled_hom.parent_projection @Ringₓ.toSemiring :=
   ⟨⟩
 
 -- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler λ Ring, has_coe_to_sort Ring (Type*)
@@ -97,10 +97,10 @@ def of (R : Type u) [Ringₓ R] : Ringₓₓ :=
 def of_hom {R S : Type u} [Ringₓ R] [Ringₓ S] (f : R →+* S) : of R ⟶ of S :=
   f
 
-instance  : Inhabited Ringₓₓ :=
+instance : Inhabited Ringₓₓ :=
   ⟨of PUnit⟩
 
-instance  (R : Ringₓₓ) : Ringₓ R :=
+instance (R : Ringₓₓ) : Ringₓ R :=
   R.str
 
 @[simp]
@@ -121,13 +121,13 @@ def CommSemiRing : Type (u + 1) :=
 
 namespace CommSemiRing
 
-instance  : bundled_hom.parent_projection @CommSemiringₓ.toSemiring :=
+instance : bundled_hom.parent_projection @CommSemiringₓ.toSemiring :=
   ⟨⟩
 
 -- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] CommSemiRing
 
-instance  : CoeSort CommSemiRing (Type _) :=
+instance : CoeSort CommSemiRing (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled CommSemiRing from the underlying type and typeclass. -/
@@ -138,10 +138,10 @@ def of (R : Type u) [CommSemiringₓ R] : CommSemiRing :=
 def of_hom {R S : Type u} [CommSemiringₓ R] [CommSemiringₓ S] (f : R →+* S) : of R ⟶ of S :=
   f
 
-instance  : Inhabited CommSemiRing :=
+instance : Inhabited CommSemiRing :=
   ⟨of PUnit⟩
 
-instance  (R : CommSemiRing) : CommSemiringₓ R :=
+instance (R : CommSemiRing) : CommSemiringₓ R :=
   R.str
 
 @[simp]
@@ -165,13 +165,13 @@ def CommRingₓₓ : Type (u + 1) :=
 
 namespace CommRingₓₓ
 
-instance  : bundled_hom.parent_projection @CommRingₓ.toRing :=
+instance : bundled_hom.parent_projection @CommRingₓ.toRing :=
   ⟨⟩
 
 -- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] CommRing
 
-instance  : CoeSort CommRingₓₓ (Type _) :=
+instance : CoeSort CommRingₓₓ (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled CommRing from the underlying type and typeclass. -/
@@ -182,10 +182,10 @@ def of (R : Type u) [CommRingₓ R] : CommRingₓₓ :=
 def of_hom {R S : Type u} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) : of R ⟶ of S :=
   f
 
-instance  : Inhabited CommRingₓₓ :=
+instance : Inhabited CommRingₓₓ :=
   ⟨of PUnit⟩
 
-instance  (R : CommRingₓₓ) : CommRingₓ R :=
+instance (R : CommRingₓₓ) : CommRingₓ R :=
   R.str
 
 @[simp]
@@ -201,18 +201,18 @@ instance has_forget_to_CommSemiRing : has_forget₂ CommRingₓₓ CommSemiRing 
     (by 
       tidy)
 
-instance  : full (forget₂ CommRingₓₓ CommSemiRing) :=
+instance : full (forget₂ CommRingₓₓ CommSemiRing) :=
   { Preimage := fun X Y f => f }
 
 end CommRingₓₓ
 
-example  {R S : CommRingₓₓ} (i : R ⟶ S) (r : R) (h : r = 0) : i r = 0 :=
+example {R S : CommRingₓₓ} (i : R ⟶ S) (r : R) (h : r = 0) : i r = 0 :=
   by 
     simp [h]
 
 namespace RingEquiv
 
-variable{X Y : Type u}
+variable {X Y : Type u}
 
 /-- Build an isomorphism in the category `Ring` from a `ring_equiv` between `ring`s. -/
 @[simps]
@@ -291,7 +291,7 @@ instance CommRingₓₓ.forget_reflects_isos : reflects_isomorphisms (forget Com
 
 attribute [local instance] reflects_isomorphisms_forget₂
 
-example  : reflects_isomorphisms (forget₂ Ringₓₓ AddCommGroupₓₓ) :=
+example : reflects_isomorphisms (forget₂ Ringₓₓ AddCommGroupₓₓ) :=
   by 
     infer_instance
 

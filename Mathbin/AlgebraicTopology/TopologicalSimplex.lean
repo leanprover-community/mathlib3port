@@ -24,7 +24,7 @@ attribute [local instance] CategoryTheory.ConcreteCategory.hasCoeToSort Category
 def to_Top_obj (x : SimplexCategory) :=
   { f:x →  ℝ≥0  | (∑i, f i) = 1 }
 
-instance  (x : SimplexCategory) : CoeFun x.to_Top_obj fun _ => x →  ℝ≥0  :=
+instance (x : SimplexCategory) : CoeFun x.to_Top_obj fun _ => x →  ℝ≥0  :=
   ⟨fun f => (f : x →  ℝ≥0 )⟩
 
 @[ext]

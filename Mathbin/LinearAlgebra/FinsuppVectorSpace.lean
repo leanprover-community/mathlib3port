@@ -31,9 +31,9 @@ namespace Finsupp
 
 section Ringₓ
 
-variable{R : Type _}{M : Type _}{ι : Type _}
+variable {R : Type _} {M : Type _} {ι : Type _}
 
-variable[Ringₓ R][AddCommGroupₓ M][Module R M]
+variable [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
 -- error in LinearAlgebra.FinsuppVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem linear_independent_single
@@ -142,9 +142,9 @@ end Ringₓ
 
 section Dim
 
-variable{K : Type u}{V : Type v}{ι : Type v}
+variable {K : Type u} {V : Type v} {ι : Type v}
 
-variable[Field K][AddCommGroupₓ V][Module K V]
+variable [Field K] [AddCommGroupₓ V] [Module K V]
 
 theorem dim_eq : Module.rank K (ι →₀ V) = # ι*Module.rank K V :=
   by 
@@ -157,17 +157,17 @@ end Finsupp
 
 section Module
 
-variable{K : Type u}{V V₁ V₂ : Type v}{V' : Type w}
+variable {K : Type u} {V V₁ V₂ : Type v} {V' : Type w}
 
-variable[Field K]
+variable [Field K]
 
-variable[AddCommGroupₓ V][Module K V]
+variable [AddCommGroupₓ V] [Module K V]
 
-variable[AddCommGroupₓ V₁][Module K V₁]
+variable [AddCommGroupₓ V₁] [Module K V₁]
 
-variable[AddCommGroupₓ V₂][Module K V₂]
+variable [AddCommGroupₓ V₂] [Module K V₂]
 
-variable[AddCommGroupₓ V'][Module K V']
+variable [AddCommGroupₓ V'] [Module K V']
 
 open Module
 
@@ -209,7 +209,7 @@ section Module
 
 open Module
 
-variable(K V : Type u)[Field K][AddCommGroupₓ V][Module K V]
+variable (K V : Type u) [Field K] [AddCommGroupₓ V] [Module K V]
 
 theorem cardinal_mk_eq_cardinal_mk_field_pow_dim [FiniteDimensional K V] : # V = (# K^Module.rank K V) :=
   by 

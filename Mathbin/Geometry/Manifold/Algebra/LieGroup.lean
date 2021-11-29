@@ -38,89 +38,32 @@ open_locale Manifold
 /-- A Lie (additive) group is a group and a smooth manifold at the same time in which
 the addition and negation operations are smooth. -/
 @[ancestor HasSmoothAdd]
-class
-  LieAddGroup{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E](I : ModelWithCorners 𝕜 E H)(G : Type _)[AddGroupₓ G][TopologicalSpace G][ChartedSpace H G] extends
-  HasSmoothAdd I G : Prop where 
+class LieAddGroup {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+  [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [AddGroupₓ G] [TopologicalSpace G]
+  [ChartedSpace H G] extends HasSmoothAdd I G : Prop where 
   smooth_neg : Smooth I I fun a : G => -a
 
 /-- A Lie group is a group and a smooth manifold at the same time in which
 the multiplication and inverse operations are smooth. -/
 @[ancestor HasSmoothMul, toAdditive]
-class
-  LieGroup{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E](I : ModelWithCorners 𝕜 E H)(G : Type _)[Groupₓ G][TopologicalSpace G][ChartedSpace H G] extends
+class LieGroup {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+  [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Groupₓ G] [TopologicalSpace G] [ChartedSpace H G] extends
   HasSmoothMul I G : Prop where 
   smooth_inv : Smooth I I fun a : G => a⁻¹
 
 section LieGroup
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{I :
-    ModelWithCorners 𝕜 E
-      H}{F :
-    Type
-      _}[NormedGroup
-      F][NormedSpace 𝕜
-      F]{J :
-    ModelWithCorners 𝕜 F
-      F}{G :
-    Type
-      _}[TopologicalSpace
-      G][ChartedSpace H
-      G][Groupₓ
-      G][LieGroup I
-      G]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H' :
-    Type
-      _}[TopologicalSpace
-      H']{I' :
-    ModelWithCorners 𝕜 E'
-      H'}{M :
-    Type
-      _}[TopologicalSpace
-      M][ChartedSpace H'
-      M]{E'' :
-    Type
-      _}[NormedGroup
-      E''][NormedSpace 𝕜
-      E'']{H'' :
-    Type
-      _}[TopologicalSpace H'']{I'' : ModelWithCorners 𝕜 E'' H''}{M' : Type _}[TopologicalSpace M'][ChartedSpace H'' M']
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+  [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
+  {J : ModelWithCorners 𝕜 F F} {G : Type _} [TopologicalSpace G] [ChartedSpace H G] [Groupₓ G] [LieGroup I G]
+  {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'}
+  {M : Type _} [TopologicalSpace M] [ChartedSpace H' M] {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E'']
+  {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M' : Type _} [TopologicalSpace M']
+  [ChartedSpace H'' M']
 
 section 
 
-variable(I)
+variable (I)
 
 @[toAdditive]
 theorem smooth_inv : Smooth I I fun x : G => x⁻¹ :=
@@ -161,7 +104,7 @@ end LieGroup
 section ProdLieGroup
 
 @[toAdditive]
-instance  {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+instance {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
   [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [TopologicalSpace G] [ChartedSpace H G] [Groupₓ G]
   [LieGroup I G] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
   {I' : ModelWithCorners 𝕜 E' H'} {G' : Type _} [TopologicalSpace G'] [ChartedSpace H' G'] [Groupₓ G']

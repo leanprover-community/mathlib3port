@@ -20,11 +20,11 @@ The final goal is to develop part of the API to prove, eventually, results about
 -/
 
 
-variable{R : Type _}{a b : R}
+variable {R : Type _} {a b : R}
 
 section Mul
 
-variable[Mul R]
+variable [Mul R]
 
 /-- A left-regular element is an element `c` such that multiplication on the left by `c`
 is injective on the left. -/
@@ -38,7 +38,7 @@ def IsRightRegular (c : R) :=
 
 /-- A regular element is an element `c` such that multiplication by `c` both on the left and
 on the right is injective. -/
-structure IsRegular(c : R) : Prop where 
+structure IsRegular (c : R) : Prop where 
   left : IsLeftRegular c 
   right : IsRightRegular c
 
@@ -50,7 +50,7 @@ end Mul
 
 section Semigroupₓ
 
-variable[Semigroupₓ R]
+variable [Semigroupₓ R]
 
 /-- In a semigroup, the product of left-regular elements is left-regular. -/
 theorem IsLeftRegular.mul (lra : IsLeftRegular a) (lrb : IsLeftRegular b) : IsLeftRegular (a*b) :=
@@ -111,7 +111,7 @@ end Semigroupₓ
 
 section MulZeroClass
 
-variable[MulZeroClass R]
+variable [MulZeroClass R]
 
 /--  The element `0` is left-regular if and only if `R` is trivial. -/
 theorem IsLeftRegular.subsingleton (h : IsLeftRegular (0 : R)) : Subsingleton R :=
@@ -194,7 +194,7 @@ end MulZeroClass
 
 section CommSemigroupₓ
 
-variable[CommSemigroupₓ R]
+variable [CommSemigroupₓ R]
 
 /--  A product is regular if and only if the factors are. -/
 theorem is_regular_mul_iff : IsRegular (a*b) ↔ IsRegular a ∧ IsRegular b :=
@@ -211,7 +211,7 @@ end CommSemigroupₓ
 
 section Monoidₓ
 
-variable[Monoidₓ R]
+variable [Monoidₓ R]
 
 /--  In a monoid, `1` is regular. -/
 theorem is_regular_one : IsRegular (1 : R) :=
@@ -278,7 +278,7 @@ end LeftOrRightCancelSemigroup
 
 section CancelMonoid
 
-variable[CancelMonoid R]
+variable [CancelMonoid R]
 
 /--  Elements of a cancel monoid are regular.  Cancel semigroups do not appear to exist. -/
 theorem is_regular_of_cancel_monoid (g : R) : IsRegular g :=
@@ -288,7 +288,7 @@ end CancelMonoid
 
 section CancelMonoidWithZero
 
-variable[CancelMonoidWithZero R]
+variable [CancelMonoidWithZero R]
 
 /--  Non-zero elements of an integral domain are regular. -/
 theorem is_regular_of_ne_zero (a0 : a ≠ 0) : IsRegular a :=

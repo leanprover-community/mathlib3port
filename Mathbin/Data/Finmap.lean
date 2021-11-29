@@ -11,7 +11,7 @@ universe u v w
 
 open List
 
-variable{α : Type u}{β : α → Type v}
+variable {α : Type u} {β : α → Type v}
 
 /-! ### multisets of sigma types-/
 
@@ -41,7 +41,7 @@ end Multiset
 
 /-- `finmap β` is the type of finite maps over a multiset. It is effectively
   a quotient of `alist β` by permutation of the underlying list. -/
-structure Finmap(β : α → Type v) : Type max u v where 
+structure Finmap (β : α → Type v) : Type max u v where 
   entries : Multiset (Sigma β)
   Nodupkeys : entries.nodupkeys
 
@@ -145,7 +145,7 @@ theorem ext_iff {s t : Finmap β} : s.entries = t.entries ↔ s = t :=
 
 
 /-- The predicate `a ∈ s` means that `s` has a value associated to the key `a`. -/
-instance  : HasMem α (Finmap β) :=
+instance : HasMem α (Finmap β) :=
   ⟨fun a s => a ∈ s.entries.keys⟩
 
 theorem mem_def {a : α} {s : Finmap β} : a ∈ s ↔ a ∈ s.entries.keys :=
@@ -178,10 +178,10 @@ theorem mem_keys {a : α} {s : Finmap β} : a ∈ s.keys ↔ a ∈ s :=
 
 
 /-- The empty map. -/
-instance  : HasEmptyc (Finmap β) :=
+instance : HasEmptyc (Finmap β) :=
   ⟨⟨0, nodupkeys_nil⟩⟩
 
-instance  : Inhabited (Finmap β) :=
+instance : Inhabited (Finmap β) :=
   ⟨∅⟩
 
 @[simp]
@@ -217,7 +217,7 @@ theorem mem_singleton (x y : α) (b : β y) : x ∈ singleton y b ↔ x = y :=
 
 section 
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 instance has_decidable_eq [∀ a, DecidableEq (β a)] : DecidableEq (Finmap β)
 | s₁, s₂ => decidableOfIff _ ext_iff
@@ -253,7 +253,7 @@ theorem lookup_singleton_eq {a : α} {b : β a} : (singleton a b).lookup a = som
   by 
     rw [singleton, lookup_to_finmap, Alist.singleton, Alist.lookup, lookup_cons_eq]
 
-instance  (a : α) (s : Finmap β) : Decidable (a ∈ s) :=
+instance (a : α) (s : Finmap β) : Decidable (a ∈ s) :=
   decidableOfIff _ lookup_is_some
 
 theorem mem_iff {a : α} {s : Finmap β} : a ∈ s ↔ ∃ b, s.lookup a = some b :=
@@ -330,7 +330,7 @@ def all (f : ∀ x, β x → Bool) (s : Finmap β) : Bool :=
 
 section 
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- Erase a key from the map. If the key is not present it does nothing. -/
 def erase (a : α) (s : Finmap β) : Finmap β :=
@@ -387,7 +387,7 @@ theorem erase_erase {a a' : α} {s : Finmap β} : erase a (erase a' s) = erase a
 def sdiff (s s' : Finmap β) : Finmap β :=
   s'.foldl (fun s x _ => s.erase x) (fun a₀ a₁ _ a₂ _ => erase_erase) s
 
-instance  : HasSdiff (Finmap β) :=
+instance : HasSdiff (Finmap β) :=
   ⟨sdiff⟩
 
 /-! ### insert -/
@@ -467,7 +467,7 @@ theorem insert_singleton_eq {a : α} {b b' : β a} : insert a b (singleton a b')
 
 /-- Erase a key from the map, and return the corresponding value, if found. -/
 def extract (a : α) (s : Finmap β) : Option (β a) × Finmap β :=
-  (lift_on s fun t => Prod.mapₓ id to_finmap (extract a t))$
+  (lift_on s fun t => Prod.map id to_finmap (extract a t))$
     fun s₁ s₂ p =>
       by 
         simp [perm_lookup p, to_finmap_eq, perm_erase p]
@@ -487,7 +487,7 @@ there exists an `a ∈ s₁`, `lookup a (s₁ ∪ s₂) = lookup a s₁`. -/
 def union (s₁ s₂ : Finmap β) : Finmap β :=
   (lift_on₂ s₁ s₂ fun s₁ s₂ => «expr⟦ ⟧» (s₁ ∪ s₂))$ fun s₁ s₂ s₃ s₄ p₁₃ p₂₄ => to_finmap_eq.mpr$ perm_union p₁₃ p₂₄
 
-instance  : HasUnion (Finmap β) :=
+instance : HasUnion (Finmap β) :=
   ⟨union⟩
 
 @[simp]
@@ -591,9 +591,9 @@ theorem disjoint.symm_iff (x y : Finmap β) : Disjoint x y ↔ Disjoint y x :=
 
 section 
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
-instance  : DecidableRel (@Disjoint α β) :=
+instance : DecidableRel (@Disjoint α β) :=
   fun x y =>
     by 
       dsimp only [Disjoint] <;> infer_instance

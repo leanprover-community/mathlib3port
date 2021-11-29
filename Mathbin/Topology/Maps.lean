@@ -41,17 +41,17 @@ open Set Filter
 
 open_locale TopologicalSpace Filter
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 section Inducing
 
 /-- A function `f : α → β` between topological spaces is inducing if the topology on `α` is induced
 by the topology on `β` through `f`, meaning that a set `s : set α` is open iff it is the preimage
 under `f` of some open set `t : set β`. -/
-structure Inducing[tα : TopologicalSpace α][tβ : TopologicalSpace β](f : α → β) : Prop where 
+structure Inducing [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : α → β) : Prop where 
   induced : tα = tβ.induced f
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ][TopologicalSpace δ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
 theorem inducing_id : Inducing (@id α) :=
   ⟨induced_id.symm⟩
@@ -121,10 +121,10 @@ section Embedding
 
 /-- A function between topological spaces is an embedding if it is injective,
   and for all `s : set α`, `s` is open iff it is the preimage of an open set. -/
-structure Embedding[tα : TopologicalSpace α][tβ : TopologicalSpace β](f : α → β) extends Inducing f : Prop where 
+structure Embedding [tα : TopologicalSpace α] [tβ : TopologicalSpace β] (f : α → β) extends Inducing f : Prop where 
   inj : Function.Injective f
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 theorem Embedding.mk' (f : α → β) (inj : Function.Injective f) (induced : ∀ a, comap f (𝓝 (f a)) = 𝓝 a) : Embedding f :=
   ⟨⟨(induced_iff_nhds_eq f).2 fun a => (induced a).symm⟩, inj⟩
@@ -182,7 +182,7 @@ theorem quotient_map_iff {α β : Type _} [TopologicalSpace α] [TopologicalSpac
 
 namespace QuotientMap
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ][TopologicalSpace δ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
 protected theorem id : QuotientMap (@id α) :=
   ⟨fun a => ⟨a, rfl⟩, coinduced_id.symm⟩
@@ -225,7 +225,7 @@ def IsOpenMap [TopologicalSpace α] [TopologicalSpace β] (f : α → β) :=
 
 namespace IsOpenMap
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]{f : α → β}
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {f : α → β}
 
 open Function
 
@@ -312,7 +312,7 @@ theorem Inducing.is_open_map [TopologicalSpace α] [TopologicalSpace β] {f : α
 
 section IsClosedMap
 
-variable[TopologicalSpace α][TopologicalSpace β]
+variable [TopologicalSpace α] [TopologicalSpace β]
 
 /-- A map `f : α → β` is said to be a *closed map*, if the image of any closed `U : set α`
 is closed in `β`. -/
@@ -323,7 +323,7 @@ end IsClosedMap
 
 namespace IsClosedMap
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 open Function
 
@@ -384,10 +384,10 @@ theorem is_closed_map_iff_closure_image [TopologicalSpace α] [TopologicalSpace 
 
 section OpenEmbedding
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 /-- An open embedding is an embedding with open image. -/
-structure OpenEmbedding(f : α → β) extends Embedding f : Prop where 
+structure OpenEmbedding (f : α → β) extends Embedding f : Prop where 
   open_range : IsOpen$ range f
 
 theorem OpenEmbedding.is_open_map {f : α → β} (hf : OpenEmbedding f) : IsOpenMap f :=
@@ -445,13 +445,13 @@ end OpenEmbedding
 
 section ClosedEmbedding
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 /-- A closed embedding is an embedding with closed image. -/
-structure ClosedEmbedding(f : α → β) extends Embedding f : Prop where 
+structure ClosedEmbedding (f : α → β) extends Embedding f : Prop where 
   closed_range : IsClosed$ range f
 
-variable{f : α → β}
+variable {f : α → β}
 
 theorem ClosedEmbedding.tendsto_nhds_iff {ι : Type _} {g : ι → α} {a : Filter ι} {b : α} (hf : ClosedEmbedding f) :
   tendsto g a (𝓝 b) ↔ tendsto (f ∘ g) a (𝓝 (f b)) :=

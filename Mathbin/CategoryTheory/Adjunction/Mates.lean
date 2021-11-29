@@ -39,15 +39,15 @@ namespace CategoryTheory
 
 open Category
 
-variable{C : Type u₁}{D : Type u₂}[category.{v₁} C][category.{v₂} D]
+variable {C : Type u₁} {D : Type u₂} [category.{v₁} C] [category.{v₂} D]
 
 section Square
 
-variable{E : Type u₃}{F : Type u₄}[category.{v₃} E][category.{v₄} F]
+variable {E : Type u₃} {F : Type u₄} [category.{v₃} E] [category.{v₄} F]
 
-variable{G : C ⥤ E}{H : D ⥤ F}{L₁ : C ⥤ D}{R₁ : D ⥤ C}{L₂ : E ⥤ F}{R₂ : F ⥤ E}
+variable {G : C ⥤ E} {H : D ⥤ F} {L₁ : C ⥤ D} {R₁ : D ⥤ C} {L₂ : E ⥤ F} {R₂ : F ⥤ E}
 
-variable(adj₁ : L₁ ⊣ R₁)(adj₂ : L₂ ⊣ R₂)
+variable (adj₁ : L₁ ⊣ R₁) (adj₂ : L₂ ⊣ R₂)
 
 include adj₁ adj₂
 
@@ -128,9 +128,9 @@ end Square
 
 section Self
 
-variable{L₁ L₂ L₃ : C ⥤ D}{R₁ R₂ R₃ : D ⥤ C}
+variable {L₁ L₂ L₃ : C ⥤ D} {R₁ R₂ R₃ : D ⥤ C}
 
-variable(adj₁ : L₁ ⊣ R₁)(adj₂ : L₂ ⊣ R₂)(adj₃ : L₃ ⊣ R₃)
+variable (adj₁ : L₁ ⊣ R₁) (adj₂ : L₂ ⊣ R₂) (adj₃ : L₃ ⊣ R₃)
 
 /--
 Given two adjunctions `L₁ ⊣ R₁` and `L₂ ⊣ R₂` both between categories `C`, `D`, there is a

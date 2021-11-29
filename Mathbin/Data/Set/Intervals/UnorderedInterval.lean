@@ -29,7 +29,7 @@ namespace Set
 
 section LinearOrderₓ
 
-variable{α : Type u}[LinearOrderₓ α]{a a₁ a₂ b b₁ b₂ x : α}
+variable {α : Type u} [LinearOrderₓ α] {a a₁ a₂ b b₁ b₂ x : α}
 
 /-- `interval a b` is the set of elements lying between `a` and `b`, with `a` and `b` included. -/
 def interval (a b : α) :=
@@ -176,7 +176,7 @@ open_locale Interval
 
 section OrderedAddCommGroup
 
-variable{α : Type u}[LinearOrderedAddCommGroup α](a b c x y : α)
+variable {α : Type u} [LinearOrderedAddCommGroup α] (a b c x y : α)
 
 -- error in Data.Set.Intervals.UnorderedInterval: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 @[simp]
@@ -235,7 +235,7 @@ by simp [] [] [] ["[", expr sub_eq_add_neg, ",", expr add_comm, "]"] [] []
 theorem image_neg_interval : «expr = »(«expr '' »(has_neg.neg, «expr[ , ]»(a, b)), «expr[ , ]»(«expr- »(a), «expr- »(b))) :=
 by simp [] [] [] [] [] []
 
-variable{a b c x y}
+variable {a b c x y}
 
 -- error in Data.Set.Intervals.UnorderedInterval: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 /-- If `[x, y]` is a subinterval of `[a, b]`, then the distance between `x` and `y`
@@ -266,7 +266,7 @@ end OrderedAddCommGroup
 
 section LinearOrderedField
 
-variable{k : Type u}[LinearOrderedField k]{a : k}
+variable {k : Type u} [LinearOrderedField k] {a : k}
 
 -- error in Data.Set.Intervals.UnorderedInterval: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 @[simp]

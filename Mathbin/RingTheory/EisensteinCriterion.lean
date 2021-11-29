@@ -11,7 +11,7 @@ a polynomial over an integral domain.
 
 open Polynomial Ideal.Quotient
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
 namespace Polynomial
 
@@ -38,7 +38,7 @@ polynomial.ext (λ n, begin
  end)
 
 theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.is_prime) {q : Polynomial R}
-  {c : Polynomial P.quotient} (hq : map (mk P) q = c*X ^ n) (hc0 : c.degree = 0) : n ≤ q.nat_degree :=
+  {c : Polynomial P.quotient} (hq : map (mk P) q = c*X^n) (hc0 : c.degree = 0) : n ≤ q.nat_degree :=
   WithBot.coe_le_coe.1
     (calc «expr↑ » n = degree (q.map (mk P)) :=
       by 
@@ -48,7 +48,7 @@ theorem le_nat_degree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.is_pri
       )
 
 theorem eval_zero_mem_ideal_of_eq_mul_X_pow {n : ℕ} {P : Ideal R} {q : Polynomial R} {c : Polynomial P.quotient}
-  (hq : map (mk P) q = c*X ^ n) (hn0 : 0 < n) : eval 0 q ∈ P :=
+  (hq : map (mk P) q = c*X^n) (hn0 : 0 < n) : eval 0 q ∈ P :=
   by 
     rw [←coeff_zero_eq_eval_zero, ←eq_zero_iff_mem, ←coeff_map, coeff_zero_eq_eval_zero, hq, eval_mul, eval_pow, eval_X,
       zero_pow hn0, mul_zero]
@@ -65,7 +65,7 @@ end EisensteinCriterionAux
 
 open EisensteinCriterionAux
 
-variable[IsDomain R]
+variable [IsDomain R]
 
 -- error in RingTheory.EisensteinCriterion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a non constant polynomial with coefficients in `R`, and `P` is a prime ideal in `R`,

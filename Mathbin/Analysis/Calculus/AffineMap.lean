@@ -15,11 +15,11 @@ This file contains results about smoothness of affine maps.
 
 namespace ContinuousAffineMap
 
-variable{𝕜 V W : Type _}[NondiscreteNormedField 𝕜]
+variable {𝕜 V W : Type _} [NondiscreteNormedField 𝕜]
 
-variable[NormedGroup V][NormedSpace 𝕜 V]
+variable [NormedGroup V] [NormedSpace 𝕜 V]
 
-variable[NormedGroup W][NormedSpace 𝕜 W]
+variable [NormedGroup W] [NormedSpace 𝕜 W]
 
 /-- A continuous affine map between normed vector spaces is smooth. -/
 theorem TimesContDiff {n : WithTop ℕ} (f : V →A[𝕜] W) : TimesContDiff 𝕜 n f :=

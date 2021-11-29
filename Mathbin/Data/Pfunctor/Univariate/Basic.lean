@@ -25,10 +25,10 @@ structure Pfunctor where
 
 namespace Pfunctor
 
-instance  : Inhabited Pfunctor :=
+instance : Inhabited Pfunctor :=
   ⟨⟨default _, default _⟩⟩
 
-variable(P : Pfunctor){α β : Type u}
+variable (P : Pfunctor) {α β : Type u}
 
 /-- Applying `P` to an object of `Type` -/
 def obj (α : Type _) :=
@@ -41,7 +41,7 @@ def map {α β : Type _} (f : α → β) : P.obj α → P.obj β :=
 instance obj.inhabited [Inhabited P.A] [Inhabited α] : Inhabited (P.obj α) :=
   ⟨⟨default _, fun _ => default _⟩⟩
 
-instance  : Functor P.obj :=
+instance : Functor P.obj :=
   { map := @map P }
 
 protected theorem map_eq {α β : Type _} (f : α → β) (a : P.A) (g : P.B a → α) :
@@ -54,7 +54,7 @@ protected theorem id_map {α : Type _} : ∀ x : P.obj α, id <$> x = id x :=
 protected theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) : ∀ x : P.obj α, (g ∘ f) <$> x = g <$> f <$> x :=
   fun ⟨a, b⟩ => rfl
 
-instance  : IsLawfulFunctor P.obj :=
+instance : IsLawfulFunctor P.obj :=
   { id_map := @Pfunctor.id_map P, comp_map := @Pfunctor.comp_map P }
 
 /-- re-export existing definition of W-types and
@@ -64,7 +64,7 @@ def W :=
 
 attribute [nolint has_inhabited_instance] W
 
-variable{P}
+variable {P}
 
 /-- root element  of a W tree -/
 def W.head : W P → P.A
@@ -92,7 +92,7 @@ theorem W.mk_dest (p : W P) : W.mk (W.dest p) = p :=
   by 
     cases p <;> rfl
 
-variable(P)
+variable (P)
 
 /-- `Idx` identifies a location inside the application of a pfunctor.
 For `F : pfunctor`, `x : F.obj α` and `i : F.Idx`, `i` can designate
@@ -103,7 +103,7 @@ def Idx :=
 instance Idx.inhabited [Inhabited P.A] [Inhabited (P.B (default _))] : Inhabited P.Idx :=
   ⟨⟨default _, default _⟩⟩
 
-variable{P}
+variable {P}
 
 /-- `x.iget i` takes the component of `x` designated by `i` if any is or returns
 a default value -/
@@ -143,7 +143,7 @@ end Pfunctor
 
 namespace Pfunctor
 
-variable{P : Pfunctor.{u}}
+variable {P : Pfunctor.{u}}
 
 open Functor
 

@@ -22,7 +22,7 @@ namespace CategoryTheory
 
 namespace Coyoneda
 
-variable{C : Type v}[small_category C]
+variable {C : Type v} [small_category C]
 
 /--
 The colimit cocone over `coyoneda.obj X`, with cocone point `punit`.
@@ -54,7 +54,7 @@ def colimit_cocone_is_colimit (X : «expr ᵒᵖ» C) : is_colimit (colimit_coco
           rw [←w]
           simp  }
 
-instance  (X : «expr ᵒᵖ» C) : has_colimit (coyoneda.obj X) :=
+instance (X : «expr ᵒᵖ» C) : has_colimit (coyoneda.obj X) :=
   has_colimit.mk { Cocone := _, IsColimit := colimit_cocone_is_colimit X }
 
 /--
@@ -65,7 +65,7 @@ noncomputable def colimit_coyoneda_iso (X : «expr ᵒᵖ» C) : colimit (coyone
 
 end Coyoneda
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 open Limits
 
@@ -155,7 +155,7 @@ def coyoneda_jointly_reflects_limits (J : Type v) [small_category J] (K : J ⥤ 
           ext 
           exact w j }
 
-variable{D : Type u}[small_category D]
+variable {D : Type u} [small_category D]
 
 instance yoneda_functor_preserves_limits : preserves_limits (@yoneda D _) :=
   by 

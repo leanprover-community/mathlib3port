@@ -20,9 +20,9 @@ lie subalgebra, normalizer, idealizer, cartan subalgebra
 
 universe u v w w₁ w₂
 
-variable{R : Type u}{L : Type v}
+variable {R : Type u} {L : Type v}
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L](H : LieSubalgebra R L)
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] (H : LieSubalgebra R L)
 
 namespace LieSubalgebra
 

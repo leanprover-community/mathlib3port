@@ -15,12 +15,12 @@ universe u v
 
 namespace CategoryTheory
 
-variable{c d : Type u → Type v}{α : Type u}
+variable {c d : Type u → Type v} {α : Type u}
 
 /-- `bundled` is a type bundled with a type class instance for that type. Only
 the type class is exposed as a parameter. -/
 @[nolint has_inhabited_instance]
-structure bundled(c : Type u → Type v) : Type max (u + 1) v where 
+structure bundled (c : Type u → Type v) : Type max (u + 1) v where 
   α : Type u 
   str : c α :=  by 
   runTac 
@@ -32,7 +32,7 @@ namespace Bundled
 def of {c : Type u → Type v} (α : Type u) [str : c α] : bundled c :=
   ⟨α, str⟩
 
-instance  : CoeSort (bundled c) (Type u) :=
+instance : CoeSort (bundled c) (Type u) :=
   ⟨bundled.α⟩
 
 @[simp]

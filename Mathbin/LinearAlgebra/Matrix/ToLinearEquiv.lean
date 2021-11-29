@@ -28,13 +28,13 @@ namespace Matrix
 
 open LinearMap
 
-variable{R M : Type _}[CommRingₓ R][AddCommGroupₓ M][Module R M]
+variable {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
 
-variable{n : Type _}[Fintype n]
+variable {n : Type _} [Fintype n]
 
 section ToLinearEquiv'
 
-variable[DecidableEq n]
+variable [DecidableEq n]
 
 /-- An invertible matrix yields a linear equivalence from the free module to itself.
 
@@ -65,7 +65,7 @@ end ToLinearEquiv'
 
 section ToLinearEquiv
 
-variable(b : Basis n R M)
+variable (b : Basis n R M)
 
 include b
 

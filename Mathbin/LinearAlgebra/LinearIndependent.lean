@@ -74,27 +74,27 @@ open_locale Classical BigOperators Cardinal
 
 universe u
 
-variable{ι : Type _}{ι' : Type _}{R : Type _}{K : Type _}
+variable {ι : Type _} {ι' : Type _} {R : Type _} {K : Type _}
 
-variable{M : Type _}{M' M'' : Type _}{V : Type u}{V' : Type _}
+variable {M : Type _} {M' M'' : Type _} {V : Type u} {V' : Type _}
 
 section Module
 
-variable{v : ι → M}
+variable {v : ι → M}
 
-variable[Semiringₓ R][AddCommMonoidₓ M][AddCommMonoidₓ M'][AddCommMonoidₓ M'']
+variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M'] [AddCommMonoidₓ M'']
 
-variable[Module R M][Module R M'][Module R M'']
+variable [Module R M] [Module R M'] [Module R M'']
 
-variable{a b : R}{x y : M}
+variable {a b : R} {x y : M}
 
-variable(R)(v)
+variable (R) (v)
 
 /-- `linear_independent R v` states the family of vectors `v` is linearly independent over `R`. -/
 def LinearIndependent : Prop :=
   (Finsupp.total ι M R v).ker = ⊥
 
-variable{R}{v}
+variable {R} {v}
 
 theorem linear_independent_iff : LinearIndependent R v ↔ ∀ l, Finsupp.total ι M R v l = 0 → l = 0 :=
   by 
@@ -408,13 +408,13 @@ theorem LinearIndependent.restrict_of_comp_subtype {s : Set ι} (hs : LinearInde
   LinearIndependent R (s.restrict v) :=
   hs
 
-variable(R M)
+variable (R M)
 
 theorem linear_independent_empty : LinearIndependent R (fun x => x : (∅ : Set M) → M) :=
   by 
     simp [linear_independent_subtype_disjoint]
 
-variable{R M}
+variable {R M}
 
 theorem LinearIndependent.mono {t s : Set M} (h : t ⊆ s) :
   LinearIndependent R (fun x => x : s → M) → LinearIndependent R (fun x => x : t → M) :=
@@ -471,13 +471,13 @@ end Module
 
 section Module
 
-variable{v : ι → M}
+variable {v : ι → M}
 
-variable[Ringₓ R][AddCommGroupₓ M][AddCommGroupₓ M'][AddCommGroupₓ M'']
+variable [Ringₓ R] [AddCommGroupₓ M] [AddCommGroupₓ M'] [AddCommGroupₓ M'']
 
-variable[Module R M][Module R M'][Module R M'']
+variable [Module R M] [Module R M'] [Module R M'']
 
-variable{a b : R}{x y : M}
+variable {a b : R} {x y : M}
 
 theorem linear_independent_iff_injective_total : LinearIndependent R v ↔ Function.Injective (Finsupp.total ι M R v) :=
   linear_independent_iff.trans (Finsupp.total ι M R v).toAddMonoidHom.injective_iff.symm
@@ -785,7 +785,7 @@ end Subtype
 
 section reprₓ
 
-variable(hv : LinearIndependent R v)
+variable (hv : LinearIndependent R v)
 
 /-- Canonical isomorphism between linear combinations and the span of linearly independent vectors.
 -/
@@ -888,7 +888,7 @@ theorem linear_independent_iff_not_smul_mem_span : «expr ↔ »(linear_independ
     { simp [] [] [] ["[", expr hl, "]"] [] [] }
   end)⟩
 
-variable(R)
+variable (R)
 
 -- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_maximal_independent'
@@ -1110,11 +1110,11 @@ end Module
 
 section Nontrivial
 
-variable[Ringₓ R][Nontrivial R][AddCommGroupₓ M][AddCommGroupₓ M']
+variable [Ringₓ R] [Nontrivial R] [AddCommGroupₓ M] [AddCommGroupₓ M']
 
-variable[Module R M][NoZeroSmulDivisors R M][Module R M']
+variable [Module R M] [NoZeroSmulDivisors R M] [Module R M']
 
-variable{v : ι → M}{s t : Set M}{x y z : M}
+variable {v : ι → M} {s t : Set M} {x y z : M}
 
 -- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem linear_independent_unique_iff
@@ -1143,11 +1143,11 @@ These can be considered generalizations of properties of linear independence in 
 
 section Module
 
-variable[DivisionRing K][AddCommGroupₓ V][AddCommGroupₓ V']
+variable [DivisionRing K] [AddCommGroupₓ V] [AddCommGroupₓ V']
 
-variable[Module K V][Module K V']
+variable [Module K V] [Module K V']
 
-variable{v : ι → V}{s t : Set V}{x y z : V}
+variable {v : ι → V} {s t : Set V} {x y z : V}
 
 open Submodule
 
@@ -1289,7 +1289,7 @@ theorem exists_linear_independent_extension (hs : LinearIndependent K (coeₓ : 
       ·
         exact subset_sUnion_of_mem
 
-variable(K t)
+variable (K t)
 
 theorem exists_linear_independent : ∃ (b : _)(_ : b ⊆ t), span K b = span K t ∧ LinearIndependent K (coeₓ : b → V) :=
   by 
@@ -1297,7 +1297,7 @@ theorem exists_linear_independent : ∃ (b : _)(_ : b ⊆ t), span K b = span K 
       exists_linear_independent_extension (linear_independent_empty K V) (Set.empty_subset t)
     exact ⟨b, hb₁, (span_eq_of_le _ hb₂ (Submodule.span_mono hb₁)).symm, hb₃⟩
 
-variable{K t}
+variable {K t}
 
 /-- `linear_independent.extend` adds vectors to a linear independent set `s ⊆ t` until it spans
 all elements of `t`. -/
@@ -1324,7 +1324,7 @@ theorem LinearIndependent.linear_independent_extend (hs : LinearIndependent K (f
   let ⟨hbt, hsb, htb, hli⟩ := Classical.some_spec (exists_linear_independent_extension hs hst)
   hli
 
-variable{K V}
+variable {K V}
 
 -- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_of_linear_independent_of_finite_span

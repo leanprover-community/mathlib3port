@@ -22,7 +22,7 @@ namespace CategoryTheory.Triangulated
 
 open CategoryTheory.Category
 
-variable(C : Type u)[category.{v} C][has_shift C]
+variable (C : Type u) [category.{v} C] [has_shift C]
 
 /--
 A triangle in `C` is a sextuple `(X,Y,Z,f,g,h)` where `X,Y,Z` are objects of `C`,
@@ -47,11 +47,11 @@ def triangle.mk {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ X⟦1⟧) : t
 
 section 
 
-variable[has_zero_object C][has_zero_morphisms C]
+variable [has_zero_object C] [has_zero_morphisms C]
 
 open_locale ZeroObject
 
-instance  : Inhabited (triangle C) :=
+instance : Inhabited (triangle C) :=
   ⟨⟨0, 0, 0, 0, 0, 0⟩⟩
 
 /--
@@ -63,7 +63,7 @@ def contractible_triangle (X : C) : triangle C :=
 
 end 
 
-variable{C}
+variable {C}
 
 /--
 A morphism of triangles `(X,Y,Z,f,g,h) ⟶ (X',Y',Z',f',g',h')` in `C` is a triple of morphisms
@@ -82,7 +82,7 @@ In other words, we have a commutative diagram:
 See https://stacks.math.columbia.edu/tag/0144.
 -/
 @[ext]
-structure triangle_morphism(T₁ : triangle C)(T₂ : triangle C) where 
+structure triangle_morphism (T₁ : triangle C) (T₂ : triangle C) where 
   hom₁ : T₁.obj₁ ⟶ T₂.obj₁ 
   hom₂ : T₁.obj₂ ⟶ T₂.obj₂ 
   hom₃ : T₁.obj₃ ⟶ T₂.obj₃ 
@@ -111,10 +111,10 @@ The identity triangle morphism.
 def triangle_morphism_id (T : triangle C) : triangle_morphism T T :=
   { hom₁ := 𝟙 T.obj₁, hom₂ := 𝟙 T.obj₂, hom₃ := 𝟙 T.obj₃ }
 
-instance  (T : triangle C) : Inhabited (triangle_morphism T T) :=
+instance (T : triangle C) : Inhabited (triangle_morphism T T) :=
   ⟨triangle_morphism_id T⟩
 
-variable{T₁ T₂ T₃ : triangle C}
+variable {T₁ T₂ T₃ : triangle C}
 
 /--
 Composition of triangle morphisms gives a triangle morphism.

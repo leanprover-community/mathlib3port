@@ -49,7 +49,7 @@ namespace CategoryTheory
 
 universe w v₁ v₂ u₁ u₂
 
-variable(C : Type u₁)[category.{v₁} C][preadditive C]
+variable (C : Type u₁) [category.{v₁} C] [preadditive C]
 
 /--
 An object in `Mat_ C` is a finite tuple of objects in `C`.
@@ -64,7 +64,7 @@ attribute [instance] Mat_.F Mat_.D
 
 namespace Mat_
 
-variable{C}
+variable {C}
 
 /-- A morphism in `Mat_ C` is a dependently typed matrix of morphisms. -/
 @[nolint has_inhabited_instance]
@@ -87,7 +87,7 @@ section
 
 attribute [local simp] hom.id hom.comp
 
-instance  : category.{v₁} (Mat_ C) :=
+instance : category.{v₁} (Mat_ C) :=
   { hom := hom, id := hom.id, comp := fun M N K f g => f.comp g,
     id_comp' :=
       fun M N f =>
@@ -128,12 +128,12 @@ theorem comp_def {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) : f ≫ g = fun i 
 theorem comp_apply {M N K : Mat_ C} (f : M ⟶ N) (g : N ⟶ K) i k : (f ≫ g) i k = ∑j : N.ι, f i j ≫ g j k :=
   rfl
 
-instance  (M N : Mat_ C) : Inhabited (M ⟶ N) :=
+instance (M N : Mat_ C) : Inhabited (M ⟶ N) :=
   ⟨fun i j => (0 : M.X i ⟶ N.X j)⟩
 
 end 
 
-instance  : preadditive (Mat_ C) :=
+instance : preadditive (Mat_ C) :=
   { homGroup :=
       fun M N =>
         by 
@@ -238,7 +238,7 @@ end Mat_
 
 namespace Functor
 
-variable{C}{D : Type _}[category.{v₁} D][preadditive D]
+variable {C} {D : Type _} [category.{v₁} D] [preadditive D]
 
 attribute [local simp] Mat_.id_apply
 
@@ -295,7 +295,7 @@ end Functor
 
 namespace Mat_
 
-variable(C)
+variable (C)
 
 /-- The embedding of `C` into `Mat_ C` as one-by-one matrices.
 (We index the summands by `punit`.) -/
@@ -315,23 +315,23 @@ def embedding : C ⥤ Mat_ C :=
 
 namespace Embedding
 
-instance  : faithful (embedding C) :=
+instance : faithful (embedding C) :=
   { map_injective' := fun X Y f g h => congr_funₓ (congr_funₓ h PUnit.unit) PUnit.unit }
 
-instance  : full (embedding C) :=
+instance : full (embedding C) :=
   { Preimage := fun X Y f => f PUnit.unit PUnit.unit }
 
-instance  : functor.additive (embedding C) :=
+instance : functor.additive (embedding C) :=
   {  }
 
 end Embedding
 
-instance  [Inhabited C] : Inhabited (Mat_ C) :=
+instance [Inhabited C] : Inhabited (Mat_ C) :=
   ⟨(embedding C).obj (default C)⟩
 
 open CategoryTheory.Limits
 
-variable{C}
+variable {C}
 
 /--
 Every object in `Mat_ C` is isomorphic to the biproduct of its summands.
@@ -372,7 +372,7 @@ def iso_biproduct_embedding (M : Mat_ C) : M ≅ ⨁ fun i => (embedding C).obj 
         ·
           simp [h] }
 
-variable{D : Type u₁}[category.{v₁} D][preadditive D]
+variable {D : Type u₁} [category.{v₁} D] [preadditive D]
 
 /-- Every `M` is a direct sum of objects from `C`, and `F` preserves biproducts. -/
 @[simps]
@@ -380,7 +380,7 @@ def additive_obj_iso_biproduct (F : Mat_ C ⥤ D) [functor.additive F] (M : Mat_
   F.obj M ≅ ⨁ fun i => F.obj ((embedding C).obj (M.X i)) :=
   F.map_iso (iso_biproduct_embedding M) ≪≫ F.map_biproduct _
 
-variable[has_finite_biproducts D]
+variable [has_finite_biproducts D]
 
 @[reassoc]
 theorem additive_obj_iso_biproduct_naturality (F : Mat_ C ⥤ D) [functor.additive F] {M N : Mat_ C} (f : M ⟶ N) :

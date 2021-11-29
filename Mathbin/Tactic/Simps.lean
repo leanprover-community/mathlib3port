@@ -77,7 +77,7 @@ section
 
 open Format
 
-unsafe instance  : has_to_tactic_format projection_data :=
+unsafe instance : has_to_tactic_format projection_data :=
   ⟨fun ⟨a, b, c, d, e⟩ =>
       (fun x =>
           group$
@@ -91,7 +91,7 @@ unsafe instance  : has_to_tactic_format projection_data :=
                 to_fmt "⟩") <$>
         pp b⟩
 
-unsafe instance  : has_to_format parsed_projection_data :=
+unsafe instance : has_to_format parsed_projection_data :=
   ⟨fun ⟨a, b, c, d⟩ =>
       group$
         nest 1$

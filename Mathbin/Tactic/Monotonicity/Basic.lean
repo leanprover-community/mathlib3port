@@ -1,4 +1,4 @@
-import Mathbin.Order.BoundedLattice
+import Mathbin.Order.BoundedOrder
 
 namespace Tactic.Interactive
 
@@ -36,7 +36,7 @@ unsafe def find_one_difference : List expr → List expr → tactic (List expr �
 | x :: xs, y :: ys =>
   do 
     let c ← try_core (compare x y)
-    if c.is_some then Prod.mapₓ (cons x) id <$> find_one_difference xs ys else
+    if c.is_some then Prod.map (cons x) id <$> find_one_difference xs ys else
         do 
           guardₓ (xs.length = ys.length)
           mzipWith' compare xs ys 
@@ -117,7 +117,7 @@ unsafe def monotonicity.check (lm_n : Name) : tactic mono_key :=
     let (xs, h) ← open_pis lm_t 
     mono_head_candidates 3 xs.reverse h
 
-unsafe instance  : has_to_format mono_selection :=
+unsafe instance : has_to_format mono_selection :=
   ⟨fun x =>
       match x with 
       | mono_selection.left => "left"

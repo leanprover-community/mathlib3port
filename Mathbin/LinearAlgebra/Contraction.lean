@@ -21,9 +21,9 @@ open TensorProduct
 
 open_locale TensorProduct
 
-variable(R : Type u)(M N : Type v)
+variable (R : Type u) (M N : Type v)
 
-variable[CommRingₓ R][AddCommGroupₓ M][AddCommGroupₓ N][Module R M][Module R N]
+variable [CommRingₓ R] [AddCommGroupₓ M] [AddCommGroupₓ N] [Module R M] [Module R N]
 
 /-- The natural left-handed pairing between a module and its dual. -/
 def contractLeft : Module.Dual R M ⊗ M →ₗ[R] R :=
@@ -38,7 +38,7 @@ def dualTensorHom : Module.Dual R M ⊗ N →ₗ[R] M →ₗ[R] N :=
   let M' := Module.Dual R M
   (uncurry R M' N (M →ₗ[R] N) : _ → M' ⊗ N →ₗ[R] M →ₗ[R] N) LinearMap.smulRightₗ
 
-variable{R M N}
+variable {R M N}
 
 @[simp]
 theorem contract_left_apply (f : Module.Dual R M) (m : M) : contractLeft R M (f ⊗ₜ m) = f m :=

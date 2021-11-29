@@ -21,7 +21,7 @@ open Opposite
 
 universe v₁ u₁ u₂
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
 /--
 The Yoneda embedding, as a functor from `C` into presheaves on `C`.
@@ -148,10 +148,10 @@ A functor `F : Cᵒᵖ ⥤ Type v₁` is representable if there is object `X` so
 
 See https://stacks.math.columbia.edu/tag/001Q.
 -/
-class representable(F : «expr ᵒᵖ» C ⥤ Type v₁) : Prop where 
+class representable (F : «expr ᵒᵖ» C ⥤ Type v₁) : Prop where 
   has_representation : ∃ (X : _)(f : yoneda.obj X ⟶ F), is_iso f
 
-instance  {X : C} : representable (yoneda.obj X) :=
+instance {X : C} : representable (yoneda.obj X) :=
   { has_representation := ⟨X, 𝟙 _, inferInstance⟩ }
 
 /--
@@ -159,17 +159,17 @@ A functor `F : C ⥤ Type v₁` is corepresentable if there is object `X` so `F 
 
 See https://stacks.math.columbia.edu/tag/001Q.
 -/
-class corepresentable(F : C ⥤ Type v₁) : Prop where 
+class corepresentable (F : C ⥤ Type v₁) : Prop where 
   has_corepresentation : ∃ (X : _)(f : coyoneda.obj X ⟶ F), is_iso f
 
-instance  {X : «expr ᵒᵖ» C} : corepresentable (coyoneda.obj X) :=
+instance {X : «expr ᵒᵖ» C} : corepresentable (coyoneda.obj X) :=
   { has_corepresentation := ⟨X, 𝟙 _, inferInstance⟩ }
 
 section Representable
 
-variable(F : «expr ᵒᵖ» C ⥤ Type v₁)
+variable (F : «expr ᵒᵖ» C ⥤ Type v₁)
 
-variable[F.representable]
+variable [F.representable]
 
 /-- The representing object for the representable functor `F`. -/
 noncomputable def repr_X : C :=
@@ -186,7 +186,7 @@ element of the functor.
 noncomputable def repr_x : F.obj (op F.repr_X) :=
   F.repr_f.app (op F.repr_X) (𝟙 F.repr_X)
 
-instance  : is_iso F.repr_f :=
+instance : is_iso F.repr_f :=
   representable.has_representation.some_spec.some_spec
 
 /--
@@ -211,9 +211,9 @@ end Representable
 
 section Corepresentable
 
-variable(F : C ⥤ Type v₁)
+variable (F : C ⥤ Type v₁)
 
-variable[F.corepresentable]
+variable [F.corepresentable]
 
 /-- The representing object for the corepresentable functor `F`. -/
 noncomputable def corepr_X : C :=
@@ -230,7 +230,7 @@ element of the functor.
 noncomputable def corepr_x : F.obj F.corepr_X :=
   F.corepr_f.app F.corepr_X (𝟙 F.corepr_X)
 
-instance  : is_iso F.corepr_f :=
+instance : is_iso F.corepr_f :=
   corepresentable.has_corepresentation.some_spec.some_spec
 
 /--
@@ -257,12 +257,12 @@ theorem representable_of_nat_iso (F : «expr ᵒᵖ» C ⥤ Type v₁) {G} (i : 
 theorem corepresentable_of_nat_iso (F : C ⥤ Type v₁) {G} (i : F ≅ G) [F.corepresentable] : G.corepresentable :=
   { has_corepresentation := ⟨op F.corepr_X, F.corepr_f ≫ i.hom, inferInstance⟩ }
 
-instance  : functor.corepresentable (𝟭 (Type v₁)) :=
+instance : functor.corepresentable (𝟭 (Type v₁)) :=
   corepresentable_of_nat_iso (coyoneda.obj (op PUnit)) coyoneda.punit_iso
 
 open Opposite
 
-variable(C)
+variable (C)
 
 instance prod_category_instance_1 : category ((«expr ᵒᵖ» C ⥤ Type v₁) × «expr ᵒᵖ» C) :=
   CategoryTheory.prod.{max u₁ v₁, v₁} («expr ᵒᵖ» C ⥤ Type v₁) («expr ᵒᵖ» C)
@@ -342,7 +342,7 @@ def yoneda_lemma : yoneda_pairing C ≅ yoneda_evaluation C :=
         dsimp 
         rw [functor_to_types.map_id_apply] }
 
-variable{C}
+variable {C}
 
 /--
 The isomorphism between `yoneda.obj X ⟶ F` and `F.obj (op X)`

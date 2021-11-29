@@ -84,7 +84,7 @@ They have yet to come up in practice.
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 theorem add_one_le_two_mul [Preorderₓ α] [Semiringₓ α] [CovariantClass α α (·+·) (· ≤ ·)] {a : α} (a1 : 1 ≤ a) :
   (a+1) ≤ 2*a :=
@@ -95,14 +95,14 @@ theorem add_one_le_two_mul [Preorderₓ α] [Semiringₓ α] [CovariantClass α 
 /-- An `ordered_semiring α` is a semiring `α` with a partial order such that
 addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protectProj]
-class OrderedSemiring(α : Type u) extends Semiringₓ α, OrderedCancelAddCommMonoid α where 
+class OrderedSemiring (α : Type u) extends Semiringₓ α, OrderedCancelAddCommMonoid α where 
   zero_le_one : 0 ≤ (1 : α)
   mul_lt_mul_of_pos_left : ∀ a b c : α, a < b → 0 < c → (c*a) < c*b 
   mul_lt_mul_of_pos_right : ∀ a b c : α, a < b → 0 < c → (a*c) < b*c
 
 section OrderedSemiring
 
-variable[OrderedSemiring α]{a b c d : α}
+variable [OrderedSemiring α] {a b c d : α}
 
 @[simp]
 theorem zero_le_one : 0 ≤ (1 : α) :=
@@ -118,7 +118,7 @@ theorem one_le_two : 1 ≤ (2 : α) :=
 
 section Nontrivial
 
-variable[Nontrivial α]
+variable [Nontrivial α]
 
 @[simp]
 theorem zero_lt_one : 0 < (1 : α) :=
@@ -376,7 +376,7 @@ def Function.Injective.orderedSemiring {β : Type _} [HasZero β] [HasOne β] [A
 
 section 
 
-variable[Nontrivial α]
+variable [Nontrivial α]
 
 theorem bit1_pos (h : 0 ≤ a) : 0 < bit1 a :=
   lt_add_of_le_of_pos (add_nonneg h h) zero_lt_one
@@ -487,7 +487,7 @@ section OrderedCommSemiring
 /-- An `ordered_comm_semiring α` is a commutative semiring `α` with a partial order such that
 addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protectProj]
-class OrderedCommSemiring(α : Type u) extends OrderedSemiring α, CommSemiringₓ α
+class OrderedCommSemiring (α : Type u) extends OrderedSemiring α, CommSemiringₓ α
 
 /-- Pullback an `ordered_comm_semiring` under an injective map.
 See note [reducible non-instances]. -/
@@ -504,11 +504,11 @@ A `linear_ordered_semiring α` is a nontrivial semiring `α` with a linear order
 such that addition is monotone and multiplication by a positive number is strictly monotone.
 -/
 @[protectProj]
-class LinearOrderedSemiring(α : Type u) extends OrderedSemiring α, LinearOrderedAddCommMonoid α, Nontrivial α
+class LinearOrderedSemiring (α : Type u) extends OrderedSemiring α, LinearOrderedAddCommMonoid α, Nontrivial α
 
 section LinearOrderedSemiring
 
-variable[LinearOrderedSemiring α]{a b c d : α}
+variable [LinearOrderedSemiring α] {a b c d : α}
 
 theorem zero_lt_one' : 0 < (1 : α) :=
   zero_lt_one
@@ -708,7 +708,7 @@ theorem add_le_mul' (a2 : 2 ≤ a) (b2 : 2 ≤ b) : (a+b) ≤ b*a :=
 
 section 
 
-variable[Nontrivial α]
+variable [Nontrivial α]
 
 @[simp]
 theorem bit0_le_bit0 : bit0 a ≤ bit0 b ↔ a ≤ b :=
@@ -814,7 +814,8 @@ theorem neg_of_mul_pos_right (h : «expr < »(0, «expr * »(a, b))) (ha : «exp
 by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (λ
   hb, absurd h (decidable.mul_nonpos_of_nonpos_of_nonneg ha hb).not_lt)]
 
-instance (priority := 100)LinearOrderedSemiring.to_no_top_order {α : Type _} [LinearOrderedSemiring α] : NoTopOrder α :=
+instance (priority := 100) LinearOrderedSemiring.to_no_top_order {α : Type _} [LinearOrderedSemiring α] :
+  NoTopOrder α :=
   ⟨fun a => ⟨a+1, lt_add_of_pos_right _ zero_lt_one⟩⟩
 
 /-- Pullback a `linear_ordered_semiring` under an injective map.
@@ -829,7 +830,7 @@ end LinearOrderedSemiring
 
 section Mono
 
-variable{β : Type _}[LinearOrderedSemiring α][Preorderₓ β]{f g : β → α}{a : α}
+variable {β : Type _} [LinearOrderedSemiring α] [Preorderₓ β] {f g : β → α} {a : α}
 
 -- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem monotone_mul_left_of_nonneg (ha : «expr ≤ »(0, a)) : monotone (λ x, «expr * »(a, x)) :=
@@ -899,7 +900,7 @@ end Mono
 
 section LinearOrderedSemiring
 
-variable[LinearOrderedSemiring α]{a b c : α}
+variable [LinearOrderedSemiring α] {a b c : α}
 
 theorem mul_max_of_nonneg (b c : α) (ha : 0 ≤ a) : (a*max b c) = max (a*b) (a*c) :=
   (monotone_mul_left_of_nonneg ha).map_max
@@ -918,13 +919,13 @@ end LinearOrderedSemiring
 /-- An `ordered_ring α` is a ring `α` with a partial order such that
 addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protectProj]
-class OrderedRing(α : Type u) extends Ringₓ α, OrderedAddCommGroup α where 
+class OrderedRing (α : Type u) extends Ringₓ α, OrderedAddCommGroup α where 
   zero_le_one : 0 ≤ (1 : α)
   mul_pos : ∀ a b : α, 0 < a → 0 < b → 0 < a*b
 
 section OrderedRing
 
-variable[OrderedRing α]{a b c : α}
+variable [OrderedRing α] {a b c : α}
 
 protected theorem Decidable.OrderedRing.mul_nonneg [@DecidableRel α (· ≤ ·)] {a b : α} (h₁ : 0 ≤ a) (h₂ : 0 ≤ b) :
   0 ≤ a*b :=
@@ -971,7 +972,7 @@ theorem OrderedRing.mul_lt_mul_of_pos_right (h₁ : a < b) (h₂ : 0 < c) : (a*c
     rw [←sub_pos, ←sub_mul]
     exact OrderedRing.mul_pos _ _ (sub_pos.2 h₁) h₂
 
-instance (priority := 100)OrderedRing.toOrderedSemiring : OrderedSemiring α :=
+instance (priority := 100) OrderedRing.toOrderedSemiring : OrderedSemiring α :=
   { ‹OrderedRing α› with mul_zero := mul_zero, zero_mul := zero_mul, add_left_cancel := @add_left_cancelₓ α _,
     le_of_add_le_add_left := @le_of_add_le_add_left α _ _ _,
     mul_lt_mul_of_pos_left := @OrderedRing.mul_lt_mul_of_pos_left α _,
@@ -1064,9 +1065,9 @@ section OrderedCommRing
 /-- An `ordered_comm_ring α` is a commutative ring `α` with a partial order such that
 addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protectProj]
-class OrderedCommRing(α : Type u) extends OrderedRing α, CommRingₓ α
+class OrderedCommRing (α : Type u) extends OrderedRing α, CommRingₓ α
 
-instance (priority := 100)OrderedCommRing.toOrderedCommSemiring {α : Type u} [OrderedCommRing α] :
+instance (priority := 100) OrderedCommRing.toOrderedCommSemiring {α : Type u} [OrderedCommRing α] :
   OrderedCommSemiring α :=
   { (by 
       infer_instance :
@@ -1087,22 +1088,22 @@ end OrderedCommRing
 /-- A `linear_ordered_ring α` is a ring `α` with a linear order such that
 addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protectProj]
-class LinearOrderedRing(α : Type u) extends OrderedRing α, LinearOrderₓ α, Nontrivial α
+class LinearOrderedRing (α : Type u) extends OrderedRing α, LinearOrderₓ α, Nontrivial α
 
-instance (priority := 100)LinearOrderedRing.toLinearOrderedAddCommGroup [s : LinearOrderedRing α] :
+instance (priority := 100) LinearOrderedRing.toLinearOrderedAddCommGroup [s : LinearOrderedRing α] :
   LinearOrderedAddCommGroup α :=
   { s with  }
 
 section LinearOrderedRing
 
-variable[LinearOrderedRing α]{a b c : α}
+variable [LinearOrderedRing α] {a b c : α}
 
-instance (priority := 100)LinearOrderedRing.toLinearOrderedSemiring : LinearOrderedSemiring α :=
+instance (priority := 100) LinearOrderedRing.toLinearOrderedSemiring : LinearOrderedSemiring α :=
   { ‹LinearOrderedRing α› with mul_zero := mul_zero, zero_mul := zero_mul, add_left_cancel := @add_left_cancelₓ α _,
     le_of_add_le_add_left := @le_of_add_le_add_left α _ _ _, mul_lt_mul_of_pos_left := @mul_lt_mul_of_pos_left α _,
     mul_lt_mul_of_pos_right := @mul_lt_mul_of_pos_right α _, le_total := LinearOrderedRing.le_total }
 
-instance (priority := 100)LinearOrderedRing.is_domain : IsDomain α :=
+instance (priority := 100) LinearOrderedRing.is_domain : IsDomain α :=
   { ‹LinearOrderedRing α› with
     eq_zero_or_eq_zero_of_mul_eq_zero :=
       by 
@@ -1379,18 +1380,18 @@ end LinearOrderedRing
 /-- A `linear_ordered_comm_ring α` is a commutative ring `α` with a linear order
 such that addition is monotone and multiplication by a positive number is strictly monotone. -/
 @[protectProj]
-class LinearOrderedCommRing(α : Type u) extends LinearOrderedRing α, CommMonoidₓ α
+class LinearOrderedCommRing (α : Type u) extends LinearOrderedRing α, CommMonoidₓ α
 
-instance (priority := 100)LinearOrderedCommRing.toOrderedCommRing [d : LinearOrderedCommRing α] : OrderedCommRing α :=
+instance (priority := 100) LinearOrderedCommRing.toOrderedCommRing [d : LinearOrderedCommRing α] : OrderedCommRing α :=
   { d with  }
 
-instance (priority := 100)LinearOrderedCommRing.toLinearOrderedSemiring [d : LinearOrderedCommRing α] :
+instance (priority := 100) LinearOrderedCommRing.toLinearOrderedSemiring [d : LinearOrderedCommRing α] :
   LinearOrderedSemiring α :=
   { d, LinearOrderedRing.toLinearOrderedSemiring with  }
 
 section LinearOrderedCommRing
 
-variable[LinearOrderedCommRing α]{a b c d : α}
+variable [LinearOrderedCommRing α] {a b c d : α}
 
 -- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem max_mul_mul_le_max_mul_max
@@ -1411,7 +1412,7 @@ end LinearOrderedCommRing
 
 section 
 
-variable[Ringₓ α][LinearOrderₓ α]{a b : α}
+variable [Ringₓ α] [LinearOrderₓ α] {a b : α}
 
 @[simp]
 theorem abs_dvd (a b : α) : |a| ∣ b ↔ a ∣ b :=
@@ -1443,7 +1444,7 @@ end
 
 section LinearOrderedCommRing
 
-variable[LinearOrderedCommRing α]
+variable [LinearOrderedCommRing α]
 
 /-- Pullback a `linear_ordered_comm_ring` under an injective map.
 See note [reducible non-instances]. -/
@@ -1461,7 +1462,7 @@ namespace Ringₓ
 /-- A positive cone in a ring consists of a positive cone in underlying `add_comm_group`,
 which contains `1` and such that the positive elements are closed under multiplication. -/
 @[nolint has_inhabited_instance]
-structure positive_cone(α : Type _)[Ringₓ α] extends AddCommGroupₓ.PositiveCone α where 
+structure positive_cone (α : Type _) [Ringₓ α] extends AddCommGroupₓ.PositiveCone α where 
   one_nonneg : nonneg 1
   mul_pos : ∀ a b, Pos a → Pos b → Pos (a*b)
 
@@ -1470,7 +1471,7 @@ add_decl_doc positive_cone.to_positive_cone
 
 /-- A positive cone in a ring induces a linear order if `1` is a positive element. -/
 @[nolint has_inhabited_instance]
-structure total_positive_cone(α : Type _)[Ringₓ α] extends positive_cone α, AddCommGroupₓ.TotalPositiveCone α where 
+structure total_positive_cone (α : Type _) [Ringₓ α] extends positive_cone α, AddCommGroupₓ.TotalPositiveCone α where 
   one_pos : Pos 1
 
 /-- Forget that a `total_positive_cone` in a ring is total. -/
@@ -1533,17 +1534,17 @@ end LinearOrderedRing
 in which `a ≤ b` iff there exists `c` with `b = a + c`. This is satisfied by the
 natural numbers, for example, but not the integers or other ordered groups. -/
 @[protectProj]
-class CanonicallyOrderedCommSemiring(α : Type _) extends CanonicallyOrderedAddMonoid α, CommSemiringₓ α where 
+class CanonicallyOrderedCommSemiring (α : Type _) extends CanonicallyOrderedAddMonoid α, CommSemiringₓ α where 
   eq_zero_or_eq_zero_of_mul_eq_zero : ∀ a b : α, (a*b) = 0 → a = 0 ∨ b = 0
 
 namespace CanonicallyOrderedCommSemiring
 
-variable[CanonicallyOrderedCommSemiring α]{a b : α}
+variable [CanonicallyOrderedCommSemiring α] {a b : α}
 
-instance (priority := 100)to_no_zero_divisors : NoZeroDivisors α :=
+instance (priority := 100) to_no_zero_divisors : NoZeroDivisors α :=
   ⟨CanonicallyOrderedCommSemiring.eq_zero_or_eq_zero_of_mul_eq_zero⟩
 
-instance (priority := 100)to_covariant_mul_le : CovariantClass α α (·*·) (· ≤ ·) :=
+instance (priority := 100) to_covariant_mul_le : CovariantClass α α (·*·) (· ≤ ·) :=
   by 
     refine' ⟨fun a b c h => _⟩
     rcases le_iff_exists_add.1 h with ⟨c, rfl⟩
@@ -1563,11 +1564,11 @@ end CanonicallyOrderedCommSemiring
 
 section Sub
 
-variable[CanonicallyOrderedCommSemiring α]{a b c : α}
+variable [CanonicallyOrderedCommSemiring α] {a b c : α}
 
-variable[Sub α][HasOrderedSub α]
+variable [Sub α] [HasOrderedSub α]
 
-variable[IsTotal α (· ≤ ·)]
+variable [IsTotal α (· ≤ ·)]
 
 namespace AddLeCancellable
 
@@ -1587,7 +1588,7 @@ protected theorem tsub_mul (h : AddLeCancellable (b*c)) : ((a - b)*c) = (a*c) - 
 
 end AddLeCancellable
 
-variable[ContravariantClass α α (·+·) (· ≤ ·)]
+variable [ContravariantClass α α (·+·) (· ≤ ·)]
 
 theorem mul_tsub (a b c : α) : (a*b - c) = (a*b) - a*c :=
   Contravariant.add_le_cancellable.mul_tsub
@@ -1606,16 +1607,16 @@ The main results of this section are `with_top.canonically_ordered_comm_semiring
 
 namespace WithTop
 
-instance  [Nonempty α] : Nontrivial (WithTop α) :=
+instance [Nonempty α] : Nontrivial (WithTop α) :=
   Option.nontrivial
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 section Mul
 
-variable[HasZero α][Mul α]
+variable [HasZero α] [Mul α]
 
-instance  : MulZeroClass (WithTop α) :=
+instance : MulZeroClass (WithTop α) :=
   { zero := 0, mul := fun m n => if m = 0 ∨ n = 0 then 0 else m.bind fun a => n.bind$ fun b => «expr↑ » (a*b),
     zero_mul := fun a => if_pos$ Or.inl rfl, mul_zero := fun a => if_pos$ Or.inr rfl }
 
@@ -1641,7 +1642,7 @@ end Mul
 
 section MulZeroClass
 
-variable[MulZeroClass α]
+variable [MulZeroClass α]
 
 @[normCast]
 theorem coe_mul {a b : α} : («expr↑ » (a*b) : WithTop α) = a*b :=
@@ -1693,7 +1694,7 @@ theorem mul_lt_top [PartialOrderₓ α] {a b : WithTop α} (ha : a ≠ ⊤) (hb 
 end MulZeroClass
 
 /-- `nontrivial α` is needed here as otherwise we have `1 * ⊤ = ⊤` but also `= 0 * ⊤ = 0`. -/
-instance  [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithTop α) :=
+instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithTop α) :=
   { WithTop.mulZeroClass with mul := ·*·, one := 1, zero := 0,
     one_mul :=
       fun a =>
@@ -1714,12 +1715,12 @@ instance  [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithTop α) :=
           show («expr↑ » a*((1 : α) : WithTop α)) = a by 
             simp [coe_mul.symm, -WithTop.coe_one] }
 
-instance  [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
+instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithTop α) :=
   ⟨fun a b =>
       by 
         cases a <;> cases b <;> dsimp [mul_def] <;> splitIfs <;> simp_all [none_eq_top, some_eq_coe, mul_eq_zero]⟩
 
-instance  [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop α) :=
+instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTop α) :=
   { WithTop.mulZeroClass with mul := ·*·, zero := 0,
     mul_assoc :=
       fun a b c =>
@@ -1735,10 +1736,10 @@ instance  [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithTo
             byCases' ha : a = 0 <;> byCases' hb : b = 0 <;> simp [none_eq_top, some_eq_coe]
           simp [some_eq_coe, coe_mul.symm, mul_assocₓ] }
 
-instance  [MonoidWithZeroₓ α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZeroₓ (WithTop α) :=
+instance [MonoidWithZeroₓ α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZeroₓ (WithTop α) :=
   { WithTop.mulZeroOneClass, WithTop.semigroupWithZero with  }
 
-instance  [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoidWithZero (WithTop α) :=
+instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoidWithZero (WithTop α) :=
   { WithTop.monoidWithZero with mul := ·*·, zero := 0,
     mul_comm :=
       fun a b =>
@@ -1751,7 +1752,7 @@ instance  [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMono
             simp [hb]
           simp [ha, hb, mul_def, Option.bind_comm a b, mul_commₓ] }
 
-variable[CanonicallyOrderedCommSemiring α]
+variable [CanonicallyOrderedCommSemiring α]
 
 private theorem distrib' (a b c : WithTop α) : ((a+b)*c) = (a*c)+b*c :=
   by 
@@ -1774,30 +1775,30 @@ private theorem distrib' (a b c : WithTop α) : ((a+b)*c) = (a*c)+b*c :=
 /-- This instance requires `canonically_ordered_comm_semiring` as it is the smallest class
 that derives from both `non_assoc_non_unital_semiring` and `canonically_ordered_add_monoid`, both
 of which are required for distributivity. -/
-instance  [Nontrivial α] : CommSemiringₓ (WithTop α) :=
+instance [Nontrivial α] : CommSemiringₓ (WithTop α) :=
   { WithTop.addCommMonoid, WithTop.commMonoidWithZero with right_distrib := distrib',
     left_distrib :=
       fun a b c =>
         by 
           rw [mul_commₓ, distrib', mul_commₓ b, mul_commₓ c] <;> rfl }
 
-instance  [Nontrivial α] : CanonicallyOrderedCommSemiring (WithTop α) :=
+instance [Nontrivial α] : CanonicallyOrderedCommSemiring (WithTop α) :=
   { WithTop.commSemiring, WithTop.canonicallyOrderedAddMonoid, WithTop.no_zero_divisors with  }
 
 end WithTop
 
 namespace WithBot
 
-instance  [Nonempty α] : Nontrivial (WithBot α) :=
+instance [Nonempty α] : Nontrivial (WithBot α) :=
   Option.nontrivial
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 section Mul
 
-variable[HasZero α][Mul α]
+variable [HasZero α] [Mul α]
 
-instance  : MulZeroClass (WithBot α) :=
+instance : MulZeroClass (WithBot α) :=
   WithTop.mulZeroClass
 
 theorem mul_def {a b : WithBot α} :
@@ -1820,7 +1821,7 @@ end Mul
 
 section MulZeroClass
 
-variable[MulZeroClass α]
+variable [MulZeroClass α]
 
 @[normCast]
 theorem coe_mul {a b : α} : («expr↑ » (a*b) : WithBot α) = a*b :=
@@ -1854,22 +1855,22 @@ theorem bot_lt_mul [PartialOrderₓ α] {a b : WithBot α} (ha : ⊥ < a) (hb : 
 end MulZeroClass
 
 /-- `nontrivial α` is needed here as otherwise we have `1 * ⊥ = ⊥` but also `= 0 * ⊥ = 0`. -/
-instance  [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithBot α) :=
+instance [MulZeroOneClass α] [Nontrivial α] : MulZeroOneClass (WithBot α) :=
   WithTop.mulZeroOneClass
 
-instance  [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithBot α) :=
+instance [MulZeroClass α] [NoZeroDivisors α] : NoZeroDivisors (WithBot α) :=
   WithTop.no_zero_divisors
 
-instance  [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithBot α) :=
+instance [SemigroupWithZero α] [NoZeroDivisors α] : SemigroupWithZero (WithBot α) :=
   WithTop.semigroupWithZero
 
-instance  [MonoidWithZeroₓ α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZeroₓ (WithBot α) :=
+instance [MonoidWithZeroₓ α] [NoZeroDivisors α] [Nontrivial α] : MonoidWithZeroₓ (WithBot α) :=
   WithTop.monoidWithZero
 
-instance  [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoidWithZero (WithBot α) :=
+instance [CommMonoidWithZero α] [NoZeroDivisors α] [Nontrivial α] : CommMonoidWithZero (WithBot α) :=
   WithTop.commMonoidWithZero
 
-instance  [CanonicallyOrderedCommSemiring α] [Nontrivial α] : CommSemiringₓ (WithBot α) :=
+instance [CanonicallyOrderedCommSemiring α] [Nontrivial α] : CommSemiringₓ (WithBot α) :=
   WithTop.commSemiring
 
 end WithBot

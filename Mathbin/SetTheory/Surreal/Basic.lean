@@ -279,13 +279,13 @@ open Pgame
 def mk (x : Pgame) (h : x.numeric) : Surreal :=
   Quotientₓ.mk ⟨x, h⟩
 
-instance  : HasZero Surreal :=
+instance : HasZero Surreal :=
   { zero := «expr⟦ ⟧» ⟨0, numeric_zero⟩ }
 
-instance  : HasOne Surreal :=
+instance : HasOne Surreal :=
   { one := «expr⟦ ⟧» ⟨1, numeric_one⟩ }
 
-instance  : Inhabited Surreal :=
+instance : Inhabited Surreal :=
   ⟨0⟩
 
 /-- Lift an equivalence-respecting function on pre-games to surreals. -/
@@ -329,19 +329,19 @@ the negation of `{L | R}` is `{-R | -L}`. -/
 def neg : Surreal → Surreal :=
   Surreal.lift (fun x ox => «expr⟦ ⟧» ⟨-x, Pgame.numeric_neg ox⟩) fun _ _ _ _ a => Quotientₓ.sound (Pgame.neg_congr a)
 
-instance  : LE Surreal :=
+instance : LE Surreal :=
   ⟨le⟩
 
-instance  : LT Surreal :=
+instance : LT Surreal :=
   ⟨lt⟩
 
-instance  : Add Surreal :=
+instance : Add Surreal :=
   ⟨add⟩
 
-instance  : Neg Surreal :=
+instance : Neg Surreal :=
   ⟨neg⟩
 
-instance  : OrderedAddCommGroup Surreal :=
+instance : OrderedAddCommGroup Surreal :=
   { add := ·+·,
     add_assoc :=
       by 
@@ -387,7 +387,7 @@ instance  : OrderedAddCommGroup Surreal :=
         rintro ⟨_⟩ ⟨_⟩ hx ⟨_⟩
         exact Pgame.add_le_add_left hx }
 
-noncomputable instance  : LinearOrderedAddCommGroup Surreal :=
+noncomputable instance : LinearOrderedAddCommGroup Surreal :=
   { Surreal.orderedAddCommGroup with
     le_total :=
       by 

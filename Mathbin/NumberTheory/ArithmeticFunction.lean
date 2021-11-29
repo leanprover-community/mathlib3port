@@ -47,7 +47,7 @@ open_locale BigOperators
 
 namespace Nat
 
-variable(R : Type _)
+variable (R : Type _)
 
 -- error in NumberTheory.ArithmeticFunction: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_zero
 /-- An arithmetic function is a function from `ℕ` that maps 0 to 0. In the literature, they are
@@ -57,15 +57,15 @@ variable(R : Type _)
 def arithmetic_function [has_zero R] :=
 zero_hom exprℕ() R
 
-variable{R}
+variable {R}
 
 namespace ArithmeticFunction
 
 section HasZero
 
-variable[HasZero R]
+variable [HasZero R]
 
-instance  : CoeFun (arithmetic_function R) fun _ => ℕ → R :=
+instance : CoeFun (arithmetic_function R) fun _ => ℕ → R :=
   ZeroHom.hasCoeToFun
 
 @[simp]
@@ -92,9 +92,9 @@ theorem ext_iff {f g : arithmetic_function R} : f = g ↔ ∀ x, f x = g x :=
 
 section HasOne
 
-variable[HasOne R]
+variable [HasOne R]
 
-instance  : HasOne (arithmetic_function R) :=
+instance : HasOne (arithmetic_function R) :=
   ⟨⟨fun x => ite (x = 1) 1 0, rfl⟩⟩
 
 @[simp]
@@ -152,9 +152,9 @@ theorem coe_coe [HasZero R] [HasOne R] [Add R] [Neg R] {f : arithmetic_function 
 
 section AddMonoidₓ
 
-variable[AddMonoidₓ R]
+variable [AddMonoidₓ R]
 
-instance  : Add (arithmetic_function R) :=
+instance : Add (arithmetic_function R) :=
   ⟨fun f g =>
       ⟨fun n => f n+g n,
         by 
@@ -164,17 +164,17 @@ instance  : Add (arithmetic_function R) :=
 theorem add_apply {f g : arithmetic_function R} {n : ℕ} : (f+g) n = f n+g n :=
   rfl
 
-instance  : AddMonoidₓ (arithmetic_function R) :=
+instance : AddMonoidₓ (arithmetic_function R) :=
   { arithmetic_function.has_zero R, arithmetic_function.has_add with
     add_assoc := fun _ _ _ => ext fun _ => add_assocₓ _ _ _, zero_add := fun _ => ext fun _ => zero_addₓ _,
     add_zero := fun _ => ext fun _ => add_zeroₓ _ }
 
 end AddMonoidₓ
 
-instance  [AddCommMonoidₓ R] : AddCommMonoidₓ (arithmetic_function R) :=
+instance [AddCommMonoidₓ R] : AddCommMonoidₓ (arithmetic_function R) :=
   { arithmetic_function.add_monoid with add_comm := fun _ _ => ext fun _ => add_commₓ _ _ }
 
-instance  [AddGroupₓ R] : AddGroupₓ (arithmetic_function R) :=
+instance [AddGroupₓ R] : AddGroupₓ (arithmetic_function R) :=
   { arithmetic_function.add_monoid with
     neg :=
       fun f =>
@@ -183,16 +183,16 @@ instance  [AddGroupₓ R] : AddGroupₓ (arithmetic_function R) :=
             simp ⟩,
     add_left_neg := fun _ => ext fun _ => add_left_negₓ _ }
 
-instance  [AddCommGroupₓ R] : AddCommGroupₓ (arithmetic_function R) :=
+instance [AddCommGroupₓ R] : AddCommGroupₓ (arithmetic_function R) :=
   { arithmetic_function.add_comm_monoid, arithmetic_function.add_group with  }
 
 section HasScalar
 
-variable{M : Type _}[HasZero R][AddCommMonoidₓ M][HasScalar R M]
+variable {M : Type _} [HasZero R] [AddCommMonoidₓ M] [HasScalar R M]
 
 /-- The Dirichlet convolution of two arithmetic functions `f` and `g` is another arithmetic function
   such that `(f * g) n` is the sum of `f x * g y` over all `(x,y)` such that `x * y = n`. -/
-instance  : HasScalar (arithmetic_function R) (arithmetic_function M) :=
+instance : HasScalar (arithmetic_function R) (arithmetic_function M) :=
   ⟨fun f g =>
       ⟨fun n => ∑x in divisors_antidiagonal n, f x.fst • g x.snd,
         by 
@@ -207,7 +207,7 @@ end HasScalar
 
 /-- The Dirichlet convolution of two arithmetic functions `f` and `g` is another arithmetic function
   such that `(f * g) n` is the sum of `f x * g y` over all `(x,y)` such that `x * y = n`. -/
-instance  [Semiringₓ R] : Mul (arithmetic_function R) :=
+instance [Semiringₓ R] : Mul (arithmetic_function R) :=
   ⟨· • ·⟩
 
 @[simp]
@@ -217,7 +217,7 @@ theorem mul_apply [Semiringₓ R] {f g : arithmetic_function R} {n : ℕ} :
 
 section Module
 
-variable{M : Type _}[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 theorem mul_smul' (f g : arithmetic_function R) (h : arithmetic_function M) : (f*g) • h = f • g • h :=
   by 
@@ -281,7 +281,7 @@ end Module
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 -- error in NumberTheory.ArithmeticFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : monoid (arithmetic_function R) :=
@@ -306,7 +306,7 @@ instance : monoid (arithmetic_function R) :=
   ..arithmetic_function.has_one,
   ..arithmetic_function.has_mul }
 
-instance  : Semiringₓ (arithmetic_function R) :=
+instance : Semiringₓ (arithmetic_function R) :=
   { arithmetic_function.has_zero R, arithmetic_function.has_mul, arithmetic_function.has_add,
     arithmetic_function.add_comm_monoid, arithmetic_function.monoid with
     zero_mul :=
@@ -332,7 +332,7 @@ instance  : Semiringₓ (arithmetic_function R) :=
 
 end Semiringₓ
 
-instance  [CommSemiringₓ R] : CommSemiringₓ (arithmetic_function R) :=
+instance [CommSemiringₓ R] : CommSemiringₓ (arithmetic_function R) :=
   { arithmetic_function.semiring with
     mul_comm :=
       fun f g =>
@@ -341,10 +341,10 @@ instance  [CommSemiringₓ R] : CommSemiringₓ (arithmetic_function R) :=
           rw [mul_apply, ←map_swap_divisors_antidiagonal, sum_map]
           simp [mul_commₓ] }
 
-instance  [CommRingₓ R] : CommRingₓ (arithmetic_function R) :=
+instance [CommRingₓ R] : CommRingₓ (arithmetic_function R) :=
   { arithmetic_function.add_comm_group, arithmetic_function.comm_semiring with  }
 
-instance  {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
+instance {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
   Module (arithmetic_function R) (arithmetic_function M) :=
   { one_smul := one_smul', mul_smul := mul_smul',
     smul_add :=
@@ -477,7 +477,7 @@ theorem coe_mul_zeta_apply [Semiringₓ R] {f : arithmetic_function R} {x : ℕ}
     intro y hy 
     byCases' h1 : y.fst = 0
     ·
-      simp [Function.comp_apply, h1]
+      simp [Function.comp_applyₓ, h1]
     ·
       simp only [h1, mul_oneₓ, one_mulₓ, Prod.fst_swap, Function.Embedding.coe_fn_mk, Prod.snd_swap, if_false,
         zeta_apply, ZeroHom.coe_mk, nat_coe_apply, cast_one]
@@ -511,7 +511,7 @@ theorem pmul_comm [CommMonoidWithZero R] (f g : arithmetic_function R) : f.pmul 
     ext 
     simp [mul_commₓ]
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 @[simp]
 theorem pmul_zeta (f : arithmetic_function R) : f.pmul («expr↑ » ζ) = f :=
@@ -566,7 +566,7 @@ namespace IsMultiplicative
 
 section MonoidWithZeroₓ
 
-variable[MonoidWithZeroₓ R]
+variable [MonoidWithZeroₓ R]
 
 @[simp]
 theorem map_one {f : arithmetic_function R} (h : f.is_multiplicative) : f 1 = 1 :=
@@ -933,9 +933,9 @@ theorem coe_zeta_mul_moebius : (ζ*μ : arithmetic_function ℤ) = 1 :=
 
 section CommRingₓ
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
-instance  : Invertible (ζ : arithmetic_function R) :=
+instance : Invertible (ζ : arithmetic_function R) :=
   { invOf := μ, inv_of_mul_self := coe_moebius_mul_coe_zeta, mul_inv_of_self := coe_zeta_mul_coe_moebius }
 
 /-- A unit in `arithmetic_function R` that evaluates to `ζ`, with inverse `μ`. -/

@@ -117,7 +117,7 @@ injective coercion to functions from `α` to `β`.
 This typeclass is used in the definition of the homomorphism typeclasses,
 such as `zero_hom_class`, `mul_hom_class`, `monoid_hom_class`, ....
 -/
-class FunLike(F : Sort _)(α : outParam (Sort _))(β : outParam$ α → Sort _) where 
+class FunLike (F : Sort _) (α : outParam (Sort _)) (β : outParam$ α → Sort _) where 
   coe : F → ∀ a : α, β a 
   coe_injective' : Function.Injective coeₓ
 
@@ -126,11 +126,11 @@ section Dependent
 /-! ### `fun_like F α β` where `β` depends on `a : α` -/
 
 
-variable(F α : Sort _)(β : α → Sort _)
+variable (F α : Sort _) (β : α → Sort _)
 
 namespace FunLike
 
-variable{F α β}[i : FunLike F α β]
+variable {F α β} [i : FunLike F α β]
 
 include i
 
@@ -172,7 +172,7 @@ section NonDependent
 /-! ### `fun_like F α (λ _, β)` where `β` does not depend on `a : α` -/
 
 
-variable{F α β : Sort _}[i : FunLike F α fun _ => β]
+variable {F α β : Sort _} [i : FunLike F α fun _ => β]
 
 include i
 

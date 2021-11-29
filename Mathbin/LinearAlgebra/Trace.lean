@@ -29,13 +29,13 @@ open FiniteDimensional
 
 section 
 
-variable(R : Type u)[CommRingₓ R]{M : Type v}[AddCommGroupₓ M][Module R M]
+variable (R : Type u) [CommRingₓ R] {M : Type v} [AddCommGroupₓ M] [Module R M]
 
-variable{ι : Type w}[DecidableEq ι][Fintype ι]
+variable {ι : Type w} [DecidableEq ι] [Fintype ι]
 
-variable{κ : Type _}[DecidableEq κ][Fintype κ]
+variable {κ : Type _} [DecidableEq κ] [Fintype κ]
 
-variable(b : Basis ι R M)(c : Basis κ R M)
+variable (b : Basis ι R M) (c : Basis κ R M)
 
 /-- The trace of an endomorphism given a basis. -/
 def trace_aux : (M →ₗ[R] M) →ₗ[R] R :=
@@ -73,13 +73,13 @@ theorem trace_aux_eq : trace_aux R b = trace_aux R c :=
 
 open_locale Classical
 
-variable(R)(M)
+variable (R) (M)
 
 /-- Trace of an endomorphism independent of basis. -/
 def trace : (M →ₗ[R] M) →ₗ[R] R :=
   if H : ∃ s : Finset M, Nonempty (Basis s R M) then trace_aux R H.some_spec.some else 0
 
-variable(R){M}
+variable (R) {M}
 
 /-- Auxiliary lemma for `trace_eq_matrix_trace`. -/
 theorem trace_eq_matrix_trace_of_finset {s : Finset M} (b : Basis s R M) (f : M →ₗ[R] M) :
@@ -123,7 +123,7 @@ end
 
 section 
 
-variable(R : Type u)[Field R]{M : Type v}[AddCommGroupₓ M][Module R M]
+variable (R : Type u) [Field R] {M : Type v} [AddCommGroupₓ M] [Module R M]
 
 /-- The trace of the identity endomorphism is the dimension of the vector space -/
 @[simp]

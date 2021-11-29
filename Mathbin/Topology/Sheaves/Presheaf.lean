@@ -29,7 +29,7 @@ open TopologicalSpace
 
 open Opposite
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 namespace Top
 
@@ -39,7 +39,7 @@ namespace Top
 def presheaf (X : Top.{v}) :=
 «expr ⥤ »(«expr ᵒᵖ»(opens X), C)
 
-variable{C}
+variable {C}
 
 namespace Presheaf
 
@@ -96,7 +96,7 @@ theorem pushforward_eq_eq {X Y : Top.{v}} {f g : X ⟶ Y} (h₁ h₂ : f = g) (�
 
 namespace Pushforward
 
-variable{X : Top.{v}}(ℱ : X.presheaf C)
+variable {X : Top.{v}} (ℱ : X.presheaf C)
 
 /-- The natural isomorphism between the pushforward of a presheaf along the identity continuous map
 and the original presheaf. -/
@@ -167,7 +167,7 @@ open CategoryTheory.Limits
 
 section Pullback
 
-variable[has_colimits C]
+variable [has_colimits C]
 
 noncomputable theory
 
@@ -209,7 +209,7 @@ end
 
 namespace Pullback
 
-variable{X Y : Top.{v}}(ℱ : Y.presheaf C)
+variable {X Y : Top.{v}} (ℱ : Y.presheaf C)
 
 attribute [local reassoc] colimit.pre_desc
 
@@ -259,7 +259,7 @@ end Pullback
 
 end Pullback
 
-variable(C)
+variable (C)
 
 /--
 The pushforward functor.
@@ -280,7 +280,7 @@ begin
     apply [expr pushforward.id_eq] }
 end
 
-variable[has_colimits C]
+variable [has_colimits C]
 
 /-- Pullback a presheaf on `Y` along a continuous map `f : X ⟶ Y`, obtaining a presheaf
 on `X`. -/

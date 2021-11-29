@@ -12,17 +12,17 @@ section DomCoprod
 
 open_locale TensorProduct
 
-variable{R ι₁ ι₂ ι₃ ι₄ : Type _}
+variable {R ι₁ ι₂ ι₃ ι₄ : Type _}
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
-variable[DecidableEq ι₁][DecidableEq ι₂][DecidableEq ι₃][DecidableEq ι₄]
+variable [DecidableEq ι₁] [DecidableEq ι₂] [DecidableEq ι₃] [DecidableEq ι₄]
 
-variable{N₁ : Type _}[AddCommMonoidₓ N₁][Module R N₁]
+variable {N₁ : Type _} [AddCommMonoidₓ N₁] [Module R N₁]
 
-variable{N₂ : Type _}[AddCommMonoidₓ N₂][Module R N₂]
+variable {N₂ : Type _} [AddCommMonoidₓ N₂] [Module R N₂]
 
-variable{N : Type _}[AddCommMonoidₓ N][Module R N]
+variable {N : Type _} [AddCommMonoidₓ N] [Module R N]
 
 /-- Given two multilinear maps `(ι₁ → N) → N₁` and `(ι₂ → N) → N₂`, this produces the map
 `(ι₁ ⊕ ι₂ → N) → N₁ ⊗ N₂` by taking the coproduct of the domain and the tensor product

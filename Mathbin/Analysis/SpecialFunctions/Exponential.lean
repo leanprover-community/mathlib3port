@@ -46,7 +46,7 @@ open_locale Nat TopologicalSpace BigOperators Ennreal
 
 section AnyFieldAnyAlgebra
 
-variable{𝕂 𝔸 : Type _}[NondiscreteNormedField 𝕂][NormedRing 𝔸][NormedAlgebra 𝕂 𝔸][CompleteSpace 𝔸]
+variable {𝕂 𝔸 : Type _} [NondiscreteNormedField 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 /-- The exponential in a Banach-algebra `𝔸` over a normed field `𝕂` has strict Fréchet-derivative
 `1 : 𝔸 →L[𝕂] 𝔸` at zero, as long as it converges on a neighborhood of zero. -/
@@ -68,7 +68,7 @@ end AnyFieldAnyAlgebra
 
 section AnyFieldCommAlgebra
 
-variable{𝕂 𝔸 : Type _}[NondiscreteNormedField 𝕂][NormedCommRing 𝔸][NormedAlgebra 𝕂 𝔸][CompleteSpace 𝔸]
+variable {𝕂 𝔸 : Type _} [NondiscreteNormedField 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 -- error in Analysis.SpecialFunctions.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The exponential map in a commutative Banach-algebra `𝔸` over a normed field `𝕂` of
@@ -106,7 +106,7 @@ end AnyFieldCommAlgebra
 
 section deriv
 
-variable{𝕂 : Type _}[NondiscreteNormedField 𝕂][CompleteSpace 𝕂]
+variable {𝕂 : Type _} [NondiscreteNormedField 𝕂] [CompleteSpace 𝕂]
 
 /-- The exponential map in a complete normed field `𝕂` of characteristic zero has strict derivative
 `exp 𝕂 𝕂 x` at any point `x` in the disk of convergence. -/
@@ -135,7 +135,7 @@ end deriv
 
 section IsROrCAnyAlgebra
 
-variable{𝕂 𝔸 : Type _}[IsROrC 𝕂][NormedRing 𝔸][NormedAlgebra 𝕂 𝔸][CompleteSpace 𝔸]
+variable {𝕂 𝔸 : Type _} [IsROrC 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 /-- The exponential in a Banach-algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ` has strict Fréchet-derivative
 `1 : 𝔸 →L[𝕂] 𝔸` at zero. -/
@@ -151,7 +151,7 @@ end IsROrCAnyAlgebra
 
 section IsROrCCommAlgebra
 
-variable{𝕂 𝔸 : Type _}[IsROrC 𝕂][NormedCommRing 𝔸][NormedAlgebra 𝕂 𝔸][CompleteSpace 𝔸]
+variable {𝕂 𝔸 : Type _} [IsROrC 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 attribute [local instance] char_zero_R_or_C
 
@@ -169,7 +169,7 @@ end IsROrCCommAlgebra
 
 section DerivROrC
 
-variable{𝕂 : Type _}[IsROrC 𝕂]
+variable {𝕂 : Type _} [IsROrC 𝕂]
 
 attribute [local instance] char_zero_R_or_C
 

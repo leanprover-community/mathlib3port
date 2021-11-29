@@ -16,24 +16,24 @@ namespace CategoryTheory.Limits
 
 universe v u₁ u₂ u₃
 
-variable{C : Type u₁}[category.{v} C]
+variable {C : Type u₁} [category.{v} C]
 
-variable{D : Type u₂}[category.{v} D]
+variable {D : Type u₂} [category.{v} D]
 
-variable{E : Type u₃}[category.{v} E]
+variable {E : Type u₃} [category.{v} E]
 
-variable{J : Type v}[small_category J]{K : J ⥤ C}
+variable {J : Type v} [small_category J] {K : J ⥤ C}
 
 /--
 A functor is said to preserve filtered colimits, if it preserves all colimits of shape `J`, where
 `J` is a filtered category.
 -/
-class preserves_filtered_colimits(F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
+class preserves_filtered_colimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
   PreservesFilteredColimits : ∀ J : Type v [small_category J] [is_filtered J], preserves_colimits_of_shape J F
 
 attribute [instance] preserves_filtered_colimits.preserves_filtered_colimits
 
-instance (priority := 100)preserves_colimits.preserves_filtered_colimits (F : C ⥤ D) [preserves_colimits F] :
+instance (priority := 100) preserves_colimits.preserves_filtered_colimits (F : C ⥤ D) [preserves_colimits F] :
   preserves_filtered_colimits F :=
   { PreservesFilteredColimits := inferInstance }
 
@@ -48,12 +48,12 @@ instance comp_preserves_filtered_colimits (F : C ⥤ D) (G : D ⥤ E) [preserves
 A functor is said to preserve cofiltered limits, if it preserves all limits of shape `J`, where
 `J` is a cofiltered category.
 -/
-class preserves_cofiltered_limits(F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
+class preserves_cofiltered_limits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
   PreservesCofilteredLimits : ∀ J : Type v [small_category J] [is_cofiltered J], preserves_limits_of_shape J F
 
 attribute [instance] preserves_cofiltered_limits.preserves_cofiltered_limits
 
-instance (priority := 100)preserves_limits.preserves_cofiltered_limits (F : C ⥤ D) [preserves_limits F] :
+instance (priority := 100) preserves_limits.preserves_cofiltered_limits (F : C ⥤ D) [preserves_limits F] :
   preserves_cofiltered_limits F :=
   { PreservesCofilteredLimits := inferInstance }
 

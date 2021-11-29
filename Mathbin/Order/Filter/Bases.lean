@@ -71,12 +71,12 @@ open_locale Filter Classical
 
 section Sort
 
-variable{α β γ : Type _}{ι ι' : Sort _}
+variable {α β γ : Type _} {ι ι' : Sort _}
 
 /-- A filter basis `B` on a type `α` is a nonempty collection of sets of `α`
 such that the intersection of two elements of this collection contains some element
 of the collection. -/
-structure FilterBasis(α : Type _) where 
+structure FilterBasis (α : Type _) where 
   Sets : Set (Set α)
   Nonempty : sets.nonempty 
   inter_sets {x y} : x ∈ sets → y ∈ sets → ∃ (z : _)(_ : z ∈ sets), z ⊆ x ∩ y
@@ -87,10 +87,10 @@ instance FilterBasis.nonempty_sets (B : FilterBasis α) : Nonempty B.sets :=
 /-- If `B` is a filter basis on `α`, and `U` a subset of `α` then we can write `U ∈ B` as
 on paper. -/
 @[reducible]
-instance  {α : Type _} : HasMem (Set α) (FilterBasis α) :=
+instance {α : Type _} : HasMem (Set α) (FilterBasis α) :=
   ⟨fun U B => U ∈ B.sets⟩
 
-instance  : Inhabited (FilterBasis ℕ) :=
+instance : Inhabited (FilterBasis ℕ) :=
   ⟨{ Sets := range Ici, Nonempty := ⟨Ici 0, mem_range_self 0⟩,
       inter_sets :=
         by 
@@ -102,7 +102,7 @@ instance  : Inhabited (FilterBasis ℕ) :=
           exact le_of_max_le_right p_in }⟩
 
 /-- `is_basis p s` means the image of `s` bounded by `p` is a filter basis. -/
-protected structure Filter.IsBasis(p : ι → Prop)(s : ι → Set α) : Prop where 
+protected structure Filter.IsBasis (p : ι → Prop) (s : ι → Set α) : Prop where 
   Nonempty : ∃ i, p i 
   inter : ∀ {i j}, p i → p j → ∃ k, p k ∧ s k ⊆ s i ∩ s j
 
@@ -122,7 +122,7 @@ protected def FilterBasis {p : ι → Prop} {s : ι → Set α} (h : is_basis p 
         rcases h.inter hi hj with ⟨k, hk, hk'⟩
         exact ⟨_, ⟨k, hk, rfl⟩, hk'⟩ }
 
-variable{p : ι → Prop}{s : ι → Set α}(h : is_basis p s)
+variable {p : ι → Prop} {s : ι → Set α} (h : is_basis p s)
 
 theorem mem_filter_basis_iff {U : Set α} : U ∈ h.filter_basis ↔ ∃ i, p i ∧ s i = U :=
   Iff.rfl
@@ -180,7 +180,7 @@ namespace Filter
 
 namespace IsBasis
 
-variable{p : ι → Prop}{s : ι → Set α}
+variable {p : ι → Prop} {s : ι → Set α}
 
 /-- Constructs a filter from an indexed family of sets satisfying `is_basis`. -/
 protected def Filter (h : is_basis p s) : Filter α :=
@@ -205,12 +205,13 @@ end IsBasis
 
 /-- We say that a filter `l` has a basis `s : ι → set α` bounded by `p : ι → Prop`,
 if `t ∈ l` if and only if `t` includes `s i` for some `i` such that `p i`. -/
-protected structure has_basis(l : Filter α)(p : ι → Prop)(s : ι → Set α) : Prop where 
+protected structure has_basis (l : Filter α) (p : ι → Prop) (s : ι → Set α) : Prop where 
   mem_iff' : ∀ t : Set α, t ∈ l ↔ ∃ (i : _)(hi : p i), s i ⊆ t
 
 section SameType
 
-variable{l l' : Filter α}{p : ι → Prop}{s : ι → Set α}{t : Set α}{i : ι}{p' : ι' → Prop}{s' : ι' → Set α}{i' : ι'}
+variable {l l' : Filter α} {p : ι → Prop} {s : ι → Set α} {t : Set α} {i : ι} {p' : ι' → Prop} {s' : ι' → Set α}
+  {i' : ι'}
 
 theorem has_basis_generate (s : Set (Set α)) : (generate s).HasBasis (fun t => finite t ∧ t ⊆ s) fun t => ⋂₀t :=
   ⟨by 
@@ -634,7 +635,7 @@ theorem has_basis.sInter_sets (h : has_basis l p s) : ⋂₀l.sets = ⋂(i : _)(
       rintro h _ ⟨i, hi, sub⟩
       exact sub (h i hi)
 
-variable{ι'' : Type _}[Preorderₓ ι''](l)(p'' : ι'' → Prop)(s'' : ι'' → Set α)
+variable {ι'' : Type _} [Preorderₓ ι''] (l) (p'' : ι'' → Prop) (s'' : ι'' → Set α)
 
 /-- `is_antitone_basis p s` means the image of `s` bounded by `p` is a filter basis
 such that `s` is decreasing and `p` is increasing, ie `i ≤ j → p i → p j`. -/
@@ -645,7 +646,7 @@ structure is_antitone_basis extends is_basis p'' s'' : Prop where
 /-- We say that a filter `l` has an antitone basis `s : ι → set α` bounded by `p : ι → Prop`,
 if `t ∈ l` if and only if `t` includes `s i` for some `i` such that `p i`,
 and `s` is decreasing and `p` is increasing, ie `i ≤ j → p i → p j`. -/
-structure has_antitone_basis(l : Filter α)(p : ι'' → Prop)(s : ι'' → Set α) extends has_basis l p s : Prop where 
+structure has_antitone_basis (l : Filter α) (p : ι'' → Prop) (s : ι'' → Set α) extends has_basis l p s : Prop where 
   decreasing : ∀ {i j}, p i → p j → i ≤ j → s j ⊆ s i 
   mono : Monotone p
 
@@ -653,7 +654,7 @@ end SameType
 
 section TwoTypes
 
-variable{la : Filter α}{pa : ι → Prop}{sa : ι → Set α}{lb : Filter β}{pb : ι' → Prop}{sb : ι' → Set β}{f : α → β}
+variable {la : Filter α} {pa : ι → Prop} {sa : ι → Set α} {lb : Filter β} {pb : ι' → Prop} {sb : ι' → Set β} {f : α → β}
 
 theorem has_basis.tendsto_left_iff (hla : la.has_basis pa sa) :
   tendsto f la lb ↔ ∀ t _ : t ∈ lb, ∃ (i : _)(hi : pa i), maps_to f (sa i) t :=
@@ -714,26 +715,26 @@ end Sort
 
 namespace Filter
 
-variable{α β γ ι ι' : Type _}
+variable {α β γ ι ι' : Type _}
 
 /-- `is_countably_generated f` means `f = generate s` for some countable `s`. -/
-class is_countably_generated(f : Filter α) : Prop where 
+class is_countably_generated (f : Filter α) : Prop where 
   out{} : ∃ s : Set (Set α), countable s ∧ f = generate s
 
 /-- `is_countable_basis p s` means the image of `s` bounded by `p` is a countable filter basis. -/
-structure is_countable_basis(p : ι → Prop)(s : ι → Set α) extends is_basis p s : Prop where 
+structure is_countable_basis (p : ι → Prop) (s : ι → Set α) extends is_basis p s : Prop where 
   Countable : countable$ SetOf p
 
 /-- We say that a filter `l` has a countable basis `s : ι → set α` bounded by `p : ι → Prop`,
 if `t ∈ l` if and only if `t` includes `s i` for some `i` such that `p i`, and the set
 defined by `p` is countable. -/
-structure has_countable_basis(l : Filter α)(p : ι → Prop)(s : ι → Set α) extends has_basis l p s : Prop where 
+structure has_countable_basis (l : Filter α) (p : ι → Prop) (s : ι → Set α) extends has_basis l p s : Prop where 
   Countable : countable$ SetOf p
 
 /-- A countable filter basis `B` on a type `α` is a nonempty countable collection of sets of `α`
 such that the intersection of two elements of this collection contains some element
 of the collection. -/
-structure countable_filter_basis(α : Type _) extends FilterBasis α where 
+structure countable_filter_basis (α : Type _) extends FilterBasis α where 
   Countable : countable sets
 
 instance nat.inhabited_countable_filter_basis : Inhabited (countable_filter_basis ℕ) :=

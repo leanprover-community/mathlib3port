@@ -26,11 +26,11 @@ open MeasureTheory Filter
 
 open_locale Ennreal MeasureTheory
 
-variable{α β : Type _}{m : MeasurableSpace α}{μ ν : Measureₓ α}
+variable {α β : Type _} {m : MeasurableSpace α} {μ ν : Measureₓ α}
 
 section ConditionallyCompleteLattice
 
-variable[ConditionallyCompleteLattice β]
+variable [ConditionallyCompleteLattice β]
 
 /-- Essential supremum of `f` with respect to measure `μ`: the smallest `c : β` such that
 `f x ≤ c` a.e. -/
@@ -52,7 +52,7 @@ end ConditionallyCompleteLattice
 
 section CompleteLattice
 
-variable[CompleteLattice β]
+variable [CompleteLattice β]
 
 @[simp]
 theorem ess_sup_measure_zero {m : MeasurableSpace α} {f : α → β} : essSup f (0 : Measureₓ α) = ⊥ :=
@@ -140,7 +140,7 @@ end CompleteLattice
 
 section CompleteLinearOrder
 
-variable[CompleteLinearOrder β]
+variable [CompleteLinearOrder β]
 
 theorem ae_lt_of_ess_sup_lt {f : α → β} {x : β} (hf : essSup f μ < x) : ∀ᵐy ∂μ, f y < x :=
   Filter.eventually_lt_of_limsup_lt hf
@@ -187,7 +187,7 @@ end CompleteLinearOrder
 
 namespace Ennreal
 
-variable{f : α → ℝ≥0∞}
+variable {f : α → ℝ≥0∞}
 
 theorem ae_le_ess_sup (f : α → ℝ≥0∞) : ∀ᵐy ∂μ, f y ≤ essSup f μ :=
   eventually_le_limsup f

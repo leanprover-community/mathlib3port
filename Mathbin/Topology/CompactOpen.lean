@@ -37,9 +37,9 @@ namespace ContinuousMap
 
 section CompactOpen
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 /-- A generating set for the compact-open topology (when `s` is compact and `u` is open). -/
 def compact_open.gen (s : Set α) (u : Set β) : Set C(α, β) :=
@@ -57,7 +57,7 @@ private theorem is_open_gen {s : Set α} (hs : IsCompact s) {u : Set β} (hu : I
 
 section Functorial
 
-variable(g : C(β, γ))
+variable (g : C(β, γ))
 
 private theorem preimage_gen {s : Set α} (hs : IsCompact s) {u : Set γ} (hu : IsOpen u) :
   ContinuousMap.comp g ⁻¹' compact_open.gen s u = compact_open.gen s (g ⁻¹' u) :=
@@ -77,13 +77,13 @@ end Functorial
 
 section Ev
 
-variable(α β)
+variable (α β)
 
 /-- The evaluation map `map C(α, β) × α → β` -/
 def ev (p : C(α, β) × α) : β :=
   p.1 p.2
 
-variable{α β}
+variable {α β}
 
 /-- The evaluation map `C(α, β) × α → β` is continuous if `α` is locally compact. -/
 theorem continuous_ev [LocallyCompactSpace α] : Continuous (ev α β) :=
@@ -115,7 +115,7 @@ theorem continuous_ev [LocallyCompactSpace α] : Continuous (ev α β) :=
 theorem continuous_ev₁ [LocallyCompactSpace α] (a : α) : Continuous fun f : C(α, β) => f a :=
   continuous_ev.comp (continuous_id.prod_mk continuous_const)
 
-instance  [T2Space β] [LocallyCompactSpace α] : T2Space C(α, β) :=
+instance [T2Space β] [LocallyCompactSpace α] : T2Space C(α, β) :=
   ⟨by 
       intro f₁ f₂ h 
       obtain ⟨p, hp⟩ := not_forall.mp (mt ContinuousMap.ext h)
@@ -229,14 +229,14 @@ end InfInduced
 
 section Coev
 
-variable(α β)
+variable (α β)
 
 /-- The coevaluation map `β → C(α, β × α)` sending a point `x : β` to the continuous function
 on `α` sending `y` to `(x, y)`. -/
 def coev (b : β) : C(α, β × α) :=
   ⟨fun a => (b, a), Continuous.prod_mk continuous_const continuous_id⟩
 
-variable{α β}
+variable {α β}
 
 theorem image_coev {y : β} (s : Set α) : coev α β y '' s = Set.Prod {y} s :=
   by 
@@ -303,7 +303,7 @@ theorem curry_apply (f : C(α × β, γ)) (a : α) (b : β) : f.curry a b = f (a
 /-- The uncurried form of a continuous map `α → C(β, γ)` is a continuous map `α × β → γ`. -/
 theorem continuous_uncurry_of_continuous [LocallyCompactSpace β] (f : C(α, C(β, γ))) :
   Continuous (Function.uncurry fun x y => f x y) :=
-  have hf : (Function.uncurry fun x y => f x y) = (ev β γ ∘ Prod.mapₓ f id) :=
+  have hf : (Function.uncurry fun x y => f x y) = (ev β γ ∘ Prod.map f id) :=
     by 
       ext 
       rfl 
@@ -344,9 +344,9 @@ open ContinuousMap
 
 namespace Homeomorph
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 /-- Currying as a homeomorphism between the function spaces `C(α × β, γ)` and `C(α, C(β, γ))`. -/
 def curry [LocallyCompactSpace α] [LocallyCompactSpace β] : C(α × β, γ) ≃ₜ C(α, C(β, γ)) :=

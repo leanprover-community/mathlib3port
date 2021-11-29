@@ -20,9 +20,9 @@ noncomputable theory
 
 namespace ModuleCat
 
-variable{R : Type u}[Ringₓ R]
+variable {R : Type u} [Ringₓ R]
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
 instance add_comm_group_obj (F : J ⥤ ModuleCat.{v} R) j : AddCommGroupₓ ((F ⋙ forget (ModuleCat R)).obj j) :=
   by 
@@ -74,7 +74,7 @@ namespace HasLimits
 Construction of a limit cone in `Module R`.
 (Internal use only; use the limits API.)
 -/
-def limit_cone (F : J ⥤ ModuleCat R) : cone F :=
+def limit_cone (F : J ⥤ ModuleCat.{v} R) : cone F :=
   { x := ModuleCat.of R (types.limit_cone (F ⋙ forget _)).x,
     π :=
       { app := limit_π_linear_map F,
@@ -139,15 +139,15 @@ section DirectLimit
 
 open Module
 
-variable{ι : Type v}
+variable {ι : Type v}
 
-variable[dec_ι : DecidableEq ι][DirectedOrder ι]
+variable [dec_ι : DecidableEq ι] [DirectedOrder ι]
 
-variable(G : ι → Type v)
+variable (G : ι → Type v)
 
-variable[∀ i, AddCommGroupₓ (G i)][∀ i, Module R (G i)]
+variable [∀ i, AddCommGroupₓ (G i)] [∀ i, Module R (G i)]
 
-variable(f : ∀ i j, i ≤ j → G i →ₗ[R] G j)[Module.DirectedSystem G f]
+variable (f : ∀ i j, i ≤ j → G i →ₗ[R] G j) [Module.DirectedSystem G f]
 
 /-- The diagram (in the sense of `category_theory`)
  of an unbundled `direct_limit` of modules. -/
@@ -168,7 +168,7 @@ def direct_limit_diagram : ι ⥤ ModuleCat R :=
           symm 
           apply Module.DirectedSystem.map_map }
 
-variable[DecidableEq ι]
+variable [DecidableEq ι]
 
 /-- The `cocone` on `direct_limit_diagram` corresponding to
 the unbundled `direct_limit` of modules.

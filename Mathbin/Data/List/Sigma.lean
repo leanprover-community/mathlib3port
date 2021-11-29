@@ -26,7 +26,7 @@ universe u v
 
 namespace List
 
-variable{α : Type u}{β : α → Type v}
+variable {α : Type u} {β : α → Type v}
 
 /-! ### `keys` -/
 
@@ -134,7 +134,7 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.nodup) (nd₁ : l₁
     induction' l₀ with x xs generalizing l₁ <;> cases' l₁ with y ys
     ·
       constructor 
-    iterate 2
+    iterate 2 
       first |
         specialize h x|
         specialize h y 
@@ -201,7 +201,7 @@ theorem mem_ext {l₀ l₁ : List (Sigma β)} (nd₀ : l₀.nodup) (nd₁ : l₁
         simp [h'] at h 
         exact h
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-! ### `lookup` -/
 

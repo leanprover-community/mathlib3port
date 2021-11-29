@@ -32,18 +32,18 @@ open_locale Ordinal
 namespace Onote
 
 /-- Notation for 0 -/
-instance  : HasZero Onote :=
+instance : HasZero Onote :=
   ⟨zero⟩
 
 @[simp]
 theorem zero_def : zero = 0 :=
   rfl
 
-instance  : Inhabited Onote :=
+instance : Inhabited Onote :=
   ⟨0⟩
 
 /-- Notation for 1 -/
-instance  : HasOne Onote :=
+instance : HasOne Onote :=
   ⟨oadd 0 1 0⟩
 
 /-- Notation for ω -/
@@ -72,13 +72,13 @@ def repr' : Onote → Stringₓ
 | zero => "0"
 | oadd e n a => "(oadd " ++ repr' e ++ " " ++ _root_.to_string (n : ℕ) ++ " " ++ repr' a ++ ")"
 
-instance  : HasToString Onote :=
+instance : HasToString Onote :=
   ⟨toString⟩
 
-instance  : HasRepr Onote :=
+instance : HasRepr Onote :=
   ⟨repr'⟩
 
-instance  : Preorderₓ Onote :=
+instance : Preorderₓ Onote :=
   { le := fun x y => reprₓ x ≤ reprₓ y, lt := fun x y => reprₓ x < reprₓ y, le_refl := fun a => @le_reflₓ Ordinal _ _,
     le_trans := fun a b c => @le_transₓ Ordinal _ _ _ _,
     lt_iff_le_not_le := fun a b => @lt_iff_le_not_leₓ Ordinal _ _ _ }
@@ -166,7 +166,7 @@ inductive NF_below : Onote → Ordinal.{0} → Prop
   ordinal notations, but to avoid complicating the algorithms
   we define everything over general ordinal notations and
   only prove correctness with normal form as an invariant. -/
-class NF(o : Onote) : Prop where 
+class NF (o : Onote) : Prop where 
   out : Exists (NF_below o)
 
 attribute [pp_nodot] NF
@@ -362,7 +362,7 @@ def add : Onote → Onote → Onote
     | Ordering.eq => oadd e (n+n') a'
     | Ordering.gt => oadd e n o'
 
-instance  : Add Onote :=
+instance : Add Onote :=
   ⟨add⟩
 
 @[simp]
@@ -385,7 +385,7 @@ def sub : Onote → Onote → Onote
     | 0 => if n₁ = n₂ then sub a₁ a₂ else 0
     | Nat.succ k => oadd e₁ k.succ_pnat a₁
 
-instance  : Sub Onote :=
+instance : Sub Onote :=
   ⟨sub⟩
 
 -- error in SetTheory.OrdinalNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -497,7 +497,7 @@ def mul : Onote → Onote → Onote
 | _, 0 => 0
 | o₁@(oadd e₁ n₁ a₁), oadd e₂ n₂ a₂ => if e₂ = 0 then oadd e₁ (n₁*n₂) a₁ else oadd (e₁+e₂) n₂ (mul o₁ a₂)
 
-instance  : Mul Onote :=
+instance : Mul Onote :=
   ⟨mul⟩
 
 @[simp]
@@ -617,7 +617,7 @@ def power (o₁ o₂ : Onote) : Onote :=
       let eb := a0*b 
       scale (eb+mul_nat a0 k) a+power_aux eb a0 (mul_nat a m) k m
 
-instance  : Pow Onote Onote :=
+instance : Pow Onote Onote :=
   ⟨power⟩
 
 theorem power_def (o₁ o₂ : Onote) : (o₁^o₂) = power._match_1 o₂ (split o₁) :=
@@ -932,7 +932,7 @@ end Onote
 def Nonote :=
   { o : Onote // o.NF }
 
-instance  : DecidableEq Nonote :=
+instance : DecidableEq Nonote :=
   by 
     unfold Nonote <;> infer_instance
 
@@ -957,22 +957,28 @@ def mk (o : Onote) [h : NF o] : Nonote :=
 noncomputable def reprₓ (o : Nonote) : Ordinal :=
   o.1.repr
 
-instance  : HasToString Nonote :=
+instance : HasToString Nonote :=
   ⟨fun x => x.1.toString⟩
 
-instance  : HasRepr Nonote :=
+instance : HasRepr Nonote :=
   ⟨fun x => x.1.repr'⟩
 
-instance  : Preorderₓ Nonote :=
+instance : Preorderₓ Nonote :=
   { le := fun x y => reprₓ x ≤ reprₓ y, lt := fun x y => reprₓ x < reprₓ y, le_refl := fun a => @le_reflₓ Ordinal _ _,
     le_trans := fun a b c => @le_transₓ Ordinal _ _ _ _,
     lt_iff_le_not_le := fun a b => @lt_iff_le_not_leₓ Ordinal _ _ _ }
 
-instance  : HasZero Nonote :=
+instance : HasZero Nonote :=
   ⟨⟨0, NF.zero⟩⟩
 
-instance  : Inhabited Nonote :=
+instance : Inhabited Nonote :=
   ⟨0⟩
+
+theorem wf : @WellFounded Nonote (· < ·) :=
+  InvImage.wfₓ reprₓ Ordinal.wf
+
+instance : HasWellFounded Nonote :=
+  ⟨· < ·, wf⟩
 
 /-- Convert a natural number to an ordinal notation -/
 def of_nat (n : ℕ) : Nonote :=
@@ -992,8 +998,11 @@ theorem cmp_compares : ∀ a b : nonote, (cmp a b).compares a b
   exact [expr subtype.mk_eq_mk.2 this]
 end
 
-instance  : LinearOrderₓ Nonote :=
+instance : LinearOrderₓ Nonote :=
   linearOrderOfCompares cmp cmp_compares
+
+instance : IsWellOrder Nonote (· < ·) :=
+  ⟨wf⟩
 
 /-- Asserts that `repr a < ω ^ repr b`. Used in `nonote.rec_on` -/
 def below (a b : Nonote) : Prop :=
@@ -1017,21 +1026,21 @@ def rec_on {C : Nonote → Sort _} (o : Nonote) (H0 : C 0) (H1 : ∀ e n a h, C 
       exact H1 ⟨e, h.fst⟩ n ⟨a, h.snd⟩ h.snd' (IHe _) (IHa _)
 
 /-- Addition of ordinal notations -/
-instance  : Add Nonote :=
+instance : Add Nonote :=
   ⟨fun x y => mk (x.1+y.1)⟩
 
 theorem repr_add a b : reprₓ (a+b) = reprₓ a+reprₓ b :=
   Onote.repr_add a.1 b.1
 
 /-- Subtraction of ordinal notations -/
-instance  : Sub Nonote :=
+instance : Sub Nonote :=
   ⟨fun x y => mk (x.1 - y.1)⟩
 
 theorem repr_sub a b : reprₓ (a - b) = reprₓ a - reprₓ b :=
   Onote.repr_sub a.1 b.1
 
 /-- Multiplication of ordinal notations -/
-instance  : Mul Nonote :=
+instance : Mul Nonote :=
   ⟨fun x y => mk (x.1*y.1)⟩
 
 theorem repr_mul a b : reprₓ (a*b) = reprₓ a*reprₓ b :=

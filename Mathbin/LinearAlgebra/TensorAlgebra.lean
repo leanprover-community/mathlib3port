@@ -31,9 +31,9 @@ modulo the additional relations making the inclusion of `M` into an `R`-linear m
 -/
 
 
-variable(R : Type _)[CommSemiringₓ R]
+variable (R : Type _) [CommSemiringₓ R]
 
-variable(M : Type _)[AddCommMonoidₓ M][Module R M]
+variable (M : Type _) [AddCommMonoidₓ M] [Module R M]
 
 namespace TensorAlgebra
 
@@ -55,10 +55,10 @@ ring_quot (tensor_algebra.rel R M)
 
 namespace TensorAlgebra
 
-instance  {S : Type _} [CommRingₓ S] [Module S M] : Ringₓ (TensorAlgebra S M) :=
+instance {S : Type _} [CommRingₓ S] [Module S M] : Ringₓ (TensorAlgebra S M) :=
   RingQuot.ring (rel S M)
 
-variable{M}
+variable {M}
 
 /--
 The canonical linear map `M →ₗ[R] tensor_algebra R M`.
@@ -104,7 +104,7 @@ def lift {A : Type _} [Semiringₓ A] [Algebra R A] : (M →ₗ[R] A) ≃ (Tenso
           ext 
           simp [ι] }
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem ι_comp_lift {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R] A) : (lift R f).toLinearMap.comp (ι R) = f :=
@@ -167,7 +167,7 @@ end
 def algebra_map_inv : TensorAlgebra R M →ₐ[R] R :=
   lift R (0 : M →ₗ[R] R)
 
-variable(M)
+variable (M)
 
 theorem algebra_map_left_inverse : Function.LeftInverse algebra_map_inv (algebraMap R$ TensorAlgebra R M) :=
   fun x =>
@@ -188,7 +188,7 @@ theorem algebra_map_eq_one_iff (x : R) : algebraMap R (TensorAlgebra R M) x = 1 
   by 
     rw [←algebra_map_inj M x 1, RingHom.map_one]
 
-variable{M}
+variable {M}
 
 /-- The canonical map from `tensor_algebra R M` into `triv_sq_zero_ext R M` that sends
 `tensor_algebra.ι` to `triv_sq_zero_ext.inr`. -/
@@ -211,7 +211,7 @@ theorem ι_left_inverse : Function.LeftInverse ι_inv (ι R : M → TensorAlgebr
     by 
       simp [ι_inv]
 
-variable(R)
+variable (R)
 
 @[simp]
 theorem ι_inj (x y : M) : ι R x = ι R y ↔ x = y :=
@@ -222,7 +222,7 @@ theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 :=
   by 
     rw [←ι_inj R x 0, LinearMap.map_zero]
 
-variable{R}
+variable {R}
 
 -- error in LinearAlgebra.TensorAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
@@ -258,7 +258,7 @@ end TensorAlgebra
 
 namespace FreeAlgebra
 
-variable{R M}
+variable {R M}
 
 /-- The canonical image of the `free_algebra` in the `tensor_algebra`, which maps
 `free_algebra.ι R x` to `tensor_algebra.ι R x`. -/

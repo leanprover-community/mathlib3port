@@ -89,7 +89,7 @@ open_locale Classical BigOperators Nnreal Ennreal
 
 noncomputable theory
 
-variable{ι : Type u}(s : Finset ι)
+variable {ι : Type u} (s : Finset ι)
 
 section GeomMeanLeArithMean
 
@@ -394,7 +394,7 @@ end Nnreal
 
 namespace Real
 
-variable(f g : ι → ℝ){p q : ℝ}
+variable (f g : ι → ℝ) {p q : ℝ}
 
 -- error in Analysis.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
@@ -424,7 +424,7 @@ begin
      hi, _) _) this]; simp [] [] [] ["[", expr sum_nonneg, ",", expr rpow_nonneg_of_nonneg, ",", expr abs_nonneg, ",", expr le_trans zero_le_one hp, ",", expr abs_add, ",", expr rpow_le_rpow, "]"] [] []
 end
 
-variable{f g}
+variable {f g}
 
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
@@ -448,7 +448,7 @@ end Real
 
 namespace Ennreal
 
-variable(f g : ι → ℝ≥0∞){p q : ℝ}
+variable (f g : ι → ℝ≥0∞) {p q : ℝ}
 
 -- error in Analysis.MeanInequalities: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their

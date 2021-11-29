@@ -14,7 +14,7 @@ namespace CategoryTheory
 
 universe v₁ v₂ v₃ u₁ u₂ u₃
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]{E : Type u₃}[category.{v₃} E]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
 
 /--
 The uncurrying functor, taking a functor `C ⥤ (D ⥤ E)` and producing a functor `(C × D) ⥤ E`.

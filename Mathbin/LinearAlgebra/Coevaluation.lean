@@ -28,9 +28,9 @@ open_locale TensorProduct BigOperators
 
 universe u v
 
-variable(K : Type u)[Field K]
+variable (K : Type u) [Field K]
 
-variable(V : Type v)[AddCommGroupₓ V][Module K V][FiniteDimensional K V]
+variable (V : Type v) [AddCommGroupₓ V] [Module K V] [FiniteDimensional K V]
 
 /-- The coevaluation map is a linear map from a field `K` to a finite dimensional
   vector space `V`. -/

@@ -28,7 +28,7 @@ namespace Subgroup
 
 open_locale Cardinal
 
-variable{G : Type _}[Groupₓ G](H K L : Subgroup G)
+variable {G : Type _} [Groupₓ G] (H K L : Subgroup G)
 
 /-- The index of a subgroup as a natural number, and returns 0 if the index is infinite. -/
 @[toAdditive "The index of a subgroup as a natural number,\nand returns 0 if the index is infinite."]
@@ -74,7 +74,7 @@ theorem index_comap {G' : Type _} [Groupₓ G'] (f : G' →* G) : (H.comap f).in
         rfl))
     ((H.subgroup_of f.range).index_comap_of_surjective f.range_restrict_surjective)
 
-variable{H K L}
+variable {H K L}
 
 @[toAdditive]
 theorem relindex_mul_index (h : H ≤ K) : (H.relindex K*K.index) = H.index :=
@@ -95,7 +95,7 @@ theorem relindex_mul_relindex (hHK : H ≤ K) (hKL : K ≤ L) : (H.relindex K*K.
     rw [←relindex_subgroup_of hKL]
     exact relindex_mul_index fun x hx => hHK hx
 
-variable(H K L)
+variable (H K L)
 
 theorem inf_relindex_right : (H⊓K).relindex K = H.relindex K :=
   by 
@@ -113,7 +113,7 @@ theorem relindex_eq_relindex_sup [K.normal] : K.relindex H = K.relindex (H⊔K) 
   by 
     rw [←inf_relindex_left, inf_relindex_eq_relindex_sup]
 
-variable{H K}
+variable {H K}
 
 theorem relindex_dvd_of_le_left (hHK : H ≤ K) : K.relindex L ∣ H.relindex L :=
   by 
@@ -121,7 +121,7 @@ theorem relindex_dvd_of_le_left (hHK : H ≤ K) : K.relindex L ∣ H.relindex L 
     rw [←inf_relindex_right H L, ←inf_relindex_right K L]
     exact relindex_mul_relindex (inf_le_inf_right L hHK) inf_le_right
 
-variable(H K)
+variable (H K)
 
 @[simp, toAdditive]
 theorem index_top : (⊤ : Subgroup G).index = 1 :=
@@ -207,7 +207,7 @@ theorem index_dvd_card [Fintype G] : H.index ∣ Fintype.card G :=
     classical 
     exact ⟨Fintype.card H, H.index_mul_card.symm⟩
 
-variable{H}
+variable {H}
 
 @[simp]
 theorem index_eq_one : H.index = 1 ↔ H = ⊤ :=

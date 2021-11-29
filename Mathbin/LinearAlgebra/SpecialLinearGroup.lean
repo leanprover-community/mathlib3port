@@ -52,7 +52,7 @@ open LinearMap
 
 section 
 
-variable(n : Type u)[DecidableEq n][Fintype n](R : Type v)[CommRingₓ R]
+variable (n : Type u) [DecidableEq n] [Fintype n] (R : Type v) [CommRingₓ R]
 
 /-- `special_linear_group n R` is the group of `n` by `n` `R`-matrices with determinant equal to 1.
 -/
@@ -65,7 +65,7 @@ localized [MatrixGroups] notation "SL(" n "," R ")" => special_linear_group (Fin
 
 namespace SpecialLinearGroup
 
-variable{n : Type u}[DecidableEq n][Fintype n]{R : Type v}[CommRingₓ R]
+variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 
 instance has_coe_to_matrix : Coe (special_linear_group n R) (Matrix n n R) :=
   ⟨fun A => A.val⟩
@@ -94,12 +94,12 @@ instance Mul : Mul (special_linear_group n R) :=
 instance HasOne : HasOne (special_linear_group n R) :=
   ⟨⟨1, det_one⟩⟩
 
-instance  : Inhabited (special_linear_group n R) :=
+instance : Inhabited (special_linear_group n R) :=
   ⟨1⟩
 
 section CoeLemmas
 
-variable(A B : special_linear_group n R)
+variable (A B : special_linear_group n R)
 
 @[simp]
 theorem coe_inv : ↑ₘ(A⁻¹) = adjugate A :=
@@ -131,10 +131,10 @@ theorem row_ne_zero [Nontrivial R] (g : special_linear_group n R) (i : n) : ↑�
 
 end CoeLemmas
 
-instance  : Monoidₓ (special_linear_group n R) :=
+instance : Monoidₓ (special_linear_group n R) :=
   Function.Injective.monoid coeₓ Subtype.coe_injective coe_one coe_mul
 
-instance  : Groupₓ (special_linear_group n R) :=
+instance : Groupₓ (special_linear_group n R) :=
   { special_linear_group.monoid, special_linear_group.has_inv with
     mul_left_inv :=
       fun A =>
@@ -180,11 +180,11 @@ theorem coe_to_GL (A : special_linear_group n R) : «expr↑ » A.to_GL = A.to_l
 
 section Neg
 
-variable[Fact (Even (Fintype.card n))]
+variable [Fact (Even (Fintype.card n))]
 
 /-- Formal operation of negation on special linear group on even cardinality `n` given by negating
 each element. -/
-instance  : Neg (special_linear_group n R) :=
+instance : Neg (special_linear_group n R) :=
   ⟨fun g =>
       ⟨-g,
         by 
@@ -199,7 +199,7 @@ end Neg
 section CoeFnInstance
 
 /-- This instance is here for convenience, but is not the simp-normal form. -/
-instance  : CoeFun (special_linear_group n R) fun _ => n → n → R :=
+instance : CoeFun (special_linear_group n R) fun _ => n → n → R :=
   { coe := fun A => A.val }
 
 @[simp]

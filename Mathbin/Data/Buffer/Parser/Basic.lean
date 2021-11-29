@@ -39,11 +39,11 @@ namespace Parser
 
 section DefnLemmas
 
-variable{α β : Type}(msgs : Thunkₓ (List Stringₓ))(msg : Thunkₓ Stringₓ)
+variable {α β : Type} (msgs : Thunkₓ (List Stringₓ)) (msg : Thunkₓ Stringₓ)
 
-variable(p q : Parser α)(cb : CharBuffer)(n n' : ℕ){err : Dlist Stringₓ}
+variable (p q : Parser α) (cb : CharBuffer) (n n' : ℕ) {err : Dlist Stringₓ}
 
-variable{a : α}{b : β}
+variable {a : α} {b : β}
 
 /--
 A `p : parser α` is defined to be `mono` if the result `p cb n` it gives,
@@ -114,7 +114,7 @@ theorem success_iff : (∀ pos' err, p cb n ≠ fail pos' err) ↔ ∃ (pos' : �
   by 
     cases p cb n <;> simp 
 
-variable{p q cb n n' msgs msg}
+variable {p q cb n n' msgs msg}
 
 theorem mono.of_done [p.mono] (h : p cb n = done n' a) : n ≤ n' :=
   by 
@@ -145,7 +145,7 @@ theorem unfailing.of_fail [p.unfailing] (h : p cb n = fail n' err) : False :=
     obtain ⟨np, a, hp⟩ := p.exists_done cb n 
     simpa [hp] using h
 
-instance (priority := 100)conditionally_unfailing_of_unfailing [p.unfailing] : conditionally_unfailing p :=
+instance (priority := 100) conditionally_unfailing_of_unfailing [p.unfailing] : conditionally_unfailing p :=
   ⟨fun _ _ _ => p.exists_done _ _⟩
 
 theorem exists_done_in_bounds (p : Parser α) [p.conditionally_unfailing] {cb : CharBuffer} {n : ℕ} (h : n < cb.size) :
@@ -210,13 +210,13 @@ theorem pure_ne_fail : (pure a : Parser α) cb n ≠ fail n' err :=
 
 section Bind
 
-variable(f : α → Parser β)
+variable (f : α → Parser β)
 
 @[simp]
 theorem bind_eq_bind : p.bind f = p >>= f :=
   rfl
 
-variable{f}
+variable {f}
 
 @[simp]
 theorem bind_eq_done : (p >>= f) cb n = done n' b ↔ ∃ (np : ℕ)(a : α), p cb n = done np a ∧ f a cb np = done n' b :=
@@ -246,7 +246,7 @@ end Bind
 
 section Map
 
-variable{f : α → β}
+variable {f : α → β}
 
 @[simp]
 theorem map_eq_done : (f <$> p) cb n = done n' b ↔ ∃ a : α, p cb n = done n' a ∧ f a = b :=
@@ -441,7 +441,7 @@ theorem guard_eq_fail {p : Prop} [Decidable p] :
 
 namespace Mono
 
-variable{sep : Parser Unit}
+variable {sep : Parser Unit}
 
 instance pure : mono (pure a) :=
   ⟨fun _ _ =>
@@ -664,7 +664,7 @@ end DefnLemmas
 
 section Done
 
-variable{α β : Type}{cb : CharBuffer}{n n' : ℕ}{a a' : α}{b : β}{c : Charₓ}{u : Unit}{err : Dlist Stringₓ}
+variable {α β : Type} {cb : CharBuffer} {n n' : ℕ} {a a' : α} {b : β} {c : Charₓ} {u : Unit} {err : Dlist Stringₓ}
 
 theorem any_char_eq_done : any_char cb n = done n' c ↔ ∃ hn : n < cb.size, (n' = n+1) ∧ cb.read ⟨n, hn⟩ = c :=
   by 
@@ -1050,13 +1050,8 @@ end Done
 
 namespace Static
 
-variable{α β :
-    Type}{p q :
-    Parser
-      α}{msgs :
-    Thunkₓ
-      (List
-        Stringₓ)}{msg : Thunkₓ Stringₓ}{cb : CharBuffer}{n' n : ℕ}{err : Dlist Stringₓ}{a : α}{b : β}{sep : Parser Unit}
+variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
+  {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_of_ne (h : p cb n = done n' a) (hne : n ≠ n') : ¬static p :=
   by 
@@ -1334,11 +1329,11 @@ end Static
 
 namespace Bounded
 
-variable{α β : Type}{msgs : Thunkₓ (List Stringₓ)}{msg : Thunkₓ Stringₓ}
+variable {α β : Type} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ}
 
-variable{p q : Parser α}{cb : CharBuffer}{n n' : ℕ}{err : Dlist Stringₓ}
+variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Dlist Stringₓ}
 
-variable{a : α}{b : β}
+variable {a : α} {b : β}
 
 theorem done_of_unbounded (h : ¬p.bounded) : ∃ (cb : CharBuffer)(n n' : ℕ)(a : α), p cb n = done n' a ∧ cb.size ≤ n :=
   by 
@@ -1504,7 +1499,7 @@ instance foldr_core_zero {f : α → β → β} : (foldr_core f p b 0).Bounded :
 instance foldl_core_zero {f : β → α → β} {b : β} : (foldl_core f b p 0).Bounded :=
   bounded.failure
 
-variable{reps : ℕ}[hpb : p.bounded](he : ∀ cb n n' err, p cb n = fail n' err → n ≠ n')
+variable {reps : ℕ} [hpb : p.bounded] (he : ∀ cb n n' err, p cb n = fail n' err → n ≠ n')
 
 include hpb he
 
@@ -1602,13 +1597,8 @@ end Bounded
 
 namespace Unfailing
 
-variable{α β :
-    Type}{p q :
-    Parser
-      α}{msgs :
-    Thunkₓ
-      (List
-        Stringₓ)}{msg : Thunkₓ Stringₓ}{cb : CharBuffer}{n' n : ℕ}{err : Dlist Stringₓ}{a : α}{b : β}{sep : Parser Unit}
+variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
+  {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
 theorem of_bounded [p.bounded] : ¬unfailing p :=
   by 
@@ -1763,13 +1753,8 @@ end Unfailing
 
 namespace ErrStatic
 
-variable{α β :
-    Type}{p q :
-    Parser
-      α}{msgs :
-    Thunkₓ
-      (List
-        Stringₓ)}{msg : Thunkₓ Stringₓ}{cb : CharBuffer}{n' n : ℕ}{err : Dlist Stringₓ}{a : α}{b : β}{sep : Parser Unit}
+variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
+  {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_of_ne (h : p cb n = fail n' err) (hne : n ≠ n') : ¬err_static p :=
   by 
@@ -1969,13 +1954,8 @@ end ErrStatic
 
 namespace Step
 
-variable{α β :
-    Type}{p q :
-    Parser
-      α}{msgs :
-    Thunkₓ
-      (List
-        Stringₓ)}{msg : Thunkₓ Stringₓ}{cb : CharBuffer}{n' n : ℕ}{err : Dlist Stringₓ}{a : α}{b : β}{sep : Parser Unit}
+variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
+  {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
 -- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem not_step_of_static_done
@@ -2170,13 +2150,8 @@ end Step
 
 section Step
 
-variable{α β :
-    Type}{p q :
-    Parser
-      α}{msgs :
-    Thunkₓ
-      (List
-        Stringₓ)}{msg : Thunkₓ Stringₓ}{cb : CharBuffer}{n' n : ℕ}{err : Dlist Stringₓ}{a : α}{b : β}{sep : Parser Unit}
+variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
+  {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
 -- error in Data.Buffer.Parser.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem many1_eq_done_iff_many_eq_done
@@ -2234,15 +2209,10 @@ end Step
 
 namespace Prog
 
-variable{α β :
-    Type}{p q :
-    Parser
-      α}{msgs :
-    Thunkₓ
-      (List
-        Stringₓ)}{msg : Thunkₓ Stringₓ}{cb : CharBuffer}{n' n : ℕ}{err : Dlist Stringₓ}{a : α}{b : β}{sep : Parser Unit}
+variable {α β : Type} {p q : Parser α} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ} {cb : CharBuffer}
+  {n' n : ℕ} {err : Dlist Stringₓ} {a : α} {b : β} {sep : Parser Unit}
 
-instance (priority := 100)of_step [step p] : prog p :=
+instance (priority := 100) of_step [step p] : prog p :=
   ⟨fun _ _ _ _ h =>
       by 
         rw [step.of_done h]
@@ -2417,11 +2387,11 @@ theorem fix {F : parser α → parser α} (hF : ∀ p : parser α, p.prog → (F
 
 end Prog
 
-variable{α β : Type}{msgs : Thunkₓ (List Stringₓ)}{msg : Thunkₓ Stringₓ}
+variable {α β : Type} {msgs : Thunkₓ (List Stringₓ)} {msg : Thunkₓ Stringₓ}
 
-variable{p q : Parser α}{cb : CharBuffer}{n n' : ℕ}{err : Dlist Stringₓ}
+variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Dlist Stringₓ}
 
-variable{a : α}{b : β}
+variable {a : α} {b : β}
 
 section Many
 

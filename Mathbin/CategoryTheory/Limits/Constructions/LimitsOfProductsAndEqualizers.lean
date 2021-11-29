@@ -27,26 +27,15 @@ namespace CategoryTheory.Limits
 
 universe v u u₂
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
 namespace HasLimitOfHasProductsOfHasEqualizers
 
-variable{F :
-    J ⥤
-      C}{c₁ :
-    fan
-      F.obj}{c₂ :
-    fan
-      fun f : Σp : J × J, p.1 ⟶ p.2 =>
-        F.obj
-          f.1.2}(s t :
-    c₁.X ⟶
-      c₂.X)(hs :
-    ∀ f : Σp : J × J, p.1 ⟶ p.2,
-      s ≫ c₂.π.app f =
-        c₁.π.app f.1.1 ≫ F.map f.2)(ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, t ≫ c₂.π.app f = c₁.π.app f.1.2)(i : fork s t)
+variable {F : J ⥤ C} {c₁ : fan F.obj} {c₂ : fan fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2} (s t : c₁.X ⟶ c₂.X)
+  (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, s ≫ c₂.π.app f = c₁.π.app f.1.1 ≫ F.map f.2)
+  (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, t ≫ c₂.π.app f = c₁.π.app f.1.2) (i : fork s t)
 
 include hs ht
 
@@ -65,7 +54,7 @@ def build_limit : cone F :=
               dsimp 
               rw [category.id_comp, category.assoc, ←hs ⟨⟨_, _⟩, f⟩, i.condition_assoc, ht] } }
 
-variable{i}
+variable {i}
 
 /--
 (Implementation) Show the cone constructed in `build_limit` is limiting, provided the cones used in
@@ -137,18 +126,17 @@ theorem finite_limits_from_equalizers_and_finite_products [has_finite_products C
             by 
               exact has_limit_of_equalizer_and_product F }⟩
 
-variable{D : Type u₂}[category.{v} D]
+variable {D : Type u₂} [category.{v} D]
 
 noncomputable theory
 
 section 
 
-variable[has_limits_of_shape (discrete J) C][has_limits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) C][has_equalizers C]
+variable [has_limits_of_shape (discrete J) C] [has_limits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) C]
+  [has_equalizers C]
 
-variable(G :
-    C ⥤
-      D)[preserves_limits_of_shape walking_parallel_pair
-      G][preserves_limits_of_shape (discrete J) G][preserves_limits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) G]
+variable (G : C ⥤ D) [preserves_limits_of_shape walking_parallel_pair G] [preserves_limits_of_shape (discrete J) G]
+  [preserves_limits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) G]
 
 /-- If a functor preserves equalizers and the appropriate products, it preserves limits. -/
 def preserves_limit_of_preserves_equalizers_and_product : preserves_limits_of_shape J G :=
@@ -226,20 +214,9 @@ We now dualize the above constructions, resorting to copy-paste.
 
 namespace HasColimitOfHasCoproductsOfHasCoequalizers
 
-variable{F :
-    J ⥤
-      C}{c₁ :
-    cofan
-      fun f : Σp : J × J, p.1 ⟶ p.2 =>
-        F.obj
-          f.1.1}{c₂ :
-    cofan
-      F.obj}(s t :
-    c₁.X ⟶
-      c₂.X)(hs :
-    ∀ f : Σp : J × J, p.1 ⟶ p.2,
-      c₁.ι.app f ≫ s =
-        F.map f.2 ≫ c₂.ι.app f.1.2)(ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app f ≫ t = c₂.ι.app f.1.1)(i : cofork s t)
+variable {F : J ⥤ C} {c₁ : cofan fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1} {c₂ : cofan F.obj} (s t : c₁.X ⟶ c₂.X)
+  (hs : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app f ≫ s = F.map f.2 ≫ c₂.ι.app f.1.2)
+  (ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app f ≫ t = c₂.ι.app f.1.1) (i : cofork s t)
 
 include hs ht
 
@@ -258,7 +235,7 @@ def build_colimit : cocone F :=
               dsimp 
               rw [category.comp_id, ←reassoc_of (hs ⟨⟨_, _⟩, f⟩), i.condition, ←category.assoc, ht] } }
 
-variable{i}
+variable {i}
 
 /--
 (Implementation) Show the cocone constructed in `build_colimit` is colimiting,
@@ -336,13 +313,11 @@ noncomputable theory
 
 section 
 
-variable[has_colimits_of_shape (discrete J)
-      C][has_colimits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) C][has_coequalizers C]
+variable [has_colimits_of_shape (discrete J) C] [has_colimits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) C]
+  [has_coequalizers C]
 
-variable(G :
-    C ⥤
-      D)[preserves_colimits_of_shape walking_parallel_pair
-      G][preserves_colimits_of_shape (discrete J) G][preserves_colimits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) G]
+variable (G : C ⥤ D) [preserves_colimits_of_shape walking_parallel_pair G] [preserves_colimits_of_shape (discrete J) G]
+  [preserves_colimits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) G]
 
 /-- If a functor preserves coequalizers and the appropriate coproducts, it preserves colimits. -/
 def preserves_colimit_of_preserves_coequalizers_and_coproduct : preserves_colimits_of_shape J G :=

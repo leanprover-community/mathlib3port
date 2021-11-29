@@ -20,7 +20,7 @@ namespace Polynomial
 
 open AbsoluteValue Real
 
-variable{Fq : Type _}[Field Fq][Fintype Fq]
+variable {Fq : Type _} [Field Fq] [Fintype Fq]
 
 -- error in NumberTheory.ClassNumber.AdmissibleCardPowDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `A` is a family of enough low-degree polynomials over a finite field, there is a

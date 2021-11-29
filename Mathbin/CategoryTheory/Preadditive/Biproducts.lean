@@ -40,11 +40,11 @@ noncomputable theory
 
 namespace CategoryTheory
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 section 
 
-variable[has_zero_morphisms.{v} C][has_binary_biproducts.{v} C]
+variable [has_zero_morphisms.{v} C] [has_binary_biproducts.{v} C]
 
 -- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -97,11 +97,11 @@ end
 
 section 
 
-variable[preadditive.{v} C][has_binary_biproducts.{v} C]
+variable [preadditive.{v} C] [has_binary_biproducts.{v} C]
 
-variable{X₁ X₂ Y₁ Y₂ : C}
+variable {X₁ X₂ Y₁ Y₂ : C}
 
-variable(f₁₁ : X₁ ⟶ Y₁)(f₁₂ : X₁ ⟶ Y₂)(f₂₁ : X₂ ⟶ Y₁)(f₂₂ : X₂ ⟶ Y₂)
+variable (f₁₁ : X₁ ⟶ Y₁) (f₁₂ : X₁ ⟶ Y₂) (f₂₁ : X₂ ⟶ Y₁) (f₂₂ : X₂ ⟶ Y₂)
 
 /--
 The "matrix" morphism `X₁ ⊞ X₂ ⟶ Y₁ ⊞ Y₂` with specified components.
@@ -268,7 +268,7 @@ end
 
 end 
 
-variable[preadditive.{v} C]
+variable [preadditive.{v} C]
 
 -- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem biproduct.column_nonzero_of_iso'

@@ -25,15 +25,15 @@ noncomputable theory
 abbrev LaurentSeries (R : Type _) [HasZero R] :=
   HahnSeries ℤ R
 
-variable{R : Type _}
+variable {R : Type _}
 
 namespace LaurentSeries
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
-instance  : Coe (PowerSeries R) (LaurentSeries R) :=
+instance : Coe (PowerSeries R) (LaurentSeries R) :=
   ⟨HahnSeries.ofPowerSeries ℤ R⟩
 
 theorem coe_power_series (x : PowerSeries R) : (x : LaurentSeries R) = HahnSeries.ofPowerSeries ℤ R x :=
@@ -139,7 +139,7 @@ theorem of_power_series_X_pow [CommSemiringₓ R] (n : ℕ) : of_power_series �
       rfl 
     rw [pow_succₓ, Int.coe_nat_succ, ih, of_power_series_X, mul_commₓ, single_mul_single, one_mulₓ]
 
-instance  [CommSemiringₓ R] : Algebra (PowerSeries R) (LaurentSeries R) :=
+instance [CommSemiringₓ R] : Algebra (PowerSeries R) (LaurentSeries R) :=
   (HahnSeries.ofPowerSeries ℤ R).toAlgebra
 
 @[simp]

@@ -52,7 +52,7 @@ open_locale Classical Cardinal
 
 universe u v w
 
-variable{α : Type _}{β : Type _}{γ : Type _}{r : α → α → Prop}{s : β → β → Prop}{t : γ → γ → Prop}
+variable {α : Type _} {β : Type _} {γ : Type _} {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop}
 
 namespace Ordinal
 
@@ -207,7 +207,7 @@ theorem type_ne_zero_iff_nonempty [IsWellOrder α r] : type r ≠ 0 ↔ Nonempty
 protected theorem one_ne_zero : (1 : Ordinal) ≠ 0 :=
   type_ne_zero_iff_nonempty.2 ⟨PUnit.unit⟩
 
-instance  : Nontrivial Ordinal.{u} :=
+instance : Nontrivial Ordinal.{u} :=
   ⟨⟨1, 0, Ordinal.one_ne_zero⟩⟩
 
 theorem zero_lt_one : (0 : Ordinal) < 1 :=
@@ -540,7 +540,7 @@ theorem add_is_limit a {b} : is_limit b → is_limit (a+b) :=
 def sub (a b : Ordinal.{u}) : Ordinal.{u} :=
   omin { o | a ≤ b+o } ⟨a, le_add_left _ _⟩
 
-instance  : Sub Ordinal :=
+instance : Sub Ordinal :=
   ⟨sub⟩
 
 theorem le_add_sub (a b : Ordinal) : a ≤ b+a - b :=
@@ -640,7 +640,7 @@ theorem one_add_of_omega_le {o} (h : omega ≤ o) : (1+o) = o :=
 
 /-- The multiplication of ordinals `o₁` and `o₂` is the (well founded) lexicographic order on
 `o₂ × o₁`. -/
-instance  : Monoidₓ Ordinal.{u} :=
+instance : Monoidₓ Ordinal.{u} :=
   { mul :=
       fun a b =>
         Quotientₓ.liftOn₂ a b
@@ -887,7 +887,7 @@ protected theorem div_aux (a b : Ordinal.{u}) (h : b ≠ 0) : Set.Nonempty { o |
 protected def div (a b : Ordinal.{u}) : Ordinal.{u} :=
   if h : b = 0 then 0 else omin { o | a < b*succ o } (Ordinal.div_aux a b h)
 
-instance  : Div Ordinal :=
+instance : Div Ordinal :=
   ⟨Ordinal.div⟩
 
 @[simp]
@@ -1062,7 +1062,7 @@ theorem dvd_antisymm {a b : Ordinal} (h₁ : a ∣ b) (h₂ : b ∣ a) : a = b :
 
 /-- `a % b` is the unique ordinal `o'` satisfying
   `a = b * o + o'` with `o' < b`. -/
-instance  : Mod Ordinal :=
+instance : Mod Ordinal :=
   ⟨fun a b => a - b*a / b⟩
 
 theorem mod_def (a b : Ordinal) : a % b = a - b*a / b :=
@@ -1233,7 +1233,7 @@ theorem is_normal.bsup_eq {f} (H : is_normal f) {o : Ordinal} (h : is_limit o) :
 def power (a b : Ordinal) : Ordinal :=
   if a = 0 then 1 - b else limit_rec_on b 1 (fun _ IH => IH*a) fun b _ => bsup.{u, u} b
 
-instance  : Pow Ordinal Ordinal :=
+instance : Pow Ordinal Ordinal :=
   ⟨power⟩
 
 local infixr:0 "^" => @pow Ordinal Ordinal Ordinal.hasPow

@@ -21,7 +21,7 @@ def Quiv :=
 
 namespace Quiv
 
-instance  : CoeSort Quiv (Type u) :=
+instance : CoeSort Quiv (Type u) :=
   { coe := bundled.α }
 
 instance str (C : Quiv.{v, u}) : Quiver.{v + 1, u} C :=
@@ -31,7 +31,7 @@ instance str (C : Quiv.{v, u}) : Quiver.{v + 1, u} C :=
 def of (C : Type u) [Quiver.{v + 1} C] : Quiv.{v, u} :=
   bundled.of C
 
-instance  : Inhabited Quiv :=
+instance : Inhabited Quiv :=
   ⟨Quiv.of (Quiver.Empty Pempty)⟩
 
 /-- Category structure on `Quiv` -/

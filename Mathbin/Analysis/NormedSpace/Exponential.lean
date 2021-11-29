@@ -49,7 +49,7 @@ open_locale Nat TopologicalSpace BigOperators Ennreal
 
 section AnyFieldAnyAlgebra
 
-variable(𝕂 𝔸 : Type _)[NondiscreteNormedField 𝕂][NormedRing 𝔸][NormedAlgebra 𝕂 𝔸]
+variable (𝕂 𝔸 : Type _) [NondiscreteNormedField 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸]
 
 /-- In a Banach algebra `𝔸` over a normed field `𝕂`, `exp_series 𝕂 𝔸` is the
 `formal_multilinear_series` whose `n`-th term is the map `(xᵢ) : 𝔸ⁿ ↦ (1/n! : 𝕂) • ∏ xᵢ`.
@@ -63,7 +63,7 @@ It is defined as the sum of the `formal_multilinear_series` `exp_series 𝕂 �
 noncomputable def exp (x : 𝔸) : 𝔸 :=
   (expSeries 𝕂 𝔸).Sum x
 
-variable{𝕂 𝔸}
+variable {𝕂 𝔸}
 
 theorem exp_series_apply_eq (x : 𝔸) (n : ℕ) : (expSeries 𝕂 𝔸 n fun _ => x) = (1 / n ! : 𝕂) • (x^n) :=
   by 
@@ -126,7 +126,7 @@ theorem norm_exp_series_field_summable_of_mem_ball (x : 𝕂) (hx : x ∈ Emetri
 
 section CompleteAlgebra
 
-variable[CompleteSpace 𝔸]
+variable [CompleteSpace 𝔸]
 
 theorem exp_series_summable_of_mem_ball (x : 𝔸) (hx : x ∈ Emetric.Ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
   Summable fun n => expSeries 𝕂 𝔸 n fun _ => x :=
@@ -207,7 +207,7 @@ end AnyFieldAnyAlgebra
 
 section AnyFieldCommAlgebra
 
-variable{𝕂 𝔸 : Type _}[NondiscreteNormedField 𝕂][NormedCommRing 𝔸][NormedAlgebra 𝕂 𝔸][CompleteSpace 𝔸]
+variable {𝕂 𝔸 : Type _} [NondiscreteNormedField 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 /-- In a commutative Banach-algebra `𝔸` over a normed field `𝕂` of characteristic zero,
 `exp 𝕂 𝔸 (x+y) = (exp 𝕂 𝔸 x) * (exp 𝕂 𝔸 y)` for all `x`, `y` in the disk of convergence. -/
@@ -221,7 +221,7 @@ section IsROrC
 
 section AnyAlgebra
 
-variable(𝕂 𝔸 : Type _)[IsROrC 𝕂][NormedRing 𝔸][NormedAlgebra 𝕂 𝔸]
+variable (𝕂 𝔸 : Type _) [IsROrC 𝕂] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸]
 
 -- error in Analysis.NormedSpace.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a normed algebra `𝔸` over `𝕂 = ℝ` or `𝕂 = ℂ`, the series defining the exponential map
@@ -242,7 +242,7 @@ theorem exp_series_radius_pos : 0 < (expSeries 𝕂 𝔸).radius :=
     rw [exp_series_radius_eq_top]
     exact WithTop.zero_lt_top
 
-variable{𝕂 𝔸}
+variable {𝕂 𝔸}
 
 section CompleteAlgebra
 
@@ -255,7 +255,7 @@ theorem norm_exp_series_summable' (x : 𝔸) : Summable fun n => ∥(1 / n ! : �
 theorem norm_exp_series_field_summable (x : 𝕂) : Summable fun n => ∥(x^n) / n !∥ :=
   norm_exp_series_field_summable_of_mem_ball x ((exp_series_radius_eq_top 𝕂 𝕂).symm ▸ edist_lt_top _ _)
 
-variable[CompleteSpace 𝔸]
+variable [CompleteSpace 𝔸]
 
 theorem exp_series_summable (x : 𝔸) : Summable fun n => expSeries 𝕂 𝔸 n fun _ => x :=
   summable_of_summable_norm (norm_exp_series_summable x)
@@ -303,7 +303,7 @@ end AnyAlgebra
 
 section CommAlgebra
 
-variable{𝕂 𝔸 : Type _}[IsROrC 𝕂][NormedCommRing 𝔸][NormedAlgebra 𝕂 𝔸][CompleteSpace 𝔸]
+variable {𝕂 𝔸 : Type _} [IsROrC 𝕂] [NormedCommRing 𝔸] [NormedAlgebra 𝕂 𝔸] [CompleteSpace 𝔸]
 
 attribute [local instance] char_zero_R_or_C
 
@@ -319,8 +319,8 @@ end IsROrC
 
 section ScalarTower
 
-variable(𝕂 𝕂' 𝔸 :
-    Type _)[NondiscreteNormedField 𝕂][NondiscreteNormedField 𝕂'][NormedRing 𝔸][NormedAlgebra 𝕂 𝔸][NormedAlgebra 𝕂' 𝔸]
+variable (𝕂 𝕂' 𝔸 : Type _) [NondiscreteNormedField 𝕂] [NondiscreteNormedField 𝕂'] [NormedRing 𝔸] [NormedAlgebra 𝕂 𝔸]
+  [NormedAlgebra 𝕂' 𝔸]
 
 /-- If a normed ring `𝔸` is a normed algebra over two fields, then they define the same
 `exp_series` on `𝔸`. -/

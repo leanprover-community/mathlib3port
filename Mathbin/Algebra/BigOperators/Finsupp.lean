@@ -11,13 +11,13 @@ This file contains theorems relevant to big operators in finitely supported func
 
 open_locale BigOperators
 
-variable{α ι γ A B C : Type _}[AddCommMonoidₓ A][AddCommMonoidₓ B][AddCommMonoidₓ C]
+variable {α ι γ A B C : Type _} [AddCommMonoidₓ A] [AddCommMonoidₓ B] [AddCommMonoidₓ C]
 
-variable{t : ι → A → C}(h0 : ∀ i, t i 0 = 0)(h1 : ∀ i x y, t i (x+y) = t i x+t i y)
+variable {t : ι → A → C} (h0 : ∀ i, t i 0 = 0) (h1 : ∀ i x y, t i (x+y) = t i x+t i y)
 
-variable{s : Finset α}{f : α → ι →₀ A}(i : ι)
+variable {s : Finset α} {f : α → ι →₀ A} (i : ι)
 
-variable(g : ι →₀ A)(k : ι → A → γ → B)(x : γ)
+variable (g : ι →₀ A) (k : ι → A → γ → B) (x : γ)
 
 theorem Finset.sum_apply' : (∑k in s, f k) i = ∑k in s, f k i :=
   (Finsupp.applyAddHom i : (ι →₀ A) →+ A).map_sum f s
@@ -41,7 +41,7 @@ end
 
 section 
 
-variable{R S : Type _}[NonUnitalNonAssocSemiring R][NonUnitalNonAssocSemiring S]
+variable {R S : Type _} [NonUnitalNonAssocSemiring R] [NonUnitalNonAssocSemiring S]
 
 theorem Finsupp.sum_mul (b : S) (s : α →₀ R) {f : α → R → S} : (s.sum f*b) = s.sum fun a c => f a c*b :=
   by 

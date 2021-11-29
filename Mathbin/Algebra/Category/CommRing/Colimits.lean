@@ -27,7 +27,7 @@ and the identifications given by the morphisms in the diagram.
 -/
 
 
-variable{J : Type v}[small_category J](F : J ⥤ CommRingₓₓ.{v})
+variable {J : Type v} [small_category J] (F : J ⥤ CommRingₓₓ.{v})
 
 /--
 An inductive type representing all commutative ring expressions (without relations)
@@ -41,7 +41,7 @@ inductive prequotient
   | add : prequotient → prequotient → prequotient
   | mul : prequotient → prequotient → prequotient
 
-instance  : Inhabited (prequotient F) :=
+instance : Inhabited (prequotient F) :=
   ⟨prequotient.zero⟩
 
 open Prequotient
@@ -92,7 +92,7 @@ The underlying type of the colimit of a diagram in `CommRing`.
 -/ @[derive #[expr inhabited]] def colimit_type : Type v :=
 quotient (colimit_setoid F)
 
-instance  : CommRingₓ (colimit_type F) :=
+instance : CommRingₓ (colimit_type F) :=
   { zero :=
       by 
         exact Quot.mk _ zero,

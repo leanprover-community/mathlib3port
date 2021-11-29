@@ -116,7 +116,7 @@ theorem popn_empty {n : ℕ} : "".popn n = "" :=
       ·
         simpa only [←to_list_inj] using hs
 
-instance  : LinearOrderₓ Stringₓ :=
+instance : LinearOrderₓ Stringₓ :=
   { lt := · < ·, le := · ≤ ·,
     decidableLt :=
       by 

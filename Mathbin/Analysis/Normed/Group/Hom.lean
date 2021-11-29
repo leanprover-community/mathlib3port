@@ -26,14 +26,14 @@ noncomputable theory
 open_locale Nnreal BigOperators
 
 /-- A morphism of seminormed abelian groups is a bounded group homomorphism. -/
-structure NormedGroupHom(V W : Type _)[SemiNormedGroup V][SemiNormedGroup W] where 
+structure NormedGroupHom (V W : Type _) [SemiNormedGroup V] [SemiNormedGroup W] where 
   toFun : V → W 
   map_add' : ∀ v₁ v₂, to_fun (v₁+v₂) = to_fun v₁+to_fun v₂ 
   bound' : ∃ C, ∀ v, ∥to_fun v∥ ≤ C*∥v∥
 
 namespace AddMonoidHom
 
-variable{V W : Type _}[SemiNormedGroup V][SemiNormedGroup W]{f g : NormedGroupHom V W}
+variable {V W : Type _} [SemiNormedGroup V] [SemiNormedGroup W] {f g : NormedGroupHom V W}
 
 /-- Associate to a group homomorphism a bounded group homomorphism under a norm control condition.
 
@@ -59,13 +59,13 @@ theorem exists_pos_bound_of_bound {V W : Type _} [SemiNormedGroup V] [SemiNormed
 
 namespace NormedGroupHom
 
-variable{V V₁ V₂ V₃ : Type _}
+variable {V V₁ V₂ V₃ : Type _}
 
-variable[SemiNormedGroup V][SemiNormedGroup V₁][SemiNormedGroup V₂][SemiNormedGroup V₃]
+variable [SemiNormedGroup V] [SemiNormedGroup V₁] [SemiNormedGroup V₂] [SemiNormedGroup V₃]
 
-variable{f g : NormedGroupHom V₁ V₂}
+variable {f g : NormedGroupHom V₁ V₂}
 
-instance  : CoeFun (NormedGroupHom V₁ V₂) fun _ => V₁ → V₂ :=
+instance : CoeFun (NormedGroupHom V₁ V₂) fun _ => V₁ → V₂ :=
   ⟨NormedGroupHom.toFun⟩
 
 initialize_simps_projections NormedGroupHom (toFun → apply)
@@ -90,7 +90,7 @@ theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
       rintro rfl x <;> rfl,
     ext⟩
 
-variable(f g)
+variable (f g)
 
 @[simp]
 theorem to_fun_eq_coe : f.to_fun = f :=
@@ -290,7 +290,7 @@ alias mk_normed_group_hom_norm_le' ← AddMonoidHom.mk_normed_group_hom_norm_le'
 
 
 /-- Addition of normed group homs. -/
-instance  : Add (NormedGroupHom V₁ V₂) :=
+instance : Add (NormedGroupHom V₁ V₂) :=
   ⟨fun f g =>
       (f.to_add_monoid_hom+g.to_add_monoid_hom).mkNormedGroupHom (∥f∥+∥g∥)$
         fun v =>
@@ -324,12 +324,12 @@ theorem add_apply (f g : NormedGroupHom V₁ V₂) (v : V₁) : (f+g : NormedGro
 /-! ### The zero normed group hom -/
 
 
-instance  : HasZero (NormedGroupHom V₁ V₂) :=
+instance : HasZero (NormedGroupHom V₁ V₂) :=
   ⟨(0 : V₁ →+ V₂).mkNormedGroupHom 0
       (by 
         simp )⟩
 
-instance  : Inhabited (NormedGroupHom V₁ V₂) :=
+instance : Inhabited (NormedGroupHom V₁ V₂) :=
   ⟨0⟩
 
 /-- The norm of the `0` operator is `0`. -/
@@ -369,12 +369,12 @@ theorem coe_zero : «expr⇑ » (0 : NormedGroupHom V₁ V₂) = (0 : V₁ → V
 theorem zero_apply (v : V₁) : (0 : NormedGroupHom V₁ V₂) v = 0 :=
   rfl
 
-variable{f g}
+variable {f g}
 
 /-! ### The identity normed group hom -/
 
 
-variable(V)
+variable (V)
 
 /-- The identity as a continuous normed group hom. -/
 @[simps]
@@ -415,7 +415,7 @@ theorem coe_id : (NormedGroupHom.id V : V → V) = (_root_.id : V → V) :=
 
 
 /-- Opposite of a normed group hom. -/
-instance  : Neg (NormedGroupHom V₁ V₂) :=
+instance : Neg (NormedGroupHom V₁ V₂) :=
   ⟨fun f =>
       (-f.to_add_monoid_hom).mkNormedGroupHom ∥f∥
         fun v =>
@@ -438,7 +438,7 @@ theorem op_norm_neg (f : NormedGroupHom V₁ V₂) : ∥-f∥ = ∥f∥ :=
 
 
 /-- Subtraction of normed group homs. -/
-instance  : Sub (NormedGroupHom V₁ V₂) :=
+instance : Sub (NormedGroupHom V₁ V₂) :=
   ⟨fun f g =>
       { f.to_add_monoid_hom - g.to_add_monoid_hom with
         bound' :=
@@ -458,7 +458,7 @@ theorem sub_apply (f g : NormedGroupHom V₁ V₂) (v : V₁) : (f - g : NormedG
 
 
 /-- Homs between two given normed groups form a commutative additive group. -/
-instance  : AddCommGroupₓ (NormedGroupHom V₁ V₂) :=
+instance : AddCommGroupₓ (NormedGroupHom V₁ V₂) :=
   coe_injective.AddCommGroup _ rfl (fun _ _ => rfl) (fun _ => rfl) fun _ _ => rfl
 
 /-- Normed group homomorphisms themselves form a seminormed group with respect to
@@ -553,9 +553,9 @@ end NormedGroupHom
 
 namespace NormedGroupHom
 
-variable{V W V₁ V₂ V₃ : Type _}
+variable {V W V₁ V₂ V₃ : Type _}
 
-variable[SemiNormedGroup V][SemiNormedGroup W][SemiNormedGroup V₁][SemiNormedGroup V₂][SemiNormedGroup V₃]
+variable [SemiNormedGroup V] [SemiNormedGroup W] [SemiNormedGroup V₁] [SemiNormedGroup V₂] [SemiNormedGroup V₃]
 
 /-- The inclusion of an `add_subgroup`, as bounded group homomorphism. -/
 @[simps]
@@ -576,7 +576,7 @@ theorem norm_incl {V' : AddSubgroup V} (x : V') : ∥incl _ x∥ = ∥x∥ :=
 
 section Kernels
 
-variable(f : NormedGroupHom V₁ V₂)(g : NormedGroupHom V₂ V₃)
+variable (f : NormedGroupHom V₁ V₂) (g : NormedGroupHom V₂ V₃)
 
 /-- The kernel of a bounded group homomorphism. Naturally endowed with a
 `semi_normed_group` instance. -/
@@ -632,7 +632,7 @@ end Kernels
 
 section Range
 
-variable(f : NormedGroupHom V₁ V₂)(g : NormedGroupHom V₂ V₃)
+variable (f : NormedGroupHom V₁ V₂) (g : NormedGroupHom V₂ V₃)
 
 /-- The image of a bounded group homomorphism. Naturally endowed with a
 `semi_normed_group` instance. -/
@@ -672,7 +672,7 @@ theorem range_comp_incl_top : (f.comp (incl (⊤ : AddSubgroup V₁))).range = f
 
 end Range
 
-variable{f : NormedGroupHom V W}
+variable {f : NormedGroupHom V W}
 
 /-- A `normed_group_hom` is *norm-nonincreasing* if `∥f v∥ ≤ ∥v∥` for all `v`. -/
 def norm_noninc (f : NormedGroupHom V W) : Prop :=
@@ -733,15 +733,15 @@ theorem norm_noninc_of_isometry (hf : Isometry f) : f.norm_noninc :=
 
 end Isometry
 
-variable{W₁ W₂ W₃ : Type _}[SemiNormedGroup W₁][SemiNormedGroup W₂][SemiNormedGroup W₃]
+variable {W₁ W₂ W₃ : Type _} [SemiNormedGroup W₁] [SemiNormedGroup W₂] [SemiNormedGroup W₃]
 
-variable(f)(g : NormedGroupHom V W)
+variable (f) (g : NormedGroupHom V W)
 
-variable{f₁ g₁ : NormedGroupHom V₁ W₁}
+variable {f₁ g₁ : NormedGroupHom V₁ W₁}
 
-variable{f₂ g₂ : NormedGroupHom V₂ W₂}
+variable {f₂ g₂ : NormedGroupHom V₂ W₂}
 
-variable{f₃ g₃ : NormedGroupHom V₃ W₃}
+variable {f₃ g₃ : NormedGroupHom V₃ W₃}
 
 /-- The equalizer of two morphisms `f g : normed_group_hom V W`. -/
 def equalizer :=
@@ -759,7 +759,7 @@ theorem comp_ι_eq : f.comp (ι f g) = g.comp (ι f g) :=
     rw [comp_apply, comp_apply, ←sub_eq_zero, ←NormedGroupHom.sub_apply]
     exact x.2
 
-variable{f g}
+variable {f g}
 
 /-- If `φ : normed_group_hom V₁ V` is such that `f.comp φ = g.comp φ`, the induced morphism
 `normed_group_hom V₁ (f.equalizer g)`. -/
@@ -815,9 +815,9 @@ def map (φ : NormedGroupHom V₁ V₂) (ψ : NormedGroupHom W₁ W₂) (hf : ψ
       simp only [←comp_assoc, ←hf, ←hg]
       simp only [comp_assoc, comp_ι_eq]
 
-variable{φ : NormedGroupHom V₁ V₂}{ψ : NormedGroupHom W₁ W₂}
+variable {φ : NormedGroupHom V₁ V₂} {ψ : NormedGroupHom W₁ W₂}
 
-variable{φ' : NormedGroupHom V₂ V₃}{ψ' : NormedGroupHom W₂ W₃}
+variable {φ' : NormedGroupHom V₂ V₃} {ψ' : NormedGroupHom W₂ W₃}
 
 @[simp]
 theorem ι_comp_map (hf : ψ.comp f₁ = f₂.comp φ) (hg : ψ.comp g₁ = g₂.comp φ) :
@@ -872,9 +872,9 @@ open Filter Finset
 
 open_locale TopologicalSpace
 
-variable{G : Type _}[NormedGroup G][CompleteSpace G]
+variable {G : Type _} [NormedGroup G] [CompleteSpace G]
 
-variable{H : Type _}[NormedGroup H]
+variable {H : Type _} [NormedGroup H]
 
 -- error in Analysis.Normed.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given `f : normed_group_hom G H` for some complete `G` and a subgroup `K` of `H`, if every

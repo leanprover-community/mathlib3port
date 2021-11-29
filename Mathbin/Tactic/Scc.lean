@@ -102,7 +102,7 @@ unsafe def to_tactic_format (cl : closure) : tactic format :=
             | Sum.inr ⟨y, p⟩ => f!"({( ← x)}, {( ← y)}) : { ← infer_type p }"
     pure$ to_fmt fmt
 
-unsafe instance  : has_to_tactic_format closure :=
+unsafe instance : has_to_tactic_format closure :=
   ⟨to_tactic_format⟩
 
 /-- `(n,r,p) ← root cl e` returns `r` the root of the tree that `e` is a part of (which might be

@@ -20,7 +20,7 @@ This file defines the `vandermonde` matrix and gives its determinant.
 -/
 
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
 open_locale BigOperators
 

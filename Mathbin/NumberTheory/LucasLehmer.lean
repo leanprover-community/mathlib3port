@@ -189,7 +189,7 @@ def X (q : «exprℕ+»()) : Type :=
 
 namespace X
 
-variable{q : ℕ+}
+variable {q : ℕ+}
 
 @[ext]
 theorem ext {x y : X q} (h₁ : x.1 = y.1) (h₂ : x.2 = y.2) : x = y :=
@@ -214,7 +214,7 @@ theorem neg_fst (x : X q) : (-x).1 = -x.1 :=
 theorem neg_snd (x : X q) : (-x).2 = -x.2 :=
   rfl
 
-instance  : Mul (X q) :=
+instance : Mul (X q) :=
   { mul := fun x y => ((x.1*y.1)+(3*x.2)*y.2, (x.1*y.2)+x.2*y.1) }
 
 @[simp]
@@ -225,7 +225,7 @@ theorem mul_fst (x y : X q) : (x*y).1 = (x.1*y.1)+(3*x.2)*y.2 :=
 theorem mul_snd (x y : X q) : (x*y).2 = (x.1*y.2)+x.2*y.1 :=
   rfl
 
-instance  : HasOne (X q) :=
+instance : HasOne (X q) :=
   { one := ⟨1, 0⟩ }
 
 @[simp]
@@ -254,7 +254,7 @@ theorem bit1_snd (x : X q) : (bit1 x).2 = bit0 x.2 :=
     dsimp [bit1]
     simp 
 
-instance  : Monoidₓ (X q) :=
+instance : Monoidₓ (X q) :=
   { (inferInstance : Mul (X q)) with
     mul_assoc :=
       fun x y z =>
@@ -287,11 +287,11 @@ theorem right_distrib (x y z : X q) : ((x+y)*z) = (x*z)+y*z :=
         dsimp 
         ring
 
-instance  : Ringₓ (X q) :=
+instance : Ringₓ (X q) :=
   { (inferInstance : AddCommGroupₓ (X q)), (inferInstance : Monoidₓ (X q)) with left_distrib := left_distrib,
     right_distrib := right_distrib }
 
-instance  : CommRingₓ (X q) :=
+instance : CommRingₓ (X q) :=
   { (inferInstance : Ringₓ (X q)) with
     mul_comm :=
       fun x y =>
@@ -301,7 +301,7 @@ instance  : CommRingₓ (X q) :=
               dsimp 
               ring }
 
-instance  [Fact (1 < (q : ℕ))] : Nontrivial (X q) :=
+instance [Fact (1 < (q : ℕ))] : Nontrivial (X q) :=
   ⟨⟨0, 1,
       fun h =>
         by 
@@ -553,7 +553,7 @@ begin
   exact [expr not_lt_of_ge (nat.sub_le _ _) h]
 end
 
-example  : (mersenne 5).Prime :=
+example : (mersenne 5).Prime :=
   lucas_lehmer_sufficiency 5
     (by 
       normNum)
@@ -611,7 +611,7 @@ unsafe def run_test : tactic Unit :=
 end LucasLehmer
 
 /-- We verify that the tactic works to prove `127.prime`. -/
-example  : (mersenne 7).Prime :=
+example : (mersenne 7).Prime :=
   lucas_lehmer_sufficiency _
     (by 
       normNum)

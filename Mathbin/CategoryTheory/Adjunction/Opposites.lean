@@ -18,7 +18,7 @@ open CategoryTheory
 
 universe v₁ v₂ u₁ u₂
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 namespace Adjunction
 

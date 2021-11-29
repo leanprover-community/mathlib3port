@@ -15,7 +15,7 @@ open Sum
 
 namespace CategoryTheory.sum
 
-variable(C : Type u)[category.{v} C](D : Type u)[category.{v} D](E : Type u)[category.{v} E]
+variable (C : Type u) [category.{v} C] (D : Type u) [category.{v} D] (E : Type u) [category.{v} E]
 
 /--
 The associator functor `(C ⊕ D) ⊕ E ⥤ C ⊕ (D ⊕ E)` for sums of categories.

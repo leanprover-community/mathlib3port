@@ -41,9 +41,9 @@ open CategoryTheory.Limits
 
 namespace Top.Presheaf
 
-variable{X : Top.{v}}
+variable {X : Top.{v}}
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /--
 An alternative formulation of the sheaf condition
@@ -74,7 +74,7 @@ to the usual sheaf condition.
 -/
 
 
-variable[has_products C]
+variable [has_products C]
 
 namespace SheafConditionPairwiseIntersections
 

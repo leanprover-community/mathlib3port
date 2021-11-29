@@ -1,4 +1,4 @@
-import Mathbin.Order.Filter.AtTopBot
+import Mathbin.Order.Filter.Cofinite
 
 /-!
 # liminfs and limsups of functions and filters
@@ -33,7 +33,7 @@ open Filter Set
 
 open_locale Filter
 
-variable{α β ι : Type _}
+variable {α β ι : Type _}
 
 namespace Filter
 
@@ -50,7 +50,7 @@ the relation `≺`, i.e. eventually, it is bounded by some uniform bound. -/
 def is_bounded_under (r : α → α → Prop) (f : Filter β) (u : β → α) :=
   (f.map u).IsBounded r
 
-variable{r : α → α → Prop}{f g : Filter α}
+variable {r : α → α → Prop} {f g : Filter α}
 
 /-- `f` is eventually bounded if and only if, there exists an admissible set on which it is
 bounded. -/
@@ -92,12 +92,12 @@ theorem is_bounded.is_bounded_under {q : β → β → Prop} {u : α → β} (hf
 
 -- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem not_is_bounded_under_of_tendsto_at_top
-[nonempty α]
-[semilattice_sup α]
 [preorder β]
 [no_top_order β]
 {f : α → β}
-(hf : tendsto f at_top at_top) : «expr¬ »(is_bounded_under ((«expr ≤ »)) at_top f) :=
+{l : filter α}
+[l.ne_bot]
+(hf : tendsto f l at_top) : «expr¬ »(is_bounded_under ((«expr ≤ »)) l f) :=
 begin
   rintro ["⟨", ident b, ",", ident hb, "⟩"],
   rw [expr eventually_map] ["at", ident hb],
@@ -105,26 +105,38 @@ begin
   have [ident hb'] [] [":=", expr tendsto_at_top.mp hf b'],
   have [] [":", expr «expr = »(«expr ∩ »({x : α | «expr ≤ »(f x, b)}, {x : α | «expr ≤ »(b', f x)}), «expr∅»())] [":=", expr eq_empty_of_subset_empty (λ
     x hx, not_le_of_lt h (le_trans hx.2 hx.1))],
-  exact [expr at_top.empty_not_mem («expr ▸ »(this, filter.inter_mem hb hb') : «expr ∈ »(«expr∅»(), (at_top : filter α)))]
+  exact [expr (nonempty_of_mem (hb.and hb')).ne_empty this]
 end
 
+theorem not_is_bounded_under_of_tendsto_at_bot [Preorderₓ β] [NoBotOrder β] {f : α → β} {l : Filter α} [l.ne_bot]
+  (hf : tendsto f l at_bot) : ¬is_bounded_under (· ≥ ·) l f :=
+  @not_is_bounded_under_of_tendsto_at_top α (OrderDual β) _ _ _ _ _ hf
+
 -- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem not_is_bounded_under_of_tendsto_at_bot
-[nonempty α]
-[semilattice_sup α]
-[preorder β]
-[no_bot_order β]
+theorem is_bounded_under.bdd_above_range_of_cofinite
+[semilattice_sup β]
 {f : α → β}
-(hf : tendsto f at_top at_bot) : «expr¬ »(is_bounded_under ((«expr ≥ »)) at_top f) :=
+(hf : is_bounded_under ((«expr ≤ »)) cofinite f) : bdd_above (range f) :=
 begin
-  rintro ["⟨", ident b, ",", ident hb, "⟩"],
-  rw [expr eventually_map] ["at", ident hb],
-  obtain ["⟨", ident b', ",", ident h, "⟩", ":=", expr no_bot b],
-  have [ident hb'] [] [":=", expr tendsto_at_bot.mp hf b'],
-  have [] [":", expr «expr = »(«expr ∩ »({x : α | «expr ≤ »(b, f x)}, {x : α | «expr ≤ »(f x, b')}), «expr∅»())] [":=", expr eq_empty_of_subset_empty (λ
-    x hx, not_le_of_lt h (le_trans hx.1 hx.2))],
-  exact [expr at_top.empty_not_mem («expr ▸ »(this, filter.inter_mem hb hb') : «expr ∈ »(«expr∅»(), (at_top : filter α)))]
+  rcases [expr hf, "with", "⟨", ident b, ",", ident hb, "⟩"],
+  haveI [] [":", expr nonempty β] [":=", expr ⟨b⟩],
+  rw ["[", "<-", expr image_univ, ",", "<-", expr union_compl_self {x | «expr ≤ »(f x, b)}, ",", expr image_union, ",", expr bdd_above_union, "]"] [],
+  exact [expr ⟨⟨b, «expr $ »(ball_image_iff.2, λ x, id)⟩, (hb.image f).bdd_above⟩]
 end
+
+theorem is_bounded_under.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α → β}
+  (hf : is_bounded_under (· ≥ ·) cofinite f) : BddBelow (range f) :=
+  @is_bounded_under.bdd_above_range_of_cofinite α (OrderDual β) _ _ hf
+
+theorem is_bounded_under.bdd_above_range [SemilatticeSup β] {f : ℕ → β} (hf : is_bounded_under (· ≤ ·) at_top f) :
+  BddAbove (range f) :=
+  by 
+    rw [←Nat.cofinite_eq_at_top] at hf 
+    exact hf.bdd_above_range_of_cofinite
+
+theorem is_bounded_under.bdd_below_range [SemilatticeInf β] {f : ℕ → β} (hf : is_bounded_under (· ≥ ·) at_top f) :
+  BddBelow (range f) :=
+  @is_bounded_under.bdd_above_range (OrderDual β) _ _ hf
 
 /-- `is_cobounded (≺) f` states that the filter `f` does not tend to infinity w.r.t. `≺`. This is
 also called frequently bounded. Will be usually instantiated with `≤` or `≥`.
@@ -224,7 +236,7 @@ unsafe def is_bounded_default : tactic Unit :=
 
 section ConditionallyCompleteLattice
 
-variable[ConditionallyCompleteLattice α]
+variable [ConditionallyCompleteLattice α]
 
 /-- The `Limsup` of a filter `f` is the infimum of the `a` such that, eventually for `f`,
 holds `x ≤ a`. -/
@@ -248,7 +260,7 @@ def liminf (f : Filter β) (u : β → α) : α :=
 
 section 
 
-variable{f : Filter β}{u : β → α}
+variable {f : Filter β} {u : β → α}
 
 theorem limsup_eq : f.limsup u = Inf { a | ∀ᶠn in f, u n ≤ a } :=
   rfl
@@ -429,7 +441,7 @@ end ConditionallyCompleteLattice
 
 section CompleteLattice
 
-variable[CompleteLattice α]
+variable [CompleteLattice α]
 
 @[simp]
 theorem Limsup_bot : (⊥ : Filter α).limsup = ⊥ :=

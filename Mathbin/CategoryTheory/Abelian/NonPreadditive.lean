@@ -55,7 +55,7 @@ section
 
 universe v u
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 /-- We call a category `non_preadditive_abelian` if it has a zero object, kernels, cokernels, binary
     products and coproducts, and every monomorphism and every epimorphism is normal. -/
@@ -93,11 +93,11 @@ namespace CategoryTheory.NonPreadditiveAbelian
 
 universe v u
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 section 
 
-variable[non_preadditive_abelian C]
+variable [non_preadditive_abelian C]
 
 section Strong
 
@@ -112,7 +112,7 @@ end Strong
 
 section MonoEpiIso
 
-variable{X Y : C}(f : X ⟶ Y)
+variable {X Y : C} (f : X ⟶ Y)
 
 attribute [local instance] strong_epi_of_epi
 
@@ -416,7 +416,7 @@ section
 attribute [local instance] has_limit_parallel_pair
 
 /-- A `non_preadditive_abelian` category has all equalizers. -/
-instance (priority := 100)has_equalizers : has_equalizers C :=
+instance (priority := 100) has_equalizers : has_equalizers C :=
   has_equalizers_of_has_limit_parallel_pair _
 
 end 
@@ -426,7 +426,7 @@ section
 attribute [local instance] has_colimit_parallel_pair
 
 /-- A `non_preadditive_abelian` category has all coequalizers. -/
-instance (priority := 100)has_coequalizers : has_coequalizers C :=
+instance (priority := 100) has_coequalizers : has_coequalizers C :=
   has_coequalizers_of_has_colimit_parallel_pair _
 
 end 
@@ -515,7 +515,7 @@ end
 
 section Factor
 
-variable{P Q : C}(f : P ⟶ Q)
+variable {P Q : C} (f : P ⟶ Q)
 
 /-- The kernel of the cokernel of `f` is called the image of `f`. -/
 protected abbrev image : C :=
@@ -633,7 +633,7 @@ end Factor
 
 section CokernelOfKernel
 
-variable{X Y : C}{f : X ⟶ Y}
+variable {X Y : C} {f : X ⟶ Y}
 
 /-- In a `non_preadditive_abelian` category, an epi is the cokernel of its kernel. More precisely:
     If `f` is an epimorphism and `s` is some limit kernel cone on `f`, then `f` is a cokernel

@@ -6,9 +6,9 @@ namespace Buffer
 
 open Function
 
-variable{α : Type _}{xs : List α}
+variable {α : Type _} {xs : List α}
 
-instance  : Inhabited (Buffer α) :=
+instance : Inhabited (Buffer α) :=
   ⟨nil⟩
 
 -- error in Data.Buffer.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -43,7 +43,7 @@ theorem size_nil : (@nil α).size = 0 :=
 theorem to_list_nil : to_list (@nil α) = [] :=
   rfl
 
-instance  α [DecidableEq α] : DecidableEq (Buffer α) :=
+instance α [DecidableEq α] : DecidableEq (Buffer α) :=
   by 
     runTac 
       tactic.mk_dec_eq_instance
@@ -272,10 +272,10 @@ def list_equiv_buffer (α : Type _) : List α ≃ Buffer α :=
   by 
     refine' { toFun := List.toBuffer, invFun := Buffer.toList, .. } <;> simp [left_inverse, Function.RightInverse]
 
-instance  : Traversable Buffer :=
+instance : Traversable Buffer :=
   Equiv.traversable list_equiv_buffer
 
-instance  : IsLawfulTraversable Buffer :=
+instance : IsLawfulTraversable Buffer :=
   Equiv.isLawfulTraversable list_equiv_buffer
 
 /--

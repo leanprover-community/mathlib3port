@@ -50,21 +50,21 @@ monoid_hom, add_monoid_hom
 -/
 
 
-variable{M : Type _}{N : Type _}{P : Type _}{G : Type _}{H : Type _}
+variable {M : Type _} {N : Type _} {P : Type _} {G : Type _} {H : Type _}
 
 /-- Homomorphism that preserves zero -/
-structure ZeroHom(M : Type _)(N : Type _)[HasZero M][HasZero N] where 
+structure ZeroHom (M : Type _) (N : Type _) [HasZero M] [HasZero N] where 
   toFun : M → N 
   map_zero' : to_fun 0 = 0
 
 /-- Homomorphism that preserves addition -/
-structure AddHom(M : Type _)(N : Type _)[Add M][Add N] where 
+structure AddHom (M : Type _) (N : Type _) [Add M] [Add N] where 
   toFun : M → N 
   map_add' : ∀ x y, to_fun (x+y) = to_fun x+to_fun y
 
 /-- Bundled add_monoid homomorphisms; use this for bundled add_group homomorphisms too. -/
 @[ancestor ZeroHom AddHom]
-structure AddMonoidHom(M : Type _)(N : Type _)[AddZeroClass M][AddZeroClass N] extends ZeroHom M N, AddHom M N
+structure AddMonoidHom (M : Type _) (N : Type _) [AddZeroClass M] [AddZeroClass N] extends ZeroHom M N, AddHom M N
 
 attribute [nolint doc_blame] AddMonoidHom.toAddHom
 
@@ -74,24 +74,24 @@ infixr:25 " →+ " => AddMonoidHom
 
 /-- Homomorphism that preserves one -/
 @[toAdditive]
-structure OneHom(M : Type _)(N : Type _)[HasOne M][HasOne N] where 
+structure OneHom (M : Type _) (N : Type _) [HasOne M] [HasOne N] where 
   toFun : M → N 
   map_one' : to_fun 1 = 1
 
 /-- Homomorphism that preserves multiplication -/
 @[toAdditive]
-structure MulHom(M : Type _)(N : Type _)[Mul M][Mul N] where 
+structure MulHom (M : Type _) (N : Type _) [Mul M] [Mul N] where 
   toFun : M → N 
   map_mul' : ∀ x y, to_fun (x*y) = to_fun x*to_fun y
 
 /-- Bundled monoid homomorphisms; use this for bundled group homomorphisms too. -/
 @[ancestor OneHom MulHom, toAdditive]
-structure MonoidHom(M : Type _)(N : Type _)[MulOneClass M][MulOneClass N] extends OneHom M N, MulHom M N
+structure MonoidHom (M : Type _) (N : Type _) [MulOneClass M] [MulOneClass N] extends OneHom M N, MulHom M N
 
 /-- Bundled monoid with zero homomorphisms; use this for bundled group with zero homomorphisms
 too. -/
 @[ancestor ZeroHom MonoidHom]
-structure MonoidWithZeroHom(M : Type _)(N : Type _)[MulZeroOneClass M][MulZeroOneClass N] extends ZeroHom M N,
+structure MonoidWithZeroHom (M : Type _) (N : Type _) [MulZeroOneClass M] [MulZeroOneClass N] extends ZeroHom M N,
   MonoidHom M N
 
 attribute [nolint doc_blame] MonoidHom.toMulHom
@@ -151,18 +151,18 @@ theorem MonoidWithZeroHom.coe_eq_to_zero_hom {mM : MulZeroOneClass M} {mN : MulZ
   rfl
 
 @[toAdditive]
-instance  {mM : HasOne M} {mN : HasOne N} : CoeFun (OneHom M N) fun _ => M → N :=
+instance {mM : HasOne M} {mN : HasOne N} : CoeFun (OneHom M N) fun _ => M → N :=
   ⟨OneHom.toFun⟩
 
 @[toAdditive]
-instance  {mM : Mul M} {mN : Mul N} : CoeFun (MulHom M N) fun _ => M → N :=
+instance {mM : Mul M} {mN : Mul N} : CoeFun (MulHom M N) fun _ => M → N :=
   ⟨MulHom.toFun⟩
 
 @[toAdditive]
-instance  {mM : MulOneClass M} {mN : MulOneClass N} : CoeFun (M →* N) fun _ => M → N :=
+instance {mM : MulOneClass M} {mN : MulOneClass N} : CoeFun (M →* N) fun _ => M → N :=
   ⟨MonoidHom.toFun⟩
 
-instance  {mM : MulZeroOneClass M} {mN : MulZeroOneClass N} : CoeFun (MonoidWithZeroHom M N) fun _ => M → N :=
+instance {mM : MulZeroOneClass M} {mN : MulZeroOneClass N} : CoeFun (MonoidWithZeroHom M N) fun _ => M → N :=
   ⟨MonoidWithZeroHom.toFun⟩
 
 initialize_simps_projections ZeroHom (toFun → apply)
@@ -374,9 +374,9 @@ add_decl_doc AddMonoidHom.map_add
 
 namespace MonoidHom
 
-variable{mM : MulOneClass M}{mN : MulOneClass N}{mP : MulOneClass P}
+variable {mM : MulOneClass M} {mN : MulOneClass N} {mP : MulOneClass P}
 
-variable[Groupₓ G][CommGroupₓ H]
+variable [Groupₓ G] [CommGroupₓ H]
 
 include mM mN
 
@@ -690,7 +690,7 @@ section End
 
 namespace Monoidₓ
 
-variable(M)[MulOneClass M]
+variable (M) [MulOneClass M]
 
 /-- The monoid of endomorphisms. -/
 protected def End :=
@@ -698,14 +698,14 @@ protected def End :=
 
 namespace End
 
-instance  : Monoidₓ (Monoidₓ.End M) :=
+instance : Monoidₓ (Monoidₓ.End M) :=
   { mul := MonoidHom.comp, one := MonoidHom.id M, mul_assoc := fun _ _ _ => MonoidHom.comp_assoc _ _ _,
     mul_one := MonoidHom.comp_id, one_mul := MonoidHom.id_comp }
 
-instance  : Inhabited (Monoidₓ.End M) :=
+instance : Inhabited (Monoidₓ.End M) :=
   ⟨1⟩
 
-instance  : CoeFun (Monoidₓ.End M) fun _ => M → M :=
+instance : CoeFun (Monoidₓ.End M) fun _ => M → M :=
   ⟨MonoidHom.toFun⟩
 
 end End
@@ -722,7 +722,7 @@ end Monoidₓ
 
 namespace AddMonoidₓ
 
-variable(A : Type _)[AddZeroClass A]
+variable (A : Type _) [AddZeroClass A]
 
 /-- The monoid of endomorphisms. -/
 protected def End :=
@@ -730,14 +730,14 @@ protected def End :=
 
 namespace End
 
-instance  : Monoidₓ (AddMonoidₓ.End A) :=
+instance : Monoidₓ (AddMonoidₓ.End A) :=
   { mul := AddMonoidHom.comp, one := AddMonoidHom.id A, mul_assoc := fun _ _ _ => AddMonoidHom.comp_assoc _ _ _,
     mul_one := AddMonoidHom.comp_id, one_mul := AddMonoidHom.id_comp }
 
-instance  : Inhabited (AddMonoidₓ.End A) :=
+instance : Inhabited (AddMonoidₓ.End A) :=
   ⟨1⟩
 
-instance  : CoeFun (AddMonoidₓ.End A) fun _ => A → A :=
+instance : CoeFun (AddMonoidₓ.End A) fun _ => A → A :=
   ⟨AddMonoidHom.toFun⟩
 
 end End
@@ -756,17 +756,17 @@ end End
 
 /-- `1` is the homomorphism sending all elements to `1`. -/
 @[toAdditive]
-instance  [HasOne M] [HasOne N] : HasOne (OneHom M N) :=
+instance [HasOne M] [HasOne N] : HasOne (OneHom M N) :=
   ⟨⟨fun _ => 1, rfl⟩⟩
 
 /-- `1` is the multiplicative homomorphism sending all elements to `1`. -/
 @[toAdditive]
-instance  [Mul M] [MulOneClass N] : HasOne (MulHom M N) :=
+instance [Mul M] [MulOneClass N] : HasOne (MulHom M N) :=
   ⟨⟨fun _ => 1, fun _ _ => (one_mulₓ 1).symm⟩⟩
 
 /-- `1` is the monoid homomorphism sending all elements to `1`. -/
 @[toAdditive]
-instance  [MulOneClass M] [MulOneClass N] : HasOne (M →* N) :=
+instance [MulOneClass M] [MulOneClass N] : HasOne (M →* N) :=
   ⟨⟨fun _ => 1, rfl, fun _ _ => (one_mulₓ 1).symm⟩⟩
 
 /-- `0` is the homomorphism sending all elements to `0`. -/
@@ -797,30 +797,30 @@ theorem OneHom.comp_one [HasOne M] [HasOne N] [HasOne P] (f : OneHom N P) : f.co
     simp only [OneHom.map_one, OneHom.coe_comp, Function.comp_app, OneHom.one_apply]
 
 @[toAdditive]
-instance  [HasOne M] [HasOne N] : Inhabited (OneHom M N) :=
+instance [HasOne M] [HasOne N] : Inhabited (OneHom M N) :=
   ⟨1⟩
 
 @[toAdditive]
-instance  [Mul M] [MulOneClass N] : Inhabited (MulHom M N) :=
+instance [Mul M] [MulOneClass N] : Inhabited (MulHom M N) :=
   ⟨1⟩
 
 @[toAdditive]
-instance  [MulOneClass M] [MulOneClass N] : Inhabited (M →* N) :=
+instance [MulOneClass M] [MulOneClass N] : Inhabited (M →* N) :=
   ⟨1⟩
 
-instance  [MulZeroOneClass M] : Inhabited (MonoidWithZeroHom M M) :=
+instance [MulZeroOneClass M] : Inhabited (MonoidWithZeroHom M M) :=
   ⟨MonoidWithZeroHom.id M⟩
 
 namespace MonoidHom
 
-variable[mM : MulOneClass M][mN : MulOneClass N][mP : MulOneClass P]
+variable [mM : MulOneClass M] [mN : MulOneClass N] [mP : MulOneClass P]
 
-variable[Groupₓ G][CommGroupₓ H]
+variable [Groupₓ G] [CommGroupₓ H]
 
 /-- Given two monoid morphisms `f`, `g` to a commutative monoid, `f * g` is the monoid morphism
 sending `x` to `f x * g x`. -/
 @[toAdditive]
-instance  {M N} {mM : MulOneClass M} [CommMonoidₓ N] : Mul (M →* N) :=
+instance {M N} {mM : MulOneClass M} [CommMonoidₓ N] : Mul (M →* N) :=
   ⟨fun f g =>
       { toFun := fun m => f m*g m,
         map_one' :=
@@ -960,7 +960,7 @@ theorem coe_of_map_div {H : Type _} [Groupₓ H] (f : G → H) (hf : ∀ x y, f 
 /-- If `f` is a monoid homomorphism to a commutative group, then `f⁻¹` is the homomorphism sending
 `x` to `(f x)⁻¹`. -/
 @[toAdditive]
-instance  {M G} [MulOneClass M] [CommGroupₓ G] : HasInv (M →* G) :=
+instance {M G} [MulOneClass M] [CommGroupₓ G] : HasInv (M →* G) :=
   ⟨fun f =>
       (mk' fun g => f g⁻¹)$
         fun a b =>
@@ -992,7 +992,7 @@ theorem comp_inv {M A B} {mM : MulOneClass M} {mA : CommGroupₓ A} {mB : CommGr
 /-- If `f` and `g` are monoid homomorphisms to a commutative group, then `f / g` is the homomorphism
 sending `x` to `(f x) / (g x)`. -/
 @[toAdditive]
-instance  {M G} [MulOneClass M] [CommGroupₓ G] : Div (M →* G) :=
+instance {M G} [MulOneClass M] [CommGroupₓ G] : Div (M →* G) :=
   ⟨fun f g =>
       (mk' fun x => f x / g x)$
         fun a b =>
@@ -1011,7 +1011,7 @@ end MonoidHom
 
 section Commute
 
-variable[MulOneClass M][MulOneClass N]{a x y : M}
+variable [MulOneClass M] [MulOneClass N] {a x y : M}
 
 @[simp, toAdditive]
 protected theorem SemiconjBy.map (h : SemiconjBy a x y) (f : M →* N) : SemiconjBy (f a) (f x) (f y) :=

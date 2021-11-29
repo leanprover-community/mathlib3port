@@ -15,9 +15,9 @@ of `f` in any basis.
 
 universe u v w
 
-variable{R : Type u}{M : Type v}[CommRingₓ R][Nontrivial R]
+variable {R : Type u} {M : Type v} [CommRingₓ R] [Nontrivial R]
 
-variable[AddCommGroupₓ M][Module R M][Module.Free R M][Module.Finite R M](f : M →ₗ[R] M)
+variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M] (f : M →ₗ[R] M)
 
 open_locale Classical Matrix
 

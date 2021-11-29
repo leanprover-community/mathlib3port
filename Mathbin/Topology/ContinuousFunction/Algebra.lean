@@ -24,18 +24,18 @@ attribute [local elabWithoutExpectedType] Continuous.comp
 
 namespace ContinuousFunctions
 
-variable{α : Type _}{β : Type _}[TopologicalSpace α][TopologicalSpace β]
+variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
-variable{f g : { f:α → β | Continuous f }}
+variable {f g : { f:α → β | Continuous f }}
 
-instance  : CoeFun { f:α → β | Continuous f } fun _ => α → β :=
+instance : CoeFun { f:α → β | Continuous f } fun _ => α → β :=
   ⟨Subtype.val⟩
 
 end ContinuousFunctions
 
 namespace ContinuousMap
 
-variable{α : Type _}{β : Type _}[TopologicalSpace α][TopologicalSpace β]
+variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
 @[toAdditive]
 instance Mul [Mul β] [HasContinuousMul β] : Mul C(α, β) :=
@@ -46,7 +46,7 @@ theorem coe_mul [Mul β] [HasContinuousMul β] (f g : C(α, β)) : ((f*g : C(α,
   rfl
 
 @[toAdditive]
-instance  [HasOne β] : HasOne C(α, β) :=
+instance [HasOne β] : HasOne C(α, β) :=
   ⟨const (1 : β)⟩
 
 @[simp, normCast, toAdditive]
@@ -99,7 +99,7 @@ end Subtype
 namespace ContinuousMap
 
 @[toAdditive]
-instance  {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Semigroupₓ β] [HasContinuousMul β] :
+instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Semigroupₓ β] [HasContinuousMul β] :
   Semigroupₓ C(α, β) :=
   { ContinuousMap.hasMul with
     mul_assoc :=
@@ -108,7 +108,7 @@ instance  {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β
           ext <;> exact mul_assocₓ _ _ _ }
 
 @[toAdditive]
-instance  {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Monoidₓ β] [HasContinuousMul β] :
+instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Monoidₓ β] [HasContinuousMul β] :
   Monoidₓ C(α, β) :=
   { ContinuousMap.semigroup, ContinuousMap.hasOne with
     one_mul :=
@@ -154,7 +154,7 @@ theorem pow_comp {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α]
   (comp_monoid_hom' g).map_pow f n
 
 @[toAdditive]
-instance  {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommMonoidₓ β] [HasContinuousMul β] :
+instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommMonoidₓ β] [HasContinuousMul β] :
   CommMonoidₓ C(α, β) :=
   { ContinuousMap.semigroup, ContinuousMap.hasOne with
     one_mul :=
@@ -185,7 +185,7 @@ theorem prod_apply {α : Type _} {β : Type _} [CommMonoidₓ β] [TopologicalSp
     simp 
 
 @[toAdditive]
-instance  {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Groupₓ β] [TopologicalGroup β] :
+instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Groupₓ β] [TopologicalGroup β] :
   Groupₓ C(α, β) :=
   { ContinuousMap.monoid with inv := fun f => ⟨fun x => f x⁻¹, continuous_inv.comp f.continuous⟩,
     mul_left_inv :=
@@ -220,7 +220,7 @@ theorem div_comp {α : Type _} {β : Type _} {γ : Type _} [TopologicalSpace α]
     simp 
 
 @[toAdditive]
-instance  {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommGroupₓ β] [TopologicalGroup β] :
+instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommGroupₓ β] [TopologicalGroup β] :
   CommGroupₓ C(α, β) :=
   { ContinuousMap.group, ContinuousMap.commMonoid with  }
 
@@ -254,7 +254,7 @@ end Subtype
 
 namespace ContinuousMap
 
-instance  {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Semiringₓ β] [TopologicalRing β] :
+instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Semiringₓ β] [TopologicalRing β] :
   Semiringₓ C(α, β) :=
   { ContinuousMap.addCommMonoid, ContinuousMap.monoid with
     left_distrib :=
@@ -274,11 +274,11 @@ instance  {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β
         by 
           ext <;> exact mul_zero _ }
 
-instance  {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Ringₓ β] [TopologicalRing β] :
+instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [Ringₓ β] [TopologicalRing β] :
   Ringₓ C(α, β) :=
   { ContinuousMap.semiring, ContinuousMap.addCommGroup with  }
 
-instance  {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommRingₓ β] [TopologicalRing β] :
+instance {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β] [CommRingₓ β] [TopologicalRing β] :
   CommRingₓ C(α, β) :=
   { ContinuousMap.semiring, ContinuousMap.addCommGroup, ContinuousMap.commMonoid with  }
 
@@ -314,13 +314,13 @@ topological semiring `R` inherit the structure of a module.
 
 section Subtype
 
-variable(α : Type _)[TopologicalSpace α]
+variable (α : Type _) [TopologicalSpace α]
 
-variable(R : Type _)[Semiringₓ R][TopologicalSpace R]
+variable (R : Type _) [Semiringₓ R] [TopologicalSpace R]
 
-variable(M : Type _)[TopologicalSpace M][AddCommGroupₓ M]
+variable (M : Type _) [TopologicalSpace M] [AddCommGroupₓ M]
 
-variable[Module R M][HasContinuousSmul R M][TopologicalAddGroup M]
+variable [Module R M] [HasContinuousSmul R M] [TopologicalAddGroup M]
 
 /-- The `R`-submodule of continuous maps `α → M`. -/
 def continuousSubmodule : Submodule R (α → M) :=
@@ -331,16 +331,10 @@ end Subtype
 
 namespace ContinuousMap
 
-variable{α :
-    Type
-      _}[TopologicalSpace
-      α]{R :
-    Type
-      _}[Semiringₓ
-      R][TopologicalSpace
-      R]{M : Type _}[TopologicalSpace M][AddCommMonoidₓ M]{M₂ : Type _}[TopologicalSpace M₂][AddCommMonoidₓ M₂]
+variable {α : Type _} [TopologicalSpace α] {R : Type _} [Semiringₓ R] [TopologicalSpace R] {M : Type _}
+  [TopologicalSpace M] [AddCommMonoidₓ M] {M₂ : Type _} [TopologicalSpace M₂] [AddCommMonoidₓ M₂]
 
-instance  [Module R M] [HasContinuousSmul R M] : HasScalar R C(α, M) :=
+instance [Module R M] [HasContinuousSmul R M] : HasScalar R C(α, M) :=
   ⟨fun r f => ⟨r • f, f.continuous.const_smul r⟩⟩
 
 @[simp, normCast]
@@ -358,9 +352,9 @@ theorem smul_comp {α : Type _} {β : Type _} [TopologicalSpace α] [Topological
     ext 
     simp 
 
-variable[HasContinuousAdd M][Module R M][HasContinuousSmul R M]
+variable [HasContinuousAdd M] [Module R M] [HasContinuousSmul R M]
 
-variable[HasContinuousAdd M₂][Module R M₂][HasContinuousSmul R M₂]
+variable [HasContinuousAdd M₂] [Module R M₂] [HasContinuousSmul R M₂]
 
 instance Module : Module R C(α, M) :=
   { smul := · • ·,
@@ -395,7 +389,7 @@ instance Module : Module R C(α, M) :=
           ext 
           exact smul_zero _ }
 
-variable(R)
+variable (R)
 
 /-- Composition on the left by a continuous linear map, as a `linear_map`.
 Similar to `linear_map.comp_left`. -/
@@ -426,10 +420,8 @@ is obtained by requiring that `A` be both a `has_continuous_smul` and a `topolog
 
 section Subtype
 
-variable{α :
-    Type
-      _}[TopologicalSpace
-      α]{R : Type _}[CommSemiringₓ R]{A : Type _}[TopologicalSpace A][Semiringₓ A][Algebra R A][TopologicalRing A]
+variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiringₓ R] {A : Type _} [TopologicalSpace A]
+  [Semiringₓ A] [Algebra R A] [TopologicalRing A]
 
 /-- The `R`-subalgebra of continuous maps `α → A`. -/
 def continuousSubalgebra : Subalgebra R (α → A) :=
@@ -440,18 +432,9 @@ end Subtype
 
 section ContinuousMap
 
-variable{α :
-    Type
-      _}[TopologicalSpace
-      α]{R :
-    Type
-      _}[CommSemiringₓ
-      R]{A :
-    Type
-      _}[TopologicalSpace
-      A][Semiringₓ
-      A][Algebra R
-      A][TopologicalRing A]{A₂ : Type _}[TopologicalSpace A₂][Semiringₓ A₂][Algebra R A₂][TopologicalRing A₂]
+variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiringₓ R] {A : Type _} [TopologicalSpace A]
+  [Semiringₓ A] [Algebra R A] [TopologicalRing A] {A₂ : Type _} [TopologicalSpace A₂] [Semiringₓ A₂] [Algebra R A₂]
+  [TopologicalRing A₂]
 
 /-- Continuous constant functions as a `ring_hom`. -/
 def ContinuousMap.c : R →+* C(α, A) :=
@@ -475,7 +458,7 @@ def ContinuousMap.c : R →+* C(α, A) :=
 theorem ContinuousMap.C_apply (r : R) (a : α) : ContinuousMap.c r a = algebraMap R A r :=
   rfl
 
-variable[TopologicalSpace R][HasContinuousSmul R A][HasContinuousSmul R A₂]
+variable [TopologicalSpace R] [HasContinuousSmul R A] [HasContinuousSmul R A₂]
 
 instance ContinuousMap.algebra : Algebra R C(α, A) :=
   { toRingHom := ContinuousMap.c,
@@ -488,7 +471,7 @@ instance ContinuousMap.algebra : Algebra R C(α, A) :=
         by 
           ext x <;> exact Algebra.smul_def' _ _ }
 
-variable(R)
+variable (R)
 
 /-- Composition on the left by a (continuous) homomorphism of topological `R`-algebras, as an
 `alg_hom`. Similar to `alg_hom.comp_left`. -/
@@ -503,14 +486,14 @@ def ContinuousMap.coeFnAlgHom : C(α, A) →ₐ[R] α → A :=
   { toFun := coeFn, commutes' := fun r => rfl, map_zero' := ContinuousMap.coe_zero, map_one' := ContinuousMap.coe_one,
     map_add' := ContinuousMap.coe_add, map_mul' := ContinuousMap.coe_mul }
 
-instance  : IsScalarTower R A C(α, A) :=
+instance : IsScalarTower R A C(α, A) :=
   { smul_assoc :=
       fun _ _ _ =>
         by 
           ext 
           simp  }
 
-variable{R}
+variable {R}
 
 /--
 A version of `separates_points` for subalgebras of the continuous functions,
@@ -532,7 +515,7 @@ theorem algebra_map_apply (k : R) (a : α) : algebraMap R C(α, A) k a = k • 1
     rw [Algebra.algebra_map_eq_smul_one]
     rfl
 
-variable{𝕜 : Type _}[TopologicalSpace 𝕜]
+variable {𝕜 : Type _} [TopologicalSpace 𝕜]
 
 /--
 A set of continuous maps "separates points strongly"
@@ -550,7 +533,7 @@ where the functions would be continuous functions vanishing at infinity.)
 def Set.SeparatesPointsStrongly (s : Set C(α, 𝕜)) : Prop :=
   ∀ v : α → 𝕜 x y : α, ∃ f : s, (f x : 𝕜) = v x ∧ f y = v y
 
-variable[Field 𝕜][TopologicalRing 𝕜]
+variable [Field 𝕜] [TopologicalRing 𝕜]
 
 -- error in Topology.ContinuousFunction.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 /--
@@ -671,7 +654,7 @@ in terms of `continuous_map.abs`.
 
 section 
 
-variable{R : Type _}[LinearOrderedField R]
+variable {R : Type _} [LinearOrderedField R]
 
 theorem min_eq_half_add_sub_abs_sub {x y : R} : min x y = 2⁻¹*(x+y) - |x - y| :=
   by 
@@ -687,9 +670,9 @@ namespace ContinuousMap
 
 section Lattice
 
-variable{α : Type _}[TopologicalSpace α]
+variable {α : Type _} [TopologicalSpace α]
 
-variable{β : Type _}[LinearOrderedField β][TopologicalSpace β][OrderTopology β][TopologicalRing β]
+variable {β : Type _} [LinearOrderedField β] [TopologicalSpace β] [OrderTopology β] [TopologicalRing β]
 
 theorem inf_eq (f g : C(α, β)) : f⊓g = (2⁻¹ : β) • ((f+g) - |f - g|) :=
   ext

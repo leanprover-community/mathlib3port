@@ -53,7 +53,7 @@ open mvfunctor(Liftp Liftr)
 
 open_locale Mvfunctor
 
-variable{n : ℕ}{F : Typevec.{u} (n+1) → Type u}[Mvfunctor F][q : Mvqpf F]
+variable {n : ℕ} {F : Typevec.{u} (n+1) → Type u} [Mvfunctor F] [q : Mvqpf F]
 
 include q
 
@@ -194,7 +194,7 @@ def fix.map {α β : Typevec n} (g : α ⟹ β) : fix F α → fix F β :=
 instance fix.mvfunctor : Mvfunctor (fix F) :=
   { map := @fix.map _ _ _ _ }
 
-variable{α : Typevec.{u} n}
+variable {α : Typevec.{u} n}
 
 /-- Recursor for `fix F` -/
 def fix.rec {β : Type u} (g : F (α ::: β) → β) : fix F α → β :=

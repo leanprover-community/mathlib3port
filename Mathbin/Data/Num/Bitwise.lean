@@ -180,22 +180,22 @@ inductive snum : Type
 | zero : bool → snum
 | nz : nzsnum → snum
 
-instance  : Coe Nzsnum Snum :=
+instance : Coe Nzsnum Snum :=
   ⟨Snum.nz⟩
 
-instance  : HasZero Snum :=
+instance : HasZero Snum :=
   ⟨Snum.zero ff⟩
 
-instance  : HasOne Nzsnum :=
+instance : HasOne Nzsnum :=
   ⟨Nzsnum.msb tt⟩
 
-instance  : HasOne Snum :=
+instance : HasOne Snum :=
   ⟨Snum.nz 1⟩
 
-instance  : Inhabited Nzsnum :=
+instance : Inhabited Nzsnum :=
   ⟨1⟩
 
-instance  : Inhabited Snum :=
+instance : Inhabited Snum :=
   ⟨0⟩
 
 /-!
@@ -337,7 +337,7 @@ def pred : Snum → Snum :=
 protected def neg (n : Snum) : Snum :=
   succ (~n)
 
-instance  : Neg Snum :=
+instance : Neg Snum :=
   ⟨Snum.neg⟩
 
 /-- `snum.czadd a b n` is `n + a - b` (where `a` and `b` should be read as either 0 or 1).
@@ -365,21 +365,21 @@ def cadd : Snum → Snum → Bool → Snum :=
 protected def add (a b : Snum) : Snum :=
   cadd a b ff
 
-instance  : Add Snum :=
+instance : Add Snum :=
   ⟨Snum.add⟩
 
 /-- Substract two `snum`s. -/
 protected def sub (a b : Snum) : Snum :=
   a+-b
 
-instance  : Sub Snum :=
+instance : Sub Snum :=
   ⟨Snum.sub⟩
 
 /-- Multiply two `snum`s. -/
 protected def mul (a : Snum) : Snum → Snum :=
   (rec' fun b => cond b (-a) 0)$ fun b q IH => cond b (bit0 IH+a) (bit0 IH)
 
-instance  : Mul Snum :=
+instance : Mul Snum :=
   ⟨Snum.mul⟩
 
 end Snum

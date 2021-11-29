@@ -22,7 +22,7 @@ namespace CategoryTheory
 
 universe v₁ v₂ u₁ u₂
 
-variable{T : Type u₁}[category.{v₁} T]
+variable {T : Type u₁} [category.{v₁} T]
 
 -- error in CategoryTheory.Over: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--
@@ -38,7 +38,7 @@ instance over.inhabited [Inhabited T] : Inhabited (over (default T)) :=
 
 namespace Over
 
-variable{X : T}
+variable {X : T}
 
 @[ext]
 theorem over_morphism.ext {X : T} {U V : over X} {f g : U ⟶ V} (h : f.left = g.left) : f = g :=
@@ -106,7 +106,7 @@ def iso_mk {f g : over X} (hl : f.left ≅ g.left)
 
 section 
 
-variable(X)
+variable (X)
 
 /--
 The forgetful functor mapping an arrow to its domain.
@@ -136,7 +136,7 @@ def map {Y : T} (f : X ⟶ Y) : over X ⥤ over Y :=
 
 section 
 
-variable{Y : T}{f : X ⟶ Y}{U V : over X}{g : U ⟶ V}
+variable {Y : T} {f : X ⟶ Y} {U V : over X} {g : U ⟶ V}
 
 @[simp]
 theorem map_obj_left : ((map f).obj U).left = U.left :=
@@ -224,7 +224,7 @@ instance mono_left_of_mono {f g : over X} (k : f ⟶ g) [mono k] : mono k.left :
 
 section IteratedSlice
 
-variable(f : over X)
+variable (f : over X)
 
 /-- Given f : Y ⟶ X, this is the obvious functor from (T/X)/f to T/Y -/
 @[simps]
@@ -284,7 +284,7 @@ end IteratedSlice
 
 section 
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 /-- A functor `F : T ⥤ D` induces a functor `over X ⥤ over (F.obj X)` in the obvious way. -/
 @[simps]
@@ -311,7 +311,7 @@ instance under.inhabited [Inhabited T] : Inhabited (under (default T)) :=
 
 namespace Under
 
-variable{X : T}
+variable {X : T}
 
 @[ext]
 theorem under_morphism.ext {X : T} {U V : under X} {f g : U ⟶ V} (h : f.right = g.right) : f = g :=
@@ -369,7 +369,7 @@ theorem iso_mk_inv_right {f g : under X} (hr : f.right ≅ g.right) (hw : f.hom 
 
 section 
 
-variable(X)
+variable (X)
 
 /-- The forgetful functor mapping an arrow to its domain. -/
 def forget : under X ⥤ T :=
@@ -391,7 +391,7 @@ def map {Y : T} (f : X ⟶ Y) : under Y ⥤ under X :=
 
 section 
 
-variable{Y : T}{f : X ⟶ Y}{U V : under Y}{g : U ⟶ V}
+variable {Y : T} {f : X ⟶ Y} {U V : under Y} {g : U ⟶ V}
 
 @[simp]
 theorem map_obj_right : ((map f).obj U).right = U.right :=
@@ -441,7 +441,7 @@ instance forget_faithful : faithful (forget X) :=
 
 section 
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 /-- A functor `F : T ⥤ D` induces a functor `under X ⥤ under (F.obj X)` in the obvious way. -/
 @[simps]

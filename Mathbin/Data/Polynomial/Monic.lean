@@ -20,11 +20,11 @@ namespace Polynomial
 
 universe u v y
 
-variable{R : Type u}{S : Type v}{a b : R}{m n : ℕ}{ι : Type y}
+variable {R : Type u} {S : Type v} {a b : R} {m n : ℕ} {ι : Type y}
 
 section Semiringₓ
 
-variable[Semiringₓ R]{p q r : Polynomial R}
+variable [Semiringₓ R] {p q r : Polynomial R}
 
 theorem monic.as_sum {p : Polynomial R} (hp : p.monic) :
   p = (X ^ p.nat_degree)+∑i in range p.nat_degree, C (p.coeff i)*X ^ i :=
@@ -193,7 +193,7 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]{p : Polynomial R}
+variable [CommSemiringₓ R] {p : Polynomial R}
 
 theorem monic_multiset_prod_of_monic (t : Multiset ι) (f : ι → Polynomial R) (ht : ∀ i _ : i ∈ t, monic (f i)) :
   monic (t.map f).Prod :=
@@ -270,7 +270,7 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R]{p : Polynomial R}
+variable [Ringₓ R] {p : Polynomial R}
 
 theorem monic_X_sub_C (x : R) : monic (X - C x) :=
   by 
@@ -321,7 +321,7 @@ section Injective
 
 open Function
 
-variable[Semiringₓ S]{f : R →+* S}(hf : injective f)
+variable [Semiringₓ S] {f : R →+* S} (hf : injective f)
 
 include hf
 
@@ -367,7 +367,7 @@ end Ringₓ
 
 section NonzeroSemiring
 
-variable[Semiringₓ R][Nontrivial R]{p q : Polynomial R}
+variable [Semiringₓ R] [Nontrivial R] {p q : Polynomial R}
 
 @[simp]
 theorem not_monic_zero : ¬monic (0 : Polynomial R) :=
@@ -381,7 +381,7 @@ end NonzeroSemiring
 
 section NotZeroDivisor
 
-variable[Semiringₓ R]{p : Polynomial R}
+variable [Semiringₓ R] {p : Polynomial R}
 
 theorem monic.mul_left_ne_zero (hp : monic p) {q : Polynomial R} (hq : q ≠ 0) : (q*p) ≠ 0 :=
   by 

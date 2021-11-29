@@ -11,7 +11,7 @@ from `data.set.lattice`, including `disjoint`.
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 open order_dual(toDual)
 
@@ -19,7 +19,7 @@ namespace Set
 
 section Preorderₓ
 
-variable[Preorderₓ α]{a b c : α}
+variable [Preorderₓ α] {a b c : α}
 
 @[simp]
 theorem Iic_disjoint_Ioi (h : a ≤ b) : Disjoint (Iic a) (Ioi b) :=
@@ -50,7 +50,7 @@ end Preorderₓ
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ α]{a₁ a₂ b₁ b₂ : α}
+variable [LinearOrderₓ α] {a₁ a₂ b₁ b₂ : α}
 
 @[simp]
 theorem Ico_disjoint_Ico : Disjoint (Ico a₁ a₂) (Ico b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ :=

@@ -18,7 +18,7 @@ open Finset
 
 universe u₁ u₂ u₃ u₄ u₅
 
-variable{α : Type u₁}{β : Type u₂}{γ : Type u₃}{δ : Type u₄}{ι : Type u₅}
+variable {α : Type u₁} {β : Type u₂} {γ : Type u₃} {δ : Type u₄} {ι : Type u₅}
 
 namespace Finsupp
 
@@ -27,11 +27,11 @@ namespace Finsupp
 
 section 
 
-variable[MulZeroClass β]
+variable [MulZeroClass β]
 
 /-- The product of `f g : α →₀ β` is the finitely supported function
   whose value at `a` is `f a * g a`. -/
-instance  : Mul (α →₀ β) :=
+instance : Mul (α →₀ β) :=
   ⟨zip_with (·*·) (mul_zero 0)⟩
 
 @[simp]
@@ -51,7 +51,7 @@ theorem support_mul {g₁ g₂ : α →₀ β} : (g₁*g₂).Support ⊆ g₁.su
         rw [w]
         simp 
 
-instance  : MulZeroClass (α →₀ β) :=
+instance : MulZeroClass (α →₀ β) :=
   { zero := 0, mul := ·*·,
     mul_zero :=
       fun f =>
@@ -66,7 +66,7 @@ instance  : MulZeroClass (α →₀ β) :=
 
 end 
 
-instance  [SemigroupWithZero β] : SemigroupWithZero (α →₀ β) :=
+instance [SemigroupWithZero β] : SemigroupWithZero (α →₀ β) :=
   { (inferInstance : MulZeroClass (α →₀ β)) with mul := ·*·,
     mul_assoc :=
       fun f g h =>
@@ -83,7 +83,7 @@ instance [non_unital_non_assoc_semiring β] : non_unital_non_assoc_semiring «ex
   ..(infer_instance : mul_zero_class «expr →₀ »(α, β)),
   ..(infer_instance : add_comm_monoid «expr →₀ »(α, β)) }
 
-instance  [NonUnitalSemiring β] : NonUnitalSemiring (α →₀ β) :=
+instance [NonUnitalSemiring β] : NonUnitalSemiring (α →₀ β) :=
   { (inferInstance : Semigroupₓ (α →₀ β)), (inferInstance : NonUnitalNonAssocSemiring (α →₀ β)) with  }
 
 end Finsupp

@@ -11,10 +11,10 @@ import Mathbin.Data.Nat.Choose.Dvd
 
 universe u v
 
-variable(R : Type u)
+variable (R : Type u)
 
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R -/
-class CharP[AddMonoidₓ R][HasOne R](p : ℕ) : Prop where 
+class CharP [AddMonoidₓ R] [HasOne R] (p : ℕ) : Prop where 
   cast_eq_zero_iff{} : ∀ x : ℕ, (x : R) = 0 ↔ p ∣ x
 
 theorem CharP.cast_eq_zero [AddMonoidₓ R] [HasOne R] (p : ℕ) [CharP R p] : (p : R) = 0 :=
@@ -77,7 +77,7 @@ noncomputable def ringChar [NonAssocSemiring R] : ℕ :=
 
 namespace ringChar
 
-variable[NonAssocSemiring R]
+variable [NonAssocSemiring R]
 
 -- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem spec : ∀ x : exprℕ(), «expr ↔ »(«expr = »((x : R), 0), «expr ∣ »(ring_char R, x)) :=
@@ -89,7 +89,7 @@ theorem Eq {p : ℕ} (C : CharP R p) : p = ringChar R :=
 instance CharP : CharP R (ringChar R) :=
   ⟨spec R⟩
 
-variable{R}
+variable {R}
 
 theorem of_eq {p : ℕ} (h : ringChar R = p) : CharP R p :=
   CharP.congr (ringChar R) h
@@ -221,15 +221,15 @@ section frobenius
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ
-      R]{S : Type v}[CommSemiringₓ S](f : R →* S)(g : R →+* S)(p : ℕ)[Fact p.prime][CharP R p][CharP S p](x y : R)
+variable [CommSemiringₓ R] {S : Type v} [CommSemiringₓ S] (f : R →* S) (g : R →+* S) (p : ℕ) [Fact p.prime] [CharP R p]
+  [CharP S p] (x y : R)
 
 /-- The frobenius map that sends x to x^p -/
 def frobenius : R →+* R :=
   { toFun := fun x => x ^ p, map_one' := one_pow p, map_mul' := fun x y => mul_powₓ x y p,
     map_zero' := zero_pow (Fact.out (Nat.Prime p)).Pos, map_add' := add_pow_char R }
 
-variable{R}
+variable {R}
 
 theorem frobenius_def : frobenius R p x = x ^ p :=
   rfl
@@ -239,7 +239,7 @@ theorem iterate_frobenius (n : ℕ) : (frobenius R p^[n]) x = x ^ p ^ n :=
     induction n
     ·
       simp 
-    rw [Function.iterate_succ', pow_succ'ₓ, pow_mulₓ, Function.comp_apply, frobenius_def, n_ih]
+    rw [Function.iterate_succ', pow_succ'ₓ, pow_mulₓ, Function.comp_applyₓ, frobenius_def, n_ih]
 
 theorem frobenius_mul : frobenius R p (x*y) = frobenius R p x*frobenius R p y :=
   (frobenius R p).map_mul x y
@@ -267,7 +267,7 @@ theorem RingHom.iterate_map_frobenius (f : R →+* R) (p : ℕ) [Fact p.prime] [
   (f^[n]) (frobenius R p x) = frobenius R p ((f^[n]) x) :=
   f.iterate_map_pow _ _ _
 
-variable(R)
+variable (R)
 
 theorem frobenius_zero : frobenius R p 0 = 0 :=
   (frobenius R p).map_zero
@@ -282,8 +282,8 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ
-      R]{S : Type v}[CommRingₓ S](f : R →* S)(g : R →+* S)(p : ℕ)[Fact p.prime][CharP R p][CharP S p](x y : R)
+variable [CommRingₓ R] {S : Type v} [CommRingₓ S] (f : R →* S) (g : R →+* S) (p : ℕ) [Fact p.prime] [CharP R p]
+  [CharP S p] (x y : R)
 
 theorem frobenius_neg : frobenius R p (-x) = -frobenius R p x :=
   (frobenius R p).map_neg x
@@ -307,7 +307,7 @@ namespace CharP
 
 section 
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
 theorem char_p_to_char_zero [CharP R 0] : CharZero R :=
   char_zero_of_inj_zero$ fun n h0 => eq_zero_of_zero_dvd ((cast_eq_zero_iff R 0 n).mp h0)
@@ -332,7 +332,7 @@ section Semiringₓ
 
 open Nat
 
-variable[NonAssocSemiring R]
+variable [NonAssocSemiring R]
 
 theorem char_ne_one [Nontrivial R] (p : ℕ) [hc : CharP R p] : p ≠ 1 :=
   fun hp : p = 1 =>
@@ -343,7 +343,7 @@ theorem char_ne_one [Nontrivial R] (p : ℕ) [hc : CharP R p] : p ≠ 1 :=
 
 section NoZeroDivisors
 
-variable[NoZeroDivisors R]
+variable [NoZeroDivisors R]
 
 theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
   suffices ∀ d _ : d ∣ p, d = 1 ∨ d = p from ⟨hp, this⟩
@@ -367,7 +367,7 @@ theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.
 
 section Nontrivial
 
-variable[Nontrivial R]
+variable [Nontrivial R]
 
 theorem char_is_prime_or_zero (p : ℕ) [hc : CharP R p] : Nat.Prime p ∨ p = 0 :=
   match p, hc with 
@@ -386,7 +386,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable(R)[Ringₓ R][NoZeroDivisors R][Nontrivial R][Fintype R]
+variable (R) [Ringₓ R] [NoZeroDivisors R] [Nontrivial R] [Fintype R]
 
 theorem char_is_prime (p : ℕ) [CharP R p] : p.prime :=
   Or.resolve_right (char_is_prime_or_zero R p) (char_ne_zero_of_fintype R p)
@@ -395,7 +395,7 @@ end Ringₓ
 
 section CharOne
 
-variable{R}[NonAssocSemiring R]
+variable {R} [NonAssocSemiring R]
 
 instance (priority := 100) [CharP R 1] : Subsingleton R :=
   Subsingleton.intro$
@@ -441,7 +441,7 @@ end CharP
 
 section 
 
-variable(R)[CommRingₓ R][Fintype R](n : ℕ)
+variable (R) [CommRingₓ R] [Fintype R] (n : ℕ)
 
 -- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem char_p_of_ne_zero
@@ -486,11 +486,11 @@ end
 
 section Prod
 
-variable(S : Type v)[Semiringₓ R][Semiringₓ S](p q : ℕ)[CharP R p]
+variable (S : Type v) [Semiringₓ R] [Semiringₓ S] (p q : ℕ) [CharP R p]
 
 /-- The characteristic of the product of rings is the least common multiple of the
 characteristics of the two rings. -/
-instance  [CharP S q] : CharP (R × S) (Nat.lcmₓ p q) :=
+instance [CharP S q] : CharP (R × S) (Nat.lcmₓ p q) :=
   { cast_eq_zero_iff :=
       by 
         simp [Prod.ext_iff, CharP.cast_eq_zero_iff R p, CharP.cast_eq_zero_iff S q, Nat.lcm_dvd_iff] }

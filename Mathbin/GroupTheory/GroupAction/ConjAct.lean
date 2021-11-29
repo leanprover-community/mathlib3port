@@ -22,7 +22,7 @@ is that some theorems about the group actions will not apply when since this
 -/
 
 
-variable(G : Type _)
+variable (G : Type _)
 
 /-- A type alias for a group `G`. `conj_act G` acts on `G` by conjugation -/
 def ConjAct : Type _ :=
@@ -32,18 +32,18 @@ namespace ConjAct
 
 open MulAction Subgroup
 
-variable{G}
+variable {G}
 
-instance  : ∀ [Groupₓ G], Groupₓ (ConjAct G) :=
+instance : ∀ [Groupₓ G], Groupₓ (ConjAct G) :=
   id
 
-instance  : ∀ [DivInvMonoidₓ G], DivInvMonoidₓ (ConjAct G) :=
+instance : ∀ [DivInvMonoidₓ G], DivInvMonoidₓ (ConjAct G) :=
   id
 
-instance  : ∀ [GroupWithZeroₓ G], GroupWithZeroₓ (ConjAct G) :=
+instance : ∀ [GroupWithZeroₓ G], GroupWithZeroₓ (ConjAct G) :=
   id
 
-instance  : ∀ [Fintype G], Fintype (ConjAct G) :=
+instance : ∀ [Fintype G], Fintype (ConjAct G) :=
   id
 
 @[simp]
@@ -52,9 +52,9 @@ theorem card [Fintype G] : Fintype.card (ConjAct G) = Fintype.card G :=
 
 section DivInvMonoidₓ
 
-variable[DivInvMonoidₓ G]
+variable [DivInvMonoidₓ G]
 
-instance  : Inhabited (ConjAct G) :=
+instance : Inhabited (ConjAct G) :=
   ⟨1⟩
 
 /-- Reinterpret `g : conj_act G` as an element of `G`. -/
@@ -109,7 +109,7 @@ theorem of_conj_act_mul (x y : ConjAct G) : of_conj_act (x*y) = of_conj_act x*of
 theorem to_conj_act_mul (x y : G) : to_conj_act (x*y) = to_conj_act x*to_conj_act y :=
   rfl
 
-instance  : HasScalar (ConjAct G) G :=
+instance : HasScalar (ConjAct G) G :=
   { smul := fun g h => (of_conj_act g*h)*of_conj_act g⁻¹ }
 
 theorem smul_def (g : ConjAct G) (h : G) : g • h = (of_conj_act g*h)*of_conj_act g⁻¹ :=
@@ -123,7 +123,7 @@ end DivInvMonoidₓ
 
 section GroupWithZeroₓ
 
-variable[GroupWithZeroₓ G]
+variable [GroupWithZeroₓ G]
 
 @[simp]
 theorem of_conj_act_zero : of_conj_act (0 : ConjAct G) = 0 :=
@@ -133,7 +133,7 @@ theorem of_conj_act_zero : of_conj_act (0 : ConjAct G) = 0 :=
 theorem to_conj_act_zero : to_conj_act (0 : G) = 0 :=
   rfl
 
-instance  : MulAction (ConjAct G) G :=
+instance : MulAction (ConjAct G) G :=
   { smul := · • ·,
     one_smul :=
       by 
@@ -144,9 +144,9 @@ instance  : MulAction (ConjAct G) G :=
 
 end GroupWithZeroₓ
 
-variable[Groupₓ G]
+variable [Groupₓ G]
 
-instance  : MulDistribMulAction (ConjAct G) G :=
+instance : MulDistribMulAction (ConjAct G) G :=
   { smul := · • ·,
     smul_mul :=
       by 

@@ -88,24 +88,9 @@ of `M`. This structure registers the changes in the fibers when one changes coor
 base. We do not require the change of coordinates of the fibers to be linear, only smooth.
 Therefore, the fibers of the resulting bundle will not inherit a canonical vector space structure
 in general. -/
-structure
-  BasicSmoothBundleCore{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I :
-    ModelWithCorners 𝕜 E
-      H)(M :
-    Type
-      _)[TopologicalSpace
-      M][ChartedSpace H M][SmoothManifoldWithCorners I M](F : Type _)[NormedGroup F][NormedSpace 𝕜 F] where
-  
+structure BasicSmoothBundleCore {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+  {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M] (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F] where 
   coordChange : atlas H M → atlas H M → H → F → F 
   coord_change_self : ∀ i : atlas H M, ∀ x _ : x ∈ i.1.Target, ∀ v, coord_change i i x v = v 
   coord_change_comp :
@@ -128,25 +113,11 @@ def trivialBasicSmoothBundleCore {𝕜 : Type _} [NondiscreteNormedField 𝕜] {
 
 namespace BasicSmoothBundleCore
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H]{I :
-    ModelWithCorners 𝕜 E
-      H}{M :
-    Type
-      _}[TopologicalSpace
-      M][ChartedSpace H
-      M][SmoothManifoldWithCorners I M]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F](Z : BasicSmoothBundleCore I M F)
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] (Z : BasicSmoothBundleCore I M F)
 
-instance  : Inhabited (BasicSmoothBundleCore I M F) :=
+instance : Inhabited (BasicSmoothBundleCore I M F) :=
   ⟨trivialBasicSmoothBundleCore I M F⟩
 
 -- error in Geometry.Manifold.BasicSmoothBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -297,17 +268,9 @@ end BasicSmoothBundleCore
 
 section TangentBundle
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I : ModelWithCorners 𝕜 E H)(M : Type _)[TopologicalSpace M][ChartedSpace H M][SmoothManifoldWithCorners I M]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M]
 
 -- error in Geometry.Manifold.BasicSmoothBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Basic smooth bundle core version of the tangent bundle of a smooth manifold `M` modelled over a
@@ -411,7 +374,7 @@ def tangent_bundle_core : basic_smooth_bundle_core I M E :=
     simp [] [] ["only"] ["[", expr A, ",", expr continuous_linear_map.coe_comp', "]"] ["with", ident mfld_simps] []
   end }
 
-variable{M}
+variable {M}
 
 include I
 
@@ -425,7 +388,7 @@ def TangentSpace (x : M) : Type _ :=
 
 omit I
 
-variable(M)
+variable (M)
 
 /-- The tangent bundle to a smooth manifold, as a plain type. We could use
 `(tangent_bundle_core I M).to_topological_fiber_bundle_core.total_space`, but instead we use the
@@ -441,7 +404,7 @@ of the point `p`. -/
 def TangentBundle.proj : TangentBundle I M → M :=
   fun p => p.1
 
-variable{M}
+variable {M}
 
 @[simp, mfld_simps]
 theorem TangentBundle.proj_apply (x : M) (v : TangentSpace I x) : TangentBundle.proj I M ⟨x, v⟩ = x :=
@@ -449,47 +412,47 @@ theorem TangentBundle.proj_apply (x : M) (v : TangentSpace I x) : TangentBundle.
 
 section TangentBundleInstances
 
-variable(M)
+variable (M)
 
-instance  : TopologicalSpace (TangentBundle I M) :=
+instance : TopologicalSpace (TangentBundle I M) :=
   (tangentBundleCore I M).toTopologicalFiberBundleCore.toTopologicalSpace (atlas H M)
 
-instance  : ChartedSpace (ModelProd H E) (TangentBundle I M) :=
+instance : ChartedSpace (ModelProd H E) (TangentBundle I M) :=
   (tangentBundleCore I M).toChartedSpace
 
-instance  : SmoothManifoldWithCorners I.tangent (TangentBundle I M) :=
+instance : SmoothManifoldWithCorners I.tangent (TangentBundle I M) :=
   (tangentBundleCore I M).to_smooth_manifold
 
 attribute [local reducible] TangentSpace
 
-variable{M}(x : M)
+variable {M} (x : M)
 
-instance  : HasContinuousSmul 𝕜 (TangentSpace I x) :=
+instance : HasContinuousSmul 𝕜 (TangentSpace I x) :=
   by 
     infer_instance
 
-instance  : TopologicalSpace (TangentSpace I x) :=
+instance : TopologicalSpace (TangentSpace I x) :=
   by 
     infer_instance
 
-instance  : AddCommGroupₓ (TangentSpace I x) :=
+instance : AddCommGroupₓ (TangentSpace I x) :=
   by 
     infer_instance
 
-instance  : TopologicalAddGroup (TangentSpace I x) :=
+instance : TopologicalAddGroup (TangentSpace I x) :=
   by 
     infer_instance
 
-instance  : Module 𝕜 (TangentSpace I x) :=
+instance : Module 𝕜 (TangentSpace I x) :=
   by 
     infer_instance
 
-instance  : Inhabited (TangentSpace I x) :=
+instance : Inhabited (TangentSpace I x) :=
   ⟨0⟩
 
 end TangentBundleInstances
 
-variable(M)
+variable (M)
 
 /-- The tangent bundle projection on the basis is a continuous map. -/
 theorem tangent_bundle_proj_continuous : Continuous (TangentBundle.proj I M) :=
@@ -538,7 +501,7 @@ theorem tangent_bundle_model_space_coe_chart_at_symm (p : TangentBundle I H) :
     unfoldCoes 
     simp' only with mfld_simps
 
-variable(H)
+variable (H)
 
 -- error in Geometry.Manifold.BasicSmoothBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The canonical identification between the tangent bundle to the model space and the product,

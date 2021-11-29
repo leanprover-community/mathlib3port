@@ -23,10 +23,10 @@ namespace Angle
 instance angle.add_comm_group : AddCommGroupₓ angle :=
   QuotientAddGroup.addCommGroup _
 
-instance  : Inhabited angle :=
+instance : Inhabited angle :=
   ⟨0⟩
 
-instance  : Coe ℝ angle :=
+instance : Coe ℝ angle :=
   ⟨QuotientAddGroup.mk' _⟩
 
 /-- Coercion `ℝ → angle` as an additive homomorphism. -/

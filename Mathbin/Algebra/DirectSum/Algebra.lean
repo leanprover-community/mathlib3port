@@ -24,17 +24,17 @@ where all `A i` are `R`-modules. This is the extra structure needed to promote `
 
 universe uι uR uA uB
 
-variable{ι : Type uι}
+variable {ι : Type uι}
 
 namespace DirectSum
 
 open_locale DirectSum
 
-variable(R : Type uR)(A : ι → Type uA){B : Type uB}[DecidableEq ι]
+variable (R : Type uR) (A : ι → Type uA) {B : Type uB} [DecidableEq ι]
 
-variable[CommSemiringₓ R][∀ i, AddCommMonoidₓ (A i)][∀ i, Module R (A i)]
+variable [CommSemiringₓ R] [∀ i, AddCommMonoidₓ (A i)] [∀ i, Module R (A i)]
 
-variable[AddMonoidₓ ι][gsemiring A]
+variable [AddMonoidₓ ι] [gsemiring A]
 
 section 
 
@@ -49,9 +49,9 @@ class galgebra where
 
 end 
 
-variable[Semiringₓ B][galgebra R A][Algebra R B]
+variable [Semiringₓ B] [galgebra R A] [Algebra R B]
 
-instance  : Algebra R (⨁i, A i) :=
+instance : Algebra R (⨁i, A i) :=
   { toFun := (DirectSum.of A 0).comp galgebra.to_fun, map_zero' := AddMonoidHom.map_zero _,
     map_add' := AddMonoidHom.map_add _, map_one' := (DirectSum.of A 0).congr_arg galgebra.map_one,
     map_mul' :=
@@ -127,7 +127,7 @@ instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoidₓ
 
 namespace Submodule
 
-variable{R A : Type _}[CommSemiringₓ R]
+variable {R A : Type _} [CommSemiringₓ R]
 
 end Submodule
 

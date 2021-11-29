@@ -61,9 +61,9 @@ open_locale BigOperators
 
 attribute [-simp] coe_eval₂_hom
 
-variable(p : ℕ)
+variable (p : ℕ)
 
-variable(R : Type _)[CommRingₓ R]
+variable (R : Type _) [CommRingₓ R]
 
 /-- `witt_polynomial p R n` is the `n`-th Witt polynomial
 with respect to a prime `p` with coefficients in a commutative ring `R`.
@@ -95,7 +95,7 @@ open MvPolynomial
 
 section 
 
-variable{R}{S : Type _}[CommRingₓ S]
+variable {R} {S : Type _} [CommRingₓ S]
 
 @[simp]
 theorem map_witt_polynomial (f : R →+* S) (n : ℕ) : map f (W n) = W n :=
@@ -104,7 +104,7 @@ theorem map_witt_polynomial (f : R →+* S) (n : ℕ) : map f (W n) = W n :=
     intro i hi 
     rw [map_monomial, RingHom.map_pow, RingHom.map_nat_cast]
 
-variable(R)
+variable (R)
 
 @[simp]
 theorem constant_coeff_witt_polynomial [hp : Fact p.prime] (n : ℕ) : constant_coeff (wittPolynomial p R n) = 0 :=
@@ -150,7 +150,7 @@ theorem witt_polynomial_zmod_self (n : ℕ) : W_ (Zmod (p ^ n+1)) (n+1) = expand
 
 section PPrime
 
-variable[hp : Fact p.prime]
+variable [hp : Fact p.prime]
 
 include hp
 
@@ -229,7 +229,7 @@ theorem X_in_terms_of_W_zero [Invertible (p : R)] : xInTermsOfW p R 0 = X 0 :=
 
 section PPrime
 
-variable[hp : Fact p.prime]
+variable [hp : Fact p.prime]
 
 include hp
 

@@ -45,13 +45,13 @@ universe u v w
 
 section ToMatrix'
 
-instance  {n m} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] R [Fintype R] : Fintype (Matrix m n R) :=
+instance {n m} [Fintype m] [DecidableEq m] [Fintype n] [DecidableEq n] R [Fintype R] : Fintype (Matrix m n R) :=
   by 
     unfold Matrix <;> infer_instance
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
-variable{l m n : Type _}
+variable {l m n : Type _}
 
 /-- `matrix.mul_vec M` is a linear map. -/
 def Matrix.mulVecLin [Fintype n] (M : Matrix m n R) : (n → R) →ₗ[R] m → R :=
@@ -62,7 +62,7 @@ def Matrix.mulVecLin [Fintype n] (M : Matrix m n R) : (n → R) →ₗ[R] m → 
 theorem Matrix.mul_vec_lin_apply [Fintype n] (M : Matrix m n R) (v : n → R) : Matrix.mulVecLin M v = M.mul_vec v :=
   rfl
 
-variable[Fintype n][DecidableEq n]
+variable [Fintype n] [DecidableEq n]
 
 -- error in LinearAlgebra.Matrix.ToLin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
@@ -281,13 +281,13 @@ end ToMatrix'
 
 section ToMatrix
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
-variable{l m n : Type _}[Fintype n][Fintype m][DecidableEq n]
+variable {l m n : Type _} [Fintype n] [Fintype m] [DecidableEq n]
 
-variable{M₁ M₂ : Type _}[AddCommGroupₓ M₁][AddCommGroupₓ M₂][Module R M₁][Module R M₂]
+variable {M₁ M₂ : Type _} [AddCommGroupₓ M₁] [AddCommGroupₓ M₂] [Module R M₁] [Module R M₂]
 
-variable(v₁ : Basis n R M₁)(v₂ : Basis m R M₂)
+variable (v₁ : Basis n R M₁) (v₂ : Basis m R M₂)
 
 /-- Given bases of two modules `M₁` and `M₂` over a commutative ring `R`, we get a linear
 equivalence between linear maps `M₁ →ₗ M₂` and matrices over `R` indexed by the bases. -/
@@ -393,7 +393,7 @@ theorem LinearMap.to_matrix_reindex_range [DecidableEq M₁] [DecidableEq M₂] 
   by 
     simpRw [LinearMap.to_matrix_apply, Basis.reindex_range_self, Basis.reindex_range_repr]
 
-variable{M₃ : Type _}[AddCommGroupₓ M₃][Module R M₃](v₃ : Basis l R M₃)
+variable {M₃ : Type _} [AddCommGroupₓ M₃] [Module R M₃] (v₃ : Basis l R M₃)
 
 theorem LinearMap.to_matrix_comp [Fintype l] [DecidableEq m] (f : M₂ →ₗ[R] M₃) (g : M₁ →ₗ[R] M₂) :
   LinearMap.toMatrix v₁ v₃ (f.comp g) = LinearMap.toMatrix v₂ v₃ f ⬝ LinearMap.toMatrix v₁ v₂ g :=
@@ -547,13 +547,13 @@ namespace Algebra
 
 section Lmul
 
-variable{R S T : Type _}[CommRingₓ R][CommRingₓ S][CommRingₓ T]
+variable {R S T : Type _} [CommRingₓ R] [CommRingₓ S] [CommRingₓ T]
 
-variable[Algebra R S][Algebra S T][Algebra R T][IsScalarTower R S T]
+variable [Algebra R S] [Algebra S T] [Algebra R T] [IsScalarTower R S T]
 
-variable{m n : Type _}[Fintype m][DecidableEq m][DecidableEq n]
+variable {m n : Type _} [Fintype m] [DecidableEq m] [DecidableEq n]
 
-variable(b : Basis m R S)(c : Basis n S T)
+variable (b : Basis m R S) (c : Basis n S T)
 
 open Algebra
 
@@ -620,7 +620,7 @@ theorem left_mul_matrix_injective : Function.Injective (left_mul_matrix b) :=
       _ = x' := mul_oneₓ x'
       
 
-variable[Fintype n]
+variable [Fintype n]
 
 theorem smul_left_mul_matrix x ik jk :
   left_mul_matrix (b.smul c) x ik jk = left_mul_matrix b (left_mul_matrix c x ik.2 jk.2) ik.1 jk.1 :=
@@ -655,13 +655,13 @@ section FiniteDimensional
 
 open_locale Classical
 
-variable{K : Type _}[Field K]
+variable {K : Type _} [Field K]
 
-variable{V : Type _}[AddCommGroupₓ V][Module K V][FiniteDimensional K V]
+variable {V : Type _} [AddCommGroupₓ V] [Module K V] [FiniteDimensional K V]
 
-variable{W : Type _}[AddCommGroupₓ W][Module K W][FiniteDimensional K W]
+variable {W : Type _} [AddCommGroupₓ W] [Module K W] [FiniteDimensional K W]
 
-instance  : FiniteDimensional K (V →ₗ[K] W) :=
+instance : FiniteDimensional K (V →ₗ[K] W) :=
   LinearEquiv.finite_dimensional (LinearMap.toMatrix (Basis.ofVectorSpace K V) (Basis.ofVectorSpace K W)).symm
 
 /--
@@ -683,11 +683,11 @@ end LinearMap
 
 section 
 
-variable{R : Type v}[CommRingₓ R]{n : Type _}[DecidableEq n]
+variable {R : Type v} [CommRingₓ R] {n : Type _} [DecidableEq n]
 
-variable{M M₁ M₂ : Type _}[AddCommGroupₓ M][Module R M]
+variable {M M₁ M₂ : Type _} [AddCommGroupₓ M] [Module R M]
 
-variable[AddCommGroupₓ M₁][Module R M₁][AddCommGroupₓ M₂][Module R M₂]
+variable [AddCommGroupₓ M₁] [Module R M₁] [AddCommGroupₓ M₂] [Module R M₂]
 
 /-- The natural equivalence between linear endomorphisms of finite free modules and square matrices
 is compatible with the algebra structures. -/

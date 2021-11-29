@@ -66,7 +66,7 @@ def IsFreeGroupoid.Generators G [groupoid G] :=
 
    This definition is nonstandard. Normally one would require that functors `G ⥤ X`
    to any _groupoid_ `X` are given by graph homomorphisms from `generators`. -/
-class IsFreeGroupoid(G)[groupoid.{v} G] where 
+class IsFreeGroupoid (G) [groupoid.{v} G] where 
   quiverGenerators : Quiver.{v + 1} (IsFreeGroupoid.Generators G)
   of : ∀ {a b : IsFreeGroupoid.Generators G}, (a ⟶ b) → ((show G from a) ⟶ b)
   unique_lift :
@@ -133,7 +133,8 @@ instance action_groupoid_is_free
 
 namespace SpanningTree
 
-variable{G : Type u}[groupoid.{u} G][IsFreeGroupoid G](T : WideSubquiver (symmetrify$ generators G))[arborescence T]
+variable {G : Type u} [groupoid.{u} G] [IsFreeGroupoid G] (T : WideSubquiver (symmetrify$ generators G))
+  [arborescence T]
 
 /-- The root of `T`, except its type is `G` instead of the type synonym `T`. -/
 private def root' : G :=

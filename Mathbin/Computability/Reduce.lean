@@ -116,9 +116,9 @@ theorem transitive_one_one_reducible {α} [Primcodable α] : Transitive (@OneOne
 
 namespace ComputablePred
 
-variable{α : Type _}{β : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable σ]
 
 open Computable
 
@@ -275,11 +275,11 @@ theorem disjoin_le {α β γ} [Primcodable α] [Primcodable β] [Primcodable γ]
   ⟨fun h => ⟨OneOneReducible.disjoin_left.to_many_one.trans h, OneOneReducible.disjoin_right.to_many_one.trans h⟩,
     fun ⟨h₁, h₂⟩ => disjoin_many_one_reducible h₁ h₂⟩
 
-variable{α : Type u}[Primcodable α][Inhabited α]
+variable {α : Type u} [Primcodable α] [Inhabited α]
 
-variable{β : Type v}[Primcodable β][Inhabited β]
+variable {β : Type v} [Primcodable β] [Inhabited β]
 
-variable{γ : Type w}[Primcodable γ][Inhabited γ]
+variable {γ : Type w} [Primcodable γ] [Inhabited γ]
 
 /--
 Computable and injective mapping of predicates to sets of natural numbers.
@@ -371,14 +371,14 @@ theorem of_eq_of {p : α → Prop} {q : β → Prop} : of p = of q ↔ ManyOneEq
   by 
     simp [of, Quotientₓ.eq']
 
-instance  : Inhabited ManyOneDegree :=
+instance : Inhabited ManyOneDegree :=
   ⟨of (∅ : Set ℕ)⟩
 
 /--
 For many-one degrees `d₁` and `d₂`, `d₁ ≤ d₂` if the sets in `d₁` are many-one reducible to the
 sets in `d₂`.
 -/
-instance  : LE ManyOneDegree :=
+instance : LE ManyOneDegree :=
   ⟨fun d₁ d₂ =>
       ManyOneDegree.liftOn₂ d₁ d₂ (· ≤₀ ·)$ fun p₁ p₂ q₁ q₂ hp hq => propext (hp.le_congr_left.trans hq.le_congr_right)⟩
 
@@ -404,11 +404,11 @@ private theorem le_transₓ {d₁ d₂ d₃ : ManyOneDegree} : d₁ ≤ d₂ →
     induction d₃ using ManyOneDegree.ind_on 
     apply ManyOneReducible.trans
 
-instance  : PartialOrderₓ ManyOneDegree :=
+instance : PartialOrderₓ ManyOneDegree :=
   { le := · ≤ ·, le_refl := le_reflₓ, le_trans := fun _ _ _ => le_transₓ, le_antisymm := fun _ _ => le_antisymmₓ }
 
 /-- The join of two degrees, induced by the disjoint union of two underlying sets. -/
-instance  : Add ManyOneDegree :=
+instance : Add ManyOneDegree :=
   ⟨fun d₁ d₂ =>
       d₁.lift_on₂ d₂ (fun a b => of (a ⊕' b))
         (by 
@@ -448,7 +448,7 @@ protected theorem le_add_right (d₁ d₂ : ManyOneDegree) : d₂ ≤ d₁+d₂ 
       (by 
         rfl)).2
 
-instance  : SemilatticeSup ManyOneDegree :=
+instance : SemilatticeSup ManyOneDegree :=
   { ManyOneDegree.partialOrder with sup := ·+·, le_sup_left := ManyOneDegree.le_add_left,
     le_sup_right := ManyOneDegree.le_add_right, sup_le := fun a b c h₁ h₂ => ManyOneDegree.add_le.2 ⟨h₁, h₂⟩ }
 

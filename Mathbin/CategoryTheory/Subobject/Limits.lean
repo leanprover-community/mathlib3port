@@ -19,7 +19,7 @@ noncomputable theory
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits CategoryTheory.Subobject
 
-variable{C : Type u}[category.{v} C]{X Y Z : C}
+variable {C : Type u} [category.{v} C] {X Y Z : C}
 
 namespace CategoryTheory
 
@@ -27,7 +27,7 @@ namespace Limits
 
 section Equalizer
 
-variable(f g : X ⟶ Y)[has_equalizer f g]
+variable (f g : X ⟶ Y) [has_equalizer f g]
 
 /-- The equalizer of morphisms `f g : X ⟶ Y` as a `subobject X`. -/
 abbrev equalizer_subobject : subobject X :=
@@ -70,7 +70,7 @@ end Equalizer
 
 section Kernel
 
-variable[has_zero_morphisms C](f : X ⟶ Y)[has_kernel f]
+variable [has_zero_morphisms C] (f : X ⟶ Y) [has_kernel f]
 
 /-- The kernel of a morphism `f : X ⟶ Y` as a `subobject X`. -/
 abbrev kernel_subobject : subobject X :=
@@ -128,7 +128,7 @@ theorem factor_thru_kernel_subobject_comp_kernel_subobject_iso {W : C} (h : W �
 
 section 
 
-variable{f}{X' Y' : C}{f' : X' ⟶ Y'}[has_kernel f']
+variable {f} {X' Y' : C} {f' : X' ⟶ Y'} [has_kernel f']
 
 /-- A commuting square induces a morphism between the kernel subobjects. -/
 def kernel_subobject_map (sq : arrow.mk f ⟶ arrow.mk f') : (kernel_subobject f : C) ⟶ (kernel_subobject f' : C) :=
@@ -226,7 +226,7 @@ end Kernel
 
 section Image
 
-variable(f : X ⟶ Y)[has_image f]
+variable (f : X ⟶ Y) [has_image f]
 
 /-- The image of a morphism `f g : X ⟶ Y` as a `subobject Y`. -/
 abbrev image_subobject : subobject Y :=
@@ -251,7 +251,7 @@ theorem image_subobject_arrow' : (image_subobject_iso f).inv ≫ (image_subobjec
 def factor_thru_image_subobject : X ⟶ image_subobject f :=
   factor_thru_image f ≫ (image_subobject_iso f).inv
 
-instance  [has_equalizers C] : epi (factor_thru_image_subobject f) :=
+instance [has_equalizers C] : epi (factor_thru_image_subobject f) :=
   by 
     dsimp [factor_thru_image_subobject]
     apply epi_comp
@@ -297,7 +297,7 @@ section
 
 open_locale ZeroObject
 
-variable[has_zero_morphisms C][has_zero_object C]
+variable [has_zero_morphisms C] [has_zero_object C]
 
 @[simp]
 theorem image_subobject_zero_arrow : (image_subobject (0 : X ⟶ Y)).arrow = 0 :=
@@ -315,7 +315,7 @@ end
 
 section 
 
-variable[has_equalizers C]
+variable [has_equalizers C]
 
 attribute [local instance] epi_comp
 
@@ -338,7 +338,7 @@ end
 
 section 
 
-variable[has_equalizers C]
+variable [has_equalizers C]
 
 /-- Postcomposing by an isomorphism gives an isomorphism between image subobjects. -/
 def image_subobject_comp_iso (f : X ⟶ Y) [has_image f] {Y' : C} (h : Y ⟶ Y') [is_iso h] :

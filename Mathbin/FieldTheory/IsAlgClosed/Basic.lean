@@ -36,7 +36,7 @@ open_locale Classical BigOperators
 
 open Polynomial
 
-variable(k : Type u)[Field k]
+variable (k : Type u) [Field k]
 
 /-- Typeclass for algebraically closed fields.
 
@@ -66,7 +66,7 @@ theorem IsAlgClosed.splits_domain {k K : Type _} [Field k] [IsAlgClosed k] [Fiel
 
 namespace IsAlgClosed
 
-variable{k}
+variable {k}
 
 theorem exists_root [IsAlgClosed k] (p : Polynomial k) (hp : p.degree ≠ 0) : ∃ x, is_root p x :=
   exists_root_of_splits _ (IsAlgClosed.splits p) hp
@@ -101,7 +101,7 @@ theorem exists_eval₂_eq_zero {R : Type _} [Field R] [IsAlgClosed k] (f : R →
   (hp : p.degree ≠ 0) : ∃ x, p.eval₂ f x = 0 :=
   exists_eval₂_eq_zero_of_injective f f.injective p hp
 
-variable(k)
+variable (k)
 
 theorem exists_aeval_eq_zero_of_injective {R : Type _} [CommRingₓ R] [IsAlgClosed k] [Algebra R k]
   (hinj : Function.Injective (algebraMap R k)) (p : Polynomial R) (hp : p.degree ≠ 0) : ∃ x : k, aeval x p = 0 :=
@@ -155,7 +155,7 @@ theorem algebra_map_surjective_of_is_algebraic {k K : Type _} [Field k] [Ringₓ
 end IsAlgClosed
 
 /-- Typeclass for an extension being an algebraic closure. -/
-class IsAlgClosure(K : Type v)[Field K][Algebra k K] : Prop where 
+class IsAlgClosure (K : Type v) [Field K] [Algebra k K] : Prop where 
   alg_closed : IsAlgClosed K 
   algebraic : Algebra.IsAlgebraic k K
 
@@ -194,13 +194,10 @@ end
 
 namespace lift
 
-variable{K :
-    Type
-      u}{L :
-    Type
-      v}{M : Type w}[Field K][Field L][Algebra K L][Field M][Algebra K M][IsAlgClosed M](hL : Algebra.IsAlgebraic K L)
+variable {K : Type u} {L : Type v} {M : Type w} [Field K] [Field L] [Algebra K L] [Field M] [Algebra K M]
+  [IsAlgClosed M] (hL : Algebra.IsAlgebraic K L)
 
-variable(K L M)
+variable (K L M)
 
 include hL
 
@@ -212,16 +209,16 @@ structure subfield_with_hom where
   Carrier : Subalgebra K L 
   emb : carrier →ₐ[K] M
 
-variable{K L M hL}
+variable {K L M hL}
 
 namespace SubfieldWithHom
 
-variable{E₁ E₂ E₃ : subfield_with_hom K L M hL}
+variable {E₁ E₂ E₃ : subfield_with_hom K L M hL}
 
-instance  : LE (subfield_with_hom K L M hL) :=
+instance : LE (subfield_with_hom K L M hL) :=
   { le := fun E₁ E₂ => ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x }
 
-noncomputable instance  : Inhabited (subfield_with_hom K L M hL) :=
+noncomputable instance : Inhabited (subfield_with_hom K L M hL) :=
   ⟨{ Carrier := ⊥, emb := (Algebra.ofId K M).comp (Algebra.botEquiv K L).toAlgHom }⟩
 
 theorem le_def : E₁ ≤ E₂ ↔ ∃ h : E₁.carrier ≤ E₂.carrier, ∀ x, E₂.emb (inclusion h x) = E₁.emb x :=
@@ -233,7 +230,7 @@ theorem compat (h : E₁ ≤ E₂) : ∀ x, E₂.emb (inclusion h.fst x) = E₁.
     cases h 
     assumption
 
-instance  : Preorderₓ (subfield_with_hom K L M hL) :=
+instance : Preorderₓ (subfield_with_hom K L M hL) :=
   { le := · ≤ ·,
     le_refl :=
       fun E =>
@@ -274,7 +271,7 @@ let ub : subfield_with_hom K L M hL := by haveI [] [":", expr nonempty c] [":=",
     refl
   end⟩⟩
 
-variable(hL M)
+variable (hL M)
 
 theorem exists_maximal_subfield_with_hom : ∃ E : subfield_with_hom K L M hL, ∀ N, E ≤ N → N ≤ E :=
   Zorn.exists_maximal_of_nonempty_chains_bounded maximal_subfield_with_hom_chain_bounded fun _ _ _ => le_transₓ
@@ -320,13 +317,10 @@ end lift
 
 namespace IsAlgClosed
 
-variable{K :
-    Type
-      u}[Field
-      K]{L :
-    Type v}{M : Type w}[Field L][Algebra K L][Field M][Algebra K M][IsAlgClosed M](hL : Algebra.IsAlgebraic K L)
+variable {K : Type u} [Field K] {L : Type v} {M : Type w} [Field L] [Algebra K L] [Field M] [Algebra K M]
+  [IsAlgClosed M] (hL : Algebra.IsAlgebraic K L)
 
-variable(K L M)
+variable (K L M)
 
 include hL
 
@@ -340,14 +334,14 @@ end IsAlgClosed
 
 namespace IsAlgClosure
 
-variable(J :
-    Type _)(K : Type u)[Field J][Field K](L : Type v)(M : Type w)[Field L][Field M][Algebra K M][IsAlgClosure K M]
+variable (J : Type _) (K : Type u) [Field J] [Field K] (L : Type v) (M : Type w) [Field L] [Field M] [Algebra K M]
+  [IsAlgClosure K M]
 
 attribute [local instance] IsAlgClosure.alg_closed
 
 section 
 
-variable[Algebra K L][IsAlgClosure K L]
+variable [Algebra K L] [IsAlgClosure K L]
 
 -- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A (random) isomorphism between two algebraic closures of `K`. -/ noncomputable def equiv : «expr ≃ₐ[ ] »(L, K, M) :=
@@ -363,7 +357,7 @@ end
 
 section EquivOfAlgebraic
 
-variable[Algebra K J][Algebra J L][IsAlgClosure J L][Algebra K L][IsScalarTower K J L]
+variable [Algebra K J] [Algebra J L] [IsAlgClosure J L] [Algebra K L] [IsScalarTower K J L]
 
 -- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An equiv between an algebraic closure of `K` and an algebraic closure of an algebraic
@@ -378,9 +372,9 @@ end EquivOfAlgebraic
 
 section EquivOfEquiv
 
-variable[Algebra J L][IsAlgClosure J L]
+variable [Algebra J L] [IsAlgClosure J L]
 
-variable{J K}
+variable {J K}
 
 -- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Used in the definition of `equiv_of_equiv` -/

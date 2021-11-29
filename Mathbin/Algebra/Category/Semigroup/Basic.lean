@@ -45,7 +45,7 @@ attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]]
 attribute [toAdditive] Magma.largeCategory Magma.concreteCategory
 
 @[toAdditive]
-instance  : CoeSort Magma (Type _) :=
+instance : CoeSort Magma (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled `Magma` from the underlying type and typeclass. -/
@@ -65,11 +65,11 @@ def of_hom {X Y : Type u} [Mul X] [Mul Y] (f : MulHom X Y) : of X ⟶ of Y :=
 add_decl_doc AddMagma.ofHom
 
 @[toAdditive]
-instance  : Inhabited Magma :=
+instance : Inhabited Magma :=
   ⟨Magma.of Pempty⟩
 
 @[toAdditive]
-instance  (M : Magma) : Mul M :=
+instance (M : Magma) : Mul M :=
   M.str
 
 @[simp, toAdditive]
@@ -89,7 +89,7 @@ add_decl_doc AddSemigroupₓₓ
 namespace Semigroupₓₓ
 
 @[toAdditive]
-instance  : bundled_hom.parent_projection Semigroupₓ.toHasMul :=
+instance : bundled_hom.parent_projection Semigroupₓ.toHasMul :=
   ⟨⟩
 
 -- error in Algebra.Category.Semigroup.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
@@ -98,7 +98,7 @@ attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]]
 attribute [toAdditive] Semigroupₓₓ.largeCategory Semigroupₓₓ.concreteCategory
 
 @[toAdditive]
-instance  : CoeSort Semigroupₓₓ (Type _) :=
+instance : CoeSort Semigroupₓₓ (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled `Semigroup` from the underlying type and typeclass. -/
@@ -118,11 +118,11 @@ def of_hom {X Y : Type u} [Semigroupₓ X] [Semigroupₓ Y] (f : MulHom X Y) : o
 add_decl_doc AddSemigroupₓₓ.ofHom
 
 @[toAdditive]
-instance  : Inhabited Semigroupₓₓ :=
+instance : Inhabited Semigroupₓₓ :=
   ⟨Semigroupₓₓ.of Pempty⟩
 
 @[toAdditive]
-instance  (M : Semigroupₓₓ) : Semigroupₓ M :=
+instance (M : Semigroupₓₓ) : Semigroupₓ M :=
   M.str
 
 @[simp, toAdditive]
@@ -135,11 +135,11 @@ instance has_forget_to_Magma : has_forget₂ Semigroupₓₓ Magma :=
 
 end Semigroupₓₓ
 
-variable{X Y : Type u}
+variable {X Y : Type u}
 
 section 
 
-variable[Mul X][Mul Y]
+variable [Mul X] [Mul Y]
 
 /-- Build an isomorphism in the category `Magma` from a `mul_equiv` between `has_mul`s. -/
 @[toAdditive AddEquiv.toAddMagmaIso
@@ -152,7 +152,7 @@ end
 
 section 
 
-variable[Semigroupₓ X][Semigroupₓ Y]
+variable [Semigroupₓ X] [Semigroupₓ Y]
 
 /-- Build an isomorphism in the category `Semigroup` from a `mul_equiv` between `semigroup`s. -/
 @[toAdditive AddEquiv.toAddSemigroupIso
@@ -243,7 +243,7 @@ reflect isomorphisms.
 -/
 
 
-example  : reflects_isomorphisms (forget₂ Semigroupₓₓ Magma) :=
+example : reflects_isomorphisms (forget₂ Semigroupₓₓ Magma) :=
   by 
     infer_instance
 

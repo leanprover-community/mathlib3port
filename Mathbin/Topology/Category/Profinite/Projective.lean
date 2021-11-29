@@ -49,7 +49,7 @@ def projective_presentation (X : Profinite.{u}) : projective_presentation X :=
       concrete_category.epi_of_surjective _$
         fun x => ⟨(pure x : Ultrafilter X), congr_funₓ (ultrafilter_extend_extends (𝟙 X)) x⟩ }
 
-instance  : enough_projectives Profinite.{u} :=
+instance : enough_projectives Profinite.{u} :=
   { presentation := fun X => ⟨projective_presentation X⟩ }
 
 end Profinite

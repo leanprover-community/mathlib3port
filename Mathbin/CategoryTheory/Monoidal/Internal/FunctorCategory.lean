@@ -29,13 +29,13 @@ open CategoryTheory.MonoidalCategory
 
 namespace CategoryTheory.Monoidal
 
-variable(C : Type u₁)[category.{v₁} C]
+variable (C : Type u₁) [category.{v₁} C]
 
-variable(D : Type u₂)[category.{v₂} D][monoidal_category.{v₂} D]
+variable (D : Type u₂) [category.{v₂} D] [monoidal_category.{v₂} D]
 
 namespace MonFunctorCategoryEquivalence
 
-variable{C D}
+variable {C D}
 
 /--
 Functor translating a monoid object in a functor category
@@ -177,11 +177,11 @@ as functors from `C` into the monoid objects of `D`.
 def Mon_functor_category_equivalence : Mon_ (C ⥤ D) ≌ C ⥤ Mon_ D :=
   { Functor := Functor, inverse := inverse, unitIso := unit_iso, counitIso := counit_iso }
 
-variable[braided_category.{v₂} D]
+variable [braided_category.{v₂} D]
 
 namespace CommMonFunctorCategoryEquivalence
 
-variable{C D}
+variable {C D}
 
 /--
 Functor translating a commutative monoid object in a functor category

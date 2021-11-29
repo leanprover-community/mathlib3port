@@ -15,19 +15,19 @@ open_locale Mvfunctor
 
 namespace Mvqpf
 
-variable{n : ℕ}
+variable {n : ℕ}
 
-variable{F : Typevec.{u} n → Type u}
+variable {F : Typevec.{u} n → Type u}
 
 section reprₓ
 
-variable[Mvfunctor F][q : Mvqpf F]
+variable [Mvfunctor F] [q : Mvqpf F]
 
-variable{G : Typevec.{u} n → Type u}[Mvfunctor G]
+variable {G : Typevec.{u} n → Type u} [Mvfunctor G]
 
-variable{FG_abs : ∀ {α}, F α → G α}
+variable {FG_abs : ∀ {α}, F α → G α}
 
-variable{FG_repr : ∀ {α}, G α → F α}
+variable {FG_repr : ∀ {α}, G α → F α}
 
 /-- If `F` is a QPF then `G` is a QPF as well. Can be used to
 construct `mvqpf` instances by transporting them across
@@ -48,7 +48,7 @@ end reprₓ
 
 section Rel
 
-variable(R : ∀ ⦃α⦄, F α → F α → Prop)
+variable (R : ∀ ⦃α⦄, F α → F α → Prop)
 
 /-- Functorial quotient type -/
 def quot1 (α : Typevec n) :=
@@ -57,9 +57,9 @@ def quot1 (α : Typevec n) :=
 instance quot1.inhabited {α : Typevec n} [Inhabited$ F α] : Inhabited (quot1 R α) :=
   ⟨Quot.mk _ (default _)⟩
 
-variable[Mvfunctor F][q : Mvqpf F]
+variable [Mvfunctor F] [q : Mvqpf F]
 
-variable(Hfunc : ∀ ⦃α β⦄ a b : F α f : α ⟹ β, R a b → R (f <$$> a) (f <$$> b))
+variable (Hfunc : ∀ ⦃α β⦄ a b : F α f : α ⟹ β, R a b → R (f <$$> a) (f <$$> b))
 
 /-- `map` of the `quot1` functor -/
 def quot1.map ⦃α β⦄ (f : α ⟹ β) : quot1.{u} R α → quot1.{u} R β :=

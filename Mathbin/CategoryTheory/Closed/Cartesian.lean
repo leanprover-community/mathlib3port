@@ -77,11 +77,11 @@ We define this as `monoidal_closed` with respect to the cartesian monoidal struc
 abbrev cartesian_closed (C : Type u) [category.{v} C] [has_finite_products C] :=
   monoidal_closed C
 
-variable{C : Type u}[category.{v} C](A B : C){X X' Y Y' Z : C}
+variable {C : Type u} [category.{v} C] (A B : C) {X X' Y Y' Z : C}
 
 section Exp
 
-variable[has_finite_products C][exponentiable A]
+variable [has_finite_products C] [exponentiable A]
 
 /-- This is (-)^A. -/
 def exp : C ⥤ C :=
@@ -128,16 +128,16 @@ theorem ev_coev : limits.prod.map (𝟙 A) ((coev A).app B) ≫ (ev A).app (A �
 theorem coev_ev : (coev A).app (A ⟹ B) ≫ (exp A).map ((ev A).app B) = 𝟙 (A ⟹ B) :=
   adjunction.right_triangle_components (exp.adjunction A)
 
-instance  : preserves_colimits (prod.functor.obj A) :=
+instance : preserves_colimits (prod.functor.obj A) :=
   (exp.adjunction A).leftAdjointPreservesColimits
 
 end Exp
 
-variable{A}
+variable {A}
 
 namespace CartesianClosed
 
-variable[has_finite_products C][exponentiable A]
+variable [has_finite_products C] [exponentiable A]
 
 /-- Currying in a cartesian closed category. -/
 def curry : (A ⨯ Y ⟶ X) → (Y ⟶ A ⟹ X) :=
@@ -210,7 +210,7 @@ end CartesianClosed
 
 open CartesianClosed
 
-variable[has_finite_products C][exponentiable A]
+variable [has_finite_products C] [exponentiable A]
 
 /--
 Show that the exponential of the terminal object is isomorphic to itself, i.e. `X^1 ≅ X`.
@@ -236,7 +236,7 @@ def internalize_hom (f : A ⟶ Y) : ⊤_ C ⟶ A ⟹ Y :=
 
 section Pre
 
-variable{B}
+variable {B}
 
 /-- Pre-compose an internal hom with an external hom. -/
 def pre (f : B ⟶ A) [exponentiable B] : exp A ⟶ exp B :=
@@ -350,11 +350,11 @@ theorem initial_mono {I : C} (B : C) (t : is_initial I) [cartesian_closed C] : m
 instance initial.mono_to [has_initial C] (B : C) [cartesian_closed C] : mono (initial.to B) :=
   initial_mono B initial_is_initial
 
-variable{D : Type u₂}[category.{v} D]
+variable {D : Type u₂} [category.{v} D]
 
 section Functor
 
-variable[has_finite_products D]
+variable [has_finite_products D]
 
 -- error in CategoryTheory.Closed.Cartesian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

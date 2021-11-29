@@ -17,17 +17,17 @@ while the impact on writing code is minimal as `convex_hull 𝕜 s` is automatic
 
 open Set
 
-variable{𝕜 E F : Type _}
+variable {𝕜 E F : Type _}
 
 section convexHull
 
 section OrderedSemiring
 
-variable[OrderedSemiring 𝕜]
+variable [OrderedSemiring 𝕜]
 
 section AddCommMonoidₓ
 
-variable(𝕜)[AddCommMonoidₓ E][AddCommMonoidₓ F][Module 𝕜 E][Module 𝕜 F]
+variable (𝕜) [AddCommMonoidₓ E] [AddCommMonoidₓ F] [Module 𝕜 E] [Module 𝕜 F]
 
 /-- The convex hull of a set `s` is the minimal convex set that includes `s`. -/
 def convexHull : ClosureOperator (Set E) :=
@@ -36,7 +36,7 @@ def convexHull : ClosureOperator (Set E) :=
     (fun s => convex_Inter$ fun t => convex_Inter$ fun ht => convex_Inter id)
     fun s t hst ht => Set.Inter_subset_of_subset t$ Set.Inter_subset_of_subset hst$ Set.Inter_subset _ ht
 
-variable(s : Set E)
+variable (s : Set E)
 
 theorem subset_convex_hull : s ⊆ convexHull 𝕜 s :=
   (convexHull 𝕜).le_closure s
@@ -44,7 +44,7 @@ theorem subset_convex_hull : s ⊆ convexHull 𝕜 s :=
 theorem convex_convex_hull : Convex 𝕜 (convexHull 𝕜 s) :=
   ClosureOperator.closure_mem_mk₃ s
 
-variable{𝕜 s}{t : Set E}
+variable {𝕜 s} {t : Set E}
 
 theorem convex_hull_min (hst : s ⊆ t) (ht : Convex 𝕜 t) : convexHull 𝕜 s ⊆ t :=
   ClosureOperator.closure_le_mk₃_iff (show s ≤ t from hst) ht
@@ -137,11 +137,11 @@ end OrderedSemiring
 
 section OrderedRing
 
-variable[OrderedRing 𝕜]
+variable [OrderedRing 𝕜]
 
 section AddCommGroupₓ
 
-variable[AddCommGroupₓ E][AddCommGroupₓ F][Module 𝕜 E][Module 𝕜 F](s : Set E)
+variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] (s : Set E)
 
 theorem AffineMap.image_convex_hull (f : E →ᵃ[𝕜] F) : f '' convexHull 𝕜 s = convexHull 𝕜 (f '' s) :=
   by 

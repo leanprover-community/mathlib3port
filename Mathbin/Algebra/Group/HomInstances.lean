@@ -16,11 +16,11 @@ Finally, we provide the `ring` structure on `add_monoid.End`.
 
 universe uM uN uP uQ
 
-variable{M : Type uM}{N : Type uN}{P : Type uP}{Q : Type uQ}
+variable {M : Type uM} {N : Type uN} {P : Type uP} {Q : Type uQ}
 
 /-- `(M →* N)` is a `comm_monoid` if `N` is commutative. -/
 @[toAdditive "`(M →+ N)` is an `add_comm_monoid` if `N` is commutative."]
-instance  [MulOneClass M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) :=
+instance [MulOneClass M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) :=
   { mul := ·*·,
     mul_assoc :=
       by 
@@ -58,7 +58,7 @@ instance  [MulOneClass M] [CommMonoidₓ N] : CommMonoidₓ (M →* N) :=
 
 /-- If `G` is a commutative group, then `M →* G` is a commutative group too. -/
 @[toAdditive "If `G` is an additive commutative group, then `M →+ G` is an additive commutative\ngroup too."]
-instance  {M G} [MulOneClass M] [CommGroupₓ G] : CommGroupₓ (M →* G) :=
+instance {M G} [MulOneClass M] [CommGroupₓ G] : CommGroupₓ (M →* G) :=
   { MonoidHom.commMonoid with inv := HasInv.inv, div := Div.div,
     div_eq_mul_inv :=
       by 
@@ -94,13 +94,13 @@ instance  {M G} [MulOneClass M] [CommGroupₓ G] : CommGroupₓ (M →* G) :=
           ext x 
           simp  }
 
-instance  [AddCommMonoidₓ M] : Semiringₓ (AddMonoidₓ.End M) :=
+instance [AddCommMonoidₓ M] : Semiringₓ (AddMonoidₓ.End M) :=
   { AddMonoidₓ.End.monoid M, AddMonoidHom.addCommMonoid with zero_mul := fun x => AddMonoidHom.ext$ fun i => rfl,
     mul_zero := fun x => AddMonoidHom.ext$ fun i => AddMonoidHom.map_zero _,
     left_distrib := fun x y z => AddMonoidHom.ext$ fun i => AddMonoidHom.map_add _ _ _,
     right_distrib := fun x y z => AddMonoidHom.ext$ fun i => rfl }
 
-instance  [AddCommGroupₓ M] : Ringₓ (AddMonoidₓ.End M) :=
+instance [AddCommGroupₓ M] : Ringₓ (AddMonoidₓ.End M) :=
   { AddMonoidₓ.End.semiring, AddMonoidHom.addCommGroup with  }
 
 /-!
@@ -234,7 +234,7 @@ if the import structure permits them to be.
 
 section Semiringₓ
 
-variable{R S : Type _}[Semiringₓ R][Semiringₓ S]
+variable {R S : Type _} [Semiringₓ R] [Semiringₓ S]
 
 /-- Multiplication of an element of a (semi)ring is an `add_monoid_hom` in both arguments.
 

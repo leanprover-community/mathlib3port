@@ -22,9 +22,9 @@ open_locale TopologicalSpace
 
 section LinearOrderₓ
 
-variable{α β : Type _}[LinearOrderₓ α][TopologicalSpace α][OrderTopology α]
+variable {α β : Type _} [LinearOrderₓ α] [TopologicalSpace α] [OrderTopology α]
 
-variable[LinearOrderₓ β][TopologicalSpace β][OrderTopology β]
+variable [LinearOrderₓ β] [TopologicalSpace β] [OrderTopology β]
 
 -- error in Topology.Algebra.Ordered.MonotoneContinuity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a function strictly monotone on a right neighborhood of `a` and the
@@ -279,8 +279,8 @@ this for an `order_iso` between to partial orders with order topology.
 
 namespace OrderIso
 
-variable{α β :
-    Type _}[PartialOrderₓ α][PartialOrderₓ β][TopologicalSpace α][TopologicalSpace β][OrderTopology α][OrderTopology β]
+variable {α β : Type _} [PartialOrderₓ α] [PartialOrderₓ β] [TopologicalSpace α] [TopologicalSpace β] [OrderTopology α]
+  [OrderTopology β]
 
 protected theorem Continuous (e : α ≃o β) : Continuous e :=
   by 

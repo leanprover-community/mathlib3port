@@ -29,14 +29,14 @@ submonoid, submonoids, is_submonoid
 
 open_locale BigOperators
 
-variable{M : Type _}[Monoidₓ M]{s : Set M}
+variable {M : Type _} [Monoidₓ M] {s : Set M}
 
-variable{A : Type _}[AddMonoidₓ A]{t : Set A}
+variable {A : Type _} [AddMonoidₓ A] {t : Set A}
 
 /-- `s` is an additive submonoid: a set containing 0 and closed under addition.
 Note that this structure is deprecated, and the bundled variant `add_submonoid A` should be
 preferred. -/
-structure IsAddSubmonoid(s : Set A) : Prop where 
+structure IsAddSubmonoid (s : Set A) : Prop where 
   zero_mem : (0 : A) ∈ s 
   add_mem {a b} : a ∈ s → b ∈ s → (a+b) ∈ s
 
@@ -44,7 +44,7 @@ structure IsAddSubmonoid(s : Set A) : Prop where
 Note that this structure is deprecated, and the bundled variant `submonoid M` should be
 preferred. -/
 @[toAdditive]
-structure IsSubmonoid(s : Set M) : Prop where 
+structure IsSubmonoid (s : Set M) : Prop where 
   one_mem : (1 : M) ∈ s 
   mul_mem {a b} : a ∈ s → b ∈ s → (a*b) ∈ s
 

@@ -34,7 +34,7 @@ open_locale Filter Nnreal TopologicalSpace
 
 namespace Nnreal
 
-variable{x y :  ℝ≥0 }
+variable {x y :  ℝ≥0 }
 
 /-- Square root of a nonnegative real number. -/
 @[pp_nodot]
@@ -132,7 +132,7 @@ theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrt_aux f i
 noncomputable def sqrt (x : ℝ) : ℝ :=
   Nnreal.sqrt (Real.toNnreal x)
 
-variable{x y : ℝ}
+variable {x y : ℝ}
 
 @[simp, normCast]
 theorem coe_sqrt {x :  ℝ≥0 } : (Nnreal.sqrt x : ℝ) = Real.sqrt x :=
@@ -349,13 +349,13 @@ end Real
 
 open Real
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem Filter.Tendsto.sqrt {f : α → ℝ} {l : Filter α} {x : ℝ} (h : tendsto f l (𝓝 x)) :
   tendsto (fun x => sqrt (f x)) l (𝓝 (sqrt x)) :=
   (continuous_sqrt.Tendsto _).comp h
 
-variable[TopologicalSpace α]{f : α → ℝ}{s : Set α}{x : α}
+variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {x : α}
 
 theorem ContinuousWithinAt.sqrt (h : ContinuousWithinAt f s x) : ContinuousWithinAt (fun x => sqrt (f x)) s x :=
   h.sqrt

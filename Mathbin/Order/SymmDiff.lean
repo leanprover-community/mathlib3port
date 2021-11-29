@@ -51,7 +51,7 @@ theorem symm_diff_eq_xor (p q : Prop) : p Δ q = Xorₓ p q :=
 
 section GeneralizedBooleanAlgebra
 
-variable{α : Type _}[GeneralizedBooleanAlgebra α](a b c : α)
+variable {α : Type _} [GeneralizedBooleanAlgebra α] (a b c : α)
 
 theorem symm_diff_comm : a Δ b = b Δ a :=
   by 
@@ -234,7 +234,7 @@ end GeneralizedBooleanAlgebra
 
 section BooleanAlgebra
 
-variable{α : Type _}[BooleanAlgebra α](a b c : α)
+variable {α : Type _} [BooleanAlgebra α] (a b c : α)
 
 theorem symm_diff_eq : a Δ b = a⊓«expr ᶜ» b⊔b⊓«expr ᶜ» a :=
   by 

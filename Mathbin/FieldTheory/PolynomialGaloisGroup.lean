@@ -42,7 +42,7 @@ open FiniteDimensional
 
 namespace Polynomial
 
-variable{F : Type _}[Field F](p q : Polynomial F)(E : Type _)[Field E][Algebra F E]
+variable {F : Type _} [Field F] (p q : Polynomial F) (E : Type _) [Field E] [Algebra F E]
 
 -- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler group
 /-- The Galois group of a polynomial. -/ @[derive #["[", expr group, ",", expr fintype, "]"]] def gal :=
@@ -50,7 +50,7 @@ variable{F : Type _}[Field F](p q : Polynomial F)(E : Type _)[Field E][Algebra F
 
 namespace Gal
 
-instance  : CoeFun p.gal fun _ => p.splitting_field → p.splitting_field :=
+instance : CoeFun p.gal fun _ => p.splitting_field → p.splitting_field :=
   AlgEquiv.hasCoeToFun
 
 @[ext]
@@ -74,7 +74,7 @@ def unique_gal_of_splits (h : p.splits (RingHom.id F)) : Unique p.gal :=
                   ((set_like.ext_iff.mp ((is_splitting_field.splits_iff _ p).mp h) x).mp Algebra.mem_top)
               rw [AlgEquiv.commutes, AlgEquiv.commutes] }
 
-instance  [h : Fact (p.splits (RingHom.id F))] : Unique p.gal :=
+instance [h : Fact (p.splits (RingHom.id F))] : Unique p.gal :=
   unique_gal_of_splits _ h.1
 
 instance unique_gal_zero : Unique (0 : Polynomial F).Gal :=
@@ -95,10 +95,10 @@ instance unique_gal_X_sub_C (x : F) : Unique (X - C x).Gal :=
 instance unique_gal_X_pow (n : ℕ) : Unique (X^n : Polynomial F).Gal :=
   unique_gal_of_splits _ (splits_X_pow _ _)
 
-instance  [h : Fact (p.splits (algebraMap F E))] : Algebra p.splitting_field E :=
+instance [h : Fact (p.splits (algebraMap F E))] : Algebra p.splitting_field E :=
   (is_splitting_field.lift p.splitting_field p h.1).toRingHom.toAlgebra
 
-instance  [h : Fact (p.splits (algebraMap F E))] : IsScalarTower F p.splitting_field E :=
+instance [h : Fact (p.splits (algebraMap F E))] : IsScalarTower F p.splitting_field E :=
   IsScalarTower.of_algebra_map_eq fun x => ((is_splitting_field.lift p.splitting_field p h.1).commutes x).symm
 
 attribute [irreducible] gal.algebra
@@ -173,7 +173,7 @@ instance gal_action [Fact (p.splits (algebraMap F E))] : MulAction p.gal (root_s
         by 
           simp only [Equiv.apply_symm_apply, Equiv.symm_apply_apply, mul_smul] }
 
-variable{p E}
+variable {p E}
 
 /-- `polynomial.gal.restrict p E` is compatible with `polynomial.gal.gal_action p E`. -/
 @[simp]
@@ -186,7 +186,7 @@ theorem restrict_smul [Fact (p.splits (algebraMap F E))] (ϕ : E ≃ₐ[F] E) (x
     change ϕ (roots_equiv_roots p E ((roots_equiv_roots p E).symm x)) = ϕ x 
     rw [Equiv.apply_symm_apply (roots_equiv_roots p E)]
 
-variable(p E)
+variable (p E)
 
 /-- `polynomial.gal.gal_action` as a permutation representation -/
 def gal_action_hom [Fact (p.splits (algebraMap F E))] : p.gal →* Equiv.Perm (root_set p E) :=
@@ -221,7 +221,7 @@ end
 
 end RootsAction
 
-variable{p q}
+variable {p q}
 
 /-- `polynomial.gal.restrict`, when both fields are splitting fields of polynomials. -/
 def restrict_dvd (hpq : p ∣ q) : q.gal →* p.gal :=
@@ -232,7 +232,7 @@ theorem restrict_dvd_surjective (hpq : p ∣ q) (hq : q ≠ 0) : Function.Surjec
   by 
     simp only [restrict_dvd, dif_neg hq, restrict_surjective]
 
-variable(p q)
+variable (p q)
 
 /-- The Galois group of a product maps into the product of the Galois groups.  -/
 def restrict_prod : (p*q).Gal →* p.gal × q.gal :=
@@ -325,7 +325,7 @@ theorem restrict_comp_surjective (hq : q.nat_degree ≠ 0) : Function.Surjective
   by 
     simp only [restrict_comp, restrict_surjective]
 
-variable{p q}
+variable {p q}
 
 -- error in FieldTheory.PolynomialGaloisGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For a separable polynomial, its Galois group has cardinality

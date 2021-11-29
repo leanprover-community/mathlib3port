@@ -15,7 +15,7 @@ import Mathbin.Algebra.Star.Basic
 -/
 
 
-variable{α : Type _}{β : Type _}{γ : Type _}{M : Type _}[Monoidₓ M]{N : Type _}[Monoidₓ N]
+variable {α : Type _} {β : Type _} {γ : Type _} {M : Type _} [Monoidₓ M] {N : Type _} [Monoidₓ N]
 
 /-- Free monoid over a given alphabet. -/
 @[toAdditive "Free nonabelian additive monoid over a given alphabet"]
@@ -25,7 +25,7 @@ def FreeMonoid α :=
 namespace FreeMonoid
 
 @[toAdditive]
-instance  : Monoidₓ (FreeMonoid α) :=
+instance : Monoidₓ (FreeMonoid α) :=
   { one := [], mul := fun x y => (x ++ y : List α),
     mul_one :=
       by 
@@ -38,7 +38,7 @@ instance  : Monoidₓ (FreeMonoid α) :=
         intros  <;> apply List.append_assoc }
 
 @[toAdditive]
-instance  : Inhabited (FreeMonoid α) :=
+instance : Inhabited (FreeMonoid α) :=
   ⟨1⟩
 
 @[toAdditive]
@@ -138,7 +138,7 @@ theorem lift_of_comp_eq_map (f : α → β) : (lift fun x => of (f x)) = map f :
 theorem map_comp (g : β → γ) (f : α → β) : map (g ∘ f) = (map g).comp (map f) :=
   hom_eq$ fun x => rfl
 
-instance  : StarMonoid (FreeMonoid α) :=
+instance : StarMonoid (FreeMonoid α) :=
   { star := List.reverse, star_involutive := List.reverse_reverse, star_mul := List.reverse_append }
 
 @[simp]

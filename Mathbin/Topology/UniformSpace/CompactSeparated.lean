@@ -29,7 +29,7 @@ open_locale Classical uniformity TopologicalSpace Filter
 
 open Filter UniformSpace Set
 
-variable{α β γ : Type _}[UniformSpace α][UniformSpace β]
+variable {α β γ : Type _} [UniformSpace α] [UniformSpace β]
 
 /-!
 ### Uniformity on compact separated spaces
@@ -188,10 +188,10 @@ def uniform_space_of_compact_t2 [topological_space γ] [compact_space γ] [t2_sp
 continuous. -/
 theorem CompactSpace.uniform_continuous_of_continuous [CompactSpace α] [SeparatedSpace α] {f : α → β}
   (h : Continuous f) : UniformContinuous f :=
-  calc map (Prod.mapₓ f f) (𝓤 α) = map (Prod.mapₓ f f) (⨆x, 𝓝 (x, x)) :=
+  calc map (Prod.map f f) (𝓤 α) = map (Prod.map f f) (⨆x, 𝓝 (x, x)) :=
     by 
       rw [compact_space_uniformity]
-    _ = ⨆x, map (Prod.mapₓ f f) (𝓝 (x, x)) :=
+    _ = ⨆x, map (Prod.map f f) (𝓝 (x, x)) :=
     by 
       rw [map_supr]
     _ ≤ ⨆x, 𝓝 (f x, f x) := supr_le_supr fun x => (h.prod_map h).ContinuousAt 

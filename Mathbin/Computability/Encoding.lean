@@ -21,14 +21,14 @@ It also contains several examples:
 namespace Computability
 
 /-- An encoding of a type in a certain alphabet, together with a decoding. -/
-structure encoding(α : Type) where 
+structure encoding (α : Type) where 
   Γ : Type 
   encode : α → List Γ 
   decode : List Γ → Option α 
   decode_encode : ∀ x, decode (encode x) = some x
 
 /-- An encoding plus a guarantee of finiteness of the alphabet. -/
-structure fin_encoding(α : Type) extends encoding α where 
+structure fin_encoding (α : Type) extends encoding α where 
   ΓFin : Fintype Γ
 
 -- error in Computability.Encoding: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq

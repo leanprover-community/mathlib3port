@@ -51,9 +51,9 @@ infixr:25 " →. " => Pfun
 
 namespace Pfun
 
-variable{α β γ : Type _}
+variable {α β γ : Type _}
 
-instance  : Inhabited (α →. β) :=
+instance : Inhabited (α →. β) :=
   ⟨fun a => Part.none⟩
 
 /-- The domain of a partial function -/
@@ -103,7 +103,7 @@ theorem as_subtype_eq_of_mem {f : α →. β} {x : α} {y : β} (fxy : y ∈ f x
 protected def lift (f : α → β) : α →. β :=
   fun a => Part.some (f a)
 
-instance  : Coe (α → β) (α →. β) :=
+instance : Coe (α → β) (α →. β) :=
   ⟨Pfun.lift⟩
 
 @[simp]
@@ -168,10 +168,10 @@ def bind (f : α →. β) (g : β → α →. γ) : α →. γ :=
 def map (f : β → γ) (g : α →. β) : α →. γ :=
   fun a => (g a).map f
 
-instance  : Monadₓ (Pfun α) :=
+instance : Monadₓ (Pfun α) :=
   { pure := @Pfun.pure _, bind := @Pfun.bind _, map := @Pfun.map _ }
 
-instance  : IsLawfulMonad (Pfun α) :=
+instance : IsLawfulMonad (Pfun α) :=
   { bind_pure_comp_eq_map := fun β γ f x => funext$ fun a => Part.bind_some_eq_map _ _,
     id_map :=
       fun β f =>
@@ -272,7 +272,7 @@ end Pfun
 
 namespace Pfun
 
-variable{α β : Type _}(f : α →. β)
+variable {α β : Type _} (f : α →. β)
 
 /-- Image of a set under a partial function. -/
 def image (s : Set α) : Set β :=

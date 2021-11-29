@@ -25,16 +25,10 @@ open CategoryTheory.MonoidalCategory
 
 namespace CategoryTheory
 
-variable{C :
-    Type
-      _}[category
-      C][monoidal_category
-      C][preadditive
-      C][monoidal_preadditive
-      C][has_zero_object
-      C][has_equalizers C][has_cokernels C][has_images C][has_image_maps C][has_projective_resolutions C]
+variable {C : Type _} [category C] [monoidal_category C] [preadditive C] [monoidal_preadditive C] [has_zero_object C]
+  [has_equalizers C] [has_cokernels C] [has_images C] [has_image_maps C] [has_projective_resolutions C]
 
-variable(C)
+variable (C)
 
 /-- We define `Tor C n : C ⥤ C ⥤ C` by left-deriving in the second factor of `(X, Y) ↦ X ⊗ Y`. -/
 @[simps]

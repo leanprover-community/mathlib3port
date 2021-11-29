@@ -16,16 +16,16 @@ universe u v
 
 /-- A DFA is a set of states (`σ`), a transition function from state to state labelled by the
   alphabet (`step`), a starting state (`start`) and a set of acceptance states (`accept`). -/
-structure DFA(α : Type u)(σ : Type v) where 
+structure DFA (α : Type u) (σ : Type v) where 
   step : σ → α → σ 
   start : σ 
   accept : Set σ
 
 namespace DFA
 
-variable{α : Type u}{σ : Type v}(M : DFA α σ)
+variable {α : Type u} {σ : Type v} (M : DFA α σ)
 
-instance  [Inhabited σ] : Inhabited (DFA α σ) :=
+instance [Inhabited σ] : Inhabited (DFA α σ) :=
   ⟨DFA.mk (fun _ _ => default σ) (default σ) ∅⟩
 
 /-- `M.eval_from s x` evaluates `M` with input `x` starting from the state `s`. -/

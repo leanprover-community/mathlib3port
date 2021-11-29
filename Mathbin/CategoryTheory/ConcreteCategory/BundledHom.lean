@@ -16,7 +16,7 @@ universe u
 
 namespace CategoryTheory
 
-variable{c : Type u → Type u}(hom : ∀ ⦃α β : Type u⦄ Iα : c α Iβ : c β, Type u)
+variable {c : Type u → Type u} (hom : ∀ ⦃α β : Type u⦄ Iα : c α Iβ : c β, Type u)
 
 /-- Class for bundled homs. Note that the arguments order follows that of lemmas for `monoid_hom`.
 This way we can use `⟨@monoid_hom.to_fun, @monoid_hom.id ...⟩` in an instance. -/
@@ -43,7 +43,7 @@ attribute [simp] bundled_hom.id_to_fun bundled_hom.comp_to_fun
 
 namespace BundledHom
 
-variable[𝒞 : bundled_hom hom]
+variable [𝒞 : bundled_hom hom]
 
 include 𝒞
 
@@ -65,7 +65,7 @@ instance category : category (bundled c) :=
 This instance generates the type-class problem `bundled_hom ?m` (which is why this is marked as
 `[nolint]`). Currently that is not a problem, as there are almost no instances of `bundled_hom`. -/
 @[nolint dangerous_instance]
-instance  : concrete_category.{u} (bundled c) :=
+instance : concrete_category.{u} (bundled c) :=
   { forget :=
       { obj := fun X => X, map := fun X Y f => 𝒞.to_fun X.str Y.str f, map_id' := fun X => 𝒞.id_to_fun X.str,
         map_comp' :=
@@ -76,7 +76,7 @@ instance  : concrete_category.{u} (bundled c) :=
           by 
             intros  <;> apply 𝒞.hom_ext } }
 
-variable{hom}
+variable {hom}
 
 attribute [local instance] concrete_category.has_coe_to_fun
 
@@ -88,9 +88,9 @@ def mk_has_forget₂ {d : Type u → Type u} {hom_d : ∀ ⦃α β : Type u⦄ I
     (by 
       intros  <;> apply heq_of_eq <;> apply h_map)
 
-variable{d : Type u → Type u}
+variable {d : Type u → Type u}
 
-variable(hom)
+variable (hom)
 
 section 
 
@@ -128,7 +128,7 @@ Once we've set up `Mon` as the category of bundled monoids,
 this allows us to set up `CommMon` by defining an instance
 ```instance : parent_projection (comm_monoid.to_monoid) := ⟨⟩```
 -/
-class parent_projection(F : ∀ {α}, d α → c α)
+class parent_projection (F : ∀ {α}, d α → c α)
 
 end 
 

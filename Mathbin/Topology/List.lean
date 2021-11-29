@@ -11,9 +11,9 @@ open TopologicalSpace Set Filter
 
 open_locale TopologicalSpace Filter
 
-variable{α : Type _}{β : Type _}[TopologicalSpace α][TopologicalSpace β]
+variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
-instance  : TopologicalSpace (List α) :=
+instance : TopologicalSpace (List α) :=
   TopologicalSpace.mkOfNhds (traverse nhds)
 
 -- error in Topology.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -171,7 +171,7 @@ namespace Vector
 
 open List
 
-instance  (n : ℕ) : TopologicalSpace (Vector α n) :=
+instance (n : ℕ) : TopologicalSpace (Vector α n) :=
   by 
     unfold Vector <;> infer_instance
 

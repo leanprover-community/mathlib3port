@@ -18,13 +18,13 @@ open Algebra.TensorProduct
 
 open Matrix
 
-variable{R : Type u}[CommSemiringₓ R]
+variable {R : Type u} [CommSemiringₓ R]
 
-variable{A : Type v}[Semiringₓ A][Algebra R A]
+variable {A : Type v} [Semiringₓ A] [Algebra R A]
 
-variable{n : Type w}
+variable {n : Type w}
 
-variable(R A n)
+variable (R A n)
 
 namespace matrixEquivTensor
 
@@ -83,7 +83,7 @@ as an `R`-linear map.
 def to_fun_linear : A ⊗[R] Matrix n n R →ₗ[R] Matrix n n A :=
   TensorProduct.lift (to_fun_bilinear R A n)
 
-variable[DecidableEq n][Fintype n]
+variable [DecidableEq n] [Fintype n]
 
 /--
 The function `(A ⊗[R] matrix n n R) →ₐ[R] matrix n n A`, as an algebra homomorphism.
@@ -176,7 +176,7 @@ def Equiv : A ⊗[R] Matrix n n R ≃ Matrix n n A :=
 
 end matrixEquivTensor
 
-variable[Fintype n][DecidableEq n]
+variable [Fintype n] [DecidableEq n]
 
 /--
 The `R`-algebra isomorphism `matrix n n A ≃ₐ[R] (A ⊗[R] matrix n n R)`.

@@ -25,7 +25,7 @@ properties of the tangent cone we prove here.
 -/
 
 
-variable(𝕜 : Type _)[NondiscreteNormedField 𝕜]
+variable (𝕜 : Type _) [NondiscreteNormedField 𝕜]
 
 open Filter Set
 
@@ -33,7 +33,7 @@ open_locale TopologicalSpace
 
 section TangentCone
 
-variable{E : Type _}[AddCommMonoidₓ E][Module 𝕜 E][TopologicalSpace E]
+variable {E : Type _} [AddCommMonoidₓ E] [Module 𝕜 E] [TopologicalSpace E]
 
 /-- The set of all tangent directions to the set `s` at the point `x`. -/
 def TangentConeAt (s : Set E) (x : E) : Set E :=
@@ -49,7 +49,7 @@ To avoid pathologies in dimension 0, we also require that `x` belongs to the clo
 is automatic when `E` is not `0`-dimensional).
  -/
 @[mkIff]
-structure UniqueDiffWithinAt(s : Set E)(x : E) : Prop where 
+structure UniqueDiffWithinAt (s : Set E) (x : E) : Prop where 
   dense_tangent_cone : Dense (Submodule.span 𝕜 (TangentConeAt 𝕜 s x) : Set E)
   mem_closure : x ∈ Closure s
 
@@ -62,13 +62,13 @@ def UniqueDiffOn (s : Set E) : Prop :=
 
 end TangentCone
 
-variable{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]
+variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]
+variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
 
-variable{G : Type _}[NormedGroup G][NormedSpace ℝ G]
+variable {G : Type _} [NormedGroup G] [NormedSpace ℝ G]
 
-variable{𝕜}{x y : E}{s t : Set E}
+variable {𝕜} {x y : E} {s t : Set E}
 
 section TangentCone
 
@@ -213,7 +213,7 @@ begin
     exact [expr ⟨«expr - »(z, x j), by simpa [] [] [] [] [] ["using", expr hzs], by simpa [] [] [] [] [] ["using", expr hz]⟩] },
   choose ["!"] [ident d'] [ident hd's, ident hcd'] [],
   refine [expr ⟨c, λ
-    n, function.update (d' n) i (d n), hd.mono (λ n hn j hj', _), hc, «expr $ »(tendsto_pi.2, λ j, _)⟩],
+    n, function.update (d' n) i (d n), hd.mono (λ n hn j hj', _), hc, «expr $ »(tendsto_pi_nhds.2, λ j, _)⟩],
   { rcases [expr em «expr = »(j, i), "with", ident rfl, "|", ident hj]; simp [] [] [] ["*"] [] [] },
   { rcases [expr em «expr = »(j, i), "with", ident rfl, "|", ident hj],
     { simp [] [] [] ["[", expr hy, "]"] [] [] },

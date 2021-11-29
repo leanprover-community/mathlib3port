@@ -55,7 +55,7 @@ open_locale Filter Ennreal MeasureTheory Nnreal TopologicalSpace
 
 attribute [local instance] Emetric.second_countable_of_sigma_compact
 
-variable{α : Type _}[MetricSpace α]{m0 : MeasurableSpace α}{μ : Measureₓ α}(v : VitaliFamily μ)
+variable {α : Type _} [MetricSpace α] {m0 : MeasurableSpace α} {μ : Measureₓ α} (v : VitaliFamily μ)
 
 include v
 
@@ -135,7 +135,8 @@ end
 
 section 
 
-variable[SigmaCompactSpace α][BorelSpace α][is_locally_finite_measure μ]{ρ : Measureₓ α}[is_locally_finite_measure ρ]
+variable [SigmaCompactSpace α] [BorelSpace α] [is_locally_finite_measure μ] {ρ : Measureₓ α}
+  [is_locally_finite_measure ρ]
 
 -- error in MeasureTheory.Covering.Differentiation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a measure `ρ` is singular with respect to `μ`, then for `μ` almost every `x`, the ratio
@@ -190,7 +191,7 @@ end
 
 section AbsolutelyContinuous
 
-variable(hρ : ρ ≪ μ)
+variable (hρ : ρ ≪ μ)
 
 include hρ
 

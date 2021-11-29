@@ -24,13 +24,8 @@ open Set Finₓ
 
 open_locale TopologicalSpace
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]{G : Type _}[NormedGroup G][NormedSpace 𝕜 G]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
 
 -- error in Analysis.Calculus.FormalMultilinearSeries: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_group
 /-- A formal multilinear series over a field `𝕜`, from `E` to `F`, is given by a family of
@@ -47,7 +42,7 @@ def formal_multilinear_series
 [normed_space 𝕜 F] :=
 ∀ n : exprℕ(), «expr [× ]→L[ ] »(E, n, 𝕜, F)
 
-instance  : Inhabited (FormalMultilinearSeries 𝕜 E F) :=
+instance : Inhabited (FormalMultilinearSeries 𝕜 E F) :=
   ⟨0⟩
 
 section Module
@@ -66,7 +61,7 @@ end Module
 
 namespace FormalMultilinearSeries
 
-variable(p : FormalMultilinearSeries 𝕜 E F)
+variable (p : FormalMultilinearSeries 𝕜 E F)
 
 /-- Forgetting the zeroth term in a formal multilinear series, and interpreting the following terms
 as multilinear maps into `E →L[𝕜] F`. If `p` corresponds to the Taylor series of a function, then
@@ -118,11 +113,11 @@ theorem comp_continuous_linear_map_apply (p : FormalMultilinearSeries 𝕜 F G) 
   (p.comp_continuous_linear_map u) n v = p n (u ∘ v) :=
   rfl
 
-variable(𝕜){𝕜' : Type _}[NondiscreteNormedField 𝕜'][NormedAlgebra 𝕜 𝕜']
+variable (𝕜) {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
-variable[NormedSpace 𝕜' E][IsScalarTower 𝕜 𝕜' E]
+variable [NormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E]
 
-variable[NormedSpace 𝕜' F][IsScalarTower 𝕜 𝕜' F]
+variable [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
 
 /-- Reinterpret a formal `𝕜'`-multilinear series as a formal `𝕜`-multilinear series, where `𝕜'` is a
 normed algebra over `𝕜`. -/

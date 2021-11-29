@@ -27,9 +27,9 @@ open Set
 
 open_locale BigOperators
 
-variable{R : Type u}[CommRingₓ R](I : Ideal R){a b : R}
+variable {R : Type u} [CommRingₓ R] (I : Ideal R) {a b : R}
 
-variable{S : Type v}
+variable {S : Type v}
 
 /-- The quotient `R/I` of a ring `R` by an ideal `I`.
 
@@ -43,9 +43,9 @@ def Quotientₓ (I : Ideal R) :=
 
 namespace Quotientₓ
 
-variable{I}{x y : R}
+variable {I} {x y : R}
 
-instance  (I : Ideal R) : HasOne I.quotient :=
+instance (I : Ideal R) : HasOne I.quotient :=
   ⟨Submodule.Quotient.mk 1⟩
 
 -- error in RingTheory.Ideal.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -69,7 +69,7 @@ instance (I : ideal R) : has_mul I.quotient :=
      convert [] [expr F] []
    end))⟩
 
-instance  (I : Ideal R) : CommRingₓ I.quotient :=
+instance (I : Ideal R) : CommRingₓ I.quotient :=
   { Submodule.Quotient.addCommGroup I with mul := ·*·, one := 1,
     mul_assoc :=
       fun a b c => Quotientₓ.induction_on₃' a b c$ fun a b c => congr_argₓ Submodule.Quotient.mk (mul_assocₓ a b c),
@@ -89,7 +89,7 @@ def mk (I : Ideal R) : R →+* I.quotient :=
 theorem ring_hom_ext [NonAssocSemiring S] ⦃f g : I.quotient →+* S⦄ (h : f.comp (mk I) = g.comp (mk I)) : f = g :=
   RingHom.ext$ fun x => Quotientₓ.induction_on' x$ (RingHom.congr_fun h : _)
 
-instance  : Inhabited (Quotientₓ I) :=
+instance : Inhabited (Quotientₓ I) :=
   ⟨mk I 37⟩
 
 protected theorem Eq : mk I x = mk I y ↔ x - y ∈ I :=
@@ -131,7 +131,7 @@ theorem quotient_ring_saturate (I : Ideal R) (s : Set R) : mk I ⁻¹' (mk I '' 
             by 
               rw [←Eq, sub_add_eq_sub_sub_swap, sub_self, zero_sub] <;> exact I.neg_mem hi⟩⟩
 
-instance  (I : Ideal R) [hI : I.is_prime] : IsDomain I.quotient :=
+instance (I : Ideal R) [hI : I.is_prime] : IsDomain I.quotient :=
   { quotient.nontrivial hI.1 with
     eq_zero_or_eq_zero_of_mul_eq_zero :=
       fun a b =>
@@ -195,7 +195,7 @@ theorem maximal_of_is_field (I : Ideal R) (hqf : IsField I.quotient) : I.is_maxi
 theorem maximal_ideal_iff_is_field_quotient (I : Ideal R) : I.is_maximal ↔ IsField I.quotient :=
   ⟨fun h => @Field.to_is_field I.quotient (@Ideal.Quotient.field _ _ I h), fun h => maximal_of_is_field I h⟩
 
-variable[CommRingₓ S]
+variable [CommRingₓ S]
 
 /-- Given a ring homomorphism `f : R →+* S` sending all elements of an ideal to zero,
 lift it to the quotient by this ideal. -/
@@ -250,7 +250,7 @@ theorem quot_equiv_of_eq_mk {R : Type _} [CommRingₓ R] {I J : Ideal R} (h : I 
 
 section Pi
 
-variable(ι : Type v)
+variable (ι : Type v)
 
 /-- `R^n/I^n` is a `R/I`-module. -/
 instance module_pi : Module I.quotient (I.pi ι).Quotient :=
@@ -340,7 +340,7 @@ end Pi
 
 section ChineseRemainder
 
-variable{ι : Type v}
+variable {ι : Type v}
 
 -- error in RingTheory.Ideal.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_sub_one_mem_and_mem

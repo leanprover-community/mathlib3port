@@ -17,13 +17,13 @@ open_locale BigOperators
 
 open Fintype MulAction
 
-variable(p : ℕ)(G : Type _)[Groupₓ G]
+variable (p : ℕ) (G : Type _) [Groupₓ G]
 
 /-- A p-group is a group in which every element has prime power order -/
 def IsPGroup : Prop :=
   ∀ g : G, ∃ k : ℕ, (g^p^k) = 1
 
-variable{p}{G}
+variable {p} {G}
 
 namespace IsPGroup
 
@@ -69,7 +69,7 @@ end
 
 section GIsPGroup
 
-variable(hG : IsPGroup p G)
+variable (hG : IsPGroup p G)
 
 include hG
 
@@ -92,7 +92,7 @@ theorem to_quotient (H : Subgroup G) [H.normal] : IsPGroup p (QuotientGroup.Quot
 theorem of_equiv {H : Type _} [Groupₓ H] (ϕ : G ≃* H) : IsPGroup p H :=
   hG.of_surjective ϕ.to_monoid_hom ϕ.surjective
 
-variable[hp : Fact p.prime]
+variable [hp : Fact p.prime]
 
 include hp
 
@@ -104,7 +104,7 @@ theorem index (H : Subgroup G) [Fintype (QuotientGroup.Quotient H)] : ∃ n : �
         ((congr_argₓ _ (H.normal_core.index_eq_card.trans hn)).mp (Subgroup.index_dvd_of_le H.normal_core_le))
     exact ⟨k, hk2⟩
 
-variable{α : Type _}[MulAction G α]
+variable {α : Type _} [MulAction G α]
 
 -- error in GroupTheory.PGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem card_orbit
@@ -117,7 +117,7 @@ begin
   exact [expr hG.index (stabilizer G a)]
 end
 
-variable(α)[Fintype α][Fintype (fixed_points G α)]
+variable (α) [Fintype α] [Fintype (fixed_points G α)]
 
 -- error in GroupTheory.PGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `G` is a `p`-group acting on a finite set `α`, then the number of fixed points

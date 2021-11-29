@@ -44,21 +44,21 @@ rounding, floor, ceil
 
 open Set
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-! ### Floor semiring -/
 
 
 /-- A `floor_semiring` is a linear ordered semiring over `α` with a function
 `floor : α → ℕ` satisfying `∀ (n : ℕ) (x : α), n ≤ ⌊x⌋ ↔ (n : α) ≤ x)`. -/
-class FloorSemiring(α)[OrderedSemiring α] where 
+class FloorSemiring (α) [OrderedSemiring α] where 
   floor : α → ℕ 
   ceil : α → ℕ 
   floor_of_neg {a : α} (ha : a < 0) : floor a = 0
   gc_floor {a : α} {n : ℕ} (ha : 0 ≤ a) : n ≤ floor a ↔ (n : α) ≤ a 
   gc_ceil : GaloisConnection ceil coeₓ
 
-instance  : FloorSemiring ℕ :=
+instance : FloorSemiring ℕ :=
   { floor := id, ceil := id, floor_of_neg := fun a ha => (a.not_lt_zero ha).elim,
     gc_floor :=
       fun n a ha =>
@@ -75,7 +75,7 @@ namespace Nat
 
 section LinearOrderedSemiring
 
-variable[LinearOrderedSemiring α][FloorSemiring α]{a : α}{n : ℕ}
+variable [LinearOrderedSemiring α] [FloorSemiring α] {a : α} {n : ℕ}
 
 /-- `⌊a⌋₊` is the greatest natural `n` such that `n ≤ a`. If `a` is negative, then `⌊a⌋₊ = 0`. -/
 def floor : α → ℕ :=
@@ -262,7 +262,7 @@ end LinearOrderedSemiring
 
 section LinearOrderedRing
 
-variable[LinearOrderedRing α][FloorSemiring α]{a : α}{n : ℕ}
+variable [LinearOrderedRing α] [FloorSemiring α] {a : α} {n : ℕ}
 
 theorem floor_add_nat (ha : 0 ≤ a) (n : ℕ) : ⌊a+n⌋₊ = ⌊a⌋₊+n :=
   eq_of_forall_le_iff$
@@ -334,13 +334,13 @@ end
 A `floor_ring` is a linear ordered ring over `α` with a function
 `floor : α → ℤ` satisfying `∀ (z : ℤ) (a : α), z ≤ floor a ↔ (z : α) ≤ a)`.
 -/
-class FloorRing(α)[LinearOrderedRing α] where 
+class FloorRing (α) [LinearOrderedRing α] where 
   floor : α → ℤ 
   ceil : α → ℤ 
   gc_coe_floor : GaloisConnection coeₓ floor 
   gc_ceil_coe : GaloisConnection ceil coeₓ
 
-instance  : FloorRing ℤ :=
+instance : FloorRing ℤ :=
   { floor := id, ceil := id,
     gc_coe_floor :=
       fun a b =>
@@ -373,7 +373,7 @@ def FloorRing.ofCeil α [LinearOrderedRing α] (ceil : α → ℤ) (gc_ceil_coe 
 
 namespace Int
 
-variable[LinearOrderedRing α][FloorRing α]{z : ℤ}{a : α}
+variable [LinearOrderedRing α] [FloorRing α] {z : ℤ} {a : α}
 
 /-- `int.floor a` is the greatest integer `z` such that `z ≤ a`. It is denoted with `⌊a⌋`. -/
 def floor : α → ℤ :=
@@ -773,7 +773,7 @@ theorem preimage_ceil_singleton (m : ℤ) : (ceil : α → ℤ) ⁻¹' {m} = Ioc
 /-! #### A floor ring as a floor semiring -/
 
 
-instance (priority := 100)_root_.floor_ring.to_floor_semiring : FloorSemiring α :=
+instance (priority := 100) _root_.floor_ring.to_floor_semiring : FloorSemiring α :=
   { floor := fun a => ⌊a⌋.toNat, ceil := fun a => ⌈a⌉.toNat,
     floor_of_neg := fun a ha => Int.to_nat_of_nonpos (Int.floor_nonpos ha.le),
     gc_floor :=

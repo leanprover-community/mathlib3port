@@ -20,17 +20,17 @@ open LinearMap
 
 attribute [local ext] TensorProduct.ext
 
-variable(R : Type _)[CommRingₓ R]
+variable (R : Type _) [CommRingₓ R]
 
-variable(ι₁ : Type _)(ι₂ : Type _)
+variable (ι₁ : Type _) (ι₂ : Type _)
 
-variable[DecidableEq ι₁][DecidableEq ι₂]
+variable [DecidableEq ι₁] [DecidableEq ι₂]
 
-variable(M₁ : ι₁ → Type _)(M₂ : ι₂ → Type _)
+variable (M₁ : ι₁ → Type _) (M₂ : ι₂ → Type _)
 
-variable[∀ i₁, AddCommGroupₓ (M₁ i₁)][∀ i₂, AddCommGroupₓ (M₂ i₂)]
+variable [∀ i₁, AddCommGroupₓ (M₁ i₁)] [∀ i₂, AddCommGroupₓ (M₂ i₂)]
 
-variable[∀ i₁, Module R (M₁ i₁)][∀ i₂, Module R (M₂ i₂)]
+variable [∀ i₁, Module R (M₁ i₁)] [∀ i₂, Module R (M₂ i₂)]
 
 /-- The linear equivalence `(⨁ i₁, M₁ i₁) ⊗ (⨁ i₂, M₂ i₂) ≃ (⨁ i₁, ⨁ i₂, M₁ i₁ ⊗ M₂ i₂)`, i.e.
 "tensor product distributes over direct sum". -/

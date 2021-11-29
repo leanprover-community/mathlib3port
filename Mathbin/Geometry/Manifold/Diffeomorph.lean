@@ -42,40 +42,17 @@ open_locale Manifold TopologicalSpace
 
 open Function Set
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{F :
-    Type
-      _}[NormedGroup
-      F][NormedSpace 𝕜
-      F]{H :
-    Type
-      _}[TopologicalSpace
-      H]{H' :
-    Type
-      _}[TopologicalSpace
-      H']{G :
-    Type _}[TopologicalSpace G]{I : ModelWithCorners 𝕜 E H}{I' : ModelWithCorners 𝕜 E' H'}{J : ModelWithCorners 𝕜 F G}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+  [NormedGroup E'] [NormedSpace 𝕜 E'] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] {H : Type _} [TopologicalSpace H]
+  {H' : Type _} [TopologicalSpace H'] {G : Type _} [TopologicalSpace G] {I : ModelWithCorners 𝕜 E H}
+  {I' : ModelWithCorners 𝕜 E' H'} {J : ModelWithCorners 𝕜 F G}
 
-variable{M :
-    Type
-      _}[TopologicalSpace
-      M][ChartedSpace H
-      M]{M' :
-    Type _}[TopologicalSpace M'][ChartedSpace H' M']{N : Type _}[TopologicalSpace N][ChartedSpace G N]{n : WithTop ℕ}
+variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
+  {N : Type _} [TopologicalSpace N] [ChartedSpace G N] {n : WithTop ℕ}
 
 section Defs
 
-variable(I I' M M' n)
+variable (I I' M M' n)
 
 /--
 `n`-times continuously differentiable diffeomorphism between `M` and `M'` with respect to I and I'
@@ -99,10 +76,10 @@ localized [Manifold]
 
 namespace Diffeomorph
 
-instance  : CoeFun (M ≃ₘ^n⟮I,I'⟯ M') fun _ => M → M' :=
+instance : CoeFun (M ≃ₘ^n⟮I,I'⟯ M') fun _ => M → M' :=
   ⟨fun e => e.to_equiv⟩
 
-instance  : Coe (M ≃ₘ^n⟮I,I'⟯ M') C^n⟮I, M; I', M'⟯ :=
+instance : Coe (M ≃ₘ^n⟮I,I'⟯ M') C^n⟮I, M; I', M'⟯ :=
   ⟨fun Φ => ⟨Φ, Φ.times_cont_mdiff_to_fun⟩⟩
 
 @[continuity]
@@ -155,7 +132,7 @@ theorem ext {h h' : M ≃ₘ^n⟮I,I'⟯ M'} (Heq : ∀ x, h x = h' x) : h = h' 
 
 section 
 
-variable(M I n)
+variable (M I n)
 
 /-- Identity map as a diffeomorphism. -/
 protected def refl : M ≃ₘ^n⟮I,I⟯ M :=
@@ -326,7 +303,7 @@ theorem to_local_homeomorph_mdifferentiable (h : M ≃ₘ^n⟮I,J⟯ N) (hn : 1 
   h.to_homeomorph.to_local_homeomorph.mdifferentiable I J :=
   ⟨h.mdifferentiable_on _ hn, h.symm.mdifferentiable_on _ hn⟩
 
-variable[SmoothManifoldWithCorners I M][SmoothManifoldWithCorners J N]
+variable [SmoothManifoldWithCorners I M] [SmoothManifoldWithCorners J N]
 
 theorem unique_mdiff_on_image_aux (h : M ≃ₘ^n⟮I,J⟯ N) (hn : 1 ≤ n) {s : Set M} (hs : UniqueMdiffOn I s) :
   UniqueMdiffOn J (h '' s) :=
@@ -358,7 +335,7 @@ end Diffeomorph
 
 namespace ContinuousLinearEquiv
 
-variable(e : E ≃L[𝕜] E')
+variable (e : E ≃L[𝕜] E')
 
 /-- A continuous linear equivalence between normed spaces is a diffeomorphism. -/
 def to_diffeomorph : E ≃ₘ[𝕜] E' :=
@@ -381,7 +358,7 @@ end ContinuousLinearEquiv
 
 namespace ModelWithCorners
 
-variable(I)(e : E ≃ₘ[𝕜] E')
+variable (I) (e : E ≃ₘ[𝕜] E')
 
 /-- Apply a diffeomorphism (e.g., a continuous linear equivalence) to the model vector space. -/
 def trans_diffeomorph (I : ModelWithCorners 𝕜 E H) (e : E ≃ₘ[𝕜] E') : ModelWithCorners 𝕜 E' H :=
@@ -423,7 +400,7 @@ end ModelWithCorners
 
 namespace Diffeomorph
 
-variable(e : E ≃ₘ[𝕜] F)
+variable (e : E ≃ₘ[𝕜] F)
 
 instance smooth_manifold_with_corners_trans_diffeomorph [SmoothManifoldWithCorners I M] :
   SmoothManifoldWithCorners (I.trans_diffeomorph e) M :=
@@ -434,7 +411,7 @@ instance smooth_manifold_with_corners_trans_diffeomorph [SmoothManifoldWithCorne
         (((timesContDiffGroupoid ⊤ I).compatible h₁ h₂).1.comp e.symm.times_cont_diff.times_cont_diff_on _)
     mfldSetTac
 
-variable(I M)
+variable (I M)
 
 /-- The identity diffeomorphism between a manifold with model `I` and the same manifold
 with model `I.trans_diffeomorph e`. -/
@@ -465,7 +442,7 @@ def to_trans_diffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I,I.trans_diffeomor
               by 
                 simp' only [e.symm_apply_apply, Equiv.refl_symm, Equiv.coe_refl] with mfld_simps⟩ }
 
-variable{I M}
+variable {I M}
 
 @[simp]
 theorem times_cont_mdiff_within_at_trans_diffeomorph_right {f : M' → M} {x s} :

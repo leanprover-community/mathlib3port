@@ -32,7 +32,7 @@ namespace BoxIntegral
 
 namespace Box
 
-variable{ι : Type _}{I J : box ι}
+variable {ι : Type _} {I J : box ι}
 
 /-- For a box `I`, the hyperplanes passing through its center split `I` into `2 ^ card ι` boxes.
 `box_integral.box.split_center_box I s` is one of these boxes. See also
@@ -160,7 +160,7 @@ begin
   have [ident hJuz] [":", expr tendsto (λ m, (J m).upper) at_top (expr𝓝() z)] [],
   { suffices [] [":", expr tendsto (λ m, «expr - »((J m).upper, (J m).lower)) at_top (expr𝓝() 0)],
     by simpa [] [] [] [] [] ["using", expr hJlz.add this],
-    refine [expr tendsto_pi.2 (λ i, _)],
+    refine [expr tendsto_pi_nhds.2 (λ i, _)],
     simpa [] [] [] ["[", expr hJsub, "]"] [] ["using", expr tendsto_const_nhds.div_at_top (tendsto_pow_at_top_at_top_of_one_lt (@one_lt_two exprℝ() _ _))] },
   replace [ident hJlz] [":", expr tendsto (λ m, (J m).lower) at_top «expr𝓝[ ] »(Icc I.lower I.upper, z)] [],
   from [expr tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ hJlz (eventually_of_forall hJl_mem)],

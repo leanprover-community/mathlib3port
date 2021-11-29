@@ -28,11 +28,11 @@ open BoundedContinuousFunction
 
 namespace ContinuousMap
 
-variable{α β E : Type _}[TopologicalSpace α][CompactSpace α][MetricSpace β][NormedGroup E]
+variable {α β E : Type _} [TopologicalSpace α] [CompactSpace α] [MetricSpace β] [NormedGroup E]
 
 section 
 
-variable(α β)
+variable (α β)
 
 /--
 When `α` is compact, the bounded continuous maps `α →ᵇ β` are
@@ -58,7 +58,7 @@ additively equivalent to `C(α, 𝕜)`.
 def add_equiv_bounded_of_compact [AddMonoidₓ β] [HasLipschitzAdd β] : C(α, β) ≃+ (α →ᵇ β) :=
   ({ forget_boundedness_add_hom α β, (equiv_bounded_of_compact α β).symm with  } : (α →ᵇ β) ≃+ C(α, β)).symm
 
-instance  : MetricSpace C(α, β) :=
+instance : MetricSpace C(α, β) :=
   MetricSpace.induced (equiv_bounded_of_compact α β) (equiv_bounded_of_compact α β).Injective
     (by 
       infer_instance)
@@ -87,7 +87,7 @@ open BoundedContinuousFunction
 
 section 
 
-variable{α β}{f g : C(α, β)}{C : ℝ}
+variable {α β} {f g : C(α, β)} {C : ℝ}
 
 /-- The pointwise distance is controlled by the distance between functions, by definition. -/
 theorem dist_apply_le_dist (x : α) : dist (f x) (g x) ≤ dist f g :=
@@ -116,7 +116,7 @@ theorem dist_lt_iff (C0 : (0 : ℝ) < C) : dist f g < C ↔ ∀ x : α, dist (f 
 
 end 
 
-instance  [CompleteSpace β] : CompleteSpace C(α, β) :=
+instance [CompleteSpace β] : CompleteSpace C(α, β) :=
   (isometric_bounded_of_compact α β).CompleteSpace
 
 @[continuity]
@@ -130,7 +130,7 @@ theorem continuous_evalx (x : α) : Continuous fun f : C(α, β) => f x :=
 theorem continuous_coe : @Continuous C(α, β) (α → β) _ _ coeFn :=
   continuous_pi continuous_evalx
 
-instance  : HasNorm C(α, E) :=
+instance : HasNorm C(α, E) :=
   { norm := fun x => dist x 0 }
 
 @[simp]
@@ -143,7 +143,7 @@ theorem _root_.bounded_continuous_function.norm_forget_boundedness_eq (f : α �
 
 open BoundedContinuousFunction
 
-instance  : NormedGroup C(α, E) :=
+instance : NormedGroup C(α, E) :=
   { dist_eq :=
       fun x y =>
         by 
@@ -153,7 +153,7 @@ instance  : NormedGroup C(α, E) :=
 
 section 
 
-variable(f : C(α, E))
+variable (f : C(α, E))
 
 theorem norm_coe_le_norm (x : α) : ∥f x∥ ≤ ∥f∥ :=
   (mk_of_compact f).norm_coe_le_norm x
@@ -188,23 +188,23 @@ end
 
 section 
 
-variable{R : Type _}[NormedRing R]
+variable {R : Type _} [NormedRing R]
 
-instance  : NormedRing C(α, R) :=
+instance : NormedRing C(α, R) :=
   { (inferInstance : NormedGroup C(α, R)) with norm_mul := fun f g => norm_mul_le (mk_of_compact f) (mk_of_compact g) }
 
 end 
 
 section 
 
-variable{𝕜 : Type _}[NormedField 𝕜][NormedSpace 𝕜 E]
+variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 E]
 
-instance  : NormedSpace 𝕜 C(α, E) :=
+instance : NormedSpace 𝕜 C(α, E) :=
   { norm_smul_le := fun c f => le_of_eqₓ (norm_smul c (mk_of_compact f)) }
 
 section 
 
-variable(α 𝕜 E)
+variable (α 𝕜 E)
 
 /--
 When `α` is compact and `𝕜` is a normed field,
@@ -251,9 +251,9 @@ end
 
 section 
 
-variable{𝕜 : Type _}{γ : Type _}[NormedField 𝕜][NormedRing γ][NormedAlgebra 𝕜 γ]
+variable {𝕜 : Type _} {γ : Type _} [NormedField 𝕜] [NormedRing γ] [NormedAlgebra 𝕜 γ]
 
-instance  [Nonempty α] : NormedAlgebra 𝕜 C(α, γ) :=
+instance [Nonempty α] : NormedAlgebra 𝕜 C(α, γ) :=
   { norm_algebra_map_eq := fun c => (norm_algebra_map_eq (α →ᵇ γ) c : _) }
 
 end 
@@ -264,9 +264,9 @@ namespace ContinuousMap
 
 section UniformContinuity
 
-variable{α β : Type _}
+variable {α β : Type _}
 
-variable[MetricSpace α][CompactSpace α][MetricSpace β]
+variable [MetricSpace α] [CompactSpace α] [MetricSpace β]
 
 /-!
 We now set up some declarations making it convenient to use uniform continuity.
@@ -296,9 +296,9 @@ end ContinuousMap
 
 section CompLeft
 
-variable(X : Type _){𝕜 β γ : Type _}[TopologicalSpace X][CompactSpace X][NondiscreteNormedField 𝕜]
+variable (X : Type _) {𝕜 β γ : Type _} [TopologicalSpace X] [CompactSpace X] [NondiscreteNormedField 𝕜]
 
-variable[NormedGroup β][NormedSpace 𝕜 β][NormedGroup γ][NormedSpace 𝕜 γ]
+variable [NormedGroup β] [NormedSpace 𝕜 β] [NormedGroup γ] [NormedSpace 𝕜 γ]
 
 open ContinuousMap
 

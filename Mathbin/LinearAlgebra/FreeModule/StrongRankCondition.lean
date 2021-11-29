@@ -26,7 +26,7 @@ vector `(0,...,0,1)` gives `a₀`, contradiction.
 -/
 
 
-variable(R : Type _)[CommRingₓ R][Nontrivial R]
+variable (R : Type _) [CommRingₓ R] [Nontrivial R]
 
 open Polynomial Function Finₓ LinearMap
 

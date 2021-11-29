@@ -36,49 +36,49 @@ namespace CategoryTheory.Limits
 
 universe v u₁ u₂ u₃
 
-variable{C : Type u₁}[category.{v} C]
+variable {C : Type u₁} [category.{v} C]
 
-variable{D : Type u₂}[category.{v} D]
+variable {D : Type u₂} [category.{v} D]
 
-variable{J : Type v}[small_category J]{K : J ⥤ C}
+variable {J : Type v} [small_category J] {K : J ⥤ C}
 
 /--
 A functor `F` preserves limits of `K` (written as `preserves_limit K F`)
 if `F` maps any limit cone over `K` to a limit cone.
 -/
-class preserves_limit(K : J ⥤ C)(F : C ⥤ D) : Type max u₁ u₂ v where 
+class preserves_limit (K : J ⥤ C) (F : C ⥤ D) : Type max u₁ u₂ v where 
   preserves : ∀ {c : cone K}, is_limit c → is_limit (F.map_cone c)
 
 /--
 A functor `F` preserves colimits of `K` (written as `preserves_colimit K F`)
 if `F` maps any colimit cocone over `K` to a colimit cocone.
 -/
-class preserves_colimit(K : J ⥤ C)(F : C ⥤ D) : Type max u₁ u₂ v where 
+class preserves_colimit (K : J ⥤ C) (F : C ⥤ D) : Type max u₁ u₂ v where 
   preserves : ∀ {c : cocone K}, is_colimit c → is_colimit (F.map_cocone c)
 
 /-- We say that `F` preserves limits of shape `J` if `F` preserves limits for every diagram
     `K : J ⥤ C`, i.e., `F` maps limit cones over `K` to limit cones. -/
-class preserves_limits_of_shape(J : Type v)[small_category J](F : C ⥤ D) : Type max u₁ u₂ v where 
+class preserves_limits_of_shape (J : Type v) [small_category J] (F : C ⥤ D) : Type max u₁ u₂ v where 
   PreservesLimit : ∀ {K : J ⥤ C}, preserves_limit K F :=  by 
   runTac 
     tactic.apply_instance
 
 /-- We say that `F` preserves colimits of shape `J` if `F` preserves colimits for every diagram
     `K : J ⥤ C`, i.e., `F` maps colimit cocones over `K` to colimit cocones. -/
-class preserves_colimits_of_shape(J : Type v)[small_category J](F : C ⥤ D) : Type max u₁ u₂ v where 
+class preserves_colimits_of_shape (J : Type v) [small_category J] (F : C ⥤ D) : Type max u₁ u₂ v where 
   PreservesColimit : ∀ {K : J ⥤ C}, preserves_colimit K F :=  by 
   runTac 
     tactic.apply_instance
 
 /-- We say that `F` preserves limits if it sends limit cones over any diagram to limit cones. -/
-class preserves_limits(F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
+class preserves_limits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
   PreservesLimitsOfShape : ∀ {J : Type v} [small_category J], preserves_limits_of_shape J F :=  by 
   runTac 
     tactic.apply_instance
 
 /-- We say that `F` preserves colimits if it sends colimit cocones over any diagram to colimit
     cocones.-/
-class preserves_colimits(F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
+class preserves_colimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
   PreservesColimitsOfShape : ∀ {J : Type v} [small_category J], preserves_colimits_of_shape J F :=  by 
   runTac 
     tactic.apply_instance
@@ -177,9 +177,9 @@ instance id_preserves_colimits : preserves_colimits (𝟭 C) :=
 
 section 
 
-variable{E : Type u₃}[ℰ : category.{v} E]
+variable {E : Type u₃} [ℰ : category.{v} E]
 
-variable(F : C ⥤ D)(G : D ⥤ E)
+variable (F : C ⥤ D) (G : D ⥤ E)
 
 attribute [local elabWithoutExpectedType] preserves_limit.preserves preserves_colimit.preserves
 
@@ -320,7 +320,7 @@ whenever the image of a cone over `K` under `F` is a limit cone in `D`,
 the cone was already a limit cone in `C`.
 Note that we do not assume a priori that `D` actually has any limits.
 -/
-class reflects_limit(K : J ⥤ C)(F : C ⥤ D) : Type max u₁ u₂ v where 
+class reflects_limit (K : J ⥤ C) (F : C ⥤ D) : Type max u₁ u₂ v where 
   reflects : ∀ {c : cone K}, is_limit (F.map_cone c) → is_limit c
 
 /--
@@ -329,7 +329,7 @@ whenever the image of a cocone over `K` under `F` is a colimit cocone in `D`,
 the cocone was already a colimit cocone in `C`.
 Note that we do not assume a priori that `D` actually has any colimits.
 -/
-class reflects_colimit(K : J ⥤ C)(F : C ⥤ D) : Type max u₁ u₂ v where 
+class reflects_colimit (K : J ⥤ C) (F : C ⥤ D) : Type max u₁ u₂ v where 
   reflects : ∀ {c : cocone K}, is_colimit (F.map_cocone c) → is_colimit c
 
 /--
@@ -338,7 +338,7 @@ whenever the image of a cone over some `K : J ⥤ C` under `F` is a limit cone i
 the cone was already a limit cone in `C`.
 Note that we do not assume a priori that `D` actually has any limits.
 -/
-class reflects_limits_of_shape(J : Type v)[small_category J](F : C ⥤ D) : Type max u₁ u₂ v where 
+class reflects_limits_of_shape (J : Type v) [small_category J] (F : C ⥤ D) : Type max u₁ u₂ v where 
   ReflectsLimit : ∀ {K : J ⥤ C}, reflects_limit K F :=  by 
   runTac 
     tactic.apply_instance
@@ -349,7 +349,7 @@ whenever the image of a cocone over some `K : J ⥤ C` under `F` is a colimit co
 the cocone was already a colimit cocone in `C`.
 Note that we do not assume a priori that `D` actually has any colimits.
 -/
-class reflects_colimits_of_shape(J : Type v)[small_category J](F : C ⥤ D) : Type max u₁ u₂ v where 
+class reflects_colimits_of_shape (J : Type v) [small_category J] (F : C ⥤ D) : Type max u₁ u₂ v where 
   ReflectsColimit : ∀ {K : J ⥤ C}, reflects_colimit K F :=  by 
   runTac 
     tactic.apply_instance
@@ -360,7 +360,7 @@ whenever the image of a cone over some `K : J ⥤ C` under `F` is a limit cone i
 the cone was already a limit cone in `C`.
 Note that we do not assume a priori that `D` actually has any limits.
 -/
-class reflects_limits(F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
+class reflects_limits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
   ReflectsLimitsOfShape : ∀ {J : Type v} [small_category J], reflects_limits_of_shape J F :=  by 
   runTac 
     tactic.apply_instance
@@ -371,7 +371,7 @@ whenever the image of a cocone over some `K : J ⥤ C` under `F` is a colimit co
 the cocone was already a colimit cocone in `C`.
 Note that we do not assume a priori that `D` actually has any colimits.
 -/
-class reflects_colimits(F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
+class reflects_colimits (F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
   ReflectsColimitsOfShape : ∀ {J : Type v} [small_category J], reflects_colimits_of_shape J F :=  by 
   runTac 
     tactic.apply_instance
@@ -433,19 +433,19 @@ instance reflects_colimits_subsingleton (F : C ⥤ D) : Subsingleton (reflects_c
     cases b 
     cc
 
-instance (priority := 100)reflects_limit_of_reflects_limits_of_shape (K : J ⥤ C) (F : C ⥤ D)
+instance (priority := 100) reflects_limit_of_reflects_limits_of_shape (K : J ⥤ C) (F : C ⥤ D)
   [H : reflects_limits_of_shape J F] : reflects_limit K F :=
   reflects_limits_of_shape.reflects_limit
 
-instance (priority := 100)reflects_colimit_of_reflects_colimits_of_shape (K : J ⥤ C) (F : C ⥤ D)
+instance (priority := 100) reflects_colimit_of_reflects_colimits_of_shape (K : J ⥤ C) (F : C ⥤ D)
   [H : reflects_colimits_of_shape J F] : reflects_colimit K F :=
   reflects_colimits_of_shape.reflects_colimit
 
-instance (priority := 100)reflects_limits_of_shape_of_reflects_limits (F : C ⥤ D) [H : reflects_limits F] :
+instance (priority := 100) reflects_limits_of_shape_of_reflects_limits (F : C ⥤ D) [H : reflects_limits F] :
   reflects_limits_of_shape J F :=
   reflects_limits.reflects_limits_of_shape
 
-instance (priority := 100)reflects_colimits_of_shape_of_reflects_colimits (F : C ⥤ D) [H : reflects_colimits F] :
+instance (priority := 100) reflects_colimits_of_shape_of_reflects_colimits (F : C ⥤ D) [H : reflects_colimits F] :
   reflects_colimits_of_shape J F :=
   reflects_colimits.reflects_colimits_of_shape
 
@@ -483,9 +483,9 @@ instance id_reflects_colimits : reflects_colimits (𝟭 C) :=
 
 section 
 
-variable{E : Type u₃}[ℰ : category.{v} E]
+variable {E : Type u₃} [ℰ : category.{v} E]
 
-variable(F : C ⥤ D)(G : D ⥤ E)
+variable (F : C ⥤ D) (G : D ⥤ E)
 
 instance comp_reflects_limit [reflects_limit K F] [reflects_limit (K ⋙ F) G] : reflects_limit K (F ⋙ G) :=
   ⟨fun c h => reflects_limit.reflects (reflects_limit.reflects h)⟩
@@ -684,7 +684,7 @@ def reflects_colimits_of_reflects_isomorphisms {G : C ⥤ D} [reflects_isomorphi
 
 end 
 
-variable(F : C ⥤ D)
+variable (F : C ⥤ D)
 
 /-- A fully faithful functor reflects limits. -/
 def fully_faithful_reflects_limits [full F] [faithful F] : reflects_limits F :=

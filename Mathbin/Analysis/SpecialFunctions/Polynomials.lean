@@ -22,7 +22,7 @@ open_locale Asymptotics TopologicalSpace
 
 namespace Polynomial
 
-variable{𝕜 : Type _}[NormedLinearOrderedField 𝕜](P Q : Polynomial 𝕜)
+variable {𝕜 : Type _} [NormedLinearOrderedField 𝕜] (P Q : Polynomial 𝕜)
 
 theorem eventually_no_roots (hP : P ≠ 0) : ∀ᶠx in Filter.atTop, ¬P.is_root x :=
   by 
@@ -30,7 +30,7 @@ theorem eventually_no_roots (hP : P ≠ 0) : ∀ᶠx in Filter.atTop, ¬P.is_roo
     refine' filter.eventually_at_top.mpr ⟨x₀+1, fun x hx h => _⟩
     exact absurd (hx₀ x h) (not_le.mpr (lt_of_lt_of_leₓ (lt_add_one x₀) hx))
 
-variable[OrderTopology 𝕜]
+variable [OrderTopology 𝕜]
 
 section PolynomialAtTop
 

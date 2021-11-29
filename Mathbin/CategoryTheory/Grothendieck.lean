@@ -33,9 +33,9 @@ universe u
 
 namespace CategoryTheory
 
-variable{C D : Type _}[category C][category D]
+variable {C D : Type _} [category C] [category D]
 
-variable(F : C ⥤ Cat)
+variable (F : C ⥤ Cat)
 
 /--
 The Grothendieck construction (often written as `∫ F` in mathematics) for a functor `F : C ⥤ Cat`
@@ -52,13 +52,13 @@ structure grothendieck where
 
 namespace Grothendieck
 
-variable{F}
+variable {F}
 
 /--
 A morphism in the Grothendieck category `F : C ⥤ Cat` consists of
 `base : X.base ⟶ Y.base` and `f.fiber : (F.map base).obj X.fiber ⟶ Y.fiber`.
 -/
-structure hom(X Y : grothendieck F) where 
+structure hom (X Y : grothendieck F) where 
   base : X.base ⟶ Y.base 
   fiber : (F.map base).obj X.fiber ⟶ Y.fiber
 
@@ -92,7 +92,7 @@ def id (X : grothendieck F) : hom X X :=
         (by 
           erw [CategoryTheory.Functor.map_id, functor.id_obj X.fiber]) }
 
-instance  (X : grothendieck F) : Inhabited (hom X X) :=
+instance (X : grothendieck F) : Inhabited (hom X X) :=
   ⟨id X⟩
 
 /--
@@ -107,7 +107,7 @@ def comp {X Y Z : grothendieck F} (f : hom X Y) (g : hom Y Z) : hom X Z :=
             erw [functor.map_comp, functor.comp_obj]) ≫
         (F.map g.base).map f.fiber ≫ g.fiber }
 
-instance  : category (grothendieck F) :=
+instance : category (grothendieck F) :=
   { Hom := fun X Y => grothendieck.hom X Y, id := fun X => grothendieck.id X,
     comp := fun X Y Z f g => grothendieck.comp f g,
     comp_id' :=
@@ -159,7 +159,7 @@ theorem congr {X Y : grothendieck F} {f g : X ⟶ Y} (h : f = g) :
 
 section 
 
-variable(F)
+variable (F)
 
 /-- The forgetful functor from `grothendieck F` to the source category. -/
 @[simps]
@@ -170,7 +170,7 @@ end
 
 universe w
 
-variable(G : C ⥤ Type w)
+variable (G : C ⥤ Type w)
 
 /-- Auxiliary definition for `grothendieck_Type_to_Cat`, to speed up elaboration. -/
 @[simps]

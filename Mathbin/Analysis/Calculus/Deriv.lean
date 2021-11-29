@@ -86,13 +86,13 @@ open Filter Asymptotics Set
 
 open continuous_linear_map(smulRight smul_right_one_eq_iff)
 
-variable{𝕜 : Type u}[NondiscreteNormedField 𝕜]
+variable {𝕜 : Type u} [NondiscreteNormedField 𝕜]
 
 section 
 
-variable{F : Type v}[NormedGroup F][NormedSpace 𝕜 F]
+variable {F : Type v} [NormedGroup F] [NormedSpace 𝕜 F]
 
-variable{E : Type w}[NormedGroup E][NormedSpace 𝕜 E]
+variable {E : Type w} [NormedGroup E] [NormedSpace 𝕜 E]
 
 /--
 `f` has the derivative `f'` at the point `x` as `x` goes along the filter `L`.
@@ -142,15 +142,15 @@ If the derivative exists (i.e., `∃ f', has_deriv_at f f' x`), then
 def deriv (f : 𝕜 → F) (x : 𝕜) :=
   fderiv 𝕜 f x 1
 
-variable{f f₀ f₁ g : 𝕜 → F}
+variable {f f₀ f₁ g : 𝕜 → F}
 
-variable{f' f₀' f₁' g' : F}
+variable {f' f₀' f₁' g' : F}
 
-variable{x : 𝕜}
+variable {x : 𝕜}
 
-variable{s t : Set 𝕜}
+variable {s t : Set 𝕜}
 
-variable{L L₁ L₂ : Filter 𝕜}
+variable {L L₁ L₂ : Filter 𝕜}
 
 /-- Expressing `has_fderiv_at_filter f f' x L` in terms of `has_deriv_at_filter` -/
 theorem has_fderiv_at_filter_iff_has_deriv_at_filter {f' : 𝕜 →L[𝕜] F} :
@@ -489,7 +489,7 @@ section id
 /-! ### Derivative of the identity -/
 
 
-variable(s x L)
+variable (s x L)
 
 theorem has_deriv_at_filter_id : HasDerivAtFilter id 1 x L :=
   (has_fderiv_at_filter_id x L).HasDerivAtFilter
@@ -527,7 +527,7 @@ section Const
 /-! ### Derivative of constant functions -/
 
 
-variable(c : F)(s x L)
+variable (c : F) (s x L)
 
 theorem has_deriv_at_filter_const : HasDerivAtFilter (fun x => c) 0 x L :=
   (has_fderiv_at_filter_const c x L).HasDerivAtFilter
@@ -558,7 +558,7 @@ section ContinuousLinearMap
 /-! ### Derivative of continuous linear maps -/
 
 
-variable(e : 𝕜 →L[𝕜] F)
+variable (e : 𝕜 →L[𝕜] F)
 
 protected theorem ContinuousLinearMap.has_deriv_at_filter : HasDerivAtFilter e (e 1) x L :=
   e.has_fderiv_at_filter.has_deriv_at_filter
@@ -586,7 +586,7 @@ section LinearMap
 /-! ### Derivative of bundled linear maps -/
 
 
-variable(e : 𝕜 →ₗ[𝕜] F)
+variable (e : 𝕜 →ₗ[𝕜] F)
 
 protected theorem LinearMap.has_deriv_at_filter : HasDerivAtFilter e (e 1) x L :=
   e.to_continuous_linear_map₁.has_deriv_at_filter
@@ -697,7 +697,7 @@ section Sum
 
 open_locale BigOperators
 
-variable{ι : Type _}{u : Finset ι}{A : ι → 𝕜 → F}{A' : ι → F}
+variable {ι : Type _} {u : Finset ι} {A : ι → 𝕜 → F} {A' : ι → F}
 
 theorem HasDerivAtFilter.sum (h : ∀ i _ : i ∈ u, HasDerivAtFilter (A i) (A' i) x L) :
   HasDerivAtFilter (fun y => ∑i in u, A i y) (∑i in u, A' i) x L :=
@@ -733,10 +733,8 @@ section Pi
 /-! ### Derivatives of functions `f : 𝕜 → Π i, E i` -/
 
 
-variable{ι :
-    Type
-      _}[Fintype
-      ι]{E' : ι → Type _}[∀ i, NormedGroup (E' i)][∀ i, NormedSpace 𝕜 (E' i)]{φ : 𝕜 → ∀ i, E' i}{φ' : ∀ i, E' i}
+variable {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedGroup (E' i)] [∀ i, NormedSpace 𝕜 (E' i)]
+  {φ : 𝕜 → ∀ i, E' i} {φ' : ∀ i, E' i}
 
 @[simp]
 theorem has_strict_deriv_at_pi : HasStrictDerivAt φ φ' x ↔ ∀ i, HasStrictDerivAt (fun x => φ x i) (φ' i) x :=
@@ -766,8 +764,8 @@ section Smul
 /-! ### Derivative of the multiplication of a scalar function and a vector function -/
 
 
-variable{𝕜' :
-    Type _}[NondiscreteNormedField 𝕜'][NormedAlgebra 𝕜 𝕜'][NormedSpace 𝕜' F][IsScalarTower 𝕜 𝕜' F]{c : 𝕜 → 𝕜'}{c' : 𝕜'}
+variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
+  {c : 𝕜 → 𝕜'} {c' : 𝕜'}
 
 theorem HasDerivWithinAt.smul (hc : HasDerivWithinAt c c' s x) (hf : HasDerivWithinAt f f' s x) :
   HasDerivWithinAt (fun y => c y • f y) ((c x • f')+c' • f x) s x :=
@@ -819,7 +817,7 @@ end Smul
 
 section ConstSmul
 
-variable{R : Type _}[Semiringₓ R][Module R F][TopologicalSpace R][SmulCommClass 𝕜 R F][HasContinuousSmul R F]
+variable {R : Type _} [Semiringₓ R] [Module R F] [TopologicalSpace R] [SmulCommClass 𝕜 R F] [HasContinuousSmul R F]
 
 theorem HasStrictDerivAt.const_smul (c : R) (hf : HasStrictDerivAt f f' x) :
   HasStrictDerivAt (fun y => c • f y) (c • f') x :=
@@ -885,7 +883,7 @@ section Neg2
 /-! ### Derivative of the negation function (i.e `has_neg.neg`) -/
 
 
-variable(s x L)
+variable (s x L)
 
 theorem has_deriv_at_filter_neg : HasDerivAtFilter Neg.neg (-1) x L :=
   HasDerivAtFilter.neg$ has_deriv_at_filter_id _ _
@@ -1034,9 +1032,9 @@ section CartesianProduct
 /-! ### Derivative of the cartesian product of two functions -/
 
 
-variable{G : Type w}[NormedGroup G][NormedSpace 𝕜 G]
+variable {G : Type w} [NormedGroup G] [NormedSpace 𝕜 G]
 
-variable{f₂ : 𝕜 → G}{f₂' : G}
+variable {f₂ : 𝕜 → G} {f₂' : G}
 
 theorem HasDerivAtFilter.prod (hf₁ : HasDerivAtFilter f₁ f₁' x L) (hf₂ : HasDerivAtFilter f₂ f₂' x L) :
   HasDerivAtFilter (fun x => (f₁ x, f₂ x)) (f₁', f₂') x L :=
@@ -1069,9 +1067,9 @@ usual multiplication in `comp` lemmas.
 -/
 
 
-variable{h h₁ h₂ : 𝕜 → 𝕜}{h' h₁' h₂' : 𝕜}
+variable {h h₁ h₂ : 𝕜 → 𝕜} {h' h₁' h₂' : 𝕜}
 
-variable(x)
+variable (x)
 
 theorem HasDerivAtFilter.scomp (hg : HasDerivAtFilter g g' (h x) (L.map h)) (hh : HasDerivAtFilter h h' x L) :
   HasDerivAtFilter (g ∘ h) (h' • g') x L :=
@@ -1250,9 +1248,9 @@ section CompositionVector
 
 open ContinuousLinearMap
 
-variable{l : F → E}{l' : F →L[𝕜] E}
+variable {l : F → E} {l' : F →L[𝕜] E}
 
-variable(x)
+variable (x)
 
 /-- The composition `l ∘ f` where `l : F → E` and `f : 𝕜 → F`, has a derivative within a set
 equal to the Fréchet derivative of `l` applied to the derivative of `f`. -/
@@ -1294,8 +1292,8 @@ section Mul
 /-! ### Derivative of the multiplication of two functions -/
 
 
-variable{𝕜' 𝔸 :
-    Type _}[NormedField 𝕜'][NormedRing 𝔸][NormedAlgebra 𝕜 𝕜'][NormedAlgebra 𝕜 𝔸]{c d : 𝕜 → 𝔸}{c' d' : 𝔸}{u v : 𝕜 → 𝕜'}
+variable {𝕜' 𝔸 : Type _} [NormedField 𝕜'] [NormedRing 𝔸] [NormedAlgebra 𝕜 𝕜'] [NormedAlgebra 𝕜 𝔸] {c d : 𝕜 → 𝔸}
+  {c' d' : 𝔸} {u v : 𝕜 → 𝕜'}
 
 -- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_deriv_within_at.mul
@@ -1483,7 +1481,7 @@ theorem fderiv_within_inv (x_ne_zero : x ≠ 0) (hxs : UniqueDiffWithinAt 𝕜 s
     rw [DifferentiableAt.fderiv_within (differentiable_at_inv.2 x_ne_zero) hxs]
     exact fderiv_inv
 
-variable{c : 𝕜 → 𝕜}{c' : 𝕜}
+variable {c : 𝕜 → 𝕜} {c' : 𝕜}
 
 theorem HasDerivWithinAt.inv (hc : HasDerivWithinAt c c' s x) (hx : c x ≠ 0) :
   HasDerivWithinAt (fun y => c y⁻¹) (-c' / c x ^ 2) s x :=
@@ -1527,7 +1525,7 @@ section Division
 /-! ### Derivative of `x ↦ c x / d x` -/
 
 
-variable{c d : 𝕜 → 𝕜}{c' d' : 𝕜}
+variable {c d : 𝕜 → 𝕜} {c' d' : 𝕜}
 
 theorem HasDerivWithinAt.div (hc : HasDerivWithinAt c c' s x) (hd : HasDerivWithinAt d d' s x) (hx : d x ≠ 0) :
   HasDerivWithinAt (fun y => c y / d y) (((c'*d x) - c x*d') / d x ^ 2) s x :=
@@ -1621,10 +1619,8 @@ section ClmCompApply
 
 open ContinuousLinearMap
 
-variable{G :
-    Type
-      _}[NormedGroup
-      G][NormedSpace 𝕜 G]{c : 𝕜 → F →L[𝕜] G}{c' : F →L[𝕜] G}{d : 𝕜 → E →L[𝕜] F}{d' : E →L[𝕜] F}{u : 𝕜 → F}{u' : F}
+variable {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G] {c : 𝕜 → F →L[𝕜] G} {c' : F →L[𝕜] G} {d : 𝕜 → E →L[𝕜] F}
+  {d' : E →L[𝕜] F} {u : 𝕜 → F} {u' : F}
 
 -- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_strict_deriv_at.clm_comp
@@ -1787,9 +1783,9 @@ namespace Polynomial
 /-! ### Derivative of a polynomial -/
 
 
-variable{x : 𝕜}{s : Set 𝕜}
+variable {x : 𝕜} {s : Set 𝕜}
 
-variable(p : Polynomial 𝕜)
+variable (p : Polynomial 𝕜)
 
 /-- The derivative (in the analysis sense) of a polynomial `p` is given by `p.derivative`. -/
 protected theorem HasStrictDerivAt (x : 𝕜) : HasStrictDerivAt (fun x => p.eval x) (p.derivative.eval x) x :=
@@ -1863,9 +1859,9 @@ section Pow
 /-! ### Derivative of `x ↦ x^n` for `n : ℕ` -/
 
 
-variable{x : 𝕜}{s : Set 𝕜}{c : 𝕜 → 𝕜}{c' : 𝕜}
+variable {x : 𝕜} {s : Set 𝕜} {c : 𝕜 → 𝕜} {c' : 𝕜}
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 theorem has_strict_deriv_at_pow (n : ℕ) (x : 𝕜) : HasStrictDerivAt (fun x => x ^ n) ((n : 𝕜)*x ^ (n - 1)) x :=
   by 
@@ -1944,7 +1940,7 @@ section Zpow
 /-! ### Derivative of `x ↦ x^m` for `m : ℤ` -/
 
 
-variable{x : 𝕜}{s : Set 𝕜}{m : ℤ}
+variable {x : 𝕜} {s : Set 𝕜} {m : ℤ}
 
 -- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_strict_deriv_at_zpow
@@ -2063,7 +2059,7 @@ end Zpow
 
 section Real
 
-variable{f : ℝ → ℝ}{f' : ℝ}{s : Set ℝ}{x : ℝ}{r : ℝ}
+variable {f : ℝ → ℝ} {f' : ℝ} {s : Set ℝ} {x : ℝ} {r : ℝ}
 
 theorem HasDerivWithinAt.limsup_slope_le (hf : HasDerivWithinAt f f' s x) (hr : f' < r) :
   ∀ᶠz in 𝓝[s \ {x}] x, ((z - x)⁻¹*f z - f x) < r :=
@@ -2083,7 +2079,7 @@ section RealSpace
 
 open Metric
 
-variable{E : Type u}[NormedGroup E][NormedSpace ℝ E]{f : ℝ → E}{f' : E}{s : Set ℝ}{x r : ℝ}
+variable {E : Type u} [NormedGroup E] [NormedSpace ℝ E] {f : ℝ → E} {f' : E} {s : Set ℝ} {x r : ℝ}
 
 -- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` has derivative `f'` within `s` at `x`, then for any `r > ∥f'∥` the ratio

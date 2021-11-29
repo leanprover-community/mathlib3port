@@ -14,13 +14,13 @@ def Computation (α : Type u) : Type u :=
 
 namespace Computation
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 /-- `return a` is the computation that immediately terminates with result `a`. -/
 def return (a : α) : Computation α :=
   ⟨Streamₓ.const (some a), fun n a' => id⟩
 
-instance  : CoeTₓ α (Computation α) :=
+instance : CoeTₓ α (Computation α) :=
   ⟨return⟩
 
 /-- `think c` is the computation that delays for one "tick" and then performs
@@ -57,7 +57,7 @@ def tail (c : Computation α) : Computation α :=
 def Empty α : Computation α :=
   ⟨Streamₓ.const none, fun n a' => id⟩
 
-instance  : Inhabited (Computation α) :=
+instance : Inhabited (Computation α) :=
   ⟨Empty _⟩
 
 /-- `run_for c n` evaluates `c` for `n` steps and returns the result, or `none`
@@ -228,7 +228,7 @@ theorem corec_eq (f : β → Sum α β) (b : β) : destruct (corec f b) = rmap (
 
 section Bisim
 
-variable(R : Computation α → Computation α → Prop)
+variable (R : Computation α → Computation α → Prop)
 
 local infixl:50 " ~ " => R
 
@@ -277,7 +277,7 @@ end Bisim
 protected def mem (a : α) (s : Computation α) :=
   some a ∈ s.1
 
-instance  : HasMem α (Computation α) :=
+instance : HasMem α (Computation α) :=
   ⟨Computation.Mem⟩
 
 theorem le_stable (s : Computation α) {a m n} (h : m ≤ n) : s.1 m = some a → s.1 n = some a :=
@@ -295,7 +295,7 @@ theorem mem.left_unique : Relator.LeftUnique (· ∈ · : α → Computation α 
   fun a s b => mem_unique
 
 /-- `terminates s` asserts that the computation `s` eventually terminates with some value. -/
-class terminates(s : Computation α) : Prop where 
+class terminates (s : Computation α) : Prop where 
   term : ∃ a, a ∈ s
 
 theorem terminates_iff (s : Computation α) : terminates s ↔ ∃ a, a ∈ s :=
@@ -381,7 +381,7 @@ theorem empty_promises (a : α) : Empty α ~> a :=
 
 section get
 
-variable(s : Computation α)[h : terminates s]
+variable (s : Computation α) [h : terminates s]
 
 include s h
 
@@ -588,7 +588,7 @@ def bind.F (f : α → Computation β) : Sum (Computation α) (Computation β) �
 def bind (c : Computation α) (f : α → Computation β) : Computation β :=
   corec (bind.F f) (Sum.inl c)
 
-instance  : Bind Computation :=
+instance : Bind Computation :=
   ⟨@bind⟩
 
 theorem has_bind_eq_bind {β} (c : Computation α) (f : α → Computation β) : c >>= f = bind c f :=
@@ -778,10 +778,10 @@ theorem bind_promises {s : Computation α} {f : α → Computation β} {a b} (h1
       rw [←h1 a's] at ba' 
       exact h2 ba'
 
-instance  : Monadₓ Computation :=
+instance : Monadₓ Computation :=
   { map := @map, pure := @return, bind := @bind }
 
-instance  : IsLawfulMonad Computation :=
+instance : IsLawfulMonad Computation :=
   { id_map := @map_id, bind_pure_comp_eq_map := @bind_ret, pure_bind := @ret_bind, bind_assoc := @bind_assoc }
 
 theorem has_map_eq_map {β} (f : α → β) (c : Computation α) : f <$> c = map f c :=
@@ -833,7 +833,7 @@ def orelse (c₁ c₂ : Computation α) : Computation α :=
         | Sum.inr c₂' => Sum.inr (c₁', c₂'))
     (c₁, c₂)
 
-instance  : Alternativeₓ Computation :=
+instance : Alternativeₓ Computation :=
   { Computation.monad with orelse := @orelse, failure := @Empty }
 
 @[simp]

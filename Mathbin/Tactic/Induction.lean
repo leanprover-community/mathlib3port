@@ -633,7 +633,7 @@ auto-generalisation functionality:
 | generalize_all_except (hs : list name) : generalization_mode
 | generalize_only (hs : list name) : generalization_mode
 
-instance  : Inhabited generalization_mode :=
+instance : Inhabited generalization_mode :=
   ⟨generalization_mode.generalize_all_except []⟩
 
 namespace GeneralizationMode

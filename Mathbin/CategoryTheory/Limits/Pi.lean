@@ -20,11 +20,11 @@ namespace CategoryTheory.pi
 
 universe v₁ v₂ u₁ u₂
 
-variable{I : Type v₁}{C : I → Type u₁}[∀ i, category.{v₁} (C i)]
+variable {I : Type v₁} {C : I → Type u₁} [∀ i, category.{v₁} (C i)]
 
-variable{J : Type v₁}[small_category J]
+variable {J : Type v₁} [small_category J]
 
-variable{F : J ⥤ ∀ i, C i}
+variable {F : J ⥤ ∀ i, C i}
 
 /--
 A cone over `F : J ⥤ Π i, C i` has as its components cones over each of the `F ⋙ pi.eval C i`.
@@ -103,7 +103,7 @@ def cocone_of_cocone_eval_is_colimit {c : ∀ i, cocone (F ⋙ pi.eval C i)} (P 
 
 section 
 
-variable[∀ i, has_limit (F ⋙ pi.eval C i)]
+variable [∀ i, has_limit (F ⋙ pi.eval C i)]
 
 /--
 If we have a functor `F : J ⥤ Π i, C i` into a category of indexed families,
@@ -119,7 +119,7 @@ end
 
 section 
 
-variable[∀ i, has_colimit (F ⋙ pi.eval C i)]
+variable [∀ i, has_colimit (F ⋙ pi.eval C i)]
 
 /--
 If we have a functor `F : J ⥤ Π i, C i` into a category of indexed families,

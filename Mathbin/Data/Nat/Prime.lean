@@ -645,6 +645,14 @@ theorem factors_eq_nil (n : ℕ) : n.factors = [] ↔ n = 0 ∨ n = 1 :=
       ·
         exact factors_one
 
+theorem eq_of_perm_factors {a b : ℕ} (ha : 0 < a) (hb : 0 < b) (h : a.factors ~ b.factors) : a = b :=
+  by 
+    simpa [prod_factors ha, prod_factors hb] using List.Perm.prod_eq h
+
+theorem eq_of_count_factors_eq {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
+  (h : ∀ p : ℕ, List.count p a.factors = List.count p b.factors) : a = b :=
+  eq_of_perm_factors ha hb (List.perm_iff_count.mpr h)
+
 theorem prime.coprime_iff_not_dvd {p n : ℕ} (pp : prime p) : coprime p n ↔ ¬p ∣ n :=
   ⟨fun co d =>
       pp.not_dvd_one$
@@ -825,6 +833,24 @@ theorem eq_prime_pow_of_dvd_least_prime_pow {a p k : ℕ} (pp : prime p) (h₁ :
     congr 
     exact le_antisymmₓ h (not_leₓ.1 ((not_congr (pow_dvd_pow_iff_le_right (prime.one_lt pp))).1 h₁))
 
+theorem ne_one_iff_exists_prime_dvd : ∀ {n}, n ≠ 1 ↔ ∃ p : ℕ, p.prime ∧ p ∣ n
+| 0 =>
+  by 
+    simpa using Exists.intro 2 Nat.prime_two
+| 1 =>
+  by 
+    simp [Nat.not_prime_one]
+| n+2 =>
+  let a := n+2
+  let ha : a ≠ 1 := Nat.succ_succ_ne_one n 
+  by 
+    simp only [true_iffₓ, Ne.def, not_false_iff, ha]
+    exact ⟨a.min_fac, Nat.min_fac_prime ha, a.min_fac_dvd⟩
+
+theorem eq_one_iff_not_exists_prime_dvd {n : ℕ} : n = 1 ↔ ∀ p : ℕ, p.prime → ¬p ∣ n :=
+  by 
+    simpa using not_iff_not.mpr ne_one_iff_exists_prime_dvd
+
 section 
 
 open List
@@ -937,6 +963,34 @@ theorem prime.factors_pow {p : ℕ} (hp : p.prime) (n : ℕ) : (p ^ n).factors =
       intro q hq 
       rwa [eq_of_mem_repeat hq]
 
+/-- For positive `a` and `b`, the prime factors of `a * b` are the union of those of `a` and `b` -/
+theorem perm_factors_mul_of_pos {a b : ℕ} (ha : 0 < a) (hb : 0 < b) : (a*b).factors ~ a.factors ++ b.factors :=
+  by 
+    refine' (factors_unique _ _).symm
+    ·
+      rw [List.prod_append, prod_factors ha, prod_factors hb]
+    ·
+      intro p hp 
+      rw [List.mem_appendₓ] at hp 
+      cases hp <;> exact prime_of_mem_factors hp
+
+/-- For coprime `a` and `b`, the prime factors of `a * b` are the union of those of `a` and `b` -/
+theorem perm_factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) : (a*b).factors ~ a.factors ++ b.factors :=
+  by 
+    rcases a.eq_zero_or_pos with (rfl | ha)
+    ·
+      simp [(coprime_zero_left _).mp hab]
+    rcases b.eq_zero_or_pos with (rfl | hb)
+    ·
+      simp [(coprime_zero_right _).mp hab]
+    exact perm_factors_mul_of_pos ha hb
+
+/-- For coprime `a` and `b`, the power of `p` in `a * b` is the sum of the powers in `a` and `b` -/
+theorem count_factors_mul_of_coprime {p a b : ℕ} (hab : coprime a b) :
+  List.count p (a*b).factors = List.count p a.factors+List.count p b.factors :=
+  by 
+    rw [perm_iff_count.mp (perm_factors_mul_of_coprime hab) p, count_append]
+
 end 
 
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : prime p) {m n k l : ℕ} (hpm : p ^ k ∣ m)
@@ -963,7 +1017,7 @@ def primes :=
 
 namespace Primes
 
-instance  : HasRepr Nat.Primes :=
+instance : HasRepr Nat.Primes :=
   ⟨fun p => reprₓ p.val⟩
 
 instance inhabited_primes : Inhabited primes :=
@@ -1293,6 +1347,52 @@ theorem factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) (p : ℕ) : p ∈
     ·
       simp [(coprime_zero_right _).mp hab]
     rw [mem_factors_mul_of_pos ha hb p, List.mem_union]
+
+open List
+
+/-- For `b > 0`, the power of `p` in `a * b` is at least that in `a` -/
+theorem le_factors_count_mul_left {p a b : ℕ} (hb : 0 < b) : List.count p a.factors ≤ List.count p (a*b).factors :=
+  by 
+    rcases a.eq_zero_or_pos with (rfl | ha)
+    ·
+      simp 
+    ·
+      rw [perm.count_eq (perm_factors_mul_of_pos ha hb) p, count_append p]
+      simp 
+
+/-- For `a > 0`, the power of `p` in `a * b` is at least that in `b` -/
+theorem le_factors_count_mul_right {p a b : ℕ} (ha : 0 < a) : List.count p b.factors ≤ List.count p (a*b).factors :=
+  by 
+    rw [mul_commₓ]
+    apply le_factors_count_mul_left ha
+
+/-- If `p` is a prime factor of `a` then `p` is also a prime factor of `a * b` for any `b > 0` -/
+theorem mem_factors_mul_left {p a b : ℕ} (hpa : p ∈ a.factors) (hb : 0 < b) : p ∈ (a*b).factors :=
+  by 
+    rw [←List.count_pos]
+    exact gt_of_ge_of_gtₓ (le_factors_count_mul_left hb) (count_pos.mpr hpa)
+
+/-- If `p` is a prime factor of `b` then `p` is also a prime factor of `a * b` for any `a > 0` -/
+theorem mem_factors_mul_right {p a b : ℕ} (hpb : p ∈ b.factors) (ha : 0 < a) : p ∈ (a*b).factors :=
+  by 
+    rw [mul_commₓ]
+    exact mem_factors_mul_left hpb ha
+
+/-- If `p` is a prime factor of `a` then the power of `p` in `a` is the same that in `a * b`,
+for any `b` coprime to `a`. -/
+theorem factors_count_eq_of_coprime_left {p a b : ℕ} (hab : coprime a b) (hpa : p ∈ a.factors) :
+  List.count p (a*b).factors = List.count p a.factors :=
+  by 
+    rw [count_factors_mul_of_coprime hab]
+    simpa only [count_eq_zero_of_not_mem (coprime_factors_disjoint hab hpa)]
+
+/-- If `p` is a prime factor of `b` then the power of `p` in `b` is the same that in `a * b`,
+for any `a` coprime to `b`. -/
+theorem factors_count_eq_of_coprime_right {p a b : ℕ} (hab : coprime a b) (hpb : p ∈ b.factors) :
+  List.count p (a*b).factors = List.count p b.factors :=
+  by 
+    rw [mul_commₓ]
+    exact factors_count_eq_of_coprime_left (coprime_comm.mp hab) hpb
 
 end Nat
 

@@ -15,7 +15,7 @@ import Mathbin.LinearAlgebra.Matrix.Adjugate
 
 namespace Matrix
 
-variable{m R A : Type _}[Fintype m][CommRingₓ R]
+variable {m R A : Type _} [Fintype m] [CommRingₓ R]
 
 /-- A matrix `M` is nondegenerate if for all `v ≠ 0`, there is a `w ≠ 0` with `w ⬝ M ⬝ v ≠ 0`. -/
 def nondegenerate (M : Matrix m m R) :=
@@ -31,7 +31,7 @@ theorem nondegenerate.exists_not_ortho_of_ne_zero {M : Matrix m m R} (hM : nonde
   ∃ w, Matrix.dotProduct v (mul_vec M w) ≠ 0 :=
   not_forall.mp (mt hM.eq_zero_of_ortho hv)
 
-variable[CommRingₓ A][IsDomain A]
+variable [CommRingₓ A] [IsDomain A]
 
 -- error in LinearAlgebra.Matrix.Nondegenerate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `M` has a nonzero determinant, then `M` as a bilinear form on `n → A` is nondegenerate.

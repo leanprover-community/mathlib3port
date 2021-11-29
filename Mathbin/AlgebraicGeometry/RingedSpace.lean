@@ -37,7 +37,7 @@ namespace RingedSpace
 
 open SheafedSpace
 
-variable(X : RingedSpace.{v})
+variable (X : RingedSpace.{v})
 
 -- error in AlgebraicGeometry.RingedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

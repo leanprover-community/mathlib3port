@@ -57,7 +57,7 @@ noncomputable theory
 
 open_locale Classical MeasureTheory Nnreal Ennreal
 
-variable{α β : Type _}{m : MeasurableSpace α}{μ ν : MeasureTheory.Measure α}
+variable {α β : Type _} {m : MeasurableSpace α} {μ ν : MeasureTheory.Measure α}
 
 include m
 
@@ -68,7 +68,7 @@ namespace Measureₓ
 /-- A pair of measures `μ` and `ν` is said to `have_lebesgue_decomposition` if there exists a
 measure `ξ` and a measurable function `f`, such that `ξ` is mutually singular with respect to
 `ν` and `μ = ξ + ν.with_density f`. -/
-class have_lebesgue_decomposition(μ ν : Measureₓ α) : Prop where 
+class have_lebesgue_decomposition (μ ν : Measureₓ α) : Prop where 
   lebesgue_decomposition : ∃ p : Measureₓ α × (α → ℝ≥0∞), Measurable p.2 ∧ p.1 ⊥ₘ ν ∧ μ = p.1+ν.with_density p.2
 
 /-- If a pair of measures `have_lebesgue_decomposition`, then `singular_part` chooses the
@@ -150,22 +150,22 @@ theorem with_density_rn_deriv_le (μ ν : Measureₓ α) : ν.with_density (μ.r
       rw [rn_deriv, dif_neg hl, with_density_zero]
       exact measure.zero_le μ
 
-instance  [is_finite_measure μ] : is_finite_measure (μ.singular_part ν) :=
+instance [is_finite_measure μ] : is_finite_measure (μ.singular_part ν) :=
   is_finite_measure_of_le μ$ singular_part_le μ ν
 
-instance  [sigma_finite μ] : sigma_finite (μ.singular_part ν) :=
+instance [sigma_finite μ] : sigma_finite (μ.singular_part ν) :=
   sigma_finite_of_le μ$ singular_part_le μ ν
 
-instance  [TopologicalSpace α] [is_locally_finite_measure μ] : is_locally_finite_measure (μ.singular_part ν) :=
+instance [TopologicalSpace α] [is_locally_finite_measure μ] : is_locally_finite_measure (μ.singular_part ν) :=
   is_locally_finite_measure_of_le$ singular_part_le μ ν
 
-instance  [is_finite_measure μ] : is_finite_measure (ν.with_density$ μ.rn_deriv ν) :=
+instance [is_finite_measure μ] : is_finite_measure (ν.with_density$ μ.rn_deriv ν) :=
   is_finite_measure_of_le μ$ with_density_rn_deriv_le μ ν
 
-instance  [sigma_finite μ] : sigma_finite (ν.with_density$ μ.rn_deriv ν) :=
+instance [sigma_finite μ] : sigma_finite (ν.with_density$ μ.rn_deriv ν) :=
   sigma_finite_of_le μ$ with_density_rn_deriv_le μ ν
 
-instance  [TopologicalSpace α] [is_locally_finite_measure μ] :
+instance [TopologicalSpace α] [is_locally_finite_measure μ] :
   is_locally_finite_measure (ν.with_density$ μ.rn_deriv ν) :=
   is_locally_finite_measure_of_le$ with_density_rn_deriv_le μ ν
 
@@ -736,7 +736,7 @@ theorem have_lebesgue_decomposition_of_finite_measure
 
 attribute [local instance] have_lebesgue_decomposition_of_finite_measure
 
-instance  {S : μ.finite_spanning_sets_in { s:Set α | MeasurableSet s }} (n : ℕ) :
+instance {S : μ.finite_spanning_sets_in { s:Set α | MeasurableSet s }} (n : ℕ) :
   is_finite_measure (μ.restrict$ S.set n) :=
   ⟨by 
       rw [restrict_apply MeasurableSet.univ, Set.univ_inter]
@@ -836,7 +836,7 @@ open Measureₓ
 /-- A signed measure `s` is said to `have_lebesgue_decomposition` with respect to a measure `μ`
 if the positive part and the negative part of `s` both `have_lebesgue_decomposition` with
 respect to `μ`. -/
-class have_lebesgue_decomposition(s : signed_measure α)(μ : Measureₓ α) : Prop where 
+class have_lebesgue_decomposition (s : signed_measure α) (μ : Measureₓ α) : Prop where 
   posPart : s.to_jordan_decomposition.pos_part.have_lebesgue_decomposition μ 
   negPart : s.to_jordan_decomposition.neg_part.have_lebesgue_decomposition μ
 
@@ -850,7 +850,7 @@ theorem not_have_lebesgue_decomposition_iff (s : signed_measure α) (μ : Measur
       ¬s.to_jordan_decomposition.neg_part.have_lebesgue_decomposition μ :=
   ⟨fun h => not_or_of_imp fun hp hn => h ⟨hp, hn⟩, fun h hl => (not_and_distrib.2 h) ⟨hl.1, hl.2⟩⟩
 
-instance (priority := 100)have_lebesgue_decomposition_of_sigma_finite (s : signed_measure α) (μ : Measureₓ α)
+instance (priority := 100) have_lebesgue_decomposition_of_sigma_finite (s : signed_measure α) (μ : Measureₓ α)
   [sigma_finite μ] : s.have_lebesgue_decomposition μ :=
   { posPart := inferInstance, negPart := inferInstance }
 
@@ -956,7 +956,7 @@ def rn_deriv (s : signed_measure α) (μ : Measureₓ α) : α → ℝ :=
   fun x =>
     (s.to_jordan_decomposition.pos_part.rn_deriv μ x).toReal - (s.to_jordan_decomposition.neg_part.rn_deriv μ x).toReal
 
-variable{s t : signed_measure α}
+variable {s t : signed_measure α}
 
 @[measurability]
 theorem measurable_rn_deriv (s : signed_measure α) (μ : Measureₓ α) : Measurable (rn_deriv s μ) :=
@@ -1241,7 +1241,7 @@ namespace ComplexMeasure
 
 /-- A complex measure is said to `have_lebesgue_decomposition` with respect to a positive measure
 if both its real and imaginary part `have_lebesgue_decomposition` with respect to that measure. -/
-class have_lebesgue_decomposition(c : complex_measure α)(μ : Measureₓ α) : Prop where 
+class have_lebesgue_decomposition (c : complex_measure α) (μ : Measureₓ α) : Prop where 
   re_part : c.re.have_lebesgue_decomposition μ 
   im_part : c.im.have_lebesgue_decomposition μ
 
@@ -1259,7 +1259,7 @@ def singular_part (c : complex_measure α) (μ : Measureₓ α) : complex_measur
 def rn_deriv (c : complex_measure α) (μ : Measureₓ α) : α → ℂ :=
   fun x => ⟨c.re.rn_deriv μ x, c.im.rn_deriv μ x⟩
 
-variable{c : complex_measure α}
+variable {c : complex_measure α}
 
 theorem integrable_rn_deriv (c : complex_measure α) (μ : Measureₓ α) : integrable (c.rn_deriv μ) μ :=
   by 

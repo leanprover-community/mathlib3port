@@ -10,11 +10,11 @@ in orders that are unbounded on the appropriate side.
 
 namespace Set
 
-variable{α : Type _}[Preorderₓ α]
+variable {α : Type _} [Preorderₓ α]
 
 section Bounded
 
-variable[DenselyOrdered α]
+variable [DenselyOrdered α]
 
 theorem Ioo.infinite {a b : α} (h : a < b) : Infinite (Ioo a b) :=
   by 
@@ -38,7 +38,7 @@ end Bounded
 
 section UnboundedBelow
 
-variable[NoBotOrder α]
+variable [NoBotOrder α]
 
 theorem Iio.infinite {b : α} : Infinite (Iio b) :=
   by 
@@ -56,7 +56,7 @@ end UnboundedBelow
 
 section UnboundedAbove
 
-variable[NoTopOrder α]
+variable [NoTopOrder α]
 
 theorem Ioi.infinite {a : α} : Infinite (Ioi a) :=
   by 

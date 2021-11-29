@@ -11,7 +11,7 @@ open_locale Classical Filter
 
 namespace Filter
 
-variable{α : Type _}{β : Type _}{γ : Type _}{ι : Sort _}
+variable {α : Type _} {β : Type _} {γ : Type _} {ι : Sort _}
 
 section lift
 
@@ -20,7 +20,7 @@ This is essentially a push-forward along a function mapping each set to a filter
 protected def lift (f : Filter α) (g : Set α → Filter β) :=
   ⨅(s : _)(_ : s ∈ f), g s
 
-variable{f f₁ f₂ : Filter α}{g g₁ g₂ : Set α → Filter β}
+variable {f f₁ f₂ : Filter α} {g g₁ g₂ : Set α → Filter β}
 
 @[simp]
 theorem lift_top (g : Set α → Filter β) : (⊤ : Filter α).lift g = g univ :=
@@ -229,7 +229,7 @@ This is essentially a push-forward along a function mapping each set to a set. -
 protected def lift' (f : Filter α) (h : Set α → Set β) :=
   f.lift (𝓟 ∘ h)
 
-variable{f f₁ f₂ : Filter α}{h h₁ h₂ : Set α → Set β}
+variable {f f₁ f₂ : Filter α} {h h₁ h₂ : Set α → Set β}
 
 @[simp]
 theorem lift'_top (h : Set α → Set β) : (⊤ : Filter α).lift' h = 𝓟 (h univ) :=
@@ -435,7 +435,7 @@ end Lift'
 
 section Prod
 
-variable{f : Filter α}
+variable {f : Filter α}
 
 theorem prod_def {f : Filter α} {g : Filter β} : f ×ᶠ g = (f.lift$ fun s => g.lift'$ Set.Prod s) :=
   have  : ∀ s : Set α t : Set β, 𝓟 (Set.Prod s t) = (𝓟 s).comap Prod.fst⊓(𝓟 t).comap Prod.snd :=
@@ -462,7 +462,7 @@ theorem tendsto_prod_self_iff {f : α × α → β} {x : Filter α} {y : Filter 
   by 
     simp only [tendsto_def, mem_prod_same_iff, prod_sub_preimage_iff, exists_prop, iff_selfₓ]
 
-variable{α₁ : Type _}{α₂ : Type _}{β₁ : Type _}{β₂ : Type _}
+variable {α₁ : Type _} {α₂ : Type _} {β₁ : Type _} {β₂ : Type _}
 
 theorem prod_lift_lift {f₁ : Filter α₁} {f₂ : Filter α₂} {g₁ : Set α₁ → Filter β₁} {g₂ : Set α₂ → Filter β₂}
   (hg₁ : Monotone g₁) (hg₂ : Monotone g₂) : f₁.lift g₁ ×ᶠ f₂.lift g₂ = f₁.lift fun s => f₂.lift fun t => g₁ s ×ᶠ g₂ t :=

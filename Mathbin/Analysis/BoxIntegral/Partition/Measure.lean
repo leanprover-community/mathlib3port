@@ -25,7 +25,7 @@ noncomputable theory
 
 open_locale Ennreal BigOperators Classical BoxIntegral
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 namespace BoxIntegral
 
@@ -33,7 +33,7 @@ open MeasureTheory
 
 namespace Box
 
-variable(I : box ι)
+variable (I : box ι)
 
 -- error in Analysis.BoxIntegral.Partition.Measure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem measurable_set_coe [fintype ι] (I : box ι) : measurable_set (I : set (ι → exprℝ())) :=
@@ -64,7 +64,7 @@ end BoxIntegral
 
 open BoxIntegral BoxIntegral.Box
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 namespace MeasureTheory
 

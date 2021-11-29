@@ -1,5 +1,6 @@
 import Mathbin.Algebra.Algebra.Operations 
-import Mathbin.Data.Set.UnionLift
+import Mathbin.Data.Set.UnionLift 
+import Mathbin.RingTheory.Subring.Pointwise
 
 /-!
 # Subalgebras over Commutative Semiring
@@ -15,7 +16,7 @@ universe u u' v w
 open_locale TensorProduct BigOperators
 
 /-- A subalgebra is a sub(semi)ring that includes the range of `algebra_map`. -/
-structure Subalgebra(R : Type u)(A : Type v)[CommSemiringₓ R][Semiringₓ A][Algebra R A] extends Subsemiring A :
+structure Subalgebra (R : Type u) (A : Type v) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] extends Subsemiring A :
   Type v where 
   algebra_map_mem' : ∀ r, algebraMap R A r ∈ carrier 
   zero_mem' := (algebraMap R A).map_zero ▸ algebra_map_mem' 0 
@@ -26,15 +27,15 @@ add_decl_doc Subalgebra.toSubsemiring
 
 namespace Subalgebra
 
-variable{R' : Type u'}{R : Type u}{A : Type v}{B : Type w}{C : Type w}
+variable {R' : Type u'} {R : Type u} {A : Type v} {B : Type w} {C : Type w}
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
-variable[Semiringₓ A][Algebra R A][Semiringₓ B][Algebra R B][Semiringₓ C][Algebra R C]
+variable [Semiringₓ A] [Algebra R A] [Semiringₓ B] [Algebra R B] [Semiringₓ C] [Algebra R C]
 
 include R
 
-instance  : SetLike (Subalgebra R A) A :=
+instance : SetLike (Subalgebra R A) A :=
   ⟨Subalgebra.Carrier,
     fun p q h =>
       by 
@@ -69,7 +70,7 @@ theorem coe_copy (S : Subalgebra R A) (s : Set A) (hs : s = «expr↑ » S) : (S
 theorem copy_eq (S : Subalgebra R A) (s : Set A) (hs : s = «expr↑ » S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 
-variable(S : Subalgebra R A)
+variable (S : Subalgebra R A)
 
 theorem algebra_map_mem (r : R) : algebraMap R A r ∈ S :=
   S.algebra_map_mem' r
@@ -175,7 +176,7 @@ theorem coe_to_subring {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Al
   («expr↑ » S.to_subring : Set A) = S :=
   rfl
 
-instance  : Inhabited S :=
+instance : Inhabited S :=
   ⟨(0 : S.to_subsemiring)⟩
 
 section 
@@ -259,10 +260,10 @@ section
 instance module' [Semiringₓ R'] [HasScalar R' R] [Module R' A] [IsScalarTower R' R A] : Module R' S :=
   S.to_submodule.module'
 
-instance  : Module R S :=
+instance : Module R S :=
   S.module'
 
-instance  [Semiringₓ R'] [HasScalar R' R] [Module R' A] [IsScalarTower R' R A] : IsScalarTower R' R S :=
+instance [Semiringₓ R'] [HasScalar R' R] [Module R' A] [IsScalarTower R' R A] : IsScalarTower R' R S :=
   S.to_submodule.is_scalar_tower
 
 instance algebra' [CommSemiringₓ R'] [HasScalar R' R] [Algebra R' A] [IsScalarTower R' R A] : Algebra R' S :=
@@ -273,7 +274,7 @@ instance algebra' [CommSemiringₓ R'] [HasScalar R' R] [Algebra R' A] [IsScalar
           exact algebra_map_mem S _ with
     commutes' := fun c x => Subtype.eq$ Algebra.commutes _ _, smul_def' := fun c x => Subtype.eq$ Algebra.smul_def _ _ }
 
-instance  : Algebra R S :=
+instance : Algebra R S :=
   S.algebra'
 
 end 
@@ -431,11 +432,11 @@ end Subalgebra
 
 namespace AlgHom
 
-variable{R : Type u}{A : Type v}{B : Type w}
+variable {R : Type u} {A : Type v} {B : Type w}
 
-variable[CommSemiringₓ R][Semiringₓ A][Semiringₓ B][Algebra R A][Algebra R B]
+variable [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A] [Algebra R B]
 
-variable(φ : A →ₐ[R] B)
+variable (φ : A →ₐ[R] B)
 
 /-- Range of an `alg_hom` as a subalgebra. -/
 protected def range (φ : A →ₐ[R] B) : Subalgebra R B :=
@@ -517,9 +518,9 @@ end AlgHom
 
 namespace AlgEquiv
 
-variable{R : Type u}{A : Type v}{B : Type w}
+variable {R : Type u} {A : Type v} {B : Type w}
 
-variable[CommSemiringₓ R][Semiringₓ A][Semiringₓ B][Algebra R A][Algebra R B]
+variable [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A] [Algebra R B]
 
 /-- Restrict an algebra homomorphism with a left inverse to an algebra isomorphism to its range.
 
@@ -560,16 +561,16 @@ end AlgEquiv
 
 namespace Algebra
 
-variable(R : Type u){A : Type v}{B : Type w}
+variable (R : Type u) {A : Type v} {B : Type w}
 
-variable[CommSemiringₓ R][Semiringₓ A][Algebra R A][Semiringₓ B][Algebra R B]
+variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [Semiringₓ B] [Algebra R B]
 
 /-- The minimal subalgebra that includes `s`. -/
 def adjoin (s : Set A) : Subalgebra R A :=
   { Subsemiring.closure (Set.Range (algebraMap R A) ∪ s) with
     algebra_map_mem' := fun r => Subsemiring.subset_closure$ Or.inl ⟨r, rfl⟩ }
 
-variable{R}
+variable {R}
 
 protected theorem gc : GaloisConnection (adjoin R : Set A → Subalgebra R A) coeₓ :=
   fun s S =>
@@ -584,7 +585,7 @@ protected def gi : GaloisInsertion (adjoin R : Set A → Subalgebra R A) coeₓ 
     le_l_u := fun S => (Algebra.gc (S : Set A) (adjoin R S)).1$ le_reflₓ _,
     choice_eq := fun _ _ => Subalgebra.copy_eq _ _ _ }
 
-instance  : CompleteLattice (Subalgebra R A) :=
+instance : CompleteLattice (Subalgebra R A) :=
   GaloisInsertion.liftCompleteLattice Algebra.gi
 
 @[simp]
@@ -654,7 +655,7 @@ theorem infi_to_submodule {ι : Sort _} (S : ι → Subalgebra R A) : (⨅i, S i
     by 
       simp 
 
-instance  : Inhabited (Subalgebra R A) :=
+instance : Inhabited (Subalgebra R A) :=
   ⟨⊥⟩
 
 theorem mem_bot {x : A} : x ∈ (⊥ : Subalgebra R A) ↔ x ∈ Set.Range (algebraMap R A) :=
@@ -746,11 +747,11 @@ namespace Subalgebra
 
 open Algebra
 
-variable{R : Type u}{A : Type v}{B : Type w}
+variable {R : Type u} {A : Type v} {B : Type w}
 
-variable[CommSemiringₓ R][Semiringₓ A][Algebra R A][Semiringₓ B][Algebra R B]
+variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [Semiringₓ B] [Algebra R B]
 
-variable(S : Subalgebra R A)
+variable (S : Subalgebra R A)
 
 theorem subsingleton_of_subsingleton [Subsingleton A] : Subsingleton (Subalgebra R A) :=
   ⟨fun B C =>
@@ -793,7 +794,7 @@ end
 theorem range_val : S.val.range = S :=
   ext$ Set.ext_iff.1$ S.val.coe_range.trans Subtype.range_val
 
-instance  : Unique (Subalgebra R R) :=
+instance : Unique (Subalgebra R R) :=
   { Algebra.Subalgebra.inhabited with
     uniq :=
       by 
@@ -853,7 +854,7 @@ theorem equiv_of_eq_trans (S T U : Subalgebra R A) (hST : S = T) (hTU : T = U) :
 
 section Prod
 
-variable(S₁ : Subalgebra R B)
+variable (S₁ : Subalgebra R B)
 
 /-- The product of two subalgebras is a subalgebra. -/
 def Prod : Subalgebra R (A × B) :=
@@ -887,7 +888,7 @@ end Prod
 
 section SuprLift
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 theorem coe_supr_of_directed [Nonempty ι] {S : ι → Subalgebra R A} (dir : Directed (· ≤ ·) S) :
   «expr↑ » (supr S) = ⋃i, (S i : Set A) :=
@@ -955,14 +956,8 @@ noncomputable def supr_lift [Nonempty ι] (K : ι → Subalgebra R A) (dir : Dir
                   by 
                     erw [AlgHom.commutes (f i)] }
 
-variable[Nonempty
-      ι]{K :
-    ι →
-      Subalgebra R
-        A}{dir :
-    Directed (· ≤ ·)
-      K}{f :
-    ∀ i, K i →ₐ[R] B}{hf : ∀ i j : ι h : K i ≤ K j, f i = (f j).comp (inclusion h)}{T : Subalgebra R A}{hT : T = supr K}
+variable [Nonempty ι] {K : ι → Subalgebra R A} {dir : Directed (· ≤ ·) K} {f : ∀ i, K i →ₐ[R] B}
+  {hf : ∀ i j : ι h : K i ≤ K j, f i = (f j).comp (inclusion h)} {T : Subalgebra R A} {hT : T = supr K}
 
 @[simp]
 theorem supr_lift_inclusion {i : ι} (x : K i) (h : K i ≤ T) : supr_lift K dir f hf T hT (inclusion h x) = f i x :=
@@ -994,10 +989,10 @@ These are just copies of the definitions about `subsemiring` starting from
 
 section Actions
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 /-- The action by a subalgebra is the action by the underlying ring. -/
-instance  [MulAction A α] (S : Subalgebra R A) : MulAction S α :=
+instance [MulAction A α] (S : Subalgebra R A) : MulAction S α :=
   S.to_subsemiring.mul_action
 
 theorem smul_def [MulAction A α] {S : Subalgebra R A} (g : S) (m : α) : g • m = (g : A) • m :=
@@ -1016,11 +1011,11 @@ instance is_scalar_tower_left [HasScalar α β] [MulAction A α] [MulAction A β
   (S : Subalgebra R A) : IsScalarTower S α β :=
   S.to_subsemiring.is_scalar_tower
 
-instance  [MulAction A α] [HasFaithfulScalar A α] (S : Subalgebra R A) : HasFaithfulScalar S α :=
+instance [MulAction A α] [HasFaithfulScalar A α] (S : Subalgebra R A) : HasFaithfulScalar S α :=
   S.to_subsemiring.has_faithful_scalar
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/
-instance  [AddMonoidₓ α] [DistribMulAction A α] (S : Subalgebra R A) : DistribMulAction S α :=
+instance [AddMonoidₓ α] [DistribMulAction A α] (S : Subalgebra R A) : DistribMulAction S α :=
   S.to_subsemiring.distrib_mul_action
 
 /-- The action by a subalgebra is the action by the underlying algebra. -/
@@ -1057,7 +1052,7 @@ end Actions
 
 section Pointwise
 
-variable{R' : Type _}[Semiringₓ R'][MulSemiringAction R' A][SmulCommClass R' R A]
+variable {R' : Type _} [Semiringₓ R'] [MulSemiringAction R' A] [SmulCommClass R' R A]
 
 /-- The action on a subalgebra corresponding to applying the action to every element.
 
@@ -1109,7 +1104,7 @@ end Subalgebra
 
 section Nat
 
-variable{R : Type _}[Semiringₓ R]
+variable {R : Type _} [Semiringₓ R]
 
 /-- A subsemiring is a `ℕ`-subalgebra. -/
 def subalgebraOfSubsemiring (S : Subsemiring R) : Subalgebra ℕ R :=
@@ -1123,7 +1118,7 @@ end Nat
 
 section Int
 
-variable{R : Type _}[Ringₓ R]
+variable {R : Type _} [Ringₓ R]
 
 /-- A subring is a `ℤ`-subalgebra. -/
 def subalgebraOfSubring (S : Subring R) : Subalgebra ℤ R :=
@@ -1136,7 +1131,7 @@ def subalgebraOfSubring (S : Subring R) : Subalgebra ℤ R :=
               rw [Int.cast_sub, Int.cast_one]
               exact S.sub_mem ih S.one_mem }
 
-variable{S : Type _}[Semiringₓ S]
+variable {S : Type _} [Semiringₓ S]
 
 @[simp]
 theorem mem_subalgebra_of_subring {x : R} {S : Subring R} : x ∈ subalgebraOfSubring S ↔ x ∈ S :=

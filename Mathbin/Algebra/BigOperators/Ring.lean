@@ -14,15 +14,15 @@ universe u v w
 
 open_locale BigOperators
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 namespace Finset
 
-variable{s s₁ s₂ : Finset α}{a : α}{b : β}{f g : α → β}
+variable {s s₁ s₂ : Finset α} {a : α} {b : β} {f g : α → β}
 
 section Semiringₓ
 
-variable[NonUnitalNonAssocSemiring β]
+variable [NonUnitalNonAssocSemiring β]
 
 theorem sum_mul : ((∑x in s, f x)*b) = ∑x in s, f x*b :=
   AddMonoidHom.map_sum (AddMonoidHom.mulRight b) _ s
@@ -41,7 +41,7 @@ end Semiringₓ
 
 section Semiringₓ
 
-variable[NonAssocSemiring β]
+variable [NonAssocSemiring β]
 
 theorem sum_mul_boole [DecidableEq α] (s : Finset α) (f : α → β) (a : α) :
   (∑x in s, f x*ite (a = x) 1 0) = ite (a ∈ s) (f a) 0 :=
@@ -61,7 +61,7 @@ theorem sum_div [DivisionRing β] {s : Finset α} {f : α → β} {b : β} : (�
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ β]
+variable [CommSemiringₓ β]
 
 -- error in Algebra.BigOperators.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product over a sum can be written as a sum over the product of sets, `finset.pi`.
@@ -236,7 +236,7 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
 theorem prod_range_cast_nat_sub (n k : ℕ) : (∏i in range k, (n - i : R)) = (∏i in range k, n - i : ℕ) :=
   by 

@@ -34,7 +34,7 @@ open_locale Ennreal
 
 /-- Extended norm on a vector space. As in the case of normed spaces, we require only
 `∥c • x∥ ≤ ∥c∥ * ∥x∥` in the definition, then prove an equality in `map_smul`. -/
-structure Enorm(𝕜 : Type _)(V : Type _)[NormedField 𝕜][AddCommGroupₓ V][Module 𝕜 V] where 
+structure Enorm (𝕜 : Type _) (V : Type _) [NormedField 𝕜] [AddCommGroupₓ V] [Module 𝕜 V] where 
   toFun : V → ℝ≥0∞
   eq_zero' : ∀ x, to_fun x = 0 → x = 0
   map_add_le' : ∀ x y : V, to_fun (x+y) ≤ to_fun x+to_fun y 
@@ -42,9 +42,9 @@ structure Enorm(𝕜 : Type _)(V : Type _)[NormedField 𝕜][AddCommGroupₓ V][
 
 namespace Enorm
 
-variable{𝕜 : Type _}{V : Type _}[NormedField 𝕜][AddCommGroupₓ V][Module 𝕜 V](e : Enorm 𝕜 V)
+variable {𝕜 : Type _} {V : Type _} [NormedField 𝕜] [AddCommGroupₓ V] [Module 𝕜 V] (e : Enorm 𝕜 V)
 
-instance  : CoeFun (Enorm 𝕜 V) fun _ => V → ℝ≥0∞ :=
+instance : CoeFun (Enorm 𝕜 V) fun _ => V → ℝ≥0∞ :=
   ⟨Enorm.toFun⟩
 
 theorem coe_fn_injective : Function.Injective (coeFn : Enorm 𝕜 V → V → ℝ≥0∞) :=
@@ -118,7 +118,7 @@ theorem map_sub_le (x y : V) : e (x - y) ≤ e x+e y :=
       rw [e.map_neg]
     
 
-instance  : PartialOrderₓ (Enorm 𝕜 V) :=
+instance : PartialOrderₓ (Enorm 𝕜 V) :=
   { le := fun e₁ e₂ => ∀ x, e₁ x ≤ e₂ x, le_refl := fun e x => le_reflₓ _,
     le_trans := fun e₁ e₂ e₃ h₁₂ h₂₃ x => le_transₓ (h₁₂ x) (h₂₃ x),
     le_antisymm := fun e₁ e₂ h₁₂ h₂₁ => ext$ fun x => le_antisymmₓ (h₁₂ x) (h₂₁ x) }
@@ -141,13 +141,13 @@ instance  : PartialOrderₓ (Enorm 𝕜 V) :=
      { simp [] [] [] ["[", expr hcx.1, "]"] [] [] }
    end }⟩
 
-noncomputable instance  : Inhabited (Enorm 𝕜 V) :=
+noncomputable instance : Inhabited (Enorm 𝕜 V) :=
   ⟨⊤⟩
 
 theorem top_map {x : V} (hx : x ≠ 0) : (⊤ : Enorm 𝕜 V) x = ⊤ :=
   if_neg hx
 
-noncomputable instance  : OrderTop (Enorm 𝕜 V) :=
+noncomputable instance : OrderTop (Enorm 𝕜 V) :=
   { top := ⊤,
     le_top :=
       fun e x =>
@@ -158,8 +158,8 @@ noncomputable instance  : OrderTop (Enorm 𝕜 V) :=
           by 
             simp [top_map h] }
 
-noncomputable instance  : SemilatticeSupTop (Enorm 𝕜 V) :=
-  { Enorm.orderTop, Enorm.partialOrder with le := · ≤ ·, lt := · < ·,
+noncomputable instance : SemilatticeSup (Enorm 𝕜 V) :=
+  { Enorm.partialOrder with le := · ≤ ·, lt := · < ·,
     sup :=
       fun e₁ e₂ =>
         { toFun := fun x => max (e₁ x) (e₂ x), eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1,
@@ -233,14 +233,14 @@ theorem finite_edist_eq (x y : e.finite_subspace) : edist x y = e (x - y) :=
   rfl
 
 /-- Normed group instance on `e.finite_subspace`. -/
-instance  : NormedGroup e.finite_subspace :=
+instance : NormedGroup e.finite_subspace :=
   { norm := fun x => (e x).toReal, dist_eq := fun x y => rfl }
 
 theorem finite_norm_eq (x : e.finite_subspace) : ∥x∥ = (e x).toReal :=
   rfl
 
 /-- Normed space instance on `e.finite_subspace`. -/
-instance  : NormedSpace 𝕜 e.finite_subspace :=
+instance : NormedSpace 𝕜 e.finite_subspace :=
   { norm_smul_le :=
       fun c x =>
         le_of_eqₓ$

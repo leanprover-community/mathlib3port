@@ -1,3 +1,4 @@
+import Mathbin.Data.Stream.Defs
 
 /-!
 # Streams a.k.a. infinite lists a.k.a. infinite sequences
@@ -10,32 +11,9 @@ open Nat Function Option
 
 universe u v w
 
-def Streamₓ (α : Type u) :=
-  Nat → α
-
 namespace Streamₓ
 
-variable{α : Type u}{β : Type v}{δ : Type w}
-
-def cons (a : α) (s : Streamₓ α) : Streamₓ α :=
-  fun i =>
-    match i with 
-    | 0 => a
-    | succ n => s n
-
-@[reducible]
-def head (s : Streamₓ α) : α :=
-  s 0
-
-def tail (s : Streamₓ α) : Streamₓ α :=
-  fun i => s (i+1)
-
-def drop (n : Nat) (s : Streamₓ α) : Streamₓ α :=
-  fun i => s (i+n)
-
-@[reducible]
-def nth (n : Nat) (s : Streamₓ α) : α :=
-  s n
+variable {α : Type u} {β : Type v} {δ : Type w}
 
 protected theorem eta (s : Streamₓ α) : head s :: tail s = s :=
   funext
@@ -81,23 +59,11 @@ theorem drop_succ (n : Nat) (s : Streamₓ α) : drop (succ n) s = drop n (tail 
 protected theorem ext {s₁ s₂ : Streamₓ α} : (∀ n, nth n s₁ = nth n s₂) → s₁ = s₂ :=
   fun h => funext h
 
-def all (p : α → Prop) (s : Streamₓ α) :=
-  ∀ n, p (nth n s)
-
-def any (p : α → Prop) (s : Streamₓ α) :=
-  ∃ n, p (nth n s)
-
 theorem all_def (p : α → Prop) (s : Streamₓ α) : all p s = ∀ n, p (nth n s) :=
   rfl
 
 theorem any_def (p : α → Prop) (s : Streamₓ α) : any p s = ∃ n, p (nth n s) :=
   rfl
-
-protected def mem (a : α) (s : Streamₓ α) :=
-  any (fun b => a = b) s
-
-instance  : HasMem α (Streamₓ α) :=
-  ⟨Streamₓ.Mem⟩
 
 theorem mem_cons (a : α) (s : Streamₓ α) : a ∈ a :: s :=
   Exists.introₓ 0 rfl
@@ -125,10 +91,7 @@ theorem mem_of_nth_eq {n : Nat} {s : Streamₓ α} {a : α} : a = nth n s → a 
 
 section Map
 
-variable(f : α → β)
-
-def map (s : Streamₓ α) : Streamₓ β :=
-  fun n => f (nth n s)
+variable (f : α → β)
 
 theorem drop_map (n : Nat) (s : Streamₓ α) : drop n (map f s) = map f (drop n s) :=
   Streamₓ.ext fun i => rfl
@@ -175,10 +138,7 @@ end Map
 
 section Zip
 
-variable(f : α → β → δ)
-
-def zip (s₁ : Streamₓ α) (s₂ : Streamₓ β) : Streamₓ δ :=
-  fun n => f (nth n s₁) (nth n s₂)
+variable (f : α → β → δ)
 
 theorem drop_zip (n : Nat) (s₁ : Streamₓ α) (s₂ : Streamₓ β) : drop n (zip f s₁ s₂) = zip f (drop n s₁) (drop n s₂) :=
   Streamₓ.ext fun i => rfl
@@ -198,9 +158,6 @@ theorem zip_eq (s₁ : Streamₓ α) (s₂ : Streamₓ β) : zip f s₁ s₂ = f
     rfl
 
 end Zip
-
-def const (a : α) : Streamₓ α :=
-  fun n => a
 
 theorem mem_const (a : α) : a ∈ const a :=
   Exists.introₓ 0 rfl
@@ -224,9 +181,6 @@ theorem nth_const (n : Nat) (a : α) : nth n (const a) = a :=
 
 theorem drop_const (n : Nat) (a : α) : drop n (const a) = const a :=
   Streamₓ.ext fun i => rfl
-
-def iterate (f : α → α) (a : α) : Streamₓ α :=
-  fun n => Nat.recOn n a fun n r => f r
 
 theorem head_iterate (f : α → α) (a : α) : head (iterate f a) = a :=
   rfl
@@ -261,7 +215,7 @@ theorem nth_succ_iterate (n : Nat) (f : α → α) (a : α) : nth (succ n) (iter
 
 section Bisim
 
-variable(R : Streamₓ α → Streamₓ α → Prop)
+variable (R : Streamₓ α → Streamₓ α → Prop)
 
 local infixl:50 " ~ " => R
 
@@ -331,12 +285,6 @@ theorem map_iterate (f : α → α) (a : α) : iterate f (f a) = map f (iterate 
 
 section Corec
 
-def corec (f : α → β) (g : α → α) : α → Streamₓ β :=
-  fun a => map f (iterate g a)
-
-def corec_on (a : α) (f : α → β) (g : α → α) : Streamₓ β :=
-  corec f g a
-
 theorem corec_def (f : α → β) (g : α → α) (a : α) : corec f g a = map f (iterate g a) :=
   rfl
 
@@ -356,16 +304,10 @@ end Corec
 
 section Corec'
 
-def corec' (f : α → β × α) : α → Streamₓ β :=
-  corec (Prod.fst ∘ f) (Prod.snd ∘ f)
-
 theorem corec'_eq (f : α → β × α) (a : α) : corec' f a = (f a).1 :: corec' f (f a).2 :=
   corec_eq _ _ _
 
 end Corec'
-
-def unfolds (g : α → β) (f : α → α) (a : α) : Streamₓ β :=
-  corec g f a
 
 theorem unfolds_eq (g : α → β) (f : α → α) (a : α) : unfolds g f a = g a :: unfolds g f (f a) :=
   by 
@@ -385,11 +327,6 @@ theorem nth_unfolds_head_tail : ∀ n : Nat s : Streamₓ α, nth n (unfolds hea
 
 theorem unfolds_head_eq : ∀ s : Streamₓ α, unfolds head tail s = s :=
   fun s => Streamₓ.ext fun n => nth_unfolds_head_tail n s
-
-def interleave (s₁ s₂ : Streamₓ α) : Streamₓ α :=
-  corec_on (s₁, s₂) (fun ⟨s₁, s₂⟩ => head s₁) fun ⟨s₁, s₂⟩ => (s₂, tail s₁)
-
-infixl:65 "⋈" => interleave
 
 theorem interleave_eq (s₁ s₂ : Streamₓ α) : s₁⋈s₂ = head s₁ :: head s₂ :: (tail s₁⋈tail s₂) :=
   by 
@@ -437,12 +374,6 @@ theorem mem_interleave_right {a : α} {s₁ : Streamₓ α} (s₂ : Streamₓ α
     Exists.introₓ ((2*n)+1)
       (by 
         rw [h, nth_interleave_right])
-
-def even (s : Streamₓ α) : Streamₓ α :=
-  corec (fun s => head s) (fun s => tail (tail s)) s
-
-def odd (s : Streamₓ α) : Streamₓ α :=
-  even (tail s)
 
 theorem odd_eq (s : Streamₓ α) : odd s = even (tail s) :=
   rfl
@@ -518,17 +449,11 @@ theorem mem_of_mem_odd (a : α) (s : Streamₓ α) : a ∈ odd s → a ∈ s :=
       (by 
         rw [h, nth_odd])
 
-def append_stream : List α → Streamₓ α → Streamₓ α
-| [], s => s
-| List.cons a l, s => a :: append_stream l s
-
 theorem nil_append_stream (s : Streamₓ α) : append_stream [] s = s :=
   rfl
 
 theorem cons_append_stream (a : α) (l : List α) (s : Streamₓ α) : append_stream (a :: l) s = a :: append_stream l s :=
   rfl
-
-infixl:65 "++ₛ" => append_stream
 
 theorem append_append_stream : ∀ l₁ l₂ : List α s : Streamₓ α, l₁ ++ l₂++ₛs = l₁++ₛ(l₂++ₛs)
 | [], l₂, s => rfl
@@ -565,10 +490,6 @@ theorem mem_append_stream_left : ∀ {a : α} {l : List α} s : Streamₓ α, a 
 | a, List.cons b l, s, h =>
   Or.elim (List.eq_or_mem_of_mem_consₓ h) (fun aeqb : a = b => Exists.introₓ 0 aeqb)
     fun ainl : a ∈ l => mem_cons_of_mem b (mem_append_stream_left s ainl)
-
-def approx : Nat → Streamₓ α → List α
-| 0, s => []
-| n+1, s => List.cons (head s) (approx n (tail s))
 
 theorem approx_zero (s : Streamₓ α) : approx 0 s = [] :=
   rfl
@@ -609,25 +530,17 @@ begin
     injection [expr h₁] [] }
 end
 
-private def cycle_f : α × List α × α × List α → α
-| (v, _, _, _) => v
-
-private def cycle_g : α × List α × α × List α → α × List α × α × List α
-| (v₁, [], v₀, l₀) => (v₀, l₀, v₀, l₀)
-| (v₁, List.cons v₂ l₂, v₀, l₀) => (v₂, l₂, v₀, l₀)
-
-private theorem cycle_g_cons (a : α) (a₁ : α) (l₁ : List α) (a₀ : α) (l₀ : List α) :
-  cycle_g (a, a₁ :: l₁, a₀, l₀) = (a₁, l₁, a₀, l₀) :=
+protected theorem cycle_g_cons (a : α) (a₁ : α) (l₁ : List α) (a₀ : α) (l₀ : List α) :
+  Streamₓ.cycleG (a, a₁ :: l₁, a₀, l₀) = (a₁, l₁, a₀, l₀) :=
   rfl
-
-def cycle : ∀ l : List α, l ≠ [] → Streamₓ α
-| [], h => absurd rfl h
-| List.cons a l, h => corec cycle_f cycle_g (a, l, a, l)
 
 theorem cycle_eq : ∀ l : List α h : l ≠ [], cycle l h = l++ₛcycle l h
 | [], h => absurd rfl h
 | List.cons a l, h =>
-  have gen : ∀ l' a', corec cycle_f cycle_g (a', l', a, l) = a' :: l'++ₛcorec cycle_f cycle_g (a, l, a, l) :=
+  have gen :
+    ∀ l' a',
+      corec Streamₓ.cycleF Streamₓ.cycleG (a', l', a, l) =
+        a' :: l'++ₛcorec Streamₓ.cycleF Streamₓ.cycleG (a, l, a, l) :=
     by 
       intro l' 
       induction' l' with a₁ l₁ ih
@@ -637,7 +550,7 @@ theorem cycle_eq : ∀ l : List α h : l ≠ [], cycle l h = l++ₛcycle l h
         rfl
       ·
         intros 
-        rw [corec_eq, cycle_g_cons, ih a₁]
+        rw [corec_eq, Streamₓ.cycle_g_cons, ih a₁]
         rfl 
   gen l a
 
@@ -652,9 +565,6 @@ theorem cycle_singleton (a : α) (h : [a] ≠ []) : cycle [a] h = const a :=
     fun β fr ch =>
       by 
         rwa [cycle_eq, const_eq]
-
-def tails (s : Streamₓ α) : Streamₓ (Streamₓ α) :=
-  corec id tail (tail s)
 
 theorem tails_eq (s : Streamₓ α) : tails s = tail s :: tails (tail s) :=
   by 
@@ -673,15 +583,6 @@ theorem nth_tails : ∀ n : Nat s : Streamₓ α, nth n (tails s) = drop n (tail
 
 theorem tails_eq_iterate (s : Streamₓ α) : tails s = iterate tail (tail s) :=
   rfl
-
-def inits_core (l : List α) (s : Streamₓ α) : Streamₓ (List α) :=
-  corec_on (l, s) (fun ⟨a, b⟩ => a)
-    fun p =>
-      match p with 
-      | (l', s') => (l' ++ [head s'], tail s')
-
-def inits (s : Streamₓ α) : Streamₓ (List α) :=
-  inits_core [head s] (tail s)
 
 theorem inits_core_eq (l : List α) (s : Streamₓ α) : inits_core l s = l :: inits_core (l ++ [head s]) (tail s) :=
   by 
@@ -739,14 +640,6 @@ theorem zip_inits_tails (s : Streamₓ α) : zip append_stream (inits s) (tails 
     intro n 
     rw [nth_zip, nth_inits, nth_tails, nth_const, approx_succ, cons_append_stream, append_approx_drop, Streamₓ.eta]
 
-def pure (a : α) : Streamₓ α :=
-  const a
-
-def apply (f : Streamₓ (α → β)) (s : Streamₓ α) : Streamₓ β :=
-  fun n => (nth n f) (nth n s)
-
-infixl:75 "⊛" => apply
-
 theorem identity (s : Streamₓ α) : pure id⊛s = s :=
   rfl
 
@@ -761,9 +654,6 @@ theorem interchange (fs : Streamₓ (α → β)) (a : α) : fs⊛pure a = (pure 
 
 theorem map_eq_apply (f : α → β) (s : Streamₓ α) : map f s = pure f⊛s :=
   rfl
-
-def nats : Streamₓ Nat :=
-  fun n => n
 
 theorem nth_nats (n : Nat) : nth n nats = n :=
   rfl

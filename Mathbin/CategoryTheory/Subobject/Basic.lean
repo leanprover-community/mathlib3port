@@ -68,9 +68,9 @@ namespace CategoryTheory
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
-variable{C : Type u₁}[category.{v₁} C]{X Y Z : C}
+variable {C : Type u₁} [category.{v₁} C] {X Y Z : C}
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 /-!
 We now construct the subobject lattice for `X : C`,
@@ -123,7 +123,7 @@ Prefer to use the coercion `P : C` rather than explicitly writing `underlying.ob
 noncomputable def underlying {X : C} : subobject X ⥤ C :=
   representative ⋙ mono_over.forget _ ⋙ over.forget _
 
-instance  : Coe (subobject X) C :=
+instance : Coe (subobject X) C :=
   { coe := fun Y => underlying.obj Y }
 
 @[simp]
@@ -250,7 +250,7 @@ def of_le {B : C} (X Y : subobject B) (h : X ≤ Y) : (X : C) ⟶ (Y : C) :=
 theorem of_le_arrow {B : C} {X Y : subobject B} (h : X ≤ Y) : of_le X Y h ≫ Y.arrow = X.arrow :=
   underlying_arrow _
 
-instance  {B : C} (X Y : subobject B) (h : X ≤ Y) : mono (of_le X Y h) :=
+instance {B : C} (X Y : subobject B) (h : X ≤ Y) : mono (of_le X Y h) :=
   by 
     fsplit 
     intro Z f g w 
@@ -450,7 +450,7 @@ def lower_equivalence {A : C} {B : D} (e : mono_over A ≌ mono_over B) : subobj
 
 section Pullback
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 /-- When `C` has pullbacks, a morphism `f : X ⟶ Y` induces a functor `subobject Y ⥤ subobject X`,
 by pulling back a monomorphism along `f`. -/
@@ -472,7 +472,7 @@ theorem pullback_comp (f : X ⟶ Y) (g : Y ⟶ Z) (x : subobject Z) :
     apply Quotientₓ.sound 
     refine' ⟨(mono_over.pullback_comp _ _).app t⟩
 
-instance  (f : X ⟶ Y) : faithful (pullback f) :=
+instance (f : X ⟶ Y) : faithful (pullback f) :=
   {  }
 
 end Pullback
@@ -587,7 +587,7 @@ end Map
 
 section Exists
 
-variable[has_images C]
+variable [has_images C]
 
 /--
 The functor from subobjects of `X` to subobjects of `Y` given by

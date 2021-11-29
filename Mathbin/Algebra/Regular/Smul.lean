@@ -21,7 +21,7 @@ coincide.
 -/
 
 
-variable{R S : Type _}(M : Type _){a b : R}{s : S}
+variable {R S : Type _} (M : Type _) {a b : R} {s : S}
 
 /-- An `M`-regular element is an element `c` such that multiplication on the left by `c` is an
 injective map `M → M`. -/
@@ -44,11 +44,11 @@ theorem is_right_regular_iff [Mul R] {a : R} : IsRightRegular a ↔ IsSmulRegula
 
 namespace IsSmulRegular
 
-variable{M}
+variable {M}
 
 section HasScalar
 
-variable[HasScalar R M][HasScalar R S][HasScalar S M][IsScalarTower R S M]
+variable [HasScalar R M] [HasScalar R S] [HasScalar S M] [IsScalarTower R S M]
 
 /-- The product of `M`-regular elements is `M`-regular. -/
 theorem smul (ra : IsSmulRegular M a) (rs : IsSmulRegular M s) : IsSmulRegular M (a • s) :=
@@ -79,9 +79,9 @@ end HasScalar
 
 section Monoidₓ
 
-variable[Monoidₓ R][MulAction R M]
+variable [Monoidₓ R] [MulAction R M]
 
-variable(M)
+variable (M)
 
 /-- One is `M`-regular always. -/
 @[simp]
@@ -90,7 +90,7 @@ theorem one : IsSmulRegular M (1 : R) :=
     by 
       rwa [one_smul, one_smul] at ab
 
-variable{M}
+variable {M}
 
 theorem mul (ra : IsSmulRegular M a) (rb : IsSmulRegular M b) : IsSmulRegular M (a*b) :=
   ra.smul rb
@@ -137,9 +137,8 @@ end Monoidₓ
 
 section MonoidWithZeroₓ
 
-variable[MonoidWithZeroₓ
-      R][MonoidWithZeroₓ
-      S][HasZero M][MulActionWithZero R M][MulActionWithZero R S][MulActionWithZero S M][IsScalarTower R S M]
+variable [MonoidWithZeroₓ R] [MonoidWithZeroₓ S] [HasZero M] [MulActionWithZero R M] [MulActionWithZero R S]
+  [MulActionWithZero S M] [IsScalarTower R S M]
 
 /-- The element `0` is `M`-regular if and only if `M` is trivial. -/
 protected theorem Subsingleton (h : IsSmulRegular M (0 : R)) : Subsingleton M :=
@@ -186,7 +185,7 @@ end MonoidWithZeroₓ
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ R][MulAction R M]
+variable [CommMonoidₓ R] [MulAction R M]
 
 /-- A product is `M`-regular if and only if the factors are. -/
 theorem mul_iff : IsSmulRegular M (a*b) ↔ IsSmulRegular M a ∧ IsSmulRegular M b :=
@@ -205,7 +204,7 @@ end IsSmulRegular
 
 section Groupₓ
 
-variable{G : Type _}[Groupₓ G]
+variable {G : Type _} [Groupₓ G]
 
 /-- An element of a group acting on a Type is regular. This relies on the availability
 of the inverse given by groups, since there is no `left_cancel_smul` typeclass. -/
@@ -216,7 +215,7 @@ theorem is_smul_regular_of_group [MulAction G R] (g : G) : IsSmulRegular R g :=
 
 end Groupₓ
 
-variable[MonoidWithZeroₓ R][HasZero M][MulActionWithZero R M]
+variable [MonoidWithZeroₓ R] [HasZero M] [MulActionWithZero R M]
 
 /-- Any element in `units R` is `M`-regular. -/
 theorem Units.is_smul_regular (a : Units R) : IsSmulRegular M (a : R) :=

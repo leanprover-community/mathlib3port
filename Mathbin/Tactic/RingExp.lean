@@ -116,7 +116,7 @@ We order `atom`s on the order of appearance in the main expression.
 unsafe def lt (a b : atom) : Bool :=
   a.index < b.index
 
-unsafe instance  : HasRepr atom :=
+unsafe instance : HasRepr atom :=
   ⟨fun x => "(atom " ++ reprₓ x.2 ++ ")"⟩
 
 end Atom
@@ -290,7 +290,7 @@ unsafe def ex.repr : ∀ {et : ex_type}, ex et → Stringₓ
 | base, ex.sum_b _ ps => "(" ++ ex.repr ps ++ ")"
 | exp, ex.exp _ p ps => ex.repr p ++ " ^ " ++ ex.repr ps
 
-unsafe instance  {et : ex_type} : HasRepr (ex et) :=
+unsafe instance {et : ex_type} : HasRepr (ex et) :=
   ⟨ex.repr⟩
 
 /--
@@ -349,7 +349,7 @@ The lemmas used in the construction are all defined over a commutative semiring 
 -/
 
 
-variable{α : Type u}[CommSemiringₓ α]
+variable {α : Type u} [CommSemiringₓ α]
 
 open Tactic
 

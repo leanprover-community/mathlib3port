@@ -67,10 +67,10 @@ open IsROrC Real Filter
 
 open_locale BigOperators Classical TopologicalSpace ComplexConjugate
 
-variable{𝕜 E F : Type _}[IsROrC 𝕜]
+variable {𝕜 E F : Type _} [IsROrC 𝕜]
 
 /-- Syntactic typeclass for types endowed with an inner product -/
-class HasInner(𝕜 E : Type _) where 
+class HasInner (𝕜 E : Type _) where 
   inner : E → E → 𝕜
 
 export HasInner(inner)
@@ -95,7 +95,7 @@ spaces.
 
 To construct a norm from an inner product, see `inner_product_space.of_core`.
 -/
-class InnerProductSpace(𝕜 : Type _)(E : Type _)[IsROrC 𝕜] extends NormedGroup E, NormedSpace 𝕜 E, HasInner 𝕜 E where 
+class InnerProductSpace (𝕜 : Type _) (E : Type _) [IsROrC 𝕜] extends NormedGroup E, NormedSpace 𝕜 E, HasInner 𝕜 E where 
   norm_sq_eq_inner : ∀ x : E, (∥x∥^2) = re (inner x x)
   conj_sym : ∀ x y, conj (inner y x) = inner x y 
   add_left : ∀ x y z, inner (x+y) z = inner x z+inner y z 
@@ -125,7 +125,7 @@ instance defined on it, otherwise this will create a second non-defeq norm insta
 /-- A structure requiring that a scalar product is positive definite and symmetric, from which one
 can construct an `inner_product_space` instance in `inner_product_space.of_core`. -/
 @[nolint has_inhabited_instance]
-structure InnerProductSpace.Core(𝕜 : Type _)(F : Type _)[IsROrC 𝕜][AddCommGroupₓ F][Module 𝕜 F] where 
+structure InnerProductSpace.Core (𝕜 : Type _) (F : Type _) [IsROrC 𝕜] [AddCommGroupₓ F] [Module 𝕜 F] where 
   inner : F → F → 𝕜 
   conj_sym : ∀ x y, conj (inner y x) = inner x y 
   nonneg_re : ∀ x, 0 ≤ re (inner x x)
@@ -137,7 +137,7 @@ attribute [class] InnerProductSpace.Core
 
 namespace InnerProductSpace.ofCore
 
-variable[AddCommGroupₓ F][Module 𝕜 F][c : InnerProductSpace.Core 𝕜 F]
+variable [AddCommGroupₓ F] [Module 𝕜 F] [c : InnerProductSpace.Core 𝕜 F]
 
 include c
 
@@ -406,7 +406,7 @@ end
 /-! ### Properties of inner product spaces -/
 
 
-variable[InnerProductSpace 𝕜 E][InnerProductSpace ℝ F]
+variable [InnerProductSpace 𝕜 E] [InnerProductSpace ℝ F]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
@@ -771,7 +771,7 @@ end BasicProperties
 
 section OrthonormalSets
 
-variable{ι : Type _}(𝕜)
+variable {ι : Type _} (𝕜)
 
 include 𝕜
 
@@ -781,7 +781,7 @@ def Orthonormal (v : ι → E) : Prop :=
 
 omit 𝕜
 
-variable{𝕜}
+variable {𝕜}
 
 -- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `if ... then ... else` characterization of an indexed set of vectors being orthonormal.  (Inner
@@ -888,13 +888,13 @@ theorem Orthonormal.inner_finsupp_eq_zero {v : ι → E} (hv : Orthonormal 𝕜 
     rw [Finsupp.mem_supported'] at hl 
     simp [hv.inner_left_finsupp, hl i hi]
 
-variable(𝕜 E)
+variable (𝕜 E)
 
 theorem orthonormal_empty : Orthonormal 𝕜 (fun x => x : (∅ : Set E) → E) :=
   by 
     simp [orthonormal_subtype_iff_ite]
 
-variable{𝕜 E}
+variable {𝕜 E}
 
 -- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem orthonormal_Union_of_directed
@@ -1153,7 +1153,7 @@ theorem inner_eq_sum_norm_sq_div_four (x y : E) :
 
 section 
 
-variable{E' : Type _}[InnerProductSpace 𝕜 E']
+variable {E' : Type _} [InnerProductSpace 𝕜 E']
 
 /-- A linear isometry preserves the inner product. -/
 @[simp]
@@ -1591,7 +1591,7 @@ end Norm
 
 section BesselsInequality
 
-variable{ι : Type _}(x : E){v : ι → E}
+variable {ι : Type _} (x : E) {v : ι → E}
 
 -- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Bessel's inequality for finite sums. -/
@@ -1679,7 +1679,7 @@ theorem Submodule.coe_inner (W : Submodule 𝕜 E) (x y : W) : ⟪x, y⟫ = ⟪(
 
 section OrthogonalFamily
 
-variable{ι : Type _}[dec_ι : DecidableEq ι](𝕜)
+variable {ι : Type _} [dec_ι : DecidableEq ι] (𝕜)
 
 open_locale DirectSum
 
@@ -1687,7 +1687,7 @@ open_locale DirectSum
 def OrthogonalFamily (V : ι → Submodule 𝕜 E) : Prop :=
   ∀ ⦃i j⦄, i ≠ j → ∀ {v : E} hv : v ∈ V i {w : E} hw : w ∈ V j, ⟪v, w⟫ = 0
 
-variable{𝕜}{V : ι → Submodule 𝕜 E}
+variable {𝕜} {V : ι → Submodule 𝕜 E}
 
 include dec_ι
 
@@ -1794,9 +1794,9 @@ end OrthogonalFamily
 
 section IsROrCToReal
 
-variable{G : Type _}
+variable {G : Type _}
 
-variable(𝕜 E)
+variable (𝕜 E)
 
 include 𝕜
 
@@ -1823,7 +1823,7 @@ def InnerProductSpace.isROrCToReal : InnerProductSpace ℝ E :=
           change re ⟪(r : 𝕜) • x, y⟫ = r*re ⟪x, y⟫
           simp [inner_smul_left] }
 
-variable{E}
+variable {E}
 
 theorem real_inner_eq_re_inner (x y : E) : @HasInner.inner ℝ E (HasInner.isROrCToReal 𝕜 E) x y = re ⟪x, y⟫ :=
   rfl
@@ -1855,13 +1855,13 @@ begin
   exact [expr is_bounded_bilinear_map_inner.continuous]
 end
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem Filter.Tendsto.inner {f g : α → E} {l : Filter α} {x y : E} (hf : tendsto f l (𝓝 x)) (hg : tendsto g l (𝓝 y)) :
   tendsto (fun t => ⟪f t, g t⟫) l (𝓝 ⟪x, y⟫) :=
   (continuous_inner.Tendsto _).comp (hf.prod_mk_nhds hg)
 
-variable[TopologicalSpace α]{f g : α → E}{x : α}{s : Set α}
+variable [TopologicalSpace α] {f g : α → E} {x : α} {s : Set α}
 
 include 𝕜
 
@@ -1906,7 +1906,7 @@ end ReApplyInnerSelf
 
 section Orthogonal
 
-variable(K : Submodule 𝕜 E)
+variable (K : Submodule 𝕜 E)
 
 /-- The subspace of vectors orthogonal to a given subspace. -/
 def Submodule.orthogonal : Submodule 𝕜 E :=
@@ -1932,7 +1932,7 @@ theorem Submodule.mem_orthogonal' (v : E) : v ∈ Kᗮ ↔ ∀ u _ : u ∈ K, �
   by 
     simpRw [Submodule.mem_orthogonal, inner_eq_zero_sym]
 
-variable{K}
+variable {K}
 
 /-- A vector in `K` is orthogonal to one in `Kᗮ`. -/
 theorem Submodule.inner_right_of_mem_orthogonal {u v : E} (hu : u ∈ K) (hv : v ∈ Kᗮ) : ⟪u, v⟫ = 0 :=
@@ -1963,7 +1963,7 @@ theorem mem_orthogonal_singleton_of_inner_right (u : E) {v : E} (hv : ⟪u, v⟫
 theorem mem_orthogonal_singleton_of_inner_left (u : E) {v : E} (hv : ⟪v, u⟫ = 0) : v ∈ (𝕜∙u)ᗮ :=
   mem_orthogonal_singleton_of_inner_right u$ inner_eq_zero_sym.2 hv
 
-variable(K)
+variable (K)
 
 /-- `K` and `Kᗮ` have trivial intersection. -/
 theorem Submodule.inf_orthogonal_eq_bot : K⊓Kᗮ = ⊥ :=
@@ -2000,10 +2000,10 @@ theorem Submodule.is_closed_orthogonal : IsClosed (Kᗮ : Set E) :=
     simp 
 
 /-- In a complete space, the orthogonal complement of any submodule `K` is complete. -/
-instance  [CompleteSpace E] : CompleteSpace Kᗮ :=
+instance [CompleteSpace E] : CompleteSpace Kᗮ :=
   K.is_closed_orthogonal.complete_space_coe
 
-variable(𝕜 E)
+variable (𝕜 E)
 
 /-- `submodule.orthogonal` gives a `galois_connection` between
 `submodule 𝕜 E` and its `order_dual`. -/
@@ -2013,7 +2013,7 @@ theorem Submodule.orthogonal_gc :
     ⟨fun h v hv u hu => Submodule.inner_left_of_mem_orthogonal hv (h hu),
       fun h v hv u hu => Submodule.inner_left_of_mem_orthogonal hv (h hu)⟩
 
-variable{𝕜 E}
+variable {𝕜 E}
 
 /-- `submodule.orthogonal` reverses the `≤` ordering of two
 subspaces. -/

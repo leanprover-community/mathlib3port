@@ -69,7 +69,7 @@ theorem IsPiSystem.singleton {α} (S : Set α) : IsPiSystem ({S} : Set (Set α))
 
 section Order
 
-variable{α : Type _}{ι ι' : Sort _}[LinearOrderₓ α]
+variable {α : Type _} {ι ι' : Sort _} [LinearOrderₓ α]
 
 theorem is_pi_system_image_Iio (s : Set α) : IsPiSystem (Iio '' s) :=
   by 
@@ -272,7 +272,7 @@ end
 
 namespace MeasurableSpace
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- A Dynkin system is a collection of subsets of a type `α` that contains the empty set,
   is closed under complementation and under countable union of pairwise disjoint sets.
@@ -283,7 +283,7 @@ variable{α : Type _}
 
   A Dynkin system is also known as a "λ-system" or a "d-system".
 -/
-structure dynkin_system(α : Type _) where 
+structure dynkin_system (α : Type _) where 
   Has : Set α → Prop 
   has_empty : has ∅
   HasCompl : ∀ {a}, has a → has («expr ᶜ» a)
@@ -298,7 +298,7 @@ theorem ext : ∀ {d₁ d₂ : dynkin_system α}, (∀ s : Set α, d₁.has s �
   by 
     subst this
 
-variable(d : dynkin_system α)
+variable (d : dynkin_system α)
 
 theorem has_compl_iff {a} : d.has («expr ᶜ» a) ↔ d.has a :=
   ⟨fun h =>
@@ -327,8 +327,15 @@ theorem has_diff {s₁ s₂ : Set α} (h₁ : d.has s₁) (h₂ : d.has s₂) (h
     simp [diff_eq, compl_inter]
     exact d.has_union (d.has_compl h₁) h₂ fun x ⟨h₁, h₂⟩ => h₁ (h h₂)
 
-instance  : PartialOrderₓ (dynkin_system α) :=
-  { le := fun m₁ m₂ => m₁.has ≤ m₂.has, le_refl := fun a b => le_reflₓ _, le_trans := fun a b c => le_transₓ,
+instance : LE (dynkin_system α) :=
+  { le := fun m₁ m₂ => m₁.has ≤ m₂.has }
+
+theorem le_def {α} {a b : dynkin_system α} : a ≤ b ↔ a.has ≤ b.has :=
+  Iff.rfl
+
+instance : PartialOrderₓ (dynkin_system α) :=
+  { dynkin_system.has_le with le_refl := fun a b => le_reflₓ _,
+    le_trans := fun a b c hab hbc => le_def.mpr (le_transₓ hab hbc),
     le_antisymm := fun a b h₁ h₂ => ext$ fun s => ⟨h₁ s, h₂ s⟩ }
 
 /-- Every measurable space (σ-algebra) forms a Dynkin system -/
@@ -363,7 +370,7 @@ def generate (s : Set (Set α)) : dynkin_system α :=
 theorem generate_has_def {C : Set (Set α)} : (generate C).Has = generate_has C :=
   rfl
 
-instance  : Inhabited (dynkin_system α) :=
+instance : Inhabited (dynkin_system α) :=
   ⟨generate univ⟩
 
 /-- If a Dynkin system is closed under binary intersection, then it forms a `σ`-algebra. -/

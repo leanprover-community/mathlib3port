@@ -59,7 +59,7 @@ In this file we prove the following facts:
 -/
 
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E]{F : Type _}[NormedGroup F][NormedSpace ℝ F]
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
 
 open Metric Set Asymptotics ContinuousLinearMap Filter
 
@@ -232,7 +232,7 @@ theorem image_le_of_deriv_right_le_deriv_boundary {f f' : ℝ → ℝ} {a b : �
 
 section 
 
-variable{f : ℝ → E}{a b : ℝ}
+variable {f : ℝ → E} {a b : ℝ}
 
 /-- General fencing theorem for continuous functions with an estimate on the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -409,7 +409,7 @@ begin
    x hx, norm_image_sub_le_of_norm_deriv_le_segment hdiff H x hx]
 end
 
-variable{f' g : ℝ → E}
+variable {f' g : ℝ → E}
 
 /-- If two continuous functions on `[a, b]` have the same right derivative and are equal at `a`,
   then they are equal everywhere on `[a, b]`. -/
@@ -458,11 +458,11 @@ automatically. -/
 
 section 
 
-variable{𝕜 G : Type _}[IsROrC 𝕜][NormedSpace 𝕜 E][IsScalarTower ℝ 𝕜 E][NormedGroup G][NormedSpace 𝕜 G]
+variable {𝕜 G : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [IsScalarTower ℝ 𝕜 E] [NormedGroup G] [NormedSpace 𝕜 G]
 
 namespace Convex
 
-variable{f : E → G}{C : ℝ}{s : Set E}{x y : E}{f' : E → E →L[𝕜] G}{φ : E →L[𝕜] G}
+variable {f : E → G} {C : ℝ} {s : Set E} {x y : E} {f' : E → E →L[𝕜] G} {φ : E →L[𝕜] G}
 
 -- error in Analysis.Calculus.MeanValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The mean value theorem on a convex set: if the derivative of a function is bounded by `C`, then
@@ -627,7 +627,7 @@ end Convex
 
 namespace Convex
 
-variable{f f' : 𝕜 → G}{s : Set 𝕜}{x y : 𝕜}
+variable {f f' : 𝕜 → G} {s : Set 𝕜} {x y : 𝕜}
 
 /-- The mean value theorem on a convex set in dimension 1: if the derivative of a function is
 bounded by `C`, then the function is `C`-Lipschitz. Version with `has_deriv_within`. -/
@@ -690,24 +690,10 @@ end
 
 section Interval
 
-variable(f f' :
-    ℝ →
-      ℝ){a b :
-    ℝ}(hab :
-    a <
-      b)(hfc :
-    ContinuousOn f
-      (Icc a
-        b))(hff' :
-    ∀ x _ : x ∈ Ioo a b,
-      HasDerivAt f (f' x)
-        x)(hfd :
-    DifferentiableOn ℝ f
-      (Ioo a
-        b))(g g' :
-    ℝ →
-      ℝ)(hgc :
-    ContinuousOn g (Icc a b))(hgg' : ∀ x _ : x ∈ Ioo a b, HasDerivAt g (g' x) x)(hgd : DifferentiableOn ℝ g (Ioo a b))
+variable (f f' : ℝ → ℝ) {a b : ℝ} (hab : a < b) (hfc : ContinuousOn f (Icc a b))
+  (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x) (hfd : DifferentiableOn ℝ f (Ioo a b)) (g g' : ℝ → ℝ)
+  (hgc : ContinuousOn g (Icc a b)) (hgg' : ∀ x _ : x ∈ Ioo a b, HasDerivAt g (g' x) x)
+  (hgd : DifferentiableOn ℝ g (Ioo a b))
 
 include hab hfc hff' hgc hgg'
 
@@ -1326,13 +1312,8 @@ balls over `ℝ` or `ℂ`. For now, we only include the ones that we need.
 -/
 
 
-variable{𝕜 :
-    Type
-      _}[IsROrC
-      𝕜]{G :
-    Type
-      _}[NormedGroup
-      G][NormedSpace 𝕜 G]{H : Type _}[NormedGroup H][NormedSpace 𝕜 H]{f : G → H}{f' : G → G →L[𝕜] H}{x : G}
+variable {𝕜 : Type _} [IsROrC 𝕜] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G] {H : Type _} [NormedGroup H]
+  [NormedSpace 𝕜 H] {f : G → H} {f' : G → G →L[𝕜] H} {x : G}
 
 -- error in Analysis.Calculus.MeanValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Over the reals or the complexes, a continuously differentiable function is strictly

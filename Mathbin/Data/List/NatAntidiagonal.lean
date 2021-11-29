@@ -59,7 +59,7 @@ theorem nodup_antidiagonal (n : ℕ) : nodup (antidiagonal n) :=
   nodup_map ((@left_inverse.injective ℕ (ℕ × ℕ) Prod.fst fun i => (i, n - i))$ fun i => rfl) (nodup_range _)
 
 @[simp]
-theorem antidiagonal_succ {n : ℕ} : antidiagonal (n+1) = (0, n+1) :: (antidiagonal n).map (Prod.mapₓ Nat.succ id) :=
+theorem antidiagonal_succ {n : ℕ} : antidiagonal (n+1) = (0, n+1) :: (antidiagonal n).map (Prod.map Nat.succ id) :=
   by 
     simp only [antidiagonal, range_succ_eq_map, map_cons, true_andₓ, Nat.add_succ_sub_one, add_zeroₓ, id.def,
       eq_self_iff_true, tsub_zero, map_map, Prod.map_mkₓ]

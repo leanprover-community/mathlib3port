@@ -20,7 +20,7 @@ W, W type, cardinal, first order
 
 universe u
 
-variable{α : Type u}{β : α → Type u}
+variable {α : Type u} {β : α → Type u}
 
 noncomputable theory
 

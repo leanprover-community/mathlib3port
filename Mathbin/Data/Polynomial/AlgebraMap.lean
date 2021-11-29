@@ -19,15 +19,15 @@ namespace Polynomial
 
 universe u v w z
 
-variable{R : Type u}{S : Type v}{T : Type w}{A : Type z}{A' B' : Type _}{a b : R}{n : ℕ}
+variable {R : Type u} {S : Type v} {T : Type w} {A : Type z} {A' B' : Type _} {a b : R} {n : ℕ}
 
-variable[CommSemiringₓ A'][CommSemiringₓ B']
+variable [CommSemiringₓ A'] [CommSemiringₓ B']
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]{p q r : Polynomial R}
+variable [CommSemiringₓ R] {p q r : Polynomial R}
 
-variable[Semiringₓ A][Algebra R A]
+variable [Semiringₓ A] [Algebra R A]
 
 /-- Note that this instance also provides `algebra R (polynomial R)`. -/
 instance algebra_of_algebra : Algebra R (Polynomial A) :=
@@ -59,7 +59,7 @@ When we have `[comm_ring R]`, the function `C` is the same as `algebra_map R (po
 theorem C_eq_algebra_map (r : R) : C r = algebraMap R (Polynomial R) r :=
   rfl
 
-variable{R}
+variable {R}
 
 /--
   Extensionality lemma for algebra maps out of `polynomial A'` over a smaller base ring than `A'`
@@ -70,7 +70,7 @@ theorem alg_hom_ext' [Algebra R A'] [Algebra R B'] {f g : Polynomial A' →ₐ[R
   (h₂ : f X = g X) : f = g :=
   AlgHom.coe_ring_hom_injective (Polynomial.ring_hom_ext' (congr_argₓ AlgHom.toRingHom h₁) h₂)
 
-variable(R)
+variable (R)
 
 /-- Algebra isomorphism between `polynomial R` and `add_monoid_algebra R ℕ`. This is just an
 implementation detail, but it can be useful to transfer results from `finsupp` to polynomials. -/
@@ -83,9 +83,9 @@ def to_finsupp_iso_alg : Polynomial R ≃ₐ[R] AddMonoidAlgebra R ℕ :=
           simp only [AddMonoidAlgebra.coe_algebra_map, Algebra.id.map_eq_self, Function.comp_app]
           rw [←C_eq_algebra_map, ←monomial_zero_left, RingEquiv.to_fun_eq_coe, to_finsupp_iso_monomial] }
 
-variable{R}
+variable {R}
 
-instance  [Nontrivial A] : Nontrivial (Subalgebra R (Polynomial A)) :=
+instance [Nontrivial A] : Nontrivial (Subalgebra R (Polynomial A)) :=
   ⟨⟨⊥, ⊤,
       by 
         rw [Ne.def, SetLike.ext_iff, not_forall]
@@ -132,13 +132,13 @@ end CommSemiringₓ
 
 section Aeval
 
-variable[CommSemiringₓ R]{p q : Polynomial R}
+variable [CommSemiringₓ R] {p q : Polynomial R}
 
-variable[Semiringₓ A][Algebra R A]
+variable [Semiringₓ A] [Algebra R A]
 
-variable{B : Type _}[Semiringₓ B][Algebra R B]
+variable {B : Type _} [Semiringₓ B] [Algebra R B]
 
-variable(x : A)
+variable (x : A)
 
 /-- Given a valuation `x` of the variable in an `R`-algebra `A`, `aeval R A x` is
 the unique `R`-algebra homomorphism from `R[X]` to `A` sending `X` to `x`.
@@ -147,7 +147,7 @@ This is a stronger variant of the linear map `polynomial.leval`. -/
 def aeval : Polynomial R →ₐ[R] A :=
   { eval₂_ring_hom' (algebraMap R A) x fun a => Algebra.commutes _ _ with commutes' := fun r => eval₂_C _ _ }
 
-variable{R A}
+variable {R A}
 
 @[ext]
 theorem alg_hom_ext {f g : Polynomial R →ₐ[R] A} (h : f X = g X) : f = g :=
@@ -267,7 +267,7 @@ theorem coeff_zero_eq_aeval_zero' (p : Polynomial R) : algebraMap R A (p.coeff 0
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ S]{f : R →+* S}
+variable [CommSemiringₓ S] {f : R →+* S}
 
 theorem aeval_eq_sum_range [Algebra R S] {p : Polynomial R} (x : S) :
   aeval x p = ∑i in Finset.range (p.nat_degree+1), p.coeff i • x ^ i :=
@@ -293,7 +293,7 @@ theorem is_root_of_aeval_algebra_map_eq_zero [Algebra R S] {p : Polynomial R}
 
 section AevalTower
 
-variable[Algebra S R][Algebra S A'][Algebra S B']
+variable [Algebra S R] [Algebra S A'] [Algebra S B']
 
 /-- Version of `aeval` for defining algebra homs out of `polynomial R` over a smaller base ring
   than `R`. -/
@@ -304,7 +304,7 @@ def aeval_tower (f : R →ₐ[S] A') (x : A') : Polynomial R →ₐ[S] A' :=
         by 
           simp [algebra_map_apply] }
 
-variable(g : R →ₐ[S] A')(y : A')
+variable (g : R →ₐ[S] A') (y : A')
 
 @[simp]
 theorem aeval_tower_X : aeval_tower g y X = y :=
@@ -351,7 +351,7 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ S]{f : R →+* S}
+variable [CommRingₓ S] {f : R →+* S}
 
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : Polynomial S} (i : ℕ) (dvd_eval : p ∣ f.eval z)
   (dvd_terms : ∀ j _ : j ≠ i, p ∣ f.coeff j*z ^ j) : p ∣ f.coeff i*z ^ i :=
@@ -382,7 +382,7 @@ end Aeval
 
 section Ringₓ
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
 -- error in Data.Polynomial.AlgebraMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -409,7 +409,7 @@ begin
   simp [] [] [] ["[", expr sum_range_sub', ",", expr coeff_monomial, "]"] [] []
 end
 
-theorem not_is_unit_X_sub_C [Nontrivial R] {r : R} : ¬IsUnit (X - C r) :=
+theorem not_is_unit_X_sub_C [Nontrivial R] (r : R) : ¬IsUnit (X - C r) :=
   fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>
     @zero_ne_one R _ _$
       by 

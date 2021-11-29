@@ -29,7 +29,7 @@ import Mathbin.Logic.Function.Conjugate
 
 universe u v w x y
 
-variable{α : Type u}{β : Type v}{γ : Type w}{ι : Sort x}
+variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x}
 
 open Function
 
@@ -124,7 +124,8 @@ def cod_restrict (f : α → β) (s : Set β) (h : ∀ x, f x ∈ s) : α → s 
 theorem coe_cod_restrict_apply (f : α → β) (s : Set β) (h : ∀ x, f x ∈ s) (x : α) : (cod_restrict f s h x : β) = f x :=
   rfl
 
-variable{s s₁ s₂ : Set α}{t t₁ t₂ : Set β}{p : Set γ}{f f₁ f₂ f₃ : α → β}{g : β → γ}{f' f₁' f₂' : β → α}{g' : γ → β}
+variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {p : Set γ} {f f₁ f₂ f₃ : α → β} {g : β → γ} {f' f₁' f₂' : β → α}
+  {g' : γ → β}
 
 @[simp]
 theorem injective_cod_restrict (h : ∀ x, f x ∈ t) : injective (cod_restrict f t h) ↔ injective f :=
@@ -768,7 +769,7 @@ end Set
 
 namespace Monotone
 
-variable[Preorderₓ α][Preorderₓ β]{f : α → β}
+variable [Preorderₓ α] [Preorderₓ β] {f : α → β}
 
 protected theorem restrict (h : Monotone f) (s : Set α) : Monotone (s.restrict f) :=
   fun x y hxy => h hxy
@@ -786,7 +787,7 @@ end Monotone
 
 namespace Set
 
-variable{δ : α → Sort y}(s : Set α)(f g : ∀ i, δ i)
+variable {δ : α → Sort y} (s : Set α) (f g : ∀ i, δ i)
 
 @[simp]
 theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Set α))] : piecewise ∅ f g = g :=
@@ -805,7 +806,7 @@ theorem piecewise_insert_self {j : α} [∀ i, Decidable (i ∈ insert j s)] : (
   by 
     simp [piecewise]
 
-variable[∀ j, Decidable (j ∈ s)]
+variable [∀ j, Decidable (j ∈ s)]
 
 instance compl.decidable_mem (j : α) : Decidable (j ∈ «expr ᶜ» s) :=
   Not.decidable
@@ -1020,7 +1021,7 @@ namespace Function
 
 open Set
 
-variable{fa : α → α}{fb : β → β}{f : α → β}{g : β → γ}{s t : Set α}
+variable {fa : α → α} {fb : β → β} {f : α → β} {g : β → γ} {s t : Set α}
 
 theorem injective.comp_inj_on (hg : injective g) (hf : s.inj_on f) : s.inj_on (g ∘ f) :=
   (hg.inj_on univ).comp hf (maps_to_univ _ _)

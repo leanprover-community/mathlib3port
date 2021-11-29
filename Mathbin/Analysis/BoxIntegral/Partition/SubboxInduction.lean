@@ -30,7 +30,7 @@ open_locale Classical TopologicalSpace
 
 noncomputable theory
 
-variable{ι : Type _}[Fintype ι]{I J : box ι}
+variable {ι : Type _} [Fintype ι] {I J : box ι}
 
 namespace Prepartition
 

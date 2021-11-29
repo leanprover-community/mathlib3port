@@ -56,9 +56,9 @@ end Nat.Partrec
 
 namespace Partrec
 
-variable{α : Type _}{β : Type _}{γ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 open Computable Part
 
@@ -151,15 +151,26 @@ def ComputablePred {α} [Primcodable α] (p : α → Prop) :=
 def RePred {α} [Primcodable α] (p : α → Prop) :=
   Partrec fun a => Part.assert (p a) fun _ => Part.some ()
 
+theorem RePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : RePred p) (H : ∀ a, p a ↔ q a) : RePred q :=
+  (funext fun a => propext (H a) : p = q) ▸ hp
+
+theorem Partrec.dom_re {α β} [Primcodable α] [Primcodable β] {f : α →. β} (h : Partrec f) : RePred fun a => (f a).Dom :=
+  (h.map (Computable.const ()).to₂).of_eq$
+    fun n =>
+      Part.ext$
+        fun _ =>
+          by 
+            simp [Part.dom_iff_mem]
+
 theorem ComputablePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : ComputablePred p) (H : ∀ a, p a ↔ q a) :
   ComputablePred q :=
   (funext fun a => propext (H a) : p = q) ▸ hp
 
 namespace ComputablePred
 
-variable{α : Type _}{σ : Type _}
+variable {α : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable σ]
+variable [Primcodable α] [Primcodable σ]
 
 open nat.partrec(code)
 
@@ -240,6 +251,9 @@ theorem rice₂ (C : Set code) (H : ∀ cf cg, eval cf = eval cg → (cf ∈ C �
                         infer_instance,
                       Computable.const _⟩⟩
 
+theorem halting_problem_re n : RePred fun c => (eval c n).Dom :=
+  (eval_part.comp Computable.id (Computable.const _)).dom_re
+
 theorem halting_problem n : ¬ComputablePred fun c => (eval c n).Dom
 | h => rice { f | (f n).Dom } h Nat.Partrec.zero Nat.Partrec.none trivialₓ
 
@@ -260,6 +274,13 @@ theorem computable_iff_re_compl_re {p : α → Prop} [DecidablePred p] :
             intro a x hx y hy 
             simp  at hx hy 
             cases hy.1 hx.1⟩⟩
+
+theorem computable_iff_re_compl_re' {p : α → Prop} : ComputablePred p ↔ RePred p ∧ RePred fun a => ¬p a :=
+  by 
+    classical <;> exact computable_iff_re_compl_re
+
+theorem halting_problem_not_re n : ¬RePred fun c => ¬(eval c n).Dom
+| h => halting_problem _$ computable_iff_re_compl_re'.2 ⟨halting_problem_re _, h⟩
 
 end ComputablePred
 

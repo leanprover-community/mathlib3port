@@ -21,7 +21,7 @@ As in other polynomial files, we typically use the notation:
 
 namespace MvPolynomial
 
-variable{σ : Type _}{τ : Type _}{υ : Type _}{R : Type _}[CommSemiringₓ R]
+variable {σ : Type _} {τ : Type _} {υ : Type _} {R : Type _} [CommSemiringₓ R]
 
 /--
 Given an algebra hom `f : mv_polynomial σ R →ₐ[R] mv_polynomial τ R`
@@ -42,14 +42,14 @@ theorem comap_id_apply (x : σ → R) : comap (AlgHom.id R (MvPolynomial σ R)) 
     funext i 
     simp only [comap, AlgHom.id_apply, id.def, aeval_X]
 
-variable(σ R)
+variable (σ R)
 
 theorem comap_id : comap (AlgHom.id R (MvPolynomial σ R)) = id :=
   by 
     funext x 
     exact comap_id_apply x
 
-variable{σ R}
+variable {σ R}
 
 theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R)
   (x : υ → R) : comap (g.comp f) x = comap f (comap g x) :=

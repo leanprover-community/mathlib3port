@@ -22,11 +22,11 @@ open CategoryTheory.Limits
 
 open TopologicalSpace
 
-variable{C : Type u₁}[category.{v} C]
+variable {C : Type u₁} [category.{v} C]
 
-variable{X Y : Top.{v}}(f : X ⟶ Y)
+variable {X Y : Top.{v}} (f : X ⟶ Y)
 
-variable⦃ι : Type v⦄{U : ι → opens Y}
+variable ⦃ι : Type v⦄ {U : ι → opens Y}
 
 namespace Top
 
@@ -40,7 +40,7 @@ theorem map_diagram : pairwise.diagram U ⋙ opens.map f = pairwise.diagram ((op
       cases i <;> rfl 
     intro i j g 
     apply Subsingleton.helimₓ 
-    iterate 2
+    iterate 2 
       rw [map_diagram.obj_eq]
 
 theorem map_cocone : HEq ((opens.map f).mapCocone (pairwise.cocone U)) (pairwise.cocone ((opens.map f).obj ∘ U)) :=
@@ -48,7 +48,7 @@ theorem map_cocone : HEq ((opens.map f).mapCocone (pairwise.cocone U)) (pairwise
     unfold functor.map_cocone cocones.functoriality 
     dsimp 
     congr 
-    iterate 2
+    iterate 2 
       rw [map_diagram]
       rw [opens.map_supr]
     apply Subsingleton.helimₓ 
@@ -64,7 +64,7 @@ theorem pushforward_sheaf_of_sheaf {F : presheaf C X} (h : F.is_sheaf_pairwise_i
       rfl 
       change HEq (F.map_cone ((opens.map f).mapCocone _).op) _ 
       congr 
-      iterate 2
+      iterate 2 
         rw [map_diagram]
       apply map_cocone
 
@@ -74,7 +74,7 @@ namespace Sheaf
 
 open Presheaf
 
-variable[has_products C]
+variable [has_products C]
 
 /--
 The pushforward of a sheaf (by a continuous map) is a sheaf.

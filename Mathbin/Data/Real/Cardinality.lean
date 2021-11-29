@@ -44,7 +44,7 @@ noncomputable theory
 
 namespace Cardinal
 
-variable{c : ℝ}{f g : ℕ → Bool}{n : ℕ}
+variable {c : ℝ} {f g : ℕ → Bool} {n : ℕ}
 
 /-- The body of the sum in `cantor_function`.
 `cantor_function_aux c f n = c ^ n` if `f n = tt`;

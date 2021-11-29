@@ -34,11 +34,11 @@ open_locale Classical TopologicalSpace Filter uniformity
 
 open Filter Encodable Set
 
-variable{α : Type _}{β : Type _}{γ : Type _}{ι : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {ι : Type _}
 
 section IsGδ
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 /-- A Gδ set is a countable intersection of open sets. -/
 def IsGδ (s : Set α) : Prop :=
@@ -137,7 +137,7 @@ theorem IsClosed.is_Gδ {α} [UniformSpace α] [is_countably_generated (𝓤 α)
 
 section T1Space
 
-variable[T1Space α]
+variable [T1Space α]
 
 theorem is_Gδ_compl_singleton (a : α) : IsGδ («expr ᶜ» {a} : Set α) :=
   is_open_compl_singleton.IsGδ
@@ -158,7 +158,7 @@ theorem Finset.is_Gδ_compl (s : Finset α) : IsGδ («expr ᶜ» s : Set α) :=
 
 open TopologicalSpace
 
-variable[first_countable_topology α]
+variable [first_countable_topology α]
 
 theorem is_Gδ_singleton (a : α) : IsGδ ({a} : Set α) :=
   by 
@@ -179,7 +179,7 @@ open TopologicalSpace
 
 open_locale uniformity
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 /-- The set of points where a function is continuous is a Gδ set. -/
 theorem is_Gδ_set_of_continuous_at [UniformSpace β] [is_countably_generated (𝓤 β)] (f : α → β) :

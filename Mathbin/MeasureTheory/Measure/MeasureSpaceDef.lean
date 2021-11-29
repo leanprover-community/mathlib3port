@@ -58,14 +58,14 @@ open Function MeasurableSpace
 
 open_locale Classical TopologicalSpace BigOperators Filter Ennreal Nnreal
 
-variable{α β γ δ ι : Type _}
+variable {α β γ δ ι : Type _}
 
 namespace MeasureTheory
 
 /-- A measure is defined to be an outer measure that is countably additive on
 measurable sets, with the additional assumption that the outer measure is the canonical
 extension of the restricted measure. -/
-structure Measureₓ(α : Type _)[MeasurableSpace α] extends outer_measure α where 
+structure Measureₓ (α : Type _) [MeasurableSpace α] extends outer_measure α where 
   m_Union ⦃f : ℕ → Set α⦄ :
   (∀ i, MeasurableSet (f i)) → Pairwise (Disjoint on f) → measure_of (⋃i, f i) = ∑'i, measure_of (f i)
   trimmed : to_outer_measure.trim = to_outer_measure
@@ -81,7 +81,7 @@ instance measure.has_coe_to_fun [MeasurableSpace α] : CoeFun (Measureₓ α) fu
 
 section 
 
-variable[MeasurableSpace α]{μ μ₁ μ₂ : Measureₓ α}{s s₁ s₂ t : Set α}
+variable [MeasurableSpace α] {μ μ₁ μ₂ : Measureₓ α} {s s₁ s₂ t : Set α}
 
 namespace Measureₓ
 
@@ -240,6 +240,7 @@ theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : finite s) (
 theorem measure_Union_null [Encodable β] {s : β → Set α} : (∀ i, μ (s i) = 0) → μ (⋃i, s i) = 0 :=
   μ.to_outer_measure.Union_null
 
+@[simp]
 theorem measure_Union_null_iff [Encodable ι] {s : ι → Set α} : μ (⋃i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
   ⟨fun h i => measure_mono_null (subset_Union _ _) h, measure_Union_null⟩
 
@@ -251,6 +252,10 @@ theorem measure_bUnion_null_iff
 by { haveI [] [] [":=", expr hs.to_encodable],
   rw ["[", expr bUnion_eq_Union, ",", expr measure_Union_null_iff, ",", expr set_coe.forall, "]"] [],
   refl }
+
+theorem measure_sUnion_null_iff {S : Set (Set α)} (hS : countable S) : μ (⋃₀S) = 0 ↔ ∀ s _ : s ∈ S, μ s = 0 :=
+  by 
+    rw [sUnion_eq_bUnion, measure_bUnion_null_iff hS]
 
 theorem measure_union_le (s₁ s₂ : Set α) : μ (s₁ ∪ s₂) ≤ μ s₁+μ s₂ :=
   μ.to_outer_measure.union _ _
@@ -463,7 +468,7 @@ theorem measure_to_measurable (s : Set α) : μ (to_measurable μ s) = μ s :=
 
 /-- A measure space is a measurable space equipped with a
   measure, referred to as `volume`. -/
-class measure_space(α : Type _) extends MeasurableSpace α where 
+class measure_space (α : Type _) extends MeasurableSpace α where 
   volume : Measureₓ α
 
 export MeasureSpace(volume)
@@ -502,7 +507,7 @@ function. We define this property, called `ae_measurable f μ`. It's properties 
 -/
 
 
-variable{m : MeasurableSpace α}[MeasurableSpace β]{f g : α → β}{μ ν : Measureₓ α}
+variable {m : MeasurableSpace α} [MeasurableSpace β] {f g : α → β} {μ ν : Measureₓ α}
 
 /-- A function is almost everywhere measurable if it coincides almost everywhere with a measurable
 function. -/

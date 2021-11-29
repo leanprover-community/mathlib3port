@@ -51,7 +51,7 @@ $a^i$ and `xa i` for $x * a^i$.
 
 namespace QuaternionGroup
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 /--
 Multiplication of the dihedral group.
@@ -68,7 +68,7 @@ The identity `1` is given by `aⁱ`.
 private def one : QuaternionGroup n :=
   a 0
 
-instance  : Inhabited (QuaternionGroup n) :=
+instance : Inhabited (QuaternionGroup n) :=
   ⟨one⟩
 
 /--
@@ -81,7 +81,7 @@ private def inv : QuaternionGroup n → QuaternionGroup n
 /--
 The group structure on `quaternion_group n`.
 -/
-instance  : Groupₓ (QuaternionGroup n) :=
+instance : Groupₓ (QuaternionGroup n) :=
   { mul := mul,
     mul_assoc :=
       by 
@@ -119,7 +119,7 @@ instance  : Groupₓ (QuaternionGroup n) :=
         ·
           exact congr_argₓ a (sub_self (n+i)) }
 
-variable{n}
+variable {n}
 
 @[simp]
 theorem a_mul_a (i j : Zmod (2*n)) : (a i*a j) = a (i+j) :=
@@ -190,10 +190,10 @@ attribute [local instance] succ_mul_pos_fact
 /--
 If `0 < n`, then `quaternion_group n` is a finite group.
 -/
-instance  [Fact (0 < n)] : Fintype (QuaternionGroup n) :=
+instance [Fact (0 < n)] : Fintype (QuaternionGroup n) :=
   Fintype.ofEquiv _ fintype_helper
 
-instance  : Nontrivial (QuaternionGroup n) :=
+instance : Nontrivial (QuaternionGroup n) :=
   ⟨⟨a 0, xa 0,
       by 
         decide⟩⟩

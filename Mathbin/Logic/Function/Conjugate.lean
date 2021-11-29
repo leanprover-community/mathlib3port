@@ -15,7 +15,7 @@ We define the following predicates:
 
 namespace Function
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 /-- We say that `f : α → β` semiconjugates `ga : α → α` to `gb : β → β` if `f ∘ ga = gb ∘ f`.
 We use `∀ x, f (ga x) = gb (f x)` as the definition, so given `h : function.semiconj f ga gb` and
@@ -25,7 +25,7 @@ def semiconj (f : α → β) (ga : α → α) (gb : β → β) : Prop :=
 
 namespace Semiconj
 
-variable{f fab : α → β}{fbc : β → γ}{ga ga' : α → α}{gb gb' : β → β}{gc gc' : γ → γ}
+variable {f fab : α → β} {fbc : β → γ} {ga ga' : α → α} {gb gb' : β → β} {gc gc' : γ → γ}
 
 protected theorem comp_eq (h : semiconj f ga gb) : f ∘ ga = gb ∘ f :=
   funext h
@@ -68,7 +68,7 @@ theorem semiconj.commute {f g : α → α} (h : semiconj f g g) : commute f g :=
 
 namespace Commute
 
-variable{f f' g g' : α → α}
+variable {f f' g g' : α → α}
 
 @[refl]
 theorem refl (f : α → α) : commute f f :=
@@ -100,7 +100,7 @@ def semiconj₂ (f : α → β) (ga : α → α → α) (gb : β → β → β) 
 
 namespace Semiconj₂
 
-variable{f : α → β}{ga : α → α → α}{gb : β → β → β}
+variable {f : α → β} {ga : α → α → α} {gb : β → β → β}
 
 protected theorem Eq (h : semiconj₂ f ga gb) (x y : α) : f (ga x y) = gb (f x) (f y) :=
   h x y

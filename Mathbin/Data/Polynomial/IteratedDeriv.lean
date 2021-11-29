@@ -18,11 +18,11 @@ namespace Polynomial
 
 universe u
 
-variable{R : Type u}
+variable {R : Type u}
 
 section Semiringₓ
 
-variable[Semiringₓ R](r : R)(f p q : Polynomial R)(n k : ℕ)
+variable [Semiringₓ R] (r : R) (f p q : Polynomial R) (n k : ℕ)
 
 /-- `iterated_deriv f n` is the `n`-th formal derivative of the polynomial `f` -/
 def iterated_deriv : Polynomial R :=
@@ -130,7 +130,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R](p q : Polynomial R)(n : ℕ)
+variable [Ringₓ R] (p q : Polynomial R) (n : ℕ)
 
 @[simp]
 theorem iterated_deriv_neg : iterated_deriv (-p) n = -iterated_deriv p n :=
@@ -150,9 +150,9 @@ end Ringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
-variable(f p q : Polynomial R)(n k : ℕ)
+variable (f p q : Polynomial R) (n k : ℕ)
 
 -- error in Data.Polynomial.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem coeff_iterated_deriv_as_prod_Ico : ∀

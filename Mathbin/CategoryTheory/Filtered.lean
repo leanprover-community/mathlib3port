@@ -2,7 +2,7 @@ import Mathbin.CategoryTheory.FinCategory
 import Mathbin.CategoryTheory.Limits.Cones 
 import Mathbin.CategoryTheory.Adjunction.Basic 
 import Mathbin.CategoryTheory.Category.Preorder 
-import Mathbin.Order.BoundedLattice
+import Mathbin.Order.BoundedOrder
 
 /-!
 # Filtered categories
@@ -48,7 +48,7 @@ universe v v₁ u u₁
 
 namespace CategoryTheory
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 /--
 A category `is_filtered_or_empty` if
@@ -72,7 +72,7 @@ See https://stacks.math.columbia.edu/tag/002V. (They also define a diagram being
 class is_filtered extends is_filtered_or_empty C : Prop where 
   [Nonempty : Nonempty C]
 
-instance (priority := 100)is_filtered_or_empty_of_semilattice_sup (α : Type u) [SemilatticeSup α] :
+instance (priority := 100) is_filtered_or_empty_of_semilattice_sup (α : Type u) [SemilatticeSup α] :
   is_filtered_or_empty α :=
   { cocone_objs := fun X Y => ⟨X⊔Y, hom_of_le le_sup_left, hom_of_le le_sup_right, trivialₓ⟩,
     cocone_maps :=
@@ -81,11 +81,11 @@ instance (priority := 100)is_filtered_or_empty_of_semilattice_sup (α : Type u) 
           by 
             ext⟩ }
 
-instance (priority := 100)is_filtered_of_semilattice_sup_nonempty (α : Type u) [SemilatticeSup α] [Nonempty α] :
+instance (priority := 100) is_filtered_of_semilattice_sup_nonempty (α : Type u) [SemilatticeSup α] [Nonempty α] :
   is_filtered α :=
   {  }
 
-instance (priority := 100)is_filtered_or_empty_of_directed_order (α : Type u) [DirectedOrder α] :
+instance (priority := 100) is_filtered_or_empty_of_directed_order (α : Type u) [DirectedOrder α] :
   is_filtered_or_empty α :=
   { cocone_objs :=
       fun X Y =>
@@ -97,21 +97,21 @@ instance (priority := 100)is_filtered_or_empty_of_directed_order (α : Type u) [
           by 
             simp ⟩ }
 
-instance (priority := 100)is_filtered_of_directed_order_nonempty (α : Type u) [DirectedOrder α] [Nonempty α] :
+instance (priority := 100) is_filtered_of_directed_order_nonempty (α : Type u) [DirectedOrder α] [Nonempty α] :
   is_filtered α :=
   {  }
 
-example  (α : Type u) [SemilatticeSupBot α] : is_filtered α :=
+example (α : Type u) [SemilatticeSup α] [OrderBot α] : is_filtered α :=
   by 
     infer_instance
 
-example  (α : Type u) [SemilatticeSupTop α] : is_filtered α :=
+example (α : Type u) [SemilatticeSup α] [OrderTop α] : is_filtered α :=
   by 
     infer_instance
 
 namespace IsFiltered
 
-variable{C}[is_filtered C]
+variable {C} [is_filtered C]
 
 /--
 `max j j'` is an arbitrary choice of object to the right of both `j` and `j'`,
@@ -184,7 +184,7 @@ theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → _root_.
       ·
         exact ⟨(w' (Finset.mem_of_mem_insert_of_ne mY h)).some ≫ right_to_max _ _⟩
 
-variable(O : Finset C)(H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
+variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
 /--
 Given any `finset` of objects `{X, ...}` and
@@ -247,7 +247,7 @@ theorem to_sup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
   (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : f ≫ to_sup O H mY = to_sup O H mX :=
   (sup_exists O H).some_spec.some_spec mX mY mf
 
-variable{J : Type v}[small_category J][fin_category J]
+variable {J : Type v} [small_category J] [fin_category J]
 
 /--
 If we have `is_filtered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
@@ -294,7 +294,7 @@ An arbitrary choice of cocone over `F : J ⥤ C`, for `fin_category J` and `is_f
 noncomputable def cocone (F : J ⥤ C) : cocone F :=
   (cocone_nonempty F).some
 
-variable{D : Type u₁}[category.{v₁} D]
+variable {D : Type u₁} [category.{v₁} D]
 
 /--
 If `C` is filtered, and we have a functor `R : C ⥤ D` with a left adjoint, then `D` is filtered.
@@ -491,7 +491,7 @@ See https://stacks.math.columbia.edu/tag/04AZ.
 class is_cofiltered extends is_cofiltered_or_empty C : Prop where 
   [Nonempty : Nonempty C]
 
-instance (priority := 100)is_cofiltered_or_empty_of_semilattice_inf (α : Type u) [SemilatticeInf α] :
+instance (priority := 100) is_cofiltered_or_empty_of_semilattice_inf (α : Type u) [SemilatticeInf α] :
   is_cofiltered_or_empty α :=
   { cocone_objs := fun X Y => ⟨X⊓Y, hom_of_le inf_le_left, hom_of_le inf_le_right, trivialₓ⟩,
     cocone_maps :=
@@ -500,21 +500,21 @@ instance (priority := 100)is_cofiltered_or_empty_of_semilattice_inf (α : Type u
           by 
             ext⟩ }
 
-instance (priority := 100)is_cofiltered_of_semilattice_inf_nonempty (α : Type u) [SemilatticeInf α] [Nonempty α] :
+instance (priority := 100) is_cofiltered_of_semilattice_inf_nonempty (α : Type u) [SemilatticeInf α] [Nonempty α] :
   is_cofiltered α :=
   {  }
 
-example  (α : Type u) [SemilatticeInfBot α] : is_cofiltered α :=
+example (α : Type u) [SemilatticeInf α] [OrderBot α] : is_cofiltered α :=
   by 
     infer_instance
 
-example  (α : Type u) [SemilatticeInfTop α] : is_cofiltered α :=
+example (α : Type u) [SemilatticeInf α] [OrderTop α] : is_cofiltered α :=
   by 
     infer_instance
 
 namespace IsCofiltered
 
-variable{C}[is_cofiltered C]
+variable {C} [is_cofiltered C]
 
 /--
 `min j j'` is an arbitrary choice of object to the left of both `j` and `j'`,
@@ -587,7 +587,7 @@ theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → _root_.
       ·
         exact ⟨min_to_right _ _ ≫ (w' (Finset.mem_of_mem_insert_of_ne mY h)).some⟩
 
-variable(O : Finset C)(H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
+variable (O : Finset C) (H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y))
 
 /--
 Given any `finset` of objects `{X, ...}` and
@@ -650,7 +650,7 @@ theorem inf_to_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
   (mf : (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H) : inf_to O H mX ≫ f = inf_to O H mY :=
   (inf_exists O H).some_spec.some_spec mX mY mf
 
-variable{J : Type v}[small_category J][fin_category J]
+variable {J : Type v} [small_category J] [fin_category J]
 
 /--
 If we have `is_cofiltered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
@@ -698,7 +698,7 @@ An arbitrary choice of cone over `F : J ⥤ C`, for `fin_category J` and `is_cof
 noncomputable def cone (F : J ⥤ C) : cone F :=
   (cone_nonempty F).some
 
-variable{D : Type u₁}[category.{v₁} D]
+variable {D : Type u₁} [category.{v₁} D]
 
 /--
 If `C` is cofiltered, and we have a functor `L : C ⥤ D` with a right adjoint,

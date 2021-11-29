@@ -46,7 +46,7 @@ noncomputable theory
 
 Polynomials should be seen as (semi-)rings with the additional constructor `X`.
 The embedding from `R` is called `C`. -/
-structure Polynomial(R : Type _)[Semiringₓ R] where of_finsupp :: 
+structure Polynomial (R : Type _) [Semiringₓ R] where of_finsupp :: 
   toFinsupp : AddMonoidAlgebra R ℕ
 
 open Finsupp AddMonoidAlgebra
@@ -57,11 +57,11 @@ namespace Polynomial
 
 universe u
 
-variable{R : Type u}{a b : R}{m n : ℕ}
+variable {R : Type u} {a b : R} {m n : ℕ}
 
 section Semiringₓ
 
-variable[Semiringₓ R]{p q : Polynomial R}
+variable [Semiringₓ R] {p q : Polynomial R}
 
 theorem forall_iff_forall_finsupp (P : Polynomial R → Prop) : (∀ p, P p) ↔ ∀ q : AddMonoidAlgebra R ℕ, P ⟨q⟩ :=
   ⟨fun h q => h ⟨q⟩, fun h ⟨p⟩ => h p⟩
@@ -86,22 +86,22 @@ private def neg {R : Type u} [Ringₓ R] : Polynomial R → Polynomial R
 private def mul : Polynomial R → Polynomial R → Polynomial R
 | ⟨a⟩, ⟨b⟩ => ⟨a*b⟩
 
-instance  : HasZero (Polynomial R) :=
+instance : HasZero (Polynomial R) :=
   ⟨⟨0⟩⟩
 
-instance  : HasOne (Polynomial R) :=
+instance : HasOne (Polynomial R) :=
   ⟨monomial_fun 0 (1 : R)⟩
 
-instance  : Add (Polynomial R) :=
+instance : Add (Polynomial R) :=
   ⟨add⟩
 
-instance  {R : Type u} [Ringₓ R] : Neg (Polynomial R) :=
+instance {R : Type u} [Ringₓ R] : Neg (Polynomial R) :=
   ⟨neg⟩
 
-instance  : Mul (Polynomial R) :=
+instance : Mul (Polynomial R) :=
   ⟨mul⟩
 
-instance  {S : Type _} [Monoidₓ S] [DistribMulAction S R] : HasScalar S (Polynomial R) :=
+instance {S : Type _} [Monoidₓ S] [DistribMulAction S R] : HasScalar S (Polynomial R) :=
   ⟨fun r p => ⟨r • p.to_finsupp⟩⟩
 
 theorem zero_to_finsupp : (⟨0⟩ : Polynomial R) = 0 :=
@@ -133,10 +133,10 @@ theorem _root_.is_smul_regular.polynomial {S : Type _} [Monoidₓ S] [DistribMul
   (ha : IsSmulRegular R a) : IsSmulRegular (Polynomial R) a
 | ⟨x⟩, ⟨y⟩, h => congr_argₓ _$ ha.finsupp (Polynomial.of_finsupp.inj h)
 
-instance  : Inhabited (Polynomial R) :=
+instance : Inhabited (Polynomial R) :=
   ⟨0⟩
 
-instance  : Semiringₓ (Polynomial R) :=
+instance : Semiringₓ (Polynomial R) :=
   by 
     refineStruct
         { zero := (0 : Polynomial R), one := 1, mul := ·*·, add := ·+·, nsmul := · • ·, npow := npowRec,
@@ -148,7 +148,7 @@ instance  : Semiringₓ (Polynomial R) :=
               smul_to_finsupp, Nat.succ_eq_one_add] <;>
             abel
 
-instance  {S} [Monoidₓ S] [DistribMulAction S R] : DistribMulAction S (Polynomial R) :=
+instance {S} [Monoidₓ S] [DistribMulAction S R] : DistribMulAction S (Polynomial R) :=
   { smul := · • ·,
     one_smul :=
       by 
@@ -167,10 +167,10 @@ instance  {S} [Monoidₓ S] [DistribMulAction S R] : DistribMulAction S (Polynom
         rintro _ 
         simp [←zero_to_finsupp, smul_to_finsupp] }
 
-instance  {S} [Monoidₓ S] [DistribMulAction S R] [HasFaithfulScalar S R] : HasFaithfulScalar S (Polynomial R) :=
+instance {S} [Monoidₓ S] [DistribMulAction S R] [HasFaithfulScalar S R] : HasFaithfulScalar S (Polynomial R) :=
   { eq_of_smul_eq_smul := fun s₁ s₂ h => eq_of_smul_eq_smul$ fun a : ℕ →₀ R => congr_argₓ to_finsupp (h ⟨a⟩) }
 
-instance  {S} [Semiringₓ S] [Module S R] : Module S (Polynomial R) :=
+instance {S} [Semiringₓ S] [Module S R] : Module S (Polynomial R) :=
   { Polynomial.distribMulAction with smul := · • ·,
     add_smul :=
       by 
@@ -181,19 +181,19 @@ instance  {S} [Semiringₓ S] [Module S R] : Module S (Polynomial R) :=
         rintro ⟨⟩
         simp [smul_to_finsupp, ←zero_to_finsupp] }
 
-instance  {S₁ S₂} [Monoidₓ S₁] [Monoidₓ S₂] [DistribMulAction S₁ R] [DistribMulAction S₂ R] [SmulCommClass S₁ S₂ R] :
+instance {S₁ S₂} [Monoidₓ S₁] [Monoidₓ S₂] [DistribMulAction S₁ R] [DistribMulAction S₂ R] [SmulCommClass S₁ S₂ R] :
   SmulCommClass S₁ S₂ (Polynomial R) :=
   ⟨by 
       rintro _ _ ⟨⟩
       simp [smul_to_finsupp, smul_comm]⟩
 
-instance  {S₁ S₂} [HasScalar S₁ S₂] [Monoidₓ S₁] [Monoidₓ S₂] [DistribMulAction S₁ R] [DistribMulAction S₂ R]
+instance {S₁ S₂} [HasScalar S₁ S₂] [Monoidₓ S₁] [Monoidₓ S₂] [DistribMulAction S₁ R] [DistribMulAction S₂ R]
   [IsScalarTower S₁ S₂ R] : IsScalarTower S₁ S₂ (Polynomial R) :=
   ⟨by 
       rintro _ _ ⟨⟩
       simp [smul_to_finsupp]⟩
 
-instance  [Subsingleton R] : Unique (Polynomial R) :=
+instance [Subsingleton R] : Unique (Polynomial R) :=
   { Polynomial.inhabited with
     uniq :=
       by 
@@ -202,7 +202,7 @@ instance  [Subsingleton R] : Unique (Polynomial R) :=
         rw [←zero_to_finsupp]
         simp  }
 
-variable(R)
+variable (R)
 
 /-- Ring isomorphism between `polynomial R` and `add_monoid_algebra R ℕ`. This is just an
 implementation detail, but it can be useful to transfer results from `finsupp` to polynomials. -/
@@ -223,7 +223,7 @@ def to_finsupp_iso : Polynomial R ≃+* AddMonoidAlgebra R ℕ :=
 def op_ring_equiv : «expr ᵐᵒᵖ» (Polynomial R) ≃+* Polynomial («expr ᵐᵒᵖ» R) :=
   ((to_finsupp_iso R).op.trans AddMonoidAlgebra.opRingEquiv).trans (to_finsupp_iso _).symm
 
-variable{R}
+variable {R}
 
 theorem sum_to_finsupp {ι : Type _} (s : Finset ι) (f : ι → AddMonoidAlgebra R ℕ) :
   (∑i in s, (⟨f i⟩ : Polynomial R)) = ⟨∑i in s, f i⟩ :=
@@ -806,9 +806,9 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
-instance  : CommSemiringₓ (Polynomial R) :=
+instance : CommSemiringₓ (Polynomial R) :=
   { Polynomial.semiring with
     mul_comm :=
       by 
@@ -819,9 +819,9 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
-instance  : Ringₓ (Polynomial R) :=
+instance : Ringₓ (Polynomial R) :=
   { Polynomial.semiring with neg := Neg.neg,
     add_left_neg :=
       by 
@@ -868,12 +868,12 @@ theorem support_neg {p : Polynomial R} : (-p).Support = p.support :=
 
 end Ringₓ
 
-instance  [CommRingₓ R] : CommRingₓ (Polynomial R) :=
+instance [CommRingₓ R] : CommRingₓ (Polynomial R) :=
   { Polynomial.commSemiring, Polynomial.ring with  }
 
 section NonzeroSemiring
 
-variable[Semiringₓ R][Nontrivial R]
+variable [Semiringₓ R] [Nontrivial R]
 
 -- error in Data.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : nontrivial (polynomial R) :=
@@ -893,11 +893,11 @@ end NonzeroSemiring
 
 section reprₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 open_locale Classical
 
-instance  [HasRepr R] : HasRepr (Polynomial R) :=
+instance [HasRepr R] : HasRepr (Polynomial R) :=
   ⟨fun p =>
       if p = 0 then "0" else
         (p.support.sort (· ≤ ·)).foldr

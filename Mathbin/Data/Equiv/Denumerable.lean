@@ -17,7 +17,7 @@ typeclass.
 
 
 /-- A denumerable type is (constructively) bijective with `ℕ`. Typeclass equivalent of `α ≃ ℕ`. -/
-class Denumerable(α : Type _) extends Encodable α where 
+class Denumerable (α : Type _) extends Encodable α where 
   decode_inv : ∀ n, ∃ (a : _)(_ : a ∈ decode n), encode a = n
 
 open Nat
@@ -26,7 +26,7 @@ namespace Denumerable
 
 section 
 
-variable{α : Type _}{β : Type _}[Denumerable α][Denumerable β]
+variable {α : Type _} {β : Type _} [Denumerable α] [Denumerable β]
 
 open Encodable
 
@@ -116,7 +116,7 @@ instance Sum : Denumerable (Sum α β) :=
 
 section Sigma
 
-variable{γ : α → Type _}[∀ a, Denumerable (γ a)]
+variable {γ : α → Type _} [∀ a, Denumerable (γ a)]
 
 /-- A denumerable collection of denumerable types is denumerable. -/
 instance Sigma : Denumerable (Sigma γ) :=
@@ -179,7 +179,7 @@ open Function Encodable
 /-! ### Subsets of `ℕ` -/
 
 
-variable{s : Set ℕ}[Infinite s]
+variable {s : Set ℕ} [Infinite s]
 
 section Classical
 
@@ -205,7 +205,7 @@ theorem exists_succ (x : s) : ∃ n, ((«expr↑ » x+n)+1) ∈ s :=
 
 end Classical
 
-variable[DecidablePred (· ∈ s)]
+variable [DecidablePred (· ∈ s)]
 
 /-- Returns the next natural in a set, according to the usual ordering of `ℕ`. -/
 def succ (x : s) : s :=

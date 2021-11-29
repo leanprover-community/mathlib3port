@@ -18,7 +18,7 @@ namespace CategoryTheory
 
 universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 -- error in CategoryTheory.StructuredArrow: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--
@@ -37,7 +37,7 @@ namespace StructuredArrow
 def proj (S : D) (T : C ⥤ D) : structured_arrow S T ⥤ C :=
   comma.snd _ _
 
-variable{S S' S'' : D}{Y Y' : C}{T : C ⥤ D}
+variable {S S' S'' : D} {Y Y' : C} {T : C ⥤ D}
 
 /-- Construct a structured arrow from a morphism. -/
 def mk (f : S ⟶ T.obj Y) : structured_arrow S T :=
@@ -163,7 +163,7 @@ def mk_id_initial [full T] [faithful T] : is_initial (mk (𝟙 (T.obj Y))) :=
           apply T.map_injective 
           simpa only [hom_mk_right, T.image_preimage, ←w m] using (category.id_comp _).symm }
 
-variable{A : Type u₃}[category.{v₃} A]{B : Type u₄}[category.{v₄} B]
+variable {A : Type u₃} [category.{v₃} A] {B : Type u₄} [category.{v₄} B]
 
 /-- The functor `(S, F ⋙ G) ⥤ (S, G)`. -/
 @[simps]
@@ -200,7 +200,7 @@ namespace CostructuredArrow
 def proj (S : C ⥤ D) (T : D) : costructured_arrow S T ⥤ C :=
   comma.fst _ _
 
-variable{T T' T'' : D}{Y Y' : C}{S : C ⥤ D}
+variable {T T' T'' : D} {Y Y' : C} {S : C ⥤ D}
 
 /-- Construct a costructured arrow from a morphism. -/
 def mk (f : S.obj Y ⟶ T) : costructured_arrow S T :=
@@ -317,7 +317,7 @@ def mk_id_terminal [full S] [faithful S] : is_terminal (mk (𝟙 (S.obj Y))) :=
         apply S.map_injective 
         simpa only [hom_mk_left, S.image_preimage, ←w m] using (category.comp_id _).symm }
 
-variable{A : Type u₃}[category.{v₃} A]{B : Type u₄}[category.{v₄} B]
+variable {A : Type u₃} [category.{v₃} A] {B : Type u₄} [category.{v₄} B]
 
 /-- The functor `(F ⋙ G, S) ⥤ (G, S)`. -/
 @[simps]

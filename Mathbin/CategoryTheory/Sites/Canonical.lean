@@ -33,15 +33,15 @@ namespace CategoryTheory
 
 open CategoryTheory Category Limits Sieve Classical
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 namespace Sheaf
 
-variable{P : «expr ᵒᵖ» C ⥤ Type v}
+variable {P : «expr ᵒᵖ» C ⥤ Type v}
 
-variable{X Y : C}{S : sieve X}{R : presieve X}
+variable {X Y : C} {S : sieve X} {R : presieve X}
 
-variable(J J₂ : grothendieck_topology C)
+variable (J J₂ : grothendieck_topology C)
 
 -- error in CategoryTheory.Sites.Canonical: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

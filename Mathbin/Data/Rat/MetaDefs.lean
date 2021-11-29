@@ -66,7 +66,7 @@ section
 
 attribute [local semireducible] reflected
 
-unsafe instance  : has_reflect ℚ :=
+unsafe instance : has_reflect ℚ :=
   rat.reflect
 
 end 

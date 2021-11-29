@@ -29,7 +29,7 @@ Use `pgame.of s` or `game.of s` to construct the game.
 by a move by Left or Right. `pgame_state.turn_bound : S → ℕ` gives an upper bound on the number of
 possible turns remaining from this state.
 -/
-class State(S : Type u) where 
+class State (S : Type u) where 
   turnBound : S → ℕ 
   l : S → Finset S 
   r : S → Finset S 
@@ -38,7 +38,7 @@ class State(S : Type u) where
 
 open State
 
-variable{S : Type u}[State S]
+variable {S : Type u} [State S]
 
 -- error in SetTheory.Game.State: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem turn_bound_ne_zero_of_left_move {s t : S} (m : «expr ∈ »(t, L s)) : «expr ≠ »(turn_bound s, 0) :=

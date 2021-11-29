@@ -46,11 +46,11 @@ open_locale Classical TopologicalSpace BigOperators Ennreal MeasureTheory Nnreal
 
 open Set Filter TopologicalSpace Ennreal Emetric MeasureTheory
 
-variable{α β γ δ : Type _}{m : MeasurableSpace α}{μ ν : Measureₓ α}
+variable {α β γ δ : Type _} {m : MeasurableSpace α} {μ ν : Measureₓ α}
 
-variable[NormedGroup β]
+variable [NormedGroup β]
 
-variable[NormedGroup γ]
+variable [NormedGroup γ]
 
 namespace MeasureTheory
 
@@ -191,14 +191,14 @@ theorem has_finite_integral_zero_measure {m : MeasurableSpace α} (f : α → β
   by 
     simp only [has_finite_integral, lintegral_zero_measure, WithTop.zero_lt_top]
 
-variable(α β μ)
+variable (α β μ)
 
 @[simp]
 theorem has_finite_integral_zero : has_finite_integral (fun a : α => (0 : β)) μ :=
   by 
     simp [has_finite_integral]
 
-variable{α β μ}
+variable {α β μ}
 
 theorem has_finite_integral.neg {f : α → β} (hfi : has_finite_integral f μ) : has_finite_integral (-f) μ :=
   by 
@@ -244,7 +244,7 @@ theorem is_finite_measure_with_density_of_real {f : α → ℝ} (hfi : has_finit
 
 section DominatedConvergence
 
-variable{F : ℕ → α → β}{f : α → β}{bound : α → ℝ}
+variable {F : ℕ → α → β} {f : α → β} {bound : α → ℝ}
 
 theorem all_ae_of_real_F_le_bound (h : ∀ n, ∀ᵐa ∂μ, ∥F n a∥ ≤ bound a) :
   ∀ n, ∀ᵐa ∂μ, Ennreal.ofReal ∥F n a∥ ≤ Ennreal.ofReal (bound a) :=
@@ -356,7 +356,7 @@ end PosPart
 
 section NormedSpace
 
-variable{𝕜 : Type _}[NormedField 𝕜][NormedSpace 𝕜 β]
+variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β]
 
 theorem has_finite_integral.smul (c : 𝕜) {f : α → β} : has_finite_integral f μ → has_finite_integral (c • f) μ :=
   by 
@@ -392,7 +392,7 @@ end NormedSpace
 /-! ### The predicate `integrable` -/
 
 
-variable[MeasurableSpace β][MeasurableSpace γ][MeasurableSpace δ]
+variable [MeasurableSpace β] [MeasurableSpace γ] [MeasurableSpace δ]
 
 /-- `integrable f μ` means that `f` is measurable and that the integral `∫⁻ a, ∥f a∥ ∂μ` is finite.
   `integrable f` means `integrable f volume`. -/
@@ -494,14 +494,14 @@ theorem lintegral_edist_lt_top [second_countable_topology β] [OpensMeasurableSp
         simpRw [←has_finite_integral_iff_edist]
         exact ⟨hf.has_finite_integral, hg.has_finite_integral⟩)
 
-variable(α β μ)
+variable (α β μ)
 
 @[simp]
 theorem integrable_zero : integrable (fun _ => (0 : β)) μ :=
   by 
     simp [integrable, measurable_const.ae_measurable]
 
-variable{α β μ}
+variable {α β μ}
 
 theorem integrable.add' [OpensMeasurableSpace β] {f g : α → β} (hf : integrable f μ) (hg : integrable g μ) :
   has_finite_integral (f+g) μ :=
@@ -519,15 +519,10 @@ theorem integrable.add [BorelSpace β] [second_countable_topology β] {f g : α 
   ⟨hf.ae_measurable.add hg.ae_measurable, hf.add' hg⟩
 
 theorem integrable_finset_sum {ι} [BorelSpace β] [second_countable_topology β] (s : Finset ι) {f : ι → α → β}
-  (hf : ∀ i, integrable (f i) μ) : integrable (fun a => ∑i in s, f i a) μ :=
+  (hf : ∀ i _ : i ∈ s, integrable (f i) μ) : integrable (fun a => ∑i in s, f i a) μ :=
   by 
-    refine' Finset.induction_on s _ _
-    ·
-      simp only [Finset.sum_empty, integrable_zero]
-    ·
-      intro i s his ih 
-      simp only [his, Finset.sum_insert, not_false_iff]
-      exact (hf _).add ih
+    simp only [←Finset.sum_apply]
+    exact Finset.sum_induction f (fun g => integrable g μ) (fun _ _ => integrable.add) (integrable_zero _ _ _) hf
 
 theorem integrable.neg [BorelSpace β] {f : α → β} (hf : integrable f μ) : integrable (-f) μ :=
   ⟨hf.ae_measurable.neg, hf.has_finite_integral.neg⟩
@@ -676,7 +671,7 @@ end PosPart
 
 section NormedSpace
 
-variable{𝕜 : Type _}[NormedField 𝕜][NormedSpace 𝕜 β][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
 theorem integrable.smul [BorelSpace β] (c : 𝕜) {f : α → β} (hf : integrable f μ) : integrable (c • f) μ :=
   ⟨hf.ae_measurable.const_smul c, hf.has_finite_integral.smul c⟩
@@ -695,11 +690,11 @@ end NormedSpace
 
 section NormedSpaceOverCompleteField
 
-variable{𝕜 : Type _}[NondiscreteNormedField 𝕜][CompleteSpace 𝕜][MeasurableSpace 𝕜]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [CompleteSpace 𝕜] [MeasurableSpace 𝕜]
 
-variable[BorelSpace 𝕜]
+variable [BorelSpace 𝕜]
 
-variable{E : Type _}[NormedGroup E][NormedSpace 𝕜 E][MeasurableSpace E][BorelSpace E]
+variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] [MeasurableSpace E] [BorelSpace E]
 
 -- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem integrable_smul_const
@@ -719,20 +714,18 @@ end NormedSpaceOverCompleteField
 
 section IsROrC
 
-variable{𝕜 : Type _}[IsROrC 𝕜][MeasurableSpace 𝕜]{f : α → 𝕜}
+variable {𝕜 : Type _} [IsROrC 𝕜] {f : α → 𝕜}
 
-theorem integrable.of_real [BorelSpace 𝕜] {f : α → ℝ} (hf : integrable f μ) : integrable (fun x => (f x : 𝕜)) μ :=
+theorem integrable.of_real {f : α → ℝ} (hf : integrable f μ) : integrable (fun x => (f x : 𝕜)) μ :=
   by 
     rw [←mem_ℒp_one_iff_integrable] at hf⊢
     exact hf.of_real
 
-theorem integrable.re_im_iff [BorelSpace 𝕜] :
+theorem integrable.re_im_iff :
   integrable (fun x => IsROrC.re (f x)) μ ∧ integrable (fun x => IsROrC.im (f x)) μ ↔ integrable f μ :=
   by 
     simpRw [←mem_ℒp_one_iff_integrable]
     exact mem_ℒp_re_im_iff
-
-variable[OpensMeasurableSpace 𝕜]
 
 theorem integrable.re (hf : integrable f μ) : integrable (fun x => IsROrC.re (f x)) μ :=
   by 
@@ -748,12 +741,8 @@ end IsROrC
 
 section InnerProduct
 
-variable{𝕜 E :
-    Type
-      _}[IsROrC
-      𝕜][MeasurableSpace
-      𝕜][BorelSpace
-      𝕜][InnerProductSpace 𝕜 E][MeasurableSpace E][OpensMeasurableSpace E][second_countable_topology E]{f : α → E}
+variable {𝕜 E : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E] [MeasurableSpace E] [OpensMeasurableSpace E]
+  [second_countable_topology E] {f : α → E}
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
@@ -771,9 +760,8 @@ end InnerProduct
 
 section Trim
 
-variable{H :
-    Type
-      _}[NormedGroup H][MeasurableSpace H][OpensMeasurableSpace H]{m0 : MeasurableSpace α}{μ' : Measureₓ α}{f : α → H}
+variable {H : Type _} [NormedGroup H] [MeasurableSpace H] [OpensMeasurableSpace H] {m0 : MeasurableSpace α}
+  {μ' : Measureₓ α} {f : α → H}
 
 theorem integrable.trim (hm : m ≤ m0) (hf_int : integrable f μ') (hf : @Measurable _ _ m _ f) :
   integrable f (μ'.trim hm) :=
@@ -797,7 +785,7 @@ end Trim
 
 section SigmaFinite
 
-variable{E : Type _}{m0 : MeasurableSpace α}[NormedGroup E][MeasurableSpace E][OpensMeasurableSpace E]
+variable {E : Type _} {m0 : MeasurableSpace α} [NormedGroup E] [MeasurableSpace E] [OpensMeasurableSpace E]
 
 theorem integrable_of_forall_fin_meas_le' {μ : Measureₓ α} (hm : m ≤ m0) [sigma_finite (μ.trim hm)] (C : ℝ≥0∞)
   (hC : C < ∞) {f : α → E} (hf_meas : AeMeasurable f μ)
@@ -807,7 +795,7 @@ theorem integrable_of_forall_fin_meas_le' {μ : Measureₓ α} (hm : m ≤ m0) [
 theorem integrable_of_forall_fin_meas_le [sigma_finite μ] (C : ℝ≥0∞) (hC : C < ∞) {f : α → E}
   (hf_meas : AeMeasurable f μ) (hf : ∀ s : Set α, MeasurableSet s → μ s ≠ ∞ → (∫⁻x in s, nnnorm (f x) ∂μ) ≤ C) :
   integrable f μ :=
-  @integrable_of_forall_fin_meas_le' _ _ _ _ _ _ _ _ le_rfl
+  @integrable_of_forall_fin_meas_le' _ _ _ _ _ _ _ _ _
     (by 
       rwa [trim_eq_self])
     C hC _ hf_meas hf
@@ -844,14 +832,14 @@ end
 
 section 
 
-variable[BorelSpace β]
+variable [BorelSpace β]
 
 theorem integrable.neg {f : α →ₘ[μ] β} : integrable f → integrable (-f) :=
   induction_on f$ fun f hfm hfi => (integrable_mk _).2 ((integrable_mk hfm).1 hfi).neg
 
 section 
 
-variable[second_countable_topology β]
+variable [second_countable_topology β]
 
 theorem integrable_iff_mem_L1 {f : α →ₘ[μ] β} : integrable f ↔ f ∈ (α →₁[μ] β) :=
   by 
@@ -870,7 +858,7 @@ end
 
 section NormedSpace
 
-variable{𝕜 : Type _}[NormedField 𝕜][NormedSpace 𝕜 β][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
 theorem integrable.smul {c : 𝕜} {f : α →ₘ[μ] β} : integrable f → integrable (c • f) :=
   induction_on f$ fun f hfm hfi => (integrable_mk _).2$ ((integrable_mk hfm).1 hfi).smul _
@@ -883,7 +871,7 @@ end AeEqFun
 
 namespace L1
 
-variable[second_countable_topology β][BorelSpace β]
+variable [second_countable_topology β] [BorelSpace β]
 
 theorem integrable_coe_fn (f : α →₁[μ] β) : integrable f μ :=
   by 
@@ -946,7 +934,7 @@ end L1
 
 namespace Integrable
 
-variable[second_countable_topology β][BorelSpace β]
+variable [second_countable_topology β] [BorelSpace β]
 
 /-- Construct the equivalence class `[f]` of an integrable function `f`, as a member of the
 space `L1 β 1 μ`. -/
@@ -1008,7 +996,7 @@ theorem edist_to_L1_zero (f : α → β) (hf : integrable f μ) : edist (hf.to_L
     simp [integrable.to_L1, snorm, snorm']
     simp [edist_eq_coe_nnnorm]
 
-variable{𝕜 : Type _}[NormedField 𝕜][NormedSpace 𝕜 β][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 β] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
 theorem to_L1_smul (f : α → β) (hf : integrable f μ) (k : 𝕜) : to_L1 (fun a => k • f a) (hf.smul k) = k • to_L1 f hf :=
   rfl
@@ -1029,19 +1017,15 @@ theorem integrable_zero_measure {m : MeasurableSpace α} [MeasurableSpace β] {f
     change (0 : Measureₓ α) { x | 0 ≠ f x } = 0
     rfl
 
-variable{E :
-    Type
-      _}[NormedGroup
-      E][MeasurableSpace
-      E][BorelSpace
-      E]{𝕜 : Type _}[NondiscreteNormedField 𝕜][NormedSpace 𝕜 E]{H : Type _}[NormedGroup H][NormedSpace 𝕜 H]
+variable {E : Type _} [NormedGroup E] [MeasurableSpace E] [BorelSpace E] {𝕜 : Type _} [NondiscreteNormedField 𝕜]
+  [NormedSpace 𝕜 E] {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H]
 
 theorem MeasureTheory.Integrable.apply_continuous_linear_map {φ : α → H →L[𝕜] E} (φ_int : integrable φ μ) (v : H) :
   integrable (fun a => φ a v) μ :=
   (φ_int.norm.mul_const ∥v∥).mono' (φ_int.ae_measurable.apply_continuous_linear_map v)
     (eventually_of_forall$ fun a => (φ a).le_op_norm v)
 
-variable[MeasurableSpace H][OpensMeasurableSpace H]
+variable [MeasurableSpace H] [OpensMeasurableSpace H]
 
 theorem ContinuousLinearMap.integrable_comp {φ : α → H} (L : H →L[𝕜] E) (φ_int : integrable φ μ) :
   integrable (fun a : α => L (φ a)) μ :=

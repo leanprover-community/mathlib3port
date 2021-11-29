@@ -22,11 +22,11 @@ namespace CategoryTheory
 
 open CategoryTheory.Projective
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 section 
 
-variable[enough_projectives C][abelian C]
+variable [enough_projectives C] [abelian C]
 
 /--
 When `C` is abelian, `projective.d f` and `f` are exact.
@@ -53,7 +53,7 @@ and the map to the `n`-th object as `projective.d`.
 -/
 
 
-variable[abelian C][enough_projectives C]
+variable [abelian C] [enough_projectives C]
 
 /-- Auxiliary definition for `ProjectiveResolution.of`. -/
 @[simps]

@@ -15,9 +15,9 @@ namespace CategoryTheory
 
 open CategoryTheory.Limits Preadditive
 
-variable{C D : Type _}[category C][category D][preadditive D]
+variable {C D : Type _} [category C] [category D] [preadditive D]
 
-instance  : preadditive (C ⥤ D) :=
+instance : preadditive (C ⥤ D) :=
   { homGroup :=
       fun F G =>
         { add :=
@@ -90,7 +90,7 @@ instance  : preadditive (C ⥤ D) :=
 
 namespace NatTrans
 
-variable{F G : C ⥤ D}
+variable {F G : C ⥤ D}
 
 /-- Application of a natural transformation at a fixed object,
 as group homomorphism -/

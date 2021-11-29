@@ -22,9 +22,9 @@ namespace AbsoluteValue
 
 section OrderedSemiring
 
-variable{R S : Type _}[EuclideanDomain R][OrderedSemiring S]
+variable {R S : Type _} [EuclideanDomain R] [OrderedSemiring S]
 
-variable(abv : AbsoluteValue R S)
+variable (abv : AbsoluteValue R S)
 
 /-- An absolute value `abv : R → S` is Euclidean if it is compatible with the
 `euclidean_domain` structure on `R`, namely `abv` is strictly monotone with respect to the well
@@ -34,7 +34,7 @@ structure is_euclidean : Prop where
 
 namespace IsEuclidean
 
-variable{abv}
+variable {abv}
 
 theorem map_lt_map_iff {x y : R} (h : abv.is_euclidean) : abv x < abv y ↔ x ≺ y :=
   map_lt_map_iff' h

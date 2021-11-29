@@ -5,7 +5,7 @@ import Mathbin.LinearAlgebra.Prod
 # Partially defined linear maps
 
 A `linear_pmap R E F` is a linear map from a submodule of `E` to `F`. We define
-a `semilattice_inf_bot` instance on this this, and define three operations:
+a `semilattice_inf` with `order_bot` instance on this this, and define three operations:
 
 * `mk_span_singleton` defines a partial linear map defined on the span of a singleton.
 * `sup` takes two partial linear maps `f`, `g` that agree on the intersection of their
@@ -27,25 +27,19 @@ open Set
 universe u v w
 
 /-- A `linear_pmap R E F` is a linear map from a submodule of `E` to `F`. -/
-structure
-  LinearPmap(R :
-    Type u)[Ringₓ R](E : Type v)[AddCommGroupₓ E][Module R E](F : Type w)[AddCommGroupₓ F][Module R F] where
-  
+structure LinearPmap (R : Type u) [Ringₓ R] (E : Type v) [AddCommGroupₓ E] [Module R E] (F : Type w) [AddCommGroupₓ F]
+  [Module R F] where 
   domain : Submodule R E 
   toFun : domain →ₗ[R] F
 
-variable{R :
-    Type
-      _}[Ringₓ
-      R]{E :
-    Type
-      _}[AddCommGroupₓ E][Module R E]{F : Type _}[AddCommGroupₓ F][Module R F]{G : Type _}[AddCommGroupₓ G][Module R G]
+variable {R : Type _} [Ringₓ R] {E : Type _} [AddCommGroupₓ E] [Module R E] {F : Type _} [AddCommGroupₓ F] [Module R F]
+  {G : Type _} [AddCommGroupₓ G] [Module R G]
 
 namespace LinearPmap
 
 open Submodule
 
-instance  : CoeFun (LinearPmap R E F) fun f : LinearPmap R E F => f.domain → F :=
+instance : CoeFun (LinearPmap R E F) fun f : LinearPmap R E F => f.domain → F :=
   ⟨fun f => f.to_fun⟩
 
 @[simp]
@@ -142,14 +136,14 @@ protected def snd (p : Submodule R E) (p' : Submodule R F) : LinearPmap R (E × 
 theorem snd_apply (p : Submodule R E) (p' : Submodule R F) (x : p.prod p') : LinearPmap.snd p p' x = (x : E × F).2 :=
   rfl
 
-instance  : Neg (LinearPmap R E F) :=
+instance : Neg (LinearPmap R E F) :=
   ⟨fun f => ⟨f.domain, -f.to_fun⟩⟩
 
 @[simp]
 theorem neg_apply (f : LinearPmap R E F) x : (-f) x = -f x :=
   rfl
 
-instance  : LE (LinearPmap R E F) :=
+instance : LE (LinearPmap R E F) :=
   ⟨fun f g => f.domain ≤ g.domain ∧ ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ h : (x : E) = y, f x = g y⟩
 
 -- error in LinearAlgebra.LinearPmap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -183,28 +177,17 @@ def eq_locus (f g : LinearPmap R E F) : Submodule R E :=
           by 
             erw [f.map_smul c ⟨x, hfx⟩, g.map_smul c ⟨x, hgx⟩, hx]⟩ }
 
-instance  : HasInf (LinearPmap R E F) :=
+instance : HasInf (LinearPmap R E F) :=
   ⟨fun f g => ⟨f.eq_locus g, f.to_fun.comp$ of_le$ fun x hx => hx.fst⟩⟩
 
-instance  : HasBot (LinearPmap R E F) :=
+instance : HasBot (LinearPmap R E F) :=
   ⟨⟨⊥, 0⟩⟩
 
-instance  : Inhabited (LinearPmap R E F) :=
+instance : Inhabited (LinearPmap R E F) :=
   ⟨⊥⟩
 
-instance  : OrderBot (LinearPmap R E F) :=
-  { bot := ⊥,
-    bot_le :=
-      fun f =>
-        ⟨bot_le,
-          fun x y h =>
-            have hx : x = 0 := Subtype.eq ((mem_bot R).1 x.2)
-            have hy : y = 0 := Subtype.eq (h.symm.trans (congr_argₓ _ hx))
-            by 
-              rw [hx, hy, map_zero, map_zero]⟩ }
-
-instance  : SemilatticeInfBot (LinearPmap R E F) :=
-  { LinearPmap.orderBot with le := · ≤ ·, le_refl := fun f => ⟨le_reflₓ f.domain, fun x y h => Subtype.eq h ▸ rfl⟩,
+instance : SemilatticeInf (LinearPmap R E F) :=
+  { le := · ≤ ·, le_refl := fun f => ⟨le_reflₓ f.domain, fun x y h => Subtype.eq h ▸ rfl⟩,
     le_trans :=
       fun f g h ⟨fg_le, fg_eq⟩ ⟨gh_le, gh_eq⟩ =>
         ⟨le_transₓ fg_le gh_le,
@@ -239,6 +222,17 @@ instance  : SemilatticeInfBot (LinearPmap R E F) :=
                 Subtype.eq$
                   by 
                     exact h⟩ }
+
+instance : OrderBot (LinearPmap R E F) :=
+  { bot := ⊥,
+    bot_le :=
+      fun f =>
+        ⟨bot_le,
+          fun x y h =>
+            have hx : x = 0 := Subtype.eq ((mem_bot R).1 x.2)
+            have hy : y = 0 := Subtype.eq (h.symm.trans (congr_argₓ _ hx))
+            by 
+              rw [hx, hy, map_zero, map_zero]⟩ }
 
 theorem le_of_eq_locus_ge {f g : LinearPmap R E F} (H : f.domain ≤ f.eq_locus g) : f ≤ g :=
   suffices f ≤ f⊓g from le_transₓ this inf_le_right
@@ -342,7 +336,7 @@ end
 
 section 
 
-variable{K : Type _}[DivisionRing K][Module K E][Module K F]
+variable {K : Type _} [DivisionRing K] [Module K E] [Module K F]
 
 /-- Extend a `linear_pmap` to `f.domain ⊔ K ∙ x`. -/
 noncomputable def sup_span_singleton (f : LinearPmap K E F) (x : E) (y : F) (hx : x ∉ f.domain) : LinearPmap K E F :=

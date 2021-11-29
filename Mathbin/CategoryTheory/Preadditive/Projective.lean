@@ -28,12 +28,12 @@ universe v u
 
 namespace CategoryTheory
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /--
 An object `P` is called projective if every morphism out of `P` factors through every epimorphism.
 -/
-class projective(P : C) : Prop where 
+class projective (P : C) : Prop where 
   Factors : ∀ {E X : C} f : P ⟶ X e : E ⟶ X [epi e], ∃ f', f' ≫ e = f
 
 section 
@@ -43,7 +43,7 @@ A projective presentation of an object `X` consists of an epimorphism `f : P ⟶
 from some projective object `P`.
 -/
 @[nolint has_inhabited_instance]
-structure projective_presentation(X : C) where 
+structure projective_presentation (X : C) where 
   P : C 
   Projective : projective P :=  by 
   runTac 
@@ -53,7 +53,7 @@ structure projective_presentation(X : C) where
   runTac 
     tactic.apply_instance
 
-variable(C)
+variable (C)
 
 /-- A category "has enough projectives" if for every object `X` there is a projective object `P` and
     an epimorphism `P ↠ X`. -/
@@ -101,7 +101,7 @@ theorem iso_iff {P Q : C} (i : P ≅ Q) : projective P ↔ projective Q :=
   ⟨of_iso i, of_iso i.symm⟩
 
 /-- The axiom of choice says that every type is a projective object in `Type`. -/
-instance  (X : Type u) : projective X :=
+instance (X : Type u) : projective X :=
   { Factors :=
       fun E X' f e epi =>
         ⟨fun x => ((epi_iff_surjective _).mp epi (f x)).some,
@@ -112,7 +112,7 @@ instance  (X : Type u) : projective X :=
 instance Type.enough_projectives : enough_projectives (Type u) :=
   { presentation := fun X => ⟨{ P := X, f := 𝟙 X }⟩ }
 
-instance  {P Q : C} [has_binary_coproduct P Q] [projective P] [projective Q] : projective (P ⨿ Q) :=
+instance {P Q : C} [has_binary_coproduct P Q] [projective P] [projective Q] : projective (P ⨿ Q) :=
   { Factors :=
       fun E X' f e epi =>
         by 
@@ -121,7 +121,7 @@ instance  {P Q : C} [has_binary_coproduct P Q] [projective P] [projective Q] : p
               by 
                 tidy⟩ }
 
-instance  {β : Type v} (g : β → C) [has_coproduct g] [∀ b, projective (g b)] : projective (∐ g) :=
+instance {β : Type v} (g : β → C) [has_coproduct g] [∀ b, projective (g b)] : projective (∐ g) :=
   { Factors :=
       fun E X' f e epi =>
         by 
@@ -130,7 +130,7 @@ instance  {β : Type v} (g : β → C) [has_coproduct g] [∀ b, projective (g b
               by 
                 tidy⟩ }
 
-instance  {P Q : C} [has_zero_morphisms C] [has_binary_biproduct P Q] [projective P] [projective Q] :
+instance {P Q : C} [has_zero_morphisms C] [has_binary_biproduct P Q] [projective P] [projective Q] :
   projective (P ⊞ Q) :=
   { Factors :=
       fun E X' f e epi =>
@@ -140,7 +140,7 @@ instance  {P Q : C} [has_zero_morphisms C] [has_binary_biproduct P Q] [projectiv
               by 
                 tidy⟩ }
 
-instance  {β : Type v} [DecidableEq β] (g : β → C) [has_zero_morphisms C] [has_biproduct g] [∀ b, projective (g b)] :
+instance {β : Type v} [DecidableEq β] (g : β → C) [has_zero_morphisms C] [has_biproduct g] [∀ b, projective (g b)] :
   projective (⨁ g) :=
   { Factors :=
       fun E X' f e epi =>
@@ -152,7 +152,7 @@ instance  {β : Type v} [DecidableEq β] (g : β → C) [has_zero_morphisms C] [
 
 section EnoughProjectives
 
-variable[enough_projectives C]
+variable [enough_projectives C]
 
 /--
 `projective.over X` provides an arbitrarily chosen projective object equipped with
@@ -176,7 +176,7 @@ instance π_epi (X : C) : epi (π X) :=
 
 section 
 
-variable[has_zero_morphisms C]{X Y : C}(f : X ⟶ Y)[has_kernel f]
+variable [has_zero_morphisms C] {X Y : C} (f : X ⟶ Y) [has_kernel f]
 
 -- error in CategoryTheory.Preadditive.Projective: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler projective
 /--
@@ -205,7 +205,7 @@ open Projective
 
 section 
 
-variable[has_zero_morphisms C][has_equalizers C][has_images C]
+variable [has_zero_morphisms C] [has_equalizers C] [has_images C]
 
 /--
 Given a projective object `P` mapping via `h` into

@@ -52,16 +52,16 @@ namespace Rat
 protected def reprₓ : ℚ → Stringₓ
 | ⟨n, d, _, _⟩ => if d = 1 then _root_.repr n else _root_.repr n ++ "/" ++ _root_.repr d
 
-instance  : HasRepr ℚ :=
+instance : HasRepr ℚ :=
   ⟨Rat.repr⟩
 
-instance  : HasToString ℚ :=
+instance : HasToString ℚ :=
   ⟨Rat.repr⟩
 
-unsafe instance  : has_to_format ℚ :=
+unsafe instance : has_to_format ℚ :=
   ⟨coeₓ ∘ Rat.repr⟩
 
-instance  : Encodable ℚ :=
+instance : Encodable ℚ :=
   Encodable.ofEquiv (Σn : ℤ, { d : ℕ // 0 < d ∧ n.nat_abs.coprime d })
     ⟨fun ⟨a, b, c, d⟩ => ⟨a, b, c, d⟩, fun ⟨a, b, c, d⟩ => ⟨a, b, c, d⟩, fun ⟨a, b, c, d⟩ => rfl,
       fun ⟨a, b, c, d⟩ => rfl⟩
@@ -70,13 +70,13 @@ instance  : Encodable ℚ :=
 def of_int (n : ℤ) : ℚ :=
   ⟨n, 1, Nat.one_posₓ, Nat.coprime_one_rightₓ _⟩
 
-instance  : HasZero ℚ :=
+instance : HasZero ℚ :=
   ⟨of_int 0⟩
 
-instance  : HasOne ℚ :=
+instance : HasOne ℚ :=
   ⟨of_int 1⟩
 
-instance  : Inhabited ℚ :=
+instance : Inhabited ℚ :=
   ⟨0⟩
 
 -- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -302,7 +302,7 @@ theorem denom_dvd (a b : ℤ) : ((a /. b).denom : ℤ) ∣ b :=
 protected def add : ℚ → ℚ → ℚ
 | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => mk_pnat ((n₁*d₂)+n₂*d₁) ⟨d₁*d₂, mul_pos h₁ h₂⟩
 
-instance  : Add ℚ :=
+instance : Add ℚ :=
   ⟨Rat.add⟩
 
 -- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -358,7 +358,7 @@ protected def neg (r : ℚ) : ℚ :=
     by 
       simp [r.cop]⟩
 
-instance  : Neg ℚ :=
+instance : Neg ℚ :=
   ⟨Rat.neg⟩
 
 -- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -383,7 +383,7 @@ end
 protected def mul : ℚ → ℚ → ℚ
 | ⟨n₁, d₁, h₁, c₁⟩, ⟨n₂, d₂, h₂, c₂⟩ => mk_pnat (n₁*n₂) ⟨d₁*d₂, mul_pos h₁ h₂⟩
 
-instance  : Mul ℚ :=
+instance : Mul ℚ :=
   ⟨Rat.mul⟩
 
 @[simp]
@@ -409,7 +409,7 @@ protected def inv : ℚ → ℚ
       by 
         simp  <;> exact c⟩
 
-instance  : HasInv ℚ :=
+instance : HasInv ℚ :=
   ⟨Rat.inv⟩
 
 -- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -446,7 +446,7 @@ begin
   cc
 end
 
-variable(a b c : ℚ)
+variable (a b c : ℚ)
 
 protected theorem add_zeroₓ : (a+0) = a :=
   num_denom_cases_on' a$
@@ -574,87 +574,87 @@ protected theorem mul_inv_cancel : a ≠ 0 → (a*a⁻¹) = 1 :=
 protected theorem inv_mul_cancel (h : a ≠ 0) : (a⁻¹*a) = 1 :=
   Eq.trans (Rat.mul_comm _ _) (Rat.mul_inv_cancel _ h)
 
-instance  : DecidableEq ℚ :=
+instance : DecidableEq ℚ :=
   by 
     runTac 
       tactic.mk_dec_eq_instance
 
-instance  : Field ℚ :=
+instance : Field ℚ :=
   { zero := 0, add := Rat.add, neg := Rat.neg, one := 1, mul := Rat.mul, inv := Rat.inv, zero_add := Rat.zero_add,
     add_zero := Rat.add_zero, add_comm := Rat.add_comm, add_assoc := Rat.add_assoc, add_left_neg := Rat.add_left_neg,
     mul_one := Rat.mul_one, one_mul := Rat.one_mul, mul_comm := Rat.mul_comm, mul_assoc := Rat.mul_assoc,
     left_distrib := Rat.mul_add, right_distrib := Rat.add_mul, exists_pair_ne := ⟨0, 1, Rat.zero_ne_one⟩,
     mul_inv_cancel := Rat.mul_inv_cancel, inv_zero := rfl }
 
-instance  : DivisionRing ℚ :=
+instance : DivisionRing ℚ :=
   by 
     infer_instance
 
-instance  : IsDomain ℚ :=
+instance : IsDomain ℚ :=
   by 
     infer_instance
 
-instance  : Nontrivial ℚ :=
+instance : Nontrivial ℚ :=
   by 
     infer_instance
 
-instance  : CommRingₓ ℚ :=
+instance : CommRingₓ ℚ :=
   by 
     infer_instance
 
-instance  : CommSemiringₓ ℚ :=
+instance : CommSemiringₓ ℚ :=
   by 
     infer_instance
 
-instance  : Semiringₓ ℚ :=
+instance : Semiringₓ ℚ :=
   by 
     infer_instance
 
-instance  : AddCommGroupₓ ℚ :=
+instance : AddCommGroupₓ ℚ :=
   by 
     infer_instance
 
-instance  : AddGroupₓ ℚ :=
+instance : AddGroupₓ ℚ :=
   by 
     infer_instance
 
-instance  : AddCommMonoidₓ ℚ :=
+instance : AddCommMonoidₓ ℚ :=
   by 
     infer_instance
 
-instance  : AddMonoidₓ ℚ :=
+instance : AddMonoidₓ ℚ :=
   by 
     infer_instance
 
-instance  : AddLeftCancelSemigroup ℚ :=
+instance : AddLeftCancelSemigroup ℚ :=
   by 
     infer_instance
 
-instance  : AddRightCancelSemigroup ℚ :=
+instance : AddRightCancelSemigroup ℚ :=
   by 
     infer_instance
 
-instance  : AddCommSemigroupₓ ℚ :=
+instance : AddCommSemigroupₓ ℚ :=
   by 
     infer_instance
 
-instance  : AddSemigroupₓ ℚ :=
+instance : AddSemigroupₓ ℚ :=
   by 
     infer_instance
 
-instance  : CommMonoidₓ ℚ :=
+instance : CommMonoidₓ ℚ :=
   by 
     infer_instance
 
-instance  : Monoidₓ ℚ :=
+instance : Monoidₓ ℚ :=
   by 
     infer_instance
 
-instance  : CommSemigroupₓ ℚ :=
+instance : CommSemigroupₓ ℚ :=
   by 
     infer_instance
 
-instance  : Semigroupₓ ℚ :=
+instance : Semigroupₓ ℚ :=
   by 
     infer_instance
 
@@ -904,7 +904,7 @@ theorem coe_int_num_of_denom_eq_one {q : ℚ} (hq : q.denom = 1) : «expr↑ » 
 theorem denom_eq_one_iff (r : ℚ) : r.denom = 1 ↔ «expr↑ » r.num = r :=
   ⟨Rat.coe_int_num_of_denom_eq_one, fun h => h ▸ Rat.coe_int_denom r.num⟩
 
-instance  : CanLift ℚ ℤ :=
+instance : CanLift ℚ ℤ :=
   ⟨coeₓ, fun q => q.denom = 1, fun q hq => ⟨q.num, coe_int_num_of_denom_eq_one hq⟩⟩
 
 theorem coe_nat_eq_mk (n : ℕ) : «expr↑ » n = n /. 1 :=

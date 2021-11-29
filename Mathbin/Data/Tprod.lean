@@ -31,17 +31,17 @@ construction/theorem that is easier to define/prove on binary products than on f
 
 open List Function
 
-variable{ι : Type _}{α : ι → Type _}{i j : ι}{l : List ι}{f : ∀ i, α i}
+variable {ι : Type _} {α : ι → Type _} {i j : ι} {l : List ι} {f : ∀ i, α i}
 
 namespace List
 
-variable(α)
+variable (α)
 
 /-- The product of a family of types over a list. -/
 def tprod (l : List ι) : Type _ :=
   l.foldr (fun i β => α i × β) PUnit
 
-variable{α}
+variable {α}
 
 namespace Tprod
 
@@ -52,7 +52,7 @@ protected def mk : ∀ l : List ι f : ∀ i, α i, tprod α l
 | [] => fun f => PUnit.unit
 | i :: is => fun f => (f i, mk is f)
 
-instance  [∀ i, Inhabited (α i)] : Inhabited (tprod α l) :=
+instance [∀ i, Inhabited (α i)] : Inhabited (tprod α l) :=
   ⟨tprod.mk l fun i => default (α i)⟩
 
 @[simp]
@@ -63,7 +63,7 @@ theorem fst_mk (i : ι) (l : List ι) (f : ∀ i, α i) : (tprod.mk (i :: l) f).
 theorem snd_mk (i : ι) (l : List ι) (f : ∀ i, α i) : (tprod.mk (i :: l) f).2 = tprod.mk l f :=
   rfl
 
-variable[DecidableEq ι]
+variable [DecidableEq ι]
 
 /-- Given an element of the iterated product `l.prod α`, take a projection into direction `i`.
   If `i` appears multiple times in `l`, this chooses the first component in direction `i`. -/

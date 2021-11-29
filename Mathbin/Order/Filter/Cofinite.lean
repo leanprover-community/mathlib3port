@@ -1,4 +1,5 @@
-import Mathbin.Order.Filter.AtTopBot
+import Mathbin.Order.Filter.AtTopBot 
+import Mathbin.Order.Filter.Pi
 
 /-!
 # The cofinite filter
@@ -19,7 +20,7 @@ open Set
 
 open_locale Classical
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Filter
 
@@ -43,11 +44,12 @@ theorem mem_cofinite {s : Set α} : s ∈ @cofinite α ↔ finite («expr ᶜ» 
 theorem eventually_cofinite {p : α → Prop} : (∀ᶠx in cofinite, p x) ↔ finite { x | ¬p x } :=
   Iff.rfl
 
+theorem has_basis_cofinite : has_basis cofinite (fun s : Set α => s.finite) compl :=
+  ⟨fun s =>
+      ⟨fun h => ⟨«expr ᶜ» s, h, (compl_compl s).Subset⟩, fun ⟨t, htf, hts⟩ => htf.subset$ compl_subset_comm.2 hts⟩⟩
+
 instance cofinite_ne_bot [Infinite α] : ne_bot (@cofinite α) :=
-  ⟨mt empty_mem_iff_bot.mpr$
-      by 
-        simp only [mem_cofinite, compl_empty]
-        exact infinite_univ⟩
+  has_basis_cofinite.ne_bot_iff.2$ fun s hs => hs.infinite_compl.nonempty
 
 theorem frequently_cofinite_iff_infinite {p : α → Prop} : (∃ᶠx in cofinite, p x) ↔ Set.Infinite { x | p x } :=
   by 

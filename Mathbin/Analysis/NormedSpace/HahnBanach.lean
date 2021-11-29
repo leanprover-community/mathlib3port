@@ -1,4 +1,5 @@
 import Mathbin.Analysis.Convex.Cone 
+import Mathbin.Analysis.NormedSpace.IsROrC 
 import Mathbin.Analysis.NormedSpace.Extend
 
 /-!
@@ -19,34 +20,9 @@ of `𝕜`).
 
 universe u v
 
-/--
-The norm of `x` as an element of `𝕜` (a normed algebra over `ℝ`). This is needed in particular to
-state equalities of the form `g x = norm' 𝕜 x` when `g` is a linear function.
-
-For the concrete cases of `ℝ` and `ℂ`, this is just `∥x∥` and `↑∥x∥`, respectively.
--/
-noncomputable def norm' (𝕜 : Type _) [NondiscreteNormedField 𝕜] [SemiNormedAlgebra ℝ 𝕜] {E : Type _} [SemiNormedGroup E]
-  (x : E) : 𝕜 :=
-  algebraMap ℝ 𝕜 ∥x∥
-
-theorem norm'_def (𝕜 : Type _) [NondiscreteNormedField 𝕜] [SemiNormedAlgebra ℝ 𝕜] {E : Type _} [SemiNormedGroup E]
-  (x : E) : norm' 𝕜 x = algebraMap ℝ 𝕜 ∥x∥ :=
-  rfl
-
-theorem norm_norm' (𝕜 : Type _) [NondiscreteNormedField 𝕜] [SemiNormedAlgebra ℝ 𝕜] (A : Type _) [SemiNormedGroup A]
-  (x : A) : ∥norm' 𝕜 x∥ = ∥x∥ :=
-  by 
-    rw [norm'_def, norm_algebra_map_eq, norm_norm]
-
-@[simp]
-theorem norm'_eq_zero_iff (𝕜 : Type _) [NondiscreteNormedField 𝕜] [SemiNormedAlgebra ℝ 𝕜] (A : Type _) [NormedGroup A]
-  (x : A) : norm' 𝕜 x = 0 ↔ x = 0 :=
-  by 
-    simp [norm', ←norm_eq_zero, norm_algebra_map_eq]
-
 namespace Real
 
-variable{E : Type _}[SemiNormedGroup E][SemiNormedSpace ℝ E]
+variable {E : Type _} [SemiNormedGroup E] [SemiNormedSpace ℝ E]
 
 /-- Hahn-Banach theorem for continuous linear functions over `ℝ`. -/
 theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
@@ -78,7 +54,7 @@ section IsROrC
 
 open IsROrC
 
-variable{𝕜 : Type _}[IsROrC 𝕜]{F : Type _}[SemiNormedGroup F][SemiNormedSpace 𝕜 F]
+variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SemiNormedGroup F] [SemiNormedSpace 𝕜 F]
 
 -- error in Analysis.NormedSpace.HahnBanach: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Hahn-Banach theorem for continuous linear functions over `𝕜` satisyfing `is_R_or_C 𝕜`. -/
@@ -118,24 +94,24 @@ end IsROrC
 
 section DualVector
 
-variable(𝕜 : Type v)[IsROrC 𝕜]
+variable (𝕜 : Type v) [IsROrC 𝕜]
 
-variable{E : Type u}[NormedGroup E][NormedSpace 𝕜 E]
+variable {E : Type u} [NormedGroup E] [NormedSpace 𝕜 E]
 
 open ContinuousLinearEquiv Submodule
 
 open_locale Classical
 
-theorem coord_norm' (x : E) (h : x ≠ 0) : ∥norm' 𝕜 x • coord 𝕜 x h∥ = 1 :=
+theorem coord_norm' {x : E} (h : x ≠ 0) : ∥(∥x∥ : 𝕜) • coord 𝕜 x h∥ = 1 :=
   by 
-    rw [norm_smul, norm_norm', coord_norm, mul_inv_cancel (mt norm_eq_zero.mp h)]
+    rw [norm_smul, IsROrC.norm_coe_norm, coord_norm, mul_inv_cancel (mt norm_eq_zero.mp h)]
 
 /-- Corollary of Hahn-Banach.  Given a nonzero element `x` of a normed space, there exists an
     element of the dual space, of norm `1`, whose value on `x` is `∥x∥`. -/
-theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ = 1 ∧ g x = norm' 𝕜 x :=
+theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ = 1 ∧ g x = ∥x∥ :=
   by 
     let p : Submodule 𝕜 E := 𝕜∙x 
-    let f := norm' 𝕜 x • coord 𝕜 x h 
+    let f := (∥x∥ : 𝕜) • coord 𝕜 x h 
     obtain ⟨g, hg⟩ := exists_extension_norm_eq p f 
     refine' ⟨g, _, _⟩
     ·
@@ -143,29 +119,29 @@ theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, �
     ·
       calc g x = g (⟨x, mem_span_singleton_self x⟩ : 𝕜∙x) :=
         by 
-          rw [coe_mk]_ = (norm' 𝕜 x • coord 𝕜 x h) (⟨x, mem_span_singleton_self x⟩ : 𝕜∙x) :=
+          rw [coe_mk]_ = ((∥x∥ : 𝕜) • coord 𝕜 x h) (⟨x, mem_span_singleton_self x⟩ : 𝕜∙x) :=
         by 
-          rw [←hg.1]_ = norm' 𝕜 x :=
+          rw [←hg.1]_ = ∥x∥ :=
         by 
           simp 
 
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, and choosing
     the dual element arbitrarily when `x = 0`. -/
-theorem exists_dual_vector' [Nontrivial E] (x : E) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ = 1 ∧ g x = norm' 𝕜 x :=
+theorem exists_dual_vector' [Nontrivial E] (x : E) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ = 1 ∧ g x = ∥x∥ :=
   by 
     byCases' hx : x = 0
     ·
       obtain ⟨y, hy⟩ := exists_ne (0 : E)
-      obtain ⟨g, hg⟩ : ∃ g : E →L[𝕜] 𝕜, ∥g∥ = 1 ∧ g y = norm' 𝕜 y := exists_dual_vector 𝕜 y hy 
+      obtain ⟨g, hg⟩ : ∃ g : E →L[𝕜] 𝕜, ∥g∥ = 1 ∧ g y = ∥y∥ := exists_dual_vector 𝕜 y hy 
       refine' ⟨g, hg.left, _⟩
-      rw [norm'_def, hx, norm_zero, RingHom.map_zero, ContinuousLinearMap.map_zero]
+      simp [hx]
     ·
       exact exists_dual_vector 𝕜 x hx
 
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, but only ensuring that
     the dual element has norm at most `1` (this can not be improved for the trivial
     vector space). -/
-theorem exists_dual_vector'' (x : E) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ ≤ 1 ∧ g x = norm' 𝕜 x :=
+theorem exists_dual_vector'' (x : E) : ∃ g : E →L[𝕜] 𝕜, ∥g∥ ≤ 1 ∧ g x = ∥x∥ :=
   by 
     byCases' hx : x = 0
     ·

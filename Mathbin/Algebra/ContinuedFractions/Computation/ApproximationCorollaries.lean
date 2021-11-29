@@ -34,7 +34,7 @@ convergence, fractions
 -/
 
 
-variable{K : Type _}(v : K)[LinearOrderedField K][FloorRing K]
+variable {K : Type _} (v : K) [LinearOrderedField K] [FloorRing K]
 
 open generalized_continued_fraction(of)
 
@@ -68,7 +68,7 @@ We next show that `(generalized_continued_fraction.of v).convergents v` converge
 -/
 
 
-variable[Archimedean K]
+variable [Archimedean K]
 
 open Nat
 

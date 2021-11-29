@@ -28,7 +28,7 @@ Hölder continuity, Lipschitz continuity
  -/
 
 
-variable{X Y Z : Type _}
+variable {X Y Z : Type _}
 
 open Filter Set
 
@@ -36,7 +36,7 @@ open_locale Nnreal Ennreal TopologicalSpace
 
 section Emetric
 
-variable[PseudoEmetricSpace X][PseudoEmetricSpace Y][PseudoEmetricSpace Z]
+variable [PseudoEmetricSpace X] [PseudoEmetricSpace Y] [PseudoEmetricSpace Z]
 
 /-- A function `f : X → Y` between two `pseudo_emetric_space`s is Hölder continuous with constant
 `C : ℝ≥0` and exponent `r : ℝ≥0`, if `edist (f x) (f y) ≤ C * edist x y ^ r` for all `x y : X`. -/
@@ -90,7 +90,7 @@ protected theorem HolderWith.holder_on_with {C r :  ℝ≥0 } {f : X → Y} (h :
 
 namespace HolderOnWith
 
-variable{C r :  ℝ≥0 }{f : X → Y}{s t : Set X}
+variable {C r :  ℝ≥0 } {f : X → Y} {s t : Set X}
 
 theorem edist_le (h : HolderOnWith C r f s) {x y : X} (hx : x ∈ s) (hy : y ∈ s) :
   edist (f x) (f y) ≤ C*edist x y^(r : ℝ) :=
@@ -158,7 +158,7 @@ end HolderOnWith
 
 namespace HolderWith
 
-variable{C r :  ℝ≥0 }{f : X → Y}
+variable {C r :  ℝ≥0 } {f : X → Y}
 
 theorem edist_le (h : HolderWith C r f) (x y : X) : edist (f x) (f y) ≤ C*edist x y^(r : ℝ) :=
   h x y
@@ -191,7 +191,7 @@ end Emetric
 
 section Metric
 
-variable[PseudoMetricSpace X][PseudoMetricSpace Y]{C r :  ℝ≥0 }{f : X → Y}
+variable [PseudoMetricSpace X] [PseudoMetricSpace Y] {C r :  ℝ≥0 } {f : X → Y}
 
 namespace HolderWith
 

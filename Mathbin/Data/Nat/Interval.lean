@@ -15,7 +15,7 @@ and subsequently be moved upstream to `data.finset.locally_finite`.
 
 open Finset Nat
 
-instance  : LocallyFiniteOrder ℕ :=
+instance : LocallyFiniteOrder ℕ :=
   { finsetIcc := fun a b => (List.range' a ((b+1) - a)).toFinset,
     finsetIco := fun a b => (List.range' a (b - a)).toFinset,
     finsetIoc := fun a b => (List.range' (a+1) (b - a)).toFinset,
@@ -63,7 +63,7 @@ instance  : LocallyFiniteOrder ℕ :=
 
 namespace Nat
 
-variable(a b c : ℕ)
+variable (a b c : ℕ)
 
 theorem Icc_eq_range' : Icc a b = (List.range' a ((b+1) - a)).toFinset :=
   rfl
@@ -185,7 +185,7 @@ theorem Ico_pred_singleton {a : ℕ} (h : 0 < a) : Ico (a - 1) a = {a - 1} :=
   by 
     rw [←Icc_pred_right _ h, Icc_self]
 
-variable{a b c}
+variable {a b c}
 
 theorem Ico_succ_right_eq_insert_Ico (h : a ≤ b) : Ico a (b+1) = insert b (Ico a b) :=
   by 

@@ -23,17 +23,9 @@ partition of unity, smooth bump function, whitney theorem
 
 universe uι uE uH uM
 
-variable{ι :
-    Type
-      uι}{E :
-    Type
-      uE}[NormedGroup
-      E][NormedSpace ℝ
-      E][FiniteDimensional ℝ
-      E]{H :
-    Type
-      uH}[TopologicalSpace
-      H]{I : ModelWithCorners ℝ E H}{M : Type uM}[TopologicalSpace M][ChartedSpace H M][SmoothManifoldWithCorners I M]
+variable {ι : Type uι} {E : Type uE} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {H : Type uH}
+  [TopologicalSpace H] {I : ModelWithCorners ℝ E H} {M : Type uM} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M]
 
 open Function Filter FiniteDimensional Set
 
@@ -51,7 +43,7 @@ In this section we prove a version of the Whitney embedding theorem: for any com
 -/
 
 
-variable[T2Space M][Fintype ι]{s : Set M}(f : SmoothBumpCovering ι I M s)
+variable [T2Space M] [Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
 
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
 def embedding_pi_tangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯ :=

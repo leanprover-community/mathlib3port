@@ -24,7 +24,7 @@ probability mass function, discrete probability measure
 
 noncomputable theory
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 open_locale Classical BigOperators Nnreal Ennreal
 
@@ -35,7 +35,7 @@ def Pmf.{u} (α : Type u) : Type u :=
 
 namespace Pmf
 
-instance  : CoeFun (Pmf α) fun p => α →  ℝ≥0  :=
+instance : CoeFun (Pmf α) fun p => α →  ℝ≥0  :=
   ⟨fun p a => p.1 a⟩
 
 @[ext]
@@ -86,7 +86,7 @@ theorem mem_support_pure_iff (a a' : α) : a' ∈ (pure a).Support ↔ a' = a :=
   by 
     simp 
 
-instance  [Inhabited α] : Inhabited (Pmf α) :=
+instance [Inhabited α] : Inhabited (Pmf α) :=
   ⟨pure (default α)⟩
 
 end Pure
@@ -160,7 +160,7 @@ theorem bind_comm (p : Pmf α) (q : Pmf β) (f : α → β → Pmf γ) :
 
 end Bind
 
-instance  : Monadₓ Pmf :=
+instance : Monadₓ Pmf :=
   { pure := fun A a => pure a, bind := fun A B pa pb => pa.bind pb }
 
 section OuterMeasure
@@ -205,7 +205,7 @@ theorem to_outer_measure_caratheodory (p : Pmf α) : (to_outer_measure p).carath
   by 
     refine' eq_top_iff.2$ le_transₓ (le_Inf$ fun x hx => _) (le_sum_caratheodory _)
     obtain ⟨y, hy⟩ := hx 
-    exact ((le_of_eqₓ (dirac_caratheodory _).symm).trans (le_smul_caratheodory _ _)).trans (le_of_eqₓ hy)
+    exact ((le_of_eqₓ (dirac_caratheodory y).symm).trans (le_smul_caratheodory _ _)).trans (le_of_eqₓ hy)
 
 end OuterMeasure
 
@@ -218,7 +218,7 @@ open MeasureTheory
 def to_measure [MeasurableSpace α] (p : Pmf α) : Measureₓ α :=
   p.to_outer_measure.to_measure ((to_outer_measure_caratheodory p).symm ▸ le_top)
 
-variable[MeasurableSpace α]
+variable [MeasurableSpace α]
 
 theorem to_measure_apply_eq_to_outer_measure_apply (p : Pmf α) (s : Set α) (hs : MeasurableSet s) :
   p.to_measure s = p.to_outer_measure s :=

@@ -32,7 +32,7 @@ open_locale BigOperators
 universe u v w
 
 /-- A sesquilinear form over a module  -/
-structure SesqForm(R : Type u)(M : Type v)[Ringₓ R](I : R ≃+* «expr ᵐᵒᵖ» R)[AddCommGroupₓ M][Module R M] where 
+structure SesqForm (R : Type u) (M : Type v) [Ringₓ R] (I : R ≃+* «expr ᵐᵒᵖ» R) [AddCommGroupₓ M] [Module R M] where 
   sesq : M → M → R 
   sesq_add_left : ∀ x y z : M, sesq (x+y) z = sesq x z+sesq y z 
   sesq_smul_left : ∀ a : R x y : M, sesq (a • x) y = a*sesq x y 
@@ -43,11 +43,11 @@ namespace SesqForm
 
 section GeneralRing
 
-variable{R : Type u}{M : Type v}[Ringₓ R][AddCommGroupₓ M][Module R M]
+variable {R : Type u} {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
-variable{I : R ≃+* «expr ᵐᵒᵖ» R}{S : SesqForm R M I}
+variable {I : R ≃+* «expr ᵐᵒᵖ» R} {S : SesqForm R M I}
 
-instance  : CoeFun (SesqForm R M I) fun _ => M → M → R :=
+instance : CoeFun (SesqForm R M I) fun _ => M → M → R :=
   ⟨sesq⟩
 
 theorem add_left (x y z : M) : S (x+y) z = S x z+S y z :=
@@ -88,7 +88,7 @@ theorem sub_right (x y z : M) : S x (y - z) = S x y - S x z :=
   by 
     simp only [sub_eq_add_neg, add_right, neg_right]
 
-variable{D : SesqForm R M I}
+variable {D : SesqForm R M I}
 
 @[ext]
 theorem ext (H : ∀ x y : M, S x y = D x y) : S = D :=
@@ -99,7 +99,7 @@ theorem ext (H : ∀ x y : M, S x y = D x y) : S = D :=
     funext 
     exact H _ _
 
-instance  : Add (SesqForm R M I) :=
+instance : Add (SesqForm R M I) :=
   ⟨fun S D =>
       { sesq := fun x y => S x y+D x y,
         sesq_add_left :=
@@ -123,12 +123,12 @@ instance  : Add (SesqForm R M I) :=
             by 
               rw [smul_right, smul_right, mul_addₓ] }⟩
 
-instance  : HasZero (SesqForm R M I) :=
+instance : HasZero (SesqForm R M I) :=
   ⟨{ sesq := fun x y => 0, sesq_add_left := fun x y z => (add_zeroₓ 0).symm,
       sesq_smul_left := fun a x y => (mul_zero a).symm, sesq_add_right := fun x y z => (zero_addₓ 0).symm,
       sesq_smul_right := fun a x y => (mul_zero (I a).unop).symm }⟩
 
-instance  : Neg (SesqForm R M I) :=
+instance : Neg (SesqForm R M I) :=
   ⟨fun S =>
       { sesq := fun x y => -S.1 x y,
         sesq_add_left :=
@@ -148,7 +148,7 @@ instance  : Neg (SesqForm R M I) :=
             by 
               rw [sesq_smul_right, mul_neg_eq_neg_mul_symm] }⟩
 
-instance  : AddCommGroupₓ (SesqForm R M I) :=
+instance : AddCommGroupₓ (SesqForm R M I) :=
   { add := ·+·,
     add_assoc :=
       by 
@@ -183,7 +183,7 @@ instance  : AddCommGroupₓ (SesqForm R M I) :=
         unfold coeFn CoeFun.coe sesq 
         rw [add_commₓ] }
 
-instance  : Inhabited (SesqForm R M I) :=
+instance : Inhabited (SesqForm R M I) :=
   ⟨0⟩
 
 /-- The proposition that two elements of a sesquilinear form space are orthogonal -/
@@ -214,7 +214,7 @@ theorem sum_right {α : Type _} (S : SesqForm R M I) (t : Finset α) (g : α →
   S w (∑i in t, g i) = ∑i in t, S w (g i) :=
   (add_monoid_hom_right S w).map_sum _ t
 
-variable{M₂ : Type w}[AddCommGroupₓ M₂][Module R M₂]
+variable {M₂ : Type w} [AddCommGroupₓ M₂] [Module R M₂]
 
 /-- Apply the linear maps `f` and `g` to the left and right arguments of the sesquilinear form. -/
 def comp (S : SesqForm R M I) (f g : M₂ →ₗ[R] M) : SesqForm R M₂ I :=
@@ -280,8 +280,8 @@ end GeneralRing
 
 section CommRingₓ
 
-variable{R :
-    Type _}[CommRingₓ R]{M : Type v}[AddCommGroupₓ M][Module R M]{J : R ≃+* «expr ᵐᵒᵖ» R}(F : SesqForm R M J)(f : M → M)
+variable {R : Type _} [CommRingₓ R] {M : Type v} [AddCommGroupₓ M] [Module R M] {J : R ≃+* «expr ᵐᵒᵖ» R}
+  (F : SesqForm R M J) (f : M → M)
 
 instance to_module : Module R (SesqForm R M J) :=
   { smul :=
@@ -349,8 +349,8 @@ end CommRingₓ
 
 section IsDomain
 
-variable{R :
-    Type _}[Ringₓ R][IsDomain R]{M : Type v}[AddCommGroupₓ M][Module R M]{K : R ≃+* «expr ᵐᵒᵖ» R}{G : SesqForm R M K}
+variable {R : Type _} [Ringₓ R] [IsDomain R] {M : Type v} [AddCommGroupₓ M] [Module R M] {K : R ≃+* «expr ᵐᵒᵖ» R}
+  {G : SesqForm R M K}
 
 theorem ortho_smul_left {x y : M} {a : R} (ha : a ≠ 0) : is_ortho G x y ↔ is_ortho G (a • x) y :=
   by 
@@ -384,9 +384,9 @@ theorem ortho_smul_right {x y : M} {a : R} (ha : a ≠ 0) : is_ortho G x y ↔ i
 
 end IsDomain
 
-variable{R : Type _}{M : Type _}[Ringₓ R][AddCommGroupₓ M][Module R M]
+variable {R : Type _} {M : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
-variable{I : R ≃+* «expr ᵐᵒᵖ» R}{S : SesqForm R M I}
+variable {I : R ≃+* «expr ᵐᵒᵖ» R} {S : SesqForm R M I}
 
 /-- The proposition that a sesquilinear form is reflexive -/
 def IsRefl (S : SesqForm R M I) : Prop :=
@@ -394,7 +394,7 @@ def IsRefl (S : SesqForm R M I) : Prop :=
 
 namespace IsRefl
 
-variable(H : S.is_refl)
+variable (H : S.is_refl)
 
 theorem eq_zero : ∀ {x y : M}, S x y = 0 → S y x = 0 :=
   fun x y => H x y
@@ -410,7 +410,7 @@ def IsSymm (S : SesqForm R M I) : Prop :=
 
 namespace IsSymm
 
-variable(H : S.is_symm)
+variable (H : S.is_symm)
 
 include H
 
@@ -434,7 +434,7 @@ def is_alt (S : SesqForm R M I) : Prop :=
 
 namespace IsAlt
 
-variable(H : S.is_alt)
+variable (H : S.is_alt)
 
 include H
 

@@ -11,7 +11,7 @@ We define the global infix notation `::ₘ` for `multiset.cons`.
 
 open List Subtype Nat
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 /-- `multiset α` is the quotient of `list α` by list permutation. The result
   is a type of finite sets with duplicates allowed.  -/
@@ -20,7 +20,7 @@ def Multiset.{u} (α : Type u) : Type u :=
 
 namespace Multiset
 
-instance  : Coe (List α) (Multiset α) :=
+instance : Coe (List α) (Multiset α) :=
   ⟨Quot.mk _⟩
 
 @[simp]
@@ -56,10 +56,10 @@ instance SizeOf [SizeOf α] : SizeOf (Multiset α) :=
 protected def zero : Multiset α :=
   @nil α
 
-instance  : HasZero (Multiset α) :=
+instance : HasZero (Multiset α) :=
   ⟨Multiset.zero⟩
 
-instance  : HasEmptyc (Multiset α) :=
+instance : HasEmptyc (Multiset α) :=
   ⟨0⟩
 
 instance inhabited_multiset : Inhabited (Multiset α) :=
@@ -86,7 +86,7 @@ def cons (a : α) (s : Multiset α) : Multiset α :=
 
 infixr:67 " ::ₘ " => Multiset.cons
 
-instance  : HasInsert α (Multiset α) :=
+instance : HasInsert α (Multiset α) :=
   ⟨cons⟩
 
 @[simp]
@@ -129,7 +129,7 @@ theorem cons_swap (a b : α) (s : Multiset α) : a ::ₘ b ::ₘ s = b ::ₘ a :
 
 section Rec
 
-variable{C : Multiset α → Sort _}
+variable {C : Multiset α → Sort _}
 
 /-- Dependent recursor on multisets.
 TODO: should be @[recursor 6], but then the definition of `multiset.pi` fails with a stack
@@ -153,14 +153,8 @@ protected def rec_on (m : Multiset α) (C_0 : C 0) (C_cons : ∀ a m, C m → C 
   (C_cons_heq : ∀ a a' m b, HEq (C_cons a (a' ::ₘ m) (C_cons a' m b)) (C_cons a' (a ::ₘ m) (C_cons a m b))) : C m :=
   Multiset.rec C_0 C_cons C_cons_heq m
 
-variable{C_0 :
-    C
-      0}{C_cons :
-    ∀ a m,
-      C m →
-        C
-          (a ::ₘ
-            m)}{C_cons_heq : ∀ a a' m b, HEq (C_cons a (a' ::ₘ m) (C_cons a' m b)) (C_cons a' (a ::ₘ m) (C_cons a m b))}
+variable {C_0 : C 0} {C_cons : ∀ a m, C m → C (a ::ₘ m)}
+  {C_cons_heq : ∀ a a' m b, HEq (C_cons a (a' ::ₘ m) (C_cons a' m b)) (C_cons a' (a ::ₘ m) (C_cons a m b))}
 
 @[simp]
 theorem rec_on_0 : @Multiset.recOn α C (0 : Multiset α) C_0 C_cons C_cons_heq = C_0 :=
@@ -179,7 +173,7 @@ section Mem
 def mem (a : α) (s : Multiset α) : Prop :=
   Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e : l₁ ~ l₂ => propext$ e.mem_iff
 
-instance  : HasMem α (Multiset α) :=
+instance : HasMem α (Multiset α) :=
   ⟨mem⟩
 
 @[simp]
@@ -287,7 +281,7 @@ section Subset
 protected def subset (s t : Multiset α) : Prop :=
   ∀ ⦃a : α⦄, a ∈ s → a ∈ t
 
-instance  : HasSubset (Multiset α) :=
+instance : HasSubset (Multiset α) :=
   ⟨Multiset.Subset⟩
 
 @[simp]
@@ -362,7 +356,7 @@ end ToList
 protected def le (s t : Multiset α) : Prop :=
   Quotientₓ.liftOn₂ s t (· <+~ ·)$ fun v₁ v₂ w₁ w₂ p₁ p₂ => propext (p₂.subperm_left.trans p₁.subperm_right)
 
-instance  : PartialOrderₓ (Multiset α) :=
+instance : PartialOrderₓ (Multiset α) :=
   { le := Multiset.Le,
     le_refl :=
       by 
@@ -431,10 +425,10 @@ end
 /-! ### Singleton -/
 
 
-instance  : HasSingleton α (Multiset α) :=
+instance : HasSingleton α (Multiset α) :=
   ⟨fun a => a ::ₘ 0⟩
 
-instance  : IsLawfulSingleton α (Multiset α) :=
+instance : IsLawfulSingleton α (Multiset α) :=
   ⟨fun a => rfl⟩
 
 theorem singleton_eq_cons (a : α) : singleton a = a ::ₘ 0 :=
@@ -476,7 +470,7 @@ protected def add (s₁ s₂ : Multiset α) : Multiset α :=
   (Quotientₓ.liftOn₂ s₁ s₂ fun l₁ l₂ => ((l₁ ++ l₂ : List α) : Multiset α))$
     fun v₁ v₂ w₁ w₂ p₁ p₂ => Quot.sound$ p₁.append p₂
 
-instance  : Add (Multiset α) :=
+instance : Add (Multiset α) :=
   ⟨Multiset.add⟩
 
 @[simp]
@@ -498,7 +492,7 @@ protected theorem add_le_add_left s {t u : Multiset α} : ((s+t) ≤ s+u) ↔ t 
 protected theorem add_left_cancelₓ s {t u : Multiset α} (h : (s+t) = s+u) : t = u :=
   le_antisymmₓ ((Multiset.add_le_add_left _).1 (le_of_eqₓ h)) ((Multiset.add_le_add_left _).1 (le_of_eqₓ h.symm))
 
-instance  : OrderedCancelAddCommMonoid (Multiset α) :=
+instance : OrderedCancelAddCommMonoid (Multiset α) :=
   { @Multiset.partialOrder α with zero := 0, add := ·+·, add_comm := Multiset.add_comm,
     add_assoc :=
       fun s₁ s₂ s₃ => Quotientₓ.induction_on₃ s₁ s₂ s₃$ fun l₁ l₂ l₃ => congr_argₓ coeₓ$ append_assoc l₁ l₂ l₃,
@@ -526,10 +520,10 @@ theorem le_iff_exists_add {s t : Multiset α} : s ≤ t ↔ ∃ u, t = s+u :=
           ⟨l, Quot.sound p⟩,
     fun ⟨u, e⟩ => e.symm ▸ le_add_right _ _⟩
 
-instance  : OrderBot (Multiset α) :=
+instance : OrderBot (Multiset α) :=
   { bot := 0, bot_le := Multiset.zero_le }
 
-instance  : CanonicallyOrderedAddMonoid (Multiset α) :=
+instance : CanonicallyOrderedAddMonoid (Multiset α) :=
   { Multiset.orderBot, Multiset.orderedCancelAddCommMonoid with le_iff_exists_add := @le_iff_exists_add _ }
 
 @[simp]
@@ -772,7 +766,7 @@ theorem nsmul_repeat {a : α} (n m : ℕ) : n • repeat a m = repeat a (n*m) :=
 
 section Erase
 
-variable[DecidableEq α]{s t : Multiset α}{a b : α}
+variable [DecidableEq α] {s t : Multiset α} {a b : α}
 
 /-- `erase s a` is the multiset that subtracts 1 from the
   multiplicity of `a`. -/
@@ -920,7 +914,7 @@ theorem map_add (f : α → β) s t : map f (s+t) = map f s+map f t :=
 
 /-- If each element of `s : multiset α` can be lifted to `β`, then `s` can be lifted to
 `multiset β`. -/
-instance  [CanLift α β] : CanLift (Multiset α) (Multiset β) :=
+instance [CanLift α β] : CanLift (Multiset α) (Multiset β) :=
   { cond := fun s => ∀ x _ : x ∈ s, CanLift.Cond β x, coe := map CanLift.coe,
     prf :=
       by 
@@ -1713,7 +1707,7 @@ theorem card_product (s : Multiset α) (t : Multiset β) : card (product s t) = 
 
 section 
 
-variable{σ : α → Type _}
+variable {σ : α → Type _}
 
 /-- `sigma s t` is the dependent version of `product`. It is the sum of
   `(a, b)` as `a` ranges over `s` and `b` ranges over `t a`. -/
@@ -1862,7 +1856,7 @@ theorem attach_cons (a : α) (m : Multiset α) :
 
 section DecidablePiExists
 
-variable{m : Multiset α}
+variable {m : Multiset α}
 
 /-- If `p` is a decidable predicate,
 so is the predicate that all elements of a multiset satisfy `p`. -/
@@ -1902,14 +1896,14 @@ end DecidablePiExists
 
 section 
 
-variable[DecidableEq α]{s t u : Multiset α}{a b : α}
+variable [DecidableEq α] {s t u : Multiset α} {a b : α}
 
 /-- `s - t` is the multiset such that `count a (s - t) = count a s - count a t` for all `a`
   (note that it is truncated subtraction, so it is `0` if `count a t ≥ count a s`). -/
 protected def sub (s t : Multiset α) : Multiset α :=
   (Quotientₓ.liftOn₂ s t fun l₁ l₂ => (l₁.diff l₂ : Multiset α))$ fun v₁ v₂ w₁ w₂ p₁ p₂ => Quot.sound$ p₁.diff p₂
 
-instance  : Sub (Multiset α) :=
+instance : Sub (Multiset α) :=
   ⟨Multiset.sub⟩
 
 @[simp]
@@ -1938,7 +1932,7 @@ protected theorem sub_le_iff_le_add : s - t ≤ u ↔ s ≤ u+t :=
             by 
               simp [IH, erase_le_iff_le_cons]
 
-instance  : HasOrderedSub (Multiset α) :=
+instance : HasOrderedSub (Multiset α) :=
   ⟨fun n m k => Multiset.sub_le_iff_le_add⟩
 
 theorem sub_eq_fold_erase (s t : Multiset α) : s - t = foldl erase erase_comm s t :=
@@ -1964,7 +1958,7 @@ theorem card_sub {s t : Multiset α} (h : t ≤ s) : card (s - t) = card s - car
 def union (s t : Multiset α) : Multiset α :=
   (s - t)+t
 
-instance  : HasUnion (Multiset α) :=
+instance : HasUnion (Multiset α) :=
   ⟨union⟩
 
 theorem union_def (s t : Multiset α) : s ∪ t = (s - t)+t :=
@@ -2010,7 +2004,7 @@ def inter (s t : Multiset α) : Multiset α :=
   (Quotientₓ.liftOn₂ s t fun l₁ l₂ => (l₁.bag_inter l₂ : Multiset α))$
     fun v₁ v₂ w₁ w₂ p₁ p₂ => Quot.sound$ p₁.bag_inter p₂
 
-instance  : HasInter (Multiset α) :=
+instance : HasInter (Multiset α) :=
   ⟨inter⟩
 
 @[simp]
@@ -2063,7 +2057,7 @@ theorem mem_inter : a ∈ s ∩ t ↔ a ∈ s ∧ a ∈ t :=
       by 
         rw [←cons_erase h₁, cons_inter_of_pos _ h₂] <;> apply mem_cons_self⟩
 
-instance  : Lattice (Multiset α) :=
+instance : Lattice (Multiset α) :=
   { @Multiset.partialOrder α with sup := · ∪ ·, sup_le := @union_le _ _, le_sup_left := le_union_left,
     le_sup_right := le_union_right, inf := · ∩ ·, le_inf := @le_inter _ _, inf_le_left := inter_le_left,
     inf_le_right := inter_le_right }
@@ -2083,9 +2077,6 @@ theorem le_inter_iff : s ≤ t ∩ u ↔ s ≤ t ∧ s ≤ u :=
 @[simp]
 theorem union_le_iff : s ∪ t ≤ u ↔ s ≤ u ∧ t ≤ u :=
   sup_le_iff
-
-instance  : SemilatticeInfBot (Multiset α) :=
-  { Multiset.lattice with bot := 0, bot_le := zero_le }
 
 theorem union_comm (s t : Multiset α) : s ∪ t = t ∪ s :=
   sup_comm
@@ -2180,7 +2171,7 @@ end
 
 section 
 
-variable(p : α → Prop)[DecidablePred p]
+variable (p : α → Prop) [DecidablePred p]
 
 /-- `filter p s` returns the elements in `s` (with the same multiplicities)
   which satisfy `p`, and removes the rest. -/
@@ -2221,7 +2212,7 @@ theorem monotone_filter_right (s : Multiset α) ⦃p q : α → Prop⦄ [Decidab
   s.filter p ≤ s.filter q :=
   Quotientₓ.induction_on s fun l => (l.monotone_filter_right h).Subperm
 
-variable{p}
+variable {p}
 
 @[simp]
 theorem filter_cons_of_pos {a : α} s : p a → filter p (a ::ₘ s) = a ::ₘ filter p s :=
@@ -2281,7 +2272,7 @@ theorem filter_nsmul (s : Multiset α) (n : ℕ) : filter p (n • s) = n • fi
           intro b hb 
           rwa [mem_singleton.mp (mem_of_mem_nsmul hb)]
 
-variable(p)
+variable (p)
 
 @[simp]
 theorem filter_sub [DecidableEq α] (s t : Multiset α) : filter p (s - t) = filter p s - filter p t :=
@@ -2430,7 +2421,7 @@ theorem coe_countp (l : List α) : countp p l = l.countp p :=
 theorem countp_zero : countp p 0 = 0 :=
   rfl
 
-variable{p}
+variable {p}
 
 @[simp]
 theorem countp_cons_of_pos {a : α} s : p a → countp p (a ::ₘ s) = countp p s+1 :=
@@ -2440,7 +2431,7 @@ theorem countp_cons_of_pos {a : α} s : p a → countp p (a ::ₘ s) = countp p 
 theorem countp_cons_of_neg {a : α} s : ¬p a → countp p (a ::ₘ s) = countp p s :=
   Quot.induction_on s$ countp_cons_of_neg p
 
-variable(p)
+variable (p)
 
 theorem countp_cons (b : α) s : countp p (b ::ₘ s) = countp p s+if p b then 1 else 0 :=
   by 
@@ -2487,7 +2478,7 @@ theorem countp_map (f : α → β) (s : Multiset α) (p : β → Prop) [Decidabl
     ·
       rw [map_cons, countp_cons, IH, filter_cons, card_add, apply_ite card, card_zero, card_singleton, add_commₓ]
 
-variable{p}
+variable {p}
 
 theorem countp_pos {s} : 0 < countp p s ↔ ∃ (a : _)(_ : a ∈ s), p a :=
   by 
@@ -2503,7 +2494,7 @@ end
 
 section 
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- `count a s` is the multiplicity of `a` in `s`. -/
 def count (a : α) : Multiset α → ℕ :=
@@ -2688,7 +2679,7 @@ theorem le_iff_count {s t : Multiset α} : s ≤ t ↔ ∀ a, count a s ≤ coun
             s ∪ t = t)] <;>
           apply le_union_left⟩
 
-instance  : DistribLattice (Multiset α) :=
+instance : DistribLattice (Multiset α) :=
   { Multiset.lattice with
     le_sup_inf :=
       fun s t u =>
@@ -2699,9 +2690,6 @@ instance  : DistribLattice (Multiset α) :=
                 by 
                   simp only [max_min_distrib_left, Multiset.count_inter, Multiset.sup_eq_union, Multiset.count_union,
                     Multiset.inf_eq_inter] }
-
-instance  : SemilatticeSupBot (Multiset α) :=
-  { Multiset.lattice with bot := 0, bot_le := zero_le }
 
 theorem repeat_inf (s : Multiset α) (a : α) (n : ℕ) : repeat a n⊓s = repeat a (min (s.count a) n) :=
   by 
@@ -2738,7 +2726,7 @@ inductive rel (r : α → β → Prop) : Multiset α → Multiset β → Prop
   | zero : rel 0 0
   | cons {a b as bs} : r a b → rel as bs → rel (a ::ₘ as) (b ::ₘ bs)
 
-variable{δ : Type _}{r : α → β → Prop}{p : γ → δ → Prop}
+variable {δ : Type _} {r : α → β → Prop} {p : γ → δ → Prop}
 
 private theorem rel_flip_aux {s t} (h : rel r s t) : rel (flip r) t s :=
   rel.rec_on h rel.zero fun _ _ _ _ h₀ h₁ ih => rel.cons h₀ ih
@@ -2964,7 +2952,7 @@ theorem le_sum_of_mem [CanonicallyOrderedAddMonoid α] {m : Multiset α} {a : α
     rw [sum_cons]
     exact _root_.le_add_right (le_reflₓ a)
 
-variable[OrderedAddCommMonoid α]
+variable [OrderedAddCommMonoid α]
 
 theorem sum_map_le_sum {m : Multiset α} (f : α → α) (h : ∀ x, x ∈ m → f x ≤ x) : (m.map f).Sum ≤ m.sum :=
   sum_le_sum_of_rel_le (rel_map_left.2 (rel_refl_of_refl_on h))
@@ -3131,7 +3119,7 @@ namespace Multiset
 
 section Choose
 
-variable(p : α → Prop)[DecidablePred p](l : Multiset α)
+variable (p : α → Prop) [DecidablePred p] (l : Multiset α)
 
 /-- Given a proof `hp` that there exists a unique `a ∈ l` such that `p a`, `choose_x p l hp` returns
 that `a` together with proofs of `a ∈ l` and `p a`. -/
@@ -3165,7 +3153,7 @@ theorem choose_property (hp : ∃!a, a ∈ l ∧ p a) : p (choose p l hp) :=
 
 end Choose
 
-variable(α)
+variable (α)
 
 /-- The equivalence between lists and multisets of a subsingleton type. -/
 def subsingleton_equiv [Subsingleton α] : List α ≃ Multiset α :=
@@ -3174,7 +3162,7 @@ def subsingleton_equiv [Subsingleton α] : List α ≃ Multiset α :=
       Quot.lift id$ fun a b : List α h : a ~ b => List.ext_le h.length_eq$ fun n h₁ h₂ => Subsingleton.elimₓ _ _,
     left_inv := fun l => rfl, right_inv := fun m => Quot.induction_on m$ fun l => rfl }
 
-variable{α}
+variable {α}
 
 @[simp]
 theorem coe_subsingleton_equiv [Subsingleton α] : (subsingleton_equiv α : List α → Multiset α) = coeₓ :=

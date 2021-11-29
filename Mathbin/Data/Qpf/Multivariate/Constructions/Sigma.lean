@@ -12,9 +12,9 @@ namespace Mvqpf
 
 open_locale Mvfunctor
 
-variable{n : ℕ}{A : Type u}
+variable {n : ℕ} {A : Type u}
 
-variable(F : A → Typevec.{u} n → Type u)
+variable (F : A → Typevec.{u} n → Type u)
 
 /-- Dependent sum of of an `n`-ary functor. The sum can range over
 data types like `ℕ` or over `Type.{u-1}` -/
@@ -32,14 +32,14 @@ instance Sigma.inhabited {α} [Inhabited A] [Inhabited (F (default A) α)] : Inh
 instance Pi.inhabited {α} [∀ a, Inhabited (F a α)] : Inhabited (pi F α) :=
   ⟨fun a => default _⟩
 
-variable[∀ α, Mvfunctor$ F α]
+variable [∀ α, Mvfunctor$ F α]
 
 namespace Sigma
 
-instance  : Mvfunctor (Sigma F) :=
+instance : Mvfunctor (Sigma F) :=
   { map := fun α β f ⟨a, x⟩ => ⟨a, f <$$> x⟩ }
 
-variable[∀ α, Mvqpf$ F α]
+variable [∀ α, Mvqpf$ F α]
 
 /-- polynomial functor representation of a dependent sum -/
 protected def P : Mvpfunctor n :=
@@ -55,7 +55,7 @@ protected def reprₓ ⦃α⦄ : Sigma F α → (sigma.P F).Obj α
   let x := Mvqpf.repr f
   ⟨⟨a, x.1⟩, x.2⟩
 
-instance  : Mvqpf (Sigma F) :=
+instance : Mvqpf (Sigma F) :=
   { p := sigma.P F, abs := sigma.abs F, repr := sigma.repr F,
     abs_repr :=
       by 
@@ -69,10 +69,10 @@ end Sigma
 
 namespace Pi
 
-instance  : Mvfunctor (pi F) :=
+instance : Mvfunctor (pi F) :=
   { map := fun α β f x a => f <$$> x a }
 
-variable[∀ α, Mvqpf$ F α]
+variable [∀ α, Mvqpf$ F α]
 
 /-- polynomial functor representation of a dependent product -/
 protected def P : Mvpfunctor n :=
@@ -86,7 +86,7 @@ protected def abs ⦃α⦄ : (pi.P F).Obj α → pi F α
 protected def reprₓ ⦃α⦄ : pi F α → (pi.P F).Obj α
 | f => ⟨fun a => (Mvqpf.repr (f a)).1, fun i a => (@Mvqpf.repr _ _ _ (_inst_2 _) _ (f _)).2 _ a.2⟩
 
-instance  : Mvqpf (pi F) :=
+instance : Mvqpf (pi F) :=
   { p := pi.P F, abs := pi.abs F, repr := pi.repr F,
     abs_repr :=
       by 

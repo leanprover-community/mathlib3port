@@ -31,12 +31,8 @@ open AffineMap AffineEquiv
 
 section 
 
-variable(R :
-    Type
-      _){V V' P P' :
-    Type
-      _}[Ringₓ
-      R][Invertible (2 : R)][AddCommGroupₓ V][Module R V][AddTorsor V P][AddCommGroupₓ V'][Module R V'][AddTorsor V' P']
+variable (R : Type _) {V V' P P' : Type _} [Ringₓ R] [Invertible (2 : R)] [AddCommGroupₓ V] [Module R V] [AddTorsor V P]
+  [AddCommGroupₓ V'] [Module R V'] [AddTorsor V' P']
 
 include V
 
@@ -44,7 +40,7 @@ include V
 def midpoint (x y : P) : P :=
   line_map x y (⅟ 2 : R)
 
-variable{R}{x y z : P}
+variable {R} {x y z : P}
 
 include V'
 
@@ -119,7 +115,7 @@ theorem left_sub_midpoint (v₁ v₂ : V) : v₁ - midpoint R v₁ v₂ = (⅟ 2
 theorem right_sub_midpoint (v₁ v₂ : V) : v₂ - midpoint R v₁ v₂ = (⅟ 2 : R) • (v₂ - v₁) :=
   right_vsub_midpoint v₁ v₂
 
-variable(R)
+variable (R)
 
 theorem midpoint_eq_midpoint_iff_vsub_eq_vsub {x x' y y' : P} : midpoint R x y = midpoint R x' y' ↔ x -ᵥ x' = y' -ᵥ y :=
   by 
@@ -190,12 +186,8 @@ theorem pi_midpoint_apply {k ι : Type _} {V : ∀ i : ι, Type _} {P : ∀ i : 
 
 namespace AddMonoidHom
 
-variable(R R' :
-    Type
-      _){E F :
-    Type
-      _}[Ringₓ
-      R][Invertible (2 : R)][AddCommGroupₓ E][Module R E][Ringₓ R'][Invertible (2 : R')][AddCommGroupₓ F][Module R' F]
+variable (R R' : Type _) {E F : Type _} [Ringₓ R] [Invertible (2 : R)] [AddCommGroupₓ E] [Module R E] [Ringₓ R']
+  [Invertible (2 : R')] [AddCommGroupₓ F] [Module R' F]
 
 /-- A map `f : E → F` sending zero to zero and midpoints to midpoints is an `add_monoid_hom`. -/
 def of_map_midpoint (f : E → F) (h0 : f 0 = 0) (hm : ∀ x y, f (midpoint R x y) = midpoint R' (f x) (f y)) : E →+ F :=

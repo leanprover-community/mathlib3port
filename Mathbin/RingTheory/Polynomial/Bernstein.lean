@@ -33,7 +33,7 @@ open nat(choose)
 
 open polynomial(x)
 
-variable(R : Type _)[CommRingₓ R]
+variable (R : Type _) [CommRingₓ R]
 
 /--
 `bernstein_polynomial R n ν` is `(choose n ν) * X^ν * (1 - X)^(n - ν)`.
@@ -43,7 +43,7 @@ Although the coefficients are integers, it is convenient to work over an arbitra
 def bernsteinPolynomial (n ν : ℕ) : Polynomial R :=
   (choose n ν*X^ν)*1 - X^n - ν
 
-example  : bernsteinPolynomial ℤ 3 2 = (3*X^2) - 3*X^3 :=
+example : bernsteinPolynomial ℤ 3 2 = (3*X^2) - 3*X^3 :=
   by 
     normNum [bernsteinPolynomial, choose]
     ring
@@ -56,7 +56,7 @@ theorem eq_zero_of_lt {n ν : ℕ} (h : n < ν) : bernsteinPolynomial R n ν = 0
 
 section 
 
-variable{R}{S : Type _}[CommRingₓ S]
+variable {R} {S : Type _} [CommRingₓ S]
 
 @[simp]
 theorem map (f : R →+* S) (n ν : ℕ) : (bernsteinPolynomial R n ν).map f = bernsteinPolynomial S n ν :=

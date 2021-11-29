@@ -19,10 +19,10 @@ inductive pos_num : Type
 | bit1 : pos_num → pos_num
 | bit0 : pos_num → pos_num
 
-instance  : HasOne PosNum :=
+instance : HasOne PosNum :=
   ⟨PosNum.one⟩
 
-instance  : Inhabited PosNum :=
+instance : Inhabited PosNum :=
   ⟨1⟩
 
 -- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
@@ -34,13 +34,13 @@ inductive num : Type
 | zero : num
 | pos : pos_num → num
 
-instance  : HasZero Num :=
+instance : HasZero Num :=
   ⟨Num.zero⟩
 
-instance  : HasOne Num :=
+instance : HasOne Num :=
   ⟨Num.pos 1⟩
 
-instance  : Inhabited Num :=
+instance : Inhabited Num :=
   ⟨0⟩
 
 -- error in Data.Num.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
@@ -54,13 +54,13 @@ inductive znum : Type
 | pos : pos_num → znum
 | neg : pos_num → znum
 
-instance  : HasZero Znum :=
+instance : HasZero Znum :=
   ⟨Znum.zero⟩
 
-instance  : HasOne Znum :=
+instance : HasOne Znum :=
   ⟨Znum.pos 1⟩
 
-instance  : Inhabited Znum :=
+instance : Inhabited Znum :=
   ⟨0⟩
 
 namespace PosNum
@@ -97,7 +97,7 @@ protected def add : PosNum → PosNum → PosNum
 | bit0 a, bit1 b => bit1 (add a b)
 | bit1 a, bit0 b => bit1 (add a b)
 
-instance  : Add PosNum :=
+instance : Add PosNum :=
   ⟨PosNum.add⟩
 
 /--
@@ -138,7 +138,7 @@ protected def mul (a : PosNum) : PosNum → PosNum
 | bit0 b => bit0 (mul b)
 | bit1 b => bit0 (mul b)+a
 
-instance  : Mul PosNum :=
+instance : Mul PosNum :=
   ⟨PosNum.mul⟩
 
 /--
@@ -168,10 +168,10 @@ def cmp : PosNum → PosNum → Ordering
 | bit1 a, bit0 b => Ordering.casesOn (cmp a b) lt Gt Gt
 | bit1 a, bit1 b => cmp a b
 
-instance  : LT PosNum :=
+instance : LT PosNum :=
   ⟨fun a b => cmp a b = Ordering.lt⟩
 
-instance  : LE PosNum :=
+instance : LE PosNum :=
   ⟨fun a b => ¬b < a⟩
 
 instance decidable_lt : @DecidableRel PosNum (· < ·)
@@ -188,7 +188,7 @@ end PosNum
 
 section 
 
-variable{α : Type _}[HasOne α][Add α]
+variable {α : Type _} [HasOne α] [Add α]
 
 /--
   `cast_pos_num` casts a `pos_num` into any type which has `1` and `+`.
@@ -205,16 +205,16 @@ def castNum [z : HasZero α] : Num → α
 | 0 => 0
 | Num.pos p => castPosNum p
 
-instance (priority := 900)posNumCoe : CoeTₓ PosNum α :=
+instance (priority := 900) posNumCoe : CoeTₓ PosNum α :=
   ⟨castPosNum⟩
 
-instance (priority := 900)numNatCoe [z : HasZero α] : CoeTₓ Num α :=
+instance (priority := 900) numNatCoe [z : HasZero α] : CoeTₓ Num α :=
   ⟨castNum⟩
 
-instance  : HasRepr PosNum :=
+instance : HasRepr PosNum :=
   ⟨fun n => reprₓ (n : ℕ)⟩
 
-instance  : HasRepr Num :=
+instance : HasRepr Num :=
   ⟨fun n => reprₓ (n : ℕ)⟩
 
 end 
@@ -244,7 +244,7 @@ protected def add : Num → Num → Num
 | b, 0 => b
 | Pos a, Pos b => Pos (a+b)
 
-instance  : Add Num :=
+instance : Add Num :=
   ⟨Num.add⟩
 
 /--
@@ -289,7 +289,7 @@ protected def mul : Num → Num → Num
 | _, 0 => 0
 | Pos a, Pos b => Pos (a*b)
 
-instance  : Mul Num :=
+instance : Mul Num :=
   ⟨Num.mul⟩
 
 open Ordering
@@ -303,10 +303,10 @@ def cmp : Num → Num → Ordering
 | 0, _ => lt
 | Pos a, Pos b => PosNum.cmp a b
 
-instance  : LT Num :=
+instance : LT Num :=
   ⟨fun a b => cmp a b = Ordering.lt⟩
 
-instance  : LE Num :=
+instance : LE Num :=
   ⟨fun a b => ¬b < a⟩
 
 instance decidable_lt : @DecidableRel Num (· < ·)
@@ -353,7 +353,7 @@ def zneg : Znum → Znum
 | Pos a => neg a
 | neg a => Pos a
 
-instance  : Neg Znum :=
+instance : Neg Znum :=
   ⟨zneg⟩
 
 /--
@@ -451,7 +451,7 @@ protected def sub (a b : PosNum) : PosNum :=
   | Znum.pos p => p
   | _ => 1
 
-instance  : Sub PosNum :=
+instance : Sub PosNum :=
   ⟨PosNum.sub⟩
 
 end PosNum
@@ -517,7 +517,7 @@ def psub (a b : Num) : Option Num :=
 protected def sub (a b : Num) : Num :=
   of_znum (sub' a b)
 
-instance  : Sub Num :=
+instance : Sub Num :=
   ⟨Num.sub⟩
 
 end Num
@@ -537,7 +537,7 @@ protected def add : Znum → Znum → Znum
 | neg a, Pos b => sub' b a
 | neg a, neg b => neg (a+b)
 
-instance  : Add Znum :=
+instance : Add Znum :=
   ⟨Znum.add⟩
 
 /--
@@ -551,7 +551,7 @@ protected def mul : Znum → Znum → Znum
 | neg a, Pos b => neg (a*b)
 | neg a, neg b => Pos (a*b)
 
-instance  : Mul Znum :=
+instance : Mul Znum :=
   ⟨Znum.mul⟩
 
 open Ordering
@@ -568,10 +568,10 @@ def cmp : Znum → Znum → Ordering
 | _, Pos _ => lt
 | _, neg _ => Gt
 
-instance  : LT Znum :=
+instance : LT Znum :=
   ⟨fun a b => cmp a b = Ordering.lt⟩
 
-instance  : LE Znum :=
+instance : LE Znum :=
   ⟨fun a b => ¬b < a⟩
 
 instance decidable_lt : @DecidableRel Znum (· < ·)
@@ -638,10 +638,10 @@ def mod : Num → Num → Num
 | n, 0 => n
 | Pos n, Pos d => PosNum.mod' n d
 
-instance  : Div Num :=
+instance : Div Num :=
   ⟨Num.div⟩
 
-instance  : Mod Num :=
+instance : Mod Num :=
   ⟨Num.mod⟩
 
 /-- Auxiliary definition for `num.gcd`. -/
@@ -679,10 +679,10 @@ def mod : Znum → Znum → Znum
 | Pos n, d => Num.toZnum (Num.pos n % d.abs)
 | neg n, d => d.abs.sub' (PosNum.pred' n % d.abs).succ
 
-instance  : Div Znum :=
+instance : Div Znum :=
   ⟨Znum.div⟩
 
-instance  : Mod Znum :=
+instance : Mod Znum :=
   ⟨Znum.mod⟩
 
 /--
@@ -695,7 +695,7 @@ end Znum
 
 section 
 
-variable{α : Type _}[HasZero α][HasOne α][Add α][Neg α]
+variable {α : Type _} [HasZero α] [HasOne α] [Add α] [Neg α]
 
 /--
   `cast_znum` casts a `znum` into any type which has `0`, `1`, `+` and `neg`
@@ -705,10 +705,10 @@ def castZnum : Znum → α
 | Znum.pos p => p
 | Znum.neg p => -p
 
-instance (priority := 900)znumCoe : CoeTₓ Znum α :=
+instance (priority := 900) znumCoe : CoeTₓ Znum α :=
   ⟨castZnum⟩
 
-instance  : HasRepr Znum :=
+instance : HasRepr Znum :=
   ⟨fun n => reprₓ (n : ℤ)⟩
 
 end 

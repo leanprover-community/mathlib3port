@@ -57,13 +57,13 @@ pigeonhole principle
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{M : Type w}[LinearOrderedCancelAddCommMonoid M][DecidableEq β]
+variable {α : Type u} {β : Type v} {M : Type w} [LinearOrderedCancelAddCommMonoid M] [DecidableEq β]
 
 open_locale BigOperators
 
 namespace Finset
 
-variable{s : Finset α}{t : Finset β}{f : α → β}{w : α → M}{b : M}{n : ℕ}
+variable {s : Finset α} {t : Finset β} {f : α → β} {w : α → M} {b : M} {n : ℕ}
 
 /-!
 ### The pigeonhole principles on `finset`s, pigeons counted by weight
@@ -261,7 +261,7 @@ namespace Fintype
 
 open Finset
 
-variable[Fintype α][Fintype β](f : α → β){w : α → M}{b : M}{n : ℕ}
+variable [Fintype α] [Fintype β] (f : α → β) {w : α → M} {b : M} {n : ℕ}
 
 /-!
 ### The pigeonhole principles on `fintypes`s, pigeons counted by weight

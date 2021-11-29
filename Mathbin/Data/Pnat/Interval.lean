@@ -11,12 +11,12 @@ intervals as finsets and fintypes.
 
 open Finset Pnat
 
-instance  : LocallyFiniteOrder ℕ+ :=
+instance : LocallyFiniteOrder ℕ+ :=
   Subtype.locallyFiniteOrder _
 
 namespace Pnat
 
-variable(a b : ℕ+)
+variable (a b : ℕ+)
 
 theorem Icc_eq_finset_subtype : Icc a b = (Icc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
   rfl

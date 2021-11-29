@@ -50,7 +50,7 @@ naive expression `euclidean_space ℝ (fin (finrank ℝ E - 1))` for the model s
 -/
 
 
-variable{E : Type _}[InnerProductSpace ℝ E]
+variable {E : Type _} [InnerProductSpace ℝ E]
 
 noncomputable theory
 
@@ -62,7 +62,7 @@ attribute [local instance] fact_finite_dimensional_of_finrank_eq_succ
 
 section StereographicProjection
 
-variable(v : E)
+variable (v : E)
 
 /-! ### Construction of the stereographic projection -/
 
@@ -74,7 +74,7 @@ projection. -/
 def stereoToFun [CompleteSpace E] (x : E) : (ℝ∙v)ᗮ :=
   (2 / ((1 : ℝ) - innerRight v x)) • orthogonalProjection (ℝ∙v)ᗮ x
 
-variable{v}
+variable {v}
 
 @[simp]
 theorem stereo_to_fun_apply [CompleteSpace E] (x : E) :
@@ -96,7 +96,7 @@ theorem continuous_on_stereo_to_fun [CompleteSpace E] :
   ContinuousOn (stereoToFun v) { x:E | innerRight v x ≠ (1 : ℝ) } :=
   times_cont_diff_on_stereo_to_fun.ContinuousOn
 
-variable(v)
+variable (v)
 
 /-- Auxiliary function for the construction of the reverse direction of the stereographic
 projection.  This is a map from the orthogonal complement of a unit vector `v` in an inner product
@@ -106,7 +106,7 @@ For most purposes, use `stereo_inv_fun`, not `stereo_inv_fun_aux`. -/
 def stereoInvFunAux (w : E) : E :=
   ((∥w∥^2)+4)⁻¹ • ((4 : ℝ) • w)+((∥w∥^2) - 4) • v
 
-variable{v}
+variable {v}
 
 @[simp]
 theorem stereo_inv_fun_aux_apply (w : E) : stereoInvFunAux v w = ((∥w∥^2)+4)⁻¹ • ((4 : ℝ) • w)+((∥w∥^2) - 4) • v :=
@@ -176,7 +176,7 @@ end
 theorem continuous_stereo_inv_fun (hv : ∥v∥ = 1) : Continuous (stereoInvFun hv) :=
   continuous_induced_rng (times_cont_diff_stereo_inv_fun_aux.Continuous.comp continuous_subtype_coe)
 
-variable[CompleteSpace E]
+variable [CompleteSpace E]
 
 -- error in Geometry.Manifold.Instances.Sphere: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem stereo_left_inv
@@ -327,7 +327,7 @@ theorem stereographic'_target {n : ℕ} [Fact (finrank ℝ E = n+1)] (v : sphere
 
 /-- The unit sphere in an `n + 1`-dimensional inner product space `E` is a charted space
 modelled on the Euclidean space of dimension `n`. -/
-instance  {n : ℕ} [Fact (finrank ℝ E = n+1)] : ChartedSpace (EuclideanSpace ℝ (Finₓ n)) (sphere (0 : E) 1) :=
+instance {n : ℕ} [Fact (finrank ℝ E = n+1)] : ChartedSpace (EuclideanSpace ℝ (Finₓ n)) (sphere (0 : E) 1) :=
   { Atlas := { f | ∃ v : sphere (0 : E) 1, f = stereographic' n v }, chartAt := fun v => stereographic' n (-v),
     mem_chart_source :=
       fun v =>
@@ -380,11 +380,11 @@ theorem times_cont_mdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n+1)] :
         ((times_cont_diff_stereo_inv_fun_aux.comp (ℝ∙(-v : E))ᗮ.subtypeL.TimesContDiff).comp
             U.symm.times_cont_diff).TimesContDiffOn
 
-variable{F : Type _}[NormedGroup F][NormedSpace ℝ F]
+variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
 
-variable{H : Type _}[TopologicalSpace H]{I : ModelWithCorners ℝ F H}
+variable {H : Type _} [TopologicalSpace H] {I : ModelWithCorners ℝ F H}
 
-variable{M : Type _}[TopologicalSpace M][ChartedSpace H M][SmoothManifoldWithCorners I M]
+variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] [SmoothManifoldWithCorners I M]
 
 -- error in Geometry.Manifold.Instances.Sphere: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a `times_cont_mdiff` function `f : M → E`, where `M` is some manifold, takes values in the
@@ -430,10 +430,10 @@ attribute [local instance] finrank_real_complex_fact
 
 /-- The unit circle in `ℂ` is a charted space modelled on `euclidean_space ℝ (fin 1)`.  This
 follows by definition from the corresponding result for `metric.sphere`. -/
-instance  : ChartedSpace (EuclideanSpace ℝ (Finₓ 1)) circle :=
+instance : ChartedSpace (EuclideanSpace ℝ (Finₓ 1)) circle :=
   Metric.Sphere.chartedSpace
 
-instance  : SmoothManifoldWithCorners (𝓡 1) circle :=
+instance : SmoothManifoldWithCorners (𝓡 1) circle :=
   Metric.Sphere.smooth_manifold_with_corners
 
 -- error in Geometry.Manifold.Instances.Sphere: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

@@ -28,9 +28,9 @@ local infixl:50 " ≺ " => EuclideanDomain.R
 
 namespace AbsoluteValue
 
-variable{R : Type _}[EuclideanDomain R]
+variable {R : Type _} [EuclideanDomain R]
 
-variable(abv : AbsoluteValue R ℤ)
+variable (abv : AbsoluteValue R ℤ)
 
 /-- An absolute value `R → ℤ` is admissible if it respects the Euclidean domain
 structure and a large enough set of elements in `R^n` will contain a pair of
@@ -45,7 +45,7 @@ attribute [protected] is_admissible.card
 
 namespace IsAdmissible
 
-variable{abv}
+variable {abv}
 
 /-- For all `ε > 0` and finite families `A`, we can partition the remainders of `A` mod `b`
 into `abv.card ε` sets, such that all elements in each part of remainders are close together. -/

@@ -66,19 +66,19 @@ open_locale Nat
 
 universe u v
 
-variable{α β γ : Type _}
+variable {α β γ : Type _}
 
 /-- `fintype α` means that `α` is finite, i.e. there are only
   finitely many distinct elements of type `α`. The evidence of this
   is a finset `elems` (a list up to permutation without duplicates),
   together with a proof that everything of type `α` is in the list. -/
-class Fintype(α : Type _) where 
+class Fintype (α : Type _) where 
   elems{} : Finset α 
   complete : ∀ x : α, x ∈ elems
 
 namespace Finset
 
-variable[Fintype α]
+variable [Fintype α]
 
 /-- `univ` is the universal finite set of type `finset α` implied from
   the assumption `fintype α`. -/
@@ -116,11 +116,11 @@ theorem univ_eq_empty [IsEmpty α] : (univ : Finset α) = ∅ :=
 theorem subset_univ (s : Finset α) : s ⊆ univ :=
   fun a _ => mem_univ a
 
-instance  : OrderTop (Finset α) :=
+instance : OrderTop (Finset α) :=
   { top := univ, le_top := subset_univ }
 
-instance  [DecidableEq α] : BooleanAlgebra (Finset α) :=
-  { Finset.orderTop, Finset.generalizedBooleanAlgebra with Compl := fun s => univ \ s,
+instance [DecidableEq α] : BooleanAlgebra (Finset α) :=
+  { Finset.orderTop, Finset.orderBot, Finset.generalizedBooleanAlgebra with Compl := fun s => univ \ s,
     inf_compl_le_bot :=
       fun s x hx =>
         by 
@@ -397,7 +397,7 @@ def trunc_fin_bijection α [Fintype α] : Trunc { f : Finₓ (card α) → α //
         (fun l h : ∀ x : α, x ∈ l nd : l.nodup => Trunc.mk (nd.nth_le_bijection_of_forall_mem_list _ h)) mem_univ_val
         univ.2
 
-instance  (α : Type _) : Subsingleton (Fintype α) :=
+instance (α : Type _) : Subsingleton (Fintype α) :=
   ⟨fun ⟨s₁, h₁⟩ ⟨s₂, h₂⟩ =>
       by 
         congr <;> simp [Finset.ext_iff, h₁, h₂]⟩
@@ -450,11 +450,11 @@ section Inv
 
 namespace Function
 
-variable[Fintype α][DecidableEq β]
+variable [Fintype α] [DecidableEq β]
 
 namespace Injective
 
-variable{f : α → β}(hf : Function.Injective f)
+variable {f : α → β} (hf : Function.Injective f)
 
 /--
 The inverse of an `hf : injective` function `f : α → β`, of the type `↥(set.range f) → α`.
@@ -496,7 +496,7 @@ end Injective
 
 namespace Embedding
 
-variable(f : α ↪ β)(b : Set.Range f)
+variable (f : α ↪ β) (b : Set.Range f)
 
 /--
 The inverse of an embedding `f : α ↪ β`, of the type `↥(set.range f) → α`.
@@ -560,7 +560,7 @@ theorem card_congr {α β} [Fintype α] [Fintype β] (f : α ≃ β) : card α =
 
 section 
 
-variable[Fintype α][Fintype β]
+variable [Fintype α] [Fintype β]
 
 /-- If the cardinality of `α` is `n`, there is computably a bijection between `α` and `fin n`.
 
@@ -628,7 +628,7 @@ theorem card_of_subsingleton (a : α) [Subsingleton α] : @Fintype.card _ (of_su
 theorem card_unique [Unique α] [h : Fintype α] : Fintype.card α = 1 :=
   Subsingleton.elimₓ (of_subsingleton$ default α) h ▸ card_of_subsingleton _
 
-instance (priority := 100)of_is_empty [IsEmpty α] : Fintype α :=
+instance (priority := 100) of_is_empty [IsEmpty α] : Fintype α :=
   ⟨∅, isEmptyElim⟩
 
 /-- Note: this lemma is specifically about `fintype.of_is_empty`. For a statement about
@@ -645,10 +645,10 @@ theorem card_of_is_empty [IsEmpty α] : Fintype.card α = 0 :=
 
 open_locale Classical
 
-variable(α)
+variable (α)
 
 /-- Any subsingleton type is (noncomputably) a fintype (with zero or one term). -/
-noncomputable instance (priority := 5)of_subsingleton' [Subsingleton α] : Fintype α :=
+noncomputable instance (priority := 5) of_subsingleton' [Subsingleton α] : Fintype α :=
   if h : Nonempty α then of_subsingleton (Nonempty.some h) else @Fintype.ofIsEmpty _$ not_nonempty_iff.mp h
 
 end Fintype
@@ -744,7 +744,7 @@ theorem Finset.card_univ_diff [DecidableEq α] [Fintype α] (s : Finset α) :
 theorem Finset.card_compl [DecidableEq α] [Fintype α] (s : Finset α) : («expr ᶜ» s).card = Fintype.card α - s.card :=
   Finset.card_univ_diff s
 
-instance  (n : ℕ) : Fintype (Finₓ n) :=
+instance (n : ℕ) : Fintype (Finₓ n) :=
   ⟨Finset.finRange n, Finset.mem_fin_range⟩
 
 theorem Finₓ.univ_def (n : ℕ) : (univ : Finset (Finₓ n)) = Finset.finRange n :=
@@ -869,7 +869,7 @@ theorem Fintype.univ_pempty : @univ Pempty _ = ∅ :=
 theorem Fintype.card_pempty : Fintype.card Pempty = 0 :=
   rfl
 
-instance  : Fintype Unit :=
+instance : Fintype Unit :=
   Fintype.ofSubsingleton ()
 
 theorem Fintype.univ_unit : @univ Unit _ = {()} :=
@@ -878,7 +878,7 @@ theorem Fintype.univ_unit : @univ Unit _ = {()} :=
 theorem Fintype.card_unit : Fintype.card Unit = 1 :=
   rfl
 
-instance  : Fintype PUnit :=
+instance : Fintype PUnit :=
   Fintype.ofSubsingleton PUnit.unit
 
 @[simp]
@@ -889,7 +889,7 @@ theorem Fintype.univ_punit : @univ PUnit _ = {PUnit.unit} :=
 theorem Fintype.card_punit : Fintype.card PUnit = 1 :=
   rfl
 
-instance  : Fintype Bool :=
+instance : Fintype Bool :=
   ⟨⟨tt ::ₘ ff ::ₘ 0,
       by 
         simp ⟩,
@@ -925,7 +925,7 @@ theorem Fintype.card_units_int : Fintype.card (Units ℤ) = 2 :=
 theorem Fintype.card_bool : Fintype.card Bool = 2 :=
   rfl
 
-instance  {α : Type _} [Fintype α] : Fintype (Option α) :=
+instance {α : Type _} [Fintype α] : Fintype (Option α) :=
   ⟨univ.insertNone,
     fun a =>
       by 
@@ -935,7 +935,7 @@ instance  {α : Type _} [Fintype α] : Fintype (Option α) :=
 theorem Fintype.card_option {α : Type _} [Fintype α] : Fintype.card (Option α) = Fintype.card α+1 :=
   (Finset.card_cons _).trans$ congr_arg2 _ (card_map _) rfl
 
-instance  {α : Type _} (β : α → Type _) [Fintype α] [∀ a, Fintype (β a)] : Fintype (Sigma β) :=
+instance {α : Type _} (β : α → Type _) [Fintype α] [∀ a, Fintype (β a)] : Fintype (Sigma β) :=
   ⟨univ.Sigma fun _ => univ,
     fun ⟨a, b⟩ =>
       by 
@@ -946,7 +946,7 @@ theorem Finset.univ_sigma_univ {α : Type _} {β : α → Type _} [Fintype α] [
   ((univ : Finset α).Sigma fun a => (univ : Finset (β a))) = univ :=
   rfl
 
-instance  (α β : Type _) [Fintype α] [Fintype β] : Fintype (α × β) :=
+instance (α β : Type _) [Fintype α] [Fintype β] : Fintype (α × β) :=
   ⟨univ.product univ,
     fun ⟨a, b⟩ =>
       by 
@@ -978,14 +978,14 @@ def Fintype.prodRight {α β} [DecidableEq β] [Fintype (α × β)] [Nonempty α
       by 
         simp  <;> exact ⟨a, Fintype.complete _⟩⟩
 
-instance  (α : Type _) [Fintype α] : Fintype (Ulift α) :=
+instance (α : Type _) [Fintype α] : Fintype (Ulift α) :=
   Fintype.ofEquiv _ Equiv.ulift.symm
 
 @[simp]
 theorem Fintype.card_ulift (α : Type _) [Fintype α] : Fintype.card (Ulift α) = Fintype.card α :=
   Fintype.of_equiv_card _
 
-instance  (α : Type _) [Fintype α] : Fintype (Plift α) :=
+instance (α : Type _) [Fintype α] : Fintype (Plift α) :=
   Fintype.ofEquiv _ Equiv.plift.symm
 
 @[simp]
@@ -1000,7 +1000,7 @@ theorem univ_sum_type {α β : Type _} [Fintype α] [Fintype β] [Fintype (Sum �
     rintro (x | y)
     exacts[Or.inl ⟨x, rfl⟩, Or.inr ⟨y, rfl⟩]
 
-instance  (α : Type u) (β : Type v) [Fintype α] [Fintype β] : Fintype (Sum α β) :=
+instance (α : Type u) (β : Type v) [Fintype α] [Fintype β] : Fintype (Sum α β) :=
   @Fintype.ofEquiv _ _
     (@Sigma.fintype _ (fun b => cond b (Ulift α) (Ulift.{max u v, v} β)) _
       fun b =>
@@ -1053,7 +1053,7 @@ end Finset
 
 namespace Fintype
 
-variable[Fintype α][Fintype β]
+variable [Fintype α] [Fintype β]
 
 theorem card_le_of_injective (f : α → β) (hf : Function.Injective f) : card α ≤ card β :=
   Finset.card_le_card_of_inj_on f (fun _ _ => Finset.mem_univ _) fun _ _ _ _ h => hf h
@@ -1298,7 +1298,7 @@ theorem set_fintype_card_le_univ {α : Type _} [Fintype α] (s : Set α) [Fintyp
 
 section 
 
-variable(α)
+variable (α)
 
 /-- The `units α` type is equivalent to a subtype of `α × α`. -/
 @[simps]
@@ -1315,7 +1315,7 @@ def _root_.units_equiv_ne_zero [GroupWithZeroₓ α] : Units α ≃ { a : α // 
 
 end 
 
-instance  [Monoidₓ α] [Fintype α] [DecidableEq α] : Fintype (Units α) :=
+instance [Monoidₓ α] [Fintype α] [DecidableEq α] : Fintype (Units α) :=
   Fintype.ofEquiv _ (unitsEquivProdSubtype α).symm
 
 -- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -1392,7 +1392,7 @@ theorem card_lt_of_surjective_not_injective [Fintype α] [Fintype β] (f : α �
       have w : Function.Bijective (Function.surjInv h) := ⟨Function.injective_surj_inv h, hg⟩
       h'$ (injective_iff_surjective_of_equiv (Equiv.ofBijective _ w).symm).mpr h
 
-variable[DecidableEq α][Fintype α]{δ : α → Type _}
+variable [DecidableEq α] [Fintype α] {δ : α → Type _}
 
 /-- Given for all `a : α` a finset `t a` of `δ a`, then one can define the
 finset `fintype.pi_finset t` of all functions taking values in `t a` for all `a`. This is the
@@ -1469,10 +1469,10 @@ instance Finset.fintype [Fintype α] : Fintype (Finset α) :=
 instance Function.Embedding.fintype {α β} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] : Fintype (α ↪ β) :=
   Fintype.ofEquiv _ (Equiv.subtypeInjectiveEquivEmbedding α β)
 
-instance  [DecidableEq α] [Fintype α] {n : ℕ} : Fintype (Sym.Sym' α n) :=
+instance [DecidableEq α] [Fintype α] {n : ℕ} : Fintype (Sym.Sym' α n) :=
   Quotientₓ.fintype _
 
-instance  [DecidableEq α] [Fintype α] {n : ℕ} : Fintype (Sym α n) :=
+instance [DecidableEq α] [Fintype α] {n : ℕ} : Fintype (Sym α n) :=
   Fintype.ofEquiv _ Sym.symEquivSym'.symm
 
 @[simp]
@@ -1697,7 +1697,7 @@ section Equiv
 
 open List Equiv Equiv.Perm
 
-variable[DecidableEq α][DecidableEq β]
+variable [DecidableEq α] [DecidableEq β]
 
 /-- Given a list, produce a list of all permutations of its elements. -/
 def permsOfList : List α → List (perm α)
@@ -1844,7 +1844,7 @@ def fintypePerm [Fintype α] : Fintype (perm α) :=
     by 
       simp [mem_perms_of_finset_iff]⟩
 
-instance  [Fintype α] [Fintype β] : Fintype (α ≃ β) :=
+instance [Fintype α] [Fintype β] : Fintype (α ≃ β) :=
   if h : Fintype.card β = Fintype.card α then
     Trunc.recOnSubsingleton (Fintype.truncEquivFin α)
       fun eα =>
@@ -1875,7 +1875,7 @@ section Choose
 
 open Fintype Equiv
 
-variable[Fintype α](p : α → Prop)[DecidablePred p]
+variable [Fintype α] (p : α → Prop) [DecidablePred p]
 
 /-- Given a fintype `α` and a predicate `p`, associate to a proof that there is a unique element of
 `α` satisfying `p` this unique element, as an element of the corresponding subtype. -/
@@ -1910,7 +1910,7 @@ section BijectionInverse
 
 open Function
 
-variable[Fintype α][DecidableEq β]{f : α → β}
+variable [Fintype α] [DecidableEq β] {f : α → β}
 
 /--
 `bij_inv f` is the unique inverse to a bijection `f`. This acts
@@ -1957,7 +1957,7 @@ end Fintype
 
 /-- A type is said to be infinite if it has no fintype instance.
   Note that `infinite α` is equivalent to `is_empty (fintype α)`. -/
-class Infinite(α : Type _) : Prop where 
+class Infinite (α : Type _) : Prop where 
   not_fintype : Fintype α → False
 
 theorem not_fintype (α : Type _) [h1 : Infinite α] [h2 : Fintype α] : False :=
@@ -2037,24 +2037,24 @@ theorem of_surjective [Infinite β] (f : α → β) (hf : surjective f) : Infini
         classical 
         exact (Fintype.ofSurjective f hf).False⟩
 
-instance  : Infinite ℕ :=
+instance : Infinite ℕ :=
   ⟨fun ⟨s, hs⟩ => Finset.not_mem_range_self$ s.subset_range_sup_succ (hs _)⟩
 
-instance  : Infinite ℤ :=
+instance : Infinite ℤ :=
   Infinite.of_injective Int.ofNat fun _ _ => Int.ofNat.injₓ
 
-instance  [Infinite α] : Infinite (Set α) :=
+instance [Infinite α] : Infinite (Set α) :=
   of_injective singleton fun a b => Set.singleton_eq_singleton_iff.1
 
-instance  [Infinite α] : Infinite (Finset α) :=
+instance [Infinite α] : Infinite (Finset α) :=
   of_injective singleton Finset.singleton_injective
 
-instance  [Nonempty α] : Infinite (Multiset α) :=
+instance [Nonempty α] : Infinite (Multiset α) :=
   by 
     inhabit α 
     exact of_injective (Multiset.repeat (default α)) (Multiset.repeat_injective _)
 
-instance  [Nonempty α] : Infinite (List α) :=
+instance [Nonempty α] : Infinite (List α) :=
   of_surjective (coeₓ : List α → Multiset α) (surjective_quot_mk _)
 
 instance sum_of_left [Infinite α] : Infinite (Sum α β) :=
@@ -2247,7 +2247,7 @@ end Trunc
 
 namespace Multiset
 
-variable[Fintype α][DecidableEq α]
+variable [Fintype α] [DecidableEq α]
 
 @[simp]
 theorem count_univ (a : α) : count a Finset.univ.val = 1 :=

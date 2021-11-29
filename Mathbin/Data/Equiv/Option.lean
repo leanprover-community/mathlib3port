@@ -14,7 +14,7 @@ To construct an `f : option α ≃ option β` from `e : α ≃ β` such that
 
 namespace Equiv
 
-variable{α β : Type _}(e : Option α ≃ Option β)
+variable {α β : Type _} (e : Option α ≃ Option β)
 
 private def remove_none_aux (x : α) : β :=
   if h : (e (some x)).isSome then Option.get h else

@@ -23,12 +23,15 @@ structure TopCommRing where
 
 namespace TopCommRing
 
-instance  : CoeSort TopCommRing (Type u) :=
+instance : Inhabited TopCommRing :=
+  ⟨⟨PUnit⟩⟩
+
+instance : CoeSort TopCommRing (Type u) :=
   ⟨TopCommRing.α⟩
 
 attribute [instance] is_comm_ring is_topological_space is_topological_ring
 
-instance  : category TopCommRing.{u} :=
+instance : category TopCommRing.{u} :=
   { Hom := fun R S => { f : R →+* S // Continuous f },
     id :=
       fun R =>
@@ -45,7 +48,7 @@ instance  : category TopCommRing.{u} :=
             dsimp 
             apply Continuous.comp <;> assumption⟩ }
 
-instance  : concrete_category TopCommRing.{u} :=
+instance : concrete_category TopCommRing.{u} :=
   { forget := { obj := fun R => R, map := fun R S f => f.val }, forget_faithful := {  } }
 
 /-- Construct a bundled `TopCommRing` from the underlying type and the appropriate typeclasses. -/
@@ -86,7 +89,7 @@ instance forget_to_Top_topological_ring (R : TopCommRing) : TopologicalRing ((fo
 The forgetful functors to `Type` do not reflect isomorphisms,
 but the forgetful functor from `TopCommRing` to `Top` does.
 -/
-instance  : reflects_isomorphisms (forget₂ TopCommRing.{u} Top.{u}) :=
+instance : reflects_isomorphisms (forget₂ TopCommRing.{u} Top.{u}) :=
   { reflects :=
       fun X Y f _ =>
         by 

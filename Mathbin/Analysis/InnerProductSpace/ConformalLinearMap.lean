@@ -8,7 +8,7 @@ In an inner product space, a map is conformal iff it preserves inner products up
 -/
 
 
-variable{E F : Type _}[InnerProductSpace ℝ E][InnerProductSpace ℝ F]
+variable {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
 
 open LinearIsometry ContinuousLinearMap
 

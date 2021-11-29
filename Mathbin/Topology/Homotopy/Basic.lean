@@ -46,9 +46,9 @@ noncomputable theory
 
 universe u v w
 
-variable{X : Type u}{Y : Type v}{Z : Type w}
+variable {X : Type u} {Y : Type v} {Z : Type w}
 
-variable[TopologicalSpace X][TopologicalSpace Y][TopologicalSpace Z]
+variable [TopologicalSpace X] [TopologicalSpace Y] [TopologicalSpace Z]
 
 open_locale UnitInterval
 
@@ -57,7 +57,7 @@ namespace ContinuousMap
 /--
 The type of homotopies between two functions.
 -/
-structure homotopy(f₀ f₁ : C(X, Y)) extends C(I × X, Y) where 
+structure homotopy (f₀ f₁ : C(X, Y)) extends C(I × X, Y) where 
   to_fun_zero : ∀ x, to_fun (0, x) = f₀ x 
   to_fun_one : ∀ x, to_fun (1, x) = f₁ x
 
@@ -65,9 +65,9 @@ namespace Homotopy
 
 section 
 
-variable{f₀ f₁ : C(X, Y)}
+variable {f₀ f₁ : C(X, Y)}
 
-instance  : CoeFun (homotopy f₀ f₁) fun _ => I × X → Y :=
+instance : CoeFun (homotopy f₀ f₁) fun _ => I × X → Y :=
   ⟨fun F => F.to_fun⟩
 
 theorem coe_fn_injective : @Function.Injective (homotopy f₀ f₁) (I × X → Y) coeFn :=
@@ -151,7 +151,7 @@ Given a continuous function `f`, we can define a `homotopy f f` by `F (t, x) = f
 def refl (f : C(X, Y)) : homotopy f f :=
   { toFun := fun x => f x.2, to_fun_zero := fun _ => rfl, to_fun_one := fun _ => rfl }
 
-instance  : Inhabited (homotopy (ContinuousMap.id : C(X, X)) ContinuousMap.id) :=
+instance : Inhabited (homotopy (ContinuousMap.id : C(X, X)) ContinuousMap.id) :=
   ⟨homotopy.refl ContinuousMap.id⟩
 
 /--
@@ -303,16 +303,16 @@ end Homotopic
 The type of homotopies between `f₀ f₁ : C(X, Y)`, where the intermediate maps satisfy the predicate
 `P : C(X, Y) → Prop`
 -/
-structure homotopy_with(f₀ f₁ : C(X, Y))(P : C(X, Y) → Prop) extends homotopy f₀ f₁ where 
+structure homotopy_with (f₀ f₁ : C(X, Y)) (P : C(X, Y) → Prop) extends homotopy f₀ f₁ where 
   prop' : ∀ t, P ⟨fun x => to_fun (t, x), Continuous.comp continuous_to_fun (continuous_const.prod_mk continuous_id')⟩
 
 namespace HomotopyWith
 
 section 
 
-variable{f₀ f₁ : C(X, Y)}{P : C(X, Y) → Prop}
+variable {f₀ f₁ : C(X, Y)} {P : C(X, Y) → Prop}
 
-instance  : CoeFun (homotopy_with f₀ f₁ P) fun _ => I × X → Y :=
+instance : CoeFun (homotopy_with f₀ f₁ P) fun _ => I × X → Y :=
   ⟨fun F => F.to_fun⟩
 
 theorem coe_fn_injective : @Function.Injective (homotopy_with f₀ f₁ P) (I × X → Y) coeFn :=
@@ -376,7 +376,7 @@ theorem extend_prop (F : homotopy_with f₀ f₁ P) (t : ℝ) : P (F.to_homotopy
 
 end 
 
-variable{P : C(X, Y) → Prop}
+variable {P : C(X, Y) → Prop}
 
 /--
 Given a continuous function `f`, and a proof `h : P f`, we can define a `homotopy_with f f P` by
@@ -392,7 +392,7 @@ def refl (f : C(X, Y)) (hf : P f) : homotopy_with f f P :=
           cases f 
           rfl }
 
-instance  : Inhabited (homotopy_with (ContinuousMap.id : C(X, X)) ContinuousMap.id fun f => True) :=
+instance : Inhabited (homotopy_with (ContinuousMap.id : C(X, X)) ContinuousMap.id fun f => True) :=
   ⟨homotopy_with.refl _ trivialₓ⟩
 
 /--
@@ -455,7 +455,7 @@ def homotopic_with (f₀ f₁ : C(X, Y)) (P : C(X, Y) → Prop) : Prop :=
 
 namespace HomotopicWith
 
-variable{P : C(X, Y) → Prop}
+variable {P : C(X, Y) → Prop}
 
 @[refl]
 theorem refl (f : C(X, Y)) (hf : P f) : homotopic_with f f P :=
@@ -481,7 +481,7 @@ namespace HomotopyRel
 
 section 
 
-variable{f₀ f₁ : C(X, Y)}{S : Set X}
+variable {f₀ f₁ : C(X, Y)} {S : Set X}
 
 theorem eq_fst (F : homotopy_rel f₀ f₁ S) (t : I) {x : X} (hx : x ∈ S) : F (t, x) = f₀ x :=
   (F.prop t x hx).1
@@ -494,7 +494,7 @@ theorem fst_eq_snd (F : homotopy_rel f₀ f₁ S) {x : X} (hx : x ∈ S) : f₀ 
 
 end 
 
-variable{f₀ f₁ f₂ : C(X, Y)}{S : Set X}
+variable {f₀ f₁ f₂ : C(X, Y)} {S : Set X}
 
 /--
 Given a map `f : C(X, Y)` and a set `S`, we can define a `homotopy_rel f f S` by setting
@@ -569,7 +569,7 @@ def homotopic_rel (f₀ f₁ : C(X, Y)) (S : Set X) : Prop :=
 
 namespace HomotopicRel
 
-variable{S : Set X}
+variable {S : Set X}
 
 @[refl]
 theorem refl (f : C(X, Y)) : homotopic_rel f f S :=

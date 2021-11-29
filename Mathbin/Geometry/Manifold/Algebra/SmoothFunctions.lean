@@ -11,38 +11,11 @@ noncomputable theory
 
 open_locale Manifold
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H :
-    Type
-      _}[TopologicalSpace
-      H]{I :
-    ModelWithCorners 𝕜 E
-      H}{H' :
-    Type
-      _}[TopologicalSpace
-      H']{I' :
-    ModelWithCorners 𝕜 E'
-      H'}{N :
-    Type
-      _}[TopologicalSpace
-      N][ChartedSpace H
-      N]{E'' :
-    Type
-      _}[NormedGroup
-      E''][NormedSpace 𝕜
-      E'']{H'' :
-    Type
-      _}[TopologicalSpace H'']{I'' : ModelWithCorners 𝕜 E'' H''}{N' : Type _}[TopologicalSpace N'][ChartedSpace H'' N']
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+  [NormedGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {H' : Type _}
+  [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {N : Type _} [TopologicalSpace N] [ChartedSpace H N]
+  {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
+  {I'' : ModelWithCorners 𝕜 E'' H''} {N' : Type _} [TopologicalSpace N'] [ChartedSpace H'' N']
 
 namespace SmoothMap
 
@@ -259,7 +232,7 @@ inherit an algebra structure.
 -/
 
 
-variable{A : Type _}[NormedRing A][NormedAlgebra 𝕜 A][SmoothRing 𝓘(𝕜, A) A]
+variable {A : Type _} [NormedRing A] [NormedAlgebra 𝕜 A] [SmoothRing 𝓘(𝕜, A) A]
 
 /-- Smooth constant functions as a `ring_hom`. -/
 def C : 𝕜 →+* C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=

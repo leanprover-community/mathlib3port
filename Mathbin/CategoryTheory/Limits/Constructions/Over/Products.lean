@@ -16,11 +16,11 @@ universe v u
 
 open CategoryTheory CategoryTheory.Limits
 
-variable{J : Type v}
+variable {J : Type v}
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{X : C}
+variable {X : C}
 
 namespace CategoryTheory.Over
 

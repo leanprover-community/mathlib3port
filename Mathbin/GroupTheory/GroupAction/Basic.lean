@@ -11,7 +11,7 @@ import Mathbin.Data.Fintype.Card
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 open_locale BigOperators Pointwise
 
@@ -19,14 +19,14 @@ open Function
 
 namespace MulAction
 
-variable(α)[Monoidₓ α][MulAction α β]
+variable (α) [Monoidₓ α] [MulAction α β]
 
 /-- The orbit of an element under an action. -/
 @[toAdditive "The orbit of an element under an action."]
 def orbit (b : β) :=
   Set.Range fun x : α => x • b
 
-variable{α}
+variable {α}
 
 @[toAdditive]
 theorem mem_orbit_iff {b₁ b₂ : β} : b₂ ∈ orbit α b₁ ↔ ∃ x : α, x • b₁ = b₂ :=
@@ -59,7 +59,7 @@ theorem orbit_smul_subset (a : α) (b : β) : orbit α (a • b) ⊆ orbit α b 
   Set.range_subset_iff.2$ fun a' => mul_smul a' a b ▸ mem_orbit _ _
 
 @[toAdditive]
-instance  {b : β} : MulAction α (orbit α b) :=
+instance {b : β} : MulAction α (orbit α b) :=
   { smul := fun a => (maps_to_smul_orbit a b).restrict _ _ _, one_smul := fun a => Subtype.ext (one_smul α a),
     mul_smul := fun a a' b' => Subtype.ext (mul_smul a a' b') }
 
@@ -67,7 +67,7 @@ instance  {b : β} : MulAction α (orbit α b) :=
 theorem orbit.coe_smul {b : β} {a : α} {b' : orbit α b} : «expr↑ » (a • b') = a • (b' : β) :=
   rfl
 
-variable(α)(β)
+variable (α) (β)
 
 /-- The set of elements fixed under the whole action. -/
 @[toAdditive "The set of elements fixed under the whole action."]
@@ -88,7 +88,7 @@ theorem fixed_eq_Inter_fixed_by : fixed_points α β = ⋂g : α, fixed_by α β
           by 
             exact (Set.mem_Inter.1 hx g : _)⟩
 
-variable{α}(β)
+variable {α} (β)
 
 @[simp, toAdditive]
 theorem mem_fixed_points {b : β} : b ∈ fixed_points α β ↔ ∀ x : α, x • b = b :=
@@ -105,7 +105,7 @@ theorem mem_fixed_points' {b : β} : b ∈ fixed_points α β ↔ ∀ b', b' ∈
       hx ▸ h x,
     fun h b => h _ (mem_orbit _ _)⟩
 
-variable(α){β}
+variable (α) {β}
 
 /-- The stabilizer of a point `b` as a submonoid of `α`. -/
 @[toAdditive "The stabilizer of a point `b` as an additive submonoid of `α`."]
@@ -128,9 +128,9 @@ end MulAction
 
 namespace MulAction
 
-variable(α)
+variable (α)
 
-variable[Groupₓ α][MulAction α β]
+variable [Groupₓ α] [MulAction α β]
 
 /-- The stabilizer of an element under an action, i.e. what sends the element to itself.
 A subgroup. -/
@@ -143,7 +143,7 @@ def stabilizer (b : β) : Subgroup α :=
         show a⁻¹ • b = b by 
           rw [inv_smul_eq_iff, ha] }
 
-variable{α}{β}
+variable {α} {β}
 
 @[simp, toAdditive]
 theorem mem_stabilizer_iff {b : β} {a : α} : a ∈ stabilizer α b ↔ a • b = b :=
@@ -167,7 +167,7 @@ theorem orbit_smul (a : α) (b : β) : orbit α (a • b) = orbit α b :=
 
 /-- The action of a group on an orbit is transitive. -/
 @[toAdditive "The action of an additive group on an orbit is transitive."]
-instance  (x : β) : is_pretransitive α (orbit α x) :=
+instance (x : β) : is_pretransitive α (orbit α x) :=
   ⟨by 
       rintro ⟨_, a, rfl⟩ ⟨_, b, rfl⟩
       use b*a⁻¹
@@ -198,7 +198,7 @@ theorem mem_fixed_points_iff_card_orbit_eq_one {a : β} [Fintype (orbit α a)] :
       calc x • a = z := Subtype.mk.injₓ (hz₁ ⟨x • a, mem_orbit _ _⟩)_ = a :=
         (Subtype.mk.injₓ (hz₁ ⟨a, mem_orbit_self _⟩)).symm
 
-variable(α){β}
+variable (α) {β}
 
 @[toAdditive]
 theorem mem_orbit_smul (g : α) (a : β) : a ∈ orbit α (g • a) :=
@@ -210,7 +210,7 @@ theorem smul_mem_orbit_smul (g h : α) (a : β) : g • a ∈ orbit α (h • a)
   by 
     simp only [orbit_smul, mem_orbit]
 
-variable(α)(β)
+variable (α) (β)
 
 -- error in GroupTheory.GroupAction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The relation 'in the same orbit'. -/
@@ -247,7 +247,7 @@ def self_equiv_sigma_orbits' {φ : Ω → β} (hφ : RightInverse φ Quotientₓ
 noncomputable def self_equiv_sigma_orbits : β ≃ Σω : Ω, orbit α ω.out' :=
   self_equiv_sigma_orbits' α β Quotientₓ.out_eq'
 
-variable{α β}
+variable {α β}
 
 /-- If the stabilizer of `x` is `S`, then the stabilizer of `g • x` is `gSg⁻¹`. -/
 theorem stabilizer_smul_eq_stabilizer_map_conj (g : α) (x : β) :
@@ -271,7 +271,7 @@ end MulAction
 
 namespace AddAction
 
-variable[AddGroupₓ α][AddAction α β]
+variable [AddGroupₓ α] [AddAction α β]
 
 /-- If the stabilizer of `x` is `S`, then the stabilizer of `g +ᵥ x` is `g + S + (-g)`. -/
 theorem stabilizer_vadd_eq_stabilizer_map_conj (g : α) (x : β) :
@@ -295,7 +295,7 @@ end AddAction
 
 namespace MulAction
 
-variable[Groupₓ α][MulAction α β]
+variable [Groupₓ α] [MulAction α β]
 
 open QuotientGroup
 
@@ -339,7 +339,7 @@ theorem quotient.smul_coe (H : Subgroup α) (a x : α) : (a • x : QuotientGrou
 instance mul_left_cosets_comp_subtype_val (H I : Subgroup α) : MulAction I (Quotientₓ H) :=
   MulAction.compHom (Quotientₓ H) (Subgroup.subtype I)
 
-variable(α){β}(x : β)
+variable (α) {β} (x : β)
 
 /-- The canonical map from the quotient of the stabilizer to the set. -/
 @[toAdditive "The canonical map from the quotient of the stabilizer to the set. "]
@@ -409,7 +409,7 @@ theorem stabilizer_quotient {G} [Groupₓ G] (H : Subgroup G) : MulAction.stabil
     ext 
     simp [QuotientGroup.eq]
 
-variable(β)
+variable (β)
 
 local notation "Ω" => Quotientₓ$ orbit_rel α β
 
@@ -502,7 +502,7 @@ end MulAction
 
 section 
 
-variable[Monoidₓ α][AddMonoidₓ β][DistribMulAction α β]
+variable [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction α β]
 
 theorem List.smul_sum {r : α} {l : List β} : r • l.sum = (l.map ((· • ·) r)).Sum :=
   (DistribMulAction.toAddMonoidHom β r).map_list_sum l
@@ -521,7 +521,7 @@ end
 
 section 
 
-variable[Monoidₓ α][Monoidₓ β][MulDistribMulAction α β]
+variable [Monoidₓ α] [Monoidₓ β] [MulDistribMulAction α β]
 
 theorem List.smul_prod {r : α} {l : List β} : r • l.prod = (l.map ((· • ·) r)).Prod :=
   (MulDistribMulAction.toMonoidHom β r).map_list_prod l
@@ -530,7 +530,7 @@ end
 
 section 
 
-variable[Monoidₓ α][AddCommMonoidₓ β][DistribMulAction α β]
+variable [Monoidₓ α] [AddCommMonoidₓ β] [DistribMulAction α β]
 
 theorem Multiset.smul_sum {r : α} {s : Multiset β} : r • s.sum = (s.map ((· • ·) r)).Sum :=
   (DistribMulAction.toAddMonoidHom β r).map_multiset_sum s
@@ -542,7 +542,7 @@ end
 
 section 
 
-variable[Monoidₓ α][CommMonoidₓ β][MulDistribMulAction α β]
+variable [Monoidₓ α] [CommMonoidₓ β] [MulDistribMulAction α β]
 
 theorem Multiset.smul_prod {r : α} {s : Multiset β} : r • s.prod = (s.map ((· • ·) r)).Prod :=
   (MulDistribMulAction.toMonoidHom β r).map_multiset_prod s
@@ -554,7 +554,7 @@ end
 
 namespace Subgroup
 
-variable{G : Type _}[Groupₓ G](H : Subgroup G)
+variable {G : Type _} [Groupₓ G] (H : Subgroup G)
 
 theorem normal_core_eq_ker : H.normal_core = (MulAction.toPermHom G (QuotientGroup.Quotient H)).ker :=
   by 

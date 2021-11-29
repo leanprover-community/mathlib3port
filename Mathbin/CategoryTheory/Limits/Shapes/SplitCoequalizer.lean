@@ -27,13 +27,13 @@ namespace CategoryTheory
 
 universe v v₂ u u₂
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{D : Type u₂}[category.{v} D]
+variable {D : Type u₂} [category.{v} D]
 
-variable(G : C ⥤ D)
+variable (G : C ⥤ D)
 
-variable{X Y : C}(f g : X ⟶ Y)
+variable {X Y : C} (f g : X ⟶ Y)
 
 /--
 A split coequalizer diagram consists of morphisms
@@ -53,7 +53,7 @@ The name "coequalizer" is appropriate, since any split coequalizer is a coequali
 `category_theory.is_split_coequalizer.is_coequalizer`.
 Split coequalizers are also absolute, since a functor preserves all the structure above.
 -/
-structure is_split_coequalizer{Z : C}(π : Y ⟶ Z) where 
+structure is_split_coequalizer {Z : C} (π : Y ⟶ Z) where 
   rightSection : Z ⟶ Y 
   leftSection : Y ⟶ X 
   condition : f ≫ π = g ≫ π 
@@ -61,7 +61,7 @@ structure is_split_coequalizer{Z : C}(π : Y ⟶ Z) where
   left_section_bottom : left_section ≫ g = 𝟙 Y 
   left_section_top : left_section ≫ f = π ≫ right_section
 
-instance  {X : C} : Inhabited (is_split_coequalizer (𝟙 X) (𝟙 X) (𝟙 X)) :=
+instance {X : C} : Inhabited (is_split_coequalizer (𝟙 X) (𝟙 X) (𝟙 X)) :=
   ⟨⟨𝟙 _, 𝟙 _, rfl, category.id_comp _, category.id_comp _, rfl⟩⟩
 
 open IsSplitCoequalizer
@@ -70,7 +70,7 @@ attribute [reassoc] condition
 
 attribute [simp, reassoc] right_section_π left_section_bottom left_section_top
 
-variable{f g}
+variable {f g}
 
 /-- Split coequalizers are absolute: they are preserved by any functor. -/
 @[simps]
@@ -116,7 +116,7 @@ def is_split_coequalizer.is_coequalizer {Z : C} {h : Y ⟶ Z} (t : is_split_coeq
 
 end 
 
-variable(f g)
+variable (f g)
 
 /--
 The pair `f,g` is a split pair if there is a `h : Y ⟶ Z` so that `f, g, h` forms a split coequalizer
@@ -153,7 +153,7 @@ instance map_is_split_pair [has_split_coequalizer f g] : has_split_coequalizer (
 namespace Limits
 
 /-- If a pair has a split coequalizer, it has a coequalizer. -/
-instance (priority := 1)has_coequalizer_of_has_split_coequalizer [has_split_coequalizer f g] : has_coequalizer f g :=
+instance (priority := 1) has_coequalizer_of_has_split_coequalizer [has_split_coequalizer f g] : has_coequalizer f g :=
   has_colimit.mk ⟨_, (has_split_coequalizer.is_split_coequalizer f g).isCoequalizer⟩
 
 end Limits

@@ -35,8 +35,8 @@ universe u
 def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : positive_compacts (ι → ℝ) :=
   ⟨Set.Pi Set.Univ fun i => Icc 0 1, is_compact_univ_pi fun i => is_compact_Icc,
     by 
-      rw [interior_pi_set]
-      simp only [interior_Icc, univ_pi_nonempty_iff, nonempty_Ioo, implies_true_iff, zero_lt_one]⟩
+      simp only [interior_pi_set, finite.of_fintype, interior_Icc, univ_pi_nonempty_iff, nonempty_Ioo, implies_true_iff,
+        zero_lt_one]⟩
 
 namespace MeasureTheory
 
@@ -62,7 +62,7 @@ theorem add_haar_measure_eq_volume : add_haar_measure Icc01 = volume :=
     ·
       exact is_add_left_invariant_real_volume
 
-instance  : is_add_haar_measure (volume : Measureₓ ℝ) :=
+instance : is_add_haar_measure (volume : Measureₓ ℝ) :=
   by 
     rw [←add_haar_measure_eq_volume]
     infer_instance
@@ -171,10 +171,8 @@ theorem haar_preimage_linear_map {E : Type _} [NormedGroup E] [NormedSpace ℝ E
 -/
 
 
-variable{E :
-    Type
-      _}[NormedGroup
-      E][MeasurableSpace E][NormedSpace ℝ E][FiniteDimensional ℝ E][BorelSpace E](μ : Measureₓ E)[is_add_haar_measure μ]
+variable {E : Type _} [NormedGroup E] [MeasurableSpace E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [BorelSpace E]
+  (μ : Measureₓ E) [is_add_haar_measure μ]
 
 -- error in MeasureTheory.Measure.HaarLebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem map_add_haar_smul

@@ -30,7 +30,7 @@ namespace CategoryTheory
 
 open Limits Category
 
-variable{C : Type u₁}[category.{v₁} C]{A : C}
+variable {C : Type u₁} [category.{v₁} C] {A : C}
 
 /-- An object `A` is subterminal iff for any `Z`, there is at most one morphism `Z ⟶ A`. -/
 def is_subterminal (A : C) : Prop :=
@@ -111,7 +111,7 @@ begin
   apply [expr (as_iso (diag A)).symm]
 end
 
-variable(C)
+variable (C)
 
 -- error in CategoryTheory.Subterminal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--
@@ -122,7 +122,7 @@ to the lattice of open subsets of `X`. More generally, if `C` is a topos, this i
 -/ @[derive #[expr category]] def subterminals (C : Type u₁) [category.{v₁} C] :=
 {A : C // is_subterminal A}
 
-instance  [has_terminal C] : Inhabited (subterminals C) :=
+instance [has_terminal C] : Inhabited (subterminals C) :=
   ⟨⟨⊤_ C, is_subterminal_of_terminal⟩⟩
 
 -- error in CategoryTheory.Subterminal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full

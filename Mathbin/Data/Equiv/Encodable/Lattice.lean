@@ -19,7 +19,7 @@ open Set
 
 namespace Encodable
 
-variable{α : Type _}{β : Type _}[Encodable β]
+variable {α : Type _} {β : Type _} [Encodable β]
 
 theorem supr_decode₂ [CompleteLattice α] (f : β → α) : (⨆(i : ℕ)(b : _)(_ : b ∈ decode₂ β i), f b) = ⨆b, f b :=
   by 

@@ -21,19 +21,19 @@ namespace CategoryTheory
 
 open Category Limits
 
-variable{C : Type u₁}[category.{v} C]
+variable {C : Type u₁} [category.{v} C]
 
-variable{D : Type u₂}[category.{v} D]
+variable {D : Type u₂} [category.{v} D]
 
-variable(G : C ⥤ D)
+variable (G : C ⥤ D)
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
-variable(F : J ⥤ C)
+variable (F : J ⥤ C)
 
 section 
 
-variable[preserves_limit F G]
+variable [preserves_limit F G]
 
 @[simp]
 theorem preserves_lift_map_cone (c₁ c₂ : cone F) (t : is_limit c₁) :
@@ -42,7 +42,7 @@ theorem preserves_lift_map_cone (c₁ c₂ : cone F) (t : is_limit c₁) :
       (by 
         simp [←G.map_comp])).symm
 
-variable[has_limit F][has_limit (F ⋙ G)]
+variable [has_limit F] [has_limit (F ⋙ G)]
 
 /--
 If `G` preserves limits, we have an isomorphism from the image of the limit of a functor `F`
@@ -70,7 +70,7 @@ end
 
 section 
 
-variable[preserves_colimit F G]
+variable [preserves_colimit F G]
 
 @[simp]
 theorem preserves_desc_map_cocone (c₁ c₂ : cocone F) (t : is_colimit c₁) :
@@ -79,7 +79,7 @@ theorem preserves_desc_map_cocone (c₁ c₂ : cocone F) (t : is_colimit c₁) :
       (by 
         simp [←G.map_comp])).symm
 
-variable[has_colimit F][has_colimit (F ⋙ G)]
+variable [has_colimit F] [has_colimit (F ⋙ G)]
 
 /--
 If `G` preserves colimits, we have an isomorphism from the image of the colimit of a functor `F`

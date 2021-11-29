@@ -21,16 +21,16 @@ open_locale Mvfunctor
 
 /-- multivariate functors, i.e. functor between the category of type vectors
 and the category of Type -/
-class Mvfunctor{n : ℕ}(F : Typevec n → Type _) where 
+class Mvfunctor {n : ℕ} (F : Typevec n → Type _) where 
   map : ∀ {α β : Typevec n}, α ⟹ β → F α → F β
 
 localized [Mvfunctor] infixr:100 " <$$> " => Mvfunctor.map
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 namespace Mvfunctor
 
-variable{α β γ : Typevec.{u} n}{F : Typevec.{u} n → Type v}[Mvfunctor F]
+variable {α β γ : Typevec.{u} n} {F : Typevec.{u} n → Type v} [Mvfunctor F]
 
 /-- predicate lifting over multivariate functors -/
 def liftp {α : Typevec n} (p : ∀ i, α i → Prop) (x : F α) : Prop :=
@@ -54,7 +54,7 @@ theorem of_mem_supp {α : Typevec n} {x : F α} {p : ∀ ⦃i⦄, α i → Prop}
 end Mvfunctor
 
 /-- laws for `mvfunctor` -/
-class IsLawfulMvfunctor{n : ℕ}(F : Typevec n → Type _)[Mvfunctor F] : Prop where 
+class IsLawfulMvfunctor {n : ℕ} (F : Typevec n → Type _) [Mvfunctor F] : Prop where 
   id_map : ∀ {α : Typevec n} x : F α, Typevec.id <$$> x = x 
   comp_map : ∀ {α β γ : Typevec n} g : α ⟹ β h : β ⟹ γ x : F α, (h ⊚ g) <$$> x = h <$$> g <$$> x
 
@@ -66,11 +66,11 @@ export IsLawfulMvfunctor(comp_map)
 
 open IsLawfulMvfunctor
 
-variable{α β γ : Typevec.{u} n}
+variable {α β γ : Typevec.{u} n}
 
-variable{F : Typevec.{u} n → Type v}[Mvfunctor F]
+variable {F : Typevec.{u} n → Type v} [Mvfunctor F]
 
-variable(p : α ⟹ repeat n Prop)(r : α ⊗ α ⟹ repeat n Prop)
+variable (p : α ⟹ repeat n Prop) (r : α ⊗ α ⟹ repeat n Prop)
 
 /-- adapt `mvfunctor.liftp` to accept predicates as arrows -/
 def liftp' : F α → Prop :=
@@ -80,7 +80,7 @@ def liftp' : F α → Prop :=
 def liftr' : F α → F α → Prop :=
   Mvfunctor.Liftr$ fun i x y => of_repeat$ r i$ Typevec.Prod.mk _ x y
 
-variable[IsLawfulMvfunctor F]
+variable [IsLawfulMvfunctor F]
 
 @[simp]
 theorem id_map (x : F α) : Typevec.id <$$> x = x :=
@@ -95,7 +95,7 @@ theorem map_map (g : α ⟹ β) (h : β ⟹ γ) (x : F α) : h <$$> g <$$> x = (
 
 section Liftp'
 
-variable(F)
+variable (F)
 
 theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : α ⟹ β) (g : β ⟹ α) (h₀ : f ⊚ g = id)
   (h₁ : ∀ u : F α, p u ↔ q (f <$$> u)) : (∃ u : F α, p u) ↔ ∃ u : F β, q u :=
@@ -107,7 +107,7 @@ theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : �
       apply (h₁ _).mpr _ 
       simp only [Mvfunctor.map_map, h₀, IsLawfulMvfunctor.id_map, h₂]
 
-variable{F}
+variable {F}
 
 theorem liftp_def (x : F α) : liftp' p x ↔ ∃ u : F (subtype_ p), subtype_val p <$$> u = x :=
   exists_iff_exists_of_mono F _ _ (to_subtype_of_subtype p)
@@ -134,15 +134,15 @@ open Typevec
 
 section LiftpLastPredIff
 
-variable{F : Typevec.{u} (n+1) → Type _}[Mvfunctor F][IsLawfulMvfunctor F]{α : Typevec.{u} n}
+variable {F : Typevec.{u} (n+1) → Type _} [Mvfunctor F] [IsLawfulMvfunctor F] {α : Typevec.{u} n}
 
-variable(p : α ⟹ repeat n Prop)(r : α ⊗ α ⟹ repeat n Prop)
+variable (p : α ⟹ repeat n Prop) (r : α ⊗ α ⟹ repeat n Prop)
 
 open Mvfunctor
 
-variable{β : Type u}
+variable {β : Type u}
 
-variable(pp : β → Prop)
+variable (pp : β → Prop)
 
 private def f :
   ∀ n α,
@@ -184,7 +184,7 @@ theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) :
 
 open Function
 
-variable(rr : β → β → Prop)
+variable (rr : β → β → Prop)
 
 private def f :
   ∀ n α,

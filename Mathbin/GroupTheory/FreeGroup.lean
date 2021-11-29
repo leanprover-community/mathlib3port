@@ -41,13 +41,13 @@ open Relation
 
 universe u v w
 
-variable{α : Type u}
+variable {α : Type u}
 
 attribute [local simp] List.append_eq_has_append
 
 namespace FreeGroup
 
-variable{L L₁ L₂ L₃ L₄ : List (α × Bool)}
+variable {L L₁ L₂ L₃ L₄ : List (α × Bool)}
 
 /-- Reduction step: `w * x * x⁻¹ * v ~> w * v` -/
 inductive red.step : List (α × Bool) → List (α × Bool) → Prop
@@ -396,7 +396,7 @@ def FreeGroup (α : Type u) : Type u :=
 
 namespace FreeGroup
 
-variable{α}{L L₁ L₂ L₃ L₄ : List (α × Bool)}
+variable {α} {L L₁ L₂ L₃ L₄ : List (α × Bool)}
 
 /-- The canonical map from `list (α × bool)` to the free group on `α`. -/
 def mk L : FreeGroup α :=
@@ -416,16 +416,16 @@ theorem quot_lift_on_mk (β : Type v) (f : List (α × Bool) → β) (H : ∀ L�
   Quot.liftOn (mk L) f H = f L :=
   rfl
 
-instance  : HasOne (FreeGroup α) :=
+instance : HasOne (FreeGroup α) :=
   ⟨mk []⟩
 
 theorem one_eq_mk : (1 : FreeGroup α) = mk [] :=
   rfl
 
-instance  : Inhabited (FreeGroup α) :=
+instance : Inhabited (FreeGroup α) :=
   ⟨1⟩
 
-instance  : Mul (FreeGroup α) :=
+instance : Mul (FreeGroup α) :=
   ⟨fun x y =>
       Quot.liftOn x (fun L₁ => Quot.liftOn y (fun L₂ => mk$ L₁ ++ L₂) fun L₂ L₃ H => Quot.sound$ red.step.append_left H)
         fun L₁ L₂ H => Quot.induction_on y$ fun L₃ => Quot.sound$ red.step.append_right H⟩
@@ -434,7 +434,7 @@ instance  : Mul (FreeGroup α) :=
 theorem mul_mk : (mk L₁*mk L₂) = mk (L₁ ++ L₂) :=
   rfl
 
-instance  : HasInv (FreeGroup α) :=
+instance : HasInv (FreeGroup α) :=
   ⟨fun x =>
       Quot.liftOn x (fun L => mk (L.map$ fun x : α × Bool => (x.1, bnot x.2)).reverse)
         fun a b h =>
@@ -446,7 +446,7 @@ instance  : HasInv (FreeGroup α) :=
 theorem inv_mk : mk L⁻¹ = mk (L.map$ fun x : α × Bool => (x.1, bnot x.2)).reverse :=
   rfl
 
-instance  : Groupₓ (FreeGroup α) :=
+instance : Groupₓ (FreeGroup α) :=
   { mul := ·*·, one := 1, inv := HasInv.inv,
     mul_assoc :=
       by 
@@ -488,7 +488,7 @@ theorem of_injective : Function.Injective (@of α) :=
 
 section lift
 
-variable{β : Type v}[Groupₓ β](f : α → β){x y : FreeGroup α}
+variable {β : Type v} [Groupₓ β] (f : α → β) {x y : FreeGroup α}
 
 /-- Given `f : α → β` with `β` a group, the canonical map `list (α × bool) → β` -/
 def lift.aux : List (α × Bool) → β :=
@@ -527,7 +527,7 @@ def lift : (α → β) ≃ (FreeGroup α →* β) :=
                 show _ = g (of x*mk t)
                 simpa [lift.aux] using ih }
 
-variable{f}
+variable {f}
 
 @[simp]
 theorem lift.mk : lift f (mk L) = List.prod (L.map$ fun x => cond x.2 (f x.1) (f x.1⁻¹)) :=
@@ -582,7 +582,7 @@ end lift
 
 section Map
 
-variable{β : Type v}(f : α → β){x y : FreeGroup α}
+variable {β : Type v} (f : α → β) {x y : FreeGroup α}
 
 /-- Given `f : α → β`, the canonical map `list (α × bool) → list (β × bool)`. -/
 def map.aux (L : List (α × Bool)) : List (β × Bool) :=
@@ -608,7 +608,7 @@ def map : FreeGroup α →* FreeGroup β :=
       rintro ⟨L₁⟩ ⟨L₂⟩
       simp [map.to_fun, map.aux])
 
-variable{f}
+variable {f}
 
 @[simp]
 theorem map.mk : map f (mk L) = mk (L.map fun x => (f x.1, x.2)) :=
@@ -665,7 +665,7 @@ end Map
 
 section Prod
 
-variable[Groupₓ α](x y : FreeGroup α)
+variable [Groupₓ α] (x y : FreeGroup α)
 
 /-- If `α` is a group, then any function from `α` to `α`
 extends uniquely to a homomorphism from the
@@ -674,7 +674,7 @@ version of `sum`. -/
 def Prod : FreeGroup α →* α :=
   lift id
 
-variable{x y}
+variable {x y}
 
 @[simp]
 theorem prod_mk : Prod (mk L) = List.prod (L.map$ fun x => cond x.2 x.1 (x.1⁻¹)) :=
@@ -699,7 +699,7 @@ theorem lift_eq_prod_map {β : Type v} [Groupₓ β] {f : α → β} {x} : lift 
 
 section Sum
 
-variable[AddGroupₓ α](x y : FreeGroup α)
+variable [AddGroupₓ α] (x y : FreeGroup α)
 
 /-- If `α` is a group, then any function from `α` to `α`
 extends uniquely to a homomorphism from the
@@ -708,7 +708,7 @@ version of `prod`. -/
 def Sum : α :=
   @Prod (Multiplicative _) _ x
 
-variable{x y}
+variable {x y}
 
 @[simp]
 theorem sum_mk : Sum (mk L) = List.sum (L.map$ fun x => cond x.2 x.1 (-x.1)) :=
@@ -772,9 +772,9 @@ def free_group_unit_equiv_int : FreeGroup Unit ≃ ℤ :=
 
 section Category
 
-variable{β : Type u}
+variable {β : Type u}
 
-instance  : Monadₓ FreeGroup.{u} :=
+instance : Monadₓ FreeGroup.{u} :=
   { pure := fun α => of, map := fun α β f => map f, bind := fun α β x f => lift f x }
 
 @[elab_as_eliminator]
@@ -815,7 +815,7 @@ theorem mul_bind (f : α → FreeGroup β) (x y : FreeGroup α) : (x*y) >>= f = 
 theorem inv_bind (f : α → FreeGroup β) (x : FreeGroup α) : x⁻¹ >>= f = (x >>= f)⁻¹ :=
   (lift f).map_inv _
 
-instance  : IsLawfulMonad FreeGroup.{u} :=
+instance : IsLawfulMonad FreeGroup.{u} :=
   { id_map :=
       fun α x =>
         FreeGroup.induction_on x (map_one id) (fun x => map_pure id x)
@@ -830,20 +830,20 @@ instance  : IsLawfulMonad FreeGroup.{u} :=
       fun α β γ x f g =>
         FreeGroup.induction_on x
           (by 
-            iterate 3
+            iterate 3 
               rw [one_bind])
           (fun x =>
             by 
-              iterate 2
+              iterate 2 
                 rw [pure_bind])
           (fun x ih =>
             by 
-              iterate 3
+              iterate 3 
                   rw [inv_bind] <;>
                 rw [ih])
           fun x y ihx ihy =>
             by 
-              iterate 3
+              iterate 3 
                   rw [mul_bind] <;>
                 rw [ihx, ihy],
     bind_pure_comp_eq_map :=
@@ -865,7 +865,7 @@ end Category
 
 section Reduce
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- The maximal reduction of a word. It is computable
 iff `α` has decidable equality. -/
@@ -1013,7 +1013,7 @@ theorem to_word.inj : ∀ x y : FreeGroup α, to_word x = to_word y → x = y :=
 def reduce.church_rosser (H12 : red L₁ L₂) (H13 : red L₁ L₃) : { L₄ // red L₂ L₄ ∧ red L₃ L₄ } :=
   ⟨reduce L₁, reduce.rev H12, reduce.rev H13⟩
 
-instance  : DecidableEq (FreeGroup α) :=
+instance : DecidableEq (FreeGroup α) :=
   Function.Injective.decidableEq to_word.inj
 
 instance red.decidable_rel : DecidableRel (@red α)
@@ -1043,7 +1043,7 @@ theorem red.enum.sound (H : L₂ ∈ red.enum L₁) : red L₁ L₂ :=
 theorem red.enum.complete (H : red L₁ L₂) : L₂ ∈ red.enum L₁ :=
   List.mem_filter_of_mem (List.mem_sublists.2$ red.sublist H) H
 
-instance  : Fintype { L₂ // red L₁ L₂ } :=
+instance : Fintype { L₂ // red L₁ L₂ } :=
   Fintype.subtype (List.toFinset$ red.enum L₁)$
     fun L₂ => ⟨fun H => red.enum.sound$ List.mem_to_finset.1 H, fun H => List.mem_to_finset.2$ red.enum.complete H⟩
 

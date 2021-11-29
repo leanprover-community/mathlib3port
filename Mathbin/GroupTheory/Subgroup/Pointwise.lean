@@ -19,13 +19,13 @@ keep them in sync.
 -/
 
 
-variable{α : Type _}{G : Type _}{A : Type _}[Groupₓ G][AddGroupₓ A]
+variable {α : Type _} {G : Type _} {A : Type _} [Groupₓ G] [AddGroupₓ A]
 
 namespace Subgroup
 
 section Monoidₓ
 
-variable[Monoidₓ α][MulDistribMulAction α G]
+variable [Monoidₓ α] [MulDistribMulAction α G]
 
 /-- The action on a subgroup corresponding to applying the action to every element.
 
@@ -57,7 +57,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable[Groupₓ α][MulDistribMulAction α G]
+variable [Groupₓ α] [MulDistribMulAction α G]
 
 open_locale Pointwise
 
@@ -90,7 +90,7 @@ end Groupₓ
 
 section GroupWithZeroₓ
 
-variable[GroupWithZeroₓ α][MulDistribMulAction α G]
+variable [GroupWithZeroₓ α] [MulDistribMulAction α G]
 
 open_locale Pointwise
 
@@ -122,7 +122,7 @@ namespace AddSubgroup
 
 section Monoidₓ
 
-variable[Monoidₓ α][DistribMulAction α A]
+variable [Monoidₓ α] [DistribMulAction α A]
 
 /-- The action on an additive subgroup corresponding to applying the action to every element.
 
@@ -151,7 +151,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable[Groupₓ α][DistribMulAction α A]
+variable [Groupₓ α] [DistribMulAction α A]
 
 open_locale Pointwise
 
@@ -179,7 +179,7 @@ end Groupₓ
 
 section GroupWithZeroₓ
 
-variable[GroupWithZeroₓ α][DistribMulAction α A]
+variable [GroupWithZeroₓ α] [DistribMulAction α A]
 
 open_locale Pointwise
 

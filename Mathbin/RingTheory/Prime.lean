@@ -9,7 +9,7 @@ This file contains lemmas about prime elements of commutative rings.
 
 section CommCancelMonoidWithZero
 
-variable{R : Type _}[CommCancelMonoidWithZero R]
+variable {R : Type _} [CommCancelMonoidWithZero R]
 
 open Finset
 
@@ -71,7 +71,7 @@ end CommCancelMonoidWithZero
 
 section CommRingₓ
 
-variable{α : Type _}[CommRingₓ α]
+variable {α : Type _} [CommRingₓ α]
 
 theorem Prime.neg {p : α} (hp : Prime p) : Prime (-p) :=
   by 

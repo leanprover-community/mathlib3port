@@ -6,7 +6,7 @@ attribute [local simp] Rbnode.Lift
 
 namespace Rbnode
 
-variable{α : Type u}
+variable {α : Type u}
 
 open Color
 
@@ -86,7 +86,7 @@ theorem balance2_node_ne_leaf {s : Rbnode α} (a : α) (t : Rbnode α) : s ≠ l
       simp [balance2_node]
       apply balance2_ne_leaf
 
-variable(lt : α → α → Prop)
+variable (lt : α → α → Prop)
 
 @[elab_as_eliminator]
 theorem ins.induction [DecidableRel lt] {p : Rbnode α → Prop} t x (is_leaf : p leaf)
@@ -630,7 +630,7 @@ end SimpAuxLemmas
 
 attribute [local simp] find_black_eq_find_red find_red_of_lt find_red_of_lt find_red_of_gt find_red_of_incomp
 
-variable[IsStrictWeakOrder α lt][DecidableRel lt]
+variable [IsStrictWeakOrder α lt] [DecidableRel lt]
 
 -- error in Data.Rbtree.Insert: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem find_balance1_lt
@@ -943,7 +943,7 @@ end MembershipLemmas
 
 section IsRedBlack
 
-variable{α : Type u}
+variable {α : Type u}
 
 open Nat Color
 
@@ -989,7 +989,7 @@ def ins_rb_result : Rbnode α → color → Nat → Prop
 | t, red, n => is_bad_red_black t n
 | t, black, n => ∃ c, is_red_black t c n
 
-variable{lt : α → α → Prop}[DecidableRel lt]
+variable {lt : α → α → Prop} [DecidableRel lt]
 
 theorem of_get_color_eq_red {t : Rbnode α} {c n} : get_color t = red → is_red_black t c n → c = red :=
   by 
@@ -1001,7 +1001,7 @@ theorem of_get_color_ne_red {t : Rbnode α} {c n} : get_color t ≠ red → is_r
     intro h₁ h₂ 
     cases h₂ <;> simp [get_color] at h₁ <;> contradiction
 
-variable(lt)
+variable (lt)
 
 -- error in Data.Rbtree.Insert: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem ins_rb {t : rbnode α} (x) : ∀ {c n} (h : is_red_black t c n), ins_rb_result (ins lt t x) c n :=

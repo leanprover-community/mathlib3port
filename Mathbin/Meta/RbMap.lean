@@ -17,7 +17,7 @@ namespace Native
 
 namespace RbSet
 
-unsafe instance  {key} [LT key] [DecidableRel (· < · : key → key → Prop)] : Inhabited (rb_set key) :=
+unsafe instance {key} [LT key] [DecidableRel (· < · : key → key → Prop)] : Inhabited (rb_set key) :=
   ⟨mk_rb_set⟩
 
 /-- `filter s P` returns the subset of elements of `s` satisfying `P`. -/
@@ -75,7 +75,7 @@ end RbSet
 
 namespace RbMap
 
-unsafe instance  {key data : Type} [LT key] [DecidableRel (· < · : key → key → Prop)] : Inhabited (rb_map key data) :=
+unsafe instance {key data : Type} [LT key] [DecidableRel (· < · : key → key → Prop)] : Inhabited (rb_map key data) :=
   ⟨mk_rb_map⟩
 
 /-- `find_def default m k` returns the value corresponding to `k` in `m`, if it exists.
@@ -101,7 +101,7 @@ unsafe def add {key value} [Add value] [HasZero value] [DecidableEq value] (m1 m
       let nv := v+m2.zfind n 
       if nv = 0 then m.erase n else m.insert n nv
 
-variable{m : Type → Type _}[Monadₓ m]
+variable {m : Type → Type _} [Monadₓ m]
 
 open Function
 
@@ -124,7 +124,7 @@ section
 
 open Format Prod
 
-variable{key : Type}{data : Type}[has_to_tactic_format key][has_to_tactic_format data]
+variable {key : Type} {data : Type} [has_to_tactic_format key] [has_to_tactic_format data]
 
 private unsafe def pp_key_data (k : key) (d : data) (first : Bool) : tactic format :=
   do 
@@ -132,7 +132,7 @@ private unsafe def pp_key_data (k : key) (d : data) (first : Bool) : tactic form
     let fd ← tactic.pp d 
     return$ (if first then to_fmt "" else to_fmt "," ++ line) ++ fk ++ space ++ to_fmt "←" ++ space ++ fd
 
-unsafe instance  : has_to_tactic_format (rb_map key data) :=
+unsafe instance : has_to_tactic_format (rb_map key data) :=
   ⟨fun m =>
       do 
         let (fmt, _) ←
@@ -153,7 +153,7 @@ end RbMap
 
 namespace RbLmap
 
-unsafe instance  (key : Type) [LT key] [DecidableRel (· < · : key → key → Prop)] (data : Type) :
+unsafe instance (key : Type) [LT key] [DecidableRel (· < · : key → key → Prop)] (data : Type) :
   Inhabited (rb_lmap key data) :=
   ⟨rb_lmap.mk _ _⟩
 
@@ -176,7 +176,7 @@ end Native
 
 namespace NameSet
 
-unsafe instance  : Inhabited name_set :=
+unsafe instance : Inhabited name_set :=
   ⟨mk_name_set⟩
 
 /-- `filter P s` returns the subset of elements of `s` satisfying `P`. -/
@@ -220,7 +220,7 @@ end NameSet
 
 namespace NameMap
 
-unsafe instance  {data : Type} : Inhabited (name_map data) :=
+unsafe instance {data : Type} : Inhabited (name_map data) :=
   ⟨mk_name_map⟩
 
 end NameMap

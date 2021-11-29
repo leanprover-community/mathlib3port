@@ -11,7 +11,7 @@ is conformal at `x` iff the derivative preserves inner products up to a scalar m
 
 noncomputable theory
 
-variable{E F : Type _}[InnerProductSpace ℝ E][InnerProductSpace ℝ F]
+variable {E F : Type _} [InnerProductSpace ℝ E] [InnerProductSpace ℝ F]
 
 open_locale RealInnerProductSpace
 

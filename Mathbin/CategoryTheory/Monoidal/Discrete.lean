@@ -16,7 +16,7 @@ open CategoryTheory
 
 open CategoryTheory.Discrete
 
-variable(M : Type u)[Monoidₓ M]
+variable (M : Type u) [Monoidₓ M]
 
 namespace CategoryTheory
 
@@ -25,7 +25,7 @@ instance monoid_discrete : Monoidₓ (discrete M) :=
     dsimp [discrete]
     infer_instance
 
-instance  : monoidal_category (discrete M) :=
+instance : monoidal_category (discrete M) :=
   { tensorUnit := 1, tensorObj := fun X Y => X*Y,
     tensorHom :=
       fun W X Y Z f g =>
@@ -35,7 +35,7 @@ instance  : monoidal_category (discrete M) :=
     leftUnitor := fun X => eq_to_iso (one_mulₓ X), rightUnitor := fun X => eq_to_iso (mul_oneₓ X),
     associator := fun X Y Z => eq_to_iso (mul_assocₓ _ _ _) }
 
-variable{M}{N : Type u}[Monoidₓ N]
+variable {M} {N : Type u} [Monoidₓ N]
 
 /--
 A multiplicative morphism between monoids gives a monoidal functor between the corresponding
@@ -46,7 +46,7 @@ def discrete.monoidal_functor (F : M →* N) : monoidal_functor (discrete M) (di
   { obj := F, map := fun X Y f => eq_to_hom (F.congr_arg (eq_of_hom f)), ε := eq_to_hom F.map_one.symm,
     μ := fun X Y => eq_to_hom (F.map_mul X Y).symm }
 
-variable{K : Type u}[Monoidₓ K]
+variable {K : Type u} [Monoidₓ K]
 
 /--
 The monoidal natural isomorphism corresponding to composing two multiplicative morphisms.

@@ -24,15 +24,15 @@ universe v u₁ u₂
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
-variable{C : Type u₁}[category.{v} C]
+variable {C : Type u₁} [category.{v} C]
 
-variable{D : Type u₂}[category.{v} D]
+variable {D : Type u₂} [category.{v} D]
 
-variable(G : C ⥤ D)
+variable (G : C ⥤ D)
 
 namespace CategoryTheory.Limits
 
-variable{W X Y Z : C}{f : X ⟶ Z}{g : Y ⟶ Z}{h : W ⟶ X}{k : W ⟶ Y}(comm : h ≫ f = k ≫ g)
+variable {W X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z} {h : W ⟶ X} {k : W ⟶ Y} (comm : h ≫ f = k ≫ g)
 
 /--
 The map of a pullback cone is a limit iff the fork consisting of the mapped morphisms is a limit.
@@ -45,7 +45,7 @@ def is_limit_map_cone_pullback_cone_equiv :
         (by 
           simp only [←G.map_comp, comm]) :
       pullback_cone (G.map f) (G.map g)) :=
-  (is_limit.postcompose_hom_equiv (diagram_iso_cospan _) _).symm.trans
+  (is_limit.postcompose_hom_equiv (diagram_iso_cospan.{v} _) _).symm.trans
     (is_limit.equiv_iso_limit
       (cones.ext (iso.refl _)
         (by 
@@ -62,7 +62,7 @@ def is_limit_of_is_limit_pullback_cone_map [reflects_limit (cospan f g) G]
   (l : is_limit (pullback_cone.mk (G.map h) (G.map k) _)) : is_limit (pullback_cone.mk h k comm) :=
   reflects_limit.reflects ((is_limit_map_cone_pullback_cone_equiv G comm).symm l)
 
-variable(f g)[has_pullback f g]
+variable (f g) [has_pullback f g]
 
 /--
 If `G` preserves pullbacks and `C` has them, then the pullback cone constructed of the mapped
@@ -72,7 +72,7 @@ def is_limit_of_has_pullback_of_preserves_limit [preserves_limit (cospan f g) G]
   is_limit (pullback_cone.mk (G.map pullback.fst) (G.map pullback.snd) _) :=
   is_limit_pullback_cone_map_of_is_limit G _ (pullback_is_pullback f g)
 
-variable[has_pullback (G.map f) (G.map g)]
+variable [has_pullback (G.map f) (G.map g)]
 
 /--
 If the pullback comparison map for `G` at `(f,g)` is an isomorphism, then `G` preserves the
@@ -85,7 +85,7 @@ def preserves_pullback.of_iso_comparison [i : is_iso (pullback_comparison G f g)
     apply is_limit.of_point_iso (limit.is_limit (cospan (G.map f) (G.map g)))
     apply i
 
-variable[preserves_limit (cospan f g) G]
+variable [preserves_limit (cospan f g) G]
 
 /--
 If `G` preserves the pullback of `(f,g)`, then the pullback comparison map for `G` at `(f,g)` is
@@ -98,7 +98,7 @@ def preserves_pullback.iso : G.obj (pullback f g) ≅ pullback (G.map f) (G.map 
 theorem preserves_pullback.iso_hom : (preserves_pullback.iso G f g).Hom = pullback_comparison G f g :=
   rfl
 
-instance  : is_iso (pullback_comparison G f g) :=
+instance : is_iso (pullback_comparison G f g) :=
   by 
     rw [←preserves_pullback.iso_hom]
     infer_instance

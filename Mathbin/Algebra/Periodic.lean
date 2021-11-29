@@ -24,7 +24,7 @@ period, periodic, periodicity, antiperiodic
 -/
 
 
-variable{α β γ : Type _}{f g : α → β}{c c₁ c₂ x : α}
+variable {α β γ : Type _} {f g : α → β} {c c₁ c₂ x : α}
 
 namespace Function
 

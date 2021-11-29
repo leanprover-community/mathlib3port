@@ -31,13 +31,13 @@ open Category Limits CartesianClosed
 
 universe v u u'
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{D : Type u'}[category.{v} D]
+variable {D : Type u'} [category.{v} D]
 
-variable[has_finite_products C][has_finite_products D]
+variable [has_finite_products C] [has_finite_products D]
 
-variable(F : C ⥤ D){L : D ⥤ C}
+variable (F : C ⥤ D) {L : D ⥤ C}
 
 noncomputable theory
 
@@ -67,9 +67,9 @@ instance frobenius_morphism_iso_of_preserves_binary_products (h : L ⊣ F) (A : 
     dsimp [frobenius_morphism]
     infer_instance
 
-variable[cartesian_closed C][cartesian_closed D]
+variable [cartesian_closed C] [cartesian_closed D]
 
-variable[preserves_limits_of_shape (discrete walking_pair) F]
+variable [preserves_limits_of_shape (discrete walking_pair) F]
 
 /--
 The exponential comparison map.

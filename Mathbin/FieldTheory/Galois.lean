@@ -35,28 +35,28 @@ open FiniteDimensional AlgEquiv
 
 section 
 
-variable(F : Type _)[Field F](E : Type _)[Field E][Algebra F E]
+variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
 
 /-- A field extension E/F is galois if it is both separable and normal -/
 class IsGalois : Prop where 
   [to_is_separable : IsSeparable F E]
   [to_normal : Normal F E]
 
-variable{F E}
+variable {F E}
 
 theorem is_galois_iff : IsGalois F E ↔ IsSeparable F E ∧ Normal F E :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h => { to_is_separable := h.1, to_normal := h.2 }⟩
 
 attribute [instance] IsGalois.to_is_separable IsGalois.to_normal
 
-variable(F E)
+variable (F E)
 
 namespace IsGalois
 
 instance self : IsGalois F F :=
   ⟨⟩
 
-variable(F){E}
+variable (F) {E}
 
 theorem integral [IsGalois F E] (x : E) : IsIntegral F x :=
   Normal.is_integral' x
@@ -67,7 +67,7 @@ theorem separable [IsGalois F E] (x : E) : (minpoly F x).Separable :=
 theorem splits [IsGalois F E] (x : E) : (minpoly F x).Splits (algebraMap F E) :=
   Normal.splits' x
 
-variable(F E)
+variable (F E)
 
 instance of_fixed_field (G : Type _) [Groupₓ G] [Fintype G] [MulSemiringAction G E] :
   IsGalois (FixedPoints.subfield G E) E :=
@@ -127,16 +127,16 @@ end
 
 section IsGaloisTower
 
-variable(F K E : Type _)[Field F][Field K][Field E]{E' : Type _}[Field E'][Algebra F E']
+variable (F K E : Type _) [Field F] [Field K] [Field E] {E' : Type _} [Field E'] [Algebra F E']
 
-variable[Algebra F K][Algebra F E][Algebra K E][IsScalarTower F K E]
+variable [Algebra F K] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
 theorem IsGalois.tower_top_of_is_galois [IsGalois F E] : IsGalois K E :=
   { to_is_separable := is_separable_tower_top_of_is_separable F K E, to_normal := Normal.tower_top_of_normal F K E }
 
-variable{F E}
+variable {F E}
 
-instance (priority := 100)IsGalois.tower_top_intermediate_field (K : IntermediateField F E) [h : IsGalois F E] :
+instance (priority := 100) IsGalois.tower_top_intermediate_field (K : IntermediateField F E) [h : IsGalois F E] :
   IsGalois K E :=
   IsGalois.tower_top_of_is_galois F K E
 
@@ -171,9 +171,9 @@ end IsGaloisTower
 
 section GaloisCorrespondence
 
-variable{F : Type _}[Field F]{E : Type _}[Field E][Algebra F E]
+variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E]
 
-variable(H : Subgroup (E ≃ₐ[F] E))(K : IntermediateField F E)
+variable (H : Subgroup (E ≃ₐ[F] E)) (K : IntermediateField F E)
 
 namespace IntermediateField
 
@@ -319,7 +319,7 @@ end GaloisCorrespondence
 
 section GaloisEquivalentDefinitions
 
-variable(F : Type _)[Field F](E : Type _)[Field E][Algebra F E]
+variable (F : Type _) [Field F] (E : Type _) [Field E] [Algebra F E]
 
 namespace IsGalois
 
@@ -361,7 +361,7 @@ begin
        refl } }]
 end
 
-variable{F}{E}{p : Polynomial F}
+variable {F} {E} {p : Polynomial F}
 
 -- error in FieldTheory.Galois: ././Mathport/Syntax/Translate/Basic.lean:341:40: in let: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem of_separable_splitting_field_aux

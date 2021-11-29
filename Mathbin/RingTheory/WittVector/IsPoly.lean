@@ -149,7 +149,7 @@ namespace WittVector
 
 universe u
 
-variable{p : ℕ}{R S : Type u}{σ idx : Type _}[hp : Fact p.prime][CommRingₓ R][CommRingₓ S]
+variable {p : ℕ} {R S : Type u} {σ idx : Type _} [hp : Fact p.prime] [CommRingₓ R] [CommRingₓ S]
 
 local notation "𝕎" => WittVector p
 
@@ -159,7 +159,7 @@ open function(uncurry)
 
 include hp
 
-variable(p)
+variable (p)
 
 noncomputable theory
 
@@ -202,7 +202,7 @@ and the `@[is_poly]` attribute derives certain specialized composition instances
 for declarations of type `is_poly f`.
 For the most part, users are not expected to treat `is_poly` as a class.
 -/
-class is_poly(f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R) : Prop where mk' :: 
+class is_poly (f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R) : Prop where mk' :: 
   poly :
   ∃ φ : ℕ → MvPolynomial ℕ ℤ,
     ∀ ⦃R⦄ [CommRingₓ R] x : 𝕎 R,
@@ -221,10 +221,10 @@ instance id_is_poly_i' : is_poly p fun _ _ a => a :=
 
 namespace IsPoly
 
-instance  : Inhabited (is_poly p fun _ _ => id) :=
+instance : Inhabited (is_poly p fun _ _ => id) :=
   ⟨WittVector.id_is_poly p⟩
 
-variable{p}
+variable {p}
 
 include hp
 
@@ -297,7 +297,7 @@ class is_poly₂
     [comm_ring R]
     (x y : expr𝕎() R), by exactI [expr «expr = »((f x y).coeff, λ n, peval (φ n) «expr![ , ]»([x.coeff, y.coeff]))]))
 
-variable{p}
+variable {p}
 
 -- error in RingTheory.WittVector.IsPoly: ././Mathport/Syntax/Translate/Basic.lean:341:40: in refine: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- The composition of polynomial functions is polynomial. -/
@@ -587,10 +587,10 @@ namespace IsPoly₂
 
 omit hp
 
-instance  [Fact p.prime] : Inhabited (is_poly₂ p _) :=
+instance [Fact p.prime] : Inhabited (is_poly₂ p _) :=
   ⟨add_is_poly₂⟩
 
-variable{p}
+variable {p}
 
 /-- The composition of a binary polynomial function
  with a unary polynomial function in the first argument is polynomial. -/

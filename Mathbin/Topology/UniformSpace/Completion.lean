@@ -59,9 +59,9 @@ section
 
 parameter {α : Type u}[UniformSpace α]
 
-variable{β : Type v}{γ : Type w}
+variable {β : Type v} {γ : Type w}
 
-variable[UniformSpace β][UniformSpace γ]
+variable [UniformSpace β] [UniformSpace γ]
 
 def gen (s : Set (α × α)) : Set (Cauchyₓ α × Cauchyₓ α) :=
   { p | s ∈ p.1.val ×ᶠ p.2.val }
@@ -110,7 +110,7 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => CompRel s s) �
     _ ≤ (𝓤 α).lift' gen := lift'_mono comp_le_uniformity (le_reflₓ _)
     
 
-instance  : UniformSpace (Cauchyₓ α) :=
+instance : UniformSpace (Cauchyₓ α) :=
   UniformSpace.ofCore
     { uniformity := (𝓤 α).lift' gen,
       refl := principal_le_lift'$ fun s hs ⟨a, b⟩ a_eq_b : a = b => a_eq_b ▸ a.property.right hs, symm := symm_gen,
@@ -194,7 +194,7 @@ section
 
 set_option eqn_compiler.zeta true
 
-instance  : CompleteSpace (Cauchyₓ α) :=
+instance : CompleteSpace (Cauchyₓ α) :=
   complete_space_extension uniform_inducing_pure_cauchy dense_range_pure_cauchy$
     fun f hf =>
       let f' : Cauchyₓ α := ⟨f, hf⟩
@@ -212,10 +212,10 @@ instance  : CompleteSpace (Cauchyₓ α) :=
 
 end 
 
-instance  [Inhabited α] : Inhabited (Cauchyₓ α) :=
+instance [Inhabited α] : Inhabited (Cauchyₓ α) :=
   ⟨pure_cauchy$ default α⟩
 
-instance  [h : Nonempty α] : Nonempty (Cauchyₓ α) :=
+instance [h : Nonempty α] : Nonempty (Cauchyₓ α) :=
   h.rec_on$ fun a => Nonempty.intro$ Cauchyₓ.pureCauchy a
 
 section Extend
@@ -224,14 +224,14 @@ def extend (f : α → β) : Cauchyₓ α → β :=
   if UniformContinuous f then dense_inducing_pure_cauchy.extend f else
     fun x => f (Classical.inhabitedOfNonempty$ nonempty_Cauchy_iff.1 ⟨x⟩).default
 
-variable[SeparatedSpace β]
+variable [SeparatedSpace β]
 
 theorem extend_pure_cauchy {f : α → β} (hf : UniformContinuous f) (a : α) : extend f (pure_cauchy a) = f a :=
   by 
     rw [extend, if_pos hf]
     exact uniformly_extend_of_ind uniform_inducing_pure_cauchy dense_range_pure_cauchy hf _
 
-variable[_root_.complete_space β]
+variable [_root_.complete_space β]
 
 theorem uniform_continuous_extend {f : α → β} : UniformContinuous (extend f) :=
   by 
@@ -310,11 +310,11 @@ open Cauchyₓ Set
 
 namespace UniformSpace
 
-variable(α : Type _)[UniformSpace α]
+variable (α : Type _) [UniformSpace α]
 
-variable{β : Type _}[UniformSpace β]
+variable {β : Type _} [UniformSpace β]
 
-variable{γ : Type _}[UniformSpace γ]
+variable {γ : Type _} [UniformSpace γ]
 
 instance complete_space_separation [h : CompleteSpace α] : CompleteSpace (Quotientₓ (separation_setoid α)) :=
   ⟨fun f =>
@@ -334,7 +334,7 @@ def completion :=
 
 namespace Completion
 
-instance  [Inhabited α] : Inhabited (completion α) :=
+instance [Inhabited α] : Inhabited (completion α) :=
   by 
     unfold completion <;> infer_instance
 
@@ -342,19 +342,19 @@ instance (priority := 50) : UniformSpace (completion α) :=
   by 
     dunfold completion <;> infer_instance
 
-instance  : CompleteSpace (completion α) :=
+instance : CompleteSpace (completion α) :=
   by 
     dunfold completion <;> infer_instance
 
-instance  : SeparatedSpace (completion α) :=
+instance : SeparatedSpace (completion α) :=
   by 
     dunfold completion <;> infer_instance
 
-instance  : RegularSpace (completion α) :=
+instance : RegularSpace (completion α) :=
   separated_regular
 
 /-- Automatic coercion from `α` to its completion. Not always injective. -/
-instance  : CoeTₓ α (completion α) :=
+instance : CoeTₓ α (completion α) :=
   ⟨Quotientₓ.mk ∘ pure_cauchy⟩
 
 protected theorem coe_eq : (coeₓ : α → completion α) = (Quotientₓ.mk ∘ pure_cauchy) :=
@@ -377,12 +377,12 @@ end
 theorem uniform_inducing_coe : UniformInducing (coeₓ : α → completion α) :=
   ⟨comap_coe_eq_uniformity α⟩
 
-variable{α}
+variable {α}
 
 theorem dense_range_coe : DenseRange (coeₓ : α → completion α) :=
   dense_range_pure_cauchy.Quotient
 
-variable(α)
+variable (α)
 
 def cpkg {α : Type _} [UniformSpace α] : AbstractCompletion α :=
   { Space := completion α, coe := coeₓ,
@@ -414,7 +414,10 @@ theorem continuous_coe : Continuous (coeₓ : α → completion α) :=
 theorem uniform_embedding_coe [SeparatedSpace α] : UniformEmbedding (coeₓ : α → completion α) :=
   { comap_uniformity := comap_coe_eq_uniformity α, inj := separated_pure_cauchy_injective }
 
-variable{α}
+theorem coe_injective [SeparatedSpace α] : Function.Injective (coeₓ : α → completion α) :=
+  UniformEmbedding.inj (uniform_embedding_coe _)
+
+variable {α}
 
 theorem dense_inducing_coe : DenseInducing (coeₓ : α → completion α) :=
   { (uniform_inducing_coe α).Inducing with dense := dense_range_coe }
@@ -459,20 +462,20 @@ theorem ext [T2Space β] {f g : completion α → β} (hf : Continuous f) (hg : 
 
 section Extension
 
-variable{f : α → β}
+variable {f : α → β}
 
 /-- "Extension" to the completion. It is defined for any map `f` but
 returns an arbitrary constant value if `f` is not uniformly continuous -/
 protected def extension (f : α → β) : completion α → β :=
   cpkg.extend f
 
-variable[SeparatedSpace β]
+variable [SeparatedSpace β]
 
 @[simp]
 theorem extension_coe (hf : UniformContinuous f) (a : α) : (completion.extension f) a = f a :=
   cpkg.extend_coe hf a
 
-variable[CompleteSpace β]
+variable [CompleteSpace β]
 
 theorem uniform_continuous_extension : UniformContinuous (completion.extension f) :=
   cpkg.uniform_continuous_extend
@@ -492,7 +495,7 @@ end Extension
 
 section Map
 
-variable{f : α → β}
+variable {f : α → β}
 
 /-- Completion functor acting on morphisms -/
 protected def map (f : α → β) : completion α → completion β :=
@@ -565,20 +568,20 @@ end SeparationQuotientCompletion
 
 section Extension₂
 
-variable(f : α → β → γ)
+variable (f : α → β → γ)
 
 open Function
 
 protected def extension₂ (f : α → β → γ) : completion α → completion β → γ :=
   cpkg.extend₂ cpkg f
 
-variable[SeparatedSpace γ]{f}
+variable [SeparatedSpace γ] {f}
 
 @[simp]
 theorem extension₂_coe_coe (hf : UniformContinuous₂ f) (a : α) (b : β) : completion.extension₂ f a b = f a b :=
   cpkg.extension₂_coe_coe cpkg hf a b
 
-variable[CompleteSpace γ](f)
+variable [CompleteSpace γ] (f)
 
 theorem uniform_continuous_extension₂ : UniformContinuous₂ (completion.extension₂ f) :=
   cpkg.uniform_continuous_extension₂ cpkg f

@@ -29,18 +29,18 @@ open Function
 
 universe u u' u'' v
 
-variable{S : Type u'}{T : Type u''}{R : Type u}{M : Type v}
+variable {S : Type u'} {T : Type u''} {R : Type u} {M : Type v}
 
 /-- A sub_mul_action is a set which is closed under scalar multiplication.  -/
-structure SubMulAction(R : Type u)(M : Type v)[HasScalar R M] : Type v where 
+structure SubMulAction (R : Type u) (M : Type v) [HasScalar R M] : Type v where 
   Carrier : Set M 
   smul_mem' : ∀ c : R {x : M}, x ∈ carrier → c • x ∈ carrier
 
 namespace SubMulAction
 
-variable[HasScalar R M]
+variable [HasScalar R M]
 
-instance  : SetLike (SubMulAction R M) M :=
+instance : SetLike (SubMulAction R M) M :=
   ⟨SubMulAction.Carrier,
     fun p q h =>
       by 
@@ -66,10 +66,10 @@ theorem coe_copy (p : SubMulAction R M) (s : Set M) (hs : s = «expr↑ » p) : 
 theorem copy_eq (p : SubMulAction R M) (s : Set M) (hs : s = «expr↑ » p) : p.copy s hs = p :=
   SetLike.coe_injective hs
 
-instance  : HasBot (SubMulAction R M) :=
+instance : HasBot (SubMulAction R M) :=
   ⟨{ Carrier := ∅, smul_mem' := fun c => Set.not_mem_empty }⟩
 
-instance  : Inhabited (SubMulAction R M) :=
+instance : Inhabited (SubMulAction R M) :=
   ⟨⊥⟩
 
 end SubMulAction
@@ -78,19 +78,19 @@ namespace SubMulAction
 
 section HasScalar
 
-variable[HasScalar R M]
+variable [HasScalar R M]
 
-variable(p : SubMulAction R M)
+variable (p : SubMulAction R M)
 
-variable{r : R}{x : M}
+variable {r : R} {x : M}
 
 theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
   p.smul_mem' r h
 
-instance  : HasScalar R p :=
+instance : HasScalar R p :=
   { smul := fun c x => ⟨c • x.1, smul_mem _ c x.2⟩ }
 
-variable{p}
+variable {p}
 
 @[simp, normCast]
 theorem coe_smul (r : R) (x : p) : ((r • x : p) : M) = r • «expr↑ » x :=
@@ -100,7 +100,7 @@ theorem coe_smul (r : R) (x : p) : ((r • x : p) : M) = r • «expr↑ » x :=
 theorem coe_mk (x : M) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : M) = x :=
   rfl
 
-variable(p)
+variable (p)
 
 /-- Embedding of a submodule `p` to the ambient space `M`. -/
 protected def Subtype : p →[R] M :=
@@ -118,13 +118,13 @@ end HasScalar
 
 section MulAction
 
-variable[Monoidₓ R][MulAction R M]
+variable [Monoidₓ R] [MulAction R M]
 
 section 
 
-variable[HasScalar S R][HasScalar S M][IsScalarTower S R M]
+variable [HasScalar S R] [HasScalar S M] [IsScalarTower S R M]
 
-variable(p : SubMulAction R M)
+variable (p : SubMulAction R M)
 
 theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p :=
   by 
@@ -134,7 +134,7 @@ theorem smul_of_tower_mem (s : S) {x : M} (h : x ∈ p) : s • x ∈ p :=
 instance has_scalar' : HasScalar S p :=
   { smul := fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩ }
 
-instance  : IsScalarTower S R p :=
+instance : IsScalarTower S R p :=
   { smul_assoc := fun s r x => Subtype.ext$ smul_assoc s r («expr↑ » x) }
 
 @[simp, normCast]
@@ -150,16 +150,16 @@ end
 
 section 
 
-variable[Monoidₓ S][HasScalar S R][MulAction S M][IsScalarTower S R M]
+variable [Monoidₓ S] [HasScalar S R] [MulAction S M] [IsScalarTower S R M]
 
-variable(p : SubMulAction R M)
+variable (p : SubMulAction R M)
 
 /-- If the scalar product forms a `mul_action`, then the subset inherits this action -/
 instance mul_action' : MulAction S p :=
   { smul := · • ·, one_smul := fun x => Subtype.ext$ one_smul _ x,
     mul_smul := fun c₁ c₂ x => Subtype.ext$ mul_smul c₁ c₂ x }
 
-instance  : MulAction R p :=
+instance : MulAction R p :=
   p.mul_action'
 
 end 
@@ -168,11 +168,11 @@ end MulAction
 
 section Module
 
-variable[Semiringₓ R][AddCommMonoidₓ M]
+variable [Semiringₓ R] [AddCommMonoidₓ M]
 
-variable[Module R M]
+variable [Module R M]
 
-variable(p : SubMulAction R M)
+variable (p : SubMulAction R M)
 
 theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
   let ⟨x, hx⟩ := h 
@@ -180,20 +180,20 @@ theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
 
 /-- If the scalar product forms a `module`, and the `sub_mul_action` is not `⊥`, then the
 subset inherits the zero. -/
-instance  [n_empty : Nonempty p] : HasZero p :=
+instance [n_empty : Nonempty p] : HasZero p :=
   { zero := ⟨0, n_empty.elim$ fun x => p.zero_mem ⟨x, x.prop⟩⟩ }
 
 end Module
 
 section AddCommGroupₓ
 
-variable[Ringₓ R][AddCommGroupₓ M]
+variable [Ringₓ R] [AddCommGroupₓ M]
 
-variable[Module R M]
+variable [Module R M]
 
-variable(p p' : SubMulAction R M)
+variable (p p' : SubMulAction R M)
 
-variable{r : R}{x y : M}
+variable {r : R} {x y : M}
 
 theorem neg_mem (hx : x ∈ p) : -x ∈ p :=
   by 
@@ -208,7 +208,7 @@ theorem neg_mem_iff : -x ∈ p ↔ x ∈ p :=
         exact neg_mem _ h,
     neg_mem _⟩
 
-instance  : Neg p :=
+instance : Neg p :=
   ⟨fun x => ⟨-x.1, neg_mem _ x.2⟩⟩
 
 @[simp, normCast]
@@ -221,11 +221,11 @@ end SubMulAction
 
 namespace SubMulAction
 
-variable[DivisionRing S][Semiringₓ R][MulAction R M]
+variable [DivisionRing S] [Semiringₓ R] [MulAction R M]
 
-variable[HasScalar S R][MulAction S M][IsScalarTower S R M]
+variable [HasScalar S R] [MulAction S M] [IsScalarTower S R M]
 
-variable(p : SubMulAction R M){s : S}{x y : M}
+variable (p : SubMulAction R M) {s : S} {x y : M}
 
 theorem smul_mem_iff (s0 : s ≠ 0) : s • x ∈ p ↔ x ∈ p :=
   p.smul_mem_iff' (Units.mk0 s s0)

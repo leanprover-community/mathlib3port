@@ -23,11 +23,11 @@ universe u v w w₁ w₂
 
 namespace LieModule
 
-variable(R : Type u)(L : Type v)(M : Type w)
+variable (R : Type u) (L : Type v) (M : Type w)
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L][AddCommGroupₓ M][Module R M]
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M] [Module R M]
 
-variable[LieRingModule L M][LieModule R L M]
+variable [LieRingModule L M] [LieModule R L M]
 
 /-- The lower central series of Lie submodules of a Lie module. -/
 def lower_central_series (k : ℕ) : LieSubmodule R L M :=
@@ -89,7 +89,7 @@ steps). -/
 class IsNilpotent : Prop where 
   nilpotent : ∃ k, lower_central_series R L M k = ⊥
 
-instance (priority := 100)trivial_is_nilpotent [is_trivial L M] : IsNilpotent R L M :=
+instance (priority := 100) trivial_is_nilpotent [is_trivial L M] : IsNilpotent R L M :=
   ⟨by 
       use 1
       change ⁅⊤,⊤⁆ = ⊥
@@ -124,7 +124,7 @@ theorem infi_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent R L M] :
 
 end LieModule
 
-instance (priority := 100)LieAlgebra.is_solvable_of_is_nilpotent (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L]
+instance (priority := 100) LieAlgebra.is_solvable_of_is_nilpotent (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L]
   [LieAlgebra R L] [hL : LieModule.IsNilpotent R L L] : LieAlgebra.IsSolvable R L :=
   by 
     obtain ⟨k, h⟩ : ∃ k, LieModule.lowerCentralSeries R L L k = ⊥ := hL.nilpotent 
@@ -134,9 +134,9 @@ instance (priority := 100)LieAlgebra.is_solvable_of_is_nilpotent (R : Type u) (L
 
 section NilpotentAlgebras
 
-variable(R : Type u)(L : Type v)(L' : Type w)
+variable (R : Type u) (L : Type v) (L' : Type w)
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L][LieRing L'][LieAlgebra R L']
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [LieRing L'] [LieAlgebra R L']
 
 /-- We say a Lie algebra is nilpotent when it is nilpotent as a Lie module over itself via the
 adjoint representation. -/
@@ -153,7 +153,7 @@ theorem LieAlgebra.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent [IsNilpotent
   (⨅x : L, (ad R L x).maximalGeneralizedEigenspace 0) = ⊤ :=
   LieModule.infi_max_gen_zero_eigenspace_eq_top_of_nilpotent R L L
 
-variable{R L L'}
+variable {R L L'}
 
 open lie_module(lowerCentralSeries)
 
@@ -213,14 +213,14 @@ theorem LieEquiv.nilpotent_iff_equiv_nilpotent (e : L ≃ₗ⁅R⁆ L') : IsNilp
     ·
       exact e.injective.lie_algebra_is_nilpotent
 
-instance  [h : LieAlgebra.IsNilpotent R L] : LieAlgebra.IsNilpotent R (⊤ : LieSubalgebra R L) :=
+instance [h : LieAlgebra.IsNilpotent R L] : LieAlgebra.IsNilpotent R (⊤ : LieSubalgebra R L) :=
   LieSubalgebra.topEquivSelf.nilpotent_iff_equiv_nilpotent.mpr h
 
 end NilpotentAlgebras
 
 section OfAssociative
 
-variable(R : Type u){A : Type v}[CommRingₓ R][Ringₓ A][Algebra R A]
+variable (R : Type u) {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A]
 
 -- error in Algebra.Lie.Nilpotent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lie_algebra.ad_nilpotent_of_nilpotent {a : A} (h : is_nilpotent a) : is_nilpotent (lie_algebra.ad R A a) :=
@@ -233,7 +233,7 @@ begin
   exact [expr (algebra.commute_lmul_left_right R a a).is_nilpotent_sub hl hr]
 end
 
-variable{R}
+variable {R}
 
 theorem LieSubalgebra.is_nilpotent_ad_of_is_nilpotent_ad {L : Type v} [LieRing L] [LieAlgebra R L]
   (K : LieSubalgebra R L) {x : K} (h : IsNilpotent (LieAlgebra.ad R L («expr↑ » x))) :

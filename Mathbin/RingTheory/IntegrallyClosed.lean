@@ -25,14 +25,14 @@ open_locale nonZeroDivisors
 This definition uses `fraction_ring R` to denote `Frac(R)`. See `is_integrally_closed_iff`
 if you want to choose another field of fractions for `R`.
 -/
-class IsIntegrallyClosed(R : Type _)[CommRingₓ R][IsDomain R] : Prop where 
+class IsIntegrallyClosed (R : Type _) [CommRingₓ R] [IsDomain R] : Prop where 
   algebra_map_eq_of_integral : ∀ {x : FractionRing R}, IsIntegral R x → ∃ y, algebraMap R (FractionRing R) y = x
 
 section Iff
 
-variable{R : Type _}[CommRingₓ R][IsDomain R]
+variable {R : Type _} [CommRingₓ R] [IsDomain R]
 
-variable(K : Type _)[Field K][Algebra R K][IsFractionRing R K]
+variable (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
 
 /-- `R` is integrally closed iff all integral elements of its fraction field `K`
 are also elements of `R`. -/
@@ -71,11 +71,11 @@ end Iff
 
 namespace IsIntegrallyClosed
 
-variable{R : Type _}[CommRingₓ R][IsDomain R][iic : IsIntegrallyClosed R]
+variable {R : Type _} [CommRingₓ R] [IsDomain R] [iic : IsIntegrallyClosed R]
 
-variable{K : Type _}[Field K][Algebra R K][IsFractionRing R K]
+variable {K : Type _} [Field K] [Algebra R K] [IsFractionRing R K]
 
-instance  : IsIntegralClosure R R K :=
+instance : IsIntegralClosure R R K :=
   (is_integrally_closed_iff_is_integral_closure K).mp iic
 
 include iic
@@ -85,7 +85,7 @@ theorem is_integral_iff {x : K} : IsIntegral R x ↔ ∃ y, algebraMap R K y = x
 
 omit iic
 
-variable{R}(K)
+variable {R} (K)
 
 theorem integral_closure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrallyClosed R :=
   by 
@@ -103,7 +103,7 @@ theorem integral_closure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrally
 
 include iic
 
-variable(R K)
+variable (R K)
 
 @[simp]
 theorem integral_closure_eq_bot : integralClosure R K = ⊥ :=
@@ -115,11 +115,11 @@ namespace integralClosure
 
 open IsIntegrallyClosed
 
-variable{R : Type _}[CommRingₓ R][IsDomain R][iic : IsIntegrallyClosed R]
+variable {R : Type _} [CommRingₓ R] [IsDomain R] [iic : IsIntegrallyClosed R]
 
-variable(K : Type _)[Field K][Algebra R K][IsFractionRing R K]
+variable (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
 
-variable{L : Type _}[Field L][Algebra K L][Algebra R L][IsScalarTower R K L]
+variable {L : Type _} [Field L] [Algebra K L] [Algebra R L] [IsScalarTower R K L]
 
 -- error in RingTheory.IntegrallyClosed: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_integrally_closed_of_finite_extension

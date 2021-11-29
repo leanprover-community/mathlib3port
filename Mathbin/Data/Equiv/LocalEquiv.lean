@@ -92,14 +92,14 @@ end Tactic.Interactive
 
 open Function Set
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 /-- Local equivalence between subsets `source` and `target` of α and β respectively. The (global)
 maps `to_fun : α → β` and `inv_fun : β → α` map `source` to `target` and conversely, and are inverse
 to each other there. The values of `to_fun` outside of `source` and of `inv_fun` outside of `target`
 are irrelevant. -/
 @[nolint has_inhabited_instance]
-structure LocalEquiv(α : Type _)(β : Type _) where 
+structure LocalEquiv (α : Type _) (β : Type _) where 
   toFun : α → β 
   invFun : β → α 
   Source : Set α 
@@ -117,14 +117,14 @@ def Equiv.toLocalEquiv (e : α ≃ β) : LocalEquiv α β :=
 
 namespace LocalEquiv
 
-variable(e : LocalEquiv α β)(e' : LocalEquiv β γ)
+variable (e : LocalEquiv α β) (e' : LocalEquiv β γ)
 
 /-- The inverse of a local equiv -/
 protected def symm : LocalEquiv β α :=
   { toFun := e.inv_fun, invFun := e.to_fun, Source := e.target, Target := e.source, map_source' := e.map_target',
     map_target' := e.map_source', left_inv' := e.right_inv', right_inv' := e.left_inv' }
 
-instance  : CoeFun (LocalEquiv α β) fun _ => α → β :=
+instance : CoeFun (LocalEquiv α β) fun _ => α → β :=
   ⟨LocalEquiv.toFun⟩
 
 /-- See Note [custom simps projection] -/
@@ -238,7 +238,7 @@ def is_image (s : Set α) (t : Set β) : Prop :=
 
 namespace IsImage
 
-variable{e}{s : Set α}{t : Set β}{x : α}{y : β}
+variable {e} {s : Set α} {t : Set β} {x : α} {y : β}
 
 theorem apply_mem_iff (h : e.is_image s t) (hx : x ∈ e.source) : e x ∈ t ↔ x ∈ s :=
   h hx
@@ -800,7 +800,7 @@ theorem disjoint_union_eq_piecewise (e e' : LocalEquiv α β) (hs : Disjoint e.s
 
 section Pi
 
-variable{ι : Type _}{αi βi : ι → Type _}(ei : ∀ i, LocalEquiv (αi i) (βi i))
+variable {ι : Type _} {αi βi : ι → Type _} (ei : ∀ i, LocalEquiv (αi i) (βi i))
 
 /-- The product of a family of local equivs, as a local equiv on the pi type. -/
 @[simps Source Target]
@@ -845,7 +845,7 @@ end Set
 
 namespace Equiv
 
-variable(e : Equiv α β)(e' : Equiv β γ)
+variable (e : Equiv α β) (e' : Equiv β γ)
 
 @[simp, mfld_simps]
 theorem to_local_equiv_coe : (e.to_local_equiv : α → β) = e :=

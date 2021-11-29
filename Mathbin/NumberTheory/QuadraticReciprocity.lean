@@ -28,7 +28,7 @@ open_locale BigOperators Nat
 
 namespace Zmod
 
-variable(p q : ℕ)[Fact p.prime][Fact q.prime]
+variable (p q : ℕ) [Fact p.prime] [Fact q.prime]
 
 -- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Euler's Criterion: A unit `x` of `zmod p` is a square if and only if `x ^ (p / 2) = 1`. -/
@@ -377,7 +377,7 @@ begin
   simp [] [] ["only"] ["[", expr card_Ico, ",", expr tsub_zero, ",", expr succ_sub_succ_eq_sub, "]"] [] []
 end
 
-variable(p q : ℕ)[Fact p.prime][Fact q.prime]
+variable (p q : ℕ) [Fact p.prime] [Fact q.prime]
 
 namespace Zmod
 

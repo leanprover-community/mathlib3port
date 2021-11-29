@@ -18,7 +18,7 @@ import Mathbin.RingTheory.Multiplicity
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 local infixl:50 " ~ᵤ " => Associated
 
@@ -26,12 +26,12 @@ local infixl:50 " ~ᵤ " => Associated
 condition on divisibility and to the ascending chain condition on
 principal ideals in an integral domain.
   -/
-class WfDvdMonoid(α : Type _)[CommMonoidWithZero α] : Prop where 
+class WfDvdMonoid (α : Type _) [CommMonoidWithZero α] : Prop where 
   well_founded_dvd_not_unit : WellFounded (@DvdNotUnit α _)
 
 export WfDvdMonoid(well_founded_dvd_not_unit)
 
-instance (priority := 100)IsNoetherianRing.wf_dvd_monoid [CommRingₓ α] [IsDomain α] [IsNoetherianRing α] :
+instance (priority := 100) IsNoetherianRing.wf_dvd_monoid [CommRingₓ α] [IsDomain α] [IsNoetherianRing α] :
   WfDvdMonoid α :=
   ⟨by 
       convert InvImage.wfₓ (fun a => Ideal.span ({a} : Set α)) (well_founded_submodule_gt _ _)
@@ -40,7 +40,7 @@ instance (priority := 100)IsNoetherianRing.wf_dvd_monoid [CommRingₓ α] [IsDom
 
 namespace WfDvdMonoid
 
-variable[CommMonoidWithZero α]
+variable [CommMonoidWithZero α]
 
 open Associates Nat
 
@@ -53,7 +53,7 @@ theorem of_wf_dvd_monoid_associates (h : wf_dvd_monoid (associates α)) : wf_dvd
    rw [expr mk_dvd_not_unit_mk_iff] []
  end⟩
 
-variable[WfDvdMonoid α]
+variable [WfDvdMonoid α]
 
 instance wf_dvd_monoid_associates : WfDvdMonoid (Associates α) :=
   ⟨by 
@@ -160,7 +160,7 @@ To define a UFD using the definition in terms of multisets
 of prime factors, use the definition `of_exists_prime_factors`
 
 -/
-class UniqueFactorizationMonoid(α : Type _)[CommCancelMonoidWithZero α] extends WfDvdMonoid α : Prop where 
+class UniqueFactorizationMonoid (α : Type _) [CommCancelMonoidWithZero α] extends WfDvdMonoid α : Prop where 
   irreducible_iff_prime : ∀ {a : α}, Irreducible a ↔ Prime a
 
 /-- Can't be an instance because it would cause a loop `ufm → wf_dvd_monoid → ufm → ...`. -/
@@ -181,7 +181,7 @@ end Prio
 
 namespace UniqueFactorizationMonoid
 
-variable[CommCancelMonoidWithZero α][UniqueFactorizationMonoid α]
+variable [CommCancelMonoidWithZero α] [UniqueFactorizationMonoid α]
 
 theorem exists_prime_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Prime b) ∧ f.prod ~ᵤ a :=
   by 
@@ -292,9 +292,9 @@ end
 
 section ExistsPrimeFactors
 
-variable[CommCancelMonoidWithZero α]
+variable [CommCancelMonoidWithZero α]
 
-variable(pf : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Prime b) ∧ f.prod ~ᵤ a)
+variable (pf : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Prime b) ∧ f.prod ~ᵤ a)
 
 include pf
 
@@ -406,9 +406,9 @@ theorem UniqueFactorizationMonoid.of_exists_unique_irreducible_factors [CommCanc
 
 namespace UniqueFactorizationMonoid
 
-variable[CommCancelMonoidWithZero α][DecidableEq α]
+variable [CommCancelMonoidWithZero α] [DecidableEq α]
 
-variable[UniqueFactorizationMonoid α]
+variable [UniqueFactorizationMonoid α]
 
 /-- Noncomputably determines the multiset of prime factors. -/
 noncomputable def factors (a : α) : Multiset α :=
@@ -456,9 +456,9 @@ end UniqueFactorizationMonoid
 
 namespace UniqueFactorizationMonoid
 
-variable[CommCancelMonoidWithZero α][DecidableEq α][NormalizationMonoid α]
+variable [CommCancelMonoidWithZero α] [DecidableEq α] [NormalizationMonoid α]
 
-variable[UniqueFactorizationMonoid α]
+variable [UniqueFactorizationMonoid α]
 
 /-- Noncomputably determines the multiset of prime factors. -/
 noncomputable def normalized_factors (a : α) : Multiset α :=
@@ -471,7 +471,7 @@ theorem normalized_factors_prod {a : α} (ane0 : a ≠ 0) : Associated (normaliz
     rw [←Associates.mk_eq_mk_iff_associated, ←Associates.prod_mk, ←Associates.prod_mk, Multiset.map_map]
     congr 2 
     ext 
-    rw [Function.comp_apply, Associates.mk_normalize]
+    rw [Function.comp_applyₓ, Associates.mk_normalize]
 
 theorem prime_of_normalized_factor {a : α} : ∀ x : α, x ∈ normalized_factors a → Prime x :=
   by 
@@ -614,7 +614,7 @@ open Multiset Associates
 
 noncomputable theory
 
-variable[CommCancelMonoidWithZero α][Nontrivial α][UniqueFactorizationMonoid α]
+variable [CommCancelMonoidWithZero α] [Nontrivial α] [UniqueFactorizationMonoid α]
 
 -- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Noncomputably defines a `normalization_monoid` structure on a `unique_factorization_monoid`. -/
@@ -640,14 +640,14 @@ normalization_monoid_of_monoid_hom_right_inverse { to_fun := λ
    apply [expr normalized_factors_prod hx]
  end)
 
-instance  : Inhabited (NormalizationMonoid α) :=
+instance : Inhabited (NormalizationMonoid α) :=
   ⟨UniqueFactorizationMonoid.normalizationMonoid⟩
 
 end UniqueFactorizationMonoid
 
 namespace UniqueFactorizationMonoid
 
-variable{R : Type _}[CommCancelMonoidWithZero R][UniqueFactorizationMonoid R]
+variable {R : Type _} [CommCancelMonoidWithZero R] [UniqueFactorizationMonoid R]
 
 theorem no_factors_of_no_prime_factors {a b : R} (ha : a ≠ 0) (h : ∀ {d}, d ∣ a → d ∣ b → ¬Prime d) :
   ∀ {d}, d ∣ a → d ∣ b → IsUnit d :=
@@ -733,9 +733,9 @@ theorem exists_reduced_factors' (a b : R) (hb : b ≠ 0) :
 
 section multiplicity
 
-variable[Nontrivial R][NormalizationMonoid R][DecidableEq R]
+variable [Nontrivial R] [NormalizationMonoid R] [DecidableEq R]
 
-variable[DecidableRel (HasDvd.Dvd : R → R → Prop)]
+variable [DecidableRel (HasDvd.Dvd : R → R → Prop)]
 
 open multiplicity Multiset
 
@@ -780,7 +780,7 @@ namespace Associates
 
 open UniqueFactorizationMonoid Associated Multiset
 
-variable[CommCancelMonoidWithZero α]
+variable [CommCancelMonoidWithZero α]
 
 /-- `factor_set α` representation elements of unique factorization domain as multisets.
 `multiset α` produced by `normalized_factors` are only unique up to associated elements, while the
@@ -865,7 +865,7 @@ def bcount [DecidableEq (Associates α)] (p : { a : Associates α // Irreducible
 | none => 0
 | some s => s.count p
 
-variable[dec_irr : ∀ p : Associates α, Decidable (Irreducible p)]
+variable [dec_irr : ∀ p : Associates α, Decidable (Irreducible p)]
 
 include dec_irr
 
@@ -910,7 +910,7 @@ If `p` is not irreducible, `p` is not a member of any `factor_set`. -/
 def factor_set_mem (p : Associates α) (s : factor_set α) : Prop :=
   if hp : Irreducible p then bfactor_set_mem ⟨p, hp⟩ s else False
 
-instance  : HasMem (Associates α) (factor_set α) :=
+instance : HasMem (Associates α) (factor_set α) :=
   ⟨factor_set_mem⟩
 
 @[simp]
@@ -939,7 +939,7 @@ theorem reducible_not_mem_factor_set {p : Associates α} (hp : ¬Irreducible p) 
 
 omit dec_irr
 
-variable[UniqueFactorizationMonoid α]
+variable [UniqueFactorizationMonoid α]
 
 theorem unique' {p q : Multiset (Associates α)} :
   (∀ a _ : a ∈ p, Irreducible a) → (∀ a _ : a ∈ q, Irreducible a) → p.prod = q.prod → p = q :=
@@ -993,7 +993,7 @@ theorem prod_le_prod_iff_le [Nontrivial α] {p q : Multiset (Associates α)} (hp
         rw [←prod_eq_zero_iff, eqc, hc, mul_zero])
     prod_le_prod
 
-variable[dec : DecidableEq α][dec' : DecidableEq (Associates α)]
+variable [dec : DecidableEq α] [dec' : DecidableEq (Associates α)]
 
 include dec
 
@@ -1121,14 +1121,14 @@ theorem prod_le [Nontrivial α] {a b : factor_set α} : a.prod ≤ b.prod ↔ a 
 
 include dec dec'
 
-noncomputable instance  : HasSup (Associates α) :=
+noncomputable instance : HasSup (Associates α) :=
   ⟨fun a b => (a.factors⊔b.factors).Prod⟩
 
-noncomputable instance  : HasInf (Associates α) :=
+noncomputable instance : HasInf (Associates α) :=
   ⟨fun a b => (a.factors⊓b.factors).Prod⟩
 
-noncomputable instance  [Nontrivial α] : BoundedLattice (Associates α) :=
-  { Associates.partialOrder, Associates.orderTop, Associates.orderBot with sup := ·⊔·, inf := ·⊓·,
+noncomputable instance [Nontrivial α] : Lattice (Associates α) :=
+  { Associates.partialOrder with sup := ·⊔·, inf := ·⊓·,
     sup_le := fun a b c hac hbc => factors_prod c ▸ prod_mono (sup_le (factors_mono hac) (factors_mono hbc)),
     le_sup_left := fun a b => le_transₓ (le_of_eqₓ (factors_prod a).symm)$ prod_mono$ le_sup_left,
     le_sup_right := fun a b => le_transₓ (le_of_eqₓ (factors_prod b).symm)$ prod_mono$ le_sup_right,

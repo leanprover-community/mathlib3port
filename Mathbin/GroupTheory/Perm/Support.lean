@@ -21,7 +21,7 @@ open Equiv Finset
 
 namespace Equiv.Perm
 
-variable{α : Type _}
+variable {α : Type _}
 
 section Disjoint
 
@@ -30,7 +30,7 @@ every element is fixed either by `f`, or by `g`. -/
 def Disjoint (f g : perm α) :=
   ∀ x, f x = x ∨ g x = x
 
-variable{f g h : perm α}
+variable {f g h : perm α}
 
 @[symm]
 theorem Disjoint.symm : Disjoint f g → Disjoint g f :=
@@ -196,7 +196,7 @@ end Disjoint
 
 section IsSwap
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- `f.is_swap` indicates that the permutation `f` is a transposition of two elements. -/
 def is_swap (f : perm α) : Prop :=
@@ -234,7 +234,7 @@ section Support
 
 section Set
 
-variable(p q : perm α)
+variable (p q : perm α)
 
 theorem set_support_inv_eq : { x | (p⁻¹) x ≠ x } = { x | p x ≠ x } :=
   by 
@@ -261,7 +261,7 @@ theorem set_support_mul_subset : { x | (p*q) x ≠ x } ⊆ { x | p x ≠ x } ∪
 
 end Set
 
-variable[DecidableEq α][Fintype α]{f g : perm α}
+variable [DecidableEq α] [Fintype α] {f g : perm α}
 
 /-- The `finset` of nonfixed points of a permutation. -/
 def support (f : perm α) : Finset α :=
@@ -515,7 +515,7 @@ theorem support_le_prod_of_mem {l : List (perm α)} (h : f ∈ l) (hl : l.pairwi
 
 section ExtendDomain
 
-variable{β : Type _}[DecidableEq β][Fintype β]{p : β → Prop}[DecidablePred p]
+variable {β : Type _} [DecidableEq β] [Fintype β] {p : β → Prop} [DecidablePred p]
 
 @[simp]
 theorem support_extend_domain (f : α ≃ Subtype p) {g : perm α} :

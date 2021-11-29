@@ -20,7 +20,7 @@ noncomputable theory
 
 open_locale BigOperators
 
-variable{X : Type _}
+variable {X : Type _}
 
 /-- The group homomorphism `free_abelian_group X →+ (X →₀ ℤ)`. -/
 def FreeAbelianGroup.toFinsupp : FreeAbelianGroup X →+ X →₀ ℤ :=
@@ -68,7 +68,7 @@ namespace FreeAbelianGroup
 
 open Finsupp
 
-variable{X}
+variable {X}
 
 @[simp]
 theorem to_finsupp_of (x : X) : to_finsupp (of x) = Finsupp.single x 1 :=
@@ -80,7 +80,7 @@ theorem to_finsupp_to_free_abelian_group (f : X →₀ ℤ) : f.to_free_abelian_
   by 
     rw [←AddMonoidHom.comp_apply, to_finsupp_comp_to_free_abelian_group, AddMonoidHom.id_apply]
 
-variable(X)
+variable (X)
 
 /-- The additive equivalence between `free_abelian_group X` and `(X →₀ ℤ)`. -/
 @[simps]
@@ -88,7 +88,7 @@ def equiv_finsupp : FreeAbelianGroup X ≃+ (X →₀ ℤ) :=
   { toFun := to_finsupp, invFun := to_free_abelian_group, left_inv := to_free_abelian_group_to_finsupp,
     right_inv := to_finsupp_to_free_abelian_group, map_add' := to_finsupp.map_add }
 
-variable{X}
+variable {X}
 
 /-- `coeff x` is the additive group homomorphism `free_abelian_group X →+ ℤ`
 that sends `a` to the multiplicity of `x : X` in `a`. -/

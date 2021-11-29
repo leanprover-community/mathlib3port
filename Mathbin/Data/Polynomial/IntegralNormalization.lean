@@ -15,13 +15,13 @@ namespace Polynomial
 
 universe u v y
 
-variable{R : Type u}{S : Type v}{a b : R}{m n : ℕ}{ι : Type y}
+variable {R : Type u} {S : Type v} {a b : R} {m n : ℕ} {ι : Type y}
 
 section IntegralNormalization
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 /-- If `f : polynomial R` is a nonzero polynomial with root `z`, `integral_normalization f` is
 a monic polynomial with root `leading_coeff f * z`.
@@ -75,7 +75,7 @@ end Semiringₓ
 
 section IsDomain
 
-variable[Ringₓ R][IsDomain R]
+variable [Ringₓ R] [IsDomain R]
 
 @[simp]
 theorem support_integral_normalization {f : Polynomial R} : (integral_normalization f).support = f.support :=
@@ -93,9 +93,9 @@ end IsDomain
 
 section IsDomain
 
-variable[CommRingₓ R][IsDomain R]
+variable [CommRingₓ R] [IsDomain R]
 
-variable[CommRingₓ S]
+variable [CommRingₓ S]
 
 -- error in Data.Polynomial.IntegralNormalization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem integral_normalization_eval₂_eq_zero

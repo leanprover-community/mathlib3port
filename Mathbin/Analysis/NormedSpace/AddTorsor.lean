@@ -24,8 +24,8 @@ structure and require the distance to be the same as results from the
 norm (which in fact implies the distance yields a pseudometric space, but
 bundling just the distance and using an instance for the pseudometric space
 results in type class problems). -/
-class SemiNormedAddTorsor(V : outParam$ Type _)(P : Type _)[outParam$ SemiNormedGroup V][PseudoMetricSpace P] extends
-  AddTorsor V P where 
+class SemiNormedAddTorsor (V : outParam$ Type _) (P : Type _) [outParam$ SemiNormedGroup V]
+  [PseudoMetricSpace P] extends AddTorsor V P where 
   dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
 
 /-- A `normed_add_torsor V P` is a torsor of an additive normed group
@@ -34,32 +34,32 @@ structure and require the distance to be the same as results from the
 norm (which in fact implies the distance yields a metric space, but
 bundling just the distance and using an instance for the metric space
 results in type class problems). -/
-class NormedAddTorsor(V : outParam$ Type _)(P : Type _)[outParam$ NormedGroup V][MetricSpace P] extends
+class NormedAddTorsor (V : outParam$ Type _) (P : Type _) [outParam$ NormedGroup V] [MetricSpace P] extends
   AddTorsor V P where 
   dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
 
 /-- A `normed_add_torsor` is a `semi_normed_add_torsor`. -/
-instance (priority := 100)NormedAddTorsor.toSemiNormedAddTorsor {V P : Type _} [NormedGroup V] [MetricSpace P]
+instance (priority := 100) NormedAddTorsor.toSemiNormedAddTorsor {V P : Type _} [NormedGroup V] [MetricSpace P]
   [β : NormedAddTorsor V P] : SemiNormedAddTorsor V P :=
   { β with  }
 
-variable{α V P : Type _}[SemiNormedGroup V][PseudoMetricSpace P][SemiNormedAddTorsor V P]
+variable {α V P : Type _} [SemiNormedGroup V] [PseudoMetricSpace P] [SemiNormedAddTorsor V P]
 
-variable{W Q : Type _}[NormedGroup W][MetricSpace Q][NormedAddTorsor W Q]
+variable {W Q : Type _} [NormedGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 
 /-- A `semi_normed_group` is a `semi_normed_add_torsor` over itself. -/
-instance (priority := 100)SemiNormedGroup.normedAddTorsor : SemiNormedAddTorsor V V :=
+instance (priority := 100) SemiNormedGroup.normedAddTorsor : SemiNormedAddTorsor V V :=
   { dist_eq_norm' := dist_eq_norm }
 
 /-- A `normed_group` is a `normed_add_torsor` over itself. -/
-instance (priority := 100)NormedGroup.normedAddTorsor : NormedAddTorsor W W :=
+instance (priority := 100) NormedGroup.normedAddTorsor : NormedAddTorsor W W :=
   { dist_eq_norm' := dist_eq_norm }
 
 include V
 
 section 
 
-variable(V W)
+variable (V W)
 
 /-- The distance equals the norm of subtracting two points. In this
 lemma, it is necessary to have `V` as an explicit argument; otherwise
@@ -197,7 +197,7 @@ theorem uniform_continuous_vadd : UniformContinuous fun x : V × P => x.1 +ᵥ x
 theorem uniform_continuous_vsub : UniformContinuous fun x : P × P => x.1 -ᵥ x.2 :=
   (LipschitzWith.prod_fst.vsub LipschitzWith.prod_snd).UniformContinuous
 
-instance (priority := 100)SemiNormedAddTorsor.has_continuous_vadd : HasContinuousVadd V P :=
+instance (priority := 100) SemiNormedAddTorsor.has_continuous_vadd : HasContinuousVadd V P :=
   { continuous_vadd := uniform_continuous_vadd.Continuous }
 
 theorem continuous_vsub : Continuous fun x : P × P => x.1 -ᵥ x.2 :=
@@ -209,7 +209,7 @@ theorem Filter.Tendsto.vsub {l : Filter α} {f g : α → P} {x y : P} (hf : ten
 
 section 
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 theorem Continuous.vsub {f g : α → P} (hf : Continuous f) (hg : Continuous g) : Continuous (f -ᵥ g) :=
   continuous_vsub.comp (hf.prod_mk hg : _)
@@ -226,7 +226,7 @@ end
 
 section 
 
-variable{R : Type _}[Ringₓ R][TopologicalSpace R][Module R V][HasContinuousSmul R V]
+variable {R : Type _} [Ringₓ R] [TopologicalSpace R] [Module R V] [HasContinuousSmul R V]
 
 theorem Filter.Tendsto.line_map {l : Filter α} {f₁ f₂ : α → P} {g : α → R} {p₁ p₂ : P} {c : R}
   (h₁ : tendsto f₁ l (𝓝 p₁)) (h₂ : tendsto f₂ l (𝓝 p₂)) (hg : tendsto g l (𝓝 c)) :
@@ -242,7 +242,7 @@ end
 
 section NormedSpace
 
-variable{𝕜 : Type _}[NormedField 𝕜][SemiNormedSpace 𝕜 V]
+variable {𝕜 : Type _} [NormedField 𝕜] [SemiNormedSpace 𝕜 V]
 
 open AffineMap
 
@@ -266,7 +266,7 @@ theorem dist_self_homothety (p₁ p₂ : P) (c : 𝕜) : dist p₂ (homothety p�
   by 
     rw [dist_comm, dist_homothety_self]
 
-variable[Invertible (2 : 𝕜)]
+variable [Invertible (2 : 𝕜)]
 
 @[simp]
 theorem dist_left_midpoint (p₁ p₂ : P) : dist p₁ (midpoint 𝕜 p₁ p₂) = ∥(2 : 𝕜)∥⁻¹*dist p₁ p₂ :=
@@ -299,7 +299,7 @@ theorem dist_midpoint_midpoint_le' (p₁ p₂ p₃ p₄ : P) :
 
 end NormedSpace
 
-variable[SemiNormedSpace ℝ V][NormedSpace ℝ W]
+variable [SemiNormedSpace ℝ V] [NormedSpace ℝ W]
 
 theorem dist_midpoint_midpoint_le (p₁ p₂ p₃ p₄ : V) :
   dist (midpoint ℝ p₁ p₂) (midpoint ℝ p₃ p₄) ≤ (dist p₁ p₃+dist p₂ p₄) / 2 :=

@@ -62,7 +62,7 @@ graded monoid
 -/
 
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 /-- A type alias of sigma types for graded monoids. -/
 def GradedMonoid (A : ι → Type _) :=
@@ -70,7 +70,7 @@ def GradedMonoid (A : ι → Type _) :=
 
 namespace GradedMonoid
 
-instance  {A : ι → Type _} [Inhabited ι] [Inhabited (A (default ι))] : Inhabited (GradedMonoid A) :=
+instance {A : ι → Type _} [Inhabited ι] [Inhabited (A (default ι))] : Inhabited (GradedMonoid A) :=
   Sigma.inhabited
 
 /-- Construct an element of a graded monoid. -/
@@ -82,10 +82,10 @@ def mk {A : ι → Type _} : ∀ i, A i → GradedMonoid A :=
 
 section Defs
 
-variable(A : ι → Type _)
+variable (A : ι → Type _)
 
 /-- A graded version of `has_one`, which must be of grade 0. -/
-class ghas_one[HasZero ι] where 
+class ghas_one [HasZero ι] where 
   one : A 0
 
 /-- `ghas_one` implies `has_one (graded_monoid A)` -/
@@ -94,7 +94,7 @@ instance ghas_one.to_has_one [HasZero ι] [ghas_one A] : HasOne (GradedMonoid A)
 
 /-- A graded version of `has_mul`. Multiplication combines grades additively, like
 `add_monoid_algebra`. -/
-class ghas_mul[Add ι] where 
+class ghas_mul [Add ι] where 
   mul {i j} : A i → A j → A (i+j)
 
 /-- `ghas_mul` implies `has_mul (graded_monoid A)`. -/
@@ -106,7 +106,7 @@ theorem mk_mul_mk [Add ι] [ghas_mul A] {i j} (a : A i) (b : A j) : (mk i a*mk j
 
 namespace Gmonoid
 
-variable{A}[AddMonoidₓ ι][ghas_mul A][ghas_one A]
+variable {A} [AddMonoidₓ ι] [ghas_mul A] [ghas_one A]
 
 /-- A default implementation of power on a graded monoid, like `npow_rec`.
 `gmonoid.gnpow` should be used instead. -/
@@ -139,7 +139,7 @@ end Gmonoid
 
 Like `monoid.npow`, this has an optional `gmonoid.gnpow` field to allow definitional control of
 natural powers of a graded monoid. -/
-class gmonoid[AddMonoidₓ ι] extends ghas_mul A, ghas_one A where 
+class gmonoid [AddMonoidₓ ι] extends ghas_mul A, ghas_one A where 
   one_mul (a : GradedMonoid A) : (1*a) = a 
   mul_one (a : GradedMonoid A) : (a*1) = a 
   mul_assoc (a b c : GradedMonoid A) : ((a*b)*c) = a*b*c 
@@ -168,7 +168,7 @@ theorem mk_pow [AddMonoidₓ ι] [gmonoid A] {i} (a : A i) (n : ℕ) : mk i a ^ 
       exact (gmonoid.gnpow_succ' n ⟨_, a⟩).symm
 
 /-- A graded version of `comm_monoid`. -/
-class gcomm_monoid[AddCommMonoidₓ ι] extends gmonoid A where 
+class gcomm_monoid [AddCommMonoidₓ ι] extends gmonoid A where 
   mul_comm (a : GradedMonoid A) (b : GradedMonoid A) : (a*b) = b*a
 
 /-- `gcomm_monoid` implies a `comm_monoid (graded_monoid A)`, although this is only used as an
@@ -187,11 +187,11 @@ types of multiplicative structure.
 
 section GradeZero
 
-variable(A : ι → Type _)
+variable (A : ι → Type _)
 
 section One
 
-variable[HasZero ι][ghas_one A]
+variable [HasZero ι] [ghas_one A]
 
 /-- `1 : A 0` is the value provided in `ghas_one.one`. -/
 @[nolint unused_arguments]
@@ -202,7 +202,7 @@ end One
 
 section Mul
 
-variable[AddMonoidₓ ι][ghas_mul A]
+variable [AddMonoidₓ ι] [ghas_mul A]
 
 /-- `(•) : A 0 → A i → A i` is the value provided in `graded_monoid.ghas_mul.mul`, composed with
 an `eq.rec` to turn `A (0 + i)` into `A i`.
@@ -216,7 +216,7 @@ an `eq.rec` to turn `A (0 + 0)` into `A 0`.
 instance grade_zero.has_mul : Mul (A 0) :=
   { mul := · • · }
 
-variable{A}
+variable {A}
 
 @[simp]
 theorem mk_zero_smul {i} (a : A 0) (b : A i) : mk _ (a • b) = mk _ a*mk _ b :=
@@ -230,7 +230,7 @@ end Mul
 
 section Monoidₓ
 
-variable[AddMonoidₓ ι][gmonoid A]
+variable [AddMonoidₓ ι] [gmonoid A]
 
 /-- The `monoid` structure derived from `gmonoid A`. -/
 instance grade_zero.monoid : Monoidₓ (A 0) :=
@@ -240,7 +240,7 @@ end Monoidₓ
 
 section Monoidₓ
 
-variable[AddCommMonoidₓ ι][gcomm_monoid A]
+variable [AddCommMonoidₓ ι] [gcomm_monoid A]
 
 /-- The `comm_monoid` structure derived from `gcomm_monoid A`. -/
 instance grade_zero.comm_monoid : CommMonoidₓ (A 0) :=
@@ -250,7 +250,7 @@ end Monoidₓ
 
 section MulAction
 
-variable[AddMonoidₓ ι][gmonoid A]
+variable [AddMonoidₓ ι] [gmonoid A]
 
 /-- `graded_monoid.mk 0` is a `monoid_hom`, using the `graded_monoid.grade_zero.monoid` structure.
 -/
@@ -276,7 +276,7 @@ end GradedMonoid
 
 section 
 
-variable(ι){R : Type _}
+variable (ι) {R : Type _}
 
 @[simps one]
 instance HasOne.ghasOne [HasZero ι] [HasOne R] : GradedMonoid.GhasOne fun i : ι => R :=
@@ -308,10 +308,10 @@ end
 
 section Subobjects
 
-variable{R : Type _}
+variable {R : Type _}
 
 /-- A version of `graded_monoid.ghas_one` for internally graded objects. -/
-class SetLike.HasGradedOne{S : Type _}[SetLike S R][HasOne R][HasZero ι](A : ι → S) : Prop where 
+class SetLike.HasGradedOne {S : Type _} [SetLike S R] [HasOne R] [HasZero ι] (A : ι → S) : Prop where 
   one_mem : (1 : R) ∈ A 0
 
 instance SetLike.ghasOne {S : Type _} [SetLike S R] [HasOne R] [HasZero ι] (A : ι → S) [SetLike.HasGradedOne A] :
@@ -324,7 +324,7 @@ theorem SetLike.coe_ghas_one {S : Type _} [SetLike S R] [HasOne R] [HasZero ι] 
   rfl
 
 /-- A version of `graded_monoid.ghas_one` for internally graded objects. -/
-class SetLike.HasGradedMul{S : Type _}[SetLike S R][Mul R][Add ι](A : ι → S) : Prop where 
+class SetLike.HasGradedMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) : Prop where 
   mul_mem : ∀ ⦃i j⦄ {gi gj}, gi ∈ A i → gj ∈ A j → (gi*gj) ∈ A (i+j)
 
 instance SetLike.ghasMul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι → S) [SetLike.HasGradedMul A] :
@@ -337,8 +337,8 @@ theorem SetLike.coe_ghas_mul {S : Type _} [SetLike S R] [Mul R] [Add ι] (A : ι
   rfl
 
 /-- A version of `graded_monoid.gmonoid` for internally graded objects. -/
-class SetLike.GradedMonoid{S : Type _}[SetLike S R][Monoidₓ R][AddMonoidₓ ι](A : ι → S) extends SetLike.HasGradedOne A,
-  SetLike.HasGradedMul A : Prop
+class SetLike.GradedMonoid {S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ ι] (A : ι → S) extends
+  SetLike.HasGradedOne A, SetLike.HasGradedMul A : Prop
 
 /-- Build a `gmonoid` instance for a collection of subobjects. -/
 instance SetLike.gmonoid {S : Type _} [SetLike S R] [Monoidₓ R] [AddMonoidₓ ι] (A : ι → S) [SetLike.GradedMonoid A] :

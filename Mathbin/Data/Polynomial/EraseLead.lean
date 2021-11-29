@@ -21,7 +21,7 @@ open Polynomial Finset
 
 namespace Polynomial
 
-variable{R : Type _}[Semiringₓ R]{f : Polynomial R}
+variable {R : Type _} [Semiringₓ R] {f : Polynomial R}
 
 /-- `erase_lead f` for a polynomial `f` is the polynomial obtained by
 subtracting from `f` the leading term of `f`. -/

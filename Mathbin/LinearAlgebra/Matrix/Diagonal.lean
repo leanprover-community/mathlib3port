@@ -26,7 +26,7 @@ namespace Matrix
 
 section CommRingₓ
 
-variable{n : Type _}[Fintype n][DecidableEq n]{R : Type v}[CommRingₓ R]
+variable {n : Type _} [Fintype n] [DecidableEq n] {R : Type v} [CommRingₓ R]
 
 theorem proj_diagonal (i : n) (w : n → R) : (proj i).comp (to_lin' (diagonal w)) = w i • proj i :=
   by 
@@ -52,9 +52,9 @@ end CommRingₓ
 
 section Field
 
-variable{m n : Type _}[Fintype m][Fintype n]
+variable {m n : Type _} [Fintype m] [Fintype n]
 
-variable{K : Type u}[Field K]
+variable {K : Type u} [Field K]
 
 -- error in LinearAlgebra.Matrix.Diagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem ker_diagonal_to_lin'

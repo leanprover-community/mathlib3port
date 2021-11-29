@@ -30,21 +30,21 @@ open Order.Pfilter
 
 namespace Order
 
-variable{P : Type _}
+variable {P : Type _}
 
 namespace Ideal
 
 /-- A pair of an `ideal` and a `pfilter` which form a partition of `P`.
 -/
 @[nolint has_inhabited_instance]
-structure prime_pair(P : Type _)[Preorderₓ P] where 
+structure prime_pair (P : Type _) [Preorderₓ P] where 
   i : ideal P 
   f : pfilter P 
   is_compl_I_F : IsCompl (I : Set P) F
 
 namespace PrimePair
 
-variable[Preorderₓ P](IF : prime_pair P)
+variable [Preorderₓ P] (IF : prime_pair P)
 
 theorem compl_I_eq_F : «expr ᶜ» (IF.I : Set P) = IF.F :=
   IF.is_compl_I_F.compl_eq
@@ -72,12 +72,12 @@ end PrimePair
 /-- An ideal `I` is prime if its complement is a filter.
 -/
 @[mkIff]
-class is_prime[Preorderₓ P](I : ideal P) extends is_proper I : Prop where 
+class is_prime [Preorderₓ P] (I : ideal P) extends is_proper I : Prop where 
   compl_filter : is_pfilter («expr ᶜ» (I : Set P))
 
 section Preorderₓ
 
-variable[Preorderₓ P]
+variable [Preorderₓ P]
 
 /-- Create an element of type `order.ideal.prime_pair` from an ideal satisfying the predicate
 `order.ideal.is_prime`. -/
@@ -95,7 +95,7 @@ end Preorderₓ
 
 section SemilatticeInf
 
-variable[SemilatticeInf P]{x y : P}{I : ideal P}
+variable [SemilatticeInf P] {x y : P} {I : ideal P}
 
 theorem is_prime.mem_or_mem (hI : is_prime I) {x y : P} : x⊓y ∈ I → x ∈ I ∨ y ∈ I :=
   by 
@@ -127,7 +127,7 @@ end SemilatticeInf
 
 section DistribLattice
 
-variable[DistribLattice P]{I : ideal P}
+variable [DistribLattice P] {I : ideal P}
 
 -- error in Order.PrimeIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[priority 100] instance is_maximal.is_prime [is_maximal I] : is_prime I :=
@@ -153,7 +153,7 @@ end DistribLattice
 
 section BooleanAlgebra
 
-variable[BooleanAlgebra P]{x : P}{I : ideal P}
+variable [BooleanAlgebra P] {x : P} {I : ideal P}
 
 theorem is_prime.mem_or_compl_mem (hI : is_prime I) : x ∈ I ∨ «expr ᶜ» x ∈ I :=
   by 
@@ -179,7 +179,7 @@ end
 theorem is_prime_iff_mem_or_compl_mem [is_proper I] : is_prime I ↔ ∀ {x : P}, x ∈ I ∨ «expr ᶜ» x ∈ I :=
   ⟨fun h _ => h.mem_or_compl_mem, is_prime_of_mem_or_compl_mem⟩
 
-instance (priority := 100)is_prime.is_maximal [is_prime I] : is_maximal I :=
+instance (priority := 100) is_prime.is_maximal [is_prime I] : is_maximal I :=
   by 
     simp only [is_maximal_iff, Set.eq_univ_iff_forall, is_prime.to_is_proper, true_andₓ]
     intro J hIJ x 
@@ -197,12 +197,12 @@ end Ideal
 
 namespace Pfilter
 
-variable[Preorderₓ P]
+variable [Preorderₓ P]
 
 /-- A filter `F` is prime if its complement is an ideal.
 -/
 @[mkIff]
-class is_prime(F : pfilter P) : Prop where 
+class is_prime (F : pfilter P) : Prop where 
   compl_ideal : is_ideal («expr ᶜ» (F : Set P))
 
 /-- Create an element of type `order.ideal.prime_pair` from a filter satisfying the predicate

@@ -48,13 +48,13 @@ namespace Matrix
 
 universe u v
 
-variable{n : Type u}[DecidableEq n][Fintype n]{α : Type v}[CommRingₓ α]
+variable {n : Type u} [DecidableEq n] [Fintype n] {α : Type v} [CommRingₓ α]
 
 open_locale Matrix BigOperators
 
 open Equiv Equiv.Perm Finset
 
-variable(A : Matrix n n α)(B : Matrix n n α)
+variable (A : Matrix n n α) (B : Matrix n n α)
 
 /-! ### Matrices are `invertible` iff their determinants are -/
 
@@ -120,7 +120,7 @@ def invertible_equiv_det_invertible : Invertible A ≃ Invertible A.det :=
   { toFun := @det_invertible_of_invertible _ _ _ _ _ A, invFun := @invertible_of_det_invertible _ _ _ _ _ A,
     left_inv := fun _ => Subsingleton.elimₓ _ _, right_inv := fun _ => Subsingleton.elimₓ _ _ }
 
-variable{A B}
+variable {A B}
 
 -- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mul_eq_one_comm : «expr ↔ »(«expr = »(«expr ⬝ »(A, B), 1), «expr = »(«expr ⬝ »(B, A), 1)) :=
@@ -135,7 +135,7 @@ assume A B h, begin
     «expr = »(..., 1) : matrix.mul_inv_of_self B
 end
 
-variable(A B)
+variable (A B)
 
 /-- We can construct an instance of invertible A if A has a left inverse. -/
 def invertible_of_left_inverse (h : B ⬝ A = 1) : Invertible A :=
@@ -166,7 +166,7 @@ end
 theorem is_unit_det_of_invertible [Invertible A] : IsUnit A.det :=
   @is_unit_of_invertible _ _ _ (det_invertible_of_invertible A)
 
-variable{A B}
+variable {A B}
 
 theorem is_unit_det_of_left_inverse (h : B ⬝ A = 1) : IsUnit A.det :=
   @is_unit_of_invertible _ _ _ (det_invertible_of_left_inverse _ _ h)
@@ -193,7 +193,7 @@ theorem is_unit_det_transpose (h : IsUnit A.det) : IsUnit (A)ᵀ.det :=
 
 
 /-- The inverse of a square matrix, when it is invertible (and zero otherwise).-/
-noncomputable instance  : HasInv (Matrix n n α) :=
+noncomputable instance : HasInv (Matrix n n α) :=
   ⟨fun A => Ring.inverse A.det • A.adjugate⟩
 
 theorem inv_def (A : Matrix n n α) : A⁻¹ = Ring.inverse A.det • A.adjugate :=
@@ -317,7 +317,7 @@ theorem unit_of_det_invertible_eq_nonsing_inv_unit [Invertible A.det] :
     ext 
     rfl
 
-variable{A}{B}
+variable {A} {B}
 
 -- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If matrix A is left invertible, then its inverse equals its left inverse. -/
@@ -333,7 +333,7 @@ theorem inv_eq_right_inv (h : A ⬝ B = 1) : A⁻¹ = B :=
 
 section InvEqInv
 
-variable{C : Matrix n n α}
+variable {C : Matrix n n α}
 
 /-- The left inverse of matrix A is unique when existing. -/
 theorem left_inv_eq_left_inv (h : B ⬝ A = 1) (g : C ⬝ A = 1) : B = C :=
@@ -359,7 +359,7 @@ theorem inv_inj (h : A⁻¹ = B⁻¹) (h' : IsUnit A.det) : A = B :=
 
 end InvEqInv
 
-variable(A)
+variable (A)
 
 -- error in LinearAlgebra.Matrix.NonsingularInverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp] theorem inv_zero : «expr = »(«expr ⁻¹»((0 : matrix n n α)), 0) :=
@@ -417,6 +417,14 @@ theorem det_smul_inv_mul_vec_eq_cramer (A : Matrix n n α) (b : n → α) (h : I
   A.det • A⁻¹.mulVec b = cramer A b :=
   by 
     rw [cramer_eq_adjugate_mul_vec, A.nonsing_inv_apply h, ←smul_mul_vec_assoc, smul_smul, h.mul_coe_inv, one_smul]
+
+/-- One form of **Cramer's rule**. See `matrix.mul_vec_cramer` for a stronger form. -/
+@[simp]
+theorem det_smul_inv_vec_mul_eq_cramer_transpose (A : Matrix n n α) (b : n → α) (h : IsUnit A.det) :
+  A.det • A⁻¹.vecMul b = cramer (A)ᵀ b :=
+  by 
+    rw [←A⁻¹.transpose_transpose, vec_mul_transpose, transpose_nonsing_inv, ←det_transpose,
+      (A)ᵀ.det_smul_inv_mul_vec_eq_cramer _ (is_unit_det_transpose A h)]
 
 end Matrix
 

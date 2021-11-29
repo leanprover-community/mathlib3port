@@ -27,7 +27,7 @@ open_locale Nnreal TopologicalSpace Classical Ennreal
 
 open Filter Function
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- A map is said to be `contracting_with K`, if `K < 1` and `f` is `lipschitz_with K`. -/
 def ContractingWith [EmetricSpace α] (K :  ℝ≥0 ) (f : α → α) :=
@@ -35,7 +35,7 @@ def ContractingWith [EmetricSpace α] (K :  ℝ≥0 ) (f : α → α) :=
 
 namespace ContractingWith
 
-variable[EmetricSpace α][cs : CompleteSpace α]{K :  ℝ≥0 }{f : α → α}
+variable [EmetricSpace α] [cs : CompleteSpace α] {K :  ℝ≥0 } {f : α → α}
 
 open Emetric Set
 
@@ -102,7 +102,7 @@ theorem exists_fixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f 
     edist_le_of_edist_le_geometric_of_tendsto K (edist x (f x)) (hf.to_lipschitz_with.edist_iterate_succ_le_geometric x)
       hy⟩
 
-variable(f)
+variable (f)
 
 /-- Let `x` be a point of a complete emetric space. Suppose that `f` is a contracting map,
 and `edist x (f x) ≠ ∞`. Then `efixed_point` is the unique fixed point of `f`
@@ -110,7 +110,7 @@ in `emetric.ball x ∞`. -/
 noncomputable def efixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f x) ≠ ∞) : α :=
   Classical.some$ hf.exists_fixed_point x hx
 
-variable{f}
+variable {f}
 
 theorem efixed_point_is_fixed_pt (hf : ContractingWith K f) {x : α} (hx : edist x (f x) ≠ ∞) :
   is_fixed_pt f (efixed_point f hf x hx) :=
@@ -174,7 +174,7 @@ begin
     rw ["[", expr maps_to.iterate_restrict, ",", expr eq_comm, ",", expr maps_to.coe_restrict_apply, ",", expr subtype.coe_mk, "]"] [] }
 end
 
-variable(f)
+variable (f)
 
 /-- Let `s` be a complete forward-invariant set of a self-map `f`. If `f` contracts on `s`
 and `x ∈ s` satisfies `edist x (f x) ≠ ∞`, then `efixed_point'` is the unique fixed point
@@ -183,7 +183,7 @@ noncomputable def efixed_point' {s : Set α} (hsc : IsComplete s) (hsf : maps_to
   (hf : ContractingWith K$ hsf.restrict f s s) (x : α) (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) : α :=
   Classical.some$ hf.exists_fixed_point' hsc hsf hxs hx
 
-variable{f}
+variable {f}
 
 theorem efixed_point_mem' {s : Set α} (hsc : IsComplete s) (hsf : maps_to f s s)
   (hf : ContractingWith K$ hsf.restrict f s s) {x : α} (hxs : x ∈ s) (hx : edist x (f x) ≠ ∞) :
@@ -246,7 +246,7 @@ end ContractingWith
 
 namespace ContractingWith
 
-variable[MetricSpace α]{K :  ℝ≥0 }{f : α → α}(hf : ContractingWith K f)
+variable [MetricSpace α] {K :  ℝ≥0 } {f : α → α} (hf : ContractingWith K f)
 
 include hf
 
@@ -284,15 +284,15 @@ theorem dist_fixed_point_fixed_point_of_dist_le' (g : α → α) {x y} (hx : is_
 
 noncomputable theory
 
-variable[Nonempty α][CompleteSpace α]
+variable [Nonempty α] [CompleteSpace α]
 
-variable(f)
+variable (f)
 
 /-- The unique fixed point of a contracting map in a nonempty complete metric space. -/
 def fixed_point : α :=
   efixed_point f hf _ (edist_ne_top (Classical.choice ‹Nonempty α›) _)
 
-variable{f}
+variable {f}
 
 /-- The point provided by `contracting_with.fixed_point` is actually a fixed point. -/
 theorem fixed_point_is_fixed_pt : is_fixed_pt f (fixed_point f hf) :=
@@ -341,7 +341,7 @@ begin
   rw ["[", "<-", expr iterate_succ_apply, ",", expr iterate_succ_apply', ",", expr hx, "]"] ["at", ident this],
   contrapose ["!"] [ident this],
   have [] [] [":=", expr dist_pos.2 (ne.symm this)],
-  simpa [] [] ["only"] ["[", expr nnreal.coe_one, ",", expr one_mul, "]"] [] ["using", expr (mul_lt_mul_right this).2 hf.1]
+  simpa [] [] ["only"] ["[", expr nnreal.coe_one, ",", expr one_mul, ",", expr nnreal.val_eq_coe, "]"] [] ["using", expr (mul_lt_mul_right this).mpr hf.left]
 end
 
 end ContractingWith

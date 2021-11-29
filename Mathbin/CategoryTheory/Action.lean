@@ -22,7 +22,7 @@ namespace CategoryTheory
 
 universe u
 
-variable(M : Type _)[Monoidₓ M](X : Type u)[MulAction M X]
+variable (M : Type _) [Monoidₓ M] (X : Type u) [MulAction M X]
 
 /-- A multiplicative action M ↻ X viewed as a functor mapping the single object of M to X
   and an element `m : M` to the map `X → X` given by multiplication by `m`. -/
@@ -52,14 +52,14 @@ theorem π_map (p q : action_category M X) (f : p ⟶ q) : (π M X).map f = f.va
 theorem π_obj (p : action_category M X) : (π M X).obj p = single_obj.star M :=
   Unit.ext
 
-variable{M X}
+variable {M X}
 
 /-- The canonical map `action_category M X → X`. It is given by `λ x, x.snd`, but
   has a more explicit type. -/
 protected def back : action_category M X → X :=
   fun x => x.snd
 
-instance  : CoeTₓ X (action_category M X) :=
+instance : CoeTₓ X (action_category M X) :=
   ⟨fun x => ⟨(), x⟩⟩
 
 @[simp]
@@ -71,7 +71,7 @@ theorem back_coe (x : action_category M X) : «expr↑ » x.back = x :=
   by 
     ext <;> rfl
 
-variable(M X)
+variable (M X)
 
 /-- An object of the action category given by M ↻ X corresponds to an element of X. -/
 def obj_equiv : X ≃ action_category M X :=
@@ -80,13 +80,13 @@ def obj_equiv : X ≃ action_category M X :=
 theorem hom_as_subtype (p q : action_category M X) : (p ⟶ q) = { m : M // m • p.back = q.back } :=
   rfl
 
-instance  [Inhabited X] : Inhabited (action_category M X) :=
+instance [Inhabited X] : Inhabited (action_category M X) :=
   { default := «expr↑ » (default X) }
 
-instance  [Nonempty X] : Nonempty (action_category M X) :=
+instance [Nonempty X] : Nonempty (action_category M X) :=
   Nonempty.map (obj_equiv M X) inferInstance
 
-variable{X}(x : X)
+variable {X} (x : X)
 
 /-- The stabilizer of a point is isomorphic to the endomorphism monoid at the
   corresponding point. In fact they are definitionally equivalent. -/
@@ -101,7 +101,7 @@ theorem stabilizer_iso_End_apply (f : stabilizer.submonoid M x) : (stabilizer_is
 theorem stabilizer_iso_End_symm_apply (f : End _) : (stabilizer_iso_End M x).invFun f = f :=
   rfl
 
-variable{M X}
+variable {M X}
 
 @[simp]
 protected theorem id_val (x : action_category M X) : Subtype.val (𝟙 x) = 1 :=
@@ -111,15 +111,15 @@ protected theorem id_val (x : action_category M X) : Subtype.val (𝟙 x) = 1 :=
 protected theorem comp_val {x y z : action_category M X} (f : x ⟶ y) (g : y ⟶ z) : (f ≫ g).val = g.val*f.val :=
   rfl
 
-instance  [is_pretransitive M X] [Nonempty X] : is_connected (action_category M X) :=
+instance [is_pretransitive M X] [Nonempty X] : is_connected (action_category M X) :=
   zigzag_is_connected$
     fun x y => Relation.ReflTransGen.single$ Or.inl$ nonempty_subtype.mpr (show _ from exists_smul_eq M x.back y.back)
 
 section Groupₓ
 
-variable{G : Type _}[Groupₓ G][MulAction G X]
+variable {G : Type _} [Groupₓ G] [MulAction G X]
 
-noncomputable instance  : groupoid (action_category G X) :=
+noncomputable instance : groupoid (action_category G X) :=
   CategoryTheory.groupoidOfElements _
 
 /-- Any subgroup of `G` is a vertex group in its action groupoid. -/
@@ -146,7 +146,7 @@ protected def cases {P : ∀ ⦃a b : action_category G X⦄, (a ⟶ b) → Sort
     cases inv_smul_eq_iff.mpr h.symm 
     rfl
 
-variable{H : Type _}[Groupₓ H]
+variable {H : Type _} [Groupₓ H]
 
 /-- Given `G` acting on `X`, a functor from the corresponding action groupoid to a group `H`
     can be curried to a group homomorphism `G →* (X → H) ⋊ G`. -/

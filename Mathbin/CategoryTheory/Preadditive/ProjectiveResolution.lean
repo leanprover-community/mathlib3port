@@ -40,13 +40,13 @@ universe v u
 
 namespace CategoryTheory
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 open Projective
 
 section 
 
-variable[has_zero_object C][has_zero_morphisms C][has_equalizers C][has_images C]
+variable [has_zero_object C] [has_zero_morphisms C] [has_equalizers C] [has_images C]
 
 /--
 A `ProjectiveResolution Z` consists of a bundled `ℕ`-indexed chain complex of projective objects,
@@ -66,7 +66,7 @@ you will not typically need to use this bundled object, and will instead use
   and when the category is `abelian` we will show `π` is a quasi-iso).
 -/
 @[nolint has_inhabited_instance]
-structure ProjectiveResolution(Z : C) where 
+structure ProjectiveResolution (Z : C) where 
   complex : ChainComplex C ℕ 
   π : HomologicalComplex.Hom complex ((ChainComplex.single₀ C).obj Z)
   Projective : ∀ n, projective (complex.X n) :=  by 
@@ -88,12 +88,12 @@ attribute [instance] ProjectiveResolution.projective ProjectiveResolution.exact�
 /--
 An object admits a projective resolution.
 -/
-class has_projective_resolution(Z : C) : Prop where 
+class has_projective_resolution (Z : C) : Prop where 
   out{} : Nonempty (ProjectiveResolution Z)
 
 section 
 
-variable(C)
+variable (C)
 
 /--
 You will rarely use this typeclass directly: it is implied by the combination
@@ -116,7 +116,7 @@ theorem π_f_succ {Z : C} (P : ProjectiveResolution Z) (n : ℕ) : P.π.f (n+1) 
     dsimp 
     rfl
 
-instance  {Z : C} (P : ProjectiveResolution Z) (n : ℕ) : CategoryTheory.Epi (P.π.f n) :=
+instance {Z : C} (P : ProjectiveResolution Z) (n : ℕ) : CategoryTheory.Epi (P.π.f n) :=
   by 
     cases n <;> infer_instance
 
@@ -213,7 +213,7 @@ end
 
 namespace ProjectiveResolution
 
-variable[has_zero_object C][preadditive C][has_equalizers C][has_images C]
+variable [has_zero_object C] [preadditive C] [has_equalizers C] [has_images C]
 
 /-- An auxiliary definition for `lift_homotopy_zero`. -/
 def lift_homotopy_zero_zero {Y Z : C} {P : ProjectiveResolution Y} {Q : ProjectiveResolution Z}
@@ -307,7 +307,7 @@ end ProjectiveResolution
 
 section 
 
-variable[has_zero_morphisms C][has_zero_object C][has_equalizers C][has_images C]
+variable [has_zero_morphisms C] [has_zero_object C] [has_equalizers C] [has_images C]
 
 /-- An arbitrarily chosen projective resolution of an object. -/
 abbrev projective_resolution (Z : C) [has_projective_resolution Z] : ChainComplex C ℕ :=
@@ -326,7 +326,7 @@ abbrev projective_resolution.lift {X Y : C} (f : X ⟶ Y) [has_projective_resolu
 
 end 
 
-variable(C)[preadditive C][has_zero_object C][has_equalizers C][has_images C][has_projective_resolutions C]
+variable (C) [preadditive C] [has_zero_object C] [has_equalizers C] [has_images C] [has_projective_resolutions C]
 
 /--
 Taking projective resolutions is functorial,

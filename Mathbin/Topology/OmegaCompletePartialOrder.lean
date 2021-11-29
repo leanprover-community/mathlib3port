@@ -30,7 +30,7 @@ theorem is_ωSup_iff_is_lub {α : Type u} [Preorderₓ α] {c : chain α} {x : �
   by 
     simp [is_ωSup, IsLub, IsLeast, UpperBounds, LowerBounds]
 
-variable(α : Type u)[OmegaCompletePartialOrder α]
+variable (α : Type u) [OmegaCompletePartialOrder α]
 
 attribute [local irreducible] Set
 
@@ -97,7 +97,7 @@ instance Scott.topologicalSpace (α : Type u) [OmegaCompletePartialOrder α] : T
 
 section NotBelow
 
-variable{α : Type _}[OmegaCompletePartialOrder α](y : Scott α)
+variable {α : Type _} [OmegaCompletePartialOrder α] (y : Scott α)
 
 /-- `not_below` is an open set in `Scott α` used
 to prove the monotonicity of continuous functions -/

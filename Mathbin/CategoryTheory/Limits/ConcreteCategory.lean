@@ -21,9 +21,8 @@ attribute [local instance] concrete_category.has_coe_to_fun concrete_category.ha
 
 section Limits
 
-variable{C :
-    Type
-      u}[category.{v} C][concrete_category.{v} C]{J : Type v}[small_category J](F : J ⥤ C)[preserves_limit F (forget C)]
+variable {C : Type u} [category.{v} C] [concrete_category.{v} C] {J : Type v} [small_category J] (F : J ⥤ C)
+  [preserves_limit F (forget C)]
 
 -- error in CategoryTheory.Limits.ConcreteCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem concrete.to_product_injective_of_is_limit
@@ -153,10 +152,8 @@ end Limits
 
 section Colimits
 
-variable{C :
-    Type
-      u}[category.{v}
-      C][concrete_category.{v} C]{J : Type v}[small_category J](F : J ⥤ C)[preserves_colimit F (forget C)]
+variable {C : Type u} [category.{v} C] [concrete_category.{v} C] {J : Type v} [small_category J] (F : J ⥤ C)
+  [preserves_colimit F (forget C)]
 
 -- error in CategoryTheory.Limits.ConcreteCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem concrete.from_union_surjective_of_is_colimit
@@ -234,7 +231,7 @@ theorem concrete.colimit_rep_eq_of_exists [has_colimit F] {i j : J} (x : F.obj i
 
 section FilteredColimits
 
-variable[is_filtered J]
+variable [is_filtered J]
 
 theorem concrete.is_colimit_exists_of_rep_eq {D : cocone F} {i j : J} (hD : is_colimit D) (x : F.obj i) (y : F.obj j)
   (h : D.ι.app _ x = D.ι.app _ y) : ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f x = F.map g y :=

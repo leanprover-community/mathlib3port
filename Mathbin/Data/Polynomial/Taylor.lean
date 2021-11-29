@@ -18,7 +18,7 @@ noncomputable theory
 
 namespace Polynomial
 
-variable{R : Type _}[Semiringₓ R](r : R)(f : Polynomial R)
+variable {R : Type _} [Semiringₓ R] (r : R) (f : Polynomial R)
 
 /-- The Taylor expansion of a polynomial `f` at `r`. -/
 def taylor (r : R) : Polynomial R →ₗ[R] Polynomial R :=

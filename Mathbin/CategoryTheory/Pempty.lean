@@ -13,13 +13,13 @@ namespace CategoryTheory
 
 namespace Functor
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 /-- The canonical functor out of the empty category. -/
 def Empty : discrete Pempty.{v + 1} ⥤ C :=
   discrete.functor Pempty.elimₓ
 
-variable{C}
+variable {C}
 
 /-- Any two functors out of the empty category are isomorphic. -/
 def empty_ext (F G : discrete Pempty.{v + 1} ⥤ C) : F ≅ G :=

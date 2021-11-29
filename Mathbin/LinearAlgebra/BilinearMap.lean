@@ -28,33 +28,33 @@ namespace LinearMap
 
 section Semiringₓ
 
-variable{R : Type _}[Semiringₓ R]{S : Type _}[Semiringₓ S]
+variable {R : Type _} [Semiringₓ R] {S : Type _} [Semiringₓ S]
 
-variable{R₂ : Type _}[Semiringₓ R₂]{S₂ : Type _}[Semiringₓ S₂]
+variable {R₂ : Type _} [Semiringₓ R₂] {S₂ : Type _} [Semiringₓ S₂]
 
-variable{M : Type _}{N : Type _}{P : Type _}
+variable {M : Type _} {N : Type _} {P : Type _}
 
-variable{Nₗ : Type _}{Pₗ : Type _}
+variable {Nₗ : Type _} {Pₗ : Type _}
 
-variable{M' : Type _}{N' : Type _}{P' : Type _}
+variable {M' : Type _} {N' : Type _} {P' : Type _}
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ N][AddCommMonoidₓ P]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P]
 
-variable[AddCommMonoidₓ Nₗ][AddCommMonoidₓ Pₗ]
+variable [AddCommMonoidₓ Nₗ] [AddCommMonoidₓ Pₗ]
 
-variable[AddCommGroupₓ M'][AddCommGroupₓ N'][AddCommGroupₓ P']
+variable [AddCommGroupₓ M'] [AddCommGroupₓ N'] [AddCommGroupₓ P']
 
-variable[Module R M][Module S N][Module R₂ P][Module S₂ P]
+variable [Module R M] [Module S N] [Module R₂ P] [Module S₂ P]
 
-variable[Module R Pₗ][Module S Pₗ]
+variable [Module R Pₗ] [Module S Pₗ]
 
-variable[Module R M'][Module S N'][Module R₂ P'][Module S₂ P']
+variable [Module R M'] [Module S N'] [Module R₂ P'] [Module S₂ P']
 
-variable[SmulCommClass S₂ R₂ P][SmulCommClass S R Pₗ][SmulCommClass S₂ R₂ P']
+variable [SmulCommClass S₂ R₂ P] [SmulCommClass S R Pₗ] [SmulCommClass S₂ R₂ P']
 
-variable{ρ₁₂ : R →+* R₂}{σ₁₂ : S →+* S₂}
+variable {ρ₁₂ : R →+* R₂} {σ₁₂ : S →+* S₂}
 
-variable(ρ₁₂ σ₁₂)
+variable (ρ₁₂ σ₁₂)
 
 /-- Create a bilinear map from a function that is semilinear in each component.
 See `mk₂'` and `mk₂` for the linear case. -/
@@ -64,14 +64,14 @@ def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f 
   { toFun := fun m => { toFun := f m, map_add' := H3 m, map_smul' := fun c => H4 c m },
     map_add' := fun m₁ m₂ => LinearMap.ext$ H1 m₁ m₂, map_smul' := fun c m => LinearMap.ext$ H2 c m }
 
-variable{ρ₁₂ σ₁₂}
+variable {ρ₁₂ σ₁₂}
 
 @[simp]
 theorem mk₂'ₛₗ_apply (f : M → N → P) {H1 H2 H3 H4} (m : M) (n : N) :
   (mk₂'ₛₗ ρ₁₂ σ₁₂ f H1 H2 H3 H4 : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) m n = f m n :=
   rfl
 
-variable(R S)
+variable (R S)
 
 /-- Create a bilinear map from a function that is linear in each component.
 See `mk₂` for the special case where both arguments come from modules over the same ring. -/
@@ -79,7 +79,7 @@ def mk₂' (f : M → N → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f m�
   (H3 : ∀ m n₁ n₂, f m (n₁+n₂) = f m n₁+f m n₂) (H4 : ∀ c : S m n, f m (c • n) = c • f m n) : M →ₗ[R] N →ₗ[S] Pₗ :=
   mk₂'ₛₗ (RingHom.id R) (RingHom.id S) f H1 H2 H3 H4
 
-variable{R S}
+variable {R S}
 
 @[simp]
 theorem mk₂'_apply (f : M → N → Pₗ) {H1 H2 H3 H4} (m : M) (n : N) :
@@ -112,7 +112,7 @@ theorem flip_apply (f : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P) (m : M) (
 
 open_locale BigOperators
 
-variable{R}
+variable {R}
 
 theorem flip_inj {f g : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P} (H : flip f = flip g) : f = g :=
   ext₂$
@@ -146,29 +146,29 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable{R : Type _}[CommSemiringₓ R]{R₂ : Type _}[CommSemiringₓ R₂]
+variable {R : Type _} [CommSemiringₓ R] {R₂ : Type _} [CommSemiringₓ R₂]
 
-variable{R₃ : Type _}[CommSemiringₓ R₃]{R₄ : Type _}[CommSemiringₓ R₄]
+variable {R₃ : Type _} [CommSemiringₓ R₃] {R₄ : Type _} [CommSemiringₓ R₄]
 
-variable{M : Type _}{N : Type _}{P : Type _}{Q : Type _}
+variable {M : Type _} {N : Type _} {P : Type _} {Q : Type _}
 
-variable{Nₗ : Type _}{Pₗ : Type _}{Qₗ : Type _}
+variable {Nₗ : Type _} {Pₗ : Type _} {Qₗ : Type _}
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ N][AddCommMonoidₓ P][AddCommMonoidₓ Q]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P] [AddCommMonoidₓ Q]
 
-variable[AddCommMonoidₓ Nₗ][AddCommMonoidₓ Pₗ][AddCommMonoidₓ Qₗ]
+variable [AddCommMonoidₓ Nₗ] [AddCommMonoidₓ Pₗ] [AddCommMonoidₓ Qₗ]
 
-variable[Module R M][Module R₂ N][Module R₃ P][Module R₄ Q]
+variable [Module R M] [Module R₂ N] [Module R₃ P] [Module R₄ Q]
 
-variable[Module R Nₗ][Module R Pₗ][Module R Qₗ]
+variable [Module R Nₗ] [Module R Pₗ] [Module R Qₗ]
 
-variable{σ₁₂ : R →+* R₂}{σ₂₃ : R₂ →+* R₃}{σ₁₃ : R →+* R₃}
+variable {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃}
 
-variable{σ₄₂ : R₄ →+* R₂}{σ₄₃ : R₄ →+* R₃}
+variable {σ₄₂ : R₄ →+* R₂} {σ₄₃ : R₄ →+* R₃}
 
-variable[RingHomCompTriple σ₁₂ σ₂₃ σ₁₃][RingHomCompTriple σ₄₂ σ₂₃ σ₄₃]
+variable [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomCompTriple σ₄₂ σ₂₃ σ₄₃]
 
-variable(R)
+variable (R)
 
 /-- Create a bilinear map from a function that is linear in each component.
 
@@ -182,41 +182,41 @@ theorem mk₂_apply (f : M → Nₗ → Pₗ) {H1 H2 H3 H4} (m : M) (n : Nₗ) :
   (mk₂ R f H1 H2 H3 H4 : M →ₗ[R] Nₗ →ₗ[R] Pₗ) m n = f m n :=
   rfl
 
-variable(R M N P)
+variable (R M N P)
 
 /-- Given a linear map from `M` to linear maps from `N` to `P`, i.e., a bilinear map `M → N → P`,
 change the order of variables and get a linear map from `N` to linear maps from `M` to `P`. -/
 def lflip : (M →ₛₗ[σ₁₃] N →ₛₗ[σ₂₃] P) →ₗ[R₃] N →ₛₗ[σ₂₃] M →ₛₗ[σ₁₃] P :=
   { toFun := flip, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl }
 
-variable{R M N P}
+variable {R M N P}
 
-variable(f : M →ₛₗ[σ₁₃] N →ₛₗ[σ₂₃] P)
+variable (f : M →ₛₗ[σ₁₃] N →ₛₗ[σ₂₃] P)
 
 @[simp]
 theorem lflip_apply (m : M) (n : N) : lflip R M N P f n m = f m n :=
   rfl
 
-variable(R Pₗ)
+variable (R Pₗ)
 
 /-- Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
 def lcomp (f : M →ₗ[R] Nₗ) : (Nₗ →ₗ[R] Pₗ) →ₗ[R] M →ₗ[R] Pₗ :=
   flip$ LinearMap.comp (flip id) f
 
-variable{R Pₗ}
+variable {R Pₗ}
 
 @[simp]
 theorem lcomp_apply (f : M →ₗ[R] Nₗ) (g : Nₗ →ₗ[R] Pₗ) (x : M) : lcomp R Pₗ f g x = g (f x) :=
   rfl
 
-variable(P σ₂₃)
+variable (P σ₂₃)
 
 /-- Composing a semilinear map `M → N` and a semilinear map `N → P` to form a semilinear map
 `M → P` is itself a linear map. -/
 def lcompₛₗ (f : M →ₛₗ[σ₁₂] N) : (N →ₛₗ[σ₂₃] P) →ₗ[R₃] M →ₛₗ[σ₁₃] P :=
   flip$ LinearMap.comp (flip id) f
 
-variable{P σ₂₃}
+variable {P σ₂₃}
 
 include σ₁₃
 
@@ -226,7 +226,7 @@ theorem lcompₛₗ_apply (f : M →ₛₗ[σ₁₂] N) (g : N →ₛₗ[σ₂�
 
 omit σ₁₃
 
-variable(R M Nₗ Pₗ)
+variable (R M Nₗ Pₗ)
 
 /-- Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
 def llcomp : (Nₗ →ₗ[R] Pₗ) →ₗ[R] (M →ₗ[R] Nₗ) →ₗ[R] M →ₗ[R] Pₗ :=
@@ -234,7 +234,7 @@ def llcomp : (Nₗ →ₗ[R] Pₗ) →ₗ[R] (M →ₗ[R] Nₗ) →ₗ[R] M →�
     { toFun := lcomp R Pₗ, map_add' := fun f f' => ext₂$ fun g x => g.map_add _ _,
       map_smul' := fun c : R f => ext₂$ fun g x => g.map_smul _ _ }
 
-variable{R M Nₗ Pₗ}
+variable {R M Nₗ Pₗ}
 
 section 
 
@@ -266,7 +266,7 @@ def compr₂ (f : M →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Pₗ →ₗ[R] Qₗ) : M
 theorem compr₂_apply (f : M →ₗ[R] Nₗ →ₗ[R] Pₗ) (g : Pₗ →ₗ[R] Qₗ) (m : M) (n : Nₗ) : f.compr₂ g m n = g (f m n) :=
   rfl
 
-variable(R M)
+variable (R M)
 
 /-- Scalar multiplication as a bilinear map `R → M → M`. -/
 def lsmul : R →ₗ[R] M →ₗ[R] M :=
@@ -275,7 +275,7 @@ def lsmul : R →ₗ[R] M →ₗ[R] M :=
       by 
         simp only [smul_smul, smul_eq_mul, mul_commₓ]
 
-variable{R M}
+variable {R M}
 
 @[simp]
 theorem lsmul_apply (r : R) (m : M) : lsmul R M r m = r • m :=
@@ -285,7 +285,7 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable{R M : Type _}[CommRingₓ R][AddCommGroupₓ M][Module R M]
+variable {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
 
 theorem lsmul_injective [NoZeroSmulDivisors R M] {x : R} (hx : x ≠ 0) : Function.Injective (lsmul R M x) :=
   smul_right_injective _ hx

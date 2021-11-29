@@ -26,7 +26,7 @@ namespace CategoryTheory
 
 open Opposite
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
 /--
 An equality `X = Y` gives us a morphism `X ⟶ Y`.
@@ -121,7 +121,7 @@ theorem eq_to_hom_unop {X Y : «expr ᵒᵖ» C} (h : X = Y) : (eq_to_hom h).uno
     cases h 
     rfl
 
-instance  {X Y : C} (h : X = Y) : is_iso (eq_to_hom h) :=
+instance {X Y : C} (h : X = Y) : is_iso (eq_to_hom h) :=
   is_iso.of_iso (eq_to_iso h)
 
 @[simp]
@@ -130,7 +130,7 @@ theorem inv_eq_to_hom {X Y : C} (h : X = Y) : inv (eq_to_hom h) = eq_to_hom h.sy
     ext 
     simp 
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 namespace Functor
 

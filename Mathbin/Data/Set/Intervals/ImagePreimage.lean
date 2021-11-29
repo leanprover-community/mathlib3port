@@ -30,7 +30,7 @@ TODO : move as much as possible in this file to the setting of this weaker typec
 -/
 
 
-variable{α : Type u}[OrderedCancelAddCommMonoid α][HasExistsAddOfLe α](a b d : α)
+variable {α : Type u} [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] (a b d : α)
 
 theorem Icc_add_bij : bij_on (·+d) (Icc a b) (Icc (a+d) (b+d)) :=
   by 
@@ -100,7 +100,7 @@ end HasExistsAddOfLe
 
 section OrderedAddCommGroup
 
-variable{G : Type u}[OrderedAddCommGroup G](a b c : G)
+variable {G : Type u} [OrderedAddCommGroup G] (a b c : G)
 
 /-!
 ### Preimages under `x ↦ a + x`
@@ -552,7 +552,7 @@ end OrderedAddCommGroup
 
 section LinearOrderedField
 
-variable{k : Type u}[LinearOrderedField k]
+variable {k : Type u} [LinearOrderedField k]
 
 @[simp]
 theorem preimage_mul_const_Iio (a : k) {c : k} (h : 0 < c) : (fun x => x*c) ⁻¹' Iio a = Iio (a / c) :=

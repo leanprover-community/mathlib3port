@@ -21,7 +21,7 @@ noncomputable theory
 universe u
 
 /-- A valued ring is a ring that comes equipped with a distinguished valuation.-/
-class Valued(R : Type u)[Ringₓ R] where 
+class Valued (R : Type u) [Ringₓ R] where 
   Γ₀ : Type u
   [grp : LinearOrderedCommGroupWithZero Γ₀]
   V : Valuation R Γ₀
@@ -30,7 +30,7 @@ attribute [instance] Valued.grp
 
 namespace Valued
 
-variable{R : Type _}[Ringₓ R][Valued R]
+variable {R : Type _} [Ringₓ R] [Valued R]
 
 /-- The basis of open subgroups for the topology on a valued ring.-/
 theorem subgroups_basis : RingSubgroupsBasis fun γ : Units (Γ₀ R) => Valued.v.ltAddSubgroup γ :=
@@ -105,11 +105,11 @@ theorem loc_const {x : R} (h : v x ≠ 0) : { y:R | v y = v x } ∈ 𝓝 x :=
     exact Valuation.map_eq_of_sub_lt _ y_in
 
 /-- The uniform structure on a valued ring.-/
-instance (priority := 100)UniformSpace : UniformSpace R :=
+instance (priority := 100) UniformSpace : UniformSpace R :=
   TopologicalAddGroup.toUniformSpace R
 
 /-- A valued ring is a uniform additive group.-/
-instance (priority := 100)UniformAddGroup : UniformAddGroup R :=
+instance (priority := 100) UniformAddGroup : UniformAddGroup R :=
   topological_add_group_is_uniform
 
 theorem cauchy_iff {F : Filter R} :

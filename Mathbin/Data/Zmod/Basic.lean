@@ -38,7 +38,7 @@ to register the ring structure on `zmod n` as type class instance.
 open Nat.Modeq Int
 
 /-- Multiplicative commutative semigroup structure on `fin (n+1)`. -/
-instance  (n : ℕ) : CommSemigroupₓ (Finₓ (n+1)) :=
+instance (n : ℕ) : CommSemigroupₓ (Finₓ (n+1)) :=
   { Finₓ.hasMul with
     mul_assoc :=
       fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
@@ -66,7 +66,7 @@ private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Finₓ (n+1), (a*b+c) =
         )
 
 /-- Commutative ring structure on `fin (n+1)`. -/
-instance  (n : ℕ) : CommRingₓ (Finₓ (n+1)) :=
+instance (n : ℕ) : CommRingₓ (Finₓ (n+1)) :=
   { Finₓ.hasOne, Finₓ.addCommGroup n, Finₓ.commSemigroup n with one_mul := Finₓ.one_mul, mul_one := Finₓ.mul_one,
     left_distrib := left_distrib_aux n,
     right_distrib :=
@@ -161,7 +161,7 @@ theorem val_nat_cast {n : ℕ} (a : ℕ) : (a : Zmod n).val = a % n :=
     rw [←Finₓ.of_nat_eq_coe]
     rfl
 
-instance  (n : ℕ) : CharP (Zmod n) n :=
+instance (n : ℕ) : CharP (Zmod n) n :=
   { cast_eq_zero_iff :=
       by 
         intro k 
@@ -183,11 +183,11 @@ theorem nat_cast_self' (n : ℕ) : (n+1 : Zmod (n+1)) = 0 :=
 
 section UniversalProperty
 
-variable{n : ℕ}{R : Type _}
+variable {n : ℕ} {R : Type _}
 
 section 
 
-variable[HasZero R][HasOne R][Add R][Neg R]
+variable [HasZero R] [HasOne R] [Add R] [Neg R]
 
 /-- Cast an integer modulo `n` to another semiring.
 This function is a morphism if the characteristic of `R` divides `n`.
@@ -204,7 +204,7 @@ theorem cast_zero : ((0 : Zmod n) : R) = 0 :=
   by 
     cases n <;> rfl
 
-variable{S : Type _}[HasZero S][HasOne S][Add S][Neg S]
+variable {S : Type _} [HasZero S] [HasOne S] [Add S] [Neg S]
 
 @[simp]
 theorem _root_.prod.fst_zmod_cast (a : Zmod n) : (a : R × S).fst = a :=
@@ -260,7 +260,7 @@ theorem cast_id : ∀ n i : Zmod n, «expr↑ » i = i
 theorem cast_id' : (coeₓ : Zmod n → Zmod n) = id :=
   funext (cast_id n)
 
-variable(R)[Ringₓ R]
+variable (R) [Ringₓ R]
 
 /-- The coercions are respectively `nat.cast` and `zmod.cast`. -/
 @[simp]
@@ -283,7 +283,7 @@ theorem int_cast_comp_cast : (coeₓ : ℤ → R) ∘ (coeₓ : Zmod n → ℤ) 
       ext 
       simp 
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem nat_cast_val [Fact (0 < n)] (i : Zmod n) : (i.val : R) = i :=
@@ -311,7 +311,7 @@ section CharDvd
 /-! If the characteristic of `R` divides `n`, then `cast` is a homomorphism. -/
 
 
-variable{n}{m : ℕ}[CharP R m]
+variable {n} {m : ℕ} [CharP R m]
 
 @[simp]
 theorem cast_one (h : m ∣ n) : ((1 : Zmod n) : R) = 1 :=
@@ -388,7 +388,7 @@ section CharEq
 /-! Some specialised simp lemmas which apply when `R` has characteristic `n`. -/
 
 
-variable[CharP R n]
+variable [CharP R n]
 
 @[simp]
 theorem cast_one' : ((1 : Zmod n) : R) = 1 :=
@@ -418,7 +418,7 @@ theorem cast_nat_cast' (k : ℕ) : ((k : Zmod n) : R) = k :=
 theorem cast_int_cast' (k : ℤ) : ((k : Zmod n) : R) = k :=
   cast_int_cast dvd_rfl k
 
-variable(R)
+variable (R)
 
 theorem cast_hom_injective : Function.Injective (Zmod.castHom (dvd_refl n) R) :=
   by 
@@ -556,7 +556,7 @@ def inv : ∀ n : ℕ, Zmod n → Zmod n
 | 0, i => Int.sign i
 | n+1, i => Nat.gcdA i.val (n+1)
 
-instance  (n : ℕ) : HasInv (Zmod n) :=
+instance (n : ℕ) : HasInv (Zmod n) :=
   ⟨inv n⟩
 
 theorem inv_zero : ∀ n : ℕ, (0 : Zmod n)⁻¹ = 0
@@ -958,7 +958,7 @@ end Zmod
 
 namespace Zmod
 
-variable(p : ℕ)[Fact p.prime]
+variable (p : ℕ) [Fact p.prime]
 
 private theorem mul_inv_cancel_aux (a : Zmod p) (h : a ≠ 0) : (a*a⁻¹) = 1 :=
   by 
@@ -968,12 +968,12 @@ private theorem mul_inv_cancel_aux (a : Zmod p) (h : a ≠ 0) : (a*a⁻¹) = 1 :
     rwa [Nat.Prime.coprime_iff_not_dvd (Fact.out p.prime), ←CharP.cast_eq_zero_iff (Zmod p)]
 
 /-- Field structure on `zmod p` if `p` is prime. -/
-instance  : Field (Zmod p) :=
+instance : Field (Zmod p) :=
   { Zmod.commRing p, Zmod.hasInv p, Zmod.nontrivial p with mul_inv_cancel := mul_inv_cancel_aux p,
     inv_zero := inv_zero p }
 
 /-- `zmod p` is an integral domain when `p` is prime. -/
-instance  (p : ℕ) [hp : Fact p.prime] : IsDomain (Zmod p) :=
+instance (p : ℕ) [hp : Fact p.prime] : IsDomain (Zmod p) :=
   by 
     (
       cases p
@@ -995,7 +995,7 @@ theorem RingHom.ext_zmod {n : ℕ} {R : Type _} [Semiringₓ R] (f g : Zmod n �
 
 namespace Zmod
 
-variable{n : ℕ}{R : Type _}
+variable {n : ℕ} {R : Type _}
 
 instance subsingleton_ring_hom [Semiringₓ R] : Subsingleton (Zmod n →+* R) :=
   ⟨RingHom.ext_zmod⟩
@@ -1030,7 +1030,7 @@ end
 
 section lift
 
-variable(n){A : Type _}[AddGroupₓ A]
+variable (n) {A : Type _} [AddGroupₓ A]
 
 /-- The map from `zmod n` induced by `f : ℤ →+ A` that maps `n` to `0`. -/
 @[simps]
@@ -1048,7 +1048,7 @@ def lift : { f : ℤ →+ A // f n = 0 } ≃ (Zmod n →+ A) :=
             refine' h (AddSubgroup.mem_zmultiples _)).trans$
     (Int.castAddHom (Zmod n)).liftOfRightInverse coeₓ int_cast_zmod_cast
 
-variable(f : { f : ℤ →+ A // f n = 0 })
+variable (f : { f : ℤ →+ A // f n = 0 })
 
 @[simp]
 theorem lift_coe (x : ℤ) : lift n f (x : Zmod n) = f x :=

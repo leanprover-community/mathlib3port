@@ -50,7 +50,7 @@ open CategoryTheory.Limits.WalkingParallelPair
 
 universe v u
 
-variable(R : Type u)[Ringₓ R]
+variable (R : Type u) [Ringₓ R]
 
 /-- The category of R-modules and their morphisms.
 
@@ -67,7 +67,7 @@ attribute [instance] ModuleCat.isAddCommGroup ModuleCat.isModule
 
 namespace ModuleCat
 
-instance  : CoeSort (ModuleCat.{v} R) (Type v) :=
+instance : CoeSort (ModuleCat.{v} R) (Type v) :=
   ⟨ModuleCat.Carrier⟩
 
 instance Module_category : category (ModuleCat.{v} R) :=
@@ -90,17 +90,17 @@ def of_hom {R : Type u} [Ringₓ R] {X Y : Type u} [AddCommGroupₓ X] [Module R
   (f : X →ₗ[R] Y) : of R X ⟶ of R Y :=
   f
 
-instance  : HasZero (ModuleCat R) :=
+instance : HasZero (ModuleCat R) :=
   ⟨of R PUnit⟩
 
-instance  : Inhabited (ModuleCat R) :=
+instance : Inhabited (ModuleCat R) :=
   ⟨0⟩
 
 @[simp]
 theorem coe_of (X : Type u) [AddCommGroupₓ X] [Module R X] : (of R X : Type u) = X :=
   rfl
 
-variable{R}
+variable {R}
 
 /-- Forgetting to the underlying type and then building the bundled object returns the original
 module. -/
@@ -108,12 +108,12 @@ module. -/
 def of_self_iso (M : ModuleCat R) : ModuleCat.of R M ≅ M :=
   { Hom := 𝟙 M, inv := 𝟙 M }
 
-instance  : Subsingleton (of R PUnit) :=
+instance : Subsingleton (of R PUnit) :=
   by 
     rw [coe_of R PUnit]
     infer_instance
 
-instance  : has_zero_object (ModuleCat.{v} R) :=
+instance : has_zero_object (ModuleCat.{v} R) :=
   { zero := 0,
     uniqueTo :=
       fun X =>
@@ -137,7 +137,7 @@ instance  : has_zero_object (ModuleCat.{v} R) :=
                   by 
                     decide } }
 
-variable{R}{M N U : ModuleCat.{v} R}
+variable {R} {M N U : ModuleCat.{v} R}
 
 @[simp]
 theorem id_apply (m : M) : (𝟙 M : M → M) m = m :=
@@ -152,9 +152,9 @@ theorem comp_def (f : M ⟶ N) (g : N ⟶ U) : f ≫ g = g.comp f :=
 
 end ModuleCat
 
-variable{R}
+variable {R}
 
-variable{X₁ X₂ : Type v}
+variable {X₁ X₂ : Type v}
 
 /-- Reinterpreting a linear map in the category of `R`-modules. -/
 def ModuleCat.asHom [AddCommGroupₓ X₁] [Module R X₁] [AddCommGroupₓ X₂] [Module R X₂] :
@@ -280,7 +280,7 @@ def linearEquivIsoModuleIso {X Y : Type u} [AddCommGroupₓ X] [AddCommGroupₓ 
 
 namespace ModuleCat
 
-instance  : preadditive (ModuleCat.{v} R) :=
+instance : preadditive (ModuleCat.{v} R) :=
   { add_comp' :=
       fun P Q R f f' g =>
         show (f+f') ≫ g = (f ≫ g)+f' ≫ g by 
@@ -294,9 +294,9 @@ instance  : preadditive (ModuleCat.{v} R) :=
 
 section 
 
-variable{S : Type u}[CommRingₓ S]
+variable {S : Type u} [CommRingₓ S]
 
-instance  : linear S (ModuleCat.{v} S) :=
+instance : linear S (ModuleCat.{v} S) :=
   { homModule := fun X Y => LinearMap.module,
     smul_comp' :=
       by 
@@ -313,6 +313,6 @@ end
 
 end ModuleCat
 
-instance  (M : Type u) [AddCommGroupₓ M] [Module R M] : Coe (Submodule R M) (ModuleCat R) :=
+instance (M : Type u) [AddCommGroupₓ M] [Module R M] : Coe (Submodule R M) (ModuleCat R) :=
   ⟨fun N => ModuleCat.of R N⟩
 

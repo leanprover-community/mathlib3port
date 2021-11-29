@@ -79,13 +79,13 @@ theorem coe_eq_one {x : I} : (x : ℝ) = 1 ↔ x = 1 :=
 theorem coe_ne_one {x : I} : (x : ℝ) ≠ 1 ↔ x ≠ 1 :=
   not_iff_not.mpr coe_eq_one
 
-instance  : Nonempty I :=
+instance : Nonempty I :=
   ⟨0⟩
 
 theorem mul_mem (x y : I) : ((x : ℝ)*y) ∈ I :=
   ⟨mul_nonneg x.2.1 y.2.1, (mul_le_mul x.2.2 y.2.2 y.2.1 zero_le_one).trans_eq$ one_mulₓ 1⟩
 
-instance  : Mul I :=
+instance : Mul I :=
   ⟨fun x y => ⟨x*y, mul_mem x y⟩⟩
 
 @[simp, normCast]
@@ -131,11 +131,11 @@ theorem continuous_symm : Continuous σ :=
   by 
     continuity!
 
-instance  : ConnectedSpace I :=
+instance : ConnectedSpace I :=
   Subtype.connected_space ⟨nonempty_Icc.mpr zero_le_one, is_preconnected_Icc⟩
 
 /-- Verify there is an instance for `compact_space I`. -/
-example  : CompactSpace I :=
+example : CompactSpace I :=
   by 
     infer_instance
 
@@ -197,7 +197,7 @@ end Tactic.Interactive
 
 section 
 
-variable{𝕜 : Type _}[LinearOrderedField 𝕜][TopologicalSpace 𝕜][TopologicalRing 𝕜]
+variable {𝕜 : Type _} [LinearOrderedField 𝕜] [TopologicalSpace 𝕜] [TopologicalRing 𝕜]
 
 /--
 The image of `[0,1]` under the homeomorphism `λ x, a * x + b` is `[b, a+b]`.

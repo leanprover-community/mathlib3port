@@ -19,9 +19,9 @@ open CategoryTheory
 
 universe v u
 
-variable{J : Type v}[category.{v} J]{J' : Type v}[category.{v} J']
+variable {J : Type v} [category.{v} J] {J' : Type v} [category.{v} J']
 
-variable{C : Type u}[category.{v} C]{C' : Type u}[category.{v} C']
+variable {C : Type u} [category.{v} C] {C' : Type u} [category.{v} C']
 
 /-- A cone is a limit cone iff it is terminal. -/
 def cone.is_limit_equiv_is_terminal {F : J ⥤ C} (c : cone F) : is_limit c ≃ is_terminal c :=

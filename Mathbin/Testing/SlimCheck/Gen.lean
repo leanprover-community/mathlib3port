@@ -1,6 +1,5 @@
-import Mathbin.Control.Uliftable 
-import Leanbin.System.Random 
-import Mathbin.System.Random.Basic
+import Mathbin.Control.Random 
+import Mathbin.Control.Uliftable
 
 /-!
 # `gen` Monad
@@ -38,7 +37,7 @@ It has a `nat` parameter so that the caller can decide on the
 size of the examples. -/ @[reducible, derive #["[", expr monad, ",", expr is_lawful_monad, "]"]] def gen (α : Type u) :=
 reader_t (ulift exprℕ()) rand α
 
-variable(α : Type u)
+variable (α : Type u)
 
 local infixl:41 " .. " => Set.Icc
 
@@ -55,7 +54,7 @@ section Rand
 def choose_any [Random α] : gen α :=
   ⟨fun _ => Rand.random α⟩
 
-variable{α}[Preorderₓ α]
+variable {α} [Preorderₓ α]
 
 /-- Lift `random.random_r` to the `gen` monad. -/
 def choose [BoundedRandom α] (x y : α) (p : x ≤ y) : gen (x .. y) :=
@@ -79,16 +78,16 @@ def choose_nat' (x y : ℕ) (p : x < y) : gen (Set.Ico x y) :=
 
 open Nat
 
-instance  : Uliftable gen.{u} gen.{v} :=
+instance : Uliftable gen.{u} gen.{v} :=
   ReaderTₓ.uliftable' (Equiv.ulift.trans Equiv.ulift.symm)
 
-instance  : HasOrelse gen.{u} :=
+instance : HasOrelse gen.{u} :=
   ⟨fun α x y =>
       do 
         let b ← Uliftable.up$ choose_any Bool 
         if b.down then x else y⟩
 
-variable{α}
+variable {α}
 
 /-- Get access to the size parameter of the `gen` monad. For
 reasons of universe polymorphism, it is specified in

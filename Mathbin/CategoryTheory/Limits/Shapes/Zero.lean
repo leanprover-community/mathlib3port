@@ -29,7 +29,7 @@ open CategoryTheory.Category
 
 namespace CategoryTheory.Limits
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 /-- A category "has zero morphisms" if there is a designated "zero morphism" in each morphism space,
 and compositions of zero morphisms with anything give the zero morphism. -/
@@ -48,7 +48,7 @@ restate_axiom has_zero_morphisms.comp_zero'
 
 restate_axiom has_zero_morphisms.zero_comp'
 
-variable{C}
+variable {C}
 
 @[simp]
 theorem comp_zero [has_zero_morphisms C] {X Y : C} {f : X ⟶ Y} {Z : C} : f ≫ (0 : Y ⟶ Z) = (0 : X ⟶ Z) :=
@@ -70,7 +70,7 @@ instance has_zero_morphisms_punit : has_zero_morphisms (discrete PUnit) :=
 
 namespace HasZeroMorphisms
 
-variable{C}
+variable {C}
 
 /-- This lemma will be immediately superseded by `ext`, below. -/
 private theorem ext_aux (I J : has_zero_morphisms C)
@@ -102,7 +102,7 @@ theorem ext (I J : has_zero_morphisms C) : I = J :=
     rw [←@has_zero_morphisms.comp_zero _ _ I X X (@has_zero_morphisms.has_zero _ _ J X X).zero]
     rw [@has_zero_morphisms.zero_comp _ _ J]
 
-instance  : Subsingleton (has_zero_morphisms C) :=
+instance : Subsingleton (has_zero_morphisms C) :=
   ⟨ext⟩
 
 end HasZeroMorphisms
@@ -116,7 +116,7 @@ instance has_zero_morphisms_opposite [has_zero_morphisms C] : has_zero_morphisms
 
 section 
 
-variable{C}[has_zero_morphisms C]
+variable {C} [has_zero_morphisms C]
 
 theorem zero_of_comp_mono {X Y Z : C} {f : X ⟶ Y} (g : Y ⟶ Z) [mono g] (h : f ≫ g = 0) : f = 0 :=
   by 
@@ -141,18 +141,18 @@ section
 
 universe v' u'
 
-variable(D : Type u')[category.{v'} D]
+variable (D : Type u') [category.{v'} D]
 
-variable[has_zero_morphisms D]
+variable [has_zero_morphisms D]
 
-instance  : has_zero_morphisms (C ⥤ D) :=
+instance : has_zero_morphisms (C ⥤ D) :=
   { HasZero := fun F G => ⟨{ app := fun X => 0 }⟩ }
 
 @[simp]
 theorem zero_app (F G : C ⥤ D) (j : C) : (0 : F ⟶ G).app j = 0 :=
   rfl
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 -- error in CategoryTheory.Limits.Shapes.Zero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem equivalence_preserves_zero_morphisms
@@ -174,7 +174,7 @@ theorem is_equivalence_preserves_zero_morphisms (F : C ⥤ D) [is_equivalence F]
 
 end 
 
-variable(C)
+variable (C)
 
 /-- A category "has a zero object" if it has an object which is both initial and terminal. -/
 class has_zero_object where 
@@ -191,11 +191,11 @@ instance has_zero_object_punit : has_zero_object (discrete PUnit) :=
       by 
         tidy }
 
-variable{C}
+variable {C}
 
 namespace HasZeroObject
 
-variable[has_zero_object C]
+variable [has_zero_object C]
 
 /--
 Construct a `has_zero C` for a category with a zero object.
@@ -220,17 +220,17 @@ theorem from_zero_ext {X : C} (f g : 0 ⟶ X) : f = g :=
   by 
     rw [(has_zero_object.unique_to X).uniq f, (has_zero_object.unique_to X).uniq g]
 
-instance  (X : C) : Subsingleton (X ≅ 0) :=
+instance (X : C) : Subsingleton (X ≅ 0) :=
   by 
     tidy
 
-instance  {X : C} (f : 0 ⟶ X) : mono f :=
+instance {X : C} (f : 0 ⟶ X) : mono f :=
   { right_cancellation :=
       fun Z g h w =>
         by 
           ext }
 
-instance  {X : C} (f : X ⟶ 0) : epi f :=
+instance {X : C} (f : X ⟶ 0) : epi f :=
   { left_cancellation :=
       fun Z g h w =>
         by 
@@ -268,19 +268,19 @@ def zero_is_terminal : is_terminal (0 : C) :=
   is_terminal.of_unique 0
 
 /-- A zero object is in particular initial. -/
-instance (priority := 10)has_initial : has_initial C :=
+instance (priority := 10) has_initial : has_initial C :=
   has_initial_of_unique 0
 
 /-- A zero object is in particular terminal. -/
-instance (priority := 10)has_terminal : has_terminal C :=
+instance (priority := 10) has_terminal : has_terminal C :=
   has_terminal_of_unique 0
 
-instance (priority := 100)has_strict_initial : initial_mono_class C :=
+instance (priority := 100) has_strict_initial : initial_mono_class C :=
   initial_mono_class.of_is_initial zero_is_initial fun X => CategoryTheory.Mono _
 
 open_locale ZeroObject
 
-instance  {B : Type _} [category B] [has_zero_morphisms C] : has_zero_object (B ⥤ C) :=
+instance {B : Type _} [category B] [has_zero_morphisms C] : has_zero_object (B ⥤ C) :=
   { zero := { obj := fun X => 0, map := fun X Y f => 0 },
     uniqueTo :=
       fun F =>
@@ -306,7 +306,7 @@ end HasZeroObject
 
 section 
 
-variable[has_zero_object C][has_zero_morphisms C]
+variable [has_zero_object C] [has_zero_morphisms C]
 
 open_locale ZeroObject
 
@@ -413,7 +413,7 @@ end
 
 section IsIso
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 /--
 A zero morphism `0 : X ⟶ Y` is an isomorphism if and only if
@@ -447,7 +447,7 @@ def is_iso_zero_self_equiv (X : C) : is_iso (0 : X ⟶ X) ≃ 𝟙 X = 0 :=
   by 
     simpa using is_iso_zero_equiv X X
 
-variable[has_zero_object C]
+variable [has_zero_object C]
 
 open_locale ZeroObject
 
@@ -529,7 +529,7 @@ def has_zero_object_of_has_terminal_object [has_zero_morphisms C] [has_terminal 
 
 section Image
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 theorem image_ι_comp_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [has_image f] [epi (factor_thru_image f)]
   (h : f ≫ g = 0) : image.ι f ≫ g = 0 :=
@@ -543,7 +543,7 @@ theorem comp_factor_thru_image_eq_zero {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z} [
     by 
       simp [h]
 
-variable[has_zero_object C]
+variable [has_zero_object C]
 
 open_locale ZeroObject
 

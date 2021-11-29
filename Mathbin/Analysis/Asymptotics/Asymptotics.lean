@@ -44,26 +44,12 @@ open_locale TopologicalSpace BigOperators Classical Filter Nnreal
 
 namespace Asymptotics
 
-variable{α :
-    Type
-      _}{β :
-    Type
-      _}{E :
-    Type
-      _}{F :
-    Type _}{G : Type _}{E' : Type _}{F' : Type _}{G' : Type _}{R : Type _}{R' : Type _}{𝕜 : Type _}{𝕜' : Type _}
+variable {α : Type _} {β : Type _} {E : Type _} {F : Type _} {G : Type _} {E' : Type _} {F' : Type _} {G' : Type _}
+  {R : Type _} {R' : Type _} {𝕜 : Type _} {𝕜' : Type _}
 
-variable[HasNorm
-      E][HasNorm
-      F][HasNorm
-      G][NormedGroup
-      E'][NormedGroup
-      F'][NormedGroup
-      G'][NormedRing
-      R][NormedRing
-      R'][NormedField
-      𝕜][NormedField
-      𝕜']{c c' : ℝ}{f : α → E}{g : α → F}{k : α → G}{f' : α → E'}{g' : α → F'}{k' : α → G'}{l l' : Filter α}
+variable [HasNorm E] [HasNorm F] [HasNorm G] [NormedGroup E'] [NormedGroup F'] [NormedGroup G'] [NormedRing R]
+  [NormedRing R'] [NormedField 𝕜] [NormedField 𝕜'] {c c' : ℝ} {f : α → E} {g : α → F} {k : α → G} {f' : α → E'}
+  {g' : α → F'} {k' : α → G'} {l l' : Filter α}
 
 section Defs
 
@@ -370,7 +356,7 @@ theorem is_o.trans' (hfg : is_o f g' l) (hgk : is_o g' k l) : is_o f k l :=
 
 section 
 
-variable(l)
+variable (l)
 
 theorem is_O_with_of_le' (hfg : ∀ x, ∥f x∥ ≤ c*∥g x∥) : is_O_with c f g l :=
   is_O_with.of_bound$ univ_mem' hfg
@@ -407,7 +393,7 @@ theorem is_o.trans_le (hfg : is_o f g l) (hgk : ∀ x, ∥g x∥ ≤ ∥k x∥) 
 
 section Bot
 
-variable(c f g)
+variable (c f g)
 
 @[simp]
 theorem is_O_with_bot : is_O_with c f g ⊥ :=
@@ -575,7 +561,7 @@ theorem is_O_snd_prod' {f' : α → E' × F'} : is_O (fun x => (f' x).2) f' l :=
 
 section 
 
-variable(f' k')
+variable (f' k')
 
 theorem is_O_with.prod_rightl (h : is_O_with c f g' l) (hc : 0 ≤ c) : is_O_with c f (fun x => (g' x, k' x)) l :=
   (h.trans is_O_with_fst_prod hc).congr_const (mul_oneₓ c)
@@ -661,7 +647,7 @@ theorem is_O.eq_zero_imp (h : is_O f' g' l) : ∀ᶠx in l, g' x = 0 → f' x = 
 
 section add_sub
 
-variable{c₁ c₂ : ℝ}{f₁ f₂ : α → E'}
+variable {c₁ c₂ : ℝ} {f₁ f₂ : α → E'}
 
 theorem is_O_with.add (h₁ : is_O_with c₁ f₁ g l) (h₂ : is_O_with c₂ f₂ g l) :
   is_O_with (c₁+c₂) (fun x => f₁ x+f₂ x) g l :=
@@ -727,7 +713,7 @@ end add_sub
 
 section IsOOAsRel
 
-variable{f₁ f₂ f₃ : α → E'}
+variable {f₁ f₂ f₃ : α → E'}
 
 theorem is_O_with.symm (h : is_O_with c (fun x => f₁ x - f₂ x) g l) : is_O_with c (fun x => f₂ x - f₁ x) g l :=
   h.neg_left.congr_left$ fun x => neg_sub _ _
@@ -775,7 +761,7 @@ end IsOOAsRel
 
 section ZeroConst
 
-variable(g g' l)
+variable (g g' l)
 
 theorem is_o_zero : is_o (fun x => (0 : E')) g' l :=
   is_o.of_bound$
@@ -808,7 +794,7 @@ theorem is_O_refl_left : is_O (fun x => f' x - f' x) g' l :=
 theorem is_o_refl_left : is_o (fun x => f' x - f' x) g' l :=
   (is_o_zero g' l).congr_left$ fun x => (sub_self _).symm
 
-variable{g g' l}
+variable {g g' l}
 
 @[simp]
 theorem is_O_with_zero_right_iff : is_O_with c f' (fun x => (0 : F')) l ↔ ∀ᶠx in l, f' x = 0 :=
@@ -884,7 +870,7 @@ theorem is_O_const_one (c : E) (l : Filter α) : is_O (fun x : α => c) (fun x =
 
 section 
 
-variable(𝕜)
+variable (𝕜)
 
 theorem is_o_const_iff_is_o_one {c : F'} (hc : c ≠ 0) : is_o f (fun x => c) l ↔ is_o f (fun x => (1 : 𝕜)) l :=
   ⟨fun h => h.trans_is_O$ is_O_const_one c l, fun h => h.trans_is_O$ is_O_const_const _ hc _⟩
@@ -927,7 +913,7 @@ end
 
 section 
 
-variable(𝕜)
+variable (𝕜)
 
 theorem is_o_one_iff : is_o f' (fun x => (1 : 𝕜)) l ↔ tendsto f' l (𝓝 0) :=
   is_o_const_iff one_ne_zero
@@ -1115,7 +1101,7 @@ theorem is_o.pow {f : α → R} {g : α → 𝕜} (h : is_o f g l) {n : ℕ} (hn
 
 section SmulConst
 
-variable[NormedSpace 𝕜 E']
+variable [NormedSpace 𝕜 E']
 
 theorem is_O_with.const_smul_left (h : is_O_with c f' g l) (c' : 𝕜) : is_O_with (∥c'∥*c) (fun x => c' • f' x) g l :=
   by 
@@ -1179,7 +1165,7 @@ end SmulConst
 
 section Smul
 
-variable[NormedSpace 𝕜 E'][NormedSpace 𝕜 F']
+variable [NormedSpace 𝕜 E'] [NormedSpace 𝕜 F']
 
 theorem is_O_with.smul {k₁ k₂ : α → 𝕜} (h₁ : is_O_with c k₁ k₂ l) (h₂ : is_O_with c' f' g' l) :
   is_O_with (c*c') (fun x => k₁ x • f' x) (fun x => k₂ x • g' x) l :=
@@ -1223,7 +1209,7 @@ end Smul
 
 section Sum
 
-variable{ι : Type _}{A : ι → α → E'}{C : ι → ℝ}{s : Finset ι}
+variable {ι : Type _} {A : ι → α → E'} {C : ι → ℝ} {s : Finset ι}
 
 theorem is_O_with.sum (h : ∀ i _ : i ∈ s, is_O_with (C i) (A i) g l) :
   is_O_with (∑i in s, C i) (fun x => ∑i in s, A i x) g l :=
@@ -1294,7 +1280,7 @@ eventually have `(u / v) * v = u`, even if `v` vanishes.
 
 section EventuallyMulDivCancel
 
-variable{u v : α → 𝕜}
+variable {u v : α → 𝕜}
 
 theorem is_O_with.eventually_mul_div_cancel (h : is_O_with c u v l) : ((u / v)*v) =ᶠ[l] u :=
   eventually.mono h.bound
@@ -1320,7 +1306,7 @@ end EventuallyMulDivCancel
 
 section ExistsMulEq
 
-variable{u v : α → 𝕜}
+variable {u v : α → 𝕜}
 
 /-- If `∥φ∥` is eventually bounded by `c`, and `u =ᶠ[l] φ * v`, then we have `is_O_with c u v l`.
     This does not require any assumptions on `c`, which is why we keep this version along with
@@ -1560,9 +1546,9 @@ theorem summable_of_is_O_nat {E} [NormedGroup E] [CompleteSpace E] {f : ℕ → 
 
 namespace LocalHomeomorph
 
-variable{α : Type _}{β : Type _}[TopologicalSpace α][TopologicalSpace β]
+variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
-variable{E : Type _}[HasNorm E]{F : Type _}[HasNorm F]
+variable {E : Type _} [HasNorm E] {F : Type _} [HasNorm F]
 
 /-- Transfer `is_O_with` over a `local_homeomorph`. -/
 theorem is_O_with_congr (e : LocalHomeomorph α β) {b : β} (hb : b ∈ e.target) {f : β → E} {g : β → F} {C : ℝ} :
@@ -1595,9 +1581,9 @@ end LocalHomeomorph
 
 namespace Homeomorph
 
-variable{α : Type _}{β : Type _}[TopologicalSpace α][TopologicalSpace β]
+variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
-variable{E : Type _}[HasNorm E]{F : Type _}[HasNorm F]
+variable {E : Type _} [HasNorm E] {F : Type _} [HasNorm F]
 
 open Asymptotics
 

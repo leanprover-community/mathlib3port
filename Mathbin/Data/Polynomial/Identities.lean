@@ -14,7 +14,7 @@ namespace Polynomial
 
 universe u v w x y z
 
-variable{R : Type u}{S : Type v}{T : Type w}{ι : Type x}{k : Type y}{A : Type z}{a b : R}{m n : ℕ}
+variable {R : Type u} {S : Type v} {T : Type w} {ι : Type x} {k : Type y} {A : Type z} {a b : R} {m n : ℕ}
 
 section Identities
 
@@ -44,7 +44,7 @@ def pow_add_expansion {R : Type _} [CommSemiringₓ R] (x y : R) :
         pushCast 
         ringExp!
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 private def poly_binom_aux1 (x y : R) (e : ℕ) (a : R) :
   { k : R // (a*(x+y) ^ e) = a*((x ^ e)+(e*x ^ (e - 1))*y)+k*y ^ 2 } :=

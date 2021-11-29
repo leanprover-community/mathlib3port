@@ -36,7 +36,7 @@ internally graded ring
 
 open_locale DirectSum
 
-variable{ι : Type _}{S R : Type _}[DecidableEq ι]
+variable {ι : Type _} {S R : Type _} [DecidableEq ι]
 
 /-! #### From `add_submonoid`s -/
 

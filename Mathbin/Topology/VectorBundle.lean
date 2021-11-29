@@ -53,22 +53,9 @@ noncomputable theory
 
 open Bundle Set
 
-variable(R :
-    Type
-      _){B :
-    Type
-      _}(F :
-    Type
-      _)(E :
-    B →
-      Type
-        _)[Semiringₓ
-      R][∀ x,
-      AddCommMonoidₓ
-        (E
-          x)][∀ x,
-      Module R
-        (E x)][TopologicalSpace F][AddCommMonoidₓ F][Module R F][TopologicalSpace (total_space E)][TopologicalSpace B]
+variable (R : Type _) {B : Type _} (F : Type _) (E : B → Type _) [Semiringₓ R] [∀ x, AddCommMonoidₓ (E x)]
+  [∀ x, Module R (E x)] [TopologicalSpace F] [AddCommMonoidₓ F] [Module R F] [TopologicalSpace (total_space E)]
+  [TopologicalSpace B]
 
 section 
 
@@ -80,15 +67,15 @@ structure topological_vector_bundle.trivializationextends to_fiber_bundle_trivia
 
 open TopologicalVectorBundle
 
-instance  : CoeFun (trivialization R F E) fun _ => total_space E → B × F :=
+instance : CoeFun (trivialization R F E) fun _ => total_space E → B × F :=
   ⟨fun e => e.to_fun⟩
 
-instance  : Coe (trivialization R F E) (TopologicalFiberBundle.Trivialization F (proj E)) :=
+instance : Coe (trivialization R F E) (TopologicalFiberBundle.Trivialization F (proj E)) :=
   ⟨TopologicalVectorBundle.Trivialization.toFiberBundleTrivialization⟩
 
 namespace TopologicalVectorBundle
 
-variable{R F E}
+variable {R F E}
 
 theorem trivialization.mem_source (e : trivialization R F E) {x : total_space E} :
   x ∈ e.source ↔ proj E x ∈ e.base_set :=
@@ -107,7 +94,7 @@ end TopologicalVectorBundle
 
 end 
 
-variable[∀ x, TopologicalSpace (E x)]
+variable [∀ x, TopologicalSpace (E x)]
 
 /-- The space `total_space E` (for `E : B → Type*` such that each `E x` is a topological vector
 space) has a topological vector space structure with fiber `F` (denoted with
@@ -117,7 +104,7 @@ class TopologicalVectorBundle : Prop where
   Inducing{} : ∀ b : B, Inducing fun x : E b => (id ⟨b, x⟩ : total_space E)
   locally_trivial{} : ∀ b : B, ∃ e : TopologicalVectorBundle.Trivialization R F E, b ∈ e.base_set
 
-variable[TopologicalVectorBundle R F E]
+variable [TopologicalVectorBundle R F E]
 
 namespace TopologicalVectorBundle
 
@@ -136,7 +123,7 @@ theorem mem_source_trivialization_at (z : total_space E) : z ∈ (trivialization
     rw [TopologicalFiberBundle.Trivialization.mem_source]
     apply mem_base_set_trivialization_at
 
-variable{R F E}
+variable {R F E}
 
 namespace Trivialization
 
@@ -223,18 +210,18 @@ section
 
 attribute [local reducible] Bundle.Trivial
 
-instance  {B : Type _} {F : Type _} [AddCommMonoidₓ F] (b : B) : AddCommMonoidₓ (Bundle.Trivial B F b) :=
+instance {B : Type _} {F : Type _} [AddCommMonoidₓ F] (b : B) : AddCommMonoidₓ (Bundle.Trivial B F b) :=
   ‹AddCommMonoidₓ F›
 
-instance  {B : Type _} {F : Type _} [AddCommGroupₓ F] (b : B) : AddCommGroupₓ (Bundle.Trivial B F b) :=
+instance {B : Type _} {F : Type _} [AddCommGroupₓ F] (b : B) : AddCommGroupₓ (Bundle.Trivial B F b) :=
   ‹AddCommGroupₓ F›
 
-instance  {B : Type _} {F : Type _} [AddCommMonoidₓ F] [Module R F] (b : B) : Module R (Bundle.Trivial B F b) :=
+instance {B : Type _} {F : Type _} [AddCommMonoidₓ F] [Module R F] (b : B) : Module R (Bundle.Trivial B F b) :=
   ‹Module R F›
 
 end 
 
-variable(R B F)
+variable (R B F)
 
 /-- Local trivialization for trivial bundle. -/
 def trivial_topological_vector_bundle.trivialization : trivialization R F (Bundle.Trivial B F) :=
@@ -269,7 +256,7 @@ instance trivial_bundle.topological_vector_bundle : topological_vector_bundle R 
      simp [] [] ["only"] ["[", expr total_space.topological_space, ",", expr induced_inf, ",", expr induced_compose, ",", expr function.comp, ",", expr proj, ",", expr induced_const, ",", expr top_inf_eq, ",", expr trivial.proj_snd, ",", expr id.def, ",", expr trivial.topological_space, ",", expr this, ",", expr induced_id, "]"] [] []
    end⟩ }
 
-variable{R B F}
+variable {R B F}
 
 theorem is_topological_vector_bundle_is_topological_fiber_bundle : IsTopologicalFiberBundle F (proj E) :=
   fun x => ⟨(trivialization_at R F E x).toFiberBundleTrivialization, mem_base_set_trivialization_at R F E x⟩
@@ -279,13 +266,13 @@ end TopologicalVectorBundle
 /-! ### Constructing topological vector bundles -/
 
 
-variable(B)
+variable (B)
 
 /-- Analogous construction of `topological_fiber_bundle_core` for vector bundles. This
 construction gives a way to construct vector bundles from a structure registering how
 trivialization changes act on fibers.-/
 @[nolint has_inhabited_instance]
-structure TopologicalVectorBundleCore(ι : Type _) where 
+structure TopologicalVectorBundleCore (ι : Type _) where 
   BaseSet : ι → Set B 
   is_open_base_set : ∀ i, IsOpen (base_set i)
   indexAt : B → ι 
@@ -303,7 +290,7 @@ attribute [simp, mfld_simps] TopologicalVectorBundleCore.mem_base_set_at
 
 namespace TopologicalVectorBundleCore
 
-variable{R B F}{ι : Type _}(Z : TopologicalVectorBundleCore R B F ι)
+variable {R B F} {ι : Type _} (Z : TopologicalVectorBundleCore R B F ι)
 
 /-- Natural identification to a `topological_fiber_bundle_core`. -/
 def to_topological_vector_bundle_core : TopologicalFiberBundleCore ι B F :=
@@ -373,14 +360,14 @@ theorem mem_triv_change_source (i j : ι) (p : B × F) :
   p ∈ (Z.triv_change i j).Source ↔ p.1 ∈ Z.base_set i ∩ Z.base_set j :=
   TopologicalFiberBundleCore.mem_triv_change_source («expr↑ » Z) i j p
 
-variable(ι)
+variable (ι)
 
 /-- Topological structure on the total space of a topological bundle created from core, designed so
 that all the local trivialization are continuous. -/
 instance to_topological_space : TopologicalSpace (total_space Z.fiber) :=
   TopologicalFiberBundleCore.toTopologicalSpace ι («expr↑ » Z)
 
-variable{ι}(b : B)(a : F)
+variable {ι} (b : B) (a : F)
 
 @[simp, mfld_simps]
 theorem coe_cord_change (i j : ι) : TopologicalFiberBundleCore.coordChange («expr↑ » Z) i j b = Z.coord_change i j b :=
@@ -419,7 +406,7 @@ theorem mem_source_at : (⟨b, a⟩ : total_space Z.fiber) ∈ (Z.local_triv_at 
 theorem local_triv_at_apply : (Z.local_triv_at b) ⟨b, a⟩ = ⟨b, a⟩ :=
   TopologicalFiberBundleCore.local_triv_at_apply Z b a
 
-instance  : TopologicalVectorBundle R F Z.fiber :=
+instance : TopologicalVectorBundle R F Z.fiber :=
   { Inducing :=
       fun b =>
         ⟨by 

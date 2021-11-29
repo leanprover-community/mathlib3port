@@ -38,9 +38,9 @@ self-adjoint operator, spectral theorem, diagonalization theorem
 -/
 
 
-variable{𝕜 : Type _}[IsROrC 𝕜][dec_𝕜 : DecidableEq 𝕜]
+variable {𝕜 : Type _} [IsROrC 𝕜] [dec_𝕜 : DecidableEq 𝕜]
 
-variable{E : Type _}[InnerProductSpace 𝕜 E]
+variable {E : Type _} [InnerProductSpace 𝕜 E]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
@@ -52,7 +52,7 @@ open Module.End
 
 namespace IsSelfAdjoint
 
-variable{T : E →ₗ[𝕜] E}(hT : IsSelfAdjoint T)
+variable {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T)
 
 include hT
 
@@ -113,7 +113,7 @@ end
 /-! ### Finite-dimensional theory -/
 
 
-variable[FiniteDimensional 𝕜 E]
+variable [FiniteDimensional 𝕜 E]
 
 -- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on a
@@ -173,7 +173,7 @@ end Version1
 
 section Version2
 
-variable{n : ℕ}(hn : FiniteDimensional.finrank 𝕜 E = n)
+variable {n : ℕ} (hn : FiniteDimensional.finrank 𝕜 E = n)
 
 /-- A choice of orthonormal basis of eigenvectors for self-adjoint operator `T` on a
 finite-dimensional inner product space `E`.

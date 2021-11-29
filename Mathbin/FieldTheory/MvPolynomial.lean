@@ -21,9 +21,9 @@ namespace MvPolynomial
 
 universe u v
 
-variable{σ : Type u}{K : Type v}
+variable {σ : Type u} {K : Type v}
 
-variable(σ K)[Field K]
+variable (σ K) [Field K]
 
 -- error in FieldTheory.MvPolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem quotient_mk_comp_C_injective
@@ -43,7 +43,7 @@ namespace MvPolynomial
 
 universe u
 
-variable{σ : Type u}{K : Type u}[Field K]
+variable {σ : Type u} {K : Type u} [Field K]
 
 open_locale Classical
 

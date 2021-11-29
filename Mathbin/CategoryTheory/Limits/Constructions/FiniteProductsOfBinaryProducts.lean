@@ -26,11 +26,11 @@ open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
 namespace CategoryTheory
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{D : Type u'}[category.{v} D]
+variable {D : Type u'} [category.{v} D]
 
 /--
 Given `n+1` objects of `C`, a fan for the last `n` with point `c₁.X` and a binary fan on `c₁.X` and
@@ -95,7 +95,7 @@ def extend_fan_is_limit {n : ℕ} (f : Ulift (Finₓ (n+1)) → C) {c₁ : fan f
 
 section 
 
-variable[has_binary_products.{v} C][has_terminal C]
+variable [has_binary_products.{v} C] [has_terminal C]
 
 -- error in CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -103,14 +103,14 @@ If `C` has a terminal object and binary products, then it has a product for obje
 `ulift (fin n)`.
 This is a helper lemma for `has_finite_products_of_has_binary_and_terminal`, which is more general
 than this.
--/ private theorem has_product_ulift_fin : ∀ (n : exprℕ()) (f : ulift (fin n) → C), has_product f
+-/ private theorem has_product_ulift_fin : ∀ (n : exprℕ()) (f : ulift.{v} (fin n) → C), has_product f
 | 0 := λ f, begin
-  letI [] [":", expr has_limits_of_shape (discrete (ulift (fin 0))) C] [":=", expr has_limits_of_shape_of_equivalence (discrete.equivalence (equiv.ulift.trans fin_zero_equiv').symm)],
+  letI [] [":", expr has_limits_of_shape (discrete (ulift.{v} (fin 0))) C] [":=", expr has_limits_of_shape_of_equivalence (discrete.equivalence.{v} (equiv.ulift.trans fin_zero_equiv').symm)],
   apply_instance
 end
 | «expr + »(n, 1) := λ f, begin
   haveI [] [] [":=", expr has_product_ulift_fin n],
-  apply [expr has_limit.mk ⟨_, extend_fan_is_limit f (limit.is_limit _) (limit.is_limit _)⟩]
+  apply [expr has_limit.mk ⟨_, extend_fan_is_limit f (limit.is_limit.{v} _) (limit.is_limit _)⟩]
 end
 
 -- error in CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -119,7 +119,7 @@ If `C` has a terminal object and binary products, then it has limits of shape
 `discrete (ulift (fin n))` for any `n : ℕ`.
 This is a helper lemma for `has_finite_products_of_has_binary_and_terminal`, which is more general
 than this.
--/ private theorem has_limits_of_shape_ulift_fin (n : exprℕ()) : has_limits_of_shape (discrete (ulift (fin n))) C :=
+-/ private theorem has_limits_of_shape_ulift_fin (n : exprℕ()) : has_limits_of_shape (discrete (ulift.{v} (fin n))) C :=
 { has_limit := λ K, begin
     letI [] [] [":=", expr has_product_ulift_fin n K.obj],
     let [] [":", expr «expr ≅ »(discrete.functor K.obj, K)] [":=", expr discrete.nat_iso (λ i, iso.refl _)],
@@ -139,13 +139,13 @@ end
 
 section Preserves
 
-variable(F : C ⥤ D)
+variable (F : C ⥤ D)
 
-variable[preserves_limits_of_shape (discrete walking_pair) F]
+variable [preserves_limits_of_shape (discrete walking_pair) F]
 
-variable[preserves_limits_of_shape (discrete Pempty) F]
+variable [preserves_limits_of_shape (discrete Pempty) F]
 
-variable[has_finite_products.{v} C]
+variable [has_finite_products.{v} C]
 
 -- error in CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -163,7 +163,7 @@ end
 | «expr + »(n, 1) := begin
   haveI [] [] [":=", expr preserves_fin_of_preserves_binary_and_terminal n],
   intro [ident f],
-  refine [expr preserves_limit_of_preserves_limit_cone (extend_fan_is_limit f (limit.is_limit _) (limit.is_limit _)) _],
+  refine [expr preserves_limit_of_preserves_limit_cone (extend_fan_is_limit f (limit.is_limit.{v} _) (limit.is_limit _)) _],
   apply [expr (is_limit_map_cone_fan_mk_equiv _ _ _).symm _],
   let [] [] [":=", expr extend_fan_is_limit (λ
     i, F.obj (f i)) (is_limit_of_has_product_of_preserves_limit F _) (is_limit_of_has_binary_product_of_preserves_limit F _ _)],
@@ -270,7 +270,7 @@ def extend_cofan_is_colimit {n : ℕ} (f : Ulift (Finₓ (n+1)) → C) {c₁ : c
 
 section 
 
-variable[has_binary_coproducts.{v} C][has_initial C]
+variable [has_binary_coproducts.{v} C] [has_initial C]
 
 -- error in CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -278,14 +278,14 @@ If `C` has an initial object and binary coproducts, then it has a coproduct for 
 `ulift (fin n)`.
 This is a helper lemma for `has_cofinite_products_of_has_binary_and_terminal`, which is more general
 than this.
--/ private theorem has_coproduct_ulift_fin : ∀ (n : exprℕ()) (f : ulift (fin n) → C), has_coproduct f
+-/ private theorem has_coproduct_ulift_fin : ∀ (n : exprℕ()) (f : ulift.{v} (fin n) → C), has_coproduct f
 | 0 := λ f, begin
-  letI [] [":", expr has_colimits_of_shape (discrete (ulift (fin 0))) C] [":=", expr has_colimits_of_shape_of_equivalence (discrete.equivalence (equiv.ulift.trans fin_zero_equiv').symm)],
+  letI [] [":", expr has_colimits_of_shape (discrete (ulift.{v} (fin 0))) C] [":=", expr has_colimits_of_shape_of_equivalence (discrete.equivalence.{v} (equiv.ulift.trans fin_zero_equiv').symm)],
   apply_instance
 end
 | «expr + »(n, 1) := λ f, begin
   haveI [] [] [":=", expr has_coproduct_ulift_fin n],
-  apply [expr has_colimit.mk ⟨_, extend_cofan_is_colimit f (colimit.is_colimit _) (colimit.is_colimit _)⟩]
+  apply [expr has_colimit.mk ⟨_, extend_cofan_is_colimit f (colimit.is_colimit.{v} _) (colimit.is_colimit _)⟩]
 end
 
 -- error in CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -294,7 +294,9 @@ If `C` has an initial object and binary coproducts, then it has colimits of shap
 `discrete (ulift (fin n))` for any `n : ℕ`.
 This is a helper lemma for `has_cofinite_products_of_has_binary_and_terminal`, which is more general
 than this.
--/ private theorem has_colimits_of_shape_ulift_fin (n : exprℕ()) : has_colimits_of_shape (discrete (ulift (fin n))) C :=
+-/
+private
+theorem has_colimits_of_shape_ulift_fin (n : exprℕ()) : has_colimits_of_shape (discrete (ulift.{v} (fin n))) C :=
 { has_colimit := λ K, begin
     letI [] [] [":=", expr has_coproduct_ulift_fin n K.obj],
     let [] [":", expr «expr ≅ »(K, discrete.functor K.obj)] [":=", expr discrete.nat_iso (λ i, iso.refl _)],
@@ -314,13 +316,13 @@ end
 
 section Preserves
 
-variable(F : C ⥤ D)
+variable (F : C ⥤ D)
 
-variable[preserves_colimits_of_shape (discrete walking_pair) F]
+variable [preserves_colimits_of_shape (discrete walking_pair) F]
 
-variable[preserves_colimits_of_shape (discrete Pempty) F]
+variable [preserves_colimits_of_shape (discrete Pempty) F]
 
-variable[has_finite_coproducts.{v} C]
+variable [has_finite_coproducts.{v} C]
 
 -- error in CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -338,7 +340,7 @@ end
 | «expr + »(n, 1) := begin
   haveI [] [] [":=", expr preserves_fin_of_preserves_binary_and_initial n],
   intro [ident f],
-  refine [expr preserves_colimit_of_preserves_colimit_cocone (extend_cofan_is_colimit f (colimit.is_colimit _) (colimit.is_colimit _)) _],
+  refine [expr preserves_colimit_of_preserves_colimit_cocone (extend_cofan_is_colimit f (colimit.is_colimit.{v} _) (colimit.is_colimit _)) _],
   apply [expr (is_colimit_map_cocone_cofan_mk_equiv _ _ _).symm _],
   let [] [] [":=", expr extend_cofan_is_colimit (λ
     i, F.obj (f i)) (is_colimit_of_has_coproduct_of_preserves_colimit F _) (is_colimit_of_has_binary_coproduct_of_preserves_colimit F _ _)],

@@ -14,13 +14,13 @@ and
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Finset
 
-variable[DecidableEq α](s t : Finset α)
+variable [DecidableEq α] (s t : Finset α)
 
-instance  : LocallyFiniteOrder (Finset α) :=
+instance : LocallyFiniteOrder (Finset α) :=
   { finsetIcc := fun s t => t.powerset.filter ((· ⊆ ·) s), finsetIco := fun s t => t.ssubsets.filter ((· ⊆ ·) s),
     finsetIoc := fun s t => t.powerset.filter ((· ⊂ ·) s), finsetIoo := fun s t => t.ssubsets.filter ((· ⊂ ·) s),
     finset_mem_Icc :=
@@ -62,7 +62,7 @@ theorem Iic_eq_powerset : Iic s = s.powerset :=
 theorem Iio_eq_ssubsets : Iio s = s.ssubsets :=
   filter_true_of_mem$ fun t _ => empty_subset t
 
-variable{s t}
+variable {s t}
 
 theorem Icc_eq_image_powerset (h : s ⊆ t) : Icc s t = (t \ s).Powerset.Image ((· ∪ ·) s) :=
   by 

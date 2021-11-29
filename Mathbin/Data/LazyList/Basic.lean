@@ -19,7 +19,7 @@ namespace Thunkₓ
 def mk {α} (x : α) : Thunkₓ α :=
   fun _ => x
 
-instance  {α : Type u} [DecidableEq α] : DecidableEq (Thunkₓ α)
+instance {α : Type u} [DecidableEq α] : DecidableEq (Thunkₓ α)
 | a, b =>
   have  : a = b ↔ a () = b () :=
     ⟨by 
@@ -54,7 +54,7 @@ def list_equiv_lazy_list (α : Type _) : List α ≃ LazyList α :=
         rfl 
         simp  }
 
-instance  {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
+instance {α : Type u} [DecidableEq α] : DecidableEq (LazyList α)
 | nil, nil => is_true rfl
 | cons x xs, cons y ys =>
   if h : x = y then
@@ -88,10 +88,10 @@ protected def traverse {m : Type u → Type u} [Applicativeₓ m] {α β : Type 
 | LazyList.nil => pure LazyList.nil
 | LazyList.cons x xs => (LazyList.cons <$> f x)<*>Thunkₓ.mk <$> traverse (xs ())
 
-instance  : Traversable LazyList :=
+instance : Traversable LazyList :=
   { map := @LazyList.traverse id _, traverse := @LazyList.traverse }
 
-instance  : IsLawfulTraversable LazyList :=
+instance : IsLawfulTraversable LazyList :=
   by 
     apply Equiv.isLawfulTraversable' list_equiv_lazy_list <;> intros  <;> skip <;> ext
     ·
@@ -158,7 +158,7 @@ it than a series of thunks. -/
 def reverse {α} (xs : LazyList α) : LazyList α :=
   of_list xs.to_list.reverse
 
-instance  : Monadₓ LazyList :=
+instance : Monadₓ LazyList :=
   { pure := @LazyList.singleton, bind := @LazyList.bind }
 
 theorem append_nil {α} (xs : LazyList α) : xs.append LazyList.nil = xs :=
@@ -178,7 +178,7 @@ theorem append_bind {α β} (xs : LazyList α) (ys : Thunkₓ (LazyList α)) (f 
   by 
     induction xs <;> simp [LazyList.bind, append, append_assoc, append, LazyList.bind]
 
-instance  : IsLawfulMonad LazyList :=
+instance : IsLawfulMonad LazyList :=
   { pure_bind :=
       by 
         intros 
@@ -207,7 +207,7 @@ protected def mem {α} (x : α) : LazyList α → Prop
 | LazyList.nil => False
 | LazyList.cons y ys => x = y ∨ mem (ys ())
 
-instance  {α} : HasMem α (LazyList α) :=
+instance {α} : HasMem α (LazyList α) :=
   ⟨LazyList.Mem⟩
 
 instance mem.decidable {α} [DecidableEq α] (x : α) : ∀ xs : LazyList α, Decidable (x ∈ xs)
@@ -248,7 +248,7 @@ def pmap {α β} {p : α → Prop} (f : ∀ a, p a → β) : ∀ l : LazyList α
 def attach {α} (l : LazyList α) : LazyList { x // x ∈ l } :=
   pmap Subtype.mk l fun a => id
 
-instance  {α} [HasRepr α] : HasRepr (LazyList α) :=
+instance {α} [HasRepr α] : HasRepr (LazyList α) :=
   ⟨fun xs => reprₓ xs.to_list⟩
 
 end LazyList

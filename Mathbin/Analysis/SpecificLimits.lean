@@ -15,7 +15,7 @@ open Classical Set Function Filter Finset Metric Asymptotics
 
 open_locale Classical TopologicalSpace Nat BigOperators uniformity Nnreal Ennreal
 
-variable{α : Type _}{β : Type _}{ι : Type _}
+variable {α : Type _} {β : Type _} {ι : Type _}
 
 theorem tendsto_norm_at_top_at_top : tendsto (norm : ℝ → ℝ) at_top at_top :=
   tendsto_abs_at_top_at_top
@@ -438,7 +438,7 @@ theorem Ennreal.tsum_geometric (r : ℝ≥0∞) : (∑'n : ℕ, r ^ n) = (1 - r)
           rw [sum_const, nsmul_one, card_range]_ ≤ ∑i in range n, r ^ i :=
         sum_le_sum fun k _ => one_le_pow_of_one_le' hr k
 
-variable{K : Type _}[NormedField K]{ξ : K}
+variable {K : Type _} [NormedField K] {ξ : K}
 
 -- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_sum_geometric_of_norm_lt_1
@@ -547,7 +547,8 @@ decaying terms.
 
 section EdistLeGeometric
 
-variable[PseudoEmetricSpace α](r C : ℝ≥0∞)(hr : r < 1)(hC : C ≠ ⊤){f : ℕ → α}(hu : ∀ n, edist (f n) (f (n+1)) ≤ C*r ^ n)
+variable [PseudoEmetricSpace α] (r C : ℝ≥0∞) (hr : r < 1) (hC : C ≠ ⊤) {f : ℕ → α}
+  (hu : ∀ n, edist (f n) (f (n+1)) ≤ C*r ^ n)
 
 include hr hC hu
 
@@ -581,9 +582,8 @@ end EdistLeGeometric
 
 section EdistLeGeometricTwo
 
-variable[PseudoEmetricSpace
-      α](C :
-    ℝ≥0∞)(hC : C ≠ ⊤){f : ℕ → α}(hu : ∀ n, edist (f n) (f (n+1)) ≤ C / 2 ^ n){a : α}(ha : tendsto f at_top (𝓝 a))
+variable [PseudoEmetricSpace α] (C : ℝ≥0∞) (hC : C ≠ ⊤) {f : ℕ → α} (hu : ∀ n, edist (f n) (f (n+1)) ≤ C / 2 ^ n)
+  {a : α} (ha : tendsto f at_top (𝓝 a))
 
 include hC hu
 
@@ -618,7 +618,7 @@ end EdistLeGeometricTwo
 
 section LeGeometric
 
-variable[PseudoMetricSpace α]{r C : ℝ}(hr : r < 1){f : ℕ → α}(hu : ∀ n, dist (f n) (f (n+1)) ≤ C*r ^ n)
+variable [PseudoMetricSpace α] {r C : ℝ} (hr : r < 1) {f : ℕ → α} (hu : ∀ n, dist (f n) (f (n+1)) ≤ C*r ^ n)
 
 include hr hu
 
@@ -631,7 +631,7 @@ theorem aux_has_sum_of_le_geometric : HasSum (fun n : ℕ => C*r ^ n) (C / (1 - 
       refine' HasSum.mul_left C _ 
       simpa using has_sum_geometric_of_lt_1 r₀ hr
 
-variable(r C)
+variable (r C)
 
 /-- If `dist (f n) (f (n+1))` is bounded by `C * r^n`, `r < 1`, then `f` is a Cauchy sequence.
 Note that this lemma does not assume `0 ≤ C` or `0 ≤ r`. -/
@@ -661,7 +661,7 @@ end
 
 omit hr hu
 
-variable(hu₂ : ∀ n, dist (f n) (f (n+1)) ≤ C / 2 / 2 ^ n)
+variable (hu₂ : ∀ n, dist (f n) (f (n+1)) ≤ C / 2 / 2 ^ n)
 
 /-- If `dist (f n) (f (n+1))` is bounded by `(C / 2) / 2^n`, then `f` is a Cauchy sequence. -/
 theorem cauchy_seq_of_le_geometric_two : CauchySeq f :=
@@ -688,7 +688,7 @@ end LeGeometric
 
 section SummableLeGeometric
 
-variable[SemiNormedGroup α]{r C : ℝ}{f : ℕ → α}
+variable [SemiNormedGroup α] {r C : ℝ} {f : ℕ → α}
 
 theorem SemiNormedGroup.cauchy_seq_of_le_geometric {C : ℝ} {r : ℝ} (hr : r < 1) {u : ℕ → α}
   (h : ∀ n, ∥u n - u (n+1)∥ ≤ C*r ^ n) : CauchySeq u :=
@@ -799,7 +799,7 @@ end SummableLeGeometric
 
 section NormedRingGeometric
 
-variable{R : Type _}[NormedRing R][CompleteSpace R]
+variable {R : Type _} [NormedRing R] [CompleteSpace R]
 
 open NormedSpace
 
@@ -1131,7 +1131,7 @@ theorem Real.tendsto_pow_div_factorial_at_top (x : ℝ) : tendsto (fun n => x ^ 
 
 section 
 
-variable{R : Type _}[TopologicalSpace R][LinearOrderedField R][OrderTopology R][FloorRing R]
+variable {R : Type _} [TopologicalSpace R] [LinearOrderedField R] [OrderTopology R] [FloorRing R]
 
 -- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem tendsto_nat_floor_mul_div_at_top

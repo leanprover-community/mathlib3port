@@ -18,15 +18,15 @@ open_locale Pointwise
 
 universe u v w u₁ v₁
 
-variable(R : Type u)(S : Type v)(A : Type w)(B : Type u₁)(M : Type v₁)
+variable (R : Type u) (S : Type v) (A : Type w) (B : Type u₁) (M : Type v₁)
 
 namespace Algebra
 
-variable[CommSemiringₓ R][Semiringₓ A][Algebra R A]
+variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-variable[AddCommMonoidₓ M][Module R M][Module A M][IsScalarTower R A M]
+variable [AddCommMonoidₓ M] [Module R M] [Module A M] [IsScalarTower R A M]
 
-variable{A}
+variable {A}
 
 /-- The `R`-algebra morphism `A → End (M)` corresponding to the representation of the algebra `A`
 on the `R`-module `M`.
@@ -52,11 +52,11 @@ namespace IsScalarTower
 
 section Module
 
-variable[CommSemiringₓ R][Semiringₓ A][Algebra R A]
+variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-variable[AddCommMonoidₓ M][Module R M][Module A M][IsScalarTower R A M]
+variable [AddCommMonoidₓ M] [Module R M] [Module A M] [IsScalarTower R A M]
 
-variable{R}(A){M}
+variable {R} (A) {M}
 
 theorem algebra_map_smul (r : R) (x : M) : algebraMap R A r • x = r • x :=
   by 
@@ -66,11 +66,11 @@ end Module
 
 section Semiringₓ
 
-variable[CommSemiringₓ R][CommSemiringₓ S][Semiringₓ A][Semiringₓ B]
+variable [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A] [Semiringₓ B]
 
-variable[Algebra R S][Algebra S A][Algebra S B]
+variable [Algebra R S] [Algebra S A] [Algebra S B]
 
-variable{R S A}
+variable {R S A}
 
 theorem of_algebra_map_eq [Algebra R A] (h : ∀ x, algebraMap R A x = algebraMap S A (algebraMap R S x)) :
   IsScalarTower R S A :=
@@ -83,14 +83,14 @@ theorem of_algebra_map_eq' [Algebra R A] (h : algebraMap R A = (algebraMap S A).
   IsScalarTower R S A :=
   of_algebra_map_eq$ RingHom.ext_iff.1 h
 
-variable(R S A)
+variable (R S A)
 
 instance Subalgebra (S₀ : Subalgebra R S) : IsScalarTower S₀ S A :=
   of_algebra_map_eq$ fun x => rfl
 
-variable[Algebra R A][Algebra R B]
+variable [Algebra R A] [Algebra R B]
 
-variable[IsScalarTower R S A][IsScalarTower R S B]
+variable [IsScalarTower R S A] [IsScalarTower R S B]
 
 theorem algebra_map_eq : algebraMap R A = (algebraMap S A).comp (algebraMap R S) :=
   RingHom.ext$
@@ -145,23 +145,23 @@ theorem coe_to_alg_hom : «expr↑ » (to_alg_hom R S A) = algebraMap S A :=
 theorem coe_to_alg_hom' : (to_alg_hom R S A : S → A) = algebraMap S A :=
   rfl
 
-variable{R S A B}
+variable {R S A B}
 
 @[simp]
 theorem _root_.alg_hom.map_algebra_map (f : A →ₐ[S] B) (r : R) : f (algebraMap R A r) = algebraMap R B r :=
   by 
     rw [algebra_map_apply R S A r, f.commutes, ←algebra_map_apply R S B]
 
-variable(R)
+variable (R)
 
 @[simp]
 theorem _root_.alg_hom.comp_algebra_map_of_tower (f : A →ₐ[S] B) :
   (f : A →+* B).comp (algebraMap R A) = algebraMap R B :=
   RingHom.ext f.map_algebra_map
 
-variable(R){S A B}
+variable (R) {S A B}
 
-instance (priority := 999)Subsemiring (U : Subsemiring S) : IsScalarTower U S A :=
+instance (priority := 999) Subsemiring (U : Subsemiring S) : IsScalarTower U S A :=
   of_algebra_map_eq$ fun x => rfl
 
 -- error in Algebra.Algebra.Tower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -183,15 +183,15 @@ end IsScalarTower
 
 section Homs
 
-variable[CommSemiringₓ R][CommSemiringₓ S][Semiringₓ A][Semiringₓ B]
+variable [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A] [Semiringₓ B]
 
-variable[Algebra R S][Algebra S A][Algebra S B]
+variable [Algebra R S] [Algebra S A] [Algebra S B]
 
-variable[Algebra R A][Algebra R B]
+variable [Algebra R A] [Algebra R B]
 
-variable[IsScalarTower R S A][IsScalarTower R S B]
+variable [IsScalarTower R S A] [IsScalarTower R S B]
 
-variable(R){A S B}
+variable (R) {A S B}
 
 open IsScalarTower
 
@@ -257,11 +257,11 @@ open IsScalarTower
 
 section Semiringₓ
 
-variable(R){S A B}[CommSemiringₓ R][CommSemiringₓ S][Semiringₓ A][Semiringₓ B]
+variable (R) {S A B} [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A] [Semiringₓ B]
 
-variable[Algebra R S][Algebra S A][Algebra R A][Algebra S B][Algebra R B]
+variable [Algebra R S] [Algebra S A] [Algebra R A] [Algebra S B] [Algebra R B]
 
-variable[IsScalarTower R S A][IsScalarTower R S B]
+variable [IsScalarTower R S A] [IsScalarTower R S B]
 
 /-- Given a scalar tower `R`, `S`, `A` of algebras, reinterpret an `S`-subalgebra of `A` an as an
 `R`-subalgebra. -/
@@ -312,9 +312,9 @@ namespace IsScalarTower
 
 open Subalgebra
 
-variable[CommSemiringₓ R][CommSemiringₓ S][CommSemiringₓ A]
+variable [CommSemiringₓ R] [CommSemiringₓ S] [CommSemiringₓ A]
 
-variable[Algebra R S][Algebra S A][Algebra R A][IsScalarTower R S A]
+variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 
 theorem adjoin_range_to_alg_hom (t : Set A) :
   (Algebra.adjoin (to_alg_hom R S A).range t).restrictScalars R = (Algebra.adjoin S t).restrictScalars R :=
@@ -333,11 +333,11 @@ end IsScalarTower
 
 section Semiringₓ
 
-variable{R S A}
+variable {R S A}
 
-variable[CommSemiringₓ R][Semiringₓ S][AddCommMonoidₓ A]
+variable [CommSemiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A]
 
-variable[Algebra R S][Module S A][Module R A][IsScalarTower R S A]
+variable [Algebra R S] [Module S A] [Module R A] [IsScalarTower R S A]
 
 namespace Submodule
 
@@ -405,9 +405,9 @@ section Ringₓ
 
 namespace Algebra
 
-variable[CommSemiringₓ R][Ringₓ A][Algebra R A]
+variable [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 
-variable[AddCommGroupₓ M][Module A M][Module R M][IsScalarTower R A M]
+variable [AddCommGroupₓ M] [Module A M] [Module R M] [IsScalarTower R A M]
 
 theorem lsmul_injective [NoZeroSmulDivisors A M] {x : A} (hx : x ≠ 0) : Function.Injective (lsmul R M x) :=
   smul_right_injective _ hx

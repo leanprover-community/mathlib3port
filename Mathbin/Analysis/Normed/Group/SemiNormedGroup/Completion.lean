@@ -73,7 +73,7 @@ def Completion.map_hom (V W : SemiNormedGroupₓ.{u}) : (V ⟶ W) →+ Completio
 theorem Completion.map_zero (V W : SemiNormedGroupₓ) : Completion.map (0 : V ⟶ W) = 0 :=
   (Completion.map_hom V W).map_zero
 
-instance  : preadditive SemiNormedGroupₓ.{u} :=
+instance : preadditive SemiNormedGroupₓ.{u} :=
   { homGroup := fun P Q => inferInstance,
     add_comp' :=
       by 
@@ -86,7 +86,7 @@ instance  : preadditive SemiNormedGroupₓ.{u} :=
         ext 
         simp only [NormedGroupHom.add_apply, CategoryTheory.comp_apply, NormedGroupHom.map_add] }
 
-instance  : functor.additive Completion :=
+instance : functor.additive Completion :=
   { map_add' := fun X Y => (Completion.map_hom _ _).map_add }
 
 /-- Given a normed group hom `f : V → W` with `W` complete, this provides a lift of `f` to

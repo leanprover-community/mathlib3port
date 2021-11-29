@@ -47,17 +47,16 @@ open Set Filter TopologicalSpace MeasureTheory Function
 
 open_locale Classical TopologicalSpace Interval BigOperators Filter Ennreal Nnreal MeasureTheory
 
-variable{α β E F : Type _}[MeasurableSpace α]
+variable {α β E F : Type _} [MeasurableSpace α]
 
 namespace MeasureTheory
 
 section NormedGroup
 
-variable[NormedGroup
-      E][MeasurableSpace
-      E]{f g : α → E}{s t : Set α}{μ ν : Measureₓ α}{l l' : Filter α}[BorelSpace E][second_countable_topology E]
+variable [NormedGroup E] [MeasurableSpace E] {f g : α → E} {s t : Set α} {μ ν : Measureₓ α} {l l' : Filter α}
+  [BorelSpace E] [second_countable_topology E]
 
-variable[CompleteSpace E][NormedSpace ℝ E]
+variable [CompleteSpace E] [NormedSpace ℝ E]
 
 theorem set_integral_congr_ae (hs : MeasurableSet s) (h : ∀ᵐx ∂μ, x ∈ s → f x = g x) :
   (∫x in s, f x ∂μ) = ∫x in s, g x ∂μ :=
@@ -68,7 +67,7 @@ theorem set_integral_congr (hs : MeasurableSet s) (h : eq_on f g s) : (∫x in s
 
 theorem set_integral_congr_set_ae (hst : s =ᵐ[μ] t) : (∫x in s, f x ∂μ) = ∫x in t, f x ∂μ :=
   by 
-    rw [restrict_congr_set hst]
+    rw [measure.restrict_congr_set hst]
 
 theorem integral_union (hst : Disjoint s t) (hs : MeasurableSet s) (ht : MeasurableSet t) (hfs : integrable_on f s μ)
   (hft : integrable_on f t μ) : (∫x in s ∪ t, f x ∂μ) = (∫x in s, f x ∂μ)+∫x in t, f x ∂μ :=
@@ -435,7 +434,7 @@ end NormedGroup
 
 section Mono
 
-variable{μ : Measureₓ α}{f g : α → ℝ}{s t : Set α}(hf : integrable_on f s μ)(hg : integrable_on g s μ)
+variable {μ : Measureₓ α} {f g : α → ℝ} {s t : Set α} (hf : integrable_on f s μ) (hg : integrable_on g s μ)
 
 theorem set_integral_mono_ae_restrict (h : f ≤ᵐ[μ.restrict s] g) : (∫a in s, f a ∂μ) ≤ ∫a in s, g a ∂μ :=
   integral_mono_ae hf hg h
@@ -477,7 +476,7 @@ end Mono
 
 section Nonneg
 
-variable{μ : Measureₓ α}{f : α → ℝ}{s : Set α}
+variable {μ : Measureₓ α} {f : α → ℝ} {s : Set α}
 
 theorem set_integral_nonneg_of_ae_restrict (hf : 0 ≤ᵐ[μ.restrict s] f) : 0 ≤ ∫a in s, f a ∂μ :=
   integral_nonneg_of_ae hf
@@ -527,11 +526,8 @@ end Nonneg
 
 section TendstoMono
 
-variable{μ :
-    Measureₓ
-      α}[MeasurableSpace
-      E][NormedGroup
-      E][BorelSpace E][CompleteSpace E][NormedSpace ℝ E][second_countable_topology E]{s : ℕ → Set α}{f : α → E}
+variable {μ : Measureₓ α} [MeasurableSpace E] [NormedGroup E] [BorelSpace E] [CompleteSpace E] [NormedSpace ℝ E]
+  [second_countable_topology E] {s : ℕ → Set α} {f : α → E}
 
 -- error in MeasureTheory.Integral.SetIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem _root_.antitone.tendsto_set_integral
@@ -567,16 +563,9 @@ We prove that for any set `s`, the function `λ f : α →₁[μ] E, ∫ x in s,
 
 section ContinuousSetIntegral
 
-variable[NormedGroup
-      E][MeasurableSpace
-      E][second_countable_topology
-      E][BorelSpace
-      E]{𝕜 :
-    Type
-      _}[IsROrC
-      𝕜][MeasurableSpace
-      𝕜][NormedGroup
-      F][MeasurableSpace F][second_countable_topology F][BorelSpace F][NormedSpace 𝕜 F]{p : ℝ≥0∞}{μ : Measureₓ α}
+variable [NormedGroup E] [MeasurableSpace E] [second_countable_topology E] [BorelSpace E] {𝕜 : Type _} [IsROrC 𝕜]
+  [NormedGroup F] [MeasurableSpace F] [second_countable_topology F] [BorelSpace F] [NormedSpace 𝕜 F] {p : ℝ≥0∞}
+  {μ : Measureₓ α}
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map is additive. -/
@@ -595,7 +584,7 @@ theorem Lp_to_Lp_restrict_add (f g : Lp E p μ) (s : Set α) :
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map commutes with scalar multiplication. -/
-theorem Lp_to_Lp_restrict_smul [OpensMeasurableSpace 𝕜] (c : 𝕜) (f : Lp F p μ) (s : Set α) :
+theorem Lp_to_Lp_restrict_smul (c : 𝕜) (f : Lp F p μ) (s : Set α) :
   ((Lp.mem_ℒp (c • f)).restrict s).toLp («expr⇑ » (c • f)) = c • ((Lp.mem_ℒp f).restrict s).toLp f :=
   by 
     ext1 
@@ -615,11 +604,11 @@ theorem norm_Lp_to_Lp_restrict_le (s : Set α) (f : Lp E p μ) : ∥((Lp.mem_ℒ
       exact s 
     exact snorm_congr_ae (mem_ℒp.coe_fn_to_Lp _)
 
-variable(α F 𝕜)
+variable (α F 𝕜)
 
 /-- Continuous linear map sending a function of `Lp F p μ` to the same function in
 `Lp F p (μ.restrict s)`. -/
-def Lp_to_Lp_restrict_clm [BorelSpace 𝕜] (μ : Measureₓ α) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] (s : Set α) :
+def Lp_to_Lp_restrict_clm (μ : Measureₓ α) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] (s : Set α) :
   Lp F p μ →L[𝕜] Lp F p (μ.restrict s) :=
   @LinearMap.mkContinuous 𝕜 𝕜 (Lp F p μ) (Lp F p (μ.restrict s)) _ _ _ _ _ _ (RingHom.id 𝕜)
     ⟨fun f => mem_ℒp.to_Lp f ((Lp.mem_ℒp f).restrict s), fun f g => Lp_to_Lp_restrict_add f g s,
@@ -630,15 +619,15 @@ def Lp_to_Lp_restrict_clm [BorelSpace 𝕜] (μ : Measureₓ α) (p : ℝ≥0∞
       rw [one_mulₓ]
       exact norm_Lp_to_Lp_restrict_le s f)
 
-variable{α F 𝕜}
+variable {α F 𝕜}
 
-variable(𝕜)
+variable (𝕜)
 
-theorem Lp_to_Lp_restrict_clm_coe_fn [BorelSpace 𝕜] [hp : Fact (1 ≤ p)] (s : Set α) (f : Lp F p μ) :
+theorem Lp_to_Lp_restrict_clm_coe_fn [hp : Fact (1 ≤ p)] (s : Set α) (f : Lp F p μ) :
   Lp_to_Lp_restrict_clm α F 𝕜 μ p s f =ᵐ[μ.restrict s] f :=
   mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp f).restrict s)
 
-variable{𝕜}
+variable {𝕜}
 
 -- error in MeasureTheory.Integral.SetIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[continuity #[]]
@@ -663,7 +652,7 @@ end MeasureTheory
 
 open MeasureTheory Asymptotics Metric
 
-variable{ι : Type _}[MeasurableSpace E][NormedGroup E]
+variable {ι : Type _} [MeasurableSpace E] [NormedGroup E]
 
 -- error in MeasureTheory.Integral.SetIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Fundamental theorem of calculus for set integrals: if `μ` is a measure that is finite at a
@@ -818,15 +807,15 @@ as `continuous_linear_map.comp_Lp`. We take advantage of this construction here.
 
 open_locale ComplexConjugate
 
-variable{μ : Measureₓ α}{𝕜 : Type _}[IsROrC 𝕜][NormedSpace 𝕜 E][NormedGroup F][NormedSpace 𝕜 F]{p : Ennreal}
+variable {μ : Measureₓ α} {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [NormedGroup F] [NormedSpace 𝕜 F] {p : Ennreal}
 
 attribute [local instance] fact_one_le_one_ennreal
 
 namespace ContinuousLinearMap
 
-variable[MeasurableSpace F][BorelSpace F]
+variable [MeasurableSpace F] [BorelSpace F]
 
-variable[second_countable_topology F][CompleteSpace F][BorelSpace E][second_countable_topology E][NormedSpace ℝ F]
+variable [second_countable_topology F] [CompleteSpace F] [BorelSpace E] [second_countable_topology E] [NormedSpace ℝ F]
 
 theorem integral_comp_Lp (L : E →L[𝕜] F) (φ : Lp E p μ) : (∫a, (L.comp_Lp φ) a ∂μ) = ∫a, L (φ a) ∂μ :=
   integral_congr_ae$ coe_fn_comp_Lp _ _
@@ -835,14 +824,12 @@ theorem set_integral_comp_Lp (L : E →L[𝕜] F) (φ : Lp E p μ) {s : Set α} 
   (∫a in s, (L.comp_Lp φ) a ∂μ) = ∫a in s, L (φ a) ∂μ :=
   set_integral_congr_ae hs ((L.coe_fn_comp_Lp φ).mono fun x hx hx2 => hx)
 
-theorem continuous_integral_comp_L1 [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] (L : E →L[𝕜] F) :
-  Continuous fun φ : α →₁[μ] E => ∫a : α, L (φ a) ∂μ :=
+theorem continuous_integral_comp_L1 (L : E →L[𝕜] F) : Continuous fun φ : α →₁[μ] E => ∫a : α, L (φ a) ∂μ :=
   by 
     rw [←funext L.integral_comp_Lp]
     exact continuous_integral.comp (L.comp_LpL 1 μ).Continuous
 
-variable[CompleteSpace
-      E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜][NormedSpace ℝ E][IsScalarTower ℝ 𝕜 E][IsScalarTower ℝ 𝕜 F]
+variable [CompleteSpace E] [NormedSpace ℝ E] [IsScalarTower ℝ 𝕜 E] [IsScalarTower ℝ 𝕜 F]
 
 theorem integral_comp_comm (L : E →L[𝕜] F) {φ : α → E} (φ_int : integrable φ μ) : (∫a, L (φ a) ∂μ) = L (∫a, φ a ∂μ) :=
   by 
@@ -895,27 +882,17 @@ end ContinuousLinearMap
 
 namespace LinearIsometry
 
-variable[MeasurableSpace
-      F][BorelSpace
-      F][second_countable_topology
-      F][CompleteSpace
-      F][NormedSpace ℝ
-      F][IsScalarTower ℝ 𝕜
-      F][BorelSpace
-      E][second_countable_topology
-      E][CompleteSpace E][NormedSpace ℝ E][IsScalarTower ℝ 𝕜 E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable [MeasurableSpace F] [BorelSpace F] [second_countable_topology F] [CompleteSpace F] [NormedSpace ℝ F]
+  [IsScalarTower ℝ 𝕜 F] [BorelSpace E] [second_countable_topology E] [CompleteSpace E] [NormedSpace ℝ E]
+  [IsScalarTower ℝ 𝕜 E]
 
 theorem integral_comp_comm (L : E →ₗᵢ[𝕜] F) (φ : α → E) : (∫a, L (φ a) ∂μ) = L (∫a, φ a ∂μ) :=
   L.to_continuous_linear_map.integral_comp_comm' L.antilipschitz _
 
 end LinearIsometry
 
-variable[BorelSpace
-      E][second_countable_topology
-      E][CompleteSpace
-      E][NormedSpace ℝ
-      E][MeasurableSpace
-      F][BorelSpace F][second_countable_topology F][CompleteSpace F][NormedSpace ℝ F][MeasurableSpace 𝕜][BorelSpace 𝕜]
+variable [BorelSpace E] [second_countable_topology E] [CompleteSpace E] [NormedSpace ℝ E] [MeasurableSpace F]
+  [BorelSpace F] [second_countable_topology F] [CompleteSpace F] [NormedSpace ℝ F]
 
 @[normCast]
 theorem integral_of_real {f : α → ℝ} : (∫a, (f a : 𝕜) ∂μ) = «expr↑ » (∫a, f a ∂μ) :=
@@ -963,11 +940,12 @@ theorem integral_pair {f : α → E} {g : α → F} (hf : integrable f μ) (hg :
   have  := hf.prod_mk hg 
   Prod.extₓ (fst_integral this) (snd_integral this)
 
-theorem integral_smul_const (f : α → ℝ) (c : E) : (∫x, f x • c ∂μ) = (∫x, f x ∂μ) • c :=
+theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [IsScalarTower ℝ 𝕜 E] [MeasurableSpace 𝕜]
+  [BorelSpace 𝕜] (f : α → 𝕜) (c : E) : (∫x, f x • c ∂μ) = (∫x, f x ∂μ) • c :=
   by 
     byCases' hf : integrable f μ
     ·
-      exact ((ContinuousLinearMap.id ℝ ℝ).smulRight c).integral_comp_comm hf
+      exact ((1 : 𝕜 →L[𝕜] 𝕜).smulRight c).integral_comp_comm hf
     ·
       byCases' hc : c = 0
       ·
@@ -977,11 +955,8 @@ theorem integral_smul_const (f : α → ℝ) (c : E) : (∫x, f x • c ∂μ) =
 
 section Inner
 
-variable{E' :
-    Type
-      _}[InnerProductSpace 𝕜
-      E'][MeasurableSpace
-      E'][BorelSpace E'][second_countable_topology E'][CompleteSpace E'][NormedSpace ℝ E'][IsScalarTower ℝ 𝕜 E']
+variable {E' : Type _} [InnerProductSpace 𝕜 E'] [MeasurableSpace E'] [BorelSpace E'] [second_countable_topology E']
+  [CompleteSpace E'] [NormedSpace ℝ E'] [IsScalarTower ℝ 𝕜 E']
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
 

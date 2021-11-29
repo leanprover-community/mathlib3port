@@ -40,7 +40,7 @@ noncomputable theory
 
 namespace ContinuousMap
 
-variable{X : Type _}[TopologicalSpace X][CompactSpace X]
+variable {X : Type _} [TopologicalSpace X] [CompactSpace X]
 
 /--
 Turn a function `f : C(X, ℝ)` into a continuous map into `set.Icc (-∥f∥) (∥f∥)`,
@@ -302,7 +302,7 @@ section Complex
 
 open Complex
 
-variable{X : Type _}[TopologicalSpace X]
+variable {X : Type _} [TopologicalSpace X]
 
 namespace ContinuousMap
 
@@ -343,7 +343,7 @@ begin
     simpa [] [] [] [] [] ["using", expr this] }
 end
 
-variable[CompactSpace X]
+variable [CompactSpace X]
 
 -- error in Topology.ContinuousFunction.StoneWeierstrass: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

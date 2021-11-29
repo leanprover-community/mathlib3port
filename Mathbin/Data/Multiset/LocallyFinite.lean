@@ -8,13 +8,13 @@ This file provides basic results about all the `multiset.Ixx`, which are defined
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Multiset
 
 section Preorderₓ
 
-variable[Preorderₓ α][LocallyFiniteOrder α]{a b c : α}
+variable [Preorderₓ α] [LocallyFiniteOrder α] {a b c : α}
 
 theorem nodup_Icc : (Icc a b).Nodup :=
   Finset.nodup _
@@ -74,7 +74,7 @@ theorem Ioc_eq_zero_of_le (h : b ≤ a) : Ioc a b = 0 :=
 theorem Ioo_eq_zero_of_le (h : b ≤ a) : Ioo a b = 0 :=
   Ioo_eq_zero h.not_lt
 
-variable(a)
+variable (a)
 
 @[simp]
 theorem Ico_self : Ico a a = 0 :=
@@ -91,7 +91,7 @@ theorem Ioo_self : Ioo a a = 0 :=
   by 
     rw [Ioo, Finset.Ioo_self, Finset.empty_val]
 
-variable{a b c}
+variable {a b c}
 
 theorem left_mem_Icc : a ∈ Icc a b ↔ a ≤ b :=
   Finset.left_mem_Icc
@@ -155,7 +155,7 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable[PartialOrderₓ α][LocallyFiniteOrder α]{a b : α}
+variable [PartialOrderₓ α] [LocallyFiniteOrder α] {a b : α}
 
 @[simp]
 theorem Icc_self (a : α) : Icc a a = {a} :=
@@ -193,7 +193,7 @@ end PartialOrderₓ
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ α][LocallyFiniteOrder α]{a b c d : α}
+variable [LinearOrderₓ α] [LocallyFiniteOrder α] {a b c d : α}
 
 theorem Ico_subset_Ico_iff {a₁ b₁ a₂ b₂ : α} (h : a₁ < b₁) : Ico a₁ b₁ ⊆ Ico a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ ≤ b₂ :=
   Finset.Ico_subset_Ico_iff h
@@ -231,7 +231,7 @@ end LinearOrderₓ
 
 section OrderedCancelAddCommMonoid
 
-variable[OrderedCancelAddCommMonoid α][HasExistsAddOfLe α][LocallyFiniteOrder α]
+variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α]
 
 theorem map_add_left_Icc (a b c : α) : (Icc a b).map ((·+·) c) = Icc (c+a) (c+b) :=
   by 

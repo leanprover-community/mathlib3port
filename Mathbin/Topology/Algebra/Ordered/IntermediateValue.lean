@@ -49,7 +49,7 @@ statement, including the classical IVT that corresponds to a constant function `
 
 section 
 
-variable{X : Type u}{α : Type v}[TopologicalSpace X][LinearOrderₓ α][TopologicalSpace α][OrderClosedTopology α]
+variable {X : Type u} {α : Type v} [TopologicalSpace X] [LinearOrderₓ α] [TopologicalSpace α] [OrderClosedTopology α]
 
 /-- Intermediate value theorem for two functions: if `f` and `g` are two continuous functions
 on a preconnected space and `f a ≤ g a` and `g b ≤ f b`, then for some `x` we have `f x = g x`. -/
@@ -220,15 +220,8 @@ theorem IsPreconnected.eq_univ_of_unbounded {s : Set α} (hs : IsPreconnected s)
 
 end 
 
-variable{α :
-    Type
-      u}{β :
-    Type
-      v}{γ :
-    Type
-      w}[ConditionallyCompleteLinearOrder
-      α][TopologicalSpace
-      α][OrderTopology α][ConditionallyCompleteLinearOrder β][TopologicalSpace β][OrderTopology β][Nonempty γ]
+variable {α : Type u} {β : Type v} {γ : Type w} [ConditionallyCompleteLinearOrder α] [TopologicalSpace α]
+  [OrderTopology α] [ConditionallyCompleteLinearOrder β] [TopologicalSpace β] [OrderTopology β] [Nonempty γ]
 
 /-- A bounded connected subset of a conditionally complete linear order includes the open interval
 `(Inf s, Sup s)`. -/
@@ -386,7 +379,7 @@ begin
     x hx, hgt x ⟨hx.1, Ico_subset_Ico_right hy.2 hx.2⟩ y hx.2.2)]
 end
 
-variable[DenselyOrdered α]{a b : α}
+variable [DenselyOrdered α] {a b : α}
 
 -- error in Topology.Algebra.Ordered.IntermediateValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A "continuous induction principle" for a closed interval: if a set `s` meets `[a, b]`
@@ -461,7 +454,7 @@ theorem is_preconnected_Ioc : IsPreconnected (Ioc a b) :=
 theorem is_preconnected_Ico : IsPreconnected (Ico a b) :=
   ord_connected_Ico.IsPreconnected
 
-instance (priority := 100)ordered_connected_space : PreconnectedSpace α :=
+instance (priority := 100) ordered_connected_space : PreconnectedSpace α :=
   ⟨ord_connected_univ.IsPreconnected⟩
 
 /-- In a dense conditionally complete linear order, the set of preconnected sets is exactly
@@ -487,7 +480,7 @@ continuous on an interval.
 -/
 
 
-variable{δ : Type _}[LinearOrderₓ δ][TopologicalSpace δ][OrderClosedTopology δ]
+variable {δ : Type _} [LinearOrderₓ δ] [TopologicalSpace δ] [OrderClosedTopology δ]
 
 /-- **Intermediate Value Theorem** for continuous functions on closed intervals, case
 `f a ≤ t ≤ f b`.-/

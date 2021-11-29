@@ -28,7 +28,7 @@ open_locale BigOperators Nat
 
 section CancelMonoidWithZero
 
-variable{M : Type _}[CancelMonoidWithZero M][Fintype M]
+variable {M : Type _} [CancelMonoidWithZero M] [Fintype M]
 
 theorem mul_right_bijective_of_fintype₀ {a : M} (ha : a ≠ 0) : bijective fun b => a*b :=
   Fintype.injective_iff_bijective.1$ mul_right_injective₀ ha
@@ -52,11 +52,11 @@ def groupWithZeroOfFintype (M : Type _) [CancelMonoidWithZero M] [DecidableEq M]
 
 end CancelMonoidWithZero
 
-variable{R : Type _}{G : Type _}
+variable {R : Type _} {G : Type _}
 
 section Ringₓ
 
-variable[Ringₓ R][IsDomain R][Fintype R]
+variable [Ringₓ R] [IsDomain R] [Fintype R]
 
 /-- Every finite domain is a division ring.
 
@@ -67,7 +67,7 @@ def divisionRingOfIsDomain (R : Type _) [Ringₓ R] [IsDomain R] [DecidableEq R]
 
 end Ringₓ
 
-variable[CommRingₓ R][IsDomain R][Groupₓ G][Fintype G]
+variable [CommRingₓ R] [IsDomain R] [Groupₓ G] [Fintype G]
 
 -- error in RingTheory.IntegralDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem card_nth_roots_subgroup_units
@@ -100,7 +100,7 @@ theorem is_cyclic_of_subgroup_is_domain (f : G →* R) (hf : injective f) : IsCy
 
 To support `units ℤ` and other infinite monoids with finite groups of units, this requires only
 `fintype (units R)` rather than deducing it from `fintype R`. -/
-instance  [Fintype (Units R)] : IsCyclic (Units R) :=
+instance [Fintype (Units R)] : IsCyclic (Units R) :=
   is_cyclic_of_subgroup_is_domain (Units.coeHom R)$ Units.ext
 
 /-- Every finite integral domain is a field. -/
@@ -109,7 +109,7 @@ def fieldOfIsDomain [DecidableEq R] [Fintype R] : Field R :=
 
 section 
 
-variable(S : Subgroup (Units R))[Fintype S]
+variable (S : Subgroup (Units R)) [Fintype S]
 
 /-- A finite subgroup of the units of an integral domain is cyclic. -/
 instance subgroup_units_cyclic : IsCyclic S :=

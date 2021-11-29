@@ -22,9 +22,9 @@ universe u
 
 namespace Lagrange
 
-variable{F : Type u}[DecidableEq F][Field F](s : Finset F)
+variable {F : Type u} [DecidableEq F] [Field F] (s : Finset F)
 
-variable{F' : Type u}[Field F'](s' : Finset F')
+variable {F' : Type u} [Field F'] (s' : Finset F')
 
 open Polynomial
 
@@ -93,7 +93,7 @@ begin
       exact [expr X_pow_sub_C_ne_zero zero_lt_one _ hz] } }
 end
 
-variable(f : s → F)
+variable (f : s → F)
 
 /-- Lagrange interpolation: given a finset `s` and a function `f : s → F`,
 `interpolate s f` is the unique polynomial of degree `< s.card`

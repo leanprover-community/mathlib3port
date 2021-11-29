@@ -21,7 +21,7 @@ boxes of `π` actually cover the whole `I`. We also define some operations on pr
 * `box_integral.partition.bUnion`: split each box of a partition into smaller boxes;
 * `box_integral.partition.restrict`: restrict a partition to a smaller box.
 
-We also define a `semilattice_inf_top` structure on `box_integral.partition I` for all
+We also define a `semilattice_inf` structure on `box_integral.partition I` for all
 `I : box_integral.box ι`.
 
 ## Tags
@@ -38,20 +38,20 @@ noncomputable theory
 
 namespace BoxIntegral
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 /-- A prepartition of `I : box_integral.box ι` is a finite set of pairwise disjoint subboxes of
 `I`. -/
-structure prepartition(I : box ι) where 
+structure prepartition (I : box ι) where 
   boxes : Finset (box ι)
   le_of_mem' : ∀ J _ : J ∈ boxes, J ≤ I 
   PairwiseDisjoint : Set.Pairwise («expr↑ » boxes) (Disjoint on (coeₓ : box ι → Set (ι → ℝ)))
 
 namespace Prepartition
 
-variable{I J J₁ J₂ : box ι}(π : prepartition I){π₁ π₂ : prepartition I}{x : ι → ℝ}
+variable {I J J₁ J₂ : box ι} (π : prepartition I) {π₁ π₂ : prepartition I} {x : ι → ℝ}
 
-instance  : HasMem (box ι) (prepartition I) :=
+instance : HasMem (box ι) (prepartition I) :=
   ⟨fun J π => J ∈ π.boxes⟩
 
 @[simp]
@@ -106,10 +106,10 @@ theorem mem_single {J'} (h : J ≤ I) : J' ∈ single I J h ↔ J' = J :=
   mem_singleton
 
 /-- We say that `π ≤ π'` if each box of `π` is a subbox of some box of `π'`. -/
-instance  : LE (prepartition I) :=
+instance : LE (prepartition I) :=
   ⟨fun π π' => ∀ ⦃I⦄, I ∈ π → ∃ (I' : _)(_ : I' ∈ π'), I ≤ I'⟩
 
-instance  : PartialOrderₓ (prepartition I) :=
+instance : PartialOrderₓ (prepartition I) :=
   { le := · ≤ ·, le_refl := fun π I hI => ⟨I, hI, le_rfl⟩,
     le_trans :=
       fun π₁ π₂ π₃ h₁₂ h₂₃ I₁ hI₁ =>
@@ -129,7 +129,7 @@ instance  : PartialOrderₓ (prepartition I) :=
         exact le_antisymmₓ ‹_› ‹_›
         assumption }
 
-instance  : OrderTop (prepartition I) :=
+instance : OrderTop (prepartition I) :=
   { top := single I I le_rfl,
     le_top :=
       fun π J hJ =>
@@ -138,10 +138,10 @@ instance  : OrderTop (prepartition I) :=
             simp ,
           π.le_of_mem hJ⟩ }
 
-instance  : OrderBot (prepartition I) :=
+instance : OrderBot (prepartition I) :=
   { bot := ⟨∅, fun J hJ => False.elim hJ, fun J hJ => False.elim hJ⟩, bot_le := fun π J hJ => False.elim hJ }
 
-instance  : Inhabited (prepartition I) :=
+instance : Inhabited (prepartition I) :=
   ⟨⊤⟩
 
 theorem le_def : π₁ ≤ π₂ ↔ ∀ J _ : J ∈ π₁, ∃ (J' : _)(_ : J' ∈ π₂), J ≤ J' :=
@@ -292,7 +292,7 @@ def bUnion (πi : ∀ J : box ι, prepartition J) : prepartition I :=
         exact π.eq_of_mem_of_mem hJ₁ hJ₂ ((πi J₁).le_of_mem hJ₁' hx₁) ((πi J₂).le_of_mem hJ₂' hx₂)
         exact (πi J₁).eq_of_mem_of_mem hJ₁' hJ₂' hx₁ hx₂ }
 
-variable{πi πi₁ πi₂ : ∀ J : box ι, prepartition J}
+variable {πi πi₁ πi₂ : ∀ J : box ι, prepartition J}
 
 @[simp]
 theorem mem_bUnion : J ∈ π.bUnion πi ↔ ∃ (J' : _)(_ : J' ∈ π), J ∈ πi J' :=
@@ -547,7 +547,7 @@ begin
     exact [expr ⟨Ji, π.mem_bUnion.2 ⟨J, hJ, hJi⟩, hlei⟩] }
 end
 
-instance  : HasInf (prepartition I) :=
+instance : HasInf (prepartition I) :=
   ⟨fun π₁ π₂ => π₁.bUnion fun J => π₂.restrict J⟩
 
 theorem inf_def (π₁ π₂ : prepartition I) : π₁⊓π₂ = π₁.bUnion fun J => π₂.restrict J :=
@@ -564,13 +564,10 @@ theorem Union_inf (π₁ π₂ : prepartition I) : (π₁⊓π₂).Union = π₁
   by 
     simp only [inf_def, Union_bUnion, Union_restrict, ←Union_inter, ←Union_def]
 
-instance  : SemilatticeInfTop (prepartition I) :=
-  { prepartition.partial_order, prepartition.order_top, prepartition.has_inf with
-    inf_le_left := fun π₁ π₂ => π₁.bUnion_le _, inf_le_right := fun π₁ π₂ => (bUnion_le_iff _).2 fun J hJ => le_rfl,
+instance : SemilatticeInf (prepartition I) :=
+  { prepartition.has_inf, prepartition.partial_order with inf_le_left := fun π₁ π₂ => π₁.bUnion_le _,
+    inf_le_right := fun π₁ π₂ => (bUnion_le_iff _).2 fun J hJ => le_rfl,
     le_inf := fun π π₁ π₂ h₁ h₂ => π₁.le_bUnion_iff.2 ⟨h₁, fun J hJ => restrict_mono h₂⟩ }
-
-instance  : SemilatticeInfBot (prepartition I) :=
-  { prepartition.order_bot, prepartition.semilattice_inf_top with  }
 
 /-- The prepartition with boxes `{J ∈ π | p J}`. -/
 @[simps]
@@ -640,7 +637,7 @@ theorem sum_disj_union_boxes {M : Type _} [AddCommMonoidₓ M] (h : Disjoint π�
 
 section Distortion
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 /-- The distortion of a prepartition is the maximum of the distortions of the boxes of this
 prepartition. -/
@@ -693,7 +690,7 @@ theorem is_partition_top (I : box ι) : is_partition (⊤ : prepartition I) :=
 
 namespace IsPartition
 
-variable{π}
+variable {π}
 
 theorem Union_eq (h : π.is_partition) : π.Union = I :=
   is_partition_iff_Union_eq.1 h

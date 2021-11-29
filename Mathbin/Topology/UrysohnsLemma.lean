@@ -64,7 +64,7 @@ Urysohn's lemma, normal topological space
 -/
 
 
-variable{X : Type _}[TopologicalSpace X]
+variable {X : Type _} [TopologicalSpace X]
 
 open Set Filter TopologicalSpace
 
@@ -75,16 +75,16 @@ namespace Urysohns
 /-- An auxiliary type for the proof of Urysohn's lemma: a pair of a closed set `C` and its
 open neighborhood `U`. -/
 @[protectProj]
-structure CU(X : Type _)[TopologicalSpace X] where 
+structure CU (X : Type _) [TopologicalSpace X] where 
   (c U : Set X)
   closed_C : IsClosed C 
   open_U : IsOpen U 
   Subset : C ⊆ U
 
-instance  : Inhabited (CU X) :=
+instance : Inhabited (CU X) :=
   ⟨⟨∅, univ, is_closed_empty, is_open_univ, empty_subset _⟩⟩
 
-variable[NormalSpace X]
+variable [NormalSpace X]
 
 namespace CU
 
@@ -283,7 +283,7 @@ end CU
 
 end Urysohns
 
-variable[NormalSpace X]
+variable [NormalSpace X]
 
 /-- Urysohns lemma: if `s` and `t` are two disjoint closed sets in a normal topological space `X`,
 then there exists a continuous function `f : X → ℝ` such that

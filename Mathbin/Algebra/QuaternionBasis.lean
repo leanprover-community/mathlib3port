@@ -27,16 +27,16 @@ namespace QuaternionAlgebra
 
 Note that for definitional convenience, `k` is provided as a field even though `i_mul_j` fully
 determines it. -/
-structure basis{R : Type _}(A : Type _)[CommRingₓ R][Ringₓ A][Algebra R A](c₁ c₂ : R) where 
+structure basis {R : Type _} (A : Type _) [CommRingₓ R] [Ringₓ A] [Algebra R A] (c₁ c₂ : R) where 
   (i j k : A)
   i_mul_i : (i*i) = c₁ • 1
   j_mul_j : (j*j) = c₂ • 1
   i_mul_j : (i*j) = k 
   j_mul_i : (j*i) = -k
 
-variable{R : Type _}{A B : Type _}[CommRingₓ R][Ringₓ A][Ringₓ B][Algebra R A][Algebra R B]
+variable {R : Type _} {A B : Type _} [CommRingₓ R] [Ringₓ A] [Ringₓ B] [Algebra R A] [Algebra R B]
 
-variable{c₁ c₂ : R}
+variable {c₁ c₂ : R}
 
 namespace Basis
 
@@ -50,7 +50,7 @@ protected theorem ext ⦃q₁ q₂ : basis A c₁ c₂⦄ (hi : q₁.i = q₂.i)
     rw [←q₁_i_mul_j, ←q₂_i_mul_j]
     congr
 
-variable(R)
+variable (R)
 
 /-- There is a natural quaternionic basis for the `quaternion_algebra`. -/
 @[simps i j k]
@@ -71,12 +71,12 @@ protected def self : basis ℍ[R,c₁,c₂] c₁ c₂ :=
       by 
         ext <;> simp  }
 
-variable{R}
+variable {R}
 
-instance  : Inhabited (basis ℍ[R,c₁,c₂] c₁ c₂) :=
+instance : Inhabited (basis ℍ[R,c₁,c₂] c₁ c₂) :=
   ⟨basis.self R⟩
 
-variable(q : basis A c₁ c₂)
+variable (q : basis A c₁ c₂)
 
 include q
 

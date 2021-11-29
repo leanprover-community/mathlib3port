@@ -28,7 +28,7 @@ open Filter Set
 
 open_locale Filter TopologicalSpace Pointwise
 
-variable{a b : ℝ}(hab : a < b){l : Filter ℝ}{f f' g g' : ℝ → ℝ}
+variable {a b : ℝ} (hab : a < b) {l : Filter ℝ} {f f' g g' : ℝ → ℝ}
 
 /-!
 ## Interval-based versions

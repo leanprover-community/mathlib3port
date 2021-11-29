@@ -51,17 +51,17 @@ noncomputable theory
 /-- If `Γ` is linearly ordered and `R` has zero, then `hahn_series Γ R` consists of
   formal series over `Γ` with coefficients in `R`, whose supports are well-founded. -/
 @[ext]
-structure HahnSeries(Γ : Type _)(R : Type _)[PartialOrderₓ Γ][HasZero R] where 
+structure HahnSeries (Γ : Type _) (R : Type _) [PartialOrderₓ Γ] [HasZero R] where 
   coeff : Γ → R 
   is_pwo_support' : (Function.Support coeff).IsPwo
 
-variable{Γ : Type _}{R : Type _}
+variable {Γ : Type _} {R : Type _}
 
 namespace HahnSeries
 
 section Zero
 
-variable[PartialOrderₓ Γ][HasZero R]
+variable [PartialOrderₓ Γ] [HasZero R]
 
 /-- The support of a Hahn series is just the set of indices whose coefficients are nonzero.
   Notably, it is well-founded. -/
@@ -80,16 +80,16 @@ theorem is_wf_support (x : HahnSeries Γ R) : x.support.is_wf :=
 theorem mem_support (x : HahnSeries Γ R) (a : Γ) : a ∈ x.support ↔ x.coeff a ≠ 0 :=
   Iff.refl _
 
-instance  : HasZero (HahnSeries Γ R) :=
+instance : HasZero (HahnSeries Γ R) :=
   ⟨{ coeff := 0,
       is_pwo_support' :=
         by 
           simp  }⟩
 
-instance  : Inhabited (HahnSeries Γ R) :=
+instance : Inhabited (HahnSeries Γ R) :=
   ⟨0⟩
 
-instance  [Subsingleton R] : Subsingleton (HahnSeries Γ R) :=
+instance [Subsingleton R] : Subsingleton (HahnSeries Γ R) :=
   ⟨fun a b => a.ext b (Subsingleton.elimₓ _ _)⟩
 
 @[simp]
@@ -124,7 +124,7 @@ def single (a : Γ) : ZeroHom R (HahnSeries Γ R) :=
       fun r => { coeff := Pi.single a r, is_pwo_support' := (Set.is_pwo_singleton a).mono Pi.support_single_subset },
     map_zero' := ext _ _ (Pi.single_zero _) }
 
-variable{a b : Γ}{r : R}
+variable {a b : Γ} {r : R}
 
 @[simp]
 theorem single_coeff_same (a : Γ) (r : R) : (single a r).coeff a = r :=
@@ -160,7 +160,7 @@ theorem single_injective (a : Γ) : Function.Injective (single a : R → HahnSer
 theorem single_ne_zero (h : r ≠ 0) : single a r ≠ 0 :=
   fun con => h (single_injective a (Con.trans single_eq_zero.symm))
 
-instance  [Nonempty Γ] [Nontrivial R] : Nontrivial (HahnSeries Γ R) :=
+instance [Nonempty Γ] [Nontrivial R] : Nontrivial (HahnSeries Γ R) :=
   ⟨by 
       obtain ⟨r, s, rs⟩ := exists_pair_ne R 
       inhabit Γ 
@@ -169,7 +169,7 @@ instance  [Nonempty Γ] [Nontrivial R] : Nontrivial (HahnSeries Γ R) :=
 
 section Order
 
-variable[HasZero Γ]
+variable [HasZero Γ]
 
 /-- The order of a nonzero Hahn series `x` is a minimal element of `Γ` where `x` has a
   nonzero coefficient, the order of 0 is 0. -/
@@ -201,7 +201,7 @@ end Order
 
 section Domain
 
-variable{Γ' : Type _}[PartialOrderₓ Γ']
+variable {Γ' : Type _} [PartialOrderₓ Γ']
 
 /-- Extends the domain of a `hahn_series` by an `order_embedding`. -/
 def emb_domain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R :=
@@ -283,19 +283,19 @@ end Zero
 
 section Addition
 
-variable[PartialOrderₓ Γ]
+variable [PartialOrderₓ Γ]
 
 section AddMonoidₓ
 
-variable[AddMonoidₓ R]
+variable [AddMonoidₓ R]
 
-instance  : Add (HahnSeries Γ R) :=
+instance : Add (HahnSeries Γ R) :=
   { add :=
       fun x y =>
         { coeff := x.coeff+y.coeff,
           is_pwo_support' := (x.is_pwo_support.union y.is_pwo_support).mono (Function.support_add _ _) } }
 
-instance  : AddMonoidₓ (HahnSeries Γ R) :=
+instance : AddMonoidₓ (HahnSeries Γ R) :=
   { zero := 0, add := ·+·,
     add_assoc :=
       fun x y z =>
@@ -356,7 +356,7 @@ def coeff.add_monoid_hom (g : Γ) : HahnSeries Γ R →+ R :=
 
 section Domain
 
-variable{Γ' : Type _}[PartialOrderₓ Γ']
+variable {Γ' : Type _} [PartialOrderₓ Γ']
 
 theorem emb_domain_add (f : Γ ↪o Γ') (x y : HahnSeries Γ R) : emb_domain f (x+y) = emb_domain f x+emb_domain f y :=
   by 
@@ -372,7 +372,7 @@ end Domain
 
 end AddMonoidₓ
 
-instance  [AddCommMonoidₓ R] : AddCommMonoidₓ (HahnSeries Γ R) :=
+instance [AddCommMonoidₓ R] : AddCommMonoidₓ (HahnSeries Γ R) :=
   { HahnSeries.addMonoid with
     add_comm :=
       fun x y =>
@@ -382,9 +382,9 @@ instance  [AddCommMonoidₓ R] : AddCommMonoidₓ (HahnSeries Γ R) :=
 
 section AddGroupₓ
 
-variable[AddGroupₓ R]
+variable [AddGroupₓ R]
 
-instance  : AddGroupₓ (HahnSeries Γ R) :=
+instance : AddGroupₓ (HahnSeries Γ R) :=
   { HahnSeries.addMonoid with
     neg :=
       fun x =>
@@ -424,16 +424,16 @@ theorem sub_coeff {x y : HahnSeries Γ R} {a : Γ} : (x - y).coeff a = x.coeff a
 
 end AddGroupₓ
 
-instance  [AddCommGroupₓ R] : AddCommGroupₓ (HahnSeries Γ R) :=
+instance [AddCommGroupₓ R] : AddCommGroupₓ (HahnSeries Γ R) :=
   { HahnSeries.addCommMonoid, HahnSeries.addGroup with  }
 
 end Addition
 
 section DistribMulAction
 
-variable[PartialOrderₓ Γ]{V : Type _}[Monoidₓ R][AddMonoidₓ V][DistribMulAction R V]
+variable [PartialOrderₓ Γ] {V : Type _} [Monoidₓ R] [AddMonoidₓ V] [DistribMulAction R V]
 
-instance  : HasScalar R (HahnSeries Γ V) :=
+instance : HasScalar R (HahnSeries Γ V) :=
   ⟨fun r x =>
       { coeff := r • x.coeff, is_pwo_support' := x.is_pwo_support.mono (Function.support_smul_subset_right r x.coeff) }⟩
 
@@ -441,7 +441,7 @@ instance  : HasScalar R (HahnSeries Γ V) :=
 theorem smul_coeff {r : R} {x : HahnSeries Γ V} {a : Γ} : (r • x).coeff a = r • x.coeff a :=
   rfl
 
-instance  : DistribMulAction R (HahnSeries Γ V) :=
+instance : DistribMulAction R (HahnSeries Γ V) :=
   { smul := · • ·,
     one_smul :=
       fun _ =>
@@ -464,15 +464,15 @@ instance  : DistribMulAction R (HahnSeries Γ V) :=
           ext 
           simp [mul_smul] }
 
-variable{S : Type _}[Monoidₓ S][DistribMulAction S V]
+variable {S : Type _} [Monoidₓ S] [DistribMulAction S V]
 
-instance  [HasScalar R S] [IsScalarTower R S V] : IsScalarTower R S (HahnSeries Γ V) :=
+instance [HasScalar R S] [IsScalarTower R S V] : IsScalarTower R S (HahnSeries Γ V) :=
   ⟨fun r s a =>
       by 
         ext 
         simp ⟩
 
-instance  [SmulCommClass R S V] : SmulCommClass R S (HahnSeries Γ V) :=
+instance [SmulCommClass R S V] : SmulCommClass R S (HahnSeries Γ V) :=
   ⟨fun r s a =>
       by 
         ext 
@@ -482,9 +482,9 @@ end DistribMulAction
 
 section Module
 
-variable[PartialOrderₓ Γ][Semiringₓ R]{V : Type _}[AddCommMonoidₓ V][Module R V]
+variable [PartialOrderₓ Γ] [Semiringₓ R] {V : Type _} [AddCommMonoidₓ V] [Module R V]
 
-instance  : Module R (HahnSeries Γ V) :=
+instance : Module R (HahnSeries Γ V) :=
   { HahnSeries.distribMulAction with
     zero_smul :=
       fun _ =>
@@ -514,7 +514,7 @@ def coeff.linear_map (g : Γ) : HahnSeries Γ R →ₗ[R] R :=
 
 section Domain
 
-variable{Γ' : Type _}[PartialOrderₓ Γ']
+variable {Γ' : Type _} [PartialOrderₓ Γ']
 
 theorem emb_domain_smul (f : Γ ↪o Γ') (r : R) (x : HahnSeries Γ R) : emb_domain f (r • x) = r • emb_domain f x :=
   by 
@@ -537,9 +537,9 @@ end Module
 
 section Multiplication
 
-variable[OrderedCancelAddCommMonoid Γ]
+variable [OrderedCancelAddCommMonoid Γ]
 
-instance  [HasZero R] [HasOne R] : HasOne (HahnSeries Γ R) :=
+instance [HasZero R] [HasOne R] : HasOne (HahnSeries Γ R) :=
   ⟨single 0 1⟩
 
 @[simp]
@@ -761,7 +761,7 @@ private theorem mul_assoc' [NonUnitalSemiring R] (x y z : HahnSeries Γ R) : ((x
       rintro ⟨⟨i, j⟩, ⟨k, l⟩⟩ H1 H2 
       simp [mul_assocₓ]
 
-instance  [NonUnitalNonAssocSemiring R] : NonUnitalNonAssocSemiring (HahnSeries Γ R) :=
+instance [NonUnitalNonAssocSemiring R] : NonUnitalNonAssocSemiring (HahnSeries Γ R) :=
   { HahnSeries.addCommMonoid, HahnSeries.distrib with zero := 0, add := ·+·, mul := ·*·,
     zero_mul :=
       fun _ =>
@@ -774,10 +774,10 @@ instance  [NonUnitalNonAssocSemiring R] : NonUnitalNonAssocSemiring (HahnSeries 
           ext 
           simp  }
 
-instance  [NonUnitalSemiring R] : NonUnitalSemiring (HahnSeries Γ R) :=
+instance [NonUnitalSemiring R] : NonUnitalSemiring (HahnSeries Γ R) :=
   { HahnSeries.nonUnitalNonAssocSemiring with zero := 0, add := ·+·, mul := ·*·, mul_assoc := mul_assoc' }
 
-instance  [NonAssocSemiring R] : NonAssocSemiring (HahnSeries Γ R) :=
+instance [NonAssocSemiring R] : NonAssocSemiring (HahnSeries Γ R) :=
   { HahnSeries.nonUnitalNonAssocSemiring with zero := 0, one := 1, add := ·+·, mul := ·*·,
     one_mul :=
       fun x =>
@@ -790,10 +790,10 @@ instance  [NonAssocSemiring R] : NonAssocSemiring (HahnSeries Γ R) :=
           ext 
           exact mul_single_zero_coeff.trans (mul_oneₓ _) }
 
-instance  [Semiringₓ R] : Semiringₓ (HahnSeries Γ R) :=
+instance [Semiringₓ R] : Semiringₓ (HahnSeries Γ R) :=
   { HahnSeries.nonAssocSemiring, HahnSeries.nonUnitalSemiring with zero := 0, one := 1, add := ·+·, mul := ·*· }
 
-instance  [CommSemiringₓ R] : CommSemiringₓ (HahnSeries Γ R) :=
+instance [CommSemiringₓ R] : CommSemiringₓ (HahnSeries Γ R) :=
   { HahnSeries.semiring with
     mul_comm :=
       fun x y =>
@@ -825,13 +825,13 @@ instance  [CommSemiringₓ R] : CommSemiringₓ (HahnSeries Γ R) :=
             simp only [Prod.fst_swap, mem_add_antidiagonal, Prod.snd_swap, Ne.def, Set.mem_set_of_eq] at ha⊢
             exact ⟨(add_commₓ _ _).trans ha.1, ha.2.2, ha.2.1⟩ }
 
-instance  [Ringₓ R] : Ringₓ (HahnSeries Γ R) :=
+instance [Ringₓ R] : Ringₓ (HahnSeries Γ R) :=
   { HahnSeries.semiring, HahnSeries.addCommGroup with  }
 
-instance  [CommRingₓ R] : CommRingₓ (HahnSeries Γ R) :=
+instance [CommRingₓ R] : CommRingₓ (HahnSeries Γ R) :=
   { HahnSeries.commSemiring, HahnSeries.ring with  }
 
-instance  {Γ} [LinearOrderedCancelAddCommMonoid Γ] [Ringₓ R] [IsDomain R] : IsDomain (HahnSeries Γ R) :=
+instance {Γ} [LinearOrderedCancelAddCommMonoid Γ] [Ringₓ R] [IsDomain R] : IsDomain (HahnSeries Γ R) :=
   { HahnSeries.nontrivial, HahnSeries.ring with
     eq_zero_or_eq_zero_of_mul_eq_zero :=
       fun x y xy =>
@@ -862,7 +862,7 @@ theorem order_mul {Γ} [LinearOrderedCancelAddCommMonoid Γ] [Ringₓ R] [IsDoma
 
 section NonUnitalNonAssocSemiring
 
-variable[NonUnitalNonAssocSemiring R]
+variable [NonUnitalNonAssocSemiring R]
 
 @[simp]
 theorem single_mul_single {a b : Γ} {r s : R} : (single a r*single b s) = single (a+b) (r*s) :=
@@ -883,7 +883,7 @@ end NonUnitalNonAssocSemiring
 
 section NonAssocSemiring
 
-variable[NonAssocSemiring R]
+variable [NonAssocSemiring R]
 
 /-- `C a` is the constant Hahn Series `a`. `C` is provided as a ring homomorphism. -/
 @[simps]
@@ -934,7 +934,7 @@ end NonAssocSemiring
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 theorem C_mul_eq_smul {r : R} {x : HahnSeries Γ R} : (C r*x) = r • x :=
   single_zero_mul_eq_smul
@@ -943,7 +943,7 @@ end Semiringₓ
 
 section Domain
 
-variable{Γ' : Type _}[OrderedCancelAddCommMonoid Γ']
+variable {Γ' : Type _} [OrderedCancelAddCommMonoid Γ']
 
 theorem emb_domain_mul [NonUnitalNonAssocSemiring R] (f : Γ ↪o Γ') (hf : ∀ x y, f (x+y) = f x+f y)
   (x y : HahnSeries Γ R) : emb_domain f (x*y) = emb_domain f x*emb_domain f y :=
@@ -1005,9 +1005,9 @@ end Domain
 
 section Algebra
 
-variable[CommSemiringₓ R]{A : Type _}[Semiringₓ A][Algebra R A]
+variable [CommSemiringₓ R] {A : Type _} [Semiringₓ A] [Algebra R A]
 
-instance  : Algebra R (HahnSeries Γ A) :=
+instance : Algebra R (HahnSeries Γ A) :=
   { toRingHom := C.comp (algebraMap R A),
     smul_def' :=
       fun r x =>
@@ -1028,7 +1028,7 @@ theorem C_eq_algebra_map : C = algebraMap R (HahnSeries Γ R) :=
 theorem algebra_map_apply {r : R} : algebraMap R (HahnSeries Γ A) r = C (algebraMap R A r) :=
   rfl
 
-instance  [Nontrivial Γ] [Nontrivial R] : Nontrivial (Subalgebra R (HahnSeries Γ R)) :=
+instance [Nontrivial Γ] [Nontrivial R] : Nontrivial (Subalgebra R (HahnSeries Γ R)) :=
   ⟨⟨⊥, ⊤,
       by 
         rw [Ne.def, SetLike.ext_iff, not_forall]
@@ -1043,7 +1043,7 @@ instance  [Nontrivial Γ] [Nontrivial R] : Nontrivial (Subalgebra R (HahnSeries 
 
 section Domain
 
-variable{Γ' : Type _}[OrderedCancelAddCommMonoid Γ']
+variable {Γ' : Type _} [OrderedCancelAddCommMonoid Γ']
 
 /-- Extending the domain of Hahn series is an algebra homomorphism. -/
 @[simps]
@@ -1059,7 +1059,7 @@ end Multiplication
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 /-- The ring `hahn_series ℕ R` is isomorphic to `power_series R`. -/
 @[simps]
@@ -1103,14 +1103,14 @@ theorem coeff_to_power_series_symm {f : PowerSeries R} {n : ℕ} :
   (HahnSeries.toPowerSeries.symm f).coeff n = PowerSeries.coeff R n f :=
   rfl
 
-variable(Γ)(R)[OrderedSemiring Γ][Nontrivial Γ]
+variable (Γ) (R) [OrderedSemiring Γ] [Nontrivial Γ]
 
 /-- Casts a power series as a Hahn series with coefficients from an `ordered_semiring`. -/
 def of_power_series : PowerSeries R →+* HahnSeries Γ R :=
   (HahnSeries.embDomainRingHom (Nat.castAddMonoidHom Γ) Nat.strict_mono_cast.Injective fun _ _ => Nat.cast_le).comp
     (RingEquiv.toRingHom to_power_series.symm)
 
-variable{Γ}{R}
+variable {Γ} {R}
 
 theorem of_power_series_injective : Function.Injective (of_power_series Γ R) :=
   emb_domain_injective.comp to_power_series.symm.Injective
@@ -1136,7 +1136,7 @@ end Semiringₓ
 
 section Algebra
 
-variable(R)[CommSemiringₓ R]{A : Type _}[Semiringₓ A][Algebra R A]
+variable (R) [CommSemiringₓ R] {A : Type _} [Semiringₓ A] [Algebra R A]
 
 /-- The `R`-algebra `hahn_series ℕ A` is isomorphic to `power_series A`. -/
 @[simps]
@@ -1156,7 +1156,7 @@ def to_power_series_alg : HahnSeries ℕ A ≃ₐ[R] PowerSeries A :=
             simp only [n.succ_ne_zero, Ne.def, not_false_iff, single_coeff_of_ne]
             rw [PowerSeries.coeff_C, if_neg n.succ_ne_zero] }
 
-variable(Γ)(R)[OrderedSemiring Γ][Nontrivial Γ]
+variable (Γ) (R) [OrderedSemiring Γ] [Nontrivial Γ]
 
 /-- Casting a power series as a Hahn series with coefficients from an `ordered_semiring`
   is an algebra homomorphism. -/
@@ -1169,16 +1169,16 @@ end Algebra
 
 section Valuation
 
-variable[LinearOrderedAddCommGroup Γ][Ringₓ R][IsDomain R]
+variable [LinearOrderedAddCommGroup Γ] [Ringₓ R] [IsDomain R]
 
-instance  : LinearOrderedCommGroup (Multiplicative Γ) :=
+instance : LinearOrderedCommGroup (Multiplicative Γ) :=
   { (inferInstance : LinearOrderₓ (Multiplicative Γ)), (inferInstance : OrderedCommGroup (Multiplicative Γ)) with  }
 
-instance  : LinearOrderedCommGroupWithZero (WithZero (Multiplicative Γ)) :=
+instance : LinearOrderedCommGroupWithZero (WithZero (Multiplicative Γ)) :=
   { WithZero.orderedCommMonoid, (inferInstance : LinearOrderₓ (WithZero (Multiplicative Γ))),
     (inferInstance : CommGroupWithZero (WithZero (Multiplicative Γ))) with zero_le_one := WithZero.zero_le 1 }
 
-variable(Γ)(R)
+variable (Γ) (R)
 
 /-- The additive valuation on `hahn_series Γ R`, returning the smallest index at which
   a Hahn Series has a nonzero coefficient, or `⊤` for the 0 series.  -/
@@ -1215,7 +1215,7 @@ def add_val : AddValuation (HahnSeries Γ R) (WithTop Γ) :=
           simp [hy]
         rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ←WithTop.coe_add, WithTop.coe_eq_coe, order_mul hx hy]
 
-variable{Γ}{R}
+variable {Γ} {R}
 
 theorem add_val_apply {x : HahnSeries Γ R} :
   add_val Γ R x = if x = (0 : HahnSeries Γ R) then (⊤ : WithTop Γ) else x.order :=
@@ -1251,12 +1251,12 @@ theorem is_pwo_Union_support_powers [LinearOrderedAddCommGroup Γ] [Ringₓ R] [
 
 section 
 
-variable(Γ)(R)[PartialOrderₓ Γ][AddCommMonoidₓ R]
+variable (Γ) (R) [PartialOrderₓ Γ] [AddCommMonoidₓ R]
 
 /-- An infinite family of Hahn series which has a formal coefficient-wise sum.
   The requirements for this are that the union of the supports of the series is well-founded,
   and that only finitely many series are nonzero at any given coefficient. -/
-structure summable_family(α : Type _) where 
+structure summable_family (α : Type _) where 
   toFun : α → HahnSeries Γ R 
   is_pwo_Union_support' : Set.IsPwo (⋃a : α, (to_fun a).Support)
   finite_co_support' : ∀ g : Γ, { a | (to_fun a).coeff g ≠ 0 }.Finite
@@ -1267,9 +1267,9 @@ namespace SummableFamily
 
 section AddCommMonoidₓ
 
-variable[PartialOrderₓ Γ][AddCommMonoidₓ R]{α : Type _}
+variable [PartialOrderₓ Γ] [AddCommMonoidₓ R] {α : Type _}
 
-instance  : CoeFun (summable_family Γ R α) fun _ => α → HahnSeries Γ R :=
+instance : CoeFun (summable_family Γ R α) fun _ => α → HahnSeries Γ R :=
   ⟨to_fun⟩
 
 theorem is_pwo_Union_support (s : summable_family Γ R α) : Set.IsPwo (⋃a : α, (s a).Support) :=
@@ -1288,7 +1288,7 @@ theorem coe_injective : @Function.Injective (summable_family Γ R α) (α → Ha
 theorem ext {s t : summable_family Γ R α} (h : ∀ a : α, s a = t a) : s = t :=
   coe_injective$ funext h
 
-instance  : Add (summable_family Γ R α) :=
+instance : Add (summable_family Γ R α) :=
   ⟨fun x y =>
       { toFun := x+y,
         is_pwo_Union_support' :=
@@ -1306,14 +1306,14 @@ instance  : Add (summable_family Γ R α) :=
                 contrapose! ha 
                 rw [ha.1, ha.2, add_zeroₓ]) }⟩
 
-instance  : HasZero (summable_family Γ R α) :=
+instance : HasZero (summable_family Γ R α) :=
   ⟨⟨0,
       by 
         simp ,
       by 
         simp ⟩⟩
 
-instance  : Inhabited (summable_family Γ R α) :=
+instance : Inhabited (summable_family Γ R α) :=
   ⟨0⟩
 
 @[simp]
@@ -1330,7 +1330,7 @@ theorem coe_zero : ((0 : summable_family Γ R α) : α → HahnSeries Γ R) = 0 
 theorem zero_apply {a : α} : (0 : summable_family Γ R α) a = 0 :=
   rfl
 
-instance  : AddCommMonoidₓ (summable_family Γ R α) :=
+instance : AddCommMonoidₓ (summable_family Γ R α) :=
   { add := ·+·, zero := 0,
     zero_add :=
       fun s =>
@@ -1389,9 +1389,9 @@ end AddCommMonoidₓ
 
 section AddCommGroupₓ
 
-variable[PartialOrderₓ Γ][AddCommGroupₓ R]{α : Type _}{s t : summable_family Γ R α}{a : α}
+variable [PartialOrderₓ Γ] [AddCommGroupₓ R] {α : Type _} {s t : summable_family Γ R α} {a : α}
 
-instance  : AddCommGroupₓ (summable_family Γ R α) :=
+instance : AddCommGroupₓ (summable_family Γ R α) :=
   { summable_family.add_comm_monoid with
     neg :=
       fun s =>
@@ -1429,9 +1429,9 @@ end AddCommGroupₓ
 
 section Semiringₓ
 
-variable[OrderedCancelAddCommMonoid Γ][Semiringₓ R]{α : Type _}
+variable [OrderedCancelAddCommMonoid Γ] [Semiringₓ R] {α : Type _}
 
-instance  : HasScalar (HahnSeries Γ R) (summable_family Γ R α) :=
+instance : HasScalar (HahnSeries Γ R) (summable_family Γ R α) :=
   { smul :=
       fun x s =>
         { toFun := fun a => x*s a,
@@ -1463,7 +1463,7 @@ instance  : HasScalar (HahnSeries Γ R) (summable_family Γ R α) :=
 theorem smul_apply {x : HahnSeries Γ R} {s : summable_family Γ R α} {a : α} : (x • s) a = x*s a :=
   rfl
 
-instance  : Module (HahnSeries Γ R) (summable_family Γ R α) :=
+instance : Module (HahnSeries Γ R) (summable_family Γ R α) :=
   { smul := · • ·, smul_zero := fun x => ext fun a => mul_zero _, zero_smul := fun x => ext fun a => zero_mul _,
     one_smul := fun x => ext fun a => one_mulₓ _, add_smul := fun x y s => ext fun a => add_mulₓ _ _ _,
     smul_add := fun x s t => ext fun a => mul_addₓ _ _ _, mul_smul := fun x y s => ext fun a => mul_assocₓ _ _ _ }
@@ -1518,7 +1518,7 @@ end Semiringₓ
 
 section OfFinsupp
 
-variable[PartialOrderₓ Γ][AddCommMonoidₓ R]{α : Type _}
+variable [PartialOrderₓ Γ] [AddCommMonoidₓ R] {α : Type _}
 
 -- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A family with only finitely many nonzero elements is summable. -/
@@ -1563,7 +1563,7 @@ end OfFinsupp
 
 section EmbDomain
 
-variable[PartialOrderₓ Γ][AddCommMonoidₓ R]{α β : Type _}
+variable [PartialOrderₓ Γ] [AddCommMonoidₓ R] {α β : Type _}
 
 /-- A summable family can be reindexed by an embedding without changing its sum. -/
 def emb_domain (s : summable_family Γ R α) (f : α ↪ β) : summable_family Γ R β :=
@@ -1591,7 +1591,7 @@ def emb_domain (s : summable_family Γ R α) (f : α ↪ β) : summable_family �
               contrapose! h 
               simp only [Ne.def, Set.mem_set_of_eq, dif_neg hb, not_not, zero_coeff]) }
 
-variable(s : summable_family Γ R α)(f : α ↪ β){a : α}{b : β}
+variable (s : summable_family Γ R α) (f : α ↪ β) {a : α} {b : β}
 
 theorem emb_domain_apply : s.emb_domain f b = if h : b ∈ Set.Range f then s (Classical.some h) else 0 :=
   rfl
@@ -1618,7 +1618,7 @@ end EmbDomain
 
 section Powers
 
-variable[LinearOrderedAddCommGroup Γ][CommRingₓ R][IsDomain R]
+variable [LinearOrderedAddCommGroup Γ] [CommRingₓ R] [IsDomain R]
 
 -- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The powers of an element of positive valuation form a summable family. -/
@@ -1647,7 +1647,7 @@ def powers (x : hahn_series Γ R) (hx : «expr < »(0, add_val Γ R x)) : summab
         exact [expr ⟨hi, ⟨n, hj⟩⟩] } }
   end }
 
-variable{x : HahnSeries Γ R}(hx : 0 < add_val Γ R x)
+variable {x : HahnSeries Γ R} (hx : 0 < add_val Γ R x)
 
 @[simp]
 theorem coe_powers : «expr⇑ » (powers x hx) = pow x :=
@@ -1679,11 +1679,11 @@ end SummableFamily
 
 section Inversion
 
-variable[LinearOrderedAddCommGroup Γ]
+variable [LinearOrderedAddCommGroup Γ]
 
 section IsDomain
 
-variable[CommRingₓ R][IsDomain R]
+variable [CommRingₓ R] [IsDomain R]
 
 -- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem unit_aux

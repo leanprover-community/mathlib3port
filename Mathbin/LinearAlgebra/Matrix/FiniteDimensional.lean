@@ -25,11 +25,11 @@ namespace Matrix
 
 section FiniteDimensional
 
-variable{m n : Type _}[Fintype m][Fintype n]
+variable {m n : Type _} [Fintype m] [Fintype n]
 
-variable{R : Type v}[Field R]
+variable {R : Type v} [Field R]
 
-instance  : FiniteDimensional R (Matrix m n R) :=
+instance : FiniteDimensional R (Matrix m n R) :=
   LinearEquiv.finite_dimensional (LinearEquiv.curry R m n)
 
 /--

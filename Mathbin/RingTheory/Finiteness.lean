@@ -26,15 +26,15 @@ open_locale BigOperators
 
 section ModuleAndAlgebra
 
-variable(R A B M N : Type _)
+variable (R A B M N : Type _)
 
 /-- A module over a semiring is `finite` if it is finitely generated as a module. -/
-class Module.Finite[Semiringₓ R][AddCommMonoidₓ M][Module R M] : Prop where 
+class Module.Finite [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Prop where 
   out : (⊤ : Submodule R M).Fg
 
 /-- An algebra over a commutative semiring is of `finite_type` if it is finitely generated
 over the base ring as algebra. -/
-class Algebra.FiniteType[CommSemiringₓ R][Semiringₓ A][Algebra R A] : Prop where 
+class Algebra.FiniteType [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] : Prop where 
   out : (⊤ : Subalgebra R A).Fg
 
 /-- An algebra over a commutative semiring is `finite_presentation` if it is the quotient of a
@@ -44,12 +44,12 @@ def Algebra.FinitePresentation [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
 namespace Module
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M][AddCommMonoidₓ N][Module R N]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ N] [Module R N]
 
 theorem finite_def {R M} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : finite R M ↔ (⊤ : Submodule R M).Fg :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 
-instance (priority := 100)is_noetherian.finite [IsNoetherian R M] : finite R M :=
+instance (priority := 100) is_noetherian.finite [IsNoetherian R M] : finite R M :=
   ⟨IsNoetherian.noetherian ⊤⟩
 
 namespace Finite
@@ -64,7 +64,7 @@ theorem iff_add_group_fg {G : Type _} [AddCommGroupₓ G] : Module.Finite ℤ G 
   ⟨fun h => AddGroupₓ.fg_def.2$ (fg_iff_add_subgroup_fg ⊤).1 (finite_def.1 h),
     fun h => finite_def.2$ (fg_iff_add_subgroup_fg ⊤).2 (AddGroupₓ.fg_def.1 h)⟩
 
-variable{R M N}
+variable {R M N}
 
 theorem exists_fin [finite R M] : ∃ (n : ℕ)(s : Finₓ n → M), span R (range s) = ⊤ :=
   Submodule.fg_iff_exists_fin_generating_family.mp out
@@ -77,14 +77,14 @@ theorem of_surjective [hM : finite R M] (f : M →ₗ[R] N) (hf : surjective f) 
 theorem of_injective [IsNoetherian R N] (f : M →ₗ[R] N) (hf : Function.Injective f) : finite R M :=
   ⟨fg_of_injective f hf⟩
 
-variable(R)
+variable (R)
 
 instance self : finite R R :=
   ⟨⟨{1},
       by 
         simpa only [Finset.coe_singleton] using Ideal.span_singleton_one⟩⟩
 
-variable(M)
+variable (M)
 
 -- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem of_restrict_scalars_finite
@@ -106,7 +106,7 @@ begin
   exact [expr this]
 end
 
-variable{R M}
+variable {R M}
 
 instance Prod [hM : finite R M] [hN : finite R N] : finite R (M × N) :=
   ⟨by 
@@ -127,7 +127,7 @@ theorem trans {R : Type _} (A B : Type _) [CommSemiringₓ R] [CommSemiringₓ A
         by 
           rw [Set.image2_smul, Submodule.span_smul hs («expr↑ » t : Set B), ht, Submodule.restrict_scalars_top]⟩⟩
 
-instance (priority := 100)finite_type {R : Type _} (A : Type _) [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A]
+instance (priority := 100) finite_type {R : Type _} (A : Type _) [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A]
   [hRA : finite R A] : Algebra.FiniteType R A :=
   ⟨Subalgebra.fg_of_submodule_fg hRA.1⟩
 
@@ -139,11 +139,11 @@ end Module
 
 namespace Algebra
 
-variable[CommRingₓ R][CommRingₓ A][Algebra R A][CommRingₓ B][Algebra R B]
+variable [CommRingₓ R] [CommRingₓ A] [Algebra R A] [CommRingₓ B] [Algebra R B]
 
-variable[AddCommGroupₓ M][Module R M]
+variable [AddCommGroupₓ M] [Module R M]
 
-variable[AddCommGroupₓ N][Module R N]
+variable [AddCommGroupₓ N] [Module R N]
 
 namespace FiniteType
 
@@ -185,7 +185,7 @@ begin
   exact [expr le (eq_top_iff.1 hS b)]
 end
 
-variable{R A B}
+variable {R A B}
 
 theorem of_surjective (hRA : finite_type R A) (f : A →ₐ[R] B) (hf : surjective f) : finite_type R B :=
   ⟨by 
@@ -264,7 +264,7 @@ end FiniteType
 
 namespace FinitePresentation
 
-variable{R A B}
+variable {R A B}
 
 -- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An algebra over a Noetherian ring is finitely generated if and only if it is finitely
@@ -296,7 +296,7 @@ begin
     rw ["[", expr ring_hom.ker_eq_comap_bot, ",", expr hco, ",", "<-", expr ideal.comap_comap, ",", "<-", expr ring_hom.ker_eq_comap_bot, ",", expr ring_hom.ker_coe_equiv (alg_equiv.to_ring_equiv e), ",", expr ring_hom.ker_eq_comap_bot, "]"] [] }
 end
 
-variable(R)
+variable (R)
 
 /-- The ring of polynomials in finitely many variables is finitely presented. -/
 protected theorem MvPolynomial (ι : Type u_2) [Fintype ι] : finite_presentation R (MvPolynomial ι R) :=
@@ -317,7 +317,7 @@ protected theorem MvPolynomial (ι : Type u_2) [Fintype ι] : finite_presentatio
 theorem self : finite_presentation R R :=
   Equiv (finite_presentation.mv_polynomial R Pempty) (MvPolynomial.isEmptyAlgEquiv R Pempty)
 
-variable{R}
+variable {R}
 
 /-- The quotient of a finitely presented algebra by a finitely generated ideal is finitely
 presented. -/
@@ -409,7 +409,7 @@ end ModuleAndAlgebra
 
 namespace RingHom
 
-variable{A B C : Type _}[CommRingₓ A][CommRingₓ B][CommRingₓ C]
+variable {A B C : Type _} [CommRingₓ A] [CommRingₓ B] [CommRingₓ C]
 
 -- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A ring morphism `A →+* B` is `finite` if `B` is finitely generated as `A`-module. -/
@@ -427,12 +427,12 @@ def finite_presentation (f : A →+* B) : Prop :=
 
 namespace Finite
 
-variable(A)
+variable (A)
 
 theorem id : finite (RingHom.id A) :=
   Module.Finite.self A
 
-variable{A}
+variable {A}
 
 -- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem of_surjective (f : «expr →+* »(A, B)) (hf : surjective f) : f.finite :=
@@ -468,12 +468,12 @@ end Finite
 
 namespace FiniteType
 
-variable(A)
+variable (A)
 
 theorem id : finite_type (RingHom.id A) :=
   Algebra.FiniteType.self A
 
-variable{A}
+variable {A}
 
 theorem comp_surjective {f : A →+* B} {g : B →+* C} (hf : f.finite_type) (hg : surjective g) : (g.comp f).FiniteType :=
   @Algebra.FiniteType.of_surjective A B C _ _ f.to_algebra _ (g.comp f).toAlgebra hf
@@ -514,12 +514,12 @@ end FiniteType
 
 namespace FinitePresentation
 
-variable(A)
+variable (A)
 
 theorem id : finite_presentation (RingHom.id A) :=
   Algebra.FinitePresentation.self A
 
-variable{A}
+variable {A}
 
 theorem comp_surjective {f : A →+* B} {g : B →+* C} (hf : f.finite_presentation) (hg : surjective g) (hker : g.ker.fg) :
   (g.comp f).FinitePresentation :=
@@ -550,11 +550,11 @@ end RingHom
 
 namespace AlgHom
 
-variable{R A B C : Type _}[CommRingₓ R]
+variable {R A B C : Type _} [CommRingₓ R]
 
-variable[CommRingₓ A][CommRingₓ B][CommRingₓ C]
+variable [CommRingₓ A] [CommRingₓ B] [CommRingₓ C]
 
-variable[Algebra R A][Algebra R B][Algebra R C]
+variable [Algebra R A] [Algebra R B] [Algebra R C]
 
 /-- An algebra morphism `A →ₐ[R] B` is finite if it is finite as ring morphism.
 In other words, if `B` is finitely generated as `A`-module. -/
@@ -573,12 +573,12 @@ def finite_presentation (f : A →ₐ[R] B) : Prop :=
 
 namespace Finite
 
-variable(R A)
+variable (R A)
 
 theorem id : finite (AlgHom.id R A) :=
   RingHom.Finite.id A
 
-variable{R A}
+variable {R A}
 
 theorem comp {g : B →ₐ[R] C} {f : A →ₐ[R] B} (hg : g.finite) (hf : f.finite) : (g.comp f).Finite :=
   RingHom.Finite.comp hg hf
@@ -596,12 +596,12 @@ end Finite
 
 namespace FiniteType
 
-variable(R A)
+variable (R A)
 
 theorem id : finite_type (AlgHom.id R A) :=
   RingHom.FiniteType.id A
 
-variable{R A}
+variable {R A}
 
 theorem comp {g : B →ₐ[R] C} {f : A →ₐ[R] B} (hg : g.finite_type) (hf : f.finite_type) : (g.comp f).FiniteType :=
   RingHom.FiniteType.comp hg hf
@@ -623,12 +623,12 @@ end FiniteType
 
 namespace FinitePresentation
 
-variable(R A)
+variable (R A)
 
 theorem id : finite_presentation (AlgHom.id R A) :=
   RingHom.FinitePresentation.id A
 
-variable{R A}
+variable {R A}
 
 theorem comp {g : B →ₐ[R] C} {f : A →ₐ[R] B} (hg : g.finite_presentation) (hf : f.finite_presentation) :
   (g.comp f).FinitePresentation :=
@@ -650,7 +650,7 @@ end AlgHom
 
 section MonoidAlgebra
 
-variable{R : Type _}{M : Type _}
+variable {R : Type _} {M : Type _}
 
 namespace AddMonoidAlgebra
 
@@ -660,7 +660,7 @@ section Span
 
 section Semiringₓ
 
-variable[CommSemiringₓ R][AddMonoidₓ M]
+variable [CommSemiringₓ R] [AddMonoidₓ M]
 
 /-- An element of `add_monoid_algebra R M` is in the subalgebra generated by its support. -/
 theorem mem_adjoin_support (f : AddMonoidAlgebra R M) : f ∈ adjoin R (of' R M '' f.support) :=
@@ -704,7 +704,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[CommRingₓ R][AddCommMonoidₓ M]
+variable [CommRingₓ R] [AddCommMonoidₓ M]
 
 -- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `add_monoid_algebra R M` is of finite type, there there is a `G : finset M` such that its
@@ -750,7 +750,7 @@ end Ringₓ
 
 end Span
 
-variable[AddCommMonoidₓ M]
+variable [AddCommMonoidₓ M]
 
 -- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a set `S` generates an additive monoid `M`, then the image of `M` generates, as algebra,
@@ -774,7 +774,7 @@ begin
     exact [expr ⟨«expr • »(r, P), alg_hom.map_smul _ _ _⟩] }
 end
 
-variable(R M)
+variable (R M)
 
 /-- If an additive monoid `M` is finitely generated then `add_monoid_algebra R M` is of finite
 type. -/
@@ -786,7 +786,7 @@ instance finite_type_of_fg [CommRingₓ R] [h : AddMonoidₓ.Fg M] : finite_type
         (MvPolynomial.aeval fun s : (S : Set M) => of' R M («expr↑ » s))
         (mv_polynomial_aeval_of_surjective_of_closure hS)
 
-variable{R M}
+variable {R M}
 
 -- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An additive monoid `M` is finitely generated if and only if `add_monoid_algebra R M` is of
@@ -825,7 +825,7 @@ section Span
 
 section Semiringₓ
 
-variable[CommSemiringₓ R][Monoidₓ M]
+variable [CommSemiringₓ R] [Monoidₓ M]
 
 /-- An element of `monoid_algebra R M` is in the subalgebra generated by its support. -/
 theorem mem_adjoint_support (f : MonoidAlgebra R M) : f ∈ adjoin R (of R M '' f.support) :=
@@ -869,7 +869,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[CommRingₓ R][CommMonoidₓ M]
+variable [CommRingₓ R] [CommMonoidₓ M]
 
 -- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `monoid_algebra R M` is of finite type, there there is a `G : finset M` such that its image
@@ -912,7 +912,7 @@ end Ringₓ
 
 end Span
 
-variable[CommMonoidₓ M]
+variable [CommMonoidₓ M]
 
 -- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a set `S` generates a monoid `M`, then the image of `M` generates, as algebra,

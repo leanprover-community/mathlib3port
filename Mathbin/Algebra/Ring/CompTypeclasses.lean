@@ -35,18 +35,18 @@ Instances of these typeclasses mostly involving `ring_hom.id` are also provided:
 -/
 
 
-variable{R₁ : Type _}{R₂ : Type _}{R₃ : Type _}
+variable {R₁ : Type _} {R₂ : Type _} {R₃ : Type _}
 
-variable[Semiringₓ R₁][Semiringₓ R₂][Semiringₓ R₃]
+variable [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃]
 
 /-- Class that expresses the fact that three ring equivs form a composition triple. This is
 used to handle composition of semilinear maps. -/
-class RingHomCompTriple(σ₁₂ : R₁ →+* R₂)(σ₂₃ : R₂ →+* R₃)(σ₁₃ : outParam (R₁ →+* R₃)) : Prop where 
+class RingHomCompTriple (σ₁₂ : R₁ →+* R₂) (σ₂₃ : R₂ →+* R₃) (σ₁₃ : outParam (R₁ →+* R₃)) : Prop where 
   comp_eq : σ₂₃.comp σ₁₂ = σ₁₃
 
 attribute [simp] RingHomCompTriple.comp_eq
 
-variable{σ₁₂ : R₁ →+* R₂}{σ₂₃ : R₂ →+* R₃}{σ₁₃ : R₁ →+* R₃}
+variable {σ₁₂ : R₁ →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R₁ →+* R₃}
 
 namespace RingHomCompTriple
 
@@ -58,7 +58,7 @@ end RingHomCompTriple
 
 /-- Class that expresses the fact that two ring equivs are inverses of each other. This is used
 to handle `symm` for semilinear equivalences. -/
-class RingHomInvPair(σ : R₁ →+* R₂)(σ' : outParam (R₂ →+* R₁)) : Prop where 
+class RingHomInvPair (σ : R₁ →+* R₂) (σ' : outParam (R₂ →+* R₁)) : Prop where 
   comp_eq : σ'.comp σ = RingHom.id R₁ 
   comp_eq₂ : σ.comp σ' = RingHom.id R₂
 
@@ -66,11 +66,11 @@ attribute [simp] RingHomInvPair.comp_eq
 
 attribute [simp] RingHomInvPair.comp_eq₂
 
-variable{σ : R₁ →+* R₂}{σ' : R₂ →+* R₁}
+variable {σ : R₁ →+* R₂} {σ' : R₂ →+* R₁}
 
 namespace RingHomInvPair
 
-variable[RingHomInvPair σ σ']
+variable [RingHomInvPair σ σ']
 
 @[simp]
 theorem comp_apply_eq {x : R₁} : σ' (σ x) = x :=
@@ -136,7 +136,7 @@ end RingHomCompTriple
 
 /-- Class expressing the fact that a `ring_hom` is surjective. This is needed in the context
 of semilinear maps, where some lemmas require this. -/
-class RingHomSurjective(σ : R₁ →+* R₂) : Prop where 
+class RingHomSurjective (σ : R₁ →+* R₂) : Prop where 
   is_surjective : Function.Surjective σ
 
 theorem RingHom.is_surjective (σ : R₁ →+* R₂) [t : RingHomSurjective σ] : Function.Surjective σ :=
@@ -145,7 +145,7 @@ theorem RingHom.is_surjective (σ : R₁ →+* R₂) [t : RingHomSurjective σ] 
 namespace RingHomSurjective
 
 @[nolint dangerous_instance]
-instance (priority := 100)inv_pair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁} [RingHomInvPair σ₁ σ₂] : RingHomSurjective σ₁ :=
+instance (priority := 100) inv_pair {σ₁ : R₁ →+* R₂} {σ₂ : R₂ →+* R₁} [RingHomInvPair σ₁ σ₂] : RingHomSurjective σ₁ :=
   ⟨fun x => ⟨σ₂ x, RingHomInvPair.comp_apply_eq₂⟩⟩
 
 instance ids : RingHomSurjective (RingHom.id R₁) :=

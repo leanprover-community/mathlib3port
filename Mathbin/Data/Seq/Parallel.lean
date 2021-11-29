@@ -6,7 +6,7 @@ namespace Computation
 
 open Wseq
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 def parallel.aux2 : List (Computation α) → Sum α (List (Computation α)) :=
   List.foldr

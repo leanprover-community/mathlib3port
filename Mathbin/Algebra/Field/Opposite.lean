@@ -6,14 +6,14 @@ import Mathbin.Algebra.Opposites
 -/
 
 
-variable(α : Type _)
+variable (α : Type _)
 
 namespace MulOpposite
 
-instance  [DivisionRing α] : DivisionRing («expr ᵐᵒᵖ» α) :=
+instance [DivisionRing α] : DivisionRing («expr ᵐᵒᵖ» α) :=
   { MulOpposite.groupWithZero α, MulOpposite.ring α with  }
 
-instance  [Field α] : Field («expr ᵐᵒᵖ» α) :=
+instance [Field α] : Field («expr ᵐᵒᵖ» α) :=
   { MulOpposite.divisionRing α, MulOpposite.commRing α with  }
 
 end MulOpposite

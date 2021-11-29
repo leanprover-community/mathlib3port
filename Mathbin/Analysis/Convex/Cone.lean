@@ -45,46 +45,46 @@ open Set LinearMap
 
 open_locale Classical Pointwise
 
-variable{𝕜 E F G : Type _}
+variable {𝕜 E F G : Type _}
 
 /-! ### Definition of `convex_cone` and basic properties -/
 
 
 section Definitions
 
-variable(𝕜 E)[OrderedSemiring 𝕜]
+variable (𝕜 E) [OrderedSemiring 𝕜]
 
 /-- A convex cone is a subset `s` of a `𝕜`-module such that `a • x + b • y ∈ s` whenever `a, b > 0`
 and `x, y ∈ s`. -/
-structure ConvexCone[AddCommMonoidₓ E][HasScalar 𝕜 E] where 
+structure ConvexCone [AddCommMonoidₓ E] [HasScalar 𝕜 E] where 
   Carrier : Set E 
   smul_mem' : ∀ ⦃c : 𝕜⦄, 0 < c → ∀ ⦃x : E⦄, x ∈ carrier → c • x ∈ carrier 
   add_mem' : ∀ ⦃x⦄ hx : x ∈ carrier ⦃y⦄ hy : y ∈ carrier, (x+y) ∈ carrier
 
 end Definitions
 
-variable{𝕜 E}
+variable {𝕜 E}
 
 namespace ConvexCone
 
 section OrderedSemiring
 
-variable[OrderedSemiring 𝕜][AddCommMonoidₓ E]
+variable [OrderedSemiring 𝕜] [AddCommMonoidₓ E]
 
 section HasScalar
 
-variable[HasScalar 𝕜 E](S T : ConvexCone 𝕜 E)
+variable [HasScalar 𝕜 E] (S T : ConvexCone 𝕜 E)
 
-instance  : Coe (ConvexCone 𝕜 E) (Set E) :=
+instance : Coe (ConvexCone 𝕜 E) (Set E) :=
   ⟨ConvexCone.Carrier⟩
 
-instance  : HasMem E (ConvexCone 𝕜 E) :=
+instance : HasMem E (ConvexCone 𝕜 E) :=
   ⟨fun m S => m ∈ S.carrier⟩
 
-instance  : LE (ConvexCone 𝕜 E) :=
+instance : LE (ConvexCone 𝕜 E) :=
   ⟨fun S T => S.carrier ⊆ T.carrier⟩
 
-instance  : LT (ConvexCone 𝕜 E) :=
+instance : LT (ConvexCone 𝕜 E) :=
   ⟨fun S T => S.carrier ⊂ T.carrier⟩
 
 @[simp, normCast]
@@ -115,7 +115,7 @@ theorem smul_mem {c : 𝕜} {x : E} (hc : 0 < c) (hx : x ∈ S) : c • x ∈ S 
 theorem add_mem ⦃x⦄ (hx : x ∈ S) ⦃y⦄ (hy : y ∈ S) : (x+y) ∈ S :=
   S.add_mem' hx hy
 
-instance  : HasInf (ConvexCone 𝕜 E) :=
+instance : HasInf (ConvexCone 𝕜 E) :=
   ⟨fun S T =>
       ⟨S ∩ T, fun c hc x hx => ⟨S.smul_mem hc hx.1, T.smul_mem hc hx.2⟩,
         fun x hx y hy => ⟨S.add_mem hx.1 hy.1, T.add_mem hx.2 hy.2⟩⟩⟩
@@ -126,7 +126,7 @@ theorem coe_inf : ((S⊓T : ConvexCone 𝕜 E) : Set E) = «expr↑ » S ∩ «e
 theorem mem_inf {x} : x ∈ S⊓T ↔ x ∈ S ∧ x ∈ T :=
   Iff.rfl
 
-instance  : HasInfₓ (ConvexCone 𝕜 E) :=
+instance : HasInfₓ (ConvexCone 𝕜 E) :=
   ⟨fun S =>
       ⟨⋂(s : _)(_ : s ∈ S), «expr↑ » s,
         fun c hc x hx =>
@@ -147,21 +147,21 @@ instance  : HasInfₓ (ConvexCone 𝕜 E) :=
 theorem mem_Inf {x : E} {S : Set (ConvexCone 𝕜 E)} : x ∈ Inf S ↔ ∀ s _ : s ∈ S, x ∈ s :=
   mem_bInter_iff
 
-variable(𝕜)
+variable (𝕜)
 
-instance  : HasBot (ConvexCone 𝕜 E) :=
+instance : HasBot (ConvexCone 𝕜 E) :=
   ⟨⟨∅, fun c hc x => False.elim, fun x => False.elim⟩⟩
 
 theorem mem_bot (x : E) : (x ∈ (⊥ : ConvexCone 𝕜 E)) = False :=
   rfl
 
-instance  : HasTop (ConvexCone 𝕜 E) :=
+instance : HasTop (ConvexCone 𝕜 E) :=
   ⟨⟨univ, fun c hc x hx => mem_univ _, fun x hx y hy => mem_univ _⟩⟩
 
 theorem mem_top (x : E) : x ∈ (⊤ : ConvexCone 𝕜 E) :=
   mem_univ x
 
-instance  : CompleteLattice (ConvexCone 𝕜 E) :=
+instance : CompleteLattice (ConvexCone 𝕜 E) :=
   { PartialOrderₓ.lift (coeₓ : ConvexCone 𝕜 E → Set E) fun a b => ext' with le := · ≤ ·, lt := · < ·, bot := ⊥,
     bot_le := fun S x => False.elim, top := ⊤, le_top := fun S x hx => mem_top 𝕜 x, inf := ·⊓·, inf := HasInfₓ.inf,
     sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x }, sup := fun s => Inf { T | ∀ S _ : S ∈ s, S ≤ T },
@@ -172,14 +172,14 @@ instance  : CompleteLattice (ConvexCone 𝕜 E) :=
     le_Sup := fun s p hs x hx => mem_Inf.2$ fun t ht => ht p hs hx, Sup_le := fun s p hs x hx => mem_Inf.1 hx p hs,
     le_Inf := fun s a ha x hx => mem_Inf.2$ fun t ht => ha t ht hx, Inf_le := fun s a ha x hx => mem_Inf.1 hx _ ha }
 
-instance  : Inhabited (ConvexCone 𝕜 E) :=
+instance : Inhabited (ConvexCone 𝕜 E) :=
   ⟨⊥⟩
 
 end HasScalar
 
 section Module
 
-variable[Module 𝕜 E](S : ConvexCone 𝕜 E)
+variable [Module 𝕜 E] (S : ConvexCone 𝕜 E)
 
 protected theorem Convex : Convex 𝕜 (S : Set E) :=
   convex_iff_forall_pos.2$ fun x y hx hy a b ha hb hab => S.add_mem (S.smul_mem ha hx) (S.smul_mem hb hy)
@@ -190,15 +190,15 @@ end OrderedSemiring
 
 section LinearOrderedField
 
-variable[LinearOrderedField 𝕜]
+variable [LinearOrderedField 𝕜]
 
 section AddCommMonoidₓ
 
-variable[AddCommMonoidₓ E][AddCommMonoidₓ F][AddCommMonoidₓ G]
+variable [AddCommMonoidₓ E] [AddCommMonoidₓ F] [AddCommMonoidₓ G]
 
 section MulAction
 
-variable[MulAction 𝕜 E](S : ConvexCone 𝕜 E)
+variable [MulAction 𝕜 E] (S : ConvexCone 𝕜 E)
 
 theorem smul_mem_iff {c : 𝕜} (hc : 0 < c) {x : E} : c • x ∈ S ↔ x ∈ S :=
   ⟨fun h => inv_smul_smul₀ hc.ne' x ▸ S.smul_mem (inv_pos.2 hc) h, S.smul_mem hc⟩
@@ -207,7 +207,7 @@ end MulAction
 
 section Module
 
-variable[Module 𝕜 E][Module 𝕜 F][Module 𝕜 G]
+variable [Module 𝕜 E] [Module 𝕜 F] [Module 𝕜 G]
 
 /-- The image of a convex cone under a `𝕜`-linear map is a convex cone. -/
 def map (f : E →ₗ[𝕜] F) (S : ConvexCone 𝕜 E) : ConvexCone 𝕜 F :=
@@ -254,7 +254,7 @@ end AddCommMonoidₓ
 
 section OrderedAddCommGroup
 
-variable[OrderedAddCommGroup E][Module 𝕜 E]
+variable [OrderedAddCommGroup E] [Module 𝕜 E]
 
 /--
 Constructs an ordered module given an `ordered_add_comm_group`, a cone, and a proof that
@@ -276,11 +276,11 @@ end LinearOrderedField
 
 section OrderedSemiring
 
-variable[OrderedSemiring 𝕜]
+variable [OrderedSemiring 𝕜]
 
 section AddCommMonoidₓ
 
-variable[AddCommMonoidₓ E][HasScalar 𝕜 E](S : ConvexCone 𝕜 E)
+variable [AddCommMonoidₓ E] [HasScalar 𝕜 E] (S : ConvexCone 𝕜 E)
 
 /-- A convex cone is pointed if it includes `0`. -/
 def pointed (S : ConvexCone 𝕜 E) : Prop :=
@@ -301,7 +301,7 @@ end AddCommMonoidₓ
 
 section AddCommGroupₓ
 
-variable[AddCommGroupₓ E][HasScalar 𝕜 E](S : ConvexCone 𝕜 E)
+variable [AddCommGroupₓ E] [HasScalar 𝕜 E] (S : ConvexCone 𝕜 E)
 
 /-- A convex cone is flat if it contains some nonzero vector `x` and its opposite `-x`. -/
 def flat : Prop :=
@@ -382,7 +382,7 @@ end OrderedSemiring
 
 section PositiveCone
 
-variable(𝕜 E)[OrderedSemiring 𝕜][OrderedAddCommGroup E][Module 𝕜 E][OrderedSmul 𝕜 E]
+variable (𝕜 E) [OrderedSemiring 𝕜] [OrderedAddCommGroup E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
 
 /--
 The positive cone is the convex cone formed by the set of nonnegative elements in an ordered
@@ -419,7 +419,7 @@ end ConvexCone
 
 section ConeFromConvex
 
-variable[LinearOrderedField 𝕜][OrderedAddCommGroup E][Module 𝕜 E]
+variable [LinearOrderedField 𝕜] [OrderedAddCommGroup E] [Module 𝕜 E]
 
 namespace Convex
 
@@ -438,7 +438,7 @@ begin
     simp [] [] ["only"] ["[", expr smul_add, ",", expr smul_smul, ",", expr mul_div_assoc', ",", expr mul_div_cancel_left _ this.ne', "]"] [] [] }
 end
 
-variable{s : Set E}(hs : Convex 𝕜 s){x : E}
+variable {s : Set E} (hs : Convex 𝕜 s) {x : E}
 
 theorem mem_to_cone : x ∈ hs.to_cone s ↔ ∃ c : 𝕜, 0 < c ∧ ∃ (y : _)(_ : y ∈ s), c • y = x :=
   by 
@@ -509,13 +509,13 @@ we use this isomorphism to prove the theorem.
 -/
 
 
-variable[AddCommGroupₓ E][Module ℝ E]
+variable [AddCommGroupₓ E] [Module ℝ E]
 
 namespace riesz_extension
 
 open Submodule
 
-variable(s : ConvexCone ℝ E)(f : LinearPmap ℝ E ℝ)
+variable (s : ConvexCone ℝ E) (f : LinearPmap ℝ E ℝ)
 
 -- error in Analysis.Convex.Cone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Induction step in M. Riesz extension theorem. Given a convex cone `s` in a vector space `E`,
@@ -670,7 +670,7 @@ end
 
 section Dual
 
-variable{H : Type _}[InnerProductSpace ℝ H](s t : Set H)
+variable {H : Type _} [InnerProductSpace ℝ H] (s t : Set H)
 
 open_locale RealInnerProductSpace
 

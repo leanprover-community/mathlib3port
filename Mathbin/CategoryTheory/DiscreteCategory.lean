@@ -55,14 +55,14 @@ instance discrete_category (α : Type u₁) : small_category (discrete α) :=
 
 namespace Discrete
 
-variable{α : Type u₁}
+variable {α : Type u₁}
 
-instance  [Inhabited α] : Inhabited (discrete α) :=
+instance [Inhabited α] : Inhabited (discrete α) :=
   by 
     dsimp [discrete]
     infer_instance
 
-instance  [Subsingleton α] : Subsingleton (discrete α) :=
+instance [Subsingleton α] : Subsingleton (discrete α) :=
   by 
     dsimp [discrete]
     infer_instance
@@ -75,9 +75,9 @@ theorem eq_of_hom {X Y : discrete α} (i : X ⟶ Y) : X = Y :=
 theorem id_def (X : discrete α) : Ulift.up (Plift.up (Eq.refl X)) = 𝟙 X :=
   rfl
 
-variable{C : Type u₂}[category.{v₂} C]
+variable {C : Type u₂} [category.{v₂} C]
 
-instance  {I : Type u₁} {i j : discrete I} (f : i ⟶ j) : is_iso f :=
+instance {I : Type u₁} {i j : discrete I} (f : i ⟶ j) : is_iso f :=
   ⟨⟨eq_to_hom (eq_of_hom f).symm,
       by 
         tidy⟩⟩
@@ -155,7 +155,7 @@ We can promote a type-level `equiv` to
 an equivalence between the corresponding `discrete` categories.
 -/
 @[simps]
-def Equivalenceₓ {I J : Type u₁} (e : I ≃ J) : discrete I ≌ discrete J :=
+def Equivalenceₓ {I : Type u₁} {J : Type u₂} (e : I ≃ J) : discrete I ≌ discrete J :=
   { Functor := discrete.functor (e : I → J), inverse := discrete.functor (e.symm : J → I),
     unitIso :=
       discrete.nat_iso
@@ -172,7 +172,7 @@ def Equivalenceₓ {I J : Type u₁} (e : I ≃ J) : discrete I ≌ discrete J :
 
 /-- We can convert an equivalence of `discrete` categories to a type-level `equiv`. -/
 @[simps]
-def equiv_of_equivalence {α β : Type u₁} (h : discrete α ≌ discrete β) : α ≃ β :=
+def equiv_of_equivalence {α : Type u₁} {β : Type u₂} (h : discrete α ≌ discrete β) : α ≃ β :=
   { toFun := h.functor.obj, invFun := h.inverse.obj, left_inv := fun a => eq_of_hom (h.unit_iso.app a).2,
     right_inv := fun a => eq_of_hom (h.counit_iso.app a).1 }
 
@@ -180,7 +180,7 @@ end Discrete
 
 namespace Discrete
 
-variable{J : Type v₁}
+variable {J : Type v₁}
 
 open Opposite
 
@@ -202,7 +202,7 @@ protected def Opposite (α : Type u₁) : «expr ᵒᵖ» (discrete α) ≌ disc
         _ 
     tidy
 
-variable{C : Type u₂}[category.{v₂} C]
+variable {C : Type u₂} [category.{v₂} C]
 
 -- error in CategoryTheory.DiscreteCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]

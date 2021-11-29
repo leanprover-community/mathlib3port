@@ -27,7 +27,7 @@ noncomputable theory
 
 open_locale TopologicalSpace
 
-variable{R : Type _}[NormedRing R][CompleteSpace R]
+variable {R : Type _} [NormedRing R] [CompleteSpace R]
 
 namespace Units
 

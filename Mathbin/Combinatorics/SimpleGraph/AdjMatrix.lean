@@ -31,7 +31,7 @@ open_locale BigOperators Matrix
 
 open Finset Matrix SimpleGraph
 
-variable{V α β : Type _}
+variable {V α β : Type _}
 
 namespace Matrix
 
@@ -39,7 +39,7 @@ namespace Matrix
     (1) every entry of `A` is `0` or `1`,
     (2) `A` is symmetric,
     (3) every diagonal entry of `A` is `0`. -/
-structure is_adj_matrix[HasZero α][HasOne α](A : Matrix V V α) : Prop where 
+structure is_adj_matrix [HasZero α] [HasOne α] (A : Matrix V V α) : Prop where 
   zero_or_one : ∀ i j, A i j = 0 ∨ A i j = 1 :=  by 
   runTac 
     obviously 
@@ -52,7 +52,7 @@ structure is_adj_matrix[HasZero α][HasOne α](A : Matrix V V α) : Prop where
 
 namespace IsAdjMatrix
 
-variable{A : Matrix V V α}
+variable {A : Matrix V V α}
 
 @[simp]
 theorem apply_diag_ne [MulZeroOneClass α] [Nontrivial α] (h : is_adj_matrix A) (i : V) : ¬A i i = 1 :=
@@ -83,7 +83,7 @@ def to_graph [MulZeroOneClass α] [Nontrivial α] (h : is_adj_matrix A) : Simple
         by 
           simp [h] }
 
-instance  [MulZeroOneClass α] [Nontrivial α] [DecidableEq α] (h : is_adj_matrix A) : DecidableRel h.to_graph.adj :=
+instance [MulZeroOneClass α] [Nontrivial α] [DecidableEq α] (h : is_adj_matrix A) : DecidableRel h.to_graph.adj :=
   by 
     simp only [to_graph]
     infer_instance
@@ -97,7 +97,7 @@ def compl [HasZero α] [HasOne α] [DecidableEq α] [DecidableEq V] (A : Matrix 
 
 section Compl
 
-variable[DecidableEq α][DecidableEq V](A : Matrix V V α)
+variable [DecidableEq α] [DecidableEq V] (A : Matrix V V α)
 
 @[simp]
 theorem compl_apply_diag [HasZero α] [HasOne α] (i : V) : A.compl i i = 0 :=
@@ -124,7 +124,7 @@ theorem is_adj_matrix_compl [HasZero α] [HasOne α] (h : A.is_symm) : is_adj_ma
 
 namespace IsAdjMatrix
 
-variable{A}
+variable {A}
 
 @[simp]
 theorem compl [HasZero α] [HasOne α] (h : is_adj_matrix A) : is_adj_matrix A.compl :=
@@ -146,16 +146,16 @@ open Matrix
 
 namespace SimpleGraph
 
-variable(G : SimpleGraph V)[DecidableRel G.adj]
+variable (G : SimpleGraph V) [DecidableRel G.adj]
 
-variable(α)
+variable (α)
 
 /-- `adj_matrix G α` is the matrix `A` such that `A i j = (1 : α)` if `i` and `j` are
   adjacent in the simple graph `G`, and otherwise `A i j = 0`. -/
 def adj_matrix [HasZero α] [HasOne α] : Matrix V V α
 | i, j => if G.adj i j then 1 else 0
 
-variable{α}
+variable {α}
 
 @[simp]
 theorem adj_matrix_apply (v w : V) [HasZero α] [HasOne α] : G.adj_matrix α v w = if G.adj v w then 1 else 0 :=
@@ -171,7 +171,7 @@ theorem transpose_adj_matrix [HasZero α] [HasOne α] : (G.adj_matrix α)ᵀ = G
 theorem is_symm_adj_matrix [HasZero α] [HasOne α] : (G.adj_matrix α).IsSymm :=
   transpose_adj_matrix G
 
-variable(α)
+variable (α)
 
 /-- The adjacency matrix of `G` is an adjacency matrix. -/
 @[simp]
@@ -188,7 +188,7 @@ theorem to_graph_adj_matrix_eq [MulZeroOneClass α] [Nontrivial α] : (G.is_adj_
     simp only [is_adj_matrix.to_graph_adj, adj_matrix_apply, ite_eq_left_iff, zero_ne_one]
     apply not_not
 
-variable{α}[Fintype V]
+variable {α} [Fintype V]
 
 @[simp]
 theorem adj_matrix_dot_product [NonAssocSemiring α] (v : V) (vec : V → α) :
@@ -229,20 +229,20 @@ theorem mul_adj_matrix_apply [NonAssocSemiring α] (M : Matrix V V α) (v w : V)
   by 
     simp [mul_apply, neighbor_finset_eq_filter, sum_filter, adj_comm]
 
-variable(α)
+variable (α)
 
 theorem trace_adj_matrix [NonAssocSemiring α] [Semiringₓ β] [Module β α] : Matrix.trace _ β _ (G.adj_matrix α) = 0 :=
   by 
     simp 
 
-variable{α}
+variable {α}
 
 theorem adj_matrix_mul_self_apply_self [NonAssocSemiring α] (i : V) :
   (G.adj_matrix α ⬝ G.adj_matrix α) i i = degree G i :=
   by 
     simp [degree]
 
-variable{G}
+variable {G}
 
 @[simp]
 theorem adj_matrix_mul_vec_const_apply [Semiringₓ α] {a : α} {v : V} :
@@ -259,9 +259,9 @@ end SimpleGraph
 
 namespace Matrix.IsAdjMatrix
 
-variable[MulZeroOneClass α][Nontrivial α]
+variable [MulZeroOneClass α] [Nontrivial α]
 
-variable{A : Matrix V V α}(h : is_adj_matrix A)
+variable {A : Matrix V V α} (h : is_adj_matrix A)
 
 /-- If `A` is qualified as an adjacency matrix,
     then the adjacency matrix of the graph induced by `A` is itself. -/

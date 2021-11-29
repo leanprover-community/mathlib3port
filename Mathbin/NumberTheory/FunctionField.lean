@@ -32,7 +32,7 @@ function field, ring of integers
 
 noncomputable theory
 
-variable(Fq F : Type)[Field Fq][Field F]
+variable (Fq F : Type) [Field Fq] [Field F]
 
 /-- `F` is a function field over the finite field `Fq` if it is a finite
 extension of the field of rational functions in one variable over `Fq`.
@@ -86,25 +86,25 @@ def ring_of_integers [Algebra (Polynomial Fq) F] :=
 
 namespace RingOfIntegers
 
-variable[Algebra (Polynomial Fq) F]
+variable [Algebra (Polynomial Fq) F]
 
-instance  : IsDomain (ring_of_integers Fq F) :=
+instance : IsDomain (ring_of_integers Fq F) :=
   (ring_of_integers Fq F).IsDomain
 
-instance  : IsIntegralClosure (ring_of_integers Fq F) (Polynomial Fq) F :=
+instance : IsIntegralClosure (ring_of_integers Fq F) (Polynomial Fq) F :=
   integralClosure.is_integral_closure _ _
 
-variable[Algebra (Ratfunc Fq) F][FunctionField Fq F]
+variable [Algebra (Ratfunc Fq) F] [FunctionField Fq F]
 
-variable[IsScalarTower (Polynomial Fq) (Ratfunc Fq) F]
+variable [IsScalarTower (Polynomial Fq) (Ratfunc Fq) F]
 
-instance  : IsFractionRing (ring_of_integers Fq F) F :=
+instance : IsFractionRing (ring_of_integers Fq F) F :=
   integralClosure.is_fraction_ring_of_finite_extension (Ratfunc Fq) F
 
-instance  : IsIntegrallyClosed (ring_of_integers Fq F) :=
+instance : IsIntegrallyClosed (ring_of_integers Fq F) :=
   integralClosure.is_integrally_closed_of_finite_extension (Ratfunc Fq)
 
-instance  [IsSeparable (Ratfunc Fq) F] : IsDedekindDomain (ring_of_integers Fq F) :=
+instance [IsSeparable (Ratfunc Fq) F] : IsDedekindDomain (ring_of_integers Fq F) :=
   IsIntegralClosure.is_dedekind_domain (Polynomial Fq) (Ratfunc Fq) F _
 
 end RingOfIntegers

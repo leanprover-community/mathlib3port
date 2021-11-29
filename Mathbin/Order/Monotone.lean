@@ -56,11 +56,11 @@ open Function
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}{r : α → α → Prop}
+variable {α : Type u} {β : Type v} {γ : Type w} {r : α → α → Prop}
 
 section MonotoneDef
 
-variable[Preorderₓ α][Preorderₓ β]
+variable [Preorderₓ α] [Preorderₓ β]
 
 /-- A function `f` is monotone if `a ≤ b` implies `f a ≤ f b`. -/
 def Monotone (f : α → β) : Prop :=
@@ -110,7 +110,7 @@ section OrderDual
 
 open OrderDual
 
-variable[Preorderₓ α][Preorderₓ β]{f : α → β}{s : Set α}
+variable [Preorderₓ α] [Preorderₓ β] {f : α → β} {s : Set α}
 
 protected theorem Monotone.dual (hf : Monotone f) : Monotone (to_dual ∘ f ∘ of_dual) :=
   fun a b h => hf h
@@ -191,13 +191,13 @@ end OrderDual
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 theorem Monotone.comp_le_comp_left [Preorderₓ β] {f : β → α} {g h : γ → β} (hf : Monotone f) (le_gh : g ≤ h) :
   LE.le.{max w u} (f ∘ g) (f ∘ h) :=
   fun x => hf (le_gh x)
 
-variable[Preorderₓ γ]
+variable [Preorderₓ γ]
 
 theorem monotone_lam {f : α → β → γ} (hf : ∀ b, Monotone fun a => f a b) : Monotone f :=
   fun a a' h b => hf b h
@@ -222,11 +222,11 @@ theorem Function.monotone_eval {ι : Type u} {α : ι → Type v} [∀ i, Preord
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 section Preorderₓ
 
-variable[Preorderₓ β]{f : α → β}
+variable [Preorderₓ β] {f : α → β}
 
 protected theorem Monotone.monotone_on (hf : Monotone f) (s : Set α) : MonotoneOn f s :=
   fun a _ b _ h => hf h
@@ -256,7 +256,7 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable[PartialOrderₓ β]{f : α → β}
+variable [PartialOrderₓ β] {f : α → β}
 
 theorem Monotone.strict_mono_of_injective (h₁ : Monotone f) (h₂ : injective f) : StrictMono f :=
   fun a b h => (h₁ h.le).lt_of_ne fun H => h.ne$ h₂ H
@@ -270,7 +270,7 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable[PartialOrderₓ α][Preorderₓ β]{f : α → β}
+variable [PartialOrderₓ α] [Preorderₓ β] {f : α → β}
 
 protected theorem StrictMono.monotone (hf : StrictMono f) : Monotone f :=
   fun a b h =>
@@ -330,7 +330,7 @@ theorem injective_of_le_imp_le [PartialOrderₓ α] [Preorderₓ β] (f : α →
 
 section Preorderₓ
 
-variable[Preorderₓ α][Preorderₓ β]{f g : α → β}
+variable [Preorderₓ α] [Preorderₓ β] {f g : α → β}
 
 -- error in Order.Monotone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 protected
@@ -372,7 +372,7 @@ end Preorderₓ
 
 section Composition
 
-variable[Preorderₓ α][Preorderₓ β][Preorderₓ γ]{g : β → γ}{f : α → β}{s : Set α}
+variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β} {s : Set α}
 
 protected theorem Monotone.comp (hg : Monotone g) (hf : Monotone f) : Monotone (g ∘ f) :=
   fun a b h => hg (hf h)
@@ -435,11 +435,11 @@ end Composition
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ α]
+variable [LinearOrderₓ α]
 
 section Preorderₓ
 
-variable[Preorderₓ β]{f : α → β}{s : Set α}
+variable [Preorderₓ β] {f : α → β} {s : Set α}
 
 open Ordering
 
@@ -515,7 +515,7 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable[PartialOrderₓ β]{f : α → β}
+variable [PartialOrderₓ β] {f : α → β}
 
 theorem Monotone.strict_mono_iff_injective (hf : Monotone f) : StrictMono f ↔ injective f :=
   ⟨fun h => h.injective, hf.strict_mono_of_injective⟩
@@ -532,7 +532,7 @@ end LinearOrderₓ
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 theorem monotone_nat_of_le_succ {f : ℕ → α} (hf : ∀ n, f n ≤ f (n+1)) : Monotone f
 | n, m, h =>

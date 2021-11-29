@@ -173,7 +173,7 @@ theorem wf_subsequent : WellFounded subsequent :=
         ·
           exact Acc.invₓ (IH2 rfl) h1⟩
 
-instance  : HasWellFounded Pgame :=
+instance : HasWellFounded Pgame :=
   { R := subsequent, wf := wf_subsequent }
 
 /-- A move by Left produces a subsequent game. (For use in pgame_wf_tac.) -/
@@ -191,7 +191,7 @@ unsafe def pgame_wf_tac :=
   sorry
 
 /-- The pre-game `zero` is defined by `0 = { | }`. -/
-instance  : HasZero Pgame :=
+instance : HasZero Pgame :=
   ⟨⟨Pempty, Pempty, Pempty.elimₓ, Pempty.elimₓ⟩⟩
 
 @[simp]
@@ -202,11 +202,11 @@ theorem zero_left_moves : (0 : Pgame).LeftMoves = Pempty :=
 theorem zero_right_moves : (0 : Pgame).RightMoves = Pempty :=
   rfl
 
-instance  : Inhabited Pgame :=
+instance : Inhabited Pgame :=
   ⟨0⟩
 
 /-- The pre-game `one` is defined by `1 = { 0 | }`. -/
-instance  : HasOne Pgame :=
+instance : HasOne Pgame :=
   ⟨⟨PUnit, Pempty, fun _ => 0, Pempty.elimₓ⟩⟩
 
 @[simp]
@@ -233,10 +233,10 @@ def le_lt : ∀ x y : Pgame, Prop × Prop
   ((∀ i : xl, (le_lt (xL i) ⟨yl, yr, yL, yR⟩).2) ∧ ∀ j : yr, (le_lt ⟨xl, xr, xL, xR⟩ (yR j)).2,
   (∃ i : yl, (le_lt ⟨xl, xr, xL, xR⟩ (yL i)).1) ∨ ∃ j : xr, (le_lt (xR j) ⟨yl, yr, yL, yR⟩).1)
 
-instance  : LE Pgame :=
+instance : LE Pgame :=
   ⟨fun x y => (le_lt x y).1⟩
 
-instance  : LT Pgame :=
+instance : LT Pgame :=
   ⟨fun x y => (le_lt x y).2⟩
 
 /-- Definition of `x ≤ y` on pre-games built using the constructor. -/
@@ -587,7 +587,7 @@ theorem relabelling.le {x y : Pgame} (r : relabelling x y) : x ≤ y :=
 theorem relabelling.equiv {x y : Pgame} (r : relabelling x y) : x ≈ y :=
   ⟨r.le, r.symm.le⟩
 
-instance  {x y : Pgame} : Coe (relabelling x y) (x ≈ y) :=
+instance {x y : Pgame} : Coe (relabelling x y) (x ≈ y) :=
   ⟨relabelling.equiv⟩
 
 /-- Replace the types indexing the next moves for Left and Right by equivalent types. -/
@@ -631,7 +631,7 @@ def relabel_relabelling {x : Pgame} {xl' xr'} (el : x.left_moves ≃ xl') (er : 
 def neg : Pgame → Pgame
 | ⟨l, r, L, R⟩ => ⟨r, l, fun i => neg (R i), fun i => neg (L i)⟩
 
-instance  : Neg Pgame :=
+instance : Neg Pgame :=
   ⟨neg⟩
 
 @[simp]
@@ -801,7 +801,7 @@ begin
   { exact [expr λ i, IHyr i] }
 end
 
-instance  : Add Pgame :=
+instance : Add Pgame :=
   ⟨add⟩
 
 /-- `x + 0` has exactly the same moves as `x`. -/
@@ -924,7 +924,7 @@ def relabelling.add_congr : ∀ {w x y z : Pgame.{u}}, w.relabelling x → y.rel
       ·
         exact relabelling.add_congr ⟨L_equiv₁, R_equiv₁, L_relabelling₁, R_relabelling₁⟩ (R_relabelling₂ j)
 
-instance  : Sub Pgame :=
+instance : Sub Pgame :=
   ⟨fun x y => x+-y⟩
 
 /-- If `w` has the same moves as `x` and `y` has the same moves as `z`,

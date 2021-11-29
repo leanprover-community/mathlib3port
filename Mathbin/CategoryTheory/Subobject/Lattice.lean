@@ -4,7 +4,7 @@ import Mathbin.CategoryTheory.Subobject.WellPowered
 /-!
 # The lattice of subobjects
 
-We provide the `semilattice_inf_top (subobject X)` instance when `[has_pullback C]`,
+We provide the `semilattice_inf` with `order_top (subobject X)` instance when `[has_pullback C]`,
 and the `semilattice_sup (subobject X)` instance when `[has_images C] [has_binary_coproducts C]`.
 -/
 
@@ -15,9 +15,9 @@ noncomputable theory
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
-variable{C : Type u₁}[category.{v₁} C]{X Y Z : C}
+variable {C : Type u₁} [category.{v₁} C] {X Y Z : C}
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 namespace CategoryTheory
 
@@ -25,10 +25,10 @@ namespace MonoOver
 
 section HasTop
 
-instance  {X : C} : HasTop (mono_over X) :=
+instance {X : C} : HasTop (mono_over X) :=
   { top := mk' (𝟙 _) }
 
-instance  {X : C} : Inhabited (mono_over X) :=
+instance {X : C} : Inhabited (mono_over X) :=
   ⟨⊤⟩
 
 /-- The morphism to the top object in `mono_over X`. -/
@@ -52,7 +52,7 @@ def map_top (f : X ⟶ Y) [mono f] : (map f).obj ⊤ ≅ mk' f :=
 
 section 
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 /-- The pullback of the top object in `mono_over Y`
 is (isomorphic to) the top object in `mono_over X`. -/
@@ -79,9 +79,9 @@ end HasTop
 
 section HasBot
 
-variable[has_initial C][initial_mono_class C]
+variable [has_initial C] [initial_mono_class C]
 
-instance  {X : C} : HasBot (mono_over X) :=
+instance {X : C} : HasBot (mono_over X) :=
   { bot := mk' (initial.to X) }
 
 @[simp]
@@ -112,7 +112,7 @@ end HasBot
 
 section ZeroOrderBot
 
-variable[has_zero_object C]
+variable [has_zero_object C]
 
 open_locale ZeroObject
 
@@ -128,7 +128,7 @@ end ZeroOrderBot
 
 section Inf
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 /--
 When `[has_pullbacks C]`, `mono_over A` has "intersections", functorial in both arguments.
@@ -171,7 +171,7 @@ end Inf
 
 section Sup
 
-variable[has_images C][has_binary_coproducts C]
+variable [has_images C] [has_binary_coproducts C]
 
 /-- When `[has_images C] [has_binary_coproducts C]`, `mono_over A` has a `sup` construction,
 which is functorial in both arguments,
@@ -224,7 +224,7 @@ instance OrderTop {X : C} : OrderTop (subobject X) :=
         refine' Quotientₓ.ind' fun f => _ 
         exact ⟨mono_over.le_top f⟩ }
 
-instance  {X : C} : Inhabited (subobject X) :=
+instance {X : C} : Inhabited (subobject X) :=
   ⟨⊤⟩
 
 theorem top_eq_id (B : C) : (⊤ : subobject B) = subobject.mk (𝟙 B) :=
@@ -276,7 +276,7 @@ theorem eq_top_of_is_iso_arrow {Y : C} (P : subobject Y) [is_iso P.arrow] : P = 
 
 section 
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 theorem pullback_top (f : X ⟶ Y) : (pullback f).obj ⊤ = ⊤ :=
   Quotientₓ.sound' ⟨mono_over.pullback_top f⟩
@@ -290,7 +290,7 @@ end OrderTop
 
 section OrderBot
 
-variable[has_initial C][initial_mono_class C]
+variable [has_initial C] [initial_mono_class C]
 
 instance OrderBot {X : C} : OrderBot (subobject X) :=
   { bot := Quotientₓ.mk' ⊥,
@@ -313,7 +313,7 @@ end OrderBot
 
 section ZeroOrderBot
 
-variable[has_zero_object C]
+variable [has_zero_object C]
 
 open_locale ZeroObject
 
@@ -321,7 +321,7 @@ open_locale ZeroObject
 def bot_coe_iso_zero {B : C} : ((⊥ : subobject B) : C) ≅ 0 :=
   bot_coe_iso_initial ≪≫ initial_is_initial.uniqueUpToIso has_zero_object.zero_is_initial
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 theorem bot_eq_zero {B : C} : (⊥ : subobject B) = subobject.mk (0 : 0 ⟶ B) :=
   mk_eq_mk_of_comm _ _ (initial_is_initial.uniqueUpToIso has_zero_object.zero_is_initial)
@@ -347,7 +347,7 @@ end ZeroOrderBot
 
 section Functor
 
-variable(C)
+variable (C)
 
 /-- Sending `X : C` to `subobject X` is a contravariant functor `Cᵒᵖ ⥤ Type`. -/
 @[simps]
@@ -359,7 +359,7 @@ end Functor
 
 section SemilatticeInfTop
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 /-- The functorial infimum on `mono_over A` descends to an infimum on `subobject A`. -/
 def inf {A : C} : subobject A ⥤ subobject A ⥤ subobject A :=
@@ -377,8 +377,8 @@ theorem le_inf {A : C} (h f g : subobject A) : h ≤ f → h ≤ g → h ≤ (in
       rintro f g h ⟨k⟩ ⟨l⟩
       exact ⟨mono_over.le_inf _ _ _ k l⟩)
 
-instance  {B : C} : SemilatticeInfTop (subobject B) :=
-  { subobject.order_top, subobject.partial_order B with inf := fun m n => (inf.obj m).obj n, inf_le_left := inf_le_left,
+instance {B : C} : SemilatticeInf (subobject B) :=
+  { subobject.partial_order _ with inf := fun m n => (inf.obj m).obj n, inf_le_left := inf_le_left,
     inf_le_right := inf_le_right, le_inf := le_inf }
 
 theorem factors_left_of_inf_factors {A B : C} {X Y : subobject B} {f : A ⟶ B} (h : (X⊓Y).Factors f) : X.factors f :=
@@ -483,13 +483,13 @@ end SemilatticeInfTop
 
 section SemilatticeSup
 
-variable[has_images C][has_binary_coproducts C]
+variable [has_images C] [has_binary_coproducts C]
 
 /-- The functorial supremum on `mono_over A` descends to an supremum on `subobject A`. -/
 def sup {A : C} : subobject A ⥤ subobject A ⥤ subobject A :=
   thin_skeleton.map₂ mono_over.sup
 
-instance  {B : C} : SemilatticeSup (subobject B) :=
+instance {B : C} : SemilatticeSup (subobject B) :=
   { subobject.partial_order B with sup := fun m n => (sup.obj m).obj n,
     le_sup_left := fun m n => Quotientₓ.induction_on₂' m n fun a b => ⟨mono_over.le_sup_left _ _⟩,
     le_sup_right := fun m n => Quotientₓ.induction_on₂' m n fun a b => ⟨mono_over.le_sup_right _ _⟩,
@@ -501,10 +501,7 @@ theorem sup_factors_of_factors_left {A B : C} {X Y : subobject B} {f : A ⟶ B} 
 theorem sup_factors_of_factors_right {A B : C} {X Y : subobject B} {f : A ⟶ B} (P : Y.factors f) : (X⊔Y).Factors f :=
   factors_of_le f le_sup_right P
 
-variable[has_initial C][initial_mono_class C]
-
-instance  {B : C} : SemilatticeSupBot (subobject B) :=
-  { subobject.order_bot, subobject.semilattice_sup with  }
+variable [has_initial C] [initial_mono_class C]
 
 theorem finset_sup_factors {I : Type _} {A B : C} {s : Finset I} {P : I → subobject B} {f : A ⟶ B}
   (h : ∃ (i : _)(_ : i ∈ s), (P i).Factors f) : (s.sup P).Factors f :=
@@ -528,21 +525,19 @@ end SemilatticeSup
 
 section Lattice
 
-variable[has_pullbacks C][has_images C][has_binary_coproducts C]
+instance [has_initial C] [initial_mono_class C] {B : C} : BoundedOrder (subobject B) :=
+  { subobject.order_top, subobject.order_bot with  }
 
-instance  {B : C} : Lattice (subobject B) :=
-  { subobject.semilattice_inf_top, subobject.semilattice_sup with  }
+variable [has_pullbacks C] [has_images C] [has_binary_coproducts C]
 
-variable[has_initial C][initial_mono_class C]
-
-instance  {B : C} : BoundedLattice (subobject B) :=
-  { subobject.semilattice_inf_top, subobject.semilattice_sup_bot with  }
+instance {B : C} : Lattice (subobject B) :=
+  { subobject.semilattice_inf, subobject.semilattice_sup with  }
 
 end Lattice
 
 section Inf
 
-variable[well_powered C]
+variable [well_powered C]
 
 /--
 The "wide cospan" diagram, with a small indexing type, constructed from a set of subobjects.
@@ -576,7 +571,7 @@ theorem le_Inf_cone_π_app_none {A : C} (s : Set (subobject A)) (f : subobject A
   (le_Inf_cone s f k).π.app none = f.arrow :=
   rfl
 
-variable[has_wide_pullbacks C]
+variable [has_wide_pullbacks C]
 
 /--
 The limit of `wide_cospan s`. (This will be the supremum of the set of subobjects.)
@@ -636,14 +631,14 @@ theorem le_Inf {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ : 
       dsimp [Inf, wide_pullback_ι]
       simp 
 
-instance  {B : C} : CompleteSemilatticeInf (subobject B) :=
+instance {B : C} : CompleteSemilatticeInf (subobject B) :=
   { subobject.partial_order B with inf := Inf, Inf_le := Inf_le, le_Inf := le_Inf }
 
 end Inf
 
 section Sup
 
-variable[well_powered C][has_coproducts C]
+variable [well_powered C] [has_coproducts C]
 
 /--
 The univesal morphism out of the coproduct of a set of subobjects,
@@ -652,7 +647,7 @@ after using `[well_powered C]` to reindex by a small type.
 def small_coproduct_desc {A : C} (s : Set (subobject A)) : _ ⟶ A :=
   limits.sigma.desc fun j : equivShrink _ '' s => ((equivShrink (subobject A)).symm j).arrow
 
-variable[has_images C]
+variable [has_images C]
 
 /-- When `[well_powered C] [has_images C] [has_coproducts C]`,
 `subobject A` has arbitrary supremums. -/
@@ -709,17 +704,17 @@ theorem Sup_le {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ : 
       dsimp [Sup]
       simp 
 
-instance  {B : C} : CompleteSemilatticeSup (subobject B) :=
+instance {B : C} : CompleteSemilatticeSup (subobject B) :=
   { subobject.partial_order B with sup := Sup, le_Sup := le_Sup, Sup_le := Sup_le }
 
 end Sup
 
 section CompleteLattice
 
-variable[well_powered C][has_wide_pullbacks C][has_images C][has_coproducts C][initial_mono_class C]
+variable [well_powered C] [has_wide_pullbacks C] [has_images C] [has_coproducts C] [initial_mono_class C]
 
-instance  {B : C} : CompleteLattice (subobject B) :=
-  { subobject.semilattice_inf_top, subobject.semilattice_sup_bot, subobject.complete_semilattice_Inf,
+instance {B : C} : CompleteLattice (subobject B) :=
+  { subobject.semilattice_inf, subobject.semilattice_sup, subobject.bounded_order, subobject.complete_semilattice_Inf,
     subobject.complete_semilattice_Sup with  }
 
 end CompleteLattice

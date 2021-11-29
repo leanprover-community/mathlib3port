@@ -44,23 +44,18 @@ open_locale Classical Manifold TopologicalSpace
 
 open Set
 
-variable{H :
-    Type
-      _}{M :
-    Type
-      _}[TopologicalSpace
-      H][TopologicalSpace
-      M][ChartedSpace H M]{H' : Type _}{M' : Type _}[TopologicalSpace H'][TopologicalSpace M'][ChartedSpace H' M']
+variable {H : Type _} {M : Type _} [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M] {H' : Type _}
+  {M' : Type _} [TopologicalSpace H'] [TopologicalSpace M'] [ChartedSpace H' M']
 
 namespace StructureGroupoid
 
-variable(G : StructureGroupoid H)(G' : StructureGroupoid H')
+variable (G : StructureGroupoid H) (G' : StructureGroupoid H')
 
 /-- Structure recording good behavior of a property of a triple `(f, s, x)` where `f` is a function,
 `s` a set and `x` a point. Good behavior here means locality and invariance under given groupoids
 (both in the source and in the target). Given such a good behavior, the lift of this property
 to charted spaces admitting these groupoids will inherit the good behavior. -/
-structure local_invariant_prop(P : (H → H') → Set H → H → Prop) : Prop where 
+structure local_invariant_prop (P : (H → H') → Set H → H → Prop) : Prop where 
   is_local : ∀ {s x u} {f : H → H'}, IsOpen u → x ∈ u → (P f s x ↔ P f (s ∩ u) x)
   right_invariance :
   ∀ {s x f} {e : LocalHomeomorph H H}, e ∈ G → x ∈ e.source → P f s x → P (f ∘ e.symm) (e.target ∩ e.symm ⁻¹' s) (e x)
@@ -103,15 +98,9 @@ open ChartedSpace
 
 namespace StructureGroupoid
 
-variable{G :
-    StructureGroupoid
-      H}{G' :
-    StructureGroupoid
-      H'}{e e' :
-    LocalHomeomorph M
-      H}{f f' :
-    LocalHomeomorph M'
-      H'}{P : (H → H') → Set H → H → Prop}{g g' : M → M'}{s t : Set M}{x : M}{Q : (H → H) → Set H → H → Prop}
+variable {G : StructureGroupoid H} {G' : StructureGroupoid H'} {e e' : LocalHomeomorph M H}
+  {f f' : LocalHomeomorph M' H'} {P : (H → H') → Set H → H → Prop} {g g' : M → M'} {s t : Set M} {x : M}
+  {Q : (H → H) → Set H → H → Prop}
 
 theorem lift_prop_within_at_univ : lift_prop_within_at P g univ x ↔ lift_prop_at P g x :=
   Iff.rfl
@@ -122,7 +111,7 @@ theorem lift_prop_on_univ : lift_prop_on P g univ ↔ lift_prop P g :=
 
 namespace LocalInvariantProp
 
-variable(hG : G.local_invariant_prop G' P)
+variable (hG : G.local_invariant_prop G' P)
 
 include hG
 
@@ -502,7 +491,7 @@ end LocalInvariantProp
 
 section LocalStructomorph
 
-variable(G)
+variable (G)
 
 open LocalHomeomorph
 

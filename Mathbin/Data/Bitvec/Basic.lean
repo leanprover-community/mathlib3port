@@ -5,7 +5,7 @@ import Mathbin.Tactic.Monotonicity.Default
 
 namespace Bitvec
 
-instance  (n : ℕ) : Preorderₓ (Bitvec n) :=
+instance (n : ℕ) : Preorderₓ (Bitvec n) :=
   Preorderₓ.lift Bitvec.toNat
 
 /-- convert `fin` to `bitvec` -/

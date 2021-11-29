@@ -18,7 +18,7 @@ namespace Mvqpf
 
 open_locale Mvfunctor
 
-variable(n : ℕ)
+variable (n : ℕ)
 
 /-- Constant multivariate functor -/
 @[nolint unused_arguments]
@@ -32,7 +32,7 @@ namespace Const
 
 open Mvfunctor Mvpfunctor
 
-variable{n}{A : Type u}{α β : Typevec.{u} n}(f : α ⟹ β)
+variable {n} {A : Type u} {α β : Typevec.{u} n} (f : α ⟹ β)
 
 /-- Constructor for constant functor -/
 protected def mk (x : A) : (const n A) α :=
@@ -54,7 +54,7 @@ protected theorem get_mk (x : A) : const.get (const.mk x : const n A α) = x :=
 protected def map : (const n A) α → (const n A) β :=
   fun x => x
 
-instance  : Mvfunctor (const n A) :=
+instance : Mvfunctor (const n A) :=
   { map := fun α β f => const.map }
 
 theorem map_mk (x : A) : f <$$> const.mk x = const.mk x :=

@@ -59,20 +59,20 @@ section
 
 attribute [local reducible] EuclideanHalfSpace EuclideanQuadrant
 
-variable{n : ℕ}
+variable {n : ℕ}
 
-instance  [HasZero (Finₓ n)] : TopologicalSpace (EuclideanHalfSpace n) :=
+instance [HasZero (Finₓ n)] : TopologicalSpace (EuclideanHalfSpace n) :=
   by 
     infer_instance
 
-instance  : TopologicalSpace (EuclideanQuadrant n) :=
+instance : TopologicalSpace (EuclideanQuadrant n) :=
   by 
     infer_instance
 
-instance  [HasZero (Finₓ n)] : Inhabited (EuclideanHalfSpace n) :=
+instance [HasZero (Finₓ n)] : Inhabited (EuclideanHalfSpace n) :=
   ⟨⟨0, le_reflₓ _⟩⟩
 
-instance  : Inhabited (EuclideanQuadrant n) :=
+instance : Inhabited (EuclideanQuadrant n) :=
   ⟨⟨0, fun i => le_reflₓ _⟩⟩
 
 theorem range_half_space (n : ℕ) [HasZero (Finₓ n)] : (range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } :=
@@ -339,11 +339,11 @@ theorem fact_zero_lt_one : Fact ((0 : ℝ) < 1) :=
 
 attribute [local instance] fact_zero_lt_one
 
-instance  : ChartedSpace (EuclideanHalfSpace 1) (Icc (0 : ℝ) 1) :=
+instance : ChartedSpace (EuclideanHalfSpace 1) (Icc (0 : ℝ) 1) :=
   by 
     infer_instance
 
-instance  : SmoothManifoldWithCorners (𝓡∂ 1) (Icc (0 : ℝ) 1) :=
+instance : SmoothManifoldWithCorners (𝓡∂ 1) (Icc (0 : ℝ) 1) :=
   by 
     infer_instance
 

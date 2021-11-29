@@ -29,19 +29,19 @@ namespace CategoryTheory
 
 universe v u v₁
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{D : Type v₁}
+variable {D : Type v₁}
 
-variable{X Y Z : C}
+variable {X Y Z : C}
 
 /-- The lifting property of a morphism `i` with respect to a morphism `p`.
 This can be interpreted as the right lifting property of `i` with respect to `p`,
 or the left lifting property of `p` with respect to `i`. -/
-class has_lifting_property(i p : arrow C) : Prop where 
+class has_lifting_property (i p : arrow C) : Prop where 
   sq_has_lift : ∀ sq : i ⟶ p, arrow.has_lift sq
 
-instance (priority := 100)has_lifting_property' {i p : arrow C} [has_lifting_property i p] (sq : i ⟶ p) :
+instance (priority := 100) has_lifting_property' {i p : arrow C} [has_lifting_property i p] (sq : i ⟶ p) :
   arrow.has_lift sq :=
   has_lifting_property.sq_has_lift sq
 

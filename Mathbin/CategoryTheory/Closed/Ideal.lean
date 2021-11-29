@@ -31,9 +31,9 @@ open Limits Category
 
 section Ideal
 
-variable{C : Type u₁}{D : Type u₂}[category.{v₁} C][category.{v₁} D]{i : D ⥤ C}
+variable {C : Type u₁} {D : Type u₂} [category.{v₁} C] [category.{v₁} D] {i : D ⥤ C}
 
-variable(i)[has_finite_products C][cartesian_closed C]
+variable (i) [has_finite_products C] [cartesian_closed C]
 
 /--
 The subcategory `D` of `C` expressed as an inclusion functor is an *exponential ideal* if
@@ -53,13 +53,13 @@ theorem exponential_ideal.mk' (h : ∀ B : D A : C, (A ⟹ i.obj B) ∈ i.ess_im
         exact functor.ess_image.of_iso ((exp A).mapIso iB') (h B' A)⟩
 
 /-- The entire category viewed as a subcategory is an exponential ideal. -/
-instance  : exponential_ideal (𝟭 C) :=
+instance : exponential_ideal (𝟭 C) :=
   exponential_ideal.mk' _ fun B A => ⟨_, ⟨iso.refl _⟩⟩
 
 open CartesianClosed
 
 /-- The subcategory of subterminal objects is an exponential ideal. -/
-instance  : exponential_ideal (subterminal_inclusion C) :=
+instance : exponential_ideal (subterminal_inclusion C) :=
   by 
     apply exponential_ideal.mk' 
     intro B A 
@@ -101,9 +101,9 @@ end Ideal
 
 section 
 
-variable{C : Type u₁}{D : Type u₂}[category.{v₁} C][category.{v₁} D]
+variable {C : Type u₁} {D : Type u₂} [category.{v₁} C] [category.{v₁} D]
 
-variable(i : D ⥤ C)
+variable (i : D ⥤ C)
 
 theorem reflective_products [has_finite_products C] [reflective i] : has_finite_products D :=
   ⟨fun J 𝒥₁ 𝒥₂ =>
@@ -114,7 +114,7 @@ attribute [local instance] reflective_products
 
 open CartesianClosed
 
-variable[has_finite_products C][reflective i][cartesian_closed C]
+variable [has_finite_products C] [reflective i] [cartesian_closed C]
 
 -- error in CategoryTheory.Closed.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -143,7 +143,7 @@ begin
   apply [expr mem_ess_image_of_unit_split_mono]
 end
 
-variable[exponential_ideal i]
+variable [exponential_ideal i]
 
 -- error in CategoryTheory.Closed.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

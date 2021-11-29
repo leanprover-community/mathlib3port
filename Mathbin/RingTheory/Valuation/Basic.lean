@@ -51,11 +51,11 @@ noncomputable theory
 
 open Function Ideal
 
-variable{R : Type _}
+variable {R : Type _}
 
 section 
 
-variable(R)(Γ₀ : Type _)[LinearOrderedCommMonoidWithZero Γ₀][Ringₓ R]
+variable (R) (Γ₀ : Type _) [LinearOrderedCommMonoidWithZero Γ₀] [Ringₓ R]
 
 /-- The type of `Γ₀`-valued valuations on `R`. -/
 @[nolint has_inhabited_instance]
@@ -69,29 +69,29 @@ end
 
 namespace Valuation
 
-variable{Γ₀ : Type _}
+variable {Γ₀ : Type _}
 
-variable{Γ'₀ : Type _}
+variable {Γ'₀ : Type _}
 
-variable{Γ''₀ : Type _}[LinearOrderedCommMonoidWithZero Γ''₀]
+variable {Γ''₀ : Type _} [LinearOrderedCommMonoidWithZero Γ''₀]
 
 section Basic
 
-variable(R)(Γ₀)[Ringₓ R]
+variable (R) (Γ₀) [Ringₓ R]
 
 section Monoidₓ
 
-variable[LinearOrderedCommMonoidWithZero Γ₀][LinearOrderedCommMonoidWithZero Γ'₀]
+variable [LinearOrderedCommMonoidWithZero Γ₀] [LinearOrderedCommMonoidWithZero Γ'₀]
 
 /-- A valuation is coerced to the underlying function `R → Γ₀`. -/
-instance  : CoeFun (Valuation R Γ₀) fun _ => R → Γ₀ :=
+instance : CoeFun (Valuation R Γ₀) fun _ => R → Γ₀ :=
   { coe := fun v => v.to_monoid_with_zero_hom.to_fun }
 
 /-- A valuation is coerced to a monoid morphism R → Γ₀. -/
-instance  : Coe (Valuation R Γ₀) (MonoidWithZeroHom R Γ₀) :=
+instance : Coe (Valuation R Γ₀) (MonoidWithZeroHom R Γ₀) :=
   ⟨Valuation.toMonoidWithZeroHom⟩
 
-variable{R}{Γ₀}(v : Valuation R Γ₀){x y z : R}
+variable {R} {Γ₀} (v : Valuation R Γ₀) {x y z : R}
 
 @[simp, normCast]
 theorem coe_coe : ((v : MonoidWithZeroHom R Γ₀) : R → Γ₀) = v :=
@@ -206,11 +206,15 @@ end Monoidₓ
 
 section Groupₓ
 
-variable[LinearOrderedCommGroupWithZero Γ₀]{R}{Γ₀}(v : Valuation R Γ₀){x y z : R}
+variable [LinearOrderedCommGroupWithZero Γ₀] {R} {Γ₀} (v : Valuation R Γ₀) {x y z : R}
 
 @[simp]
 theorem map_inv {K : Type _} [DivisionRing K] (v : Valuation K Γ₀) {x : K} : v (x⁻¹) = v x⁻¹ :=
   v.to_monoid_with_zero_hom.map_inv x
+
+@[simp]
+theorem map_zpow {K : Type _} [DivisionRing K] (v : Valuation K Γ₀) {x : K} {n : ℤ} : v (x ^ n) = v x ^ n :=
+  v.to_monoid_with_zero_hom.map_zpow x n
 
 theorem map_units_inv (x : Units R) : v (x⁻¹ : Units R) = v x⁻¹ :=
   v.to_monoid_with_zero_hom.to_monoid_hom.map_units_inv x
@@ -280,13 +284,13 @@ end Basic
 
 namespace IsEquiv
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
-variable[LinearOrderedCommMonoidWithZero Γ₀][LinearOrderedCommMonoidWithZero Γ'₀]
+variable [LinearOrderedCommMonoidWithZero Γ₀] [LinearOrderedCommMonoidWithZero Γ'₀]
 
-variable{v : Valuation R Γ₀}
+variable {v : Valuation R Γ₀}
 
-variable{v₁ : Valuation R Γ₀}{v₂ : Valuation R Γ'₀}{v₃ : Valuation R Γ''₀}
+variable {v₁ : Valuation R Γ₀} {v₂ : Valuation R Γ'₀} {v₃ : Valuation R Γ''₀}
 
 @[refl]
 theorem refl : v.is_equiv v :=
@@ -351,7 +355,7 @@ theorem is_equiv_of_val_le_one [LinearOrderedCommGroupWithZero Γ₀] [LinearOrd
       [show y = 1*y by 
         rw [one_mulₓ]]
     rw [←inv_mul_cancel_right₀ hy x]
-    iterate 2
+    iterate 2 
       rw [v.map_mul _ y, v'.map_mul _ y]
     rw [v.map_one, v'.map_one]
     split  <;> intro H
@@ -370,11 +374,11 @@ end
 
 section Supp
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
-variable[LinearOrderedCommMonoidWithZero Γ₀][LinearOrderedCommMonoidWithZero Γ'₀]
+variable [LinearOrderedCommMonoidWithZero Γ₀] [LinearOrderedCommMonoidWithZero Γ'₀]
 
-variable(v : Valuation R Γ₀)
+variable (v : Valuation R Γ₀)
 
 /-- The support of a valuation `v : R → Γ₀` is the ideal of `R` where `v` vanishes. -/
 def supp : Ideal R :=
@@ -397,7 +401,7 @@ theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = 0 :=
   Iff.rfl
 
 /-- The support of a valuation is a prime ideal. -/
-instance  [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
+instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
   ⟨fun h : v.supp = ⊤ =>
       one_ne_zero$
         show (1 : Γ₀) = 0 from
@@ -500,7 +504,7 @@ end Valuation
 
 section AddMonoidₓ
 
-variable(R)[Ringₓ R](Γ₀ : Type _)[LinearOrderedAddCommMonoidWithTop Γ₀]
+variable (R) [Ringₓ R] (Γ₀ : Type _) [LinearOrderedAddCommMonoidWithTop Γ₀]
 
 /-- The type of `Γ₀`-valued additive valuations on `R`. -/
 @[nolint has_inhabited_instance]
@@ -511,34 +515,34 @@ end AddMonoidₓ
 
 namespace AddValuation
 
-variable{Γ₀ : Type _}{Γ'₀ : Type _}
+variable {Γ₀ : Type _} {Γ'₀ : Type _}
 
 section Basic
 
 section Monoidₓ
 
-variable[LinearOrderedAddCommMonoidWithTop Γ₀][LinearOrderedAddCommMonoidWithTop Γ'₀]
+variable [LinearOrderedAddCommMonoidWithTop Γ₀] [LinearOrderedAddCommMonoidWithTop Γ'₀]
 
-variable(R)(Γ₀)[Ringₓ R]
+variable (R) (Γ₀) [Ringₓ R]
 
 /-- A valuation is coerced to the underlying function `R → Γ₀`. -/
-instance  : CoeFun (AddValuation R Γ₀) fun _ => R → Γ₀ :=
+instance : CoeFun (AddValuation R Γ₀) fun _ => R → Γ₀ :=
   { coe := fun v => v.to_monoid_with_zero_hom.to_fun }
 
-variable{R}{Γ₀}(v : AddValuation R Γ₀){x y z : R}
+variable {R} {Γ₀} (v : AddValuation R Γ₀) {x y z : R}
 
 section 
 
-variable(f : R → Γ₀)(h0 : f 0 = ⊤)(h1 : f 1 = 0)
+variable (f : R → Γ₀) (h0 : f 0 = ⊤) (h1 : f 1 = 0)
 
-variable(hadd : ∀ x y, min (f x) (f y) ≤ f (x+y))(hmul : ∀ x y, f (x*y) = f x+f y)
+variable (hadd : ∀ x y, min (f x) (f y) ≤ f (x+y)) (hmul : ∀ x y, f (x*y) = f x+f y)
 
 /-- An alternate constructor of `add_valuation`, that doesn't reference
   `multiplicative (order_dual Γ₀)` -/
 def of : AddValuation R Γ₀ :=
   { toFun := f, map_one' := h1, map_zero' := h0, map_add' := hadd, map_mul' := hmul }
 
-variable{h0}{h1}{hadd}{hmul}{r : R}
+variable {h0} {h1} {hadd} {hmul} {r : R}
 
 @[simp]
 theorem of_apply : (of f h0 h1 hadd hmul) r = f r :=
@@ -630,7 +634,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable[LinearOrderedAddCommGroupWithTop Γ₀][Ringₓ R](v : AddValuation R Γ₀){x y z : R}
+variable [LinearOrderedAddCommGroupWithTop Γ₀] [Ringₓ R] (v : AddValuation R Γ₀) {x y z : R}
 
 @[simp]
 theorem map_inv {K : Type _} [DivisionRing K] (v : AddValuation K Γ₀) {x : K} : v (x⁻¹) = -v x :=
@@ -664,15 +668,15 @@ end Basic
 
 namespace IsEquiv
 
-variable[LinearOrderedAddCommMonoidWithTop Γ₀][LinearOrderedAddCommMonoidWithTop Γ'₀]
+variable [LinearOrderedAddCommMonoidWithTop Γ₀] [LinearOrderedAddCommMonoidWithTop Γ'₀]
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
-variable{Γ''₀ : Type _}[LinearOrderedAddCommMonoidWithTop Γ''₀]
+variable {Γ''₀ : Type _} [LinearOrderedAddCommMonoidWithTop Γ''₀]
 
-variable{v : AddValuation R Γ₀}
+variable {v : AddValuation R Γ₀}
 
-variable{v₁ : AddValuation R Γ₀}{v₂ : AddValuation R Γ'₀}{v₃ : AddValuation R Γ''₀}
+variable {v₁ : AddValuation R Γ₀} {v₂ : AddValuation R Γ'₀} {v₃ : AddValuation R Γ''₀}
 
 @[refl]
 theorem refl : v.is_equiv v :=
@@ -707,11 +711,11 @@ end IsEquiv
 
 section Supp
 
-variable[LinearOrderedAddCommMonoidWithTop Γ₀][LinearOrderedAddCommMonoidWithTop Γ'₀]
+variable [LinearOrderedAddCommMonoidWithTop Γ₀] [LinearOrderedAddCommMonoidWithTop Γ'₀]
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
-variable(v : AddValuation R Γ₀)
+variable (v : AddValuation R Γ₀)
 
 /-- The support of an additive valuation `v : R → Γ₀` is the ideal of `R` where `v x = ⊤` -/
 def supp : Ideal R :=

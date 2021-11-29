@@ -20,11 +20,11 @@ namespace CategoryTheory
 
 universe v u
 
-variable{T : Type u}[category.{v} T]
+variable {T : Type u} [category.{v} T]
 
 section 
 
-variable(T)
+variable (T)
 
 -- error in CategoryTheory.Arrow: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- The arrow category of `T` has as objects all morphisms in `T` and as morphisms commutative
@@ -60,7 +60,7 @@ theorem mk_injective (A B : T) : Function.Injective (arrow.mk : (A ⟶ B) → ar
 theorem mk_inj (A B : T) {f g : A ⟶ B} : arrow.mk f = arrow.mk g ↔ f = g :=
   (mk_injective A B).eq_iff
 
-instance  {X Y : T} : Coe (X ⟶ Y) (arrow T) :=
+instance {X Y : T} : Coe (X ⟶ Y) (arrow T) :=
   ⟨mk⟩
 
 /-- A morphism in the arrow category is a commutative square connecting two objects of the arrow
@@ -101,7 +101,7 @@ def iso_mk {f g : arrow T} (l : f.left ≅ g.left) (r : f.right ≅ g.right) (h 
 
 section 
 
-variable{f g : arrow T}(sq : f ⟶ g)
+variable {f g : arrow T} (sq : f ⟶ g)
 
 instance is_iso_left [is_iso sq] : is_iso sq.left :=
   { out :=
@@ -186,7 +186,7 @@ theorem square_from_iso_invert {X Y : T} (i : X ≅ Y) (p : arrow T) (sq : arrow
 
 /-- A lift of a commutative square is a diagonal morphism making the two triangles commute. -/
 @[ext]
-structure lift_struct{f g : arrow T}(sq : f ⟶ g) where 
+structure lift_struct {f g : arrow T} (sq : f ⟶ g) where 
   lift : f.right ⟶ g.left 
   fac_left' : f.hom ≫ lift = sq.left :=  by 
   runTac 
@@ -204,7 +204,7 @@ instance lift_struct_inhabited {X : T} : Inhabited (lift_struct (𝟙 (arrow.mk 
 
 /-- `has_lift sq` says that there is some `lift_struct sq`, i.e., that it is possible to find a
     diagonal morphism making the two triangles commute. -/
-class HasLift{f g : arrow T}(sq : f ⟶ g) : Prop where mk' :: 
+class HasLift {f g : arrow T} (sq : f ⟶ g) : Prop where mk' :: 
   exists_lift : Nonempty (lift_struct sq)
 
 theorem HasLift.mk {f g : arrow T} {sq : f ⟶ g} (s : lift_struct sq) : HasLift sq :=
@@ -272,7 +272,7 @@ instance subsingleton_lift_struct_of_mono {f g : arrow T} (sq : f ⟶ g) [mono g
 
 end 
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /-- A helper construction: given a square between `i` and `f ≫ g`, produce a square between
 `i` and `g`, whose top leg uses `f`:
@@ -307,7 +307,7 @@ namespace Functor
 
 universe v₁ v₂ u₁ u₂
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 -- error in CategoryTheory.Arrow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A functor `C ⥤ D` induces a functor between the corresponding arrow categories. -/

@@ -63,28 +63,28 @@ open_locale Classical Ennreal
 
 open Set Filter TopologicalSpace Ennreal Emetric MeasureTheory Function
 
-variable{α β γ δ : Type _}[MeasurableSpace α]{μ ν : Measureₓ α}
+variable {α β γ δ : Type _} [MeasurableSpace α] {μ ν : Measureₓ α}
 
 namespace MeasureTheory
 
 section MeasurableSpace
 
-variable[MeasurableSpace β]
+variable [MeasurableSpace β]
 
-variable(β)
+variable (β)
 
 /-- The equivalence relation of being almost everywhere equal -/
 def measure.ae_eq_setoid (μ : Measureₓ α) : Setoidₓ { f : α → β // AeMeasurable f μ } :=
   ⟨fun f g => (f : α → β) =ᵐ[μ] g, fun f => ae_eq_refl f, fun f g => ae_eq_symm, fun f g h => ae_eq_trans⟩
 
-variable(α)
+variable (α)
 
 /-- The space of equivalence classes of measurable functions, where two measurable functions are
     equivalent if they agree almost everywhere, i.e., they differ on a set of measure `0`.  -/
 def ae_eq_fun (μ : Measureₓ α) : Type _ :=
   Quotientₓ (μ.ae_eq_setoid β)
 
-variable{α β}
+variable {α β}
 
 notation:25 α " →ₘ[" μ "] " β => ae_eq_fun α β μ
 
@@ -92,7 +92,7 @@ end MeasurableSpace
 
 namespace AeEqFun
 
-variable[MeasurableSpace β][MeasurableSpace γ][MeasurableSpace δ]
+variable [MeasurableSpace β] [MeasurableSpace γ] [MeasurableSpace δ]
 
 /-- Construct the equivalence class `[f]` of an almost everywhere measurable function `f`, based
     on the equivalence relation of being almost everywhere equal. -/
@@ -100,7 +100,7 @@ def mk (f : α → β) (hf : AeMeasurable f μ) : α →ₘ[μ] β :=
   Quotientₓ.mk' ⟨f, hf⟩
 
 /-- A measurable representative of an `ae_eq_fun` [f] -/
-instance  : CoeFun (α →ₘ[μ] β) fun _ => α → β :=
+instance : CoeFun (α →ₘ[μ] β) fun _ => α → β :=
   ⟨fun f => AeMeasurable.mk _ (Quotientₓ.out' f : { f : α → β // AeMeasurable f μ }).2⟩
 
 protected theorem Measurable (f : α →ₘ[μ] β) : Measurable f :=
@@ -287,7 +287,7 @@ theorem lift_rel_iff_coe_fn {r : β → γ → Prop} {f : α →ₘ[μ] β} {g :
 
 section Order
 
-instance  [Preorderₓ β] : Preorderₓ (α →ₘ[μ] β) :=
+instance [Preorderₓ β] : Preorderₓ (α →ₘ[μ] β) :=
   Preorderₓ.lift to_germ
 
 @[simp]
@@ -298,12 +298,12 @@ theorem mk_le_mk [Preorderₓ β] {f g : α → β} hf hg : (mk f hf : α →ₘ
 theorem coe_fn_le [Preorderₓ β] {f g : α →ₘ[μ] β} : (f : α → β) ≤ᵐ[μ] g ↔ f ≤ g :=
   lift_rel_iff_coe_fn.symm
 
-instance  [PartialOrderₓ β] : PartialOrderₓ (α →ₘ[μ] β) :=
+instance [PartialOrderₓ β] : PartialOrderₓ (α →ₘ[μ] β) :=
   PartialOrderₓ.lift to_germ to_germ_injective
 
 end Order
 
-variable(α)
+variable (α)
 
 /-- The equivalence class of a constant function: `[λa:α, b]`, based on the equivalence relation of
     being almost everywhere equal -/
@@ -313,13 +313,13 @@ def const (b : β) : α →ₘ[μ] β :=
 theorem coe_fn_const (b : β) : (const α b : α →ₘ[μ] β) =ᵐ[μ] Function.const α b :=
   coe_fn_mk _ _
 
-variable{α}
+variable {α}
 
-instance  [Inhabited β] : Inhabited (α →ₘ[μ] β) :=
+instance [Inhabited β] : Inhabited (α →ₘ[μ] β) :=
   ⟨const α (default β)⟩
 
 @[toAdditive]
-instance  [HasOne β] : HasOne (α →ₘ[μ] β) :=
+instance [HasOne β] : HasOne (α →ₘ[μ] β) :=
   ⟨const α 1⟩
 
 @[toAdditive]
@@ -336,10 +336,10 @@ theorem one_to_germ [HasOne β] : (1 : α →ₘ[μ] β).toGerm = 1 :=
 
 section Monoidₓ
 
-variable[TopologicalSpace γ][second_countable_topology γ][BorelSpace γ][Monoidₓ γ][HasContinuousMul γ]
+variable [TopologicalSpace γ] [second_countable_topology γ] [BorelSpace γ] [Monoidₓ γ] [HasContinuousMul γ]
 
 @[toAdditive]
-instance  : Mul (α →ₘ[μ] γ) :=
+instance : Mul (α →ₘ[μ] γ) :=
   ⟨comp₂ (·*·) measurable_mul⟩
 
 @[simp, toAdditive]
@@ -355,7 +355,7 @@ theorem mul_to_germ (f g : α →ₘ[μ] γ) : (f*g).toGerm = f.to_germ*g.to_ger
   comp₂_to_germ _ _ _ _
 
 @[toAdditive]
-instance  : Monoidₓ (α →ₘ[μ] γ) :=
+instance : Monoidₓ (α →ₘ[μ] γ) :=
   to_germ_injective.Monoid to_germ one_to_germ mul_to_germ
 
 end Monoidₓ
@@ -367,10 +367,10 @@ instance CommMonoidₓ [TopologicalSpace γ] [second_countable_topology γ] [Bor
 
 section Groupₓ
 
-variable[TopologicalSpace γ][BorelSpace γ][Groupₓ γ][TopologicalGroup γ]
+variable [TopologicalSpace γ] [BorelSpace γ] [Groupₓ γ] [TopologicalGroup γ]
 
 @[toAdditive]
-instance  : HasInv (α →ₘ[μ] γ) :=
+instance : HasInv (α →ₘ[μ] γ) :=
   ⟨comp HasInv.inv measurable_inv⟩
 
 @[simp, toAdditive]
@@ -385,10 +385,10 @@ theorem coe_fn_inv (f : α →ₘ[μ] γ) : «expr⇑ » (f⁻¹) =ᵐ[μ] f⁻�
 theorem inv_to_germ (f : α →ₘ[μ] γ) : f⁻¹.toGerm = f.to_germ⁻¹ :=
   comp_to_germ _ _ _
 
-variable[second_countable_topology γ]
+variable [second_countable_topology γ]
 
 @[toAdditive]
-instance  : Div (α →ₘ[μ] γ) :=
+instance : Div (α →ₘ[μ] γ) :=
   ⟨comp₂ Div.div measurable_div⟩
 
 @[simp, toAdditive]
@@ -404,23 +404,23 @@ theorem div_to_germ (f g : α →ₘ[μ] γ) : (f / g).toGerm = f.to_germ / g.to
   comp₂_to_germ _ _ _ _
 
 @[toAdditive]
-instance  : Groupₓ (α →ₘ[μ] γ) :=
+instance : Groupₓ (α →ₘ[μ] γ) :=
   to_germ_injective.Group _ one_to_germ mul_to_germ inv_to_germ div_to_germ
 
 end Groupₓ
 
 @[toAdditive]
-instance  [TopologicalSpace γ] [BorelSpace γ] [CommGroupₓ γ] [TopologicalGroup γ] [second_countable_topology γ] :
+instance [TopologicalSpace γ] [BorelSpace γ] [CommGroupₓ γ] [TopologicalGroup γ] [second_countable_topology γ] :
   CommGroupₓ (α →ₘ[μ] γ) :=
   { ae_eq_fun.group, ae_eq_fun.comm_monoid with  }
 
 section Module
 
-variable{𝕜 : Type _}[Semiringₓ 𝕜][TopologicalSpace 𝕜][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable {𝕜 : Type _} [Semiringₓ 𝕜] [TopologicalSpace 𝕜] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
-variable[TopologicalSpace γ][BorelSpace γ][AddCommMonoidₓ γ][Module 𝕜 γ][HasContinuousSmul 𝕜 γ]
+variable [TopologicalSpace γ] [BorelSpace γ] [AddCommMonoidₓ γ] [Module 𝕜 γ] [HasContinuousSmul 𝕜 γ]
 
-instance  : HasScalar 𝕜 (α →ₘ[μ] γ) :=
+instance : HasScalar 𝕜 (α →ₘ[μ] γ) :=
   ⟨fun c f => comp ((· • ·) c) (measurable_id.const_smul c) f⟩
 
 @[simp]
@@ -433,9 +433,9 @@ theorem coe_fn_smul (c : 𝕜) (f : α →ₘ[μ] γ) : «expr⇑ » (c • f) =
 theorem smul_to_germ (c : 𝕜) (f : α →ₘ[μ] γ) : (c • f).toGerm = c • f.to_germ :=
   comp_to_germ _ _ _
 
-variable[second_countable_topology γ][HasContinuousAdd γ]
+variable [second_countable_topology γ] [HasContinuousAdd γ]
 
-instance  : Module 𝕜 (α →ₘ[μ] γ) :=
+instance : Module 𝕜 (α →ₘ[μ] γ) :=
   to_germ_injective.Module 𝕜 ⟨@to_germ α γ _ μ _, zero_to_germ, add_to_germ⟩ smul_to_germ
 
 end Module
@@ -473,8 +473,8 @@ theorem lintegral_mono {f g : α →ₘ[μ] ℝ≥0∞} : f ≤ g → lintegral 
 
 section PosPart
 
-variable[TopologicalSpace
-      γ][LinearOrderₓ γ][OrderClosedTopology γ][second_countable_topology γ][HasZero γ][OpensMeasurableSpace γ]
+variable [TopologicalSpace γ] [LinearOrderₓ γ] [OrderClosedTopology γ] [second_countable_topology γ] [HasZero γ]
+  [OpensMeasurableSpace γ]
 
 /-- Positive part of an `ae_eq_fun`. -/
 def pos_part (f : α →ₘ[μ] γ) : α →ₘ[μ] γ :=
@@ -498,9 +498,9 @@ namespace ContinuousMap
 
 open MeasureTheory
 
-variable[TopologicalSpace α][BorelSpace α](μ)
+variable [TopologicalSpace α] [BorelSpace α] (μ)
 
-variable[TopologicalSpace β][MeasurableSpace β][BorelSpace β]
+variable [TopologicalSpace β] [MeasurableSpace β] [BorelSpace β]
 
 /-- The equivalence class of `μ`-almost-everywhere measurable functions associated to a continuous
 map. -/
@@ -510,7 +510,7 @@ def to_ae_eq_fun (f : C(α, β)) : α →ₘ[μ] β :=
 theorem coe_fn_to_ae_eq_fun (f : C(α, β)) : f.to_ae_eq_fun μ =ᵐ[μ] f :=
   ae_eq_fun.coe_fn_mk f _
 
-variable[Groupₓ β][TopologicalGroup β][second_countable_topology β]
+variable [Groupₓ β] [TopologicalGroup β] [second_countable_topology β]
 
 /-- The `mul_hom` from the group of continuous maps from `α` to `β` to the group of equivalence
 classes of `μ`-almost-everywhere measurable functions. -/
@@ -521,12 +521,10 @@ def to_ae_eq_fun_mul_hom : C(α, β) →* α →ₘ[μ] β :=
     map_mul' :=
       fun f g => ae_eq_fun.mk_mul_mk f g f.continuous.measurable.ae_measurable g.continuous.measurable.ae_measurable }
 
-variable{𝕜 : Type _}[Semiringₓ 𝕜][TopologicalSpace 𝕜][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable {𝕜 : Type _} [Semiringₓ 𝕜] [TopologicalSpace 𝕜] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
-variable[TopologicalSpace
-      γ][MeasurableSpace
-      γ][BorelSpace
-      γ][AddCommGroupₓ γ][Module 𝕜 γ][TopologicalAddGroup γ][HasContinuousSmul 𝕜 γ][second_countable_topology γ]
+variable [TopologicalSpace γ] [MeasurableSpace γ] [BorelSpace γ] [AddCommGroupₓ γ] [Module 𝕜 γ] [TopologicalAddGroup γ]
+  [HasContinuousSmul 𝕜 γ] [second_countable_topology γ]
 
 /-- The linear map from the group of continuous maps from `α` to `β` to the group of equivalence
 classes of `μ`-almost-everywhere measurable functions. -/

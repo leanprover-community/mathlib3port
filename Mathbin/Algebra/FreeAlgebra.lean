@@ -41,9 +41,9 @@ inductively defined relation `free_algebra.rel`. Explicitly, the construction in
 -/
 
 
-variable(R : Type _)[CommSemiringₓ R]
+variable (R : Type _) [CommSemiringₓ R]
 
-variable(X : Type _)
+variable (X : Type _)
 
 namespace FreeAlgebra
 
@@ -58,7 +58,7 @@ inductive pre
 
 namespace Pre
 
-instance  : Inhabited (pre R X) :=
+instance : Inhabited (pre R X) :=
   ⟨of_scalar 0⟩
 
 /-- Coercion from `X` to `pre R X`. Note: Used for notation only. -/
@@ -140,7 +140,7 @@ namespace FreeAlgebra
 attribute [local instance] pre.has_coe_generator pre.has_coe_semiring pre.has_mul pre.has_add pre.has_zero pre.has_one
   pre.has_scalar
 
-instance  : Semiringₓ (FreeAlgebra R X) :=
+instance : Semiringₓ (FreeAlgebra R X) :=
   { add := Quot.map₂ (·+·) (fun _ _ _ => rel.add_compat_right) fun _ _ _ => rel.add_compat_left,
     add_assoc :=
       by 
@@ -191,13 +191,13 @@ instance  : Semiringₓ (FreeAlgebra R X) :=
         rintro ⟨⟩
         exact Quot.sound rel.mul_zero }
 
-instance  : Inhabited (FreeAlgebra R X) :=
+instance : Inhabited (FreeAlgebra R X) :=
   ⟨0⟩
 
-instance  : HasScalar R (FreeAlgebra R X) :=
+instance : HasScalar R (FreeAlgebra R X) :=
   { smul := fun r => Quot.map ((·*·) («expr↑ » r)) fun a b => rel.mul_compat_right }
 
-instance  : Algebra R (FreeAlgebra R X) :=
+instance : Algebra R (FreeAlgebra R X) :=
   { toFun := fun r => Quot.mk _ r, map_one' := rfl, map_mul' := fun _ _ => Quot.sound rel.mul_scalar, map_zero' := rfl,
     map_add' := fun _ _ => Quot.sound rel.add_scalar,
     commutes' :=
@@ -207,10 +207,10 @@ instance  : Algebra R (FreeAlgebra R X) :=
           exact Quot.sound rel.central_scalar,
     smul_def' := fun _ _ => rfl }
 
-instance  {S : Type _} [CommRingₓ S] : Ringₓ (FreeAlgebra S X) :=
+instance {S : Type _} [CommRingₓ S] : Ringₓ (FreeAlgebra S X) :=
   Algebra.semiringToRing S
 
-variable{X}
+variable {X}
 
 /--
 The canonical function `X → free_algebra R X`.
@@ -222,7 +222,7 @@ def ι : X → FreeAlgebra R X :=
 theorem quot_mk_eq_ι (m : X) : Quot.mk (FreeAlgebra.Rel R X) m = ι R m :=
   rfl
 
-variable{A : Type _}[Semiringₓ A][Algebra R A]
+variable {A : Type _} [Semiringₓ A] [Algebra R A]
 
 /-- Internal definition used to define `lift` -/
 private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A :=
@@ -334,7 +334,7 @@ theorem lift_aux_eq (f : X → A) : lift_aux R f = lift R f :=
 theorem lift_symm_apply (F : FreeAlgebra R X →ₐ[R] A) : (lift R).symm F = F ∘ ι R :=
   rfl
 
-variable{R X}
+variable {R X}
 
 @[simp]
 theorem ι_comp_lift (f : X → A) : (lift R f : FreeAlgebra R X → A) ∘ ι R = f :=
@@ -401,7 +401,7 @@ noncomputable def equiv_monoid_algebra_free_monoid : FreeAlgebra R X ≃ₐ[R] M
       ext 
       simp )
 
-instance  [Nontrivial R] : Nontrivial (FreeAlgebra R X) :=
+instance [Nontrivial R] : Nontrivial (FreeAlgebra R X) :=
   equiv_monoid_algebra_free_monoid.Surjective.Nontrivial
 
 section 
@@ -498,13 +498,13 @@ begin
 end
 
 /-- The star ring formed by reversing the elements of products -/
-instance  : StarRing (FreeAlgebra R X) :=
+instance : StarRing (FreeAlgebra R X) :=
   { star := MulOpposite.unop ∘ lift R (MulOpposite.op ∘ ι R),
     star_involutive :=
       fun x =>
         by 
           unfold HasStar.star 
-          simp only [Function.comp_apply]
+          simp only [Function.comp_applyₓ]
           refine' FreeAlgebra.induction R X _ _ _ _ x <;> intros  <;> simp ,
     star_mul :=
       fun a b =>

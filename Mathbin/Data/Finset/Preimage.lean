@@ -12,7 +12,7 @@ open_locale BigOperators
 
 universe u v w x
 
-variable{α : Type u}{β : Type v}{ι : Sort w}{γ : Type x}
+variable {α : Type u} {β : Type v} {ι : Sort w} {γ : Type x}
 
 namespace Finset
 

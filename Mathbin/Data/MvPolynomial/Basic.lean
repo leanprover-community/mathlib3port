@@ -82,7 +82,7 @@ open_locale BigOperators
 
 universe u v w x
 
-variable{R : Type u}{S₁ : Type v}{S₂ : Type w}{S₃ : Type x}
+variable {R : Type u} {S₁ : Type v} {S₂ : Type w} {S₃ : Type x}
 
 /-- Multivariate polynomial, where `σ` is the index set of the variables and
   `R` is the coefficient ring -/
@@ -91,7 +91,7 @@ def MvPolynomial (σ : Type _) (R : Type _) [CommSemiringₓ R] :=
 
 namespace MvPolynomial
 
-variable{σ : Type _}{a a' a₁ a₂ : R}{e : ℕ}{n m : σ}{s : σ →₀ ℕ}
+variable {σ : Type _} {a a' a₁ a₂ : R} {e : ℕ} {n m : σ} {s : σ →₀ ℕ}
 
 section CommSemiringₓ
 
@@ -101,31 +101,31 @@ instance decidable_eq_mv_polynomial [CommSemiringₓ R] [DecidableEq σ] [Decida
   DecidableEq (MvPolynomial σ R) :=
   Finsupp.decidableEq
 
-instance  [CommSemiringₓ R] : CommSemiringₓ (MvPolynomial σ R) :=
+instance [CommSemiringₓ R] : CommSemiringₓ (MvPolynomial σ R) :=
   AddMonoidAlgebra.commSemiring
 
-instance  [CommSemiringₓ R] : Inhabited (MvPolynomial σ R) :=
+instance [CommSemiringₓ R] : Inhabited (MvPolynomial σ R) :=
   ⟨0⟩
 
-instance  [Monoidₓ R] [CommSemiringₓ S₁] [DistribMulAction R S₁] : DistribMulAction R (MvPolynomial σ S₁) :=
+instance [Monoidₓ R] [CommSemiringₓ S₁] [DistribMulAction R S₁] : DistribMulAction R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.distribMulAction
 
-instance  [Monoidₓ R] [CommSemiringₓ S₁] [DistribMulAction R S₁] [HasFaithfulScalar R S₁] :
+instance [Monoidₓ R] [CommSemiringₓ S₁] [DistribMulAction R S₁] [HasFaithfulScalar R S₁] :
   HasFaithfulScalar R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.has_faithful_scalar
 
-instance  [Semiringₓ R] [CommSemiringₓ S₁] [Module R S₁] : Module R (MvPolynomial σ S₁) :=
+instance [Semiringₓ R] [CommSemiringₓ S₁] [Module R S₁] : Module R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.module
 
-instance  [Monoidₓ R] [Monoidₓ S₁] [CommSemiringₓ S₂] [HasScalar R S₁] [DistribMulAction R S₂] [DistribMulAction S₁ S₂]
+instance [Monoidₓ R] [Monoidₓ S₁] [CommSemiringₓ S₂] [HasScalar R S₁] [DistribMulAction R S₂] [DistribMulAction S₁ S₂]
   [IsScalarTower R S₁ S₂] : IsScalarTower R S₁ (MvPolynomial σ S₂) :=
   AddMonoidAlgebra.is_scalar_tower
 
-instance  [Monoidₓ R] [Monoidₓ S₁] [CommSemiringₓ S₂] [DistribMulAction R S₂] [DistribMulAction S₁ S₂]
+instance [Monoidₓ R] [Monoidₓ S₁] [CommSemiringₓ S₂] [DistribMulAction R S₂] [DistribMulAction S₁ S₂]
   [SmulCommClass R S₁ S₂] : SmulCommClass R S₁ (MvPolynomial σ S₂) :=
   AddMonoidAlgebra.smul_comm_class
 
-instance  [CommSemiringₓ R] [CommSemiringₓ S₁] [Algebra R S₁] : Algebra R (MvPolynomial σ S₁) :=
+instance [CommSemiringₓ R] [CommSemiringₓ S₁] [Algebra R S₁] : Algebra R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.algebra
 
 /-- If `R` is a subsingleton, then `mv_polynomial σ R` has a unique element -/
@@ -134,7 +134,7 @@ protected def Unique [CommSemiringₓ R] [Subsingleton R] : Unique (MvPolynomial
 
 end Instances
 
-variable[CommSemiringₓ R][CommSemiringₓ S₁]{p q : MvPolynomial σ R}
+variable [CommSemiringₓ R] [CommSemiringₓ S₁] {p q : MvPolynomial σ R}
 
 /-- `monomial s a` is the monomial with coefficient `a` and exponents given by `s`  -/
 def monomial (s : σ →₀ ℕ) : R →ₗ[R] MvPolynomial σ R :=
@@ -150,12 +150,12 @@ theorem mul_def : (p*q) = p.sum fun m a => q.sum$ fun n b => monomial (m+n) (a*b
 def C : R →+* MvPolynomial σ R :=
   { single_zero_ring_hom with toFun := monomial 0 }
 
-variable(R σ)
+variable (R σ)
 
 theorem algebra_map_eq : algebraMap R (MvPolynomial σ R) = C :=
   rfl
 
-variable{R σ}
+variable {R σ}
 
 /-- `X n` is the degree `1` monomial $X_n$. -/
 def X (n : σ) : MvPolynomial σ R :=
@@ -232,13 +232,13 @@ theorem monomial_pow : monomial s a ^ e = monomial (e • s) (a ^ e) :=
 theorem monomial_mul {s s' : σ →₀ ℕ} {a b : R} : (monomial s a*monomial s' b) = monomial (s+s') (a*b) :=
   AddMonoidAlgebra.single_mul_single
 
-variable(σ R)
+variable (σ R)
 
 /-- `λ s, monomial s 1` as a homomorphism. -/
 def monomial_one_hom : Multiplicative (σ →₀ ℕ) →* MvPolynomial σ R :=
   AddMonoidAlgebra.of _ _
 
-variable{σ R}
+variable {σ R}
 
 @[simp]
 theorem monomial_one_hom_apply : monomial_one_hom R σ s = (monomial s 1 : MvPolynomial σ R) :=
@@ -515,8 +515,20 @@ theorem coeff_mul (p q : MvPolynomial σ R) (n : σ →₀ ℕ) :
   AddMonoidAlgebra.mul_apply_antidiagonal p q _ _$ fun p => mem_antidiagonal
 
 @[simp]
+theorem coeff_mul_monomial m (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) : coeff (m+s) (p*monomial s r) = coeff m p*r :=
+  AddMonoidAlgebra.mul_single_apply_aux p _ _ _ _ fun a => add_left_injₓ _
+
+@[simp]
+theorem coeff_monomial_mul m (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) : coeff (s+m) (monomial s r*p) = r*coeff m p :=
+  AddMonoidAlgebra.single_mul_apply_aux p _ _ _ _ fun a => add_right_injₓ _
+
+@[simp]
 theorem coeff_mul_X m (s : σ) (p : MvPolynomial σ R) : coeff (m+single s 1) (p*X s) = coeff m p :=
-  (AddMonoidAlgebra.mul_single_apply_aux p _ _ _ _ fun a => add_left_injₓ _).trans (mul_oneₓ _)
+  (coeff_mul_monomial _ _ _ _).trans (mul_oneₓ _)
+
+@[simp]
+theorem coeff_X_mul m (s : σ) (p : MvPolynomial σ R) : coeff (single s 1+m) (X s*p) = coeff m p :=
+  (coeff_monomial_mul _ _ _ _).trans (one_mulₓ _)
 
 @[simp]
 theorem support_mul_X (s : σ) (p : MvPolynomial σ R) :
@@ -526,38 +538,60 @@ theorem support_mul_X (s : σ) (p : MvPolynomial σ R) :
       simp )
     _
 
+@[simp]
+theorem support_X_mul (s : σ) (p : MvPolynomial σ R) :
+  (X s*p).support = p.support.map (addLeftEmbedding (single s 1)) :=
+  AddMonoidAlgebra.support_single_mul p _
+    (by 
+      simp )
+    _
+
 -- error in Data.MvPolynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coeff_mul_X'
-[decidable_eq σ]
+theorem coeff_mul_monomial'
 (m)
-(s : σ)
-(p : mv_polynomial σ R) : «expr = »(coeff m «expr * »(p, X s), if «expr ∈ »(s, m.support) then coeff «expr - »(m, single s 1) p else 0) :=
+(s : «expr →₀ »(σ, exprℕ()))
+(r : R)
+(p : mv_polynomial σ R) : «expr = »(coeff m «expr * »(p, monomial s r), if «expr ≤ »(s, m) then «expr * »(coeff «expr - »(m, s) p, r) else 0) :=
 begin
-  nontriviality [expr R] [],
+  obtain [ident rfl, "|", ident hr, ":=", expr eq_or_ne r 0],
+  { simp [] [] ["only"] ["[", expr monomial_zero, ",", expr coeff_zero, ",", expr mul_zero, ",", expr if_t_t, "]"] [] [] },
+  haveI [] [":", expr nontrivial R] [":=", expr nontrivial_of_ne _ _ hr],
   split_ifs [] ["with", ident h, ident h],
-  { conv_rhs [] [] { rw ["<-", expr coeff_mul_X _ s] },
+  { conv_rhs [] [] { rw ["<-", expr coeff_mul_monomial _ s] },
     congr' [] ["with", ident t],
-    by_cases [expr hj, ":", expr «expr = »(s, t)],
-    { subst [expr t],
-      simp [] [] ["only"] ["[", expr tsub_apply, ",", expr add_apply, ",", expr single_eq_same, "]"] [] [],
-      refine [expr (tsub_add_cancel_of_le (nat.pos_of_ne_zero _).nat_succ_le).symm],
-      rwa [expr finsupp.mem_support_iff] ["at", ident h] },
-    { simp [] [] [] ["[", expr single_eq_of_ne hj, "]"] [] [] } },
+    rw [expr tsub_add_cancel_of_le h] [] },
   { rw ["<-", expr not_mem_support_iff] [],
     intro [ident hm],
     apply [expr h],
     have [ident H] [] [":=", expr support_mul _ _ hm],
     simp [] [] ["only"] ["[", expr finset.mem_bUnion, "]"] [] ["at", ident H],
     rcases [expr H, "with", "⟨", ident j, ",", ident hj, ",", ident i', ",", ident hi', ",", ident H, "⟩"],
-    rw ["[", expr support_X, ",", expr finset.mem_singleton, "]"] ["at", ident hi'],
+    rw ["[", expr support_monomial, ",", expr if_neg hr, ",", expr finset.mem_singleton, "]"] ["at", ident hi'],
     subst [expr i'],
     rw [expr finset.mem_singleton] ["at", ident H],
     subst [expr m],
-    rw ["[", expr finsupp.mem_support_iff, ",", expr add_apply, ",", expr single_apply, ",", expr if_pos rfl, "]"] [],
-    intro [ident H],
-    rw ["[", expr _root_.add_eq_zero_iff, "]"] ["at", ident H],
-    exact [expr one_ne_zero H.2] }
+    exact [expr le_add_left le_rfl] }
 end
+
+theorem coeff_monomial_mul' m (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) :
+  coeff m (monomial s r*p) = if s ≤ m then r*coeff (m - s) p else 0 :=
+  by 
+    rw [mul_commₓ, mul_commₓ r]
+    exact coeff_mul_monomial' _ _ _ _
+
+theorem coeff_mul_X' [DecidableEq σ] m (s : σ) (p : MvPolynomial σ R) :
+  coeff m (p*X s) = if s ∈ m.support then coeff (m - single s 1) p else 0 :=
+  by 
+    refine' (coeff_mul_monomial' _ _ _ _).trans _ 
+    simpRw [Finsupp.single_le_iff, Finsupp.mem_support_iff, Nat.succ_le_iff, pos_iff_ne_zero, mul_oneₓ]
+    congr
+
+theorem coeff_X_mul' [DecidableEq σ] m (s : σ) (p : MvPolynomial σ R) :
+  coeff m (X s*p) = if s ∈ m.support then coeff (m - single s 1) p else 0 :=
+  by 
+    refine' (coeff_monomial_mul' _ _ _ _).trans _ 
+    simpRw [Finsupp.single_le_iff, Finsupp.mem_support_iff, Nat.succ_le_iff, pos_iff_ne_zero, one_mulₓ]
+    congr
 
 theorem eq_zero_iff {p : MvPolynomial σ R} : p = 0 ↔ ∀ d, coeff d p = 0 :=
   by 
@@ -632,7 +666,7 @@ theorem constant_coeff_monomial [DecidableEq σ] (d : σ →₀ ℕ) (r : R) :
   by 
     rw [constant_coeff_eq, coeff_monomial]
 
-variable(σ R)
+variable (σ R)
 
 @[simp]
 theorem constant_coeff_comp_C : constant_coeff.comp (C : R →+* MvPolynomial σ R) = RingHom.id R :=
@@ -659,7 +693,7 @@ end AsSum
 
 section Eval₂
 
-variable(f : R →+* S₁)(g : σ → S₁)
+variable (f : R →+* S₁) (g : σ → S₁)
 
 /-- Evaluate a polynomial `p` given a valuation `g` of all the variables
   and a ring hom `f` from the scalar ring to the target -/
@@ -856,7 +890,7 @@ end Eval₂
 
 section Eval
 
-variable{f : σ → R}
+variable {f : σ → R}
 
 /-- Evaluate a polynomial `p` given a valuation `f` of all the variables -/
 def eval (f : σ → R) : MvPolynomial σ R →+* R :=
@@ -906,7 +940,7 @@ end Eval
 
 section Map
 
-variable(f : R →+* S₁)
+variable (f : R →+* S₁)
 
 /-- `map f p` maps a polynomial `p` across a ring hom `f` -/
 def map : MvPolynomial σ R →+* MvPolynomial σ S₁ :=
@@ -1139,9 +1173,9 @@ section Aeval
 /-! ### The algebra of multivariate polynomials -/
 
 
-variable[Algebra R S₁][CommSemiringₓ S₂]
+variable [Algebra R S₁] [CommSemiringₓ S₂]
 
-variable(f : σ → S₁)
+variable (f : σ → S₁)
 
 /-- A map `σ → S₁` where `S₁` is an algebra over `R` generates an `R`-algebra homomorphism
 from multivariate polynomials over `σ` to `S₁`. -/
@@ -1222,9 +1256,9 @@ end Aeval
 
 section AevalTower
 
-variable{S A B : Type _}[CommSemiringₓ S][CommSemiringₓ A][CommSemiringₓ B]
+variable {S A B : Type _} [CommSemiringₓ S] [CommSemiringₓ A] [CommSemiringₓ B]
 
-variable[Algebra S R][Algebra S A][Algebra S B]
+variable [Algebra S R] [Algebra S A] [Algebra S B]
 
 /-- Version of `aeval` for defining algebra homs out of `mv_polynomial σ R` over a smaller base ring
   than `R`. -/
@@ -1235,7 +1269,7 @@ def aeval_tower (f : R →ₐ[S] A) (x : σ → A) : MvPolynomial σ R →ₐ[S]
         by 
           simp [IsScalarTower.algebra_map_eq S R (MvPolynomial σ R), algebra_map_eq] }
 
-variable(g : R →ₐ[S] A)(y : σ → A)
+variable (g : R →ₐ[S] A) (y : σ → A)
 
 @[simp]
 theorem aeval_tower_X (i : σ) : aeval_tower g y (X i) = y i :=

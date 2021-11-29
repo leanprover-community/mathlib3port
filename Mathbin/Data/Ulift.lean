@@ -13,18 +13,18 @@ universe u v
 
 namespace Plift
 
-variable{α : Sort u}{β : Sort v}
+variable {α : Sort u} {β : Sort v}
 
-instance  [Subsingleton α] : Subsingleton (Plift α) :=
+instance [Subsingleton α] : Subsingleton (Plift α) :=
   Equiv.plift.Subsingleton
 
-instance  [Unique α] : Unique (Plift α) :=
+instance [Unique α] : Unique (Plift α) :=
   Equiv.plift.unique
 
-instance  [DecidableEq α] : DecidableEq (Plift α) :=
+instance [DecidableEq α] : DecidableEq (Plift α) :=
   Equiv.plift.DecidableEq
 
-instance  [IsEmpty α] : IsEmpty (Plift α) :=
+instance [IsEmpty α] : IsEmpty (Plift α) :=
   Equiv.plift.isEmpty
 
 @[simp]
@@ -39,18 +39,18 @@ end Plift
 
 namespace Ulift
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
-instance  [Subsingleton α] : Subsingleton (Ulift α) :=
+instance [Subsingleton α] : Subsingleton (Ulift α) :=
   Equiv.ulift.Subsingleton
 
-instance  [Unique α] : Unique (Ulift α) :=
+instance [Unique α] : Unique (Ulift α) :=
   Equiv.ulift.unique
 
-instance  [DecidableEq α] : DecidableEq (Ulift α) :=
+instance [DecidableEq α] : DecidableEq (Ulift α) :=
   Equiv.ulift.DecidableEq
 
-instance  [IsEmpty α] : IsEmpty (Ulift α) :=
+instance [IsEmpty α] : IsEmpty (Ulift α) :=
   Equiv.ulift.isEmpty
 
 @[simp]

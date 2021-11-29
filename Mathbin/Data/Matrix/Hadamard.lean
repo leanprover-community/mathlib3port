@@ -25,9 +25,9 @@ hadamard product, hadamard
 -/
 
 
-variable{α β γ m n : Type _}
+variable {α β γ m n : Type _}
 
-variable{R : Type _}
+variable {R : Type _}
 
 namespace Matrix
 
@@ -43,7 +43,7 @@ localized [Matrix] infixl:100 " ⊙ " => Matrix.hadamard
 
 section BasicProperties
 
-variable(A : Matrix m n α)(B : Matrix m n α)(C : Matrix m n α)
+variable (A : Matrix m n α) (B : Matrix m n α) (C : Matrix m n α)
 
 theorem hadamard_comm [CommSemigroupₓ α] : A ⊙ B = B ⊙ A :=
   ext$ fun _ _ => mul_commₓ _ _
@@ -71,7 +71,7 @@ end Scalar
 
 section Zero
 
-variable[MulZeroClass α]
+variable [MulZeroClass α]
 
 @[simp]
 theorem hadamard_zero : A ⊙ (0 : Matrix m n α) = 0 :=
@@ -85,9 +85,9 @@ end Zero
 
 section One
 
-variable[DecidableEq n][MulZeroOneClass α]
+variable [DecidableEq n] [MulZeroOneClass α]
 
-variable(M : Matrix n n α)
+variable (M : Matrix n n α)
 
 theorem hadamard_one : M ⊙ (1 : Matrix n n α) = diagonal fun i => M i i :=
   by 
@@ -103,7 +103,7 @@ end One
 
 section Diagonal
 
-variable[DecidableEq n][MulZeroClass α]
+variable [DecidableEq n] [MulZeroClass α]
 
 theorem diagonal_hadamard_diagonal (v : n → α) (w : n → α) : diagonal v ⊙ diagonal w = diagonal (v*w) :=
   ext$ fun _ _ => (apply_ite2 _ _ _ _ _ _).trans (congr_argₓ _$ zero_mul 0)
@@ -112,9 +112,9 @@ end Diagonal
 
 section trace
 
-variable[Fintype m][Fintype n]
+variable [Fintype m] [Fintype n]
 
-variable(R)[Semiringₓ α][Semiringₓ R][Module R α]
+variable (R) [Semiringₓ α] [Semiringₓ R] [Module R α]
 
 theorem sum_hadamard_eq : (∑(i : m)(j : n), (A ⊙ B) i j) = trace m R α (A ⬝ (B)ᵀ) :=
   rfl

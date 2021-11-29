@@ -24,9 +24,9 @@ section Ultrafilter
 def UltrafilterBasis (α : Type u) : Set (Set (Ultrafilter α)) :=
   range$ fun s : Set α => { u | s ∈ u }
 
-variable{α : Type u}
+variable {α : Type u}
 
-instance  : TopologicalSpace (Ultrafilter α) :=
+instance : TopologicalSpace (Ultrafilter α) :=
   TopologicalSpace.generateFrom (UltrafilterBasis α)
 
 theorem ultrafilter_basis_is_basis : TopologicalSpace.IsTopologicalBasis (UltrafilterBasis α) :=
@@ -140,7 +140,7 @@ end Embedding
 
 section Extension
 
-variable{γ : Type _}[TopologicalSpace γ]
+variable {γ : Type _} [TopologicalSpace γ]
 
 -- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The extension of a function `α → γ` to a function `ultrafilter α → γ`.
@@ -148,7 +148,7 @@ variable{γ : Type _}[TopologicalSpace γ]
 def ultrafilter.extend (f : α → γ) : ultrafilter α → γ :=
 by letI [] [":", expr topological_space α] [":=", expr «expr⊥»()]; exact [expr dense_inducing_pure.extend f]
 
-variable[T2Space γ]
+variable [T2Space γ]
 
 -- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem ultrafilter_extend_extends (f : α → γ) : «expr = »(«expr ∘ »(ultrafilter.extend f, pure), f) :=
@@ -158,7 +158,7 @@ begin
   exact [expr funext (dense_inducing_pure.extend_eq continuous_of_discrete_topology)]
 end
 
-variable[CompactSpace γ]
+variable [CompactSpace γ]
 
 -- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_ultrafilter_extend (f : α → γ) : continuous (ultrafilter.extend f) :=
@@ -198,7 +198,7 @@ end Ultrafilter
 
 section StoneCech
 
-variable(α : Type u)[TopologicalSpace α]
+variable (α : Type u) [TopologicalSpace α]
 
 instance stoneCechSetoid : Setoidₓ (Ultrafilter α) :=
   { R :=
@@ -221,13 +221,13 @@ instance stoneCechSetoid : Setoidₓ (Ultrafilter α) :=
 def StoneCech : Type u :=
   Quotientₓ (stoneCechSetoid α)
 
-variable{α}
+variable {α}
 
-instance  : TopologicalSpace (StoneCech α) :=
+instance : TopologicalSpace (StoneCech α) :=
   by 
     unfold StoneCech <;> infer_instance
 
-instance  [Inhabited α] : Inhabited (StoneCech α) :=
+instance [Inhabited α] : Inhabited (StoneCech α) :=
   by 
     unfold StoneCech <;> infer_instance
 
@@ -242,9 +242,9 @@ theorem dense_range_stone_cech_unit : DenseRange (stoneCechUnit : α → StoneCe
 
 section Extension
 
-variable{γ : Type u}[TopologicalSpace γ][T2Space γ][CompactSpace γ]
+variable {γ : Type u} [TopologicalSpace γ] [T2Space γ] [CompactSpace γ]
 
-variable{f : α → γ}(hf : Continuous f)
+variable {f : α → γ} (hf : Continuous f)
 
 attribute [local elab_with_expected_type] Quotientₓ.lift
 

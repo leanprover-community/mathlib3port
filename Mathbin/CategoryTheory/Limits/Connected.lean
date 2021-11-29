@@ -62,11 +62,11 @@ end Examples
 
 attribute [local tidy] tactic.case_bash
 
-variable{C : Type u₂}[category.{v₂} C]
+variable {C : Type u₂} [category.{v₂} C]
 
-variable[has_binary_products C]
+variable [has_binary_products C]
 
-variable{J : Type v₂}[small_category J]
+variable {J : Type v₂} [small_category J]
 
 namespace ProdPreservesConnectedLimits
 

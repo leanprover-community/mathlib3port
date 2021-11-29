@@ -10,7 +10,7 @@ open_locale TopologicalSpace
 /-- A `ctop α σ` is a realization of a topology (basis) on `α`,
   represented by a type `σ` together with operations for the top element and
   the intersection operation. -/
-structure Ctop(α σ : Type _) where 
+structure Ctop (α σ : Type _) where 
   f : σ → Set α 
   top : α → σ 
   top_mem : ∀ x : α, x ∈ f (top x)
@@ -18,15 +18,15 @@ structure Ctop(α σ : Type _) where
   inter_mem : ∀ a b x h, x ∈ f (inter a b x h)
   inter_sub : ∀ a b x h, f (inter a b x h) ⊆ f a ∩ f b
 
-variable{α : Type _}{β : Type _}{σ : Type _}{τ : Type _}
+variable {α : Type _} {β : Type _} {σ : Type _} {τ : Type _}
 
 namespace Ctop
 
 section 
 
-variable(F : Ctop α σ)
+variable (F : Ctop α σ)
 
-instance  : CoeFun (Ctop α σ) fun _ => σ → Set α :=
+instance : CoeFun (Ctop α σ) fun _ => σ → Set α :=
   ⟨Ctop.F⟩
 
 @[simp]
@@ -83,7 +83,7 @@ end Ctop
 
 /-- A `ctop` realizer for the topological space `T` is a `ctop`
   which generates `T`. -/
-structure Ctop.Realizer(α)[T : TopologicalSpace α] where 
+structure Ctop.Realizer (α) [T : TopologicalSpace α] where 
   σ : Type _ 
   f : Ctop α σ 
   Eq : F.to_topsp = T
@@ -146,7 +146,7 @@ theorem ext [T : TopologicalSpace α] {σ : Type _} {F : Ctop α σ} (H₁ : ∀
   (H₂ : ∀ a s, s ∈ 𝓝 a → ∃ b, a ∈ F b ∧ F b ⊆ s) : F.to_topsp = T :=
   ext'$ fun a s => ⟨H₂ a s, fun ⟨b, h₁, h₂⟩ => mem_nhds_iff.2 ⟨_, h₂, H₁ _, h₁⟩⟩
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 protected def id : realizer α :=
   ⟨{ x : Set α // IsOpen x },
@@ -208,7 +208,7 @@ theorem tendsto_nhds_iff {m : β → α} {f : Filter β} (F : f.realizer) (R : r
 
 end Ctop.Realizer
 
-structure LocallyFinite.Realizer[TopologicalSpace α](F : realizer α)(f : β → Set α) where 
+structure LocallyFinite.Realizer [TopologicalSpace α] (F : realizer α) (f : β → Set α) where 
   bas : ∀ a, { s // a ∈ F.F s }
   Sets : ∀ x : α, Fintype { i | (f i ∩ F.F (bas x)).Nonempty }
 

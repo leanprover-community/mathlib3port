@@ -20,13 +20,13 @@ Use `finsupp.total_id_surjective` to prove that any module is the quotient of a 
 
 universe u v w z
 
-variable(R : Type u)(M : Type v)(N : Type z)
+variable (R : Type u) (M : Type v) (N : Type z)
 
 open_locale TensorProduct DirectSum BigOperators
 
 section Basic
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 /-- `module.free R M` is the statement that the `R`-module `M` is free.-/
 class Module.Free : Prop where 
@@ -41,7 +41,7 @@ theorem Module.free_iff_set : Module.Free R M ↔ ∃ S : Set M, Nonempty (Basis
   ⟨fun h => ⟨Set.Range h.exists_basis.some.2, ⟨Basis.reindexRange h.exists_basis.some.2⟩⟩,
     fun ⟨S, hS⟩ => ⟨nonempty_sigma.2 ⟨S, hS⟩⟩⟩
 
-variable{R M}
+variable {R M}
 
 theorem Module.Free.of_basis {ι : Type w} (b : Basis ι R M) : Module.Free R M :=
   (Module.free_def R M).2 ⟨Set.Range b, ⟨b.reindex_range⟩⟩
@@ -52,9 +52,9 @@ namespace Module.Free
 
 section Semiringₓ
 
-variable(R M)[Semiringₓ R][AddCommMonoidₓ M][Module R M][Module.Free R M]
+variable (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [Module.Free R M]
 
-variable[AddCommMonoidₓ N][Module R N]
+variable [AddCommMonoidₓ N] [Module R N]
 
 /-- If `[finite_free R M]` then `choose_basis_index R M` is the `ι` which indexes the basis
   `ι → M`. -/
@@ -83,7 +83,7 @@ noncomputable def constr {S : Type z} [Semiringₓ S] [Module S N] [SmulCommClas
   (choose_basis_index R M → N) ≃ₗ[S] M →ₗ[R] N :=
   Basis.constr (choose_basis R M) S
 
-instance (priority := 100)NoZeroSmulDivisors [NoZeroDivisors R] : NoZeroSmulDivisors R M :=
+instance (priority := 100) NoZeroSmulDivisors [NoZeroDivisors R] : NoZeroSmulDivisors R M :=
   let ⟨⟨_, b⟩⟩ := exists_basis R M 
   b.no_zero_smul_divisors
 
@@ -96,7 +96,7 @@ instance pi {ι : Type _} [Fintype ι] {M : ι → Type _} [∀ i : ι, AddCommG
 instance Matrix {n : Type _} [Fintype n] {m : Type _} [Fintype m] : Module.Free R (Matrix n m R) :=
   of_basis$ Matrix.stdBasis R n m
 
-variable{R M N}
+variable {R M N}
 
 theorem of_equiv (e : M ≃ₗ[R] N) : Module.Free R N :=
   of_basis$ (choose_basis R M).map e
@@ -107,12 +107,12 @@ theorem of_equiv' {P : Type v} [AddCommMonoidₓ P] [Module R P] (h : Module.Fre
   Module.Free R N :=
   of_equiv e
 
-variable(R M N)
+variable (R M N)
 
-instance  {ι : Type v} : Module.Free R (ι →₀ R) :=
+instance {ι : Type v} : Module.Free R (ι →₀ R) :=
   of_basis (Basis.of_repr (LinearEquiv.refl _ _))
 
-instance  {ι : Type v} [Fintype ι] : Module.Free R (ι → R) :=
+instance {ι : Type v} [Fintype ι] : Module.Free R (ι → R) :=
   of_equiv (Basis.of_repr$ LinearEquiv.refl _ _).equivFun
 
 instance Prod [Module.Free R N] : Module.Free R (M × N) :=
@@ -121,7 +121,7 @@ instance Prod [Module.Free R N] : Module.Free R (M × N) :=
 instance self : Module.Free R R :=
   of_basis$ Basis.singleton Unit R
 
-instance (priority := 100)of_subsingleton [Subsingleton N] : Module.Free R N :=
+instance (priority := 100) of_subsingleton [Subsingleton N] : Module.Free R N :=
   of_basis (Basis.empty N : Basis Pempty R N)
 
 instance Dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
@@ -136,9 +136,9 @@ end Semiringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][AddCommGroupₓ M][Module R M][Module.Free R M]
+variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 
-variable[AddCommGroupₓ N][Module R N][Module.Free R N]
+variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
 
 instance tensor : Module.Free R (M ⊗[R] N) :=
   of_equiv' (of_equiv' (finsupp.free R) (finsuppTensorFinsupp' R _ _).symm)
@@ -148,9 +148,9 @@ end CommRingₓ
 
 section DivisionRing
 
-variable[DivisionRing R][AddCommGroupₓ M][Module R M]
+variable [DivisionRing R] [AddCommGroupₓ M] [Module R M]
 
-instance (priority := 100)of_division_ring : Module.Free R M :=
+instance (priority := 100) of_division_ring : Module.Free R M :=
   of_basis (Basis.ofVectorSpace R M)
 
 end DivisionRing

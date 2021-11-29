@@ -6,7 +6,7 @@ universe u
 
 namespace Rbnode
 
-variable{α : Type u}{lt : α → α → Prop}
+variable {α : Type u} {lt : α → α → Prop}
 
 theorem is_searchable_of_well_formed {t : Rbnode α} [IsStrictWeakOrder α lt] :
   t.well_formed lt → is_searchable lt t none none :=
@@ -42,7 +42,7 @@ end Rbnode
 
 namespace Rbtree
 
-variable{α : Type u}{lt : α → α → Prop}
+variable {α : Type u} {lt : α → α → Prop}
 
 -- error in Data.Rbtree.Main: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem balanced (t : rbtree α lt) : «expr ≤ »(t.depth max, «expr + »(«expr * »(2, t.depth min), 1)) :=
@@ -80,7 +80,7 @@ end
 
 section Dec
 
-variable[DecidableRel lt]
+variable [DecidableRel lt]
 
 theorem insert_ne_mk_rbtree (t : Rbtree α lt) (a : α) : t.insert a ≠ mkRbtree α lt :=
   by 

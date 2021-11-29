@@ -1,7 +1,7 @@
 import Mathbin.Order.CompleteLattice 
 import Mathbin.Order.Iterate 
 import Mathbin.Tactic.Monotonicity.Default 
-import Mathbin.Order.BoundedLattice
+import Mathbin.Order.BoundedOrder
 
 /-!
 # Successor and predecessor
@@ -54,11 +54,11 @@ open Function
 /-! ### Successor order -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- Order equipped with a sensible successor function. -/
 @[ext]
-class SuccOrder(α : Type _)[Preorderₓ α] where 
+class SuccOrder (α : Type _) [Preorderₓ α] where 
   succ : α → α 
   le_succ : ∀ a, a ≤ succ a 
   maximal_of_succ_le : ∀ ⦃a⦄, succ a ≤ a → ∀ ⦃b⦄, ¬a < b 
@@ -69,7 +69,7 @@ namespace SuccOrder
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 /-- A constructor for `succ_order α` usable when `α` has no maximal element. -/
 def of_succ_le_iff_of_le_lt_succ (succ : α → α) (hsucc_le_iff : ∀ {a b}, succ a ≤ b ↔ a < b)
@@ -78,7 +78,7 @@ def of_succ_le_iff_of_le_lt_succ (succ : α → α) (hsucc_le_iff : ∀ {a b}, s
     maximal_of_succ_le := fun a ha => (lt_irreflₓ a (hsucc_le_iff.1 ha)).elim,
     succ_le_of_lt := fun a b => hsucc_le_iff.2, le_of_lt_succ := fun a b => hle_of_lt_succ }
 
-variable[SuccOrder α]
+variable [SuccOrder α]
 
 -- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp, mono #[]] theorem succ_le_succ {a b : α} (h : «expr ≤ »(a, b)) : «expr ≤ »(succ a, succ b) :=
@@ -103,7 +103,7 @@ theorem lt_succ_of_not_maximal {a b : α} (h : a < b) : a < succ a :=
 
 section NoTopOrder
 
-variable[NoTopOrder α]{a b : α}
+variable [NoTopOrder α] {a b : α}
 
 theorem lt_succ (a : α) : a < succ a :=
   (le_succ a).lt_of_not_le fun h => not_exists.2 (maximal_of_succ_le h) (no_top a)
@@ -135,10 +135,10 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable[PartialOrderₓ α]
+variable [PartialOrderₓ α]
 
 /-- There is at most one way to define the successors in a `partial_order`. -/
-instance  : Subsingleton (SuccOrder α) :=
+instance : Subsingleton (SuccOrder α) :=
   by 
     refine' Subsingleton.intro fun h₀ h₁ => _ 
     ext a 
@@ -154,7 +154,7 @@ instance  : Subsingleton (SuccOrder α) :=
                 fun h => @maximal_of_succ_le _ _ h₁ _ h _$ (@le_succ _ _ h₀ a).lt_of_not_le ha).antisymm
           (@succ_le_of_lt _ _ h₁ _ _$ (@le_succ _ _ h₀ a).lt_of_not_le ha)
 
-variable[SuccOrder α]
+variable [SuccOrder α]
 
 theorem le_le_succ_iff {a b : α} : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = succ a :=
   by 
@@ -171,7 +171,7 @@ theorem le_le_succ_iff {a b : α} : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = s
 
 section NoTopOrder
 
-variable[NoTopOrder α]{a b : α}
+variable [NoTopOrder α] {a b : α}
 
 theorem succ_injective : injective (succ : α → α) :=
   by 
@@ -200,7 +200,7 @@ end PartialOrderₓ
 
 section OrderTop
 
-variable[PartialOrderₓ α][OrderTop α][SuccOrder α]
+variable [PartialOrderₓ α] [OrderTop α] [SuccOrder α]
 
 @[simp]
 theorem succ_top : succ (⊤ : α) = ⊤ :=
@@ -223,7 +223,7 @@ end OrderTop
 
 section OrderBot
 
-variable[PartialOrderₓ α][OrderBot α][SuccOrder α][Nontrivial α]
+variable [PartialOrderₓ α] [OrderBot α] [SuccOrder α] [Nontrivial α]
 
 -- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bot_lt_succ (a : α) : «expr < »(«expr⊥»(), succ a) :=
@@ -242,7 +242,7 @@ end OrderBot
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ α]
+variable [LinearOrderₓ α]
 
 /-- A constructor for `succ_order α` usable when `α` is a linear order with no maximal element. -/
 def of_succ_le_iff (succ : α → α) (hsucc_le_iff : ∀ {a b}, succ a ≤ b ↔ a < b) : SuccOrder α :=
@@ -255,7 +255,7 @@ end LinearOrderₓ
 
 section CompleteLattice
 
-variable[CompleteLattice α][SuccOrder α]
+variable [CompleteLattice α] [SuccOrder α]
 
 theorem succ_eq_infi (a : α) : succ a = ⨅(b : α)(h : a < b), b :=
   by 
@@ -275,7 +275,7 @@ end SuccOrder
 
 /-- Order equipped with a sensible predecessor function. -/
 @[ext]
-class PredOrder(α : Type _)[Preorderₓ α] where 
+class PredOrder (α : Type _) [Preorderₓ α] where 
   pred : α → α 
   pred_le : ∀ a, pred a ≤ a 
   minimal_of_le_pred : ∀ ⦃a⦄, a ≤ pred a → ∀ ⦃b⦄, ¬b < a 
@@ -286,7 +286,7 @@ namespace PredOrder
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 /-- A constructor for `pred_order α` usable when `α` has no minimal element. -/
 def of_le_pred_iff_of_pred_le_pred (pred : α → α) (hle_pred_iff : ∀ {a b}, a ≤ pred b ↔ a < b)
@@ -295,7 +295,7 @@ def of_le_pred_iff_of_pred_le_pred (pred : α → α) (hle_pred_iff : ∀ {a b},
     minimal_of_le_pred := fun a ha => (lt_irreflₓ a (hle_pred_iff.1 ha)).elim,
     le_pred_of_lt := fun a b => hle_pred_iff.2, le_of_pred_lt := fun a b => hle_of_pred_lt }
 
-variable[PredOrder α]
+variable [PredOrder α]
 
 -- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp, mono #[]] theorem pred_le_pred {a b : α} (h : «expr ≤ »(a, b)) : «expr ≤ »(pred a, pred b) :=
@@ -320,7 +320,7 @@ theorem pred_lt_of_not_minimal {a b : α} (h : b < a) : pred a < a :=
 
 section NoBotOrder
 
-variable[NoBotOrder α]{a b : α}
+variable [NoBotOrder α] {a b : α}
 
 theorem pred_lt (a : α) : pred a < a :=
   (pred_le a).lt_of_not_le fun h => not_exists.2 (minimal_of_le_pred h) (no_bot a)
@@ -353,10 +353,10 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable[PartialOrderₓ α]
+variable [PartialOrderₓ α]
 
 /-- There is at most one way to define the predecessors in a `partial_order`. -/
-instance  : Subsingleton (PredOrder α) :=
+instance : Subsingleton (PredOrder α) :=
   by 
     refine' Subsingleton.intro fun h₀ h₁ => _ 
     ext a 
@@ -373,7 +373,7 @@ instance  : Subsingleton (PredOrder α) :=
             (@pred_le _ _ h₁ a).lt_of_not_le$
               fun h => @minimal_of_le_pred _ _ h₁ _ h _$ (@pred_le _ _ h₀ a).lt_of_not_le ha)
 
-variable[PredOrder α]
+variable [PredOrder α]
 
 theorem pred_le_le_iff {a b : α} : pred a ≤ b ∧ b ≤ a ↔ b = a ∨ b = pred a :=
   by 
@@ -390,7 +390,7 @@ theorem pred_le_le_iff {a b : α} : pred a ≤ b ∧ b ≤ a ↔ b = a ∨ b = p
 
 section NoBotOrder
 
-variable[NoBotOrder α]{a b : α}
+variable [NoBotOrder α] {a b : α}
 
 theorem pred_injective : injective (pred : α → α) :=
   by 
@@ -417,7 +417,7 @@ end PartialOrderₓ
 
 section OrderBot
 
-variable[PartialOrderₓ α][OrderBot α][PredOrder α]
+variable [PartialOrderₓ α] [OrderBot α] [PredOrder α]
 
 @[simp]
 theorem pred_bot : pred (⊥ : α) = ⊥ :=
@@ -440,7 +440,7 @@ end OrderBot
 
 section OrderTop
 
-variable[PartialOrderₓ α][OrderTop α][PredOrder α]
+variable [PartialOrderₓ α] [OrderTop α] [PredOrder α]
 
 -- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem pred_lt_top [nontrivial α] (a : α) : «expr < »(pred a, «expr⊤»()) :=
@@ -459,7 +459,7 @@ end OrderTop
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ α]
+variable [LinearOrderₓ α]
 
 /-- A constructor for `pred_order α` usable when `α` is a linear order with no maximal element. -/
 def of_le_pred_iff (pred : α → α) (hle_pred_iff : ∀ {a b}, a ≤ pred b ↔ a < b) : PredOrder α :=
@@ -472,7 +472,7 @@ end LinearOrderₓ
 
 section CompleteLattice
 
-variable[CompleteLattice α][PredOrder α]
+variable [CompleteLattice α] [PredOrder α]
 
 theorem pred_eq_supr (a : α) : pred a = ⨆(b : α)(h : b < a), b :=
   by 
@@ -494,13 +494,13 @@ open SuccOrder PredOrder
 
 section OrderDual
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
-instance  [PredOrder α] : SuccOrder (OrderDual α) :=
+instance [PredOrder α] : SuccOrder (OrderDual α) :=
   { succ := (pred : α → α), le_succ := pred_le, maximal_of_succ_le := minimal_of_le_pred,
     succ_le_of_lt := fun a b h => le_pred_of_lt h, le_of_lt_succ := fun a b => le_of_pred_lt }
 
-instance  [SuccOrder α] : PredOrder (OrderDual α) :=
+instance [SuccOrder α] : PredOrder (OrderDual α) :=
   { pred := (succ : α → α), pred_le := le_succ, minimal_of_le_pred := maximal_of_succ_le,
     le_pred_of_lt := fun a b h => succ_le_of_lt h, le_of_pred_lt := fun a b => le_of_lt_succ }
 
@@ -527,7 +527,7 @@ open WithTop
 /-! #### Adding a `⊤` to an `order_top` -/
 
 
-instance  [DecidableEq α] [PartialOrderₓ α] [OrderTop α] [SuccOrder α] : SuccOrder (WithTop α) :=
+instance [DecidableEq α] [PartialOrderₓ α] [OrderTop α] [SuccOrder α] : SuccOrder (WithTop α) :=
   { succ :=
       fun a =>
         match a with 
@@ -593,7 +593,7 @@ instance  [DecidableEq α] [PartialOrderₓ α] [OrderTop α] [SuccOrder α] : S
           ·
             exact le_of_lt_succ (some_lt_some.1 h) }
 
-instance  [PartialOrderₓ α] [OrderTop α] [PredOrder α] : PredOrder (WithTop α) :=
+instance [PartialOrderₓ α] [OrderTop α] [PredOrder α] : PredOrder (WithTop α) :=
   { pred :=
       fun a =>
         match a with 
@@ -685,7 +685,7 @@ instance ofNoTop [PartialOrderₓ α] [NoTopOrder α] [SuccOrder α] : SuccOrder
           ·
             exact some_le_some.2 (le_of_lt_succ$ some_lt_some.1 h) }
 
-instance  [PartialOrderₓ α] [NoTopOrder α] [hα : Nonempty α] : IsEmpty (PredOrder (WithTop α)) :=
+instance [PartialOrderₓ α] [NoTopOrder α] [hα : Nonempty α] : IsEmpty (PredOrder (WithTop α)) :=
   ⟨by 
       intro 
       set b := pred (⊤ : WithTop α) with h 
@@ -706,7 +706,7 @@ open WithBot
 /-! #### Adding a `⊥` to a `bot_order` -/
 
 
-instance  [Preorderₓ α] [OrderBot α] [SuccOrder α] : SuccOrder (WithBot α) :=
+instance [Preorderₓ α] [OrderBot α] [SuccOrder α] : SuccOrder (WithBot α) :=
   { succ :=
       fun a =>
         match a with 
@@ -751,7 +751,7 @@ instance  [Preorderₓ α] [OrderBot α] [SuccOrder α] : SuccOrder (WithBot α)
           ·
             exact some_le_some.2 (le_of_lt_succ$ some_lt_some.1 h) }
 
-instance  [DecidableEq α] [PartialOrderₓ α] [OrderBot α] [PredOrder α] : PredOrder (WithBot α) :=
+instance [DecidableEq α] [PartialOrderₓ α] [OrderBot α] [PredOrder α] : PredOrder (WithBot α) :=
   { pred :=
       fun a =>
         match a with 
@@ -820,7 +820,7 @@ instance  [DecidableEq α] [PartialOrderₓ α] [OrderBot α] [PredOrder α] : P
 /-! #### Adding a `⊥` to a `no_bot_order` -/
 
 
-instance  [PartialOrderₓ α] [NoBotOrder α] [hα : Nonempty α] : IsEmpty (SuccOrder (WithBot α)) :=
+instance [PartialOrderₓ α] [NoBotOrder α] [hα : Nonempty α] : IsEmpty (SuccOrder (WithBot α)) :=
   ⟨by 
       intro 
       set b : WithBot α := succ ⊥ with h 
@@ -884,12 +884,12 @@ end WithBot
 
 /-- A `succ_order` is succ-archimedean if one can go from any two comparable elements by iterating
 `succ` -/
-class IsSuccArchimedean(α : Type _)[Preorderₓ α][SuccOrder α] : Prop where 
+class IsSuccArchimedean (α : Type _) [Preorderₓ α] [SuccOrder α] : Prop where 
   exists_succ_iterate_of_le {a b : α} (h : a ≤ b) : ∃ n, (succ^[n]) a = b
 
 /-- A `pred_order` is pred-archimedean if one can go from any two comparable elements by iterating
 `pred` -/
-class IsPredArchimedean(α : Type _)[Preorderₓ α][PredOrder α] : Prop where 
+class IsPredArchimedean (α : Type _) [Preorderₓ α] [PredOrder α] : Prop where 
   exists_pred_iterate_of_le {a b : α} (h : a ≤ b) : ∃ n, (pred^[n]) b = a
 
 export IsSuccArchimedean(exists_succ_iterate_of_le)
@@ -898,13 +898,13 @@ export IsPredArchimedean(exists_pred_iterate_of_le)
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 section SuccOrder
 
-variable[SuccOrder α][IsSuccArchimedean α]{a b : α}
+variable [SuccOrder α] [IsSuccArchimedean α] {a b : α}
 
-instance  : IsPredArchimedean (OrderDual α) :=
+instance : IsPredArchimedean (OrderDual α) :=
   { exists_pred_iterate_of_le :=
       fun a b h =>
         by 
@@ -933,9 +933,9 @@ end SuccOrder
 
 section PredOrder
 
-variable[PredOrder α][IsPredArchimedean α]{a b : α}
+variable [PredOrder α] [IsPredArchimedean α] {a b : α}
 
-instance  : IsSuccArchimedean (OrderDual α) :=
+instance : IsSuccArchimedean (OrderDual α) :=
   { exists_succ_iterate_of_le :=
       fun a b h =>
         by 
@@ -959,11 +959,11 @@ end Preorderₓ
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ α]
+variable [LinearOrderₓ α]
 
 section SuccOrder
 
-variable[SuccOrder α][IsSuccArchimedean α]{a b : α}
+variable [SuccOrder α] [IsSuccArchimedean α] {a b : α}
 
 theorem exists_succ_iterate_or : (∃ n, (succ^[n]) a = b) ∨ ∃ n, (succ^[n]) b = a :=
   (le_totalₓ a b).imp exists_succ_iterate_of_le exists_succ_iterate_of_le
@@ -975,7 +975,7 @@ end SuccOrder
 
 section PredOrder
 
-variable[PredOrder α][IsPredArchimedean α]{a b : α}
+variable [PredOrder α] [IsPredArchimedean α] {a b : α}
 
 theorem exists_pred_iterate_or : (∃ n, (pred^[n]) b = a) ∨ ∃ n, (pred^[n]) a = b :=
   (le_totalₓ a b).imp exists_pred_iterate_of_le exists_pred_iterate_of_le
@@ -989,7 +989,7 @@ end LinearOrderₓ
 
 section OrderBot
 
-variable[Preorderₓ α][OrderBot α][SuccOrder α][IsSuccArchimedean α]
+variable [Preorderₓ α] [OrderBot α] [SuccOrder α] [IsSuccArchimedean α]
 
 theorem Succ.rec_bot (p : α → Prop) (hbot : p ⊥) (hsucc : ∀ a, p a → p (succ a)) (a : α) : p a :=
   Succ.rec hsucc bot_le hbot
@@ -998,7 +998,7 @@ end OrderBot
 
 section OrderTop
 
-variable[Preorderₓ α][OrderTop α][PredOrder α][IsPredArchimedean α]
+variable [Preorderₓ α] [OrderTop α] [PredOrder α] [IsPredArchimedean α]
 
 theorem Pred.rec_top (p : α → Prop) (htop : p ⊤) (hpred : ∀ a, p a → p (pred a)) (a : α) : p a :=
   Pred.rec hpred le_top htop

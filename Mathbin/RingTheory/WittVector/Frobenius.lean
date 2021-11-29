@@ -41,7 +41,7 @@ and bundle it into `witt_vector.frobenius`.
 
 namespace WittVector
 
-variable{p : ℕ}{R S : Type _}[hp : Fact p.prime][CommRingₓ R][CommRingₓ S]
+variable {p : ℕ} {R S : Type _} [hp : Fact p.prime] [CommRingₓ R] [CommRingₓ S]
 
 local notation "𝕎" => WittVector p
 
@@ -51,7 +51,7 @@ open MvPolynomial Finset
 
 open_locale BigOperators
 
-variable(p)
+variable (p)
 
 include hp
 
@@ -216,7 +216,7 @@ theorem bind₁_frobenius_poly_witt_polynomial (n : ℕ) :
     apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective 
     simp only [map_bind₁, map_frobenius_poly, bind₁_frobenius_poly_rat_witt_polynomial, map_witt_polynomial]
 
-variable{p}
+variable {p}
 
 /-- `frobenius_fun` is the function underlying the ring endomorphism
 `frobenius : 𝕎 R →+* frobenius 𝕎 R`. -/
@@ -228,7 +228,7 @@ theorem coeff_frobenius_fun (x : 𝕎 R) (n : ℕ) :
   by 
     rw [frobenius_fun, coeff_mk]
 
-variable(p)
+variable (p)
 
 /-- `frobenius_fun` is tautologically a polynomial function.
 
@@ -241,7 +241,7 @@ theorem frobenius_fun_is_poly : is_poly p fun R _Rcr => @frobenius_fun p R _ _Rc
         funext n 
         apply coeff_frobenius_fun⟩⟩
 
-variable{p}
+variable {p}
 
 @[ghost_simps]
 theorem ghost_component_frobenius_fun (n : ℕ) (x : 𝕎 R) :
@@ -285,7 +285,7 @@ theorem coeff_frobenius (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = MvPolyn
 theorem ghost_component_frobenius (n : ℕ) (x : 𝕎 R) : ghost_component n (frobenius x) = ghost_component (n+1) x :=
   ghost_component_frobenius_fun _ _
 
-variable(p)
+variable (p)
 
 /-- `frobenius` is tautologically a polynomial function. -/
 @[isPoly]
@@ -294,7 +294,7 @@ theorem frobenius_is_poly : is_poly p fun R _Rcr => @frobenius p R _ _Rcr :=
 
 section CharP
 
-variable[CharP R p]
+variable [CharP R p]
 
 @[simp]
 theorem coeff_frobenius_char_p (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = (x.coeff n^p) :=

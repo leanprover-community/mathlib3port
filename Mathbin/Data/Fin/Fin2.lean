@@ -89,7 +89,7 @@ def remap_left {m n} (f : Fin2 m → Fin2 n) : ∀ k, Fin2 (m+k) → Fin2 (n+k)
 
 /-- This is a simple type class inference prover for proof obligations
   of the form `m < n` where `m n : ℕ`. -/
-class is_lt(m n : ℕ) where 
+class is_lt (m n : ℕ) where 
   h : m < n
 
 instance is_lt.zero n : is_lt 0 (succ n) :=
@@ -108,7 +108,7 @@ def of_nat' : ∀ {n} m [is_lt m n], Fin2 n
 -- error in Data.Fin.Fin2: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 local prefix `&`:max := of_nat'
 
-instance  : Inhabited (Fin2 1) :=
+instance : Inhabited (Fin2 1) :=
   ⟨fz⟩
 
 end Fin2

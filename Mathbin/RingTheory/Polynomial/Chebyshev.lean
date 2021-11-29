@@ -51,7 +51,7 @@ namespace Polynomial.Chebyshev
 
 open Polynomial
 
-variable(R S : Type _)[CommRingₓ R][CommRingₓ S]
+variable (R S : Type _) [CommRingₓ R] [CommRingₓ S]
 
 /-- `T n` is the `n`-th Chebyshev polynomial of the first kind -/
 noncomputable def T : ℕ → Polynomial R
@@ -82,7 +82,7 @@ theorem T_of_two_le (n : ℕ) (h : 2 ≤ n) : T R n = ((2*X)*T R (n - 1)) - T R 
     rw [add_commₓ]
     exact T_add_two R n
 
-variable{R S}
+variable {R S}
 
 theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (T R n) = T S n
 | 0 =>
@@ -96,7 +96,7 @@ theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (T R n) = T S n
     simp only [T_add_two, map_mul, map_sub, map_X, bit0, map_add, map_one]
     rw [map_T (n+1), map_T n]
 
-variable(R S)
+variable (R S)
 
 /-- `U n` is the `n`-th Chebyshev polynomial of the second kind -/
 noncomputable def U : ℕ → Polynomial R
@@ -179,7 +179,7 @@ theorem one_sub_X_sq_mul_U_eq_pol_in_T (n : ℕ) : ((1 - X ^ 2)*U R n) = (X*T R 
   by 
     rw [T_eq_X_mul_T_sub_pol_U, ←sub_add, sub_self, zero_addₓ]
 
-variable{R S}
+variable {R S}
 
 @[simp]
 theorem map_U (f : R →+* S) : ∀ n : ℕ, map f (U R n) = U S n
@@ -259,7 +259,7 @@ begin
     «expr = »(..., «expr - »(«expr * »(X, U R n), «expr * »(«expr - »(1, «expr ^ »(X, 2)), derivative (U R n)))) : by ring []
 end
 
-variable(R)
+variable (R)
 
 -- error in RingTheory.Polynomial.Chebyshev: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of two Chebyshev polynomials is the sum of two other Chebyshev polynomials. -/

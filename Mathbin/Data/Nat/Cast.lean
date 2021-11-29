@@ -22,11 +22,11 @@ Setting up the coercions priorities is tricky. See Note [coercion into rings].
 
 namespace Nat
 
-variable{α : Type _}
+variable {α : Type _}
 
 section 
 
-variable[HasZero α][HasOne α][Add α]
+variable [HasZero α] [HasOne α] [Add α]
 
 /-- Canonical homomorphism from `ℕ` to a type `α` with `0`, `1` and `+`. -/
 protected def cast : ℕ → α
@@ -66,7 +66,7 @@ attribute [instance] coeBaseₓ
 
 attribute [instance] coeTransₓ
 
-instance (priority := 900)cast_coe : CoeTₓ ℕ α :=
+instance (priority := 900) cast_coe : CoeTₓ ℕ α :=
   ⟨Nat.cast⟩
 
 @[simp, normCast]
@@ -188,7 +188,7 @@ theorem commute_cast [Semiringₓ α] (x : α) (n : ℕ) : Commute x n :=
 
 section 
 
-variable[OrderedSemiring α]
+variable [OrderedSemiring α]
 
 @[simp]
 theorem cast_nonneg : ∀ n : ℕ, 0 ≤ (n : α)
@@ -202,7 +202,7 @@ theorem mono_cast : Monotone (coeₓ : ℕ → α) :=
     by 
       simp [hk]
 
-variable[Nontrivial α]
+variable [Nontrivial α]
 
 theorem strict_mono_cast : StrictMono (coeₓ : ℕ → α) :=
   fun m n h => Nat.le_induction (lt_add_of_pos_right _ zero_lt_one) (fun n _ h => lt_add_of_lt_of_pos h zero_lt_one) _ h
@@ -264,7 +264,7 @@ alias coe_nat_dvd ← HasDvd.Dvd.nat_cast
 
 section LinearOrderedField
 
-variable[LinearOrderedField α]
+variable [LinearOrderedField α]
 
 /-- Natural division is always less than division in the field. -/
 theorem cast_div_le {m n : ℕ} : ((m / n : ℕ) : α) ≤ m / n :=
@@ -303,7 +303,7 @@ end Nat
 
 namespace Prod
 
-variable{α : Type _}{β : Type _}[HasZero α][HasOne α][Add α][HasZero β][HasOne β][Add β]
+variable {α : Type _} {β : Type _} [HasZero α] [HasOne α] [Add α] [HasZero β] [HasOne β] [Add β]
 
 @[simp]
 theorem fst_nat_cast (n : ℕ) : (n : α × β).fst = n :=
@@ -319,7 +319,7 @@ end Prod
 
 namespace AddMonoidHom
 
-variable{A B : Type _}[AddMonoidₓ A]
+variable {A B : Type _} [AddMonoidₓ A]
 
 @[ext]
 theorem ext_nat {f g : ℕ →+ A} (h : f 1 = g 1) : f = g :=
@@ -330,7 +330,7 @@ theorem ext_nat {f g : ℕ →+ A} (h : f 1 = g 1) : f = g :=
           by 
             simp only [Nat.succ_eq_add_one, map_add]
 
-variable[HasOne A][AddMonoidₓ B][HasOne B]
+variable [HasOne A] [AddMonoidₓ B] [HasOne B]
 
 theorem eq_nat_cast (f : ℕ →+ A) (h1 : f 1 = 1) : ∀ n : ℕ, f n = n :=
   congr_funₓ$ show f = Nat.castAddMonoidHom A from ext_nat (h1.trans Nat.cast_one.symm)
@@ -345,7 +345,7 @@ end AddMonoidHom
 
 namespace MonoidWithZeroHom
 
-variable{A : Type _}[MonoidWithZeroₓ A]
+variable {A : Type _} [MonoidWithZeroₓ A]
 
 /-- If two `monoid_with_zero_hom`s agree on the positive naturals they are equal. -/
 @[ext]
@@ -361,7 +361,7 @@ end MonoidWithZeroHom
 
 namespace RingHom
 
-variable{R : Type _}{S : Type _}[NonAssocSemiring R][NonAssocSemiring S]
+variable {R : Type _} {S : Type _} [NonAssocSemiring R] [NonAssocSemiring S]
 
 @[simp]
 theorem eq_nat_cast (f : ℕ →+* R) (n : ℕ) : f n = n :=
@@ -392,9 +392,9 @@ instance Nat.subsingleton_ring_hom {R : Type _} [NonAssocSemiring R] : Subsingle
 
 namespace WithTop
 
-variable{α : Type _}
+variable {α : Type _}
 
-variable[HasZero α][HasOne α][Add α]
+variable [HasZero α] [HasOne α] [Add α]
 
 @[simp, normCast]
 theorem coe_nat : ∀ n : Nat, ((n : α) : WithTop α) = n
@@ -451,7 +451,7 @@ end WithTop
 
 namespace Pi
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 theorem nat_apply [HasZero β] [HasOne β] [Add β] : ∀ n : ℕ a : α, (n : α → β) a = n
 | 0, a => rfl

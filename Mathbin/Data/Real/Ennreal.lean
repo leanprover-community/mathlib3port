@@ -68,7 +68,7 @@ open Classical Set
 
 open_locale Classical BigOperators Nnreal
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
 -- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_zero
 /-- The extended nonnegative real numbers. This is usually denoted [0, ∞],
@@ -83,20 +83,26 @@ localized [Ennreal] notation "ℝ≥0∞" => Ennreal
 
 localized [Ennreal] notation "∞" => (⊤ : Ennreal)
 
-noncomputable instance  : LinearOrderedAddCommMonoid ℝ≥0∞ :=
+noncomputable instance : LinearOrderedAddCommMonoid ℝ≥0∞ :=
   { Ennreal.canonicallyOrderedCommSemiring, Ennreal.completeLinearOrder with  }
+
+instance covariant_class_mul : CovariantClass ℝ≥0∞ ℝ≥0∞ (·*·) (· ≤ ·) :=
+  CanonicallyOrderedCommSemiring.to_covariant_mul_le
+
+instance covariant_class_add : CovariantClass ℝ≥0∞ ℝ≥0∞ (·+·) (· ≤ ·) :=
+  OrderedAddCommMonoid.to_covariant_class_left ℝ≥0∞
 
 namespace Ennreal
 
-variable{a b c d : ℝ≥0∞}{r p q :  ℝ≥0 }
+variable {a b c d : ℝ≥0∞} {r p q :  ℝ≥0 }
 
-instance  : Inhabited ℝ≥0∞ :=
+instance : Inhabited ℝ≥0∞ :=
   ⟨0⟩
 
-instance  : Coe ℝ≥0  ℝ≥0∞ :=
+instance : Coe ℝ≥0  ℝ≥0∞ :=
   ⟨Option.some⟩
 
-instance  : CanLift ℝ≥0∞ ℝ≥0  :=
+instance : CanLift ℝ≥0∞ ℝ≥0  :=
   { coe := coeₓ, cond := fun r => r ≠ ∞,
     prf := fun x hx => ⟨Option.get$ Option.ne_none_iff_is_some.1 hx, Option.some_get _⟩ }
 
@@ -412,13 +418,13 @@ theorem coe_of_nnreal_hom : «expr⇑ » of_nnreal_hom = coeₓ :=
 section Actions
 
 /-- A `mul_action` over `ℝ≥0∞` restricts to a `mul_action` over `ℝ≥0`. -/
-noncomputable instance  {M : Type _} [MulAction ℝ≥0∞ M] : MulAction ℝ≥0  M :=
+noncomputable instance {M : Type _} [MulAction ℝ≥0∞ M] : MulAction ℝ≥0  M :=
   MulAction.compHom M of_nnreal_hom.toMonoidHom
 
 theorem smul_def {M : Type _} [MulAction ℝ≥0∞ M] (c :  ℝ≥0 ) (x : M) : c • x = (c : ℝ≥0∞) • x :=
   rfl
 
-instance  {M N : Type _} [MulAction ℝ≥0∞ M] [MulAction ℝ≥0∞ N] [HasScalar M N] [IsScalarTower ℝ≥0∞ M N] :
+instance {M N : Type _} [MulAction ℝ≥0∞ M] [MulAction ℝ≥0∞ N] [HasScalar M N] [IsScalarTower ℝ≥0∞ M N] :
   IsScalarTower ℝ≥0  M N :=
   { smul_assoc := fun r => (smul_assoc (r : ℝ≥0∞) : _) }
 
@@ -431,15 +437,15 @@ instance smul_comm_class_right {M N : Type _} [MulAction ℝ≥0∞ N] [HasScala
   { smul_comm := fun m r => (smul_comm m (r : ℝ≥0∞) : _) }
 
 /-- A `distrib_mul_action` over `ℝ≥0∞` restricts to a `distrib_mul_action` over `ℝ≥0`. -/
-noncomputable instance  {M : Type _} [AddMonoidₓ M] [DistribMulAction ℝ≥0∞ M] : DistribMulAction ℝ≥0  M :=
+noncomputable instance {M : Type _} [AddMonoidₓ M] [DistribMulAction ℝ≥0∞ M] : DistribMulAction ℝ≥0  M :=
   DistribMulAction.compHom M of_nnreal_hom.toMonoidHom
 
 /-- A `module` over `ℝ≥0∞` restricts to a `module` over `ℝ≥0`. -/
-noncomputable instance  {M : Type _} [AddCommMonoidₓ M] [Module ℝ≥0∞ M] : Module ℝ≥0  M :=
+noncomputable instance {M : Type _} [AddCommMonoidₓ M] [Module ℝ≥0∞ M] : Module ℝ≥0  M :=
   Module.compHom M of_nnreal_hom
 
 /-- An `algebra` over `ℝ≥0∞` restricts to an `algebra` over `ℝ≥0`. -/
-noncomputable instance  {A : Type _} [Semiringₓ A] [Algebra ℝ≥0∞ A] : Algebra ℝ≥0  A :=
+noncomputable instance {A : Type _} [Semiringₓ A] [Algebra ℝ≥0∞ A] : Algebra ℝ≥0  A :=
   { smul := · • ·,
     commutes' :=
       fun r x =>
@@ -451,11 +457,11 @@ noncomputable instance  {A : Type _} [Semiringₓ A] [Algebra ℝ≥0∞ A] : Al
           simp [←Algebra.smul_def (r : ℝ≥0∞) x, smul_def],
     toRingHom := (algebraMap ℝ≥0∞ A).comp (of_nnreal_hom :  ℝ≥0  →+* ℝ≥0∞) }
 
-noncomputable example  : Algebra ℝ≥0  ℝ≥0∞ :=
+noncomputable example : Algebra ℝ≥0  ℝ≥0∞ :=
   by 
     infer_instance
 
-noncomputable example  : DistribMulAction (Units ℝ≥0 ) ℝ≥0∞ :=
+noncomputable example : DistribMulAction (Units ℝ≥0 ) ℝ≥0∞ :=
   by 
     infer_instance
 
@@ -822,7 +828,7 @@ theorem coe_nat_mono : StrictMono (coeₓ : ℕ → ℝ≥0∞) :=
 theorem coe_nat_le_coe_nat {m n : ℕ} : (m : ℝ≥0∞) ≤ n ↔ m ≤ n :=
   coe_nat_mono.le_iff_le
 
-instance  : CharZero ℝ≥0∞ :=
+instance : CharZero ℝ≥0∞ :=
   ⟨coe_nat_mono.Injective⟩
 
 protected theorem exists_nat_gt {r : ℝ≥0∞} (h : r ≠ ∞) : ∃ n : ℕ, r < n :=
@@ -1171,7 +1177,7 @@ end Sum
 
 section Interval
 
-variable{x y z : ℝ≥0∞}{ε ε₁ ε₂ : ℝ≥0∞}{s : Set ℝ≥0∞}
+variable {x y z : ℝ≥0∞} {ε ε₁ ε₂ : ℝ≥0∞} {s : Set ℝ≥0∞}
 
 protected theorem Ico_eq_Iio : Ico 0 y = Iio y :=
   Ico_bot
@@ -1239,10 +1245,10 @@ section Inv
 
 noncomputable theory
 
-instance  : HasInv ℝ≥0∞ :=
+instance : HasInv ℝ≥0∞ :=
   ⟨fun a => Inf { b | 1 ≤ a*b }⟩
 
-instance  : DivInvMonoidₓ ℝ≥0∞ :=
+instance : DivInvMonoidₓ ℝ≥0∞ :=
   { (inferInstance : Monoidₓ ℝ≥0∞) with inv := HasInv.inv }
 
 @[simp]
@@ -2184,7 +2190,7 @@ end Real
 
 section infi
 
-variable{ι : Sort _}{f g : ι → ℝ≥0∞}
+variable {ι : Sort _} {f g : ι → ℝ≥0∞}
 
 theorem infi_add : (infi f+a) = ⨅i, f i+a :=
   le_antisymmₓ (le_infi$ fun i => add_le_add (infi_le _ _)$ le_reflₓ _)

@@ -52,16 +52,16 @@ open_locale BigOperators Pointwise
 `is_artinian R M` is the proposition that `M` is an Artinian `R`-module,
 implemented as the well-foundedness of submodule inclusion.
 -/
-class IsArtinian(R M)[Semiringₓ R][AddCommMonoidₓ M][Module R M] : Prop where 
+class IsArtinian (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Prop where 
   well_founded_submodule_lt{} : WellFounded (· < · : Submodule R M → Submodule R M → Prop)
 
 section 
 
-variable{R : Type _}{M : Type _}{P : Type _}{N : Type _}
+variable {R : Type _} {M : Type _} {P : Type _} {N : Type _}
 
-variable[Ringₓ R][AddCommGroupₓ M][AddCommGroupₓ P][AddCommGroupₓ N]
+variable [Ringₓ R] [AddCommGroupₓ M] [AddCommGroupₓ P] [AddCommGroupₓ N]
 
-variable[Module R M][Module R P][Module R N]
+variable [Module R M] [Module R P] [Module R N]
 
 open IsArtinian
 
@@ -77,13 +77,13 @@ instance is_artinian_submodule' [IsArtinian R M] (N : Submodule R M) : IsArtinia
 theorem is_artinian_of_le {s t : Submodule R M} [ht : IsArtinian R t] (h : s ≤ t) : IsArtinian R s :=
   is_artinian_of_injective (Submodule.ofLe h) (Submodule.of_le_injective h)
 
-variable(M)
+variable (M)
 
 theorem is_artinian_of_surjective (f : M →ₗ[R] P) (hf : Function.Surjective f) [IsArtinian R M] : IsArtinian R P :=
   ⟨Subrelation.wfₓ (fun A B hAB => show A.comap f < B.comap f from Submodule.comap_strict_mono_of_surjective hf hAB)
       (InvImage.wfₓ (Submodule.comap f) (IsArtinian.well_founded_submodule_lt _ _))⟩
 
-variable{M}
+variable {M}
 
 theorem is_artinian_of_linear_equiv (f : M ≃ₗ[R] P) [IsArtinian R M] : IsArtinian R P :=
   is_artinian_of_surjective _ f.to_linear_map f.to_equiv.surjective
@@ -140,12 +140,12 @@ open IsArtinian Submodule Function
 
 section 
 
-variable{R M : Type _}[Ringₓ R][AddCommGroupₓ M][Module R M]
+variable {R M : Type _} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
 theorem is_artinian_iff_well_founded : IsArtinian R M ↔ WellFounded (· < · : Submodule R M → Submodule R M → Prop) :=
   ⟨fun h => h.1, IsArtinian.mk⟩
 
-variable{R M}
+variable {R M}
 
 -- error in RingTheory.Artinian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_artinian.finite_of_linear_independent
@@ -270,14 +270,14 @@ theorem IsArtinian.disjoint_partial_infs_eventually_top [I : IsArtinian R M] (f 
 
 universe w
 
-variable{N : Type w}[AddCommGroupₓ N][Module R N]
+variable {N : Type w} [AddCommGroupₓ N] [Module R N]
 
 end 
 
 /--
 A ring is Artinian if it is Artinian as a module over itself.
 -/
-class IsArtinianRing(R)[Ringₓ R] extends IsArtinian R R : Prop
+class IsArtinianRing (R) [Ringₓ R] extends IsArtinian R R : Prop
 
 theorem is_artinian_ring_iff {R} [Ringₓ R] : IsArtinianRing R ↔ IsArtinian R R :=
   ⟨fun h => h.1, @IsArtinianRing.mk _ _⟩
@@ -376,7 +376,7 @@ namespace IsArtinianRing
 
 open IsArtinian
 
-variable{R : Type _}[CommRingₓ R][IsArtinianRing R]
+variable {R : Type _} [CommRingₓ R] [IsArtinianRing R]
 
 -- error in RingTheory.Artinian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_nilpotent_jacobson_bot : is_nilpotent (ideal.jacobson («expr⊥»() : ideal R)) :=

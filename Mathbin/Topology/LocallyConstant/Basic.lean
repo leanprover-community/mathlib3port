@@ -21,7 +21,7 @@ This file sets up the theory of locally constant function from a topological spa
 -/
 
 
-variable{X Y Z α : Type _}[TopologicalSpace X]
+variable {X Y Z α : Type _} [TopologicalSpace X]
 
 open Set Filter
 
@@ -186,16 +186,16 @@ end
 end IsLocallyConstant
 
 /-- A (bundled) locally constant function from a topological space `X` to a type `Y`. -/
-structure LocallyConstant(X Y : Type _)[TopologicalSpace X] where 
+structure LocallyConstant (X Y : Type _) [TopologicalSpace X] where 
   toFun : X → Y 
   IsLocallyConstant : IsLocallyConstant to_fun
 
 namespace LocallyConstant
 
-instance  [Inhabited Y] : Inhabited (LocallyConstant X Y) :=
+instance [Inhabited Y] : Inhabited (LocallyConstant X Y) :=
   ⟨⟨_, IsLocallyConstant.const (default Y)⟩⟩
 
-instance  : CoeFun (LocallyConstant X Y) fun _ => X → Y :=
+instance : CoeFun (LocallyConstant X Y) fun _ => X → Y :=
   ⟨LocallyConstant.toFun⟩
 
 initialize_simps_projections LocallyConstant (toFun → apply)
@@ -233,7 +233,7 @@ theorem ext_iff {f g : LocallyConstant X Y} : f = g ↔ ∀ x, f x = g x :=
 
 section CodomainTopologicalSpace
 
-variable[TopologicalSpace Y](f : LocallyConstant X Y)
+variable [TopologicalSpace Y] (f : LocallyConstant X Y)
 
 protected theorem Continuous : Continuous f :=
   f.is_locally_constant.continuous
@@ -243,7 +243,7 @@ def to_continuous_map : C(X, Y) :=
   ⟨f, f.continuous⟩
 
 /-- As a shorthand, `locally_constant.to_continuous_map` is available as a coercion -/
-instance  : Coe (LocallyConstant X Y) C(X, Y) :=
+instance : Coe (LocallyConstant X Y) C(X, Y) :=
   ⟨to_continuous_map⟩
 
 @[simp]
@@ -411,7 +411,7 @@ section Comap
 
 open_locale Classical
 
-variable[TopologicalSpace Y]
+variable [TopologicalSpace Y]
 
 /-- Pull back of locally constant maps under any map, by pre-composition.
 

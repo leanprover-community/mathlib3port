@@ -25,11 +25,11 @@ namespace Polynomial
 
 universe u v
 
-variable{R : Type u}{S : Type v}{a b : R}{n m : ℕ}
+variable {R : Type u} {S : Type v} {a b : R} {n m : ℕ}
 
 section Semiringₓ
 
-variable[Semiringₓ R]{p q r : Polynomial R}
+variable [Semiringₓ R] {p q r : Polynomial R}
 
 /-- `degree p` is the degree of the polynomial `p`, i.e. the largest `X`-exponent in `p`.
 `degree p = some n` when `p ≠ 0` and `n` is the highest power of `X` that appears in `p`, otherwise
@@ -40,7 +40,7 @@ def degree (p : Polynomial R) : WithBot ℕ :=
 theorem degree_lt_wf : WellFounded fun p q : Polynomial R => degree p < degree q :=
   InvImage.wfₓ degree (WithBot.well_founded_lt Nat.lt_wf)
 
-instance  : HasWellFounded (Polynomial R) :=
+instance : HasWellFounded (Polynomial R) :=
   ⟨_, degree_lt_wf⟩
 
 /-- `nat_degree p` forces `degree p` to ℕ, by defining nat_degree 0 = 0. -/
@@ -414,7 +414,7 @@ end Semiringₓ
 
 section NonzeroSemiring
 
-variable[Semiringₓ R][Nontrivial R]{p q : Polynomial R}
+variable [Semiringₓ R] [Nontrivial R] {p q : Polynomial R}
 
 @[simp]
 theorem degree_one : degree (1 : Polynomial R) = (0 : WithBot ℕ) :=
@@ -432,7 +432,7 @@ end NonzeroSemiring
 
 section Ringₓ
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
 theorem coeff_mul_X_sub_C {p : Polynomial R} {r : R} {a : ℕ} : coeff (p*X - C r) (a+1) = coeff p a - coeff p (a+1)*r :=
   by 
@@ -460,7 +460,7 @@ end Ringₓ
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 /-- The second-highest coefficient, or 0 for constants -/
 def next_coeff (p : Polynomial R) : R :=
@@ -483,7 +483,7 @@ end Semiringₓ
 
 section Semiringₓ
 
-variable[Semiringₓ R]{p q : Polynomial R}{ι : Type _}
+variable [Semiringₓ R] {p q : Polynomial R} {ι : Type _}
 
 theorem coeff_nat_degree_eq_zero_of_degree_lt (h : degree p < degree q) : coeff p (nat_degree q) = 0 :=
   coeff_eq_zero_of_degree_lt (lt_of_lt_of_leₓ h degree_le_nat_degree)
@@ -1023,7 +1023,7 @@ end Semiringₓ
 
 section NontrivialSemiring
 
-variable[Semiringₓ R][Nontrivial R]{p q : Polynomial R}
+variable [Semiringₓ R] [Nontrivial R] {p q : Polynomial R}
 
 @[simp]
 theorem degree_X_pow (n : ℕ) : degree ((X : Polynomial R) ^ n) = n :=
@@ -1056,7 +1056,7 @@ end NontrivialSemiring
 
 section Ringₓ
 
-variable[Ringₓ R]{p q : Polynomial R}
+variable [Ringₓ R] {p q : Polynomial R}
 
 theorem degree_sub_le (p q : Polynomial R) : degree (p - q) ≤ max (degree p) (degree q) :=
   by 
@@ -1116,7 +1116,7 @@ end Ringₓ
 
 section NonzeroRing
 
-variable[Nontrivial R][Ringₓ R]
+variable [Nontrivial R] [Ringₓ R]
 
 @[simp]
 theorem degree_X_sub_C (a : R) : degree (X - C a) = 1 :=
@@ -1196,7 +1196,7 @@ end NonzeroRing
 
 section NoZeroDivisors
 
-variable[Semiringₓ R][NoZeroDivisors R]{p q : Polynomial R}
+variable [Semiringₓ R] [NoZeroDivisors R] {p q : Polynomial R}
 
 @[simp]
 theorem degree_mul : degree (p*q) = degree p+degree q :=

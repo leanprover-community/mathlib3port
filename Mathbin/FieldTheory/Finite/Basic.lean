@@ -40,7 +40,7 @@ diamonds, as `fintype` carries data.
 -/
 
 
-variable{K : Type _}{R : Type _}
+variable {K : Type _} {R : Type _}
 
 local notation "q" => Fintype.card K
 
@@ -52,7 +52,7 @@ open Finset Function
 
 section Polynomial
 
-variable[CommRingₓ R][IsDomain R]
+variable [CommRingₓ R] [IsDomain R]
 
 open Polynomial
 
@@ -118,7 +118,7 @@ end
 
 section 
 
-variable[GroupWithZeroₓ K][Fintype K]
+variable [GroupWithZeroₓ K] [Fintype K]
 
 theorem pow_card_sub_one_eq_one (a : K) (ha : a ≠ 0) : (a^q - 1) = 1 :=
   calc (a^Fintype.card K - 1) = (Units.mk0 a ha^Fintype.card K - 1 : Units K) :=
@@ -151,7 +151,7 @@ theorem pow_card_pow (n : ℕ) (a : K) : (a^q^n) = a :=
 
 end 
 
-variable(K)[Field K][Fintype K]
+variable (K) [Field K] [Fintype K]
 
 -- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem card
@@ -263,7 +263,7 @@ open Polynomial
 
 section 
 
-variable(K' : Type _)[Field K']{p n : ℕ}
+variable (K' : Type _) [Field K'] {p n : ℕ}
 
 -- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem X_pow_card_sub_X_nat_degree_eq
@@ -290,7 +290,7 @@ theorem X_pow_card_pow_sub_X_ne_zero (hn : n ≠ 0) (hp : 1 < p) : ((X^p^n) - X 
 
 end 
 
-variable(p : ℕ)[Fact p.prime][CharP K p]
+variable (p : ℕ) [Fact p.prime] [CharP K p]
 
 -- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem roots_X_pow_card_sub_X : «expr = »(roots («expr - »(«expr ^ »(X, exprq()), X) : polynomial K), finset.univ.val) :=
@@ -324,7 +324,7 @@ instance : is_splitting_field (zmod p) K «expr - »(«expr ^ »(X, exprq()), X)
 
 end IsSplittingField
 
-variable{K}
+variable {K}
 
 theorem frobenius_pow {p : ℕ} [Fact p.prime] [CharP K p] {n : ℕ} (hcard : q = (p^n)) : (frobenius K p^n) = 1 :=
   by 
@@ -346,9 +346,7 @@ begin
   rcases [expr finite_field.card K p, "with", "⟨", "⟨", ident n, ",", ident npos, "⟩", ",", "⟨", ident hp, ",", ident hn, "⟩", "⟩"],
   haveI [] [":", expr fact p.prime] [":=", expr ⟨hp⟩],
   dsimp [] [] [] ["at", ident hn],
-  rw [expr hn] ["at", "*"],
-  rw ["<-", expr map_expand_pow_char] [],
-  rw ["[", expr frobenius_pow hn, ",", expr ring_hom.one_def, ",", expr map_id, "]"] []
+  rw ["[", expr hn, ",", "<-", expr map_expand_pow_char, ",", expr frobenius_pow hn, ",", expr ring_hom.one_def, ",", expr map_id, "]"] []
 end
 
 end FiniteField
@@ -433,7 +431,7 @@ end
 
 section 
 
-variable{V : Type _}[Fintype K][DivisionRing K][AddCommGroupₓ V][Module K V]
+variable {V : Type _} [Fintype K] [DivisionRing K] [AddCommGroupₓ V] [Module K V]
 
 theorem card_eq_pow_finrank [Fintype V] : Fintype.card V = (q^FiniteDimensional.finrank K V) :=
   by 

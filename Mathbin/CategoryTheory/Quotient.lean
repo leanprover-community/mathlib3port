@@ -22,7 +22,7 @@ def hom_rel (C) [quiver C] :=
 
 namespace CategoryTheory
 
-variable{C : Type _}[category C](r : HomRel C)
+variable {C : Type _} [category C] (r : HomRel C)
 
 include r
 
@@ -40,7 +40,7 @@ attribute [instance] congruence.is_equiv
 structure Quotientₓ where 
   as : C
 
-instance  [Inhabited C] : Inhabited (Quotientₓ r) :=
+instance [Inhabited C] : Inhabited (Quotientₓ r) :=
   ⟨{ as := default C }⟩
 
 namespace Quotientₓ
@@ -63,7 +63,7 @@ theorem comp_right {a b c : C} (g : b ⟶ c) : ∀ f₁ f₂ : a ⟶ b h : comp_
 def hom (s t : Quotientₓ r) :=
   Quot$ @comp_closure C _ r s.as t.as
 
-instance  (a : Quotientₓ r) : Inhabited (hom r a a) :=
+instance (a : Quotientₓ r) : Inhabited (hom r a a) :=
   ⟨Quot.mk _ (𝟙 a.as)⟩
 
 /-- Composition in the quotient category. -/
@@ -86,10 +86,10 @@ instance category : category (Quotientₓ r) :=
 def Functor : C ⥤ Quotientₓ r :=
   { obj := fun a => { as := a }, map := fun _ _ f => Quot.mk _ f }
 
-noncomputable instance  : full (Functor r) :=
+noncomputable instance : full (Functor r) :=
   { Preimage := fun X Y f => Quot.out f }
 
-instance  : ess_surj (Functor r) :=
+instance : ess_surj (Functor r) :=
   { mem_ess_image :=
       fun Y =>
         ⟨Y.as,
@@ -130,7 +130,7 @@ theorem functor_map_eq_iff [congruence r] {X Y : C} (f f' : X ⟶ Y) : (Functor 
     ·
       apply Quotientₓ.sound
 
-variable{D : Type _}[category D](F : C ⥤ D)(H : ∀ x y : C f₁ f₂ : x ⟶ y, r f₁ f₂ → F.map f₁ = F.map f₂)
+variable {D : Type _} [category D] (F : C ⥤ D) (H : ∀ x y : C f₁ f₂ : x ⟶ y, r f₁ f₂ → F.map f₁ = F.map f₂)
 
 include H
 

@@ -8,7 +8,7 @@ inductive Rbnode (α : Type u)
 
 namespace Rbnode
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 inductive color
   | red
@@ -76,7 +76,7 @@ def get_color : Rbnode α → color
 
 section Insert
 
-variable(lt : α → α → Prop)[DecidableRel lt]
+variable (lt : α → α → Prop) [DecidableRel lt]
 
 def ins : Rbnode α → α → Rbnode α
 | leaf, x => red_node leaf x leaf
@@ -102,7 +102,7 @@ end Insert
 
 section Membership
 
-variable(lt : α → α → Prop)
+variable (lt : α → α → Prop)
 
 def mem : α → Rbnode α → Prop
 | a, leaf => False
@@ -114,7 +114,7 @@ def mem_exact : α → Rbnode α → Prop
 | a, red_node l v r => mem_exact a l ∨ a = v ∨ mem_exact a r
 | a, black_node l v r => mem_exact a l ∨ a = v ∨ mem_exact a r
 
-variable[DecidableRel lt]
+variable [DecidableRel lt]
 
 def find : Rbnode α → α → Option α
 | leaf, x => none
@@ -157,12 +157,12 @@ def mkRbtree (α : Type u)
 
 namespace Rbtree
 
-variable{α : Type u}{β : Type v}{lt : α → α → Prop}
+variable {α : Type u} {β : Type v} {lt : α → α → Prop}
 
 protected def mem (a : α) (t : Rbtree α lt) : Prop :=
   Rbnode.Mem lt a t.val
 
-instance  : HasMem α (Rbtree α lt) :=
+instance : HasMem α (Rbtree α lt) :=
   ⟨Rbtree.Mem⟩
 
 def mem_exact (a : α) (t : Rbtree α lt) : Prop :=
@@ -190,10 +190,10 @@ protected def min : Rbtree α lt → Option α
 protected def max : Rbtree α lt → Option α
 | ⟨t, _⟩ => t.max
 
-instance  [HasRepr α] : HasRepr (Rbtree α lt) :=
+instance [HasRepr α] : HasRepr (Rbtree α lt) :=
   ⟨fun t => "rbtree_of " ++ reprₓ t.to_list⟩
 
-variable[DecidableRel lt]
+variable [DecidableRel lt]
 
 def insert : Rbtree α lt → α → Rbtree α lt
 | ⟨t, w⟩, x => ⟨t.insert lt x, well_formed.insert_wff w rfl⟩

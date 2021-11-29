@@ -16,9 +16,9 @@ These actions are available in the `pointwise` locale.
 
 namespace Submodule
 
-variable{α : Type _}{R : Type _}{M : Type _}
+variable {α : Type _} {R : Type _} {M : Type _}
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 instance pointwise_add_comm_monoid : AddCommMonoidₓ (Submodule R M) :=
   { add := ·⊔·, add_assoc := fun _ _ _ => sup_assoc, zero := ⊥, zero_add := fun _ => bot_sup_eq,
@@ -34,7 +34,7 @@ theorem zero_eq_bot : (0 : Submodule R M) = ⊥ :=
 
 section 
 
-variable[Monoidₓ α][DistribMulAction α M][SmulCommClass α R M]
+variable [Monoidₓ α] [DistribMulAction α M] [SmulCommClass α R M]
 
 /-- The action on a submodule corresponding to applying the action to every element.
 
@@ -88,7 +88,7 @@ end
 
 section 
 
-variable[Semiringₓ α][Module α M][SmulCommClass α R M]
+variable [Semiringₓ α] [Module α M] [SmulCommClass α R M]
 
 /-- The action on a submodule corresponding to applying the action to every element.
 

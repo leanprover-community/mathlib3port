@@ -17,7 +17,7 @@ and right order continuous.
 
 universe u v w x
 
-variable{α : Type u}{β : Type v}{γ : Type w}{ι : Sort x}
+variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x}
 
 open Set Function
 
@@ -42,14 +42,14 @@ namespace LeftOrdContinuous
 
 section Preorderₓ
 
-variable(α)[Preorderₓ α][Preorderₓ β][Preorderₓ γ]{g : β → γ}{f : α → β}
+variable (α) [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β}
 
 protected theorem id : LeftOrdContinuous (id : α → α) :=
   fun s x h =>
     by 
       simpa only [image_id] using h
 
-variable{α}
+variable {α}
 
 protected theorem OrderDual (hf : LeftOrdContinuous f) : @RightOrdContinuous (OrderDual α) (OrderDual β) _ _ f :=
   hf
@@ -78,7 +78,7 @@ end Preorderₓ
 
 section SemilatticeSup
 
-variable[SemilatticeSup α][SemilatticeSup β]{f : α → β}
+variable [SemilatticeSup α] [SemilatticeSup β] {f : α → β}
 
 theorem map_sup (hf : LeftOrdContinuous f) (x y : α) : f (x⊔y) = f x⊔f y :=
   (hf is_lub_pair).unique$
@@ -93,13 +93,13 @@ theorem lt_iff (hf : LeftOrdContinuous f) (h : injective f) {x y} : f x < f y �
   by 
     simp only [lt_iff_le_not_leₓ, hf.le_iff h]
 
-variable(f)
+variable (f)
 
 /-- Convert an injective left order continuous function to an order embedding. -/
 def to_order_embedding (hf : LeftOrdContinuous f) (h : injective f) : α ↪o β :=
   ⟨⟨f, h⟩, fun x y => hf.le_iff h⟩
 
-variable{f}
+variable {f}
 
 @[simp]
 theorem coe_to_order_embedding (hf : LeftOrdContinuous f) (h : injective f) :
@@ -110,7 +110,7 @@ end SemilatticeSup
 
 section CompleteLattice
 
-variable[CompleteLattice α][CompleteLattice β]{f : α → β}
+variable [CompleteLattice α] [CompleteLattice β] {f : α → β}
 
 theorem map_Sup' (hf : LeftOrdContinuous f) (s : Set α) : f (Sup s) = Sup (f '' s) :=
   (hf$ is_lub_Sup s).Sup_eq.symm
@@ -127,7 +127,7 @@ end CompleteLattice
 
 section ConditionallyCompleteLattice
 
-variable[ConditionallyCompleteLattice α][ConditionallyCompleteLattice β][Nonempty ι]{f : α → β}
+variable [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β] [Nonempty ι] {f : α → β}
 
 theorem map_cSup (hf : LeftOrdContinuous f) {s : Set α} (sne : s.nonempty) (sbdd : BddAbove s) :
   f (Sup s) = Sup (f '' s) :=
@@ -145,14 +145,14 @@ namespace RightOrdContinuous
 
 section Preorderₓ
 
-variable(α)[Preorderₓ α][Preorderₓ β][Preorderₓ γ]{g : β → γ}{f : α → β}
+variable (α) [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {g : β → γ} {f : α → β}
 
 protected theorem id : RightOrdContinuous (id : α → α) :=
   fun s x h =>
     by 
       simpa only [image_id] using h
 
-variable{α}
+variable {α}
 
 protected theorem OrderDual (hf : RightOrdContinuous f) : @LeftOrdContinuous (OrderDual α) (OrderDual β) _ _ f :=
   hf
@@ -173,7 +173,7 @@ end Preorderₓ
 
 section SemilatticeInf
 
-variable[SemilatticeInf α][SemilatticeInf β]{f : α → β}
+variable [SemilatticeInf α] [SemilatticeInf β] {f : α → β}
 
 theorem map_inf (hf : RightOrdContinuous f) (x y : α) : f (x⊓y) = f x⊓f y :=
   hf.order_dual.map_sup x y
@@ -184,13 +184,13 @@ theorem le_iff (hf : RightOrdContinuous f) (h : injective f) {x y} : f x ≤ f y
 theorem lt_iff (hf : RightOrdContinuous f) (h : injective f) {x y} : f x < f y ↔ x < y :=
   hf.order_dual.lt_iff h
 
-variable(f)
+variable (f)
 
 /-- Convert an injective left order continuous function to a `order_embedding`. -/
 def to_order_embedding (hf : RightOrdContinuous f) (h : injective f) : α ↪o β :=
   ⟨⟨f, h⟩, fun x y => hf.le_iff h⟩
 
-variable{f}
+variable {f}
 
 @[simp]
 theorem coe_to_order_embedding (hf : RightOrdContinuous f) (h : injective f) :
@@ -201,7 +201,7 @@ end SemilatticeInf
 
 section CompleteLattice
 
-variable[CompleteLattice α][CompleteLattice β]{f : α → β}
+variable [CompleteLattice α] [CompleteLattice β] {f : α → β}
 
 theorem map_Inf' (hf : RightOrdContinuous f) (s : Set α) : f (Inf s) = Inf (f '' s) :=
   hf.order_dual.map_Sup' s
@@ -216,7 +216,7 @@ end CompleteLattice
 
 section ConditionallyCompleteLattice
 
-variable[ConditionallyCompleteLattice α][ConditionallyCompleteLattice β][Nonempty ι]{f : α → β}
+variable [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β] [Nonempty ι] {f : α → β}
 
 theorem map_cInf (hf : RightOrdContinuous f) {s : Set α} (sne : s.nonempty) (sbdd : BddBelow s) :
   f (Inf s) = Inf (f '' s) :=
@@ -233,7 +233,7 @@ namespace OrderIso
 
 section Preorderₓ
 
-variable[Preorderₓ α][Preorderₓ β](e : α ≃o β){s : Set α}{x : α}
+variable [Preorderₓ α] [Preorderₓ β] (e : α ≃o β) {s : Set α} {x : α}
 
 protected theorem LeftOrdContinuous : LeftOrdContinuous e :=
   fun s x hx =>

@@ -274,7 +274,7 @@ unsafe def collect_struct' : pexpr → StateTₓ (List$ expr × structure_instan
     pure$ to_pexpr v
 
 unsafe def collect_struct (e : pexpr) : tactic$ pexpr × List (expr × structure_instance_info) :=
-  Prod.mapₓ id List.reverse <$> (collect_struct' e).run []
+  Prod.map id List.reverse <$> (collect_struct' e).run []
 
 unsafe def refine_one (str : structure_instance_info) : tactic$ List (expr × structure_instance_info) :=
   do 

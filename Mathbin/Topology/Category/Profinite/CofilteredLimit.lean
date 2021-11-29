@@ -26,7 +26,7 @@ open CategoryTheory.Limits
 
 universe u
 
-variable{J : Type u}[small_category J][is_cofiltered J]{F : J ⥤ Profinite.{u}}(C : cone F)(hC : is_limit C)
+variable {J : Type u} [small_category J] [is_cofiltered J] {F : J ⥤ Profinite.{u}} (C : cone F) (hC : is_limit C)
 
 include hC
 

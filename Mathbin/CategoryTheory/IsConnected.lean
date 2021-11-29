@@ -49,7 +49,7 @@ namespace CategoryTheory
 /--
 A possibly empty category for which every functor to a discrete category is constant.
 -/
-class is_preconnected(J : Type u₁)[category.{v₁} J] : Prop where 
+class is_preconnected (J : Type u₁) [category.{v₁} J] : Prop where 
   iso_constant : ∀ {α : Type u₁} F : J ⥤ discrete α j : J, Nonempty (F ≅ (Functor.Const J).obj (F.obj j))
 
 /--
@@ -64,14 +64,14 @@ This allows us to show that the functor X ⨯ - preserves connected limits.
 
 See https://stacks.math.columbia.edu/tag/002S
 -/
-class is_connected(J : Type u₁)[category.{v₁} J] extends is_preconnected J : Prop where 
+class is_connected (J : Type u₁) [category.{v₁} J] extends is_preconnected J : Prop where 
   [is_nonempty : Nonempty J]
 
 attribute [instance] is_connected.is_nonempty
 
-variable{J : Type u₁}[category.{v₁} J]
+variable {J : Type u₁} [category.{v₁} J]
 
-variable{K : Type u₂}[category.{v₂} K]
+variable {K : Type u₂} [category.{v₂} K]
 
 /--
 If `J` is connected, any functor `F : J ⥤ discrete α` is isomorphic to
@@ -315,14 +315,14 @@ theorem is_connected_of_zigzag [Nonempty J]
 
 /-- If `discrete α` is connected, then `α` is (type-)equivalent to `punit`. -/
 def discrete_is_connected_equiv_punit {α : Type u₁} [is_connected (discrete α)] : α ≃ PUnit :=
-  discrete.equiv_of_equivalence
+  discrete.equiv_of_equivalence.{u₁, u₁}
     { Functor := functor.star α, inverse := discrete.functor fun _ => Classical.arbitrary _,
       unitIso :=
         by 
           exact iso_constant _ (Classical.arbitrary _),
       counitIso := functor.punit_ext _ _ }
 
-variable{C : Type u₂}[category.{u₁} C]
+variable {C : Type u₂} [category.{u₁} C]
 
 -- error in CategoryTheory.IsConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -340,7 +340,7 @@ j j' : J, «expr = »(α.app j, (α.app j' : «expr ⟶ »(X, Y))) :=
    erw ["[", expr id_comp, ",", expr comp_id, "]"] ["at", ident this],
    exact [expr this.symm] })
 
-instance  [is_connected J] : full (Functor.Const J : C ⥤ J ⥤ C) :=
+instance [is_connected J] : full (Functor.Const J : C ⥤ J ⥤ C) :=
   { Preimage := fun X Y f => f.app (Classical.arbitrary J),
     witness' :=
       fun X Y f =>

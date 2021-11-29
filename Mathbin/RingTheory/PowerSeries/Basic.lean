@@ -73,39 +73,39 @@ namespace MvPowerSeries
 
 open Finsupp
 
-variable{σ R : Type _}
+variable {σ R : Type _}
 
-instance  [Inhabited R] : Inhabited (MvPowerSeries σ R) :=
+instance [Inhabited R] : Inhabited (MvPowerSeries σ R) :=
   ⟨fun _ => default _⟩
 
-instance  [HasZero R] : HasZero (MvPowerSeries σ R) :=
+instance [HasZero R] : HasZero (MvPowerSeries σ R) :=
   Pi.hasZero
 
-instance  [AddMonoidₓ R] : AddMonoidₓ (MvPowerSeries σ R) :=
+instance [AddMonoidₓ R] : AddMonoidₓ (MvPowerSeries σ R) :=
   Pi.addMonoid
 
-instance  [AddGroupₓ R] : AddGroupₓ (MvPowerSeries σ R) :=
+instance [AddGroupₓ R] : AddGroupₓ (MvPowerSeries σ R) :=
   Pi.addGroup
 
-instance  [AddCommMonoidₓ R] : AddCommMonoidₓ (MvPowerSeries σ R) :=
+instance [AddCommMonoidₓ R] : AddCommMonoidₓ (MvPowerSeries σ R) :=
   Pi.addCommMonoid
 
-instance  [AddCommGroupₓ R] : AddCommGroupₓ (MvPowerSeries σ R) :=
+instance [AddCommGroupₓ R] : AddCommGroupₓ (MvPowerSeries σ R) :=
   Pi.addCommGroup
 
-instance  [Nontrivial R] : Nontrivial (MvPowerSeries σ R) :=
+instance [Nontrivial R] : Nontrivial (MvPowerSeries σ R) :=
   Function.nontrivial
 
-instance  {A} [Semiringₓ R] [AddCommMonoidₓ A] [Module R A] : Module R (MvPowerSeries σ A) :=
+instance {A} [Semiringₓ R] [AddCommMonoidₓ A] [Module R A] : Module R (MvPowerSeries σ A) :=
   Pi.module _ _ _
 
-instance  {A S} [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A] [Module R A] [Module S A] [HasScalar R S]
+instance {A S} [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A] [Module R A] [Module S A] [HasScalar R S]
   [IsScalarTower R S A] : IsScalarTower R S (MvPowerSeries σ A) :=
   Pi.is_scalar_tower
 
 section Semiringₓ
 
-variable(R)[Semiringₓ R]
+variable (R) [Semiringₓ R]
 
 /-- The `n`th monomial with coefficient `a` as multivariate formal power series.-/
 def monomial (n : σ →₀ ℕ) : R →ₗ[R] MvPowerSeries σ R :=
@@ -115,7 +115,7 @@ def monomial (n : σ →₀ ℕ) : R →ₗ[R] MvPowerSeries σ R :=
 def coeff (n : σ →₀ ℕ) : MvPowerSeries σ R →ₗ[R] R :=
   LinearMap.proj n
 
-variable{R}
+variable {R}
 
 /-- Two multivariate formal power series are equal if all their coefficients are equal.-/
 @[ext]
@@ -153,9 +153,9 @@ theorem coeff_comp_monomial (n : σ →₀ ℕ) : (coeff R n).comp (monomial R n
 theorem coeff_zero (n : σ →₀ ℕ) : coeff R n (0 : MvPowerSeries σ R) = 0 :=
   rfl
 
-variable(m n : σ →₀ ℕ)(φ ψ : MvPowerSeries σ R)
+variable (m n : σ →₀ ℕ) (φ ψ : MvPowerSeries σ R)
 
-instance  : HasOne (MvPowerSeries σ R) :=
+instance : HasOne (MvPowerSeries σ R) :=
   ⟨monomial R (0 : σ →₀ ℕ) 1⟩
 
 theorem coeff_one [DecidableEq σ] : coeff R n (1 : MvPowerSeries σ R) = if n = 0 then 1 else 0 :=
@@ -167,7 +167,7 @@ theorem coeff_zero_one : coeff R (0 : σ →₀ ℕ) 1 = 1 :=
 theorem monomial_zero_one : monomial R (0 : σ →₀ ℕ) 1 = 1 :=
   rfl
 
-instance  : Mul (MvPowerSeries σ R) :=
+instance : Mul (MvPowerSeries σ R) :=
   ⟨fun φ ψ n => ∑p in Finsupp.antidiagonal n, coeff R p.1 φ*coeff R p.2 ψ⟩
 
 theorem coeff_mul : coeff R n (φ*ψ) = ∑p in Finsupp.antidiagonal n, coeff R p.1 φ*coeff R p.2 ψ :=
@@ -268,14 +268,14 @@ protected theorem mul_assocₓ (φ₁ φ₂ φ₃ : MvPowerSeries σ R) : ((φ�
       rintro rfl rfl 
       refine' ⟨⟨(i+k, l), (i, k)⟩, _, _⟩ <;> simp [add_assocₓ]
 
-instance  : Semiringₓ (MvPowerSeries σ R) :=
+instance : Semiringₓ (MvPowerSeries σ R) :=
   { MvPowerSeries.hasOne, MvPowerSeries.hasMul, MvPowerSeries.addCommMonoid with mul_one := MvPowerSeries.mul_one,
     one_mul := MvPowerSeries.one_mul, mul_assoc := MvPowerSeries.mul_assoc, mul_zero := MvPowerSeries.mul_zero,
     zero_mul := MvPowerSeries.zero_mul, left_distrib := MvPowerSeries.mul_add, right_distrib := MvPowerSeries.add_mul }
 
 end Semiringₓ
 
-instance  [CommSemiringₓ R] : CommSemiringₓ (MvPowerSeries σ R) :=
+instance [CommSemiringₓ R] : CommSemiringₓ (MvPowerSeries σ R) :=
   { MvPowerSeries.semiring with
     mul_comm :=
       fun φ ψ =>
@@ -284,15 +284,15 @@ instance  [CommSemiringₓ R] : CommSemiringₓ (MvPowerSeries σ R) :=
             by 
               simpa only [coeff_mul, mul_commₓ] using sum_antidiagonal_swap n fun a b => coeff R a φ*coeff R b ψ }
 
-instance  [Ringₓ R] : Ringₓ (MvPowerSeries σ R) :=
+instance [Ringₓ R] : Ringₓ (MvPowerSeries σ R) :=
   { MvPowerSeries.semiring, MvPowerSeries.addCommGroup with  }
 
-instance  [CommRingₓ R] : CommRingₓ (MvPowerSeries σ R) :=
+instance [CommRingₓ R] : CommRingₓ (MvPowerSeries σ R) :=
   { MvPowerSeries.commSemiring, MvPowerSeries.addCommGroup with  }
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 theorem monomial_mul_monomial (m n : σ →₀ ℕ) (a b : R) : (monomial R m a*monomial R n b) = monomial R (m+n) (a*b) :=
   by 
@@ -313,14 +313,14 @@ theorem monomial_mul_monomial (m n : σ →₀ ℕ) (a b : R) : (monomial R m a*
       rw [h₂] at h₁ 
       exact (h₁$ le_add_left le_rfl).elim
 
-variable(σ)(R)
+variable (σ) (R)
 
 /-- The constant multivariate formal power series.-/
 def C : R →+* MvPowerSeries σ R :=
   { monomial R (0 : σ →₀ ℕ) with map_one' := rfl, map_mul' := fun a b => (monomial_mul_monomial 0 0 a b).symm,
     map_zero' := (monomial R (0 : _)).map_zero }
 
-variable{σ}{R}
+variable {σ} {R}
 
 @[simp]
 theorem monomial_zero_eq_C : «expr⇑ » (monomial R (0 : σ →₀ ℕ)) = C σ R :=
@@ -405,7 +405,7 @@ begin
   simp [] [] ["only"] ["[", expr X, ",", expr coeff_monomial_mul, ",", expr if_neg this, "]"] [] []
 end
 
-variable(σ)(R)
+variable (σ) (R)
 
 /-- The constant coefficient of a formal power series.-/
 def constant_coeff : MvPowerSeries σ R →+* R :=
@@ -416,7 +416,7 @@ def constant_coeff : MvPowerSeries σ R →+* R :=
           simp [coeff_mul, support_single_ne_zero],
     map_zero' := LinearMap.map_zero _ }
 
-variable{σ}{R}
+variable {σ} {R}
 
 @[simp]
 theorem coeff_zero_eq_constant_coeff : «expr⇑ » (coeff R (0 : σ →₀ ℕ)) = constant_coeff σ R :=
@@ -477,11 +477,11 @@ end Semiringₓ
 
 section Map
 
-variable{S T : Type _}[Semiringₓ R][Semiringₓ S][Semiringₓ T]
+variable {S T : Type _} [Semiringₓ R] [Semiringₓ S] [Semiringₓ T]
 
-variable(f : R →+* S)(g : S →+* T)
+variable (f : R →+* S) (g : S →+* T)
 
-variable(σ)
+variable (σ)
 
 /-- The map between multivariate formal power series induced by a map on the coefficients.-/
 def map : MvPowerSeries σ R →+* MvPowerSeries σ S :=
@@ -508,7 +508,7 @@ def map : MvPowerSeries σ R →+* MvPowerSeries σ S :=
               rw [f.map_mul]
               rfl }
 
-variable{σ}
+variable {σ}
 
 @[simp]
 theorem map_id : map σ (RingHom.id R) = RingHom.id _ :=
@@ -544,9 +544,9 @@ end Map
 
 section Algebra
 
-variable{A : Type _}[CommSemiringₓ R][Semiringₓ A][Algebra R A]
+variable {A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-instance  : Algebra R (MvPowerSeries σ A) :=
+instance : Algebra R (MvPowerSeries σ A) :=
   { MvPowerSeries.module with
     commutes' :=
       fun a φ =>
@@ -568,7 +568,7 @@ theorem algebra_map_apply {r : R} : algebraMap R (MvPowerSeries σ A) r = C σ A
     change (MvPowerSeries.map σ (algebraMap R A)).comp (C σ R) r = _ 
     simp 
 
-instance  [Nonempty σ] [Nontrivial R] : Nontrivial (Subalgebra R (MvPowerSeries σ R)) :=
+instance [Nonempty σ] [Nontrivial R] : Nontrivial (Subalgebra R (MvPowerSeries σ R)) :=
   ⟨⟨⊥, ⊤,
       by 
         rw [Ne.def, SetLike.ext_iff, not_forall]
@@ -584,7 +584,7 @@ end Algebra
 
 section Trunc
 
-variable[CommSemiringₓ R](n : σ →₀ ℕ)
+variable [CommSemiringₓ R] (n : σ →₀ ℕ)
 
 /-- Auxiliary definition for the truncation function. -/
 def trunc_fun (φ : MvPowerSeries σ R) : MvPolynomial σ R :=
@@ -595,7 +595,7 @@ theorem coeff_trunc_fun (m : σ →₀ ℕ) (φ : MvPowerSeries σ R) :
   by 
     simp [trunc_fun, MvPolynomial.coeff_sum]
 
-variable(R)
+variable (R)
 
 /-- The `n`th truncation of a multivariate formal power series to a multivariate polynomial -/
 def Trunc : MvPowerSeries σ R →+ MvPolynomial σ R :=
@@ -611,7 +611,7 @@ def Trunc : MvPowerSeries σ R →+ MvPolynomial σ R :=
         simp [coeff_trunc_fun, ite_add]
         splitIfs <;> rfl }
 
-variable{R}
+variable {R}
 
 theorem coeff_trunc (m : σ →₀ ℕ) (φ : MvPowerSeries σ R) : (Trunc R n φ).coeff m = if m ≤ n then coeff R m φ else 0 :=
   by 
@@ -662,7 +662,7 @@ end Trunc
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
 theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
   ((X s : MvPowerSeries σ R)^n) ∣ φ ↔ ∀ m : σ →₀ ℕ, m s < n → coeff R m φ = 0 :=
@@ -747,7 +747,7 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
 /-- Auxiliary definition that unifies
  the totalised inverse formal power series `(_)⁻¹` and
@@ -812,7 +812,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 /-- Multivariate formal power series over a local ring form a local ring. -/
 instance is_local_ring [LocalRing R] : LocalRing (MvPowerSeries σ R) :=
@@ -828,7 +828,7 @@ end CommRingₓ
 
 section LocalRing
 
-variable{S : Type _}[CommRingₓ R][CommRingₓ S](f : R →+* S)[IsLocalRingHom f]
+variable {S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) [IsLocalRingHom f]
 
 -- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The map `A[[X]] → B[[X]]` induced by a local ring hom `A → B` is local -/
@@ -843,22 +843,22 @@ instance map.is_local_ring_hom : is_local_ring_hom (map σ f) :=
    exact [expr is_unit_of_mul_eq_one φ (inv_of_unit φ c) (mul_inv_of_unit φ c hc.symm)]
  end⟩
 
-variable[LocalRing R][LocalRing S]
+variable [LocalRing R] [LocalRing S]
 
-instance  : LocalRing (MvPowerSeries σ R) :=
+instance : LocalRing (MvPowerSeries σ R) :=
   { is_local := LocalRing.is_local }
 
 end LocalRing
 
 section Field
 
-variable{k : Type _}[Field k]
+variable {k : Type _} [Field k]
 
 /-- The inverse `1/f` of a multivariable power series `f` over a field -/
 protected def inv (φ : MvPowerSeries σ k) : MvPowerSeries σ k :=
   inv.aux (constant_coeff σ k φ⁻¹) φ
 
-instance  : HasInv (MvPowerSeries σ k) :=
+instance : HasInv (MvPowerSeries σ k) :=
   ⟨MvPowerSeries.inv⟩
 
 theorem coeff_inv [DecidableEq σ] (n : σ →₀ ℕ) (φ : MvPowerSeries σ k) :
@@ -932,7 +932,7 @@ namespace MvPolynomial
 
 open Finsupp
 
-variable{σ : Type _}{R : Type _}[CommSemiringₓ R]
+variable {σ : Type _} {R : Type _} [CommSemiringₓ R]
 
 /-- The natural inclusion from multivariate polynomials into multivariate formal power series.-/
 instance coe_to_mv_power_series : Coe (MvPolynomial σ R) (MvPowerSeries σ R) :=
@@ -999,61 +999,61 @@ namespace PowerSeries
 
 open finsupp(single)
 
-variable{R : Type _}
+variable {R : Type _}
 
 section 
 
 attribute [local reducible] PowerSeries
 
-instance  [Inhabited R] : Inhabited (PowerSeries R) :=
+instance [Inhabited R] : Inhabited (PowerSeries R) :=
   by 
     infer_instance
 
-instance  [AddMonoidₓ R] : AddMonoidₓ (PowerSeries R) :=
+instance [AddMonoidₓ R] : AddMonoidₓ (PowerSeries R) :=
   by 
     infer_instance
 
-instance  [AddGroupₓ R] : AddGroupₓ (PowerSeries R) :=
+instance [AddGroupₓ R] : AddGroupₓ (PowerSeries R) :=
   by 
     infer_instance
 
-instance  [AddCommMonoidₓ R] : AddCommMonoidₓ (PowerSeries R) :=
+instance [AddCommMonoidₓ R] : AddCommMonoidₓ (PowerSeries R) :=
   by 
     infer_instance
 
-instance  [AddCommGroupₓ R] : AddCommGroupₓ (PowerSeries R) :=
+instance [AddCommGroupₓ R] : AddCommGroupₓ (PowerSeries R) :=
   by 
     infer_instance
 
-instance  [Semiringₓ R] : Semiringₓ (PowerSeries R) :=
+instance [Semiringₓ R] : Semiringₓ (PowerSeries R) :=
   by 
     infer_instance
 
-instance  [CommSemiringₓ R] : CommSemiringₓ (PowerSeries R) :=
+instance [CommSemiringₓ R] : CommSemiringₓ (PowerSeries R) :=
   by 
     infer_instance
 
-instance  [Ringₓ R] : Ringₓ (PowerSeries R) :=
+instance [Ringₓ R] : Ringₓ (PowerSeries R) :=
   by 
     infer_instance
 
-instance  [CommRingₓ R] : CommRingₓ (PowerSeries R) :=
+instance [CommRingₓ R] : CommRingₓ (PowerSeries R) :=
   by 
     infer_instance
 
-instance  [Nontrivial R] : Nontrivial (PowerSeries R) :=
+instance [Nontrivial R] : Nontrivial (PowerSeries R) :=
   by 
     infer_instance
 
-instance  {A} [Semiringₓ R] [AddCommMonoidₓ A] [Module R A] : Module R (PowerSeries A) :=
+instance {A} [Semiringₓ R] [AddCommMonoidₓ A] [Module R A] : Module R (PowerSeries A) :=
   by 
     infer_instance
 
-instance  {A S} [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A] [Module R A] [Module S A] [HasScalar R S]
+instance {A S} [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A] [Module R A] [Module S A] [HasScalar R S]
   [IsScalarTower R S A] : IsScalarTower R S (PowerSeries A) :=
   Pi.is_scalar_tower
 
-instance  {A} [Semiringₓ A] [CommSemiringₓ R] [Algebra R A] : Algebra R (PowerSeries A) :=
+instance {A} [Semiringₓ A] [CommSemiringₓ R] [Algebra R A] : Algebra R (PowerSeries A) :=
   by 
     infer_instance
 
@@ -1061,7 +1061,7 @@ end
 
 section Semiringₓ
 
-variable(R)[Semiringₓ R]
+variable (R) [Semiringₓ R]
 
 /-- The `n`th coefficient of a formal power series.-/
 def coeff (n : ℕ) : PowerSeries R →ₗ[R] R :=
@@ -1071,7 +1071,7 @@ def coeff (n : ℕ) : PowerSeries R →ₗ[R] R :=
 def monomial (n : ℕ) : R →ₗ[R] PowerSeries R :=
   MvPowerSeries.monomial R (single () n)
 
-variable{R}
+variable {R}
 
 theorem coeff_def {s : Unit →₀ ℕ} {n : ℕ} (h : s () = n) : coeff R n = MvPowerSeries.coeff R s :=
   by 
@@ -1122,7 +1122,7 @@ theorem coeff_monomial_same (n : ℕ) (a : R) : coeff R n (monomial R n a) = a :
 theorem coeff_comp_monomial (n : ℕ) : (coeff R n).comp (monomial R n) = LinearMap.id :=
   LinearMap.ext$ coeff_monomial_same n
 
-variable(R)
+variable (R)
 
 /--The constant coefficient of a formal power series. -/
 def constant_coeff : PowerSeries R →+* R :=
@@ -1132,7 +1132,7 @@ def constant_coeff : PowerSeries R →+* R :=
 def C : R →+* PowerSeries R :=
   MvPowerSeries.c Unit R
 
-variable{R}
+variable {R}
 
 /-- The variable of the formal power series ring.-/
 def X : PowerSeries R :=
@@ -1308,9 +1308,9 @@ theorem eq_X_mul_shift_add_const (φ : PowerSeries R) : φ = (X*mk fun p => coef
 
 section Map
 
-variable{S : Type _}{T : Type _}[Semiringₓ S][Semiringₓ T]
+variable {S : Type _} {T : Type _} [Semiringₓ S] [Semiringₓ T]
 
-variable(f : R →+* S)(g : S →+* T)
+variable (f : R →+* S) (g : S →+* T)
 
 /-- The map between formal power series induced by a map on the coefficients.-/
 def map : PowerSeries R →+* PowerSeries S :=
@@ -1333,7 +1333,7 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
 theorem X_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} : ((X : PowerSeries R)^n) ∣ φ ↔ ∀ m, m < n → coeff R m φ = 0 :=
   by 
@@ -1484,7 +1484,7 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
 /-- Auxiliary function used for computing inverse of a power series -/
 protected def inv.aux : R → PowerSeries R → PowerSeries R :=
@@ -1577,7 +1577,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable{A : Type _}[CommRingₓ A]
+variable {A : Type _} [CommRingₓ A]
 
 @[simp]
 theorem rescale_neg_one_X : rescale (-1 : A) X = -X :=
@@ -1598,7 +1598,7 @@ end CommRingₓ
 
 section Domain
 
-variable[Ringₓ R][IsDomain R]
+variable [Ringₓ R] [IsDomain R]
 
 -- error in RingTheory.PowerSeries.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eq_zero_or_eq_zero_of_mul_eq_zero
@@ -1646,14 +1646,14 @@ begin
     rw [expr finset.nat.mem_antidiagonal] [] }
 end
 
-instance  : IsDomain (PowerSeries R) :=
+instance : IsDomain (PowerSeries R) :=
   { PowerSeries.nontrivial with eq_zero_or_eq_zero_of_mul_eq_zero := eq_zero_or_eq_zero_of_mul_eq_zero }
 
 end Domain
 
 section IsDomain
 
-variable[CommRingₓ R][IsDomain R]
+variable [CommRingₓ R] [IsDomain R]
 
 /-- The ideal spanned by the variable in the power series ring
  over an integral domain is a prime ideal.-/
@@ -1692,21 +1692,21 @@ end IsDomain
 
 section LocalRing
 
-variable{S : Type _}[CommRingₓ R][CommRingₓ S](f : R →+* S)[IsLocalRingHom f]
+variable {S : Type _} [CommRingₓ R] [CommRingₓ S] (f : R →+* S) [IsLocalRingHom f]
 
 instance map.is_local_ring_hom : IsLocalRingHom (map f) :=
   MvPowerSeries.map.is_local_ring_hom f
 
-variable[LocalRing R][LocalRing S]
+variable [LocalRing R] [LocalRing S]
 
-instance  : LocalRing (PowerSeries R) :=
+instance : LocalRing (PowerSeries R) :=
   MvPowerSeries.local_ring
 
 end LocalRing
 
 section Algebra
 
-variable{A : Type _}[CommSemiringₓ R][Semiringₓ A][Algebra R A]
+variable {A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
 theorem C_eq_algebra_map {r : R} : C R r = (algebraMap R (PowerSeries R)) r :=
   rfl
@@ -1714,20 +1714,20 @@ theorem C_eq_algebra_map {r : R} : C R r = (algebraMap R (PowerSeries R)) r :=
 theorem algebra_map_apply {r : R} : algebraMap R (PowerSeries A) r = C A (algebraMap R A r) :=
   MvPowerSeries.algebra_map_apply
 
-instance  [Nontrivial R] : Nontrivial (Subalgebra R (PowerSeries R)) :=
+instance [Nontrivial R] : Nontrivial (Subalgebra R (PowerSeries R)) :=
   MvPowerSeries.Subalgebra.nontrivial
 
 end Algebra
 
 section Field
 
-variable{k : Type _}[Field k]
+variable {k : Type _} [Field k]
 
 /-- The inverse 1/f of a power series f defined over a field -/
 protected def inv : PowerSeries k → PowerSeries k :=
   MvPowerSeries.inv
 
-instance  : HasInv (PowerSeries k) :=
+instance : HasInv (PowerSeries k) :=
   ⟨PowerSeries.inv⟩
 
 theorem inv_eq_inv_aux (φ : PowerSeries k) : φ⁻¹ = inv.aux (constant_coeff k φ⁻¹) φ :=
@@ -1779,7 +1779,7 @@ end PowerSeries
 
 namespace PowerSeries
 
-variable{R : Type _}
+variable {R : Type _}
 
 attribute [local instance] Classical.propDecidable
 
@@ -1789,7 +1789,7 @@ section OrderBasic
 
 open multiplicity
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
 /-- The order of a formal power series `φ` is the greatest `n : enat`
 such that `X^n` divides `φ`. The order is `⊤` if and only if `φ = 0`. -/
@@ -2053,7 +2053,7 @@ end OrderBasic
 
 section OrderZeroNeOne
 
-variable[CommSemiringₓ R][Nontrivial R]
+variable [CommSemiringₓ R] [Nontrivial R]
 
 /-- The order of the formal power series `1` is `0`.-/
 @[simp]
@@ -2078,7 +2078,7 @@ end OrderZeroNeOne
 
 section OrderIsDomain
 
-variable[CommRingₓ R][IsDomain R]
+variable [CommRingₓ R] [IsDomain R]
 
 /-- The order of the product of two formal power series over an integral domain
  is the sum of their orders.-/
@@ -2093,7 +2093,7 @@ namespace Polynomial
 
 open Finsupp
 
-variable{σ : Type _}{R : Type _}[CommSemiringₓ R]
+variable {σ : Type _} {R : Type _} [CommSemiringₓ R]
 
 /-- The natural inclusion from polynomials into formal power series.-/
 instance coe_to_power_series : Coe (Polynomial R) (PowerSeries R) :=

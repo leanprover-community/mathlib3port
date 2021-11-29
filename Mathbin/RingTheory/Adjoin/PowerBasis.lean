@@ -9,7 +9,7 @@ where `x` is an integral element over `R`.
 -/
 
 
-variable{K S : Type _}[Field K][CommRingₓ S][Algebra K S]
+variable {K S : Type _} [Field K] [CommRingₓ S] [Algebra K S]
 
 namespace Algebra
 

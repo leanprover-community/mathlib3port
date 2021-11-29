@@ -23,7 +23,7 @@ universe u
 
 namespace Mon
 
-variable{J : Type u}[small_category J]
+variable {J : Type u} [small_category J]
 
 @[toAdditive]
 instance monoid_obj (F : J ⥤ Mon) j : Monoidₓ ((F ⋙ forget Mon).obj j) :=
@@ -64,7 +64,7 @@ Construction of a limit cone in `Mon`.
 (Internal use only; use the limits API.)
 -/
 @[toAdditive "(Internal use only; use the limits API.)"]
-def limit_cone (F : J ⥤ Mon) : cone F :=
+def limit_cone (F : J ⥤ Mon.{u}) : cone F :=
   { x := Mon.of (types.limit_cone (F ⋙ forget _)).x,
     π :=
       { app := limit_π_monoid_hom F,
@@ -110,7 +110,7 @@ end Mon
 
 namespace CommMon
 
-variable{J : Type u}[small_category J]
+variable {J : Type u} [small_category J]
 
 @[toAdditive]
 instance comm_monoid_obj (F : J ⥤ CommMon) j : CommMonoidₓ ((F ⋙ forget CommMon).obj j) :=
@@ -129,7 +129,7 @@ All we need to do is notice that the limit point has a `comm_monoid` instance av
 and then reuse the existing limit.
 -/
 @[toAdditive]
-instance  (F : J ⥤ CommMon) : creates_limit F (forget₂ CommMon Mon.{u}) :=
+instance (F : J ⥤ CommMon) : creates_limit F (forget₂ CommMon Mon.{u}) :=
   creates_limit_of_reflects_iso
     fun c' t =>
       { liftedCone :=

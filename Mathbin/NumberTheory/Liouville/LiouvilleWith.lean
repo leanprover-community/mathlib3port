@@ -60,7 +60,7 @@ end
 
 namespace LiouvilleWith
 
-variable{p q x y : ℝ}{r : ℚ}{m : ℤ}{n : ℕ}
+variable {p q x y : ℝ} {r : ℚ} {m : ℤ} {n : ℕ}
 
 /-- The constant `C` provided by the definition of `liouville_with` can be made positive.
 We also add `1 ≤ n` to the list of assumptions about the denominator. While it is equivalent to
@@ -327,7 +327,7 @@ end LiouvilleWith
 
 namespace Liouville
 
-variable{x : ℝ}
+variable {x : ℝ}
 
 -- error in NumberTheory.Liouville.LiouvilleWith: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `x` is a Liouville number, then for any `n`, for infinitely many denominators `b` there

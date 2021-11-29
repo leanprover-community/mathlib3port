@@ -35,7 +35,7 @@ open TopologicalSpace Filter Set
 
 namespace LinearOrderedCommGroupWithZero
 
-variable(Γ₀ : Type _)[LinearOrderedCommGroupWithZero Γ₀]
+variable (Γ₀ : Type _) [LinearOrderedCommGroupWithZero Γ₀]
 
 /-- The neighbourhoods around γ ∈ Γ₀, used in the definition of the topology on Γ₀.
 These neighbourhoods are defined as follows:
@@ -99,7 +99,7 @@ theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhds_fun Γ₀ x) :
       refine' ⟨{x}, mem_singleton _, singleton_subset_iff.2 s_in, fun y y_in => _⟩
       simpa [mem_singleton_iff.mp y_in, hx]
 
-variable{Γ₀}
+variable {Γ₀}
 
 /-- The neighbourhood filter of an invertible element consists of all sets containing that 
 element. -/
@@ -171,7 +171,7 @@ theorem tendsto_of_ne_zero {α : Type _} {F : Filter α} {f : α → Γ₀} {γ 
   tendsto f F (𝓝 γ) ↔ { x:α | f x = γ } ∈ F :=
   @tendsto_units _ _ _ F f (Units.mk0 γ h)
 
-variable(Γ₀)
+variable (Γ₀)
 
 -- error in Topology.Algebra.WithZeroTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The topology on a linearly ordered group with zero element adjoined

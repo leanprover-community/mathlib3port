@@ -13,13 +13,13 @@ open Classical Set Filter Metric
 
 open_locale Classical TopologicalSpace Ennreal Nnreal BigOperators Filter
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 namespace Ennreal
 
-variable{a b c d : ℝ≥0∞}{r p q :  ℝ≥0 }
+variable {a b c d : ℝ≥0∞} {r p q :  ℝ≥0 }
 
-variable{x y z : ℝ≥0∞}{ε ε₁ ε₂ : ℝ≥0∞}{s : Set ℝ≥0∞}
+variable {x y z : ℝ≥0∞} {ε ε₁ ε₂ : ℝ≥0∞} {s : Set ℝ≥0∞}
 
 section TopologicalSpace
 
@@ -29,13 +29,13 @@ open TopologicalSpace
 
 Note: this is different from the `emetric_space` topology. The `emetric_space` topology has
 `is_open {⊤}`, while this topology doesn't have singleton elements. -/
-instance  : TopologicalSpace ℝ≥0∞ :=
+instance : TopologicalSpace ℝ≥0∞ :=
   Preorderₓ.topology ℝ≥0∞
 
-instance  : OrderTopology ℝ≥0∞ :=
+instance : OrderTopology ℝ≥0∞ :=
   ⟨rfl⟩
 
-instance  : T2Space ℝ≥0∞ :=
+instance : T2Space ℝ≥0∞ :=
   by 
     infer_instance
 
@@ -289,7 +289,7 @@ protected theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {f : β → �
   by 
     simp only [Ennreal.tendsto_nhds ha, mem_at_top_sets, mem_set_of_eq, Filter.Eventually]
 
-instance  : HasContinuousAdd ℝ≥0∞ :=
+instance : HasContinuousAdd ℝ≥0∞ :=
   by 
     refine' ⟨continuous_iff_continuous_at.2 _⟩
     rintro ⟨_ | a, b⟩
@@ -627,7 +627,7 @@ end TopologicalSpace
 
 section tsum
 
-variable{f g : α → ℝ≥0∞}
+variable {f g : α → ℝ≥0∞}
 
 @[normCast]
 protected theorem has_sum_coe {f : α →  ℝ≥0 } {r :  ℝ≥0 } : HasSum (fun a => (f a : ℝ≥0∞)) («expr↑ » r) ↔ HasSum f r :=
@@ -1150,7 +1150,7 @@ theorem tsum_lt_tsum_of_nonneg {i : ℕ} {f g : ℕ → ℝ} (h0 : ∀ b : ℕ, 
 
 section 
 
-variable[EmetricSpace β]
+variable [EmetricSpace β]
 
 open Ennreal Filter Emetric
 
@@ -1179,7 +1179,7 @@ end
 
 section 
 
-variable[PseudoEmetricSpace α]
+variable [PseudoEmetricSpace α]
 
 open Emetric
 

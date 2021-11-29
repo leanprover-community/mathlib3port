@@ -18,7 +18,7 @@ We define the subtype of compact sets in a topological space.
 
 open Set
 
-variable(α : Type _){β : Type _}[TopologicalSpace α][TopologicalSpace β]
+variable (α : Type _) {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
 namespace TopologicalSpace
 
@@ -27,7 +27,7 @@ def closeds :=
   { s : Set α // IsClosed s }
 
 /-- The type of closed subsets is inhabited, with default element the empty set. -/
-instance  : Inhabited (closeds α) :=
+instance : Inhabited (closeds α) :=
   ⟨⟨∅, is_closed_empty⟩⟩
 
 /-- The compact sets of a topological space. See also `nonempty_compacts`. -/
@@ -63,17 +63,20 @@ theorem positive_compacts_univ_val (α : Type _) [TopologicalSpace α] [CompactS
   (positive_compacts_univ : positive_compacts α).val = univ :=
   rfl
 
-variable{α}
+variable {α}
 
 namespace Compacts
 
-instance  : SemilatticeSupBot (compacts α) :=
-  Subtype.semilatticeSupBot is_compact_empty fun K₁ K₂ => IsCompact.union
+instance : SemilatticeSup (compacts α) :=
+  Subtype.semilatticeSup fun K₁ K₂ => IsCompact.union
 
-instance  [T2Space α] : SemilatticeInfBot (compacts α) :=
-  Subtype.semilatticeInfBot is_compact_empty fun K₁ K₂ => IsCompact.inter
+instance : OrderBot (compacts α) :=
+  Subtype.orderBot is_compact_empty
 
-instance  [T2Space α] : Lattice (compacts α) :=
+instance [T2Space α] : SemilatticeInf (compacts α) :=
+  Subtype.semilatticeInf fun K₁ K₂ => IsCompact.inter
+
+instance [T2Space α] : Lattice (compacts α) :=
   Subtype.lattice (fun K₁ K₂ => IsCompact.union) fun K₁ K₂ => IsCompact.inter
 
 @[simp]
@@ -92,7 +95,7 @@ protected theorem ext {K₁ K₂ : compacts α} (h : K₁.1 = K₂.1) : K₁ = K
 theorem finset_sup_val {β} {K : β → compacts α} {s : Finset β} : (s.sup K).1 = s.sup fun x => (K x).1 :=
   Finset.sup_coe _ _
 
-instance  : Inhabited (compacts α) :=
+instance : Inhabited (compacts α) :=
   ⟨⊥⟩
 
 /-- The image of a compact set under a continuous function. -/
@@ -128,7 +131,7 @@ section NonemptyCompacts
 
 open TopologicalSpace Set
 
-variable{α}
+variable {α}
 
 instance nonempty_compacts.to_compact_space {p : nonempty_compacts α} : CompactSpace p.val :=
   ⟨is_compact_iff_is_compact_univ.1 p.property.2⟩
@@ -144,7 +147,7 @@ end NonemptyCompacts
 
 section PositiveCompacts
 
-variable(α)
+variable (α)
 
 /-- In a nonempty locally compact space, there exists a compact set with nonempty interior. -/
 instance nonempty_positive_compacts [LocallyCompactSpace α] [Nonempty α] : Nonempty (positive_compacts α) :=

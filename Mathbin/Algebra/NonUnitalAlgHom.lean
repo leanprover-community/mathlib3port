@@ -39,14 +39,12 @@ non-unital, algebra, morphism
 
 universe u v w w₁ w₂ w₃
 
-variable(R : Type u)(A : Type v)(B : Type w)(C : Type w₁)
+variable (R : Type u) (A : Type v) (B : Type w) (C : Type w₁)
 
 /-- A morphism respecting addition, multiplication, and scalar multiplication. When these arise from
 algebra structures, this is the same as a not-necessarily-unital morphism of algebras. -/
-structure
-  NonUnitalAlgHom[Monoidₓ
-      R][NonUnitalNonAssocSemiring A][DistribMulAction R A][NonUnitalNonAssocSemiring B][DistribMulAction R B] extends
-  A →+[R] B, MulHom A B
+structure NonUnitalAlgHom [Monoidₓ R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] [NonUnitalNonAssocSemiring B]
+  [DistribMulAction R B] extends A →+[R] B, MulHom A B
 
 attribute [nolint doc_blame] NonUnitalAlgHom.toDistribMulActionHom
 
@@ -54,16 +52,16 @@ attribute [nolint doc_blame] NonUnitalAlgHom.toMulHom
 
 namespace NonUnitalAlgHom
 
-variable{R A B C}[Monoidₓ R]
+variable {R A B C} [Monoidₓ R]
 
-variable[NonUnitalNonAssocSemiring A][DistribMulAction R A]
+variable [NonUnitalNonAssocSemiring A] [DistribMulAction R A]
 
-variable[NonUnitalNonAssocSemiring B][DistribMulAction R B]
+variable [NonUnitalNonAssocSemiring B] [DistribMulAction R B]
 
-variable[NonUnitalNonAssocSemiring C][DistribMulAction R C]
+variable [NonUnitalNonAssocSemiring C] [DistribMulAction R C]
 
 /-- see Note [function coercion] -/
-instance  : CoeFun (NonUnitalAlgHom R A B) fun _ => A → B :=
+instance : CoeFun (NonUnitalAlgHom R A B) fun _ => A → B :=
   ⟨to_fun⟩
 
 @[simp]
@@ -99,10 +97,10 @@ theorem mk_coe (f : NonUnitalAlgHom R A B) h₁ h₂ h₃ h₄ : (⟨f, h₁, h�
     ext 
     rfl
 
-instance  : Coe (NonUnitalAlgHom R A B) (A →+[R] B) :=
+instance : Coe (NonUnitalAlgHom R A B) (A →+[R] B) :=
   ⟨to_distrib_mul_action_hom⟩
 
-instance  : Coe (NonUnitalAlgHom R A B) (MulHom A B) :=
+instance : Coe (NonUnitalAlgHom R A B) (MulHom A B) :=
   ⟨to_mul_hom⟩
 
 @[simp]
@@ -162,13 +160,13 @@ theorem map_mul (f : NonUnitalAlgHom R A B) (x y : A) : f (x*y) = f x*f y :=
 theorem map_zero (f : NonUnitalAlgHom R A B) : f 0 = 0 :=
   f.to_distrib_mul_action_hom.map_zero
 
-instance  : HasZero (NonUnitalAlgHom R A B) :=
+instance : HasZero (NonUnitalAlgHom R A B) :=
   ⟨{ (0 : A →+[R] B) with
       map_mul' :=
         by 
           simp  }⟩
 
-instance  : HasOne (NonUnitalAlgHom R A A) :=
+instance : HasOne (NonUnitalAlgHom R A A) :=
   ⟨{ (1 : A →+[R] A) with
       map_mul' :=
         by 
@@ -188,7 +186,7 @@ theorem zero_apply (a : A) : (0 : NonUnitalAlgHom R A B) a = 0 :=
 theorem one_apply (a : A) : (1 : NonUnitalAlgHom R A A) a = a :=
   rfl
 
-instance  : Inhabited (NonUnitalAlgHom R A B) :=
+instance : Inhabited (NonUnitalAlgHom R A B) :=
   ⟨0⟩
 
 /-- The composition of morphisms is a morphism. -/
@@ -217,7 +215,7 @@ end NonUnitalAlgHom
 
 namespace AlgHom
 
-variable{R A B}[CommSemiringₓ R][Semiringₓ A][Semiringₓ B][Algebra R A][Algebra R B]
+variable {R A B} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A] [Algebra R B]
 
 /-- A unital morphism of algebras is a `non_unital_alg_hom`. -/
 def to_non_unital_alg_hom (f : A →ₐ[R] B) : NonUnitalAlgHom R A B :=

@@ -40,17 +40,17 @@ open Function Tactic Set Auto
 
 universe u
 
-variable{α β γ : Type _}{ι ι' ι₂ : Sort _}
+variable {α β γ : Type _} {ι ι' ι₂ : Sort _}
 
 namespace Set
 
 /-! ### Complete lattice and complete Boolean algebra instances -/
 
 
-instance  : HasInfₓ (Set α) :=
+instance : HasInfₓ (Set α) :=
   ⟨fun s => { a | ∀ t _ : t ∈ s, a ∈ t }⟩
 
-instance  : HasSupₓ (Set α) :=
+instance : HasSupₓ (Set α) :=
   ⟨sUnion⟩
 
 /-- Intersection of a set of sets. -/
@@ -102,7 +102,7 @@ theorem mem_Inter {x : β} {s : ι → Set β} : x ∈ Inter s ↔ ∀ i, x ∈ 
 theorem mem_sUnion {x : α} {S : Set (Set α)} : x ∈ ⋃₀S ↔ ∃ (t : _)(_ : t ∈ S), x ∈ t :=
   Iff.rfl
 
-instance  : CompleteBooleanAlgebra (Set α) :=
+instance : CompleteBooleanAlgebra (Set α) :=
   { Set.booleanAlgebra, Pi.completeLattice with sup := Sup, inf := Inf,
     le_Sup := fun s t t_in a a_in => ⟨t, ⟨t_in, a_in⟩⟩, Sup_le := fun s t h a ⟨t', ⟨t'_in, a_in⟩⟩ => h t' t'_in a_in,
     le_Inf := fun s t h a a_in t' t'_in => h t' t'_in a_in, Inf_le := fun s t t_in a h => h _ t_in,
@@ -135,7 +135,7 @@ theorem monotone_set_of [Preorderₓ α] {p : α → β → Prop} (hp : ∀ b, M
 
 section GaloisConnection
 
-variable{f : α → β}
+variable {f : α → β}
 
 protected theorem image_preimage : GaloisConnection (image f) (preimage f) :=
   fun a b => image_subset_iff
@@ -156,7 +156,7 @@ end GaloisConnection
 /-! ### Union and intersection over an indexed family of sets -/
 
 
-instance  : OrderTop (Set α) :=
+instance : OrderTop (Set α) :=
   { top := univ,
     le_top :=
       by 
@@ -358,7 +358,7 @@ theorem Inter_option {ι} (s : Option ι → Set α) : (⋂o, s o) = s none ∩ 
 
 section 
 
-variable(p : ι → Prop)[DecidablePred p]
+variable (p : ι → Prop) [DecidablePred p]
 
 theorem Union_dite (f : ∀ i, p i → Set α) (g : ∀ i, ¬p i → Set α) :
   (⋃i, if h : p i then f i h else g i h) = (⋃(i : _)(h : p i), f i h) ∪ ⋃(i : _)(h : ¬p i), g i h :=
@@ -434,7 +434,7 @@ theorem Inter_univ : (⋂i : ι, univ : Set α) = univ :=
 
 section 
 
-variable{s : ι → Set α}
+variable {s : ι → Set α}
 
 @[simp]
 theorem Union_eq_empty : (⋃i, s i) = ∅ ↔ ∀ i, s i = ∅ :=
@@ -1280,7 +1280,7 @@ theorem Inter_Inter_eq' {f : ι → α} {g : α → Set β} : (⋂(x y : _)(h : 
   by 
     simpa using bInter_range
 
-variable{s : Set γ}{f : γ → α}{g : α → Set β}
+variable {s : Set γ} {f : γ → α} {g : α → Set β}
 
 theorem bUnion_image : (⋃(x : _)(_ : x ∈ f '' s), g x) = ⋃(y : _)(_ : y ∈ s), g (f y) :=
   supr_image
@@ -1391,7 +1391,7 @@ end Prod
 
 section Image2
 
-variable(f : α → β → γ){s : Set α}{t : Set β}
+variable (f : α → β → γ) {s : Set α} {t : Set β}
 
 theorem Union_image_left : (⋃(a : _)(_ : a ∈ s), f a '' t) = image2 f s t :=
   by 
@@ -1489,13 +1489,13 @@ end Seq
 /-! ### `set` as a monad -/
 
 
-instance  : Monadₓ Set :=
+instance : Monadₓ Set :=
   { pure := fun α : Type u a => {a}, bind := fun α β : Type u s f => ⋃(i : _)(_ : i ∈ s), f i,
     seq := fun α β : Type u => Set.Seq, map := fun α β : Type u => Set.Image }
 
 section Monadₓ
 
-variable{α' β' : Type u}{s : Set α'}{f : α' → Set β'}{g : Set (α' → β')}
+variable {α' β' : Type u} {s : Set α'} {f : α' → Set β'} {g : Set (α' → β')}
 
 @[simp]
 theorem bind_def : s >>= f = ⋃(i : _)(_ : i ∈ s), f i :=
@@ -1515,7 +1515,7 @@ theorem pure_def (a : α) : (pure a : Set α) = {a} :=
 
 end Monadₓ
 
-instance  : IsLawfulMonad Set :=
+instance : IsLawfulMonad Set :=
   { pure_bind :=
       fun α β x f =>
         by 
@@ -1539,12 +1539,12 @@ instance  : IsLawfulMonad Set :=
         by 
           simp [seq_def] }
 
-instance  : IsCommApplicative (Set : Type u → Type u) :=
+instance : IsCommApplicative (Set : Type u → Type u) :=
   ⟨fun α β s t => prod_image_seq_comm s t⟩
 
 section Pi
 
-variable{π : α → Type _}
+variable {π : α → Type _}
 
 theorem pi_def (i : Set α) (s : ∀ a, Set (π a)) : pi i s = ⋂(a : _)(_ : a ∈ i), eval a ⁻¹' s a :=
   by 
@@ -1595,7 +1595,7 @@ We define some lemmas in the `disjoint` namespace to be able to use projection n
 
 section Disjoint
 
-variable{s t u : Set α}
+variable {s t u : Set α}
 
 namespace Disjoint
 
@@ -1616,6 +1616,12 @@ theorem inter_right (u : Set α) (h : Disjoint s t) : Disjoint s (t ∩ u) :=
 
 theorem inter_right' (u : Set α) (h : Disjoint s t) : Disjoint s (u ∩ t) :=
   inf_right' _ h
+
+theorem subset_left_of_subset_union (h : s ⊆ t ∪ u) (hac : Disjoint s u) : s ⊆ t :=
+  hac.left_le_of_le_sup_right h
+
+theorem subset_right_of_subset_union (h : s ⊆ t ∪ u) (hab : Disjoint s t) : s ⊆ u :=
+  hab.left_le_of_le_sup_left h
 
 theorem preimage {α β} (f : α → β) {s t : Set β} (h : Disjoint s t) : Disjoint (f ⁻¹' s) (f ⁻¹' t) :=
   fun x hx => h hx
@@ -1738,7 +1744,7 @@ end Disjoint
 
 namespace Set
 
-variable(t : α → Set β)
+variable (t : α → Set β)
 
 theorem subset_diff {s t u : Set α} : s ⊆ t \ u ↔ s ⊆ t ∧ Disjoint s u :=
   ⟨fun h => ⟨fun x hxs => (h hxs).1, fun x ⟨hxs, hxu⟩ => (h hxs).2 hxu⟩,

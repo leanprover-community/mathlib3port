@@ -16,11 +16,11 @@ open_locale BigOperators Pointwise
 
 namespace Submodule
 
-variable{R : Type u}{M : Type v}
+variable {R : Type u} {M : Type v}
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 open_locale Pointwise
 
@@ -31,7 +31,7 @@ instance has_scalar' : HasScalar (Ideal R) (Submodule R M) :=
 def annihilator (N : Submodule R M) : Ideal R :=
   (LinearMap.lsmul R N).ker
 
-variable{I J : Ideal R}{N P : Submodule R M}
+variable {I J : Ideal R} {N P : Submodule R M}
 
 theorem mem_annihilator {r} : r ∈ N.annihilator ↔ ∀ n _ : n ∈ N, r • n = (0 : M) :=
   ⟨fun hr n hn => congr_argₓ Subtype.val (LinearMap.ext_iff.1 (LinearMap.mem_ker.1 hr) ⟨n, hn⟩),
@@ -117,7 +117,7 @@ theorem mul_annihilator (I : Ideal R) : (I*annihilator I) = ⊥ :=
   by 
     rw [mul_commₓ, annihilator_mul]
 
-variable(I J N P)
+variable (I J N P)
 
 @[simp]
 theorem smul_bot : I • (⊥ : Submodule R M) = ⊥ :=
@@ -162,7 +162,7 @@ protected theorem smul_assoc : (I • J) • N = I • J • N :=
         smul_le.2$
           fun s hs n hn => show r • s • n ∈ (I • J) • N from mul_smul r s n ▸ smul_mem_smul (smul_mem_smul hr hs) hn)
 
-variable(S : Set R)(T : Set M)
+variable (S : Set R) (T : Set M)
 
 theorem span_smul_span : Ideal.span S • span R T = span R (⋃(s : _)(_ : s ∈ S)(t : _)(_ : t ∈ T), {s • t}) :=
   le_antisymmₓ
@@ -185,7 +185,7 @@ theorem span_smul_span : Ideal.span S • span R T = span R (⋃(s : _)(_ : s �
         fun r hrS =>
           Set.bUnion_subset$ fun n hnT => Set.singleton_subset_iff.2$ smul_mem_smul (subset_span hrS) (subset_span hnT)
 
-variable{M' : Type w}[AddCommMonoidₓ M'][Module R M']
+variable {M' : Type w} [AddCommMonoidₓ M'] [Module R M']
 
 theorem map_smul'' (f : M →ₗ[R] M') : (I • N).map f = I • N.map f :=
   le_antisymmₓ
@@ -202,9 +202,9 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][AddCommGroupₓ M][Module R M]
+variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
 
-variable{N N₁ N₂ P P₁ P₂ : Submodule R M}
+variable {N N₁ N₂ P P₁ P₂ : Submodule R M}
 
 /-- `N.colon P` is the ideal of all elements `r : R` such that `r • P ⊆ N`. -/
 def colon (N P : Submodule R M) : Ideal R :=
@@ -245,11 +245,11 @@ namespace Ideal
 
 section MulAndRadical
 
-variable{R : Type u}{ι : Type _}[CommSemiringₓ R]
+variable {R : Type u} {ι : Type _} [CommSemiringₓ R]
 
-variable{I J K L : Ideal R}
+variable {I J K L : Ideal R}
 
-instance  : Mul (Ideal R) :=
+instance : Mul (Ideal R) :=
   ⟨· • ·⟩
 
 @[simp]
@@ -303,7 +303,7 @@ theorem mul_right_self_sup : (I*J)⊔I = I :=
 theorem mul_left_self_sup : (J*I)⊔I = I :=
   sup_eq_right.2 Ideal.mul_le_left
 
-variable(I J K)
+variable (I J K)
 
 protected theorem mul_commₓ : (I*J) = J*I :=
   le_antisymmₓ (mul_le.2$ fun r hrI s hsJ => mul_mem_mul_rev hsJ hrI)
@@ -315,7 +315,7 @@ protected theorem mul_assocₓ : ((I*J)*K) = I*J*K :=
 theorem span_mul_span (S T : Set R) : (span S*span T) = span (⋃(s : _)(_ : s ∈ S)(t : _)(_ : t ∈ T), {s*t}) :=
   Submodule.span_smul_span S T
 
-variable{I J K}
+variable {I J K}
 
 theorem span_mul_span' (S T : Set R) : (span S*span T) = span (S*T) :=
   by 
@@ -419,7 +419,7 @@ theorem mul_eq_inf_of_coprime (h : I⊔J = ⊤) : (I*J) = I⊓J :=
       let ⟨s, hsi, t, htj, hst⟩ := Submodule.mem_sup.1 ((eq_top_iff_one _).1 h)
       mul_oneₓ r ▸ hst ▸ (mul_addₓ r s t).symm ▸ Ideal.add_mem (I*J) (mul_mem_mul_rev hsi hrj) (mul_mem_mul hri htj)
 
-variable(I)
+variable (I)
 
 @[simp]
 theorem mul_bot : (I*⊥) = ⊥ :=
@@ -437,7 +437,7 @@ theorem mul_top : (I*⊤) = I :=
 theorem top_mul : (⊤*I) = I :=
   Submodule.top_smul I
 
-variable{I}
+variable {I}
 
 theorem mul_mono (hik : I ≤ K) (hjl : J ≤ L) : (I*J) ≤ K*L :=
   Submodule.smul_mono hik hjl
@@ -448,7 +448,7 @@ theorem mul_mono_left (h : I ≤ J) : (I*K) ≤ J*K :=
 theorem mul_mono_right (h : J ≤ K) : (I*J) ≤ I*K :=
   Submodule.smul_mono_right h
 
-variable(I J K)
+variable (I J K)
 
 theorem mul_sup : (I*J⊔K) = (I*J)⊔I*K :=
   Submodule.smul_sup I J K
@@ -456,7 +456,7 @@ theorem mul_sup : (I*J⊔K) = (I*J)⊔I*K :=
 theorem sup_mul : ((I⊔J)*K) = (I*K)⊔J*K :=
   Submodule.sup_smul I J K
 
-variable{I J K}
+variable {I J K}
 
 theorem pow_le_pow {m n : ℕ} (h : m ≤ n) : I ^ n ≤ I ^ m :=
   by 
@@ -476,7 +476,7 @@ theorem mul_eq_bot {R : Type _} [CommRingₓ R] [IsDomain R] {I J : Ideal R} : (
       by 
         cases h <;> rw [←Ideal.mul_bot, h, Ideal.mul_comm]⟩
 
-instance  {R : Type _} [CommRingₓ R] [IsDomain R] : NoZeroDivisors (Ideal R) :=
+instance {R : Type _} [CommRingₓ R] [IsDomain R] : NoZeroDivisors (Ideal R) :=
   { eq_zero_or_eq_zero_of_mul_eq_zero := fun I J => mul_eq_bot.1 }
 
 /-- A product of ideals in an integral domain is zero if and only if one of the terms is zero. -/
@@ -508,23 +508,23 @@ def radical (I : Ideal R) : Ideal R :=
 theorem le_radical : I ≤ radical I :=
   fun r hri => ⟨1, (pow_oneₓ r).symm ▸ hri⟩
 
-variable(R)
+variable (R)
 
 theorem radical_top : (radical ⊤ : Ideal R) = ⊤ :=
   (eq_top_iff_one _).2 ⟨0, Submodule.mem_top⟩
 
-variable{R}
+variable {R}
 
 theorem radical_mono (H : I ≤ J) : radical I ≤ radical J :=
   fun r ⟨n, hrni⟩ => ⟨n, H hrni⟩
 
-variable(I)
+variable (I)
 
 @[simp]
 theorem radical_idem : radical (radical I) = radical I :=
   le_antisymmₓ (fun r ⟨n, k, hrnki⟩ => ⟨n*k, (pow_mulₓ r n k).symm ▸ hrnki⟩) le_radical
 
-variable{I}
+variable {I}
 
 theorem radical_le_radical_iff : radical I ≤ radical J ↔ I ≤ radical J :=
   ⟨fun h => le_transₓ le_radical h, fun h => radical_idem J ▸ radical_mono h⟩
@@ -539,7 +539,7 @@ theorem radical_eq_top : radical I = ⊤ ↔ I = ⊤ :=
 theorem is_prime.radical (H : is_prime I) : radical I = I :=
   le_antisymmₓ (fun r ⟨n, hrni⟩ => H.mem_of_pow_mem n hrni) le_radical
 
-variable(I J)
+variable (I J)
 
 theorem radical_sup : radical (I⊔J) = radical (radical I⊔radical J) :=
   le_antisymmₓ (radical_mono$ sup_le_sup le_radical le_radical)$
@@ -556,7 +556,7 @@ theorem radical_mul : radical (I*J) = radical I⊓radical J :=
   le_antisymmₓ (radical_inf I J ▸ radical_mono$ @mul_le_inf _ _ I J)
     fun r ⟨⟨m, hrm⟩, ⟨n, hrn⟩⟩ => ⟨m+n, (pow_addₓ r m n).symm ▸ mul_mem_mul hrm hrn⟩
 
-variable{I J}
+variable {I J}
 
 theorem is_prime.radical_le_iff (hj : is_prime J) : radical I ≤ J ↔ I ≤ J :=
   ⟨le_transₓ le_radical, fun hij r ⟨n, hrni⟩ => hj.mem_of_pow_mem n$ hij hrni⟩
@@ -610,10 +610,10 @@ theorem radical_eq_Inf (I : Ideal R) : radical I = Inf { J:Ideal R | I ≤ J ∧
 theorem radical_bot_of_is_domain {R : Type u} [CommRingₓ R] [IsDomain R] : radical (⊥ : Ideal R) = ⊥ :=
   eq_bot_iff.2 fun x hx => hx.rec_on fun n hn => pow_eq_zero hn
 
-instance  : CommSemiringₓ (Ideal R) :=
+instance : CommSemiringₓ (Ideal R) :=
   Submodule.commSemiring
 
-variable(R)
+variable (R)
 
 theorem top_pow (n : ℕ) : (⊤ ^ n : Ideal R) = ⊤ :=
   Nat.recOn n one_eq_top$
@@ -621,9 +621,9 @@ theorem top_pow (n : ℕ) : (⊤ ^ n : Ideal R) = ⊤ :=
       by 
         rw [pow_succₓ, ih, top_mul]
 
-variable{R}
+variable {R}
 
-variable(I)
+variable (I)
 
 theorem radical_pow (n : ℕ) (H : n > 0) : radical (I ^ n) = radical I :=
   Nat.recOn n
@@ -897,15 +897,15 @@ end MulAndRadical
 
 section MapAndComap
 
-variable{R : Type u}{S : Type v}
+variable {R : Type u} {S : Type v}
 
 section Semiringₓ
 
-variable[Semiringₓ R][Semiringₓ S]
+variable [Semiringₓ R] [Semiringₓ S]
 
-variable(f : R →+* S)
+variable (f : R →+* S)
 
-variable{I J : Ideal R}{K L : Ideal S}
+variable {I J : Ideal R} {K L : Ideal S}
 
 /-- `I.map f` is the span of the image of the ideal `I` under `f`, which may be bigger than
   the image itself. -/
@@ -914,14 +914,9 @@ def map (I : Ideal R) : Ideal S :=
 
 /-- `I.comap f` is the preimage of `I` under `f`. -/
 def comap (I : Ideal S) : Ideal R :=
-  { I.to_add_submonoid.comap (f : R →+ S) with Carrier := f ⁻¹' I,
-    smul_mem' :=
-      fun c x hx =>
-        show f (c*x) ∈ I by 
-          rw [f.map_mul]
-          exact I.mul_mem_left _ hx }
+  { I.comap f.to_semilinear_map with Carrier := f ⁻¹' I }
 
-variable{f}
+variable {f}
 
 theorem map_mono (h : I ≤ J) : map f I ≤ map f J :=
   span_mono$ Set.image_subset _ h
@@ -942,12 +937,30 @@ theorem mem_comap {x} : x ∈ comap f K ↔ f x ∈ K :=
 theorem comap_mono (h : K ≤ L) : comap f K ≤ comap f L :=
   Set.preimage_mono fun x hx => h hx
 
-variable(f)
+variable (f)
 
 theorem comap_ne_top (hK : K ≠ ⊤) : comap f K ≠ ⊤ :=
   (ne_top_iff_one _).2$
     by 
       rw [mem_comap, f.map_one] <;> exact (ne_top_iff_one _).1 hK
+
+theorem map_le_comap_of_inv_on (g : S →+* R) (I : Ideal R) (hf : Set.LeftInvOn g f I) : I.map f ≤ I.comap g :=
+  by 
+    refine' Ideal.span_le.2 _ 
+    rintro x ⟨x, hx, rfl⟩
+    rw [SetLike.mem_coe, mem_comap, hf hx]
+    exact hx
+
+theorem comap_le_map_of_inv_on (g : S →+* R) (I : Ideal S) (hf : Set.LeftInvOn g f (f ⁻¹' I)) : I.comap f ≤ I.map g :=
+  fun x hx : f x ∈ I => hf hx ▸ Ideal.mem_map_of_mem g hx
+
+/-- The `ideal` version of `set.image_subset_preimage_of_inverse`. -/
+theorem map_le_comap_of_inverse (g : S →+* R) (I : Ideal R) (h : Function.LeftInverse g f) : I.map f ≤ I.comap g :=
+  map_le_comap_of_inv_on _ _ _$ h.left_inv_on _
+
+/-- The `ideal` version of `set.preimage_subset_image_of_inverse`. -/
+theorem comap_le_map_of_inverse (g : S →+* R) (I : Ideal S) (h : Function.LeftInverse g f) : I.comap f ≤ I.map g :=
+  comap_le_map_of_inv_on _ _ _$ h.left_inv_on _
 
 instance is_prime.comap [hK : K.is_prime] : (comap f K).IsPrime :=
   ⟨comap_ne_top _ hK.1,
@@ -955,12 +968,12 @@ instance is_prime.comap [hK : K.is_prime] : (comap f K).IsPrime :=
       by 
         simp only [mem_comap, f.map_mul] <;> apply hK.2⟩
 
-variable(I J K L)
+variable (I J K L)
 
 theorem map_top : map f ⊤ = ⊤ :=
   (eq_top_iff_one _).2$ subset_span ⟨1, trivialₓ, f.map_one⟩
 
-variable(f)
+variable (f)
 
 theorem gc_map_comap : GaloisConnection (Ideal.map f) (Ideal.comap f) :=
   fun I J => Ideal.map_le_iff_le_comap
@@ -986,7 +999,7 @@ theorem map_span (f : R →+* S) (s : Set R) : map f (span s) = span (f '' s) :=
     Submodule.span_eq_of_le _ (fun y ⟨x, hy, x_eq⟩ => x_eq ▸ mem_map_of_mem f (subset_span hy))
       (map_le_iff_le_comap.2$ span_le.2$ Set.image_subset_iff.1 subset_span)
 
-variable{f I J K L}
+variable {f I J K L}
 
 theorem map_le_of_le_comap : I ≤ K.comap f → I.map f ≤ K :=
   (gc_map_comap f).l_le
@@ -1015,7 +1028,7 @@ theorem comap_eq_top_iff {I : Ideal S} : I.comap f = ⊤ ↔ I = ⊤ :=
 theorem map_bot : (⊥ : Ideal R).map f = ⊥ :=
   (gc_map_comap f).l_bot
 
-variable(f I J K L)
+variable (f I J K L)
 
 @[simp]
 theorem map_comap_map : ((I.map f).comap f).map f = I.map f :=
@@ -1031,7 +1044,7 @@ theorem map_sup : (I⊔J).map f = I.map f⊔J.map f :=
 theorem comap_inf : comap f (K⊓L) = comap f K⊓comap f L :=
   rfl
 
-variable{ι : Sort _}
+variable {ι : Sort _}
 
 theorem map_supr (K : ι → Ideal R) : (supr K).map f = ⨆i, (K i).map f :=
   (gc_map_comap f).l_supr
@@ -1057,7 +1070,7 @@ theorem comap_is_prime [H : is_prime K] : is_prime (comap f K) :=
         by 
           rwa [mem_comap, RingHom.map_mul] at h⟩
 
-variable{I J K L}
+variable {I J K L}
 
 theorem map_inf_le : map f (I⊓J) ≤ map f I⊓map f J :=
   (gc_map_comap f).monotone_l.map_inf_le _ _
@@ -1067,7 +1080,7 @@ theorem le_comap_sup : comap f K⊔comap f L ≤ comap f (K⊔L) :=
 
 section Surjective
 
-variable(hf : Function.Surjective f)
+variable (hf : Function.Surjective f)
 
 include hf
 
@@ -1121,7 +1134,7 @@ end Surjective
 
 section Injective
 
-variable(hf : Function.Injective f)
+variable (hf : Function.Injective f)
 
 include hf
 
@@ -1137,11 +1150,11 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R][Ringₓ S](f : R →+* S){I : Ideal R}
+variable [Ringₓ R] [Ringₓ S] (f : R →+* S) {I : Ideal R}
 
 section Surjective
 
-variable(hf : Function.Surjective f)
+variable (hf : Function.Surjective f)
 
 include hf
 
@@ -1223,7 +1236,7 @@ theorem map_comap_of_equiv (I : Ideal R) (f : R ≃+* S) : I.map (f : R →+* S)
 
 section Bijective
 
-variable(hf : Function.Bijective f)
+variable (hf : Function.Bijective f)
 
 include hf
 
@@ -1258,11 +1271,11 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][CommRingₓ S]
+variable [CommRingₓ R] [CommRingₓ S]
 
-variable(f : R →+* S)
+variable (f : R →+* S)
 
-variable{I J : Ideal R}{K L : Ideal S}
+variable {I J : Ideal R} {K L : Ideal S}
 
 theorem mem_quotient_iff_mem (hIJ : I ≤ J) {x : R} : Quotientₓ.mk I x ∈ J.map (Quotientₓ.mk I) ↔ x ∈ J :=
   by 
@@ -1275,7 +1288,7 @@ theorem mem_quotient_iff_mem (hIJ : I ≤ J) {x : R} : Quotientₓ.mk I x ∈ J.
       intro x_mem 
       exact ⟨x, x_mem, rfl⟩
 
-variable(I J K L)
+variable (I J K L)
 
 theorem map_mul : map f (I*J) = map f I*map f J :=
   le_antisymmₓ
@@ -1305,7 +1318,7 @@ theorem map_quotient_self : map (Quotientₓ.mk I) I = ⊥ :=
   eq_bot_iff.2$
     Ideal.map_le_iff_le_comap.2$ fun x hx => (Submodule.mem_bot I.quotient).2$ Ideal.Quotient.eq_zero_iff_mem.2 hx
 
-variable{I J K L}
+variable {I J K L}
 
 theorem map_radical_le : map f (radical I) ≤ radical (map f I) :=
   map_le_iff_le_comap.2$ fun r ⟨n, hrni⟩ => ⟨n, f.map_pow r n ▸ mem_map_of_mem f hrni⟩
@@ -1321,7 +1334,7 @@ end MapAndComap
 
 section IsPrimary
 
-variable{R : Type u}[CommSemiringₓ R]
+variable {R : Type u} [CommSemiringₓ R]
 
 /-- A proper ideal `I` is primary iff `xy ∈ I` implies `x ∈ I` or `y ∈ radical I`. -/
 def is_primary (I : Ideal R) : Prop :=
@@ -1366,11 +1379,11 @@ end Ideal
 
 namespace RingHom
 
-variable{R : Type u}{S : Type v}
+variable {R : Type u} {S : Type v} {T : Type v}
 
 section Semiringₓ
 
-variable[Semiringₓ R][Semiringₓ S](f : R →+* S)
+variable [Semiringₓ R] [Semiringₓ S] [Semiringₓ T] (f : R →+* S) (g : T →+* S)
 
 /-- Kernel of a ring homomorphism as an ideal of the domain. -/
 def ker : Ideal R :=
@@ -1387,6 +1400,10 @@ theorem ker_eq : (ker f : Set R) = Set.Preimage f {0} :=
 theorem ker_eq_comap_bot (f : R →+* S) : f.ker = Ideal.comap f ⊥ :=
   rfl
 
+theorem comap_ker (f : S →+* R) : f.ker.comap g = (f.comp g).ker :=
+  by 
+    rw [RingHom.ker_eq_comap_bot, Ideal.comap_comap, RingHom.ker_eq_comap_bot]
+
 /-- If the target is not the zero ring, then one is not in the kernel.-/
 theorem not_one_mem_ker [Nontrivial S] (f : R →+* S) : (1 : R) ∉ ker f :=
   by 
@@ -1397,7 +1414,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R][Semiringₓ S](f : R →+* S)
+variable [Ringₓ R] [Semiringₓ S] (f : R →+* S)
 
 theorem injective_iff_ker_eq_bot : Function.Injective f ↔ ker f = ⊥ :=
   by 
@@ -1417,7 +1434,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][CommRingₓ S](f : R →+* S)
+variable [CommRingₓ R] [CommRingₓ S] (f : R →+* S)
 
 /-- The induced map from the quotient by the kernel to the codomain.
 
@@ -1440,7 +1457,7 @@ theorem ker_lift_injective (f : R →+* S) : Function.Injective (ker_lift f) :=
           show a - b ∈ ker f by 
             rw [mem_ker, map_sub, h, sub_self]
 
-variable{f}
+variable {f}
 
 /-- The **first isomorphism theorem** for commutative rings, computable version. -/
 def quotient_ker_equiv_of_right_inverse {g : S → R} (hf : Function.RightInverse g f) : f.ker.quotient ≃+* S :=
@@ -1500,11 +1517,11 @@ end RingHom
 
 namespace Ideal
 
-variable{R : Type _}{S : Type _}
+variable {R : Type _} {S : Type _}
 
 section Semiringₓ
 
-variable[Semiringₓ R][Semiringₓ S]
+variable [Semiringₓ R] [Semiringₓ S]
 
 theorem map_eq_bot_iff_le_ker {I : Ideal R} (f : R →+* S) : I.map f = ⊥ ↔ I ≤ f.ker :=
   by 
@@ -1517,7 +1534,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R][Ringₓ S]
+variable [Ringₓ R] [Ringₓ S]
 
 -- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem map_Inf
@@ -1578,7 +1595,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][CommRingₓ S]
+variable [CommRingₓ R] [CommRingₓ S]
 
 @[simp]
 theorem mk_ker {I : Ideal R} : (Quotientₓ.mk I).ker = I :=
@@ -1642,14 +1659,14 @@ theorem bot_quotient_is_maximal_iff (I : Ideal R) : (⊥ : Ideal I.quotient).IsM
 
 section QuotientAlgebra
 
-variable(R₁ R₂ : Type _){A B : Type _}
+variable (R₁ R₂ : Type _) {A B : Type _}
 
-variable[CommSemiringₓ R₁][CommSemiringₓ R₂][CommRingₓ A][CommRingₓ B]
+variable [CommSemiringₓ R₁] [CommSemiringₓ R₂] [CommRingₓ A] [CommRingₓ B]
 
-variable[Algebra R₁ A][Algebra R₂ A][Algebra R₁ B]
+variable [Algebra R₁ A] [Algebra R₂ A] [Algebra R₁ B]
 
 /-- The `R₁`-algebra structure on `A/I` for an `R₁`-algebra `A` -/
-instance  {I : Ideal A} : Algebra R₁ (Ideal.Quotient I) :=
+instance {I : Ideal A} : Algebra R₁ (Ideal.Quotient I) :=
   { RingHom.comp (Ideal.Quotient.mk I) (algebraMap R₁ A) with toFun := fun x => Ideal.Quotient.mk I (algebraMap R₁ A x),
     smul := · • ·,
     smul_def' :=
@@ -1658,7 +1675,7 @@ instance  {I : Ideal A} : Algebra R₁ (Ideal.Quotient I) :=
           fun x => ((Quotientₓ.mk I).congr_arg$ Algebra.smul_def _ _).trans (RingHom.map_mul _ _ _),
     commutes' := fun _ _ => mul_commₓ _ _ }
 
-instance  [HasScalar R₁ R₂] [IsScalarTower R₁ R₂ A] (I : Ideal A) : IsScalarTower R₁ R₂ (Ideal.Quotient I) :=
+instance [HasScalar R₁ R₂] [IsScalarTower R₁ R₂ A] (I : Ideal A) : IsScalarTower R₁ R₂ (Ideal.Quotient I) :=
   by 
     infer_instance
 
@@ -1701,7 +1718,7 @@ theorem quotient.mkₐ_surjective (I : Ideal A) : Function.Surjective (quotient.
 theorem quotient.mkₐ_ker (I : Ideal A) : (quotient.mkₐ R₁ I : A →+* I.quotient).ker = I :=
   Ideal.mk_ker
 
-variable{R₁}
+variable {R₁}
 
 theorem ker_lift.map_smul (f : A →ₐ[R₁] B) (r : R₁) (x : f.to_ring_hom.ker.quotient) :
   f.to_ring_hom.ker_lift (r • x) = r • f.to_ring_hom.ker_lift x :=
@@ -1860,7 +1877,7 @@ def quotient_equiv_alg (I : Ideal A) (J : Ideal B) (f : A ≃ₐ[R₁] B) (hIJ :
         by 
           simp  }
 
-instance (priority := 100)quotient_algebra {I : Ideal A} [Algebra R A] :
+instance (priority := 100) quotient_algebra {I : Ideal A} [Algebra R A] :
   Algebra (I.comap (algebraMap R A)).Quotient I.quotient :=
   (quotient_map I (algebraMap R A) (le_of_eqₓ rfl)).toAlgebra
 
@@ -1880,9 +1897,9 @@ end Ideal
 
 namespace Submodule
 
-variable{R : Type u}{M : Type v}
+variable {R : Type u} {M : Type v}
 
-variable[CommSemiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 instance module_submodule : Module (Ideal R) (Submodule R M) :=
   { smul_add := smul_sup, add_smul := sup_smul, mul_smul := Submodule.smul_assoc,
@@ -1895,9 +1912,9 @@ end Submodule
 
 namespace RingHom
 
-variable{A B C : Type _}[Ringₓ A][Ringₓ B][Ringₓ C]
+variable {A B C : Type _} [Ringₓ A] [Ringₓ B] [Ringₓ C]
 
-variable(f : A →+* B)(f_inv : B → A)
+variable (f : A →+* B) (f_inv : B → A)
 
 /-- Auxiliary definition used to define `lift_of_right_inverse` -/
 def lift_of_right_inverse_aux (hf : Function.RightInverse f_inv f) (g : A →+* C) (hg : f.ker ≤ g.ker) : B →+* C :=
@@ -1986,7 +2003,7 @@ namespace DoubleQuot
 
 open Ideal
 
-variable{R : Type u}[CommRingₓ R](I J : Ideal R)
+variable {R : Type u} [CommRingₓ R] (I J : Ideal R)
 
 /-- The obvious ring hom `R/I → R/(I ⊔ J)` -/
 def quot_left_to_quot_sup : I.quotient →+* (I⊔J).Quotient :=

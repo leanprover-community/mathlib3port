@@ -46,7 +46,8 @@ section
 
 open MonoidalCategory
 
-variable(C : Type u₁)[category.{v₁} C][monoidal_category.{v₁} C](D : Type u₂)[category.{v₂} D][monoidal_category.{v₂} D]
+variable (C : Type u₁) [category.{v₁} C] [monoidal_category.{v₁} C] (D : Type u₂) [category.{v₂} D]
+  [monoidal_category.{v₂} D]
 
 /-- A lax monoidal functor is a functor `F : C ⥤ D` between monoidal categories,
 equipped with morphisms `ε : 𝟙 _D ⟶ F.obj (𝟙_ C)` and `μ X Y : F.obj X ⊗ F.obj Y ⟶ F.obj (X ⊗ Y)`,
@@ -89,7 +90,7 @@ attribute [simp, reassoc] lax_monoidal_functor.associativity
 
 section 
 
-variable{C D}
+variable {C D}
 
 @[simp, reassoc]
 theorem lax_monoidal_functor.left_unitality_inv (F : lax_monoidal_functor C D) (X : C) :
@@ -129,7 +130,7 @@ structure monoidal_functor extends lax_monoidal_functor.{v₁, v₂} C D where
 
 attribute [instance] monoidal_functor.ε_is_iso monoidal_functor.μ_is_iso
 
-variable{C D}
+variable {C D}
 
 /--
 The unit morphism of a (strong) monoidal functor as an isomorphism.
@@ -150,14 +151,14 @@ open MonoidalCategory
 
 namespace LaxMonoidalFunctor
 
-variable(C : Type u₁)[category.{v₁} C][monoidal_category.{v₁} C]
+variable (C : Type u₁) [category.{v₁} C] [monoidal_category.{v₁} C]
 
 /-- The identity lax monoidal functor. -/
 @[simps]
 def id : lax_monoidal_functor.{v₁, v₁} C C :=
   { 𝟭 C with ε := 𝟙 _, μ := fun X Y => 𝟙 _ }
 
-instance  : Inhabited (lax_monoidal_functor C C) :=
+instance : Inhabited (lax_monoidal_functor C C) :=
   ⟨id C⟩
 
 end LaxMonoidalFunctor
@@ -166,9 +167,9 @@ namespace MonoidalFunctor
 
 section 
 
-variable{C : Type u₁}[category.{v₁} C][monoidal_category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C] [monoidal_category.{v₁} C]
 
-variable{D : Type u₂}[category.{v₂} D][monoidal_category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D] [monoidal_category.{v₂} D]
 
 theorem map_tensor (F : monoidal_functor.{v₁, v₂} C D) {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') :
   F.map (f ⊗ g) = inv (F.μ X X') ≫ (F.map f ⊗ F.map g) ≫ F.μ Y Y' :=
@@ -204,29 +205,29 @@ end
 
 section 
 
-variable(C : Type u₁)[category.{v₁} C][monoidal_category.{v₁} C]
+variable (C : Type u₁) [category.{v₁} C] [monoidal_category.{v₁} C]
 
 /-- The identity monoidal functor. -/
 @[simps]
 def id : monoidal_functor.{v₁, v₁} C C :=
   { 𝟭 C with ε := 𝟙 _, μ := fun X Y => 𝟙 _ }
 
-instance  : Inhabited (monoidal_functor C C) :=
+instance : Inhabited (monoidal_functor C C) :=
   ⟨id C⟩
 
 end 
 
 end MonoidalFunctor
 
-variable{C : Type u₁}[category.{v₁} C][monoidal_category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C] [monoidal_category.{v₁} C]
 
-variable{D : Type u₂}[category.{v₂} D][monoidal_category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D] [monoidal_category.{v₂} D]
 
-variable{E : Type u₃}[category.{v₃} E][monoidal_category.{v₃} E]
+variable {E : Type u₃} [category.{v₃} E] [monoidal_category.{v₃} E]
 
 namespace LaxMonoidalFunctor
 
-variable(F : lax_monoidal_functor.{v₁, v₂} C D)(G : lax_monoidal_functor.{v₂, v₃} D E)
+variable (F : lax_monoidal_functor.{v₁, v₂} C D) (G : lax_monoidal_functor.{v₂, v₃} D E)
 
 /-- The composition of two lax monoidal functors is again lax monoidal. -/
 @[simps]
@@ -272,7 +273,7 @@ end LaxMonoidalFunctor
 
 namespace MonoidalFunctor
 
-variable(F : monoidal_functor.{v₁, v₂} C D)(G : monoidal_functor.{v₂, v₃} D E)
+variable (F : monoidal_functor.{v₁, v₂} C D) (G : monoidal_functor.{v₂, v₃} D E)
 
 /-- The composition of two monoidal functors is again monoidal. -/
 @[simps]

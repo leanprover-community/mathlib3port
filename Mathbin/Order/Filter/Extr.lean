@@ -69,7 +69,7 @@ Similar predicates with `_on` suffix are particular cases for `l = 𝓟 s`.
 
 universe u v w x
 
-variable{α : Type u}{β : Type v}{γ : Type w}{δ : Type x}
+variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 
 open Set Filter
 
@@ -77,9 +77,9 @@ open_locale Filter
 
 section Preorderₓ
 
-variable[Preorderₓ β][Preorderₓ γ]
+variable [Preorderₓ β] [Preorderₓ γ]
 
-variable(f : α → β)(s : Set α)(l : Filter α)(a : α)
+variable (f : α → β) (s : Set α) (l : Filter α) (a : α)
 
 /-! ### Definitions -/
 
@@ -108,7 +108,7 @@ def IsMaxOn :=
 def IsExtrOn : Prop :=
   IsExtrFilter f (𝓟 s) a
 
-variable{f s a l}{t : Set α}{l' : Filter α}
+variable {f s a l} {t : Set α} {l' : Filter α}
 
 theorem IsExtrOn.elim {p : Prop} : IsExtrOn f s a → (IsMinOn f s a → p) → (IsMaxOn f s a → p) → p :=
   Or.elim
@@ -327,7 +327,7 @@ end Preorderₓ
 
 section OrderedAddCommMonoid
 
-variable[OrderedAddCommMonoid β]{f g : α → β}{a : α}{s : Set α}{l : Filter α}
+variable [OrderedAddCommMonoid β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsMinFilter.add (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) : IsMinFilter (fun x => f x+g x) l a :=
   show IsMinFilter (fun x => f x+g x) l a from hf.bicomp_mono (fun x x' hx y y' hy => add_le_add hx hy) hg
@@ -348,7 +348,7 @@ end OrderedAddCommMonoid
 
 section OrderedAddCommGroup
 
-variable[OrderedAddCommGroup β]{f g : α → β}{a : α}{s : Set α}{l : Filter α}
+variable [OrderedAddCommGroup β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsMinFilter.neg (hf : IsMinFilter f l a) : IsMaxFilter (fun x => -f x) l a :=
   hf.comp_antitone fun x y hx => neg_le_neg hx
@@ -391,7 +391,7 @@ end OrderedAddCommGroup
 
 section SemilatticeSup
 
-variable[SemilatticeSup β]{f g : α → β}{a : α}{s : Set α}{l : Filter α}
+variable [SemilatticeSup β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsMinFilter.sup (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) : IsMinFilter (fun x => f x⊔g x) l a :=
   show IsMinFilter (fun x => f x⊔g x) l a from hf.bicomp_mono (fun x x' hx y y' hy => sup_le_sup hx hy) hg
@@ -409,7 +409,7 @@ end SemilatticeSup
 
 section SemilatticeInf
 
-variable[SemilatticeInf β]{f g : α → β}{a : α}{s : Set α}{l : Filter α}
+variable [SemilatticeInf β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsMinFilter.inf (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) : IsMinFilter (fun x => f x⊓g x) l a :=
   show IsMinFilter (fun x => f x⊓g x) l a from hf.bicomp_mono (fun x x' hx y y' hy => inf_le_inf hx hy) hg
@@ -430,7 +430,7 @@ end SemilatticeInf
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ β]{f g : α → β}{a : α}{s : Set α}{l : Filter α}
+variable [LinearOrderₓ β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsMinFilter.min (hf : IsMinFilter f l a) (hg : IsMinFilter g l a) :
   IsMinFilter (fun x => min (f x) (g x)) l a :=
@@ -511,7 +511,7 @@ end Eventually
 
 section ConditionallyCompleteLinearOrder
 
-variable[ConditionallyCompleteLinearOrder α]{f : β → α}{s : Set β}{x₀ : β}
+variable [ConditionallyCompleteLinearOrder α] {f : β → α} {s : Set β} {x₀ : β}
 
 -- error in Order.Filter.Extr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_max_on.supr_eq (hx₀ : «expr ∈ »(x₀, s)) (h : is_max_on f s x₀) : «expr = »(«expr⨆ , »((x : s), f x), f x₀) :=

@@ -32,7 +32,7 @@ open Finset
 
 namespace Nat
 
-variable(n : ℕ)
+variable (n : ℕ)
 
 /-- `divisors n` is the `finset` of divisors of `n`. As a special case, `divisors 0 = ∅`. -/
 def divisors : Finset ℕ :=
@@ -48,7 +48,7 @@ def proper_divisors : Finset ℕ :=
 def divisors_antidiagonal : Finset (ℕ × ℕ) :=
   ((Finset.ico 1 (n+1)).product (Finset.ico 1 (n+1))).filter fun x => (x.fst*x.snd) = n
 
-variable{n}
+variable {n}
 
 theorem proper_divisors.not_self_mem : ¬n ∈ proper_divisors n :=
   by 
@@ -119,7 +119,7 @@ theorem mem_divisors_antidiagonal {x : ℕ × ℕ} : x ∈ divisors_antidiagonal
       simp only [succ_le_of_lt (Nat.pos_of_ne_zeroₓ h.1), succ_le_of_lt (Nat.pos_of_ne_zeroₓ h.2), true_andₓ]
       exact ⟨le_mul_of_pos_right (Nat.pos_of_ne_zeroₓ h.2), le_mul_of_pos_left (Nat.pos_of_ne_zeroₓ h.1)⟩
 
-variable{n}
+variable {n}
 
 theorem divisor_le {m : ℕ} : n ∈ divisors m → n ≤ m :=
   by 

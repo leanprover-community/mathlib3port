@@ -37,7 +37,7 @@ open_locale BigOperators
 
 universe u u' v w x y z
 
-variable{R : Type u}{k : Type u'}{S : Type v}{M : Type w}{M₂ : Type x}{M₃ : Type y}{ι : Type z}
+variable {R : Type u} {k : Type u'} {S : Type v} {M : Type w} {M₂ : Type x} {M₃ : Type y} {ι : Type z}
 
 /-- A module is a generalization of vector spaces to a scalar semiring.
   It consists of a scalar semiring `R` and an additive monoid of "vectors" `M`,
@@ -45,16 +45,16 @@ variable{R : Type u}{k : Type u'}{S : Type v}{M : Type w}{M₂ : Type x}{M₃ : 
   (where `r : R` and `x : M`) with some natural associativity and
   distributivity axioms similar to those on a ring. -/
 @[protectProj]
-class Module(R : Type u)(M : Type v)[Semiringₓ R][AddCommMonoidₓ M] extends DistribMulAction R M where 
+class Module (R : Type u) (M : Type v) [Semiringₓ R] [AddCommMonoidₓ M] extends DistribMulAction R M where 
   add_smul : ∀ r s : R x : M, (r+s) • x = (r • x)+s • x 
   zero_smul : ∀ x : M, (0 : R) • x = 0
 
 section AddCommMonoidₓ
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M](r s : R)(x y : M)
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (r s : R) (x y : M)
 
 /-- A module over a semiring automatically inherits a `mul_action_with_zero` structure. -/
-instance (priority := 100)Module.toMulActionWithZero : MulActionWithZero R M :=
+instance (priority := 100) Module.toMulActionWithZero : MulActionWithZero R M :=
   { (inferInstance : MulAction R M) with smul_zero := smul_zero, zero_smul := Module.zero_smul }
 
 instance AddCommMonoidₓ.natModule : Module ℕ M :=
@@ -64,7 +64,7 @@ instance AddCommMonoidₓ.natModule : Module ℕ M :=
 theorem add_smul : (r+s) • x = (r • x)+s • x :=
   Module.add_smul r s x
 
-variable(R)
+variable (R)
 
 theorem two_smul : (2 : R) • x = x+x :=
   by 
@@ -105,7 +105,7 @@ protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasScalar R M�
           rcases hf x with ⟨x, rfl⟩
           simp only [←f.map_zero, ←smul, zero_smul] }
 
-variable{R}(M)
+variable {R} (M)
 
 /-- Compose a `module` with a `ring_hom`, with action `f s • m`.
 
@@ -119,7 +119,7 @@ def Module.compHom [Semiringₓ S] (f : S →+* R) : Module S M :=
         by 
           simp [add_smul] }
 
-variable(R)(M)
+variable (R) (M)
 
 /-- `(•)` as an `add_monoid_hom`.
 
@@ -144,7 +144,7 @@ use of `add_monoid_hom.flip`. -/
 def smulAddHom : R →+ M →+ M :=
   (Module.toAddMonoidEnd R M).toAddMonoidHom
 
-variable{R M}
+variable {R M}
 
 @[simp]
 theorem smul_add_hom_apply (r : R) (x : M) : smulAddHom R M r x = r • x :=
@@ -165,7 +165,7 @@ theorem Finset.sum_smul {f : ι → R} {s : Finset ι} {x : M} : (∑i in s, f i
 
 end AddCommMonoidₓ
 
-variable(R)
+variable (R)
 
 /-- An `add_comm_monoid` that is a `module` over a `ring` carries a natural `add_comm_group`
 structure.
@@ -179,11 +179,11 @@ def Module.addCommMonoidToAddCommGroup [Ringₓ R] [AddCommMonoidₓ M] [Module 
           nthRw 1[←one_smul _ a]
           rw [←add_smul, add_left_negₓ, zero_smul] }
 
-variable{R}
+variable {R}
 
 section AddCommGroupₓ
 
-variable(R M)[Semiringₓ R][AddCommGroupₓ M]
+variable (R M) [Semiringₓ R] [AddCommGroupₓ M]
 
 instance AddCommGroupₓ.intModule : Module ℤ M :=
   { one_smul := one_zsmul, mul_smul := fun m n a => mul_zsmul a m n, smul_add := fun n a b => zsmul_add a b n,
@@ -200,7 +200,7 @@ structure Module.Core extends HasScalar R M where
   mul_smul : ∀ r s : R x : M, (r*s) • x = r • s • x 
   one_smul : ∀ x : M, (1 : R) • x = x
 
-variable{R M}
+variable {R M}
 
 -- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Define `module` without proving `zero_smul` and `smul_zero` by using an auxiliary
@@ -241,7 +241,7 @@ end
 
 section Module
 
-variable[Ringₓ R][AddCommGroupₓ M][Module R M](r s : R)(x y : M)
+variable [Ringₓ R] [AddCommGroupₓ M] [Module R M] (r s : R) (x y : M)
 
 @[simp]
 theorem neg_smul : -r • x = -(r • x) :=
@@ -259,13 +259,13 @@ theorem Units.neg_smul (u : Units R) (x : M) : -u • x = -(u • x) :=
   by 
     rw [Units.smul_def, Units.coe_neg, neg_smul, Units.smul_def]
 
-variable(R)
+variable (R)
 
 theorem neg_one_smul (x : M) : (-1 : R) • x = -x :=
   by 
     simp 
 
-variable{R}
+variable {R}
 
 theorem sub_smul (r s : R) (y : M) : (r - s) • y = r • y - s • y :=
   by 
@@ -281,11 +281,11 @@ protected theorem Module.subsingleton (R M : Type _) [Semiringₓ R] [Subsinglet
       by 
         rw [←one_smul R x, ←one_smul R y, Subsingleton.elimₓ (1 : R) 0, zero_smul, zero_smul]⟩
 
-instance (priority := 910)Semiringₓ.toModule [Semiringₓ R] : Module R R :=
+instance (priority := 910) Semiringₓ.toModule [Semiringₓ R] : Module R R :=
   { smul_add := mul_addₓ, add_smul := add_mulₓ, zero_smul := zero_mul, smul_zero := mul_zero }
 
 /-- Like `semiring.to_module`, but multiplies on the right. -/
-instance (priority := 910)Semiringₓ.toOppositeModule [Semiringₓ R] : Module («expr ᵐᵒᵖ» R) R :=
+instance (priority := 910) Semiringₓ.toOppositeModule [Semiringₓ R] : Module («expr ᵐᵒᵖ» R) R :=
   { MonoidWithZeroₓ.toOppositeMulActionWithZero R with smul_add := fun r x y => add_mulₓ _ _ _,
     add_smul := fun r x y => mul_addₓ _ _ _ }
 
@@ -310,11 +310,11 @@ instance RingHom.apply_has_faithful_scalar [Semiringₓ R] : HasFaithfulScalar (
 
 section AddCommMonoidₓ
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 section 
 
-variable(R)
+variable (R)
 
 /-- `nsmul` is equal to any other module structure via a cast. -/
 theorem nsmul_eq_smul_cast (n : ℕ) (b : M) : n • b = (n : R) • b :=
@@ -369,11 +369,11 @@ end AddCommMonoidₓ
 
 section AddCommGroupₓ
 
-variable[Semiringₓ S][Ringₓ R][AddCommGroupₓ M][Module S M][Module R M]
+variable [Semiringₓ S] [Ringₓ R] [AddCommGroupₓ M] [Module S M] [Module R M]
 
 section 
 
-variable(R)
+variable (R)
 
 /-- `zsmul` is equal to any other module structure via a cast. -/
 theorem zsmul_eq_smul_cast (n : ℤ) (b : M) : n • b = (n : R) • b :=
@@ -525,7 +525,7 @@ is the result `smul_eq_zero`: a scalar multiple is `0` iff either argument is `0
 
 It is a generalization of the `no_zero_divisors` class to heterogeneous multiplication.
 -/
-class NoZeroSmulDivisors(R M : Type _)[HasZero R][HasZero M][HasScalar R M] : Prop where 
+class NoZeroSmulDivisors (R M : Type _) [HasZero R] [HasZero M] [HasScalar R M] : Prop where 
   eq_zero_or_eq_zero_of_smul_eq_zero : ∀ {c : R} {x : M}, c • x = 0 → c = 0 ∨ x = 0
 
 export NoZeroSmulDivisors(eq_zero_or_eq_zero_of_smul_eq_zero)
@@ -543,7 +543,7 @@ theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [HasZero R] [H
 
 section Module
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 instance NoZeroSmulDivisors.of_no_zero_divisors [NoZeroDivisors R] : NoZeroSmulDivisors R R :=
   ⟨fun c x => NoZeroDivisors.eq_zero_or_eq_zero_of_mul_eq_zero⟩
@@ -558,7 +558,7 @@ theorem smul_ne_zero [NoZeroSmulDivisors R M] {c : R} {x : M} : c • x ≠ 0 �
 
 section Nat
 
-variable(R)(M)[NoZeroSmulDivisors R M][CharZero R]
+variable (R) (M) [NoZeroSmulDivisors R M] [CharZero R]
 
 include R
 
@@ -568,7 +568,7 @@ theorem Nat.no_zero_smul_divisors : NoZeroSmulDivisors ℕ M :=
       rw [nsmul_eq_smul_cast R, smul_eq_zero]
       simp ⟩
 
-variable{M}
+variable {M}
 
 -- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eq_zero_of_smul_two_eq_zero {v : M} (hv : «expr = »(«expr • »(2, v), 0)) : «expr = »(v, 0) :=
@@ -580,11 +580,11 @@ end Module
 
 section AddCommGroupₓ
 
-variable[Semiringₓ R][AddCommGroupₓ M][Module R M]
+variable [Semiringₓ R] [AddCommGroupₓ M] [Module R M]
 
 section SmulInjective
 
-variable(M)
+variable (M)
 
 theorem smul_right_injective [NoZeroSmulDivisors R M] {c : R} (hc : c ≠ 0) : Function.Injective fun x : M => c • x :=
   fun x y h =>
@@ -599,7 +599,7 @@ end SmulInjective
 
 section Nat
 
-variable(R)[NoZeroSmulDivisors R M][CharZero R]
+variable (R) [NoZeroSmulDivisors R M] [CharZero R]
 
 include R
 
@@ -618,11 +618,11 @@ end AddCommGroupₓ
 
 section Module
 
-variable[Ringₓ R][AddCommGroupₓ M][Module R M][NoZeroSmulDivisors R M]
+variable [Ringₓ R] [AddCommGroupₓ M] [Module R M] [NoZeroSmulDivisors R M]
 
 section SmulInjective
 
-variable(R)
+variable (R)
 
 theorem smul_left_injective {x : M} (hx : x ≠ 0) : Function.Injective fun c : R => c • x :=
   fun c d h =>
@@ -637,7 +637,7 @@ end SmulInjective
 
 section Nat
 
-variable[CharZero R]
+variable [CharZero R]
 
 theorem ne_neg_of_ne_zero [NoZeroDivisors R] {v : R} (hv : v ≠ 0) : v ≠ -v :=
   fun h => hv (eq_zero_of_eq_neg R h)
@@ -648,9 +648,9 @@ end Module
 
 section DivisionRing
 
-variable[DivisionRing R][AddCommGroupₓ M][Module R M]
+variable [DivisionRing R] [AddCommGroupₓ M] [Module R M]
 
-instance (priority := 100)NoZeroSmulDivisors.of_division_ring : NoZeroSmulDivisors R M :=
+instance (priority := 100) NoZeroSmulDivisors.of_division_ring : NoZeroSmulDivisors R M :=
   ⟨fun c x h => or_iff_not_imp_left.2$ fun hc => (smul_eq_zero_iff_eq' hc).1 h⟩
 
 end DivisionRing

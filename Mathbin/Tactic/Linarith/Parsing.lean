@@ -44,7 +44,7 @@ unsafe def monom.one : monom :=
 unsafe def monom.lt : monom → monom → Prop :=
   fun a b => a.keys < b.keys || a.keys = b.keys && a.values < b.values
 
-unsafe instance  : LT monom :=
+unsafe instance : LT monom :=
   ⟨monom.lt⟩
 
 /-- Linear combinations of monomials are represented by mapping monomials to coefficients. -/

@@ -29,11 +29,11 @@ namespace Equiv.Perm
 
 open Equiv List Multiset
 
-variable{α : Type _}[Fintype α]
+variable {α : Type _} [Fintype α]
 
 section CycleType
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- The cycle type of a permutation -/
 def cycle_type (σ : perm α) : Multiset ℕ :=
@@ -406,7 +406,7 @@ theorem is_cycle_of_prime_order'' {σ : perm α} (h1 : (Fintype.card α).Prime) 
 
 section Cauchy
 
-variable(G : Type _)[Groupₓ G](n : ℕ)
+variable (G : Type _) [Groupₓ G] (n : ℕ)
 
 /-- The type of vectors with terms from `G`, length `n`, and product equal to `1:G`. -/
 def vectors_prod_eq_one : Set (Vector G n) :=
@@ -468,13 +468,13 @@ def equiv_vector : vectors_prod_eq_one G n ≃ Vector G (n - 1) :=
         by 
           rw [tsub_add_cancel_of_le (Nat.pos_of_ne_zeroₓ hn).nat_succ_le])).symm
 
-instance  [Fintype G] : Fintype (vectors_prod_eq_one G n) :=
+instance [Fintype G] : Fintype (vectors_prod_eq_one G n) :=
   Fintype.ofEquiv (Vector G (n - 1)) (equiv_vector G n).symm
 
 theorem card [Fintype G] : Fintype.card (vectors_prod_eq_one G n) = (Fintype.card G^n - 1) :=
   (Fintype.card_congr (equiv_vector G n)).trans (card_vector (n - 1))
 
-variable{G n}{g : G}(v : vectors_prod_eq_one G n)(j k : ℕ)
+variable {G n} {g : G} (v : vectors_prod_eq_one G n) (j k : ℕ)
 
 /-- Rotate a vector whose product is 1. -/
 def rotate : vectors_prod_eq_one G n :=
@@ -556,7 +556,7 @@ end
 
 section Partition
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- The partition corresponding to a permutation -/
 def partition (σ : perm α) : (Fintype.card α).partition :=
@@ -607,7 +607,7 @@ def is_three_cycle [DecidableEq α] (σ : perm α) : Prop :=
 
 namespace IsThreeCycle
 
-variable[DecidableEq α]{σ : perm α}
+variable [DecidableEq α] {σ : perm α}
 
 theorem cycle_type (h : is_three_cycle σ) : σ.cycle_type = {3} :=
   h
@@ -666,7 +666,7 @@ end IsThreeCycle
 
 section 
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 theorem is_three_cycle_swap_mul_swap_same {a b c : α} (ab : a ≠ b) (ac : a ≠ c) (bc : b ≠ c) :
   is_three_cycle (swap a b*swap a c) :=

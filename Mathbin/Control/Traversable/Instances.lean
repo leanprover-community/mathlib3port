@@ -16,11 +16,11 @@ section Option
 
 open Functor
 
-variable{F G : Type u → Type u}
+variable {F G : Type u → Type u}
 
-variable[Applicativeₓ F][Applicativeₓ G]
+variable [Applicativeₓ F] [Applicativeₓ G]
 
-variable[IsLawfulApplicative F][IsLawfulApplicative G]
+variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
 theorem Option.id_traverse {α} (x : Option α) : Option.traverseₓ id.mk x = x :=
   by 
@@ -36,7 +36,7 @@ theorem Option.traverse_eq_map_id {α β} (f : α → β) (x : Option α) : trav
   by 
     cases x <;> rfl
 
-variable(η : ApplicativeTransformation F G)
+variable (η : ApplicativeTransformation F G)
 
 theorem Option.naturality {α β} (f : α → F β) (x : Option α) :
   η (Option.traverseₓ f x) = Option.traverseₓ (@η _ ∘ f) x :=
@@ -45,19 +45,19 @@ theorem Option.naturality {α β} (f : α → F β) (x : Option α) :
 
 end Option
 
-instance  : IsLawfulTraversable Option :=
+instance : IsLawfulTraversable Option :=
   { Option.is_lawful_monad with id_traverse := @Option.id_traverse, comp_traverse := @Option.comp_traverse,
     traverse_eq_map_id := @Option.traverse_eq_map_id, naturality := @Option.naturality }
 
 namespace List
 
-variable{F G : Type u → Type u}
+variable {F G : Type u → Type u}
 
-variable[Applicativeₓ F][Applicativeₓ G]
+variable [Applicativeₓ F] [Applicativeₓ G]
 
 section 
 
-variable[IsLawfulApplicative F][IsLawfulApplicative G]
+variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
 open Applicativeₓ Functor
 
@@ -77,7 +77,7 @@ protected theorem traverse_eq_map_id {α β} (f : α → β) (x : List α) : Lis
   by 
     induction x <;> simp' with functor_norm <;> rfl
 
-variable(η : ApplicativeTransformation F G)
+variable (η : ApplicativeTransformation F G)
 
 protected theorem naturality {α β} (f : α → F β) (x : List α) : η (List.traverseₓ f x) = List.traverseₓ (@η _ ∘ f) x :=
   by 
@@ -85,7 +85,7 @@ protected theorem naturality {α β} (f : α → F β) (x : List α) : η (List.
 
 open Nat
 
-instance  : IsLawfulTraversable.{u} List :=
+instance : IsLawfulTraversable.{u} List :=
   { List.is_lawful_monad with id_traverse := @List.id_traverse, comp_traverse := @List.comp_traverse,
     traverse_eq_map_id := @List.traverse_eq_map_id, naturality := @List.naturality }
 
@@ -93,7 +93,7 @@ end
 
 section Traverse
 
-variable{α' β' : Type u}(f : α' → F β')
+variable {α' β' : Type u} (f : α' → F β')
 
 @[simp]
 theorem traverse_nil : traverse f ([] : List α') = (pure [] : F (List β')) :=
@@ -103,7 +103,7 @@ theorem traverse_nil : traverse f ([] : List α') = (pure [] : F (List β')) :=
 theorem traverse_cons (a : α') (l : List α') : traverse f (a :: l) = ((· :: ·) <$> f a)<*>traverse f l :=
   rfl
 
-variable[IsLawfulApplicative F]
+variable [IsLawfulApplicative F]
 
 @[simp]
 theorem traverse_append : ∀ as bs : List α', traverse f (as ++ bs) = ((· ++ ·) <$> traverse f as)<*>traverse f bs
@@ -139,11 +139,11 @@ namespace Sum
 
 section Traverse
 
-variable{σ : Type u}
+variable {σ : Type u}
 
-variable{F G : Type u → Type u}
+variable {F G : Type u → Type u}
 
-variable[Applicativeₓ F][Applicativeₓ G]
+variable [Applicativeₓ F] [Applicativeₓ G]
 
 open Applicativeₓ Functor
 
@@ -154,7 +154,7 @@ protected theorem traverse_map {α β γ : Type u} (g : α → β) (f : β → G
   by 
     cases x <;> simp' [Sum.traverseₓ, id_map] with functor_norm <;> rfl
 
-variable[IsLawfulApplicative F][IsLawfulApplicative G]
+variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
 protected theorem id_traverse {σ α} (x : Sum σ α) : Sum.traverseₓ id.mk x = x :=
   by 
@@ -175,7 +175,7 @@ protected theorem map_traverse {α β γ} (g : α → G β) (f : β → γ) (x :
   by 
     cases x <;> simp' [Sum.traverseₓ, id_map] with functor_norm <;> congr <;> rfl
 
-variable(η : ApplicativeTransformation F G)
+variable (η : ApplicativeTransformation F G)
 
 protected theorem naturality {α β} (f : α → F β) (x : Sum σ α) : η (Sum.traverseₓ f x) = Sum.traverseₓ (@η _ ∘ f) x :=
   by 
@@ -183,7 +183,7 @@ protected theorem naturality {α β} (f : α → F β) (x : Sum σ α) : η (Sum
 
 end Traverse
 
-instance  {σ : Type u} : IsLawfulTraversable.{u} (Sum σ) :=
+instance {σ : Type u} : IsLawfulTraversable.{u} (Sum σ) :=
   { Sum.is_lawful_monad with id_traverse := @Sum.id_traverse σ, comp_traverse := @Sum.comp_traverse σ,
     traverse_eq_map_id := @Sum.traverse_eq_map_id σ, naturality := @Sum.naturality σ }
 

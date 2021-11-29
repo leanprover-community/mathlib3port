@@ -37,7 +37,7 @@ See `category_theory.hom_of_le` and `category_theory.le_of_hom`.
 
 See https://stacks.math.columbia.edu/tag/00D3.
 -/
-instance (priority := 100)small_category (α : Type u) [Preorderₓ α] : small_category α :=
+instance (priority := 100) small_category (α : Type u) [Preorderₓ α] : small_category α :=
   { Hom := fun U V => Ulift (Plift (U ≤ V)), id := fun X => ⟨⟨le_reflₓ X⟩⟩,
     comp := fun X Y Z f g => ⟨⟨le_transₓ _ _ _ f.down.down g.down.down⟩⟩ }
 
@@ -47,7 +47,7 @@ namespace CategoryTheory
 
 open Opposite
 
-variable{X : Type u}[Preorderₓ X]
+variable {X : Type u} [Preorderₓ X]
 
 /--
 Express an inequality as a morphism in the corresponding preorder category.
@@ -103,7 +103,7 @@ end CategoryTheory
 
 section 
 
-variable{X : Type u}{Y : Type v}[Preorderₓ X][Preorderₓ Y]
+variable {X : Type u} {Y : Type v} [Preorderₓ X] [Preorderₓ Y]
 
 /--
 A monotone function between preorders induces a functor between the associated categories.
@@ -135,7 +135,7 @@ namespace CategoryTheory
 
 section Preorderₓ
 
-variable{X : Type u}{Y : Type v}[Preorderₓ X][Preorderₓ Y]
+variable {X : Type u} {Y : Type v} [Preorderₓ X] [Preorderₓ Y]
 
 /--
 A functor between preorder categories is monotone.
@@ -167,14 +167,14 @@ def Preorder_to_Cat : Preorderₓₓ.{u} ⥤ Cat :=
           apply CategoryTheory.Functor.ext 
           tidy }
 
-instance  : faithful Preorder_to_Cat.{u} :=
+instance : faithful Preorder_to_Cat.{u} :=
   { map_injective' :=
       fun X Y f g h =>
         by 
           ext x 
           exact functor.congr_obj h x }
 
-instance  : full Preorder_to_Cat.{u} :=
+instance : full Preorder_to_Cat.{u} :=
   { Preimage := fun X Y f => ⟨f.obj, f.monotone⟩,
     witness' :=
       fun X Y f =>
@@ -186,7 +186,7 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable{X : Type u}{Y : Type v}[PartialOrderₓ X][PartialOrderₓ Y]
+variable {X : Type u} {Y : Type v} [PartialOrderₓ X] [PartialOrderₓ Y]
 
 theorem iso.to_eq {x y : X} (f : x ≅ y) : x = y :=
   le_antisymmₓ f.hom.le f.inv.le

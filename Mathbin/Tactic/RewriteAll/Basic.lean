@@ -15,7 +15,7 @@ def Side.toString : Side → Stringₓ
 | Side.L => "L"
 | Side.R => "R"
 
-instance  : HasToString Side :=
+instance : HasToString Side :=
   ⟨Side.toString⟩
 
 namespace Tactic.RewriteAll

@@ -1,13 +1,13 @@
 
 universe u v w
 
-variable{α β γ : Type u}
+variable {α β γ : Type u}
 
 notation:1 a " $< " f:1 => f a
 
 section Functor
 
-variable{f : Type u → Type v}[Functor f][IsLawfulFunctor f]
+variable {f : Type u → Type v} [Functor f] [IsLawfulFunctor f]
 
 run_cmd 
   mk_simp_attr `functor_norm
@@ -27,7 +27,7 @@ end Functor
 
 section Applicativeₓ
 
-variable{F : Type u → Type v}[Applicativeₓ F]
+variable {F : Type u → Type v} [Applicativeₓ F]
 
 def mzipWith {α₁ α₂ φ : Type u} (f : α₁ → α₂ → F φ) : ∀ ma₁ : List α₁ ma₂ : List α₂, F (List φ)
 | x :: xs, y :: ys => (· :: ·) <$> f x y <*> mzipWith xs ys
@@ -38,7 +38,7 @@ def mzipWith' (f : α → β → F γ) : List α → List β → F PUnit
 | [], _ => pure PUnit.unit
 | _, [] => pure PUnit.unit
 
-variable[IsLawfulApplicative F]
+variable [IsLawfulApplicative F]
 
 attribute [functor_norm] seq_assoc pure_seq_eq_map
 
@@ -66,13 +66,13 @@ attribute [functor_norm] pure_bind bind_assoc bind_pureₓ
 
 section Monadₓ
 
-variable{m : Type u → Type v}[Monadₓ m][IsLawfulMonad m]
+variable {m : Type u → Type v} [Monadₓ m] [IsLawfulMonad m]
 
 open List
 
 def List.mpartition {f : Type → Type} [Monadₓ f] {α : Type} (p : α → f Bool) : List α → f (List α × List α)
 | [] => pure ([], [])
-| x :: xs => mcond (p x) (Prod.mapₓ (cons x) id <$> List.mpartition xs) (Prod.mapₓ id (cons x) <$> List.mpartition xs)
+| x :: xs => mcond (p x) (Prod.map (cons x) id <$> List.mpartition xs) (Prod.map id (cons x) <$> List.mpartition xs)
 
 theorem map_bind (x : m α) {g : α → m β} {f : β → γ} : f <$> (x >>= g) = x >>= fun a => f <$> g a :=
   by 
@@ -107,9 +107,9 @@ theorem fish_assoc {α β γ φ} (f : α → m β) (g : β → m γ) (h : γ →
   by 
     simp' only [· >=> ·] with functor_norm
 
-variable{β' γ' : Type v}
+variable {β' γ' : Type v}
 
-variable{m' : Type v → Type w}[Monadₓ m']
+variable {m' : Type v → Type w} [Monadₓ m']
 
 def List.mmapAccumr (f : α → β' → m' (β' × γ')) : β' → List α → m' (β' × List γ')
 | a, [] => pure (a, [])
@@ -131,7 +131,7 @@ end Monadₓ
 
 section 
 
-variable{m : Type u → Type u}[Monadₓ m][IsLawfulMonad m]
+variable {m : Type u → Type u} [Monadₓ m] [IsLawfulMonad m]
 
 theorem mjoin_map_map {α β : Type u} (f : α → β) (a : m (m α)) : mjoin (Functor.map f <$> a) = f <$> mjoin a :=
   by 
@@ -154,7 +154,7 @@ end
 
 section Alternativeₓ
 
-variable{F : Type → Type v}[Alternativeₓ F]
+variable {F : Type → Type v} [Alternativeₓ F]
 
 def succeeds {α} (x : F α) : F Bool :=
   x $> tt <|> pure ff
@@ -176,20 +176,20 @@ end Alternativeₓ
 
 namespace Sum
 
-variable{e : Type v}
+variable {e : Type v}
 
 protected def bind {α β} : Sum e α → (α → Sum e β) → Sum e β
 | inl x, _ => inl x
 | inr x, f => f x
 
-instance  : Monadₓ (Sum.{v, u} e) :=
+instance : Monadₓ (Sum.{v, u} e) :=
   { pure := @Sum.inr e, bind := @Sum.bindₓ e }
 
-instance  : IsLawfulFunctor (Sum.{v, u} e) :=
+instance : IsLawfulFunctor (Sum.{v, u} e) :=
   by 
     refine' { .. } <;> intros  <;> casesM Sum _ _ <;> rfl
 
-instance  : IsLawfulMonad (Sum.{v, u} e) :=
+instance : IsLawfulMonad (Sum.{v, u} e) :=
   { bind_assoc :=
       by 
         intros 
@@ -209,7 +209,7 @@ instance  : IsLawfulMonad (Sum.{v, u} e) :=
 
 end Sum
 
-class IsCommApplicative(m : Type _ → Type _)[Applicativeₓ m] extends IsLawfulApplicative m : Prop where 
+class IsCommApplicative (m : Type _ → Type _) [Applicativeₓ m] extends IsLawfulApplicative m : Prop where 
   commutative_prod : ∀ {α β} a : m α b : m β, Prod.mk <$> a <*> b = (fun b a => (a, b)) <$> b <*> a
 
 open Functor

@@ -51,7 +51,7 @@ def projective_presentation (X : CompHaus) : projective_presentation X :=
       concrete_category.epi_of_surjective _$
         fun x => ⟨(pure x : Ultrafilter X), congr_funₓ (ultrafilter_extend_extends (𝟙 X)) x⟩ }
 
-instance  : enough_projectives CompHaus :=
+instance : enough_projectives CompHaus :=
   { presentation := fun X => ⟨projective_presentation X⟩ }
 
 end CompHaus

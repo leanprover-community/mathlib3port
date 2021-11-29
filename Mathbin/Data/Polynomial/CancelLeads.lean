@@ -18,18 +18,18 @@ namespace Polynomial
 
 noncomputable theory
 
-variable{R : Type _}
+variable {R : Type _}
 
 section CommRingₓ
 
-variable[CommRingₓ R](p q : Polynomial R)
+variable [CommRingₓ R] (p q : Polynomial R)
 
 /-- `cancel_leads p q` is formed by multiplying `p` and `q` by monomials so that they
   have the same leading term, and then subtracting. -/
 def cancel_leads : Polynomial R :=
   ((C p.leading_coeff*X ^ (p.nat_degree - q.nat_degree))*q) - (C q.leading_coeff*X ^ (q.nat_degree - p.nat_degree))*p
 
-variable{p q}
+variable {p q}
 
 @[simp]
 theorem neg_cancel_leads : -p.cancel_leads q = q.cancel_leads p :=

@@ -8,13 +8,13 @@ namespace CategoryTheory
 
 universe v u₁ u₂ u₃
 
-variable{C : Type u₁}[category.{v} C]
+variable {C : Type u₁} [category.{v} C]
 
 section Creates
 
-variable{D : Type u₂}[category.{v} D]
+variable {D : Type u₂} [category.{v} D]
 
-variable{J : Type v}[small_category J]{K : J ⥤ C}
+variable {J : Type v} [small_category J] {K : J ⥤ C}
 
 /--
 Define the lift of a cone: For a cone `c` for `K ⋙ F`, give a cone for `K`
@@ -25,7 +25,7 @@ every limit cone has a lift.
 
 Note this definition is really only useful when `c` is a limit already.
 -/
-structure liftable_cone(K : J ⥤ C)(F : C ⥤ D)(c : cone (K ⋙ F)) where 
+structure liftable_cone (K : J ⥤ C) (F : C ⥤ D) (c : cone (K ⋙ F)) where 
   liftedCone : cone K 
   validLift : F.map_cone lifted_cone ≅ c
 
@@ -38,7 +38,7 @@ every limit cocone has a lift.
 
 Note this definition is really only useful when `c` is a colimit already.
 -/
-structure liftable_cocone(K : J ⥤ C)(F : C ⥤ D)(c : cocone (K ⋙ F)) where 
+structure liftable_cocone (K : J ⥤ C) (F : C ⥤ D) (c : cocone (K ⋙ F)) where 
   liftedCocone : cocone K 
   validLift : F.map_cocone lifted_cocone ≅ c
 
@@ -51,20 +51,20 @@ limits for `K`.
 If `F` reflects isomorphisms, it suffices to show only that the lifted cone is
 a limit - see `creates_limit_of_reflects_iso`.
 -/
-class creates_limit(K : J ⥤ C)(F : C ⥤ D) extends reflects_limit K F where 
+class creates_limit (K : J ⥤ C) (F : C ⥤ D) extends reflects_limit K F where 
   lifts : ∀ c, is_limit c → liftable_cone K F c
 
 /--
 `F` creates limits of shape `J` if `F` creates the limit of any diagram
 `K : J ⥤ C`.
 -/
-class creates_limits_of_shape(J : Type v)[small_category J](F : C ⥤ D) where 
+class creates_limits_of_shape (J : Type v) [small_category J] (F : C ⥤ D) where 
   CreatesLimit : ∀ {K : J ⥤ C}, creates_limit K F :=  by 
   runTac 
     tactic.apply_instance
 
 /-- `F` creates limits if it creates limits of shape `J` for any small `J`. -/
-class creates_limits(F : C ⥤ D) where 
+class creates_limits (F : C ⥤ D) where 
   CreatesLimitsOfShape : ∀ {J : Type v} [small_category J], creates_limits_of_shape J F :=  by 
   runTac 
     tactic.apply_instance
@@ -78,20 +78,20 @@ reflects limits for `K`.
 If `F` reflects isomorphisms, it suffices to show only that the lifted cocone is
 a limit - see `creates_limit_of_reflects_iso`.
 -/
-class creates_colimit(K : J ⥤ C)(F : C ⥤ D) extends reflects_colimit K F where 
+class creates_colimit (K : J ⥤ C) (F : C ⥤ D) extends reflects_colimit K F where 
   lifts : ∀ c, is_colimit c → liftable_cocone K F c
 
 /--
 `F` creates colimits of shape `J` if `F` creates the colimit of any diagram
 `K : J ⥤ C`.
 -/
-class creates_colimits_of_shape(J : Type v)[small_category J](F : C ⥤ D) where 
+class creates_colimits_of_shape (J : Type v) [small_category J] (F : C ⥤ D) where 
   CreatesColimit : ∀ {K : J ⥤ C}, creates_colimit K F :=  by 
   runTac 
     tactic.apply_instance
 
 /-- `F` creates colimits if it creates colimits of shape `J` for any small `J`. -/
-class creates_colimits(F : C ⥤ D) where 
+class creates_colimits (F : C ⥤ D) where 
   CreatesColimitsOfShape : ∀ {J : Type v} [small_category J], creates_colimits_of_shape J F :=  by 
   runTac 
     tactic.apply_instance
@@ -164,18 +164,19 @@ theorem has_colimits_of_has_colimits_creates_colimits (F : C ⥤ D) [has_colimit
       by 
         exact has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape F⟩
 
-instance (priority := 10)reflects_limits_of_shape_of_creates_limits_of_shape (F : C ⥤ D) [creates_limits_of_shape J F] :
-  reflects_limits_of_shape J F :=
+instance (priority := 10) reflects_limits_of_shape_of_creates_limits_of_shape (F : C ⥤ D)
+  [creates_limits_of_shape J F] : reflects_limits_of_shape J F :=
   {  }
 
-instance (priority := 10)reflects_limits_of_creates_limits (F : C ⥤ D) [creates_limits F] : reflects_limits F :=
+instance (priority := 10) reflects_limits_of_creates_limits (F : C ⥤ D) [creates_limits F] : reflects_limits F :=
   {  }
 
-instance (priority := 10)reflects_colimits_of_shape_of_creates_colimits_of_shape (F : C ⥤ D)
+instance (priority := 10) reflects_colimits_of_shape_of_creates_colimits_of_shape (F : C ⥤ D)
   [creates_colimits_of_shape J F] : reflects_colimits_of_shape J F :=
   {  }
 
-instance (priority := 10)reflects_colimits_of_creates_colimits (F : C ⥤ D) [creates_colimits F] : reflects_colimits F :=
+instance (priority := 10) reflects_colimits_of_creates_colimits (F : C ⥤ D) [creates_colimits F] :
+  reflects_colimits F :=
   {  }
 
 /--
@@ -185,7 +186,7 @@ a limit and `F` reflects isomorphisms, then `F` creates limits.
 Usually, `F` creating limits says that _any_ lift of `c` is a limit, but
 here we only need to show that our particular lift of `c` is a limit.
 -/
-structure lifts_to_limit(K : J ⥤ C)(F : C ⥤ D)(c : cone (K ⋙ F))(t : is_limit c) extends liftable_cone K F c where 
+structure lifts_to_limit (K : J ⥤ C) (F : C ⥤ D) (c : cone (K ⋙ F)) (t : is_limit c) extends liftable_cone K F c where 
   makesLimit : is_limit lifted_cone
 
 /--
@@ -195,7 +196,7 @@ a limit and `F` reflects isomorphisms, then `F` creates colimits.
 Usually, `F` creating colimits says that _any_ lift of `c` is a colimit, but
 here we only need to show that our particular lift of `c` is a colimit.
 -/
-structure lifts_to_colimit(K : J ⥤ C)(F : C ⥤ D)(c : cocone (K ⋙ F))(t : is_colimit c) extends
+structure lifts_to_colimit (K : J ⥤ C) (F : C ⥤ D) (c : cocone (K ⋙ F)) (t : is_colimit c) extends
   liftable_cocone K F c where 
   makesColimit : is_colimit lifted_cocone
 
@@ -260,7 +261,7 @@ def creates_limit_of_fully_faithful_of_iso {K : J ⥤ C} {F : C ⥤ D} [full F] 
       tidy)
 
 /-- `F` preserves the limit of `K` if it creates the limit and `K ⋙ F` has the limit. -/
-instance (priority := 100)preserves_limit_of_creates_limit_and_has_limit (K : J ⥤ C) (F : C ⥤ D) [creates_limit K F]
+instance (priority := 100) preserves_limit_of_creates_limit_and_has_limit (K : J ⥤ C) (F : C ⥤ D) [creates_limit K F]
   [has_limit (K ⋙ F)] : preserves_limit K F :=
   { preserves :=
       fun c t =>
@@ -269,12 +270,12 @@ instance (priority := 100)preserves_limit_of_creates_limit_and_has_limit (K : J 
             (cones.functoriality K F).mapIso ((lifted_limit_is_limit (limit.is_limit _)).uniqueUpToIso t)) }
 
 /-- `F` preserves the limit of shape `J` if it creates these limits and `D` has them. -/
-instance (priority := 100)preserves_limit_of_shape_of_creates_limits_of_shape_and_has_limits_of_shape (F : C ⥤ D)
+instance (priority := 100) preserves_limit_of_shape_of_creates_limits_of_shape_and_has_limits_of_shape (F : C ⥤ D)
   [creates_limits_of_shape J F] [has_limits_of_shape J D] : preserves_limits_of_shape J F :=
   {  }
 
 /-- `F` preserves limits if it creates limits and `D` has limits. -/
-instance (priority := 100)preserves_limits_of_creates_limits_and_has_limits (F : C ⥤ D) [creates_limits F]
+instance (priority := 100) preserves_limits_of_creates_limits_and_has_limits (F : C ⥤ D) [creates_limits F]
   [has_limits D] : preserves_limits F :=
   {  }
 
@@ -302,8 +303,44 @@ def creates_colimit_of_reflects_iso
       exact [expr is_colimit.of_iso_colimit hd' (as_iso f)]
     end } }
 
+/--
+When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` creates the colimit for `K`
+it suffices to exhibit a lift of the chosen colimit cocone for `K ⋙ F`.
+-/
+def creates_colimit_of_fully_faithful_of_lift {K : J ⥤ C} {F : C ⥤ D} [full F] [faithful F] [has_colimit (K ⋙ F)]
+  (c : cocone K) (i : F.map_cocone c ≅ colimit.cocone (K ⋙ F)) : creates_colimit K F :=
+  creates_colimit_of_reflects_iso
+    fun c' t =>
+      { liftedCocone := c, validLift := i.trans (is_colimit.unique_up_to_iso (colimit.is_colimit _) t),
+        makesColimit :=
+          is_colimit.of_faithful F (is_colimit.of_iso_colimit (colimit.is_colimit _) i.symm) (fun s => F.preimage _)
+            fun s => F.image_preimage _ }
+
+/--
+When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` creates the colimit for `K`
+it suffices to show that the chosen colimit point is in the essential image of `F`.
+-/
+def creates_colimit_of_fully_faithful_of_iso {K : J ⥤ C} {F : C ⥤ D} [full F] [faithful F] [has_colimit (K ⋙ F)] (X : C)
+  (i : F.obj X ≅ colimit (K ⋙ F)) : creates_colimit K F :=
+  creates_colimit_of_fully_faithful_of_lift
+    ({ x,
+      ι :=
+        { app := fun j => F.preimage (colimit.ι (K ⋙ F) j ≫ i.inv : _),
+          naturality' :=
+            fun Y Z f =>
+              F.map_injective
+                (by 
+                  erw [category.comp_id]
+                  simp only [functor.map_comp, functor.image_preimage]
+                  erw [colimit.w_assoc (K ⋙ F)]) } } :
+    cocone K)
+    (by 
+      fapply cocones.ext 
+      exact i 
+      tidy)
+
 /-- `F` preserves the colimit of `K` if it creates the colimit and `K ⋙ F` has the colimit. -/
-instance (priority := 100)preserves_colimit_of_creates_colimit_and_has_colimit (K : J ⥤ C) (F : C ⥤ D)
+instance (priority := 100) preserves_colimit_of_creates_colimit_and_has_colimit (K : J ⥤ C) (F : C ⥤ D)
   [creates_colimit K F] [has_colimit (K ⋙ F)] : preserves_colimit K F :=
   { preserves :=
       fun c t =>
@@ -312,12 +349,12 @@ instance (priority := 100)preserves_colimit_of_creates_colimit_and_has_colimit (
             (cocones.functoriality K F).mapIso ((lifted_colimit_is_colimit (colimit.is_colimit _)).uniqueUpToIso t)) }
 
 /-- `F` preserves the colimit of shape `J` if it creates these colimits and `D` has them. -/
-instance (priority := 100)preserves_colimit_of_shape_of_creates_colimits_of_shape_and_has_colimits_of_shape (F : C ⥤ D)
+instance (priority := 100) preserves_colimit_of_shape_of_creates_colimits_of_shape_and_has_colimits_of_shape (F : C ⥤ D)
   [creates_colimits_of_shape J F] [has_colimits_of_shape J D] : preserves_colimits_of_shape J F :=
   {  }
 
 /-- `F` preserves limits if it creates limits and `D` has limits. -/
-instance (priority := 100)preserves_colimits_of_creates_colimits_and_has_colimits (F : C ⥤ D) [creates_colimits F]
+instance (priority := 100) preserves_colimits_of_creates_colimits_and_has_colimits (F : C ⥤ D) [creates_colimits F]
   [has_colimits D] : preserves_colimits F :=
   {  }
 
@@ -463,9 +500,9 @@ instance inhabited_lifts_to_colimit (K : J ⥤ C) (F : C ⥤ D) [creates_colimit
 
 section Comp
 
-variable{E : Type u₃}[ℰ : category.{v} E]
+variable {E : Type u₃} [ℰ : category.{v} E]
 
-variable(F : C ⥤ D)(G : D ⥤ E)
+variable (F : C ⥤ D) (G : D ⥤ E)
 
 instance comp_creates_limit [creates_limit K F] [creates_limit (K ⋙ F) G] : creates_limit K (F ⋙ G) :=
   { lifts :=

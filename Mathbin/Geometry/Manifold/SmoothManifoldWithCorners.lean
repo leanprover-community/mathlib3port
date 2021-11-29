@@ -125,11 +125,8 @@ model vector space `E` over the field `𝕜`. This is all what is needed to
 define a smooth manifold with model space `H`, and model vector space `E`.
 -/
 @[nolint has_inhabited_instance]
-structure
-  ModelWithCorners(𝕜 :
-    Type
-      _)[NondiscreteNormedField 𝕜](E : Type _)[NormedGroup E][NormedSpace 𝕜 E](H : Type _)[TopologicalSpace H] extends
-  LocalEquiv H E where 
+structure ModelWithCorners (𝕜 : Type _) [NondiscreteNormedField 𝕜] (E : Type _) [NormedGroup E] [NormedSpace 𝕜 E]
+  (H : Type _) [TopologicalSpace H] extends LocalEquiv H E where 
   source_eq : source = univ 
   unique_diff' : UniqueDiffOn 𝕜 to_local_equiv.target 
   continuous_to_fun : Continuous to_fun :=  by 
@@ -153,14 +150,12 @@ localized [Manifold] notation "𝓘(" 𝕜 ")" => modelWithCornersSelf 𝕜 𝕜
 
 section 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]{H : Type _}[TopologicalSpace H](I : ModelWithCorners 𝕜 E H)
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H)
 
 namespace ModelWithCorners
 
-instance  : CoeFun (ModelWithCorners 𝕜 E H) fun _ => H → E :=
+instance : CoeFun (ModelWithCorners 𝕜 E H) fun _ => H → E :=
   ⟨fun e => e.to_fun⟩
 
 /-- The inverse to a model with corners, only registered as a local equiv. -/
@@ -295,7 +290,7 @@ end ModelWithCorners
 
 section 
 
-variable(𝕜 E)
+variable (𝕜 E)
 
 /-- In the trivial model with corners, the associated local equiv is the identity. -/
 @[simp, mfld_simps]
@@ -354,34 +349,10 @@ def ModelWithCorners.tangent {𝕜 : Type u} [NondiscreteNormedField 𝕜] {E : 
   {H : Type w} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) : ModelWithCorners 𝕜 (E × E) (ModelProd H E) :=
   I.prod 𝓘(𝕜, E)
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{F :
-    Type
-      _}[NormedGroup
-      F][NormedSpace 𝕜
-      F]{F' :
-    Type
-      _}[NormedGroup
-      F'][NormedSpace 𝕜
-      F']{H :
-    Type
-      _}[TopologicalSpace
-      H]{H' :
-    Type
-      _}[TopologicalSpace
-      H']{G :
-    Type
-      _}[TopologicalSpace G]{G' : Type _}[TopologicalSpace G']{I : ModelWithCorners 𝕜 E H}{J : ModelWithCorners 𝕜 F G}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+  [NormedGroup E'] [NormedSpace 𝕜 E'] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] {F' : Type _} [NormedGroup F']
+  [NormedSpace 𝕜 F'] {H : Type _} [TopologicalSpace H] {H' : Type _} [TopologicalSpace H'] {G : Type _}
+  [TopologicalSpace G] {G' : Type _} [TopologicalSpace G'] {I : ModelWithCorners 𝕜 E H} {J : ModelWithCorners 𝕜 F G}
 
 @[simp, mfld_simps]
 theorem model_with_corners_prod_to_local_equiv : (I.prod J).toLocalEquiv = I.to_local_equiv.prod J.to_local_equiv :=
@@ -389,12 +360,12 @@ theorem model_with_corners_prod_to_local_equiv : (I.prod J).toLocalEquiv = I.to_
 
 @[simp, mfld_simps]
 theorem model_with_corners_prod_coe (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H') :
-  (I.prod I' : _ × _ → _ × _) = Prod.mapₓ I I' :=
+  (I.prod I' : _ × _ → _ × _) = Prod.map I I' :=
   rfl
 
 @[simp, mfld_simps]
 theorem model_with_corners_prod_coe_symm (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H') :
-  ((I.prod I').symm : _ × _ → _ × _) = Prod.mapₓ I.symm I'.symm :=
+  ((I.prod I').symm : _ × _ → _ × _) = Prod.map I.symm I'.symm :=
   rfl
 
 end ModelWithCornersProd
@@ -402,12 +373,8 @@ end ModelWithCornersProd
 section Boundaryless
 
 /-- Property ensuring that the model with corners `I` defines manifolds without boundary. -/
-class
-  ModelWithCorners.Boundaryless{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]{H : Type _}[TopologicalSpace H](I : ModelWithCorners 𝕜 E H) :
-  Prop where 
+class ModelWithCorners.Boundaryless {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E]
+  [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) : Prop where 
   range_eq_univ : range I = univ
 
 /-- The trivial model with corners has no boundary -/
@@ -434,17 +401,10 @@ section timesContDiffGroupoid
 /-! ### Smooth functions on models with corners -/
 
 
-variable{m n :
-    WithTop
-      ℕ}{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E]{H : Type _}[TopologicalSpace H](I : ModelWithCorners 𝕜 E H){M : Type _}[TopologicalSpace M]
+variable {m n : WithTop ℕ} {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+  {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M]
 
-variable(n)
+variable (n)
 
 -- error in Geometry.Manifold.SmoothManifoldWithCorners: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a model with corners `(E, H)`, we define the groupoid of `C^n` transformations of `H` as
@@ -494,7 +454,7 @@ pregroupoid.groupoid { property := λ
     rw [expr fg _ hy1] []
   end }
 
-variable{n}
+variable {n}
 
 /-- Inclusion of the groupoid of `C^n` local diffeos in the groupoid of `C^m` local diffeos when
 `m ≤ n` -/
@@ -522,7 +482,7 @@ theorem times_cont_diff_groupoid_zero_eq : timesContDiffGroupoid 0 I = continuou
       apply ContinuousOn.comp (@Continuous.continuous_on _ _ _ _ _ univ I.continuous) _ (subset_univ _)
       apply ContinuousOn.comp u.continuous_inv_fun I.continuous_inv_fun.continuous_on (inter_subset_left _ _)
 
-variable(n)
+variable (n)
 
 -- error in Geometry.Manifold.SmoothManifoldWithCorners: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An identity local homeomorphism belongs to the `C^n` groupoid. -/
@@ -547,7 +507,7 @@ begin
   exact [expr structure_groupoid.eq_on_source _ (of_set_mem_times_cont_diff_groupoid n I e.open_target) this]
 end
 
-variable{E' : Type _}[NormedGroup E'][NormedSpace 𝕜 E']{H' : Type _}[TopologicalSpace H']
+variable {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
 
 -- error in Geometry.Manifold.SmoothManifoldWithCorners: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of two smooth local homeomorphisms is smooth. -/
@@ -574,7 +534,7 @@ begin
 end
 
 /-- The `C^n` groupoid is closed under restriction. -/
-instance  : ClosedUnderRestriction (timesContDiffGroupoid n I) :=
+instance : ClosedUnderRestriction (timesContDiffGroupoid n I) :=
   (closed_under_restriction_iff_id_le _).mpr
     (by 
       apply structure_groupoid.le_iff.mpr 
@@ -594,17 +554,9 @@ section SmoothManifoldWithCorners
 /-- Typeclass defining smooth manifolds with corners with respect to a model with corners, over a
 field `𝕜` and with infinite smoothness to simplify typeclass search and statements later on. -/
 @[ancestor HasGroupoid]
-class
-  SmoothManifoldWithCorners{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type _}[TopologicalSpace H](I : ModelWithCorners 𝕜 E H)(M : Type _)[TopologicalSpace M][ChartedSpace H M] extends
-  HasGroupoid M (timesContDiffGroupoid ∞ I) : Prop
+class SmoothManifoldWithCorners {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
+  {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M]
+  [ChartedSpace H M] extends HasGroupoid M (timesContDiffGroupoid ∞ I) : Prop
 
 theorem SmoothManifoldWithCorners.mk' {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E]
   [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M]
@@ -641,21 +593,15 @@ end SmoothManifoldWithCorners
 
 namespace SmoothManifoldWithCorners
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H : Type _}[TopologicalSpace H](I : ModelWithCorners 𝕜 E H)(M : Type _)[TopologicalSpace M][ChartedSpace H M]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
 
 /-- The maximal atlas of `M` for the smooth manifold with corners structure corresponding to the
 model with corners `I`. -/
 def maximal_atlas :=
   (timesContDiffGroupoid ∞ I).MaximalAtlas M
 
-variable{M}
+variable {M}
 
 theorem mem_maximal_atlas_of_mem_atlas [SmoothManifoldWithCorners I M] {e : LocalHomeomorph M H} (he : e ∈ atlas H M) :
   e ∈ maximal_atlas I M :=
@@ -664,7 +610,7 @@ theorem mem_maximal_atlas_of_mem_atlas [SmoothManifoldWithCorners I M] {e : Loca
 theorem chart_mem_maximal_atlas [SmoothManifoldWithCorners I M] (x : M) : chart_at H x ∈ maximal_atlas I M :=
   StructureGroupoid.chart_mem_maximal_atlas _ x
 
-variable{I}
+variable {I}
 
 theorem compatible_of_mem_maximal_atlas {e e' : LocalHomeomorph M H} (he : e ∈ maximal_atlas I M)
   (he' : e' ∈ maximal_atlas I M) : e.symm.trans e' ∈ timesContDiffGroupoid ∞ I :=
@@ -723,21 +669,11 @@ namespace TopologicalSpace.Opens
 
 open TopologicalSpace
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I :
-    ModelWithCorners 𝕜 E
-      H){M : Type _}[TopologicalSpace M][ChartedSpace H M][SmoothManifoldWithCorners I M](s : opens M)
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M] (s : opens M)
 
-instance  : SmoothManifoldWithCorners I s :=
+instance : SmoothManifoldWithCorners I s :=
   { s.has_groupoid (timesContDiffGroupoid ∞ I) with  }
 
 end TopologicalSpace.Opens
@@ -746,17 +682,9 @@ section ExtendedCharts
 
 open_locale TopologicalSpace
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I : ModelWithCorners 𝕜 E H){M : Type _}[TopologicalSpace M][ChartedSpace H M](x : M){s t : Set M}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M] (x : M)
+  {s t : Set M}
 
 /-!
 ### Extended charts

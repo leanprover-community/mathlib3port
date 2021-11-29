@@ -29,7 +29,7 @@ namespace GeneralizedContinuedFraction
 
 open generalized_continued_fraction(of)
 
-variable{K : Type _}[LinearOrderedField K][FloorRing K]
+variable {K : Type _} [LinearOrderedField K] [FloorRing K]
 
 attribute [local simp] pair.map int_fract_pair.mapFr
 
@@ -47,7 +47,7 @@ show that `v = ↑q`.
 -/
 
 
-variable(v : K)(n : ℕ)
+variable (v : K) (n : ℕ)
 
 -- error in Algebra.ContinuedFractions.Computation.TerminatesIffRat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_gcf_pair_rat_eq_of_nth_conts_aux : «expr∃ , »((conts : pair exprℚ()), «expr = »((of v).continuants_aux n, (conts.map coe : pair K))) :=
@@ -105,7 +105,7 @@ theorem exists_rat_eq_nth_convergent : ∃ q : ℚ, (of v).convergents n = (q : 
     use Aₙ / Bₙ 
     simp [nth_num_eq, nth_denom_eq, convergent_eq_num_div_denom]
 
-variable{v}
+variable {v}
 
 -- error in Algebra.ContinuedFractions.Computation.TerminatesIffRat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Every terminating continued fraction corresponds to a rational number. -/
@@ -144,7 +144,7 @@ the computation first and then lift the results step-by-step.
 -/
 
 
-variable{v : K}{q : ℚ}(v_eq_q : v = («expr↑ » q : K))(n : ℕ)
+variable {v : K} {q : ℚ} (v_eq_q : v = («expr↑ » q : K)) (n : ℕ)
 
 include v_eq_q
 
@@ -251,7 +251,7 @@ this process must stop after finite number of steps, and the computation hence t
 
 namespace IntFractPair
 
-variable{q : ℚ}{n : ℕ}
+variable {q : ℚ} {n : ℕ}
 
 /--
 Shows that for any `q : ℚ` with `0 < q < 1`, the numerator of the fractional part of

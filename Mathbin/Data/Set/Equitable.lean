@@ -18,7 +18,7 @@ latter yet.
 
 open_locale BigOperators
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 namespace Set
 
@@ -59,7 +59,7 @@ theorem equitable_on_iff_exists_eq_eq_add_one {s : Set α} {f : α → ℕ} :
 
 section OrderedSemiring
 
-variable[OrderedSemiring β]
+variable [OrderedSemiring β]
 
 theorem subsingleton.equitable_on {s : Set α} (hs : s.subsingleton) (f : α → β) : s.equitable_on f :=
   fun i j hi hj =>

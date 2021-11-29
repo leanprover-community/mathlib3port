@@ -7,10 +7,10 @@ This file defines `prod.swap : α × β → β × α` and proves various simple 
 -/
 
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 @[simp]
-theorem prod_mapₓ (f : α → γ) (g : β → δ) (p : α × β) : Prod.mapₓ f g p = (f p.1, g p.2) :=
+theorem prod_mapₓ (f : α → γ) (g : β → δ) (p : α × β) : Prod.map f g p = (f p.1, g p.2) :=
   rfl
 
 namespace Prod
@@ -58,7 +58,7 @@ Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions.
 -/
 theorem map_comp_map {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) :
-  Prod.mapₓ g g' ∘ Prod.mapₓ f f' = Prod.mapₓ (g ∘ f) (g' ∘ f') :=
+  Prod.map g g' ∘ Prod.map f f' = Prod.map (g ∘ f) (g' ∘ f') :=
   rfl
 
 /--
@@ -66,7 +66,7 @@ Composing a `prod.map` with another `prod.map` is equal to
 a single `prod.map` of composed functions, fully applied.
 -/
 theorem map_map {ε ζ : Type _} (f : α → β) (f' : γ → δ) (g : β → ε) (g' : δ → ζ) (x : α × γ) :
-  Prod.mapₓ g g' (Prod.mapₓ f f' x) = Prod.mapₓ (g ∘ f) (g' ∘ f') x :=
+  Prod.map g g' (Prod.map f f' x) = Prod.map (g ∘ f) (g' ∘ f') x :=
   rfl
 
 @[simp]
@@ -94,7 +94,7 @@ theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 :=
 theorem ext {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
   ext_iff.2 ⟨h₁, h₂⟩
 
-theorem map_def {f : α → γ} {g : β → δ} : Prod.mapₓ f g = fun p : α × β => (f p.1, g p.2) :=
+theorem map_def {f : α → γ} {g : β → δ} : Prod.map f g = fun p : α × β => (f p.1, g p.2) :=
   funext fun p => ext (map_fst f g p) (map_snd f g p)
 
 theorem id_prod : (fun p : α × α => (p.1, p.2)) = id :=
@@ -197,11 +197,11 @@ end Prod
 open Function
 
 theorem Function.Injective.prod_map {f : α → γ} {g : β → δ} (hf : injective f) (hg : injective g) :
-  injective (Prod.mapₓ f g) :=
+  injective (Prod.map f g) :=
   fun x y h => Prod.extₓ (hf (Prod.ext_iff.1 h).1) (hg$ (Prod.ext_iff.1 h).2)
 
 theorem Function.Surjective.prod_map {f : α → γ} {g : β → δ} (hf : surjective f) (hg : surjective g) :
-  surjective (Prod.mapₓ f g) :=
+  surjective (Prod.map f g) :=
   fun p =>
     let ⟨x, hx⟩ := hf p.1
     let ⟨y, hy⟩ := hg p.2

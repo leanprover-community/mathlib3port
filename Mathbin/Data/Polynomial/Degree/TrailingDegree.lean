@@ -24,11 +24,11 @@ namespace Polynomial
 
 universe u v
 
-variable{R : Type u}{S : Type v}{a b : R}{n m : ℕ}
+variable {R : Type u} {S : Type v} {a b : R} {n m : ℕ}
 
 section Semiringₓ
 
-variable[Semiringₓ R]{p q r : Polynomial R}
+variable [Semiringₓ R] {p q r : Polynomial R}
 
 /-- `trailing_degree p` is the multiplicity of `x` in the polynomial `p`, i.e. the smallest
 `X`-exponent in `p`.
@@ -330,7 +330,7 @@ end Semiringₓ
 
 section NonzeroSemiring
 
-variable[Semiringₓ R][Nontrivial R]{p q : Polynomial R}
+variable [Semiringₓ R] [Nontrivial R] {p q : Polynomial R}
 
 @[simp]
 theorem trailing_degree_one : trailing_degree (1 : Polynomial R) = (0 : WithTop ℕ) :=
@@ -348,7 +348,7 @@ end NonzeroSemiring
 
 section Ringₓ
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
 @[simp]
 theorem trailing_degree_neg (p : Polynomial R) : trailing_degree (-p) = trailing_degree p :=
@@ -369,7 +369,7 @@ end Ringₓ
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 /-- The second-lowest coefficient, or 0 for constants -/
 def next_coeff_up (p : Polynomial R) : R :=
@@ -392,7 +392,7 @@ end Semiringₓ
 
 section Semiringₓ
 
-variable[Semiringₓ R]{p q : Polynomial R}{ι : Type _}
+variable [Semiringₓ R] {p q : Polynomial R} {ι : Type _}
 
 theorem coeff_nat_trailing_degree_eq_zero_of_trailing_degree_lt (h : trailing_degree p < trailing_degree q) :
   coeff q (nat_trailing_degree p) = 0 :=

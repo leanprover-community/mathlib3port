@@ -27,7 +27,7 @@ namespace Polynomial
 
 section Primitive
 
-variable{R : Type _}[CommSemiringₓ R]
+variable {R : Type _} [CommSemiringₓ R]
 
 /-- A polynomial is primitive when the only constant polynomials dividing it are units -/
 def is_primitive (p : Polynomial R) : Prop :=
@@ -55,11 +55,11 @@ theorem is_primitive.ne_zero [Nontrivial R] {p : Polynomial R} (hp : p.is_primit
 
 end Primitive
 
-variable{R : Type _}[CommRingₓ R][IsDomain R]
+variable {R : Type _} [CommRingₓ R] [IsDomain R]
 
 section NormalizedGcdMonoid
 
-variable[NormalizedGcdMonoid R]
+variable [NormalizedGcdMonoid R]
 
 /-- `p.content` is the `gcd` of the coefficients of `p`. -/
 def content (p : Polynomial R) : R :=
@@ -121,7 +121,7 @@ begin
 end
 
 @[simp]
-theorem content_X_pow {k : ℕ} : content ((X : Polynomial R) ^ k) = 1 :=
+theorem content_X_pow {k : ℕ} : content ((X : Polynomial R)^k) = 1 :=
   by 
     induction' k with k hi
     ·
@@ -462,7 +462,7 @@ theorem dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part {p q : Polynomia
       rw [p.eq_C_content_mul_prim_part, q.eq_C_content_mul_prim_part]
       exact mul_dvd_mul (RingHom.map_dvd C h.1) h.2
 
-instance (priority := 100)NormalizedGcdMonoid : NormalizedGcdMonoid (Polynomial R) :=
+instance (priority := 100) NormalizedGcdMonoid : NormalizedGcdMonoid (Polynomial R) :=
   normalizedGcdMonoidOfExistsLcm$
     fun p q =>
       by 
@@ -476,7 +476,7 @@ instance (priority := 100)NormalizedGcdMonoid : NormalizedGcdMonoid (Polynomial 
         ·
           rw [C_eq_zero, lcm_eq_zero_iff, content_eq_zero_iff, content_eq_zero_iff] at hpq 
           rcases hpq with (hpq | hpq) <;> simp [hpq, hs]
-        iterate 3
+        iterate 3 
           rw [dvd_iff_content_dvd_content_and_prim_part_dvd_prim_part hs]
         rw [content_mul, rprim.content_eq_one, mul_oneₓ, content_C, normalize_lcm, lcm_dvd_iff,
           prim_part_mul (mul_ne_zero hpq rprim.ne_zero), rprim.prim_part_eq,

@@ -28,7 +28,7 @@ namespace Function
 
 namespace Injective
 
-variable{M₁ : Type _}{M₂ : Type _}[Mul M₁]
+variable {M₁ : Type _} {M₂ : Type _} [Mul M₁]
 
 /-- A type endowed with `*` is a semigroup,
 if it admits an injective map that preserves `*` to a semigroup.
@@ -92,7 +92,7 @@ protected def RightCancelSemigroup [RightCancelSemigroup M₂] (f : M₁ → M�
             by 
               erw [←mul, ←mul, H] <;> rfl }
 
-variable[HasOne M₁]
+variable [HasOne M₁]
 
 /-- A type endowed with `1` and `*` is a mul_one_class,
 if it admits an injective map that preserves `1` and `*` to a mul_one_class.
@@ -195,7 +195,7 @@ protected def CancelCommMonoid [CancelCommMonoid M₂] (f : M₁ → M₂) (hf :
   (mul : ∀ x y, f (x*y) = f x*f y) : CancelCommMonoid M₁ :=
   { hf.left_cancel_semigroup f mul, hf.comm_monoid f one mul with  }
 
-variable[HasInv M₁][Div M₁]
+variable [HasInv M₁] [Div M₁]
 
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `div_inv_monoid`
 if it admits an injective map that preserves `1`, `*`, `⁻¹`, and `/` to a `div_inv_monoid`.
@@ -286,7 +286,7 @@ end Injective
 
 namespace Surjective
 
-variable{M₁ : Type _}{M₂ : Type _}[Mul M₂]
+variable {M₁ : Type _} {M₂ : Type _} [Mul M₂]
 
 /-- A type endowed with `*` is a semigroup,
 if it admits a surjective map that preserves `*` from a semigroup.
@@ -318,7 +318,7 @@ protected def CommSemigroupₓ [CommSemigroupₓ M₁] (f : M₁ → M₂) (hf :
           by 
             erw [←mul, ←mul, mul_commₓ] }
 
-variable[HasOne M₂]
+variable [HasOne M₂]
 
 /-- A type endowed with `1` and `*` is a mul_one_class,
 if it admits a surjective map that preserves `1` and `*` from a mul_one_class.
@@ -360,7 +360,7 @@ protected def CommMonoidₓ [CommMonoidₓ M₁] (f : M₁ → M₂) (hf : surje
   (mul : ∀ x y, f (x*y) = f x*f y) : CommMonoidₓ M₂ :=
   { hf.comm_semigroup f mul, hf.monoid f one mul with  }
 
-variable[HasInv M₂][Div M₂]
+variable [HasInv M₂] [Div M₂]
 
 /-- A type endowed with `1`, `*`, `⁻¹`, and `/` is a `div_inv_monoid`,
 if it admits a surjective map that preserves `1`, `*`, `⁻¹`, and `/` from a `div_inv_monoid`

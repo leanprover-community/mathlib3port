@@ -130,11 +130,11 @@ open Multiset Subtype Nat Function
 
 universe u
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 /-- `finset α` is the type of finite sets of elements of `α`. It is implemented
   as a multiset (a list up to permutation) which has no duplicate elements. -/
-structure Finset(α : Type _) where 
+structure Finset (α : Type _) where 
   val : Multiset α 
   Nodup : nodup val
 
@@ -157,7 +157,7 @@ instance has_decidable_eq [DecidableEq α] : DecidableEq (Finset α)
 /-! ### membership -/
 
 
-instance  : HasMem α (Finset α) :=
+instance : HasMem α (Finset α) :=
   ⟨fun a s => a ∈ s.1⟩
 
 theorem mem_def {a : α} {s : Finset α} : a ∈ s ↔ a ∈ s.1 :=
@@ -174,7 +174,7 @@ instance decidable_mem [h : DecidableEq α] (a : α) (s : Finset α) : Decidable
 
 
 /-- Convert a finset to a set in the natural way. -/
-instance  : CoeTₓ (Finset α) (Set α) :=
+instance : CoeTₓ (Finset α) (Set α) :=
   ⟨fun s => { x | x ∈ s }⟩
 
 @[simp, normCast]
@@ -217,7 +217,7 @@ theorem coe_injective {α} : injective (coeₓ : Finset α → Set α) :=
 
 
 /-- Coercion from a finset to the corresponding subtype. -/
-instance  {α : Type u} : CoeSort (Finset α) (Type u) :=
+instance {α : Type u} : CoeSort (Finset α) (Type u) :=
   ⟨fun s => { x // x ∈ s }⟩
 
 instance pi_finset_coe.can_lift (ι : Type _) (α : ∀ i : ι, Type _) [ne : ∀ i, Nonempty (α i)] (s : Finset ι) :
@@ -237,7 +237,7 @@ theorem coe_sort_coe (s : Finset α) : ((s : Set α) : Sort _) = s :=
 /-! ### subset -/
 
 
-instance  : HasSubset (Finset α) :=
+instance : HasSubset (Finset α) :=
   ⟨fun s₁ s₂ => ∀ ⦃a⦄, a ∈ s₁ → a ∈ s₂⟩
 
 theorem subset_def {s₁ s₂ : Finset α} : s₁ ⊆ s₂ ↔ s₁.1 ⊆ s₂.1 :=
@@ -275,10 +275,10 @@ theorem coe_subset {s₁ s₂ : Finset α} : (s₁ : Set α) ⊆ s₂ ↔ s₁ �
 theorem val_le_iff {s₁ s₂ : Finset α} : s₁.1 ≤ s₂.1 ↔ s₁ ⊆ s₂ :=
   le_iff_subset s₁.2
 
-instance  : HasSsubset (Finset α) :=
+instance : HasSsubset (Finset α) :=
   ⟨fun a b => a ⊆ b ∧ ¬b ⊆ a⟩
 
-instance  : PartialOrderₓ (Finset α) :=
+instance : PartialOrderₓ (Finset α) :=
   { le := · ⊆ ·, lt := · ⊂ ·, le_refl := subset.refl, le_trans := @subset.trans _, le_antisymm := @subset.antisymm _ }
 
 /-- Coercion to `set α` as an `order_embedding`. -/
@@ -370,7 +370,7 @@ theorem nonempty.forall_const {s : Finset α} (h : s.nonempty) {p : Prop} : (∀
 protected def Empty : Finset α :=
   ⟨0, nodup_zero⟩
 
-instance  : HasEmptyc (Finset α) :=
+instance : HasEmptyc (Finset α) :=
   ⟨Finset.empty⟩
 
 instance inhabited_finset : Inhabited (Finset α) :=
@@ -459,7 +459,7 @@ theorem eq_empty_of_is_empty [IsEmpty α] (s : Finset α) : s = ∅ :=
 
 This differs from `insert a ∅` in that it does not require a `decidable_eq` instance for `α`.
 -/
-instance  : HasSingleton α (Finset α) :=
+instance : HasSingleton α (Finset α) :=
   ⟨fun a => ⟨{a}, nodup_singleton a⟩⟩
 
 @[simp]
@@ -628,10 +628,10 @@ theorem mem_disj_union {α s t h a} : a ∈ @disj_union α s t h ↔ a ∈ s ∨
 
 section DecidableEq
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- `insert a s` is the set `{a} ∪ s` containing `a` and the elements of `s`. -/
-instance  : HasInsert α (Finset α) :=
+instance : HasInsert α (Finset α) :=
   ⟨fun a s => ⟨_, nodup_ndinsert a s.2⟩⟩
 
 theorem insert_def (a : α) (s : Finset α) : insert a s = ⟨_, nodup_ndinsert a s.2⟩ :=
@@ -680,7 +680,7 @@ theorem mem_insert_coe {s : Finset α} {x y : α} : x ∈ insert y s ↔ x ∈ i
   by 
     simp 
 
-instance  : IsLawfulSingleton α (Finset α) :=
+instance : IsLawfulSingleton α (Finset α) :=
   ⟨fun a =>
       by 
         ext 
@@ -728,7 +728,7 @@ leanprover.zulipchat.com/#narrow/stream/113488-general/topic/strange.20error.20(
 -/
 
 
-instance  {α : Type u} [DecidableEq α] (i : α) (s : Finset α) : Nonempty.{u + 1} ((insert i s : Finset α) : Set α) :=
+instance {α : Type u} [DecidableEq α] (i : α) (s : Finset α) : Nonempty.{u + 1} ((insert i s : Finset α) : Set α) :=
   (Finset.coe_nonempty.mpr (s.insert_nonempty i)).to_subtype
 
 end 
@@ -853,7 +853,7 @@ end
 
 
 /-- `s ∪ t` is the set such that `a ∈ s ∪ t` iff `a ∈ s` or `a ∈ t`. -/
-instance  : HasUnion (Finset α) :=
+instance : HasUnion (Finset α) :=
   ⟨fun s₁ s₂ => ⟨_, nodup_ndunion s₁.1 s₂.2⟩⟩
 
 theorem union_val_nd (s₁ s₂ : Finset α) : (s₁ ∪ s₂).1 = ndunion s₁.1 s₂.1 :=
@@ -914,7 +914,7 @@ theorem union_comm (s₁ s₂ : Finset α) : s₁ ∪ s₂ = s₂ ∪ s₁ :=
       by 
         simp only [mem_union, or_comm]
 
-instance  : IsCommutative (Finset α) (· ∪ ·) :=
+instance : IsCommutative (Finset α) (· ∪ ·) :=
   ⟨union_comm⟩
 
 @[simp]
@@ -924,14 +924,14 @@ theorem union_assoc (s₁ s₂ s₃ : Finset α) : s₁ ∪ s₂ ∪ s₃ = s₁
       by 
         simp only [mem_union, or_assoc]
 
-instance  : IsAssociative (Finset α) (· ∪ ·) :=
+instance : IsAssociative (Finset α) (· ∪ ·) :=
   ⟨union_assoc⟩
 
 @[simp]
 theorem union_idempotent (s : Finset α) : s ∪ s = s :=
   ext$ fun _ => mem_union.trans$ or_selfₓ _
 
-instance  : IsIdempotent (Finset α) (· ∪ ·) :=
+instance : IsIdempotent (Finset α) (· ∪ ·) :=
   ⟨union_idempotent⟩
 
 theorem union_subset_left {s₁ s₂ s₃ : Finset α} (h : s₁ ∪ s₂ ⊆ s₃) : s₁ ⊆ s₃ :=
@@ -1050,7 +1050,7 @@ theorem exists_mem_subset_of_subset_bUnion_of_directed_on {α ι : Type _} {f : 
 
 
 /-- `s ∩ t` is the set such that `a ∈ s ∩ t` iff `a ∈ s` and `a ∈ t`. -/
-instance  : HasInter (Finset α) :=
+instance : HasInter (Finset α) :=
   ⟨fun s₁ s₂ => ⟨_, nodup_ndinter s₂.1 s₁.2⟩⟩
 
 theorem inter_val_nd (s₁ s₂ : Finset α) : (s₁ ∩ s₂).1 = ndinter s₁.1 s₂.1 :=
@@ -1207,7 +1207,7 @@ theorem inter_subset_inter_left {x y s : Finset α} (h : x ⊆ y) : s ∩ x ⊆ 
 /-! ### lattice laws -/
 
 
-instance  : Lattice (Finset α) :=
+instance : Lattice (Finset α) :=
   { Finset.partialOrder with sup := · ∪ ·, sup_le := fun a b c => union_subset, le_sup_left := subset_union_left,
     le_sup_right := subset_union_right, inf := · ∩ ·, le_inf := fun a b c => subset_inter,
     inf_le_left := inter_subset_left, inf_le_right := inter_subset_right }
@@ -1220,18 +1220,12 @@ theorem sup_eq_union : (·⊔· : Finset α → Finset α → Finset α) = · �
 theorem inf_eq_inter : (·⊓· : Finset α → Finset α → Finset α) = · ∩ · :=
   rfl
 
-instance  {α : Type u} : OrderBot (Finset α) :=
+instance {α : Type u} : OrderBot (Finset α) :=
   { bot := ∅, bot_le := empty_subset }
-
-instance  : SemilatticeInfBot (Finset α) :=
-  { Finset.orderBot, Finset.lattice with  }
 
 @[simp]
 theorem bot_eq_empty {α : Type u} : (⊥ : Finset α) = ∅ :=
   rfl
-
-instance  : SemilatticeSupBot (Finset α) :=
-  { Finset.semilatticeInfBot, Finset.lattice with  }
 
 -- error in Data.Finset.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : distrib_lattice (finset α) :=
@@ -1404,7 +1398,7 @@ theorem erase_inj_on (s : Finset α) : Set.InjOn s.erase s :=
 
 
 /-- `s \ t` is the set consisting of the elements of `s` that are not in `t`. -/
-instance  : HasSdiff (Finset α) :=
+instance : HasSdiff (Finset α) :=
   ⟨fun s₁ s₂ => ⟨s₁.1 - s₂.1, nodup_of_le tsub_le_self s₁.2⟩⟩
 
 @[simp]
@@ -1421,8 +1415,8 @@ theorem inter_sdiff_self (s₁ s₂ : Finset α) : s₁ ∩ (s₂ \ s₁) = ∅ 
     by 
       simp only [mem_inter, mem_sdiff] <;> rintro x ⟨h, _, hn⟩ <;> exact hn h
 
-instance  : GeneralizedBooleanAlgebra (Finset α) :=
-  { Finset.hasSdiff, Finset.distribLattice, Finset.semilatticeInfBot with
+instance : GeneralizedBooleanAlgebra (Finset α) :=
+  { Finset.hasSdiff, Finset.distribLattice, Finset.orderBot with
     sup_inf_sdiff :=
       fun x y =>
         by 
@@ -1612,7 +1606,7 @@ complement. -/
 def piecewise {α : Type _} {δ : α → Sort _} (s : Finset α) (f g : ∀ i, δ i) [∀ j, Decidable (j ∈ s)] : ∀ i, δ i :=
   fun i => if i ∈ s then f i else g i
 
-variable{δ : α → Sort _}(s : Finset α)(f g : ∀ i, δ i)
+variable {δ : α → Sort _} (s : Finset α) (f g : ∀ i, δ i)
 
 @[simp]
 theorem piecewise_insert_self [DecidableEq α] {j : α} [∀ i, Decidable (i ∈ insert j s)] :
@@ -1626,7 +1620,7 @@ theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Finset α))] : piec
     ext i 
     simp [piecewise]
 
-variable[∀ j, Decidable (j ∈ s)]
+variable [∀ j, Decidable (j ∈ s)]
 
 @[normCast]
 theorem piecewise_coe [∀ j, Decidable (j ∈ (s : Set α))] : (s : Set α).piecewise f g = s.piecewise f g :=
@@ -1750,7 +1744,7 @@ end Piecewise
 
 section DecidablePiExists
 
-variable{s : Finset α}
+variable {s : Finset α}
 
 instance decidable_dforall_finset {p : ∀ a _ : a ∈ s, Prop} [hp : ∀ a h : a ∈ s, Decidable (p a h)] :
   Decidable (∀ a h : a ∈ s, p a h) :=
@@ -1771,7 +1765,7 @@ end DecidablePiExists
 
 section Filter
 
-variable(p q : α → Prop)[DecidablePred p][DecidablePred q]
+variable (p q : α → Prop) [DecidablePred p] [DecidablePred q]
 
 /-- `filter p s` is the set of elements of `s` that satisfy `p`. -/
 def filter (s : Finset α) : Finset α :=
@@ -1785,7 +1779,7 @@ theorem filter_val (s : Finset α) : (filter p s).1 = s.1.filter p :=
 theorem filter_subset (s : Finset α) : s.filter p ⊆ s :=
   filter_subset _ _
 
-variable{p}
+variable {p}
 
 @[simp]
 theorem mem_filter {s : Finset α} {a : α} : a ∈ s.filter p ↔ a ∈ s ∧ p a :=
@@ -1797,7 +1791,7 @@ theorem filter_ssubset {s : Finset α} : s.filter p ⊂ s ↔ ∃ (x : _)(_ : x 
       ⟨x, hs, mt (fun hp => mem_filter.2 ⟨hs, hp⟩) hp⟩,
     fun ⟨x, hs, hp⟩ => ⟨s.filter_subset _, fun h => hp (mem_filter.1 (h hs)).2⟩⟩
 
-variable(p)
+variable (p)
 
 theorem filter_filter (s : Finset α) : (s.filter p).filter q = s.filter fun a => p a ∧ q a :=
   ext$
@@ -1816,7 +1810,7 @@ theorem filter_false {h} (s : Finset α) : @filter α (fun a => False) h s = ∅
       by 
         simp only [mem_filter, and_falseₓ] <;> rfl
 
-variable{p q}
+variable {p q}
 
 /-- If all elements of a `finset` satisfy the predicate `p`, `s.filter p` is `s`. -/
 @[simp]
@@ -1832,7 +1826,7 @@ theorem filter_false_of_mem {s : Finset α} (h : ∀ x _ : x ∈ s, ¬p x) : s.f
 theorem filter_congr {s : Finset α} (H : ∀ x _ : x ∈ s, p x ↔ q x) : filter p s = filter q s :=
   eq_of_veq$ filter_congr H
 
-variable(p q)
+variable (p q)
 
 theorem filter_empty : filter p ∅ = ∅ :=
   subset_empty.1$ filter_subset _ _
@@ -1858,7 +1852,7 @@ theorem filter_singleton (a : α) : filter p (singleton a) = if p a then singlet
     simp 
     splitIfs with h <;> byCases' h' : x = a <;> simp [h, h']
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 theorem filter_union (s₁ s₂ : Finset α) : (s₁ ∪ s₂).filter p = s₁.filter p ∪ s₂.filter p :=
   ext$
@@ -1987,7 +1981,7 @@ open_locale Classical
   simp-lemma `finset.filter_congr_decidable` will make sure that `finset.filter` uses the right
   instance for decidability.
 -/
-noncomputable instance  {α : Type _} : HasSep α (Finset α) :=
+noncomputable instance {α : Type _} : HasSep α (Finset α) :=
   ⟨fun p x => x.filter p⟩
 
 @[simp]
@@ -2042,7 +2036,7 @@ end Filter
 
 section Range
 
-variable{n m l : ℕ}
+variable {n m l : ℕ}
 
 /-- `range n` is the set of natural numbers less than `n`. -/
 def range (n : ℕ) : Finset ℕ :=
@@ -2161,7 +2155,7 @@ theorem coe_not_mem_range_equiv_symm (k : ℕ) :
 
 namespace Multiset
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- `to_finset s` removes duplicates from the multiset `s` to produce a finset. -/
 def to_finset (s : Multiset α) : Finset α :=
@@ -2248,7 +2242,7 @@ end Finset
 
 namespace List
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- `to_finset l` removes duplicates from the list `l` to produce a finset. -/
 def to_finset (l : List α) : Finset α :=
@@ -2355,7 +2349,7 @@ theorem map_val (f : α ↪ β) (s : Finset α) : (map f s).1 = s.1.map f :=
 theorem map_empty (f : α ↪ β) : (∅ : Finset α).map f = ∅ :=
   rfl
 
-variable{f : α ↪ β}{s : Finset α}
+variable {f : α ↪ β} {s : Finset α}
 
 @[simp]
 theorem mem_map {b : β} : b ∈ s.map f ↔ ∃ (a : _)(_ : a ∈ s), f a = b :=
@@ -2489,7 +2483,7 @@ theorem range_add_one' (n : ℕ) : range (n+1) = insert 0 ((range n).map ⟨fun 
 
 section Image
 
-variable[DecidableEq β]
+variable [DecidableEq β]
 
 /-- `image f s` is the forward image of `s` under `f`. -/
 def image (f : α → β) (s : Finset α) : Finset β :=
@@ -2503,7 +2497,7 @@ theorem image_val (f : α → β) (s : Finset α) : (image f s).1 = (s.1.map f).
 theorem image_empty (f : α → β) : (∅ : Finset α).Image f = ∅ :=
   rfl
 
-variable{f : α → β}{s : Finset α}
+variable {f : α → β} {s : Finset α}
 
 @[simp]
 theorem mem_image {b : β} : b ∈ s.image f ↔ ∃ (a : _)(_ : a ∈ s), f a = b :=
@@ -2513,7 +2507,7 @@ theorem mem_image {b : β} : b ∈ s.image f ↔ ∃ (a : _)(_ : a ∈ s), f a =
 theorem mem_image_of_mem (f : α → β) {a} {s : Finset α} (h : a ∈ s) : f a ∈ s.image f :=
   mem_image.2 ⟨_, h, rfl⟩
 
-instance  [CanLift β α] : CanLift (Finset β) (Finset α) :=
+instance [CanLift β α] : CanLift (Finset β) (Finset α) :=
   { cond := fun s => ∀ x _ : x ∈ s, CanLift.Cond α x, coe := image CanLift.coe,
     prf :=
       by 
@@ -2730,10 +2724,10 @@ theorem map_erase [DecidableEq α] (f : α ↪ β) (s : Finset α) (a : α) : (s
 Because `finset.image` requires a `decidable_eq` instances for the target type,
 we can only construct a `functor finset` when working classically.
 -/
-instance  [∀ P, Decidable P] : Functor Finset :=
+instance [∀ P, Decidable P] : Functor Finset :=
   { map := fun α β f s => s.image f }
 
-instance  [∀ P, Decidable P] : IsLawfulFunctor Finset :=
+instance [∀ P, Decidable P] : IsLawfulFunctor Finset :=
   { id_map := fun α x => image_id, comp_map := fun α β γ f g s => image_image.symm }
 
 /-- Given a finset `s` and a predicate `p`, `s.subtype p` is the finset of `subtype p` whose
@@ -3399,7 +3393,7 @@ over a finite set `s : finset α`.
 -/
 
 
-variable[DecidableEq β]{s : Finset α}{t : α → Finset β}
+variable [DecidableEq β] {s : Finset α} {t : α → Finset β}
 
 /-- `bUnion s t` is the union of `t x` over `x ∈ s`.
 (This was formerly `bind` due to the monad structure on types with `decidable_eq`.) -/
@@ -3558,7 +3552,7 @@ end BUnion
 
 section Sigma
 
-variable{σ : α → Type _}{s : Finset α}{t : ∀ a, Finset (σ a)}
+variable {σ : α → Type _} {s : Finset α} {t : ∀ a, Finset (σ a)}
 
 /-- `sigma s t` is the set of dependent pairs `⟨a, b⟩` such that `a ∈ s` and `b ∈ t a`. -/
 protected def Sigma (s : Finset α) (t : ∀ a, Finset (σ a)) : Finset (Σa, σ a) :=
@@ -3598,7 +3592,7 @@ end Sigma
 
 section Disjoint
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 theorem disjoint_left {s t : Finset α} : Disjoint s t ↔ ∀ {a}, a ∈ s → a ∉ t :=
   by 
@@ -3853,7 +3847,7 @@ theorem card_attach_fin {n : ℕ} (s : Finset ℕ) (h : ∀ m _ : m ∈ s, m < n
 
 section Choose
 
-variable(p : α → Prop)[DecidablePred p](l : Finset α)
+variable (p : α → Prop) [DecidablePred p] (l : Finset α)
 
 /-- Given a finset `l` and a predicate `p`, associate to a proof that there is a unique element of
 `l` satisfying `p` this unique element, as an element of the corresponding subtype. -/
@@ -3920,7 +3914,7 @@ end Equiv
 
 namespace Multiset
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 theorem to_finset_card_of_nodup {l : Multiset α} (h : l.nodup) : l.to_finset.card = l.card :=
   congr_argₓ card$ Multiset.erase_dup_eq_self.mpr h
@@ -3943,7 +3937,7 @@ end Multiset
 
 namespace List
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 theorem to_finset_card_of_nodup {l : List α} (h : l.nodup) : l.to_finset.card = l.length :=
   Multiset.to_finset_card_of_nodup h

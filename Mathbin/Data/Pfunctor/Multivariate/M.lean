@@ -47,7 +47,7 @@ namespace Mvpfunctor
 
 open Typevec
 
-variable{n : ℕ}(P : Mvpfunctor.{u} (n+1))
+variable {n : ℕ} (P : Mvpfunctor.{u} (n+1))
 
 /-- A path from the root of a tree to one of its node -/
 inductive M.path : P.last.M → Fin2 n → Type u

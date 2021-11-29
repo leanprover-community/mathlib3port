@@ -32,7 +32,7 @@ directed union, directed supremum, glue, gluing
 -/
 
 
-variable{α ι β : Type _}
+variable {α ι β : Type _}
 
 namespace Set
 
@@ -47,14 +47,9 @@ noncomputable def Union_lift (S : ι → Set α) (f : ∀ i x : S i, β)
   let i := Classical.indefiniteDescription _ (mem_Union.1 (hT x.prop))
   f i ⟨x, i.prop⟩
 
-variable{S :
-    ι →
-      Set
-        α}{f :
-    ∀ i x : S i,
-      β}{hf :
-    ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j,
-      f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩}{T : Set α}{hT : T ⊆ Union S}(hT' : T = Union S)
+variable {S : ι → Set α} {f : ∀ i x : S i, β}
+  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {T : Set α} {hT : T ⊆ Union S}
+  (hT' : T = Union S)
 
 @[simp]
 theorem Union_lift_mk {i : ι} (x : S i) (hx : (x : α) ∈ T) : Union_lift S f hf T hT ⟨x, hx⟩ = f i x :=
@@ -144,11 +139,8 @@ end
 
 end UnionLift
 
-variable{S :
-    ι →
-      Set
-        α}{f :
-    ∀ i x : S i, β}{hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩}{hS : Union S = univ}
+variable {S : ι → Set α} {f : ∀ i x : S i, β}
+  {hf : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, f i ⟨x, hxi⟩ = f j ⟨x, hxj⟩} {hS : Union S = univ}
 
 /-- Glue together functions defined on each of a collection `S` of sets that cover a type. See
   also `set.Union_lift`.   -/

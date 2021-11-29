@@ -10,14 +10,14 @@ namespace Finset
 
 open Multiset
 
-variable{α β γ : Type _}
+variable {α β γ : Type _}
 
 /-! ### fold -/
 
 
 section Fold
 
-variable(op : β → β → β)[hc : IsCommutative β op][ha : IsAssociative β op]
+variable (op : β → β → β) [hc : IsCommutative β op] [ha : IsAssociative β op]
 
 local notation a "*" b => op a b
 
@@ -28,7 +28,7 @@ include hc ha
 def fold (b : β) (f : α → β) (s : Finset α) : β :=
   (s.1.map f).fold op b
 
-variable{op}{f : α → β}{b : β}{s : Finset α}{a : α}
+variable {op} {f : α → β} {b : β} {s : Finset α} {a : α}
 
 @[simp]
 theorem fold_empty : (∅ : Finset α).fold op b f = b :=
@@ -182,7 +182,7 @@ theorem fold_sup_bot_singleton [DecidableEq α] (s : Finset α) : Finset.fold (�
 
 section Order
 
-variable[LinearOrderₓ β](c : β)
+variable [LinearOrderₓ β] (c : β)
 
 theorem le_fold_min : c ≤ s.fold min b f ↔ c ≤ b ∧ ∀ x _ : x ∈ s, c ≤ f x :=
   fold_op_rel_iff_and$ fun x y z => le_min_iff

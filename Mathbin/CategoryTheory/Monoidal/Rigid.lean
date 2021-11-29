@@ -49,11 +49,11 @@ noncomputable theory
 
 namespace CategoryTheory
 
-variable{C : Type u₁}[category.{v₁} C][monoidal_category C]
+variable {C : Type u₁} [category.{v₁} C] [monoidal_category C]
 
 /-- An exact pairing is a pair of objects `X Y : C` which admit
   a coevaluation and evaluation morphism which fulfill two triangle equalities. -/
-class exact_pairing(X Y : C) where 
+class exact_pairing (X Y : C) where 
   coevaluation{} : 𝟙_ C ⟶ X ⊗ Y 
   evaluation{} : Y ⊗ X ⟶ 𝟙_ C 
   coevaluation_evaluation'{} : (𝟙 Y ⊗ coevaluation) ≫ (α_ _ _ _).inv ≫ (evaluation ⊗ 𝟙 Y) = (ρ_ Y).Hom ≫ (λ_ Y).inv :=
@@ -93,12 +93,12 @@ instance exact_pairing_unit : exact_pairing (𝟙_ C) (𝟙_ C) :=
         simp  }
 
 /-- A class of objects which have a right dual. -/
-class has_right_dual(X : C) where 
+class has_right_dual (X : C) where 
   rightDual : C
   [exact : exact_pairing X right_dual]
 
 /-- A class of objects with have a left dual. -/
-class has_left_dual(Y : C) where 
+class has_left_dual (Y : C) where 
   leftDual : C
   [exact : exact_pairing left_dual Y]
 
@@ -180,12 +180,12 @@ theorem comp_right_adjoint_mate {X Y Z : C} [has_right_dual X] [has_right_dual Y
     rw [right_adjoint_mate_comp]
     simp only [right_adjoint_mate, comp_tensor_id, iso.cancel_iso_inv_left, id_tensor_comp, category.assoc]
     symm 
-    iterate 5
+    iterate 5 
       trans 
       rw [←category.id_comp g, tensor_comp]
     rw [←category.assoc]
     symm 
-    iterate 2
+    iterate 2 
       trans 
       rw [←category.assoc]
     apply eq_whisker 
@@ -217,12 +217,12 @@ theorem comp_left_adjoint_mate {X Y Z : C} [has_left_dual X] [has_left_dual Y] [
     rw [left_adjoint_mate_comp]
     simp only [left_adjoint_mate, id_tensor_comp, iso.cancel_iso_inv_left, comp_tensor_id, category.assoc]
     symm 
-    iterate 5
+    iterate 5 
       trans 
       rw [←category.id_comp g, tensor_comp]
     rw [←category.assoc]
     symm 
-    iterate 2
+    iterate 2 
       trans 
       rw [←category.assoc]
     apply eq_whisker 
@@ -279,11 +279,11 @@ theorem left_dual_iso_id {X Y : C} (p : exact_pairing X Y) : left_dual_iso p p =
     simp only [left_dual_iso, iso.refl_hom, left_adjoint_mate_id]
 
 /-- A right rigid monoidal category is one in which every object has a right dual. -/
-class right_rigid_category(C : Type u)[category.{v} C][monoidal_category.{v} C] where 
+class right_rigid_category (C : Type u) [category.{v} C] [monoidal_category.{v} C] where 
   [rightDual : ∀ X : C, has_right_dual X]
 
 /-- A left rigid monoidal category is one in which every object has a right dual. -/
-class left_rigid_category(C : Type u)[category.{v} C][monoidal_category.{v} C] where 
+class left_rigid_category (C : Type u) [category.{v} C] [monoidal_category.{v} C] where 
   [leftDual : ∀ X : C, has_left_dual X]
 
 attribute [instance] right_rigid_category.right_dual
@@ -291,7 +291,7 @@ attribute [instance] right_rigid_category.right_dual
 attribute [instance] left_rigid_category.left_dual
 
 /-- A rigid monoidal category is a monoidal category which is left rigid and right rigid. -/
-class rigid_category(C : Type u)[category.{v} C][monoidal_category.{v} C] extends right_rigid_category C,
+class rigid_category (C : Type u) [category.{v} C] [monoidal_category.{v} C] extends right_rigid_category C,
   left_rigid_category C
 
 end CategoryTheory

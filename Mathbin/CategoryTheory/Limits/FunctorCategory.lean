@@ -18,13 +18,13 @@ We also show that `F : D ⥤ K ⥤ C` preserves (co)limits if it does so for eac
 
 open CategoryTheory CategoryTheory.Category
 
+universe v₁ v₂ u₁ u₂ v v' u u'
+
 namespace CategoryTheory.Limits
 
-universe v v₂ u u₂
+variable {C : Type u} [category.{v} C] {D : Type u'} [category.{v'} D]
 
-variable{C : Type u}[category.{v} C]{D : Type u₂}[category.{v} D]
-
-variable{J K : Type v}[small_category J][category.{v₂} K]
+variable {J : Type u₁} [category.{v₁} J] {K : Type u₂} [category.{v₂} K]
 
 @[simp, reassoc]
 theorem limit.lift_π_app (H : J ⥤ K ⥤ C) [has_limit H] (c : cone H) (j : J) (k : K) :
@@ -182,11 +182,20 @@ instance functor_category_has_colimits_of_shape [has_colimits_of_shape J C] : ha
         has_colimit.mk
           { Cocone := combine_cocones _ fun k => get_colimit_cocone _, IsColimit := combined_is_colimit _ _ } }
 
-instance functor_category_has_limits [has_limits C] : has_limits (K ⥤ C) :=
-  {  }
+instance functor_category_has_limits_of_size [has_limits_of_size.{v₁, u₁} C] : has_limits_of_size.{v₁, u₁} (K ⥤ C) :=
+  ⟨inferInstance⟩
 
-instance functor_category_has_colimits [has_colimits C] : has_colimits (K ⥤ C) :=
-  {  }
+instance functor_category_has_colimits_of_size [has_colimits_of_size.{v₁, u₁} C] :
+  has_colimits_of_size.{v₁, u₁} (K ⥤ C) :=
+  ⟨inferInstance⟩
+
+end CategoryTheory.Limits
+
+namespace CategoryTheory.Limits
+
+variable {C : Type u} [category.{v} C] {D : Type u'} [category.{v} D]
+
+variable {J : Type v} [category.{v} J] {K : Type v} [category.{v₂} K]
 
 instance evaluation_preserves_limits_of_shape [has_limits_of_shape J C] (k : K) :
   preserves_limits_of_shape J ((evaluation K C).obj k) :=

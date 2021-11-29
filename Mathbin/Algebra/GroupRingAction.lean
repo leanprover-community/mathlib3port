@@ -1,9 +1,6 @@
-import Mathbin.Algebra.Pointwise 
 import Mathbin.Data.Equiv.Ring 
 import Mathbin.GroupTheory.GroupAction.Group 
-import Mathbin.GroupTheory.Submonoid.Pointwise 
-import Mathbin.GroupTheory.Subgroup.Pointwise 
-import Mathbin.RingTheory.Subring
+import Mathbin.RingTheory.Subring.Basic
 
 /-!
 # Group action on rings
@@ -32,17 +29,17 @@ open_locale BigOperators
 /-- Typeclass for multiplicative actions by monoids on semirings.
 
 This combines `distrib_mul_action` with `mul_distrib_mul_action`. -/
-class MulSemiringAction(M : Type u)(R : Type v)[Monoidₓ M][Semiringₓ R] extends DistribMulAction M R where 
+class MulSemiringAction (M : Type u) (R : Type v) [Monoidₓ M] [Semiringₓ R] extends DistribMulAction M R where 
   smul_one : ∀ g : M, (g • 1 : R) = 1
   smul_mul : ∀ g : M x y : R, (g • x*y) = (g • x)*g • y
 
 section Semiringₓ
 
-variable(M G : Type u)[Monoidₓ M][Groupₓ G]
+variable (M G : Type u) [Monoidₓ M] [Groupₓ G]
 
-variable(A R S F : Type v)[AddMonoidₓ A][Semiringₓ R][CommSemiringₓ S][DivisionRing F]
+variable (A R S F : Type v) [AddMonoidₓ A] [Semiringₓ R] [CommSemiringₓ S] [DivisionRing F]
 
-instance (priority := 100)MulSemiringAction.toMulDistribMulAction [h : MulSemiringAction M R] :
+instance (priority := 100) MulSemiringAction.toMulDistribMulAction [h : MulSemiringAction M R] :
   MulDistribMulAction M R :=
   { h with  }
 
@@ -62,7 +59,7 @@ def MulSemiringAction.toRingEquiv [MulSemiringAction G R] (x : G) : R ≃+* R :=
 
 section 
 
-variable{M G R}
+variable {M G R}
 
 /-- A stronger version of `submonoid.distrib_mul_action`. -/
 instance Submonoid.mulSemiringAction [MulSemiringAction M R] (H : Submonoid M) : MulSemiringAction H R :=
@@ -83,99 +80,9 @@ instance Subring.mulSemiringAction {R'} [Ringₓ R'] [MulSemiringAction R' R] (H
 
 end 
 
-section Pointwise
-
-namespace Subsemiring
-
-variable[MulSemiringAction M R]
-
-/-- The action on a subsemiring corresponding to applying the action to every element.
-
-This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_mul_action : MulAction M (Subsemiring R) :=
-  { smul := fun a S => S.map (MulSemiringAction.toRingHom _ _ a),
-    one_smul :=
-      fun S =>
-        (congr_argₓ (fun f => S.map f)
-              (RingHom.ext$
-                by 
-                  exact one_smul M)).trans
-          S.map_id,
-    mul_smul :=
-      fun a₁ a₂ S =>
-        (congr_argₓ (fun f => S.map f)
-              (RingHom.ext$
-                by 
-                  exact mul_smul _ _)).trans
-          (S.map_map _ _).symm }
-
-localized [Pointwise] attribute [instance] Subsemiring.pointwiseMulAction
-
-open_locale Pointwise
-
-@[simp]
-theorem coe_pointwise_smul (m : M) (S : Subsemiring R) : «expr↑ » (m • S) = m • (S : Set R) :=
-  rfl
-
-@[simp]
-theorem pointwise_smul_to_add_submonoid (m : M) (S : Subsemiring R) : (m • S).toAddSubmonoid = m • S.to_add_submonoid :=
-  rfl
-
-theorem smul_mem_pointwise_smul (m : M) (r : R) (S : Subsemiring R) : r ∈ S → m • r ∈ m • S :=
-  (Set.smul_mem_smul_set : _ → _ ∈ m • (S : Set R))
-
-end Subsemiring
-
-namespace Subring
-
-variable{R' : Type _}[Ringₓ R'][MulSemiringAction M R']
-
-/-- The action on a subring corresponding to applying the action to every element.
-
-This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_mul_action : MulAction M (Subring R') :=
-  { smul := fun a S => S.map (MulSemiringAction.toRingHom _ _ a),
-    one_smul :=
-      fun S =>
-        (congr_argₓ (fun f => S.map f)
-              (RingHom.ext$
-                by 
-                  exact one_smul M)).trans
-          S.map_id,
-    mul_smul :=
-      fun a₁ a₂ S =>
-        (congr_argₓ (fun f => S.map f)
-              (RingHom.ext$
-                by 
-                  exact mul_smul _ _)).trans
-          (S.map_map _ _).symm }
-
-localized [Pointwise] attribute [instance] Subring.pointwiseMulAction
-
-open_locale Pointwise
-
-@[simp]
-theorem coe_pointwise_smul (m : M) (S : Subring R') : «expr↑ » (m • S) = m • (S : Set R') :=
-  rfl
-
-@[simp]
-theorem pointwise_smul_to_add_subgroup (m : M) (S : Subring R') : (m • S).toAddSubgroup = m • S.to_add_subgroup :=
-  rfl
-
-@[simp]
-theorem pointwise_smul_to_subsemiring (m : M) (S : Subring R') : (m • S).toSubsemiring = m • S.to_subsemiring :=
-  rfl
-
-theorem smul_mem_pointwise_smul (m : M) (r : R') (S : Subring R') : r ∈ S → m • r ∈ m • S :=
-  (Set.smul_mem_smul_set : _ → _ ∈ m • (S : Set R'))
-
-end Subring
-
-end Pointwise
-
 section SimpLemmas
 
-variable{M G A R F}
+variable {M G A R F}
 
 attribute [simp] smul_one smul_mul' smul_zero smul_add
 
@@ -191,9 +98,9 @@ end Semiringₓ
 
 section Ringₓ
 
-variable(M : Type u)[Monoidₓ M]{R : Type v}[Ringₓ R][MulSemiringAction M R]
+variable (M : Type u) [Monoidₓ M] {R : Type v} [Ringₓ R] [MulSemiringAction M R]
 
-variable(S : Subring R)
+variable (S : Subring R)
 
 open MulAction
 

@@ -13,9 +13,9 @@ import Mathbin.Data.Matrix.Basic
 -/
 
 
-variable{l m n o : Type _}{m' : o → Type _}{n' : o → Type _}
+variable {l m n o : Type _} {m' : o → Type _} {n' : o → Type _}
 
-variable{R : Type _}{S : Type _}{α : Type _}{β : Type _}
+variable {R : Type _} {S : Type _} {α : Type _} {β : Type _}
 
 open_locale Matrix
 
@@ -157,7 +157,7 @@ theorem to_square_block_prop_def (M : Matrix m m α) (p : m → Prop) :
   to_square_block_prop M p = fun i j => M («expr↑ » i) («expr↑ » j) :=
   rfl
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
 theorem from_blocks_smul (x : α) (A : Matrix n l α) (B : Matrix n m α) (C : Matrix o l α) (D : Matrix o m α) :
   x • from_blocks A B C D = from_blocks (x • A) (x • B) (x • C) (x • D) :=
@@ -183,7 +183,7 @@ theorem from_blocks_multiply {p q : Type _} [Fintype l] [Fintype m] (A : Matrix 
       rcases j with ⟨⟩ <;>
         simp only [from_blocks, mul_apply, Fintype.sum_sum_type, Sum.elim_inl, Sum.elim_inr, Pi.add_apply]
 
-variable[DecidableEq l][DecidableEq m]
+variable [DecidableEq l] [DecidableEq m]
 
 @[simp]
 theorem from_blocks_diagonal (d₁ : l → α) (d₂ : m → α) :
@@ -202,11 +202,11 @@ end BlockMatrices
 
 section BlockDiagonal
 
-variable(M N : o → Matrix m n α)[DecidableEq o]
+variable (M N : o → Matrix m n α) [DecidableEq o]
 
 section HasZero
 
-variable[HasZero α][HasZero β]
+variable [HasZero α] [HasZero β]
 
 /-- `matrix.block_diagonal M` turns a homogenously-indexed collection of matrices
 `M : o → matrix m n α'` into a `m × o`-by-`n × o` block matrix which has the entries of `M` along
@@ -315,11 +315,11 @@ end BlockDiagonal
 
 section BlockDiagonal'
 
-variable(M N : ∀ i, Matrix (m' i) (n' i) α)[DecidableEq o]
+variable (M N : ∀ i, Matrix (m' i) (n' i) α) [DecidableEq o]
 
 section HasZero
 
-variable[HasZero α][HasZero β]
+variable [HasZero α] [HasZero β]
 
 /-- `matrix.block_diagonal' M` turns `M : Π i, matrix (m i) (n i) α` into a
 `Σ i, m i`-by-`Σ i, n i` block matrix which has the entries of `M` along the diagonal

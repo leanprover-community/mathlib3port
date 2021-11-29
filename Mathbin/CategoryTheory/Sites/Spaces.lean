@@ -31,7 +31,7 @@ universe u
 
 namespace Opens
 
-variable(T : Type u)[TopologicalSpace T]
+variable (T : Type u) [TopologicalSpace T]
 
 open CategoryTheory TopologicalSpace CategoryTheory.Limits
 

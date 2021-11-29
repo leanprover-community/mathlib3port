@@ -41,20 +41,20 @@ open Set
 
 universe u
 
-variable{K : Type u}
+variable {K : Type u}
 
 /-- A `division_ring` is a `ring` with multiplicative inverses for nonzero elements -/
 @[protectProj, ancestor Ringₓ DivInvMonoidₓ Nontrivial]
-class DivisionRing(K : Type u) extends Ringₓ K, DivInvMonoidₓ K, Nontrivial K where 
+class DivisionRing (K : Type u) extends Ringₓ K, DivInvMonoidₓ K, Nontrivial K where 
   mul_inv_cancel : ∀ {a : K}, a ≠ 0 → (a*a⁻¹) = 1
   inv_zero : (0 : K)⁻¹ = 0
 
 section DivisionRing
 
-variable[DivisionRing K]{a b : K}
+variable [DivisionRing K] {a b : K}
 
 /-- Every division ring is a `group_with_zero`. -/
-instance (priority := 100)DivisionRing.toGroupWithZero : GroupWithZeroₓ K :=
+instance (priority := 100) DivisionRing.toGroupWithZero : GroupWithZeroₓ K :=
   { ‹DivisionRing K›, (inferInstance : Semiringₓ K) with  }
 
 attribute [field_simps] inv_eq_one_div
@@ -182,7 +182,7 @@ theorem add_div_eq_mul_add_div (a b : K) {c : K} (hc : c ≠ 0) : (a+b / c) = ((
     by 
       rw [right_distrib, div_mul_cancel _ hc]
 
-instance (priority := 100)DivisionRing.is_domain : IsDomain K :=
+instance (priority := 100) DivisionRing.is_domain : IsDomain K :=
   { ‹DivisionRing K›,
     (by 
       infer_instance :
@@ -193,21 +193,21 @@ end DivisionRing
 
 /-- A `field` is a `comm_ring` with multiplicative inverses for nonzero elements -/
 @[protectProj, ancestor CommRingₓ DivInvMonoidₓ Nontrivial]
-class Field(K : Type u) extends CommRingₓ K, DivInvMonoidₓ K, Nontrivial K where 
+class Field (K : Type u) extends CommRingₓ K, DivInvMonoidₓ K, Nontrivial K where 
   mul_inv_cancel : ∀ {a : K}, a ≠ 0 → (a*a⁻¹) = 1
   inv_zero : (0 : K)⁻¹ = 0
 
 section Field
 
-variable[Field K]
+variable [Field K]
 
-instance (priority := 100)Field.toDivisionRing : DivisionRing K :=
+instance (priority := 100) Field.toDivisionRing : DivisionRing K :=
   { show Field K by 
       infer_instance with
      }
 
 /-- Every field is a `comm_group_with_zero`. -/
-instance (priority := 100)Field.toCommGroupWithZero : CommGroupWithZero K :=
+instance (priority := 100) Field.toCommGroupWithZero : CommGroupWithZero K :=
   { (_ : GroupWithZeroₓ K), ‹Field K› with  }
 
 attribute [local simp] mul_assocₓ mul_commₓ mul_left_commₓ
@@ -255,7 +255,7 @@ theorem div_sub' (a b c : K) (hc : c ≠ 0) : a / c - b = (a - c*b) / c :=
   by 
     simpa using div_sub_div a b hc one_ne_zero
 
-instance (priority := 100)Field.is_domain : IsDomain K :=
+instance (priority := 100) Field.is_domain : IsDomain K :=
   { DivisionRing.is_domain with  }
 
 end Field
@@ -268,7 +268,7 @@ This is mainly useful because such a predicate does not contain data,
 and can therefore be easily transported along ring isomorphisms.
 Additionaly, this is useful when trying to prove that
 a particular ring structure extends to a field. -/
-structure IsField(R : Type u)[Ringₓ R] : Prop where 
+structure IsField (R : Type u) [Ringₓ R] : Prop where 
   exists_pair_ne : ∃ x y : R, x ≠ y 
   mul_comm : ∀ x y : R, (x*y) = y*x 
   mul_inv_cancel : ∀ {a : R}, a ≠ 0 → ∃ b, (a*b) = 1
@@ -315,7 +315,7 @@ namespace RingHom
 
 section 
 
-variable{R : Type _}[Semiringₓ R][DivisionRing K](f : R →+* K)
+variable {R : Type _} [Semiringₓ R] [DivisionRing K] (f : R →+* K)
 
 @[simp]
 theorem map_units_inv (u : Units R) : f («expr↑ » (u⁻¹)) = f («expr↑ » u)⁻¹ :=
@@ -325,7 +325,8 @@ end
 
 section 
 
-variable{R K' : Type _}[DivisionRing K][Semiringₓ R][Nontrivial R][DivisionRing K'](f : K →+* R)(g : K →+* K'){x y : K}
+variable {R K' : Type _} [DivisionRing K] [Semiringₓ R] [Nontrivial R] [DivisionRing K'] (f : K →+* R) (g : K →+* K')
+  {x y : K}
 
 theorem map_ne_zero : f x ≠ 0 ↔ x ≠ 0 :=
   f.to_monoid_with_zero_hom.map_ne_zero
@@ -334,7 +335,7 @@ theorem map_ne_zero : f x ≠ 0 ↔ x ≠ 0 :=
 theorem map_eq_zero : f x = 0 ↔ x = 0 :=
   f.to_monoid_with_zero_hom.map_eq_zero
 
-variable(x y)
+variable (x y)
 
 theorem map_inv : g (x⁻¹) = g x⁻¹ :=
   g.to_monoid_with_zero_hom.map_inv x
@@ -351,7 +352,7 @@ end RingHom
 
 section NoncomputableDefs
 
-variable{R : Type _}[Nontrivial R]
+variable {R : Type _} [Nontrivial R]
 
 /-- Constructs a `division_ring` structure on a `ring` consisting only of units and 0. -/
 noncomputable def divisionRingOfIsUnitOrEqZero [hR : Ringₓ R] (h : ∀ a : R, IsUnit a ∨ a = 0) : DivisionRing R :=

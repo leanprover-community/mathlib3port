@@ -5,7 +5,7 @@ import Mathbin.Algebra.Ring.Pi
 import Mathbin.Analysis.SpecialFunctions.Pow 
 import Mathbin.FieldTheory.PerfectClosure 
 import Mathbin.RingTheory.Localization 
-import Mathbin.RingTheory.Subring 
+import Mathbin.RingTheory.Subring.Basic 
 import Mathbin.RingTheory.Valuation.Integers
 
 /-!
@@ -57,14 +57,14 @@ def Ringₓ.Perfection (R : Type u₁) [CommSemiringₓ R] (p : ℕ) : Type u₁
 
 namespace Perfection
 
-variable(R : Type u₁)[CommSemiringₓ R](p : ℕ)[hp : Fact p.prime][CharP R p]
+variable (R : Type u₁) [CommSemiringₓ R] (p : ℕ) [hp : Fact p.prime] [CharP R p]
 
 include hp
 
-instance  : CommSemiringₓ (Ringₓ.Perfection R p) :=
+instance : CommSemiringₓ (Ringₓ.Perfection R p) :=
   (Ringₓ.perfectionSubsemiring R p).toCommSemiring
 
-instance  : CharP (Ringₓ.Perfection R p) p :=
+instance : CharP (Ringₓ.Perfection R p) p :=
   CharP.subsemiring (ℕ → R) p (Ringₓ.perfectionSubsemiring R p)
 
 instance Ringₓ (R : Type u₁) [CommRingₓ R] [CharP R p] : Ringₓ (Ringₓ.Perfection R p) :=
@@ -73,27 +73,27 @@ instance Ringₓ (R : Type u₁) [CommRingₓ R] [CharP R p] : Ringₓ (Ringₓ.
 instance CommRingₓ (R : Type u₁) [CommRingₓ R] [CharP R p] : CommRingₓ (Ringₓ.Perfection R p) :=
   (Ringₓ.perfectionSubring R p).toCommRing
 
-instance  : Inhabited (Ringₓ.Perfection R p) :=
+instance : Inhabited (Ringₓ.Perfection R p) :=
   ⟨0⟩
 
 /-- The `n`-th coefficient of an element of the perfection. -/
 def coeff (n : ℕ) : Ringₓ.Perfection R p →+* R :=
   { toFun := fun f => f.1 n, map_one' := rfl, map_mul' := fun f g => rfl, map_zero' := rfl, map_add' := fun f g => rfl }
 
-variable{R p}
+variable {R p}
 
 @[ext]
 theorem ext {f g : Ringₓ.Perfection R p} (h : ∀ n, coeff R p n f = coeff R p n g) : f = g :=
   Subtype.eq$ funext h
 
-variable(R p)
+variable (R p)
 
 /-- The `p`-th root of an element of the perfection. -/
 def pthRoot : Ringₓ.Perfection R p →+* Ringₓ.Perfection R p :=
   { toFun := fun f => ⟨fun n => coeff R p (n+1) f, fun n => f.2 _⟩, map_one' := rfl, map_mul' := fun f g => rfl,
     map_zero' := rfl, map_add' := fun f g => rfl }
 
-variable{R p}
+variable {R p}
 
 @[simp]
 theorem coeff_mk (f : ℕ → R) hf (n : ℕ) : coeff R p n ⟨f, hf⟩ = f n :=
@@ -155,7 +155,7 @@ theorem coeff_ne_zero_of_le {f : Ringₓ.Perfection R p} {m n : ℕ} (hfm : coef
   let ⟨k, hk⟩ := Nat.exists_eq_add_of_le hmn 
   hk.symm ▸ coeff_add_ne_zero hfm k
 
-variable(R p)
+variable (R p)
 
 instance PerfectRing : PerfectRing (Ringₓ.Perfection R p) p :=
   { pthRoot' := pthRoot R p, frobenius_pth_root' := congr_funₓ$ congr_argₓ RingHom.toFun$ @frobenius_pth_root R _ p _ _,
@@ -193,7 +193,7 @@ theorem hom_ext {R : Type u₁} [CommSemiringₓ R] [CharP R p] [PerfectRing R p
   [CharP S p] {f g : R →+* Ringₓ.Perfection S p} (hfg : ∀ x, coeff S p 0 (f x) = coeff S p 0 (g x)) : f = g :=
   (lift p R S).symm.Injective$ RingHom.ext hfg
 
-variable{R}{S : Type u₂}[CommSemiringₓ S][CharP S p]
+variable {R} {S : Type u₂} [CommSemiringₓ S] [CharP S p]
 
 /-- A ring homomorphism `R →+* S` induces `perfection R p →+* perfection S p` -/
 @[simps]
@@ -217,22 +217,18 @@ end Perfection
 /-- A perfection map to a ring of characteristic `p` is a map that is isomorphic
 to its perfection. -/
 @[nolint has_inhabited_instance]
-structure
-  PerfectionMap(p :
-    ℕ)[Fact
-      p.prime]{R :
-    Type u₁}[CommSemiringₓ R][CharP R p]{P : Type u₂}[CommSemiringₓ P][CharP P p][PerfectRing P p](π : P →+* R) :
-  Prop where 
+structure PerfectionMap (p : ℕ) [Fact p.prime] {R : Type u₁} [CommSemiringₓ R] [CharP R p] {P : Type u₂}
+  [CommSemiringₓ P] [CharP P p] [PerfectRing P p] (π : P →+* R) : Prop where 
   Injective : ∀ ⦃x y : P⦄, (∀ n, π ((pthRoot P p^[n]) x) = π ((pthRoot P p^[n]) y)) → x = y 
   Surjective : ∀ f : ℕ → R, (∀ n, (f (n+1)^p) = f n) → ∃ x : P, ∀ n, π ((pthRoot P p^[n]) x) = f n
 
 namespace PerfectionMap
 
-variable{p : ℕ}[Fact p.prime]
+variable {p : ℕ} [Fact p.prime]
 
-variable{R : Type u₁}[CommSemiringₓ R][CharP R p]
+variable {R : Type u₁} [CommSemiringₓ R] [CharP R p]
 
-variable{P : Type u₃}[CommSemiringₓ P][CharP P p][PerfectRing P p]
+variable {P : Type u₃} [CommSemiringₓ P] [CharP P p] [PerfectRing P p]
 
 /-- Create a `perfection_map` from an isomorphism to the perfection. -/
 @[simps]
@@ -250,7 +246,7 @@ theorem mk' {f : P →+* R} (g : P ≃+* Ringₓ.Perfection R p) (hfg : Perfecti
             show Perfection.coeff R p n (Perfection.lift p P R f x) = Perfection.coeff R p n ⟨y, hy⟩by 
               rw [hfg, ←coe_fn_coe_base, hx]⟩ }
 
-variable(p R P)
+variable (p R P)
 
 /-- The canonical perfection map from the perfection of a ring. -/
 theorem of : PerfectionMap p (Perfection.coeff R p 0) :=
@@ -270,7 +266,7 @@ theorem id [PerfectRing R p] : PerfectionMap p (RingHom.id R) :=
                     by 
                       rw [Function.iterate_succ_apply', pth_root_pow_p _, ih, hf]⟩ }
 
-variable{p R P}
+variable {p R P}
 
 /-- A perfection map induces an isomorphism to the prefection. -/
 noncomputable def Equiv {π : P →+* R} (m : PerfectionMap p π) : P ≃+* Ringₓ.Perfection R p :=
@@ -297,7 +293,7 @@ theorem comp_symm_equiv' {π : P →+* R} (m : PerfectionMap p π) :
   π.comp («expr↑ » m.equiv.symm) = Perfection.coeff R p 0 :=
   RingHom.ext m.comp_symm_equiv
 
-variable(p R P)
+variable (p R P)
 
 /-- Given rings `R` and `S` of characteristic `p`, with `R` being perfect,
 any homomorphism `R →+* S` can be lifted to a homomorphism `R →+* P`,
@@ -320,16 +316,16 @@ noncomputable def lift [PerfectRing R p] (S : Type u₂) [CommSemiringₓ S] [Ch
                 show Perfection.lift p R S (π.comp f) x = RingHom.comp («expr↑ » m.equiv) f x from
                   RingHom.ext_iff.1 ((Perfection.lift p R S).apply_eq_iff_eq_symm_apply.2 rfl) _ }
 
-variable{R p}
+variable {R p}
 
 theorem hom_ext [PerfectRing R p] {S : Type u₂} [CommSemiringₓ S] [CharP S p] {P : Type u₃} [CommSemiringₓ P]
   [CharP P p] [PerfectRing P p] (π : P →+* S) (m : PerfectionMap p π) {f g : R →+* P} (hfg : ∀ x, π (f x) = π (g x)) :
   f = g :=
   (lift p R S P π m).symm.Injective$ RingHom.ext hfg
 
-variable{R P}(p){S : Type u₂}[CommSemiringₓ S][CharP S p]
+variable {R P} (p) {S : Type u₂} [CommSemiringₓ S] [CharP S p]
 
-variable{Q : Type u₄}[CommSemiringₓ Q][CharP Q p][PerfectRing Q p]
+variable {Q : Type u₄} [CommSemiringₓ Q] [CharP Q p] [PerfectRing Q p]
 
 /-- A ring homomorphism `R →+* S` induces `P →+* Q`, a map of the respective perfections. -/
 @[nolint unused_arguments]
@@ -355,11 +351,11 @@ end PerfectionMap
 
 section Perfectoid
 
-variable(K : Type u₁)[Field K](v : Valuation K ℝ≥0 )
+variable (K : Type u₁) [Field K] (v : Valuation K ℝ≥0 )
 
-variable(O : Type u₂)[CommRingₓ O][Algebra O K](hv : v.integers O)
+variable (O : Type u₂) [CommRingₓ O] [Algebra O K] (hv : v.integers O)
 
-variable(p : ℕ)
+variable (p : ℕ)
 
 include hv
 
@@ -368,19 +364,19 @@ include hv
 def ModP :=
   (Ideal.span {p} : Ideal O).Quotient
 
-variable[hp : Fact p.prime][hvp : Fact (v p ≠ 1)]
+variable [hp : Fact p.prime] [hvp : Fact (v p ≠ 1)]
 
 namespace ModP
 
-instance  : CommRingₓ (ModP K v O hv p) :=
+instance : CommRingₓ (ModP K v O hv p) :=
   Ideal.Quotient.commRing _
 
 include hp hvp
 
-instance  : CharP (ModP K v O hv p) p :=
+instance : CharP (ModP K v O hv p) p :=
   CharP.quotient O p$ mt hv.one_of_is_unit$ ((algebraMap O K).map_nat_cast p).symm ▸ hvp.1
 
-instance  : Nontrivial (ModP K v O hv p) :=
+instance : Nontrivial (ModP K v O hv p) :=
   CharP.nontrivial_of_char_ne_one hp.1.ne_one
 
 section Classical
@@ -394,7 +390,7 @@ a function `O/(p) → ℝ≥0` that sends `0` to `0` and `x + (p)` to `v(x)` as 
 noncomputable def pre_val (x : ModP K v O hv p) :  ℝ≥0  :=
   if x = 0 then 0 else v (algebraMap O K x.out')
 
-variable{K v O hv p}
+variable {K v O hv p}
 
 theorem pre_val_mk {x : O} (hx : (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0) :
   pre_val K v O hv p (Ideal.Quotient.mk _ x) = v (algebraMap O K x) :=
@@ -465,7 +461,7 @@ theorem pre_val_eq_zero {x : ModP K v O hv p} : pre_val K v O hv p x = 0 ↔ x =
             exact not_lt_zero' hx0,
     fun hx => hx.symm ▸ pre_val_zero⟩
 
-variable(hv hvp)
+variable (hv hvp)
 
 theorem v_p_lt_val {x : O} : v p < v (algebraMap O K x) ↔ (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0 :=
   by 
@@ -474,7 +470,7 @@ theorem v_p_lt_val {x : O} : v p < v (algebraMap O K x) ↔ (Ideal.Quotient.mk _
 
 open Nnreal
 
-variable{hv}(hvp)
+variable {hv} (hvp)
 
 include hp
 
@@ -517,10 +513,10 @@ include hp hvp
 
 namespace PreTilt
 
-instance  : CommRingₓ (PreTilt K v O hv p) :=
+instance : CommRingₓ (PreTilt K v O hv p) :=
   Perfection.commRing p _
 
-instance  : CharP (PreTilt K v O hv p) p :=
+instance : CharP (PreTilt K v O hv p) p :=
   Perfection.char_p (ModP K v O hv p) p
 
 section Classical
@@ -535,7 +531,7 @@ otherwise output `pre_val(f(n))^(p^n)` for any `n` such that `f(n) ≠ 0`. -/
 noncomputable def val_aux (f : PreTilt K v O hv p) :  ℝ≥0  :=
   if h : ∃ n, coeff _ _ n f ≠ 0 then ModP.preVal K v O hv p (coeff _ _ (Nat.findₓ h) f)^p^Nat.findₓ h else 0
 
-variable{K v O hv p}
+variable {K v O hv p}
 
 theorem coeff_nat_find_add_ne_zero {f : PreTilt K v O hv p} {h : ∃ n, coeff _ _ n f ≠ 0} (k : ℕ) :
   coeff _ _ (Nat.findₓ h+k) f ≠ 0 :=
@@ -629,7 +625,7 @@ theorem val_aux_add (f g : PreTilt K v O hv p) :
     ·
       exact le_max_of_le_right (pow_le_pow_of_le_left' h _)
 
-variable(K v O hv p)
+variable (K v O hv p)
 
 /-- The valuation `Perfection(O/(p)) → ℝ≥0`.
 Given `f ∈ Perfection(O/(p))`, if `f = 0` then output `0`;
@@ -638,7 +634,7 @@ noncomputable def val : Valuation (PreTilt K v O hv p) ℝ≥0  :=
   { toFun := val_aux K v O hv p, map_one' := val_aux_one, map_mul' := val_aux_mul, map_zero' := val_aux_zero,
     map_add' := val_aux_add }
 
-variable{K v O hv p}
+variable {K v O hv p}
 
 theorem map_eq_zero {f : PreTilt K v O hv p} : val K v O hv p f = 0 ↔ f = 0 :=
   by 
@@ -655,7 +651,7 @@ theorem map_eq_zero {f : PreTilt K v O hv p} : val K v O hv p f = 0 ↔ f = 0 :=
 
 end Classical
 
-instance  : IsDomain (PreTilt K v O hv p) :=
+instance : IsDomain (PreTilt K v O hv p) :=
   { (inferInstance : CommRingₓ (PreTilt K v O hv p)) with
     exists_pair_ne := (CharP.nontrivial_of_char_ne_one hp.1.ne_one).1,
     eq_zero_or_eq_zero_of_mul_eq_zero :=
@@ -677,7 +673,7 @@ def Tilt :=
 
 namespace Tilt
 
-noncomputable instance  : Field (Tilt K v O hv p) :=
+noncomputable instance : Field (Tilt K v O hv p) :=
   FractionRing.field
 
 end Tilt

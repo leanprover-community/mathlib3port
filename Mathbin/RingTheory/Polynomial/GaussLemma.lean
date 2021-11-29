@@ -21,19 +21,19 @@ Gauss's Lemma is one of a few results pertaining to irreducibility of primitive 
 
 open_locale nonZeroDivisors
 
-variable{R : Type _}[CommRingₓ R][IsDomain R]
+variable {R : Type _} [CommRingₓ R] [IsDomain R]
 
 namespace Polynomial
 
 section NormalizedGcdMonoid
 
-variable[NormalizedGcdMonoid R]
+variable [NormalizedGcdMonoid R]
 
 section 
 
-variable{S : Type _}[CommRingₓ S][IsDomain S]{φ : R →+* S}(hinj : Function.Injective φ)
+variable {S : Type _} [CommRingₓ S] [IsDomain S] {φ : R →+* S} (hinj : Function.Injective φ)
 
-variable{f : Polynomial R}(hf : f.is_primitive)
+variable {f : Polynomial R} (hf : f.is_primitive)
 
 include hinj hf
 
@@ -67,7 +67,7 @@ end
 
 section FractionMap
 
-variable{K : Type _}[Field K][Algebra R K][IsFractionRing R K]
+variable {K : Type _} [Field K] [Algebra R K] [IsFractionRing R K]
 
 theorem is_primitive.is_unit_iff_is_unit_map {p : Polynomial R} (hp : p.is_primitive) :
   IsUnit p ↔ IsUnit (p.map (algebraMap R K)) :=
@@ -159,7 +159,7 @@ begin
     simp [] [] [] ["[", expr s0, ",", expr mem_non_zero_divisors_iff_ne_zero, "]"] [] [] }
 end
 
-variable(K)
+variable (K)
 
 theorem is_primitive.dvd_iff_fraction_map_dvd_fraction_map {p q : Polynomial R} (hp : p.is_primitive)
   (hq : q.is_primitive) : p ∣ q ↔ p.map (algebraMap R K) ∣ q.map (algebraMap R K) :=

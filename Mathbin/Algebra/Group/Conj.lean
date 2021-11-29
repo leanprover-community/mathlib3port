@@ -13,11 +13,11 @@ See also `mul_aut.conj` and `quandle.conj`.
 
 universe u v
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 section Monoidₓ
 
-variable[Monoidₓ α][Monoidₓ β]
+variable [Monoidₓ α] [Monoidₓ β]
 
 /-- We say that `a` is conjugate to `b` if for some unit `c` we have `c * a * c⁻¹ = b`. -/
 def IsConj (a b : α) :=
@@ -55,7 +55,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable[Groupₓ α]
+variable [Groupₓ α]
 
 @[simp]
 theorem is_conj_iff {a b : α} : IsConj a b ↔ ∃ c : α, ((c*a)*c⁻¹) = b :=
@@ -137,13 +137,13 @@ namespace ConjClasses
 
 section Monoidₓ
 
-variable[Monoidₓ α][Monoidₓ β]
+variable [Monoidₓ α] [Monoidₓ β]
 
 /-- The canonical quotient map from a monoid `α` into the `conj_classes` of `α` -/
 protected def mk {α : Type _} [Monoidₓ α] (a : α) : ConjClasses α :=
   «expr⟦ ⟧» a
 
-instance  : Inhabited (ConjClasses α) :=
+instance : Inhabited (ConjClasses α) :=
   ⟨«expr⟦ ⟧» 1⟩
 
 theorem mk_eq_mk_iff_is_conj {a b : α} : ConjClasses.mk a = ConjClasses.mk b ↔ IsConj a b :=
@@ -161,7 +161,7 @@ theorem forall_is_conj {p : ConjClasses α → Prop} : (∀ a, p a) ↔ ∀ a, p
 theorem mk_surjective : Function.Surjective (@ConjClasses.mk α _) :=
   forall_is_conj.2 fun a => ⟨a, rfl⟩
 
-instance  : HasOne (ConjClasses α) :=
+instance : HasOne (ConjClasses α) :=
   ⟨«expr⟦ ⟧» 1⟩
 
 theorem one_eq_mk_one : (1 : ConjClasses α) = ConjClasses.mk 1 :=
@@ -174,14 +174,14 @@ theorem exists_rep (a : ConjClasses α) : ∃ a0 : α, ConjClasses.mk a0 = a :=
 def map (f : α →* β) : ConjClasses α → ConjClasses β :=
   Quotientₓ.lift (ConjClasses.mk ∘ f) fun a b ab => mk_eq_mk_iff_is_conj.2 (f.map_is_conj ab)
 
-instance  [Fintype α] [DecidableRel (IsConj : α → α → Prop)] : Fintype (ConjClasses α) :=
+instance [Fintype α] [DecidableRel (IsConj : α → α → Prop)] : Fintype (ConjClasses α) :=
   Quotientₓ.fintype (IsConj.setoid α)
 
 end Monoidₓ
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ α]
+variable [CommMonoidₓ α]
 
 theorem mk_injective : Function.Injective (@ConjClasses.mk α _) :=
   fun _ _ => (mk_eq_mk_iff_is_conj.trans is_conj_iff_eq).1
@@ -203,7 +203,7 @@ end ConjClasses
 
 section Monoidₓ
 
-variable[Monoidₓ α]
+variable [Monoidₓ α]
 
 /-- Given an element `a`, `conjugates a` is the set of conjugates. -/
 def ConjugatesOf (a : α) : Set α :=
@@ -226,7 +226,7 @@ end Monoidₓ
 
 namespace ConjClasses
 
-variable[Monoidₓ α]
+variable [Monoidₓ α]
 
 attribute [local instance] IsConj.setoid
 

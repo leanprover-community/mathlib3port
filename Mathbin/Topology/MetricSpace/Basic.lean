@@ -47,7 +47,7 @@ open_locale uniformity TopologicalSpace BigOperators Filter Nnreal Ennreal
 
 universe u v w
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 -- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a uniform structure core from a distance function and metric space axioms.
@@ -86,7 +86,7 @@ def uniformSpaceOfDist (dist : α → α → ℝ) (dist_self : ∀ x : α, dist 
 
 /-- The distance function (given an ambient metric space on `α`), which returns
   a nonnegative real number `dist x y` given `x y : α`. -/
-class HasDist(α : Type _) where 
+class HasDist (α : Type _) where 
   dist : α → α → ℝ
 
 export HasDist(dist)
@@ -118,7 +118,7 @@ instantiating a `metric_space` structure, the uniformity fields are not necessar
 filled in by default. In the same way, each metric space induces an emetric space structure.
 It is included in the structure, but filled in by default.
 -/
-class PseudoMetricSpace(α : Type u) extends HasDist α : Type u where 
+class PseudoMetricSpace (α : Type u) extends HasDist α : Type u where 
   dist_self : ∀ x : α, dist x x = 0
   dist_comm : ∀ x y : α, dist x y = dist y x 
   dist_triangle : ∀ x y z : α, dist x z ≤ dist x y+dist y z 
@@ -131,12 +131,12 @@ class PseudoMetricSpace(α : Type u) extends HasDist α : Type u where
   runTac 
     control_laws_tac
 
-variable[PseudoMetricSpace α]
+variable [PseudoMetricSpace α]
 
-instance (priority := 100)MetricSpace.toUniformSpace' : UniformSpace α :=
+instance (priority := 100) MetricSpace.toUniformSpace' : UniformSpace α :=
   PseudoMetricSpace.toUniformSpace
 
-instance (priority := 200)PseudoMetricSpace.toHasEdist : HasEdist α :=
+instance (priority := 200) PseudoMetricSpace.toHasEdist : HasEdist α :=
   ⟨PseudoMetricSpace.edist⟩
 
 /-- Construct a pseudo-metric space structure whose underlying topological space structure
@@ -265,13 +265,13 @@ theorem abs_dist {a b : α} : |dist a b| = dist a b :=
   abs_of_nonneg dist_nonneg
 
 /-- A version of `has_dist` that takes value in `ℝ≥0`. -/
-class HasNndist(α : Type _) where 
+class HasNndist (α : Type _) where 
   nndist : α → α →  ℝ≥0 
 
 export HasNndist(nndist)
 
 /-- Distance as a nonnegative real number. -/
-instance (priority := 100)PseudoMetricSpace.toHasNndist : HasNndist α :=
+instance (priority := 100) PseudoMetricSpace.toHasNndist : HasNndist α :=
   ⟨fun a b => ⟨dist a b, dist_nonneg⟩⟩
 
 /--Express `nndist` in terms of `edist`-/
@@ -353,7 +353,7 @@ theorem dist_edist (x y : α) : dist x y = (edist x y).toReal :=
 
 namespace Metric
 
-variable{x y z : α}{ε ε₁ ε₂ : ℝ}{s : Set α}
+variable {x y z : α} {ε ε₁ ε₂ : ℝ} {s : Set α}
 
 /-- `ball x ε` is the set of all points `y` with `dist y x < ε` -/
 def ball (x : α) (ε : ℝ) : Set α :=
@@ -932,7 +932,7 @@ theorem Metric.uniformity_edist : 𝓤 α = ⨅(ε : _)(_ : ε > 0), 𝓟 { p:α
   PseudoMetric.uniformity_basis_edist.eq_binfi
 
 /-- A pseudometric space induces a pseudoemetric space -/
-instance (priority := 100)PseudoMetricSpace.toPseudoEmetricSpace : PseudoEmetricSpace α :=
+instance (priority := 100) PseudoMetricSpace.toPseudoEmetricSpace : PseudoEmetricSpace α :=
   { ‹PseudoMetricSpace α› with edist := edist,
     edist_self :=
       by 
@@ -1113,7 +1113,7 @@ theorem Real.dist_le_of_mem_Icc_01 {x y : ℝ} (hx : x ∈ Icc (0 : ℝ) 1) (hy 
   by 
     simpa only [sub_zero] using Real.dist_le_of_mem_Icc hx hy
 
-instance  : OrderTopology ℝ :=
+instance : OrderTopology ℝ :=
   order_topology_of_nhds_abs$
     fun x =>
       by 
@@ -1131,7 +1131,7 @@ theorem Real.closed_ball_eq {x r : ℝ} : closed_ball x r = Icc (x - r) (x+r) :=
 
 section MetricOrdered
 
-variable[ConditionallyCompleteLinearOrder α][OrderTopology α]
+variable [ConditionallyCompleteLinearOrder α] [OrderTopology α]
 
 theorem totally_bounded_Icc (a b : α) : TotallyBounded (Icc a b) :=
   is_compact_Icc.TotallyBounded
@@ -1188,7 +1188,7 @@ end Real
 
 section CauchySeq
 
-variable[Nonempty β][SemilatticeSup β]
+variable [Nonempty β] [SemilatticeSup β]
 
 /-- In a pseudometric space, Cauchy sequences are characterized by the fact that, eventually,
 the distance between its elements is arbitrarily small -/
@@ -1311,7 +1311,7 @@ theorem Subtype.pseudo_dist_eq {p : α → Prop} (x y : Subtype p) : dist x y = 
 
 section Nnreal
 
-noncomputable instance  : PseudoMetricSpace ℝ≥0  :=
+noncomputable instance : PseudoMetricSpace ℝ≥0  :=
   by 
     unfold Nnreal <;> infer_instance
 
@@ -1446,7 +1446,7 @@ theorem Filter.Tendsto.nndist {f g : β → α} {x : Filter β} {a b : α} (hf :
 
 namespace Metric
 
-variable{x y z : α}{ε ε₁ ε₂ : ℝ}{s : Set α}
+variable {x y z : α} {ε ε₁ ε₂ : ℝ} {s : Set α}
 
 theorem is_closed_ball : IsClosed (closed_ball x ε) :=
   is_closed_le (continuous_id.dist continuous_const) continuous_const
@@ -1499,7 +1499,7 @@ section Pi
 
 open Finset
 
-variable{π : β → Type _}[Fintype β][∀ b, PseudoMetricSpace (π b)]
+variable {π : β → Type _} [Fintype β] [∀ b, PseudoMetricSpace (π b)]
 
 -- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite product of pseudometric spaces is a pseudometric space, with the sup distance. -/
@@ -1626,7 +1626,7 @@ section ProperSpace
 open Metric
 
 /-- A pseudometric space is proper if all closed balls are compact. -/
-class ProperSpace(α : Type u)[PseudoMetricSpace α] : Prop where 
+class ProperSpace (α : Type u) [PseudoMetricSpace α] : Prop where 
   is_compact_closed_ball : ∀ x : α, ∀ r, IsCompact (closed_ball x r)
 
 /-- In a proper pseudometric space, all spheres are compact. -/
@@ -1634,11 +1634,11 @@ theorem is_compact_sphere {α : Type _} [PseudoMetricSpace α] [ProperSpace α] 
   compact_of_is_closed_subset (ProperSpace.is_compact_closed_ball x r) is_closed_sphere sphere_subset_closed_ball
 
 /-- In a proper pseudometric space, any sphere is a `compact_space` when considered as a subtype. -/
-instance  {α : Type _} [PseudoMetricSpace α] [ProperSpace α] (x : α) (r : ℝ) : CompactSpace (sphere x r) :=
+instance {α : Type _} [PseudoMetricSpace α] [ProperSpace α] (x : α) (r : ℝ) : CompactSpace (sphere x r) :=
   is_compact_iff_compact_space.mp (is_compact_sphere _ _)
 
 /-- A proper pseudo metric space is sigma compact, and therefore second countable. -/
-instance (priority := 100)second_countable_of_proper [ProperSpace α] : second_countable_topology α :=
+instance (priority := 100) second_countable_of_proper [ProperSpace α] : second_countable_topology α :=
   by 
     suffices  : SigmaCompactSpace α
     ·
@@ -1677,11 +1677,11 @@ theorem proper_space_of_compact_closed_ball_of_le
      exact [expr (h x R (le_refl _)).inter_right is_closed_ball] }
  end⟩
 
-instance (priority := 100)proper_of_compact [CompactSpace α] : ProperSpace α :=
+instance (priority := 100) proper_of_compact [CompactSpace α] : ProperSpace α :=
   ⟨fun x r => is_closed_ball.IsCompact⟩
 
 /-- A proper space is locally compact -/
-instance (priority := 100)locally_compact_of_proper [ProperSpace α] : LocallyCompactSpace α :=
+instance (priority := 100) locally_compact_of_proper [ProperSpace α] : LocallyCompactSpace α :=
   (locally_compact_space_of_has_basis fun x => nhds_basis_closed_ball)$
     fun x ε ε0 => ProperSpace.is_compact_closed_ball _ _
 
@@ -1706,7 +1706,7 @@ instance pi_proper_space {π : β → Type _} [Fintype β] [∀ b, PseudoMetricS
     apply is_compact_univ_pi fun b => _ 
     apply (h b).is_compact_closed_ball
 
-variable[ProperSpace α]{x : α}{r : ℝ}{s : Set α}
+variable [ProperSpace α] {x : α} {r : ℝ} {s : Set α}
 
 -- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a nonempty ball in a proper space includes a closed set `s`, then there exists a nonempty
@@ -1797,7 +1797,7 @@ def Bounded (s : Set α) : Prop :=
 
 section Bounded
 
-variable{x : α}{s t : Set α}{r : ℝ}
+variable {x : α} {s t : Set α} {r : ℝ}
 
 @[simp]
 theorem bounded_empty : Bounded (∅ : Set α) :=
@@ -1860,7 +1860,19 @@ alias bounded_closure_of_bounded ← Metric.Bounded.closure
 theorem bounded_closure_iff : Bounded (Closure s) ↔ Bounded s :=
   ⟨fun h => h.mono subset_closure, fun h => h.closure⟩
 
-/-- The union of two bounded sets is bounded iff each of the sets is bounded -/
+/-- The union of two bounded sets is bounded. -/
+theorem bounded.union (hs : Bounded s) (ht : Bounded t) : Bounded (s ∪ t) :=
+  by 
+    refine' bounded_iff_mem_bounded.2 fun x _ => _ 
+    rw [bounded_iff_subset_ball x] at hs ht⊢
+    rcases hs with ⟨Cs, hCs⟩
+    rcases ht with ⟨Ct, hCt⟩
+    exact
+      ⟨max Cs Ct,
+        union_subset (subset.trans hCs$ closed_ball_subset_closed_ball$ le_max_leftₓ _ _)
+          (subset.trans hCt$ closed_ball_subset_closed_ball$ le_max_rightₓ _ _)⟩
+
+/-- The union of two sets is bounded iff each of the sets is bounded. -/
 @[simp]
 theorem bounded_union : Bounded (s ∪ t) ↔ Bounded s ∧ Bounded t :=
   ⟨fun h =>
@@ -1870,16 +1882,7 @@ theorem bounded_union : Bounded (s ∪ t) ↔ Bounded s ∧ Bounded t :=
         h.mono
           (by 
             simp )⟩,
-    by 
-      rintro ⟨hs, ht⟩
-      refine' bounded_iff_mem_bounded.2 fun x _ => _ 
-      rw [bounded_iff_subset_ball x] at hs ht⊢
-      rcases hs with ⟨Cs, hCs⟩
-      rcases ht with ⟨Ct, hCt⟩
-      exact
-        ⟨max Cs Ct,
-          union_subset (subset.trans hCs$ closed_ball_subset_closed_ball$ le_max_leftₓ _ _)
-            (subset.trans hCt$ closed_ball_subset_closed_ball$ le_max_rightₓ _ _)⟩⟩
+    fun h => h.1.union h.2⟩
 
 /-- A finite union of bounded sets is bounded -/
 theorem bounded_bUnion {I : Set β} {s : β → Set α} (H : finite I) :
@@ -1918,6 +1921,22 @@ theorem bounded_range_iff {f : β → α} : Bounded (range f) ↔ ∃ C, ∀ x y
         by 
           rintro H _ _ ⟨x, rfl⟩ ⟨y, rfl⟩ <;> exact H x y⟩
 
+theorem bounded_range_of_tendsto_cofinite_uniformity {f : β → α}
+  (hf : tendsto (Prod.map f f) (cofinite ×ᶠ cofinite) (𝓤 α)) : Bounded (range f) :=
+  by 
+    rcases(has_basis_cofinite.prod_self.tendsto_iff uniformity_basis_dist).1 hf 1 zero_lt_one with ⟨s, hsf, hs1⟩
+    rw [←image_univ, ←union_compl_self s, image_union, bounded_union]
+    use (hsf.image f).Bounded, 1
+    rintro _ _ ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩
+    exact le_of_ltₓ (hs1 (x, y) ⟨hx, hy⟩)
+
+theorem bounded_range_of_cauchy_map_cofinite {f : β → α} (hf : Cauchy (map f cofinite)) : Bounded (range f) :=
+  bounded_range_of_tendsto_cofinite_uniformity$ (cauchy_map_iff.1 hf).2
+
+theorem bounded_range_of_tendsto_cofinite {f : β → α} {a : α} (hf : tendsto f cofinite (𝓝 a)) : Bounded (range f) :=
+  bounded_range_of_tendsto_cofinite_uniformity$
+    (hf.prod_map hf).mono_right$ nhds_prod_eq.symm.trans_le (nhds_le_uniformity a)
+
 /-- In a compact space, all sets are bounded -/
 theorem bounded_of_compact_space [CompactSpace α] : Bounded s :=
   compact_univ.Bounded.mono (subset_univ _)
@@ -1942,7 +1961,7 @@ theorem compact_space_iff_bounded_univ [ProperSpace α] : CompactSpace α ↔ Bo
 
 section ConditionallyCompleteLinearOrder
 
-variable[ConditionallyCompleteLinearOrder α][OrderTopology α]
+variable [ConditionallyCompleteLinearOrder α] [OrderTopology α]
 
 theorem bounded_Icc (a b : α) : Bounded (Icc a b) :=
   (totally_bounded_Icc a b).Bounded
@@ -1969,7 +1988,7 @@ end Bounded
 
 section Diam
 
-variable{s : Set α}{x y z : α}
+variable {s : Set α} {x y z : α}
 
 /-- The diameter of a set in a metric space. To get controllable behavior even when the diameter
 should be infinite, we express it in terms of the emetric.diameter -/
@@ -2157,7 +2176,7 @@ theorem tendsto_coe_cofinite : tendsto (coeₓ : ℤ → ℝ) cofinite (cocompac
 end Int
 
 /-- We now define `metric_space`, extending `pseudo_metric_space`. -/
-class MetricSpace(α : Type u) extends PseudoMetricSpace α : Type u where 
+class MetricSpace (α : Type u) extends PseudoMetricSpace α : Type u where 
   eq_of_dist_eq_zero : ∀ {x y : α}, dist x y = 0 → x = y
 
 /-- Construct a metric space structure whose underlying topological space structure
@@ -2169,7 +2188,7 @@ def MetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : α → 
   (eq_of_dist_eq_zero : ∀ x y : α, dist x y = 0 → x = y) : MetricSpace α :=
   { PseudoMetricSpace.ofMetrizable dist dist_self dist_comm dist_triangle H with eq_of_dist_eq_zero }
 
-variable{γ : Type w}[MetricSpace γ]
+variable {γ : Type w} [MetricSpace γ]
 
 theorem eq_of_dist_eq_zero {x y : γ} : dist x y = 0 → x = y :=
   MetricSpace.eq_of_dist_eq_zero
@@ -2218,7 +2237,7 @@ theorem zero_eq_nndist {x y : γ} : 0 = nndist x y ↔ x = y :=
 
 namespace Metric
 
-variable{x : γ}{s : Set γ}
+variable {x : γ} {s : Set γ}
 
 @[simp]
 theorem closed_ball_zero : closed_ball x 0 = {x} :=
@@ -2250,7 +2269,7 @@ begin
     simpa [] [] [] [] [] ["using", expr this] }
 end
 
-instance (priority := 100)metric_space.to_separated : SeparatedSpace γ :=
+instance (priority := 100) metric_space.to_separated : SeparatedSpace γ :=
   separated_def.2$ fun x y h => eq_of_forall_dist_le$ fun ε ε0 => le_of_ltₓ (h _ (dist_mem_uniformity ε0))
 
 /-- If a  `pseudo_metric_space` is separated, then it is a `metric_space`. -/
@@ -2267,7 +2286,7 @@ def of_t2_pseudo_metric_space {α : Type _} [PseudoMetricSpace α] (h : Separate
                 rwa [hdist]) }
 
 /-- A metric space induces an emetric space -/
-instance (priority := 100)metric_space.to_emetric_space : EmetricSpace γ :=
+instance (priority := 100) metric_space.to_emetric_space : EmetricSpace γ :=
   { PseudoMetricSpace.toPseudoEmetricSpace with
     eq_of_edist_eq_zero :=
       fun x y h =>
@@ -2344,7 +2363,7 @@ instance Subtype.metricSpace {α : Type _} {p : α → Prop} [t : MetricSpace α
 theorem Subtype.dist_eq {p : α → Prop} (x y : Subtype p) : dist x y = dist (x : α) y :=
   rfl
 
-instance  : MetricSpace Empty :=
+instance : MetricSpace Empty :=
   { dist := fun _ _ => 0, dist_self := fun _ => rfl, dist_comm := fun _ _ => rfl,
     eq_of_dist_eq_zero := fun _ _ _ => Subsingleton.elimₓ _ _,
     dist_triangle :=
@@ -2352,7 +2371,7 @@ instance  : MetricSpace Empty :=
         show (0 : ℝ) ≤ 0+0 by 
           rw [add_zeroₓ] }
 
-instance  : MetricSpace PUnit :=
+instance : MetricSpace PUnit :=
   { dist := fun _ _ => 0, dist_self := fun _ => rfl, dist_comm := fun _ _ => rfl,
     eq_of_dist_eq_zero := fun _ _ _ => Subsingleton.elimₓ _ _,
     dist_triangle :=
@@ -2374,7 +2393,7 @@ end Real
 
 section Nnreal
 
-noncomputable instance  : MetricSpace ℝ≥0  :=
+noncomputable instance : MetricSpace ℝ≥0  :=
   Subtype.metricSpace
 
 end Nnreal
@@ -2395,7 +2414,7 @@ section Pi
 
 open Finset
 
-variable{π : β → Type _}[Fintype β][∀ b, MetricSpace (π b)]
+variable {π : β → Type _} [Fintype β] [∀ b, MetricSpace (π b)]
 
 -- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite product of metric spaces is a metric space, with the sup distance. -/

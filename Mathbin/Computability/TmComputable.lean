@@ -52,12 +52,12 @@ namespace FinTm2
 
 section 
 
-variable(tm : fin_tm2)
+variable (tm : fin_tm2)
 
-instance  : DecidableEq tm.K :=
+instance : DecidableEq tm.K :=
   tm.K_decidable_eq
 
-instance  : Inhabited tm.σ :=
+instance : Inhabited tm.σ :=
   ⟨tm.initial_state⟩
 
 -- error in Computability.TmComputable: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
@@ -106,13 +106,13 @@ def halt_list (tm : fin_tm2) (s : List (tm.Γ tm.k₁)) : tm.cfg :=
 
 /-- A "proof" of the fact that f eventually reaches b when repeatedly evaluated on a,
 remembering the number of steps it takes. -/
-structure evals_to{σ : Type _}(f : σ → Option σ)(a : σ)(b : Option σ) where 
+structure evals_to {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) where 
   steps : ℕ 
   evals_in_steps : (flip bind f^[steps]) a = b
 
 /-- A "proof" of the fact that `f` eventually reaches `b` in at most `m` steps when repeatedly
 evaluated on `a`, remembering the number of steps it takes. -/
-structure evals_to_in_time{σ : Type _}(f : σ → Option σ)(a : σ)(b : Option σ)(m : ℕ) extends evals_to f a b where 
+structure evals_to_in_time {σ : Type _} (f : σ → Option σ) (a : σ) (b : Option σ) (m : ℕ) extends evals_to f a b where 
   steps_le_m : steps ≤ m
 
 /-- Reflexivity of `evals_to` in 0 steps. -/
@@ -153,13 +153,13 @@ def tm2_outputs_in_time.to_tm2_outputs {tm : fin_tm2} {l : List (tm.Γ tm.k₀)}
   h.to_evals_to
 
 /-- A Turing machine with input alphabet equivalent to Γ₀ and output alphabet equivalent to Γ₁. -/
-structure tm2_computable_aux(Γ₀ Γ₁ : Type) where 
+structure tm2_computable_aux (Γ₀ Γ₁ : Type) where 
   tm : fin_tm2 
   inputAlphabet : tm.Γ tm.k₀ ≃ Γ₀ 
   outputAlphabet : tm.Γ tm.k₁ ≃ Γ₁
 
 /-- A Turing machine + a proof it outputs f. -/
-structure tm2_computable{α β : Type}(ea : fin_encoding α)(eb : fin_encoding β)(f : α → β) extends
+structure tm2_computable {α β : Type} (ea : fin_encoding α) (eb : fin_encoding β) (f : α → β) extends
   tm2_computable_aux ea.Γ eb.Γ where 
   outputsFun :
   ∀ a,
@@ -167,7 +167,7 @@ structure tm2_computable{α β : Type}(ea : fin_encoding α)(eb : fin_encoding �
       (Option.some ((List.map output_alphabet.inv_fun) (eb.encode (f a))))
 
 /-- A Turing machine + a time function + a proof it outputs f in at most time(len(input)) steps. -/
-structure tm2_computable_in_time{α β : Type}(ea : fin_encoding α)(eb : fin_encoding β)(f : α → β) extends
+structure tm2_computable_in_time {α β : Type} (ea : fin_encoding α) (eb : fin_encoding β) (f : α → β) extends
   tm2_computable_aux ea.Γ eb.Γ where 
   time : ℕ → ℕ 
   outputsFun :
@@ -177,7 +177,7 @@ structure tm2_computable_in_time{α β : Type}(ea : fin_encoding α)(eb : fin_en
 
 /-- A Turing machine + a polynomial time function + a proof it outputs f in at most time(len(input))
 steps. -/
-structure tm2_computable_in_poly_time{α β : Type}(ea : fin_encoding α)(eb : fin_encoding β)(f : α → β) extends
+structure tm2_computable_in_poly_time {α β : Type} (ea : fin_encoding α) (eb : fin_encoding β) (f : α → β) extends
   tm2_computable_aux ea.Γ eb.Γ where 
   time : Polynomial ℕ 
   outputsFun :

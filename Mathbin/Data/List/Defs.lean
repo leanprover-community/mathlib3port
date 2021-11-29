@@ -18,9 +18,9 @@ open Function Nat
 
 universe u v w x
 
-variable{α β γ δ ε ζ : Type _}
+variable {α β γ δ ε ζ : Type _}
 
-instance  [DecidableEq α] : HasSdiff (List α) :=
+instance [DecidableEq α] : HasSdiff (List α) :=
   ⟨List.diff⟩
 
 /-- Split a list at an index.
@@ -107,7 +107,7 @@ def insert_nth (n : ℕ) (a : α) : List α → List α :=
 
 section Take'
 
-variable[Inhabited α]
+variable [Inhabited α]
 
 /-- Take `n` elements from a list `l`. If `l` has less than `n` elements, append `n - length l`
 elements `default α`. -/
@@ -180,8 +180,8 @@ def partition_map (f : α → Sum β γ) : List α → List β × List γ
 | [] => ([], [])
 | x :: xs =>
   match f x with 
-  | Sum.inr r => Prod.mapₓ id (cons r)$ partition_map xs
-  | Sum.inl l => Prod.mapₓ (cons l) id$ partition_map xs
+  | Sum.inr r => Prod.map id (cons r)$ partition_map xs
+  | Sum.inl l => Prod.map (cons l) id$ partition_map xs
 
 /-- `find p l` is the first element of `l` satisfying `p`, or `none` if no such
   element exists. -/
@@ -206,7 +206,7 @@ def mbfind' {m : Type u → Type v} [Monadₓ m] {α : Type u} (p : α → m (Ul
 
 section 
 
-variable{m : Type → Type v}[Monadₓ m]
+variable {m : Type → Type v} [Monadₓ m]
 
 /-- A variant of `mbfind'` with more restrictive universe levels. -/
 def mbfind {α} (p : α → m Bool) (xs : List α) : m (Option α) :=
@@ -281,7 +281,7 @@ def indexes_of [DecidableEq α] (a : α) : List α → List Nat :=
 
 section MfoldWithIndex
 
-variable{m : Type v → Type w}[Monadₓ m]
+variable {m : Type v → Type w} [Monadₓ m]
 
 /-- Monadic variant of `foldl_with_index`. -/
 def mfoldl_with_index {α β} (f : ℕ → β → α → m β) (b : β) (as : List α) : m β :=
@@ -305,7 +305,7 @@ end MfoldWithIndex
 
 section MmapWithIndex
 
-variable{m : Type v → Type w}[Applicativeₓ m]
+variable {m : Type v → Type w} [Applicativeₓ m]
 
 /-- Auxiliary definition for `mmap_with_index`. -/
 def mmap_with_index_aux {α β} (f : ℕ → α → m β) : ℕ → List α → m (List β)
@@ -414,7 +414,7 @@ def sublists_aux₁ : List α → (List α → List β) → List β
 
 section Forall₂
 
-variable{r : α → β → Prop}{p : γ → δ → Prop}
+variable {r : α → β → Prop} {p : γ → δ → Prop}
 
 /-- `forall₂ R l₁ l₂` means that `l₁` and `l₂` have the same length,
   and whenever `a` is the nth element of `l₁`, and `b` is the nth element of `l₂`,
@@ -587,7 +587,7 @@ def disjoint (l₁ l₂ : List α) : Prop :=
 
 section Pairwise
 
-variable(R : α → α → Prop)
+variable (R : α → α → Prop)
 
 /-- `pairwise R l` means that all the elements with earlier indexes are
   `R`-related to all the elements with later indexes.
@@ -600,7 +600,7 @@ inductive pairwise : List α → Prop
   | nil : pairwise []
   | cons : ∀ {a : α} {l : List α}, (∀ a' _ : a' ∈ l, R a a') → pairwise l → pairwise (a :: l)
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem pairwise_cons {a : α} {l : List α} : pairwise R (a :: l) ↔ (∀ a' _ : a' ∈ l, R a a') ∧ pairwise R l :=
@@ -630,7 +630,7 @@ def pw_filter (R : α → α → Prop) [DecidableRel R] : List α → List α
 
 section Chain
 
-variable(R : α → α → Prop)
+variable (R : α → α → Prop)
 
 /-- `chain R a l` means that `R` holds between adjacent elements of `a::l`.
 
@@ -646,7 +646,7 @@ def chain' : List α → Prop
 | [] => True
 | a :: l => chain R a l
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem chain_cons {a b : α} {l : List α} : chain R a (b :: l) ↔ R a b ∧ chain R b l :=
@@ -723,7 +723,7 @@ def rotate' : List α → ℕ → List α
 
 section Choose
 
-variable(p : α → Prop)[DecidablePred p](l : List α)
+variable (p : α → Prop) [DecidablePred p] (l : List α)
 
 /-- Given a decidable predicate `p` and a proof of existence of `a ∈ l` such that `p a`,
 choose the first element with this property. This version returns both `a` and proofs

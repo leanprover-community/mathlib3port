@@ -33,7 +33,7 @@ universe u v
 
 section 
 
-variable(M : Type v)[Monoidₓ M][StarMonoid M]
+variable (M : Type v) [Monoidₓ M] [StarMonoid M]
 
 /--
 In a `star_monoid M`, `unitary_submonoid M` is the submonoid consisting of all the elements of
@@ -59,9 +59,9 @@ open_locale Matrix
 
 section 
 
-variable(n : Type u)[DecidableEq n][Fintype n]
+variable (n : Type u) [DecidableEq n] [Fintype n]
 
-variable(α : Type v)[CommRingₓ α][StarRing α]
+variable (α : Type v) [CommRingₓ α] [StarRing α]
 
 -- error in LinearAlgebra.UnitaryGroup: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler monoid
 /--
@@ -71,9 +71,9 @@ unitary_submonoid (matrix n n α)
 
 end 
 
-variable{n : Type u}[DecidableEq n][Fintype n]
+variable {n : Type u} [DecidableEq n] [Fintype n]
 
-variable{α : Type v}[CommRingₓ α][StarRing α]
+variable {α : Type v} [CommRingₓ α] [StarRing α]
 
 namespace unitarySubmonoid
 
@@ -112,10 +112,10 @@ theorem ext_iff (A B : unitary_group n α) : A = B ↔ ∀ i j, A i j = B i j :=
 theorem ext (A B : unitary_group n α) : (∀ i j, A i j = B i j) → A = B :=
   (unitary_group.ext_iff A B).mpr
 
-instance  : HasInv (unitary_group n α) :=
+instance : HasInv (unitary_group n α) :=
   ⟨fun A => ⟨star A.1, unitary_submonoid.star_mem_iff.mpr A.2⟩⟩
 
-instance  : StarMonoid (unitary_group n α) :=
+instance : StarMonoid (unitary_group n α) :=
   { star := fun A => ⟨star A.1, unitary_submonoid.star_mem A.2⟩, star_involutive := fun A => Subtype.ext$ star_star A.1,
     star_mul := fun A B => Subtype.ext$ star_mul A.1 B.1 }
 
@@ -123,12 +123,12 @@ instance  : StarMonoid (unitary_group n α) :=
 theorem star_mul_self (A : unitary_group n α) : star A ⬝ A = 1 :=
   A.2
 
-instance  : Inhabited (unitary_group n α) :=
+instance : Inhabited (unitary_group n α) :=
   ⟨1⟩
 
 section CoeLemmas
 
-variable(A B : unitary_group n α)
+variable (A B : unitary_group n α)
 
 @[simp]
 theorem inv_val : «expr↑ » (A⁻¹) = (star A : Matrix n n α) :=
@@ -164,7 +164,7 @@ theorem to_lin'_one : to_lin' (1 : unitary_group n α) = LinearMap.id :=
 
 end CoeLemmas
 
-instance  : Groupₓ (unitary_group n α) :=
+instance : Groupₓ (unitary_group n α) :=
   { unitary_group.has_inv, unitary_group.monoid n α with mul_left_inv := fun A => Subtype.eq A.2 }
 
 /-- `to_linear_equiv A` is matrix multiplication of vectors by `A`, as a linear equivalence. -/
@@ -223,7 +223,7 @@ end UnitaryGroup
 
 section OrthogonalGroup
 
-variable(β : Type v)[CommRingₓ β]
+variable (β : Type v) [CommRingₓ β]
 
 attribute [local instance] starRingOfComm
 

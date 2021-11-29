@@ -15,10 +15,8 @@ open_locale Pointwise
 
 section inv_neg
 
-variable{G :
-    Type
-      _}[Groupₓ
-      G][Preorderₓ G][CovariantClass G G (·*·) (· ≤ ·)][CovariantClass G G (swap (·*·)) (· ≤ ·)]{s : Set G}{a : G}
+variable {G : Type _} [Groupₓ G] [Preorderₓ G] [CovariantClass G G (·*·) (· ≤ ·)]
+  [CovariantClass G G (swap (·*·)) (· ≤ ·)] {s : Set G} {a : G}
 
 @[simp, toAdditive]
 theorem bdd_above_inv : BddAbove (s⁻¹) ↔ BddBelow s :=
@@ -64,7 +62,7 @@ end inv_neg
 
 section mul_addₓ
 
-variable{M : Type _}[Mul M][Preorderₓ M][CovariantClass M M (·*·) (· ≤ ·)][CovariantClass M M (swap (·*·)) (· ≤ ·)]
+variable {M : Type _} [Mul M] [Preorderₓ M] [CovariantClass M M (·*·) (· ≤ ·)] [CovariantClass M M (swap (·*·)) (· ≤ ·)]
 
 @[toAdditive]
 theorem mul_mem_upper_bounds_mul {s t : Set M} {a b : M} (ha : a ∈ UpperBounds s) (hb : b ∈ UpperBounds t) :
@@ -98,10 +96,8 @@ section ConditionallyCompleteLattice
 
 section Right
 
-variable{ι G :
-    Type
-      _}[Groupₓ
-      G][ConditionallyCompleteLattice G][CovariantClass G G (Function.swap (·*·)) (· ≤ ·)][Nonempty ι]{f : ι → G}
+variable {ι G : Type _} [Groupₓ G] [ConditionallyCompleteLattice G] [CovariantClass G G (Function.swap (·*·)) (· ≤ ·)]
+  [Nonempty ι] {f : ι → G}
 
 @[toAdditive]
 theorem csupr_mul (hf : BddAbove (Set.Range f)) (a : G) : ((⨆i, f i)*a) = ⨆i, f i*a :=
@@ -116,8 +112,8 @@ end Right
 
 section Left
 
-variable{ι G :
-    Type _}[Groupₓ G][ConditionallyCompleteLattice G][CovariantClass G G (·*·) (· ≤ ·)][Nonempty ι]{f : ι → G}
+variable {ι G : Type _} [Groupₓ G] [ConditionallyCompleteLattice G] [CovariantClass G G (·*·) (· ≤ ·)] [Nonempty ι]
+  {f : ι → G}
 
 @[toAdditive]
 theorem mul_csupr (hf : BddAbove (Set.Range f)) (a : G) : (a*⨆i, f i) = ⨆i, a*f i :=

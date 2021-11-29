@@ -16,7 +16,7 @@ that all standard intervals are `ord_connected`.
 
 namespace Set
 
-variable{α : Type _}[Preorderₓ α]{s t : Set α}
+variable {α : Type _} [Preorderₓ α] {s t : Set α}
 
 /--
 We say that a set `s : set α` is `ord_connected` if for all `x y ∈ s` it includes the
@@ -24,7 +24,7 @@ interval `[x, y]`. If `α` is a `densely_ordered` `conditionally_complete_linear
 the `order_topology`, then this condition is equivalent to `is_preconnected s`. If `α` is a
 `linear_ordered_field`, then this condition is also equivalent to `convex α s`.
 -/
-class ord_connected(s : Set α) : Prop where 
+class ord_connected (s : Set α) : Prop where 
   out' ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : Icc x y ⊆ s
 
 theorem ord_connected.out (h : ord_connected s) : ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, Icc x y ⊆ s :=
@@ -150,7 +150,7 @@ instance [densely_ordered α] {s : set α} [hs : ord_connected s] : densely_orde
    exact [expr hs.out a₁.2 a₂.2 (Ioo_subset_Icc_self ⟨ha₁x, hxa₂⟩)]
  end⟩
 
-variable{β : Type _}[LinearOrderₓ β]
+variable {β : Type _} [LinearOrderₓ β]
 
 @[instance]
 theorem ord_connected_interval {a b : β} : ord_connected (interval a b) :=

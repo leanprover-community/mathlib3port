@@ -10,7 +10,7 @@ Other basic operations on `option` are defined in the core library.
 
 namespace Option
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
 attribute [inline] Option.isSome Option.isNone
 

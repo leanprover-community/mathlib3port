@@ -21,7 +21,7 @@ open Set Filter
 
 open_locale TopologicalSpace
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
 local notation f " ⟶ " limit => tendsto f at_top (𝓝 limit)
 
@@ -30,7 +30,7 @@ local notation f " ⟶ " limit => tendsto f at_top (𝓝 limit)
 
 section TopologicalSpace
 
-variable[TopologicalSpace α][TopologicalSpace β]
+variable [TopologicalSpace α] [TopologicalSpace β]
 
 /-- A sequence converges in the sence of topological spaces iff the associated statement for filter
 holds. -/
@@ -89,7 +89,7 @@ theorem mem_of_is_closed_sequential {A : Set α} (_ : IsClosed A) {x : ℕ → �
  formalised by demanding that the sequential closure and the closure coincide. The following
  statements show that other topological properties can be deduced from sequences in sequential
  spaces. -/
-class SequentialSpace(α : Type _)[TopologicalSpace α] : Prop where 
+class SequentialSpace (α : Type _) [TopologicalSpace α] : Prop where 
   sequential_closure_eq_closure : ∀ M : Set α, SequentialClosure M = Closure M
 
 /-- In a sequential space, a set is closed iff it's sequentially closed. -/
@@ -143,7 +143,7 @@ namespace TopologicalSpace
 
 namespace FirstCountableTopology
 
-variable[TopologicalSpace α][first_countable_topology α]
+variable [TopologicalSpace α] [first_countable_topology α]
 
 /-- Every first-countable space is sequential. -/
 instance (priority := 100) : SequentialSpace α :=
@@ -169,7 +169,7 @@ section SeqCompact
 
 open TopologicalSpace TopologicalSpace.FirstCountableTopology
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 /-- A set `s` is sequentially compact if every sequence taking values in `s` has a
 converging subsequence. -/
@@ -178,7 +178,7 @@ def IsSeqCompact (s : Set α) :=
 
 /-- A space `α` is sequentially compact if every sequence in `α` has a
 converging subsequence. -/
-class SeqCompactSpace(α : Type _)[TopologicalSpace α] : Prop where 
+class SeqCompactSpace (α : Type _) [TopologicalSpace α] : Prop where 
   seq_compact_univ : IsSeqCompact (univ : Set α)
 
 theorem IsSeqCompact.subseq_of_frequently_in {s : Set α} (hs : IsSeqCompact s) {u : ℕ → α}
@@ -198,7 +198,7 @@ theorem SeqCompactSpace.tendsto_subseq [SeqCompactSpace α] (u : ℕ → α) :
 
 section FirstCountableTopology
 
-variable[first_countable_topology α]
+variable [first_countable_topology α]
 
 open TopologicalSpace.FirstCountableTopology
 
@@ -215,7 +215,7 @@ theorem IsCompact.tendsto_subseq {s : Set α} {u : ℕ → α} (hs : IsCompact s
   ∃ (x : _)(_ : x ∈ s)(φ : ℕ → ℕ), StrictMono φ ∧ tendsto (u ∘ φ) at_top (𝓝 x) :=
   hs.is_seq_compact hu
 
-instance (priority := 100)FirstCountableTopology.seq_compact_of_compact [CompactSpace α] : SeqCompactSpace α :=
+instance (priority := 100) FirstCountableTopology.seq_compact_of_compact [CompactSpace α] : SeqCompactSpace α :=
   ⟨compact_univ.IsSeqCompact⟩
 
 theorem CompactSpace.tendsto_subseq [CompactSpace α] (u : ℕ → α) :
@@ -232,7 +232,7 @@ open_locale uniformity
 
 open UniformSpace Prod
 
-variable[UniformSpace β]{s : Set β}
+variable [UniformSpace β] {s : Set β}
 
 -- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lebesgue_number_lemma_seq
@@ -369,7 +369,7 @@ end UniformSpaceSeqCompact
 
 section MetricSeqCompact
 
-variable[MetricSpace β]{s : Set β}
+variable [MetricSpace β] {s : Set β}
 
 open Metric
 

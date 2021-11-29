@@ -89,7 +89,7 @@ open_locale TopologicalSpace Filter Classical
 
 universe u v
 
-variable{α : Type u}{β : Type v}[TopologicalSpace α]
+variable {α : Type u} {β : Type v} [TopologicalSpace α]
 
 section Separation
 
@@ -134,7 +134,7 @@ end Separated
 
 /-- A T₀ space, also known as a Kolmogorov space, is a topological space
   where for every pair `x ≠ y`, there is an open set containing one but not the other. -/
-class T0Space(α : Type u)[TopologicalSpace α] : Prop where 
+class T0Space (α : Type u) [TopologicalSpace α] : Prop where 
   t0 : ∀ x y, x ≠ y → ∃ U : Set α, IsOpen U ∧ Xorₓ (x ∈ U) (y ∈ U)
 
 -- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -233,7 +233,7 @@ instance Subtype.t0_space [T0Space α] {p : α → Prop} : T0Space (Subtype p) :
 /-- A T₁ space, also known as a Fréchet space, is a topological space
   where every singleton set is closed. Equivalently, for every pair
   `x ≠ y`, there is an open set containing `x` and not `y`. -/
-class T1Space(α : Type u)[TopologicalSpace α] : Prop where 
+class T1Space (α : Type u) [TopologicalSpace α] : Prop where 
   t1 : ∀ x, IsClosed ({x} : Set α)
 
 theorem is_closed_singleton [T1Space α] {x : α} : IsClosed ({x} : Set α) :=
@@ -281,7 +281,7 @@ instance Subtype.t1_space {α : Type u} [TopologicalSpace α] [T1Space α] {p : 
               by 
                 simp [Subtype.ext_iff_val]⟩⟩
 
-instance (priority := 100)T1Space.t0_space [T1Space α] : T0Space α :=
+instance (priority := 100) T1Space.t0_space [T1Space α] : T0Space α :=
   ⟨fun x y h => ⟨{ z | z ≠ y }, is_open_ne, Or.inl ⟨h, not_not_intro rfl⟩⟩⟩
 
 -- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -524,14 +524,14 @@ theorem DiscreteTopology.of_subset {X : Type _} [TopologicalSpace X] {s t : Set 
 /-- A T₂ space, also known as a Hausdorff space, is one in which for every
   `x ≠ y` there exists disjoint open sets around `x` and `y`. This is
   the most widely used of the separation axioms. -/
-class T2Space(α : Type u)[TopologicalSpace α] : Prop where 
+class T2Space (α : Type u) [TopologicalSpace α] : Prop where 
   t2 : ∀ x y, x ≠ y → ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ y ∈ v ∧ u ∩ v = ∅
 
 theorem t2_separation [T2Space α] {x y : α} (h : x ≠ y) :
   ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ x ∈ u ∧ y ∈ v ∧ u ∩ v = ∅ :=
   T2Space.t2 x y h
 
-instance (priority := 100)T2Space.t1_space [T2Space α] : T1Space α :=
+instance (priority := 100) T2Space.t1_space [T2Space α] : T1Space α :=
   ⟨fun x =>
       is_open_compl_iff.1$
         is_open_iff_forall_mem_open.2$
@@ -657,10 +657,10 @@ theorem tendsto_const_nhds_iff [T2Space α] {l : Filter α} [ne_bot l] {c d : α
 /-- A T₂.₅ space, also known as a Urysohn space, is a topological space
   where for every pair `x ≠ y`, there are two open sets, with the intersection of closures
   empty, one containing `x` and the other `y` . -/
-class T25Space(α : Type u)[TopologicalSpace α] : Prop where 
+class T25Space (α : Type u) [TopologicalSpace α] : Prop where 
   t2_5 : ∀ x y h : x ≠ y, ∃ U V : Set α, IsOpen U ∧ IsOpen V ∧ Closure U ∩ Closure V = ∅ ∧ x ∈ U ∧ y ∈ V
 
-instance (priority := 100)T25Space.t2_space [T25Space α] : T2Space α :=
+instance (priority := 100) T25Space.t2_space [T25Space α] : T2Space α :=
   ⟨fun x y hxy =>
       let ⟨U, V, hU, hV, hUV, hh⟩ := T25Space.t2_5 x y hxy
       ⟨U, V, hU, hV, hh.1, hh.2,
@@ -668,7 +668,7 @@ instance (priority := 100)T25Space.t2_space [T25Space α] : T2Space α :=
 
 section limₓ
 
-variable[T2Space α]{f : Filter α}
+variable [T2Space α] {f : Filter α}
 
 /-!
 ### Properties of `Lim` and `lim`
@@ -746,7 +746,7 @@ Hausdorff spaces:
 -/
 
 
-instance (priority := 100)t2_space_discrete {α : Type _} [TopologicalSpace α] [DiscreteTopology α] : T2Space α :=
+instance (priority := 100) t2_space_discrete {α : Type _} [TopologicalSpace α] [DiscreteTopology α] : T2Space α :=
   { t2 :=
       fun x y hxy =>
         ⟨{x}, {y}, is_open_discrete _, is_open_discrete _, rfl, rfl,
@@ -769,10 +769,10 @@ theorem separated_by_open_embedding {α β : Type _} [TopologicalSpace α] [Topo
     by 
       rw [image_inter hf.inj, uv, image_empty]⟩
 
-instance  {α : Type _} {p : α → Prop} [t : TopologicalSpace α] [T2Space α] : T2Space (Subtype p) :=
+instance {α : Type _} {p : α → Prop} [t : TopologicalSpace α] [T2Space α] : T2Space (Subtype p) :=
   ⟨fun x y h => separated_by_continuous continuous_subtype_val (mt Subtype.eq h)⟩
 
-instance  {α : Type _} {β : Type _} [t₁ : TopologicalSpace α] [T2Space α] [t₂ : TopologicalSpace β] [T2Space β] :
+instance {α : Type _} {β : Type _} [t₁ : TopologicalSpace α] [T2Space α] [t₂ : TopologicalSpace β] [T2Space β] :
   T2Space (α × β) :=
   ⟨fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ h =>
       Or.elim (not_and_distrib.mp (mt Prod.ext_iff.mpr h)) (fun h₁ => separated_by_continuous continuous_fst h₁)
@@ -781,7 +781,7 @@ instance  {α : Type _} {β : Type _} [t₁ : TopologicalSpace α] [T2Space α] 
 theorem Embedding.t2_space [TopologicalSpace β] [T2Space β] {f : α → β} (hf : Embedding f) : T2Space α :=
   ⟨fun x y h => separated_by_continuous hf.continuous (hf.inj.ne h)⟩
 
-instance  {α : Type _} {β : Type _} [t₁ : TopologicalSpace α] [T2Space α] [t₂ : TopologicalSpace β] [T2Space β] :
+instance {α : Type _} {β : Type _} [t₁ : TopologicalSpace α] [T2Space α] [t₂ : TopologicalSpace β] [T2Space β] :
   T2Space (Sum α β) :=
   by 
     constructor 
@@ -818,7 +818,7 @@ instance Sigma.t2_space {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSp
           by 
             tidy⟩
 
-variable[TopologicalSpace β]
+variable [TopologicalSpace β]
 
 theorem is_closed_eq [T2Space α] {f g : β → α} (hf : Continuous f) (hg : Continuous g) : IsClosed { x:β | f x = g x } :=
   continuous_iff_is_closed.mp (hf.prod_mk hg) _ is_closed_diagonal
@@ -986,7 +986,7 @@ theorem locally_compact_of_compact_nhds [T2Space α] (h : ∀ x : α, ∃ s, s �
         mem_nhds_iff.mpr ⟨v, subset_compl_iff_disjoint.mpr vw, vo, singleton_subset_iff.mp xv⟩
       ⟨k \ w, Filter.inter_mem kx wn, subset.trans (diff_subset_comm.mp kuw) un, kc.diff wo⟩⟩
 
-instance (priority := 100)locally_compact_of_compact [T2Space α] [CompactSpace α] : LocallyCompactSpace α :=
+instance (priority := 100) locally_compact_of_compact [T2Space α] [CompactSpace α] : LocallyCompactSpace α :=
   locally_compact_of_compact_nhds fun x => ⟨univ, is_open_univ.mem_nhds trivialₓ, compact_univ⟩
 
 /-- In a locally compact T₂ space, every point has an open neighborhood with compact closure -/
@@ -1004,10 +1004,10 @@ section Regularity
 /-- A T₃ space, also known as a regular space (although this condition sometimes
   omits T₂), is one in which for every closed `C` and `x ∉ C`, there exist
   disjoint open sets containing `x` and `C` respectively. -/
-class RegularSpace(α : Type u)[TopologicalSpace α] extends T0Space α : Prop where 
+class RegularSpace (α : Type u) [TopologicalSpace α] extends T0Space α : Prop where 
   regular : ∀ {s : Set α} {a}, IsClosed s → a ∉ s → ∃ t, IsOpen t ∧ s ⊆ t ∧ 𝓝[t] a = ⊥
 
-instance (priority := 100)RegularSpace.t1_space [RegularSpace α] : T1Space α :=
+instance (priority := 100) RegularSpace.t1_space [RegularSpace α] : T1Space α :=
   by 
     rw [t1_iff_exists_open]
     intro x y hxy 
@@ -1023,8 +1023,7 @@ instance (priority := 100)RegularSpace.t1_space [RegularSpace α] : T1Space α :
 theorem nhds_is_closed [RegularSpace α] {a : α} {s : Set α} (h : s ∈ 𝓝 a) :
   ∃ (t : _)(_ : t ∈ 𝓝 a), t ⊆ s ∧ IsClosed t :=
   let ⟨s', h₁, h₂, h₃⟩ := mem_nhds_iff.mp h 
-  have  : ∃ t, IsOpen t ∧ «expr ᶜ» s' ⊆ t ∧ 𝓝[t] a = ⊥ :=
-    RegularSpace.regular (is_closed_compl_iff.mpr h₂) (not_not_intro h₃)
+  have  : ∃ t, IsOpen t ∧ «expr ᶜ» s' ⊆ t ∧ 𝓝[t] a = ⊥ := RegularSpace.regular h₂.is_closed_compl (not_not_intro h₃)
   let ⟨t, ht₁, ht₂, ht₃⟩ := this
   ⟨«expr ᶜ» t,
     mem_of_eq_bot$
@@ -1039,6 +1038,22 @@ theorem closed_nhds_basis [RegularSpace α] (a : α) : (𝓝 a).HasBasis (fun s 
           ⟨s, ⟨s_in, h⟩, h_st⟩,
         fun ⟨s, ⟨s_in, hs⟩, hst⟩ => mem_of_superset s_in hst⟩⟩
 
+theorem TopologicalSpace.IsTopologicalBasis.exists_closure_subset [RegularSpace α] {B : Set (Set α)}
+  (hB : TopologicalSpace.IsTopologicalBasis B) {a : α} {s : Set α} (h : s ∈ 𝓝 a) :
+  ∃ (t : _)(_ : t ∈ B), a ∈ t ∧ Closure t ⊆ s :=
+  by 
+    rcases nhds_is_closed h with ⟨t, hat, hts, htc⟩
+    rcases hB.mem_nhds_iff.1 hat with ⟨u, huB, hau, hut⟩
+    exact ⟨u, huB, hau, (closure_minimal hut htc).trans hts⟩
+
+theorem TopologicalSpace.IsTopologicalBasis.nhds_basis_closure [RegularSpace α] {B : Set (Set α)}
+  (hB : TopologicalSpace.IsTopologicalBasis B) (a : α) : (𝓝 a).HasBasis (fun s : Set α => a ∈ s ∧ s ∈ B) Closure :=
+  ⟨fun s =>
+      ⟨fun h =>
+          let ⟨t, htB, hat, hts⟩ := hB.exists_closure_subset h
+          ⟨t, ⟨hat, htB⟩, hts⟩,
+        fun ⟨t, ⟨hat, htB⟩, hts⟩ => mem_of_superset (hB.mem_nhds htB hat) (subset_closure.trans hts)⟩⟩
+
 instance Subtype.regular_space [RegularSpace α] {p : α → Prop} : RegularSpace (Subtype p) :=
   ⟨by 
       intro s a hs ha 
@@ -1047,9 +1062,9 @@ instance Subtype.regular_space [RegularSpace α] {p : α → Prop} : RegularSpac
       refine' ⟨coeₓ ⁻¹' t, is_open_induced ht, preimage_mono hst, _⟩
       rw [nhdsWithin, nhds_induced, ←comap_principal, ←comap_inf, ←nhdsWithin, hat, comap_bot]⟩
 
-variable(α)
+variable (α)
 
-instance (priority := 100)RegularSpace.t2_space [RegularSpace α] : T2Space α :=
+instance (priority := 100) RegularSpace.t2_space [RegularSpace α] : T2Space α :=
   ⟨fun x y hxy =>
       let ⟨s, hs, hys, hxs⟩ := RegularSpace.regular is_closed_singleton (mt mem_singleton_iff.1 hxy)
       let ⟨t, hxt, u, hsu, htu⟩ := empty_mem_iff_bot.2 hxs 
@@ -1061,7 +1076,7 @@ instance (priority := 100)RegularSpace.t2_space [RegularSpace α] : T2Space α :
               rw [htu]
               exact ⟨hvt hzv, hsu hzs⟩⟩⟩
 
-instance (priority := 100)RegularSpace.t2_5_space [RegularSpace α] : T25Space α :=
+instance (priority := 100) RegularSpace.t2_5_space [RegularSpace α] : T25Space α :=
   ⟨fun x y hxy =>
       let ⟨U, V, hU, hV, hh_1, hh_2, hUV⟩ := T2Space.t2 x y hxy 
       let hxcV := not_not.mpr ((interior_maximal (subset_compl_iff_disjoint.mpr hUV) hU) hh_1)
@@ -1077,7 +1092,7 @@ instance (priority := 100)RegularSpace.t2_5_space [RegularSpace α] : T25Space �
           (compl_inter_self (Closure V)),
         hhh.2, hh_2⟩⟩
 
-variable{α}
+variable {α}
 
 /-- Given two points `x ≠ y`, we can find neighbourhoods `x ∈ V₁ ⊆ U₁` and `y ∈ V₂ ⊆ U₂`,
 with the `Vₖ` closed and the `Uₖ` open, such that the `Uₖ` are disjoint. -/
@@ -1098,7 +1113,7 @@ section Normality
 /-- A T₄ space, also known as a normal space (although this condition sometimes
   omits T₂), is one in which for every pair of disjoint closed sets `C` and `D`,
   there exist disjoint open sets containing `C` and `D` respectively. -/
-class NormalSpace(α : Type u)[TopologicalSpace α] extends T1Space α : Prop where 
+class NormalSpace (α : Type u) [TopologicalSpace α] extends T1Space α : Prop where 
   normal :
   ∀ s t : Set α, IsClosed s → IsClosed t → Disjoint s t → ∃ u v, IsOpen u ∧ IsOpen v ∧ s ⊆ u ∧ t ⊆ v ∧ Disjoint u v
 
@@ -1121,7 +1136,7 @@ begin
   exact [expr λ x hxs hxt, hs't' ⟨hxs, hxt⟩]
 end
 
-instance (priority := 100)NormalSpace.regular_space [NormalSpace α] : RegularSpace α :=
+instance (priority := 100) NormalSpace.regular_space [NormalSpace α] : RegularSpace α :=
   { regular :=
       fun s x hs hxs =>
         let ⟨u, v, hu, hv, hsu, hxv, huv⟩ :=
@@ -1139,6 +1154,61 @@ theorem normal_of_compact_t2 [CompactSpace α] [T2Space α] : NormalSpace α :=
     refine' ⟨fun s t hs ht st => _⟩
     simp only [disjoint_iff]
     exact compact_compact_separated hs.is_compact ht.is_compact st.eq_bot
+
+open TopologicalSpace
+
+variable (α)
+
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- A regular topological space with second countable topology is a normal space.
+This lemma is not an instance to avoid a loop. -/
+theorem normal_space_of_regular_second_countable [second_countable_topology α] [regular_space α] : normal_space α :=
+begin
+  have [ident key] [":", expr ∀
+   {s
+    t : set α}, is_closed t → disjoint s t → «expr∃ , »((U : set (countable_basis α)), «expr ∧ »(«expr ⊆ »(s, «expr⋃ , »((u «expr ∈ » U), «expr↑ »(u))), «expr ∧ »(∀
+      u «expr ∈ » U, disjoint (closure «expr↑ »(u)) t, ∀
+      n : exprℕ(), is_closed «expr⋃ , »((u «expr ∈ » U)
+       (h : «expr ≤ »(encodable.encode u, n)), closure (u : set α)))))] [],
+  { intros [ident s, ident t, ident hc, ident hd],
+    rw [expr disjoint_left] ["at", ident hd],
+    have [] [":", expr ∀
+     x «expr ∈ » s, «expr∃ , »((U «expr ∈ » countable_basis α), «expr ∧ »(«expr ∈ »(x, U), disjoint (closure U) t))] [],
+    { intros [ident x, ident hx],
+      rcases [expr (is_basis_countable_basis α).exists_closure_subset (hc.is_open_compl.mem_nhds (hd hx)), "with", "⟨", ident u, ",", ident hu, ",", ident hxu, ",", ident hut, "⟩"],
+      exact [expr ⟨u, hu, hxu, disjoint_left.2 hut⟩] },
+    choose ["!"] [ident U] [ident hu, ident hxu, ident hd] [],
+    set [] [ident V] [":", expr s → countable_basis α] [":="] [expr maps_to.restrict _ _ _ hu] [],
+    refine [expr ⟨range V, _, «expr $ »(forall_range_iff.2, subtype.forall.2 hd), λ n, _⟩],
+    { rw [expr bUnion_range] [],
+      exact [expr λ x hx, mem_Union.2 ⟨⟨x, hx⟩, hxu x hx⟩] },
+    { simp [] [] ["only"] ["[", "<-", expr supr_eq_Union, ",", expr supr_and', "]"] [] [],
+      exact [expr is_closed_bUnion «expr $ »(((finite_le_nat n).preimage_embedding (encodable.encode' _)).subset, inter_subset_right _ _) (λ
+        u hu, is_closed_closure)] } },
+  refine [expr ⟨λ s t hs ht hd, _⟩],
+  rcases [expr key ht hd, "with", "⟨", ident U, ",", ident hsU, ",", ident hUd, ",", ident hUc, "⟩"],
+  rcases [expr key hs hd.symm, "with", "⟨", ident V, ",", ident htV, ",", ident hVd, ",", ident hVc, "⟩"],
+  refine [expr ⟨«expr⋃ , »((u «expr ∈ » U), «expr \ »(«expr↑ »(u), «expr⋃ , »((v «expr ∈ » V)
+       (hv : «expr ≤ »(encodable.encode v, encodable.encode u)), closure «expr↑ »(v)))), «expr⋃ , »((v «expr ∈ » V), «expr \ »(«expr↑ »(v), «expr⋃ , »((u «expr ∈ » U)
+       (hu : «expr ≤ »(encodable.encode u, encodable.encode v)), closure «expr↑ »(u)))), «expr $ »(is_open_bUnion, λ
+     u
+     hu, (is_open_of_mem_countable_basis u.2).sdiff (hVc _)), «expr $ »(is_open_bUnion, λ
+     v hv, (is_open_of_mem_countable_basis v.2).sdiff (hUc _)), λ x hx, _, λ x hx, _, _⟩],
+  { rcases [expr mem_bUnion_iff.1 (hsU hx), "with", "⟨", ident u, ",", ident huU, ",", ident hxu, "⟩"],
+    refine [expr mem_bUnion huU ⟨hxu, _⟩],
+    simp [] [] ["only"] ["[", expr mem_Union, "]"] [] [],
+    rintro ["⟨", ident v, ",", ident hvV, ",", "-", ",", ident hxv, "⟩"],
+    exact [expr hVd v hvV ⟨hxv, hx⟩] },
+  { rcases [expr mem_bUnion_iff.1 (htV hx), "with", "⟨", ident v, ",", ident hvV, ",", ident hxv, "⟩"],
+    refine [expr mem_bUnion hvV ⟨hxv, _⟩],
+    simp [] [] ["only"] ["[", expr mem_Union, "]"] [] [],
+    rintro ["⟨", ident u, ",", ident huU, ",", "-", ",", ident hxu, "⟩"],
+    exact [expr hUd u huU ⟨hxu, hx⟩] },
+  { simp [] [] ["only"] ["[", expr disjoint_left, ",", expr mem_Union, ",", expr mem_diff, ",", expr not_exists, ",", expr not_and, ",", expr not_forall, ",", expr not_not, "]"] [] [],
+    rintro [ident a, "⟨", ident u, ",", ident huU, ",", ident hau, ",", ident haV, "⟩", ident v, ident hvV, ident hav],
+    cases [expr le_total (encodable.encode u) (encodable.encode v)] ["with", ident hle, ident hle],
+    exacts ["[", expr ⟨u, huU, hle, subset_closure hau⟩, ",", expr «expr $ »(haV _ hvV hle, subset_closure hav).elim, "]"] }
+end
 
 end Normality
 
@@ -1205,7 +1275,7 @@ section Profinite
 
 open TopologicalSpace
 
-variable[T2Space α]
+variable [T2Space α]
 
 -- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A Hausdorff space with a clopen basis is totally separated. -/
@@ -1222,7 +1292,7 @@ begin
   rw [expr set.union_compl_self] []
 end
 
-variable[CompactSpace α]
+variable [CompactSpace α]
 
 /-- A compact Hausdorff space is totally disconnected if and only if it is totally separated, this
   is also true for locally compact spaces. -/
@@ -1244,7 +1314,7 @@ theorem compact_t2_tot_disc_iff_tot_sep : TotallyDisconnectedSpace α ↔ Totall
       simpa using hyp («expr ᶜ» w) w (is_open_compl_iff.mpr hw.2) hw.1 hx hy 
     apply TotallySeparatedSpace.totally_disconnected_space
 
-variable[TotallyDisconnectedSpace α]
+variable [TotallyDisconnectedSpace α]
 
 -- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem nhds_basis_clopen (x : α) : (expr𝓝() x).has_basis (λ s : set α, «expr ∧ »(«expr ∈ »(x, s), is_clopen s)) id :=
@@ -1297,7 +1367,7 @@ section LocallyCompact
 
 open TopologicalSpace
 
-variable{H : Type _}[TopologicalSpace H][LocallyCompactSpace H][T2Space H]
+variable {H : Type _} [TopologicalSpace H] [LocallyCompactSpace H] [T2Space H]
 
 -- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A locally compact Hausdorff totally disconnected space has a basis with clopen elements. -/

@@ -44,7 +44,7 @@ open Equiv Equiv.Perm List
 
 namespace List
 
-variable{α : Type _}[DecidableEq α]{l l' : List α}
+variable {α : Type _} [DecidableEq α] {l l' : List α}
 
 -- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem form_perm_disjoint_iff
@@ -128,7 +128,7 @@ end List
 
 namespace Cycle
 
-variable{α : Type _}[DecidableEq α](s s' : Cycle α)
+variable {α : Type _} [DecidableEq α] (s s' : Cycle α)
 
 /--
 A cycle `s : cycle α` , given `nodup s` can be interpreted as a `equiv.perm α`
@@ -204,11 +204,11 @@ theorem form_perm_eq_form_perm_iff {α : Type _} [DecidableEq α] {s s' : Cycle 
 
 end Cycle
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Equiv.Perm
 
-variable[Fintype α][DecidableEq α](p : Equiv.Perm α)(x : α)
+variable [Fintype α] [DecidableEq α] (p : Equiv.Perm α) (x : α)
 
 /--
 `equiv.perm.to_list (f : perm α) (x : α)` generates the list `[x, f x, f (f x), ...]`
@@ -252,7 +252,7 @@ theorem to_list_nth_le_zero (h : x ∈ p.support) : (to_list p x).nthLe 0 (lengt
   by 
     simp [to_list]
 
-variable{p}{x}
+variable {p} {x}
 
 theorem mem_to_list_iff {y : α} : y ∈ to_list p x ↔ same_cycle p x y ∧ x ∈ p.support :=
   by 

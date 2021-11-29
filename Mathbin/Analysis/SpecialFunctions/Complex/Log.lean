@@ -183,7 +183,7 @@ open Complex Filter
 
 open_locale TopologicalSpace
 
-variable{α : Type _}
+variable {α : Type _}
 
 -- error in Analysis.SpecialFunctions.Complex.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_at_clog
@@ -206,7 +206,7 @@ theorem Filter.Tendsto.clog {l : Filter α} {f : α → ℂ} {x : ℂ} (h : tend
   tendsto (fun t => log (f t)) l (𝓝$ log x) :=
   (continuous_at_clog hx).Tendsto.comp h
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 theorem ContinuousAt.clog {f : α → ℂ} {x : α} (h₁ : ContinuousAt f x) (h₂ : 0 < (f x).re ∨ (f x).im ≠ 0) :
   ContinuousAt (fun t => log (f t)) x :=

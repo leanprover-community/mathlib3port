@@ -27,7 +27,7 @@ groups.
 namespace CategoryTheory
 
 /-- A functor `F` is additive provided `F.map` is an additive homomorphism. -/
-class functor.additive{C D : Type _}[category C][category D][preadditive C][preadditive D](F : C ⥤ D) : Prop where 
+class functor.additive {C D : Type _} [category C] [category D] [preadditive C] [preadditive D] (F : C ⥤ D) : Prop where 
   map_add' : ∀ {X Y : C} {f g : X ⟶ Y}, F.map (f+g) = F.map f+F.map g :=  by 
   runTac 
     obviously
@@ -38,7 +38,7 @@ namespace Functor
 
 section 
 
-variable{C D : Type _}[category C][category D][preadditive C][preadditive D](F : C ⥤ D)[functor.additive F]
+variable {C D : Type _} [category C] [category D] [preadditive C] [preadditive D] (F : C ⥤ D) [functor.additive F]
 
 @[simp]
 theorem map_add {X Y : C} {f g : X ⟶ Y} : F.map (f+g) = F.map f+F.map g :=
@@ -56,10 +56,10 @@ theorem coe_map_add_hom {X Y : C} : «expr⇑ » (F.map_add_hom : (X ⟶ Y) →+
 theorem map_zero {X Y : C} : F.map (0 : X ⟶ Y) = 0 :=
   F.map_add_hom.map_zero
 
-instance  : Additive (𝟭 C) :=
+instance : Additive (𝟭 C) :=
   {  }
 
-instance  {E : Type _} [category E] [preadditive E] (G : D ⥤ E) [functor.additive G] : Additive (F ⋙ G) :=
+instance {E : Type _} [category E] [preadditive E] (G : D ⥤ E) [functor.additive G] : Additive (F ⋙ G) :=
   {  }
 
 @[simp]
@@ -96,7 +96,7 @@ end
 
 section InducedCategory
 
-variable{C : Type _}{D : Type _}[category D][preadditive D](F : C → D)
+variable {C : Type _} {D : Type _} [category D] [preadditive D] (F : C → D)
 
 instance induced_functor_additive : functor.additive (induced_functor F) :=
   {  }
@@ -109,8 +109,8 @@ noncomputable theory
 
 universe v u₁ u₂
 
-variable{C :
-    Type u₁}{D : Type u₂}[category.{v} C][category.{v} D][preadditive C][preadditive D](F : C ⥤ D)[functor.additive F]
+variable {C : Type u₁} {D : Type u₂} [category.{v} C] [category.{v} D] [preadditive C] [preadditive D] (F : C ⥤ D)
+  [functor.additive F]
 
 open CategoryTheory.Limits
 
@@ -156,7 +156,7 @@ end Functor
 
 namespace Equivalenceₓ
 
-variable{C D : Type _}[category C][category D][preadditive C][preadditive D]
+variable {C D : Type _} [category C] [category D] [preadditive C] [preadditive D]
 
 instance inverse_additive (e : C ≌ D) [e.functor.additive] : e.inverse.additive :=
   { map_add' :=

@@ -11,7 +11,7 @@ two results for `ℤ` (and a ring `R`) and `ℚ` (and a field `R`).
 -/
 
 
-variable{α R : Type _}
+variable {α R : Type _}
 
 open Filter Set
 
@@ -64,17 +64,17 @@ theorem at_bot_countable_basis_of_archimedean [LinearOrderedRing R] [Archimedean
           ⟨m, trivialₓ, Iic_subset_Iic.2 hm.le⟩)
         fun m hm => ⟨m, trivialₓ, subset.rfl⟩ }
 
-instance (priority := 100)at_top_countably_generated_of_archimedean [LinearOrderedSemiring R] [Archimedean R] :
+instance (priority := 100) at_top_countably_generated_of_archimedean [LinearOrderedSemiring R] [Archimedean R] :
   (at_top : Filter R).IsCountablyGenerated :=
   at_top_countable_basis_of_archimedean.IsCountablyGenerated
 
-instance (priority := 100)at_bot_countably_generated_of_archimedean [LinearOrderedRing R] [Archimedean R] :
+instance (priority := 100) at_bot_countably_generated_of_archimedean [LinearOrderedRing R] [Archimedean R] :
   (at_bot : Filter R).IsCountablyGenerated :=
   at_bot_countable_basis_of_archimedean.IsCountablyGenerated
 
-variable[LinearOrderedSemiring R][Archimedean R]
+variable [LinearOrderedSemiring R] [Archimedean R]
 
-variable{l : Filter α}{f : α → R}{r : R}
+variable {l : Filter α} {f : α → R} {r : R}
 
 /-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the left) also tends to infinity. The archimedean assumption is convenient to get a

@@ -40,14 +40,14 @@ namespace Pnat
 
 namespace XgcdType
 
-variable(u : xgcd_type)
+variable (u : xgcd_type)
 
-instance  : SizeOf xgcd_type :=
+instance : SizeOf xgcd_type :=
   ⟨fun u => u.bp⟩
 
 /-- The has_repr instance converts terms to strings in a way that
  reflects the matrix/vector interpretation as above. -/
-instance  : HasRepr xgcd_type :=
+instance : HasRepr xgcd_type :=
   ⟨fun u =>
       "[[[" ++ reprₓ (u.wp+1) ++ ", " ++ reprₓ u.x ++ "], [" ++ reprₓ u.y ++ ", " ++ reprₓ (u.zp+1) ++ "]], [" ++
               reprₓ (u.ap+1) ++
@@ -365,7 +365,7 @@ end XgcdType
 
 section Gcd
 
-variable(a b : ℕ+)
+variable (a b : ℕ+)
 
 def xgcd : xgcd_type :=
   (xgcd_type.start a b).reduce

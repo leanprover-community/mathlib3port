@@ -10,7 +10,7 @@ A simple lemma about sums in `enat`.
 
 open_locale BigOperators
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Finset
 

@@ -39,7 +39,7 @@ instance Real.measureSpace : measure_space ℝ :=
 
 namespace Real
 
-variable{ι : Type _}[Fintype ι]
+variable {ι : Type _} [Fintype ι]
 
 open_locale TopologicalSpace
 
@@ -503,7 +503,7 @@ section RegionBetween
 
 open_locale Classical
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- The region between two real-valued functions on an arbitrary set. -/
 def RegionBetween (f g : α → ℝ) (s : Set α) : Set (α × ℝ) :=
@@ -513,7 +513,7 @@ theorem region_between_subset (f g : α → ℝ) (s : Set α) : RegionBetween f 
   by 
     simpa only [prod_univ, RegionBetween, Set.Preimage, set_of_subset_set_of] using fun a => And.left
 
-variable[MeasurableSpace α]{μ : Measureₓ α}{f g : α → ℝ}{s : Set α}
+variable [MeasurableSpace α] {μ : Measureₓ α} {f g : α → ℝ} {s : Set α}
 
 /-- The region between two measurable functions on a measurable set is measurable. -/
 theorem measurable_set_region_between (hf : Measurable f) (hg : Measurable g) (hs : MeasurableSet s) :

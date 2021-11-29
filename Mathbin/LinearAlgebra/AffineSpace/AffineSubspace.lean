@@ -55,9 +55,9 @@ open Set
 
 section 
 
-variable(k : Type _){V : Type _}{P : Type _}[Ringₓ k][AddCommGroupₓ V][Module k V]
+variable (k : Type _) {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V]
 
-variable[affine_space V P]
+variable [affine_space V P]
 
 include V
 
@@ -74,7 +74,7 @@ theorem vector_span_def (s : Set P) : vectorSpan k s = Submodule.span k (s -ᵥ 
 theorem vector_span_mono {s₁ s₂ : Set P} (h : s₁ ⊆ s₂) : vectorSpan k s₁ ≤ vectorSpan k s₂ :=
   Submodule.span_mono (vsub_self_mono h)
 
-variable(P)
+variable (P)
 
 /-- The `vector_span` of the empty set is `⊥`. -/
 @[simp]
@@ -82,7 +82,7 @@ theorem vector_span_empty : vectorSpan k (∅ : Set P) = (⊥ : Submodule k V) :
   by 
     rw [vector_span_def, vsub_empty, Submodule.span_empty]
 
-variable{P}
+variable {P}
 
 /-- The `vector_span` of a single point is `⊥`. -/
 @[simp]
@@ -160,15 +160,15 @@ end
 /-- An `affine_subspace k P` is a subset of an `affine_space V P`
 that, if not empty, has an affine space structure induced by a
 corresponding subspace of the `module k V`. -/
-structure
-  AffineSubspace(k : Type _){V : Type _}(P : Type _)[Ringₓ k][AddCommGroupₓ V][Module k V][affine_space V P] where 
+structure AffineSubspace (k : Type _) {V : Type _} (P : Type _) [Ringₓ k] [AddCommGroupₓ V] [Module k V]
+  [affine_space V P] where 
   Carrier : Set P 
   smul_vsub_vadd_mem :
   ∀ c : k {p1 p2 p3 : P}, p1 ∈ carrier → p2 ∈ carrier → p3 ∈ carrier → c • (p1 -ᵥ p2 : V) +ᵥ p3 ∈ carrier
 
 namespace Submodule
 
-variable{k V : Type _}[Ringₓ k][AddCommGroupₓ V][Module k V]
+variable {k V : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V]
 
 /-- Reinterpret `p : submodule k V` as an `affine_subspace k V`. -/
 def to_affine_subspace (p : Submodule k V) : AffineSubspace k V :=
@@ -178,14 +178,14 @@ end Submodule
 
 namespace AffineSubspace
 
-variable(k : Type _){V : Type _}(P : Type _)[Ringₓ k][AddCommGroupₓ V][Module k V][affine_space V P]
+variable (k : Type _) {V : Type _} (P : Type _) [Ringₓ k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
 
 include V
 
-instance  : Coe (AffineSubspace k P) (Set P) :=
+instance : Coe (AffineSubspace k P) (Set P) :=
   ⟨carrier⟩
 
-instance  : HasMem P (AffineSubspace k P) :=
+instance : HasMem P (AffineSubspace k P) :=
   ⟨fun p s => p ∈ (s : Set P)⟩
 
 /-- A point is in an affine subspace coerced to a set if and only if
@@ -194,7 +194,7 @@ it is in that affine subspace. -/
 theorem mem_coe (p : P) (s : AffineSubspace k P) : p ∈ (s : Set P) ↔ p ∈ s :=
   Iff.rfl
 
-variable{k P}
+variable {k P}
 
 /-- The direction of an affine subspace is the submodule spanned by
 the pairwise differences of points.  (Except in the case of an empty
@@ -499,7 +499,7 @@ theorem AffineMap.line_map_mem {k V P : Type _} [Ringₓ k] [AddCommGroupₓ V] 
 
 section affineSpan
 
-variable(k : Type _){V : Type _}{P : Type _}[Ringₓ k][AddCommGroupₓ V][Module k V][affine_space V P]
+variable (k : Type _) {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
 
 include V
 
@@ -542,11 +542,11 @@ end affineSpan
 
 namespace AffineSubspace
 
-variable{k : Type _}{V : Type _}{P : Type _}[Ringₓ k][AddCommGroupₓ V][Module k V][S : affine_space V P]
+variable {k : Type _} {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V] [S : affine_space V P]
 
 include S
 
-instance  : CompleteLattice (AffineSubspace k P) :=
+instance : CompleteLattice (AffineSubspace k P) :=
   { PartialOrderₓ.lift (coeₓ : AffineSubspace k P → Set P) fun _ _ => ext with
     sup := fun s1 s2 => affineSpan k (s1 ∪ s2),
     le_sup_left := fun s1 s2 => Set.Subset.trans (Set.subset_union_left s1 s2) (subset_span_points k _),
@@ -574,7 +574,7 @@ instance  : CompleteLattice (AffineSubspace k P) :=
     Sup_le := fun _ _ h => span_points_subset_coe_of_subset_coe (Set.bUnion_subset h),
     Inf_le := fun _ _ => Set.bInter_subset_of_mem, le_Inf := fun _ _ => Set.subset_bInter }
 
-instance  : Inhabited (AffineSubspace k P) :=
+instance : Inhabited (AffineSubspace k P) :=
   ⟨⊤⟩
 
 /-- The `≤` order on subspaces is the same as that on the corresponding
@@ -616,14 +616,14 @@ theorem eq_of_direction_eq_of_nonempty_of_le {s₁ s₂ : AffineSubspace k P} (h
   let ⟨p, hp⟩ := hn 
   ext_of_direction_eq hd ⟨p, hp, hle hp⟩
 
-variable(k V)
+variable (k V)
 
 /-- The affine span is the `Inf` of subspaces containing the given
 points. -/
 theorem affine_span_eq_Inf (s : Set P) : affineSpan k s = Inf { s' | s ⊆ s' } :=
   le_antisymmₓ (span_points_subset_coe_of_subset_coe (Set.subset_bInter fun _ h => h)) (Inf_le (subset_span_points k _))
 
-variable(P)
+variable (P)
 
 /-- The Galois insertion formed by `affine_span` and coercion back to
 a set. -/
@@ -642,12 +642,12 @@ theorem span_empty : affineSpan k (∅ : Set P) = ⊥ :=
 theorem span_univ : affineSpan k (Set.Univ : Set P) = ⊤ :=
   eq_top_iff.2$ subset_span_points k _
 
-variable{k V P}
+variable {k V P}
 
 theorem _root_.affine_span_le {s : Set P} {Q : AffineSubspace k P} : affineSpan k s ≤ Q ↔ s ⊆ (Q : Set P) :=
   (AffineSubspace.gi k V P).gc _ _
 
-variable(k V){P}
+variable (k V) {P}
 
 /-- The affine span of a single point, coerced to a set, contains just
 that point. -/
@@ -674,20 +674,20 @@ their spans. -/
 theorem span_Union {ι : Type _} (s : ι → Set P) : affineSpan k (⋃i, s i) = ⨆i, affineSpan k (s i) :=
   (AffineSubspace.gi k V P).gc.l_supr
 
-variable(P)
+variable (P)
 
 /-- `⊤`, coerced to a set, is the whole set of points. -/
 @[simp]
 theorem top_coe : ((⊤ : AffineSubspace k P) : Set P) = Set.Univ :=
   rfl
 
-variable{P}
+variable {P}
 
 /-- All points are in `⊤`. -/
 theorem mem_top (p : P) : p ∈ (⊤ : AffineSubspace k P) :=
   Set.mem_univ p
 
-variable(P)
+variable (P)
 
 -- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The direction of `⊤` is the whole module as a submodule. -/
@@ -712,7 +712,7 @@ theorem bot_ne_top : (⊥ : AffineSubspace k P) ≠ ⊤ :=
     rw [←ext_iff, bot_coe, top_coe] at contra 
     exact Set.empty_ne_univ contra
 
-instance  : Nontrivial (AffineSubspace k P) :=
+instance : Nontrivial (AffineSubspace k P) :=
   ⟨⟨⊥, ⊤, bot_ne_top k V P⟩⟩
 
 theorem nonempty_of_affine_span_eq_top {s : Set P} (h : affineSpan k s = ⊤) : s.nonempty :=
@@ -756,13 +756,13 @@ theorem card_pos_of_affine_span_eq_top {ι : Type _} [Fintype ι] {p : ι → P}
     obtain ⟨-, ⟨i, -⟩⟩ := nonempty_of_affine_span_eq_top k V P h 
     exact fintype.card_pos_iff.mpr ⟨i⟩
 
-variable{P}
+variable {P}
 
 /-- No points are in `⊥`. -/
 theorem not_mem_bot (p : P) : p ∉ (⊥ : AffineSubspace k P) :=
   Set.not_mem_empty p
 
-variable(P)
+variable (P)
 
 /-- The direction of `⊥` is the submodule `⊥`. -/
 @[simp]
@@ -770,7 +770,7 @@ theorem direction_bot : (⊥ : AffineSubspace k P).direction = ⊥ :=
   by 
     rw [direction_eq_vector_span, bot_coe, vector_span_def, vsub_empty, Submodule.span_empty]
 
-variable{k V P}
+variable {k V P}
 
 -- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem subsingleton_of_subsingleton_span_eq_top
@@ -951,9 +951,9 @@ end AffineSubspace
 
 section AffineSpace'
 
-variable(k : Type _){V : Type _}{P : Type _}[Ringₓ k][AddCommGroupₓ V][Module k V][affine_space V P]
+variable (k : Type _) {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 include V
 
@@ -1097,10 +1097,10 @@ theorem affine_span_nonempty (s : Set P) : (affineSpan k s : Set P).Nonempty ↔
   span_points_nonempty k s
 
 /-- The affine span of a nonempty set is nonempty. -/
-instance  {s : Set P} [Nonempty s] : Nonempty (affineSpan k s) :=
+instance {s : Set P} [Nonempty s] : Nonempty (affineSpan k s) :=
   ((affine_span_nonempty k s).mpr (nonempty_subtype.mp ‹_›)).to_subtype
 
-variable{k}
+variable {k}
 
 /-- Suppose a set of vectors spans `V`.  Then a point `p`, together
 with those vectors added to `p`, spans `P`. -/
@@ -1115,7 +1115,7 @@ theorem affine_span_singleton_union_vadd_eq_top_of_span_eq_top {s : Set V} (p : 
     use (v' : V) +ᵥ p 
     simp 
 
-variable(k)
+variable (k)
 
 /-- `affine_span` is monotone. -/
 @[mono]
@@ -1142,7 +1142,7 @@ end AffineSpace'
 
 namespace AffineSubspace
 
-variable{k : Type _}{V : Type _}{P : Type _}[Ringₓ k][AddCommGroupₓ V][Module k V][affine_space V P]
+variable {k : Type _} {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
 
 include V
 
@@ -1221,15 +1221,15 @@ end AffineSubspace
 
 section Maps
 
-variable{k V₁ P₁ V₂ P₂ : Type _}[Ringₓ k]
+variable {k V₁ P₁ V₂ P₂ : Type _} [Ringₓ k]
 
-variable[AddCommGroupₓ V₁][Module k V₁][AddTorsor V₁ P₁]
+variable [AddCommGroupₓ V₁] [Module k V₁] [AddTorsor V₁ P₁]
 
-variable[AddCommGroupₓ V₂][Module k V₂][AddTorsor V₂ P₂]
+variable [AddCommGroupₓ V₂] [Module k V₂] [AddTorsor V₂ P₂]
 
 include V₁ V₂
 
-variable(f : P₁ →ᵃ[k] P₂)
+variable (f : P₁ →ᵃ[k] P₂)
 
 @[simp]
 theorem AffineMap.vector_span_image_eq_submodule_map {s : Set P₁} :

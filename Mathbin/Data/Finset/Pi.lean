@@ -15,14 +15,14 @@ open Multiset
 
 section Pi
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- The empty dependent product function, defined on the empty set. The assumption `a ∈ ∅` is never
 satisfied. -/
 def pi.empty (β : α → Sort _) (a : α) (h : a ∈ (∅ : Finset α)) : β a :=
   Multiset.Pi.emptyₓ β a h
 
-variable{δ : α → Type _}[DecidableEq α]
+variable {δ : α → Type _} [DecidableEq α]
 
 /-- Given a finset `s` of `α` and for all `a : α` a finset `t a` of `δ a`, then one can define the
 finset `s.pi t` of all functions defined on elements of `s` taking values in `t a` for `a ∈ s`.

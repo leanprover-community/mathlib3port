@@ -19,11 +19,11 @@ open_locale Classical
 
 open Polynomial Set Function
 
-variable{A B : Type _}
+variable {A B : Type _}
 
 section MinPolyDef
 
-variable(A)[CommRingₓ A][Ringₓ B][Algebra A B]
+variable (A) [CommRingₓ A] [Ringₓ B] [Algebra A B]
 
 /--
 Suppose `x : B`, where `B` is an `A`-algebra.
@@ -44,9 +44,9 @@ namespace minpoly
 
 section Ringₓ
 
-variable[CommRingₓ A][Ringₓ B][Algebra A B]
+variable [CommRingₓ A] [Ringₓ B] [Algebra A B]
 
-variable{x : B}
+variable {x : B}
 
 /-- A minimal polynomial is monic. -/
 theorem monic (hx : IsIntegral A x) : monic (minpoly A x) :=
@@ -62,7 +62,7 @@ theorem ne_zero [Nontrivial A] (hx : IsIntegral A x) : minpoly A x ≠ 0 :=
 theorem eq_zero (hx : ¬IsIntegral A x) : minpoly A x = 0 :=
   dif_neg hx
 
-variable(A x)
+variable (A x)
 
 /-- An element is a root of its minimal polynomial. -/
 @[simp]
@@ -128,13 +128,13 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ A]
+variable [CommRingₓ A]
 
 section Ringₓ
 
-variable[Ringₓ B][Algebra A B][Nontrivial B]
+variable [Ringₓ B] [Algebra A B] [Nontrivial B]
 
-variable{x : B}
+variable {x : B}
 
 -- error in FieldTheory.Minpoly: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The degree of a minimal polynomial, as a natural number, is positive. -/
@@ -186,9 +186,9 @@ end Ringₓ
 
 section IsDomain
 
-variable[IsDomain A][Ringₓ B][Algebra A B]
+variable [IsDomain A] [Ringₓ B] [Algebra A B]
 
-variable{x : B}
+variable {x : B}
 
 -- error in FieldTheory.Minpoly: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `a` strictly divides the minimal polynomial of `x`, then `x` cannot be a root for `a`. -/
@@ -218,7 +218,7 @@ begin
   exact_mod_cast [expr lt_add_of_pos_right _ degbzero]
 end
 
-variable[IsDomain B]
+variable [IsDomain B]
 
 -- error in FieldTheory.Minpoly: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A minimal polynomial is irreducible. -/ theorem irreducible (hx : is_integral A x) : irreducible (minpoly A x) :=
@@ -259,15 +259,15 @@ end CommRingₓ
 
 section Field
 
-variable[Field A]
+variable [Field A]
 
 section Ringₓ
 
-variable[Ringₓ B][Algebra A B]
+variable [Ringₓ B] [Algebra A B]
 
-variable{x : B}
+variable {x : B}
 
-variable(A x)
+variable (A x)
 
 /-- If an element `x` is a root of a nonzero polynomial `p`,
 then the degree of `p` is at least the degree of the minimal polynomial of `x`. -/
@@ -335,7 +335,7 @@ theorem aeval_of_is_scalar_tower (R : Type _) {K T U : Type _} [CommRingₓ R] [
     rw [IsScalarTower.aeval_apply R K]
     exact eval₂_eq_zero_of_dvd_of_eval₂_eq_zero (algebraMap K U) y (minpoly.dvd_map_of_is_scalar_tower R K x) hy
 
-variable{A x}
+variable {A x}
 
 theorem eq_of_irreducible_of_monic [Nontrivial B] {p : Polynomial A} (hp1 : _root_.irreducible p)
   (hp2 : Polynomial.aeval x p = 0) (hp3 : p.monic) : p = minpoly A x :=
@@ -418,7 +418,7 @@ theorem gcd_domain_dvd {A R : Type _} (K : Type _) [CommRingₓ A] [IsDomain A] 
 
 end GcdDomain
 
-variable(B)[Nontrivial B]
+variable (B) [Nontrivial B]
 
 /-- If `B/K` is a nontrivial algebra over a field, and `x` is an element of `K`,
 then the minimal polynomial of `algebra_map K B x` is `X - C x`. -/
@@ -428,7 +428,7 @@ theorem eq_X_sub_C (a : A) : minpoly A (algebraMap A B a) = X - C a :=
 theorem eq_X_sub_C' (a : A) : minpoly A a = X - C a :=
   eq_X_sub_C A a
 
-variable(A)
+variable (A)
 
 /-- The minimal polynomial of `0` is `X`. -/
 @[simp]
@@ -446,9 +446,9 @@ end Ringₓ
 
 section IsDomain
 
-variable[Ringₓ B][IsDomain B][Algebra A B]
+variable [Ringₓ B] [IsDomain B] [Algebra A B]
 
-variable{x : B}
+variable {x : B}
 
 -- error in FieldTheory.Minpoly: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A minimal polynomial is prime. -/ theorem prime (hx : is_integral A x) : prime (minpoly A x) :=

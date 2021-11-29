@@ -41,7 +41,7 @@ open Function hiding eval
 
 open Finset FiniteField
 
-variable{K : Type _}{σ : Type _}[Fintype K][Field K][Fintype σ]
+variable {K : Type _} {σ : Type _} [Fintype K] [Field K] [Fintype σ]
 
 local notation "q" => Fintype.card K
 
@@ -88,7 +88,7 @@ begin
     rw [expr equiv.subtype_equiv_codomain_symm_apply_ne] [] }
 end
 
-variable[DecidableEq K][DecidableEq σ]
+variable [DecidableEq K] [DecidableEq σ]
 
 -- error in FieldTheory.ChevalleyWarning: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Chevalley–Warning theorem.

@@ -16,11 +16,11 @@ other files.
 -/
 
 
-variable{M : Type _}
+variable {M : Type _}
 
 namespace Set
 
-variable(M)
+variable (M)
 
 /-- The center of a magma. -/
 @[toAdditive add_center " The center of an additive magma. "]
@@ -44,7 +44,7 @@ theorem zero_mem_center [MulZeroClass M] : (0 : M) ∈ Set.Center M :=
   by 
     simp [mem_center_iff]
 
-variable{M}
+variable {M}
 
 @[simp, toAdditive add_mem_add_center]
 theorem mul_mem_center [Semigroupₓ M] {a b : M} (ha : a ∈ Set.Center M) (hb : b ∈ Set.Center M) :
@@ -112,7 +112,7 @@ theorem div_mem_center₀ [GroupWithZeroₓ M] {a b : M} (ha : a ∈ Set.Center 
     rw [div_eq_mul_inv]
     exact mul_mem_center ha (inv_mem_center₀ hb)
 
-variable(M)
+variable (M)
 
 @[simp, toAdditive add_center_eq_univ]
 theorem center_eq_univ [CommSemigroupₓ M] : center M = Set.Univ :=
@@ -124,7 +124,7 @@ namespace Submonoid
 
 section 
 
-variable(M)[Monoidₓ M]
+variable (M) [Monoidₓ M]
 
 /-- The center of a monoid `M` is the set of elements that commute with everything in `M` -/
 @[toAdditive "The center of a monoid `M` is the set of elements that commute with everything in\n`M`"]
@@ -135,7 +135,7 @@ def center : Submonoid M :=
 theorem coe_center : «expr↑ » (center M) = Set.Center M :=
   rfl
 
-variable{M}
+variable {M}
 
 @[toAdditive]
 theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, (g*z) = z*g :=
@@ -145,14 +145,14 @@ instance decidable_mem_center [DecidableEq M] [Fintype M] : DecidablePred (· �
   fun _ => decidableOfIff' _ mem_center_iff
 
 /-- The center of a monoid is commutative. -/
-instance  : CommMonoidₓ (center M) :=
+instance : CommMonoidₓ (center M) :=
   { (center M).toMonoid with mul_comm := fun a b => Subtype.ext$ b.prop _ }
 
 end 
 
 section 
 
-variable(M)[CommMonoidₓ M]
+variable (M) [CommMonoidₓ M]
 
 @[simp]
 theorem center_eq_top : center M = ⊤ :=

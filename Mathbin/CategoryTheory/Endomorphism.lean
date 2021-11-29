@@ -24,7 +24,7 @@ namespace End
 
 section Struct
 
-variable{C : Type u}[category_struct.{v} C](X : C)
+variable {C : Type u} [category_struct.{v} C] (X : C)
 
 instance HasOne : HasOne (End X) :=
   ⟨𝟙 X⟩
@@ -36,7 +36,7 @@ instance Inhabited : Inhabited (End X) :=
 instance Mul : Mul (End X) :=
   ⟨fun x y => y ≫ x⟩
 
-variable{X}
+variable {X}
 
 /-- Assist the typechecker by expressing a morphism `X ⟶ X` as a term of `End X`. -/
 def of (f : X ⟶ X) : End X :=
@@ -79,7 +79,7 @@ theorem is_unit_iff_is_iso {C : Type u} [category.{v} C] {X : C} (f : End X) : I
                 simp ⟩,
             rfl⟩⟩
 
-variable{C : Type u}[category.{v} C](X : C)
+variable {C : Type u} [category.{v} C] (X : C)
 
 /--
 Automorphisms of an object in a category.
@@ -97,7 +97,7 @@ namespace Aut
 instance Inhabited : Inhabited (Aut X) :=
   ⟨iso.refl X⟩
 
-instance  : Groupₓ (Aut X) :=
+instance : Groupₓ (Aut X) :=
   by 
     refineStruct
         { one := iso.refl X, inv := iso.symm, mul := flip iso.trans, div := _,
@@ -124,7 +124,7 @@ end Aut
 
 namespace Functor
 
-variable{D : Type u'}[category.{v'} D](f : C ⥤ D)(X)
+variable {D : Type u'} [category.{v'} D] (f : C ⥤ D) (X)
 
 /-- `f.map` as a monoid hom between endomorphism monoids. -/
 @[simps]

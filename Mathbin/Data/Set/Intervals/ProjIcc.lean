@@ -14,7 +14,7 @@ We also prove some trivial properties of these maps.
 -/
 
 
-variable{α β : Type _}[LinearOrderₓ α]
+variable {α β : Type _} [LinearOrderₓ α]
 
 open Function
 
@@ -24,7 +24,7 @@ namespace Set
 def proj_Icc (a b : α) (h : a ≤ b) (x : α) : Icc a b :=
   ⟨max a (min b x), le_max_leftₓ _ _, max_leₓ h (min_le_leftₓ _ _)⟩
 
-variable{a b : α}(h : a ≤ b){x : α}
+variable {a b : α} (h : a ≤ b) {x : α}
 
 theorem proj_Icc_of_le_left (hx : x ≤ a) : proj_Icc a b h x = ⟨a, left_mem_Icc.2 h⟩ :=
   by 
@@ -120,7 +120,7 @@ end Set
 
 open Set
 
-variable[Preorderₓ β]{a b : α}(h : a ≤ b){f : Icc a b → β}
+variable [Preorderₓ β] {a b : α} (h : a ≤ b) {f : Icc a b → β}
 
 theorem Monotone.Icc_extend (hf : Monotone f) : Monotone (Icc_extend h f) :=
   hf.comp$ monotone_proj_Icc h

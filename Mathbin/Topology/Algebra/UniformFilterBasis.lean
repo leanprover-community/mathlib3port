@@ -18,7 +18,7 @@ open Filter
 
 namespace AddGroupFilterBasis
 
-variable{G : Type _}[AddCommGroupₓ G](B : AddGroupFilterBasis G)
+variable {G : Type _} [AddCommGroupₓ G] (B : AddGroupFilterBasis G)
 
 /-- The uniform space structure associated to an abelian group filter basis via the associated
 topological abelian group structure. -/

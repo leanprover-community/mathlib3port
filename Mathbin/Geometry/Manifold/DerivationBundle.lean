@@ -15,17 +15,8 @@ of the Lie algebra for a Lie group.
 -/
 
 
-variable(𝕜 :
-    Type
-      _)[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I : ModelWithCorners 𝕜 E H)(M : Type _)[TopologicalSpace M][ChartedSpace H M](n : WithTop ℕ)
+variable (𝕜 : Type _) [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (M : Type _) [TopologicalSpace M] [ChartedSpace H M] (n : WithTop ℕ)
 
 open_locale Manifold
 
@@ -45,29 +36,29 @@ def PointedSmoothMap (x : M) :=
 
 localized [Derivation] notation "C^" n "⟮" I "," M ";" 𝕜 "⟯⟨" x "⟩" => PointedSmoothMap 𝕜 I M n x
 
-variable{𝕜 M}
+variable {𝕜 M}
 
 namespace PointedSmoothMap
 
-instance  {x : M} : CoeFun C^∞⟮I,M;𝕜⟯⟨x⟩ fun _ => M → 𝕜 :=
+instance {x : M} : CoeFun C^∞⟮I,M;𝕜⟯⟨x⟩ fun _ => M → 𝕜 :=
   TimesContMdiffMap.hasCoeToFun
 
-instance  {x : M} : CommRingₓ C^∞⟮I,M;𝕜⟯⟨x⟩ :=
+instance {x : M} : CommRingₓ C^∞⟮I,M;𝕜⟯⟨x⟩ :=
   SmoothMap.commRing
 
-instance  {x : M} : Algebra 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ :=
+instance {x : M} : Algebra 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ :=
   SmoothMap.algebra
 
-instance  {x : M} : Inhabited C^∞⟮I,M;𝕜⟯⟨x⟩ :=
+instance {x : M} : Inhabited C^∞⟮I,M;𝕜⟯⟨x⟩ :=
   ⟨0⟩
 
-instance  {x : M} : Algebra C^∞⟮I,M;𝕜⟯⟨x⟩ C^∞⟮I, M; 𝕜⟯ :=
+instance {x : M} : Algebra C^∞⟮I,M;𝕜⟯⟨x⟩ C^∞⟮I, M; 𝕜⟯ :=
   Algebra.id C^∞⟮I, M; 𝕜⟯
 
-instance  {x : M} : IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ C^∞⟮I, M; 𝕜⟯ :=
+instance {x : M} : IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ C^∞⟮I, M; 𝕜⟯ :=
   IsScalarTower.right
 
-variable{I}
+variable {I}
 
 /-- `smooth_map.eval_ring_hom` gives rise to an algebra structure of `C^∞⟮I, M; 𝕜⟯` on `𝕜`. -/
 instance eval_algebra {x : M} : Algebra C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 :=
@@ -80,7 +71,7 @@ def eval (x : M) : C^∞⟮I, M; 𝕜⟯ →ₐ[C^∞⟮I,M;𝕜⟯⟨x⟩] 𝕜
 theorem smul_def (x : M) (f : C^∞⟮I,M;𝕜⟯⟨x⟩) (k : 𝕜) : f • k = f x*k :=
   rfl
 
-instance  (x : M) : IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 :=
+instance (x : M) : IsScalarTower 𝕜 C^∞⟮I,M;𝕜⟯⟨x⟩ 𝕜 :=
   { smul_assoc :=
       fun k f h =>
         by 
@@ -98,7 +89,7 @@ def PointDerivation (x : M) :=
 
 section 
 
-variable(I){M}(X Y : Derivation 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯)(f g : C^∞⟮I, M; 𝕜⟯)(r : 𝕜)
+variable (I) {M} (X Y : Derivation 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯) (f g : C^∞⟮I, M; 𝕜⟯) (r : 𝕜)
 
 /-- Evaluation at a point gives rise to a `C^∞⟮I, M; 𝕜⟯`-linear map between `C^∞⟮I, M; 𝕜⟯` and `𝕜`.
  -/
@@ -107,7 +98,7 @@ def SmoothFunction.evalAt (x : M) : C^∞⟮I, M; 𝕜⟯ →ₗ[C^∞⟮I,M;�
 
 namespace Derivation
 
-variable{I}
+variable {I}
 
 /-- The evaluation at a point as a linear map. -/
 def eval_at (x : M) : Derivation 𝕜 C^∞⟮I, M; 𝕜⟯ C^∞⟮I, M; 𝕜⟯ →ₗ[𝕜] PointDerivation I x :=
@@ -118,12 +109,8 @@ theorem eval_at_apply (x : M) : eval_at x X f = (X f) x :=
 
 end Derivation
 
-variable{I}{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H' :
-    Type _}[TopologicalSpace H']{I' : ModelWithCorners 𝕜 E' H'}{M' : Type _}[TopologicalSpace M'][ChartedSpace H' M']
+variable {I} {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
+  {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
 
 /-- The heterogeneous differential as a linear map. Instead of taking a function as an argument this
 differential takes `h : f x = y`. It is particularly handy to deal with situations where the points
@@ -167,14 +154,8 @@ theorem apply_hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h :
   (g : C^∞⟮I', M'; 𝕜⟯) : 𝒅ₕ h v g = 𝒅 f x v g :=
   rfl
 
-variable{E'' :
-    Type
-      _}[NormedGroup
-      E''][NormedSpace 𝕜
-      E'']{H'' :
-    Type
-      _}[TopologicalSpace
-      H'']{I'' : ModelWithCorners 𝕜 E'' H''}{M'' : Type _}[TopologicalSpace M''][ChartedSpace H'' M'']
+variable {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
+  {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
 
 @[simp]
 theorem fdifferential_comp (g : C^∞⟮I', M'; I'', M''⟯) (f : C^∞⟮I, M; I', M'⟯) (x : M) :

@@ -34,17 +34,17 @@ alternating group permutation
 
 open Equiv Equiv.Perm Subgroup Fintype
 
-variable(α : Type _)[Fintype α][DecidableEq α]
+variable (α : Type _) [Fintype α] [DecidableEq α]
 
 -- error in GroupTheory.SpecificGroups.Alternating: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler fintype
 /-- The alternating group on a finite type, realized as a subgroup of `equiv.perm`.
   For $A_n$, use `alternating_group (fin n)`. -/ @[derive #[expr fintype]] def alternating_group : subgroup (perm α) :=
 sign.ker
 
-instance  [Subsingleton α] : Unique (alternatingGroup α) :=
+instance [Subsingleton α] : Unique (alternatingGroup α) :=
   ⟨⟨1⟩, fun ⟨p, hp⟩ => Subtype.eq (Subsingleton.elimₓ p _)⟩
 
-variable{α}
+variable {α}
 
 theorem alternating_group_eq_sign_ker : alternatingGroup α = sign.ker :=
   rfl
@@ -207,7 +207,7 @@ begin
   exact [expr le_trans h3 (card α).self_le_factorial]
 end
 
-instance  {n : ℕ} : Nontrivial (alternatingGroup (Finₓ (n+3))) :=
+instance {n : ℕ} : Nontrivial (alternatingGroup (Finₓ (n+3))) :=
   nontrivial_of_three_le_card
     (by 
       rw [card_fin]

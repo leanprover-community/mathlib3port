@@ -28,7 +28,7 @@ parameter {t t' : Type u → Type u}
 
 parameter (eqv : ∀ α, t α ≃ t' α)
 
-variable[Functor t]
+variable [Functor t]
 
 open Functor
 
@@ -44,7 +44,7 @@ protected def map {α β : Type u} (f : α → β) (x : t' α) : t' β :=
 protected def Functor : Functor t' :=
   { map := @Equiv.map _ }
 
-variable[IsLawfulFunctor t]
+variable [IsLawfulFunctor t]
 
 protected theorem id_map {α : Type u} (x : t' α) : Equiv.map id x = x :=
   by 
@@ -83,11 +83,11 @@ parameter {t t' : Type u → Type u}
 
 parameter (eqv : ∀ α, t α ≃ t' α)
 
-variable[Traversable t]
+variable [Traversable t]
 
-variable{m : Type u → Type u}[Applicativeₓ m]
+variable {m : Type u → Type u} [Applicativeₓ m]
 
-variable{α β : Type u}
+variable {α β : Type u}
 
 /-- Like `equiv.map`, a function `t' : Type u → Type u` can be given
 the structure of a traversable functor using a traversable functor
@@ -108,15 +108,15 @@ parameter {t t' : Type u → Type u}
 
 parameter (eqv : ∀ α, t α ≃ t' α)
 
-variable[Traversable t][IsLawfulTraversable t]
+variable [Traversable t] [IsLawfulTraversable t]
 
-variable{F G : Type u → Type u}[Applicativeₓ F][Applicativeₓ G]
+variable {F G : Type u → Type u} [Applicativeₓ F] [Applicativeₓ G]
 
-variable[IsLawfulApplicative F][IsLawfulApplicative G]
+variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
-variable(η : ApplicativeTransformation F G)
+variable (η : ApplicativeTransformation F G)
 
-variable{α β γ : Type u}
+variable {α β γ : Type u}
 
 open IsLawfulTraversable Functor
 

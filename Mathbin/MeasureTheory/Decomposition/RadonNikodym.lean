@@ -30,7 +30,7 @@ noncomputable theory
 
 open_locale Classical MeasureTheory Nnreal Ennreal
 
-variable{α β : Type _}{m : MeasurableSpace α}
+variable {α β : Type _} {m : MeasurableSpace α}
 
 namespace MeasureTheory
 

@@ -25,35 +25,35 @@ universe v u
 
 open CategoryTheory CategoryTheory.Limits
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{X : C}
+variable {X : C}
 
 namespace CategoryTheory.Over
 
 instance has_colimit_of_has_colimit_comp_forget (F : J ⥤ over X) [i : has_colimit (F ⋙ forget X)] : has_colimit F :=
   @costructured_arrow.has_colimit _ _ _ _ i _
 
-instance  [has_colimits_of_shape J C] : has_colimits_of_shape J (over X) :=
+instance [has_colimits_of_shape J C] : has_colimits_of_shape J (over X) :=
   {  }
 
-instance  [has_colimits C] : has_colimits (over X) :=
-  {  }
+instance [has_colimits C] : has_colimits (over X) :=
+  ⟨inferInstance⟩
 
 instance creates_colimits : creates_colimits (forget X) :=
   costructured_arrow.creates_colimits
 
-example  [has_colimits C] : preserves_colimits (forget X) :=
+example [has_colimits C] : preserves_colimits (forget X) :=
   inferInstance
 
-example  : reflects_colimits (forget X) :=
+example : reflects_colimits (forget X) :=
   inferInstance
 
 section 
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 open Tactic
 
@@ -122,24 +122,24 @@ namespace CategoryTheory.Under
 instance has_limit_of_has_limit_comp_forget (F : J ⥤ under X) [i : has_limit (F ⋙ forget X)] : has_limit F :=
   @structured_arrow.has_limit _ _ _ _ i _
 
-instance  [has_limits_of_shape J C] : has_limits_of_shape J (under X) :=
+instance [has_limits_of_shape J C] : has_limits_of_shape J (under X) :=
   {  }
 
-instance  [has_limits C] : has_limits (under X) :=
-  {  }
+instance [has_limits C] : has_limits (under X) :=
+  ⟨inferInstance⟩
 
 instance creates_limits : creates_limits (forget X) :=
   structured_arrow.creates_limits
 
-example  [has_limits C] : preserves_limits (forget X) :=
+example [has_limits C] : preserves_limits (forget X) :=
   inferInstance
 
-example  : reflects_limits (forget X) :=
+example : reflects_limits (forget X) :=
   inferInstance
 
 section 
 
-variable[has_pushouts C]
+variable [has_pushouts C]
 
 /-- When `C` has pushouts, a morphism `f : X ⟶ Y` induces a functor `under X ⥤ under Y`,
 by pushing a morphism forward along `f`. -/

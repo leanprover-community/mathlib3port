@@ -23,12 +23,8 @@ isometry, affine map, linear map
 -/
 
 
-variable{E PE :
-    Type
-      _}[NormedGroup
-      E][NormedSpace ℝ
-      E][MetricSpace
-      PE][NormedAddTorsor E PE]{F PF : Type _}[NormedGroup F][NormedSpace ℝ F][MetricSpace PF][NormedAddTorsor F PF]
+variable {E PE : Type _} [NormedGroup E] [NormedSpace ℝ E] [MetricSpace PE] [NormedAddTorsor E PE] {F PF : Type _}
+  [NormedGroup F] [NormedSpace ℝ F] [MetricSpace PF] [NormedAddTorsor F PF]
 
 open Set AffineMap AffineIsometryEquiv
 

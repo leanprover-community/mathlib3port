@@ -37,7 +37,7 @@ namespace GeneralizedContinuedFraction
 
 open generalized_continued_fraction(of)
 
-variable{K : Type _}[LinearOrderedField K][FloorRing K]{v : K}
+variable {K : Type _} [LinearOrderedField K] [FloorRing K] {v : K}
 
 namespace IntFractPair
 
@@ -49,7 +49,7 @@ stream of integer and fractional parts of a value.
 -/
 
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 theorem stream_eq_none_of_fr_eq_zero {ifp_n : int_fract_pair K} (stream_nth_eq : int_fract_pair.stream v n = some ifp_n)
   (nth_fr_eq_zero : ifp_n.fr = 0) : int_fract_pair.stream v (n+1) = none :=
@@ -174,7 +174,7 @@ sequence implies the termination of another sequence.
 -/
 
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 theorem int_fract_pair.nth_seq1_eq_succ_nth_stream :
   (int_fract_pair.seq1 v).snd.nth n = (int_fract_pair.stream v) (n+1) :=

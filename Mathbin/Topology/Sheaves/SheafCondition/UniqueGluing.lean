@@ -50,7 +50,7 @@ open Opposite
 
 universe u v
 
-variable{C : Type u}[category.{v} C][concrete_category.{v} C]
+variable {C : Type u} [category.{v} C] [concrete_category.{v} C]
 
 namespace Top
 
@@ -60,7 +60,7 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable{X : Top.{v}}(F : presheaf C X){ι : Type v}(U : ι → opens X)
+variable {X : Top.{v}} (F : presheaf C X) {ι : Type v} (U : ι → opens X)
 
 /--
 A family of sections `sf` is compatible, if the restrictions of `sf i` and `sf j` to `U i ⊓ U j`
@@ -92,7 +92,7 @@ end
 
 section TypeValued
 
-variable{X : Top.{v}}(F : presheaf (Type v) X){ι : Type v}(U : ι → opens X)
+variable {X : Top.{v}} (F : presheaf (Type v) X) {ι : Type v} (U : ι → opens X)
 
 /--
 For presheaves of types, terms of `pi_opens F U` are just families of sections.
@@ -206,9 +206,9 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable[has_limits C][reflects_isomorphisms (forget C)][preserves_limits (forget C)]
+variable [has_limits C] [reflects_isomorphisms (forget C)] [preserves_limits (forget C)]
 
-variable{X : Top.{v}}(F : presheaf C X){ι : Type v}(U : ι → opens X)
+variable {X : Top.{v}} (F : presheaf C X) {ι : Type v} (U : ι → opens X)
 
 /--
 For presheaves valued in a concrete category, whose forgetful functor reflects isomorphisms and
@@ -232,11 +232,11 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable[has_limits C][reflects_isomorphisms (concrete_category.forget C)]
+variable [has_limits C] [reflects_isomorphisms (concrete_category.forget C)]
 
-variable[preserves_limits (concrete_category.forget C)]
+variable [preserves_limits (concrete_category.forget C)]
 
-variable{X : Top.{v}}(F : sheaf C X){ι : Type v}(U : ι → opens X)
+variable {X : Top.{v}} (F : sheaf C X) {ι : Type v} (U : ι → opens X)
 
 /--
 A more convenient way of obtaining a unique gluing of sections for a sheaf.

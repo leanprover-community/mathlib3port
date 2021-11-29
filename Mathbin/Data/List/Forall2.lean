@@ -12,7 +12,7 @@ open Nat Function
 
 namespace List
 
-variable{α β γ δ : Type _}{r : α → β → Prop}{p : γ → δ → Prop}
+variable {α β γ δ : Type _} {r : α → β → Prop} {p : γ → δ → Prop}
 
 open Relator
 
@@ -310,7 +310,7 @@ theorem sublist_forall₂_iff {l₁ : List α} {l₂ : List β} : sublist_forall
         cases' hl1 with _ _ _ _ hr hl _ 
         exact sublist_forall₂.cons hr (ih hl)
 
-variable{ra : α → α → Prop}
+variable {ra : α → α → Prop}
 
 instance sublist_forall₂.is_refl [IsRefl α ra] : IsRefl (List α) (sublist_forall₂ ra) :=
   ⟨fun l => sublist_forall₂_iff.2 ⟨l, forall₂_refl l, sublist.refl l⟩⟩

@@ -25,7 +25,7 @@ namespace MeasureTheory
 
 namespace Measureₓ
 
-variable{α : Type _}{m0 : MeasurableSpace α}{μ μ₁ μ₂ ν ν₁ ν₂ : Measureₓ α}
+variable {α : Type _} {m0 : MeasurableSpace α} {μ μ₁ μ₂ ν ν₁ ν₂ : Measureₓ α}
 
 /-- Two measures `μ`, `ν` are said to be mutually singular if there exists a measurable set `s`
 such that `μ s = 0` and `ν sᶜ = 0`. -/

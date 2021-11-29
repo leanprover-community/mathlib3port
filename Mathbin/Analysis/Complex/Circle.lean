@@ -68,7 +68,7 @@ theorem norm_sq_eq_of_mem_circle (z : circle) : norm_sq z = 1 :=
 theorem nonzero_of_mem_circle (z : circle) : (z : ℂ) ≠ 0 :=
   nonzero_of_mem_unit_sphere z
 
-instance  : Groupₓ circle :=
+instance : Groupₓ circle :=
   { circle.toMonoid with
     inv :=
       fun z =>
@@ -97,10 +97,10 @@ theorem coe_div_circle (z w : circle) : «expr↑ » (z / w) = (z : ℂ) / w :=
   show «expr↑ » (z*w⁻¹) = (z : ℂ)*w⁻¹by 
     simp 
 
-instance  : CompactSpace circle :=
+instance : CompactSpace circle :=
   Metric.Sphere.compact_space _ _
 
-instance  : TopologicalGroup circle :=
+instance : TopologicalGroup circle :=
   { continuous_mul :=
       let h : Continuous fun x : circle => (x : ℂ) := continuous_subtype_coe 
       continuous_induced_rng (continuous_mul.comp (h.prod_map h)),

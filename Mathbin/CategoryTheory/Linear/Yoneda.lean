@@ -19,7 +19,7 @@ open Opposite
 
 namespace CategoryTheory
 
-variable(R : Type _)[Ringₓ R](C : Type _)[category C][preadditive C][linear R C]
+variable (R : Type _) [Ringₓ R] (C : Type _) [category C] [preadditive C] [linear R C]
 
 /-- The Yoneda embedding for `R`-linear categories `C`,
 sending an object `X : C` to the `Module R`-valued presheaf on `C`,

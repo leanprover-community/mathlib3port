@@ -20,7 +20,7 @@ open Polynomial
 
 section 
 
-variable(R : Type u){A : Type v}[CommRingₓ R][Ringₓ A][Algebra R A]
+variable (R : Type u) {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A]
 
 /-- An element of an R-algebra is algebraic over R if it is the root of a nonzero polynomial. -/
 def IsAlgebraic (x : A) : Prop :=
@@ -30,19 +30,19 @@ def IsAlgebraic (x : A) : Prop :=
 def Transcendental (x : A) : Prop :=
   ¬IsAlgebraic R x
 
-variable{R}
+variable {R}
 
 /-- A subalgebra is algebraic if all its elements are algebraic. -/
 def Subalgebra.IsAlgebraic (S : Subalgebra R A) : Prop :=
   ∀ x _ : x ∈ S, IsAlgebraic R x
 
-variable(R A)
+variable (R A)
 
 /-- An algebra is algebraic if all its elements are algebraic. -/
 def Algebra.IsAlgebraic : Prop :=
   ∀ x : A, IsAlgebraic R x
 
-variable{R A}
+variable {R A}
 
 -- error in RingTheory.Algebraic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A subalgebra is algebraic if and only if it is algebraic an algebra. -/
@@ -76,7 +76,7 @@ end
 
 section zero_ne_one
 
-variable(R : Type u){A : Type v}[CommRingₓ R][Nontrivial R][Ringₓ A][Algebra R A]
+variable (R : Type u) {A : Type v} [CommRingₓ R] [Nontrivial R] [Ringₓ A] [Algebra R A]
 
 /-- An integral element of an algebra is algebraic.-/
 theorem IsIntegral.is_algebraic {x : A} (h : IsIntegral R x) : IsAlgebraic R x :=
@@ -84,7 +84,7 @@ theorem IsIntegral.is_algebraic {x : A} (h : IsIntegral R x) : IsAlgebraic R x :
     rcases h with ⟨p, hp, hpx⟩
     exact ⟨p, hp.ne_zero, hpx⟩
 
-variable{R}
+variable {R}
 
 /-- An element of `R` is algebraic, when viewed as an element of the `R`-algebra `A`. -/
 theorem is_algebraic_algebra_map (a : R) : IsAlgebraic R (algebraMap R A a) :=
@@ -96,7 +96,7 @@ end zero_ne_one
 
 section Field
 
-variable(K : Type u){A : Type v}[Field K][Ringₓ A][Algebra K A]
+variable (K : Type u) {A : Type v} [Field K] [Ringₓ A] [Algebra K A]
 
 /-- An element of an algebra over a field is algebraic if and only if it is integral.-/
 theorem is_algebraic_iff_is_integral {x : A} : IsAlgebraic K x ↔ IsIntegral K x :=
@@ -113,13 +113,13 @@ end Field
 
 namespace Algebra
 
-variable{K : Type _}{L : Type _}{R : Type _}{S : Type _}{A : Type _}
+variable {K : Type _} {L : Type _} {R : Type _} {S : Type _} {A : Type _}
 
-variable[Field K][Field L][CommRingₓ R][CommRingₓ S][CommRingₓ A]
+variable [Field K] [Field L] [CommRingₓ R] [CommRingₓ S] [CommRingₓ A]
 
-variable[Algebra K L][Algebra L A][Algebra K A][IsScalarTower K L A]
+variable [Algebra K L] [Algebra L A] [Algebra K A] [IsScalarTower K L A]
 
-variable[Algebra R S][Algebra S A][Algebra R A][IsScalarTower R S A]
+variable [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A]
 
 /-- If L is an algebraic field extension of K and A is an algebraic algebra over L,
 then A is algebraic over K. -/
@@ -128,7 +128,7 @@ theorem is_algebraic_trans (L_alg : IsAlgebraic K L) (A_alg : IsAlgebraic L A) :
     simp only [IsAlgebraic, is_algebraic_iff_is_integral] at L_alg A_alg⊢
     exact is_integral_trans L_alg A_alg
 
-variable(K L)
+variable (K L)
 
 /-- If A is an algebraic algebra over R, then A is algebraic over A when S is an extension of R,
   and the map from `R` to `S` is injective. -/
@@ -146,7 +146,7 @@ theorem is_algebraic_of_larger_base_of_injective (hinj : Function.Injective (alg
 theorem is_algebraic_of_larger_base (A_alg : IsAlgebraic K A) : IsAlgebraic L A :=
   is_algebraic_of_larger_base_of_injective (algebraMap K L).Injective A_alg
 
-variable{R S K L}
+variable {R S K L}
 
 /-- A field extension is algebraic if it is finite. -/
 theorem is_algebraic_of_finite [finite : FiniteDimensional K L] : IsAlgebraic K L :=
@@ -156,7 +156,7 @@ theorem is_algebraic_of_finite [finite : FiniteDimensional K L] : IsAlgebraic K 
 
 end Algebra
 
-variable{R S : Type _}[CommRingₓ R][IsDomain R][CommRingₓ S]
+variable {R S : Type _} [CommRingₓ R] [IsDomain R] [CommRingₓ S]
 
 -- error in RingTheory.Algebraic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_integral_multiple
@@ -192,7 +192,7 @@ theorem IsIntegralClosure.exists_smul_eq_mul {L : Type _} [Field L] [Algebra R S
 
 section Field
 
-variable{K L : Type _}[Field K][Field L][Algebra K L](A : Subalgebra K L)
+variable {K L : Type _} [Field K] [Field L] [Algebra K L] (A : Subalgebra K L)
 
 theorem inv_eq_of_aeval_div_X_ne_zero {x : L} {p : Polynomial K} (aeval_ne : aeval x (div_X p) ≠ 0) :
   x⁻¹ = aeval x (div_X p) / (aeval x p - algebraMap _ _ (p.coeff 0)) :=

@@ -12,7 +12,7 @@ In this file we define the type `continuous_map` of continuous bundled maps.
 
 /-- Bundled continuous maps. -/
 @[protectProj]
-structure ContinuousMap(α : Type _)(β : Type _)[TopologicalSpace α][TopologicalSpace β] where 
+structure ContinuousMap (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] where 
   toFun : α → β 
   continuous_to_fun : Continuous to_fun :=  by 
   runTac 
@@ -24,18 +24,18 @@ namespace ContinuousMap
 
 attribute [continuity] ContinuousMap.continuous_to_fun
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
-instance  : CoeFun C(α, β) fun _ => α → β :=
+instance : CoeFun C(α, β) fun _ => α → β :=
   ⟨ContinuousMap.toFun⟩
 
 @[simp]
 theorem to_fun_eq_coe {f : C(α, β)} : f.to_fun = (f : α → β) :=
   rfl
 
-variable{α β}{f g : ContinuousMap α β}
+variable {α β} {f g : ContinuousMap α β}
 
 @[continuity]
 protected theorem Continuous (f : C(α, β)) : Continuous f :=
@@ -68,7 +68,7 @@ theorem ext (H : ∀ x, f x = g x) : f = g :=
 theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
   ⟨ContinuousMap.congr_fun, ext⟩
 
-instance  [Inhabited β] : Inhabited C(α, β) :=
+instance [Inhabited β] : Inhabited C(α, β) :=
   ⟨{ toFun := fun _ => default _ }⟩
 
 theorem coe_inj ⦃f g : C(α, β)⦄ (h : (f : α → β) = g) : f = g :=
@@ -81,7 +81,7 @@ theorem coe_mk (f : α → β) (h : Continuous f) : «expr⇑ » (⟨f, h⟩ : C
 
 section 
 
-variable(α β)
+variable (α β)
 
 /--
 The continuous functions from `α` to `β` are the same as the plain functions when `α` is discrete.
@@ -133,7 +133,7 @@ theorem const_coe (b : β) : (const b : α → β) = fun x => b :=
 theorem const_apply (b : β) (a : α) : const b a = b :=
   rfl
 
-instance  [Nonempty α] [Nontrivial β] : Nontrivial C(α, β) :=
+instance [Nonempty α] [Nontrivial β] : Nontrivial C(α, β) :=
   { exists_pair_ne :=
       by 
         obtain ⟨b₁, b₂, hb⟩ := exists_pair_ne β 
@@ -145,7 +145,7 @@ instance  [Nonempty α] [Nontrivial β] : Nontrivial C(α, β) :=
 
 section 
 
-variable[LinearOrderedAddCommGroup β][OrderTopology β]
+variable [LinearOrderedAddCommGroup β] [OrderTopology β]
 
 /-- The pointwise absolute value of a continuous function as a continuous function. -/
 def abs (f : C(α, β)) : C(α, β) :=
@@ -190,7 +190,7 @@ theorem sup_coe [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) :
 theorem sup_apply [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) : (f⊔g) a = max (f a) (g a) :=
   rfl
 
-instance  [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeSup C(α, β) :=
+instance [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeSup C(α, β) :=
   { ContinuousMap.partialOrder, ContinuousMap.hasSup with
     le_sup_left :=
       fun f g =>
@@ -220,7 +220,7 @@ theorem inf_coe [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) :
 theorem inf_apply [LinearOrderₓ β] [OrderClosedTopology β] (f g : C(α, β)) (a : α) : (f⊓g) a = min (f a) (g a) :=
   rfl
 
-instance  [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeInf C(α, β) :=
+instance [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeInf C(α, β) :=
   { ContinuousMap.partialOrder, ContinuousMap.hasInf with
     inf_le_left :=
       fun f g =>
@@ -239,12 +239,12 @@ instance  [LinearOrderₓ β] [OrderClosedTopology β] : SemilatticeInf C(α, β
             by 
               simp [le_def.mp w₁ a, le_def.mp w₂ a] }
 
-instance  [LinearOrderₓ β] [OrderClosedTopology β] : Lattice C(α, β) :=
+instance [LinearOrderₓ β] [OrderClosedTopology β] : Lattice C(α, β) :=
   { ContinuousMap.semilatticeInf, ContinuousMap.semilatticeSup with  }
 
 section Sup'
 
-variable[LinearOrderₓ γ][OrderClosedTopology γ]
+variable [LinearOrderₓ γ] [OrderClosedTopology γ]
 
 theorem sup'_apply {ι : Type _} {s : Finset ι} (H : s.nonempty) (f : ι → C(β, γ)) (b : β) :
   s.sup' H f b = s.sup' H fun a => f a b :=
@@ -261,7 +261,7 @@ end Sup'
 
 section Inf'
 
-variable[LinearOrderₓ γ][OrderClosedTopology γ]
+variable [LinearOrderₓ γ] [OrderClosedTopology γ]
 
 theorem inf'_apply {ι : Type _} {s : Finset ι} (H : s.nonempty) (f : ι → C(β, γ)) (b : β) :
   s.inf' H f b = s.inf' H fun a => f a b :=
@@ -278,7 +278,7 @@ end Lattice
 
 section Restrict
 
-variable(s : Set α)
+variable (s : Set α)
 
 /-- The restriction of a continuous function `α → β` to a subset `s` of `α`. -/
 def restrict (f : C(α, β)) : C(s, β) :=
@@ -292,7 +292,7 @@ end Restrict
 
 section Extend
 
-variable[LinearOrderₓ α][OrderTopology α]{a b : α}(h : a ≤ b)
+variable [LinearOrderₓ α] [OrderTopology α] {a b : α} (h : a ≤ b)
 
 /--
 Extend a continuous function `f : C(set.Icc a b, β)` to a function `f : C(α, β)`.
@@ -308,15 +308,8 @@ end Extend
 
 section Gluing
 
-variable{ι :
-    Type
-      _}(S :
-    ι →
-      Set
-        α)(φ :
-    ∀ i : ι,
-      C(S i,
-        β))(hφ : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, φ i ⟨x, hxi⟩ = φ j ⟨x, hxj⟩)(hS : ∀ x : α, ∃ i, S i ∈ nhds x)
+variable {ι : Type _} (S : ι → Set α) (φ : ∀ i : ι, C(S i, β))
+  (hφ : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, φ i ⟨x, hxi⟩ = φ j ⟨x, hxj⟩) (hS : ∀ x : α, ∃ i, S i ∈ nhds x)
 
 include hφ hS
 
@@ -338,7 +331,7 @@ begin
   exact [expr set.lift_cover_coe x]
 end
 
-variable{S φ hφ hS}
+variable {S φ hφ hS}
 
 @[simp]
 theorem lift_cover_coe {i : ι} (x : S i) : lift_cover S φ hφ hS x = φ i x :=
@@ -350,15 +343,9 @@ theorem lift_cover_restrict {i : ι} : (lift_cover S φ hφ hS).restrict (S i) =
 
 omit hφ hS
 
-variable(A :
-    Set
-      (Set
-        α))(F :
-    ∀ s : Set α hi : s ∈ A,
-      C(s,
-        β))(hF :
-    ∀ s hs : s ∈ A t ht : t ∈ A x : α hxi : x ∈ s hxj : x ∈ t,
-      F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)(hA : ∀ x : α, ∃ (i : _)(_ : i ∈ A), i ∈ nhds x)
+variable (A : Set (Set α)) (F : ∀ s : Set α hi : s ∈ A, C(s, β))
+  (hF : ∀ s hs : s ∈ A t ht : t ∈ A x : α hxi : x ∈ s hxj : x ∈ t, F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)
+  (hA : ∀ x : α, ∃ (i : _)(_ : i ∈ A), i ∈ nhds x)
 
 include hF hA
 
@@ -374,7 +361,7 @@ noncomputable def lift_cover' : C(α, β) :=
     obtain ⟨s, hs, hsx⟩ := hA x 
     exact ⟨⟨s, hs⟩, hsx⟩
 
-variable{A F hF hA}
+variable {A F hF hA}
 
 @[simp]
 theorem lift_cover_coe' {s : Set α} {hs : s ∈ A} (x : s) : lift_cover' A F hF hA x = F s hs x :=

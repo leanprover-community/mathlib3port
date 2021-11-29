@@ -27,14 +27,14 @@ instance bundled_hom : bundled_hom @NormedGroupHom :=
 -- error in Analysis.Normed.Group.SemiNormedGroup: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] SemiNormedGroup
 
-instance  : CoeSort SemiNormedGroupₓ (Type u) :=
+instance : CoeSort SemiNormedGroupₓ (Type u) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled `SemiNormedGroup` from the underlying type and typeclass. -/
 def of (M : Type u) [SemiNormedGroup M] : SemiNormedGroupₓ :=
   bundled.of M
 
-instance  (M : SemiNormedGroupₓ) : SemiNormedGroup M :=
+instance (M : SemiNormedGroupₓ) : SemiNormedGroup M :=
   M.str
 
 @[simp]
@@ -49,13 +49,13 @@ theorem coe_id (V : SemiNormedGroupₓ) : «expr⇑ » (𝟙 V) = id :=
 theorem coe_comp {M N K : SemiNormedGroupₓ} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : M → K) = (g ∘ f) :=
   rfl
 
-instance  : HasZero SemiNormedGroupₓ :=
+instance : HasZero SemiNormedGroupₓ :=
   ⟨of PUnit⟩
 
-instance  : Inhabited SemiNormedGroupₓ :=
+instance : Inhabited SemiNormedGroupₓ :=
   ⟨0⟩
 
-instance  : limits.has_zero_morphisms.{u, u + 1} SemiNormedGroupₓ :=
+instance : limits.has_zero_morphisms.{u, u + 1} SemiNormedGroupₓ :=
   {  }
 
 @[simp]
@@ -102,10 +102,10 @@ def SemiNormedGroup₁ : Type (u + 1) :=
 
 namespace SemiNormedGroup₁
 
-instance  : CoeSort SemiNormedGroup₁ (Type u) :=
+instance : CoeSort SemiNormedGroup₁ (Type u) :=
   bundled.has_coe_to_sort
 
-instance  : large_category.{u} SemiNormedGroup₁ :=
+instance : large_category.{u} SemiNormedGroup₁ :=
   { hom := fun X Y => { f : NormedGroupHom X Y // f.norm_noninc },
     id := fun X => ⟨NormedGroupHom.id X, NormedGroupHom.NormNoninc.id⟩,
     comp := fun X Y Z f g => ⟨(g : NormedGroupHom Y Z).comp (f : NormedGroupHom X Y), g.2.comp f.2⟩ }
@@ -114,14 +114,14 @@ instance  : large_category.{u} SemiNormedGroup₁ :=
 theorem hom_ext {M N : SemiNormedGroup₁} (f g : M ⟶ N) (w : (f : M → N) = (g : M → N)) : f = g :=
   Subtype.eq (NormedGroupHom.ext (congr_funₓ w))
 
-instance  : concrete_category.{u} SemiNormedGroup₁ :=
+instance : concrete_category.{u} SemiNormedGroup₁ :=
   { forget := { obj := fun X => X, map := fun X Y f => f }, forget_faithful := {  } }
 
 /-- Construct a bundled `SemiNormedGroup₁` from the underlying type and typeclass. -/
 def of (M : Type u) [SemiNormedGroup M] : SemiNormedGroup₁ :=
   bundled.of M
 
-instance  (M : SemiNormedGroup₁) : SemiNormedGroup M :=
+instance (M : SemiNormedGroup₁) : SemiNormedGroup M :=
   M.str
 
 /-- Promote a morphism in `SemiNormedGroup` to a morphism in `SemiNormedGroup₁`. -/
@@ -146,7 +146,7 @@ def mk_iso {M N : SemiNormedGroupₓ} (f : M ≅ N) (i : f.hom.norm_noninc) (i' 
         apply Subtype.eq 
         exact f.inv_hom_id }
 
-instance  : has_forget₂ SemiNormedGroup₁ SemiNormedGroupₓ :=
+instance : has_forget₂ SemiNormedGroup₁ SemiNormedGroupₓ :=
   { forget₂ := { obj := fun X => X, map := fun X Y f => f.1 } }
 
 @[simp]
@@ -166,13 +166,13 @@ theorem coe_comp' {M N K : SemiNormedGroup₁} (f : M ⟶ N) (g : N ⟶ K) :
   (f ≫ g : NormedGroupHom M K) = («expr↑ » g : NormedGroupHom N K).comp («expr↑ » f) :=
   rfl
 
-instance  : HasZero SemiNormedGroup₁ :=
+instance : HasZero SemiNormedGroup₁ :=
   ⟨of PUnit⟩
 
-instance  : Inhabited SemiNormedGroup₁ :=
+instance : Inhabited SemiNormedGroup₁ :=
   ⟨0⟩
 
-instance  : limits.has_zero_morphisms.{u, u + 1} SemiNormedGroup₁ :=
+instance : limits.has_zero_morphisms.{u, u + 1} SemiNormedGroup₁ :=
   { HasZero := fun X Y => { zero := ⟨0, NormedGroupHom.NormNoninc.zero⟩ },
     comp_zero' :=
       fun X Y f Z =>

@@ -27,7 +27,7 @@ open_locale Pointwise
 
 namespace Algebra
 
-variable{R : Type u}{A : Type v}{B : Type w}[CommSemiringₓ R][CommSemiringₓ A][Algebra R A]{s t : Set A}
+variable {R : Type u} {A : Type v} {B : Type w} [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A] {s t : Set A}
 
 -- error in RingTheory.Adjoin.Fg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem fg_trans
@@ -79,9 +79,9 @@ end Algebra
 
 namespace Subalgebra
 
-variable{R : Type u}{A : Type v}{B : Type w}
+variable {R : Type u} {A : Type v} {B : Type w}
 
-variable[CommSemiringₓ R][Semiringₓ A][Algebra R A][Semiringₓ B][Algebra R B]
+variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [Semiringₓ B] [Algebra R B]
 
 /-- A subalgebra `S` is finitely generated if there exists `t : finset A` such that
 `algebra.adjoin R t = S`. -/
@@ -183,9 +183,9 @@ end Subalgebra
 
 section Semiringₓ
 
-variable{R : Type u}{A : Type v}{B : Type w}
+variable {R : Type u} {A : Type v} {B : Type w}
 
-variable[CommSemiringₓ R][CommRingₓ A][CommRingₓ B][Algebra R A][Algebra R B]
+variable [CommSemiringₓ R] [CommRingₓ A] [CommRingₓ B] [Algebra R A] [Algebra R B]
 
 /-- The image of a Noetherian R-algebra under an R-algebra map is a Noetherian ring. -/
 instance AlgHom.is_noetherian_ring_range (f : A →ₐ[R] B) [IsNoetherianRing A] : IsNoetherianRing f.range :=
@@ -195,9 +195,9 @@ end Semiringₓ
 
 section Ringₓ
 
-variable{R : Type u}{A : Type v}{B : Type w}
+variable {R : Type u} {A : Type v} {B : Type w}
 
-variable[CommRingₓ R][CommRingₓ A][CommRingₓ B][Algebra R A][Algebra R B]
+variable [CommRingₓ R] [CommRingₓ A] [CommRingₓ B] [Algebra R A] [Algebra R B]
 
 -- error in RingTheory.Adjoin.Fg: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_noetherian_ring_of_fg {S : subalgebra R A} (HS : S.fg) [is_noetherian_ring R] : is_noetherian_ring S :=

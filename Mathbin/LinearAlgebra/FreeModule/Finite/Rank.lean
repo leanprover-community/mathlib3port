@@ -12,7 +12,7 @@ This is a basic API for the rank of finite free modules.
 
 universe u v w
 
-variable(R : Type u)(M : Type v)(N : Type w)
+variable (R : Type u) (M : Type v) (N : Type w)
 
 open_locale TensorProduct DirectSum BigOperators Cardinal
 
@@ -22,11 +22,11 @@ namespace Module.Free
 
 section Ringₓ
 
-variable[Ringₓ R][StrongRankCondition R]
+variable [Ringₓ R] [StrongRankCondition R]
 
-variable[AddCommGroupₓ M][Module R M][Module.Free R M][Module.Finite R M]
+variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M]
 
-variable[AddCommGroupₓ N][Module R N][Module.Free R N][Module.Finite R N]
+variable [AddCommGroupₓ N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
 -- error in LinearAlgebra.FreeModule.Finite.Rank: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The rank of a finite and free module is finite. -/ theorem rank_lt_omega : «expr < »(module.rank R M, exprω()) :=
@@ -110,11 +110,11 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][StrongRankCondition R]
+variable [CommRingₓ R] [StrongRankCondition R]
 
-variable[AddCommGroupₓ M][Module R M][Module.Free R M][Module.Finite R M]
+variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M]
 
-variable[AddCommGroupₓ N][Module R N][Module.Free R N][Module.Finite R N]
+variable [AddCommGroupₓ N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
 -- error in LinearAlgebra.FreeModule.Finite.Rank: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The finrank of `M →ₗ[R] N` is `(finrank R M) * (finrank R N)`. -/

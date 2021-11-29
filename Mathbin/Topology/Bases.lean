@@ -50,14 +50,14 @@ namespace TopologicalSpace
 
 universe u
 
-variable{α : Type u}[t : TopologicalSpace α]
+variable {α : Type u} [t : TopologicalSpace α]
 
 include t
 
 /-- A topological basis is one that satisfies the necessary conditions so that
   it suffices to take unions of the basis sets to get a topology (without taking
   finite intersections as well). -/
-structure is_topological_basis(s : Set (Set α)) : Prop where 
+structure is_topological_basis (s : Set (Set α)) : Prop where 
   exists_subset_inter :
   ∀ t₁ _ : t₁ ∈ s, ∀ t₂ _ : t₂ ∈ s, ∀ x _ : x ∈ t₁ ∩ t₂, ∃ (t₃ : _)(_ : t₃ ∈ s), x ∈ t₃ ∧ t₃ ⊆ t₁ ∩ t₂ 
   sUnion_eq : ⋃₀s = univ 
@@ -142,6 +142,10 @@ protected theorem is_topological_basis.is_open {s : Set α} {b : Set (Set α)} (
   by 
     rw [hb.eq_generate_from]
     exact generate_open.basic s hs
+
+protected theorem is_topological_basis.mem_nhds {a : α} {s : Set α} {b : Set (Set α)} (hb : is_topological_basis b)
+  (hs : s ∈ b) (ha : a ∈ s) : s ∈ 𝓝 a :=
+  (hb.is_open hs).mem_nhds ha
 
 theorem is_topological_basis.exists_subset_of_mem_open {b : Set (Set α)} (hb : is_topological_basis b) {a : α}
   {u : Set α} (au : a ∈ u) (ou : IsOpen u) : ∃ (v : _)(_ : v ∈ b), a ∈ v ∧ v ⊆ u :=
@@ -260,7 +264,7 @@ protected theorem is_topological_basis.continuous {β : Type _} [TopologicalSpac
     rw [hB.eq_generate_from]
     exact continuous_generated_from hf
 
-variable(α)
+variable (α)
 
 /-- A separable space is one with a countable dense subset, available through
 `topological_space.exists_countable_dense`. If `α` is also known to be nonempty, then
@@ -300,7 +304,7 @@ def dense_seq [separable_space α] [Nonempty α] : ℕ → α :=
 theorem dense_range_dense_seq [separable_space α] [Nonempty α] : DenseRange (dense_seq α) :=
   Classical.some_spec (exists_dense_seq α)
 
-variable{α}
+variable {α}
 
 -- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a separable space, a family of nonempty disjoint open sets is countable. -/
@@ -358,45 +362,21 @@ theorem is_topological_basis_pi
  i, X i) | «expr∃ , »((U : ∀ i, set (X i))
  (F : finset ι), «expr ∧ »(∀ i, «expr ∈ »(i, F) → «expr ∈ »(U i, T i), «expr = »(S, (F : set ι).pi U)))} :=
 begin
-  classical,
   refine [expr is_topological_basis_of_open_of_nhds _ _],
   { rintro ["_", "⟨", ident U, ",", ident F, ",", ident h1, ",", ident rfl, "⟩"],
     apply [expr is_open_set_pi F.finite_to_set],
     intros [ident i, ident hi],
-    exact [expr is_topological_basis.is_open (cond i) (h1 i hi)] },
+    exact [expr (cond i).is_open (h1 i hi)] },
   { intros [ident a, ident U, ident ha, ident hU],
-    have [] [":", expr «expr ∈ »(U, nhds a)] [":=", expr is_open.mem_nhds hU ha],
-    rw ["[", expr nhds_pi, ",", expr filter.mem_infi, "]"] ["at", ident this],
-    obtain ["⟨", ident F, ",", ident hF, ",", ident V, ",", ident hV1, ",", ident rfl, "⟩", ":=", expr this],
-    choose [] [ident U'] [ident hU'] ["using", expr hV1],
-    obtain ["⟨", ident hU1, ",", ident hU2, "⟩", ":=", "⟨", expr λ i, (hU' i).1, ",", expr λ i, (hU' i).2, "⟩"],
+    obtain ["⟨", ident I, ",", ident t, ",", ident hta, ",", ident htU, "⟩", ":", expr «expr∃ , »((I : finset ι)
+      (t : ∀ i : ι, set (X i)), «expr ∧ »(∀ i, «expr ∈ »(t i, expr𝓝() (a i)), «expr ⊆ »(set.pi «expr↑ »(I) t, U)))],
+    { rw ["[", "<-", expr filter.mem_pi', ",", "<-", expr nhds_pi, "]"] [],
+      exact [expr hU.mem_nhds ha] },
     have [] [":", expr ∀
-     j : F, «expr∃ , »((T' : set (X j))
-      (hT : «expr ∈ »(T', T j)), «expr ∧ »(«expr ∈ »(a j, T'), «expr ⊆ »(T', U' j)))] [],
-    { intros [ident i],
-      specialize [expr hU1 i],
-      rwa [expr (cond i).mem_nhds_iff] ["at", ident hU1] },
-    choose [] [ident U''] [ident hU''] ["using", expr this],
-    let [ident U] [":", expr ∀
-     i : ι, set (X i)] [":=", expr λ i, if hi : «expr ∈ »(i, F) then U'' ⟨i, hi⟩ else set.univ],
-    refine [expr ⟨F.pi U, ⟨U, hF.to_finset, λ i hi, _, by simp [] [] [] [] [] []⟩, _, _⟩],
-    { dsimp ["only"] ["[", expr U, "]"] [] [],
-      rw ["[", expr dif_pos, "]"] [],
-      swap,
-      { simpa [] [] [] [] [] ["using", expr hi] },
-      exact [expr (hU'' _).1] },
-    { rw [expr set.mem_pi] [],
-      intros [ident i, ident hi],
-      dsimp ["only"] ["[", expr U, "]"] [] [],
-      rw [expr dif_pos hi] [],
-      exact [expr (hU'' _).2.1] },
-    { intros [ident x, ident hx],
-      rintros ["-", "⟨", ident i, ",", ident rfl, "⟩"],
-      refine [expr hU2 i ((hU'' i).2.2 _)],
-      convert [] [expr hx i i.2] [],
-      rcases [expr i, "with", "⟨", ident i, ",", ident p, "⟩"],
-      dsimp [] ["[", expr U, "]"] [] [],
-      rw [expr dif_pos p] [] } }
+     i, «expr∃ , »((V «expr ∈ » T i), «expr ∧ »(«expr ∈ »(a i, V), «expr ⊆ »(V, t i)))] [":=", expr λ
+     i, (cond i).mem_nhds_iff.1 (hta i)],
+    choose [] [ident V] [ident hVT, ident haV, ident hVt] [],
+    exact [expr ⟨_, ⟨V, I, λ i hi, hVT i, rfl⟩, λ i hi, haV i, «expr $ »(pi_mono, λ i hi, hVt i).trans htU⟩] }
 end
 
 -- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -485,7 +465,7 @@ namespace TopologicalSpace
 
 universe u
 
-variable(α : Type u)[t : TopologicalSpace α]
+variable (α : Type u) [t : TopologicalSpace α]
 
 include t
 
@@ -498,7 +478,7 @@ attribute [instance] first_countable_topology.nhds_generated_countable
 
 namespace FirstCountableTopology
 
-variable{α}
+variable {α}
 
 /-- In a first-countable space, a cluster point `x` of a sequence
 is the limit of some subsequence. -/
@@ -508,25 +488,25 @@ theorem tendsto_subseq [first_countable_topology α] {u : ℕ → α} {x : α} (
 
 end FirstCountableTopology
 
-variable{α}
+variable {α}
 
 instance is_countably_generated_nhds_within (x : α) [is_countably_generated (𝓝 x)] (s : Set α) :
   is_countably_generated (𝓝[s] x) :=
   inf.is_countably_generated _ _
 
-variable(α)
+variable (α)
 
 /-- A second-countable space is one with a countable basis. -/
 class second_countable_topology : Prop where 
   is_open_generated_countable{} : ∃ b : Set (Set α), countable b ∧ t = TopologicalSpace.generateFrom b
 
-variable{α}
+variable {α}
 
 protected theorem is_topological_basis.second_countable_topology {b : Set (Set α)} (hb : is_topological_basis b)
   (hc : countable b) : second_countable_topology α :=
   ⟨⟨b, hc, hb.eq_generate_from⟩⟩
 
-variable(α)
+variable (α)
 
 theorem exists_countable_basis [second_countable_topology α] :
   ∃ b : Set (Set α), countable b ∧ ∅ ∉ b ∧ is_topological_basis b :=
@@ -560,7 +540,7 @@ theorem eq_generate_from_countable_basis [second_countable_topology α] :
   ‹TopologicalSpace α› = generate_from (countable_basis α) :=
   (is_basis_countable_basis α).eq_generate_from
 
-variable{α}
+variable {α}
 
 theorem is_open_of_mem_countable_basis [second_countable_topology α] {s : Set α} (hs : s ∈ countable_basis α) :
   IsOpen s :=
@@ -570,9 +550,9 @@ theorem nonempty_of_mem_countable_basis [second_countable_topology α] {s : Set 
   s.nonempty :=
   ne_empty_iff_nonempty.1$ ne_of_mem_of_not_mem hs$ empty_nmem_countable_basis α
 
-variable(α)
+variable (α)
 
-instance (priority := 100)second_countable_topology.to_first_countable_topology [second_countable_topology α] :
+instance (priority := 100) second_countable_topology.to_first_countable_topology [second_countable_topology α] :
   first_countable_topology α :=
   ⟨fun x =>
       has_countable_basis.is_countably_generated$
@@ -590,7 +570,7 @@ theorem second_countable_topology_induced β [t : TopologicalSpace β] [second_c
 instance subtype.second_countable_topology (s : Set α) [second_countable_topology α] : second_countable_topology s :=
   second_countable_topology_induced s α coeₓ
 
-instance  {β : Type _} [TopologicalSpace β] [second_countable_topology α] [second_countable_topology β] :
+instance {β : Type _} [TopologicalSpace β] [second_countable_topology α] [second_countable_topology β] :
   second_countable_topology (α × β) :=
   ((is_basis_countable_basis α).Prod (is_basis_countable_basis β)).SecondCountableTopology$
     (countable_countable_basis α).Image2 (countable_countable_basis β) _
@@ -640,7 +620,7 @@ instance second_countable_topology_fintype
 by { letI [] [] [":=", expr fintype.encodable ι],
   exact [expr topological_space.second_countable_topology_encodable] }
 
-instance (priority := 100)second_countable_topology.to_separable_space [second_countable_topology α] :
+instance (priority := 100) second_countable_topology.to_separable_space [second_countable_topology α] :
   separable_space α :=
   by 
     choose p hp using fun s : countable_basis α => nonempty_of_mem_countable_basis s.2 
@@ -648,7 +628,7 @@ instance (priority := 100)second_countable_topology.to_separable_space [second_c
       ⟨⟨range p, countable_range _,
           (is_basis_countable_basis α).dense_iff.2$ fun o ho _ => ⟨p ⟨o, ho⟩, hp _, mem_range_self _⟩⟩⟩
 
-variable{α}
+variable {α}
 
 -- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A countable open cover induces a second-countable topology if all open covers
@@ -724,7 +704,7 @@ end TopologicalSpace
 
 open TopologicalSpace
 
-variable{α β : Type _}[TopologicalSpace α][TopologicalSpace β]{f : α → β}
+variable {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {f : α → β}
 
 protected theorem Inducing.second_countable_topology [second_countable_topology β] (hf : Inducing f) :
   second_countable_topology α :=

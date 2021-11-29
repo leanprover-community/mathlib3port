@@ -42,15 +42,15 @@ namespace CategoryTheory
 
 universe v₁ v₂ v₃ v₄ v₅ u₁ u₂ u₃ u₄ u₅
 
-variable{A : Type u₁}[category.{v₁} A]
+variable {A : Type u₁} [category.{v₁} A]
 
-variable{B : Type u₂}[category.{v₂} B]
+variable {B : Type u₂} [category.{v₂} B]
 
-variable{T : Type u₃}[category.{v₃} T]
+variable {T : Type u₃} [category.{v₃} T]
 
 /-- The objects of the comma category are triples of an object `left : A`, an object
    `right : B` and a morphism `hom : L.obj left ⟶ R.obj right`.  -/
-structure comma(L : A ⥤ T)(R : B ⥤ T) : Type max u₁ u₂ v₃ where 
+structure comma (L : A ⥤ T) (R : B ⥤ T) : Type max u₁ u₂ v₃ where 
   left : A :=  by 
   runTac 
     obviously 
@@ -62,13 +62,13 @@ structure comma(L : A ⥤ T)(R : B ⥤ T) : Type max u₁ u₂ v₃ where
 instance comma.inhabited [Inhabited T] : Inhabited (comma (𝟭 T) (𝟭 T)) :=
   { default := { left := default T, right := default T, Hom := 𝟙 (default T) } }
 
-variable{L : A ⥤ T}{R : B ⥤ T}
+variable {L : A ⥤ T} {R : B ⥤ T}
 
 /-- A morphism between two objects in the comma category is a commutative square connecting the
     morphisms coming from the two objects using morphisms in the image of the functors `L` and `R`.
 -/
 @[ext]
-structure comma_morphism(X Y : comma L R) where 
+structure comma_morphism (X Y : comma L R) where 
   left : X.left ⟶ Y.left :=  by 
   runTac 
     obviously 
@@ -95,7 +95,7 @@ namespace Comma
 
 section 
 
-variable{X Y Z : comma L R}{f : X ⟶ Y}{g : Y ⟶ Z}
+variable {X Y Z : comma L R} {f : X ⟶ Y} {g : Y ⟶ Z}
 
 @[simp]
 theorem id_left : (𝟙 X : comma_morphism X X).left = 𝟙 X.left :=
@@ -115,7 +115,7 @@ theorem comp_right : (f ≫ g).right = f.right ≫ g.right :=
 
 end 
 
-variable(L)(R)
+variable (L) (R)
 
 /-- The functor sending an object `X` in the comma category to `X.left`. -/
 @[simps]
@@ -137,7 +137,7 @@ def nat_trans : fst L R ⋙ L ⟶ snd L R ⋙ R :=
 
 section 
 
-variable{L₁ L₂ L₃ : A ⥤ T}{R₁ R₂ R₃ : B ⥤ T}
+variable {L₁ L₂ L₃ : A ⥤ T} {R₁ R₂ R₃ : B ⥤ T}
 
 /--
 Construct an isomorphism in the comma category given isomorphisms of the objects whose forward
@@ -196,7 +196,7 @@ end
 
 section 
 
-variable{C : Type u₄}[category.{v₄} C]{D : Type u₅}[category.{v₅} D]
+variable {C : Type u₄} [category.{v₄} C] {D : Type u₅} [category.{v₅} D]
 
 /-- The functor `(F ⋙ L, R) ⥤ (L, R)` -/
 @[simps]

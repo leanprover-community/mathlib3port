@@ -37,7 +37,7 @@ open Classical Set Filter MeasureTheory Finset Function TopologicalSpace
 
 open_locale Classical TopologicalSpace
 
-variable{ι : Type _}{α : Type _}[MeasurableSpace α]{f : α → α}{s : Set α}{μ : Measureₓ α}
+variable {ι : Type _} {α : Type _} [MeasurableSpace α] {f : α → α} {s : Set α} {μ : Measureₓ α}
 
 namespace MeasureTheory
 
@@ -46,8 +46,8 @@ open Measureₓ
 /-- We say that a non-singular (`measure_theory.quasi_measure_preserving`) self-map is
 *conservative* if for any measurable set `s` of positive measure there exists `x ∈ s` such that `x`
 returns back to `s` under some iteration of `f`. -/
-structure
-  conservative(f : α → α)(μ : Measureₓ α :=  by 
+structure conservative (f : α → α)
+  (μ : Measureₓ α :=  by 
     runTac 
       volume_tac) extends
   quasi_measure_preserving f μ μ : Prop where 

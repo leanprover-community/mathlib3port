@@ -8,7 +8,7 @@ open Category
 
 universe v₁ u₁
 
-variable(C : Type u₁)[category.{v₁} C]
+variable (C : Type u₁) [category.{v₁} C]
 
 /--
 The data of a monad on C consists of an endofunctor T together with natural transformations
@@ -50,7 +50,7 @@ structure comonad extends C ⥤ C where
   runTac 
     obviously
 
-variable{C}(T : Monadₓ C)(G : comonad C)
+variable {C} (T : Monadₓ C) (G : comonad C)
 
 instance coe_monad : Coe (Monadₓ C) (C ⥤ C) :=
   ⟨fun T => T.to_functor⟩
@@ -137,7 +137,7 @@ theorem comonad.right_counit (G : comonad C) (X : C) :
 
 /-- A morphism of monads is a natural transformation compatible with η and μ. -/
 @[ext]
-structure monad_hom(T₁ T₂ : Monadₓ C) extends nat_trans (T₁ : C ⥤ C) T₂ where 
+structure monad_hom (T₁ T₂ : Monadₓ C) extends nat_trans (T₁ : C ⥤ C) T₂ where 
   app_η' : ∀ X, T₁.η.app X ≫ app X = T₂.η.app X :=  by 
   runTac 
     obviously 
@@ -147,7 +147,7 @@ structure monad_hom(T₁ T₂ : Monadₓ C) extends nat_trans (T₁ : C ⥤ C) T
 
 /-- A morphism of comonads is a natural transformation compatible with ε and δ. -/
 @[ext]
-structure comonad_hom(M N : comonad C) extends nat_trans (M : C ⥤ C) N where 
+structure comonad_hom (M N : comonad C) extends nat_trans (M : C ⥤ C) N where 
   app_ε' : ∀ X, app X ≫ N.ε.app X = M.ε.app X :=  by 
   runTac 
     obviously 
@@ -167,15 +167,15 @@ restate_axiom comonad_hom.app_δ'
 
 attribute [simp, reassoc] comonad_hom.app_ε comonad_hom.app_δ
 
-instance  : category (Monadₓ C) :=
+instance : category (Monadₓ C) :=
   { Hom := monad_hom, id := fun M => { toNatTrans := 𝟙 (M : C ⥤ C) },
     comp := fun _ _ _ f g => { toNatTrans := { app := fun X => f.app X ≫ g.app X } } }
 
-instance  : category (comonad C) :=
+instance : category (comonad C) :=
   { Hom := comonad_hom, id := fun M => { toNatTrans := 𝟙 (M : C ⥤ C) },
     comp := fun M N L f g => { toNatTrans := { app := fun X => f.app X ≫ g.app X } } }
 
-instance  {T : Monadₓ C} : Inhabited (monad_hom T T) :=
+instance {T : Monadₓ C} : Inhabited (monad_hom T T) :=
   ⟨𝟙 T⟩
 
 @[simp]
@@ -187,7 +187,7 @@ theorem monad_hom.comp_to_nat_trans {T₁ T₂ T₃ : Monadₓ C} (f : T₁ ⟶ 
   (f ≫ g).toNatTrans = ((f.to_nat_trans : _ ⟶ (T₂ : C ⥤ C)) ≫ g.to_nat_trans : (T₁ : C ⥤ C) ⟶ T₃) :=
   rfl
 
-instance  {G : comonad C} : Inhabited (comonad_hom G G) :=
+instance {G : comonad C} : Inhabited (comonad_hom G G) :=
   ⟨𝟙 G⟩
 
 @[simp]
@@ -237,7 +237,7 @@ def comonad_iso.mk {M N : comonad C} (f : (M : C ⥤ C) ≅ N) f_ε f_δ : M ≅
               rw [←functor.map_comp, iso.hom_inv_id_app, Functor.map_id]
               apply (comp_id _).symm } }
 
-variable(C)
+variable (C)
 
 /--
 The forgetful functor from the category of monads to the category of endofunctors.
@@ -246,7 +246,7 @@ The forgetful functor from the category of monads to the category of endofunctor
 def monad_to_functor : Monadₓ C ⥤ C ⥤ C :=
   { obj := fun T => T, map := fun M N f => f.to_nat_trans }
 
-instance  : faithful (monad_to_functor C) :=
+instance : faithful (monad_to_functor C) :=
   {  }
 
 @[simp]
@@ -256,7 +256,7 @@ theorem monad_to_functor_map_iso_monad_iso_mk {M N : Monadₓ C} (f : (M : C ⥤
     ext 
     rfl
 
-instance  : reflects_isomorphisms (monad_to_functor C) :=
+instance : reflects_isomorphisms (monad_to_functor C) :=
   { reflects :=
       fun M N f i =>
         by 
@@ -271,7 +271,7 @@ The forgetful functor from the category of comonads to the category of endofunct
 def comonad_to_functor : comonad C ⥤ C ⥤ C :=
   { obj := fun G => G, map := fun M N f => f.to_nat_trans }
 
-instance  : faithful (comonad_to_functor C) :=
+instance : faithful (comonad_to_functor C) :=
   {  }
 
 @[simp]
@@ -281,7 +281,7 @@ theorem comonad_to_functor_map_iso_comonad_iso_mk {M N : comonad C} (f : (M : C 
     ext 
     rfl
 
-instance  : reflects_isomorphisms (comonad_to_functor C) :=
+instance : reflects_isomorphisms (comonad_to_functor C) :=
   { reflects :=
       fun M N f i =>
         by 
@@ -289,7 +289,7 @@ instance  : reflects_isomorphisms (comonad_to_functor C) :=
           convert is_iso.of_iso (comonad_iso.mk (as_iso ((comonad_to_functor C).map f)) f.app_ε f.app_δ)
           ext <;> rfl }
 
-variable{C}
+variable {C}
 
 /--
 An isomorphism of monads gives a natural isomorphism of the underlying functors.
@@ -305,7 +305,7 @@ An isomorphism of comonads gives a natural isomorphism of the underlying functor
 def comonad_iso.to_nat_iso {M N : comonad C} (h : M ≅ N) : (M : C ⥤ C) ≅ N :=
   (comonad_to_functor C).mapIso h
 
-variable(C)
+variable (C)
 
 namespace Monadₓ
 
@@ -314,7 +314,7 @@ namespace Monadₓ
 def id : Monadₓ C :=
   { toFunctor := 𝟭 C, η' := 𝟙 (𝟭 C), μ' := 𝟙 (𝟭 C) }
 
-instance  : Inhabited (Monadₓ C) :=
+instance : Inhabited (Monadₓ C) :=
   ⟨monad.id C⟩
 
 end Monadₓ
@@ -326,7 +326,7 @@ namespace Comonad
 def id : comonad C :=
   { toFunctor := 𝟭 _, ε' := 𝟙 (𝟭 C), δ' := 𝟙 (𝟭 C) }
 
-instance  : Inhabited (comonad C) :=
+instance : Inhabited (comonad C) :=
   ⟨comonad.id C⟩
 
 end Comonad

@@ -63,11 +63,11 @@ open Function
 
 universe u v w z
 
-variable{α : Sort u}{β : Sort v}{γ : Sort w}
+variable {α : Sort u} {β : Sort v} {γ : Sort w}
 
 /-- `α ≃ β` is the type of functions from `α → β` with a two-sided inverse. -/
 @[nolint has_inhabited_instance]
-structure Equiv(α : Sort _)(β : Sort _) where 
+structure Equiv (α : Sort _) (β : Sort _) where 
   toFun : α → β 
   invFun : β → α 
   left_inv : left_inverse inv_fun to_fun 
@@ -86,7 +86,7 @@ namespace Equiv
 def perm (α : Sort _) :=
   Equiv α α
 
-instance  : CoeFun (α ≃ β) fun _ => α → β :=
+instance : CoeFun (α ≃ β) fun _ => α → β :=
   ⟨to_fun⟩
 
 @[simp]
@@ -436,7 +436,7 @@ theorem equiv_congr_apply_apply {δ} (ab : α ≃ β) (cd : γ ≃ δ) (e : α �
 
 section PermCongr
 
-variable{α' β' : Type _}(e : α' ≃ β')
+variable {α' β' : Type _} (e : α' ≃ β')
 
 /-- If `α` is equivalent to `β`, then `perm α` is equivalent to `perm β`. -/
 def perm_congr : perm α' ≃ perm β' :=
@@ -615,7 +615,7 @@ theorem conj_comp (e : α ≃ β) (f₁ f₂ : α → α) : e.conj (f₁ ∘ f�
 
 section BinaryOp
 
-variable{α₁ β₁ : Type _}(e : α₁ ≃ β₁)(f : α₁ → α₁ → α₁)
+variable {α₁ β₁ : Type _} (e : α₁ ≃ β₁) (f : α₁ → α₁ → α₁)
 
 theorem semiconj_conj (f : α₁ → α₁) : semiconj e f (e.conj f) :=
   fun x =>
@@ -627,19 +627,19 @@ theorem semiconj₂_conj : semiconj₂ e f (e.arrow_congr e.conj f) :=
     by 
       simp 
 
-instance  [IsAssociative α₁ f] : IsAssociative β₁ (e.arrow_congr (e.arrow_congr e) f) :=
+instance [IsAssociative α₁ f] : IsAssociative β₁ (e.arrow_congr (e.arrow_congr e) f) :=
   (e.semiconj₂_conj f).is_associative_right e.surjective
 
-instance  [IsIdempotent α₁ f] : IsIdempotent β₁ (e.arrow_congr (e.arrow_congr e) f) :=
+instance [IsIdempotent α₁ f] : IsIdempotent β₁ (e.arrow_congr (e.arrow_congr e) f) :=
   (e.semiconj₂_conj f).is_idempotent_right e.surjective
 
-instance  [IsLeftCancel α₁ f] : IsLeftCancel β₁ (e.arrow_congr (e.arrow_congr e) f) :=
+instance [IsLeftCancel α₁ f] : IsLeftCancel β₁ (e.arrow_congr (e.arrow_congr e) f) :=
   ⟨e.surjective.forall₃.2$
       fun x y z =>
         by 
           simpa using @IsLeftCancel.left_cancel _ f _ x y z⟩
 
-instance  [IsRightCancel α₁ f] : IsRightCancel β₁ (e.arrow_congr (e.arrow_congr e) f) :=
+instance [IsRightCancel α₁ f] : IsRightCancel β₁ (e.arrow_congr (e.arrow_congr e) f) :=
   ⟨e.surjective.forall₃.2$
       fun x y z =>
         by 
@@ -713,7 +713,7 @@ end
 /-- Product of two equivalences. If `α₁ ≃ α₂` and `β₁ ≃ β₂`, then `α₁ × β₁ ≃ α₂ × β₂`. -/
 @[congr, simps apply]
 def prod_congr {α₁ β₁ α₂ β₂ : Type _} (e₁ : α₁ ≃ α₂) (e₂ : β₁ ≃ β₂) : α₁ × β₁ ≃ α₂ × β₂ :=
-  ⟨Prod.mapₓ e₁ e₂, Prod.mapₓ e₁.symm e₂.symm,
+  ⟨Prod.map e₁ e₂, Prod.map e₁.symm e₂.symm,
     fun ⟨a, b⟩ =>
       by 
         simp ,
@@ -1058,9 +1058,9 @@ def subtype_congr {α : Type _} {p q : α → Prop} [DecidablePred p] [Decidable
 
 open Equiv
 
-variable{ε : Type _}{p : ε → Prop}[DecidablePred p]
+variable {ε : Type _} {p : ε → Prop} [DecidablePred p]
 
-variable(ep ep' : perm { a // p a })(en en' : perm { a // ¬p a })
+variable (ep ep' : perm { a // p a }) (en en' : perm { a // ¬p a })
 
 /-- Combining permutations on `ε` that permute only inside or outside the subtype
 split induced by `p : ε → Prop` constructs a permutation on `ε`. -/
@@ -1127,7 +1127,7 @@ end SumCompl
 
 section SubtypePreimage
 
-variable(p : α → Prop)[DecidablePred p](x₀ : { a // p a } → β)
+variable (p : α → Prop) [DecidablePred p] (x₀ : { a // p a } → β)
 
 /-- For a fixed function `x₀ : {a // p a} → β` defined on a subtype of `α`,
 the subtype of functions `x : α → β` that agree with `x₀` on the subtype `{a // p a}`
@@ -1347,7 +1347,7 @@ end
 
 section ProdCongr
 
-variable{α₁ β₁ β₂ : Type _}(e : α₁ → β₁ ≃ β₂)
+variable {α₁ β₁ β₂ : Type _} (e : α₁ → β₁ ≃ β₂)
 
 /-- A family of equivalences `Π (a : α₁), β₁ ≃ β₂` generates an equivalence
 between `β₁ × α₁` and `β₂ × α₁`. -/
@@ -1440,7 +1440,7 @@ end ProdCongr
 
 namespace Perm
 
-variable{α₁ β₁ β₂ : Type _}[DecidableEq α₁](a : α₁)(e : perm β₁)
+variable {α₁ β₁ β₂ : Type _} [DecidableEq α₁] (a : α₁) (e : perm β₁)
 
 /-- `prod_extend_right a e` extends `e : perm β` to `perm (α × β)` by sending `(a, b)` to
 `(a, e b)` and keeping the other `(a', b)` fixed. -/
@@ -1920,7 +1920,7 @@ end
 
 section SubtypeEquivCodomain
 
-variable{X : Type _}{Y : Type _}[DecidableEq X]{x : X}
+variable {X : Type _} {Y : Type _} [DecidableEq X] {x : X}
 
 /-- The type of all functions `X → Y` with prescribed values for all `x' ≠ x`
 is equivalent to the codomain `Y`. -/
@@ -1985,7 +1985,7 @@ theorem of_bijective_symm_apply_apply {α β} (f : α → β) (hf : bijective f)
 
 section 
 
-variable{α' β' : Type _}(e : perm α'){p : β' → Prop}[DecidablePred p](f : α' ≃ Subtype p)
+variable {α' β' : Type _} (e : perm α') {p : β' → Prop} [DecidablePred p] (f : α' ≃ Subtype p)
 
 /--
 Extend the domain of `e : equiv.perm α` to one that is over `β` via `f : α → subtype p`,
@@ -2052,7 +2052,7 @@ def subtype_quotient_equiv_quotient_subtype (p₁ : α → Prop) [s₁ : Setoid�
 
 section Swap
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- A helper function for `equiv.swap`. -/
 def swap_core (a b r : α) : α :=
@@ -2291,7 +2291,7 @@ protected theorem forall_congr' {p : α → Prop} {q : β → Prop} (f : α ≃ 
 
 universe ua1 ua2 ub1 ub2 ug1 ug2
 
-variable{α₁ : Sort ua1}{α₂ : Sort ua2}{β₁ : Sort ub1}{β₂ : Sort ub2}{γ₁ : Sort ug1}{γ₂ : Sort ug2}
+variable {α₁ : Sort ua1} {α₂ : Sort ua2} {β₁ : Sort ub1} {β₂ : Sort ub2} {γ₁ : Sort ug1} {γ₂ : Sort ug2}
 
 protected theorem forall₂_congr {p : α₁ → β₁ → Prop} {q : α₂ → β₂ → Prop} (eα : α₁ ≃ α₂) (eβ : β₁ ≃ β₂)
   (h : ∀ {x y}, p x y ↔ q (eα x) (eβ y)) : (∀ x y, p x y) ↔ ∀ x y, q x y :=
@@ -2338,7 +2338,7 @@ protected theorem exists_congr_left {α β} (f : α ≃ β) {p : α → Prop} : 
 
 section 
 
-variable(P : α → Sort w)(e : α ≃ β)
+variable (P : α → Sort w) (e : α ≃ β)
 
 /--
 Transport dependent functions through an equivalence of the base space.
@@ -2373,7 +2373,7 @@ end
 
 section 
 
-variable(P : β → Sort w)(e : α ≃ β)
+variable (P : β → Sort w) (e : α ≃ β)
 
 /--
 Transporting dependent functions through an equivalence of the base,
@@ -2386,7 +2386,7 @@ end
 
 section 
 
-variable{W : α → Sort w}{Z : β → Sort z}(h₁ : α ≃ β)(h₂ : ∀ a : α, W a ≃ Z (h₁ a))
+variable {W : α → Sort w} {Z : β → Sort z} (h₁ : α ≃ β) (h₂ : ∀ a : α, W a ≃ Z (h₁ a))
 
 /--
 Transport dependent functions through
@@ -2396,11 +2396,27 @@ of equivalences of the matching fibers.
 def Pi_congr : (∀ a, W a) ≃ ∀ b, Z b :=
   (Equiv.piCongrRight h₂).trans (Equiv.piCongrLeft _ h₁)
 
+@[simp]
+theorem coe_Pi_congr_symm : ((h₁.Pi_congr h₂).symm : (∀ b, Z b) → ∀ a, W a) = fun f a => (h₂ a).symm (f (h₁ a)) :=
+  rfl
+
+theorem Pi_congr_symm_apply (f : ∀ b, Z b) : (h₁.Pi_congr h₂).symm f = fun a => (h₂ a).symm (f (h₁ a)) :=
+  rfl
+
+@[simp]
+theorem Pi_congr_apply_apply (f : ∀ a, W a) (a : α) : h₁.Pi_congr h₂ f (h₁ a) = h₂ a (f a) :=
+  by 
+    change cast _ ((h₂ (h₁.symm (h₁ a))) (f (h₁.symm (h₁ a)))) = (h₂ a) (f a)
+    generalizeProofs hZa 
+    revert hZa 
+    rw [h₁.symm_apply_apply a]
+    simp 
+
 end 
 
 section 
 
-variable{W : α → Sort w}{Z : β → Sort z}(h₁ : α ≃ β)(h₂ : ∀ b : β, W (h₁.symm b) ≃ Z b)
+variable {W : α → Sort w} {Z : β → Sort z} (h₁ : α ≃ β) (h₂ : ∀ b : β, W (h₁.symm b) ≃ Z b)
 
 /--
 Transport dependent functions through
@@ -2409,6 +2425,25 @@ of equivalences of the matching fibres.
 -/
 def Pi_congr' : (∀ a, W a) ≃ ∀ b, Z b :=
   (Pi_congr h₁.symm fun b => (h₂ b).symm).symm
+
+@[simp]
+theorem coe_Pi_congr' : (h₁.Pi_congr' h₂ : (∀ a, W a) → ∀ b, Z b) = fun f b => h₂ b$ f$ h₁.symm b :=
+  rfl
+
+theorem Pi_congr'_apply (f : ∀ a, W a) : h₁.Pi_congr' h₂ f = fun b => h₂ b$ f$ h₁.symm b :=
+  rfl
+
+@[simp]
+theorem Pi_congr'_symm_apply_symm_apply (f : ∀ b, Z b) (b : β) :
+  (h₁.Pi_congr' h₂).symm f (h₁.symm b) = (h₂ b).symm (f b) :=
+  by 
+    change cast _ ((h₂ (h₁ (h₁.symm b))).symm (f (h₁ (h₁.symm b)))) = (h₂ b).symm (f b)
+    generalizeProofs hWb 
+    revert hWb 
+    generalize hb : h₁ (h₁.symm b) = b' 
+    rw [h₁.apply_symm_apply b] at hb 
+    subst hb 
+    simp 
 
 end 
 

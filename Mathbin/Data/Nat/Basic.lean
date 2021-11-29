@@ -21,10 +21,10 @@ universe u v
 /-! ### instances -/
 
 
-instance  : Nontrivial ℕ :=
+instance : Nontrivial ℕ :=
   ⟨⟨0, 1, Nat.zero_ne_one⟩⟩
 
-instance  : CommSemiringₓ Nat :=
+instance : CommSemiringₓ Nat :=
   { add := Nat.add, add_assoc := Nat.add_assoc, zero := Nat.zero, zero_add := Nat.zero_add, add_zero := Nat.add_zero,
     add_comm := Nat.add_comm, mul := Nat.mul, mul_assoc := Nat.mul_assoc, one := Nat.succ Nat.zero,
     one_mul := Nat.one_mul, mul_one := Nat.mul_one, left_distrib := Nat.left_distrib,
@@ -35,72 +35,75 @@ instance  : CommSemiringₓ Nat :=
         by 
           rw [Nat.succ_eq_add_one, Nat.add_comm, Nat.right_distrib, Nat.one_mul] }
 
-instance  : LinearOrderedSemiring Nat :=
+instance : LinearOrderedSemiring Nat :=
   { Nat.commSemiring, Nat.linearOrder with add_left_cancel := @Nat.add_left_cancel, lt := Nat.Lt,
     add_le_add_left := @Nat.add_le_add_leftₓ, le_of_add_le_add_left := @Nat.le_of_add_le_add_leftₓ,
     zero_le_one := Nat.le_of_ltₓ (Nat.zero_lt_succₓ 0), mul_lt_mul_of_pos_left := @Nat.mul_lt_mul_of_pos_leftₓ,
     mul_lt_mul_of_pos_right := @Nat.mul_lt_mul_of_pos_rightₓ, DecidableEq := Nat.decidableEq,
     exists_pair_ne := ⟨0, 1, ne_of_ltₓ Nat.zero_lt_oneₓ⟩ }
 
-instance  : LinearOrderedCancelAddCommMonoid ℕ :=
+instance : LinearOrderedCancelAddCommMonoid ℕ :=
   { Nat.linearOrderedSemiring with add_left_cancel := @Nat.add_left_cancel }
 
-instance  : LinearOrderedCommMonoidWithZero ℕ :=
+instance : LinearOrderedCommMonoidWithZero ℕ :=
   { Nat.linearOrderedSemiring, (inferInstance : CommMonoidWithZero ℕ) with
     mul_le_mul_left := fun a b h c => Nat.mul_le_mul_leftₓ c h }
 
-instance  : OrderedCommSemiring ℕ :=
+instance : OrderedCommSemiring ℕ :=
   { Nat.commSemiring, Nat.linearOrderedSemiring with  }
 
 /-! Extra instances to short-circuit type class resolution -/
 
 
-instance  : AddCommMonoidₓ Nat :=
+instance : AddCommMonoidₓ Nat :=
   by 
     infer_instance
 
-instance  : AddMonoidₓ Nat :=
+instance : AddMonoidₓ Nat :=
   by 
     infer_instance
 
-instance  : Monoidₓ Nat :=
+instance : Monoidₓ Nat :=
   by 
     infer_instance
 
-instance  : CommMonoidₓ Nat :=
+instance : CommMonoidₓ Nat :=
   by 
     infer_instance
 
-instance  : CommSemigroupₓ Nat :=
+instance : CommSemigroupₓ Nat :=
   by 
     infer_instance
 
-instance  : Semigroupₓ Nat :=
+instance : Semigroupₓ Nat :=
   by 
     infer_instance
 
-instance  : AddCommSemigroupₓ Nat :=
+instance : AddCommSemigroupₓ Nat :=
   by 
     infer_instance
 
-instance  : AddSemigroupₓ Nat :=
+instance : AddSemigroupₓ Nat :=
   by 
     infer_instance
 
-instance  : Distrib Nat :=
+instance : Distrib Nat :=
   by 
     infer_instance
 
-instance  : Semiringₓ Nat :=
+instance : Semiringₓ Nat :=
   by 
     infer_instance
 
-instance  : OrderedSemiring Nat :=
+instance : OrderedSemiring Nat :=
   by 
     infer_instance
 
-instance  : CanonicallyOrderedCommSemiring ℕ :=
-  { Nat.nontrivial, (inferInstance : OrderedAddCommMonoid ℕ), (inferInstance : LinearOrderedSemiring ℕ),
+instance Nat.orderBot : OrderBot ℕ :=
+  { bot := 0, bot_le := Nat.zero_leₓ }
+
+instance : CanonicallyOrderedCommSemiring ℕ :=
+  { Nat.nontrivial, Nat.orderBot, (inferInstance : OrderedAddCommMonoid ℕ), (inferInstance : LinearOrderedSemiring ℕ),
     (inferInstance : CommSemiringₓ ℕ) with
     le_iff_exists_add :=
       fun a b =>
@@ -108,15 +111,17 @@ instance  : CanonicallyOrderedCommSemiring ℕ :=
             let ⟨c, hc⟩ := Nat.Le.dest h
             ⟨c, hc.symm⟩,
           fun ⟨c, hc⟩ => hc.symm ▸ Nat.le_add_rightₓ _ _⟩,
-    eq_zero_or_eq_zero_of_mul_eq_zero := fun a b => Nat.eq_zero_of_mul_eq_zero, bot := 0, bot_le := Nat.zero_leₓ }
+    eq_zero_or_eq_zero_of_mul_eq_zero := fun a b => Nat.eq_zero_of_mul_eq_zero }
 
-instance  : CanonicallyLinearOrderedAddMonoid ℕ :=
+instance : CanonicallyLinearOrderedAddMonoid ℕ :=
   { (inferInstance : CanonicallyOrderedAddMonoid ℕ), Nat.linearOrder with  }
 
-instance Nat.Subtype.semilatticeSupBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] : SemilatticeSupBot s :=
-  { Subtype.linearOrder s, latticeOfLinearOrder with
-    bot := ⟨Nat.findₓ (nonempty_subtype.1 h), Nat.find_specₓ (nonempty_subtype.1 h)⟩,
+instance Nat.Subtype.orderBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] : OrderBot s :=
+  { bot := ⟨Nat.findₓ (nonempty_subtype.1 h), Nat.find_specₓ (nonempty_subtype.1 h)⟩,
     bot_le := fun x => Nat.find_min'ₓ _ x.2 }
+
+instance Nat.Subtype.semilatticeSup (s : Set ℕ) : SemilatticeSup s :=
+  { Subtype.linearOrder s, latticeOfLinearOrder with  }
 
 theorem Nat.Subtype.coe_bot {s : Set ℕ} [DecidablePred (· ∈ s)] [h : Nonempty s] :
   ((⊥ : s) : ℕ) = Nat.findₓ (nonempty_subtype.1 h) :=
@@ -153,7 +158,7 @@ instance pos_of_one_lt (n : ℕ) [h : Fact (1 < n)] : Fact (0 < n) :=
 
 end Facts
 
-variable{m n k : ℕ}
+variable {m n k : ℕ}
 
 namespace Nat
 
@@ -171,7 +176,7 @@ theorem zero_union_range_succ : {0} ∪ range succ = univ :=
     ext n 
     cases n <;> simp 
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem range_of_succ (f : ℕ → α) : {f 0} ∪ range (f ∘ succ) = range f :=
   by 
@@ -586,7 +591,7 @@ theorem pred_le_iff {n m : ℕ} : pred n ≤ m ↔ n ≤ succ m :=
 Most lemmas come from the `has_ordered_sub` instance on `ℕ`. -/
 
 
-instance  : HasOrderedSub ℕ :=
+instance : HasOrderedSub ℕ :=
   by 
     constructor 
     intro m n k 
@@ -1468,7 +1473,7 @@ theorem dvd_left_injective : Function.Injective (· ∣ · : ℕ → ℕ → Pro
 
 section Find
 
-variable{p q : ℕ → Prop}[DecidablePred p][DecidablePred q]
+variable {p q : ℕ → Prop} [DecidablePred p] [DecidablePred q]
 
 theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.findₓ h = m ↔ p m ∧ ∀ n _ : n < m, ¬p n :=
   by 
@@ -1550,7 +1555,7 @@ protected def find_greatest (P : ℕ → Prop) [DecidablePred P] : ℕ → ℕ
 | 0 => 0
 | n+1 => if P (n+1) then n+1 else find_greatest n
 
-variable{P : ℕ → Prop}[DecidablePred P]
+variable {P : ℕ → Prop} [DecidablePred P]
 
 @[simp]
 theorem find_greatest_zero : Nat.findGreatest P 0 = 0 :=

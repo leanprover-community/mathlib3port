@@ -27,13 +27,13 @@ universe u v w
 
 namespace Polynomial
 
-instance  {R : Type u} [Semiringₓ R] (p : ℕ) [h : CharP R p] : CharP (Polynomial R) p :=
+instance {R : Type u} [Semiringₓ R] (p : ℕ) [h : CharP R p] : CharP (Polynomial R) p :=
   let ⟨h⟩ := h
   ⟨fun n =>
       by 
         rw [←C.map_nat_cast, ←C_0, C_inj, h]⟩
 
-variable(R : Type u)[CommRingₓ R]
+variable (R : Type u) [CommRingₓ R]
 
 /-- The `R`-submodule of `R[X]` consisting of polynomials of degree ≤ `n`. -/
 def degree_le (n : WithBot ℕ) : Submodule R (Polynomial R) :=
@@ -43,7 +43,7 @@ def degree_le (n : WithBot ℕ) : Submodule R (Polynomial R) :=
 def degree_lt (n : ℕ) : Submodule R (Polynomial R) :=
   ⨅k : ℕ, ⨅h : k ≥ n, (lcoeff R k).ker
 
-variable{R}
+variable {R}
 
 theorem mem_degree_le {n : WithBot ℕ} {f : Polynomial R} : f ∈ degree_le R n ↔ degree f ≤ n :=
   by 
@@ -253,7 +253,7 @@ theorem restriction_one : restriction (1 : Polynomial R) = 1 :=
         by 
           rw [coeff_restriction', coeff_one, coeff_one] <;> splitIfs <;> rfl
 
-variable{S : Type v}[Ringₓ S]{f : R →+* S}{x : S}
+variable {S : Type v} [Ringₓ S] {f : R →+* S} {x : S}
 
 theorem eval₂_restriction {p : Polynomial R} : eval₂ f x p = eval₂ (f.comp (Subring.subtype _)) x p.restriction :=
   by 
@@ -262,7 +262,7 @@ theorem eval₂_restriction {p : Polynomial R} : eval₂ f x p = eval₂ (f.comp
 
 section ToSubring
 
-variable(p : Polynomial R)(T : Subring R)
+variable (p : Polynomial R) (T : Subring R)
 
 /-- Given a polynomial `p` and a subring `T` that contains the coefficients of `p`,
 return the corresponding polynomial whose coefficients are in `T. -/
@@ -270,7 +270,7 @@ def to_subring (hp : («expr↑ » p.frange : Set R) ⊆ T) : Polynomial T :=
   ∑i in p.support,
     monomial i (⟨p.coeff i, if H : p.coeff i = 0 then H.symm ▸ T.zero_mem else hp (p.coeff_mem_frange _ H)⟩ : T)
 
-variable(hp : («expr↑ » p.frange : Set R) ⊆ T)
+variable (hp : («expr↑ » p.frange : Set R) ⊆ T)
 
 include hp
 
@@ -352,7 +352,7 @@ theorem map_to_subring : (p.to_subring T hp).map (Subring.subtype T) = p :=
 
 end ToSubring
 
-variable(T : Subring R)
+variable (T : Subring R)
 
 /-- Given a polynomial whose coefficients are in some subring, return
 the corresponding polynomial whose coefficients are in the ambient ring. -/
@@ -378,7 +378,7 @@ theorem frange_of_subring {p : Polynomial T} : («expr↑ » (p.of_subring T).fr
 
 section ModByMonic
 
-variable{q : Polynomial R}
+variable {q : Polynomial R}
 
 theorem mem_ker_mod_by_monic [Nontrivial R] (hq : q.monic) {p : Polynomial R} : p ∈ (mod_by_monic_hom hq).ker ↔ q ∣ p :=
   LinearMap.mem_ker.trans (dvd_iff_mod_by_monic_eq_zero hq)
@@ -392,9 +392,9 @@ end ModByMonic
 
 end Polynomial
 
-variable{R : Type u}{S : Type _}{σ : Type v}{M : Type w}
+variable {R : Type u} {S : Type _} {σ : Type v} {M : Type w}
 
-variable[CommRingₓ R][CommRingₓ S][AddCommGroupₓ M][Module R M]
+variable [CommRingₓ R] [CommRingₓ S] [AddCommGroupₓ M] [Module R M]
 
 namespace Ideal
 
@@ -608,12 +608,12 @@ def of_polynomial (I : Ideal (Polynomial R)) : Submodule R (Polynomial R) :=
           rw [←C_mul']
           exact I.mul_mem_left _ H }
 
-variable{I : Ideal (Polynomial R)}
+variable {I : Ideal (Polynomial R)}
 
 theorem mem_of_polynomial x : x ∈ I.of_polynomial ↔ x ∈ I :=
   Iff.rfl
 
-variable(I)
+variable (I)
 
 /-- Given an ideal `I` of `R[X]`, make the `R`-submodule of `I`
 consisting of polynomials of degree ≤ `n`. -/
@@ -1128,7 +1128,7 @@ namespace Polynomial
 
 open UniqueFactorizationMonoid
 
-variable{D : Type u}[CommRingₓ D][IsDomain D][UniqueFactorizationMonoid D]
+variable {D : Type u} [CommRingₓ D] [IsDomain D] [UniqueFactorizationMonoid D]
 
 -- error in RingTheory.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[priority 100] instance unique_factorization_monoid : unique_factorization_monoid (polynomial D) :=

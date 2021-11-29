@@ -7,7 +7,7 @@ The function `accumulate` takes a set `s` and returns `⋃ y ≤ x, s y`.
 -/
 
 
-variable{α β γ : Type _}{s : α → Set β}{t : α → Set γ}
+variable {α β γ : Type _} {s : α → Set β} {t : α → Set γ}
 
 namespace Set
 
@@ -15,7 +15,7 @@ namespace Set
 def accumulate [LE α] (s : α → Set β) (x : α) : Set β :=
   ⋃(y : _)(_ : y ≤ x), s y
 
-variable{s}
+variable {s}
 
 theorem accumulate_def [LE α] {x : α} : accumulate s x = ⋃(y : _)(_ : y ≤ x), s y :=
   rfl

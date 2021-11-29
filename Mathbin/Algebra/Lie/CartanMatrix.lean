@@ -78,13 +78,13 @@ universe u v w
 
 noncomputable theory
 
-variable(R : Type u){B : Type v}[CommRingₓ R][DecidableEq B][Fintype B]
+variable (R : Type u) {B : Type v} [CommRingₓ R] [DecidableEq B] [Fintype B]
 
-variable(A : Matrix B B ℤ)
+variable (A : Matrix B B ℤ)
 
 namespace CartanMatrix
 
-variable(B)
+variable (B)
 
 /-- The generators of the free Lie algebra from which we construct the Lie algebra of a Cartan
 matrix as a quotient. -/
@@ -93,10 +93,10 @@ inductive generators
   | E : B → generators
   | F : B → generators
 
-instance  [Inhabited B] : Inhabited (generators B) :=
+instance [Inhabited B] : Inhabited (generators B) :=
   ⟨generators.H$ default B⟩
 
-variable{B}
+variable {B}
 
 namespace Relations
 

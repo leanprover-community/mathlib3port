@@ -35,7 +35,7 @@ For graphs with no repeated edges, one can use `quiver.{0} V`, which ensures
 Because `category` will later extend this class, we call the field `hom`.
 Except when constructing instances, you should rarely see this, and use the `⟶` notation instead.
 -/
-class Quiver(V : Type u) where 
+class Quiver (V : Type u) where 
   Hom : V → V → Sort v
 
 infixr:10 " ⟶ " => Quiver.Hom
@@ -44,7 +44,7 @@ infixr:10 " ⟶ " => Quiver.Hom
 A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.
 -/
-structure Prefunctor(V : Type u₁)[Quiver.{v₁} V](W : Type u₂)[Quiver.{v₂} W] where 
+structure Prefunctor (V : Type u₁) [Quiver.{v₁} V] (W : Type u₂) [Quiver.{v₂} W] where 
   obj{} : V → W 
   map : ∀ {X Y : V}, (X ⟶ Y) → (obj X ⟶ obj Y)
 
@@ -57,7 +57,7 @@ The identity morphism between quivers.
 def id (V : Type _) [Quiver V] : Prefunctor V V :=
   { obj := id, map := fun X Y f => f }
 
-instance  (V : Type _) [Quiver V] : Inhabited (Prefunctor V V) :=
+instance (V : Type _) [Quiver V] : Inhabited (Prefunctor V V) :=
   ⟨id V⟩
 
 /--
@@ -104,13 +104,13 @@ instance empty_quiver (V : Type u) : Quiver.{u} (Empty V) :=
 theorem empty_arrow {V : Type u} (a b : Empty V) : (a ⟶ b) = Pempty :=
   rfl
 
-instance  {V} [Quiver V] : HasBot (WideSubquiver V) :=
+instance {V} [Quiver V] : HasBot (WideSubquiver V) :=
   ⟨fun a b => ∅⟩
 
-instance  {V} [Quiver V] : HasTop (WideSubquiver V) :=
+instance {V} [Quiver V] : HasTop (WideSubquiver V) :=
   ⟨fun a b => Set.Univ⟩
 
-instance  {V} [Quiver V] : Inhabited (WideSubquiver V) :=
+instance {V} [Quiver V] : Inhabited (WideSubquiver V) :=
   ⟨⊤⟩
 
 /-- `Vᵒᵖ` reverses the direction of all arrows of `V`. -/
@@ -142,7 +142,7 @@ instance symmetrify_quiver (V : Type u) [Quiver V] : Quiver (symmetrify V) :=
 
 /-- `total V` is the type of _all_ arrows of `V`. -/
 @[ext, nolint has_inhabited_instance]
-structure Total(V : Type u)[Quiver.{v} V] : Sort max (u + 1) v where 
+structure Total (V : Type u) [Quiver.{v} V] : Sort max (u + 1) v where 
   left : V 
   right : V 
   Hom : left ⟶ right
@@ -174,7 +174,7 @@ def hom.to_path {V} [Quiver V] {a b : V} (e : a ⟶ b) : path a b :=
 
 namespace Path
 
-variable{V : Type u}[Quiver V]
+variable {V : Type u} [Quiver V]
 
 /-- The length of a path is the number of arrows it uses. -/
 def length {a : V} : ∀ {b : V}, path a b → ℕ
@@ -224,7 +224,7 @@ namespace Prefunctor
 
 open Quiver
 
-variable{V : Type u₁}[Quiver.{v₁} V]{W : Type u₂}[Quiver.{v₂} W](F : Prefunctor V W)
+variable {V : Type u₁} [Quiver.{v₁} V] {W : Type u₂} [Quiver.{v₂} W] (F : Prefunctor V W)
 
 /-- The image of a path under a prefunctor. -/
 def map_path {a : V} : ∀ {b : V}, path a b → path (F.obj a) (F.obj b)
@@ -255,7 +255,7 @@ namespace Quiver
 
 /-- A quiver is an arborescence when there is a unique path from the default vertex
     to every other vertex. -/
-class arborescence(V : Type u)[Quiver.{v} V] : Type max u v where 
+class arborescence (V : Type u) [Quiver.{v} V] : Type max u v where 
   root : V 
   uniquePath : ∀ b : V, Unique (path root b)
 
@@ -263,14 +263,14 @@ class arborescence(V : Type u)[Quiver.{v} V] : Type max u v where
 def root (V : Type u) [Quiver V] [arborescence V] : V :=
   arborescence.root
 
-instance  {V : Type u} [Quiver V] [arborescence V] (b : V) : Unique (path (root V) b) :=
+instance {V : Type u} [Quiver V] [arborescence V] (b : V) : Unique (path (root V) b) :=
   arborescence.unique_path b
 
 /-- An `L`-labelling of a quiver assigns to every arrow an element of `L`. -/
 def labelling (V : Type u) [Quiver V] (L : Sort _) :=
   ∀ ⦃a b : V⦄, (a ⟶ b) → L
 
-instance  {V : Type u} [Quiver V] L [Inhabited L] : Inhabited (labelling V L) :=
+instance {V : Type u} [Quiver V] L [Inhabited L] : Inhabited (labelling V L) :=
   ⟨fun a b e => default L⟩
 
 -- error in Combinatorics.Quiver: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -320,14 +320,14 @@ def arborescence_mk
    end⟩ }
 
 /-- `rooted_connected r` means that there is a path from `r` to any other vertex. -/
-class rooted_connected{V : Type u}[Quiver V](r : V) : Prop where 
+class rooted_connected {V : Type u} [Quiver V] (r : V) : Prop where 
   nonempty_path : ∀ b : V, Nonempty (path r b)
 
 attribute [instance] rooted_connected.nonempty_path
 
 section GeodesicSubtree
 
-variable{V : Type u}[Quiver.{v + 1} V](r : V)[rooted_connected r]
+variable {V : Type u} [Quiver.{v + 1} V] (r : V) [rooted_connected r]
 
 /-- A path from `r` of minimal length. -/
 noncomputable def shortest_path (b : V) : path r b :=
@@ -357,17 +357,17 @@ arborescence_mk r (λ
 
 end GeodesicSubtree
 
-variable(V : Type u)[Quiver.{v + 1} V]
+variable (V : Type u) [Quiver.{v + 1} V]
 
 /-- A quiver `has_reverse` if we can reverse an arrow `p` from `a` to `b` to get an arrow
     `p.reverse` from `b` to `a`.-/
 class has_reverse where 
   reverse' : ∀ {a b : V}, (a ⟶ b) → (b ⟶ a)
 
-instance  : has_reverse (symmetrify V) :=
+instance : has_reverse (symmetrify V) :=
   ⟨fun a b e => e.swap⟩
 
-variable{V}[has_reverse V]
+variable {V} [has_reverse V]
 
 /-- Reverse the direction of an arrow. -/
 def reverse {a b : V} : (a ⟶ b) → (b ⟶ a) :=
@@ -378,7 +378,7 @@ def path.reverse {a : V} : ∀ {b}, path a b → path b a
 | a, path.nil => path.nil
 | b, path.cons p e => (reverse e).toPath.comp p.reverse
 
-variable(V)
+variable (V)
 
 /-- Two vertices are related in the zigzag setoid if there is a
     zigzag of arrows from one to the other. -/
@@ -394,16 +394,16 @@ def weakly_connected_component : Type _ :=
 
 namespace WeaklyConnectedComponent
 
-variable{V}
+variable {V}
 
 /-- The weakly connected component corresponding to a vertex. -/
 protected def mk : V → weakly_connected_component V :=
   Quotientₓ.mk'
 
-instance  : CoeTₓ V (weakly_connected_component V) :=
+instance : CoeTₓ V (weakly_connected_component V) :=
   ⟨weakly_connected_component.mk⟩
 
-instance  [Inhabited V] : Inhabited (weakly_connected_component V) :=
+instance [Inhabited V] : Inhabited (weakly_connected_component V) :=
   ⟨«expr↑ » (default V)⟩
 
 protected theorem Eq (a b : V) :

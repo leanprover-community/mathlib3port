@@ -18,7 +18,7 @@ groups, which can be found in `algebra/category/Group/adjunctions`.
 
 universe u v
 
-variable(G : Type u)[Groupₓ G]
+variable (G : Type u) [Groupₓ G]
 
 -- error in GroupTheory.Abelianization: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler subgroup.normal
 /-- The commutator subgroup of a group G is the normal subgroup
@@ -34,7 +34,7 @@ namespace Abelianization
 
 attribute [local instance] QuotientGroup.leftRel
 
-instance  : CommGroupₓ (Abelianization G) :=
+instance : CommGroupₓ (Abelianization G) :=
   { QuotientGroup.Quotient.group _ with
     mul_comm :=
       fun x y =>
@@ -47,10 +47,10 @@ instance  : CommGroupₓ (Abelianization G) :=
               use a⁻¹
               group }
 
-instance  : Inhabited (Abelianization G) :=
+instance : Inhabited (Abelianization G) :=
   ⟨1⟩
 
-variable{G}
+variable {G}
 
 /-- `of` is the canonical projection from G to its abelianization. -/
 def of : G →* Abelianization G :=
@@ -58,7 +58,7 @@ def of : G →* Abelianization G :=
 
 section lift
 
-variable{A : Type v}[CommGroupₓ A](f : G →* A)
+variable {A : Type v} [CommGroupₓ A] (f : G →* A)
 
 theorem commutator_subset_ker : commutator G ≤ f.ker :=
   by 
@@ -83,7 +83,7 @@ theorem lift.unique (φ : Abelianization G →* A) (hφ : ∀ x : G, φ (of x) =
 
 end lift
 
-variable{A : Type v}[Monoidₓ A]
+variable {A : Type v} [Monoidₓ A]
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]

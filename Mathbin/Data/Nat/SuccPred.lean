@@ -10,11 +10,11 @@ In this file, we show that `ℕ` is both an archimedean `succ_order` and an arch
 open Function Nat
 
 @[reducible]
-instance  : SuccOrder ℕ :=
+instance : SuccOrder ℕ :=
   { SuccOrder.ofSuccLeIff succ fun a b => Iff.rfl with succ := succ }
 
 @[reducible]
-instance  : PredOrder ℕ :=
+instance : PredOrder ℕ :=
   { pred := pred, pred_le := pred_le,
     minimal_of_le_pred :=
       fun a ha b h =>
@@ -55,13 +55,13 @@ theorem Nat.pred_iterate (a : ℕ) : ∀ n, (pred^[n]) a = a - n
     rw [Function.iterate_succ', sub_succ]
     exact congr_argₓ _ n.pred_iterate
 
-instance  : IsSuccArchimedean ℕ :=
+instance : IsSuccArchimedean ℕ :=
   ⟨fun a b h =>
       ⟨b - a,
         by 
           rw [Nat.succ_iterate, add_tsub_cancel_of_le h]⟩⟩
 
-instance  : IsPredArchimedean ℕ :=
+instance : IsPredArchimedean ℕ :=
   ⟨fun a b h =>
       ⟨b - a,
         by 

@@ -46,9 +46,9 @@ open MvPolynomial Function
 
 open_locale BigOperators
 
-variable{p : ℕ}{R S T : Type _}[hp : Fact p.prime][CommRingₓ R][CommRingₓ S][CommRingₓ T]
+variable {p : ℕ} {R S T : Type _} [hp : Fact p.prime] [CommRingₓ R] [CommRingₓ S] [CommRingₓ T]
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
 local notation "𝕎" => WittVector p
 
@@ -74,7 +74,7 @@ theorem surjective (f : α → β) (hf : surjective f) : surjective (map_fun f :
         dsimp [map_fun]
         rw [Classical.some_spec (hf (x.coeff n))]⟩
 
-variable(f : R →+* S)(x y : 𝕎 R)
+variable (f : R →+* S) (x y : 𝕎 R)
 
 /-- Auxiliary tactic for showing that `map_fun` respects the ring operations. -/
 unsafe def map_fun_tac : tactic Unit :=
@@ -149,7 +149,7 @@ section GhostFun
 
 include hp
 
-variable(x y : 𝕎 R)
+variable (x y : 𝕎 R)
 
 omit hp
 
@@ -186,7 +186,7 @@ by ghost_fun_tac [expr «expr- »(X 0)] [expr «expr![ , ]»([x.coeff])]
 
 end GhostFun
 
-variable(p)(R)
+variable (p) (R)
 
 -- error in RingTheory.WittVector.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The bijection between `𝕎 R` and `ℕ → R`, under the assumption that `p` is invertible in `R`.
@@ -223,11 +223,11 @@ private def comm_ring_aux₂ : CommRingₓ (𝕎 (MvPolynomial R ℤ)) :=
     (map_fun.one _) (map_fun.add _) (map_fun.mul _) (map_fun.neg _) (map_fun.sub _)
 
 /-- The commutative ring structure on `𝕎 R`. -/
-instance  : CommRingₓ (𝕎 R) :=
+instance : CommRingₓ (𝕎 R) :=
   (map_fun.surjective _$ counit_surjective _).CommRing (map_fun$ MvPolynomial.counit _) (map_fun.zero _) (map_fun.one _)
     (map_fun.add _) (map_fun.mul _) (map_fun.neg _) (map_fun.sub _)
 
-variable{p R}
+variable {p R}
 
 /-- `witt_vector.map f` is the ring homomorphism `𝕎 R →+* 𝕎 S` naturally induced
 by a ring homomorphism `f : R →+* S`. It acts coefficientwise. -/
@@ -263,7 +263,7 @@ theorem ghost_component_apply (n : ℕ) (x : 𝕎 R) : ghost_component n x = aev
 theorem ghost_map_apply (x : 𝕎 R) (n : ℕ) : ghost_map x n = ghost_component n x :=
   rfl
 
-variable(p R)[Invertible (p : R)]
+variable (p R) [Invertible (p : R)]
 
 /-- `witt_vector.ghost_map` is a ring isomorphism when `p` is invertible in `R`. -/
 def ghost_equiv : 𝕎 R ≃+* (ℕ → R) :=

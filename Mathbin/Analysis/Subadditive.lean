@@ -24,7 +24,7 @@ def Subadditive (u : ℕ → ℝ) : Prop :=
 
 namespace Subadditive
 
-variable{u : ℕ → ℝ}(h : Subadditive u)
+variable {u : ℕ → ℝ} (h : Subadditive u)
 
 include h
 

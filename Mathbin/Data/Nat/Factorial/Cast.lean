@@ -15,13 +15,13 @@ to `↑a - 1`, the other factor is `0` anyway.
 
 open_locale Nat
 
-variable(S : Type _)
+variable (S : Type _)
 
 namespace Nat
 
 section Semiringₓ
 
-variable[Semiringₓ S](a b : ℕ)
+variable [Semiringₓ S] (a b : ℕ)
 
 theorem cast_asc_factorial : (a.asc_factorial b : S) = (pochhammer S b).eval (a+1) :=
   by 
@@ -49,7 +49,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[Ringₓ S](a b : ℕ)
+variable [Ringₓ S] (a b : ℕ)
 
 /-- Convenience lemma. The `a - 1` is not using truncated substraction, as opposed to the definition
 of `nat.desc_factorial` as a natural. -/

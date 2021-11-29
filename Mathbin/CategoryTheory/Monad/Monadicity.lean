@@ -207,11 +207,11 @@ open CategoryTheory.Adjunction
 
 open MonadicityInternal
 
-variable{C : Type u₁}{D : Type u₂}
+variable {C : Type u₁} {D : Type u₂}
 
-variable[category.{v₁} C][category.{v₁} D]
+variable [category.{v₁} C] [category.{v₁} D]
 
-variable(G : D ⥤ C)
+variable (G : D ⥤ C)
 
 /--
 If `G` is monadic, it creates colimits of `G`-split pairs. This is the "boring" direction of Beck's
@@ -231,7 +231,7 @@ def creates_G_split_coequalizers_of_monadic [monadic_right_adjoint G] ⦃A B⦄ 
       dsimp 
       infer_instance
 
-variable[is_right_adjoint G]
+variable [is_right_adjoint G]
 
 section BeckMonadicity
 
@@ -288,7 +288,7 @@ begin
    (f g : «expr ⟶ »(A, B))
    [G.is_split_pair f g], has_colimit «expr ⋙ »(parallel_pair f g, G)] [],
   { introsI [ident A, ident B, ident f, ident g, ident i],
-    apply [expr has_colimit_of_iso (diagram_iso_parallel_pair _)],
+    apply [expr has_colimit_of_iso (diagram_iso_parallel_pair.{v₁} _)],
     change [expr has_coequalizer (G.map f) (G.map g)] [] [],
     apply_instance },
   apply [expr monadic_of_has_preserves_reflects_G_split_coequalizers _],
@@ -324,9 +324,9 @@ end BeckMonadicity
 
 section ReflexiveMonadicity
 
-variable[has_reflexive_coequalizers D][reflects_isomorphisms G]
+variable [has_reflexive_coequalizers D] [reflects_isomorphisms G]
 
-variable[∀ ⦃A B⦄ f g : A ⟶ B [is_reflexive_pair f g], preserves_colimit (parallel_pair f g) G]
+variable [∀ ⦃A B⦄ f g : A ⟶ B [is_reflexive_pair f g], preserves_colimit (parallel_pair f g) G]
 
 -- error in CategoryTheory.Monad.Monadicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

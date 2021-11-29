@@ -18,13 +18,13 @@ import Mathbin.Topology.UnitInterval
 -/
 
 
-variable{R : Type _}
+variable {R : Type _}
 
 namespace Polynomial
 
 section 
 
-variable[Semiringₓ R][TopologicalSpace R][TopologicalRing R]
+variable [Semiringₓ R] [TopologicalSpace R] [TopologicalRing R]
 
 /--
 Every polynomial with coefficients in a topological semiring gives a (bundled) continuous function.
@@ -51,7 +51,7 @@ end
 
 section 
 
-variable{α : Type _}[TopologicalSpace α][CommSemiringₓ R][TopologicalSpace R][TopologicalRing R]
+variable {α : Type _} [TopologicalSpace α] [CommSemiringₓ R] [TopologicalSpace R] [TopologicalRing R]
 
 @[simp]
 theorem aeval_continuous_map_apply (g : Polynomial R) (f : C(α, R)) (x : α) :
@@ -71,7 +71,7 @@ section
 
 noncomputable theory
 
-variable[CommSemiringₓ R][TopologicalSpace R][TopologicalRing R]
+variable [CommSemiringₓ R] [TopologicalSpace R] [TopologicalRing R]
 
 /--
 The algebra map from `polynomial R` to continuous functions `C(R, R)`.
@@ -139,7 +139,7 @@ end Polynomial
 
 section 
 
-variable[CommSemiringₓ R][TopologicalSpace R][TopologicalRing R]
+variable [CommSemiringₓ R] [TopologicalSpace R] [TopologicalRing R]
 
 /--
 The subalgebra of polynomial functions in `C(X, R)`, for `X` a subset of some topological ring `R`.

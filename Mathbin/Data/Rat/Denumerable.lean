@@ -11,7 +11,7 @@ namespace Rat
 
 open Denumerable
 
-instance  : Infinite ℚ :=
+instance : Infinite ℚ :=
   Infinite.of_injective (coeₓ : ℕ → ℚ) Nat.cast_injective
 
 private def denumerable_aux : ℚ ≃ { x : ℤ × ℕ // 0 < x.2 ∧ x.1.natAbs.Coprime x.2 } :=

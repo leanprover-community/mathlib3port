@@ -21,7 +21,7 @@ To construct an `equiv_functor`, it suffices to supply just the function `f α �
 an equivalence `α ≃ β`, and then prove the functor laws. It's then a consequence that
 this function is part of an equivalence, provided by `equiv_functor.map_equiv`.
 -/
-class EquivFunctor(f : Type u₀ → Type u₁) where 
+class EquivFunctor (f : Type u₀ → Type u₁) where 
   map : ∀ {α β}, α ≃ β → f α → f β 
   map_refl' : ∀ α, map (Equiv.refl α) = @id (f α) :=  by 
   runTac 
@@ -40,7 +40,7 @@ namespace EquivFunctor
 
 section 
 
-variable(f : Type u₀ → Type u₁)[EquivFunctor f]{α β : Type u₀}(e : α ≃ β)
+variable (f : Type u₀ → Type u₁) [EquivFunctor f] {α β : Type u₀} (e : α ≃ β)
 
 /-- An `equiv_functor` in fact takes every equiv to an equiv. -/
 def map_equiv : f α ≃ f β :=
@@ -87,7 +87,7 @@ theorem map_equiv_trans {γ : Type u₀} (ab : α ≃ β) (bc : β ≃ γ) :
 
 end 
 
-instance (priority := 100)of_is_lawful_functor (f : Type u₀ → Type u₁) [Functor f] [IsLawfulFunctor f] :
+instance (priority := 100) of_is_lawful_functor (f : Type u₀ → Type u₁) [Functor f] [IsLawfulFunctor f] :
   EquivFunctor f :=
   { map := fun α β e => Functor.map e,
     map_refl' :=

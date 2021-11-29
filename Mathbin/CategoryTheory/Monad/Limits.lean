@@ -27,15 +27,15 @@ universe v₁ v₂ u₁ u₂
 
 namespace Monadₓ
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable{T : Monadₓ C}
+variable {T : Monadₓ C}
 
-variable{J : Type v₁}[small_category J]
+variable {J : Type v₁} [small_category J]
 
 namespace ForgetCreatesLimits
 
-variable(D : J ⥤ algebra T)(c : cone (D ⋙ T.forget))(t : is_limit c)
+variable (D : J ⥤ algebra T) (c : cone (D ⋙ T.forget)) (t : is_limit c)
 
 /-- (Impl) The natural transformation used to define the new cone -/
 @[simps]
@@ -125,7 +125,7 @@ theorem has_limit_of_comp_forget_has_limit (D : J ⥤ algebra T) [has_limit (D �
 
 namespace ForgetCreatesColimits
 
-variable{D : J ⥤ algebra T}(c : cocone (D ⋙ forget T))(t : is_colimit c)
+variable {D : J ⥤ algebra T} (c : cocone (D ⋙ forget T)) (t : is_colimit c)
 
 /--
 (Impl)
@@ -145,7 +145,7 @@ with the colimiting cocone for `D ⋙ forget T`.
 def new_cocone : cocone ((D ⋙ forget T) ⋙ «expr↑ » T) :=
   { x := c.X, ι := γ ≫ c.ι }
 
-variable[preserves_colimit (D ⋙ forget T) (T : C ⥤ C)]
+variable [preserves_colimit (D ⋙ forget T) (T : C ⥤ C)]
 
 /--
 (Impl)
@@ -161,7 +161,7 @@ def lambda : ((T : C ⥤ C).mapCocone c).x ⟶ c.X :=
 theorem commuting (j : J) : (T : C ⥤ C).map (c.ι.app j) ≫ lambda c t = (D.obj j).a ≫ c.ι.app j :=
   (is_colimit_of_preserves _ t).fac (new_cocone c) j
 
-variable[preserves_colimit ((D ⋙ forget T) ⋙ «expr↑ » T) (T : C ⥤ C)]
+variable [preserves_colimit ((D ⋙ forget T) ⋙ «expr↑ » T) (T : C ⥤ C)]
 
 /--
 (Impl)
@@ -274,9 +274,9 @@ theorem forget_creates_colimits_of_monad_preserves [preserves_colimits_of_shape 
 
 end Monadₓ
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₁} D]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₁} D]
 
-variable{J : Type v₁}[small_category J]
+variable {J : Type v₁} [small_category J]
 
 instance comp_comparison_forget_has_limit (F : J ⥤ D) (R : D ⥤ C) [monadic_right_adjoint R] [has_limit (F ⋙ R)] :
   has_limit ((F ⋙ monad.comparison (adjunction.of_right_adjoint R)) ⋙ monad.forget _) :=

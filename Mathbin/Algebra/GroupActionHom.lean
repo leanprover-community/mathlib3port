@@ -22,37 +22,37 @@ import Mathbin.Algebra.GroupRingAction
 -/
 
 
-variable(M' : Type _)
+variable (M' : Type _)
 
-variable(X : Type _)[HasScalar M' X]
+variable (X : Type _) [HasScalar M' X]
 
-variable(Y : Type _)[HasScalar M' Y]
+variable (Y : Type _) [HasScalar M' Y]
 
-variable(Z : Type _)[HasScalar M' Z]
+variable (Z : Type _) [HasScalar M' Z]
 
-variable(M : Type _)[Monoidₓ M]
+variable (M : Type _) [Monoidₓ M]
 
-variable(A : Type _)[AddMonoidₓ A][DistribMulAction M A]
+variable (A : Type _) [AddMonoidₓ A] [DistribMulAction M A]
 
-variable(A' : Type _)[AddGroupₓ A'][DistribMulAction M A']
+variable (A' : Type _) [AddGroupₓ A'] [DistribMulAction M A']
 
-variable(B : Type _)[AddMonoidₓ B][DistribMulAction M B]
+variable (B : Type _) [AddMonoidₓ B] [DistribMulAction M B]
 
-variable(B' : Type _)[AddGroupₓ B'][DistribMulAction M B']
+variable (B' : Type _) [AddGroupₓ B'] [DistribMulAction M B']
 
-variable(C : Type _)[AddMonoidₓ C][DistribMulAction M C]
+variable (C : Type _) [AddMonoidₓ C] [DistribMulAction M C]
 
-variable(R : Type _)[Semiringₓ R][MulSemiringAction M R]
+variable (R : Type _) [Semiringₓ R] [MulSemiringAction M R]
 
-variable(R' : Type _)[Ringₓ R'][MulSemiringAction M R']
+variable (R' : Type _) [Ringₓ R'] [MulSemiringAction M R']
 
-variable(S : Type _)[Semiringₓ S][MulSemiringAction M S]
+variable (S : Type _) [Semiringₓ S] [MulSemiringAction M S]
 
-variable(S' : Type _)[Ringₓ S'][MulSemiringAction M S']
+variable (S' : Type _) [Ringₓ S'] [MulSemiringAction M S']
 
-variable(T : Type _)[Semiringₓ T][MulSemiringAction M T]
+variable (T : Type _) [Semiringₓ T] [MulSemiringAction M T]
 
-variable(G : Type _)[Groupₓ G](H : Subgroup G)
+variable (G : Type _) [Groupₓ G] (H : Subgroup G)
 
 /-- Equivariant functions. -/
 @[nolint has_inhabited_instance]
@@ -64,10 +64,10 @@ notation:25 X " →[" M:25 "] " Y:0 => MulActionHom M X Y
 
 namespace MulActionHom
 
-instance  : CoeFun (X →[M'] Y) fun _ => X → Y :=
+instance : CoeFun (X →[M'] Y) fun _ => X → Y :=
   ⟨MulActionHom.toFun⟩
 
-variable{M M' X Y}
+variable {M M' X Y}
 
 @[simp]
 theorem map_smul (f : X →[M'] Y) (m : M') (x : X) : f (m • x) = m • f x :=
@@ -89,7 +89,7 @@ theorem ext_iff {f g : X →[M'] Y} : f = g ↔ ∀ x, f x = g x :=
 protected theorem congr_funₓ {f g : X →[M'] Y} (h : f = g) (x : X) : f x = g x :=
   h ▸ rfl
 
-variable(M M'){X}
+variable (M M') {X}
 
 /-- The identity map as an equivariant map. -/
 protected def id : X →[M'] X :=
@@ -99,7 +99,7 @@ protected def id : X →[M'] X :=
 theorem id_apply (x : X) : MulActionHom.id M' x = x :=
   rfl
 
-variable{M M' X Y Z}
+variable {M M' X Y Z}
 
 /-- Composition of two equivariant maps. -/
 def comp (g : Y →[M'] Z) (f : X →[M'] Y) : X →[M'] Z :=
@@ -129,7 +129,7 @@ theorem comp_id (f : X →[M'] Y) : f.comp (MulActionHom.id M') = f :=
       by 
         rw [comp_apply, id_apply]
 
-variable{A B}
+variable {A B}
 
 /-- The inverse of a bijective equivariant map is equivariant. -/
 @[simps]
@@ -148,7 +148,7 @@ def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h�
             rw [h₁]
            }
 
-variable{G}(H)
+variable {G} (H)
 
 /-- The canonical map to the left cosets. -/
 def to_quotient : G →[G] QuotientGroup.Quotient H :=
@@ -179,10 +179,10 @@ instance Coe : Coe (A →+[M] B) (A →+ B) :=
 instance has_coe' : Coe (A →+[M] B) (A →[M] B) :=
   ⟨to_mul_action_hom⟩
 
-instance  : CoeFun (A →+[M] B) fun _ => A → B :=
+instance : CoeFun (A →+[M] B) fun _ => A → B :=
   ⟨to_fun⟩
 
-variable{M A B}
+variable {M A B}
 
 @[simp]
 theorem to_fun_eq_coe (f : A →+[M] B) : f.to_fun = «expr⇑ » f :=
@@ -242,7 +242,7 @@ theorem map_sub (f : A' →+[M] B') (x y : A') : f (x - y) = f x - f y :=
 theorem map_smul (f : A →+[M] B) (m : M) (x : A) : f (m • x) = m • f x :=
   f.map_smul' m x
 
-variable(M){A}
+variable (M) {A}
 
 /-- The identity map as an equivariant additive monoid homomorphism. -/
 protected def id : A →+[M] A :=
@@ -252,15 +252,15 @@ protected def id : A →+[M] A :=
 theorem id_apply (x : A) : DistribMulActionHom.id M x = x :=
   rfl
 
-variable{M A B C}
+variable {M A B C}
 
-instance  : HasZero (A →+[M] B) :=
+instance : HasZero (A →+[M] B) :=
   ⟨{ (0 : A →+ B) with
       map_smul' :=
         by 
           simp  }⟩
 
-instance  : HasOne (A →+[M] A) :=
+instance : HasOne (A →+[M] A) :=
   ⟨DistribMulActionHom.id M⟩
 
 @[simp]
@@ -277,7 +277,7 @@ theorem zero_apply (a : A) : (0 : A →+[M] B) a = 0 :=
 theorem one_apply (a : A) : (1 : A →+[M] A) a = a :=
   rfl
 
-instance  : Inhabited (A →+[M] B) :=
+instance : Inhabited (A →+[M] B) :=
   ⟨0⟩
 
 /-- Composition of two equivariant additive monoid homomorphisms. -/
@@ -309,7 +309,7 @@ def inverse (f : A →+[M] B) (g : B → A) (h₁ : Function.LeftInverse g f) (h
 
 section Semiringₓ
 
-variable{R M'}[AddMonoidₓ M'][DistribMulAction R M']
+variable {R M'} [AddMonoidₓ M'] [DistribMulAction R M']
 
 @[ext]
 theorem ext_ring {f g : R →+[R] M'} (h : f 1 = g 1) : f = g :=
@@ -344,10 +344,10 @@ instance Coe : Coe (R →+*[M] S) (R →+* S) :=
 instance has_coe' : Coe (R →+*[M] S) (R →+[M] S) :=
   ⟨to_distrib_mul_action_hom⟩
 
-instance  : CoeFun (R →+*[M] S) fun _ => R → S :=
+instance : CoeFun (R →+*[M] S) fun _ => R → S :=
   ⟨fun c => c.to_fun⟩
 
-variable{M R S}
+variable {M R S}
 
 @[normCast]
 theorem coe_fn_coe (f : R →+*[M] S) : ((f : R →+* S) : R → S) = f :=
@@ -398,7 +398,7 @@ theorem map_mul (f : R →+*[M] S) (x y : R) : f (x*y) = f x*f y :=
 theorem map_smul (f : R →+*[M] S) (m : M) (x : R) : f (m • x) = m • f x :=
   f.map_smul' m x
 
-variable(M){R}
+variable (M) {R}
 
 /-- The identity map as an equivariant ring homomorphism. -/
 protected def id : R →+*[M] R :=
@@ -408,7 +408,7 @@ protected def id : R →+*[M] R :=
 theorem id_apply (x : R) : MulSemiringActionHom.id M x = x :=
   rfl
 
-variable{M R S T}
+variable {M R S T}
 
 /-- Composition of two equivariant additive monoid homomorphisms. -/
 def comp (g : S →+*[M] T) (f : R →+*[M] S) : R →+*[M] T :=
@@ -436,7 +436,7 @@ end MulSemiringActionHom
 
 section 
 
-variable(M){R'}(U : Subring R')[IsInvariantSubring M U]
+variable (M) {R'} (U : Subring R') [IsInvariantSubring M U]
 
 /-- The canonical inclusion from an invariant subring. -/
 def IsInvariantSubring.subtypeHom : U →+*[M] R' :=

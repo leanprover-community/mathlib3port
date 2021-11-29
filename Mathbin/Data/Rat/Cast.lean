@@ -21,19 +21,19 @@ rat, rationals, field, ℚ, numerator, denominator, num, denom, cast, coercion, 
 
 namespace Rat
 
-variable{α : Type _}
+variable {α : Type _}
 
 open_locale Rat
 
 section WithDivRing
 
-variable[DivisionRing α]
+variable [DivisionRing α]
 
 /-- Construct the canonical injection from `ℚ` into an arbitrary
   division ring. If the field has positive characteristic `p`,
   we define `1 / p = 1 / 0 = 0` for consistency with our
   division by zero convention. -/
-instance (priority := 900)cast_coe : CoeTₓ ℚ α :=
+instance (priority := 900) cast_coe : CoeTₓ ℚ α :=
   ⟨fun r => r.1 / r.2⟩
 
 theorem cast_def (r : ℚ) : (r : α) = r.num / r.denom :=
@@ -237,13 +237,13 @@ theorem cast_bit1 [CharZero α] (n : ℚ) : ((bit1 n : ℚ) : α) = bit1 n :=
   by 
     rw [bit1, cast_add, cast_one, cast_bit0] <;> rfl
 
-variable(α)
+variable (α)
 
 /-- Coercion `ℚ → α` as a `ring_hom`. -/
 def cast_hom [CharZero α] : ℚ →+* α :=
   ⟨coeₓ, cast_one, cast_mul, cast_zero, cast_add⟩
 
-variable{α}
+variable {α}
 
 @[simp]
 theorem coe_cast_hom [CharZero α] : «expr⇑ » (cast_hom α) = coeₓ :=
@@ -361,7 +361,7 @@ instance Rat.subsingleton_ring_hom {R : Type _} [Semiringₓ R] : Subsingleton (
 
 namespace MonoidWithZeroHom
 
-variable{M : Type _}[GroupWithZeroₓ M]
+variable {M : Type _} [GroupWithZeroₓ M]
 
 -- error in Data.Rat.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` and `g` agree on the integers then they are equal `φ`.

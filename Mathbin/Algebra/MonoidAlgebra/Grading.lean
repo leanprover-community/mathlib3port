@@ -21,11 +21,11 @@ noncomputable theory
 
 namespace AddMonoidAlgebra
 
-variable{ι : Type _}{R : Type _}
+variable {ι : Type _} {R : Type _}
 
 section 
 
-variable(R)
+variable (R)
 
 /-- The submodule corresponding to each grade. -/
 abbrev grade [CommSemiringₓ R] (i : ι) : Submodule R (AddMonoidAlgebra R ι) :=
@@ -44,7 +44,7 @@ instance grade.graded_monoid [AddMonoidₓ ι] [CommSemiringₓ R] :
           rintro ⟨a, rfl⟩ ⟨b, rfl⟩
           exact ⟨_, single_mul_single.symm⟩ }
 
-variable{R}[DecidableEq ι][AddMonoidₓ ι][CommSemiringₓ R]
+variable {R} [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R]
 
 /-- The canonical grade decomposition. -/
 def to_grades : AddMonoidAlgebra R ι →ₐ[R] ⨁i : ι, grade R i :=

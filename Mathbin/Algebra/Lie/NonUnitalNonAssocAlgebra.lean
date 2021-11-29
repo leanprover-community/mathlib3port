@@ -29,7 +29,7 @@ lie algebra, non-unital, non-associative
 
 universe u v w
 
-variable(R : Type u)(L : Type v)[CommRingₓ R][LieRing L][LieAlgebra R L]
+variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
 /-- A `lie_ring` can be regarded as a `non_unital_non_assoc_semiring` by turning its
 `has_bracket` (denoted `⁅, ⁆`) into a `has_mul` (denoted `*`). -/
@@ -55,7 +55,7 @@ end LieAlgebra
 
 namespace LieHom
 
-variable{R L}{L₂ : Type w}[LieRing L₂][LieAlgebra R L₂]
+variable {R L} {L₂ : Type w} [LieRing L₂] [LieAlgebra R L₂]
 
 /-- Regarding the `lie_ring` of a `lie_algebra` as a `non_unital_non_assoc_semiring`, we can
 regard a `lie_hom` as a `non_unital_alg_hom`. -/

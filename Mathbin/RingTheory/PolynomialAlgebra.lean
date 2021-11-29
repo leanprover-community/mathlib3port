@@ -35,11 +35,11 @@ open algebra.tensor_product(algHomOfLinearMapTensorProduct includeLeft)
 
 noncomputable theory
 
-variable(R A : Type _)
+variable (R A : Type _)
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
-variable[Semiringₓ A][Algebra R A]
+variable [Semiringₓ A] [Algebra R A]
 
 namespace polyEquivTensor
 
@@ -203,9 +203,9 @@ open Dmatrix Matrix
 
 open_locale BigOperators
 
-variable{R}
+variable {R}
 
-variable{n : Type w}[DecidableEq n][Fintype n]
+variable {n : Type w} [DecidableEq n] [Fintype n]
 
 /--
 The algebra isomorphism stating "matrices of polynomials are the same as polynomials of matrices".

@@ -18,7 +18,7 @@ This file defines finset constructions on the product type `α × β`. Beware no
 
 open Multiset
 
-variable{α β γ : Type _}
+variable {α β γ : Type _}
 
 namespace Finset
 
@@ -27,7 +27,7 @@ namespace Finset
 
 section Prod
 
-variable{s s' : Finset α}{t t' : Finset β}
+variable {s s' : Finset α} {t t' : Finset β}
 
 /-- `product s t` is the set of pairs `(a, b)` such that `a ∈ s` and `b ∈ t`. -/
 protected def product (s : Finset α) (t : Finset β) : Finset (α × β) :=
@@ -138,7 +138,7 @@ end Prod
 
 section Diag
 
-variable(s : Finset α)[DecidableEq α]
+variable (s : Finset α) [DecidableEq α]
 
 /-- Given a finite set `s`, the diagonal, `s.diag` is the set of pairs of the form `(a, a)` for
 `a ∈ s`. -/

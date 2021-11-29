@@ -12,11 +12,11 @@ This file defines instances for group, monoid, semigroup and related structures 
 
 universe u v w
 
-variable{I : Type u}
+variable {I : Type u}
 
-variable{f : I → Type v}
+variable {f : I → Type v}
 
-variable(x y : ∀ i, f i)(i : I)
+variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
@@ -167,7 +167,7 @@ end Pi
 
 section MonoidHom
 
-variable(f)[∀ i, MulOneClass (f i)]
+variable (f) [∀ i, MulOneClass (f i)]
 
 /-- Evaluation of functions into an indexed collection of monoids at a point is a monoid
 homomorphism.
@@ -212,11 +212,11 @@ end MonoidHom
 
 section Single
 
-variable[DecidableEq I]
+variable [DecidableEq I]
 
 open Pi
 
-variable(f)
+variable (f)
 
 /-- The zero-preserving homomorphism including a single value
 into a dependent family of values, as functions supported at a point.
@@ -242,7 +242,7 @@ This is the `mul_hom` version of `pi.single`. -/
 def MulHom.single [∀ i, MulZeroClass$ f i] (i : I) : MulHom (f i) (∀ i, f i) :=
   { toFun := single i, map_mul' := single_op₂ (fun _ => ·*·) (fun _ => zero_mul _) _ }
 
-variable{f}
+variable {f}
 
 theorem Pi.single_add [∀ i, AddZeroClass$ f i] (i : I) (x y : f i) : single i (x+y) = single i x+single i y :=
   (AddMonoidHom.single f i).map_add x y
@@ -312,7 +312,7 @@ end Piecewise
 
 section Extend
 
-variable{ι : Type u}{η : Type v}(R : Type w)(s : ι → η)
+variable {ι : Type u} {η : Type v} (R : Type w) (s : ι → η)
 
 /-- `function.extend s f 1` as a bundled hom. -/
 @[toAdditive Function.ExtendByZero.hom "`function.extend s f 0` as a bundled hom.", simps]

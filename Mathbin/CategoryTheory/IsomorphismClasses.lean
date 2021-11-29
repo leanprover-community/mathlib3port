@@ -16,13 +16,13 @@ namespace CategoryTheory
 
 section Category
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /-- An object `X` is isomorphic to an object `Y`, if `X ≅ Y` is not empty. -/
 def is_isomorphic : C → C → Prop :=
   fun X Y => Nonempty (X ≅ Y)
 
-variable(C)
+variable (C)
 
 /-- `is_isomorphic` defines a setoid. -/
 def is_isomorphic_setoid : Setoidₓ C :=

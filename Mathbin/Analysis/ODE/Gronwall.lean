@@ -23,7 +23,7 @@ Sec. 4.5][HubbardWest-ode], where `norm_le_gronwall_bound_of_norm_deriv_right_le
 -/
 
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E]{F : Type _}[NormedGroup F][NormedSpace ℝ F]
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
 
 open Metric Set Asymptotics Filter Real
 

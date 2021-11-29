@@ -10,12 +10,12 @@ by radicals, then its minimal polynomial has solvable Galois group.
 
 ## Main definitions
 
-* `SBF F E` : the intermediate field of solvable-by-radicals elements
+* `solvable_by_rad F E` : the intermediate field of solvable-by-radicals elements
 
 ## Main results
 
-* `solvable_gal_of_solvable_by_rad` : the minimal polynomial of an element of `SBF F E` has
-solvable Galois group
+* the Abel-Ruffini Theorem `solvable_by_rad.is_solvable'` : An irreducible polynomial with a root
+that is solvable by radicals has a solvable Galois group.
 -/
 
 
@@ -27,7 +27,7 @@ open Polynomial IntermediateField
 
 section AbelRuffini
 
-variable{F : Type _}[Field F]{E : Type _}[Field E][Algebra F E]
+variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E]
 
 theorem gal_zero_is_solvable : IsSolvable (0 : Polynomial F).Gal :=
   by 
@@ -227,7 +227,7 @@ end
 
 end GalXPowSubC
 
-variable(F)
+variable (F)
 
 /-- Inductive definition of solvable by radicals -/
 inductive IsSolvableByRad : E → Prop
@@ -238,7 +238,7 @@ inductive IsSolvableByRad : E → Prop
   | inv (α : E) : IsSolvableByRad α → IsSolvableByRad (α⁻¹)
   | rad (α : E) (n : ℕ) (hn : n ≠ 0) : IsSolvableByRad (α^n) → IsSolvableByRad α
 
-variable(E)
+variable (E)
 
 /-- The intermediate field of solvable-by-radicals elements -/
 def solvableByRad : IntermediateField F E :=
@@ -256,7 +256,7 @@ def solvableByRad : IntermediateField F E :=
 
 namespace solvableByRad
 
-variable{F}{E}{α : E}
+variable {F} {E} {α : E}
 
 theorem induction (P : solvableByRad F E → Prop) (base : ∀ α : F, P (algebraMap F (solvableByRad F E) α))
   (add : ∀ α β : solvableByRad F E, P α → P β → P (α+β)) (neg : ∀ α : solvableByRad F E, P α → P (-α))

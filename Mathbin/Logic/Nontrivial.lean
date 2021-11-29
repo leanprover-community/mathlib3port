@@ -14,13 +14,13 @@ We introduce a typeclass `nontrivial` formalizing this property.
 -/
 
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
 open_locale Classical
 
 /-- Predicate typeclass for expressing that a type is not reduced to a single element. In rings,
 this is equivalent to `0 ≠ 1`. In vector spaces, this is equivalent to positive dimension. -/
-class Nontrivial(α : Type _) : Prop where 
+class Nontrivial (α : Type _) : Prop where 
   exists_pair_ne : ∃ x y : α, x ≠ y
 
 theorem nontrivial_iff : Nontrivial α ↔ ∃ x y : α, x ≠ y :=
@@ -57,7 +57,7 @@ theorem Subtype.nontrivial_iff_exists_ne (p : α → Prop) (x : Subtype p) :
   by 
     simp only [nontrivial_iff_exists_ne x, Subtype.exists, Ne.def, Subtype.ext_iff, Subtype.coe_mk]
 
-instance  : Nontrivial Prop :=
+instance : Nontrivial Prop :=
   ⟨⟨True, False, true_ne_false⟩⟩
 
 /--
@@ -66,7 +66,7 @@ See Note [lower instance priority]
 Note that since this and `nonempty_of_inhabited` are the most "obvious" way to find a nonempty
 instance if no direct instance can be found, we give this a higher priority than the usual `100`.
 -/
-instance (priority := 500)Nontrivial.to_nonempty [Nontrivial α] : Nonempty α :=
+instance (priority := 500) Nontrivial.to_nonempty [Nontrivial α] : Nonempty α :=
   let ⟨x, _⟩ := exists_pair_ne α
   ⟨x⟩
 
@@ -154,7 +154,7 @@ instance nontrivial_prod_left [Nontrivial α] [Nonempty β] : Nontrivial (α × 
 
 namespace Pi
 
-variable{I : Type _}{f : I → Type _}
+variable {I : Type _} {f : I → Type _}
 
 /-- A pi type is nontrivial if it's nonempty everywhere and nontrivial somewhere. -/
 theorem nontrivial_at (i' : I) [inst : ∀ i, Nonempty (f i)] [Nontrivial (f i')] : Nontrivial (∀ i : I, f i) :=
@@ -310,7 +310,7 @@ end Tactic.Interactive
 
 namespace Bool
 
-instance  : Nontrivial Bool :=
+instance : Nontrivial Bool :=
   ⟨⟨tt, ff, tt_eq_ff_eq_false⟩⟩
 
 end Bool

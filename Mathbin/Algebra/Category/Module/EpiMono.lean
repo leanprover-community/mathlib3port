@@ -20,7 +20,7 @@ open_locale ModuleCat
 
 namespace ModuleCat
 
-variable{R : Type u}[Ringₓ R]{X Y : ModuleCat.{v} R}(f : X ⟶ Y)
+variable {R : Type u} [Ringₓ R] {X Y : ModuleCat.{v} R} (f : X ⟶ Y)
 
 theorem ker_eq_bot_of_mono [mono f] : f.ker = ⊥ :=
   LinearMap.ker_eq_bot_of_cancel$ fun u v => (@cancel_mono _ _ _ _ _ f _ (↟u) (↟v)).1

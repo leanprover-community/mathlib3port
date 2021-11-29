@@ -23,7 +23,7 @@ def mkRbmap (α : Type u) (β : Type v)
 
 namespace Rbmap
 
-variable{α : Type u}{β : Type v}{δ : Type w}{lt : α → α → Prop}
+variable {α : Type u} {β : Type v} {δ : Type w} {lt : α → α → Prop}
 
 def Empty (m : Rbmap α β lt) : Bool :=
   m.empty
@@ -49,16 +49,16 @@ protected def mem (k : α) (m : Rbmap α β lt) : Prop :=
   | Rbnode.red_node _ e _ => Rbtree.Mem (k, e.2) m
   | Rbnode.black_node _ e _ => Rbtree.Mem (k, e.2) m
 
-instance  : HasMem α (Rbmap α β lt) :=
+instance : HasMem α (Rbmap α β lt) :=
   ⟨Rbmap.Mem⟩
 
-instance  [HasRepr α] [HasRepr β] : HasRepr (Rbmap α β lt) :=
+instance [HasRepr α] [HasRepr β] : HasRepr (Rbmap α β lt) :=
   ⟨fun t => "rbmap_of " ++ reprₓ t.to_list⟩
 
 def rbmap_lt_dec [h : DecidableRel lt] : DecidableRel (@RbmapLt α β lt) :=
   fun a b => h a.1 b.1
 
-variable[DecidableRel lt]
+variable [DecidableRel lt]
 
 def insert (m : Rbmap α β lt) (k : α) (v : β) : Rbmap α β lt :=
   @Rbtree.insert _ _ rbmap_lt_dec m (k, v)

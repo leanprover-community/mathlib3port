@@ -22,7 +22,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-variable{R : Type v}[Ringₓ R]
+variable {R : Type v} [Ringₓ R]
 
 namespace ModuleCat.Colimits
 
@@ -34,7 +34,7 @@ and the identifications given by the morphisms in the diagram.
 -/
 
 
-variable{J : Type v}[small_category J](F : J ⥤ ModuleCat.{v} R)
+variable {J : Type v} [small_category J] (F : J ⥤ ModuleCat.{v} R)
 
 /--
 An inductive type representing all module expressions (without relations)
@@ -47,7 +47,7 @@ inductive prequotient
   | add : prequotient → prequotient → prequotient
   | smul : R → prequotient → prequotient
 
-instance  : Inhabited (prequotient F) :=
+instance : Inhabited (prequotient F) :=
   ⟨prequotient.zero⟩
 
 open Prequotient
@@ -96,7 +96,7 @@ The underlying type of the colimit of a diagram in `Module R`.
 -/ @[derive #[expr inhabited]] def colimit_type : Type v :=
 quotient (colimit_setoid F)
 
-instance  : AddCommGroupₓ (colimit_type F) :=
+instance : AddCommGroupₓ (colimit_type F) :=
   { zero :=
       by 
         exact Quot.mk _ zero,
@@ -180,7 +180,7 @@ instance  : AddCommGroupₓ (colimit_type F) :=
           rfl 
           rfl }
 
-instance  : Module R (colimit_type F) :=
+instance : Module R (colimit_type F) :=
   { smul :=
       fun s =>
         by 

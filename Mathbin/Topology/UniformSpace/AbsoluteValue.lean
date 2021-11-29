@@ -31,9 +31,9 @@ open_locale Filter
 
 namespace IsAbsoluteValue
 
-variable{𝕜 : Type _}[LinearOrderedField 𝕜]
+variable {𝕜 : Type _} [LinearOrderedField 𝕜]
 
-variable{R : Type _}[CommRingₓ R](abv : R → 𝕜)[IsAbsoluteValue abv]
+variable {R : Type _} [CommRingₓ R] (abv : R → 𝕜) [IsAbsoluteValue abv]
 
 /-- The uniformity coming from an absolute value. -/
 def uniform_space_core : UniformSpace.Core R :=

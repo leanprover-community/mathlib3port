@@ -17,10 +17,10 @@ A type synonym for the category of paths in a quiver.
 def paths (V : Type u₁) : Type u₁ :=
   V
 
-instance  (V : Type u₁) [Inhabited V] : Inhabited (paths V) :=
+instance (V : Type u₁) [Inhabited V] : Inhabited (paths V) :=
   ⟨(default V : V)⟩
 
-variable(V : Type u₁)[Quiver.{v₁ + 1} V]
+variable (V : Type u₁) [Quiver.{v₁ + 1} V]
 
 namespace Paths
 
@@ -28,7 +28,7 @@ instance category_paths : category.{max u₁ v₁} (paths V) :=
   { Hom := fun X Y : V => Quiver.Path X Y, id := fun X => Quiver.Path.nil,
     comp := fun X Y Z f g => Quiver.Path.comp f g }
 
-variable{V}
+variable {V}
 
 /--
 The inclusion of a quiver `V` into its path category, as a prefunctor.
@@ -61,7 +61,7 @@ theorem ext_functor {C} [category C] {F G : paths V ⥤ C} (h_obj : F.obj = G.ob
 
 end Paths
 
-variable(W : Type u₂)[Quiver.{v₂ + 1} W]
+variable (W : Type u₂) [Quiver.{v₂ + 1} W]
 
 @[simp]
 theorem prefunctor.map_path_comp' (F : Prefunctor V W) {X Y Z : paths V} (f : X ⟶ Y) (g : Y ⟶ Z) :
@@ -72,7 +72,7 @@ end
 
 section 
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
 open Quiver
 

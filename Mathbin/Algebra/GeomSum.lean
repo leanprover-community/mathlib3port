@@ -31,7 +31,7 @@ are recorded.
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 open Finset MulOpposite
 
@@ -54,7 +54,12 @@ theorem geom_sum_one [Semiringₓ α] (x : α) : geomSum x 1 = 1 :=
     rw [geom_sum_def, sum_range_one, pow_zeroₓ]
 
 @[simp]
-theorem op_geom_sum [Ringₓ α] (x : α) (n : ℕ) : op (geomSum x n) = geomSum (op x) n :=
+theorem one_geom_sum [Semiringₓ α] (n : ℕ) : geomSum (1 : α) n = n :=
+  by 
+    simp [geom_sum_def]
+
+@[simp]
+theorem op_geom_sum [Semiringₓ α] (x : α) (n : ℕ) : op (geomSum x n) = geomSum (op x) n :=
   by 
     simp [geom_sum_def]
 
@@ -75,7 +80,7 @@ by { have [] [":", expr «expr = »(«expr - »(«expr - »(1, 1), 0), 0)] [":="
   rw ["[", expr geom_sum₂_def, ",", expr sum_range_one, ",", expr this, ",", expr pow_zero, ",", expr pow_zero, ",", expr mul_one, "]"] [] }
 
 @[simp]
-theorem op_geom_sum₂ [Ringₓ α] (x y : α) (n : ℕ) : op (geomSum₂ x y n) = geomSum₂ (op y) (op x) n :=
+theorem op_geom_sum₂ [Semiringₓ α] (x y : α) (n : ℕ) : op (geomSum₂ x y n) = geomSum₂ (op y) (op x) n :=
   by 
     simp only [geom_sum₂_def, op_sum, op_mul, op_pow]
     rw [←sum_range_reflect]
@@ -348,7 +353,7 @@ theorem geom_sum_inv [DivisionRing α] {x : α} (hx1 : x ≠ 1) (hx0 : x ≠ 0) 
     rw [geom_sum_eq h₁, div_eq_iff_mul_eq h₂, ←mul_right_inj' h₃, ←mul_assocₓ, ←mul_assocₓ, mul_inv_cancel h₃]
     simp [mul_addₓ, add_mulₓ, mul_inv_cancel hx0, mul_assocₓ, h₄, sub_eq_add_neg, add_commₓ, add_left_commₓ]
 
-variable{β : Type _}
+variable {β : Type _}
 
 theorem RingHom.map_geom_sum [Semiringₓ α] [Semiringₓ β] (x : α) (n : ℕ) (f : α →+* β) :
   f (geomSum x n) = geomSum (f x) n :=

@@ -53,7 +53,7 @@ these arguments are also present on the `noncomputable` equivs.
 -/
 
 
-variable{ι : Type _}{R : Type _}{M : Type _}
+variable {ι : Type _} {R : Type _} {M : Type _}
 
 /-! ### Basic definitions and lemmas -/
 
@@ -70,7 +70,7 @@ theorem Finsupp.to_dfinsupp_coe [HasZero M] (f : ι →₀ M) : «expr⇑ » f.t
 
 section 
 
-variable[DecidableEq ι][HasZero M]
+variable [DecidableEq ι] [HasZero M]
 
 @[simp]
 theorem Finsupp.to_dfinsupp_single (i : ι) (m : M) : (Finsupp.single i m).toDfinsupp = Dfinsupp.single i m :=
@@ -78,7 +78,7 @@ theorem Finsupp.to_dfinsupp_single (i : ι) (m : M) : (Finsupp.single i m).toDfi
     ext 
     simp [Finsupp.single_apply, Dfinsupp.single_apply]
 
-variable[∀ m : M, Decidable (m ≠ 0)]
+variable [∀ m : M, Decidable (m ≠ 0)]
 
 @[simp]
 theorem to_dfinsupp_support (f : ι →₀ M) : f.to_dfinsupp.support = f.support :=
@@ -158,7 +158,7 @@ end Finsupp
 
 namespace Dfinsupp
 
-variable[DecidableEq ι]
+variable [DecidableEq ι]
 
 @[simp]
 theorem to_finsupp_zero [HasZero M] [∀ m : M, Decidable (m ≠ 0)] : to_finsupp 0 = (0 : ι →₀ M) :=
@@ -207,7 +207,7 @@ noncomputable def finsuppAddEquivDfinsupp [DecidableEq ι] [AddZeroClass M] [∀
   { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
     map_add' := Finsupp.to_dfinsupp_add }
 
-variable(R)
+variable (R)
 
 /-- The additive version of `finsupp.to_finsupp`. Note that this is `noncomputable` because
 `finsupp.has_add` is noncomputable. -/
@@ -224,7 +224,7 @@ noncomputable theory
 
 open_locale Classical
 
-variable{η : ι → Type _}{N : Type _}[Semiringₓ R]
+variable {η : ι → Type _} {N : Type _} [Semiringₓ R]
 
 open Finsupp
 

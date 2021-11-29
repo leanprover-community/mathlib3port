@@ -40,17 +40,17 @@ open_locale Ennreal Nnreal TopologicalSpace BoundedContinuousFunction
 
 open MeasureTheory TopologicalSpace ContinuousMap
 
-variable{α : Type _}[MeasurableSpace α][TopologicalSpace α][NormalSpace α][BorelSpace α]
+variable {α : Type _} [MeasurableSpace α] [TopologicalSpace α] [NormalSpace α] [BorelSpace α]
 
-variable(E : Type _)[MeasurableSpace E][NormedGroup E][BorelSpace E][second_countable_topology E]
+variable (E : Type _) [MeasurableSpace E] [NormedGroup E] [BorelSpace E] [second_countable_topology E]
 
-variable{p : ℝ≥0∞}[_i : Fact (1 ≤ p)](hp : p ≠ ∞)(μ : Measureₓ α)
+variable {p : ℝ≥0∞} [_i : Fact (1 ≤ p)] (hp : p ≠ ∞) (μ : Measureₓ α)
 
 include _i hp
 
 namespace MeasureTheory.lp
 
-variable[NormedSpace ℝ E]
+variable [NormedSpace ℝ E]
 
 -- error in MeasureTheory.Function.ContinuousMapDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
@@ -157,7 +157,7 @@ end
 
 end MeasureTheory.lp
 
-variable(𝕜 : Type _)[MeasurableSpace 𝕜][NormedField 𝕜][OpensMeasurableSpace 𝕜][NormedAlgebra ℝ 𝕜][NormedSpace 𝕜 E]
+variable (𝕜 : Type _) [MeasurableSpace 𝕜] [NormedField 𝕜] [OpensMeasurableSpace 𝕜] [NormedAlgebra ℝ 𝕜] [NormedSpace 𝕜 E]
 
 namespace BoundedContinuousFunction
 

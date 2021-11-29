@@ -63,9 +63,9 @@ open Opposite
 
 open CategoryTheory.Limits
 
-variable{C : Type v}[small_category C]
+variable {C : Type v} [small_category C]
 
-variable{D : Type v}[small_category D]
+variable {D : Type v} [small_category D]
 
 /--
 A functor `F : C ⥤ D` is final if for every `d : D`, the comma category of morphisms `d ⟶ F.obj c`
@@ -73,7 +73,7 @@ is connected.
 
 See https://stacks.math.columbia.edu/tag/04E6
 -/
-class final(F : C ⥤ D) : Prop where 
+class final (F : C ⥤ D) : Prop where 
   out (d : D) : is_connected (structured_arrow d F)
 
 attribute [instance] final.out
@@ -82,7 +82,7 @@ attribute [instance] final.out
 A functor `F : C ⥤ D` is initial if for every `d : D`, the comma category of morphisms
 `F.obj c ⟶ d` is connected.
 -/
-class initial(F : C ⥤ D) : Prop where 
+class initial (F : C ⥤ D) : Prop where 
   out (d : D) : is_connected (costructured_arrow F d)
 
 attribute [instance] initial.out
@@ -145,20 +145,20 @@ theorem initial_of_adjunction {L : C ⥤ D} {R : D ⥤ C} (adj : L ⊣ R) : init
                         (by 
                           simp )⟩)) }
 
-instance (priority := 100)final_of_is_right_adjoint (F : C ⥤ D) [h : is_right_adjoint F] : final F :=
+instance (priority := 100) final_of_is_right_adjoint (F : C ⥤ D) [h : is_right_adjoint F] : final F :=
   final_of_adjunction h.adj
 
-instance (priority := 100)initial_of_is_left_adjoint (F : C ⥤ D) [h : is_left_adjoint F] : initial F :=
+instance (priority := 100) initial_of_is_left_adjoint (F : C ⥤ D) [h : is_left_adjoint F] : initial F :=
   initial_of_adjunction h.adj
 
 namespace Final
 
-variable(F : C ⥤ D)[final F]
+variable (F : C ⥤ D) [final F]
 
-instance  (d : D) : Nonempty (structured_arrow d F) :=
+instance (d : D) : Nonempty (structured_arrow d F) :=
   is_connected.is_nonempty
 
-variable{E : Type u}[category.{v} E](G : D ⥤ E)
+variable {E : Type u} [category.{v} E] (G : D ⥤ E)
 
 /--
 When `F : C ⥤ D` is cofinal, we denote by `lift F d` an arbitrary choice of object in `C` such that
@@ -205,7 +205,7 @@ def induction {d : D} (Z : ∀ X : C k : d ⟶ F.obj X, Sort _)
       dsimp 
       simp 
 
-variable{F G}
+variable {F G}
 
 /--
 Given a cocone over `F ⋙ G`, we can construct a `cocone G` with the same cocone point.
@@ -254,7 +254,7 @@ theorem colimit_cocone_comp_aux (s : cocone (F ⋙ G)) (j : C) :
     ·
       exact s.w (𝟙 _)
 
-variable(F G)
+variable (F G)
 
 /--
 If `F` is cofinal,
@@ -281,7 +281,7 @@ def cocones_equiv : cocone (F ⋙ G) ≌ cocone G :=
         (by 
           tidy) }
 
-variable{G}
+variable {G}
 
 /--
 When `F : C ⥤ D` is cofinal, and `t : cocone G` for some `G : D ⥤ E`,
@@ -302,7 +302,7 @@ def is_colimit_extend_cocone_equiv (t : cocone (F ⋙ G)) : is_colimit (extend_c
 def colimit_cocone_comp (t : colimit_cocone G) : colimit_cocone (F ⋙ G) :=
   { Cocone := _, IsColimit := (is_colimit_whisker_equiv F _).symm t.is_colimit }
 
-instance (priority := 100)comp_has_colimit [has_colimit G] : has_colimit (F ⋙ G) :=
+instance (priority := 100) comp_has_colimit [has_colimit G] : has_colimit (F ⋙ G) :=
   has_colimit.mk (colimit_cocone_comp F (get_colimit_cocone G))
 
 theorem colimit_pre_is_iso_aux {t : cocone G} (P : is_colimit t) :
@@ -325,7 +325,7 @@ instance colimit_pre_is_iso [has_colimit G] : is_iso (colimit.pre G F) :=
 
 section 
 
-variable(G)
+variable (G)
 
 /--
 When `F : C ⥤ D` is cofinal, and `G : D ⥤ E` has a colimit, then `F ⋙ G` has a colimit also and
@@ -428,12 +428,12 @@ end Final
 
 namespace Initial
 
-variable(F : C ⥤ D)[initial F]
+variable (F : C ⥤ D) [initial F]
 
-instance  (d : D) : Nonempty (costructured_arrow F d) :=
+instance (d : D) : Nonempty (costructured_arrow F d) :=
   is_connected.is_nonempty
 
-variable{E : Type u}[category.{v} E](G : D ⥤ E)
+variable {E : Type u} [category.{v} E] (G : D ⥤ E)
 
 /--
 When `F : C ⥤ D` is initial, we denote by `lift F d` an arbitrary choice of object in `C` such that
@@ -480,7 +480,7 @@ def induction {d : D} (Z : ∀ X : C k : F.obj X ⟶ d, Sort _)
       dsimp 
       simp 
 
-variable{F G}
+variable {F G}
 
 /--
 Given a cone over `F ⋙ G`, we can construct a `cone G` with the same cocone point.
@@ -531,7 +531,7 @@ theorem limit_cone_comp_aux (s : cone (F ⋙ G)) (j : C) :
     ·
       exact s.w (𝟙 _)
 
-variable(F G)
+variable (F G)
 
 /--
 If `F` is initial,
@@ -558,7 +558,7 @@ def cones_equiv : cone (F ⋙ G) ≌ cone G :=
         (by 
           tidy) }
 
-variable{G}
+variable {G}
 
 /--
 When `F : C ⥤ D` is initial, and `t : cone G` for some `G : D ⥤ E`,
@@ -579,7 +579,7 @@ def is_limit_extend_cone_equiv (t : cone (F ⋙ G)) : is_limit (extend_cone.obj 
 def limit_cone_comp (t : limit_cone G) : limit_cone (F ⋙ G) :=
   { Cone := _, IsLimit := (is_limit_whisker_equiv F _).symm t.is_limit }
 
-instance (priority := 100)comp_has_limit [has_limit G] : has_limit (F ⋙ G) :=
+instance (priority := 100) comp_has_limit [has_limit G] : has_limit (F ⋙ G) :=
   has_limit.mk (limit_cone_comp F (get_limit_cone G))
 
 theorem limit_pre_is_iso_aux {t : cone G} (P : is_limit t) :
@@ -599,7 +599,7 @@ instance limit_pre_is_iso [has_limit G] : is_iso (limit.pre G F) :=
 
 section 
 
-variable(G)
+variable (G)
 
 /--
 When `F : C ⥤ D` is initial, and `G : D ⥤ E` has a limit, then `F ⋙ G` has a limit also and

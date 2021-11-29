@@ -40,15 +40,15 @@ open Set Function Finsupp AddMonoidAlgebra
 
 universe u v w x
 
-variable{R : Type u}{S₁ : Type v}{S₂ : Type w}{S₃ : Type x}
+variable {R : Type u} {S₁ : Type v} {S₂ : Type w} {S₃ : Type x}
 
 namespace MvPolynomial
 
-variable{σ : Type _}{a a' a₁ a₂ : R}{e : ℕ}{n m : σ}{s : σ →₀ ℕ}
+variable {σ : Type _} {a a' a₁ a₂ : R} {e : ℕ} {n m : σ} {s : σ →₀ ℕ}
 
 section Equiv
 
-variable(R)[CommSemiringₓ R]
+variable (R) [CommSemiringₓ R]
 
 /--
 The ring isomorphism between multivariable polynomials in a single variable and
@@ -88,7 +88,7 @@ def punit_alg_equiv : MvPolynomial PUnit R ≃ₐ[R] Polynomial R :=
 
 section Map
 
-variable{R}(σ)
+variable {R} (σ)
 
 /-- If `e : A ≃+* B` is an isomorphism of rings, then so is `map e`. -/
 @[simps apply]
@@ -110,9 +110,9 @@ theorem map_equiv_trans [CommSemiringₓ S₁] [CommSemiringₓ S₂] [CommSemir
   (map_equiv σ e).trans (map_equiv σ f) = map_equiv σ (e.trans f) :=
   RingEquiv.ext (map_map e f)
 
-variable{A₁ A₂ A₃ : Type _}[CommSemiringₓ A₁][CommSemiringₓ A₂][CommSemiringₓ A₃]
+variable {A₁ A₂ A₃ : Type _} [CommSemiringₓ A₁] [CommSemiringₓ A₂] [CommSemiringₓ A₃]
 
-variable[Algebra R A₁][Algebra R A₂][Algebra R A₃]
+variable [Algebra R A₁] [Algebra R A₂] [Algebra R A₃]
 
 /-- If `e : A ≃ₐ[R] B` is an isomorphism of `R`-algebras, then so is `map e`. -/
 @[simps apply]
@@ -136,7 +136,7 @@ end Map
 
 section 
 
-variable(S₁ S₂ S₃)
+variable (S₁ S₂ S₃)
 
 /--
 The function from multivariable polynomials in a sum of two types,
@@ -179,7 +179,7 @@ theorem iter_to_sum_X (b : S₁) : iter_to_sum R S₁ S₂ (X b) = X (Sum.inl b)
 theorem iter_to_sum_C_X (c : S₂) : iter_to_sum R S₁ S₂ (C (X c)) = X (Sum.inr c) :=
   Eq.trans (eval₂_C _ _ (X c)) (eval₂_X _ _ _)
 
-variable(σ)
+variable (σ)
 
 /-- The algebra isomorphism between multivariable polynomials in no variables
 and the ground ring. -/
@@ -199,7 +199,7 @@ and the ground ring. -/
 def is_empty_ring_equiv [he : IsEmpty σ] : MvPolynomial σ R ≃+* R :=
   (is_empty_alg_equiv R σ).toRingEquiv
 
-variable{σ}
+variable {σ}
 
 /-- A helper function for `sum_ring_equiv`. -/
 @[simps]

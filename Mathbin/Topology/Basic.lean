@@ -56,7 +56,7 @@ universe u v w
 
 /-- A topology on `α`. -/
 @[protectProj]
-structure TopologicalSpace(α : Type u) where 
+structure TopologicalSpace (α : Type u) where 
   IsOpen : Set α → Prop 
   is_open_univ : IsOpen univ 
   is_open_inter : ∀ s t, IsOpen s → IsOpen t → IsOpen (s ∩ t)
@@ -88,7 +88,7 @@ def TopologicalSpace.ofClosed {α : Type u} (T : Set (Set α)) (empty_mem : ∅ 
 
 section TopologicalSpace
 
-variable{α : Type u}{β : Type v}{ι : Sort w}{a : α}{s s₁ s₂ : Set α}{p p₁ p₂ : α → Prop}
+variable {α : Type u} {β : Type v} {ι : Sort w} {a : α} {s s₁ s₂ : Set α} {p p₁ p₂ : α → Prop}
 
 @[ext]
 theorem topological_space_eq : ∀ {f g : TopologicalSpace α}, f.is_open = g.is_open → f = g
@@ -96,7 +96,7 @@ theorem topological_space_eq : ∀ {f g : TopologicalSpace α}, f.is_open = g.is
 
 section 
 
-variable[t : TopologicalSpace α]
+variable [t : TopologicalSpace α]
 
 include t
 
@@ -126,7 +126,7 @@ theorem topological_space_eq_iff {t t' : TopologicalSpace α} : t = t' ↔ ∀ s
 theorem is_open_fold {s : Set α} {t : TopologicalSpace α} : t.is_open s = @IsOpen α t s :=
   rfl
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 theorem is_open_Union {f : ι → Set α} (h : ∀ i, IsOpen (f i)) : IsOpen (⋃i, f i) :=
   is_open_sUnion$
@@ -187,7 +187,7 @@ theorem IsOpen.and : IsOpen { a | p₁ a } → IsOpen { a | p₂ a } → IsOpen 
   IsOpen.inter
 
 /-- A set is closed if its complement is open -/
-class IsClosed(s : Set α) : Prop where 
+class IsClosed (s : Set α) : Prop where 
   is_open_compl : IsOpen («expr ᶜ» s)
 
 @[simp]
@@ -1358,15 +1358,15 @@ end TopologicalSpace
 
 section Continuous
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 
 open_locale TopologicalSpace
 
 /-- A function between topological spaces is continuous if the preimage
   of every open set is open. Registered as a structure to make sure it is not unfolded by Lean. -/
-structure Continuous(f : α → β) : Prop where 
+structure Continuous (f : α → β) : Prop where 
   is_open_preimage : ∀ s, IsOpen s → IsOpen (f ⁻¹' s)
 
 theorem continuous_def {f : α → β} : Continuous f ↔ ∀ s, IsOpen s → IsOpen (f ⁻¹' s) :=
@@ -1579,13 +1579,13 @@ theorem map_mem_closure {s : Set α} {t : Set β} {f : α → β} {a : α} (hf :
 
 section DenseRange
 
-variable{κ ι : Type _}(f : κ → β)(g : β → γ)
+variable {κ ι : Type _} (f : κ → β) (g : β → γ)
 
 /-- `f : ι → β` has dense range if its range (image) is a dense subset of β. -/
 def DenseRange :=
   Dense (range f)
 
-variable{f}
+variable {f}
 
 /-- A surjective map has dense range. -/
 theorem Function.Surjective.dense_range (hf : Function.Surjective f) : DenseRange f :=

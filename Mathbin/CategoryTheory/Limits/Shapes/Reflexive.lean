@@ -26,22 +26,22 @@ namespace CategoryTheory
 
 universe v v₂ u u₂
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
-variable{A B : C}{f g : A ⟶ B}
+variable {A B : C} {f g : A ⟶ B}
 
 /--
 The pair `f g : A ⟶ B` is reflexive if there is a morphism `B ⟶ A` which is a section for both.
 -/
-class is_reflexive_pair(f g : A ⟶ B) : Prop where 
+class is_reflexive_pair (f g : A ⟶ B) : Prop where 
   common_section{} : ∃ s : B ⟶ A, s ≫ f = 𝟙 B ∧ s ≫ g = 𝟙 B
 
 /--
 The pair `f g : A ⟶ B` is coreflexive if there is a morphism `B ⟶ A` which is a retraction for both.
 -/
-class is_coreflexive_pair(f g : A ⟶ B) : Prop where 
+class is_coreflexive_pair (f g : A ⟶ B) : Prop where 
   common_retraction{} : ∃ s : B ⟶ A, f ≫ s = 𝟙 A ∧ g ≫ s = 𝟙 A
 
 theorem is_reflexive_pair.mk' (s : B ⟶ A) (sf : s ≫ f = 𝟙 B) (sg : s ≫ g = 𝟙 B) : is_reflexive_pair f g :=
@@ -87,10 +87,10 @@ theorem is_reflexive_pair.swap [is_reflexive_pair f g] : is_reflexive_pair g f :
 theorem is_coreflexive_pair.swap [is_coreflexive_pair f g] : is_coreflexive_pair g f :=
   is_coreflexive_pair.mk' _ (right_comp_retraction f g) (left_comp_retraction f g)
 
-variable{F : C ⥤ D}{G : D ⥤ C}(adj : F ⊣ G)
+variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
 
 /-- For an adjunction `F ⊣ G` with counit `ε`, the pair `(FGε_B, ε_FGB)` is reflexive. -/
-instance  (B : D) : is_reflexive_pair (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B))) :=
+instance (B : D) : is_reflexive_pair (F.map (G.map (adj.counit.app B))) (adj.counit.app (F.obj (G.obj B))) :=
   is_reflexive_pair.mk' (F.map (adj.unit.app (G.obj B)))
     (by 
       rw [←F.map_comp, adj.right_triangle_components]
@@ -99,7 +99,7 @@ instance  (B : D) : is_reflexive_pair (F.map (G.map (adj.counit.app B))) (adj.co
 
 namespace Limits
 
-variable(C)
+variable (C)
 
 /-- `C` has reflexive coequalizers if it has coequalizers for every reflexive pair. -/
 class has_reflexive_coequalizers : Prop where 
@@ -140,7 +140,7 @@ begin
 end
 
 /-- If `C` has coequalizers, then it has reflexive coequalizers. -/
-instance (priority := 100)has_reflexive_coequalizers_of_has_coequalizers [has_coequalizers C] :
+instance (priority := 100) has_reflexive_coequalizers_of_has_coequalizers [has_coequalizers C] :
   has_reflexive_coequalizers C :=
   { has_coeq :=
       fun A B f g i =>
@@ -148,7 +148,7 @@ instance (priority := 100)has_reflexive_coequalizers_of_has_coequalizers [has_co
           infer_instance }
 
 /-- If `C` has equalizers, then it has coreflexive equalizers. -/
-instance (priority := 100)has_coreflexive_equalizers_of_has_equalizers [has_equalizers C] :
+instance (priority := 100) has_coreflexive_equalizers_of_has_equalizers [has_equalizers C] :
   has_coreflexive_equalizers C :=
   { has_eq :=
       fun A B f g i =>

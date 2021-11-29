@@ -61,15 +61,15 @@ namespace Matrix
 
 open_locale Matrix
 
-variable(n p : Type _)(R : Type u₂){𝕜 : Type _}[Field 𝕜]
+variable (n p : Type _) (R : Type u₂) {𝕜 : Type _} [Field 𝕜]
 
-variable[DecidableEq n][DecidableEq p]
+variable [DecidableEq n] [DecidableEq p]
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 section Transvection
 
-variable{R n}(i j : n)
+variable {R n} (i j : n)
 
 /-- The transvection matrix `transvection i j c` is equal to the identity plus `c` at position
 `(i, j)`. Multiplying by it on the left (as in `transvection i j c ⬝ M`) corresponds to adding
@@ -85,7 +85,7 @@ theorem transvection_zero : transvection i j (0 : R) = 1 :=
 
 section 
 
-variable[Fintype n]
+variable [Fintype n]
 
 /-- A transvection matrix is obtained from the identity by adding `c` times the `j`-th row to
 the `i`-th row. -/
@@ -143,7 +143,7 @@ theorem det_transvection_of_ne (h : i ≠ j) (c : R) : det (transvection i j c) 
 
 end 
 
-variable(R n)
+variable (R n)
 
 /-- A structure containing all the information from which one can build a nontrivial transvection.
 This structure is easier to manipulate than transvections as one has a direct access to all the
@@ -154,14 +154,14 @@ structure transvection_struct where
   hij : i ≠ j 
   c : R
 
-instance  [Nontrivial n] : Nonempty (transvection_struct n R) :=
+instance [Nontrivial n] : Nonempty (transvection_struct n R) :=
   by 
     choose x y hxy using exists_pair_ne n 
     exact ⟨⟨x, y, hxy, 0⟩⟩
 
 namespace TransvectionStruct
 
-variable{R n}
+variable {R n}
 
 /-- Associating to a `transvection_struct` the corresponding transvection matrix. -/
 def to_matrix (t : transvection_struct n R) : Matrix n n R :=
@@ -193,7 +193,7 @@ protected def inv (t : transvection_struct n R) : transvection_struct n R :=
 
 section 
 
-variable[Fintype n]
+variable [Fintype n]
 
 theorem inv_mul (t : transvection_struct n R) : t.inv.to_matrix ⬝ t.to_matrix = 1 :=
   by 
@@ -237,7 +237,7 @@ theorem prod_mul_reverse_inv_prod (L : List (transvection_struct n R)) :
 
 end 
 
-variable(p)
+variable (p)
 
 open Sum
 
@@ -286,7 +286,7 @@ theorem mul_sum_inl_to_matrix_prod [Fintype n] [Fintype p] (M : Matrix n n R) (L
     ·
       simp [IH, to_matrix_sum_inl, from_blocks_multiply]
 
-variable{p}
+variable {p}
 
 /-- Given a `transvection_struct` on `n` and an equivalence between `n` and `p`, define the
 corresponding `transvection_struct` on `p`. -/
@@ -297,7 +297,7 @@ def reindex_equiv (e : n ≃ p) (t : transvection_struct n R) : transvection_str
         simp [t.hij],
     c := t.c }
 
-variable[Fintype n][Fintype p]
+variable [Fintype n] [Fintype p]
 
 theorem to_matrix_reindex_equiv (e : n ≃ p) (t : transvection_struct n R) :
   (t.reindex_equiv e).toMatrix = reindex_alg_equiv R e t.to_matrix :=
@@ -343,7 +343,7 @@ of the matrices, through a suitable reindexing to identify any fintype with `fin
 
 namespace Pivot
 
-variable{R}{r : ℕ}(M : Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜)
+variable {R} {r : ℕ} (M : Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜)
 
 open Sum Unit Finₓ TransvectionStruct
 
@@ -637,7 +637,7 @@ begin
   simp [] [] [] ["[", expr h₀, "]"] [] []
 end
 
-variable{n p}[Fintype n][Fintype p]
+variable {n p} [Fintype n] [Fintype p]
 
 -- error in LinearAlgebra.Matrix.Transvection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Reduction to diagonal form by elementary operations is invariant under reindexing. -/
@@ -717,7 +717,7 @@ end Pivot
 
 open Pivot TransvectionStruct
 
-variable{n}[Fintype n]
+variable {n} [Fintype n]
 
 -- error in LinearAlgebra.Matrix.Transvection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Induction principle for matrices based on transvections: if a property is true for all diagonal

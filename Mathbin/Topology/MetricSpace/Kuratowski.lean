@@ -15,7 +15,7 @@ open Set
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 /-- The space of bounded sequences, with its sup norm -/
 @[reducible]
@@ -29,7 +29,7 @@ namespace kuratowskiEmbedding
 /-! ### Any separable metric space can be embedded isometrically in ℓ^∞(ℝ) -/
 
 
-variable{f g : ℓInftyℝ}{n : ℕ}{C : ℝ}[MetricSpace α](x : ℕ → α)(a b : α)
+variable {f g : ℓInftyℝ} {n : ℕ} {C : ℝ} [MetricSpace α] (x : ℕ → α) (a b : α)
 
 /-- A metric space can be embedded in `l^∞(ℝ)` via the distances to points in
 a fixed countable set, if this set is dense. This map is given in `Kuratowski_embedding`,

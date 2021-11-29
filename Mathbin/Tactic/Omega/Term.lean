@@ -76,7 +76,7 @@ def fresh_index (t : term) : Nat :=
 def toString (t : term) : Stringₓ :=
   t.2.enum.foldr (fun ⟨i, n⟩ r => toString n ++ " * x" ++ toString i ++ " + " ++ r) (toString t.1)
 
-instance  : HasToString term :=
+instance : HasToString term :=
   ⟨toString⟩
 
 end Term

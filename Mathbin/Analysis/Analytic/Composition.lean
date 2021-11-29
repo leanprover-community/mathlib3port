@@ -61,17 +61,9 @@ in more details below in the paragraph on associativity.
 
 noncomputable theory
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{F :
-    Type
-      _}[NormedGroup
-      F][NormedSpace 𝕜 F]{G : Type _}[NormedGroup G][NormedSpace 𝕜 G]{H : Type _}[NormedGroup H][NormedSpace 𝕜 H]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G] {H : Type _} [NormedGroup H]
+  [NormedSpace 𝕜 H]
 
 open Filter List
 
@@ -356,7 +348,7 @@ right composition.
 
 section 
 
-variable(𝕜 E)
+variable (𝕜 E)
 
 /-- The identity formal multilinear series, with all coefficients equal to `0` except for `n = 1`
 where it is (the continuous multilinear version of) the identity. -/
@@ -881,7 +873,7 @@ composition of formal multilinear series in `formal_multilinear_series.comp_asso
 
 namespace Composition
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 -- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Rewriting equality in the dependent type `Σ (a : composition n), composition a.length)` in

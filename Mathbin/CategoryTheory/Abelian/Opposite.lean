@@ -14,13 +14,13 @@ namespace CategoryTheory
 
 open CategoryTheory.Limits
 
-variable(C : Type _)[category C][abelian C]
+variable (C : Type _) [category C] [abelian C]
 
 attribute [local instance] finite_limits_from_equalizers_and_finite_products
   finite_colimits_from_coequalizers_and_finite_coproducts has_finite_limits_opposite has_finite_colimits_opposite
   has_finite_products_opposite
 
-instance  : abelian («expr ᵒᵖ» C) :=
+instance : abelian («expr ᵒᵖ» C) :=
   { NormalMono :=
       fun X Y f m =>
         by 
@@ -32,7 +32,7 @@ instance  : abelian («expr ᵒᵖ» C) :=
 
 section 
 
-variable{C}{X Y : C}(f : X ⟶ Y){A B : «expr ᵒᵖ» C}(g : A ⟶ B)
+variable {C} {X Y : C} (f : X ⟶ Y) {A B : «expr ᵒᵖ» C} (g : A ⟶ B)
 
 /-- The kernel of `f.op` is the opposite of `cokernel f`. -/
 @[simps]

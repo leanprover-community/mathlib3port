@@ -109,28 +109,10 @@ We use the names `mdifferentiable` and `mfderiv`, where the prefix letter `m` me
 -/
 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I :
-    ModelWithCorners 𝕜 E
-      H){M :
-    Type
-      _}[TopologicalSpace
-      M][ChartedSpace H
-      M]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H' :
-    Type _}[TopologicalSpace H'](I' : ModelWithCorners 𝕜 E' H'){M' : Type _}[TopologicalSpace M'][ChartedSpace H' M']
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {E' : Type _}
+  [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') {M' : Type _}
+  [TopologicalSpace M'] [ChartedSpace H' M']
 
 /-- Predicate ensuring that, at a point and within a set, a function can have at most one
 derivative. This is expressed using the preferred chart at the considered point. -/
@@ -186,7 +168,7 @@ def Mdifferentiable (f : M → M') :=
 def LocalHomeomorph.Mdifferentiable (f : LocalHomeomorph M M') :=
   MdifferentiableOn I I' f f.source ∧ MdifferentiableOn I' I f.symm f.target
 
-variable[SmoothManifoldWithCorners I M][SmoothManifoldWithCorners I' M']
+variable [SmoothManifoldWithCorners I M] [SmoothManifoldWithCorners I' M']
 
 /-- `has_mfderiv_within_at I I' f s x f'` indicates that the function `f` between manifolds
 has, at the point `x` and within the set `s`, the derivative `f'`. Here, `f'` is a continuous linear
@@ -245,46 +227,12 @@ section DerivativesProperties
 /-! ### Unique differentiability sets in manifolds -/
 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I :
-    ModelWithCorners 𝕜 E
-      H){M :
-    Type
-      _}[TopologicalSpace
-      M][ChartedSpace H
-      M]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H' :
-    Type
-      _}[TopologicalSpace
-      H']{I' :
-    ModelWithCorners 𝕜 E'
-      H'}{M' :
-    Type
-      _}[TopologicalSpace
-      M'][ChartedSpace H'
-      M']{E'' :
-    Type
-      _}[NormedGroup
-      E''][NormedSpace 𝕜
-      E'']{H'' :
-    Type
-      _}[TopologicalSpace
-      H'']{I'' :
-    ModelWithCorners 𝕜 E''
-      H''}{M'' :
-    Type _}[TopologicalSpace M''][ChartedSpace H'' M'']{f f₀ f₁ : M → M'}{x : M}{s t : Set M}{g : M' → M''}{u : Set M'}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {E' : Type _}
+  [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _}
+  [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _}
+  [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
+  {f f₀ f₁ : M → M'} {x : M} {s t : Set M} {g : M' → M''} {u : Set M'}
 
 theorem unique_mdiff_within_at_univ : UniqueMdiffWithinAt I univ x :=
   by 
@@ -292,7 +240,7 @@ theorem unique_mdiff_within_at_univ : UniqueMdiffWithinAt I univ x :=
     simp only [preimage_univ, univ_inter]
     exact I.unique_diff _ (mem_range_self _)
 
-variable{I}
+variable {I}
 
 theorem unique_mdiff_within_at_iff {s : Set M} {x : M} :
   UniqueMdiffWithinAt I s x ↔
@@ -331,14 +279,9 @@ theorem IsOpen.unique_mdiff_on (hs : IsOpen s) : UniqueMdiffOn I s :=
 theorem unique_mdiff_on_univ : UniqueMdiffOn I (univ : Set M) :=
   is_open_univ.UniqueMdiffOn
 
-variable[Is :
-    SmoothManifoldWithCorners I
-      M][I's :
-    SmoothManifoldWithCorners I'
-      M'][I''s :
-    SmoothManifoldWithCorners I''
-      M'']{f' f₀' f₁' :
-    TangentSpace I x →L[𝕜] TangentSpace I' (f x)}{g' : TangentSpace I' (f x) →L[𝕜] TangentSpace I'' (g (f x))}
+variable [Is : SmoothManifoldWithCorners I M] [I's : SmoothManifoldWithCorners I' M']
+  [I''s : SmoothManifoldWithCorners I'' M''] {f' f₀' f₁' : TangentSpace I x →L[𝕜] TangentSpace I' (f x)}
+  {g' : TangentSpace I' (f x) →L[𝕜] TangentSpace I'' (g (f x))}
 
 /-- `unique_mdiff_within_at` achieves its goal: it implies the uniqueness of the derivative. -/
 theorem UniqueMdiffWithinAt.eq (U : UniqueMdiffWithinAt I s x) (h : HasMfderivWithinAt I I' f s x f')
@@ -647,7 +590,7 @@ theorem MdifferentiableWithinAt.congr_of_eventually_eq (h : MdifferentiableWithi
   (hx : f₁ x = f x) : MdifferentiableWithinAt I I' f₁ s x :=
   (h.has_mfderiv_within_at.congr_of_eventually_eq h₁ hx).MdifferentiableWithinAt
 
-variable(I I')
+variable (I I')
 
 theorem Filter.EventuallyEq.mdifferentiable_within_at_iff (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) :
   MdifferentiableWithinAt I I' f s x ↔ MdifferentiableWithinAt I I' f₁ s x :=
@@ -663,7 +606,7 @@ theorem Filter.EventuallyEq.mdifferentiable_within_at_iff (h₁ : f₁ =ᶠ[𝓝
       intro y 
       apply Eq.symm
 
-variable{I I'}
+variable {I I'}
 
 theorem MdifferentiableWithinAt.congr_mono (h : MdifferentiableWithinAt I I' f s x) (ht : ∀ x _ : x ∈ t, f₁ x = f x)
   (hx : f₁ x = f x) (h₁ : t ⊆ s) : MdifferentiableWithinAt I I' f₁ t x :=
@@ -733,7 +676,7 @@ theorem written_in_ext_chart_comp (h : ContinuousWithinAt f s x) :
         (ext_chart_preimage_mem_nhds_within I x (h.preimage_mem_nhds_within (ext_chart_at_source_mem_nhds _ _)))
     mfldSetTac
 
-variable(x)
+variable (x)
 
 include Is I's I''s
 
@@ -845,11 +788,8 @@ this and related statements.
 -/
 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type _}[NormedGroup E][NormedSpace 𝕜 E]{E' : Type _}[NormedGroup E'][NormedSpace 𝕜 E']{f : E → E'}{s : Set E}{x : E}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+  [NormedGroup E'] [NormedSpace 𝕜 E'] {f : E → E'} {s : Set E} {x : E}
 
 theorem unique_mdiff_within_at_iff_unique_diff_within_at : UniqueMdiffWithinAt 𝓘(𝕜, E) s x ↔ UniqueDiffWithinAt 𝕜 s x :=
   by 
@@ -941,36 +881,15 @@ section SpecificFunctions
 /-! ### Differentiability of specific functions -/
 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I :
-    ModelWithCorners 𝕜 E
-      H){M :
-    Type
-      _}[TopologicalSpace
-      M][ChartedSpace H
-      M][SmoothManifoldWithCorners I
-      M]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H' :
-    Type
-      _}[TopologicalSpace
-      H'](I' :
-    ModelWithCorners 𝕜 E' H'){M' : Type _}[TopologicalSpace M'][ChartedSpace H' M'][SmoothManifoldWithCorners I' M']
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
+  (I' : ModelWithCorners 𝕜 E' H') {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
+  [SmoothManifoldWithCorners I' M']
 
 namespace ContinuousLinearMap
 
-variable(f : E →L[𝕜] E'){s : Set E}{x : E}
+variable (f : E →L[𝕜] E') {s : Set E} {x : E}
 
 protected theorem HasMfderivWithinAt : HasMfderivWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x f :=
   f.has_fderiv_within_at.has_mfderiv_within_at
@@ -1000,7 +919,7 @@ end ContinuousLinearMap
 
 namespace ContinuousLinearEquiv
 
-variable(f : E ≃L[𝕜] E'){s : Set E}{x : E}
+variable (f : E ≃L[𝕜] E') {s : Set E} {x : E}
 
 protected theorem HasMfderivWithinAt : HasMfderivWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x (f : E →L[𝕜] E') :=
   f.has_fderiv_within_at.has_mfderiv_within_at
@@ -1029,7 +948,7 @@ theorem mfderiv_within_eq (hs : UniqueMdiffWithinAt 𝓘(𝕜, E) s x) :
 
 end ContinuousLinearEquiv
 
-variable{s : Set M}{x : M}
+variable {s : Set M} {x : M}
 
 section id
 
@@ -1098,7 +1017,7 @@ section Const
 /-! #### Constants -/
 
 
-variable{c : M'}
+variable {c : M'}
 
 theorem has_mfderiv_at_const (c : M') (x : M) :
   HasMfderivAt I I' (fun y : M => c) x (0 : TangentSpace I x →L[𝕜] TangentSpace I' c) :=
@@ -1167,7 +1086,7 @@ end ModelWithCorners
 
 section Charts
 
-variable{e : LocalHomeomorph M H}
+variable {e : LocalHomeomorph M H}
 
 -- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mdifferentiable_at_atlas
@@ -1254,48 +1173,12 @@ end SpecificFunctions
 
 namespace LocalHomeomorph.Mdifferentiable
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H]{I :
-    ModelWithCorners 𝕜 E
-      H}{M :
-    Type
-      _}[TopologicalSpace
-      M][ChartedSpace H
-      M]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H' :
-    Type
-      _}[TopologicalSpace
-      H']{I' :
-    ModelWithCorners 𝕜 E'
-      H'}{M' :
-    Type
-      _}[TopologicalSpace
-      M'][ChartedSpace H'
-      M']{E'' :
-    Type
-      _}[NormedGroup
-      E''][NormedSpace 𝕜
-      E'']{H'' :
-    Type
-      _}[TopologicalSpace
-      H'']{I'' :
-    ModelWithCorners 𝕜 E''
-      H''}{M'' :
-    Type
-      _}[TopologicalSpace
-      M''][ChartedSpace H'' M'']{e : LocalHomeomorph M M'}(he : e.mdifferentiable I I'){e' : LocalHomeomorph M' M''}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {M : Type _} [TopologicalSpace M] [ChartedSpace H M] {E' : Type _}
+  [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H'] {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _}
+  [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _}
+  [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
+  {e : LocalHomeomorph M M'} (he : e.mdifferentiable I I') {e' : LocalHomeomorph M' M''}
 
 include he
 
@@ -1308,7 +1191,7 @@ protected theorem MdifferentiableAt {x : M} (hx : x ∈ e.source) : Mdifferentia
 theorem mdifferentiable_at_symm {x : M'} (hx : x ∈ e.target) : MdifferentiableAt I' I e.symm x :=
   (he.2 x hx).MdifferentiableAt (IsOpen.mem_nhds e.open_target hx)
 
-variable[SmoothManifoldWithCorners I M][SmoothManifoldWithCorners I' M'][SmoothManifoldWithCorners I'' M'']
+variable [SmoothManifoldWithCorners I M] [SmoothManifoldWithCorners I' M'] [SmoothManifoldWithCorners I'' M'']
 
 -- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem symm_comp_deriv
@@ -1386,19 +1269,9 @@ end LocalHomeomorph.Mdifferentiable
 
 section extChartAt
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I :
-    ModelWithCorners 𝕜 E
-      H){M : Type _}[TopologicalSpace M][ChartedSpace H M][SmoothManifoldWithCorners I M]{s : Set M}{x y : M}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M] {s : Set M} {x y : M}
 
 theorem has_mfderiv_at_ext_chart_at (h : y ∈ (chart_at H x).Source) :
   HasMfderivAt I 𝓘(𝕜, E) (extChartAt I x) y (mfderiv I I (chart_at H x) y : _) :=
@@ -1422,31 +1295,10 @@ end extChartAt
 
 section UniqueMdiff
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H]{I :
-    ModelWithCorners 𝕜 E
-      H}{M :
-    Type
-      _}[TopologicalSpace
-      M][ChartedSpace H
-      M][SmoothManifoldWithCorners I
-      M]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H' :
-    Type
-      _}[TopologicalSpace
-      H']{I' : ModelWithCorners 𝕜 E' H'}{M' : Type _}[TopologicalSpace M'][ChartedSpace H' M']{s : Set M}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] {I : ModelWithCorners 𝕜 E H} {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
+  {I' : ModelWithCorners 𝕜 E' H'} {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M'] {s : Set M}
 
 -- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a set has the unique differential property, then its image under a local
@@ -1539,7 +1391,7 @@ begin
   exact [expr this.unique_diff_on_target_inter _]
 end
 
-variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F](Z : BasicSmoothBundleCore I M F)
+variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] (Z : BasicSmoothBundleCore I M F)
 
 -- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In a smooth fiber bundle constructed from core, the preimage under the projection of a set with

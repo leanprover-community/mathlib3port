@@ -29,7 +29,7 @@ noncomputable theory
 
 open CategoryTheory
 
-variable(R : Type _)[Ringₓ R](C : Type _)[category C][abelian C][linear R C][enough_projectives C]
+variable (R : Type _) [Ringₓ R] (C : Type _) [category C] [abelian C] [linear R C] [enough_projectives C]
 
 /--
 `Ext R C n` is defined by deriving in the frst argument of `(X, Y) ↦ Module.of R (unop X ⟶ Y)`

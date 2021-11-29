@@ -13,7 +13,7 @@ open CategoryTheory
 
 open CategoryTheory.MonoidalCategory
 
-variable(C : Type u₁)[category.{v₁} C][monoidal_category.{v₁} C]
+variable (C : Type u₁) [category.{v₁} C] [monoidal_category.{v₁} C]
 
 /--
 A monoid object internal to a monoidal category.
@@ -59,10 +59,10 @@ def trivialₓ : Mon_ C :=
       by 
         simp [unitors_equal] }
 
-instance  : Inhabited (Mon_ C) :=
+instance : Inhabited (Mon_ C) :=
   ⟨trivialₓ C⟩
 
-variable{C}{M : Mon_ C}
+variable {C} {M : Mon_ C}
 
 @[simp]
 theorem one_mul_hom {Z : C} (f : Z ⟶ M.X) : (M.one ⊗ f) ≫ M.mul = (λ_ Z).Hom ≫ f :=
@@ -80,7 +80,7 @@ theorem assoc_flip : (𝟙 M.X ⊗ M.mul) ≫ M.mul = (α_ M.X M.X M.X).inv ≫ 
 
 /-- A morphism of monoid objects. -/
 @[ext]
-structure hom(M N : Mon_ C) where 
+structure hom (M N : Mon_ C) where 
   Hom : M.X ⟶ N.X 
   one_hom' : M.one ≫ hom = N.one :=  by 
   runTac 
@@ -108,7 +108,7 @@ instance hom_inhabited (M : Mon_ C) : Inhabited (hom M M) :=
 def comp {M N O : Mon_ C} (f : hom M N) (g : hom N O) : hom M O :=
   { Hom := f.hom ≫ g.hom }
 
-instance  : category (Mon_ C) :=
+instance : category (Mon_ C) :=
   { Hom := fun M N => hom M N, id := id, comp := fun M N O f g => comp f g }
 
 @[simp]
@@ -121,7 +121,7 @@ theorem comp_hom' {M N K : Mon_ C} (f : M ⟶ N) (g : N ⟶ K) : (f ≫ g : hom 
 
 section 
 
-variable(C)
+variable (C)
 
 /-- The forgetful functor from monoid objects to the ambient category. -/
 @[simps]
@@ -133,11 +133,11 @@ end
 instance forget_faithful : faithful (@forget C _ _) :=
   {  }
 
-instance  {A B : Mon_ C} (f : A ⟶ B) [e : is_iso ((forget C).map f)] : is_iso f.hom :=
+instance {A B : Mon_ C} (f : A ⟶ B) [e : is_iso ((forget C).map f)] : is_iso f.hom :=
   e
 
 /-- The forgetful functor from monoid objects to the ambient category reflects isomorphisms. -/
-instance  : reflects_isomorphisms (forget C) :=
+instance : reflects_isomorphisms (forget C) :=
   { reflects :=
       fun X Y f e =>
         by 
@@ -171,14 +171,14 @@ instance unique_hom_from_trivial (A : Mon_ C) : Unique (trivialₓ C ⟶ A) :=
 
 open CategoryTheory.Limits
 
-instance  : has_initial (Mon_ C) :=
+instance : has_initial (Mon_ C) :=
   has_initial_of_unique (trivialₓ C)
 
 end Mon_
 
 namespace CategoryTheory.LaxMonoidalFunctor
 
-variable{C}{D : Type u₂}[category.{v₂} D][monoidal_category.{v₂} D]
+variable {C} {D : Type u₂} [category.{v₂} D] [monoidal_category.{v₂} D]
 
 /--
 A lax monoidal functor takes monoid objects to monoid objects.
@@ -238,7 +238,7 @@ def map_Mon (F : lax_monoidal_functor C D) : Mon_ C ⥤ Mon_ D :=
           ext 
           simp  }
 
-variable(C D)
+variable (C D)
 
 /-- `map_Mon` is functorial in the lax monoidal functor. -/
 def map_Mon_functor : lax_monoidal_functor C D ⥤ Mon_ C ⥤ Mon_ D :=

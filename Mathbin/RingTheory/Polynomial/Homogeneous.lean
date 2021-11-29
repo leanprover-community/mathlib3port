@@ -24,14 +24,14 @@ open_locale BigOperators
 
 namespace MvPolynomial
 
-variable{σ : Type _}{τ : Type _}{R : Type _}{S : Type _}
+variable {σ : Type _} {τ : Type _} {R : Type _} {S : Type _}
 
 /-- A multivariate polynomial `φ` is homogeneous of degree `n`
 if all monomials occuring in `φ` have degree `n`. -/
 def is_homogeneous [CommSemiringₓ R] (φ : MvPolynomial σ R) (n : ℕ) :=
   ∀ ⦃d⦄, coeff d φ ≠ 0 → (∑i in d.support, d i) = n
 
-variable(σ R)
+variable (σ R)
 
 /-- The submodule of homogeneous `mv_polynomial`s of degree `n`. -/
 noncomputable def homogeneous_submodule [CommSemiringₓ R] (n : ℕ) : Submodule R (MvPolynomial σ R) :=
@@ -59,14 +59,14 @@ noncomputable def homogeneous_submodule [CommSemiringₓ R] (n : ℕ) : Submodul
           ·
             exact hb h }
 
-variable{σ R}
+variable {σ R}
 
 @[simp]
 theorem mem_homogeneous_submodule [CommSemiringₓ R] (n : ℕ) (p : MvPolynomial σ R) :
   p ∈ homogeneous_submodule σ R n ↔ p.is_homogeneous n :=
   Iff.rfl
 
-variable(σ R)
+variable (σ R)
 
 /-- While equal, the former has a convenient definitional reduction. -/
 theorem homogeneous_submodule_eq_finsupp_supported [CommSemiringₓ R] (n : ℕ) :
@@ -77,7 +77,7 @@ theorem homogeneous_submodule_eq_finsupp_supported [CommSemiringₓ R] (n : ℕ)
     simp only [Finsupp.mem_support_iff, Finset.mem_coe]
     rfl
 
-variable{σ R}
+variable {σ R}
 
 -- error in RingTheory.Polynomial.Homogeneous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem homogeneous_submodule_mul
@@ -106,9 +106,9 @@ end
 
 section 
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
-variable{σ R}
+variable {σ R}
 
 theorem is_homogeneous_monomial (d : σ →₀ ℕ) (r : R) (n : ℕ) (hn : (∑i in d.support, d i) = n) :
   is_homogeneous (monomial d r) n :=
@@ -123,14 +123,14 @@ theorem is_homogeneous_monomial (d : σ →₀ ℕ) (r : R) (n : ℕ) (hn : (∑
     ·
       contradiction
 
-variable(σ){R}
+variable (σ) {R}
 
 theorem is_homogeneous_C (r : R) : is_homogeneous (C r : MvPolynomial σ R) 0 :=
   by 
     apply is_homogeneous_monomial 
     simp only [Finsupp.zero_apply, Finset.sum_const_zero]
 
-variable(σ R)
+variable (σ R)
 
 theorem is_homogeneous_zero (n : ℕ) : is_homogeneous (0 : MvPolynomial σ R) n :=
   (homogeneous_submodule σ R n).zero_mem
@@ -138,7 +138,7 @@ theorem is_homogeneous_zero (n : ℕ) : is_homogeneous (0 : MvPolynomial σ R) n
 theorem is_homogeneous_one : is_homogeneous (1 : MvPolynomial σ R) 0 :=
   is_homogeneous_C _ _
 
-variable{σ}(R)
+variable {σ} (R)
 
 theorem is_homogeneous_X (i : σ) : is_homogeneous (X i : MvPolynomial σ R) 1 :=
   by 
@@ -150,7 +150,7 @@ end
 
 namespace IsHomogeneous
 
-variable[CommSemiringₓ R]{φ ψ : MvPolynomial σ R}{m n : ℕ}
+variable [CommSemiringₓ R] {φ ψ : MvPolynomial σ R} {m n : ℕ}
 
 -- error in RingTheory.Polynomial.Homogeneous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem coeff_eq_zero
@@ -215,10 +215,10 @@ instance homogeneous_submodule.gcomm_semiring : SetLike.GradedMonoid (homogeneou
 
 open_locale DirectSum
 
-noncomputable example  : CommSemiringₓ (⨁i, homogeneous_submodule σ R i) :=
+noncomputable example : CommSemiringₓ (⨁i, homogeneous_submodule σ R i) :=
   inferInstance
 
-noncomputable example  : Algebra R (⨁i, homogeneous_submodule σ R i) :=
+noncomputable example : Algebra R (⨁i, homogeneous_submodule σ R i) :=
   inferInstance
 
 end IsHomogeneous
@@ -241,7 +241,7 @@ section HomogeneousComponent
 
 open Finset
 
-variable[CommSemiringₓ R](n : ℕ)(φ : MvPolynomial σ R)
+variable [CommSemiringₓ R] (n : ℕ) (φ : MvPolynomial σ R)
 
 theorem coeff_homogeneous_component (d : σ →₀ ℕ) :
   coeff d (homogeneous_component n φ) = if (∑i in d.support, d i) = n then coeff d φ else 0 :=

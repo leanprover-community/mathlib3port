@@ -45,9 +45,9 @@ open_locale Manifold
 
 namespace Units
 
-variable{R : Type _}[NormedRing R][CompleteSpace R]
+variable {R : Type _} [NormedRing R] [CompleteSpace R]
 
-instance  : ChartedSpace R (Units R) :=
+instance : ChartedSpace R (Units R) :=
   open_embedding_coe.singletonChartedSpace
 
 theorem chart_at_apply {a : Units R} {b : Units R} : chart_at R a b = b :=
@@ -56,9 +56,9 @@ theorem chart_at_apply {a : Units R} {b : Units R} : chart_at R a b = b :=
 theorem chart_at_source {a : Units R} : (chart_at R a).Source = Set.Univ :=
   rfl
 
-variable{𝕜 : Type _}[NondiscreteNormedField 𝕜][NormedAlgebra 𝕜 R]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedAlgebra 𝕜 R]
 
-instance  : SmoothManifoldWithCorners 𝓘(𝕜, R) (Units R) :=
+instance : SmoothManifoldWithCorners 𝓘(𝕜, R) (Units R) :=
   open_embedding_coe.singleton_smooth_manifold_with_corners 𝓘(𝕜, R)
 
 end Units

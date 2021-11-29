@@ -23,7 +23,7 @@ universe v v₀ v₁ v₂ u u₀ u₁ u₂
 
 namespace CategoryTheory
 
-variable(C : Type u)[category C]
+variable (C : Type u) [category C]
 
 /--
 A preadditive category `C` is called additive if it has all finite biproducts.

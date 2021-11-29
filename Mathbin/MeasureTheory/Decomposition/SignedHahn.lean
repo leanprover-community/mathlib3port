@@ -34,9 +34,9 @@ noncomputable theory
 
 open_locale Classical BigOperators Nnreal Ennreal MeasureTheory
 
-variable{α β : Type _}[MeasurableSpace α]
+variable {α β : Type _} [MeasurableSpace α]
 
-variable{M : Type _}[AddCommMonoidₓ M][TopologicalSpace M][OrderedAddCommMonoid M]
+variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M] [OrderedAddCommMonoid M]
 
 namespace MeasureTheory
 
@@ -44,7 +44,7 @@ namespace SignedMeasure
 
 open Filter VectorMeasure
 
-variable{s : signed_measure α}{i j : Set α}
+variable {s : signed_measure α} {i j : Set α}
 
 section ExistsSubsetRestrictNonpos
 

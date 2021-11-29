@@ -13,7 +13,7 @@ even, odd
 
 namespace Int
 
-variable{m n : ℤ}
+variable {m n : ℤ}
 
 @[simp]
 theorem mod_two_ne_one : ¬n % 2 = 1 ↔ n % 2 = 0 :=
@@ -95,7 +95,7 @@ theorem even_xor_odd' (n : ℤ) : ∃ k, Xorₓ (n = 2*k) (n = (2*k)+1) :=
 theorem two_dvd_ne_zero : ¬2 ∣ n ↔ n % 2 = 1 :=
   not_even_iff
 
-instance  : DecidablePred (Even : ℤ → Prop) :=
+instance : DecidablePred (Even : ℤ → Prop) :=
   fun n =>
     decidableOfDecidableOfIff
       (by 
@@ -265,14 +265,14 @@ theorem nat_abs_odd : Odd n.nat_abs ↔ Odd n :=
   by 
     rw [odd_iff_not_even, Nat.odd_iff_not_even, nat_abs_even]
 
-example  (m n : ℤ) (h : Even m) : ¬Even (n+3) ↔ Even (((m ^ 2)+m)+n) :=
+example (m n : ℤ) (h : Even m) : ¬Even (n+3) ↔ Even (((m ^ 2)+m)+n) :=
   by 
     simp' [(by 
         decide :
       ¬2 = 0)] with
       parity_simps
 
-example  : ¬Even (25394535 : ℤ) :=
+example : ¬Even (25394535 : ℤ) :=
   by 
     simp 
 

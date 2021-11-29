@@ -33,11 +33,11 @@ the bundled version, see `rel`.
 -/
 
 
-variable{α β γ δ : Type _}
+variable {α β γ δ : Type _}
 
 section NeImp
 
-variable{r : α → α → Prop}
+variable {r : α → α → Prop}
 
 theorem IsRefl.reflexive [IsRefl α r] : Reflexive r :=
   fun x => IsRefl.refl x
@@ -69,7 +69,7 @@ end NeImp
 
 section Comap
 
-variable{r : β → β → Prop}
+variable {r : β → β → Prop}
 
 theorem Reflexive.comap (h : Reflexive r) (f : α → β) : Reflexive (r on f) :=
   fun a => h (f a)
@@ -89,7 +89,7 @@ namespace Relation
 
 section Comp
 
-variable{r : α → β → Prop}{p : β → γ → Prop}{q : γ → δ → Prop}
+variable {r : α → β → Prop} {p : β → γ → Prop} {q : γ → δ → Prop}
 
 /--
 The composition of two relations, yielding a new relation.  The result
@@ -148,7 +148,7 @@ related by `r`.
 protected def map (r : α → β → Prop) (f : α → γ) (g : β → δ) : γ → δ → Prop :=
   fun c d => ∃ a b, r a b ∧ f a = c ∧ g b = d
 
-variable{r : α → α → Prop}{a b c d : α}
+variable {r : α → α → Prop} {a b c d : α}
 
 /-- `refl_trans_gen r`: reflexive transitive closure of `r` -/
 @[mkIff Relation.ReflTransGen.cases_tail_iff]
@@ -568,7 +568,7 @@ end Relation
 
 section EqvGen
 
-variable{r : α → α → Prop}{a b : α}
+variable {r : α → α → Prop} {a b : α}
 
 theorem Equivalenceₓ.eqv_gen_iff (h : Equivalenceₓ r) : EqvGen r a b ↔ r a b :=
   Iff.intro

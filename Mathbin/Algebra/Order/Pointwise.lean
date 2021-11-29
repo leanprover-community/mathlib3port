@@ -13,7 +13,7 @@ open_locale Pointwise
 
 namespace LinearOrderedField
 
-variable{K : Type _}[LinearOrderedField K]{a b r : K}(hr : 0 < r)
+variable {K : Type _} [LinearOrderedField K] {a b r : K} (hr : 0 < r)
 
 open Set
 

@@ -51,7 +51,7 @@ deduce corresponding results for Euclidean affine spaces.
 -/
 
 
-variable{V : Type _}[InnerProductSpace ℝ V]
+variable {V : Type _} [InnerProductSpace ℝ V]
 
 /-- Pythagorean theorem, if-and-only-if vector angle form. -/
 theorem norm_add_sq_eq_norm_sq_add_norm_sq_iff_angle_eq_pi_div_two (x y : V) :
@@ -272,7 +272,7 @@ open InnerProductGeometry
 
 open_locale EuclideanGeometry
 
-variable{V : Type _}{P : Type _}[InnerProductSpace ℝ V][MetricSpace P][NormedAddTorsor V P]
+variable {V : Type _} {P : Type _} [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
 
 include V
 

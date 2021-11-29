@@ -13,7 +13,7 @@ extend `has_le` and/or `has_lt` while these classes take a relation as an explic
 
 universe u v
 
-variable{α : Type u}{β : Type v}{r : α → α → Prop}{s : β → β → Prop}
+variable {α : Type u} {β : Type v} {r : α → α → Prop} {s : β → β → Prop}
 
 open Function
 
@@ -64,95 +64,95 @@ protected theorem IsAsymm.is_irrefl [IsAsymm α r] : IsIrrefl α r :=
 protected theorem IsTotal.is_trichotomous r [IsTotal α r] : IsTrichotomous α r :=
   ⟨fun a b => Or.left_comm.1 (Or.inr$ total_of r a b)⟩
 
-instance  [Preorderₓ α] : IsRefl α (· ≤ ·) :=
+instance [Preorderₓ α] : IsRefl α (· ≤ ·) :=
   ⟨le_reflₓ⟩
 
-instance  [Preorderₓ α] : IsRefl α (· ≥ ·) :=
+instance [Preorderₓ α] : IsRefl α (· ≥ ·) :=
   IsRefl.swap _
 
-instance  [Preorderₓ α] : IsTrans α (· ≤ ·) :=
+instance [Preorderₓ α] : IsTrans α (· ≤ ·) :=
   ⟨@le_transₓ _ _⟩
 
-instance  [Preorderₓ α] : IsTrans α (· ≥ ·) :=
+instance [Preorderₓ α] : IsTrans α (· ≥ ·) :=
   IsTrans.swap _
 
-instance  [Preorderₓ α] : IsPreorder α (· ≤ ·) :=
+instance [Preorderₓ α] : IsPreorder α (· ≤ ·) :=
   {  }
 
-instance  [Preorderₓ α] : IsPreorder α (· ≥ ·) :=
+instance [Preorderₓ α] : IsPreorder α (· ≥ ·) :=
   {  }
 
-instance  [Preorderₓ α] : IsIrrefl α (· < ·) :=
+instance [Preorderₓ α] : IsIrrefl α (· < ·) :=
   ⟨lt_irreflₓ⟩
 
-instance  [Preorderₓ α] : IsIrrefl α (· > ·) :=
+instance [Preorderₓ α] : IsIrrefl α (· > ·) :=
   IsIrrefl.swap _
 
-instance  [Preorderₓ α] : IsTrans α (· < ·) :=
+instance [Preorderₓ α] : IsTrans α (· < ·) :=
   ⟨@lt_transₓ _ _⟩
 
-instance  [Preorderₓ α] : IsTrans α (· > ·) :=
+instance [Preorderₓ α] : IsTrans α (· > ·) :=
   IsTrans.swap _
 
-instance  [Preorderₓ α] : IsAsymm α (· < ·) :=
+instance [Preorderₓ α] : IsAsymm α (· < ·) :=
   ⟨@lt_asymmₓ _ _⟩
 
-instance  [Preorderₓ α] : IsAsymm α (· > ·) :=
+instance [Preorderₓ α] : IsAsymm α (· > ·) :=
   IsAsymm.swap _
 
-instance  [Preorderₓ α] : IsAntisymm α (· < ·) :=
+instance [Preorderₓ α] : IsAntisymm α (· < ·) :=
   IsAsymm.is_antisymm _
 
-instance  [Preorderₓ α] : IsAntisymm α (· > ·) :=
+instance [Preorderₓ α] : IsAntisymm α (· > ·) :=
   IsAsymm.is_antisymm _
 
-instance  [Preorderₓ α] : IsStrictOrder α (· < ·) :=
+instance [Preorderₓ α] : IsStrictOrder α (· < ·) :=
   {  }
 
-instance  [Preorderₓ α] : IsStrictOrder α (· > ·) :=
+instance [Preorderₓ α] : IsStrictOrder α (· > ·) :=
   {  }
 
-instance  [PartialOrderₓ α] : IsAntisymm α (· ≤ ·) :=
+instance [PartialOrderₓ α] : IsAntisymm α (· ≤ ·) :=
   ⟨@le_antisymmₓ _ _⟩
 
-instance  [PartialOrderₓ α] : IsAntisymm α (· ≥ ·) :=
+instance [PartialOrderₓ α] : IsAntisymm α (· ≥ ·) :=
   IsAntisymm.swap _
 
-instance  [PartialOrderₓ α] : IsPartialOrder α (· ≤ ·) :=
+instance [PartialOrderₓ α] : IsPartialOrder α (· ≤ ·) :=
   {  }
 
-instance  [PartialOrderₓ α] : IsPartialOrder α (· ≥ ·) :=
+instance [PartialOrderₓ α] : IsPartialOrder α (· ≥ ·) :=
   {  }
 
-instance  [LinearOrderₓ α] : IsTotal α (· ≤ ·) :=
+instance [LinearOrderₓ α] : IsTotal α (· ≤ ·) :=
   ⟨le_totalₓ⟩
 
-instance  [LinearOrderₓ α] : IsTotal α (· ≥ ·) :=
+instance [LinearOrderₓ α] : IsTotal α (· ≥ ·) :=
   IsTotal.swap _
 
 instance LinearOrderₓ.is_total_preorder [LinearOrderₓ α] : IsTotalPreorder α (· ≤ ·) :=
   by 
     infer_instance
 
-instance  [LinearOrderₓ α] : IsTotalPreorder α (· ≥ ·) :=
+instance [LinearOrderₓ α] : IsTotalPreorder α (· ≥ ·) :=
   {  }
 
-instance  [LinearOrderₓ α] : IsLinearOrder α (· ≤ ·) :=
+instance [LinearOrderₓ α] : IsLinearOrder α (· ≤ ·) :=
   {  }
 
-instance  [LinearOrderₓ α] : IsLinearOrder α (· ≥ ·) :=
+instance [LinearOrderₓ α] : IsLinearOrder α (· ≥ ·) :=
   {  }
 
-instance  [LinearOrderₓ α] : IsTrichotomous α (· < ·) :=
+instance [LinearOrderₓ α] : IsTrichotomous α (· < ·) :=
   ⟨lt_trichotomyₓ⟩
 
-instance  [LinearOrderₓ α] : IsTrichotomous α (· > ·) :=
+instance [LinearOrderₓ α] : IsTrichotomous α (· > ·) :=
   IsTrichotomous.swap _
 
-instance  [LinearOrderₓ α] : IsTrichotomous α (· ≤ ·) :=
+instance [LinearOrderₓ α] : IsTrichotomous α (· ≤ ·) :=
   IsTotal.is_trichotomous _
 
-instance  [LinearOrderₓ α] : IsTrichotomous α (· ≥ ·) :=
+instance [LinearOrderₓ α] : IsTrichotomous α (· ≥ ·) :=
   IsTotal.is_trichotomous _
 
 instance OrderDual.is_total_le [LE α] [IsTotal α (· ≤ ·)] : IsTotal (OrderDual α) (· ≤ ·) :=
@@ -213,7 +213,7 @@ def partialOrderOfSO r [IsStrictOrder α r] : PartialOrderₓ α :=
 /-- This is basically the same as `is_strict_total_order`, but that definition has a redundant
 assumption `is_incomp_trans α lt`. -/
 @[algebra]
-class IsStrictTotalOrder'(α : Type u)(lt : α → α → Prop) extends IsTrichotomous α lt, IsStrictOrder α lt : Prop
+class IsStrictTotalOrder' (α : Type u) (lt : α → α → Prop) extends IsTrichotomous α lt, IsStrictOrder α lt : Prop
 
 /-- Construct a linear order from an `is_strict_total_order'` relation.
 
@@ -236,7 +236,7 @@ def linearOrderOfSTO' r [IsStrictTotalOrder' α r] [∀ x y, Decidable ¬r x y] 
 theorem IsStrictTotalOrder'.swap r [IsStrictTotalOrder' α r] : IsStrictTotalOrder' α (swap r) :=
   { IsTrichotomous.swap r, IsStrictOrder.swap r with  }
 
-instance  [LinearOrderₓ α] : IsStrictTotalOrder' α (· < ·) :=
+instance [LinearOrderₓ α] : IsStrictTotalOrder' α (· < ·) :=
   {  }
 
 /-- A connected order is one satisfying the condition `a < c → a < b ∨ b < c`.
@@ -244,7 +244,7 @@ instance  [LinearOrderₓ α] : IsStrictTotalOrder' α (· < ·) :=
   the constructive reals, and is also known as negative transitivity,
   since the contrapositive asserts transitivity of the relation `¬ a < b`.  -/
 @[algebra]
-class IsOrderConnected(α : Type u)(lt : α → α → Prop) : Prop where 
+class IsOrderConnected (α : Type u) (lt : α → α → Prop) : Prop where 
   conn : ∀ a b c, lt a c → lt a b ∨ lt b c
 
 theorem IsOrderConnected.neg_trans {r : α → α → Prop} [IsOrderConnected α r] {a b c} (h₁ : ¬r a b) (h₂ : ¬r b c) :
@@ -258,27 +258,27 @@ theorem is_strict_weak_order_of_is_order_connected [IsAsymm α r] [IsOrderConnec
     incomp_trans :=
       fun a b c ⟨h₁, h₂⟩ ⟨h₃, h₄⟩ => ⟨IsOrderConnected.neg_trans h₁ h₃, IsOrderConnected.neg_trans h₄ h₂⟩ }
 
-instance (priority := 100)is_order_connected_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
+instance (priority := 100) is_order_connected_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
   IsOrderConnected α r :=
   ⟨fun a b c h => (trichotomous _ _).imp_right fun o => o.elim (fun e => e ▸ h) fun h' => trans h' h⟩
 
-instance (priority := 100)is_strict_total_order_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
+instance (priority := 100) is_strict_total_order_of_is_strict_total_order' [IsStrictTotalOrder' α r] :
   IsStrictTotalOrder α r :=
   { is_strict_weak_order_of_is_order_connected with  }
 
-instance  [LinearOrderₓ α] : IsStrictTotalOrder α (· < ·) :=
+instance [LinearOrderₓ α] : IsStrictTotalOrder α (· < ·) :=
   by 
     infer_instance
 
-instance  [LinearOrderₓ α] : IsOrderConnected α (· < ·) :=
+instance [LinearOrderₓ α] : IsOrderConnected α (· < ·) :=
   by 
     infer_instance
 
-instance  [LinearOrderₓ α] : IsIncompTrans α (· < ·) :=
+instance [LinearOrderₓ α] : IsIncompTrans α (· < ·) :=
   by 
     infer_instance
 
-instance  [LinearOrderₓ α] : IsStrictWeakOrder α (· < ·) :=
+instance [LinearOrderₓ α] : IsStrictWeakOrder α (· < ·) :=
   by 
     infer_instance
 
@@ -286,39 +286,39 @@ instance  [LinearOrderₓ α] : IsStrictWeakOrder α (· < ·) :=
   of predecessors. It is named for the `x ∈ y` relation in set theory, whose
   extensionality is one of the first axioms of ZFC. -/
 @[algebra]
-class IsExtensional(α : Type u)(r : α → α → Prop) : Prop where 
+class IsExtensional (α : Type u) (r : α → α → Prop) : Prop where 
   ext : ∀ a b, (∀ x, r x a ↔ r x b) → a = b
 
-instance (priority := 100)is_extensional_of_is_strict_total_order' [IsStrictTotalOrder' α r] : IsExtensional α r :=
+instance (priority := 100) is_extensional_of_is_strict_total_order' [IsStrictTotalOrder' α r] : IsExtensional α r :=
   ⟨fun a b H => ((@trichotomous _ r _ a b).resolve_left$ mt (H _).2 (irrefl a)).resolve_right$ mt (H _).1 (irrefl b)⟩
 
 /-- A well order is a well-founded linear order. -/
 @[algebra]
-class IsWellOrder(α : Type u)(r : α → α → Prop) extends IsStrictTotalOrder' α r : Prop where 
+class IsWellOrder (α : Type u) (r : α → α → Prop) extends IsStrictTotalOrder' α r : Prop where 
   wf : WellFounded r
 
-instance (priority := 100)IsWellOrder.is_strict_total_order {α} (r : α → α → Prop) [IsWellOrder α r] :
+instance (priority := 100) IsWellOrder.is_strict_total_order {α} (r : α → α → Prop) [IsWellOrder α r] :
   IsStrictTotalOrder α r :=
   by 
     infer_instance
 
-instance (priority := 100)IsWellOrder.is_extensional {α} (r : α → α → Prop) [IsWellOrder α r] : IsExtensional α r :=
+instance (priority := 100) IsWellOrder.is_extensional {α} (r : α → α → Prop) [IsWellOrder α r] : IsExtensional α r :=
   by 
     infer_instance
 
-instance (priority := 100)IsWellOrder.is_trichotomous {α} (r : α → α → Prop) [IsWellOrder α r] : IsTrichotomous α r :=
+instance (priority := 100) IsWellOrder.is_trichotomous {α} (r : α → α → Prop) [IsWellOrder α r] : IsTrichotomous α r :=
   by 
     infer_instance
 
-instance (priority := 100)IsWellOrder.is_trans {α} (r : α → α → Prop) [IsWellOrder α r] : IsTrans α r :=
+instance (priority := 100) IsWellOrder.is_trans {α} (r : α → α → Prop) [IsWellOrder α r] : IsTrans α r :=
   by 
     infer_instance
 
-instance (priority := 100)IsWellOrder.is_irrefl {α} (r : α → α → Prop) [IsWellOrder α r] : IsIrrefl α r :=
+instance (priority := 100) IsWellOrder.is_irrefl {α} (r : α → α → Prop) [IsWellOrder α r] : IsIrrefl α r :=
   by 
     infer_instance
 
-instance (priority := 100)IsWellOrder.is_asymm {α} (r : α → α → Prop) [IsWellOrder α r] : IsAsymm α r :=
+instance (priority := 100) IsWellOrder.is_asymm {α} (r : α → α → Prop) [IsWellOrder α r] : IsAsymm α r :=
   by 
     infer_instance
 

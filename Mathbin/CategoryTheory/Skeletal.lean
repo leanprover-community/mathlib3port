@@ -24,11 +24,11 @@ namespace CategoryTheory
 
 open Category
 
-variable(C : Type u₁)[category.{v₁} C]
+variable (C : Type u₁) [category.{v₁} C]
 
-variable(D : Type u₂)[category.{v₂} D]
+variable (D : Type u₂) [category.{v₂} D]
 
-variable{E : Type u₃}[category.{v₃} E]
+variable {E : Type u₃} [category.{v₃} E]
 
 /-- A category is skeletal if isomorphic objects are equal. -/
 def skeletal : Prop :=
@@ -38,13 +38,13 @@ def skeletal : Prop :=
 `is_skeleton_of C D F` says that `F : D ⥤ C` exhibits `D` as a skeletal full subcategory of `C`,
 in particular `F` is a (strong) equivalence and `D` is skeletal.
 -/
-structure is_skeleton_of(F : D ⥤ C) where 
+structure is_skeleton_of (F : D ⥤ C) where 
   skel : skeletal D 
   eqv : is_equivalence F
 
 attribute [local instance] is_isomorphic_setoid
 
-variable{C D}
+variable {C D}
 
 /-- If `C` is thin and skeletal, then any naturally isomorphic functors to `C` are equal. -/
 theorem functor.eq_of_iso {F₁ F₂ : D ⥤ C} [∀ X Y : C, Subsingleton (X ⟶ Y)] (hC : skeletal C) (hF : F₁ ≅ F₂) :
@@ -58,7 +58,7 @@ If `C` is thin and skeletal, `D ⥤ C` is skeletal.
 theorem functor_skeletal [∀ X Y : C, Subsingleton (X ⟶ Y)] (hC : skeletal C) : skeletal (D ⥤ C) :=
   fun F₁ F₂ h => h.elim (functor.eq_of_iso hC)
 
-variable(C D)
+variable (C D)
 
 -- error in CategoryTheory.Skeletal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--
@@ -67,7 +67,7 @@ its category structure.
 -/ @[derive #[expr category]] def skeleton : Type u₁ :=
 induced_category C quotient.out
 
-instance  [Inhabited C] : Inhabited (skeleton C) :=
+instance [Inhabited C] : Inhabited (skeleton C) :=
   ⟨«expr⟦ ⟧» (default C)⟩
 
 -- error in CategoryTheory.Skeletal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
@@ -77,10 +77,10 @@ noncomputable
 def from_skeleton : «expr ⥤ »(skeleton C, C) :=
 induced_functor _
 
-instance  : ess_surj (from_skeleton C) :=
+instance : ess_surj (from_skeleton C) :=
   { mem_ess_image := fun X => ⟨Quotientₓ.mk X, Quotientₓ.mk_out X⟩ }
 
-noncomputable instance  : is_equivalence (from_skeleton C) :=
+noncomputable instance : is_equivalence (from_skeleton C) :=
   equivalence.of_fully_faithfully_ess_surj (from_skeleton C)
 
 /-- The equivalence between the skeleton and the category itself. -/
@@ -101,7 +101,7 @@ noncomputable def skeleton_is_skeleton : is_skeleton_of C (skeleton C) (from_ske
 
 section 
 
-variable{C D}
+variable {C D}
 
 /--
 Two categories which are categorically equivalent have skeletons with equivalent objects.
@@ -155,7 +155,7 @@ instance thin {X Y : thin_skeleton C} : Subsingleton (X ⟶ Y) :=
       rintro ⟨⟨f₁⟩⟩ ⟨⟨f₂⟩⟩
       rfl⟩
 
-variable{C}{D}
+variable {C} {D}
 
 /-- A functor `C ⥤ D` computably lowers to a functor `thin_skeleton C ⥤ thin_skeleton D`. -/
 @[simps]
@@ -193,11 +193,11 @@ def map₂ (F : C ⥤ D ⥤ E) : thin_skeleton C ⥤ thin_skeleton D ⥤ thin_sk
             { app :=
                 fun y => Quotientₓ.recOnSubsingleton y fun Y => hom_of_le (f.le.elim fun f' => ⟨(F.map f').app Y⟩) } }
 
-variable(C)
+variable (C)
 
 section 
 
-variable[∀ X Y : C, Subsingleton (X ⟶ Y)]
+variable [∀ X Y : C, Subsingleton (X ⟶ Y)]
 
 instance to_thin_skeleton_faithful : faithful (to_thin_skeleton C) :=
   {  }
@@ -229,7 +229,7 @@ noncomputable instance from_thin_skeleton_equivalence : is_equivalence (from_thi
 noncomputable def Equivalenceₓ : thin_skeleton C ≌ C :=
   (from_thin_skeleton C).asEquivalence
 
-variable{C}
+variable {C}
 
 theorem equiv_of_both_ways {X Y : C} (f : X ⟶ Y) (g : Y ⟶ X) : X ≈ Y :=
   ⟨iso_of_both_ways f g⟩
@@ -270,7 +270,7 @@ noncomputable instance is_skeleton_of_inhabited :
 
 end 
 
-variable{C}
+variable {C}
 
 -- error in CategoryTheory.Skeletal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An adjunction between thin categories gives an adjunction between their thin skeletons. -/
@@ -293,7 +293,7 @@ open ThinSkeleton
 
 section 
 
-variable{C}{α : Type _}[PartialOrderₓ α]
+variable {C} {α : Type _} [PartialOrderₓ α]
 
 /--
 When `e : C ≌ α` is a categorical equivalence from a thin category `C` to some partial order `α`,

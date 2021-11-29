@@ -91,7 +91,7 @@ theorem Nat.irreducible_iff_prime {p : ℕ} : Irreducible p ↔ Prime p :=
 
 namespace Nat
 
-instance  : WfDvdMonoid ℕ :=
+instance : WfDvdMonoid ℕ :=
   ⟨by 
       apply RelHom.well_founded _ (WithTop.well_founded_lt Nat.lt_wf)
       refine' ⟨fun x => if x = 0 then ⊤ else x, _⟩
@@ -109,13 +109,13 @@ instance  : WfDvdMonoid ℕ :=
       apply lt_of_le_of_neₓ (Nat.le_of_dvdₓ (Nat.succ_posₓ _) h1) fun con => h2 _ 
       rw [Con]⟩
 
-instance  : UniqueFactorizationMonoid ℕ :=
+instance : UniqueFactorizationMonoid ℕ :=
   ⟨fun _ => Nat.irreducible_iff_prime⟩
 
 end Nat
 
 /-- `ℕ` is a gcd_monoid. -/
-instance  : GcdMonoid ℕ :=
+instance : GcdMonoid ℕ :=
   { gcd := Nat.gcdₓ, lcm := Nat.lcmₓ, gcd_dvd_left := Nat.gcd_dvd_leftₓ, gcd_dvd_right := Nat.gcd_dvd_rightₓ,
     dvd_gcd := fun a b c => Nat.dvd_gcdₓ,
     gcd_mul_lcm :=
@@ -124,7 +124,7 @@ instance  : GcdMonoid ℕ :=
           rw [Nat.gcd_mul_lcmₓ],
     lcm_zero_left := Nat.lcm_zero_leftₓ, lcm_zero_right := Nat.lcm_zero_rightₓ }
 
-instance  : NormalizedGcdMonoid ℕ :=
+instance : NormalizedGcdMonoid ℕ :=
   { (inferInstance : GcdMonoid ℕ), (inferInstance : NormalizationMonoid ℕ) with
     normalize_gcd := fun a b => normalize_eq _, normalize_lcm := fun a b => normalize_eq _ }
 
@@ -138,7 +138,7 @@ namespace Int
 
 section NormalizationMonoid
 
-instance  : NormalizationMonoid ℤ :=
+instance : NormalizationMonoid ℤ :=
   { normUnit := fun a : ℤ => if 0 ≤ a then 1 else -1, norm_unit_zero := if_pos (le_reflₓ _),
     norm_unit_mul :=
       fun a b hna hnb =>
@@ -190,7 +190,7 @@ end NormalizationMonoid
 
 section GcdMonoid
 
-instance  : GcdMonoid ℤ :=
+instance : GcdMonoid ℤ :=
   { gcd := fun a b => Int.gcdₓ a b, lcm := fun a b => Int.lcm a b, gcd_dvd_left := fun a b => Int.gcd_dvd_left _ _,
     gcd_dvd_right := fun a b => Int.gcd_dvd_right _ _, dvd_gcd := fun a b c => dvd_gcd,
     gcd_mul_lcm :=
@@ -201,7 +201,7 @@ instance  : GcdMonoid ℤ :=
     lcm_zero_left := fun a => coe_nat_eq_zero.2$ Nat.lcm_zero_leftₓ _,
     lcm_zero_right := fun a => coe_nat_eq_zero.2$ Nat.lcm_zero_rightₓ _ }
 
-instance  : NormalizedGcdMonoid ℤ :=
+instance : NormalizedGcdMonoid ℤ :=
   { Int.normalizationMonoid, (inferInstance : GcdMonoid ℤ) with normalize_gcd := fun a b => normalize_coe_nat _,
     normalize_lcm := fun a b => normalize_coe_nat _ }
 

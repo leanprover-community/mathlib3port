@@ -28,7 +28,7 @@ namespace Pmf
 
 noncomputable theory
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 open_locale Classical BigOperators Nnreal Ennreal
 

@@ -10,7 +10,7 @@ import Mathbin.Topology.ContinuousFunction.Algebra
 
 namespace LocallyConstant
 
-variable{X Y : Type _}[TopologicalSpace X][TopologicalSpace Y](f : LocallyConstant X Y)
+variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] (f : LocallyConstant X Y)
 
 /-- The inclusion of locally-constant functions into continuous functions as a multiplicative
 monoid hom. -/

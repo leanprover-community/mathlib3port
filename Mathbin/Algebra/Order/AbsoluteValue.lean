@@ -17,7 +17,7 @@ This file defines a bundled type of absolute values `absolute_value R S`.
 
 /-- `absolute_value R S` is the type of absolute values on `R` mapping to `S`:
 the maps that preserve `*`, are nonnegative, positive definite and satisfy the triangle equality. -/
-structure AbsoluteValue(R S : Type _)[Semiringₓ R][OrderedSemiring S] extends MulHom R S where 
+structure AbsoluteValue (R S : Type _) [Semiringₓ R] [OrderedSemiring S] extends MulHom R S where 
   nonneg' : ∀ x, 0 ≤ to_fun x 
   eq_zero' : ∀ x, to_fun x = 0 ↔ x = 0
   add_le' : ∀ x y, to_fun (x+y) ≤ to_fun x+to_fun y
@@ -30,9 +30,9 @@ initialize_simps_projections AbsoluteValue (to_mul_hom_to_fun → apply)
 
 section OrderedSemiring
 
-variable{R S : Type _}[Semiringₓ R][OrderedSemiring S](abv : AbsoluteValue R S)
+variable {R S : Type _} [Semiringₓ R] [OrderedSemiring S] (abv : AbsoluteValue R S)
 
-instance  : CoeFun (AbsoluteValue R S) fun f => R → S :=
+instance : CoeFun (AbsoluteValue R S) fun f => R → S :=
   ⟨fun f => f.to_fun⟩
 
 @[simp]
@@ -71,7 +71,7 @@ end OrderedSemiring
 
 section OrderedRing
 
-variable{R S : Type _}[Ringₓ R][OrderedRing S](abv : AbsoluteValue R S)
+variable {R S : Type _} [Ringₓ R] [OrderedRing S] (abv : AbsoluteValue R S)
 
 protected theorem sub_le (a b c : R) : abv (a - c) ≤ abv (a - b)+abv (b - c) :=
   by 
@@ -90,17 +90,17 @@ end OrderedRing
 
 section LinearOrderedRing
 
-variable{R S : Type _}[Semiringₓ R][LinearOrderedRing S](abv : AbsoluteValue R S)
+variable {R S : Type _} [Semiringₓ R] [LinearOrderedRing S] (abv : AbsoluteValue R S)
 
 /-- `absolute_value.abs` is `abs` as a bundled `absolute_value`. -/
 @[simps]
 protected def abs : AbsoluteValue S S :=
   { toFun := abs, nonneg' := abs_nonneg, eq_zero' := fun _ => abs_eq_zero, add_le' := abs_add, map_mul' := abs_mul }
 
-instance  : Inhabited (AbsoluteValue S S) :=
+instance : Inhabited (AbsoluteValue S S) :=
   ⟨AbsoluteValue.abs⟩
 
-variable[Nontrivial R]
+variable [Nontrivial R]
 
 @[simp]
 protected theorem map_one : abv 1 = 1 :=
@@ -134,7 +134,7 @@ section LinearOrderedCommRing
 
 section Ringₓ
 
-variable{R S : Type _}[Ringₓ R][LinearOrderedCommRing S](abv : AbsoluteValue R S)
+variable {R S : Type _} [Ringₓ R] [LinearOrderedCommRing S] (abv : AbsoluteValue R S)
 
 @[simp]
 protected theorem map_neg (a : R) : abv (-a) = abv a :=
@@ -167,7 +167,7 @@ section LinearOrderedField
 
 section Field
 
-variable{R S : Type _}[DivisionRing R][LinearOrderedField S](abv : AbsoluteValue R S)
+variable {R S : Type _} [DivisionRing R] [LinearOrderedField S] (abv : AbsoluteValue R S)
 
 @[simp]
 protected theorem map_inv (a : R) : abv (a⁻¹) = abv a⁻¹ :=
@@ -190,7 +190,7 @@ multiplicative.
 
 See also the type `absolute_value` which represents a bundled version of absolute values.
 -/
-class IsAbsoluteValue{S}[OrderedSemiring S]{R}[Semiringₓ R](f : R → S) : Prop where 
+class IsAbsoluteValue {S} [OrderedSemiring S] {R} [Semiringₓ R] (f : R → S) : Prop where 
   abv_nonneg{} : ∀ x, 0 ≤ f x 
   abv_eq_zero{} : ∀ {x}, f x = 0 ↔ x = 0
   abv_add{} : ∀ x y, f (x+y) ≤ f x+f y 
@@ -200,9 +200,9 @@ namespace IsAbsoluteValue
 
 section OrderedSemiring
 
-variable{S : Type _}[OrderedSemiring S]
+variable {S : Type _} [OrderedSemiring S]
 
-variable{R : Type _}[Semiringₓ R](abv : R → S)[IsAbsoluteValue abv]
+variable {R : Type _} [Semiringₓ R] (abv : R → S) [IsAbsoluteValue abv]
 
 /-- A bundled absolute value is an absolute value. -/
 instance absolute_value.is_absolute_value (abv : AbsoluteValue R S) : IsAbsoluteValue abv :=
@@ -225,9 +225,9 @@ end OrderedSemiring
 
 section LinearOrderedRing
 
-variable{S : Type _}[LinearOrderedRing S]
+variable {S : Type _} [LinearOrderedRing S]
 
-variable{R : Type _}[Semiringₓ R](abv : R → S)[IsAbsoluteValue abv]
+variable {R : Type _} [Semiringₓ R] (abv : R → S) [IsAbsoluteValue abv]
 
 instance abs_is_absolute_value {S} [LinearOrderedRing S] : IsAbsoluteValue (abs : S → S) :=
   { abv_nonneg := abs_nonneg, abv_eq_zero := fun _ => abs_eq_zero, abv_add := abs_add, abv_mul := abs_mul }
@@ -236,11 +236,11 @@ end LinearOrderedRing
 
 section LinearOrderedCommRing
 
-variable{S : Type _}[LinearOrderedCommRing S]
+variable {S : Type _} [LinearOrderedCommRing S]
 
 section Semiringₓ
 
-variable{R : Type _}[Semiringₓ R](abv : R → S)[IsAbsoluteValue abv]
+variable {R : Type _} [Semiringₓ R] (abv : R → S) [IsAbsoluteValue abv]
 
 theorem abv_one [Nontrivial R] : abv 1 = 1 :=
   (mul_right_inj'$ mt (abv_eq_zero abv).1 one_ne_zero).1$
@@ -260,11 +260,11 @@ end LinearOrderedCommRing
 
 section LinearOrderedField
 
-variable{S : Type _}[LinearOrderedField S]
+variable {S : Type _} [LinearOrderedField S]
 
 section Ringₓ
 
-variable{R : Type _}[Ringₓ R](abv : R → S)[IsAbsoluteValue abv]
+variable {R : Type _} [Ringₓ R] (abv : R → S) [IsAbsoluteValue abv]
 
 theorem abv_neg (a : R) : abv (-a) = abv a :=
   by 
@@ -293,7 +293,7 @@ end Ringₓ
 
 section Field
 
-variable{R : Type _}[DivisionRing R](abv : R → S)[IsAbsoluteValue abv]
+variable {R : Type _} [DivisionRing R] (abv : R → S) [IsAbsoluteValue abv]
 
 theorem abv_inv (a : R) : abv (a⁻¹) = abv a⁻¹ :=
   (abv_hom abv).map_inv a

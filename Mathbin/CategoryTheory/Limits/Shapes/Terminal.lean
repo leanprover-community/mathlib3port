@@ -19,7 +19,7 @@ open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /-- Construct a cone for the empty diagram given an object. -/
 @[simps]
@@ -133,21 +133,21 @@ def is_terminal.unique_up_to_iso {T T' : C} (hT : is_terminal T) (hT' : is_termi
 def is_initial.unique_up_to_iso {I I' : C} (hI : is_initial I) (hI' : is_initial I') : I ≅ I' :=
   { Hom := hI.to _, inv := hI'.to _ }
 
-variable(C)
+variable (C)
 
 /--
 A category has a terminal object if it has a limit over the empty diagram.
 Use `has_terminal_of_unique` to construct instances.
 -/
 abbrev has_terminal :=
-  has_limits_of_shape (discrete Pempty) C
+  has_limits_of_shape (discrete Pempty : Type v) C
 
 /--
 A category has an initial object if it has a colimit over the empty diagram.
 Use `has_initial_of_unique` to construct instances.
 -/
 abbrev has_initial :=
-  has_colimits_of_shape (discrete Pempty) C
+  has_colimits_of_shape (discrete Pempty : Type v) C
 
 /--
 An arbitrary choice of terminal object, if one exists.
@@ -171,7 +171,7 @@ notation "⊥_ " C:20 => initial C
 
 section 
 
-variable{C}
+variable {C}
 
 /-- We can more explicitly show that a category has a terminal object by specifying the object,
 and showing there is a unique morphism to it from any other object. -/
@@ -262,7 +262,7 @@ to terminal is a monomorphism, which is the second of Freyd's axioms for an AT c
 
 TODO: This is a condition satisfied by categories with zero objects and morphisms.
 -/
-class initial_mono_class(C : Type u)[category.{v} C] : Prop where 
+class initial_mono_class (C : Type u) [category.{v} C] : Prop where 
   is_initial_mono_from : ∀ {I} X : C hI : is_initial I, mono (hI.to X)
 
 theorem is_initial.mono_from [initial_mono_class C] {I} {X : C} (hI : is_initial I) (f : I ⟶ X) : mono f :=
@@ -270,7 +270,7 @@ theorem is_initial.mono_from [initial_mono_class C] {I} {X : C} (hI : is_initial
     rw [hI.hom_ext f (hI.to X)]
     apply initial_mono_class.is_initial_mono_from
 
-instance (priority := 100)initial.mono_from [has_initial C] [initial_mono_class C] (X : C) (f : ⊥_ C ⟶ X) : mono f :=
+instance (priority := 100) initial.mono_from [has_initial C] [initial_mono_class C] (X : C) (f : ⊥_ C ⟶ X) : mono f :=
   initial_is_initial.mono_from f
 
 /-- To show a category is a `initial_mono_class` it suffices to give an initial object such that
@@ -301,7 +301,7 @@ theorem initial_mono_class.of_terminal [has_initial C] [has_terminal C] (h : mon
 
 section Comparison
 
-variable{D : Type u₂}[category.{v} D](G : C ⥤ D)
+variable {D : Type u₂} [category.{v} D] (G : C ⥤ D)
 
 /--
 The comparison morphism from the image of a terminal object to the terminal object in the target
@@ -321,7 +321,7 @@ def initial_comparison [has_initial C] [has_initial D] : ⊥_ D ⟶ G.obj (⊥_ 
 
 end Comparison
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
 /-- From a functor `F : J ⥤ C`, given an initial object of `J`, construct a cone for `J`.
 In `limit_of_diagram_initial` we show it is a limit cone. -/

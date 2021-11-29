@@ -28,11 +28,11 @@ open Finset Filter Function Classical
 
 open_locale TopologicalSpace Classical BigOperators Nnreal
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 section HasSum
 
-variable[AddCommMonoidₓ α][TopologicalSpace α]
+variable [AddCommMonoidₓ α] [TopologicalSpace α]
 
 /-- Infinite sum on a topological monoid
 
@@ -61,7 +61,7 @@ def tsum {β} (f : β → α) :=
 
 notation3  "∑'" (...) ", " r:(scoped f => tsum f) => r
 
-variable{f g : β → α}{a b : α}{s : Finset β}
+variable {f g : β → α} {a b : α} {s : Finset β}
 
 theorem Summable.has_sum (ha : Summable f) : HasSum f (∑'b, f b) :=
   by 
@@ -233,7 +233,7 @@ theorem Equiv.summable_iff_of_has_sum_iff {α' : Type _} [AddCommMonoidₓ α'] 
             rwa [e.apply_symm_apply]⟩,
     fun ⟨a, ha⟩ => ⟨e a, he.2 ha⟩⟩
 
-variable[HasContinuousAdd α]
+variable [HasContinuousAdd α]
 
 theorem HasSum.add (hf : HasSum f a) (hg : HasSum g b) : HasSum (fun b => f b+g b) (a+b) :=
   by 
@@ -346,9 +346,9 @@ end HasSum
 
 section tsum
 
-variable[AddCommMonoidₓ α][TopologicalSpace α][T2Space α]
+variable [AddCommMonoidₓ α] [TopologicalSpace α] [T2Space α]
 
-variable{f g : β → α}{a a₁ a₂ : α}
+variable {f g : β → α} {a a₁ a₂ : α}
 
 theorem HasSum.tsum_eq (ha : HasSum f a) : (∑'b, f b) = a :=
   (Summable.has_sum ⟨a, ha⟩).unique ha
@@ -431,7 +431,7 @@ theorem tsum_subtype (s : Set β) (f : β → α) : (∑'x : s, f x) = ∑'x, s.
 
 section HasContinuousAdd
 
-variable[HasContinuousAdd α]
+variable [HasContinuousAdd α]
 
 theorem tsum_add (hf : Summable f) (hg : Summable g) : (∑'b, f b+g b) = (∑'b, f b)+∑'b, g b :=
   (hf.has_sum.add hg.has_sum).tsum_eq
@@ -461,7 +461,7 @@ section Encodable
 
 open Encodable
 
-variable[Encodable γ]
+variable [Encodable γ]
 
 -- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- You can compute a sum over an encodably type by summing over the natural numbers and
@@ -539,7 +539,7 @@ theorem rel_sup_add [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : �
 
 end Encodable
 
-variable[HasContinuousAdd α]
+variable [HasContinuousAdd α]
 
 theorem tsum_add_tsum_compl {s : Set β} (hs : Summable (f ∘ coeₓ : s → α))
   (hsc : Summable (f ∘ coeₓ : «expr ᶜ» s → α)) : ((∑'x : s, f x)+∑'x : «expr ᶜ» s, f x) = ∑'x, f x :=
@@ -557,7 +557,7 @@ end tsum
 
 section Prod
 
-variable[AddCommMonoidₓ α][TopologicalSpace α][AddCommMonoidₓ γ][TopologicalSpace γ]
+variable [AddCommMonoidₓ α] [TopologicalSpace α] [AddCommMonoidₓ γ] [TopologicalSpace γ]
 
 theorem HasSum.prod_mk {f : β → α} {g : β → γ} {a : α} {b : γ} (hf : HasSum f a) (hg : HasSum g b) :
   HasSum (fun x => (⟨f x, g x⟩ : α × γ)) ⟨a, b⟩ :=
@@ -568,11 +568,11 @@ end Prod
 
 section Pi
 
-variable{ι : Type _}{π : α → Type _}[∀ x, AddCommMonoidₓ (π x)][∀ x, TopologicalSpace (π x)]
+variable {ι : Type _} {π : α → Type _} [∀ x, AddCommMonoidₓ (π x)] [∀ x, TopologicalSpace (π x)]
 
 theorem Pi.has_sum {f : ι → ∀ x, π x} {g : ∀ x, π x} : HasSum f g ↔ ∀ x, HasSum (fun i => f i x) (g x) :=
   by 
-    simp only [HasSum, tendsto_pi, sum_apply]
+    simp only [HasSum, tendsto_pi_nhds, sum_apply]
 
 theorem Pi.summable {f : ι → ∀ x, π x} : Summable f ↔ ∀ x, Summable fun i => f i x :=
   by 
@@ -585,9 +585,9 @@ end Pi
 
 section TopologicalGroup
 
-variable[AddCommGroupₓ α][TopologicalSpace α][TopologicalAddGroup α]
+variable [AddCommGroupₓ α] [TopologicalSpace α] [TopologicalAddGroup α]
 
-variable{f g : β → α}{a a₁ a₂ : α}
+variable {f g : β → α} {a a₁ a₂ : α}
 
 theorem HasSum.neg (h : HasSum f a) : HasSum (fun b => -f b) (-a) :=
   by 
@@ -683,7 +683,7 @@ theorem has_sum_ite_eq_extract [DecidableEq β] (hf : HasSum f a) (b : β) :
 
 section tsum
 
-variable[T2Space α]
+variable [T2Space α]
 
 theorem tsum_neg (hf : Summable f) : (∑'b, -f b) = -∑'b, f b :=
   hf.has_sum.neg.tsum_eq
@@ -769,9 +769,9 @@ end TopologicalGroup
 
 section TopologicalRing
 
-variable[Semiringₓ α][TopologicalSpace α][TopologicalRing α]
+variable [Semiringₓ α] [TopologicalSpace α] [TopologicalRing α]
 
-variable{f g : β → α}{a a₁ a₂ : α}
+variable {f g : β → α} {a a₁ a₂ : α}
 
 theorem HasSum.mul_left a₂ (h : HasSum f a₁) : HasSum (fun b => a₂*f b) (a₂*a₁) :=
   by 
@@ -789,7 +789,7 @@ theorem Summable.mul_right a (hf : Summable f) : Summable fun b => f b*a :=
 
 section tsum
 
-variable[T2Space α]
+variable [T2Space α]
 
 theorem Summable.tsum_mul_left a (hf : Summable f) : (∑'b, a*f b) = a*∑'b, f b :=
   (hf.has_sum.mul_left _).tsum_eq
@@ -803,11 +803,8 @@ end TopologicalRing
 
 section ConstSmul
 
-variable{R :
-    Type
-      _}[Monoidₓ
-      R][TopologicalSpace
-      R][TopologicalSpace α][AddCommMonoidₓ α][DistribMulAction R α][HasContinuousSmul R α]{f : β → α}
+variable {R : Type _} [Monoidₓ R] [TopologicalSpace R] [TopologicalSpace α] [AddCommMonoidₓ α] [DistribMulAction R α]
+  [HasContinuousSmul R α] {f : β → α}
 
 theorem HasSum.const_smul {a : α} {r : R} (hf : HasSum f a) : HasSum (fun z => r • f z) (r • a) :=
   hf.map (DistribMulAction.toAddMonoidHom α r) (continuous_const.smul continuous_id)
@@ -822,10 +819,8 @@ end ConstSmul
 
 section SmulConst
 
-variable{R :
-    Type
-      _}[Semiringₓ
-      R][TopologicalSpace R][TopologicalSpace α][AddCommMonoidₓ α][Module R α][HasContinuousSmul R α]{f : β → R}
+variable {R : Type _} [Semiringₓ R] [TopologicalSpace R] [TopologicalSpace α] [AddCommMonoidₓ α] [Module R α]
+  [HasContinuousSmul R α] {f : β → R}
 
 theorem HasSum.smul_const {a : α} {r : R} (hf : HasSum f r) : HasSum (fun z => f z • a) (r • a) :=
   hf.map ((smulAddHom R α).flip a) (continuous_id.smul continuous_const)
@@ -840,7 +835,7 @@ end SmulConst
 
 section DivisionRing
 
-variable[DivisionRing α][TopologicalSpace α][TopologicalRing α]{f g : β → α}{a a₁ a₂ : α}
+variable [DivisionRing α] [TopologicalSpace α] [TopologicalRing α] {f g : β → α} {a a₁ a₂ : α}
 
 theorem HasSum.div_const (h : HasSum f a) (b : α) : HasSum (fun x => f x / b) (a / b) :=
   by 
@@ -897,9 +892,9 @@ end DivisionRing
 
 section OrderTopology
 
-variable[OrderedAddCommMonoid α][TopologicalSpace α][OrderClosedTopology α]
+variable [OrderedAddCommMonoid α] [TopologicalSpace α] [OrderClosedTopology α]
 
-variable{f g : β → α}{a a₁ a₂ : α}
+variable {f g : β → α} {a a₁ a₂ : α}
 
 theorem has_sum_le (h : ∀ b, f b ≤ g b) (hf : HasSum f a₁) (hg : HasSum g a₂) : a₁ ≤ a₂ :=
   le_of_tendsto_of_tendsto' hf hg$ fun s => sum_le_sum$ fun b _ => h b
@@ -1018,8 +1013,8 @@ end OrderTopology
 
 section OrderedTopologicalGroup
 
-variable[OrderedAddCommGroup
-      α][TopologicalSpace α][TopologicalAddGroup α][OrderClosedTopology α]{f g : β → α}{a₁ a₂ : α}
+variable [OrderedAddCommGroup α] [TopologicalSpace α] [TopologicalAddGroup α] [OrderClosedTopology α] {f g : β → α}
+  {a₁ a₂ : α}
 
 theorem has_sum_lt {i : β} (h : ∀ b : β, f b ≤ g b) (hi : f i < g i) (hf : HasSum f a₁) (hg : HasSum g a₂) : a₁ < a₂ :=
   have  : update f i 0 ≤ update g i 0 := update_le_update_iff.mpr ⟨rfl.le, fun i _ => h i⟩
@@ -1050,9 +1045,9 @@ end OrderedTopologicalGroup
 
 section CanonicallyOrdered
 
-variable[CanonicallyOrderedAddMonoid α][TopologicalSpace α][OrderClosedTopology α]
+variable [CanonicallyOrderedAddMonoid α] [TopologicalSpace α] [OrderClosedTopology α]
 
-variable{f : β → α}{a : α}
+variable {f : β → α} {a : α}
 
 theorem le_has_sum' (hf : HasSum f a) (b : β) : f b ≤ a :=
   le_has_sum hf b$ fun _ _ => zero_le _
@@ -1085,13 +1080,13 @@ end CanonicallyOrdered
 
 section UniformGroup
 
-variable[AddCommGroupₓ α][UniformSpace α]
+variable [AddCommGroupₓ α] [UniformSpace α]
 
 theorem summable_iff_cauchy_seq_finset [CompleteSpace α] {f : β → α} :
   Summable f ↔ CauchySeq fun s : Finset β => ∑b in s, f b :=
   cauchy_map_iff_exists_tendsto.symm
 
-variable[UniformAddGroup α]{f g : β → α}{a a₁ a₂ : α}
+variable [UniformAddGroup α] {f g : β → α} {a a₁ a₂ : α}
 
 -- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem cauchy_seq_finset_iff_vanishing : «expr ↔ »(cauchy_seq (λ
@@ -1151,7 +1146,7 @@ begin
     rwa [expr finset.summable_compl_iff] [] }
 end
 
-variable[CompleteSpace α]
+variable [CompleteSpace α]
 
 theorem summable_iff_vanishing :
   Summable f ↔ ∀ e _ : e ∈ 𝓝 (0 : α), ∃ s : Finset β, ∀ t, Disjoint t s → (∑b in t, f b) ∈ e :=
@@ -1216,7 +1211,7 @@ end UniformGroup
 
 section TopologicalGroup
 
-variable{G : Type _}[TopologicalSpace G][AddCommGroupₓ G][TopologicalAddGroup G]{f : α → G}
+variable {G : Type _} [TopologicalSpace G] [AddCommGroupₓ G] [TopologicalAddGroup G] {f : α → G}
 
 -- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem summable.vanishing
@@ -1401,7 +1396,7 @@ We first establish results about arbitrary index types, `β` and `γ`, and then 
 
 section tsum_mul_tsum
 
-variable[TopologicalSpace α][RegularSpace α][Semiringₓ α][TopologicalRing α]{f : β → α}{g : γ → α}{s t u : α}
+variable [TopologicalSpace α] [RegularSpace α] [Semiringₓ α] [TopologicalRing α] {f : β → α} {g : γ → α} {s t u : α}
 
 theorem HasSum.mul_eq (hf : HasSum f s) (hg : HasSum g t) (hfg : HasSum (fun x : β × γ => f x.1*g x.2) u) : (s*t) = u :=
   have key₁ : HasSum (fun b => f b*t) (s*t) := hf.mul_right t 
@@ -1434,18 +1429,18 @@ where the `n`-th term is a sum over all pairs `(k, l)` such that `k+l=n`, which 
 `finset` `finset.nat.antidiagonal n` -/
 
 
-variable{f : ℕ → α}{g : ℕ → α}
+variable {f : ℕ → α} {g : ℕ → α}
 
 open Finset
 
-variable[TopologicalSpace α][Semiringₓ α]
+variable [TopologicalSpace α] [Semiringₓ α]
 
 theorem summable_mul_prod_iff_summable_mul_sigma_antidiagonal {f g : ℕ → α} :
   (Summable fun x : ℕ × ℕ => f x.1*g x.2) ↔
     Summable fun x : Σn : ℕ, nat.antidiagonal n => f (x.2 : ℕ × ℕ).1*g (x.2 : ℕ × ℕ).2 :=
   nat.sigma_antidiagonal_equiv_prod.summable_iff.symm
 
-variable[RegularSpace α][TopologicalRing α]
+variable [RegularSpace α] [TopologicalRing α]
 
 theorem summable_sum_mul_antidiagonal_of_summable_mul {f g : ℕ → α} (h : Summable fun x : ℕ × ℕ => f x.1*g x.2) :
   Summable fun n => ∑kl in nat.antidiagonal n, f kl.1*g kl.2 :=

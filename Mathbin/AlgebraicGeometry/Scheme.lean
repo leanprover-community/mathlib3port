@@ -48,7 +48,7 @@ def to_LocallyRingedSpace (S : Scheme) : LocallyRingedSpace :=
 /--
 Schemes are a full subcategory of locally ringed spaces.
 -/
-instance  : category Scheme :=
+instance : category Scheme :=
   induced_category.category Scheme.to_LocallyRingedSpace
 
 /--
@@ -97,10 +97,10 @@ The empty scheme, as `Spec 0`.
 def Empty : Scheme :=
   Spec_obj (CommRingₓₓ.of PUnit)
 
-instance  : HasEmptyc Scheme :=
+instance : HasEmptyc Scheme :=
   ⟨Empty⟩
 
-instance  : Inhabited Scheme :=
+instance : Inhabited Scheme :=
   ⟨∅⟩
 
 /--

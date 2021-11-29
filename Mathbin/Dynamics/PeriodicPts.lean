@@ -36,7 +36,7 @@ open Set
 
 namespace Function
 
-variable{α : Type _}{β : Type _}{f fa : α → α}{fb : β → β}{x y : α}{m n : ℕ}
+variable {α : Type _} {β : Type _} {f fa : α → α} {fb : β → β} {x y : α} {m n : ℕ}
 
 /-- A point `x` is a periodic point of `f : α → α` of period `n` if `f^[n] x = x`.
 Note that we do not require `0 < n` in this definition. Many theorems about periodic points
@@ -58,7 +58,7 @@ theorem is_periodic_pt_zero (f : α → α) (x : α) : is_periodic_pt f 0 x :=
 
 namespace IsPeriodicPt
 
-instance  [DecidableEq α] {f : α → α} {n : ℕ} {x : α} : Decidable (is_periodic_pt f n x) :=
+instance [DecidableEq α] {f : α → α} {n : ℕ} {x : α} : Decidable (is_periodic_pt f n x) :=
   is_fixed_pt.decidable
 
 protected theorem is_fixed_pt (hf : is_periodic_pt f n x) : is_fixed_pt (f^[n]) x :=
@@ -177,7 +177,7 @@ theorem mk_mem_periodic_pts (hn : 0 < n) (hx : is_periodic_pt f n x) : x ∈ per
 theorem mem_periodic_pts : x ∈ periodic_pts f ↔ ∃ (n : _)(_ : n > 0), is_periodic_pt f n x :=
   Iff.rfl
 
-variable(f)
+variable (f)
 
 theorem bUnion_pts_of_period : (⋃(n : _)(_ : n > 0), pts_of_period f n) = periodic_pts f :=
   Set.ext$
@@ -192,7 +192,7 @@ theorem bij_on_periodic_pts : bij_on f (periodic_pts f) (periodic_pts f) :=
   Union_pnat_pts_of_period f ▸
     bij_on_Union_of_directed (directed_pts_of_period_pnat f) fun i => bij_on_pts_of_period f i.pos
 
-variable{f}
+variable {f}
 
 theorem semiconj.maps_to_periodic_pts {g : α → β} (h : semiconj g fa fb) :
   maps_to g (periodic_pts fa) (periodic_pts fb) :=

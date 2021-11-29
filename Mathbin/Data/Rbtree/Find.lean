@@ -4,7 +4,7 @@ universe u
 
 namespace Rbnode
 
-variable{α : Type u}
+variable {α : Type u}
 
 @[elabWithoutExpectedType]
 theorem find.induction {p : Rbnode α → Prop} lt [DecidableRel lt] t x (h₁ : p leaf)
@@ -169,7 +169,7 @@ theorem eqv_of_find_some {t : Rbnode α} {lt x y} [DecidableRel lt] :
   ∀ {lo hi} hs : is_searchable lt t lo hi he : find lt t x = some y, x ≈[lt]y :=
   by 
     apply find.induction lt t x <;> intros  <;> simp_all only [mem, find]
-    iterate 2
+    iterate 2 
       ·
         cases hs 
         exact ih hs_hs₁ rfl

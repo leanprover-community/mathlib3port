@@ -97,7 +97,7 @@ localized [FinFact] attribute [instance] Fact.Pow.pos
 
 namespace Finₓ
 
-variable{n m : ℕ}{a b : Finₓ n}
+variable {n m : ℕ} {a b : Finₓ n}
 
 instance fin_to_nat (n : ℕ) : Coe (Finₓ n) Nat :=
   ⟨Subtype.val⟩
@@ -216,7 +216,7 @@ theorem coe_fin_lt {n : ℕ} {a b : Finₓ n} : (a : ℕ) < (b : ℕ) ↔ a < b 
 theorem coe_fin_le {n : ℕ} {a b : Finₓ n} : (a : ℕ) ≤ (b : ℕ) ↔ a ≤ b :=
   Iff.rfl
 
-instance  {n : ℕ} : LinearOrderₓ (Finₓ n) :=
+instance {n : ℕ} : LinearOrderₓ (Finₓ n) :=
   { LinearOrderₓ.lift (coeₓ : Finₓ n → ℕ) (@Finₓ.eq_of_veq _) with le := · ≤ ·, lt := · < ·,
     decidableLe := Finₓ.decidableLe, decidableLt := Finₓ.decidableLt, DecidableEq := Finₓ.decidableEq _ }
 
@@ -238,7 +238,7 @@ def factorial {n : ℕ} : fin n → ℕ
 | ⟨i + 1, hi⟩ := (i + 1) * factorial ⟨i, i.lt_succ_self.trans hi⟩
 ```
 -/
-instance  {n : ℕ} : HasWellFounded (Finₓ n) :=
+instance {n : ℕ} : HasWellFounded (Finₓ n) :=
   ⟨_, measure_wf coeₓ⟩
 
 @[simp]
@@ -289,7 +289,7 @@ theorem last_val (n : ℕ) : (last n).val = n :=
 theorem le_last (i : Finₓ (n+1)) : i ≤ last n :=
   le_of_lt_succ i.is_lt
 
-instance  : BoundedLattice (Finₓ (n+1)) :=
+instance : BoundedOrder (Finₓ (n+1)) :=
   { Finₓ.linearOrder, latticeOfLinearOrder with top := last n, le_top := le_last, bot := 0, bot_le := zero_le }
 
 theorem last_pos : (0 : Finₓ (n+2)) < last (n+1) :=
@@ -301,7 +301,7 @@ theorem eq_last_of_not_lt {i : Finₓ (n+1)} (h : ¬(i : ℕ) < n) : i = last n 
 
 section 
 
-variable{α : Type _}[Preorderₓ α]
+variable {α : Type _} [Preorderₓ α]
 
 open Set
 
@@ -403,7 +403,7 @@ theorem coe_one {n : ℕ} : ((1 : Finₓ (n+2)) : ℕ) = 1 :=
 theorem mk_one : (⟨1, Nat.succ_lt_succₓ (Nat.succ_posₓ n)⟩ : Finₓ (n+2)) = (1 : Finₓ _) :=
   rfl
 
-instance  {n : ℕ} : Nontrivial (Finₓ (n+2)) :=
+instance {n : ℕ} : Nontrivial (Finₓ (n+2)) :=
   ⟨⟨0, 1,
       by 
         decide⟩⟩
@@ -1344,11 +1344,11 @@ section AddGroupₓ
 open Nat Int
 
 /-- Negation on `fin n` -/
-instance  (n : ℕ) : Neg (Finₓ n) :=
+instance (n : ℕ) : Neg (Finₓ n) :=
   ⟨fun a => ⟨(n - a) % n, Nat.mod_ltₓ _ (lt_of_le_of_ltₓ (Nat.zero_leₓ _) a.2)⟩⟩
 
 /-- Abelian group structure on `fin (n+1)`. -/
-instance  (n : ℕ) : AddCommGroupₓ (Finₓ (n+1)) :=
+instance (n : ℕ) : AddCommGroupₓ (Finₓ (n+1)) :=
   { Finₓ.addCommMonoid n, Finₓ.hasNeg n.succ with
     add_left_neg :=
       fun ⟨a, ha⟩ =>

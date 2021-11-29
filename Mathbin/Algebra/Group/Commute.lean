@@ -29,7 +29,7 @@ namespace Commute
 
 section Mul
 
-variable{S : Type _}[Mul S]
+variable {S : Type _} [Mul S]
 
 /-- Equality behind `commute a b`; useful for rewriting. -/
 @[toAdditive]
@@ -58,7 +58,7 @@ end Mul
 
 section Semigroupₓ
 
-variable{S : Type _}[Semigroupₓ S]{a b c : S}
+variable {S : Type _} [Semigroupₓ S] {a b c : S}
 
 /-- If `a` commutes with both `b` and `c`, then it commutes with their product. -/
 @[simp, toAdditive]
@@ -88,7 +88,7 @@ protected theorem all {S : Type _} [CommSemigroupₓ S] (a b : S) : Commute a b 
 
 section MulOneClass
 
-variable{M : Type _}[MulOneClass M]
+variable {M : Type _} [MulOneClass M]
 
 @[simp, toAdditive]
 theorem one_right (a : M) : Commute a 1 :=
@@ -102,7 +102,7 @@ end MulOneClass
 
 section Monoidₓ
 
-variable{M : Type _}[Monoidₓ M]{a b : M}{u u₁ u₂ : Units M}
+variable {M : Type _} [Monoidₓ M] {a b : M} {u u₁ u₂ : Units M}
 
 @[simp, toAdditive]
 theorem pow_right (h : Commute a b) (n : ℕ) : Commute a (b ^ n) :=
@@ -185,7 +185,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable{G : Type _}[Groupₓ G]{a b : G}
+variable {G : Type _} [Groupₓ G] {a b : G}
 
 @[toAdditive]
 theorem inv_right : Commute a b → Commute a (b⁻¹) :=
@@ -237,7 +237,7 @@ end Commute
 
 section CommGroupₓ
 
-variable{G : Type _}[CommGroupₓ G](a b : G)
+variable {G : Type _} [CommGroupₓ G] (a b : G)
 
 @[simp, toAdditive]
 theorem mul_inv_cancel_comm : ((a*b)*a⁻¹) = b :=

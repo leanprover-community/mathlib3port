@@ -54,9 +54,9 @@ by haveI [] [] [":=", expr classical.dec_eq γ]; exact [expr finset.induction_on
 
 section Single
 
-variable{I : Type _}[DecidableEq I]{Z : I → Type _}
+variable {I : Type _} [DecidableEq I] {Z : I → Type _}
 
-variable[∀ i, AddCommMonoidₓ (Z i)]
+variable [∀ i, AddCommMonoidₓ (Z i)]
 
 theorem Finset.univ_sum_single [Fintype I] (f : ∀ i, Z i) : (∑i, Pi.single i (f i)) = f :=
   by 
@@ -84,9 +84,9 @@ section RingHom
 
 open Pi
 
-variable{I : Type _}[DecidableEq I]{f : I → Type _}
+variable {I : Type _} [DecidableEq I] {f : I → Type _}
 
-variable[∀ i, Semiringₓ (f i)]
+variable [∀ i, Semiringₓ (f i)]
 
 @[ext]
 theorem RingHom.functions_ext [Fintype I] (G : Type _) [Semiringₓ G] (g h : (∀ i, f i) →+* G)
@@ -97,7 +97,7 @@ end RingHom
 
 namespace Prod
 
-variable{α β γ : Type _}[CommMonoidₓ α][CommMonoidₓ β]{s : Finset γ}{f : γ → α × β}
+variable {α β γ : Type _} [CommMonoidₓ α] [CommMonoidₓ β] {s : Finset γ} {f : γ → α × β}
 
 @[toAdditive]
 theorem fst_prod : (∏c in s, f c).1 = ∏c in s, (f c).1 :=

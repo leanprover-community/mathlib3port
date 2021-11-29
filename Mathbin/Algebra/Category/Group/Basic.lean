@@ -28,7 +28,7 @@ add_decl_doc AddGroupₓₓ
 namespace Groupₓₓ
 
 @[toAdditive]
-instance  : bundled_hom.parent_projection Groupₓ.toMonoid :=
+instance : bundled_hom.parent_projection Groupₓ.toMonoid :=
   ⟨⟩
 
 -- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
@@ -37,7 +37,7 @@ attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]]
 attribute [toAdditive] Groupₓₓ.largeCategory Groupₓₓ.concreteCategory
 
 @[toAdditive]
-instance  : CoeSort Groupₓₓ (Type _) :=
+instance : CoeSort Groupₓₓ (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled `Group` from the underlying type and typeclass. -/
@@ -57,7 +57,7 @@ def of_hom {X Y : Type u} [Groupₓ X] [Groupₓ Y] (f : X →* Y) : of X ⟶ of
 add_decl_doc AddGroupₓₓ.ofHom
 
 @[toAdditive]
-instance  (G : Groupₓₓ) : Groupₓ G :=
+instance (G : Groupₓₓ) : Groupₓ G :=
   G.str
 
 @[simp, toAdditive]
@@ -65,11 +65,11 @@ theorem coe_of (R : Type u) [Groupₓ R] : (Groupₓₓ.of R : Type u) = R :=
   rfl
 
 @[toAdditive]
-instance  : HasOne Groupₓₓ :=
+instance : HasOne Groupₓₓ :=
   ⟨Groupₓₓ.of PUnit⟩
 
 @[toAdditive]
-instance  : Inhabited Groupₓₓ :=
+instance : Inhabited Groupₓₓ :=
   ⟨1⟩
 
 @[toAdditive]
@@ -112,7 +112,7 @@ abbrev Ab :=
 namespace CommGroupₓₓ
 
 @[toAdditive]
-instance  : bundled_hom.parent_projection CommGroupₓ.toGroup :=
+instance : bundled_hom.parent_projection CommGroupₓ.toGroup :=
   ⟨⟩
 
 -- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
@@ -121,7 +121,7 @@ attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]]
 attribute [toAdditive] CommGroupₓₓ.largeCategory CommGroupₓₓ.concreteCategory
 
 @[toAdditive]
-instance  : CoeSort CommGroupₓₓ (Type _) :=
+instance : CoeSort CommGroupₓₓ (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled `CommGroup` from the underlying type and typeclass. -/
@@ -149,11 +149,11 @@ theorem coe_of (R : Type u) [CommGroupₓ R] : (CommGroupₓₓ.of R : Type u) =
   rfl
 
 @[toAdditive]
-instance  : HasOne CommGroupₓₓ :=
+instance : HasOne CommGroupₓₓ :=
   ⟨CommGroupₓₓ.of PUnit⟩
 
 @[toAdditive]
-instance  : Inhabited CommGroupₓₓ :=
+instance : Inhabited CommGroupₓₓ :=
   ⟨1⟩
 
 @[toAdditive]
@@ -186,7 +186,7 @@ instance has_forget_to_CommMon : has_forget₂ CommGroupₓₓ CommMon :=
 end CommGroupₓₓ
 
 @[toAdditive]
-example  {R S : CommGroupₓₓ} (i : R ⟶ S) (r : R) (h : r = 1) : i r = 1 :=
+example {R S : CommGroupₓₓ} (i : R ⟶ S) (r : R) (h : r = 1) : i r = 1 :=
   by 
     simp [h]
 
@@ -223,7 +223,7 @@ end
 
 end AddCommGroupₓₓ
 
-variable{X Y : Type u}
+variable {X Y : Type u}
 
 /-- Build an isomorphism in the category `Group` from a `mul_equiv` between `group`s. -/
 @[toAdditive AddEquiv.toAddGroupIso, simps]

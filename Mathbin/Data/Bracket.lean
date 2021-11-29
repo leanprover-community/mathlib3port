@@ -28,7 +28,7 @@ these are the Unicode "square with quill" brackets rather than the usual square 
 
   3. for binary operations on substructures, like the commutator `⁅H, K⁆` of two subgroups `H` and
      `K` of a group. -/
-class HasBracket(L M : Type _) where 
+class HasBracket (L M : Type _) where 
   bracket : L → M → M
 
 notation "⁅" x "," y "⁆" => HasBracket.bracket x y

@@ -26,17 +26,17 @@ open Classical Set Filter Metric TopologicalSpace
 
 open_locale Classical TopologicalSpace Ennreal Nnreal BigOperators Filter
 
-variable{α : Type _}[TopologicalSpace α]
+variable {α : Type _} [TopologicalSpace α]
 
 namespace Ereal
 
-instance  : TopologicalSpace Ereal :=
+instance : TopologicalSpace Ereal :=
   Preorderₓ.topology Ereal
 
-instance  : OrderTopology Ereal :=
+instance : OrderTopology Ereal :=
   ⟨rfl⟩
 
-instance  : T2Space Ereal :=
+instance : T2Space Ereal :=
   by 
     infer_instance
 

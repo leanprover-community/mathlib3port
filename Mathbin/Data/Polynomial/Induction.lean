@@ -15,11 +15,11 @@ namespace Polynomial
 
 universe u v w x y z
 
-variable{R : Type u}{S : Type v}{T : Type w}{ι : Type x}{k : Type y}{A : Type z}{a b : R}{m n : ℕ}
+variable {R : Type u} {S : Type v} {T : Type w} {ι : Type x} {k : Type y} {A : Type z} {a b : R} {m n : ℕ}
 
 section Semiringₓ
 
-variable[Semiringₓ R]{p q r : Polynomial R}
+variable [Semiringₓ R] {p q r : Polynomial R}
 
 theorem sum_C_mul_X_eq (p : Polynomial R) : (p.sum fun n a => C a*X ^ n) = p :=
   by 
@@ -95,7 +95,7 @@ end Coeff
 
 open Submodule Polynomial Set
 
-variable{f : Polynomial R}{I : Submodule (Polynomial R) (Polynomial R)}
+variable {f : Polynomial R} {I : Submodule (Polynomial R) (Polynomial R)}
 
 /--  If the coefficients of a polynomial belong to n ideal contains the submodule span of the
 coefficients of a polynomial. -/

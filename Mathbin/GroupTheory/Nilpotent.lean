@@ -58,7 +58,7 @@ are not central series if `G` is not nilpotent is a standard abuse of notation.
 
 open Subgroup
 
-variable{G : Type _}[Groupₓ G](H : Subgroup G)[normal H]
+variable {G : Type _} [Groupₓ G] (H : Subgroup G) [normal H]
 
 /-- If `H` is a normal subgroup of `G`, then the set `{x : G | ∀ y : G, x*y*x⁻¹*y⁻¹ ∈ H}`
 is a subgroup of `G` (because it is the preimage in `G` of the centre of the
@@ -101,12 +101,12 @@ theorem upper_central_series_step_eq_comap_center :
     congr 2
     group
 
-instance  : normal (upperCentralSeriesStep H) :=
+instance : normal (upperCentralSeriesStep H) :=
   by 
     rw [upper_central_series_step_eq_comap_center]
     infer_instance
 
-variable(G)
+variable (G)
 
 /-- An auxiliary type-theoretic definition defining both the upper central series of
 a group, and a proof that it is normal, all in one go. -/
@@ -122,7 +122,7 @@ def upperCentralSeriesAux : ℕ → Σ'H : Subgroup G, normal H
 def upperCentralSeries (n : ℕ) : Subgroup G :=
   (upperCentralSeriesAux G n).1
 
-instance  (n : ℕ) : normal (upperCentralSeries G n) :=
+instance (n : ℕ) : normal (upperCentralSeries G n) :=
   (upperCentralSeriesAux G n).2
 
 @[simp]
@@ -136,7 +136,7 @@ theorem mem_upper_central_series_succ_iff (n : ℕ) (x : G) :
   Iff.rfl
 
 /-- A group `G` is nilpotent if its upper central series is eventually `G`. -/
-class Groupₓ.IsNilpotent(G : Type _)[Groupₓ G] : Prop where 
+class Groupₓ.IsNilpotent (G : Type _) [Groupₓ G] : Prop where 
   nilpotent{} : ∃ n : ℕ, upperCentralSeries G n = ⊤
 
 open Groupₓ
@@ -152,7 +152,7 @@ noncomputable def Groupₓ.nilpotencyClass (G : Type _) [Groupₓ G] [is_nilpote
 
 end Classical
 
-variable{G}
+variable {G}
 
 /-- A sequence of subgroups of `G` is an ascending central series if `H 0` is trivial and
   `⁅H (n + 1), G⁆ ⊆ H n` for all `n`. Note that we do not require that `H n = G` for some `n`. -/
@@ -180,7 +180,7 @@ theorem ascending_central_series_le_upper
   apply [expr this]
 end
 
-variable(G)
+variable (G)
 
 /-- The upper central series of a group is an ascending central series. -/
 theorem upper_central_series_is_ascending_central_series : IsAscendingCentralSeries (upperCentralSeries G) :=
@@ -261,7 +261,7 @@ def lowerCentralSeries (G : Type _) [Groupₓ G] : ℕ → Subgroup G
 | 0 => ⊤
 | n+1 => ⁅lowerCentralSeries n,⊤⁆
 
-variable{G}
+variable {G}
 
 @[simp]
 theorem lower_central_series_zero : lowerCentralSeries G 0 = ⊤ :=
@@ -279,7 +279,7 @@ theorem lower_central_series_succ (n : ℕ) :
     closure { x | ∃ (p : _)(_ : p ∈ lowerCentralSeries G n)(q : _)(_ : q ∈ (⊤ : Subgroup G)), (((p*q)*p⁻¹)*q⁻¹) = x } :=
   rfl
 
-instance  (n : ℕ) : normal (lowerCentralSeries G n) :=
+instance (n : ℕ) : normal (lowerCentralSeries G n) :=
   by 
     induction' n with d hd
     ·
@@ -359,7 +359,7 @@ begin
   exact [expr eq_bot_iff.mpr (λ x hx, subtype.ext (this x hx))]
 end
 
-instance (priority := 100)is_nilpotent_of_subsingleton [Subsingleton G] : is_nilpotent G :=
+instance (priority := 100) is_nilpotent_of_subsingleton [Subsingleton G] : is_nilpotent G :=
   nilpotent_iff_lower_central_series.2 ⟨0, Subsingleton.elimₓ ⊤ ⊥⟩
 
 theorem upperCentralSeries.map {H : Type _} [Groupₓ H] {f : G →* H} (h : Function.Surjective f) (n : ℕ) :

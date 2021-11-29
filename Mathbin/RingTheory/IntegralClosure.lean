@@ -29,9 +29,9 @@ open Polynomial Submodule
 
 section Ringₓ
 
-variable{R S A : Type _}
+variable {R S A : Type _}
 
-variable[CommRingₓ R][Ringₓ A][Ringₓ S](f : R →+* S)
+variable [CommRingₓ R] [Ringₓ A] [Ringₓ S] (f : R →+* S)
 
 /-- An element `x` of `A` is said to be integral over `R` with respect to `f`
 if it is a root of a monic polynomial `p : polynomial R` evaluated under `f` -/
@@ -43,7 +43,7 @@ if every element `A` is integral with respect to the map `f` -/
 def RingHom.IsIntegral (f : R →+* A) :=
   ∀ x : A, f.is_integral_elem x
 
-variable[Algebra R A](R)
+variable [Algebra R A] (R)
 
 /-- An element `x` of an algebra `A` over a commutative ring `R` is said to be *integral*,
 if it is a root of some monic polynomial `p : polynomial R`.
@@ -51,13 +51,13 @@ Equivalently, the element is integral over `R` with respect to the induced `alge
 def IsIntegral (x : A) : Prop :=
   (algebraMap R A).IsIntegralElem x
 
-variable(A)
+variable (A)
 
 /-- An algebra is integral if every element of the extension is integral over the base ring -/
 def Algebra.IsIntegral : Prop :=
   (algebraMap R A).IsIntegral
 
-variable{R A}
+variable {R A}
 
 theorem RingHom.is_integral_map {x : R} : f.is_integral_elem (f x) :=
   ⟨X - C x, monic_X_sub_C _,
@@ -105,11 +105,11 @@ end Ringₓ
 
 section 
 
-variable{R A B S : Type _}
+variable {R A B S : Type _}
 
-variable[CommRingₓ R][CommRingₓ A][CommRingₓ B][CommRingₓ S]
+variable [CommRingₓ R] [CommRingₓ A] [CommRingₓ B] [CommRingₓ S]
 
-variable[Algebra R A][Algebra R B](f : R →+* S)
+variable [Algebra R A] [Algebra R B] (f : R →+* S)
 
 theorem is_integral_alg_hom (f : A →ₐ[R] B) {x : A} (hx : IsIntegral R x) : IsIntegral R (f x) :=
   let ⟨p, hp, hpx⟩ := hx
@@ -358,7 +358,7 @@ theorem RingHom.is_integral_mul {x y : S} (hx : f.is_integral_elem x) (hy : f.is
 theorem is_integral_mul {x y : A} (hx : IsIntegral R x) (hy : IsIntegral R y) : IsIntegral R (x*y) :=
   (algebraMap R A).is_integral_mul hx hy
 
-variable(R A)
+variable (R A)
 
 /-- The integral closure of R in an R-algebra A. -/
 def integralClosure : Subalgebra R A :=
@@ -371,7 +371,7 @@ theorem mem_integral_closure_iff_mem_fg {r : A} :
   ⟨fun hr => ⟨Algebra.adjoin R {r}, fg_adjoin_singleton_of_integral _ hr, Algebra.subset_adjoin rfl⟩,
     fun ⟨M, Hf, hrM⟩ => is_integral_of_mem_of_fg M Hf _ hrM⟩
 
-variable{R}{A}
+variable {R} {A}
 
 /-- Mapping an integral closure along an `alg_equiv` gives the integral closure. -/
 theorem integral_closure_map_alg_equiv (f : A ≃ₐ[R] B) :
@@ -449,7 +449,7 @@ section IsIntegralClosure
 the integral closure of `R` in `B`,
 i.e. that an element of `B` is integral over `R` iff it is an element of (the image of) `A`.
 -/
-class IsIntegralClosure(A R B : Type _)[CommRingₓ R][CommSemiringₓ A][CommRingₓ B][Algebra R B][Algebra A B] :
+class IsIntegralClosure (A R B : Type _) [CommRingₓ R] [CommSemiringₓ A] [CommRingₓ B] [Algebra R B] [Algebra A B] :
   Prop where 
   algebra_map_injective{} : Function.Injective (algebraMap A B)
   is_integral_iff : ∀ {x : B}, IsIntegral R x ↔ ∃ y, algebraMap A B y = x
@@ -465,11 +465,11 @@ instance integralClosure.is_integral_closure (R A : Type _) [CommRingₓ R] [Com
 
 namespace IsIntegralClosure
 
-variable{R A B : Type _}[CommRingₓ R][CommRingₓ A][CommRingₓ B]
+variable {R A B : Type _} [CommRingₓ R] [CommRingₓ A] [CommRingₓ B]
 
-variable[Algebra R B][Algebra A B][IsIntegralClosure A R B]
+variable [Algebra R B] [Algebra A B] [IsIntegralClosure A R B]
 
-variable(R){A}(B)
+variable (R) {A} (B)
 
 protected theorem IsIntegral [Algebra R A] [IsScalarTower R A B] (x : A) : IsIntegral R x :=
   (is_integral_algebra_map_iff (algebra_map_injective A R B)).mp$
@@ -478,7 +478,7 @@ protected theorem IsIntegral [Algebra R A] [IsScalarTower R A B] (x : A) : IsInt
 theorem is_integral_algebra [Algebra R A] [IsScalarTower R A B] : Algebra.IsIntegral R A :=
   fun x => IsIntegralClosure.is_integral R B x
 
-variable{R}(A){B}
+variable {R} (A) {B}
 
 /-- If `x : B` is integral over `R`, then it is an element of the integral closure of `R` in `B`. -/
 noncomputable def mk' (x : B) (hx : IsIntegral R x) : A :=
@@ -524,9 +524,9 @@ theorem mk'_algebra_map [Algebra R A] [IsScalarTower R A B] (x : R)
 
 section lift
 
-variable{R}(A B){S : Type _}[CommRingₓ S][Algebra R S][Algebra S B][IsScalarTower R S B]
+variable {R} (A B) {S : Type _} [CommRingₓ S] [Algebra R S] [Algebra S B] [IsScalarTower R S B]
 
-variable[Algebra R A][IsScalarTower R A B](h : Algebra.IsIntegral R S)
+variable [Algebra R A] [IsScalarTower R A B] (h : Algebra.IsIntegral R S)
 
 /-- If `B / S / R` is a tower of ring extensions where `S` is integral over `R`,
 then `S` maps (uniquely) into an integral closure `B / A / R`. -/
@@ -559,9 +559,9 @@ end lift
 
 section Equiv
 
-variable(R A B)(A' : Type _)[CommRingₓ A'][Algebra A' B][IsIntegralClosure A' R B]
+variable (R A B) (A' : Type _) [CommRingₓ A'] [Algebra A' B] [IsIntegralClosure A' R B]
 
-variable[Algebra R A][Algebra R A'][IsScalarTower R A B][IsScalarTower R A' B]
+variable [Algebra R A] [Algebra R A'] [IsScalarTower R A B] [IsScalarTower R A' B]
 
 /-- Integral closures are all isomorphic to each other. -/
 noncomputable def Equiv : A ≃ₐ[R] A' :=
@@ -589,11 +589,11 @@ section Algebra
 
 open Algebra
 
-variable{R A B S T : Type _}
+variable {R A B S T : Type _}
 
-variable[CommRingₓ R][CommRingₓ A][CommRingₓ B][CommRingₓ S][CommRingₓ T]
+variable [CommRingₓ R] [CommRingₓ A] [CommRingₓ B] [CommRingₓ S] [CommRingₓ T]
 
-variable[Algebra A B][Algebra R B](f : R →+* S)(g : S →+* T)
+variable [Algebra A B] [Algebra R B] (f : R →+* S) (g : S →+* T)
 
 -- error in RingTheory.IntegralClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_integral_trans_aux
@@ -625,7 +625,7 @@ begin
     convert [] [expr hq] ["using", 1]; symmetry; apply [expr eval_map] }
 end
 
-variable[Algebra R A][IsScalarTower R A B]
+variable [Algebra R A] [IsScalarTower R A B]
 
 /-- If A is an R-algebra all of whose elements are integral over R,
 and x is an element of an A-algebra that is integral over A, then x is integral over R.-/
@@ -777,9 +777,9 @@ theorem integral_closure_idem {R : Type _} {A : Type _} [CommRingₓ R] [CommRin
 
 section IsDomain
 
-variable{R S : Type _}[CommRingₓ R][CommRingₓ S][IsDomain S][Algebra R S]
+variable {R S : Type _} [CommRingₓ R] [CommRingₓ S] [IsDomain S] [Algebra R S]
 
-instance  : IsDomain (integralClosure R S) :=
+instance : IsDomain (integralClosure R S) :=
   inferInstance
 
 end IsDomain

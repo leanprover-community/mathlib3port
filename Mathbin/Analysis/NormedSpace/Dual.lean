@@ -30,11 +30,11 @@ namespace NormedSpace
 
 section General
 
-variable(𝕜 : Type _)[NondiscreteNormedField 𝕜]
+variable (𝕜 : Type _) [NondiscreteNormedField 𝕜]
 
-variable(E : Type _)[SemiNormedGroup E][SemiNormedSpace 𝕜 E]
+variable (E : Type _) [SemiNormedGroup E] [SemiNormedSpace 𝕜 E]
 
-variable(F : Type _)[NormedGroup F][NormedSpace 𝕜 F]
+variable (F : Type _) [NormedGroup F] [NormedSpace 𝕜 F]
 
 -- error in Analysis.NormedSpace.Dual: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- The topological dual of a seminormed space `E`. -/
@@ -42,16 +42,16 @@ variable(F : Type _)[NormedGroup F][NormedSpace 𝕜 F]
 def dual :=
 «expr →L[ ] »(E, 𝕜, 𝕜)
 
-instance  : CoeFun (dual 𝕜 E) fun _ => E → 𝕜 :=
+instance : CoeFun (dual 𝕜 E) fun _ => E → 𝕜 :=
   ContinuousLinearMap.toFun
 
-instance  : NormedGroup (dual 𝕜 F) :=
+instance : NormedGroup (dual 𝕜 F) :=
   ContinuousLinearMap.toNormedGroup
 
-instance  : NormedSpace 𝕜 (dual 𝕜 F) :=
+instance : NormedSpace 𝕜 (dual 𝕜 F) :=
   ContinuousLinearMap.toNormedSpace
 
-instance  [FiniteDimensional 𝕜 E] : FiniteDimensional 𝕜 (dual 𝕜 E) :=
+instance [FiniteDimensional 𝕜 E] : FiniteDimensional 𝕜 (dual 𝕜 E) :=
   ContinuousLinearMap.finite_dimensional
 
 /-- The inclusion of a normed space in its double (topological) dual, considered
@@ -79,7 +79,7 @@ end General
 
 section BidualIsometry
 
-variable(𝕜 : Type v)[IsROrC 𝕜]{E : Type u}[NormedGroup E][NormedSpace 𝕜 E]
+variable (𝕜 : Type v) [IsROrC 𝕜] {E : Type u} [NormedGroup E] [NormedSpace 𝕜 E]
 
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `continuous_linear_map.op_norm_le_bound`. -/
@@ -91,7 +91,7 @@ theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : dual 
       simp only [h, hMp, norm_zero]
     ·
       obtain ⟨f, hf⟩ : ∃ g : E →L[𝕜] 𝕜, _ := exists_dual_vector 𝕜 x h 
-      calc ∥x∥ = ∥norm' 𝕜 x∥ := (norm_norm' _ _ _).symm _ = ∥f x∥ :=
+      calc ∥x∥ = ∥(∥x∥ : 𝕜)∥ := is_R_or_C.norm_coe_norm.symm _ = ∥f x∥ :=
         by 
           rw [hf.2]_ ≤ M*∥f∥ :=
         hM f _ = M :=

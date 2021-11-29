@@ -37,9 +37,9 @@ open TopologicalSpace.Opens
 
 namespace Top
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{X : Top.{v}}(F : presheaf C X){ι : Type v}(U : ι → opens X)
+variable {X : Top.{v}} (F : presheaf C X) {ι : Type v} (U : ι → opens X)
 
 namespace Presheaf
 
@@ -51,15 +51,15 @@ The category of open sets contained in some element of the cover.
 def opens_le_cover : Type v :=
   { V : opens X // ∃ i, V ≤ U i }
 
-instance  [Inhabited ι] : Inhabited (opens_le_cover U) :=
+instance [Inhabited ι] : Inhabited (opens_le_cover U) :=
   ⟨⟨⊥, default ι, bot_le⟩⟩
 
-instance  : category (opens_le_cover U) :=
+instance : category (opens_le_cover U) :=
   CategoryTheory.fullSubcategory _
 
 namespace OpensLeCover
 
-variable{U}
+variable {U}
 
 /--
 An arbitrarily chosen index such that `V ≤ U i`.
@@ -133,14 +133,14 @@ of open sets below some `U i`.
 def pairwise_to_opens_le_cover : Pairwise ι ⥤ opens_le_cover U :=
   { obj := pairwise_to_opens_le_cover_obj U, map := fun V W i => pairwise_to_opens_le_cover_map U i }
 
-instance  (V : opens_le_cover U) : Nonempty (structured_arrow V (pairwise_to_opens_le_cover U)) :=
+instance (V : opens_le_cover U) : Nonempty (structured_arrow V (pairwise_to_opens_le_cover U)) :=
   ⟨{ right := single V.index, Hom := V.hom_to_index }⟩
 
 /--
 The diagram consisting of the `U i` and `U i ⊓ U j` is cofinal in the diagram
 of all opens contained in some `U i`.
 -/
-instance  : functor.final (pairwise_to_opens_le_cover U) :=
+instance : functor.final (pairwise_to_opens_le_cover U) :=
   ⟨fun V =>
       is_connected_of_zigzag$
         fun A B =>
@@ -247,7 +247,7 @@ theorem is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections (F : preshea
               is_limit.equiv_iso_limit ((cones.functoriality _ _).mapIso (pairwise_cocone_iso U : _).symm)
               
 
-variable[has_products C]
+variable [has_products C]
 
 /--
 The sheaf condition in terms of an equalizer diagram is equivalent

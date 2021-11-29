@@ -20,7 +20,7 @@ rat, rationals, field, ℚ, numerator, denominator, num, denom, order, ordering,
 
 namespace Rat
 
-variable(a b c : ℚ)
+variable (a b c : ℚ)
 
 open_locale Rat
 
@@ -95,7 +95,7 @@ instance decidable_nonneg : Decidable (Rat.Nonneg a) :=
 protected def le (a b : ℚ) :=
   Rat.Nonneg (b - a)
 
-instance  : LE ℚ :=
+instance : LE ℚ :=
   ⟨Rat.Le⟩
 
 instance decidable_le : DecidableRel (· ≤ · : ℚ → ℚ → Prop)
@@ -127,7 +127,7 @@ protected theorem le_transₓ {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a 
   by 
     simpa [sub_eq_add_neg, add_commₓ, add_left_commₓ]
 
-instance  : LinearOrderₓ ℚ :=
+instance : LinearOrderₓ ℚ :=
   { le := Rat.Le, le_refl := Rat.le_refl, le_trans := @Rat.le_trans, le_antisymm := @Rat.le_antisymm,
     le_total := Rat.le_total,
     DecidableEq :=
@@ -135,39 +135,39 @@ instance  : LinearOrderₓ ℚ :=
         infer_instance,
     decidableLe := fun a b => Rat.decidableNonneg (b - a) }
 
-instance  : LT ℚ :=
+instance : LT ℚ :=
   by 
     infer_instance
 
-instance  : DistribLattice ℚ :=
+instance : DistribLattice ℚ :=
   by 
     infer_instance
 
-instance  : Lattice ℚ :=
+instance : Lattice ℚ :=
   by 
     infer_instance
 
-instance  : SemilatticeInf ℚ :=
+instance : SemilatticeInf ℚ :=
   by 
     infer_instance
 
-instance  : SemilatticeSup ℚ :=
+instance : SemilatticeSup ℚ :=
   by 
     infer_instance
 
-instance  : HasInf ℚ :=
+instance : HasInf ℚ :=
   by 
     infer_instance
 
-instance  : HasSup ℚ :=
+instance : HasSup ℚ :=
   by 
     infer_instance
 
-instance  : PartialOrderₓ ℚ :=
+instance : PartialOrderₓ ℚ :=
   by 
     infer_instance
 
-instance  : Preorderₓ ℚ :=
+instance : Preorderₓ ℚ :=
   by 
     infer_instance
 
@@ -211,7 +211,7 @@ protected theorem mul_nonneg {a b : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a
   by 
     rw [←nonneg_iff_zero_le] at ha hb⊢ <;> exact Rat.nonneg_mul ha hb
 
-instance  : LinearOrderedField ℚ :=
+instance : LinearOrderedField ℚ :=
   { Rat.field, Rat.linearOrder, Rat.semiring with
     zero_le_one :=
       by 
@@ -222,39 +222,39 @@ instance  : LinearOrderedField ℚ :=
         lt_of_le_of_neₓ (Rat.mul_nonneg (le_of_ltₓ ha) (le_of_ltₓ hb))
           (mul_ne_zero (ne_of_ltₓ ha).symm (ne_of_ltₓ hb).symm).symm }
 
-instance  : LinearOrderedCommRing ℚ :=
+instance : LinearOrderedCommRing ℚ :=
   by 
     infer_instance
 
-instance  : LinearOrderedRing ℚ :=
+instance : LinearOrderedRing ℚ :=
   by 
     infer_instance
 
-instance  : OrderedRing ℚ :=
+instance : OrderedRing ℚ :=
   by 
     infer_instance
 
-instance  : LinearOrderedSemiring ℚ :=
+instance : LinearOrderedSemiring ℚ :=
   by 
     infer_instance
 
-instance  : OrderedSemiring ℚ :=
+instance : OrderedSemiring ℚ :=
   by 
     infer_instance
 
-instance  : LinearOrderedAddCommGroup ℚ :=
+instance : LinearOrderedAddCommGroup ℚ :=
   by 
     infer_instance
 
-instance  : OrderedAddCommGroup ℚ :=
+instance : OrderedAddCommGroup ℚ :=
   by 
     infer_instance
 
-instance  : OrderedCancelAddCommMonoid ℚ :=
+instance : OrderedCancelAddCommMonoid ℚ :=
   by 
     infer_instance
 
-instance  : OrderedAddCommMonoid ℚ :=
+instance : OrderedAddCommMonoid ℚ :=
   by 
     infer_instance
 

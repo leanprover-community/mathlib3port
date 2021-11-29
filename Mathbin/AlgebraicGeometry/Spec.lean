@@ -51,24 +51,16 @@ def Spec.Top_obj (R : CommRingₓₓ) : Top :=
 /--
 The induced map of a ring homomorphism on the ring spectra, as a morphism of topological spaces.
 -/
-@[simps]
 def Spec.Top_map {R S : CommRingₓₓ} (f : R ⟶ S) : Spec.Top_obj S ⟶ Spec.Top_obj R :=
-  { toFun := PrimeSpectrum.comap f, continuous_to_fun := PrimeSpectrum.comap_continuous f }
+  PrimeSpectrum.comap f
 
 @[simp]
 theorem Spec.Top_map_id (R : CommRingₓₓ) : Spec.Top_map (𝟙 R) = 𝟙 (Spec.Top_obj R) :=
-  ContinuousMap.ext$
-    fun x =>
-      by 
-        erw [Spec.Top_map_to_fun, PrimeSpectrum.comap_id, id.def, Top.id_app]
+  PrimeSpectrum.comap_id
 
 theorem Spec.Top_map_comp {R S T : CommRingₓₓ} (f : R ⟶ S) (g : S ⟶ T) :
   Spec.Top_map (f ≫ g) = Spec.Top_map g ≫ Spec.Top_map f :=
-  ContinuousMap.ext$
-    fun x =>
-      by 
-        dsimp only [Spec.Top_map_to_fun, Top.comp_app]
-        erw [PrimeSpectrum.comap_comp]
+  PrimeSpectrum.comap_comp _ _
 
 /--
 The spectrum, as a contravariant functor from commutative rings to topological spaces.

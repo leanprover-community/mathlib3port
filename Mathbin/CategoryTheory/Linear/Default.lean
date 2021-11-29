@@ -35,7 +35,7 @@ namespace CategoryTheory
 
 /-- A category is called `R`-linear if `P ⟶ Q` is an `R`-module such that composition is
     `R`-linear in both variables. -/
-class linear(R : Type w)[Semiringₓ R](C : Type u)[category.{v} C][preadditive C] where 
+class linear (R : Type w) [Semiringₓ R] (C : Type u) [category.{v} C] [preadditive C] where 
   homModule : ∀ X Y : C, Module R (X ⟶ Y) :=  by 
   runTac 
     tactic.apply_instance 
@@ -62,7 +62,7 @@ open CategoryTheory
 
 namespace CategoryTheory.Linear
 
-variable{C : Type u}[category.{v} C][preadditive C]
+variable {C : Type u} [category.{v} C] [preadditive C]
 
 instance preadditive_nat_linear : linear ℕ C :=
   { smul_comp' := fun X Y Z r f g => (preadditive.right_comp X g).map_nsmul f r,
@@ -74,27 +74,27 @@ instance preadditive_int_linear : linear ℤ C :=
 
 section End
 
-variable{R : Type w}[CommRingₓ R][linear R C]
+variable {R : Type w} [CommRingₓ R] [linear R C]
 
-instance  (X : C) : Module R (End X) :=
+instance (X : C) : Module R (End X) :=
   by 
     dsimp [End]
     infer_instance
 
-instance  (X : C) : Algebra R (End X) :=
+instance (X : C) : Algebra R (End X) :=
   Algebra.ofModule (fun r f g => comp_smul _ _ _ _ _ _) fun r f g => smul_comp _ _ _ _ _ _
 
 end End
 
 section 
 
-variable{R : Type w}[Semiringₓ R][linear R C]
+variable {R : Type w} [Semiringₓ R] [linear R C]
 
 section InducedCategory
 
 universe u'
 
-variable{C}{D : Type u'}(F : D → C)
+variable {C} {D : Type u'} (F : D → C)
 
 instance induced_category.category : linear.{w, v} R (induced_category C F) :=
   { homModule := fun X Y => @linear.hom_module R _ C _ _ _ (F X) (F Y),
@@ -102,7 +102,7 @@ instance induced_category.category : linear.{w, v} R (induced_category C F) :=
 
 end InducedCategory
 
-variable(R)
+variable (R)
 
 /-- Composition by a fixed left argument as an `R`-linear map. -/
 @[simps]
@@ -126,13 +126,13 @@ def right_comp (X : C) {Y Z : C} (g : Y ⟶ Z) : (X ⟶ Y) →ₗ[R] X ⟶ Z :=
       by 
         simp  }
 
-instance  {X Y : C} (f : X ⟶ Y) [epi f] (r : R) [Invertible r] : epi (r • f) :=
+instance {X Y : C} (f : X ⟶ Y) [epi f] (r : R) [Invertible r] : epi (r • f) :=
   ⟨fun R g g' H =>
       by 
         rw [smul_comp, smul_comp, ←comp_smul, ←comp_smul, cancel_epi] at H 
         simpa [smul_smul] using congr_argₓ (fun f => ⅟ r • f) H⟩
 
-instance  {X Y : C} (f : X ⟶ Y) [mono f] (r : R) [Invertible r] : mono (r • f) :=
+instance {X Y : C} (f : X ⟶ Y) [mono f] (r : R) [Invertible r] : mono (r • f) :=
   ⟨fun R g g' H =>
       by 
         rw [comp_smul, comp_smul, ←smul_comp, ←smul_comp, cancel_mono] at H 
@@ -142,7 +142,7 @@ end
 
 section 
 
-variable{S : Type w}[CommSemiringₓ S][linear S C]
+variable {S : Type w} [CommSemiringₓ S] [linear S C]
 
 /-- Composition as a bilinear map. -/
 @[simps]

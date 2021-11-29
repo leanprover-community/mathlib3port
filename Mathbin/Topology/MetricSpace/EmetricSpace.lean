@@ -31,7 +31,7 @@ open_locale uniformity TopologicalSpace BigOperators Filter Nnreal Ennreal
 
 universe u v w
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 /-- Characterizing uniformities associated to a (generalized) distance function `D`
 in terms of the elements of the uniformity. -/
@@ -44,7 +44,7 @@ theorem uniformity_dist_of_mem_uniformity [LinearOrderₓ β] {U : Filter (α ×
       mem_infi_of_mem ε$ mem_infi_of_mem ε0$ mem_principal.2$ fun ⟨a, b⟩ => h
 
 /-- `has_edist α` means that `α` is equipped with an extended distance. -/
-class HasEdist(α : Type _) where 
+class HasEdist (α : Type _) where 
   edist : α → α → ℝ≥0∞
 
 export HasEdist(edist)
@@ -88,7 +88,7 @@ on a product.
 
 Continuity of `edist` is proved in `topology.instances.ennreal`
 -/
-class PseudoEmetricSpace(α : Type u) extends HasEdist α : Type u where 
+class PseudoEmetricSpace (α : Type u) extends HasEdist α : Type u where 
   edist_self : ∀ x : α, edist x x = 0 
   edist_comm : ∀ x y : α, edist x y = edist y x 
   edist_triangle : ∀ x y z : α, edist x z ≤ edist x y+edist y z 
@@ -97,9 +97,9 @@ class PseudoEmetricSpace(α : Type u) extends HasEdist α : Type u where
   runTac 
     control_laws_tac
 
-variable[PseudoEmetricSpace α]
+variable [PseudoEmetricSpace α]
 
-instance (priority := 100)PseudoEmetricSpace.toUniformSpace' : UniformSpace α :=
+instance (priority := 100) PseudoEmetricSpace.toUniformSpace' : UniformSpace α :=
   PseudoEmetricSpace.toUniformSpace
 
 export PseudoEmetricSpace(edist_self edist_comm edist_triangle)
@@ -380,7 +380,7 @@ def PseudoEmetricSpace.induced {α β} (f : α → β) (m : PseudoEmetricSpace �
           exact ⟨_, edist_mem_uniformity ε0, fun ⟨a, b⟩ => hε⟩ }
 
 /-- Pseudoemetric space instance on subsets of pseudoemetric spaces -/
-instance  {α : Type _} {p : α → Prop} [t : PseudoEmetricSpace α] : PseudoEmetricSpace (Subtype p) :=
+instance {α : Type _} {p : α → Prop} [t : PseudoEmetricSpace α] : PseudoEmetricSpace (Subtype p) :=
   t.induced coeₓ
 
 /-- The extended psuedodistance on a subset of a pseudoemetric space is the restriction of
@@ -425,7 +425,7 @@ section Pi
 
 open Finset
 
-variable{π : β → Type _}[Fintype β]
+variable {π : β → Type _} [Fintype β]
 
 /-- The product of a finite number of pseudoemetric spaces, with the max distance, is still
 a pseudoemetric space.
@@ -485,7 +485,7 @@ end Pi
 
 namespace Emetric
 
-variable{x y z : α}{ε ε₁ ε₂ : ℝ≥0∞}{s : Set α}
+variable {x y z : α} {ε ε₁ ε₂ : ℝ≥0∞} {s : Set α}
 
 /-- `emetric.ball x ε` is the set of all points `y` with `edist y x < ε` -/
 def ball (x : α) (ε : ℝ≥0∞) : Set α :=
@@ -725,7 +725,7 @@ section SecondCountable
 
 open _Root_.TopologicalSpace
 
-variable(α)
+variable (α)
 
 /-- A sigma compact pseudo emetric space has second countable topology. This is not an instance
 to avoid a loop with `sigma_compact_space_of_locally_compact_second_countable`.  -/
@@ -739,7 +739,7 @@ theorem second_countable_of_sigma_compact [SigmaCompactSpace α] : second_counta
     rcases Union_eq_univ_iff.1 (Union_compact_covering α) x with ⟨n, hn⟩
     exact closure_mono (subset_Union _ n) (hsubT _ hn)
 
-variable{α}
+variable {α}
 
 theorem second_countable_of_almost_dense_set
   (hs : ∀ ε _ : ε > 0, ∃ t : Set α, countable t ∧ (⋃(x : _)(_ : x ∈ t), closed_ball x ε) = univ) :
@@ -877,12 +877,12 @@ end Diam
 end Emetric
 
 /-- We now define `emetric_space`, extending `pseudo_emetric_space`. -/
-class EmetricSpace(α : Type u) extends PseudoEmetricSpace α : Type u where 
+class EmetricSpace (α : Type u) extends PseudoEmetricSpace α : Type u where 
   eq_of_edist_eq_zero : ∀ {x y : α}, edist x y = 0 → x = y
 
-variable{γ : Type w}[EmetricSpace γ]
+variable {γ : Type w} [EmetricSpace γ]
 
-instance (priority := 100)EmetricSpace.toUniformSpace' : UniformSpace γ :=
+instance (priority := 100) EmetricSpace.toUniformSpace' : UniformSpace γ :=
   PseudoEmetricSpace.toUniformSpace
 
 export EmetricSpace(eq_of_edist_eq_zero)
@@ -936,7 +936,7 @@ begin
 end
 
 /-- An emetric space is separated -/
-instance (priority := 100)to_separated : SeparatedSpace γ :=
+instance (priority := 100) to_separated : SeparatedSpace γ :=
   separated_def.2$ fun x y h => eq_of_forall_edist_le$ fun ε ε0 => le_of_ltₓ (h _ (edist_mem_uniformity ε0))
 
 /-- If a  `pseudo_emetric_space` is separated, then it is an `emetric_space`. -/
@@ -984,7 +984,7 @@ def EmetricSpace.induced {γ β} (f : γ → β) (hf : Function.Injective f) (m 
           exact ⟨_, edist_mem_uniformity ε0, fun ⟨a, b⟩ => hε⟩ }
 
 /-- Emetric space instance on subsets of emetric spaces -/
-instance  {α : Type _} {p : α → Prop} [t : EmetricSpace α] : EmetricSpace (Subtype p) :=
+instance {α : Type _} {p : α → Prop} [t : EmetricSpace α] : EmetricSpace (Subtype p) :=
   t.induced coeₓ fun x y => Subtype.ext_iff_val.2
 
 -- error in Topology.MetricSpace.EmetricSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -1008,7 +1008,7 @@ section Pi
 
 open Finset
 
-variable{π : β → Type _}[Fintype β]
+variable {π : β → Type _} [Fintype β]
 
 -- error in Topology.MetricSpace.EmetricSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of a finite number of emetric spaces, with the max distance, is still
@@ -1036,7 +1036,7 @@ theorem countable_closure_of_compact {s : Set γ} (hs : IsCompact s) :
 
 section Diam
 
-variable{s : Set γ}
+variable {s : Set γ}
 
 theorem diam_eq_zero_iff : diam s = 0 ↔ s.subsingleton :=
   ⟨fun h x hx y hy => edist_le_zero.1$ h ▸ edist_le_diam_of_mem hx hy, diam_subsingleton⟩

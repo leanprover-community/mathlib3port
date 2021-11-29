@@ -26,7 +26,7 @@ group, semidirect product
 -/
 
 
-variable(N : Type _)(G : Type _){H : Type _}[Groupₓ N][Groupₓ G][Groupₓ H]
+variable (N : Type _) (G : Type _) {H : Type _} [Groupₓ N] [Groupₓ G] [Groupₓ H]
 
 -- error in GroupTheory.SemidirectProduct: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- The semidirect product of groups `N` and `G`, given a map `φ` from `G` to the automorphism
@@ -41,7 +41,7 @@ notation:35 N " ⋊[" φ:35 "] " G:35 => SemidirectProduct N G φ
 
 namespace SemidirectProduct
 
-variable{N G}{φ : G →* MulAut N}
+variable {N G} {φ : G →* MulAut N}
 
 private def one_aux : N ⋊[φ] G :=
   ⟨1, 1⟩
@@ -69,11 +69,11 @@ private theorem mul_left_inv_aux (a : N ⋊[φ] G) : mul_aux (inv_aux a) a = one
   by 
     simp only [mul_aux, inv_aux, one_aux, ←MulEquiv.map_mul, mul_left_invₓ] <;> simp 
 
-instance  : Groupₓ (N ⋊[φ] G) :=
+instance : Groupₓ (N ⋊[φ] G) :=
   { one := one_aux, inv := inv_aux, mul := mul_aux, mul_assoc := mul_assoc_aux, one_mul := one_mul_aux,
     mul_one := mul_one_aux, mul_left_inv := mul_left_inv_aux }
 
-instance  : Inhabited (N ⋊[φ] G) :=
+instance : Inhabited (N ⋊[φ] G) :=
   ⟨1⟩
 
 @[simp]
@@ -201,7 +201,7 @@ le_antisymm (λ
 
 section lift
 
-variable(f₁ : N →* H)(f₂ : G →* H)(h : ∀ g, f₁.comp (φ g).toMonoidHom = (MulAut.conj (f₂ g)).toMonoidHom.comp f₁)
+variable (f₁ : N →* H) (f₂ : G →* H) (h : ∀ g, f₁.comp (φ g).toMonoidHom = (MulAut.conj (f₂ g)).toMonoidHom.comp f₁)
 
 -- error in GroupTheory.SemidirectProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Define a group hom `N ⋊[φ] G →* H`, by defining maps `N →* H` and `G →* H`  -/
@@ -260,7 +260,7 @@ end lift
 
 section Map
 
-variable{N₁ : Type _}{G₁ : Type _}[Groupₓ N₁][Groupₓ G₁]{φ₁ : G₁ →* MulAut N₁}
+variable {N₁ : Type _} {G₁ : Type _} [Groupₓ N₁] [Groupₓ G₁] {φ₁ : G₁ →* MulAut N₁}
 
 /-- Define a map from `N ⋊[φ] G` to `N₁ ⋊[φ₁] G₁` given maps `N →* N₁` and `G →* G₁` that
   satisfy a commutativity condition `∀ n g, f₁ (φ g n) = φ₁ (f₂ g) (f₁ n)`.  -/
@@ -276,7 +276,7 @@ def map (f₁ : N →* N₁) (f₂ : G →* G₁) (h : ∀ g : G, f₁.comp (φ 
           replace h := MonoidHom.ext_iff.1 (h x.right) y.left 
           ext <;> simp_all  }
 
-variable(f₁ : N →* N₁)(f₂ : G →* G₁)(h : ∀ g : G, f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁)
+variable (f₁ : N →* N₁) (f₂ : G →* G₁) (h : ∀ g : G, f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁)
 
 @[simp]
 theorem map_left (g : N ⋊[φ] G) : (map f₁ f₂ h g).left = f₁ g.left :=

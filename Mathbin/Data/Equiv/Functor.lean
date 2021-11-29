@@ -19,13 +19,13 @@ def bifunctor.map_equiv (F : Type u → Type v → Type w) [bifunctor F] [is_law
 
 universe u v w
 
-variable{α β : Type u}
+variable {α β : Type u}
 
 open Equiv
 
 namespace Functor
 
-variable(f : Type u → Type v)[Functor f][IsLawfulFunctor f]
+variable (f : Type u → Type v) [Functor f] [IsLawfulFunctor f]
 
 /-- Apply a functor to an `equiv`. -/
 def map_equiv (h : α ≃ β) : f α ≃ f β :=
@@ -58,7 +58,7 @@ end Functor
 
 namespace Bifunctor
 
-variable{α' β' : Type v}(F : Type u → Type v → Type w)[Bifunctor F][IsLawfulBifunctor F]
+variable {α' β' : Type v} (F : Type u → Type v → Type w) [Bifunctor F] [IsLawfulBifunctor F]
 
 /-- Apply a bifunctor to a pair of `equiv`s. -/
 def map_equiv (h : α ≃ β) (h' : α' ≃ β') : F α α' ≃ F β β' :=

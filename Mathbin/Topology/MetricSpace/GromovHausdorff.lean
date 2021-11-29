@@ -73,7 +73,7 @@ def GH_space : Type :=
 def to_GH_space (X : Type u) [MetricSpace X] [CompactSpace X] [Nonempty X] : GH_space :=
   «expr⟦ ⟧» (NonemptyCompacts.kuratowskiEmbedding X)
 
-instance  : Inhabited GH_space :=
+instance : Inhabited GH_space :=
   ⟨Quot.mk _
       ⟨{0},
         by 
@@ -179,7 +179,7 @@ theorem to_GH_space_eq_to_GH_space_iff_isometric
 /-- Distance on `GH_space`: the distance between two nonempty compact spaces is the infimum
 Hausdorff distance between isometric copies of the two spaces in a metric space. For the definition,
 we only consider embeddings in `ℓ^∞(ℝ)`, but we will prove below that it works for all spaces. -/
-instance  : HasDist GH_space :=
+instance : HasDist GH_space :=
   { dist :=
       fun x y =>
         Inf$
@@ -480,7 +480,7 @@ namespace GromovHausdorff
 
 section NonemptyCompacts
 
-variable{X : Type u}[MetricSpace X]
+variable {X : Type u} [MetricSpace X]
 
 -- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem GH_dist_le_nonempty_compacts_dist
@@ -508,7 +508,8 @@ end NonemptyCompacts
 
 section 
 
-variable{X : Type u}[MetricSpace X][CompactSpace X][Nonempty X]{Y : Type v}[MetricSpace Y][CompactSpace Y][Nonempty Y]
+variable {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty X] {Y : Type v} [MetricSpace Y] [CompactSpace Y]
+  [Nonempty Y]
 
 attribute [local instance] Sum.topologicalSpace Sum.uniformSpace
 
@@ -837,17 +838,17 @@ end
 
 section Complete
 
-variable(X : ℕ → Type)[∀ n, MetricSpace (X n)][∀ n, CompactSpace (X n)][∀ n, Nonempty (X n)]
+variable (X : ℕ → Type) [∀ n, MetricSpace (X n)] [∀ n, CompactSpace (X n)] [∀ n, Nonempty (X n)]
 
 /-- Auxiliary structure used to glue metric spaces below, recording an isometric embedding
 of a type `A` in another metric space. -/
-structure aux_gluing_struct(A : Type)[MetricSpace A] : Type 1 where 
+structure aux_gluing_struct (A : Type) [MetricSpace A] : Type 1 where 
   Space : Type 
   metric : MetricSpace space 
   embed : A → space 
   isom : Isometry embed
 
-instance  (A : Type) [MetricSpace A] : Inhabited (aux_gluing_struct A) :=
+instance (A : Type) [MetricSpace A] : Inhabited (aux_gluing_struct A) :=
   ⟨{ Space := A,
       metric :=
         by 

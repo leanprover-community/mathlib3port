@@ -10,7 +10,7 @@ This generalises the integer power function on a division ring.
 
 section Zero
 
-variable{M : Type _}[MonoidWithZeroₓ M]
+variable {M : Type _} [MonoidWithZeroₓ M]
 
 @[simp]
 theorem zero_pow' : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
@@ -49,7 +49,7 @@ end Zero
 
 section GroupWithZeroₓ
 
-variable{G₀ : Type _}[GroupWithZeroₓ G₀]
+variable {G₀ : Type _} [GroupWithZeroₓ G₀]
 
 section NatPow
 
@@ -82,7 +82,7 @@ section Zpow
 
 open Int
 
-variable{G₀ : Type _}[GroupWithZeroₓ G₀]
+variable {G₀ : Type _} [GroupWithZeroₓ G₀]
 
 attribute [local ematch] le_of_ltₓ
 
@@ -325,7 +325,7 @@ end Zpow
 
 section 
 
-variable{G₀ : Type _}[CommGroupWithZero G₀]
+variable {G₀ : Type _} [CommGroupWithZero G₀]
 
 @[simp]
 theorem div_pow (a b : G₀) (n : ℕ) : (a / b) ^ n = a ^ n / b ^ n :=
@@ -358,7 +358,7 @@ theorem MonoidWithZeroHom.map_zpow {G₀ G₀' : Type _} [GroupWithZeroₓ G₀]
 
 section 
 
-variable{R : Type _}[LinearOrderedField R]{a : R}
+variable {R : Type _} [LinearOrderedField R] {a : R}
 
 theorem pow_minus_two_nonneg : 0 ≤ a ^ (-2 : ℤ) :=
   by 

@@ -62,7 +62,7 @@ open Real
 
 section deriv
 
-variable{f : ℝ → ℝ}{s : Set ℝ}{f' x : ℝ}
+variable {f : ℝ → ℝ} {s : Set ℝ} {f' x : ℝ}
 
 theorem HasDerivWithinAt.sqrt (hf : HasDerivWithinAt f f' s x) (hx : f x ≠ 0) :
   HasDerivWithinAt (fun y => sqrt (f y)) (f' / 2*sqrt (f x)) s x :=
@@ -92,7 +92,7 @@ end deriv
 
 section fderiv
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E]{f : E → ℝ}{n : WithTop ℕ}{s : Set E}{x : E}{f' : E →L[ℝ] ℝ}
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {n : WithTop ℕ} {s : Set E} {x : E} {f' : E →L[ℝ] ℝ}
 
 theorem HasFderivAt.sqrt (hf : HasFderivAt f f' x) (hx : f x ≠ 0) :
   HasFderivAt (fun y => sqrt (f y)) ((1 / 2*sqrt (f x)) • f') x :=

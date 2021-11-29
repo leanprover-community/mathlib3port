@@ -30,7 +30,7 @@ postfix `ᵐᵒᵖ`:std.prec.max_plus := mul_opposite
 
 namespace MulOpposite
 
-variable{α : Type u}
+variable {α : Type u}
 
 /-- The element of `mul_opposite α` that represents `x : α`. -/
 @[pp_nodot]
@@ -96,50 +96,50 @@ theorem op_inj {x y : α} : op x = op y ↔ x = y :=
 theorem unop_inj {x y : «expr ᵐᵒᵖ» α} : unop x = unop y ↔ x = y :=
   unop_injective.eq_iff
 
-variable(α)
+variable (α)
 
-instance  [Nontrivial α] : Nontrivial («expr ᵐᵒᵖ» α) :=
+instance [Nontrivial α] : Nontrivial («expr ᵐᵒᵖ» α) :=
   op_injective.Nontrivial
 
-instance  [Inhabited α] : Inhabited («expr ᵐᵒᵖ» α) :=
+instance [Inhabited α] : Inhabited («expr ᵐᵒᵖ» α) :=
   ⟨op (default α)⟩
 
-instance  [Subsingleton α] : Subsingleton («expr ᵐᵒᵖ» α) :=
+instance [Subsingleton α] : Subsingleton («expr ᵐᵒᵖ» α) :=
   unop_injective.Subsingleton
 
-instance  [Unique α] : Unique («expr ᵐᵒᵖ» α) :=
+instance [Unique α] : Unique («expr ᵐᵒᵖ» α) :=
   Unique.mk' _
 
-instance  [IsEmpty α] : IsEmpty («expr ᵐᵒᵖ» α) :=
+instance [IsEmpty α] : IsEmpty («expr ᵐᵒᵖ» α) :=
   Function.is_empty unop
 
-instance  [HasZero α] : HasZero («expr ᵐᵒᵖ» α) :=
+instance [HasZero α] : HasZero («expr ᵐᵒᵖ» α) :=
   { zero := op 0 }
 
-instance  [HasOne α] : HasOne («expr ᵐᵒᵖ» α) :=
+instance [HasOne α] : HasOne («expr ᵐᵒᵖ» α) :=
   { one := op 1 }
 
-instance  [Add α] : Add («expr ᵐᵒᵖ» α) :=
+instance [Add α] : Add («expr ᵐᵒᵖ» α) :=
   { add := fun x y => op (unop x+unop y) }
 
-instance  [Sub α] : Sub («expr ᵐᵒᵖ» α) :=
+instance [Sub α] : Sub («expr ᵐᵒᵖ» α) :=
   { sub := fun x y => op (unop x - unop y) }
 
-instance  [Neg α] : Neg («expr ᵐᵒᵖ» α) :=
+instance [Neg α] : Neg («expr ᵐᵒᵖ» α) :=
   { neg := fun x => op$ -unop x }
 
-instance  [Mul α] : Mul («expr ᵐᵒᵖ» α) :=
+instance [Mul α] : Mul («expr ᵐᵒᵖ» α) :=
   { mul := fun x y => op (unop y*unop x) }
 
-instance  [HasInv α] : HasInv («expr ᵐᵒᵖ» α) :=
+instance [HasInv α] : HasInv («expr ᵐᵒᵖ» α) :=
   { inv := fun x => op$ unop x⁻¹ }
 
-instance  (R : Type _) [HasScalar R α] : HasScalar R («expr ᵐᵒᵖ» α) :=
+instance (R : Type _) [HasScalar R α] : HasScalar R («expr ᵐᵒᵖ» α) :=
   { smul := fun c x => op (c • unop x) }
 
 section 
 
-variable(α)
+variable (α)
 
 @[simp]
 theorem op_zero [HasZero α] : op (0 : α) = 0 :=
@@ -157,7 +157,7 @@ theorem op_one [HasOne α] : op (1 : α) = 1 :=
 theorem unop_one [HasOne α] : unop (1 : «expr ᵐᵒᵖ» α) = 1 :=
   rfl
 
-variable{α}
+variable {α}
 
 @[simp]
 theorem op_add [Add α] (x y : α) : op (x+y) = op x+op y :=
@@ -209,16 +209,16 @@ theorem unop_smul {R : Type _} [HasScalar R α] (c : R) (a : «expr ᵐᵒᵖ» 
 
 end 
 
-instance  [AddSemigroupₓ α] : AddSemigroupₓ («expr ᵐᵒᵖ» α) :=
+instance [AddSemigroupₓ α] : AddSemigroupₓ («expr ᵐᵒᵖ» α) :=
   unop_injective.AddSemigroup _ fun x y => rfl
 
-instance  [AddLeftCancelSemigroup α] : AddLeftCancelSemigroup («expr ᵐᵒᵖ» α) :=
+instance [AddLeftCancelSemigroup α] : AddLeftCancelSemigroup («expr ᵐᵒᵖ» α) :=
   unop_injective.AddLeftCancelSemigroup _ fun x y => rfl
 
-instance  [AddRightCancelSemigroup α] : AddRightCancelSemigroup («expr ᵐᵒᵖ» α) :=
+instance [AddRightCancelSemigroup α] : AddRightCancelSemigroup («expr ᵐᵒᵖ» α) :=
   unop_injective.AddRightCancelSemigroup _ fun x y => rfl
 
-instance  [AddCommSemigroupₓ α] : AddCommSemigroupₓ («expr ᵐᵒᵖ» α) :=
+instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.addSemigroup α with add_comm := fun x y => unop_injective$ add_commₓ (unop x) (unop y) }
 
 @[simp]
@@ -235,34 +235,34 @@ theorem unop_ne_zero_iff {α} [HasZero α] (a : «expr ᵐᵒᵖ» α) : a.unop 
 theorem op_ne_zero_iff {α} [HasZero α] (a : α) : op a ≠ (0 : «expr ᵐᵒᵖ» α) ↔ a ≠ (0 : α) :=
   not_congr$ op_eq_zero_iff a
 
-instance  [AddZeroClass α] : AddZeroClass («expr ᵐᵒᵖ» α) :=
+instance [AddZeroClass α] : AddZeroClass («expr ᵐᵒᵖ» α) :=
   unop_injective.AddZeroClass _ rfl fun x y => rfl
 
-instance  [AddMonoidₓ α] : AddMonoidₓ («expr ᵐᵒᵖ» α) :=
+instance [AddMonoidₓ α] : AddMonoidₓ («expr ᵐᵒᵖ» α) :=
   unop_injective.addMonoidSmul _ rfl (fun _ _ => rfl) fun _ _ => rfl
 
-instance  [AddCommMonoidₓ α] : AddCommMonoidₓ («expr ᵐᵒᵖ» α) :=
+instance [AddCommMonoidₓ α] : AddCommMonoidₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.addMonoid α, MulOpposite.addCommSemigroup α with  }
 
-instance  [SubNegMonoidₓ α] : SubNegMonoidₓ («expr ᵐᵒᵖ» α) :=
+instance [SubNegMonoidₓ α] : SubNegMonoidₓ («expr ᵐᵒᵖ» α) :=
   unop_injective.subNegMonoidSmul _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
-instance  [AddGroupₓ α] : AddGroupₓ («expr ᵐᵒᵖ» α) :=
+instance [AddGroupₓ α] : AddGroupₓ («expr ᵐᵒᵖ» α) :=
   unop_injective.addGroupSmul _ rfl (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 
-instance  [AddCommGroupₓ α] : AddCommGroupₓ («expr ᵐᵒᵖ» α) :=
+instance [AddCommGroupₓ α] : AddCommGroupₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.addGroup α, MulOpposite.addCommMonoid α with  }
 
-instance  [Semigroupₓ α] : Semigroupₓ («expr ᵐᵒᵖ» α) :=
+instance [Semigroupₓ α] : Semigroupₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.hasMul α with mul_assoc := fun x y z => unop_injective$ Eq.symm$ mul_assocₓ (unop z) (unop y) (unop x) }
 
-instance  [RightCancelSemigroup α] : LeftCancelSemigroup («expr ᵐᵒᵖ» α) :=
+instance [RightCancelSemigroup α] : LeftCancelSemigroup («expr ᵐᵒᵖ» α) :=
   { MulOpposite.semigroup α with mul_left_cancel := fun x y z H => unop_injective$ mul_right_cancelₓ$ op_injective H }
 
-instance  [LeftCancelSemigroup α] : RightCancelSemigroup («expr ᵐᵒᵖ» α) :=
+instance [LeftCancelSemigroup α] : RightCancelSemigroup («expr ᵐᵒᵖ» α) :=
   { MulOpposite.semigroup α with mul_right_cancel := fun x y z H => unop_injective$ mul_left_cancelₓ$ op_injective H }
 
-instance  [CommSemigroupₓ α] : CommSemigroupₓ («expr ᵐᵒᵖ» α) :=
+instance [CommSemigroupₓ α] : CommSemigroupₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.semigroup α with mul_comm := fun x y => unop_injective$ mul_commₓ (unop y) (unop x) }
 
 @[simp]
@@ -273,31 +273,31 @@ theorem unop_eq_one_iff {α} [HasOne α] (a : «expr ᵐᵒᵖ» α) : a.unop = 
 theorem op_eq_one_iff {α} [HasOne α] (a : α) : op a = 1 ↔ a = 1 :=
   op_injective.eq_iff' rfl
 
-instance  [MulOneClass α] : MulOneClass («expr ᵐᵒᵖ» α) :=
+instance [MulOneClass α] : MulOneClass («expr ᵐᵒᵖ» α) :=
   { MulOpposite.hasMul α, MulOpposite.hasOne α with one_mul := fun x => unop_injective$ mul_oneₓ$ unop x,
     mul_one := fun x => unop_injective$ one_mulₓ$ unop x }
 
-instance  [Monoidₓ α] : Monoidₓ («expr ᵐᵒᵖ» α) :=
+instance [Monoidₓ α] : Monoidₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.semigroup α, MulOpposite.mulOneClass α with npow := fun n x => op$ x.unop ^ n,
     npow_zero' := fun x => unop_injective$ Monoidₓ.npow_zero' x.unop,
     npow_succ' := fun n x => unop_injective$ pow_succ'ₓ x.unop n }
 
-instance  [RightCancelMonoid α] : LeftCancelMonoid («expr ᵐᵒᵖ» α) :=
+instance [RightCancelMonoid α] : LeftCancelMonoid («expr ᵐᵒᵖ» α) :=
   { MulOpposite.leftCancelSemigroup α, MulOpposite.monoid α with  }
 
-instance  [LeftCancelMonoid α] : RightCancelMonoid («expr ᵐᵒᵖ» α) :=
+instance [LeftCancelMonoid α] : RightCancelMonoid («expr ᵐᵒᵖ» α) :=
   { MulOpposite.rightCancelSemigroup α, MulOpposite.monoid α with  }
 
-instance  [CancelMonoid α] : CancelMonoid («expr ᵐᵒᵖ» α) :=
+instance [CancelMonoid α] : CancelMonoid («expr ᵐᵒᵖ» α) :=
   { MulOpposite.rightCancelMonoid α, MulOpposite.leftCancelMonoid α with  }
 
-instance  [CommMonoidₓ α] : CommMonoidₓ («expr ᵐᵒᵖ» α) :=
+instance [CommMonoidₓ α] : CommMonoidₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.monoid α, MulOpposite.commSemigroup α with  }
 
-instance  [CancelCommMonoid α] : CancelCommMonoid («expr ᵐᵒᵖ» α) :=
+instance [CancelCommMonoid α] : CancelCommMonoid («expr ᵐᵒᵖ» α) :=
   { MulOpposite.cancelMonoid α, MulOpposite.commMonoid α with  }
 
-instance  [DivInvMonoidₓ α] : DivInvMonoidₓ («expr ᵐᵒᵖ» α) :=
+instance [DivInvMonoidₓ α] : DivInvMonoidₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.monoid α, MulOpposite.hasInv α with zpow := fun n x => op$ x.unop ^ n,
     zpow_zero' := fun x => unop_injective$ DivInvMonoidₓ.zpow_zero' x.unop,
     zpow_succ' :=
@@ -307,66 +307,66 @@ instance  [DivInvMonoidₓ α] : DivInvMonoidₓ («expr ᵐᵒᵖ» α) :=
             rw [unop_op, zpow_of_nat, zpow_of_nat, pow_succ'ₓ, unop_mul, unop_op],
     zpow_neg' := fun z x => unop_injective$ DivInvMonoidₓ.zpow_neg' z x.unop }
 
-instance  [Groupₓ α] : Groupₓ («expr ᵐᵒᵖ» α) :=
+instance [Groupₓ α] : Groupₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.divInvMonoid α with mul_left_inv := fun x => unop_injective$ mul_inv_selfₓ$ unop x }
 
-instance  [CommGroupₓ α] : CommGroupₓ («expr ᵐᵒᵖ» α) :=
+instance [CommGroupₓ α] : CommGroupₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.group α, MulOpposite.commMonoid α with  }
 
-instance  [Distrib α] : Distrib («expr ᵐᵒᵖ» α) :=
+instance [Distrib α] : Distrib («expr ᵐᵒᵖ» α) :=
   { MulOpposite.hasAdd α, MulOpposite.hasMul α with
     left_distrib := fun x y z => unop_injective$ add_mulₓ (unop y) (unop z) (unop x),
     right_distrib := fun x y z => unop_injective$ mul_addₓ (unop z) (unop x) (unop y) }
 
-instance  [MulZeroClass α] : MulZeroClass («expr ᵐᵒᵖ» α) :=
+instance [MulZeroClass α] : MulZeroClass («expr ᵐᵒᵖ» α) :=
   { zero := 0, mul := ·*·, zero_mul := fun x => unop_injective$ mul_zero$ unop x,
     mul_zero := fun x => unop_injective$ zero_mul$ unop x }
 
-instance  [MulZeroOneClass α] : MulZeroOneClass («expr ᵐᵒᵖ» α) :=
+instance [MulZeroOneClass α] : MulZeroOneClass («expr ᵐᵒᵖ» α) :=
   { MulOpposite.mulZeroClass α, MulOpposite.mulOneClass α with  }
 
-instance  [SemigroupWithZero α] : SemigroupWithZero («expr ᵐᵒᵖ» α) :=
+instance [SemigroupWithZero α] : SemigroupWithZero («expr ᵐᵒᵖ» α) :=
   { MulOpposite.semigroup α, MulOpposite.mulZeroClass α with  }
 
-instance  [MonoidWithZeroₓ α] : MonoidWithZeroₓ («expr ᵐᵒᵖ» α) :=
+instance [MonoidWithZeroₓ α] : MonoidWithZeroₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.monoid α, MulOpposite.mulZeroOneClass α with  }
 
-instance  [NonUnitalNonAssocSemiring α] : NonUnitalNonAssocSemiring («expr ᵐᵒᵖ» α) :=
+instance [NonUnitalNonAssocSemiring α] : NonUnitalNonAssocSemiring («expr ᵐᵒᵖ» α) :=
   { MulOpposite.addCommMonoid α, MulOpposite.mulZeroClass α, MulOpposite.distrib α with  }
 
-instance  [NonUnitalSemiring α] : NonUnitalSemiring («expr ᵐᵒᵖ» α) :=
+instance [NonUnitalSemiring α] : NonUnitalSemiring («expr ᵐᵒᵖ» α) :=
   { MulOpposite.semigroupWithZero α, MulOpposite.nonUnitalNonAssocSemiring α with  }
 
-instance  [NonAssocSemiring α] : NonAssocSemiring («expr ᵐᵒᵖ» α) :=
+instance [NonAssocSemiring α] : NonAssocSemiring («expr ᵐᵒᵖ» α) :=
   { MulOpposite.mulZeroOneClass α, MulOpposite.nonUnitalNonAssocSemiring α with  }
 
-instance  [Semiringₓ α] : Semiringₓ («expr ᵐᵒᵖ» α) :=
+instance [Semiringₓ α] : Semiringₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.nonUnitalSemiring α, MulOpposite.nonAssocSemiring α, MulOpposite.monoidWithZero α with  }
 
-instance  [CommSemiringₓ α] : CommSemiringₓ («expr ᵐᵒᵖ» α) :=
+instance [CommSemiringₓ α] : CommSemiringₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.semiring α, MulOpposite.commSemigroup α with  }
 
-instance  [Ringₓ α] : Ringₓ («expr ᵐᵒᵖ» α) :=
+instance [Ringₓ α] : Ringₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.addCommGroup α, MulOpposite.monoid α, MulOpposite.semiring α with  }
 
-instance  [CommRingₓ α] : CommRingₓ («expr ᵐᵒᵖ» α) :=
+instance [CommRingₓ α] : CommRingₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.ring α, MulOpposite.commSemiring α with  }
 
-instance  [HasZero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors («expr ᵐᵒᵖ» α) :=
+instance [HasZero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors («expr ᵐᵒᵖ» α) :=
   { eq_zero_or_eq_zero_of_mul_eq_zero :=
       fun x y H : op (_*_) = op (0 : α) =>
         Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero$ op_injective H) (fun hy => Or.inr$ unop_injective$ hy)
           fun hx => Or.inl$ unop_injective$ hx }
 
-instance  [Ringₓ α] [IsDomain α] : IsDomain («expr ᵐᵒᵖ» α) :=
+instance [Ringₓ α] [IsDomain α] : IsDomain («expr ᵐᵒᵖ» α) :=
   { MulOpposite.no_zero_divisors α, MulOpposite.ring α, MulOpposite.nontrivial α with  }
 
-instance  [GroupWithZeroₓ α] : GroupWithZeroₓ («expr ᵐᵒᵖ» α) :=
+instance [GroupWithZeroₓ α] : GroupWithZeroₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.monoidWithZero α, MulOpposite.divInvMonoid α, MulOpposite.nontrivial α with
     mul_inv_cancel := fun x hx => unop_injective$ inv_mul_cancel$ unop_injective.Ne hx,
     inv_zero := unop_injective inv_zero }
 
-variable{α}
+variable {α}
 
 theorem semiconj_by.op [Mul α] {a x y : α} (h : SemiconjBy a x y) : SemiconjBy (op a) (op y) (op x) :=
   by 

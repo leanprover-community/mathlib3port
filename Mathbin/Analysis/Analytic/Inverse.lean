@@ -28,10 +28,8 @@ open Finset Filter
 
 namespace FormalMultilinearSeries
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F]
 
 /-! ### The left inverse of a formal multilinear series -/
 

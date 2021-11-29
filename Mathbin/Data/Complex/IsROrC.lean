@@ -42,7 +42,7 @@ open_locale ComplexConjugate
 /--
 This typeclass captures properties shared by ℝ and ℂ, with an API that closely matches that of ℂ.
 -/
-class IsROrC(K : Type _) extends NondiscreteNormedField K, StarRing K, NormedAlgebra ℝ K, CompleteSpace K where 
+class IsROrC (K : Type _) extends NondiscreteNormedField K, StarRing K, NormedAlgebra ℝ K, CompleteSpace K where 
   re : K →+ ℝ 
   im : K →+ ℝ 
   i : K 
@@ -65,11 +65,11 @@ end
 
 namespace IsROrC
 
-variable{K : Type _}[IsROrC K]
+variable {K : Type _} [IsROrC K]
 
 open_locale ComplexConjugate
 
-noncomputable instance (priority := 900)algebra_map_coe : CoeTₓ ℝ K :=
+noncomputable instance (priority := 900) algebra_map_coe : CoeTₓ ℝ K :=
   ⟨algebraMap ℝ K⟩
 
 theorem of_real_alg (x : ℝ) : (x : K) = x • (1 : K) :=
@@ -332,14 +332,14 @@ theorem eq_conj_iff_real {z : K} : conj z = z ↔ ∃ r : ℝ, z = (r : K) :=
       rintro ⟨r, rfl⟩
       apply conj_of_real
 
-variable(K)
+variable (K)
 
 /-- Conjugation as a ring equivalence. This is used to convert the inner product into a
 sesquilinear product. -/
 abbrev conj_to_ring_equiv : K ≃+* «expr ᵐᵒᵖ» K :=
   starRingEquiv
 
-variable{K}
+variable {K}
 
 theorem eq_conj_iff_re {z : K} : conj z = z ↔ (re z : K) = z :=
   eq_conj_iff_real.trans
@@ -752,7 +752,7 @@ theorem abs_add (z w : K) : abs (z+w) ≤ abs z+abs w :=
         mul_assocₓ, mul_le_mul_left (@zero_lt_two ℝ _ _)]
       simpa [-mul_re] using re_le_abs (z*conj w)
 
-instance  : IsAbsoluteValue absK :=
+instance : IsAbsoluteValue absK :=
   { abv_nonneg := abs_nonneg, abv_eq_zero := fun _ => abs_eq_zero, abv_add := abs_add, abv_mul := abs_mul }
 
 open IsAbsoluteValue
@@ -888,7 +888,7 @@ end IsROrC
 
 namespace FiniteDimensional
 
-variable{K : Type _}[IsROrC K]
+variable {K : Type _} [IsROrC K]
 
 open_locale Classical
 
@@ -1036,7 +1036,7 @@ end CleanupLemmas
 
 section LinearMaps
 
-variable{K : Type _}[IsROrC K]
+variable {K : Type _} [IsROrC K]
 
 /-- The real part in a `is_R_or_C` field, as a linear map. -/
 noncomputable def re_lm : K →ₗ[ℝ] ℝ :=
@@ -1183,9 +1183,9 @@ end IsROrC
 
 section Normalization
 
-variable{K : Type _}[IsROrC K]
+variable {K : Type _} [IsROrC K]
 
-variable{E : Type _}[NormedGroup E][NormedSpace K E]
+variable {E : Type _} [NormedGroup E] [NormedSpace K E]
 
 open IsROrC
 

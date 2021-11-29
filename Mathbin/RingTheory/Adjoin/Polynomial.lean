@@ -20,7 +20,7 @@ namespace Algebra
 
 open Subsemiring Submodule
 
-variable(R : Type u){A : Type v}(s : Set A)[CommSemiringₓ R][CommSemiringₓ A][Algebra R A]
+variable (R : Type u) {A : Type v} (s : Set A) [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A]
 
 theorem adjoin_eq_range : adjoin R s = (MvPolynomial.aeval (coeₓ : s → A)).range :=
   le_antisymmₓ (adjoin_le$ fun x hx => ⟨MvPolynomial.x ⟨x, hx⟩, MvPolynomial.eval₂_X _ _ _⟩)

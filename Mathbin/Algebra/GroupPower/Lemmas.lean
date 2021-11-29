@@ -10,7 +10,7 @@ which require additional imports besides those available in `algebra.group_power
 
 universe u v w x y z u₁ u₂
 
-variable{M : Type u}{N : Type v}{G : Type w}{H : Type x}{A : Type y}{B : Type z}{R : Type u₁}{S : Type u₂}
+variable {M : Type u} {N : Type v} {G : Type w} {H : Type x} {A : Type y} {B : Type z} {R : Type u₁} {S : Type u₂}
 
 /-!
 ### (Additive) monoid
@@ -19,7 +19,7 @@ variable{M : Type u}{N : Type v}{G : Type w}{H : Type x}{A : Type y}{B : Type z}
 
 section Monoidₓ
 
-variable[Monoidₓ M][Monoidₓ N][AddMonoidₓ A][AddMonoidₓ B]
+variable [Monoidₓ M] [Monoidₓ N] [AddMonoidₓ A] [AddMonoidₓ B]
 
 @[simp]
 theorem nsmul_one [HasOne A] : ∀ n : ℕ, n • (1 : A) = n :=
@@ -103,7 +103,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable[Groupₓ G][Groupₓ H][AddGroupₓ A][AddGroupₓ B]
+variable [Groupₓ G] [Groupₓ H] [AddGroupₓ A] [AddGroupₓ B]
 
 open Int
 
@@ -208,7 +208,7 @@ end Groupₓ
 
 section OrderedAddCommGroup
 
-variable[OrderedAddCommGroup A]
+variable [OrderedAddCommGroup A]
 
 /-! Lemmas about `zsmul` under ordering,  placed here (rather than in `algebra.group_power.order`
 with their friends) because they require facts from `data.int.basic`-/
@@ -255,7 +255,7 @@ theorem zsmul_le_zsmul_iff {a : A} {n m : ℤ} (ha : 0 < a) : n • a ≤ m • 
 theorem zsmul_lt_zsmul_iff {a : A} {n m : ℤ} (ha : 0 < a) : n • a < m • a ↔ n < m :=
   (zsmul_strict_mono_left ha).lt_iff_lt
 
-variable(A)
+variable (A)
 
 theorem zsmul_strict_mono_right {n : ℤ} (hn : 0 < n) : StrictMono ((· • ·) n : A → A) :=
   fun a b hab =>
@@ -271,7 +271,7 @@ theorem zsmul_mono_right {n : ℤ} (hn : 0 ≤ n) : Monotone ((· • ·) n : A 
       rw [←sub_nonneg, ←zsmul_sub]
       exact zsmul_nonneg hab hn
 
-variable{A}
+variable {A}
 
 theorem zsmul_le_zsmul' {n : ℤ} (hn : 0 ≤ n) {a₁ a₂ : A} (h : a₁ ≤ a₂) : n • a₁ ≤ n • a₂ :=
   zsmul_mono_right A hn h
@@ -338,7 +338,7 @@ end OrderedAddCommGroup
 
 section LinearOrderedAddCommGroup
 
-variable[LinearOrderedAddCommGroup A]
+variable [LinearOrderedAddCommGroup A]
 
 theorem zsmul_le_zsmul_iff' {n : ℤ} (hn : 0 < n) {a₁ a₂ : A} : n • a₁ ≤ n • a₂ ↔ a₁ ≤ a₂ :=
   (zsmul_strict_mono_right A hn).le_iff_le
@@ -486,7 +486,7 @@ theorem neg_one_pow_eq_pow_mod_two [Ringₓ R] {n : ℕ} : (-1 : R) ^ n = -1 ^ (
 
 section OrderedSemiring
 
-variable[OrderedSemiring R]{a : R}
+variable [OrderedSemiring R] {a : R}
 
 /-- Bernoulli's inequality. This version works for semirings but requires
 additional hypotheses `0 ≤ a * a` and `0 ≤ (1 + a) * (1 + a)`. -/
@@ -566,7 +566,7 @@ end OrderedSemiring
 
 section LinearOrderedSemiring
 
-variable[LinearOrderedSemiring R]
+variable [LinearOrderedSemiring R]
 
 -- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem sign_cases_of_C_mul_pow_nonneg
@@ -585,7 +585,7 @@ end LinearOrderedSemiring
 
 section LinearOrderedRing
 
-variable[LinearOrderedRing R]{a : R}{n : ℕ}
+variable [LinearOrderedRing R] {a : R} {n : ℕ}
 
 @[simp]
 theorem abs_pow (a : R) (n : ℕ) : |a ^ n| = |a| ^ n :=
@@ -738,7 +738,7 @@ theorem pow_right_injective {x : ℤ} (h : 1 < x.nat_abs) : Function.Injective (
 
 end Int
 
-variable(M G A)
+variable (M G A)
 
 /-- Monoid homomorphisms from `multiplicative ℕ` are defined by the image
 of `multiplicative.of_add 1`. -/
@@ -784,7 +784,7 @@ attribute [toAdditive multiplesHom] powersHom
 
 attribute [toAdditive zmultiplesHom] zpowersHom
 
-variable{M G A}
+variable {M G A}
 
 @[simp]
 theorem powers_hom_apply [Monoidₓ M] (x : M) (n : Multiplicative ℕ) : powersHom M x n = x ^ n.to_add :=
@@ -863,7 +863,7 @@ theorem AddMonoidHom.apply_int [AddGroupₓ M] (f : ℤ →+ M) (n : ℤ) : f n 
 /-! `add_monoid_hom.ext_int` is defined in `data.int.cast` -/
 
 
-variable(M G A)
+variable (M G A)
 
 /-- If `M` is commutative, `powers_hom` is a multiplicative equivalence. -/
 def powersMulHom [CommMonoidₓ M] : M ≃* (Multiplicative ℕ →* M) :=
@@ -901,7 +901,7 @@ def zmultiplesAddHom [AddCommGroupₓ A] : A ≃+ (ℤ →+ A) :=
           by 
             simp [zsmul_add] }
 
-variable{M G A}
+variable {M G A}
 
 @[simp]
 theorem powers_mul_hom_apply [CommMonoidₓ M] (x : M) (n : Multiplicative ℕ) : powersMulHom M x n = x ^ n.to_add :=
@@ -949,7 +949,7 @@ namespace SemiconjBy
 
 section 
 
-variable[Semiringₓ R]{a x y : R}
+variable [Semiringₓ R] {a x y : R}
 
 @[simp]
 theorem cast_nat_mul_right (h : SemiconjBy a x y) (n : ℕ) : SemiconjBy a ((n : R)*x) (n*y) :=
@@ -965,7 +965,7 @@ theorem cast_nat_mul_cast_nat_mul (h : SemiconjBy a x y) (m n : ℕ) : SemiconjB
 
 end 
 
-variable[Monoidₓ M][Groupₓ G][Ringₓ R]
+variable [Monoidₓ M] [Groupₓ G] [Ringₓ R]
 
 @[simp, toAdditive]
 theorem units_zpow_right {a : M} {x y : Units M} (h : SemiconjBy a x y) :
@@ -977,7 +977,7 @@ theorem units_zpow_right {a : M} {x y : Units M} (h : SemiconjBy a x y) :
   by 
     simp only [zpow_neg_succ_of_nat, Units.coe_pow, units_inv_right, h, pow_right]
 
-variable{a b x y x' y' : R}
+variable {a b x y x' y' : R}
 
 @[simp]
 theorem cast_int_mul_right (h : SemiconjBy a x y) (m : ℤ) : SemiconjBy a ((m : ℤ)*x) (m*y) :=
@@ -997,7 +997,7 @@ namespace Commute
 
 section 
 
-variable[Semiringₓ R]{a b : R}
+variable [Semiringₓ R] {a b : R}
 
 @[simp]
 theorem cast_nat_mul_right (h : Commute a b) (n : ℕ) : Commute a ((n : R)*b) :=
@@ -1025,7 +1025,7 @@ theorem self_cast_nat_mul_cast_nat_mul (m n : ℕ) : Commute ((m : R)*a) (n*a) :
 
 end 
 
-variable[Monoidₓ M][Groupₓ G][Ringₓ R]
+variable [Monoidₓ M] [Groupₓ G] [Ringₓ R]
 
 @[simp, toAdditive]
 theorem units_zpow_right {a : M} {u : Units M} (h : Commute a u) (m : ℤ) : Commute a («expr↑ » (u ^ m)) :=
@@ -1035,7 +1035,7 @@ theorem units_zpow_right {a : M} {u : Units M} (h : Commute a u) (m : ℤ) : Com
 theorem units_zpow_left {u : Units M} {a : M} (h : Commute («expr↑ » u) a) (m : ℤ) : Commute («expr↑ » (u ^ m)) a :=
   (h.symm.units_zpow_right m).symm
 
-variable{a b : R}
+variable {a b : R}
 
 @[simp]
 theorem cast_int_mul_right (h : Commute a b) (m : ℤ) : Commute a (m*b) :=
@@ -1048,7 +1048,7 @@ theorem cast_int_mul_left (h : Commute a b) (m : ℤ) : Commute ((m : R)*a) b :=
 theorem cast_int_mul_cast_int_mul (h : Commute a b) (m n : ℤ) : Commute ((m : R)*a) (n*b) :=
   h.cast_int_mul_cast_int_mul m n
 
-variable(a)(m n : ℤ)
+variable (a) (m n : ℤ)
 
 @[simp]
 theorem cast_int_left : Commute (m : R) a :=
@@ -1112,7 +1112,7 @@ end Multiplicative
 
 namespace Units
 
-variable[Monoidₓ M]
+variable [Monoidₓ M]
 
 theorem conj_pow (u : Units M) (x : M) (n : ℕ) : ((«expr↑ » u*x)*«expr↑ » (u⁻¹)) ^ n = (u*x ^ n)*«expr↑ » (u⁻¹) :=
   (divp_eq_iff_mul_eq.2 ((u.mk_semiconj_by x).pow_right n).Eq.symm).symm

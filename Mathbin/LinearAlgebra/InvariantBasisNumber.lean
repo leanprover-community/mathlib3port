@@ -67,7 +67,7 @@ universe u v w
 
 section 
 
-variable(R : Type u)[Ringₓ R]
+variable (R : Type u) [Ringₓ R]
 
 /-- We say that `R` satisfies the strong rank condition if `(fin n → R) →ₗ[R] (fin m → R)` injective
     implies `n ≤ m`. -/
@@ -139,7 +139,7 @@ By the universal property for free modules, any surjective map `(fin n → R) �
 has an injective splitting `(fin m → R) →ₗ[R] (fin n → R)`
 from which the strong rank condition gives the necessary inequality for the rank condition.
 -/
-instance (priority := 100)rank_condition_of_strong_rank_condition [StrongRankCondition R] : RankCondition R :=
+instance (priority := 100) rank_condition_of_strong_rank_condition [StrongRankCondition R] : RankCondition R :=
   { le_of_fin_surjective :=
       fun n m f s => le_of_fin_injective R _ (f.splitting_of_fun_on_fintype_surjective_injective s) }
 
@@ -149,7 +149,7 @@ instance (priority := 100)rank_condition_of_strong_rank_condition [StrongRankCon
 class InvariantBasisNumber : Prop where 
   eq_of_fin_equiv : ∀ {n m : ℕ}, ((Finₓ n → R) ≃ₗ[R] Finₓ m → R) → n = m
 
-instance (priority := 100)invariant_basis_number_of_rank_condition [RankCondition R] : InvariantBasisNumber R :=
+instance (priority := 100) invariant_basis_number_of_rank_condition [RankCondition R] : InvariantBasisNumber R :=
   { eq_of_fin_equiv :=
       fun n m e =>
         le_antisymmₓ (le_of_fin_surjective R e.symm.to_linear_map e.symm.surjective)
@@ -159,7 +159,7 @@ end
 
 section 
 
-variable(R : Type u)[Ringₓ R][InvariantBasisNumber R]
+variable (R : Type u) [Ringₓ R] [InvariantBasisNumber R]
 
 theorem eq_of_fin_equiv {n m : ℕ} : ((Finₓ n → R) ≃ₗ[R] Finₓ m → R) → n = m :=
   InvariantBasisNumber.eq_of_fin_equiv
@@ -185,7 +185,7 @@ end
 
 section 
 
-variable(R : Type u)[Ringₓ R][Nontrivial R][IsNoetherianRing R]
+variable (R : Type u) [Ringₓ R] [Nontrivial R] [IsNoetherianRing R]
 
 -- error in LinearAlgebra.InvariantBasisNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -228,7 +228,7 @@ end
 
 section 
 
-variable{R : Type u}[CommRingₓ R](I : Ideal R){ι : Type v}[Fintype ι]{ι' : Type w}
+variable {R : Type u} [CommRingₓ R] (I : Ideal R) {ι : Type v} [Fintype ι] {ι' : Type w}
 
 /-- An `R`-linear map `R^n → R^m` induces a function `R^n/I^n → R^m/I^m`. -/
 private def induced_map (I : Ideal R) (e : (ι → R) →ₗ[R] ι' → R) : (I.pi ι).Quotient → (I.pi ι').Quotient :=
@@ -260,7 +260,7 @@ section
 attribute [local instance] Ideal.Quotient.field
 
 /-- Nontrivial commutative rings have the invariant basis number property. -/
-instance (priority := 100)invariant_basis_number_of_nontrivial_of_comm_ring {R : Type u} [CommRingₓ R] [Nontrivial R] :
+instance (priority := 100) invariant_basis_number_of_nontrivial_of_comm_ring {R : Type u} [CommRingₓ R] [Nontrivial R] :
   InvariantBasisNumber R :=
   ⟨fun n m e =>
       let ⟨I, hI⟩ := Ideal.exists_maximal R 

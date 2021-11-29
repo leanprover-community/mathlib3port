@@ -72,7 +72,7 @@ end
 def LinearExtension (α : Type u) : Type u :=
   α
 
-noncomputable instance  {α : Type u} [PartialOrderₓ α] : LinearOrderₓ (LinearExtension α) :=
+noncomputable instance {α : Type u} [PartialOrderₓ α] : LinearOrderₓ (LinearExtension α) :=
   { le := (extend_partial_order (· ≤ · : α → α → Prop)).some,
     le_refl := (extend_partial_order (· ≤ · : α → α → Prop)).some_spec.some.1.1.1.1,
     le_trans := (extend_partial_order (· ≤ · : α → α → Prop)).some_spec.some.1.1.2.1,
@@ -84,6 +84,6 @@ def toLinearExtension {α : Type u} [PartialOrderₓ α] :
   (· ≤ · : α → α → Prop) →r (· ≤ · : LinearExtension α → LinearExtension α → Prop) :=
   { toFun := fun x => x, map_rel' := fun a b => (extend_partial_order (· ≤ · : α → α → Prop)).some_spec.some_spec _ _ }
 
-instance  {α : Type u} [Inhabited α] : Inhabited (LinearExtension α) :=
+instance {α : Type u} [Inhabited α] : Inhabited (LinearExtension α) :=
   ⟨(default _ : α)⟩
 

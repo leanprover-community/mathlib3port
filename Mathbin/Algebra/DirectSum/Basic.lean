@@ -22,7 +22,7 @@ open_locale BigOperators
 
 universe u v w u₁
 
-variable(ι : Type v)[dec_ι : DecidableEq ι](β : ι → Type w)
+variable (ι : Type v) [dec_ι : DecidableEq ι] (β : ι → Type w)
 
 -- error in Algebra.DirectSum.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_monoid
 /-- `direct_sum β` is the direct sum of a family of additive commutative monoids `β i`.
@@ -32,23 +32,23 @@ Note: `open_locale direct_sum` will enable the notation `⨁ i, β i` for `direc
 def direct_sum [∀ i, add_comm_monoid (β i)] : Type* :=
 «exprΠ₀ , »((i), β i)
 
-instance  [∀ i, AddCommMonoidₓ (β i)] : CoeFun (DirectSum ι β) fun _ => ∀ i : ι, β i :=
+instance [∀ i, AddCommMonoidₓ (β i)] : CoeFun (DirectSum ι β) fun _ => ∀ i : ι, β i :=
   Dfinsupp.hasCoeToFun
 
 localized [DirectSum] notation3  "⨁" (...) ", " r:(scoped f => DirectSum _ f) => r
 
 namespace DirectSum
 
-variable{ι}
+variable {ι}
 
 section AddCommGroupₓ
 
-variable[∀ i, AddCommGroupₓ (β i)]
+variable [∀ i, AddCommGroupₓ (β i)]
 
-instance  : AddCommGroupₓ (DirectSum ι β) :=
+instance : AddCommGroupₓ (DirectSum ι β) :=
   Dfinsupp.addCommGroup
 
-variable{β}
+variable {β}
 
 @[simp]
 theorem sub_apply (g₁ g₂ : ⨁i, β i) (i : ι) : (g₁ - g₂) i = g₁ i - g₂ i :=
@@ -56,19 +56,19 @@ theorem sub_apply (g₁ g₂ : ⨁i, β i) (i : ι) : (g₁ - g₂) i = g₁ i -
 
 end AddCommGroupₓ
 
-variable[∀ i, AddCommMonoidₓ (β i)]
+variable [∀ i, AddCommMonoidₓ (β i)]
 
 @[simp]
 theorem zero_apply (i : ι) : (0 : ⨁i, β i) i = 0 :=
   rfl
 
-variable{β}
+variable {β}
 
 @[simp]
 theorem add_apply (g₁ g₂ : ⨁i, β i) (i : ι) : (g₁+g₂) i = g₁ i+g₂ i :=
   Dfinsupp.add_apply _ _ _
 
-variable(β)
+variable (β)
 
 include dec_ι
 
@@ -102,7 +102,7 @@ theorem support_of_subset [∀ i : ι x : β i, Decidable (x ≠ 0)] {i : ι} {b
 theorem sum_support_of [∀ i : ι x : β i, Decidable (x ≠ 0)] (x : ⨁i, β i) : (∑i in x.support, of β i (x i)) = x :=
   Dfinsupp.sum_single
 
-variable{β}
+variable {β}
 
 theorem mk_injective (s : Finset ι) : Function.Injective (mk β s) :=
   Dfinsupp.mk_injective s
@@ -140,11 +140,11 @@ theorem add_hom_ext' {γ : Type _} [AddMonoidₓ γ] ⦃f g : (⨁i, β i) →+ 
   (H : ∀ i : ι, f.comp (of _ i) = g.comp (of _ i)) : f = g :=
   add_hom_ext$ fun i => AddMonoidHom.congr_fun$ H i
 
-variable{γ : Type u₁}[AddCommMonoidₓ γ]
+variable {γ : Type u₁} [AddCommMonoidₓ γ]
 
 section ToAddMonoid
 
-variable(φ : ∀ i, β i →+ γ)(ψ : (⨁i, β i) →+ γ)
+variable (φ : ∀ i, β i →+ γ) (ψ : (⨁i, β i) →+ γ)
 
 /-- `to_add_monoid φ` is the natural homomorphism from `⨁ i, β i` to `γ`
 induced by a family `φ` of homomorphisms `β i → γ`. -/
@@ -184,14 +184,14 @@ theorem from_add_monoid_of_apply (i : ι) (f : γ →+ β i) (x : γ) : from_add
 
 end FromAddMonoid
 
-variable(β)
+variable (β)
 
 /-- `set_to_set β S T h` is the natural homomorphism `⨁ (i : S), β i → ⨁ (i : T), β i`,
 where `h : S ⊆ T`. -/
 def set_to_set (S T : Set ι) (H : S ⊆ T) : (⨁i : S, β i) →+ ⨁i : T, β i :=
   to_add_monoid$ fun i => of (fun i : Subtype T => β i) ⟨«expr↑ » i, H i.prop⟩
 
-variable{β}
+variable {β}
 
 omit dec_ι
 

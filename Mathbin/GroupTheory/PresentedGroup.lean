@@ -21,7 +21,7 @@ generators, relations, group presentations
 -/
 
 
-variable{α : Type}
+variable {α : Type}
 
 /-- Given a set of relations, rels, over a type `α`, presented_group constructs the group with
 generators `x : α` and relations `rels` as a quotient of free_group `α`.-/
@@ -30,7 +30,7 @@ def PresentedGroup (rels : Set (FreeGroup α)) : Type :=
 
 namespace PresentedGroup
 
-instance  (rels : Set (FreeGroup α)) : Groupₓ (PresentedGroup rels) :=
+instance (rels : Set (FreeGroup α)) : Groupₓ (PresentedGroup rels) :=
   QuotientGroup.Quotient.group _
 
 /-- `of` is the canonical map from `α` to a presented group with generators `x : α`. The term `x` is
@@ -40,11 +40,11 @@ def of {rels : Set (FreeGroup α)} (x : α) : PresentedGroup rels :=
 
 section ToGroup
 
-variable{G : Type}[Groupₓ G]{f : α → G}{rels : Set (FreeGroup α)}
+variable {G : Type} [Groupₓ G] {f : α → G} {rels : Set (FreeGroup α)}
 
 local notation "F" => FreeGroup.lift f
 
-variable(h : ∀ r _ : r ∈ rels, F r = 1)
+variable (h : ∀ r _ : r ∈ rels, F r = 1)
 
 theorem closure_rels_subset_ker : Subgroup.normalClosure rels ≤ MonoidHom.ker F :=
   Subgroup.normal_closure_le_normal fun x w => (MonoidHom.mem_ker _).2 (h x w)
@@ -66,7 +66,7 @@ theorem to_group.unique (g : PresentedGroup rels →* G) (hg : ∀ x : α, g (of
 
 end ToGroup
 
-instance  (rels : Set (FreeGroup α)) : Inhabited (PresentedGroup rels) :=
+instance (rels : Set (FreeGroup α)) : Inhabited (PresentedGroup rels) :=
   ⟨1⟩
 
 end PresentedGroup

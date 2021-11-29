@@ -1,4 +1,4 @@
-import Mathbin.Order.BoundedLattice
+import Mathbin.Order.BoundedOrder
 
 /-!
 # (Generalized) Boolean algebras
@@ -60,7 +60,7 @@ generalized Boolean algebras, Boolean algebras, lattices, sdiff, compl
 
 universe u v
 
-variable{α : Type u}{w x y z : α}
+variable {α : Type u} {w x y z : α}
 
 /-!
 ### Generalized Boolean algebras
@@ -82,13 +82,13 @@ operation `\` (called `sdiff`, after "set difference") satisfying `(a ⊓ b) ⊔
 
 This is a generalization of Boolean algebras which applies to `finset α` for arbitrary
 (not-necessarily-`fintype`) `α`. -/
-class GeneralizedBooleanAlgebra(α : Type u) extends DistribLatticeBot α, HasSdiff α where 
+class GeneralizedBooleanAlgebra (α : Type u) extends DistribLattice α, HasSdiff α, HasBot α where 
   sup_inf_sdiff : ∀ a b : α, a⊓b⊔a \ b = a 
   inf_inf_sdiff : ∀ a b : α, a⊓b⊓(a \ b) = ⊥
 
 section GeneralizedBooleanAlgebra
 
-variable[GeneralizedBooleanAlgebra α]
+variable [GeneralizedBooleanAlgebra α]
 
 @[simp]
 theorem sup_inf_sdiff (x y : α) : x⊓y⊔x \ y = x :=
@@ -107,6 +107,14 @@ theorem sup_sdiff_inf (x y : α) : x \ y⊔x⊓y = x :=
 theorem inf_sdiff_inf (x y : α) : x \ y⊓(x⊓y) = ⊥ :=
   by 
     rw [inf_comm, inf_inf_sdiff]
+
+instance (priority := 100) GeneralizedBooleanAlgebra.toOrderBot : OrderBot α :=
+  { GeneralizedBooleanAlgebra.toHasBot α with
+    bot_le :=
+      fun a =>
+        by 
+          rw [←inf_inf_sdiff a a, inf_assoc]
+          exact inf_le_left }
 
 theorem disjoint_inf_sdiff : Disjoint (x⊓y) (x \ y) :=
   (inf_inf_sdiff x y).le
@@ -846,7 +854,7 @@ end GeneralizedBooleanAlgebra
 
 /-- Set / lattice complement -/
 @[notationClass]
-class HasCompl(α : Type _) where 
+class HasCompl (α : Type _) where 
   Compl : α → α
 
 export HasCompl(Compl)
@@ -855,14 +863,25 @@ export HasCompl(Compl)
 postfix `ᶜ`:«expr + »(max, 1) := compl
 
 /-- This class contains the core axioms of a Boolean algebra. The `boolean_algebra` class extends
-both this class and `generalized_boolean_algebra`, see Note [forgetful inheritance]. -/
-class BooleanAlgebra.Core(α : Type u) extends BoundedDistribLattice α, HasCompl α where 
+both this class and `generalized_boolean_algebra`, see Note [forgetful inheritance].
+
+Since `bounded_order`, `order_bot`, and `order_top` are mixins that require `has_le`
+to be present at define-time, the `extends` mechanism does not work with them.
+Instead, we extend using the underlying `has_bot` and `has_top` data typeclasses, and replicate the
+order axioms of those classes here. A "forgetful" instance back to `bounded_order` is provided.
+-/
+class BooleanAlgebra.Core (α : Type u) extends DistribLattice α, HasCompl α, HasTop α, HasBot α where 
   inf_compl_le_bot : ∀ x : α, x⊓«expr ᶜ» x ≤ ⊥
-  top_le_sup_compl : ∀ x : α, ⊤ ≤ x⊔«expr ᶜ» x
+  top_le_sup_compl : ∀ x : α, ⊤ ≤ x⊔«expr ᶜ» x 
+  le_top : ∀ a : α, a ≤ ⊤
+  bot_le : ∀ a : α, ⊥ ≤ a
+
+instance (priority := 100) BooleanAlgebra.Core.toBoundedOrder [h : BooleanAlgebra.Core α] : BoundedOrder α :=
+  { h with  }
 
 section BooleanAlgebraCore
 
-variable[BooleanAlgebra.Core α]
+variable [BooleanAlgebra.Core α]
 
 @[simp]
 theorem inf_compl_eq_bot : x⊓«expr ᶜ» x = ⊥ :=
@@ -998,8 +1017,26 @@ satisfying `x \ y = x ⊓ yᶜ`.
 
 This is a generalization of (classical) logic of propositions, or
 the powerset lattice. -/
-class BooleanAlgebra(α : Type u) extends GeneralizedBooleanAlgebra α, BooleanAlgebra.Core α where 
+class BooleanAlgebra (α : Type u) extends GeneralizedBooleanAlgebra α, BooleanAlgebra.Core α where 
   sdiff_eq : ∀ x y : α, x \ y = x⊓«expr ᶜ» y
+
+section OfCore
+
+/-- Create a `has_sdiff` instance from a `boolean_algebra.core` instance, defining `x \ y` to
+be `x ⊓ yᶜ`.
+
+For some types, it may be more convenient to create the `boolean_algebra` instance by hand in order
+to have a simpler `sdiff` operation.
+
+See note [reducible non-instances]. -/
+@[reducible]
+def BooleanAlgebra.Core.sdiff [BooleanAlgebra.Core α] : HasSdiff α :=
+  ⟨fun x y => x⊓«expr ᶜ» y⟩
+
+attribute [local instance] BooleanAlgebra.Core.sdiff
+
+theorem BooleanAlgebra.Core.sdiff_eq [BooleanAlgebra.Core α] (a b : α) : a \ b = a⊓«expr ᶜ» b :=
+  rfl
 
 /-- Create a `boolean_algebra` instance from a `boolean_algebra.core` instance, defining `x \ y` to
 be `x ⊓ yᶜ`.
@@ -1015,11 +1052,15 @@ def BooleanAlgebra.ofCore (B : BooleanAlgebra.Core α) : BooleanAlgebra α :=
     inf_inf_sdiff :=
       fun a b =>
         by 
-          rw [inf_left_right_swap, @inf_assoc _ _ a, compl_inf_eq_bot, inf_bot_eq, bot_inf_eq] }
+          rw [inf_left_right_swap, BooleanAlgebra.Core.sdiff_eq, @inf_assoc _ _ _ _ b, compl_inf_eq_bot, inf_bot_eq,
+            bot_inf_eq]
+          congr }
+
+end OfCore
 
 section BooleanAlgebra
 
-variable[BooleanAlgebra α]
+variable [BooleanAlgebra α]
 
 theorem sdiff_eq : x \ y = x⊓«expr ᶜ» y :=
   BooleanAlgebra.sdiff_eq x y
@@ -1046,7 +1087,7 @@ end BooleanAlgebra
 
 instance Prop.booleanAlgebra : BooleanAlgebra Prop :=
   BooleanAlgebra.ofCore
-    { Prop.boundedDistribLattice with Compl := Not, inf_compl_le_bot := fun p ⟨Hp, Hpc⟩ => Hpc Hp,
+    { Prop.distribLattice, Prop.boundedOrder with Compl := Not, inf_compl_le_bot := fun p ⟨Hp, Hpc⟩ => Hpc Hp,
       top_le_sup_compl := fun p H => Classical.em p }
 
 instance Pi.hasSdiff {ι : Type u} {α : ι → Type v} [∀ i, HasSdiff (α i)] : HasSdiff (∀ i, α i) :=
@@ -1074,8 +1115,7 @@ theorem Pi.compl_apply {ι : Type u} {α : ι → Type v} [∀ i, HasCompl (α i
   rfl
 
 instance Pi.booleanAlgebra {ι : Type u} {α : ι → Type v} [∀ i, BooleanAlgebra (α i)] : BooleanAlgebra (∀ i, α i) :=
-  { Pi.hasSdiff, Pi.hasCompl, Pi.boundedLattice, Pi.distribLattice with
-    sdiff_eq := fun x y => funext$ fun i => sdiff_eq,
+  { Pi.hasSdiff, Pi.hasCompl, Pi.boundedOrder, Pi.distribLattice with sdiff_eq := fun x y => funext$ fun i => sdiff_eq,
     sup_inf_sdiff := fun x y => funext$ fun i => sup_inf_sdiff (x i) (y i),
     inf_inf_sdiff := fun x y => funext$ fun i => inf_inf_sdiff (x i) (y i),
     inf_compl_le_bot := fun _ _ => BooleanAlgebra.inf_compl_le_bot _,

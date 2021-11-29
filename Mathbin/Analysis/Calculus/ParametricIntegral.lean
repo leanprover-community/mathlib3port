@@ -53,24 +53,10 @@ open TopologicalSpace MeasureTheory Filter Metric
 
 open_locale TopologicalSpace Filter
 
-variable{α :
-    Type
-      _}[MeasurableSpace
-      α]{μ :
-    Measureₓ
-      α}{𝕜 :
-    Type
-      _}[IsROrC
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace ℝ
-      E][NormedSpace 𝕜
-      E][IsScalarTower ℝ 𝕜
-      E][CompleteSpace
-      E][second_countable_topology
-      E][MeasurableSpace
-      E][BorelSpace E]{H : Type _}[NormedGroup H][NormedSpace 𝕜 H][second_countable_topology$ H →L[𝕜] E]
+variable {α : Type _} [MeasurableSpace α] {μ : Measureₓ α} {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E]
+  [NormedSpace ℝ E] [NormedSpace 𝕜 E] [IsScalarTower ℝ 𝕜 E] [CompleteSpace E] [second_countable_topology E]
+  [MeasurableSpace E] [BorelSpace E] {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H]
+  [second_countable_topology$ H →L[𝕜] E]
 
 -- error in Analysis.Calculus.ParametricIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming `F x₀` is

@@ -313,9 +313,9 @@ protected theorem Computable₂.partrec₂ {α β σ} [Primcodable α] [Primcoda
 
 namespace Computable
 
-variable{α : Type _}{β : Type _}{γ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 theorem of_eq {f g : α → σ} (hf : Computable f) (H : ∀ n, f n = g n) : Computable g :=
   (funext H : f = g) ▸ hf
@@ -433,9 +433,9 @@ end Computable
 
 namespace Partrec
 
-variable{α : Type _}{β : Type _}{γ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 open Computable
 
@@ -504,9 +504,9 @@ end Partrec
 
 namespace Partrec₂
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable δ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable δ] [Primcodable σ]
 
 theorem unpaired {f : ℕ → ℕ →. α} : Partrec (Nat.unpaired f) ↔ Partrec₂ f :=
   ⟨fun h =>
@@ -529,9 +529,9 @@ end Partrec₂
 
 namespace Computable
 
-variable{α : Type _}{β : Type _}{γ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 theorem comp {f : β → σ} {g : α → β} (hf : Computable f) (hg : Computable g) : Computable fun a => f (g a) :=
   hf.comp hg
@@ -543,9 +543,9 @@ end Computable
 
 namespace Computable₂
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable δ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable δ] [Primcodable σ]
 
 theorem comp {f : β → γ → σ} {g : α → β} {h : α → γ} (hf : Computable₂ f) (hg : Computable g) (hh : Computable h) :
   Computable fun a => f (g a) (h a) :=
@@ -559,9 +559,9 @@ end Computable₂
 
 namespace Partrec
 
-variable{α : Type _}{β : Type _}{γ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 open Computable
 
@@ -627,9 +627,9 @@ theorem Vector.m_of_fn_part_some {α n} :
 
 namespace Computable
 
-variable{α : Type _}{β : Type _}{γ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 theorem option_some_iff {f : α → σ} : (Computable fun a => some (f a)) ↔ Computable f :=
   ⟨fun h => encode_iff.1$ Primrec.pred.to_comp.comp$ encode_iff.2 h, option_some.comp⟩
@@ -747,9 +747,9 @@ end Computable
 
 namespace Partrec
 
-variable{α : Type _}{β : Type _}{γ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 open Computable
 

@@ -4,7 +4,7 @@
 -/
 
 
-variable{α : Sort _}{β : Sort _}
+variable {α : Sort _} {β : Sort _}
 
 namespace PProd
 

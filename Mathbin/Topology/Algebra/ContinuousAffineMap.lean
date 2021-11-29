@@ -25,17 +25,8 @@ to the notation `E →L[R] F` for `continuous_linear_map R E F`.
 
 
 /-- A continuous map of affine spaces. -/
-structure
-  ContinuousAffineMap(R :
-    Type
-      _){V W :
-    Type
-      _}(P Q :
-    Type
-      _)[Ringₓ
-      R][AddCommGroupₓ
-      V][Module R
-      V][TopologicalSpace P][AddTorsor V P][AddCommGroupₓ W][Module R W][TopologicalSpace Q][AddTorsor W Q] extends
+structure ContinuousAffineMap (R : Type _) {V W : Type _} (P Q : Type _) [Ringₓ R] [AddCommGroupₓ V] [Module R V]
+  [TopologicalSpace P] [AddTorsor V P] [AddCommGroupₓ W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q] extends
   P →ᵃ[R] Q where 
   cont : Continuous to_fun
 
@@ -43,16 +34,16 @@ notation:25 P " →A[" R "] " Q => ContinuousAffineMap R P Q
 
 namespace ContinuousAffineMap
 
-variable{R V W P Q : Type _}[Ringₓ R]
+variable {R V W P Q : Type _} [Ringₓ R]
 
-variable[AddCommGroupₓ V][Module R V][TopologicalSpace P][AddTorsor V P]
+variable [AddCommGroupₓ V] [Module R V] [TopologicalSpace P] [AddTorsor V P]
 
-variable[AddCommGroupₓ W][Module R W][TopologicalSpace Q][AddTorsor W Q]
+variable [AddCommGroupₓ W] [Module R W] [TopologicalSpace Q] [AddTorsor W Q]
 
 include V W
 
 /-- see Note [function coercion] -/
-instance  : CoeFun (P →A[R] Q) fun _ => P → Q :=
+instance : CoeFun (P →A[R] Q) fun _ => P → Q :=
   ⟨fun f => f.to_affine_map.to_fun⟩
 
 theorem to_fun_eq_coe (f : P →A[R] Q) : f.to_fun = «expr⇑ » f :=
@@ -81,14 +72,14 @@ theorem ext_iff {f g : P →A[R] Q} : f = g ↔ ∀ x, f x = g x :=
 theorem congr_funₓ {f g : P →A[R] Q} (h : f = g) (x : P) : f x = g x :=
   h ▸ rfl
 
-instance  : Coe (P →A[R] Q) (P →ᵃ[R] Q) :=
+instance : Coe (P →A[R] Q) (P →ᵃ[R] Q) :=
   ⟨to_affine_map⟩
 
 /-- Forgetting its algebraic properties, a continuous affine map is a continuous map. -/
 def to_continuous_map (f : P →A[R] Q) : C(P, Q) :=
   ⟨f, f.cont⟩
 
-instance  : Coe (P →A[R] Q) C(P, Q) :=
+instance : Coe (P →A[R] Q) C(P, Q) :=
   ⟨to_continuous_map⟩
 
 @[simp]
@@ -139,7 +130,7 @@ theorem mk_coe (f : P →A[R] Q) h : (⟨(f : P →ᵃ[R] Q), h⟩ : P →A[R] Q
 protected theorem Continuous (f : P →A[R] Q) : Continuous f :=
   f.2
 
-variable(R P)
+variable (R P)
 
 /-- The constant map is a continuous affine map. -/
 def const (q : Q) : P →A[R] Q :=
@@ -149,16 +140,16 @@ def const (q : Q) : P →A[R] Q :=
 theorem coe_const (q : Q) : (const R P q : P → Q) = Function.const P q :=
   rfl
 
-noncomputable instance  : Inhabited (P →A[R] Q) :=
+noncomputable instance : Inhabited (P →A[R] Q) :=
   ⟨const R P$
       Nonempty.some
         (by 
           infer_instance :
         Nonempty Q)⟩
 
-variable{R P}{W₂ Q₂ : Type _}
+variable {R P} {W₂ Q₂ : Type _}
 
-variable[AddCommGroupₓ W₂][Module R W₂][TopologicalSpace Q₂][AddTorsor W₂ Q₂]
+variable [AddCommGroupₓ W₂] [Module R W₂] [TopologicalSpace Q₂] [AddTorsor W₂ Q₂]
 
 include W₂
 
@@ -177,11 +168,11 @@ omit W₂
 
 section ModuleValuedMaps
 
-variable{S : Type _}[CommRingₓ S][Module S V][Module S W]
+variable {S : Type _} [CommRingₓ S] [Module S V] [Module S W]
 
-variable[TopologicalSpace W][TopologicalSpace S][HasContinuousSmul S W]
+variable [TopologicalSpace W] [TopologicalSpace S] [HasContinuousSmul S W]
 
-instance  : HasZero (P →A[R] W) :=
+instance : HasZero (P →A[R] W) :=
   ⟨ContinuousAffineMap.const R P 0⟩
 
 @[normCast, simp]
@@ -191,7 +182,7 @@ theorem coe_zero : ((0 : P →A[R] W) : P → W) = 0 :=
 theorem zero_apply (x : P) : (0 : P →A[R] W) x = 0 :=
   rfl
 
-instance  : HasScalar S (P →A[S] W) :=
+instance : HasScalar S (P →A[S] W) :=
   { smul := fun t f => { t • (f : P →ᵃ[S] W) with cont := f.continuous.const_smul t } }
 
 @[normCast, simp]
@@ -201,9 +192,9 @@ theorem coe_smul (t : S) (f : P →A[S] W) : «expr⇑ » (t • f) = t • f :=
 theorem smul_apply (t : S) (f : P →A[S] W) (x : P) : (t • f) x = t • f x :=
   rfl
 
-variable[TopologicalAddGroup W]
+variable [TopologicalAddGroup W]
 
-instance  : Add (P →A[R] W) :=
+instance : Add (P →A[R] W) :=
   { add := fun f g => { (f : P →ᵃ[R] W)+(g : P →ᵃ[R] W) with cont := f.continuous.add g.continuous } }
 
 @[normCast, simp]
@@ -213,7 +204,7 @@ theorem coe_add (f g : P →A[R] W) : «expr⇑ » (f+g) = f+g :=
 theorem add_apply (f g : P →A[R] W) (x : P) : (f+g) x = f x+g x :=
   rfl
 
-instance  : Sub (P →A[R] W) :=
+instance : Sub (P →A[R] W) :=
   { sub := fun f g => { (f : P →ᵃ[R] W) - (g : P →ᵃ[R] W) with cont := f.continuous.sub g.continuous } }
 
 @[normCast, simp]
@@ -223,7 +214,7 @@ theorem coe_sub (f g : P →A[R] W) : «expr⇑ » (f - g) = f - g :=
 theorem sub_apply (f g : P →A[R] W) (x : P) : (f - g) x = f x - g x :=
   rfl
 
-instance  : Neg (P →A[R] W) :=
+instance : Neg (P →A[R] W) :=
   { neg := fun f => { -(f : P →ᵃ[R] W) with cont := f.continuous.neg } }
 
 @[normCast, simp]
@@ -233,11 +224,11 @@ theorem coe_neg (f : P →A[R] W) : «expr⇑ » (-f) = -f :=
 theorem neg_apply (f : P →A[R] W) (x : P) : (-f) x = -f x :=
   rfl
 
-instance  : AddCommGroupₓ (P →A[R] W) :=
+instance : AddCommGroupₓ (P →A[R] W) :=
   { (coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub : AddCommGroupₓ (P →A[R] W)) with add := ·+·,
     zero := 0, neg := Neg.neg, sub := Sub.sub }
 
-instance  : Module S (P →A[S] W) :=
+instance : Module S (P →A[S] W) :=
   Function.Injective.module S ⟨fun f => f.to_affine_map.to_fun, rfl, coe_add⟩ coe_injective coe_smul
 
 end ModuleValuedMaps
@@ -246,11 +237,11 @@ end ContinuousAffineMap
 
 namespace ContinuousLinearMap
 
-variable{R V W : Type _}[Ringₓ R]
+variable {R V W : Type _} [Ringₓ R]
 
-variable[AddCommGroupₓ V][Module R V][TopologicalSpace V]
+variable [AddCommGroupₓ V] [Module R V] [TopologicalSpace V]
 
-variable[AddCommGroupₓ W][Module R W][TopologicalSpace W]
+variable [AddCommGroupₓ W] [Module R W] [TopologicalSpace W]
 
 /-- A continuous linear map can be regarded as a continuous affine map. -/
 def to_continuous_affine_map (f : V →L[R] W) : V →A[R] W :=

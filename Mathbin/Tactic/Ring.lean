@@ -145,10 +145,10 @@ unsafe def horner_expr.is_zero : horner_expr → Bool
 | horner_expr.const _ c => c = 0
 | _ => ff
 
-unsafe instance  : Coe horner_expr expr :=
+unsafe instance : Coe horner_expr expr :=
   ⟨horner_expr.e⟩
 
-unsafe instance  : CoeFun horner_expr fun _ => expr → expr :=
+unsafe instance : CoeFun horner_expr fun _ => expr → expr :=
   ⟨fun e => «expr⇑ » (e : expr)⟩
 
 /-- Construct a `xadd` node, generating the cached expr using the input cache. -/
@@ -173,7 +173,7 @@ unsafe def horner_expr.pp : horner_expr → tactic format
     let px ← pp x.1
     return$ "(" ++ pa ++ ") * (" ++ px ++ ")^" ++ toString n ++ " + " ++ pb
 
-unsafe instance  : has_to_tactic_format horner_expr :=
+unsafe instance : has_to_tactic_format horner_expr :=
   ⟨horner_expr.pp⟩
 
 /-- Reflexivity conversion for a `horner_expr`. -/
@@ -610,7 +610,7 @@ form so that you can see why it failed. This setting adjusts the resulting form:
 | SOP
 | horner
 
-instance  : Inhabited normalize_mode :=
+instance : Inhabited normalize_mode :=
   ⟨normalize_mode.horner⟩
 
 /-- A `ring`-based normalization simplifier that rewrites ring expressions into the specified mode.

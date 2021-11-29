@@ -21,9 +21,9 @@ namespace Polynomial
 
 universe u v
 
-variable{R : Type u}{S : Type v}{a b : R}{n m : ℕ}
+variable {R : Type u} {S : Type v} {a b : R} {n m : ℕ}
 
-variable[Semiringₓ R]{p q r : Polynomial R}
+variable [Semiringₓ R] {p q r : Polynomial R}
 
 section Coeff
 
@@ -63,13 +63,13 @@ def lsum {R A M : Type _} [Semiringₓ R] [Semiringₓ A] [AddCommMonoidₓ M] [
           rw [sum_eq_of_subset _ (fun n r => f n r) (fun n => (f n).map_zero) _ (support_smul c p)]
           simp only [sum_def, Finset.smul_sum, coeff_smul, LinearMap.map_smul, RingHom.id_apply] }
 
-variable(R)
+variable (R)
 
 /-- The nth coefficient, as a linear map. -/
 def lcoeff (n : ℕ) : Polynomial R →ₗ[R] R :=
   { toFun := fun p => coeff p n, map_add' := fun p q => coeff_add p q n, map_smul' := fun r p => coeff_smul r p n }
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem lcoeff_apply (n : ℕ) (f : Polynomial R) : lcoeff R n f = coeff f n :=

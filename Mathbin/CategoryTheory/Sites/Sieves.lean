@@ -26,9 +26,9 @@ namespace CategoryTheory
 
 open Category Limits
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D](F : C ⥤ D)
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] (F : C ⥤ D)
 
-variable{X Y Z : C}(f : Y ⟶ X)
+variable {X Y Z : C} (f : Y ⟶ X)
 
 -- error in CategoryTheory.Sites.Sieves: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler complete_lattice
 /-- A set of arrows all with codomain `X`. -/ @[derive #[expr complete_lattice]] def presieve (X : C) :=
@@ -36,7 +36,7 @@ variable{X Y Z : C}(f : Y ⟶ X)
 
 namespace Presieve
 
-instance  : Inhabited (presieve X) :=
+instance : Inhabited (presieve X) :=
   ⟨⊤⟩
 
 /--
@@ -147,7 +147,7 @@ theorem functor_pullback_id (R : presieve X) : R.functor_pullback (𝟭 _) = R :
 
 section FunctorPushforward
 
-variable{E : Type u₃}[category.{v₃} E](G : D ⥤ E)
+variable {E : Type u₃} [category.{v₃} E] (G : D ⥤ E)
 
 /--
 Given a presieve on `X`, we can define a presieve on `F(X)` (which is actually a sieve)
@@ -160,7 +160,7 @@ def functor_pushforward (S : presieve X) : presieve (F.obj X) :=
 An auxillary definition in order to fix the choice of the preimages between various definitions.
 -/
 @[nolint has_inhabited_instance]
-structure functor_pushforward_structure(S : presieve X){Y}(f : Y ⟶ F.obj X) where 
+structure functor_pushforward_structure (S : presieve X) {Y} (f : Y ⟶ F.obj X) where 
   preobj : C 
   premap : preobj ⟶ X 
   lift : Y ⟶ F.obj preobj 
@@ -207,18 +207,18 @@ end Presieve
 For an object `X` of a category `C`, a `sieve X` is a set of morphisms to `X` which is closed under
 left-composition.
 -/
-structure sieve{C : Type u₁}[category.{v₁} C](X : C) where 
+structure sieve {C : Type u₁} [category.{v₁} C] (X : C) where 
   Arrows : presieve X 
   downward_closed' : ∀ {Y Z f} hf : arrows f g : Z ⟶ Y, arrows (g ≫ f)
 
 namespace Sieve
 
-instance  : CoeFun (sieve X) fun _ => presieve X :=
+instance : CoeFun (sieve X) fun _ => presieve X :=
   ⟨sieve.arrows⟩
 
 initialize_simps_projections Sieve (Arrows → apply)
 
-variable{S R : sieve X}
+variable {S R : sieve X}
 
 @[simp]
 theorem downward_closed (S : sieve X) {f : Y ⟶ X} (hf : S f) (g : Z ⟶ Y) : S (g ≫ f) :=
@@ -269,7 +269,7 @@ protected def inter (S R : sieve X) : sieve X :=
 Sieves on an object `X` form a complete lattice.
 We generate this directly rather than using the galois insertion for nicer definitional properties.
 -/
-instance  : CompleteLattice (sieve X) :=
+instance : CompleteLattice (sieve X) :=
   { le := fun S R => ∀ ⦃Y⦄ f : Y ⟶ X, S f → R f, le_refl := fun S f q => id,
     le_trans := fun S₁ S₂ S₃ S₁₂ S₂₃ Y f h => S₂₃ _ (S₁₂ _ h),
     le_antisymm := fun S R p q => sieve.ext fun Y f => ⟨p _, q _⟩,
@@ -520,7 +520,7 @@ theorem pullback_arrows_comm [has_pullbacks C] {X Y : C} (f : Y ⟶ X) (R : pres
 
 section Functor
 
-variable{E : Type u₃}[category.{v₃} E](G : D ⥤ E)
+variable {E : Type u₃} [category.{v₃} E] (G : D ⥤ E)
 
 /--
 If `R` is a sieve, then the `category_theory.presieve.functor_pullback` of `R` is actually a sieve.
@@ -640,8 +640,19 @@ theorem functor_pullback_inter (S R : sieve (F.obj X)) :
   (S⊓R).FunctorPullback F = S.functor_pullback F⊓R.functor_pullback F :=
   rfl
 
+@[simp]
 theorem functor_pushforward_bot (F : C ⥤ D) (X : C) : (⊥ : sieve X).FunctorPushforward F = ⊥ :=
   (functor_galois_connection F X).l_bot
+
+@[simp]
+theorem functor_pushforward_top (F : C ⥤ D) (X : C) : (⊤ : sieve X).FunctorPushforward F = ⊤ :=
+  by 
+    refine' (generate_sieve _).symm.trans _ 
+    apply generate_of_contains_split_epi (𝟙 (F.obj X))
+    refine'
+      ⟨X, 𝟙 _, 𝟙 _, trivialₓ,
+        by 
+          simp ⟩
 
 @[simp]
 theorem functor_pullback_bot (F : C ⥤ D) (X : C) : (⊥ : sieve (F.obj X)).FunctorPullback F = ⊥ :=

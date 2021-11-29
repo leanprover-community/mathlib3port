@@ -27,15 +27,15 @@ submonoid, submonoids
 
 open_locale BigOperators
 
-variable{M : Type _}
+variable {M : Type _}
 
-variable{A : Type _}
+variable {A : Type _}
 
 namespace Submonoid
 
 section Assoc
 
-variable[Monoidₓ M](S : Submonoid M)
+variable [Monoidₓ M] (S : Submonoid M)
 
 @[simp, normCast, toAdditive coe_nsmul]
 theorem coe_pow (x : S) (n : ℕ) : «expr↑ » (x ^ n) = (x ^ n : M) :=
@@ -91,7 +91,7 @@ end Assoc
 
 section NonAssoc
 
-variable[MulOneClass M](S : Submonoid M)
+variable [MulOneClass M] (S : Submonoid M)
 
 open Set
 
@@ -165,7 +165,7 @@ end Submonoid
 
 namespace FreeMonoid
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Submonoid
 
@@ -178,7 +178,7 @@ end FreeMonoid
 
 namespace Submonoid
 
-variable[Monoidₓ M]
+variable [Monoidₓ M]
 
 open MonoidHom
 
@@ -279,7 +279,7 @@ end Submonoid
 
 namespace Submonoid
 
-variable{N : Type _}[CommMonoidₓ N]
+variable {N : Type _} [CommMonoidₓ N]
 
 open MonoidHom
 
@@ -298,7 +298,7 @@ end Submonoid
 
 namespace AddSubmonoid
 
-variable[AddMonoidₓ A]
+variable [AddMonoidₓ A]
 
 open Set
 
@@ -360,7 +360,7 @@ end AddSubmonoid
 
 namespace Submonoid
 
-variable{R : Type _}[NonAssocSemiring R](S : Submonoid R){a b : R}
+variable {R : Type _} [NonAssocSemiring R] (S : Submonoid R) {a b : R}
 
 /-- The product of an element of the additive closure of a multiplicative submonoid `M`
 and an element of `M` is contained in the additive closure of `M`. -/

@@ -25,7 +25,7 @@ subgroups of `ℝ`.
 -/
 
 
-variable{G : Type _}[LinearOrderedAddCommGroup G][Archimedean G]
+variable {G : Type _} [LinearOrderedAddCommGroup G] [Archimedean G]
 
 open LinearOrderedAddCommGroup
 

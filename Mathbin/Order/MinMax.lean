@@ -13,13 +13,13 @@ min, max
 
 universe u v
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 attribute [simp] max_eq_leftₓ max_eq_rightₓ min_eq_leftₓ min_eq_rightₓ
 
 section 
 
-variable[LinearOrderₓ α][LinearOrderₓ β]{f : α → β}{s : Set α}{a b c d : α}
+variable [LinearOrderₓ α] [LinearOrderₓ β] {f : α → β} {s : Set α} {a b c d : α}
 
 @[simp]
 theorem le_min_iff : c ≤ min a b ↔ c ≤ a ∧ c ≤ b :=

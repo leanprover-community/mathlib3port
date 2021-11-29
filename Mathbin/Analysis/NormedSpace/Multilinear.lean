@@ -75,54 +75,11 @@ We use the following type variables in this file:
 
 universe u v v' wE wE₁ wE' wEi wG wG'
 
-variable{𝕜 :
-    Type
-      u}{ι :
-    Type
-      v}{ι' :
-    Type
-      v'}{n :
-    ℕ}{E :
-    ι →
-      Type
-        wE}{E₁ :
-    ι →
-      Type
-        wE₁}{E' :
-    ι' →
-      Type
-        wE'}{Ei :
-    Finₓ n.succ →
-      Type
-        wEi}{G :
-    Type
-      wG}{G' :
-    Type
-      wG'}[DecidableEq
-      ι][Fintype
-      ι][DecidableEq
-      ι'][Fintype
-      ι'][NondiscreteNormedField
-      𝕜][∀ i,
-      NormedGroup
-        (E
-          i)][∀ i,
-      NormedSpace 𝕜
-        (E
-          i)][∀ i,
-      NormedGroup
-        (E₁
-          i)][∀ i,
-      NormedSpace 𝕜
-        (E₁
-          i)][∀ i,
-      NormedGroup
-        (E'
-          i)][∀ i,
-      NormedSpace 𝕜
-        (E'
-          i)][∀ i,
-      NormedGroup (Ei i)][∀ i, NormedSpace 𝕜 (Ei i)][NormedGroup G][NormedSpace 𝕜 G][NormedGroup G'][NormedSpace 𝕜 G']
+variable {𝕜 : Type u} {ι : Type v} {ι' : Type v'} {n : ℕ} {E : ι → Type wE} {E₁ : ι → Type wE₁} {E' : ι' → Type wE'}
+  {Ei : Finₓ n.succ → Type wEi} {G : Type wG} {G' : Type wG'} [DecidableEq ι] [Fintype ι] [DecidableEq ι'] [Fintype ι']
+  [NondiscreteNormedField 𝕜] [∀ i, NormedGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] [∀ i, NormedGroup (E₁ i)]
+  [∀ i, NormedSpace 𝕜 (E₁ i)] [∀ i, NormedGroup (E' i)] [∀ i, NormedSpace 𝕜 (E' i)] [∀ i, NormedGroup (Ei i)]
+  [∀ i, NormedSpace 𝕜 (Ei i)] [NormedGroup G] [NormedSpace 𝕜 G] [NormedGroup G'] [NormedSpace 𝕜 G']
 
 /-!
 ### Continuity properties of multilinear maps
@@ -134,7 +91,7 @@ both directions. Along the way, we prove useful bounds on the difference `∥f m
 
 namespace MultilinearMap
 
-variable(f : MultilinearMap 𝕜 E G)
+variable (f : MultilinearMap 𝕜 E G)
 
 -- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a multilinear map in finitely many variables on normed spaces satisfies the inequality
@@ -334,7 +291,7 @@ defines a normed space structure on `continuous_multilinear_map 𝕜 E G`.
 
 namespace ContinuousMultilinearMap
 
-variable(c : 𝕜)(f g : ContinuousMultilinearMap 𝕜 E G)(m : ∀ i, E i)
+variable (c : 𝕜) (f g : ContinuousMultilinearMap 𝕜 E G) (m : ∀ i, E i)
 
 theorem bound : ∃ C : ℝ, 0 < C ∧ ∀ m, ∥f m∥ ≤ C*∏i, ∥m i∥ :=
   f.to_multilinear_map.exists_bound_of_continuous f.2
@@ -424,7 +381,7 @@ theorem op_norm_zero_iff : ∥f∥ = 0 ↔ f = 0 :=
       apply le_antisymmₓ (op_norm_le_bound 0 le_rfl fun m => _) (op_norm_nonneg _)
       simp 
 
-variable{𝕜' : Type _}[NondiscreteNormedField 𝕜'][NormedAlgebra 𝕜' 𝕜][NormedSpace 𝕜' G][IsScalarTower 𝕜' 𝕜 G]
+variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜' 𝕜] [NormedSpace 𝕜' G] [IsScalarTower 𝕜' 𝕜 G]
 
 theorem op_norm_smul_le (c : 𝕜') : ∥c • f∥ ≤ ∥c∥*∥f∥ :=
   (c • f).op_norm_le_bound (mul_nonneg (norm_nonneg _) (op_norm_nonneg _))
@@ -502,7 +459,7 @@ theorem norm_pi {ι' : Type v'} [Fintype ι'] {E' : ι' → Type wE'} [∀ i', N
 
 section 
 
-variable(𝕜 E E' G G')
+variable (𝕜 E E' G G')
 
 /-- `continuous_multilinear_map.prod` as a `linear_isometry_equiv`. -/
 def prodL :
@@ -533,14 +490,14 @@ end
 
 section RestrictScalars
 
-variable[∀ i, NormedSpace 𝕜' (E i)][∀ i, IsScalarTower 𝕜' 𝕜 (E i)]
+variable [∀ i, NormedSpace 𝕜' (E i)] [∀ i, IsScalarTower 𝕜' 𝕜 (E i)]
 
 @[simp]
 theorem norm_restrict_scalars : ∥f.restrict_scalars 𝕜'∥ = ∥f∥ :=
   by 
     simp only [norm_def, coe_restrict_scalars]
 
-variable(𝕜')
+variable (𝕜')
 
 /-- `continuous_multilinear_map.restrict_scalars` as a `continuous_multilinear_map`. -/
 def restrict_scalars_linear : ContinuousMultilinearMap 𝕜 E G →L[𝕜'] ContinuousMultilinearMap 𝕜' E G :=
@@ -549,7 +506,7 @@ def restrict_scalars_linear : ContinuousMultilinearMap 𝕜 E G →L[𝕜'] Cont
       by 
         simp 
 
-variable{𝕜'}
+variable {𝕜'}
 
 theorem continuous_restrict_scalars :
   Continuous (RestrictScalars 𝕜' : ContinuousMultilinearMap 𝕜 E G → ContinuousMultilinearMap 𝕜' E G) :=
@@ -720,7 +677,7 @@ theorem norm_restr {k n : ℕ} (f : G[×n]→L[𝕜] G') (s : Finset (Finₓ n))
 
 section 
 
-variable(𝕜 ι)(A : Type _)[NormedCommRing A][NormedAlgebra 𝕜 A]
+variable (𝕜 ι) (A : Type _) [NormedCommRing A] [NormedAlgebra 𝕜 A]
 
 /-- The continuous multilinear map on `A^ι`, where `A` is a normed commutative algebra
 over `𝕜`, associating to `m` the product of all the `m i`.
@@ -736,7 +693,7 @@ protected def mk_pi_algebra : ContinuousMultilinearMap 𝕜 (fun i : ι => A) A 
       ·
         simp [norm_prod_le' univ univ_nonempty, hι]
 
-variable{A 𝕜 ι}
+variable {A 𝕜 ι}
 
 @[simp]
 theorem mk_pi_algebra_apply (m : ι → A) : ContinuousMultilinearMap.mkPiAlgebra 𝕜 ι A m = ∏i, m i :=
@@ -778,7 +735,7 @@ end
 
 section 
 
-variable(𝕜 n)(A : Type _)[NormedRing A][NormedAlgebra 𝕜 A]
+variable (𝕜 n) (A : Type _) [NormedRing A] [NormedAlgebra 𝕜 A]
 
 -- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The continuous multilinear map on `A^n`, where `A` is a normed algebra over `𝕜`, associating to
@@ -796,7 +753,7 @@ def mk_pi_algebra_fin : continuous_multilinear_map 𝕜 (λ i : fin n, A) A :=
      simpa [] [] [] ["[", "<-", expr fin.prod_of_fn, "]"] [] ["using", expr list.norm_prod_le' this] }
  end)
 
-variable{A 𝕜 n}
+variable {A 𝕜 n}
 
 @[simp]
 theorem mk_pi_algebra_fin_apply (m : Finₓ n → A) :
@@ -828,7 +785,7 @@ theorem norm_mk_pi_algebra_fin [NormOneClass A] : ∥ContinuousMultilinearMap.mk
 
 end 
 
-variable(𝕜 ι)
+variable (𝕜 ι)
 
 /-- The canonical continuous multilinear map on `𝕜^ι`, associating to `m` the product of all the
 `m i` (multiplied by a fixed reference element `z` in the target module) -/
@@ -838,7 +795,7 @@ protected def mk_pi_field (z : G) : ContinuousMultilinearMap 𝕜 (fun i : ι =>
       by 
         simp only [MultilinearMap.mk_pi_ring_apply, norm_smul, NormedField.norm_prod, mul_commₓ]
 
-variable{𝕜 ι}
+variable {𝕜 ι}
 
 @[simp]
 theorem mk_pi_field_apply (z : G) (m : ι → 𝕜) :
@@ -849,14 +806,19 @@ theorem mk_pi_field_apply_one_eq_self (f : ContinuousMultilinearMap 𝕜 (fun i 
   ContinuousMultilinearMap.mkPiField 𝕜 ι (f fun i => 1) = f :=
   to_multilinear_map_inj f.to_multilinear_map.mk_pi_ring_apply_one_eq_self
 
-variable(𝕜 ι G)
+@[simp]
+theorem norm_mk_pi_field (z : G) : ∥ContinuousMultilinearMap.mkPiField 𝕜 ι z∥ = ∥z∥ :=
+  (MultilinearMap.mk_continuous_norm_le _ (norm_nonneg z) _).antisymm$
+    by 
+      simpa using (ContinuousMultilinearMap.mkPiField 𝕜 ι z).le_op_norm fun _ => 1
+
+variable (𝕜 ι G)
 
 /-- Continuous multilinear maps on `𝕜^n` with values in `G` are in bijection with `G`, as such a
 continuous multilinear map is completely determined by its value on the constant vector made of
-ones. We register this bijection as a linear equivalence in
-`continuous_multilinear_map.pi_field_equiv_aux`. The continuous linear equivalence is
+ones. We register this bijection as a linear isometry in
 `continuous_multilinear_map.pi_field_equiv`. -/
-protected def pi_field_equiv_aux : G ≃ₗ[𝕜] ContinuousMultilinearMap 𝕜 (fun i : ι => 𝕜) G :=
+protected def pi_field_equiv : G ≃ₗᵢ[𝕜] ContinuousMultilinearMap 𝕜 (fun i : ι => 𝕜) G :=
   { toFun := fun z => ContinuousMultilinearMap.mkPiField 𝕜 ι z, invFun := fun f => f fun i => 1,
     map_add' :=
       fun z z' =>
@@ -872,29 +834,7 @@ protected def pi_field_equiv_aux : G ≃ₗ[𝕜] ContinuousMultilinearMap 𝕜 
       fun z =>
         by 
           simp ,
-    right_inv := fun f => f.mk_pi_field_apply_one_eq_self }
-
-/-- Continuous multilinear maps on `𝕜^n` with values in `G` are in bijection with `G`, as such a
-continuous multilinear map is completely determined by its value on the constant vector made of
-ones. We register this bijection as a continuous linear equivalence in
-`continuous_multilinear_map.pi_field_equiv`. -/
-protected def pi_field_equiv : G ≃L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : ι => 𝕜) G :=
-  { ContinuousMultilinearMap.piFieldEquivAux 𝕜 ι G with
-    continuous_to_fun :=
-      by 
-        refine' (ContinuousMultilinearMap.piFieldEquivAux 𝕜 ι G).toLinearMap.continuous_of_bound (1 : ℝ) fun z => _ 
-        rw [one_mulₓ]
-        change ∥ContinuousMultilinearMap.mkPiField 𝕜 ι z∥ ≤ ∥z∥
-        exact MultilinearMap.mk_continuous_norm_le _ (norm_nonneg _) _,
-    continuous_inv_fun :=
-      by 
-        refine'
-          (ContinuousMultilinearMap.piFieldEquivAux 𝕜 ι G).symm.toLinearMap.continuous_of_bound (1 : ℝ) fun f => _ 
-        rw [one_mulₓ]
-        change ∥f fun i => 1∥ ≤ ∥f∥
-        apply @ContinuousMultilinearMap.unit_le_op_norm 𝕜 ι (fun i : ι => 𝕜) G _ _ _ _ _ _ _ f 
-        simp only [pi_norm_le_iff zero_le_one, norm_one]
-        exact fun _ => le_rfl }
+    right_inv := fun f => f.mk_pi_field_apply_one_eq_self, norm_map' := norm_mk_pi_field }
 
 end ContinuousMultilinearMap
 
@@ -1205,7 +1145,7 @@ theorem ContinuousMultilinearMap.uncurry_curry_left (f : ContinuousMultilinearMa
   f.curry_left.uncurry_left = f :=
   ContinuousMultilinearMap.to_multilinear_map_inj$ f.to_multilinear_map.uncurry_curry_left
 
-variable(𝕜 Ei G)
+variable (𝕜 Ei G)
 
 /-- The space of continuous multilinear maps on `Π(i : fin (n+1)), E i` is canonically isomorphic to
 the space of continuous linear maps from `E 0` to the space of continuous multilinear maps on
@@ -1234,7 +1174,7 @@ def continuousMultilinearCurryLeftEquiv :
     (fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _)
     fun f => LinearMap.mk_continuous_norm_le _ (norm_nonneg f) _
 
-variable{𝕜 Ei G}
+variable {𝕜 Ei G}
 
 @[simp]
 theorem continuous_multilinear_curry_left_equiv_apply
@@ -1325,7 +1265,7 @@ theorem ContinuousMultilinearMap.uncurry_curry_right (f : ContinuousMultilinearM
     ext m 
     simp 
 
-variable(𝕜 Ei G)
+variable (𝕜 Ei G)
 
 /--
 The space of continuous multilinear maps on `Π(i : fin (n+1)), Ei i` is canonically isomorphic to
@@ -1357,7 +1297,7 @@ def continuousMultilinearCurryRightEquiv :
     (fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _)
     fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _
 
-variable(n G')
+variable (n G')
 
 /-- The space of continuous multilinear maps on `Π(i : fin (n+1)), G` is canonically isomorphic to
 the space of continuous multilinear maps on `Π(i : fin n), G` with values in the space
@@ -1371,7 +1311,7 @@ unless you need the full framework of linear isometric equivs. -/
 def continuousMultilinearCurryRightEquiv' : (G[×n]→L[𝕜] G →L[𝕜] G') ≃ₗᵢ[𝕜] G[×n.succ]→L[𝕜] G' :=
   continuousMultilinearCurryRightEquiv 𝕜 (fun i : Finₓ n.succ => G) G'
 
-variable{n 𝕜 G Ei G'}
+variable {n 𝕜 G Ei G'}
 
 @[simp]
 theorem continuous_multilinear_curry_right_equiv_apply
@@ -1418,13 +1358,13 @@ section
 
 attribute [local instance] Unique.subsingleton
 
-variable{𝕜 G G'}
+variable {𝕜 G G'}
 
 /-- Associating to a continuous multilinear map in `0` variables the unique value it takes. -/
 def ContinuousMultilinearMap.uncurry0 (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ 0 => G) G') : G' :=
   f 0
 
-variable(𝕜 G)
+variable (𝕜 G)
 
 /-- Associating to an element `x` of a vector space `E₂` the continuous multilinear map in `0`
 variables taking the (unique) value `x` -/
@@ -1432,13 +1372,13 @@ def ContinuousMultilinearMap.curry0 (x : G') : G[×0]→L[𝕜] G' :=
   { toFun := fun m => x, map_add' := fun m i => Finₓ.elim0 i, map_smul' := fun m i => Finₓ.elim0 i,
     cont := continuous_const }
 
-variable{G}
+variable {G}
 
 @[simp]
 theorem ContinuousMultilinearMap.curry0_apply (x : G') (m : Finₓ 0 → G) : ContinuousMultilinearMap.curry0 𝕜 G x m = x :=
   rfl
 
-variable{𝕜}
+variable {𝕜}
 
 @[simp]
 theorem ContinuousMultilinearMap.uncurry0_apply (f : G[×0]→L[𝕜] G') : f.uncurry0 = f 0 :=
@@ -1456,7 +1396,7 @@ theorem ContinuousMultilinearMap.uncurry0_curry0 (f : G[×0]→L[𝕜] G') :
   by 
     simp 
 
-variable(𝕜 G)
+variable (𝕜 G)
 
 @[simp]
 theorem ContinuousMultilinearMap.curry0_uncurry0 (x : G') : (ContinuousMultilinearMap.curry0 𝕜 G x).uncurry0 = x :=
@@ -1475,7 +1415,7 @@ theorem ContinuousMultilinearMap.curry0_norm (x : G') : ∥ContinuousMultilinear
     ·
       simpa using (ContinuousMultilinearMap.curry0 𝕜 G x).le_op_norm 0
 
-variable{𝕜 G}
+variable {𝕜 G}
 
 -- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
@@ -1495,7 +1435,7 @@ theorem ContinuousMultilinearMap.uncurry0_norm (f : G[×0]→L[𝕜] G') : ∥f.
   by 
     simp 
 
-variable(𝕜 G G')
+variable (𝕜 G G')
 
 /-- The continuous linear isomorphism between elements of a normed space, and continuous multilinear
 maps in `0` variables with values in this normed space.
@@ -1507,7 +1447,7 @@ def continuousMultilinearCurryFin0 : (G[×0]→L[𝕜] G') ≃ₗᵢ[𝕜] G' :=
     map_add' := fun f g => rfl, map_smul' := fun c f => rfl, left_inv := ContinuousMultilinearMap.uncurry0_curry0,
     right_inv := ContinuousMultilinearMap.curry0_uncurry0 𝕜 G, norm_map' := ContinuousMultilinearMap.uncurry0_norm }
 
-variable{𝕜 G G'}
+variable {𝕜 G G'}
 
 @[simp]
 theorem continuous_multilinear_curry_fin0_apply (f : G[×0]→L[𝕜] G') : continuousMultilinearCurryFin0 𝕜 G G' f = f 0 :=
@@ -1523,7 +1463,7 @@ end
 /-! #### With 1 variable -/
 
 
-variable(𝕜 G G')
+variable (𝕜 G G')
 
 /-- Continuous multilinear maps from `G^1` to `G'` are isomorphic with continuous linear maps from
 `G` to `G'`. -/
@@ -1531,7 +1471,7 @@ def continuousMultilinearCurryFin1 : (G[×1]→L[𝕜] G') ≃ₗᵢ[𝕜] G →
   (continuousMultilinearCurryRightEquiv 𝕜 (fun i : Finₓ 1 => G) G').symm.trans
     (continuousMultilinearCurryFin0 𝕜 G (G →L[𝕜] G'))
 
-variable{𝕜 G G'}
+variable {𝕜 G G'}
 
 @[simp]
 theorem continuous_multilinear_curry_fin1_apply (f : G[×1]→L[𝕜] G') (x : G) :
@@ -1545,7 +1485,7 @@ theorem continuous_multilinear_curry_fin1_symm_apply (f : G →L[𝕜] G') (v : 
 
 namespace ContinuousMultilinearMap
 
-variable(𝕜 G G')
+variable (𝕜 G G')
 
 /-- An equivalence of the index set defines a linear isometric equivalence between the spaces
 of multilinear maps. -/
@@ -1584,11 +1524,11 @@ def dom_dom_congr (σ : ι ≃ ι') :
     (fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _)
     fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _
 
-variable{𝕜 G G'}
+variable {𝕜 G G'}
 
 section 
 
-variable[DecidableEq (Sum ι ι')]
+variable [DecidableEq (Sum ι ι')]
 
 /-- A continuous multilinear map with variables indexed by `ι ⊕ ι'` defines a continuous multilinear
 map with variables indexed by `ι` taking values in the space of continuous multilinear maps with
@@ -1622,7 +1562,7 @@ theorem uncurry_sum_apply
   (m : Sum ι ι' → G) : f.uncurry_sum m = f (m ∘ Sum.inl) (m ∘ Sum.inr) :=
   rfl
 
-variable(𝕜 ι ι' G G')
+variable (𝕜 ι ι' G G')
 
 /-- Linear isometric equivalence between the space of continuous multilinear maps with variables
 indexed by `ι ⊕ ι'` and the space of continuous multilinear maps with variables indexed by `ι`
@@ -1664,7 +1604,7 @@ end
 
 section 
 
-variable(𝕜 G G'){k l : ℕ}{s : Finset (Finₓ n)}
+variable (𝕜 G G') {k l : ℕ} {s : Finset (Finₓ n)}
 
 /-- If `s : finset (fin n)` is a finite set of cardinality `k` and its complement has cardinality
 `l`, then the space of continuous multilinear maps `G [×n]→L[𝕜] G'` of `n` variables is isomorphic
@@ -1674,7 +1614,7 @@ def curry_fin_finset {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl
   (G[×n]→L[𝕜] G') ≃ₗᵢ[𝕜] G[×k]→L[𝕜] G[×l]→L[𝕜] G' :=
   (dom_dom_congr 𝕜 G G' (finSumEquivOfFinset hk hl).symm).trans (curry_sum_equiv 𝕜 (Finₓ k) (Finₓ l) G G')
 
-variable{𝕜 G G'}
+variable {𝕜 G G'}
 
 @[simp]
 theorem curry_fin_finset_apply (hk : s.card = k) (hl : («expr ᶜ» s).card = l) (f : G[×n]→L[𝕜] G') (mk : Finₓ k → G)

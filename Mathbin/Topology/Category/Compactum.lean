@@ -94,16 +94,16 @@ def free : Type _ ⥤ Compactum :=
 def adj : free ⊣ forget :=
   monad.adj _
 
-instance  : concrete_category Compactum :=
+instance : concrete_category Compactum :=
   { forget := forget }
 
-instance  : CoeSort Compactum (Type _) :=
+instance : CoeSort Compactum (Type _) :=
   ⟨forget.obj⟩
 
-instance  {X Y : Compactum} : CoeFun (X ⟶ Y) fun f => X → Y :=
+instance {X Y : Compactum} : CoeFun (X ⟶ Y) fun f => X → Y :=
   ⟨fun f => f.f⟩
 
-instance  : has_limits Compactum :=
+instance : has_limits Compactum :=
   has_limits_of_has_limits_creates_limits forget
 
 /-- The structure map for a compactum, essentially sending an ultrafilter to its limit. -/
@@ -139,7 +139,7 @@ theorem join_distrib (X : Compactum) (uux : Ultrafilter (Ultrafilter X)) : X.str
     rw [monad.algebra.assoc]
     rfl
 
-instance  {X : Compactum} : TopologicalSpace X :=
+instance {X : Compactum} : TopologicalSpace X :=
   { IsOpen := fun U => ∀ F : Ultrafilter X, X.str F ∈ U → U ∈ F, is_open_univ := fun _ _ => Filter.univ_sets _,
     is_open_inter := fun S T h3 h4 h5 h6 => Filter.inter_sets _ (h3 _ h6.1) (h4 _ h6.2),
     is_open_sUnion := fun S h1 F ⟨T, hT, h2⟩ => mem_of_superset (h1 T hT _ h2) (Set.subset_sUnion_of_mem hT) }
@@ -159,7 +159,7 @@ theorem is_closed_iff {X : Compactum} (S : Set X) : IsClosed S ↔ ∀ F : Ultra
       specialize h1 F 
       cases F.mem_or_compl_mem S <;> finish
 
-instance  {X : Compactum} : CompactSpace X :=
+instance {X : Compactum} : CompactSpace X :=
   by 
     constructor 
     rw [is_compact_iff_ultrafilter_le_nhds]
@@ -337,7 +337,7 @@ theorem le_nhds_of_str_eq {X : Compactum} (F : Ultrafilter X) (x : X) : X.str F 
           by 
             rwa [h]
 
-instance  {X : Compactum} : T2Space X :=
+instance {X : Compactum} : T2Space X :=
   by 
     rw [t2_iff_ultrafilter]
     intro _ _ F hx hy 

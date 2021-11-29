@@ -142,8 +142,8 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit :=
 /-- `seq_apply_constructor f [x,y,z]` synthesizes `f <*> x <*> y <*> z` -/
 private unsafe def seq_apply_constructor : expr → List (Sum expr expr) → tactic (List (tactic expr) × expr)
 | e, Sum.inr x :: xs =>
-  Prod.mapₓ (cons intro1) id <$> (to_expr (pquote.1 ((%%ₓe) <*> %%ₓx)) >>= flip seq_apply_constructor xs)
-| e, Sum.inl x :: xs => Prod.mapₓ (cons$ pure x) id <$> seq_apply_constructor e xs
+  Prod.map (cons intro1) id <$> (to_expr (pquote.1 ((%%ₓe) <*> %%ₓx)) >>= flip seq_apply_constructor xs)
+| e, Sum.inl x :: xs => Prod.map (cons$ pure x) id <$> seq_apply_constructor e xs
 | e, [] => return ([], e)
 
 /-- ``nested_traverse f α (list (array n (list α)))`` synthesizes the expression

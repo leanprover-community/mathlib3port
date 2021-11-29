@@ -22,7 +22,7 @@ namespace DirPair
 
 open ExprLens
 
-variable{α β : Type}(p : dir_pair α)
+variable {α β : Type} (p : dir_pair α)
 
 /-- Get one side of the pair, picking the side according to the direction. -/
 def get : dir → α

@@ -81,13 +81,13 @@ protected def toString : label → Stringₓ
 | move => "move"
 | squash => "squash"
 
-instance  : HasToString label :=
+instance : HasToString label :=
   ⟨label.to_string⟩
 
-instance  : HasRepr label :=
+instance : HasRepr label :=
   ⟨label.to_string⟩
 
-unsafe instance  : has_to_format label :=
+unsafe instance : has_to_format label :=
   ⟨fun l => l.to_string⟩
 
 /-- Convert `string` into `label`. -/
@@ -169,7 +169,7 @@ unsafe structure norm_cast_cache where
 unsafe def empty_cache : norm_cast_cache :=
   { up := simp_lemmas.mk, down := simp_lemmas.mk, squash := simp_lemmas.mk }
 
-unsafe instance  : Inhabited norm_cast_cache :=
+unsafe instance : Inhabited norm_cast_cache :=
   ⟨empty_cache⟩
 
 /-- `add_elim cache e` adds `e` as an `elim` lemma to `cache`. -/

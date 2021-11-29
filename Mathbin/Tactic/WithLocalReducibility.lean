@@ -18,7 +18,7 @@ reducible, semireducible (the default), irreducible. -/ @[derive #[expr decidabl
 | irreducible
 
 /-- Satisfy the inhabited linter -/
-instance  : Inhabited decl_reducibility :=
+instance : Inhabited decl_reducibility :=
   ⟨decl_reducibility.semireducible⟩
 
 /-- Get the reducibility attribute of a declaration.

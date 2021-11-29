@@ -44,7 +44,7 @@ universe u v w
 
 section Semiringₓ
 
-variable{R : Type u}[Semiringₓ R]{S : Type v}[Semiringₓ S]{f : R →+* S}
+variable {R : Type u} [Semiringₓ R] {S : Type v} [Semiringₓ S] {f : R →+* S}
 
 /-- We define the subsemiring of polynomials that lifts as the image of `ring_hom.of (map f)`. -/
 def lifts (f : R →+* S) : Subsemiring (Polynomial S) :=
@@ -230,7 +230,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable{R : Type u}[Ringₓ R]{S : Type v}[Ringₓ S](f : R →+* S)
+variable {R : Type u} [Ringₓ R] {S : Type v} [Ringₓ S] (f : R →+* S)
 
 /-- The subring of polynomials that lift. -/
 def lifts_ring (f : R →+* S) : Subring (Polynomial S) :=
@@ -246,7 +246,7 @@ end Ringₓ
 
 section Algebra
 
-variable{R : Type u}[CommSemiringₓ R]{S : Type v}[Semiringₓ S][Algebra R S]
+variable {R : Type u} [CommSemiringₓ R] {S : Type v} [Semiringₓ S] [Algebra R S]
 
 /-- The map `polynomial R → polynomial S` as an algebra homomorphism. -/
 def map_alg (R : Type u) [CommSemiringₓ R] (S : Type v) [Semiringₓ S] [Algebra R S] : Polynomial R →ₐ[R] Polynomial S :=

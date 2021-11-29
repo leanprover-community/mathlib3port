@@ -49,13 +49,13 @@ For `a : α`, `o : part α`, `a ∈ o` means that `o` is defined and equal to `a
 /-- `part α` is the type of "partial values" of type `α`. It
   is similar to `option α` except the domain condition can be an
   arbitrary proposition, not necessarily decidable. -/
-structure Part.{u}(α : Type u) : Type u where 
+structure Part.{u} (α : Type u) : Type u where 
   Dom : Prop 
   get : dom → α
 
 namespace Part
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 /-- Convert a `part α` with a decidable domain to an option -/
 def to_option (o : Part α) [Decidable o.dom] : Option α :=
@@ -77,7 +77,7 @@ theorem eta : ∀ o : Part α, (⟨o.dom, fun h => o.get h⟩ : Part α) = o
 protected def mem (a : α) (o : Part α) : Prop :=
   ∃ h, o.get h = a
 
-instance  : HasMem α (Part α) :=
+instance : HasMem α (Part α) :=
   ⟨Part.Mem⟩
 
 theorem mem_eq (a : α) (o : Part α) : (a ∈ o) = ∃ h, o.get h = a :=
@@ -98,7 +98,7 @@ theorem ext {o p : Part α} (H : ∀ a, a ∈ o ↔ a ∈ p) : o = p :=
 def none : Part α :=
   ⟨False, False.ndrec _⟩
 
-instance  : Inhabited (Part α) :=
+instance : Inhabited (Part α) :=
   ⟨none⟩
 
 @[simp]
@@ -260,7 +260,7 @@ theorem of_option_eq_get {α} (o : Option α) : of_option o = ⟨_, @Option.get 
       by 
         cases o <;> [cases h₁, rfl]
 
-instance  : Coe (Option α) (Part α) :=
+instance : Coe (Option α) (Part α) :=
   ⟨of_option⟩
 
 @[simp]
@@ -300,17 +300,13 @@ by haveI [] [] [":=", expr classical.dec]; exact [expr ⟨λ
   o, to_option o, of_option, λ o, of_to_option o, λ o, eq.trans (by dsimp [] [] [] []; congr) (to_of_option o)⟩]
 
 /-- We give `part α` the order where everything is greater than `none`. -/
-instance  : PartialOrderₓ (Part α) :=
+instance : PartialOrderₓ (Part α) :=
   { le := fun x y => ∀ i, i ∈ x → i ∈ y, le_refl := fun x y => id, le_trans := fun x y z f g i => g _ ∘ f _,
     le_antisymm := fun x y f g => Part.ext$ fun z => ⟨f _, g _⟩ }
 
 -- error in Data.Part: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 instance : order_bot (part α) :=
 { bot := none, bot_le := by { introv [ident x], rintro ["⟨", "⟨", "_", "⟩", ",", "_", "⟩"] } }
-
-instance  : Preorderₓ (Part α) :=
-  by 
-    infer_instance
 
 theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) : x ≤ y ∨ y ≤ x :=
   by 
@@ -447,10 +443,10 @@ theorem map_map (g : β → γ) (f : α → β) (o : Part α) : map g (map f o) 
   by 
     rw [←bind_some_eq_map, bind_map, bind_some_eq_map]
 
-instance  : Monadₓ Part :=
+instance : Monadₓ Part :=
   { pure := @some, map := @map, bind := @Part.bind }
 
-instance  : IsLawfulMonad Part :=
+instance : IsLawfulMonad Part :=
   { bind_pure_comp_eq_map := @bind_some_eq_map,
     id_map :=
       fun β f =>
@@ -497,7 +493,7 @@ theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) : x >>= f 
       rcases h' with ⟨a, h₀, h₁⟩
       apply h _ h₀ _ h₁
 
-instance  : MonadFail Part :=
+instance : MonadFail Part :=
   { Part.monad with fail := fun _ _ => none }
 
 /-- `restrict p o h` replaces the domain of `o` with `p`, and is well defined when

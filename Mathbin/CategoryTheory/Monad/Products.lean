@@ -24,13 +24,13 @@ namespace CategoryTheory
 
 open Category Limits
 
-variable{C : Type u}[category.{v} C](X : C)
+variable {C : Type u} [category.{v} C] (X : C)
 
 section 
 
 open Comonad
 
-variable[has_binary_products C]
+variable [has_binary_products C]
 
 /-- `X ⨯ -` has a comonad structure. This is sometimes called the writer comonad. -/
 @[simps]
@@ -92,7 +92,7 @@ section
 
 open _Root_.Monad
 
-variable[has_binary_coproducts C]
+variable [has_binary_coproducts C]
 
 /-- `X ⨿ -` has a monad structure. This is sometimes called the either monad. -/
 @[simps]

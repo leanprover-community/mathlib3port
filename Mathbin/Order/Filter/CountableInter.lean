@@ -16,14 +16,14 @@ open Set Filter
 
 open_locale Filter
 
-variable{ι α : Type _}
+variable {ι α : Type _}
 
 /-- A filter `l` has the countable intersection property if for any countable collection
 of sets `s ∈ l` their intersection belongs to `l` as well. -/
-class CountableInterFilter(l : Filter α) : Prop where 
+class CountableInterFilter (l : Filter α) : Prop where 
   countable_sInter_mem_sets' : ∀ {S : Set (Set α)} hSc : countable S hS : ∀ s _ : s ∈ S, s ∈ l, ⋂₀S ∈ l
 
-variable{l : Filter α}[CountableInterFilter l]
+variable {l : Filter α} [CountableInterFilter l]
 
 theorem countable_sInter_mem_sets {S : Set (Set α)} (hSc : countable S) : ⋂₀S ∈ l ↔ ∀ s _ : s ∈ S, s ∈ l :=
   ⟨fun hS s hs => mem_of_superset hS (sInter_subset_of_mem hs), CountableInterFilter.countable_sInter_mem_sets' hSc⟩

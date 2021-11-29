@@ -27,20 +27,20 @@ def Fintypeₓ :=
 
 namespace Fintypeₓ
 
-instance  : CoeSort Fintypeₓ (Type _) :=
+instance : CoeSort Fintypeₓ (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled `Fintype` from the underlying type and typeclass. -/
 def of (X : Type _) [Fintype X] : Fintypeₓ :=
   bundled.of X
 
-instance  : Inhabited Fintypeₓ :=
+instance : Inhabited Fintypeₓ :=
   ⟨⟨Pempty⟩⟩
 
-instance  {X : Fintypeₓ} : Fintype X :=
+instance {X : Fintypeₓ} : Fintype X :=
   X.2
 
-instance  : category Fintypeₓ :=
+instance : category Fintypeₓ :=
   induced_category.category bundled.α
 
 -- error in CategoryTheory.Fintype: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
@@ -49,7 +49,7 @@ instance  : category Fintypeₓ :=
 def incl : «expr ⥤ »(Fintype, Type*) :=
 induced_functor _
 
-instance  : concrete_category Fintypeₓ :=
+instance : concrete_category Fintypeₓ :=
   ⟨incl⟩
 
 @[simp]
@@ -78,7 +78,7 @@ namespace Skeleton
 def mk : ℕ → skeleton :=
   Ulift.up
 
-instance  : Inhabited skeleton :=
+instance : Inhabited skeleton :=
   ⟨mk 0⟩
 
 /-- Given any object of `Fintype.skeleton`, this returns the associated natural number. -/
@@ -89,7 +89,7 @@ def len : skeleton → ℕ :=
 theorem ext (X Y : skeleton) : X.len = Y.len → X = Y :=
   Ulift.ext _ _
 
-instance  : small_category skeleton.{u} :=
+instance : small_category skeleton.{u} :=
   { Hom := fun X Y => Ulift.{u} (Finₓ X.len) → Ulift.{u} (Finₓ Y.len), id := fun _ => id,
     comp := fun _ _ _ f g => g ∘ f }
 
@@ -118,19 +118,19 @@ theorem is_skeletal : skeletal skeleton.{u} :=
 def incl : skeleton.{u} ⥤ Fintypeₓ.{u} :=
   { obj := fun X => Fintypeₓ.of (Ulift (Finₓ X.len)), map := fun _ _ f => f }
 
-instance  : full incl :=
+instance : full incl :=
   { Preimage := fun _ _ f => f }
 
-instance  : faithful incl :=
+instance : faithful incl :=
   {  }
 
-instance  : ess_surj incl :=
+instance : ess_surj incl :=
   ess_surj.mk$
     fun X =>
       let F := Fintype.equivFin X
       ⟨mk (Fintype.card X), Nonempty.intro { Hom := F.symm ∘ Ulift.down, inv := Ulift.up ∘ F }⟩
 
-noncomputable instance  : is_equivalence incl :=
+noncomputable instance : is_equivalence incl :=
   equivalence.of_fully_faithfully_ess_surj _
 
 /-- The equivalence between `Fintype.skeleton` and `Fintype`. -/

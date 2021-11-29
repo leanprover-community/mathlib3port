@@ -14,7 +14,7 @@ universe v₁ v₂ u₁ u₂
 
 namespace CategoryTheory
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
 instance unop_mono_of_epi {A B : «expr ᵒᵖ» C} (f : A ⟶ B) [epi f] : mono f.unop :=
   ⟨fun Z g h eq => Quiver.Hom.op_inj ((cancel_epi f).1 (Quiver.Hom.unop_inj Eq))⟩
@@ -30,7 +30,7 @@ instance op_epi_of_mono {A B : C} (f : A ⟶ B) [mono f] : epi f.op :=
 
 section 
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 theorem left_adjoint_preserves_epi {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) {X Y : C} {f : X ⟶ Y} (hf : epi f) :
   epi (F.map f) :=
@@ -75,7 +75,7 @@ such that `f ≫ retraction f = 𝟙 X`.
 
 Every split monomorphism is a monomorphism.
 -/
-class split_mono{X Y : C}(f : X ⟶ Y) where 
+class split_mono {X Y : C} (f : X ⟶ Y) where 
   retraction : Y ⟶ X 
   id' : f ≫ retraction = 𝟙 X :=  by 
   runTac 
@@ -88,7 +88,7 @@ such that `section_ f ≫ f = 𝟙 Y`.
 
 Every split epimorphism is an epimorphism.
 -/
-class split_epi{X Y : C}(f : X ⟶ Y) where 
+class split_epi {X Y : C} (f : X ⟶ Y) where 
   section_ : Y ⟶ X 
   id' : section_ ≫ f = 𝟙 Y :=  by 
   runTac 
@@ -138,15 +138,15 @@ theorem is_iso_of_mono_of_split_epi {X Y : C} (f : X ⟶ Y) [mono f] [split_epi 
           simp ⟩⟩⟩
 
 /-- Every iso is a split mono. -/
-noncomputable instance (priority := 100)split_mono.of_iso {X Y : C} (f : X ⟶ Y) [is_iso f] : split_mono f :=
+noncomputable instance (priority := 100) split_mono.of_iso {X Y : C} (f : X ⟶ Y) [is_iso f] : split_mono f :=
   { retraction := inv f }
 
 /-- Every iso is a split epi. -/
-noncomputable instance (priority := 100)split_epi.of_iso {X Y : C} (f : X ⟶ Y) [is_iso f] : split_epi f :=
+noncomputable instance (priority := 100) split_epi.of_iso {X Y : C} (f : X ⟶ Y) [is_iso f] : split_epi f :=
   { section_ := inv f }
 
 /-- Every split mono is a mono. -/
-instance (priority := 100)split_mono.mono {X Y : C} (f : X ⟶ Y) [split_mono f] : mono f :=
+instance (priority := 100) split_mono.mono {X Y : C} (f : X ⟶ Y) [split_mono f] : mono f :=
   { right_cancellation :=
       fun Z g h w =>
         by 
@@ -154,7 +154,7 @@ instance (priority := 100)split_mono.mono {X Y : C} (f : X ⟶ Y) [split_mono f]
           simpa using w }
 
 /-- Every split epi is an epi. -/
-instance (priority := 100)split_epi.epi {X Y : C} (f : X ⟶ Y) [split_epi f] : epi f :=
+instance (priority := 100) split_epi.epi {X Y : C} (f : X ⟶ Y) [split_epi f] : epi f :=
   { left_cancellation :=
       fun Z g h w =>
         by 
@@ -191,17 +191,17 @@ noncomputable def groupoid.of_trunc_split_mono (all_split_mono : ∀ {X Y : C} f
 
 section 
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 /-- Split monomorphisms are also absolute monomorphisms. -/
-instance  {X Y : C} (f : X ⟶ Y) [split_mono f] (F : C ⥤ D) : split_mono (F.map f) :=
+instance {X Y : C} (f : X ⟶ Y) [split_mono f] (F : C ⥤ D) : split_mono (F.map f) :=
   { retraction := F.map (retraction f),
     id' :=
       by 
         rw [←functor.map_comp, split_mono.id, Functor.map_id] }
 
 /-- Split epimorphisms are also absolute epimorphisms. -/
-instance  {X Y : C} (f : X ⟶ Y) [split_epi f] (F : C ⥤ D) : split_epi (F.map f) :=
+instance {X Y : C} (f : X ⟶ Y) [split_epi f] (F : C ⥤ D) : split_epi (F.map f) :=
   { section_ := F.map (section_ f),
     id' :=
       by 

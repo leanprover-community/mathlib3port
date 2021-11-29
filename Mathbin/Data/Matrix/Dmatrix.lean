@@ -14,15 +14,15 @@ whose columns are indexed by the fintype `n`. -/
 def Dmatrix (m : Type u) (n : Type u') [Fintype m] [Fintype n] (α : m → n → Type v) : Type max u u' v :=
   ∀ i j, α i j
 
-variable{l m n o : Type _}[Fintype l][Fintype m][Fintype n][Fintype o]
+variable {l m n o : Type _} [Fintype l] [Fintype m] [Fintype n] [Fintype o]
 
-variable{α : m → n → Type v}
+variable {α : m → n → Type v}
 
 namespace Dmatrix
 
 section Ext
 
-variable{M N : Dmatrix m n α}
+variable {M N : Dmatrix m n α}
 
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
   ⟨fun h => funext$ fun i => funext$ h i,
@@ -66,43 +66,43 @@ def col {α : m → Type v} (w : ∀ i, α i) : Dmatrix m Unit fun i j => α i
 def row {α : n → Type v} (v : ∀ j, α j) : Dmatrix Unit n fun i j => α j
 | x, y => v y
 
-instance  [∀ i j, Inhabited (α i j)] : Inhabited (Dmatrix m n α) :=
+instance [∀ i j, Inhabited (α i j)] : Inhabited (Dmatrix m n α) :=
   Pi.inhabited _
 
-instance  [∀ i j, Add (α i j)] : Add (Dmatrix m n α) :=
+instance [∀ i j, Add (α i j)] : Add (Dmatrix m n α) :=
   Pi.hasAdd
 
-instance  [∀ i j, AddSemigroupₓ (α i j)] : AddSemigroupₓ (Dmatrix m n α) :=
+instance [∀ i j, AddSemigroupₓ (α i j)] : AddSemigroupₓ (Dmatrix m n α) :=
   Pi.addSemigroup
 
-instance  [∀ i j, AddCommSemigroupₓ (α i j)] : AddCommSemigroupₓ (Dmatrix m n α) :=
+instance [∀ i j, AddCommSemigroupₓ (α i j)] : AddCommSemigroupₓ (Dmatrix m n α) :=
   Pi.addCommSemigroup
 
-instance  [∀ i j, HasZero (α i j)] : HasZero (Dmatrix m n α) :=
+instance [∀ i j, HasZero (α i j)] : HasZero (Dmatrix m n α) :=
   Pi.hasZero
 
-instance  [∀ i j, AddMonoidₓ (α i j)] : AddMonoidₓ (Dmatrix m n α) :=
+instance [∀ i j, AddMonoidₓ (α i j)] : AddMonoidₓ (Dmatrix m n α) :=
   Pi.addMonoid
 
-instance  [∀ i j, AddCommMonoidₓ (α i j)] : AddCommMonoidₓ (Dmatrix m n α) :=
+instance [∀ i j, AddCommMonoidₓ (α i j)] : AddCommMonoidₓ (Dmatrix m n α) :=
   Pi.addCommMonoid
 
-instance  [∀ i j, Neg (α i j)] : Neg (Dmatrix m n α) :=
+instance [∀ i j, Neg (α i j)] : Neg (Dmatrix m n α) :=
   Pi.hasNeg
 
-instance  [∀ i j, Sub (α i j)] : Sub (Dmatrix m n α) :=
+instance [∀ i j, Sub (α i j)] : Sub (Dmatrix m n α) :=
   Pi.hasSub
 
-instance  [∀ i j, AddGroupₓ (α i j)] : AddGroupₓ (Dmatrix m n α) :=
+instance [∀ i j, AddGroupₓ (α i j)] : AddGroupₓ (Dmatrix m n α) :=
   Pi.addGroup
 
-instance  [∀ i j, AddCommGroupₓ (α i j)] : AddCommGroupₓ (Dmatrix m n α) :=
+instance [∀ i j, AddCommGroupₓ (α i j)] : AddCommGroupₓ (Dmatrix m n α) :=
   Pi.addCommGroup
 
-instance  [∀ i j, Unique (α i j)] : Unique (Dmatrix m n α) :=
+instance [∀ i j, Unique (α i j)] : Unique (Dmatrix m n α) :=
   Pi.unique
 
-instance  [∀ i j, Subsingleton (α i j)] : Subsingleton (Dmatrix m n α) :=
+instance [∀ i j, Subsingleton (α i j)] : Subsingleton (Dmatrix m n α) :=
   Pi.subsingleton
 
 @[simp]

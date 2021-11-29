@@ -28,7 +28,7 @@ setoid, equivalence, iseqv, relation, equivalence relation
 -/
 
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
 /-- A version of `setoid.r` that takes the equivalence relation as an explicit argument. -/
 def Setoidₓ.Rel (r : Setoidₓ α) : α → α → Prop :=
@@ -52,7 +52,7 @@ theorem eq_iff_rel_eq {r₁ r₂ : Setoidₓ α} : r₁ = r₂ ↔ r₁.rel = r�
   ⟨fun h => h ▸ rfl, fun h => Setoidₓ.ext'$ fun x y => h ▸ Iff.rfl⟩
 
 /-- Defining `≤` for equivalence relations. -/
-instance  : LE (Setoidₓ α) :=
+instance : LE (Setoidₓ α) :=
   ⟨fun r s => ∀ ⦃x y⦄, r.rel x y → s.rel x y⟩
 
 theorem le_def {r s : Setoidₓ α} : r ≤ s ↔ ∀ {x y}, r.rel x y → s.rel x y :=
@@ -104,7 +104,7 @@ protected def Prod (r : Setoidₓ α) (s : Setoidₓ β) : Setoidₓ (α × β) 
         fun _ _ _ h1 h2 => ⟨r.trans' h1.1 h2.1, s.trans' h1.2 h2.2⟩⟩ }
 
 /-- The infimum of two equivalence relations. -/
-instance  : HasInf (Setoidₓ α) :=
+instance : HasInf (Setoidₓ α) :=
   ⟨fun r s =>
       ⟨fun x y => r.rel x y ∧ s.rel x y,
         ⟨fun x => ⟨r.refl' x, s.refl' x⟩, fun _ _ h => ⟨r.symm' h.1, s.symm' h.2⟩,
@@ -119,7 +119,7 @@ theorem inf_iff_and {r s : Setoidₓ α} {x y} : (r⊓s).Rel x y ↔ r.rel x y �
   Iff.rfl
 
 /-- The infimum of a set of equivalence relations. -/
-instance  : HasInfₓ (Setoidₓ α) :=
+instance : HasInfₓ (Setoidₓ α) :=
   ⟨fun S =>
       ⟨fun x y => ∀ r _ : r ∈ S, rel r x y,
         ⟨fun x r hr => r.refl' x, fun _ _ h r hr => r.symm'$ h r hr,
@@ -133,7 +133,7 @@ theorem Inf_def {s : Set (Setoidₓ α)} : (Inf s).Rel = Inf (rel '' s) :=
     simp only [Inf_image, infi_apply, infi_Prop_eq]
     rfl
 
-instance  : PartialOrderₓ (Setoidₓ α) :=
+instance : PartialOrderₓ (Setoidₓ α) :=
   { le := · ≤ ·, lt := fun r s => r ≤ s ∧ ¬s ≤ r, le_refl := fun _ _ _ => id,
     le_trans := fun _ _ _ hr hs _ _ h => hs$ hr h, lt_iff_le_not_le := fun _ _ => Iff.rfl,
     le_antisymm := fun r s h1 h2 => Setoidₓ.ext'$ fun x y => ⟨fun h => h1 h, fun h => h2 h⟩ }
@@ -275,7 +275,7 @@ theorem ker_eq_lift_of_injective {r : Setoidₓ α} (f : α → β) (H : ∀ x y
     (fun x y hk => Quotientₓ.exact$ h$ show Quotientₓ.lift f H («expr⟦ ⟧» x) = Quotientₓ.lift f H («expr⟦ ⟧» y) from hk)
     H
 
-variable(r : Setoidₓ α)(f : α → β)
+variable (r : Setoidₓ α) (f : α → β)
 
 /-- The first isomorphism theorem for sets: the quotient of α by the kernel of a function f
     bijects with f's image. -/
@@ -312,7 +312,7 @@ definitionally more useful. -/
 noncomputable def quotient_ker_equiv_of_surjective (hf : surjective f) : Quotientₓ (ker f) ≃ β :=
   quotient_ker_equiv_of_right_inverse _ (Function.surjInv hf) (right_inverse_surj_inv hf)
 
-variable{r f}
+variable {r f}
 
 /-- Given a function `f : α → β` and equivalence relation `r` on `α`, the equivalence
     closure of the relation on `f`'s image defined by '`x ≈ y` iff the elements of `f⁻¹(x)` are
@@ -364,7 +364,7 @@ noncomputable def comap_quotient_equiv (f : α → β) (r : Setoidₓ β) :
   Quotientₓ (comap f r) ≃ Set.Range (@Quotientₓ.mk _ r ∘ f) :=
   (Quotientₓ.congrRight$ ext_iff.1 comap_eq).trans$ quotient_ker_equiv_range$ Quotientₓ.mk ∘ f
 
-variable(r f)
+variable (r f)
 
 /-- The third isomorphism theorem for sets. -/
 def quotient_quotient_equiv_quotient (s : Setoidₓ α) (h : r ≤ s) : Quotientₓ (ker (Quot.mapRight h)) ≃ Quotientₓ s :=
@@ -391,7 +391,7 @@ def quotient_quotient_equiv_quotient (s : Setoidₓ α) (h : r ≤ s) : Quotient
             by 
               show «expr⟦ ⟧» _ = _ <;> rfl }
 
-variable{r f}
+variable {r f}
 
 open Quotientₓ
 

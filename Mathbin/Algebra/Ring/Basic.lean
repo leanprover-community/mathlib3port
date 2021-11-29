@@ -40,7 +40,7 @@ ring_hom, nonzero, domain, is_domain
 
 universe u v w x
 
-variable{α : Type u}{β : Type v}{γ : Type w}{R : Type x}
+variable {α : Type u} {β : Type v} {γ : Type w} {R : Type x}
 
 open Function
 
@@ -52,7 +52,7 @@ open Function
 /-- A typeclass stating that multiplication is left and right distributive
 over addition. -/
 @[protectProj, ancestor Mul Add]
-class Distrib(R : Type _) extends Mul R, Add R where 
+class Distrib (R : Type _) extends Mul R, Add R where 
   left_distrib : ∀ a b c : R, (a*b+c) = (a*b)+a*c 
   right_distrib : ∀ a b c : R, ((a+b)*c) = (a*c)+b*c
 
@@ -107,26 +107,26 @@ protected def Function.Surjective.distrib {S} [Distrib R] [Add S] [Mul S] (f : R
 
 /-- A not-necessarily-unital, not-necessarily-associative semiring. -/
 @[protectProj, ancestor AddCommMonoidₓ Distrib MulZeroClass]
-class NonUnitalNonAssocSemiring(α : Type u) extends AddCommMonoidₓ α, Distrib α, MulZeroClass α
+class NonUnitalNonAssocSemiring (α : Type u) extends AddCommMonoidₓ α, Distrib α, MulZeroClass α
 
 /-- An associative but not-necessarily unital semiring. -/
 @[protectProj, ancestor NonUnitalNonAssocSemiring SemigroupWithZero]
-class NonUnitalSemiring(α : Type u) extends NonUnitalNonAssocSemiring α, SemigroupWithZero α
+class NonUnitalSemiring (α : Type u) extends NonUnitalNonAssocSemiring α, SemigroupWithZero α
 
 /-- A unital but not-necessarily-associative semiring. -/
 @[protectProj, ancestor NonUnitalNonAssocSemiring MulZeroOneClass]
-class NonAssocSemiring(α : Type u) extends NonUnitalNonAssocSemiring α, MulZeroOneClass α
+class NonAssocSemiring (α : Type u) extends NonUnitalNonAssocSemiring α, MulZeroOneClass α
 
 /-- A semiring is a type with the following structures: additive commutative monoid
 (`add_comm_monoid`), multiplicative monoid (`monoid`), distributive laws (`distrib`), and
 multiplication by zero law (`mul_zero_class`). The actual definition extends `monoid_with_zero`
 instead of `monoid` and `mul_zero_class`. -/
 @[protectProj, ancestor NonUnitalSemiring NonAssocSemiring MonoidWithZeroₓ]
-class Semiringₓ(α : Type u) extends NonUnitalSemiring α, NonAssocSemiring α, MonoidWithZeroₓ α
+class Semiringₓ (α : Type u) extends NonUnitalSemiring α, NonAssocSemiring α, MonoidWithZeroₓ α
 
 section InjectiveSurjectiveMaps
 
-variable[HasZero β][Add β][Mul β]
+variable [HasZero β] [Add β] [Mul β]
 
 /-- Pullback a `non_unital_non_assoc_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
@@ -192,7 +192,7 @@ end InjectiveSurjectiveMaps
 
 section Semiringₓ
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
 theorem one_add_one_eq_two : (1+1) = (2 : α) :=
   by 
@@ -336,7 +336,7 @@ end AddMonoidHom
 
 This extends from both `monoid_hom` and `monoid_with_zero_hom` in order to put the fields in a
 sensible order, even though `monoid_with_zero_hom` already extends `monoid_hom`. -/
-structure RingHom(α : Type _)(β : Type _)[NonAssocSemiring α][NonAssocSemiring β] extends MonoidHom α β,
+structure RingHom (α : Type _) (β : Type _) [NonAssocSemiring α] [NonAssocSemiring β] extends MonoidHom α β,
   AddMonoidHom α β, MonoidWithZeroHom α β
 
 infixr:25 " →+* " => RingHom
@@ -363,11 +363,11 @@ See note [implicit instance arguments].
 -/
 
 
-variable{rα : NonAssocSemiring α}{rβ : NonAssocSemiring β}
+variable {rα : NonAssocSemiring α} {rβ : NonAssocSemiring β}
 
 include rα rβ
 
-instance  : CoeFun (α →+* β) fun _ => α → β :=
+instance : CoeFun (α →+* β) fun _ => α → β :=
   ⟨RingHom.toFun⟩
 
 initialize_simps_projections RingHom (toFun → apply)
@@ -416,13 +416,13 @@ theorem coe_add_monoid_hom_mk (f : α → β) h₁ h₂ h₃ h₄ : ((⟨f, h₁
 
 end coeₓ
 
-variable[rα : NonAssocSemiring α][rβ : NonAssocSemiring β]
+variable [rα : NonAssocSemiring α] [rβ : NonAssocSemiring β]
 
 section 
 
 include rα rβ
 
-variable(f : α →+* β){x y : α}{rα rβ}
+variable (f : α →+* β) {x y : α} {rα rβ}
 
 theorem congr_funₓ {f g : α →+* β} (h : f = g) (x : α) : f x = g x :=
   congr_argₓ (fun h : α →+* β => h x) h
@@ -535,7 +535,7 @@ def id (α : Type _) [NonAssocSemiring α] : α →+* α :=
 
 include rα
 
-instance  : Inhabited (α →+* α) :=
+instance : Inhabited (α →+* α) :=
   ⟨id α⟩
 
 @[simp]
@@ -550,7 +550,7 @@ theorem coe_add_monoid_hom_id : (id α : α →+ α) = AddMonoidHom.id α :=
 theorem coe_monoid_hom_id : (id α : α →* α) = MonoidHom.id α :=
   rfl
 
-variable{rγ : NonAssocSemiring γ}
+variable {rγ : NonAssocSemiring γ}
 
 include rβ rγ
 
@@ -596,7 +596,7 @@ theorem id_comp (f : α →+* β) : (id β).comp f = f :=
 
 omit rβ
 
-instance  : Monoidₓ (α →+* α) :=
+instance : Monoidₓ (α →+* α) :=
   { one := id α, mul := comp, mul_one := comp_id, one_mul := id_comp, mul_assoc := fun f g h => comp_assoc _ _ _ }
 
 theorem one_def : (1 : α →+* α) = id α :=
@@ -633,7 +633,7 @@ end RingHom
 
 section Semiringₓ
 
-variable[Semiringₓ α]{a : α}
+variable [Semiringₓ α] {a : α}
 
 @[simp]
 theorem two_dvd_bit0 : 2 ∣ bit0 a :=
@@ -649,14 +649,14 @@ type with the following structures: additive commutative monoid (`add_comm_monoi
 commutative monoid (`comm_monoid`), distributive laws (`distrib`), and multiplication by zero law
 (`mul_zero_class`). -/
 @[protectProj, ancestor Semiringₓ CommMonoidₓ]
-class CommSemiringₓ(α : Type u) extends Semiringₓ α, CommMonoidₓ α
+class CommSemiringₓ (α : Type u) extends Semiringₓ α, CommMonoidₓ α
 
-instance (priority := 100)CommSemiringₓ.toCommMonoidWithZero [CommSemiringₓ α] : CommMonoidWithZero α :=
+instance (priority := 100) CommSemiringₓ.toCommMonoidWithZero [CommSemiringₓ α] : CommMonoidWithZero α :=
   { CommSemiringₓ.toCommMonoid α, CommSemiringₓ.toSemiring α with  }
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ α][CommSemiringₓ β]{a b c : α}
+variable [CommSemiringₓ α] [CommSemiringₓ β] {a b c : α}
 
 /-- Pullback a `semiring` instance along an injective function.
 See note [reducible non-instances]. -/
@@ -689,13 +689,13 @@ end CommSemiringₓ
 multiplicative monoid (`monoid`), and distributive laws (`distrib`).  Equivalently, a ring is a
 `semiring` with a negation operation making it an additive group.  -/
 @[protectProj, ancestor AddCommGroupₓ Monoidₓ Distrib]
-class Ringₓ(α : Type u) extends AddCommGroupₓ α, Monoidₓ α, Distrib α
+class Ringₓ (α : Type u) extends AddCommGroupₓ α, Monoidₓ α, Distrib α
 
 section Ringₓ
 
-variable[Ringₓ α]{a b c d e : α}
+variable [Ringₓ α] {a b c d e : α}
 
-instance (priority := 200)Ringₓ.toSemiring : Semiringₓ α :=
+instance (priority := 200) Ringₓ.toSemiring : Semiringₓ α :=
   { ‹Ringₓ α› with
     zero_mul :=
       fun a =>
@@ -816,10 +816,10 @@ end Ringₓ
 
 namespace Units
 
-variable[Ringₓ α]{a b : α}
+variable [Ringₓ α] {a b : α}
 
 /-- Each element of the group of units of a ring has an additive inverse. -/
-instance  : Neg (Units α) :=
+instance : Neg (Units α) :=
   ⟨fun u =>
       ⟨-«expr↑ » u, -«expr↑ » (u⁻¹),
         by 
@@ -911,14 +911,14 @@ end RingHom
 
 /-- A commutative ring is a `ring` with commutative multiplication. -/
 @[protectProj, ancestor Ringₓ CommSemigroupₓ]
-class CommRingₓ(α : Type u) extends Ringₓ α, CommMonoidₓ α
+class CommRingₓ (α : Type u) extends Ringₓ α, CommMonoidₓ α
 
-instance (priority := 100)CommRingₓ.toCommSemiring [s : CommRingₓ α] : CommSemiringₓ α :=
+instance (priority := 100) CommRingₓ.toCommSemiring [s : CommRingₓ α] : CommSemiringₓ α :=
   { s with mul_zero := mul_zero, zero_mul := zero_mul }
 
 section Ringₓ
 
-variable[Ringₓ α]{a b c : α}
+variable [Ringₓ α] {a b c : α}
 
 theorem dvd_neg_of_dvd (h : a ∣ b) : a ∣ -b :=
   Dvd.elim h
@@ -1023,7 +1023,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ α]{a b c : α}
+variable [CommRingₓ α] {a b c : α}
 
 /-- Pullback a `comm_ring` instance along an injective function.
 See note [reducible non-instances]. -/
@@ -1122,15 +1122,15 @@ theorem is_regular_of_ne_zero' [Ringₓ α] [NoZeroDivisors α] {k : α} (hk : k
   This is implemented as a mixin for `ring α`.
   To obtain an integral domain use `[comm_ring α] [is_domain α]`. -/
 @[protectProj]
-class IsDomain(α : Type u)[Ringₓ α] extends NoZeroDivisors α, Nontrivial α : Prop
+class IsDomain (α : Type u) [Ringₓ α] extends NoZeroDivisors α, Nontrivial α : Prop
 
 section IsDomain
 
 section Ringₓ
 
-variable[Ringₓ α][IsDomain α]
+variable [Ringₓ α] [IsDomain α]
 
-instance (priority := 100)IsDomain.toCancelMonoidWithZero : CancelMonoidWithZero α :=
+instance (priority := 100) IsDomain.toCancelMonoidWithZero : CancelMonoidWithZero α :=
   { (inferInstance : Semiringₓ α) with
     mul_left_cancel_of_ne_zero := fun a b c ha => @IsRegular.left _ _ _ (is_regular_of_ne_zero' ha) _ _,
     mul_right_cancel_of_ne_zero := fun a b c hb => @IsRegular.right _ _ _ (is_regular_of_ne_zero' hb) _ _ }
@@ -1143,9 +1143,9 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ α][IsDomain α]
+variable [CommRingₓ α] [IsDomain α]
 
-instance (priority := 100)IsDomain.toCommCancelMonoidWithZero : CommCancelMonoidWithZero α :=
+instance (priority := 100) IsDomain.toCommCancelMonoidWithZero : CommCancelMonoidWithZero α :=
   { CommSemiringₓ.toCommMonoidWithZero, IsDomain.toCancelMonoidWithZero with  }
 
 theorem mul_self_eq_mul_self_iff {a b : α} : ((a*a) = b*b) ↔ a = b ∨ a = -b :=
@@ -1216,7 +1216,7 @@ theorem add_left [Distrib R] {a b x y : R} (ha : SemiconjBy a x y) (hb : Semicon
   by 
     simp only [SemiconjBy, left_distrib, right_distrib, ha.eq, hb.eq]
 
-variable[Ringₓ R]{a b x y x' y' : R}
+variable [Ringₓ R] {a b x y x' y' : R}
 
 theorem neg_right (h : SemiconjBy a x y) : SemiconjBy a (-x) (-y) :=
   by 
@@ -1276,7 +1276,7 @@ theorem bit1_right [Semiringₓ R] {x y : R} (h : Commute x y) : Commute x (bit1
 theorem bit1_left [Semiringₓ R] {x y : R} (h : Commute x y) : Commute (bit1 x) y :=
   h.bit0_left.add_left (Commute.one_left y)
 
-variable[Ringₓ R]{a b c : R}
+variable [Ringₓ R] {a b c : R}
 
 theorem neg_right : Commute a b → Commute a (-b) :=
   SemiconjBy.neg_right

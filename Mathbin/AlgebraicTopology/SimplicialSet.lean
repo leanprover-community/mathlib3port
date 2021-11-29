@@ -49,7 +49,7 @@ def standard_simplex : SimplexCategory ⥤ SSet :=
 
 localized [Simplicial] notation "Δ[" n "]" => SSet.standardSimplex.obj (SimplexCategory.mk n)
 
-instance  : Inhabited SSet :=
+instance : Inhabited SSet :=
   ⟨Δ[0]⟩
 
 section 
@@ -126,7 +126,7 @@ simplicial_object.truncated (Type u) n
 def sk (n : ℕ) : SSet ⥤ SSet.Truncated n :=
   simplicial_object.sk n
 
-instance  {n} : Inhabited (SSet.Truncated n) :=
+instance {n} : Inhabited (SSet.Truncated n) :=
   ⟨(sk n).obj$ Δ[0]⟩
 
 end SSet

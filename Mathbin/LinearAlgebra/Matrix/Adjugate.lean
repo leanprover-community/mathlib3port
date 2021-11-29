@@ -42,7 +42,7 @@ namespace Matrix
 
 universe u v
 
-variable{n : Type u}[DecidableEq n][Fintype n]{α : Type v}[CommRingₓ α]
+variable {n : Type u} [DecidableEq n] [Fintype n] {α : Type v} [CommRingₓ α]
 
 open_locale Matrix BigOperators
 
@@ -59,7 +59,7 @@ section Cramer
 -/
 
 
-variable(A : Matrix n n α)(b : n → α)
+variable (A : Matrix n n α) (b : n → α)
 
 /--
   `cramer_map A b i` is the determinant of the matrix `A` with column `i` replaced with `b`,
@@ -94,6 +94,10 @@ def cramer (A : Matrix n n α) : (n → α) →ₗ[α] n → α :=
 
 theorem cramer_apply (i : n) : cramer A b i = (A.update_column i b).det :=
   rfl
+
+theorem cramer_transpose_apply (i : n) : cramer (A)ᵀ b i = (A.update_row i b).det :=
+  by 
+    rw [cramer_apply, update_column_transpose, det_transpose]
 
 theorem cramer_transpose_row_self (i : n) : (A)ᵀ.cramer (A i) = Pi.single i A.det :=
   by 

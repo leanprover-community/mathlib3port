@@ -48,7 +48,7 @@ theorem char_zero_of_injective_algebra_map {R A : Type _} [CommSemiringₓ R] [S
 
 section 
 
-variable(K L : Type _)[Field K][CommSemiringₓ L][Nontrivial L][Algebra K L]
+variable (K L : Type _) [Field K] [CommSemiringₓ L] [Nontrivial L] [Algebra K L]
 
 theorem Algebra.char_p_iff (p : ℕ) : CharP K p ↔ CharP L p :=
   (algebraMap K L).char_p_iff_char_p p
@@ -57,7 +57,7 @@ end
 
 namespace FreeAlgebra
 
-variable{R X : Type _}[CommSemiringₓ R](p : ℕ)
+variable {R X : Type _} [CommSemiringₓ R] (p : ℕ)
 
 /-- If `R` has characteristic `p`, then so does `free_algebra R X`. -/
 instance CharP [CharP R p] : CharP (FreeAlgebra R X) p :=
@@ -71,9 +71,9 @@ end FreeAlgebra
 
 namespace IsFractionRing
 
-variable(R : Type _){K : Type _}[CommRingₓ R][Field K][Algebra R K][IsFractionRing R K]
+variable (R : Type _) {K : Type _} [CommRingₓ R] [Field K] [Algebra R K] [IsFractionRing R K]
 
-variable(p : ℕ)
+variable (p : ℕ)
 
 /-- If `R` has characteristic `p`, then so does Frac(R). -/
 theorem char_p_of_is_fraction_ring [CharP R p] : CharP K p :=
@@ -83,7 +83,7 @@ theorem char_p_of_is_fraction_ring [CharP R p] : CharP K p :=
 theorem char_zero_of_is_fraction_ring [CharZero R] : CharZero K :=
   @CharP.char_p_to_char_zero K _ (char_p_of_is_fraction_ring R 0)
 
-variable[IsDomain R]
+variable [IsDomain R]
 
 /-- If `R` has characteristic `p`, then so does `fraction_ring R`. -/
 instance CharP [CharP R p] : CharP (FractionRing R) p :=

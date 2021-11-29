@@ -22,7 +22,7 @@ def Wseq α :=
 
 namespace Wseq
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 /-- Turn a sequence into a weak sequence -/
 def of_seq : Seqₓₓ α → Wseq α :=
@@ -49,7 +49,7 @@ instance coe_stream : Coe (Streamₓ α) (Wseq α) :=
 def nil : Wseq α :=
   Seqₓₓ.nil
 
-instance  : Inhabited (Wseq α) :=
+instance : Inhabited (Wseq α) :=
   ⟨nil⟩
 
 /-- Prepend an element to a weak sequence -/
@@ -76,7 +76,7 @@ def cases_on {C : Wseq α → Sort v} (s : Wseq α) (h1 : C nil) (h2 : ∀ x s, 
 protected def mem (a : α) (s : Wseq α) :=
   Seqₓₓ.Mem (some a) s
 
-instance  : HasMem α (Wseq α) :=
+instance : HasMem α (Wseq α) :=
   ⟨Wseq.Mem⟩
 
 theorem not_mem_nil (a : α) : a ∉ @nil α :=
@@ -135,7 +135,7 @@ def length (s : Wseq α) : Computation ℕ :=
 
 /-- A weak sequence is finite if `to_list s` terminates. Equivalently,
   it is a finite number of `think` and `cons` applied to `nil`. -/
-class is_finite(s : Wseq α) : Prop where 
+class is_finite (s : Wseq α) : Prop where 
   out : (to_list s).Terminates
 
 instance to_list_terminates (s : Wseq α) [h : is_finite s] : (to_list s).Terminates :=
@@ -148,7 +148,7 @@ def get (s : Wseq α) [is_finite s] : List α :=
 /-- A weak sequence is *productive* if it never stalls forever - there are
  always a finite number of `think`s between `cons` constructors.
  The sequence itself is allowed to be infinite though. -/
-class productive(s : Wseq α) : Prop where 
+class productive (s : Wseq α) : Prop where 
   nth_terminates : ∀ n, (nth s n).Terminates
 
 theorem productive_iff (s : Wseq α) : productive s ↔ ∀ n, (nth s n).Terminates :=
@@ -1380,11 +1380,11 @@ theorem exists_of_mem_bind {s : Wseq α} {f : α → Wseq β} {b} (h : b ∈ bin
       rwa [e]⟩
 
 theorem destruct_map (f : α → β) (s : Wseq α) :
-  destruct (map f s) = Computation.map (Option.map (Prod.mapₓ f (map f))) (destruct s) :=
+  destruct (map f s) = Computation.map (Option.map (Prod.map f (map f))) (destruct s) :=
   by 
     apply
       eq_of_bisim
-        fun c1 c2 => ∃ s, c1 = destruct (map f s) ∧ c2 = Computation.map (Option.map (Prod.mapₓ f (map f))) (destruct s)
+        fun c1 c2 => ∃ s, c1 = destruct (map f s) ∧ c2 = Computation.map (Option.map (Prod.map f (map f))) (destruct s)
     ·
       intro c1 c2 h 
       cases' h with s h 
@@ -1787,7 +1787,7 @@ theorem bind_assoc (s : Wseq α) (f : α → Wseq β) (g : β → Wseq γ) :
     rw [←map_comp f (map g), map_comp (map g ∘ f) join]
     apply join_join
 
-instance  : Monadₓ Wseq :=
+instance : Monadₓ Wseq :=
   { map := @map, pure := @ret, bind := @bind }
 
 end Wseq

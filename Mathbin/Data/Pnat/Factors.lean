@@ -19,7 +19,7 @@ the multiplicity of `p` in this factors multiset being the p-adic valuation of `
  gives an equivalence between this set and ℕ+, as we will formalize
  below. -/
 @[derive #["[", expr inhabited, ",", expr has_repr, ",", expr canonically_ordered_add_monoid, ",", expr distrib_lattice,
-   ",", expr semilattice_sup_bot, ",", expr has_sub, ",", expr has_ordered_sub, "]"]]
+   ",", expr semilattice_sup, ",", expr order_bot, ",", expr has_sub, ",", expr has_ordered_sub, "]"]]
 def prime_multiset :=
 multiset nat.primes
 

@@ -50,10 +50,10 @@ namespace Nnreal
 
 open_locale Nnreal BigOperators Filter
 
-instance  : TopologicalSpace ℝ≥0  :=
+instance : TopologicalSpace ℝ≥0  :=
   inferInstance
 
-instance  : TopologicalRing ℝ≥0  :=
+instance : TopologicalRing ℝ≥0  :=
   { continuous_mul :=
       continuous_subtype_mk _$
         (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd),
@@ -61,15 +61,15 @@ instance  : TopologicalRing ℝ≥0  :=
       continuous_subtype_mk _$
         (continuous_subtype_val.comp continuous_fst).add (continuous_subtype_val.comp continuous_snd) }
 
-instance  : second_countable_topology ℝ≥0  :=
+instance : second_countable_topology ℝ≥0  :=
   TopologicalSpace.Subtype.second_countable_topology _ _
 
-instance  : OrderTopology ℝ≥0  :=
+instance : OrderTopology ℝ≥0  :=
   @order_topology_of_ord_connected _ _ _ _ (Ici 0) _
 
 section coeₓ
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Filter Finset
 
@@ -107,19 +107,19 @@ theorem tendsto_of_real {f : Filter α} {m : α → ℝ} {x : ℝ} (h : tendsto 
 theorem nhds_zero : 𝓝 (0 :  ℝ≥0 ) = ⨅(a : _)(_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans$
     by 
-      simp [bot_lt_iff_ne_bot, Set.Iio]
+      simp [bot_lt_iff_ne_bot]
 
 theorem nhds_zero_basis : (𝓝 (0 :  ℝ≥0 )).HasBasis (fun a :  ℝ≥0  => 0 < a) fun a => Iio a :=
   nhds_bot_basis
 
-instance  : HasContinuousSub ℝ≥0  :=
+instance : HasContinuousSub ℝ≥0  :=
   ⟨continuous_subtype_mk _$
       ((continuous_coe.comp continuous_fst).sub (continuous_coe.comp continuous_snd)).max continuous_const⟩
 
-instance  : HasContinuousInv₀ ℝ≥0  :=
+instance : HasContinuousInv₀ ℝ≥0  :=
   ⟨fun x hx => tendsto_coe.1$ (Real.tendsto_inv$ Nnreal.coe_ne_zero.2 hx).comp continuous_coe.ContinuousAt⟩
 
-instance  : HasContinuousSmul ℝ≥0  ℝ :=
+instance : HasContinuousSmul ℝ≥0  ℝ :=
   { continuous_smul :=
       Continuous.comp Real.continuous_mul$
         Continuous.prod_mk (Continuous.comp continuous_subtype_val continuous_fst) continuous_snd }

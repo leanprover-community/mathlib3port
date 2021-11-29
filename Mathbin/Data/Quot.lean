@@ -11,7 +11,7 @@ quotient
 -/
 
 
-variable{α : Sort _}{β : Sort _}
+variable {α : Sort _} {β : Sort _}
 
 namespace Setoidₓ
 
@@ -25,12 +25,12 @@ end Setoidₓ
 
 namespace Quot
 
-variable{ra : α → α → Prop}{rb : β → β → Prop}{φ : Quot ra → Quot rb → Sort _}
+variable {ra : α → α → Prop} {rb : β → β → Prop} {φ : Quot ra → Quot rb → Sort _}
 
 -- error in Data.Quot: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 local notation `⟦`:max a `⟧` := quot.mk _ a
 
-instance  [Inhabited α] : Inhabited (Quot ra) :=
+instance [Inhabited α] : Inhabited (Quot ra) :=
   ⟨«expr⟦ ⟧» (default _)⟩
 
 /-- Recursion on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
@@ -66,7 +66,7 @@ theorem factor_mk_eq {α : Type _} (r s : α → α → Prop) (h : ∀ x y, r x 
   factor r s h ∘ Quot.mk _ = Quot.mk _ :=
   rfl
 
-variable{γ : Sort _}{r : α → α → Prop}{s : β → β → Prop}
+variable {γ : Sort _} {r : α → α → Prop} {s : β → β → Prop}
 
 /-- **Alias** of `quot.lift_beta`. -/
 theorem lift_mk (f : α → γ) (h : ∀ a₁ a₂, r a₁ a₂ → f a₁ = f a₂) (a : α) : Quot.lift f h (Quot.mk r a) = f a :=
@@ -99,7 +99,7 @@ theorem lift_on₂_mk (a : α) (b : β) (f : α → β → γ) (hr : ∀ a b₁ 
   (hs : ∀ a₁ a₂ b, r a₁ a₂ → f a₁ b = f a₂ b) : Quot.liftOn₂ (Quot.mk r a) (Quot.mk s b) f hr hs = f a b :=
   rfl
 
-variable{t : γ → γ → Prop}
+variable {t : γ → γ → Prop}
 
 /-- Descends a function `f : α → β → γ` to quotients of `α` and `β` wih values in a quotient of
 `γ`. -/
@@ -128,11 +128,11 @@ end Quot
 
 namespace Quotientₓ
 
-variable[sa : Setoidₓ α][sb : Setoidₓ β]
+variable [sa : Setoidₓ α] [sb : Setoidₓ β]
 
-variable{φ : Quotientₓ sa → Quotientₓ sb → Sort _}
+variable {φ : Quotientₓ sa → Quotientₓ sb → Sort _}
 
-instance  [Inhabited α] : Inhabited (Quotientₓ sa) :=
+instance [Inhabited α] : Inhabited (Quotientₓ sa) :=
   ⟨«expr⟦ ⟧» (default _)⟩
 
 /-- Induction on two `quotient` arguments `a` and `b`, result type depends on `⟦a⟧` and `⟦b⟧`. -/
@@ -150,7 +150,7 @@ theorem map_mk (f : α → β) (h : (· ≈ ·⇒· ≈ ·) f f) (x : α) :
   Quotientₓ.map f h («expr⟦ ⟧» x : Quotientₓ sa) = («expr⟦ ⟧» (f x) : Quotientₓ sb) :=
   rfl
 
-variable{γ : Sort _}[sc : Setoidₓ γ]
+variable {γ : Sort _} [sc : Setoidₓ γ]
 
 /-- Map a function `f : α → β → γ` that sends equivalent elements to equivalent elements
 to a function `f : quotient sa → quotient sb → quotient sc`.
@@ -288,7 +288,7 @@ namespace Trunc
 def mk (a : α) : Trunc α :=
   Quot.mk _ a
 
-instance  [Inhabited α] : Inhabited (Trunc α) :=
+instance [Inhabited α] : Inhabited (Trunc α) :=
   ⟨mk (default _)⟩
 
 /-- Any constant function lifts to a function out of the truncation -/
@@ -321,7 +321,7 @@ protected theorem induction_on₂ {C : Trunc α → Trunc β → Prop} (q₁ : T
 protected theorem Eq (a b : Trunc α) : a = b :=
   Trunc.induction_on₂ a b fun x y => Quot.sound trivialₓ
 
-instance  : Subsingleton (Trunc α) :=
+instance : Subsingleton (Trunc α) :=
   ⟨Trunc.eq⟩
 
 /-- The `bind` operator for the `trunc` monad. -/
@@ -332,13 +332,13 @@ def bind (q : Trunc α) (f : α → Trunc β) : Trunc β :=
 def map (f : α → β) (q : Trunc α) : Trunc β :=
   bind q (Trunc.mk ∘ f)
 
-instance  : Monadₓ Trunc :=
+instance : Monadₓ Trunc :=
   { pure := @Trunc.mk, bind := @Trunc.bind }
 
-instance  : IsLawfulMonad Trunc :=
+instance : IsLawfulMonad Trunc :=
   { id_map := fun α q => Trunc.eq _ _, pure_bind := fun α β q f => rfl, bind_assoc := fun α β γ x f g => Trunc.eq _ _ }
 
-variable{C : Trunc α → Sort _}
+variable {C : Trunc α → Sort _}
 
 /-- Recursion/induction principle for `trunc`. -/
 @[reducible, elab_as_eliminator]
@@ -372,7 +372,7 @@ end Trunc
 
 namespace Quotientₓ
 
-variable{γ : Sort _}{φ : Sort _}{s₁ : Setoidₓ α}{s₂ : Setoidₓ β}{s₃ : Setoidₓ γ}
+variable {γ : Sort _} {φ : Sort _} {s₁ : Setoidₓ α} {s₂ : Setoidₓ β} {s₃ : Setoidₓ γ}
 
 /-! Versions of quotient definitions and lemmas ending in `'` use unification instead
 of typeclass inference for inferring the `setoid` argument. This is useful when there are

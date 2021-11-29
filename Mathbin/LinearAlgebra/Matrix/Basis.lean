@@ -35,9 +35,9 @@ open_locale Matrix
 
 section BasisToMatrix
 
-variable{ι ι' κ κ' : Type _}
+variable {ι ι' κ κ' : Type _}
 
-variable{R M : Type _}[CommRingₓ R][AddCommGroupₓ M][Module R M]
+variable {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
 
 open Function Matrix
 
@@ -46,7 +46,7 @@ are the vectors `v i` written in the basis `e`. -/
 def Basis.toMatrix (e : Basis ι R M) (v : ι' → M) : Matrix ι ι' R :=
   fun i j => e.repr (v j) i
 
-variable(e : Basis ι R M)(v : ι' → M)(i : ι)(j : ι')
+variable (e : Basis ι R M) (v : ι' → M) (i : ι) (j : ι')
 
 namespace Basis
 
@@ -132,17 +132,17 @@ end Basis
 
 section MulLinearMapToMatrix
 
-variable{N : Type _}[AddCommGroupₓ N][Module R N]
+variable {N : Type _} [AddCommGroupₓ N] [Module R N]
 
-variable(b : Basis ι R M)(b' : Basis ι' R M)(c : Basis κ R N)(c' : Basis κ' R N)
+variable (b : Basis ι R M) (b' : Basis ι' R M) (c : Basis κ R N) (c' : Basis κ' R N)
 
-variable(f : M →ₗ[R] N)
+variable (f : M →ₗ[R] N)
 
 open LinearMap
 
 section Fintype
 
-variable[Fintype ι'][Fintype κ][Fintype κ']
+variable [Fintype ι'] [Fintype κ] [Fintype κ']
 
 -- error in LinearAlgebra.Matrix.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
@@ -150,7 +150,7 @@ theorem basis_to_matrix_mul_linear_map_to_matrix
 [decidable_eq ι'] : «expr = »(«expr ⬝ »(c.to_matrix c', linear_map.to_matrix b' c' f), linear_map.to_matrix b' c f) :=
 (matrix.to_lin b' c).injective (by haveI [] [] [":=", expr classical.dec_eq κ']; rw ["[", expr to_lin_to_matrix, ",", expr to_lin_mul b' c' c, ",", expr to_lin_to_matrix, ",", expr c.to_lin_to_matrix, ",", expr id_comp, "]"] [])
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 @[simp]
 theorem linear_map_to_matrix_mul_basis_to_matrix [DecidableEq ι] [DecidableEq ι'] :

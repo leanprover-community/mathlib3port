@@ -15,7 +15,7 @@ open Set Filter
 
 open_locale TopologicalSpace Classical
 
-variable{β : Type v}
+variable {β : Type v}
 
 -- error in Topology.MetricSpace.CauSeqFilter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem cau_seq.tendsto_limit
@@ -37,7 +37,7 @@ _root_.tendsto_nhds.mpr (begin
    solve_by_elim [] [] [] []
  end)
 
-variable[NormedField β]
+variable [NormedField β]
 
 instance NormedField.is_absolute_value : IsAbsoluteValue (norm : β → ℝ) :=
   { abv_nonneg := norm_nonneg, abv_eq_zero := fun _ => norm_eq_zero, abv_add := norm_add_le,

@@ -20,13 +20,13 @@ namespace Polynomial
 
 universe u v w y z
 
-variable{R : Type u}{S : Type v}{T : Type w}{ι : Type y}{A : Type z}{a b : R}{n : ℕ}
+variable {R : Type u} {S : Type v} {T : Type w} {ι : Type y} {A : Type z} {a b : R} {n : ℕ}
 
 section Derivative
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 /-- `derivative p` is the formal derivative of the polynomial `p` -/
 def derivative : Polynomial R →ₗ[R] Polynomial R :=
@@ -189,7 +189,7 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
 theorem derivative_eval (p : Polynomial R) (x : R) : p.derivative.eval x = p.sum fun n a => (a*n)*x ^ (n - 1) :=
   by 
@@ -386,7 +386,7 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 theorem derivative_comp_one_sub_X (p : Polynomial R) : (p.comp (1 - X)).derivative = -p.derivative.comp (1 - X) :=
   by 
@@ -412,7 +412,7 @@ end CommRingₓ
 
 section IsDomain
 
-variable[Ringₓ R][IsDomain R]
+variable [Ringₓ R] [IsDomain R]
 
 theorem mem_support_derivative [CharZero R] (p : Polynomial R) (n : ℕ) :
   n ∈ (derivative p).Support ↔ (n+1) ∈ p.support :=

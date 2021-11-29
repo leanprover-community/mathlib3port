@@ -12,7 +12,7 @@ This is a basic API for the rank of free modules.
 
 universe u v w
 
-variable(R : Type u)(M : Type v)(N : Type w)
+variable (R : Type u) (M : Type v) (N : Type w)
 
 open_locale TensorProduct DirectSum BigOperators Cardinal
 
@@ -22,11 +22,11 @@ namespace Module.Free
 
 section Ringₓ
 
-variable[Ringₓ R][StrongRankCondition R]
+variable [Ringₓ R] [StrongRankCondition R]
 
-variable[AddCommGroupₓ M][Module R M][Module.Free R M]
+variable [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 
-variable[AddCommGroupₓ N][Module R N][Module.Free R N]
+variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
 
 /-- The rank of a free module `M` over `R` is the cardinality of `choose_basis_index R M`. -/
 theorem rank_eq_card_choose_basis_index : Module.rank R M = # (choose_basis_index R M) :=
@@ -107,11 +107,11 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][StrongRankCondition R]
+variable [CommRingₓ R] [StrongRankCondition R]
 
-variable[AddCommGroupₓ M][Module R M][Module.Free R M]
+variable [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 
-variable[AddCommGroupₓ N][Module R N][Module.Free R N]
+variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
 
 -- error in LinearAlgebra.FreeModule.Rank: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The rank of `M ⊗[R] N` is `(module.rank R M).lift * (module.rank R N).lift`. -/

@@ -54,12 +54,8 @@ namespace BoxIntegral
 
 universe u v w
 
-variable{ι :
-    Type
-      u}{E :
-    Type
-      v}{F :
-    Type w}[NormedGroup E][NormedSpace ℝ E][NormedGroup F][NormedSpace ℝ F]{I J : box ι}{π : tagged_prepartition I}
+variable {ι : Type u} {E : Type v} {F : Type w} [NormedGroup E] [NormedSpace ℝ E] [NormedGroup F] [NormedSpace ℝ F]
+  {I J : box ι} {π : tagged_prepartition I}
 
 open TaggedPrepartition
 
@@ -146,7 +142,7 @@ theorem integral_sum_smul (c : ℝ) (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →
   by 
     simp only [integral_sum, Finset.smul_sum, Pi.smul_apply, ContinuousLinearMap.map_smul]
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 /-!
 ### Basic integrability theory
@@ -169,7 +165,7 @@ zero on non-integrable functions. -/
 def integral (I : box ι) (l : integration_params) (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) :=
   if h : integrable I l f vol then h.some else 0
 
-variable{l : integration_params}{f g : ℝⁿ → E}{vol : ι →ᵇᵃ E →L[ℝ] F}{y y' : F}
+variable {l : integration_params} {f g : ℝⁿ → E} {vol : ι →ᵇᵃ E →L[ℝ] F} {y y' : F}
 
 /-- Reinterpret `box_integral.has_integral` as `filter.tendsto`, e.g., dot-notation theorems
 that are shadowed in the `box_integral.has_integral` namespace. -/
@@ -433,7 +429,7 @@ then we use `r c x = 1`.  -/
 def convergence_r (h : integrable I l f vol) (ε : ℝ) :  ℝ≥0  → ℝⁿ → Ioi (0 : ℝ) :=
   if hε : 0 < ε then (has_integral_iff.1 h.has_integral ε hε).some else fun _ _ => ⟨1, Set.mem_Ioi.2 zero_lt_one⟩
 
-variable{c c₁ c₂ :  ℝ≥0 }{ε ε₁ ε₂ : ℝ}{π₁ π₂ : tagged_prepartition I}
+variable {c c₁ c₂ :  ℝ≥0 } {ε ε₁ ε₂ : ℝ} {π₁ π₂ : tagged_prepartition I}
 
 theorem convergence_r_cond (h : integrable I l f vol) (ε : ℝ) (c :  ℝ≥0 ) : l.r_cond (h.convergence_r ε c) :=
   by 
@@ -515,7 +511,7 @@ theorem cauchy_map_integral_sum_to_filter_Union (h : integrable I l f vol) (π�
       h.tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity.mono_left
         (inf_le_inf_left _$ principal_mono.2$ fun π h => h.1.trans h.2.symm)
 
-variable[CompleteSpace F]
+variable [CompleteSpace F]
 
 theorem to_subbox_aux (h : integrable I l f vol) (hJ : J ≤ I) :
   ∃ y : F,
@@ -662,7 +658,7 @@ open MeasureTheory
 -/
 
 
-variable(l)
+variable (l)
 
 -- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A continuous function is box-integrable with respect to any locally finite measure.
@@ -704,7 +700,7 @@ begin
   exact [expr hε.le]
 end
 
-variable{l}
+variable {l}
 
 -- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- This is an auxiliary lemma used to prove two statements at once. Use one of the next two

@@ -45,18 +45,18 @@ open Ideal LocalRing
 
 /-- An integral domain is a *discrete valuation ring* (DVR) if it's a local PID which
   is not a field. -/
-class DiscreteValuationRing(R : Type u)[CommRingₓ R][IsDomain R] extends IsPrincipalIdealRing R, LocalRing R :
+class DiscreteValuationRing (R : Type u) [CommRingₓ R] [IsDomain R] extends IsPrincipalIdealRing R, LocalRing R :
   Prop where 
   not_a_field' : maximal_ideal R ≠ ⊥
 
 namespace DiscreteValuationRing
 
-variable(R : Type u)[CommRingₓ R][IsDomain R][DiscreteValuationRing R]
+variable (R : Type u) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R]
 
 theorem not_a_field : maximal_ideal R ≠ ⊥ :=
   not_a_field'
 
-variable{R}
+variable {R}
 
 open PrincipalIdealRing
 
@@ -90,7 +90,7 @@ theorem irreducible_iff_uniformizer (ϖ : R) : «expr ↔ »(irreducible ϖ, «e
 theorem _root_.irreducible.maximal_ideal_eq {ϖ : R} (h : Irreducible ϖ) : maximal_ideal R = Ideal.span {ϖ} :=
   (irreducible_iff_uniformizer _).mp h
 
-variable(R)
+variable (R)
 
 /-- Uniformisers exist in a DVR -/
 theorem exists_irreducible : ∃ ϖ : R, Irreducible ϖ :=
@@ -149,7 +149,7 @@ end DiscreteValuationRing
 
 namespace DiscreteValuationRing
 
-variable(R : Type _)
+variable (R : Type _)
 
 /-- Alternative characterisation of discrete valuation rings. -/
 def has_unit_mul_pow_irreducible_factorization [CommRingₓ R] : Prop :=
@@ -157,7 +157,7 @@ def has_unit_mul_pow_irreducible_factorization [CommRingₓ R] : Prop :=
 
 namespace HasUnitMulPowIrreducibleFactorization
 
-variable{R}[CommRingₓ R](hR : has_unit_mul_pow_irreducible_factorization R)
+variable {R} [CommRingₓ R] (hR : has_unit_mul_pow_irreducible_factorization R)
 
 include hR
 
@@ -186,7 +186,7 @@ begin
       exact [expr (hϖ.not_unit (is_unit_of_mul_is_unit_left H0)).elim] } }
 end
 
-variable[IsDomain R]
+variable [IsDomain R]
 
 -- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An integral domain in which there is an irreducible element `p`
@@ -339,9 +339,9 @@ end
 
 section 
 
-variable[CommRingₓ R][IsDomain R][DiscreteValuationRing R]
+variable [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R]
 
-variable{R}
+variable {R}
 
 -- error in RingTheory.DiscreteValuationRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem associated_pow_irreducible
@@ -510,7 +510,7 @@ theorem add_val_add {a b : R} : min (add_val R a) (add_val R b) ≤ add_val R (a
 
 end 
 
-instance  (R : Type _) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] : IsHausdorff (maximal_ideal R) R :=
+instance (R : Type _) [CommRingₓ R] [IsDomain R] [DiscreteValuationRing R] : IsHausdorff (maximal_ideal R) R :=
   { haus' :=
       fun x hx =>
         by 

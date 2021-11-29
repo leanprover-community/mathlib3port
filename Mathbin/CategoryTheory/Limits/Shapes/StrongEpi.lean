@@ -29,24 +29,24 @@ universe v u
 
 namespace CategoryTheory
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{P Q : C}
+variable {P Q : C}
 
 /-- A strong epimorphism `f` is an epimorphism such that every commutative square with `f` at the
     top and a monomorphism at the bottom has a lift. -/
-class strong_epi(f : P ⟶ Q) : Prop where 
+class strong_epi (f : P ⟶ Q) : Prop where 
   Epi : epi f 
   HasLift : ∀ {X Y : C} {u : P ⟶ X} {v : Q ⟶ Y} {z : X ⟶ Y} [mono z] h : u ≫ z = f ≫ v, arrow.has_lift$ arrow.hom_mk' h
 
 attribute [instance] strong_epi.has_lift
 
-instance (priority := 100)epi_of_strong_epi (f : P ⟶ Q) [strong_epi f] : epi f :=
+instance (priority := 100) epi_of_strong_epi (f : P ⟶ Q) [strong_epi f] : epi f :=
   strong_epi.epi
 
 section 
 
-variable{R : C}(f : P ⟶ Q)(g : Q ⟶ R)
+variable {R : C} (f : P ⟶ Q) (g : Q ⟶ R)
 
 -- error in CategoryTheory.Limits.Shapes.StrongEpi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The composition of two strong epimorphisms is a strong epimorphism. -/
@@ -74,7 +74,7 @@ theorem strong_epi_of_strong_epi [strong_epi «expr ≫ »(f, g)] : strong_epi g
   end }
 
 /-- An isomorphism is in particular a strong epimorphism. -/
-instance (priority := 100)strong_epi_of_is_iso [is_iso f] : strong_epi f :=
+instance (priority := 100) strong_epi_of_is_iso [is_iso f] : strong_epi f :=
   { Epi :=
       by 
         infer_instance,

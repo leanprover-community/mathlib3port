@@ -64,7 +64,7 @@ open_locale Classical Cardinal
 
 universe u v w
 
-variable{α : Type _}{β : Type _}{γ : Type _}{r : α → α → Prop}{s : β → β → Prop}{t : γ → γ → Prop}
+variable {α : Type _} {β : Type _} {γ : Type _} {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop}
 
 /-!
 ### Initial segments
@@ -79,17 +79,17 @@ any `b' < b` also belongs to the range). The type of these embeddings from `r` t
 embedding whose range is an initial segment. That is, whenever `b < f a` in `β` then `b` is in the
 range of `f`. -/
 @[nolint has_inhabited_instance]
-structure InitialSeg{α β : Type _}(r : α → α → Prop)(s : β → β → Prop) extends r ↪r s where 
+structure InitialSeg {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends r ↪r s where 
   init : ∀ a b, s b (to_rel_embedding a) → ∃ a', to_rel_embedding a' = b
 
 local infixl:25 " ≼i " => InitialSeg
 
 namespace InitialSeg
 
-instance  : Coe (r ≼i s) (r ↪r s) :=
+instance : Coe (r ≼i s) (r ↪r s) :=
   ⟨InitialSeg.toRelEmbedding⟩
 
-instance  : CoeFun (r ≼i s) fun _ => α → β :=
+instance : CoeFun (r ≼i s) fun _ => α → β :=
   ⟨fun f x => (f : r ↪r s) x⟩
 
 @[simp]
@@ -163,7 +163,7 @@ theorem unique_of_extensional [is_extensional β s] : well_founded r → subsing
      exact [expr (f : «expr ↪r »(r, s)).map_rel_iff.2 h'] }
  end⟩
 
-instance  [IsWellOrder β s] : Subsingleton (r ≼i s) :=
+instance [IsWellOrder β s] : Subsingleton (r ≼i s) :=
   ⟨fun a => @Subsingleton.elimₓ _ (unique_of_extensional (@RelEmbedding.well_founded _ _ r s a IsWellOrder.wf)) a⟩
 
 protected theorem Eq [IsWellOrder β s] (f g : r ≼i s) a : f a = g a :=
@@ -245,7 +245,7 @@ segments.
 embedding whose range is an open interval `(-∞, top)` for some element `top` of `β`. Such order
 embeddings are called principal segments -/
 @[nolint has_inhabited_instance]
-structure PrincipalSeg{α β : Type _}(r : α → α → Prop)(s : β → β → Prop) extends r ↪r s where 
+structure PrincipalSeg {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends r ↪r s where 
   top : β 
   down : ∀ b, s b top ↔ ∃ a, to_rel_embedding a = b
 
@@ -253,10 +253,10 @@ local infixl:25 " ≺i " => PrincipalSeg
 
 namespace PrincipalSeg
 
-instance  : Coe (r ≺i s) (r ↪r s) :=
+instance : Coe (r ≺i s) (r ↪r s) :=
   ⟨PrincipalSeg.toRelEmbedding⟩
 
-instance  : CoeFun (r ≺i s) fun _ => α → β :=
+instance : CoeFun (r ≺i s) fun _ => α → β :=
   ⟨fun f => f⟩
 
 @[simp]
@@ -549,7 +549,7 @@ attribute [instance] WellOrder.wo
 
 namespace WellOrder
 
-instance  : Inhabited WellOrder :=
+instance : Inhabited WellOrder :=
   ⟨⟨Pempty, _, EmptyRelation.is_well_order⟩⟩
 
 end WellOrder
@@ -620,7 +620,7 @@ protected def le (a b : Ordinal) : Prop :=
         ⟨fun ⟨h⟩ => ⟨(InitialSeg.ofIso f.symm).trans$ h.trans (InitialSeg.ofIso g)⟩,
           fun ⟨h⟩ => ⟨(InitialSeg.ofIso f).trans$ h.trans (InitialSeg.ofIso g.symm)⟩⟩
 
-instance  : LE Ordinal :=
+instance : LE Ordinal :=
   ⟨Ordinal.Le⟩
 
 theorem type_le {α β} {r : α → α → Prop} {s : β → β → Prop} [IsWellOrder α r] [IsWellOrder β s] :
@@ -643,7 +643,7 @@ def lt (a b : Ordinal) : Prop :=
             ⟨fun ⟨h⟩ => ⟨PrincipalSeg.equivLt f.symm$ h.lt_le (InitialSeg.ofIso g)⟩,
               fun ⟨h⟩ => ⟨PrincipalSeg.equivLt f$ h.lt_le (InitialSeg.ofIso g.symm)⟩⟩
 
-instance  : LT Ordinal :=
+instance : LT Ordinal :=
   ⟨Ordinal.Lt⟩
 
 @[simp]
@@ -651,7 +651,7 @@ theorem type_lt {α β} {r : α → α → Prop} {s : β → β → Prop} [IsWel
   type r < type s ↔ Nonempty (r ≺i s) :=
   Iff.rfl
 
-instance  : PartialOrderₓ Ordinal :=
+instance : PartialOrderₓ Ordinal :=
   { le := · ≤ ·, lt := · < ·,
     le_refl :=
       Quot.ind$
@@ -851,7 +851,7 @@ theorem wf : @WellFounded Ordinal (· < ·) :=
                           rcases typein_surj r (lt_transₓ h (typein_lt_type r _)) with ⟨b, rfl⟩
                           exact IH _ ((typein_lt_typein r).1 h)⟩⟩
 
-instance  : HasWellFounded Ordinal :=
+instance : HasWellFounded Ordinal :=
   ⟨· < ·, wf⟩
 
 /-- Reformulation of well founded induction on ordinals as a lemma that works with the
@@ -888,13 +888,13 @@ theorem card_typein {r : α → α → Prop} [wo : IsWellOrder α r] (x : α) : 
 theorem card_le_card {o₁ o₂ : Ordinal} : o₁ ≤ o₂ → card o₁ ≤ card o₂ :=
   induction_on o₁$ fun α r _ => induction_on o₂$ fun β s _ ⟨⟨⟨f, _⟩, _⟩⟩ => ⟨f⟩
 
-instance  : HasZero Ordinal :=
+instance : HasZero Ordinal :=
   ⟨«expr⟦ ⟧»
       ⟨Pempty, EmptyRelation,
         by 
           infer_instance⟩⟩
 
-instance  : Inhabited Ordinal :=
+instance : Inhabited Ordinal :=
   ⟨0⟩
 
 theorem zero_eq_type_empty : 0 = @type Empty EmptyRelation _ :=
@@ -916,7 +916,7 @@ protected theorem pos_iff_ne_zero {o : Ordinal} : 0 < o ↔ o ≠ 0 :=
   by 
     simp only [lt_iff_le_and_ne, Ordinal.zero_le, true_andₓ, Ne.def, eq_comm]
 
-instance  : HasOne Ordinal :=
+instance : HasOne Ordinal :=
   ⟨«expr⟦ ⟧»
       ⟨PUnit, EmptyRelation,
         by 
@@ -1105,7 +1105,7 @@ the addition, together with properties of the other operations, are proved in
 
 /-- `o₁ + o₂` is the order on the disjoint union of `o₁` and `o₂` obtained by declaring that
   every element of `o₁` is smaller than every element of `o₂`. -/
-instance  : Add Ordinal.{u} :=
+instance : Add Ordinal.{u} :=
   ⟨fun o₁ o₂ =>
       Quotientₓ.liftOn₂ o₁ o₂
           (fun ⟨α, r, wo⟩ ⟨β, s, wo'⟩ =>
@@ -1138,7 +1138,7 @@ def succ (o : Ordinal) : Ordinal :=
 theorem succ_eq_add_one o : succ o = o+1 :=
   rfl
 
-instance  : AddMonoidₓ Ordinal.{u} :=
+instance : AddMonoidₓ Ordinal.{u} :=
   { add := ·+·, zero := 0,
     zero_add :=
       fun o =>
@@ -1270,10 +1270,10 @@ theorem le_totalₓ (a b : Ordinal) : a ≤ b ∨ b ≤ a :=
                 exact Or.inr (Or.inl h)])
       h₁ h₂
 
-instance  : LinearOrderₓ Ordinal :=
+instance : LinearOrderₓ Ordinal :=
   { Ordinal.partialOrder with le_total := le_totalₓ, decidableLe := Classical.decRel _ }
 
-instance  : IsWellOrder Ordinal (· < ·) :=
+instance : IsWellOrder Ordinal (· < ·) :=
   ⟨wf⟩
 
 @[simp]
@@ -1398,7 +1398,7 @@ theorem omin_le {S H i} (h : i ∈ S) : omin S H ≤ i :=
  by rw [expr e] []; exact [expr lift_le.2 «expr $ »(le_min.2, λ
    j, «expr $ »(lift_le.1, by have [] [] [":=", expr min_le «expr ∘ »(lift, f) j]; rwa [expr e] ["at", ident this]))])
 
-instance  : ConditionallyCompleteLinearOrderBot Ordinal :=
+instance : ConditionallyCompleteLinearOrderBot Ordinal :=
   wf.conditionallyCompleteLinearOrderWithBot 0$
     le_antisymmₓ (Ordinal.zero_le _)$ not_ltₓ.1 (wf.not_lt_min Set.Univ ⟨0, mem_univ _⟩ (mem_univ 0))
 
@@ -1418,7 +1418,7 @@ theorem Inf_mem {s : Set Ordinal} (hs : s.nonempty) : Inf s ∈ s :=
     rw [Inf_eq_omin hs]
     exact omin_mem _ hs
 
-instance  : NoTopOrder Ordinal :=
+instance : NoTopOrder Ordinal :=
   ⟨fun a => ⟨a.succ, lt_succ_self a⟩⟩
 
 end Ordinal

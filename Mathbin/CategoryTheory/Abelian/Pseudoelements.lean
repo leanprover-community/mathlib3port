@@ -78,7 +78,7 @@ universe v u
 
 namespace CategoryTheory.Abelian
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 attribute [local instance] over.coe_from_hom
 
@@ -109,7 +109,7 @@ theorem pseudo_equal_refl {P : C} : Reflexive (pseudo_equal P) :=
 theorem pseudo_equal_symm {P : C} : Symmetric (pseudo_equal P) :=
   fun f g ⟨R, p, q, ep, Eq, comm⟩ => ⟨R, q, p, Eq, ep, comm.symm⟩
 
-variable[abelian.{v} C]
+variable [abelian.{v} C]
 
 section 
 
@@ -242,7 +242,7 @@ def HasZero {P : C} : HasZero P :=
 
 localized [Pseudoelement] attribute [instance] CategoryTheory.Abelian.Pseudoelement.hasZero
 
-instance  {P : C} : Inhabited (pseudoelement P) :=
+instance {P : C} : Inhabited (pseudoelement P) :=
   ⟨0⟩
 
 theorem pseudo_zero_def {P : C} : (0 : pseudoelement P) = «expr⟦ ⟧» (0 : P ⟶ P) :=
@@ -458,7 +458,7 @@ theorem sub_of_eq_image
    end⟩⟩
  end)
 
-variable[limits.has_pullbacks C]
+variable [limits.has_pullbacks C]
 
 /-- If `f : P ⟶ R` and `g : Q ⟶ R` are morphisms and `p : P` and `q : Q` are pseudoelements such
     that `f p = g q`, then there is some `s : pullback f g` such that `fst s = p` and `snd s = q`.

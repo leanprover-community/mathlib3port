@@ -10,7 +10,7 @@ namespace Multiset
 
 open List
 
-variable{α β γ : Type _}
+variable {α β γ : Type _}
 
 /-- `nodup s` means that `s` has no duplicates, i.e. the multiplicity of
   any element is at most 1. -/

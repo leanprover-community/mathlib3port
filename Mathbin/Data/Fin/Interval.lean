@@ -10,16 +10,16 @@ intervals as finsets and fintypes.
 
 open Finset Finₓ
 
-variable(n : ℕ)
+variable (n : ℕ)
 
-instance  : LocallyFiniteOrder (Finₓ n) :=
+instance : LocallyFiniteOrder (Finₓ n) :=
   Subtype.locallyFiniteOrder _
 
 namespace Finₓ
 
 section Bounded
 
-variable{n}(a b : Finₓ n)
+variable {n} (a b : Finₓ n)
 
 theorem Icc_eq_finset_subtype : Icc a b = (Icc (a : ℕ) b).Subtype fun x => x < n :=
   rfl
@@ -93,7 +93,7 @@ end Bounded
 
 section Unbounded
 
-variable{n}(a b : Finₓ (n+1))
+variable {n} (a b : Finₓ (n+1))
 
 theorem Ici_eq_finset_subtype : Ici a = (Icc (a : ℕ) (n+1)).Subtype fun x => x < n+1 :=
   by 

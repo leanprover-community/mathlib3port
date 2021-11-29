@@ -15,7 +15,7 @@ open Function
 
 namespace Finset
 
-variable{α M : Type _}[CommMonoidₓ M]
+variable {α M : Type _} [CommMonoidₓ M]
 
 @[simp, toAdditive]
 theorem prod_insert_none (f : Option α → M) (s : Finset α) : (∏x in s.insert_none, f x) = f none*∏x in s, f (some x) :=

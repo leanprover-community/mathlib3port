@@ -20,7 +20,7 @@ namespace Real
 /-- Two real exponents `p, q` are conjugate if they are `> 1` and satisfy the equality
 `1/p + 1/q = 1`. This condition shows up in many theorems in analysis, notably related to `L^p`
 norms. -/
-structure is_conjugate_exponent(p q : ℝ) : Prop where 
+structure is_conjugate_exponent (p q : ℝ) : Prop where 
   one_lt : 1 < p 
   inv_add_inv_conj : ((1 / p)+1 / q) = 1
 
@@ -30,7 +30,7 @@ def conjugate_exponent (p : ℝ) : ℝ :=
 
 namespace IsConjugateExponent
 
-variable{p q : ℝ}(h : p.is_conjugate_exponent q)
+variable {p q : ℝ} (h : p.is_conjugate_exponent q)
 
 include h
 

@@ -37,7 +37,7 @@ terms of the partial sums of the other series.
 
 namespace Finset
 
-variable{M : Type _}[OrderedAddCommMonoid M]{f : ℕ → M}
+variable {M : Type _} [OrderedAddCommMonoid M] {f : ℕ → M}
 
 -- error in Analysis.PSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem le_sum_condensed'
@@ -92,7 +92,7 @@ end Finset
 
 namespace Ennreal
 
-variable{f : ℕ → ℝ≥0∞}
+variable {f : ℕ → ℝ≥0∞}
 
 theorem le_tsum_condensed (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) : (∑'k, f k) ≤ f 0+∑'k : ℕ, (2^k)*f (2^k) :=
   by 

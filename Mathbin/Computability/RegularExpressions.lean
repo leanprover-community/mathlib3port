@@ -16,7 +16,7 @@ TODO
 
 universe u
 
-variable{α : Type u}[dec : DecidableEq α]
+variable {α : Type u} [dec : DecidableEq α]
 
 /--
 This is the definition of regular expressions. The names used here is to mirror the definition
@@ -38,19 +38,19 @@ inductive RegularExpression (α : Type u) : Type u
 
 namespace RegularExpression
 
-instance  : Inhabited (RegularExpression α) :=
+instance : Inhabited (RegularExpression α) :=
   ⟨zero⟩
 
-instance  : Add (RegularExpression α) :=
+instance : Add (RegularExpression α) :=
   ⟨plus⟩
 
-instance  : Mul (RegularExpression α) :=
+instance : Mul (RegularExpression α) :=
   ⟨comp⟩
 
-instance  : HasOne (RegularExpression α) :=
+instance : HasOne (RegularExpression α) :=
   ⟨epsilon⟩
 
-instance  : HasZero (RegularExpression α) :=
+instance : HasZero (RegularExpression α) :=
   ⟨zero⟩
 
 attribute [matchPattern] Mul.mul
@@ -351,7 +351,7 @@ theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatc
         rw [ih y]
         tauto
 
-instance  (P : RegularExpression α) : DecidablePred P.matches :=
+instance (P : RegularExpression α) : DecidablePred P.matches :=
   by 
     intro x 
     change Decidable (x ∈ P.matches)

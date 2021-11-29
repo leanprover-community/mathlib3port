@@ -22,36 +22,36 @@ open_locale Nnreal
 
 noncomputable theory
 
-variable(α β : Type _)[PseudoMetricSpace α][PseudoMetricSpace β]
+variable (α β : Type _) [PseudoMetricSpace α] [PseudoMetricSpace β]
 
 section HasLipschitzMul
 
 /-- Class `has_lipschitz_add M` says that the addition `(+) : X × X → X` is Lipschitz jointly in
 the two arguments. -/
-class HasLipschitzAdd[AddMonoidₓ β] : Prop where 
+class HasLipschitzAdd [AddMonoidₓ β] : Prop where 
   lipschitz_add : ∃ C, LipschitzWith C fun p : β × β => p.1+p.2
 
 /-- Class `has_lipschitz_mul M` says that the multiplication `(*) : X × X → X` is Lipschitz jointly
 in the two arguments. -/
 @[toAdditive]
-class HasLipschitzMul[Monoidₓ β] : Prop where 
+class HasLipschitzMul [Monoidₓ β] : Prop where 
   lipschitz_mul : ∃ C, LipschitzWith C fun p : β × β => p.1*p.2
 
-variable[Monoidₓ β]
+variable [Monoidₓ β]
 
 /-- The Lipschitz constant of a monoid `β` satisfying `has_lipschitz_mul` -/
 @[toAdditive "The Lipschitz constant of an `add_monoid` `β` satisfying `has_lipschitz_add`"]
 def HasLipschitzMul.c [_i : HasLipschitzMul β] :  ℝ≥0  :=
   Classical.some _i.lipschitz_mul
 
-variable{β}
+variable {β}
 
 @[toAdditive]
 theorem lipschitz_with_lipschitz_const_mul_edist [_i : HasLipschitzMul β] :
   LipschitzWith (HasLipschitzMul.c β) fun p : β × β => p.1*p.2 :=
   Classical.some_spec _i.lipschitz_mul
 
-variable[HasLipschitzMul β]
+variable [HasLipschitzMul β]
 
 @[toAdditive]
 theorem lipschitz_with_lipschitz_const_mul : ∀ p q : β × β, dist (p.1*p.2) (q.1*q.2) ≤ HasLipschitzMul.c β*dist p q :=
@@ -60,7 +60,7 @@ theorem lipschitz_with_lipschitz_const_mul : ∀ p q : β × β, dist (p.1*p.2) 
     exact lipschitz_with_lipschitz_const_mul_edist
 
 @[toAdditive]
-instance (priority := 100)HasLipschitzMul.has_continuous_mul : HasContinuousMul β :=
+instance (priority := 100) HasLipschitzMul.has_continuous_mul : HasContinuousMul β :=
   ⟨lipschitz_with_lipschitz_const_mul_edist.Continuous⟩
 
 @[toAdditive]
@@ -95,7 +95,7 @@ end HasLipschitzMul
 
 section HasBoundedSmul
 
-variable[HasZero α][HasZero β][HasScalar α β]
+variable [HasZero α] [HasZero β] [HasScalar α β]
 
 /-- Mixin typeclass on a scalar action of a metric space `α` on a metric space `β` both with
 distinguished points `0`, requiring compatibility of the action in the sense that
@@ -105,7 +105,7 @@ class HasBoundedSmul : Prop where
   dist_smul_pair' : ∀ x : α, ∀ y₁ y₂ : β, dist (x • y₁) (x • y₂) ≤ dist x 0*dist y₁ y₂ 
   dist_pair_smul' : ∀ x₁ x₂ : α, ∀ y : β, dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂*dist y 0
 
-variable{α β}[HasBoundedSmul α β]
+variable {α β} [HasBoundedSmul α β]
 
 theorem dist_smul_pair (x : α) (y₁ y₂ : β) : dist (x • y₁) (x • y₂) ≤ dist x 0*dist y₁ y₂ :=
   HasBoundedSmul.dist_smul_pair' x y₁ y₂

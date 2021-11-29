@@ -18,7 +18,7 @@ if they are equal upon evaluating them on an arbitrary assignment of the variabl
 
 namespace MvPolynomial
 
-variable{R : Type _}[CommRingₓ R][IsDomain R][Infinite R]
+variable {R : Type _} [CommRingₓ R] [IsDomain R] [Infinite R]
 
 private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x : Finₓ n → R, eval x p = 0) : p = 0 :=
   by 

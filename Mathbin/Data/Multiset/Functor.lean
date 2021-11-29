@@ -13,22 +13,22 @@ namespace Multiset
 
 open List
 
-instance  : Functor Multiset :=
+instance : Functor Multiset :=
   { map := @map }
 
 @[simp]
 theorem fmap_def {α' β'} {s : Multiset α'} (f : α' → β') : f <$> s = s.map f :=
   rfl
 
-instance  : IsLawfulFunctor Multiset :=
+instance : IsLawfulFunctor Multiset :=
   by 
     refine' { .. } <;> intros  <;> simp 
 
 open IsLawfulTraversable IsCommApplicative
 
-variable{F : Type u → Type u}[Applicativeₓ F][IsCommApplicative F]
+variable {F : Type u → Type u} [Applicativeₓ F] [IsCommApplicative F]
 
-variable{α' β' : Type u}(f : α' → F β')
+variable {α' β' : Type u} (f : α' → F β')
 
 -- error in Data.Multiset.Functor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 def traverse : multiset α' → F (multiset β') :=
@@ -52,7 +52,7 @@ quotient.lift «expr ∘ »(functor.map coe, traversable.traverse f) (begin
    case [ident perm.trans] { simp [] [] [] ["[", "*", "]"] [] [] }
  end)
 
-instance  : Monadₓ Multiset :=
+instance : Monadₓ Multiset :=
   { Multiset.functor with pure := fun α x => {x}, bind := @bind }
 
 @[simp]
@@ -63,7 +63,7 @@ theorem pure_def {α} : (pure : α → Multiset α) = singleton :=
 theorem bind_def {α β} : · >>= · = @bind α β :=
   rfl
 
-instance  : IsLawfulMonad Multiset :=
+instance : IsLawfulMonad Multiset :=
   { bind_pure_comp_eq_map :=
       fun α β f s =>
         Multiset.induction_on s rfl$

@@ -33,13 +33,13 @@ namespace Complex
 
 open_locale ComplexConjugate
 
-variable{R : Type _}{S : Type _}
+variable {R : Type _} {S : Type _}
 
 section 
 
-variable[HasScalar R ℝ]
+variable [HasScalar R ℝ]
 
-instance  : HasScalar R ℂ :=
+instance : HasScalar R ℂ :=
   { smul := fun r x => ⟨r • x.re - 0*x.im, (r • x.im)+0*x.re⟩ }
 
 theorem smul_re (r : R) (z : ℂ) : (r • z).re = r • z.re :=
@@ -56,19 +56,19 @@ theorem real_smul {x : ℝ} {z : ℂ} : x • z = x*z :=
 
 end 
 
-instance  [HasScalar R ℝ] [HasScalar S ℝ] [SmulCommClass R S ℝ] : SmulCommClass R S ℂ :=
+instance [HasScalar R ℝ] [HasScalar S ℝ] [SmulCommClass R S ℝ] : SmulCommClass R S ℂ :=
   { smul_comm :=
       fun r s x =>
         by 
           ext <;> simp [smul_re, smul_im, smul_comm] }
 
-instance  [HasScalar R S] [HasScalar R ℝ] [HasScalar S ℝ] [IsScalarTower R S ℝ] : IsScalarTower R S ℂ :=
+instance [HasScalar R S] [HasScalar R ℝ] [HasScalar S ℝ] [IsScalarTower R S ℝ] : IsScalarTower R S ℂ :=
   { smul_assoc :=
       fun r s x =>
         by 
           ext <;> simp [smul_re, smul_im, smul_assoc] }
 
-instance  [Monoidₓ R] [MulAction R ℝ] : MulAction R ℂ :=
+instance [Monoidₓ R] [MulAction R ℝ] : MulAction R ℂ :=
   { one_smul :=
       fun x =>
         by 
@@ -78,7 +78,7 @@ instance  [Monoidₓ R] [MulAction R ℝ] : MulAction R ℂ :=
         by 
           ext <;> simp [smul_re, smul_im, mul_smul] }
 
-instance  [Semiringₓ R] [DistribMulAction R ℝ] : DistribMulAction R ℂ :=
+instance [Semiringₓ R] [DistribMulAction R ℝ] : DistribMulAction R ℂ :=
   { smul_add :=
       fun r x y =>
         by 
@@ -88,7 +88,7 @@ instance  [Semiringₓ R] [DistribMulAction R ℝ] : DistribMulAction R ℂ :=
         by 
           ext <;> simp [smul_re, smul_im, smul_zero] }
 
-instance  [Semiringₓ R] [Module R ℝ] : Module R ℂ :=
+instance [Semiringₓ R] [Module R ℝ] : Module R ℂ :=
   { add_smul :=
       fun r s x =>
         by 
@@ -98,7 +98,7 @@ instance  [Semiringₓ R] [Module R ℝ] : Module R ℂ :=
         by 
           ext <;> simp [smul_re, smul_im, zero_smul] }
 
-instance  [CommSemiringₓ R] [Algebra R ℝ] : Algebra R ℂ :=
+instance [CommSemiringₓ R] [Algebra R ℝ] : Algebra R ℂ :=
   { Complex.ofReal.comp (algebraMap R ℝ) with smul := · • ·,
     smul_def' :=
       fun r x =>
@@ -115,7 +115,7 @@ theorem coe_algebra_map : (algebraMap ℝ ℂ : ℝ → ℂ) = coeₓ :=
 
 section 
 
-variable{A : Type _}[Semiringₓ A][Algebra ℝ A]
+variable {A : Type _} [Semiringₓ A] [Algebra ℝ A]
 
 /-- We need this lemma since `complex.coe_algebra_map` diverts the simp-normal form away from
 `alg_hom.commutes`. -/
@@ -171,7 +171,7 @@ rfl
  i, «expr $ »(basis.apply_eq_iff.mpr, «expr $ »(finsupp.ext, λ
    j, by fin_cases [ident i] []; fin_cases [ident j] []; simp [] [] ["only"] ["[", expr coe_basis_one_I_repr, ",", expr finsupp.single_eq_same, ",", expr finsupp.single_eq_of_ne, ",", expr matrix.cons_val_zero, ",", expr matrix.cons_val_one, ",", expr matrix.head_cons, ",", expr nat.one_ne_zero, ",", expr fin.one_eq_zero_iff, ",", expr fin.zero_eq_one_iff, ",", expr ne.def, ",", expr not_false_iff, ",", expr one_re, ",", expr one_im, ",", expr I_re, ",", expr I_im, "]"] [] [])))
 
-instance  : FiniteDimensional ℝ ℂ :=
+instance : FiniteDimensional ℝ ℂ :=
   of_fintype_basis basis_one_I
 
 @[simp]
@@ -195,7 +195,7 @@ theorem finrank_real_complex_fact : Fact (finrank ℝ ℂ = 2) :=
 
 end Complex
 
-instance (priority := 900)Module.complexToReal (E : Type _) [AddCommGroupₓ E] [Module ℂ E] : Module ℝ E :=
+instance (priority := 900) Module.complexToReal (E : Type _) [AddCommGroupₓ E] [Module ℂ E] : Module ℝ E :=
   RestrictScalars.module ℝ ℂ E
 
 instance Module.real_complex_tower (E : Type _) [AddCommGroupₓ E] [Module ℂ E] : IsScalarTower ℝ ℂ E :=
@@ -205,7 +205,7 @@ instance Module.real_complex_tower (E : Type _) [AddCommGroupₓ E] [Module ℂ 
 theorem Complex.coe_smul {E : Type _} [AddCommGroupₓ E] [Module ℂ E] (x : ℝ) (y : E) : (x : ℂ) • y = x • y :=
   rfl
 
-instance (priority := 100)FiniteDimensional.complex_to_real (E : Type _) [AddCommGroupₓ E] [Module ℂ E]
+instance (priority := 100) FiniteDimensional.complex_to_real (E : Type _) [AddCommGroupₓ E] [Module ℂ E]
   [FiniteDimensional ℂ E] : FiniteDimensional ℝ E :=
   FiniteDimensional.trans ℝ ℂ E
 
@@ -264,7 +264,7 @@ theorem conj_ae_coe : «expr⇑ » conj_ae = conj :=
 
 section lift
 
-variable{A : Type _}[Ringₓ A][Algebra ℝ A]
+variable {A : Type _} [Ringₓ A] [Algebra ℝ A]
 
 /-- There is an alg_hom from `ℂ` to any `ℝ`-algebra with an element that squares to `-1`.
 

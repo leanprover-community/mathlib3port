@@ -34,7 +34,7 @@ open Opposite
 
 namespace AlgebraicTopology
 
-variable{C : Type _}[category C][abelian C]
+variable {C : Type _} [category C] [abelian C]
 
 attribute [local instance] abelian.has_pullbacks
 
@@ -46,7 +46,7 @@ namespace NormalizedMooreComplex
 
 open CategoryTheory.Subobject
 
-variable(X : simplicial_object C)
+variable (X : simplicial_object C)
 
 /--
 The normalized Moore complex in degree `n`, as a subobject of `X n`.
@@ -110,7 +110,7 @@ The normalized Moore complex functor, on objects.
 def obj (X : simplicial_object C) : ChainComplex C ℕ :=
   ChainComplex.of (fun n => (obj_X X n : C)) (obj_d X) (d_squared X)
 
-variable{X}{Y : simplicial_object C}(f : X ⟶ Y)
+variable {X} {Y : simplicial_object C} (f : X ⟶ Y)
 
 /--
 The normalized Moore complex functor, on morphisms.
@@ -153,7 +153,7 @@ end NormalizedMooreComplex
 
 open NormalizedMooreComplex
 
-variable(C)
+variable (C)
 
 /--
 The (normalized) Moore complex of a simplicial object `X` in an abelian category `C`.

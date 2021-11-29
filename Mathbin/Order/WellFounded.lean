@@ -12,7 +12,7 @@ and provide a few new definitions: `well_founded.min`, `well_founded.sup`, and `
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace WellFounded
 
@@ -134,11 +134,11 @@ end WellFounded
 
 namespace Function
 
-variable{β : Type _}(f : α → β)
+variable {β : Type _} (f : α → β)
 
 section LT
 
-variable[LT β](h : WellFounded (· < · : β → β → Prop))
+variable [LT β] (h : WellFounded (· < · : β → β → Prop))
 
 /-- Given a function `f : α → β` where `β` carries a well-founded `<`, this is an element of `α`
 whose image under `f` is minimal in the sense of `function.not_lt_argmin`. -/
@@ -167,7 +167,7 @@ end LT
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ β](h : WellFounded (· < · : β → β → Prop))
+variable [LinearOrderₓ β] (h : WellFounded (· < · : β → β → Prop))
 
 @[simp]
 theorem argmin_le (a : α) [Nonempty α] : f (argmin f h) ≤ f a :=

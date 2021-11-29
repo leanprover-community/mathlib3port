@@ -28,15 +28,15 @@ and whose columns are indexed by `n`. -/
 def Matrix (m : Type u) (n : Type u') (α : Type v) : Type max u u' v :=
   m → n → α
 
-variable{l m n o : Type _}{m' : o → Type _}{n' : o → Type _}
+variable {l m n o : Type _} {m' : o → Type _} {n' : o → Type _}
 
-variable{R : Type _}{S : Type _}{α : Type v}{β : Type w}{γ : Type _}
+variable {R : Type _} {S : Type _} {α : Type v} {β : Type w} {γ : Type _}
 
 namespace Matrix
 
 section Ext
 
-variable{M N : Matrix m n α}
+variable {M N : Matrix m n α}
 
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
   ⟨fun h => funext$ fun i => funext$ h i,
@@ -102,67 +102,67 @@ def col (w : m → α) : Matrix m Unit α
 def row (v : n → α) : Matrix Unit n α
 | x, y => v y
 
-instance  [Inhabited α] : Inhabited (Matrix m n α) :=
+instance [Inhabited α] : Inhabited (Matrix m n α) :=
   Pi.inhabited _
 
-instance  [Add α] : Add (Matrix m n α) :=
+instance [Add α] : Add (Matrix m n α) :=
   Pi.hasAdd
 
-instance  [AddSemigroupₓ α] : AddSemigroupₓ (Matrix m n α) :=
+instance [AddSemigroupₓ α] : AddSemigroupₓ (Matrix m n α) :=
   Pi.addSemigroup
 
-instance  [AddCommSemigroupₓ α] : AddCommSemigroupₓ (Matrix m n α) :=
+instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (Matrix m n α) :=
   Pi.addCommSemigroup
 
-instance  [HasZero α] : HasZero (Matrix m n α) :=
+instance [HasZero α] : HasZero (Matrix m n α) :=
   Pi.hasZero
 
-instance  [AddZeroClass α] : AddZeroClass (Matrix m n α) :=
+instance [AddZeroClass α] : AddZeroClass (Matrix m n α) :=
   Pi.addZeroClass
 
-instance  [AddMonoidₓ α] : AddMonoidₓ (Matrix m n α) :=
+instance [AddMonoidₓ α] : AddMonoidₓ (Matrix m n α) :=
   Pi.addMonoid
 
-instance  [AddCommMonoidₓ α] : AddCommMonoidₓ (Matrix m n α) :=
+instance [AddCommMonoidₓ α] : AddCommMonoidₓ (Matrix m n α) :=
   Pi.addCommMonoid
 
-instance  [Neg α] : Neg (Matrix m n α) :=
+instance [Neg α] : Neg (Matrix m n α) :=
   Pi.hasNeg
 
-instance  [Sub α] : Sub (Matrix m n α) :=
+instance [Sub α] : Sub (Matrix m n α) :=
   Pi.hasSub
 
-instance  [AddGroupₓ α] : AddGroupₓ (Matrix m n α) :=
+instance [AddGroupₓ α] : AddGroupₓ (Matrix m n α) :=
   Pi.addGroup
 
-instance  [AddCommGroupₓ α] : AddCommGroupₓ (Matrix m n α) :=
+instance [AddCommGroupₓ α] : AddCommGroupₓ (Matrix m n α) :=
   Pi.addCommGroup
 
-instance  [Unique α] : Unique (Matrix m n α) :=
+instance [Unique α] : Unique (Matrix m n α) :=
   Pi.unique
 
-instance  [Subsingleton α] : Subsingleton (Matrix m n α) :=
+instance [Subsingleton α] : Subsingleton (Matrix m n α) :=
   Pi.subsingleton
 
-instance  [Nonempty m] [Nonempty n] [Nontrivial α] : Nontrivial (Matrix m n α) :=
+instance [Nonempty m] [Nonempty n] [Nontrivial α] : Nontrivial (Matrix m n α) :=
   Function.nontrivial
 
-instance  [HasScalar R α] : HasScalar R (Matrix m n α) :=
+instance [HasScalar R α] : HasScalar R (Matrix m n α) :=
   Pi.hasScalar
 
-instance  [HasScalar R α] [HasScalar S α] [SmulCommClass R S α] : SmulCommClass R S (Matrix m n α) :=
+instance [HasScalar R α] [HasScalar S α] [SmulCommClass R S α] : SmulCommClass R S (Matrix m n α) :=
   Pi.smul_comm_class
 
-instance  [HasScalar R S] [HasScalar R α] [HasScalar S α] [IsScalarTower R S α] : IsScalarTower R S (Matrix m n α) :=
+instance [HasScalar R S] [HasScalar R α] [HasScalar S α] [IsScalarTower R S α] : IsScalarTower R S (Matrix m n α) :=
   Pi.is_scalar_tower
 
-instance  [Monoidₓ R] [MulAction R α] : MulAction R (Matrix m n α) :=
+instance [Monoidₓ R] [MulAction R α] : MulAction R (Matrix m n α) :=
   Pi.mulAction _
 
-instance  [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] : DistribMulAction R (Matrix m n α) :=
+instance [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] : DistribMulAction R (Matrix m n α) :=
   Pi.distribMulAction _
 
-instance  [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] : Module R (Matrix m n α) :=
+instance [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] : Module R (Matrix m n α) :=
   Pi.module _ _ _
 
 @[simp]
@@ -210,7 +210,7 @@ namespace Matrix
 
 section Diagonal
 
-variable[DecidableEq n]
+variable [DecidableEq n]
 
 /-- `diagonal d` is the square matrix such that `(diagonal d) i i = d i` and `(diagonal d) i j = 0`
 if `i ≠ j`.
@@ -271,21 +271,21 @@ theorem diagonal_smul [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] (r
   by 
     ext i j <;> byCases' h : i = j <;> simp [h]
 
-variable(n α)
+variable (n α)
 
 /-- `matrix.diagonal` as an `add_monoid_hom`. -/
 @[simps]
 def diagonal_add_monoid_hom [AddZeroClass α] : (n → α) →+ Matrix n n α :=
   { toFun := diagonal, map_zero' := diagonal_zero, map_add' := fun x y => (diagonal_add x y).symm }
 
-variable(R)
+variable (R)
 
 /-- `matrix.diagonal` as a `linear_map`. -/
 @[simps]
 def diagonal_linear_map [Semiringₓ R] [AddCommMonoidₓ α] [Module R α] : (n → α) →ₗ[R] Matrix n n α :=
   { diagonal_add_monoid_hom n α with map_smul' := diagonal_smul }
 
-variable{n α R}
+variable {n α R}
 
 @[simp]
 theorem diagonal_map [HasZero α] [HasZero β] {f : α → β} (h : f 0 = 0) {d : n → α} :
@@ -303,9 +303,9 @@ theorem diagonal_conj_transpose [Semiringₓ α] [StarRing α] (v : n → α) : 
 
 section One
 
-variable[HasZero α][HasOne α]
+variable [HasZero α] [HasOne α]
 
-instance  : HasOne (Matrix n n α) :=
+instance : HasOne (Matrix n n α) :=
   ⟨diagonal fun _ => 1⟩
 
 @[simp]
@@ -346,7 +346,7 @@ section Numeral
 theorem bit0_apply [Add α] (M : Matrix m m α) (i : m) (j : m) : (bit0 M) i j = bit0 (M i j) :=
   rfl
 
-variable[AddMonoidₓ α][HasOne α]
+variable [AddMonoidₓ α] [HasOne α]
 
 theorem bit1_apply (M : Matrix n n α) (i : n) (j : n) : (bit1 M) i j = if i = j then bit1 (M i j) else bit0 (M i j) :=
   by 
@@ -368,7 +368,7 @@ end Diagonal
 
 section DotProduct
 
-variable[Fintype m]
+variable [Fintype m]
 
 /-- `dot_product v w` is the sum of the entrywise products `v i * w i` -/
 def dot_product [Mul α] [AddCommMonoidₓ α] (v w : m → α) : α :=
@@ -390,7 +390,7 @@ theorem dot_product_punit [AddCommMonoidₓ α] [Mul α] (v w : PUnit → α) : 
 
 section NonUnitalNonAssocSemiring
 
-variable[NonUnitalNonAssocSemiring α](u v w : m → α)
+variable [NonUnitalNonAssocSemiring α] (u v w : m → α)
 
 @[simp]
 theorem dot_product_zero : dot_product v 0 = 0 :=
@@ -424,7 +424,7 @@ end NonUnitalNonAssocSemiring
 
 section NonUnitalNonAssocSemiringDecidable
 
-variable[DecidableEq m][NonUnitalNonAssocSemiring α](u v w : m → α)
+variable [DecidableEq m] [NonUnitalNonAssocSemiring α] (u v w : m → α)
 
 @[simp]
 theorem diagonal_dot_product (i : m) : dot_product (diagonal v i) w = v i*w i :=
@@ -475,7 +475,7 @@ end NonUnitalNonAssocSemiringDecidable
 
 section Ringₓ
 
-variable[Ringₓ α](u v w : m → α)
+variable [Ringₓ α] (u v w : m → α)
 
 @[simp]
 theorem neg_dot_product : dot_product (-v) w = -dot_product v w :=
@@ -501,7 +501,7 @@ end Ringₓ
 
 section DistribMulAction
 
-variable[Monoidₓ R][Mul α][AddCommMonoidₓ α][DistribMulAction R α]
+variable [Monoidₓ R] [Mul α] [AddCommMonoidₓ α] [DistribMulAction R α]
 
 @[simp]
 theorem smul_dot_product [IsScalarTower R α α] (x : R) (v w : m → α) : dot_product (x • v) w = x • dot_product v w :=
@@ -517,7 +517,7 @@ end DistribMulAction
 
 section StarRing
 
-variable[Semiringₓ α][StarRing α](v w : m → α)
+variable [Semiringₓ α] [StarRing α] (v w : m → α)
 
 theorem star_dot_product_star : dot_product (star v) (star w) = star (dot_product w v) :=
   by 
@@ -547,7 +547,7 @@ theorem mul_apply [Fintype m] [Mul α] [AddCommMonoidₓ α] {M : Matrix l m α}
   (M ⬝ N) i k = ∑j, M i j*N j k :=
   rfl
 
-instance  [Fintype n] [Mul α] [AddCommMonoidₓ α] : Mul (Matrix n n α) :=
+instance [Fintype n] [Mul α] [AddCommMonoidₓ α] : Mul (Matrix n n α) :=
   ⟨Matrix.mul⟩
 
 @[simp]
@@ -568,7 +568,7 @@ theorem sum_apply [AddCommMonoidₓ α] (i : m) (j : n) (s : Finset β) (g : β 
 
 section NonUnitalNonAssocSemiring
 
-variable[NonUnitalNonAssocSemiring α]
+variable [NonUnitalNonAssocSemiring α]
 
 @[simp]
 protected theorem mul_zero [Fintype n] (M : Matrix m n α) : M ⬝ (0 : Matrix n o α) = 0 :=
@@ -592,7 +592,7 @@ protected theorem add_mulₓ [Fintype m] (L M : Matrix l m α) (N : Matrix m n �
     ext i j 
     apply add_dot_product
 
-instance  [Fintype n] : NonUnitalNonAssocSemiring (Matrix n n α) :=
+instance [Fintype n] : NonUnitalNonAssocSemiring (Matrix n n α) :=
   { Matrix.addCommMonoid with mul := ·*·, add := ·+·, zero := 0, mul_zero := Matrix.mul_zero,
     zero_mul := Matrix.zero_mul, left_distrib := Matrix.mul_add, right_distrib := Matrix.add_mul }
 
@@ -640,7 +640,7 @@ end NonUnitalNonAssocSemiring
 
 section NonAssocSemiring
 
-variable[NonAssocSemiring α]
+variable [NonAssocSemiring α]
 
 @[simp]
 protected theorem one_mulₓ [Fintype m] [DecidableEq m] (M : Matrix m n α) : (1 : Matrix m m α) ⬝ M = M :=
@@ -652,7 +652,7 @@ protected theorem mul_oneₓ [Fintype n] [DecidableEq n] (M : Matrix m n α) : M
   by 
     ext i j <;> rw [←diagonal_one, mul_diagonal, mul_oneₓ]
 
-instance  [Fintype n] [DecidableEq n] : NonAssocSemiring (Matrix n n α) :=
+instance [Fintype n] [DecidableEq n] : NonAssocSemiring (Matrix n n α) :=
   { Matrix.nonUnitalNonAssocSemiring with one := 1, one_mul := Matrix.one_mul, mul_one := Matrix.mul_one }
 
 @[simp]
@@ -662,7 +662,7 @@ theorem map_mul [Fintype n] {L : Matrix m n α} {M : Matrix n o α} [NonAssocSem
     ext 
     simp [mul_apply, RingHom.map_sum]
 
-variable(α n)
+variable (α n)
 
 /-- `matrix.diagonal` as a `ring_hom`. -/
 @[simps]
@@ -674,30 +674,30 @@ end NonAssocSemiring
 
 section NonUnitalSemiring
 
-variable[NonUnitalSemiring α][Fintype m][Fintype n]
+variable [NonUnitalSemiring α] [Fintype m] [Fintype n]
 
 protected theorem mul_assocₓ (L : Matrix l m α) (M : Matrix m n α) (N : Matrix n o α) : L ⬝ M ⬝ N = L ⬝ (M ⬝ N) :=
   by 
     ext 
     apply dot_product_assoc
 
-instance  : NonUnitalSemiring (Matrix n n α) :=
+instance : NonUnitalSemiring (Matrix n n α) :=
   { Matrix.nonUnitalNonAssocSemiring with mul_assoc := Matrix.mul_assoc }
 
 end NonUnitalSemiring
 
 section Semiringₓ
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
-instance  [Fintype n] [DecidableEq n] : Semiringₓ (Matrix n n α) :=
+instance [Fintype n] [DecidableEq n] : Semiringₓ (Matrix n n α) :=
   { Matrix.nonUnitalSemiring, Matrix.nonAssocSemiring with  }
 
 end Semiringₓ
 
 section Ringₓ
 
-variable[Ringₓ α][Fintype n]
+variable [Ringₓ α] [Fintype n]
 
 @[simp]
 theorem neg_mul (M : Matrix m n α) (N : Matrix n o α) : -M ⬝ N = -(M ⬝ N) :=
@@ -721,12 +721,12 @@ protected theorem mul_sub (M : Matrix m n α) (N N' : Matrix n o α) : M ⬝ (N 
 
 end Ringₓ
 
-instance  [Fintype n] [DecidableEq n] [Ringₓ α] : Ringₓ (Matrix n n α) :=
+instance [Fintype n] [DecidableEq n] [Ringₓ α] : Ringₓ (Matrix n n α) :=
   { Matrix.semiring, Matrix.addCommGroup with  }
 
 section Semiringₓ
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
 theorem smul_eq_diagonal_mul [Fintype m] [DecidableEq m] (M : Matrix m n α) (a : α) :
   a • M = (diagonal fun _ => a) ⬝ M :=
@@ -779,7 +779,7 @@ def scalar (n : Type u) [DecidableEq n] [Fintype n] : α →+* Matrix n n α :=
 
 section Scalar
 
-variable[DecidableEq n][Fintype n]
+variable [DecidableEq n] [Fintype n]
 
 @[simp]
 theorem coe_scalar : (scalar n : α → Matrix n n α) = fun a => a • 1 :=
@@ -810,7 +810,7 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ α][Fintype n]
+variable [CommSemiringₓ α] [Fintype n]
 
 theorem smul_eq_mul_diagonal [DecidableEq n] (M : Matrix m n α) (a : α) : a • M = M ⬝ diagonal fun _ => a :=
   by 
@@ -829,11 +829,11 @@ end CommSemiringₓ
 
 section Algebra
 
-variable[Fintype n][DecidableEq n]
+variable [Fintype n] [DecidableEq n]
 
-variable[CommSemiringₓ R][Semiringₓ α][Semiringₓ β][Algebra R α][Algebra R β]
+variable [CommSemiringₓ R] [Semiringₓ α] [Semiringₓ β] [Algebra R α] [Algebra R β]
 
-instance  : Algebra R (Matrix n n α) :=
+instance : Algebra R (Matrix n n α) :=
   { (Matrix.scalar n).comp (algebraMap R α) with
     commutes' :=
       fun r x =>
@@ -871,7 +871,7 @@ theorem map_algebra_map (r : R) (f : α → β) (hf : f 0 = 0) (hf₂ : f (algeb
     congr 1 with x 
     simp only [hf₂, Pi.algebra_map_apply]
 
-variable(R)
+variable (R)
 
 /-- `matrix.diagonal` as an `alg_hom`. -/
 @[simps]
@@ -914,7 +914,7 @@ end Equiv
 
 namespace AddMonoidHom
 
-variable[AddZeroClass α][AddZeroClass β][AddZeroClass γ]
+variable [AddZeroClass α] [AddZeroClass β] [AddZeroClass γ]
 
 /-- The `add_monoid_hom` between spaces of matrices induced by an `add_monoid_hom` between their
 coefficients. This is `matrix.map` as an `add_monoid_hom`. -/
@@ -935,7 +935,7 @@ end AddMonoidHom
 
 namespace AddEquiv
 
-variable[Add α][Add β][Add γ]
+variable [Add α] [Add β] [Add γ]
 
 /-- The `add_equiv` between spaces of matrices induced by an `add_equiv` between their
 coefficients. This is `matrix.map` as an `add_equiv`. -/
@@ -961,9 +961,9 @@ end AddEquiv
 
 namespace LinearMap
 
-variable[Semiringₓ R][AddCommMonoidₓ α][AddCommMonoidₓ β][AddCommMonoidₓ γ]
+variable [Semiringₓ R] [AddCommMonoidₓ α] [AddCommMonoidₓ β] [AddCommMonoidₓ γ]
 
-variable[Module R α][Module R β][Module R γ]
+variable [Module R α] [Module R β] [Module R γ]
 
 /-- The `linear_map` between spaces of matrices induced by a `linear_map` between their
 coefficients. This is `matrix.map` as a `linear_map`. -/
@@ -985,9 +985,9 @@ end LinearMap
 
 namespace LinearEquiv
 
-variable[Semiringₓ R][AddCommMonoidₓ α][AddCommMonoidₓ β][AddCommMonoidₓ γ]
+variable [Semiringₓ R] [AddCommMonoidₓ α] [AddCommMonoidₓ β] [AddCommMonoidₓ γ]
 
-variable[Module R α][Module R β][Module R γ]
+variable [Module R α] [Module R β] [Module R γ]
 
 /-- The `linear_equiv` between spaces of matrices induced by an `linear_equiv` between their
 coefficients. This is `matrix.map` as an `linear_equiv`. -/
@@ -1012,9 +1012,9 @@ end LinearEquiv
 
 namespace RingHom
 
-variable[Fintype m][DecidableEq m]
+variable [Fintype m] [DecidableEq m]
 
-variable[NonAssocSemiring α][NonAssocSemiring β][NonAssocSemiring γ]
+variable [NonAssocSemiring α] [NonAssocSemiring β] [NonAssocSemiring γ]
 
 /-- The `ring_hom` between spaces of square matrices induced by a `ring_hom` between their
 coefficients. This is `matrix.map` as a `ring_hom`. -/
@@ -1039,9 +1039,9 @@ end RingHom
 
 namespace RingEquiv
 
-variable[Fintype m][DecidableEq m]
+variable [Fintype m] [DecidableEq m]
 
-variable[NonAssocSemiring α][NonAssocSemiring β][NonAssocSemiring γ]
+variable [NonAssocSemiring α] [NonAssocSemiring β] [NonAssocSemiring γ]
 
 /-- The `ring_equiv` between spaces of square matrices induced by a `ring_equiv` between their
 coefficients. This is `matrix.map` as a `ring_equiv`. -/
@@ -1067,11 +1067,11 @@ end RingEquiv
 
 namespace AlgHom
 
-variable[Fintype m][DecidableEq m]
+variable [Fintype m] [DecidableEq m]
 
-variable[CommSemiringₓ R][Semiringₓ α][Semiringₓ β][Semiringₓ γ]
+variable [CommSemiringₓ R] [Semiringₓ α] [Semiringₓ β] [Semiringₓ γ]
 
-variable[Algebra R α][Algebra R β][Algebra R γ]
+variable [Algebra R α] [Algebra R β] [Algebra R γ]
 
 /-- The `alg_hom` between spaces of square matrices induced by a `alg_hom` between their
 coefficients. This is `matrix.map` as a `alg_hom`. -/
@@ -1093,11 +1093,11 @@ end AlgHom
 
 namespace AlgEquiv
 
-variable[Fintype m][DecidableEq m]
+variable [Fintype m] [DecidableEq m]
 
-variable[CommSemiringₓ R][Semiringₓ α][Semiringₓ β][Semiringₓ γ]
+variable [CommSemiringₓ R] [Semiringₓ α] [Semiringₓ β] [Semiringₓ γ]
 
-variable[Algebra R α][Algebra R β][Algebra R γ]
+variable [Algebra R α] [Algebra R β] [Algebra R γ]
 
 /-- The `alg_equiv` between spaces of square matrices induced by a `alg_equiv` between their
 coefficients. This is `matrix.map` as a `alg_equiv`. -/
@@ -1132,7 +1132,7 @@ def vec_mul_vec [Mul α] (w : m → α) (v : n → α) : Matrix m n α
 
 section NonUnitalNonAssocSemiring
 
-variable[NonUnitalNonAssocSemiring α]
+variable [NonUnitalNonAssocSemiring α]
 
 /-- `mul_vec M v` is the matrix-vector product of `M` and `v`, where `v` is seen as a column matrix.
     Put another way, `mul_vec M v` is the vector whose entries
@@ -1243,7 +1243,7 @@ end NonUnitalNonAssocSemiring
 
 section NonUnitalSemiring
 
-variable[NonUnitalSemiring α][Fintype n]
+variable [NonUnitalSemiring α] [Fintype n]
 
 @[simp]
 theorem vec_mul_vec_mul [Fintype m] (v : m → α) (M : Matrix m n α) (N : Matrix n o α) :
@@ -1264,7 +1264,7 @@ end NonUnitalSemiring
 
 section NonAssocSemiring
 
-variable[Fintype m][DecidableEq m][NonAssocSemiring α]
+variable [Fintype m] [DecidableEq m] [NonAssocSemiring α]
 
 @[simp]
 theorem one_mul_vec (v : m → α) : mul_vec 1 v = v :=
@@ -1282,7 +1282,7 @@ end NonAssocSemiring
 
 section Ringₓ
 
-variable[Ringₓ α]
+variable [Ringₓ α]
 
 theorem neg_vec_mul [Fintype m] (v : m → α) (A : Matrix m n α) : vec_mul (-v) A = -vec_mul v A :=
   by 
@@ -1308,7 +1308,7 @@ end Ringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ α]
+variable [CommSemiringₓ α]
 
 theorem mul_vec_smul_assoc [Fintype n] (A : Matrix m n α) (b : n → α) (a : α) : A.mul_vec (a • b) = a • A.mul_vec b :=
   by 
@@ -1523,7 +1523,7 @@ section Star
 
 /-- When `α` has a star operation, square matrices `matrix n n α` have a star
 operation equal to `matrix.conj_transpose`. -/
-instance  [HasStar α] : HasStar (Matrix n n α) :=
+instance [HasStar α] : HasStar (Matrix n n α) :=
   { star := conj_transpose }
 
 theorem star_eq_conj_transpose [HasStar α] (M : Matrix m m α) : star M = (M)ᴴ :=
@@ -1533,15 +1533,15 @@ theorem star_eq_conj_transpose [HasStar α] (M : Matrix m m α) : star M = (M)�
 theorem star_apply [HasStar α] (M : Matrix n n α) i j : (star M) i j = star (M j i) :=
   rfl
 
-instance  [HasInvolutiveStar α] : HasInvolutiveStar (Matrix n n α) :=
+instance [HasInvolutiveStar α] : HasInvolutiveStar (Matrix n n α) :=
   { star_involutive := conj_transpose_conj_transpose }
 
 /-- When `α` is a `*`-additive monoid, `matrix.has_star` is also a `*`-additive monoid. -/
-instance  [AddMonoidₓ α] [StarAddMonoid α] : StarAddMonoid (Matrix n n α) :=
+instance [AddMonoidₓ α] [StarAddMonoid α] : StarAddMonoid (Matrix n n α) :=
   { star_add := conj_transpose_add }
 
 /-- When `α` is a `*`-(semi)ring, `matrix.has_star` is also a `*`-(semi)ring. -/
-instance  [Fintype n] [DecidableEq n] [Semiringₓ α] [StarRing α] : StarRing (Matrix n n α) :=
+instance [Fintype n] [DecidableEq n] [Semiringₓ α] [StarRing α] : StarRing (Matrix n n α) :=
   { star_add := conj_transpose_add, star_mul := conj_transpose_mul }
 
 /-- A version of `star_mul` for `⬝` instead of `*`. -/
@@ -1873,7 +1873,7 @@ def update_row [DecidableEq n] (M : Matrix n m α) (i : n) (b : m → α) : Matr
 def update_column [DecidableEq m] (M : Matrix n m α) (j : m) (b : n → α) : Matrix n m α :=
   fun i => Function.update (M i) j (b i)
 
-variable{M : Matrix n m α}{i : n}{j : m}{b : m → α}{c : n → α}
+variable {M : Matrix n m α} {i : n} {j : m} {b : m → α} {c : n → α}
 
 @[simp]
 theorem update_row_self [DecidableEq n] : update_row M i b i = b :=
@@ -1971,7 +1971,7 @@ end Matrix
 
 namespace RingHom
 
-variable[Fintype n][Semiringₓ α][Semiringₓ β]
+variable [Fintype n] [Semiringₓ α] [Semiringₓ β]
 
 theorem map_matrix_mul (M : Matrix m n α) (N : Matrix n o α) (i : m) (j : o) (f : α →+* β) :
   f (Matrix.mul M N i j) = Matrix.mul (fun i j => f (M i j)) (fun i j => f (N i j)) i j :=

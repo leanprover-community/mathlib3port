@@ -37,13 +37,13 @@ open_locale BigOperators
 
 universe u v
 
-variable(σ : Type u)(R : Type v)[CommRingₓ R](p m : ℕ)
+variable (σ : Type u) (R : Type v) [CommRingₓ R] (p m : ℕ)
 
 namespace MvPolynomial
 
 section CharP
 
-instance  [CharP R p] : CharP (MvPolynomial σ R) p :=
+instance [CharP R p] : CharP (MvPolynomial σ R) p :=
   { cast_eq_zero_iff :=
       fun n =>
         by 
@@ -74,7 +74,7 @@ less than or equal to `m`.-/
 def restrict_degree (m : ℕ) : Submodule R (MvPolynomial σ R) :=
   Finsupp.supported _ _ { n | ∀ i, n i ≤ m }
 
-variable{R}
+variable {R}
 
 theorem mem_restrict_total_degree (p : MvPolynomial σ R) : p ∈ restrict_total_degree σ R m ↔ p.total_degree ≤ m :=
   by 
@@ -93,7 +93,7 @@ theorem mem_restrict_degree_iff_sup (p : MvPolynomial σ R) (n : ℕ) :
     simp only [mem_restrict_degree, degrees, Multiset.count_sup, Finsupp.count_to_multiset, Finset.sup_le_iff]
     exact ⟨fun h n s hs => h s hs n, fun h s hs n => h n s hs⟩
 
-variable(σ R)
+variable (σ R)
 
 /-- The monomials form a basis on `mv_polynomial σ R`. -/
 def basis_monomials : Basis (σ →₀ ℕ) R (MvPolynomial σ R) :=

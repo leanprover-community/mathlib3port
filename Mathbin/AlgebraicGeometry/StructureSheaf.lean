@@ -3,7 +3,7 @@ import Mathbin.Algebra.Category.CommRing.Colimits
 import Mathbin.Algebra.Category.CommRing.Limits 
 import Mathbin.Topology.Sheaves.LocalPredicate 
 import Mathbin.RingTheory.Localization 
-import Mathbin.RingTheory.Subring
+import Mathbin.RingTheory.Subring.Basic
 
 /-!
 # The structure sheaf on `prime_spectrum R`.
@@ -44,7 +44,7 @@ universe u
 
 noncomputable theory
 
-variable(R : Type u)[CommRingₓ R]
+variable (R : Type u) [CommRingₓ R]
 
 open Top
 
@@ -70,17 +70,17 @@ The type family over `prime_spectrum R` consisting of the localization over each
 -/ @[derive #["[", expr comm_ring, ",", expr local_ring, "]"]] def localizations (P : prime_spectrum.Top R) : Type u :=
 localization.at_prime P.as_ideal
 
-instance  (P : prime_spectrum.Top R) : Inhabited (localizations R P) :=
+instance (P : prime_spectrum.Top R) : Inhabited (localizations R P) :=
   ⟨1⟩
 
-instance  (U : opens (prime_spectrum.Top R)) (x : U) : Algebra R (localizations R x) :=
+instance (U : opens (prime_spectrum.Top R)) (x : U) : Algebra R (localizations R x) :=
   Localization.algebra
 
-instance  (U : opens (prime_spectrum.Top R)) (x : U) :
+instance (U : opens (prime_spectrum.Top R)) (x : U) :
   IsLocalization.AtPrime (localizations R x) (x : prime_spectrum.Top R).asIdeal :=
   Localization.is_localization
 
-variable{R}
+variable {R}
 
 /--
 The predicate saying that a dependent function on an open `U` is realised as a fixed fraction
@@ -99,7 +99,7 @@ theorem is_fraction.eq_mk' {U : opens (prime_spectrum.Top R)} {f : ∀ x : U, lo
     refine' ⟨r, s, fun x => ⟨(h x).1, (is_localization.mk'_eq_iff_eq_mul.mpr _).symm⟩⟩
     exact (h x).2.symm
 
-variable(R)
+variable (R)
 
 /--
 The predicate `is_fraction` is "prelocal",
@@ -779,7 +779,7 @@ theorem global_sections_iso_hom (R : CommRingₓₓ) : (global_sections_iso R).h
 
 section Comap
 
-variable{R}{S : Type u}[CommRingₓ S]{P : Type u}[CommRingₓ P]
+variable {R} {S : Type u} [CommRingₓ S] {P : Type u} [CommRingₓ P]
 
 /--
 Given a ring homomorphism `f : R →+* S`, an open set `U` of the prime spectrum of `R` and an open
@@ -803,7 +803,7 @@ theorem comap_fun_is_locally_fraction (f : R →+* S) (U : opens (prime_spectrum
   by 
     rintro ⟨p, hpV⟩
     rcases hs ⟨PrimeSpectrum.comap f p, hUV hpV⟩ with ⟨W, m, iWU, a, b, h_frac⟩
-    refine' ⟨opens.comap (comap_continuous f) W⊓V, ⟨m, hpV⟩, opens.inf_le_right _ _, f a, f b, _⟩
+    refine' ⟨opens.comap (comap f) W⊓V, ⟨m, hpV⟩, opens.inf_le_right _ _, f a, f b, _⟩
     rintro ⟨q, ⟨hqW, hqV⟩⟩
     specialize h_frac ⟨PrimeSpectrum.comap f q, hqW⟩
     refine' ⟨h_frac.1, _⟩
@@ -954,7 +954,7 @@ theorem comap_comp (f : R →+* S) (g : S →+* P) (U : opens (prime_spectrum.To
 
 @[elementwise, reassoc]
 theorem to_open_comp_comap (f : R →+* S) (U : opens (prime_spectrum.Top R)) :
-  (to_open R U ≫ comap f U (opens.comap (comap_continuous f) U) fun _ => id) = CommRingₓₓ.ofHom f ≫ to_open S _ :=
+  (to_open R U ≫ comap f U (opens.comap (PrimeSpectrum.comap f) U) fun _ => id) = CommRingₓₓ.ofHom f ≫ to_open S _ :=
   RingHom.ext$
     fun s =>
       Subtype.eq$

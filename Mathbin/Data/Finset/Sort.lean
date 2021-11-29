@@ -11,14 +11,14 @@ namespace Finset
 
 open Multiset Nat
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 /-! ### sort -/
 
 
 section Sort
 
-variable(r : α → α → Prop)[DecidableRel r][IsTrans α r][IsAntisymm α r][IsTotal α r]
+variable (r : α → α → Prop) [DecidableRel r] [IsTrans α r] [IsAntisymm α r] [IsTotal α r]
 
 /-- `sort s` constructs a sorted list from the unordered set `s`.
   (Uses merge sort algorithm.) -/
@@ -60,7 +60,7 @@ end Sort
 
 section SortLinearOrder
 
-variable[LinearOrderₓ α]
+variable [LinearOrderₓ α]
 
 theorem sort_sorted_lt (s : Finset α) : List.Sorted (· < ·) (sort (· ≤ ·) s) :=
   (sort_sorted _ _).imp₂ (@lt_of_le_of_neₓ _ _) (sort_nodup _ _)
@@ -254,7 +254,7 @@ end
 
 end SortLinearOrder
 
-instance  [HasRepr α] : HasRepr (Finset α) :=
+instance [HasRepr α] : HasRepr (Finset α) :=
   ⟨fun s => reprₓ s.1⟩
 
 end Finset

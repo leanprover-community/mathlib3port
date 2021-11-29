@@ -25,7 +25,7 @@ fixed point, complete lattice, monotone function
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 open function(FixedPoints IsFixedPt)
 
@@ -33,7 +33,7 @@ namespace PreorderHom
 
 section Basic
 
-variable[CompleteLattice α](f : α →ₘ α)
+variable [CompleteLattice α] (f : α →ₘ α)
 
 /-- Least fixed point of a monotone function -/
 def lfp : (α →ₘ α) →ₘ α :=
@@ -123,7 +123,7 @@ end Basic
 
 section Eqn
 
-variable[CompleteLattice α][CompleteLattice β](f : β →ₘ α)(g : α →ₘ β)
+variable [CompleteLattice α] [CompleteLattice β] (f : β →ₘ α) (g : α →ₘ β)
 
 theorem map_lfp_comp : f (lfp (g.comp f)) = lfp (f.comp g) :=
   le_antisymmₓ ((f.comp g).map_lfp ▸ f.mono (lfp_le_fixed _$ congr_argₓ g (f.comp g).map_lfp))$
@@ -153,7 +153,7 @@ end Eqn
 
 section PrevNext
 
-variable[CompleteLattice α](f : α →ₘ α)
+variable [CompleteLattice α] (f : α →ₘ α)
 
 theorem gfp_const_inf_le (x : α) : gfp (const α x⊓f) ≤ x :=
   gfp_le _$ fun b hb => hb.trans inf_le_left
@@ -216,19 +216,19 @@ namespace FixedPoints
 
 open PreorderHom
 
-variable[CompleteLattice α](f : α →ₘ α)
+variable [CompleteLattice α] (f : α →ₘ α)
 
-instance  : SemilatticeSup (fixed_points f) :=
+instance : SemilatticeSup (fixed_points f) :=
   { Subtype.partialOrder _ with sup := fun x y => f.next_fixed (x⊔y) (f.le_map_sup_fixed_points x y),
     le_sup_left := fun x y => Subtype.coe_le_coe.1$ le_sup_left.trans (f.le_next_fixed _),
     le_sup_right := fun x y => Subtype.coe_le_coe.1$ le_sup_right.trans (f.le_next_fixed _),
     sup_le := fun x y z hxz hyz => f.next_fixed_le _$ sup_le hxz hyz }
 
-instance  : SemilatticeInf (fixed_points f) :=
+instance : SemilatticeInf (fixed_points f) :=
   { Subtype.partialOrder _, OrderDual.semilatticeInf (fixed_points f.dual) with
     inf := fun x y => f.prev_fixed (x⊓y) (f.map_inf_fixed_points_le x y) }
 
-instance  : CompleteSemilatticeSup (fixed_points f) :=
+instance : CompleteSemilatticeSup (fixed_points f) :=
   { Subtype.partialOrder _ with
     sup :=
       fun s =>
@@ -236,7 +236,7 @@ instance  : CompleteSemilatticeSup (fixed_points f) :=
     le_Sup := fun s x hx => Subtype.coe_le_coe.1$ le_transₓ (le_Sup$ Set.mem_image_of_mem _ hx) (f.le_next_fixed _),
     Sup_le := fun s x hx => f.next_fixed_le _$ Sup_le$ Set.ball_image_iff.2 hx }
 
-instance  : CompleteSemilatticeInf (fixed_points f) :=
+instance : CompleteSemilatticeInf (fixed_points f) :=
   { Subtype.partialOrder _ with
     inf :=
       fun s =>
@@ -245,7 +245,7 @@ instance  : CompleteSemilatticeInf (fixed_points f) :=
     Inf_le := fun s x hx => Subtype.coe_le_coe.1$ le_transₓ (f.prev_fixed_le _) (Inf_le$ Set.mem_image_of_mem _ hx) }
 
 /-- **Knaster-Tarski Theorem**: The fixed points of `f` form a complete lattice. -/
-instance  : CompleteLattice (fixed_points f) :=
+instance : CompleteLattice (fixed_points f) :=
   { Subtype.partialOrder _, fixed_points.semilattice_sup f, fixed_points.semilattice_inf f,
     fixed_points.complete_semilattice_Sup f, fixed_points.complete_semilattice_Inf f with
     top := ⟨f.gfp, f.is_fixed_pt_gfp⟩, bot := ⟨f.lfp, f.is_fixed_pt_lfp⟩, le_top := fun x => f.le_gfp x.2.Ge,

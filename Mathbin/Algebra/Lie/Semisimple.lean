@@ -25,21 +25,15 @@ lie algebra, radical, simple, semisimple
 universe u v w w₁ w₂
 
 /-- A Lie module is irreducible if it is zero or its only non-trivial Lie submodule is itself. -/
-class
-  LieModule.IsIrreducible(R :
-    Type
-      u)(L :
-    Type
-      v)(M :
-    Type w)[CommRingₓ R][LieRing L][LieAlgebra R L][AddCommGroupₓ M][Module R M][LieRingModule L M][LieModule R L M] :
-  Prop where 
+class LieModule.IsIrreducible (R : Type u) (L : Type v) (M : Type w) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
+  [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M] : Prop where 
   Irreducible : ∀ N : LieSubmodule R L M, N ≠ ⊥ → N = ⊤
 
 namespace LieAlgebra
 
-variable(R : Type u)(L : Type v)
+variable (R : Type u) (L : Type v)
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L]
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
 /-- A Lie algebra is simple if it is irreducible as a Lie module over itself via the adjoint
 action, and it is non-Abelian. -/
@@ -82,7 +76,7 @@ theorem center_eq_bot_of_semisimple [h : is_semisimple R L] : center R L = ⊥ :
     infer_instance
 
 /-- A simple Lie algebra is semisimple. -/
-instance (priority := 100)is_semisimple_of_is_simple [h : is_simple R L] : is_semisimple R L :=
+instance (priority := 100) is_semisimple_of_is_simple [h : is_simple R L] : is_semisimple R L :=
   by 
     rw [is_semisimple_iff_no_abelian_ideals]
     intro I hI 

@@ -16,7 +16,7 @@ namespace Sigma
 
 universe w₁ w₂ w₃ v₁ v₂ u₁ u₂
 
-variable{I : Type w₁}{C : I → Type u₁}[∀ i, category.{v₁} (C i)]
+variable {I : Type w₁} {C : I → Type u₁} [∀ i, category.{v₁} (C i)]
 
 /--
 The type of morphisms of a disjoint union of categories: for `X : C i` and `Y : C j`, a morphism
@@ -31,14 +31,14 @@ namespace SigmaHom
 def id : ∀ X : Σi, C i, sigma_hom X X
 | ⟨i, X⟩ => mk (𝟙 _)
 
-instance  (X : Σi, C i) : Inhabited (sigma_hom X X) :=
+instance (X : Σi, C i) : Inhabited (sigma_hom X X) :=
   ⟨id X⟩
 
 /-- Composition of sigma homomorphisms. -/
 def comp : ∀ {X Y Z : Σi, C i}, sigma_hom X Y → sigma_hom Y Z → sigma_hom X Z
 | _, _, _, mk f, mk g => mk (f ≫ g)
 
-instance  : category_struct (Σi, C i) :=
+instance : category_struct (Σi, C i) :=
   { Hom := sigma_hom, id := id, comp := fun X Y Z f g => comp f g }
 
 @[simp]
@@ -68,15 +68,15 @@ def incl (i : I) : C i ⥤ Σi, C i :=
 theorem incl_obj {i : I} (X : C i) : (incl i).obj X = ⟨i, X⟩ :=
   rfl
 
-instance  (i : I) : full (incl i : C i ⥤ Σi, C i) :=
+instance (i : I) : full (incl i : C i ⥤ Σi, C i) :=
   { Preimage := fun X Y ⟨f⟩ => f, witness' := fun X Y ⟨f⟩ => rfl }
 
-instance  (i : I) : faithful (incl i : C i ⥤ Σi, C i) :=
+instance (i : I) : faithful (incl i : C i ⥤ Σi, C i) :=
   {  }
 
 section 
 
-variable{D : Type u₂}[category.{v₂} D](F : ∀ i, C i ⥤ D)
+variable {D : Type u₂} [category.{v₂} D] (F : ∀ i, C i ⥤ D)
 
 /--
 To build a natural transformation over the sigma category, it suffices to specify it restricted to
@@ -171,7 +171,7 @@ end
 
 section 
 
-variable(C){J : Type w₂}(g : J → I)
+variable (C) {J : Type w₂} (g : J → I)
 
 /-- A function `J → I` induces a functor `Σ j, C (g j) ⥤ Σ i, C i`. -/
 def map : (Σj : J, C (g j)) ⥤ Σi : I, C i :=
@@ -192,7 +192,7 @@ The functor `sigma.map C g` restricted to the subcategory `C j` acts as the incl
 def incl_comp_map (j : J) : incl j ⋙ map C g ≅ incl (g j) :=
   iso.refl _
 
-variable(I)
+variable (I)
 
 /-- The functor `sigma.map` applied to the identity function is just the identity functor. -/
 @[simps]
@@ -203,7 +203,7 @@ def map_id : map C (id : I → I) ≅ 𝟭 (Σi, C i) :=
         (by 
           tidy)
 
-variable{I}{K : Type w₃}
+variable {I} {K : Type w₃}
 
 /-- The functor `sigma.map` applied to a composition is a composition of functors. -/
 @[simps]
@@ -214,9 +214,9 @@ end
 
 namespace Functor
 
-variable{C}
+variable {C}
 
-variable{D : I → Type u₁}[∀ i, category.{v₁} (D i)]
+variable {D : I → Type u₁} [∀ i, category.{v₁} (D i)]
 
 /--
 Assemble an `I`-indexed family of functors into a functor between the sigma types.
@@ -228,11 +228,11 @@ end Functor
 
 namespace NatTrans
 
-variable{C}
+variable {C}
 
-variable{D : I → Type u₁}[∀ i, category.{v₁} (D i)]
+variable {D : I → Type u₁} [∀ i, category.{v₁} (D i)]
 
-variable{F G : ∀ i, C i ⥤ D i}
+variable {F G : ∀ i, C i ⥤ D i}
 
 /--
 Assemble an `I`-indexed family of natural transformations into a single natural transformation.

@@ -32,7 +32,7 @@ namespace CategoryTheory
 
 universe v u
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 -- error in CategoryTheory.WithTerminal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /-- Formally adjoin a terminal object to a category. -/ @[derive #[expr inhabited]] inductive with_terminal : Type u
@@ -48,7 +48,7 @@ namespace WithTerminal
 
 attribute [local tidy] tactic.case_bash
 
-variable{C}
+variable {C}
 
 /-- Morphisms for `with_terminal C`. -/
 @[simp, nolint has_inhabited_instance]
@@ -72,17 +72,17 @@ def comp : ∀ {X Y Z : with_terminal C}, hom X Y → hom Y Z → hom X Z
 | _, star, of Y => fun f g => Pempty.elimₓ g
 | star, star, star => fun _ _ => PUnit.unit
 
-instance  : category.{v} (with_terminal C) :=
+instance : category.{v} (with_terminal C) :=
   { Hom := fun X Y => hom X Y, id := fun X => id _, comp := fun X Y Z f g => comp f g }
 
 /-- The inclusion from `C` into `with_terminal C`. -/
 def incl : C ⥤ with_terminal C :=
   { obj := of, map := fun X Y f => f }
 
-instance  : full (incl : C ⥤ _) :=
+instance : full (incl : C ⥤ _) :=
   { Preimage := fun X Y f => f }
 
-instance  : faithful (incl : C ⥤ _) :=
+instance : faithful (incl : C ⥤ _) :=
   {  }
 
 /-- Map `with_terminal` with respect to a functor `F : C ⥤ D`. -/
@@ -99,7 +99,7 @@ def map {D : Type _} [category D] (F : C ⥤ D) : with_terminal C ⥤ with_termi
         | of x, star, PUnit.unit => PUnit.unit
         | star, star, PUnit.unit => PUnit.unit }
 
-instance  {X : with_terminal C} : Unique (X ⟶ star) :=
+instance {X : with_terminal C} : Unique (X ⟶ star) :=
   { default :=
       match X with 
       | of x => PUnit.unit
@@ -203,7 +203,7 @@ namespace WithInitial
 
 attribute [local tidy] tactic.case_bash
 
-variable{C}
+variable {C}
 
 /-- Morphisms for `with_initial C`. -/
 @[simp, nolint has_inhabited_instance]
@@ -227,17 +227,17 @@ def comp : ∀ {X Y Z : with_initial C}, hom X Y → hom Y Z → hom X Z
 | of Y, star, _ => fun f g => Pempty.elimₓ f
 | star, star, star => fun _ _ => PUnit.unit
 
-instance  : category.{v} (with_initial C) :=
+instance : category.{v} (with_initial C) :=
   { Hom := fun X Y => hom X Y, id := fun X => id _, comp := fun X Y Z f g => comp f g }
 
 /-- The inclusion of `C` into `with_initial C`. -/
 def incl : C ⥤ with_initial C :=
   { obj := of, map := fun X Y f => f }
 
-instance  : full (incl : C ⥤ _) :=
+instance : full (incl : C ⥤ _) :=
   { Preimage := fun X Y f => f }
 
-instance  : faithful (incl : C ⥤ _) :=
+instance : faithful (incl : C ⥤ _) :=
   {  }
 
 /-- Map `with_initial` with respect to a functor `F : C ⥤ D`. -/
@@ -254,7 +254,7 @@ def map {D : Type _} [category D] (F : C ⥤ D) : with_initial C ⥤ with_initia
         | star, of x, PUnit.unit => PUnit.unit
         | star, star, PUnit.unit => PUnit.unit }
 
-instance  {X : with_initial C} : Unique (star ⟶ X) :=
+instance {X : with_initial C} : Unique (star ⟶ X) :=
   { default :=
       match X with 
       | of x => PUnit.unit

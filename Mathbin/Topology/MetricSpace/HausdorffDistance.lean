@@ -34,7 +34,7 @@ namespace Emetric
 
 section InfEdist
 
-variable{α : Type u}{β : Type v}[PseudoEmetricSpace α][PseudoEmetricSpace β]{x y : α}{s t : Set α}{Φ : α → β}
+variable {α : Type u} {β : Type v} [PseudoEmetricSpace α] [PseudoEmetricSpace β] {x y : α} {s t : Set α} {Φ : α → β}
 
 /-! ### Distance of a point to a set as a function into `ℝ≥0∞`. -/
 
@@ -201,7 +201,7 @@ theorem Hausdorff_edist_def {α : Type u} [PseudoEmetricSpace α] (s t : Set α)
 
 section HausdorffEdist
 
-variable{α : Type u}{β : Type v}[PseudoEmetricSpace α][PseudoEmetricSpace β]{x y : α}{s t u : Set α}{Φ : α → β}
+variable {α : Type u} {β : Type v} [PseudoEmetricSpace α] [PseudoEmetricSpace β] {x y : α} {s t u : Set α} {Φ : α → β}
 
 /-- The Hausdorff edistance of a set to itself vanishes -/
 @[simp]
@@ -402,7 +402,7 @@ namespace Metric
 
 section 
 
-variable{α : Type u}{β : Type v}[PseudoMetricSpace α][PseudoMetricSpace β]{s t u : Set α}{x y : α}{Φ : α → β}
+variable {α : Type u} {β : Type v} [PseudoMetricSpace α] [PseudoMetricSpace β] {s t u : Set α} {x y : α} {Φ : α → β}
 
 open Emetric
 
@@ -502,7 +502,7 @@ theorem disjoint_closed_ball_of_lt_inf_dist {r : ℝ} (h : r < inf_dist x s) : D
         rwa [mem_closed_ball, dist_comm] at hy _ < inf_dist x s :=
       h
 
-variable(s)
+variable (s)
 
 /-- The minimal distance to a set is Lipschitz in point with constant 1 -/
 theorem lipschitz_inf_dist_pt : LipschitzWith 1 fun x => inf_dist x s :=
@@ -517,7 +517,7 @@ theorem uniform_continuous_inf_dist_pt : UniformContinuous fun x => inf_dist x s
 theorem continuous_inf_dist_pt : Continuous fun x => inf_dist x s :=
   (uniform_continuous_inf_dist_pt s).Continuous
 
-variable{s}
+variable {s}
 
 /-- The minimal distance to a set and its closure coincide -/
 theorem inf_dist_eq_closure : inf_dist x (Closure s) = inf_dist x s :=
@@ -827,7 +827,7 @@ end
 
 section Thickening
 
-variable{α : Type u}[PseudoEmetricSpace α]
+variable {α : Type u} [PseudoEmetricSpace α]
 
 open Emetric
 
@@ -861,7 +861,7 @@ an increasing function of the subset `E`. -/
 theorem thickening_subset_of_subset (δ : ℝ) {E₁ E₂ : Set α} (h : E₁ ⊆ E₂) : thickening δ E₁ ⊆ thickening δ E₂ :=
   fun _ hx => lt_of_le_of_ltₓ (inf_edist_le_inf_edist_of_subset h) hx
 
-variable{X : Type u}[MetricSpace X]
+variable {X : Type u} [MetricSpace X]
 
 -- error in Topology.MetricSpace.HausdorffDistance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A point in a metric space belongs to the (open) `δ`-thickening of a subset `E` if and only if

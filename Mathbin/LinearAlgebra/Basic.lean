@@ -57,19 +57,19 @@ open Function
 
 open_locale BigOperators Pointwise
 
-variable{R : Type _}{R₁ : Type _}{R₂ : Type _}{R₃ : Type _}{R₄ : Type _}
+variable {R : Type _} {R₁ : Type _} {R₂ : Type _} {R₃ : Type _} {R₄ : Type _}
 
-variable{S : Type _}
+variable {S : Type _}
 
-variable{K : Type _}{K₂ : Type _}
+variable {K : Type _} {K₂ : Type _}
 
-variable{M : Type _}{M' : Type _}{M₁ : Type _}{M₂ : Type _}{M₃ : Type _}{M₄ : Type _}
+variable {M : Type _} {M' : Type _} {M₁ : Type _} {M₂ : Type _} {M₃ : Type _} {M₄ : Type _}
 
-variable{N : Type _}{N₂ : Type _}
+variable {N : Type _} {N₂ : Type _}
 
-variable{ι : Type _}
+variable {ι : Type _}
 
-variable{V : Type _}{V₂ : Type _}
+variable {V : Type _} {V₂ : Type _}
 
 namespace Finsupp
 
@@ -89,9 +89,9 @@ theorem sum_smul_index_linear_map' {α : Type _} {R : Type _} {M : Type _} {M₂
       intro i 
       exact (h i).map_zero
 
-variable(α : Type _)[Fintype α]
+variable (α : Type _) [Fintype α]
 
-variable(R M)[AddCommMonoidₓ M][Semiringₓ R][Module R M]
+variable (R M) [AddCommMonoidₓ M] [Semiringₓ R] [Module R M]
 
 /-- Given `fintype α`, `linear_equiv_fun_on_fintype R` is the natural `R`-linear equivalence between
 `α →₀ β` and `α → β`. -/
@@ -153,23 +153,23 @@ namespace LinearMap
 
 section AddCommMonoidₓ
 
-variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃][Semiringₓ R₄]
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃] [Semiringₓ R₄]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₁][AddCommMonoidₓ M₂]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
 
-variable[AddCommMonoidₓ M₃][AddCommMonoidₓ M₄]
+variable [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄]
 
-variable[Module R M][Module R M₁][Module R₂ M₂][Module R₃ M₃][Module R₄ M₄]
+variable [Module R M] [Module R M₁] [Module R₂ M₂] [Module R₃ M₃] [Module R₄ M₄]
 
-variable{σ₁₂ : R →+* R₂}{σ₂₃ : R₂ →+* R₃}{σ₃₄ : R₃ →+* R₄}
+variable {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₃₄ : R₃ →+* R₄}
 
-variable{σ₁₃ : R →+* R₃}{σ₂₄ : R₂ →+* R₄}{σ₁₄ : R →+* R₄}
+variable {σ₁₃ : R →+* R₃} {σ₂₄ : R₂ →+* R₄} {σ₁₄ : R →+* R₄}
 
-variable[RingHomCompTriple σ₁₂ σ₂₃ σ₁₃][RingHomCompTriple σ₂₃ σ₃₄ σ₂₄]
+variable [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomCompTriple σ₂₃ σ₃₄ σ₂₄]
 
-variable[RingHomCompTriple σ₁₃ σ₃₄ σ₁₄][RingHomCompTriple σ₁₂ σ₂₄ σ₁₄]
+variable [RingHomCompTriple σ₁₃ σ₃₄ σ₁₄] [RingHomCompTriple σ₁₂ σ₂₄ σ₁₄]
 
-variable(f : M →ₛₗ[σ₁₂] M₂)(g : M₂ →ₛₗ[σ₂₃] M₃)
+variable (f : M →ₛₗ[σ₁₂] M₂) (g : M₂ →ₛₗ[σ₂₃] M₃)
 
 include R R₂
 
@@ -258,7 +258,7 @@ theorem sum_apply (t : Finset ι) (f : ι → M →ₛₗ[σ₁₂] M₂) (b : M
 
 section SmulRight
 
-variable[Semiringₓ S][Module R S][Module S M][IsScalarTower R S M]
+variable [Semiringₓ S] [Module R S] [Module S M] [IsScalarTower R S M]
 
 /-- When `f` is an `R`-linear map taking values in `S`, then `λb, f b • x` is an `R`-linear map. -/
 def smul_right (f : M₁ →ₗ[R] S) (x : M) : M₁ →ₗ[R] M :=
@@ -281,7 +281,7 @@ theorem smul_right_apply (f : M₁ →ₗ[R] S) (x : M) (c : M₁) : smul_right 
 
 end SmulRight
 
-instance  [Nontrivial M] : Nontrivial (Module.End R M) :=
+instance [Nontrivial M] : Nontrivial (Module.End R M) :=
   by 
     obtain ⟨m, ne⟩ := (nontrivial_iff_exists_ne (0 : M)).mp inferInstance 
     exact nontrivial_of_ne 1 0 fun p => Ne (LinearMap.congr_fun p m)
@@ -342,7 +342,7 @@ theorem id_pow (n : ℕ) : (id : M →ₗ[R] M) ^ n = id :=
 
 section 
 
-variable{f' : M →ₗ[R] M}
+variable {f' : M →ₗ[R] M}
 
 theorem iterate_succ (n : ℕ) : (f' ^ n+1) = comp (f' ^ n) f' :=
   by 
@@ -400,15 +400,10 @@ end AddCommMonoidₓ
 
 section Module
 
-variable[Semiringₓ
-      R][Semiringₓ
-      S][AddCommMonoidₓ
-      M][AddCommMonoidₓ
-      M₂][AddCommMonoidₓ
-      M₃][Module R
-      M][Module R M₂][Module R M₃][Module S M₂][Module S M₃][SmulCommClass R S M₂][SmulCommClass R S M₃](f : M →ₗ[R] M₂)
+variable [Semiringₓ R] [Semiringₓ S] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [Module R M]
+  [Module R M₂] [Module R M₃] [Module S M₂] [Module S M₃] [SmulCommClass R S M₂] [SmulCommClass R S M₃] (f : M →ₗ[R] M₂)
 
-variable(S)
+variable (S)
 
 /-- Applying a linear map at `v : M`, seen as `S`-linear map from `M →ₗ[R] M₂` to `M₂`.
 
@@ -422,7 +417,7 @@ def applyₗ' : M →+ (M →ₗ[R] M₂) →ₗ[S] M₂ :=
 
 section 
 
-variable(R M)
+variable (R M)
 
 /--
 The equivalence between R-linear maps from `R` to `M`, and points of `M` itself.
@@ -452,11 +447,11 @@ end Module
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R][AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃]
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
 
-variable[Module R M][Module R M₂][Module R M₃]
+variable [Module R M] [Module R M₂] [Module R M₃]
 
-variable(f g : M →ₗ[R] M₂)
+variable (f g : M →ₗ[R] M₂)
 
 include R
 
@@ -493,9 +488,9 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][AddCommGroupₓ M][AddCommGroupₓ M₂][AddCommGroupₓ M₃]
+variable [CommRingₓ R] [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
 
-variable[Module R M][Module R M₂][Module R M₃]
+variable [Module R M] [Module R M₂] [Module R M₃]
 
 /--
 The family of linear maps `M₂ → M` parameterised by `f ∈ M₂ → R`, `x ∈ M`, is linear in `f`, `x`.
@@ -597,29 +592,29 @@ namespace Submodule
 
 section AddCommMonoidₓ
 
-variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃]
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃][AddCommMonoidₓ M']
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [AddCommMonoidₓ M']
 
-variable[Module R M][Module R M'][Module R₂ M₂][Module R₃ M₃]
+variable [Module R M] [Module R M'] [Module R₂ M₂] [Module R₃ M₃]
 
-variable{σ₁₂ : R →+* R₂}{σ₂₃ : R₂ →+* R₃}{σ₁₃ : R →+* R₃}
+variable {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃}
 
-variable{σ₂₁ : R₂ →+* R}
+variable {σ₂₁ : R₂ →+* R}
 
-variable[RingHomInvPair σ₁₂ σ₂₁][RingHomInvPair σ₂₁ σ₁₂]
+variable [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
 
-variable[RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
+variable [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
-variable(p p' : Submodule R M)(q q' : Submodule R₂ M₂)
+variable (p p' : Submodule R M) (q q' : Submodule R₂ M₂)
 
-variable(q₁ q₁' : Submodule R M')
+variable (q₁ q₁' : Submodule R M')
 
-variable{r : R}{x y : M}
+variable {r : R} {x y : M}
 
 open Set
 
-variable{p p'}
+variable {p p'}
 
 /-- If two submodules `p` and `p'` satisfy `p ⊆ p'`, then `of_le p p'` is the linear map version of
 this inclusion. -/
@@ -636,14 +631,14 @@ theorem of_le_apply (h : p ≤ p') (x : p) : of_le h x = ⟨x, h x.2⟩ :=
 theorem of_le_injective (h : p ≤ p') : Function.Injective (of_le h) :=
   fun x y h => Subtype.val_injective (Subtype.mk.injₓ h)
 
-variable(p p')
+variable (p p')
 
 theorem subtype_comp_of_le (p q : Submodule R M) (h : p ≤ q) : q.subtype.comp (of_le h) = p.subtype :=
   by 
     ext ⟨b, hb⟩
     rfl
 
-variable(R)
+variable (R)
 
 @[simp]
 theorem subsingleton_iff : Subsingleton (Submodule R M) ↔ Subsingleton M :=
@@ -658,16 +653,16 @@ theorem nontrivial_iff : Nontrivial (Submodule R M) ↔ Nontrivial M :=
   not_iff_not.mp
     ((not_nontrivial_iff_subsingleton.trans$ subsingleton_iff R).trans not_nontrivial_iff_subsingleton.symm)
 
-variable{R}
+variable {R}
 
-instance  [Subsingleton M] : Unique (Submodule R M) :=
+instance [Subsingleton M] : Unique (Submodule R M) :=
   ⟨⟨⊥⟩, fun a => @Subsingleton.elimₓ _ ((subsingleton_iff R).mpr ‹_›) a _⟩
 
 -- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance unique' [subsingleton R] : unique (submodule R M) :=
 by haveI [] [] [":=", expr module.subsingleton R M]; apply_instance
 
-instance  [Nontrivial M] : Nontrivial (Submodule R M) :=
+instance [Nontrivial M] : Nontrivial (Submodule R M) :=
   (nontrivial_iff R).mpr ‹_›
 
 theorem disjoint_def {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x _ : x ∈ p, x ∈ p' → x = (0 : M) :=
@@ -685,7 +680,7 @@ theorem mem_left_iff_eq_zero_of_disjoint {p p' : Submodule R M} (h : Disjoint p 
 
 section 
 
-variable[RingHomSurjective σ₁₂]
+variable [RingHomSurjective σ₁₂]
 
 /-- The pushforward of a submodule `p ⊆ M` by `f : M → M₂` -/
 def map (f : M →ₛₗ[σ₁₂] M₂) (p : Submodule R M) : Submodule R₂ M₂ :=
@@ -797,7 +792,7 @@ theorem comap_mono {f : M →ₛₗ[σ₁₂] M₂} {q q' : Submodule R₂ M₂}
 
 section 
 
-variable[RingHomSurjective σ₁₂]
+variable [RingHomSurjective σ₁₂]
 
 theorem map_le_iff_le_comap {f : M →ₛₗ[σ₁₂] M₂} {p : Submodule R M} {q : Submodule R₂ M₂} :
   map f p ≤ q ↔ p ≤ comap f q :=
@@ -847,9 +842,9 @@ theorem le_comap_map [RingHomSurjective σ₁₂] (f : M →ₛₗ[σ₁₂] M�
 
 section GaloisInsertion
 
-variable{f : M →ₛₗ[σ₁₂] M₂}(hf : surjective f)
+variable {f : M →ₛₗ[σ₁₂] M₂} (hf : surjective f)
 
-variable[RingHomSurjective σ₁₂]
+variable [RingHomSurjective σ₁₂]
 
 include hf
 
@@ -893,7 +888,7 @@ end GaloisInsertion
 
 section GaloisCoinsertion
 
-variable[RingHomSurjective σ₁₂]{f : M →ₛₗ[σ₁₂] M₂}(hf : injective f)
+variable [RingHomSurjective σ₁₂] {f : M →ₛₗ[σ₁₂] M₂} (hf : injective f)
 
 include hf
 
@@ -971,7 +966,7 @@ end
 
 section 
 
-variable(R)
+variable (R)
 
 /-- The span of a set `s ⊆ M` is the smallest submodule of M that contains `s`. -/
 def span (s : Set M) : Submodule R M :=
@@ -979,7 +974,7 @@ def span (s : Set M) : Submodule R M :=
 
 end 
 
-variable{s t : Set M}
+variable {s t : Set M}
 
 theorem mem_span : x ∈ span R s ↔ ∀ p : Submodule R M, s ⊆ p → x ∈ p :=
   mem_bInter_iff
@@ -1045,6 +1040,33 @@ theorem span_induction {p : M → Prop} (h : x ∈ span R s) (Hs : ∀ x _ : x �
   (H1 : ∀ x y, p x → p y → p (x+y)) (H2 : ∀ a : R x, p x → p (a • x)) : p x :=
   (@span_le _ _ _ _ _ _ ⟨p, H0, H1, H2⟩).2 Hs h
 
+/-- The difference with `submodule.span_induction` is that this acts on the subtype. -/
+theorem span_induction' {p : span R s → Prop} (Hs : ∀ x h : x ∈ s, p ⟨x, subset_span h⟩) (H0 : p 0)
+  (H1 : ∀ x y, p x → p y → p (x+y)) (H2 : ∀ a : R x, p x → p (a • x)) (x : span R s) : p x :=
+  Subtype.recOn x$
+    fun x hx =>
+      by 
+        refine' Exists.elim _ fun hx : x ∈ span R s hc : p ⟨x, hx⟩ => hc 
+        refine'
+          span_induction hx (fun m hm => ⟨subset_span hm, Hs m hm⟩) ⟨zero_mem _, H0⟩
+            (fun x y hx hy =>
+              Exists.elim hx$ fun hx' hx => Exists.elim hy$ fun hy' hy => ⟨add_mem _ hx' hy', H1 _ _ hx hy⟩)
+            fun r x hx => Exists.elim hx$ fun hx' hx => ⟨smul_mem _ _ hx', H2 r _ hx⟩
+
+@[simp]
+theorem span_span_coe_preimage : span R ((coeₓ : span R s → M) ⁻¹' s) = ⊤ :=
+  by 
+    refine' eq_top_iff.2 fun x hx => span_induction' (fun x hx => _) _ _ (fun r x hx => _) x
+    ·
+      exact subset_span hx
+    ·
+      exact Submodule.zero_mem _
+    ·
+      intro x y hx hy 
+      exact Submodule.add_mem _ hx hy
+    ·
+      exact Submodule.smul_mem _ _ hx
+
 theorem span_nat_eq_add_submonoid_closure (s : Set M) : (span ℕ s).toAddSubmonoid = AddSubmonoid.closure s :=
   by 
     refine' Eq.symm (AddSubmonoid.closure_eq_of_le subset_span _)
@@ -1072,7 +1094,7 @@ theorem span_int_eq {M : Type _} [AddCommGroupₓ M] (s : AddSubgroup M) : (span
 
 section 
 
-variable(R M)
+variable (R M)
 
 /-- `span` forms a Galois insertion with the coercion from submodule to set. -/
 protected def gi : GaloisInsertion (@span R M _ _ _) coeₓ :=
@@ -1150,7 +1172,7 @@ theorem mem_supr_of_chain (a : ℕ →ₘ Submodule R M) (m : M) : (m ∈ ⨆k, 
 
 section 
 
-variable{p p'}
+variable {p p'}
 
 theorem mem_sup : x ∈ p⊔p' ↔ ∃ (y : _)(_ : y ∈ p)(z : _)(_ : z ∈ p'), (y+z) = x :=
   ⟨fun h =>
@@ -1321,7 +1343,7 @@ theorem span_insert_eq_span (h : x ∈ span R s) : span R (insert x s) = span R 
 theorem span_span : span R (span R s : Set M) = span R s :=
   span_eq _
 
-variable(R S s)
+variable (R S s)
 
 /-- If `R` is "smaller" ring than `S` then the span by `R` is smaller than the span by `S`. -/
 theorem span_le_restrict_scalars [Semiringₓ S] [HasScalar R S] [Module S M] [IsScalarTower R S M] :
@@ -1340,7 +1362,7 @@ theorem span_span_of_tower [Semiringₓ S] [HasScalar R S] [Module S M] [IsScala
   span S (span R s : Set M) = span S s :=
   le_antisymmₓ (span_le.2$ span_subset_span R S s) (span_mono subset_span)
 
-variable{R S s}
+variable {R S s}
 
 theorem span_eq_bot : span R (s : Set M) = ⊥ ↔ ∀ x _ : x ∈ s, (x : M) = 0 :=
   eq_bot_iff.trans ⟨fun H x h => (mem_bot R).1$ H$ subset_span h, fun H => span_le.2 fun x h => (mem_bot R).2$ H x h⟩
@@ -1390,7 +1412,7 @@ begin
   exact [expr ⟨y, ⟨hyd, by simpa [] [] ["only"] ["[", expr span_le, ",", expr singleton_subset_iff, "]"] [] []⟩⟩]
 end
 
-instance  : IsCompactlyGenerated (Submodule R M) :=
+instance : IsCompactlyGenerated (Submodule R M) :=
   ⟨fun s =>
       ⟨(fun x => span R {x}) '' s,
         ⟨fun t ht =>
@@ -1513,13 +1535,13 @@ theorem prod_sup_prod : Prod p q₁⊔Prod p' q₁' = Prod (p⊔p') (q₁⊔q₁
 
 end AddCommMonoidₓ
 
-variable[Ringₓ R][AddCommGroupₓ M][AddCommGroupₓ M₂][AddCommGroupₓ M₃]
+variable [Ringₓ R] [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
 
-variable[Module R M][Module R M₂][Module R M₃]
+variable [Module R M] [Module R M₂] [Module R M₃]
 
-variable(p p' : Submodule R M)(q q' : Submodule R M₂)
+variable (p p' : Submodule R M) (q q' : Submodule R M₂)
 
-variable{r : R}{x y : M}
+variable {r : R} {x y : M}
 
 open Set
 
@@ -1566,11 +1588,11 @@ end Submodule
 
 namespace Submodule
 
-variable[Field K]
+variable [Field K]
 
-variable[AddCommGroupₓ V][Module K V]
+variable [AddCommGroupₓ V] [Module K V]
 
-variable[AddCommGroupₓ V₂][Module K V₂]
+variable [AddCommGroupₓ V₂] [Module K V₂]
 
 theorem comap_smul (f : V →ₗ[K] V₂) (p : Submodule K V₂) (a : K) (h : a ≠ 0) : p.comap (a • f) = p.comap f :=
   by 
@@ -1602,15 +1624,15 @@ namespace LinearMap
 
 section AddCommMonoidₓ
 
-variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃]
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
 
-variable{σ₁₂ : R →+* R₂}{σ₂₃ : R₂ →+* R₃}{σ₁₃ : R →+* R₃}
+variable {σ₁₂ : R →+* R₂} {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃}
 
-variable[RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
+variable [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
-variable[Module R M][Module R₂ M₂][Module R₃ M₃]
+variable [Module R M] [Module R₂ M₂] [Module R₃ M₃]
 
 include R
 
@@ -1648,7 +1670,7 @@ theorem ext_on_range {v : ι → M} {f g : M →ₛₗ[σ₁₂] M₂} (hv : spa
 
 section Finsupp
 
-variable{γ : Type _}[HasZero γ]
+variable {γ : Type _} [HasZero γ]
 
 @[simp]
 theorem map_finsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : ι →₀ γ} {g : ι → γ → M} : f (t.sum g) = t.sum fun i d => f (g i d) :=
@@ -1667,11 +1689,11 @@ section Dfinsupp
 
 open Dfinsupp
 
-variable{γ : ι → Type _}[DecidableEq ι]
+variable {γ : ι → Type _} [DecidableEq ι]
 
 section Sum
 
-variable[∀ i, HasZero (γ i)][∀ i x : γ i, Decidable (x ≠ 0)]
+variable [∀ i, HasZero (γ i)] [∀ i x : γ i, Decidable (x ≠ 0)]
 
 @[simp]
 theorem map_dfinsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀i, γ i} {g : ∀ i, γ i → M} :
@@ -1690,7 +1712,7 @@ end Sum
 
 section SumAddHom
 
-variable[∀ i, AddZeroClass (γ i)]
+variable [∀ i, AddZeroClass (γ i)]
 
 @[simp]
 theorem map_dfinsupp_sum_add_hom (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀i, γ i} {g : ∀ i, γ i →+ M} :
@@ -1701,9 +1723,9 @@ end SumAddHom
 
 end Dfinsupp
 
-variable{σ₂₁ : R₂ →+* R}{τ₁₂ : R →+* R₂}{τ₂₃ : R₂ →+* R₃}{τ₁₃ : R →+* R₃}
+variable {σ₂₁ : R₂ →+* R} {τ₁₂ : R →+* R₂} {τ₂₃ : R₂ →+* R₃} {τ₁₃ : R →+* R₃}
 
-variable[RingHomCompTriple τ₁₂ τ₂₃ τ₁₃]
+variable [RingHomCompTriple τ₁₂ τ₂₃ τ₁₃]
 
 theorem map_cod_restrict [RingHomSurjective σ₂₁] (p : Submodule R M) (f : M₂ →ₛₗ[σ₂₁] M) h p' :
   Submodule.map (cod_restrict p f h) p' = comap p.subtype (p'.map f) :=
@@ -1798,7 +1820,7 @@ instance fintype_range [Fintype M] [DecidableEq M₂] [RingHomSurjective τ₁�
 
 section 
 
-variable(R)(M)
+variable (R) (M)
 
 /-- Given an element `x` of a module `M` over `R`, the natural map from
     `R` to scalar multiples of `x`.-/
@@ -1912,7 +1934,7 @@ theorem ker_eq_top {f : M →ₛₗ[τ₁₂] M₂} : ker f = ⊤ ↔ f = 0 :=
 
 section 
 
-variable[RingHomSurjective τ₁₂]
+variable [RingHomSurjective τ₁₂]
 
 theorem range_le_bot_iff (f : M →ₛₗ[τ₁₂] M₂) : range f ≤ ⊥ ↔ f = 0 :=
   by 
@@ -1967,15 +1989,15 @@ end AddCommMonoidₓ
 
 section AddCommGroupₓ
 
-variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃]
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃]
 
-variable[AddCommGroupₓ M][AddCommGroupₓ M₂][AddCommGroupₓ M₃]
+variable [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
 
-variable[Module R M][Module R₂ M₂][Module R₃ M₃]
+variable [Module R M] [Module R₂ M₂] [Module R₃ M₃]
 
-variable{τ₁₂ : R →+* R₂}{τ₂₃ : R₂ →+* R₃}{τ₁₃ : R →+* R₃}
+variable {τ₁₂ : R →+* R₂} {τ₂₃ : R₂ →+* R₃} {τ₁₃ : R →+* R₃}
 
-variable[RingHomCompTriple τ₁₂ τ₂₃ τ₁₃][RingHomSurjective τ₁₂]
+variable [RingHomCompTriple τ₁₂ τ₂₃ τ₁₃] [RingHomSurjective τ₁₂]
 
 include R
 
@@ -2017,17 +2039,17 @@ end AddCommGroupₓ
 
 section Ringₓ
 
-variable[Ringₓ R][Ringₓ R₂][Ringₓ R₃]
+variable [Ringₓ R] [Ringₓ R₂] [Ringₓ R₃]
 
-variable[AddCommGroupₓ M][AddCommGroupₓ M₂][AddCommGroupₓ M₃]
+variable [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
 
-variable[Module R M][Module R₂ M₂][Module R₃ M₃]
+variable [Module R M] [Module R₂ M₂] [Module R₃ M₃]
 
-variable{τ₁₂ : R →+* R₂}{τ₂₃ : R₂ →+* R₃}{τ₁₃ : R →+* R₃}
+variable {τ₁₂ : R →+* R₂} {τ₂₃ : R₂ →+* R₃} {τ₁₃ : R →+* R₃}
 
-variable[RingHomCompTriple τ₁₂ τ₂₃ τ₁₃]
+variable [RingHomCompTriple τ₁₂ τ₂₃ τ₁₃]
 
-variable{f : M →ₛₗ[τ₁₂] M₂}
+variable {f : M →ₛₗ[τ₁₂] M₂}
 
 include R
 
@@ -2087,11 +2109,11 @@ end Ringₓ
 
 section Field
 
-variable[Field K][Field K₂]
+variable [Field K] [Field K₂]
 
-variable[AddCommGroupₓ V][Module K V]
+variable [AddCommGroupₓ V] [Module K V]
 
-variable[AddCommGroupₓ V₂][Module K V₂]
+variable [AddCommGroupₓ V₂] [Module K V₂]
 
 theorem ker_smul (f : V →ₗ[K] V₂) (a : K) (h : a ≠ 0) : ker (a • f) = ker f :=
   Submodule.comap_smul f _ a h
@@ -2153,13 +2175,13 @@ namespace Submodule
 
 section AddCommMonoidₓ
 
-variable[Semiringₓ R][Semiringₓ R₂][AddCommMonoidₓ M][AddCommMonoidₓ M₂]
+variable [Semiringₓ R] [Semiringₓ R₂] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
 
-variable[Module R M][Module R₂ M₂]
+variable [Module R M] [Module R₂ M₂]
 
-variable(p p' : Submodule R M)(q : Submodule R₂ M₂)
+variable (p p' : Submodule R M) (q : Submodule R₂ M₂)
 
-variable{τ₁₂ : R →+* R₂}
+variable {τ₁₂ : R →+* R₂}
 
 open LinearMap
 
@@ -2250,15 +2272,15 @@ namespace LinearMap
 
 section Semiringₓ
 
-variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃]
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
 
-variable[Module R M][Module R₂ M₂][Module R₃ M₃]
+variable [Module R M] [Module R₂ M₂] [Module R₃ M₃]
 
-variable{τ₁₂ : R →+* R₂}{τ₂₃ : R₂ →+* R₃}{τ₁₃ : R →+* R₃}
+variable {τ₁₂ : R →+* R₂} {τ₂₃ : R₂ →+* R₃} {τ₁₃ : R →+* R₃}
 
-variable[RingHomCompTriple τ₁₂ τ₂₃ τ₁₃]
+variable [RingHomCompTriple τ₁₂ τ₂₃ τ₁₃]
 
 -- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A monomorphism is injective. -/
@@ -2339,22 +2361,22 @@ section AddCommMonoidₓ
 
 section Subsingleton
 
-variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃][Semiringₓ R₄]
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃] [Semiringₓ R₄]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃][AddCommMonoidₓ M₄]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄]
 
-variable[Module R M][Module R₂ M₂]
+variable [Module R M] [Module R₂ M₂]
 
-variable[Subsingleton M][Subsingleton M₂]
+variable [Subsingleton M] [Subsingleton M₂]
 
-variable{σ₁₂ : R →+* R₂}{σ₂₁ : R₂ →+* R}
+variable {σ₁₂ : R →+* R₂} {σ₂₁ : R₂ →+* R}
 
-variable[RingHomInvPair σ₁₂ σ₂₁][RingHomInvPair σ₂₁ σ₁₂]
+variable [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
 
 include σ₂₁
 
 /-- Between two zero modules, the zero map is an equivalence. -/
-instance  : HasZero (M ≃ₛₗ[σ₁₂] M₂) :=
+instance : HasZero (M ≃ₛₗ[σ₁₂] M₂) :=
   ⟨{ (0 : M →ₛₗ[σ₁₂] M₂) with toFun := 0, invFun := 0, right_inv := fun x => Subsingleton.elimₓ _ _,
       left_inv := fun x => Subsingleton.elimₓ _ _ }⟩
 
@@ -2374,7 +2396,7 @@ theorem zero_apply (x : M) : (0 : M ≃ₛₗ[σ₁₂] M₂) x = 0 :=
   rfl
 
 /-- Between two zero modules, the zero map is the only equivalence. -/
-instance  : Unique (M ≃ₛₗ[σ₁₂] M₂) :=
+instance : Unique (M ≃ₛₗ[σ₁₂] M₂) :=
   { uniq := fun f => to_linear_map_injective (Subsingleton.elimₓ _ _), default := 0 }
 
 omit σ₂₁
@@ -2383,17 +2405,17 @@ end Subsingleton
 
 section 
 
-variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃][Semiringₓ R₄]
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃] [Semiringₓ R₄]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃][AddCommMonoidₓ M₄]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄]
 
-variable{module_M : Module R M}{module_M₂ : Module R₂ M₂}
+variable {module_M : Module R M} {module_M₂ : Module R₂ M₂}
 
-variable{σ₁₂ : R →+* R₂}{σ₂₁ : R₂ →+* R}
+variable {σ₁₂ : R →+* R₂} {σ₂₁ : R₂ →+* R}
 
-variable{re₁₂ : RingHomInvPair σ₁₂ σ₂₁}{re₂₁ : RingHomInvPair σ₂₁ σ₁₂}
+variable {re₁₂ : RingHomInvPair σ₁₂ σ₂₁} {re₂₁ : RingHomInvPair σ₂₁ σ₁₂}
 
-variable(e e' : M ≃ₛₗ[σ₁₂] M₂)
+variable (e e' : M ≃ₛₗ[σ₁₂] M₂)
 
 theorem map_eq_comap {p : Submodule R M} :
   (p.map (e : M →ₛₗ[σ₁₂] M₂) : Submodule R₂ M₂) = p.comap (e.symm : M₂ →ₛₗ[σ₂₁] M) :=
@@ -2447,17 +2469,17 @@ end
 
 section Finsupp
 
-variable{γ : Type _}
+variable {γ : Type _}
 
-variable[Semiringₓ R][Semiringₓ R₂]
+variable [Semiringₓ R] [Semiringₓ R₂]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
 
-variable[Module R M][Module R₂ M₂][HasZero γ]
+variable [Module R M] [Module R₂ M₂] [HasZero γ]
 
-variable{τ₁₂ : R →+* R₂}{τ₂₁ : R₂ →+* R}
+variable {τ₁₂ : R →+* R₂} {τ₂₁ : R₂ →+* R}
 
-variable[RingHomInvPair τ₁₂ τ₂₁][RingHomInvPair τ₂₁ τ₁₂]
+variable [RingHomInvPair τ₁₂ τ₂₁] [RingHomInvPair τ₂₁ τ₁₂]
 
 include τ₂₁
 
@@ -2473,17 +2495,17 @@ section Dfinsupp
 
 open Dfinsupp
 
-variable[Semiringₓ R][Semiringₓ R₂]
+variable [Semiringₓ R] [Semiringₓ R₂]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
 
-variable[Module R M][Module R₂ M₂]
+variable [Module R M] [Module R₂ M₂]
 
-variable{τ₁₂ : R →+* R₂}{τ₂₁ : R₂ →+* R}
+variable {τ₁₂ : R →+* R₂} {τ₂₁ : R₂ →+* R}
 
-variable[RingHomInvPair τ₁₂ τ₂₁][RingHomInvPair τ₂₁ τ₁₂]
+variable [RingHomInvPair τ₁₂ τ₂₁] [RingHomInvPair τ₂₁ τ₁₂]
 
-variable{γ : ι → Type _}[DecidableEq ι]
+variable {γ : ι → Type _} [DecidableEq ι]
 
 include τ₂₁
 
@@ -2501,11 +2523,11 @@ end Dfinsupp
 
 section Uncurry
 
-variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃][Semiringₓ R₄]
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃] [Semiringₓ R₄]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃][AddCommMonoidₓ M₄]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄]
 
-variable(V V₂ R)
+variable (V V₂ R)
 
 /-- Linear equivalence between a curried and uncurried function.
   Differs from `tensor_product.curry`. -/
@@ -2534,33 +2556,33 @@ end Uncurry
 
 section 
 
-variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃][Semiringₓ R₄]
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃] [Semiringₓ R₄]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃][AddCommMonoidₓ M₄]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄]
 
-variable{module_M : Module R M}{module_M₂ : Module R₂ M₂}{module_M₃ : Module R₃ M₃}
+variable {module_M : Module R M} {module_M₂ : Module R₂ M₂} {module_M₃ : Module R₃ M₃}
 
-variable{σ₁₂ : R →+* R₂}{σ₂₁ : R₂ →+* R}
+variable {σ₁₂ : R →+* R₂} {σ₂₁ : R₂ →+* R}
 
-variable{σ₂₃ : R₂ →+* R₃}{σ₁₃ : R →+* R₃}[RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
+variable {σ₂₃ : R₂ →+* R₃} {σ₁₃ : R →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
-variable{σ₃₂ : R₃ →+* R₂}
+variable {σ₃₂ : R₃ →+* R₂}
 
-variable{re₁₂ : RingHomInvPair σ₁₂ σ₂₁}{re₂₁ : RingHomInvPair σ₂₁ σ₁₂}
+variable {re₁₂ : RingHomInvPair σ₁₂ σ₂₁} {re₂₁ : RingHomInvPair σ₂₁ σ₁₂}
 
-variable{re₂₃ : RingHomInvPair σ₂₃ σ₃₂}{re₃₂ : RingHomInvPair σ₃₂ σ₂₃}
+variable {re₂₃ : RingHomInvPair σ₂₃ σ₃₂} {re₃₂ : RingHomInvPair σ₃₂ σ₂₃}
 
-variable(f : M →ₛₗ[σ₁₂] M₂)(g : M₂ →ₛₗ[σ₂₁] M)(e : M ≃ₛₗ[σ₁₂] M₂)(h : M₂ →ₛₗ[σ₂₃] M₃)
+variable (f : M →ₛₗ[σ₁₂] M₂) (g : M₂ →ₛₗ[σ₂₁] M) (e : M ≃ₛₗ[σ₁₂] M₂) (h : M₂ →ₛₗ[σ₂₃] M₃)
 
-variable(e'' : M₂ ≃ₛₗ[σ₂₃] M₃)
+variable (e'' : M₂ ≃ₛₗ[σ₂₃] M₃)
 
-variable(p q : Submodule R M)
+variable (p q : Submodule R M)
 
 /-- Linear equivalence between two equal submodules. -/
 def of_eq (h : p = q) : p ≃ₗ[R] q :=
   { Equiv.Set.ofEq (congr_argₓ _ h) with map_smul' := fun _ _ => rfl, map_add' := fun _ _ => rfl }
 
-variable{p q}
+variable {p q}
 
 @[simp]
 theorem coe_of_eq_apply (h : p = q) (x : p) : (of_eq p q h x : M) = x :=
@@ -2613,7 +2635,7 @@ theorem of_submodule'_symm_apply [Module R M] [Module R₂ M₂] (f : M ≃ₛ�
   ((f.of_submodule' U).symm x : M) = f.symm (x : M₂) :=
   rfl
 
-variable(p)
+variable (p)
 
 omit σ₂₁ re₁₂ re₂₁
 
@@ -2687,7 +2709,7 @@ theorem ker_comp (l : M →ₛₗ[σ₁₂] M₂) : (((e'' : M₂ →ₛₗ[σ�
 
 omit module_M
 
-variable{f g}
+variable {f g}
 
 include σ₂₁
 
@@ -2722,7 +2744,7 @@ theorem of_left_inverse_symm_apply [RingHomInvPair σ₁₂ σ₂₁] [RingHomIn
 
 omit σ₂₁
 
-variable(f)
+variable (f)
 
 /-- An `injective` linear map `f : M →ₗ[R] M₂` defines a linear equivalence
 between `M` and `f.range`. See also `linear_map.of_left_inverse`. -/
@@ -2751,23 +2773,23 @@ end AddCommMonoidₓ
 
 section AddCommGroupₓ
 
-variable[Semiringₓ R][Semiringₓ R₂][Semiringₓ R₃][Semiringₓ R₄]
+variable [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃] [Semiringₓ R₄]
 
-variable[AddCommGroupₓ M][AddCommGroupₓ M₂][AddCommGroupₓ M₃][AddCommGroupₓ M₄]
+variable [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃] [AddCommGroupₓ M₄]
 
-variable{module_M : Module R M}{module_M₂ : Module R₂ M₂}
+variable {module_M : Module R M} {module_M₂ : Module R₂ M₂}
 
-variable{module_M₃ : Module R₃ M₃}{module_M₄ : Module R₄ M₄}
+variable {module_M₃ : Module R₃ M₃} {module_M₄ : Module R₄ M₄}
 
-variable{σ₁₂ : R →+* R₂}{σ₃₄ : R₃ →+* R₄}
+variable {σ₁₂ : R →+* R₂} {σ₃₄ : R₃ →+* R₄}
 
-variable{σ₂₁ : R₂ →+* R}{σ₄₃ : R₄ →+* R₃}
+variable {σ₂₁ : R₂ →+* R} {σ₄₃ : R₄ →+* R₃}
 
-variable{re₁₂ : RingHomInvPair σ₁₂ σ₂₁}{re₂₁ : RingHomInvPair σ₂₁ σ₁₂}
+variable {re₁₂ : RingHomInvPair σ₁₂ σ₂₁} {re₂₁ : RingHomInvPair σ₂₁ σ₁₂}
 
-variable{re₃₄ : RingHomInvPair σ₃₄ σ₄₃}{re₄₃ : RingHomInvPair σ₄₃ σ₃₄}
+variable {re₃₄ : RingHomInvPair σ₃₄ σ₄₃} {re₄₃ : RingHomInvPair σ₄₃ σ₃₄}
 
-variable(e e₁ : M ≃ₛₗ[σ₁₂] M₂)(e₂ : M₃ ≃ₛₗ[σ₃₄] M₄)
+variable (e e₁ : M ≃ₛₗ[σ₁₂] M₂) (e₂ : M₃ ≃ₛₗ[σ₃₄] M₄)
 
 @[simp]
 theorem map_neg (a : M) : e (-a) = -e a :=
@@ -2781,13 +2803,13 @@ end AddCommGroupₓ
 
 section Neg
 
-variable(R)[Semiringₓ R][AddCommGroupₓ M][Module R M]
+variable (R) [Semiringₓ R] [AddCommGroupₓ M] [Module R M]
 
 /-- `x ↦ -x` as a `linear_equiv` -/
 def neg : M ≃ₗ[R] M :=
   { Equiv.neg M, (-LinearMap.id : M →ₗ[R] M) with  }
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem coe_neg : «expr⇑ » (neg R : M ≃ₗ[R] M) = -id :=
@@ -2805,9 +2827,9 @@ end Neg
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R][AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃]
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃]
 
-variable[Module R M][Module R M₂][Module R M₃]
+variable [Module R M] [Module R M₂] [Module R M₃]
 
 open _Root_.LinearMap
 
@@ -2908,11 +2930,11 @@ end CommSemiringₓ
 
 section Field
 
-variable[Field K][AddCommGroupₓ M][AddCommGroupₓ M₂][AddCommGroupₓ M₃]
+variable [Field K] [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
 
-variable[Module K M][Module K M₂][Module K M₃]
+variable [Module K M] [Module K M₂] [Module K M₃]
 
-variable(K)(M)
+variable (K) (M)
 
 open _Root_.LinearMap
 
@@ -2983,7 +3005,7 @@ namespace Submodule
 
 section Module
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 /-- Given `p` a submodule of the module `M` and `q` a submodule of `p`, `p.equiv_subtype_map q`
 is the natural `linear_equiv` between `q` and `q.map p.subtype`. -/
@@ -3031,19 +3053,19 @@ end Submodule
 
 namespace Submodule
 
-variable[CommSemiringₓ R][CommSemiringₓ R₂]
+variable [CommSemiringₓ R] [CommSemiringₓ R₂]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][Module R M][Module R₂ M₂]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [Module R M] [Module R₂ M₂]
 
-variable[AddCommMonoidₓ N][AddCommMonoidₓ N₂][Module R N][Module R N₂]
+variable [AddCommMonoidₓ N] [AddCommMonoidₓ N₂] [Module R N] [Module R N₂]
 
-variable{τ₁₂ : R →+* R₂}{τ₂₁ : R₂ →+* R}
+variable {τ₁₂ : R →+* R₂} {τ₂₁ : R₂ →+* R}
 
-variable[RingHomInvPair τ₁₂ τ₂₁][RingHomInvPair τ₂₁ τ₁₂]
+variable [RingHomInvPair τ₁₂ τ₂₁] [RingHomInvPair τ₂₁ τ₁₂]
 
-variable(p : Submodule R M)(q : Submodule R₂ M₂)
+variable (p : Submodule R M) (q : Submodule R₂ M₂)
 
-variable(pₗ : Submodule R N)(qₗ : Submodule R N₂)
+variable (pₗ : Submodule R N) (qₗ : Submodule R N₂)
 
 include τ₂₁
 
@@ -3112,7 +3134,7 @@ end Submodule
 
 namespace Equiv
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M][AddCommMonoidₓ M₂][Module R M₂]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ M₂] [Module R M₂]
 
 /-- An equivalence whose underlying function is linear is a linear equivalence. -/
 def to_linear_equiv (e : M ≃ M₂) (h : IsLinearMap R (e : M → M₂)) : M ≃ₗ[R] M₂ :=
@@ -3122,7 +3144,7 @@ end Equiv
 
 namespace AddEquiv
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M][AddCommMonoidₓ M₂][Module R M₂]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ M₂] [Module R M₂]
 
 /-- An additive equivalence whose underlying function preserves `smul` is a linear equivalence. -/
 def to_linear_equiv (e : M ≃+ M₂) (h : ∀ c : R x, e (c • x) = c • e x) : M ≃ₗ[R] M₂ :=
@@ -3141,9 +3163,9 @@ end AddEquiv
 
 section FunLeft
 
-variable(R M)[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-variable{m n p : Type _}
+variable {m n p : Type _}
 
 namespace LinearMap
 
@@ -3233,9 +3255,9 @@ end FunLeft
 
 namespace LinearMap
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-variable(R M)
+variable (R M)
 
 /-- The group of invertible linear maps from `M` to itself -/
 @[reducible]
@@ -3244,9 +3266,9 @@ def general_linear_group :=
 
 namespace GeneralLinearGroup
 
-variable{R M}
+variable {R M}
 
-instance  : CoeFun (general_linear_group R M) fun _ => M → M :=
+instance : CoeFun (general_linear_group R M) fun _ => M → M :=
   by 
     infer_instance
 
@@ -3267,7 +3289,7 @@ def of_linear_equiv (f : M ≃ₗ[R] M) : general_linear_group R M :=
   { val := f, inv := (f.symm : M →ₗ[R] M), val_inv := LinearMap.ext$ fun _ => f.apply_symm_apply _,
     inv_val := LinearMap.ext$ fun _ => f.symm_apply_apply _ }
 
-variable(R M)
+variable (R M)
 
 /-- The general linear group on `R` and `M` is multiplicatively equivalent to the type of linear
 equivalences between `M` and itself. -/
@@ -3302,9 +3324,9 @@ end LinearMap
 
 namespace Submodule
 
-variable[Ringₓ R][AddCommGroupₓ M][Module R M]
+variable [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
-instance  : IsModularLattice (Submodule R M) :=
+instance : IsModularLattice (Submodule R M) :=
   ⟨fun x y z xz a ha =>
       by 
         rw [mem_inf, mem_sup] at ha 

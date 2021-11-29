@@ -77,17 +77,17 @@ Note: if `set_like.coe` is a projection, implementers should create a simp lemma
 to normalize terms.
 -/
 @[protectProj]
-class SetLike(A : Type _)(B : outParam$ Type _) where 
+class SetLike (A : Type _) (B : outParam$ Type _) where 
   coe : A → Set B 
   coe_injective' : Function.Injective coeₓ
 
 namespace SetLike
 
-variable{A : Type _}{B : Type _}[i : SetLike A B]
+variable {A : Type _} {B : Type _} [i : SetLike A B]
 
 include i
 
-instance  : CoeTₓ A (Set B) :=
+instance : CoeTₓ A (Set B) :=
   ⟨SetLike.Coe⟩
 
 instance (priority := 100) : HasMem B A :=
@@ -97,13 +97,13 @@ instance (priority := 100) : HasMem B A :=
 instance (priority := 100) : CoeSort A (Type _) :=
   ⟨fun p => { x : B // x ∈ p }⟩
 
-variable(p q : A)
+variable (p q : A)
 
 @[simp, normCast]
 theorem coe_sort_coe : ((p : Set B) : Type _) = p :=
   rfl
 
-variable{p q}
+variable {p q}
 
 protected theorem exists {q : p → Prop} : (∃ x, q x) ↔ ∃ (x : _)(_ : x ∈ p), q ⟨x, ‹_›⟩ :=
   SetCoe.exists

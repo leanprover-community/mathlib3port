@@ -69,7 +69,7 @@ open_locale Ennreal Nnreal
 
 open MeasureTheory MeasureTheory.Measure
 
-variable{α : Type _}[TopologicalSpace α][MeasurableSpace α][BorelSpace α](μ : Measureₓ α)[weakly_regular μ]
+variable {α : Type _} [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α] (μ : Measureₓ α) [weakly_regular μ]
 
 namespace MeasureTheory
 
@@ -235,7 +235,7 @@ begin
       «expr = »(..., «expr + »(«expr∫⁻ , ∂ »((x), f x, μ), ε)) : by simp [] [] ["only"] ["[", expr add_assoc, ",", expr ennreal.add_halves, ",", expr zero_add, "]"] [] [] }
 end
 
-variable{μ}
+variable {μ}
 
 -- error in MeasureTheory.Integral.VitaliCaratheodory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given an integrable function `f` with values in `ℝ≥0` in a sigma-finite space, there exists a

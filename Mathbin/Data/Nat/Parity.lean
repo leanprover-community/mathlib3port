@@ -13,7 +13,7 @@ even, odd
 
 namespace Nat
 
-variable{m n : ℕ}
+variable {m n : ℕ}
 
 @[simp]
 theorem mod_two_ne_one : ¬n % 2 = 1 ↔ n % 2 = 0 :=
@@ -98,7 +98,7 @@ theorem odd_gt_zero (h : Odd n) : 0 < n :=
 theorem two_dvd_ne_zero : ¬2 ∣ n ↔ n % 2 = 1 :=
   not_even_iff
 
-instance  : DecidablePred (Even : ℕ → Prop) :=
+instance : DecidablePred (Even : ℕ → Prop) :=
   fun n =>
     decidableOfDecidableOfIff
       (by 
@@ -285,7 +285,7 @@ theorem even_mul_self_pred (n : ℕ) : Even (n*n - 1) :=
 theorem even_sub_one_of_prime_ne_two {p : ℕ} (hp : prime p) (hodd : p ≠ 2) : Even (p - 1) :=
   odd.sub_odd (odd_iff.2$ hp.eq_two_or_odd.resolve_left hodd) (odd_iff.2 rfl)
 
-variable{R : Type _}[Ringₓ R]
+variable {R : Type _} [Ringₓ R]
 
 theorem neg_one_pow_eq_one_iff_even (h1 : (-1 : R) ≠ 1) : (-1 : R) ^ n = 1 ↔ Even n :=
   ⟨fun h =>
@@ -314,14 +314,14 @@ theorem neg_one_pow_of_odd : Odd n → (-1 : R) ^ n = -1 :=
     rintro ⟨c, rfl⟩
     simp [pow_addₓ, pow_mulₓ]
 
-example  (m n : ℕ) (h : Even m) : ¬Even (n+3) ↔ Even (((m ^ 2)+m)+n) :=
+example (m n : ℕ) (h : Even m) : ¬Even (n+3) ↔ Even (((m ^ 2)+m)+n) :=
   by 
     simp' [(by 
         decide :
       ¬2 = 0)] with
       parity_simps
 
-example  : ¬Even 25394535 :=
+example : ¬Even 25394535 :=
   by 
     simp 
 

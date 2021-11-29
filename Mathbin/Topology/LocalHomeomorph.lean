@@ -44,14 +44,13 @@ open topological_space(SecondCountableTopology)
 
 open_locale TopologicalSpace
 
-variable{α :
-    Type
-      _}{β :
-    Type _}{γ : Type _}{δ : Type _}[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ][TopologicalSpace δ]
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} [TopologicalSpace α] [TopologicalSpace β]
+  [TopologicalSpace γ] [TopologicalSpace δ]
 
 /-- local homeomorphisms, defined on open subsets of the space -/
 @[nolint has_inhabited_instance]
-structure LocalHomeomorph(α : Type _)(β : Type _)[TopologicalSpace α][TopologicalSpace β] extends LocalEquiv α β where 
+structure LocalHomeomorph (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends
+  LocalEquiv α β where 
   open_source : IsOpen source 
   open_target : IsOpen target 
   continuous_to_fun : ContinuousOn to_fun source 
@@ -71,9 +70,9 @@ def Homeomorph.toLocalHomeomorph (e : α ≃ₜ β) : LocalHomeomorph α β :=
 
 namespace LocalHomeomorph
 
-variable(e : LocalHomeomorph α β)(e' : LocalHomeomorph β γ)
+variable (e : LocalHomeomorph α β) (e' : LocalHomeomorph β γ)
 
-instance  : CoeFun (LocalHomeomorph α β) fun _ => α → β :=
+instance : CoeFun (LocalHomeomorph α β) fun _ => α → β :=
   ⟨fun e => e.to_fun⟩
 
 /-- The inverse of a local homeomorphism -/
@@ -332,7 +331,7 @@ def is_image (s : Set α) (t : Set β) : Prop :=
 
 namespace IsImage
 
-variable{e}{s : Set α}{t : Set β}{x : α}{y : β}
+variable {e} {s : Set α} {t : Set β} {x : α} {y : β}
 
 theorem to_local_equiv (h : e.is_image s t) : e.to_local_equiv.is_image s t :=
   h
@@ -557,7 +556,7 @@ theorem refl_symm : (LocalHomeomorph.refl α).symm = LocalHomeomorph.refl α :=
 
 section 
 
-variable{s : Set α}(hs : IsOpen s)
+variable {s : Set α} (hs : IsOpen s)
 
 /-- The identity local equiv on a set `s` -/
 @[simps (config := mfldCfg) apply, simps (config := { attrs := [] }) Source Target]
@@ -692,7 +691,7 @@ theorem eq_on_source_iff (e e' : LocalHomeomorph α β) :
   Iff.rfl
 
 /-- `eq_on_source` is an equivalence relation -/
-instance  : Setoidₓ (LocalHomeomorph α β) :=
+instance : Setoidₓ (LocalHomeomorph α β) :=
   { R := eq_on_source,
     iseqv :=
       ⟨fun e => (@LocalEquiv.eqOnSourceSetoid α β).iseqv.1 e.to_local_equiv,
@@ -817,11 +816,8 @@ end Piecewise
 
 section Pi
 
-variable{ι :
-    Type
-      _}[Fintype
-      ι]{Xi Yi :
-    ι → Type _}[∀ i, TopologicalSpace (Xi i)][∀ i, TopologicalSpace (Yi i)](ei : ∀ i, LocalHomeomorph (Xi i) (Yi i))
+variable {ι : Type _} [Fintype ι] {Xi Yi : ι → Type _} [∀ i, TopologicalSpace (Xi i)] [∀ i, TopologicalSpace (Yi i)]
+  (ei : ∀ i, LocalHomeomorph (Xi i) (Yi i))
 
 /-- The product of a finite family of `local_homeomorph`s. -/
 @[simps toLocalEquiv]
@@ -973,7 +969,7 @@ end LocalHomeomorph
 
 namespace Homeomorph
 
-variable(e : α ≃ₜ β)(e' : β ≃ₜ γ)
+variable (e : α ≃ₜ β) (e' : β ≃ₜ γ)
 
 attribute [simps (config := { mfldCfg with simpRhs := tt }) apply Source Target] to_local_homeomorph
 
@@ -998,7 +994,7 @@ end Homeomorph
 
 namespace OpenEmbedding
 
-variable(f : α → β)(h : OpenEmbedding f)
+variable (f : α → β) (h : OpenEmbedding f)
 
 /-- An open embedding of `α` into `β`, with `α` nonempty, defines a local homeomorphism whose source
 is all of `α`.  The converse is also true; see `local_homeomorph.to_open_embedding`. -/
@@ -1027,7 +1023,7 @@ namespace TopologicalSpace.Opens
 
 open TopologicalSpace
 
-variable(s : opens α)[Nonempty s]
+variable (s : opens α) [Nonempty s]
 
 /-- The inclusion of an open subset `s` of a space `α` into `α` is a local homeomorphism from the
 subtype `s` to `α`. -/
@@ -1054,9 +1050,9 @@ namespace LocalHomeomorph
 
 open TopologicalSpace
 
-variable(e : LocalHomeomorph α β)
+variable (e : LocalHomeomorph α β)
 
-variable(s : opens α)[Nonempty s]
+variable (s : opens α) [Nonempty s]
 
 /-- The restriction of a local homeomorphism `e` to an open subset `s` of the domain type produces a
 local homeomorphism whose domain is the subtype `s`.-/

@@ -46,7 +46,7 @@ quaternion
 /-- Quaternion algebra over a type with fixed coefficients $a=i^2$ and $b=j^2$.
 Implemented as a structure with four fields: `re`, `im_i`, `im_j`, and `im_k`. -/
 @[nolint unused_arguments, ext]
-structure QuaternionAlgebra(R : Type _)(a b : R) where mk{} :: 
+structure QuaternionAlgebra (R : Type _) (a b : R) where mk{} :: 
   re : R 
   imI : R 
   imJ : R 
@@ -60,9 +60,9 @@ namespace QuaternionAlgebra
 theorem mk.eta {R : Type _} {c₁ c₂} : ∀ a : ℍ[R,c₁,c₂], mk a.1 a.2 a.3 a.4 = a
 | ⟨a₁, a₂, a₃, a₄⟩ => rfl
 
-variable{R : Type _}[CommRingₓ R]{c₁ c₂ : R}(r x y z : R)(a b c : ℍ[R,c₁,c₂])
+variable {R : Type _} [CommRingₓ R] {c₁ c₂ : R} (r x y z : R) (a b c : ℍ[R,c₁,c₂])
 
-instance  : CoeTₓ R ℍ[R,c₁,c₂] :=
+instance : CoeTₓ R ℍ[R,c₁,c₂] :=
   ⟨fun x => ⟨x, 0, 0, 0⟩⟩
 
 @[simp]
@@ -89,18 +89,18 @@ theorem coe_inj {x y : R} : (x : ℍ[R,c₁,c₂]) = y ↔ x = y :=
   coe_injective.eq_iff
 
 @[simps]
-instance  : HasZero ℍ[R,c₁,c₂] :=
+instance : HasZero ℍ[R,c₁,c₂] :=
   ⟨⟨0, 0, 0, 0⟩⟩
 
 @[simp, normCast]
 theorem coe_zero : ((0 : R) : ℍ[R,c₁,c₂]) = 0 :=
   rfl
 
-instance  : Inhabited ℍ[R,c₁,c₂] :=
+instance : Inhabited ℍ[R,c₁,c₂] :=
   ⟨0⟩
 
 @[simps]
-instance  : HasOne ℍ[R,c₁,c₂] :=
+instance : HasOne ℍ[R,c₁,c₂] :=
   ⟨⟨1, 0, 0, 0⟩⟩
 
 @[simp, normCast]
@@ -108,7 +108,7 @@ theorem coe_one : ((1 : R) : ℍ[R,c₁,c₂]) = 1 :=
   rfl
 
 @[simps]
-instance  : Add ℍ[R,c₁,c₂] :=
+instance : Add ℍ[R,c₁,c₂] :=
   ⟨fun a b => ⟨a.1+b.1, a.2+b.2, a.3+b.3, a.4+b.4⟩⟩
 
 @[simp]
@@ -117,7 +117,7 @@ theorem mk_add_mk (a₁ a₂ a₃ a₄ b₁ b₂ b₃ b₄ : R) :
   rfl
 
 @[simps]
-instance  : Neg ℍ[R,c₁,c₂] :=
+instance : Neg ℍ[R,c₁,c₂] :=
   ⟨fun a => ⟨-a.1, -a.2, -a.3, -a.4⟩⟩
 
 @[simp]
@@ -125,7 +125,7 @@ theorem neg_mk (a₁ a₂ a₃ a₄ : R) : -(mk a₁ a₂ a₃ a₄ : ℍ[R,c₁
   rfl
 
 @[simps]
-instance  : Sub ℍ[R,c₁,c₂] :=
+instance : Sub ℍ[R,c₁,c₂] :=
   ⟨fun a b => ⟨a.1 - b.1, a.2 - b.2, a.3 - b.3, a.4 - b.4⟩⟩
 
 @[simp]
@@ -143,7 +143,7 @@ theorem mk_sub_mk (a₁ a₂ a₃ a₄ b₁ b₂ b₃ b₄ : R) :
 * `i * k = c₁ * j`, `k * i = `-c₁ * j`;
 * `j * k = -c₂ * i`, `k * j = c₂ * i`.  -/
 @[simps]
-instance  : Mul ℍ[R,c₁,c₂] :=
+instance : Mul ℍ[R,c₁,c₂] :=
   ⟨fun a b =>
       ⟨(((a.1*b.1)+(c₁*a.2)*b.2)+(c₂*a.3)*b.3) - ((c₁*c₂)*a.4)*b.4, (((a.1*b.2)+a.2*b.1) - (c₂*a.3)*b.4)+(c₂*a.4)*b.3,
         (((a.1*b.3)+(c₁*a.2)*b.4)+a.3*b.1) - (c₁*a.4)*b.2, (((a.1*b.4)+a.2*b.3) - a.3*b.2)+a.4*b.1⟩⟩
@@ -155,7 +155,7 @@ theorem mk_mul_mk (a₁ a₂ a₃ a₄ b₁ b₂ b₃ b₄ : R) :
       (((a₁*b₃)+(c₁*a₂)*b₄)+a₃*b₁) - (c₁*a₄)*b₂, (((a₁*b₄)+a₂*b₃) - a₃*b₂)+a₄*b₁⟩ :=
   rfl
 
-instance  : Ringₓ ℍ[R,c₁,c₂] :=
+instance : Ringₓ ℍ[R,c₁,c₂] :=
   by 
     refineStruct
         { add := ·+·, zero := (0 : ℍ[R,c₁,c₂]), neg := Neg.neg, sub := Sub.sub, mul := ·*·, one := 1,
@@ -166,7 +166,7 @@ instance  : Ringₓ ℍ[R,c₁,c₂] :=
             rfl <;>
           ext <;> simp  <;> ringExp
 
-instance  : Algebra R ℍ[R,c₁,c₂] :=
+instance : Algebra R ℍ[R,c₁,c₂] :=
   { smul := fun r a => ⟨r*a.1, r*a.2, r*a.3, r*a.4⟩, toFun := coeₓ, map_one' := rfl, map_zero' := rfl,
     map_mul' :=
       fun x y =>
@@ -211,7 +211,7 @@ theorem algebra_map_eq (r : R) : algebraMap R ℍ[R,c₁,c₂] r = ⟨r, 0, 0, 0
 
 section 
 
-variable(R c₁ c₂)
+variable (R c₁ c₂)
 
 /-- `quaternion_algebra.re` as a `linear_map`-/
 @[simps]
@@ -406,7 +406,7 @@ theorem conj_neg : (-a).conj = -a.conj :=
 theorem conj_sub : (a - b).conj = a.conj - b.conj :=
   (conj : ℍ[R,c₁,c₂] ≃ₗ[R] _).map_sub a b
 
-instance  : StarRing ℍ[R,c₁,c₂] :=
+instance : StarRing ℍ[R,c₁,c₂] :=
   { star := conj, star_involutive := conj_conj, star_add := conj_add, star_mul := conj_mul }
 
 @[simp]
@@ -442,23 +442,23 @@ localized [Quaternion] notation "ℍ[" R "]" => Quaternion R
 
 namespace Quaternion
 
-variable{R : Type _}[CommRingₓ R](r x y z : R)(a b c : ℍ[R])
+variable {R : Type _} [CommRingₓ R] (r x y z : R) (a b c : ℍ[R])
 
 export QuaternionAlgebra(re imI imJ imK)
 
-instance  : CoeTₓ R ℍ[R] :=
+instance : CoeTₓ R ℍ[R] :=
   QuaternionAlgebra.hasCoeT
 
-instance  : Ringₓ ℍ[R] :=
+instance : Ringₓ ℍ[R] :=
   QuaternionAlgebra.ring
 
-instance  : Inhabited ℍ[R] :=
+instance : Inhabited ℍ[R] :=
   QuaternionAlgebra.inhabited
 
-instance  : Algebra R ℍ[R] :=
+instance : Algebra R ℍ[R] :=
   QuaternionAlgebra.algebra
 
-instance  : StarRing ℍ[R] :=
+instance : StarRing ℍ[R] :=
   QuaternionAlgebra.starRing
 
 @[ext]
@@ -817,11 +817,11 @@ end Quaternion
 
 namespace Quaternion
 
-variable{R : Type _}
+variable {R : Type _}
 
 section LinearOrderedCommRing
 
-variable[LinearOrderedCommRing R]{a : ℍ[R]}
+variable [LinearOrderedCommRing R] {a : ℍ[R]}
 
 @[simp]
 theorem norm_sq_eq_zero : norm_sq a = 0 ↔ a = 0 :=
@@ -846,10 +846,10 @@ theorem norm_sq_le_zero : norm_sq a ≤ 0 ↔ a = 0 :=
   by 
     simpa only [le_antisymm_iffₓ, norm_sq_nonneg, and_trueₓ] using @norm_sq_eq_zero _ _ a
 
-instance  : Nontrivial ℍ[R] :=
+instance : Nontrivial ℍ[R] :=
   { exists_pair_ne := ⟨0, 1, mt (congr_argₓ re) zero_ne_one⟩ }
 
-instance  : IsDomain ℍ[R] :=
+instance : IsDomain ℍ[R] :=
   { Quaternion.nontrivial with
     eq_zero_or_eq_zero_of_mul_eq_zero :=
       fun a b hab =>
@@ -862,13 +862,13 @@ end LinearOrderedCommRing
 
 section Field
 
-variable[LinearOrderedField R](a b : ℍ[R])
+variable [LinearOrderedField R] (a b : ℍ[R])
 
 @[simps (config := { attrs := [] })]
-instance  : HasInv ℍ[R] :=
+instance : HasInv ℍ[R] :=
   ⟨fun a => norm_sq a⁻¹ • a.conj⟩
 
-instance  : DivisionRing ℍ[R] :=
+instance : DivisionRing ℍ[R] :=
   { Quaternion.nontrivial, Quaternion.ring with inv := HasInv.inv,
     inv_zero :=
       by 

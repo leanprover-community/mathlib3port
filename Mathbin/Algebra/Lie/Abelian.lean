@@ -28,7 +28,7 @@ lie algebra, abelian, commutative, center
 universe u v w w₁ w₂
 
 /-- A Lie (ring) module is trivial iff all brackets vanish. -/
-class LieModule.IsTrivial(L : Type v)(M : Type w)[HasBracket L M][HasZero M] : Prop where 
+class LieModule.IsTrivial (L : Type v) (M : Type w) [HasBracket L M] [HasZero M] : Prop where 
   trivial : ∀ x : L m : M, ⁅x,m⁆ = 0
 
 @[simp]
@@ -86,13 +86,13 @@ theorem LieAlgebra.is_lie_abelian_bot (R : Type u) (L : Type v) [CommRingₓ R] 
 
 section Center
 
-variable(R : Type u)(L : Type v)(M : Type w)(N : Type w₁)
+variable (R : Type u) (L : Type v) (M : Type w) (N : Type w₁)
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L]
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
-variable[AddCommGroupₓ M][Module R M][LieRingModule L M][LieModule R L M]
+variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
-variable[AddCommGroupₓ N][Module R N][LieRingModule L N][LieModule R L N]
+variable [AddCommGroupₓ N] [Module R N] [LieRingModule L N] [LieModule R L N]
 
 namespace LieModule
 
@@ -125,7 +125,7 @@ def max_triv_submodule : LieSubmodule R L M :=
 theorem mem_max_triv_submodule (m : M) : m ∈ max_triv_submodule R L M ↔ ∀ x : L, ⁅x,m⁆ = 0 :=
   Iff.rfl
 
-instance  : is_trivial L (max_triv_submodule R L M) :=
+instance : is_trivial L (max_triv_submodule R L M) :=
   { trivial := fun x m => Subtype.ext (m.property x) }
 
 theorem trivial_iff_le_maximal_trivial (N : LieSubmodule R L M) : is_trivial L N ↔ N ≤ max_triv_submodule R L M :=
@@ -147,7 +147,7 @@ theorem is_trivial_iff_max_triv_eq_top : is_trivial L M ↔ max_triv_submodule R
       rw [←mem_max_triv_submodule R L M, h]
       exact LieSubmodule.mem_top m
 
-variable{R L M N}
+variable {R L M N}
 
 /-- `max_triv_submodule` is functorial. -/
 def max_triv_hom (f : M →ₗ⁅R,L⁆ N) : max_triv_submodule R L M →ₗ⁅R,L⁆ max_triv_submodule R L N :=
@@ -255,7 +255,7 @@ adjoint representation. -/
 abbrev center : LieIdeal R L :=
   LieModule.maxTrivSubmodule R L L
 
-instance  : IsLieAbelian (center R L) :=
+instance : IsLieAbelian (center R L) :=
   inferInstance
 
 @[simp]
@@ -286,13 +286,13 @@ section IdealOperations
 
 open LieSubmodule LieSubalgebra
 
-variable{R : Type u}{L : Type v}{M : Type w}
+variable {R : Type u} {L : Type v} {M : Type w}
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L][AddCommGroupₓ M][Module R M]
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M] [Module R M]
 
-variable[LieRingModule L M][LieModule R L M]
+variable [LieRingModule L M] [LieModule R L M]
 
-variable(N N' : LieSubmodule R L M)(I J : LieIdeal R L)
+variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L)
 
 @[simp]
 theorem LieSubmodule.trivial_lie_oper_zero [LieModule.IsTrivial L M] : ⁅I,N⁆ = ⊥ :=

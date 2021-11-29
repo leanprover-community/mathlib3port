@@ -524,7 +524,7 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0) (hnlt : ∥z - a�
 
 end Hensel
 
-variable{p : ℕ}[Fact p.prime]{F : Polynomial ℤ_[p]}{a : ℤ_[p]}
+variable {p : ℕ} [Fact p.prime] {F : Polynomial ℤ_[p]} {a : ℤ_[p]}
 
 private theorem a_soln_is_unique (ha : F.eval a = 0) (z' : ℤ_[p]) (hz' : F.eval z' = 0)
   (hnormz' : ∥z' - a∥ < ∥F.derivative.eval a∥) : z' = a :=
@@ -562,7 +562,7 @@ private theorem a_soln_is_unique (ha : F.eval a = 0) (z' : ℤ_[p]) (hz' : F.eva
     (by 
       rw [←this] <;> rfl)
 
-variable(hnorm : ∥F.eval a∥ < (∥F.derivative.eval a∥^2))
+variable (hnorm : ∥F.eval a∥ < (∥F.derivative.eval a∥^2))
 
 include hnorm
 

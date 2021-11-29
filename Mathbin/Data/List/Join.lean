@@ -8,7 +8,7 @@ in [`data.list.defs`](./data/list/defs).
 -/
 
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 namespace List
 

@@ -51,7 +51,7 @@ measurable, measure, null measurable, completion
 
 open Filter Set Encodable
 
-variable{ι α β γ : Type _}
+variable {ι α β γ : Type _}
 
 namespace MeasureTheory
 
@@ -66,15 +66,15 @@ def null_measurable_space (α : Type _) [MeasurableSpace α]
 
 section 
 
-variable{m0 : MeasurableSpace α}{μ : Measureₓ α}{s t : Set α}
+variable {m0 : MeasurableSpace α} {μ : Measureₓ α} {s t : Set α}
 
-instance  [h : Inhabited α] : Inhabited (null_measurable_space α μ) :=
+instance [h : Inhabited α] : Inhabited (null_measurable_space α μ) :=
   h
 
-instance  [h : Subsingleton α] : Subsingleton (null_measurable_space α μ) :=
+instance [h : Subsingleton α] : Subsingleton (null_measurable_space α μ) :=
   h
 
-instance  : MeasurableSpace (null_measurable_space α μ) :=
+instance : MeasurableSpace (null_measurable_space α μ) :=
   { MeasurableSet' := fun s => ∃ t, MeasurableSet t ∧ s =ᵐ[μ] t,
     measurable_set_empty := ⟨∅, MeasurableSet.empty, ae_eq_refl _⟩,
     measurable_set_compl := fun s ⟨t, htm, hts⟩ => ⟨«expr ᶜ» t, htm.compl, hts.compl⟩,
@@ -198,7 +198,7 @@ protected theorem disjointed {f : ℕ → Set α} (h : ∀ i, null_measurable_se
 protected theorem const (p : Prop) : null_measurable_set { a:α | p } μ :=
   MeasurableSet.const p
 
-instance  [MeasurableSingletonClass α] : MeasurableSingletonClass (null_measurable_space α μ) :=
+instance [MeasurableSingletonClass α] : MeasurableSingletonClass (null_measurable_space α μ) :=
   ⟨fun x => (@measurable_set_singleton α _ _ x).NullMeasurableSet⟩
 
 protected theorem insert [MeasurableSingletonClass (null_measurable_space α μ)] (hs : null_measurable_set s μ) (a : α) :
@@ -268,7 +268,7 @@ theorem measure_union₀ (hs : null_measurable_set s μ) (ht : null_measurable_s
 
 section MeasurableSingletonClass
 
-variable[MeasurableSingletonClass (null_measurable_space α μ)]
+variable [MeasurableSingletonClass (null_measurable_space α μ)]
 
 theorem null_measurable_set_singleton (x : α) : null_measurable_set {x} μ :=
   measurable_set_singleton x
@@ -319,7 +319,7 @@ end
 
 section NullMeasurable
 
-variable[MeasurableSpace α][MeasurableSpace β][MeasurableSpace γ]{f : α → β}{μ : Measureₓ α}
+variable [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] {f : α → β} {μ : Measureₓ α}
 
 /-- A function `f : α → β` is null measurable if the preimage of a measurable set is a null
 measurable set. -/
@@ -358,10 +358,10 @@ section IsComplete
   A null set is a subset of a measurable set with measure `0`.
   Since every measure is defined as a special case of an outer measure, we can more simply state
   that a set `s` is null if `μ s = 0`. -/
-class measure.is_complete{_ : MeasurableSpace α}(μ : Measureₓ α) : Prop where 
+class measure.is_complete {_ : MeasurableSpace α} (μ : Measureₓ α) : Prop where 
   out' : ∀ s, μ s = 0 → MeasurableSet s
 
-variable{m0 : MeasurableSpace α}{μ : Measureₓ α}{s t : Set α}
+variable {m0 : MeasurableSpace α} {μ : Measureₓ α} {s t : Set α}
 
 theorem measure.is_complete_iff : μ.is_complete ↔ ∀ s, μ s = 0 → MeasurableSet s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩

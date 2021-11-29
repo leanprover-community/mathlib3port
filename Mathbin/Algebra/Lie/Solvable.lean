@@ -29,11 +29,11 @@ lie algebra, derived series, derived length, solvable, radical
 
 universe u v w w₁ w₂
 
-variable(R : Type u)(L : Type v)(M : Type w){L' : Type w₁}
+variable (R : Type u) (L : Type v) (M : Type w) {L' : Type w₁}
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L][LieRing L'][LieAlgebra R L']
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [LieRing L'] [LieAlgebra R L']
 
-variable(I J : LieIdeal R L){f : L' →ₗ⁅R⁆ L}
+variable (I J : LieIdeal R L) {f : L' →ₗ⁅R⁆ L}
 
 namespace LieAlgebra
 
@@ -64,7 +64,7 @@ abbrev derived_series (k : ℕ) : LieIdeal R L :=
 theorem derived_series_def (k : ℕ) : derived_series R L k = derived_series_of_ideal R L k ⊤ :=
   rfl
 
-variable{R L}
+variable {R L}
 
 local notation "D" => derived_series_of_ideal R L
 
@@ -143,7 +143,7 @@ namespace LieIdeal
 
 open LieAlgebra
 
-variable{R L}
+variable {R L}
 
 theorem derived_series_eq_derived_series_of_ideal_comap (k : ℕ) :
   derived_series R I k = (derived_series_of_ideal R L k I).comap I.incl :=
@@ -221,7 +221,7 @@ instance is_solvable_add {I J : LieIdeal R L} [hI : is_solvable R I] [hJ : is_so
 
 end LieAlgebra
 
-variable{R L}
+variable {R L}
 
 namespace Function
 
@@ -264,9 +264,9 @@ theorem solvable_iff_equiv_solvable (e : L' ≃ₗ⁅R⁆ L) : is_solvable R L' 
 theorem le_solvable_ideal_solvable {I J : LieIdeal R L} (h₁ : I ≤ J) (h₂ : is_solvable R J) : is_solvable R I :=
   (LieIdeal.hom_of_le_injective h₁).lie_algebra_is_solvable
 
-variable(R L)
+variable (R L)
 
-instance (priority := 100)of_abelian_is_solvable [IsLieAbelian L] : is_solvable R L :=
+instance (priority := 100) of_abelian_is_solvable [IsLieAbelian L] : is_solvable R L :=
   by 
     use 1
     rw [←abelian_iff_derived_one_eq_bot, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquivSelf]
@@ -346,7 +346,7 @@ theorem derived_length_eq_derived_length_of_ideal (I : LieIdeal R L) :
     ext k 
     exact I.derived_series_eq_bot_iff k
 
-variable{R L}
+variable {R L}
 
 /-- Given a solvable Lie ideal `I` with derived series `I = D₀ ≥ D₁ ≥ ⋯ ≥ Dₖ = ⊥`, this is the
 `k-1`th term in the derived series (and is therefore an Abelian ideal contained in `I`).

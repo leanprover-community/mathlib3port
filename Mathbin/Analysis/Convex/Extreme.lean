@@ -40,11 +40,11 @@ open_locale Classical Affine
 
 open Set
 
-variable(𝕜 : Type _){E : Type _}
+variable (𝕜 : Type _) {E : Type _}
 
 section HasScalar
 
-variable[OrderedSemiring 𝕜][AddCommMonoidₓ E][HasScalar 𝕜 E]
+variable [OrderedSemiring 𝕜] [AddCommMonoidₓ E] [HasScalar 𝕜 E]
 
 /-- A set `B` is an extreme subset of `A` if `B ⊆ A` and all points of `B` only belong to open
 segments whose ends are in `B`. -/
@@ -60,7 +60,7 @@ def Set.ExtremePoints (A : Set E) : Set E :=
 protected theorem IsExtreme.refl (A : Set E) : IsExtreme 𝕜 A A :=
   ⟨subset.rfl, fun x₁ x₂ hx₁A hx₂A x hxA hx => ⟨hx₁A, hx₂A⟩⟩
 
-variable{𝕜}{A B C : Set E}{x : E}
+variable {𝕜} {A B C : Set E} {x : E}
 
 protected theorem IsExtreme.rfl : IsExtreme 𝕜 A A :=
   IsExtreme.refl 𝕜 A
@@ -76,7 +76,7 @@ protected theorem IsExtreme.trans (hAB : IsExtreme 𝕜 A B) (hBC : IsExtreme �
 protected theorem IsExtreme.antisymm : AntiSymmetric (IsExtreme 𝕜 : Set E → Set E → Prop) :=
   fun A B hAB hBA => subset.antisymm hBA.1 hAB.1
 
-instance  : IsPartialOrder (Set E) (IsExtreme 𝕜) :=
+instance : IsPartialOrder (Set E) (IsExtreme 𝕜) :=
   { refl := IsExtreme.refl 𝕜, trans := fun A B C => IsExtreme.trans, antisymm := IsExtreme.antisymm }
 
 theorem IsExtreme.inter (hAB : IsExtreme 𝕜 A B) (hAC : IsExtreme 𝕜 A C) : IsExtreme 𝕜 A (B ∩ C) :=
@@ -171,7 +171,7 @@ end HasScalar
 
 section OrderedSemiring
 
-variable{𝕜}[OrderedSemiring 𝕜][AddCommGroupₓ E][Module 𝕜 E]{A B : Set E}{x : E}
+variable {𝕜} [OrderedSemiring 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E} {x : E}
 
 theorem IsExtreme.convex_diff (hA : Convex 𝕜 A) (hAB : IsExtreme 𝕜 A B) : Convex 𝕜 (A \ B) :=
   convex_iff_open_segment_subset.2
@@ -182,7 +182,7 @@ end OrderedSemiring
 
 section LinearOrderedField
 
-variable{𝕜}[LinearOrderedField 𝕜][AddCommGroupₓ E][Module 𝕜 E]{A B : Set E}{x : E}
+variable {𝕜} [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {A B : Set E} {x : E}
 
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/

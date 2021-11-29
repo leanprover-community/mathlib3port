@@ -21,7 +21,7 @@ namespace AddCommGroupₓₓ
 
 section 
 
-variable{X Y : AddCommGroupₓₓ.{u}}(f : X ⟶ Y)
+variable {X Y : AddCommGroupₓₓ.{u}} (f : X ⟶ Y)
 
 /-- In the category of abelian groups, every monomorphism is normal. -/
 def normal_mono (hf : mono f) : normal_mono f :=
@@ -36,7 +36,7 @@ def normal_epi (hf : epi f) : normal_epi f :=
 end 
 
 /-- The category of abelian groups is abelian. -/
-instance  : abelian AddCommGroupₓₓ.{u} :=
+instance : abelian AddCommGroupₓₓ.{u} :=
   { HasFiniteProducts :=
       ⟨by 
           infer_instance⟩,

@@ -119,7 +119,7 @@ universe u
 -/
 
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}{ι : Sort _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} {ι : Sort _}
 
 /-- The identity relation, or the graph of the identity function -/
 def IdRel {α : Type _} :=
@@ -212,7 +212,7 @@ theorem symmetric_rel_inter {U V : Set (α × α)} (hU : SymmetricRel U) (hV : S
 
 /-- This core description of a uniform space is outside of the type class hierarchy. It is useful
   for constructions of uniform spaces, when the topology is derived from the uniform space. -/
-structure UniformSpace.Core(α : Type u) where 
+structure UniformSpace.Core (α : Type u) where 
   uniformity : Filter (α × α)
   refl : 𝓟 IdRel ≤ uniformity 
   symm : tendsto Prod.swap uniformity uniformity 
@@ -256,7 +256,7 @@ theorem UniformSpace.core_eq : ∀ {u₁ u₂ : UniformSpace.Core α}, u₁.unif
 
   A metric space has a natural uniformity, and a uniform space has a natural topology.
   A topological group also has a natural uniformity, even when it is not metrizable. -/
-class UniformSpace(α : Type u) extends TopologicalSpace α, UniformSpace.Core α where 
+class UniformSpace (α : Type u) extends TopologicalSpace α, UniformSpace.Core α where 
   is_open_uniformity : ∀ s, IsOpen s ↔ ∀ x _ : x ∈ s, { p:α × α | p.1 = x → p.2 ∈ s } ∈ uniformity
 
 /-- Alternative constructor for `uniform_space α` when a topology is already given. -/
@@ -301,9 +301,19 @@ theorem UniformSpace.of_core_eq_to_core (u : UniformSpace α) (t : TopologicalSp
   (h : t = u.to_core.to_topological_space) : UniformSpace.ofCoreEq u.to_core t h = u :=
   uniform_space_eq rfl
 
+/-- Replace topology in a `uniform_space` instance with a propositionally (but possibly not
+definitionally) equal one. -/
+def UniformSpace.replaceTopology {α : Type _} [i : TopologicalSpace α] (u : UniformSpace α)
+  (h : i = u.to_topological_space) : UniformSpace α :=
+  UniformSpace.ofCoreEq u.to_core i$ h.trans u.to_core_to_topological_space.symm
+
+theorem UniformSpace.replace_topology_eq {α : Type _} [i : TopologicalSpace α] (u : UniformSpace α)
+  (h : i = u.to_topological_space) : u.replace_topology h = u :=
+  u.of_core_eq_to_core _ _
+
 section UniformSpace
 
-variable[UniformSpace α]
+variable [UniformSpace α]
 
 /-- The uniformity is a filter on α × α (inferred from an ambient uniform space
   structure on α). -/
@@ -937,7 +947,7 @@ theorem comp_open_symm_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤
 
 section 
 
-variable(α)
+variable (α)
 
 theorem UniformSpace.has_seq_basis [is_countably_generated$ 𝓤 α] :
   ∃ V : ℕ → Set (α × α), has_antitone_basis (𝓤 α) (fun _ => True) V ∧ ∀ n, SymmetricRel (V n) :=
@@ -1020,11 +1030,11 @@ open_locale uniformity
 
 section Constructions
 
-instance  : PartialOrderₓ (UniformSpace α) :=
+instance : PartialOrderₓ (UniformSpace α) :=
   { le := fun t s => t.uniformity ≤ s.uniformity, le_antisymm := fun t s h₁ h₂ => uniform_space_eq$ le_antisymmₓ h₁ h₂,
     le_refl := fun t => le_reflₓ _, le_trans := fun a b c h₁ h₂ => le_transₓ h₁ h₂ }
 
-instance  : HasInfₓ (UniformSpace α) :=
+instance : HasInfₓ (UniformSpace α) :=
   ⟨fun s =>
       UniformSpace.ofCore
         { uniformity := ⨅(u : _)(_ : u ∈ s), @uniformity α u, refl := le_infi$ fun u => le_infi$ fun hu => u.refl,
@@ -1039,7 +1049,7 @@ private theorem Inf_le {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : t
 private theorem le_Inf {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : ∀ t' _ : t' ∈ tt, t ≤ t') : t ≤ Inf tt :=
   show t.uniformity ≤ ⨅(u : _)(_ : u ∈ tt), @uniformity α u from le_infi$ fun t' => le_infi$ fun ht' => h t' ht'
 
-instance  : HasTop (UniformSpace α) :=
+instance : HasTop (UniformSpace α) :=
   ⟨UniformSpace.ofCore { uniformity := ⊤, refl := le_top, symm := le_top, comp := le_top }⟩
 
 -- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -1056,7 +1066,7 @@ instance : has_bot (uniform_space α) :=
    is_open_uniformity := assume
    s, by simp [] [] [] ["[", expr is_open_fold, ",", expr subset_def, ",", expr id_rel, "]"] [] [] { contextual := tt } }⟩
 
-instance  : CompleteLattice (UniformSpace α) :=
+instance : CompleteLattice (UniformSpace α) :=
   { UniformSpace.partialOrder with sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x },
     le_sup_left := fun a b => le_Inf fun _ ⟨h, _⟩ => h, le_sup_right := fun a b => le_Inf fun _ ⟨_, h⟩ => h,
     sup_le := fun a b c h₁ h₂ => Inf_le ⟨h₁, h₂⟩, inf := fun a b => Inf {a, b},
@@ -1144,7 +1154,7 @@ def UniformSpace.comap (f : α → β) (u : UniformSpace β) : UniformSpace α :
                 mem_nhds_uniformity_iff_right.1$ mem_nhds_left _ ht⟩ }
 
 theorem uniformity_comap [UniformSpace α] [UniformSpace β] {f : α → β}
-  (h : ‹UniformSpace α› = UniformSpace.comap f ‹UniformSpace β›) : 𝓤 α = comap (Prod.mapₓ f f) (𝓤 β) :=
+  (h : ‹UniformSpace α› = UniformSpace.comap f ‹UniformSpace β›) : 𝓤 α = comap (Prod.map f f) (𝓤 β) :=
   by 
     rw [h]
     rfl
@@ -1227,22 +1237,22 @@ theorem to_topological_space_inf {u v : UniformSpace α} :
   by 
     rw [to_topological_space_Inf, infi_pair]
 
-instance  : UniformSpace Empty :=
+instance : UniformSpace Empty :=
   ⊥
 
-instance  : UniformSpace PUnit :=
+instance : UniformSpace PUnit :=
   ⊥
 
-instance  : UniformSpace Bool :=
+instance : UniformSpace Bool :=
   ⊥
 
-instance  : UniformSpace ℕ :=
+instance : UniformSpace ℕ :=
   ⊥
 
-instance  : UniformSpace ℤ :=
+instance : UniformSpace ℤ :=
   ⊥
 
-instance  {p : α → Prop} [t : UniformSpace α] : UniformSpace (Subtype p) :=
+instance {p : α → Prop} [t : UniformSpace α] : UniformSpace (Subtype p) :=
   UniformSpace.comap Subtype.val t
 
 theorem uniformity_subtype {p : α → Prop} [t : UniformSpace α] :
@@ -1262,10 +1272,10 @@ theorem uniform_continuous_on_iff_restrict [UniformSpace α] [UniformSpace β] {
   by 
     unfold UniformContinuousOn Set.restrict UniformContinuous tendsto 
     rw
-      [show (fun x : s × s => (f x.1, f x.2)) = (Prod.mapₓ f f ∘ coeₓ)by 
+      [show (fun x : s × s => (f x.1, f x.2)) = (Prod.map f f ∘ coeₓ)by 
         ext x <;> cases x <;> rfl,
       uniformity_comap rfl,
-      show Prod.mapₓ Subtype.val Subtype.val = (coeₓ : s × s → α × α)by 
+      show Prod.map Subtype.val Subtype.val = (coeₓ : s × s → α × α)by 
         ext x <;> cases x <;> rfl]
     conv  in map _ (comap _ _) => rw [←Filter.map_map]
     rw [subtype_coe_map_comap_prod]
@@ -1286,7 +1296,7 @@ theorem UniformContinuousOn.continuous_on [UniformSpace α] [UniformSpace β] {f
 
 section Prod
 
-instance  [u₁ : UniformSpace α] [u₂ : UniformSpace β] : UniformSpace (α × β) :=
+instance [u₁ : UniformSpace α] [u₂ : UniformSpace β] : UniformSpace (α × β) :=
   UniformSpace.ofCoreEq (u₁.comap Prod.fst⊓u₂.comap Prod.snd).toCore Prod.topologicalSpace
     (calc Prod.topologicalSpace = (u₁.comap Prod.fst⊓u₂.comap Prod.snd).toTopologicalSpace :=
       by 
@@ -1347,7 +1357,7 @@ theorem uniform_continuous_fst [UniformSpace α] [UniformSpace β] : UniformCont
 theorem uniform_continuous_snd [UniformSpace α] [UniformSpace β] : UniformContinuous fun p : α × β => p.2 :=
   tendsto_prod_uniformity_snd
 
-variable[UniformSpace α][UniformSpace β][UniformSpace γ]
+variable [UniformSpace α] [UniformSpace β] [UniformSpace γ]
 
 theorem UniformContinuous.prod_mk {f₁ : α → β} {f₂ : α → γ} (h₁ : UniformContinuous f₁) (h₂ : UniformContinuous f₂) :
   UniformContinuous fun a => (f₁ a, f₂ a) :=
@@ -1363,7 +1373,7 @@ theorem UniformContinuous.prod_mk_right {f : α × β → γ} (h : UniformContin
   h.comp (uniform_continuous_const.prod_mk uniform_continuous_id)
 
 theorem UniformContinuous.prod_map [UniformSpace δ] {f : α → γ} {g : β → δ} (hf : UniformContinuous f)
-  (hg : UniformContinuous g) : UniformContinuous (Prod.mapₓ f g) :=
+  (hg : UniformContinuous g) : UniformContinuous (Prod.map f g) :=
   (hf.comp uniform_continuous_fst).prod_mk (hg.comp uniform_continuous_snd)
 
 theorem to_topological_space_prod {α} {β} [u : UniformSpace α] [v : UniformSpace β] :
@@ -1377,7 +1387,7 @@ section
 
 open UniformSpace Function
 
-variable{δ' : Type _}[UniformSpace α][UniformSpace β][UniformSpace γ][UniformSpace δ][UniformSpace δ']
+variable {δ' : Type _} [UniformSpace α] [UniformSpace β] [UniformSpace γ] [UniformSpace δ] [UniformSpace δ']
 
 local notation f "∘₂" g => Function.bicompr f g
 
@@ -1413,7 +1423,7 @@ theorem to_topological_space_subtype [u : UniformSpace α] {p : α → Prop} :
 
 section Sum
 
-variable[UniformSpace α][UniformSpace β]
+variable [UniformSpace α] [UniformSpace β]
 
 open Sum
 
@@ -1600,7 +1610,7 @@ with primes.
 
 namespace Uniform
 
-variable[UniformSpace α]
+variable [UniformSpace α]
 
 theorem tendsto_nhds_right {f : Filter β} {u : β → α} {a : α} :
   tendsto u f (𝓝 a) ↔ tendsto (fun x => (a, u x)) f (𝓤 α) :=

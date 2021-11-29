@@ -14,7 +14,7 @@ universe u
 
 section Associative
 
-variable{α : Type u}(f : α → α → α)[IsAssociative α f](x y : α)
+variable {α : Type u} (f : α → α → α) [IsAssociative α f] (x y : α)
 
 /--
 Composing two associative operations of `f : α → α → α` on the left
@@ -23,7 +23,7 @@ is equal to an associative operation on the left.
 theorem comp_assoc_left : f x ∘ f y = f (f x y) :=
   by 
     ext z 
-    rw [Function.comp_apply, @IsAssociative.assoc _ f]
+    rw [Function.comp_applyₓ, @IsAssociative.assoc _ f]
 
 /--
 Composing two associative operations of `f : α → α → α` on the right
@@ -32,13 +32,13 @@ is equal to an associative operation on the right.
 theorem comp_assoc_right : ((fun z => f z x) ∘ fun z => f z y) = fun z => f z (f y x) :=
   by 
     ext z 
-    rw [Function.comp_apply, @IsAssociative.assoc _ f]
+    rw [Function.comp_applyₓ, @IsAssociative.assoc _ f]
 
 end Associative
 
 section Semigroupₓ
 
-variable{α : Type _}
+variable {α : Type _}
 
 /--
 Composing two multiplications on the left by `y` then `x`
@@ -62,7 +62,7 @@ end Semigroupₓ
 
 section MulOneClass
 
-variable{M : Type u}[MulOneClass M]
+variable {M : Type u} [MulOneClass M]
 
 @[toAdditive]
 theorem ite_mul_one {P : Prop} [Decidable P] {a b : M} : ite P (a*b) 1 = ite P a 1*ite P b 1 :=
@@ -94,7 +94,7 @@ end MulOneClass
 
 section CommSemigroupₓ
 
-variable{G : Type u}[CommSemigroupₓ G]
+variable {G : Type u} [CommSemigroupₓ G]
 
 @[no_rsimp, toAdditive]
 theorem mul_left_commₓ : ∀ a b c : G, (a*b*c) = b*a*c :=
@@ -115,7 +115,7 @@ attribute [local simp] mul_assocₓ sub_eq_add_neg
 
 section AddMonoidₓ
 
-variable{M : Type u}[AddMonoidₓ M]{a b c : M}
+variable {M : Type u} [AddMonoidₓ M] {a b c : M}
 
 @[simp]
 theorem bit0_zero : bit0 (0 : M) = 0 :=
@@ -130,7 +130,7 @@ end AddMonoidₓ
 
 section CommMonoidₓ
 
-variable{M : Type u}[CommMonoidₓ M]{x y z : M}
+variable {M : Type u} [CommMonoidₓ M] {x y z : M}
 
 @[toAdditive]
 theorem inv_unique (hy : (x*y) = 1) (hz : (x*z) = 1) : y = z :=
@@ -140,7 +140,7 @@ end CommMonoidₓ
 
 section LeftCancelMonoid
 
-variable{M : Type u}[LeftCancelMonoid M]{a b : M}
+variable {M : Type u} [LeftCancelMonoid M] {a b : M}
 
 @[simp, toAdditive]
 theorem mul_right_eq_self : (a*b) = a ↔ b = 1 :=
@@ -158,7 +158,7 @@ end LeftCancelMonoid
 
 section RightCancelMonoid
 
-variable{M : Type u}[RightCancelMonoid M]{a b : M}
+variable {M : Type u} [RightCancelMonoid M] {a b : M}
 
 @[simp, toAdditive]
 theorem mul_left_eq_self : (a*b) = b ↔ a = 1 :=
@@ -176,7 +176,7 @@ end RightCancelMonoid
 
 section DivInvMonoidₓ
 
-variable{G : Type u}[DivInvMonoidₓ G]
+variable {G : Type u} [DivInvMonoidₓ G]
 
 @[toAdditive]
 theorem inv_eq_one_div (x : G) : x⁻¹ = 1 / x :=
@@ -203,7 +203,7 @@ end DivInvMonoidₓ
 
 section Groupₓ
 
-variable{G : Type u}[Groupₓ G]{a b c : G}
+variable {G : Type u} [Groupₓ G] {a b c : G}
 
 @[simp, toAdditive]
 theorem inv_mul_cancel_right (a b : G) : ((a*b⁻¹)*b) = a :=
@@ -409,21 +409,27 @@ theorem div_one' (a : G) : a / 1 = a :=
     _ = a := mul_oneₓ a
     
 
+@[simp, toAdditive neg_sub]
+theorem inv_div' (a b : G) : (a / b)⁻¹ = b / a :=
+  inv_eq_of_mul_eq_oneₓ
+    (by 
+      rw [div_eq_mul_inv, div_eq_mul_inv, mul_assocₓ, inv_mul_cancel_leftₓ, mul_right_invₓ])
+
+@[simp, toAdditive sub_add_cancel]
+theorem div_mul_cancel' (a b : G) : ((a / b)*b) = a :=
+  by 
+    rw [div_eq_mul_inv, inv_mul_cancel_right a b]
+
 end Groupₓ
 
 section AddGroupₓ
 
-variable{G : Type u}[AddGroupₓ G]{a b c d : G}
+variable {G : Type u} [AddGroupₓ G] {a b c d : G}
 
 @[simp]
 theorem sub_self (a : G) : a - a = 0 :=
   by 
     rw [sub_eq_add_neg, add_right_negₓ a]
-
-@[simp]
-theorem sub_add_cancel (a b : G) : ((a - b)+b) = a :=
-  by 
-    rw [sub_eq_add_neg, neg_add_cancel_right a b]
 
 @[simp]
 theorem add_sub_cancel (a b : G) : (a+b) - b = a :=
@@ -448,12 +454,6 @@ theorem sub_ne_zero_of_ne (h : a ≠ b) : a - b ≠ 0 :=
 theorem sub_neg_eq_add (a b : G) : a - -b = a+b :=
   by 
     rw [sub_eq_add_neg, neg_negₓ]
-
-@[simp]
-theorem neg_sub (a b : G) : -(a - b) = b - a :=
-  neg_eq_of_add_eq_zeroₓ
-    (by 
-      rw [sub_eq_add_neg, sub_eq_add_neg, add_assocₓ, neg_add_cancel_leftₓ, add_right_negₓ])
 
 attribute [local simp] add_assocₓ
 
@@ -554,7 +554,7 @@ end AddGroupₓ
 
 section CommGroupₓ
 
-variable{G : Type u}[CommGroupₓ G]
+variable {G : Type u} [CommGroupₓ G]
 
 @[toAdditive neg_add]
 theorem mul_inv (a b : G) : (a*b)⁻¹ = a⁻¹*b⁻¹ :=
@@ -576,7 +576,7 @@ end CommGroupₓ
 
 section AddCommGroupₓ
 
-variable{G : Type u}[AddCommGroupₓ G]{a b c d : G}
+variable {G : Type u} [AddCommGroupₓ G] {a b c d : G}
 
 attribute [local simp] add_assocₓ add_commₓ add_left_commₓ sub_eq_add_neg
 
@@ -620,8 +620,7 @@ theorem add_eq_of_eq_sub' (h : b = c - a) : (a+b) = c :=
 
 theorem sub_sub_self (a b : G) : a - (a - b) = b :=
   by 
-    simp 
-    rw [add_commₓ b, add_neg_cancel_left]
+    simpa using add_neg_cancel_left a b
 
 theorem add_sub_comm (a b c d : G) : ((a+b) - c+d) = (a - c)+b - d :=
   by 
@@ -676,6 +675,11 @@ theorem add_sub_cancel' (a b : G) : (a+b) - a = b :=
 theorem add_sub_cancel'_right (a b : G) : (a+b - a) = b :=
   by 
     rw [←add_sub_assoc, add_sub_cancel']
+
+@[simp]
+theorem sub_add_cancel' (a b : G) : (a - a+b) = -b :=
+  by 
+    rw [←neg_sub, add_sub_cancel']
 
 theorem add_add_neg_cancel'_right (a b : G) : (a+b+-a) = b :=
   by 

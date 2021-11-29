@@ -43,21 +43,21 @@ universe u v w
 
 open LinearMap Matrix Set Function
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
-variable{M : Type _}[AddCommGroupₓ M][Module R M]
+variable {M : Type _} [AddCommGroupₓ M] [Module R M]
 
-variable{M' : Type _}[AddCommGroupₓ M'][Module R M']
+variable {M' : Type _} [AddCommGroupₓ M'] [Module R M']
 
-variable{ι : Type _}[DecidableEq ι][Fintype ι]
+variable {ι : Type _} [DecidableEq ι] [Fintype ι]
 
-variable(e : Basis ι R M)
+variable (e : Basis ι R M)
 
 section Conjugate
 
-variable{A : Type _}[CommRingₓ A]
+variable {A : Type _} [CommRingₓ A]
 
-variable{m n : Type _}[Fintype m][Fintype n]
+variable {m n : Type _} [Fintype m] [Fintype n]
 
 /-- If `R^m` and `R^n` are linearly equivalent, then `m` and `n` are also equivalent. -/
 def equivOfPiLequivPi {R : Type _} [CommRingₓ R] [IsDomain R] (e : (m → R) ≃ₗ[R] n → R) : m ≃ n :=
@@ -99,9 +99,9 @@ namespace LinearMap
 /-! ### Determinant of a linear map -/
 
 
-variable{A : Type _}[CommRingₓ A][IsDomain A][Module A M]
+variable {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M]
 
-variable{κ : Type _}[Fintype κ]
+variable {κ : Type _} [Fintype κ]
 
 /-- The determinant of `linear_map.to_matrix` does not depend on the choice of basis. -/
 theorem det_to_matrix_eq_det_to_matrix [DecidableEq κ] (b : Basis ι A M) (c : Basis κ A M) (f : M →ₗ[A] M) :
@@ -397,7 +397,7 @@ theorem AlternatingMap.eq_smul_basis_det (f : AlternatingMap R M R ι) : f = f e
     change f (e ∘ σ) = (f e • e.det) (e ∘ σ)
     simp [AlternatingMap.map_perm, Basis.det_self]
 
-variable{A : Type _}[CommRingₓ A][IsDomain A][Module A M]
+variable {A : Type _} [CommRingₓ A] [IsDomain A] [Module A M]
 
 @[simp]
 theorem Basis.det_comp (e : Basis ι A M) (f : M →ₗ[A] M) (v : ι → M) : e.det (f ∘ v) = f.det*e.det v :=

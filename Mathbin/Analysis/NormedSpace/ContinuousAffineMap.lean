@@ -37,17 +37,17 @@ submultiplicative: for a composition of maps, we have only `∥f.comp g∥ ≤ �
 
 namespace ContinuousAffineMap
 
-variable{𝕜 R V W W₂ P Q Q₂ : Type _}
+variable {𝕜 R V W W₂ P Q Q₂ : Type _}
 
-variable[NormedGroup V][MetricSpace P][NormedAddTorsor V P]
+variable [NormedGroup V] [MetricSpace P] [NormedAddTorsor V P]
 
-variable[NormedGroup W][MetricSpace Q][NormedAddTorsor W Q]
+variable [NormedGroup W] [MetricSpace Q] [NormedAddTorsor W Q]
 
-variable[NormedGroup W₂][MetricSpace Q₂][NormedAddTorsor W₂ Q₂]
+variable [NormedGroup W₂] [MetricSpace Q₂] [NormedAddTorsor W₂ Q₂]
 
-variable[NormedField R][NormedSpace R V][NormedSpace R W][NormedSpace R W₂]
+variable [NormedField R] [NormedSpace R V] [NormedSpace R W] [NormedSpace R W₂]
 
-variable[NondiscreteNormedField 𝕜][NormedSpace 𝕜 V][NormedSpace 𝕜 W][NormedSpace 𝕜 W₂]
+variable [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 V] [NormedSpace 𝕜 W] [NormedSpace 𝕜 W₂]
 
 include V W
 
@@ -152,7 +152,7 @@ theorem decomp (f : V →A[R] W) : (f : V → W) = f.cont_linear+Function.const 
 
 section NormedSpaceStructure
 
-variable(f : V →A[𝕜] W)
+variable (f : V →A[𝕜] W)
 
 /-- Note that unlike the operator norm for linear maps, this norm is _not_ submultiplicative:
 we do _not_ necessarily have `∥f.comp g∥ ≤ ∥f∥ * ∥g∥`. See `norm_comp_le` for what we can say. -/
@@ -179,7 +179,7 @@ theorem norm_eq (h : f 0 = 0) : ∥f∥ = ∥f.cont_linear∥ :=
     _ = ∥f.cont_linear∥ := max_eq_rightₓ (norm_nonneg _)
     
 
-noncomputable instance  : NormedGroup (V →A[𝕜] W) :=
+noncomputable instance : NormedGroup (V →A[𝕜] W) :=
   NormedGroup.ofCore _
     { norm_eq_zero_iff :=
         fun f =>
@@ -215,7 +215,7 @@ noncomputable instance  : NormedGroup (V →A[𝕜] W) :=
           by 
             simp [norm_def] }
 
-noncomputable instance  : NormedSpace 𝕜 (V →A[𝕜] W) :=
+noncomputable instance : NormedSpace 𝕜 (V →A[𝕜] W) :=
   { norm_smul_le :=
       fun t f =>
         by 
@@ -243,7 +243,7 @@ theorem norm_comp_le (g : W₂ →A[𝕜] V) : ∥f.comp g∥ ≤ (∥f∥*∥g�
           rw [le_add_iff_nonneg_right]
           apply norm_nonneg
 
-variable(𝕜 V W)
+variable (𝕜 V W)
 
 /-- The space of affine maps between two normed spaces is linearly isometric to the product of the
 codomain with the space of linear maps, by taking the value of the affine map at `(0 : V)` and the

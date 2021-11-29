@@ -29,7 +29,7 @@ namespace Real
 
 open CauSeq CauSeq.Completion
 
-variable{x y : ℝ}
+variable {x y : ℝ}
 
 theorem ext_cauchy_iff : ∀ {x y : Real}, x = y ↔ x.cauchy = y.cauchy
 | ⟨a⟩, ⟨b⟩ =>
@@ -63,19 +63,19 @@ private def neg : ℝ → ℝ
 private def mul : ℝ → ℝ → ℝ
 | ⟨a⟩, ⟨b⟩ => ⟨a*b⟩
 
-instance  : HasZero ℝ :=
+instance : HasZero ℝ :=
   ⟨zero⟩
 
-instance  : HasOne ℝ :=
+instance : HasOne ℝ :=
   ⟨one⟩
 
-instance  : Add ℝ :=
+instance : Add ℝ :=
   ⟨add⟩
 
-instance  : Neg ℝ :=
+instance : Neg ℝ :=
   ⟨neg⟩
 
-instance  : Mul ℝ :=
+instance : Mul ℝ :=
   ⟨mul⟩
 
 theorem zero_cauchy : (⟨0⟩ : ℝ) = 0 :=
@@ -98,7 +98,7 @@ theorem mul_cauchy {a b} : (⟨a⟩*⟨b⟩ : ℝ) = ⟨a*b⟩ :=
   show mul _ _ = _ by 
     rw [mul]
 
-instance  : CommRingₓ ℝ :=
+instance : CommRingₓ ℝ :=
   by 
     refineStruct
         { zero := (0 : ℝ), one := (1 : ℝ), mul := ·*·, add := ·+·, neg := @Neg.neg ℝ _, sub := fun a b => a+-b,
@@ -126,87 +126,87 @@ instance  : CommRingₓ ℝ :=
  version of them. -/
 
 
-instance  : Ringₓ ℝ :=
+instance : Ringₓ ℝ :=
   by 
     infer_instance
 
-instance  : CommSemiringₓ ℝ :=
+instance : CommSemiringₓ ℝ :=
   by 
     infer_instance
 
-instance  : Semiringₓ ℝ :=
+instance : Semiringₓ ℝ :=
   by 
     infer_instance
 
-instance  : CommMonoidWithZero ℝ :=
+instance : CommMonoidWithZero ℝ :=
   by 
     infer_instance
 
-instance  : MonoidWithZeroₓ ℝ :=
+instance : MonoidWithZeroₓ ℝ :=
   by 
     infer_instance
 
-instance  : AddCommGroupₓ ℝ :=
+instance : AddCommGroupₓ ℝ :=
   by 
     infer_instance
 
-instance  : AddGroupₓ ℝ :=
+instance : AddGroupₓ ℝ :=
   by 
     infer_instance
 
-instance  : AddCommMonoidₓ ℝ :=
+instance : AddCommMonoidₓ ℝ :=
   by 
     infer_instance
 
-instance  : AddMonoidₓ ℝ :=
+instance : AddMonoidₓ ℝ :=
   by 
     infer_instance
 
-instance  : AddLeftCancelSemigroup ℝ :=
+instance : AddLeftCancelSemigroup ℝ :=
   by 
     infer_instance
 
-instance  : AddRightCancelSemigroup ℝ :=
+instance : AddRightCancelSemigroup ℝ :=
   by 
     infer_instance
 
-instance  : AddCommSemigroupₓ ℝ :=
+instance : AddCommSemigroupₓ ℝ :=
   by 
     infer_instance
 
-instance  : AddSemigroupₓ ℝ :=
+instance : AddSemigroupₓ ℝ :=
   by 
     infer_instance
 
-instance  : CommMonoidₓ ℝ :=
+instance : CommMonoidₓ ℝ :=
   by 
     infer_instance
 
-instance  : Monoidₓ ℝ :=
+instance : Monoidₓ ℝ :=
   by 
     infer_instance
 
-instance  : CommSemigroupₓ ℝ :=
+instance : CommSemigroupₓ ℝ :=
   by 
     infer_instance
 
-instance  : Semigroupₓ ℝ :=
+instance : Semigroupₓ ℝ :=
   by 
     infer_instance
 
-instance  : Sub ℝ :=
+instance : Sub ℝ :=
   by 
     infer_instance
 
-instance  : Module ℝ ℝ :=
+instance : Module ℝ ℝ :=
   by 
     infer_instance
 
-instance  : Inhabited ℝ :=
+instance : Inhabited ℝ :=
   ⟨0⟩
 
 /-- The real numbers are a `*`-ring, with the trivial `*`-structure. -/
-instance  : StarRing ℝ :=
+instance : StarRing ℝ :=
   starRingOfComm
 
 /-- Coercion `ℚ` → `ℝ` as a `ring_hom`. Note that this
@@ -235,7 +235,7 @@ private def lt : ℝ → ℝ → Prop
         ⟨fun h => lt_of_eq_of_lt (Setoidₓ.symm hf) (lt_of_lt_of_eq h hg),
           fun h => lt_of_eq_of_lt hf (lt_of_lt_of_eq h (Setoidₓ.symm hg))⟩
 
-instance  : LT ℝ :=
+instance : LT ℝ :=
   ⟨lt⟩
 
 theorem lt_cauchy {f g} : (⟨«expr⟦ ⟧» f⟩ : ℝ) < ⟨«expr⟦ ⟧» g⟩ ↔ f < g :=
@@ -275,7 +275,7 @@ theorem mk_pos {f : CauSeq ℚ abs} : 0 < mk f ↔ Pos f :=
 private def le (x y : ℝ) : Prop :=
   x < y ∨ x = y
 
-instance  : LE ℝ :=
+instance : LE ℝ :=
   ⟨le⟩
 
 private theorem le_def {x y : ℝ} : x ≤ y ↔ x < y ∨ x = y :=
@@ -303,7 +303,7 @@ theorem add_lt_add_iff_left {a b : ℝ} (c : ℝ) : ((c+a) < c+b) ↔ a < b :=
     show Pos _ ↔ Pos _ 
     rw [add_sub_add_left_eq_sub]
 
-instance  : PartialOrderₓ ℝ :=
+instance : PartialOrderₓ ℝ :=
   { le := · ≤ ·, lt := · < ·,
     lt_iff_le_not_le :=
       fun a b =>
@@ -345,7 +345,7 @@ instance  : PartialOrderₓ ℝ :=
                 by 
                   simpa [mk_eq] using @CauSeq.le_antisymm _ _ a b }
 
-instance  : Preorderₓ ℝ :=
+instance : Preorderₓ ℝ :=
   by 
     infer_instance
 
@@ -364,7 +364,7 @@ protected theorem mul_pos {a b : ℝ} : 0 < a → 0 < b → 0 < a*b :=
     induction' b using Real.ind_mk with b 
     simpa only [mk_lt, mk_pos, ←mk_mul] using CauSeq.mul_pos
 
-instance  : OrderedCommRing ℝ :=
+instance : OrderedCommRing ℝ :=
   { Real.commRing, Real.partialOrder, Real.semiring with
     add_le_add_left :=
       by 
@@ -376,32 +376,32 @@ instance  : OrderedCommRing ℝ :=
           exact fun c => Or.inr ((add_lt_add_iff_left c).2 ‹_›),
     zero_le_one := le_of_ltₓ Real.zero_lt_one, mul_pos := @Real.mul_pos }
 
-instance  : OrderedRing ℝ :=
+instance : OrderedRing ℝ :=
   by 
     infer_instance
 
-instance  : OrderedSemiring ℝ :=
+instance : OrderedSemiring ℝ :=
   by 
     infer_instance
 
-instance  : OrderedAddCommGroup ℝ :=
+instance : OrderedAddCommGroup ℝ :=
   by 
     infer_instance
 
-instance  : OrderedCancelAddCommMonoid ℝ :=
+instance : OrderedCancelAddCommMonoid ℝ :=
   by 
     infer_instance
 
-instance  : OrderedAddCommMonoid ℝ :=
+instance : OrderedAddCommMonoid ℝ :=
   by 
     infer_instance
 
-instance  : Nontrivial ℝ :=
+instance : Nontrivial ℝ :=
   ⟨⟨0, 1, ne_of_ltₓ Real.zero_lt_one⟩⟩
 
 open_locale Classical
 
-noncomputable instance  : LinearOrderₓ ℝ :=
+noncomputable instance : LinearOrderₓ ℝ :=
   { Real.partialOrder with
     le_total :=
       by 
@@ -413,36 +413,36 @@ noncomputable instance  : LinearOrderₓ ℝ :=
       by 
         infer_instance }
 
-noncomputable instance  : LinearOrderedCommRing ℝ :=
+noncomputable instance : LinearOrderedCommRing ℝ :=
   { Real.nontrivial, Real.orderedRing, Real.commRing, Real.linearOrder with  }
 
-noncomputable instance  : LinearOrderedRing ℝ :=
+noncomputable instance : LinearOrderedRing ℝ :=
   by 
     infer_instance
 
-noncomputable instance  : LinearOrderedSemiring ℝ :=
+noncomputable instance : LinearOrderedSemiring ℝ :=
   by 
     infer_instance
 
-instance  : IsDomain ℝ :=
+instance : IsDomain ℝ :=
   { Real.nontrivial, Real.commRing, LinearOrderedRing.is_domain with  }
 
 /-- The real numbers are an ordered `*`-ring, with the trivial `*`-structure. -/
-instance  : StarOrderedRing ℝ :=
+instance : StarOrderedRing ℝ :=
   { star_mul_self_nonneg := fun r => mul_self_nonneg r }
 
 @[irreducible]
 private noncomputable def inv' : ℝ → ℝ
 | ⟨a⟩ => ⟨a⁻¹⟩
 
-noncomputable instance  : HasInv ℝ :=
+noncomputable instance : HasInv ℝ :=
   ⟨inv'⟩
 
 theorem inv_cauchy {f} : (⟨f⟩ : ℝ)⁻¹ = ⟨f⁻¹⟩ :=
   show inv' _ = _ by 
     rw [inv']
 
-noncomputable instance  : LinearOrderedField ℝ :=
+noncomputable instance : LinearOrderedField ℝ :=
   { Real.linearOrderedCommRing with inv := HasInv.inv,
     mul_inv_cancel :=
       by 
@@ -454,7 +454,7 @@ noncomputable instance  : LinearOrderedField ℝ :=
       by 
         simp [←zero_cauchy, inv_cauchy] }
 
-noncomputable instance  : LinearOrderedAddCommGroup ℝ :=
+noncomputable instance : LinearOrderedAddCommGroup ℝ :=
   by 
     infer_instance
 
@@ -462,31 +462,31 @@ noncomputable instance Field : Field ℝ :=
   by 
     infer_instance
 
-noncomputable instance  : DivisionRing ℝ :=
+noncomputable instance : DivisionRing ℝ :=
   by 
     infer_instance
 
-noncomputable instance  : DistribLattice ℝ :=
+noncomputable instance : DistribLattice ℝ :=
   by 
     infer_instance
 
-noncomputable instance  : Lattice ℝ :=
+noncomputable instance : Lattice ℝ :=
   by 
     infer_instance
 
-noncomputable instance  : SemilatticeInf ℝ :=
+noncomputable instance : SemilatticeInf ℝ :=
   by 
     infer_instance
 
-noncomputable instance  : SemilatticeSup ℝ :=
+noncomputable instance : SemilatticeSup ℝ :=
   by 
     infer_instance
 
-noncomputable instance  : HasInf ℝ :=
+noncomputable instance : HasInf ℝ :=
   by 
     infer_instance
 
-noncomputable instance  : HasSup ℝ :=
+noncomputable instance : HasSup ℝ :=
   by 
     infer_instance
 
@@ -543,7 +543,7 @@ theorem mk_near_of_forall_near {f : CauSeq ℚ abs} {x : ℝ} {ε : ℝ} (H : �
     ⟨sub_le_iff_le_add'.2$ mk_le_of_forall_le$ H.imp$ fun i h j ij => sub_le_iff_le_add'.1 (abs_sub_le_iff.1$ h j ij).1,
       sub_le.1$ le_mk_of_forall_le$ H.imp$ fun i h j ij => sub_le.1 (abs_sub_le_iff.1$ h j ij).2⟩
 
-instance  : Archimedean ℝ :=
+instance : Archimedean ℝ :=
   archimedean_iff_rat_le.2$
     fun x =>
       Real.ind_mk x$
@@ -551,7 +551,7 @@ instance  : Archimedean ℝ :=
           let ⟨M, M0, H⟩ := f.bounded' 0
           ⟨M, mk_le_of_forall_le ⟨0, fun i _ => Rat.cast_le.2$ le_of_ltₓ (abs_lt.1 (H i)).2⟩⟩
 
-noncomputable instance  : FloorRing ℝ :=
+noncomputable instance : FloorRing ℝ :=
   Archimedean.floorRing _
 
 theorem is_cau_seq_iff_lift {f : ℕ → ℚ} : IsCauSeq abs f ↔ IsCauSeq abs fun i => (f i : ℝ) :=
@@ -639,7 +639,7 @@ begin
   { exact [expr mk_le_of_forall_le ⟨1, λ n n1, let ⟨x, xS, hx⟩ := hf₁ _ n1 in le_trans hx (h xS)⟩] }
 end
 
-noncomputable instance  : HasSupₓ ℝ :=
+noncomputable instance : HasSupₓ ℝ :=
   ⟨fun S => if h : S.nonempty ∧ BddAbove S then Classical.some (exists_is_lub S h.1 h.2) else 0⟩
 
 theorem Sup_def (S : Set ℝ) :
@@ -651,7 +651,7 @@ protected theorem is_lub_Sup (S : Set ℝ) (h₁ : S.nonempty) (h₂ : BddAbove 
     simp only [Sup_def, dif_pos (And.intro h₁ h₂)]
     apply Classical.some_spec
 
-noncomputable instance  : HasInfₓ ℝ :=
+noncomputable instance : HasInfₓ ℝ :=
   ⟨fun S => -Sup (-S)⟩
 
 theorem Inf_def (S : Set ℝ) : Inf S = -Sup (-S) :=
@@ -662,7 +662,7 @@ protected theorem is_glb_Inf (S : Set ℝ) (h₁ : S.nonempty) (h₂ : BddBelow 
     rw [Inf_def, ←is_lub_neg', neg_negₓ]
     exact Real.is_lub_Sup _ h₁.neg h₂.neg
 
-noncomputable instance  : ConditionallyCompleteLinearOrder ℝ :=
+noncomputable instance : ConditionallyCompleteLinearOrder ℝ :=
   { Real.linearOrder, Real.lattice with sup := HasSupₓ.sup, inf := HasInfₓ.inf,
     le_cSup := fun s a hs ha => (Real.is_lub_Sup s ⟨a, ha⟩ hs).1 ha,
     cSup_le := fun s a hs ha => (Real.is_lub_Sup s hs ⟨a, ha⟩).2 ha,
@@ -790,7 +790,7 @@ begin
     exact [expr ih _ ij] }
 end
 
-noncomputable instance  : CauSeq.IsComplete ℝ abs :=
+noncomputable instance : CauSeq.IsComplete ℝ abs :=
   ⟨cau_seq_converges⟩
 
 end Real

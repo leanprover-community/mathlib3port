@@ -16,7 +16,7 @@ noncomputable theory
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 open Function Set
 
@@ -50,9 +50,9 @@ theorem Isometry.dist_eq [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α �
 
 section PseudoEmetricIsometry
 
-variable[PseudoEmetricSpace α][PseudoEmetricSpace β][PseudoEmetricSpace γ]
+variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
 
-variable{f : α → β}{x y z : α}{s : Set α}
+variable {f : α → β} {x y z : α} {s : Set α}
 
 theorem Isometry.lipschitz (h : Isometry f) : LipschitzWith 1 f :=
   LipschitzWith.of_edist_le$ fun x y => le_of_eqₓ (h x y)
@@ -125,11 +125,15 @@ end PseudoEmetricIsometry
 
 section EmetricIsometry
 
-variable[EmetricSpace α]
+variable [EmetricSpace α]
 
 /-- An isometry from a metric space is a uniform embedding -/
 theorem Isometry.uniform_embedding [PseudoEmetricSpace β] {f : α → β} (hf : Isometry f) : UniformEmbedding f :=
   hf.antilipschitz.uniform_embedding hf.lipschitz.uniform_continuous
+
+/-- An isometry from a metric space is an embedding -/
+theorem Isometry.embedding [PseudoEmetricSpace β] {f : α → β} (hf : Isometry f) : Embedding f :=
+  hf.uniform_embedding.embedding
 
 /-- An isometry from a complete emetric space is a closed embedding -/
 theorem Isometry.closed_embedding [CompleteSpace α] [EmetricSpace β] {f : α → β} (hf : Isometry f) :
@@ -156,7 +160,7 @@ theorem Isometry.diam_range [PseudoMetricSpace α] [PseudoMetricSpace β] {f : �
 
 /-- `α` and `β` are isometric if there is an isometric bijection between them. -/
 @[nolint has_inhabited_instance]
-structure Isometric(α : Type _)(β : Type _)[PseudoEmetricSpace α][PseudoEmetricSpace β] extends α ≃ β where 
+structure Isometric (α : Type _) (β : Type _) [PseudoEmetricSpace α] [PseudoEmetricSpace β] extends α ≃ β where 
   isometry_to_fun : Isometry to_fun
 
 infixl:25 " ≃ᵢ " => Isometric
@@ -165,9 +169,9 @@ namespace Isometric
 
 section PseudoEmetricSpace
 
-variable[PseudoEmetricSpace α][PseudoEmetricSpace β][PseudoEmetricSpace γ]
+variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
 
-instance  : CoeFun (α ≃ᵢ β) fun _ => α → β :=
+instance : CoeFun (α ≃ᵢ β) fun _ => α → β :=
   ⟨fun e => e.to_equiv⟩
 
 theorem coe_eq_to_equiv (h : α ≃ᵢ β) (a : α) : h a = h.to_equiv a :=
@@ -319,7 +323,7 @@ theorem comp_continuous_iff' {γ} [TopologicalSpace γ] (h : α ≃ᵢ β) {f : 
   h.to_homeomorph.comp_continuous_iff'
 
 /-- The group of isometries. -/
-instance  : Groupₓ (α ≃ᵢ α) :=
+instance : Groupₓ (α ≃ᵢ α) :=
   { one := Isometric.refl _, mul := fun e₁ e₂ => e₂.trans e₁, inv := Isometric.symm, mul_assoc := fun e₁ e₂ e₃ => rfl,
     one_mul := fun e => ext$ fun _ => rfl, mul_one := fun e => ext$ fun _ => rfl,
     mul_left_inv := fun e => ext e.symm_apply_apply }
@@ -358,7 +362,7 @@ end PseudoEmetricSpace
 
 section PseudoMetricSpace
 
-variable[PseudoMetricSpace α][PseudoMetricSpace β](h : α ≃ᵢ β)
+variable [PseudoMetricSpace α] [PseudoMetricSpace β] (h : α ≃ᵢ β)
 
 @[simp]
 theorem diam_image (s : Set α) : Metric.diam (h '' s) = Metric.diam s :=

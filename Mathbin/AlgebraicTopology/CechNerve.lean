@@ -27,13 +27,13 @@ noncomputable theory
 
 universe v u
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 namespace CategoryTheory.Arrow
 
-variable(f : arrow C)
+variable (f : arrow C)
 
-variable[∀ n : ℕ, has_wide_pullback f.right (fun i : Ulift (Finₓ (n+1)) => f.left) fun i => f.hom]
+variable [∀ n : ℕ, has_wide_pullback f.right (fun i : Ulift (Finₓ (n+1)) => f.left) fun i => f.hom]
 
 /-- The Čech nerve associated to an arrow. -/
 @[simps]
@@ -57,7 +57,7 @@ namespace CategoryTheory
 
 namespace SimplicialObject
 
-variable[∀ n : ℕ f : arrow C, has_wide_pullback f.right (fun i : Ulift (Finₓ (n+1)) => f.left) fun i => f.hom]
+variable [∀ n : ℕ f : arrow C, has_wide_pullback f.right (fun i : Ulift (Finₓ (n+1)) => f.left) fun i => f.hom]
 
 /-- The Čech nerve construction, as a functor from `arrow C`. -/
 @[simps]
@@ -185,9 +185,9 @@ end CategoryTheory
 
 namespace CategoryTheory.Arrow
 
-variable(f : arrow C)
+variable (f : arrow C)
 
-variable[∀ n : ℕ, has_wide_pushout f.left (fun i : Ulift (Finₓ (n+1)) => f.right) fun i => f.hom]
+variable [∀ n : ℕ, has_wide_pushout f.left (fun i : Ulift (Finₓ (n+1)) => f.right) fun i => f.hom]
 
 /-- The Čech conerve associated to an arrow. -/
 @[simps]
@@ -213,7 +213,7 @@ namespace CategoryTheory
 
 namespace CosimplicialObject
 
-variable[∀ n : ℕ f : arrow C, has_wide_pushout f.left (fun i : Ulift (Finₓ (n+1)) => f.right) fun i => f.hom]
+variable [∀ n : ℕ f : arrow C, has_wide_pushout f.left (fun i : Ulift (Finₓ (n+1)) => f.right) fun i => f.hom]
 
 /-- The Čech conerve construction, as a functor from `arrow C`. -/
 @[simps]

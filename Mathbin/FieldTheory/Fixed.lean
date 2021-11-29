@@ -29,11 +29,11 @@ open MulAction Finset FiniteDimensional
 
 universe u v w
 
-variable{M : Type u}[Monoidₓ M]
+variable {M : Type u} [Monoidₓ M]
 
-variable(G : Type u)[Groupₓ G]
+variable (G : Type u) [Groupₓ G]
 
-variable(F : Type v)[Field F][MulSemiringAction M F][MulSemiringAction G F](m : M)
+variable (F : Type v) [Field F] [MulSemiringAction M F] [MulSemiringAction G F] (m : M)
 
 /-- The subfield of F fixed by the field endomorphism `m`. -/
 def FixedBy.subfield : Subfield F :=
@@ -45,13 +45,13 @@ def FixedBy.subfield : Subfield F :=
 
 section InvariantSubfields
 
-variable(M){F}
+variable (M) {F}
 
 /-- A typeclass for subrings invariant under a `mul_semiring_action`. -/
-class IsInvariantSubfield(S : Subfield F) : Prop where 
+class IsInvariantSubfield (S : Subfield F) : Prop where 
   smul_mem : ∀ m : M {x : F}, x ∈ S → m • x ∈ S
 
-variable(S : Subfield F)
+variable (S : Subfield F)
 
 instance IsInvariantSubfield.toMulSemiringAction [IsInvariantSubfield M S] : MulSemiringAction M S :=
   { smul := fun m x => ⟨m • x, IsInvariantSubfield.smul_mem m x.2⟩, one_smul := fun s => Subtype.eq$ one_smul M s,
@@ -59,14 +59,14 @@ instance IsInvariantSubfield.toMulSemiringAction [IsInvariantSubfield M S] : Mul
     smul_zero := fun m => Subtype.eq$ smul_zero m, smul_one := fun m => Subtype.eq$ smul_one m,
     smul_mul := fun m s₁ s₂ => Subtype.eq$ smul_mul' m s₁ s₂ }
 
-instance  [IsInvariantSubfield M S] : IsInvariantSubring M S.to_subring :=
+instance [IsInvariantSubfield M S] : IsInvariantSubring M S.to_subring :=
   { smul_mem := IsInvariantSubfield.smul_mem }
 
 end InvariantSubfields
 
 namespace FixedPoints
 
-variable(M)
+variable (M)
 
 /-- The subfield of fixed points by a monoid action. -/
 def Subfield : Subfield F :=
@@ -75,13 +75,13 @@ def Subfield : Subfield F :=
       ext z 
       simp [fixed_points, FixedBy.subfield, infi, Subfield.mem_Inf])
 
-instance  : IsInvariantSubfield M (FixedPoints.subfield M F) :=
+instance : IsInvariantSubfield M (FixedPoints.subfield M F) :=
   { smul_mem :=
       fun g x hx g' =>
         by 
           rw [hx, hx] }
 
-instance  : SmulCommClass M (FixedPoints.subfield M F) F :=
+instance : SmulCommClass M (FixedPoints.subfield M F) F :=
   { smul_comm :=
       fun m f f' =>
         show (m • «expr↑ » f*f') = f*m • f' by 
@@ -107,7 +107,7 @@ theorem smul_polynomial (m : M) (p : Polynomial (FixedPoints.subfield M F)) : m 
       by 
         rw [smul_mul', Polynomial.smul_C, smul, smul_pow', Polynomial.smul_X]
 
-instance  : Algebra (FixedPoints.subfield M F) F :=
+instance : Algebra (FixedPoints.subfield M F) F :=
   Algebra.ofSubring (FixedPoints.subfield M F).toSubring
 
 theorem coe_algebra_map : algebraMap (FixedPoints.subfield M F) F = Subfield.subtype (FixedPoints.subfield M F) :=
@@ -159,7 +159,7 @@ begin
   rw ["[", expr hla, ",", expr to_fun_apply, ",", expr to_fun_apply, ",", expr smul_smul, ",", expr mul_inv_cancel_left, "]"] []
 end
 
-variable[Fintype G](x : F)
+variable [Fintype G] (x : F)
 
 /-- `minpoly G F x` is the minimal polynomial of `(x : F)` over `fixed_points G F`. -/
 def minpoly : Polynomial (FixedPoints.subfield G F) :=
@@ -266,7 +266,7 @@ theorem dim_le_card : Module.rank (FixedPoints.subfield G F) F ≤ Fintype.card 
           Cardinal.nat_cast_le] using
           cardinal_lift_le_dim_of_linear_independent' (linear_independent_smul_of_linear_independent G F hs)
 
-instance  : FiniteDimensional (FixedPoints.subfield G F) F :=
+instance : FiniteDimensional (FixedPoints.subfield G F) F :=
   IsNoetherian.iff_fg.1$ IsNoetherian.iff_dim_lt_omega.2$ lt_of_le_of_ltₓ (dim_le_card G F) (Cardinal.nat_lt_omega _)
 
 theorem finrank_le_card : finrank (FixedPoints.subfield G F) F ≤ Fintype.card G :=

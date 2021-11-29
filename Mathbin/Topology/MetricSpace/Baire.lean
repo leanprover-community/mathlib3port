@@ -27,13 +27,13 @@ open_locale Classical TopologicalSpace Filter Ennreal
 
 open Filter Encodable Set
 
-variable{α : Type _}{β : Type _}{γ : Type _}{ι : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {ι : Type _}
 
 section BaireTheorem
 
 open Emetric Ennreal
 
-variable[EmetricSpace α][CompleteSpace α]
+variable [EmetricSpace α] [CompleteSpace α]
 
 -- error in Topology.MetricSpace.Baire: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here when
@@ -253,7 +253,7 @@ theorem dense_of_mem_residual {s : Set α} (hs : s ∈ residual α) : Dense s :=
   let ⟨t, hts, _, hd⟩ := mem_residual.1 hs 
   hd.mono hts
 
-instance  : CountableInterFilter (residual α) :=
+instance : CountableInterFilter (residual α) :=
   ⟨by 
       intro S hSc hS 
       simp only [mem_residual] at *

@@ -33,9 +33,9 @@ universe v u
 
 open CategoryTheory CategoryTheory.Limits
 
-variable{ι : Type _}
+variable {ι : Type _}
 
-variable(V : Type u)[category.{v} V][has_zero_morphisms V]
+variable (V : Type u) [category.{v} V] [has_zero_morphisms V]
 
 /--
 A `homological_complex V c` with a "shape" controlled by `c : complex_shape ι`
@@ -48,7 +48,7 @@ This avoids a lot of dependent type theory hell!
 
 The composite of any two differentials `d i j ≫ d j k` must be zero.
 -/
-structure HomologicalComplex(c : ComplexShape ι) where 
+structure HomologicalComplex (c : ComplexShape ι) where 
   x : ι → V 
   d : ∀ i j, X i ⟶ X j 
   shape' : ∀ i j, ¬c.rel i j → d i j = 0 :=  by 
@@ -64,7 +64,7 @@ restate_axiom shape'
 
 attribute [simp] shape
 
-variable{V}{c : ComplexShape ι}
+variable {V} {c : ComplexShape ι}
 
 @[simp, reassoc]
 theorem d_comp_d (C : HomologicalComplex V c) (i j k : ι) : C.d i j ≫ C.d j k = 0 :=
@@ -145,14 +145,14 @@ end CochainComplex
 
 namespace HomologicalComplex
 
-variable{V}{c : ComplexShape ι}(C : HomologicalComplex V c)
+variable {V} {c : ComplexShape ι} (C : HomologicalComplex V c)
 
 /--
 A morphism of homological complexes consists of maps between the chain groups,
 commuting with the differentials.
 -/
 @[ext]
-structure hom(A B : HomologicalComplex V c) where 
+structure hom (A B : HomologicalComplex V c) where 
   f : ∀ i, A.X i ⟶ B.X i 
   comm' : ∀ i j, c.rel i j → f i ≫ B.d i j = A.d i j ≫ f j :=  by 
   runTac 
@@ -166,7 +166,7 @@ theorem hom.comm {A B : HomologicalComplex V c} (f : A.hom B) (i j : ι) : f.f i
       exact f.comm' i j hij 
     rw [A.shape i j hij, B.shape i j hij, comp_zero, zero_comp]
 
-instance  (A B : HomologicalComplex V c) : Inhabited (hom A B) :=
+instance (A B : HomologicalComplex V c) : Inhabited (hom A B) :=
   ⟨{ f := fun i => 0 }⟩
 
 /-- Identity chain map. -/
@@ -181,7 +181,7 @@ section
 
 attribute [local simp] id comp
 
-instance  : category (HomologicalComplex V c) :=
+instance : category (HomologicalComplex V c) :=
   { Hom := hom, id := id, comp := comp }
 
 end 
@@ -198,7 +198,7 @@ theorem hom_f_injective {C₁ C₂ : HomologicalComplex V c} : Function.Injectiv
   by 
     tidy
 
-instance  : has_zero_morphisms (HomologicalComplex V c) :=
+instance : has_zero_morphisms (HomologicalComplex V c) :=
   { HasZero := fun C D => ⟨{ f := fun i => 0 }⟩ }
 
 @[simp]
@@ -207,7 +207,7 @@ theorem zero_apply (C D : HomologicalComplex V c) (i : ι) : (0 : C ⟶ D).f i =
 
 open_locale ZeroObject
 
-instance  [has_zero_object V] : has_zero_object (HomologicalComplex V c) :=
+instance [has_zero_object V] : has_zero_object (HomologicalComplex V c) :=
   { zero := { x := fun i => 0, d := fun i j => 0 },
     uniqueFrom :=
       fun C =>
@@ -222,7 +222,7 @@ instance  [has_zero_object V] : has_zero_object (HomologicalComplex V c) :=
             by 
               ext⟩ }
 
-instance  [has_zero_object V] : Inhabited (HomologicalComplex V c) :=
+instance [has_zero_object V] : Inhabited (HomologicalComplex V c) :=
   ⟨0⟩
 
 theorem congr_hom {C D : HomologicalComplex V c} {f g : C ⟶ D} (w : f = g) (i : ι) : f.f i = g.f i :=
@@ -230,7 +230,7 @@ theorem congr_hom {C D : HomologicalComplex V c} {f g : C ⟶ D} (w : f = g) (i 
 
 section 
 
-variable(V c)
+variable (V c)
 
 /-- The functor picking out the `i`-th object of a complex. -/
 @[simps]
@@ -306,7 +306,7 @@ theorem image_eq_image [has_images V] [has_equalizers V] {i i' j : ι} (r : c.re
 
 section 
 
-variable[has_zero_object V]
+variable [has_zero_object V]
 
 open_locale ZeroObject
 
@@ -449,7 +449,7 @@ end
 
 namespace Hom
 
-variable{C₁ C₂ C₃ : HomologicalComplex V c}
+variable {C₁ C₂ C₃ : HomologicalComplex V c}
 
 /-- The `i`-th component of an isomorphism of chain complexes. -/
 @[simps]
@@ -493,7 +493,7 @@ theorem iso_of_components_app (f : ∀ i, C₁.X i ≅ C₂.X i)
     ext 
     simp 
 
-variable[has_zero_object V]
+variable [has_zero_object V]
 
 open_locale ZeroObject
 
@@ -622,7 +622,7 @@ namespace ChainComplex
 
 section Of
 
-variable{V}{α : Type _}[AddRightCancelSemigroup α][HasOne α][DecidableEq α]
+variable {V} {α : Type _} [AddRightCancelSemigroup α] [HasOne α] [DecidableEq α]
 
 /--
 Construct an `α`-indexed chain complex from a dependently-typed differential.
@@ -649,7 +649,7 @@ def of (X : α → V) (d : ∀ n, X (n+1) ⟶ X n) (sq : ∀ n, d (n+1) ≫ d n 
           simp only [category.id_comp, dif_pos rfl, eq_to_hom_refl]
           exact sq k }
 
-variable(X : α → V)(d : ∀ n, X (n+1) ⟶ X n)(sq : ∀ n, d (n+1) ≫ d n = 0)
+variable (X : α → V) (d : ∀ n, X (n+1) ⟶ X n) (sq : ∀ n, d (n+1) ≫ d n = 0)
 
 @[simp]
 theorem of_X (n : α) : (of X d sq).x n = X n :=
@@ -670,14 +670,10 @@ end Of
 
 section OfHom
 
-variable{V}{α : Type _}[AddRightCancelSemigroup α][HasOne α][DecidableEq α]
+variable {V} {α : Type _} [AddRightCancelSemigroup α] [HasOne α] [DecidableEq α]
 
-variable(X :
-    α →
-      V)(d_X :
-    ∀ n,
-      X (n+1) ⟶
-        X n)(sq_X : ∀ n, d_X (n+1) ≫ d_X n = 0)(Y : α → V)(d_Y : ∀ n, Y (n+1) ⟶ Y n)(sq_Y : ∀ n, d_Y (n+1) ≫ d_Y n = 0)
+variable (X : α → V) (d_X : ∀ n, X (n+1) ⟶ X n) (sq_X : ∀ n, d_X (n+1) ≫ d_X n = 0) (Y : α → V)
+  (d_Y : ∀ n, Y (n+1) ⟶ Y n) (sq_Y : ∀ n, d_Y (n+1) ≫ d_Y n = 0)
 
 /--
 A constructor for chain maps between `α`-indexed chain complexes built using `chain_complex.of`,
@@ -713,20 +709,14 @@ structure mk_struct where
   d₁ : X₂ ⟶ X₁ 
   s : d₁ ≫ d₀ = 0
 
-variable{V}
+variable {V}
 
 /-- Flatten to a tuple. -/
 def mk_struct.flat (t : mk_struct V) : Σ'(X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0 :=
   ⟨t.X₀, t.X₁, t.X₂, t.d₀, t.d₁, t.s⟩
 
-variable(X₀ X₁ X₂ :
-    V)(d₀ :
-    X₁ ⟶
-      X₀)(d₁ :
-    X₂ ⟶
-      X₁)(s :
-    d₁ ≫ d₀ =
-      0)(succ :
+variable (X₀ X₁ X₂ : V) (d₀ : X₁ ⟶ X₀) (d₁ : X₂ ⟶ X₁) (s : d₁ ≫ d₀ = 0)
+  (succ :
     ∀ t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0,
       Σ'(X₃ : V)(d₂ : X₃ ⟶ t.2.2.1), d₂ ≫ t.2.2.2.2.1 = 0)
 
@@ -786,7 +776,7 @@ def mk' (X₀ X₁ : V) (d : X₁ ⟶ X₀) (succ' : ∀ t : ΣX₀ X₁ : V, X�
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2
     fun t => succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 
-variable(succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
+variable (succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
 
 @[simp]
 theorem mk'_X_0 : (mk' X₀ X₁ d₀ succ').x 0 = X₀ :=
@@ -806,18 +796,9 @@ end Mk
 
 section MkHom
 
-variable{V}(P Q :
-    ChainComplex V
-      ℕ)(zero :
-    P.X 0 ⟶
-      Q.X
-        0)(one :
-    P.X 1 ⟶
-      Q.X
-        1)(one_zero_comm :
-    one ≫ Q.d 1 0 =
-      P.d 1 0 ≫
-        zero)(succ :
+variable {V} (P Q : ChainComplex V ℕ) (zero : P.X 0 ⟶ Q.X 0) (one : P.X 1 ⟶ Q.X 1)
+  (one_zero_comm : one ≫ Q.d 1 0 = P.d 1 0 ≫ zero)
+  (succ :
     ∀ n : ℕ p : Σ'(f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f' ≫ Q.d (n+1) n = P.d (n+1) n ≫ f,
       Σ'f'' : P.X (n+2) ⟶ Q.X (n+2), f'' ≫ Q.d (n+2) (n+1) = P.d (n+2) (n+1) ≫ p.2.1)
 
@@ -877,7 +858,7 @@ namespace CochainComplex
 
 section Of
 
-variable{V}{α : Type _}[AddRightCancelSemigroup α][HasOne α][DecidableEq α]
+variable {V} {α : Type _} [AddRightCancelSemigroup α] [HasOne α] [DecidableEq α]
 
 /--
 Construct an `α`-indexed cochain complex from a dependently-typed differential.
@@ -907,7 +888,7 @@ def of (X : α → V) (d : ∀ n, X n ⟶ X (n+1)) (sq : ∀ n, d n ≫ d (n+1) 
           all_goals 
             simp  }
 
-variable(X : α → V)(d : ∀ n, X n ⟶ X (n+1))(sq : ∀ n, d n ≫ d (n+1) = 0)
+variable (X : α → V) (d : ∀ n, X n ⟶ X (n+1)) (sq : ∀ n, d n ≫ d (n+1) = 0)
 
 @[simp]
 theorem of_X (n : α) : (of X d sq).x n = X n :=
@@ -928,16 +909,10 @@ end Of
 
 section OfHom
 
-variable{V}{α : Type _}[AddRightCancelSemigroup α][HasOne α][DecidableEq α]
+variable {V} {α : Type _} [AddRightCancelSemigroup α] [HasOne α] [DecidableEq α]
 
-variable(X :
-    α →
-      V)(d_X :
-    ∀ n,
-      X n ⟶
-        X
-          (n+1))(sq_X :
-    ∀ n, d_X n ≫ d_X (n+1) = 0)(Y : α → V)(d_Y : ∀ n, Y n ⟶ Y (n+1))(sq_Y : ∀ n, d_Y n ≫ d_Y (n+1) = 0)
+variable (X : α → V) (d_X : ∀ n, X n ⟶ X (n+1)) (sq_X : ∀ n, d_X n ≫ d_X (n+1) = 0) (Y : α → V)
+  (d_Y : ∀ n, Y n ⟶ Y (n+1)) (sq_Y : ∀ n, d_Y n ≫ d_Y (n+1) = 0)
 
 /--
 A constructor for chain maps between `α`-indexed cochain complexes built using `cochain_complex.of`,
@@ -973,20 +948,14 @@ structure mk_struct where
   d₁ : X₁ ⟶ X₂ 
   s : d₀ ≫ d₁ = 0
 
-variable{V}
+variable {V}
 
 /-- Flatten to a tuple. -/
 def mk_struct.flat (t : mk_struct V) : Σ'(X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0 :=
   ⟨t.X₀, t.X₁, t.X₂, t.d₀, t.d₁, t.s⟩
 
-variable(X₀ X₁ X₂ :
-    V)(d₀ :
-    X₀ ⟶
-      X₁)(d₁ :
-    X₁ ⟶
-      X₂)(s :
-    d₀ ≫ d₁ =
-      0)(succ :
+variable (X₀ X₁ X₂ : V) (d₀ : X₀ ⟶ X₁) (d₁ : X₁ ⟶ X₂) (s : d₀ ≫ d₁ = 0)
+  (succ :
     ∀ t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0,
       Σ'(X₃ : V)(d₂ : t.2.2.1 ⟶ X₃), t.2.2.2.2.1 ≫ d₂ = 0)
 
@@ -1046,7 +1015,7 @@ def mk' (X₀ X₁ : V) (d : X₀ ⟶ X₁) (succ' : ∀ t : ΣX₀ X₁ : V, X�
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2
     fun t => succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 
-variable(succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
+variable (succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
 
 @[simp]
 theorem mk'_X_0 : (mk' X₀ X₁ d₀ succ').x 0 = X₀ :=
@@ -1066,18 +1035,9 @@ end Mk
 
 section MkHom
 
-variable{V}(P Q :
-    CochainComplex V
-      ℕ)(zero :
-    P.X 0 ⟶
-      Q.X
-        0)(one :
-    P.X 1 ⟶
-      Q.X
-        1)(one_zero_comm :
-    zero ≫ Q.d 0 1 =
-      P.d 0 1 ≫
-        one)(succ :
+variable {V} (P Q : CochainComplex V ℕ) (zero : P.X 0 ⟶ Q.X 0) (one : P.X 1 ⟶ Q.X 1)
+  (one_zero_comm : zero ≫ Q.d 0 1 = P.d 0 1 ≫ one)
+  (succ :
     ∀ n : ℕ p : Σ'(f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f ≫ Q.d n (n+1) = P.d n (n+1) ≫ f',
       Σ'f'' : P.X (n+2) ⟶ Q.X (n+2), p.2.1 ≫ Q.d (n+1) (n+2) = P.d (n+1) (n+2) ≫ f'')
 

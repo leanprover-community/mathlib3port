@@ -28,11 +28,11 @@ Necessary for the TODO in the module docstring of `order.disjointed`.
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 section SemilatticeSup
 
-variable[SemilatticeSup α]
+variable [SemilatticeSup α]
 
 /-- The monotone sequence whose value at `n` is the supremum of the `f m` where `m ≤ n`. -/
 def partialSups (f : ℕ → α) : ℕ →ₘ α :=
@@ -118,7 +118,7 @@ theorem partial_sups_eq_sup'_range (f : ℕ → α) (n : ℕ) :
 
 end SemilatticeSup
 
-theorem partial_sups_eq_sup_range [SemilatticeSupBot α] (f : ℕ → α) (n : ℕ) :
+theorem partial_sups_eq_sup_range [SemilatticeSup α] [OrderBot α] (f : ℕ → α) (n : ℕ) :
   partialSups f n = (Finset.range (n+1)).sup f :=
   by 
     induction' n with n ih
@@ -128,8 +128,8 @@ theorem partial_sups_eq_sup_range [SemilatticeSupBot α] (f : ℕ → α) (n : �
       dsimp [partialSups]  at ih⊢
       rw [Finset.range_succ, Finset.sup_insert, sup_comm, ih]
 
-theorem partial_sups_disjoint_of_disjoint [DistribLatticeBot α] (f : ℕ → α) (h : Pairwise (Disjoint on f)) {m n : ℕ}
-  (hmn : m < n) : Disjoint (partialSups f m) (f n) :=
+theorem partial_sups_disjoint_of_disjoint [DistribLattice α] [OrderBot α] (f : ℕ → α) (h : Pairwise (Disjoint on f))
+  {m n : ℕ} (hmn : m < n) : Disjoint (partialSups f m) (f n) :=
   by 
     induction' m with m ih
     ·
@@ -140,7 +140,7 @@ theorem partial_sups_disjoint_of_disjoint [DistribLatticeBot α] (f : ℕ → α
 
 section CompleteLattice
 
-variable[CompleteLattice α]
+variable [CompleteLattice α]
 
 theorem partial_sups_eq_bsupr (f : ℕ → α) (n : ℕ) : partialSups f n = ⨆(i : _)(_ : i ≤ n), f i :=
   by 

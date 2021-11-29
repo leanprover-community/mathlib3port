@@ -46,25 +46,25 @@ submonoid, submonoids
 -/
 
 
-variable{M : Type _}{N : Type _}
+variable {M : Type _} {N : Type _}
 
-variable{A : Type _}
+variable {A : Type _}
 
 section NonAssoc
 
-variable[MulOneClass M]{s : Set M}
+variable [MulOneClass M] {s : Set M}
 
-variable[AddZeroClass A]{t : Set A}
+variable [AddZeroClass A] {t : Set A}
 
 /-- A submonoid of a monoid `M` is a subset containing 1 and closed under multiplication. -/
-structure Submonoid(M : Type _)[MulOneClass M] where 
+structure Submonoid (M : Type _) [MulOneClass M] where 
   Carrier : Set M 
   one_mem' : (1 : M) ∈ carrier 
   mul_mem' {a b} : a ∈ carrier → b ∈ carrier → (a*b) ∈ carrier
 
 /-- An additive submonoid of an additive monoid `M` is a subset containing 0 and
   closed under addition. -/
-structure AddSubmonoid(M : Type _)[AddZeroClass M] where 
+structure AddSubmonoid (M : Type _) [AddZeroClass M] where 
   Carrier : Set M 
   zero_mem' : (0 : M) ∈ carrier 
   add_mem' {a b} : a ∈ carrier → b ∈ carrier → (a+b) ∈ carrier
@@ -74,7 +74,7 @@ attribute [toAdditive] Submonoid
 namespace Submonoid
 
 @[toAdditive]
-instance  : SetLike (Submonoid M) M :=
+instance : SetLike (Submonoid M) M :=
   ⟨Submonoid.Carrier,
     fun p q h =>
       by 
@@ -115,7 +115,7 @@ theorem ext {S T : Submonoid M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
 protected def copy (S : Submonoid M) (s : Set M) (hs : s = S) : Submonoid M :=
   { Carrier := s, one_mem' := hs.symm ▸ S.one_mem', mul_mem' := hs.symm ▸ S.mul_mem' }
 
-variable{S : Submonoid M}
+variable {S : Submonoid M}
 
 @[simp, toAdditive]
 theorem coe_copy {s : Set M} (hs : s = S) : (S.copy s hs : Set M) = s :=
@@ -125,7 +125,7 @@ theorem coe_copy {s : Set M} (hs : s = S) : (S.copy s hs : Set M) = s :=
 theorem copy_eq {s : Set M} (hs : s = S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 
-variable(S)
+variable (S)
 
 /-- A submonoid contains the monoid's 1. -/
 @[toAdditive "An `add_submonoid` contains the monoid's 0."]
@@ -139,12 +139,12 @@ theorem mul_mem {x y : M} : x ∈ S → y ∈ S → (x*y) ∈ S :=
 
 /-- The submonoid `M` of the monoid `M`. -/
 @[toAdditive "The additive submonoid `M` of the `add_monoid M`."]
-instance  : HasTop (Submonoid M) :=
+instance : HasTop (Submonoid M) :=
   ⟨{ Carrier := Set.Univ, one_mem' := Set.mem_univ 1, mul_mem' := fun _ _ _ _ => Set.mem_univ _ }⟩
 
 /-- The trivial submonoid `{1}` of an monoid `M`. -/
 @[toAdditive "The trivial `add_submonoid` `{0}` of an `add_monoid` `M`."]
-instance  : HasBot (Submonoid M) :=
+instance : HasBot (Submonoid M) :=
   ⟨{ Carrier := {1}, one_mem' := Set.mem_singleton 1,
       mul_mem' :=
         fun a b ha hb =>
@@ -153,7 +153,7 @@ instance  : HasBot (Submonoid M) :=
             rw [ha, hb, mul_oneₓ] }⟩
 
 @[toAdditive]
-instance  : Inhabited (Submonoid M) :=
+instance : Inhabited (Submonoid M) :=
   ⟨⊥⟩
 
 @[simp, toAdditive]
@@ -174,7 +174,7 @@ theorem coe_bot : ((⊥ : Submonoid M) : Set M) = {1} :=
 
 /-- The inf of two submonoids is their intersection. -/
 @[toAdditive "The inf of two `add_submonoid`s is their intersection."]
-instance  : HasInf (Submonoid M) :=
+instance : HasInf (Submonoid M) :=
   ⟨fun S₁ S₂ =>
       { Carrier := S₁ ∩ S₂, one_mem' := ⟨S₁.one_mem, S₂.one_mem⟩,
         mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
@@ -188,7 +188,7 @@ theorem mem_inf {p p' : Submonoid M} {x : M} : x ∈ p⊓p' ↔ x ∈ p ∧ x �
   Iff.rfl
 
 @[toAdditive]
-instance  : HasInfₓ (Submonoid M) :=
+instance : HasInfₓ (Submonoid M) :=
   ⟨fun s =>
       { Carrier := ⋂(t : _)(_ : t ∈ s), «expr↑ » t, one_mem' := Set.mem_bInter$ fun i h => i.one_mem,
         mul_mem' :=
@@ -221,7 +221,7 @@ theorem coe_infi {ι : Sort _} {S : ι → Submonoid M} : («expr↑ » (⨅i, S
 
 /-- Submonoids of a monoid form a complete lattice. -/
 @[toAdditive "The `add_submonoid`s of an `add_monoid` form a complete lattice."]
-instance  : CompleteLattice (Submonoid M) :=
+instance : CompleteLattice (Submonoid M) :=
   { completeLatticeOfInf (Submonoid M)$
       fun s => IsGlb.of_image (fun S T => show (S : Set M) ≤ T ↔ S ≤ T from SetLike.coe_subset_coe) is_glb_binfi with
     le := · ≤ ·, lt := · < ·, bot := ⊥, bot_le := fun S x hx => (mem_bot.1 hx).symm ▸ S.one_mem, top := ⊤,
@@ -251,11 +251,11 @@ theorem nontrivial_iff : Nontrivial (Submonoid M) ↔ Nontrivial M :=
   not_iff_not.mp ((not_nontrivial_iff_subsingleton.trans subsingleton_iff).trans not_nontrivial_iff_subsingleton.symm)
 
 @[toAdditive]
-instance  [Subsingleton M] : Unique (Submonoid M) :=
+instance [Subsingleton M] : Unique (Submonoid M) :=
   ⟨⟨⊥⟩, fun a => @Subsingleton.elimₓ _ (subsingleton_iff.mpr ‹_›) a _⟩
 
 @[toAdditive]
-instance  [Nontrivial M] : Nontrivial (Submonoid M) :=
+instance [Nontrivial M] : Nontrivial (Submonoid M) :=
   nontrivial_iff.mpr ‹_›
 
 /-- The `submonoid` generated by a set. -/
@@ -276,7 +276,7 @@ theorem subset_closure : s ⊆ closure s :=
 theorem not_mem_of_not_mem_closure {P : M} (hP : P ∉ closure s) : P ∉ s :=
   fun h => hP (subset_closure h)
 
-variable{S}
+variable {S}
 
 open Set
 
@@ -296,7 +296,7 @@ theorem closure_mono ⦃s t : Set M⦄ (h : s ⊆ t) : closure s ≤ closure t :
 theorem closure_eq_of_le (h₁ : s ⊆ S) (h₂ : S ≤ closure s) : closure s = S :=
   le_antisymmₓ (closure_le.2 h₁) h₂
 
-variable(S)
+variable (S)
 
 /-- An induction principle for closure membership. If `p` holds for `1` and all elements of `s`, and
 is preserved under multiplication, then `p` holds for all elements of the closure of `s`. -/
@@ -319,7 +319,7 @@ theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = �
   by 
     simpa [hs] using this x
 
-variable(M)
+variable (M)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
 @[toAdditive "`closure` forms a Galois insertion with the coercion to set."]
@@ -327,7 +327,7 @@ protected def gi : GaloisInsertion (@closure M _) coeₓ :=
   { choice := fun s _ => closure s, gc := fun s t => closure_le, le_l_u := fun s => subset_closure,
     choice_eq := fun s h => rfl }
 
-variable{M}
+variable {M}
 
 /-- Closure of a submonoid `S` equals `S`. -/
 @[simp, toAdditive "Additive closure of an additive submonoid `S` equals `S`"]
@@ -354,7 +354,7 @@ end Submonoid
 
 namespace MonoidHom
 
-variable[MulOneClass N]
+variable [MulOneClass N]
 
 open Submonoid
 
@@ -389,7 +389,7 @@ end NonAssoc
 
 section Assoc
 
-variable[Monoidₓ M][Monoidₓ N]{s : Set M}
+variable [Monoidₓ M] [Monoidₓ N] {s : Set M}
 
 section IsUnit
 

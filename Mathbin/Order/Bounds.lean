@@ -25,11 +25,11 @@ open order_dual(toDual ofDual)
 
 universe u v w x
 
-variable{α : Type u}{β : Type v}{γ : Type w}{ι : Sort x}
+variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x}
 
 section 
 
-variable[Preorderₓ α][Preorderₓ β]{s t : Set α}{a b : α}
+variable [Preorderₓ α] [Preorderₓ β] {s t : Set α} {a b : α}
 
 /-!
 ### Definitions
@@ -387,7 +387,7 @@ theorem bdd_below_Ioi : BddBelow (Ioi a) :=
 
 section 
 
-variable[LinearOrderₓ γ][DenselyOrdered γ]
+variable [LinearOrderₓ γ] [DenselyOrdered γ]
 
 theorem is_lub_Iio {a : γ} : IsLub (Iio a) a :=
   ⟨fun x hx => le_of_ltₓ hx, fun y hy => le_of_forall_ge_of_dense hy⟩
@@ -501,7 +501,7 @@ theorem lower_bounds_Ico (h : a < b) : LowerBounds (Ico a b) = Iic a :=
 
 section 
 
-variable[SemilatticeSup γ][DenselyOrdered γ]
+variable [SemilatticeSup γ] [DenselyOrdered γ]
 
 theorem is_glb_Ioo {a b : γ} (h : a < b) : IsGlb (Ioo a b) a :=
   ⟨fun x hx => hx.1.le,
@@ -528,7 +528,7 @@ end
 
 section 
 
-variable[SemilatticeInf γ][DenselyOrdered γ]
+variable [SemilatticeInf γ] [DenselyOrdered γ]
 
 theorem is_lub_Ioo {a b : γ} (hab : a < b) : IsLub (Ioo a b) b :=
   by 
@@ -756,7 +756,7 @@ end
 
 section Preorderₓ
 
-variable[Preorderₓ α]{s : Set α}{a b : α}
+variable [Preorderₓ α] {s : Set α} {a b : α}
 
 theorem lower_bounds_le_upper_bounds (ha : a ∈ LowerBounds s) (hb : b ∈ UpperBounds s) : s.nonempty → a ≤ b
 | ⟨c, hc⟩ => le_transₓ (ha hc) (hb hc)
@@ -781,7 +781,7 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable[PartialOrderₓ α]{s : Set α}{a b : α}
+variable [PartialOrderₓ α] {s : Set α} {a b : α}
 
 theorem IsLeast.unique (Ha : IsLeast s a) (Hb : IsLeast s b) : a = b :=
   le_antisymmₓ (Ha.right Hb.left) (Hb.right Ha.left)
@@ -814,7 +814,7 @@ end PartialOrderₓ
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ α]{s : Set α}{a b : α}
+variable [LinearOrderₓ α] {s : Set α} {a b : α}
 
 theorem lt_is_lub_iff (h : IsLub s a) : b < a ↔ ∃ (c : _)(_ : c ∈ s), b < c :=
   by 
@@ -848,7 +848,7 @@ end LinearOrderₓ
 
 section LinearOrderedAddCommGroup
 
-variable[LinearOrderedAddCommGroup α]{s : Set α}{a ε : α}
+variable [LinearOrderedAddCommGroup α] {s : Set α} {a ε : α}
 
 theorem IsGlb.exists_between_self_add (h : IsGlb s a) (hε : 0 < ε) : ∃ (b : _)(_ : b ∈ s), a ≤ b ∧ b < a+ε :=
   h.exists_between$ lt_add_of_pos_right _ hε
@@ -873,7 +873,7 @@ end LinearOrderedAddCommGroup
 
 namespace Monotone
 
-variable[Preorderₓ α][Preorderₓ β]{f : α → β}(Hf : Monotone f){a : α}{s : Set α}
+variable [Preorderₓ α] [Preorderₓ β] {f : α → β} (Hf : Monotone f) {a : α} {s : Set α}
 
 theorem mem_upper_bounds_image (Ha : a ∈ UpperBounds s) : f a ∈ UpperBounds (f '' s) :=
   ball_image_of_ball fun x H => Hf (Ha ‹x ∈ s›)
@@ -915,7 +915,7 @@ end Monotone
 
 namespace Antitone
 
-variable[Preorderₓ α][Preorderₓ β]{f : α → β}(hf : Antitone f){a : α}{s : Set α}
+variable [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : Antitone f) {a : α} {s : Set α}
 
 theorem mem_upper_bounds_image (ha : a ∈ LowerBounds s) : f a ∈ UpperBounds (f '' s) :=
   hf.dual_right.mem_lower_bounds_image ha
@@ -1007,7 +1007,7 @@ theorem is_glb_prod [Preorderₓ α] [Preorderₓ β] {s : Set (α × β)} (p : 
 
 namespace OrderIso
 
-variable[Preorderₓ α][Preorderₓ β](f : α ≃o β)
+variable [Preorderₓ α] [Preorderₓ β] (f : α ≃o β)
 
 theorem upper_bounds_image {s : Set α} : UpperBounds (f '' s) = f '' UpperBounds s :=
   subset.antisymm

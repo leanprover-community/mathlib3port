@@ -12,14 +12,14 @@ open_locale Manifold
 
 section SmoothRing
 
-variable{𝕜 :
-    Type _}[NondiscreteNormedField 𝕜]{H : Type _}[TopologicalSpace H]{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+  [NormedSpace 𝕜 E]
 
 set_option default_priority 100
 
 /-- A smooth (semi)ring is a (semi)ring `R` where addition and multiplication are smooth.
 If `R` is a ring, then negation is automatically smooth, as it is multiplication with `-1`. -/
-class SmoothRing(I : ModelWithCorners 𝕜 E H)(R : Type _)[Semiringₓ R][TopologicalSpace R][ChartedSpace H R] extends
+class SmoothRing (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiringₓ R] [TopologicalSpace R] [ChartedSpace H R] extends
   HasSmoothAdd I R : Prop where 
   smooth_mul : Smooth (I.prod I) I fun p : R × R => p.1*p.2
 
@@ -46,11 +46,8 @@ instance field_smooth_ring {𝕜 : Type _} [NondiscreteNormedField 𝕜] : Smoot
         rw [times_cont_diff_on_univ]
         exact times_cont_diff_mul }
 
-variable{𝕜 R E H :
-    Type
-      _}[TopologicalSpace
-      R][TopologicalSpace
-      H][NondiscreteNormedField 𝕜][NormedGroup E][NormedSpace 𝕜 E][ChartedSpace H R](I : ModelWithCorners 𝕜 E H)
+variable {𝕜 R E H : Type _} [TopologicalSpace R] [TopologicalSpace H] [NondiscreteNormedField 𝕜] [NormedGroup E]
+  [NormedSpace 𝕜 E] [ChartedSpace H R] (I : ModelWithCorners 𝕜 E H)
 
 /-- A smooth (semi)ring is a topological (semi)ring. This is not an instance for technical reasons,
 see note [Design choices about smooth algebraic structures]. -/

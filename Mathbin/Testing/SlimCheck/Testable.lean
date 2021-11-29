@@ -167,13 +167,13 @@ random testing
 
 universe u v
 
-variable(var var' : Stringₓ)
+variable (var var' : Stringₓ)
 
-variable(α : Type u)
+variable (α : Type u)
 
-variable(β : α → Prop)
+variable (β : α → Prop)
 
-variable(f : Type → Prop)
+variable (f : Type → Prop)
 
 namespace SlimCheck
 
@@ -222,21 +222,21 @@ structure slim_check_cfg :=
   (random_seed : option exprℕ() := none)
   (quiet : bool := ff)
 
-instance  {p} : HasToString (test_result p) :=
+instance {p} : HasToString (test_result p) :=
   ⟨test_result.to_string⟩
 
 /--
 `printable_prop p` allows one to print a proposition so that
 `slim_check` can indicate how values relate to each other.
 -/
-class printable_prop(p : Prop) where 
+class printable_prop (p : Prop) where 
   printProp : Option Stringₓ
 
-instance (priority := 100)default_printable_prop {p} : printable_prop p :=
+instance (priority := 100) default_printable_prop {p} : printable_prop p :=
   ⟨none⟩
 
 /-- `testable p` uses random examples to try to disprove `p`. -/
-class testable(p : Prop) where 
+class testable (p : Prop) where 
   run{} (cfg : slim_check_cfg) (minimize : Bool) : gen (test_result p)
 
 open _Root_.List
@@ -345,7 +345,7 @@ instance iff_testable (p q : Prop) [testable (p ∧ q ∨ ¬p ∧ ¬q)] : testab
 
 open PrintableProp
 
-instance (priority := 1000)dec_guard_testable (p : Prop) [printable_prop p] [Decidable p] (β : p → Prop)
+instance (priority := 1000) dec_guard_testable (p : Prop) [printable_prop p] [Decidable p] (β : p → Prop)
   [∀ h, testable (β h)] : testable (named_binder var$ ∀ h, β h) :=
   ⟨fun cfg min =>
       do 
@@ -374,10 +374,10 @@ instance use_has_to_string.inhabited [I : Inhabited α] : Inhabited (use_has_to_
 def use_has_to_string.mk {α} (x : α) : use_has_to_string α :=
   x
 
-instance  [HasToString α] : HasRepr (use_has_to_string α) :=
+instance [HasToString α] : HasRepr (use_has_to_string α) :=
   ⟨@toString α _⟩
 
-instance (priority := 2000)all_types_testable [testable (f ℤ)] : testable (named_binder var$ ∀ x, f x) :=
+instance (priority := 2000) all_types_testable [testable (f ℤ)] : testable (named_binder var$ ∀ x, f x) :=
   ⟨fun cfg min =>
       do 
         let r ← testable.run (f ℤ) cfg min 
@@ -505,7 +505,7 @@ def minimize [sampleable_ext α] [∀ x, testable (β x)] (cfg : slim_check_cfg)
     let x' ← OptionTₓ.run$ minimize_aux α _ cfg var x 0
     pure$ x'.get_or_else ⟨x, r⟩
 
-instance (priority := 2000)exists_testable (p : Prop) [testable (named_binder var (∀ x, named_binder var'$ β x → p))] :
+instance (priority := 2000) exists_testable (p : Prop) [testable (named_binder var (∀ x, named_binder var'$ β x → p))] :
   testable (named_binder var' (named_binder var (∃ x, β x) → p)) :=
   ⟨fun cfg min =>
       do 
@@ -536,13 +536,14 @@ instance prop_var_testable (β : Prop → Prop) [I : ∀ b : Bool, testable (β 
       do 
         (convert_counter_example fun h b : Bool => h b) <$> @testable.run (named_binder var$ ∀ b : Bool, β b) _ cfg min⟩
 
-instance (priority := 3000)unused_var_testable β [Inhabited α] [testable β] : testable (named_binder var$ ∀ x : α, β) :=
+instance (priority := 3000) unused_var_testable β [Inhabited α] [testable β] :
+  testable (named_binder var$ ∀ x : α, β) :=
   ⟨fun cfg min =>
       do 
         let r ← testable.run β cfg min 
         pure$ convert_counter_example (·$ default _) r (Psum.inr$ fun x _ => x)⟩
 
-instance (priority := 2000)subtype_var_testable {p : α → Prop} [∀ x, printable_prop (p x)] [∀ x, testable (β x)]
+instance (priority := 2000) subtype_var_testable {p : α → Prop} [∀ x, printable_prop (p x)] [∀ x, testable (β x)]
   [I : sampleable_ext (Subtype p)] : testable (named_binder var$ ∀ x : α, named_binder var'$ p x → β x) :=
   ⟨fun cfg min =>
       do 
@@ -556,7 +557,7 @@ instance (priority := 2000)subtype_var_testable {p : α → Prop} [∀ x, printa
         let r ← @testable.run (∀ x : Subtype p, β x.val) (@SlimCheck.varTestable var _ _ I test) cfg min 
         pure$ convert_counter_example' ⟨fun h : ∀ x : Subtype p, β x x h' => h ⟨x, h'⟩, fun h ⟨x, h'⟩ => h x h'⟩ r⟩
 
-instance (priority := 100)decidable_testable (p : Prop) [printable_prop p] [Decidable p] : testable p :=
+instance (priority := 100) decidable_testable (p : Prop) [printable_prop p] [Decidable p] : testable p :=
   ⟨fun cfg min =>
       return$
         if h : p then success (Psum.inr h) else
@@ -621,7 +622,7 @@ section Io
 
 open _Root_.Nat
 
-variable{p : Prop}
+variable {p : Prop}
 
 /-- Execute `cmd` and repeat every time the result is `gave_up` (at most
 `n` times). -/
@@ -642,9 +643,9 @@ def give_up (x : ℕ) : test_result p → test_result p
 | gave_up n => gave_up (n+x)
 | failure Hce xs n => failure Hce xs n
 
-variable(p)
+variable (p)
 
-variable[testable p]
+variable [testable p]
 
 /-- Try `n` times to find a counter-example for `p`. -/
 def testable.run_suite_aux (cfg : slim_check_cfg) : test_result p → ℕ → Rand (test_result p)

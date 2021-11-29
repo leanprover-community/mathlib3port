@@ -44,37 +44,22 @@ open_locale Affine
 
 /-- An `affine_map k P1 P2` (notation: `P1 →ᵃ[k] P2`) is a map from `P1` to `P2` that
 induces a corresponding linear map from `V1` to `V2`. -/
-structure
-  AffineMap(k :
-    Type
-      _){V1 :
-    Type
-      _}(P1 :
-    Type
-      _){V2 :
-    Type
-      _}(P2 :
-    Type
-      _)[Ringₓ
-      k][AddCommGroupₓ V1][Module k V1][affine_space V1 P1][AddCommGroupₓ V2][Module k V2][affine_space V2 P2] where
-  
+structure AffineMap (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _) [Ringₓ k] [AddCommGroupₓ V1]
+  [Module k V1] [affine_space V1 P1] [AddCommGroupₓ V2] [Module k V2] [affine_space V2 P2] where 
   toFun : P1 → P2 
   linear : V1 →ₗ[k] V2 
   map_vadd' : ∀ p : P1 v : V1, to_fun (v +ᵥ p) = linear v +ᵥ to_fun p
 
 notation:25 P1 " →ᵃ[" k:25 "] " P2:0 => AffineMap k P1 P2
 
-instance  (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _) [Ringₓ k] [AddCommGroupₓ V1]
-  [Module k V1] [affine_space V1 P1] [AddCommGroupₓ V2] [Module k V2] [affine_space V2 P2] :
-  CoeFun (P1 →ᵃ[k] P2) fun _ => P1 → P2 :=
+instance (k : Type _) {V1 : Type _} (P1 : Type _) {V2 : Type _} (P2 : Type _) [Ringₓ k] [AddCommGroupₓ V1] [Module k V1]
+  [affine_space V1 P1] [AddCommGroupₓ V2] [Module k V2] [affine_space V2 P2] : CoeFun (P1 →ᵃ[k] P2) fun _ => P1 → P2 :=
   ⟨AffineMap.toFun⟩
 
 namespace LinearMap
 
-variable{k :
-    Type
-      _}{V₁ :
-    Type _}{V₂ : Type _}[Ringₓ k][AddCommGroupₓ V₁][Module k V₁][AddCommGroupₓ V₂][Module k V₂](f : V₁ →ₗ[k] V₂)
+variable {k : Type _} {V₁ : Type _} {V₂ : Type _} [Ringₓ k] [AddCommGroupₓ V₁] [Module k V₁] [AddCommGroupₓ V₂]
+  [Module k V₂] (f : V₁ →ₗ[k] V₂)
 
 /-- Reinterpret a linear map as an affine map. -/
 def to_affine_map : V₁ →ᵃ[k] V₂ :=
@@ -92,32 +77,10 @@ end LinearMap
 
 namespace AffineMap
 
-variable{k :
-    Type
-      _}{V1 :
-    Type
-      _}{P1 :
-    Type
-      _}{V2 :
-    Type
-      _}{P2 :
-    Type
-      _}{V3 :
-    Type
-      _}{P3 :
-    Type
-      _}{V4 :
-    Type
-      _}{P4 :
-    Type
-      _}[Ringₓ
-      k][AddCommGroupₓ
-      V1][Module k
-      V1][affine_space V1
-      P1][AddCommGroupₓ
-      V2][Module k
-      V2][affine_space V2
-      P2][AddCommGroupₓ V3][Module k V3][affine_space V3 P3][AddCommGroupₓ V4][Module k V4][affine_space V4 P4]
+variable {k : Type _} {V1 : Type _} {P1 : Type _} {V2 : Type _} {P2 : Type _} {V3 : Type _} {P3 : Type _} {V4 : Type _}
+  {P4 : Type _} [Ringₓ k] [AddCommGroupₓ V1] [Module k V1] [affine_space V1 P1] [AddCommGroupₓ V2] [Module k V2]
+  [affine_space V2 P2] [AddCommGroupₓ V3] [Module k V3] [affine_space V3 P3] [AddCommGroupₓ V4] [Module k V4]
+  [affine_space V4 P4]
 
 include V1 V2
 
@@ -174,7 +137,7 @@ protected theorem congr_argₓ (f : P1 →ᵃ[k] P2) {x y : P1} (h : x = y) : f 
 protected theorem congr_funₓ {f g : P1 →ᵃ[k] P2} (h : f = g) (x : P1) : f x = g x :=
   h ▸ rfl
 
-variable(k P1)
+variable (k P1)
 
 /-- Constant function as an `affine_map`. -/
 def const (p : P2) : P1 →ᵃ[k] P2 :=
@@ -192,7 +155,7 @@ theorem coe_const (p : P2) : «expr⇑ » (const k P1 p) = Function.const P1 p :
 theorem const_linear (p : P2) : (const k P1 p).linear = 0 :=
   rfl
 
-variable{k P1}
+variable {k P1}
 
 theorem linear_eq_zero_iff_exists_const (f : P1 →ᵃ[k] P2) : f.linear = 0 ↔ ∃ q, f = const k P1 q :=
   by 
@@ -228,7 +191,7 @@ theorem mk'_linear (f : P1 → P2) (f' : V1 →ₗ[k] V2) p h : (mk' f f' p h).l
   rfl
 
 /-- The set of affine maps to a vector space is an additive commutative group. -/
-instance  : AddCommGroupₓ (P1 →ᵃ[k] V2) :=
+instance : AddCommGroupₓ (P1 →ᵃ[k] V2) :=
   { zero := ⟨0, 0, fun p v => (zero_vadd _ _).symm⟩,
     add :=
       fun f g =>
@@ -287,7 +250,7 @@ theorem neg_linear (f : P1 →ᵃ[k] V2) : (-f).linear = -f.linear :=
 
 /-- The space of affine maps from `P1` to `P2` is an affine space over the space of affine maps
 from `P1` to the vector space `V2` corresponding to `P2`. -/
-instance  : affine_space (P1 →ᵃ[k] V2) (P1 →ᵃ[k] P2) :=
+instance : affine_space (P1 →ᵃ[k] V2) (P1 →ᵃ[k] P2) :=
   { vadd :=
       fun f g =>
         ⟨fun p => f p +ᵥ g p, f.linear+g.linear,
@@ -337,7 +300,7 @@ theorem coe_snd : «expr⇑ » (snd : P1 × P2 →ᵃ[k] P2) = Prod.snd :=
 theorem snd_linear : (snd : P1 × P2 →ᵃ[k] P2).linear = LinearMap.snd k V1 V2 :=
   rfl
 
-variable(k P1)
+variable (k P1)
 
 omit V2
 
@@ -354,15 +317,15 @@ theorem coe_id : «expr⇑ » (id k P1) = _root_.id :=
 theorem id_linear : (id k P1).linear = LinearMap.id :=
   rfl
 
-variable{P1}
+variable {P1}
 
 /-- The identity affine map acts as the identity. -/
 theorem id_apply (p : P1) : id k P1 p = p :=
   rfl
 
-variable{k P1}
+variable {k P1}
 
-instance  : Inhabited (P1 →ᵃ[k] P1) :=
+instance : Inhabited (P1 →ᵃ[k] P1) :=
   ⟨id k P1⟩
 
 include V2 V3
@@ -403,7 +366,7 @@ theorem comp_assoc (f₃₄ : P3 →ᵃ[k] P4) (f₂₃ : P2 →ᵃ[k] P3) (f₁
 
 omit V2 V3 V4
 
-instance  : Monoidₓ (P1 →ᵃ[k] P1) :=
+instance : Monoidₓ (P1 →ᵃ[k] P1) :=
   { one := id k P1, mul := comp, one_mul := id_comp, mul_one := comp_id, mul_assoc := comp_assoc }
 
 @[simp]
@@ -609,10 +572,8 @@ end
 
 section 
 
-variable{ι :
-    Type
-      _}{V :
-    ∀ i : ι, Type _}{P : ∀ i : ι, Type _}[∀ i, AddCommGroupₓ (V i)][∀ i, Module k (V i)][∀ i, AddTorsor (V i) (P i)]
+variable {ι : Type _} {V : ∀ i : ι, Type _} {P : ∀ i : ι, Type _} [∀ i, AddCommGroupₓ (V i)] [∀ i, Module k (V i)]
+  [∀ i, AddTorsor (V i) (P i)]
 
 include V
 
@@ -637,18 +598,14 @@ end AffineMap
 
 namespace AffineMap
 
-variable{k :
-    Type
-      _}{V1 :
-    Type
-      _}{P1 :
-    Type _}{V2 : Type _}[CommRingₓ k][AddCommGroupₓ V1][Module k V1][affine_space V1 P1][AddCommGroupₓ V2][Module k V2]
+variable {k : Type _} {V1 : Type _} {P1 : Type _} {V2 : Type _} [CommRingₓ k] [AddCommGroupₓ V1] [Module k V1]
+  [affine_space V1 P1] [AddCommGroupₓ V2] [Module k V2]
 
 include V1
 
 /-- If `k` is a commutative ring, then the set of affine maps with codomain in a `k`-module
 is a `k`-module. -/
-instance  : Module k (P1 →ᵃ[k] V2) :=
+instance : Module k (P1 →ᵃ[k] V2) :=
   { smul :=
       fun c f =>
         ⟨c • f, c • f.linear,

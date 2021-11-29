@@ -14,7 +14,7 @@ This file contains some results on absolute values applied to integers.
 -/
 
 
-variable{R S : Type _}[Ringₓ R][LinearOrderedCommRing S]
+variable {R S : Type _} [Ringₓ R] [LinearOrderedCommRing S]
 
 @[simp]
 theorem AbsoluteValue.map_units_int (abv : AbsoluteValue ℤ S) (x : Units ℤ) : abv x = 1 :=

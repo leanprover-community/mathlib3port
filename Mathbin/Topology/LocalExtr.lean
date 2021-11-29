@@ -29,7 +29,7 @@ Here is the list of statements specific to these two types of filters:
 
 universe u v w x
 
-variable{α : Type u}{β : Type v}{γ : Type w}{δ : Type x}[TopologicalSpace α]
+variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x} [TopologicalSpace α]
 
 open Set Filter
 
@@ -37,7 +37,7 @@ open_locale TopologicalSpace Filter
 
 section Preorderₓ
 
-variable[Preorderₓ β][Preorderₓ γ](f : α → β)(s : Set α)(a : α)
+variable [Preorderₓ β] [Preorderₓ γ] (f : α → β) (s : Set α) (a : α)
 
 /-- `is_local_min_on f s a` means that `f a ≤ f x` for all `x ∈ s` in some neighborhood of `a`. -/
 def IsLocalMinOn :=
@@ -63,7 +63,7 @@ def IsLocalMax :=
 def IsLocalExtr :=
   IsExtrFilter f (𝓝 a) a
 
-variable{f s a}
+variable {f s a}
 
 theorem IsLocalExtrOn.elim {p : Prop} : IsLocalExtrOn f s a → (IsLocalMinOn f s a → p) → (IsLocalMaxOn f s a → p) → p :=
   Or.elim
@@ -271,7 +271,7 @@ end Preorderₓ
 
 section OrderedAddCommMonoid
 
-variable[OrderedAddCommMonoid β]{f g : α → β}{a : α}{s : Set α}{l : Filter α}
+variable [OrderedAddCommMonoid β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsLocalMin.add (hf : IsLocalMin f a) (hg : IsLocalMin g a) : IsLocalMin (fun x => f x+g x) a :=
   hf.add hg
@@ -292,7 +292,7 @@ end OrderedAddCommMonoid
 
 section OrderedAddCommGroup
 
-variable[OrderedAddCommGroup β]{f g : α → β}{a : α}{s : Set α}{l : Filter α}
+variable [OrderedAddCommGroup β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsLocalMin.neg (hf : IsLocalMin f a) : IsLocalMax (fun x => -f x) a :=
   hf.neg
@@ -331,7 +331,7 @@ end OrderedAddCommGroup
 
 section SemilatticeSup
 
-variable[SemilatticeSup β]{f g : α → β}{a : α}{s : Set α}{l : Filter α}
+variable [SemilatticeSup β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsLocalMin.sup (hf : IsLocalMin f a) (hg : IsLocalMin g a) : IsLocalMin (fun x => f x⊔g x) a :=
   hf.sup hg
@@ -349,7 +349,7 @@ end SemilatticeSup
 
 section SemilatticeInf
 
-variable[SemilatticeInf β]{f g : α → β}{a : α}{s : Set α}{l : Filter α}
+variable [SemilatticeInf β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsLocalMin.inf (hf : IsLocalMin f a) (hg : IsLocalMin g a) : IsLocalMin (fun x => f x⊓g x) a :=
   hf.inf hg
@@ -370,7 +370,7 @@ end SemilatticeInf
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ β]{f g : α → β}{a : α}{s : Set α}{l : Filter α}
+variable [LinearOrderₓ β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
 theorem IsLocalMin.min (hf : IsLocalMin f a) (hg : IsLocalMin g a) : IsLocalMin (fun x => min (f x) (g x)) a :=
   hf.min hg
@@ -407,7 +407,7 @@ section Eventually
 /-! ### Relation with `eventually` comparisons of two functions -/
 
 
-variable[Preorderₓ β]{s : Set α}
+variable [Preorderₓ β] {s : Set α}
 
 theorem Filter.EventuallyLe.is_local_max_on {f g : α → β} {a : α} (hle : g ≤ᶠ[𝓝[s] a] f) (hfga : f a = g a)
   (h : IsLocalMaxOn f s a) : IsLocalMaxOn g s a :=

@@ -9,7 +9,7 @@ universe u v w
 
 namespace Units
 
-variable{M : Type u}{N : Type v}{P : Type w}[Monoidₓ M][Monoidₓ N][Monoidₓ P]
+variable {M : Type u} {N : Type v} {P : Type w} [Monoidₓ M] [Monoidₓ N] [Monoidₓ P]
 
 /-- The group homomorphism on units induced by a `monoid_hom`. -/
 @[toAdditive "The `add_group` homomorphism on `add_unit`s induced by an `add_monoid_hom`."]
@@ -35,7 +35,7 @@ theorem coe_map_inv (f : M →* N) (u : Units M) : «expr↑ » (map f u⁻¹) =
 theorem map_comp (f : M →* N) (g : N →* P) : map (g.comp f) = (map g).comp (map f) :=
   rfl
 
-variable(M)
+variable (M)
 
 @[simp, toAdditive]
 theorem map_id : map (MonoidHom.id M) = MonoidHom.id (Units M) :=
@@ -47,7 +47,7 @@ theorem map_id : map (MonoidHom.id M) = MonoidHom.id (Units M) :=
 def coe_hom : Units M →* M :=
   ⟨coeₓ, coe_one, coe_mul⟩
 
-variable{M}
+variable {M}
 
 @[simp, toAdditive]
 theorem coe_hom_apply (x : Units M) : coe_hom M x = «expr↑ » x :=
@@ -109,7 +109,7 @@ end MonoidHom
 
 section IsUnit
 
-variable{M : Type _}{N : Type _}
+variable {M : Type _} {N : Type _}
 
 @[toAdditive]
 theorem IsUnit.map [Monoidₓ M] [Monoidₓ N] (f : M →* N) {x : M} (h : IsUnit x) : IsUnit (f x) :=

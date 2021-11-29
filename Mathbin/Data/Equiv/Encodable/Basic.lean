@@ -32,7 +32,7 @@ open Option List Nat Function
 /-- Constructively countable type. Made from an explicit injection `encode : α → ℕ` and a partial
 inverse `decode : ℕ → option α`. Note that finite types *are* countable. See `denumerable` if you
 wish to enforce infiniteness. -/
-class Encodable(α : Type _) where 
+class Encodable (α : Type _) where 
   encode : α → ℕ 
   decode{} : ℕ → Option α 
   encodek : ∀ a, decode (encode a) = some a
@@ -41,7 +41,7 @@ attribute [simp] Encodable.encodek
 
 namespace Encodable
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
 universe u
 
@@ -208,7 +208,7 @@ def _root_.unique.encodable [Unique α] : Encodable α :=
 
 section Sum
 
-variable[Encodable α][Encodable β]
+variable [Encodable α] [Encodable β]
 
 /-- Explicit encoding function for the sum of two encodable types. -/
 def encode_sum : Sum α β → ℕ
@@ -280,7 +280,7 @@ noncomputable instance Prop : Encodable Prop :=
 
 section Sigma
 
-variable{γ : α → Type _}[Encodable α][∀ a, Encodable (γ a)]
+variable {γ : α → Type _} [Encodable α] [∀ a, Encodable (γ a)]
 
 /-- Explicit encoding function for `sigma γ` -/
 def encode_sigma : Sigma γ → ℕ
@@ -311,7 +311,7 @@ end Sigma
 
 section Prod
 
-variable[Encodable α][Encodable β]
+variable [Encodable α] [Encodable β]
 
 /-- If `α` and `β` are encodable, then so is their product. -/
 instance Prod : Encodable (α × β) :=
@@ -333,7 +333,7 @@ section Subtype
 
 open Subtype Decidable
 
-variable{P : α → Prop}[encA : Encodable α][decP : DecidablePred P]
+variable {P : α → Prop} [encA : Encodable α] [decP : DecidablePred P]
 
 include encA
 
@@ -397,19 +397,19 @@ end Ulower
 
 namespace Ulower
 
-variable(α : Type _)[Encodable α]
+variable (α : Type _) [Encodable α]
 
 /-- The equivalence between the encodable type `α` and `ulower α : Type`. -/
 def Equiv : α ≃ Ulower α :=
   Encodable.equivRangeEncode α
 
-variable{α}
+variable {α}
 
 /-- Lowers an `a : α` into `ulower α`. -/
 def down (a : α) : Ulower α :=
   Equiv α a
 
-instance  [Inhabited α] : Inhabited (Ulower α) :=
+instance [Inhabited α] : Inhabited (Ulower α) :=
   ⟨down (default _)⟩
 
 /-- Lifts an `a : ulower α` into `α`. -/
@@ -442,7 +442,7 @@ namespace Encodable
 
 section FindA
 
-variable{α : Type _}(p : α → Prop)[Encodable α][DecidablePred p]
+variable {α : Type _} (p : α → Prop) [Encodable α] [DecidablePred p]
 
 private def good : Option α → Prop
 | some a => p a
@@ -457,7 +457,7 @@ attribute [local instance] decidable_good
 
 open Encodable
 
-variable{p}
+variable {p}
 
 /-- Constructive choice function for a decidable subtype of an encodable type. -/
 def choose_x (h : ∃ x, p x) : { a : α // p a } :=
@@ -490,13 +490,13 @@ theorem skolem {α : Type _} {β : α → Type _} {P : ∀ x, β x → Prop} [c 
 def encode' α [Encodable α] : α ↪ ℕ :=
   ⟨Encodable.encode, Encodable.encode_injective⟩
 
-instance  {α} [Encodable α] : IsTrans _ (encode' α ⁻¹'o (· ≤ ·)) :=
+instance {α} [Encodable α] : IsTrans _ (encode' α ⁻¹'o (· ≤ ·)) :=
   (RelEmbedding.preimage _ _).IsTrans
 
-instance  {α} [Encodable α] : IsAntisymm _ (Encodable.encode' α ⁻¹'o (· ≤ ·)) :=
+instance {α} [Encodable α] : IsAntisymm _ (Encodable.encode' α ⁻¹'o (· ≤ ·)) :=
   (RelEmbedding.preimage _ _).IsAntisymm
 
-instance  {α} [Encodable α] : IsTotal _ (Encodable.encode' α ⁻¹'o (· ≤ ·)) :=
+instance {α} [Encodable α] : IsTotal _ (Encodable.encode' α ⁻¹'o (· ≤ ·)) :=
   (RelEmbedding.preimage _ _).IsTotal
 
 end Encodable
@@ -505,7 +505,7 @@ namespace Directed
 
 open Encodable
 
-variable{α : Type _}{β : Type _}[Encodable α][Inhabited α]
+variable {α : Type _} {β : Type _} [Encodable α] [Inhabited α]
 
 /-- Given a `directed r` function `f : α → β` defined on an encodable inhabited type,
 construct a noncomputable sequence such that `r (f (x n)) (f (x (n + 1)))`
@@ -535,7 +535,7 @@ theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f
     simp only [Directed.sequence, encodek]
     exact (Classical.some_spec (hf _ a)).2
 
-variable[Preorderₓ β]{f : α → β}(hf : Directed (· ≤ ·) f)
+variable [Preorderₓ β] {f : α → β} (hf : Directed (· ≤ ·) f)
 
 theorem sequence_mono : Monotone (f ∘ hf.sequence f) :=
   monotone_nat_of_le_succ$ hf.sequence_mono_nat
@@ -549,7 +549,7 @@ section Quotientₓ
 
 open Encodable Quotientₓ
 
-variable{α : Type _}{s : Setoidₓ α}[@DecidableRel α (· ≈ ·)][Encodable α]
+variable {α : Type _} {s : Setoidₓ α} [@DecidableRel α (· ≈ ·)] [Encodable α]
 
 /-- Representative of an equivalence class. This is a computable version of `quot.out` for a setoid
 on an encodable type. -/

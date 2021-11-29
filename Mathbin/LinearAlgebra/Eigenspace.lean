@@ -43,7 +43,8 @@ namespace End
 
 open Module PrincipalIdealRing Polynomial FiniteDimensional
 
-variable{K R : Type v}{V M : Type w}[CommRingₓ R][AddCommGroupₓ M][Module R M][Field K][AddCommGroupₓ V][Module K V]
+variable {K R : Type v} {V M : Type w} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Field K] [AddCommGroupₓ V]
+  [Module K V]
 
 /-- The submodule `eigenspace f μ` for a linear map `f` and a scalar `μ` consists of all vectors `x`
     such that `f x = μ • x`. (Def 5.36 of [axler2015])-/
@@ -63,7 +64,7 @@ def has_eigenvalue (f : End R M) (a : R) : Prop :=
 def eigenvalues (f : End R M) : Type _ :=
   { μ : R // f.has_eigenvalue μ }
 
-instance  (f : End R M) : Coe f.eigenvalues R :=
+instance (f : End R M) : Coe f.eigenvalues R :=
   coeSubtype
 
 theorem has_eigenvalue_of_has_eigenvector {f : End R M} {μ : R} {x : M} (h : has_eigenvector f μ x) :
@@ -148,9 +149,9 @@ theorem is_root_of_has_eigenvalue {f : End K V} {μ : K} (h : f.has_eigenvalue �
     refine' Or.resolve_right (smul_eq_zero.1 _) ne0 
     simp [←aeval_apply_of_has_eigenvector ⟨H, ne0⟩, minpoly.aeval K f]
 
-variable[FiniteDimensional K V](f : End K V)
+variable [FiniteDimensional K V] (f : End K V)
 
-variable{f}{μ : K}
+variable {f} {μ : K}
 
 -- error in LinearAlgebra.Eigenspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_eigenvalue_of_is_root (h : (minpoly K f).is_root μ) : f.has_eigenvalue μ :=
@@ -200,8 +201,7 @@ theorem exists_eigenvalue [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V]
     rw [LinearMap.is_unit_iff] at nu 
     exact has_eigenvalue_of_has_eigenvector (Submodule.exists_mem_ne_zero_of_ne_bot nu).some_spec
 
-noncomputable instance  [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : End K V) :
-  Inhabited f.eigenvalues :=
+noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : End K V) : Inhabited f.eigenvalues :=
   ⟨⟨f.exists_eigenvalue.some, f.exists_eigenvalue.some_spec⟩⟩
 
 -- error in LinearAlgebra.Eigenspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

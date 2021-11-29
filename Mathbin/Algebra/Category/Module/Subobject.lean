@@ -20,7 +20,7 @@ universe v u
 
 namespace ModuleCat
 
-variable{R : Type u}[Ringₓ R](M : ModuleCat.{v} R)
+variable {R : Type u} [Ringₓ R] (M : ModuleCat.{v} R)
 
 -- error in Algebra.Category.Module.Subobject: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The categorical subobjects of a module `M` are in one-to-one correspondence with its

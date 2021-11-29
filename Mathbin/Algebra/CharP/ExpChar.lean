@@ -24,11 +24,11 @@ exponential characteristic, characteristic
 
 universe u
 
-variable(R : Type u)
+variable (R : Type u)
 
 section Semiringₓ
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 /-- The definition of the exponential characteristic of a semiring. -/
 class inductive ExpChar (R : Type u) [Semiringₓ R] : ℕ → Prop
@@ -70,7 +70,7 @@ theorem char_eq_exp_char_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p
 
 section Nontrivial
 
-variable[Nontrivial R]
+variable [Nontrivial R]
 
 /-- The exponential characteristic is one if the characteristic is zero. -/
 theorem char_zero_of_exp_char_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] : p = 0 :=
@@ -82,7 +82,7 @@ theorem char_zero_of_exp_char_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] 
       exact False.elim (CharP.char_ne_one R 1 rfl)
 
 /-- The exponential characteristic is one if the characteristic is zero. -/
-instance (priority := 100)char_zero_of_exp_char_one' [hq : ExpChar R 1] : CharZero R :=
+instance (priority := 100) char_zero_of_exp_char_one' [hq : ExpChar R 1] : CharZero R :=
   by 
     cases' hq
     ·
@@ -105,7 +105,7 @@ theorem exp_char_one_iff_char_zero (p q : ℕ) [CharP R p] [ExpChar R q] : q = 1
 
 section NoZeroDivisors
 
-variable[NoZeroDivisors R]
+variable [NoZeroDivisors R]
 
 /-- A helper lemma: the characteristic is prime if it is non-zero. -/
 theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) : Nat.Prime p :=

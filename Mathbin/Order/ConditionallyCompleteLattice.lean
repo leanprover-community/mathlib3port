@@ -23,7 +23,7 @@ bounded below.
 
 open Set
 
-variable{α β : Type _}{ι : Sort _}
+variable {α β : Type _} {ι : Sort _}
 
 section 
 
@@ -34,16 +34,16 @@ Extension of Sup and Inf from a preorder `α` to `with_top α` and `with_bot α`
 
 open_locale Classical
 
-noncomputable instance  {α : Type _} [Preorderₓ α] [HasSupₓ α] : HasSupₓ (WithTop α) :=
+noncomputable instance {α : Type _} [Preorderₓ α] [HasSupₓ α] : HasSupₓ (WithTop α) :=
   ⟨fun S => if ⊤ ∈ S then ⊤ else if BddAbove (coeₓ ⁻¹' S : Set α) then «expr↑ » (Sup (coeₓ ⁻¹' S : Set α)) else ⊤⟩
 
-noncomputable instance  {α : Type _} [HasInfₓ α] : HasInfₓ (WithTop α) :=
+noncomputable instance {α : Type _} [HasInfₓ α] : HasInfₓ (WithTop α) :=
   ⟨fun S => if S ⊆ {⊤} then ⊤ else «expr↑ » (Inf (coeₓ ⁻¹' S : Set α))⟩
 
-noncomputable instance  {α : Type _} [HasSupₓ α] : HasSupₓ (WithBot α) :=
+noncomputable instance {α : Type _} [HasSupₓ α] : HasSupₓ (WithBot α) :=
   ⟨(@WithTop.hasInf (OrderDual α) _).inf⟩
 
-noncomputable instance  {α : Type _} [Preorderₓ α] [HasInfₓ α] : HasInfₓ (WithBot α) :=
+noncomputable instance {α : Type _} [Preorderₓ α] [HasInfₓ α] : HasInfₓ (WithBot α) :=
   ⟨(@WithTop.hasSup (OrderDual α) _ _).sup⟩
 
 @[simp]
@@ -65,7 +65,7 @@ To differentiate the statements from the corresponding statements in (unconditio
 complete lattices, we prefix Inf and Sup by a c everywhere. The same statements should
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
-class ConditionallyCompleteLattice(α : Type _) extends Lattice α, HasSupₓ α, HasInfₓ α where 
+class ConditionallyCompleteLattice (α : Type _) extends Lattice α, HasSupₓ α, HasInfₓ α where 
   le_cSup : ∀ s a, BddAbove s → a ∈ s → a ≤ Sup s 
   cSup_le : ∀ s a, Set.Nonempty s → a ∈ UpperBounds s → Sup s ≤ a 
   cInf_le : ∀ s a, BddBelow s → a ∈ s → Inf s ≤ a 
@@ -80,7 +80,7 @@ To differentiate the statements from the corresponding statements in (unconditio
 complete linear orders, we prefix Inf and Sup by a c everywhere. The same statements should
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
-class ConditionallyCompleteLinearOrder(α : Type _) extends ConditionallyCompleteLattice α, LinearOrderₓ α
+class ConditionallyCompleteLinearOrder (α : Type _) extends ConditionallyCompleteLattice α, LinearOrderₓ α
 
 /-- A conditionally complete linear order with `bot` is a linear order with least element, in which
 every nonempty subset which is bounded above has a supremum, and every nonempty subset (necessarily
@@ -91,15 +91,17 @@ complete linear orders, we prefix Inf and Sup by a c everywhere. The same statem
 hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 @[ancestor ConditionallyCompleteLinearOrder HasBot]
-class ConditionallyCompleteLinearOrderBot(α : Type _) extends ConditionallyCompleteLinearOrder α, HasBot α where 
+class ConditionallyCompleteLinearOrderBot (α : Type _) extends ConditionallyCompleteLinearOrder α, HasBot α where 
   bot_le : ∀ x : α, ⊥ ≤ x 
   cSup_empty : Sup ∅ = ⊥
 
-instance (priority := 100)ConditionallyCompleteLinearOrderBot.toOrderBot (α : Type _)
-  [h : ConditionallyCompleteLinearOrderBot α] : OrderBot α :=
+instance (priority := 100) ConditionallyCompleteLinearOrderBot.toOrderBot [h : ConditionallyCompleteLinearOrderBot α] :
+  OrderBot α :=
   { h with  }
 
-instance (priority := 100)conditionallyCompleteLatticeOfCompleteLattice [CompleteLattice α] :
+/-- A complete lattice is a conditionally complete lattice, as there are no restrictions
+on the properties of Inf and Sup in a complete lattice.-/
+instance (priority := 100) conditionallyCompleteLatticeOfCompleteLattice [CompleteLattice α] :
   ConditionallyCompleteLattice α :=
   { ‹CompleteLattice α› with
     le_cSup :=
@@ -115,7 +117,7 @@ instance (priority := 100)conditionallyCompleteLatticeOfCompleteLattice [Complet
       by 
         intros  <;> apply le_Inf <;> assumption }
 
-instance (priority := 100)conditionallyCompleteLinearOrderOfCompleteLinearOrder [CompleteLinearOrder α] :
+instance (priority := 100) conditionallyCompleteLinearOrderOfCompleteLinearOrder [CompleteLinearOrder α] :
   ConditionallyCompleteLinearOrder α :=
   { conditionallyCompleteLatticeOfCompleteLattice, ‹CompleteLinearOrder α› with  }
 
@@ -178,19 +180,19 @@ end
 
 section OrderDual
 
-instance  (α : Type _) [ConditionallyCompleteLattice α] : ConditionallyCompleteLattice (OrderDual α) :=
+instance (α : Type _) [ConditionallyCompleteLattice α] : ConditionallyCompleteLattice (OrderDual α) :=
   { OrderDual.hasInfₓ α, OrderDual.hasSupₓ α, OrderDual.lattice α with
     le_cSup := @ConditionallyCompleteLattice.cInf_le α _, cSup_le := @ConditionallyCompleteLattice.le_cInf α _,
     le_cInf := @ConditionallyCompleteLattice.cSup_le α _, cInf_le := @ConditionallyCompleteLattice.le_cSup α _ }
 
-instance  (α : Type _) [ConditionallyCompleteLinearOrder α] : ConditionallyCompleteLinearOrder (OrderDual α) :=
+instance (α : Type _) [ConditionallyCompleteLinearOrder α] : ConditionallyCompleteLinearOrder (OrderDual α) :=
   { OrderDual.conditionallyCompleteLattice α, OrderDual.linearOrder α with  }
 
 end OrderDual
 
 section ConditionallyCompleteLattice
 
-variable[ConditionallyCompleteLattice α]{s t : Set α}{a b : α}
+variable [ConditionallyCompleteLattice α] {s t : Set α} {a b : α}
 
 theorem le_cSup (h₁ : BddAbove s) (h₂ : a ∈ s) : a ≤ Sup s :=
   ConditionallyCompleteLattice.le_cSup s a h₁ h₂
@@ -614,7 +616,7 @@ instance pi.conditionally_complete_lattice
 
 section ConditionallyCompleteLinearOrder
 
-variable[ConditionallyCompleteLinearOrder α]{s t : Set α}{a b : α}
+variable [ConditionallyCompleteLinearOrder α] {s t : Set α} {a b : α}
 
 theorem Finset.Nonempty.cSup_eq_max' {s : Finset α} (h : s.nonempty) : Sup («expr↑ » s) = s.max' h :=
   eq_of_forall_ge_iff$ fun a => (cSup_le_iff s.bdd_above h.to_set).trans (s.max'_le_iff h).symm
@@ -682,7 +684,7 @@ theorem cSup_eq_of_is_forall_le_of_forall_le_imp_ge (_ : s.nonempty) (h_is_ub : 
 
 open Function
 
-variable[IsWellOrder α (· < ·)]
+variable [IsWellOrder α (· < ·)]
 
 theorem Inf_eq_argmin_on (hs : s.nonempty) : Inf s = argmin_on id (@IsWellOrder.wf α (· < ·) _) s hs :=
   IsLeast.cInf_eq ⟨argmin_on_mem _ _ _ _, fun a ha => argmin_on_le id _ _ ha⟩
@@ -709,7 +711,7 @@ In this case we have `Sup ∅ = ⊥`, so we can drop some `nonempty`/`set.nonemp
 
 section ConditionallyCompleteLinearOrderBot
 
-variable[ConditionallyCompleteLinearOrderBot α]
+variable [ConditionallyCompleteLinearOrderBot α]
 
 theorem cSup_empty : (Sup ∅ : α) = ⊥ :=
   ConditionallyCompleteLinearOrderBot.cSup_empty
@@ -758,7 +760,7 @@ namespace WithTop
 
 open_locale Classical
 
-variable[ConditionallyCompleteLinearOrderBot α]
+variable [ConditionallyCompleteLinearOrderBot α]
 
 /-- The Sup of a non-empty set is its least upper bound for a conditionally
 complete lattice with a top. -/
@@ -901,7 +903,7 @@ theorem is_glb_Inf (s : Set (WithTop α)) : IsGlb s (Inf s) :=
       intro _ _ 
       exact bot_le
 
-noncomputable instance  : CompleteLinearOrder (WithTop α) :=
+noncomputable instance : CompleteLinearOrder (WithTop α) :=
   { WithTop.linearOrder, WithTop.lattice, WithTop.orderTop, WithTop.orderBot with sup := Sup,
     le_Sup := fun s => (is_lub_Sup s).1, Sup_le := fun s => (is_lub_Sup s).2, inf := Inf,
     le_Inf := fun s => (is_glb_Inf s).2, Inf_le := fun s => (is_glb_Inf s).1 }
@@ -934,7 +936,7 @@ end WithTop
 
 namespace Monotone
 
-variable[Preorderₓ α][ConditionallyCompleteLattice β]{f : α → β}(h_mono : Monotone f)
+variable [Preorderₓ α] [ConditionallyCompleteLattice β] {f : α → β} (h_mono : Monotone f)
 
 /-! A monotone function into a conditionally complete lattice preserves the ordering properties of
 `Sup` and `Inf`. -/
@@ -956,7 +958,8 @@ end Monotone
 
 namespace GaloisConnection
 
-variable{γ : Type _}[ConditionallyCompleteLattice α][ConditionallyCompleteLattice β][Nonempty ι]{l : α → β}{u : β → α}
+variable {γ : Type _} [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β] [Nonempty ι] {l : α → β}
+  {u : β → α}
 
 theorem l_cSup (gc : GaloisConnection l u) {s : Set α} (hne : s.nonempty) (hbdd : BddAbove s) :
   l (Sup s) = ⨆x : s, l x :=
@@ -1001,7 +1004,7 @@ end GaloisConnection
 
 namespace OrderIso
 
-variable{γ : Type _}[ConditionallyCompleteLattice α][ConditionallyCompleteLattice β][Nonempty ι]
+variable {γ : Type _} [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β] [Nonempty ι]
 
 theorem map_cSup (e : α ≃o β) {s : Set α} (hne : s.nonempty) (hbdd : BddAbove s) : e (Sup s) = ⨆x : s, e x :=
   e.to_galois_connection.l_cSup hne hbdd
@@ -1105,14 +1108,9 @@ noncomputable instance WithBot.conditionallyCompleteLattice {α : Type _} [Condi
     cInf_le := (@WithTop.conditionallyCompleteLattice (OrderDual α) _).le_cSup,
     le_cInf := (@WithTop.conditionallyCompleteLattice (OrderDual α) _).cSup_le }
 
-/-- Adding a bottom and a top to a conditionally complete lattice gives a bounded lattice-/
-noncomputable instance WithTop.WithBot.boundedLattice {α : Type _} [ConditionallyCompleteLattice α] :
-  BoundedLattice (WithTop (WithBot α)) :=
-  { WithTop.orderBot, WithTop.orderTop, ConditionallyCompleteLattice.toLattice _ with  }
-
 noncomputable instance WithTop.WithBot.completeLattice {α : Type _} [ConditionallyCompleteLattice α] :
   CompleteLattice (WithTop (WithBot α)) :=
-  { WithTop.hasInf, WithTop.hasSup, WithTop.WithBot.boundedLattice with
+  { WithTop.hasInf, WithTop.hasSup, WithTop.boundedOrder, WithTop.lattice with
     le_Sup := fun S a haS => (WithTop.is_lub_Sup' ⟨a, haS⟩).1 haS,
     Sup_le :=
       fun S a ha =>
@@ -1165,7 +1163,7 @@ end WithTopBot
 
 section Subtype
 
-variable(s : Set α)
+variable (s : Set α)
 
 /-! ### Subtypes of conditionally complete linear orders
 
@@ -1183,7 +1181,7 @@ open_locale Classical
 
 section HasSupₓ
 
-variable[HasSupₓ α]
+variable [HasSupₓ α]
 
 /-- `has_Sup` structure on a nonempty subset `s` of an object with `has_Sup`. This definition is
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
@@ -1207,7 +1205,7 @@ end HasSupₓ
 
 section HasInfₓ
 
-variable[HasInfₓ α]
+variable [HasInfₓ α]
 
 /-- `has_Inf` structure on a nonempty subset `s` of an object with `has_Inf`. This definition is
 non-canonical (it uses `default s`); it should be used only as here, as an auxiliary instance in the
@@ -1229,7 +1227,7 @@ theorem subset_Inf_of_within [Inhabited s] {t : Set s} (h : Inf (coeₓ '' t : S
 
 end HasInfₓ
 
-variable[ConditionallyCompleteLinearOrder α]
+variable [ConditionallyCompleteLinearOrder α]
 
 attribute [local instance] subsetHasSup
 

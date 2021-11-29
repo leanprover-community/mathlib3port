@@ -27,11 +27,11 @@ universe u
 
 namespace SimpleGraph
 
-variable{V : Type u}
+variable {V : Type u}
 
-variable(G : SimpleGraph V)[DecidableRel G.adj]
+variable (G : SimpleGraph V) [DecidableRel G.adj]
 
-variable[Fintype V][DecidableEq V]
+variable [Fintype V] [DecidableEq V]
 
 /--
 A graph is strongly regular with parameters `n k l m` if
@@ -40,7 +40,7 @@ A graph is strongly regular with parameters `n k l m` if
  * every pair of adjacent vertices has `l` common neighbors
  * every pair of nonadjacent vertices has `m` common neighbors
 -/
-structure is_SRG_of(n k l m : ℕ) : Prop where 
+structure is_SRG_of (n k l m : ℕ) : Prop where 
   card : Fintype.card V = n 
   regular : G.is_regular_of_degree k 
   adj_common : ∀ v w : V, G.adj v w → Fintype.card (G.common_neighbors v w) = l 

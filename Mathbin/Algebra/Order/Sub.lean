@@ -34,7 +34,7 @@ TODO: generalize `nat.le_of_le_of_sub_le_sub_right`, `nat.sub_le_sub_right_iff`,
 -/
 
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 /-- `has_ordered_sub α` means that `α` has a subtraction characterized by `a - b ≤ c ↔ a ≤ c + b`.
 In other words, `a - b` is the least `c` such that `a ≤ b + c`.
@@ -42,12 +42,12 @@ In other words, `a - b` is the least `c` such that `a ≤ b + c`.
 This is satisfied both by the subtraction in additive ordered groups and by truncated subtraction
 in canonically ordered monoids on many specific types.
 -/
-class HasOrderedSub(α : Type _)[LE α][Add α][Sub α] where 
+class HasOrderedSub (α : Type _) [LE α] [Add α] [Sub α] where 
   tsub_le_iff_right : ∀ a b c : α, a - b ≤ c ↔ a ≤ c+b
 
 section Add
 
-variable[Preorderₓ α][Add α][Sub α][HasOrderedSub α]{a b c d : α}
+variable [Preorderₓ α] [Add α] [Sub α] [HasOrderedSub α] {a b c d : α}
 
 @[simp]
 theorem tsub_le_iff_right : a - b ≤ c ↔ a ≤ c+b :=
@@ -93,7 +93,7 @@ section OrderedAddCommMonoid
 
 section Preorderₓ
 
-variable[Preorderₓ α][AddCommMonoidₓ α][Sub α][HasOrderedSub α]{a b c d : α}
+variable [Preorderₓ α] [AddCommMonoidₓ α] [Sub α] [HasOrderedSub α] {a b c d : α}
 
 theorem tsub_le_iff_left : a - b ≤ c ↔ a ≤ b+c :=
   by 
@@ -123,7 +123,7 @@ theorem AddMonoidHom.le_map_tsub [Preorderₓ β] [AddCommMonoidₓ β] [Sub β]
 
 end Preorderₓ
 
-variable[PartialOrderₓ α][AddCommMonoidₓ α][Sub α][HasOrderedSub α]{a b c d : α}
+variable [PartialOrderₓ α] [AddCommMonoidₓ α] [Sub α] [HasOrderedSub α] {a b c d : α}
 
 theorem tsub_tsub (b a c : α) : b - a - c = b - a+c :=
   by 
@@ -135,7 +135,7 @@ theorem tsub_tsub (b a c : α) : b - a - c = b - a+c :=
 
 section Cov
 
-variable[CovariantClass α α (·+·) (· ≤ ·)]
+variable [CovariantClass α α (·+·) (· ≤ ·)]
 
 theorem tsub_le_tsub_left (h : a ≤ b) (c : α) : c - b ≤ c - a :=
   tsub_le_iff_left.mpr$ le_add_tsub.trans$ add_le_add_right h _
@@ -256,7 +256,7 @@ end AddLeCancellable
 
 section Contra
 
-variable[ContravariantClass α α (·+·) (· ≤ ·)]
+variable [ContravariantClass α α (·+·) (· ≤ ·)]
 
 theorem le_add_tsub_swap : a ≤ (b+a) - b :=
   Contravariant.add_le_cancellable.le_add_tsub_swap
@@ -297,7 +297,7 @@ end Contra
 
 section Both
 
-variable[CovariantClass α α (·+·) (· ≤ ·)][ContravariantClass α α (·+·) (· ≤ ·)]
+variable [CovariantClass α α (·+·) (· ≤ ·)] [ContravariantClass α α (·+·) (· ≤ ·)]
 
 theorem add_tsub_add_eq_tsub_right (a c b : α) : ((a+c) - b+c) = a - b :=
   by 
@@ -324,7 +324,7 @@ end OrderedAddCommMonoid
 
 section LinearOrderₓ
 
-variable{a b c d : α}[LinearOrderₓ α][AddCommMonoidₓ α][Sub α][HasOrderedSub α]
+variable {a b c d : α} [LinearOrderₓ α] [AddCommMonoidₓ α] [Sub α] [HasOrderedSub α]
 
 /-- See `lt_of_tsub_lt_tsub_right_of_le` for a weaker statement in a partial order. -/
 theorem lt_of_tsub_lt_tsub_right (h : a - c < b - c) : a < b :=
@@ -343,7 +343,7 @@ theorem lt_tsub_comm : a < b - c ↔ c < b - a :=
 
 section Cov
 
-variable[CovariantClass α α (·+·) (· ≤ ·)]
+variable [CovariantClass α α (·+·) (· ≤ ·)]
 
 /-- See `lt_of_tsub_lt_tsub_left_of_le` for a weaker statement in a partial order. -/
 theorem lt_of_tsub_lt_tsub_left (h : a - b < a - c) : c < b :=
@@ -358,7 +358,7 @@ end LinearOrderₓ
 
 section CanonicallyOrderedAddMonoid
 
-variable[CanonicallyOrderedAddMonoid α][Sub α][HasOrderedSub α]{a b c d : α}
+variable [CanonicallyOrderedAddMonoid α] [Sub α] [HasOrderedSub α] {a b c d : α}
 
 @[simp]
 theorem add_tsub_cancel_of_le (h : a ≤ b) : (a+b - a) = b :=
@@ -603,7 +603,7 @@ section Contra
 /-! ### Lemmas where addition is order-reflecting. -/
 
 
-variable[ContravariantClass α α (·+·) (· ≤ ·)]
+variable [ContravariantClass α α (·+·) (· ≤ ·)]
 
 theorem eq_tsub_iff_add_eq_of_le (h : c ≤ b) : a = b - c ↔ (a+c) = b :=
   Contravariant.add_le_cancellable.eq_tsub_iff_add_eq_of_le h
@@ -696,7 +696,7 @@ end CanonicallyOrderedAddMonoid
 
 section CanonicallyLinearOrderedAddMonoid
 
-variable[CanonicallyLinearOrderedAddMonoid α][Sub α][HasOrderedSub α]{a b c d : α}
+variable [CanonicallyLinearOrderedAddMonoid α] [Sub α] [HasOrderedSub α] {a b c d : α}
 
 @[simp]
 theorem tsub_pos_iff_lt : 0 < a - b ↔ b < a :=
@@ -757,7 +757,7 @@ end AddLeCancellable
 
 section Contra
 
-variable[ContravariantClass α α (·+·) (· ≤ ·)]
+variable [ContravariantClass α α (·+·) (· ≤ ·)]
 
 /-- This lemma also holds for `ennreal`, but we need a different proof for that. -/
 theorem tsub_lt_tsub_iff_right (h : c ≤ a) : a - c < b - c ↔ a < b :=
@@ -809,7 +809,7 @@ namespace WithTop
 
 section 
 
-variable[Sub α][HasZero α]
+variable [Sub α] [HasZero α]
 
 /-- If `α` has subtraction and `0`, we can extend the subtraction to `with_top α`. -/
 protected def sub : ∀ a b : WithTop α, WithTop α
@@ -817,7 +817,7 @@ protected def sub : ∀ a b : WithTop α, WithTop α
 | ⊤, (x : α) => ⊤
 | (x : α), (y : α) => (x - y : α)
 
-instance  : Sub (WithTop α) :=
+instance : Sub (WithTop α) :=
   ⟨WithTop.sub⟩
 
 @[simp, normCast]
@@ -835,9 +835,9 @@ theorem sub_top {a : WithTop α} : a - ⊤ = 0 :=
 
 end 
 
-variable[CanonicallyOrderedAddMonoid α][Sub α][HasOrderedSub α]
+variable [CanonicallyOrderedAddMonoid α] [Sub α] [HasOrderedSub α]
 
-instance  : HasOrderedSub (WithTop α) :=
+instance : HasOrderedSub (WithTop α) :=
   by 
     constructor 
     rintro x y z 

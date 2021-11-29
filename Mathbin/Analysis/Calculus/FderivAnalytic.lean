@@ -13,17 +13,17 @@ open Filter Asymptotics
 
 open_locale Ennreal
 
-variable{𝕜 : Type _}[NondiscreteNormedField 𝕜]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
 
-variable{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]
+variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]
+variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
 
 section fderiv
 
-variable{p : FormalMultilinearSeries 𝕜 E F}{r : ℝ≥0∞}
+variable {p : FormalMultilinearSeries 𝕜 E F} {r : ℝ≥0∞}
 
-variable{f : E → F}{x : E}{s : Set E}
+variable {f : E → F} {x : E} {s : Set E}
 
 theorem HasFpowerSeriesAt.has_strict_fderiv_at (h : HasFpowerSeriesAt f p x) :
   HasStrictFderivAt f (continuousMultilinearCurryFin1 𝕜 E F (p 1)) x :=
@@ -58,9 +58,9 @@ end fderiv
 
 section deriv
 
-variable{p : FormalMultilinearSeries 𝕜 𝕜 F}{r : ℝ≥0∞}
+variable {p : FormalMultilinearSeries 𝕜 𝕜 F} {r : ℝ≥0∞}
 
-variable{f : 𝕜 → F}{x : 𝕜}
+variable {f : 𝕜 → F} {x : 𝕜}
 
 protected theorem HasFpowerSeriesAt.has_strict_deriv_at (h : HasFpowerSeriesAt f p x) :
   HasStrictDerivAt f (p 1 fun _ => 1) x :=

@@ -30,7 +30,7 @@ noncomputable theory
 
 open_locale Classical MeasureTheory Ennreal Nnreal
 
-variable{α β : Type _}{m : MeasurableSpace α}
+variable {α β : Type _} {m : MeasurableSpace α}
 
 namespace MeasureTheory
 
@@ -92,9 +92,9 @@ def equiv_signed_measure : complex_measure α ≃ signed_measure α × signed_me
 
 section 
 
-variable{R : Type _}[Semiringₓ R][Module R ℝ]
+variable {R : Type _} [Semiringₓ R] [Module R ℝ]
 
-variable[TopologicalSpace R][HasContinuousSmul R ℝ][HasContinuousSmul R ℂ]
+variable [TopologicalSpace R] [HasContinuousSmul R ℝ] [HasContinuousSmul R ℂ]
 
 /-- The complex measures form an linear isomorphism to the type of pairs of signed measures. -/
 @[simps]

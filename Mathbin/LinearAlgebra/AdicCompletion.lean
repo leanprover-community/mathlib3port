@@ -24,11 +24,11 @@ with respect to an ideal `I`:
 
 open Submodule
 
-variable{R : Type _}[CommRingₓ R](I : Ideal R)
+variable {R : Type _} [CommRingₓ R] (I : Ideal R)
 
-variable(M : Type _)[AddCommGroupₓ M][Module R M]
+variable (M : Type _) [AddCommGroupₓ M] [Module R M]
 
-variable{N : Type _}[AddCommGroupₓ N][Module R N]
+variable {N : Type _} [AddCommGroupₓ N] [Module R N]
 
 /-- A module `M` is Hausdorff with respect to an ideal `I` if `⋂ I^n M = 0`. -/
 class IsHausdorff : Prop where 
@@ -44,7 +44,7 @@ class IsPrecomplete : Prop where
 /-- A module `M` is `I`-adically complete if it is Hausdorff and precomplete. -/
 class IsAdicComplete extends IsHausdorff I M, IsPrecomplete I M : Prop
 
-variable{I M}
+variable {I M}
 
 theorem IsHausdorff.haus (h : IsHausdorff I M) : ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD ((I^n) • ⊤ : Submodule R M)]) → x = 0 :=
   IsHausdorff.haus'
@@ -64,7 +64,7 @@ theorem is_precomplete_iff :
         ∃ L : M, ∀ n, f n ≡ L [SMOD ((I^n) • ⊤ : Submodule R M)] :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 
-variable(I M)
+variable (I M)
 
 /-- The Hausdorffification of a module with respect to an ideal. -/
 @[reducible]
@@ -103,7 +103,7 @@ instance bot : IsHausdorff (⊥ : Ideal R) M :=
       by 
         simpa only [pow_oneₓ ⊥, bot_smul, Smodeq.bot] using hx 1⟩
 
-variable{M}
+variable {M}
 
 protected theorem Subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleton M :=
   ⟨fun x y =>
@@ -114,12 +114,12 @@ protected theorem Subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleto
               rw [Ideal.top_pow, top_smul]
               exact Smodeq.top⟩
 
-variable(M)
+variable (M)
 
-instance (priority := 100)of_subsingleton [Subsingleton M] : IsHausdorff I M :=
+instance (priority := 100) of_subsingleton [Subsingleton M] : IsHausdorff I M :=
   ⟨fun x _ => Subsingleton.elimₓ _ _⟩
 
-variable{I M}
+variable {I M}
 
 theorem infi_pow_smul (h : IsHausdorff I M) : (⨅n : ℕ, (I^n) • ⊤ : Submodule R M) = ⊥ :=
   eq_bot_iff.2$ fun x hx => (mem_bot _).2$ h.haus x$ fun n => Smodeq.zero.2$ (mem_infi$ fun n : ℕ => (I^n) • ⊤).1 hx n
@@ -132,13 +132,13 @@ namespace Hausdorffification
 def of : M →ₗ[R] Hausdorffification I M :=
   mkq _
 
-variable{I M}
+variable {I M}
 
 @[elab_as_eliminator]
 theorem induction_on {C : Hausdorffification I M → Prop} (x : Hausdorffification I M) (ih : ∀ x, C (of I M x)) : C x :=
   Quotientₓ.induction_on' x ih
 
-variable(I M)
+variable (I M)
 
 -- error in LinearAlgebra.AdicCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : is_Hausdorff I (Hausdorffification I M) :=
@@ -153,7 +153,7 @@ instance : is_Hausdorff I (Hausdorffification I M) :=
       exact [expr hx n]
     end)))⟩
 
-variable{M}[h : IsHausdorff I N]
+variable {M} [h : IsHausdorff I N]
 
 include h
 
@@ -208,7 +208,7 @@ instance top : IsPrecomplete (⊤ : Ideal R) M :=
             rw [Ideal.top_pow, top_smul]
             exact Smodeq.top⟩⟩
 
-instance (priority := 100)of_subsingleton [Subsingleton M] : IsPrecomplete I M :=
+instance (priority := 100) of_subsingleton [Subsingleton M] : IsPrecomplete I M :=
   ⟨fun f hf =>
       ⟨0,
         fun n =>
@@ -249,15 +249,15 @@ theorem eval_comp_of (n : ℕ) : (eval I M n).comp (of I M) = mkq _ :=
 theorem range_eval (n : ℕ) : (eval I M n).range = ⊤ :=
   LinearMap.range_eq_top.2$ fun x => Quotientₓ.induction_on' x$ fun x => ⟨of I M x, rfl⟩
 
-variable{I M}
+variable {I M}
 
 @[ext]
 theorem ext {x y : adicCompletion I M} (h : ∀ n, eval I M n x = eval I M n y) : x = y :=
   Subtype.eq$ funext h
 
-variable(I M)
+variable (I M)
 
-instance  : IsHausdorff I (adicCompletion I M) :=
+instance : IsHausdorff I (adicCompletion I M) :=
   ⟨fun x hx =>
       ext$
         fun n =>
@@ -283,7 +283,7 @@ instance bot : IsAdicComplete (⊥ : Ideal R) M :=
 protected theorem Subsingleton (h : IsAdicComplete (⊤ : Ideal R) M) : Subsingleton M :=
   h.1.Subsingleton
 
-instance (priority := 100)of_subsingleton [Subsingleton M] : IsAdicComplete I M :=
+instance (priority := 100) of_subsingleton [Subsingleton M] : IsAdicComplete I M :=
   {  }
 
 open_locale BigOperators

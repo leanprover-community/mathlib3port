@@ -22,7 +22,7 @@ import Mathbin.Order.Atoms
 -/
 
 
-variable(R : Type _)[Ringₓ R](M : Type _)[AddCommGroupₓ M][Module R M]
+variable (R : Type _) [Ringₓ R] (M : Type _) [AddCommGroupₓ M] [Module R M]
 
 /-- A module is simple when it has only two submodules, `⊥` and `⊤`. -/
 abbrev IsSimpleModule :=
@@ -42,7 +42,7 @@ theorem is_simple_module.nontrivial [is_simple_module R M] : nontrivial M :=
     simp [] [] [] ["[", expr submodule.mem_bot, ",", expr submodule.mem_top, ",", expr h x, "]"] [] []
   end⟩⟩
 
-variable{R}{M}{m : Submodule R M}{N : Type _}[AddCommGroupₓ N][Module R N]
+variable {R} {M} {m : Submodule R M} {N : Type _} [AddCommGroupₓ N] [Module R N]
 
 theorem is_simple_module_iff_is_atom : IsSimpleModule R m ↔ IsAtom m :=
   by 
@@ -52,7 +52,7 @@ theorem is_simple_module_iff_is_atom : IsSimpleModule R m ↔ IsAtom m :=
 
 namespace IsSimpleModule
 
-variable[hm : IsSimpleModule R m]
+variable [hm : IsSimpleModule R m]
 
 @[simp]
 theorem IsAtom : IsAtom m :=
@@ -68,7 +68,7 @@ theorem is_semisimple_of_Sup_simples_eq_top (h : Sup { m:Submodule R M | IsSimpl
 
 namespace IsSemisimpleModule
 
-variable[IsSemisimpleModule R M]
+variable [IsSemisimpleModule R M]
 
 theorem Sup_simples_eq_top : Sup { m:Submodule R M | IsSimpleModule R m } = ⊤ :=
   by 

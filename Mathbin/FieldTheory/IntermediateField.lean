@@ -36,7 +36,7 @@ open FiniteDimensional
 
 open_locale BigOperators
 
-variable(K L : Type _)[Field K][Field L][Algebra K L]
+variable (K L : Type _) [Field K] [Field L] [Algebra K L]
 
 /-- `S : intermediate_field K L` is a subset of `L` such that there is a field
 tower `L / S / K`. -/
@@ -47,7 +47,7 @@ structure IntermediateField extends Subalgebra K L where
 /-- Reinterpret an `intermediate_field` as a `subalgebra`. -/
 add_decl_doc IntermediateField.toSubalgebra
 
-variable{K L}(S : IntermediateField K L)
+variable {K L} (S : IntermediateField K L)
 
 namespace IntermediateField
 
@@ -55,7 +55,7 @@ namespace IntermediateField
 def to_subfield : Subfield L :=
   { S.to_subalgebra, S with  }
 
-instance  : SetLike (IntermediateField K L) L :=
+instance : SetLike (IntermediateField K L) L :=
   ⟨fun S => S.to_subalgebra.carrier,
     by 
       rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ ⟨h⟩
@@ -275,7 +275,7 @@ instance is_scalar_tower_mid {R : Type _} [Semiringₓ R] [Algebra L R] [Algebra
 instance is_scalar_tower_mid' : IsScalarTower K S L :=
   S.is_scalar_tower_mid
 
-variable{L' : Type _}[Field L'][Algebra K L']
+variable {L' : Type _} [Field L'] [Algebra K L']
 
 /-- If `f : L →+* L'` fixes `K`, `S.map f` is the intermediate field between `L'` and `K`
 such that `x ∈ S ↔ f x ∈ S.map f`. -/
@@ -299,14 +299,14 @@ theorem coe_val : «expr⇑ » S.val = coeₓ :=
 theorem val_mk {x : L} (hx : x ∈ S) : S.val ⟨x, hx⟩ = x :=
   rfl
 
-variable{S}
+variable {S}
 
 theorem to_subalgebra_injective {S S' : IntermediateField K L} (h : S.to_subalgebra = S'.to_subalgebra) : S = S' :=
   by 
     ext 
     rw [←mem_to_subalgebra, ←mem_to_subalgebra, h]
 
-variable(S)
+variable (S)
 
 theorem set_range_subset : Set.Range (algebraMap K L) ⊆ S :=
   S.to_subalgebra.range_subset
@@ -325,7 +325,7 @@ theorem to_subalgebra_le_to_subalgebra {S S' : IntermediateField K L} : S.to_sub
 theorem to_subalgebra_lt_to_subalgebra {S S' : IntermediateField K L} : S.to_subalgebra < S'.to_subalgebra ↔ S < S' :=
   Iff.rfl
 
-variable{S}
+variable {S}
 
 section Tower
 
@@ -351,7 +351,7 @@ theorem mem_lift2 {F : IntermediateField K L} {E : IntermediateField F L} {x : L
   Iff.rfl
 
 /-- This was formerly an instance called `lift2_alg`, but an instance above already provides it. -/
-example  {F : IntermediateField K L} {E : IntermediateField F L} : Algebra K E :=
+example {F : IntermediateField K L} {E : IntermediateField F L} : Algebra K E :=
   by 
     infer_instance
 
@@ -371,7 +371,7 @@ end Tower
 
 section FiniteDimensional
 
-variable(F E : IntermediateField K L)
+variable (F E : IntermediateField K L)
 
 instance finite_dimensional_left [FiniteDimensional K L] : FiniteDimensional K F :=
   FiniteDimensional.finite_dimensional_submodule F.to_subalgebra.to_submodule
@@ -387,7 +387,7 @@ theorem dim_eq_dim_subalgebra : Module.rank K F.to_subalgebra = Module.rank K F 
 theorem finrank_eq_finrank_subalgebra : finrank K F.to_subalgebra = finrank K F :=
   rfl
 
-variable{F}{E}
+variable {F} {E}
 
 @[simp]
 theorem to_subalgebra_eq_iff : F.to_subalgebra = E.to_subalgebra ↔ F = E :=

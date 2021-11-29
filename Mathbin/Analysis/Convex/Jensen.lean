@@ -25,17 +25,15 @@ open Finset LinearMap Set
 
 open_locale BigOperators Classical Convex Pointwise
 
-variable{𝕜 E F β ι : Type _}
+variable {𝕜 E F β ι : Type _}
 
 /-! ### Jensen's inequality -/
 
 
 section Jensen
 
-variable[LinearOrderedField
-      𝕜][AddCommGroupₓ
-      E][OrderedAddCommGroup
-      β][Module 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f : E → β}{t : Finset ι}{w : ι → 𝕜}{p : ι → E}
+variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [OrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β]
+  {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E}
 
 -- error in Analysis.Convex.Jensen: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Convex **Jensen's inequality**, `finset.center_mass` version. -/
@@ -74,10 +72,8 @@ end Jensen
 
 section MaximumPrinciple
 
-variable[LinearOrderedField
-      𝕜][AddCommGroupₓ
-      E][LinearOrderedAddCommGroup
-      β][Module 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f : E → β}{t : Finset ι}{w : ι → 𝕜}{p : ι → E}
+variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [LinearOrderedAddCommGroup β] [Module 𝕜 E] [Module 𝕜 β]
+  [OrderedSmul 𝕜 β] {s : Set E} {f : E → β} {t : Finset ι} {w : ι → 𝕜} {p : ι → E}
 
 -- error in Analysis.Convex.Jensen: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function `f` is convex on `s`, then the value it takes at some center of mass of points of

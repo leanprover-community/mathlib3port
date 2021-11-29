@@ -35,7 +35,7 @@ universe v₁ v₂ v₃ u₁ u₂ u₃
 
 attribute [local elabWithoutExpectedType] whisker_left whisker_right
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 /--
 `F ⊣ G` represents the data of an adjunction between two functors
@@ -50,7 +50,7 @@ Uniqueness of adjoints is shown in `category_theory.adjunction.opposites`.
 
 See https://stacks.math.columbia.edu/tag/0037.
 -/
-structure adjunction(F : C ⥤ D)(G : D ⥤ C) where 
+structure adjunction (F : C ⥤ D) (G : D ⥤ C) where 
   homEquiv : ∀ X Y, (F.obj X ⟶ Y) ≃ (X ⟶ G.obj Y)
   Unit : 𝟭 C ⟶ F.comp G 
   counit : G.comp F ⟶ 𝟭 D 
@@ -64,12 +64,12 @@ structure adjunction(F : C ⥤ D)(G : D ⥤ C) where
 infixl:15 " ⊣ " => adjunction
 
 /-- A class giving a chosen right adjoint to the functor `left`. -/
-class is_left_adjoint(left : C ⥤ D) where 
+class is_left_adjoint (left : C ⥤ D) where 
   right : D ⥤ C 
   adj : left ⊣ right
 
 /-- A class giving a chosen left adjoint to the functor `right`. -/
-class is_right_adjoint(right : D ⥤ C) where 
+class is_right_adjoint (right : D ⥤ C) where 
   left : C ⥤ D 
   adj : left ⊣ right
 
@@ -99,7 +99,7 @@ attribute [simp] hom_equiv_unit hom_equiv_counit
 
 section 
 
-variable{F : C ⥤ D}{G : D ⥤ C}(adj : F ⊣ G){X' X : C}{Y Y' : D}
+variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G) {X' X : C} {Y Y' : D}
 
 @[simp]
 theorem hom_equiv_naturality_left_symm (f : X' ⟶ X) (g : X ⟶ G.obj Y) :
@@ -191,7 +191,7 @@ See `adjunction.mk_of_hom_equiv`.
 This structure won't typically be used anywhere else.
 -/
 @[nolint has_inhabited_instance]
-structure core_hom_equiv(F : C ⥤ D)(G : D ⥤ C) where 
+structure core_hom_equiv (F : C ⥤ D) (G : D ⥤ C) where 
   homEquiv : ∀ X Y, (F.obj X ⟶ Y) ≃ (X ⟶ G.obj Y)
   hom_equiv_naturality_left_symm' :
   ∀ {X' X Y} f : X' ⟶ X g : X ⟶ G.obj Y, (hom_equiv X' Y).symm (f ≫ g) = F.map f ≫ (hom_equiv X Y).symm g :=  by 
@@ -210,7 +210,7 @@ restate_axiom hom_equiv_naturality_right'
 
 attribute [simp] hom_equiv_naturality_left_symm hom_equiv_naturality_right
 
-variable{F : C ⥤ D}{G : D ⥤ C}(adj : core_hom_equiv F G){X' X : C}{Y Y' : D}
+variable {F : C ⥤ D} {G : D ⥤ C} (adj : core_hom_equiv F G) {X' X : C} {Y Y' : D}
 
 @[simp]
 theorem hom_equiv_naturality_left (f : X' ⟶ X) (g : F.obj X ⟶ Y) :
@@ -232,7 +232,7 @@ See `adjunction.mk_of_unit_counit`.
 This structure won't typically be used anywhere else.
 -/
 @[nolint has_inhabited_instance]
-structure core_unit_counit(F : C ⥤ D)(G : D ⥤ C) where 
+structure core_unit_counit (F : C ⥤ D) (G : D ⥤ C) where 
   Unit : 𝟭 C ⟶ F.comp G 
   counit : G.comp F ⟶ 𝟭 D 
   left_triangle' :
@@ -254,7 +254,7 @@ attribute [simp] left_triangle right_triangle
 
 end CoreUnitCounit
 
-variable{F : C ⥤ D}{G : D ⥤ C}
+variable {F : C ⥤ D} {G : D ⥤ C}
 
 /-- Construct an adjunction between `F` and `G` out of a natural bijection between each
 `F.obj X ⟶ Y` and `X ⟶ G.obj Y`. -/
@@ -319,7 +319,7 @@ def mk_of_unit_counit (adj : core_unit_counit F G) : «expr ⊣ »(F, G) :=
 def id : 𝟭 C ⊣ 𝟭 C :=
   { homEquiv := fun X Y => Equiv.refl _, Unit := 𝟙 _, counit := 𝟙 _ }
 
-instance  : Inhabited (adjunction (𝟭 C) (𝟭 C)) :=
+instance : Inhabited (adjunction (𝟭 C) (𝟭 C)) :=
   ⟨id⟩
 
 /-- If F and G are naturally isomorphic functors, establish an equivalence of hom-sets. -/
@@ -367,7 +367,7 @@ def left_adjoint_of_nat_iso {F G : C ⥤ D} (h : F ≅ G) [r : is_left_adjoint F
 
 section 
 
-variable{E : Type u₃}[ℰ : category.{v₃} E](H : D ⥤ E)(I : E ⥤ D)
+variable {E : Type u₃} [ℰ : category.{v₃} E] (H : D ⥤ E) (I : E ⥤ D)
 
 /--
 Composition of adjunctions.
@@ -393,11 +393,11 @@ end
 
 section ConstructLeft
 
-variable{F_obj : C → D}{G}
+variable {F_obj : C → D} {G}
 
-variable(e : ∀ X Y, (F_obj X ⟶ Y) ≃ (X ⟶ G.obj Y))
+variable (e : ∀ X Y, (F_obj X ⟶ Y) ≃ (X ⟶ G.obj Y))
 
-variable(he : ∀ X Y Y' g h, e X Y' (h ≫ g) = e X Y h ≫ G.map g)
+variable (he : ∀ X Y Y' g h, e X Y' (h ≫ g) = e X Y h ≫ G.map g)
 
 include he
 
@@ -435,11 +435,11 @@ end ConstructLeft
 
 section ConstructRight
 
-variable{F}{G_obj : D → C}
+variable {F} {G_obj : D → C}
 
-variable(e : ∀ X Y, (F.obj X ⟶ Y) ≃ (X ⟶ G_obj Y))
+variable (e : ∀ X Y, (F.obj X ⟶ Y) ≃ (X ⟶ G_obj Y))
 
-variable(he : ∀ X' X Y f g, e X' Y (F.map f ≫ g) = f ≫ e X Y g)
+variable (he : ∀ X' X Y f g, e X' Y (F.map f ≫ g) = f ≫ e X Y g)
 
 include he
 
@@ -535,7 +535,7 @@ def adjunction (E : C ⥤ D) [is_equivalence E] : E ⊣ E.inv :=
   E.as_equivalence.toAdjunction
 
 /-- If `F` is an equivalence, it's a left adjoint. -/
-instance (priority := 10)left_adjoint_of_equivalence {F : C ⥤ D} [is_equivalence F] : is_left_adjoint F :=
+instance (priority := 10) left_adjoint_of_equivalence {F : C ⥤ D} [is_equivalence F] : is_left_adjoint F :=
   { right := _, adj := functor.adjunction F }
 
 @[simp]
@@ -543,7 +543,7 @@ theorem right_adjoint_of_is_equivalence {F : C ⥤ D} [is_equivalence F] : right
   rfl
 
 /-- If `F` is an equivalence, it's a right adjoint. -/
-instance (priority := 10)right_adjoint_of_equivalence {F : C ⥤ D} [is_equivalence F] : is_right_adjoint F :=
+instance (priority := 10) right_adjoint_of_equivalence {F : C ⥤ D} [is_equivalence F] : is_right_adjoint F :=
   { left := _, adj := functor.adjunction F.inv }
 
 @[simp]

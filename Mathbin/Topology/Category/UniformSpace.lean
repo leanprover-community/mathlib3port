@@ -26,30 +26,30 @@ def UniformSpaceₓ : Type (u + 1) :=
 namespace UniformSpaceₓ
 
 /-- The information required to build morphisms for `UniformSpace`. -/
-instance  : unbundled_hom @UniformContinuous :=
+instance : unbundled_hom @UniformContinuous :=
   ⟨@uniform_continuous_id, @UniformContinuous.comp⟩
 
 -- error in Topology.Category.UniformSpace: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] UniformSpace
 
-instance  : CoeSort UniformSpaceₓ (Type _) :=
+instance : CoeSort UniformSpaceₓ (Type _) :=
   bundled.has_coe_to_sort
 
-instance  (x : UniformSpaceₓ) : UniformSpace x :=
+instance (x : UniformSpaceₓ) : UniformSpace x :=
   x.str
 
 /-- Construct a bundled `UniformSpace` from the underlying type and the typeclass. -/
 def of (α : Type u) [UniformSpace α] : UniformSpaceₓ :=
   ⟨α⟩
 
-instance  : Inhabited UniformSpaceₓ :=
+instance : Inhabited UniformSpaceₓ :=
   ⟨UniformSpaceₓ.of Empty⟩
 
 @[simp]
 theorem coe_of (X : Type u) [UniformSpace X] : (of X : Type u) = X :=
   rfl
 
-instance  (X Y : UniformSpaceₓ) : CoeFun (X ⟶ Y) fun _ => X → Y :=
+instance (X Y : UniformSpaceₓ) : CoeFun (X ⟶ Y) fun _ => X → Y :=
   ⟨CategoryTheory.Functor.map (forget UniformSpaceₓ)⟩
 
 @[simp]
@@ -84,7 +84,7 @@ structure CpltSepUniformSpace where
 
 namespace CpltSepUniformSpace
 
-instance  : CoeSort CpltSepUniformSpace (Type u) :=
+instance : CoeSort CpltSepUniformSpace (Type u) :=
   ⟨CpltSepUniformSpace.α⟩
 
 attribute [instance] is_uniform_space is_complete_space IsSeparated
@@ -197,15 +197,15 @@ noncomputable def adj : completion_functor ⊣ forget₂ CpltSepUniformSpace Uni
             exact g.property 
             exact f.property }
 
-noncomputable instance  : is_right_adjoint (forget₂ CpltSepUniformSpace UniformSpaceₓ) :=
+noncomputable instance : is_right_adjoint (forget₂ CpltSepUniformSpace UniformSpaceₓ) :=
   ⟨completion_functor, adj⟩
 
-noncomputable instance  : reflective (forget₂ CpltSepUniformSpace UniformSpaceₓ) :=
+noncomputable instance : reflective (forget₂ CpltSepUniformSpace UniformSpaceₓ) :=
   {  }
 
 open CategoryTheory.Limits
 
-example  [has_limits.{u} UniformSpaceₓ.{u}] : has_limits.{u} CpltSepUniformSpace.{u} :=
+example [has_limits.{u} UniformSpaceₓ.{u}] : has_limits.{u} CpltSepUniformSpace.{u} :=
   has_limits_of_reflective$ forget₂ CpltSepUniformSpace UniformSpaceₓ.{u}
 
 end UniformSpaceₓ

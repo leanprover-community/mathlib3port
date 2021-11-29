@@ -33,13 +33,13 @@ open CategoryTheory CategoryTheory.Category CategoryTheory.Functor Opposite
 
 namespace CategoryTheory.Limits
 
-universe v u u' u'' w
+universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
-variable{J K : Type v}[small_category J][small_category K]
+variable {J : Type u₁} [category.{v₁} J] {K : Type u₂} [category.{v₂} K]
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u₃} [category.{v₃} C]
 
-variable{F : J ⥤ C}
+variable {F : J ⥤ C}
 
 /--
 A cone `t` on `F` is a limit cone if each cone on `F` admits a unique
@@ -48,7 +48,7 @@ cone morphism to `t`.
 See https://stacks.math.columbia.edu/tag/002E.
   -/
 @[nolint has_inhabited_instance]
-structure is_limit(t : cone F) where 
+structure is_limit (t : cone F) where 
   lift : ∀ s : cone F, s.X ⟶ t.X 
   fac' : ∀ s : cone F j : J, lift s ≫ t.π.app j = s.π.app j :=  by 
   runTac 
@@ -190,7 +190,7 @@ of_iso_limit P (begin
    apply [expr as_iso (P.lift_cone_morphism t)]
  end)
 
-variable{t : cone F}
+variable {t : cone F}
 
 theorem hom_lift (h : is_limit t) {W : C} (m : W ⟶ t.X) :
   m = h.lift { x := W, π := { app := fun b => m ≫ t.π.app b } } :=
@@ -206,7 +206,7 @@ theorem hom_ext (h : is_limit t) {W : C} {f f' : W ⟶ t.X} (w : ∀ j, f ≫ t.
 Given a right adjoint functor between categories of cones,
 the image of a limit cone is a limit cone.
 -/
-def of_right_adjoint {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cone G ⥤ cone F) [is_right_adjoint h] {c : cone G}
+def of_right_adjoint {D : Type u₄} [category.{v₄} D] {G : K ⥤ D} (h : cone G ⥤ cone F) [is_right_adjoint h] {c : cone G}
   (t : is_limit c) : is_limit (h.obj c) :=
   mk_cone_morphism (fun s => (adjunction.of_right_adjoint h).homEquiv s c (t.lift_cone_morphism _))
     fun s m => (adjunction.eq_hom_equiv_apply _ _ _).2 t.uniq_cone_morphism
@@ -215,7 +215,7 @@ def of_right_adjoint {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cone G �
 Given two functors which have equivalent categories of cones, we can transport a limiting cone
 across the equivalence.
 -/
-def of_cone_equiv {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cone G ≌ cone F) {c : cone G} :
+def of_cone_equiv {D : Type u₄} [category.{v₄} D] {G : K ⥤ D} (h : cone G ≌ cone F) {c : cone G} :
   is_limit (h.functor.obj c) ≃ is_limit c :=
   { toFun := fun P => of_iso_limit (of_right_adjoint h.inverse P) (h.unit_iso.symm.app c),
     invFun := of_right_adjoint h.functor,
@@ -227,7 +227,7 @@ def of_cone_equiv {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cone G ≌ c
         tidy }
 
 @[simp]
-theorem of_cone_equiv_apply_desc {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cone G ≌ cone F) {c : cone G}
+theorem of_cone_equiv_apply_desc {D : Type u₄} [category.{v₄} D] {G : K ⥤ D} (h : cone G ≌ cone F) {c : cone G}
   (P : is_limit (h.functor.obj c)) s :
   (of_cone_equiv h P).lift s =
     ((h.unit_iso.hom.app s).Hom ≫ (h.functor.inv.map (P.lift_cone_morphism (h.functor.obj s))).Hom) ≫
@@ -235,7 +235,7 @@ theorem of_cone_equiv_apply_desc {D : Type u'} [category.{v} D] {G : K ⥤ D} (h
   rfl
 
 @[simp]
-theorem of_cone_equiv_symm_apply_desc {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cone G ≌ cone F) {c : cone G}
+theorem of_cone_equiv_symm_apply_desc {D : Type u₄} [category.{v₄} D] {G : K ⥤ D} (h : cone G ≌ cone F) {c : cone G}
   (P : is_limit c) s :
   ((of_cone_equiv h).symm P).lift s =
     (h.counit_iso.inv.app s).Hom ≫ (h.functor.map (P.lift_cone_morphism (h.inverse.obj s))).Hom :=
@@ -336,19 +336,20 @@ end Equivalenceₓ
 
 /-- The universal property of a limit cone: a map `W ⟶ X` is the same as
   a cone on `F` with vertex `W`. -/
-def hom_iso (h : is_limit t) (W : C) : (W ⟶ t.X) ≅ (const J).obj W ⟶ F :=
-  { Hom := fun f => (t.extend f).π, inv := fun π => h.lift { x := W, π },
+def hom_iso (h : is_limit t) (W : C) : Ulift.{u₁} (W ⟶ t.X : Type v₃) ≅ (const J).obj W ⟶ F :=
+  { Hom := fun f => (t.extend f.down).π, inv := fun π => ⟨h.lift { x := W, π }⟩,
     hom_inv_id' :=
       by 
         ext f <;> apply h.hom_ext <;> intro j <;> simp  <;> dsimp <;> rfl }
 
 @[simp]
-theorem hom_iso_hom (h : is_limit t) {W : C} (f : W ⟶ t.X) : (is_limit.hom_iso h W).Hom f = (t.extend f).π :=
+theorem hom_iso_hom (h : is_limit t) {W : C} (f : Ulift.{u₁} (W ⟶ t.X)) :
+  (is_limit.hom_iso h W).Hom f = (t.extend f.down).π :=
   rfl
 
 /-- The limit of `F` represents the functor taking `W` to
   the set of cones on `F` with vertex `W`. -/
-def nat_iso (h : is_limit t) : yoneda.obj t.X ≅ F.cones :=
+def nat_iso (h : is_limit t) : yoneda.obj t.X ⋙ ulift_functor.{u₁} ≅ F.cones :=
   nat_iso.of_components (fun W => is_limit.hom_iso h (unop W))
     (by 
       tidy)
@@ -358,7 +359,7 @@ Another, more explicit, formulation of the universal property of a limit cone.
 See also `hom_iso`.
 -/
 def hom_iso' (h : is_limit t) (W : C) :
-  (W ⟶ t.X : Type v) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j'} f : j ⟶ j', p j ≫ F.map f = p j' } :=
+  Ulift.{u₁} (W ⟶ t.X : Type v₃) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j'} f : j ⟶ j', p j ≫ F.map f = p j' } :=
   h.hom_iso W ≪≫
     { Hom :=
         fun π =>
@@ -379,7 +380,7 @@ def hom_iso' (h : is_limit t) (W : C) :
 /-- If G : C → D is a faithful functor which sends t to a limit cone,
   then it suffices to check that the induced maps for the image of t
   can be lifted to maps of C. -/
-def of_faithful {t : cone F} {D : Type u'} [category.{v} D] (G : C ⥤ D) [faithful G] (ht : is_limit (G.map_cone t))
+def of_faithful {t : cone F} {D : Type u₄} [category.{v₄} D] (G : C ⥤ D) [faithful G] (ht : is_limit (G.map_cone t))
   (lift : ∀ s : cone F, s.X ⟶ t.X) (h : ∀ s, G.map (lift s) = ht.lift (G.map_cone s)) : is_limit t :=
   { lift,
     fac' :=
@@ -399,7 +400,7 @@ def of_faithful {t : cone F} {D : Type u'} [category.{v} D] (G : C ⥤ D) [faith
 If `F` and `G` are naturally isomorphic, then `F.map_cone c` being a limit implies
 `G.map_cone c` is also a limit.
 -/
-def map_cone_equiv {D : Type u'} [category.{v} D] {K : J ⥤ C} {F G : C ⥤ D} (h : F ≅ G) {c : cone K}
+def map_cone_equiv {D : Type u₄} [category.{v₄} D] {K : J ⥤ C} {F G : C ⥤ D} (h : F ≅ G) {c : cone K}
   (t : is_limit (F.map_cone c)) : is_limit (G.map_cone c) :=
   by 
     apply postcompose_inv_equiv (iso_whisker_left K h : _) (G.map_cone c) _ 
@@ -417,16 +418,16 @@ def iso_unique_cone_morphism {t : cone F} : is_limit t ≅ ∀ s, Unique (s ⟶ 
 
 namespace OfNatIso
 
-variable{X : C}(h : yoneda.obj X ≅ F.cones)
+variable {X : C} (h : yoneda.obj X ⋙ ulift_functor.{u₁} ≅ F.cones)
 
 /-- If `F.cones` is represented by `X`, each morphism `f : Y ⟶ X` gives a cone with cone point
 `Y`. -/
 def cone_of_hom {Y : C} (f : Y ⟶ X) : cone F :=
-  { x := Y, π := h.hom.app (op Y) f }
+  { x := Y, π := h.hom.app (op Y) ⟨f⟩ }
 
 /-- If `F.cones` is represented by `X`, each cone `s` gives a morphism `s.X ⟶ X`. -/
 def hom_of_cone (s : cone F) : s.X ⟶ X :=
-  h.inv.app (op s.X) s.π
+  (h.inv.app (op s.X) s.π).down
 
 @[simp]
 theorem cone_of_hom_of_cone (s : cone F) : cone_of_hom h (hom_of_cone h s) = s :=
@@ -435,11 +436,12 @@ theorem cone_of_hom_of_cone (s : cone F) : cone_of_hom h (hom_of_cone h s) = s :
     cases s 
     congr 
     dsimp 
-    exact congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.inv_hom_id) (op s_X)) s_π
+    convert congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.inv_hom_id) (op s_X)) s_π 
+    exact Ulift.up_down _
 
 @[simp]
 theorem hom_of_cone_of_hom {Y : C} (f : Y ⟶ X) : hom_of_cone h (cone_of_hom h f) = f :=
-  congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.hom_inv_id) (op Y)) f
+  congr_argₓ Ulift.down (congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.hom_inv_id) (op Y)) ⟨f⟩ : _)
 
 /-- If `F.cones` is represented by `X`, the cone corresponding to the identity morphism on `X`
 will be a limit cone. -/
@@ -453,7 +455,7 @@ theorem cone_of_hom_fac {Y : C} (f : «expr ⟶ »(Y, X)) : «expr = »(cone_of_
 begin
   dsimp [] ["[", expr cone_of_hom, ",", expr limit_cone, ",", expr cone.extend, "]"] [] [],
   congr' [] ["with", ident j],
-  have [ident t] [] [":=", expr congr_fun (h.hom.naturality f.op) («expr𝟙»() X)],
+  have [ident t] [] [":=", expr congr_fun (h.hom.naturality f.op) ⟨«expr𝟙»() X⟩],
   dsimp [] [] [] ["at", ident t],
   simp [] [] ["only"] ["[", expr comp_id, "]"] [] ["at", ident t],
   rw [expr congr_fun (congr_arg nat_trans.app t) j] [],
@@ -478,7 +480,10 @@ open OfNatIso
 /--
 If `F.cones` is representable, then the cone corresponding to the identity morphism on
 the representing object is a limit cone.
--/ def of_nat_iso {X : C} (h : «expr ≅ »(yoneda.obj X, F.cones)) : is_limit (limit_cone h) :=
+-/
+def of_nat_iso
+{X : C}
+(h : «expr ≅ »(«expr ⋙ »(yoneda.obj X, ulift_functor.{u₁}), F.cones)) : is_limit (limit_cone h) :=
 { lift := λ s, hom_of_cone h s,
   fac' := λ s j, begin
     have [ident h] [] [":=", expr cone_fac h s],
@@ -509,7 +514,7 @@ cocone morphism from `t`.
 See https://stacks.math.columbia.edu/tag/002F.
 -/
 @[nolint has_inhabited_instance]
-structure is_colimit(t : cocone F) where 
+structure is_colimit (t : cocone F) where 
   desc : ∀ s : cocone F, t.X ⟶ s.X 
   fac' : ∀ s : cocone F j : J, t.ι.app j ≫ desc s = s.ι.app j :=  by 
   runTac 
@@ -652,7 +657,7 @@ of_iso_colimit P (begin
    apply [expr as_iso (P.desc_cocone_morphism t)]
  end)
 
-variable{t : cocone F}
+variable {t : cocone F}
 
 theorem hom_desc (h : is_colimit t) {W : C} (m : t.X ⟶ W) :
   m =
@@ -675,7 +680,7 @@ theorem hom_ext (h : is_colimit t) {W : C} {f f' : t.X ⟶ W} (w : ∀ j, t.ι.a
 Given a left adjoint functor between categories of cocones,
 the image of a colimit cocone is a colimit cocone.
 -/
-def of_left_adjoint {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cocone G ⥤ cocone F) [is_left_adjoint h]
+def of_left_adjoint {D : Type u₄} [category.{v₄} D] {G : K ⥤ D} (h : cocone G ⥤ cocone F) [is_left_adjoint h]
   {c : cocone G} (t : is_colimit c) : is_colimit (h.obj c) :=
   mk_cocone_morphism (fun s => ((adjunction.of_left_adjoint h).homEquiv c s).symm (t.desc_cocone_morphism _))
     fun s m => (adjunction.hom_equiv_apply_eq _ _ _).1 t.uniq_cocone_morphism
@@ -684,7 +689,7 @@ def of_left_adjoint {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cocone G �
 Given two functors which have equivalent categories of cocones,
 we can transport a colimiting cocone across the equivalence.
 -/
-def of_cocone_equiv {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cocone G ≌ cocone F) {c : cocone G} :
+def of_cocone_equiv {D : Type u₄} [category.{v₄} D] {G : K ⥤ D} (h : cocone G ≌ cocone F) {c : cocone G} :
   is_colimit (h.functor.obj c) ≃ is_colimit c :=
   { toFun := fun P => of_iso_colimit (of_left_adjoint h.inverse P) (h.unit_iso.symm.app c),
     invFun := of_left_adjoint h.functor,
@@ -696,14 +701,14 @@ def of_cocone_equiv {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cocone G �
         tidy }
 
 @[simp]
-theorem of_cocone_equiv_apply_desc {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cocone G ≌ cocone F) {c : cocone G}
+theorem of_cocone_equiv_apply_desc {D : Type u₄} [category.{v₄} D] {G : K ⥤ D} (h : cocone G ≌ cocone F) {c : cocone G}
   (P : is_colimit (h.functor.obj c)) s :
   (of_cocone_equiv h P).desc s =
     (h.unit.app c).Hom ≫ (h.inverse.map (P.desc_cocone_morphism (h.functor.obj s))).Hom ≫ (h.unit_inv.app s).Hom :=
   rfl
 
 @[simp]
-theorem of_cocone_equiv_symm_apply_desc {D : Type u'} [category.{v} D] {G : K ⥤ D} (h : cocone G ≌ cocone F)
+theorem of_cocone_equiv_symm_apply_desc {D : Type u₄} [category.{v₄} D] {G : K ⥤ D} (h : cocone G ≌ cocone F)
   {c : cocone G} (P : is_colimit c) s :
   ((of_cocone_equiv h).symm P).desc s =
     (h.functor.map (P.desc_cocone_morphism (h.inverse.obj s))).Hom ≫ (h.counit.app s).Hom :=
@@ -808,19 +813,20 @@ end Equivalenceₓ
 
 /-- The universal property of a colimit cocone: a map `X ⟶ W` is the same as
   a cocone on `F` with vertex `W`. -/
-def hom_iso (h : is_colimit t) (W : C) : (t.X ⟶ W) ≅ F ⟶ (const J).obj W :=
-  { Hom := fun f => (t.extend f).ι, inv := fun ι => h.desc { x := W, ι },
+def hom_iso (h : is_colimit t) (W : C) : Ulift.{u₁} (t.X ⟶ W : Type v₃) ≅ F ⟶ (const J).obj W :=
+  { Hom := fun f => (t.extend f.down).ι, inv := fun ι => ⟨h.desc { x := W, ι }⟩,
     hom_inv_id' :=
       by 
         ext f <;> apply h.hom_ext <;> intro j <;> simp  <;> dsimp <;> rfl }
 
 @[simp]
-theorem hom_iso_hom (h : is_colimit t) {W : C} (f : t.X ⟶ W) : (is_colimit.hom_iso h W).Hom f = (t.extend f).ι :=
+theorem hom_iso_hom (h : is_colimit t) {W : C} (f : Ulift (t.X ⟶ W)) :
+  (is_colimit.hom_iso h W).Hom f = (t.extend f.down).ι :=
   rfl
 
 /-- The colimit of `F` represents the functor taking `W` to
   the set of cocones on `F` with vertex `W`. -/
-def nat_iso (h : is_colimit t) : coyoneda.obj (op t.X) ≅ F.cocones :=
+def nat_iso (h : is_colimit t) : coyoneda.obj (op t.X) ⋙ ulift_functor.{u₁} ≅ F.cocones :=
   nat_iso.of_components (is_colimit.hom_iso h)
     (by 
       intros  <;> ext <;> dsimp <;> rw [←assoc] <;> rfl)
@@ -830,7 +836,7 @@ Another, more explicit, formulation of the universal property of a colimit cocon
 See also `hom_iso`.
 -/
 def hom_iso' (h : is_colimit t) (W : C) :
-  (t.X ⟶ W : Type v) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j' : J} f : j ⟶ j', F.map f ≫ p j' = p j } :=
+  Ulift.{u₁} (t.X ⟶ W : Type v₃) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j' : J} f : j ⟶ j', F.map f ≫ p j' = p j } :=
   h.hom_iso W ≪≫
     { Hom :=
         fun ι =>
@@ -851,7 +857,7 @@ def hom_iso' (h : is_colimit t) (W : C) :
 /-- If G : C → D is a faithful functor which sends t to a colimit cocone,
   then it suffices to check that the induced maps for the image of t
   can be lifted to maps of C. -/
-def of_faithful {t : cocone F} {D : Type u'} [category.{v} D] (G : C ⥤ D) [faithful G]
+def of_faithful {t : cocone F} {D : Type u₄} [category.{v₄} D] (G : C ⥤ D) [faithful G]
   (ht : is_colimit (G.map_cocone t)) (desc : ∀ s : cocone F, t.X ⟶ s.X)
   (h : ∀ s, G.map (desc s) = ht.desc (G.map_cocone s)) : is_colimit t :=
   { desc,
@@ -872,7 +878,7 @@ def of_faithful {t : cocone F} {D : Type u'} [category.{v} D] (G : C ⥤ D) [fai
 If `F` and `G` are naturally isomorphic, then `F.map_cone c` being a colimit implies
 `G.map_cone c` is also a colimit.
 -/
-def map_cocone_equiv {D : Type u'} [category.{v} D] {K : J ⥤ C} {F G : C ⥤ D} (h : F ≅ G) {c : cocone K}
+def map_cocone_equiv {D : Type u₄} [category.{v₄} D] {K : J ⥤ C} {F G : C ⥤ D} (h : F ≅ G) {c : cocone K}
   (t : is_colimit (F.map_cocone c)) : is_colimit (G.map_cocone c) :=
   by 
     apply is_colimit.of_iso_colimit _ (precompose_whisker_left_map_cocone h c)
@@ -891,16 +897,16 @@ def iso_unique_cocone_morphism {t : cocone F} : is_colimit t ≅ ∀ s, Unique (
 
 namespace OfNatIso
 
-variable{X : C}(h : coyoneda.obj (op X) ≅ F.cocones)
+variable {X : C} (h : coyoneda.obj (op X) ⋙ ulift_functor.{u₁} ≅ F.cocones)
 
 /-- If `F.cocones` is corepresented by `X`, each morphism `f : X ⟶ Y` gives a cocone with cone
 point `Y`. -/
 def cocone_of_hom {Y : C} (f : X ⟶ Y) : cocone F :=
-  { x := Y, ι := h.hom.app Y f }
+  { x := Y, ι := h.hom.app Y ⟨f⟩ }
 
 /-- If `F.cocones` is corepresented by `X`, each cocone `s` gives a morphism `X ⟶ s.X`. -/
 def hom_of_cocone (s : cocone F) : X ⟶ s.X :=
-  h.inv.app s.X s.ι
+  (h.inv.app s.X s.ι).down
 
 @[simp]
 theorem cocone_of_hom_of_cocone (s : cocone F) : cocone_of_hom h (hom_of_cocone h s) = s :=
@@ -909,11 +915,12 @@ theorem cocone_of_hom_of_cocone (s : cocone F) : cocone_of_hom h (hom_of_cocone 
     cases s 
     congr 
     dsimp 
-    exact congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.inv_hom_id) s_X) s_ι
+    convert congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.inv_hom_id) s_X) s_ι 
+    exact Ulift.up_down _
 
 @[simp]
 theorem hom_of_cocone_of_hom {Y : C} (f : X ⟶ Y) : hom_of_cocone h (cocone_of_hom h f) = f :=
-  congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.hom_inv_id) Y) f
+  congr_argₓ Ulift.down (congr_funₓ (congr_funₓ (congr_argₓ nat_trans.app h.hom_inv_id) Y) ⟨f⟩ : _)
 
 /-- If `F.cocones` is corepresented by `X`, the cocone corresponding to the identity morphism on `X`
 will be a colimit cocone. -/
@@ -927,7 +934,7 @@ theorem cocone_of_hom_fac {Y : C} (f : «expr ⟶ »(X, Y)) : «expr = »(cocone
 begin
   dsimp [] ["[", expr cocone_of_hom, ",", expr colimit_cocone, ",", expr cocone.extend, "]"] [] [],
   congr' [] ["with", ident j],
-  have [ident t] [] [":=", expr congr_fun (h.hom.naturality f) («expr𝟙»() X)],
+  have [ident t] [] [":=", expr congr_fun (h.hom.naturality f) ⟨«expr𝟙»() X⟩],
   dsimp [] [] [] ["at", ident t],
   simp [] [] ["only"] ["[", expr id_comp, "]"] [] ["at", ident t],
   rw [expr congr_fun (congr_arg nat_trans.app t) j] [],
@@ -952,7 +959,10 @@ open OfNatIso
 /--
 If `F.cocones` is corepresentable, then the cocone corresponding to the identity morphism on
 the representing object is a colimit cocone.
--/ def of_nat_iso {X : C} (h : «expr ≅ »(coyoneda.obj (op X), F.cocones)) : is_colimit (colimit_cocone h) :=
+-/
+def of_nat_iso
+{X : C}
+(h : «expr ≅ »(«expr ⋙ »(coyoneda.obj (op X), ulift_functor.{u₁}), F.cocones)) : is_colimit (colimit_cocone h) :=
 { desc := λ s, hom_of_cocone h s,
   fac' := λ s j, begin
     have [ident h] [] [":=", expr cocone_fac h s],

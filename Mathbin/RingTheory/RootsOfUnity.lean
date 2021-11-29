@@ -61,13 +61,13 @@ open Polynomial
 
 open Finset
 
-variable{M N G G₀ R S : Type _}
+variable {M N G G₀ R S : Type _}
 
-variable[CommMonoidₓ M][CommMonoidₓ N][CommGroupₓ G][CommGroupWithZero G₀]
+variable [CommMonoidₓ M] [CommMonoidₓ N] [CommGroupₓ G] [CommGroupWithZero G₀]
 
 section rootsOfUnity
 
-variable{k l : ℕ+}
+variable {k l : ℕ+}
 
 /-- `roots_of_unity k M` is the subgroup of elements `m : units M` that satisfy `m ^ k = 1` -/
 def rootsOfUnity (k : ℕ+) (M : Type _) [CommMonoidₓ M] : Subgroup (Units M) :=
@@ -96,7 +96,7 @@ theorem map_roots_of_unity (f : Units M →* Units N) (k : ℕ+) : (rootsOfUnity
     rintro _ ⟨ζ, h, rfl⟩
     simp_all only [←MonoidHom.map_pow, mem_roots_of_unity, SetLike.mem_coe, MonoidHom.map_one]
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 @[normCast]
 theorem rootsOfUnity.coe_pow (ζ : rootsOfUnity k R) (m : ℕ) : «expr↑ » (ζ^m) = (ζ^m : R) :=
@@ -104,7 +104,7 @@ theorem rootsOfUnity.coe_pow (ζ : rootsOfUnity k R) (m : ℕ) : «expr↑ » (�
     change «expr↑ » («expr↑ » (ζ^m) : Units R) = («expr↑ » (ζ : Units R)^m)
     rw [Subgroup.coe_pow, Units.coe_pow]
 
-variable[CommRingₓ S]
+variable [CommRingₓ S]
 
 /-- Restrict a ring homomorphism between integral domains to the nth roots of unity -/
 def RingHom.restrictRootsOfUnity (σ : R →+* S) (n : ℕ+) : rootsOfUnity n R →* rootsOfUnity n S :=
@@ -161,13 +161,13 @@ theorem RingEquiv.restrict_roots_of_unity_symm (σ : R ≃+* S) :
   (σ.restrict_roots_of_unity k).symm = σ.symm.restrict_roots_of_unity k :=
   rfl
 
-variable[IsDomain R]
+variable [IsDomain R]
 
 theorem mem_roots_of_unity_iff_mem_nth_roots {ζ : Units R} : ζ ∈ rootsOfUnity k R ↔ (ζ : R) ∈ nth_roots k (1 : R) :=
   by 
     simp only [mem_roots_of_unity, mem_nth_roots k.pos, Units.ext_iff, Units.coe_one, Units.coe_pow]
 
-variable(k R)
+variable (k R)
 
 /-- Equivalence between the `k`-th roots of unity in `R` and the `k`-th roots of `1`.
 
@@ -197,7 +197,7 @@ def rootsOfUnityEquivNthRoots : rootsOfUnity k R ≃ { x // x ∈ nth_roots k (1
       show ((_ : Units R)^(k : ℕ)) = 1
       simp only [Units.ext_iff, hx, Units.coe_mk, Units.coe_one, Subtype.coe_mk, Units.coe_pow]
 
-variable{k R}
+variable {k R}
 
 @[simp]
 theorem roots_of_unity_equiv_nth_roots_apply (x : rootsOfUnity k R) : (rootsOfUnityEquivNthRoots R k x : R) = x :=
@@ -208,7 +208,7 @@ theorem roots_of_unity_equiv_nth_roots_symm_apply (x : { x // x ∈ nth_roots k 
   ((rootsOfUnityEquivNthRoots R k).symm x : R) = x :=
   rfl
 
-variable(k R)
+variable (k R)
 
 instance rootsOfUnity.fintype : Fintype (rootsOfUnity k R) :=
   Fintype.ofEquiv { x // x ∈ nth_roots k (1 : R) }$ (rootsOfUnityEquivNthRoots R k).symm
@@ -225,7 +225,7 @@ theorem card_roots_of_unity : Fintype.card (rootsOfUnity k R) ≤ k :=
     _ ≤ k := card_nth_roots k 1
     
 
-variable{k R}
+variable {k R}
 
 theorem RingHom.map_root_of_unity_eq_pow_self (σ : R →+* R) (ζ : rootsOfUnity k R) : ∃ m : ℕ, σ ζ = (ζ^m) :=
   by 
@@ -239,20 +239,20 @@ end rootsOfUnity
 
 /-- An element `ζ` is a primitive `k`-th root of unity if `ζ ^ k = 1`,
 and if `l` satisfies `ζ ^ l = 1` then `k ∣ l`. -/
-structure IsPrimitiveRoot(ζ : M)(k : ℕ) : Prop where 
+structure IsPrimitiveRoot (ζ : M) (k : ℕ) : Prop where 
   pow_eq_one : (ζ^(k : ℕ)) = 1
   dvd_of_pow_eq_one : ∀ l : ℕ, (ζ^l) = 1 → k ∣ l
 
 section primitiveRoots
 
-variable{k : ℕ}
+variable {k : ℕ}
 
 /-- `primitive_roots k R` is the finset of primitive `k`-th roots of unity
 in the integral domain `R`. -/
 def primitiveRoots (k : ℕ) (R : Type _) [CommRingₓ R] [IsDomain R] : Finset R :=
   (nth_roots k (1 : R)).toFinset.filter fun ζ => IsPrimitiveRoot ζ k
 
-variable[CommRingₓ R][IsDomain R]
+variable [CommRingₓ R] [IsDomain R]
 
 @[simp]
 theorem mem_primitive_roots {ζ : R} (h0 : 0 < k) : ζ ∈ primitiveRoots k R ↔ IsPrimitiveRoot ζ k :=
@@ -264,7 +264,7 @@ end primitiveRoots
 
 namespace IsPrimitiveRoot
 
-variable{k l : ℕ}
+variable {k l : ℕ}
 
 theorem iff_def (ζ : M) (k : ℕ) : IsPrimitiveRoot ζ k ↔ (ζ^k) = 1 ∧ ∀ l : ℕ, (ζ^l) = 1 → k ∣ l :=
   ⟨fun ⟨h1, h2⟩ => ⟨h1, h2⟩, fun ⟨h1, h2⟩ => ⟨h1, h2⟩⟩
@@ -285,7 +285,7 @@ theorem mk_of_lt (ζ : M) (hk : 0 < k) (h1 : (ζ^k) = 1) (h : ∀ l : ℕ, 0 < l
 
 section CommMonoidₓ
 
-variable{ζ : M}(h : IsPrimitiveRoot ζ k)
+variable {ζ : M} (h : IsPrimitiveRoot ζ k)
 
 @[nontriviality]
 theorem of_subsingleton [Subsingleton M] (x : M) : IsPrimitiveRoot x 1 :=
@@ -402,7 +402,7 @@ end CommMonoidₓ
 
 section CommMonoidWithZero
 
-variable{M₀ : Type _}[CommMonoidWithZero M₀]
+variable {M₀ : Type _} [CommMonoidWithZero M₀]
 
 theorem zero [Nontrivial M₀] : IsPrimitiveRoot (0 : M₀) 0 :=
   ⟨pow_zeroₓ 0,
@@ -414,7 +414,7 @@ end CommMonoidWithZero
 
 section CommGroupₓ
 
-variable{ζ : G}
+variable {ζ : G}
 
 theorem zpow_eq_one (h : IsPrimitiveRoot ζ k) : (ζ^(k : ℤ)) = 1 :=
   by 
@@ -487,7 +487,7 @@ end CommGroupₓ
 
 section CommGroupWithZero
 
-variable{ζ : G₀}
+variable {ζ : G₀}
 
 theorem zpow_eq_one₀ (h : IsPrimitiveRoot ζ k) : (ζ^(k : ℤ)) = 1 :=
   by 
@@ -555,7 +555,7 @@ end CommGroupWithZero
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R][CommSemiringₓ S]{f : R →+* S}{ζ : R}
+variable [CommSemiringₓ R] [CommSemiringₓ S] {f : R →+* S} {ζ : R}
 
 open Function
 
@@ -590,9 +590,9 @@ end CommSemiringₓ
 
 section IsDomain
 
-variable{ζ : R}
+variable {ζ : R}
 
-variable[CommRingₓ R][IsDomain R]
+variable [CommRingₓ R] [IsDomain R]
 
 @[simp]
 theorem primitive_roots_zero : primitiveRoots 0 R = ∅ :=
@@ -646,9 +646,9 @@ end IsDomain
 
 section IsDomain
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
-variable{ζ : Units R}(h : IsPrimitiveRoot ζ k)
+variable {ζ : Units R} (h : IsPrimitiveRoot ζ k)
 
 protected theorem mem_roots_of_unity {n : ℕ+} (h : IsPrimitiveRoot ζ n) : ζ ∈ rootsOfUnity n R :=
   h.pow_eq_one
@@ -739,7 +739,7 @@ begin
   exact [expr h.dvd_of_pow_eq_one _ hl]
 end
 
-variable[IsDomain R]
+variable [IsDomain R]
 
 -- error in RingTheory.RootsOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem zpowers_eq
@@ -962,7 +962,7 @@ section minpoly
 
 open minpoly
 
-variable{n : ℕ}{K : Type _}[Field K]{μ : K}(h : IsPrimitiveRoot μ n)(hpos : 0 < n)
+variable {n : ℕ} {K : Type _} [Field K] {μ : K} (h : IsPrimitiveRoot μ n) (hpos : 0 < n)
 
 include n μ h hpos
 
@@ -976,7 +976,7 @@ theorem IsIntegral : IsIntegral ℤ μ :=
     ·
       simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, eval₂_one, eval₂_X_pow, eval₂_sub, sub_self]
 
-variable[CharZero K]
+variable [CharZero K]
 
 /--The minimal polynomial of a root of unity `μ` divides `X ^ n - 1`. -/
 theorem minpoly_dvd_X_pow_sub_one : minpoly ℤ μ ∣ (X^n) - 1 :=
@@ -1077,9 +1077,8 @@ begin
   { use [expr R] },
   replace [ident habs] [] [":=", expr lt_of_lt_of_le (enat.coe_lt_coe.2 one_lt_two) (multiplicity.le_multiplicity_of_pow_dvd (dvd_trans habs prod))],
   have [ident hfree] [":", expr squarefree («expr - »(«expr ^ »(X, n), 1) : polynomial (zmod p))] [],
-  { refine [expr squarefree_X_pow_sub_C 1 _ one_ne_zero],
-    by_contra [ident hzero],
-    exact [expr hdiv ((zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 hzero)] },
+  { exact [expr (separable_X_pow_sub_C 1 (λ
+       h, «expr $ »(hdiv, (zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 h)) one_ne_zero).squarefree] },
   cases [expr (multiplicity.squarefree_iff_multiplicity_le_one «expr - »(«expr ^ »(X, n), 1)).1 hfree (map (int.cast_ring_hom (zmod p)) P)] ["with", ident hle, ident hunit],
   { rw [expr nat.cast_one] ["at", ident habs],
     exact [expr hle.not_lt habs] },

@@ -25,7 +25,7 @@ universe v w
 
 namespace Matrix
 
-variable{R : Type v}[Semiringₓ R]{n : Type w}[Fintype n]
+variable {R : Type v} [Semiringₓ R] {n : Type w} [Fintype n]
 
 @[simp]
 theorem dot_product_std_basis_eq_mul [DecidableEq n] (v : n → R) (c : R) (i : n) :

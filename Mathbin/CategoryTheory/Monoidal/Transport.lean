@@ -23,9 +23,9 @@ open CategoryTheory.MonoidalCategory
 
 namespace CategoryTheory.Monoidal
 
-variable{C : Type u₁}[category.{v₁} C][monoidal_category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C] [monoidal_category.{v₁} C]
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 /--
 Transport a monoidal structure along an equivalence of (plain) categories.
@@ -131,10 +131,10 @@ def transport (e : C ≌ D) : monoidal_category.{v₂} D :=
 def transported (e : «expr ≌ »(C, D)) :=
 D
 
-instance  (e : C ≌ D) : monoidal_category (transported e) :=
+instance (e : C ≌ D) : monoidal_category (transported e) :=
   transport e
 
-instance  (e : C ≌ D) : Inhabited (transported e) :=
+instance (e : C ≌ D) : Inhabited (transported e) :=
   ⟨𝟙_ _⟩
 
 /--

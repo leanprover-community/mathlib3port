@@ -15,7 +15,7 @@ open Classical Set
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 open_locale Classical Pointwise
 
@@ -24,7 +24,7 @@ namespace Filter
 open Set
 
 @[toAdditive]
-instance  [HasOne α] : HasOne (Filter α) :=
+instance [HasOne α] : HasOne (Filter α) :=
   ⟨principal 1⟩
 
 @[simp, toAdditive]
@@ -134,13 +134,13 @@ protected theorem mul_oneₓ [Monoidₓ α] (f : Filter α) : (f*1) = f :=
             simp only [mul_oneₓ]⟩
 
 @[toAdditive Filter.addMonoid]
-instance  [Monoidₓ α] : Monoidₓ (Filter α) :=
+instance [Monoidₓ α] : Monoidₓ (Filter α) :=
   { Filter.hasMul, Filter.hasOne with mul_assoc := Filter.mul_assoc, one_mul := Filter.one_mul,
     mul_one := Filter.mul_one }
 
 section Map
 
-variable[Monoidₓ α][Monoidₓ β]{f : Filter α}(m : MulHom α β)(φ : α →* β)
+variable [Monoidₓ α] [Monoidₓ β] {f : Filter α} (m : MulHom α β) (φ : α →* β)
 
 -- error in Order.Filter.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]

@@ -143,7 +143,7 @@ def inner_regular {α} {m : MeasurableSpace α} (μ : Measureₓ α) (p q : Set 
 
 namespace InnerRegular
 
-variable{α : Type _}{m : MeasurableSpace α}{μ : Measureₓ α}{p q : Set α → Prop}{U : Set α}{ε : ℝ≥0∞}
+variable {α : Type _} {m : MeasurableSpace α} {μ : Measureₓ α} {p q : Set α → Prop} {U : Set α} {ε : ℝ≥0∞}
 
 theorem measure_eq_supr (H : inner_regular μ p q) (hU : q U) : μ U = ⨆(K : _)(_ : K ⊆ U)(hK : p K), μ K :=
   by 
@@ -187,14 +187,14 @@ theorem trans {q' : Set α → Prop} (H : inner_regular μ p q) (H' : inner_regu
 
 end InnerRegular
 
-variable{α β : Type _}[MeasurableSpace α][TopologicalSpace α]{μ : Measureₓ α}
+variable {α β : Type _} [MeasurableSpace α] [TopologicalSpace α] {μ : Measureₓ α}
 
 /-- A measure `μ` is outer regular if `μ(A) = inf {μ(U) | A ⊆ U open}` for a measurable set `A`.
 
 This definition implies the same equality for any (not necessarily measurable) set, see
 `set.measure_eq_infi_is_open`. -/
 @[protectProj]
-class outer_regular(μ : Measureₓ α) : Prop where 
+class outer_regular (μ : Measureₓ α) : Prop where 
   OuterRegular : ∀ ⦃A : Set α⦄, MeasurableSet A → ∀ r _ : r > μ A, ∃ (U : _)(_ : U ⊇ A), IsOpen U ∧ μ U < r
 
 /-- A measure `μ` is regular if
@@ -203,7 +203,7 @@ class outer_regular(μ : Measureₓ α) : Prop where
   - it is inner regular for open sets, using compact sets:
     `μ(U) = sup {μ(K) | K ⊆ U compact}` for `U` open. -/
 @[protectProj]
-class regular(μ : Measureₓ α) extends outer_regular μ : Prop where 
+class regular (μ : Measureₓ α) extends outer_regular μ : Prop where 
   lt_top_of_is_compact : ∀ ⦃K : Set α⦄, IsCompact K → μ K < ∞
   InnerRegular : inner_regular μ IsCompact IsOpen
 
@@ -212,11 +212,11 @@ class regular(μ : Measureₓ α) extends outer_regular μ : Prop where
   - it is inner regular for open sets, using closed sets:
     `μ(U) = sup {μ(F) | F ⊆ U compact}` for `U` open. -/
 @[protectProj]
-class weakly_regular(μ : Measureₓ α) extends outer_regular μ : Prop where 
+class weakly_regular (μ : Measureₓ α) extends outer_regular μ : Prop where 
   InnerRegular : inner_regular μ IsClosed IsOpen
 
 /-- A regular measure is weakly regular. -/
-instance (priority := 100)regular.weakly_regular [T2Space α] [regular μ] : weakly_regular μ :=
+instance (priority := 100) regular.weakly_regular [T2Space α] [regular μ] : weakly_regular μ :=
   { InnerRegular :=
       fun U hU r hr =>
         let ⟨K, hKU, hcK, hK⟩ := regular.inner_regular hU r hr
@@ -353,7 +353,7 @@ end
 
 namespace InnerRegular
 
-variable{p q : Set α → Prop}{U s : Set α}{ε r : ℝ≥0∞}
+variable {p q : Set α → Prop} {U s : Set α} {ε r : ℝ≥0∞}
 
 /-- If a measure is inner regular (using closed or compact sets), then every measurable set of
 finite measure can by approximated by a (closed or compact) subset. -/
@@ -563,7 +563,7 @@ begin
 end
 
 /-- A regular measure in a σ-compact space is σ-finite. -/
-instance (priority := 100)sigma_finite [SigmaCompactSpace α] [regular μ] : sigma_finite μ :=
+instance (priority := 100) sigma_finite [SigmaCompactSpace α] [regular μ] : sigma_finite μ :=
   ⟨⟨{ Set := CompactCovering α, set_mem := fun n => trivialₓ,
         Finite := fun n => regular.lt_top_of_is_compact$ is_compact_compact_covering α n,
         spanning := Union_compact_covering α }⟩⟩
@@ -633,7 +633,7 @@ begin
 end
 
 /-- Any finite measure on a metric space (or even a pseudo emetric space) is weakly regular. -/
-instance (priority := 100)of_pseudo_emetric_space_of_is_finite_measure {X : Type _} [PseudoEmetricSpace X]
+instance (priority := 100) of_pseudo_emetric_space_of_is_finite_measure {X : Type _} [PseudoEmetricSpace X]
   [MeasurableSpace X] [BorelSpace X] (μ : Measureₓ X) [is_finite_measure μ] : weakly_regular μ :=
   (inner_regular.of_pseudo_emetric_space μ).weakly_regular_of_finite μ
 
@@ -661,7 +661,7 @@ end
 end WeaklyRegular
 
 /-- Any locally finite measure on a `σ`-compact (e)metric space is regular. -/
-instance (priority := 100)regular.of_sigma_compact_space_of_is_locally_finite_measure {X : Type _} [EmetricSpace X]
+instance (priority := 100) regular.of_sigma_compact_space_of_is_locally_finite_measure {X : Type _} [EmetricSpace X]
   [SigmaCompactSpace X] [MeasurableSpace X] [BorelSpace X] (μ : Measureₓ X) [is_locally_finite_measure μ] : regular μ :=
   { lt_top_of_is_compact := fun K hK => hK.measure_lt_top,
     InnerRegular := (inner_regular.is_compact_is_closed μ).trans (inner_regular.of_pseudo_emetric_space μ) }

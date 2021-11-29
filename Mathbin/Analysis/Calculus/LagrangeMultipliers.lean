@@ -26,12 +26,8 @@ open Filter Set
 
 open_locale TopologicalSpace Filter BigOperators
 
-variable{E F :
-    Type
-      _}[NormedGroup
-      E][NormedSpace ℝ
-      E][CompleteSpace
-      E][NormedGroup F][NormedSpace ℝ F][CompleteSpace F]{f : E → F}{φ : E → ℝ}{x₀ : E}{f' : E →L[ℝ] F}{φ' : E →L[ℝ] ℝ}
+variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E] [NormedGroup F] [NormedSpace ℝ F]
+  [CompleteSpace F] {f : E → F} {φ : E → ℝ} {x₀ : E} {f' : E →L[ℝ] F} {φ' : E →L[ℝ] ℝ}
 
 -- error in Analysis.Calculus.LagrangeMultipliers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`

@@ -1,7 +1,7 @@
 import Mathbin.Analysis.NormedSpace.Banach 
 import Mathbin.Analysis.NormedSpace.FiniteDimension 
 import Mathbin.Analysis.Convex.Combination 
-import Mathbin.LinearAlgebra.AffineSpace.BarycentricCoords 
+import Mathbin.LinearAlgebra.AffineSpace.Basis 
 import Mathbin.LinearAlgebra.AffineSpace.FiniteDimensional
 
 /-!
@@ -21,22 +21,22 @@ This file contains results about bases in normed affine spaces.
 
 section Barycentric
 
-variable{ι 𝕜 E P : Type _}[NondiscreteNormedField 𝕜][CompleteSpace 𝕜]
+variable {ι 𝕜 E P : Type _} [NondiscreteNormedField 𝕜] [CompleteSpace 𝕜]
 
-variable[NormedGroup E][NormedSpace 𝕜 E][FiniteDimensional 𝕜 E]
+variable [NormedGroup E] [NormedSpace 𝕜 E] [FiniteDimensional 𝕜 E]
 
-variable[MetricSpace P][NormedAddTorsor E P]
+variable [MetricSpace P] [NormedAddTorsor E P]
 
-variable{p : ι → P}(h_ind : AffineIndependent 𝕜 p)(h_tot : affineSpan 𝕜 (Set.Range p) = ⊤)
+variable (b : AffineBasis ι 𝕜 P)
 
 @[continuity]
-theorem continuous_barycentric_coord (i : ι) : Continuous (barycentricCoord h_ind h_tot i) :=
+theorem continuous_barycentric_coord (i : ι) : Continuous (b.coord i) :=
   AffineMap.continuous_of_finite_dimensional _
 
 attribute [local instance] FiniteDimensional.complete
 
-theorem is_open_map_barycentric_coord [Nontrivial ι] (i : ι) : IsOpenMap (barycentricCoord h_ind h_tot i) :=
-  open_mapping_affine (continuous_barycentric_coord h_ind h_tot i) (surjective_barycentric_coord h_ind h_tot i)
+theorem is_open_map_barycentric_coord [Nontrivial ι] (i : ι) : IsOpenMap (b.coord i) :=
+  open_mapping_affine (continuous_barycentric_coord b i) (b.surjective_coord i)
 
 end Barycentric
 
@@ -54,32 +54,29 @@ theorem interior_convex_hull_aff_basis
 [fintype ι]
 [normed_group E]
 [normed_space exprℝ() E]
-{p : ι → E}
-(h_ind : affine_independent exprℝ() p)
-(h_tot : «expr = »(affine_span exprℝ() (range p), «expr⊤»())) : «expr = »(interior (convex_hull exprℝ() (range p)), {x | ∀
- i, «expr < »(0, barycentric_coord h_ind h_tot i x)}) :=
+(b : affine_basis ι exprℝ() E) : «expr = »(interior (convex_hull exprℝ() (range b.points)), {x | ∀
+ i, «expr < »(0, b.coord i x)}) :=
 begin
   cases [expr subsingleton_or_nontrivial ι] ["with", ident h, ident h],
   { haveI [] [] [":=", expr h],
-    suffices [] [":", expr «expr = »(range p, univ)],
+    suffices [] [":", expr «expr = »(range b.points, univ)],
     { simp [] [] [] ["[", expr this, "]"] [] [] },
-    refine [expr affine_subspace.eq_univ_of_subsingleton_span_eq_top _ h_tot],
+    refine [expr affine_subspace.eq_univ_of_subsingleton_span_eq_top _ b.tot],
     rw ["<-", expr image_univ] [],
-    exact [expr subsingleton.image subsingleton_of_subsingleton p] },
+    exact [expr subsingleton.image subsingleton_of_subsingleton b.points] },
   { haveI [] [":", expr finite_dimensional exprℝ() E] [],
     { classical,
       obtain ["⟨", ident i, "⟩", ":=", expr (infer_instance : nonempty ι)],
-      have [ident b] [] [":=", expr basis_of_aff_ind_span_eq_top h_ind h_tot i],
-      exact [expr finite_dimensional.of_fintype_basis b] },
-    have [] [":", expr «expr = »(convex_hull exprℝ() (range p), «expr⋂ , »((i), «expr ⁻¹' »(barycentric_coord h_ind h_tot i, Ici 0)))] [],
-    { rw [expr convex_hull_affine_basis_eq_nonneg_barycentric h_ind h_tot] [],
+      exact [expr finite_dimensional.of_fintype_basis (b.basis_of i)] },
+    have [] [":", expr «expr = »(convex_hull exprℝ() (range b.points), «expr⋂ , »((i), «expr ⁻¹' »(b.coord i, Ici 0)))] [],
+    { rw [expr convex_hull_affine_basis_eq_nonneg_barycentric b] [],
       ext [] [] [],
       simp [] [] [] [] [] [] },
     ext [] [] [],
-    simp [] [] ["only"] ["[", expr this, ",", expr interior_Inter_of_fintype, ",", "<-", expr is_open_map.preimage_interior_eq_interior_preimage (continuous_barycentric_coord h_ind h_tot _) (is_open_map_barycentric_coord h_ind h_tot _), ",", expr interior_Ici, ",", expr mem_Inter, ",", expr mem_set_of_eq, ",", expr mem_Ioi, ",", expr mem_preimage, "]"] [] [] }
+    simp [] [] ["only"] ["[", expr this, ",", expr interior_Inter_of_fintype, ",", "<-", expr is_open_map.preimage_interior_eq_interior_preimage (continuous_barycentric_coord b _) (is_open_map_barycentric_coord b _), ",", expr interior_Ici, ",", expr mem_Inter, ",", expr mem_set_of_eq, ",", expr mem_Ioi, ",", expr mem_preimage, "]"] [] [] }
 end
 
-variable{V P : Type _}[NormedGroup V][NormedSpace ℝ V][MetricSpace P][NormedAddTorsor V P]
+variable {V P : Type _} [NormedGroup V] [NormedSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
 
 include V
 
@@ -150,9 +147,10 @@ begin
     haveI [] [":", expr fintype t] [":=", expr fintype_of_fin_dim_affine_independent exprℝ() h_ind],
     use [expr finset.centroid exprℝ() (finset.univ : finset t) (coe : t → V)],
     rw ["[", expr h, ",", "<-", expr @set_of_mem_eq V t, ",", "<-", expr subtype.range_coe_subtype, "]"] ["at", ident h_tot],
-    rw [expr interior_convex_hull_aff_basis h_ind h_tot] [],
+    let [ident b] [":", expr affine_basis t exprℝ() V] [":=", expr ⟨coe, h_ind, h_tot⟩],
+    rw [expr interior_convex_hull_aff_basis b] [],
     have [ident htne] [":", expr (finset.univ : finset t).nonempty] [],
     { simpa [] [] [] ["[", expr finset.univ_nonempty_iff, "]"] [] ["using", expr affine_subspace.nonempty_of_affine_span_eq_top exprℝ() V V h_tot] },
-    simp [] [] [] ["[", expr finset.centroid_def, ",", expr barycentric_coord_apply_combination_of_mem h_ind h_tot (finset.mem_univ _) (finset.sum_centroid_weights_eq_one_of_nonempty exprℝ() (finset.univ : finset t) htne), ",", expr finset.centroid_weights_apply, ",", expr nat.cast_pos, ",", expr inv_pos, ",", expr finset.card_pos.mpr htne, "]"] [] [] }
+    simp [] [] [] ["[", expr finset.centroid_def, ",", expr b.coord_apply_combination_of_mem (finset.mem_univ _) (finset.sum_centroid_weights_eq_one_of_nonempty exprℝ() (finset.univ : finset t) htne), ",", expr finset.centroid_weights_apply, ",", expr nat.cast_pos, ",", expr inv_pos, ",", expr finset.card_pos.mpr htne, "]"] [] [] }
 end
 

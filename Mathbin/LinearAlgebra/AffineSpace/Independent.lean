@@ -35,9 +35,9 @@ open Function
 
 section AffineIndependent
 
-variable(k : Type _){V : Type _}{P : Type _}[Ringₓ k][AddCommGroupₓ V][Module k V]
+variable (k : Type _) {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V]
 
-variable[affine_space V P]{ι : Type _}
+variable [affine_space V P] {ι : Type _}
 
 include V
 
@@ -219,7 +219,29 @@ begin
     simpa [] [] [] ["[", expr w2, "]"] [] ["using", expr hws] }
 end
 
-variable{k}
+-- error in LinearAlgebra.AffineSpace.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- A finite family is affinely independent if and only if any affine
+combinations (with sum of weights 1) that evaluate to the same point are equal. -/
+theorem affine_independent_iff_eq_of_fintype_affine_combination_eq
+[fintype ι]
+(p : ι → P) : «expr ↔ »(affine_independent k p, ∀
+ w1
+ w2 : ι → k, «expr = »(«expr∑ , »((i), w1 i), 1) → «expr = »(«expr∑ , »((i), w2 i), 1) → «expr = »(finset.univ.affine_combination p w1, finset.univ.affine_combination p w2) → «expr = »(w1, w2)) :=
+begin
+  rw [expr affine_independent_iff_indicator_eq_of_affine_combination_eq] [],
+  split,
+  { intros [ident h, ident w1, ident w2, ident hw1, ident hw2, ident hweq],
+    simpa [] [] ["only"] ["[", expr set.indicator_univ, ",", expr finset.coe_univ, "]"] [] ["using", expr h _ _ w1 w2 hw1 hw2 hweq] },
+  { intros [ident h, ident s1, ident s2, ident w1, ident w2, ident hw1, ident hw2, ident hweq],
+    have [ident hw1'] [":", expr «expr = »(«expr∑ , »((i), (s1 : set ι).indicator w1 i), 1)] [],
+    { rwa [expr set.sum_indicator_subset _ (finset.subset_univ s1)] ["at", ident hw1] },
+    have [ident hw2'] [":", expr «expr = »(«expr∑ , »((i), (s2 : set ι).indicator w2 i), 1)] [],
+    { rwa [expr set.sum_indicator_subset _ (finset.subset_univ s2)] ["at", ident hw2] },
+    rw ["[", expr finset.affine_combination_indicator_subset w1 p (finset.subset_univ s1), ",", expr finset.affine_combination_indicator_subset w2 p (finset.subset_univ s2), "]"] ["at", ident hweq],
+    exact [expr h _ _ hw1' hw2' hweq] }
+end
+
+variable {k}
 
 /-- If we single out one member of an affine-independent family of points and affinely transport
 all others along the line joining them to this member, the resulting new family of points is affine-
@@ -328,7 +350,7 @@ theorem AffineIndependent.of_set_of_injective {p : ι → P} (ha : AffineIndepen
 
 section Composition
 
-variable{V₂ P₂ : Type _}[AddCommGroupₓ V₂][Module k V₂][affine_space V₂ P₂]
+variable {V₂ P₂ : Type _} [AddCommGroupₓ V₂] [Module k V₂] [affine_space V₂ P₂]
 
 include V₂
 
@@ -486,9 +508,9 @@ end AffineIndependent
 
 section DivisionRing
 
-variable{k : Type _}{V : Type _}{P : Type _}[DivisionRing k][AddCommGroupₓ V][Module k V]
+variable {k : Type _} {V : Type _} {P : Type _} [DivisionRing k] [AddCommGroupₓ V] [Module k V]
 
-variable[affine_space V P]{ι : Type _}
+variable [affine_space V P] {ι : Type _}
 
 include V
 
@@ -529,7 +551,7 @@ begin
     { use ["[", expr hsvi, ",", expr affine_span_singleton_union_vadd_eq_top_of_span_eq_top p₁ hsvt, "]"] } }
 end
 
-variable(k V)
+variable (k V)
 
 -- error in LinearAlgebra.AffineSpace.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_affine_independent
@@ -558,7 +580,7 @@ begin
       exact [expr ⟨mem_span_points k _ _ (set.mem_insert p _), mem_span_points k _ _ hp⟩] } }
 end
 
-variable(k){V P}
+variable (k) {V P}
 
 -- error in LinearAlgebra.AffineSpace.Independent: ././Mathport/Syntax/Translate/Basic.lean:341:40: in rw: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- Two different points are affinely independent. -/
@@ -583,15 +605,15 @@ end DivisionRing
 
 namespace Affine
 
-variable(k : Type _){V : Type _}(P : Type _)[Ringₓ k][AddCommGroupₓ V][Module k V]
+variable (k : Type _) {V : Type _} (P : Type _) [Ringₓ k] [AddCommGroupₓ V] [Module k V]
 
-variable[affine_space V P]
+variable [affine_space V P]
 
 include V
 
 /-- A `simplex k P n` is a collection of `n + 1` affinely
 independent points. -/
-structure simplex(n : ℕ) where 
+structure simplex (n : ℕ) where 
   points : Finₓ (n+1) → P 
   Independent : AffineIndependent k points
 
@@ -601,7 +623,7 @@ abbrev triangle :=
 
 namespace Simplex
 
-variable{P}
+variable {P}
 
 /-- Construct a 0-simplex from a point. -/
 def mk_of_point (p : P) : simplex k P 0 :=
@@ -612,13 +634,13 @@ def mk_of_point (p : P) : simplex k P 0 :=
 theorem mk_of_point_points (p : P) (i : Finₓ 1) : (mk_of_point k p).points i = p :=
   rfl
 
-instance  [Inhabited P] : Inhabited (simplex k P 0) :=
+instance [Inhabited P] : Inhabited (simplex k P 0) :=
   ⟨mk_of_point k$ default P⟩
 
 instance Nonempty : Nonempty (simplex k P 0) :=
   ⟨mk_of_point k$ AddTorsor.nonempty.some⟩
 
-variable{k V}
+variable {k V}
 
 /-- Two simplices are equal if they have the same points. -/
 @[ext]
@@ -672,7 +694,7 @@ namespace Affine
 
 namespace Simplex
 
-variable{k : Type _}{V : Type _}{P : Type _}[DivisionRing k][AddCommGroupₓ V][Module k V][affine_space V P]
+variable {k : Type _} {V : Type _} {P : Type _} [DivisionRing k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
 
 include V
 

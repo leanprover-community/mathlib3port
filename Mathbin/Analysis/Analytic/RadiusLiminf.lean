@@ -10,10 +10,8 @@ would create a circular dependency once we redefine `exp` using `formal_multilin
 -/
 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F]
 
 open_locale TopologicalSpace Classical BigOperators Nnreal Ennreal
 
@@ -21,7 +19,7 @@ open Filter Asymptotics
 
 namespace FormalMultilinearSeries
 
-variable(p : FormalMultilinearSeries 𝕜 E F)
+variable (p : FormalMultilinearSeries 𝕜 E F)
 
 -- error in Analysis.Analytic.RadiusLiminf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The radius of a formal multilinear series is equal to

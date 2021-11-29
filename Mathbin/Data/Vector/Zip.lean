@@ -10,7 +10,7 @@ namespace Vector
 
 section ZipWith
 
-variable{α β γ : Type _}{n : ℕ}(f : α → β → γ)
+variable {α β γ : Type _} {n : ℕ} (f : α → β → γ)
 
 /-- Apply the function `f : α → β → γ` to each corresponding pair of elements from two vectors. -/
 def zip_with : Vector α n → Vector β n → Vector γ n :=

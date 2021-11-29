@@ -9,7 +9,7 @@ We write `Cᵐᵒᵖ` for the monoidal opposite of a monoidal category `C`.
 
 universe v₁ v₂ u₁ u₂
 
-variable{C : Type u₁}
+variable {C : Type u₁}
 
 namespace CategoryTheory
 
@@ -70,7 +70,7 @@ open CategoryTheory
 
 open CategoryTheory.MonoidalOpposite
 
-variable[category.{v₁} C]
+variable [category.{v₁} C]
 
 /-- The monoidal opposite of a morphism `f : X ⟶ Y` is just `f`, thought of as `mop X ⟶ mop Y`. -/
 def Quiver.Hom.mop {X Y : C} (f : X ⟶ Y) : @Quiver.Hom («expr ᴹᵒᵖ» C) _ (mop X) (mop Y) :=
@@ -122,7 +122,7 @@ theorem mop_id_unmop {X : «expr ᴹᵒᵖ» C} : (𝟙 (unmop X)).mop = 𝟙 X 
 
 namespace Iso
 
-variable{X Y : C}
+variable {X Y : C}
 
 /-- An isomorphism in `C` gives an isomorphism in `Cᴹᵒᵖ`. -/
 @[simps]
@@ -131,7 +131,7 @@ def mop (f : X ≅ Y) : mop X ≅ mop Y :=
 
 end Iso
 
-variable[monoidal_category.{v₁} C]
+variable [monoidal_category.{v₁} C]
 
 open Opposite MonoidalCategory
 

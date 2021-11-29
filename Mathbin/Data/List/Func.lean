@@ -24,21 +24,21 @@ open List
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 namespace List
 
 namespace Func
 
-variable{a : α}
+variable {a : α}
 
-variable{as as1 as2 as3 : List α}
+variable {as as1 as2 as3 : List α}
 
 /-- Elementwise negation of a list -/
 def neg [Neg α] (as : List α) :=
   as.map fun a => -a
 
-variable[Inhabited α][Inhabited β]
+variable [Inhabited α] [Inhabited β]
 
 /--
 Update element of a list by index. If the index is out of range, extend the list with default
@@ -272,7 +272,7 @@ theorem length_neg [Neg α] (as : List α) : (neg as).length = as.length :=
   by 
     simp only [neg, length_map]
 
-variable[Inhabited α][Inhabited β]
+variable [Inhabited α] [Inhabited β]
 
 theorem nil_pointwise {f : α → β → γ} : ∀ bs : List β, pointwise f [] bs = bs.map (f$ default α)
 | [] => rfl

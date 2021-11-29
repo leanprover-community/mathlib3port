@@ -19,16 +19,16 @@ universe u v
   inputing `none`.
   Since this definition allows for Automata with infinite states, a `fintype` instance must be
   supplied for true `ε_NFA`'s.-/
-structure εNFA(α : Type u)(σ : Type v) where 
+structure εNFA (α : Type u) (σ : Type v) where 
   step : σ → Option α → Set σ 
   start : Set σ 
   accept : Set σ
 
-variable{α : Type u}{σ σ' : Type v}(M : εNFA α σ)
+variable {α : Type u} {σ σ' : Type v} (M : εNFA α σ)
 
 namespace εNFA
 
-instance  : Inhabited (εNFA α σ) :=
+instance : Inhabited (εNFA α σ) :=
   ⟨εNFA.mk (fun _ _ => ∅) ∅ ∅⟩
 
 /-- The `ε_closure` of a set is the set of states which can be reached by taking a finite string of

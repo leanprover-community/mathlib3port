@@ -1,7 +1,7 @@
 import Mathbin.Algebra.Ring.Pi 
 import Mathbin.Algebra.Category.CommRing.Basic 
 import Mathbin.Algebra.Category.Group.Limits 
-import Mathbin.RingTheory.Subring
+import Mathbin.RingTheory.Subring.Basic
 
 /-!
 # The category of (commutative) rings has all limits
@@ -29,7 +29,7 @@ noncomputable theory
 
 namespace SemiRing
 
-variable{J : Type u}[small_category J]
+variable {J : Type u} [small_category J]
 
 instance semiring_obj (F : J ⥤ SemiRing) j : Semiringₓ ((F ⋙ forget SemiRing).obj j) :=
   by 
@@ -58,7 +58,7 @@ namespace HasLimits
 Construction of a limit cone in `SemiRing`.
 (Internal use only; use the limits API.)
 -/
-def limit_cone (F : J ⥤ SemiRing) : cone F :=
+def limit_cone (F : J ⥤ SemiRing.{u}) : cone F :=
   { x := SemiRing.of (types.limit_cone (F ⋙ forget _)).x,
     π :=
       { app := limit_π_ring_hom F,
@@ -144,7 +144,7 @@ end SemiRing
 
 namespace CommSemiRing
 
-variable{J : Type u}[small_category J]
+variable {J : Type u} [small_category J]
 
 instance comm_semiring_obj (F : J ⥤ CommSemiRing) j : CommSemiringₓ ((F ⋙ forget CommSemiRing).obj j) :=
   by 
@@ -161,7 +161,7 @@ We show that the forgetful functor `CommSemiRing ⥤ SemiRing` creates limits.
 All we need to do is notice that the limit point has a `comm_semiring` instance available,
 and then reuse the existing limit.
 -/
-instance  (F : J ⥤ CommSemiRing) : creates_limit F (forget₂ CommSemiRing SemiRing.{u}) :=
+instance (F : J ⥤ CommSemiRing) : creates_limit F (forget₂ CommSemiRing SemiRing.{u}) :=
   creates_limit_of_reflects_iso
     fun c' t =>
       { liftedCone :=
@@ -229,7 +229,7 @@ end CommSemiRing
 
 namespace Ringₓₓ
 
-variable{J : Type u}[small_category J]
+variable {J : Type u} [small_category J]
 
 instance ring_obj (F : J ⥤ Ringₓₓ) j : Ringₓ ((F ⋙ forget Ringₓₓ).obj j) :=
   by 
@@ -252,7 +252,7 @@ We show that the forgetful functor `CommRing ⥤ Ring` creates limits.
 All we need to do is notice that the limit point has a `ring` instance available,
 and then reuse the existing limit.
 -/
-instance  (F : J ⥤ Ringₓₓ) : creates_limit F (forget₂ Ringₓₓ SemiRing.{u}) :=
+instance (F : J ⥤ Ringₓₓ) : creates_limit F (forget₂ Ringₓₓ SemiRing.{u}) :=
   creates_limit_of_reflects_iso
     fun c' t =>
       { liftedCone :=
@@ -339,7 +339,7 @@ end Ringₓₓ
 
 namespace CommRingₓₓ
 
-variable{J : Type u}[small_category J]
+variable {J : Type u} [small_category J]
 
 instance comm_ring_obj (F : J ⥤ CommRingₓₓ) j : CommRingₓ ((F ⋙ forget CommRingₓₓ).obj j) :=
   by 
@@ -355,7 +355,7 @@ We show that the forgetful functor `CommRing ⥤ Ring` creates limits.
 All we need to do is notice that the limit point has a `comm_ring` instance available,
 and then reuse the existing limit.
 -/
-instance  (F : J ⥤ CommRingₓₓ) : creates_limit F (forget₂ CommRingₓₓ Ringₓₓ.{u}) :=
+instance (F : J ⥤ CommRingₓₓ) : creates_limit F (forget₂ CommRingₓₓ Ringₓₓ.{u}) :=
   creates_limit_of_reflects_iso
     fun c' t =>
       { liftedCone :=

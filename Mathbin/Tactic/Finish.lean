@@ -100,11 +100,11 @@ section
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
-variable(p q : Prop)
+variable (p q : Prop)
 
-variable(s : α → Prop)
+variable (s : α → Prop)
 
 attribute [local instance] Classical.propDecidable
 

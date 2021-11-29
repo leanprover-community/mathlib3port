@@ -53,9 +53,9 @@ namespace Metric
 
 section ApproxGluing
 
-variable{X : Type u}{Y : Type v}{Z : Type w}
+variable {X : Type u} {Y : Type v} {Z : Type w}
 
-variable[MetricSpace X][MetricSpace Y]{Φ : Z → X}{Ψ : Z → Y}{ε : ℝ}
+variable [MetricSpace X] [MetricSpace Y] {Φ : Z → X} {Ψ : Z → Y} {ε : ℝ}
 
 open _root_.sum(inl inr)
 
@@ -96,7 +96,7 @@ private theorem glue_dist_comm (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) : ∀ x 
 | inl x, inr y => rfl
 | inr x, inl y => rfl
 
-variable[Nonempty Z]
+variable [Nonempty Z]
 
 -- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private
@@ -256,9 +256,9 @@ end ApproxGluing
 
 section Sum
 
-variable{X : Type u}{Y : Type v}{Z : Type w}
+variable {X : Type u} {Y : Type v} {Z : Type w}
 
-variable[MetricSpace X][MetricSpace Y][Inhabited X][Inhabited Y]
+variable [MetricSpace X] [MetricSpace Y] [Inhabited X] [Inhabited Y]
 
 open sum(inl inr)
 
@@ -368,9 +368,9 @@ end Sum
 
 section Gluing
 
-variable{X : Type u}{Y : Type v}{Z : Type w}
+variable {X : Type u} {Y : Type v} {Z : Type w}
 
-variable[Nonempty Z][MetricSpace Z][MetricSpace X][MetricSpace Y]{Φ : Z → X}{Ψ : Z → Y}{ε : ℝ}
+variable [Nonempty Z] [MetricSpace Z] [MetricSpace X] [MetricSpace Y] {Φ : Z → X} {Ψ : Z → Y} {ε : ℝ}
 
 open _root_.sum(inl inr)
 
@@ -433,7 +433,7 @@ section InductiveLimit
 
 open Nat
 
-variable{X : ℕ → Type u}[∀ n, MetricSpace (X n)]{f : ∀ n, X n → X (n+1)}
+variable {X : ℕ → Type u} [∀ n, MetricSpace (X n)] {f : ∀ n, X n → X (n+1)}
 
 /-- Predistance on the disjoint union `Σ n, X n`. -/
 def inductive_limit_dist (f : ∀ n, X n → X (n+1)) (x y : Σn, X n) : ℝ :=
@@ -507,7 +507,7 @@ instance metric_space_inductive_limit (I : ∀ n, Isometry (f n)) : MetricSpace 
 def to_inductive_limit (I : ∀ n, isometry (f n)) (n : exprℕ()) (x : X n) : metric.inductive_limit I :=
 by letI [] [":", expr pseudo_metric_space «exprΣ , »((n), X n)] [":=", expr inductive_premetric I]; exact [expr «expr⟦ ⟧»(sigma.mk n x)]
 
-instance  (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (inductive_limit I) :=
+instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (inductive_limit I) :=
   ⟨to_inductive_limit _ 0 (default _)⟩
 
 /-- The map `to_inductive_limit n` mapping `X n` to the inductive limit is an isometry. -/

@@ -25,9 +25,9 @@ section trace
 
 universe u v w
 
-variable{m : Type _}(n : Type _){p : Type _}
+variable {m : Type _} (n : Type _) {p : Type _}
 
-variable(R : Type _)(M : Type _)[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable (R : Type _) (M : Type _) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 /--
 The diagonal of a square matrix.
@@ -45,7 +45,7 @@ def diag : Matrix n n M →ₗ[R] n → M :=
         ext 
         rfl }
 
-variable{n}{R}{M}
+variable {n} {R} {M}
 
 @[simp]
 theorem diag_apply (A : Matrix n n M) (i : n) : diag n R M A i = A i i :=
@@ -68,7 +68,7 @@ theorem diag_col_mul_row (a b : n → R) : diag n R R (col a ⬝ row b) = a*b :=
     ext 
     simp [Matrix.mul_apply]
 
-variable(n)(R)(M)
+variable (n) (R) (M)
 
 /--
 The trace of a square matrix.
@@ -84,7 +84,7 @@ def trace [Fintype n] : Matrix n n M →ₗ[R] M :=
         intros 
         simp [Finset.smul_sum] }
 
-variable{n}{R}{M}[Fintype n][Fintype m][Fintype p]
+variable {n} {R} {M} [Fintype n] [Fintype m] [Fintype p]
 
 @[simp]
 theorem trace_diag (A : Matrix n n M) : trace n R M A = ∑i, diag n R M A i :=

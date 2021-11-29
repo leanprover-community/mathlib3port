@@ -28,13 +28,13 @@ noncomputable theory
 
 namespace CategoryTheory
 
-variable(C : Type u)[category.{v} C]{X Y : C}
+variable (C : Type u) [category.{v} C] {X Y : C}
 
 namespace Limits
 
 section 
 
-variable{C}
+variable {C}
 
 /-- Swap the two sides of a `binary_fan`. -/
 def binary_fan.swap {P Q : C} (t : binary_fan P Q) : binary_fan Q P :=
@@ -215,11 +215,11 @@ section
 
 attribute [local tidy] tactic.case_bash
 
-variable{C}
+variable {C}
 
-variable(𝒯 : limit_cone (functor.empty C))
+variable (𝒯 : limit_cone (functor.empty C))
 
-variable(ℬ : ∀ X Y : C, limit_cone (pair X Y))
+variable (ℬ : ∀ X Y : C, limit_cone (pair X Y))
 
 namespace MonoidalOfChosenFiniteProducts
 
@@ -347,7 +347,7 @@ def monoidal_of_chosen_finite_products_synonym
 (ℬ : ∀ X Y : C, limit_cone (pair X Y)) :=
 C
 
-instance  : monoidal_category (monoidal_of_chosen_finite_products_synonym 𝒯 ℬ) :=
+instance : monoidal_category (monoidal_of_chosen_finite_products_synonym 𝒯 ℬ) :=
   monoidal_of_chosen_finite_products 𝒯 ℬ
 
 theorem braiding_naturality {X X' Y Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y') :

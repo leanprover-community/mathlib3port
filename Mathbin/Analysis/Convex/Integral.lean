@@ -38,13 +38,8 @@ open MeasureTheory Set Filter
 
 open_locale TopologicalSpace BigOperators
 
-variable{α E :
-    Type
-      _}[MeasurableSpace
-      α]{μ :
-    Measureₓ
-      α}[NormedGroup
-      E][NormedSpace ℝ E][CompleteSpace E][TopologicalSpace.SecondCountableTopology E][MeasurableSpace E][BorelSpace E]
+variable {α E : Type _} [MeasurableSpace α] {μ : Measureₓ α} [NormedGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+  [TopologicalSpace.SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E]
 
 -- error in Analysis.Convex.Integral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private

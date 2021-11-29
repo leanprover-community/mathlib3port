@@ -22,7 +22,7 @@ open_locale Cardinal
 private def mv_polynomial_fun (σ R : Type u) : Type u :=
   Sum R (Sum σ (Ulift.{u} Bool))
 
-variable(σ R : Type u)
+variable (σ R : Type u)
 
 /-- A function used to prove theorems about the cardinality of `mv_polynomial σ R`.
   The type ``W_type (arity σ R)` has a constant for every element of `R` and `σ` and two binary
@@ -39,9 +39,9 @@ private def arity_fintype (x : mv_polynomial_fun σ R) : Fintype (arity σ R x) 
 
 attribute [local instance] arity_fintype
 
-variable{σ R}
+variable {σ R}
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
 /-- The surjection from `W_type (arity σ R)` into `mv_polynomial σ R`. -/
 private noncomputable def to_mv_polynomial : WType (arity σ R) → MvPolynomial σ R

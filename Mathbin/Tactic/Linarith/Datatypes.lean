@@ -150,10 +150,10 @@ unsafe def to_const_mul_nm : ineq → Name
 | le => `` mul_nonpos
 | Eq => `` mul_eq
 
-instance  : HasToString ineq :=
+instance : HasToString ineq :=
   ⟨ineq.to_string⟩
 
-unsafe instance  : has_to_format ineq :=
+unsafe instance : has_to_format ineq :=
   ⟨fun i => ineq.to_string i⟩
 
 end Ineq

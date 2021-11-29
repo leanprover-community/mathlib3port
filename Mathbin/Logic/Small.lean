@@ -18,7 +18,7 @@ universe u w v
 /--
 A type is `small.{w}` if there exists an equivalence to some `S : Type w`.
 -/
-class Small(α : Type v) : Prop where 
+class Small (α : Type v) : Prop where 
   equiv_small : ∃ S : Type w, Nonempty (α ≃ S)
 
 /--
@@ -40,10 +40,10 @@ The noncomputable equivalence between a `w`-small type and a model.
 noncomputable def equivShrink (α : Type v) [Small.{w} α] : α ≃ Shrink α :=
   Nonempty.some (Classical.some_spec (@Small.equiv_small α _))
 
-instance (priority := 100)small_self (α : Type v) : Small.{v} α :=
+instance (priority := 100) small_self (α : Type v) : Small.{v} α :=
   Small.mk' (Equiv.refl _)
 
-instance (priority := 100)small_max (α : Type v) : Small.{max w v} α :=
+instance (priority := 100) small_max (α : Type v) : Small.{max w v} α :=
   Small.mk' Equiv.ulift.{w}.symm
 
 instance small_ulift (α : Type v) : Small.{v} (Ulift.{w} α) :=
@@ -77,7 +77,7 @@ theorem small_of_injective {α : Type _} {β : Type _} [Small.{w} β] (f : α �
     rw [small_congr (Equiv.ofInjective f hf)]
     infer_instance
 
-instance (priority := 100)small_subsingleton (α : Type v) [Subsingleton α] : Small.{w} α :=
+instance (priority := 100) small_subsingleton (α : Type v) [Subsingleton α] : Small.{w} α :=
   by 
     rcases is_empty_or_nonempty α with ⟨⟩ <;> skip
     ·

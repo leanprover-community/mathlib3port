@@ -34,18 +34,18 @@ open_locale Pointwise
 
 namespace Submodule
 
-variable{ι : Sort uι}
+variable {ι : Sort uι}
 
-variable{R : Type u}[CommSemiringₓ R]
+variable {R : Type u} [CommSemiringₓ R]
 
 section Ringₓ
 
-variable{A : Type v}[Semiringₓ A][Algebra R A]
+variable {A : Type v} [Semiringₓ A] [Algebra R A]
 
-variable(S T : Set A){M N P Q : Submodule R A}{m n : A}
+variable (S T : Set A) {M N P Q : Submodule R A} {m n : A}
 
 /-- `1 : submodule R A` is the submodule R of A. -/
-instance  : HasOne (Submodule R A) :=
+instance : HasOne (Submodule R A) :=
   ⟨(Algebra.linearMap R A).range⟩
 
 theorem one_eq_range : (1 : Submodule R A) = (Algebra.linearMap R A).range :=
@@ -71,7 +71,7 @@ theorem one_le : (1 : Submodule R A) ≤ P ↔ (1 : A) ∈ P :=
 
 /-- Multiplication of sub-R-modules of an R-algebra A. The submodule `M * N` is the
 smallest R-submodule of `A` containing the elements `m * n` for `m ∈ M` and `n ∈ N`. -/
-instance  : Mul (Submodule R A) :=
+instance : Mul (Submodule R A) :=
   ⟨fun M N => ⨆s : M, N.map$ Algebra.lmul R A s.1⟩
 
 theorem mul_mem_mul (hm : m ∈ M) (hn : n ∈ N) : (m*n) ∈ M*N :=
@@ -86,7 +86,7 @@ protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M*N) (hm
   (h0 : C 0) (ha : ∀ x y, C x → C y → C (x+y)) (hs : ∀ r : R x, C x → C (r • x)) : C r :=
   (@mul_le _ _ _ _ _ _ _ ⟨C, h0, ha, hs⟩).2 hm hr
 
-variable(R)
+variable (R)
 
 theorem span_mul_span : (span R S*span R T) = span R (S*T) :=
   by 
@@ -114,9 +114,9 @@ theorem span_mul_span : (span R S*span R T) = span R (S*T) :=
       rintro _ ⟨a, b, ha, hb, rfl⟩
       exact mul_mem_mul (subset_span ha) (subset_span hb)
 
-variable{R}
+variable {R}
 
-variable(M N P Q)
+variable (M N P Q)
 
 protected theorem mul_assocₓ : ((M*N)*P) = M*N*P :=
   le_antisymmₓ
@@ -158,7 +158,7 @@ protected theorem mul_oneₓ : (M*1) = M :=
     convLHS => rw [one_eq_span, ←span_eq M]
     erw [span_mul_span, mul_oneₓ, span_eq]
 
-variable{M N P Q}
+variable {M N P Q}
 
 @[mono]
 theorem mul_le_mul (hmp : M ≤ P) (hnq : N ≤ Q) : (M*N) ≤ P*Q :=
@@ -170,7 +170,7 @@ theorem mul_le_mul_left (h : M ≤ N) : (M*P) ≤ N*P :=
 theorem mul_le_mul_right (h : N ≤ P) : (M*N) ≤ M*P :=
   mul_le_mul (le_reflₓ M) h
 
-variable(M N P)
+variable (M N P)
 
 theorem mul_sup : (M*N⊔P) = (M*N)⊔M*P :=
   le_antisymmₓ
@@ -262,15 +262,15 @@ theorem mem_span_mul_finite_of_mem_mul {P Q : Submodule R A} {x : A} (hx : x ∈
     (by 
       rwa [←Submodule.span_eq P, ←Submodule.span_eq Q, Submodule.span_mul_span] at hx)
 
-variable{M N P}
+variable {M N P}
 
 /-- Sub-R-modules of an R-algebra form a semiring. -/
-instance  : Semiringₓ (Submodule R A) :=
+instance : Semiringₓ (Submodule R A) :=
   { Submodule.pointwiseAddCommMonoid, Submodule.hasOne, Submodule.hasMul with one_mul := Submodule.one_mul,
     mul_one := Submodule.mul_one, mul_assoc := Submodule.mul_assoc, zero_mul := bot_mul, mul_zero := mul_bot,
     left_distrib := mul_sup, right_distrib := sup_mul }
 
-variable(M)
+variable (M)
 
 theorem pow_subset_pow {n : ℕ} : («expr↑ » M : Set A) ^ n ⊆ «expr↑ » (M ^ n : Submodule R A) :=
   by 
@@ -297,21 +297,21 @@ end Ringₓ
 
 section CommRingₓ
 
-variable{A : Type v}[CommSemiringₓ A][Algebra R A]
+variable {A : Type v} [CommSemiringₓ A] [Algebra R A]
 
-variable{M N : Submodule R A}{m n : A}
+variable {M N : Submodule R A} {m n : A}
 
 theorem mul_mem_mul_rev (hm : m ∈ M) (hn : n ∈ N) : (n*m) ∈ M*N :=
   mul_commₓ m n ▸ mul_mem_mul hm hn
 
-variable(M N)
+variable (M N)
 
 protected theorem mul_commₓ : (M*N) = N*M :=
   le_antisymmₓ (mul_le.2$ fun r hrm s hsn => mul_mem_mul_rev hsn hrm)
     (mul_le.2$ fun r hrn s hsm => mul_mem_mul_rev hsm hrn)
 
 /-- Sub-R-modules of an R-algebra A form a semiring. -/
-instance  : CommSemiringₓ (Submodule R A) :=
+instance : CommSemiringₓ (Submodule R A) :=
   { Submodule.semiring with mul_comm := Submodule.mul_comm }
 
 -- error in Algebra.Algebra.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -332,7 +332,7 @@ theorem prod_span_singleton {ι : Type _} (s : Finset ι) (x : ι → A) :
   by 
     rw [prod_span, Set.finset_prod_singleton]
 
-variable(R A)
+variable (R A)
 
 /-- R-submodules of the R-algebra A are a module over `set A`. -/
 instance module_set : Module (set_semiring A) (Submodule R A) :=
@@ -356,7 +356,7 @@ instance module_set : Module (set_semiring A) (Submodule R A) :=
           erw [span_empty, bot_mul],
     smul_zero := fun _ => mul_bot _ }
 
-variable{R A}
+variable {R A}
 
 theorem smul_def {s : set_semiring A} {P : Submodule R A} : s • P = span R s*P :=
   rfl
@@ -388,7 +388,7 @@ which is equivalent to `x • J ⊆ I` (see `mem_div_iff_smul_subset`), but nice
 
 This is the general form of the ideal quotient, traditionally written $I : J$.
 -/
-instance  : Div (Submodule R A) :=
+instance : Div (Submodule R A) :=
   ⟨fun I J =>
       { Carrier := { x | ∀ y _ : y ∈ J, (x*y) ∈ I },
         zero_mem' :=

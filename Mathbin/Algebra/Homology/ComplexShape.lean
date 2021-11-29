@@ -54,14 +54,14 @@ This means that the shape consists of some union of lines, rays, intervals, and 
 Below we define `c.next` and `c.prev` which provide, as an `option`, these related elements.
 -/
 @[ext, nolint has_inhabited_instance]
-structure ComplexShape(ι : Type _) where 
+structure ComplexShape (ι : Type _) where 
   Rel : ι → ι → Prop 
   next_eq : ∀ {i j j'}, rel i j → rel i j' → j = j' 
   prev_eq : ∀ {i i' j}, rel i j → rel i' j → i = i'
 
 namespace ComplexShape
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 /--
 The complex shape where only differentials from each `X.i` to itself are allowed.

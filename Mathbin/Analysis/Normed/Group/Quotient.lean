@@ -82,7 +82,7 @@ open QuotientAddGroup Metric Set
 
 open_locale TopologicalSpace Nnreal
 
-variable{M N : Type _}[SemiNormedGroup M][SemiNormedGroup N]
+variable {M N : Type _} [SemiNormedGroup M] [SemiNormedGroup N]
 
 /-- The definition of the norm on the quotient by an additive subgroup. -/
 noncomputable instance normOnQuotient (S : AddSubgroup M) : HasNorm (Quotientₓ S) :=
@@ -326,7 +326,7 @@ instance add_subgroup.semi_normed_group_quotient (S : add_subgroup M) : semi_nor
     { simp [] [] [] [] [] [] }
   end }
 
-example  (S : AddSubgroup M) :
+example (S : AddSubgroup M) :
   (Quotientₓ.topologicalSpace : TopologicalSpace$ Quotientₓ S) =
     S.semi_normed_group_quotient.to_uniform_space.to_topological_space :=
   rfl
@@ -341,7 +341,7 @@ noncomputable instance AddSubgroup.normedGroupQuotient (S : AddSubgroup M) [hS :
         erw [←(mk' S).map_sub, quotient_norm_eq_zero_iff, hS.closure_eq, ←QuotientAddGroup.eq_iff_sub_mem] at h 
         exact h }
 
-example  (S : AddSubgroup M) [IsClosed (S : Set M)] : S.semi_normed_group_quotient = NormedGroup.toSemiNormedGroup :=
+example (S : AddSubgroup M) [IsClosed (S : Set M)] : S.semi_normed_group_quotient = NormedGroup.toSemiNormedGroup :=
   rfl
 
 namespace AddSubgroup
@@ -437,7 +437,7 @@ namespace NormedGroupHom
 
 /-- `is_quotient f`, for `f : M ⟶ N` means that `N` is isomorphic to the quotient of `M`
 by the kernel of `f`. -/
-structure is_quotient(f : NormedGroupHom M N) : Prop where 
+structure is_quotient (f : NormedGroupHom M N) : Prop where 
   Surjective : Function.Surjective f 
   norm : ∀ x, ∥f x∥ = Inf ((fun m => ∥x+m∥) '' f.ker)
 

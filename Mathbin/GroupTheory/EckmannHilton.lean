@@ -21,13 +21,13 @@ universe u
 
 namespace EckmannHilton
 
-variable{X : Type u}
+variable {X : Type u}
 
 local notation a "<" m ">" b => m a b
 
 /-- `is_unital m e` expresses that `e : X` is a left and right unit
 for the binary operation `m : X → X → X`. -/
-structure is_unital(m : X → X → X)(e : X) extends IsLeftId _ m e, IsRightId _ m e : Prop
+structure is_unital (m : X → X → X) (e : X) extends IsLeftId _ m e, IsRightId _ m e : Prop
 
 @[toAdditive EckmannHilton.AddZeroClass.is_unital]
 theorem mul_one_class.is_unital [G : MulOneClass X] : is_unital (·*·) (1 : X) :=
@@ -37,11 +37,11 @@ theorem mul_one_class.is_unital [G : MulOneClass X] : is_unital (·*·) (1 : X) 
     (by 
       infer_instance)
 
-variable{m₁ m₂ : X → X → X}{e₁ e₂ : X}
+variable {m₁ m₂ : X → X → X} {e₁ e₂ : X}
 
-variable(h₁ : is_unital m₁ e₁)(h₂ : is_unital m₂ e₂)
+variable (h₁ : is_unital m₁ e₁) (h₂ : is_unital m₂ e₂)
 
-variable(distrib : ∀ a b c d, ((a<m₂>b)<m₁>c<m₂>d) = (a<m₁>c)<m₂>b<m₁>d)
+variable (distrib : ∀ a b c d, ((a<m₂>b)<m₁>c<m₂>d) = (a<m₁>c)<m₂>b<m₁>d)
 
 include h₁ h₂ distrib
 

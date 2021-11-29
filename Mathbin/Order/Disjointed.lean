@@ -30,11 +30,11 @@ Related to the TODO in the module docstring of `order.partial_sups`.
 -/
 
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 section GeneralizedBooleanAlgebra
 
-variable[GeneralizedBooleanAlgebra α]
+variable [GeneralizedBooleanAlgebra α]
 
 /-- If `f : ℕ → α` is a sequence of elements, then `disjointed f` is the sequence formed by
 subtracting each element from the nexts. This is the unique disjoint sequence whose partial sups
@@ -135,7 +135,7 @@ end GeneralizedBooleanAlgebra
 
 section CompleteBooleanAlgebra
 
-variable[CompleteBooleanAlgebra α]
+variable [CompleteBooleanAlgebra α]
 
 theorem supr_disjointed (f : ℕ → α) : (⨆n, disjointed f n) = ⨆n, f n :=
   supr_eq_supr_of_partial_sups_eq_partial_sups (partial_sups_disjointed f)

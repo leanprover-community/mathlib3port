@@ -21,7 +21,7 @@ class float_cfg where
   prec_pos : 0 < prec 
   prec_max : prec ≤ emax
 
-variable[C : float_cfg]
+variable [C : float_cfg]
 
 include C
 
@@ -79,7 +79,7 @@ theorem float.zero.valid : valid_finite emin 0 :=
 def float.zero (s : Bool) : float :=
   float.finite s emin 0 float.zero.valid
 
-instance  : Inhabited float :=
+instance : Inhabited float :=
   ⟨float.zero tt⟩
 
 protected def float.sign' : float → Semiquot Bool
@@ -172,7 +172,7 @@ unsafe def of_rat : rmode → ℚ → float
 
 namespace Float
 
-instance  : Neg float :=
+instance : Neg float :=
   ⟨float.neg⟩
 
 unsafe def add (mode : rmode) : float → float → float
@@ -187,13 +187,13 @@ unsafe def add (mode : rmode) : float → float → float
   let f₂ := finite s₂ e₂ m₂ v₂ 
   of_rat mode (to_rat f₁ rfl+to_rat f₂ rfl)
 
-unsafe instance  : Add float :=
+unsafe instance : Add float :=
   ⟨float.add rmode.NE⟩
 
 unsafe def sub (mode : rmode) (f1 f2 : float) : float :=
   add mode f1 (-f2)
 
-unsafe instance  : Sub float :=
+unsafe instance : Sub float :=
   ⟨float.sub rmode.NE⟩
 
 unsafe def mul (mode : rmode) : float → float → float

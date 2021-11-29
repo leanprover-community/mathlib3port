@@ -21,9 +21,9 @@ Finally, we use this to show unique factorization domains are integrally closed.
 
 section scaleRoots
 
-variable{A K R S : Type _}[CommRingₓ A][Field K][CommRingₓ R][CommRingₓ S]
+variable {A K R S : Type _} [CommRingₓ A] [Field K] [CommRingₓ R] [CommRingₓ S]
 
-variable{M : Submonoid A}[Algebra A S][IsLocalization M S][Algebra A K][IsFractionRing A K]
+variable {M : Submonoid A} [Algebra A S] [IsLocalization M S] [Algebra A K] [IsFractionRing A K]
 
 open Finsupp IsFractionRing IsLocalization Polynomial
 
@@ -33,7 +33,7 @@ theorem scale_roots_aeval_eq_zero_of_aeval_mk'_eq_zero {p : Polynomial A} {r : A
     convert scale_roots_eval₂_eq_zero (algebraMap A S) hr 
     rw [aeval_def, mk'_spec' _ r s]
 
-variable[IsDomain A]
+variable [IsDomain A]
 
 theorem num_is_root_scale_roots_of_aeval_eq_zero [UniqueFactorizationMonoid A] {p : Polynomial A} {x : K}
   (hr : aeval x p = 0) : is_root (scaleRoots p (denom A x)) (Num A x) :=
@@ -47,9 +47,9 @@ end scaleRoots
 
 section RationalRootTheorem
 
-variable{A K : Type _}[CommRingₓ A][IsDomain A][UniqueFactorizationMonoid A][Field K]
+variable {A K : Type _} [CommRingₓ A] [IsDomain A] [UniqueFactorizationMonoid A] [Field K]
 
-variable[Algebra A K][IsFractionRing A K]
+variable [Algebra A K] [IsFractionRing A K]
 
 open IsFractionRing IsLocalization Polynomial UniqueFactorizationMonoid
 

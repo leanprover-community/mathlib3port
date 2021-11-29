@@ -61,7 +61,7 @@ universe u
   This definition is slightly generalised to include a well founded relation
   `r` with the property that `r (a % b) b`, instead of a valuation.  -/
 @[protectProj without mul_left_not_lt r_well_founded]
-class EuclideanDomain(R : Type u) extends CommRingₓ R, Nontrivial R where 
+class EuclideanDomain (R : Type u) extends CommRingₓ R, Nontrivial R where 
   Quotient : R → R → R 
   quotient_zero : ∀ a, Quotientₓ a 0 = 0
   remainder : R → R → R 
@@ -73,9 +73,9 @@ class EuclideanDomain(R : Type u) extends CommRingₓ R, Nontrivial R where
 
 namespace EuclideanDomain
 
-variable{R : Type u}
+variable {R : Type u}
 
-variable[EuclideanDomain R]
+variable [EuclideanDomain R]
 
 local infixl:50 " ≺ " => EuclideanDomain.R
 
@@ -240,7 +240,7 @@ end
 
 section Gcd
 
-variable[DecidableEq R]
+variable [DecidableEq R]
 
 /-- `gcd a b` is a (non-unique) element such that `gcd a b ∣ a` `gcd a b ∣ b`, and for
   any element `c` such that `c ∣ a` and `c ∣ b`, then `c ∣ gcd a b` -/
@@ -431,7 +431,7 @@ end Gcd
 
 section Lcm
 
-variable[DecidableEq R]
+variable [DecidableEq R]
 
 /-- `lcm a b` is a (non-unique) element such that `a ∣ lcm a b` `b ∣ lcm a b`, and for
   any element `c` such that `a ∣ c` and `b ∣ c`, then `lcm a b ∣ c` -/
@@ -579,7 +579,7 @@ instance Int.euclideanDomain : EuclideanDomain ℤ :=
             rw [←mul_oneₓ a.nat_abs, Int.nat_abs_mul]
             exact mul_le_mul_of_nonneg_left (Int.nat_abs_pos_of_ne_zero b0) (Nat.zero_leₓ _) }
 
-instance (priority := 100)Field.toEuclideanDomain {K : Type u} [Field K] : EuclideanDomain K :=
+instance (priority := 100) Field.toEuclideanDomain {K : Type u} [Field K] : EuclideanDomain K :=
   { ‹Field K› with add := ·+·, mul := ·*·, one := 1, zero := 0, neg := Neg.neg, Quotient := · / ·,
     remainder := fun a b => a - (a*b) / b, quotient_zero := div_zero,
     quotient_mul_add_remainder_eq :=

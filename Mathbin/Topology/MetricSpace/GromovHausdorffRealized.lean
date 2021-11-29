@@ -45,7 +45,8 @@ section GromovHausdorffRealized
 
 section Definitions
 
-variable(X : Type u)(Y : Type v)[MetricSpace X][CompactSpace X][Nonempty X][MetricSpace Y][CompactSpace Y][Nonempty Y]
+variable (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Nonempty X] [MetricSpace Y] [CompactSpace Y]
+  [Nonempty Y]
 
 @[reducible]
 private def prod_space_fun : Type _ :=
@@ -86,13 +87,8 @@ end Definitions
 
 section Constructions
 
-variable{X :
-    Type
-      u}{Y :
-    Type
-      v}[MetricSpace
-      X][CompactSpace
-      X][Nonempty X][MetricSpace Y][CompactSpace Y][Nonempty Y]{f : prod_space_fun X Y}{x y z t : Sum X Y}
+variable {X : Type u} {Y : Type v} [MetricSpace X] [CompactSpace X] [Nonempty X] [MetricSpace Y] [CompactSpace Y]
+  [Nonempty Y] {f : prod_space_fun X Y} {x y z t : Sum X Y}
 
 attribute [local instance] inhabited_of_nonempty'
 
@@ -321,23 +317,23 @@ def HD (f : Cb X Y) :=
   max (⨆x, ⨅y, f (inl x, inr y)) (⨆y, ⨅x, f (inl x, inr y))
 
 theorem HD_below_aux1 {f : Cb X Y} (C : ℝ) {x : X} : BddBelow (range fun y : Y => f (inl x, inr y)+C) :=
-  let ⟨cf, hcf⟩ := (Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1
+  let ⟨cf, hcf⟩ := (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1
   ⟨cf+C, forall_range_iff.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
 
 private theorem HD_bound_aux1 (f : Cb X Y) (C : ℝ) : BddAbove (range fun x : X => ⨅y, f (inl x, inr y)+C) :=
   by 
-    rcases(Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).2 with ⟨Cf, hCf⟩
+    rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2 with ⟨Cf, hCf⟩
     refine' ⟨Cf+C, forall_range_iff.2 fun x => _⟩
     calc (⨅y, f (inl x, inr y)+C) ≤ f (inl x, inr (default Y))+C := cinfi_le (HD_below_aux1 C) (default Y)_ ≤ Cf+C :=
       add_le_add ((fun x => hCf (mem_range_self x)) _) (le_reflₓ _)
 
 theorem HD_below_aux2 {f : Cb X Y} (C : ℝ) {y : Y} : BddBelow (range fun x : X => f (inl x, inr y)+C) :=
-  let ⟨cf, hcf⟩ := (Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1
+  let ⟨cf, hcf⟩ := (Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1
   ⟨cf+C, forall_range_iff.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
 
 private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) : BddAbove (range fun y : Y => ⨅x, f (inl x, inr y)+C) :=
   by 
-    rcases(Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).2 with ⟨Cf, hCf⟩
+    rcases(Real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).2 with ⟨Cf, hCf⟩
     refine' ⟨Cf+C, forall_range_iff.2 fun y => _⟩
     calc (⨅x, f (inl x, inr y)+C) ≤ f (inl (default X), inr y)+C := cinfi_le (HD_below_aux2 C) (default X)_ ≤ Cf+C :=
       add_le_add ((fun x => hCf (mem_range_self x)) _) (le_reflₓ _)
@@ -378,9 +374,9 @@ theorem HD_lipschitz_aux1
 (f
  g : Cb X Y) : «expr ≤ »(«expr⨆ , »((x), «expr⨅ , »((y), f (inl x, inr y))), «expr + »(«expr⨆ , »((x), «expr⨅ , »((y), g (inl x, inr y))), dist f g)) :=
 begin
-  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1, "with", "⟨", ident cg, ",", ident hcg, "⟩"],
+  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 g.bounded_range).1, "with", "⟨", ident cg, ",", ident hcg, "⟩"],
   have [ident Hcg] [":", expr ∀ x, «expr ≤ »(cg, g x)] [":=", expr λ x, hcg (mem_range_self x)],
-  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1, "with", "⟨", ident cf, ",", ident hcf, "⟩"],
+  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1, "with", "⟨", ident cf, ",", ident hcf, "⟩"],
   have [ident Hcf] [":", expr ∀ x, «expr ≤ »(cf, f x)] [":=", expr λ x, hcf (mem_range_self x)],
   have [ident Z] [":", expr «expr ≤ »(«expr⨆ , »((x), «expr⨅ , »((y), f (inl x, inr y))), «expr⨆ , »((x), «expr⨅ , »((y), «expr + »(g (inl x, inr y), dist f g))))] [":=", expr csupr_le_csupr (HD_bound_aux1 _ (dist f g)) (λ
     x, cinfi_le_cinfi ⟨cf, forall_range_iff.2 (λ i, Hcf _)⟩ (λ y, coe_le_coe_add_dist))],
@@ -406,9 +402,9 @@ theorem HD_lipschitz_aux2
 (f
  g : Cb X Y) : «expr ≤ »(«expr⨆ , »((y), «expr⨅ , »((x), f (inl x, inr y))), «expr + »(«expr⨆ , »((y), «expr⨅ , »((x), g (inl x, inr y))), dist f g)) :=
 begin
-  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1, "with", "⟨", ident cg, ",", ident hcg, "⟩"],
+  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 g.bounded_range).1, "with", "⟨", ident cg, ",", ident hcg, "⟩"],
   have [ident Hcg] [":", expr ∀ x, «expr ≤ »(cg, g x)] [":=", expr λ x, hcg (mem_range_self x)],
-  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1, "with", "⟨", ident cf, ",", ident hcf, "⟩"],
+  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 f.bounded_range).1, "with", "⟨", ident cf, ",", ident hcf, "⟩"],
   have [ident Hcf] [":", expr ∀ x, «expr ≤ »(cf, f x)] [":=", expr λ x, hcf (mem_range_self x)],
   have [ident Z] [":", expr «expr ≤ »(«expr⨆ , »((y), «expr⨅ , »((x), f (inl x, inr y))), «expr⨆ , »((y), «expr⨅ , »((x), «expr + »(g (inl x, inr y), dist f g))))] [":=", expr csupr_le_csupr (HD_bound_aux2 _ (dist f g)) (λ
     y, cinfi_le_cinfi ⟨cf, forall_range_iff.2 (λ i, Hcf _)⟩ (λ y, coe_le_coe_add_dist))],
@@ -440,7 +436,8 @@ end Constructions
 
 section Consequences
 
-variable(X : Type u)(Y : Type v)[MetricSpace X][CompactSpace X][Nonempty X][MetricSpace Y][CompactSpace Y][Nonempty Y]
+variable (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Nonempty X] [MetricSpace Y] [CompactSpace Y]
+  [Nonempty Y]
 
 private theorem exists_minimizer : ∃ (f : _)(_ : f ∈ candidates_b X Y), ∀ g _ : g ∈ candidates_b X Y, HD f ≤ HD g :=
   compact_candidates_b.exists_forall_le candidates_b_nonempty HD_continuous.ContinuousOn

@@ -18,9 +18,9 @@ open CategoryTheory
 
 namespace CategoryTheory.Functor
 
-variable(J : Type u₁)[category.{v₁} J]
+variable (J : Type u₁) [category.{v₁} J]
 
-variable{C : Type u₂}[category.{v₂} C]
+variable {C : Type u₂} [category.{v₂} C]
 
 /--
 The functor sending `X : C` to the constant functor `J ⥤ C` sending everything to `X`.
@@ -32,7 +32,7 @@ namespace Const
 
 open Opposite
 
-variable{J}
+variable {J}
 
 @[simp]
 theorem obj_obj (X : C) (j : J) : ((const J).obj X).obj j = X :=
@@ -86,7 +86,7 @@ end Const
 
 section 
 
-variable{D : Type u₃}[category.{v₃} D]
+variable {D : Type u₃} [category.{v₃} D]
 
 /-- These are actually equal, of course, but not definitionally equal
   (the equality requires F.map (𝟙 _) = 𝟙 _). A natural isomorphism is
@@ -96,7 +96,7 @@ def const_comp (X : C) (F : C ⥤ D) : (const J).obj X ⋙ F ≅ (const J).obj (
   { Hom := { app := fun _ => 𝟙 _ }, inv := { app := fun _ => 𝟙 _ } }
 
 /-- If `J` is nonempty, then the constant functor over `J` is faithful. -/
-instance  [Nonempty J] : faithful (const J : C ⥤ J ⥤ C) :=
+instance [Nonempty J] : faithful (const J : C ⥤ J ⥤ C) :=
   { map_injective' := fun X Y f g e => nat_trans.congr_app e (Classical.arbitrary J) }
 
 end 

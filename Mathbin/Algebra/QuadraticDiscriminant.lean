@@ -29,13 +29,13 @@ open Filter
 
 section Ringₓ
 
-variable{R : Type _}
+variable {R : Type _}
 
 /-- Discriminant of a quadratic -/
 def discrim [Ringₓ R] (a b c : R) : R :=
   b ^ 2 - (4*a)*c
 
-variable[CommRingₓ R][IsDomain R]{a b c : R}
+variable [CommRingₓ R] [IsDomain R] {a b c : R}
 
 -- error in Algebra.QuadraticDiscriminant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -74,7 +74,7 @@ end Ringₓ
 
 section Field
 
-variable{K : Type _}[Field K][Invertible (2 : K)]{a b c x : K}
+variable {K : Type _} [Field K] [Invertible (2 : K)] {a b c x : K}
 
 -- error in Algebra.QuadraticDiscriminant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Roots of a quadratic -/
@@ -133,7 +133,7 @@ end Field
 
 section LinearOrderedField
 
-variable{K : Type _}[LinearOrderedField K]{a b c : K}
+variable {K : Type _} [LinearOrderedField K] {a b c : K}
 
 -- error in Algebra.QuadraticDiscriminant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a polynomial of degree 2 is always nonnegative, then its discriminant is nonpositive -/

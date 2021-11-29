@@ -33,7 +33,7 @@ open Opposite
 
 open TopologicalSpace
 
-variable{X : Top.{v}}(F : presheaf (Type v) X)
+variable {X : Top.{v}} (F : presheaf (Type v) X)
 
 namespace Top.Presheaf
 

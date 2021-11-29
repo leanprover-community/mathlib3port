@@ -42,11 +42,11 @@ open Opposite CategoryTheory Category Limits Sieve Classical
 
 namespace Presheaf
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable{A : Type u₂}[category.{v₂} A]
+variable {A : Type u₂} [category.{v₂} A]
 
-variable(J : grothendieck_topology C)
+variable (J : grothendieck_topology C)
 
 /--
 A sheaf of A is a presheaf P : C^op => A such that for every X : A, the
@@ -57,7 +57,7 @@ https://stacks.math.columbia.edu/tag/00VR
 def is_sheaf (P : «expr ᵒᵖ» C ⥤ A) : Prop :=
   ∀ X : A, presieve.is_sheaf J (P ⋙ coyoneda.obj (op X))
 
-variable{J}
+variable {J}
 
 /-- This is a wrapper around `presieve.is_sheaf_for.amalgamate` to be used below.
   If `P`s a sheaf, `S` is a cover of `X`, and `x` is a collection of morphisms from `E`
@@ -85,15 +85,15 @@ theorem is_sheaf.hom_ext {A : Type u₂} [category.{max v₁ u₁} A] {E : A} {X
   (h : ∀ I : S.arrow, e₁ ≫ P.map I.f.op = e₂ ≫ P.map I.f.op) : e₁ = e₂ :=
   (hP _ _ S.condition).IsSeparatedFor.ext fun Y f hf => h ⟨Y, f, hf⟩
 
-variable(J)
+variable (J)
 
 end Presheaf
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable(J : grothendieck_topology C)
+variable (J : grothendieck_topology C)
 
-variable(A : Type u₂)[category.{v₂} A]
+variable (A : Type u₂) [category.{v₂} A]
 
 -- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- The category of sheaves taking values in `A` on a grothendieck topology. -/
@@ -166,7 +166,7 @@ def Sheaf_equiv_SheafOfTypes : Sheaf J (Type w) ≌ SheafOfTypes J :=
         (by 
           tidy) }
 
-instance  : Inhabited (Sheaf (⊥ : grothendieck_topology C) (Type w)) :=
+instance : Inhabited (Sheaf (⊥ : grothendieck_topology C) (Type w)) :=
   ⟨(Sheaf_equiv_SheafOfTypes _).inverse.obj (default _)⟩
 
 end CategoryTheory
@@ -177,15 +177,15 @@ open Opposite CategoryTheory Category Limits Sieve Classical
 
 namespace Presheaf
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable{A : Type u₂}[category.{max v₁ u₁} A]
+variable {A : Type u₂} [category.{max v₁ u₁} A]
 
-variable(J : grothendieck_topology C)
+variable (J : grothendieck_topology C)
 
-variable{U : C}(R : presieve U)
+variable {U : C} (R : presieve U)
 
-variable(P : «expr ᵒᵖ» C ⥤ A)
+variable (P : «expr ᵒᵖ» C ⥤ A)
 
 section MultiequalizerConditions
 
@@ -261,7 +261,7 @@ end MultiequalizerConditions
 
 section 
 
-variable[has_products A]
+variable [has_products A]
 
 /--
 The middle object of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
@@ -277,7 +277,7 @@ of https://stacks.math.columbia.edu/tag/00VM.
 def fork_map : P.obj (op U) ⟶ first_obj R P :=
   pi.lift fun f => P.map f.2.1.op
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 /--
 The rightmost object of the fork diagram of https://stacks.math.columbia.edu/tag/00VM, which
@@ -372,7 +372,7 @@ end
 
 section Concrete
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 -- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

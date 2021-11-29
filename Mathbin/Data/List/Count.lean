@@ -11,13 +11,13 @@ definitions can be found in [`data.list.defs`](./data/list/defs).
 
 open Nat
 
-variable{α β : Type _}{l l₁ l₂ : List α}
+variable {α β : Type _} {l l₁ l₂ : List α}
 
 namespace List
 
 section Countp
 
-variable(p : α → Prop)[DecidablePred p]
+variable (p : α → Prop) [DecidablePred p]
 
 @[simp]
 theorem countp_nil : countp p [] = 0 :=
@@ -73,7 +73,7 @@ end Countp
 
 section Count
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 @[simp]
 theorem count_nil (a : α) : count a [] = 0 :=

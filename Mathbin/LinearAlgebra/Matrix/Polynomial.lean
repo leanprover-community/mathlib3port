@@ -23,7 +23,7 @@ matrix determinant, polynomial
 
 open_locale Matrix BigOperators
 
-variable{n α : Type _}[DecidableEq n][Fintype n][CommRingₓ α]
+variable {n α : Type _} [DecidableEq n] [Fintype n] [CommRingₓ α]
 
 open Polynomial Matrix Equiv.Perm
 

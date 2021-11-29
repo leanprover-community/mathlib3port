@@ -53,7 +53,7 @@ open_locale TopologicalSpace
 
 section NormedGroup
 
-variable{α β : Type _}[NormedGroup β]
+variable {α β : Type _} [NormedGroup β]
 
 /-- Two functions `u` and `v` are said to be asymptotically equivalent along a filter `l` when
     `u x - v x = o(v x)` as x converges along `l`. -/
@@ -62,7 +62,7 @@ def is_equivalent (u v : α → β) (l : Filter α) :=
 
 localized [Asymptotics] notation:50 u " ~[" l:50 "] " v:50 => Asymptotics.IsEquivalent u v l
 
-variable{u v w : α → β}{l : Filter α}
+variable {u v w : α → β} {l : Filter α}
 
 theorem is_equivalent.is_o (h : u ~[l] v) : is_o (u - v) v l :=
   h
@@ -163,7 +163,7 @@ open_locale Asymptotics
 
 section NormedField
 
-variable{α β : Type _}[NormedField β]{t u v w : α → β}{l : Filter α}
+variable {α β : Type _} [NormedField β] {t u v w : α → β} {l : Filter α}
 
 theorem is_equivalent_iff_exists_eq_mul : u ~[l] v ↔ ∃ (φ : α → β)(hφ : tendsto φ l (𝓝 1)), u =ᶠ[l] φ*v :=
   by 
@@ -262,7 +262,7 @@ end Smul
 
 section mul_inv
 
-variable{α β : Type _}[NormedField β]{t u v w : α → β}{l : Filter α}
+variable {α β : Type _} [NormedField β] {t u v w : α → β} {l : Filter α}
 
 theorem is_equivalent.mul (htu : t ~[l] u) (hvw : v ~[l] w) : (t*v) ~[l] u*w :=
   htu.smul hvw
@@ -290,7 +290,7 @@ end mul_inv
 
 section NormedLinearOrderedField
 
-variable{α β : Type _}[NormedLinearOrderedField β]{u v : α → β}{l : Filter α}
+variable {α β : Type _} [NormedLinearOrderedField β] {u v : α → β} {l : Filter α}
 
 theorem is_equivalent.tendsto_at_top [OrderTopology β] (huv : u ~[l] v) (hu : tendsto u l at_top) :
   tendsto v l at_top :=
@@ -318,7 +318,7 @@ open Filter Asymptotics
 
 open_locale Asymptotics
 
-variable{α β : Type _}[NormedGroup β]
+variable {α β : Type _} [NormedGroup β]
 
 theorem Filter.EventuallyEq.is_equivalent {u v : α → β} {l : Filter α} (h : u =ᶠ[l] v) : u ~[l] v :=
   is_o.congr' h.sub_eq.symm (eventually_eq.refl _ _) (is_o_zero v l)

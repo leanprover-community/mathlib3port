@@ -19,7 +19,7 @@ open CategoryTheory.Limits
 
 universe v u
 
-variable(R : Type u)[CommRingₓ R]
+variable (R : Type u) [CommRingₓ R]
 
 /-- The category of R-algebras and their morphisms. -/
 structure AlgebraCat where 
@@ -31,13 +31,13 @@ attribute [instance] AlgebraCat.isRing AlgebraCat.isAlgebra
 
 namespace AlgebraCat
 
-instance  : CoeSort (AlgebraCat R) (Type v) :=
+instance : CoeSort (AlgebraCat R) (Type v) :=
   ⟨AlgebraCat.Carrier⟩
 
-instance  : category (AlgebraCat.{v} R) :=
+instance : category (AlgebraCat.{v} R) :=
   { hom := fun A B => A →ₐ[R] B, id := fun A => AlgHom.id R A, comp := fun A B C f g => g.comp f }
 
-instance  : concrete_category.{v} (AlgebraCat.{v} R) :=
+instance : concrete_category.{v} (AlgebraCat.{v} R) :=
   { forget := { obj := fun R => R, map := fun R S f => (f : R → S) }, forget_faithful := {  } }
 
 instance has_forget_to_Ring : has_forget₂ (AlgebraCat.{v} R) Ringₓₓ.{v} :=
@@ -56,14 +56,14 @@ def of_hom {R : Type u} [CommRingₓ R] {X Y : Type v} [Ringₓ X] [Algebra R X]
   of R X ⟶ of R Y :=
   f
 
-instance  : Inhabited (AlgebraCat R) :=
+instance : Inhabited (AlgebraCat R) :=
   ⟨of R R⟩
 
 @[simp]
 theorem coe_of (X : Type u) [Ringₓ X] [Algebra R X] : (of R X : Type u) = X :=
   rfl
 
-variable{R}
+variable {R}
 
 /-- Forgetting to the underlying type and then building the bundled object returns the original
 algebra. -/
@@ -71,7 +71,7 @@ algebra. -/
 def of_self_iso (M : AlgebraCat.{v} R) : AlgebraCat.of R M ≅ M :=
   { hom := 𝟙 M, inv := 𝟙 M }
 
-variable{R}{M N U : ModuleCat.{v} R}
+variable {R} {M N U : ModuleCat.{v} R}
 
 @[simp]
 theorem id_apply (m : M) : (𝟙 M : M → M) m = m :=
@@ -81,7 +81,7 @@ theorem id_apply (m : M) : (𝟙 M : M → M) m = m :=
 theorem coe_comp (f : M ⟶ N) (g : N ⟶ U) : (f ≫ g : M → U) = g ∘ f :=
   rfl
 
-variable(R)
+variable (R)
 
 /-- The "free algebra" functor, sending a type `S` to the free algebra on `S`. -/
 @[simps]
@@ -119,14 +119,14 @@ def adj : free.{u} R ⊣ forget (AlgebraCat.{u} R) :=
           simp only [forget_map_eq_coe, CategoryTheory.coe_comp, Function.comp_app, FreeAlgebra.lift_symm_apply,
             types_comp_apply] }
 
-instance  : is_right_adjoint (forget (AlgebraCat.{u} R)) :=
+instance : is_right_adjoint (forget (AlgebraCat.{u} R)) :=
   ⟨_, adj R⟩
 
 end AlgebraCat
 
-variable{R}
+variable {R}
 
-variable{X₁ X₂ : Type u}
+variable {X₁ X₂ : Type u}
 
 /-- Build an isomorphism in the category `Algebra R` from a `alg_equiv` between `algebra`s. -/
 @[simps]
@@ -173,7 +173,7 @@ def algEquivIsoAlgebraIso {X Y : Type u} [Ringₓ X] [Ringₓ Y] [Algebra R X] [
   (X ≃ₐ[R] Y) ≅ AlgebraCat.of R X ≅ AlgebraCat.of R Y :=
   { hom := fun e => e.to_Algebra_iso, inv := fun i => i.to_alg_equiv }
 
-instance  (X : Type u) [Ringₓ X] [Algebra R X] : Coe (Subalgebra R X) (AlgebraCat R) :=
+instance (X : Type u) [Ringₓ X] [Algebra R X] : Coe (Subalgebra R X) (AlgebraCat R) :=
   ⟨fun N => AlgebraCat.of R N⟩
 
 instance AlgebraCat.forget_reflects_isos : reflects_isomorphisms (forget (AlgebraCat.{u} R)) :=

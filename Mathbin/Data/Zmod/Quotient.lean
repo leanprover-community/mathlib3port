@@ -29,7 +29,7 @@ open QuotientAddGroup
 
 open Zmod
 
-variable(n : ℕ){A R : Type _}[AddGroupₓ A][Ringₓ R]
+variable (n : ℕ) {A R : Type _} [AddGroupₓ A] [Ringₓ R]
 
 namespace Int
 

@@ -21,7 +21,7 @@ mul_aut, add_aut
 -/
 
 
-variable{A : Type _}{M : Type _}{G : Type _}
+variable {A : Type _} {M : Type _} {G : Type _}
 
 /-- The group of multiplicative automorphisms. -/
 @[reducible, toAdditive "The group of additive automorphisms."]
@@ -30,14 +30,14 @@ def MulAut (M : Type _) [Mul M] :=
 
 namespace MulAut
 
-variable(M)[Mul M]
+variable (M) [Mul M]
 
 /--
 The group operation on multiplicative automorphisms is defined by
 `λ g h, mul_equiv.trans h g`.
 This means that multiplication agrees with composition, `(g*h)(x) = g (h x)`.
 -/
-instance  : Groupₓ (MulAut M) :=
+instance : Groupₓ (MulAut M) :=
   by 
     refineStruct
         { mul := fun g h => MulEquiv.trans h g, one := MulEquiv.refl M, inv := MulEquiv.symm, div := _,
@@ -49,7 +49,7 @@ instance  : Groupₓ (MulAut M) :=
               rfl <;>
             apply Equiv.left_inv
 
-instance  : Inhabited (MulAut M) :=
+instance : Inhabited (MulAut M) :=
   ⟨1⟩
 
 @[simp]
@@ -148,7 +148,7 @@ end MulAut
 
 namespace AddAut
 
-variable(A)[Add A]
+variable (A) [Add A]
 
 /--
 The group operation on additive automorphisms is defined by
@@ -167,7 +167,7 @@ instance Groupₓ : Groupₓ (AddAut A) :=
               rfl <;>
             apply Equiv.left_inv
 
-instance  : Inhabited (AddAut A) :=
+instance : Inhabited (AddAut A) :=
   ⟨1⟩
 
 @[simp]

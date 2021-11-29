@@ -29,9 +29,9 @@ A slightly more elaborate corollary is that if `E` is complete and `T` is a comp
 -/
 
 
-variable{𝕜 : Type _}[IsROrC 𝕜]
+variable {𝕜 : Type _} [IsROrC 𝕜]
 
-variable{E : Type _}[InnerProductSpace 𝕜 E]
+variable {E : Type _} [InnerProductSpace 𝕜 E]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
@@ -41,7 +41,7 @@ open Module.End Metric
 
 namespace ContinuousLinearMap
 
-variable(T : E →L[𝕜] E)
+variable (T : E →L[𝕜] E)
 
 local notation "rayleigh_quotient" => fun x : E => T.re_apply_inner_self x / (∥(x : E)∥^2)
 
@@ -94,7 +94,7 @@ namespace IsSelfAdjoint
 
 section Real
 
-variable{F : Type _}[InnerProductSpace ℝ F]
+variable {F : Type _} [InnerProductSpace ℝ F]
 
 theorem has_strict_fderiv_at_re_apply_inner_self {T : F →L[ℝ] F} (hT : IsSelfAdjoint (T : F →ₗ[ℝ] F)) (x₀ : F) :
   HasStrictFderivAt T.re_apply_inner_self (bit0 (innerRight (T x₀))) x₀ :=
@@ -103,7 +103,7 @@ theorem has_strict_fderiv_at_re_apply_inner_self {T : F →L[ℝ] F} (hT : IsSel
     ext y 
     simp [bit0, hT.apply_clm x₀ y, real_inner_comm x₀]
 
-variable[CompleteSpace F]{T : F →L[ℝ] F}
+variable [CompleteSpace F] {T : F →L[ℝ] F}
 
 local notation "rayleigh_quotient" => fun x : F => T.re_apply_inner_self x / (∥(x : F)∥^2)
 
@@ -157,7 +157,7 @@ end Real
 
 section CompleteSpace
 
-variable[CompleteSpace E]{T : E →L[𝕜] E}
+variable [CompleteSpace E] {T : E →L[𝕜] E}
 
 local notation "rayleigh_quotient" => fun x : E => T.re_apply_inner_self x / (∥(x : E)∥^2)
 
@@ -235,7 +235,7 @@ end CompleteSpace
 
 section FiniteDimensional
 
-variable[FiniteDimensional 𝕜 E][_i : Nontrivial E]{T : E →ₗ[𝕜] E}
+variable [FiniteDimensional 𝕜 E] [_i : Nontrivial E] {T : E →ₗ[𝕜] E}
 
 include _i
 

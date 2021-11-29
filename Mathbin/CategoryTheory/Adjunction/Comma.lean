@@ -24,11 +24,11 @@ namespace CategoryTheory
 
 open Limits
 
-variable{C : Type u₁}{D : Type u₂}[category.{v} C][category.{v} D](G : D ⥤ C)
+variable {C : Type u₁} {D : Type u₂} [category.{v} C] [category.{v} D] (G : D ⥤ C)
 
 section OfInitials
 
-variable[∀ A, has_initial (structured_arrow A G)]
+variable [∀ A, has_initial (structured_arrow A G)]
 
 -- error in CategoryTheory.Adjunction.Comma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -81,7 +81,7 @@ end OfInitials
 
 section OfTerminals
 
-variable[∀ A, has_terminal (costructured_arrow G A)]
+variable [∀ A, has_terminal (costructured_arrow G A)]
 
 -- error in CategoryTheory.Adjunction.Comma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -132,7 +132,7 @@ end OfTerminals
 
 section 
 
-variable{F : C ⥤ D}
+variable {F : C ⥤ D}
 
 /-- Given a left adjoint to `G`, we can construct an initial object in each structured arrow
 category on `G`. -/

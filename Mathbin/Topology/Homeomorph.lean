@@ -25,11 +25,11 @@ open Set Filter
 
 open_locale TopologicalSpace
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 /-- Homeomorphism between `α` and `β`, also called topological isomorphism -/
 @[nolint has_inhabited_instance]
-structure Homeomorph(α : Type _)(β : Type _)[TopologicalSpace α][TopologicalSpace β] extends α ≃ β where 
+structure Homeomorph (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β] extends α ≃ β where 
   continuous_to_fun : Continuous to_fun :=  by 
   runTac 
     tactic.interactive.continuity' 
@@ -41,9 +41,9 @@ infixl:25 " ≃ₜ " => Homeomorph
 
 namespace Homeomorph
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ][TopologicalSpace δ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
-instance  : CoeFun (α ≃ₜ β) fun _ => α → β :=
+instance : CoeFun (α ≃ₜ β) fun _ => α → β :=
   ⟨fun e => e.to_equiv⟩
 
 @[simp]
@@ -257,6 +257,9 @@ protected theorem IsOpenMap (h : α ≃ₜ β) : IsOpenMap h :=
 protected theorem IsClosedMap (h : α ≃ₜ β) : IsClosedMap h :=
   fun s => h.is_closed_image.2
 
+protected theorem OpenEmbedding (h : α ≃ₜ β) : OpenEmbedding h :=
+  open_embedding_of_embedding_open h.embedding h.is_open_map
+
 protected theorem ClosedEmbedding (h : α ≃ₜ β) : ClosedEmbedding h :=
   closed_embedding_of_embedding_closed h.embedding h.is_closed_map
 
@@ -359,12 +362,12 @@ theorem prod_congr_symm (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : (h₁.prod
   rfl
 
 @[simp]
-theorem coe_prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : «expr⇑ » (h₁.prod_congr h₂) = Prod.mapₓ h₁ h₂ :=
+theorem coe_prod_congr (h₁ : α ≃ₜ β) (h₂ : γ ≃ₜ δ) : «expr⇑ » (h₁.prod_congr h₂) = Prod.map h₁ h₂ :=
   rfl
 
 section 
 
-variable(α β γ)
+variable (α β γ)
 
 /-- `α × β` is homeomorphic to `β × α`. -/
 def prod_comm : α × β ≃ₜ β × α :=
@@ -428,7 +431,7 @@ def sum_prod_distrib : Sum α β × γ ≃ₜ Sum (α × γ) (β × γ) :=
 def prod_sum_distrib : α × Sum β γ ≃ₜ Sum (α × β) (α × γ) :=
   (prod_comm _ _).trans$ sum_prod_distrib.trans$ sum_congr (prod_comm _ _) (prod_comm _ _)
 
-variable{ι : Type _}{σ : ι → Type _}[∀ i, TopologicalSpace (σ i)]
+variable {ι : Type _} {σ : ι → Type _} [∀ i, TopologicalSpace (σ i)]
 
 /-- `(Σ i, σ i) × β` is homeomorphic to `Σ i, (σ i × β)`. -/
 def sigma_prod_distrib : (Σi, σ i) × β ≃ₜ Σi, σ i × β :=

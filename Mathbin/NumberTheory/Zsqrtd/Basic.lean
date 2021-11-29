@@ -17,7 +17,7 @@ to choices of square roots of `d` in `R`.
 /-- The ring of integers adjoined with a square root of `d`.
   These have the form `a + b √d` where `a b : ℤ`. The components
   are called `re` and `im` by analogy to the negative `d` case. -/
-structure Zsqrtd(d : ℤ) where 
+structure Zsqrtd (d : ℤ) where 
   re : ℤ 
   im : ℤ
 
@@ -29,7 +29,7 @@ section
 
 parameter {d : ℤ}
 
-instance  : DecidableEq (ℤ√d) :=
+instance : DecidableEq (ℤ√d) :=
   by 
     runTac 
       tactic.mk_dec_eq_instance
@@ -57,7 +57,7 @@ theorem of_int_im (n : ℤ) : (of_int n).im = 0 :=
 def zero : ℤ√d :=
   of_int 0
 
-instance  : HasZero (ℤ√d) :=
+instance : HasZero (ℤ√d) :=
   ⟨Zsqrtd.zero⟩
 
 @[simp]
@@ -68,14 +68,14 @@ theorem zero_re : (0 : ℤ√d).re = 0 :=
 theorem zero_im : (0 : ℤ√d).im = 0 :=
   rfl
 
-instance  : Inhabited (ℤ√d) :=
+instance : Inhabited (ℤ√d) :=
   ⟨0⟩
 
 /-- The one of the ring -/
 def one : ℤ√d :=
   of_int 1
 
-instance  : HasOne (ℤ√d) :=
+instance : HasOne (ℤ√d) :=
   ⟨Zsqrtd.one⟩
 
 @[simp]
@@ -102,7 +102,7 @@ theorem sqrtd_im : (sqrtd : ℤ√d).im = 1 :=
 def add : ℤ√d → ℤ√d → ℤ√d
 | ⟨x, y⟩, ⟨x', y'⟩ => ⟨x+x', y+y'⟩
 
-instance  : Add (ℤ√d) :=
+instance : Add (ℤ√d) :=
   ⟨Zsqrtd.add⟩
 
 @[simp]
@@ -139,7 +139,7 @@ theorem bit1_im z : (bit1 z : ℤ√d).im = bit0 z.im :=
 def neg : ℤ√d → ℤ√d
 | ⟨x, y⟩ => ⟨-x, -y⟩
 
-instance  : Neg (ℤ√d) :=
+instance : Neg (ℤ√d) :=
   ⟨Zsqrtd.neg⟩
 
 @[simp]
@@ -154,7 +154,7 @@ theorem neg_im : ∀ z : ℤ√d, (-z).im = -z.im
 def mul : ℤ√d → ℤ√d → ℤ√d
 | ⟨x, y⟩, ⟨x', y'⟩ => ⟨(x*x')+(d*y)*y', (x*y')+y*x'⟩
 
-instance  : Mul (ℤ√d) :=
+instance : Mul (ℤ√d) :=
   ⟨Zsqrtd.mul⟩
 
 @[simp]
@@ -165,7 +165,7 @@ theorem mul_re : ∀ z w : ℤ√d, (z*w).re = (z.re*w.re)+(d*z.im)*w.im
 theorem mul_im : ∀ z w : ℤ√d, (z*w).im = (z.re*w.im)+z.im*w.re
 | ⟨x, y⟩, ⟨x', y'⟩ => rfl
 
-instance  : CommRingₓ (ℤ√d) :=
+instance : CommRingₓ (ℤ√d) :=
   by 
     refineStruct
         { add := ·+·, zero := (0 : ℤ√d), neg := Neg.neg, mul := ·*·, sub := fun a b => a+-b, one := 1,
@@ -176,51 +176,51 @@ instance  : CommRingₓ (ℤ√d) :=
             rfl <;>
           simp [ext, add_mulₓ, mul_addₓ, add_commₓ, add_left_commₓ, mul_commₓ, mul_left_commₓ]
 
-instance  : AddCommMonoidₓ (ℤ√d) :=
+instance : AddCommMonoidₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : AddMonoidₓ (ℤ√d) :=
+instance : AddMonoidₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : Monoidₓ (ℤ√d) :=
+instance : Monoidₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : CommMonoidₓ (ℤ√d) :=
+instance : CommMonoidₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : CommSemigroupₓ (ℤ√d) :=
+instance : CommSemigroupₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : Semigroupₓ (ℤ√d) :=
+instance : Semigroupₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : AddCommSemigroupₓ (ℤ√d) :=
+instance : AddCommSemigroupₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : AddSemigroupₓ (ℤ√d) :=
+instance : AddSemigroupₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : CommSemiringₓ (ℤ√d) :=
+instance : CommSemiringₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : Semiringₓ (ℤ√d) :=
+instance : Semiringₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : Ringₓ (ℤ√d) :=
+instance : Ringₓ (ℤ√d) :=
   by 
     infer_instance
 
-instance  : Distrib (ℤ√d) :=
+instance : Distrib (ℤ√d) :=
   by 
     infer_instance
 
@@ -266,7 +266,7 @@ theorem conj_conj {d : ℤ} (x : ℤ√d) : x.conj.conj = x :=
   by 
     simp only [ext, true_andₓ, conj_re, eq_self_iff_true, neg_negₓ, conj_im]
 
-instance  : Nontrivial (ℤ√d) :=
+instance : Nontrivial (ℤ√d) :=
   ⟨⟨0, 1,
       by 
         decide⟩⟩
@@ -299,7 +299,7 @@ theorem coe_int_val (n : ℤ) : (n : ℤ√d) = ⟨n, 0⟩ :=
   by 
     simp [ext]
 
-instance  : CharZero (ℤ√d) :=
+instance : CharZero (ℤ√d) :=
   { cast_injective :=
       fun m n =>
         by 
@@ -577,13 +577,13 @@ def nonneg : ℤ√d → Prop
 protected def le (a b : ℤ√d) : Prop :=
   nonneg (b - a)
 
-instance  : LE (ℤ√d) :=
+instance : LE (ℤ√d) :=
   ⟨Zsqrtd.Le⟩
 
 protected def lt (a b : ℤ√d) : Prop :=
   ¬b ≤ a
 
-instance  : LT (ℤ√d) :=
+instance : LT (ℤ√d) :=
   ⟨Zsqrtd.Lt⟩
 
 instance decidable_nonnegg c d a b : Decidable (nonnegg c d a b) :=
@@ -736,7 +736,7 @@ protected theorem le_totalₓ (a b : ℤ√d) : a ≤ b ∨ b ≤ a :=
   by 
     rw [show -(b - a) = a - b from neg_sub b a] at t <;> exact t
 
-instance  : Preorderₓ (ℤ√d) :=
+instance : Preorderₓ (ℤ√d) :=
   { le := Zsqrtd.Le, le_refl := Zsqrtd.le_refl, le_trans := @Zsqrtd.le_trans, lt := Zsqrtd.Lt,
     lt_iff_le_not_le := fun a b => (and_iff_right_of_imp (Zsqrtd.le_total _ _).resolve_left).symm }
 
@@ -849,7 +849,7 @@ theorem not_sq_le_succ c d y (h : 0 < c) : ¬sq_le (y+1) c 0 d :=
 /-- A nonsquare is a natural number that is not equal to the square of an
   integer. This is implemented as a typeclass because it's a necessary condition
   for much of the Pell equation theory. -/
-class nonsquare(x : ℕ) : Prop where 
+class nonsquare (x : ℕ) : Prop where 
   ns{} : ∀ n : ℕ, x ≠ n*n
 
 parameter [dnsq : nonsquare d]
@@ -918,7 +918,7 @@ theorem le_antisymmₓ {a b : ℤ√d} (ab : a ≤ b) (ba : b ≤ a) : a = b :=
       (by 
         rw [neg_sub] <;> exact ab)
 
-instance  : LinearOrderₓ (ℤ√d) :=
+instance : LinearOrderₓ (ℤ√d) :=
   { Zsqrtd.preorder with le_antisymm := @Zsqrtd.le_antisymm, le_total := Zsqrtd.le_total,
     decidableLe := Zsqrtd.decidableLe }
 
@@ -961,7 +961,7 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ {a b : ℤ√d}, (a*b)
                     simp [h2, mul_assocₓ, mul_left_commₓ]
                   
 
-instance  : IsDomain (ℤ√d) :=
+instance : IsDomain (ℤ√d) :=
   { Zsqrtd.commRing, Zsqrtd.nontrivial with
     eq_zero_or_eq_zero_of_mul_eq_zero := @Zsqrtd.eq_zero_or_eq_zero_of_mul_eq_zero }
 
@@ -970,18 +970,18 @@ protected theorem mul_pos (a b : ℤ√d) (a0 : 0 < a) (b0 : 0 < b) : 0 < a*b :=
     Or.elim (eq_zero_or_eq_zero_of_mul_eq_zero (le_antisymmₓ ab (mul_nonneg _ _ (le_of_ltₓ a0) (le_of_ltₓ b0))))
       (fun e => ne_of_gtₓ a0 e) fun e => ne_of_gtₓ b0 e
 
-instance  : LinearOrderedCommRing (ℤ√d) :=
+instance : LinearOrderedCommRing (ℤ√d) :=
   { Zsqrtd.commRing, Zsqrtd.linearOrder, Zsqrtd.nontrivial with add_le_add_left := @Zsqrtd.add_le_add_left,
     mul_pos := @Zsqrtd.mul_pos,
     zero_le_one :=
       by 
         decide }
 
-instance  : LinearOrderedRing (ℤ√d) :=
+instance : LinearOrderedRing (ℤ√d) :=
   by 
     infer_instance
 
-instance  : OrderedRing (ℤ√d) :=
+instance : OrderedRing (ℤ√d) :=
   by 
     infer_instance
 
@@ -1009,7 +1009,7 @@ begin
     exact [expr mul_nonpos_of_nonpos_of_nonneg h.le (mul_self_nonneg _)] }
 end
 
-variable{R : Type}[CommRingₓ R]
+variable {R : Type} [CommRingₓ R]
 
 @[ext]
 theorem hom_ext {d : ℤ} (f g : ℤ√d →+* R) (h : f sqrtd = g sqrtd) : f = g :=

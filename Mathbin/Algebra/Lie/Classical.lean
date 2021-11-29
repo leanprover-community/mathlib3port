@@ -67,11 +67,11 @@ open Matrix
 
 open_locale Matrix
 
-variable(n p q l : Type _)(R : Type u₂)
+variable (n p q l : Type _) (R : Type u₂)
 
-variable[DecidableEq n][DecidableEq p][DecidableEq q][DecidableEq l]
+variable [DecidableEq n] [DecidableEq p] [DecidableEq q] [DecidableEq l]
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 @[simp]
 theorem matrix_trace_commutator_zero [Fintype n] (X Y : Matrix n n R) : Matrix.trace n R R ⁅X,Y⁆ = 0 :=
@@ -93,7 +93,7 @@ theorem sl_bracket [Fintype n] (A B : sl n R) : ⁅A,B⁆.val = A.val ⬝ B.val 
 
 section ElementaryBasis
 
-variable{n}[Fintype n](i j : n)
+variable {n} [Fintype n] (i j : n)
 
 /-- When j ≠ i, the elementary matrices are elements of sl n R, in fact they are part of a natural
 basis of sl n R. -/
@@ -166,7 +166,7 @@ the parameter `i` is a square root of -1. -/
 def Pso (i : R) : Matrix (Sum p q) (Sum p q) R :=
   Matrix.diagonalₓ$ Sum.elim (fun _ => 1) fun _ => i
 
-variable[Fintype p][Fintype q]
+variable [Fintype p] [Fintype q]
 
 theorem Pso_inv {i : R} (hi : (i*i) = -1) : (Pso p q R i*Pso p q R (-i)) = 1 :=
   by 
@@ -327,7 +327,7 @@ where sizes of the blocks are:
 def PB :=
   Matrix.fromBlocks (1 : Matrix Unit Unit R) 0 0 (PD l R)
 
-variable[Fintype l]
+variable [Fintype l]
 
 theorem PB_inv [Invertible (2 : R)] : (PB l R*Matrix.fromBlocks 1 0 0 (⅟ (PD l R))) = 1 :=
   by 

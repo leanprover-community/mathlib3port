@@ -24,7 +24,7 @@ open_locale Classical
 
 open Polynomial IsScalarTower
 
-variable(F K : Type _)[Field F][Field K][Algebra F K]
+variable (F K : Type _) [Field F] [Field K] [Algebra F K]
 
 /-- Typeclass for normal field extension: `K` is a normal extension of `F` iff the minimal
 polynomial of every element `x` in `K` splits in `K`, i.e. every conjugate of `x` is in `K`. -/
@@ -32,7 +32,7 @@ class Normal : Prop where
   is_integral' (x : K) : IsIntegral F x 
   splits' (x : K) : splits (algebraMap F K) (minpoly F x)
 
-variable{F K}
+variable {F K}
 
 theorem Normal.is_integral (h : Normal F K) (x : K) : IsIntegral F x :=
   Normal.is_integral' x
@@ -46,7 +46,7 @@ theorem normal_iff : Normal F K ↔ ∀ x : K, IsIntegral F x ∧ splits (algebr
 theorem Normal.out : Normal F K → ∀ x : K, IsIntegral F x ∧ splits (algebraMap F K) (minpoly F x) :=
   normal_iff.1
 
-variable(F K)
+variable (F K)
 
 instance normal_self : Normal F F :=
   ⟨fun x => is_integral_algebra_map,
@@ -55,9 +55,9 @@ instance normal_self : Normal F F :=
         rw [minpoly.eq_X_sub_C']
         exact splits_X_sub_C _⟩
 
-variable{K}
+variable {K}
 
-variable(K)
+variable (K)
 
 theorem Normal.exists_is_splitting_field [h : Normal F K] [FiniteDimensional F K] :
   ∃ p : Polynomial F, is_splitting_field F K p :=
@@ -77,7 +77,7 @@ theorem Normal.exists_is_splitting_field [h : Normal F K] [FiniteDimensional F K
 
 section NormalTower
 
-variable(E : Type _)[Field E][Algebra F E][Algebra K E][IsScalarTower F K E]
+variable (E : Type _) [Field E] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
 theorem Normal.tower_top_of_normal [h : Normal F E] : Normal K E :=
   normal_iff.2$
@@ -99,7 +99,7 @@ theorem alg_hom.normal_bijective [h : normal F E] (ϕ : «expr →ₐ[ ] »(E, F
           exact [expr minpoly.aeval F (algebra_map K E x)] }))))] ["with", ident y, ident hy],
    exact [expr ⟨y, hy⟩] }⟩
 
-variable{F}{E}{E' : Type _}[Field E'][Algebra F E']
+variable {F} {E} {E' : Type _} [Field E'] [Algebra F E']
 
 -- error in FieldTheory.Normal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem normal.of_alg_equiv [h : normal F E] (f : «expr ≃ₐ[ ] »(E, F, E')) : normal F E' :=
@@ -182,16 +182,16 @@ begin
   rw ["[", expr set.image_singleton, ",", expr ring_hom.algebra_map_to_algebra, ",", expr adjoin_root.lift_root, "]"] []
 end
 
-instance  (p : Polynomial F) : Normal F p.splitting_field :=
+instance (p : Polynomial F) : Normal F p.splitting_field :=
   Normal.of_is_splitting_field p
 
 end NormalTower
 
-variable{F}{K}(ϕ ψ : K →ₐ[F] K)(χ ω : K ≃ₐ[F] K)
+variable {F} {K} (ϕ ψ : K →ₐ[F] K) (χ ω : K ≃ₐ[F] K)
 
 section Restrict
 
-variable(E : Type _)[Field E][Algebra F E][Algebra E K][IsScalarTower F E K]
+variable (E : Type _) [Field E] [Algebra F E] [Algebra E K] [IsScalarTower F E K]
 
 /-- Restrict algebra homomorphism to image of normal subfield -/
 def AlgHom.restrictNormalAux [h : Normal F E] : (to_alg_hom F E K).range →ₐ[F] (to_alg_hom F E K).range :=
@@ -262,7 +262,7 @@ end Restrict
 
 section lift
 
-variable{F}{K}(E : Type _)[Field E][Algebra F E][Algebra K E][IsScalarTower F K E]
+variable {F} {K} (E : Type _) [Field E] [Algebra F E] [Algebra K E] [IsScalarTower F K E]
 
 /-- If `E/K/F` is a tower of fields with `E/F` normal then we can lift
   an algebra homomorphism `ϕ : K →ₐ[F] K` to `ϕ.lift_normal E : E →ₐ[F] E`. -/
@@ -308,7 +308,7 @@ theorem AlgEquiv.restrict_normal_hom_surjective [Normal F K] [Normal F E] :
   Function.Surjective (AlgEquiv.restrictNormalHom K : (E ≃ₐ[F] E) → K ≃ₐ[F] K) :=
   fun χ => ⟨χ.lift_normal E, χ.restrict_lift_normal E⟩
 
-variable(F)(K)(E)
+variable (F) (K) (E)
 
 theorem is_solvable_of_is_scalar_tower [Normal F K] [h1 : IsSolvable (K ≃ₐ[F] K)] [h2 : IsSolvable (E ≃ₐ[K] E)] :
   IsSolvable (E ≃ₐ[F] E) :=

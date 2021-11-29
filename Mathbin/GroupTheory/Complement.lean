@@ -24,7 +24,7 @@ open_locale BigOperators
 
 namespace Subgroup
 
-variable{G : Type _}[Groupₓ G](H K : Subgroup G)(S T : Set G)
+variable {G : Type _} [Groupₓ G] (H K : Subgroup G) (S T : Set G)
 
 /-- `S` and `T` are complements if `(*) : S × T → G` is a bijection.
   This notion generalizes left transversals, right transversals, and complementary subgroups. -/
@@ -47,7 +47,7 @@ def left_transversals : Set (Set G) :=
 def right_transversals : Set (Set G) :=
   { T:Set G | is_complement S T }
 
-variable{H K S T}
+variable {H K S T}
 
 @[toAdditive]
 theorem is_complement'_def : is_complement' H K ↔ is_complement (H : Set G) (K : Set G) :=
@@ -224,7 +224,7 @@ theorem mem_right_transversals_iff_bijective :
     (Function.bijective_iff_exists_unique (S.restrict Quotientₓ.mk')).symm
 
 @[toAdditive]
-instance  : Inhabited (left_transversals (H : Set G)) :=
+instance : Inhabited (left_transversals (H : Set G)) :=
   ⟨⟨Set.Range Quotientₓ.out',
       mem_left_transversals_iff_bijective.mpr
         ⟨by 
@@ -233,7 +233,7 @@ instance  : Inhabited (left_transversals (H : Set G)) :=
           fun q => ⟨⟨q.out', q, rfl⟩, Quotientₓ.out_eq' q⟩⟩⟩⟩
 
 @[toAdditive]
-instance  : Inhabited (right_transversals (H : Set G)) :=
+instance : Inhabited (right_transversals (H : Set G)) :=
   ⟨⟨Set.Range Quotientₓ.out',
       mem_right_transversals_iff_bijective.mpr
         ⟨by 

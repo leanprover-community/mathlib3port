@@ -34,33 +34,33 @@ The ordered scalar product property is when an ordered additive commutative mono
 with a partial order has a scalar multiplication which is compatible with the order.
 -/
 @[protectProj]
-class OrderedSmul(R M : Type _)[OrderedSemiring R][OrderedAddCommMonoid M][SmulWithZero R M] : Prop where 
+class OrderedSmul (R M : Type _) [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] : Prop where 
   smul_lt_smul_of_pos : ∀ {a b : M}, ∀ {c : R}, a < b → 0 < c → c • a < c • b 
   lt_of_smul_lt_smul_of_pos : ∀ {a b : M}, ∀ {c : R}, c • a < c • b → 0 < c → a < b
 
 namespace OrderDual
 
-variable{R M : Type _}
+variable {R M : Type _}
 
-instance  [HasScalar R M] : HasScalar R (OrderDual M) :=
+instance [HasScalar R M] : HasScalar R (OrderDual M) :=
   { smul := fun k x => OrderDual.rec (fun x' => (k • x' : M)) x }
 
-instance  [HasZero R] [AddZeroClass M] [h : SmulWithZero R M] : SmulWithZero R (OrderDual M) :=
+instance [HasZero R] [AddZeroClass M] [h : SmulWithZero R M] : SmulWithZero R (OrderDual M) :=
   { OrderDual.hasScalar with zero_smul := fun m => OrderDual.rec (zero_smul _) m,
     smul_zero := fun r => OrderDual.rec (smul_zero' _) r }
 
-instance  [Monoidₓ R] [MulAction R M] : MulAction R (OrderDual M) :=
+instance [Monoidₓ R] [MulAction R M] : MulAction R (OrderDual M) :=
   { OrderDual.hasScalar with one_smul := fun m => OrderDual.rec (one_smul _) m,
     mul_smul := fun r => OrderDual.rec mul_smul r }
 
-instance  [MonoidWithZeroₓ R] [AddMonoidₓ M] [MulActionWithZero R M] : MulActionWithZero R (OrderDual M) :=
+instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [MulActionWithZero R M] : MulActionWithZero R (OrderDual M) :=
   { OrderDual.mulAction, OrderDual.smulWithZero with  }
 
-instance  [MonoidWithZeroₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (OrderDual M) :=
+instance [MonoidWithZeroₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (OrderDual M) :=
   { smul_add := fun k a => OrderDual.rec (fun a' b => OrderDual.rec (smul_add _ _) b) a,
     smul_zero := fun r => OrderDual.rec smul_zero r }
 
-instance  [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] :
+instance [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] :
   OrderedSmul R (OrderDual M) :=
   { smul_lt_smul_of_pos := fun a b => @OrderedSmul.smul_lt_smul_of_pos R M _ _ _ _ b a,
     lt_of_smul_lt_smul_of_pos := fun a b => @OrderedSmul.lt_of_smul_lt_smul_of_pos R M _ _ _ _ b a }
@@ -77,7 +77,8 @@ end OrderDual
 
 section OrderedSmul
 
-variable{R M : Type _}[OrderedSemiring R][OrderedAddCommMonoid M][SmulWithZero R M][OrderedSmul R M]{a b : M}{c : R}
+variable {R M : Type _} [OrderedSemiring R] [OrderedAddCommMonoid M] [SmulWithZero R M] [OrderedSmul R M] {a b : M}
+  {c : R}
 
 theorem smul_lt_smul_of_pos : a < b → 0 < c → c • a < c • b :=
   OrderedSmul.smul_lt_smul_of_pos
@@ -175,8 +176,8 @@ instance LinearOrderedSemiring.to_ordered_smul {R : Type _} [LinearOrderedSemiri
 
 section Field
 
-variable{k M :
-    Type _}[LinearOrderedField k][OrderedAddCommGroup M][MulActionWithZero k M][OrderedSmul k M]{a b : M}{c : k}
+variable {k M : Type _} [LinearOrderedField k] [OrderedAddCommGroup M] [MulActionWithZero k M] [OrderedSmul k M]
+  {a b : M} {c : k}
 
 theorem smul_le_smul_iff_of_pos (hc : 0 < c) : c • a ≤ c • b ↔ a ≤ b :=
   ⟨fun h => inv_smul_smul₀ hc.ne' a ▸ inv_smul_smul₀ hc.ne' b ▸ smul_le_smul_of_nonneg h (inv_nonneg.2 hc.le),
@@ -210,7 +211,7 @@ theorem le_smul_iff_of_pos (hc : 0 < c) : a ≤ c • b ↔ c⁻¹ • a ≤ b :
     _ ↔ c⁻¹ • a ≤ b := smul_le_smul_iff_of_pos hc
     
 
-variable(M)
+variable (M)
 
 /-- Left scalar multiplication as an order isomorphism. -/
 @[simps]

@@ -33,7 +33,7 @@ The disadvantage is that we have to duplicate some instances about `set.Ici` to 
 
 open Set
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Nonneg
 
@@ -49,14 +49,17 @@ theorem bot_eq [Preorderₓ α] {a : α} : (⊥ : { x : α // a ≤ x }) = ⟨a,
 instance NoTopOrder [PartialOrderₓ α] [NoTopOrder α] {a : α} : NoTopOrder { x : α // a ≤ x } :=
   Set.Ici.no_top_order
 
-/-- This instance uses data fields from `subtype.partial_order` to help type-class inference.
-The `set.Ici` data fields are definitionally equal, but that requires unfolding semireducible
-definitions, so type-class inference won't see this. -/
-instance SemilatticeInfBot [SemilatticeInf α] {a : α} : SemilatticeInfBot { x : α // a ≤ x } :=
-  { Nonneg.orderBot, Set.Ici.semilatticeInfBot with  }
+instance SemilatticeInf [SemilatticeInf α] {a : α} : SemilatticeInf { x : α // a ≤ x } :=
+  Set.Ici.semilatticeInf
 
 instance DenselyOrdered [Preorderₓ α] [DenselyOrdered α] {a : α} : DenselyOrdered { x : α // a ≤ x } :=
   show DenselyOrdered (Ici a) from Set.densely_ordered
+
+/-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order`. -/
+@[reducible]
+protected noncomputable def ConditionallyCompleteLinearOrder [ConditionallyCompleteLinearOrder α] {a : α} :
+  ConditionallyCompleteLinearOrder { x : α // a ≤ x } :=
+  { @ordConnectedSubsetConditionallyCompleteLinearOrder α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩ _ with  }
 
 /-- If `Sup ∅ ≤ a` then `{x : α // a ≤ x}` is a `conditionally_complete_linear_order_bot`.
 
@@ -66,11 +69,7 @@ definitions, so type-class inference won't see this. -/
 @[reducible]
 protected noncomputable def ConditionallyCompleteLinearOrderBot [ConditionallyCompleteLinearOrder α] {a : α}
   (h : Sup ∅ ≤ a) : ConditionallyCompleteLinearOrderBot { x : α // a ≤ x } :=
-  { Nonneg.orderBot,
-    (by 
-      infer_instance :
-    LinearOrderₓ { x : α // a ≤ x }),
-    @ordConnectedSubsetConditionallyCompleteLinearOrder α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩ _ with
+  { Nonneg.orderBot, Nonneg.conditionallyCompleteLinearOrder with
     cSup_empty :=
       (Function.funext_iffₓ.1 (@subset_Sup_def α (Set.Ici a) _ ⟨⟨a, le_rfl⟩⟩) ∅).trans$
         Subtype.eq$
@@ -248,7 +247,7 @@ instance CanonicallyLinearOrderedAddMonoid [LinearOrderedRing α] :
 
 section LinearOrderₓ
 
-variable[HasZero α][LinearOrderₓ α]
+variable [HasZero α] [LinearOrderₓ α]
 
 /-- The function `a ↦ max a 0` of type `α → {x : α // 0 ≤ x}`. -/
 def to_nonneg (a : α) : { x : α // 0 ≤ x } :=

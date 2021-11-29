@@ -16,7 +16,7 @@ namespace WittVector
 
 open MvPolynomial
 
-variable{p : ℕ}{R S : Type _}[hp : Fact p.prime][CommRingₓ R][CommRingₓ S]
+variable {p : ℕ} {R S : Type _} [hp : Fact p.prime] [CommRingₓ R] [CommRingₓ S]
 
 local notation "𝕎" => WittVector p
 
@@ -86,7 +86,7 @@ theorem aeval_verschiebung_poly' (x : 𝕎 R) (n : ℕ) :
       rw [verschiebung_poly, verschiebung_fun_coeff_succ, if_neg n.succ_ne_zero, aeval_X, Nat.succ_eq_add_one,
         add_tsub_cancel_right]
 
-variable(p)
+variable (p)
 
 /--
 `witt_vector.verschiebung` has polynomial structure given by `witt_vector.verschiebung_poly`.
@@ -97,7 +97,7 @@ theorem verschiebung_fun_is_poly : is_poly p fun R _Rcr => @verschiebung_fun p R
     use verschiebung_poly 
     simp only [aeval_verschiebung_poly', eq_self_iff_true, forall_3_true_iff]
 
-variable{p}
+variable {p}
 
 include hp
 

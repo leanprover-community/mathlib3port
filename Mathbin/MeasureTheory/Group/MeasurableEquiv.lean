@@ -32,12 +32,8 @@ measurable, equivalence, group action
 
 namespace MeasurableEquiv
 
-variable{G G₀ α :
-    Type
-      _}[MeasurableSpace
-      G][MeasurableSpace
-      G₀][MeasurableSpace
-      α][Groupₓ G][GroupWithZeroₓ G₀][MulAction G α][MulAction G₀ α][HasMeasurableSmul G α][HasMeasurableSmul G₀ α]
+variable {G G₀ α : Type _} [MeasurableSpace G] [MeasurableSpace G₀] [MeasurableSpace α] [Groupₓ G] [GroupWithZeroₓ G₀]
+  [MulAction G α] [MulAction G₀ α] [HasMeasurableSmul G α] [HasMeasurableSmul G₀ α]
 
 /-- If a group `G` acts on `α` by measurable maps, then each element `c : G` defines a measurable
 automorphism of `α`. -/
@@ -74,7 +70,7 @@ theorem _root_.measurable_embedding_const_smul₀ {c : G₀} (hc : c ≠ 0) : Me
 
 section Mul
 
-variable[HasMeasurableMul G][HasMeasurableMul G₀]
+variable [HasMeasurableMul G] [HasMeasurableMul G₀]
 
 /-- If `G` is a group with measurable multiplication, then left multiplication by `g : G` is a
 measurable automorphism of `G`. -/
@@ -166,7 +162,7 @@ theorem to_equiv_mul_right₀ {g : G₀} (hg : g ≠ 0) : (mul_right₀ g hg).to
 
 end Mul
 
-variable(G G₀)
+variable (G G₀)
 
 /-- Inversion as a measurable automorphism of a group. -/
 @[toAdditive "Negation as a measurable automorphism of an additive group.",
@@ -179,7 +175,7 @@ def inv [HasMeasurableInv G] : G ≃ᵐ G :=
 def inv₀ [HasMeasurableInv G₀] : G₀ ≃ᵐ G₀ :=
   { toEquiv := Equiv.inv₀ G₀, measurable_to_fun := measurable_inv, measurable_inv_fun := measurable_inv }
 
-variable{G G₀}
+variable {G G₀}
 
 @[simp]
 theorem symm_inv [HasMeasurableInv G] : (inv G).symm = inv G :=

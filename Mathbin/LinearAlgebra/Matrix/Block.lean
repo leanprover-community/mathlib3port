@@ -30,9 +30,9 @@ open_locale BigOperators
 
 universe v
 
-variable{m n : Type _}[DecidableEq n][Fintype n][DecidableEq m][Fintype m]
+variable {m n : Type _} [DecidableEq n] [Fintype n] [DecidableEq m] [Fintype m]
 
-variable{R : Type v}[CommRingₓ R]
+variable {R : Type v} [CommRingₓ R]
 
 namespace Matrix
 

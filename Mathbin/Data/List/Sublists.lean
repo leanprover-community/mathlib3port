@@ -11,7 +11,7 @@ This file contains basic results on this function.
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}
+variable {α : Type u} {β : Type v} {γ : Type w}
 
 open Nat
 

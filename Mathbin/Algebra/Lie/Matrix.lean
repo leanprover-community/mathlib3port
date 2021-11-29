@@ -27,9 +27,9 @@ section Matrices
 
 open_locale Matrix
 
-variable{R : Type u}[CommRingₓ R]
+variable {R : Type u} [CommRingₓ R]
 
-variable{n : Type w}[DecidableEq n][Fintype n]
+variable {n : Type w} [DecidableEq n] [Fintype n]
 
 -- error in Algebra.Lie.Matrix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The natural equivalence between linear endomorphisms of finite free modules and square matrices
@@ -66,7 +66,7 @@ theorem Matrix.lie_conj_symm_apply (P A : Matrix n n R) (h : Invertible P) : (P.
   by 
     simp [LinearEquiv.symm_conj_apply, Matrix.lieConj, LinearMap.to_matrix'_comp, LinearMap.to_matrix'_to_lin']
 
-variable{m : Type w₁}[DecidableEq m][Fintype m](e : n ≃ m)
+variable {m : Type w₁} [DecidableEq m] [Fintype m] (e : n ≃ m)
 
 /-- For square matrices, the natural map that reindexes a matrix's rows and columns with equivalent
 types, `matrix.reindex`, is an equivalence of Lie algebras. -/

@@ -13,11 +13,11 @@ namespace Pi
 
 universe u v w
 
-variable{I : Type u}
+variable {I : Type u}
 
-variable{f : I → Type v}
+variable {f : I → Type v}
 
-variable(x y : ∀ i, f i)(i : I)
+variable (x y : ∀ i, f i) (i : I)
 
 instance Distrib [∀ i, Distrib$ f i] : Distrib (∀ i : I, f i) :=
   by 
@@ -96,7 +96,7 @@ section RingHom
 
 universe u v
 
-variable{I : Type u}
+variable {I : Type u}
 
 /-- Evaluation of functions into an indexed collection of monoids at a point is a monoid
 homomorphism. This is `function.eval` as a `ring_hom`. -/

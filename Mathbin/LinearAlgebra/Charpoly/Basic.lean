@@ -18,9 +18,9 @@ in any basis is in `linear_algebra/charpoly/to_matrix`.
 
 universe u v w
 
-variable{R : Type u}{M : Type v}[CommRingₓ R][Nontrivial R]
+variable {R : Type u} {M : Type v} [CommRingₓ R] [Nontrivial R]
 
-variable[AddCommGroupₓ M][Module R M][Module.Free R M][Module.Finite R M](f : M →ₗ[R] M)
+variable [AddCommGroupₓ M] [Module R M] [Module.Free R M] [Module.Finite R M] (f : M →ₗ[R] M)
 
 open_locale Classical Matrix
 
@@ -65,7 +65,7 @@ theorem minpoly_dvd_charpoly {K : Type u} {M : Type v} [Field K] [AddCommGroup�
   (f : M →ₗ[K] M) : minpoly K f ∣ f.charpoly :=
   minpoly.dvd _ _ (aeval_self_charpoly f)
 
-variable{f}
+variable {f}
 
 -- error in LinearAlgebra.Charpoly.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem minpoly_coeff_zero_of_injective (hf : function.injective f) : «expr ≠ »((minpoly R f).coeff 0, 0) :=

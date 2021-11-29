@@ -28,23 +28,23 @@ open Finset LinearMap Set
 
 open_locale BigOperators Classical Convex Pointwise
 
-variable{𝕜 E F β ι : Type _}
+variable {𝕜 E F β ι : Type _}
 
 section OrderedSemiring
 
-variable[OrderedSemiring 𝕜]
+variable [OrderedSemiring 𝕜]
 
 section AddCommMonoidₓ
 
-variable[AddCommMonoidₓ E][AddCommMonoidₓ F]
+variable [AddCommMonoidₓ E] [AddCommMonoidₓ F]
 
 section OrderedAddCommMonoid
 
-variable[OrderedAddCommMonoid β]
+variable [OrderedAddCommMonoid β]
 
 section HasScalar
 
-variable(𝕜)[HasScalar 𝕜 E][HasScalar 𝕜 β](s : Set E)(f : E → β)
+variable (𝕜) [HasScalar 𝕜 E] [HasScalar 𝕜 β] (s : Set E) (f : E → β)
 
 /-- Convexity of functions -/
 def ConvexOn : Prop :=
@@ -67,7 +67,7 @@ def StrictConcaveOn : Prop :=
     ∀ ⦃x y : E⦄,
       x ∈ s → y ∈ s → x ≠ y → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → (a+b) = 1 → ((a • f x)+b • f y) < f ((a • x)+b • y)
 
-variable{𝕜 s f}
+variable {𝕜 s f}
 
 open order_dual(toDual ofDual)
 
@@ -113,7 +113,7 @@ end HasScalar
 
 section DistribMulAction
 
-variable[HasScalar 𝕜 E][DistribMulAction 𝕜 β]{s : Set E}{f g : E → β}
+variable [HasScalar 𝕜 E] [DistribMulAction 𝕜 β] {s : Set E} {f g : E → β}
 
 theorem ConvexOn.add (hf : ConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : ConvexOn 𝕜 s (f+g) :=
   ⟨hf.1,
@@ -132,7 +132,7 @@ end DistribMulAction
 
 section Module
 
-variable[HasScalar 𝕜 E][Module 𝕜 β]{s : Set E}{f : E → β}
+variable [HasScalar 𝕜 E] [Module 𝕜 β] {s : Set E} {f : E → β}
 
 theorem convex_on_const (c : β) (hs : Convex 𝕜 s) : ConvexOn 𝕜 s fun x : E => c :=
   ⟨hs, fun x y _ _ a b _ _ hab => (Convex.combo_self hab c).Ge⟩
@@ -144,7 +144,7 @@ end Module
 
 section OrderedSmul
 
-variable[HasScalar 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f : E → β}
+variable [HasScalar 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x∈s | f x ≤ r } :=
   fun x y hx hy a b ha hb hab =>
@@ -180,7 +180,7 @@ end OrderedSmul
 
 section Module
 
-variable[Module 𝕜 E][HasScalar 𝕜 β]{s : Set E}{f : E → β}
+variable [Module 𝕜 E] [HasScalar 𝕜 β] {s : Set E} {f : E → β}
 
 /-- Right translation preserves convexity. -/
 theorem ConvexOn.translate_right (hf : ConvexOn 𝕜 s f) (c : E) : ConvexOn 𝕜 ((fun z => c+z) ⁻¹' s) (f ∘ fun z => c+z) :=
@@ -211,7 +211,7 @@ end Module
 
 section Module
 
-variable[Module 𝕜 E][Module 𝕜 β]
+variable [Module 𝕜 E] [Module 𝕜 β]
 
 theorem convex_on_iff_forall_pos {s : Set E} {f : E → β} :
   ConvexOn 𝕜 s f ↔
@@ -291,7 +291,7 @@ theorem StrictConcaveOn.concave_on {s : Set E} {f : E → β} (hf : StrictConcav
 
 section OrderedSmul
 
-variable[OrderedSmul 𝕜 β]{s : Set E}{f : E → β}
+variable [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem StrictConvexOn.convex_lt (hf : StrictConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x∈s | f x < r } :=
   convex_iff_pairwise_pos.2$
@@ -309,7 +309,7 @@ end OrderedSmul
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ E]{s : Set E}{f : E → β}
+variable [LinearOrderₓ E] {s : Set E} {f : E → β}
 
 /-- For a function on a convex set in a linearly ordered space (where the order and the algebraic
 structures aren't necessarily compatible), in order to prove that it is convex, it suffices to
@@ -372,7 +372,7 @@ end Module
 
 section Module
 
-variable[Module 𝕜 E][Module 𝕜 F][HasScalar 𝕜 β]
+variable [Module 𝕜 E] [Module 𝕜 F] [HasScalar 𝕜 β]
 
 /-- If `g` is convex on `s`, so is `(f ∘ g)` on `f ⁻¹' s` for a linear `f`. -/
 theorem ConvexOn.comp_linear_map {f : F → β} {s : Set F} (hf : ConvexOn 𝕜 s f) (g : E →ₗ[𝕜] F) :
@@ -396,11 +396,11 @@ end OrderedAddCommMonoid
 
 section OrderedCancelAddCommMonoid
 
-variable[OrderedCancelAddCommMonoid β]
+variable [OrderedCancelAddCommMonoid β]
 
 section DistribMulAction
 
-variable[HasScalar 𝕜 E][DistribMulAction 𝕜 β]{s : Set E}{f g : E → β}
+variable [HasScalar 𝕜 E] [DistribMulAction 𝕜 β] {s : Set E} {f g : E → β}
 
 theorem StrictConvexOn.add (hf : StrictConvexOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) : StrictConvexOn 𝕜 s (f+g) :=
   ⟨hf.1,
@@ -419,7 +419,7 @@ end DistribMulAction
 
 section Module
 
-variable[Module 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f : E → β}
+variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 { x∈s | f x < r } :=
   convex_iff_forall_pos.2$
@@ -451,7 +451,7 @@ end OrderedCancelAddCommMonoid
 
 section LinearOrderedAddCommMonoid
 
-variable[LinearOrderedAddCommMonoid β][HasScalar 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f g : E → β}
+variable [LinearOrderedAddCommMonoid β] [HasScalar 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f g : E → β}
 
 /-- The pointwise maximum of convex functions is convex. -/
 theorem ConvexOn.sup (hf : ConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : ConvexOn 𝕜 s (f⊔g) :=
@@ -544,11 +544,11 @@ end LinearOrderedAddCommMonoid
 
 section LinearOrderedCancelAddCommMonoid
 
-variable[LinearOrderedCancelAddCommMonoid β]
+variable [LinearOrderedCancelAddCommMonoid β]
 
 section OrderedSmul
 
-variable[HasScalar 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f g : E → β}
+variable [HasScalar 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f g : E → β}
 
 theorem ConvexOn.le_left_of_right_le' (hf : ConvexOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s) {a b : 𝕜} (ha : 0 < a)
   (hb : 0 ≤ b) (hab : (a+b) = 1) (hfy : f y ≤ f ((a • x)+b • y)) : f ((a • x)+b • y) ≤ f x :=
@@ -599,7 +599,7 @@ end OrderedSmul
 
 section Module
 
-variable[Module 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f g : E → β}
+variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f g : E → β}
 
 theorem StrictConvexOn.lt_left_of_right_lt' (hf : StrictConvexOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s) {a b : 𝕜}
   (ha : 0 < a) (hb : 0 < b) (hab : (a+b) = 1) (hfy : f y < f ((a • x)+b • y)) : f ((a • x)+b • y) < f x :=
@@ -658,7 +658,7 @@ end LinearOrderedCancelAddCommMonoid
 
 section OrderedAddCommGroup
 
-variable[OrderedAddCommGroup β][HasScalar 𝕜 E][Module 𝕜 β]{s : Set E}{f : E → β}
+variable [OrderedAddCommGroup β] [HasScalar 𝕜 E] [Module 𝕜 β] {s : Set E} {f : E → β}
 
 /-- A function `-f` is convex iff `f` is concave. -/
 @[simp]
@@ -720,7 +720,7 @@ end AddCommMonoidₓ
 
 section AddCancelCommMonoid
 
-variable[AddCancelCommMonoid E][OrderedAddCommMonoid β][Module 𝕜 E][HasScalar 𝕜 β]{s : Set E}{f : E → β}
+variable [AddCancelCommMonoid E] [OrderedAddCommMonoid β] [Module 𝕜 E] [HasScalar 𝕜 β] {s : Set E} {f : E → β}
 
 /-- Right translation preserves strict convexity. -/
 theorem StrictConvexOn.translate_right (hf : StrictConvexOn 𝕜 s f) (c : E) :
@@ -756,15 +756,15 @@ end OrderedSemiring
 
 section OrderedCommSemiring
 
-variable[OrderedCommSemiring 𝕜][AddCommMonoidₓ E]
+variable [OrderedCommSemiring 𝕜] [AddCommMonoidₓ E]
 
 section OrderedAddCommMonoid
 
-variable[OrderedAddCommMonoid β]
+variable [OrderedAddCommMonoid β]
 
 section Module
 
-variable[HasScalar 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f : E → β}
+variable [HasScalar 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.smul {c : 𝕜} (hc : 0 ≤ c) (hf : ConvexOn 𝕜 s f) : ConvexOn 𝕜 s fun x => c • f x :=
   ⟨hf.1,
@@ -786,15 +786,15 @@ end OrderedCommSemiring
 
 section OrderedRing
 
-variable[LinearOrderedField 𝕜][AddCommGroupₓ E][AddCommGroupₓ F]
+variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [AddCommGroupₓ F]
 
 section OrderedAddCommMonoid
 
-variable[OrderedAddCommMonoid β]
+variable [OrderedAddCommMonoid β]
 
 section Module
 
-variable[Module 𝕜 E][Module 𝕜 F][HasScalar 𝕜 β]
+variable [Module 𝕜 E] [Module 𝕜 F] [HasScalar 𝕜 β]
 
 /-- If a function is convex on `s`, it remains convex when precomposed by an affine map. -/
 theorem ConvexOn.comp_affine_map {f : F → β} (g : E →ᵃ[𝕜] F) {s : Set F} (hf : ConvexOn 𝕜 s f) :
@@ -821,15 +821,15 @@ end OrderedRing
 
 section LinearOrderedField
 
-variable[LinearOrderedField 𝕜][AddCommMonoidₓ E]
+variable [LinearOrderedField 𝕜] [AddCommMonoidₓ E]
 
 section OrderedAddCommMonoid
 
-variable[OrderedAddCommMonoid β]
+variable [OrderedAddCommMonoid β]
 
 section HasScalar
 
-variable[HasScalar 𝕜 E][HasScalar 𝕜 β]{s : Set E}
+variable [HasScalar 𝕜 E] [HasScalar 𝕜 β] {s : Set E}
 
 theorem convex_on_iff_div {f : E → β} :
   ConvexOn 𝕜 s f ↔

@@ -29,7 +29,7 @@ def modeq (n a b : exprℕ()) :=
 
 notation:50 a " ≡ " b " [MOD " n "]" => modeq n a b
 
-variable{m n a b c d : ℕ}
+variable {m n a b c d : ℕ}
 
 namespace Modeq
 
@@ -416,7 +416,7 @@ end Nat
 
 namespace List
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem nth_rotate : ∀ {l : List α} {n m : ℕ} hml : m < l.length, (l.rotate n).nth m = l.nth ((m+n) % l.length)
 | [], n, m, hml => (Nat.not_lt_zeroₓ _ hml).elim

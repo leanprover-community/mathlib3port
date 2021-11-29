@@ -42,7 +42,7 @@ should describe the shape of the generated lemma in its docstring.
 
 namespace NormNum
 
-variable{α : Type u}
+variable {α : Type u}
 
 theorem subst_into_add {α} [Add α] l r tl tr t (prl : (l : α) = tl) (prr : r = tr) (prt : (tl+tr) = t) : (l+r) = t :=
   by 

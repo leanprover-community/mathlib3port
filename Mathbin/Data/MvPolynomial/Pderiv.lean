@@ -44,15 +44,15 @@ open_locale BigOperators
 
 universe u
 
-variable{R : Type u}
+variable {R : Type u}
 
 namespace MvPolynomial
 
-variable{σ : Type _}{a a' a₁ a₂ : R}{s : σ →₀ ℕ}
+variable {σ : Type _} {a a' a₁ a₂ : R} {s : σ →₀ ℕ}
 
 section Pderiv
 
-variable{R}[CommSemiringₓ R]
+variable {R} [CommSemiringₓ R]
 
 /-- `pderiv i p` is the partial derivative of `p` with respect to `i` -/
 def pderiv (i : σ) : MvPolynomial σ R →ₗ[R] MvPolynomial σ R :=

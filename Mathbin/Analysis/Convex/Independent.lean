@@ -39,18 +39,18 @@ open_locale Affine BigOperators Classical
 
 open Finset Function
 
-variable{𝕜 E ι : Type _}
+variable {𝕜 E ι : Type _}
 
 section OrderedSemiring
 
-variable(𝕜)[OrderedSemiring 𝕜][AddCommGroupₓ E][Module 𝕜 E]{s t : Set E}
+variable (𝕜) [OrderedSemiring 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s t : Set E}
 
 /-- An indexed family is said to be convex independent if every point only belongs to convex hulls
 of sets containing it. -/
 def ConvexIndependent (p : ι → E) : Prop :=
   ∀ s : Set ι x : ι, p x ∈ convexHull 𝕜 (p '' s) → x ∈ s
 
-variable{𝕜}
+variable {𝕜}
 
 -- error in Analysis.Convex.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A family with at most one point is convex independent. -/
@@ -170,7 +170,7 @@ end OrderedSemiring
 
 section LinearOrderedField
 
-variable[LinearOrderedField 𝕜][AddCommGroupₓ E][Module 𝕜 E]{s : Set E}
+variable [LinearOrderedField 𝕜] [AddCommGroupₓ E] [Module 𝕜 E] {s : Set E}
 
 -- error in Analysis.Convex.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- To check convex independence, one only has to check finsets thanks to Carathéodory's theorem. -/

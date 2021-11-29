@@ -24,11 +24,11 @@ namespace CategoryTheory
 
 open MonoidalCategory
 
-variable{C : Type u}
+variable {C : Type u}
 
 section 
 
-variable(C)
+variable (C)
 
 -- error in CategoryTheory.Monoidal.Free.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 /--
@@ -132,7 +132,7 @@ instance category_free_monoidal_category : category.{u} (F C) :=
         rintro W X Y Z ⟨f⟩ ⟨g⟩ ⟨h⟩
         exact Quotientₓ.sound (assoc f g h) }
 
-instance  : monoidal_category (F C) :=
+instance : monoidal_category (F C) :=
   { tensorObj := fun X Y => free_monoidal_category.tensor X Y,
     tensorHom :=
       fun X₁ Y₁ X₂ Y₂ =>
@@ -220,7 +220,7 @@ theorem unit_eq_unit : free_monoidal_category.unit = 𝟙_ (F C) :=
 
 section Functor
 
-variable{D : Type u'}[category.{v'} D][monoidal_category D](f : C → D)
+variable {D : Type u'} [category.{v'} D] [monoidal_category D] (f : C → D)
 
 /-- Auxiliary definition for `free_monoidal_category.project`. -/
 def project_obj : F C → D

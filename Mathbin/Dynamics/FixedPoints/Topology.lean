@@ -15,7 +15,7 @@ fixed points, iterates
 -/
 
 
-variable{α : Type _}[TopologicalSpace α][T2Space α]{f : α → α}
+variable {α : Type _} [TopologicalSpace α] [T2Space α] {f : α → α}
 
 open Function Filter
 

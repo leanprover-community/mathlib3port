@@ -36,68 +36,30 @@ library_note "Design choices about smooth algebraic structures"
 semigroup. A smooth additive monoid over `α`, for example, is obtained by requiring both the
 instances `add_monoid α` and `has_smooth_add α`. -/
 @[ancestor SmoothManifoldWithCorners]
-class
-  HasSmoothAdd{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E](I : ModelWithCorners 𝕜 E H)(G : Type _)[Add G][TopologicalSpace G][ChartedSpace H G] extends
-  SmoothManifoldWithCorners I G : Prop where 
+class HasSmoothAdd {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
+  [NormedGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Add G] [TopologicalSpace G]
+  [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where 
   smooth_add : Smooth (I.prod I) I fun p : G × G => p.1+p.2
 
 /-- Basic hypothesis to talk about a smooth (Lie) monoid or a smooth semigroup.
 A smooth monoid over `G`, for example, is obtained by requiring both the instances `monoid G`
 and `has_smooth_mul I G`. -/
 @[ancestor SmoothManifoldWithCorners, toAdditive]
-class
-  HasSmoothMul{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E](I : ModelWithCorners 𝕜 E H)(G : Type _)[Mul G][TopologicalSpace G][ChartedSpace H G] extends
-  SmoothManifoldWithCorners I G : Prop where 
+class HasSmoothMul {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _}
+  [NormedGroup E] [NormedSpace 𝕜 E] (I : ModelWithCorners 𝕜 E H) (G : Type _) [Mul G] [TopologicalSpace G]
+  [ChartedSpace H G] extends SmoothManifoldWithCorners I G : Prop where 
   smooth_mul : Smooth (I.prod I) I fun p : G × G => p.1*p.2
 
 section HasSmoothMul
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{I :
-    ModelWithCorners 𝕜 E
-      H}{G :
-    Type
-      _}[Mul
-      G][TopologicalSpace
-      G][ChartedSpace H
-      G][HasSmoothMul I
-      G]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H' :
-    Type _}[TopologicalSpace H']{I' : ModelWithCorners 𝕜 E' H'}{M : Type _}[TopologicalSpace M][ChartedSpace H' M]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+  [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H G]
+  [HasSmoothMul I G] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
+  {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M] [ChartedSpace H' M]
 
 section 
 
-variable(I)
+variable (I)
 
 @[toAdditive]
 theorem smooth_mul : Smooth (I.prod I) I fun p : G × G => p.1*p.2 :=
@@ -129,7 +91,7 @@ theorem SmoothOn.mul {f : M → G} {g : M → G} {s : Set M} (hf : SmoothOn I' I
   SmoothOn I' I (f*g) s :=
   ((smooth_mul I).comp_smooth_on (hf.prod_mk hg) : _)
 
-variable(I)(g h : G)
+variable (I) (g h : G)
 
 /-- Left multiplication by `g`. It is meant to mimic the usual notation in Lie groups.
 Lemmas involving `smooth_left_mul` with the notation `𝑳` usually use `L` instead of `𝑳` in the
@@ -173,7 +135,7 @@ theorem R_mul {G : Type _} [Semigroupₓ G] [TopologicalSpace G] [ChartedSpace H
 
 section 
 
-variable{G' : Type _}[Monoidₓ G'][TopologicalSpace G'][ChartedSpace H G'][HasSmoothMul I G'](g' : G')
+variable {G' : Type _} [Monoidₓ G'] [TopologicalSpace G'] [ChartedSpace H G'] [HasSmoothMul I G'] (g' : G')
 
 theorem smooth_left_mul_one : (𝑳 I g') 1 = g' :=
   mul_oneₓ g'
@@ -198,33 +160,11 @@ end HasSmoothMul
 
 section Monoidₓ
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{I :
-    ModelWithCorners 𝕜 E
-      H}{G :
-    Type
-      _}[Monoidₓ
-      G][TopologicalSpace
-      G][ChartedSpace H
-      G][HasSmoothMul I
-      G]{H' :
-    Type
-      _}[TopologicalSpace
-      H']{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{I' :
-    ModelWithCorners 𝕜 E' H'}{G' : Type _}[Monoidₓ G'][TopologicalSpace G'][ChartedSpace H' G'][HasSmoothMul I' G']
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+  [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [Monoidₓ G] [TopologicalSpace G] [ChartedSpace H G]
+  [HasSmoothMul I G] {H' : Type _} [TopologicalSpace H'] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E']
+  {I' : ModelWithCorners 𝕜 E' H'} {G' : Type _} [Monoidₓ G'] [TopologicalSpace G'] [ChartedSpace H' G']
+  [HasSmoothMul I' G']
 
 theorem smooth_pow : ∀ n : ℕ, Smooth I I fun a : G => a^n
 | 0 =>
@@ -236,47 +176,28 @@ theorem smooth_pow : ∀ n : ℕ, Smooth I I fun a : G => a^n
     simpa [pow_succₓ] using smooth_id.mul (smooth_pow _)
 
 /-- Morphism of additive smooth monoids. -/
-structure
-  SmoothAddMonoidMorphism(I :
-    ModelWithCorners 𝕜 E
-      H)(I' :
-    ModelWithCorners 𝕜 E'
-      H')(G :
-    Type
-      _)[TopologicalSpace
-      G][ChartedSpace H
-      G][AddMonoidₓ
-      G][HasSmoothAdd I
-      G](G' : Type _)[TopologicalSpace G'][ChartedSpace H' G'][AddMonoidₓ G'][HasSmoothAdd I' G'] extends
-  G →+ G' where 
+structure SmoothAddMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H') (G : Type _)
+  [TopologicalSpace G] [ChartedSpace H G] [AddMonoidₓ G] [HasSmoothAdd I G] (G' : Type _) [TopologicalSpace G']
+  [ChartedSpace H' G'] [AddMonoidₓ G'] [HasSmoothAdd I' G'] extends G →+ G' where 
   smooth_to_fun : Smooth I I' to_fun
 
 /-- Morphism of smooth monoids. -/
 @[toAdditive]
-structure
-  SmoothMonoidMorphism(I :
-    ModelWithCorners 𝕜 E
-      H)(I' :
-    ModelWithCorners 𝕜 E'
-      H')(G :
-    Type
-      _)[TopologicalSpace
-      G][ChartedSpace H
-      G][Monoidₓ
-      G][HasSmoothMul I G](G' : Type _)[TopologicalSpace G'][ChartedSpace H' G'][Monoidₓ G'][HasSmoothMul I' G'] extends
-  G →* G' where 
+structure SmoothMonoidMorphism (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H') (G : Type _)
+  [TopologicalSpace G] [ChartedSpace H G] [Monoidₓ G] [HasSmoothMul I G] (G' : Type _) [TopologicalSpace G']
+  [ChartedSpace H' G'] [Monoidₓ G'] [HasSmoothMul I' G'] extends G →* G' where 
   smooth_to_fun : Smooth I I' to_fun
 
 @[toAdditive]
-instance  : HasOne (SmoothMonoidMorphism I I' G G') :=
+instance : HasOne (SmoothMonoidMorphism I I' G G') :=
   ⟨{ smooth_to_fun := smooth_const, toMonoidHom := 1 }⟩
 
 @[toAdditive]
-instance  : Inhabited (SmoothMonoidMorphism I I' G G') :=
+instance : Inhabited (SmoothMonoidMorphism I I' G G') :=
   ⟨1⟩
 
 @[toAdditive]
-instance  : CoeFun (SmoothMonoidMorphism I I' G G') fun _ => G → G' :=
+instance : CoeFun (SmoothMonoidMorphism I I' G G') fun _ => G → G' :=
   ⟨fun a => a.to_fun⟩
 
 end Monoidₓ
@@ -285,30 +206,10 @@ section CommMonoidₓ
 
 open_locale BigOperators
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{I :
-    ModelWithCorners 𝕜 E
-      H}{G :
-    Type
-      _}[CommMonoidₓ
-      G][TopologicalSpace
-      G][ChartedSpace H
-      G][HasSmoothMul I
-      G]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H' :
-    Type _}[TopologicalSpace H']{I' : ModelWithCorners 𝕜 E' H'}{M : Type _}[TopologicalSpace M][ChartedSpace H' M]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {H : Type _} [TopologicalSpace H] {E : Type _} [NormedGroup E]
+  [NormedSpace 𝕜 E] {I : ModelWithCorners 𝕜 E H} {G : Type _} [CommMonoidₓ G] [TopologicalSpace G] [ChartedSpace H G]
+  [HasSmoothMul I G] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
+  {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M] [ChartedSpace H' M]
 
 @[toAdditive]
 theorem smooth_finset_prod' {ι} {s : Finset ι} {f : ι → M → G} (h : ∀ i _ : i ∈ s, Smooth I' I (f i)) :

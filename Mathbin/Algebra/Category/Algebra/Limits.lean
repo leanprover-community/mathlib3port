@@ -20,9 +20,9 @@ noncomputable theory
 
 namespace AlgebraCat
 
-variable{R : Type u}[CommRingₓ R]
+variable {R : Type u} [CommRingₓ R]
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
 instance semiring_obj (F : J ⥤ AlgebraCat R) j : Semiringₓ ((F ⋙ forget (AlgebraCat R)).obj j) :=
   by 
@@ -68,7 +68,7 @@ namespace HasLimits
 Construction of a limit cone in `Algebra R`.
 (Internal use only; use the limits API.)
 -/
-def limit_cone (F : J ⥤ AlgebraCat R) : cone F :=
+def limit_cone (F : J ⥤ AlgebraCat.{v} R) : cone F :=
   { x := AlgebraCat.of R (types.limit_cone (F ⋙ forget _)).x,
     π :=
       { app := limit_π_alg_hom F,

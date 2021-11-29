@@ -131,7 +131,7 @@ unsafe def doc_category.to_string : DocCategory → Stringₓ
 | DocCategory.hole_cmd => "hole_command"
 | DocCategory.attr => "attribute"
 
-unsafe instance  : has_to_format DocCategory :=
+unsafe instance : has_to_format DocCategory :=
   ⟨«expr↑ » doc_category.to_string⟩
 
 -- error in Tactic.DocCommands: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
@@ -151,7 +151,7 @@ unsafe def tactic_doc_entry.to_json (d : TacticDocEntry) : json :=
     [("name", d.name), ("category", d.category.to_string), ("decl_names", d.decl_names.map (json.of_string ∘ toString)),
       ("tags", d.tags.map json.of_string), ("description", d.description)]
 
-unsafe instance  : HasToString TacticDocEntry :=
+unsafe instance : HasToString TacticDocEntry :=
   ⟨json.unparse ∘ tactic_doc_entry.to_json⟩
 
 /-- `update_description_from tde inh_id` replaces the `description` field of `tde` with the

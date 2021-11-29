@@ -42,7 +42,7 @@ A well-founded subset of an ordered type is one on which the relation `<` is wel
 
 open_locale Pointwise
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Set
 
@@ -111,7 +111,7 @@ end
 
 section LT
 
-variable[LT α]
+variable [LT α]
 
 /-- `s.is_wf` indicates that `<` is well-founded when restricted to `s`. -/
 def is_wf (s : Set α) : Prop :=
@@ -121,7 +121,7 @@ theorem is_wf_univ_iff : is_wf (univ : Set α) ↔ WellFounded (· < · : α →
   by 
     simp [is_wf, well_founded_on_iff]
 
-variable{s t : Set α}
+variable {s t : Set α}
 
 theorem is_wf.mono (h : is_wf t) (st : s ⊆ t) : is_wf s :=
   by 
@@ -133,7 +133,7 @@ end LT
 
 section PartialOrderₓ
 
-variable[PartialOrderₓ α]{s t : Set α}{a : α}
+variable [PartialOrderₓ α] {s t : Set α} {a : α}
 
 -- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_wf_iff_no_descending_seq : «expr ↔ »(is_wf s, ∀
@@ -220,7 +220,7 @@ end
 
 section PartialOrderₓ
 
-variable{s : Set α}{t : Set α}{r : α → α → Prop}
+variable {s : Set α} {t : Set α} {r : α → α → Prop}
 
 theorem partially_well_ordered_on.exists_monotone_subseq [IsRefl α r] [IsTrans α r] (h : s.partially_well_ordered_on r)
   (f : ℕ → α) (hf : range f ⊆ s) : ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) :=
@@ -265,7 +265,7 @@ begin
   exact [expr (f.map_rel_iff.2 hlt).2 (antisymm hle (f.map_rel_iff.2 hlt).1).symm]
 end
 
-variable[PartialOrderₓ α]
+variable [PartialOrderₓ α]
 
 theorem is_pwo.is_wf (h : s.is_pwo) : s.is_wf :=
   by 
@@ -400,7 +400,7 @@ end Finset
 
 namespace Set
 
-variable[PartialOrderₓ α]{s : Set α}{a : α}
+variable [PartialOrderₓ α] {s : Set α} {a : α}
 
 theorem finite.is_pwo (h : s.finite) : s.is_pwo :=
   by 
@@ -472,7 +472,7 @@ theorem Finset.is_pwo_sup {ι : Type _} [PartialOrderₓ α] (f : Finset ι) (g 
 
 namespace Set
 
-variable[LinearOrderₓ α]{s t : Set α}{a : α}
+variable [LinearOrderₓ α] {s t : Set α} {a : α}
 
 theorem is_wf.min_le (hs : s.is_wf) (hn : s.nonempty) (ha : a ∈ s) : hs.min hn ≤ a :=
   le_of_not_ltₓ (hs.not_lt_min hn ha)
@@ -501,7 +501,7 @@ end Set
 
 namespace Set
 
-variable{s : Set α}{t : Set α}
+variable {s : Set α} {t : Set α}
 
 @[toAdditive]
 theorem is_pwo.mul [OrderedCancelCommMonoid α] (hs : s.is_pwo) (ht : t.is_pwo) : is_pwo (s*t) :=
@@ -509,7 +509,7 @@ theorem is_pwo.mul [OrderedCancelCommMonoid α] (hs : s.is_pwo) (ht : t.is_pwo) 
     rw [←image_mul_prod]
     exact (is_pwo.prod hs ht).image_of_monotone fun _ _ h => mul_le_mul' h.1 h.2
 
-variable[LinearOrderedCancelCommMonoid α]
+variable [LinearOrderedCancelCommMonoid α]
 
 @[toAdditive]
 theorem is_wf.mul (hs : s.is_wf) (ht : t.is_wf) : is_wf (s*t) :=
@@ -731,7 +731,7 @@ theorem mem_mul_antidiagonal [Monoidₓ α] {s t : Set α} {a : α} {x : α × �
 
 section CancelCommMonoid
 
-variable[CancelCommMonoid α]{s t : Set α}{a : α}
+variable [CancelCommMonoid α] {s t : Set α} {a : α}
 
 -- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
@@ -760,7 +760,7 @@ end CancelCommMonoid
 
 section OrderedCancelCommMonoid
 
-variable[OrderedCancelCommMonoid α](s t : Set α)(a : α)
+variable [OrderedCancelCommMonoid α] (s t : Set α) (a : α)
 
 @[toAdditive]
 theorem eq_of_fst_le_fst_of_snd_le_snd {x y : mul_antidiagonal s t a} (h1 : (x : α × α).fst ≤ (y : α × α).fst)
@@ -775,7 +775,7 @@ theorem eq_of_fst_le_fst_of_snd_le_snd {x y : mul_antidiagonal s t a} (h1 : (x :
       ne_of_ltₓ (mul_lt_mul_of_lt_of_le hlt h2)
         ((mem_mul_antidiagonal.1 x.2).1.trans (mem_mul_antidiagonal.1 y.2).1.symm)
 
-variable{s}{t}
+variable {s} {t}
 
 -- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]] theorem finite_of_is_pwo (hs : s.is_pwo) (ht : t.is_pwo) (a) : (mul_antidiagonal s t a).finite :=
@@ -820,9 +820,9 @@ end Set
 
 namespace Finset
 
-variable[OrderedCancelCommMonoid α]
+variable [OrderedCancelCommMonoid α]
 
-variable{s t : Set α}(hs : s.is_pwo)(ht : t.is_pwo)(a : α)
+variable {s t : Set α} (hs : s.is_pwo) (ht : t.is_pwo) (a : α)
 
 /-- `finset.mul_antidiagonal_of_is_wf hs ht a` is the set of all pairs of an element in
   `s` and an element in `t` that multiply to `a`, but its construction requires proofs
@@ -832,7 +832,7 @@ variable{s t : Set α}(hs : s.is_pwo)(ht : t.is_pwo)(a : α)
 noncomputable def mul_antidiagonal : Finset (α × α) :=
   (Set.MulAntidiagonal.finite_of_is_pwo hs ht a).toFinset
 
-variable{hs}{ht}{u : Set α}{hu : u.is_pwo}{a}{x : α × α}
+variable {hs} {ht} {u : Set α} {hu : u.is_pwo} {a} {x : α × α}
 
 @[simp, toAdditive]
 theorem mem_mul_antidiagonal : x ∈ mul_antidiagonal hs ht a ↔ (x.1*x.2) = a ∧ x.1 ∈ s ∧ x.2 ∈ t :=

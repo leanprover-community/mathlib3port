@@ -15,7 +15,7 @@ namespace CategoryTheory
 
 universe v u
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /--
 The objects for the Kleisli category of the functor (usually monad) `T : C ⥤ C`, which are the same
@@ -27,9 +27,9 @@ def kleisli (T : Monadₓ C) :=
 
 namespace Kleisli
 
-variable(T : Monadₓ C)
+variable (T : Monadₓ C)
 
-instance  [Inhabited C] (T : Monadₓ C) : Inhabited (kleisli T) :=
+instance [Inhabited C] (T : Monadₓ C) : Inhabited (kleisli T) :=
   ⟨(default _ : C)⟩
 
 /-- The Kleisli category on a monad `T`.

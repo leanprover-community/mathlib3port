@@ -1,6 +1,7 @@
 import Mathbin.Algebra.GcdMonoid.Basic 
 import Mathbin.RingTheory.Coprime.Basic 
-import Mathbin.RingTheory.Ideal.Basic
+import Mathbin.RingTheory.Ideal.Basic 
+import Mathbin.RingTheory.PrincipalIdealDomain
 
 /-!
 # Lemmas about Euclidean domains
@@ -23,9 +24,7 @@ open EuclideanDomain Set Ideal
 
 section GcdMonoid
 
-variable{R : Type _}[EuclideanDomain R][GcdMonoid R]
-
-open GcdMonoid
+variable {R : Type _} [EuclideanDomain R] [GcdMonoid R]
 
 theorem left_div_gcd_ne_zero {p q : R} (hp : p ≠ 0) : p / GcdMonoid.gcd p q ≠ 0 :=
   by 
@@ -43,49 +42,56 @@ theorem right_div_gcd_ne_zero {p q : R} (hq : q ≠ 0) : q / GcdMonoid.gcd p q �
 
 end GcdMonoid
 
-variable{α : Type _}[EuclideanDomain α][DecidableEq α]
+namespace EuclideanDomain
+
+/-- Create a `gcd_monoid` whose `gcd_monoid.gcd` matches `euclidean_domain.gcd`. -/
+def GcdMonoid R [EuclideanDomain R] : GcdMonoid R :=
+  { gcd := gcd, lcm := lcm, gcd_dvd_left := gcd_dvd_left, gcd_dvd_right := gcd_dvd_right,
+    dvd_gcd := fun a b c => dvd_gcd,
+    gcd_mul_lcm :=
+      fun a b =>
+        by 
+          rw [EuclideanDomain.gcd_mul_lcm],
+    lcm_zero_left := lcm_zero_left, lcm_zero_right := lcm_zero_right }
+
+variable {α : Type _} [EuclideanDomain α] [DecidableEq α]
 
 -- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem span_gcd {α} [euclidean_domain α] (x y : α) : «expr = »(span ({gcd x y} : set α), span ({x, y} : set α)) :=
 begin
-  apply [expr le_antisymm],
-  { refine [expr span_le.2 (λ x, _)],
-    simp [] [] ["only"] ["[", expr set.mem_singleton_iff, ",", expr set_like.mem_coe, ",", expr mem_span_pair, "]"] [] [],
-    rintro [ident rfl],
-    exact [expr ⟨gcd_a x y, gcd_b x y, by simp [] [] [] ["[", expr gcd_eq_gcd_ab, ",", expr mul_comm, "]"] [] []⟩] },
-  { assume [binders (z)],
-    simp [] [] [] ["[", expr mem_span_singleton, ",", expr euclidean_domain.gcd_dvd_left, ",", expr mem_span_pair, ",", expr @eq_comm _ _ z, "]"] [] [] { contextual := tt },
-    exact [expr λ a b _, dvd_add ((gcd_dvd_left x y).mul_left _) ((gcd_dvd_right x y).mul_left _)] }
+  letI [] [] [":=", expr euclidean_domain.gcd_monoid α],
+  exact [expr span_gcd x y]
 end
 
-theorem gcd_is_unit_iff {α} [EuclideanDomain α] {x y : α} : IsUnit (gcd x y) ↔ IsCoprime x y :=
-  ⟨fun h =>
-      let ⟨b, hb⟩ := is_unit_iff_exists_inv'.1 h
-      ⟨b*gcd_a x y, b*gcd_b x y,
-        by 
-          rw [←hb, gcd_eq_gcd_ab, mul_commₓ x, mul_commₓ y, mul_addₓ, mul_assocₓ, mul_assocₓ]⟩,
-    fun ⟨a, b, h⟩ =>
-      is_unit_iff_dvd_one.2$ h ▸ dvd_add ((gcd_dvd_left x y).mul_left _) ((gcd_dvd_right x y).mul_left _)⟩
+-- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem gcd_is_unit_iff {α} [euclidean_domain α] {x y : α} : «expr ↔ »(is_unit (gcd x y), is_coprime x y) :=
+begin
+  letI [] [] [":=", expr euclidean_domain.gcd_monoid α],
+  exact [expr gcd_is_unit_iff x y]
+end
 
-theorem is_coprime_of_dvd {α} [EuclideanDomain α] {x y : α} (z : ¬(x = 0 ∧ y = 0))
-  (H : ∀ z _ : z ∈ Nonunits α, z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
-  by 
-    rw [←gcd_is_unit_iff]
-    byContra h 
-    refine' H _ h _ (gcd_dvd_left _ _) (gcd_dvd_right _ _)
-    rwa [Ne, EuclideanDomain.gcd_eq_zero_iff]
+-- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_coprime_of_dvd
+{α}
+[euclidean_domain α]
+{x y : α}
+(z : «expr¬ »(«expr ∧ »(«expr = »(x, 0), «expr = »(y, 0))))
+(H : ∀ z «expr ∈ » nonunits α, «expr ≠ »(z, 0) → «expr ∣ »(z, x) → «expr¬ »(«expr ∣ »(z, y))) : is_coprime x y :=
+begin
+  letI [] [] [":=", expr euclidean_domain.gcd_monoid α],
+  exact [expr is_coprime_of_dvd x y z H]
+end
 
-theorem dvd_or_coprime {α} [EuclideanDomain α] (x y : α) (h : Irreducible x) : x ∣ y ∨ IsCoprime x y :=
-  by 
-    refine' or_iff_not_imp_left.2 fun h' => _ 
-    apply is_coprime_of_dvd
-    ·
-      (
-        rintro ⟨rfl, rfl⟩)
-      simpa using h
-    ·
-      (
-        rintro z nu nz ⟨w, rfl⟩ dy)
-      refine' h' (dvd_trans _ dy)
-      simpa using mul_dvd_mul_left z (is_unit_iff_dvd_one.1$ (of_irreducible_mul h).resolve_left nu)
+-- error in RingTheory.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem dvd_or_coprime
+{α}
+[euclidean_domain α]
+(x y : α)
+(h : irreducible x) : «expr ∨ »(«expr ∣ »(x, y), is_coprime x y) :=
+begin
+  letI [] [] [":=", expr euclidean_domain.gcd_monoid α],
+  exact [expr dvd_or_coprime x y h]
+end
+
+end EuclideanDomain
 

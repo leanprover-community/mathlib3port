@@ -36,7 +36,7 @@ open Filter
 /-- Class `has_continuous_smul M α` says that the scalar multiplication `(•) : M → α → α`
 is continuous in both arguments. We use the same class for all kinds of multiplicative actions,
 including (semi)modules and algebras. -/
-class HasContinuousSmul(M α : Type _)[HasScalar M α][TopologicalSpace M][TopologicalSpace α] : Prop where 
+class HasContinuousSmul (M α : Type _) [HasScalar M α] [TopologicalSpace M] [TopologicalSpace α] : Prop where 
   continuous_smul : Continuous fun p : M × α => p.1 • p.2
 
 export HasContinuousSmul(continuous_smul)
@@ -44,18 +44,18 @@ export HasContinuousSmul(continuous_smul)
 /-- Class `has_continuous_vadd M α` says that the additive action `(+ᵥ) : M → α → α`
 is continuous in both arguments. We use the same class for all kinds of additive actions,
 including (semi)modules and algebras. -/
-class HasContinuousVadd(M α : Type _)[HasVadd M α][TopologicalSpace M][TopologicalSpace α] : Prop where 
+class HasContinuousVadd (M α : Type _) [HasVadd M α] [TopologicalSpace M] [TopologicalSpace α] : Prop where 
   continuous_vadd : Continuous fun p : M × α => p.1 +ᵥ p.2
 
 export HasContinuousVadd(continuous_vadd)
 
 attribute [toAdditive] HasContinuousSmul
 
-variable{M α β : Type _}[TopologicalSpace M][TopologicalSpace α]
+variable {M α β : Type _} [TopologicalSpace M] [TopologicalSpace α]
 
 section HasScalar
 
-variable[HasScalar M α][HasContinuousSmul M α]
+variable [HasScalar M α] [HasContinuousSmul M α]
 
 @[toAdditive]
 theorem Filter.Tendsto.smul {f : β → M} {g : β → α} {l : Filter β} {c : M} {a : α} (hf : tendsto f l (𝓝 c))
@@ -72,7 +72,7 @@ theorem Filter.Tendsto.smul_const {f : β → M} {l : Filter β} {c : M} (hf : t
   tendsto (fun x => f x • a) l (𝓝 (c • a)) :=
   hf.smul tendsto_const_nhds
 
-variable[TopologicalSpace β]{f : β → M}{g : β → α}{b : β}{s : Set β}
+variable [TopologicalSpace β] {f : β → M} {g : β → α} {b : β} {s : Set β}
 
 @[toAdditive]
 theorem ContinuousWithinAt.smul (hf : ContinuousWithinAt f s b) (hg : ContinuousWithinAt g s b) :
@@ -112,7 +112,7 @@ end HasScalar
 
 section Monoidₓ
 
-variable[Monoidₓ M][MulAction M α][HasContinuousSmul M α]
+variable [Monoidₓ M] [MulAction M α] [HasContinuousSmul M α]
 
 instance Units.has_continuous_smul : HasContinuousSmul (Units M) α :=
   { continuous_smul :=
@@ -131,7 +131,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable{G : Type _}[TopologicalSpace G][Groupₓ G][MulAction G α][HasContinuousSmul G α]
+variable {G : Type _} [TopologicalSpace G] [Groupₓ G] [MulAction G α] [HasContinuousSmul G α]
 
 @[toAdditive]
 theorem tendsto_const_smul_iff {f : β → α} {l : Filter β} {a : α} (c : G) :
@@ -141,7 +141,7 @@ theorem tendsto_const_smul_iff {f : β → α} {l : Filter β} {a : α} (c : G) 
         simpa only [inv_smul_smul] using h.const_smul (c⁻¹),
     fun h => h.const_smul _⟩
 
-variable[TopologicalSpace β]{f : β → α}{b : β}{s : Set β}
+variable [TopologicalSpace β] {f : β → α} {b : β} {s : Set β}
 
 @[toAdditive]
 theorem continuous_within_at_const_smul_iff (c : G) :
@@ -196,13 +196,13 @@ end Groupₓ
 
 section GroupWithZeroₓ
 
-variable{G₀ : Type _}[TopologicalSpace G₀][GroupWithZeroₓ G₀][MulAction G₀ α][HasContinuousSmul G₀ α]
+variable {G₀ : Type _} [TopologicalSpace G₀] [GroupWithZeroₓ G₀] [MulAction G₀ α] [HasContinuousSmul G₀ α]
 
 theorem tendsto_const_smul_iff₀ {f : β → α} {l : Filter β} {a : α} {c : G₀} (hc : c ≠ 0) :
   tendsto (fun x => c • f x) l (𝓝$ c • a) ↔ tendsto f l (𝓝 a) :=
   tendsto_const_smul_iff (Units.mk0 c hc)
 
-variable[TopologicalSpace β]{f : β → α}{b : β}{c : G₀}{s : Set β}
+variable [TopologicalSpace β] {f : β → α} {b : β} {c : G₀} {s : Set β}
 
 theorem continuous_within_at_const_smul_iff₀ (hc : c ≠ 0) :
   ContinuousWithinAt (fun x => c • f x) s b ↔ ContinuousWithinAt f s b :=
@@ -250,14 +250,14 @@ end GroupWithZeroₓ
 
 namespace IsUnit
 
-variable[Monoidₓ M][MulAction M α][HasContinuousSmul M α]
+variable [Monoidₓ M] [MulAction M α] [HasContinuousSmul M α]
 
 theorem tendsto_const_smul_iff {f : β → α} {l : Filter β} {a : α} {c : M} (hc : IsUnit c) :
   tendsto (fun x => c • f x) l (𝓝$ c • a) ↔ tendsto f l (𝓝 a) :=
   let ⟨u, hu⟩ := hc 
   hu ▸ tendsto_const_smul_iff u
 
-variable[TopologicalSpace β]{f : β → α}{b : β}{c : M}{s : Set β}
+variable [TopologicalSpace β] {f : β → α} {b : β} {c : M} {s : Set β}
 
 theorem continuous_within_at_const_smul_iff (hc : IsUnit c) :
   ContinuousWithinAt (fun x => c • f x) s b ↔ ContinuousWithinAt f s b :=
@@ -292,13 +292,13 @@ instance HasContinuousMul.has_continuous_smul {M : Type _} [Monoidₓ M] [Topolo
   ⟨continuous_mul⟩
 
 @[toAdditive]
-instance  [TopologicalSpace β] [HasScalar M α] [HasScalar M β] [HasContinuousSmul M α] [HasContinuousSmul M β] :
+instance [TopologicalSpace β] [HasScalar M α] [HasScalar M β] [HasContinuousSmul M α] [HasContinuousSmul M β] :
   HasContinuousSmul M (α × β) :=
   ⟨(continuous_fst.smul (continuous_fst.comp continuous_snd)).prod_mk
       (continuous_fst.smul (continuous_snd.comp continuous_snd))⟩
 
 @[toAdditive]
-instance  {ι : Type _} {γ : ι → Type} [∀ i, TopologicalSpace (γ i)] [∀ i, HasScalar M (γ i)]
+instance {ι : Type _} {γ : ι → Type} [∀ i, TopologicalSpace (γ i)] [∀ i, HasScalar M (γ i)]
   [∀ i, HasContinuousSmul M (γ i)] : HasContinuousSmul M (∀ i, γ i) :=
   ⟨continuous_pi$
       fun i =>

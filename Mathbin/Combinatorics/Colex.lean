@@ -39,7 +39,7 @@ colex, colexicographic, binary
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Finset
 
@@ -67,11 +67,11 @@ theorem Colex.eq_iff (A B : Finset α) : A.to_colex = B.to_colex ↔ A = B :=
 `A` is less than `B` in the colex ordering if the largest thing that's not in both sets is in B.
 In other words, max (A Δ B) ∈ B (if the maximum exists).
 -/
-instance  [LT α] : LT (Finset.Colex α) :=
+instance [LT α] : LT (Finset.Colex α) :=
   ⟨fun A B : Finset α => ∃ k : α, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A ∧ k ∈ B⟩
 
 /-- We can define (≤) in the obvious way. -/
-instance  [LT α] : LE (Finset.Colex α) :=
+instance [LT α] : LE (Finset.Colex α) :=
   ⟨fun A B => A < B ∨ A = B⟩
 
 theorem Colex.lt_def [LT α] (A B : Finset α) :
@@ -132,7 +132,7 @@ theorem hom_fin_lt_iff {n : ℕ} (A B : Finset (Finₓ n)) :
   (A.image fun i : Finₓ n => (i : ℕ)).toColex < (B.image fun i : Finₓ n => (i : ℕ)).toColex ↔ A.to_colex < B.to_colex :=
   Colex.hom_lt_iff (fun x y k => k) _ _
 
-instance  [LT α] : IsIrrefl (Finset.Colex α) (· < ·) :=
+instance [LT α] : IsIrrefl (Finset.Colex α) (· < ·) :=
   ⟨fun A h => Exists.elim h fun _ ⟨_, a, b⟩ => a b⟩
 
 @[trans]
@@ -162,7 +162,7 @@ theorem lt_transₓ [LinearOrderₓ α] {a b c : Finset.Colex α} : a < b → b 
 theorem le_transₓ [LinearOrderₓ α] (a b c : Finset.Colex α) : a ≤ b → b ≤ c → a ≤ c :=
   fun AB BC => AB.elim (fun k => BC.elim (fun t => Or.inl (lt_transₓ k t)) fun t => t ▸ AB) fun k => k.symm ▸ BC
 
-instance  [LinearOrderₓ α] : IsTrans (Finset.Colex α) (· < ·) :=
+instance [LinearOrderₓ α] : IsTrans (Finset.Colex α) (· < ·) :=
   ⟨fun _ _ _ => Colex.lt_trans⟩
 
 theorem lt_trichotomyₓ [LinearOrderₓ α] (A B : Finset.Colex α) : A < B ∨ A = B ∨ B < A :=
@@ -196,7 +196,7 @@ theorem lt_trichotomyₓ [LinearOrderₓ α] (A B : Finset.Colex α) : A < B ∨
     simp only [union_eq_empty_iff, sdiff_eq_empty_iff_subset] at a 
     apply h₁ (subset.antisymm a.1 a.2)
 
-instance  [LinearOrderₓ α] : IsTrichotomous (Finset.Colex α) (· < ·) :=
+instance [LinearOrderₓ α] : IsTrichotomous (Finset.Colex α) (· < ·) :=
   ⟨lt_trichotomyₓ⟩
 
 instance decidable_lt [LinearOrderₓ α] : ∀ {A B : Finset.Colex α}, Decidable (A < B) :=
@@ -211,7 +211,7 @@ instance decidable_lt [LinearOrderₓ α] : ∀ {A B : Finset.Colex α}, Decidab
           refine' and_congr_left' (forall_congrₓ _)
           tauto)
 
-instance  [LinearOrderₓ α] : LinearOrderₓ (Finset.Colex α) :=
+instance [LinearOrderₓ α] : LinearOrderₓ (Finset.Colex α) :=
   { Finset.Colex.hasLt, Finset.Colex.hasLe with le_refl := fun A => Or.inr rfl, le_trans := le_transₓ,
     le_antisymm := fun A B AB BA => AB.elim (fun k => BA.elim (fun t => (asymm k t).elim) fun t => t.symm) id,
     le_total := fun A B => (lt_trichotomyₓ A B).elim3 (Or.inl ∘ Or.inl) (Or.inl ∘ Or.inr) (Or.inr ∘ Or.inl),
@@ -245,7 +245,7 @@ instance  [LinearOrderₓ α] : LinearOrderₓ (Finset.Colex α) :=
           apply h₂.elim (Or.inr rfl) }
 
 /-- The instances set up let us infer that `colex.lt` is a strict total order. -/
-example  [LinearOrderₓ α] : IsStrictTotalOrder (Finset.Colex α) (· < ·) :=
+example [LinearOrderₓ α] : IsStrictTotalOrder (Finset.Colex α) (· < ·) :=
   inferInstance
 
 /-- Strictly monotone functions preserve the colex ordering. -/
@@ -389,36 +389,28 @@ def to_colex_rel_hom [LinearOrderₓ α] :
   (· ⊆ · : Finset α → Finset α → Prop) →r (· ≤ · : Finset.Colex α → Finset.Colex α → Prop) :=
   { toFun := Finset.toColex, map_rel' := fun A B => colex_le_of_subset }
 
-instance  [LinearOrderₓ α] : OrderBot (Finset.Colex α) :=
+instance [LinearOrderₓ α] : OrderBot (Finset.Colex α) :=
   { bot := (∅ : Finset α).toColex, bot_le := fun x => empty_to_colex_le }
 
-instance  [LinearOrderₓ α] [Fintype α] : OrderTop (Finset.Colex α) :=
+instance [LinearOrderₓ α] [Fintype α] : OrderTop (Finset.Colex α) :=
   { top := Finset.univ.toColex, le_top := fun x => colex_le_of_subset (subset_univ _) }
 
-instance  [LinearOrderₓ α] : SemilatticeInfBot (Finset.Colex α) :=
-  { finset.colex.order_bot,
+instance [LinearOrderₓ α] : Lattice (Finset.Colex α) :=
+  { (by 
+      infer_instance :
+    SemilatticeSup (Finset.Colex α)),
     (by 
       infer_instance :
     SemilatticeInf (Finset.Colex α)) with
      }
 
-instance  [LinearOrderₓ α] : SemilatticeSupBot (Finset.Colex α) :=
-  { finset.colex.order_bot,
-    (by 
-      infer_instance :
-    SemilatticeSup (Finset.Colex α)) with
-     }
-
-instance  [LinearOrderₓ α] [Fintype α] : BoundedLattice (Finset.Colex α) :=
+instance [LinearOrderₓ α] [Fintype α] : BoundedOrder (Finset.Colex α) :=
   { (by 
       infer_instance :
     OrderTop (Finset.Colex α)),
     (by 
       infer_instance :
-    SemilatticeSup (Finset.Colex α)),
-    (by 
-      infer_instance :
-    SemilatticeInfBot (Finset.Colex α)) with
+    OrderBot (Finset.Colex α)) with
      }
 
 -- error in Combinatorics.Colex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

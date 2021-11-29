@@ -33,8 +33,8 @@ open_locale BigOperators
 
 namespace LinearMap
 
-variable(R :
-    Type _){ι : Type _}[Semiringₓ R](φ : ι → Type _)[∀ i, AddCommMonoidₓ (φ i)][∀ i, Module R (φ i)][DecidableEq ι]
+variable (R : Type _) {ι : Type _} [Semiringₓ R] (φ : ι → Type _) [∀ i, AddCommMonoidₓ (φ i)] [∀ i, Module R (φ i)]
+  [DecidableEq ι]
 
 /-- The standard basis of the product of `φ`. -/
 def std_basis : ∀ i : ι, φ i →ₗ[R] ∀ i, φ i :=
@@ -172,11 +172,11 @@ open LinearMap
 
 open Set
 
-variable{R : Type _}
+variable {R : Type _}
 
 section Module
 
-variable{η : Type _}{ιs : η → Type _}{Ms : η → Type _}
+variable {η : Type _} {ιs : η → Type _} {Ms : η → Type _}
 
 -- error in LinearAlgebra.StdBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem linear_independent_std_basis
@@ -212,9 +212,9 @@ begin
     exact [expr (disjoint_std_basis_std_basis _ _ _ _ h₃).mono h₁ h₂] }
 end
 
-variable[Semiringₓ R][∀ i, AddCommMonoidₓ (Ms i)][∀ i, Module R (Ms i)]
+variable [Semiringₓ R] [∀ i, AddCommMonoidₓ (Ms i)] [∀ i, Module R (Ms i)]
 
-variable[Fintype η]
+variable [Fintype η]
 
 section 
 
@@ -263,7 +263,7 @@ end
 
 section 
 
-variable(R η)
+variable (R η)
 
 /-- The basis on `η → R` where the `i`th basis vector is `function.update 0 i 1`. -/
 noncomputable def basis_fun : Basis η R (∀ j : η, R) :=
@@ -288,13 +288,13 @@ end Pi
 
 namespace Matrix
 
-variable(R : Type _)(n : Type _)(m : Type _)[Fintype m][Fintype n][Semiringₓ R]
+variable (R : Type _) (n : Type _) (m : Type _) [Fintype m] [Fintype n] [Semiringₓ R]
 
 /-- The standard basis of `matrix n m R`. -/
 noncomputable def std_basis : Basis (n × m) R (Matrix n m R) :=
   Basis.reindex (Pi.basis fun i : n => Pi.basisFun R m) (Equiv.sigmaEquivProd _ _)
 
-variable{n m}
+variable {n m}
 
 theorem std_basis_eq_std_basis_matrix (i : n) (j : m) [DecidableEq n] [DecidableEq m] :
   std_basis R n m (i, j) = std_basis_matrix i j (1 : R) :=

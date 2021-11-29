@@ -36,7 +36,7 @@ The next step is to define ZFA sets as lists quotiented by `lists.equiv`.
 (-/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 -- error in SetTheory.Lists: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- Prelists, helper type to define `lists`. `lists' α ff` are the "atoms", a copy of `α`.
@@ -56,7 +56,7 @@ def Lists (α : Type _) :=
 
 namespace Lists'
 
-instance  [Inhabited α] : ∀ b, Inhabited (Lists' α b)
+instance [Inhabited α] : ∀ b, Inhabited (Lists' α b)
 | tt => ⟨nil⟩
 | ff => ⟨atom (default _)⟩
 
@@ -130,12 +130,12 @@ add_decl_doc Lists'.Subset
 
 namespace Lists'
 
-instance  : HasSubset (Lists' α tt) :=
+instance : HasSubset (Lists' α tt) :=
   ⟨Lists'.Subset⟩
 
 /-- ZFA prelist membership. A ZFA list is in a ZFA prelist if some element of this ZFA prelist is
 equivalent as a ZFA list to this ZFA list. -/
-instance  {b} : HasMem (Lists α) (Lists' α b) :=
+instance {b} : HasMem (Lists α) (Lists' α b) :=
   ⟨fun a l => ∃ (a' : _)(_ : a' ∈ l.to_list), a ~ a'⟩
 
 theorem mem_def {b a} {l : Lists' α b} : a ∈ l ↔ ∃ (a' : _)(_ : a' ∈ l.to_list), a ~ a' :=
@@ -242,14 +242,14 @@ theorem of_to_list : ∀ {l : Lists α}, is_list l → of_list (to_list l) = l
   by 
     simp [of_list, of']
 
-instance  : Inhabited (Lists α) :=
+instance : Inhabited (Lists α) :=
   ⟨of' Lists'.nil⟩
 
-instance  [DecidableEq α] : DecidableEq (Lists α) :=
+instance [DecidableEq α] : DecidableEq (Lists α) :=
   by 
     unfold Lists <;> infer_instance
 
-instance  [SizeOf α] : SizeOf (Lists α) :=
+instance [SizeOf α] : SizeOf (Lists α) :=
   by 
     unfold Lists <;> infer_instance
 
@@ -283,7 +283,7 @@ def mem (a : Lists α) : Lists α → Prop
 | ⟨ff, l⟩ => False
 | ⟨tt, l⟩ => a ∈ l
 
-instance  : HasMem (Lists α) (Lists α) :=
+instance : HasMem (Lists α) (Lists α) :=
   ⟨mem⟩
 
 theorem is_list_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → is_list l
@@ -348,7 +348,7 @@ theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l�
       intro a l IH₁ IH₂ 
       simpa [IH₁] using IH₂
 
-instance  : Setoidₓ (Lists α) :=
+instance : Setoidₓ (Lists α) :=
   ⟨· ~ ·, Equiv.refl, @Equiv.symm _, @Equiv.trans _⟩
 
 section Decidable
@@ -431,13 +431,13 @@ def Finsets (α : Type _) :=
 
 namespace Finsets
 
-instance  : HasEmptyc (Finsets α) :=
+instance : HasEmptyc (Finsets α) :=
   ⟨«expr⟦ ⟧» (Lists.of' Lists'.nil)⟩
 
-instance  : Inhabited (Finsets α) :=
+instance : Inhabited (Finsets α) :=
   ⟨∅⟩
 
-instance  [DecidableEq α] : DecidableEq (Finsets α) :=
+instance [DecidableEq α] : DecidableEq (Finsets α) :=
   by 
     unfold Finsets <;> infer_instance
 

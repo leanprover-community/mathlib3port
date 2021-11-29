@@ -38,9 +38,9 @@ universe u v
 
 namespace Ideal
 
-variable{R : Type u}[CommRingₓ R]{I : Ideal R}
+variable {R : Type u} [CommRingₓ R] {I : Ideal R}
 
-variable{S : Type v}[CommRingₓ S]
+variable {S : Type v} [CommRingₓ S]
 
 section Jacobson
 
@@ -81,7 +81,7 @@ theorem jacobson_eq_bot : jacobson I = ⊥ → I = ⊥ :=
 theorem jacobson_eq_self_of_is_maximal [H : is_maximal I] : I.jacobson = I :=
   le_antisymmₓ (Inf_le ⟨le_of_eqₓ rfl, H⟩) le_jacobson
 
-instance (priority := 100)jacobson.is_maximal [H : is_maximal I] : is_maximal (jacobson I) :=
+instance (priority := 100) jacobson.is_maximal [H : is_maximal I] : is_maximal (jacobson I) :=
   ⟨⟨fun htop => H.1.1 (jacobson_eq_top_iff.1 htop), fun J hJ => H.1.2 _ (lt_of_le_of_ltₓ le_jacobson hJ)⟩⟩
 
 theorem mem_jacobson_iff {x : R} : x ∈ jacobson I ↔ ∀ y, ∃ z, (((x*y)*z)+z) - 1 ∈ I :=
@@ -330,7 +330,7 @@ end Polynomial
 section IsLocal
 
 /-- An ideal `I` is local iff its Jacobson radical is maximal. -/
-class is_local(I : Ideal R) : Prop where 
+class is_local (I : Ideal R) : Prop where 
   out : is_maximal (jacobson I)
 
 theorem is_local_iff {I : Ideal R} : is_local I ↔ is_maximal (jacobson I) :=

@@ -27,7 +27,7 @@ equiv, mul_equiv, add_equiv
 -/
 
 
-variable{A : Type _}{B : Type _}{M : Type _}{N : Type _}{P : Type _}{Q : Type _}{G : Type _}{H : Type _}
+variable {A : Type _} {B : Type _} {M : Type _} {N : Type _} {P : Type _} {Q : Type _} {G : Type _} {H : Type _}
 
 /-- Makes a multiplicative inverse from a bijection which preserves multiplication. -/
 @[toAdditive "Makes an additive inverse from a bijection which preserves addition."]
@@ -56,7 +56,7 @@ def MonoidHom.inverse {A B : Type _} [Monoidₓ A] [Monoidₓ B] (f : A →* B) 
 
 /-- add_equiv α β is the type of an equiv α ≃ β which preserves addition. -/
 @[ancestor Equiv AddHom]
-structure AddEquiv(A B : Type _)[Add A][Add B] extends A ≃ B, AddHom A B
+structure AddEquiv (A B : Type _) [Add A] [Add B] extends A ≃ B, AddHom A B
 
 /-- The `equiv` underlying an `add_equiv`. -/
 add_decl_doc AddEquiv.toEquiv
@@ -66,7 +66,7 @@ add_decl_doc AddEquiv.toAddHom
 
 /-- `mul_equiv α β` is the type of an equiv `α ≃ β` which preserves multiplication. -/
 @[ancestor Equiv MulHom, toAdditive]
-structure MulEquiv(M N : Type _)[Mul M][Mul N] extends M ≃ N, MulHom M N
+structure MulEquiv (M N : Type _) [Mul M] [Mul N] extends M ≃ N, MulHom M N
 
 /-- The `equiv` underlying a `mul_equiv`. -/
 add_decl_doc MulEquiv.toEquiv
@@ -81,10 +81,10 @@ infixl:25 " ≃+ " => AddEquiv
 namespace MulEquiv
 
 @[toAdditive]
-instance  [Mul M] [Mul N] : CoeFun (M ≃* N) fun _ => M → N :=
+instance [Mul M] [Mul N] : CoeFun (M ≃* N) fun _ => M → N :=
   ⟨MulEquiv.toFun⟩
 
-variable[Mul M][Mul N][Mul P][Mul Q]
+variable [Mul M] [Mul N] [Mul P] [Mul Q]
 
 @[simp, toAdditive]
 theorem to_fun_eq_coe {f : M ≃* N} : f.to_fun = f :=
@@ -126,7 +126,7 @@ def refl (M : Type _) [Mul M] : M ≃* M :=
   { Equiv.refl _ with map_mul' := fun _ _ => rfl }
 
 @[toAdditive]
-instance  : Inhabited (M ≃* M) :=
+instance : Inhabited (M ≃* M) :=
   ⟨refl M⟩
 
 /-- The inverse of an isomorphism is an isomorphism. -/
@@ -276,7 +276,7 @@ def mul_equiv_of_unique_of_unique {M N} [Unique M] [Unique N] [Mul M] [Mul N] : 
 
 /-- There is a unique monoid homomorphism between two monoids with a unique element. -/
 @[toAdditive]
-instance  {M N} [Unique M] [Unique N] [Mul M] [Mul N] : Unique (M ≃* N) :=
+instance {M N} [Unique M] [Unique N] [Mul M] [Mul N] : Unique (M ≃* N) :=
   { default := mul_equiv_of_unique_of_unique, uniq := fun _ => ext$ fun x => Subsingleton.elimₓ _ _ }
 
 /-!
@@ -448,7 +448,7 @@ namespace Units
 theorem coe_inv [Groupₓ G] (u : Units G) : «expr↑ » (u⁻¹) = (u⁻¹ : G) :=
   toUnits.symm.map_inv u
 
-variable[Monoidₓ M][Monoidₓ N][Monoidₓ P]
+variable [Monoidₓ M] [Monoidₓ N] [Monoidₓ P]
 
 /-- A multiplicative equivalence of monoids defines a multiplicative equivalence
 of their groups of units. -/
@@ -492,7 +492,7 @@ namespace Equiv
 
 section Groupₓ
 
-variable[Groupₓ G]
+variable [Groupₓ G]
 
 /-- Left multiplication in a `group` is a permutation of the underlying type. -/
 @[toAdditive "Left addition in an `add_group` is a permutation of the underlying type."]
@@ -538,7 +538,7 @@ theorem mul_right_symm_apply (a : G) : ((Equiv.mulRight a).symm : G → G) = fun
 theorem _root_.group.mul_right_bijective (a : G) : Function.Bijective (·*a) :=
   (Equiv.mulRight a).Bijective
 
-variable(G)
+variable (G)
 
 /-- Inversion on a `group` is a permutation of the underlying type. -/
 @[toAdditive "Negation on an `add_group` is a permutation of the underlying type.",
@@ -551,7 +551,7 @@ protected def inv : perm G :=
 protected def inv₀ (G : Type _) [GroupWithZeroₓ G] : perm G :=
   Function.Involutive.toEquiv HasInv.inv inv_inv₀
 
-variable{G}
+variable {G}
 
 @[simp, toAdditive]
 theorem inv_symm : (Equiv.inv G).symm = Equiv.inv G :=
@@ -599,7 +599,7 @@ end Groupₓ
 
 section GroupWithZeroₓ
 
-variable[GroupWithZeroₓ G]
+variable [GroupWithZeroₓ G]
 
 /-- Left multiplication by a nonzero element in a `group_with_zero` is a permutation of the
 underlying type. -/

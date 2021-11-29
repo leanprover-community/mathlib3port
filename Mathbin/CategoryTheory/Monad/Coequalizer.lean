@@ -22,11 +22,11 @@ namespace Monadₓ
 
 open Limits
 
-variable{C : Type u₁}
+variable {C : Type u₁}
 
-variable[category.{v₁} C]
+variable [category.{v₁} C]
 
-variable{T : Monadₓ C}(X : algebra T)
+variable {T : Monadₓ C} (X : algebra T)
 
 /-!
 Show that any algebra is a coequalizer of free algebras.
@@ -52,7 +52,7 @@ theorem free_coequalizer.condition :
   free_coequalizer.top_map X ≫ free_coequalizer.π X = free_coequalizer.bottom_map X ≫ free_coequalizer.π X :=
   algebra.hom.ext _ _ X.assoc.symm
 
-instance  : is_reflexive_pair (free_coequalizer.top_map X) (free_coequalizer.bottom_map X) :=
+instance : is_reflexive_pair (free_coequalizer.top_map X) (free_coequalizer.bottom_map X) :=
   by 
     apply is_reflexive_pair.mk' _ _ _ 
     apply (free T).map (T.η.app X.A)

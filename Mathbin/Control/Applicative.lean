@@ -18,11 +18,11 @@ section Lemmas
 
 open Function
 
-variable{F : Type u → Type v}
+variable {F : Type u → Type v}
 
-variable[Applicativeₓ F][IsLawfulApplicative F]
+variable [Applicativeₓ F] [IsLawfulApplicative F]
 
-variable{α β γ σ : Type u}
+variable {α β γ σ : Type u}
 
 theorem Applicativeₓ.map_seq_map (f : α → β → γ) (g : σ → β) (x : F α) (y : F σ) :
   f <$> x <*> g <$> y = (flip (· ∘ ·) g ∘ f) <$> x <*> y :=
@@ -77,7 +77,7 @@ end
 
 end Lemmas
 
-instance  : IsCommApplicative id :=
+instance : IsCommApplicative id :=
   by 
     refine' { .. } <;> intros  <;> rfl
 
@@ -89,13 +89,13 @@ open Function hiding comp
 
 open Functor
 
-variable{F : Type u → Type w}{G : Type v → Type u}
+variable {F : Type u → Type w} {G : Type v → Type u}
 
-variable[Applicativeₓ F][Applicativeₓ G]
+variable [Applicativeₓ F] [Applicativeₓ G]
 
-variable[IsLawfulApplicative F][IsLawfulApplicative G]
+variable [IsLawfulApplicative F] [IsLawfulApplicative G]
 
-variable{α β γ : Type v}
+variable {α β γ : Type v}
 
 theorem map_pure (f : α → β) (x : α) : (f <$> pure x : comp F G β) = pure (f x) :=
   comp.ext$
@@ -118,7 +118,7 @@ theorem pure_seq_eq_map (f : α → β) (x : comp F G α) : pure f <*> x = f <$>
     by 
       simp' [Applicativeₓ.pure_seq_eq_map'] with functor_norm
 
-instance  : IsLawfulApplicative (comp F G) :=
+instance : IsLawfulApplicative (comp F G) :=
   { pure_seq_eq_map := @comp.pure_seq_eq_map F G _ _ _ _, map_pure := @comp.map_pure F G _ _ _ _,
     seq_pure := @comp.seq_pure F G _ _ _ _, seq_assoc := @comp.seq_assoc F G _ _ _ _ }
 
@@ -133,7 +133,7 @@ theorem applicative_comp_id {F} [AF : Applicativeₓ F] [LF : IsLawfulApplicativ
 
 open IsCommApplicative
 
-instance  {f : Type u → Type w} {g : Type v → Type u} [Applicativeₓ f] [Applicativeₓ g] [IsCommApplicative f]
+instance {f : Type u → Type w} {g : Type v → Type u} [Applicativeₓ f] [Applicativeₓ g] [IsCommApplicative f]
   [IsCommApplicative g] : IsCommApplicative (comp f g) :=
   by 
     refine' { @comp.is_lawful_applicative f g _ _ _ _ with .. }
@@ -158,17 +158,17 @@ theorem Comp.seq_mk {α β : Type w} {f : Type u → Type v} {g : Type w → Typ
   (h : f (g (α → β))) (x : f (g α)) : comp.mk h <*> comp.mk x = comp.mk (Seqₓ.seq <$> h <*> x) :=
   rfl
 
-instance  {α} [HasOne α] [Mul α] : Applicativeₓ (const α) :=
+instance {α} [HasOne α] [Mul α] : Applicativeₓ (const α) :=
   { pure := fun β x => (1 : α), seq := fun β γ f x => (f*x : α) }
 
-instance  {α} [Monoidₓ α] : IsLawfulApplicative (const α) :=
+instance {α} [Monoidₓ α] : IsLawfulApplicative (const α) :=
   by 
     refine' { .. } <;> intros  <;> simp [mul_assocₓ, · <$> ·, · <*> ·, pure]
 
-instance  {α} [HasZero α] [Add α] : Applicativeₓ (add_const α) :=
+instance {α} [HasZero α] [Add α] : Applicativeₓ (add_const α) :=
   { pure := fun β x => (0 : α), seq := fun β γ f x => (f+x : α) }
 
-instance  {α} [AddMonoidₓ α] : IsLawfulApplicative (add_const α) :=
+instance {α} [AddMonoidₓ α] : IsLawfulApplicative (add_const α) :=
   by 
     refine' { .. } <;> intros  <;> simp [add_assocₓ, · <$> ·, · <*> ·, pure]
 

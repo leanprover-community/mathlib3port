@@ -26,7 +26,7 @@ open_locale Classical BigOperators
 
 universe u
 
-variable(K : Type u)[Field K]
+variable (K : Type u) [Field K]
 
 -- error in Algebra.Category.FinVect: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- Define `FinVect` as the subtype of `Module.{u} K` of finite dimensional vector spaces. -/
@@ -39,10 +39,10 @@ namespace FinVect
 instance FiniteDimensional (V : FinVect K) : FiniteDimensional K V :=
   V.prop
 
-instance  : Inhabited (FinVect K) :=
+instance : Inhabited (FinVect K) :=
   ⟨⟨ModuleCat.of K K, FiniteDimensional.finite_dimensional_self K⟩⟩
 
-instance  : Coe (FinVect.{u} K) (ModuleCat.{u} K) :=
+instance : Coe (FinVect.{u} K) (ModuleCat.{u} K) :=
   { coe := fun V => V.1 }
 
 protected theorem coe_comp {U V W : FinVect K} (f : U ⟶ V) (g : V ⟶ W) : (f ≫ g : U → W) = (g : V → W) ∘ (f : U → V) :=
@@ -55,13 +55,13 @@ instance monoidal_category : monoidal_category (FinVect K) :=
       by 
         exact finite_dimensional_tensor_product X Y
 
-variable(V : FinVect K)
+variable (V : FinVect K)
 
 /-- The dual module is the dual in the rigid monoidal category `FinVect K`. -/
 def FinVect_dual : FinVect K :=
   ⟨ModuleCat.of K (Module.Dual K V), Subspace.Module.Dual.finite_dimensional⟩
 
-instance  : CoeFun (FinVect_dual K V) fun _ => V → K :=
+instance : CoeFun (FinVect_dual K V) fun _ => V → K :=
   { coe :=
       fun v =>
         by 

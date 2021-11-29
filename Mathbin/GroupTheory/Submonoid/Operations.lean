@@ -58,7 +58,7 @@ submonoid, range, product, map, comap
 -/
 
 
-variable{M N P : Type _}[MulOneClass M][MulOneClass N][MulOneClass P](S : Submonoid M)
+variable {M N P : Type _} [MulOneClass M] [MulOneClass N] [MulOneClass P] (S : Submonoid M)
 
 /-!
 ### Conversion to/from `additive`/`multiplicative`
@@ -100,7 +100,7 @@ end
 
 section 
 
-variable{A : Type _}[AddZeroClass A]
+variable {A : Type _} [AddZeroClass A]
 
 /-- Additive submonoids of an additive monoid `A` are isomorphic to
 multiplicative submonoids of `multiplicative A`. -/
@@ -279,7 +279,7 @@ theorem map_id (S : Submonoid M) : S.map (MonoidHom.id M) = S :=
 
 section GaloisCoinsertion
 
-variable{ι : Type _}{f : M →* N}(hf : Function.Injective f)
+variable {ι : Type _} {f : M →* N} (hf : Function.Injective f)
 
 include hf
 
@@ -331,7 +331,7 @@ end GaloisCoinsertion
 
 section GaloisInsertion
 
-variable{ι : Type _}{f : M →* N}(hf : Function.Surjective f)
+variable {ι : Type _} {f : M →* N} (hf : Function.Surjective f)
 
 include hf
 
@@ -490,6 +490,18 @@ theorem closure_induction' (s : Set M) {p : closure s → Prop} (Hs : ∀ x h : 
           closure_induction hx (fun x hx => ⟨subset_closure hx, Hs x hx⟩) ⟨one_mem _, H1⟩
             fun x y hx hy =>
               Exists.elim hx$ fun hx' hx => Exists.elim hy$ fun hy' hy => ⟨mul_mem _ hx' hy', Hmul _ _ hx hy⟩
+
+@[simp, toAdditive]
+theorem closure_closure_coe_preimage {s : Set M} : closure ((coeₓ : closure s → M) ⁻¹' s) = ⊤ :=
+  by 
+    refine' eq_top_iff.2 fun x hx => closure_induction' (fun x => _) _ _ (fun g₁ g₂ hg₁ hg₂ => _) x
+    ·
+      intro g hg 
+      exact subset_closure hg
+    ·
+      exact Submonoid.one_mem _
+    ·
+      exact Submonoid.mul_mem _ hg₁ hg₂
 
 /-- Given `submonoid`s `s`, `t` of monoids `M`, `N` respectively, `s × t` as a submonoid
 of `M × N`. -/
@@ -816,7 +828,7 @@ end Submonoid
 
 namespace MulEquiv
 
-variable{S}{T : Submonoid M}
+variable {S} {T : Submonoid M}
 
 /-- Makes the identity isomorphism from a proof that two submonoids of a multiplicative
     monoid are equal. -/
@@ -865,11 +877,11 @@ These instances work particularly well in conjunction with `monoid.to_mul_action
 
 namespace Submonoid
 
-variable{M' : Type _}{α β : Type _}[Monoidₓ M']
+variable {M' : Type _} {α β : Type _} [Monoidₓ M']
 
 /-- The action by a submonoid is the action by the underlying monoid. -/
 @[toAdditive "The additive action by an add_submonoid is the action by the underlying\nadd_monoid. "]
-instance  [MulAction M' α] (S : Submonoid M') : MulAction S α :=
+instance [MulAction M' α] (S : Submonoid M') : MulAction S α :=
   MulAction.compHom _ S.subtype
 
 @[toAdditive]
@@ -877,11 +889,11 @@ theorem smul_def [MulAction M' α] {S : Submonoid M'} (g : S) (m : α) : g • m
   rfl
 
 /-- The action by a submonoid is the action by the underlying monoid. -/
-instance  [AddMonoidₓ α] [DistribMulAction M' α] (S : Submonoid M') : DistribMulAction S α :=
+instance [AddMonoidₓ α] [DistribMulAction M' α] (S : Submonoid M') : DistribMulAction S α :=
   DistribMulAction.compHom _ S.subtype
 
 /-- The action by a submonoid is the action by the underlying monoid. -/
-instance  [Monoidₓ α] [MulDistribMulAction M' α] (S : Submonoid M') : MulDistribMulAction S α :=
+instance [Monoidₓ α] [MulDistribMulAction M' α] (S : Submonoid M') : MulDistribMulAction S α :=
   MulDistribMulAction.compHom _ S.subtype
 
 @[toAdditive]
@@ -895,15 +907,15 @@ instance smul_comm_class_right [HasScalar α β] [MulAction M' β] [SmulCommClas
   ⟨fun a s => (smul_comm a (s : M') : _)⟩
 
 /-- Note that this provides `is_scalar_tower S M' M'` which is needed by `smul_mul_assoc`. -/
-instance  [HasScalar α β] [MulAction M' α] [MulAction M' β] [IsScalarTower M' α β] (S : Submonoid M') :
+instance [HasScalar α β] [MulAction M' α] [MulAction M' β] [IsScalarTower M' α β] (S : Submonoid M') :
   IsScalarTower S α β :=
   ⟨fun a => (smul_assoc (a : M') : _)⟩
 
-example  {S : Submonoid M'} : IsScalarTower S M' M' :=
+example {S : Submonoid M'} : IsScalarTower S M' M' :=
   by 
     infer_instance
 
-instance  [MulAction M' α] [HasFaithfulScalar M' α] (S : Submonoid M') : HasFaithfulScalar S α :=
+instance [MulAction M' α] [HasFaithfulScalar M' α] (S : Submonoid M') : HasFaithfulScalar S α :=
   { eq_of_smul_eq_smul := fun x y h => Subtype.ext (eq_of_smul_eq_smul h) }
 
 end Submonoid

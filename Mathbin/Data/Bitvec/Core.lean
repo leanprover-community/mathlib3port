@@ -48,7 +48,7 @@ def append {m n} : Bitvec m → Bitvec n → Bitvec (m+n) :=
 
 section Shift
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 /-- `shl x i` is the bitvector obtained by left-shifting `x` `i` times and padding with `ff`.
 If `x.length < i` then this will return the all-`ff`s bitvector. -/
@@ -87,7 +87,7 @@ end Shift
 
 section Bitwise
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 /-- bitwise not -/
 def Not : Bitvec n → Bitvec n :=
@@ -112,7 +112,7 @@ end Bitwise
 
 section Arith
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 /-- `xor3 x y c` is `((x XOR y) XOR c)`. -/
 protected def xor3 (x y c : Bool) :=
@@ -146,19 +146,19 @@ def sbb (x y : Bitvec n) (b : Bool) : Bool × Bitvec n :=
 protected def sub (x y : Bitvec n) : Bitvec n :=
   Prod.snd (sbb x y ff)
 
-instance  : HasZero (Bitvec n) :=
+instance : HasZero (Bitvec n) :=
   ⟨Bitvec.zero n⟩
 
-instance  : HasOne (Bitvec n) :=
+instance : HasOne (Bitvec n) :=
   ⟨Bitvec.one n⟩
 
-instance  : Add (Bitvec n) :=
+instance : Add (Bitvec n) :=
   ⟨Bitvec.add⟩
 
-instance  : Sub (Bitvec n) :=
+instance : Sub (Bitvec n) :=
   ⟨Bitvec.sub⟩
 
-instance  : Neg (Bitvec n) :=
+instance : Neg (Bitvec n) :=
   ⟨Bitvec.neg⟩
 
 /-- The product of two bitvectors -/
@@ -166,7 +166,7 @@ protected def mul (x y : Bitvec n) : Bitvec n :=
   let f := fun r b => cond b ((r+r)+y) (r+r)
   (to_list x).foldl f 0
 
-instance  : Mul (Bitvec n) :=
+instance : Mul (Bitvec n) :=
   ⟨Bitvec.mul⟩
 
 end Arith
@@ -176,7 +176,7 @@ end Arith
 
 section Comparison
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 /-- `uborrow x y` returns `tt` iff the "subtract with borrow" operation on `x`, `y` and `ff`
 required a borrow. -/
@@ -231,7 +231,7 @@ end Comparison
 
 section Conversion
 
-variable{α : Type}
+variable {α : Type}
 
 /-- Create a bitvector from a `nat` -/
 protected def of_nat : ∀ n : ℕ, Nat → Bitvec n
@@ -315,14 +315,14 @@ end Conversion
 private def reprₓ {n : Nat} : Bitvec n → Stringₓ
 | ⟨bs, p⟩ => "0b" ++ (bs.map fun b : Bool => if b then '1' else '0').asString
 
-instance  (n : Nat) : HasRepr (Bitvec n) :=
+instance (n : Nat) : HasRepr (Bitvec n) :=
   ⟨reprₓ⟩
 
 end Bitvec
 
-instance  {n} {x y : Bitvec n} : Decidable (Bitvec.Ult x y) :=
+instance {n} {x y : Bitvec n} : Decidable (Bitvec.Ult x y) :=
   Bool.decidableEq _ _
 
-instance  {n} {x y : Bitvec n} : Decidable (Bitvec.Ugt x y) :=
+instance {n} {x y : Bitvec n} : Decidable (Bitvec.Ugt x y) :=
   Bool.decidableEq _ _
 

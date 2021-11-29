@@ -37,21 +37,21 @@ using `map_swap` as a definition, and does not require `has_neg N`.
 -/
 
 
-variable{R : Type _}[Semiringₓ R]
+variable {R : Type _} [Semiringₓ R]
 
-variable{M : Type _}[AddCommMonoidₓ M][Module R M]
+variable {M : Type _} [AddCommMonoidₓ M] [Module R M]
 
-variable{N : Type _}[AddCommMonoidₓ N][Module R N]
+variable {N : Type _} [AddCommMonoidₓ N] [Module R N]
 
-variable{M' : Type _}[AddCommGroupₓ M'][Module R M']
+variable {M' : Type _} [AddCommGroupₓ M'] [Module R M']
 
-variable{N' : Type _}[AddCommGroupₓ N'][Module R N']
+variable {N' : Type _} [AddCommGroupₓ N'] [Module R N']
 
-variable{ι : Type _}[DecidableEq ι]
+variable {ι : Type _} [DecidableEq ι]
 
 section 
 
-variable(R M N ι)
+variable (R M N ι)
 
 /--
 An alternating map is a multilinear map that vanishes when two of its arguments are equal.
@@ -66,13 +66,13 @@ add_decl_doc AlternatingMap.toMultilinearMap
 
 namespace AlternatingMap
 
-variable(f f' : AlternatingMap R M N ι)
+variable (f f' : AlternatingMap R M N ι)
 
-variable(g g₂ : AlternatingMap R M N' ι)
+variable (g g₂ : AlternatingMap R M N' ι)
 
-variable(g' : AlternatingMap R M' N' ι)
+variable (g' : AlternatingMap R M' N' ι)
 
-variable(v : ι → M)(v' : ι → M')
+variable (v : ι → M) (v' : ι → M')
 
 open Function
 
@@ -81,7 +81,7 @@ open Function
 
 section Coercions
 
-instance  : CoeFun (AlternatingMap R M N ι) fun _ => (ι → M) → N :=
+instance : CoeFun (AlternatingMap R M N ι) fun _ => (ι → M) → N :=
   ⟨fun x => x.to_fun⟩
 
 initialize_simps_projections AlternatingMap (toFun → apply)
@@ -119,7 +119,7 @@ theorem ext {f f' : AlternatingMap R M N ι} (H : ∀ x, f x = f' x) : f = f' :=
 theorem ext_iff {f g : AlternatingMap R M N ι} : f = g ↔ ∀ x, f x = g x :=
   ⟨fun h x => h ▸ rfl, fun h => ext h⟩
 
-instance  : Coe (AlternatingMap R M N ι) (MultilinearMap R (fun i : ι => M) N) :=
+instance : Coe (AlternatingMap R M N ι) (MultilinearMap R (fun i : ι => M) N) :=
   ⟨fun x => x.to_multilinear_map⟩
 
 @[simp, normCast]
@@ -194,7 +194,7 @@ as `multilinear_map`
 -/
 
 
-instance  : Add (AlternatingMap R M N ι) :=
+instance : Add (AlternatingMap R M N ι) :=
   ⟨fun a b =>
       { (a+b : MultilinearMap R (fun i : ι => M) N) with
         map_eq_zero_of_eq' :=
@@ -210,7 +210,7 @@ theorem add_apply : (f+f') v = f v+f' v :=
 theorem coe_add : («expr↑ » (f+f') : MultilinearMap R (fun i : ι => M) N) = f+f' :=
   rfl
 
-instance  : HasZero (AlternatingMap R M N ι) :=
+instance : HasZero (AlternatingMap R M N ι) :=
   ⟨{ (0 : MultilinearMap R (fun i : ι => M) N) with
       map_eq_zero_of_eq' :=
         fun v i j h hij =>
@@ -225,10 +225,10 @@ theorem zero_apply : (0 : AlternatingMap R M N ι) v = 0 :=
 theorem coe_zero : ((0 : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι => M) N) = 0 :=
   rfl
 
-instance  : Inhabited (AlternatingMap R M N ι) :=
+instance : Inhabited (AlternatingMap R M N ι) :=
   ⟨0⟩
 
-instance  : AddCommMonoidₓ (AlternatingMap R M N ι) :=
+instance : AddCommMonoidₓ (AlternatingMap R M N ι) :=
   { zero := 0, add := ·+·,
     zero_add :=
       by 
@@ -260,7 +260,7 @@ instance  : AddCommMonoidₓ (AlternatingMap R M N ι) :=
         ext 
         simp [add_smul, Nat.succ_eq_one_add] }
 
-instance  : Neg (AlternatingMap R M N' ι) :=
+instance : Neg (AlternatingMap R M N' ι) :=
   ⟨fun f =>
       { -(f : MultilinearMap R (fun i : ι => M) N') with
         map_eq_zero_of_eq' :=
@@ -276,7 +276,7 @@ theorem neg_apply (m : ι → M) : (-g) m = -g m :=
 theorem coe_neg : ((-g : AlternatingMap R M N' ι) : MultilinearMap R (fun i : ι => M) N') = -g :=
   rfl
 
-instance  : Sub (AlternatingMap R M N' ι) :=
+instance : Sub (AlternatingMap R M N' ι) :=
   ⟨fun f g =>
       { (f - g : MultilinearMap R (fun i : ι => M) N') with
         map_eq_zero_of_eq' :=
@@ -292,7 +292,7 @@ theorem sub_apply (m : ι → M) : (g - g₂) m = g m - g₂ m :=
 theorem coe_sub : («expr↑ » (g - g₂) : MultilinearMap R (fun i : ι => M) N') = g - g₂ :=
   rfl
 
-instance  : AddCommGroupₓ (AlternatingMap R M N' ι) :=
+instance : AddCommGroupₓ (AlternatingMap R M N' ι) :=
   by 
     refine'
         { AlternatingMap.addCommMonoid with zero := 0, add := ·+·, neg := Neg.neg, sub := Sub.sub, sub_eq_add_neg := _,
@@ -315,9 +315,9 @@ instance  : AddCommGroupₓ (AlternatingMap R M N' ι) :=
 
 section DistribMulAction
 
-variable{S : Type _}[Monoidₓ S][DistribMulAction S N][SmulCommClass R S N]
+variable {S : Type _} [Monoidₓ S] [DistribMulAction S N] [SmulCommClass R S N]
 
-instance  : HasScalar S (AlternatingMap R M N ι) :=
+instance : HasScalar S (AlternatingMap R M N ι) :=
   ⟨fun c f =>
       { (c • f : MultilinearMap R (fun i : ι => M) N) with
         map_eq_zero_of_eq' :=
@@ -336,7 +336,7 @@ theorem coe_smul (c : S) : ((c • f : AlternatingMap R M N ι) : MultilinearMap
 theorem coe_fn_smul (c : S) (f : AlternatingMap R M N ι) : «expr⇑ » (c • f) = c • f :=
   rfl
 
-instance  : DistribMulAction S (AlternatingMap R M N ι) :=
+instance : DistribMulAction S (AlternatingMap R M N ι) :=
   { one_smul := fun f => ext$ fun x => one_smul _ _, mul_smul := fun c₁ c₂ f => ext$ fun x => mul_smul _ _ _,
     smul_zero := fun r => ext$ fun x => smul_zero _, smul_add := fun r f₁ f₂ => ext$ fun x => smul_add _ _ _ }
 
@@ -344,21 +344,21 @@ end DistribMulAction
 
 section Module
 
-variable{S : Type _}[Semiringₓ S][Module S N][SmulCommClass R S N]
+variable {S : Type _} [Semiringₓ S] [Module S N] [SmulCommClass R S N]
 
 /-- The space of multilinear maps over an algebra over `R` is a module over `R`, for the pointwise
 addition and scalar multiplication. -/
-instance  : Module S (AlternatingMap R M N ι) :=
+instance : Module S (AlternatingMap R M N ι) :=
   { add_smul := fun r₁ r₂ f => ext$ fun x => add_smul _ _ _, zero_smul := fun f => ext$ fun x => zero_smul _ _ }
 
-instance  [NoZeroSmulDivisors S N] : NoZeroSmulDivisors S (AlternatingMap R M N ι) :=
+instance [NoZeroSmulDivisors S N] : NoZeroSmulDivisors S (AlternatingMap R M N ι) :=
   coe_injective.NoZeroSmulDivisors _ rfl coe_fn_smul
 
 end Module
 
 section 
 
-variable(R N)
+variable (R N)
 
 /-- The evaluation map from `ι → N` to `N` at a given `i` is alternating when `ι` is subsingleton.
 -/
@@ -378,7 +378,7 @@ end AlternatingMap
 
 namespace LinearMap
 
-variable{N₂ : Type _}[AddCommMonoidₓ N₂][Module R N₂]
+variable {N₂ : Type _} [AddCommMonoidₓ N₂] [Module R N₂]
 
 /-- Composing a alternating map with a linear map on the left gives again an alternating map. -/
 def comp_alternating_map (g : N →ₗ[R] N₂) : AlternatingMap R M N ι →+ AlternatingMap R M N₂ ι :=
@@ -412,7 +412,7 @@ end LinearMap
 
 namespace AlternatingMap
 
-variable{M₂ : Type _}[AddCommMonoidₓ M₂][Module R M₂]
+variable {M₂ : Type _} [AddCommMonoidₓ M₂] [Module R M₂]
 
 /-- Composing a alternating map with the same linear map on each argument gives again an
 alternating map. -/
@@ -448,13 +448,13 @@ theorem comp_linear_map_zero [Nonempty ι] (f : AlternatingMap R M N ι) : f.com
     ext 
     simpRw [comp_linear_map_apply, LinearMap.zero_apply, ←Pi.zero_def, map_zero, zero_apply]
 
-variable(f f' : AlternatingMap R M N ι)
+variable (f f' : AlternatingMap R M N ι)
 
-variable(g g₂ : AlternatingMap R M N' ι)
+variable (g g₂ : AlternatingMap R M N' ι)
 
-variable(g' : AlternatingMap R M' N' ι)
+variable (g' : AlternatingMap R M' N' ι)
 
-variable(v : ι → M)(v' : ι → M')
+variable (v : ι → M) (v' : ι → M')
 
 open Function
 
@@ -552,7 +552,7 @@ namespace MultilinearMap
 
 open Equiv
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 private theorem alternization_map_eq_zero_of_eq_aux (m : MultilinearMap R (fun i : ι => M) N') (v : ι → M) (i j : ι)
   (i_ne_j : i ≠ j) (hv : v i = v j) : (∑σ : perm ι, σ.sign • m.dom_dom_congr σ) v = 0 :=
@@ -615,7 +615,7 @@ end AlternatingMap
 
 namespace LinearMap
 
-variable{N'₂ : Type _}[AddCommGroupₓ N'₂][Module R N'₂][Fintype ι]
+variable {N'₂ : Type _} [AddCommGroupₓ N'₂] [Module R N'₂] [Fintype ι]
 
 /-- Composition with a linear map before and after alternatization are equivalent. -/
 theorem comp_multilinear_map_alternatization (g : N' →ₗ[R] N'₂) (f : MultilinearMap R (fun _ : ι => M) N') :
@@ -632,14 +632,10 @@ open_locale BigOperators
 
 open_locale TensorProduct
 
-variable{ιa ιb : Type _}[DecidableEq ιa][DecidableEq ιb][Fintype ιa][Fintype ιb]
+variable {ιa ιb : Type _} [DecidableEq ιa] [DecidableEq ιb] [Fintype ιa] [Fintype ιb]
 
-variable{R' :
-    Type
-      _}{Mᵢ N₁ N₂ :
-    Type
-      _}[CommSemiringₓ
-      R'][AddCommGroupₓ N₁][Module R' N₁][AddCommGroupₓ N₂][Module R' N₂][AddCommMonoidₓ Mᵢ][Module R' Mᵢ]
+variable {R' : Type _} {Mᵢ N₁ N₂ : Type _} [CommSemiringₓ R'] [AddCommGroupₓ N₁] [Module R' N₁] [AddCommGroupₓ N₂]
+  [Module R' N₂] [AddCommMonoidₓ Mᵢ] [Module R' Mᵢ]
 
 namespace Equiv.Perm
 
@@ -877,11 +873,11 @@ section Basis
 
 open AlternatingMap
 
-variable{ι₁ : Type _}[Fintype ι]
+variable {ι₁ : Type _} [Fintype ι]
 
-variable{R' : Type _}{N₁ N₂ : Type _}[CommSemiringₓ R'][AddCommMonoidₓ N₁][AddCommMonoidₓ N₂]
+variable {R' : Type _} {N₁ N₂ : Type _} [CommSemiringₓ R'] [AddCommMonoidₓ N₁] [AddCommMonoidₓ N₂]
 
-variable[Module R' N₁][Module R' N₂]
+variable [Module R' N₁] [Module R' N₂]
 
 -- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Two alternating maps indexed by a `fintype` are equal if they are equal when all arguments

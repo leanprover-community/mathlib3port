@@ -18,7 +18,7 @@ universe u
 
 namespace AddCommGroupₓₓ
 
-variable{G H : AddCommGroupₓₓ.{0}}(f : G ⟶ H)
+variable {G H : AddCommGroupₓₓ.{0}} (f : G ⟶ H)
 
 attribute [local ext] Subtype.ext_val
 
@@ -32,7 +32,7 @@ def image : AddCommGroupₓₓ :=
 def image.ι : image f ⟶ H :=
   f.range.subtype
 
-instance  : mono (image.ι f) :=
+instance : mono (image.ι f) :=
   concrete_category.mono_of_injective (image.ι f) Subtype.val_injective
 
 /-- the corestriction map to the image -/
@@ -46,7 +46,7 @@ theorem image.fac : factor_thru_image f ≫ image.ι f = f :=
 
 attribute [local simp] image.fac
 
-variable{f}
+variable {f}
 
 -- error in Algebra.Category.Group.Images: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- the universal property for the image factorisation -/

@@ -66,16 +66,16 @@ localized [CategoryTheory.Type] notation "↾" f:200 => as_hom f
 
 section 
 
-variable(α β γ : Type u)(f : α → β)(g : β → γ)
+variable (α β γ : Type u) (f : α → β) (g : β → γ)
 
-example  : α → γ :=
+example : α → γ :=
   ↾f ≫ ↾g
 
-example  [is_iso (↾f)] : mono (↾f) :=
+example [is_iso (↾f)] : mono (↾f) :=
   by 
     infer_instance
 
-example  [is_iso (↾f)] : ↾f ≫ inv (↾f) = 𝟙 α :=
+example [is_iso (↾f)] : ↾f ≫ inv (↾f) = 𝟙 α :=
   by 
     simp 
 
@@ -83,7 +83,7 @@ end
 
 namespace Functor
 
-variable{J : Type u}[category.{v} J]
+variable {J : Type u} [category.{v} J]
 
 /--
 The sections of a functor `J ⥤ Type` are
@@ -99,9 +99,9 @@ end Functor
 
 namespace FunctorToTypes
 
-variable{C : Type u}[category.{v} C](F G H : C ⥤ Type w){X Y Z : C}
+variable {C : Type u} [category.{v} C] (F G H : C ⥤ Type w) {X Y Z : C}
 
-variable(σ : F ⟶ G)(τ : G ⟶ H)
+variable (σ : F ⟶ G) (τ : G ⟶ H)
 
 @[simp]
 theorem map_comp_apply (f : X ⟶ Y) (g : Y ⟶ Z) (a : F.obj X) : (F.map (f ≫ g)) a = (F.map g) ((F.map f) a) :=
@@ -120,7 +120,7 @@ theorem naturality (f : X ⟶ Y) (x : F.obj X) : σ.app Y ((F.map f) x) = (G.map
 theorem comp (x : F.obj X) : (σ ≫ τ).app X x = τ.app X (σ.app X x) :=
   rfl
 
-variable{D : Type u'}[𝒟 : category.{u'} D](I J : D ⥤ C)(ρ : I ⟶ J){W : D}
+variable {D : Type u'} [𝒟 : category.{u'} D] (I J : D ⥤ C) (ρ : I ⟶ J) {W : D}
 
 @[simp]
 theorem hcomp (x : (I ⋙ F).obj W) : (ρ ◫ σ).app W x = (G.map (ρ.app W)) (σ.app (I.obj W) x) :=
@@ -249,7 +249,7 @@ def of_type_functor (m : Type u → Type v) [_root_.functor m] [IsLawfulFunctor 
   { obj := m, map := fun α β => _root_.functor.map, map_id' := fun α => _root_.functor.map_id,
     map_comp' := fun α β γ f g => funext$ fun a => IsLawfulFunctor.comp_map f g _ }
 
-variable(m : Type u → Type v)[_root_.functor m][IsLawfulFunctor m]
+variable (m : Type u → Type v) [_root_.functor m] [IsLawfulFunctor m]
 
 @[simp]
 theorem of_type_functor_obj : (of_type_functor m).obj = m :=
@@ -267,7 +267,7 @@ namespace Equiv
 
 universe u
 
-variable{X Y : Type u}
+variable {X Y : Type u}
 
 /--
 Any equivalence between types in the same universe gives
@@ -292,7 +292,7 @@ namespace CategoryTheory.Iso
 
 open CategoryTheory
 
-variable{X Y : Type u}
+variable {X Y : Type u}
 
 /--
 Any isomorphism between types gives an equivalence.

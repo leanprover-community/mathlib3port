@@ -12,13 +12,13 @@ A typeclass for categories with all finite (co)limits.
 -/
 
 
-universe v u
+universe v' u' v u
 
 open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 /--
 A category has all finite limits if every functor `J ⥤ C` with a `fin_category J` instance
@@ -29,15 +29,19 @@ This is often called 'finitely complete'.
 class has_finite_limits : Prop where 
   out (J : Type v) [𝒥 : small_category J] [@fin_category J 𝒥] : @has_limits_of_shape J 𝒥 C _
 
-instance (priority := 100)has_limits_of_shape_of_has_finite_limits (J : Type v) [small_category J] [fin_category J]
+instance (priority := 100) has_limits_of_shape_of_has_finite_limits (J : Type v) [small_category J] [fin_category J]
   [has_finite_limits C] : has_limits_of_shape J C :=
   has_finite_limits.out J
 
+-- error in CategoryTheory.Limits.Shapes.FiniteLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[priority 100]
+instance has_finite_limits_of_has_limits_of_size [has_limits_of_size.{v', u'} C] : has_finite_limits C :=
+⟨λ J hJ hJ', by { haveI [] [] [":=", expr has_limits_of_size_shrink.{0, 0} C],
+   exact [expr has_limits_of_shape_of_equivalence (fin_category.equiv_as_type J)] }⟩
+
 /-- If `C` has all limits, it has finite limits. -/
 theorem has_finite_limits_of_has_limits [has_limits C] : has_finite_limits C :=
-  ⟨fun J 𝒥₁ 𝒥₂ =>
-      by 
-        infer_instance⟩
+  inferInstance
 
 /--
 A category has all finite colimits if every functor `J ⥤ C` with a `fin_category J` instance
@@ -48,15 +52,19 @@ This is often called 'finitely cocomplete'.
 class has_finite_colimits : Prop where 
   out (J : Type v) [𝒥 : small_category J] [@fin_category J 𝒥] : @has_colimits_of_shape J 𝒥 C _
 
-instance (priority := 100)has_limits_of_shape_of_has_finite_colimits (J : Type v) [small_category J] [fin_category J]
+instance (priority := 100) has_limits_of_shape_of_has_finite_colimits (J : Type v) [small_category J] [fin_category J]
   [has_finite_colimits C] : has_colimits_of_shape J C :=
   has_finite_colimits.out J
 
+-- error in CategoryTheory.Limits.Shapes.FiniteLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+@[priority 100]
+instance has_finite_colimits_of_has_colimits_of_size [has_colimits_of_size.{v', u'} C] : has_finite_colimits C :=
+⟨λ J hJ hJ', by { haveI [] [] [":=", expr has_colimits_of_size_shrink.{0, 0} C],
+   exact [expr has_colimits_of_shape_of_equivalence (fin_category.equiv_as_type J)] }⟩
+
 /-- If `C` has all colimits, it has finite colimits. -/
 theorem has_finite_colimits_of_has_colimits [has_colimits C] : has_finite_colimits C :=
-  ⟨fun J 𝒥₁ 𝒥₂ =>
-      by 
-        infer_instance⟩
+  inferInstance
 
 section 
 
@@ -71,7 +79,7 @@ instance fintype_walking_parallel_pair : Fintype walking_parallel_pair :=
 
 attribute [local tidy] tactic.case_bash
 
-instance  (j j' : walking_parallel_pair) : Fintype (walking_parallel_pair_hom j j') :=
+instance (j j' : walking_parallel_pair) : Fintype (walking_parallel_pair_hom j j') :=
   { elems :=
       walking_parallel_pair.rec_on j
         (walking_parallel_pair.rec_on j' [walking_parallel_pair_hom.id zero].toFinset [left, right].toFinset)
@@ -82,21 +90,21 @@ instance  (j j' : walking_parallel_pair) : Fintype (walking_parallel_pair_hom j 
 
 end 
 
-instance  : fin_category walking_parallel_pair :=
+instance : fin_category walking_parallel_pair :=
   {  }
 
 /-- Equalizers are finite limits, so if `C` has all finite limits, it also has all equalizers -/
-example  [has_finite_limits C] : has_equalizers C :=
+example [has_finite_limits C] : has_equalizers C :=
   by 
     infer_instance
 
 /-- Coequalizers are finite colimits, of if `C` has all finite colimits, it also has all
     coequalizers -/
-example  [has_finite_colimits C] : has_coequalizers C :=
+example [has_finite_colimits C] : has_coequalizers C :=
   by 
     infer_instance
 
-variable{J : Type v}
+variable {J : Type v}
 
 attribute [local tidy] tactic.case_bash
 
@@ -222,12 +230,12 @@ instance fintype_walking_pair : Fintype walking_pair :=
           cases x <;> simp  }
 
 /-- Pullbacks are finite limits, so if `C` has all finite limits, it also has all pullbacks -/
-example  [has_finite_wide_pullbacks C] : has_pullbacks C :=
+example [has_finite_wide_pullbacks C] : has_pullbacks C :=
   by 
     infer_instance
 
 /-- Pushouts are finite colimits, so if `C` has all finite colimits, it also has all pushouts -/
-example  [has_finite_wide_pushouts C] : has_pushouts C :=
+example [has_finite_wide_pushouts C] : has_pushouts C :=
   by 
     infer_instance
 

@@ -86,7 +86,8 @@ def ae_measurable' {α β} [MeasurableSpace β] (m : MeasurableSpace α) {m0 : M
 
 namespace AeMeasurable'
 
-variable{α β 𝕜 : Type _}{m m0 : MeasurableSpace α}{μ : Measureₓ α}[MeasurableSpace β][MeasurableSpace 𝕜]{f g : α → β}
+variable {α β 𝕜 : Type _} {m m0 : MeasurableSpace α} {μ : Measureₓ α} [MeasurableSpace β] [MeasurableSpace 𝕜]
+  {f g : α → β}
 
 theorem congr (hf : ae_measurable' m f μ) (hfg : f =ᵐ[μ] g) : ae_measurable' m g μ :=
   by 
@@ -123,14 +124,13 @@ theorem const_smul [HasScalar 𝕜 β] [HasMeasurableSmul 𝕜 β] (c : 𝕜) (h
     refine' ⟨c • f', @Measurable.const_smul _ _ _ _ _ _ m _ f' h_f'_meas c, _⟩
     exact eventually_eq.fun_comp hff' fun x => c • x
 
-theorem const_inner [IsROrC 𝕜] [BorelSpace 𝕜] [InnerProductSpace 𝕜 β] [second_countable_topology β]
-  [OpensMeasurableSpace β] {f : α → β} (hfm : ae_measurable' m f μ) (c : β) :
-  ae_measurable' m (fun x => (inner c (f x) : 𝕜)) μ :=
+theorem const_inner {𝕜} [IsROrC 𝕜] [InnerProductSpace 𝕜 β] [second_countable_topology β] [OpensMeasurableSpace β]
+  {f : α → β} (hfm : ae_measurable' m f μ) (c : β) : ae_measurable' m (fun x => (inner c (f x) : 𝕜)) μ :=
   by 
     rcases hfm with ⟨f', hf'_meas, hf_ae⟩
     refine'
-      ⟨fun x => (inner c (f' x) : 𝕜),
-        @Measurable.inner _ _ _ _ _ m _ _ _ _ _ _ _ (@measurable_const _ _ _ m _) hf'_meas, hf_ae.mono fun x hx => _⟩
+      ⟨fun x => (inner c (f' x) : 𝕜), @Measurable.inner _ _ _ _ _ m _ _ _ _ _ (@measurable_const _ _ _ m _) hf'_meas,
+        hf_ae.mono fun x hx => _⟩
     dsimp only 
     rw [hx]
 
@@ -150,7 +150,7 @@ theorem measurable_comp {γ} [MeasurableSpace γ] {f : α → β} {g : β → γ
     hf.ae_eq_mk.mono
       fun x hx =>
         by 
-          rw [Function.comp_apply, hx]⟩
+          rw [Function.comp_applyₓ, hx]⟩
 
 end AeMeasurable'
 
@@ -170,49 +170,21 @@ theorem ae_eq_trim_iff_of_ae_measurable' {α β} [AddGroupₓ β] [MeasurableSpa
   (ae_eq_trim_iff hm hfm.measurable_mk hgm.measurable_mk).trans
     ⟨fun h => hfm.ae_eq_mk.trans (h.trans hgm.ae_eq_mk.symm), fun h => hfm.ae_eq_mk.symm.trans (h.trans hgm.ae_eq_mk)⟩
 
-variable{α β γ E E' F F' G G' H 𝕜 :
-    Type
-      _}{p :
-    ℝ≥0∞}[IsROrC
-      𝕜][MeasurableSpace
-      𝕜][MeasurableSpace
-      β][InnerProductSpace 𝕜
-      E][MeasurableSpace
-      E][BorelSpace
-      E][second_countable_topology
-      E][InnerProductSpace 𝕜
-      E'][MeasurableSpace
-      E'][BorelSpace
-      E'][second_countable_topology
-      E'][CompleteSpace
-      E'][NormedSpace ℝ
-      E'][NormedGroup
-      F][NormedSpace 𝕜
-      F][MeasurableSpace
-      F][BorelSpace
-      F][second_countable_topology
-      F][NormedGroup
-      F'][NormedSpace 𝕜
-      F'][MeasurableSpace
-      F'][BorelSpace
-      F'][second_countable_topology
-      F'][NormedSpace ℝ
-      F'][CompleteSpace
-      F'][NormedGroup
-      G][MeasurableSpace
-      G][BorelSpace
-      G][second_countable_topology
-      G][NormedGroup
-      G'][MeasurableSpace
-      G'][BorelSpace
-      G'][second_countable_topology G'][NormedSpace ℝ G'][CompleteSpace G'][MeasurableSpace H][NormedGroup H]
+variable {α β γ E E' F F' G G' H 𝕜 : Type _} {p : ℝ≥0∞} [IsROrC 𝕜] [MeasurableSpace β] [InnerProductSpace 𝕜 E]
+  [MeasurableSpace E] [BorelSpace E] [second_countable_topology E] [InnerProductSpace 𝕜 E'] [MeasurableSpace E']
+  [BorelSpace E'] [second_countable_topology E'] [CompleteSpace E'] [NormedSpace ℝ E'] [NormedGroup F] [NormedSpace 𝕜 F]
+  [MeasurableSpace F] [BorelSpace F] [second_countable_topology F] [NormedGroup F'] [NormedSpace 𝕜 F']
+  [MeasurableSpace F'] [BorelSpace F'] [second_countable_topology F'] [NormedSpace ℝ F'] [CompleteSpace F']
+  [NormedGroup G] [MeasurableSpace G] [BorelSpace G] [second_countable_topology G] [NormedGroup G'] [MeasurableSpace G']
+  [BorelSpace G'] [second_countable_topology G'] [NormedSpace ℝ G'] [CompleteSpace G'] [MeasurableSpace H]
+  [NormedGroup H]
 
 section LpMeas
 
 /-! ## The subset `Lp_meas` of `Lp` functions a.e. measurable with respect to a sub-sigma-algebra -/
 
 
-variable(F)
+variable (F)
 
 /-- `Lp_meas_subgroup F m p μ` is the subspace of `Lp F p μ` containing functions `f` verifying
 `ae_measurable' m f μ`, i.e. functions which are `μ`-a.e. equal to an `m`-measurable function. -/
@@ -222,7 +194,7 @@ def Lp_meas_subgroup (m : MeasurableSpace α) [MeasurableSpace α] (p : ℝ≥0�
     add_mem' := fun f g hf hg => (hf.add hg).congr (Lp.coe_fn_add f g).symm,
     neg_mem' := fun f hf => ae_measurable'.congr hf.neg (Lp.coe_fn_neg f).symm }
 
-variable(𝕜)
+variable (𝕜)
 
 /-- `Lp_meas F 𝕜 m p μ` is the subspace of `Lp F p μ` containing functions `f` verifying
 `ae_measurable' m f μ`, i.e. functions which are `μ`-a.e. equal to an `m`-measurable function. -/
@@ -233,9 +205,9 @@ def Lp_meas [OpensMeasurableSpace 𝕜] (m : MeasurableSpace α) [MeasurableSpac
     add_mem' := fun f g hf hg => (hf.add hg).congr (Lp.coe_fn_add f g).symm,
     smul_mem' := fun c f hf => (hf.const_smul c).congr (Lp.coe_fn_smul c f).symm }
 
-variable{F 𝕜}
+variable {F 𝕜}
 
-variable[OpensMeasurableSpace 𝕜]
+variable [OpensMeasurableSpace 𝕜]
 
 theorem mem_Lp_meas_subgroup_iff_ae_measurable' {m m0 : MeasurableSpace α} {μ : Measureₓ α} {f : Lp F p μ} :
   f ∈ Lp_meas_subgroup F m p μ ↔ ae_measurable' m f μ :=
@@ -275,7 +247,7 @@ measure `μ.trim hm`. As a consequence, the completeness of `Lp` implies complet
 `Lp_meas_subgroup` (and `Lp_meas`). -/
 
 
-variable{ι : Type _}{m m0 : MeasurableSpace α}{μ : Measureₓ α}
+variable {ι : Type _} {m m0 : MeasurableSpace α} {μ : Measureₓ α}
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` belongs to `Lp_meas_subgroup F m p μ`, then the measurable function it is almost
@@ -309,32 +281,32 @@ theorem mem_Lp_meas_subgroup_to_Lp_of_trim (hm : m ≤ m0) (f : Lp F p (μ.trim 
     refine' ae_measurable'_of_ae_measurable'_trim hm _ 
     exact Lp.ae_measurable f
 
-variable(F p μ)
+variable (F p μ)
 
 /-- Map from `Lp_meas_subgroup` to `Lp F p (μ.trim hm)`. -/
 def Lp_meas_subgroup_to_Lp_trim (hm : m ≤ m0) (f : Lp_meas_subgroup F m p μ) : Lp F p (μ.trim hm) :=
   mem_ℒp.to_Lp (mem_Lp_meas_subgroup_iff_ae_measurable'.mp f.mem).some (mem_ℒp_trim_of_mem_Lp_meas_subgroup hm f f.mem)
 
-variable(𝕜)
+variable (𝕜)
 
 /-- Map from `Lp_meas` to `Lp F p (μ.trim hm)`. -/
 def Lp_meas_to_Lp_trim (hm : m ≤ m0) (f : Lp_meas F 𝕜 m p μ) : Lp F p (μ.trim hm) :=
   mem_ℒp.to_Lp (mem_Lp_meas_iff_ae_measurable'.mp f.mem).some (mem_ℒp_trim_of_mem_Lp_meas_subgroup hm f f.mem)
 
-variable{𝕜}
+variable {𝕜}
 
 /-- Map from `Lp F p (μ.trim hm)` to `Lp_meas_subgroup`, inverse of
 `Lp_meas_subgroup_to_Lp_trim`. -/
 def Lp_trim_to_Lp_meas_subgroup (hm : m ≤ m0) (f : Lp F p (μ.trim hm)) : Lp_meas_subgroup F m p μ :=
   ⟨(mem_ℒp_of_mem_ℒp_trim hm (Lp.mem_ℒp f)).toLp f, mem_Lp_meas_subgroup_to_Lp_of_trim hm f⟩
 
-variable(𝕜)
+variable (𝕜)
 
 /-- Map from `Lp F p (μ.trim hm)` to `Lp_meas`, inverse of `Lp_meas_to_Lp_trim`. -/
 def Lp_trim_to_Lp_meas (hm : m ≤ m0) (f : Lp F p (μ.trim hm)) : Lp_meas F 𝕜 m p μ :=
   ⟨(mem_ℒp_of_mem_ℒp_trim hm (Lp.mem_ℒp f)).toLp f, mem_Lp_meas_subgroup_to_Lp_of_trim hm f⟩
 
-variable{F 𝕜 p μ}
+variable {F 𝕜 p μ}
 
 theorem Lp_meas_subgroup_to_Lp_trim_ae_eq (hm : m ≤ m0) (f : Lp_meas_subgroup F m p μ) :
   Lp_meas_subgroup_to_Lp_trim F p μ hm f =ᵐ[μ] f :=
@@ -448,7 +420,7 @@ theorem isometry_Lp_meas_subgroup_to_Lp_trim [hp : Fact (1 ≤ p)] (hm : m ≤ m
     intro f g 
     rw [dist_eq_norm, ←Lp_meas_subgroup_to_Lp_trim_sub, Lp_meas_subgroup_to_Lp_trim_norm_map, dist_eq_norm]
 
-variable(F p μ)
+variable (F p μ)
 
 /-- `Lp_meas_subgroup` and `Lp F p (μ.trim hm)` are isometric. -/
 def Lp_meas_subgroup_to_Lp_trim_iso [hp : Fact (1 ≤ p)] (hm : m ≤ m0) :
@@ -457,7 +429,7 @@ def Lp_meas_subgroup_to_Lp_trim_iso [hp : Fact (1 ≤ p)] (hm : m ≤ m0) :
     left_inv := Lp_meas_subgroup_to_Lp_trim_left_inv hm, right_inv := Lp_meas_subgroup_to_Lp_trim_right_inv hm,
     isometry_to_fun := isometry_Lp_meas_subgroup_to_Lp_trim hm }
 
-variable(𝕜)
+variable (𝕜)
 
 /-- `Lp_meas_subgroup` and `Lp_meas` are isometric. -/
 def Lp_meas_subgroup_to_Lp_meas_iso [hp : Fact (1 ≤ p)] : Lp_meas_subgroup F m p μ ≃ᵢ Lp_meas F 𝕜 m p μ :=
@@ -470,14 +442,14 @@ def Lp_meas_to_Lp_trim_lie [hp : Fact (1 ≤ p)] (hm : m ≤ m0) : Lp_meas F �
     map_add' := Lp_meas_subgroup_to_Lp_trim_add hm, map_smul' := Lp_meas_to_Lp_trim_smul hm,
     norm_map' := Lp_meas_subgroup_to_Lp_trim_norm_map hm }
 
-variable{F 𝕜 p μ}
+variable {F 𝕜 p μ}
 
-instance  [hm : Fact (m ≤ m0)] [CompleteSpace F] [hp : Fact (1 ≤ p)] : CompleteSpace (Lp_meas_subgroup F m p μ) :=
+instance [hm : Fact (m ≤ m0)] [CompleteSpace F] [hp : Fact (1 ≤ p)] : CompleteSpace (Lp_meas_subgroup F m p μ) :=
   by 
     rw [(Lp_meas_subgroup_to_Lp_trim_iso F p μ hm.elim).complete_space_iff]
     infer_instance
 
-instance  [hm : Fact (m ≤ m0)] [CompleteSpace F] [hp : Fact (1 ≤ p)] : CompleteSpace (Lp_meas F 𝕜 m p μ) :=
+instance [hm : Fact (m ≤ m0)] [CompleteSpace F] [hp : Fact (1 ≤ p)] : CompleteSpace (Lp_meas F 𝕜 m p μ) :=
   by 
     rw [(Lp_meas_subgroup_to_Lp_meas_iso F 𝕜 p μ).symm.complete_space_iff]
     infer_instance
@@ -502,7 +474,7 @@ end CompleteSubspace
 
 section StronglyMeasurable
 
-variable{m m0 : MeasurableSpace α}{μ : Measureₓ α}
+variable {m m0 : MeasurableSpace α} {μ : Measureₓ α}
 
 /-- We do not get `ae_fin_strongly_measurable f (μ.trim hm)`, since we don't have
 `f =ᵐ[μ.trim hm] Lp_meas_to_Lp_trim F 𝕜 p μ hm f` but only the weaker
@@ -521,7 +493,7 @@ section UniquenessOfConditionalExpectation
 /-! ## Uniqueness of the conditional expectation -/
 
 
-variable{m m0 : MeasurableSpace α}{μ : Measureₓ α}[BorelSpace 𝕜]
+variable {m m0 : MeasurableSpace α} {μ : Measureₓ α}
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem Lp_meas.ae_eq_zero_of_forall_set_integral_eq_zero
@@ -653,7 +625,7 @@ end UniquenessOfConditionalExpectation
 
 section IntegralNormLe
 
-variable{m m0 : MeasurableSpace α}{μ : Measureₓ α}{s : Set α}
+variable {m m0 : MeasurableSpace α} {μ : Measureₓ α} {s : Set α}
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Let `m` be a sub-σ-algebra of `m0`, `f` a `m0`-measurable function and `g` a `m`-measurable
@@ -715,13 +687,13 @@ section CondexpL2
 
 attribute [local instance] fact_one_le_two_ennreal
 
-variable[CompleteSpace E][BorelSpace 𝕜]{m m0 : MeasurableSpace α}{μ : Measureₓ α}{s t : Set α}
+variable [CompleteSpace E] {m m0 : MeasurableSpace α} {μ : Measureₓ α} {s t : Set α}
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
 local notation "⟪" x ", " y "⟫₂" => @inner 𝕜 (α →₂[μ] E) _ x y
 
-variable(𝕜)
+variable (𝕜)
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Conditional expectation of a function in L2 with respect to a sigma-algebra -/
@@ -729,7 +701,7 @@ def condexp_L2 (hm : «expr ≤ »(m, m0)) : «expr →L[ ] »(«expr →₂[ ] 
 @orthogonal_projection 𝕜 «expr →₂[ ] »(α, μ, E) _ _ (Lp_meas E 𝕜 m 2 μ) (by { haveI [] [":", expr fact «expr ≤ »(m, m0)] [":=", expr ⟨hm⟩],
    exact [expr infer_instance] })
 
-variable{𝕜}
+variable {𝕜}
 
 theorem ae_measurable'_condexp_L2 (hm : m ≤ m0) (f : α →₂[μ] E) : ae_measurable' m (condexp_L2 𝕜 hm f) μ :=
   Lp_meas.ae_measurable' _
@@ -744,12 +716,12 @@ theorem integrable_condexp_L2_of_is_finite_measure (hm : m ≤ m0) [is_finite_me
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem norm_condexp_L2_le_one
-(hm : «expr ≤ »(m, m0)) : «expr ≤ »(«expr∥ ∥»(@condexp_L2 α E 𝕜 _ _ _ _ _ _ _ _ _ _ μ hm), 1) :=
+(hm : «expr ≤ »(m, m0)) : «expr ≤ »(«expr∥ ∥»(@condexp_L2 α E 𝕜 _ _ _ _ _ _ _ _ μ hm), 1) :=
 by { haveI [] [":", expr fact «expr ≤ »(m, m0)] [":=", expr ⟨hm⟩],
   exact [expr orthogonal_projection_norm_le _] }
 
 theorem norm_condexp_L2_le (hm : m ≤ m0) (f : α →₂[μ] E) : ∥condexp_L2 𝕜 hm f∥ ≤ ∥f∥ :=
-  ((@condexp_L2 _ E 𝕜 _ _ _ _ _ _ _ _ _ _ μ hm).le_op_norm f).trans
+  ((@condexp_L2 _ E 𝕜 _ _ _ _ _ _ _ _ μ hm).le_op_norm f).trans
     (mul_le_of_le_one_left (norm_nonneg _) (norm_condexp_L2_le_one hm))
 
 theorem snorm_condexp_L2_le (hm : m ≤ m0) (f : α →₂[μ] E) : snorm (condexp_L2 𝕜 hm f) 2 μ ≤ snorm f 2 μ :=
@@ -799,7 +771,7 @@ theorem inner_condexp_L2_eq_inner_fun (hm : m ≤ m0) (f g : α →₂[μ] E) (h
 
 section Real
 
-variable{hm : m ≤ m0}
+variable {hm : m ≤ m0}
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem integral_condexp_L2_eq_of_fin_meas_real
@@ -945,18 +917,11 @@ begin
   exact [expr integral_condexp_L2_eq_of_fin_meas_real _ hs hμs]
 end
 
-variable{E'' 𝕜' :
-    Type
-      _}[IsROrC
-      𝕜'][MeasurableSpace
-      𝕜'][BorelSpace
-      𝕜'][MeasurableSpace
-      E''][InnerProductSpace 𝕜'
-      E''][BorelSpace
-      E''][second_countable_topology
-      E''][CompleteSpace E''][NormedSpace ℝ E''][IsScalarTower ℝ 𝕜 E'][IsScalarTower ℝ 𝕜' E'']
+variable {E'' 𝕜' : Type _} [IsROrC 𝕜'] [MeasurableSpace E''] [InnerProductSpace 𝕜' E''] [BorelSpace E'']
+  [second_countable_topology E''] [CompleteSpace E''] [NormedSpace ℝ E''] [IsScalarTower ℝ 𝕜 E']
+  [IsScalarTower ℝ 𝕜' E'']
 
-variable(𝕜 𝕜')
+variable (𝕜 𝕜')
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem condexp_L2_comp_continuous_linear_map
@@ -979,11 +944,11 @@ begin
     exact [expr (Lp_meas.ae_measurable' (condexp_L2 𝕜 hm f)).measurable_comp T.measurable] }
 end
 
-variable{𝕜 𝕜'}
+variable {𝕜 𝕜'}
 
 section CondexpL2Indicator
 
-variable(𝕜)
+variable (𝕜)
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem condexp_L2_indicator_ae_eq_smul
@@ -1017,7 +982,7 @@ begin
   refl
 end
 
-variable{𝕜}
+variable {𝕜}
 
 theorem set_lintegral_nnnorm_condexp_L2_indicator_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : E')
   {t : Set α} (ht : @MeasurableSet _ m t) (hμt : μ t ≠ ∞) :
@@ -1066,7 +1031,7 @@ end CondexpL2Indicator
 
 section CondexpIndSmul
 
-variable[NormedSpace ℝ G]{hm : m ≤ m0}
+variable [NormedSpace ℝ G] {hm : m ≤ m0}
 
 /-- Conditional expectation of the indicator of a measurable set with finite measure, in L2. -/
 def condexp_ind_smul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) : Lp G 2 μ :=
@@ -1164,12 +1129,10 @@ theorem set_integral_condexp_ind_smul (hs : measurable_set[m] s) (ht : Measurabl
     (∫a in s, (condexp_ind_smul hm ht hμt x) a ∂μ) =
       ∫a in s, condexp_L2 ℝ hm (indicator_const_Lp 2 ht hμt (1 : ℝ)) a • x ∂μ :=
     set_integral_congr_ae (hm s hs) ((condexp_ind_smul_ae_eq_smul hm ht hμt x).mono fun x hx hxs => hx)
-    _ = (∫a in s, condexp_L2 ℝ hm (indicator_const_Lp 2 ht hμt (1 : ℝ)) a ∂μ) • x :=
-    by 
-      rw [integral_smul_const _ x]
+    _ = (∫a in s, condexp_L2 ℝ hm (indicator_const_Lp 2 ht hμt (1 : ℝ)) a ∂μ) • x := integral_smul_const _ x 
     _ = (∫a in s, indicator_const_Lp 2 ht hμt (1 : ℝ) a ∂μ) • x :=
     by 
-      rw [@integral_condexp_L2_eq α _ ℝ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hm (indicator_const_Lp 2 ht hμt (1 : ℝ)) hs hμs]
+      rw [@integral_condexp_L2_eq α _ ℝ _ _ _ _ _ _ _ _ _ _ _ _ hm (indicator_const_Lp 2 ht hμt (1 : ℝ)) hs hμs]
     _ = (μ (t ∩ s)).toReal • x :=
     by 
       rw [set_integral_indicator_const_Lp (hm s hs), smul_assoc, one_smul]
@@ -1192,7 +1155,7 @@ seen as an element of `α →₁[μ] G`.
 
 attribute [local instance] fact_one_le_two_ennreal
 
-variable{m m0 : MeasurableSpace α}{μ : Measureₓ α}[BorelSpace 𝕜][IsScalarTower ℝ 𝕜 E']{s t : Set α}[NormedSpace ℝ G]
+variable {m m0 : MeasurableSpace α} {μ : Measureₓ α} [IsScalarTower ℝ 𝕜 E'] {s t : Set α} [NormedSpace ℝ G]
 
 section CondexpIndL1Fin
 
@@ -1206,7 +1169,7 @@ theorem condexp_ind_L1_fin_ae_eq_condexp_ind_smul (hm : m ≤ m0) [sigma_finite 
   (hμs : μ s ≠ ∞) (x : G) : condexp_ind_L1_fin hm hs hμs x =ᵐ[μ] condexp_ind_smul hm hs hμs x :=
   (integrable_condexp_ind_smul hm hs hμs x).coe_fn_to_L1
 
-variable{hm : m ≤ m0}[sigma_finite (μ.trim hm)]
+variable {hm : m ≤ m0} [sigma_finite (μ.trim hm)]
 
 theorem condexp_ind_L1_fin_add (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x y : G) :
   condexp_ind_L1_fin hm hs hμs (x+y) = condexp_ind_L1_fin hm hs hμs x+condexp_ind_L1_fin hm hs hμs y :=
@@ -1300,7 +1263,7 @@ def condexp_ind_L1 {m m0 : MeasurableSpace α} (hm : m ≤ m0) (μ : Measureₓ 
   (x : G) : α →₁[μ] G :=
   if hs : MeasurableSet s ∧ μ s ≠ ∞ then condexp_ind_L1_fin hm hs.1 hs.2 x else 0
 
-variable{hm : m ≤ m0}[sigma_finite (μ.trim hm)]
+variable {hm : m ≤ m0} [sigma_finite (μ.trim hm)]
 
 theorem condexp_ind_L1_of_measurable_set_of_measure_ne_top (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :
   condexp_ind_L1 hm μ s x = condexp_ind_L1_fin hm hs hμs x :=
@@ -1409,7 +1372,7 @@ theorem condexp_ind_ae_eq_condexp_ind_smul (hm : m ≤ m0) [sigma_finite (μ.tri
     refine' eventually_eq.trans _ (condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm hs hμs x)
     simp [condexp_ind, condexp_ind_L1, hs, hμs]
 
-variable{hm : m ≤ m0}[sigma_finite (μ.trim hm)]
+variable {hm : m ≤ m0} [sigma_finite (μ.trim hm)]
 
 theorem ae_measurable'_condexp_ind (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :
   ae_measurable' m (condexp_ind hm μ s x) μ :=
@@ -1453,13 +1416,13 @@ theorem condexp_ind_disjoint_union (hs : MeasurableSet s) (ht : MeasurableSet t)
     pushCast 
     exact condexp_ind_disjoint_union_apply hs ht hμs hμt hst x
 
-variable(G)
+variable (G)
 
 theorem dominated_fin_meas_additive_condexp_ind (hm : m ≤ m0) (μ : Measureₓ α) [sigma_finite (μ.trim hm)] :
   dominated_fin_meas_additive μ (condexp_ind hm μ : Set α → G →L[ℝ] α →₁[μ] G) 1 :=
   ⟨fun s t => condexp_ind_disjoint_union, fun s => norm_condexp_ind_le.trans (one_mulₓ _).symm.le⟩
 
-variable{G}
+variable {G}
 
 theorem set_integral_condexp_ind (hs : measurable_set[m] s) (ht : MeasurableSet t) (hμs : μ s ≠ ∞) (hμt : μ t ≠ ∞)
   (x : G') : (∫a in s, condexp_ind hm μ t x a ∂μ) = (μ (t ∩ s)).toReal • x :=
@@ -1487,10 +1450,8 @@ section CondexpL1
 
 attribute [local instance] fact_one_le_one_ennreal
 
-variable{m m0 :
-    MeasurableSpace
-      α}{μ :
-    Measureₓ α}[BorelSpace 𝕜][IsScalarTower ℝ 𝕜 F']{hm : m ≤ m0}[sigma_finite (μ.trim hm)]{f g : α → F'}{s : Set α}
+variable {m m0 : MeasurableSpace α} {μ : Measureₓ α} [IsScalarTower ℝ 𝕜 F'] {hm : m ≤ m0} [sigma_finite (μ.trim hm)]
+  {f g : α → F'} {s : Set α}
 
 /-- Conditional expectation of a function as a linear map from `α →₁[μ] F'` to itself. -/
 def condexp_L1_clm (hm : m ≤ m0) (μ : Measureₓ α) [sigma_finite (μ.trim hm)] : (α →₁[μ] F') →L[ℝ] α →₁[μ] F' :=
@@ -1743,10 +1704,8 @@ open_locale Classical
 
 attribute [local instance] fact_one_le_one_ennreal
 
-variable{𝕜}{m m0 :
-    MeasurableSpace
-      α}{μ :
-    Measureₓ α}[BorelSpace 𝕜][IsScalarTower ℝ 𝕜 F']{hm : m ≤ m0}[sigma_finite (μ.trim hm)]{f g : α → F'}{s : Set α}
+variable {𝕜} {m m0 : MeasurableSpace α} {μ : Measureₓ α} [IsScalarTower ℝ 𝕜 F'] {hm : m ≤ m0} [sigma_finite (μ.trim hm)]
+  {f g : α → F'} {s : Set α}
 
 /-- Conditional expectation of a function. Its value is 0 if the function is not integrable. -/
 @[irreducible]

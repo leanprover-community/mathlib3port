@@ -81,7 +81,7 @@ theorem prover. -/ @[derive #["[", expr has_reflect, ",", expr decidable_eq, "]"
 | iff
 | eq
 
-instance  : Inhabited and_kind :=
+instance : Inhabited and_kind :=
   ⟨and_kind.and⟩
 
 -- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
@@ -120,7 +120,7 @@ def prop.not (a : prop) : prop :=
 def prop.xor (a b : prop) : prop :=
   (a.and b.not).Or (b.and a.not)
 
-instance  : Inhabited prop :=
+instance : Inhabited prop :=
   ⟨prop.true⟩
 
 /-- Given the contents of an `and` variant, return the two conjuncts. -/
@@ -139,7 +139,7 @@ unsafe def prop.to_format : prop → format
 | prop.or p q => f! "({p.to_format } ∨ {q.to_format})"
 | prop.imp p q => f! "({p.to_format } → {q.to_format})"
 
-unsafe instance  : has_to_format prop :=
+unsafe instance : has_to_format prop :=
   ⟨prop.to_format⟩
 
 section 
@@ -171,10 +171,10 @@ def prop.cmp (p q : prop) : Ordering :=
     exacts[lt, lt, lt, lt, lt, Gt, lt, lt, lt, lt, Gt, Gt, lt, lt, lt, Gt, Gt, Gt, lt, lt, Gt, Gt, Gt, Gt, lt, Gt, Gt,
       Gt, Gt, Gt]
 
-instance  : LT prop :=
+instance : LT prop :=
   ⟨fun p q => p.cmp q = lt⟩
 
-instance  : DecidableRel (@LT.lt prop _) :=
+instance : DecidableRel (@LT.lt prop _) :=
   fun _ _ => Ordering.decidableEq _ _
 
 end 
@@ -200,7 +200,7 @@ inductive proof
 | or_elim (p₁ : proof) (x : name) (p₂ p₃ : proof) : proof
 | imp_imp_simp (x : name) (p : proof) : proof
 
-instance  : Inhabited proof :=
+instance : Inhabited proof :=
   ⟨proof.triv⟩
 
 /-- Debugging printer for proof objects. -/
@@ -222,7 +222,7 @@ unsafe def proof.to_format : proof → format
 | proof.or_elim p x q r => f! "({p.to_format }.elim (λ {x }, {q.to_format }) (λ {x }, {r.to_format})"
 | proof.imp_imp_simp _ p => f! "(imp_imp_simp {p.to_format})"
 
-unsafe instance  : has_to_format proof :=
+unsafe instance : has_to_format proof :=
   ⟨proof.to_format⟩
 
 /-- A variant on `proof.exfalso'` that performs opportunistic simplification. -/
@@ -253,7 +253,7 @@ unsafe def context :=
 unsafe def context.to_format (Γ : context) : format :=
   Γ.fold ""$ fun P p f => P.to_format ++ " := " ++ p.to_format ++ ",\n" ++ f
 
-unsafe instance  : has_to_format context :=
+unsafe instance : has_to_format context :=
   ⟨context.to_format⟩
 
 /-- Insert a proposition and its proof into the context, as in `have : A := p`. This will eagerly

@@ -21,7 +21,7 @@ setoid, equivalence, iseqv, relation, equivalence relation, partition, equivalen
 
 namespace Setoidₓ
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- If x ∈ α is in 2 elements of a set of sets partitioning α, those 2 sets are equal. -/
 theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b) {x b b'} (hc : b ∈ c) (hb : x ∈ b)
@@ -208,7 +208,7 @@ instance partition.partial_order : PartialOrderₓ (Subtype (@is_partition α)) 
         by 
           rw [Subtype.ext_iff_val, ←classes_mk_classes x.1 x.2, ←classes_mk_classes y.1 y.2, h] }
 
-variable(α)
+variable (α)
 
 /-- The order-preserving bijection between equivalence relations on a type `α`, and
   partitions of `α` into subsets. -/
@@ -225,7 +225,7 @@ protected def partition.order_iso : Setoidₓ α ≃o { C : Set (Set α) // is_p
           convRHS => rw [←mk_classes_classes r, ←mk_classes_classes s]
           rfl }
 
-variable{α}
+variable {α}
 
 /-- A complete lattice instance for partitions; there is more infrastructure for the
     equivalent complete lattice on equivalence relations. -/
@@ -245,7 +245,7 @@ an index to an element of the corresponding set.
 
 This type is primarily useful for definitional control of `s` - if this is not needed, then
 `setoid.ker index` by itself may be sufficient. -/
-structure IndexedPartition{ι α : Type _}(s : ι → Set α) where 
+structure IndexedPartition {ι α : Type _} (s : ι → Set α) where 
   eq_of_mem : ∀ {x i j}, x ∈ s i → x ∈ s j → i = j 
   some : ι → α 
   some_mem : ∀ i, some i ∈ s i 
@@ -263,10 +263,10 @@ namespace IndexedPartition
 
 open Set
 
-variable{ι α : Type _}{s : ι → Set α}(hs : IndexedPartition s)
+variable {ι α : Type _} {s : ι → Set α} (hs : IndexedPartition s)
 
 /-- On a unique index set there is the obvious trivial partition -/
-instance  [Unique ι] [Inhabited α] : Inhabited (IndexedPartition fun i : ι => (Set.Univ : Set α)) :=
+instance [Unique ι] [Inhabited α] : Inhabited (IndexedPartition fun i : ι => (Set.Univ : Set α)) :=
   ⟨{ eq_of_mem := fun x i j hi hj => Subsingleton.elimₓ _ _, some := fun i => default α, some_mem := Set.mem_univ,
       index := fun a => default ι, mem_index := Set.mem_univ }⟩
 
@@ -311,7 +311,7 @@ protected def Quotientₓ :=
 def proj : α → hs.quotient :=
   Quotientₓ.mk'
 
-instance  [Inhabited α] : Inhabited hs.quotient :=
+instance [Inhabited α] : Inhabited hs.quotient :=
   ⟨hs.proj (default α)⟩
 
 theorem proj_eq_iff {x y : α} : hs.proj x = hs.proj y ↔ hs.index x = hs.index y :=

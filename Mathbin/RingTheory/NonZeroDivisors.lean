@@ -33,7 +33,7 @@ def nonZeroDivisors (R : Type _) [MonoidWithZeroₓ R] : Submonoid R :=
 
 localized [nonZeroDivisors] notation:9000 R "⁰" => nonZeroDivisors R
 
-variable{M M' M₁ : Type _}[MonoidWithZeroₓ M][MonoidWithZeroₓ M'][CommMonoidWithZero M₁]
+variable {M M' M₁ : Type _} [MonoidWithZeroₓ M] [MonoidWithZeroₓ M'] [CommMonoidWithZero M₁]
 
 theorem nonZeroDivisors.ne_zero [Nontrivial M] {x} (hx : x ∈ M⁰) : x ≠ 0 :=
   fun h => one_ne_zero (hx _$ (one_mulₓ _).trans h)

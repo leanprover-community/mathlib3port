@@ -16,13 +16,8 @@ complemented subspace, normed vector space
 -/
 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]{G : Type _}[NormedGroup G][NormedSpace 𝕜 G]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
 
 noncomputable theory
 
@@ -30,7 +25,7 @@ namespace ContinuousLinearMap
 
 section 
 
-variable[CompleteSpace 𝕜]
+variable [CompleteSpace 𝕜]
 
 theorem ker_closed_complemented_of_finite_dimensional_range (f : E →L[𝕜] F) [FiniteDimensional 𝕜 f.range] :
   f.ker.closed_complemented :=
@@ -41,7 +36,7 @@ theorem ker_closed_complemented_of_finite_dimensional_range (f : E →L[𝕜] F)
 
 end 
 
-variable[CompleteSpace E][CompleteSpace (F × G)]
+variable [CompleteSpace E] [CompleteSpace (F × G)]
 
 /-- If `f : E →L[R] F` and `g : E →L[R] G` are two surjective linear maps and
 their kernels are complement of each other, then `x ↦ (f x, g x)` defines
@@ -72,7 +67,7 @@ end ContinuousLinearMap
 
 namespace Subspace
 
-variable[CompleteSpace E](p q : Subspace 𝕜 E)
+variable [CompleteSpace E] (p q : Subspace 𝕜 E)
 
 open continuous_linear_map(subtype_val)
 
@@ -94,7 +89,7 @@ end
 def linear_proj_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) : E →L[𝕜] p :=
   ContinuousLinearMap.fst 𝕜 p q ∘L «expr↑ » (prod_equiv_of_closed_compl p q h hp hq).symm
 
-variable{p q}
+variable {p q}
 
 @[simp]
 theorem coe_prod_equiv_of_closed_compl (h : IsCompl p q) (hp : IsClosed (p : Set E)) (hq : IsClosed (q : Set E)) :

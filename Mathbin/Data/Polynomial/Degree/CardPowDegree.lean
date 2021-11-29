@@ -22,7 +22,7 @@ to `q ^ degree p` (where `q ^ degree 0 = 0`) is an absolute value.
 
 namespace Polynomial
 
-variable{Fq : Type _}[Field Fq][Fintype Fq]
+variable {Fq : Type _} [Field Fq] [Fintype Fq]
 
 open AbsoluteValue
 
@@ -69,7 +69,7 @@ n, «expr < »(0, «expr ^ »((fintype.card Fq : exprℤ()), n)) := λ n, pow_po
   end }
 
 theorem card_pow_degree_apply (p : Polynomial Fq) :
-  card_pow_degree p = if p = 0 then 0 else Fintype.card Fq ^ nat_degree p :=
+  card_pow_degree p = if p = 0 then 0 else Fintype.card Fq^nat_degree p :=
   rfl
 
 @[simp]
@@ -77,12 +77,12 @@ theorem card_pow_degree_zero : card_pow_degree (0 : Polynomial Fq) = 0 :=
   if_pos rfl
 
 @[simp]
-theorem card_pow_degree_nonzero (p : Polynomial Fq) (hp : p ≠ 0) : card_pow_degree p = Fintype.card Fq ^ p.nat_degree :=
+theorem card_pow_degree_nonzero (p : Polynomial Fq) (hp : p ≠ 0) : card_pow_degree p = (Fintype.card Fq^p.nat_degree) :=
   if_neg hp
 
 theorem card_pow_degree_is_euclidean : is_euclidean (card_pow_degree : AbsoluteValue (Polynomial Fq) ℤ) :=
   have card_pos : 0 < Fintype.card Fq := Fintype.card_pos_iff.mpr inferInstance 
-  have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n => pow_pos (Int.coe_nat_pos.mpr card_pos) n
+  have pow_pos : ∀ n, 0 < ((Fintype.card Fq : ℤ)^n) := fun n => pow_pos (Int.coe_nat_pos.mpr card_pos) n
   { map_lt_map_iff' :=
       fun p q =>
         by 

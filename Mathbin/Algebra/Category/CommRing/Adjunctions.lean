@@ -46,7 +46,7 @@ def adj : free ⊣ forget CommRingₓₓ.{u} :=
       hom_equiv_naturality_left_symm' :=
         fun _ _ Y f g => RingHom.ext$ fun x => eval₂_cast_comp f (Int.castRingHom Y) g x }
 
-instance  : is_right_adjoint (forget CommRingₓₓ.{u}) :=
+instance : is_right_adjoint (forget CommRingₓₓ.{u}) :=
   ⟨_, adj⟩
 
 end CommRingₓₓ

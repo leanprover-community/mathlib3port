@@ -71,14 +71,14 @@ the monomorphisms in `AddCommGroup` are just the injective functions.
 
 (This proof works in all universes.)
 -/
-example  {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) [mono f] : Function.Injective f :=
+example {G H : AddCommGroupₓₓ.{u}} (f : G ⟶ H) [mono f] : Function.Injective f :=
   (mono_iff_injective f).1
     (right_adjoint_preserves_mono adj
       (by 
         infer_instance :
       mono f))
 
-instance  : is_right_adjoint (forget AddCommGroupₓₓ.{u}) :=
+instance : is_right_adjoint (forget AddCommGroupₓₓ.{u}) :=
   ⟨_, adj⟩
 
 end AddCommGroupₓₓ
@@ -111,7 +111,7 @@ def adj : free ⊣ forget Groupₓₓ.{u} :=
             ext1 
             rfl }
 
-instance  : is_right_adjoint (forget Groupₓₓ.{u}) :=
+instance : is_right_adjoint (forget Groupₓₓ.{u}) :=
   ⟨_, adj⟩
 
 end Groupₓₓ

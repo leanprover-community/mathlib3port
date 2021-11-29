@@ -57,19 +57,19 @@ However, `coe` is noncomputable so `some` is preferable when computability is a 
 def some : ℕ → Enat :=
   Part.some
 
-instance  : HasZero Enat :=
+instance : HasZero Enat :=
   ⟨some 0⟩
 
-instance  : Inhabited Enat :=
+instance : Inhabited Enat :=
   ⟨0⟩
 
-instance  : HasOne Enat :=
+instance : HasOne Enat :=
   ⟨some 1⟩
 
-instance  : Add Enat :=
+instance : Add Enat :=
   ⟨fun x y => ⟨x.dom ∧ y.dom, fun h => get x h.1+get y h.2⟩⟩
 
-instance  (n : ℕ) : Decidable (some n).Dom :=
+instance (n : ℕ) : Decidable (some n).Dom :=
   is_true trivialₓ
 
 theorem some_eq_coe (n : ℕ) : some n = n :=
@@ -105,22 +105,22 @@ theorem dom_coe (x : ℕ) : (x : Enat).Dom :=
   by 
     rw [←some_eq_coe] <;> trivial
 
-instance  : AddCommMonoidₓ Enat :=
+instance : AddCommMonoidₓ Enat :=
   { add := ·+·, zero := 0, add_comm := fun x y => Part.ext' And.comm fun _ _ => add_commₓ _ _,
     zero_add := fun x => Part.ext' (true_andₓ _) fun _ _ => zero_addₓ _,
     add_zero := fun x => Part.ext' (and_trueₓ _) fun _ _ => add_zeroₓ _,
     add_assoc := fun x y z => Part.ext' And.assoc fun _ _ => add_assocₓ _ _ _ }
 
-instance  : LE Enat :=
+instance : LE Enat :=
   ⟨fun x y => ∃ h : y.dom → x.dom, ∀ hy : y.dom, x.get (h hy) ≤ y.get hy⟩
 
-instance  : HasTop Enat :=
+instance : HasTop Enat :=
   ⟨none⟩
 
-instance  : HasBot Enat :=
+instance : HasBot Enat :=
   ⟨0⟩
 
-instance  : HasSup Enat :=
+instance : HasSup Enat :=
   ⟨fun x y => ⟨x.dom ∧ y.dom, fun h => x.get h.1⊔y.get h.2⟩⟩
 
 theorem le_def (x y : Enat) : x ≤ y ↔ ∃ h : y.dom → x.dom, ∀ hy : y.dom, x.get (h hy) ≤ y.get hy :=
@@ -213,7 +213,7 @@ def coe_hom : ℕ →+ Enat :=
 theorem coe_coe_hom : «expr⇑ » coe_hom = coeₓ :=
   rfl
 
-instance  : PartialOrderₓ Enat :=
+instance : PartialOrderₓ Enat :=
   { le := · ≤ ·, le_refl := fun x => ⟨id, fun _ => le_reflₓ _⟩,
     le_trans := fun x y z ⟨hxy₁, hxy₂⟩ ⟨hyz₁, hyz₂⟩ => ⟨hxy₁ ∘ hyz₁, fun _ => le_transₓ (hxy₂ _) (hyz₂ _)⟩,
     le_antisymm :=
@@ -293,13 +293,13 @@ protected theorem zero_lt_one : (0 : Enat) < 1 :=
     normCast 
     normNum
 
-instance OrderBot : OrderBot Enat :=
-  { bot := ⊥, bot_le := fun _ => ⟨fun _ => trivialₓ, fun _ => Nat.zero_leₓ _⟩ }
-
-instance SemilatticeSupBot : SemilatticeSupBot Enat :=
-  { Enat.orderBot, Enat.partialOrder with sup := ·⊔·, le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩,
+instance SemilatticeSup : SemilatticeSup Enat :=
+  { Enat.partialOrder with sup := ·⊔·, le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩,
     le_sup_right := fun _ _ => ⟨And.right, fun _ => le_sup_right⟩,
     sup_le := fun x y z ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩ => ⟨fun hz => ⟨hx₁ hz, hy₁ hz⟩, fun _ => sup_le (hx₂ _) (hy₂ _)⟩ }
+
+instance OrderBot : OrderBot Enat :=
+  { bot := ⊥, bot_le := fun _ => ⟨fun _ => trivialₓ, fun _ => Nat.zero_leₓ _⟩ }
 
 instance OrderTop : OrderTop Enat :=
   { top := ⊤, le_top := fun x => ⟨fun h => False.elim h, fun hy => False.elim hy⟩ }
@@ -358,7 +358,7 @@ theorem pos_iff_one_le {x : Enat} : 0 < x ↔ 1 ≤ x :=
         rw [←Nat.cast_zero, ←Nat.cast_one, Enat.coe_lt_coe, Enat.coe_le_coe]
         rfl
 
-noncomputable instance  : LinearOrderₓ Enat :=
+noncomputable instance : LinearOrderₓ Enat :=
   { Enat.partialOrder with
     le_total :=
       fun x y =>
@@ -367,8 +367,11 @@ noncomputable instance  : LinearOrderₓ Enat :=
             fun x y => (le_totalₓ x y).elim (Or.inr ∘ coe_le_coe.2) (Or.inl ∘ coe_le_coe.2)),
     decidableLe := Classical.decRel _ }
 
-noncomputable instance  : BoundedLattice Enat :=
-  { Enat.orderTop, Enat.semilatticeSupBot with inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ,
+instance : BoundedOrder Enat :=
+  { Enat.orderTop, Enat.orderBot with  }
+
+noncomputable instance : Lattice Enat :=
+  { Enat.semilatticeSup with inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ,
     le_inf := fun _ _ _ => le_minₓ }
 
 theorem sup_eq_max {a b : Enat} : a⊔b = max a b :=
@@ -377,7 +380,7 @@ theorem sup_eq_max {a b : Enat} : a⊔b = max a b :=
 theorem inf_eq_min {a b : Enat} : a⊓b = min a b :=
   rfl
 
-instance  : OrderedAddCommMonoid Enat :=
+instance : OrderedAddCommMonoid Enat :=
   { Enat.linearOrder, Enat.addCommMonoid with
     add_le_add_left :=
       fun a b ⟨h₁, h₂⟩ c =>
@@ -390,8 +393,8 @@ instance  : OrderedAddCommMonoid Enat :=
                 by 
                   simpa only [coe_add_get] using add_le_add_left (h₂ _) c⟩ }
 
-instance  : CanonicallyOrderedAddMonoid Enat :=
-  { Enat.semilatticeSupBot, Enat.orderedAddCommMonoid with
+instance : CanonicallyOrderedAddMonoid Enat :=
+  { Enat.semilatticeSup, Enat.orderBot, Enat.orderedAddCommMonoid with
     le_iff_exists_add :=
       fun a b =>
         Enat.cases_on b (iff_of_true le_top ⟨⊤, (add_top _).symm⟩)
@@ -662,12 +665,12 @@ show well_founded (λ
  a
  b : enat, «expr < »(a, b)), by haveI [] [] [":=", expr classical.dec]; simp [] [] ["only"] ["[", expr to_with_top_lt.symm, "]"] [] [] { eta := ff }; exact [expr inv_image.wf _ (with_top.well_founded_lt nat.lt_wf)]
 
-instance  : HasWellFounded Enat :=
+instance : HasWellFounded Enat :=
   ⟨· < ·, lt_wf⟩
 
 section Find
 
-variable(P : ℕ → Prop)[DecidablePred P]
+variable (P : ℕ → Prop) [DecidablePred P]
 
 /-- The smallest `enat` satisfying a (decidable) predicate `P : ℕ → Prop` -/
 def find : Enat :=
@@ -715,7 +718,7 @@ theorem find_eq_top_iff : find P = ⊤ ↔ ∀ n, ¬P n :=
 
 end Find
 
-noncomputable instance  : LinearOrderedAddCommMonoidWithTop Enat :=
+noncomputable instance : LinearOrderedAddCommMonoidWithTop Enat :=
   { Enat.linearOrder, Enat.orderedAddCommMonoid, Enat.orderTop with top_add' := top_add }
 
 end Enat

@@ -17,11 +17,11 @@ noncomputable theory
 
 open CategoryTheory CategoryTheory.Limits HomologicalComplex
 
-variable{ι : Type _}
+variable {ι : Type _}
 
-variable(V : Type u)[category.{v} V][preadditive V]
+variable (V : Type u) [category.{v} V] [preadditive V]
 
-variable(c : ComplexShape ι)
+variable (c : ComplexShape ι)
 
 /--
 The congruence on `homological_complex V c` given by the existence of a homotopy.
@@ -49,10 +49,10 @@ def Quotientₓ : HomologicalComplex V c ⥤ HomotopyCategory V c :=
 
 attribute [local instance] has_zero_object.has_zero
 
-instance  [has_zero_object V] : Inhabited (HomotopyCategory V c) :=
+instance [has_zero_object V] : Inhabited (HomotopyCategory V c) :=
   ⟨(Quotientₓ V c).obj 0⟩
 
-variable{V c}
+variable {V c}
 
 @[simp]
 theorem quotient_obj_as (C : HomologicalComplex V c) : ((Quotientₓ V c).obj C).as = C :=
@@ -116,7 +116,7 @@ def homotopy_equiv_of_iso {C D : HomologicalComplex V c} (i : (Quotientₓ V c).
           simp 
           rfl) }
 
-variable(V c)[has_zero_object V][has_equalizers V][has_images V][has_image_maps V][has_cokernels V]
+variable (V c) [has_zero_object V] [has_equalizers V] [has_images V] [has_image_maps V] [has_cokernels V]
 
 /-- The `i`-th homology, as a functor from the homotopy category. -/
 def homologyFunctor (i : ι) : HomotopyCategory V c ⥤ V :=
@@ -142,7 +142,7 @@ end HomotopyCategory
 
 namespace CategoryTheory
 
-variable{V}{W : Type _}[category W][preadditive W]
+variable {V} {W : Type _} [category W] [preadditive W]
 
 /-- An additive functor induces a functor between homotopy categories. -/
 @[simps]

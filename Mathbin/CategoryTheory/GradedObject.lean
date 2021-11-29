@@ -45,7 +45,7 @@ abbrev graded_object_with_shift {β : Type w} [AddCommGroupₓ β] (s : β) (C :
 
 namespace GradedObject
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 instance category_of_graded_objects (β : Type w) : category.{max w v} (graded_object β C) :=
   CategoryTheory.pi fun _ => C
@@ -57,7 +57,7 @@ def eval {β : Type w} (b : β) : graded_object β C ⥤ C :=
 
 section 
 
-variable(C)
+variable (C)
 
 /--
 The natural isomorphism comparing between
@@ -174,11 +174,11 @@ end GradedObject
 
 namespace GradedObject
 
-variable(β : Type)
+variable (β : Type)
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
-variable[has_coproducts C]
+variable [has_coproducts C]
 
 /--
 The total object of a graded object is the coproduct of the graded components.
@@ -186,20 +186,20 @@ The total object of a graded object is the coproduct of the graded components.
 noncomputable def Total : graded_object β C ⥤ C :=
   { obj := fun X => ∐ fun i : Ulift.{v} β => X i.down, map := fun X Y f => limits.sigma.map fun i => f i.down }
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 /--
 The `total` functor taking a graded object to the coproduct of its graded components is faithful.
 To prove this, we need to know that the coprojections into the coproduct are monomorphisms,
 which follows from the fact we have zero morphisms and decidable equality for the grading.
 -/
-instance  : faithful (Total β C) :=
+instance : faithful (Total β C) :=
   { map_injective' :=
       fun X Y f g w =>
         by 
           classical 
           ext i 
-          replace w := sigma.ι (fun i : Ulift β => X i.down) ⟨i⟩ ≫= w 
+          replace w := sigma.ι (fun i : Ulift.{v} β => X i.down) ⟨i⟩ ≫= w 
           erw [colimit.ι_map, colimit.ι_map] at w 
           exact mono.right_cancellation _ _ w }
 
@@ -209,14 +209,14 @@ namespace GradedObject
 
 noncomputable theory
 
-variable(β : Type)
+variable (β : Type)
 
-variable(C : Type (u + 1))[large_category C][concrete_category C][has_coproducts C][has_zero_morphisms C]
+variable (C : Type (u + 1)) [large_category C] [concrete_category C] [has_coproducts C] [has_zero_morphisms C]
 
-instance  : concrete_category (graded_object β C) :=
+instance : concrete_category (graded_object β C) :=
   { forget := Total β C ⋙ forget C }
 
-instance  : has_forget₂ (graded_object β C) C :=
+instance : has_forget₂ (graded_object β C) C :=
   { forget₂ := Total β C }
 
 end GradedObject

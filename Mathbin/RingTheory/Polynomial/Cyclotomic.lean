@@ -4,7 +4,8 @@ import Mathbin.Data.Polynomial.Lifts
 import Mathbin.FieldTheory.Separable 
 import Mathbin.FieldTheory.SplittingField 
 import Mathbin.NumberTheory.ArithmeticFunction 
-import Mathbin.RingTheory.RootsOfUnity
+import Mathbin.RingTheory.RootsOfUnity 
+import Mathbin.FieldTheory.Ratfunc
 
 /-!
 # Cyclotomic polynomials.
@@ -56,7 +57,7 @@ section Cyclotomic'
 
 section IsDomain
 
-variable{R : Type _}[CommRingₓ R][IsDomain R]
+variable {R : Type _} [CommRingₓ R] [IsDomain R]
 
 /-- The modified `n`-th cyclotomic polynomial with coefficients in `R`, it is the usual cyclotomic
 polynomial if there is a primitive `n`-th root of unity in `R`. -/
@@ -136,7 +137,7 @@ end IsDomain
 
 section Field
 
-variable{K : Type _}[Field K]
+variable {K : Type _} [Field K]
 
 -- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If there is a primitive `n`th root of unity in `K`, then `X ^ n - 1 = ∏ (X - μ)`, where `μ`
@@ -433,17 +434,14 @@ open_locale ArithmeticFunction
   using Möbius inversion. -/
 theorem cyclotomic_eq_prod_X_pow_sub_one_pow_moebius
 {n : exprℕ()}
-(hpos : «expr < »(0, n))
 (R : Type*)
 [comm_ring R]
-[nontrivial R]
-{K : Type*}
-[field K]
-[algebra (polynomial R) K]
-[is_fraction_ring (polynomial R) K] : «expr = »(algebra_map _ K (cyclotomic n R), «expr∏ in , »((i), n.divisors_antidiagonal, «expr ^ »(algebra_map (polynomial R) K «expr - »(«expr ^ »(X, i.snd), 1), exprμ() i.fst))) :=
+[is_domain R] : «expr = »(algebra_map _ (ratfunc R) (cyclotomic n R), «expr∏ in , »((i), n.divisors_antidiagonal, «expr ^ »(algebra_map (polynomial R) _ «expr - »(«expr ^ »(X, i.snd), 1), exprμ() i.fst))) :=
 begin
+  rcases [expr n.eq_zero_or_pos, "with", ident rfl, "|", ident hpos],
+  { simp [] [] [] [] [] [] },
   have [ident h] [":", expr ∀
-   n : exprℕ(), «expr < »(0, n) → «expr = »(«expr∏ in , »((i), nat.divisors n, algebra_map _ K (cyclotomic i R)), algebra_map _ _ «expr - »(«expr ^ »(X, n), 1))] [],
+   n : exprℕ(), «expr < »(0, n) → «expr = »(«expr∏ in , »((i), nat.divisors n, algebra_map _ (ratfunc R) (cyclotomic i R)), algebra_map _ _ «expr - »(«expr ^ »(X, n), 1))] [],
   { intros [ident n, ident hn],
     rw ["[", "<-", expr prod_cyclotomic_eq_X_pow_sub_one hn R, ",", expr ring_hom.map_prod, "]"] [] },
   rw [expr (prod_eq_iff_prod_pow_moebius_eq_of_nonzero (λ
@@ -684,7 +682,7 @@ begin
   { intro [ident ha],
     exact [expr hn (int.coe_nat_dvd.1 ((zmod.int_coe_zmod_eq_zero_iff_dvd n p).1 ha))] },
   rw ["[", expr sq, "]"] ["at", ident habs],
-  replace [ident habs] [] [":=", expr squarefree_X_pow_sub_C (1 : zmod p) hnzero one_ne_zero (map (int.cast_ring_hom (zmod p)) «expr - »(X, a)) habs],
+  replace [ident habs] [] [":=", expr (separable_X_pow_sub_C (1 : zmod p) hnzero one_ne_zero).squarefree (map (int.cast_ring_hom (zmod p)) «expr - »(X, a)) habs],
   simp [] [] ["only"] ["[", expr map_nat_cast, ",", expr map_X, ",", expr map_sub, "]"] [] ["at", ident habs],
   replace [ident habs] [] [":=", expr degree_eq_zero_of_is_unit habs],
   rw ["[", "<-", expr C_eq_nat_cast, ",", expr degree_X_sub_C, "]"] ["at", ident habs],

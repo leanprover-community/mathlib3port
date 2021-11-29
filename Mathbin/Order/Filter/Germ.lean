@@ -38,7 +38,7 @@ For each of the following structures we prove that if `β` has this structure, t
 * one-operation algebraic structures up to `comm_group`;
 * `mul_zero_class`, `distrib`, `semiring`, `comm_semiring`, `ring`, `comm_ring`;
 * `mul_action`, `distrib_mul_action`, `module`;
-* `preorder`, `partial_order`, and `lattice` structures up to `bounded_lattice`;
+* `preorder`, `partial_order`, and `lattice` structures up to `bounded_order`;
 * `ordered_cancel_comm_monoid` and `ordered_cancel_add_comm_monoid`.
 
 ## Tags
@@ -49,7 +49,7 @@ filter, germ
 
 namespace Filter
 
-variable{α β γ δ : Type _}{l : Filter α}{f g h : α → β}
+variable {α β γ δ : Type _} {l : Filter α} {f g h : α → β}
 
 theorem const_eventually_eq' [ne_bot l] {a b : β} : (∀ᶠx in l, a = b) ↔ a = b :=
   eventually_const
@@ -72,10 +72,10 @@ def germ (l : Filter α) (β : Type _) : Type _ :=
 
 namespace Germ
 
-instance  : CoeTₓ (α → β) (germ l β) :=
+instance : CoeTₓ (α → β) (germ l β) :=
   ⟨Quotientₓ.mk'⟩
 
-instance  : HasLiftT β (germ l β) :=
+instance : HasLiftT β (germ l β) :=
   ⟨fun c => «expr↑ » fun x : α => c⟩
 
 @[simp]
@@ -245,15 +245,15 @@ theorem lift_rel_const_iff [ne_bot l] {r : β → γ → Prop} {x : β} {y : γ}
   lift_rel r («expr↑ » x : germ l β) («expr↑ » y) ↔ r x y :=
   @eventually_const _ _ _ (r x y)
 
-instance  [Inhabited β] : Inhabited (germ l β) :=
+instance [Inhabited β] : Inhabited (germ l β) :=
   ⟨«expr↑ » (default β)⟩
 
 section Monoidₓ
 
-variable{M : Type _}{G : Type _}
+variable {M : Type _} {G : Type _}
 
 @[toAdditive]
-instance  [Mul M] : Mul (germ l M) :=
+instance [Mul M] : Mul (germ l M) :=
   ⟨map₂ (·*·)⟩
 
 @[simp, normCast, toAdditive]
@@ -261,7 +261,7 @@ theorem coe_mul [Mul M] (f g : α → M) : «expr↑ » (f*g) = (f*g : germ l M)
   rfl
 
 @[toAdditive]
-instance  [HasOne M] : HasOne (germ l M) :=
+instance [HasOne M] : HasOne (germ l M) :=
   ⟨«expr↑ » (1 : M)⟩
 
 @[simp, normCast, toAdditive]
@@ -269,7 +269,7 @@ theorem coe_one [HasOne M] : «expr↑ » (1 : α → M) = (1 : germ l M) :=
   rfl
 
 @[toAdditive]
-instance  [Semigroupₓ M] : Semigroupₓ (germ l M) :=
+instance [Semigroupₓ M] : Semigroupₓ (germ l M) :=
   { mul := ·*·,
     mul_assoc :=
       by 
@@ -277,7 +277,7 @@ instance  [Semigroupₓ M] : Semigroupₓ (germ l M) :=
         simp only [mul_assocₓ, quot_mk_eq_coe, ←coe_mul] }
 
 @[toAdditive]
-instance  [CommSemigroupₓ M] : CommSemigroupₓ (germ l M) :=
+instance [CommSemigroupₓ M] : CommSemigroupₓ (germ l M) :=
   { germ.semigroup with mul := ·*·,
     mul_comm :=
       by 
@@ -285,21 +285,21 @@ instance  [CommSemigroupₓ M] : CommSemigroupₓ (germ l M) :=
         simp only [mul_commₓ, quot_mk_eq_coe, ←coe_mul] }
 
 @[toAdditive AddLeftCancelSemigroup]
-instance  [LeftCancelSemigroup M] : LeftCancelSemigroup (germ l M) :=
+instance [LeftCancelSemigroup M] : LeftCancelSemigroup (germ l M) :=
   { germ.semigroup with mul := ·*·,
     mul_left_cancel :=
       fun f₁ f₂ f₃ =>
         induction_on₃ f₁ f₂ f₃$ fun f₁ f₂ f₃ H => coe_eq.2 ((coe_eq.1 H).mono$ fun x => mul_left_cancelₓ) }
 
 @[toAdditive AddRightCancelSemigroup]
-instance  [RightCancelSemigroup M] : RightCancelSemigroup (germ l M) :=
+instance [RightCancelSemigroup M] : RightCancelSemigroup (germ l M) :=
   { germ.semigroup with mul := ·*·,
     mul_right_cancel :=
       fun f₁ f₂ f₃ =>
         induction_on₃ f₁ f₂ f₃$ fun f₁ f₂ f₃ H => coe_eq.2$ (coe_eq.1 H).mono$ fun x => mul_right_cancelₓ }
 
 @[toAdditive]
-instance  [Monoidₓ M] : Monoidₓ (germ l M) :=
+instance [Monoidₓ M] : Monoidₓ (germ l M) :=
   { germ.semigroup with mul := ·*·, one := 1,
     one_mul :=
       fun f =>
@@ -329,11 +329,11 @@ theorem coe_coe_mul_hom [Monoidₓ M] : (coe_mul_hom l : (α → M) → germ l M
   rfl
 
 @[toAdditive]
-instance  [CommMonoidₓ M] : CommMonoidₓ (germ l M) :=
+instance [CommMonoidₓ M] : CommMonoidₓ (germ l M) :=
   { germ.comm_semigroup, germ.monoid with mul := ·*·, one := 1 }
 
 @[toAdditive]
-instance  [HasInv G] : HasInv (germ l G) :=
+instance [HasInv G] : HasInv (germ l G) :=
   ⟨map HasInv.inv⟩
 
 @[simp, normCast, toAdditive]
@@ -341,7 +341,7 @@ theorem coe_inv [HasInv G] (f : α → G) : «expr↑ » (f⁻¹) = (f⁻¹ : ge
   rfl
 
 @[toAdditive]
-instance  [Div M] : Div (germ l M) :=
+instance [Div M] : Div (germ l M) :=
   ⟨map₂ (· / ·)⟩
 
 @[simp, normCast, toAdditive]
@@ -349,7 +349,7 @@ theorem coe_div [Div M] (f g : α → M) : «expr↑ » (f / g) = (f / g : germ 
   rfl
 
 @[toAdditive]
-instance  [DivInvMonoidₓ G] : DivInvMonoidₓ (germ l G) :=
+instance [DivInvMonoidₓ G] : DivInvMonoidₓ (germ l G) :=
   { germ.monoid with inv := HasInv.inv, div := Div.div,
     div_eq_mul_inv :=
       by 
@@ -357,7 +357,7 @@ instance  [DivInvMonoidₓ G] : DivInvMonoidₓ (germ l G) :=
         exact congr_argₓ (Quot.mk _) (div_eq_mul_inv f g) }
 
 @[toAdditive]
-instance  [Groupₓ G] : Groupₓ (germ l G) :=
+instance [Groupₓ G] : Groupₓ (germ l G) :=
   { germ.div_inv_monoid with mul := ·*·, one := 1,
     mul_left_inv :=
       by 
@@ -365,20 +365,20 @@ instance  [Groupₓ G] : Groupₓ (germ l G) :=
         exact congr_argₓ (Quot.mk _) (mul_left_invₓ f) }
 
 @[toAdditive]
-instance  [CommGroupₓ G] : CommGroupₓ (germ l G) :=
+instance [CommGroupₓ G] : CommGroupₓ (germ l G) :=
   { germ.group, germ.comm_monoid with mul := ·*·, one := 1, inv := HasInv.inv }
 
 end Monoidₓ
 
 section Ringₓ
 
-variable{R : Type _}
+variable {R : Type _}
 
 instance Nontrivial [Nontrivial R] [ne_bot l] : Nontrivial (germ l R) :=
   let ⟨x, y, h⟩ := exists_pair_ne R
   ⟨⟨«expr↑ » x, «expr↑ » y, mt const_inj.1 h⟩⟩
 
-instance  [MulZeroClass R] : MulZeroClass (germ l R) :=
+instance [MulZeroClass R] : MulZeroClass (germ l R) :=
   { zero := 0, mul := ·*·,
     mul_zero :=
       fun f =>
@@ -395,7 +395,7 @@ instance  [MulZeroClass R] : MulZeroClass (germ l R) :=
               normCast 
               rw [zero_mul] }
 
-instance  [Distrib R] : Distrib (germ l R) :=
+instance [Distrib R] : Distrib (germ l R) :=
   { mul := ·*·, add := ·+·,
     left_distrib :=
       fun f g h =>
@@ -412,7 +412,7 @@ instance  [Distrib R] : Distrib (germ l R) :=
               normCast 
               rw [right_distrib] }
 
-instance  [Semiringₓ R] : Semiringₓ (germ l R) :=
+instance [Semiringₓ R] : Semiringₓ (germ l R) :=
   { germ.add_comm_monoid, germ.monoid, germ.distrib, germ.mul_zero_class with  }
 
 /-- Coercion `(α → R) → germ l R` as a `ring_hom`. -/
@@ -423,22 +423,22 @@ def coe_ring_hom [Semiringₓ R] (l : Filter α) : (α → R) →+* germ l R :=
 theorem coe_coe_ring_hom [Semiringₓ R] : (coe_ring_hom l : (α → R) → germ l R) = coeₓ :=
   rfl
 
-instance  [Ringₓ R] : Ringₓ (germ l R) :=
+instance [Ringₓ R] : Ringₓ (germ l R) :=
   { germ.add_comm_group, germ.monoid, germ.distrib, germ.mul_zero_class with  }
 
-instance  [CommSemiringₓ R] : CommSemiringₓ (germ l R) :=
+instance [CommSemiringₓ R] : CommSemiringₓ (germ l R) :=
   { germ.semiring, germ.comm_monoid with  }
 
-instance  [CommRingₓ R] : CommRingₓ (germ l R) :=
+instance [CommRingₓ R] : CommRingₓ (germ l R) :=
   { germ.ring, germ.comm_monoid with  }
 
 end Ringₓ
 
 section Module
 
-variable{M N R : Type _}
+variable {M N R : Type _}
 
-instance  [HasScalar M β] : HasScalar M (germ l β) :=
+instance [HasScalar M β] : HasScalar M (germ l β) :=
   ⟨fun c => map ((· • ·) c)⟩
 
 instance has_scalar' [HasScalar M β] : HasScalar (germ l M) (germ l β) :=
@@ -452,7 +452,7 @@ theorem coe_smul [HasScalar M β] (c : M) (f : α → β) : «expr↑ » (c • 
 theorem coe_smul' [HasScalar M β] (c : α → M) (f : α → β) : «expr↑ » (c • f) = (c : germ l M) • (f : germ l β) :=
   rfl
 
-instance  [Monoidₓ M] [MulAction M β] : MulAction M (germ l β) :=
+instance [Monoidₓ M] [MulAction M β] : MulAction M (germ l β) :=
   { one_smul :=
       fun f =>
         induction_on f$
@@ -483,7 +483,7 @@ instance mul_action' [Monoidₓ M] [MulAction M β] : MulAction (germ l M) (germ
               normCast 
               simp only [mul_smul] }
 
-instance  [Monoidₓ M] [AddMonoidₓ N] [DistribMulAction M N] : DistribMulAction M (germ l N) :=
+instance [Monoidₓ M] [AddMonoidₓ N] [DistribMulAction M N] : DistribMulAction M (germ l N) :=
   { smul_add :=
       fun c f g =>
         induction_on₂ f g$
@@ -512,7 +512,7 @@ instance distrib_mul_action' [Monoidₓ M] [AddMonoidₓ N] [DistribMulAction M 
             by 
               simp only [←coe_zero, ←coe_smul', smul_zero] }
 
-instance  [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (germ l M) :=
+instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (germ l M) :=
   { add_smul :=
       fun c₁ c₂ f =>
         induction_on f$
@@ -545,7 +545,7 @@ instance module' [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module (ger
 
 end Module
 
-instance  [LE β] : LE (germ l β) :=
+instance [LE β] : LE (germ l β) :=
   ⟨lift_rel (· ≤ ·)⟩
 
 @[simp]
@@ -562,80 +562,68 @@ theorem const_le [LE β] {x y : β} (h : x ≤ y) : («expr↑ » x : germ l β)
 theorem const_le_iff [LE β] [ne_bot l] {x y : β} : («expr↑ » x : germ l β) ≤ «expr↑ » y ↔ x ≤ y :=
   lift_rel_const_iff
 
-instance  [Preorderₓ β] : Preorderₓ (germ l β) :=
+instance [Preorderₓ β] : Preorderₓ (germ l β) :=
   { le := · ≤ ·, le_refl := fun f => induction_on f$ eventually_le.refl l,
     le_trans := fun f₁ f₂ f₃ => induction_on₃ f₁ f₂ f₃$ fun f₁ f₂ f₃ => eventually_le.trans }
 
-instance  [PartialOrderₓ β] : PartialOrderₓ (germ l β) :=
+instance [PartialOrderₓ β] : PartialOrderₓ (germ l β) :=
   { germ.preorder with le := · ≤ ·,
     le_antisymm := fun f g => induction_on₂ f g$ fun f g h₁ h₂ => (eventually_le.antisymm h₁ h₂).germ_eq }
 
-instance  [HasBot β] : HasBot (germ l β) :=
+instance [HasBot β] : HasBot (germ l β) :=
   ⟨«expr↑ » (⊥ : β)⟩
 
 @[simp, normCast]
 theorem const_bot [HasBot β] : («expr↑ » (⊥ : β) : germ l β) = ⊥ :=
   rfl
 
-instance  [LE β] [OrderBot β] : OrderBot (germ l β) :=
+instance [LE β] [OrderBot β] : OrderBot (germ l β) :=
   { bot := ⊥, bot_le := fun f => induction_on f$ fun f => eventually_of_forall$ fun x => bot_le }
 
-instance  [HasTop β] : HasTop (germ l β) :=
+instance [HasTop β] : HasTop (germ l β) :=
   ⟨«expr↑ » (⊤ : β)⟩
 
 @[simp, normCast]
 theorem const_top [HasTop β] : («expr↑ » (⊤ : β) : germ l β) = ⊤ :=
   rfl
 
-instance  [LE β] [OrderTop β] : OrderTop (germ l β) :=
+instance [LE β] [OrderTop β] : OrderTop (germ l β) :=
   { top := ⊤, le_top := fun f => induction_on f$ fun f => eventually_of_forall$ fun x => le_top }
 
-instance  [HasSup β] : HasSup (germ l β) :=
+instance [HasSup β] : HasSup (germ l β) :=
   ⟨map₂ (·⊔·)⟩
 
 @[simp, normCast]
 theorem const_sup [HasSup β] (a b : β) : «expr↑ » (a⊔b) = («expr↑ » a⊔«expr↑ » b : germ l β) :=
   rfl
 
-instance  [HasInf β] : HasInf (germ l β) :=
+instance [HasInf β] : HasInf (germ l β) :=
   ⟨map₂ (·⊓·)⟩
 
 @[simp, normCast]
 theorem const_inf [HasInf β] (a b : β) : «expr↑ » (a⊓b) = («expr↑ » a⊓«expr↑ » b : germ l β) :=
   rfl
 
-instance  [SemilatticeSup β] : SemilatticeSup (germ l β) :=
+instance [SemilatticeSup β] : SemilatticeSup (germ l β) :=
   { germ.partial_order with sup := ·⊔·,
     le_sup_left := fun f g => induction_on₂ f g$ fun f g => eventually_of_forall$ fun x => le_sup_left,
     le_sup_right := fun f g => induction_on₂ f g$ fun f g => eventually_of_forall$ fun x => le_sup_right,
     sup_le := fun f₁ f₂ g => induction_on₃ f₁ f₂ g$ fun f₁ f₂ g h₁ h₂ => h₂.mp$ h₁.mono$ fun x => sup_le }
 
-instance  [SemilatticeInf β] : SemilatticeInf (germ l β) :=
+instance [SemilatticeInf β] : SemilatticeInf (germ l β) :=
   { germ.partial_order with inf := ·⊓·,
     inf_le_left := fun f g => induction_on₂ f g$ fun f g => eventually_of_forall$ fun x => inf_le_left,
     inf_le_right := fun f g => induction_on₂ f g$ fun f g => eventually_of_forall$ fun x => inf_le_right,
     le_inf := fun f₁ f₂ g => induction_on₃ f₁ f₂ g$ fun f₁ f₂ g h₁ h₂ => h₂.mp$ h₁.mono$ fun x => le_inf }
 
-instance  [SemilatticeInfBot β] : SemilatticeInfBot (germ l β) :=
-  { germ.semilattice_inf, germ.order_bot with  }
-
-instance  [SemilatticeSupBot β] : SemilatticeSupBot (germ l β) :=
-  { germ.semilattice_sup, germ.order_bot with  }
-
-instance  [SemilatticeInfTop β] : SemilatticeInfTop (germ l β) :=
-  { germ.semilattice_inf, germ.order_top with  }
-
-instance  [SemilatticeSupTop β] : SemilatticeSupTop (germ l β) :=
-  { germ.semilattice_sup, germ.order_top with  }
-
-instance  [Lattice β] : Lattice (germ l β) :=
+instance [Lattice β] : Lattice (germ l β) :=
   { germ.semilattice_sup, germ.semilattice_inf with  }
 
-instance  [BoundedLattice β] : BoundedLattice (germ l β) :=
-  { germ.lattice, germ.order_bot, germ.order_top with  }
+instance [LE β] [BoundedOrder β] : BoundedOrder (germ l β) :=
+  { germ.order_bot, germ.order_top with  }
 
 @[toAdditive]
-instance  [OrderedCancelCommMonoid β] : OrderedCancelCommMonoid (germ l β) :=
+instance [OrderedCancelCommMonoid β] : OrderedCancelCommMonoid (germ l β) :=
   { germ.partial_order, germ.comm_monoid, germ.left_cancel_semigroup with
     mul_le_mul_left :=
       fun f g => induction_on₂ f g$ fun f g H h => induction_on h$ fun h => H.mono$ fun x H => mul_le_mul_left' H _,

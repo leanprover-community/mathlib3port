@@ -39,7 +39,7 @@ def HolorIndex (ds : List ℕ) : Type :=
 
 namespace HolorIndex
 
-variable{ds₁ ds₂ ds₃ : List ℕ}
+variable {ds₁ ds₂ ds₃ : List ℕ}
 
 def take : ∀ {ds₁ : List ℕ}, HolorIndex (ds₁ ++ ds₂) → HolorIndex ds₁
 | ds, is => ⟨List.takeₓ (length ds) is.1, forall₂_take_append is.1 ds ds₂ is.2⟩
@@ -84,60 +84,60 @@ def Holor (α : Type u) (ds : List ℕ) :=
 
 namespace Holor
 
-variable{α : Type}{d : ℕ}{ds : List ℕ}{ds₁ : List ℕ}{ds₂ : List ℕ}{ds₃ : List ℕ}
+variable {α : Type} {d : ℕ} {ds : List ℕ} {ds₁ : List ℕ} {ds₂ : List ℕ} {ds₃ : List ℕ}
 
-instance  [Inhabited α] : Inhabited (Holor α ds) :=
+instance [Inhabited α] : Inhabited (Holor α ds) :=
   ⟨fun t => default α⟩
 
-instance  [HasZero α] : HasZero (Holor α ds) :=
+instance [HasZero α] : HasZero (Holor α ds) :=
   ⟨fun t => 0⟩
 
-instance  [Add α] : Add (Holor α ds) :=
+instance [Add α] : Add (Holor α ds) :=
   ⟨fun x y t => x t+y t⟩
 
-instance  [Neg α] : Neg (Holor α ds) :=
+instance [Neg α] : Neg (Holor α ds) :=
   ⟨fun a t => -a t⟩
 
-instance  [AddSemigroupₓ α] : AddSemigroupₓ (Holor α ds) :=
+instance [AddSemigroupₓ α] : AddSemigroupₓ (Holor α ds) :=
   by 
     refineStruct { add := ·+·, .. } <;>
       runTac 
         tactic.pi_instance_derive_field
 
-instance  [AddCommSemigroupₓ α] : AddCommSemigroupₓ (Holor α ds) :=
+instance [AddCommSemigroupₓ α] : AddCommSemigroupₓ (Holor α ds) :=
   by 
     refineStruct { add := ·+·, .. } <;>
       runTac 
         tactic.pi_instance_derive_field
 
-instance  [AddMonoidₓ α] : AddMonoidₓ (Holor α ds) :=
+instance [AddMonoidₓ α] : AddMonoidₓ (Holor α ds) :=
   by 
     refineStruct { zero := (0 : Holor α ds), add := ·+·, nsmul := fun n x i => n • x i } <;>
       runTac 
         tactic.pi_instance_derive_field
 
-instance  [AddCommMonoidₓ α] : AddCommMonoidₓ (Holor α ds) :=
+instance [AddCommMonoidₓ α] : AddCommMonoidₓ (Holor α ds) :=
   by 
     refineStruct { zero := (0 : Holor α ds), add := ·+·, nsmul := AddMonoidₓ.nsmul } <;>
       runTac 
         tactic.pi_instance_derive_field
 
-instance  [AddGroupₓ α] : AddGroupₓ (Holor α ds) :=
+instance [AddGroupₓ α] : AddGroupₓ (Holor α ds) :=
   by 
     refineStruct { zero := (0 : Holor α ds), add := ·+·, nsmul := AddMonoidₓ.nsmul, zsmul := fun n x i => n • x i } <;>
       runTac 
         tactic.pi_instance_derive_field
 
-instance  [AddCommGroupₓ α] : AddCommGroupₓ (Holor α ds) :=
+instance [AddCommGroupₓ α] : AddCommGroupₓ (Holor α ds) :=
   by 
     refineStruct { zero := (0 : Holor α ds), add := ·+·, nsmul := AddMonoidₓ.nsmul, zsmul := SubNegMonoidₓ.zsmul } <;>
       runTac 
         tactic.pi_instance_derive_field
 
-instance  [Mul α] : HasScalar α (Holor α ds) :=
+instance [Mul α] : HasScalar α (Holor α ds) :=
   ⟨fun a x => fun t => a*x t⟩
 
-instance  [Semiringₓ α] : Module α (Holor α ds) :=
+instance [Semiringₓ α] : Module α (Holor α ds) :=
   Pi.module _ _ _
 
 /-- The tensor product of two holors. -/

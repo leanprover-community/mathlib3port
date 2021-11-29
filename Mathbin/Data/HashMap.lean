@@ -65,9 +65,9 @@ section
 
 parameter {α : Type u}{β : α → Type v}(hash_fn : α → Nat)
 
-variable{n : ℕ+}(data : BucketArray α β n)
+variable {n : ℕ+} (data : BucketArray α β n)
 
-instance  : Inhabited (BucketArray α β n) :=
+instance : Inhabited (BucketArray α β n) :=
   ⟨mkArray _ []⟩
 
 /-- Read the bucket corresponding to an element -/
@@ -196,7 +196,7 @@ def erase_aux (a : α) : List (Σa, β a) → List (Σa, β a)
   invariants: There are exactly `sz` elements in it, every pair is in the
   bucket determined by its key and the hash function, and no key appears
   multiple times in the list. -/
-structure valid{n}(bkts : BucketArray α β n)(sz : Nat) : Prop where 
+structure valid {n} (bkts : BucketArray α β n) (sz : Nat) : Prop where 
   len : bkts.as_list.length = sz 
   idx : ∀ {i} {a : Σa, β a}, a ∈ Arrayₓ.read bkts i → mk_idx n (hash_fn a.1) = i 
   Nodup : ∀ i, ((Arrayₓ.read bkts i).map Sigma.fst).Nodup
@@ -268,7 +268,7 @@ local notation "L" => Arrayₓ.read bkts bidx
 private def bkts' : BucketArray α β n :=
   Arrayₓ.write bkts bidx (f L)
 
-variable(hl : L = u ++ v1 ++ w)(hfl : f L = u ++ v2 ++ w)
+variable (hl : L = u ++ v1 ++ w) (hfl : f L = u ++ v2 ++ w)
 
 include hl hfl
 
@@ -290,14 +290,8 @@ begin
     simp [] [] [] [] [] [] }
 end
 
-variable(hvnd :
-    (v2.map
-        Sigma.fst).Nodup)(hal :
-    ∀ a : Σa, β a,
-      a ∈ v2 →
-        mk_idx n (hash_fn a.1) =
-          bidx)(djuv :
-    (u.map Sigma.fst).Disjoint (v2.map Sigma.fst))(djwv : (w.map Sigma.fst).Disjoint (v2.map Sigma.fst))
+variable (hvnd : (v2.map Sigma.fst).Nodup) (hal : ∀ a : Σa, β a, a ∈ v2 → mk_idx n (hash_fn a.1) = bidx)
+  (djuv : (u.map Sigma.fst).Disjoint (v2.map Sigma.fst)) (djwv : (w.map Sigma.fst).Disjoint (v2.map Sigma.fst))
 
 include hvnd hal djuv djwv
 
@@ -448,7 +442,7 @@ end HashMap
 
 /-- A hash map data structure, representing a finite key-value map
   with key type `α` and value type `β` (which may depend on `α`). -/
-structure HashMap(α : Type u)[DecidableEq α](β : α → Type v) where 
+structure HashMap (α : Type u) [DecidableEq α] (β : α → Type v) where 
   hashFn : α → Nat 
   size : ℕ 
   nbuckets : ℕ+
@@ -466,7 +460,7 @@ def mkHashMap {α : Type u} [DecidableEq α] {β : α → Type v} (hash_fn : α 
 
 namespace HashMap
 
-variable{α : Type u}{β : α → Type v}[DecidableEq α]
+variable {α : Type u} {β : α → Type v} [DecidableEq α]
 
 /-- Return the value corresponding to a key, or `none` if not found -/
 def find (m : HashMap α β) (a : α) : Option (β a) :=
@@ -476,7 +470,7 @@ def find (m : HashMap α β) (a : α) : Option (β a) :=
 def contains (m : HashMap α β) (a : α) : Bool :=
   (m.find a).isSome
 
-instance  : HasMem α (HashMap α β) :=
+instance : HasMem α (HashMap α β) :=
   ⟨fun a m => m.contains a⟩
 
 /-- Fold a function over the key-value pairs in the map -/
@@ -740,7 +734,7 @@ theorem find_erase (m : HashMap α β) (a' a : α) : (m.erase a).find a' = if a 
 
 section Stringₓ
 
-variable[HasToString α][∀ a, HasToString (β a)]
+variable [HasToString α] [∀ a, HasToString (β a)]
 
 open Prod
 
@@ -750,7 +744,7 @@ private def key_data_to_string (a : α) (b : β a) (first : Bool) : Stringₓ :=
 private def toString (m : HashMap α β) : Stringₓ :=
   "⟨" ++ fst (fold m ("", tt) fun p a b => (fst p ++ key_data_to_string a b (snd p), ff)) ++ "⟩"
 
-instance  : HasToString (HashMap α β) :=
+instance : HasToString (HashMap α β) :=
   ⟨toString⟩
 
 end Stringₓ
@@ -759,7 +753,7 @@ section Format
 
 open Format Prod
 
-variable[has_to_format α][∀ a, has_to_format (β a)]
+variable [has_to_format α] [∀ a, has_to_format (β a)]
 
 private unsafe def format_key_data (a : α) (b : β a) (first : Bool) : format :=
   (if first then to_fmt "" else to_fmt "," ++ line) ++ to_fmt a ++ space ++ to_fmt "←" ++ space ++ to_fmt b
@@ -769,13 +763,13 @@ private unsafe def to_format (m : HashMap α β) : format :=
     to_fmt "⟨" ++ nest 1 (fst (fold m (to_fmt "", tt) fun p a b => (fst p ++ format_key_data a b (snd p), ff))) ++
       to_fmt "⟩"
 
-unsafe instance  : has_to_format (HashMap α β) :=
+unsafe instance : has_to_format (HashMap α β) :=
   ⟨to_format⟩
 
 end Format
 
 /-- `hash_map` with key type `nat` and value type that may vary. -/
-instance  {β : ℕ → Type _} : Inhabited (HashMap ℕ β) :=
+instance {β : ℕ → Type _} : Inhabited (HashMap ℕ β) :=
   ⟨mkHashMap id⟩
 
 end HashMap

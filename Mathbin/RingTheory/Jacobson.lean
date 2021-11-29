@@ -35,12 +35,12 @@ open Polynomial
 
 section IsJacobson
 
-variable{R S : Type _}[CommRingₓ R][CommRingₓ S]{I : Ideal R}
+variable {R S : Type _} [CommRingₓ R] [CommRingₓ S] {I : Ideal R}
 
 /-- A ring is a Jacobson ring if for every radical ideal `I`,
  the Jacobson radical of `I` is equal to `I`.
  See `is_jacobson_iff_prime_eq` and `is_jacobson_iff_Inf_maximal` for equivalent definitions. -/
-class is_jacobson(R : Type _)[CommRingₓ R] : Prop where 
+class is_jacobson (R : Type _) [CommRingₓ R] : Prop where 
   out' : ∀ I : Ideal R, I.radical = I → I.jacobson = I
 
 theorem is_jacobson_iff {R} [CommRingₓ R] : is_jacobson R ↔ ∀ I : Ideal R, I.radical = I → I.jacobson = I :=
@@ -82,7 +82,7 @@ theorem radical_eq_jacobson [H : is_jacobson R] (I : Ideal R) : I.radical = I.ja
     (H.out (radical_idem I) ▸ jacobson_mono le_radical)
 
 /-- Fields have only two ideals, and the condition holds for both of them.  -/
-instance (priority := 100)is_jacobson_field {K : Type _} [Field K] : is_jacobson K :=
+instance (priority := 100) is_jacobson_field {K : Type _} [Field K] : is_jacobson K :=
   ⟨fun I hI =>
       Or.rec_on (eq_bot_or_top I)
         (fun h => le_antisymmₓ (Inf_le ⟨le_of_eqₓ rfl, Eq.symm h ▸ bot_is_maximal⟩) (Eq.symm h ▸ bot_le))
@@ -104,7 +104,7 @@ begin
   exact [expr eq.trans this (map_Inf hf (λ (J) ⟨hJ, _⟩, le_trans (ideal.ker_le_comap f) hJ))]
 end
 
-instance (priority := 100)is_jacobson_quotient [is_jacobson R] : is_jacobson (Quotientₓ I) :=
+instance (priority := 100) is_jacobson_quotient [is_jacobson R] : is_jacobson (Quotientₓ I) :=
   is_jacobson_of_surjective
     ⟨Quotientₓ.mk I,
       by 
@@ -141,9 +141,9 @@ section Localization
 
 open IsLocalization Submonoid
 
-variable{R S : Type _}[CommRingₓ R][CommRingₓ S]{I : Ideal R}
+variable {R S : Type _} [CommRingₓ R] [CommRingₓ S] {I : Ideal R}
 
-variable(y : R)[Algebra R S][IsLocalization.Away y S]
+variable (y : R) [Algebra R S] [IsLocalization.Away y S]
 
 theorem disjoint_powers_iff_not_mem (hI : I.radical = I) :
   Disjoint (Submonoid.powers y : Set R) («expr↑ » I) ↔ y ∉ I.1 :=
@@ -153,7 +153,7 @@ theorem disjoint_powers_iff_not_mem (hI : I.radical = I) :
     rw [←hI] at hx' 
     exact absurd (hI ▸ mem_radical_of_pow_mem hx' : y ∈ I.carrier) h
 
-variable(S)
+variable (S)
 
 -- error in RingTheory.Jacobson: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `R` is a Jacobson ring, then maximal ideals in the localization at `y`
@@ -190,7 +190,7 @@ begin
       exact [expr map_mono hI'] } }
 end
 
-variable{S}
+variable {S}
 
 /-- If `R` is a Jacobson ring, then maximal ideals in the localization at `y`
 correspond to maximal ideals in the original ring `R` that don't contain `y`.
@@ -259,9 +259,9 @@ open Polynomial
 
 section CommRingₓ
 
-variable{R S : Type _}[CommRingₓ R][CommRingₓ S][IsDomain S]
+variable {R S : Type _} [CommRingₓ R] [CommRingₓ S] [IsDomain S]
 
-variable{Rₘ Sₘ : Type _}[CommRingₓ Rₘ][CommRingₓ Sₘ]
+variable {Rₘ Sₘ : Type _} [CommRingₓ Rₘ] [CommRingₓ Sₘ]
 
 -- error in RingTheory.Jacobson: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `I` is a prime ideal of `polynomial R` and `pX ∈ I` is a non-constant polynomial,
@@ -418,16 +418,16 @@ theorem is_jacobson_polynomial_iff_is_jacobson : is_jacobson (Polynomial R) ↔ 
               by 
                 simp only [coe_eval₂_ring_hom, RingHom.id_apply, eval₂_C]⟩⟩
 
-instance  [is_jacobson R] : is_jacobson (Polynomial R) :=
+instance [is_jacobson R] : is_jacobson (Polynomial R) :=
   is_jacobson_polynomial_iff_is_jacobson.mpr ‹is_jacobson R›
 
 end CommRingₓ
 
 section 
 
-variable{R : Type _}[CommRingₓ R][is_jacobson R]
+variable {R : Type _} [CommRingₓ R] [is_jacobson R]
 
-variable(P : Ideal (Polynomial R))[hP : P.is_maximal]
+variable (P : Ideal (Polynomial R)) [hP : P.is_maximal]
 
 include P hP
 
@@ -578,7 +578,7 @@ begin
   exact [expr is_jacobson_mv_polynomial_fin _]
 end
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 theorem quotient_mk_comp_C_is_integral_of_jacobson {R : Type _} [CommRingₓ R] [is_jacobson R]
   (P : Ideal (MvPolynomial (Finₓ n) R)) [P.is_maximal] :

@@ -58,7 +58,7 @@ open Set HasInv Function TopologicalSpace MeasurableSpace
 
 open_locale Nnreal Classical Ennreal Pointwise TopologicalSpace
 
-variable{G : Type _}[Groupₓ G]
+variable {G : Type _} [Groupₓ G]
 
 namespace MeasureTheory
 
@@ -87,7 +87,7 @@ theorem index_empty {V : Set G} : index ∅ V = 0 :=
     use ∅
     simp only [Finset.card_empty, empty_subset, mem_set_of_eq, eq_self_iff_true, and_selfₓ]
 
-variable[TopologicalSpace G]
+variable [TopologicalSpace G]
 
 /-- `prehaar K₀ U K` is a weighted version of the index, defined as `(K : U)/(K₀ : U)`.
   In the applications `K₀` is compact with non-empty interior, `U` is open containing `1`,
@@ -129,7 +129,7 @@ theorem mem_prehaar_empty {K₀ : Set G} {f : compacts G → ℝ} :
 def cl_prehaar (K₀ : Set G) (V : open_nhds_of (1 : G)) : Set (compacts G → ℝ) :=
   Closure$ prehaar K₀ '' { U:Set G | U ⊆ V.1 ∧ IsOpen U ∧ (1 : G) ∈ U }
 
-variable[TopologicalGroup G]
+variable [TopologicalGroup G]
 
 /-!
 ### Lemmas about `index`
@@ -592,7 +592,7 @@ begin
     exact [expr is_closed_singleton] }
 end
 
-variable[T2Space G]
+variable [T2Space G]
 
 /-- The function `chaar` interpreted in `ℝ≥0`, as a content -/
 @[toAdditive "additive version of `measure_theory.measure.haar.haar_content`"]
@@ -655,7 +655,7 @@ open Haar
 -/
 
 
-variable[TopologicalSpace G][T2Space G][TopologicalGroup G][MeasurableSpace G][BorelSpace G]
+variable [TopologicalSpace G] [T2Space G] [TopologicalGroup G] [MeasurableSpace G] [BorelSpace G]
 
 /-- The Haar measure on the locally compact group `G`, scaled so that `haar_measure K₀ K₀ = 1`. -/
 @[toAdditive
@@ -729,7 +729,7 @@ def haar [LocallyCompactSpace G] : Measureₓ G :=
 
 section Unique
 
-variable[second_countable_topology G]{μ : Measureₓ G}[sigma_finite μ]
+variable [second_countable_topology G] {μ : Measureₓ G} [sigma_finite μ]
 
 -- error in MeasureTheory.Measure.Haar: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Haar measure is unique up to scaling. More precisely: every σ-finite left invariant measure

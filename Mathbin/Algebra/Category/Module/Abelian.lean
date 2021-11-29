@@ -20,7 +20,7 @@ universe v u
 
 namespace ModuleCat
 
-variable{R : Type u}[Ringₓ R]{M N : ModuleCat.{v} R}(f : M ⟶ N)
+variable {R : Type u} [Ringₓ R] {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
 /-- In the category of modules, every monomorphism is normal. -/
 def normal_mono (hf : mono f) : normal_mono f :=
@@ -47,7 +47,7 @@ def normal_epi (hf : epi f) : normal_epi f :=
           rfl }
 
 /-- The category of R-modules is abelian. -/
-instance  : abelian (ModuleCat R) :=
+instance : abelian (ModuleCat R) :=
   { HasFiniteProducts :=
       ⟨by 
           infer_instance⟩,
@@ -56,7 +56,7 @@ instance  : abelian (ModuleCat R) :=
         infer_instance,
     HasCokernels := has_cokernels_Module, NormalMono := fun X Y => normal_mono, NormalEpi := fun X Y => normal_epi }
 
-variable{O : ModuleCat.{v} R}(g : N ⟶ O)
+variable {O : ModuleCat.{v} R} (g : N ⟶ O)
 
 open LinearMap
 

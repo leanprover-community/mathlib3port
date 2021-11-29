@@ -43,7 +43,7 @@ Note that `concrete_category` potentially depends on three independent universe 
 * the universe level `u` of the objects (i.e `C : Type u`)
 They are specified that order, to avoid unnecessary universe annotations.
 -/
-class concrete_category(C : Type u)[category.{v} C] where 
+class concrete_category (C : Type u) [category.{v} C] where 
   forget{} : C ⥤ Type w
   [forget_faithful : faithful forget]
 
@@ -73,7 +73,7 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort
 
-variable{C : Type v}[category C][concrete_category C]
+variable {C : Type v} [category C] [concrete_category C]
 
 @[simp]
 theorem forget_obj_eq_coe {X : C} : (forget C).obj X = X :=
@@ -150,8 +150,8 @@ end
 `has_forget₂ C D`, where `C` and `D` are both concrete categories, provides a functor
 `forget₂ C D : C ⥤ D` and a proof that `forget₂ ⋙ (forget D) = forget C`.
 -/
-class
-  has_forget₂(C : Type v)(D : Type v')[category C][concrete_category.{u} C][category D][concrete_category.{u} D] where 
+class has_forget₂ (C : Type v) (D : Type v') [category C] [concrete_category.{u} C] [category D]
+  [concrete_category.{u} D] where 
   forget₂ : C ⥤ D 
   forget_comp : forget₂ ⋙ forget D = forget C :=  by 
   runTac 

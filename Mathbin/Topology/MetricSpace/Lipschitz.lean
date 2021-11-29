@@ -39,7 +39,7 @@ open Filter Function Set
 
 open_locale TopologicalSpace Nnreal Ennreal
 
-variable{α : Type u}{β : Type v}{γ : Type w}{ι : Type x}
+variable {α : Type u} {β : Type v} {γ : Type w} {ι : Type x}
 
 /-- A function `f` is Lipschitz continuous with constant `K ≥ 0` if for all `x, y`
 we have `dist (f x) (f y) ≤ K * dist x y` -/
@@ -91,9 +91,9 @@ namespace LipschitzWith
 
 section Emetric
 
-variable[PseudoEmetricSpace α][PseudoEmetricSpace β][PseudoEmetricSpace γ]
+variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
 
-variable{K :  ℝ≥0 }{f : α → β}
+variable {K :  ℝ≥0 } {f : α → β}
 
 protected theorem LipschitzOnWith (h : LipschitzWith K f) (s : Set α) : LipschitzOnWith K f s :=
   fun x _ y _ => h x y
@@ -243,7 +243,7 @@ end Emetric
 
 section Metric
 
-variable[PseudoMetricSpace α][PseudoMetricSpace β][PseudoMetricSpace γ]{K :  ℝ≥0 }
+variable [PseudoMetricSpace α] [PseudoMetricSpace β] [PseudoMetricSpace γ] {K :  ℝ≥0 }
 
 protected theorem of_dist_le' {f : α → β} {K : ℝ} (h : ∀ x y, dist (f x) (f y) ≤ K*dist x y) :
   LipschitzWith (Real.toNnreal K) f :=
@@ -318,7 +318,7 @@ end Metric
 
 section Emetric
 
-variable{α}[PseudoEmetricSpace α]{f g : α → ℝ}{Kf Kg :  ℝ≥0 }
+variable {α} [PseudoEmetricSpace α] {f g : α → ℝ} {Kf Kg :  ℝ≥0 }
 
 protected theorem max (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) :
   LipschitzWith (max Kf Kg) fun x => max (f x) (g x) :=
@@ -355,9 +355,9 @@ end LipschitzWith
 
 namespace LipschitzOnWith
 
-variable[PseudoEmetricSpace α][PseudoEmetricSpace β][PseudoEmetricSpace γ]
+variable [PseudoEmetricSpace α] [PseudoEmetricSpace β] [PseudoEmetricSpace γ]
 
-variable{K :  ℝ≥0 }{s : Set α}{f : α → β}
+variable {K :  ℝ≥0 } {s : Set α} {f : α → β}
 
 protected theorem UniformContinuousOn (hf : LipschitzOnWith K f s) : UniformContinuousOn f s :=
   uniform_continuous_on_iff_restrict.mpr (lipschitz_on_with_iff_restrict.mp hf).UniformContinuous

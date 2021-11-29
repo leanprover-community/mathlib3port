@@ -73,11 +73,11 @@ open_locale Classical BigOperators
 
 open Finset
 
-variable{α β γ ι M M' N P G H R S : Type _}
+variable {α β γ ι M M' N P G H R S : Type _}
 
 /-- `finsupp α M`, denoted `α →₀ M`, is the type of functions `f : α → M` such that
   `f x = 0` for all but finitely many `x`. -/
-structure Finsupp(α : Type _)(M : Type _)[HasZero M] where 
+structure Finsupp (α : Type _) (M : Type _) [HasZero M] where 
   Support : Finset α 
   toFun : α → M 
   mem_support_to_fun : ∀ a, a ∈ support ↔ to_fun a ≠ 0
@@ -91,16 +91,16 @@ namespace Finsupp
 
 section Basic
 
-variable[HasZero M]
+variable [HasZero M]
 
-instance  : CoeFun (α →₀ M) fun _ => α → M :=
+instance : CoeFun (α →₀ M) fun _ => α → M :=
   ⟨to_fun⟩
 
 @[simp]
 theorem coe_mk (f : α → M) (s : Finset α) (h : ∀ a, a ∈ s ↔ f a ≠ 0) : «expr⇑ » (⟨s, f, h⟩ : α →₀ M) = f :=
   rfl
 
-instance  : HasZero (α →₀ M) :=
+instance : HasZero (α →₀ M) :=
   ⟨⟨∅, 0, fun _ => ⟨False.elim, fun H => H rfl⟩⟩⟩
 
 @[simp]
@@ -114,7 +114,7 @@ theorem zero_apply {a : α} : (0 : α →₀ M) a = 0 :=
 theorem support_zero : (0 : α →₀ M).Support = ∅ :=
   rfl
 
-instance  : Inhabited (α →₀ M) :=
+instance : Inhabited (α →₀ M) :=
   ⟨0⟩
 
 @[simp]
@@ -190,7 +190,7 @@ theorem card_support_eq_zero {f : α →₀ M} : card f.support = 0 ↔ f = 0 :=
   by 
     simp 
 
-instance  [DecidableEq α] [DecidableEq M] : DecidableEq (α →₀ M) :=
+instance [DecidableEq α] [DecidableEq M] : DecidableEq (α →₀ M) :=
   fun f g => decidableOfIff (f.support = g.support ∧ ∀ a _ : a ∈ f.support, f a = g a) ext_iff'.symm
 
 theorem finite_support (f : α →₀ M) : Set.Finite (Function.Support f) :=
@@ -232,7 +232,7 @@ end Basic
 
 section Single
 
-variable[HasZero M]{a a' : α}{b : M}
+variable [HasZero M] {a a' : α} {b : M}
 
 /-- `single a b` is the finitely supported function which has
   value `b` at `a` and zero otherwise. -/
@@ -381,7 +381,7 @@ theorem single_swap (a₁ a₂ : α) (b : M) : single a₁ b a₂ = single a₂ 
   by 
     simp only [single_apply] <;> acRfl
 
-instance  [Nonempty α] [Nontrivial M] : Nontrivial (α →₀ M) :=
+instance [Nonempty α] [Nontrivial M] : Nontrivial (α →₀ M) :=
   by 
     inhabit α 
     rcases exists_ne (0 : M) with ⟨x, hx⟩
@@ -460,7 +460,7 @@ end Single
 
 section Update
 
-variable[HasZero M](f : α →₀ M)(a : α)(b : M)(i : α)
+variable [HasZero M] (f : α →₀ M) (a : α) (b : M) (i : α)
 
 /-- Replace the value of a `α →₀ M` at a given point `a : α` by a given value `b : M`.
 If `b = 0`, this amounts to removing `a` from the `finsupp.support`.
@@ -491,7 +491,7 @@ theorem support_update : support (f.update a b) = if b = 0 then f.support.erase 
 theorem support_update_zero : support (f.update a 0) = f.support.erase a :=
   if_pos rfl
 
-variable{b}
+variable {b}
 
 theorem support_update_ne_zero (h : b ≠ 0) : support (f.update a b) = insert a f.support :=
   if_neg h
@@ -503,7 +503,7 @@ end Update
 
 section OnFinset
 
-variable[HasZero M]
+variable [HasZero M]
 
 /-- `on_finset s f hf` is the finsupp function representing `f` restricted to the finset `s`.
   The function needs to be `0` outside of `s`. Use this when the set needs to be filtered anyways,
@@ -535,7 +535,7 @@ end OnFinset
 
 section OfSupportFinite
 
-variable[HasZero M]
+variable [HasZero M]
 
 /-- The natural `finsupp` induced by the function `f` given that it has finite support. -/
 noncomputable def of_support_finite (f : α → M) (hf : (Function.Support f).Finite) : α →₀ M :=
@@ -544,7 +544,7 @@ noncomputable def of_support_finite (f : α → M) (hf : (Function.Support f).Fi
 theorem of_support_finite_coe {f : α → M} {hf : (Function.Support f).Finite} : (of_support_finite f hf : α → M) = f :=
   rfl
 
-instance  : CanLift (α → M) (α →₀ M) :=
+instance : CanLift (α → M) (α →₀ M) :=
   { coe := coeFn, cond := fun f => (Function.Support f).Finite, prf := fun f hf => ⟨of_support_finite f hf, rfl⟩ }
 
 end OfSupportFinite
@@ -554,7 +554,7 @@ end OfSupportFinite
 
 section MapRange
 
-variable[HasZero M][HasZero N][HasZero P]
+variable [HasZero M] [HasZero N] [HasZero P]
 
 /-- The composition of `f : M → N` and `g : α →₀ M` is
 `map_range f hf g : α →₀ N`, well-defined when `f 0 = 0`.
@@ -611,7 +611,7 @@ end MapRange
 
 section EmbDomain
 
-variable[HasZero M][HasZero N]
+variable [HasZero M] [HasZero N]
 
 /-- Given `f : α ↪ β` and `v : α →₀ M`, `emb_domain f v : β →₀ M`
 is the finitely supported function whose value at `f a : β` is `v a`.
@@ -732,7 +732,7 @@ end EmbDomain
 
 section ZipWith
 
-variable[HasZero M][HasZero N][HasZero P]
+variable [HasZero M] [HasZero N] [HasZero P]
 
 /-- `zip_with f hf g₁ g₂` is the finitely supported function satisfying
   `zip_with f hf g₁ g₂ a = f (g₁ a) (g₂ a)`, and it is well-defined when `f 0 0 = 0`. -/
@@ -763,7 +763,7 @@ end ZipWith
 
 section Erase
 
-variable[HasZero M]
+variable [HasZero M]
 
 /-- `erase a f` is the finitely supported function equal to `f` except at `a` where it is equal to
   `0`. -/
@@ -828,7 +828,7 @@ section SumProd
 def Prod [HasZero M] [CommMonoidₓ N] (f : α →₀ M) (g : α → M → N) : N :=
   ∏a in f.support, g a (f a)
 
-variable[HasZero M][HasZero M'][CommMonoidₓ N]
+variable [HasZero M] [HasZero M'] [CommMonoidₓ N]
 
 @[toAdditive]
 theorem prod_of_support_subset (f : α →₀ M) {s : Finset α} (hs : f.support ⊆ s) (g : α → M → N)
@@ -925,9 +925,9 @@ end SumProd
 
 section AddZeroClass
 
-variable[AddZeroClass M]
+variable [AddZeroClass M]
 
-instance  : Add (α →₀ M) :=
+instance : Add (α →₀ M) :=
   ⟨zip_with (·+·) (add_zeroₓ 0)⟩
 
 @[simp]
@@ -965,7 +965,7 @@ theorem single_add {a : α} {b₁ b₂ : M} : single a (b₁+b₂) = single a b�
         ·
           rw [add_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, zero_addₓ]
 
-instance  : AddZeroClass (α →₀ M) :=
+instance : AddZeroClass (α →₀ M) :=
   { zero := 0, add := ·+·, zero_add := fun ⟨s, f, hf⟩ => ext$ fun a => zero_addₓ _,
     add_zero := fun ⟨s, f, hf⟩ => ext$ fun a => add_zeroₓ _ }
 
@@ -1145,9 +1145,9 @@ end AddZeroClass
 
 section AddMonoidₓ
 
-variable[AddMonoidₓ M]
+variable [AddMonoidₓ M]
 
-instance  : AddMonoidₓ (α →₀ M) :=
+instance : AddMonoidₓ (α →₀ M) :=
   { Finsupp.addZeroClass with zero := 0, add := ·+·,
     add_assoc := fun ⟨s, f, hf⟩ ⟨t, g, hg⟩ ⟨u, h, hh⟩ => ext$ fun a => add_assocₓ _ _ _,
     nsmul := fun n v => v.map_range ((· • ·) n) (nsmul_zero _),
@@ -1196,13 +1196,13 @@ theorem MonoidHom.finsupp_prod_apply [HasZero β] [Monoidₓ N] [CommMonoidₓ P
 
 namespace Finsupp
 
-instance  [AddCommMonoidₓ M] : AddCommMonoidₓ (α →₀ M) :=
+instance [AddCommMonoidₓ M] : AddCommMonoidₓ (α →₀ M) :=
   { Finsupp.addMonoid with add_comm := fun ⟨s, f, _⟩ ⟨t, g, _⟩ => ext$ fun a => add_commₓ _ _ }
 
-instance  [AddGroupₓ G] : Sub (α →₀ G) :=
+instance [AddGroupₓ G] : Sub (α →₀ G) :=
   ⟨zip_with Sub.sub (sub_zero _)⟩
 
-instance  [AddGroupₓ G] : AddGroupₓ (α →₀ G) :=
+instance [AddGroupₓ G] : AddGroupₓ (α →₀ G) :=
   { Finsupp.addMonoid with neg := map_range Neg.neg neg_zero, sub := Sub.sub,
     sub_eq_add_neg := fun x y => ext fun i => sub_eq_add_neg _ _,
     add_left_neg := fun ⟨s, f, _⟩ => ext$ fun x => add_left_negₓ _,
@@ -1224,7 +1224,7 @@ instance  [AddGroupₓ G] : AddGroupₓ (α →₀ G) :=
           simp only [Nat.succ_eq_add_one, map_range_apply, zsmul_neg_succ_of_nat, Int.coe_nat_succ, neg_inj, add_zsmul,
             add_nsmul, one_zsmul, coe_nat_zsmul, one_nsmul] }
 
-instance  [AddCommGroupₓ G] : AddCommGroupₓ (α →₀ G) :=
+instance [AddCommGroupₓ G] : AddCommGroupₓ (α →₀ G) :=
   { Finsupp.addGroup with add_comm := add_commₓ }
 
 theorem single_multiset_sum [AddCommMonoidₓ M] (s : Multiset M) (a : α) : single a s.sum = (s.map (single a)).Sum :=
@@ -1479,7 +1479,7 @@ section MapRange
 
 section Equiv
 
-variable[HasZero M][HasZero N][HasZero P]
+variable [HasZero M] [HasZero N] [HasZero P]
 
 /-- `finsupp.map_range` as an equiv. -/
 @[simps apply]
@@ -1525,7 +1525,7 @@ end Equiv
 
 section ZeroHom
 
-variable[HasZero M][HasZero N][HasZero P]
+variable [HasZero M] [HasZero N] [HasZero P]
 
 /-- Composition with a fixed zero-preserving homomorphism is itself an zero-preserving homomorphism
 on functions. -/
@@ -1545,7 +1545,7 @@ end ZeroHom
 
 section AddMonoidHom
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ N][AddCommMonoidₓ P]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [AddCommMonoidₓ P]
 
 /--
 Composition with a fixed additive homomorphism is itself an additive homomorphism on functions.
@@ -1632,7 +1632,7 @@ end MapRange
 
 section MapDomain
 
-variable[AddCommMonoidₓ M]{v v₁ v₂ : α →₀ M}
+variable [AddCommMonoidₓ M] {v v₁ v₂ : α →₀ M}
 
 /-- Given `f : α → β` and `v : α →₀ M`, `map_domain f v : β →₀ M`
   is the finitely supported function whose value at `a : β` is the sum
@@ -1898,7 +1898,7 @@ end Option
 
 section EquivCongrLeft
 
-variable[HasZero M]
+variable [HasZero M]
 
 /-- Given `f : α ≃ β`, we can map `l : α →₀ M` to  `equiv_map_domain f l : β →₀ M` (computably)
 by mapping the support forwards and the function backwards. -/
@@ -1976,7 +1976,7 @@ section Filter
 
 section HasZero
 
-variable[HasZero M](p : α → Prop)(f : α →₀ M)
+variable [HasZero M] (p : α → Prop) (f : α →₀ M)
 
 /-- `filter p f` is the function which is `f a` if `p a` is true and 0 otherwise. -/
 def filter (p : α → Prop) (f : α →₀ M) : α →₀ M :=
@@ -2038,7 +2038,7 @@ end Filter
 
 section Frange
 
-variable[HasZero M]
+variable [HasZero M]
 
 /-- `frange f` is the image of `f` on the support of `f`. -/
 def frange (f : α →₀ M) : Finset M :=
@@ -2068,7 +2068,7 @@ section SubtypeDomain
 
 section Zero
 
-variable[HasZero M]{p : α → Prop}
+variable [HasZero M] {p : α → Prop}
 
 /-- `subtype_domain p f` is the restriction of the finitely supported function
   `f` to the subtype `p`. -/
@@ -2113,7 +2113,7 @@ end Zero
 
 section AddZeroClass
 
-variable[AddZeroClass M]{p : α → Prop}{v v' : α →₀ M}
+variable [AddZeroClass M] {p : α → Prop} {v v' : α →₀ M}
 
 @[simp]
 theorem subtype_domain_add {v v' : α →₀ M} : (v+v').subtypeDomain p = v.subtype_domain p+v'.subtype_domain p :=
@@ -2136,7 +2136,7 @@ end AddZeroClass
 
 section CommMonoidₓ
 
-variable[AddCommMonoidₓ M]{p : α → Prop}
+variable [AddCommMonoidₓ M] {p : α → Prop}
 
 theorem subtype_domain_sum {s : Finset ι} {h : ι → α →₀ M} :
   (∑c in s, h c).subtypeDomain p = ∑c in s, (h c).subtypeDomain p :=
@@ -2163,7 +2163,7 @@ end CommMonoidₓ
 
 section Groupₓ
 
-variable[AddGroupₓ G]{p : α → Prop}{v v' : α →₀ G}
+variable [AddGroupₓ G] {p : α → Prop} {v v' : α →₀ G}
 
 @[simp]
 theorem subtype_domain_neg : (-v).subtypeDomain p = -v.subtype_domain p :=
@@ -2354,7 +2354,7 @@ end Multiset
 
 section CurryUncurry
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ N]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ N]
 
 /-- Given a finitely supported function `f` from a product type `α × β` to `γ`,
 `curry f` is the "curried" finitely supported function from `α` to the type of
@@ -2486,7 +2486,7 @@ theorem sum_finsupp_equiv_prod_finsupp_symm_inr {α β γ : Type _} [HasZero γ]
   (sum_finsupp_equiv_prod_finsupp.symm fg) (Sum.inr y) = fg.2 y :=
   rfl
 
-variable[AddMonoidₓ M]
+variable [AddMonoidₓ M]
 
 /-- The additive equivalence between `(α ⊕ β) →₀ M` and `(α →₀ M) × (β →₀ M)`.
 
@@ -2521,7 +2521,7 @@ end Sum
 
 section 
 
-variable[Groupₓ G][MulAction G α][AddCommMonoidₓ M]
+variable [Groupₓ G] [MulAction G α] [AddCommMonoidₓ M]
 
 /--
 Scalar multiplication by a group element g,
@@ -2606,7 +2606,7 @@ end
 
 section 
 
-instance  [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : HasScalar R (α →₀ M) :=
+instance [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : HasScalar R (α →₀ M) :=
   ⟨fun a v => v.map_range ((· • ·) a) (smul_zero _)⟩
 
 /-!
@@ -2628,7 +2628,7 @@ theorem _root_.is_smul_regular.finsupp {_ : Monoidₓ R} [AddMonoidₓ M] [Distr
   (hk : IsSmulRegular M k) : IsSmulRegular (α →₀ M) k :=
   fun _ _ h => ext$ fun i => hk (congr_funₓ h i)
 
-instance  [Monoidₓ R] [Nonempty α] [AddMonoidₓ M] [DistribMulAction R M] [HasFaithfulScalar R M] :
+instance [Monoidₓ R] [Nonempty α] [AddMonoidₓ M] [DistribMulAction R M] [HasFaithfulScalar R M] :
   HasFaithfulScalar R (α →₀ M) :=
   { eq_of_smul_eq_smul :=
       fun r₁ r₂ h =>
@@ -2638,26 +2638,26 @@ instance  [Monoidₓ R] [Nonempty α] [AddMonoidₓ M] [DistribMulAction R M] [H
             by 
               simpa using congr_funₓ (h (single a m)) a }
 
-variable(α M)
+variable (α M)
 
-instance  [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (α →₀ M) :=
+instance [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (α →₀ M) :=
   { smul := · • ·, smul_add := fun a x y => ext$ fun _ => smul_add _ _ _,
     one_smul := fun x => ext$ fun _ => one_smul _ _, mul_smul := fun r s x => ext$ fun _ => mul_smul _ _ _,
     smul_zero := fun x => ext$ fun _ => smul_zero _ }
 
-instance  [Monoidₓ R] [Monoidₓ S] [AddMonoidₓ M] [DistribMulAction R M] [DistribMulAction S M] [HasScalar R S]
+instance [Monoidₓ R] [Monoidₓ S] [AddMonoidₓ M] [DistribMulAction R M] [DistribMulAction S M] [HasScalar R S]
   [IsScalarTower R S M] : IsScalarTower R S (α →₀ M) :=
   { smul_assoc := fun r s a => ext$ fun _ => smul_assoc _ _ _ }
 
-instance  [Monoidₓ R] [Monoidₓ S] [AddMonoidₓ M] [DistribMulAction R M] [DistribMulAction S M] [SmulCommClass R S M] :
+instance [Monoidₓ R] [Monoidₓ S] [AddMonoidₓ M] [DistribMulAction R M] [DistribMulAction S M] [SmulCommClass R S M] :
   SmulCommClass R S (α →₀ M) :=
   { smul_comm := fun r s a => ext$ fun _ => smul_comm _ _ _ }
 
-instance  [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (α →₀ M) :=
+instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (α →₀ M) :=
   { Finsupp.distribMulAction α M with smul := · • ·, zero_smul := fun x => ext$ fun _ => zero_smul _ _,
     add_smul := fun a x y => ext$ fun _ => add_smul _ _ _ }
 
-variable{α M}{R}
+variable {α M} {R}
 
 theorem support_smul {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] {b : R} {g : α →₀ M} :
   (b • g).Support ⊆ g.support :=
@@ -2668,7 +2668,7 @@ theorem support_smul {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] {
 
 section 
 
-variable{p : α → Prop}
+variable {p : α → Prop}
 
 @[simp]
 theorem filter_smul {_ : Monoidₓ R} [AddMonoidₓ M] [DistribMulAction R M] {b : R} {v : α →₀ M} :
@@ -2738,16 +2738,16 @@ theorem sum_smul_index_add_monoid_hom [Monoidₓ R] [AddMonoidₓ M] [AddCommMon
   {b : R} {h : α → M →+ N} : ((b • g).Sum fun a => h a) = g.sum fun i c => h i (b • c) :=
   sum_map_range_index fun i => (h i).map_zero
 
-instance  [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] {ι : Type _} [NoZeroSmulDivisors R M] :
+instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] {ι : Type _} [NoZeroSmulDivisors R M] :
   NoZeroSmulDivisors R (ι →₀ M) :=
   ⟨fun c f h =>
       or_iff_not_imp_left.mpr fun hc => Finsupp.ext fun i => (smul_eq_zero.mp (Finsupp.ext_iff.mp h i)).resolve_left hc⟩
 
 section DistribMulActionHom
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ N][DistribMulAction R M][DistribMulAction R N]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ N] [DistribMulAction R M] [DistribMulAction R N]
 
 /-- `finsupp.single` as a `distrib_mul_action_hom`.
 
@@ -2773,7 +2773,7 @@ end DistribMulActionHom
 
 section 
 
-variable[HasZero R]
+variable [HasZero R]
 
 /-- The `finsupp` version of `pi.unique`. -/
 instance unique_of_right [Subsingleton R] : Unique (α →₀ R) :=
@@ -2861,7 +2861,7 @@ namespace Finsupp
 
 section Sigma
 
-variable{αs : ι → Type _}[HasZero M](l : (Σi, αs i) →₀ M)
+variable {αs : ι → Type _} [HasZero M] (l : (Σi, αs i) →₀ M)
 
 /-- Given `l`, a finitely supported function from the sigma type `Σ (i : ι), αs i` to `M` and
 an index element `i : ι`, `split l i` is the `i`th component of `l`,
@@ -2910,7 +2910,7 @@ theorem sigma_sum [AddCommMonoidₓ N] (f : (Σi : ι, αs i) → M → N) :
   by 
     simp only [Sum, sigma_support, sum_sigma, split_apply]
 
-variable{η : Type _}[Fintype η]{ιs : η → Type _}[HasZero α]
+variable {η : Type _} [Fintype η] {ιs : η → Type _} [HasZero α]
 
 /-- On a `fintype η`, `finsupp.split` is an equivalence between `(Σ (j : η), ιs j) →₀ α`
 and `Π j, (ιs j →₀ α)`.
@@ -3011,22 +3011,22 @@ theorem Finsupp.to_multiset_to_finsupp (f : α →₀ ℕ) : f.to_multiset.to_fi
 
 namespace Finsupp
 
-instance  [Preorderₓ M] [HasZero M] : Preorderₓ (α →₀ M) :=
+instance [Preorderₓ M] [HasZero M] : Preorderₓ (α →₀ M) :=
   { le := fun f g => ∀ s, f s ≤ g s, le_refl := fun f s => le_reflₓ _,
     le_trans := fun f g h Hfg Hgh s => le_transₓ (Hfg s) (Hgh s) }
 
-instance  [PartialOrderₓ M] [HasZero M] : PartialOrderₓ (α →₀ M) :=
+instance [PartialOrderₓ M] [HasZero M] : PartialOrderₓ (α →₀ M) :=
   { Finsupp.preorder with le_antisymm := fun f g hfg hgf => ext$ fun s => le_antisymmₓ (hfg s) (hgf s) }
 
-instance  [OrderedAddCommMonoid M] : OrderedAddCommMonoid (α →₀ M) :=
+instance [OrderedAddCommMonoid M] : OrderedAddCommMonoid (α →₀ M) :=
   { Finsupp.addCommMonoid, Finsupp.partialOrder with add_le_add_left := fun a b h c s => add_le_add_left (h s) (c s) }
 
-instance  [OrderedCancelAddCommMonoid M] : OrderedCancelAddCommMonoid (α →₀ M) :=
+instance [OrderedCancelAddCommMonoid M] : OrderedCancelAddCommMonoid (α →₀ M) :=
   { Finsupp.addCommMonoid, Finsupp.partialOrder with add_le_add_left := fun a b h c s => add_le_add_left (h s) (c s),
     le_of_add_le_add_left := fun a b c h s => le_of_add_le_add_left (h s),
     add_left_cancel := fun a b c h => ext$ fun s => add_left_cancelₓ (ext_iff.1 h s) }
 
-instance  [OrderedAddCommMonoid M] [ContravariantClass M M (·+·) (· ≤ ·)] :
+instance [OrderedAddCommMonoid M] [ContravariantClass M M (·+·) (· ≤ ·)] :
   ContravariantClass (α →₀ M) (α →₀ M) (·+·) (· ≤ ·) :=
   ⟨fun f g h H x => le_of_add_le_add_left$ H x⟩
 
@@ -3080,13 +3080,13 @@ theorem sum_id_lt_of_lt (m n : α →₀ ℕ) (h : m < n) : (m.sum fun _ => id) 
     apply Multiset.card_lt_of_lt 
     exact to_multiset_strict_mono h
 
-variable(α)
+variable (α)
 
 /-- The order on `σ →₀ ℕ` is well-founded.-/
 theorem lt_wf : WellFounded (@LT.lt (α →₀ ℕ) _) :=
   Subrelation.wfₓ sum_id_lt_of_lt$ InvImage.wfₓ _ Nat.lt_wf
 
-variable{α}
+variable {α}
 
 /-! Declarations about subtraction on `finsupp` with codomain a `canonically_ordered_add_monoid`.
 
@@ -3097,7 +3097,13 @@ section NatSub
 
 section CanonicallyOrderedMonoid
 
-variable[CanonicallyOrderedAddMonoid M][Sub M][HasOrderedSub M]
+instance [CanonicallyOrderedAddMonoid M] : OrderBot (α →₀ M) :=
+  { bot := 0,
+    bot_le :=
+      by 
+        simp [Finsupp.le_def] }
+
+variable [CanonicallyOrderedAddMonoid M] [Sub M] [HasOrderedSub M]
 
 /-- This is called `tsub` for truncated subtraction, to distinguish it with subtraction in an
 additive group. -/
@@ -3111,11 +3117,11 @@ theorem coe_tsub (g₁ g₂ : α →₀ M) : «expr⇑ » (g₁ - g₂) = g₁ -
 theorem tsub_apply (g₁ g₂ : α →₀ M) (a : α) : (g₁ - g₂) a = g₁ a - g₂ a :=
   rfl
 
-instance  : CanonicallyOrderedAddMonoid (α →₀ M) :=
-  { (by 
+instance : CanonicallyOrderedAddMonoid (α →₀ M) :=
+  { Finsupp.orderBot,
+    (by 
       infer_instance :
     OrderedAddCommMonoid (α →₀ M)) with
-    bot := 0, bot_le := fun f s => zero_le (f s),
     le_iff_exists_add :=
       by 
         intro f g 
@@ -3130,7 +3136,7 @@ instance  : CanonicallyOrderedAddMonoid (α →₀ M) :=
           rintro ⟨g, rfl⟩ x 
           exact self_le_add_right (f x) (g x) }
 
-instance  : HasOrderedSub (α →₀ M) :=
+instance : HasOrderedSub (α →₀ M) :=
   ⟨fun n m k => forall_congrₓ$ fun x => tsub_le_iff_right⟩
 
 @[simp]

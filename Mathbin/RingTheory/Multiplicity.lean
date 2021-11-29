@@ -17,7 +17,7 @@ several basic results on it.
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Nat Part
 
@@ -33,7 +33,7 @@ namespace multiplicity
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ α]
+variable [CommMonoidₓ α]
 
 /-- `multiplicity.finite a b` indicates that the multiplicity of `a` in `b` is finite. -/
 @[reducible]
@@ -90,7 +90,7 @@ theorem finite_of_finite_mul_right {a b c : α} : finite a (b*c) → finite a b 
   by 
     rw [mul_commₓ] <;> exact finite_of_finite_mul_left
 
-variable[DecidableRel (· ∣ · : α → α → Prop)]
+variable [DecidableRel (· ∣ · : α → α → Prop)]
 
 theorem pow_dvd_of_le_multiplicity {a b : α} {k : ℕ} : (k : Enat) ≤ multiplicity a b → a ^ k ∣ b :=
   by 
@@ -286,7 +286,7 @@ end CommMonoidₓ
 
 section CommMonoidWithZero
 
-variable[CommMonoidWithZero α]
+variable [CommMonoidWithZero α]
 
 theorem ne_zero_of_finite {a b : α} (h : finite a b) : b ≠ 0 :=
   let ⟨n, hn⟩ := h 
@@ -294,7 +294,7 @@ theorem ne_zero_of_finite {a b : α} (h : finite a b) : b ≠ 0 :=
     by 
       simpa [hb] using hn
 
-variable[DecidableRel (· ∣ · : α → α → Prop)]
+variable [DecidableRel (· ∣ · : α → α → Prop)]
 
 @[simp]
 protected theorem zero (a : α) : multiplicity a 0 = ⊤ :=
@@ -310,7 +310,7 @@ end CommMonoidWithZero
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ α][DecidableRel (· ∣ · : α → α → Prop)]
+variable [CommSemiringₓ α] [DecidableRel (· ∣ · : α → α → Prop)]
 
 theorem min_le_multiplicity_add {p a b : α} : min (multiplicity p a) (multiplicity p b) ≤ multiplicity p (a+b) :=
   (le_totalₓ (multiplicity p a) (multiplicity p b)).elim
@@ -327,7 +327,7 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ α][DecidableRel (· ∣ · : α → α → Prop)]
+variable [CommRingₓ α] [DecidableRel (· ∣ · : α → α → Prop)]
 
 open_locale Classical
 
@@ -387,7 +387,7 @@ end CommRingₓ
 
 section CommCancelMonoidWithZero
 
-variable[CommCancelMonoidWithZero α]
+variable [CommCancelMonoidWithZero α]
 
 theorem finite_mul_aux {p : α} (hp : Prime p) :
   ∀ {n m : ℕ} {a b : α}, ¬(p ^ n+1) ∣ a → ¬(p ^ m+1) ∣ b → ¬(p ^ (n+m)+1) ∣ a*b
@@ -467,7 +467,7 @@ theorem finite_pow {p a : α} (hp : Prime p) : ∀ {k : ℕ} ha : finite p a, fi
   by 
     rw [pow_succₓ] <;> exact finite_mul hp ha (finite_pow ha)
 
-variable[DecidableRel (· ∣ · : α → α → Prop)]
+variable [DecidableRel (· ∣ · : α → α → Prop)]
 
 @[simp]
 theorem multiplicity_self {a : α} (ha : ¬IsUnit a) (ha0 : a ≠ 0) : multiplicity a a = 1 :=
@@ -587,7 +587,7 @@ end CommCancelMonoidWithZero
 
 section Valuation
 
-variable{R : Type _}[CommRingₓ R][IsDomain R]{p : R}[DecidableRel (HasDvd.Dvd : R → R → Prop)]
+variable {R : Type _} [CommRingₓ R] [IsDomain R] {p : R} [DecidableRel (HasDvd.Dvd : R → R → Prop)]
 
 /-- `multiplicity` of a prime inan integral domain as an additive valuation to `enat`. -/
 noncomputable def AddValuation (hp : Prime p) : AddValuation R Enat :=

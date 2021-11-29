@@ -65,19 +65,19 @@ open Function Set Submodule
 
 open_locale Classical BigOperators
 
-variable{ι : Type _}{ι' : Type _}{R : Type _}{K : Type _}
+variable {ι : Type _} {ι' : Type _} {R : Type _} {K : Type _}
 
-variable{M : Type _}{M' M'' : Type _}{V : Type u}{V' : Type _}
+variable {M : Type _} {M' M'' : Type _} {V : Type u} {V' : Type _}
 
 section Module
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
-variable[AddCommMonoidₓ M][Module R M][AddCommMonoidₓ M'][Module R M']
+variable [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ M'] [Module R M']
 
 section 
 
-variable(ι)(R)(M)
+variable (ι) (R) (M)
 
 /-- A `basis ι R M` for a module `M` is the type of `ι`-indexed `R`-bases of `M`.
 
@@ -93,15 +93,15 @@ end
 
 namespace Basis
 
-instance  : Inhabited (Basis ι R (ι →₀ R)) :=
+instance : Inhabited (Basis ι R (ι →₀ R)) :=
   ⟨Basis.of_repr (LinearEquiv.refl _ _)⟩
 
-variable(b b₁ : Basis ι R M)(i : ι)(c : R)(x : M)
+variable (b b₁ : Basis ι R M) (i : ι) (c : R) (x : M)
 
 section reprₓ
 
 /-- `b i` is the `i`th basis vector. -/
-instance  : CoeFun (Basis ι R M) fun _ => ι → M :=
+instance : CoeFun (Basis ι R M) fun _ => ι → M :=
   { coe := fun b i => b.repr.symm (Finsupp.single i 1) }
 
 @[simp]
@@ -222,7 +222,7 @@ end Coord
 
 section Ext
 
-variable{M₁ : Type _}[AddCommMonoidₓ M₁][Module R M₁]
+variable {M₁ : Type _} [AddCommMonoidₓ M₁] [Module R M₁]
 
 /-- Two linear maps are equal if they are equal on basis vectors. -/
 theorem ext {f₁ f₂ : M →ₗ[R] M₁} (h : ∀ i, f₁ (b i) = f₂ (b i)) : f₁ = f₂ :=
@@ -305,7 +305,7 @@ end Ext
 
 section Map
 
-variable(f : M ≃ₗ[R] M')
+variable (f : M ≃ₗ[R] M')
 
 /-- Apply the linear equivalence `f` to the basis vectors. -/
 @[simps]
@@ -320,7 +320,7 @@ end Map
 
 section MapCoeffs
 
-variable{R' : Type _}[Semiringₓ R'][Module R' M](f : R ≃+* R')(h : ∀ c x : M, f c • x = c • x)
+variable {R' : Type _} [Semiringₓ R'] [Module R' M] (f : R ≃+* R') (h : ∀ c x : M, f c • x = c • x)
 
 include f h b
 
@@ -354,9 +354,9 @@ end MapCoeffs
 
 section Reindex
 
-variable(b' : Basis ι' R M')
+variable (b' : Basis ι' R M')
 
-variable(e : ι ≃ ι')
+variable (e : ι ≃ ι')
 
 /-- `b.reindex (e : ι ≃ ι')` is a basis indexed by `ι'` -/
 def reindex : Basis ι' R M :=
@@ -452,7 +452,7 @@ theorem reindex_range_repr (x : M) (i : ι) (h := Set.mem_range_self i) : b.rein
 
 section Fintype
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 /-- `b.reindex_finset_range` is a basis indexed by `finset.univ.image b`,
 the finite set of basis vectors themselves. -/
@@ -521,9 +521,9 @@ theorem index_nonempty (b : Basis ι R M) [Nontrivial M] : Nonempty ι :=
 
 section Constr
 
-variable(S : Type _)[Semiringₓ S][Module S M']
+variable (S : Type _) [Semiringₓ S] [Module S M']
 
-variable[SmulCommClass R S M']
+variable [SmulCommClass R S M']
 
 /-- Construct a linear map given the value at the basis.
 
@@ -593,9 +593,9 @@ end Constr
 
 section Equiv
 
-variable(b' : Basis ι' R M')(e : ι ≃ ι')
+variable (b' : Basis ι' R M') (e : ι ≃ ι')
 
-variable[AddCommMonoidₓ M''][Module R M'']
+variable [AddCommMonoidₓ M''] [Module R M'']
 
 /-- If `b` is a basis for `M` and `b'` a basis for `M'`, and the index types are equivalent,
 `b.equiv b' e` is a linear equivalence `M ≃ₗ[R] M'`, mapping `b i` to `b' (e i)`. -/
@@ -640,7 +640,7 @@ end Equiv
 
 section Prod
 
-variable(b' : Basis ι' R M')
+variable (b' : Basis ι' R M')
 
 /-- `basis.prod` maps a `ι`-indexed basis for `M` and a `ι'`-indexed basis for `M'`
 to a `ι ⊕ ι'`-index basis for `M × M'`. -/
@@ -803,7 +803,7 @@ end Singleton
 
 section Empty
 
-variable(M)
+variable (M)
 
 /-- If `M` is a subsingleton and `ι` is empty, this is the unique `ι`-indexed basis for `M`. -/
 protected def Empty [Subsingleton M] [IsEmpty ι] : Basis ι R M :=
@@ -822,7 +822,7 @@ open Basis
 
 open Fintype
 
-variable[Fintype ι](b : Basis ι R M)
+variable [Fintype ι] (b : Basis ι R M)
 
 /-- A module over `R` with a finite basis is linearly equivalent to functions from its basis to `R`.
 -/
@@ -884,9 +884,9 @@ theorem Basis.coe_of_equiv_fun (e : M ≃ₗ[R] ι → R) :
             by 
               simp [Basis.ofEquivFun, ←Finsupp.single_eq_pi_single, Finsupp.single_eq_update]
 
-variable(S : Type _)[Semiringₓ S][Module S M']
+variable (S : Type _) [Semiringₓ S] [Module S M']
 
-variable[SmulCommClass R S M']
+variable [SmulCommClass R S M']
 
 @[simp]
 theorem Basis.constr_apply_fintype (f : ι → M') (x : M) : (b.constr S f : M → M') x = ∑i, b.equiv_fun x i • f i :=
@@ -901,11 +901,11 @@ section CommSemiringₓ
 
 namespace Basis
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
-variable[AddCommMonoidₓ M][Module R M][AddCommMonoidₓ M'][Module R M']
+variable [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ M'] [Module R M']
 
-variable(b : Basis ι R M)(b' : Basis ι' R M')
+variable (b : Basis ι R M) (b' : Basis ι' R M')
 
 /-- If `b` is a basis for `M` and `b'` a basis for `M'`,
 and `f`, `g` form a bijection between the basis vectors,
@@ -921,8 +921,8 @@ def equiv' (f : M → M') (g : M' → M) (hf : ∀ i, f (b i) ∈ range b') (hg 
             Exists.elim (hf i)
               fun i' hi' =>
                 by 
-                  rw [LinearMap.comp_apply, b.constr_basis, Function.comp_apply, ←hi', b'.constr_basis,
-                    Function.comp_apply, hi', hgf, LinearMap.id_apply]
+                  rw [LinearMap.comp_apply, b.constr_basis, Function.comp_applyₓ, ←hi', b'.constr_basis,
+                    Function.comp_applyₓ, hi', hgf, LinearMap.id_apply]
       fun x => congr_argₓ (fun h : M →ₗ[R] M => h x) this,
     right_inv :=
       have  : (b.constr R (f ∘ b)).comp (b'.constr R (g ∘ b')) = LinearMap.id :=
@@ -931,8 +931,8 @@ def equiv' (f : M → M') (g : M' → M) (hf : ∀ i, f (b i) ∈ range b') (hg 
             Exists.elim (hg i)
               fun i' hi' =>
                 by 
-                  rw [LinearMap.comp_apply, b'.constr_basis, Function.comp_apply, ←hi', b.constr_basis,
-                    Function.comp_apply, hi', hfg, LinearMap.id_apply]
+                  rw [LinearMap.comp_apply, b'.constr_basis, Function.comp_applyₓ, ←hi', b.constr_basis,
+                    Function.comp_applyₓ, hi', hfg, LinearMap.id_apply]
       fun x => congr_argₓ (fun h : M' →ₗ[R] M' => h x) this }
 
 @[simp]
@@ -960,15 +960,15 @@ section Module
 
 open LinearMap
 
-variable{v : ι → M}
+variable {v : ι → M}
 
-variable[Ringₓ R][AddCommGroupₓ M][AddCommGroupₓ M'][AddCommGroupₓ M'']
+variable [Ringₓ R] [AddCommGroupₓ M] [AddCommGroupₓ M'] [AddCommGroupₓ M'']
 
-variable[Module R M][Module R M'][Module R M'']
+variable [Module R M] [Module R M'] [Module R M'']
 
-variable{c d : R}{x y : M}
+variable {c d : R} {x y : M}
 
-variable(b : Basis ι R M)
+variable (b : Basis ι R M)
 
 namespace Basis
 
@@ -999,7 +999,7 @@ end
 
 section Mk
 
-variable(hli : LinearIndependent R v)(hsp : span R (range v) = ⊤)
+variable (hli : LinearIndependent R v) (hsp : span R (range v) = ⊤)
 
 /-- A linear independent family of vectors spanning the whole module is a basis. -/
 protected noncomputable def mk : Basis ι R M :=
@@ -1020,7 +1020,7 @@ theorem mk_apply (i : ι) : Basis.mk hli hsp i = v i :=
 theorem coe_mk : «expr⇑ » (Basis.mk hli hsp) = v :=
   funext (mk_apply _ _)
 
-variable{hli hsp}
+variable {hli hsp}
 
 /-- Given a basis, the `i`th element of the dual basis evaluates to 1 on the `i`th element of the
 basis. -/
@@ -1048,7 +1048,7 @@ end Mk
 
 section Span
 
-variable(hli : LinearIndependent R v)
+variable (hli : LinearIndependent R v)
 
 -- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A linear independent family of vectors is a basis for their span. -/
@@ -1179,9 +1179,9 @@ end Module
 
 section Induction
 
-variable[Ringₓ R][IsDomain R]
+variable [Ringₓ R] [IsDomain R]
 
-variable[AddCommGroupₓ M][Module R M]{b : ι → M}
+variable [AddCommGroupₓ M] [Module R M] {b : ι → M}
 
 -- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `N` is a submodule with finite rank, do induction on adjoining a linear independent
@@ -1229,9 +1229,9 @@ end Induction
 
 section DivisionRing
 
-variable[DivisionRing K][AddCommGroupₓ V][AddCommGroupₓ V'][Module K V][Module K V']
+variable [DivisionRing K] [AddCommGroupₓ V] [AddCommGroupₓ V'] [Module K V] [Module K V']
 
-variable{v : ι → V}{s t : Set V}{x y z : V}
+variable {v : ι → V} {s t : Set V} {x y z : V}
 
 include K
 
@@ -1276,7 +1276,7 @@ theorem subset_extend {s : Set V} (hs : LinearIndependent K (coeₓ : s → V)) 
 
 section 
 
-variable(K V)
+variable (K V)
 
 /-- A set used to index `basis.of_vector_space`. -/
 noncomputable def of_vector_space_index : Set V :=
@@ -1313,7 +1313,7 @@ end Basis
 
 open Fintype
 
-variable(K V)
+variable (K V)
 
 theorem VectorSpace.card_fintype [Fintype K] [Fintype V] : ∃ n : ℕ, card V = (card K^n) :=
   ⟨card (Basis.OfVectorSpaceIndex K V), Module.card_fintype (Basis.ofVectorSpace K V)⟩
@@ -1322,9 +1322,9 @@ end DivisionRing
 
 section Field
 
-variable[Field K][AddCommGroupₓ V][AddCommGroupₓ V'][Module K V][Module K V']
+variable [Field K] [AddCommGroupₓ V] [AddCommGroupₓ V'] [Module K V] [Module K V']
 
-variable{v : ι → V}{s t : Set V}{x y z : V}
+variable {v : ι → V} {s t : Set V} {x y z : V}
 
 -- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem linear_map.exists_left_inverse_of_injective

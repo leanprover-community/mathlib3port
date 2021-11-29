@@ -12,11 +12,11 @@ when needed. To construct instances for concrete numbers,
 -/
 
 
-variable{K : Type _}
+variable {K : Type _}
 
 section Field
 
-variable[Field K]
+variable [Field K]
 
 /-- A natural number `t` is invertible in a field `K` if the charactistic of `K` does not divide
 `t`. -/
@@ -42,7 +42,7 @@ end Field
 
 section DivisionRing
 
-variable[DivisionRing K][CharZero K]
+variable [DivisionRing K] [CharZero K]
 
 instance invertibleSucc (n : ℕ) : Invertible (n.succ : K) :=
   invertibleOfNonzero (Nat.cast_ne_zero.mpr (Nat.succ_ne_zero _))

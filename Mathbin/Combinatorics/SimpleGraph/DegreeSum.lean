@@ -41,7 +41,7 @@ namespace SimpleGraph
 
 universe u
 
-variable{V : Type u}(G : SimpleGraph V)
+variable {V : Type u} (G : SimpleGraph V)
 
 -- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
 /-- A dart is a directed edge, consisting of an ordered pair of adjacent vertices. -/
@@ -60,7 +60,7 @@ instance dart.fintype [Fintype V] [DecidableRel G.adj] : Fintype G.dart :=
           by 
             ext <;> simp  }
 
-variable{G}
+variable {G}
 
 /-- The edge associated to the dart. -/
 def dart.edge (d : G.dart) : Sym2 V :=
@@ -100,7 +100,7 @@ theorem dart_edge_eq_iff (d₁ d₂ : G.dart) : d₁.edge = d₂.edge ↔ d₁ =
     simp only [dart.edge, dart.rev_edge, dart.rev]
     rw [Sym2.eq_iff]
 
-variable(G)
+variable (G)
 
 /-- For a given vertex `v`, this is the bijective map from the neighbor set at `v`
 to the darts `d` with `d.fst = v`. --/
@@ -118,7 +118,7 @@ instance dart.inhabited [Inhabited V] [Inhabited (G.neighbor_set (default _))] :
 
 section DegreeSum
 
-variable[Fintype V][DecidableRel G.adj]
+variable [Fintype V] [DecidableRel G.adj]
 
 theorem dart_fst_fiber [DecidableEq V] (v : V) :
   (univ.filter fun d : G.dart => d.fst = v) = univ.Image (G.dart_of_neighbor_set v) :=
@@ -153,7 +153,7 @@ begin
   exact [expr card_eq_sum_card_fiberwise (by simp [] [] [] [] [] [])]
 end
 
-variable{G}[DecidableEq V]
+variable {G} [DecidableEq V]
 
 theorem dart.edge_fiber (d : G.dart) : (univ.filter fun d' : G.dart => d'.edge = d.edge) = {d, d.rev} :=
   Finset.ext
@@ -161,7 +161,7 @@ theorem dart.edge_fiber (d : G.dart) : (univ.filter fun d' : G.dart => d'.edge =
       by 
         simpa using dart_edge_eq_iff d' d
 
-variable(G)
+variable (G)
 
 theorem dart_edge_fiber_card (e : Sym2 V) (h : e ∈ G.edge_set) : (univ.filter fun d : G.dart => d.edge = e).card = 2 :=
   by 

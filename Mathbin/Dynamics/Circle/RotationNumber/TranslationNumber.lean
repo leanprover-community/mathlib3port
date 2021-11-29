@@ -132,14 +132,14 @@ structure CircleDeg1Lift : Type where
 
 namespace CircleDeg1Lift
 
-instance  : CoeFun CircleDeg1Lift fun _ => ℝ → ℝ :=
+instance : CoeFun CircleDeg1Lift fun _ => ℝ → ℝ :=
   ⟨CircleDeg1Lift.toFun⟩
 
 @[simp]
 theorem coe_mk f h₁ h₂ : «expr⇑ » (mk f h₁ h₂) = f :=
   rfl
 
-variable(f g : CircleDeg1Lift)
+variable (f g : CircleDeg1Lift)
 
 protected theorem Monotone : Monotone f :=
   f.monotone'
@@ -172,7 +172,7 @@ theorem ext ⦃f g : CircleDeg1Lift⦄ (h : ∀ x, f x = g x) : f = g :=
 theorem ext_iff {f g : CircleDeg1Lift} : f = g ↔ ∀ x, f x = g x :=
   ⟨fun h x => h ▸ rfl, fun h => ext h⟩
 
-instance  : Monoidₓ CircleDeg1Lift :=
+instance : Monoidₓ CircleDeg1Lift :=
   { mul :=
       fun f g =>
         { toFun := f ∘ g, monotone' := f.monotone.comp g.monotone,
@@ -183,7 +183,7 @@ instance  : Monoidₓ CircleDeg1Lift :=
     one := ⟨id, monotone_id, fun _ => rfl⟩, mul_one := fun f => coe_inj$ Function.comp.right_id f,
     one_mul := fun f => coe_inj$ Function.comp.left_id f, mul_assoc := fun f₁ f₂ f₃ => coe_inj rfl }
 
-instance  : Inhabited CircleDeg1Lift :=
+instance : Inhabited CircleDeg1Lift :=
   ⟨1⟩
 
 @[simp]
@@ -391,7 +391,7 @@ theorem map_fract_sub_fract_eq (x : ℝ) : f (fract x) - fract x = f x - x :=
 
 
 /-- Monotone circle maps form a lattice with respect to the pointwise order -/
-noncomputable instance  : Lattice CircleDeg1Lift :=
+noncomputable instance : Lattice CircleDeg1Lift :=
   { sup :=
       fun f g =>
         { toFun := fun x => max (f x) (g x), monotone' := fun x y h => max_le_max (f.mono h) (g.mono h),

@@ -67,7 +67,7 @@ inductive walking_parallel_pair_hom : walking_parallel_pair → walking_parallel
 | id : ∀ X : walking_parallel_pair.{v}, walking_parallel_pair_hom X X
 
 /-- Satisfying the inhabited linter -/
-instance  : Inhabited (walking_parallel_pair_hom zero one) :=
+instance : Inhabited (walking_parallel_pair_hom zero one) :=
   { default := walking_parallel_pair_hom.left }
 
 open WalkingParallelPairHom
@@ -87,9 +87,9 @@ instance walking_parallel_pair_hom_category : small_category walking_parallel_pa
 theorem walking_parallel_pair_hom_id (X : walking_parallel_pair) : walking_parallel_pair_hom.id X = 𝟙 X :=
   rfl
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{X Y : C}
+variable {X Y : C}
 
 /-- `parallel_pair f g` is the diagram in `C` consisting of the two morphisms `f` and `g` with
     common domain and codomain. -/
@@ -179,7 +179,7 @@ abbrev fork (f g : X ⟶ Y) :=
 abbrev cofork (f g : X ⟶ Y) :=
   cocone (parallel_pair f g)
 
-variable{f g : X ⟶ Y}
+variable {f g : X ⟶ Y}
 
 /-- A fork `t` on the parallel pair `f g : X ⟶ Y` consists of two morphisms `t.π.app zero : t.X ⟶ X`
     and `t.π.app one : t.X ⟶ Y`. Of these, only the first one is interesting, and we give it the
@@ -551,6 +551,7 @@ To construct an isomorphism between coforks,
 it suffices to give an isomorphism between the cocone points
 and check that it commutes with the `π` morphisms.
 -/
+@[simps]
 def cofork.ext {s t : cofork f g} (i : s.X ≅ t.X) (w : s.π ≫ i.hom = t.π) : s ≅ t :=
   { Hom := cofork.mk_hom i.hom w,
     inv :=
@@ -558,7 +559,7 @@ def cofork.ext {s t : cofork f g} (i : s.X ≅ t.X) (w : s.π ≫ i.hom = t.π) 
         (by 
           rw [iso.comp_inv_eq, w]) }
 
-variable(f g)
+variable (f g)
 
 section 
 
@@ -569,7 +570,7 @@ for the parallel pair of morphisms `f` and `g`.
 abbrev has_equalizer :=
   has_limit (parallel_pair f g)
 
-variable[has_equalizer f g]
+variable [has_equalizer f g]
 
 /-- If an equalizer of `f` and `g` exists, we can access an arbitrary choice of such by
     saying `equalizer f g`. -/
@@ -606,7 +607,7 @@ def equalizer_is_equalizer : is_limit (fork.of_ι (equalizer.ι f g) (equalizer.
       (by 
         tidy))
 
-variable{f g}
+variable {f g}
 
 /-- A morphism `k : W ⟶ X` satisfying `k ≫ f = k ≫ g` factors through the equalizer of `f` and `g`
     via `equalizer.lift : W ⟶ equalizer f g`. -/
@@ -636,7 +637,7 @@ end
 
 section 
 
-variable{f g}
+variable {f g}
 
 /-- The equalizer morphism in any limit cone is a monomorphism. -/
 theorem mono_of_is_limit_parallel_pair {c : cone (parallel_pair f g)} (i : is_limit c) : mono (fork.ι c) :=
@@ -646,7 +647,7 @@ end
 
 section 
 
-variable{f g}
+variable {f g}
 
 /-- The identity determines a cone on the equalizer diagram of `f` and `g` if `f = g`. -/
 def id_fork (h : f = g) : fork f g :=
@@ -715,7 +716,7 @@ for the parallel pair of morphisms `f` and `g`.
 abbrev has_coequalizer :=
   has_colimit (parallel_pair f g)
 
-variable[has_coequalizer f g]
+variable [has_coequalizer f g]
 
 /-- If a coequalizer of `f` and `g` exists, we can access an arbitrary choice of such by
     saying `coequalizer f g`. -/
@@ -752,7 +753,7 @@ def coequalizer_is_coequalizer : is_colimit (cofork.of_π (coequalizer.π f g) (
       (by 
         tidy))
 
-variable{f g}
+variable {f g}
 
 /-- Any morphism `k : Y ⟶ W` satisfying `f ≫ k = g ≫ k` factors through the coequalizer of `f`
     and `g` via `coequalizer.desc : coequalizer f g ⟶ W`. -/
@@ -784,7 +785,7 @@ end
 
 section 
 
-variable{f g}
+variable {f g}
 
 /-- The coequalizer morphism in any colimit cocone is an epimorphism. -/
 theorem epi_of_is_colimit_parallel_pair {c : cocone (parallel_pair f g)} (i : is_colimit c) : epi (c.ι.app one) :=
@@ -794,7 +795,7 @@ end
 
 section 
 
-variable{f g}
+variable {f g}
 
 /-- The identity determines a cocone on the coequalizer diagram of `f` and `g`, if `f = g`. -/
 def id_cofork (h : f = g) : cofork f g :=
@@ -856,7 +857,7 @@ theorem coequalizer.iso_target_of_self_inv : (coequalizer.iso_target_of_self f).
 
 section Comparison
 
-variable{D : Type u₂}[category.{v} D](G : C ⥤ D)
+variable {D : Type u₂} [category.{v} D] (G : C ⥤ D)
 
 /--
 The comparison morphism for the equalizer of `f,g`.
@@ -910,15 +911,15 @@ theorem coequalizer_comparison_map_desc [has_coequalizer f g] [has_coequalizer (
 
 end Comparison
 
-variable(C)
+variable (C)
 
 /-- `has_equalizers` represents a choice of equalizer for every pair of morphisms -/
 abbrev has_equalizers :=
-  has_limits_of_shape walking_parallel_pair C
+  has_limits_of_shape walking_parallel_pair.{v} C
 
 /-- `has_coequalizers` represents a choice of coequalizer for every pair of morphisms -/
 abbrev has_coequalizers :=
-  has_colimits_of_shape walking_parallel_pair C
+  has_colimits_of_shape walking_parallel_pair.{v} C
 
 /-- If `C` has all limits of diagrams `parallel_pair f g`, then it has all equalizers -/
 theorem has_equalizers_of_has_limit_parallel_pair [∀ {X Y : C} {f g : X ⟶ Y}, has_limit (parallel_pair f g)] :
@@ -932,7 +933,7 @@ theorem has_coequalizers_of_has_colimit_parallel_pair [∀ {X Y : C} {f g : X �
 
 section 
 
-variable{C}[split_mono f]
+variable {C} [split_mono f]
 
 /--
 A split mono `f` equalizes `(retraction f ≫ f)` and `(𝟙 Y)`.
@@ -963,7 +964,7 @@ end
 
 section 
 
-variable{C}[split_epi f]
+variable {C} [split_epi f]
 
 /--
 A split epi `f` coequalizes `(f ≫ section_ f)` and `(𝟙 X)`.

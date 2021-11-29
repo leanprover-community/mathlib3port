@@ -18,7 +18,7 @@ open_locale Mvfunctor
 /--
 multivariate polynomial functors
 -/
-structure Mvpfunctor(n : ℕ) where 
+structure Mvpfunctor (n : ℕ) where 
   A : Type u 
   B : A → Typevec.{u} n
 
@@ -26,7 +26,7 @@ namespace Mvpfunctor
 
 open mvfunctor(Liftp Liftr)
 
-variable{n m : ℕ}(P : Mvpfunctor.{u} n)
+variable {n m : ℕ} (P : Mvpfunctor.{u} n)
 
 /-- Applying `P` to an object of `Type` -/
 def obj (α : Typevec.{u} n) : Type u :=
@@ -36,13 +36,13 @@ def obj (α : Typevec.{u} n) : Type u :=
 def map {α β : Typevec n} (f : α ⟹ β) : P.obj α → P.obj β :=
   fun ⟨a, g⟩ => ⟨a, Typevec.comp f g⟩
 
-instance  : Inhabited (Mvpfunctor n) :=
+instance : Inhabited (Mvpfunctor n) :=
   ⟨⟨default _, fun _ => default _⟩⟩
 
 instance obj.inhabited {α : Typevec n} [Inhabited P.A] [∀ i, Inhabited (α i)] : Inhabited (P.obj α) :=
   ⟨⟨default _, fun _ _ => default _⟩⟩
 
-instance  : Mvfunctor P.obj :=
+instance : Mvfunctor P.obj :=
   ⟨@Mvpfunctor.map n P⟩
 
 theorem map_eq {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f : P.B a ⟹ α) :
@@ -55,7 +55,7 @@ theorem id_map {α : Typevec n} : ∀ x : P.obj α, Typevec.id <$$> x = x
 theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) : ∀ x : P.obj α, (g ⊚ f) <$$> x = g <$$> f <$$> x
 | ⟨a, h⟩ => rfl
 
-instance  : IsLawfulMvfunctor P.obj :=
+instance : IsLawfulMvfunctor P.obj :=
   { id_map := @id_map _ P, comp_map := @comp_map _ P }
 
 /-- Constant functor where the input object does not affect the output -/
@@ -64,13 +64,13 @@ def const (n : ℕ) (A : Type u) : Mvpfunctor n :=
 
 section Const
 
-variable(n){A : Type u}{α β : Typevec.{u} n}
+variable (n) {A : Type u} {α β : Typevec.{u} n}
 
 /-- Constructor for the constant functor -/
 def const.mk (x : A) {α} : (const n A).Obj α :=
   ⟨x, fun i a => Pempty.elimₓ a⟩
 
-variable{n A}
+variable {n A}
 
 /-- Destructor for the constant functor -/
 def const.get (x : (const n A).Obj α) : A :=
@@ -100,7 +100,7 @@ end Const
 def comp (P : Mvpfunctor.{u} n) (Q : Fin2 n → Mvpfunctor.{u} m) : Mvpfunctor m :=
   { A := Σa₂ : P.1, ∀ i, P.2 a₂ i → (Q i).1, B := fun a => fun i => Σ(j : _)(b : P.2 a.1 j), (Q j).2 (a.snd j b) i }
 
-variable{P}{Q : Fin2 n → Mvpfunctor.{u} m}{α β : Typevec.{u} m}
+variable {P} {Q : Fin2 n → Mvpfunctor.{u} m} {α β : Typevec.{u} m}
 
 /-- Constructor for functor composition -/
 def comp.mk (x : P.obj fun i => (Q i).Obj α) : (comp P Q).Obj α :=
@@ -217,7 +217,7 @@ namespace Mvpfunctor
 
 open Typevec
 
-variable{n : ℕ}(P : Mvpfunctor.{u} (n+1))
+variable {n : ℕ} (P : Mvpfunctor.{u} (n+1))
 
 /-- Split polynomial functor, get a n-ary functor
 from a `n+1`-ary functor -/

@@ -46,7 +46,7 @@ open_locale BigOperators
 
 namespace CategoryTheory
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 /-- A category is called preadditive if `P ⟶ Q` is an abelian group such that composition is
     linear in both variables. -/
@@ -85,13 +85,13 @@ section Preadditive
 
 open AddMonoidHom
 
-variable{C : Type u}[category.{v} C][preadditive C]
+variable {C : Type u} [category.{v} C] [preadditive C]
 
 section InducedCategory
 
 universe u'
 
-variable{C}{D : Type u'}(F : D → C)
+variable {C} {D : Type u'} (F : D → C)
 
 instance induced_category.category : preadditive.{v} (induced_category C F) :=
   { homGroup := fun P Q => @preadditive.hom_group C _ _ (F P) (F Q),
@@ -99,12 +99,12 @@ instance induced_category.category : preadditive.{v} (induced_category C F) :=
 
 end InducedCategory
 
-instance  (X : C) : AddCommGroupₓ (End X) :=
+instance (X : C) : AddCommGroupₓ (End X) :=
   by 
     dsimp [End]
     infer_instance
 
-instance  (X : C) : Ringₓ (End X) :=
+instance (X : C) : Ringₓ (End X) :=
   { (inferInstance : AddCommGroupₓ (End X)), (inferInstance : Monoidₓ (End X)) with
     left_distrib := fun f g h => preadditive.add_comp X X X g h f,
     right_distrib := fun f g h => preadditive.comp_add X X X h f g }
@@ -123,7 +123,7 @@ def right_comp (P : C) {Q R : C} (g : Q ⟶ R) : (P ⟶ Q) →+ (P ⟶ R) :=
       by 
         simp 
 
-variable{P Q R : C}(f f' : P ⟶ Q)(g g' : Q ⟶ R)
+variable {P Q R : C} (f f' : P ⟶ Q) (g g' : Q ⟶ R)
 
 /-- Composition as a bilinear group homomorphism -/
 def comp_hom : (P ⟶ Q) →+ (Q ⟶ R) →+ (P ⟶ R) :=
@@ -172,17 +172,17 @@ theorem sum_comp {P Q R : C} {J : Type _} (s : Finset J) (f : J → (P ⟶ Q)) (
   (∑j in s, f j) ≫ g = ∑j in s, f j ≫ g :=
   map_sum (right_comp P g) _ _
 
-instance  {P Q : C} {f : P ⟶ Q} [epi f] : epi (-f) :=
+instance {P Q : C} {f : P ⟶ Q} [epi f] : epi (-f) :=
   ⟨fun R g g' H =>
       by 
         rwa [neg_comp, neg_comp, ←comp_neg, ←comp_neg, cancel_epi, neg_inj] at H⟩
 
-instance  {P Q : C} {f : P ⟶ Q} [mono f] : mono (-f) :=
+instance {P Q : C} {f : P ⟶ Q} [mono f] : mono (-f) :=
   ⟨fun R g g' H =>
       by 
         rwa [comp_neg, comp_neg, ←neg_comp, ←neg_comp, cancel_mono, neg_inj] at H⟩
 
-instance (priority := 100)preadditive_has_zero_morphisms : has_zero_morphisms C :=
+instance (priority := 100) preadditive_has_zero_morphisms : has_zero_morphisms C :=
   { HasZero := inferInstance, comp_zero' := fun P Q f R => map_zero$ left_comp R f,
     zero_comp' := fun P Q R f => map_zero$ right_comp P f }
 
@@ -218,7 +218,7 @@ theorem epi_of_cokernel_zero {X Y : C} {f : X ⟶ Y} [has_colimit (parallel_pair
 
 open_locale ZeroObject
 
-variable[has_zero_object C]
+variable [has_zero_object C]
 
 theorem mono_of_kernel_iso_zero {X Y : C} {f : X ⟶ Y} [has_limit (parallel_pair f 0)] (w : kernel f ≅ 0) : mono f :=
   mono_of_kernel_zero (zero_of_source_iso_zero _ w)
@@ -230,11 +230,11 @@ end Preadditive
 
 section Equalizers
 
-variable{C : Type u}[category.{v} C][preadditive C]
+variable {C : Type u} [category.{v} C] [preadditive C]
 
 section 
 
-variable{X Y : C}(f : X ⟶ Y)(g : X ⟶ Y)
+variable {X Y : C} (f : X ⟶ Y) (g : X ⟶ Y)
 
 /-- A kernel of `f - g` is an equalizer of `f` and `g`. -/
 theorem has_limit_parallel_pair [has_kernel (f - g)] : has_limit (parallel_pair f g) :=
@@ -273,7 +273,7 @@ end
 
 section 
 
-variable{X Y : C}(f : X ⟶ Y)(g : X ⟶ Y)
+variable {X Y : C} (f : X ⟶ Y) (g : X ⟶ Y)
 
 /-- A cokernel of `f - g` is a coequalizer of `f` and `g`. -/
 theorem has_colimit_parallel_pair [has_cokernel (f - g)] : has_colimit (parallel_pair f g) :=

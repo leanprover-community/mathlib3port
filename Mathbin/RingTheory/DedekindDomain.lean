@@ -45,7 +45,7 @@ dedekind domain, dedekind ring
 -/
 
 
-variable(R A K : Type _)[CommRingₓ R][CommRingₓ A][Field K]
+variable (R A K : Type _) [CommRingₓ R] [CommRingₓ A] [Field K]
 
 open_locale nonZeroDivisors
 
@@ -77,7 +77,7 @@ theorem dimension_le_one.integral_closure [Nontrivial R] [IsDomain A] [Algebra R
 
 end Ringₓ
 
-variable[IsDomain A]
+variable [IsDomain A]
 
 /--
 A Dedekind domain is an integral domain that is Noetherian, integrally closed, and
@@ -108,7 +108,7 @@ theorem is_dedekind_domain_iff (K : Type _) [Field K] [Algebra A K] [IsFractionR
   ⟨fun ⟨hr, hd, hi⟩ => ⟨hr, hd, fun x => (is_integrally_closed_iff K).mp hi⟩,
     fun ⟨hr, hd, hi⟩ => ⟨hr, hd, (is_integrally_closed_iff K).mpr @hi⟩⟩
 
-instance (priority := 100)IsPrincipalIdealRing.is_dedekind_domain [IsPrincipalIdealRing A] : IsDedekindDomain A :=
+instance (priority := 100) IsPrincipalIdealRing.is_dedekind_domain [IsPrincipalIdealRing A] : IsDedekindDomain A :=
   ⟨PrincipalIdealRing.is_noetherian_ring, Ringₓ.DimensionLeOne.principal_ideal_ring A,
     UniqueFactorizationMonoid.is_integrally_closed⟩
 
@@ -125,11 +125,11 @@ structure IsDedekindDomainDvr : Prop where
 
 section Inverse
 
-variable{R₁ : Type _}[CommRingₓ R₁][IsDomain R₁][Algebra R₁ K][IsFractionRing R₁ K]
+variable {R₁ : Type _} [CommRingₓ R₁] [IsDomain R₁] [Algebra R₁ K] [IsFractionRing R₁ K]
 
-variable{I J : FractionalIdeal R₁⁰ K}
+variable {I J : FractionalIdeal R₁⁰ K}
 
-noncomputable instance  : HasInv (FractionalIdeal R₁⁰ K) :=
+noncomputable instance : HasInv (FractionalIdeal R₁⁰ K) :=
   ⟨fun I => 1 / I⟩
 
 theorem inv_eq : I⁻¹ = 1 / I :=
@@ -149,7 +149,7 @@ theorem coe_inv_of_nonzero {J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) :
     rfl 
     assumption
 
-variable{K}
+variable {K}
 
 theorem mem_inv_iff (hI : I ≠ 0) {x : K} : x ∈ I⁻¹ ↔ ∀ y _ : y ∈ I, (x*y) ∈ (1 : FractionalIdeal R₁⁰ K) :=
   FractionalIdeal.mem_div_iff_of_nonzero hI
@@ -163,7 +163,7 @@ theorem inv_anti_mono (hI : I ≠ 0) (hJ : J ≠ 0) (hIJ : I ≤ J) : J⁻¹ ≤
 theorem le_self_mul_inv {I : FractionalIdeal R₁⁰ K} (hI : I ≤ (1 : FractionalIdeal R₁⁰ K)) : I ≤ I*I⁻¹ :=
   FractionalIdeal.le_self_mul_one_div hI
 
-variable(K)
+variable (K)
 
 theorem coe_ideal_le_self_mul_inv (I : Ideal R₁) : (I : FractionalIdeal R₁⁰ K) ≤ I*I⁻¹ :=
   le_self_mul_inv FractionalIdeal.coe_ideal_le_one
@@ -199,7 +199,7 @@ theorem mul_inv_cancel_iff {I : FractionalIdeal R₁⁰ K} : (I*I⁻¹) = 1 ↔ 
 theorem mul_inv_cancel_iff_is_unit {I : FractionalIdeal R₁⁰ K} : (I*I⁻¹) = 1 ↔ IsUnit I :=
   (mul_inv_cancel_iff K).trans is_unit_iff_exists_inv.symm
 
-variable{K' : Type _}[Field K'][Algebra R₁ K'][IsFractionRing R₁ K']
+variable {K' : Type _} [Field K'] [Algebra R₁ K'] [IsFractionRing R₁ K']
 
 @[simp]
 theorem map_inv (I : FractionalIdeal R₁⁰ K) (h : K ≃ₐ[R₁] K') : I⁻¹.map (h : K →ₐ[R₁] K') = I.map h⁻¹ :=
@@ -275,7 +275,7 @@ def IsDedekindDomainInv : Prop :=
 
 open FractionalIdeal
 
-variable{R A K}
+variable {R A K}
 
 theorem is_dedekind_domain_inv_iff [Algebra A K] [IsFractionRing A K] :
   IsDedekindDomainInv A ↔ ∀ I _ : I ≠ (⊥ : FractionalIdeal A⁰ K), (I*I⁻¹) = 1 :=
@@ -310,7 +310,7 @@ end
 
 namespace IsDedekindDomainInv
 
-variable[Algebra A K][IsFractionRing A K](h : IsDedekindDomainInv A)
+variable [Algebra A K] [IsFractionRing A K] (h : IsDedekindDomainInv A)
 
 include h
 
@@ -381,7 +381,7 @@ theorem IsDedekindDomain : IsDedekindDomain A :=
 
 end IsDedekindDomainInv
 
-variable[Algebra A K][IsFractionRing A K]
+variable [Algebra A K] [IsFractionRing A K]
 
 -- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Specialization of `exists_prime_spectrum_prod_le_and_ne_bot_of_domain` to Dedekind domains:
@@ -625,7 +625,7 @@ end Inverse
 
 section IsDedekindDomain
 
-variable{R A}[IsDedekindDomain A][Algebra A K][IsFractionRing A K]
+variable {R A} [IsDedekindDomain A] [Algebra A K] [IsFractionRing A K]
 
 open FractionalIdeal
 
@@ -673,7 +673,7 @@ theorem Ideal.dvd_not_unit_iff_lt {I J : Ideal A} : DvdNotUnit I J ↔ J < I :=
     fun h =>
       dvd_not_unit_of_dvd_of_not_dvd (Ideal.dvd_iff_le.mpr (le_of_ltₓ h)) (mt Ideal.dvd_iff_le.mp (not_le_of_lt h))⟩
 
-instance  : WfDvdMonoid (Ideal A) :=
+instance : WfDvdMonoid (Ideal A) :=
   { well_founded_dvd_not_unit :=
       have  : WellFounded (· > · : Ideal A → Ideal A → Prop) :=
         is_noetherian_iff_well_founded.mp (is_noetherian_ring_iff.mp IsDedekindDomain.is_noetherian_ring)
@@ -743,13 +743,13 @@ open Algebra
 
 open_locale BigOperators
 
-variable{A K}[Algebra A K][IsFractionRing A K]
+variable {A K} [Algebra A K] [IsFractionRing A K]
 
-variable{L : Type _}[Field L](C : Type _)[CommRingₓ C]
+variable {L : Type _} [Field L] (C : Type _) [CommRingₓ C]
 
-variable[Algebra K L][FiniteDimensional K L][Algebra A L][IsScalarTower A K L]
+variable [Algebra K L] [FiniteDimensional K L] [Algebra A L] [IsScalarTower A K L]
 
-variable[Algebra C L][IsIntegralClosure C A L][Algebra A C][IsScalarTower A C L]
+variable [Algebra C L] [IsIntegralClosure C A L] [Algebra A C] [IsScalarTower A C L]
 
 -- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_integral_closure.range_le_span_dual_basis
@@ -794,7 +794,7 @@ theorem integral_closure_le_span_dual_basis [IsSeparable K L] {ι : Type _} [Fin
     intro x hx 
     exact ⟨⟨x, hx⟩, rfl⟩
 
-variable(A)(K)
+variable (A) (K)
 
 include K
 
@@ -821,7 +821,7 @@ begin
       exact [expr is_fraction_ring.injective _ _] } }
 end
 
-variable(L)
+variable (L)
 
 -- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `L` is a finite extension of `K = Frac(A)`,
@@ -853,7 +853,7 @@ begin
     exact [expr his' _ ⟨_, rfl⟩] }
 end
 
-variable(A K L)[IsSeparable K L]
+variable (A K L) [IsSeparable K L]
 
 include L
 
@@ -871,13 +871,13 @@ begin
   exact [expr linear_map.ker_eq_bot_of_injective (is_integral_closure.algebra_map_injective C A L)]
 end
 
-variable{A K}
+variable {A K}
 
 theorem integralClosure.is_noetherian_ring [IsIntegrallyClosed A] [IsNoetherianRing A] :
   IsNoetherianRing (integralClosure A L) :=
   IsIntegralClosure.is_noetherian_ring A K L (integralClosure A L)
 
-variable(A K)[IsDomain C]
+variable (A K) [IsDomain C]
 
 -- error in RingTheory.DedekindDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_integral_closure.is_dedekind_domain [h : is_dedekind_domain A] : is_dedekind_domain C :=
@@ -893,9 +893,9 @@ theorem integralClosure.is_dedekind_domain [h : IsDedekindDomain A] : IsDedekind
 
 omit K
 
-variable[Algebra (FractionRing A) L][IsScalarTower A (FractionRing A) L]
+variable [Algebra (FractionRing A) L] [IsScalarTower A (FractionRing A) L]
 
-variable[FiniteDimensional (FractionRing A) L][IsSeparable (FractionRing A) L]
+variable [FiniteDimensional (FractionRing A) L] [IsSeparable (FractionRing A) L]
 
 instance integralClosure.is_dedekind_domain_fraction_ring [IsDedekindDomain A] :
   IsDedekindDomain (integralClosure A L) :=
@@ -905,7 +905,7 @@ end IsIntegralClosure
 
 section IsDedekindDomain
 
-variable{T : Type _}[CommRingₓ T][IsDomain T][IsDedekindDomain T](I J : Ideal T)
+variable {T : Type _} [CommRingₓ T] [IsDomain T] [IsDedekindDomain T] (I J : Ideal T)
 
 open_locale Classical
 

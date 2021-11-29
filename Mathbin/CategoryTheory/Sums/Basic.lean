@@ -23,7 +23,7 @@ open Sum
 
 section 
 
-variable(C : Type u₁)[category.{v₁} C](D : Type u₁)[category.{v₁} D]
+variable (C : Type u₁) [category.{v₁} C] (D : Type u₁) [category.{v₁} D]
 
 /--
 `sum C D` gives the direct sum of two categories.
@@ -63,7 +63,7 @@ end
 
 namespace Sum
 
-variable(C : Type u₁)[category.{v₁} C](D : Type u₁)[category.{v₁} D]
+variable (C : Type u₁) [category.{v₁} C] (D : Type u₁) [category.{v₁} D]
 
 /-- `inl_` is the functor `X ↦ inl X`. -/
 @[simps]
@@ -137,8 +137,8 @@ end Swap
 
 end Sum
 
-variable{A :
-    Type u₁}[category.{v₁} A]{B : Type u₁}[category.{v₁} B]{C : Type u₁}[category.{v₁} C]{D : Type u₁}[category.{v₁} D]
+variable {A : Type u₁} [category.{v₁} A] {B : Type u₁} [category.{v₁} B] {C : Type u₁} [category.{v₁} C] {D : Type u₁}
+  [category.{v₁} D]
 
 namespace Functor
 

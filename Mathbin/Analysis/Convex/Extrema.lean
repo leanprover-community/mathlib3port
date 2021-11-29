@@ -11,13 +11,8 @@ a global minimum, and likewise for concave functions.
 -/
 
 
-variable{E β :
-    Type
-      _}[AddCommGroupₓ
-      E][TopologicalSpace
-      E][Module ℝ
-      E][TopologicalAddGroup
-      E][HasContinuousSmul ℝ E][LinearOrderedAddCommGroup β][Module ℝ β][OrderedSmul ℝ β]{s : Set E}
+variable {E β : Type _} [AddCommGroupₓ E] [TopologicalSpace E] [Module ℝ E] [TopologicalAddGroup E]
+  [HasContinuousSmul ℝ E] [LinearOrderedAddCommGroup β] [Module ℝ β] [OrderedSmul ℝ β] {s : Set E}
 
 open Set Filter
 

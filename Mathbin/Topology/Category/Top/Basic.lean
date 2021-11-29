@@ -29,7 +29,7 @@ instance bundled_hom : bundled_hom @ContinuousMap :=
 -- error in Topology.Category.Top.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] Top
 
-instance  : CoeSort Top (Type _) :=
+instance : CoeSort Top (Type _) :=
   bundled.has_coe_to_sort
 
 instance topological_space_unbundled (x : Top) : TopologicalSpace x :=
@@ -47,14 +47,14 @@ theorem comp_app {X Y Z : Top.{u}} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) : (f ≫ 
 def of (X : Type u) [TopologicalSpace X] : Top :=
   ⟨X⟩
 
-instance  (X : Top) : TopologicalSpace X :=
+instance (X : Top) : TopologicalSpace X :=
   X.str
 
 @[simp]
 theorem coe_of (X : Type u) [TopologicalSpace X] : (of X : Type u) = X :=
   rfl
 
-instance  : Inhabited Top :=
+instance : Inhabited Top :=
   ⟨Top.of Empty⟩
 
 /-- The discrete topology on any type. -/

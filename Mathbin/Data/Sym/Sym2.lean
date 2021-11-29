@@ -41,7 +41,7 @@ open Finset Fintype Function Sym
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 namespace Sym2
 
@@ -171,7 +171,7 @@ theorem coe_lift_symm_apply {β : Type _} (F : Sym2 α → β) (a₁ a₂ : α) 
 The functor `sym2` is functorial, and this function constructs the induced maps.
 -/
 def map {α β : Type _} (f : α → β) : Sym2 α → Sym2 β :=
-  Quotientₓ.map (Prod.mapₓ f f)
+  Quotientₓ.map (Prod.map f f)
     (by 
       rintro _ _ h 
       cases h
@@ -219,7 +219,7 @@ cardinality-two multisets on `α`.
 def mem (x : α) (z : Sym2 α) : Prop :=
   ∃ y : α, z = «expr⟦ ⟧» (x, y)
 
-instance  : HasMem α (Sym2 α) :=
+instance : HasMem α (Sym2 α) :=
   ⟨mem⟩
 
 theorem mk_has_mem (x y : α) : x ∈ «expr⟦ ⟧» (x, y) :=
@@ -364,7 +364,7 @@ section Relations
 /-! ### Declarations about symmetric relations -/
 
 
-variable{r : α → α → Prop}
+variable {r : α → α → Prop}
 
 /--
 Symmetric relations define a set on `sym2 α` by taking all those pairs
@@ -533,7 +533,7 @@ theorem rel_bool_spec [DecidableEq α] (x y : α × α) : «expr↥ » (rel_bool
 /--
 Given `[decidable_eq α]` and `[fintype α]`, the following instance gives `fintype (sym2 α)`.
 -/
-instance  (α : Type _) [DecidableEq α] : DecidableRel (Sym2.Rel α) :=
+instance (α : Type _) [DecidableEq α] : DecidableRel (Sym2.Rel α) :=
   fun x y => decidableOfBool (rel_bool x y) (rel_bool_spec x y)
 
 /--

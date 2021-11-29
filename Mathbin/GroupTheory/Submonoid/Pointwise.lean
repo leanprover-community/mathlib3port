@@ -22,13 +22,13 @@ on `set`s.
 -/
 
 
-variable{α : Type _}{M : Type _}{A : Type _}[Monoidₓ M][AddMonoidₓ A]
+variable {α : Type _} {M : Type _} {A : Type _} [Monoidₓ M] [AddMonoidₓ A]
 
 namespace Submonoid
 
 section Monoidₓ
 
-variable[Monoidₓ α][MulDistribMulAction α M]
+variable [Monoidₓ α] [MulDistribMulAction α M]
 
 /-- The action on a submonoid corresponding to applying the action to every element.
 
@@ -53,7 +53,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable[Groupₓ α][MulDistribMulAction α M]
+variable [Groupₓ α] [MulDistribMulAction α M]
 
 open_locale Pointwise
 
@@ -81,7 +81,7 @@ end Groupₓ
 
 section GroupWithZeroₓ
 
-variable[GroupWithZeroₓ α][MulDistribMulAction α M]
+variable [GroupWithZeroₓ α] [MulDistribMulAction α M]
 
 open_locale Pointwise
 
@@ -138,7 +138,7 @@ namespace AddSubmonoid
 
 section Monoidₓ
 
-variable[Monoidₓ α][DistribMulAction α A]
+variable [Monoidₓ α] [DistribMulAction α A]
 
 /-- The action on an additive submonoid corresponding to applying the action to every element.
 
@@ -163,7 +163,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable[Groupₓ α][DistribMulAction α A]
+variable [Groupₓ α] [DistribMulAction α A]
 
 open_locale Pointwise
 
@@ -191,7 +191,7 @@ end Groupₓ
 
 section GroupWithZeroₓ
 
-variable[GroupWithZeroₓ α][DistribMulAction α A]
+variable [GroupWithZeroₓ α] [DistribMulAction α A]
 
 open_locale Pointwise
 

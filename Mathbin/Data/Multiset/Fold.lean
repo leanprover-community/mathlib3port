@@ -8,14 +8,14 @@ import Mathbin.Data.List.MinMax
 
 namespace Multiset
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 /-! ### fold -/
 
 
 section Fold
 
-variable(op : α → α → α)[hc : IsCommutative α op][ha : IsAssociative α op]
+variable (op : α → α → α) [hc : IsCommutative α op] [ha : IsAssociative α op]
 
 local notation a "*" b => op a b
 

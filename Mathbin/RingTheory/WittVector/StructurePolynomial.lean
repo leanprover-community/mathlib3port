@@ -90,7 +90,7 @@ open finsupp(single)
 
 attribute [-simp] coe_eval₂_hom
 
-variable{p : ℕ}{R : Type _}{idx : Type _}[CommRingₓ R]
+variable {p : ℕ} {R : Type _} {idx : Type _} [CommRingₓ R]
 
 open_locale Witt
 
@@ -98,7 +98,7 @@ open_locale BigOperators
 
 section PPrime
 
-variable(p)[hp : Fact p.prime]
+variable (p) [hp : Fact p.prime]
 
 include hp
 
@@ -200,7 +200,7 @@ gives the unique family of polynomials with this property. -/
 noncomputable def wittStructureInt (Φ : MvPolynomial idx ℤ) (n : ℕ) : MvPolynomial (idx × ℕ) ℤ :=
   Finsupp.mapRange Rat.num (Rat.coe_int_num 0) (wittStructureRat p (map (Int.castRingHom ℚ) Φ) n)
 
-variable{p}
+variable {p}
 
 -- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bind₁_rename_expand_witt_polynomial
@@ -258,7 +258,7 @@ begin
   rw ["[", "<-", expr C_eq_coe_nat, ",", expr int.nat_cast_eq_coe_nat, ",", expr C_dvd_iff_zmod, ",", expr ring_hom.map_sub, ",", expr sub_eq_zero, ",", expr map_expand, ",", expr ring_hom.map_pow, ",", expr mv_polynomial.expand_zmod, "]"] []
 end
 
-variable(p)
+variable (p)
 
 -- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
@@ -289,7 +289,7 @@ begin
   exact [expr C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum Φ n IH]
 end
 
-variable(p)
+variable (p)
 
 -- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem witt_structure_int_prop
@@ -338,7 +338,7 @@ theorem witt_structure_prop (Φ : MvPolynomial idx ℤ) n :
       simp only [map_rename, map_witt_polynomial]
 
 theorem witt_structure_int_rename {σ : Type _} (Φ : MvPolynomial idx ℤ) (f : idx → σ) (n : ℕ) :
-  wittStructureInt p (rename f Φ) n = rename (Prod.mapₓ f id) (wittStructureInt p Φ n) :=
+  wittStructureInt p (rename f Φ) n = rename (Prod.map f id) (wittStructureInt p Φ n) :=
   by 
     apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective 
     simp only [map_rename, map_witt_structure_int, wittStructureRat, rename_bind₁, rename_rename, bind₁_rename]
@@ -383,7 +383,7 @@ begin
   rw ["[", expr constant_coeff_map, ",", expr h, ",", expr ring_hom.map_zero, "]"] []
 end
 
-variable(R)
+variable (R)
 
 theorem witt_structure_rat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : ℕ) :
   (wittStructureRat p Φ n).vars ⊆ Finset.univ.product (Finset.range (n+1)) :=

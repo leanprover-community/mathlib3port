@@ -26,15 +26,15 @@ open_locale Pointwise
 
 open Submodule Subsemiring
 
-variable{R : Type u}{A : Type v}{B : Type w}
+variable {R : Type u} {A : Type v} {B : Type w}
 
 namespace Algebra
 
 section Semiringₓ
 
-variable[CommSemiringₓ R][Semiringₓ A][Semiringₓ B]
+variable [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B]
 
-variable[Algebra R A][Algebra R B]{s t : Set A}
+variable [Algebra R A] [Algebra R B] {s t : Set A}
 
 theorem subset_adjoin : s ⊆ adjoin R s :=
   Algebra.gc.le_u_l s
@@ -60,10 +60,40 @@ theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : �
   let S : Subalgebra R A := { Carrier := p, mul_mem' := Hmul, add_mem' := Hadd, algebra_map_mem' := Halg }
   adjoin_le (show s ≤ S from Hs) h
 
+/-- The difference with `algebra.adjoin_induction` is that this acts on the subtype. -/
+theorem adjoin_induction' {p : adjoin R s → Prop} (Hs : ∀ x h : x ∈ s, p ⟨x, subset_adjoin h⟩)
+  (Halg : ∀ r, p (algebraMap R _ r)) (Hadd : ∀ x y, p x → p y → p (x+y)) (Hmul : ∀ x y, p x → p y → p (x*y))
+  (x : adjoin R s) : p x :=
+  Subtype.recOn x$
+    fun x hx =>
+      by 
+        refine' Exists.elim _ fun hx : x ∈ adjoin R s hc : p ⟨x, hx⟩ => hc 
+        exact
+          adjoin_induction hx (fun x hx => ⟨subset_adjoin hx, Hs x hx⟩)
+            (fun r => ⟨Subalgebra.algebra_map_mem _ r, Halg r⟩)
+            (fun x y hx hy =>
+              Exists.elim hx$
+                fun hx' hx => Exists.elim hy$ fun hy' hy => ⟨Subalgebra.add_mem _ hx' hy', Hadd _ _ hx hy⟩)
+            fun x y hx hy =>
+              Exists.elim hx$ fun hx' hx => Exists.elim hy$ fun hy' hy => ⟨Subalgebra.mul_mem _ hx' hy', Hmul _ _ hx hy⟩
+
+@[simp]
+theorem adjoin_adjoin_coe_preimage {s : Set A} : adjoin R ((coeₓ : adjoin R s → A) ⁻¹' s) = ⊤ :=
+  by 
+    refine' eq_top_iff.2 fun x => adjoin_induction' (fun a ha => _) (fun r => _) (fun _ _ => _) (fun _ _ => _) x
+    ·
+      exact subset_adjoin ha
+    ·
+      exact Subalgebra.algebra_map_mem _ r
+    ·
+      exact Subalgebra.add_mem _
+    ·
+      exact Subalgebra.mul_mem _
+
 theorem adjoin_union (s t : Set A) : adjoin R (s ∪ t) = adjoin R s⊔adjoin R t :=
   (Algebra.gc : GaloisConnection _ (coeₓ : Subalgebra R A → Set A)).l_sup
 
-variable(R A)
+variable (R A)
 
 @[simp]
 theorem adjoin_empty : adjoin R (∅ : Set A) = ⊥ :=
@@ -75,7 +105,7 @@ theorem adjoin_empty : adjoin R (∅ : Set A) = ⊥ :=
 theorem adjoin_univ : adjoin R (Set.Univ : Set A) = ⊤ :=
   eq_top_iff.2$ fun x => subset_adjoin$ Set.mem_univ _
 
-variable(R){A}(s)
+variable (R) {A} (s)
 
 theorem adjoin_eq_span : (adjoin R s).toSubmodule = span R (Submonoid.closure s) :=
   by 
@@ -186,11 +216,11 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R][CommSemiringₓ A]
+variable [CommSemiringₓ R] [CommSemiringₓ A]
 
-variable[Algebra R A]{s t : Set A}
+variable [Algebra R A] {s t : Set A}
 
-variable(R s t)
+variable (R s t)
 
 theorem adjoin_union_eq_adjoin_adjoin : adjoin R (s ∪ t) = (adjoin (adjoin R s) t).restrictScalars R :=
   le_antisymmₓ
@@ -215,11 +245,11 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable[CommRingₓ R][Ringₓ A]
+variable [CommRingₓ R] [Ringₓ A]
 
-variable[Algebra R A]{s t : Set A}
+variable [Algebra R A] {s t : Set A}
 
-variable{R s t}
+variable {R s t}
 
 theorem adjoin_int (s : Set R) : adjoin ℤ s = subalgebraOfSubring (Subring.closure s) :=
   le_antisymmₓ (adjoin_le Subring.subset_closure)
@@ -244,7 +274,7 @@ open Algebra Subalgebra
 
 namespace AlgHom
 
-variable[CommSemiringₓ R][Semiringₓ A][Semiringₓ B][Algebra R A][Algebra R B]
+variable [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [Algebra R A] [Algebra R B]
 
 theorem map_adjoin (φ : A →ₐ[R] B) (s : Set A) : (adjoin R s).map φ = adjoin R (φ '' s) :=
   (adjoin_image _ _ _).symm

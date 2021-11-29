@@ -42,12 +42,12 @@ open_locale Classical TopologicalSpace BigOperators Nnreal Ennreal MeasureTheory
 
 namespace MeasureTheory
 
-variable{α β γ δ : Type _}
+variable {α β γ δ : Type _}
 
 /-- A function `f` from a measurable space to any type is called *simple*,
 if every preimage `f ⁻¹' {x}` is measurable, and the range is finite. This structure bundles
 a function with these properties. -/
-structure simple_func.{u, v}(α : Type u)[MeasurableSpace α](β : Type v) where 
+structure simple_func.{u, v} (α : Type u) [MeasurableSpace α] (β : Type v) where 
   toFun : α → β 
   measurable_set_fiber' : ∀ x, MeasurableSet (to_fun ⁻¹' {x})
   finite_range' : (Set.Range to_fun).Finite
@@ -58,7 +58,7 @@ namespace SimpleFunc
 
 section Measurable
 
-variable[MeasurableSpace α]
+variable [MeasurableSpace α]
 
 instance CoeFun : CoeFun (α →ₛ β) fun _ => α → β :=
   ⟨to_fun⟩
@@ -114,7 +114,7 @@ theorem exists_forall_le [Nonempty β] [DirectedOrder β] (f : α →ₛ β) : �
 def const α {β} [MeasurableSpace α] (b : β) : α →ₛ β :=
   ⟨fun a => b, fun x => MeasurableSet.const _, finite_range_const⟩
 
-instance  [Inhabited β] : Inhabited (α →ₛ β) :=
+instance [Inhabited β] : Inhabited (α →ₛ β) :=
   ⟨const _ (default _)⟩
 
 theorem const_apply (a : α) (b : β) : (const α b) a = b :=
@@ -382,22 +382,22 @@ theorem bind_const (f : α →ₛ β) : f.bind (const α) = f :=
   by 
     ext <;> simp 
 
-instance  [HasZero β] : HasZero (α →ₛ β) :=
+instance [HasZero β] : HasZero (α →ₛ β) :=
   ⟨const α 0⟩
 
-instance  [Add β] : Add (α →ₛ β) :=
+instance [Add β] : Add (α →ₛ β) :=
   ⟨fun f g => (f.map (·+·)).seq g⟩
 
-instance  [Mul β] : Mul (α →ₛ β) :=
+instance [Mul β] : Mul (α →ₛ β) :=
   ⟨fun f g => (f.map (·*·)).seq g⟩
 
-instance  [HasSup β] : HasSup (α →ₛ β) :=
+instance [HasSup β] : HasSup (α →ₛ β) :=
   ⟨fun f g => (f.map (·⊔·)).seq g⟩
 
-instance  [HasInf β] : HasInf (α →ₛ β) :=
+instance [HasInf β] : HasInf (α →ₛ β) :=
   ⟨fun f g => (f.map (·⊓·)).seq g⟩
 
-instance  [LE β] : LE (α →ₛ β) :=
+instance [LE β] : LE (α →ₛ β) :=
   ⟨fun f g => ∀ a, f a ≤ g a⟩
 
 @[simp, normCast]
@@ -466,20 +466,20 @@ theorem map_add [Add β] [Add γ] {g : β → γ} (hg : ∀ x y, g (x+y) = g x+g
   (f₁+f₂).map g = f₁.map g+f₂.map g :=
   ext$ fun x => hg _ _
 
-instance  [AddMonoidₓ β] : AddMonoidₓ (α →ₛ β) :=
+instance [AddMonoidₓ β] : AddMonoidₓ (α →ₛ β) :=
   Function.Injective.addMonoid (fun f => show α → β from f) coe_injective coe_zero coe_add
 
 instance AddCommMonoidₓ [AddCommMonoidₓ β] : AddCommMonoidₓ (α →ₛ β) :=
   Function.Injective.addCommMonoid (fun f => show α → β from f) coe_injective coe_zero coe_add
 
-instance  [Neg β] : Neg (α →ₛ β) :=
+instance [Neg β] : Neg (α →ₛ β) :=
   ⟨fun f => f.map Neg.neg⟩
 
 @[simp, normCast]
 theorem coe_neg [Neg β] (f : α →ₛ β) : «expr⇑ » (-f) = -f :=
   rfl
 
-instance  [Sub β] : Sub (α →ₛ β) :=
+instance [Sub β] : Sub (α →ₛ β) :=
   ⟨fun f g => (f.map Sub.sub).seq g⟩
 
 @[simp, normCast]
@@ -489,15 +489,15 @@ theorem coe_sub [Sub β] (f g : α →ₛ β) : «expr⇑ » (f - g) = f - g :=
 theorem sub_apply [Sub β] (f g : α →ₛ β) (x : α) : (f - g) x = f x - g x :=
   rfl
 
-instance  [AddGroupₓ β] : AddGroupₓ (α →ₛ β) :=
+instance [AddGroupₓ β] : AddGroupₓ (α →ₛ β) :=
   Function.Injective.addGroup (fun f => show α → β from f) coe_injective coe_zero coe_add coe_neg coe_sub
 
-instance  [AddCommGroupₓ β] : AddCommGroupₓ (α →ₛ β) :=
+instance [AddCommGroupₓ β] : AddCommGroupₓ (α →ₛ β) :=
   Function.Injective.addCommGroup (fun f => show α → β from f) coe_injective coe_zero coe_add coe_neg coe_sub
 
-variable{K : Type _}
+variable {K : Type _}
 
-instance  [HasScalar K β] : HasScalar K (α →ₛ β) :=
+instance [HasScalar K β] : HasScalar K (α →ₛ β) :=
   ⟨fun k f => f.map ((· • ·) k)⟩
 
 @[simp]
@@ -507,43 +507,40 @@ theorem coe_smul [HasScalar K β] (c : K) (f : α →ₛ β) : «expr⇑ » (c �
 theorem smul_apply [HasScalar K β] (k : K) (f : α →ₛ β) (a : α) : (k • f) a = k • f a :=
   rfl
 
-instance  [Semiringₓ K] [AddCommMonoidₓ β] [Module K β] : Module K (α →ₛ β) :=
+instance [Semiringₓ K] [AddCommMonoidₓ β] [Module K β] : Module K (α →ₛ β) :=
   Function.Injective.module K ⟨fun f => show α → β from f, coe_zero, coe_add⟩ coe_injective coe_smul
 
 theorem smul_eq_map [HasScalar K β] (k : K) (f : α →ₛ β) : k • f = f.map ((· • ·) k) :=
   rfl
 
-instance  [Preorderₓ β] : Preorderₓ (α →ₛ β) :=
+instance [Preorderₓ β] : Preorderₓ (α →ₛ β) :=
   { simple_func.has_le with le_refl := fun f a => le_reflₓ _,
     le_trans := fun f g h hfg hgh a => le_transₓ (hfg _) (hgh a) }
 
-instance  [PartialOrderₓ β] : PartialOrderₓ (α →ₛ β) :=
+instance [PartialOrderₓ β] : PartialOrderₓ (α →ₛ β) :=
   { simple_func.preorder with le_antisymm := fun f g hfg hgf => ext$ fun a => le_antisymmₓ (hfg a) (hgf a) }
 
-instance  [LE β] [OrderBot β] : OrderBot (α →ₛ β) :=
+instance [LE β] [OrderBot β] : OrderBot (α →ₛ β) :=
   { bot := const α ⊥, bot_le := fun f a => bot_le }
 
-instance  [LE β] [OrderTop β] : OrderTop (α →ₛ β) :=
+instance [LE β] [OrderTop β] : OrderTop (α →ₛ β) :=
   { top := const α ⊤, le_top := fun f a => le_top }
 
-instance  [SemilatticeInf β] : SemilatticeInf (α →ₛ β) :=
+instance [SemilatticeInf β] : SemilatticeInf (α →ₛ β) :=
   { simple_func.partial_order with inf := ·⊓·, inf_le_left := fun f g a => inf_le_left,
     inf_le_right := fun f g a => inf_le_right, le_inf := fun f g h hfh hgh a => le_inf (hfh a) (hgh a) }
 
-instance  [SemilatticeSup β] : SemilatticeSup (α →ₛ β) :=
+instance [SemilatticeSup β] : SemilatticeSup (α →ₛ β) :=
   { simple_func.partial_order with sup := ·⊔·, le_sup_left := fun f g a => le_sup_left,
     le_sup_right := fun f g a => le_sup_right, sup_le := fun f g h hfh hgh a => sup_le (hfh a) (hgh a) }
 
-instance  [SemilatticeSupBot β] : SemilatticeSupBot (α →ₛ β) :=
-  { simple_func.semilattice_sup, simple_func.order_bot with  }
-
-instance  [Lattice β] : Lattice (α →ₛ β) :=
+instance [Lattice β] : Lattice (α →ₛ β) :=
   { simple_func.semilattice_sup, simple_func.semilattice_inf with  }
 
-instance  [BoundedLattice β] : BoundedLattice (α →ₛ β) :=
-  { simple_func.lattice, simple_func.order_bot, simple_func.order_top with  }
+instance [LE β] [BoundedOrder β] : BoundedOrder (α →ₛ β) :=
+  { simple_func.order_bot, simple_func.order_top with  }
 
-theorem finset_sup_apply [SemilatticeSupBot β] {f : γ → α →ₛ β} (s : Finset γ) (a : α) :
+theorem finset_sup_apply [SemilatticeSup β] [OrderBot β] {f : γ → α →ₛ β} (s : Finset γ) (a : α) :
   s.sup f a = s.sup fun c => f c a :=
   by 
     refine' Finset.induction_on s rfl _ 
@@ -552,7 +549,7 @@ theorem finset_sup_apply [SemilatticeSupBot β] {f : γ → α →ₛ β} (s : F
 
 section Restrict
 
-variable[HasZero β]
+variable [HasZero β]
 
 /-- Restrict a simple function `f : α →ₛ β` to a set `s`. If `s` is measurable,
 then `f.restrict s a = if a ∈ s then f a else 0`, otherwise `f.restrict s = const α 0`. -/
@@ -641,7 +638,7 @@ section Approx
 
 section 
 
-variable[SemilatticeSupBot β][HasZero β]
+variable [SemilatticeSup β] [OrderBot β] [HasZero β]
 
 /-- Fix a sequence `i : ℕ → β`. Given a function `α → β`, its `n`-th approximation
 by simple functions is defined so that in case `β = ℝ≥0∞` it sends each `a` to the supremum
@@ -787,7 +784,7 @@ end Measurable
 
 section Measureₓ
 
-variable{m : MeasurableSpace α}{μ ν : Measureₓ α}
+variable {m : MeasurableSpace α} {μ ν : Measureₓ α}
 
 /-- Integral of a simple function whose codomain is `ℝ≥0∞`. -/
 def lintegral {m : MeasurableSpace α} (f : α →ₛ ℝ≥0∞) (μ : Measureₓ α) : ℝ≥0∞ :=
@@ -1010,7 +1007,7 @@ theorem support_eq [MeasurableSpace α] [HasZero β] (f : α →ₛ β) :
         simp only [Finset.set_bUnion_preimage_singleton, mem_support, Set.mem_preimage, Finset.mem_coe, mem_filter,
           mem_range_self, true_andₓ]
 
-variable{m : MeasurableSpace α}[HasZero β][HasZero γ]{μ : Measureₓ α}{f : α →ₛ β}
+variable {m : MeasurableSpace α} [HasZero β] [HasZero γ] {μ : Measureₓ α} {f : α →ₛ β}
 
 theorem measurable_set_support [MeasurableSpace α] (f : α →ₛ β) : MeasurableSet (support f) :=
   by 
@@ -1157,7 +1154,7 @@ section Lintegral
 
 open SimpleFunc
 
-variable{m : MeasurableSpace α}{μ ν : Measureₓ α}
+variable {m : MeasurableSpace α} {μ ν : Measureₓ α}
 
 /-- The **lower Lebesgue integral** of a function `f` with respect to a measure `μ`. -/
 def lintegral {m : MeasurableSpace α} (μ : Measureₓ α) (f : α → ℝ≥0∞) : ℝ≥0∞ :=
@@ -1339,7 +1336,7 @@ theorem lintegral_congr {f g : α → ℝ≥0∞} (h : ∀ a, f a = g a) : (∫�
 
 theorem set_lintegral_congr {f : α → ℝ≥0∞} {s t : Set α} (h : s =ᵐ[μ] t) : (∫⁻x in s, f x ∂μ) = ∫⁻x in t, f x ∂μ :=
   by 
-    rw [restrict_congr_set h]
+    rw [measure.restrict_congr_set h]
 
 theorem set_lintegral_congr_fun {f g : α → ℝ≥0∞} {s : Set α} (hs : MeasurableSet s) (hfg : ∀ᵐx ∂μ, x ∈ s → f x = g x) :
   (∫⁻x in s, f x ∂μ) = ∫⁻x in s, g x ∂μ :=
@@ -2292,7 +2289,7 @@ theorem measure_preserving.set_lintegral_comp_emb {mb : MeasurableSpace β} {ν 
 
 section DiracAndCount
 
-variable[MeasurableSpace α]
+variable [MeasurableSpace α]
 
 theorem lintegral_dirac' (a : α) {f : α → ℝ≥0∞} (hf : Measurable f) : (∫⁻a, f a ∂dirac a) = f a :=
   by 
@@ -2384,7 +2381,7 @@ theorem with_density_add {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Mea
   μ.with_density (f+g) = μ.with_density f+μ.with_density g :=
   by 
     refine' measure.ext fun s hs => _ 
-    rw [with_density_apply _ hs, measure.coe_add, Pi.add_apply, with_density_apply _ hs, with_density_apply _ hs,
+    rw [with_density_apply _ hs, measure.add_apply, with_density_apply _ hs, with_density_apply _ hs,
       ←lintegral_add hf hg]
     rfl
 
@@ -2502,7 +2499,7 @@ theorem Measurable.ennreal_induction {α} [MeasurableSpace α] {P : (α → ℝ�
 
 namespace MeasureTheory
 
-variable{α : Type _}{m m0 : MeasurableSpace α}
+variable {α : Type _} {m m0 : MeasurableSpace α}
 
 include m
 
@@ -2601,7 +2598,7 @@ theorem lintegral_trim_ae {μ : Measureₓ α} (hm : m ≤ m0) {f : α → ℝ�
 
 section SigmaFinite
 
-variable{E : Type _}[NormedGroup E][MeasurableSpace E][OpensMeasurableSpace E]
+variable {E : Type _} [NormedGroup E] [MeasurableSpace E] [OpensMeasurableSpace E]
 
 -- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem univ_le_of_forall_fin_meas_le
@@ -2708,7 +2705,7 @@ constant. -/
 theorem lintegral_le_of_forall_fin_meas_le [MeasurableSpace α] {μ : Measureₓ α} [sigma_finite μ] (C : ℝ≥0∞)
   {f : α → ℝ≥0∞} (hf_meas : AeMeasurable f μ) (hf : ∀ s, MeasurableSet s → μ s ≠ ∞ → (∫⁻x in s, f x ∂μ) ≤ C) :
   (∫⁻x, f x ∂μ) ≤ C :=
-  @lintegral_le_of_forall_fin_meas_le' _ _ _ _ le_rfl
+  @lintegral_le_of_forall_fin_meas_le' _ _ _ _ _
     (by 
       rwa [trim_eq_self])
     C _ hf_meas hf

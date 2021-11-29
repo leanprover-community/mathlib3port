@@ -11,13 +11,13 @@ Mostly monotonicity results for the `∏` and `∑` operations.
 
 open_locale BigOperators
 
-variable{ι α β M N G k R : Type _}
+variable {ι α β M N G k R : Type _}
 
 namespace Finset
 
 section OrderedCommMonoid
 
-variable[CommMonoidₓ M][OrderedCommMonoid N]
+variable [CommMonoidₓ M] [OrderedCommMonoid N]
 
 /-- Let `{x | p x}` be a subsemigroup of a commutative monoid `M`. Let `f : M → N` be a map
 submultiplicative on `{x | p x}`, i.e., `p x → p y → f (x * y) ≤ f x * f y`. Let `g i`, `i ∈ s`, be
@@ -89,7 +89,7 @@ theorem le_prod_of_submultiplicative (f : M → N) (h_one : f 1 = 1) (h_mul : �
 `i ∈ s`, is a finite family of elements of `M`, then `f (∑ i in s, g i) ≤ ∑ i in s, f (g i)`. -/
 add_decl_doc le_sum_of_subadditive
 
-variable{f g : ι → N}{s t : Finset ι}
+variable {f g : ι → N} {s t : Finset ι}
 
 /-- In an ordered commutative monoid, if each factor `f i` of one finite product is less than or
 equal to the corresponding factor `g i` of another finite product, then
@@ -187,7 +187,7 @@ theorem card_bUnion_le_card_mul [DecidableEq β] (s : Finset ι) (f : ι → Fin
   (h : ∀ a _ : a ∈ s, (f a).card ≤ n) : (s.bUnion f).card ≤ s.card*n :=
   card_bUnion_le.trans$ sum_le_of_forall_le _ _ _ h
 
-variable{ι' : Type _}[DecidableEq ι']
+variable {ι' : Type _} [DecidableEq ι']
 
 @[toAdditive sum_fiberwise_le_sum_of_sum_fiber_nonneg]
 theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι → ι'} {f : ι → N}
@@ -215,7 +215,7 @@ theorem abs_prod {R : Type _} [LinearOrderedCommRing R] {f : ι → R} {s : Fins
 
 section Pigeonhole
 
-variable[DecidableEq β]
+variable [DecidableEq β]
 
 theorem card_le_mul_card_image_of_maps_to {f : α → β} {s : Finset α} {t : Finset β} (Hf : ∀ a _ : a ∈ s, f a ∈ t)
   (n : ℕ) (hn : ∀ a _ : a ∈ t, (s.filter fun x => f x = a).card ≤ n) : s.card ≤ n*t.card :=
@@ -247,9 +247,60 @@ theorem mul_card_image_le_card {f : α → β} (s : Finset α) (n : ℕ)
 
 end Pigeonhole
 
+section DoubleCounting
+
+variable [DecidableEq α] {s : Finset α} {B : Finset (Finset α)} {n : ℕ}
+
+/-- If every element belongs to at most `n` finsets, then the sum of their sizes is at most `n`
+times how many they are. -/
+theorem sum_card_inter_le (h : ∀ a _ : a ∈ s, (B.filter$ (· ∈ ·) a).card ≤ n) : (∑t in B, (s ∩ t).card) ≤ s.card*n :=
+  by 
+    refine' le_transₓ _ (s.sum_le_of_forall_le _ _ h)
+    simpRw [←filter_mem_eq_inter, card_eq_sum_ones, sum_filter]
+    exact sum_comm.le
+
+/-- If every element belongs to at most `n` finsets, then the sum of their sizes is at most `n`
+times how many they are. -/
+theorem sum_card_le [Fintype α] (h : ∀ a, (B.filter$ (· ∈ ·) a).card ≤ n) : (∑s in B, s.card) ≤ Fintype.card α*n :=
+  calc (∑s in B, s.card) = ∑s in B, (univ ∩ s).card :=
+    by 
+      simpRw [univ_inter]
+    _ ≤ Fintype.card α*n := sum_card_inter_le fun a _ => h a
+    
+
+/-- If every element belongs to at least `n` finsets, then the sum of their sizes is at least `n`
+times how many they are. -/
+theorem le_sum_card_inter (h : ∀ a _ : a ∈ s, n ≤ (B.filter$ (· ∈ ·) a).card) : (s.card*n) ≤ ∑t in B, (s ∩ t).card :=
+  by 
+    apply (s.le_sum_of_forall_le _ _ h).trans 
+    simpRw [←filter_mem_eq_inter, card_eq_sum_ones, sum_filter]
+    exact sum_comm.le
+
+/-- If every element belongs to at least `n` finsets, then the sum of their sizes is at least `n`
+times how many they are. -/
+theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filter$ (· ∈ ·) a).card) : (Fintype.card α*n) ≤ ∑s in B, s.card :=
+  calc (Fintype.card α*n) ≤ ∑s in B, (univ ∩ s).card := le_sum_card_inter fun a _ => h a 
+    _ = ∑s in B, s.card :=
+    by 
+      simpRw [univ_inter]
+    
+
+/-- If every element belongs to exactly `n` finsets, then the sum of their sizes is `n` times how
+many they are. -/
+theorem sum_card_inter (h : ∀ a _ : a ∈ s, (B.filter$ (· ∈ ·) a).card = n) : (∑t in B, (s ∩ t).card) = s.card*n :=
+  (sum_card_inter_le$ fun a ha => (h a ha).le).antisymm (le_sum_card_inter$ fun a ha => (h a ha).Ge)
+
+/-- If every element belongs to exactly `n` finsets, then the sum of their sizes is `n` times how
+many they are. -/
+theorem sum_card [Fintype α] (h : ∀ a, (B.filter$ (· ∈ ·) a).card = n) : (∑s in B, s.card) = Fintype.card α*n :=
+  by 
+    simpRw [Fintype.card, ←sum_card_inter fun a _ => h a, univ_inter]
+
+end DoubleCounting
+
 section CanonicallyOrderedMonoid
 
-variable[CanonicallyOrderedMonoid M]{f : ι → M}{s t : Finset ι}
+variable [CanonicallyOrderedMonoid M] {f : ι → M} {s t : Finset ι}
 
 @[simp, toAdditive sum_eq_zero_iff]
 theorem prod_eq_one_iff' : (∏x in s, f x) = 1 ↔ ∀ x _ : x ∈ s, f x = 1 :=
@@ -283,7 +334,7 @@ end CanonicallyOrderedMonoid
 
 section OrderedCancelCommMonoid
 
-variable[OrderedCancelCommMonoid M]{f g : ι → M}{s t : Finset ι}
+variable [OrderedCancelCommMonoid M] {f g : ι → M} {s t : Finset ι}
 
 @[toAdditive sum_lt_sum]
 theorem prod_lt_prod' (Hle : ∀ i _ : i ∈ s, f i ≤ g i) (Hlt : ∃ (i : _)(_ : i ∈ s), f i < g i) :
@@ -335,7 +386,7 @@ end OrderedCancelCommMonoid
 
 section LinearOrderedCancelCommMonoid
 
-variable[LinearOrderedCancelCommMonoid M]{f g : ι → M}{s t : Finset ι}
+variable [LinearOrderedCancelCommMonoid M] {f g : ι → M} {s t : Finset ι}
 
 @[toAdditive exists_lt_of_sum_lt]
 theorem exists_lt_of_prod_lt' (Hlt : (∏i in s, f i) < ∏i in s, g i) : ∃ (i : _)(_ : i ∈ s), f i < g i :=
@@ -363,7 +414,7 @@ end LinearOrderedCancelCommMonoid
 
 section OrderedCommSemiring
 
-variable[OrderedCommSemiring R]{f g : ι → R}{s t : Finset ι}
+variable [OrderedCommSemiring R] {f g : ι → R} {s t : Finset ι}
 
 open_locale Classical
 
@@ -428,7 +479,7 @@ end OrderedCommSemiring
 
 section CanonicallyOrderedCommSemiring
 
-variable[CanonicallyOrderedCommSemiring R]{f g h : ι → R}{s : Finset ι}{i : ι}
+variable [CanonicallyOrderedCommSemiring R] {f g h : ι → R} {s : Finset ι} {i : ι}
 
 theorem prod_le_prod' (h : ∀ i _ : i ∈ s, f i ≤ g i) : (∏i in s, f i) ≤ ∏i in s, g i :=
   by 
@@ -465,7 +516,7 @@ end Finset
 
 namespace Fintype
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 @[toAdditive sum_mono, mono]
 theorem prod_mono' [OrderedCommMonoid M] : Monotone fun f : ι → M => ∏i, f i :=
@@ -520,7 +571,7 @@ end WithTop
 
 section AbsoluteValue
 
-variable{S : Type _}
+variable {S : Type _}
 
 -- error in Algebra.BigOperators.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem absolute_value.sum_le

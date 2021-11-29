@@ -17,7 +17,7 @@ open_locale TopologicalSpace
 
 open Set
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E][FiniteDimensional ℝ E]
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
 noncomputable theory
 
@@ -100,7 +100,7 @@ theorem ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : ball x r ∈ 𝓝 x :=
 
 end Euclidean
 
-variable{F : Type _}[NormedGroup F][NormedSpace ℝ F]{f g : F → E}{n : WithTop ℕ}
+variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F] {f g : F → E} {n : WithTop ℕ}
 
 theorem TimesContDiff.euclidean_dist (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ n g) (h : ∀ x, f x ≠ g x) :
   TimesContDiff ℝ n fun x => Euclidean.dist (f x) (g x) :=

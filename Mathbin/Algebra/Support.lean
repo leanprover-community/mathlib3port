@@ -18,11 +18,11 @@ open_locale BigOperators
 
 namespace Function
 
-variable{α β A B M N P R S G M₀ G₀ : Type _}{ι : Sort _}
+variable {α β A B M N P R S G M₀ G₀ : Type _} {ι : Sort _}
 
 section HasOne
 
-variable[HasOne M][HasOne N][HasOne P]
+variable [HasOne M] [HasOne N] [HasOne P]
 
 /-- `support` of a function is the set of points `x` such that `f x ≠ 0`. -/
 def support [HasZero A] (f : α → A) : Set α :=
@@ -292,7 +292,7 @@ namespace Set
 
 open Function
 
-variable{α β M : Type _}[HasOne M]{f : α → M}
+variable {α β M : Type _} [HasOne M] {f : α → M}
 
 @[toAdditive]
 theorem image_inter_mul_support_eq {s : Set β} {g : β → α} : g '' s ∩ mul_support f = g '' (s ∩ mul_support (f ∘ g)) :=
@@ -303,7 +303,7 @@ end Set
 
 namespace Pi
 
-variable{A : Type _}{B : Type _}[DecidableEq A][HasZero B]{a : A}{b : B}
+variable {A : Type _} {B : Type _} [DecidableEq A] [HasZero B] {a : A} {b : B}
 
 theorem support_single_zero : Function.Support (Pi.single a (0 : B)) = ∅ :=
   by 

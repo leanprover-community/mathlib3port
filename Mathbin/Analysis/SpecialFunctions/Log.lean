@@ -23,7 +23,7 @@ noncomputable theory
 
 namespace Real
 
-variable{x y : ℝ}
+variable {x y : ℝ}
 
 /-- The real logarithm function, equal to the inverse of the exponential for `x > 0`,
 to `log |x|` for `x < 0`, and to `0` for `0`. We use this unconventional extension to
@@ -263,13 +263,13 @@ section Continuity
 
 open Real
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem Filter.Tendsto.log {f : α → ℝ} {l : Filter α} {x : ℝ} (h : tendsto f l (𝓝 x)) (hx : x ≠ 0) :
   tendsto (fun x => log (f x)) l (𝓝 (log x)) :=
   (continuous_at_log hx).Tendsto.comp h
 
-variable[TopologicalSpace α]{f : α → ℝ}{s : Set α}{a : α}
+variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {a : α}
 
 theorem Continuous.log (hf : Continuous f) (h₀ : ∀ x, f x ≠ 0) : Continuous fun x => log (f x) :=
   continuous_on_log.comp_continuous hf h₀

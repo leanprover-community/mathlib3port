@@ -14,9 +14,9 @@ namespace TopologicalRing
 
 open TopologicalSpace Function
 
-variable(R : Type _)[Ringₓ R]
+variable (R : Type _) [Ringₓ R]
 
-variable[TopologicalSpace R]
+variable [TopologicalSpace R]
 
 /-- The induced topology on units of a topological ring.
 This is not a global instance since other topologies could be relevant. Instead there is a class
@@ -30,10 +30,10 @@ def topological_space_units : TopologicalSpace (Units R) :=
  Another good candidate is the subspace topology of $R \times R$,
  with the units embedded via $u \mapsto (u, u^{-1})$.
  These topologies are not (propositionally) equal in general. -/
-class induced_units[t : TopologicalSpace$ Units R] : Prop where 
+class induced_units [t : TopologicalSpace$ Units R] : Prop where 
   top_eq : t = induced (coeₓ : Units R → R) ‹_›
 
-variable[TopologicalSpace$ Units R]
+variable [TopologicalSpace$ Units R]
 
 theorem units_topology_eq [induced_units R] : ‹TopologicalSpace (Units R)› = induced (coeₓ : Units R → R) ‹_› :=
   induced_units.top_eq
@@ -59,7 +59,7 @@ instance top_monoid_units [topological_ring R] [induced_units R] : has_continuou
 
 end TopologicalRing
 
-variable(K : Type _)[DivisionRing K][TopologicalSpace K]
+variable (K : Type _) [DivisionRing K] [TopologicalSpace K]
 
 /-- A topological division ring is a division ring with a topology where all operations are
     continuous, including inversion. -/
@@ -84,10 +84,10 @@ topological_ring.topological_space_units topological_division_ring.units_top_gro
 
 attribute [local instance] TopologicalRing.topologicalSpaceUnits
 
-instance (priority := 100)induced_units : TopologicalRing.InducedUnits K :=
+instance (priority := 100) induced_units : TopologicalRing.InducedUnits K :=
   ⟨rfl⟩
 
-variable[TopologicalDivisionRing K]
+variable [TopologicalDivisionRing K]
 
 -- error in Topology.Algebra.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem units_top_group : topological_group (units K) :=
@@ -120,7 +120,7 @@ happens to be a field is enough.
 -/
 
 
-variable{𝕜 : Type _}[Field 𝕜][TopologicalSpace 𝕜][TopologicalRing 𝕜]
+variable {𝕜 : Type _} [Field 𝕜] [TopologicalSpace 𝕜] [TopologicalRing 𝕜]
 
 /--
 The map `λ x, a * x + b`, as a homeomorphism from `𝕜` (a topological field) to itself, when `a ≠ 0`.

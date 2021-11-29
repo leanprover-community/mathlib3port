@@ -143,14 +143,14 @@ end Nat
 
 /-- A `primcodable` type is an `encodable` type for which
   the encode/decode functions are primitive recursive. -/
-class Primcodable(α : Type _) extends Encodable α where 
+class Primcodable (α : Type _) extends Encodable α where 
   prim{} : Nat.Primrec fun n => Encodable.encode (decode n)
 
 namespace Primcodable
 
 open Nat.Primrec
 
-instance (priority := 10)of_denumerable α [Denumerable α] : Primcodable α :=
+instance (priority := 10) of_denumerable α [Denumerable α] : Primcodable α :=
   ⟨succ.of_eq$
       by 
         simp ⟩
@@ -207,9 +207,9 @@ def Primrec {α β} [Primcodable α] [Primcodable β] (f : α → β) : Prop :=
 
 namespace Primrec
 
-variable{α : Type _}{β : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable σ]
 
 open Nat.Primrec
 
@@ -345,7 +345,7 @@ end Primcodable
 
 namespace Primrec
 
-variable{α : Type _}{σ : Type _}[Primcodable α][Primcodable σ]
+variable {α : Type _} {σ : Type _} [Primcodable α] [Primcodable σ]
 
 open Nat.Primrec
 
@@ -413,9 +413,9 @@ def PrimrecRel {α β} [Primcodable α] [Primcodable β] (s : α → β → Prop
 
 namespace Primrec₂
 
-variable{α : Type _}{β : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable σ]
 
 theorem of_eq {f g : α → β → σ} (hg : Primrec₂ f) (H : ∀ a b, f a b = g a b) : Primrec₂ g :=
   (by 
@@ -473,9 +473,9 @@ end Primrec₂
 
 section Comp
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable δ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable δ] [Primcodable σ]
 
 theorem Primrec.comp₂ {f : γ → σ} {g : α → β → γ} (hf : Primrec f) (hg : Primrec₂ g) : Primrec₂ fun a b => f (g a b) :=
   hf.comp hg
@@ -512,9 +512,9 @@ theorem PrimrecRel.of_eq {α β} [Primcodable α] [Primcodable β] {r s : α →
 
 namespace Primrec₂
 
-variable{α : Type _}{β : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable σ]
 
 open Nat.Primrec
 
@@ -543,9 +543,9 @@ end Primrec₂
 
 namespace Primrec
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable δ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable δ] [Primcodable σ]
 
 theorem to₂ {f : α × β → σ} (hf : Primrec f) : Primrec₂ fun a b => f (a, b) :=
   hf.of_eq$ fun ⟨a, b⟩ => rfl
@@ -848,11 +848,11 @@ end Primrec
 
 section 
 
-variable{α : Type _}{β : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable σ]
 
-variable(H : Nat.Primrec fun n => Encodable.encode (decode (List β) n))
+variable (H : Nat.Primrec fun n => Encodable.encode (decode (List β) n))
 
 include H
 
@@ -924,9 +924,9 @@ end
 
 namespace Primcodable
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
-variable[Primcodable α][Primcodable β]
+variable [Primcodable α] [Primcodable β]
 
 open Primrec
 
@@ -979,9 +979,9 @@ end Primcodable
 
 namespace Primrec
 
-variable{α : Type _}{β : Type _}{γ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 theorem sum_inl : Primrec (@Sum.inl α β) :=
   encode_iff.1$ nat_bit0.comp Primrec.encode
@@ -1150,9 +1150,9 @@ end Primrec
 
 namespace Primcodable
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
-variable[Primcodable α][Primcodable β]
+variable [Primcodable α] [Primcodable β]
 
 open Primrec
 
@@ -1201,9 +1201,9 @@ end Primcodable
 
 namespace Primrec
 
-variable{α : Type _}{β : Type _}{γ : Type _}{σ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {σ : Type _}
 
-variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable σ]
+variable [Primcodable α] [Primcodable β] [Primcodable γ] [Primcodable σ]
 
 -- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem subtype_val

@@ -8,7 +8,7 @@ import Mathbin.Algebra.CharP.Basic
 
 open Matrix
 
-variable{n : Type _}[Fintype n]{R : Type _}[Ringₓ R]
+variable {n : Type _} [Fintype n] {R : Type _} [Ringₓ R]
 
 instance Matrix.char_p [DecidableEq n] [Nonempty n] (p : ℕ) [CharP R p] : CharP (Matrix n n R) p :=
   ⟨by 

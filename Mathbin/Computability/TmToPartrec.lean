@@ -647,7 +647,7 @@ end
 theorem code_is_ok c : code.ok c :=
   by 
     induction c <;> intro k v <;> rw [step_normal]
-    iterate 3
+    iterate 3 
       simp only [code.eval, pure_bind]
     case cons f fs IHf IHfs => 
       rw [code.eval, IHf]
@@ -887,10 +887,10 @@ inductive Λ'
   | pred (q₁ q₂ : Λ')
   | ret (k : cont')
 
-instance  : Inhabited Λ' :=
+instance : Inhabited Λ' :=
   ⟨Λ'.ret cont'.halt⟩
 
-instance  : DecidableEq Λ' :=
+instance : DecidableEq Λ' :=
   fun a b =>
     by 
       induction a generalizing b <;>

@@ -11,7 +11,7 @@ open CategoryTheory
 
 namespace CategoryTheory.prod
 
-variable(C : Type u₁)[category.{v₁} C](D : Type u₂)[category.{v₂} D](E : Type u₃)[category.{v₃} E]
+variable (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D] (E : Type u₃) [category.{v₃} E]
 
 /--
 The associator functor `(C × D) × E ⥤ C × (D × E)`.

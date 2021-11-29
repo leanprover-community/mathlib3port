@@ -40,16 +40,16 @@ If `p` is invertible in `R`, this ring is isomorphic to `ℕ → R` (the product
 If `R` is a ring of characteristic `p`, then `witt_vector p R` is a ring of characteristic `0`.
 The canonical example is `witt_vector p (zmod p)`,
 which is isomorphic to the `p`-adic integers `ℤ_[p]`. -/
-structure WittVector(p : ℕ)(R : Type _) where mk{} :: 
+structure WittVector (p : ℕ) (R : Type _) where mk{} :: 
   coeff : ℕ → R
 
-variable{p : ℕ}
+variable {p : ℕ}
 
 local notation "𝕎" => WittVector p
 
 namespace WittVector
 
-variable(p){R : Type _}
+variable (p) {R : Type _}
 
 /-- Construct a Witt vector `mk p x : 𝕎 R` from a sequence `x` of elements of `R`. -/
 add_decl_doc WittVector.mk
@@ -78,13 +78,13 @@ theorem ext_iff {x y : 𝕎 R} : x = y ↔ ∀ n, x.coeff n = y.coeff n :=
 theorem coeff_mk (x : ℕ → R) : (mk p x).coeff = x :=
   rfl
 
-instance  : Functor (WittVector p) :=
+instance : Functor (WittVector p) :=
   { map := fun α β f v => mk p (f ∘ v.coeff), mapConst := fun α β a v => mk p fun _ => a }
 
-instance  : IsLawfulFunctor (WittVector p) :=
+instance : IsLawfulFunctor (WittVector p) :=
   { map_const_eq := fun α β => rfl, id_map := fun α ⟨v, _⟩ => rfl, comp_map := fun α β γ f g v => rfl }
 
-variable(p)[hp : Fact p.prime][CommRingₓ R]
+variable (p) [hp : Fact p.prime] [CommRingₓ R]
 
 include hp
 
@@ -116,7 +116,7 @@ def witt_mul : ℕ → MvPolynomial (Finₓ 2 × ℕ) ℤ :=
 def witt_neg : ℕ → MvPolynomial (Finₓ 1 × ℕ) ℤ :=
   wittStructureInt p (-X 0)
 
-variable{p}
+variable {p}
 
 omit hp
 
@@ -140,12 +140,12 @@ evaluating this at `(x₀, x₁)` gives us the sum of two Witt vectors `x₀ + x
 def eval {k : ℕ} (φ : ℕ → MvPolynomial (Finₓ k × ℕ) ℤ) (x : Finₓ k → 𝕎 R) : 𝕎 R :=
   mk p$ fun n => peval (φ n)$ fun i => (x i).coeff
 
-variable(R)[Fact p.prime]
+variable (R) [Fact p.prime]
 
 -- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 instance : has_zero (expr𝕎() R) := ⟨eval (witt_zero p) «expr![ , ]»([])⟩
 
-instance  : Inhabited (𝕎 R) :=
+instance : Inhabited (𝕎 R) :=
   ⟨0⟩
 
 -- error in RingTheory.WittVector.Defs: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
@@ -262,7 +262,7 @@ end WittStructureSimplifications
 
 section Coeff
 
-variable(p R)
+variable (p R)
 
 @[simp]
 theorem zero_coeff (n : ℕ) : (0 : 𝕎 R).coeff n = 0 :=
@@ -279,7 +279,7 @@ theorem one_coeff_eq_of_pos (n : ℕ) (hn : 0 < n) : coeff (1 : 𝕎 R) n = 0 :=
   show (aeval _ (witt_one p n) : R) = 0 by 
     simp only [hn, witt_one_pos_eq_zero, AlgHom.map_zero]
 
-variable{p R}
+variable {p R}
 
 omit hp
 

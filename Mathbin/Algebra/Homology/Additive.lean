@@ -20,26 +20,26 @@ noncomputable theory
 
 open CategoryTheory CategoryTheory.Limits HomologicalComplex
 
-variable{ι : Type _}
+variable {ι : Type _}
 
-variable{V : Type u}[category.{v} V][preadditive V]
+variable {V : Type u} [category.{v} V] [preadditive V]
 
-variable{c : ComplexShape ι}{C D E : HomologicalComplex V c}
+variable {c : ComplexShape ι} {C D E : HomologicalComplex V c}
 
-variable(f g : C ⟶ D)(h k : D ⟶ E)(i : ι)
+variable (f g : C ⟶ D) (h k : D ⟶ E) (i : ι)
 
 namespace HomologicalComplex
 
-instance  : HasZero (C ⟶ D) :=
+instance : HasZero (C ⟶ D) :=
   ⟨{ f := fun i => 0 }⟩
 
-instance  : Add (C ⟶ D) :=
+instance : Add (C ⟶ D) :=
   ⟨fun f g => { f := fun i => f.f i+g.f i }⟩
 
-instance  : Neg (C ⟶ D) :=
+instance : Neg (C ⟶ D) :=
   ⟨fun f => { f := fun i => -f.f i }⟩
 
-instance  : Sub (C ⟶ D) :=
+instance : Sub (C ⟶ D) :=
   ⟨fun f g => { f := fun i => f.f i - g.f i }⟩
 
 @[simp]
@@ -58,7 +58,7 @@ theorem neg_f_apply (f : C ⟶ D) (i : ι) : (-f).f i = -f.f i :=
 theorem sub_f_apply (f g : C ⟶ D) (i : ι) : (f - g).f i = f.f i - g.f i :=
   rfl
 
-instance  : AddCommGroupₓ (C ⟶ D) :=
+instance : AddCommGroupₓ (C ⟶ D) :=
   Function.Injective.addCommGroup hom.f HomologicalComplex.hom_f_injective
     (by 
       tidy)
@@ -69,7 +69,7 @@ instance  : AddCommGroupₓ (C ⟶ D) :=
     (by 
       tidy)
 
-instance  : preadditive (HomologicalComplex V c) :=
+instance : preadditive (HomologicalComplex V c) :=
   {  }
 
 /-- The `i`-th component of a chain map, as an additive map from chain maps to morphisms. -/
@@ -84,17 +84,17 @@ namespace HomologicalComplex
 instance eval_additive (i : ι) : (eval V c i).Additive :=
   {  }
 
-variable[has_zero_object V]
+variable [has_zero_object V]
 
 instance cycles_additive [has_equalizers V] : (cyclesFunctor V c i).Additive :=
   {  }
 
-variable[has_images V][has_image_maps V]
+variable [has_images V] [has_image_maps V]
 
 instance boundaries_additive : (boundariesFunctor V c i).Additive :=
   {  }
 
-variable[has_equalizers V][has_cokernels V]
+variable [has_equalizers V] [has_cokernels V]
 
 instance homology_additive : (homologyFunctor V c i).Additive :=
   { map_add' :=
@@ -111,7 +111,7 @@ end HomologicalComplex
 
 namespace CategoryTheory
 
-variable{W : Type _}[category W][preadditive W]
+variable {W : Type _} [category W] [preadditive W]
 
 /--
 An additive functor induces a functor between homological complexes.
@@ -177,7 +177,7 @@ theorem nat_trans.map_homological_complex_naturality {c : ComplexShape ι} {F G 
 
 end CategoryTheory
 
-variable[has_zero_object V]{W : Type _}[category W][preadditive W][has_zero_object W]
+variable [has_zero_object V] {W : Type _} [category W] [preadditive W] [has_zero_object W]
 
 namespace HomologicalComplex
 
@@ -231,7 +231,7 @@ def single_map_homological_complex (F : V ⥤ W) [F.additive] (c : ComplexShape 
         dsimp 
         splitIfs with h <;> simp [h]
 
-variable(F : V ⥤ W)[functor.additive F](c)
+variable (F : V ⥤ W) [functor.additive F] (c)
 
 @[simp]
 theorem single_map_homological_complex_hom_app_self (j : ι) (X : V) :

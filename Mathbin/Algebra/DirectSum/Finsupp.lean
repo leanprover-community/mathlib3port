@@ -17,11 +17,11 @@ open_locale DirectSum
 
 open LinearMap Submodule
 
-variable{R : Type u}{M : Type v}[Ringₓ R][AddCommGroupₓ M][Module R M]
+variable {R : Type u} {M : Type v} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
 section finsuppLequivDirectSum
 
-variable(R M)(ι : Type _)[DecidableEq ι]
+variable (R M) (ι : Type _) [DecidableEq ι]
 
 -- error in Algebra.DirectSum.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The finitely supported functions `ι →₀ M` are in linear equivalence with the direct sum of

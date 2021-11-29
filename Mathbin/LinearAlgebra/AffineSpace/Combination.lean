@@ -46,15 +46,15 @@ theorem univ_fin2 : (univ : Finset (Finₓ 2)) = {0, 1} :=
     ext x 
     finCases x <;> simp 
 
-variable{k : Type _}{V : Type _}{P : Type _}[Ringₓ k][AddCommGroupₓ V][Module k V]
+variable {k : Type _} {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V]
 
-variable[S : affine_space V P]
+variable [S : affine_space V P]
 
 include S
 
-variable{ι : Type _}(s : Finset ι)
+variable {ι : Type _} (s : Finset ι)
 
-variable{ι₂ : Type _}(s₂ : Finset ι₂)
+variable {ι₂ : Type _} (s₂ : Finset ι₂)
 
 /-- A weighted sum of the results of subtracting a base point from the
 given points, as a linear map on the weights.  The main cases of
@@ -309,7 +309,7 @@ theorem affine_combination_map (e : ι₂ ↪ ι) (w : ι → k) (p : ι → P) 
   by 
     simpRw [affine_combination_apply, weighted_vsub_of_point_map]
 
-variable{V}
+variable {V}
 
 /-- Suppose an indexed family of points is given, along with a subset
 of the index type.  A vector can be expressed as
@@ -335,7 +335,7 @@ theorem eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype {
             _⟩ <;>
         simp 
 
-variable(k)
+variable (k)
 
 /-- Suppose an indexed family of points is given, along with a subset
 of the index type.  A vector can be expressed as `weighted_vsub` using
@@ -348,7 +348,7 @@ theorem eq_weighted_vsub_subset_iff_eq_weighted_vsub_subtype {v : V} {s : Set ι
     ∃ (fs : Finset s)(w : s → k)(hw : (∑i in fs, w i) = 0), v = fs.weighted_vsub (fun i : s => p i) w :=
   eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype
 
-variable(V)
+variable (V)
 
 /-- Suppose an indexed family of points is given, along with a subset
 of the index type.  A point can be expressed as an
@@ -364,7 +364,7 @@ theorem eq_affine_combination_subset_iff_eq_affine_combination_subtype {p0 : P} 
     simpRw [affine_combination_apply, eq_vadd_iff_vsub_eq]
     exact eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype
 
-variable{k V}
+variable {k V}
 
 -- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Affine maps commute with affine combinations. -/
@@ -388,9 +388,9 @@ end Finset
 
 namespace Finset
 
-variable(k : Type _){V : Type _}{P : Type _}[DivisionRing k][AddCommGroupₓ V][Module k V]
+variable (k : Type _) {V : Type _} {P : Type _} [DivisionRing k] [AddCommGroupₓ V] [Module k V]
 
-variable[affine_space V P]{ι : Type _}(s : Finset ι){ι₂ : Type _}(s₂ : Finset ι₂)
+variable [affine_space V P] {ι : Type _} (s : Finset ι) {ι₂ : Type _} (s₂ : Finset ι₂)
 
 /-- The weights for the centroid of some points. -/
 def centroid_weights : ι → k :=
@@ -405,7 +405,7 @@ theorem centroid_weights_apply (i : ι) : s.centroid_weights k i = (card s : k)�
 theorem centroid_weights_eq_const : s.centroid_weights k = Function.const ι ((card s : k)⁻¹) :=
   rfl
 
-variable{k}
+variable {k}
 
 /-- The weights in the centroid sum to 1, if the number of points,
 converted to `k`, is not zero. -/
@@ -414,7 +414,7 @@ theorem sum_centroid_weights_eq_one_of_cast_card_ne_zero (h : (card s : k) ≠ 0
   by 
     simp [h]
 
-variable(k)
+variable (k)
 
 /-- In the characteristic zero case, the weights in the centroid sum
 to 1 if the number of points is not zero. -/
@@ -599,9 +599,9 @@ end Finset
 
 section AffineSpace'
 
-variable{k : Type _}{V : Type _}{P : Type _}[Ringₓ k][AddCommGroupₓ V][Module k V][affine_space V P]
+variable {k : Type _} {V : Type _} {P : Type _} [Ringₓ k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 include V
 
@@ -656,7 +656,7 @@ begin
   exact [expr affine_subspace.vadd_mem_of_mem_direction hv (mem_affine_span k (set.mem_range_self _))]
 end
 
-variable(k){V}
+variable (k) {V}
 
 -- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A vector is in the `vector_span` of an indexed family if and only
@@ -696,7 +696,7 @@ begin
     exact [expr weighted_vsub_mem_vector_span hw p] }
 end
 
-variable{k}
+variable {k}
 
 -- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A point in the `affine_span` of an indexed family is an
@@ -744,7 +744,7 @@ theorem eq_affine_combination_of_mem_affine_span_of_fintype [Fintype ι] {p1 : P
     ext i 
     congr
 
-variable(k V)
+variable (k V)
 
 /-- A point is in the `affine_span` of an indexed family if and only
 if it is an `affine_combination` with sum of weights 1, provided the
@@ -789,7 +789,7 @@ begin
     exact [expr affine_combination_mem_affine_span h₁ p] }
 end
 
-variable{k V}
+variable {k V}
 
 -- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a set of points, together with a chosen base point in this set, if we affinely transport
@@ -815,9 +815,9 @@ end AffineSpace'
 
 section DivisionRing
 
-variable{k : Type _}{V : Type _}{P : Type _}[DivisionRing k][AddCommGroupₓ V][Module k V]
+variable {k : Type _} {V : Type _} {P : Type _} [DivisionRing k] [AddCommGroupₓ V] [Module k V]
 
-variable[affine_space V P]{ι : Type _}
+variable [affine_space V P] {ι : Type _}
 
 include V
 
@@ -829,7 +829,7 @@ theorem centroid_mem_affine_span_of_cast_card_ne_zero {s : Finset ι} (p : ι �
   s.centroid k p ∈ affineSpan k (range p) :=
   affine_combination_mem_affine_span (s.sum_centroid_weights_eq_one_of_cast_card_ne_zero h) p
 
-variable(k)
+variable (k)
 
 /-- In the characteristic zero case, the centroid lies in the affine
 span if the number of points is not zero. -/
@@ -853,9 +853,9 @@ end DivisionRing
 
 namespace AffineMap
 
-variable{k : Type _}{V : Type _}(P : Type _)[CommRingₓ k][AddCommGroupₓ V][Module k V]
+variable {k : Type _} {V : Type _} (P : Type _) [CommRingₓ k] [AddCommGroupₓ V] [Module k V]
 
-variable[affine_space V P]{ι : Type _}(s : Finset ι)
+variable [affine_space V P] {ι : Type _} (s : Finset ι)
 
 include V
 

@@ -34,7 +34,7 @@ We also prove some simple lemmas about spaces with this property.
 /-- This typeclass says that all closed intervals in `α` are compact. This is true for all
 conditionally complete linear orders with order topology and products (finite or infinite)
 of such spaces. -/
-class CompactIccSpace(α : Type _)[TopologicalSpace α][Preorderₓ α] : Prop where 
+class CompactIccSpace (α : Type _) [TopologicalSpace α] [Preorderₓ α] : Prop where 
   is_compact_Icc : ∀ {a b : α}, IsCompact (Icc a b)
 
 export CompactIccSpace(is_compact_Icc)
@@ -98,7 +98,7 @@ begin
   { exact [expr ((hsc.1 ⟨hy, hay⟩).not_lt hxy.1).elim] }
 end
 
-instance  {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
+instance {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
   [∀ i, CompactIccSpace (α i)] : CompactIccSpace (∀ i, α i) :=
   ⟨fun a b => pi_univ_Icc a b ▸ is_compact_univ_pi$ fun i => is_compact_Icc⟩
 
@@ -106,7 +106,7 @@ instance Pi.compact_Icc_space' {α β : Type _} [Preorderₓ β] [TopologicalSpa
   CompactIccSpace (α → β) :=
   Pi.compact_Icc_space
 
-instance  {α β : Type _} [Preorderₓ α] [TopologicalSpace α] [CompactIccSpace α] [Preorderₓ β] [TopologicalSpace β]
+instance {α β : Type _} [Preorderₓ α] [TopologicalSpace α] [CompactIccSpace α] [Preorderₓ β] [TopologicalSpace β]
   [CompactIccSpace β] : CompactIccSpace (α × β) :=
   ⟨fun a b => (Icc_prod_eq a b).symm ▸ is_compact_Icc.Prod is_compact_Icc⟩
 
@@ -120,14 +120,14 @@ theorem is_compact_interval {α : Type _} [ConditionallyCompleteLinearOrder α] 
 We do not register an instance for a `[compact_Icc_space α]` because this would only add instances
 for products (indexed or not) of complete linear orders, and we have instances with higher priority
 that cover these cases. -/
-instance (priority := 100)compact_space_of_complete_linear_order {α : Type _} [CompleteLinearOrder α]
+instance (priority := 100) compact_space_of_complete_linear_order {α : Type _} [CompleteLinearOrder α]
   [TopologicalSpace α] [OrderTopology α] : CompactSpace α :=
   ⟨by 
       simp only [←Icc_bot_top, is_compact_Icc]⟩
 
 section 
 
-variable{α : Type _}[Preorderₓ α][TopologicalSpace α][CompactIccSpace α]
+variable {α : Type _} [Preorderₓ α] [TopologicalSpace α] [CompactIccSpace α]
 
 instance compact_space_Icc (a b : α) : CompactSpace (Icc a b) :=
   is_compact_iff_compact_space.mp is_compact_Icc
@@ -139,7 +139,7 @@ end
 -/
 
 
-variable{α β : Type _}[ConditionallyCompleteLinearOrder α][TopologicalSpace α][OrderTopology α][TopologicalSpace β]
+variable {α β : Type _} [ConditionallyCompleteLinearOrder α] [TopologicalSpace α] [OrderTopology α] [TopologicalSpace β]
 
 theorem IsCompact.Inf_mem {s : Set α} (hs : IsCompact s) (ne_s : s.nonempty) : Inf s ∈ s :=
   hs.is_closed.cInf_mem ne_s hs.bdd_below
@@ -227,7 +227,7 @@ theorem Continuous.exists_forall_ge [Nonempty β] {f : β → α} (hf : Continuo
 -/
 
 
-variable[DenselyOrdered α][ConditionallyCompleteLinearOrder β][OrderTopology β]{f : α → β}{a b x y : α}
+variable [DenselyOrdered α] [ConditionallyCompleteLinearOrder β] [OrderTopology β] {f : α → β} {a b x y : α}
 
 open_locale Interval
 

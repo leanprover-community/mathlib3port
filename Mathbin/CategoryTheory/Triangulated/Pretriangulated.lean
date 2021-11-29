@@ -31,7 +31,8 @@ namespace CategoryTheory.Triangulated
 
 open CategoryTheory.Category
 
-variable(C : Type u)[category.{v} C][has_zero_object C][has_shift C][preadditive C][functor.additive (shift C).Functor]
+variable (C : Type u) [category.{v} C] [has_zero_object C] [has_shift C] [preadditive C]
+  [functor.additive (shift C).Functor]
 
 /--
 A preadditive category `C` with an additive shift, and a class of "distinguished triangles"
@@ -69,7 +70,7 @@ class pretriangulated where
 
 namespace Pretriangulated
 
-variable[pretriangulated C]
+variable [pretriangulated C]
 
 notation:20 "dist_triang" C => distinguished_triangles C
 
@@ -143,17 +144,11 @@ namespace CategoryTheory.Triangulated
 
 namespace Pretriangulated
 
-variable(C :
-    Type
-      u₁)[category.{v₁}
-      C][has_zero_object
-      C][has_shift C][preadditive C][functor.additive (shift C).Functor][functor.additive (shift C).inverse]
+variable (C : Type u₁) [category.{v₁} C] [has_zero_object C] [has_shift C] [preadditive C]
+  [functor.additive (shift C).Functor] [functor.additive (shift C).inverse]
 
-variable(D :
-    Type
-      u₂)[category.{v₂}
-      D][has_zero_object
-      D][has_shift D][preadditive D][functor.additive (shift D).Functor][functor.additive (shift D).inverse]
+variable (D : Type u₂) [category.{v₂} D] [has_zero_object D] [has_shift D] [preadditive D]
+  [functor.additive (shift D).Functor] [functor.additive (shift D).inverse]
 
 /--
 The underlying structure of a triangulated functor between pretriangulated categories `C` and `D`
@@ -162,13 +157,13 @@ is a functor `F : C ⥤ D` together with given functorial isomorphisms `ξ X : F
 structure triangulated_functor_struct extends C ⥤ D where 
   commShift : (shift C).Functor ⋙ to_functor ≅ to_functor ⋙ (shift D).Functor
 
-instance  : Inhabited (triangulated_functor_struct C C) :=
+instance : Inhabited (triangulated_functor_struct C C) :=
   ⟨{ obj := fun X => X, map := fun _ _ f => f,
       commShift :=
         by 
           rfl }⟩
 
-variable{C D}
+variable {C D}
 
 /--
 Given a `triangulated_functor_struct` we can define a function from triangles of `C` to
@@ -178,7 +173,7 @@ triangles of `D`.
 def triangulated_functor_struct.map_triangle (F : triangulated_functor_struct C D) (T : triangle C) : triangle D :=
   triangle.mk _ (F.map T.mor₁) (F.map T.mor₂) (F.map T.mor₃ ≫ F.comm_shift.hom.app T.obj₁)
 
-variable(C D)
+variable (C D)
 
 /--
 A triangulated functor between pretriangulated categories `C` and `D` is a functor `F : C ⥤ D`
@@ -187,11 +182,11 @@ distinguished triangle `(X,Y,Z,f,g,h)` of `C`, the triangle
 `(F(X), F(Y), F(Z), F(f), F(g), F(h) ≫ (ξ X))` is a distinguished triangle of `D`.
 See https://stacks.math.columbia.edu/tag/014V
 -/
-structure triangulated_functor[pretriangulated C][pretriangulated D] extends triangulated_functor_struct C D where 
+structure triangulated_functor [pretriangulated C] [pretriangulated D] extends triangulated_functor_struct C D where 
   map_distinguished' :
   ∀ T : triangle C, T ∈ (dist_triang C) → to_triangulated_functor_struct.map_triangle T ∈ (dist_triang D)
 
-instance  [pretriangulated C] : Inhabited (triangulated_functor C C) :=
+instance [pretriangulated C] : Inhabited (triangulated_functor C C) :=
   ⟨{ obj := fun X => X, map := fun _ _ f => f,
       commShift :=
         by 
@@ -202,7 +197,7 @@ instance  [pretriangulated C] : Inhabited (triangulated_functor C C) :=
           dsimp  at *
           rwa [category.comp_id] }⟩
 
-variable{C D}[pretriangulated C][pretriangulated D]
+variable {C D} [pretriangulated C] [pretriangulated D]
 
 /--
 Given a `triangulated_functor` we can define a function from triangles of `C` to triangles of `D`.

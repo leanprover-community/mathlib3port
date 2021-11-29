@@ -13,11 +13,11 @@ open Nat List
 
 namespace Encodable
 
-variable{α : Type _}
+variable {α : Type _}
 
 section List
 
-variable[Encodable α]
+variable [Encodable α]
 
 /-- Explicit encoding function for `list α` -/
 def encode_list : List α → ℕ
@@ -70,7 +70,7 @@ end List
 
 section Finset
 
-variable[Encodable α]
+variable [Encodable α]
 
 private def enle : α → α → Prop :=
   encode ⁻¹'o (· ≤ ·)
@@ -186,7 +186,7 @@ end Encodable
 
 namespace Denumerable
 
-variable{α : Type _}{β : Type _}[Denumerable α][Denumerable β]
+variable {α : Type _} {β : Type _} [Denumerable α] [Denumerable β]
 
 open Encodable
 

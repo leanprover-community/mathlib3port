@@ -12,7 +12,7 @@ open Set Function
 
 universe u v w x
 
-variable{α : Type u}{β : Type v}{ι : Sort w}{γ : Type x}
+variable {α : Type u} {β : Type v} {ι : Sort w} {γ : Type x}
 
 namespace Set
 
@@ -88,7 +88,7 @@ theorem finite.exists_finset_coe {s : Set α} (hs : finite s) : ∃ s' : Finset 
   ⟨hs.to_finset, hs.coe_to_finset⟩
 
 /-- Finite sets can be lifted to finsets. -/
-instance  : CanLift (Set α) (Finset α) :=
+instance : CanLift (Set α) (Finset α) :=
   { coe := coeₓ, cond := finite, prf := fun s hs => hs.exists_finset_coe }
 
 theorem finite_mem_finset (s : Finset α) : finite { a | a ∈ s } :=
@@ -642,9 +642,9 @@ end Set
 
 namespace Finset
 
-variable[DecidableEq β]
+variable [DecidableEq β]
 
-variable{s : Finset α}
+variable {s : Finset α}
 
 theorem finite_to_set (s : Finset α) : Set.Finite («expr↑ » s : Set α) :=
   Set.finite_mem_finset s
@@ -889,7 +889,7 @@ end DecidableEq
 
 section 
 
-variable[SemilatticeSup α][Nonempty α]{s : Set α}
+variable [SemilatticeSup α] [Nonempty α] {s : Set α}
 
 /--A finite set is bounded above.-/
 protected theorem finite.bdd_above (hs : finite s) : BddAbove s :=
@@ -909,7 +909,7 @@ end
 
 section 
 
-variable[SemilatticeInf α][Nonempty α]{s : Set α}
+variable [SemilatticeInf α] [Nonempty α] {s : Set α}
 
 /--A finite set is bounded below.-/
 protected theorem finite.bdd_below (hs : finite s) : BddBelow s :=
@@ -938,7 +938,7 @@ end Finset
 
 namespace Fintype
 
-variable[Fintype α]{p q : α → Prop}[DecidablePred p][DecidablePred q]
+variable [Fintype α] {p q : α → Prop} [DecidablePred p] [DecidablePred q]
 
 @[simp]
 theorem card_subtype_compl : Fintype.card { x // ¬p x } = Fintype.card α - Fintype.card { x // p x } :=

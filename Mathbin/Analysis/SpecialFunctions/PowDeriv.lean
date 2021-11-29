@@ -64,7 +64,7 @@ section fderiv
 
 open Complex
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℂ E]{f g : E → ℂ}{f' g' : E →L[ℂ] ℂ}{x : E}{s : Set E}{c : ℂ}
+variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E] {f g : E → ℂ} {f' g' : E →L[ℂ] ℂ} {x : E} {s : Set E} {c : ℂ}
 
 theorem HasStrictFderivAt.cpow (hf : HasStrictFderivAt f f' x) (hg : HasStrictFderivAt g g' x)
   (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) :
@@ -117,7 +117,7 @@ section deriv
 
 open Complex
 
-variable{f g : ℂ → ℂ}{s : Set ℂ}{f' g' x c : ℂ}
+variable {f g : ℂ → ℂ} {s : Set ℂ} {f' g' x c : ℂ}
 
 /-- A private lemma that rewrites the output of lemmas like `has_fderiv_at.cpow` to the form
 expected by lemmas like `has_deriv_at.cpow`. -/
@@ -178,7 +178,7 @@ end deriv
 
 namespace Real
 
-variable{x y z : ℝ}
+variable {x y z : ℝ}
 
 -- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `(x, y) ↦ x ^ y` is strictly differentiable at `p : ℝ × ℝ` such that `0 < p.fst`. -/
@@ -266,7 +266,7 @@ end Real
 
 namespace Real
 
-variable{z x y : ℝ}
+variable {z x y : ℝ}
 
 theorem has_deriv_at_rpow_const {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) : HasDerivAt (fun x => x^p) (p*x^p - 1) x :=
   by 
@@ -328,8 +328,8 @@ open Real
 
 section fderiv
 
-variable{E :
-    Type _}[NormedGroup E][NormedSpace ℝ E]{f g : E → ℝ}{f' g' : E →L[ℝ] ℝ}{x : E}{s : Set E}{c p : ℝ}{n : WithTop ℕ}
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f g : E → ℝ} {f' g' : E →L[ℝ] ℝ} {x : E} {s : Set E} {c p : ℝ}
+  {n : WithTop ℕ}
 
 theorem HasFderivWithinAt.rpow (hf : HasFderivWithinAt f f' s x) (hg : HasFderivWithinAt g g' s x) (h : 0 < f x) :
   HasFderivWithinAt (fun x => f x^g x) (((g x*f x^g x - 1) • f')+((f x^g x)*log (f x)) • g') s x :=
@@ -432,7 +432,7 @@ theorem TimesContDiff.rpow_const_of_ne (hf : TimesContDiff ℝ n f) (h : ∀ x, 
   TimesContDiff ℝ n fun x => f x^p :=
   hf.rpow times_cont_diff_const h
 
-variable{m : ℕ}
+variable {m : ℕ}
 
 theorem TimesContDiffWithinAt.rpow_const_of_le (hf : TimesContDiffWithinAt ℝ m f s x) (h : «expr↑ » m ≤ p) :
   TimesContDiffWithinAt ℝ m (fun x => f x^p) s x :=
@@ -456,7 +456,7 @@ end fderiv
 
 section deriv
 
-variable{f g : ℝ → ℝ}{f' g' x y p : ℝ}{s : Set ℝ}
+variable {f g : ℝ → ℝ} {f' g' x y p : ℝ} {s : Set ℝ}
 
 theorem HasDerivWithinAt.rpow (hf : HasDerivWithinAt f f' s x) (hg : HasDerivWithinAt g g' s x) (h : 0 < f x) :
   HasDerivWithinAt (fun x => f x^g x) (((f'*g x)*f x^g x - 1)+(g'*f x^g x)*log (f x)) s x :=

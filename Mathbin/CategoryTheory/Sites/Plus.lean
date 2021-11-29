@@ -22,15 +22,15 @@ open Opposite
 
 universe w v u
 
-variable{C : Type u}[category.{v} C](J : grothendieck_topology C)
+variable {C : Type u} [category.{v} C] (J : grothendieck_topology C)
 
-variable{D : Type w}[category.{max v u} D]
+variable {D : Type w} [category.{max v u} D]
 
 noncomputable theory
 
-variable[∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
+variable [∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
 
-variable(P : «expr ᵒᵖ» C ⥤ D)
+variable (P : «expr ᵒᵖ» C ⥤ D)
 
 /-- The diagram whose colimit defines the values of `plus`. -/
 @[simps]
@@ -66,7 +66,7 @@ def diagram_pullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).
           dsimp 
           simpa }
 
-variable[∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
+variable [∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
 
 /-- The plus construction, associating a presheaf to any presheaf.
 See `plus` below for a functorial version.
@@ -143,7 +143,7 @@ def plus_map {P Q : «expr ᵒᵖ» C ⥤ D} (η : P ⟶ Q) : J.plus_obj P ⟶ J
         dsimp 
         simpa }
 
-variable(D)
+variable (D)
 
 /-- The plus construction, a functor sending `P` to `J.plus_obj P`. -/
 @[simps]
@@ -171,7 +171,7 @@ def plus_functor : («expr ᵒᵖ» C ⥤ D) ⥤ «expr ᵒᵖ» C ⥤ D :=
         dsimp 
         simp  }
 
-variable{D}
+variable {D}
 
 /-- The canonical map from `P` to `J.plus.obj P`.
 See `to_plus` for a functorial version. -/
@@ -185,7 +185,7 @@ def to_plus : P ⟶ J.plus_obj P :=
         delta' cover.to_multiequalizer 
         simp only [diagram_pullback_app, colimit.ι_pre, ι_colim_map_assoc, category.assoc]
         dsimp only [functor.op, unop_op]
-        let e : (J.pullback f.unop).obj ⊤ ⟶ ⊤ := hom_of_le (SemilatticeInfTop.le_top _)
+        let e : (J.pullback f.unop).obj ⊤ ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
         rw [←colimit.w _ e.op, ←category.assoc, ←category.assoc, ←category.assoc]
         congr 1 
         ext 
@@ -194,7 +194,7 @@ def to_plus : P ⟶ J.plus_obj P :=
         dsimp [cover.arrow.base]
         simp  }
 
-variable(D)
+variable (D)
 
 /-- The natural transformation from the identity functor to `plus`. -/
 @[simps]
@@ -213,7 +213,7 @@ def to_plus_nat_trans : 𝟭 («expr ᵒᵖ» C ⥤ D) ⟶ J.plus_functor D :=
         dsimp 
         simp  }
 
-variable{D}
+variable {D}
 
 /-- `(P ⟶ P⁺)⁺ = P⁺ ⟶ P⁺⁺` -/
 @[simp]
@@ -223,14 +223,14 @@ theorem plus_map_to_plus : J.plus_map (J.to_plus P) = J.to_plus (J.plus_obj P) :
     dsimp 
     delta' cover.to_multiequalizer 
     simp only [ι_colim_map]
-    let e : S.unop ⟶ ⊤ := hom_of_le (SemilatticeInfTop.le_top _)
+    let e : S.unop ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
     simpRw [←colimit.w _ e.op, ←category.assoc]
     congr 1 
     ext I 
     dsimp 
     simp only [diagram_pullback_app, colimit.ι_pre, multiequalizer.lift_ι, ι_colim_map_assoc, category.assoc]
     dsimp only [functor.op]
-    let ee : (J.pullback (I.map e).f).obj S.unop ⟶ ⊤ := hom_of_le (SemilatticeInfTop.le_top _)
+    let ee : (J.pullback (I.map e).f).obj S.unop ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
     simpRw [←colimit.w _ ee.op, ←category.assoc]
     congr 1 
     ext II 

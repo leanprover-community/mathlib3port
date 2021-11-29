@@ -50,7 +50,7 @@ def cokernel_lift {X Y : SemiNormedGroup₁.{u}} (f : X ⟶ Y) (s : cokernel_cof
       simp 
     exact NormedGroupHom.lift_norm_noninc _ _ _ s.π.2
 
-instance  : has_cokernels SemiNormedGroup₁.{u} :=
+instance : has_cokernels SemiNormedGroup₁.{u} :=
   { HasColimit :=
       fun X Y f =>
         has_colimit.mk
@@ -66,7 +66,7 @@ instance  : has_cokernels SemiNormedGroup₁.{u} :=
                     simp )
                 fun s m w => Subtype.eq (NormedGroupHom.lift_unique f.1.range _ _ _ (congr_argₓ Subtype.val w : _)) } }
 
-example  : has_cokernels SemiNormedGroup₁ :=
+example : has_cokernels SemiNormedGroup₁ :=
   by 
     infer_instance
 
@@ -104,7 +104,7 @@ instance has_limit_parallel_pair {V W : SemiNormedGroupₓ.{u}} (f g : V ⟶ W) 
                   rw [←h]
                   rfl } }
 
-instance  : limits.has_equalizers.{u, u + 1} SemiNormedGroupₓ :=
+instance : limits.has_equalizers.{u, u + 1} SemiNormedGroupₓ :=
   @has_equalizers_of_has_limit_parallel_pair SemiNormedGroupₓ _$
     fun V W f g => SemiNormedGroupₓ.has_limit_parallel_pair f g
 
@@ -140,11 +140,11 @@ def is_colimit_cokernel_cocone {X Y : SemiNormedGroupₓ.{u}} (f : X ⟶ Y) : is
         simp )
     fun s m w => NormedGroupHom.lift_unique f.range _ _ _ w
 
-instance  : has_cokernels SemiNormedGroupₓ.{u} :=
+instance : has_cokernels SemiNormedGroupₓ.{u} :=
   { HasColimit :=
       fun X Y f => has_colimit.mk { Cocone := cokernel_cocone f, IsColimit := is_colimit_cokernel_cocone f } }
 
-example  : has_cokernels SemiNormedGroupₓ :=
+example : has_cokernels SemiNormedGroupₓ :=
   by 
     infer_instance
 

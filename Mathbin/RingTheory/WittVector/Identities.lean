@@ -22,7 +22,7 @@ In this file we derive common identities between the Frobenius and Verschiebung 
 
 namespace WittVector
 
-variable{p : ℕ}{R : Type _}[Fact p.prime][CommRingₓ R]
+variable {p : ℕ} {R : Type _} [Fact p.prime] [CommRingₓ R]
 
 local notation "𝕎" => WittVector p
 

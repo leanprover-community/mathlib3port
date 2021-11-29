@@ -44,7 +44,7 @@ namespace Game
 def le : Game → Game → Prop :=
   Quotientₓ.lift₂ (fun x y => x ≤ y) fun x₁ y₁ x₂ y₂ hx hy => propext (le_congr hx hy)
 
-instance  : LE Game :=
+instance : LE Game :=
   { le := le }
 
 theorem le_reflₓ : ∀ x : Game, x ≤ x :=
@@ -72,27 +72,27 @@ theorem not_leₓ : ∀ {x y : Game}, ¬x ≤ y ↔ lt y x :=
     rintro ⟨x⟩ ⟨y⟩
     exact not_leₓ
 
-instance  : HasZero Game :=
+instance : HasZero Game :=
   ⟨«expr⟦ ⟧» 0⟩
 
-instance  : Inhabited Game :=
+instance : Inhabited Game :=
   ⟨0⟩
 
-instance  : HasOne Game :=
+instance : HasOne Game :=
   ⟨«expr⟦ ⟧» 1⟩
 
 /-- The negation of `{L | R}` is `{-R | -L}`. -/
 def neg : Game → Game :=
   Quot.lift (fun x => «expr⟦ ⟧» (-x)) fun x y h => Quot.sound (@neg_congr x y h)
 
-instance  : Neg Game :=
+instance : Neg Game :=
   { neg := neg }
 
 /-- The sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
 def add : Game → Game → Game :=
   Quotientₓ.lift₂ (fun x y : Pgame => «expr⟦ ⟧» (x+y)) fun x₁ y₁ x₂ y₂ hx hy => Quot.sound (Pgame.add_congr hx hy)
 
-instance  : Add Game :=
+instance : Add Game :=
   ⟨add⟩
 
 theorem add_assocₓ : ∀ x y z : Game, ((x+y)+z) = x+y+z :=
@@ -101,7 +101,7 @@ theorem add_assocₓ : ∀ x y z : Game, ((x+y)+z) = x+y+z :=
     apply Quot.sound 
     exact add_assoc_equiv
 
-instance  : AddSemigroupₓ Game.{u} :=
+instance : AddSemigroupₓ Game.{u} :=
   { Game.hasAdd with add_assoc := add_assocₓ }
 
 theorem add_zeroₓ : ∀ x : Game, (x+0) = x :=
@@ -116,7 +116,7 @@ theorem zero_addₓ : ∀ x : Game, (0+x) = x :=
     apply Quot.sound 
     apply zero_add_equiv
 
-instance  : AddMonoidₓ Game :=
+instance : AddMonoidₓ Game :=
   { Game.hasZero, Game.addSemigroup with add_zero := add_zeroₓ, zero_add := zero_addₓ }
 
 theorem add_left_negₓ : ∀ x : Game, ((-x)+x) = 0 :=
@@ -125,7 +125,7 @@ theorem add_left_negₓ : ∀ x : Game, ((-x)+x) = 0 :=
     apply Quot.sound 
     apply add_left_neg_equiv
 
-instance  : AddGroupₓ Game :=
+instance : AddGroupₓ Game :=
   { Game.hasNeg, Game.addMonoid with add_left_neg := add_left_negₓ }
 
 theorem add_commₓ : ∀ x y : Game, (x+y) = y+x :=
@@ -134,10 +134,10 @@ theorem add_commₓ : ∀ x y : Game, (x+y) = y+x :=
     apply Quot.sound 
     exact add_comm_equiv
 
-instance  : AddCommSemigroupₓ Game :=
+instance : AddCommSemigroupₓ Game :=
   { Game.addSemigroup with add_comm := add_commₓ }
 
-instance  : AddCommGroupₓ Game :=
+instance : AddCommGroupₓ Game :=
   { Game.addCommSemigroup, Game.addGroup with  }
 
 theorem add_le_add_left : ∀ a b : Game, a ≤ b → ∀ c : Game, (c+a) ≤ c+b :=
@@ -198,7 +198,7 @@ begin
   { exact [expr «expr - »(«expr + »(IHxr i y, IHyl j), IHxr i (yL j))] }
 end
 
-instance  : Mul Pgame :=
+instance : Mul Pgame :=
   ⟨mul⟩
 
 /-- An explicit description of the moves for Left in `x * y`. -/
@@ -611,10 +611,10 @@ noncomputable def inv (x : Pgame) : Pgame :=
   by 
     classical <;> exact if x = 0 then 0 else if 0 < x then inv' x else inv' (-x)
 
-noncomputable instance  : HasInv Pgame :=
+noncomputable instance : HasInv Pgame :=
   ⟨inv⟩
 
-noncomputable instance  : Div Pgame :=
+noncomputable instance : Div Pgame :=
   ⟨fun x y => x*y⁻¹⟩
 
 end Pgame

@@ -1,5 +1,5 @@
-import Mathbin.AlgebraicGeometry.PresheafedSpace 
-import Mathbin.Topology.Sheaves.Sheaf
+import Mathbin.AlgebraicGeometry.PresheafedSpace.HasColimits 
+import Mathbin.Topology.Sheaves.Functors
 
 /-!
 # Sheafed spaces
@@ -26,7 +26,7 @@ open CategoryTheory.Limits
 
 open CategoryTheory.Category CategoryTheory.Functor
 
-variable(C : Type u)[category.{v} C][limits.has_products C]
+variable (C : Type u) [category.{v} C] [limits.has_products C]
 
 attribute [local tidy] tactic.op_induction'
 
@@ -36,7 +36,7 @@ namespace AlgebraicGeometry
 structure SheafedSpace extends PresheafedSpace C where 
   IsSheaf : presheaf.is_sheaf
 
-variable{C}
+variable {C}
 
 namespace SheafedSpace
 
@@ -55,17 +55,17 @@ theorem as_coe (X : SheafedSpace C) : X.carrier = (X : Top.{v}) :=
 theorem mk_coe carrier presheaf h : (({ Carrier, Presheaf, IsSheaf := h } : SheafedSpace.{v} C) : Top.{v}) = carrier :=
   rfl
 
-instance  (X : SheafedSpace.{v} C) : TopologicalSpace X :=
+instance (X : SheafedSpace.{v} C) : TopologicalSpace X :=
   X.carrier.str
 
 /-- The trivial `punit` valued sheaf on any topological space. -/
 def PUnit (X : Top) : SheafedSpace (discrete PUnit) :=
   { @PresheafedSpace.const (discrete PUnit) _ X PUnit.unit with IsSheaf := presheaf.is_sheaf_punit _ }
 
-instance  : Inhabited (SheafedSpace (discrete _root_.punit)) :=
+instance : Inhabited (SheafedSpace (discrete _root_.punit)) :=
   ⟨PUnit (Top.of Pempty)⟩
 
-instance  : category (SheafedSpace C) :=
+instance : category (SheafedSpace C) :=
   show category (induced_category (PresheafedSpace C) SheafedSpace.to_PresheafedSpace)by 
     infer_instance
 
@@ -75,7 +75,7 @@ instance  : category (SheafedSpace C) :=
 def forget_to_PresheafedSpace : «expr ⥤ »(SheafedSpace C, PresheafedSpace C) :=
 induced_functor _
 
-variable{C}
+variable {C}
 
 section 
 
@@ -112,7 +112,7 @@ theorem comp_c_app {X Y Z : SheafedSpace C} (α : X ⟶ Y) (β : Y ⟶ Z) U :
   (α ≫ β).c.app U = β.c.app U ≫ α.c.app (op ((opens.map β.base).obj (unop U))) :=
   rfl
 
-variable(C)
+variable (C)
 
 /-- The forgetful functor from `SheafedSpace` to `Top`. -/
 def forget : SheafedSpace C ⥤ Top :=
@@ -161,6 +161,19 @@ theorem Γ_map {X Y : «expr ᵒᵖ» (SheafedSpace C)} (f : X ⟶ Y) : Γ.map f
 
 theorem Γ_map_op {X Y : SheafedSpace C} (f : X ⟶ Y) : Γ.map f.op = f.c.app (op ⊤) :=
   rfl
+
+noncomputable instance [has_limits C] : creates_colimits (forget_to_PresheafedSpace : SheafedSpace C ⥤ _) :=
+  ⟨fun J hJ =>
+      by 
+        exact
+          ⟨fun K =>
+              creates_colimit_of_fully_faithful_of_iso
+                ⟨(PresheafedSpace.colimit_cocone (K ⋙ forget_to_PresheafedSpace)).x,
+                  limit_is_sheaf _ fun j => sheaf.pushforward_sheaf_of_sheaf _ (K.obj (unop j)).2⟩
+                (colimit.iso_colimit_cocone ⟨_, PresheafedSpace.colimit_cocone_is_colimit _⟩).symm⟩⟩
+
+instance [has_limits C] : has_colimits (SheafedSpace C) :=
+  has_colimits_of_has_colimits_creates_colimits forget_to_PresheafedSpace
 
 end SheafedSpace
 

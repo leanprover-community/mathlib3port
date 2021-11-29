@@ -48,11 +48,11 @@ namespace LinearIsometry
 
 open LinearMap
 
-variable{R : Type _}[Semiringₓ R]
+variable {R : Type _} [Semiringₓ R]
 
-variable{F E₁ : Type _}[SemiNormedGroup F][NormedGroup E₁][Module R E₁]
+variable {F E₁ : Type _} [SemiNormedGroup F] [NormedGroup E₁] [Module R E₁]
 
-variable{R₁ : Type _}[Field R₁][Module R₁ E₁][Module R₁ F][FiniteDimensional R₁ E₁][FiniteDimensional R₁ F]
+variable {R₁ : Type _} [Field R₁] [Module R₁ E₁] [Module R₁ F] [FiniteDimensional R₁ E₁] [FiniteDimensional R₁ F]
 
 /-- A linear isometry between finite dimensional spaces of equal dimension can be upgraded
     to a linear isometry equivalence. -/
@@ -75,19 +75,11 @@ namespace AffineIsometry
 
 open AffineMap
 
-variable{𝕜 :
-    Type
-      _}{V₁ V₂ :
-    Type
-      _}{P₁ P₂ :
-    Type
-      _}[NormedField
-      𝕜][NormedGroup
-      V₁][SemiNormedGroup
-      V₂][NormedSpace 𝕜
-      V₁][SemiNormedSpace 𝕜 V₂][MetricSpace P₁][PseudoMetricSpace P₂][NormedAddTorsor V₁ P₁][SemiNormedAddTorsor V₂ P₂]
+variable {𝕜 : Type _} {V₁ V₂ : Type _} {P₁ P₂ : Type _} [NormedField 𝕜] [NormedGroup V₁] [SemiNormedGroup V₂]
+  [NormedSpace 𝕜 V₁] [SemiNormedSpace 𝕜 V₂] [MetricSpace P₁] [PseudoMetricSpace P₂] [NormedAddTorsor V₁ P₁]
+  [SemiNormedAddTorsor V₂ P₂]
 
-variable[FiniteDimensional 𝕜 V₁][FiniteDimensional 𝕜 V₂]
+variable [FiniteDimensional 𝕜 V₁] [FiniteDimensional 𝕜 V₂]
 
 /-- An affine isometry between finite dimensional spaces of equal dimension can be upgraded
     to an affine isometry equivalence. -/
@@ -157,21 +149,9 @@ end
 
 section CompleteField
 
-variable{𝕜 :
-    Type
-      u}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      v}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{F :
-    Type
-      w}[NormedGroup
-      F][NormedSpace 𝕜
-      F]{F' :
-    Type
-      x}[AddCommGroupₓ
-      F'][Module 𝕜 F'][TopologicalSpace F'][TopologicalAddGroup F'][HasContinuousSmul 𝕜 F'][CompleteSpace 𝕜]
+variable {𝕜 : Type u} [NondiscreteNormedField 𝕜] {E : Type v} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type w}
+  [NormedGroup F] [NormedSpace 𝕜 F] {F' : Type x} [AddCommGroupₓ F'] [Module 𝕜 F'] [TopologicalSpace F']
+  [TopologicalAddGroup F'] [HasContinuousSmul 𝕜 F'] [CompleteSpace 𝕜]
 
 -- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- In finite dimension over a complete field, the canonical identification (in terms of a basis)
@@ -266,7 +246,7 @@ theorem AffineMap.continuous_of_finite_dimensional {PE PF : Type _} [MetricSpace
 
 namespace LinearMap
 
-variable[FiniteDimensional 𝕜 E]
+variable [FiniteDimensional 𝕜 E]
 
 /-- The continuous linear map induced by a linear map on a finite dimensional space -/
 def to_continuous_linear_map : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F' :=
@@ -372,7 +352,7 @@ def ContinuousLinearEquiv.ofFinrankEq [FiniteDimensional 𝕜 E] [FiniteDimensio
   (cond : finrank 𝕜 E = finrank 𝕜 F) : E ≃L[𝕜] F :=
   (linear_equiv.of_finrank_eq E F cond).toContinuousLinearEquiv
 
-variable{ι : Type _}[Fintype ι]
+variable {ι : Type _} [Fintype ι]
 
 -- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a continuous linear map given the value at a finite basis. -/
@@ -495,7 +475,7 @@ begin
     «expr ≤ »(..., ε) : by linarith [] [] ["[", expr hn x, ",", expr hn y, "]"]
 end
 
-variable(𝕜 E)
+variable (𝕜 E)
 
 -- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem finite_dimensional.complete [finite_dimensional 𝕜 E] : complete_space E :=
@@ -505,7 +485,7 @@ begin
   exact [expr (complete_space_congr this).1 (by apply_instance)]
 end
 
-variable{𝕜 E}
+variable {𝕜 E}
 
 /-- A finite-dimensional subspace is complete. -/
 theorem Submodule.complete_of_finite_dimensional (s : Submodule 𝕜 E) [FiniteDimensional 𝕜 s] : IsComplete (s : Set E) :=
@@ -585,7 +565,7 @@ begin
   exact [expr ⟨«expr + »(«expr∥ ∥»(c), 1), f, hc.trans A, hf.1, hf.2⟩]
 end
 
-variable(𝕜)
+variable (𝕜)
 
 -- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Riesz's theorem: if the unit ball is compact in a vector space, then the space is
@@ -663,7 +643,7 @@ end CompleteField
 
 section ProperField
 
-variable(𝕜 : Type u)[NondiscreteNormedField 𝕜](E : Type v)[NormedGroup E][NormedSpace 𝕜 E][ProperSpace 𝕜]
+variable (𝕜 : Type u) [NondiscreteNormedField 𝕜] (E : Type v) [NormedGroup E] [NormedSpace 𝕜 E] [ProperSpace 𝕜]
 
 /-- Any finite-dimensional vector space over a proper field is proper.
 We do not register this as an instance to avoid an instance loop when trying to prove the

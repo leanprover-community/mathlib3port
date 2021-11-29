@@ -286,35 +286,35 @@ instance lt_decidable (x y : Pgame.{u}) [short x] [short y] : Decidable (x < y) 
 instance equiv_decidable (x y : Pgame.{u}) [short x] [short y] : Decidable (x ≈ y) :=
   And.decidable
 
-example  : short 0 :=
+example : short 0 :=
   by 
     infer_instance
 
-example  : short 1 :=
+example : short 1 :=
   by 
     infer_instance
 
-example  : short 2 :=
+example : short 2 :=
   by 
     infer_instance
 
-example  : short (-2) :=
+example : short (-2) :=
   by 
     infer_instance
 
-example  : short (of_lists [0] [1]) :=
+example : short (of_lists [0] [1]) :=
   by 
     infer_instance
 
-example  : short (of_lists [-2, -1] [1]) :=
+example : short (of_lists [-2, -1] [1]) :=
   by 
     infer_instance
 
-example  : short (0+0) :=
+example : short (0+0) :=
   by 
     infer_instance
 
-example  : Decidable ((1 : Pgame) ≤ 1) :=
+example : Decidable ((1 : Pgame) ≤ 1) :=
   by 
     infer_instance
 

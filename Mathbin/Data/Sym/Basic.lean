@@ -50,7 +50,7 @@ attribute [local instance] Vector.Perm.isSetoid
 
 namespace Sym
 
-variable{α : Type u}{n : ℕ}
+variable {α : Type u} {n : ℕ}
 
 /--
 This is the quotient map that takes a list of n elements as an n-tuple and produces an nth
@@ -62,7 +62,7 @@ def of_vector (x : Vector α n) : Sym α n :=
       rw [Multiset.coe_card]
       exact x.2⟩
 
-instance  : HasLift (Vector α n) (Sym α n) :=
+instance : HasLift (Vector α n) (Sym α n) :=
   { lift := of_vector }
 
 /--
@@ -114,7 +114,7 @@ theorem cons_swap (a b : α) (s : Sym α n) : a :: b :: s = b :: a :: s :=
 def mem (a : α) (s : Sym α n) : Prop :=
   a ∈ s.1
 
-instance  : HasMem α (Sym α n) :=
+instance : HasMem α (Sym α n) :=
   ⟨mem⟩
 
 instance decidable_mem [DecidableEq α] (a : α) (s : Sym α n) : Decidable (a ∈ s) :=

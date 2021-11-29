@@ -51,9 +51,9 @@ open CategoryTheory.Functor
 
 namespace CategoryTheory.Limits
 
-variable{J : Type v}[DecidableEq J]
+variable {J : Type v} [DecidableEq J]
 
-variable{C : Type u}[category.{v} C][has_zero_morphisms C]
+variable {C : Type u} [category.{v} C] [has_zero_morphisms C]
 
 /--
 A `c : bicone F` is:
@@ -62,7 +62,7 @@ A `c : bicone F` is:
 * such that `ι j ≫ π j'` is the identity when `j = j'` and zero otherwise.
 -/
 @[nolint has_inhabited_instance]
-structure bicone(F : J → C) where 
+structure bicone (F : J → C) where 
   x : C 
   π : ∀ j, X ⟶ F j 
   ι : ∀ j, F j ⟶ X 
@@ -78,7 +78,7 @@ theorem bicone_ι_π_ne {F : J → C} (B : bicone F) {j j' : J} (h : j ≠ j') :
   by 
     simpa [h] using B.ι_π j j'
 
-variable{F : J → C}
+variable {F : J → C}
 
 namespace Bicone
 
@@ -98,7 +98,7 @@ end Bicone
 A bicone over `F : J → C`, which is both a limit cone and a colimit cocone.
 -/
 @[nolint has_inhabited_instance]
-structure limit_bicone(F : J → C) where 
+structure limit_bicone (F : J → C) where 
   Bicone : bicone F 
   IsLimit : is_limit bicone.to_cone 
   IsColimit : is_colimit bicone.to_cocone
@@ -107,7 +107,7 @@ structure limit_bicone(F : J → C) where
 `has_biproduct F` expresses the mere existence of a bicone which is
 simultaneously a limit and a colimit of the diagram `F`.
 -/
-class has_biproduct(F : J → C) : Prop where mk' :: 
+class has_biproduct (F : J → C) : Prop where mk' :: 
   exists_biproduct : Nonempty (limit_bicone F)
 
 theorem has_biproduct.mk {F : J → C} (d : limit_bicone F) : has_biproduct F :=
@@ -129,13 +129,13 @@ def biproduct.is_limit (F : J → C) [has_biproduct F] : is_limit (biproduct.bic
 def biproduct.is_colimit (F : J → C) [has_biproduct F] : is_colimit (biproduct.bicone F).toCocone :=
   (get_biproduct_data F).IsColimit
 
-instance (priority := 100)has_product_of_has_biproduct [has_biproduct F] : has_limit (discrete.functor F) :=
+instance (priority := 100) has_product_of_has_biproduct [has_biproduct F] : has_limit (discrete.functor F) :=
   has_limit.mk { Cone := (biproduct.bicone F).toCone, IsLimit := biproduct.is_limit F }
 
-instance (priority := 100)has_coproduct_of_has_biproduct [has_biproduct F] : has_colimit (discrete.functor F) :=
+instance (priority := 100) has_coproduct_of_has_biproduct [has_biproduct F] : has_colimit (discrete.functor F) :=
   has_colimit.mk { Cocone := (biproduct.bicone F).toCocone, IsColimit := biproduct.is_colimit F }
 
-variable(J C)
+variable (J C)
 
 /--
 `C` has biproducts of shape `J` if we have
@@ -154,7 +154,7 @@ class has_finite_biproducts : Prop where
 
 attribute [instance] has_finite_biproducts.has_biproducts_of_shape
 
-instance (priority := 100)has_finite_products_of_has_finite_biproducts [has_finite_biproducts C] :
+instance (priority := 100) has_finite_products_of_has_finite_biproducts [has_finite_biproducts C] :
   has_finite_products C :=
   { out :=
       fun J _ _ =>
@@ -162,7 +162,7 @@ instance (priority := 100)has_finite_products_of_has_finite_biproducts [has_fini
             by 
               exact has_limit_of_iso discrete.nat_iso_functor.symm⟩ }
 
-instance (priority := 100)has_finite_coproducts_of_has_finite_biproducts [has_finite_biproducts C] :
+instance (priority := 100) has_finite_coproducts_of_has_finite_biproducts [has_finite_biproducts C] :
   has_finite_coproducts C :=
   { out :=
       fun J _ _ =>
@@ -170,7 +170,7 @@ instance (priority := 100)has_finite_coproducts_of_has_finite_biproducts [has_fi
             by 
               exact has_colimit_of_iso discrete.nat_iso_functor⟩ }
 
-variable{J C}
+variable {J C}
 
 /--
 The isomorphism between the specified limit and the specified colimit for
@@ -184,9 +184,9 @@ end CategoryTheory.Limits
 
 namespace CategoryTheory.Limits
 
-variable{J : Type v}[DecidableEq J]
+variable {J : Type v} [DecidableEq J]
 
-variable{C : Type u}[category.{v} C][has_zero_morphisms C]
+variable {C : Type u} [category.{v} C] [has_zero_morphisms C]
 
 /-- `biproduct f` computes the biproduct of a family of elements `f`. (It is defined as an
    abbreviation for `limit (discrete.functor f)`, so for most facts about `biproduct f`, you will
@@ -316,7 +316,7 @@ def biproduct.map_iso [Fintype J] {f g : J → C} [has_finite_biproducts C] (p :
 
 section 
 
-variable[Fintype J]{K : Type v}[Fintype K][DecidableEq K]{f : J → C}{g : K → C}[has_finite_biproducts C]
+variable [Fintype J] {K : Type v} [Fintype K] [DecidableEq K] {f : J → C} {g : K → C} [has_finite_biproducts C]
 
 /--
 Convert a (dependently typed) matrix to a morphism of biproducts.
@@ -376,7 +376,7 @@ instance biproduct.π_epi (f : J → C) [has_biproduct f] (b : J) : split_epi (b
   { section_ :=
       biproduct.lift$ fun b' => if h : b = b' then eq_to_hom (congr_argₓ f h) else biproduct.ι f b ≫ biproduct.π f b' }
 
-variable{C}
+variable {C}
 
 /--
 A binary bicone for a pair of objects `P Q : C` consists of the cone point `X`,
@@ -384,7 +384,7 @@ maps from `X` to both `P` and `Q`, and maps from both `P` and `Q` to `X`,
 so that `inl ≫ fst = 𝟙 P`, `inl ≫ snd = 0`, `inr ≫ fst = 0`, and `inr ≫ snd = 𝟙 Q`
 -/
 @[nolint has_inhabited_instance]
-structure binary_bicone(P Q : C) where 
+structure binary_bicone (P Q : C) where 
   x : C 
   fst : X ⟶ P 
   snd : X ⟶ Q 
@@ -415,7 +415,7 @@ attribute [simp, reassoc] binary_bicone.inl_fst binary_bicone.inl_snd binary_bic
 
 namespace BinaryBicone
 
-variable{P Q : C}
+variable {P Q : C}
 
 /-- Extract the cone from a binary bicone. -/
 def to_cone (c : binary_bicone P Q) : cone (pair P Q) :=
@@ -517,7 +517,7 @@ end Bicone
 A bicone over `P Q : C`, which is both a limit cone and a colimit cocone.
 -/
 @[nolint has_inhabited_instance]
-structure binary_biproduct_data(P Q : C) where 
+structure binary_biproduct_data (P Q : C) where 
   Bicone : binary_bicone P Q 
   IsLimit : is_limit bicone.to_cone 
   IsColimit : is_colimit bicone.to_cocone
@@ -526,7 +526,7 @@ structure binary_biproduct_data(P Q : C) where
 `has_binary_biproduct P Q` expresses the mere existence of a bicone which is
 simultaneously a limit and a colimit of the diagram `pair P Q`.
 -/
-class has_binary_biproduct(P Q : C) : Prop where mk' :: 
+class has_binary_biproduct (P Q : C) : Prop where mk' :: 
   exists_binary_biproduct : Nonempty (binary_biproduct_data P Q)
 
 theorem has_binary_biproduct.mk {P Q : C} (d : binary_biproduct_data P Q) : has_binary_biproduct P Q :=
@@ -553,7 +553,7 @@ def binary_biproduct.is_colimit (P Q : C) [has_binary_biproduct P Q] :
 
 section 
 
-variable(C)
+variable (C)
 
 /--
 `has_binary_biproducts C` represents the existence of a bicone which is
@@ -580,7 +580,7 @@ theorem has_binary_biproducts_of_finite_biproducts [has_finite_biproducts C] : h
 
 end 
 
-variable{P Q : C}
+variable {P Q : C}
 
 instance has_binary_biproduct.has_limit_pair [has_binary_biproduct P Q] : has_limit (pair P Q) :=
   has_limit.mk ⟨_, binary_biproduct.is_limit P Q⟩
@@ -588,11 +588,11 @@ instance has_binary_biproduct.has_limit_pair [has_binary_biproduct P Q] : has_li
 instance has_binary_biproduct.has_colimit_pair [has_binary_biproduct P Q] : has_colimit (pair P Q) :=
   has_colimit.mk ⟨_, binary_biproduct.is_colimit P Q⟩
 
-instance (priority := 100)has_binary_products_of_has_binary_biproducts [has_binary_biproducts C] :
+instance (priority := 100) has_binary_products_of_has_binary_biproducts [has_binary_biproducts C] :
   has_binary_products C :=
   { HasLimit := fun F => has_limit_of_iso (diagram_iso_pair F).symm }
 
-instance (priority := 100)has_binary_coproducts_of_has_binary_biproducts [has_binary_biproducts C] :
+instance (priority := 100) has_binary_coproducts_of_has_binary_biproducts [has_binary_biproducts C] :
   has_binary_coproducts C :=
   { HasColimit := fun F => has_colimit_of_iso (diagram_iso_pair F) }
 
@@ -628,7 +628,7 @@ abbrev biprod.inr {X Y : C} [has_binary_biproduct X Y] : Y ⟶ X ⊞ Y :=
 
 section 
 
-variable{X Y : C}[has_binary_biproduct X Y]
+variable {X Y : C} [has_binary_biproduct X Y]
 
 @[simp]
 theorem binary_biproduct.bicone_fst : (binary_biproduct.bicone X Y).fst = biprod.fst :=
@@ -806,7 +806,7 @@ def biprod.map_iso {W X Y Z : C} [has_binary_biproduct W X] [has_binary_biproduc
 
 section 
 
-variable[has_binary_biproducts C]
+variable [has_binary_biproducts C]
 
 /-- The braiding isomorphism which swaps a binary biproduct. -/
 @[simps]
@@ -858,9 +858,9 @@ namespace CategoryTheory.Limits
 
 section Preadditive
 
-variable{C : Type u}[category.{v} C][preadditive C]
+variable {C : Type u} [category.{v} C] [preadditive C]
 
-variable{J : Type v}[DecidableEq J][Fintype J]
+variable {J : Type v} [DecidableEq J] [Fintype J]
 
 open CategoryTheory.Preadditive
 
@@ -954,7 +954,7 @@ theorem has_finite_biproducts.of_has_finite_coproducts [has_finite_coproducts C]
 
 section 
 
-variable{f : J → C}[has_biproduct f]
+variable {f : J → C} [has_biproduct f]
 
 /--
 In any preadditive category, any biproduct satsifies
@@ -1083,7 +1083,7 @@ theorem has_binary_biproducts.of_has_binary_coproducts [has_binary_coproducts C]
 
 section 
 
-variable{X Y : C}[has_binary_biproduct X Y]
+variable {X Y : C} [has_binary_biproduct X Y]
 
 /--
 In any preadditive category, any binary biproduct satsifies

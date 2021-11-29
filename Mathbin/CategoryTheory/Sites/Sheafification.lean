@@ -20,13 +20,13 @@ open CategoryTheory.Limits Opposite
 
 universe w v u
 
-variable{C : Type u}[category.{v} C]{J : grothendieck_topology C}
+variable {C : Type u} [category.{v} C] {J : grothendieck_topology C}
 
-variable{D : Type w}[category.{max v u} D]
+variable {D : Type w} [category.{max v u} D]
 
 section 
 
-variable[concrete_category.{max v u} D]
+variable [concrete_category.{max v u} D]
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
@@ -39,11 +39,11 @@ end
 
 namespace Meq
 
-variable[concrete_category.{max v u} D]
+variable [concrete_category.{max v u} D]
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-instance  {X} (P : «expr ᵒᵖ» C ⥤ D) (S : J.cover X) : CoeFun (meq P S) fun x => ∀ I : S.arrow, P.obj (op I.Y) :=
+instance {X} (P : «expr ᵒᵖ» C ⥤ D) (S : J.cover X) : CoeFun (meq P S) fun x => ∀ I : S.arrow, P.obj (op I.Y) :=
   ⟨fun x => x.1⟩
 
 @[ext]
@@ -95,7 +95,7 @@ theorem mk_apply {X : C} {P : «expr ᵒᵖ» C ⥤ D} (S : J.cover X) (x : P.ob
   mk S x I = P.map I.f.op x :=
   rfl
 
-variable[preserves_limits (forget D)]
+variable [preserves_limits (forget D)]
 
 /-- The equivalence between the type associated to `multiequalizer (S.index P)` and `meq P S`. -/
 noncomputable def Equiv {X : C} (P : «expr ᵒᵖ» C ⥤ D) (S : J.cover X) [has_multiequalizer (S.index P)] :
@@ -121,15 +121,15 @@ namespace GrothendieckTopology
 
 namespace Plus
 
-variable[concrete_category.{max v u} D]
+variable [concrete_category.{max v u} D]
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable[preserves_limits (forget D)]
+variable [preserves_limits (forget D)]
 
-variable[∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
+variable [∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
 
-variable[∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
+variable [∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
 
 noncomputable theory
 
@@ -156,7 +156,7 @@ theorem to_plus_mk {X : C} {P : «expr ᵒᵖ» C ⥤ D} (S : J.cover X) (x : P.
   (J.to_plus P).app _ x = mk (meq.mk S x) :=
   by 
     dsimp [mk]
-    let e : S ⟶ ⊤ := hom_of_le (SemilatticeInfTop.le_top _)
+    let e : S ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
     rw [←colimit.w _ e.op]
     delta' cover.to_multiequalizer 
     simp only [comp_apply]
@@ -175,7 +175,7 @@ theorem to_plus_apply {X : C} {P : «expr ᵒᵖ» C ⥤ D} (S : J.cover X) (x :
     simp only [←comp_apply, colimit.ι_pre, ι_colim_map_assoc]
     simp only [comp_apply]
     dsimp only [functor.op]
-    let e : (J.pullback I.f).obj (unop (op S)) ⟶ ⊤ := hom_of_le (SemilatticeInfTop.le_top _)
+    let e : (J.pullback I.f).obj (unop (op S)) ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
     rw [←colimit.w _ e.op]
     simp only [comp_apply]
     congr 1
@@ -201,7 +201,7 @@ theorem to_plus_eq_mk {X : C} {P : «expr ᵒᵖ» C ⥤ D} (x : P.obj (op X)) :
     ext i 
     simpa
 
-variable[∀ X : C, preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)]
+variable [∀ X : C, preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)]
 
 theorem exists_rep {X : C} {P : «expr ᵒᵖ» C ⥤ D} (x : (J.plus_obj P).obj (op X)) :
   ∃ (S : J.cover X)(y : meq P S), x = mk y :=
@@ -377,7 +377,7 @@ begin
   refl
 end
 
-variable[reflects_isomorphisms (forget D)]
+variable [reflects_isomorphisms (forget D)]
 
 /-- If `P` is separated, then `P⁺` is a sheaf. -/
 theorem is_sheaf_of_sep (P : «expr ᵒᵖ» C ⥤ D)
@@ -414,7 +414,7 @@ theorem is_sheaf_of_sep (P : «expr ᵒᵖ» C ⥤ D)
       rw [←comp_apply, multiequalizer.lift_ι]
       rfl
 
-variable(J)
+variable (J)
 
 /-- `P⁺⁺` is always a sheaf. -/
 theorem is_sheaf_plus_plus (P : «expr ᵒᵖ» C ⥤ D) : presheaf.is_sheaf J (J.plus_obj (J.plus_obj P)) :=
@@ -425,10 +425,10 @@ theorem is_sheaf_plus_plus (P : «expr ᵒᵖ» C ⥤ D) : presheaf.is_sheaf J (
 
 end Plus
 
-variable(J)
+variable (J)
 
-variable[∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X,
-      has_multiequalizer (S.index P)][∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
+variable [∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
+  [∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
 
 /-- The sheafification of a presheaf `P`.
 *NOTE:* Additional hypotheses are needed to obtain a proof that this is a sheaf! -/
@@ -441,7 +441,7 @@ def sheafify (P : «expr ᵒᵖ» C ⥤ D) : «expr ᵒᵖ» C ⥤ D :=
 def to_sheafify (P : «expr ᵒᵖ» C ⥤ D) : P ⟶ J.sheafify P :=
   J.to_plus P ≫ J.plus_map (J.to_plus P)
 
-variable(D)
+variable (D)
 
 /-- The sheafification of a presheaf `P`, as a functor.
 *NOTE:* Additional hypotheses are needed to obtain a proof that this is a sheaf! -/
@@ -462,7 +462,7 @@ def to_sheafification : 𝟭 _ ⟶ sheafification J D :=
 theorem to_sheafification_app (P : «expr ᵒᵖ» C ⥤ D) : (J.to_sheafification D).app P = J.to_sheafify P :=
   rfl
 
-variable{D}
+variable {D}
 
 -- error in CategoryTheory.Sites.Sheafification: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_iso_to_sheafify {P : «expr ⥤ »(«expr ᵒᵖ»(C), D)} (hP : presheaf.is_sheaf J P) : is_iso (J.to_sheafify P) :=
@@ -508,17 +508,12 @@ theorem sheafify_hom_ext {P Q : «expr ᵒᵖ» C ⥤ D} (η γ : J.sheafify P �
 
 end GrothendieckTopology
 
-variable(J D)
+variable (J D)
 
-variable[concrete_category.{max v u}
-      D][preserves_limits
-      (forget
-        D)][∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X,
-      has_multiequalizer
-        (S.index
-          P)][∀ X : C,
-      has_colimits_of_shape («expr ᵒᵖ» (J.cover X))
-        D][∀ X : C, preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)][reflects_isomorphisms (forget D)]
+variable [concrete_category.{max v u} D] [preserves_limits (forget D)]
+  [∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
+  [∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
+  [∀ X : C, preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)] [reflects_isomorphisms (forget D)]
 
 /-- The sheafification functor, as a functor taking values in `Sheaf`. -/
 @[simps obj map]
@@ -550,7 +545,7 @@ def sheafification_adjunction : presheaf_to_Sheaf J D ⊣ Sheaf_to_presheaf J D 
             rw [category.assoc]
             rfl }
 
-variable{J D}
+variable {J D}
 
 /-- A sheaf `P` is isomorphic to its own sheafification. -/
 def sheafification_iso (P : Sheaf J D) : P ≅ (presheaf_to_Sheaf J D).obj ((Sheaf_to_presheaf J D).obj P) :=

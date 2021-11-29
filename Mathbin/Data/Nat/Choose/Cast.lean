@@ -11,7 +11,7 @@ of characteristic `0`.
 
 open_locale Nat
 
-variable(K : Type _)[DivisionRing K][CharZero K]
+variable (K : Type _) [DivisionRing K] [CharZero K]
 
 namespace Nat
 

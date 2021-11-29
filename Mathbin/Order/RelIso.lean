@@ -38,12 +38,12 @@ open Function
 
 universe u v w
 
-variable{α β γ : Type _}{r : α → α → Prop}{s : β → β → Prop}{t : γ → γ → Prop}
+variable {α β γ : Type _} {r : α → α → Prop} {s : β → β → Prop} {t : γ → γ → Prop}
 
 /-- A relation homomorphism with respect to a given pair of relations `r` and `s`
 is a function `f : α → β` such that `r a b → s (f a) (f b)`. -/
 @[nolint has_inhabited_instance]
-structure RelHom{α β : Type _}(r : α → α → Prop)(s : β → β → Prop) where 
+structure RelHom {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) where 
   toFun : α → β 
   map_rel' : ∀ {a b}, r a b → s (to_fun a) (to_fun b)
 
@@ -51,7 +51,7 @@ infixl:25 " →r " => RelHom
 
 namespace RelHom
 
-instance  : CoeFun (r →r s) fun _ => α → β :=
+instance : CoeFun (r →r s) fun _ => α → β :=
   ⟨fun o => o.to_fun⟩
 
 initialize_simps_projections RelHom (toFun → apply)
@@ -180,13 +180,13 @@ theorem Surjective.well_founded_iff {f : α → β} (hf : surjective f) (o : ∀
       intro a b h 
       apply o.2
       convert h 
-      iterate 2
+      iterate 2 
         apply Classical.some_spec hf.has_right_inverse)
     (RelHom.well_founded ⟨f, fun _ _ => o.1⟩)
 
 /-- A relation embedding with respect to a given pair of relations `r` and `s`
 is an embedding `f : α ↪ β` such that `r a b ↔ s (f a) (f b)`. -/
-structure RelEmbedding{α β : Type _}(r : α → α → Prop)(s : β → β → Prop) extends α ↪ β where 
+structure RelEmbedding {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends α ↪ β where 
   map_rel_iff' : ∀ {a b}, s (to_embedding a) (to_embedding b) ↔ r a b
 
 infixl:25 " ↪r " => RelEmbedding
@@ -211,10 +211,10 @@ namespace RelEmbedding
 def to_rel_hom (f : r ↪r s) : r →r s :=
   { toFun := f.to_embedding.to_fun, map_rel' := fun x y => (map_rel_iff' f).mpr }
 
-instance  : Coe (r ↪r s) (r →r s) :=
+instance : Coe (r ↪r s) (r →r s) :=
   ⟨to_rel_hom⟩
 
-instance  : CoeFun (r ↪r s) fun _ => α → β :=
+instance : CoeFun (r ↪r s) fun _ => α → β :=
   ⟨fun o => o.to_embedding⟩
 
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,
@@ -273,7 +273,7 @@ protected def trans (f : r ↪r s) (g : s ↪r t) : r ↪r t :=
       by 
         simp [f.map_rel_iff, g.map_rel_iff]⟩
 
-instance  (r : α → α → Prop) : Inhabited (r ↪r r) :=
+instance (r : α → α → Prop) : Inhabited (r ↪r r) :=
   ⟨RelEmbedding.refl _⟩
 
 theorem trans_apply (f : r ↪r s) (g : s ↪r t) (a : α) : (f.trans g) a = g (f a) :=
@@ -415,7 +415,7 @@ end RelEmbedding
 
 namespace OrderEmbedding
 
-variable[Preorderₓ α][Preorderₓ β](f : α ↪o β)
+variable [Preorderₓ α] [Preorderₓ β] (f : α ↪o β)
 
 /-- `<` is preserved by order embeddings of preorders. -/
 def lt_embedding : (· < · : α → α → Prop) ↪r (· < · : β → β → Prop) :=
@@ -487,7 +487,7 @@ def Subtype (p : α → Prop) : Subtype p ↪o α :=
 end OrderEmbedding
 
 /-- A relation isomorphism is an equivalence that is also a relation embedding. -/
-structure RelIso{α β : Type _}(r : α → α → Prop)(s : β → β → Prop) extends α ≃ β where 
+structure RelIso {α β : Type _} (r : α → α → Prop) (s : β → β → Prop) extends α ≃ β where 
   map_rel_iff' : ∀ {a b}, s (to_equiv a) (to_equiv b) ↔ r a b
 
 infixl:25 " ≃r " => RelIso
@@ -507,10 +507,10 @@ in the target type. -/
 def to_rel_embedding (f : r ≃r s) : r ↪r s :=
   ⟨f.to_equiv.to_embedding, f.map_rel_iff'⟩
 
-instance  : Coe (r ≃r s) (r ↪r s) :=
+instance : Coe (r ≃r s) (r ↪r s) :=
   ⟨to_rel_embedding⟩
 
-instance  : CoeFun (r ≃r s) fun _ => α → β :=
+instance : CoeFun (r ≃r s) fun _ => α → β :=
   ⟨fun f => f⟩
 
 @[simp]
@@ -579,7 +579,7 @@ protected def refl (r : α → α → Prop) : r ≃r r :=
 protected def trans (f₁ : r ≃r s) (f₂ : s ≃r t) : r ≃r t :=
   ⟨f₁.to_equiv.trans f₂.to_equiv, fun a b => f₂.map_rel_iff.trans f₁.map_rel_iff⟩
 
-instance  (r : α → α → Prop) : Inhabited (r ≃r r) :=
+instance (r : α → α → Prop) : Inhabited (r ≃r r) :=
   ⟨RelIso.refl _⟩
 
 @[simp]
@@ -658,7 +658,7 @@ def prod_lex_congr {α₁ α₂ β₁ β₂ r₁ r₂ s₁ s₂} (e₁ : @RelIso
       by 
         simp [Prod.lex_def, e₁.map_rel_iff, e₂.map_rel_iff]⟩
 
-instance  : Groupₓ (r ≃r r) :=
+instance : Groupₓ (r ≃r r) :=
   { one := RelIso.refl r, mul := fun f₁ f₂ => f₂.trans f₁, inv := RelIso.symm, mul_assoc := fun f₁ f₂ f₃ => rfl,
     one_mul := fun f => ext$ fun _ => rfl, mul_one := fun f => ext$ fun _ => rfl,
     mul_left_inv := fun f => ext f.symm_apply_apply }
@@ -688,7 +688,7 @@ namespace OrderIso
 
 section LE
 
-variable[LE α][LE β][LE γ]
+variable [LE α] [LE β] [LE γ]
 
 /-- Reinterpret an order isomorphism as an order embedding. -/
 def to_order_embedding (e : α ≃o β) : α ↪o β :=
@@ -824,7 +824,7 @@ open Set
 
 section Le
 
-variable[LE α][LE β][LE γ]
+variable [LE α] [LE β] [LE γ]
 
 @[simp]
 theorem le_iff_le (e : α ≃o β) {x y : α} : e x ≤ e y ↔ x ≤ y :=
@@ -838,7 +838,7 @@ theorem symm_apply_le (e : α ≃o β) {x : α} {y : β} : e.symm y ≤ x ↔ y 
 
 end Le
 
-variable[Preorderₓ α][Preorderₓ β][Preorderₓ γ]
+variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ]
 
 protected theorem Monotone (e : α ≃o β) : Monotone e :=
   e.to_order_embedding.monotone
@@ -896,7 +896,7 @@ end OrderIso
 
 namespace Equiv
 
-variable[Preorderₓ α][Preorderₓ β]
+variable [Preorderₓ α] [Preorderₓ β]
 
 /-- If `e` is an equivalence with monotone forward and inverse maps, then `e` is an
 order isomorphism. -/
@@ -954,7 +954,7 @@ protected def RelEmbedding (r : α → α → Prop) (p : Set α) : Subrel r p �
 theorem rel_embedding_apply (r : α → α → Prop) p a : Subrel.relEmbedding r p a = a.1 :=
   rfl
 
-instance  (r : α → α → Prop) [IsWellOrder α r] (p : Set α) : IsWellOrder p (Subrel r p) :=
+instance (r : α → α → Prop) [IsWellOrder α r] (p : Set α) : IsWellOrder p (Subrel r p) :=
   RelEmbedding.is_well_order (Subrel.relEmbedding r p)
 
 end Subrel
@@ -999,15 +999,15 @@ theorem OrderIso.map_inf [SemilatticeInf α] [SemilatticeInf β] (f : α ≃o β
     simpa [←f.symm.le_iff_le] using f.symm.to_order_embedding.map_inf_le (f x) (f y)
 
 /-- Note that this goal could also be stated `(disjoint on f) a b` -/
-theorem Disjoint.map_order_iso [SemilatticeInfBot α] [SemilatticeInfBot β] {a b : α} (f : α ≃o β) (ha : Disjoint a b) :
-  Disjoint (f a) (f b) :=
+theorem Disjoint.map_order_iso [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β] {a b : α} (f : α ≃o β)
+  (ha : Disjoint a b) : Disjoint (f a) (f b) :=
   by 
     rw [Disjoint, ←f.map_inf, ←f.map_bot]
     exact f.monotone ha
 
 @[simp]
-theorem disjoint_map_order_iso_iff [SemilatticeInfBot α] [SemilatticeInfBot β] {a b : α} (f : α ≃o β) :
-  Disjoint (f a) (f b) ↔ Disjoint a b :=
+theorem disjoint_map_order_iso_iff [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β] {a b : α}
+  (f : α ≃o β) : Disjoint (f a) (f b) ↔ Disjoint a b :=
   ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_order_iso f.symm, fun h => h.map_order_iso f⟩
 
 theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ↪o β) (x y : α) : f x⊔f y ≤ f (x⊔y) :=
@@ -1016,9 +1016,9 @@ theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : �
 theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) : f (x⊔y) = f x⊔f y :=
   f.dual.map_inf x y
 
-section BoundedLattice
+section BoundedOrder
 
-variable[BoundedLattice α][BoundedLattice β](f : α ≃o β)
+variable [Lattice α] [Lattice β] [BoundedOrder α] [BoundedOrder β] (f : α ≃o β)
 
 include f
 
@@ -1052,7 +1052,7 @@ theorem OrderIso.is_complemented_iff : IsComplemented α ↔ IsComplemented β :
       intro 
       exact f.symm.is_complemented⟩
 
-end BoundedLattice
+end BoundedOrder
 
 end LatticeIsos
 

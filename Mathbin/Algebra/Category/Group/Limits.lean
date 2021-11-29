@@ -22,7 +22,7 @@ universe u
 
 noncomputable theory
 
-variable{J : Type u}[small_category J]
+variable {J : Type u} [small_category J]
 
 namespace Groupₓₓ
 
@@ -58,7 +58,7 @@ All we need to do is notice that the limit point has a `group` instance availabl
 and then reuse the existing limit.
 -/
 @[toAdditive]
-instance  (F : J ⥤ Groupₓₓ) : creates_limit F (forget₂ Groupₓₓ Mon.{u}) :=
+instance (F : J ⥤ Groupₓₓ) : creates_limit F (forget₂ Groupₓₓ Mon.{u}) :=
   creates_limit_of_reflects_iso
     fun c' t =>
       { liftedCone :=
@@ -142,7 +142,7 @@ All we need to do is notice that the limit point has a `comm_group` instance ava
 and then reuse the existing limit.
 -/
 @[toAdditive]
-instance  (F : J ⥤ CommGroupₓₓ) : creates_limit F (forget₂ CommGroupₓₓ Groupₓₓ.{u}) :=
+instance (F : J ⥤ CommGroupₓₓ) : creates_limit F (forget₂ CommGroupₓₓ Groupₓₓ.{u}) :=
   creates_limit_of_reflects_iso
     fun c' t =>
       { liftedCone :=

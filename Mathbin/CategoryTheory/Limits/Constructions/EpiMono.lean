@@ -20,9 +20,9 @@ namespace CategoryTheory
 
 open Category Limits
 
-variable{C : Type u₁}{D : Type u₂}[category.{v} C][category.{v} D]
+variable {C : Type u₁} {D : Type u₂} [category.{v} C] [category.{v} D]
 
-variable(F : C ⥤ D)
+variable (F : C ⥤ D)
 
 -- error in CategoryTheory.Limits.Constructions.EpiMono: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `F` preserves pullbacks, then it preserves monomorphisms. -/

@@ -24,9 +24,9 @@ noncomputable theory
 
 namespace Mon_
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
-variable{C : Type u}[category.{v} C][has_limits C][monoidal_category.{v} C]
+variable {C : Type u} [category.{v} C] [has_limits C] [monoidal_category.{v} C]
 
 /--
 We construct the (candidate) limit of a functor `F : J ⥤ Mon_ C`

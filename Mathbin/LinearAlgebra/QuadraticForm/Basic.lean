@@ -50,11 +50,11 @@ quadratic form, homogeneous polynomial, quadratic polynomial
 
 universe u v w
 
-variable{S : Type _}
+variable {S : Type _}
 
-variable{R : Type _}{M : Type _}[AddCommGroupₓ M][Ringₓ R]
+variable {R : Type _} {M : Type _} [AddCommGroupₓ M] [Ringₓ R]
 
-variable{R₁ : Type _}[CommRingₓ R₁]
+variable {R₁ : Type _} [CommRingₓ R₁]
 
 namespace QuadraticForm
 
@@ -85,12 +85,12 @@ theorem polar_comm (f : M → R) (x y : M) : polar f x y = polar f y x :=
 
 end QuadraticForm
 
-variable[Module R M][Module R₁ M]
+variable [Module R M] [Module R₁ M]
 
 open QuadraticForm
 
 /-- A quadratic form over a module. -/
-structure QuadraticForm(R : Type u)(M : Type v)[Ringₓ R][AddCommGroupₓ M][Module R M] where 
+structure QuadraticForm (R : Type u) (M : Type v) [Ringₓ R] [AddCommGroupₓ M] [Module R M] where 
   toFun : M → R 
   to_fun_smul : ∀ a : R x : M, to_fun (a • x) = (a*a)*to_fun x 
   polar_add_left' : ∀ x x' y : M, polar to_fun (x+x') y = polar to_fun x y+polar to_fun x' y 
@@ -100,9 +100,9 @@ structure QuadraticForm(R : Type u)(M : Type v)[Ringₓ R][AddCommGroupₓ M][Mo
 
 namespace QuadraticForm
 
-variable{Q : QuadraticForm R M}
+variable {Q : QuadraticForm R M}
 
-instance  : CoeFun (QuadraticForm R M) fun _ => M → R :=
+instance : CoeFun (QuadraticForm R M) fun _ => M → R :=
   ⟨to_fun⟩
 
 /-- The `simp` normal form for a quadratic form is `coe_fn`, not `to_fun`. -/
@@ -186,7 +186,7 @@ theorem polar_self (x : M) : polar Q x x = 2*Q x :=
 
 section OfTower
 
-variable[CommSemiringₓ S][Algebra S R][Module S M][IsScalarTower S R M]
+variable [CommSemiringₓ S] [Algebra S R] [Module S M] [IsScalarTower S R M]
 
 @[simp]
 theorem polar_smul_left_of_tower (a : S) (x y : M) : polar Q (a • x) y = a • polar Q x y :=
@@ -200,7 +200,7 @@ theorem polar_smul_right_of_tower (a : S) (x y : M) : polar Q x (a • y) = a �
 
 end OfTower
 
-variable{Q' : QuadraticForm R M}
+variable {Q' : QuadraticForm R M}
 
 @[ext]
 theorem ext (H : ∀ x : M, Q x = Q' x) : Q = Q' :=
@@ -217,7 +217,7 @@ theorem congr_funₓ (h : Q = Q') (x : M) : Q x = Q' x :=
 theorem ext_iff : Q = Q' ↔ ∀ x, Q x = Q' x :=
   ⟨congr_funₓ, ext⟩
 
-instance  : HasZero (QuadraticForm R M) :=
+instance : HasZero (QuadraticForm R M) :=
   ⟨{ toFun := fun x => 0,
       to_fun_smul :=
         fun a x =>
@@ -248,10 +248,10 @@ theorem coe_fn_zero : «expr⇑ » (0 : QuadraticForm R M) = 0 :=
 theorem zero_apply (x : M) : (0 : QuadraticForm R M) x = 0 :=
   rfl
 
-instance  : Inhabited (QuadraticForm R M) :=
+instance : Inhabited (QuadraticForm R M) :=
   ⟨0⟩
 
-instance  : Add (QuadraticForm R M) :=
+instance : Add (QuadraticForm R M) :=
   ⟨fun Q Q' =>
       { toFun := Q+Q',
         to_fun_smul :=
@@ -283,7 +283,7 @@ theorem coe_fn_add (Q Q' : QuadraticForm R M) : «expr⇑ » (Q+Q') = Q+Q' :=
 theorem add_apply (Q Q' : QuadraticForm R M) (x : M) : (Q+Q') x = Q x+Q' x :=
   rfl
 
-instance  : Neg (QuadraticForm R M) :=
+instance : Neg (QuadraticForm R M) :=
   ⟨fun Q =>
       { toFun := -Q,
         to_fun_smul :=
@@ -315,7 +315,7 @@ theorem coe_fn_neg (Q : QuadraticForm R M) : «expr⇑ » (-Q) = -Q :=
 theorem neg_apply (Q : QuadraticForm R M) (x : M) : (-Q) x = -Q x :=
   rfl
 
-instance  : AddCommGroupₓ (QuadraticForm R M) :=
+instance : AddCommGroupₓ (QuadraticForm R M) :=
   { add := ·+·, zero := 0, neg := Neg.neg,
     add_comm :=
       fun Q Q' =>
@@ -381,12 +381,12 @@ end Sum
 
 section HasScalar
 
-variable[Monoidₓ S][DistribMulAction S R][SmulCommClass S R R]
+variable [Monoidₓ S] [DistribMulAction S R] [SmulCommClass S R R]
 
 /-- `quadratic_form R M` inherits the scalar action from any algebra over `R`.
 
 When `R` is commutative, this provides an `R`-action via `algebra.id`. -/
-instance  : HasScalar S (QuadraticForm R M) :=
+instance : HasScalar S (QuadraticForm R M) :=
   ⟨fun a Q =>
       { toFun := a • Q,
         to_fun_smul :=
@@ -418,7 +418,7 @@ theorem coe_fn_smul (a : S) (Q : QuadraticForm R M) : «expr⇑ » (a • Q) = a
 theorem smul_apply (a : S) (Q : QuadraticForm R M) (x : M) : (a • Q) x = a • Q x :=
   rfl
 
-instance  : DistribMulAction S (QuadraticForm R M) :=
+instance : DistribMulAction S (QuadraticForm R M) :=
   { mul_smul :=
       fun a b Q =>
         ext
@@ -446,7 +446,7 @@ end HasScalar
 
 section Module
 
-instance  [Semiringₓ S] [Module S R] [SmulCommClass S R R] : Module S (QuadraticForm R M) :=
+instance [Semiringₓ S] [Module S R] [SmulCommClass S R R] : Module S (QuadraticForm R M) :=
   { zero_smul :=
       fun Q =>
         by 
@@ -462,7 +462,7 @@ end Module
 
 section Comp
 
-variable{N : Type v}[AddCommGroupₓ N][Module R N]
+variable {N : Type v} [AddCommGroupₓ N] [Module R N]
 
 /-- Compose the quadratic form with a linear function. -/
 def comp (Q : QuadraticForm R N) (f : M →ₗ[R] N) : QuadraticForm R M :=
@@ -538,14 +538,14 @@ theorem add_lin_mul_lin (f g h : M →ₗ[R₁] R₁) : lin_mul_lin (f+g) h = li
 theorem lin_mul_lin_add (f g h : M →ₗ[R₁] R₁) : lin_mul_lin f (g+h) = lin_mul_lin f g+lin_mul_lin f h :=
   ext fun x => mul_addₓ _ _ _
 
-variable{N : Type v}[AddCommGroupₓ N][Module R₁ N]
+variable {N : Type v} [AddCommGroupₓ N] [Module R₁ N]
 
 @[simp]
 theorem lin_mul_lin_comp (f g : M →ₗ[R₁] R₁) (h : N →ₗ[R₁] M) :
   (lin_mul_lin f g).comp h = lin_mul_lin (f.comp h) (g.comp h) :=
   rfl
 
-variable{n : Type _}
+variable {n : Type _}
 
 /-- `proj i j` is the quadratic form mapping the vector `x : n → R₁` to `x i * x j` -/
 def proj (i j : n) : QuadraticForm R₁ (n → R₁) :=
@@ -569,7 +569,7 @@ quadratic form.
 -/
 
 
-variable{B : BilinForm R M}
+variable {B : BilinForm R M}
 
 namespace BilinForm
 
@@ -607,7 +607,7 @@ theorem to_quadratic_form_apply (B : BilinForm R M) (x : M) : B.to_quadratic_for
 
 section 
 
-variable(R M)
+variable (R M)
 
 @[simp]
 theorem to_quadratic_form_zero : (0 : BilinForm R M).toQuadraticForm = 0 :=
@@ -623,9 +623,9 @@ open BilinForm
 
 section AssociatedHom
 
-variable(S)[CommSemiringₓ S][Algebra S R]
+variable (S) [CommSemiringₓ S] [Algebra S R]
 
-variable[Invertible (2 : R)]{B₁ : BilinForm R M}
+variable [Invertible (2 : R)] {B₁ : BilinForm R M}
 
 -- error in LinearAlgebra.QuadraticForm.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `associated_hom` is the map that sends a quadratic form on a module `M` over `R` to its
@@ -653,7 +653,7 @@ def associated_hom : «expr →ₗ[ ] »(quadratic_form R M, S, bilin_form R M) 
   map_smul' := λ s Q, by { ext [] [] [],
     simp [] [] ["only"] ["[", expr ring_hom.id_apply, ",", expr polar_smul, ",", expr algebra.mul_smul_comm, ",", expr coe_fn_mk, ",", expr coe_fn_smul, ",", expr bilin_form.smul_apply, "]"] [] [] } }
 
-variable(Q : QuadraticForm R M)(S)
+variable (Q : QuadraticForm R M) (S)
 
 @[simp]
 theorem associated_apply (x y : M) : associated_hom S Q x y = ⅟ 2*Q (x+y) - Q x - Q y :=
@@ -714,7 +714,7 @@ abbrev associated' : QuadraticForm R M →ₗ[ℤ] BilinForm R M :=
   associated_hom ℤ
 
 /-- Symmetric bilinear forms can be lifted to quadratic forms -/
-instance  : CanLift (BilinForm R M) (QuadraticForm R M) :=
+instance : CanLift (BilinForm R M) (QuadraticForm R M) :=
   { coe := associated_hom ℕ, cond := BilinForm.IsSymm,
     prf := fun B hB => ⟨B.to_quadratic_form, associated_left_inverse _ hB⟩ }
 
@@ -731,7 +731,7 @@ end AssociatedHom
 
 section Associated
 
-variable[Invertible (2 : R₁)]
+variable [Invertible (2 : R₁)]
 
 /-- `associated` is the linear map that sends a quadratic form over a commutative ring to its
 associated symmetric bilinear form. -/
@@ -772,7 +772,7 @@ end Anisotropic
 
 section PosDef
 
-variable{R₂ : Type u}[OrderedRing R₂][Module R₂ M]{Q₂ : QuadraticForm R₂ M}
+variable {R₂ : Type u} [OrderedRing R₂] [Module R₂ M] {Q₂ : QuadraticForm R₂ M}
 
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
 def pos_def (Q₂ : QuadraticForm R₂ M) : Prop :=
@@ -782,7 +782,7 @@ theorem pos_def.smul {R} [LinearOrderedCommRing R] [Module R M] {Q : QuadraticFo
   (a_pos : 0 < a) : pos_def (a • Q) :=
   fun x hx => mul_pos a_pos (h x hx)
 
-variable{n : Type _}
+variable {n : Type _}
 
 theorem pos_def.add (Q Q' : QuadraticForm R₂ M) (hQ : pos_def Q) (hQ' : pos_def Q') : pos_def (Q+Q') :=
   fun x hx => add_pos (hQ x hx) (hQ' x hx)
@@ -813,13 +813,13 @@ The determinant of the matrix is the discriminant of the quadratic form.
 -/
 
 
-variable{n : Type w}[Fintype n][DecidableEq n]
+variable {n : Type w} [Fintype n] [DecidableEq n]
 
 /-- `M.to_quadratic_form` is the map `λ x, col x ⬝ M ⬝ row x` as a quadratic form. -/
 def Matrix.toQuadraticForm' (M : Matrix n n R₁) : QuadraticForm R₁ (n → R₁) :=
   M.to_bilin'.to_quadratic_form
 
-variable[Invertible (2 : R₁)]
+variable [Invertible (2 : R₁)]
 
 /-- A matrix representation of the quadratic form. -/
 def QuadraticForm.toMatrix' (Q : QuadraticForm R₁ (n → R₁)) : Matrix n n R₁ :=
@@ -835,11 +835,11 @@ end
 
 namespace QuadraticForm
 
-variable{n : Type w}[Fintype n]
+variable {n : Type w} [Fintype n]
 
-variable[DecidableEq n][Invertible (2 : R₁)]
+variable [DecidableEq n] [Invertible (2 : R₁)]
 
-variable{m : Type w}[DecidableEq m][Fintype m]
+variable {m : Type w} [DecidableEq m] [Fintype m]
 
 open_locale Matrix
 
@@ -852,7 +852,7 @@ theorem to_matrix'_comp (Q : QuadraticForm R₁ (m → R₁)) (f : (n → R₁) 
 
 section Discriminant
 
-variable{Q : QuadraticForm R₁ (n → R₁)}
+variable {Q : QuadraticForm R₁ (n → R₁)}
 
 /-- The discriminant of a quadratic form generalizes the discriminant of a quadratic polynomial. -/
 def discr (Q : QuadraticForm R₁ (n → R₁)) : R₁ :=
@@ -872,16 +872,16 @@ end QuadraticForm
 
 namespace QuadraticForm
 
-variable{M₁ : Type _}{M₂ : Type _}{M₃ : Type _}
+variable {M₁ : Type _} {M₂ : Type _} {M₃ : Type _}
 
-variable[AddCommGroupₓ M₁][AddCommGroupₓ M₂][AddCommGroupₓ M₃]
+variable [AddCommGroupₓ M₁] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
 
-variable[Module R M₁][Module R M₂][Module R M₃]
+variable [Module R M₁] [Module R M₂] [Module R M₃]
 
 /-- An isometry between two quadratic spaces `M₁, Q₁` and `M₂, Q₂` over a ring `R`,
 is a linear equivalence between `M₁` and `M₂` that commutes with the quadratic forms. -/
 @[nolint has_inhabited_instance]
-structure isometry(Q₁ : QuadraticForm R M₁)(Q₂ : QuadraticForm R M₂) extends M₁ ≃ₗ[R] M₂ where 
+structure isometry (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) extends M₁ ≃ₗ[R] M₂ where 
   map_app' : ∀ m, Q₂ (to_fun m) = Q₁ m
 
 /-- Two quadratic forms over a ring `R` are equivalent
@@ -892,16 +892,16 @@ def equivalent (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) :=
 
 namespace Isometry
 
-variable{Q₁ : QuadraticForm R M₁}{Q₂ : QuadraticForm R M₂}{Q₃ : QuadraticForm R M₃}
+variable {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} {Q₃ : QuadraticForm R M₃}
 
-instance  : Coe (Q₁.isometry Q₂) (M₁ ≃ₗ[R] M₂) :=
+instance : Coe (Q₁.isometry Q₂) (M₁ ≃ₗ[R] M₂) :=
   ⟨isometry.to_linear_equiv⟩
 
 @[simp]
 theorem to_linear_equiv_eq_coe (f : Q₁.isometry Q₂) : f.to_linear_equiv = f :=
   rfl
 
-instance  : CoeFun (Q₁.isometry Q₂) fun _ => M₁ → M₂ :=
+instance : CoeFun (Q₁.isometry Q₂) fun _ => M₁ → M₂ :=
   ⟨fun f => «expr⇑ » (f : M₁ ≃ₗ[R] M₂)⟩
 
 @[simp]
@@ -942,7 +942,7 @@ end Isometry
 
 namespace Equivalent
 
-variable{Q₁ : QuadraticForm R M₁}{Q₂ : QuadraticForm R M₂}{Q₃ : QuadraticForm R M₃}
+variable {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} {Q₃ : QuadraticForm R M₃}
 
 @[refl]
 theorem refl (Q : QuadraticForm R M) : Q.equivalent Q :=
@@ -978,9 +978,9 @@ theorem exists_bilin_form_self_ne_zero [htwo : Invertible (2 : R)] {B : BilinFor
 
 open FiniteDimensional
 
-variable{V : Type u}{K : Type v}[Field K][AddCommGroupₓ V][Module K V]
+variable {V : Type u} {K : Type v} [Field K] [AddCommGroupₓ V] [Module K V]
 
-variable[FiniteDimensional K V]
+variable [FiniteDimensional K V]
 
 -- error in LinearAlgebra.QuadraticForm.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a symmetric bilinear form `B` on some vector space `V` over a field `K`
@@ -1037,9 +1037,9 @@ open_locale BigOperators
 
 open Finset BilinForm
 
-variable{M₁ : Type _}[AddCommGroupₓ M₁][Module R M₁]
+variable {M₁ : Type _} [AddCommGroupₓ M₁] [Module R M₁]
 
-variable{ι : Type _}[Fintype ι]{v : Basis ι R M}
+variable {ι : Type _} [Fintype ι] {v : Basis ι R M}
 
 /-- A quadratic form composed with a `linear_equiv` is isometric to itself. -/
 def isometry_of_comp_linear_equiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) : Q.isometry (Q.comp (f : M₁ →ₗ[R] M)) :=
@@ -1066,7 +1066,7 @@ noncomputable def isometry_basis_repr (Q : QuadraticForm R M) (v : Basis ι R M)
 
 section 
 
-variable(R₁)
+variable (R₁)
 
 /-- The weighted sum of squares with respect to some weight as a quadratic form.
 
@@ -1098,9 +1098,9 @@ theorem basis_repr_eq_of_is_Ortho [Invertible (2 : R₁)] (Q : QuadraticForm R�
       intro i _ hij 
       rw [smul_left, smul_right, show associated_hom R₁ Q (v j) (v i) = 0 from hv₂ j i hij.symm, mul_zero, mul_zero]
 
-variable{V : Type _}{K : Type _}[Field K][Invertible (2 : K)]
+variable {V : Type _} {K : Type _} [Field K] [Invertible (2 : K)]
 
-variable[AddCommGroupₓ V][Module K V]
+variable [AddCommGroupₓ V] [Module K V]
 
 /-- Given an orthogonal basis, a quadratic form is isometric with a weighted sum of squares. -/
 noncomputable def isometry_weighted_sum_squares (Q : QuadraticForm K V)
@@ -1112,7 +1112,7 @@ noncomputable def isometry_weighted_sum_squares (Q : QuadraticForm K V)
     convert iso.map_app m 
     rw [basis_repr_eq_of_is_Ortho _ _ hv₁]
 
-variable[FiniteDimensional K V]
+variable [FiniteDimensional K V]
 
 theorem equivalent_weighted_sum_squares (Q : QuadraticForm K V) :
   ∃ w : Finₓ (FiniteDimensional.finrank K V) → K, equivalent Q (weighted_sum_squares K w) :=

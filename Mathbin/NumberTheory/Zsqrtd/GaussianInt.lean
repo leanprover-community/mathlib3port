@@ -42,10 +42,10 @@ local notation "ℤ[i]" => GaussianInt
 
 namespace GaussianInt
 
-instance  : HasRepr ℤ[i] :=
+instance : HasRepr ℤ[i] :=
   ⟨fun x => "⟨" ++ reprₓ x.re ++ ", " ++ reprₓ x.im ++ "⟩"⟩
 
-instance  : CommRingₓ ℤ[i] :=
+instance : CommRingₓ ℤ[i] :=
   Zsqrtd.commRing
 
 section 
@@ -61,7 +61,7 @@ def to_complex : ℤ[i] →+* ℂ :=
 
 end 
 
-instance  : Coe ℤ[i] ℂ :=
+instance : Coe ℤ[i] ℂ :=
   ⟨to_complex⟩
 
 theorem to_complex_def (x : ℤ[i]) : (x : ℂ) = x.re+x.im*I :=
@@ -174,7 +174,7 @@ protected def div (x y : ℤ[i]) : ℤ[i] :=
   let c := y.conj
   ⟨round (Rat.ofInt (x*c).re*n : ℚ), round (Rat.ofInt (x*c).im*n : ℚ)⟩
 
-instance  : Div ℤ[i] :=
+instance : Div ℤ[i] :=
   ⟨GaussianInt.div⟩
 
 theorem div_def (x y : ℤ[i]) : x / y = ⟨round ((x*conj y).re / norm y : ℚ), round ((x*conj y).im / norm y : ℚ)⟩ :=
@@ -223,7 +223,7 @@ theorem norm_sq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
 protected def mod (x y : ℤ[i]) : ℤ[i] :=
   x - y*x / y
 
-instance  : Mod ℤ[i] :=
+instance : Mod ℤ[i] :=
   ⟨GaussianInt.mod⟩
 
 theorem mod_def (x y : ℤ[i]) : x % y = x - y*x / y :=
@@ -260,12 +260,12 @@ theorem norm_le_norm_mul_left (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (norm x
             (by 
               rw [coe_nat_abs_norm] <;> exact Int.add_one_le_of_lt (norm_pos.2 hy)))
 
-instance  : Nontrivial ℤ[i] :=
+instance : Nontrivial ℤ[i] :=
   ⟨⟨0, 1,
       by 
         decide⟩⟩
 
-instance  : EuclideanDomain ℤ[i] :=
+instance : EuclideanDomain ℤ[i] :=
   { GaussianInt.commRing, GaussianInt.nontrivial with Quotient := · / ·, remainder := · % ·,
     quotient_zero :=
       by 

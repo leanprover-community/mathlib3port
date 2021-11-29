@@ -24,15 +24,8 @@ manifold, smooth bump function
 
 universe uE uF uH uM
 
-variable{E :
-    Type
-      uE}[NormedGroup
-      E][NormedSpace ℝ
-      E][FiniteDimensional ℝ
-      E]{H :
-    Type
-      uH}[TopologicalSpace
-      H](I : ModelWithCorners ℝ E H){M : Type uM}[TopologicalSpace M][ChartedSpace H M][SmoothManifoldWithCorners I M]
+variable {E : Type uE} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {H : Type uH} [TopologicalSpace H]
+  (I : ModelWithCorners ℝ E H) {M : Type uM} [TopologicalSpace M] [ChartedSpace H M] [SmoothManifoldWithCorners I M]
 
 open Function Filter FiniteDimensional Set
 
@@ -59,23 +52,23 @@ The structure contains data required to construct a function with these properti
 available as `⇑f` or `f x`. Formal statements of the properties listed above involve some
 (pre)images under `ext_chart_at I f.c` and are given as lemmas in the `smooth_bump_function`
 namespace. -/
-structure SmoothBumpFunction(c : M) extends TimesContDiffBump (extChartAt I c c) where 
+structure SmoothBumpFunction (c : M) extends TimesContDiffBump (extChartAt I c c) where 
   closed_ball_subset : Euclidean.ClosedBall (extChartAt I c c) R ∩ range I ⊆ (extChartAt I c).Target
 
-variable{M}
+variable {M}
 
 namespace SmoothBumpFunction
 
 open Euclidean renaming dist→eudist
 
-variable{c : M}(f : SmoothBumpFunction I c){x : M}{I}
+variable {c : M} (f : SmoothBumpFunction I c) {x : M} {I}
 
 /-- The function defined by `f : smooth_bump_function c`. Use automatic coercion to function
 instead. -/
 def to_fun : M → ℝ :=
   indicator (chart_at H c).Source (f.to_times_cont_diff_bump ∘ extChartAt I c)
 
-instance  : CoeFun (SmoothBumpFunction I c) fun _ => M → ℝ :=
+instance : CoeFun (SmoothBumpFunction I c) fun _ => M → ℝ :=
   ⟨to_fun⟩
 
 theorem coe_def : «expr⇑ » f = indicator (chart_at H c).Source (f.to_times_cont_diff_bump ∘ extChartAt I c) :=
@@ -251,10 +244,10 @@ theorem support_update_r {r : ℝ} (hr : r ∈ Ioo 0 f.R) : support (f.update_r 
   by 
     simp only [support_eq_inter_preimage, update_r_R]
 
-instance  : Inhabited (SmoothBumpFunction I c) :=
+instance : Inhabited (SmoothBumpFunction I c) :=
   Classical.inhabitedOfNonempty nhds_within_range_basis.Nonempty
 
-variable[T2Space M]
+variable [T2Space M]
 
 theorem closed_symm_image_closed_ball :
   IsClosed ((extChartAt I c).symm '' (closed_ball (extChartAt I c c) f.R ∩ range I)) :=
@@ -283,7 +276,7 @@ theorem compact_closure_support : IsCompact (Closure$ support f) :=
   compact_of_is_closed_subset f.compact_symm_image_closed_ball is_closed_closure
     f.closure_support_subset_symm_image_closed_ball
 
-variable(I c)
+variable (I c)
 
 -- error in Geometry.Manifold.BumpFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The closures of supports of smooth bump functions centered at `c` form a basis of `𝓝 c`.
@@ -301,7 +294,7 @@ begin
     f hf, ⟨f, trivial, f.closure_support_subset_symm_image_closed_ball⟩) (λ f _, f.closure_support_mem_nhds)]
 end
 
-variable{c}
+variable {c}
 
 /-- Given `s ∈ 𝓝 c`, the supports of smooth bump functions `f : smooth_bump_function I c` such that
 `closure (support f) ⊆ s` form a basis of `𝓝 c`.  In other words, each of these supports is a
@@ -312,7 +305,7 @@ theorem nhds_basis_support {s : Set M} (hs : s ∈ 𝓝 c) :
   ((nhds_basis_closure_support I c).restrict_subset hs).to_has_basis' (fun f hf => ⟨f, hf.2, subset_closure⟩)
     fun f hf => f.support_mem_nhds
 
-variable[SmoothManifoldWithCorners I M]{I}
+variable [SmoothManifoldWithCorners I M] {I}
 
 -- error in Geometry.Manifold.BumpFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A smooth bump function is infinitely smooth. -/ protected theorem smooth : smooth I «expr𝓘( )»(exprℝ()) f :=

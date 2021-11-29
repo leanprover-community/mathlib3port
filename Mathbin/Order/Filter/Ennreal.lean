@@ -15,7 +15,7 @@ open_locale Filter Ennreal
 
 namespace Ennreal
 
-variable{α : Type _}{f : Filter α}
+variable {α : Type _} {f : Filter α}
 
 -- error in Order.Filter.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eventually_le_limsup

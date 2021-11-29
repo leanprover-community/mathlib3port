@@ -60,15 +60,15 @@ open_locale BigOperators
 
 universe u v w
 
-variable{R : Type u}{S : Type v}
+variable {R : Type u} {S : Type v}
 
 namespace MvPolynomial
 
-variable{σ τ : Type _}{r : R}{e : ℕ}{n m : σ}{s : σ →₀ ℕ}
+variable {σ τ : Type _} {r : R} {e : ℕ} {n m : σ} {s : σ →₀ ℕ}
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]{p q : MvPolynomial σ R}
+variable [CommSemiringₓ R] {p q : MvPolynomial σ R}
 
 section Degrees
 
@@ -189,7 +189,7 @@ theorem le_degrees_add {p q : MvPolynomial σ R} (h : p.degrees.disjoint q.degre
     ·
       simp only [h0, zero_le, Finsupp.zero_apply]
     ·
-      refine' @Finset.le_sup _ _ _ (p+q).support _ d _ 
+      refine' @Finset.le_sup _ _ _ _ (p+q).support _ d _ 
       rw [mem_support_iff, coeff_add]
       suffices  : q.coeff d = 0
       ·
@@ -368,7 +368,7 @@ theorem vars_prod {ι : Type _} {s : Finset ι} (f : ι → MvPolynomial σ R) :
 
 section IsDomain
 
-variable{A : Type _}[CommRingₓ A][IsDomain A]
+variable {A : Type _} [CommRingₓ A] [IsDomain A]
 
 theorem vars_C_mul (a : A) (ha : a ≠ 0) (φ : MvPolynomial σ A) : (C a*φ).vars = φ.vars :=
   by 
@@ -385,7 +385,7 @@ end Mul
 
 section Sum
 
-variable{ι : Type _}(t : Finset ι)(φ : ι → MvPolynomial σ R)
+variable {ι : Type _} (t : Finset ι) (φ : ι → MvPolynomial σ R)
 
 theorem vars_sum_subset : (∑i in t, φ i).vars ⊆ Finset.bUnion t fun i => (φ i).vars :=
   by 
@@ -421,15 +421,15 @@ end Sum
 
 section Map
 
-variable[CommSemiringₓ S](f : R →+* S)
+variable [CommSemiringₓ S] (f : R →+* S)
 
-variable(p)
+variable (p)
 
 theorem vars_map : (map f p).vars ⊆ p.vars :=
   by 
     simp [vars, degrees_map]
 
-variable{f}
+variable {f}
 
 theorem vars_map_of_injective (hf : injective f) : (map f p).vars = p.vars :=
   by 
@@ -621,7 +621,7 @@ section EvalVars
 /-! ### `vars` and `eval` -/
 
 
-variable[CommSemiringₓ S]
+variable [CommSemiringₓ S]
 
 theorem eval₂_hom_eq_constant_coeff_of_vars (f : R →+* S) {g : σ → S} {p : MvPolynomial σ R}
   (hp : ∀ i _ : i ∈ p.vars, g i = 0) : eval₂_hom f g p = f (constant_coeff p) :=

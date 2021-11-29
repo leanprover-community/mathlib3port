@@ -27,7 +27,7 @@ Alternate forms which operate on `[is_scalar_tower ℝ 𝕜 F]` instead are prov
 
 open IsROrC
 
-variable{𝕜 : Type _}[IsROrC 𝕜]{F : Type _}[SemiNormedGroup F][SemiNormedSpace 𝕜 F]
+variable {𝕜 : Type _} [IsROrC 𝕜] {F : Type _} [SemiNormedGroup F] [SemiNormedSpace 𝕜 F]
 
 local notation "abs𝕜" => @IsROrC.abs 𝕜 _
 

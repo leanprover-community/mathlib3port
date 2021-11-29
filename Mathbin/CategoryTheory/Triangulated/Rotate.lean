@@ -26,9 +26,9 @@ namespace CategoryTheory.Triangulated
 
 open CategoryTheory.Category
 
-variable{C : Type u}[category.{v} C][has_shift C][preadditive C]
+variable {C : Type u} [category.{v} C] [has_shift C] [preadditive C]
 
-variable(X : C)
+variable (X : C)
 
 /--
 If you rotate a triangle, you get another triangle.
@@ -67,7 +67,7 @@ def triangle.inv_rotate (T : triangle C) : triangle C :=
 
 namespace TriangleMorphism
 
-variable{T₁ T₂ T₃ T₄ : triangle C}
+variable {T₁ T₂ T₃ T₄ : triangle C}
 
 open Triangle
 
@@ -155,7 +155,7 @@ The inverse rotation of triangles gives an endofunctor on the category of triang
 def inv_rotate : triangle C ⥤ triangle C :=
   { obj := triangle.inv_rotate, map := fun _ _ f => f.inv_rotate }
 
-variable[functor.additive (shift C).Functor]
+variable [functor.additive (shift C).Functor]
 
 /--
 There is a natural transformation between the identity functor on triangles in `C`,

@@ -31,24 +31,24 @@ namespace ωCPO
 
 open OmegaCompletePartialOrder
 
-instance  : bundled_hom @continuous_hom :=
+instance : bundled_hom @continuous_hom :=
   { toFun := @continuous_hom.simps.apply, id := @continuous_hom.id, comp := @continuous_hom.comp,
     hom_ext := @continuous_hom.coe_inj }
 
 -- error in Order.Category.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] ωCPO
 
-instance  : CoeSort ωCPO (Type _) :=
+instance : CoeSort ωCPO (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled ωCPO from the underlying type and typeclass. -/
 def of (α : Type _) [OmegaCompletePartialOrder α] : ωCPO :=
   bundled.of α
 
-instance  : Inhabited ωCPO :=
+instance : Inhabited ωCPO :=
   ⟨of PUnit⟩
 
-instance  (α : ωCPO) : OmegaCompletePartialOrder α :=
+instance (α : ωCPO) : OmegaCompletePartialOrder α :=
   α.str
 
 section 
@@ -75,7 +75,7 @@ def is_product (J : Type v) (f : J → ωCPO) : is_limit (product f) :=
           rw [←w j]
           rfl }
 
-instance  (J : Type v) (f : J → ωCPO.{v}) : has_product f :=
+instance (J : Type v) (f : J → ωCPO.{v}) : has_product f :=
   has_limit.mk ⟨_, is_product _ f⟩
 
 end HasProducts
@@ -121,16 +121,16 @@ def is_equalizer {X Y : ωCPO.{v}} (f g : X ⟶ Y) : is_limit (equalizer f g) :=
 
 end HasEqualizers
 
-instance  : has_products ωCPO.{v} :=
+instance : has_products ωCPO.{v} :=
   fun J => { HasLimit := fun F => has_limit_of_iso discrete.nat_iso_functor.symm }
 
-instance  {X Y : ωCPO.{v}} (f g : X ⟶ Y) : has_limit (parallel_pair f g) :=
+instance {X Y : ωCPO.{v}} (f g : X ⟶ Y) : has_limit (parallel_pair f g) :=
   has_limit.mk ⟨_, has_equalizers.is_equalizer f g⟩
 
-instance  : has_equalizers ωCPO.{v} :=
+instance : has_equalizers ωCPO.{v} :=
   has_equalizers_of_has_limit_parallel_pair _
 
-instance  : has_limits ωCPO.{v} :=
+instance : has_limits ωCPO.{v} :=
   limits_from_equalizers_and_products
 
 end 

@@ -19,7 +19,7 @@ universe u v
 
 open_locale Classical
 
-variable{α : Type _}{β : α → Type _}
+variable {α : Type _} {β : α → Type _}
 
 open OmegaCompletePartialOrder
 
@@ -29,7 +29,7 @@ functions `f`, such as the function that is defined iff its argument is not, fam
 halting problem. Instead, this requirement is limited to only functions that are `continuous` in the
 sense of `ω`-complete partial orders, which excludes the example because it is not monotone
 (making the input argument less defined can make `f` more defined). -/
-class LawfulFix(α : Type _)[OmegaCompletePartialOrder α] extends HasFix α where 
+class LawfulFix (α : Type _) [OmegaCompletePartialOrder α] extends HasFix α where 
   fix_eq : ∀ {f : α →ₘ α}, continuous f → HasFix.fix f = f (HasFix.fix f)
 
 theorem LawfulFix.fix_eq' {α} [OmegaCompletePartialOrder α] [LawfulFix α] {f : α → α} (hf : continuous' f) :
@@ -42,7 +42,7 @@ open Part Nat Nat.Upto
 
 namespace Fix
 
-variable(f : (∀ a, Part$ β a) →ₘ ∀ a, Part$ β a)
+variable (f : (∀ a, Part$ β a) →ₘ ∀ a, Part$ β a)
 
 theorem approx_mono' {i : ℕ} : fix.approx f i ≤ fix.approx f (succ i) :=
   by 
@@ -138,9 +138,9 @@ end Fix
 
 open Fix
 
-variable{α}
+variable {α}
 
-variable(f : (∀ a, Part$ β a) →ₘ ∀ a, Part$ β a)
+variable (f : (∀ a, Part$ β a) →ₘ ∀ a, Part$ β a)
 
 open OmegaCompletePartialOrder
 
@@ -183,7 +183,7 @@ theorem fix_le {X : ∀ a, Part$ β a} (hX : f X ≤ X) : Part.fix f ≤ X :=
     apply f.monotone i_ih 
     apply hX
 
-variable{f}(hc : continuous f)
+variable {f} (hc : continuous f)
 
 include hc
 
@@ -220,7 +220,7 @@ theorem to_unit_cont (f : Part α →ₘ Part α) (hc : continuous f) : continuo
     erw [hc, chain.map_comp]
     rfl
 
-noncomputable instance  : LawfulFix (Part α) :=
+noncomputable instance : LawfulFix (Part α) :=
   ⟨fun f hc =>
       show Part.fix (to_unit_mono f) () = _ by 
         rw [Part.fix_eq (to_unit_cont f hc)] <;> rfl⟩
@@ -231,14 +231,14 @@ open Sigma
 
 namespace Pi
 
-noncomputable instance  {β} : LawfulFix (α → Part β) :=
+noncomputable instance {β} : LawfulFix (α → Part β) :=
   ⟨fun f => Part.fix_eq⟩
 
-variable{γ : ∀ a : α, β a → Type _}
+variable {γ : ∀ a : α, β a → Type _}
 
 section Monotone
 
-variable(α β γ)
+variable (α β γ)
 
 /-- `sigma.curry` as a monotone function. -/
 @[simps]
@@ -250,7 +250,7 @@ def monotone_curry [∀ x y, Preorderₓ$ γ x y] : (∀ x : Σa, β a, γ x.1 x
 def monotone_uncurry [∀ x y, Preorderₓ$ γ x y] : (∀ a b : β a, γ a b) →ₘ ∀ x : Σa, β a, γ x.1 x.2 :=
   { toFun := uncurry, monotone' := fun x y h a => h a.1 a.2 }
 
-variable[∀ x y, OmegaCompletePartialOrder$ γ x y]
+variable [∀ x y, OmegaCompletePartialOrder$ γ x y]
 
 open OmegaCompletePartialOrder.Chain
 
@@ -274,16 +274,16 @@ end Monotone
 
 open HasFix
 
-instance  [HasFix$ ∀ x : Sigma β, γ x.1 x.2] : HasFix (∀ x y : β x, γ x y) :=
+instance [HasFix$ ∀ x : Sigma β, γ x.1 x.2] : HasFix (∀ x y : β x, γ x y) :=
   ⟨fun f => curry (fix$ uncurry ∘ f ∘ curry)⟩
 
-variable[∀ x y, OmegaCompletePartialOrder$ γ x y]
+variable [∀ x y, OmegaCompletePartialOrder$ γ x y]
 
 section Curry
 
-variable{f : (∀ x y : β x, γ x y) →ₘ ∀ x y : β x, γ x y}
+variable {f : (∀ x y : β x, γ x y) →ₘ ∀ x y : β x, γ x y}
 
-variable(hc : continuous f)
+variable (hc : continuous f)
 
 theorem uncurry_curry_continuous : continuous$ (monotone_uncurry α β γ).comp$ f.comp$ monotone_curry α β γ :=
   continuous_comp _ _ (continuous_comp _ _ (continuous_curry _ _ _) hc) (continuous_uncurry _ _ _)

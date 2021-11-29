@@ -60,18 +60,18 @@ open_locale Classical TopologicalSpace Filter UnitInterval
 
 open Filter Set Function UnitInterval
 
-variable{X Y : Type _}[TopologicalSpace X][TopologicalSpace Y]{x y z : X}{ι : Type _}
+variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {x y z : X} {ι : Type _}
 
 /-! ### Paths -/
 
 
 /-- Continuous path connecting two points `x` and `y` in a topological space -/
 @[nolint has_inhabited_instance]
-structure Path(x y : X) extends C(I, X) where 
+structure Path (x y : X) extends C(I, X) where 
   source' : to_fun 0 = x 
   target' : to_fun 1 = y
 
-instance  : CoeFun (Path x y) fun _ => I → X :=
+instance : CoeFun (Path x y) fun _ => I → X :=
   ⟨fun p => p.to_fun⟩
 
 @[ext]
@@ -84,7 +84,7 @@ namespace Path
 theorem coe_mk (f : I → X) h₁ h₂ h₃ : «expr⇑ » (mk ⟨f, h₁⟩ h₂ h₃ : Path x y) = f :=
   rfl
 
-variable(γ : Path x y)
+variable (γ : Path x y)
 
 @[continuity]
 protected theorem Continuous : Continuous γ :=
@@ -641,7 +641,7 @@ theorem Joined.symm {x y : X} (h : Joined x y) : Joined y x :=
 theorem Joined.trans {x y z : X} (hxy : Joined x y) (hyz : Joined y z) : Joined x z :=
   ⟨hxy.some_path.trans hyz.some_path⟩
 
-variable(X)
+variable (X)
 
 /-- The setoid corresponding the equivalence relation of being joined by a continuous path. -/
 def pathSetoid : Setoidₓ X :=
@@ -651,10 +651,10 @@ def pathSetoid : Setoidₓ X :=
 def ZerothHomotopy :=
   Quotientₓ (pathSetoid X)
 
-instance  : Inhabited (ZerothHomotopy ℝ) :=
+instance : Inhabited (ZerothHomotopy ℝ) :=
   ⟨@Quotientₓ.mk ℝ (pathSetoid ℝ) 0⟩
 
-variable{X}
+variable {X}
 
 /-! ### Being joined by a path inside a set -/
 
@@ -664,7 +664,7 @@ reflexive for points that do not belong to `F`. -/
 def JoinedIn (F : Set X) (x y : X) : Prop :=
   ∃ γ : Path x y, ∀ t, γ t ∈ F
 
-variable{F : Set X}
+variable {F : Set X}
 
 -- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem joined_in.mem (h : joined_in F x y) : «expr ∧ »(«expr ∈ »(x, F), «expr ∈ »(y, F)) :=
@@ -951,7 +951,7 @@ theorem IsPathConnected.exists_path_through_family' {X : Type _} [TopologicalSpa
 
 /-- A topological space is path-connected if it is non-empty and every two points can be
 joined by a continuous path. -/
-class PathConnectedSpace(X : Type _)[TopologicalSpace X] : Prop where 
+class PathConnectedSpace (X : Type _) [TopologicalSpace X] : Prop where 
   Nonempty : Nonempty X 
   Joined : ∀ x y : X, Joined x y
 
@@ -975,7 +975,7 @@ end
 
 namespace PathConnectedSpace
 
-variable[PathConnectedSpace X]
+variable [PathConnectedSpace X]
 
 /-- Use path-connectedness to build a path between two points. -/
 def some_path (x y : X) : Path x y :=
@@ -1017,7 +1017,7 @@ theorem path_connected_space_iff_eq : PathConnectedSpace X ↔ ∃ x : X, PathCo
   by 
     simp [path_connected_space_iff_univ, is_path_connected_iff_eq]
 
-instance (priority := 100)PathConnectedSpace.connected_space [PathConnectedSpace X] : ConnectedSpace X :=
+instance (priority := 100) PathConnectedSpace.connected_space [PathConnectedSpace X] : ConnectedSpace X :=
   by 
     rw [connected_space_iff_connected_component]
     rcases is_path_connected_iff_eq.mp (path_connected_space_iff_univ.mp ‹_›) with ⟨x, x_in, hx⟩
@@ -1031,7 +1031,7 @@ instance (priority := 100)PathConnectedSpace.connected_space [PathConnectedSpace
 
 namespace PathConnectedSpace
 
-variable[PathConnectedSpace X]
+variable [PathConnectedSpace X]
 
 -- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_path_through_family
@@ -1062,7 +1062,7 @@ end PathConnectedSpace
 
 /-- A topological space is locally path connected, at every point, path connected
 neighborhoods form a neighborhood basis. -/
-class LocPathConnectedSpace(X : Type _)[TopologicalSpace X] : Prop where 
+class LocPathConnectedSpace (X : Type _) [TopologicalSpace X] : Prop where 
   path_connected_basis : ∀ x : X, (𝓝 x).HasBasis (fun s : Set X => s ∈ 𝓝 x ∧ IsPathConnected s) id
 
 export LocPathConnectedSpace(path_connected_basis)

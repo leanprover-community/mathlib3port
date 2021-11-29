@@ -20,13 +20,13 @@ namespace Polynomial
 
 universe u v w z
 
-variable{R : Type u}{S : Type v}{T : Type w}{A : Type z}{a b : R}{n : ℕ}
+variable {R : Type u} {S : Type v} {T : Type w} {A : Type z} {a b : R} {n : ℕ}
 
 section CommRingₓ
 
-variable[CommRingₓ R]{p q : Polynomial R}
+variable [CommRingₓ R] {p q : Polynomial R}
 
-variable[CommRingₓ S]
+variable [CommRingₓ S]
 
 theorem nat_degree_pos_of_aeval_root [Algebra R S] {p : Polynomial R} (hp : p ≠ 0) {z : S} (hz : aeval z p = 0)
   (inj : ∀ x : R, algebraMap R S x = 0 → x = 0) : 0 < p.nat_degree :=
@@ -71,9 +71,9 @@ end CommRingₓ
 
 section NoZeroDivisors
 
-variable[Ringₓ R][NoZeroDivisors R]{p q : Polynomial R}
+variable [Ringₓ R] [NoZeroDivisors R] {p q : Polynomial R}
 
-instance  : NoZeroDivisors (Polynomial R) :=
+instance : NoZeroDivisors (Polynomial R) :=
   { eq_zero_or_eq_zero_of_mul_eq_zero :=
       fun a b h =>
         by 
@@ -120,7 +120,7 @@ end NoZeroDivisors
 
 section NoZeroDivisors
 
-variable[CommRingₓ R][NoZeroDivisors R]{p q : Polynomial R}
+variable [CommRingₓ R] [NoZeroDivisors R] {p q : Polynomial R}
 
 theorem root_mul : is_root (p*q) a ↔ is_root p a ∨ is_root q a :=
   by 
@@ -133,9 +133,9 @@ end NoZeroDivisors
 
 section Ringₓ
 
-variable[Ringₓ R][IsDomain R]{p q : Polynomial R}
+variable [Ringₓ R] [IsDomain R] {p q : Polynomial R}
 
-instance  : IsDomain (Polynomial R) :=
+instance : IsDomain (Polynomial R) :=
   { Polynomial.no_zero_divisors, Polynomial.nontrivial with  }
 
 theorem nat_trailing_degree_mul (hp : p ≠ 0) (hq : q ≠ 0) :
@@ -151,7 +151,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][IsDomain R]{p q : Polynomial R}
+variable [CommRingₓ R] [IsDomain R] {p q : Polynomial R}
 
 section Roots
 
@@ -178,7 +178,7 @@ theorem degree_coe_units (u : Units (Polynomial R)) : degree (u : Polynomial R) 
   degree_eq_zero_of_is_unit ⟨u, rfl⟩
 
 theorem prime_X_sub_C (r : R) : Prime (X - C r) :=
-  ⟨X_sub_C_ne_zero r, not_is_unit_X_sub_C,
+  ⟨X_sub_C_ne_zero r, not_is_unit_X_sub_C r,
     fun _ _ =>
       by 
         simpRw [dvd_iff_is_root, is_root.def, eval_mul, mul_eq_zero]
@@ -582,7 +582,7 @@ theorem funext [Infinite R] {p q : Polynomial R} (ext : ∀ r : R, p.eval r = q.
     intro x 
     rw [eval_sub, sub_eq_zero, ext]
 
-variable[CommRingₓ T]
+variable [CommRingₓ T]
 
 /-- The set of distinct roots of `p` in `E`.
 
@@ -707,7 +707,7 @@ end CommRingₓ
 
 section 
 
-variable[Semiringₓ R][CommRingₓ S][IsDomain S](φ : R →+* S)
+variable [Semiringₓ R] [CommRingₓ S] [IsDomain S] (φ : R →+* S)
 
 -- error in Data.Polynomial.RingDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_unit_of_is_unit_leading_coeff_of_is_unit_map
@@ -733,7 +733,7 @@ end
 
 section 
 
-variable[CommRingₓ R][IsDomain R][CommRingₓ S][IsDomain S](φ : R →+* S)
+variable [CommRingₓ R] [IsDomain R] [CommRingₓ S] [IsDomain S] (φ : R →+* S)
 
 -- error in Data.Polynomial.RingDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

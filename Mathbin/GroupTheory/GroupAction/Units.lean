@@ -14,7 +14,7 @@ The results are repeated for `add_units` and `has_vadd` where relevant.
 -/
 
 
-variable{G H M N : Type _}{α : Type _}
+variable {G H M N : Type _} {α : Type _}
 
 namespace Units
 
@@ -22,7 +22,7 @@ namespace Units
 
 
 @[toAdditive]
-instance  [Monoidₓ M] [HasScalar M α] : HasScalar (Units M) α :=
+instance [Monoidₓ M] [HasScalar M α] : HasScalar (Units M) α :=
   { smul := fun m a => (m : M) • a }
 
 @[toAdditive]
@@ -33,17 +33,17 @@ theorem _root_.is_unit.inv_smul [Monoidₓ α] {a : α} (h : IsUnit a) : h.unit�
   h.coe_inv_mul
 
 @[toAdditive]
-instance  [Monoidₓ M] [HasScalar M α] [HasFaithfulScalar M α] : HasFaithfulScalar (Units M) α :=
+instance [Monoidₓ M] [HasScalar M α] [HasFaithfulScalar M α] : HasFaithfulScalar (Units M) α :=
   { eq_of_smul_eq_smul := fun u₁ u₂ h => Units.ext$ eq_of_smul_eq_smul h }
 
 @[toAdditive]
-instance  [Monoidₓ M] [MulAction M α] : MulAction (Units M) α :=
+instance [Monoidₓ M] [MulAction M α] : MulAction (Units M) α :=
   { one_smul := (one_smul M : _), mul_smul := fun m n => mul_smul (m : M) n }
 
-instance  [Monoidₓ M] [AddMonoidₓ α] [DistribMulAction M α] : DistribMulAction (Units M) α :=
+instance [Monoidₓ M] [AddMonoidₓ α] [DistribMulAction M α] : DistribMulAction (Units M) α :=
   { smul_add := fun m => smul_add (m : M), smul_zero := fun m => smul_zero m }
 
-instance  [Monoidₓ M] [Monoidₓ α] [MulDistribMulAction M α] : MulDistribMulAction (Units M) α :=
+instance [Monoidₓ M] [Monoidₓ α] [MulDistribMulAction M α] : MulDistribMulAction (Units M) α :=
   { smul_mul := fun m => smul_mul' (m : M), smul_one := fun m => smul_one m }
 
 instance smul_comm_class_left [Monoidₓ M] [HasScalar M α] [HasScalar N α] [SmulCommClass M N α] :
@@ -54,7 +54,7 @@ instance smul_comm_class_right [Monoidₓ N] [HasScalar M α] [HasScalar N α] [
   SmulCommClass M (Units N) α :=
   { smul_comm := fun m n => (smul_comm m (n : N) : _) }
 
-instance  [Monoidₓ M] [HasScalar M N] [HasScalar M α] [HasScalar N α] [IsScalarTower M N α] :
+instance [Monoidₓ M] [HasScalar M N] [HasScalar M α] [HasScalar N α] [IsScalarTower M N α] :
   IsScalarTower (Units M) N α :=
   { smul_assoc := fun m n => (smul_assoc (m : M) n : _) }
 
@@ -104,9 +104,20 @@ instance is_scalar_tower'_left [Groupₓ G] [Monoidₓ M] [MulAction G M] [HasSc
   [SmulCommClass G M M] [IsScalarTower G M M] [IsScalarTower G M α] : IsScalarTower G (Units M) α :=
   { smul_assoc := fun g m => (smul_assoc g (m : M) : _) }
 
-example  [Monoidₓ M] [Monoidₓ N] [MulAction M N] [SmulCommClass M N N] [IsScalarTower M N N] :
+example [Monoidₓ M] [Monoidₓ N] [MulAction M N] [SmulCommClass M N N] [IsScalarTower M N N] :
   MulAction (Units M) (Units N) :=
   Units.mulAction'
 
+/-- A stronger form of `units.mul_action'`. -/
+instance mul_distrib_mul_action' [Groupₓ G] [Monoidₓ M] [MulDistribMulAction G M] [SmulCommClass G M M]
+  [IsScalarTower G M M] : MulDistribMulAction G (Units M) :=
+  { Units.mulAction' with smul := · • ·, smul_one := fun m => Units.ext$ smul_one _,
+    smul_mul := fun g m₁ m₂ => Units.ext$ smul_mul' _ _ _ }
+
 end Units
+
+theorem IsUnit.smul [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] {m : M} (g : G)
+  (h : IsUnit m) : IsUnit (g • m) :=
+  let ⟨u, hu⟩ := h 
+  hu ▸ ⟨g • u, Units.coe_smul _ _⟩
 

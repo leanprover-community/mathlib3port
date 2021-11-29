@@ -22,7 +22,7 @@ universe uu vv
 
 namespace List
 
-variable{α : Type uu}{β : Type vv}
+variable {α : Type uu} {β : Type vv}
 
 /-- `perm l₁ l₂` or `l₁ ~ l₂` asserts that `l₁` and `l₂` are permutations
   of each other. This is defined by induction using pairwise swaps. -/
@@ -284,7 +284,7 @@ section Rel
 
 open Relator
 
-variable{γ : Type _}{δ : Type _}{r : α → β → Prop}{p : γ → δ → Prop}
+variable {γ : Type _} {δ : Type _} {r : α → β → Prop} {p : γ → δ → Prop}
 
 local infixr:80 " ∘r " => Relation.Comp
 
@@ -473,7 +473,7 @@ theorem perm.rec_heq {β : List α → Sort _} {f : ∀ a l, β l → β (a :: l
 
 section 
 
-variable{op : α → α → α}[IsAssociative α op][IsCommutative α op]
+variable {op : α → α → α} [IsAssociative α op] [IsCommutative α op]
 
 local notation a "*" b => op a b
 
@@ -499,7 +499,7 @@ theorem perm.prod_eq' [Monoidₓ α] {l₁ l₂ : List α} (h : l₁ ~ l₂) (hc
             simp only [mul_assocₓ, h])
     _
 
-variable[CommMonoidₓ α]
+variable [CommMonoidₓ α]
 
 @[toAdditive]
 theorem perm.prod_eq {l₁ l₂ : List α} (h : perm l₁ l₂) : Prod l₁ = Prod l₂ :=
@@ -711,7 +711,7 @@ theorem nodup.sublist_ext {l₁ l₂ l : List α} (d : nodup l) (s₁ : l₁ <+ 
 
 section 
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 theorem perm.erase (a : α) {l₁ l₂ : List α} (p : l₁ ~ l₂) : l₁.erase a ~ l₂.erase a :=
   if h₁ : a ∈ l₁ then

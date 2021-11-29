@@ -9,43 +9,12 @@ bundled maps.
 -/
 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H :
-    Type
-      _}[TopologicalSpace
-      H]{H' :
-    Type
-      _}[TopologicalSpace
-      H'](I :
-    ModelWithCorners 𝕜 E
-      H)(I' :
-    ModelWithCorners 𝕜 E'
-      H')(M :
-    Type
-      _)[TopologicalSpace
-      M][ChartedSpace H
-      M](M' :
-    Type
-      _)[TopologicalSpace
-      M'][ChartedSpace H'
-      M']{E'' :
-    Type
-      _}[NormedGroup
-      E''][NormedSpace 𝕜
-      E'']{H'' :
-    Type
-      _}[TopologicalSpace
-      H'']{I'' : ModelWithCorners 𝕜 E'' H''}{M'' : Type _}[TopologicalSpace M''][ChartedSpace H'' M''](n : WithTop ℕ)
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {E' : Type _}
+  [NormedGroup E'] [NormedSpace 𝕜 E'] {H : Type _} [TopologicalSpace H] {H' : Type _} [TopologicalSpace H']
+  (I : ModelWithCorners 𝕜 E H) (I' : ModelWithCorners 𝕜 E' H') (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
+  (M' : Type _) [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E'']
+  {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M'']
+  [ChartedSpace H'' M''] (n : WithTop ℕ)
 
 /-- Bundled `n` times continuously differentiable maps. -/
 @[protectProj]
@@ -66,18 +35,18 @@ open_locale Manifold
 
 namespace TimesContMdiffMap
 
-variable{I}{I'}{M}{M'}{n}
+variable {I} {I'} {M} {M'} {n}
 
-instance  : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
+instance : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
   ⟨TimesContMdiffMap.toFun⟩
 
-instance  : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
+instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
   ⟨fun f => ⟨f, f.times_cont_mdiff_to_fun.continuous⟩⟩
 
 attribute [toAdditiveIgnoreArgs 21] TimesContMdiffMap TimesContMdiffMap.hasCoeToFun
   TimesContMdiffMap.ContinuousMap.hasCoe
 
-variable{f g : C^n⟮I, M; I', M'⟯}
+variable {f g : C^n⟮I, M; I', M'⟯}
 
 @[simp]
 theorem coe_fn_mk (f : M → M') (hf : TimesContMdiff I I' n f) : (mk f hf : M → M') = f :=
@@ -119,7 +88,7 @@ def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, 
 theorem comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (x : M) : f.comp g x = f (g x) :=
   rfl
 
-instance  [Inhabited M'] : Inhabited C^n⟮I, M; I', M'⟯ :=
+instance [Inhabited M'] : Inhabited C^n⟮I, M; I', M'⟯ :=
   ⟨⟨fun _ => default _, times_cont_mdiff_const⟩⟩
 
 /-- Constant map as a smooth map -/

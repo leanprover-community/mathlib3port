@@ -43,10 +43,10 @@ theorem Kleisli.comp_def {m} [Monadₓ m] (α β γ : Kleisli m) (xs : α ⟶ β
   (xs ≫ ys) a = xs a >>= ys :=
   rfl
 
-instance  : Inhabited (Kleisli id) :=
+instance : Inhabited (Kleisli id) :=
   ⟨PUnit⟩
 
-instance  {α : Type u} [Inhabited α] : Inhabited (Kleisli.mk id α) :=
+instance {α : Type u} [Inhabited α] : Inhabited (Kleisli.mk id α) :=
   ⟨(default α : _)⟩
 
 end CategoryTheory

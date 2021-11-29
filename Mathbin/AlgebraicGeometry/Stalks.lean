@@ -25,7 +25,7 @@ open TopologicalSpace
 
 open Opposite
 
-variable{C : Type u}[category.{v} C][has_colimits C]
+variable {C : Type u} [category.{v} C] [has_colimits C]
 
 attribute [local tidy] tactic.op_induction'
 

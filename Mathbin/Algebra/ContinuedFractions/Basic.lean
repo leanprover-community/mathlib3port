@@ -35,7 +35,7 @@ numerics, number theory, approximations, fractions
 -/
 
 
-variable(α : Type _)
+variable (α : Type _)
 
 /-!### Definitions-/
 
@@ -53,10 +53,10 @@ open GeneralizedContinuedFraction
 
 namespace GeneralizedContinuedFraction.Pair
 
-variable{α}
+variable {α}
 
 /-- Make a `gcf.pair` printable. -/
-instance  [HasRepr α] : HasRepr (pair α) :=
+instance [HasRepr α] : HasRepr (pair α) :=
   ⟨fun p => "(a : " ++ reprₓ p.a ++ ", b : " ++ reprₓ p.b ++ ")"⟩
 
 /-- Maps a function `f` on both components of a given pair. -/
@@ -65,7 +65,7 @@ def map {β : Type _} (f : α → β) (gp : pair α) : pair β :=
 
 section coeₓ
 
-variable{β : Type _}[Coe α β]
+variable {β : Type _} [Coe α β]
 
 /-- Coerce a pair by elementwise coercion. -/
 instance has_coe_to_generalized_continued_fraction_pair : Coe (pair α) (pair β) :=
@@ -80,7 +80,7 @@ end coeₓ
 
 end GeneralizedContinuedFraction.Pair
 
-variable(α)
+variable (α)
 
 /--
 A *generalised continued fraction* (gcf) is a potentially infinite expression of the form
@@ -105,7 +105,7 @@ structure GeneralizedContinuedFraction where
   h : α 
   s : Seqₓₓ$ pair α
 
-variable{α}
+variable {α}
 
 namespace GeneralizedContinuedFraction
 
@@ -113,7 +113,7 @@ namespace GeneralizedContinuedFraction
 def of_integer (a : α) : GeneralizedContinuedFraction α :=
   ⟨a, Seqₓₓ.nil⟩
 
-instance  [Inhabited α] : Inhabited (GeneralizedContinuedFraction α) :=
+instance [Inhabited α] : Inhabited (GeneralizedContinuedFraction α) :=
   ⟨of_integer (default _)⟩
 
 /-- Returns the sequence of partial numerators `aᵢ` of `g`. -/
@@ -143,7 +143,7 @@ section coeₓ
 /-! Interlude: define some expected coercions. -/
 
 
-variable{β : Type _}[Coe α β]
+variable {β : Type _} [Coe α β]
 
 /-- Coerce a gcf by elementwise coercion. -/
 instance has_coe_to_generalized_continued_fraction :
@@ -178,7 +178,7 @@ equal to one.
 def GeneralizedContinuedFraction.IsSimpleContinuedFraction (g : GeneralizedContinuedFraction α) [HasOne α] : Prop :=
   ∀ n : ℕ aₙ : α, g.partial_numerators.nth n = some aₙ → aₙ = 1
 
-variable(α)
+variable (α)
 
 /--
 A *simple continued fraction* (scf) is a generalized continued fraction (gcf) whose partial
@@ -201,11 +201,11 @@ It is encoded as the subtype of gcfs that satisfy
 def SimpleContinuedFraction [HasOne α] :=
   { g : GeneralizedContinuedFraction α // g.is_simple_continued_fraction }
 
-variable{α}
+variable {α}
 
 namespace SimpleContinuedFraction
 
-variable[HasOne α]
+variable [HasOne α]
 
 /-- Constructs a simple continued fraction without fractional part. -/
 def of_integer (a : α) : SimpleContinuedFraction α :=
@@ -214,7 +214,7 @@ def of_integer (a : α) : SimpleContinuedFraction α :=
       by 
         cases h⟩
 
-instance  : Inhabited (SimpleContinuedFraction α) :=
+instance : Inhabited (SimpleContinuedFraction α) :=
   ⟨of_integer 1⟩
 
 /-- Lift a scf to a gcf using the inclusion map. -/
@@ -236,7 +236,7 @@ A simple continued fraction is a *(regular) continued fraction* ((r)cf) if all p
 def SimpleContinuedFraction.IsContinuedFraction [HasOne α] [HasZero α] [LT α] (s : SimpleContinuedFraction α) : Prop :=
   ∀ n : ℕ bₙ : α, («expr↑ » s : GeneralizedContinuedFraction α).partialDenominators.nth n = some bₙ → 0 < bₙ
 
-variable(α)
+variable (α)
 
 /--
 A *(regular) continued fraction* ((r)cf) is a simple continued fraction (scf) whose partial
@@ -246,14 +246,14 @@ denominators are all positive. It is the subtype of scfs that satisfy
 def ContinuedFraction [HasOne α] [HasZero α] [LT α] :=
   { s : SimpleContinuedFraction α // s.is_continued_fraction }
 
-variable{α}
+variable {α}
 
 /-! Interlude: define some expected coercions. -/
 
 
 namespace ContinuedFraction
 
-variable[HasOne α][HasZero α][LT α]
+variable [HasOne α] [HasZero α] [LT α]
 
 /-- Constructs a continued fraction without fractional part. -/
 def of_integer (a : α) : ContinuedFraction α :=
@@ -262,7 +262,7 @@ def of_integer (a : α) : ContinuedFraction α :=
       by 
         cases h⟩
 
-instance  : Inhabited (ContinuedFraction α) :=
+instance : Inhabited (ContinuedFraction α) :=
   ⟨of_integer 0⟩
 
 /-- Lift a cf to a scf using the inclusion map. -/
@@ -296,7 +296,7 @@ For (r)cfs, these computations are equivalent as shown in
 -/
 
 
-variable{K : Type _}[DivisionRing K]
+variable {K : Type _} [DivisionRing K]
 
 /-!
 We start with the definition of the recurrence relation. Given a gcf `g`, for all `n ≥ 1`, we define

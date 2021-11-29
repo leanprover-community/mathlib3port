@@ -66,20 +66,20 @@ section haarCircle
 measure 1. -/
 
 
-instance  : MeasurableSpace circle :=
+instance : MeasurableSpace circle :=
   borel circle
 
-instance  : BorelSpace circle :=
+instance : BorelSpace circle :=
   ⟨rfl⟩
 
 /-- Haar measure on the circle, normalized to have total measure 1. -/
 def haarCircle : Measureₓ circle :=
   haar_measure positive_compacts_univ
 
-instance  : is_probability_measure haarCircle :=
+instance : is_probability_measure haarCircle :=
   ⟨haar_measure_self⟩
 
-instance  : measure_space circle :=
+instance : measure_space circle :=
   { circle.measurableSpace with volume := haarCircle }
 
 end haarCircle

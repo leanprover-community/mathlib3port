@@ -18,11 +18,11 @@ open Function
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}{r : α → α → Prop}
+variable {α : Type u} {β : Type v} {γ : Type w} {r : α → α → Prop}
 
 namespace OrderDual
 
-instance  [Nontrivial α] : Nontrivial (OrderDual α) :=
+instance [Nontrivial α] : Nontrivial (OrderDual α) :=
   by 
     delta' OrderDual <;> assumption
 

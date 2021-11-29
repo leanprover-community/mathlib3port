@@ -25,11 +25,11 @@ In this file we prove simple properties of `nat.iterate f n` a.k.a. `f^[n]`:
 
 universe u v
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 namespace Function
 
-variable(f : α → α)
+variable (f : α → α)
 
 @[simp]
 theorem iterate_zero : f^[0] = id :=
@@ -74,7 +74,7 @@ theorem iterate_mul (m : ℕ) : ∀ n, f^[m*n] = f^[m]^[n]
   by 
     simp only [Nat.mul_succ, Nat.mul_one, iterate_one, iterate_add, iterate_mul n]
 
-variable{f}
+variable {f}
 
 theorem iterate_fixed {x} (h : f x = x) (n : ℕ) : (f^[n]) x = x :=
   Nat.recOn n rfl$
@@ -111,7 +111,7 @@ end Semiconj
 
 namespace Commute
 
-variable{g : α → α}
+variable {g : α → α}
 
 theorem iterate_right (h : commute f g) (n : ℕ) : commute f (g^[n]) :=
   h.iterate_right n
@@ -136,7 +136,7 @@ theorem comp_iterate (h : commute f g) (n : ℕ) : (f ∘ g)^[n] = f^[n] ∘ g^[
     funext x 
     simp only [ihn, (h.iterate_right n).Eq, iterate_succ, comp_app]
 
-variable(f)
+variable (f)
 
 theorem iterate_self (n : ℕ) : commute (f^[n]) f :=
   (refl f).iterate_left n
@@ -152,7 +152,7 @@ end Commute
 theorem semiconj₂.iterate {f : α → α} {op : α → α → α} (hf : semiconj₂ f op op) (n : ℕ) : semiconj₂ (f^[n]) op op :=
   Nat.recOn n (semiconj₂.id_left op) fun n ihn => ihn.comp hf
 
-variable(f)
+variable (f)
 
 theorem iterate_succ' (n : ℕ) : f^[n.succ] = f ∘ f^[n] :=
   by 
@@ -183,7 +183,7 @@ theorem iterate.rec_zero (p : α → Sort _) {f : α → α} (h : ∀ a, p a →
   iterate.rec p h ha 0 = ha :=
   rfl
 
-variable{f}
+variable {f}
 
 theorem left_inverse.iterate {g : α → α} (hg : left_inverse g f) (n : ℕ) : left_inverse (g^[n]) (f^[n]) :=
   (Nat.recOn n fun _ => rfl)$

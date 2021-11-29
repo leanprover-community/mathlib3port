@@ -34,11 +34,11 @@ section Limits
 
 universe w v u
 
-variable{C : Type max v u}[category.{v} C]{J : grothendieck_topology C}
+variable {C : Type max v u} [category.{v} C] {J : grothendieck_topology C}
 
-variable{D : Type w}[category.{max v u} D]
+variable {D : Type w} [category.{max v u} D]
 
-variable{K : Type max v u}[small_category K]
+variable {K : Type max v u} [small_category K]
 
 noncomputable theory
 
@@ -82,7 +82,7 @@ def multifork_evaluation_cone (F : K ⥤ Sheaf J D) (E : cone (F ⋙ Sheaf_to_pr
             rw [category.assoc, ←E.w f]
             simp  } }
 
-variable[has_limits_of_shape K D]
+variable [has_limits_of_shape K D]
 
 /-- If `E` is a cone of shape `K` of sheaves, which is a limit on the level of presheves,
 this definition shows that the limit presheaf satisfies the multifork variant of the sheaf
@@ -134,7 +134,7 @@ theorem is_sheaf_of_is_limit (F : K ⥤ Sheaf J D) (E : cone (F ⋙ Sheaf_to_pre
     intro X S 
     exact ⟨is_limit_multifork_of_is_limit _ _ hE _ _⟩
 
-instance  (F : K ⥤ Sheaf J D) : creates_limit F (Sheaf_to_presheaf J D) :=
+instance (F : K ⥤ Sheaf J D) : creates_limit F (Sheaf_to_presheaf J D) :=
   creates_limit_of_reflects_iso$
     fun E hE =>
       { liftedCone := ⟨⟨E.X, is_sheaf_of_is_limit _ _ hE⟩, ⟨E.π.app, E.π.naturality⟩⟩,
@@ -149,18 +149,18 @@ instance  (F : K ⥤ Sheaf J D) : creates_limit F (Sheaf_to_presheaf J D) :=
             fac' := fun S j => hE.fac ((Sheaf_to_presheaf J D).mapCone S) j,
             uniq' := fun S m hm => hE.uniq ((Sheaf_to_presheaf J D).mapCone S) m hm } }
 
-instance  : creates_limits_of_shape K (Sheaf_to_presheaf J D) :=
+instance : creates_limits_of_shape K (Sheaf_to_presheaf J D) :=
   {  }
 
-instance  : has_limits_of_shape K (Sheaf J D) :=
+instance : has_limits_of_shape K (Sheaf J D) :=
   has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape (Sheaf_to_presheaf J D)
 
 end 
 
-instance  [has_limits D] : creates_limits (Sheaf_to_presheaf J D) :=
+instance [has_limits D] : creates_limits (Sheaf_to_presheaf J D) :=
   {  }
 
-instance  [has_limits D] : has_limits (Sheaf J D) :=
+instance [has_limits D] : has_limits (Sheaf J D) :=
   has_limits_of_has_limits_creates_limits (Sheaf_to_presheaf J D)
 
 end Limits
@@ -169,23 +169,23 @@ section Colimits
 
 universe w v u
 
-variable{C : Type max v u}[category.{v} C]{J : grothendieck_topology C}
+variable {C : Type max v u} [category.{v} C] {J : grothendieck_topology C}
 
-variable{D : Type w}[category.{max v u} D]
+variable {D : Type w} [category.{max v u} D]
 
-variable{K : Type max v u}[small_category K]
+variable {K : Type max v u} [small_category K]
 
-variable[concrete_category.{max v u} D]
+variable [concrete_category.{max v u} D]
 
-variable[∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
+variable [∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
 
-variable[preserves_limits (forget D)]
+variable [preserves_limits (forget D)]
 
-variable[∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
+variable [∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
 
-variable[∀ X : C, preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)]
+variable [∀ X : C, preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)]
 
-variable[reflects_isomorphisms (forget D)]
+variable [reflects_isomorphisms (forget D)]
 
 /-- Construct a cocone by sheafifying a cocone point of a cocone `E` of presheaves
 over a functor which factors through sheaves.
@@ -224,11 +224,11 @@ def is_colimit_sheafify_cocone {F : K ⥤ Sheaf J D} (E : cocone (F ⋙ Sheaf_to
         erw [←category.assoc, hm j]
         rfl }
 
-instance  [has_colimits_of_shape K D] : has_colimits_of_shape K (Sheaf J D) :=
+instance [has_colimits_of_shape K D] : has_colimits_of_shape K (Sheaf J D) :=
   ⟨fun F => has_colimit.mk ⟨sheafify_cocone (colimit.cocone _), is_colimit_sheafify_cocone _ (colimit.is_colimit _)⟩⟩
 
-instance  [has_colimits D] : has_colimits (Sheaf J D) :=
-  {  }
+instance [has_colimits D] : has_colimits (Sheaf J D) :=
+  ⟨inferInstance⟩
 
 end Colimits
 

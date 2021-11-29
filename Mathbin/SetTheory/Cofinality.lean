@@ -48,7 +48,7 @@ open_locale Classical Cardinal
 
 universe u v w
 
-variable{α : Type _}{r : α → α → Prop}
+variable {α : Type _} {r : α → α → Prop}
 
 namespace Order
 

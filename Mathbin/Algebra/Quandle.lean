@@ -81,7 +81,7 @@ universe u v
 A *shelf* is a structure with a self-distributive binary operation.
 The binary operation is regarded as a left action of the type on itself.
 -/
-class Shelf(α : Type u) where 
+class Shelf (α : Type u) where 
   act : α → α → α 
   self_distrib : ∀ {x y z : α}, act x (act y z) = act (act x y) (act x z)
 
@@ -90,7 +90,7 @@ The type of homomorphisms between shelves.
 This is also the notion of rack and quandle homomorphisms.
 -/
 @[ext]
-structure ShelfHom(S₁ : Type _)(S₂ : Type _)[Shelf S₁][Shelf S₂] where 
+structure ShelfHom (S₁ : Type _) (S₂ : Type _) [Shelf S₁] [Shelf S₂] where 
   toFun : S₁ → S₂ 
   map_act' : ∀ {x y : S₁}, to_fun (Shelf.act x y) = Shelf.act (to_fun x) (to_fun y)
 
@@ -102,7 +102,7 @@ element's action is invertible.
 The notations `x ◃ y` and `x ◃⁻¹ y` denote the action and the
 inverse action, respectively, and they are right associative.
 -/
-class Rack(α : Type u) extends Shelf α where 
+class Rack (α : Type u) extends Shelf α where 
   invAct : α → α → α 
   left_inv : ∀ x, Function.LeftInverse (inv_act x) (act x)
   right_inv : ∀ x, Function.RightInverse (inv_act x) (act x)
@@ -117,7 +117,7 @@ open_locale Quandles
 
 namespace Rack
 
-variable{R : Type _}[Rack R]
+variable {R : Type _} [Rack R]
 
 theorem self_distrib {x y z : R} : x ◃ y ◃ z = (x ◃ y) ◃ x ◃ z :=
   Shelf.self_distrib
@@ -306,9 +306,9 @@ end Rack
 
 namespace ShelfHom
 
-variable{S₁ : Type _}{S₂ : Type _}{S₃ : Type _}[Shelf S₁][Shelf S₂][Shelf S₃]
+variable {S₁ : Type _} {S₂ : Type _} {S₃ : Type _} [Shelf S₁] [Shelf S₂] [Shelf S₃]
 
-instance  : CoeFun (S₁ →◃ S₂) fun _ => S₁ → S₂ :=
+instance : CoeFun (S₁ →◃ S₂) fun _ => S₁ → S₂ :=
   ⟨ShelfHom.toFun⟩
 
 @[simp]
@@ -345,14 +345,14 @@ end ShelfHom
 /--
 A quandle is a rack such that each automorphism fixes its corresponding element.
 -/
-class Quandle(α : Type _) extends Rack α where 
+class Quandle (α : Type _) extends Rack α where 
   fix : ∀ {x : α}, act x x = x
 
 namespace Quandle
 
 open Rack
 
-variable{Q : Type _}[Quandle Q]
+variable {Q : Type _} [Quandle Q]
 
 attribute [simp] fix
 
@@ -422,7 +422,7 @@ def conj.map {G : Type _} {H : Type _} [Groupₓ G] [Groupₓ H] (f : G →* H) 
       by 
         simp  }
 
-instance  {G : Type _} {H : Type _} [Groupₓ G] [Groupₓ H] : HasLift (G →* H) (conj G →◃ conj H) :=
+instance {G : Type _} {H : Type _} [Groupₓ G] [Groupₓ H] : HasLift (G →* H) (conj G →◃ conj H) :=
   { lift := conj.map }
 
 /--
@@ -447,7 +447,7 @@ theorem dihedral_act.inv (n : ℕ) (a : Zmod n) : Function.Involutive (dihedral_
     dsimp [dihedral_act]
     ring
 
-instance  (n : ℕ) : Quandle (dihedral n) :=
+instance (n : ℕ) : Quandle (dihedral n) :=
   { act := dihedral_act n,
     self_distrib :=
       fun x y z =>
@@ -614,7 +614,7 @@ The universal enveloping group for the rack R.
 def envel_group (R : Type _) [Rack R] :=
   Quotientₓ (pre_envel_group.setoid R)
 
-instance  (R : Type _) [Rack R] : DivInvMonoidₓ (envel_group R) :=
+instance (R : Type _) [Rack R] : DivInvMonoidₓ (envel_group R) :=
   { mul :=
       fun a b =>
         Quotientₓ.liftOn₂ a b (fun a b => «expr⟦ ⟧» (pre_envel_group.mul a b))
@@ -629,7 +629,7 @@ instance  (R : Type _) [Rack R] : DivInvMonoidₓ (envel_group R) :=
     one_mul := fun a => Quotientₓ.induction_on a fun a => Quotientₓ.sound (pre_envel_group_rel'.one_mul a).Rel,
     mul_one := fun a => Quotientₓ.induction_on a fun a => Quotientₓ.sound (pre_envel_group_rel'.mul_one a).Rel }
 
-instance  (R : Type _) [Rack R] : Groupₓ (envel_group R) :=
+instance (R : Type _) [Rack R] : Groupₓ (envel_group R) :=
   { envel_group.div_inv_monoid _ with
     mul_left_inv :=
       fun a => Quotientₓ.induction_on a fun a => Quotientₓ.sound (pre_envel_group_rel'.mul_left_inv a).Rel }

@@ -35,7 +35,7 @@ inductive Pairwise (ι : Type v)
   | single : ι → Pairwise
   | pair : ι → ι → Pairwise
 
-variable{ι : Type v}
+variable {ι : Type v}
 
 namespace Pairwise
 
@@ -75,16 +75,16 @@ section
 
 attribute [local tidy] tactic.case_bash
 
-instance  : category (Pairwise ι) :=
+instance : category (Pairwise ι) :=
   { Hom := hom, id := id, comp := fun X Y Z f g => comp f g }
 
 end 
 
-variable{α : Type v}(U : ι → α)
+variable {α : Type v} (U : ι → α)
 
 section 
 
-variable[SemilatticeInf α]
+variable [SemilatticeInf α]
 
 /-- Auxiliary definition for `diagram`. -/
 @[simp]
@@ -113,7 +113,7 @@ end
 
 section 
 
-variable[CompleteLattice α]
+variable [CompleteLattice α]
 
 /-- Auxiliary definition for `cocone`. -/
 def cocone_ι_app : ∀ o : Pairwise ι, diagram_obj U o ⟶ supr U

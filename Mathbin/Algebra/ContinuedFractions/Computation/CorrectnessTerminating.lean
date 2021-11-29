@@ -44,7 +44,7 @@ namespace GeneralizedContinuedFraction
 
 open generalized_continued_fraction(of)
 
-variable{K : Type _}[LinearOrderedField K]{v : K}{n : ℕ}
+variable {K : Type _} [LinearOrderedField K] {v : K} {n : ℕ}
 
 /--
 Given two continuants `pconts` and `conts` and a value `fr`, this function returns
@@ -61,7 +61,7 @@ protected def comp_exact_value (pconts conts : pair K) (fr : K) : K :=
     let exact_conts := next_continuants 1 (fr⁻¹) pconts conts 
     exact_conts.a / exact_conts.b
 
-variable[FloorRing K]
+variable [FloorRing K]
 
 /-- Just a computational lemma we need for the next main proof. -/
 protected theorem comp_exact_value_correctness_of_stream_eq_some_aux_comp {a : K} (b c : K)

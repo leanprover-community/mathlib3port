@@ -8,13 +8,13 @@ import Mathbin.RingTheory.Ideal.Quotient
 
 open Submodule
 
-variable{R : Type _}[Ringₓ R]
+variable {R : Type _} [Ringₓ R]
 
-variable{M : Type _}[AddCommGroupₓ M][Module R M](U U₁ U₂ : Submodule R M)
+variable {M : Type _} [AddCommGroupₓ M] [Module R M] (U U₁ U₂ : Submodule R M)
 
-variable{x x₁ x₂ y y₁ y₂ z z₁ z₂ : M}
+variable {x x₁ x₂ y y₁ y₂ z z₁ z₂ : M}
 
-variable{N : Type _}[AddCommGroupₓ N][Module R N](V V₁ V₂ : Submodule R N)
+variable {N : Type _} [AddCommGroupₓ N] [Module R N] (V V₁ V₂ : Submodule R N)
 
 /-- A predicate saying two elements of a module are equivalent modulo a submodule. -/
 def Smodeq (x y : M) : Prop :=
@@ -22,7 +22,7 @@ def Smodeq (x y : M) : Prop :=
 
 notation:50 x " ≡ " y " [SMOD " N "]" => Smodeq N x y
 
-variable{U U₁ U₂}
+variable {U U₁ U₂}
 
 protected theorem Smodeq.def : x ≡ y [SMOD U] ↔ (Submodule.Quotient.mk x : U.quotient) = Submodule.Quotient.mk y :=
   Iff.rfl

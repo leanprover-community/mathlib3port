@@ -27,11 +27,11 @@ namespace CategoryTheory
 
 open Category Limits
 
-variable{C : Type u}[category.{v₁} C]
+variable {C : Type u} [category.{v₁} C]
 
-variable{D : Type u₂}[category.{u} D]
+variable {D : Type u₂} [category.{u} D]
 
-variable{E : Type u}[category.{v₂} E]
+variable {E : Type u} [category.{v₂} E]
 
 /--
 If `X × -` preserves colimits in `D` for any `X : D`, then the product functor `F ⨯ -` for

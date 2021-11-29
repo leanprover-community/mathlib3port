@@ -12,7 +12,7 @@ open CategoryTheory
 
 open CategoryTheory.MonoidalCategory
 
-variable(C : Type u₁)[category.{v₁} C][monoidal_category.{v₁} C][braided_category.{v₁} C]
+variable (C : Type u₁) [category.{v₁} C] [monoidal_category.{v₁} C] [braided_category.{v₁} C]
 
 /--
 A commutative monoid object internal to a monoidal category.
@@ -39,12 +39,12 @@ def trivialₓ : CommMon_ C :=
         dsimp 
         rw [braiding_left_unitor, unitors_equal] }
 
-instance  : Inhabited (CommMon_ C) :=
+instance : Inhabited (CommMon_ C) :=
   ⟨trivialₓ C⟩
 
-variable{C}{M : CommMon_ C}
+variable {C} {M : CommMon_ C}
 
-instance  : category (CommMon_ C) :=
+instance : category (CommMon_ C) :=
   induced_category.category CommMon_.toMon_
 
 @[simp]
@@ -57,7 +57,7 @@ theorem comp_hom {R S T : CommMon_ C} (f : R ⟶ S) (g : S ⟶ T) : Mon_.Hom.hom
 
 section 
 
-variable(C)
+variable (C)
 
 -- error in CategoryTheory.Monoidal.CommMon_: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler full
 /-- The forgetful functor from commutative monoid objects to monoid objects. -/
@@ -84,14 +84,14 @@ instance unique_hom_from_trivial (A : CommMon_ C) : Unique (trivialₓ C ⟶ A) 
 
 open CategoryTheory.Limits
 
-instance  : has_initial (CommMon_ C) :=
+instance : has_initial (CommMon_ C) :=
   has_initial_of_unique (trivialₓ C)
 
 end CommMon_
 
 namespace CategoryTheory.LaxBraidedFunctor
 
-variable{C}{D : Type u₂}[category.{v₂} D][monoidal_category.{v₂} D][braided_category.{v₂} D]
+variable {C} {D : Type u₂} [category.{v₂} D] [monoidal_category.{v₂} D] [braided_category.{v₂} D]
 
 -- error in CategoryTheory.Monoidal.CommMon_: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -109,7 +109,7 @@ That is, a lax braided functor `F : C ⥤ D` induces a functor `CommMon_ C ⥤ C
     ..F.to_lax_monoidal_functor.map_Mon.obj A.to_Mon_ },
   map := λ A B f, F.to_lax_monoidal_functor.map_Mon.map f }
 
-variable(C)(D)
+variable (C) (D)
 
 /-- `map_CommMon` is functorial in the lax braided functor. -/
 def map_CommMon_functor : lax_braided_functor C D ⥤ CommMon_ C ⥤ CommMon_ D :=

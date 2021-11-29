@@ -19,7 +19,7 @@ open Classical Set Filter TopologicalSpace
 
 open_locale Classical TopologicalSpace BigOperators Pointwise
 
-variable{ι α X M N : Type _}[TopologicalSpace X]
+variable {ι α X M N : Type _} [TopologicalSpace X]
 
 @[toAdditive]
 theorem continuous_one [TopologicalSpace M] [HasOne M] : Continuous (1 : X → M) :=
@@ -28,19 +28,19 @@ theorem continuous_one [TopologicalSpace M] [HasOne M] : Continuous (1 : X → M
 /-- Basic hypothesis to talk about a topological additive monoid or a topological additive
 semigroup. A topological additive monoid over `M`, for example, is obtained by requiring both the
 instances `add_monoid M` and `has_continuous_add M`. -/
-class HasContinuousAdd(M : Type u)[TopologicalSpace M][Add M] : Prop where 
+class HasContinuousAdd (M : Type u) [TopologicalSpace M] [Add M] : Prop where 
   continuous_add : Continuous fun p : M × M => p.1+p.2
 
 /-- Basic hypothesis to talk about a topological monoid or a topological semigroup.
 A topological monoid over `M`, for example, is obtained by requiring both the instances `monoid M`
 and `has_continuous_mul M`. -/
 @[toAdditive]
-class HasContinuousMul(M : Type u)[TopologicalSpace M][Mul M] : Prop where 
+class HasContinuousMul (M : Type u) [TopologicalSpace M] [Mul M] : Prop where 
   continuous_mul : Continuous fun p : M × M => p.1*p.2
 
 section HasContinuousMul
 
-variable[TopologicalSpace M][Mul M][HasContinuousMul M]
+variable [TopologicalSpace M] [Mul M] [HasContinuousMul M]
 
 @[toAdditive]
 theorem continuous_mul : Continuous fun p : M × M => p.1*p.2 :=
@@ -93,7 +93,7 @@ theorem ContinuousWithinAt.mul {f g : X → M} {s : Set X} {x : X} (hf : Continu
   hf.mul hg
 
 @[toAdditive]
-instance  [TopologicalSpace N] [Mul N] [HasContinuousMul N] : HasContinuousMul (M × N) :=
+instance [TopologicalSpace N] [Mul N] [HasContinuousMul N] : HasContinuousMul (M × N) :=
   ⟨((continuous_fst.comp continuous_fst).mul (continuous_fst.comp continuous_snd)).prod_mk
       ((continuous_snd.comp continuous_fst).mul (continuous_snd.comp continuous_snd))⟩
 
@@ -112,7 +112,7 @@ instance Pi.has_continuous_mul' : HasContinuousMul (ι → M) :=
   Pi.has_continuous_mul
 
 @[toAdditive]
-instance (priority := 100)has_continuous_mul_of_discrete_topology [TopologicalSpace N] [Mul N] [DiscreteTopology N] :
+instance (priority := 100) has_continuous_mul_of_discrete_topology [TopologicalSpace N] [Mul N] [DiscreteTopology N] :
   HasContinuousMul N :=
   ⟨continuous_of_discrete_topology⟩
 
@@ -163,9 +163,20 @@ theorem has_continuous_mul_of_comm_of_nhds_one (M : Type u) [CommMonoidₓ M] [T
 
 end HasContinuousMul
 
+namespace Submonoid
+
+@[toAdditive]
+instance [TopologicalSpace α] [Monoidₓ α] [HasContinuousMul α] (S : Submonoid α) : HasContinuousMul S :=
+  { continuous_mul :=
+      by 
+        rw [embedding_subtype_coe.to_inducing.continuous_iff]
+        exact (continuous_subtype_coe.comp continuous_fst).mul (continuous_subtype_coe.comp continuous_snd) }
+
+end Submonoid
+
 section HasContinuousMul
 
-variable[TopologicalSpace M][Monoidₓ M][HasContinuousMul M]
+variable [TopologicalSpace M] [Monoidₓ M] [HasContinuousMul M]
 
 @[toAdditive]
 theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) :
@@ -306,10 +317,10 @@ section Op
 open MulOpposite
 
 /-- Put the same topological space structure on the opposite monoid as on the original space. -/
-instance  [_i : TopologicalSpace α] : TopologicalSpace («expr ᵐᵒᵖ» α) :=
+instance [_i : TopologicalSpace α] : TopologicalSpace («expr ᵐᵒᵖ» α) :=
   TopologicalSpace.induced (unop : «expr ᵐᵒᵖ» α → α) _i
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 theorem continuous_unop : Continuous (unop : «expr ᵐᵒᵖ» α → α) :=
   continuous_induced_dom
@@ -317,10 +328,10 @@ theorem continuous_unop : Continuous (unop : «expr ᵐᵒᵖ» α → α) :=
 theorem continuous_op : Continuous (op : α → «expr ᵐᵒᵖ» α) :=
   continuous_induced_rng continuous_id
 
-variable[Monoidₓ α][HasContinuousMul α]
+variable [Monoidₓ α] [HasContinuousMul α]
 
 /-- If multiplication is continuous in the monoid `α`, then it also is in the monoid `αᵐᵒᵖ`. -/
-instance  : HasContinuousMul («expr ᵐᵒᵖ» α) :=
+instance : HasContinuousMul («expr ᵐᵒᵖ» α) :=
   ⟨let h₁ := @continuous_mul α _ _ _ 
     let h₂ : Continuous fun p : α × α => _ := continuous_snd.prod_mk continuous_fst 
     continuous_induced_rng$ (h₁.comp h₂).comp (continuous_unop.prod_map continuous_unop)⟩
@@ -331,10 +342,10 @@ namespace Units
 
 open MulOpposite
 
-variable[TopologicalSpace α][Monoidₓ α]
+variable [TopologicalSpace α] [Monoidₓ α]
 
 /-- The units of a monoid are equipped with a topology, via the embedding into `α × α`. -/
-instance  : TopologicalSpace (Units α) :=
+instance : TopologicalSpace (Units α) :=
   TopologicalSpace.induced (embedProduct α)
     (by 
       infer_instance)
@@ -346,14 +357,14 @@ theorem continuous_coe : Continuous (coeₓ : Units α → α) :=
   by 
     convert continuous_fst.comp continuous_induced_dom
 
-variable[HasContinuousMul α]
+variable [HasContinuousMul α]
 
 /-- If multiplication on a monoid is continuous, then multiplication on the units of the monoid,
 with respect to the induced topology, is continuous.
 
 Inversion is also continuous, but we register this in a later file, `topology.algebra.group`,
 because the predicate `has_continuous_inv` has not yet been defined. -/
-instance  : HasContinuousMul (Units α) :=
+instance : HasContinuousMul (Units α) :=
   ⟨let h := @continuous_mul (α × «expr ᵐᵒᵖ» α) _ _ _ 
     continuous_induced_rng$ h.comp$ continuous_embed_product.prod_map continuous_embed_product⟩
 
@@ -361,13 +372,13 @@ end Units
 
 section 
 
-variable[TopologicalSpace M][CommMonoidₓ M]
+variable [TopologicalSpace M] [CommMonoidₓ M]
 
 @[toAdditive]
 theorem Submonoid.mem_nhds_one (S : Submonoid M) (oS : IsOpen (S : Set M)) : (S : Set M) ∈ 𝓝 (1 : M) :=
   IsOpen.mem_nhds oS S.one_mem
 
-variable[HasContinuousMul M]
+variable [HasContinuousMul M]
 
 @[toAdditive]
 theorem tendsto_multiset_prod {f : ι → α → M} {x : Filter α} {a : ι → M} (s : Multiset ι) :

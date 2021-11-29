@@ -21,7 +21,7 @@ multiset, gcd
 
 namespace Multiset
 
-variable{α : Type _}[CommCancelMonoidWithZero α][NormalizedGcdMonoid α]
+variable {α : Type _} [CommCancelMonoidWithZero α] [NormalizedGcdMonoid α]
 
 /-! ### lcm -/
 
@@ -70,7 +70,16 @@ theorem normalize_lcm (s : Multiset α) : normalize s.lcm = s.lcm :=
       by 
         simp 
 
-variable[DecidableEq α]
+@[simp]
+theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : α) ∈ s :=
+  by 
+    induction' s using Multiset.induction_on with a s ihs
+    ·
+      simp only [lcm_zero, one_ne_zero, not_mem_zero]
+    ·
+      simp only [mem_cons, lcm_cons, lcm_eq_zero_iff, ihs, @eq_comm _ a]
+
+variable [DecidableEq α]
 
 @[simp]
 theorem lcm_erase_dup (s : Multiset α) : (erase_dup s).lcm = s.lcm :=
@@ -166,7 +175,7 @@ theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s �
       intro a s sgcd h 
       simp [h a (mem_cons_self a s), sgcd fun x hx => h x (mem_cons_of_mem hx)]
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 @[simp]
 theorem gcd_erase_dup (s : Multiset α) : (erase_dup s).gcd = s.gcd :=

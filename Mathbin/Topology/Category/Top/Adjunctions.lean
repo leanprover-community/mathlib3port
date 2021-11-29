@@ -30,7 +30,7 @@ def adj₁ : discrete ⊣ forget Top.{u} :=
 def adj₂ : forget Top.{u} ⊣ trivialₓ :=
   adjunction.mk_of_unit_counit { Unit := { app := fun X => ⟨id, continuous_top⟩ }, counit := { app := fun X => id } }
 
-instance  : is_right_adjoint (forget Top.{u}) :=
+instance : is_right_adjoint (forget Top.{u}) :=
   ⟨_, adj₁⟩
 
 end Top

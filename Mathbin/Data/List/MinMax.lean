@@ -18,7 +18,7 @@ The main definitions are `argmax`, `argmin`, `minimum` and `maximum` for lists.
 
 namespace List
 
-variable{α : Type _}{β : Type _}[LinearOrderₓ β]
+variable {α : Type _} {β : Type _} [LinearOrderₓ β]
 
 /-- Auxiliary definition to define `argmax` -/
 def argmax₂ (f : α → β) (a : Option α) (b : α) : Option α :=
@@ -245,7 +245,7 @@ theorem argmin_eq_some_iff [DecidableEq α] {f : α → β} {m : α} {l : List �
   argmin f l = some m ↔ m ∈ l ∧ (∀ a _ : a ∈ l, f m ≤ f a) ∧ ∀ a _ : a ∈ l, f a ≤ f m → l.index_of m ≤ l.index_of a :=
   mem_argmin_iff
 
-variable[LinearOrderₓ α]
+variable [LinearOrderₓ α]
 
 /-- `maximum l` returns an `with_bot α`, the largest element of `l` for nonempty lists, and `⊥` for
 `[]`  -/
@@ -346,9 +346,9 @@ theorem minimum_eq_coe_iff {m : α} {l : List α} : minimum l = m ↔ m ∈ l �
 
 section Fold
 
-variable{M : Type _}[CanonicallyLinearOrderedAddMonoid M]
+variable {M : Type _} [CanonicallyLinearOrderedAddMonoid M]
 
-/-! Note: since there is no typeclass for both `linear_order` and `has_top`, nor a typeclass dual
+/-! Note: since there is no typeclass typeclass dual
 to `canonically_linear_ordered_add_monoid α` we cannot express these lemmas generally for
 `minimum`; instead we are limited to doing so on `order_dual α`. -/
 

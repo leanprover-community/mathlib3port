@@ -78,7 +78,7 @@ There is exactly one edge for every pair of adjacent edges;
 see `simple_graph.edge_set` for the corresponding edge set.
 -/
 @[ext]
-structure SimpleGraph(V : Type u) where 
+structure SimpleGraph (V : Type u) where 
   Adj : V → V → Prop 
   symm : Symmetric adj :=  by 
   runTac 
@@ -95,7 +95,7 @@ def SimpleGraph.fromRel {V : Type u} (r : V → V → Prop) : SimpleGraph V :=
   { Adj := fun a b => a ≠ b ∧ (r a b ∨ r b a), symm := fun a b ⟨hn, hr⟩ => ⟨hn.symm, hr.symm⟩,
     loopless := fun a ⟨hn, _⟩ => hn rfl }
 
-noncomputable instance  {V : Type u} [Fintype V] : Fintype (SimpleGraph V) :=
+noncomputable instance {V : Type u} [Fintype V] : Fintype (SimpleGraph V) :=
   by 
     classical 
     exact Fintype.ofInjective SimpleGraph.Adj SimpleGraph.ext
@@ -116,7 +116,7 @@ def emptyGraph (V : Type u) : SimpleGraph V :=
 
 namespace SimpleGraph
 
-variable{V : Type u}{W : Type v}{X : Type w}(G : SimpleGraph V)(G' : SimpleGraph W)
+variable {V : Type u} {W : Type v} {X : Type w} (G : SimpleGraph V) (G' : SimpleGraph W)
 
 @[simp]
 theorem irrefl {v : V} : ¬G.adj v v :=
@@ -141,7 +141,7 @@ Note that this should be spelled `≤`. -/
 def is_subgraph (x y : SimpleGraph V) : Prop :=
   ∀ ⦃v w : V⦄, x.adj v w → y.adj v w
 
-instance  : LE (SimpleGraph V) :=
+instance : LE (SimpleGraph V) :=
   ⟨is_subgraph⟩
 
 @[simp]
@@ -149,7 +149,7 @@ theorem is_subgraph_eq_le : (is_subgraph : SimpleGraph V → SimpleGraph V → P
   rfl
 
 /-- The supremum of two graphs `x ⊔ y` has edges where either `x` or `y` have edges. -/
-instance  : HasSup (SimpleGraph V) :=
+instance : HasSup (SimpleGraph V) :=
   ⟨fun x y =>
       { Adj := x.adj⊔y.adj,
         symm :=
@@ -162,7 +162,7 @@ theorem sup_adj (x y : SimpleGraph V) (v w : V) : (x⊔y).Adj v w ↔ x.adj v w 
   Iff.rfl
 
 /-- The infinum of two graphs `x ⊓ y` has edges where both `x` and `y` have edges. -/
-instance  : HasInf (SimpleGraph V) :=
+instance : HasInf (SimpleGraph V) :=
   ⟨fun x y =>
       { Adj := x.adj⊓y.adj,
         symm :=
@@ -179,7 +179,7 @@ We define `Gᶜ` to be the `simple_graph V` such that no two adjacent vertices i
 are adjacent in the complement, and every nonadjacent pair of vertices is adjacent
 (still ensuring that vertices are not adjacent to themselves).
 -/
-instance  : HasCompl (SimpleGraph V) :=
+instance : HasCompl (SimpleGraph V) :=
   ⟨fun G =>
       { Adj := fun v w => v ≠ w ∧ ¬G.adj v w,
         symm :=
@@ -194,7 +194,7 @@ theorem compl_adj (G : SimpleGraph V) (v w : V) : («expr ᶜ» G).Adj v w ↔ v
   Iff.rfl
 
 /-- The difference of two graphs `x / y` has the edges of `x` with the edges of `y` removed. -/
-instance  : HasSdiff (SimpleGraph V) :=
+instance : HasSdiff (SimpleGraph V) :=
   ⟨fun x y =>
       { Adj := x.adj \ y.adj,
         symm :=
@@ -206,7 +206,7 @@ instance  : HasSdiff (SimpleGraph V) :=
 theorem sdiff_adj (x y : SimpleGraph V) (v w : V) : (x \ y).Adj v w ↔ x.adj v w ∧ ¬y.adj v w :=
   Iff.rfl
 
-instance  : BooleanAlgebra (SimpleGraph V) :=
+instance : BooleanAlgebra (SimpleGraph V) :=
   { PartialOrderₓ.lift adj ext with le := · ≤ ·, sup := ·⊔·, inf := ·⊓·, Compl := HasCompl.compl, sdiff := · \ ·,
     top := completeGraph V, bot := emptyGraph V, le_top := fun x v w h => x.ne_of_adj h,
     bot_le := fun x v w h => h.elim, sup_le := fun x y z hxy hyz v w h => h.cases_on (fun h => hxy h) fun h => hyz h,
@@ -261,12 +261,12 @@ theorem complete_graph_eq_top (V : Type u) : completeGraph V = ⊤ :=
 theorem empty_graph_eq_bot (V : Type u) : emptyGraph V = ⊥ :=
   rfl
 
-instance  (V : Type u) : Inhabited (SimpleGraph V) :=
+instance (V : Type u) : Inhabited (SimpleGraph V) :=
   ⟨⊤⟩
 
 section Decidable
 
-variable(V)(H : SimpleGraph V)[DecidableRel G.adj][DecidableRel H.adj]
+variable (V) (H : SimpleGraph V) [DecidableRel G.adj] [DecidableRel H.adj]
 
 instance bot.adj_decidable : DecidableRel (⊥ : SimpleGraph V).Adj :=
   fun v w => Decidable.false
@@ -280,7 +280,7 @@ instance inf.adj_decidable : DecidableRel (G⊓H).Adj :=
 instance sdiff.adj_decidable : DecidableRel (G \ H).Adj :=
   fun v w => And.decidable
 
-variable[DecidableEq V]
+variable [DecidableEq V]
 
 instance top.adj_decidable : DecidableRel (⊤ : SimpleGraph V).Adj :=
   fun v w => Not.decidable
@@ -464,7 +464,7 @@ instance decidable_mem_common_neighbors [DecidableRel G.adj] (v w : V) : Decidab
 
 section Incidence
 
-variable[DecidableEq V]
+variable [DecidableEq V]
 
 /--
 Given an edge incident to a particular vertex, get the other vertex on the edge.
@@ -522,7 +522,7 @@ Use `neighbor_finset_eq_filter` to rewrite this definition as a `filter`.
 -/
 
 
-variable(v : V)[Fintype (G.neighbor_set v)]
+variable (v : V) [Fintype (G.neighbor_set v)]
 
 /--
 `G.neighbors v` is the `finset` version of `G.adj v` in case `G` is
@@ -579,7 +579,7 @@ A graph is locally finite if every vertex has a finite neighbor set.
 def locally_finite :=
   ∀ v : V, Fintype (G.neighbor_set v)
 
-variable[locally_finite G]
+variable [locally_finite G]
 
 /--
 A locally finite simple graph is regular of degree `d` if every vertex has degree `d`.
@@ -594,7 +594,7 @@ end LocallyFinite
 
 section Finite
 
-variable[Fintype V]
+variable [Fintype V]
 
 instance neighbor_set_fintype [DecidableRel G.adj] (v : V) : Fintype (G.neighbor_set v) :=
   @Subtype.fintype _ _
@@ -820,7 +820,7 @@ infixl:50 " ≃g " => iso
 
 namespace Hom
 
-variable{G G'}(f : G →g G')
+variable {G G'} (f : G →g G')
 
 /-- The identity homomorphism from a graph to itself. -/
 abbrev id : G →g G :=
@@ -854,7 +854,7 @@ theorem map_edge_set.injective (hinj : Function.Injective f) : Function.Injectiv
       rw [Subtype.mk_eq_mk]
     apply Sym2.map.injective hinj
 
-variable{G'' : SimpleGraph X}
+variable {G'' : SimpleGraph X}
 
 /-- Composition of graph homomorphisms. -/
 abbrev comp (f' : G' →g G'') (f : G →g G') : G →g G'' :=
@@ -868,7 +868,7 @@ end Hom
 
 namespace Embedding
 
-variable{G G'}(f : G ↪g G')
+variable {G G'} (f : G ↪g G')
 
 /-- The identity embedding from a graph to itself. -/
 abbrev refl : G ↪g G :=
@@ -902,7 +902,7 @@ def map_neighbor_set (v : V) : G.neighbor_set v ↪ G'.neighbor_set (f v) :=
         rw [Subtype.mk_eq_mk] at h⊢
         exact f.inj' h }
 
-variable{G'' : SimpleGraph X}
+variable {G'' : SimpleGraph X}
 
 /-- Composition of graph embeddings. -/
 abbrev comp (f' : G' ↪g G'') (f : G ↪g G') : G ↪g G'' :=
@@ -916,7 +916,7 @@ end Embedding
 
 namespace Iso
 
-variable{G G'}(f : G ≃g G')
+variable {G G'} (f : G ≃g G')
 
 /-- The identity isomorphism of a graph with itself. -/
 abbrev refl : G ≃g G :=
@@ -987,7 +987,7 @@ theorem card_eq_of_iso [Fintype V] [Fintype W] (f : G ≃g G') : Fintype.card V 
   by 
     convert (Fintype.of_equiv_card f.to_equiv).symm
 
-variable{G'' : SimpleGraph X}
+variable {G'' : SimpleGraph X}
 
 /-- Composition of graph isomorphisms. -/
 abbrev comp (f' : G' ≃g G'') (f : G ≃g G') : G ≃g G'' :=

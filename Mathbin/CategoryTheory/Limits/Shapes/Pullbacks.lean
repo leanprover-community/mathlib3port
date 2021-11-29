@@ -91,7 +91,7 @@ abbrev hom.inr : right ⟶ one :=
 abbrev hom.id (X : walking_cospan) : X ⟶ X :=
   wide_pullback_shape.hom.id X
 
-instance  (X Y : walking_cospan) : Subsingleton (X ⟶ Y) :=
+instance (X Y : walking_cospan) : Subsingleton (X ⟶ Y) :=
   by 
     tidy
 
@@ -118,7 +118,7 @@ abbrev hom.snd : zero ⟶ right :=
 abbrev hom.id (X : walking_span) : X ⟶ X :=
   wide_pushout_shape.hom.id X
 
-instance  (X Y : walking_span) : Subsingleton (X ⟶ Y) :=
+instance (X Y : walking_span) : Subsingleton (X ⟶ Y) :=
   by 
     tidy
 
@@ -126,7 +126,7 @@ end WalkingSpan
 
 open WalkingSpan.Hom WalkingCospan.Hom WidePullbackShape.Hom WidePushoutShape.Hom
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /-- `cospan f g` is the functor from the walking cospan hitting `f` and `g`. -/
 def cospan {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) : walking_cospan ⥤ C :=
@@ -206,7 +206,7 @@ def diagram_iso_span (F : walking_span ⥤ C) : F ≅ span (F.map fst) (F.map sn
     (by 
       tidy)
 
-variable{W X Y Z : C}
+variable {W X Y Z : C}
 
 /-- A pullback cone is just a cone on the cospan formed by two morphisms `f : X ⟶ Z` and
     `g : Y ⟶ Z`.-/
@@ -215,7 +215,7 @@ abbrev pullback_cone (f : X ⟶ Z) (g : Y ⟶ Z) :=
 
 namespace PullbackCone
 
-variable{f : X ⟶ Z}{g : Y ⟶ Z}
+variable {f : X ⟶ Z} {g : Y ⟶ Z}
 
 /-- The first projection of a pullback cone. -/
 abbrev fst (t : pullback_cone f g) : t.X ⟶ X :=
@@ -403,7 +403,7 @@ abbrev pushout_cocone (f : X ⟶ Y) (g : X ⟶ Z) :=
 
 namespace PushoutCocone
 
-variable{f : X ⟶ Y}{g : X ⟶ Z}
+variable {f : X ⟶ Y} {g : X ⟶ Z}
 
 /-- The first inclusion of a pushout cocone. -/
 abbrev inl (t : pushout_cocone f g) : Y ⟶ t.X :=
@@ -824,7 +824,7 @@ instance epi_coprod_to_pushout {C : Type _} [category C] {X Y Z : C} (f : X ⟶ 
 
 section 
 
-variable{D : Type u₂}[category.{v} D](G : C ⥤ D)
+variable {D : Type u₂} [category.{v} D] (G : C ⥤ D)
 
 /--
 The comparison morphism for the pullback of `f,g`.
@@ -863,7 +863,7 @@ section PullbackSymmetry
 
 open WalkingCospan
 
-variable(f : X ⟶ Z)(g : Y ⟶ Z)
+variable (f : X ⟶ Z) (g : Y ⟶ Z)
 
 /-- Making this a global instance would make the typeclass seach go in an infinite loop. -/
 theorem has_pullback_symmetry [has_pullback f g] : has_pullback g f :=
@@ -903,7 +903,7 @@ section PushoutSymmetry
 
 open WalkingCospan
 
-variable(f : X ⟶ Y)(g : X ⟶ Z)
+variable (f : X ⟶ Y) (g : X ⟶ Z)
 
 /-- Making this a global instance would make the typeclass seach go in an infinite loop. -/
 theorem has_pushout_symmetry [has_pushout f g] : has_pushout g f :=
@@ -944,7 +944,7 @@ section PullbackLeftIso
 
 open WalkingCospan
 
-variable(f : X ⟶ Z)(g : Y ⟶ Z)[is_iso f]
+variable (f : X ⟶ Z) (g : Y ⟶ Z) [is_iso f]
 
 /-- If `f : X ⟶ Z` is iso, then `X ×[Z] Y ≅ Y`. This is the explicit limit cone. -/
 def pullback_cone_of_left_iso : pullback_cone f g :=
@@ -1012,7 +1012,7 @@ section PullbackRightIso
 
 open WalkingCospan
 
-variable(f : X ⟶ Z)(g : Y ⟶ Z)[is_iso g]
+variable (f : X ⟶ Z) (g : Y ⟶ Z) [is_iso g]
 
 /-- If `g : Y ⟶ Z` is iso, then `X ×[Z] Y ≅ X`. This is the explicit limit cone. -/
 def pullback_cone_of_right_iso : pullback_cone f g :=
@@ -1078,7 +1078,7 @@ section PushoutLeftIso
 
 open WalkingSpan
 
-variable(f : X ⟶ Y)(g : X ⟶ Z)[is_iso f]
+variable (f : X ⟶ Y) (g : X ⟶ Z) [is_iso f]
 
 /-- If `f : X ⟶ Y` is iso, then `Y ⨿[X] Z ≅ Z`. This is the explicit colimit cocone. -/
 def pushout_cocone_of_left_iso : pushout_cocone f g :=
@@ -1146,7 +1146,7 @@ section PushoutRightIso
 
 open WalkingSpan
 
-variable(f : X ⟶ Y)(g : X ⟶ Z)[is_iso g]
+variable (f : X ⟶ Y) (g : X ⟶ Z) [is_iso g]
 
 /-- If `f : X ⟶ Z` is iso, then `Y ⨿[X] Z ≅ Y`. This is the explicit colimit cocone. -/
 def pushout_cocone_of_right_iso : pushout_cocone f g :=
@@ -1214,7 +1214,7 @@ section
 
 open WalkingCospan
 
-variable(f : X ⟶ Y)
+variable (f : X ⟶ Y)
 
 instance has_kernel_pair_of_mono [mono f] : has_pullback f f :=
   ⟨⟨⟨_, pullback_cone.is_limit_mk_id_id f⟩⟩⟩
@@ -1254,7 +1254,7 @@ section
 
 open WalkingSpan
 
-variable(f : X ⟶ Y)
+variable (f : X ⟶ Y)
 
 instance has_cokernel_pair_of_epi [epi f] : has_pushout f f :=
   ⟨⟨⟨_, pushout_cocone.is_colimit_mk_id_id f⟩⟩⟩
@@ -1290,7 +1290,7 @@ instance inr_iso_of_epi_eq [epi f] : is_iso (pushout.inr : _ ⟶ pushout f f) :=
 
 end 
 
-variable(C)
+variable (C)
 
 /--
 `has_pullbacks` represents a choice of pullback for every pair of morphisms
@@ -1298,11 +1298,11 @@ variable(C)
 See https://stacks.math.columbia.edu/tag/001W.
 -/
 abbrev has_pullbacks :=
-  has_limits_of_shape walking_cospan C
+  has_limits_of_shape walking_cospan.{v} C
 
 /-- `has_pushouts` represents a choice of pushout for every pair of morphisms -/
 abbrev has_pushouts :=
-  has_colimits_of_shape walking_span C
+  has_colimits_of_shape walking_span.{v} C
 
 /-- If `C` has all limits of diagrams `cospan f g`, then it has all pullbacks -/
 theorem has_pullbacks_of_has_limit_cospan [∀ {X Y Z : C} {f : X ⟶ Z} {g : Y ⟶ Z}, has_limit (cospan f g)] :

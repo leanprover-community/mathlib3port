@@ -9,9 +9,9 @@ at position `(i, j)`, and zeroes elsewhere.
 -/
 
 
-variable{l m n : Type _}
+variable {l m n : Type _}
 
-variable{R α : Type _}
+variable {R α : Type _}
 
 namespace Matrix
 
@@ -19,9 +19,9 @@ open_locale Matrix
 
 open_locale BigOperators
 
-variable[DecidableEq l][DecidableEq m][DecidableEq n]
+variable [DecidableEq l] [DecidableEq m] [DecidableEq n]
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
 /--
 `std_basis_matrix i j a` is the matrix with `a` in the `i`-th row, `j`-th column,
@@ -56,7 +56,7 @@ theorem matrix_eq_sum_std_basis (x : Matrix n m α) [Fintype n] [Fintype m] :
   by 
     ext 
     symm 
-    iterate 2
+    iterate 2 
       rw [Finset.sum_apply]
     convert Fintype.sum_eq_single i _
     ·
@@ -96,7 +96,7 @@ namespace StdBasisMatrix
 
 section 
 
-variable(i : m)(j : n)(c : α)(i' : m)(j' : n)
+variable (i : m) (j : n) (c : α) (i' : m) (j' : n)
 
 @[simp]
 theorem apply_same : std_basis_matrix i j c i j = c :=
@@ -122,13 +122,13 @@ end
 
 section 
 
-variable(i j : n)(c : α)(i' j' : n)
+variable (i j : n) (c : α) (i' j' : n)
 
 @[simp]
 theorem diag_zero (h : j ≠ i) : diag n α α (std_basis_matrix i j c) = 0 :=
   funext$ fun k => if_neg$ fun ⟨e₁, e₂⟩ => h (e₂.trans e₁.symm)
 
-variable[Fintype n]
+variable [Fintype n]
 
 theorem trace_zero (h : j ≠ i) : trace n α α (std_basis_matrix i j c) = 0 :=
   by 

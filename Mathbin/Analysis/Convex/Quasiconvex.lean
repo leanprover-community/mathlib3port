@@ -29,19 +29,19 @@ not hard but quite a pain to go about as there are many cases to consider.
 
 open Set
 
-variable{𝕜 E F β : Type _}
+variable {𝕜 E F β : Type _}
 
 section OrderedSemiring
 
-variable[OrderedSemiring 𝕜]
+variable [OrderedSemiring 𝕜]
 
 section AddCommMonoidₓ
 
-variable[AddCommMonoidₓ E][AddCommMonoidₓ F]
+variable [AddCommMonoidₓ E] [AddCommMonoidₓ F]
 
 section OrderedAddCommMonoid
 
-variable(𝕜)[OrderedAddCommMonoid β][HasScalar 𝕜 E](s : Set E)(f : E → β)
+variable (𝕜) [OrderedAddCommMonoid β] [HasScalar 𝕜 E] (s : Set E) (f : E → β)
 
 /-- A function is quasiconvex if all its sublevels are convex.
 This means that, for all `r`, `{x ∈ s | f x ≤ r}` is `𝕜`-convex. -/
@@ -59,7 +59,7 @@ the sets `{x ∈ s | f x ≤ r}` and `{x ∈ s | r ≤ f x}` are `𝕜`-convex. 
 def QuasilinearOn : Prop :=
   QuasiconvexOn 𝕜 s f ∧ QuasiconcaveOn 𝕜 s f
 
-variable{𝕜 s f}
+variable {𝕜 s f}
 
 theorem QuasiconvexOn.dual (hf : QuasiconvexOn 𝕜 s f) : @QuasiconcaveOn 𝕜 E (OrderDual β) _ _ _ _ s f :=
   hf
@@ -82,11 +82,11 @@ end OrderedAddCommMonoid
 
 section LinearOrderedAddCommMonoid
 
-variable[LinearOrderedAddCommMonoid β]
+variable [LinearOrderedAddCommMonoid β]
 
 section HasScalar
 
-variable[HasScalar 𝕜 E]{s : Set E}{f g : E → β}
+variable [HasScalar 𝕜 E] {s : Set E} {f g : E → β}
 
 theorem QuasiconvexOn.convex (hf : QuasiconvexOn 𝕜 s f) : Convex 𝕜 s :=
   fun x y hx hy a b ha hb hab => (hf _ ⟨hx, le_max_leftₓ _ _⟩ ⟨hy, le_max_rightₓ _ _⟩ ha hb hab).1
@@ -141,7 +141,7 @@ end HasScalar
 
 section OrderedSmul
 
-variable[HasScalar 𝕜 E][Module 𝕜 β][OrderedSmul 𝕜 β]{s : Set E}{f : E → β}
+variable [HasScalar 𝕜 E] [Module 𝕜 β] [OrderedSmul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem ConvexOn.quasiconvex_on (hf : ConvexOn 𝕜 s f) : QuasiconvexOn 𝕜 s f :=
   hf.convex_le
@@ -157,7 +157,7 @@ end AddCommMonoidₓ
 
 section LinearOrderedAddCommMonoid
 
-variable[LinearOrderedAddCommMonoid E][OrderedAddCommMonoid β][Module 𝕜 E][OrderedSmul 𝕜 E]{s : Set E}{f : E → β}
+variable [LinearOrderedAddCommMonoid E] [OrderedAddCommMonoid β] [Module 𝕜 E] [OrderedSmul 𝕜 E] {s : Set E} {f : E → β}
 
 theorem MonotoneOn.quasiconvex_on (hf : MonotoneOn f s) (hs : Convex 𝕜 s) : QuasiconvexOn 𝕜 s f :=
   hf.convex_le hs

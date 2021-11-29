@@ -32,13 +32,13 @@ pfilter, filter, ideal, dual
 
 namespace Order
 
-variable{P : Type _}
+variable {P : Type _}
 
 /-- A filter on a preorder `P` is a subset of `P` that is
   - nonempty
   - downward directed
   - upward closed. -/
-structure pfilter(P)[Preorderₓ P] where 
+structure pfilter (P) [Preorderₓ P] where 
   dual : ideal (OrderDual P)
 
 /-- A predicate for when a subset of `P` is a filter. -/
@@ -60,14 +60,14 @@ namespace Pfilter
 
 section Preorderₓ
 
-variable[Preorderₓ P]{x y : P}(F : pfilter P)
+variable [Preorderₓ P] {x y : P} (F : pfilter P)
 
 /-- A filter on `P` is a subset of `P`. -/
-instance  : Coe (pfilter P) (Set P) :=
+instance : Coe (pfilter P) (Set P) :=
   ⟨fun F => F.dual.carrier⟩
 
 /-- For the notation `x ∈ F`. -/
-instance  : HasMem P (pfilter P) :=
+instance : HasMem P (pfilter P) :=
   ⟨fun x F => x ∈ (F : Set P)⟩
 
 @[simp]
@@ -90,7 +90,7 @@ theorem mem_of_le {F : pfilter P} : x ≤ y → x ∈ F → y ∈ F :=
 def principal (p : P) : pfilter P :=
   ⟨ideal.principal p⟩
 
-instance  [Inhabited P] : Inhabited (pfilter P) :=
+instance [Inhabited P] : Inhabited (pfilter P) :=
   ⟨⟨default _⟩⟩
 
 /-- Two filters are equal when their underlying sets are equal. -/
@@ -99,7 +99,7 @@ theorem ext : ∀ F G : pfilter P, (F : Set P) = G → F = G
 | ⟨⟨_, _, _, _⟩⟩, ⟨⟨_, _, _, _⟩⟩, rfl => rfl
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/
-instance  : PartialOrderₓ (pfilter P) :=
+instance : PartialOrderₓ (pfilter P) :=
   PartialOrderₓ.lift coeₓ ext
 
 @[trans]
@@ -114,7 +114,7 @@ end Preorderₓ
 
 section OrderTop
 
-variable[Preorderₓ P][OrderTop P]{F : pfilter P}
+variable [Preorderₓ P] [OrderTop P] {F : pfilter P}
 
 /-- A specific witness of `pfilter.nonempty` when `P` has a top element. -/
 @[simp]
@@ -122,18 +122,18 @@ theorem top_mem : ⊤ ∈ F :=
   ideal.bot_mem
 
 /-- There is a bottom filter when `P` has a top element. -/
-instance  : OrderBot (pfilter P) :=
+instance : OrderBot (pfilter P) :=
   { bot := ⟨⊥⟩, bot_le := fun F => (bot_le : ⊥ ≤ F.dual) }
 
 end OrderTop
 
 /-- There is a top filter when `P` has a bottom element. -/
-instance  {P} [Preorderₓ P] [OrderBot P] : OrderTop (pfilter P) :=
+instance {P} [Preorderₓ P] [OrderBot P] : OrderTop (pfilter P) :=
   { top := ⟨⊤⟩, le_top := fun F => (le_top : F.dual ≤ ⊤) }
 
 section SemilatticeInf
 
-variable[SemilatticeInf P]{x y : P}{F : pfilter P}
+variable [SemilatticeInf P] {x y : P} {F : pfilter P}
 
 /-- A specific witness of `pfilter.directed` when `P` has meets. -/
 theorem inf_mem x y (_ : x ∈ F) (_ : y ∈ F) : x⊓y ∈ F :=

@@ -117,15 +117,15 @@ noncomputable theory
 
 section 
 
-variable{𝕜 : Type _}[NondiscreteNormedField 𝕜]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
 
-variable{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]
+variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]
+variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
 
-variable{G : Type _}[NormedGroup G][NormedSpace 𝕜 G]
+variable {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
 
-variable{G' : Type _}[NormedGroup G'][NormedSpace 𝕜 G']
+variable {G' : Type _} [NormedGroup G'] [NormedSpace 𝕜 G']
 
 /-- A function `f` has the continuous linear map `f'` as derivative along the filter `L` if
 `f x' = f x + f' (x' - x) + o (x' - x)` when `x'` converges along the filter `L`. This definition
@@ -152,7 +152,7 @@ differentiable but this definition works, e.g., for vector spaces over `p`-adic 
 def HasStrictFderivAt (f : E → F) (f' : E →L[𝕜] F) (x : E) :=
   is_o (fun p : E × E => f p.1 - f p.2 - f' (p.1 - p.2)) (fun p : E × E => p.1 - p.2) (𝓝 (x, x))
 
-variable(𝕜)
+variable (𝕜)
 
 /-- A function `f` is differentiable at a point `x` within a set `s` if it admits a derivative
 there (possibly non-unique). -/
@@ -182,19 +182,19 @@ def DifferentiableOn (f : E → F) (s : Set E) :=
 def Differentiable (f : E → F) :=
   ∀ x, DifferentiableAt 𝕜 f x
 
-variable{𝕜}
+variable {𝕜}
 
-variable{f f₀ f₁ g : E → F}
+variable {f f₀ f₁ g : E → F}
 
-variable{f' f₀' f₁' g' : E →L[𝕜] F}
+variable {f' f₀' f₁' g' : E →L[𝕜] F}
 
-variable(e : E →L[𝕜] F)
+variable (e : E →L[𝕜] F)
 
-variable{x : E}
+variable {x : E}
 
-variable{s t : Set E}
+variable {s t : Set E}
 
-variable{L L₁ L₂ : Filter E}
+variable {L L₁ L₂ : Filter E}
 
 theorem fderiv_within_zero_of_not_differentiable_within_at (h : ¬DifferentiableWithinAt 𝕜 f s x) :
   fderivWithin 𝕜 f s x = 0 :=
@@ -987,7 +987,7 @@ For composition lemmas, we put x explicit to help the elaborator, as otherwise L
 get confused since there are too many possibilities for composition -/
 
 
-variable(x)
+variable (x)
 
 theorem HasFderivAtFilter.comp {g : F → G} {g' : F →L[𝕜] G} (hg : HasFderivAtFilter g g' (f x) (L.map f))
   (hf : HasFderivAtFilter f f' x L) : HasFderivAtFilter (g ∘ f) (g'.comp f') x L :=
@@ -1114,7 +1114,7 @@ protected theorem DifferentiableOn.iterate {f : E → E} (hf : DifferentiableOn 
   DifferentiableOn 𝕜 (f^[n]) s :=
   Nat.recOn n differentiable_on_id fun n ihn => ihn.comp hf hs
 
-variable{x}
+variable {x}
 
 protected theorem HasFderivAtFilter.iterate {f : E → E} {f' : E →L[𝕜] E} (hf : HasFderivAtFilter f f' x L)
   (hL : tendsto f L L) (hx : f x = x) (n : ℕ) : HasFderivAtFilter (f^[n]) (f' ^ n) x L :=
@@ -1172,7 +1172,7 @@ section CartesianProduct
 
 section Prod
 
-variable{f₂ : E → G}{f₂' : E →L[𝕜] G}
+variable {f₂ : E → G} {f₂' : E →L[𝕜] G}
 
 protected theorem HasStrictFderivAt.prod (hf₁ : HasStrictFderivAt f₁ f₁' x) (hf₂ : HasStrictFderivAt f₂ f₂' x) :
   HasStrictFderivAt (fun x => (f₁ x, f₂ x)) (f₁'.prod f₂') x :=
@@ -1223,7 +1223,7 @@ end Prod
 
 section Fst
 
-variable{f₂ : E → F × G}{f₂' : E →L[𝕜] F × G}{p : E × F}
+variable {f₂ : E → F × G} {f₂' : E →L[𝕜] F × G} {p : E × F}
 
 theorem has_strict_fderiv_at_fst : HasStrictFderivAt (@Prod.fst E F) (fst 𝕜 E F) p :=
   (fst 𝕜 E F).HasStrictFderivAt
@@ -1297,7 +1297,7 @@ end Fst
 
 section Snd
 
-variable{f₂ : E → F × G}{f₂' : E →L[𝕜] F × G}{p : E × F}
+variable {f₂ : E → F × G} {f₂' : E →L[𝕜] F × G} {p : E × F}
 
 theorem has_strict_fderiv_at_snd : HasStrictFderivAt (@Prod.snd E F) (snd 𝕜 E F) p :=
   (snd 𝕜 E F).HasStrictFderivAt
@@ -1371,14 +1371,14 @@ end Snd
 
 section prod_mapₓ
 
-variable{f₂ : G → G'}{f₂' : G →L[𝕜] G'}{y : G}(p : E × G)
+variable {f₂ : G → G'} {f₂' : G →L[𝕜] G'} {y : G} (p : E × G)
 
 protected theorem HasStrictFderivAt.prod_map (hf : HasStrictFderivAt f f' p.1) (hf₂ : HasStrictFderivAt f₂ f₂' p.2) :
-  HasStrictFderivAt (Prod.mapₓ f f₂) (f'.prod_map f₂') p :=
+  HasStrictFderivAt (Prod.map f f₂) (f'.prod_map f₂') p :=
   (hf.comp p has_strict_fderiv_at_fst).Prod (hf₂.comp p has_strict_fderiv_at_snd)
 
 protected theorem HasFderivAt.prod_map (hf : HasFderivAt f f' p.1) (hf₂ : HasFderivAt f₂ f₂' p.2) :
-  HasFderivAt (Prod.mapₓ f f₂) (f'.prod_map f₂') p :=
+  HasFderivAt (Prod.map f f₂) (f'.prod_map f₂') p :=
   (hf.comp p has_fderiv_at_fst).Prod (hf₂.comp p has_fderiv_at_snd)
 
 @[simp]
@@ -1392,7 +1392,7 @@ end CartesianProduct
 
 section ConstSmul
 
-variable{R : Type _}[Semiringₓ R][Module R F][TopologicalSpace R][SmulCommClass 𝕜 R F][HasContinuousSmul R F]
+variable {R : Type _} [Semiringₓ R] [Module R F] [TopologicalSpace R] [SmulCommClass 𝕜 R F] [HasContinuousSmul R F]
 
 /-! ### Derivative of a function multiplied by a constant -/
 
@@ -1628,7 +1628,7 @@ section Sum
 
 open_locale BigOperators
 
-variable{ι : Type _}{u : Finset ι}{A : ι → E → F}{A' : ι → E →L[𝕜] F}
+variable {ι : Type _} {u : Finset ι} {A : ι → E → F} {A' : ι → E →L[𝕜] F}
 
 theorem HasStrictFderivAt.sum (h : ∀ i _ : i ∈ u, HasStrictFderivAt (A i) (A' i) x) :
   HasStrictFderivAt (fun y => ∑i in u, A i y) (∑i in u, A' i) x :=
@@ -1696,17 +1696,8 @@ theorem:
 -/
 
 
-variable{ι :
-    Type
-      _}[Fintype
-      ι]{F' :
-    ι →
-      Type
-        _}[∀ i,
-      NormedGroup
-        (F'
-          i)][∀ i,
-      NormedSpace 𝕜 (F' i)]{φ : ∀ i, E → F' i}{φ' : ∀ i, E →L[𝕜] F' i}{Φ : E → ∀ i, F' i}{Φ' : E →L[𝕜] ∀ i, F' i}
+variable {ι : Type _} [Fintype ι] {F' : ι → Type _} [∀ i, NormedGroup (F' i)] [∀ i, NormedSpace 𝕜 (F' i)]
+  {φ : ∀ i, E → F' i} {φ' : ∀ i, E →L[𝕜] F' i} {Φ : E → ∀ i, F' i} {Φ' : E →L[𝕜] ∀ i, F' i}
 
 @[simp]
 theorem has_strict_fderiv_at_pi' :
@@ -2026,7 +2017,7 @@ section BilinearMap
 /-! ### Derivative of a bounded bilinear map -/
 
 
-variable{b : E × F → G}{u : Set (E × F)}
+variable {b : E × F → G} {u : Set (E × F)}
 
 open NormedField
 
@@ -2098,12 +2089,8 @@ section ClmCompApply
 /-! ### Derivative of the pointwise composition/application of continuous linear maps -/
 
 
-variable{H :
-    Type
-      _}[NormedGroup
-      H][NormedSpace 𝕜
-      H]{c :
-    E → G →L[𝕜] H}{c' : E →L[𝕜] G →L[𝕜] H}{d : E → F →L[𝕜] G}{d' : E →L[𝕜] F →L[𝕜] G}{u : E → G}{u' : E →L[𝕜] G}
+variable {H : Type _} [NormedGroup H] [NormedSpace 𝕜 H] {c : E → G →L[𝕜] H} {c' : E →L[𝕜] G →L[𝕜] H} {d : E → F →L[𝕜] G}
+  {d' : E →L[𝕜] F →L[𝕜] G} {u : E → G} {u' : E →L[𝕜] G}
 
 theorem HasStrictFderivAt.clm_comp (hc : HasStrictFderivAt c c' x) (hd : HasStrictFderivAt d d' x) :
   HasStrictFderivAt (fun y => (c y).comp (d y)) ((compL 𝕜 F G H (c x)).comp d'+((compL 𝕜 F G H).flip (d x)).comp c')
@@ -2203,9 +2190,9 @@ normed vector space.
 -/
 
 
-variable{𝕜' : Type _}[NondiscreteNormedField 𝕜'][NormedAlgebra 𝕜 𝕜'][NormedSpace 𝕜' F][IsScalarTower 𝕜 𝕜' F]
+variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] [NormedSpace 𝕜' F] [IsScalarTower 𝕜 𝕜' F]
 
-variable{c : E → 𝕜'}{c' : E →L[𝕜] 𝕜'}
+variable {c : E → 𝕜'} {c' : E →L[𝕜] 𝕜'}
 
 theorem HasStrictFderivAt.smul (hc : HasStrictFderivAt c c' x) (hf : HasStrictFderivAt f f' x) :
   HasStrictFderivAt (fun y => c y • f y) ((c x • f')+c'.smul_right (f x)) x :=
@@ -2287,11 +2274,8 @@ section Mul
 /-! ### Derivative of the product of two functions -/
 
 
-variable{𝔸 𝔸' :
-    Type
-      _}[NormedRing
-      𝔸][NormedCommRing
-      𝔸'][NormedAlgebra 𝕜 𝔸][NormedAlgebra 𝕜 𝔸']{a b : E → 𝔸}{a' b' : E →L[𝕜] 𝔸}{c d : E → 𝔸'}{c' d' : E →L[𝕜] 𝔸'}
+variable {𝔸 𝔸' : Type _} [NormedRing 𝔸] [NormedCommRing 𝔸'] [NormedAlgebra 𝕜 𝔸] [NormedAlgebra 𝕜 𝔸'] {a b : E → 𝔸}
+  {a' b' : E →L[𝕜] 𝔸} {c d : E → 𝔸'} {c' d' : E →L[𝕜] 𝔸'}
 
 theorem HasStrictFderivAt.mul' {x : E} (ha : HasStrictFderivAt a a' x) (hb : HasStrictFderivAt b b' x) :
   HasStrictFderivAt (fun y => a y*b y) ((a x • b')+a'.smul_right (b x)) x :=
@@ -2455,7 +2439,7 @@ end Mul
 
 section AlgebraInverse
 
-variable{R : Type _}[NormedRing R][NormedAlgebra 𝕜 R][CompleteSpace R]
+variable {R : Type _} [NormedRing R] [NormedAlgebra 𝕜 R] [CompleteSpace R]
 
 open NormedRing ContinuousLinearMap Ringₓ
 
@@ -2497,7 +2481,7 @@ namespace ContinuousLinearEquiv
 /-! ### Differentiability of linear equivs, and invariance of differentiability -/
 
 
-variable(iso : E ≃L[𝕜] F)
+variable (iso : E ≃L[𝕜] F)
 
 protected theorem HasStrictFderivAt : HasStrictFderivAt iso (iso : E →L[𝕜] F) x :=
   iso.to_continuous_linear_map.has_strict_fderiv_at
@@ -2616,7 +2600,7 @@ namespace LinearIsometryEquiv
 /-! ### Differentiability of linear isometry equivs, and invariance of differentiability -/
 
 
-variable(iso : E ≃ₗᵢ[𝕜] F)
+variable (iso : E ≃ₗᵢ[𝕜] F)
 
 protected theorem HasStrictFderivAt : HasStrictFderivAt iso (iso : E →L[𝕜] F) x :=
   (iso : E ≃L[𝕜] F).HasStrictFderivAt
@@ -2794,11 +2778,11 @@ end
 
 section 
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E]
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
 
-variable{F : Type _}[NormedGroup F][NormedSpace ℝ F]
+variable {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
 
-variable{f : E → F}{f' : E →L[ℝ] F}{x : E}
+variable {f : E → F} {f' : E →L[ℝ] F} {x : E}
 
 -- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_fderiv_at_filter_real_equiv
@@ -2825,13 +2809,8 @@ end
 
 section TangentCone
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]{f : E → F}{s : Set E}{f' : E →L[𝕜] F}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] {f : E → F} {s : Set E} {f' : E →L[𝕜] F}
 
 -- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The image of a tangent cone under the differential of a map is included in the tangent cone to
@@ -2894,19 +2873,19 @@ respectively by `𝕜'` and `𝕜` where `𝕜'` is a normed algebra over `𝕜`
 -/
 
 
-variable(𝕜 : Type _)[NondiscreteNormedField 𝕜]
+variable (𝕜 : Type _) [NondiscreteNormedField 𝕜]
 
-variable{𝕜' : Type _}[NondiscreteNormedField 𝕜'][NormedAlgebra 𝕜 𝕜']
+variable {𝕜' : Type _} [NondiscreteNormedField 𝕜'] [NormedAlgebra 𝕜 𝕜']
 
-variable{E : Type _}[NormedGroup E][NormedSpace 𝕜 E][NormedSpace 𝕜' E]
+variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] [NormedSpace 𝕜' E]
 
-variable[IsScalarTower 𝕜 𝕜' E]
+variable [IsScalarTower 𝕜 𝕜' E]
 
-variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F][NormedSpace 𝕜' F]
+variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] [NormedSpace 𝕜' F]
 
-variable[IsScalarTower 𝕜 𝕜' F]
+variable [IsScalarTower 𝕜 𝕜' F]
 
-variable{f : E → F}{f' : E →L[𝕜'] F}{s : Set E}{x : E}
+variable {f : E → F} {f' : E →L[𝕜'] F} {s : Set E} {x : E}
 
 theorem HasStrictFderivAt.restrict_scalars (h : HasStrictFderivAt f f' x) :
   HasStrictFderivAt f (f'.restrict_scalars 𝕜) x :=

@@ -46,7 +46,7 @@ def Alexandroff (X : Type _) :=
 
 namespace Alexandroff
 
-variable{X : Type _}
+variable {X : Type _}
 
 /-- The point at infinity -/
 def infty : Alexandroff X :=
@@ -54,10 +54,10 @@ def infty : Alexandroff X :=
 
 localized [Alexandroff] notation "∞" => Alexandroff.infty
 
-instance  : CoeTₓ X (Alexandroff X) :=
+instance : CoeTₓ X (Alexandroff X) :=
   ⟨Option.some⟩
 
-instance  : Inhabited (Alexandroff X) :=
+instance : Inhabited (Alexandroff X) :=
   ⟨∞⟩
 
 theorem coe_injective : Function.Injective (coeₓ : X → Alexandroff X) :=
@@ -106,7 +106,7 @@ theorem ne_infty_iff_exists {x : Alexandroff X} : x ≠ ∞ ↔ ∃ y : X, (y : 
   by 
     induction x using Alexandroff.rec <;> simp 
 
-instance  : CanLift (Alexandroff X) X :=
+instance : CanLift (Alexandroff X) X :=
   { coe := coeₓ, cond := fun x => x ≠ ∞, prf := fun x => ne_infty_iff_exists.1 }
 
 theorem not_mem_range_coe_iff {x : Alexandroff X} : x ∉ range (coeₓ : X → Alexandroff X) ↔ x = ∞ :=
@@ -139,9 +139,9 @@ that `coe` has dense range, so it is a dense embedding.
 -/
 
 
-variable[TopologicalSpace X]
+variable [TopologicalSpace X]
 
-instance  : TopologicalSpace (Alexandroff X) :=
+instance : TopologicalSpace (Alexandroff X) :=
   { IsOpen :=
       fun s =>
         (∞ ∈ s → IsCompact («expr ᶜ» ((coeₓ : X → Alexandroff X) ⁻¹' s))) ∧ IsOpen ((coeₓ : X → Alexandroff X) ⁻¹' s),
@@ -167,7 +167,7 @@ instance  : TopologicalSpace (Alexandroff X) :=
           rw [preimage_sUnion]
           exact is_open_bUnion fun s hs => (ho s hs).2 }
 
-variable{s : Set (Alexandroff X)}{t : Set X}
+variable {s : Set (Alexandroff X)} {t : Set X}
 
 theorem is_open_def : IsOpen s ↔ (∞ ∈ s → IsCompact («expr ᶜ» (coeₓ ⁻¹' s : Set X))) ∧ IsOpen (coeₓ ⁻¹' s : Set X) :=
   Iff.rfl
@@ -274,7 +274,7 @@ instance nhds_within_compl_infty_ne_bot [NoncompactSpace X] : ne_bot (𝓝[«exp
     rw [nhds_within_compl_infty_eq]
     infer_instance
 
-instance (priority := 900)nhds_within_compl_ne_bot [∀ x : X, ne_bot (𝓝[«expr ᶜ» {x}] x)] [NoncompactSpace X]
+instance (priority := 900) nhds_within_compl_ne_bot [∀ x : X, ne_bot (𝓝[«expr ᶜ» {x}] x)] [NoncompactSpace X]
   (x : Alexandroff X) : ne_bot (𝓝[«expr ᶜ» {x}] x) :=
   Alexandroff.rec _ Alexandroff.nhds_within_compl_infty_ne_bot (fun y => Alexandroff.nhds_within_compl_coe_ne_bot y) x
 
@@ -373,7 +373,7 @@ instance : compact_space (alexandroff X) :=
   end }
 
 /-- The one point compactification of a `t0_space` space is a `t0_space`. -/
-instance  [T0Space X] : T0Space (Alexandroff X) :=
+instance [T0Space X] : T0Space (Alexandroff X) :=
   by 
     refine' ⟨fun x y hxy => _⟩
     induction x using Alexandroff.rec <;> induction y using Alexandroff.rec
@@ -391,7 +391,7 @@ instance  [T0Space X] : T0Space (Alexandroff X) :=
       simpa [coe_eq_coe]
 
 /-- The one point compactification of a `t1_space` space is a `t1_space`. -/
-instance  [T1Space X] : T1Space (Alexandroff X) :=
+instance [T1Space X] : T1Space (Alexandroff X) :=
   { t1 :=
       fun z =>
         by 
@@ -425,7 +425,7 @@ begin
 end
 
 /-- If `X` is not a compact space, then `alexandroff X` is a connected space. -/
-instance  [PreconnectedSpace X] [NoncompactSpace X] : ConnectedSpace (Alexandroff X) :=
+instance [PreconnectedSpace X] [NoncompactSpace X] : ConnectedSpace (Alexandroff X) :=
   { to_preconnected_space := dense_embedding_coe.to_dense_inducing.PreconnectedSpace, to_nonempty := inferInstance }
 
 end Alexandroff

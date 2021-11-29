@@ -32,7 +32,7 @@ namespace Embedding
 
 section antisymm
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 -- error in SetTheory.SchroederBernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **The Schröder-Bernstein Theorem**:

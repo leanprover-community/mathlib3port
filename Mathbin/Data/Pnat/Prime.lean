@@ -197,7 +197,7 @@ theorem coprime.gcd_mul_right_cancel (m : ℕ+) {n k : ℕ+} : k.coprime n → (
 theorem coprime.gcd_mul_left_cancel_right (m : ℕ+) {n k : ℕ+} : k.coprime m → m.gcd (k*n) = m.gcd n :=
   by 
     intro h 
-    iterate 2
+    iterate 2 
       rw [gcd_comm]
       symm 
     apply coprime.gcd_mul_left_cancel _ h

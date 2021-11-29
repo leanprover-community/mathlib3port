@@ -13,7 +13,7 @@ namespace Mvqpf
 
 open_locale Mvfunctor
 
-variable{n : ℕ}(i : Fin2 n)
+variable {n : ℕ} (i : Fin2 n)
 
 /-- The projection `i` functor -/
 def prj (v : Typevec.{u} n) : Type u :=

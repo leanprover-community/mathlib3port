@@ -7,7 +7,7 @@ import Mathbin.Data.Multiset.Basic
 
 namespace Multiset
 
-variable{α : Type _}
+variable {α : Type _}
 
 section Sections
 

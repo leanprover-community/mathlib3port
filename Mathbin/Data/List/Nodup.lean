@@ -14,7 +14,7 @@ universe u v
 
 open Nat Function
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 namespace List
 

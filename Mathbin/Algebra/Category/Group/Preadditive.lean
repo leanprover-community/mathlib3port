@@ -12,7 +12,7 @@ universe u
 
 namespace AddCommGroupₓₓ
 
-instance  : preadditive AddCommGroupₓₓ :=
+instance : preadditive AddCommGroupₓₓ :=
   { add_comp' :=
       fun P Q R f f' g =>
         show (f+f') ≫ g = (f ≫ g)+f' ≫ g by 

@@ -14,10 +14,8 @@ open Function Metric Set Filter Finset
 
 open_locale Classical TopologicalSpace BigOperators Nnreal
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F](f : E →L[𝕜] F)
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] (f : E →L[𝕜] F)
 
 include 𝕜
 
@@ -33,7 +31,7 @@ structure nonlinear_right_inverse where
   bound' : ∀ y, ∥to_fun y∥ ≤ nnnorm*∥y∥
   right_inv' : ∀ y, f (to_fun y) = y
 
-instance  : CoeFun (nonlinear_right_inverse f) fun _ => F → E :=
+instance : CoeFun (nonlinear_right_inverse f) fun _ => F → E :=
   ⟨fun fsymm => fsymm.to_fun⟩
 
 @[simp]
@@ -54,13 +52,13 @@ noncomputable def ContinuousLinearEquiv.toNonlinearRightInverse (f : E ≃L[𝕜
   { toFun := f.inv_fun, nnnorm := nnnorm (f.symm : F →L[𝕜] E),
     bound' := fun y => ContinuousLinearMap.le_op_norm (f.symm : F →L[𝕜] E) _, right_inv' := f.apply_symm_apply }
 
-noncomputable instance  (f : E ≃L[𝕜] F) : Inhabited (ContinuousLinearMap.NonlinearRightInverse (f : E →L[𝕜] F)) :=
+noncomputable instance (f : E ≃L[𝕜] F) : Inhabited (ContinuousLinearMap.NonlinearRightInverse (f : E →L[𝕜] F)) :=
   ⟨f.to_nonlinear_right_inverse⟩
 
 /-! ### Proof of the Banach open mapping theorem -/
 
 
-variable[CompleteSpace F]
+variable [CompleteSpace F]
 
 -- error in Analysis.NormedSpace.Banach: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -150,7 +148,7 @@ begin
       exact [expr ⟨«expr • »(«expr ⁻¹»(d), x), J, K⟩] } }
 end
 
-variable[CompleteSpace E]
+variable [CompleteSpace E]
 
 -- error in Analysis.NormedSpace.Banach: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Banach open mapping theorem: if a bounded linear map between Banach spaces is onto, then

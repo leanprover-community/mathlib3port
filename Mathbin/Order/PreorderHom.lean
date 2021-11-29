@@ -1,7 +1,7 @@
 import Mathbin.Order.GaloisConnection 
 import Mathbin.Order.CompleteLattice 
 import Mathbin.Tactic.Monotonicity.Default 
-import Mathbin.Order.BoundedLattice 
+import Mathbin.Order.BoundedOrder 
 import Mathbin.Logic.Function.Iterate
 
 /-!
@@ -57,7 +57,7 @@ monotone map, bundled morphism
 
 
 /-- Bundled monotone (aka, increasing) function -/
-structure PreorderHom(α β : Type _)[Preorderₓ α][Preorderₓ β] where 
+structure PreorderHom (α β : Type _) [Preorderₓ α] [Preorderₓ β] where 
   toFun : α → β 
   monotone' : Monotone to_fun
 
@@ -65,9 +65,9 @@ infixr:25 " →ₘ " => PreorderHom
 
 namespace PreorderHom
 
-variable{α β γ δ : Type _}[Preorderₓ α][Preorderₓ β][Preorderₓ γ][Preorderₓ δ]
+variable {α β γ δ : Type _} [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] [Preorderₓ δ]
 
-instance  : CoeFun (α →ₘ β) fun _ => α → β :=
+instance : CoeFun (α →ₘ β) fun _ => α → β :=
   ⟨PreorderHom.toFun⟩
 
 initialize_simps_projections PreorderHom (toFun → coe)
@@ -95,7 +95,7 @@ theorem ext (f g : α →ₘ β) (h : (f : α → β) = g) : f = g :=
     exact h
 
 /-- One can lift an unbundled monotone function to a bundled one. -/
-instance  : CanLift (α → β) (α →ₘ β) :=
+instance : CanLift (α → β) (α →ₘ β) :=
   { coe := coeFn, cond := Monotone, prf := fun f h => ⟨⟨f, h⟩, rfl⟩ }
 
 /-- The identity function as bundled monotone function. -/
@@ -103,14 +103,14 @@ instance  : CanLift (α → β) (α →ₘ β) :=
 def id : α →ₘ α :=
   ⟨id, monotone_id⟩
 
-instance  : Inhabited (α →ₘ α) :=
+instance : Inhabited (α →ₘ α) :=
   ⟨id⟩
 
 /-- The preorder structure of `α →ₘ β` is pointwise inequality: `f ≤ g ↔ ∀ a, f a ≤ g a`. -/
-instance  : Preorderₓ (α →ₘ β) :=
+instance : Preorderₓ (α →ₘ β) :=
   @Preorderₓ.lift (α →ₘ β) (α → β) _ coeFn
 
-instance  {β : Type _} [PartialOrderₓ β] : PartialOrderₓ (α →ₘ β) :=
+instance {β : Type _} [PartialOrderₓ β] : PartialOrderₓ (α →ₘ β) :=
   @PartialOrderₓ.lift (α →ₘ β) (α → β) _ coeFn ext
 
 theorem le_def {f g : α →ₘ β} : f ≤ g ↔ ∀ x, f x ≤ g x :=
@@ -266,9 +266,9 @@ def prod_iso : (α →ₘ β × γ) ≃o (α →ₘ β) × (α →ₘ γ) :=
 /-- `prod.map` of two `preorder_hom`s as a `preorder_hom`. -/
 @[simps]
 def prod_mapₓ (f : α →ₘ β) (g : γ →ₘ δ) : α × γ →ₘ β × δ :=
-  ⟨Prod.mapₓ f g, fun x y h => ⟨f.mono h.1, g.mono h.2⟩⟩
+  ⟨Prod.map f g, fun x y h => ⟨f.mono h.1, g.mono h.2⟩⟩
 
-variable{ι : Type _}{π : ι → Type _}[∀ i, Preorderₓ (π i)]
+variable {ι : Type _} {π : ι → Type _} [∀ i, Preorderₓ (π i)]
 
 /-- Evaluation of an unbundled function at a point (`function.eval`) as a `preorder_hom`. -/
 @[simps (config := { fullyApplied := ff })]
@@ -335,38 +335,38 @@ def dual_iso (α β : Type _) [Preorderₓ α] [Preorderₓ β] : (α →ₘ β)
   { toEquiv := PreorderHom.dual.trans OrderDual.toDual, map_rel_iff' := fun f g => Iff.rfl }
 
 @[simps]
-instance  {β : Type _} [SemilatticeSup β] : HasSup (α →ₘ β) :=
+instance {β : Type _} [SemilatticeSup β] : HasSup (α →ₘ β) :=
   { sup := fun f g => ⟨fun a => f a⊔g a, f.mono.sup g.mono⟩ }
 
-instance  {β : Type _} [SemilatticeSup β] : SemilatticeSup (α →ₘ β) :=
+instance {β : Type _} [SemilatticeSup β] : SemilatticeSup (α →ₘ β) :=
   { (_ : PartialOrderₓ (α →ₘ β)) with sup := HasSup.sup, le_sup_left := fun a b x => le_sup_left,
     le_sup_right := fun a b x => le_sup_right, sup_le := fun a b c h₀ h₁ x => sup_le (h₀ x) (h₁ x) }
 
 @[simps]
-instance  {β : Type _} [SemilatticeInf β] : HasInf (α →ₘ β) :=
+instance {β : Type _} [SemilatticeInf β] : HasInf (α →ₘ β) :=
   { inf := fun f g => ⟨fun a => f a⊓g a, f.mono.inf g.mono⟩ }
 
-instance  {β : Type _} [SemilatticeInf β] : SemilatticeInf (α →ₘ β) :=
+instance {β : Type _} [SemilatticeInf β] : SemilatticeInf (α →ₘ β) :=
   { (_ : PartialOrderₓ (α →ₘ β)), (dual_iso α β).symm.toGaloisInsertion.liftSemilatticeInf with inf := ·⊓· }
 
-instance  {β : Type _} [Lattice β] : Lattice (α →ₘ β) :=
+instance {β : Type _} [Lattice β] : Lattice (α →ₘ β) :=
   { (_ : SemilatticeSup (α →ₘ β)), (_ : SemilatticeInf (α →ₘ β)) with  }
 
 @[simps]
-instance  {β : Type _} [Preorderₓ β] [OrderBot β] : HasBot (α →ₘ β) :=
+instance {β : Type _} [Preorderₓ β] [OrderBot β] : HasBot (α →ₘ β) :=
   { bot := const α ⊥ }
 
-instance  {β : Type _} [Preorderₓ β] [OrderBot β] : OrderBot (α →ₘ β) :=
+instance {β : Type _} [Preorderₓ β] [OrderBot β] : OrderBot (α →ₘ β) :=
   { bot := ⊥, bot_le := fun a x => bot_le }
 
 @[simps]
-instance  {β : Type _} [Preorderₓ β] [OrderTop β] : HasTop (α →ₘ β) :=
+instance {β : Type _} [Preorderₓ β] [OrderTop β] : HasTop (α →ₘ β) :=
   { top := const α ⊤ }
 
-instance  {β : Type _} [Preorderₓ β] [OrderTop β] : OrderTop (α →ₘ β) :=
+instance {β : Type _} [Preorderₓ β] [OrderTop β] : OrderTop (α →ₘ β) :=
   { top := ⊤, le_top := fun a x => le_top }
 
-instance  {β : Type _} [CompleteLattice β] : HasInfₓ (α →ₘ β) :=
+instance {β : Type _} [CompleteLattice β] : HasInfₓ (α →ₘ β) :=
   { inf := fun s => ⟨fun x => ⨅(f : _)(_ : f ∈ s), (f : _) x, fun x y h => binfi_le_binfi fun f _ => f.mono h⟩ }
 
 @[simp]
@@ -382,7 +382,7 @@ theorem coe_infi {ι : Sort _} {β : Type _} [CompleteLattice β] (f : ι → α
   ((⨅i, f i : α →ₘ β) : α → β) = ⨅i, f i :=
   funext$ fun x => (infi_apply f x).trans (@_root_.infi_apply _ _ _ _ (fun i => f i) _).symm
 
-instance  {β : Type _} [CompleteLattice β] : HasSupₓ (α →ₘ β) :=
+instance {β : Type _} [CompleteLattice β] : HasSupₓ (α →ₘ β) :=
   { sup := fun s => ⟨fun x => ⨆(f : _)(_ : f ∈ s), (f : _) x, fun x y h => bsupr_le_bsupr fun f _ => f.mono h⟩ }
 
 @[simp]
@@ -398,7 +398,7 @@ theorem coe_supr {ι : Sort _} {β : Type _} [CompleteLattice β] (f : ι → α
   ((⨆i, f i : α →ₘ β) : α → β) = ⨆i, f i :=
   funext$ fun x => (supr_apply f x).trans (@_root_.supr_apply _ _ _ _ (fun i => f i) _).symm
 
-instance  {β : Type _} [CompleteLattice β] : CompleteLattice (α →ₘ β) :=
+instance {β : Type _} [CompleteLattice β] : CompleteLattice (α →ₘ β) :=
   { (_ : Lattice (α →ₘ β)), PreorderHom.orderTop, PreorderHom.orderBot with sup := Sup,
     le_Sup := fun s f hf x => le_supr_of_le f (le_supr _ hf), Sup_le := fun s f hf x => bsupr_le fun g hg => hf g hg x,
     inf := Inf, le_Inf := fun s f hf x => le_binfi fun g hg => hf g hg x,
@@ -449,11 +449,11 @@ end OrderEmbedding
 
 section RelHom
 
-variable{α β : Type _}[PartialOrderₓ α][Preorderₓ β]
+variable {α β : Type _} [PartialOrderₓ α] [Preorderₓ β]
 
 namespace RelHom
 
-variable(f : (· < · : α → α → Prop) →r (· < · : β → β → Prop))
+variable (f : (· < · : α → α → Prop) →r (· < · : β → β → Prop))
 
 /-- A bundled expression of the fact that a map between partial orders that is strictly monotone
 is weakly monotone. -/

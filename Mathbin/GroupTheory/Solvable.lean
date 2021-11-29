@@ -20,11 +20,11 @@ the derived series of a group.
 
 open Subgroup
 
-variable{G G' : Type _}[Groupₓ G][Groupₓ G']{f : G →* G'}
+variable {G G' : Type _} [Groupₓ G] [Groupₓ G'] {f : G →* G'}
 
 section derivedSeries
 
-variable(G)
+variable (G)
 
 /-- The derived series of the group `G`, obtained by starting from the subgroup `⊤` and repeatedly
   taking the commutator of the previous subgroup with itself for `n` times. -/
@@ -100,7 +100,7 @@ theorem commutator_le_map_commutator {H₁ H₂ : Subgroup G} {K₁ K₂ : Subgr
 
 section DerivedSeriesMap
 
-variable(f)
+variable (f)
 
 theorem map_derived_series_le_derived_series (n : ℕ) : (derivedSeries G n).map f ≤ derivedSeries G' n :=
   by 
@@ -110,7 +110,7 @@ theorem map_derived_series_le_derived_series (n : ℕ) : (derivedSeries G n).map
     ·
       simp only [derived_series_succ, map_commutator_eq_commutator_map, general_commutator_mono]
 
-variable{f}
+variable {f}
 
 theorem derived_series_le_map_derived_series (hf : Function.Surjective f) (n : ℕ) :
   derivedSeries G' n ≤ (derivedSeries G n).map f :=
@@ -131,7 +131,7 @@ end CommutatorMap
 
 section Solvable
 
-variable(G)
+variable (G)
 
 /-- A group `G` is solvable if its derived series is eventually trivial. We use this definition
   because it's the most convenient one to work with. -/
@@ -141,7 +141,7 @@ class IsSolvable : Prop where
 theorem is_solvable_def : IsSolvable G ↔ ∃ n : ℕ, derivedSeries G n = ⊥ :=
   ⟨fun h => h.solvable, fun h => ⟨h⟩⟩
 
-instance (priority := 100)CommGroupₓ.is_solvable {G : Type _} [CommGroupₓ G] : IsSolvable G :=
+instance (priority := 100) CommGroupₓ.is_solvable {G : Type _} [CommGroupₓ G] : IsSolvable G :=
   by 
     use 1
     rw [eq_bot_iff, derived_series_one]
@@ -162,12 +162,12 @@ end
 theorem is_solvable_of_top_eq_bot (h : (⊤ : Subgroup G) = ⊥) : IsSolvable G :=
   ⟨⟨0, h⟩⟩
 
-instance (priority := 100)is_solvable_of_subsingleton [Subsingleton G] : IsSolvable G :=
+instance (priority := 100) is_solvable_of_subsingleton [Subsingleton G] : IsSolvable G :=
   is_solvable_of_top_eq_bot G
     (by 
       ext <;> simp  at *)
 
-variable{G}
+variable {G}
 
 theorem solvable_of_solvable_injective (hf : Function.Injective f) [h : IsSolvable G'] : IsSolvable G :=
   by 
@@ -228,7 +228,7 @@ end Solvable
 
 section IsSimpleGroup
 
-variable[IsSimpleGroup G]
+variable [IsSimpleGroup G]
 
 theorem IsSimpleGroup.derived_series_succ {n : ℕ} : derivedSeries G n.succ = commutator G :=
   by 

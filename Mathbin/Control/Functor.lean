@@ -26,11 +26,11 @@ universe u v w
 
 section Functor
 
-variable{F : Type u → Type v}
+variable {F : Type u → Type v}
 
-variable{α β γ : Type u}
+variable {α β γ : Type u}
 
-variable[Functor F][IsLawfulFunctor F]
+variable [Functor F] [IsLawfulFunctor F]
 
 theorem Functor.map_id : (· <$> ·) id = (id : F α → F α) :=
   by 
@@ -98,14 +98,14 @@ protected theorem ext {α β} {x y : const α β} (h : x.run = y.run) : x = y :=
 protected def map {γ α β} (f : α → β) (x : const γ β) : const γ α :=
   x
 
-instance  {γ} : Functor (const γ) :=
+instance {γ} : Functor (const γ) :=
   { map := @const.map γ }
 
-instance  {γ} : IsLawfulFunctor (const γ) :=
+instance {γ} : IsLawfulFunctor (const γ) :=
   by 
     constructor <;> intros  <;> rfl
 
-instance  {α β} [Inhabited α] : Inhabited (const α β) :=
+instance {α β} [Inhabited α] : Inhabited (const α β) :=
   ⟨(default _ : α)⟩
 
 end Const
@@ -133,7 +133,7 @@ instance add_const.functor {γ} : Functor (add_const γ) :=
 instance add_const.is_lawful_functor {γ} : IsLawfulFunctor (add_const γ) :=
   @const.is_lawful_functor γ
 
-instance  {α β} [Inhabited α] : Inhabited (add_const α β) :=
+instance {α β} [Inhabited α] : Inhabited (add_const α β) :=
   ⟨(default _ : α)⟩
 
 /-- `functor.comp` is a wrapper around `function.comp` for types.
@@ -154,21 +154,21 @@ def comp.run {F : Type u → Type w} {G : Type v → Type u} {α : Type v} (x : 
 
 namespace Comp
 
-variable{F : Type u → Type w}{G : Type v → Type u}
+variable {F : Type u → Type w} {G : Type v → Type u}
 
 protected theorem ext {α} {x y : comp F G α} : x.run = y.run → x = y :=
   id
 
-instance  {α} [Inhabited (F (G α))] : Inhabited (comp F G α) :=
+instance {α} [Inhabited (F (G α))] : Inhabited (comp F G α) :=
   ⟨(default _ : F (G α))⟩
 
-variable[Functor F][Functor G]
+variable [Functor F] [Functor G]
 
 /-- The map operation for the composition `comp F G` of functors `F` and `G`. -/
 protected def map {α β : Type v} (h : α → β) : comp F G α → comp F G β
 | comp.mk x => comp.mk ((· <$> ·) h <$> x)
 
-instance  : Functor (comp F G) :=
+instance : Functor (comp F G) :=
   { map := @comp.map F G _ _ }
 
 @[functor_norm]
@@ -179,9 +179,9 @@ theorem map_mk {α β} (h : α → β) (x : F (G α)) : h <$> comp.mk x = comp.m
 protected theorem run_map {α β} (h : α → β) (x : comp F G α) : (h <$> x).run = (· <$> ·) h <$> x.run :=
   rfl
 
-variable[IsLawfulFunctor F][IsLawfulFunctor G]
+variable [IsLawfulFunctor F] [IsLawfulFunctor G]
 
-variable{α β γ : Type v}
+variable {α β γ : Type v}
 
 protected theorem id_map : ∀ x : comp F G α, comp.map id x = x
 | comp.mk x =>
@@ -193,7 +193,7 @@ protected theorem comp_map (g' : α → β) (h : β → γ) : ∀ x : comp F G �
   by 
     simp' [comp.map, Functor.map_comp_map g' h] with functor_norm
 
-instance  : IsLawfulFunctor (comp F G) :=
+instance : IsLawfulFunctor (comp F G) :=
   { id_map := @comp.id_map F G _ _ _ _, comp_map := @comp.comp_map F G _ _ _ _ }
 
 theorem functor_comp_id {F} [AF : Functor F] [IsLawfulFunctor F] : @comp.functor F id _ _ = AF :=
@@ -210,18 +210,18 @@ open Function hiding comp
 
 open Functor
 
-variable{F : Type u → Type w}{G : Type v → Type u}
+variable {F : Type u → Type w} {G : Type v → Type u}
 
-variable[Applicativeₓ F][Applicativeₓ G]
+variable [Applicativeₓ F] [Applicativeₓ G]
 
 /-- The `<*>` operation for the composition of applicative functors. -/
 protected def seq {α β : Type v} : comp F G (α → β) → comp F G α → comp F G β
 | comp.mk f, comp.mk x => comp.mk$ (· <*> ·) <$> f <*> x
 
-instance  : Pure (comp F G) :=
+instance : Pure (comp F G) :=
   ⟨fun _ x => comp.mk$ pure$ pure x⟩
 
-instance  : Seqₓ (comp F G) :=
+instance : Seqₓ (comp F G) :=
   ⟨fun _ _ f x => comp.seq f x⟩
 
 @[simp]
@@ -233,12 +233,12 @@ protected theorem run_seq {α β : Type v} (f : comp F G (α → β)) (x : comp 
   (f <*> x).run = (· <*> ·) <$> f.run <*> x.run :=
   rfl
 
-instance  : Applicativeₓ (comp F G) :=
+instance : Applicativeₓ (comp F G) :=
   { comp.has_pure with map := @comp.map F G _ _, seq := @comp.seq F G _ _ }
 
 end Comp
 
-variable{F : Type u → Type u}[Functor F]
+variable {F : Type u → Type u} [Functor F]
 
 /-- If we consider `x : F α` to, in some sense, contain values of type `α`,
 predicate `liftp p x` holds iff every value contained by `x` satisfies `p`. -/

@@ -48,7 +48,7 @@ open CategoryTheory
 
 universe v u u₂
 
-variable{J : Type v}
+variable {J : Type v}
 
 /-- The type of objects for the diagram indexing a wide (co)equalizer. -/
 inductive walking_parallel_family (J : Type v) : Type v
@@ -57,13 +57,13 @@ inductive walking_parallel_family (J : Type v) : Type v
 
 open WalkingParallelFamily
 
-instance  : DecidableEq (walking_parallel_family J)
+instance : DecidableEq (walking_parallel_family J)
 | zero, zero => is_true rfl
 | zero, one => is_false fun t => walking_parallel_family.no_confusion t
 | one, zero => is_false fun t => walking_parallel_family.no_confusion t
 | one, one => is_true rfl
 
-instance  : Inhabited (walking_parallel_family J) :=
+instance : Inhabited (walking_parallel_family J) :=
   ⟨zero⟩
 
 -- error in CategoryTheory.Limits.Shapes.WideEqualizers: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler decidable_eq
@@ -74,7 +74,7 @@ inductive walking_parallel_family.hom (J : Type v) : walking_parallel_family J �
 | line : ∀ j : J, walking_parallel_family.hom zero one
 
 /-- Satisfying the inhabited linter -/
-instance  (J : Type v) : Inhabited (walking_parallel_family.hom J zero zero) :=
+instance (J : Type v) : Inhabited (walking_parallel_family.hom J zero zero) :=
   { default := hom.id _ }
 
 open WalkingParallelFamily.Hom
@@ -96,9 +96,9 @@ instance walking_parallel_family.category : small_category (walking_parallel_fam
 theorem walking_parallel_family.hom_id (X : walking_parallel_family J) : walking_parallel_family.hom.id X = 𝟙 X :=
   rfl
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{X Y : C}(f : J → (X ⟶ Y))
+variable {X Y : C} (f : J → (X ⟶ Y))
 
 /--
 `parallel_family f` is the diagram in `C` consisting of the given family of morphisms, each with
@@ -174,7 +174,7 @@ abbrev trident :=
 abbrev cotrident :=
   cocone (parallel_family f)
 
-variable{f}
+variable {f}
 
 /-- A trident `t` on the parallel family `f : J → (X ⟶ Y)` consists of two morphisms
     `t.π.app zero : t.X ⟶ X` and `t.π.app one : t.X ⟶ Y`. Of these, only the first one is
@@ -552,7 +552,7 @@ def cotrident.ext [Nonempty J] {s t : cotrident f} (i : s.X ≅ t.X) (w : s.π �
         (by 
           rw [iso.comp_inv_eq, w]) }
 
-variable(f)
+variable (f)
 
 section 
 
@@ -563,7 +563,7 @@ morphisms `f`.
 abbrev has_wide_equalizer :=
   has_limit (parallel_family f)
 
-variable[has_wide_equalizer f]
+variable [has_wide_equalizer f]
 
 /-- If a wide equalizer of `f` exists, we can access an arbitrary choice of such by
     saying `wide_equalizer f`. -/
@@ -601,7 +601,7 @@ def wide_equalizer_is_wide_equalizer [Nonempty J] :
       (by 
         tidy))
 
-variable{f}
+variable {f}
 
 /-- A morphism `k : W ⟶ X` satisfying `∀ j₁ j₂, k ≫ f j₁ = k ≫ f j₂` factors through the
     wide equalizer of `f` via `wide_equalizer.lift : W ⟶ wide_equalizer f`. -/
@@ -634,7 +634,7 @@ end
 
 section 
 
-variable{f}
+variable {f}
 
 /-- The wide equalizer morphism in any limit cone is a monomorphism. -/
 theorem mono_of_is_limit_parallel_family [Nonempty J] {c : cone (parallel_family f)} (i : is_limit c) :
@@ -652,7 +652,7 @@ for the parallel family of morphisms `f`.
 abbrev has_wide_coequalizer :=
   has_colimit (parallel_family f)
 
-variable[has_wide_coequalizer f]
+variable [has_wide_coequalizer f]
 
 /-- If a wide coequalizer of `f`, we can access an arbitrary choice of such by
     saying `wide_coequalizer f`. -/
@@ -690,7 +690,7 @@ def wide_coequalizer_is_wide_coequalizer [Nonempty J] :
       (by 
         tidy))
 
-variable{f}
+variable {f}
 
 /-- Any morphism `k : Y ⟶ W` satisfying `∀ j₁ j₂, f j₁ ≫ k = f j₂ ≫ k` factors through the
     wide coequalizer of `f` via `wide_coequalizer.desc : wide_coequalizer f ⟶ W`. -/
@@ -724,7 +724,7 @@ end
 
 section 
 
-variable{f}
+variable {f}
 
 /-- The wide coequalizer morphism in any colimit cocone is an epimorphism. -/
 theorem epi_of_is_colimit_parallel_family [Nonempty J] {c : cocone (parallel_family f)} (i : is_colimit c) :
@@ -733,15 +733,15 @@ theorem epi_of_is_colimit_parallel_family [Nonempty J] {c : cocone (parallel_fam
 
 end 
 
-variable(C)
+variable (C)
 
 /-- `has_wide_equalizers` represents a choice of wide equalizer for every family of morphisms -/
 abbrev has_wide_equalizers :=
-  ∀ J, has_limits_of_shape (walking_parallel_family J) C
+  ∀ J, has_limits_of_shape (walking_parallel_family.{v} J) C
 
 /-- `has_wide_coequalizers` represents a choice of wide coequalizer for every family of morphisms -/
 abbrev has_wide_coequalizers :=
-  ∀ J, has_colimits_of_shape (walking_parallel_family J) C
+  ∀ J, has_colimits_of_shape (walking_parallel_family.{v} J) C
 
 /-- If `C` has all limits of diagrams `parallel_family f`, then it has all wide equalizers -/
 theorem has_wide_equalizers_of_has_limit_parallel_family
@@ -753,10 +753,10 @@ theorem has_wide_coequalizers_of_has_colimit_parallel_family
   [∀ {J} {X Y : C} {f : J → (X ⟶ Y)}, has_colimit (parallel_family f)] : has_wide_coequalizers C :=
   fun J => { HasColimit := fun F => has_colimit_of_iso (diagram_iso_parallel_family F) }
 
-instance (priority := 10)has_equalizers_of_has_wide_equalizers [has_wide_equalizers C] : has_equalizers C :=
+instance (priority := 10) has_equalizers_of_has_wide_equalizers [has_wide_equalizers C] : has_equalizers C :=
   has_limits_of_shape_of_equivalence walking_parallel_family_equiv_walking_parallel_pair
 
-instance (priority := 10)has_coequalizers_of_has_wide_coequalizers [has_wide_coequalizers C] : has_coequalizers C :=
+instance (priority := 10) has_coequalizers_of_has_wide_coequalizers [has_wide_coequalizers C] : has_coequalizers C :=
   has_colimits_of_shape_of_equivalence walking_parallel_family_equiv_walking_parallel_pair
 
 end CategoryTheory.Limits

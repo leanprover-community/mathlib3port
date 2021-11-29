@@ -26,9 +26,9 @@ namespace Matrix
 
 open Equiv Finset
 
-variable{R S : Type _}[CommRingₓ R][Nontrivial R][LinearOrderedCommRing S]
+variable {R S : Type _} [CommRingₓ R] [Nontrivial R] [LinearOrderedCommRing S]
 
-variable{n : Type _}[Fintype n][DecidableEq n]
+variable {n : Type _} [Fintype n] [DecidableEq n]
 
 theorem det_le {A : Matrix n n R} {abv : AbsoluteValue R S} {x : S} (hx : ∀ i j, abv (A i j) ≤ x) :
   abv A.det ≤ Nat.factorial (Fintype.card n) • (x^Fintype.card n) :=

@@ -64,13 +64,8 @@ build the general theory. We do not define it here.
 
 noncomputable theory
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]{G : Type _}[NormedGroup G][NormedSpace 𝕜 G]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
 
 open_locale TopologicalSpace Classical BigOperators Nnreal Filter Ennreal
 
@@ -81,7 +76,7 @@ open Set Filter Asymptotics
 
 namespace FormalMultilinearSeries
 
-variable(p : FormalMultilinearSeries 𝕜 E F){r :  ℝ≥0 }
+variable (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 }
 
 /-- The radius of a formal multilinear series is the largest `r` such that the sum `Σ ∥pₙ∥ ∥y∥ⁿ`
 converges for all `∥y∥ < r`. This implies that `Σ pₙ yⁿ` converges for all `∥y∥ < r`, but these
@@ -332,12 +327,12 @@ end FormalMultilinearSeries
 
 section 
 
-variable{f g : E → F}{p pf pg : FormalMultilinearSeries 𝕜 E F}{x : E}{r r' : ℝ≥0∞}
+variable {f g : E → F} {p pf pg : FormalMultilinearSeries 𝕜 E F} {x : E} {r r' : ℝ≥0∞}
 
 /-- Given a function `f : E → F` and a formal multilinear series `p`, we say that `f` has `p` as
 a power series on the ball of radius `r > 0` around `x` if `f (x + y) = ∑' pₙ yⁿ` for all `∥y∥ < r`.
 -/
-structure HasFpowerSeriesOnBall(f : E → F)(p : FormalMultilinearSeries 𝕜 E F)(x : E)(r : ℝ≥0∞) : Prop where 
+structure HasFpowerSeriesOnBall (f : E → F) (p : FormalMultilinearSeries 𝕜 E F) (x : E) (r : ℝ≥0∞) : Prop where 
   r_le : r ≤ p.radius 
   r_pos : 0 < r 
   HasSum : ∀ {y}, y ∈ Emetric.Ball (0 : E) r → HasSum (fun n : ℕ => p n fun i : Finₓ n => y) (f (x+y))
@@ -347,14 +342,14 @@ a power series around `x` if `f (x + y) = ∑' pₙ yⁿ` for all `y` in a neigh
 def HasFpowerSeriesAt (f : E → F) (p : FormalMultilinearSeries 𝕜 E F) (x : E) :=
   ∃ r, HasFpowerSeriesOnBall f p x r
 
-variable(𝕜)
+variable (𝕜)
 
 /-- Given a function `f : E → F`, we say that `f` is analytic at `x` if it admits a convergent power
 series expansion around `x`. -/
 def AnalyticAt (f : E → F) (x : E) :=
   ∃ p : FormalMultilinearSeries 𝕜 E F, HasFpowerSeriesAt f p x
 
-variable{𝕜}
+variable {𝕜}
 
 theorem HasFpowerSeriesOnBall.has_fpower_series_at (hf : HasFpowerSeriesOnBall f p x r) : HasFpowerSeriesAt f p x :=
   ⟨r, hf⟩
@@ -694,15 +689,16 @@ begin
 end
 
 /-- If a function admits a power series expansion on a disk, then it is continuous there. -/
-theorem HasFpowerSeriesOnBall.continuous_on (hf : HasFpowerSeriesOnBall f p x r) : ContinuousOn f (Emetric.Ball x r) :=
+protected theorem HasFpowerSeriesOnBall.continuous_on (hf : HasFpowerSeriesOnBall f p x r) :
+  ContinuousOn f (Emetric.Ball x r) :=
   hf.tendsto_locally_uniformly_on'.continuous_on$
-    fun n => ((p.partial_sum_continuous n).comp (continuous_id.sub continuous_const)).ContinuousOn
+    eventually_of_forall$ fun n => ((p.partial_sum_continuous n).comp (continuous_id.sub continuous_const)).ContinuousOn
 
-theorem HasFpowerSeriesAt.continuous_at (hf : HasFpowerSeriesAt f p x) : ContinuousAt f x :=
+protected theorem HasFpowerSeriesAt.continuous_at (hf : HasFpowerSeriesAt f p x) : ContinuousAt f x :=
   let ⟨r, hr⟩ := hf 
   hr.continuous_on.continuous_at (Emetric.ball_mem_nhds x hr.r_pos)
 
-theorem AnalyticAt.continuous_at (hf : AnalyticAt 𝕜 f x) : ContinuousAt f x :=
+protected theorem AnalyticAt.continuous_at (hf : AnalyticAt 𝕜 f x) : ContinuousAt f x :=
   let ⟨p, hp⟩ := hf 
   hp.continuous_at
 
@@ -758,7 +754,7 @@ namespace FormalMultilinearSeries
 
 section 
 
-variable(p : FormalMultilinearSeries 𝕜 E F){x y : E}{r R :  ℝ≥0 }
+variable (p : FormalMultilinearSeries 𝕜 E F) {x y : E} {r R :  ℝ≥0 }
 
 /-- A term of `formal_multilinear_series.change_origin_series`.
 
@@ -934,7 +930,7 @@ end
 
 end 
 
-variable[CompleteSpace F](p : FormalMultilinearSeries 𝕜 E F){x y : E}{r R :  ℝ≥0 }
+variable [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x y : E} {r R :  ℝ≥0 }
 
 theorem has_fpower_series_on_ball_change_origin (k : ℕ) (hr : 0 < p.radius) :
   HasFpowerSeriesOnBall (fun x => p.change_origin x k) (p.change_origin_series k) 0 p.radius :=
@@ -998,7 +994,7 @@ end FormalMultilinearSeries
 
 section 
 
-variable[CompleteSpace F]{f : E → F}{p : FormalMultilinearSeries 𝕜 E F}{x y : E}{r : ℝ≥0∞}
+variable [CompleteSpace F] {f : E → F} {p : FormalMultilinearSeries 𝕜 E F} {x y : E} {r : ℝ≥0∞}
 
 /-- If a function admits a power series expansion `p` on a ball `B (x, r)`, then it also admits a
 power series on any subball of this ball (even with a different center), given by `p.change_origin`.
@@ -1039,7 +1035,7 @@ begin
   exact [expr this.analytic_at]
 end
 
-variable(𝕜 f)
+variable (𝕜 f)
 
 /-- For any function `f` from a normed vector space to a Banach space, the set of points `x` such
 that `f` is analytic at `x` is open. -/

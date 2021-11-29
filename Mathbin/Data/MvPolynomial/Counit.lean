@@ -22,7 +22,7 @@ namespace MvPolynomial
 
 open Function
 
-variable(A B R : Type _)[CommSemiringₓ A][CommSemiringₓ B][CommRingₓ R][Algebra A B]
+variable (A B R : Type _) [CommSemiringₓ A] [CommSemiringₓ B] [CommRingₓ R] [Algebra A B]
 
 /-- `mv_polynomial.acounit A B` is the natural surjective algebra homomorphism
 `mv_polynomial B A →ₐ[A] B` obtained by `X a ↦ a`.
@@ -32,19 +32,19 @@ and `mv_polynomial.counit_nat` for the “absolute” variant with `A = ℕ`. -/
 noncomputable def acounit : MvPolynomial B A →ₐ[A] B :=
   aeval id
 
-variable{B}
+variable {B}
 
 @[simp]
 theorem acounit_X (b : B) : acounit A B (X b) = b :=
   aeval_X _ b
 
-variable{A}(B)
+variable {A} (B)
 
 @[simp]
 theorem acounit_C (a : A) : acounit A B (C a) = algebraMap A B a :=
   aeval_C _ a
 
-variable(A)
+variable (A)
 
 theorem acounit_surjective : surjective (acounit A B) :=
   fun b => ⟨X b, acounit_X A b⟩
@@ -77,7 +77,7 @@ theorem counit_C (n : ℤ) : counit R (C n) = n :=
 theorem counit_nat_C (n : ℕ) : counit_nat A (C n) = n :=
   acounit_C _ _
 
-variable{R A}
+variable {R A}
 
 @[simp]
 theorem counit_X (r : R) : counit R (X r) = r :=

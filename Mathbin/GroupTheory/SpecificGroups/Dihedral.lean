@@ -24,7 +24,7 @@ the `n`-gon. `dihedral_group 0` corresponds to the infinite dihedral group.
 
 namespace DihedralGroup
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 /--
 Multiplication of the dihedral group.
@@ -41,7 +41,7 @@ The identity `1` is the rotation by `0`.
 private def one : DihedralGroup n :=
   r 0
 
-instance  : Inhabited (DihedralGroup n) :=
+instance : Inhabited (DihedralGroup n) :=
   ⟨one⟩
 
 /--
@@ -54,7 +54,7 @@ private def inv : DihedralGroup n → DihedralGroup n
 /--
 The group structure on `dihedral_group n`.
 -/
-instance  : Groupₓ (DihedralGroup n) :=
+instance : Groupₓ (DihedralGroup n) :=
   { mul := mul,
     mul_assoc :=
       by 
@@ -117,10 +117,10 @@ private def fintype_helper : Sum (Zmod n) (Zmod n) ≃ DihedralGroup n :=
 /--
 If `0 < n`, then `dihedral_group n` is a finite group.
 -/
-instance  [Fact (0 < n)] : Fintype (DihedralGroup n) :=
+instance [Fact (0 < n)] : Fintype (DihedralGroup n) :=
   Fintype.ofEquiv _ fintype_helper
 
-instance  : Nontrivial (DihedralGroup n) :=
+instance : Nontrivial (DihedralGroup n) :=
   ⟨⟨r 0, sr 0,
       by 
         decide⟩⟩

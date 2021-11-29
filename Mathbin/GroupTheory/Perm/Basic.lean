@@ -12,7 +12,7 @@ universe u v
 
 namespace Equiv
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 namespace Perm
 
@@ -208,7 +208,7 @@ section ExtendDomain
 /-! Lemmas about `equiv.perm.extend_domain` re-expressed via the group structure. -/
 
 
-variable(e : perm α){p : β → Prop}[DecidablePred p](f : α ≃ Subtype p)
+variable (e : perm α) {p : β → Prop} [DecidablePred p] (f : α ≃ Subtype p)
 
 @[simp]
 theorem extend_domain_one : extend_domain 1 f = 1 :=
@@ -368,7 +368,7 @@ theorem subtype_equiv_subtype_perm_apply_of_not_mem {α : Type _} {p : α → Pr
   {a : α} (h : ¬p a) : perm.subtype_equiv_subtype_perm p f a = a :=
   f.of_subtype_apply_of_not_mem h
 
-variable(e : perm α)(ι : α ↪ β)
+variable (e : perm α) (ι : α ↪ β)
 
 open_locale Classical
 
@@ -396,7 +396,7 @@ end Perm
 
 section Swap
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 @[simp]
 theorem swap_inv (x y : α) : swap x y⁻¹ = swap x y :=

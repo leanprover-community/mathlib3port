@@ -24,7 +24,7 @@ open_locale TopologicalSpace
 
 section PartialOrderₓ
 
-variable{α β : Type _}[TopologicalSpace α][PartialOrderₓ α][TopologicalSpace β]
+variable {α β : Type _} [TopologicalSpace α] [PartialOrderₓ α] [TopologicalSpace β]
 
 theorem continuous_within_at_Ioi_iff_Ici {a : α} {f : α → β} :
   ContinuousWithinAt f (Ioi a) a ↔ ContinuousWithinAt f (Ici a) a :=
@@ -37,7 +37,7 @@ theorem continuous_within_at_Iio_iff_Iic {a : α} {f : α → β} :
 
 end PartialOrderₓ
 
-variable{α β : Type _}[TopologicalSpace α][LinearOrderₓ α][TopologicalSpace β]
+variable {α β : Type _} [TopologicalSpace α] [LinearOrderₓ α] [TopologicalSpace β]
 
 theorem nhds_left_sup_nhds_right (a : α) : 𝓝[Iic a] a⊔𝓝[Ici a] a = 𝓝 a :=
   by 

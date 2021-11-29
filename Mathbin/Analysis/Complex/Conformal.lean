@@ -36,8 +36,8 @@ theorem is_conformal_map_conj : IsConformalMap (conj_lie : ℂ →L[ℝ] ℂ) :=
 
 section ConformalIntoComplexNormed
 
-variable{E :
-    Type _}[NormedGroup E][NormedSpace ℝ E][NormedSpace ℂ E][IsScalarTower ℝ ℂ E]{z : ℂ}{g : ℂ →L[ℝ] E}{f : ℂ → E}
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [NormedSpace ℂ E] [IsScalarTower ℝ ℂ E] {z : ℂ} {g : ℂ →L[ℝ] E}
+  {f : ℂ → E}
 
 -- error in Analysis.Complex.Conformal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_conformal_map_complex_linear
@@ -69,7 +69,7 @@ section ConformalIntoComplexPlane
 
 open ContinuousLinearMap
 
-variable{f : ℂ → ℂ}{z : ℂ}{g : ℂ →L[ℝ] ℂ}
+variable {f : ℂ → ℂ} {z : ℂ} {g : ℂ →L[ℝ] ℂ}
 
 theorem IsConformalMap.is_complex_or_conj_linear (h : IsConformalMap g) :
   (∃ map : ℂ →L[ℂ] ℂ, map.restrict_scalars ℝ = g) ∨

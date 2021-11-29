@@ -31,7 +31,7 @@ noncomputable theory
 
 namespace CategoryTheory
 
-variable(C : Type u)[category.{v} C]{X Y : C}
+variable (C : Type u) [category.{v} C] {X Y : C}
 
 open CategoryTheory.Limits
 
@@ -86,7 +86,7 @@ end
 
 namespace MonoidalOfHasFiniteProducts
 
-variable[has_terminal C][has_binary_products C]
+variable [has_terminal C] [has_binary_products C]
 
 attribute [local instance] monoidal_of_has_finite_products
 
@@ -172,7 +172,7 @@ end
 
 namespace MonoidalOfHasFiniteCoproducts
 
-variable[has_initial C][has_binary_coproducts C]
+variable [has_initial C] [has_binary_coproducts C]
 
 attribute [local instance] monoidal_of_has_finite_coproducts
 

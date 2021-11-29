@@ -16,15 +16,15 @@ we do have some results in this direction under the assumption that the topologi
 
 namespace AffineMap
 
-variable{R E F : Type _}
+variable {R E F : Type _}
 
-variable[AddCommGroupₓ E][TopologicalSpace E]
+variable [AddCommGroupₓ E] [TopologicalSpace E]
 
-variable[AddCommGroupₓ F][TopologicalSpace F][TopologicalAddGroup F]
+variable [AddCommGroupₓ F] [TopologicalSpace F] [TopologicalAddGroup F]
 
 section Ringₓ
 
-variable[Ringₓ R][Module R E][Module R F]
+variable [Ringₓ R] [Module R E] [Module R F]
 
 -- error in Topology.Algebra.Affine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An affine map is continuous iff its underlying linear map is continuous. See also
@@ -52,7 +52,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][Module R F][TopologicalSpace R][HasContinuousSmul R F]
+variable [CommRingₓ R] [Module R F] [TopologicalSpace R] [HasContinuousSmul R F]
 
 @[continuity]
 theorem homothety_continuous (x : F) (t : R) : Continuous$ homothety x t :=
@@ -68,7 +68,7 @@ end CommRingₓ
 
 section Field
 
-variable[Field R][Module R F][TopologicalSpace R][HasContinuousSmul R F]
+variable [Field R] [Module R F] [TopologicalSpace R] [HasContinuousSmul R F]
 
 theorem homothety_is_open_map (x : F) (t : R) (ht : t ≠ 0) : IsOpenMap$ homothety x t :=
   by 

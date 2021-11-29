@@ -41,9 +41,9 @@ namespace Matrix
 
 open_locale Matrix BigOperators
 
-variable{m n : Type _}[DecidableEq n][Fintype n][DecidableEq m][Fintype m]
+variable {m n : Type _} [DecidableEq n] [Fintype n] [DecidableEq m] [Fintype m]
 
-variable{R : Type v}[CommRingₓ R]
+variable {R : Type v} [CommRingₓ R]
 
 -- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 local notation `ε` σ:max := ((sign σ : exprℤ()) : R)
@@ -91,10 +91,15 @@ theorem det_one : det (1 : Matrix n n R) = 1 :=
   by 
     rw [←diagonal_one] <;> simp [-diagonal_one]
 
-@[simp]
 theorem det_is_empty [IsEmpty n] {A : Matrix n n R} : det A = 1 :=
   by 
     simp [det_apply]
+
+@[simp]
+theorem coe_det_is_empty [IsEmpty n] : (det : Matrix n n R → R) = Function.const _ 1 :=
+  by 
+    ext 
+    exact det_is_empty
 
 -- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem det_eq_one_of_card_eq_zero {A : matrix n n R} (h : «expr = »(fintype.card n, 0)) : «expr = »(det A, 1) :=
@@ -307,7 +312,7 @@ theorem det_pow (M : Matrix m m R) (n : ℕ) : det (M^n) = (det M^n) :=
 
 section HomMap
 
-variable{S : Type w}[CommRingₓ S]
+variable {S : Type w} [CommRingₓ S]
 
 theorem _root_.ring_hom.map_det (f : R →+* S) (M : Matrix n n R) : f M.det = Matrix.det (f.map_matrix M) :=
   by 
@@ -347,7 +352,7 @@ theorem det_eq_zero_of_column_eq_zero {A : Matrix n n R} (j : n) (h : ∀ i, A i
     rw [←det_transpose]
     exact det_eq_zero_of_row_eq_zero j h
 
-variable{M : Matrix n n R}{i j : n}
+variable {M : Matrix n n R} {i j : n}
 
 /-- If a matrix has a repeated row, the determinant will be zero. -/
 theorem det_zero_of_row_eq (i_ne_j : i ≠ j) (hij : M i = M j) : M.det = 0 :=

@@ -1,7 +1,7 @@
 import Mathbin.Topology.Opens 
 import Mathbin.CategoryTheory.Category.Preorder 
 import Mathbin.CategoryTheory.EqToHom 
-import Mathbin.Topology.Category.Top.Basic
+import Mathbin.Topology.Category.Top.EpiMono
 
 /-!
 # The category of open sets in a topological space.
@@ -33,7 +33,7 @@ universe u
 
 namespace TopologicalSpace.Opens
 
-variable{X Y Z : Top.{u}}
+variable {X Y Z : Top.{u}}
 
 /-!
 Since `opens X` has a partial order, it automatically receives a `category` instance.
@@ -188,7 +188,7 @@ theorem map_supr (f : X ⟶ Y) {ι : Type _} (U : ι → opens Y) : (map f).obj 
 
 section 
 
-variable(X)
+variable (X)
 
 /--
 The functor `opens X ⥤ opens X` given by taking preimages under the identity function
@@ -271,6 +271,18 @@ def IsOpenMap.adjunction {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) :
     { Unit := { app := fun U => hom_of_le$ fun x hxU => ⟨x, hxU, rfl⟩ },
       counit := { app := fun V => hom_of_le$ fun y ⟨x, hfxV, hxy⟩ => hxy ▸ hfxV } }
 
+instance IsOpenMap.functorFullOfMono {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) [H : mono f] : full hf.functor :=
+  { Preimage :=
+      fun U V i =>
+        hom_of_le
+          fun x hx =>
+            by 
+              obtain ⟨y, hy, eq⟩ := i.le ⟨x, hx, rfl⟩
+              exact (Top.mono_iff_injective f).mp H Eq ▸ hy }
+
+instance IsOpenMap.functor_faithful {X Y : Top} {f : X ⟶ Y} (hf : IsOpenMap f) : faithful hf.functor :=
+  {  }
+
 namespace TopologicalSpace.Opens
 
 open TopologicalSpace
@@ -286,7 +298,7 @@ theorem inclusion_top_functor (X : Top) :
     intros 
     apply Subsingleton.helimₓ 
     congr 1
-    iterate 2
+    iterate 2 
       apply inclusion_top_functor.obj_eq
 
 end TopologicalSpace.Opens

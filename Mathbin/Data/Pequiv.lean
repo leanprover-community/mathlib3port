@@ -24,7 +24,7 @@ then `g b` is `option.some a`.
 `pequiv` is canonically ordered by inclusion; that is, if a function `f` defined on a subset `s`
 is equal to `g` on that subset, but `g` is also defined on a larger set, then `f ≤ g`. We also have
 a definition of `⊥`, which is the empty `pequiv` (sends all to `none`), which in the end gives us a
-`semilattice_inf_bot` instance.
+`semilattice_inf` with an `order_bot` instance.
 
 ## Tags
 
@@ -38,7 +38,7 @@ universe u v w x
 /-- A `pequiv` is a partial equivalence, a representation of a bijection between a subset
   of `α` and a subset of `β`. See also `local_equiv` for a version that requires `to_fun` and
 `inv_fun` to be globally defined functions and has `source` and `target` sets as extra fields. -/
-structure Pequiv(α : Type u)(β : Type v) where 
+structure Pequiv (α : Type u) (β : Type v) where 
   toFun : α → Option β 
   invFun : β → Option α 
   inv : ∀ a : α b : β, a ∈ inv_fun b ↔ b ∈ to_fun a
@@ -47,11 +47,11 @@ infixr:25 " ≃. " => Pequiv
 
 namespace Pequiv
 
-variable{α : Type u}{β : Type v}{γ : Type w}{δ : Type x}
+variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 
 open Function Option
 
-instance  : CoeFun (α ≃. β) fun _ => α → Option β :=
+instance : CoeFun (α ≃. β) fun _ => α → Option β :=
   ⟨to_fun⟩
 
 @[simp]
@@ -172,7 +172,7 @@ theorem injective_of_forall_is_some {f : α ≃. β} (h : ∀ a : α, is_some (f
 
 section OfSet
 
-variable(s : Set α)[DecidablePred (· ∈ s)]
+variable (s : Set α) [DecidablePred (· ∈ s)]
 
 /-- Creates a `pequiv` that is the identity on `s`, and `none` outside of it. -/
 def of_set (s : Set α) [DecidablePred (· ∈ s)] : α ≃. α :=
@@ -261,13 +261,13 @@ theorem trans_symm_eq_iff_forall_is_some {f : α ≃. β} : f.trans f.symm = Peq
   by 
     rw [self_trans_symm, of_set_eq_refl, Set.eq_univ_iff_forall] <;> rfl
 
-instance  : HasBot (α ≃. β) :=
+instance : HasBot (α ≃. β) :=
   ⟨{ toFun := fun _ => none, invFun := fun _ => none,
       inv :=
         by 
           simp  }⟩
 
-instance  : Inhabited (α ≃. β) :=
+instance : Inhabited (α ≃. β) :=
   ⟨⊥⟩
 
 @[simp]
@@ -296,7 +296,7 @@ theorem is_some_symm_get (f : α ≃. β) {a : α} (h : is_some (f a)) : is_some
 
 section Single
 
-variable[DecidableEq α][DecidableEq β][DecidableEq γ]
+variable [DecidableEq α] [DecidableEq β] [DecidableEq γ]
 
 /-- Create a `pequiv` which sends `a` to `b` and `b` to `a`, but is otherwise `none`. -/
 def single (a : α) (b : β) : α ≃. β :=
@@ -363,7 +363,7 @@ end Single
 
 section Order
 
-instance  : PartialOrderₓ (α ≃. β) :=
+instance : PartialOrderₓ (α ≃. β) :=
   { le := fun f g => ∀ a : α b : β, b ∈ f a → b ∈ g a, le_refl := fun _ _ _ => id,
     le_trans := fun f g h fg gh a b => gh a b ∘ fg a b,
     le_antisymm :=
@@ -380,11 +380,11 @@ instance  : PartialOrderₓ (α ≃. β) :=
 theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ a : α b : β, b ∈ f a → b ∈ g a :=
   Iff.rfl
 
-instance  : OrderBot (α ≃. β) :=
-  { Pequiv.partialOrder, Pequiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
+instance : OrderBot (α ≃. β) :=
+  { Pequiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
 
 -- error in Data.Pequiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance [decidable_eq α] [decidable_eq β] : semilattice_inf_bot «expr ≃. »(α, β) :=
+instance [decidable_eq α] [decidable_eq β] : semilattice_inf «expr ≃. »(α, β) :=
 { inf := λ
   f
   g, { to_fun := λ a, if «expr = »(f a, g a) then f a else none,
@@ -402,7 +402,6 @@ instance [decidable_eq α] [decidable_eq β] : semilattice_inf_bot «expr ≃. �
     simp [] [] [] ["[", expr le_def, "]"] [] [],
     split_ifs [] []; finish [] []
   end,
-  ..pequiv.order_bot,
   ..pequiv.partial_order }
 
 end Order
@@ -411,7 +410,7 @@ end Pequiv
 
 namespace Equiv
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 /-- Turns an `equiv` into a `pequiv` of the whole type. -/
 def to_pequiv (f : α ≃ β) : α ≃. β :=

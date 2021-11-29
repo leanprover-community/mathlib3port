@@ -25,12 +25,12 @@ open_locale BigOperators
 
 universe u'' u' u v w
 
-variable{G : Type u''}{S : Type u'}{R : Type u}{M : Type v}{ι : Type w}
+variable {G : Type u''} {S : Type u'} {R : Type u} {M : Type v} {ι : Type w}
 
 /-- A submodule of a module is one which is closed under vector operations.
   This is a sufficient condition for the subset of vectors in the submodule
   to themselves form a module. -/
-structure Submodule(R : Type u)(M : Type v)[Semiringₓ R][AddCommMonoidₓ M][Module R M] extends AddSubmonoid M,
+structure Submodule (R : Type u) (M : Type v) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] extends AddSubmonoid M,
   SubMulAction R M : Type v
 
 /-- Reinterpret a `submodule` as an `add_submonoid`. -/
@@ -41,9 +41,9 @@ add_decl_doc Submodule.toSubMulAction
 
 namespace Submodule
 
-variable[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-instance  : SetLike (Submodule R M) M :=
+instance : SetLike (Submodule R M) M :=
   ⟨Submodule.Carrier,
     fun p q h =>
       by 
@@ -53,7 +53,7 @@ instance  : SetLike (Submodule R M) M :=
 theorem mem_to_add_submonoid (p : Submodule R M) (x : M) : x ∈ p.to_add_submonoid ↔ x ∈ p :=
   Iff.rfl
 
-variable{p q : Submodule R M}
+variable {p q : Submodule R M}
 
 @[simp]
 theorem mem_mk {S : Set M} {x : M} h₁ h₂ h₃ : x ∈ (⟨S, h₁, h₂, h₃⟩ : Submodule R M) ↔ x ∈ S :=
@@ -129,15 +129,15 @@ namespace Submodule
 
 section AddCommMonoidₓ
 
-variable[Semiringₓ R][AddCommMonoidₓ M]
+variable [Semiringₓ R] [AddCommMonoidₓ M]
 
-variable{module_M : Module R M}
+variable {module_M : Module R M}
 
-variable{p q : Submodule R M}
+variable {p q : Submodule R M}
 
-variable{r : R}{x y : M}
+variable {r : R} {x y : M}
 
-variable(p)
+variable (p)
 
 @[simp]
 theorem mem_carrier : x ∈ p.carrier ↔ x ∈ (p : Set M) :=
@@ -166,19 +166,19 @@ theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀ c 
 theorem smul_mem_iff' [Groupₓ G] [MulAction G M] [HasScalar G R] [IsScalarTower G R M] (g : G) : g • x ∈ p ↔ x ∈ p :=
   p.to_sub_mul_action.smul_mem_iff' g
 
-instance  : Add p :=
+instance : Add p :=
   ⟨fun x y => ⟨x.1+y.1, add_mem _ x.2 y.2⟩⟩
 
-instance  : HasZero p :=
+instance : HasZero p :=
   ⟨⟨0, zero_mem _⟩⟩
 
-instance  : Inhabited p :=
+instance : Inhabited p :=
   ⟨0⟩
 
-instance  [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] : HasScalar S p :=
+instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] : HasScalar S p :=
   ⟨fun c x => ⟨c • x.1, smul_of_tower_mem _ c x.2⟩⟩
 
-instance  [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] : IsScalarTower S R p :=
+instance [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] : IsScalarTower S R p :=
   p.to_sub_mul_action.is_scalar_tower
 
 protected theorem Nonempty : (p : Set M).Nonempty :=
@@ -188,7 +188,7 @@ protected theorem Nonempty : (p : Set M).Nonempty :=
 theorem mk_eq_zero {x} (h : x ∈ p) : (⟨x, h⟩ : p) = 0 ↔ x = 0 :=
   Subtype.ext_iff_val
 
-variable{p}
+variable {p}
 
 @[simp, normCast]
 theorem coe_eq_zero {x : p} : (x : M) = 0 ↔ x = 0 :=
@@ -219,9 +219,9 @@ theorem coe_mk (x : M) (hx : x ∈ p) : ((⟨x, hx⟩ : p) : M) = x :=
 theorem coe_mem (x : p) : (x : M) ∈ p :=
   x.2
 
-variable(p)
+variable (p)
 
-instance  : AddCommMonoidₓ p :=
+instance : AddCommMonoidₓ p :=
   { p.to_add_submonoid.to_add_comm_monoid with add := ·+·, zero := 0 }
 
 instance module' [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R M] : Module S p :=
@@ -232,7 +232,7 @@ instance module' [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R
         apply SetCoe.ext 
         simp [smul_add, add_smul, mul_smul]
 
-instance  : Module R p :=
+instance : Module R p :=
   p.module'
 
 instance NoZeroSmulDivisors [NoZeroSmulDivisors R M] : NoZeroSmulDivisors R p :=
@@ -259,7 +259,7 @@ theorem coe_sum (x : ι → p) (s : Finset ι) : «expr↑ » (∑i in s, x i) =
 
 section RestrictScalars
 
-variable(S)[Semiringₓ S][Module S M][Module R M][HasScalar S R][IsScalarTower S R M]
+variable (S) [Semiringₓ S] [Module S M] [Module R M] [HasScalar S R] [IsScalarTower S R M]
 
 /--
 `V.restrict_scalars S` is the `S`-submodule of the `S`-module given by restriction of scalars,
@@ -281,7 +281,7 @@ theorem restrict_scalars_mem (V : Submodule R M) (m : M) : m ∈ V.restrict_scal
 theorem restrict_scalars_self (V : Submodule R M) : V.restrict_scalars R = V :=
   SetLike.coe_injective rfl
 
-variable(R S M)
+variable (R S M)
 
 theorem restrict_scalars_injective : Function.Injective (restrict_scalars S : Submodule R M → Submodule S M) :=
   fun V₁ V₂ h => ext$ Set.ext_iff.1 (SetLike.ext'_iff.1 h : _)
@@ -296,7 +296,7 @@ instance restrict_scalars.orig_module (p : Submodule R M) : Module R (p.restrict
     infer_instance :
   Module R p)
 
-instance  (p : Submodule R M) : IsScalarTower S R (p.restrict_scalars S) :=
+instance (p : Submodule R M) : IsScalarTower S R (p.restrict_scalars S) :=
   { smul_assoc := fun r s x => Subtype.ext$ smul_assoc r s (x : M) }
 
 /-- `restrict_scalars S` is an embedding of the lattice of `R`-submodules into
@@ -321,13 +321,13 @@ end AddCommMonoidₓ
 
 section AddCommGroupₓ
 
-variable[Ringₓ R][AddCommGroupₓ M]
+variable [Ringₓ R] [AddCommGroupₓ M]
 
-variable{module_M : Module R M}
+variable {module_M : Module R M}
 
-variable(p p' : Submodule R M)
+variable (p p' : Submodule R M)
 
-variable{r : R}{x y : M}
+variable {r : R} {x y : M}
 
 theorem neg_mem (hx : x ∈ p) : -x ∈ p :=
   p.to_sub_mul_action.neg_mem hx
@@ -376,14 +376,14 @@ theorem add_mem_iff_left : y ∈ p → ((x+y) ∈ p ↔ x ∈ p) :=
 theorem add_mem_iff_right : x ∈ p → ((x+y) ∈ p ↔ y ∈ p) :=
   p.to_add_subgroup.add_mem_cancel_left
 
-instance  : Neg p :=
+instance : Neg p :=
   ⟨fun x => ⟨-x.1, neg_mem _ x.2⟩⟩
 
 @[simp, normCast]
 theorem coe_neg (x : p) : ((-x : p) : M) = -x :=
   rfl
 
-instance  : AddCommGroupₓ p :=
+instance : AddCommGroupₓ p :=
   { p.to_add_subgroup.to_add_comm_group with add := ·+·, zero := 0, neg := Neg.neg }
 
 @[simp, normCast]
@@ -394,9 +394,9 @@ end AddCommGroupₓ
 
 section IsDomain
 
-variable[Ringₓ R][IsDomain R]
+variable [Ringₓ R] [IsDomain R]
 
-variable[AddCommGroupₓ M][Module R M]{b : ι → M}
+variable [AddCommGroupₓ M] [Module R M] {b : ι → M}
 
 theorem not_mem_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ c : R y _ : y ∈ N, ((c • x)+y) = (0 : M) → c = 0) :
   x ∉ N :=
@@ -412,7 +412,7 @@ end IsDomain
 
 section OrderedMonoid
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 /-- A submodule of an `ordered_add_comm_monoid` is an `ordered_add_comm_monoid`. -/
 instance to_ordered_add_comm_monoid {M} [OrderedAddCommMonoid M] [Module R M] (S : Submodule R M) :
@@ -439,7 +439,7 @@ end OrderedMonoid
 
 section OrderedGroup
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
 /-- A submodule of an `ordered_add_comm_group` is an `ordered_add_comm_group`. -/
 instance to_ordered_add_comm_group {M} [OrderedAddCommGroup M] [Module R M] (S : Submodule R M) :
@@ -458,11 +458,11 @@ end Submodule
 
 namespace Submodule
 
-variable[DivisionRing S][Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [DivisionRing S] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
-variable[HasScalar S R][Module S M][IsScalarTower S R M]
+variable [HasScalar S R] [Module S M] [IsScalarTower S R M]
 
-variable(p : Submodule R M){s : S}{x y : M}
+variable (p : Submodule R M) {s : S} {x y : M}
 
 theorem smul_mem_iff (s0 : s ≠ 0) : s • x ∈ p ↔ x ∈ p :=
   p.to_sub_mul_action.smul_mem_iff s0

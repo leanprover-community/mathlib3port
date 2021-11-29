@@ -16,7 +16,7 @@ open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-variable{J : Type v}[small_category J]{F : J ⥤ discrete PUnit.{v + 1}}
+variable {J : Type v} [small_category J] {F : J ⥤ discrete PUnit.{v + 1}}
 
 /-- A trivial cone for a functor into `punit`. `punit_cone_is_limit` shows it is a limit. -/
 def punit_cone : cone F :=
@@ -40,11 +40,11 @@ def punit_cocone_is_colimit {c : cocone F} : is_colimit c :=
   by 
     tidy
 
-instance  : has_limits (discrete PUnit) :=
+instance : has_limits (discrete PUnit) :=
   by 
     tidy
 
-instance  : has_colimits (discrete PUnit) :=
+instance : has_colimits (discrete PUnit) :=
   by 
     tidy
 

@@ -1,16 +1,16 @@
 import Mathbin.Deprecated.Subgroup 
 import Mathbin.Deprecated.Group 
-import Mathbin.RingTheory.Subring
+import Mathbin.RingTheory.Subring.Basic
 
 universe u v
 
 open Groupₓ
 
-variable{R : Type u}[Ringₓ R]
+variable {R : Type u} [Ringₓ R]
 
 /-- `S` is a subring: a set containing 1 and closed under multiplication, addition and additive
 inverse. -/
-structure IsSubring(S : Set R) extends IsAddSubgroup S, IsSubmonoid S : Prop
+structure IsSubring (S : Set R) extends IsAddSubgroup S, IsSubmonoid S : Prop
 
 /-- Construct a `subring` from a set satisfying `is_subring`. -/
 def IsSubring.subring {S : Set R} (hs : IsSubring S) : Subring R :=
@@ -34,7 +34,7 @@ theorem is_subring_set_range {R : Type u} {S : Type v} [Ringₓ R] [Ringₓ S] (
 
 end RingHom
 
-variable{cR : Type u}[CommRingₓ cR]
+variable {cR : Type u} [CommRingₓ cR]
 
 theorem IsSubring.inter {S₁ S₂ : Set R} (hS₁ : IsSubring S₁) (hS₂ : IsSubring S₂) : IsSubring (S₁ ∩ S₂) :=
   { IsAddSubgroup.inter hS₁.to_is_add_subgroup hS₂.to_is_add_subgroup,
@@ -53,7 +53,7 @@ namespace Ringₓ
 def closure (s : Set R) :=
   AddGroupₓ.Closure (Monoidₓ.Closure s)
 
-variable{s : Set R}
+variable {s : Set R}
 
 attribute [local reducible] closure
 

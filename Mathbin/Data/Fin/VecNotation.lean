@@ -1,6 +1,6 @@
 import Mathbin.Data.Fin.Tuple 
 import Mathbin.Data.List.Range 
-import Mathbin.Algebra.Module.Pi
+import Mathbin.GroupTheory.GroupAction.Pi
 
 /-!
 # Matrix and vector notation
@@ -37,7 +37,7 @@ namespace Matrix
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 section MatrixNotation
 
@@ -64,7 +64,7 @@ def vec_head {n : ℕ} (v : Finₓ n.succ → α) : α :=
 def vec_tail {n : ℕ} (v : Finₓ n.succ → α) : Finₓ n → α :=
   v ∘ Finₓ.succ
 
-variable{m n : ℕ}
+variable {m n : ℕ}
 
 /-- Use `![...]` notation for displaying a vector `fin n → α`, for example:
 
@@ -77,7 +77,7 @@ instance pi_fin.has_repr [HasRepr α] : HasRepr (Finₓ n → α) :=
 
 end MatrixNotation
 
-variable{m n o : ℕ}{m' n' o' : Type _}
+variable {m n o : ℕ} {m' n' o' : Type _}
 
 -- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 theorem empty_eq (v : fin 0 → α) : «expr = »(v, «expr![ , ]»([])) := subsingleton.elim _ _
@@ -321,7 +321,7 @@ end Val
 
 section Smul
 
-variable[Semiringₓ α]
+variable [Semiringₓ α]
 
 -- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp] theorem smul_empty (x : α) (v : fin 0 → α) : «expr = »(«expr • »(x, v), «expr![ , ]»([])) := empty_eq _
@@ -336,7 +336,7 @@ end Smul
 
 section Add
 
-variable[Add α]
+variable [Add α]
 
 -- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp] theorem empty_add_empty (v w : fin 0 → α) : «expr = »(«expr + »(v, w), «expr![ , ]»([])) := empty_eq _
@@ -367,7 +367,7 @@ end Add
 
 section Sub
 
-variable[Sub α]
+variable [Sub α]
 
 -- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp] theorem empty_sub_empty (v w : fin 0 → α) : «expr = »(«expr - »(v, w), «expr![ , ]»([])) := empty_eq _
@@ -398,7 +398,7 @@ end Sub
 
 section Zero
 
-variable[HasZero α]
+variable [HasZero α]
 
 -- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp] theorem zero_empty : «expr = »((0 : fin 0 → α), «expr![ , ]»([])) := empty_eq _
@@ -440,7 +440,7 @@ end Zero
 
 section Neg
 
-variable[Neg α]
+variable [Neg α]
 
 -- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 @[simp] theorem neg_empty (v : fin 0 → α) : «expr = »(«expr- »(v), «expr![ , ]»([])) := empty_eq _

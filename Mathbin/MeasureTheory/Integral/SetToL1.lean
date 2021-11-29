@@ -48,15 +48,9 @@ attribute [local instance] fact_one_le_one_ennreal
 
 namespace MeasureTheory
 
-variable{α E F F' G 𝕜 :
-    Type
-      _}{p :
-    ℝ≥0∞}[NormedGroup
-      E][MeasurableSpace
-      E][NormedSpace ℝ
-      E][NormedGroup
-      F][NormedSpace ℝ
-      F][NormedGroup F'][NormedSpace ℝ F'][NormedGroup G][MeasurableSpace G]{m : MeasurableSpace α}{μ : Measureₓ α}
+variable {α E F F' G 𝕜 : Type _} {p : ℝ≥0∞} [NormedGroup E] [MeasurableSpace E] [NormedSpace ℝ E] [NormedGroup F]
+  [NormedSpace ℝ F] [NormedGroup F'] [NormedSpace ℝ F'] [NormedGroup G] [MeasurableSpace G] {m : MeasurableSpace α}
+  {μ : Measureₓ α}
 
 local infixr:25 " →ₛ " => simple_func
 
@@ -426,7 +420,7 @@ namespace L1
 
 open AeEqFun Lp.SimpleFunc Lp
 
-variable{α E μ}
+variable {α E μ}
 
 namespace SimpleFunc
 
@@ -453,7 +447,7 @@ end
 
 section SetToL1s
 
-variable[second_countable_topology E][BorelSpace E][NormedField 𝕜][NormedSpace 𝕜 E]
+variable [second_countable_topology E] [BorelSpace E] [NormedField 𝕜] [NormedSpace 𝕜 E]
 
 attribute [local instance] Lp.simple_func.module
 
@@ -526,9 +520,9 @@ begin
   exact [expr Lp.simple_func.to_simple_func_indicator_const hs hμs x]
 end
 
-variable[NormedSpace 𝕜 F][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable [NormedSpace 𝕜 F] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
-variable(α E μ 𝕜)
+variable (α E μ 𝕜)
 
 /-- Extend `set α → E →L[ℝ] F` to `(α →₁ₛ[μ] E) →L[𝕜] F`. -/
 def set_to_L1s_clm' {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : dominated_fin_meas_additive μ T C)
@@ -551,7 +545,7 @@ def set_to_L1s_clm {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : dominated_fin_
   LinearMap.mkContinuous ⟨set_to_L1s T, set_to_L1s_add T h_zero hT.1, set_to_L1s_smul_real T h_zero hT.1⟩ C
     fun f => norm_set_to_L1s_le T hT.2 f
 
-variable{α E μ 𝕜}
+variable {α E μ 𝕜}
 
 theorem norm_set_to_L1s_clm_le {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : dominated_fin_meas_additive μ T C) (hC : 0 ≤ C) :
   ∥set_to_L1s_clm α E μ hT∥ ≤ C :=
@@ -573,11 +567,8 @@ attribute [local instance] Lp.simple_func.module
 
 attribute [local instance] Lp.simple_func.normed_space
 
-variable(𝕜)[NondiscreteNormedField
-      𝕜][MeasurableSpace
-      𝕜][OpensMeasurableSpace
-      𝕜][second_countable_topology
-      E][BorelSpace E][NormedSpace 𝕜 E][NormedSpace 𝕜 F][CompleteSpace F]{T : Set α → E →L[ℝ] F}{C : ℝ}
+variable (𝕜) [NondiscreteNormedField 𝕜] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [second_countable_topology E]
+  [BorelSpace E] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F] [CompleteSpace F] {T : Set α → E →L[ℝ] F} {C : ℝ}
 
 /-- Extend `set α → (E →L[ℝ] F)` to `(α →₁[μ] E) →L[𝕜] F`. -/
 def set_to_L1' (hT : dominated_fin_meas_additive μ T C) (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) :
@@ -585,7 +576,7 @@ def set_to_L1' (hT : dominated_fin_meas_additive μ T C) (h_smul : ∀ c : 𝕜,
   (set_to_L1s_clm' α E 𝕜 μ hT h_smul).extend (coe_to_Lp α E 𝕜) (simple_func.dense_range one_ne_top)
     simple_func.uniform_inducing
 
-variable{𝕜}
+variable {𝕜}
 
 /-- Extend `set α → E →L[ℝ] F` to `(α →₁[μ] E) →L[ℝ] F`. -/
 def set_to_L1 (hT : dominated_fin_meas_additive μ T C) : (α →₁[μ] E) →L[ℝ] F :=
@@ -660,7 +651,7 @@ end L1
 
 section Function
 
-variable[second_countable_topology E][BorelSpace E][CompleteSpace F]{T : Set α → E →L[ℝ] F}{C : ℝ}{f g : α → E}
+variable [second_countable_topology E] [BorelSpace E] [CompleteSpace F] {T : Set α → E →L[ℝ] F} {C : ℝ} {f g : α → E}
 
 /-- Extend `T : set α → E →L[ℝ] F` to `(α → E) → F` (for integrable functions `α → E`). We set it to
 0 if the function is not integrable. -/
@@ -869,7 +860,7 @@ begin
     assumption }
 end
 
-variable{X : Type _}[TopologicalSpace X][first_countable_topology X]
+variable {X : Type _} [TopologicalSpace X] [first_countable_topology X]
 
 theorem continuous_at_set_to_fun_of_dominated (hT : dominated_fin_meas_additive μ T C) {fs : X → α → E} {x₀ : X}
   {bound : α → ℝ} (hfs_meas : ∀ᶠx in 𝓝 x₀, AeMeasurable (fs x) μ) (h_bound : ∀ᶠx in 𝓝 x₀, ∀ᵐa ∂μ, ∥fs x a∥ ≤ bound a)

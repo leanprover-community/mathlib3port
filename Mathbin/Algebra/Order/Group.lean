@@ -19,7 +19,7 @@ open Function
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 @[toAdditive]
 instance Groupₓ.CovariantClassLe.to_contravariant_class_le [Groupₓ α] [LE α] [CovariantClass α α (·*·) (· ≤ ·)] :
@@ -59,13 +59,13 @@ instance Groupₓ.Swap.CovariantClassLt.to_contravariant_class_lt [Groupₓ α] 
 /-- An ordered additive commutative group is an additive commutative group
 with a partial order in which addition is strictly monotone. -/
 @[protectProj, ancestor AddCommGroupₓ PartialOrderₓ]
-class OrderedAddCommGroup(α : Type u) extends AddCommGroupₓ α, PartialOrderₓ α where 
+class OrderedAddCommGroup (α : Type u) extends AddCommGroupₓ α, PartialOrderₓ α where 
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, (c+a) ≤ c+b
 
 /-- An ordered commutative group is an commutative group
 with a partial order in which multiplication is strictly monotone. -/
 @[protectProj, ancestor CommGroupₓ PartialOrderₓ]
-class OrderedCommGroup(α : Type u) extends CommGroupₓ α, PartialOrderₓ α where 
+class OrderedCommGroup (α : Type u) extends CommGroupₓ α, PartialOrderₓ α where 
   mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, (c*a) ≤ c*b
 
 attribute [toAdditive] OrderedCommGroup
@@ -82,47 +82,47 @@ instance Units.orderedCommGroup [OrderedCommMonoid α] : OrderedCommGroup (Units
     mul_le_mul_left := fun a b h c => (mul_le_mul_left' (h : (a : α) ≤ b) _ : ((c : α)*a) ≤ c*b) }
 
 @[toAdditive]
-instance (priority := 100)OrderedCommGroup.toOrderedCancelCommMonoid (α : Type u) [s : OrderedCommGroup α] :
+instance (priority := 100) OrderedCommGroup.toOrderedCancelCommMonoid (α : Type u) [s : OrderedCommGroup α] :
   OrderedCancelCommMonoid α :=
   { s with mul_left_cancel := fun a b c => (mul_right_injₓ a).mp,
     le_of_mul_le_mul_left := fun a b c => (mul_le_mul_iff_left a).mp }
 
 @[toAdditive]
-instance (priority := 100)OrderedCommGroup.has_exists_mul_of_le (α : Type u) [OrderedCommGroup α] :
+instance (priority := 100) OrderedCommGroup.has_exists_mul_of_le (α : Type u) [OrderedCommGroup α] :
   HasExistsMulOfLe α :=
   ⟨fun a b hab => ⟨b*a⁻¹, (mul_inv_cancel_comm_assoc a b).symm⟩⟩
 
 @[toAdditive]
-instance  [h : HasInv α] : HasInv (OrderDual α) :=
+instance [h : HasInv α] : HasInv (OrderDual α) :=
   h
 
 @[toAdditive]
-instance  [h : Div α] : Div (OrderDual α) :=
+instance [h : Div α] : Div (OrderDual α) :=
   h
 
 @[toAdditive]
-instance  [h : DivInvMonoidₓ α] : DivInvMonoidₓ (OrderDual α) :=
+instance [h : DivInvMonoidₓ α] : DivInvMonoidₓ (OrderDual α) :=
   h
 
 @[toAdditive]
-instance  [h : Groupₓ α] : Groupₓ (OrderDual α) :=
+instance [h : Groupₓ α] : Groupₓ (OrderDual α) :=
   h
 
 @[toAdditive]
-instance  [h : CommGroupₓ α] : CommGroupₓ (OrderDual α) :=
+instance [h : CommGroupₓ α] : CommGroupₓ (OrderDual α) :=
   h
 
 @[toAdditive]
-instance  [OrderedCommGroup α] : OrderedCommGroup (OrderDual α) :=
+instance [OrderedCommGroup α] : OrderedCommGroup (OrderDual α) :=
   { OrderDual.orderedCommMonoid, OrderDual.group with  }
 
 section Groupₓ
 
-variable[Groupₓ α]
+variable [Groupₓ α]
 
 section TypeclassesLeftLe
 
-variable[LE α][CovariantClass α α (·*·) (· ≤ ·)]{a b c d : α}
+variable [LE α] [CovariantClass α α (·*·) (· ≤ ·)] {a b c d : α}
 
 /--  Uses `left` co(ntra)variant. -/
 @[simp, toAdditive Left.neg_nonpos_iff]
@@ -176,7 +176,7 @@ end TypeclassesLeftLe
 
 section TypeclassesLeftLt
 
-variable[LT α][CovariantClass α α (·*·) (· < ·)]{a b c : α}
+variable [LT α] [CovariantClass α α (·*·) (· < ·)] {a b c : α}
 
 /--  Uses `left` co(ntra)variant. -/
 @[simp, toAdditive Left.neg_pos_iff]
@@ -228,7 +228,7 @@ end TypeclassesLeftLt
 
 section TypeclassesRightLe
 
-variable[LE α][CovariantClass α α (swap (·*·)) (· ≤ ·)]{a b c : α}
+variable [LE α] [CovariantClass α α (swap (·*·)) (· ≤ ·)] {a b c : α}
 
 /--  Uses `right` co(ntra)variant. -/
 @[simp, toAdditive Right.neg_nonpos_iff]
@@ -289,7 +289,7 @@ end TypeclassesRightLe
 
 section TypeclassesRightLt
 
-variable[LT α][CovariantClass α α (swap (·*·)) (· < ·)]{a b c : α}
+variable [LT α] [CovariantClass α α (swap (·*·)) (· < ·)] {a b c : α}
 
 /--  Uses `right` co(ntra)variant. -/
 @[simp, toAdditive Right.neg_neg_iff]
@@ -346,7 +346,7 @@ end TypeclassesRightLt
 
 section TypeclassesLeftRightLe
 
-variable[LE α][CovariantClass α α (·*·) (· ≤ ·)][CovariantClass α α (swap (·*·)) (· ≤ ·)]{a b c d : α}
+variable [LE α] [CovariantClass α α (·*·) (· ≤ ·)] [CovariantClass α α (swap (·*·)) (· ≤ ·)] {a b c d : α}
 
 @[simp, toAdditive]
 theorem inv_le_inv_iff : a⁻¹ ≤ b⁻¹ ↔ b ≤ a :=
@@ -358,7 +358,7 @@ alias neg_le_neg_iff ↔ le_of_neg_le_neg _
 
 section 
 
-variable(α)
+variable (α)
 
 /-- `x ↦ x⁻¹` as an order-reversing equivalence. -/
 @[toAdditive "`x ↦ -x` as an order-reversing equivalence.", simps]
@@ -400,7 +400,7 @@ end TypeclassesLeftRightLe
 
 section TypeclassesLeftRightLt
 
-variable[LT α][CovariantClass α α (·*·) (· < ·)][CovariantClass α α (swap (·*·)) (· < ·)]{a b c d : α}
+variable [LT α] [CovariantClass α α (·*·) (· < ·)] [CovariantClass α α (swap (·*·)) (· < ·)] {a b c d : α}
 
 @[simp, toAdditive]
 theorem inv_lt_inv_iff : a⁻¹ < b⁻¹ ↔ b < a :=
@@ -442,11 +442,11 @@ end TypeclassesLeftRightLt
 
 section PreOrder
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 section LeftLe
 
-variable[CovariantClass α α (·*·) (· ≤ ·)]{a : α}
+variable [CovariantClass α α (·*·) (· ≤ ·)] {a : α}
 
 @[toAdditive]
 theorem Left.inv_le_self (h : 1 ≤ a) : a⁻¹ ≤ a :=
@@ -462,7 +462,7 @@ end LeftLe
 
 section LeftLt
 
-variable[CovariantClass α α (·*·) (· < ·)]{a : α}
+variable [CovariantClass α α (·*·) (· < ·)] {a : α}
 
 @[toAdditive]
 theorem Left.inv_lt_self (h : 1 < a) : a⁻¹ < a :=
@@ -478,7 +478,7 @@ end LeftLt
 
 section RightLe
 
-variable[CovariantClass α α (swap (·*·)) (· ≤ ·)]{a : α}
+variable [CovariantClass α α (swap (·*·)) (· ≤ ·)] {a : α}
 
 @[toAdditive]
 theorem Right.inv_le_self (h : 1 ≤ a) : a⁻¹ ≤ a :=
@@ -492,7 +492,7 @@ end RightLe
 
 section RightLt
 
-variable[CovariantClass α α (swap (·*·)) (· < ·)]{a : α}
+variable [CovariantClass α α (swap (·*·)) (· < ·)] {a : α}
 
 @[toAdditive]
 theorem Right.inv_lt_self (h : 1 < a) : a⁻¹ < a :=
@@ -510,11 +510,11 @@ end Groupₓ
 
 section CommGroupₓ
 
-variable[CommGroupₓ α]
+variable [CommGroupₓ α]
 
 section LE
 
-variable[LE α][CovariantClass α α (·*·) (· ≤ ·)]{a b c d : α}
+variable [LE α] [CovariantClass α α (·*·) (· ≤ ·)] {a b c d : α}
 
 @[toAdditive]
 theorem inv_mul_le_iff_le_mul' : (c⁻¹*a) ≤ b ↔ a ≤ b*c :=
@@ -535,7 +535,7 @@ end LE
 
 section LT
 
-variable[LT α][CovariantClass α α (·*·) (· < ·)]{a b c d : α}
+variable [LT α] [CovariantClass α α (·*·) (· < ·)] {a b c d : α}
 
 @[toAdditive]
 theorem inv_mul_lt_iff_lt_mul' : (c⁻¹*a) < b ↔ a < b*c :=
@@ -657,11 +657,11 @@ def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [Has
 
 section Groupₓ
 
-variable[Groupₓ α][LE α]
+variable [Groupₓ α] [LE α]
 
 section Right
 
-variable[CovariantClass α α (swap (·*·)) (· ≤ ·)]{a b c d : α}
+variable [CovariantClass α α (swap (·*·)) (· ≤ ·)] {a b c d : α}
 
 @[simp, toAdditive]
 theorem div_le_div_iff_right (c : α) : a / c ≤ b / c ↔ a ≤ b :=
@@ -698,7 +698,7 @@ theorem div_le_iff_le_mul : a / c ≤ b ↔ a ≤ b*c :=
   by 
     rw [←mul_le_mul_iff_right c, div_eq_mul_inv, inv_mul_cancel_right]
 
-instance (priority := 100)AddGroupₓ.toHasOrderedSub {α : Type _} [AddGroupₓ α] [LE α]
+instance (priority := 100) AddGroupₓ.toHasOrderedSub {α : Type _} [AddGroupₓ α] [LE α]
   [CovariantClass α α (swap (·+·)) (· ≤ ·)] : HasOrderedSub α :=
   ⟨fun a b c => sub_le_iff_le_add⟩
 
@@ -718,7 +718,7 @@ end Right
 
 section Left
 
-variable[CovariantClass α α (·*·) (· ≤ ·)]
+variable [CovariantClass α α (·*·) (· ≤ ·)]
 
 /-- `equiv.mul_left` as an `order_iso`. See also `order_embedding.mul_left`. -/
 @[toAdditive "`equiv.add_left` as an `order_iso`. See also `order_embedding.add_left`.",
@@ -732,7 +732,7 @@ theorem OrderIso.mul_left_symm (a : α) : (OrderIso.mulLeft a).symm = OrderIso.m
     ext x 
     rfl
 
-variable[CovariantClass α α (swap (·*·)) (· ≤ ·)]{a b c : α}
+variable [CovariantClass α α (swap (·*·)) (· ≤ ·)] {a b c : α}
 
 @[simp, toAdditive]
 theorem div_le_div_iff_left (a : α) : a / b ≤ a / c ↔ c ≤ b :=
@@ -750,11 +750,11 @@ end Groupₓ
 
 section CommGroupₓ
 
-variable[CommGroupₓ α]
+variable [CommGroupₓ α]
 
 section LE
 
-variable[LE α][CovariantClass α α (·*·) (· ≤ ·)]{a b c d : α}
+variable [LE α] [CovariantClass α α (·*·) (· ≤ ·)] {a b c d : α}
 
 @[toAdditive sub_le_sub_iff]
 theorem div_le_div_iff' : a / b ≤ c / d ↔ (a*d) ≤ c*b :=
@@ -796,7 +796,7 @@ end LE
 
 section Preorderₓ
 
-variable[Preorderₓ α][CovariantClass α α (·*·) (· ≤ ·)]{a b c d : α}
+variable [Preorderₓ α] [CovariantClass α α (·*·) (· ≤ ·)] {a b c d : α}
 
 @[toAdditive sub_le_sub]
 theorem div_le_div'' (hab : a ≤ b) (hcd : c ≤ d) : a / d ≤ b / c :=
@@ -810,11 +810,11 @@ end CommGroupₓ
 
 section Groupₓ
 
-variable[Groupₓ α][LT α]
+variable [Groupₓ α] [LT α]
 
 section Right
 
-variable[CovariantClass α α (swap (·*·)) (· < ·)]{a b c d : α}
+variable [CovariantClass α α (swap (·*·)) (· < ·)] {a b c d : α}
 
 @[simp, toAdditive]
 theorem div_lt_div_iff_right (c : α) : a / c < b / c ↔ a < b :=
@@ -859,7 +859,7 @@ end Right
 
 section Left
 
-variable[CovariantClass α α (·*·) (· < ·)][CovariantClass α α (swap (·*·)) (· < ·)]{a b c : α}
+variable [CovariantClass α α (·*·) (· < ·)] [CovariantClass α α (swap (·*·)) (· < ·)] {a b c : α}
 
 @[simp, toAdditive]
 theorem div_lt_div_iff_left (a : α) : a / b < a / c ↔ c < b :=
@@ -882,11 +882,11 @@ end Groupₓ
 
 section CommGroupₓ
 
-variable[CommGroupₓ α]
+variable [CommGroupₓ α]
 
 section LT
 
-variable[LT α][CovariantClass α α (·*·) (· < ·)]{a b c d : α}
+variable [LT α] [CovariantClass α α (·*·) (· < ·)] {a b c d : α}
 
 @[toAdditive sub_lt_sub_iff]
 theorem div_lt_div_iff' : a / b < c / d ↔ (a*d) < c*b :=
@@ -923,7 +923,7 @@ end LT
 
 section Preorderₓ
 
-variable[Preorderₓ α][CovariantClass α α (·*·) (· < ·)]{a b c d : α}
+variable [Preorderₓ α] [CovariantClass α α (·*·) (· < ·)] {a b c d : α}
 
 @[toAdditive sub_lt_sub]
 theorem div_lt_div'' (hab : a < b) (hcd : c < d) : a / d < b / c :=
@@ -937,11 +937,11 @@ end CommGroupₓ
 
 section LinearOrderₓ
 
-variable[Groupₓ α][LinearOrderₓ α][CovariantClass α α (·*·) (· ≤ ·)]
+variable [Groupₓ α] [LinearOrderₓ α] [CovariantClass α α (·*·) (· ≤ ·)]
 
 section VariableNames
 
-variable{a b c : α}
+variable {a b c : α}
 
 @[toAdditive]
 theorem le_of_forall_one_lt_lt_mul (h : ∀ ε : α, 1 < ε → a < b*ε) : a ≤ b :=
@@ -979,7 +979,7 @@ end VariableNames
 
 section DenselyOrdered
 
-variable[DenselyOrdered α]{a b c : α}
+variable [DenselyOrdered α] {a b c : α}
 
 @[toAdditive]
 theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b*ε) : a ≤ b :=
@@ -1021,12 +1021,12 @@ end LinearOrderₓ
 additive commutative group with a linear order in which
 addition is monotone. -/
 @[protectProj, ancestor OrderedAddCommGroup LinearOrderₓ]
-class LinearOrderedAddCommGroup(α : Type u) extends OrderedAddCommGroup α, LinearOrderₓ α
+class LinearOrderedAddCommGroup (α : Type u) extends OrderedAddCommGroup α, LinearOrderₓ α
 
 /-- A linearly ordered commutative monoid with an additively absorbing `⊤` element.
   Instances should include number systems with an infinite element adjoined.` -/
 @[protectProj, ancestor LinearOrderedAddCommMonoidWithTop SubNegMonoidₓ Nontrivial]
-class LinearOrderedAddCommGroupWithTop(α : Type _) extends LinearOrderedAddCommMonoidWithTop α, SubNegMonoidₓ α,
+class LinearOrderedAddCommGroupWithTop (α : Type _) extends LinearOrderedAddCommMonoidWithTop α, SubNegMonoidₓ α,
   Nontrivial α where 
   neg_top : -(⊤ : α) = ⊤
   add_neg_cancel : ∀ a : α, a ≠ ⊤ → (a+-a) = 0
@@ -1035,18 +1035,18 @@ class LinearOrderedAddCommGroupWithTop(α : Type _) extends LinearOrderedAddComm
 commutative group with a linear order in which
 multiplication is monotone. -/
 @[protectProj, ancestor OrderedCommGroup LinearOrderₓ, toAdditive]
-class LinearOrderedCommGroup(α : Type u) extends OrderedCommGroup α, LinearOrderₓ α
+class LinearOrderedCommGroup (α : Type u) extends OrderedCommGroup α, LinearOrderₓ α
 
 @[toAdditive]
-instance  [LinearOrderedCommGroup α] : LinearOrderedCommGroup (OrderDual α) :=
+instance [LinearOrderedCommGroup α] : LinearOrderedCommGroup (OrderDual α) :=
   { OrderDual.orderedCommGroup, OrderDual.linearOrder α with  }
 
 section LinearOrderedCommGroup
 
-variable[LinearOrderedCommGroup α]{a b c : α}
+variable [LinearOrderedCommGroup α] {a b c : α}
 
 @[toAdditive]
-instance (priority := 100)LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid : LinearOrderedCancelCommMonoid α :=
+instance (priority := 100) LinearOrderedCommGroup.toLinearOrderedCancelCommMonoid : LinearOrderedCancelCommMonoid α :=
   { ‹LinearOrderedCommGroup α› with le_of_mul_le_mul_left := fun x y z => le_of_mul_le_mul_left',
     mul_left_cancel := fun x y z => mul_left_cancelₓ }
 
@@ -1114,13 +1114,13 @@ theorem exists_one_lt' [Nontrivial α] : ∃ a : α, 1 < a :=
       exact ⟨y, h⟩
 
 @[toAdditive]
-instance (priority := 100)LinearOrderedCommGroup.to_no_top_order [Nontrivial α] : NoTopOrder α :=
+instance (priority := 100) LinearOrderedCommGroup.to_no_top_order [Nontrivial α] : NoTopOrder α :=
   ⟨by 
       obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt' 
       exact fun a => ⟨a*y, lt_mul_of_one_lt_right' a hy⟩⟩
 
 @[toAdditive]
-instance (priority := 100)LinearOrderedCommGroup.to_no_bot_order [Nontrivial α] : NoBotOrder α :=
+instance (priority := 100) LinearOrderedCommGroup.to_no_bot_order [Nontrivial α] : NoBotOrder α :=
   ⟨by 
       obtain ⟨y, hy⟩ : ∃ a : α, 1 < a := exists_one_lt' 
       exact fun a => ⟨a / y, (div_lt_self_iff a).mpr hy⟩⟩
@@ -1133,13 +1133,13 @@ section Neg
 
 /-- `abs a` is the absolute value of `a`. -/
 @[toAdditive]
-instance (priority := 100)hasInvLatticeHasAbs [HasInv α] [Lattice α] : HasAbs α :=
+instance (priority := 100) hasInvLatticeHasAbs [HasInv α] [Lattice α] : HasAbs α :=
   ⟨fun a => a⊔a⁻¹⟩
 
 theorem abs_eq_sup_neg {α : Type _} [Neg α] [Lattice α] (a : α) : abs a = a⊔-a :=
   rfl
 
-variable[Neg α][LinearOrderₓ α]{a b : α}
+variable [Neg α] [LinearOrderₓ α] {a b : α}
 
 theorem abs_eq_max_neg : abs a = max a (-a) :=
   rfl
@@ -1172,7 +1172,7 @@ end Neg
 
 section AddGroupₓ
 
-variable[AddGroupₓ α][LinearOrderₓ α]
+variable [AddGroupₓ α] [LinearOrderₓ α]
 
 @[simp]
 theorem abs_neg (a : α) : |-a| = |a| :=
@@ -1197,7 +1197,7 @@ theorem abs_sub_comm (a b : α) : |a - b| = |b - a| :=
     _ = |b - a| := abs_neg (b - a)
     
 
-variable[CovariantClass α α (·+·) (· ≤ ·)]{a b c : α}
+variable [CovariantClass α α (·+·) (· ≤ ·)] {a b c : α}
 
 theorem abs_of_nonneg (h : 0 ≤ a) : |a| = a :=
   max_eq_leftₓ$ (neg_nonpos.2 h).trans h
@@ -1255,7 +1255,7 @@ theorem abs_eq_zero : |a| = 0 ↔ a = 0 :=
 theorem abs_nonpos_iff {a : α} : |a| ≤ 0 ↔ a = 0 :=
   (abs_nonneg a).le_iff_eq.trans abs_eq_zero
 
-variable[CovariantClass α α (swap (·+·)) (· ≤ ·)]
+variable [CovariantClass α α (swap (·+·)) (· ≤ ·)]
 
 theorem abs_lt : |a| < b ↔ -b < a ∧ a < b :=
   max_lt_iff.trans$
@@ -1290,7 +1290,7 @@ end CovariantAddLe
 
 section LinearOrderedAddCommGroup
 
-variable[LinearOrderedAddCommGroup α]{a b c d : α}
+variable [LinearOrderedAddCommGroup α] {a b c d : α}
 
 theorem abs_le : |a| ≤ b ↔ -b ≤ a ∧ a ≤ b :=
   by 
@@ -1426,7 +1426,7 @@ namespace AddCommGroupₓ
 This is useful for constructing an `ordered_add_commm_group`
 by choosing a positive cone in an exisiting `add_comm_group`. -/
 @[nolint has_inhabited_instance]
-structure positive_cone(α : Type _)[AddCommGroupₓ α] where 
+structure positive_cone (α : Type _) [AddCommGroupₓ α] where 
   Nonneg : α → Prop 
   Pos : α → Prop := fun a => nonneg a ∧ ¬nonneg (-a)
   pos_iff : ∀ a, Pos a ↔ nonneg a ∧ ¬nonneg (-a) :=  by 
@@ -1439,7 +1439,7 @@ structure positive_cone(α : Type _)[AddCommGroupₓ α] where
 /-- A positive cone in an `add_comm_group` induces a linear order if
 for every `a`, either `a` or `-a` is non-negative. -/
 @[nolint has_inhabited_instance]
-structure total_positive_cone(α : Type _)[AddCommGroupₓ α] extends positive_cone α where 
+structure total_positive_cone (α : Type _) [AddCommGroupₓ α] extends positive_cone α where 
   nonnegDecidable : DecidablePred nonneg 
   nonneg_total : ∀ a : α, nonneg a ∨ nonneg (-a)
 
@@ -1503,33 +1503,33 @@ end LinearOrderedAddCommGroup
 
 namespace Prod
 
-variable{G H : Type _}
+variable {G H : Type _}
 
 @[toAdditive]
-instance  [OrderedCommGroup G] [OrderedCommGroup H] : OrderedCommGroup (G × H) :=
+instance [OrderedCommGroup G] [OrderedCommGroup H] : OrderedCommGroup (G × H) :=
   { Prod.commGroup, Prod.partialOrder G H, Prod.orderedCancelCommMonoid with  }
 
 end Prod
 
 section TypeTags
 
-instance  [OrderedAddCommGroup α] : OrderedCommGroup (Multiplicative α) :=
+instance [OrderedAddCommGroup α] : OrderedCommGroup (Multiplicative α) :=
   { Multiplicative.commGroup, Multiplicative.orderedCommMonoid with  }
 
-instance  [OrderedCommGroup α] : OrderedAddCommGroup (Additive α) :=
+instance [OrderedCommGroup α] : OrderedAddCommGroup (Additive α) :=
   { Additive.addCommGroup, Additive.orderedAddCommMonoid with  }
 
-instance  [LinearOrderedAddCommGroup α] : LinearOrderedCommGroup (Multiplicative α) :=
+instance [LinearOrderedAddCommGroup α] : LinearOrderedCommGroup (Multiplicative α) :=
   { Multiplicative.linearOrder, Multiplicative.orderedCommGroup with  }
 
-instance  [LinearOrderedCommGroup α] : LinearOrderedAddCommGroup (Additive α) :=
+instance [LinearOrderedCommGroup α] : LinearOrderedAddCommGroup (Additive α) :=
   { Additive.linearOrder, Additive.orderedAddCommGroup with  }
 
 end TypeTags
 
 section NormNumLemmas
 
-variable[OrderedCommGroup α]{a b : α}
+variable [OrderedCommGroup α] {a b : α}
 
 @[toAdditive neg_le_neg]
 theorem inv_le_inv' : a ≤ b → b⁻¹ ≤ a⁻¹ :=

@@ -29,7 +29,7 @@ namespace CategoryTheory
 
 universe v₁ v₂ v₃ v₄ u₁ u₂ u₃ u₄
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 /--
 `nat_trans F G` represents a natural transformation between functors `F` and `G`.
@@ -39,7 +39,7 @@ The field `app` provides the components of the natural transformation.
 Naturality is expressed by `α.naturality_lemma`.
 -/
 @[ext]
-structure nat_trans(F G : C ⥤ D) : Type max u₁ v₂ where 
+structure nat_trans (F G : C ⥤ D) : Type max u₁ v₂ where 
   app : ∀ X : C, F.obj X ⟶ G.obj X 
   naturality' : ∀ ⦃X Y : C⦄ f : X ⟶ Y, F.map f ≫ app Y = app X ≫ G.map f :=  by 
   runTac 
@@ -62,7 +62,7 @@ protected def id (F : C ⥤ D) : nat_trans F F :=
 theorem id_app' (F : C ⥤ D) (X : C) : (nat_trans.id F).app X = 𝟙 (F.obj X) :=
   rfl
 
-instance  (F : C ⥤ D) : Inhabited (nat_trans F F) :=
+instance (F : C ⥤ D) : Inhabited (nat_trans F F) :=
   ⟨nat_trans.id F⟩
 
 open Category
@@ -71,7 +71,7 @@ open CategoryTheory.Functor
 
 section 
 
-variable{F G H I : C ⥤ D}
+variable {F G H I : C ⥤ D}
 
 /-- `vcomp α β` is the vertical compositions of natural transformations. -/
 def vcomp (α : nat_trans F G) (β : nat_trans G H) : nat_trans F H :=
@@ -93,7 +93,7 @@ G X ----> G Y ----> G U ----> G V
     G(f)      G(g)      G(h)
 commutes.
 -/
-example  {F G : C ⥤ D} (α : nat_trans F G) {X Y U V : C} (f : X ⟶ Y) (g : Y ⟶ U) (h : U ⟶ V) :
+example {F G : C ⥤ D} (α : nat_trans F G) {X Y U V : C} (f : X ⟶ Y) (g : Y ⟶ U) (h : U ⟶ V) :
   α.app X ≫ G.map f ≫ G.map g ≫ G.map h = F.map f ≫ F.map g ≫ F.map h ≫ α.app V :=
   by 
     simp 

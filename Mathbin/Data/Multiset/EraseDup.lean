@@ -9,7 +9,7 @@ namespace Multiset
 
 open List
 
-variable{α β : Type _}[DecidableEq α]
+variable {α β : Type _} [DecidableEq α]
 
 /-! ### erase_dup -/
 

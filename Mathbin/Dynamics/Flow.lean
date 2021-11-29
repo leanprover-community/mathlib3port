@@ -31,14 +31,14 @@ open Set Function Filter
 
 section Invariant
 
-variable{τ : Type _}{α : Type _}
+variable {τ : Type _} {α : Type _}
 
 /-- A set `s ⊆ α` is invariant under `ϕ : τ → α → α` if
     `ϕ t s ⊆ s` for all `t` in `τ`. -/
 def IsInvariant (ϕ : τ → α → α) (s : Set α) : Prop :=
   ∀ t, maps_to (ϕ t) s s
 
-variable(ϕ : τ → α → α)(s : Set α)
+variable (ϕ : τ → α → α) (s : Set α)
 
 theorem is_invariant_iff_image : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s ⊆ s :=
   by 
@@ -74,7 +74,8 @@ end Invariant
 
 /-- A flow on a topological space `α` by an a additive topological
     monoid `τ` is a continuous monoid action of `τ` on `α`.-/
-structure Flow(τ : Type _)[TopologicalSpace τ][AddMonoidₓ τ][HasContinuousAdd τ](α : Type _)[TopologicalSpace α] where 
+structure Flow (τ : Type _) [TopologicalSpace τ] [AddMonoidₓ τ] [HasContinuousAdd τ] (α : Type _)
+  [TopologicalSpace α] where 
   toFun : τ → α → α 
   cont' : Continuous (uncurry to_fun)
   map_add' : ∀ t₁ t₂ x, to_fun (t₁+t₂) x = to_fun t₁ (to_fun t₂ x)
@@ -82,12 +83,13 @@ structure Flow(τ : Type _)[TopologicalSpace τ][AddMonoidₓ τ][HasContinuousA
 
 namespace Flow
 
-variable{τ : Type _}[AddMonoidₓ τ][TopologicalSpace τ][HasContinuousAdd τ]{α : Type _}[TopologicalSpace α](ϕ : Flow τ α)
+variable {τ : Type _} [AddMonoidₓ τ] [TopologicalSpace τ] [HasContinuousAdd τ] {α : Type _} [TopologicalSpace α]
+  (ϕ : Flow τ α)
 
-instance  : Inhabited (Flow τ α) :=
+instance : Inhabited (Flow τ α) :=
   ⟨{ toFun := fun _ x => x, cont' := continuous_snd, map_add' := fun _ _ _ => rfl, map_zero' := fun _ => rfl }⟩
 
-instance  : CoeFun (Flow τ α) fun _ => τ → α → α :=
+instance : CoeFun (Flow τ α) fun _ => τ → α → α :=
   ⟨Flow.toFun⟩
 
 @[ext]
@@ -131,8 +133,8 @@ end Flow
 
 namespace Flow
 
-variable{τ :
-    Type _}[AddCommGroupₓ τ][TopologicalSpace τ][TopologicalAddGroup τ]{α : Type _}[TopologicalSpace α](ϕ : Flow τ α)
+variable {τ : Type _} [AddCommGroupₓ τ] [TopologicalSpace τ] [TopologicalAddGroup τ] {α : Type _} [TopologicalSpace α]
+  (ϕ : Flow τ α)
 
 theorem is_invariant_iff_image_eq (s : Set α) : IsInvariant ϕ s ↔ ∀ t, ϕ t '' s = s :=
   (is_invariant_iff_image _ _).trans

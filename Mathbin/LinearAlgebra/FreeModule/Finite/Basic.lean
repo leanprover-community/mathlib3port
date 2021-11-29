@@ -20,16 +20,16 @@ We provide some instances for finite and free modules.
 
 universe u v w
 
-variable(R : Type u)(M : Type v)(N : Type w)
+variable (R : Type u) (M : Type v) (N : Type w)
 
 namespace Module.Free
 
 section Ringₓ
 
-variable[Ringₓ R][AddCommGroupₓ M][Module R M][Module.Free R M]
+variable [Ringₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 
 /-- If a free module is finite, then any basis is finite. -/
-noncomputable instance  [Nontrivial R] [Module.Finite R M] : Fintype (Module.Free.ChooseBasisIndex R M) :=
+noncomputable instance [Nontrivial R] [Module.Finite R M] : Fintype (Module.Free.ChooseBasisIndex R M) :=
   by 
     obtain ⟨h⟩ := id ‹Module.Finite R M›
     choose s hs using h 
@@ -39,16 +39,16 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][AddCommGroupₓ M][Module R M][Module.Free R M]
+variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [Module.Free R M]
 
-variable[AddCommGroupₓ N][Module R N][Module.Free R N]
+variable [AddCommGroupₓ N] [Module R N] [Module.Free R N]
 
-instance  [Nontrivial R] [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) :=
+instance [Nontrivial R] [Module.Finite R M] [Module.Finite R N] : Module.Free R (M →ₗ[R] N) :=
   by 
     classical 
     exact of_equiv (LinearMap.toMatrix (Module.Free.chooseBasis R M) (Module.Free.chooseBasis R N)).symm
 
-variable{R M}
+variable {R M}
 
 /-- A free module with a basis indexed by a `fintype` is finite. -/
 theorem _root_.module.finite.of_basis {R : Type _} {M : Type _} {ι : Type _} [CommRingₓ R] [AddCommGroupₓ M]
@@ -74,14 +74,14 @@ end CommRingₓ
 
 section Integer
 
-variable[AddCommGroupₓ M][Module.Finite ℤ M][Module.Free ℤ M]
+variable [AddCommGroupₓ M] [Module.Finite ℤ M] [Module.Free ℤ M]
 
-variable[AddCommGroupₓ N][Module.Finite ℤ N][Module.Free ℤ N]
+variable [AddCommGroupₓ N] [Module.Finite ℤ N] [Module.Free ℤ N]
 
-instance  : Module.Finite ℤ (M →+ N) :=
+instance : Module.Finite ℤ (M →+ N) :=
   Module.Finite.equiv (addMonoidHomLequivInt ℤ).symm
 
-instance  : Module.Free ℤ (M →+ N) :=
+instance : Module.Free ℤ (M →+ N) :=
   Module.Free.of_equiv (addMonoidHomLequivInt ℤ).symm
 
 end Integer

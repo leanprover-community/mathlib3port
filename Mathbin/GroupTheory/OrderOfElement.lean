@@ -30,13 +30,13 @@ open_locale Pointwise
 
 universe u v
 
-variable{G : Type u}{A : Type v}
+variable {G : Type u} {A : Type v}
 
-variable{x y : G}{a b : A}{n m : ℕ}
+variable {x y : G} {a b : A} {n m : ℕ}
 
 section MonoidAddMonoid
 
-variable[Monoidₓ G][AddMonoidₓ A]
+variable [Monoidₓ G] [AddMonoidₓ A]
 
 section IsOfFinOrder
 
@@ -118,6 +118,11 @@ theorem order_of_eq_zero (h : ¬IsOfFinOrder x) : orderOf x = 0 :=
 @[toAdditive add_order_of_eq_zero_iff]
 theorem order_of_eq_zero_iff : orderOf x = 0 ↔ ¬IsOfFinOrder x :=
   ⟨fun h H => (order_of_pos' H).ne' h, order_of_eq_zero⟩
+
+@[toAdditive add_order_of_eq_zero_iff']
+theorem order_of_eq_zero_iff' : orderOf x = 0 ↔ ∀ n : ℕ, 0 < n → x ^ n ≠ 1 :=
+  by 
+    simpRw [order_of_eq_zero_iff, is_of_fin_order_iff_pow_eq_one, not_exists, not_and]
 
 @[toAdditive nsmul_ne_zero_of_lt_add_order_of']
 theorem pow_ne_one_of_lt_order_of' (n0 : n ≠ 0) (h : n < orderOf x) : x ^ n ≠ 1 :=
@@ -229,7 +234,7 @@ theorem order_of_submonoid {H : Submonoid G} (y : H) : orderOf (y : G) = orderOf
 theorem order_of_units {y : Units G} : orderOf (y : G) = orderOf y :=
   order_of_injective (Units.coeHom G) Units.ext y
 
-variable(x)
+variable (x)
 
 @[toAdditive add_order_of_nsmul']
 theorem order_of_pow' (h : n ≠ 0) : orderOf (x ^ n) = orderOf x / gcd (orderOf x) n :=
@@ -237,9 +242,9 @@ theorem order_of_pow' (h : n ≠ 0) : orderOf (x ^ n) = orderOf x / gcd (orderOf
     convert minimal_period_iterate_eq_div_gcd h 
     simp only [orderOf, mul_left_iterate]
 
-variable(a)
+variable (a)
 
-variable(n)
+variable (n)
 
 @[toAdditive add_order_of_nsmul'']
 theorem order_of_pow'' (h : IsOfFinOrder x) : orderOf (x ^ n) = orderOf x / gcd (orderOf x) n :=
@@ -249,7 +254,7 @@ theorem order_of_pow'' (h : IsOfFinOrder x) : orderOf (x ^ n) = orderOf x / gcd 
 
 section PPrime
 
-variable{a x n}{p : ℕ}[hp : Fact p.prime]
+variable {a x n} {p : ℕ} [hp : Fact p.prime]
 
 include hp
 
@@ -284,9 +289,9 @@ end MonoidAddMonoid
 
 section CancelMonoid
 
-variable[LeftCancelMonoid G](x)
+variable [LeftCancelMonoid G] (x)
 
-variable[AddLeftCancelMonoid A](a)
+variable [AddLeftCancelMonoid A] (a)
 
 @[toAdditive nsmul_injective_aux]
 theorem pow_injective_aux (h : n ≤ m) (hm : m < orderOf x) (eq : x ^ n = x ^ m) : n = m :=
@@ -315,7 +320,7 @@ end CancelMonoid
 
 section Groupₓ
 
-variable[Groupₓ G][AddGroupₓ A]{x a}{i : ℤ}
+variable [Groupₓ G] [AddGroupₓ A] {x a} {i : ℤ}
 
 @[toAdditive add_order_of_dvd_iff_zsmul_eq_zero]
 theorem order_of_dvd_iff_zpow_eq_one : (orderOf x : ℤ) ∣ i ↔ x ^ i = 1 :=
@@ -378,11 +383,11 @@ end Groupₓ
 
 section Fintype
 
-variable[Fintype G][Fintype A]
+variable [Fintype G] [Fintype A]
 
 section FiniteMonoid
 
-variable[Monoidₓ G][AddMonoidₓ A]
+variable [Monoidₓ G] [AddMonoidₓ A]
 
 open_locale BigOperators
 
@@ -417,7 +422,7 @@ end FiniteMonoid
 
 section FiniteCancelMonoid
 
-variable[LeftCancelMonoid G][AddLeftCancelMonoid A]
+variable [LeftCancelMonoid G] [AddLeftCancelMonoid A]
 
 @[toAdditive exists_nsmul_eq_zero]
 theorem exists_pow_eq_one (x : G) : IsOfFinOrder x :=
@@ -505,7 +510,7 @@ end FiniteCancelMonoid
 
 section FiniteGroup
 
-variable[Groupₓ G][AddGroupₓ A]
+variable [Groupₓ G] [AddGroupₓ A]
 
 @[toAdditive]
 theorem exists_zpow_eq_one (x : G) : ∃ (i : ℤ)(H : i ≠ 0), x ^ (i : ℤ) = 1 :=
@@ -656,7 +661,7 @@ theorem inf_eq_bot_of_coprime {G : Type _} [Groupₓ G] {H K : Subgroup G} [Fint
       ⟨(congr_argₓ (· ∣ Fintype.card H) (order_of_subgroup ⟨x, hx.1⟩)).mpr order_of_dvd_card_univ,
         (congr_argₓ (· ∣ Fintype.card K) (order_of_subgroup ⟨x, hx.2⟩)).mpr order_of_dvd_card_univ⟩
 
-variable(a)
+variable (a)
 
 theorem image_range_add_order_of [DecidableEq A] :
   Finset.image (fun i => i • a) (Finset.range (addOrderOf a)) = (AddSubgroup.zmultiples a : Set A).toFinset :=
@@ -733,4 +738,33 @@ def powCardSubgroup {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS : S.no
         Groupₓ.card_pow_eq_card_pow_card_univ S (Fintype.card G+Fintype.card G) le_add_self])
 
 end PowIsSubgroup
+
+section LinearOrderedRing
+
+variable [LinearOrderedRing G]
+
+theorem order_of_abs_ne_one (h : |x| ≠ 1) : orderOf x = 0 :=
+  by 
+    rw [order_of_eq_zero_iff']
+    intro n hn hx 
+    replace hx : |x| ^ n = 1 :=
+      by 
+        simpa only [abs_one, abs_pow] using congr_argₓ abs hx 
+    cases' h.lt_or_lt with h h
+    ·
+      exact ((pow_lt_one (abs_nonneg x) h hn.ne').Ne hx).elim
+    ·
+      exact ((one_lt_pow h hn.ne').ne' hx).elim
+
+theorem LinearOrderedRing.order_of_le_two : orderOf x ≤ 2 :=
+  by 
+    cases' ne_or_eq |x| 1 with h h
+    ·
+      simp [order_of_abs_ne_one h]
+    rcases eq_or_eq_neg_of_abs_eq h with (rfl | rfl)
+    ·
+      simp 
+    apply order_of_le_of_pow_eq_one <;> normNum
+
+end LinearOrderedRing
 

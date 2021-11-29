@@ -31,13 +31,13 @@ universe u v w w₁ w₂
 
 namespace LieSubmodule
 
-variable{R : Type u}{L : Type v}{M : Type w}
+variable {R : Type u} {L : Type v} {M : Type w}
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L][AddCommGroupₓ M][Module R M]
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M] [Module R M]
 
-variable[LieRingModule L M][LieModule R L M]
+variable [LieRingModule L M] [LieModule R L M]
 
-variable(N N' : LieSubmodule R L M)(I J : LieIdeal R L)
+variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L)
 
 section LieIdealOperations
 
@@ -227,11 +227,11 @@ namespace LieIdeal
 
 open LieAlgebra
 
-variable{R : Type u}{L : Type v}{L' : Type w₂}
+variable {R : Type u} {L : Type v} {L' : Type w₂}
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L][LieRing L'][LieAlgebra R L']
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [LieRing L'] [LieAlgebra R L']
 
-variable(f : L →ₗ⁅R⁆ L')(I : LieIdeal R L)(J : LieIdeal R L')
+variable (f : L →ₗ⁅R⁆ L') (I : LieIdeal R L) (J : LieIdeal R L')
 
 /-- Note that the inequality can be strict; e.g., the inclusion of an Abelian subalgebra of a
 simple algebra. -/
@@ -267,7 +267,7 @@ theorem comap_bracket_le {J₁ J₂ : LieIdeal R L'} : ⁅comap f J₁,comap f J
     rw [←map_le_iff_le_comap]
     exact le_transₓ (map_bracket_le f) (LieSubmodule.mono_lie _ _ _ _ map_comap_le map_comap_le)
 
-variable{f}
+variable {f}
 
 theorem map_comap_incl {I₁ I₂ : LieIdeal R L} : map I₁.incl (comap I₁.incl I₂) = I₁⊓I₂ :=
   by 

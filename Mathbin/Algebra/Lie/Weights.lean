@@ -42,11 +42,11 @@ lie character, eigenvalue, eigenspace, weight, weight vector, root, root vector
 
 universe u v w w₁ w₂ w₃
 
-variable{R : Type u}{L : Type v}[CommRingₓ R][LieRing L][LieAlgebra R L]
+variable {R : Type u} {L : Type v} [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
-variable(H : LieSubalgebra R L)[LieAlgebra.IsNilpotent R H]
+variable (H : LieSubalgebra R L) [LieAlgebra.IsNilpotent R H]
 
-variable(M : Type w)[AddCommGroupₓ M][Module R M][LieRingModule L M][LieModule R L M]
+variable (M : Type w) [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
 namespace LieModule
 
@@ -73,7 +73,7 @@ theorem mem_pre_weight_space (χ : L → R) (m : M) :
   by 
     simp [pre_weight_space, -LinearMap.pow_apply]
 
-variable(L)
+variable (L)
 
 -- error in Algebra.Lie.Weights: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- See also `bourbaki1975b` Chapter VII §1.1, Proposition 2 (ii). -/
@@ -145,7 +145,7 @@ begin
   { rw ["[", expr linear_map.mul_apply, ",", expr linear_map.pow_map_zero_of_le hj hf₂, ",", expr linear_map.map_zero, "]"] [] }
 end
 
-variable{L M}
+variable {L M}
 
 theorem lie_mem_pre_weight_space_of_mem_pre_weight_space {χ₁ χ₂ : L → R} {x : L} {m : M}
   (hx : x ∈ pre_weight_space L χ₁) (hm : m ∈ pre_weight_space M χ₂) : ⁅x,m⁆ ∈ pre_weight_space M (χ₁+χ₂) :=
@@ -157,7 +157,7 @@ theorem lie_mem_pre_weight_space_of_mem_pre_weight_space {χ₁ χ₂ : L → R}
     simp only [Submodule.subtype_apply, to_module_hom_apply, TensorProduct.map_tmul]
     rfl
 
-variable(M)
+variable (M)
 
 /-- If a Lie algebra is nilpotent, then pre-weight spaces are Lie submodules. -/
 def weight_space [LieAlgebra.IsNilpotent R L] (χ : L → R) : LieSubmodule R L M :=
@@ -270,7 +270,7 @@ begin
   simp_rw ["[", expr linear_map.commute_pow_left_of_commute (hfg _), "]"] []
 end
 
-variable{H M}
+variable {H M}
 
 theorem lie_mem_weight_space_of_mem_weight_space {χ₁ χ₂ : H → R} {x : L} {m : M} (hx : x ∈ root_space H χ₁)
   (hm : m ∈ weight_space M χ₂) : ⁅x,m⁆ ∈ weight_space M (χ₁+χ₂) :=
@@ -282,7 +282,7 @@ theorem lie_mem_weight_space_of_mem_weight_space {χ₁ χ₂ : H → R} {x : L}
     simp only [Submodule.subtype_apply, to_module_hom_apply, Submodule.coe_mk, LieModuleHom.coe_restrict_lie,
       TensorProduct.map_tmul]
 
-variable(R L H M)
+variable (R L H M)
 
 /--
 Auxiliary definition for `root_space_weight_space_product`,
@@ -439,7 +439,7 @@ namespace LieModule
 
 open LieAlgebra
 
-variable{R L H}
+variable {R L H}
 
 -- error in Algebra.Lie.Weights: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A priori, weight spaces are Lie submodules over the Lie subalgebra `H` used to define them.

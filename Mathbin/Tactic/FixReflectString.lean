@@ -25,7 +25,7 @@ section
 
 attribute [local semireducible] reflected
 
-unsafe instance  {α} [has_reflect α] : has_reflect (Thunkₓ α)
+unsafe instance {α} [has_reflect α] : has_reflect (Thunkₓ α)
 | a => expr.lam `x BinderInfo.default (reflect Unit) (reflect (a ()))
 
 end 

@@ -12,13 +12,13 @@ open_locale TopologicalSpace Classical
 
 universe u v
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 section LiminfLimsup
 
 section OrderClosedTopology
 
-variable[SemilatticeSup α][TopologicalSpace α][OrderTopology α]
+variable [SemilatticeSup α] [TopologicalSpace α] [OrderTopology α]
 
 theorem is_bounded_le_nhds (a : α) : (𝓝 a).IsBounded (· ≤ ·) :=
   match forall_le_or_exists_lt_sup a with 
@@ -28,6 +28,13 @@ theorem is_bounded_le_nhds (a : α) : (𝓝 a).IsBounded (· ≤ ·) :=
 theorem Filter.Tendsto.is_bounded_under_le {f : Filter β} {u : β → α} {a : α} (h : tendsto u f (𝓝 a)) :
   f.is_bounded_under (· ≤ ·) u :=
   (is_bounded_le_nhds a).mono h
+
+theorem Filter.Tendsto.bdd_above_range_of_cofinite {u : β → α} {a : α} (h : tendsto u cofinite (𝓝 a)) :
+  BddAbove (Set.Range u) :=
+  h.is_bounded_under_le.bdd_above_range_of_cofinite
+
+theorem Filter.Tendsto.bdd_above_range {u : ℕ → α} {a : α} (h : tendsto u at_top (𝓝 a)) : BddAbove (Set.Range u) :=
+  h.is_bounded_under_le.bdd_above_range
 
 theorem is_cobounded_ge_nhds (a : α) : (𝓝 a).IsCobounded (· ≥ ·) :=
   (is_bounded_le_nhds a).is_cobounded_flip
@@ -40,7 +47,7 @@ end OrderClosedTopology
 
 section OrderClosedTopology
 
-variable[SemilatticeInf α][TopologicalSpace α][OrderTopology α]
+variable [SemilatticeInf α] [TopologicalSpace α] [OrderTopology α]
 
 theorem is_bounded_ge_nhds (a : α) : (𝓝 a).IsBounded (· ≥ ·) :=
   @is_bounded_le_nhds (OrderDual α) _ _ _ a
@@ -48,6 +55,13 @@ theorem is_bounded_ge_nhds (a : α) : (𝓝 a).IsBounded (· ≥ ·) :=
 theorem Filter.Tendsto.is_bounded_under_ge {f : Filter β} {u : β → α} {a : α} (h : tendsto u f (𝓝 a)) :
   f.is_bounded_under (· ≥ ·) u :=
   (is_bounded_ge_nhds a).mono h
+
+theorem Filter.Tendsto.bdd_below_range_of_cofinite {u : β → α} {a : α} (h : tendsto u cofinite (𝓝 a)) :
+  BddBelow (Set.Range u) :=
+  h.is_bounded_under_ge.bdd_below_range_of_cofinite
+
+theorem Filter.Tendsto.bdd_below_range {u : ℕ → α} {a : α} (h : tendsto u at_top (𝓝 a)) : BddBelow (Set.Range u) :=
+  h.is_bounded_under_ge.bdd_below_range
 
 theorem is_cobounded_le_nhds (a : α) : (𝓝 a).IsCobounded (· ≤ ·) :=
   (is_bounded_ge_nhds a).is_cobounded_flip
@@ -60,7 +74,7 @@ end OrderClosedTopology
 
 section ConditionallyCompleteLinearOrder
 
-variable[ConditionallyCompleteLinearOrder α]
+variable [ConditionallyCompleteLinearOrder α]
 
 theorem lt_mem_sets_of_Limsup_lt {f : Filter α} {b} (h : f.is_bounded (· ≤ ·)) (l : f.Limsup < b) : ∀ᶠa in f, a < b :=
   let ⟨c, (h : ∀ᶠa in f, a ≤ c), hcb⟩ := exists_lt_of_cInf_lt h l 
@@ -69,7 +83,7 @@ theorem lt_mem_sets_of_Limsup_lt {f : Filter α} {b} (h : f.is_bounded (· ≤ �
 theorem gt_mem_sets_of_Liminf_gt : ∀ {f : Filter α} {b}, f.is_bounded (· ≥ ·) → b < f.Liminf → ∀ᶠa in f, b < a :=
   @lt_mem_sets_of_Limsup_lt (OrderDual α) _
 
-variable[TopologicalSpace α][OrderTopology α]
+variable [TopologicalSpace α] [OrderTopology α]
 
 /-- If the liminf and the limsup of a filter coincide, then this filter converges to
 their common value, at least if the filter is eventually bounded above and below. -/

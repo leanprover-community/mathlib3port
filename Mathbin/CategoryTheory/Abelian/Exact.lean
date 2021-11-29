@@ -29,11 +29,11 @@ open CategoryTheory.Limits
 
 open CategoryTheory.Preadditive
 
-variable{C : Type u}[category.{v} C][abelian C]
+variable {C : Type u} [category.{v} C] [abelian C]
 
 namespace CategoryTheory.Abelian
 
-variable{X Y Z : C}(f : X ⟶ Y)(g : Y ⟶ Z)
+variable {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z)
 
 attribute [local instance] has_equalizers_of_has_kernels
 
@@ -146,7 +146,7 @@ theorem exact_cokernel : exact f (cokernel.π f) :=
     rw [exact_iff]
     tidy
 
-instance  [exact f g] :
+instance [exact f g] :
   mono
     (cokernel.desc f g
       (by 
@@ -165,7 +165,7 @@ instance  [exact f g] :
 
 section 
 
-variable(Z)
+variable (Z)
 
 theorem tfae_mono : tfae [mono f, kernel.ι f = 0, exact (0 : Z ⟶ X) f] :=
   by 

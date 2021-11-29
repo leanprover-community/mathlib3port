@@ -18,10 +18,10 @@ namespace Nat
 
 open_locale Classical
 
-noncomputable instance  : HasInfₓ ℕ :=
+noncomputable instance : HasInfₓ ℕ :=
   ⟨fun s => if h : ∃ n, n ∈ s then @Nat.findₓ (fun n => n ∈ s) _ h else 0⟩
 
-noncomputable instance  : HasSupₓ ℕ :=
+noncomputable instance : HasSupₓ ℕ :=
   ⟨fun s => if h : ∃ n, ∀ a _ : a ∈ s, a ≤ n then @Nat.findₓ (fun n => ∀ a _ : a ∈ s, a ≤ n) _ h else 0⟩
 
 theorem Inf_def {s : Set ℕ} (h : s.nonempty) : Inf s = @Nat.findₓ (fun n => n ∈ s) _ h :=
@@ -104,10 +104,10 @@ theorem Inf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k
 
 /-- This instance is necessary, otherwise the lattice operations would be derived via
 conditionally_complete_linear_order_bot and marked as noncomputable. -/
-instance  : Lattice ℕ :=
+instance : Lattice ℕ :=
   latticeOfLinearOrder
 
-noncomputable instance  : ConditionallyCompleteLinearOrderBot ℕ :=
+noncomputable instance : ConditionallyCompleteLinearOrderBot ℕ :=
   { (inferInstance : OrderBot ℕ), (latticeOfLinearOrder : Lattice ℕ), (inferInstance : LinearOrderₓ ℕ) with sup := Sup,
     inf := Inf,
     le_cSup :=
@@ -169,7 +169,7 @@ theorem Inf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < Inf { m | p m }) : (Inf {
 
 section 
 
-variable{α : Type _}[CompleteLattice α]
+variable {α : Type _} [CompleteLattice α]
 
 theorem supr_lt_succ (u : ℕ → α) (n : ℕ) : (⨆(k : _)(_ : k < n+1), u k) = (⨆(k : _)(_ : k < n), u k)⊔u n :=
   by 
@@ -192,7 +192,7 @@ end Nat
 
 namespace Set
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem bUnion_lt_succ (u : ℕ → Set α) (n : ℕ) : (⋃(k : _)(_ : k < n+1), u k) = (⋃(k : _)(_ : k < n), u k) ∪ u n :=
   Nat.supr_lt_succ u n
@@ -212,7 +212,7 @@ namespace Enat
 
 open_locale Classical
 
-noncomputable instance  : CompleteLinearOrder Enat :=
+noncomputable instance : CompleteLinearOrder Enat :=
   { Enat.linearOrder, with_top_order_iso.symm.toGaloisInsertion.liftCompleteLattice with  }
 
 end Enat

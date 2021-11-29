@@ -7,7 +7,7 @@ import Mathbin.Algebra.CharZero
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Nat
 

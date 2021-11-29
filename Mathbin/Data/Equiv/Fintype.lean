@@ -21,7 +21,7 @@ sides of the equivalence are `fintype`s.
 -/
 
 
-variable{α β : Type _}[Fintype α][DecidableEq β](e : Equiv.Perm α)(f : α ↪ β)
+variable {α β : Type _} [Fintype α] [DecidableEq β] (e : Equiv.Perm α) (f : α ↪ β)
 
 /--
 Computably turn an embedding `f : α ↪ β` into an equiv `α ≃ set.range f`,
@@ -88,7 +88,7 @@ theorem Equiv.Perm.via_fintype_embedding_sign [DecidableEq α] [Fintype β] :
 
 namespace Equiv
 
-variable{p q : α → Prop}[DecidablePred p][DecidablePred q]
+variable {p q : α → Prop} [DecidablePred p] [DecidablePred q]
 
 /-- If `e` is an equivalence between two subtypes of a fintype `α`, `e.to_compl`
 is an equivalence between the complement of those subtypes.

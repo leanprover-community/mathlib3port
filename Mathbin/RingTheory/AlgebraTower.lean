@@ -26,19 +26,19 @@ open_locale Pointwise
 
 universe u v w u₁
 
-variable(R : Type u)(S : Type v)(A : Type w)(B : Type u₁)
+variable (R : Type u) (S : Type v) (A : Type w) (B : Type u₁)
 
 namespace IsScalarTower
 
 section Semiringₓ
 
-variable[CommSemiringₓ R][CommSemiringₓ S][Semiringₓ A][Semiringₓ B]
+variable [CommSemiringₓ R] [CommSemiringₓ S] [Semiringₓ A] [Semiringₓ B]
 
-variable[Algebra R S][Algebra S A][Algebra S B][Algebra R A][Algebra R B]
+variable [Algebra R S] [Algebra S A] [Algebra S B] [Algebra R A] [Algebra R B]
 
-variable[IsScalarTower R S A][IsScalarTower R S B]
+variable [IsScalarTower R S A] [IsScalarTower R S B]
 
-variable(R S A B)
+variable (R S A B)
 
 /-- Suppose that `R -> S -> A` is a tower of algebras.
 If an element `r : R` is invertible in `S`, then it is invertible in `A`. -/
@@ -58,9 +58,9 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R][CommSemiringₓ A][CommSemiringₓ B]
+variable [CommSemiringₓ R] [CommSemiringₓ A] [CommSemiringₓ B]
 
-variable[Algebra R A][Algebra A B][Algebra R B][IsScalarTower R A B]
+variable [Algebra R A] [Algebra A B] [Algebra R B] [IsScalarTower R A B]
 
 end CommSemiringₓ
 
@@ -131,11 +131,11 @@ end
 
 section AlgebraMapCoeffs
 
-variable{R}(A){ι M : Type _}[CommSemiringₓ R][Semiringₓ A][AddCommMonoidₓ M]
+variable {R} (A) {ι M : Type _} [CommSemiringₓ R] [Semiringₓ A] [AddCommMonoidₓ M]
 
-variable[Algebra R A][Module A M][Module R M][IsScalarTower R A M]
+variable [Algebra R A] [Module A M] [Module R M] [IsScalarTower R A M]
 
-variable(b : Basis ι R M)(h : Function.Bijective (algebraMap R A))
+variable (b : Basis ι R M) (h : Function.Bijective (algebraMap R A))
 
 /-- If `R` and `A` have a bijective `algebra_map R A` and act identically on `M`,
 then a basis for `M` as `R`-module is also a basis for `M` as `R'`-module. -/
@@ -163,11 +163,11 @@ open_locale BigOperators Classical
 
 universe v₁ w₁
 
-variable{R S A}
+variable {R S A}
 
-variable[CommSemiringₓ R][Semiringₓ S][AddCommMonoidₓ A]
+variable [CommSemiringₓ R] [Semiringₓ S] [AddCommMonoidₓ A]
 
-variable[Algebra R S][Module S A][Module R A][IsScalarTower R S A]
+variable [Algebra R S] [Module S A] [Module R A] [IsScalarTower R S A]
 
 -- error in RingTheory.AlgebraTower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem linear_independent_smul
@@ -231,9 +231,9 @@ end Semiringₓ
 
 section Ringₓ
 
-variable{R S}
+variable {R S}
 
-variable[CommRingₓ R][Ringₓ S][Algebra R S]
+variable [CommRingₓ R] [Ringₓ S] [Algebra R S]
 
 theorem Basis.algebra_map_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial S] (b : Basis ι R S) :
   Function.Injective (algebraMap R S) :=
@@ -245,13 +245,13 @@ end Ringₓ
 
 section ArtinTate
 
-variable(C : Type _)
+variable (C : Type _)
 
 section Semiringₓ
 
-variable[CommSemiringₓ A][CommSemiringₓ B][Semiringₓ C]
+variable [CommSemiringₓ A] [CommSemiringₓ B] [Semiringₓ C]
 
-variable[Algebra A B][Algebra B C][Algebra A C][IsScalarTower A B C]
+variable [Algebra A B] [Algebra B C] [Algebra A C] [IsScalarTower A B C]
 
 open Finset Submodule
 
@@ -319,9 +319,9 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[CommRingₓ A][CommRingₓ B][CommRingₓ C]
+variable [CommRingₓ A] [CommRingₓ B] [CommRingₓ C]
 
-variable[Algebra A B][Algebra B C][Algebra A C][IsScalarTower A B C]
+variable [Algebra A B] [Algebra B C] [Algebra A C] [IsScalarTower A B C]
 
 /-- Artin--Tate lemma: if A ⊆ B ⊆ C is a chain of subrings of commutative rings, and
 A is noetherian, and C is algebra-finite over A, and C is module-finite over B,
@@ -346,9 +346,9 @@ end ArtinTate
 
 section AlgHomTower
 
-variable{A}{C D : Type _}[CommSemiringₓ A][CommSemiringₓ C][CommSemiringₓ D][Algebra A C][Algebra A D]
+variable {A} {C D : Type _} [CommSemiringₓ A] [CommSemiringₓ C] [CommSemiringₓ D] [Algebra A C] [Algebra A D]
 
-variable(f : C →ₐ[A] D)(B)[CommSemiringₓ B][Algebra A B][Algebra B C][IsScalarTower A B C]
+variable (f : C →ₐ[A] D) (B) [CommSemiringₓ B] [Algebra A B] [Algebra B C] [IsScalarTower A B C]
 
 /-- Restrict the domain of an `alg_hom`. -/
 def AlgHom.restrictDomain : B →ₐ[A] D :=
@@ -358,7 +358,7 @@ def AlgHom.restrictDomain : B →ₐ[A] D :=
 def AlgHom.extendScalars : @AlgHom B C D _ _ _ _ (f.restrict_domain B).toRingHom.toAlgebra :=
   { f with commutes' := fun _ => rfl }
 
-variable{B}
+variable {B}
 
 -- error in RingTheory.AlgebraTower: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `alg_hom`s from the top of a tower are equivalent to a pair of `alg_hom`s. -/

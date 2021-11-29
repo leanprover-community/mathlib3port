@@ -25,11 +25,11 @@ universe u v w
 
 section TopologicalAlgebra
 
-variable(R : Type _)[TopologicalSpace R][CommSemiringₓ R]
+variable (R : Type _) [TopologicalSpace R] [CommSemiringₓ R]
 
-variable(A : Type u)[TopologicalSpace A]
+variable (A : Type u) [TopologicalSpace A]
 
-variable[Semiringₓ A]
+variable [Semiringₓ A]
 
 theorem continuous_algebra_map_iff_smul [Algebra R A] [TopologicalRing A] :
   Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 :=
@@ -55,13 +55,13 @@ end TopologicalAlgebra
 
 section TopologicalAlgebra
 
-variable{R : Type _}[CommSemiringₓ R]
+variable {R : Type _} [CommSemiringₓ R]
 
-variable{A : Type u}[TopologicalSpace A]
+variable {A : Type u} [TopologicalSpace A]
 
-variable[Semiringₓ A]
+variable [Semiringₓ A]
 
-variable[Algebra R A][TopologicalRing A]
+variable [Algebra R A] [TopologicalRing A]
 
 /-- The closure of a subalgebra in a topological algebra as a subalgebra. -/
 def Subalgebra.topologicalClosure (s : Subalgebra R A) : Subalgebra R A :=

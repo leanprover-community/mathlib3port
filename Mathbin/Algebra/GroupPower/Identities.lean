@@ -7,7 +7,7 @@ This file contains some "named" commutative ring identities.
 -/
 
 
-variable{R : Type _}[CommRingₓ R]{a b x₁ x₂ x₃ x₄ x₅ x₆ x₇ x₈ y₁ y₂ y₃ y₄ y₅ y₆ y₇ y₈ n : R}
+variable {R : Type _} [CommRingₓ R] {a b x₁ x₂ x₃ x₄ x₅ x₆ x₇ x₈ y₁ y₂ y₃ y₄ y₅ y₆ y₇ y₈ n : R}
 
 /--
 Brahmagupta-Fibonacci identity or Diophantus identity, see

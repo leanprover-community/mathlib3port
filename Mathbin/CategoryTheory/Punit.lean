@@ -16,14 +16,14 @@ namespace CategoryTheory
 
 namespace Functor
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 /-- The constant functor sending everything to `punit.star`. -/
 @[simps]
 def star : C ⥤ discrete PUnit :=
   (Functor.Const _).obj PUnit.unit
 
-variable{C}
+variable {C}
 
 /-- Any two functors to `discrete punit` are isomorphic. -/
 @[simps]

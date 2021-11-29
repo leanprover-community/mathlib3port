@@ -29,7 +29,7 @@ This version is given in `vitali.vitali_family`.
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Set Metric MeasureTheory TopologicalSpace Filter
 

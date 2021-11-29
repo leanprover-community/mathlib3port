@@ -21,13 +21,13 @@ universe u v w w₁ w₂ w₃
 
 open_locale TensorProduct
 
-variable(R : Type u)(A : Type w)(L : Type v)
+variable (R : Type u) (A : Type w) (L : Type v)
 
 namespace LieAlgebra
 
 namespace ExtendScalars
 
-variable[CommRingₓ R][CommRingₓ A][Algebra R A][LieRing L][LieAlgebra R L]
+variable [CommRingₓ R] [CommRingₓ A] [Algebra R A] [LieRing L] [LieAlgebra R L]
 
 /-- The Lie bracket on the extension of a Lie algebra `L` over `R` by an algebra `A` over `R`.
 
@@ -44,7 +44,7 @@ private theorem bracket'_tmul (s t : A) (x y : L) : bracket' R A L (s ⊗ₜ[R] 
   by 
     simp [bracket']
 
-instance  : HasBracket (A ⊗[R] L) (A ⊗[R] L) :=
+instance : HasBracket (A ⊗[R] L) (A ⊗[R] L) :=
   { bracket := fun x y => bracket' R A L x y }
 
 private theorem bracket_def (x y : A ⊗[R] L) : ⁅x,y⁆ = bracket' R A L x y :=
@@ -118,7 +118,7 @@ private theorem bracket_leibniz_lie (x y z : A ⊗[R] L) : ⁅x,⁅y,z⁆⁆ = �
       intro u₁ u₂ h₁ h₂ 
       simp only [add_add_add_commₓ, h₁, h₂, LinearMap.add_apply, LinearMap.map_add]
 
-instance  : LieRing (A ⊗[R] L) :=
+instance : LieRing (A ⊗[R] L) :=
   { add_lie :=
       fun x y z =>
         by 
@@ -160,14 +160,14 @@ namespace RestrictScalars
 
 open RestrictScalars
 
-variable[h : LieRing L]
+variable [h : LieRing L]
 
 include h
 
-instance  : LieRing (RestrictScalars R A L) :=
+instance : LieRing (RestrictScalars R A L) :=
   h
 
-variable[CommRingₓ A][LieAlgebra A L]
+variable [CommRingₓ A] [LieAlgebra A L]
 
 @[nolint unused_arguments]
 instance LieAlgebra [CommRingₓ R] [Algebra R A] : LieAlgebra R (RestrictScalars R A L) :=

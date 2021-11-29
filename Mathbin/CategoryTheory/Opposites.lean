@@ -21,11 +21,11 @@ universe v₁ v₂ u₁ u₂
 
 open Opposite
 
-variable{C : Type u₁}
+variable {C : Type u₁}
 
 section Quiver
 
-variable[Quiver.{v₁} C]
+variable [Quiver.{v₁} C]
 
 theorem Quiver.Hom.op_inj {X Y : C} : Function.Injective (Quiver.Hom.op : (X ⟶ Y) → (op Y ⟶ op X)) :=
   fun _ _ H => congr_argₓ Quiver.Hom.unop H
@@ -45,7 +45,7 @@ end Quiver
 
 namespace CategoryTheory
 
-variable[category.{v₁} C]
+variable [category.{v₁} C]
 
 /--
 The opposite category.
@@ -81,7 +81,7 @@ theorem op_id_unop {X : «expr ᵒᵖ» C} : (𝟙 (unop X)).op = 𝟙 X :=
 
 section 
 
-variable(C)
+variable (C)
 
 /-- The functor from the double-opposite of a category to the underlying category. -/
 @[simps]
@@ -134,9 +134,9 @@ namespace Functor
 
 section 
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
-variable{C D}
+variable {C D}
 
 /--
 The opposite of a functor, i.e. considering a functor `F : C ⥤ D` as a functor `Cᵒᵖ ⥤ Dᵒᵖ`.
@@ -168,7 +168,7 @@ def unop_op_iso (F : «expr ᵒᵖ» C ⥤ «expr ᵒᵖ» D) : F.unop.op ≅ F 
     (by 
       tidy)
 
-variable(C D)
+variable (C D)
 
 /--
 Taking the opposite of a functor is functorial.
@@ -193,7 +193,7 @@ def op_inv : («expr ᵒᵖ» C ⥤ «expr ᵒᵖ» D) ⥤ «expr ᵒᵖ» (C �
           { app := fun X => (α.app (op X)).unop,
             naturality' := fun X Y f => Quiver.Hom.op_inj$ (α.naturality f.op).symm } }
 
-variable{C D}
+variable {C D}
 
 /--
 Another variant of the opposite of functor, turning a functor `C ⥤ Dᵒᵖ` into a functor `Cᵒᵖ ⥤ D`.
@@ -211,10 +211,10 @@ In informal mathematics no distinction is made.
 protected def right_op (F : «expr ᵒᵖ» C ⥤ D) : C ⥤ «expr ᵒᵖ» D :=
   { obj := fun X => op (F.obj (op X)), map := fun X Y f => (F.map f.op).op }
 
-instance  {F : C ⥤ D} [full F] : full F.op :=
+instance {F : C ⥤ D} [full F] : full F.op :=
   { Preimage := fun X Y f => (F.preimage f.unop).op }
 
-instance  {F : C ⥤ D} [faithful F] : faithful F.op :=
+instance {F : C ⥤ D} [faithful F] : faithful F.op :=
   { map_injective' :=
       fun X Y f g h =>
         Quiver.Hom.unop_inj$
@@ -249,11 +249,11 @@ end Functor
 
 namespace NatTrans
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 section 
 
-variable{F G : C ⥤ D}
+variable {F G : C ⥤ D}
 
 /-- The opposite of a natural transformation. -/
 @[simps]
@@ -302,7 +302,7 @@ end
 
 section 
 
-variable{F G H : C ⥤ «expr ᵒᵖ» D}
+variable {F G H : C ⥤ «expr ᵒᵖ» D}
 
 /--
 Given a natural transformation `α : F ⟶ G`, for `F G : C ⥤ Dᵒᵖ`,
@@ -342,7 +342,7 @@ end
 
 section 
 
-variable{F G H : «expr ᵒᵖ» C ⥤ D}
+variable {F G H : «expr ᵒᵖ» C ⥤ D}
 
 /--
 Given a natural transformation `α : F ⟶ G`, for `F G : Cᵒᵖ ⥤ D`,
@@ -384,7 +384,7 @@ end NatTrans
 
 namespace Iso
 
-variable{X Y : C}
+variable {X Y : C}
 
 /--
 The opposite isomorphism.
@@ -419,9 +419,9 @@ end Iso
 
 namespace NatIso
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
-variable{F G : C ⥤ D}
+variable {F G : C ⥤ D}
 
 /-- The natural isomorphism between opposite functors `G.op ≅ F.op` induced by a natural
 isomorphism between the original functors `F ≅ G`. -/
@@ -487,7 +487,7 @@ end NatIso
 
 namespace Equivalenceₓ
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 /--
 An equivalence between categories gives an equivalence between the opposite categories.
@@ -545,9 +545,9 @@ instance decidable_eq_of_unop (A B : «expr ᵒᵖ» C) [DecidableEq (unop B ⟶
 
 namespace Functor
 
-variable(C)
+variable (C)
 
-variable(D : Type u₂)[category.{v₂} D]
+variable (D : Type u₂) [category.{v₂} D]
 
 /--
 The equivalence of functor categories induced by `op` and `unop`.

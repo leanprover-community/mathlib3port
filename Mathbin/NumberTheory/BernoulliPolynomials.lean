@@ -123,7 +123,7 @@ open PowerSeries
 
 open polynomial(aeval)
 
-variable{A : Type _}[CommRingₓ A][Algebra ℚ A]
+variable {A : Type _} [CommRingₓ A] [Algebra ℚ A]
 
 /-- The theorem that `∑ Bₙ(t)X^n/n!)(e^X-1)=Xe^{tX}`  -/
 theorem exp_bernoulli_poly' (t : A) :

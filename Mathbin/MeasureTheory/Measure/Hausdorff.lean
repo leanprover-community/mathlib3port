@@ -118,7 +118,7 @@ open Emetric Set Function Filter Encodable FiniteDimensional TopologicalSpace
 
 noncomputable theory
 
-variable{ι X Y : Type _}[EmetricSpace X][EmetricSpace Y]
+variable {ι X Y : Type _} [EmetricSpace X] [EmetricSpace Y]
 
 namespace MeasureTheory
 
@@ -139,7 +139,7 @@ def is_metric (μ : outer_measure X) : Prop :=
 
 namespace IsMetric
 
-variable{μ : outer_measure X}
+variable {μ : outer_measure X}
 
 /-- A metric outer measure is additive on a finite set of pairwise metric separated sets. -/
 theorem finset_Union_of_pairwise_separated (hm : is_metric μ) {I : Finset ι} {s : ι → Set X}
@@ -273,7 +273,7 @@ def mk_metric (m : ℝ≥0∞ → ℝ≥0∞) : outer_measure X :=
 
 namespace MkMetric'
 
-variable{m : Set X → ℝ≥0∞}{r : ℝ≥0∞}{μ : outer_measure X}{s : Set X}
+variable {m : Set X → ℝ≥0∞} {r : ℝ≥0∞} {μ : outer_measure X} {s : Set X}
 
 theorem le_pre : μ ≤ pre m r ↔ ∀ s : Set X, diam s ≤ r → μ s ≤ m s :=
   by 
@@ -445,7 +445,7 @@ about metric outer measures for metric measures.
 
 namespace Measureₓ
 
-variable[MeasurableSpace X][BorelSpace X]
+variable [MeasurableSpace X] [BorelSpace X]
 
 /-- Given a function `m : set X → ℝ≥0∞`, `mk_metric' m` is the supremum of `μ r`
 over `r > 0`, where `μ r` is the maximal outer measure `μ` such that `μ s ≤ m s`
@@ -478,7 +478,7 @@ theorem outer_measure.coe_mk_metric [MeasurableSpace X] [BorelSpace X] (m : ℝ�
 
 namespace Measureₓ
 
-variable[MeasurableSpace X][BorelSpace X]
+variable [MeasurableSpace X] [BorelSpace X]
 
 /-- If `c ∉ {0, ∞}` and `m₁ d ≤ c * m₂ d` for `0 < d < ε` for some `ε > 0`
 (we use `≤ᶠ[𝓝[Ioi 0]]` to state this), then `mk_metric m₁ hm₁ ≤ c • mk_metric m₂ hm₂`. -/
@@ -817,11 +817,11 @@ open_locale MeasureTheory
 
 open MeasureTheory MeasureTheory.Measure
 
-variable[MeasurableSpace X][BorelSpace X][MeasurableSpace Y][BorelSpace Y]
+variable [MeasurableSpace X] [BorelSpace X] [MeasurableSpace Y] [BorelSpace Y]
 
 namespace HolderOnWith
 
-variable{C r :  ℝ≥0 }{f : X → Y}{s t : Set X}
+variable {C r :  ℝ≥0 } {f : X → Y} {s t : Set X}
 
 -- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f : X → Y` is Hölder continuous on `s` with a positive exponent `r`, then
@@ -864,7 +864,7 @@ end HolderOnWith
 
 namespace LipschitzOnWith
 
-variable{K :  ℝ≥0 }{f : X → Y}{s t : Set X}
+variable {K :  ℝ≥0 } {f : X → Y} {s t : Set X}
 
 /-- If `f : X → Y` is `K`-Lipschitz on `s`, then `μH[d] (f '' s) ≤ K ^ d * μH[d] s`. -/
 theorem hausdorff_measure_image_le (h : LipschitzOnWith K f s) {d : ℝ} (hd : 0 ≤ d) : μH[d] (f '' s) ≤ (K^d)*μH[d] s :=
@@ -875,7 +875,7 @@ end LipschitzOnWith
 
 namespace LipschitzWith
 
-variable{K :  ℝ≥0 }{f : X → Y}
+variable {K :  ℝ≥0 } {f : X → Y}
 
 /-- If `f` is a `K`-Lipschitz map, then it increases the Hausdorff `d`-measures of sets at most
 by the factor of `K ^ d`.-/
@@ -892,7 +892,7 @@ end LipschitzWith
 
 namespace AntilipschitzWith
 
-variable{f : X → Y}{K :  ℝ≥0 }{d : ℝ}
+variable {f : X → Y} {K :  ℝ≥0 } {d : ℝ}
 
 -- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem hausdorff_measure_preimage_le
@@ -939,7 +939,7 @@ end AntilipschitzWith
 
 namespace Isometry
 
-variable{f : X → Y}{d : ℝ}
+variable {f : X → Y} {d : ℝ}
 
 theorem hausdorff_measure_image (hf : Isometry f) (hd : 0 ≤ d ∨ surjective f) (s : Set X) : μH[d] (f '' s) = μH[d] s :=
   by 

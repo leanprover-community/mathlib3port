@@ -36,7 +36,7 @@ to make sure it is definitionally equal to the `I`-topology on `R` seen as a `R`
 -/
 
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
 open Set TopologicalAddGroup Submodule Filter
 
@@ -116,7 +116,7 @@ begin
   rwa [expr map_add_left_nhds_zero x] ["at", ident this]
 end
 
-variable(I : Ideal R)(M : Type _)[AddCommGroupₓ M][Module R M]
+variable (I : Ideal R) (M : Type _) [AddCommGroupₓ M] [Module R M]
 
 theorem adic_module_basis : I.ring_filter_basis.submodules_basis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
   { inter :=
@@ -195,7 +195,7 @@ begin
         refine [expr ⟨_, hn, H₁ n, «expr ^ »(J, n).zero_mem⟩] } } }
 end
 
-variable[TopologicalSpace R][TopologicalRing R]
+variable [TopologicalSpace R] [TopologicalRing R]
 
 theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : IsAdic (J ^ n) :=
   by 
@@ -240,12 +240,12 @@ theorem is_bot_adic_iff {A : Type _} [CommRingₓ A] [TopologicalSpace A] [Topol
 end IsAdic
 
 /-- The ring `R` is equipped with a preferred ideal. -/
-class WithIdeal(R : Type _)[CommRingₓ R] where 
+class WithIdeal (R : Type _) [CommRingₓ R] where 
   i : Ideal R
 
 namespace WithIdeal
 
-variable(R)[WithIdeal R]
+variable (R) [WithIdeal R]
 
 instance (priority := 100) : TopologicalSpace R :=
   I.adicTopology
@@ -264,25 +264,24 @@ This cannot be an instance because `R` cannot be inferred from `M`. -/
 def topological_space_module (M : Type _) [AddCommGroupₓ M] [Module R M] : TopologicalSpace M :=
   (I : Ideal R).adicModuleTopology M
 
-example  : NonarchimedeanRing R :=
+example : NonarchimedeanRing R :=
   by 
     infer_instance
 
-example  : TopologicalRing (UniformSpace.Completion R) :=
+example : TopologicalRing (UniformSpace.Completion R) :=
   by 
     infer_instance
 
-example  (M : Type _) [AddCommGroupₓ M] [Module R M] :
-  @TopologicalAddGroup M (WithIdeal.topologicalSpaceModule R M) _ :=
+example (M : Type _) [AddCommGroupₓ M] [Module R M] : @TopologicalAddGroup M (WithIdeal.topologicalSpaceModule R M) _ :=
   by 
     infer_instance
 
-example  (M : Type _) [AddCommGroupₓ M] [Module R M] :
+example (M : Type _) [AddCommGroupₓ M] [Module R M] :
   @HasContinuousSmul R M _ _ (WithIdeal.topologicalSpaceModule R M) :=
   by 
     infer_instance
 
-example  (M : Type _) [AddCommGroupₓ M] [Module R M] :
+example (M : Type _) [AddCommGroupₓ M] [Module R M] :
   @NonarchimedeanAddGroup M _ (WithIdeal.topologicalSpaceModule R M) :=
   SubmodulesBasis.nonarchimedean _
 

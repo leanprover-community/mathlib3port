@@ -112,7 +112,7 @@ private unsafe def param_substitutions (ctxt : List expr) :
               let mv ← mk_meta_var ty 
               return (app_of_list mv ctxt', [mv])
     let sb ← return$ instantiate_local n e 
-    let ps ← return$ Prod.mapₓ sb ((· <$> ·) sb) <$> ps 
+    let ps ← return$ Prod.map sb ((· <$> ·) sb) <$> ps 
     let (ms, vs) ← param_substitutions ps 
     return ((n, e) :: ms, m ++ vs)
 | _ => return ([], [])
@@ -128,7 +128,7 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
                   let (l, m) ← match_pattern rd.pat e semireducible 
                   let level_map ← rd.uparams.mmap$ fun l => Prod.mk l <$> mk_meta_univ 
                   let inst_univ ← return$ fun e => instantiate_univ_params e (level_map ++ zip rd.uargs l)
-                  let (ps, args) ← return$ split_params_args (rd.params.map (Prod.mapₓ inst_univ id)) m 
+                  let (ps, args) ← return$ split_params_args (rd.params.map (Prod.map inst_univ id)) m 
                   let (ps, ms) ← param_substitutions ctxt ps 
                   return (instantiate_locals ps ∘ inst_univ, ps, args, ms, rd)) <|>
           do 
@@ -147,14 +147,14 @@ unsafe def compute_transfer : List rule_data → List expr → expr → tactic (
                             let b ← mk_local_def (s! "b{n}") arg.out_type 
                             let R ← mk_local_def (s! "R{n}") (arg.relation a b)
                             return ((a, b), (R, [a, b, R]))) >>=
-                      return ∘ Prod.mapₓ unzip unzip ∘ unzip 
+                      return ∘ Prod.map unzip unzip ∘ unzip 
                 let rds' ← R_vars.mmap (analyse_rule [])
                 let a ← return$ i e 
                 let a' ← head_beta (app_of_list a a_vars)
                 let (b, pr, ms) ← compute_transfer (rds ++ rds') (ctxt ++ a_vars) (app r a')
                 let b' ← head_eta (lambdas b_vars b)
                 return (b', [a, b', lambdas (List.join bnds) pr], ms)) >>=
-          return ∘ Prod.mapₓ id unzip ∘ unzip 
+          return ∘ Prod.map id unzip ∘ unzip 
     let b ← head_beta (app_of_list (i rd.output) bs)
     let pr ← return$ app_of_list (i rd.pr) (Prod.snd <$> ps ++ List.join hs)
     return (b, pr, ms ++ mss.join)

@@ -9,7 +9,7 @@ namespace Multiset
 
 section Pi
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Function
 
@@ -18,7 +18,7 @@ multiset. -/
 def pi.empty (δ : α → Type _) : ∀ a _ : a ∈ (0 : Multiset α), δ a :=
   fun.
 
-variable[DecidableEq α]{δ : α → Type _}
+variable [DecidableEq α] {δ : α → Type _}
 
 /-- Given `δ : α → Type*`, a multiset `m` and a term `a`, as well as a term `b : δ a` and a
 function `f` such that `f a' : δ a'` for all `a'` in `m`, `pi.cons m a b f` is a function `g` such

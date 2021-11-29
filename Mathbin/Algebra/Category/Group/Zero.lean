@@ -18,7 +18,7 @@ universe u
 namespace Groupₓₓ
 
 @[toAdditive AddGroupₓₓ.hasZeroObject]
-instance  : has_zero_object Groupₓₓ :=
+instance : has_zero_object Groupₓₓ :=
   { zero := 1,
     uniqueTo :=
       fun X =>
@@ -41,7 +41,7 @@ end Groupₓₓ
 namespace CommGroupₓₓ
 
 @[toAdditive AddCommGroupₓₓ.hasZeroObject]
-instance  : has_zero_object CommGroupₓₓ :=
+instance : has_zero_object CommGroupₓₓ :=
   { zero := 1,
     uniqueTo :=
       fun X =>

@@ -56,13 +56,13 @@ open_locale Classical
 
 namespace PreorderHom
 
-variable(α : Type _)(β : Type _){γ : Type _}{φ : Type _}
+variable (α : Type _) (β : Type _) {γ : Type _} {φ : Type _}
 
-variable[Preorderₓ α][Preorderₓ β][Preorderₓ γ][Preorderₓ φ]
+variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] [Preorderₓ φ]
 
-variable{β γ}
+variable {β γ}
 
-variable{α}{α' : Type _}{β' : Type _}[Preorderₓ α'][Preorderₓ β']
+variable {α} {α' : Type _} {β' : Type _} [Preorderₓ α'] [Preorderₓ β']
 
 /-- `part.bind` as a monotone function -/
 @[simps]
@@ -87,26 +87,26 @@ def chain (α : Type u) [Preorderₓ α] :=
 
 namespace Chain
 
-variable{α : Type u}{β : Type v}{γ : Type _}
+variable {α : Type u} {β : Type v} {γ : Type _}
 
-variable[Preorderₓ α][Preorderₓ β][Preorderₓ γ]
+variable [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ]
 
-instance  : CoeFun (chain α) fun _ => ℕ → α :=
+instance : CoeFun (chain α) fun _ => ℕ → α :=
   PreorderHom.hasCoeToFun
 
-instance  [Inhabited α] : Inhabited (chain α) :=
+instance [Inhabited α] : Inhabited (chain α) :=
   ⟨⟨fun _ => default _, fun _ _ _ => le_reflₓ _⟩⟩
 
-instance  : HasMem α (chain α) :=
+instance : HasMem α (chain α) :=
   ⟨fun a c : ℕ →ₘ α => ∃ i, a = c i⟩
 
-variable(c c' : chain α)
+variable (c c' : chain α)
 
-variable(f : α →ₘ β)
+variable (f : α →ₘ β)
 
-variable(g : β →ₘ γ)
+variable (g : β →ₘ γ)
 
-instance  : LE (chain α) :=
+instance : LE (chain α) :=
   { le := fun x y => ∀ i, ∃ j, x i ≤ y j }
 
 /-- `map` function for `chain` -/
@@ -114,7 +114,7 @@ instance  : LE (chain α) :=
 def map : chain β :=
   f.comp c
 
-variable{f}
+variable {f}
 
 theorem mem_map (x : α) : x ∈ c → f x ∈ chain.map c f :=
   fun ⟨i, h⟩ => ⟨i, h.symm ▸ rfl⟩
@@ -164,7 +164,7 @@ call `ωSup`). In this sense, it is strictly weaker than join complete
 semi-lattices as only ω-sized totally ordered sets have a supremum.
 
 See the definition on page 114 of [gunter1992]. -/
-class OmegaCompletePartialOrder(α : Type _) extends PartialOrderₓ α where 
+class OmegaCompletePartialOrder (α : Type _) extends PartialOrderₓ α where 
   ωSup : chain α → α 
   le_ωSup : ∀ c : chain α, ∀ i, c i ≤ ωSup c 
   ωSup_le : ∀ c : chain α x, (∀ i, c i ≤ x) → ωSup c ≤ x
@@ -173,9 +173,9 @@ end Prio
 
 namespace OmegaCompletePartialOrder
 
-variable{α : Type u}{β : Type v}{γ : Type _}
+variable {α : Type u} {β : Type v} {γ : Type _}
 
-variable[OmegaCompletePartialOrder α]
+variable [OmegaCompletePartialOrder α]
 
 /-- Transfer a `omega_complete_partial_order` on `β` to a `omega_complete_partial_order` on `α`
 using a strictly monotone function `f : β →ₘ α`, a definition of ωSup and a proof that `f` is
@@ -233,9 +233,9 @@ section Continuity
 
 open Chain
 
-variable[OmegaCompletePartialOrder β]
+variable [OmegaCompletePartialOrder β]
 
-variable[OmegaCompletePartialOrder γ]
+variable [OmegaCompletePartialOrder γ]
 
 /-- A monotone function `f : α →ₘ β` is continuous if it distributes over ωSup.
 
@@ -266,7 +266,7 @@ theorem continuous'.to_bundled (f : α → β) (hf : continuous' f) : continuous
 theorem continuous'_coe : ∀ {f : α →ₘ β}, continuous' f ↔ continuous f
 | ⟨f, hf⟩ => ⟨fun ⟨hf', hc⟩ => hc, fun hc => ⟨hf, hc⟩⟩
 
-variable(f : α →ₘ β)(g : β →ₘ γ)
+variable (f : α →ₘ β) (g : β →ₘ γ)
 
 theorem continuous_id : continuous (@PreorderHom.id α _) :=
   by 
@@ -297,7 +297,7 @@ end OmegaCompletePartialOrder
 
 namespace Part
 
-variable{α : Type u}{β : Type v}{γ : Type _}
+variable {α : Type u} {β : Type v} {γ : Type _}
 
 open OmegaCompletePartialOrder
 
@@ -392,11 +392,11 @@ end Part
 
 namespace Pi
 
-variable{α : Type _}{β : α → Type _}{γ : Type _}
+variable {α : Type _} {β : α → Type _} {γ : Type _}
 
 open OmegaCompletePartialOrder OmegaCompletePartialOrder.Chain
 
-instance  [∀ a, OmegaCompletePartialOrder (β a)] : OmegaCompletePartialOrder (∀ a, β a) :=
+instance [∀ a, OmegaCompletePartialOrder (β a)] : OmegaCompletePartialOrder (∀ a, β a) :=
   { ωSup := fun c a => ωSup (c.map (Pi.evalPreorderHom a)),
     ωSup_le :=
       fun c f hf a =>
@@ -408,9 +408,9 @@ instance  [∀ a, OmegaCompletePartialOrder (β a)] : OmegaCompletePartialOrder 
 
 namespace OmegaCompletePartialOrder
 
-variable[∀ x, OmegaCompletePartialOrder$ β x]
+variable [∀ x, OmegaCompletePartialOrder$ β x]
 
-variable[OmegaCompletePartialOrder γ]
+variable [OmegaCompletePartialOrder γ]
 
 theorem flip₁_continuous' (f : ∀ x : α, γ → β x) (a : α) (hf : continuous' fun x y => f y x) : continuous' (f a) :=
   continuous.of_bundled _ (fun x y h => hf.to_monotone h a) fun c => congr_funₓ (hf.to_bundled _ c) a
@@ -428,13 +428,13 @@ namespace Prod
 
 open OmegaCompletePartialOrder
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
-variable[OmegaCompletePartialOrder α]
+variable [OmegaCompletePartialOrder α]
 
-variable[OmegaCompletePartialOrder β]
+variable [OmegaCompletePartialOrder β]
 
-variable[OmegaCompletePartialOrder γ]
+variable [OmegaCompletePartialOrder γ]
 
 /-- The supremum of a chain in the product `ω`-CPO. -/
 @[simps]
@@ -442,7 +442,7 @@ protected def ωSup (c : chain (α × β)) : α × β :=
   (ωSup (c.map PreorderHom.fst), ωSup (c.map PreorderHom.snd))
 
 @[simps ωSup_fst ωSup_snd]
-instance  : OmegaCompletePartialOrder (α × β) :=
+instance : OmegaCompletePartialOrder (α × β) :=
   { ωSup := Prod.ωSup, ωSup_le := fun c ⟨x, x'⟩ h => ⟨ωSup_le _ _$ fun i => (h i).1, ωSup_le _ _$ fun i => (h i).2⟩,
     le_ωSup := fun c i => ⟨le_ωSup (c.map PreorderHom.fst) i, le_ωSup (c.map PreorderHom.snd) i⟩ }
 
@@ -450,7 +450,7 @@ end Prod
 
 namespace CompleteLattice
 
-variable(α : Type u)
+variable (α : Type u)
 
 /-- Any complete lattice has an `ω`-CPO structure where the countable supremum is a special case
 of arbitrary suprema. -/
@@ -465,7 +465,7 @@ instance (priority := 100) [CompleteLattice α] : OmegaCompletePartialOrder α :
         by 
           simp only [PreorderHom.coe_fun_mk] <;> apply le_supr_of_le i <;> rfl }
 
-variable{α}{β : Type v}[OmegaCompletePartialOrder α][CompleteLattice β]
+variable {α} {β : Type v} [OmegaCompletePartialOrder α] [CompleteLattice β]
 
 open OmegaCompletePartialOrder
 
@@ -533,13 +533,13 @@ end CompleteLattice
 
 namespace OmegaCompletePartialOrder
 
-variable{α : Type u}{α' : Type _}{β : Type v}{β' : Type _}{γ : Type _}{φ : Type _}
+variable {α : Type u} {α' : Type _} {β : Type v} {β' : Type _} {γ : Type _} {φ : Type _}
 
-variable[OmegaCompletePartialOrder α][OmegaCompletePartialOrder β]
+variable [OmegaCompletePartialOrder α] [OmegaCompletePartialOrder β]
 
-variable[OmegaCompletePartialOrder γ][OmegaCompletePartialOrder φ]
+variable [OmegaCompletePartialOrder γ] [OmegaCompletePartialOrder φ]
 
-variable[OmegaCompletePartialOrder α'][OmegaCompletePartialOrder β']
+variable [OmegaCompletePartialOrder α'] [OmegaCompletePartialOrder β']
 
 namespace PreorderHom
 
@@ -557,7 +557,7 @@ end PreorderHom
 
 section 
 
-variable(α β)
+variable (α β)
 
 /-- A monotone function on `ω`-continuous partial orders is said to be continuous
 if for every chain `c : chain α`, `f (⊔ i, c i) = ⊔ i, f (c i)`.
@@ -569,13 +569,13 @@ attribute [nolint doc_blame] continuous_hom.to_preorder_hom
 
 infixr:25 " →𝒄 " => continuous_hom
 
-instance  : CoeFun (α →𝒄 β) fun _ => α → β :=
+instance : CoeFun (α →𝒄 β) fun _ => α → β :=
   ⟨fun f => f.to_preorder_hom.to_fun⟩
 
-instance  : Coe (α →𝒄 β) (α →ₘ β) :=
+instance : Coe (α →𝒄 β) (α →ₘ β) :=
   { coe := continuous_hom.to_preorder_hom }
 
-instance  : PartialOrderₓ (α →𝒄 β) :=
+instance : PartialOrderₓ (α →𝒄 β) :=
   (PartialOrderₓ.lift fun f => f.to_preorder_hom.to_fun)$
     by 
       rintro ⟨⟨⟩⟩ ⟨⟨⟩⟩ h <;> congr <;> exact h
@@ -721,7 +721,7 @@ def const (x : β) : α →𝒄 β :=
 theorem const_apply (f : β) (a : α) : const f a = f :=
   rfl
 
-instance  [Inhabited β] : Inhabited (α →𝒄 β) :=
+instance [Inhabited β] : Inhabited (α →𝒄 β) :=
   ⟨const (default β)⟩
 
 namespace Prod
@@ -789,7 +789,7 @@ protected def ωSup (c : chain (α →𝒄 β)) : α →𝒄 β :=
         Function.eval])
 
 @[simps ωSup]
-instance  : OmegaCompletePartialOrder (α →𝒄 β) :=
+instance : OmegaCompletePartialOrder (α →𝒄 β) :=
   OmegaCompletePartialOrder.lift continuous_hom.to_mono continuous_hom.ωSup (fun x y h => h) fun c => rfl
 
 theorem ωSup_def (c : chain (α →𝒄 β)) (x : α) : ωSup c x = continuous_hom.ωSup c x :=

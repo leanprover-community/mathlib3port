@@ -66,12 +66,12 @@ inductive Ordnode (α : Type u) : Type u
 
 namespace Ordnode
 
-variable{α : Type u}
+variable {α : Type u}
 
-instance  : HasEmptyc (Ordnode α) :=
+instance : HasEmptyc (Ordnode α) :=
   ⟨nil⟩
 
-instance  : Inhabited (Ordnode α) :=
+instance : Inhabited (Ordnode α) :=
   ⟨nil⟩
 
 /-- **Internal use only**
@@ -107,7 +107,7 @@ protected def singleton (a : α) : Ordnode α :=
 -- error in Data.Ordmap.Ordnode: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 local prefix `ι`:max := ordnode.singleton
 
-instance  : HasSingleton α (Ordnode α) :=
+instance : HasSingleton α (Ordnode α) :=
   ⟨Ordnode.singleton⟩
 
 /-- O(1). Get the size of the set.
@@ -151,7 +151,7 @@ def reprₓ {α} [HasRepr α] : Ordnode α → Stringₓ
 | nil => "∅"
 | node _ l x r => "(" ++ reprₓ l ++ " " ++ _root_.repr x ++ " " ++ reprₓ r ++ ")"
 
-instance  {α} [HasRepr α] : HasRepr (Ordnode α) :=
+instance {α} [HasRepr α] : HasRepr (Ordnode α) :=
   ⟨reprₓ⟩
 
 /-- **Internal use only**
@@ -580,10 +580,10 @@ def to_list (t : Ordnode α) : List α :=
 def to_rev_list (t : Ordnode α) : List α :=
   foldl (flip List.cons) [] t
 
-instance  [HasToString α] : HasToString (Ordnode α) :=
+instance [HasToString α] : HasToString (Ordnode α) :=
   ⟨fun t => "{" ++ Stringₓ.intercalate ", " (t.to_list.map toString) ++ "}"⟩
 
-unsafe instance  [has_to_format α] : has_to_format (Ordnode α) :=
+unsafe instance [has_to_format α] : has_to_format (Ordnode α) :=
   ⟨fun t => "{" ++ format.intercalate ", " (t.to_list.map to_fmt) ++ "}"⟩
 
 /-- O(n). True if the trees have the same elements, ignoring structural differences.
@@ -593,7 +593,7 @@ unsafe instance  [has_to_format α] : has_to_format (Ordnode α) :=
 def Equiv (t₁ t₂ : Ordnode α) : Prop :=
   t₁.size = t₂.size ∧ t₁.to_list = t₂.to_list
 
-instance  [DecidableEq α] : DecidableRel (@Equiv α) :=
+instance [DecidableEq α] : DecidableRel (@Equiv α) :=
   fun t₁ t₂ => And.decidable
 
 /-- O(2^n). Constructs the powerset of a given set, that is, the set of all subsets.
@@ -794,7 +794,7 @@ def of_asc_list : List α → Ordnode α
 
 section 
 
-variable[LE α][@DecidableRel α (· ≤ ·)]
+variable [LE α] [@DecidableRel α (· ≤ ·)]
 
 /-- O(log n). Does the set (approximately) contain the element `x`? That is,
 is there an element that is equivalent to `x` in the order?
@@ -832,7 +832,7 @@ def find (x : α) : Ordnode α → Option α
   | Ordering.eq => some y
   | Ordering.gt => find r
 
-instance  : HasMem α (Ordnode α) :=
+instance : HasMem α (Ordnode α) :=
   ⟨fun x t => t.mem x⟩
 
 instance mem.decidable (x : α) (t : Ordnode α) : Decidable (x ∈ t) :=
@@ -931,7 +931,7 @@ protected def insert (x : α) : Ordnode α → Ordnode α
   | Ordering.eq => node sz l x r
   | Ordering.gt => balance_r l y (insert r)
 
-instance  : HasInsert α (Ordnode α) :=
+instance : HasInsert α (Ordnode α) :=
   ⟨Ordnode.insert⟩
 
 /-- O(log n). Insert an element into the set, preserving balance and the BST property.

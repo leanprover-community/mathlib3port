@@ -28,25 +28,25 @@ It contains theorems relating these to each other, as well as to `submodule.prod
 
 universe u v w x y z u' v' w' y'
 
-variable{R : Type u}{K : Type u'}{M : Type v}{V : Type v'}{M₂ : Type w}{V₂ : Type w'}
+variable {R : Type u} {K : Type u'} {M : Type v} {V : Type v'} {M₂ : Type w} {V₂ : Type w'}
 
-variable{M₃ : Type y}{V₃ : Type y'}{M₄ : Type z}{ι : Type x}
+variable {M₃ : Type y} {V₃ : Type y'} {M₄ : Type z} {ι : Type x}
 
 section Prod
 
 namespace LinearMap
 
-variable(S : Type _)[Semiringₓ R][Semiringₓ S]
+variable (S : Type _) [Semiringₓ R] [Semiringₓ S]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃][AddCommMonoidₓ M₄]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄]
 
-variable[Module R M][Module R M₂][Module R M₃][Module R M₄]
+variable [Module R M] [Module R M₂] [Module R M₃] [Module R M₄]
 
-variable(f : M →ₗ[R] M₂)
+variable (f : M →ₗ[R] M₂)
 
 section 
 
-variable(R M M₂)
+variable (R M M₂)
 
 /-- The first projection of a product is a linear map. -/
 def fst : M × M₂ →ₗ[R] M :=
@@ -120,7 +120,7 @@ def prod_equiv [Module S M₂] [Module S M₃] [SmulCommClass R S M₂] [SmulCom
 
 section 
 
-variable(R M M₂)
+variable (R M M₂)
 
 /-- The left injection into a product is a linear map. -/
 def inl : M →ₗ[R] M × M₂ :=
@@ -302,9 +302,9 @@ theorem ker_prod_map (f : M →ₗ[R] M₂) (g : M₃ →ₗ[R] M₄) : (LinearM
 
 section MapMul
 
-variable{A : Type _}[NonUnitalNonAssocSemiring A][Module R A]
+variable {A : Type _} [NonUnitalNonAssocSemiring A] [Module R A]
 
-variable{B : Type _}[NonUnitalNonAssocSemiring B][Module R B]
+variable {B : Type _} [NonUnitalNonAssocSemiring B] [Module R B]
 
 theorem inl_map_mul (a₁ a₂ : A) : LinearMap.inl R A B (a₁*a₂) = LinearMap.inl R A B a₁*LinearMap.inl R A B a₂ :=
   Prod.extₓ rfl
@@ -327,9 +327,8 @@ namespace LinearMap
 
 open Submodule
 
-variable[Semiringₓ
-      R][AddCommMonoidₓ
-      M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃][AddCommMonoidₓ M₄][Module R M][Module R M₂][Module R M₃][Module R M₄]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄] [Module R M]
+  [Module R M₂] [Module R M₃] [Module R M₄]
 
 theorem range_coprod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) : (f.coprod g).range = f.range⊔g.range :=
   Submodule.ext$
@@ -450,11 +449,11 @@ namespace Submodule
 
 open LinearMap
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂]
 
-variable[Module R M][Module R M₂]
+variable [Module R M] [Module R M₂]
 
 theorem sup_eq_range (p q : Submodule R M) : p⊔q = (p.subtype.coprod q.subtype).range :=
   Submodule.ext$
@@ -462,7 +461,7 @@ theorem sup_eq_range (p q : Submodule R M) : p⊔q = (p.subtype.coprod q.subtype
       by 
         simp [Submodule.mem_sup, SetLike.exists]
 
-variable(p : Submodule R M)(q : Submodule R M₂)
+variable (p : Submodule R M) (q : Submodule R M₂)
 
 @[simp]
 theorem map_inl : p.map (inl R M M₂) = Prod p ⊥ :=
@@ -525,7 +524,7 @@ theorem range_snd : (snd R M M₂).range = ⊤ :=
   by 
     rw [range_eq_map, ←prod_top, prod_map_snd]
 
-variable(R M M₂)
+variable (R M M₂)
 
 /-- `M` as a submodule of `M × N`. -/
 def fst : Submodule R (M × M₂) :=
@@ -628,15 +627,15 @@ namespace LinearEquiv
 
 section 
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃][AddCommMonoidₓ M₄]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [AddCommMonoidₓ M₄]
 
-variable{module_M : Module R M}{module_M₂ : Module R M₂}
+variable {module_M : Module R M} {module_M₂ : Module R M₂}
 
-variable{module_M₃ : Module R M₃}{module_M₄ : Module R M₄}
+variable {module_M₃ : Module R M₃} {module_M₄ : Module R M₄}
 
-variable(e₁ : M ≃ₗ[R] M₂)(e₂ : M₃ ≃ₗ[R] M₄)
+variable (e₁ : M ≃ₗ[R] M₂) (e₂ : M₃ ≃ₗ[R] M₄)
 
 /-- Product of linear equivalences; the maps come from `equiv.prod_congr`. -/
 protected def Prod : (M × M₃) ≃ₗ[R] M₂ × M₄ :=
@@ -658,15 +657,15 @@ end
 
 section 
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
-variable[AddCommMonoidₓ M][AddCommMonoidₓ M₂][AddCommMonoidₓ M₃][AddCommGroupₓ M₄]
+variable [AddCommMonoidₓ M] [AddCommMonoidₓ M₂] [AddCommMonoidₓ M₃] [AddCommGroupₓ M₄]
 
-variable{module_M : Module R M}{module_M₂ : Module R M₂}
+variable {module_M : Module R M} {module_M₂ : Module R M₂}
 
-variable{module_M₃ : Module R M₃}{module_M₄ : Module R M₄}
+variable {module_M₃ : Module R M₃} {module_M₄ : Module R M₄}
 
-variable(e₁ : M ≃ₗ[R] M₂)(e₂ : M₃ ≃ₗ[R] M₄)
+variable (e₁ : M ≃ₗ[R] M₂) (e₂ : M₃ ≃ₗ[R] M₄)
 
 /-- Equivalence given by a block lower diagonal matrix. `e₁` and `e₂` are diagonal square blocks,
   and `f` is a rectangular block below the diagonal. -/
@@ -700,11 +699,11 @@ namespace LinearMap
 
 open Submodule
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
-variable[AddCommGroupₓ M][AddCommGroupₓ M₂][AddCommGroupₓ M₃]
+variable [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
 
-variable[Module R M][Module R M₂][Module R M₃]
+variable [Module R M] [Module R M₂] [Module R M₃]
 
 -- error in LinearAlgebra.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If the union of the kernels `ker f` and `ker g` spans the domain, then the range of
@@ -751,9 +750,9 @@ and establishes the strong rank condition for any left-noetherian ring.
 
 section Tunnel
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
-variable{N : Type _}[AddCommGroupₓ M][Module R M][AddCommGroupₓ N][Module R N]
+variable {N : Type _} [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ N] [Module R N]
 
 open Function
 

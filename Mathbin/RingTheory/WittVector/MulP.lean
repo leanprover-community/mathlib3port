@@ -21,7 +21,7 @@ and Verschiebung is equal to multiplication by `p`.
 
 namespace WittVector
 
-variable{p : ℕ}{R : Type _}[hp : Fact p.prime][CommRingₓ R]
+variable {p : ℕ} {R : Type _} [hp : Fact p.prime] [CommRingₓ R]
 
 local notation "𝕎" => WittVector p
 
@@ -31,7 +31,7 @@ noncomputable theory
 
 include hp
 
-variable(p)
+variable (p)
 
 -- error in RingTheory.WittVector.MulP: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- `witt_mul_n p n` is the family of polynomials that computes
@@ -41,7 +41,7 @@ def witt_mul_n : exprℕ() → exprℕ() → mv_polynomial exprℕ() exprℤ()
 | 0 := 0
 | «expr + »(n, 1) := λ k, bind₁ «expr $ »(function.uncurry, «expr![ , ]»([witt_mul_n n, X])) (witt_add p k)
 
-variable{p}
+variable {p}
 
 theorem mul_n_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x*n).coeff k = aeval x.coeff (witt_mul_n p n k) :=
   by 
@@ -58,7 +58,7 @@ theorem mul_n_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x*n).coeff k = aeval x.c
       ·
         simp only [Function.uncurry, Matrix.cons_val_one, Matrix.head_cons, aeval_X]
 
-variable(p)
+variable (p)
 
 /-- Multiplication by `n` is a polynomial function. -/
 @[isPoly]

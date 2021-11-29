@@ -20,7 +20,7 @@ universe v₁ v₂ v₃ u₁ u₂ u₃
 
 open NatTrans Category CategoryTheory.Functor
 
-variable(C : Type u₁)[category.{v₁} C](D : Type u₂)[category.{v₂} D]
+variable (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D]
 
 attribute [local simp] vcomp_app
 
@@ -36,9 +36,9 @@ this is a small category at the next higher level.
 instance functor.category : category.{max u₁ v₂} (C ⥤ D) :=
   { Hom := fun F G => nat_trans F G, id := fun F => nat_trans.id F, comp := fun _ _ _ α β => vcomp α β }
 
-variable{C D}{E : Type u₃}[category.{v₃} E]
+variable {C D} {E : Type u₃} [category.{v₃} E]
 
-variable{F G H I : C ⥤ D}
+variable {F G H I : C ⥤ D}
 
 namespace NatTrans
 

@@ -49,9 +49,9 @@ open TopologicalSpace.Opens
 
 namespace Top
 
-variable{C : Type u}[category.{v} C][has_products C]
+variable {C : Type u} [category.{v} C] [has_products C]
 
-variable{X : Top.{v}}(F : presheaf C X){ι : Type v}(U : ι → opens X)
+variable {X : Top.{v}} (F : presheaf C X) {ι : Type v} (U : ι → opens X)
 
 namespace Presheaf
 
@@ -85,7 +85,7 @@ theorem is_sheaf_iso_iff {F G : presheaf C X} (α : F ≅ G) : F.is_sheaf ↔ G.
 
 end Presheaf
 
-variable(C X)
+variable (C X)
 
 -- error in Topology.Sheaves.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--

@@ -52,7 +52,7 @@ open_locale TopologicalSpace BigOperators Ennreal
 
 open Set
 
-variable{α : Type _}[TopologicalSpace α]{β : Type _}[Preorderₓ β]{f g : α → β}{x : α}{s t : Set α}{y z : β}
+variable {α : Type _} [TopologicalSpace α] {β : Type _} [Preorderₓ β] {f g : α → β} {x : α} {s t : Set α} {y z : β}
 
 /-! ### Main definitions -/
 
@@ -167,7 +167,7 @@ theorem lower_semicontinuous_const : LowerSemicontinuous fun x : α => z :=
 
 section 
 
-variable[HasZero β]
+variable [HasZero β]
 
 -- error in Topology.Semicontinuous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_open.lower_semicontinuous_indicator
@@ -232,7 +232,7 @@ theorem LowerSemicontinuous.is_open_preimage (hf : LowerSemicontinuous f) (y : �
 
 section 
 
-variable{γ : Type _}[LinearOrderₓ γ][TopologicalSpace γ][OrderTopology γ]
+variable {γ : Type _} [LinearOrderₓ γ] [TopologicalSpace γ] [OrderTopology γ]
 
 theorem ContinuousWithinAt.lower_semicontinuous_within_at {f : α → γ} (h : ContinuousWithinAt f s x) :
   LowerSemicontinuousWithinAt f s x :=
@@ -254,9 +254,9 @@ end
 
 section 
 
-variable{γ : Type _}[LinearOrderₓ γ][TopologicalSpace γ][OrderTopology γ]
+variable {γ : Type _} [LinearOrderₓ γ] [TopologicalSpace γ] [OrderTopology γ]
 
-variable{δ : Type _}[LinearOrderₓ δ][TopologicalSpace δ][OrderTopology δ]
+variable {δ : Type _} [LinearOrderₓ δ] [TopologicalSpace δ] [OrderTopology δ]
 
 theorem ContinuousAt.comp_lower_semicontinuous_within_at {g : γ → δ} {f : α → γ} (hg : ContinuousAt g (f x))
   (hf : LowerSemicontinuousWithinAt f s x) (gmon : Monotone g) : LowerSemicontinuousWithinAt (g ∘ f) s x :=
@@ -314,7 +314,7 @@ end
 
 section 
 
-variable{ι : Type _}{γ : Type _}[LinearOrderedAddCommMonoid γ][TopologicalSpace γ][OrderTopology γ]
+variable {ι : Type _} {γ : Type _} [LinearOrderedAddCommMonoid γ] [TopologicalSpace γ] [OrderTopology γ]
 
 -- error in Topology.Semicontinuous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of two lower semicontinuous functions is lower semicontinuous. Formulated with an
@@ -414,7 +414,7 @@ theorem LowerSemicontinuous.add' {f g : α → γ} (hf : LowerSemicontinuous f) 
   (hcont : ∀ x, ContinuousAt (fun p : γ × γ => p.1+p.2) (f x, g x)) : LowerSemicontinuous fun z => f z+g z :=
   fun x => (hf x).add' (hg x) (hcont x)
 
-variable[HasContinuousAdd γ]
+variable [HasContinuousAdd γ]
 
 /-- The sum of two lower semicontinuous functions is lower semicontinuous. Formulated with
 `[has_continuous_add]`. The primed version of the lemma uses an explicit continuity assumption on
@@ -479,7 +479,7 @@ end
 
 section 
 
-variable{ι : Sort _}{δ : Type _}[CompleteLinearOrder δ]
+variable {ι : Sort _} {δ : Type _} [CompleteLinearOrder δ]
 
 theorem lower_semicontinuous_within_at_supr {f : ι → α → δ} (h : ∀ i, LowerSemicontinuousWithinAt (f i) s x) :
   LowerSemicontinuousWithinAt (fun x' => ⨆i, f i x') s x :=
@@ -528,7 +528,7 @@ end
 
 section 
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 theorem lower_semicontinuous_within_at_tsum {f : ι → α → ℝ≥0∞} (h : ∀ i, LowerSemicontinuousWithinAt (f i) s x) :
   LowerSemicontinuousWithinAt (fun x' => ∑'i, f i x') s x :=
@@ -615,7 +615,7 @@ theorem upper_semicontinuous_const : UpperSemicontinuous fun x : α => z :=
 
 section 
 
-variable[HasZero β]
+variable [HasZero β]
 
 theorem IsOpen.upper_semicontinuous_indicator (hs : IsOpen s) (hy : y ≤ 0) :
   UpperSemicontinuous (indicator s fun x => y) :=
@@ -662,7 +662,7 @@ theorem UpperSemicontinuous.is_open_preimage (hf : UpperSemicontinuous f) (y : �
 
 section 
 
-variable{γ : Type _}[LinearOrderₓ γ][TopologicalSpace γ][OrderTopology γ]
+variable {γ : Type _} [LinearOrderₓ γ] [TopologicalSpace γ] [OrderTopology γ]
 
 theorem ContinuousWithinAt.upper_semicontinuous_within_at {f : α → γ} (h : ContinuousWithinAt f s x) :
   UpperSemicontinuousWithinAt f s x :=
@@ -684,9 +684,9 @@ end
 
 section 
 
-variable{γ : Type _}[LinearOrderₓ γ][TopologicalSpace γ][OrderTopology γ]
+variable {γ : Type _} [LinearOrderₓ γ] [TopologicalSpace γ] [OrderTopology γ]
 
-variable{δ : Type _}[LinearOrderₓ δ][TopologicalSpace δ][OrderTopology δ]
+variable {δ : Type _} [LinearOrderₓ δ] [TopologicalSpace δ] [OrderTopology δ]
 
 theorem ContinuousAt.comp_upper_semicontinuous_within_at {g : γ → δ} {f : α → γ} (hg : ContinuousAt g (f x))
   (hf : UpperSemicontinuousWithinAt f s x) (gmon : Monotone g) : UpperSemicontinuousWithinAt (g ∘ f) s x :=
@@ -729,7 +729,7 @@ end
 
 section 
 
-variable{ι : Type _}{γ : Type _}[LinearOrderedAddCommMonoid γ][TopologicalSpace γ][OrderTopology γ]
+variable {ι : Type _} {γ : Type _} [LinearOrderedAddCommMonoid γ] [TopologicalSpace γ] [OrderTopology γ]
 
 /-- The sum of two upper semicontinuous functions is upper semicontinuous. Formulated with an
 explicit continuity assumption on addition, for application to `ereal`. The unprimed version of
@@ -763,7 +763,7 @@ theorem UpperSemicontinuous.add' {f g : α → γ} (hf : UpperSemicontinuous f) 
   (hcont : ∀ x, ContinuousAt (fun p : γ × γ => p.1+p.2) (f x, g x)) : UpperSemicontinuous fun z => f z+g z :=
   fun x => (hf x).add' (hg x) (hcont x)
 
-variable[HasContinuousAdd γ]
+variable [HasContinuousAdd γ]
 
 /-- The sum of two upper semicontinuous functions is upper semicontinuous. Formulated with
 `[has_continuous_add]`. The primed version of the lemma uses an explicit continuity assumption on
@@ -819,7 +819,7 @@ end
 
 section 
 
-variable{ι : Sort _}{δ : Type _}[CompleteLinearOrder δ]
+variable {ι : Sort _} {δ : Type _} [CompleteLinearOrder δ]
 
 theorem upper_semicontinuous_within_at_infi {f : ι → α → δ} (h : ∀ i, UpperSemicontinuousWithinAt (f i) s x) :
   UpperSemicontinuousWithinAt (fun x' => ⨅i, f i x') s x :=
@@ -858,7 +858,7 @@ end
 
 section 
 
-variable{γ : Type _}[LinearOrderₓ γ][TopologicalSpace γ][OrderTopology γ]
+variable {γ : Type _} [LinearOrderₓ γ] [TopologicalSpace γ] [OrderTopology γ]
 
 -- error in Topology.Semicontinuous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_within_at_iff_lower_upper_semicontinuous_within_at

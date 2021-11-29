@@ -25,17 +25,17 @@ namespace Tree
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 /-- Construct a string representation of a tree. Provides a `has_repr` instance. -/
 def reprₓ [HasRepr α] : Tree α → Stringₓ
 | nil => "nil"
 | node a t1 t2 => "tree.node " ++ HasRepr.repr a ++ " (" ++ reprₓ t1 ++ ") (" ++ reprₓ t2 ++ ")"
 
-instance  [HasRepr α] : HasRepr (Tree α) :=
+instance [HasRepr α] : HasRepr (Tree α) :=
   ⟨Tree.repr⟩
 
-instance  : Inhabited (Tree α) :=
+instance : Inhabited (Tree α) :=
   ⟨nil⟩
 
 /-- Makes a `tree α` out of a red-black tree. -/

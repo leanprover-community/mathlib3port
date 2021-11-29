@@ -16,13 +16,13 @@ noncomputable theory
 
 open CategoryTheory CategoryTheory.Limits HomologicalComplex
 
-variable{ι : Type _}
+variable {ι : Type _}
 
-variable{V : Type u}[category.{v} V][preadditive V]
+variable {V : Type u} [category.{v} V] [preadditive V]
 
-variable{c : ComplexShape ι}{C D E : HomologicalComplex V c}
+variable {c : ComplexShape ι} {C D E : HomologicalComplex V c}
 
-variable(f g : C ⟶ D)(h k : D ⟶ E)(i : ι)
+variable (f g : C ⟶ D) (h k : D ⟶ E) (i : ι)
 
 section 
 
@@ -203,7 +203,7 @@ A homotopy `h` between chain maps `f` and `g` consists of components `h i j : C.
 which are zero unless `c.rel j i`, satisfying the homotopy condition.
 -/
 @[ext, nolint has_inhabited_instance]
-structure Homotopy(f g : C ⟶ D) where 
+structure Homotopy (f g : C ⟶ D) where 
   Hom : ∀ i j, C.X i ⟶ D.X j 
   zero' : ∀ i j, ¬c.rel j i → hom i j = 0 :=  by 
   runTac 
@@ -212,7 +212,7 @@ structure Homotopy(f g : C ⟶ D) where
   runTac 
     obviously'
 
-variable{f g}
+variable {f g}
 
 namespace Homotopy
 
@@ -343,7 +343,7 @@ homotopy.
 
 section MkInductive
 
-variable{P Q : ChainComplex V ℕ}
+variable {P Q : ChainComplex V ℕ}
 
 @[simp]
 theorem prev_d_chain_complex (f : ∀ i j, P.X i ⟶ Q.X j) (j : ℕ) : prevD j f = f j (j+1) ≫ Q.d _ _ :=
@@ -366,24 +366,9 @@ theorem d_next_zero_chain_complex (f : ∀ i j, P.X i ⟶ Q.X j) : dNext 0 f = 0
     simp only [ChainComplex.next_nat_zero]
     rfl
 
-variable(e :
-    P ⟶
-      Q)(zero :
-    P.X 0 ⟶
-      Q.X
-        1)(comm_zero :
-    e.f 0 =
-      zero ≫
-        Q.d 1
-          0)(one :
-    P.X 1 ⟶
-      Q.X
-        2)(comm_one :
-    e.f 1 =
-      (P.d 1 0 ≫
-          zero)+one ≫
-          Q.d 2
-            1)(succ :
+variable (e : P ⟶ Q) (zero : P.X 0 ⟶ Q.X 1) (comm_zero : e.f 0 = zero ≫ Q.d 1 0) (one : P.X 1 ⟶ Q.X 2)
+  (comm_one : e.f 1 = (P.d 1 0 ≫ zero)+one ≫ Q.d 2 1)
+  (succ :
     ∀ n : ℕ p :
       Σ'(f : P.X n ⟶ Q.X (n+1))(f' : P.X (n+1) ⟶ Q.X (n+2)), e.f (n+1) = (P.d (n+1) n ≫ f)+f' ≫ Q.d (n+2) (n+1),
       Σ'f'' : P.X (n+2) ⟶ Q.X (n+3), e.f (n+2) = (P.d (n+2) (n+1) ≫ p.2.1)+f'' ≫ Q.d (n+3) (n+2))
@@ -412,7 +397,7 @@ def mk_inductive_aux₁ :
 
 section 
 
-variable[has_zero_object V]
+variable [has_zero_object V]
 
 /--
 An auxiliary construction for `mk_inductive`.
@@ -494,7 +479,7 @@ and homotopies from the compositions to the identity chain maps.
 Note that this contains data;
 arguably it might be more useful for many applications if we truncated it to a Prop.
 -/
-structure HomotopyEquiv(C D : HomologicalComplex V c) where 
+structure HomotopyEquiv (C D : HomologicalComplex V c) where 
   Hom : C ⟶ D 
   inv : D ⟶ C 
   homotopyHomInvId : Homotopy (hom ≫ inv) (𝟙 C)
@@ -513,7 +498,7 @@ def refl (C : HomologicalComplex V c) : HomotopyEquiv C C :=
       by 
         simp  }
 
-instance  : Inhabited (HomotopyEquiv C C) :=
+instance : Inhabited (HomotopyEquiv C C) :=
   ⟨refl C⟩
 
 /-- Being homotopy equivalent is a symmetric relation. -/
@@ -534,9 +519,9 @@ def trans {C D E : HomologicalComplex V c} (f : HomotopyEquiv C D) (g : Homotopy
 
 end HomotopyEquiv
 
-variable[has_equalizers V][has_cokernels V][has_images V][has_image_maps V]
+variable [has_equalizers V] [has_cokernels V] [has_images V] [has_image_maps V]
 
-variable[has_zero_object V]
+variable [has_zero_object V]
 
 /--
 Homotopic maps induce the same map on homology.
@@ -576,7 +561,7 @@ end
 
 namespace CategoryTheory
 
-variable{W : Type _}[category W][preadditive W]
+variable {W : Type _} [category W] [preadditive W]
 
 -- error in Algebra.Homology.Homotopy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An additive functor takes homotopies to homotopies. -/

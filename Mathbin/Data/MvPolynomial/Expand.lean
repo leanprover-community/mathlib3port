@@ -17,7 +17,7 @@ open_locale BigOperators
 
 namespace MvPolynomial
 
-variable{σ τ R S : Type _}[CommSemiringₓ R][CommSemiringₓ S]
+variable {σ τ R S : Type _} [CommSemiringₓ R] [CommSemiringₓ S]
 
 /-- Expand the polynomial by a factor of p, so `∑ aₙ xⁿ` becomes `∑ aₙ xⁿᵖ`.
 

@@ -45,7 +45,7 @@ open TensorProduct
 
 namespace TensorProduct
 
-variable{R A M N P : Type _}
+variable {R A M N P : Type _}
 
 /-!
 ### The `A`-module structure on `A ⊗[R] M`
@@ -60,13 +60,13 @@ namespace AlgebraTensorModule
 
 section Semiringₓ
 
-variable[CommSemiringₓ R][Semiringₓ A][Algebra R A]
+variable [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-variable[AddCommMonoidₓ M][Module R M][Module A M][IsScalarTower R A M]
+variable [AddCommMonoidₓ M] [Module R M] [Module A M] [IsScalarTower R A M]
 
-variable[AddCommMonoidₓ N][Module R N]
+variable [AddCommMonoidₓ N] [Module R N]
 
-variable[AddCommMonoidₓ P][Module R P][Module A P][IsScalarTower R A P]
+variable [AddCommMonoidₓ P] [Module R P] [Module A P] [IsScalarTower R A P]
 
 theorem smul_eq_lsmul_rtensor (a : A) (x : M ⊗[R] N) : a • x = (lsmul R M a).rtensor N x :=
   rfl
@@ -97,13 +97,13 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R][CommSemiringₓ A][Algebra R A]
+variable [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A]
 
-variable[AddCommMonoidₓ M][Module R M][Module A M][IsScalarTower R A M]
+variable [AddCommMonoidₓ M] [Module R M] [Module A M] [IsScalarTower R A M]
 
-variable[AddCommMonoidₓ N][Module R N]
+variable [AddCommMonoidₓ N] [Module R N]
 
-variable[AddCommMonoidₓ P][Module R P][Module A P][IsScalarTower R A P]
+variable [AddCommMonoidₓ P] [Module R P] [Module A P] [IsScalarTower R A P]
 
 /-- Heterobasic version of `tensor_product.lift`:
 
@@ -129,7 +129,7 @@ def lift (f : M →ₗ[A] N →ₗ[R] P) : M ⊗[R] N →ₗ[A] P :=
 theorem lift_tmul (f : M →ₗ[A] N →ₗ[R] P) (x : M) (y : N) : lift f (x ⊗ₜ y) = f x y :=
   lift.tmul' x y
 
-variable(R A M N P)
+variable (R A M N P)
 
 /-- Heterobasic version of `tensor_product.uncurry`:
 
@@ -169,7 +169,7 @@ def lift.equiv : (M →ₗ[A] N →ₗ[R] P) ≃ₗ[A] M ⊗[R] N →ₗ[A] P :=
   LinearEquiv.ofLinear (uncurry R A M N P) (lcurry R A M N P) (LinearMap.ext$ fun f => ext$ fun x y => lift_tmul _ x y)
     (LinearMap.ext$ fun f => LinearMap.ext$ fun x => LinearMap.ext$ fun y => lift_tmul f x y)
 
-variable(R A M N P)
+variable (R A M N P)
 
 /-- Heterobasic version of `tensor_product.mk`:
 
@@ -213,15 +213,15 @@ open TensorProduct
 
 section Semiringₓ
 
-variable{R A B M N : Type _}[CommSemiringₓ R]
+variable {R A B M N : Type _} [CommSemiringₓ R]
 
-variable[Semiringₓ A][Algebra R A][Semiringₓ B][Algebra R B]
+variable [Semiringₓ A] [Algebra R A] [Semiringₓ B] [Algebra R B]
 
-variable[AddCommMonoidₓ M][Module R M][AddCommMonoidₓ N][Module R N]
+variable [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ N] [Module R N]
 
-variable(r : R)(f g : M →ₗ[R] N)
+variable (r : R) (f g : M →ₗ[R] N)
 
-variable(A)
+variable (A)
 
 /-- `base_change A f` for `f : M →ₗ[R] N` is the `A`-linear map `A ⊗[R] M →ₗ[A] A ⊗[R] N`. -/
 def base_change (f : M →ₗ[R] N) : A ⊗[R] M →ₗ[A] A ⊗[R] N :=
@@ -232,7 +232,7 @@ def base_change (f : M →ₗ[R] N) : A ⊗[R] M →ₗ[A] A ⊗[R] N :=
           rw [←comp_apply, ←comp_apply]
           simp only [ltensor_comp_rtensor, rtensor_comp_ltensor] }
 
-variable{A}
+variable {A}
 
 @[simp]
 theorem base_change_tmul (a : A) (x : M) : f.base_change A (a ⊗ₜ x) = a ⊗ₜ f x :=
@@ -259,7 +259,7 @@ theorem base_change_smul : (r • f).baseChange A = r • f.base_change A :=
     ext 
     simp [base_change_tmul]
 
-variable(R A M N)
+variable (R A M N)
 
 /-- `base_change` as a linear map. -/
 @[simps]
@@ -270,13 +270,13 @@ end Semiringₓ
 
 section Ringₓ
 
-variable{R A B M N : Type _}[CommRingₓ R]
+variable {R A B M N : Type _} [CommRingₓ R]
 
-variable[Ringₓ A][Algebra R A][Ringₓ B][Algebra R B]
+variable [Ringₓ A] [Algebra R A] [Ringₓ B] [Algebra R B]
 
-variable[AddCommGroupₓ M][Module R M][AddCommGroupₓ N][Module R N]
+variable [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ N] [Module R N]
 
-variable(f g : M →ₗ[R] N)
+variable (f g : M →ₗ[R] N)
 
 @[simp]
 theorem base_change_sub : (f - g).baseChange A = f.base_change A - g.base_change A :=
@@ -300,11 +300,11 @@ namespace TensorProduct
 
 section Semiringₓ
 
-variable{R : Type u}[CommSemiringₓ R]
+variable {R : Type u} [CommSemiringₓ R]
 
-variable{A : Type v₁}[Semiringₓ A][Algebra R A]
+variable {A : Type v₁} [Semiringₓ A] [Algebra R A]
 
-variable{B : Type v₂}[Semiringₓ B][Algebra R B]
+variable {B : Type v₂} [Semiringₓ B] [Algebra R B]
 
 /-!
 ### The `R`-algebra structure on `A ⊗[R] B`
@@ -405,7 +405,7 @@ begin
   apply [expr tensor_product.induction_on x]; simp [] [] [] [] [] [] { contextual := tt }
 end
 
-instance  : Semiringₓ (A ⊗[R] B) :=
+instance : Semiringₓ (A ⊗[R] B) :=
   { (by 
       infer_instance :
     AddCommMonoidₓ (A ⊗[R] B)) with
@@ -459,7 +459,7 @@ def tensor_algebra_map : R →+* A ⊗[R] B :=
       by 
         simp [add_tmul] }
 
-instance  : Algebra R (A ⊗[R] B) :=
+instance : Algebra R (A ⊗[R] B) :=
   { tensor_algebra_map,
     (by 
       infer_instance :
@@ -496,7 +496,7 @@ instance  : Algebra R (A ⊗[R] B) :=
 theorem algebra_map_apply (r : R) : (algebraMap R (A ⊗[R] B)) r = (algebraMap R A) r ⊗ₜ[R] 1 :=
   rfl
 
-variable{C : Type v₃}[Semiringₓ C][Algebra R C]
+variable {C : Type v₃} [Semiringₓ C] [Algebra R C]
 
 @[ext]
 theorem ext {g h : A ⊗[R] B →ₐ[R] C} (H : ∀ a b, g (a ⊗ₜ b) = h (a ⊗ₜ b)) : g = h :=
@@ -558,13 +558,13 @@ end Semiringₓ
 
 section Ringₓ
 
-variable{R : Type u}[CommRingₓ R]
+variable {R : Type u} [CommRingₓ R]
 
-variable{A : Type v₁}[Ringₓ A][Algebra R A]
+variable {A : Type v₁} [Ringₓ A] [Algebra R A]
 
-variable{B : Type v₂}[Ringₓ B][Algebra R B]
+variable {B : Type v₂} [Ringₓ B] [Algebra R B]
 
-instance  : Ringₓ (A ⊗[R] B) :=
+instance : Ringₓ (A ⊗[R] B) :=
   { (by 
       infer_instance :
     AddCommGroupₓ (A ⊗[R] B)),
@@ -577,13 +577,13 @@ end Ringₓ
 
 section CommRingₓ
 
-variable{R : Type u}[CommRingₓ R]
+variable {R : Type u} [CommRingₓ R]
 
-variable{A : Type v₁}[CommRingₓ A][Algebra R A]
+variable {A : Type v₁} [CommRingₓ A] [Algebra R A]
 
-variable{B : Type v₂}[CommRingₓ B][Algebra R B]
+variable {B : Type v₂} [CommRingₓ B] [Algebra R B]
 
-instance  : CommRingₓ (A ⊗[R] B) :=
+instance : CommRingₓ (A ⊗[R] B) :=
   { (by 
       infer_instance :
     Ringₓ (A ⊗[R] B)) with
@@ -614,7 +614,7 @@ end CommRingₓ
 Verify that typeclass search finds the ring structure on `A ⊗[ℤ] B`
 when `A` and `B` are merely rings, by treating both as `ℤ`-algebras.
 -/
-example  {A : Type v₁} [Ringₓ A] {B : Type v₂} [Ringₓ B] : Ringₓ (A ⊗[ℤ] B) :=
+example {A : Type v₁} [Ringₓ A] {B : Type v₂} [Ringₓ B] : Ringₓ (A ⊗[ℤ] B) :=
   by 
     infer_instance
 
@@ -622,7 +622,7 @@ example  {A : Type v₁} [Ringₓ A] {B : Type v₂} [Ringₓ B] : Ringₓ (A �
 Verify that typeclass search finds the comm_ring structure on `A ⊗[ℤ] B`
 when `A` and `B` are merely comm_rings, by treating both as `ℤ`-algebras.
 -/
-example  {A : Type v₁} [CommRingₓ A] {B : Type v₂} [CommRingₓ B] : CommRingₓ (A ⊗[ℤ] B) :=
+example {A : Type v₁} [CommRingₓ A] {B : Type v₂} [CommRingₓ B] : CommRingₓ (A ⊗[ℤ] B) :=
   by 
     infer_instance
 
@@ -635,15 +635,15 @@ section Monoidal
 
 section 
 
-variable{R : Type u}[CommSemiringₓ R]
+variable {R : Type u} [CommSemiringₓ R]
 
-variable{A : Type v₁}[Semiringₓ A][Algebra R A]
+variable {A : Type v₁} [Semiringₓ A] [Algebra R A]
 
-variable{B : Type v₂}[Semiringₓ B][Algebra R B]
+variable {B : Type v₂} [Semiringₓ B] [Algebra R B]
 
-variable{C : Type v₃}[Semiringₓ C][Algebra R C]
+variable {C : Type v₃} [Semiringₓ C] [Algebra R C]
 
-variable{D : Type v₄}[Semiringₓ D][Algebra R D]
+variable {D : Type v₄} [Semiringₓ D] [Algebra R D]
 
 /--
 Build an algebra morphism from a linear map out of a tensor product,
@@ -764,19 +764,19 @@ theorem alg_equiv_of_linear_equiv_triple_tensor_product_apply f w₁ w₂ x :
 
 end 
 
-variable{R : Type u}[CommSemiringₓ R]
+variable {R : Type u} [CommSemiringₓ R]
 
-variable{A : Type v₁}[Semiringₓ A][Algebra R A]
+variable {A : Type v₁} [Semiringₓ A] [Algebra R A]
 
-variable{B : Type v₂}[Semiringₓ B][Algebra R B]
+variable {B : Type v₂} [Semiringₓ B] [Algebra R B]
 
-variable{C : Type v₃}[Semiringₓ C][Algebra R C]
+variable {C : Type v₃} [Semiringₓ C] [Algebra R C]
 
-variable{D : Type v₄}[Semiringₓ D][Algebra R D]
+variable {D : Type v₄} [Semiringₓ D] [Algebra R D]
 
 section 
 
-variable(R A)
+variable (R A)
 
 /--
 The base ring is a left identity for the tensor product of algebra, up to algebra isomorphism.
@@ -810,7 +810,7 @@ theorem rid_tmul (r : R) (a : A) : (TensorProduct.rid R A : A ⊗ R → A) (a �
 
 section 
 
-variable(R A B)
+variable (R A B)
 
 /--
 The tensor product of R-algebras is commutative, up to algebra isomorphism.
@@ -837,7 +837,7 @@ end
 
 section 
 
-variable{R A B C}
+variable {R A B C}
 
 theorem assoc_aux_1 (a₁ a₂ : A) (b₁ b₂ : B) (c₁ c₂ : C) :
   (TensorProduct.assoc R A B C) (((a₁*a₂) ⊗ₜ[R] b₁*b₂) ⊗ₜ[R] c₁*c₂) =
@@ -850,7 +850,7 @@ theorem assoc_aux_2 (r : R) :
 
 end 
 
-variable{R A B C D}
+variable {R A B C D}
 
 /-- The tensor product of a pair of algebra morphisms. -/
 def map (f : A →ₐ[R] B) (g : C →ₐ[R] D) : A ⊗[R] C →ₐ[R] B ⊗[R] D :=
@@ -906,13 +906,13 @@ end Monoidal
 
 section 
 
-variable{R A B S : Type _}[CommSemiringₓ R][Semiringₓ A][Semiringₓ B][CommSemiringₓ S]
+variable {R A B S : Type _} [CommSemiringₓ R] [Semiringₓ A] [Semiringₓ B] [CommSemiringₓ S]
 
-variable[Algebra R A][Algebra R B][Algebra R S]
+variable [Algebra R A] [Algebra R B] [Algebra R S]
 
-variable(f : A →ₐ[R] S)(g : B →ₐ[R] S)
+variable (f : A →ₐ[R] S) (g : B →ₐ[R] S)
 
-variable(R)
+variable (R)
 
 /-- `algebra.lmul'` is an alg_hom on commutative rings. -/
 def lmul' : S ⊗[R] S →ₐ[R] S :=
@@ -924,7 +924,7 @@ def lmul' : S ⊗[R] S →ₐ[R] S :=
       by 
         simp only [Algebra.lmul'_apply, _root_.mul_one]
 
-variable{R}
+variable {R}
 
 theorem lmul'_to_linear_map : (lmul' R : _ →ₐ[R] S).toLinearMap = Algebra.lmul' R :=
   rfl

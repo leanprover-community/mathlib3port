@@ -12,29 +12,29 @@ In this file we define a typeclass `is_empty`, which expresses that a type has n
 -/
 
 
-variable{α β γ : Sort _}
+variable {α β γ : Sort _}
 
 /-- `is_empty α` expresses that `α` is empty. -/
 @[protectProj]
-class IsEmpty(α : Sort _) : Prop where 
+class IsEmpty (α : Sort _) : Prop where 
   False : α → False
 
-instance  : IsEmpty Empty :=
+instance : IsEmpty Empty :=
   ⟨Empty.elimₓ⟩
 
-instance  : IsEmpty Pempty :=
+instance : IsEmpty Pempty :=
   ⟨Pempty.elimₓ⟩
 
-instance  : IsEmpty False :=
+instance : IsEmpty False :=
   ⟨id⟩
 
-instance  : IsEmpty (Finₓ 0) :=
+instance : IsEmpty (Finₓ 0) :=
   ⟨fun n => Nat.not_lt_zeroₓ n.1 n.2⟩
 
 protected theorem Function.is_empty [IsEmpty β] (f : α → β) : IsEmpty α :=
   ⟨fun x => IsEmpty.false (f x)⟩
 
-instance  {p : α → Sort _} [h : Nonempty α] [∀ x, IsEmpty (p x)] : IsEmpty (∀ x, p x) :=
+instance {p : α → Sort _} [h : Nonempty α] [∀ x, IsEmpty (p x)] : IsEmpty (∀ x, p x) :=
   h.elim$ fun x => Function.is_empty$ Function.eval x
 
 instance PProd.is_empty_left [IsEmpty α] : IsEmpty (PProd α β) :=
@@ -49,14 +49,14 @@ instance Prod.is_empty_left {α β} [IsEmpty α] : IsEmpty (α × β) :=
 instance Prod.is_empty_right {α β} [IsEmpty β] : IsEmpty (α × β) :=
   Function.is_empty Prod.snd
 
-instance  [IsEmpty α] [IsEmpty β] : IsEmpty (Psum α β) :=
+instance [IsEmpty α] [IsEmpty β] : IsEmpty (Psum α β) :=
   ⟨fun x => Psum.rec IsEmpty.false IsEmpty.false x⟩
 
-instance  {α β} [IsEmpty α] [IsEmpty β] : IsEmpty (Sum α β) :=
+instance {α β} [IsEmpty α] [IsEmpty β] : IsEmpty (Sum α β) :=
   ⟨fun x => Sum.rec IsEmpty.false IsEmpty.false x⟩
 
 /-- subtypes of an empty type are empty -/
-instance  [IsEmpty α] (p : α → Prop) : IsEmpty (Subtype p) :=
+instance [IsEmpty α] (p : α → Prop) : IsEmpty (Subtype p) :=
   ⟨fun x => IsEmpty.false x.1⟩
 
 /-- subtypes by an all-false predicate are false. -/
@@ -67,7 +67,7 @@ theorem Subtype.is_empty_of_false {p : α → Prop} (hp : ∀ a, ¬p a) : IsEmpt
 instance Subtype.is_empty_false : IsEmpty { a : α // False } :=
   Subtype.is_empty_of_false fun a => id
 
-example  [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) :=
+example [h : Nonempty α] [IsEmpty β] : IsEmpty (α → β) :=
   by 
     infer_instance
 
@@ -95,7 +95,7 @@ protected def elim' {β : Sort _} (h : IsEmpty α) (a : α) : β :=
 protected theorem prop_iff {p : Prop} : IsEmpty p ↔ ¬p :=
   is_empty_iff
 
-variable[IsEmpty α]
+variable [IsEmpty α]
 
 theorem forall_iff {p : α → Prop} : (∀ a, p a) ↔ True :=
   iff_true_intro isEmptyElim
@@ -141,7 +141,7 @@ theorem is_empty_psum {α β} : IsEmpty (Psum α β) ↔ IsEmpty α ∧ IsEmpty 
   by 
     simp only [←not_nonempty_iff, nonempty_psum, not_or_distrib]
 
-variable(α)
+variable (α)
 
 theorem is_empty_or_nonempty : IsEmpty α ∨ Nonempty α :=
   (em$ IsEmpty α).elim Or.inl$ Or.inr ∘ not_is_empty_iff.mp
@@ -149,4 +149,9 @@ theorem is_empty_or_nonempty : IsEmpty α ∨ Nonempty α :=
 @[simp]
 theorem not_is_empty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
   not_is_empty_iff.mpr h
+
+variable {α}
+
+theorem Function.extend_of_empty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) : Function.extendₓ f g h = h :=
+  funext$ fun x => Function.extend_apply' _ _ _$ fun ⟨a, h⟩ => isEmptyElim a
 

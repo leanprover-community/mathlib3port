@@ -21,11 +21,11 @@ namespace Polynomial
 
 universe u v w z
 
-variable{R : Type u}{S : Type v}{T : Type w}{A : Type z}{a b : R}{n : ℕ}
+variable {R : Type u} {S : Type v} {T : Type w} {A : Type z} {a b : R} {n : ℕ}
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
 theorem X_dvd_iff {α : Type u} [CommSemiringₓ α] {f : Polynomial α} : X ∣ f ↔ f.coeff 0 = 0 :=
   ⟨fun ⟨g, hfg⟩ =>
@@ -40,7 +40,7 @@ end CommSemiringₓ
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]{p q : Polynomial R}
+variable [CommSemiringₓ R] {p q : Polynomial R}
 
 -- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem multiplicity_finite_of_degree_pos_of_monic
@@ -67,7 +67,7 @@ end CommSemiringₓ
 
 section Ringₓ
 
-variable[Ringₓ R]{p q : Polynomial R}
+variable [Ringₓ R] {p q : Polynomial R}
 
 theorem div_wf_lemma (h : degree q ≤ degree p ∧ p ≠ 0) (hq : monic q) :
   degree (p - (C (leading_coeff p)*X ^ (nat_degree p - nat_degree q))*q) < degree p :=
@@ -190,7 +190,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R]{p q : Polynomial R}
+variable [CommRingₓ R] {p q : Polynomial R}
 
 theorem mod_by_monic_eq_sub_mul_div : ∀ p : Polynomial R {q : Polynomial R} hq : monic q, p %ₘ q = p - q*p /ₘ q
 | p =>

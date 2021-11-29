@@ -12,7 +12,7 @@ open_locale TopologicalSpace Classical
 
 universe u v
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 theorem continuous_on_Icc_extend_from_Ioo [TopologicalSpace α] [LinearOrderₓ α] [DenselyOrdered α] [OrderTopology α]
   [TopologicalSpace β] [RegularSpace β] {f : α → β} {a b : α} {la lb : β} (hab : a < b) (hf : ContinuousOn f (Ioo a b))

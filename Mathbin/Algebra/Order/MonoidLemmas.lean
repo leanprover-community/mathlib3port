@@ -22,15 +22,15 @@ Almost no monoid is actually present in this file: most assumptions have been ge
 
 open Function
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 section Mul
 
-variable[Mul α]
+variable [Mul α]
 
 section LE
 
-variable[LE α]
+variable [LE α]
 
 @[toAdditive add_le_add_left]
 theorem mul_le_mul_left' [CovariantClass α α (·*·) (· ≤ ·)] {b c : α} (bc : b ≤ c) (a : α) : (a*b) ≤ a*c :=
@@ -62,7 +62,7 @@ end LE
 
 section LT
 
-variable[LT α]
+variable [LT α]
 
 @[simp, toAdditive]
 theorem mul_lt_mul_iff_left [CovariantClass α α (·*·) (· < ·)] [ContravariantClass α α (·*·) (· < ·)] (a : α)
@@ -96,11 +96,11 @@ end Mul
 
 section MulOneClass
 
-variable[MulOneClass α]
+variable [MulOneClass α]
 
 section LE
 
-variable[LE α]
+variable [LE α]
 
 @[simp, toAdditive le_add_iff_nonneg_right]
 theorem le_mul_iff_one_le_right' [CovariantClass α α (·*·) (· ≤ ·)] [ContravariantClass α α (·*·) (· ≤ ·)] (a : α)
@@ -157,7 +157,7 @@ end
 
 section LT
 
-variable[LT α]
+variable [LT α]
 
 @[toAdditive lt_add_of_pos_right]
 theorem lt_mul_of_one_lt_right' [CovariantClass α α (·*·) (· < ·)] (a : α) {b : α} (h : 1 < b) : a < a*b :=
@@ -201,7 +201,7 @@ end LT
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 @[toAdditive]
 theorem mul_le_of_le_of_le_one [CovariantClass α α (·*·) (· ≤ ·)] {a b c : α} (hbc : b ≤ c) (ha : a ≤ 1) : (b*a) ≤ c :=
@@ -398,15 +398,15 @@ def Contravariant.toRightCancelSemigroup [Semigroupₓ α] [PartialOrderₓ α]
   [ContravariantClass α α (swap (·*·)) (· ≤ ·)] : RightCancelSemigroup α :=
   { ‹Semigroupₓ α› with mul_right_cancel := fun a b c => mul_right_cancel'' }
 
-variable{a b c d : α}
+variable {a b c d : α}
 
 section Left
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 section Mul
 
-variable[Mul α]
+variable [Mul α]
 
 @[toAdditive]
 theorem mul_lt_mul_of_lt_of_lt [CovariantClass α α (·*·) (· < ·)] [CovariantClass α α (swap (·*·)) (· < ·)] (h₁ : a < b)
@@ -417,7 +417,7 @@ theorem mul_lt_mul_of_lt_of_lt [CovariantClass α α (·*·) (· < ·)] [Covaria
 
 section ContravariantMulLtLeftLeRight
 
-variable[CovariantClass α α (·*·) (· < ·)][CovariantClass α α (swap (·*·)) (· ≤ ·)]
+variable [CovariantClass α α (·*·) (· < ·)] [CovariantClass α α (swap (·*·)) (· ≤ ·)]
 
 @[toAdditive]
 theorem mul_lt_mul_of_le_of_lt (h₁ : a ≤ b) (h₂ : c < d) : (a*c) < b*d :=
@@ -429,7 +429,7 @@ theorem mul_lt_mul''' (h₁ : a < b) (h₂ : c < d) : (a*c) < b*d :=
 
 end ContravariantMulLtLeftLeRight
 
-variable[CovariantClass α α (·*·) (· ≤ ·)]
+variable [CovariantClass α α (·*·) (· ≤ ·)]
 
 @[toAdditive]
 theorem mul_lt_of_mul_lt_left (h : (a*b) < c) (hle : d ≤ b) : (a*d) < c :=
@@ -458,7 +458,7 @@ end Mul
 
 section MulOneClass
 
-variable[MulOneClass α][CovariantClass α α (·*·) (· ≤ ·)]
+variable [MulOneClass α] [CovariantClass α α (·*·) (· ≤ ·)]
 
 @[toAdditive]
 theorem lt_of_mul_lt_of_one_le_left (h : (a*b) < c) (hle : 1 ≤ b) : a < c :=
@@ -491,13 +491,13 @@ section Right
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 section Mul
 
-variable[Mul α]
+variable [Mul α]
 
-variable[CovariantClass α α (swap (·*·)) (· ≤ ·)]
+variable [CovariantClass α α (swap (·*·)) (· ≤ ·)]
 
 @[toAdditive]
 theorem mul_lt_of_mul_lt_right (h : (a*b) < c) (hle : d ≤ a) : (d*b) < c :=
@@ -515,7 +515,7 @@ theorem lt_mul_of_lt_mul_right (h : a < b*c) (hle : b ≤ d) : a < d*c :=
 theorem le_mul_of_le_mul_right (h : a ≤ b*c) (hle : b ≤ d) : a ≤ d*c :=
   h.trans (mul_le_mul_right' hle c)
 
-variable[CovariantClass α α (·*·) (· ≤ ·)]
+variable [CovariantClass α α (·*·) (· ≤ ·)]
 
 @[toAdditive add_le_add]
 theorem mul_le_mul' (h₁ : a ≤ b) (h₂ : c ≤ d) : (a*c) ≤ b*d :=
@@ -532,11 +532,11 @@ end Mul
 
 section MulOneClass
 
-variable[MulOneClass α]
+variable [MulOneClass α]
 
 section LeRight
 
-variable[CovariantClass α α (swap (·*·)) (· ≤ ·)]
+variable [CovariantClass α α (swap (·*·)) (· ≤ ·)]
 
 @[toAdditive le_add_of_nonneg_left]
 theorem le_mul_of_one_le_left' (h : 1 ≤ b) : a ≤ b*a :=
@@ -592,15 +592,15 @@ end Right
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 section MulOneClass
 
-variable[MulOneClass α]
+variable [MulOneClass α]
 
 section CovariantLeft
 
-variable[CovariantClass α α (·*·) (· ≤ ·)]
+variable [CovariantClass α α (·*·) (· ≤ ·)]
 
 @[toAdditive add_pos_of_pos_of_nonneg]
 theorem one_lt_mul_of_lt_of_le' (ha : 1 < a) (hb : 1 ≤ b) : 1 < a*b :=
@@ -636,7 +636,7 @@ end CovariantLeft
 
 section CovariantRight
 
-variable[CovariantClass α α (swap (·*·)) (· ≤ ·)]
+variable [CovariantClass α α (swap (·*·)) (· ≤ ·)]
 
 @[toAdditive add_pos_of_nonneg_of_pos]
 theorem one_lt_mul_of_le_of_lt' (ha : 1 ≤ a) (hb : 1 < b) : 1 < a*b :=
@@ -661,7 +661,7 @@ section PartialOrderₓ
 /-!  Properties assuming `partial_order`. -/
 
 
-variable[MulOneClass α][PartialOrderₓ α][CovariantClass α α (·*·) (· ≤ ·)][CovariantClass α α (swap (·*·)) (· ≤ ·)]
+variable [MulOneClass α] [PartialOrderₓ α] [CovariantClass α α (·*·) (· ≤ ·)] [CovariantClass α α (swap (·*·)) (· ≤ ·)]
 
 @[toAdditive]
 theorem mul_eq_one_iff' (ha : 1 ≤ a) (hb : 1 ≤ b) : (a*b) = 1 ↔ a = 1 ∧ b = 1 :=
@@ -680,7 +680,7 @@ end PartialOrderₓ
 
 section Mono
 
-variable[Mul α][Preorderₓ α][Preorderₓ β]{f g : β → α}
+variable [Mul α] [Preorderₓ α] [Preorderₓ β] {f g : β → α}
 
 @[toAdditive Monotone.const_add]
 theorem Monotone.const_mul' [CovariantClass α α (·*·) (· ≤ ·)] (hf : Monotone f) (a : α) : Monotone fun x => a*f x :=
@@ -699,7 +699,7 @@ theorem Monotone.mul' [CovariantClass α α (·*·) (· ≤ ·)] [CovariantClass
 
 section Left
 
-variable[CovariantClass α α (·*·) (· < ·)]
+variable [CovariantClass α α (·*·) (· < ·)]
 
 @[toAdditive StrictMono.const_add]
 theorem StrictMono.const_mul' (hf : StrictMono f) (c : α) : StrictMono fun x => c*f x :=
@@ -709,7 +709,7 @@ end Left
 
 section Right
 
-variable[CovariantClass α α (swap (·*·)) (· < ·)]
+variable [CovariantClass α α (swap (·*·)) (· < ·)]
 
 @[toAdditive StrictMono.add_const]
 theorem StrictMono.mul_const' (hf : StrictMono f) (c : α) : StrictMono fun x => f x*c :=
@@ -730,7 +730,7 @@ theorem Monotone.mul_strict_mono' [CovariantClass α α (·*·) (· < ·)] [Cova
   {f g : β → α} (hf : Monotone f) (hg : StrictMono g) : StrictMono fun x => f x*g x :=
   fun x y h => mul_lt_mul_of_le_of_lt (hf h.le) (hg h)
 
-variable[CovariantClass α α (·*·) (· ≤ ·)][CovariantClass α α (swap (·*·)) (· < ·)]
+variable [CovariantClass α α (·*·) (· ≤ ·)] [CovariantClass α α (swap (·*·)) (· < ·)]
 
 /--  The product of a strictly monotone function and a monotone function is strictly monotone. -/
 @[toAdditive StrictMono.add_monotone
@@ -779,7 +779,7 @@ protected theorem inj_left [CommSemigroupₓ α] [PartialOrderₓ α] {a b c : �
   ((a*c) = b*c) ↔ a = b :=
   hc.injective_left.eq_iff
 
-variable[LE α]
+variable [LE α]
 
 @[toAdditive]
 protected theorem mul_le_mul_iff_left [Mul α] [CovariantClass α α (·*·) (· ≤ ·)] {a b c : α} (ha : MulLeCancellable a) :

@@ -18,7 +18,7 @@ assumptions.
 Finally, for each set of parameters `l : box_integral.integration_params` and a rectangular box
 `I : box_integral.box ι`, we define several `filter`s that will be used either in the definition of
 the corresponding integral, or in the proofs of its properties. We equip
-`box_integral.integration_params` with a `bounded_lattice` structure such that larger
+`box_integral.integration_params` with a `bounded_order` structure such that larger
 `integration_params` produce larger filters.
 
 ## Main definitions
@@ -164,8 +164,8 @@ noncomputable theory
 
 namespace BoxIntegral
 
-variable{ι :
-    Type _}[Fintype ι]{I J : box ι}{c c₁ c₂ :  ℝ≥0 }{r r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)}{π π₁ π₂ : tagged_prepartition I}
+variable {ι : Type _} [Fintype ι] {I J : box ι} {c c₁ c₂ :  ℝ≥0 } {r r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)}
+  {π π₁ π₂ : tagged_prepartition I}
 
 open TaggedPrepartition
 
@@ -187,7 +187,7 @@ used in the definition of a box-integrable function.
 structure integration_params : Type where 
   (bRiemann bHenstock bDistortion : Bool)
 
-variable{l l₁ l₂ : integration_params}
+variable {l l₁ l₂ : integration_params}
 
 namespace IntegrationParams
 
@@ -197,26 +197,26 @@ def equiv_prod : integration_params ≃ Bool × OrderDual Bool × OrderDual Bool
     invFun := fun l => ⟨l.1, OrderDual.ofDual l.2.1, OrderDual.ofDual l.2.2⟩, left_inv := fun ⟨a, b, c⟩ => rfl,
     right_inv := fun ⟨a, b, c⟩ => rfl }
 
-instance  : PartialOrderₓ integration_params :=
+instance : PartialOrderₓ integration_params :=
   PartialOrderₓ.lift equiv_prod equiv_prod.Injective
 
-/-- Auxiliary `order_iso` with a product type used to lift a `bounded_lattice` structure. -/
+/-- Auxiliary `order_iso` with a product type used to lift a `bounded_order` structure. -/
 def iso_prod : integration_params ≃o Bool × OrderDual Bool × OrderDual Bool :=
   ⟨equiv_prod, fun ⟨x, y, z⟩ => Iff.rfl⟩
 
-instance  : BoundedLattice integration_params :=
-  iso_prod.symm.toGaloisInsertion.liftBoundedLattice
+instance : BoundedOrder integration_params :=
+  iso_prod.symm.toGaloisInsertion.liftBoundedOrder
 
 /-- The value `⊥` (`bRiemann = ff`, `bHenstock = tt`, `bDistortion = tt`) corresponds to a
 generalization of the Henstock integral such that the Divergence theorem holds true without
 additional integrability assumptions, see the module docstring for details. -/
-instance  : Inhabited integration_params :=
+instance : Inhabited integration_params :=
   ⟨⊥⟩
 
-instance  : DecidableRel (· ≤ · : integration_params → integration_params → Prop) :=
+instance : DecidableRel (· ≤ · : integration_params → integration_params → Prop) :=
   fun _ _ => And.decidable
 
-instance  : DecidableEq integration_params :=
+instance : DecidableEq integration_params :=
   fun x y => decidableOfIff _ (ext_iff x y).symm
 
 /-- The `box_integral.integration_params` corresponding to the Riemann integral. In the
@@ -263,9 +263,8 @@ Sacks-Henstock inequality to compare two prepartitions covering the same part of
 It is also automatically satisfied for any `c > 1`, see TODO section of the module docstring for
 details. -/
 @[protectProj]
-structure
-  mem_base_set(l : integration_params)(I : box ι)(c :  ℝ≥0 )(r : (ι → ℝ) → Ioi (0 : ℝ))(π : tagged_prepartition I) :
-  Prop where 
+structure mem_base_set (l : integration_params) (I : box ι) (c :  ℝ≥0 ) (r : (ι → ℝ) → Ioi (0 : ℝ))
+  (π : tagged_prepartition I) : Prop where 
   IsSubordinate : π.is_subordinate r 
   IsHenstock : l.bHenstock → π.is_Henstock 
   distortion_le : l.bDistortion → π.distortion ≤ c 

@@ -37,11 +37,11 @@ open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-variable{J K : Type v}[small_category J][small_category K]
+variable {J K : Type v} [small_category J] [small_category K]
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable(F : J ⥤ K ⥤ C)
+variable (F : J ⥤ K ⥤ C)
 
 /--
 A structure carrying a diagram of cones over the functors `F.obj j`.
@@ -56,7 +56,7 @@ structure diagram_of_cones where
   runTac 
     obviously
 
-variable{F}
+variable {F}
 
 /--
 Extract the functor `J ⥤ C` consisting of the cone points and the maps between them,
@@ -148,9 +148,9 @@ def cone_of_cone_uncurry_is_limit
 
 section 
 
-variable(F)
+variable (F)
 
-variable[has_limits_of_shape K C]
+variable [has_limits_of_shape K C]
 
 /--
 Given a functor `F : J ⥤ K ⥤ C`, with all needed limits,
@@ -168,9 +168,9 @@ noncomputable instance diagram_of_cones_inhabited : Inhabited (diagram_of_cones 
 theorem diagram_of_cones.mk_of_has_limits_cone_points : (diagram_of_cones.mk_of_has_limits F).conePoints = F ⋙ lim :=
   rfl
 
-variable[has_limit (uncurry.obj F)]
+variable [has_limit (uncurry.obj F)]
 
-variable[has_limit (F ⋙ lim)]
+variable [has_limit (F ⋙ lim)]
 
 -- error in CategoryTheory.Limits.Fubini: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -206,15 +206,15 @@ end
 
 section 
 
-variable(G : J × K ⥤ C)
+variable (G : J × K ⥤ C)
 
 section 
 
-variable[has_limits_of_shape K C]
+variable [has_limits_of_shape K C]
 
-variable[has_limit G]
+variable [has_limit G]
 
-variable[has_limit (curry.obj G ⋙ lim)]
+variable [has_limit (curry.obj G ⋙ lim)]
 
 -- error in CategoryTheory.Limits.Fubini: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -247,7 +247,7 @@ end
 
 section 
 
-variable[has_limits C]
+variable [has_limits C]
 
 open CategoryTheory.prod
 

@@ -21,17 +21,16 @@ noncomputable theory
 
 open_locale Classical MeasureTheory Nnreal Ennreal
 
-variable{α β : Type _}{m : MeasurableSpace α}
+variable {α β : Type _} {m : MeasurableSpace α}
 
 namespace MeasureTheory
 
 open TopologicalSpace
 
-variable{μ ν : Measureₓ α}
+variable {μ ν : Measureₓ α}
 
-variable{E :
-    Type
-      _}[NormedGroup E][MeasurableSpace E][second_countable_topology E][NormedSpace ℝ E][CompleteSpace E][BorelSpace E]
+variable {E : Type _} [NormedGroup E] [MeasurableSpace E] [second_countable_topology E] [NormedSpace ℝ E]
+  [CompleteSpace E] [BorelSpace E]
 
 /-- Given a measure `μ` and an integrable function `f`, `μ.with_densityᵥ f` is
 the vector measure which maps the set `s` to `∫ₛ f ∂μ`. -/
@@ -57,7 +56,7 @@ open Measureₓ
 
 include m
 
-variable{f g : α → E}
+variable {f g : α → E}
 
 theorem with_densityᵥ_apply (hf : integrable f μ) {s : Set α} (hs : MeasurableSet s) :
   μ.with_densityᵥ f s = ∫x in s, f x ∂μ :=

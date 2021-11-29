@@ -27,7 +27,7 @@ We define the following operations on boxes:
 * coercion to `set (ι → ℝ)` and `has_mem (ι → ℝ) (box_integral.box ι)` as described above;
 * `partial_order` and `semilattice_sup` instances such that `I ≤ J` is equivalent to
   `(I : set (ι → ℝ)) ⊆ J`;
-* `lattice` and `semilattice_inf_bot` instances on `with_bot (box_integral.box ι)`;
+* `lattice` instances on `with_bot (box_integral.box ι)`;
 * `box_integral.box.Icc`: the closed box `set.Icc I.lower I.upper`; defined as a bundled monotone
   map from `box ι` to `set (ι → ℝ)`;
 * `box_integral.box.face I i : box (fin n)`: a hyperface of `I : box_integral.box (fin (n + 1))`;
@@ -51,7 +51,7 @@ open_locale Nnreal Classical
 
 namespace BoxIntegral
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 /-!
 ### Rectangular box: definition and partial order
@@ -60,7 +60,7 @@ variable{ι : Type _}
 
 /-- A nontrivial rectangular box in `ι → ℝ` with corners `lower` and `upper`. Repesents the product
 of half-open intervals `(lower i, upper i]`. -/
-structure box(ι : Type _) where 
+structure box (ι : Type _) where 
   (lower upper : ι → ℝ)
   lower_lt_upper : ∀ i, lower i < upper i
 
@@ -68,18 +68,18 @@ attribute [simp] box.lower_lt_upper
 
 namespace Box
 
-variable(I J : box ι){x y : ι → ℝ}
+variable (I J : box ι) {x y : ι → ℝ}
 
-instance  : Inhabited (box ι) :=
+instance : Inhabited (box ι) :=
   ⟨⟨0, 1, fun i => zero_lt_one⟩⟩
 
 theorem lower_le_upper : I.lower ≤ I.upper :=
   fun i => (I.lower_lt_upper i).le
 
-instance  : HasMem (ι → ℝ) (box ι) :=
+instance : HasMem (ι → ℝ) (box ι) :=
   ⟨fun x I => ∀ i, x i ∈ Ioc (I.lower i) (I.upper i)⟩
 
-instance  : CoeTₓ (box ι) (Set$ ι → ℝ) :=
+instance : CoeTₓ (box ι) (Set$ ι → ℝ) :=
   ⟨fun I => { x | x ∈ I }⟩
 
 @[simp]
@@ -117,7 +117,7 @@ theorem coe_ne_empty : (I : Set (ι → ℝ)) ≠ ∅ :=
 theorem empty_ne_coe : ∅ ≠ (I : Set (ι → ℝ)) :=
   I.coe_ne_empty.symm
 
-instance  : LE (box ι) :=
+instance : LE (box ι) :=
   ⟨fun I J => ∀ ⦃x⦄, x ∈ I → x ∈ J⟩
 
 theorem le_def : I ≤ J ↔ ∀ x _ : x ∈ I, x ∈ J :=
@@ -140,7 +140,7 @@ theorem le_tfae :
     exact fun h x hx i => Ioc_subset_Ioc (h.1 i) (h.2 i) (hx i)
     tfaeFinish
 
-variable{I J}
+variable {I J}
 
 @[simp, normCast]
 theorem coe_subset_coe : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J :=
@@ -167,7 +167,7 @@ theorem ext (H : ∀ x, x ∈ I ↔ x ∈ J) : I = J :=
 theorem ne_of_disjoint_coe (h : Disjoint (I : Set (ι → ℝ)) J) : I ≠ J :=
   mt coe_inj.2$ h.ne I.coe_ne_empty
 
-instance  : PartialOrderₓ (box ι) :=
+instance : PartialOrderₓ (box ι) :=
   { PartialOrderₓ.lift (coeₓ : box ι → Set (ι → ℝ)) injective_coe with le := · ≤ · }
 
 /-- Closed box corresponding to `I : box_integral.box ι`. -/
@@ -210,12 +210,12 @@ theorem coe_subset_Icc : «expr↑ » I ⊆ I.Icc :=
 
 /-- `I ⊔ J` is the least box that includes both `I` and `J`. Since `↑I ∪ ↑J` is usually not a box,
 `↑(I ⊔ J)` is larger than `↑I ∪ ↑J`. -/
-instance  : HasSup (box ι) :=
+instance : HasSup (box ι) :=
   ⟨fun I J =>
       ⟨I.lower⊓J.lower, I.upper⊔J.upper,
         fun i => (min_le_leftₓ _ _).trans_lt$ (I.lower_lt_upper i).trans_le (le_max_leftₓ _ _)⟩⟩
 
-instance  : SemilatticeSup (box ι) :=
+instance : SemilatticeSup (box ι) :=
   { box.partial_order, box.has_sup with le_sup_left := fun I J => le_iff_bounds.2 ⟨inf_le_left, le_sup_left⟩,
     le_sup_right := fun I J => le_iff_bounds.2 ⟨inf_le_right, le_sup_right⟩,
     sup_le :=
@@ -310,7 +310,7 @@ theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi univ fun 
       rw [coe_bot, univ_pi_eq_empty]
       exact Ioc_eq_empty hi
 
-instance  : HasInf (WithBot (box ι)) :=
+instance : HasInf (WithBot (box ι)) :=
   ⟨fun I =>
       WithBot.recBotCoe (fun J => ⊥)
         (fun I J => WithBot.recBotCoe ⊥ (fun J => mk' (I.lower⊔J.lower) (I.upper⊓J.upper)) J) I⟩
@@ -329,7 +329,7 @@ theorem coe_inf (I J : WithBot (box ι)) : («expr↑ » (I⊓J) : Set (ι → �
     change «expr↑ » (mk' _ _) = _ 
     simp only [coe_eq_pi, ←pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk', coe_coe]
 
-instance  : Lattice (WithBot (box ι)) :=
+instance : Lattice (WithBot (box ι)) :=
   { WithBot.semilatticeSup, box.with_bot.has_inf with
     inf_le_left :=
       fun I J =>
@@ -346,9 +346,6 @@ instance  : Lattice (WithBot (box ι)) :=
         by 
           simp only [←with_bot_coe_subset_iff, coe_inf] at *
           exact subset_inter h₁ h₂ }
-
-instance  : SemilatticeInfBot (WithBot (box ι)) :=
-  { box.with_bot.lattice, WithBot.semilatticeSup with  }
 
 @[simp, normCast]
 theorem disjoint_with_bot_coe {I J : WithBot (box ι)} : Disjoint (I : Set (ι → ℝ)) J ↔ Disjoint I J :=
@@ -401,7 +398,7 @@ theorem continuous_on_face_Icc {X} [TopologicalSpace X] {n} {f : (Finₓ (n+1) �
 
 section Distortion
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 /-- The distortion of a box `I` is the maximum of the ratios of the lengths of its edges.
 It is defined as the maximum of the ratios

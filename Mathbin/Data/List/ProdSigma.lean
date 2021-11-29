@@ -10,7 +10,7 @@ product.
 -/
 
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 namespace List
 
@@ -47,7 +47,7 @@ theorem length_product (l₁ : List α) (l₂ : List β) : length (product l₁ 
 /-! ### sigma -/
 
 
-variable{σ : α → Type _}
+variable {σ : α → Type _}
 
 @[simp]
 theorem nil_sigma (l : ∀ a, List (σ a)) : (@nil α).Sigma l = [] :=

@@ -28,9 +28,9 @@ open CategoryTheory.Limits
 
 universe v u
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable[preadditive C]
+variable [preadditive C]
 
 -- error in CategoryTheory.Preadditive.Schur: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -63,7 +63,7 @@ theorem is_iso_iff_nonzero [has_kernels C] {X Y : C} [simple.{v} X] [simple.{v} 
 
 open FiniteDimensional
 
-variable(𝕜 : Type _)[Field 𝕜]
+variable (𝕜 : Type _) [Field 𝕜]
 
 -- error in CategoryTheory.Preadditive.Schur: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -86,7 +86,7 @@ begin
   exact [expr finrank_zero_of_subsingleton]
 end
 
-variable[IsAlgClosed 𝕜][linear 𝕜 C]
+variable [IsAlgClosed 𝕜] [linear 𝕜 C]
 
 attribute [local ext] Module DistribMulAction MulAction HasScalar
 
@@ -117,7 +117,7 @@ begin
     exact [expr nu.symm] }
 end
 
-variable[has_kernels C]
+variable [has_kernels C]
 
 /--
 **Schur's lemma** for endomorphisms in `𝕜`-linear categories.

@@ -26,9 +26,9 @@ ordered algebra
 
 section OrderedAlgebra
 
-variable{R A : Type _}{a b : A}{r : R}
+variable {R A : Type _} {a b : A} {r : R}
 
-variable[OrderedCommRing R][OrderedRing A][Algebra R A][OrderedSmul R A]
+variable [OrderedCommRing R] [OrderedRing A] [Algebra R A] [OrderedSmul R A]
 
 theorem algebra_map_monotone : Monotone (algebraMap R A) :=
   fun a b h =>
@@ -44,7 +44,7 @@ end OrderedAlgebra
 
 section Instances
 
-variable{R : Type _}[LinearOrderedCommRing R]
+variable {R : Type _} [LinearOrderedCommRing R]
 
 instance LinearOrderedCommRing.to_ordered_smul : OrderedSmul R R :=
   { smul_lt_smul_of_pos := OrderedSemiring.mul_lt_mul_of_pos_left,

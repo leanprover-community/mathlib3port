@@ -45,7 +45,7 @@ open Set Function Filter TopologicalSpace Ennreal Emetric Finset
 
 open_locale Classical TopologicalSpace Ennreal MeasureTheory BigOperators
 
-variable{α β ι E F 𝕜 : Type _}
+variable {α β ι E F 𝕜 : Type _}
 
 noncomputable theory
 
@@ -60,7 +60,7 @@ namespace SimpleFunc
 
 section Pointwise
 
-variable[MeasurableSpace α][EmetricSpace α][OpensMeasurableSpace α]
+variable [MeasurableSpace α] [EmetricSpace α] [OpensMeasurableSpace α]
 
 /-- `nearest_pt_ind e N x` is the index `k` such that `e k` is the nearest point to `x` among the
 points `e 0`, ..., `e N`. If more than one point are at the same distance from `x`, then
@@ -128,7 +128,7 @@ theorem tendsto_nearest_pt {e : ℕ → α} {x : α} (hx : x ∈ Closure (range 
     rw [edist_comm] at hN 
     exact ⟨N, trivialₓ, fun n hn => (edist_nearest_pt_le e x hn).trans_lt hN⟩
 
-variable[MeasurableSpace β]{f : β → α}
+variable [MeasurableSpace β] {f : β → α}
 
 -- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Approximate a measurable function by a sequence of simple functions `F n` such that
@@ -217,9 +217,9 @@ end Pointwise
 
 section Lp
 
-variable[MeasurableSpace β]
+variable [MeasurableSpace β]
 
-variable[MeasurableSpace E][NormedGroup E]{q : ℝ}{p : ℝ≥0∞}
+variable [MeasurableSpace E] [NormedGroup E] {q : ℝ} {p : ℝ≥0∞}
 
 -- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem nnnorm_approx_on_le
@@ -391,9 +391,9 @@ end Lp
 
 section Integrable
 
-variable[MeasurableSpace β]
+variable [MeasurableSpace β]
 
-variable[MeasurableSpace E][NormedGroup E]
+variable [MeasurableSpace E] [NormedGroup E]
 
 theorem tendsto_approx_on_L1_nnnorm [OpensMeasurableSpace E] {f : β → E} (hf : Measurable f) {s : Set E} {y₀ : E}
   (h₀ : y₀ ∈ s) [separable_space s] {μ : Measureₓ β} (hμ : ∀ᵐx ∂μ, f x ∈ Closure s)
@@ -429,11 +429,11 @@ end Integrable
 
 section SimpleFuncProperties
 
-variable[MeasurableSpace α]
+variable [MeasurableSpace α]
 
-variable[NormedGroup E][MeasurableSpace E][NormedGroup F]
+variable [NormedGroup E] [MeasurableSpace E] [NormedGroup F]
 
-variable{μ : Measureₓ α}{p : ℝ≥0∞}
+variable {μ : Measureₓ α} {p : ℝ≥0∞}
 
 /-!
 ### Properties of simple functions in `Lp` spaces
@@ -595,14 +595,10 @@ namespace Lp
 
 open AeEqFun
 
-variable[MeasurableSpace
-      α][NormedGroup
-      E][second_countable_topology
-      E][MeasurableSpace
-      E][BorelSpace
-      E][NormedGroup F][second_countable_topology F][MeasurableSpace F][BorelSpace F](p : ℝ≥0∞)(μ : Measureₓ α)
+variable [MeasurableSpace α] [NormedGroup E] [second_countable_topology E] [MeasurableSpace E] [BorelSpace E]
+  [NormedGroup F] [second_countable_topology F] [MeasurableSpace F] [BorelSpace F] (p : ℝ≥0∞) (μ : Measureₓ α)
 
-variable(E)
+variable (E)
 
 /-- `Lp.simple_func` is a subspace of Lp consisting of equivalence classes of an integrable simple
     function. -/
@@ -619,7 +615,7 @@ def simple_func : AddSubgroup (Lp E p μ) :=
           by 
             simp only [←hs, neg_mk, simple_func.coe_neg, mk_eq_mk, AddSubgroup.coe_neg]⟩ }
 
-variable{E p μ}
+variable {E p μ}
 
 namespace SimpleFunc
 
@@ -642,7 +638,7 @@ which does not permit this (but has the advantage of working when `E` itself is 
 i.e. has no scalar action). -/
 
 
-variable[NormedField 𝕜][NormedSpace 𝕜 E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable [NormedField 𝕜] [NormedSpace 𝕜 E] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
 /-- If `E` is a normed space, `Lp.simple_func E p μ` is a `has_scalar`. Not declared as an
 instance as it is (as of writing) used only in the construction of the Bochner integral. -/
@@ -739,7 +735,7 @@ theorem to_Lp_sub (f g : α →ₛ E) (hf : mem_ℒp f p μ) (hg : mem_ℒp g p 
     simp only [sub_eq_add_neg, ←to_Lp_neg, ←to_Lp_add]
     rfl
 
-variable[NormedField 𝕜][NormedSpace 𝕜 E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable [NormedField 𝕜] [NormedSpace 𝕜 E] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
 theorem to_Lp_smul (f : α →ₛ E) (hf : mem_ℒp f p μ) (c : 𝕜) : to_Lp (c • f) (hf.const_smul c) = c • to_Lp f hf :=
   rfl
@@ -781,7 +777,7 @@ theorem to_simple_func_to_Lp (f : α →ₛ E) (hfi : mem_ℒp f p μ) : to_simp
     rw [←mk_eq_mk]
     exact Classical.some_spec (to_Lp f hfi).2
 
-variable(E μ)
+variable (E μ)
 
 theorem zero_to_simple_func : to_simple_func (0 : Lp.simple_func E p μ) =ᵐ[μ] 0 :=
   by 
@@ -789,7 +785,7 @@ theorem zero_to_simple_func : to_simple_func (0 : Lp.simple_func E p μ) =ᵐ[μ
     intro a h₁ h₂ 
     rwa [h₁]
 
-variable{E μ}
+variable {E μ}
 
 theorem add_to_simple_func (f g : Lp.simple_func E p μ) :
   to_simple_func (f+g) =ᵐ[μ] to_simple_func f+to_simple_func g :=
@@ -798,7 +794,7 @@ theorem add_to_simple_func (f g : Lp.simple_func E p μ) :
       Lp.coe_fn_add (f : Lp E p μ) g]
     intro a 
     simp only [←coe_coe, AddSubgroup.coe_add, Pi.add_apply]
-    iterate 4
+    iterate 4 
       intro h 
       rw [h]
 
@@ -822,7 +818,7 @@ theorem sub_to_simple_func (f g : Lp.simple_func E p μ) :
       intro h 
       rw [h]
 
-variable[NormedField 𝕜][NormedSpace 𝕜 E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable [NormedField 𝕜] [NormedSpace 𝕜 E] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
 theorem smul_to_simple_func (k : 𝕜) (f : Lp.simple_func E p μ) : to_simple_func (k • f) =ᵐ[μ] k • to_simple_func f :=
   by 
@@ -842,14 +838,14 @@ end ToSimpleFunc
 
 section Induction
 
-variable(p)
+variable (p)
 
 /-- The characteristic function of a finite-measure measurable set `s`, as an `Lp` simple function.
 -/
 def indicator_const {s : Set α} (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : E) : Lp.simple_func E p μ :=
   to_Lp ((simple_func.const _ c).piecewise s hs (simple_func.const _ 0)) (mem_ℒp_indicator_const p hs c (Or.inr hμs))
 
-variable{p}
+variable {p}
 
 @[simp]
 theorem coe_indicator_const {s : Set α} (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : E) :
@@ -904,7 +900,7 @@ end Induction
 
 section CoeToLp
 
-variable[Fact (1 ≤ p)]
+variable [Fact (1 ≤ p)]
 
 protected theorem UniformContinuous : UniformContinuous (coeₓ : Lp.simple_func E p μ → Lp E p μ) :=
   uniform_continuous_comap
@@ -937,16 +933,16 @@ protected theorem DenseInducing (hp_ne_top : p ≠ ∞) : DenseInducing (coeₓ 
 protected theorem DenseRange (hp_ne_top : p ≠ ∞) : DenseRange (coeₓ : Lp.simple_func E p μ → Lp E p μ) :=
   (simple_func.dense_inducing hp_ne_top).dense
 
-variable[NormedField 𝕜][NormedSpace 𝕜 E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable [NormedField 𝕜] [NormedSpace 𝕜 E] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
-variable(α E 𝕜)
+variable (α E 𝕜)
 
 /-- The embedding of Lp simple functions into Lp functions, as a continuous linear map. -/
 def coe_to_Lp : Lp.simple_func E p μ →L[𝕜] Lp E p μ :=
   { AddSubgroup.subtype (Lp.simple_func E p μ) with map_smul' := fun k f => rfl,
     cont := Lp.simple_func.uniform_continuous.Continuous }
 
-variable{α E 𝕜}
+variable {α E 𝕜}
 
 end CoeToLp
 
@@ -954,9 +950,8 @@ end SimpleFunc
 
 end Lp
 
-variable[MeasurableSpace
-      α][NormedGroup
-      E][MeasurableSpace E][BorelSpace E][second_countable_topology E]{f : α → E}{p : ℝ≥0∞}{μ : Measureₓ α}
+variable [MeasurableSpace α] [NormedGroup E] [MeasurableSpace E] [BorelSpace E] [second_countable_topology E]
+  {f : α → E} {p : ℝ≥0∞} {μ : Measureₓ α}
 
 /-- To prove something for an arbitrary `Lp` function in a second countable Borel normed group, it
 suffices to show that

@@ -31,14 +31,14 @@ open Function Set
 
 namespace BoxIntegral
 
-variable{ι M : Type _}{n : ℕ}
+variable {ι M : Type _} {n : ℕ}
 
 /-- A function on `box ι` is called box additive if for every box `J` and a partition `π` of `J`
 we have `f J = ∑ Ji in π.boxes, f Ji`. A function is called box additive on subboxes of `I : box ι`
 if the same property holds for `J ≤ I`. We formalize these two notions in the same definition
 using `I : with_bot (box ι)`: the value `I = ⊤` corresponds to functions box additive on the whole
 space.  -/
-structure box_additive_map(ι M : Type _)[AddCommMonoidₓ M](I : WithTop (box ι)) where 
+structure box_additive_map (ι M : Type _) [AddCommMonoidₓ M] (I : WithTop (box ι)) where 
   toFun : box ι → M 
   sum_partition_boxes' :
   ∀ J : box ι, «expr↑ » J ≤ I → ∀ π : prepartition J, π.is_partition → (∑Ji in π.boxes, to_fun Ji) = to_fun J
@@ -51,9 +51,9 @@ namespace BoxAdditiveMap
 
 open Box Prepartition Finset
 
-variable{N : Type _}[AddCommMonoidₓ M][AddCommMonoidₓ N]{I₀ : WithTop (box ι)}{I J : box ι}{i : ι}
+variable {N : Type _} [AddCommMonoidₓ M] [AddCommMonoidₓ N] {I₀ : WithTop (box ι)} {I J : box ι} {i : ι}
 
-instance  : CoeFun (ι →ᵇᵃ[I₀] M) fun _ => box ι → M :=
+instance : CoeFun (ι →ᵇᵃ[I₀] M) fun _ => box ι → M :=
   ⟨to_fun⟩
 
 initialize_simps_projections box_integral.box_additive_map (toFun → apply)
@@ -80,20 +80,20 @@ theorem sum_partition_boxes (f : ι →ᵇᵃ[I₀] M) (hI : «expr↑ » I ≤ 
   f.sum_partition_boxes' I hI π h
 
 @[simps (config := { fullyApplied := ff })]
-instance  : HasZero (ι →ᵇᵃ[I₀] M) :=
+instance : HasZero (ι →ᵇᵃ[I₀] M) :=
   ⟨⟨0, fun I hI π hπ => sum_const_zero⟩⟩
 
-instance  : Inhabited (ι →ᵇᵃ[I₀] M) :=
+instance : Inhabited (ι →ᵇᵃ[I₀] M) :=
   ⟨0⟩
 
-instance  : Add (ι →ᵇᵃ[I₀] M) :=
+instance : Add (ι →ᵇᵃ[I₀] M) :=
   ⟨fun f g =>
       ⟨f+g,
         fun I hI π hπ =>
           by 
             simp only [Pi.add_apply, sum_add_distrib, sum_partition_boxes _ hI hπ]⟩⟩
 
-instance  : AddCommMonoidₓ (ι →ᵇᵃ[I₀] M) :=
+instance : AddCommMonoidₓ (ι →ᵇᵃ[I₀] M) :=
   Function.Injective.addCommMonoid _ coe_injective rfl fun _ _ => rfl
 
 @[simp]
@@ -174,7 +174,7 @@ theorem sum_boxes_congr [Fintype ι] (f : ι →ᵇᵃ[I₀] M) (hI : «expr↑ 
 
 section ToSmul
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E]
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
 
 /-- If `f` is a box-additive map, then so is the map sending `I` to the scalar multiplication
 by `f I` as a continuous linear map from `E` to itself. -/

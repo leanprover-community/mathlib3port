@@ -61,7 +61,7 @@ def Real.toEreal : ℝ → Ereal :=
 
 namespace Ereal
 
-instance  : HasBot Ereal :=
+instance : HasBot Ereal :=
   ⟨some ⊥⟩
 
 @[simp]
@@ -72,7 +72,7 @@ theorem bot_lt_top : (⊥ : Ereal) < ⊤ :=
 theorem bot_ne_top : (⊥ : Ereal) ≠ ⊤ :=
   bot_lt_top.Ne
 
-instance  : Coe ℝ Ereal :=
+instance : Coe ℝ Ereal :=
   ⟨Real.toEreal⟩
 
 @[simp, normCast]
@@ -101,10 +101,10 @@ def _root_.ennreal.to_ereal : ℝ≥0∞ → Ereal
 instance has_coe_ennreal : Coe ℝ≥0∞ Ereal :=
   ⟨Ennreal.toEreal⟩
 
-instance  : HasZero Ereal :=
+instance : HasZero Ereal :=
   ⟨(0 : ℝ)⟩
 
-instance  : Inhabited Ereal :=
+instance : Inhabited Ereal :=
   ⟨0⟩
 
 /-- A recursor for `ereal` in terms of the coercion.
@@ -122,7 +122,7 @@ protected def rec {C : Ereal → Sort _} (h_bot : C ⊥) (h_real : ∀ a : ℝ, 
 /-! ### Real coercion -/
 
 
-instance  : CanLift Ereal ℝ :=
+instance : CanLift Ereal ℝ :=
   { coe := coeₓ, cond := fun r => r ≠ ⊤ ∧ r ≠ ⊥,
     prf :=
       fun x hx =>
@@ -525,7 +525,7 @@ protected def neg : Ereal → Ereal
 | ⊤ => ⊥
 | (x : ℝ) => (-x : ℝ)
 
-instance  : Neg Ereal :=
+instance : Neg Ereal :=
   ⟨Ereal.neg⟩
 
 @[normCast]
@@ -664,7 +664,7 @@ registered on `ereal` because of this bad behavior. -/
 protected noncomputable def sub (x y : Ereal) : Ereal :=
   x+-y
 
-noncomputable instance  : Sub Ereal :=
+noncomputable instance : Sub Ereal :=
   ⟨Ereal.sub⟩
 
 @[simp]

@@ -51,9 +51,9 @@ open Function
 
 section Variants
 
-variable{M N : Type _}(μ : M → N → N)(r : N → N → Prop)
+variable {M N : Type _} (μ : M → N → N) (r : N → N → Prop)
 
-variable(M N)
+variable (M N)
 
 /-- `covariant` is useful to formulate succintly statements about the interactions between an
 action of a Type on another one and a relation on the acted-upon Type.
@@ -106,7 +106,7 @@ theorem rel_iff_cov [CovariantClass M N μ r] [ContravariantClass M N μ r] (m :
 
 section flip
 
-variable{M N μ r}
+variable {M N μ r}
 
 theorem Covariant.flip (h : Covariant M N μ r) : Covariant M N μ (flip r) :=
   fun a b c hbc => h a hbc
@@ -118,7 +118,7 @@ end flip
 
 section Covariant
 
-variable{M N μ r}[CovariantClass M N μ r]
+variable {M N μ r} [CovariantClass M N μ r]
 
 theorem act_rel_act_of_rel (m : M) {a b : N} (ab : r a b) : r (μ m a) (μ m b) :=
   CovariantClass.elim _ ab
@@ -140,7 +140,7 @@ theorem Groupₓ.covconv [Groupₓ N] [CovariantClass N N (·*·) r] : Contravar
 
 section IsTrans
 
-variable[IsTrans N r](m n : M){a b c d : N}
+variable [IsTrans N r] (m n : M) {a b c d : N}
 
 theorem act_rel_of_rel_of_act_rel (ab : r a b) (rl : r (μ m b) c) : r (μ m a) c :=
   trans (act_rel_act_of_rel m ab) rl
@@ -154,7 +154,8 @@ end Covariant
 
 section MEqN
 
-variable{M N μ r}{mu : N → N → N}[IsTrans N r][CovariantClass N N mu r][CovariantClass N N (swap mu) r]{a b c d : N}
+variable {M N μ r} {mu : N → N → N} [IsTrans N r] [CovariantClass N N mu r] [CovariantClass N N (swap mu) r]
+  {a b c d : N}
 
 theorem act_rel_act_of_rel_of_rel (ab : r a b) (cd : r c d) : r (mu a c) (mu b d) :=
   trans (act_rel_act_of_rel c ab : _) (act_rel_act_of_rel b cd)
@@ -163,14 +164,14 @@ end MEqN
 
 section Contravariant
 
-variable{M N μ r}[ContravariantClass M N μ r]
+variable {M N μ r} [ContravariantClass M N μ r]
 
 theorem rel_of_act_rel_act (m : M) {a b : N} (ab : r (μ m a) (μ m b)) : r a b :=
   ContravariantClass.elim _ ab
 
 section IsTrans
 
-variable[IsTrans N r](m n : M){a b c d : N}
+variable [IsTrans N r] (m n : M) {a b c d : N}
 
 theorem act_rel_of_act_rel_of_rel_act_rel (ab : r (μ m a) b) (rl : r (μ m b) (μ m c)) : r (μ m a) c :=
   trans ab (rel_of_act_rel_act m rl)

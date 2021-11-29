@@ -21,12 +21,12 @@ quotients as setoids whose equivalence classes are clopen.
   endowed with a `fintype` instance.
 
 ## Order structure
-The type `discrete_quotient X` is endowed with an instance of a `semilattice_inf_top`.
+The type `discrete_quotient X` is endowed with an instance of a `semilattice_inf` with `order_top`.
 The partial ordering `A ≤ B` mathematically means that `B.proj` factors through `A.proj`.
 The top element `⊤` is the trivial quotient, meaning that every element of `X` is collapsed
 to a point. Given `h : A ≤ B`, the map `A → B` is `discrete_quotient.of_le h`.
 Whenever `X` is discrete, the type `discrete_quotient X` is also endowed with an instance of a
-`semilattice_inf_bot`, where the bot element `⊥` is `X` itself.
+`semilattice_inf` with `order_bot`, where the bot element `⊥` is `X` itself.
 
 Given `f : X → Y` and `h : continuous f`, we define a predicate `le_comap h A B` for
 `A : discrete_quotient X` and `B : discrete_quotient Y`, asserting that `f` descends to `A → B`.
@@ -47,7 +47,7 @@ of finite discrete spaces.
 -/
 
 
-variable(X : Type _)[TopologicalSpace X]
+variable (X : Type _) [TopologicalSpace X]
 
 /-- The type of discrete quotients of a topological space. -/
 @[ext]
@@ -58,7 +58,7 @@ structure DiscreteQuotient where
 
 namespace DiscreteQuotient
 
-variable{X}(S : DiscreteQuotient X)
+variable {X} (S : DiscreteQuotient X)
 
 /-- Construct a discrete quotient from a clopen set. -/
 def of_clopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X :=
@@ -106,10 +106,10 @@ theorem trans : ∀ x y z : X, S.rel x y → S.rel y z → S.rel x z :=
 def Setoidₓ : Setoidₓ X :=
   ⟨S.rel, S.equiv⟩
 
-instance  : CoeSort (DiscreteQuotient X) (Type _) :=
+instance : CoeSort (DiscreteQuotient X) (Type _) :=
   ⟨fun S => Quotientₓ S.setoid⟩
 
-instance  : TopologicalSpace S :=
+instance : TopologicalSpace S :=
   ⊥
 
 /-- The projection from `X` to the given discrete quotient. -/
@@ -145,7 +145,7 @@ theorem fiber_open (A : Set S) : IsOpen (S.proj ⁻¹' A) :=
 theorem fiber_clopen (A : Set S) : IsClopen (S.proj ⁻¹' A) :=
   ⟨fiber_open _ _, fiber_closed _ _⟩
 
-instance  : PartialOrderₓ (DiscreteQuotient X) :=
+instance : PartialOrderₓ (DiscreteQuotient X) :=
   { le := fun A B => ∀ x y : X, A.rel x y → B.rel x y,
     le_refl :=
       fun a =>
@@ -161,7 +161,7 @@ instance  : PartialOrderₓ (DiscreteQuotient X) :=
           ext 
           tauto }
 
-instance  : OrderTop (DiscreteQuotient X) :=
+instance : OrderTop (DiscreteQuotient X) :=
   { top :=
       ⟨fun a b => True,
         ⟨by 
@@ -176,8 +176,8 @@ instance  : OrderTop (DiscreteQuotient X) :=
         by 
           tauto }
 
-instance  : SemilatticeInfTop (DiscreteQuotient X) :=
-  { DiscreteQuotient.orderTop, DiscreteQuotient.partialOrder with
+instance : SemilatticeInf (DiscreteQuotient X) :=
+  { DiscreteQuotient.partialOrder with
     inf :=
       fun A B =>
         { Rel := fun x y => A.rel x y ∧ B.rel x y,
@@ -198,12 +198,12 @@ instance  : SemilatticeInfTop (DiscreteQuotient X) :=
         by 
           tauto }
 
-instance  : Inhabited (DiscreteQuotient X) :=
+instance : Inhabited (DiscreteQuotient X) :=
   ⟨⊤⟩
 
 section Comap
 
-variable{Y : Type _}[TopologicalSpace Y]{f : Y → X}(cont : Continuous f)
+variable {Y : Type _} [TopologicalSpace Y] {f : Y → X} (cont : Continuous f)
 
 /-- Comap a discrete quotient along a continuous map. -/
 def comap : DiscreteQuotient Y :=
@@ -276,11 +276,10 @@ theorem of_le_proj_apply {A B : DiscreteQuotient X} (h : A ≤ B) (x : X) : of_l
 end OfLe
 
 /--
-When X is discrete, there is a `semilattice_inf_bot` instance on `discrete_quotient X`
+When X is discrete, there is a `order_bot` instance on `discrete_quotient X`
 -/
-instance  [DiscreteTopology X] : SemilatticeInfBot (DiscreteQuotient X) :=
-  { (inferInstance : SemilatticeInf _) with
-    bot := { Rel := · = ·, Equiv := eq_equivalence, clopen := fun x => is_clopen_discrete _ },
+instance [DiscreteTopology X] : OrderBot (DiscreteQuotient X) :=
+  { bot := { Rel := · = ·, Equiv := eq_equivalence, clopen := fun x => is_clopen_discrete _ },
     bot_le :=
       by 
         rintro S a b (h : a = b)
@@ -295,7 +294,8 @@ theorem proj_bot_bijective [DiscreteTopology X] : Function.Bijective (⊥ : Disc
 
 section Map
 
-variable{Y : Type _}[TopologicalSpace Y]{f : Y → X}(cont : Continuous f)(A : DiscreteQuotient Y)(B : DiscreteQuotient X)
+variable {Y : Type _} [TopologicalSpace Y] {f : Y → X} (cont : Continuous f) (A : DiscreteQuotient Y)
+  (B : DiscreteQuotient X)
 
 /--
 Given `cont : continuous f`, `le_comap cont A B` is defined as `A ≤ B.comap f`.
@@ -304,7 +304,7 @@ Mathematically this means that `f` descends to a morphism `A → B`.
 def le_comap : Prop :=
   A ≤ B.comap cont
 
-variable{cont A B}
+variable {cont A B}
 
 theorem le_comap_id (A : DiscreteQuotient X) : le_comap continuous_id A A :=
   by 
@@ -451,7 +451,7 @@ end DiscreteQuotient
 
 namespace LocallyConstant
 
-variable{X}{α : Type _}(f : LocallyConstant X α)
+variable {X} {α : Type _} (f : LocallyConstant X α)
 
 /-- Any locally constant function induces a discrete quotient. -/
 def DiscreteQuotient : DiscreteQuotient X :=

@@ -30,7 +30,7 @@ from the natural numbers into it is injective.
 
 /-- Typeclass for monoids with characteristic zero.
   (This is usually stated on fields but it makes sense for any additive monoid with 1.) -/
-class CharZero(R : Type _)[AddMonoidₓ R][HasOne R] : Prop where 
+class CharZero (R : Type _) [AddMonoidₓ R] [HasOne R] : Prop where 
   cast_injective : Function.Injective (coeₓ : ℕ → R)
 
 theorem char_zero_of_inj_zero {R : Type _} [AddLeftCancelMonoid R] [HasOne R] (H : ∀ n : ℕ, (n : R) = 0 → n = 0) :
@@ -48,12 +48,12 @@ and this would risk forming a loop. -/
 theorem OrderedSemiring.to_char_zero {R : Type _} [OrderedSemiring R] [Nontrivial R] : CharZero R :=
   ⟨Nat.strict_mono_cast.Injective⟩
 
-instance (priority := 100)LinearOrderedSemiring.to_char_zero {R : Type _} [LinearOrderedSemiring R] : CharZero R :=
+instance (priority := 100) LinearOrderedSemiring.to_char_zero {R : Type _} [LinearOrderedSemiring R] : CharZero R :=
   OrderedSemiring.to_char_zero
 
 namespace Nat
 
-variable{R : Type _}[AddMonoidₓ R][HasOne R][CharZero R]
+variable {R : Type _} [AddMonoidₓ R] [HasOne R] [CharZero R]
 
 theorem cast_injective : Function.Injective (coeₓ : ℕ → R) :=
   CharZero.cast_injective
@@ -94,12 +94,12 @@ end Nat
 
 section 
 
-variable(M : Type _)[AddMonoidₓ M][HasOne M][CharZero M]
+variable (M : Type _) [AddMonoidₓ M] [HasOne M] [CharZero M]
 
-instance (priority := 100)CharZero.infinite : Infinite M :=
+instance (priority := 100) CharZero.infinite : Infinite M :=
   Infinite.of_injective coeₓ Nat.cast_injective
 
-variable{M}
+variable {M}
 
 @[field_simps]
 theorem two_ne_zero' : (2 : M) ≠ 0 :=
@@ -114,7 +114,7 @@ end
 
 section 
 
-variable{R : Type _}[Semiringₓ R][NoZeroDivisors R][CharZero R]
+variable {R : Type _} [Semiringₓ R] [NoZeroDivisors R] [CharZero R]
 
 @[simp]
 theorem add_self_eq_zero {a : R} : (a+a) = 0 ↔ a = 0 :=
@@ -135,7 +135,7 @@ end
 
 section 
 
-variable{R : Type _}[Ringₓ R][NoZeroDivisors R][CharZero R]
+variable {R : Type _} [Ringₓ R] [NoZeroDivisors R] [CharZero R]
 
 theorem neg_eq_self_iff {a : R} : -a = a ↔ a = 0 :=
   neg_eq_iff_add_eq_zero.trans add_self_eq_zero
@@ -192,7 +192,7 @@ end
 
 section 
 
-variable{R : Type _}[DivisionRing R][CharZero R]
+variable {R : Type _} [DivisionRing R] [CharZero R]
 
 @[simp]
 theorem half_add_self (a : R) : (a+a) / 2 = a :=
@@ -216,7 +216,7 @@ end
 
 namespace WithTop
 
-instance  {R : Type _} [AddMonoidₓ R] [HasOne R] [CharZero R] : CharZero (WithTop R) :=
+instance {R : Type _} [AddMonoidₓ R] [HasOne R] [CharZero R] : CharZero (WithTop R) :=
   { cast_injective :=
       fun m n h =>
         by 
@@ -226,7 +226,7 @@ end WithTop
 
 section RingHom
 
-variable{R S : Type _}[Semiringₓ R][Semiringₓ S]
+variable {R S : Type _} [Semiringₓ R] [Semiringₓ S]
 
 theorem RingHom.char_zero (ϕ : R →+* S) [hS : CharZero S] : CharZero R :=
   ⟨fun a b h =>

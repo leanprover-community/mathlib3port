@@ -15,9 +15,9 @@ open Polynomial Finset
 
 section DenomsClearable
 
-variable{R K : Type _}[Semiringₓ R][CommSemiringₓ K]{i : R →+* K}
+variable {R K : Type _} [Semiringₓ R] [CommSemiringₓ K] {i : R →+* K}
 
-variable{a b : R}{bi : K}
+variable {a b : R} {bi : K}
 
 /-- `denoms_clearable` formalizes the property that `b ^ N * f (a / b)`
 does not have denominators, if the inequality `f.nat_degree ≤ N` holds.

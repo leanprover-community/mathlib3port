@@ -24,7 +24,7 @@ normed group
 -/
 
 
-variable{α ι E F : Type _}
+variable {α ι E F : Type _}
 
 open Filter Metric
 
@@ -32,7 +32,7 @@ open_locale TopologicalSpace BigOperators Nnreal Ennreal uniformity Pointwise
 
 /-- Auxiliary class, endowing a type `E` with a function `norm : E → ℝ`. This class is designed to
 be extended in more interesting classes specifying the properties of the norm. -/
-class HasNorm(E : Type _) where 
+class HasNorm (E : Type _) where 
   norm : E → ℝ
 
 export HasNorm(norm)
@@ -41,16 +41,16 @@ notation "∥" e "∥" => norm e
 
 /-- A seminormed group is an additive group endowed with a norm for which `dist x y = ∥x - y∥`
 defines a pseudometric space structure. -/
-class SemiNormedGroup(E : Type _) extends HasNorm E, AddCommGroupₓ E, PseudoMetricSpace E where 
+class SemiNormedGroup (E : Type _) extends HasNorm E, AddCommGroupₓ E, PseudoMetricSpace E where 
   dist_eq : ∀ x y : E, dist x y = norm (x - y)
 
 /-- A normed group is an additive group endowed with a norm for which `dist x y = ∥x - y∥` defines
 a metric space structure. -/
-class NormedGroup(E : Type _) extends HasNorm E, AddCommGroupₓ E, MetricSpace E where 
+class NormedGroup (E : Type _) extends HasNorm E, AddCommGroupₓ E, MetricSpace E where 
   dist_eq : ∀ x y : E, dist x y = norm (x - y)
 
 /-- A normed group is a seminormed group. -/
-instance (priority := 100)NormedGroup.toSemiNormedGroup [h : NormedGroup E] : SemiNormedGroup E :=
+instance (priority := 100) NormedGroup.toSemiNormedGroup [h : NormedGroup E] : SemiNormedGroup E :=
   { h with  }
 
 -- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -89,7 +89,7 @@ def semi_normed_group.of_add_dist'
 
 /-- A seminormed group can be built from a seminorm that satisfies algebraic properties. This is
 formalised in this structure. -/
-structure SemiNormedGroup.Core(E : Type _)[AddCommGroupₓ E][HasNorm E] : Prop where 
+structure SemiNormedGroup.Core (E : Type _) [AddCommGroupₓ E] [HasNorm E] : Prop where 
   norm_zero : ∥(0 : E)∥ = 0
   triangle : ∀ x y : E, ∥x+y∥ ≤ ∥x∥+∥y∥
   norm_neg : ∀ x : E, ∥-x∥ = ∥x∥
@@ -126,14 +126,14 @@ def SemiNormedGroup.ofCore (E : Type _) [AddCommGroupₓ E] [HasNorm E] (C : Sem
             rw [C.norm_neg]
            }
 
-instance  : NormedGroup PUnit :=
+instance : NormedGroup PUnit :=
   { norm := Function.const _ 0, dist_eq := fun _ _ => rfl }
 
 @[simp]
 theorem PUnit.norm_eq_zero (r : PUnit) : ∥r∥ = 0 :=
   rfl
 
-noncomputable instance  : NormedGroup ℝ :=
+noncomputable instance : NormedGroup ℝ :=
   { norm := fun x => |x|, dist_eq := fun x y => rfl }
 
 theorem Real.norm_eq_abs (r : ℝ) : ∥r∥ = |r| :=
@@ -141,7 +141,7 @@ theorem Real.norm_eq_abs (r : ℝ) : ∥r∥ = |r| :=
 
 section SemiNormedGroup
 
-variable[SemiNormedGroup E][SemiNormedGroup F]
+variable [SemiNormedGroup E] [SemiNormedGroup F]
 
 theorem dist_eq_norm (g h : E) : dist g h = ∥g - h∥ :=
   SemiNormedGroup.dist_eq _ _
@@ -420,7 +420,7 @@ theorem nonzero_of_mem_unit_sphere (x : sphere (0 : E) 1) : (x : E) ≠ 0 :=
 
 /-- We equip the sphere, in a seminormed group, with a formal operation of negation, namely the
 antipodal map. -/
-instance  {r : ℝ} : Neg (sphere (0 : E) r) :=
+instance {r : ℝ} : Neg (sphere (0 : E) r) :=
   { neg :=
       fun w =>
         ⟨-«expr↑ » w,
@@ -468,13 +468,13 @@ theorem coe_add_left (x : E) : «expr⇑ » (Isometric.addLeft x) = (·+·) x :=
 theorem add_left_symm (x : E) : (Isometric.addLeft x).symm = Isometric.addLeft (-x) :=
   ext$ fun y => rfl
 
-variable(E)
+variable (E)
 
 /-- Negation `x ↦ -x` as an `isometry`. -/
 protected def neg : E ≃ᵢ E :=
   { isometry_to_fun := isometry_emetric_iff_metric.2$ fun x y => dist_neg_neg _ _, toEquiv := Equiv.neg E }
 
-variable{E}
+variable {E}
 
 @[simp]
 theorem neg_symm : (Isometric.neg E).symm = Isometric.neg E :=
@@ -633,14 +633,14 @@ theorem controlled_sum_of_mem_closure_range {j : E →+ F} {h : F} (Hh : h ∈ (
 section Nnnorm
 
 /-- Auxiliary class, endowing a type `α` with a function `nnnorm : α → ℝ≥0`. -/
-class HasNnnorm(E : Type _) where 
+class HasNnnorm (E : Type _) where 
   nnnorm : E →  ℝ≥0 
 
 export HasNnnorm(nnnorm)
 
 notation "∥" e "∥₊" => nnnorm e
 
-instance (priority := 100)SemiNormedGroup.toHasNnnorm : HasNnnorm E :=
+instance (priority := 100) SemiNormedGroup.toHasNnnorm : HasNnnorm E :=
   ⟨fun a => ⟨norm a, norm_nonneg a⟩⟩
 
 @[simp, normCast]
@@ -699,7 +699,7 @@ end Nnnorm
 
 namespace LipschitzWith
 
-variable[PseudoEmetricSpace α]{K Kf Kg :  ℝ≥0 }{f g : α → E}
+variable [PseudoEmetricSpace α] {K Kf Kg :  ℝ≥0 } {f g : α → E}
 
 theorem neg (hf : LipschitzWith K f) : LipschitzWith K fun x => -f x :=
   fun x y =>
@@ -721,7 +721,7 @@ end LipschitzWith
 
 namespace AntilipschitzWith
 
-variable[PseudoEmetricSpace α]{K Kf Kg :  ℝ≥0 }{f g : α → E}
+variable [PseudoEmetricSpace α] {K Kf Kg :  ℝ≥0 } {f g : α → E}
 
 -- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem add_lipschitz_with
@@ -923,7 +923,7 @@ theorem uniform_continuous_nnnorm : UniformContinuous fun a : E => ∥a∥₊ :=
 
 section 
 
-variable{l : Filter α}{f : α → E}{a : E}
+variable {l : Filter α} {f : α → E} {a : E}
 
 theorem Filter.Tendsto.norm (h : tendsto f l (𝓝 a)) : tendsto (fun x => ∥f x∥) l (𝓝 ∥a∥) :=
   tendsto_norm.comp h
@@ -935,7 +935,7 @@ end
 
 section 
 
-variable[TopologicalSpace α]{f : α → E}{s : Set α}{a : α}{b : E}
+variable [TopologicalSpace α] {f : α → E} {s : Set α} {a : α} {b : E}
 
 theorem Continuous.norm (h : Continuous f) : Continuous fun x => ∥f x∥ :=
   continuous_norm.comp h
@@ -977,15 +977,15 @@ begin
   exact [expr not_le_of_lt zero_lt_one (add_le_iff_nonpos_left.1 hy)]
 end
 
-instance (priority := 100)SemiNormedGroup.has_lipschitz_add : HasLipschitzAdd E :=
+instance (priority := 100) SemiNormedGroup.has_lipschitz_add : HasLipschitzAdd E :=
   { lipschitz_add := ⟨2, LipschitzWith.prod_fst.add LipschitzWith.prod_snd⟩ }
 
 /-- A seminormed group is a uniform additive group, i.e., addition and subtraction are uniformly
 continuous. -/
-instance (priority := 100)normed_uniform_group : UniformAddGroup E :=
+instance (priority := 100) normed_uniform_group : UniformAddGroup E :=
   ⟨(LipschitzWith.prod_fst.sub LipschitzWith.prod_snd).UniformContinuous⟩
 
-instance (priority := 100)normed_top_group : TopologicalAddGroup E :=
+instance (priority := 100) normed_top_group : TopologicalAddGroup E :=
   by 
     infer_instance
 
@@ -1066,7 +1066,7 @@ def normed_group.of_add_dist
 
 /-- A normed group can be built from a norm that satisfies algebraic properties. This is
 formalised in this structure. -/
-structure NormedGroup.Core(E : Type _)[AddCommGroupₓ E][HasNorm E] : Prop where 
+structure NormedGroup.Core (E : Type _) [AddCommGroupₓ E] [HasNorm E] : Prop where 
   norm_eq_zero_iff : ∀ x : E, ∥x∥ = 0 ↔ x = 0
   triangle : ∀ x y : E, ∥x+y∥ ≤ ∥x∥+∥y∥
   norm_neg : ∀ x : E, ∥-x∥ = ∥x∥
@@ -1086,7 +1086,7 @@ def NormedGroup.ofCore (E : Type _) [AddCommGroupₓ E] [HasNorm E] (C : NormedG
           rw [dist_eq_norm] at h 
           exact sub_eq_zero.mp ((C.norm_eq_zero_iff _).1 h) }
 
-variable[NormedGroup E][NormedGroup F]
+variable [NormedGroup E] [NormedGroup F]
 
 @[simp]
 theorem norm_eq_zero {g : E} : ∥g∥ = 0 ↔ g = 0 :=

@@ -137,7 +137,7 @@ theorem irrational_sqrt_rat_iff (q : ℚ) : Irrational (sqrt q) ↔ (Rat.sqrt q*
               rw [cast_zero] <;> exact (sqrt_eq_zero_of_nonpos (Rat.cast_nonpos.2$ le_of_not_leₓ H2)).symm⟩)
         fun h => H2 h.2
 
-instance  (q : ℚ) : Decidable (Irrational (sqrt q)) :=
+instance (q : ℚ) : Decidable (Irrational (sqrt q)) :=
   decidableOfIff' _ (irrational_sqrt_rat_iff q)
 
 /-!
@@ -149,7 +149,7 @@ instance  (q : ℚ) : Decidable (Irrational (sqrt q)) :=
 
 namespace Irrational
 
-variable{x : ℝ}
+variable {x : ℝ}
 
 /-!
 #### Irrational number is not equal to a rational/integer/natural number
@@ -190,7 +190,7 @@ theorem Nat.not_irrational (m : ℕ) : ¬Irrational m :=
 
 namespace Irrational
 
-variable(q : ℚ){x y : ℝ}
+variable (q : ℚ) {x y : ℝ}
 
 /-!
 #### Addition of rational/integer/natural numbers
@@ -478,7 +478,7 @@ section Polynomial
 
 open Polynomial
 
-variable(x : ℝ)(p : Polynomial ℤ)
+variable (x : ℝ) (p : Polynomial ℤ)
 
 -- error in Data.Real.Irrational: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem one_lt_nat_degree_of_irrational_root
@@ -505,7 +505,7 @@ end Polynomial
 
 section 
 
-variable{q : ℚ}{m : ℤ}{n : ℕ}{x : ℝ}
+variable {q : ℚ} {m : ℤ} {n : ℕ} {x : ℝ}
 
 open Irrational
 

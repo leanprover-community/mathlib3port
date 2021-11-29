@@ -25,15 +25,8 @@ open Algebra
 equality.
 TODO: update this when bimodules are defined. -/
 @[protectProj]
-structure
-  Derivation(R :
-    Type
-      _)(A :
-    Type
-      _)[CommSemiringₓ
-      R][CommSemiringₓ
-      A][Algebra R A](M : Type _)[AddCancelCommMonoid M][Module A M][Module R M][IsScalarTower R A M] extends
-  A →ₗ[R] M where 
+structure Derivation (R : Type _) (A : Type _) [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A] (M : Type _)
+  [AddCancelCommMonoid M] [Module A M] [Module R M] [IsScalarTower R A M] extends A →ₗ[R] M where 
   leibniz' (a b : A) : to_fun (a*b) = (a • to_fun b)+b • to_fun a
 
 /-- The `linear_map` underlying a `derivation`. -/
@@ -43,17 +36,17 @@ namespace Derivation
 
 section 
 
-variable{R : Type _}[CommSemiringₓ R]
+variable {R : Type _} [CommSemiringₓ R]
 
-variable{A : Type _}[CommSemiringₓ A][Algebra R A]
+variable {A : Type _} [CommSemiringₓ A] [Algebra R A]
 
-variable{M : Type _}[AddCancelCommMonoid M][Module A M][Module R M]
+variable {M : Type _} [AddCancelCommMonoid M] [Module A M] [Module R M]
 
-variable[IsScalarTower R A M]
+variable [IsScalarTower R A M]
 
-variable(D : Derivation R A M){D1 D2 : Derivation R A M}(r : R)(a b : A)
+variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 
-instance  : CoeFun (Derivation R A M) fun _ => A → M :=
+instance : CoeFun (Derivation R A M) fun _ => A → M :=
   ⟨fun D => D.to_linear_map.to_fun⟩
 
 instance has_coe_to_linear_map : Coe (Derivation R A M) (A →ₗ[R] M) :=
@@ -142,7 +135,7 @@ on the whole algebra. -/
 theorem ext_of_adjoin_eq_top (s : Set A) (hs : adjoin R s = ⊤) (h : Set.EqOn D1 D2 s) : D1 = D2 :=
   ext$ fun a => eq_on_adjoin h$ hs.symm ▸ trivialₓ
 
-instance  : HasZero (Derivation R A M) :=
+instance : HasZero (Derivation R A M) :=
   ⟨{ (0 : A →ₗ[R] M) with
       leibniz' :=
         fun a b =>
@@ -160,7 +153,7 @@ theorem coe_zero_linear_map : «expr↑ » (0 : Derivation R A M) = (0 : A →�
 theorem zero_apply (a : A) : (0 : Derivation R A M) a = 0 :=
   rfl
 
-instance  : Add (Derivation R A M) :=
+instance : Add (Derivation R A M) :=
   ⟨fun D1 D2 =>
       { (D1+D2 : A →ₗ[R] M) with
         leibniz' :=
@@ -220,30 +213,30 @@ theorem coe_smul_linear_map (a : A) (D : Derivation R A M) : «expr↑ » (a •
 theorem smul_apply (a : A) (D : Derivation R A M) (b : A) : (a • D) b = a • D b :=
   rfl
 
-instance  : Inhabited (Derivation R A M) :=
+instance : Inhabited (Derivation R A M) :=
   ⟨0⟩
 
-instance  : AddCommMonoidₓ (Derivation R A M) :=
+instance : AddCommMonoidₓ (Derivation R A M) :=
   coe_injective.AddCommMonoid _ coe_zero coe_add
 
 /-- `coe_fn` as an `add_monoid_hom`. -/
 def coe_fn_add_monoid_hom : Derivation R A M →+ A → M :=
   { toFun := coeFn, map_zero' := coe_zero, map_add' := coe_add }
 
-instance (priority := 100)derivation.Rmodule : Module R (Derivation R A M) :=
+instance (priority := 100) derivation.Rmodule : Module R (Derivation R A M) :=
   Function.Injective.module R coe_fn_add_monoid_hom coe_injective coe_Rsmul
 
-instance  : Module A (Derivation R A M) :=
+instance : Module A (Derivation R A M) :=
   Function.Injective.module A coe_fn_add_monoid_hom coe_injective coe_smul
 
-instance  : IsScalarTower R A (Derivation R A M) :=
+instance : IsScalarTower R A (Derivation R A M) :=
   ⟨fun x y z => ext fun a => smul_assoc _ _ _⟩
 
 section PushForward
 
-variable{N : Type _}[AddCancelCommMonoid N][Module A N][Module R N][IsScalarTower R A N]
+variable {N : Type _} [AddCancelCommMonoid N] [Module A N] [Module R N] [IsScalarTower R A N]
 
-variable(f : M →ₗ[A] N)
+variable (f : M →ₗ[A] N)
 
 /-- We can push forward derivations using linear maps, i.e., the composition of a derivation with a
 linear map is a derivation. Furthermore, this operation is linear on the spaces of derivations. -/
@@ -281,15 +274,15 @@ end
 
 section 
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
-variable{A : Type _}[CommRingₓ A][Algebra R A]
+variable {A : Type _} [CommRingₓ A] [Algebra R A]
 
 section 
 
-variable{M : Type _}[AddCommGroupₓ M][Module A M][Module R M][IsScalarTower R A M]
+variable {M : Type _} [AddCommGroupₓ M] [Module A M] [Module R M] [IsScalarTower R A M]
 
-variable(D : Derivation R A M){D1 D2 : Derivation R A M}(r : R)(a b : A)
+variable (D : Derivation R A M) {D1 D2 : Derivation R A M} (r : R) (a b : A)
 
 @[simp]
 theorem map_neg : D (-a) = -D a :=
@@ -323,7 +316,7 @@ theorem leibniz_inv {K : Type _} [Field K] [Module K M] [Algebra R K] [IsScalarT
     ·
       exact D.leibniz_of_mul_eq_one (inv_mul_cancel ha)
 
-instance  : Neg (Derivation R A M) :=
+instance : Neg (Derivation R A M) :=
   ⟨fun D =>
       { (-D : A →ₗ[R] M) with
         leibniz' :=
@@ -343,7 +336,7 @@ theorem coe_neg_linear_map (D : Derivation R A M) : «expr↑ » (-D) = (-D : A 
 theorem neg_apply : (-D) a = -D a :=
   rfl
 
-instance  : Sub (Derivation R A M) :=
+instance : Sub (Derivation R A M) :=
   ⟨fun D1 D2 =>
       { (D1 - D2 : A →ₗ[R] M) with
         leibniz' :=
@@ -363,7 +356,7 @@ theorem coe_sub_linear_map (D1 D2 : Derivation R A M) : «expr↑ » (D1 - D2) =
 theorem sub_apply : (D1 - D2) a = D1 a - D2 a :=
   rfl
 
-instance  : AddCommGroupₓ (Derivation R A M) :=
+instance : AddCommGroupₓ (Derivation R A M) :=
   coe_injective.AddCommGroup _ coe_zero coe_add coe_neg coe_sub
 
 end 
@@ -373,10 +366,10 @@ section LieStructures
 /-! # Lie structures -/
 
 
-variable(D : Derivation R A A){D1 D2 : Derivation R A A}(r : R)(a b : A)
+variable (D : Derivation R A A) {D1 D2 : Derivation R A A} (r : R) (a b : A)
 
 /-- The commutator of derivations is again a derivation. -/
-instance  : HasBracket (Derivation R A A) (Derivation R A A) :=
+instance : HasBracket (Derivation R A A) (Derivation R A A) :=
   ⟨fun D1 D2 =>
       { leibniz' :=
           fun a b =>
@@ -393,7 +386,7 @@ theorem commutator_coe_linear_map : «expr↑ » ⁅D1,D2⁆ = ⁅(D1 : Module.E
 theorem commutator_apply : ⁅D1,D2⁆ a = D1 (D2 a) - D2 (D1 a) :=
   rfl
 
-instance  : LieRing (Derivation R A A) :=
+instance : LieRing (Derivation R A A) :=
   { add_lie :=
       fun d e f =>
         by 
@@ -419,7 +412,7 @@ instance  : LieRing (Derivation R A A) :=
           simp only [commutator_apply, add_apply, sub_apply, map_sub]
           ring }
 
-instance  : LieAlgebra R (Derivation R A A) :=
+instance : LieAlgebra R (Derivation R A A) :=
   { derivation.Rmodule with
     lie_smul :=
       fun r d e =>

@@ -26,9 +26,9 @@ open Set Filter
 
 open_locale TopologicalSpace Filter
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 @[simp]
 theorem nhds_bind_nhds_within {a : α} {s : Set α} : ((𝓝 a).bind fun x => 𝓝[s] x) = 𝓝[s] a :=
@@ -237,15 +237,16 @@ theorem nhds_within_prod {α : Type _} [TopologicalSpace α] {β : Type _} [Topo
 theorem nhds_within_pi_eq' {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : finite I)
   (s : ∀ i, Set (α i)) (x : ∀ i, α i) : 𝓝[pi I s] x = ⨅i, comap (fun x => x i) (𝓝 (x i)⊓⨅hi : i ∈ I, 𝓟 (s i)) :=
   by 
-    simp only [nhdsWithin, nhds_pi, comap_inf, comap_infi, pi_def, comap_principal, ←infi_principal_finite hI,
-      ←infi_inf_eq]
+    simp only [nhdsWithin, nhds_pi, Filter.pi, comap_inf, comap_infi, pi_def, comap_principal,
+      ←infi_principal_finite hI, ←infi_inf_eq]
 
 theorem nhds_within_pi_eq {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : finite I)
   (s : ∀ i, Set (α i)) (x : ∀ i, α i) :
   𝓝[pi I s] x =
     (⨅(i : _)(_ : i ∈ I), comap (fun x => x i) (𝓝[s i] x i))⊓⨅(i : _)(_ : i ∉ I), comap (fun x => x i) (𝓝 (x i)) :=
   by 
-    simp only [nhdsWithin, nhds_pi, pi_def, ←infi_principal_finite hI, comap_inf, comap_principal, Function.eval]
+    simp only [nhdsWithin, nhds_pi, Filter.pi, pi_def, ←infi_principal_finite hI, comap_inf, comap_principal,
+      Function.eval]
     rw [infi_split _ fun i => i ∈ I, inf_right_comm]
     simp only [infi_inf_eq]
 
@@ -254,46 +255,10 @@ theorem nhds_within_pi_univ_eq {ι : Type _} {α : ι → Type _} [Fintype ι] [
   by 
     simpa [nhdsWithin] using nhds_within_pi_eq finite_univ s x
 
--- error in Topology.ContinuousOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem nhds_within_pi_univ_eq_bot
-{ι : Type*}
-{α : ι → Type*}
-[∀ i, topological_space (α i)]
-{s : ∀ i, set (α i)}
-{x : ∀
- i, α i} : «expr ↔ »(«expr = »(«expr𝓝[ ] »(pi univ s, x), «expr⊥»()), «expr∃ , »((i), «expr = »(«expr𝓝[ ] »(s i, x i), «expr⊥»()))) :=
-begin
-  classical,
-  split,
-  { haveI [] [":", expr ∀ i, inhabited (α i)] [":=", expr λ i, ⟨x i⟩],
-    simp [] [] ["only"] ["[", expr nhds_within, ",", expr nhds_pi, ",", expr inf_principal_eq_bot, ",", expr mem_infi', ",", expr mem_comap, "]"] [] [],
-    rintro ["⟨", ident I, ",", ident hIf, ",", ident V, ",", ident hV, ",", "-", ",", ident hVs, ",", "-", "⟩"],
-    choose ["!"] [ident t] [ident htx, ident htV] ["using", expr hV],
-    contrapose ["!"] [ident hVs],
-    change [expr ∀ i, «expr∃ᶠ in , »((y), expr𝓝() (x i), «expr ∈ »(y, s i))] [] ["at", ident hVs],
-    have [] [":", expr ∀ i, «expr ∩ »(s i, t i).nonempty] [],
-    from [expr λ i, ((hVs i).and_eventually (htx i)).exists],
-    choose [] [ident y] [ident hys, ident hyt] [],
-    choose [] [ident z] [ident hzs] ["using", expr λ i, (hVs i).exists],
-    suffices [] [":", expr «expr ∈ »(I.piecewise y z, «expr ∩ »(«expr⋂ , »((i «expr ∈ » I), V i), pi univ s))],
-    { intro [ident H],
-      simpa [] [] [] ["[", "<-", expr H, "]"] [] [] },
-    refine [expr ⟨«expr $ »(mem_bInter, λ i hi, htV i _), λ i hi', _⟩],
-    { simp [] [] ["only"] ["[", expr mem_preimage, ",", expr piecewise_eq_of_mem _ _ _ hi, ",", expr hyt i, "]"] [] [] },
-    { by_cases [expr hi, ":", expr «expr ∈ »(i, I)]; simp [] [] [] ["*"] [] [] } },
-  { rintro ["⟨", ident i, ",", ident eq, "⟩"],
-    rw ["[", "<-", expr @map_eq_bot_iff _ _ _ (λ x : ∀ i, α i, x i), "]"] [],
-    refine [expr eq_bot_mono _ eq],
-    exact [expr ((continuous_apply i).tendsto x).inf «expr $ »(tendsto_principal_principal.2, λ y hy, hy i trivial)] }
-end
-
 theorem nhds_within_pi_eq_bot {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι}
   {s : ∀ i, Set (α i)} {x : ∀ i, α i} : 𝓝[pi I s] x = ⊥ ↔ ∃ (i : _)(_ : i ∈ I), 𝓝[s i] x i = ⊥ :=
   by 
-    classical 
-    rw [←univ_pi_piecewise I, nhds_within_pi_univ_eq_bot]
-    refine' exists_congr fun i => _ 
-    byCases' hi : i ∈ I <;> simp [nhds_within_univ, nhds_ne_bot.ne]
+    simp only [nhdsWithin, nhds_pi, pi_inf_principal_pi_eq_bot]
 
 theorem nhds_within_pi_ne_bot {ι : Type _} {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι}
   {s : ∀ i, Set (α i)} {x : ∀ i, α i} : (𝓝[pi I s] x).ne_bot ↔ ∀ i _ : i ∈ I, (𝓝[s i] x i).ne_bot :=
@@ -423,7 +388,7 @@ theorem tendsto_nhds_within_iff_subtype {s : Set α} {a : α} (h : a ∈ s) (f :
   by 
     simp only [tendsto, nhds_within_eq_map_subtype_coe h, Filter.map_map, restrict]
 
-variable[TopologicalSpace β][TopologicalSpace γ][TopologicalSpace δ]
+variable [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
 /-- A function between topological spaces is continuous at a point `x₀` within a subset `s`
 if `f x` tends to `f x₀` when `x` tends to `x₀` while staying within `s`. -/
@@ -464,19 +429,19 @@ theorem ContinuousWithinAt.tendsto_nhds_within_image {f : α → β} {x : α} {s
 
 theorem ContinuousWithinAt.prod_map {f : α → γ} {g : β → δ} {s : Set α} {t : Set β} {x : α} {y : β}
   (hf : ContinuousWithinAt f s x) (hg : ContinuousWithinAt g t y) :
-  ContinuousWithinAt (Prod.mapₓ f g) (s.prod t) (x, y) :=
+  ContinuousWithinAt (Prod.map f g) (s.prod t) (x, y) :=
   by 
     unfold ContinuousWithinAt  at *
-    rw [nhds_within_prod_eq, Prod.mapₓ, nhds_prod_eq]
+    rw [nhds_within_prod_eq, Prod.map, nhds_prod_eq]
     exact hf.prod_map hg
 
 theorem continuous_within_at_pi {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] {f : α → ∀ i, π i}
   {s : Set α} {x : α} : ContinuousWithinAt f s x ↔ ∀ i, ContinuousWithinAt (fun y => f y i) s x :=
-  tendsto_pi
+  tendsto_pi_nhds
 
 theorem continuous_on_pi {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] {f : α → ∀ i, π i} {s : Set α} :
   ContinuousOn f s ↔ ∀ i, ContinuousOn (fun y => f y i) s :=
-  ⟨fun h i x hx => tendsto_pi.1 (h x hx) i, fun h x hx => tendsto_pi.2 fun i => h i x hx⟩
+  ⟨fun h i x hx => tendsto_pi_nhds.1 (h x hx) i, fun h x hx => tendsto_pi_nhds.2 fun i => h i x hx⟩
 
 theorem ContinuousWithinAt.fin_insert_nth {n} {π : Finₓ (n+1) → Type _} [∀ i, TopologicalSpace (π i)] (i : Finₓ (n+1))
   {f : α → π i} {a : α} {s : Set α} (hf : ContinuousWithinAt f s a) {g : α → ∀ j : Finₓ n, π (i.succ_above j)}
@@ -528,7 +493,7 @@ theorem continuous_on_iff_is_closed {f : α → β} {s : Set α} :
     rw [continuous_on_iff_continuous_restrict, continuous_iff_is_closed] <;> simp only [this]
 
 theorem ContinuousOn.prod_map {f : α → γ} {g : β → δ} {s : Set α} {t : Set β} (hf : ContinuousOn f s)
-  (hg : ContinuousOn g t) : ContinuousOn (Prod.mapₓ f g) (s.prod t) :=
+  (hg : ContinuousOn g t) : ContinuousOn (Prod.map f g) (s.prod t) :=
   fun ⟨x, y⟩ ⟨hx, hy⟩ => ContinuousWithinAt.prod_map (hf x hx) (hg y hy)
 
 theorem continuous_on_empty (f : α → β) : ContinuousOn f ∅ :=

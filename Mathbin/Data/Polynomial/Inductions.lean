@@ -18,11 +18,11 @@ namespace Polynomial
 
 universe u v w z
 
-variable{R : Type u}{S : Type v}{T : Type w}{A : Type z}{a b : R}{n : ℕ}
+variable {R : Type u} {S : Type v} {T : Type w} {A : Type z} {a b : R} {n : ℕ}
 
 section Semiringₓ
 
-variable[Semiringₓ R]{p q : Polynomial R}
+variable [Semiringₓ R] {p q : Polynomial R}
 
 /-- `div_X p` returns a polynomial `q` such that `q * X + C (p.coeff 0) = p`.
   It can be used in a semiring where the usual division algorithm is not possible -/

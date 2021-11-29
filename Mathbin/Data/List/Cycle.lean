@@ -20,7 +20,7 @@ underlying element. This representation also supports cycles that can contain du
 
 namespace List
 
-variable{α : Type _}[DecidableEq α]
+variable {α : Type _} [DecidableEq α]
 
 /-- Return the `z` such that `x :: z :: _` appears in `xs`, or `default` if there is no such `z`. -/
 def next_or : ∀ xs : List α x default : α, α
@@ -148,7 +148,7 @@ def prev : ∀ l : List α x : α h : x ∈ l, α
         (by 
           simpa [hx] using h)
 
-variable(l : List α)(x : α)(h : x ∈ l)
+variable (l : List α) (x : α) (h : x ∈ l)
 
 @[simp]
 theorem next_singleton (x y : α) (h : x ∈ [y]) : next [y] x h = y :=
@@ -464,9 +464,9 @@ def Cycle (α : Type _) : Type _ :=
 
 namespace Cycle
 
-variable{α : Type _}
+variable {α : Type _}
 
-instance  : Coe (List α) (Cycle α) :=
+instance : Coe (List α) (Cycle α) :=
   ⟨Quot.mk _⟩
 
 @[simp]
@@ -481,7 +481,7 @@ theorem mk_eq_coe (l : List α) : Quot.mk _ l = (l : Cycle α) :=
 theorem mk'_eq_coe (l : List α) : Quotientₓ.mk' l = (l : Cycle α) :=
   rfl
 
-instance  : Inhabited (Cycle α) :=
+instance : Inhabited (Cycle α) :=
   ⟨(([] : List α) : Cycle α)⟩
 
 /--
@@ -490,17 +490,17 @@ For `x : α`, `s : cycle α`, `x ∈ s` indicates that `x` occurs at least once 
 def mem (a : α) (s : Cycle α) : Prop :=
   Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e : l₁ ~r l₂ => propext$ e.mem_iff
 
-instance  : HasMem α (Cycle α) :=
+instance : HasMem α (Cycle α) :=
   ⟨mem⟩
 
 @[simp]
 theorem mem_coe_iff {a : α} {l : List α} : a ∈ (l : Cycle α) ↔ a ∈ l :=
   Iff.rfl
 
-instance  [DecidableEq α] : DecidableEq (Cycle α) :=
+instance [DecidableEq α] : DecidableEq (Cycle α) :=
   fun s₁ s₂ => Quotientₓ.recOnSubsingleton₂' s₁ s₂ fun l₁ l₂ => decidableOfIff' _ Quotientₓ.eq'
 
-instance  [DecidableEq α] (x : α) (s : Cycle α) : Decidable (x ∈ s) :=
+instance [DecidableEq α] (x : α) (s : Cycle α) : Decidable (x ∈ s) :=
   Quotientₓ.recOnSubsingleton' s fun l => List.decidableMemₓ x l
 
 /--
@@ -662,7 +662,7 @@ theorem mem_lists_iff_coe_eq {s : Cycle α} {l : List α} : l ∈ s.lists ↔ (l
 
 section Decidable
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /--
 Auxiliary decidability algorithm for lists that contain at least two unique elements.
@@ -690,10 +690,10 @@ def decidable_nontrivial_coe : ∀ l : List α, Decidable (Nontrivial (l : Cycle
         by 
           simp ⟩
 
-instance  {s : Cycle α} : Decidable (Nontrivial s) :=
+instance {s : Cycle α} : Decidable (Nontrivial s) :=
   Quot.recOnSubsingletonₓ s decidable_nontrivial_coe
 
-instance  {s : Cycle α} : Decidable (nodup s) :=
+instance {s : Cycle α} : Decidable (nodup s) :=
   Quot.recOnSubsingletonₓ s fun l : List α => List.nodupDecidableₓ l
 
 instance fintype_nodup_cycle [Fintype α] : Fintype { s : Cycle α // s.nodup } :=
@@ -798,7 +798,7 @@ via `#eval`, when over representatble types. For example, the cycle `(2 1 4 3)` 
 as `c[1, 4, 3, 2]`. The representation of the cycle sorts the elements by the string value of the
 underlying element. This representation also supports cycles that can contain duplicates.
 -/
-instance  [HasRepr α] : HasRepr (Cycle α) :=
+instance [HasRepr α] : HasRepr (Cycle α) :=
   ⟨fun s => "c[" ++ Stringₓ.intercalate ", " ((s.map reprₓ).lists.sort (· ≤ ·)).head ++ "]"⟩
 
 end Cycle

@@ -9,7 +9,7 @@ import Mathbin.Tactic.NormNum
 
 universe u
 
-variable{m n : ℕ}
+variable {m n : ℕ}
 
 /-- Equivalence between `fin 0` and `empty`. -/
 def finZeroEquiv : Finₓ 0 ≃ Empty :=

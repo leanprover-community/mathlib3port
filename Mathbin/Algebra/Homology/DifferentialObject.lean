@@ -22,9 +22,9 @@ noncomputable theory
 
 namespace HomologicalComplex
 
-variable{β : Type _}[AddCommGroupₓ β](b : β)
+variable {β : Type _} [AddCommGroupₓ β] (b : β)
 
-variable(V : Type _)[category V][has_zero_morphisms V]
+variable (V : Type _) [category V] [has_zero_morphisms V]
 
 /--
 The functor from differential graded objects to homological complexes.

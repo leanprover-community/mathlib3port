@@ -8,11 +8,11 @@ import Mathbin.Algebra.Algebra.Basic
 
 namespace Zmod
 
-variable(R : Type _)[Ringₓ R]
+variable (R : Type _) [Ringₓ R]
 
 section 
 
-variable{n : ℕ}(m : ℕ)[CharP R m]
+variable {n : ℕ} (m : ℕ) [CharP R m]
 
 /-- The `zmod n`-algebra structure on rings whose characteristic `m` divides `n` -/
 def algebra' (h : m ∣ n) : Algebra (Zmod n) R :=
@@ -30,9 +30,9 @@ end
 
 section 
 
-variable(n : ℕ)[CharP R n]
+variable (n : ℕ) [CharP R n]
 
-instance  : Algebra (Zmod n) R :=
+instance : Algebra (Zmod n) R :=
   algebra' R n (dvd_refl n)
 
 end 

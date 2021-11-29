@@ -13,7 +13,7 @@ lie module, tensor product, universal property
 
 universe u v w w₁ w₂ w₃
 
-variable{R : Type u}[CommRingₓ R]
+variable {R : Type u} [CommRingₓ R]
 
 open LieModule
 
@@ -23,17 +23,17 @@ open_locale TensorProduct
 
 namespace LieModule
 
-variable{L : Type v}{M : Type w}{N : Type w₁}{P : Type w₂}{Q : Type w₃}
+variable {L : Type v} {M : Type w} {N : Type w₁} {P : Type w₂} {Q : Type w₃}
 
-variable[LieRing L][LieAlgebra R L]
+variable [LieRing L] [LieAlgebra R L]
 
-variable[AddCommGroupₓ M][Module R M][LieRingModule L M][LieModule R L M]
+variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
-variable[AddCommGroupₓ N][Module R N][LieRingModule L N][LieModule R L N]
+variable [AddCommGroupₓ N] [Module R N] [LieRingModule L N] [LieModule R L N]
 
-variable[AddCommGroupₓ P][Module R P][LieRingModule L P][LieModule R L P]
+variable [AddCommGroupₓ P] [Module R P] [LieRingModule L P] [LieModule R L P]
 
-variable[AddCommGroupₓ Q][Module R Q][LieRingModule L Q][LieModule R L Q]
+variable [AddCommGroupₓ Q] [Module R Q] [LieRingModule L Q] [LieModule R L Q]
 
 attribute [local ext] TensorProduct.ext
 
@@ -85,7 +85,7 @@ theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x,m ⊗ₜ[R] n⁆ = (⁅x,m
     simp only [has_bracket_aux, LinearMap.rtensor_tmul, to_endomorphism_apply_apply, LinearMap.add_apply,
       LinearMap.ltensor_tmul]
 
-variable(R L M N P Q)
+variable (R L M N P Q)
 
 /-- The universal property for tensor product of modules of a Lie algebra: the `R`-linear
 tensor-hom adjunction is equivariant with respect to the `L` action. -/
@@ -126,7 +126,7 @@ theorem lift_lie_apply (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) (m : M) (n : N) : l
   by 
     simp only [coe_lift_lie_eq_lift_coe, LieModuleHom.coe_to_linear_map, lift_apply]
 
-variable{R L M N P Q}
+variable {R L M N P Q}
 
 /-- A pair of Lie module morphisms `f : M → P` and `g : N → Q`, induce a Lie module morphism:
 `M ⊗ N → P ⊗ Q`. -/
@@ -172,11 +172,11 @@ namespace LieModule
 
 open_locale TensorProduct
 
-variable(R)(L : Type v)(M : Type w)
+variable (R) (L : Type v) (M : Type w)
 
-variable[LieRing L][LieAlgebra R L]
+variable [LieRing L] [LieAlgebra R L]
 
-variable[AddCommGroupₓ M][Module R M][LieRingModule L M][LieModule R L M]
+variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
 /-- The action of the Lie algebra on one of its modules, regarded as a morphism of Lie modules. -/
 def to_module_hom : L ⊗[R] M →ₗ⁅R,L⁆ M :=
@@ -204,13 +204,13 @@ open TensorProduct.LieModule
 
 open LieModule
 
-variable{L : Type v}{M : Type w}
+variable {L : Type v} {M : Type w}
 
-variable[LieRing L][LieAlgebra R L]
+variable [LieRing L] [LieAlgebra R L]
 
-variable[AddCommGroupₓ M][Module R M][LieRingModule L M][LieModule R L M]
+variable [AddCommGroupₓ M] [Module R M] [LieRingModule L M] [LieModule R L M]
 
-variable(I : LieIdeal R L)(N : LieSubmodule R L M)
+variable (I : LieIdeal R L) (N : LieSubmodule R L M)
 
 /-- A useful alternative characterisation of Lie ideal operations on Lie submodules.
 

@@ -32,7 +32,7 @@ namespace Polynomial
 
 section TopologicalRing
 
-variable{R S : Type _}[Semiringₓ R][TopologicalSpace R][TopologicalRing R](p : Polynomial R)
+variable {R S : Type _} [Semiringₓ R] [TopologicalSpace R] [TopologicalRing R] (p : Polynomial R)
 
 @[continuity]
 protected theorem continuous_eval₂ [Semiringₓ S] (p : Polynomial S) (f : S →+* R) : Continuous fun x => p.eval₂ f x :=
@@ -57,8 +57,8 @@ end TopologicalRing
 
 section TopologicalAlgebra
 
-variable{R A :
-    Type _}[CommSemiringₓ R][Semiringₓ A][Algebra R A][TopologicalSpace A][TopologicalRing A](p : Polynomial R)
+variable {R A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A] [TopologicalSpace A] [TopologicalRing A]
+  (p : Polynomial R)
 
 @[continuity]
 protected theorem continuous_aeval : Continuous fun x : A => aeval x p :=
@@ -106,7 +106,7 @@ theorem tendsto_abv_aeval_at_top {R A k α : Type _} [CommSemiringₓ R] [Ring�
   {l : Filter α} {z : α → A} (hz : tendsto (abv ∘ z) l at_top) : tendsto (fun x => abv (aeval (z x) p)) l at_top :=
   tendsto_abv_eval₂_at_top _ abv p hd h₀ hz
 
-variable{α R : Type _}[NormedRing R][IsAbsoluteValue (norm : R → ℝ)]
+variable {α R : Type _} [NormedRing R] [IsAbsoluteValue (norm : R → ℝ)]
 
 theorem tendsto_norm_at_top (p : Polynomial R) (h : 0 < degree p) {l : Filter α} {z : α → R}
   (hz : tendsto (fun x => ∥z x∥) l at_top) : tendsto (fun x => ∥p.eval (z x)∥) l at_top :=

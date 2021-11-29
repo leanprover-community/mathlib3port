@@ -58,7 +58,7 @@ noncomputable def abs_is_admissible : is_admissible AbsoluteValue.abs :=
   { AbsoluteValue.abs_is_euclidean with card := fun ε => ⌈1 / ε⌉₊,
     exists_partition' := fun n ε hε b hb => exists_partition_int n hε hb }
 
-noncomputable instance  : Inhabited (is_admissible AbsoluteValue.abs) :=
+noncomputable instance : Inhabited (is_admissible AbsoluteValue.abs) :=
   ⟨abs_is_admissible⟩
 
 end AbsoluteValue

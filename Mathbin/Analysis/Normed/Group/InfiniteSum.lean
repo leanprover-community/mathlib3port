@@ -27,7 +27,7 @@ open_locale Classical BigOperators TopologicalSpace Nnreal
 
 open Finset Filter Metric
 
-variable{ι α E F : Type _}[SemiNormedGroup E][SemiNormedGroup F]
+variable {ι α E F : Type _} [SemiNormedGroup E] [SemiNormedGroup F]
 
 theorem cauchy_seq_finset_iff_vanishing_norm {f : ι → E} :
   (CauchySeq fun s : Finset ι => ∑i in s, f i) ↔
@@ -130,7 +130,7 @@ space. -/
 theorem nnnorm_tsum_le {f : ι → E} (hf : Summable fun i => ∥f i∥₊) : ∥∑'i, f i∥₊ ≤ ∑'i, ∥f i∥₊ :=
   tsum_of_nnnorm_bounded hf.has_sum fun i => le_rfl
 
-variable[CompleteSpace E]
+variable [CompleteSpace E]
 
 /-- Variant of the direct comparison test for series:  if the norm of `f` is eventually bounded by a
 real function `g` which is summable, then `f` is summable. -/

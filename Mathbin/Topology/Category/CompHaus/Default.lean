@@ -35,16 +35,16 @@ structure CompHaus where
 
 namespace CompHaus
 
-instance  : Inhabited CompHaus :=
+instance : Inhabited CompHaus :=
   ⟨{ toTop := { α := Pempty } }⟩
 
-instance  : CoeSort CompHaus (Type _) :=
+instance : CoeSort CompHaus (Type _) :=
   ⟨fun X => X.to_Top⟩
 
-instance  {X : CompHaus} : CompactSpace X :=
+instance {X : CompHaus} : CompactSpace X :=
   X.is_compact
 
-instance  {X : CompHaus} : T2Space X :=
+instance {X : CompHaus} : T2Space X :=
   X.is_hausdorff
 
 instance category : category CompHaus :=
@@ -57,7 +57,7 @@ instance concrete_category : concrete_category CompHaus :=
 theorem coe_to_Top {X : CompHaus} : (X.to_Top : Type _) = X :=
   rfl
 
-variable(X : Type _)[TopologicalSpace X][CompactSpace X][T2Space X]
+variable (X : Type _) [TopologicalSpace X] [CompactSpace X] [T2Space X]
 
 /-- A constructor for objects of the category `CompHaus`,
 taking a type, and bundling the compact Hausdorff topology

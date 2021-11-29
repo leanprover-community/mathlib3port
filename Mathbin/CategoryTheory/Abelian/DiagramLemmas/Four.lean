@@ -51,7 +51,7 @@ open CategoryTheory.Limits
 
 universe v u
 
-variable{V : Type u}[category.{v} V][abelian V]
+variable {V : Type u} [category.{v} V] [abelian V]
 
 attribute [local instance] preadditive.has_equalizers_of_has_kernels
 
@@ -61,21 +61,21 @@ open_locale Pseudoelement
 
 namespace CategoryTheory.Abelian
 
-variable{A B C D A' B' C' D' : V}
+variable {A B C D A' B' C' D' : V}
 
-variable{f : A ⟶ B}{g : B ⟶ C}{h : C ⟶ D}
+variable {f : A ⟶ B} {g : B ⟶ C} {h : C ⟶ D}
 
-variable{f' : A' ⟶ B'}{g' : B' ⟶ C'}{h' : C' ⟶ D'}
+variable {f' : A' ⟶ B'} {g' : B' ⟶ C'} {h' : C' ⟶ D'}
 
-variable{α : A ⟶ A'}{β : B ⟶ B'}{γ : C ⟶ C'}{δ : D ⟶ D'}
+variable {α : A ⟶ A'} {β : B ⟶ B'} {γ : C ⟶ C'} {δ : D ⟶ D'}
 
-variable(comm₁ : α ≫ f' = f ≫ β)(comm₂ : β ≫ g' = g ≫ γ)(comm₃ : γ ≫ h' = h ≫ δ)
+variable (comm₁ : α ≫ f' = f ≫ β) (comm₂ : β ≫ g' = g ≫ γ) (comm₃ : γ ≫ h' = h ≫ δ)
 
 include comm₁ comm₂ comm₃
 
 section 
 
-variable[exact f g][exact g h][exact f' g']
+variable [exact f g] [exact g h] [exact f' g']
 
 /-- The four lemma, mono version. For names of objects and morphisms, refer to the following
     diagram:
@@ -138,7 +138,7 @@ end
 
 section 
 
-variable[exact g h][exact f' g'][exact g' h']
+variable [exact g h] [exact f' g'] [exact g' h']
 
 /-- The four lemma, epi version. For names of objects and morphisms, refer to the following
     diagram:
@@ -229,11 +229,11 @@ end
 
 section Five
 
-variable{E E' : V}{i : D ⟶ E}{i' : D' ⟶ E'}{ε : E ⟶ E'}(comm₄ : δ ≫ i' = i ≫ ε)
+variable {E E' : V} {i : D ⟶ E} {i' : D' ⟶ E'} {ε : E ⟶ E'} (comm₄ : δ ≫ i' = i ≫ ε)
 
-variable[exact f g][exact g h][exact h i][exact f' g'][exact g' h'][exact h' i']
+variable [exact f g] [exact g h] [exact h i] [exact f' g'] [exact g' h'] [exact h' i']
 
-variable[is_iso α][is_iso β][is_iso δ][is_iso ε]
+variable [is_iso α] [is_iso β] [is_iso δ] [is_iso ε]
 
 include comm₄
 

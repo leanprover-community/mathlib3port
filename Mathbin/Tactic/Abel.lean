@@ -95,10 +95,10 @@ unsafe def normal_expr.e : normal_expr → expr
 | normal_expr.zero e => e
 | normal_expr.nterm e _ _ _ => e
 
-unsafe instance  : Coe normal_expr expr :=
+unsafe instance : Coe normal_expr expr :=
   ⟨normal_expr.e⟩
 
-unsafe instance  : CoeFun normal_expr fun _ => expr → expr :=
+unsafe instance : CoeFun normal_expr fun _ => expr → expr :=
   ⟨fun e => «expr⇑ » (e : expr)⟩
 
 unsafe def normal_expr.term' (c : context) (n : expr × ℤ) (x : expr) (a : normal_expr) : normal_expr :=
@@ -126,7 +126,7 @@ unsafe def normal_expr.pp (e : normal_expr) : tactic format :=
               return (to_fmt n ++ " • (" ++ pe ++ ")")
     return$ format.join$ l.intersperse («expr↑ » " + ")
 
-unsafe instance  : has_to_tactic_format normal_expr :=
+unsafe instance : has_to_tactic_format normal_expr :=
   ⟨normal_expr.pp⟩
 
 unsafe def normal_expr.refl_conv (e : normal_expr) : tactic (normal_expr × expr) :=
@@ -338,7 +338,7 @@ unsafe def eval' (c : context) (e : expr) : tactic (expr × expr) :=
 | raw
 | term
 
-instance  : Inhabited normalize_mode :=
+instance : Inhabited normalize_mode :=
   ⟨normalize_mode.term⟩
 
 unsafe def normalize (red : transparency) (mode := normalize_mode.term) (e : expr) : tactic (expr × expr) :=

@@ -44,9 +44,9 @@ universe v u
 
 namespace CategoryTheory
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable(J₁ J₂ : grothendieck_topology C)
+variable (J₁ J₂ : grothendieck_topology C)
 
 namespace GrothendieckTopology
 

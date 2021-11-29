@@ -12,7 +12,7 @@ Note that `mul_opposite.has_scalar` is provided in an earlier file as it is need
 -/
 
 
-variable(α : Type _)
+variable (α : Type _)
 
 /-! ### Actions _on_ the opposite type
 
@@ -22,23 +22,23 @@ Actions on the opposite type just act on the underlying type.
 
 namespace MulOpposite
 
-instance  (R : Type _) [Monoidₓ R] [MulAction R α] : MulAction R («expr ᵐᵒᵖ» α) :=
+instance (R : Type _) [Monoidₓ R] [MulAction R α] : MulAction R («expr ᵐᵒᵖ» α) :=
   { MulOpposite.hasScalar α R with one_smul := fun x => unop_injective$ one_smul R (unop x),
     mul_smul := fun r₁ r₂ x => unop_injective$ mul_smul r₁ r₂ (unop x) }
 
-instance  (R : Type _) [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] : DistribMulAction R («expr ᵐᵒᵖ» α) :=
+instance (R : Type _) [Monoidₓ R] [AddMonoidₓ α] [DistribMulAction R α] : DistribMulAction R («expr ᵐᵒᵖ» α) :=
   { MulOpposite.mulAction α R with smul_add := fun r x₁ x₂ => unop_injective$ smul_add r (unop x₁) (unop x₂),
     smul_zero := fun r => unop_injective$ smul_zero r }
 
-instance  (R : Type _) [Monoidₓ R] [Monoidₓ α] [MulDistribMulAction R α] : MulDistribMulAction R («expr ᵐᵒᵖ» α) :=
+instance (R : Type _) [Monoidₓ R] [Monoidₓ α] [MulDistribMulAction R α] : MulDistribMulAction R («expr ᵐᵒᵖ» α) :=
   { MulOpposite.mulAction α R with smul_mul := fun r x₁ x₂ => unop_injective$ smul_mul' r (unop x₂) (unop x₁),
     smul_one := fun r => unop_injective$ smul_one r }
 
-instance  {M N} [HasScalar M N] [HasScalar M α] [HasScalar N α] [IsScalarTower M N α] :
+instance {M N} [HasScalar M N] [HasScalar M α] [HasScalar N α] [IsScalarTower M N α] :
   IsScalarTower M N («expr ᵐᵒᵖ» α) :=
   ⟨fun x y z => unop_injective$ smul_assoc _ _ _⟩
 
-instance  {M N} [HasScalar M α] [HasScalar N α] [SmulCommClass M N α] : SmulCommClass M N («expr ᵐᵒᵖ» α) :=
+instance {M N} [HasScalar M α] [HasScalar N α] [SmulCommClass M N α] : SmulCommClass M N («expr ᵐᵒᵖ» α) :=
   ⟨fun x y z => unop_injective$ smul_comm _ _ _⟩
 
 end MulOpposite
@@ -89,7 +89,7 @@ instance SmulCommClass.opposite_mid {M N} [Monoidₓ N] [HasScalar M N] [IsScala
         induction y using MulOpposite.rec 
         simp [smul_mul_assoc]⟩
 
-example  [Monoidₓ α] : Monoidₓ.toMulAction («expr ᵐᵒᵖ» α) = MulOpposite.mulAction α («expr ᵐᵒᵖ» α) :=
+example [Monoidₓ α] : Monoidₓ.toMulAction («expr ᵐᵒᵖ» α) = MulOpposite.mulAction α («expr ᵐᵒᵖ» α) :=
   rfl
 
 /-- `monoid.to_opposite_mul_action` is faithful on cancellative monoids. -/

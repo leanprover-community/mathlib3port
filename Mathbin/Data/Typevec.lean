@@ -34,12 +34,12 @@ n-tuples of types, as a category
 def Typevec (n : ℕ) :=
   Fin2 n → Type _
 
-instance  {n} : Inhabited (Typevec.{u} n) :=
+instance {n} : Inhabited (Typevec.{u} n) :=
   ⟨fun _ => PUnit⟩
 
 namespace Typevec
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 /-- arrow in the category of `typevec` -/
 def arrow (α β : Typevec n) :=
@@ -415,9 +415,9 @@ theorem const_iff_true {α : Typevec n} {i x p} : of_repeat (Typevec.constₓ p 
   by 
     induction i <;> [rfl, erw [Typevec.constₓ, @i_ih (drop α) x]]
 
-variable{α β γ : Typevec.{u} n}
+variable {α β γ : Typevec.{u} n}
 
-variable(p : α ⟹ repeat n Prop)(r : α ⊗ α ⟹ repeat n Prop)
+variable (p : α ⟹ repeat n Prop) (r : α ⊗ α ⟹ repeat n Prop)
 
 /-- left projection of a `prod` vector -/
 def Prod.fst : ∀ {n} {α β : Typevec.{u} n}, α ⊗ β ⟹ α
@@ -450,9 +450,9 @@ theorem prod_snd_mk {α β : Typevec n} (i : Fin2 n) (a : α i) (b : β i) : Typ
     induction i <;> simp_all [Prod.snd, Prod.mk]
 
 /-- `prod` is functorial -/
-protected def Prod.mapₓ : ∀ {n} {α α' β β' : Typevec.{u} n}, α ⟹ β → α' ⟹ β' → α ⊗ α' ⟹ β ⊗ β'
+protected def Prod.map : ∀ {n} {α α' β β' : Typevec.{u} n}, α ⟹ β → α' ⟹ β' → α ⊗ α' ⟹ β ⊗ β'
 | succ n, α, α', β, β', x, y, Fin2.fs i, a =>
-  @Prod.mapₓ _ (drop α) (drop α') (drop β) (drop β') (drop_fun x) (drop_fun y) _ a
+  @Prod.map _ (drop α) (drop α') (drop β) (drop β') (drop_fun x) (drop_fun y) _ a
 | succ n, α, α', β, β', x, y, Fin2.fz, a => (x _ a.1, y _ a.2)
 
 localized [Mvfunctor] infixl:45 " ⊗' " => Typevec.Prod.map

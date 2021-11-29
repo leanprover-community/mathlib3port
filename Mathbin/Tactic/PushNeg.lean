@@ -8,11 +8,11 @@ section
 
 universe u
 
-variable{α : Sort u}
+variable {α : Sort u}
 
-variable(p q : Prop)
+variable (p q : Prop)
 
-variable(s : α → Prop)
+variable (s : α → Prop)
 
 attribute [local instance] Classical.propDecidable
 
@@ -40,9 +40,9 @@ theorem classical.implies_iff_not_or : p → q ↔ ¬p ∨ q :=
 theorem not_eq (a b : α) : ¬a = b ↔ a ≠ b :=
   Iff.rfl
 
-variable{β : Type u}
+variable {β : Type u}
 
-variable[LinearOrderₓ β]
+variable [LinearOrderₓ β]
 
 theorem not_le_eq (a b : β) : (¬a ≤ b) = (b < a) :=
   propext not_leₓ

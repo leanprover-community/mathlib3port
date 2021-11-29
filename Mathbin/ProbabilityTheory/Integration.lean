@@ -28,7 +28,7 @@ open Set MeasureTheory
 
 open_locale Ennreal
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace ProbabilityTheory
 

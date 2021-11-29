@@ -14,7 +14,7 @@ open HomologicalComplex
 
 universe v u
 
-variable{V : Type u}[category.{v} V]
+variable {V : Type u} [category.{v} V]
 
 namespace ChainComplex
 
@@ -46,7 +46,7 @@ def truncate_to [has_zero_object V] [has_zero_morphisms V] (C : ChainComplex V �
       by 
         tidy⟩
 
-variable[has_zero_morphisms V]
+variable [has_zero_morphisms V]
 
 /--
 We can "augment" a chain complex by inserting an arbitrary object in degree zero
@@ -274,7 +274,7 @@ def to_truncate [has_zero_object V] [has_zero_morphisms V] (C : CochainComplex V
       by 
         tidy⟩
 
-variable[has_zero_morphisms V]
+variable [has_zero_morphisms V]
 
 /--
 We can "augment" a cochain complex by inserting an arbitrary object in degree zero

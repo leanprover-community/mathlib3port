@@ -33,7 +33,7 @@ A braided monoidal category is a monoidal category equipped with a braiding isom
 which is natural in both arguments,
 and also satisfies the two hexagon identities.
 -/
-class braided_category(C : Type u)[category.{v} C][monoidal_category.{v} C] where 
+class braided_category (C : Type u) [category.{v} C] [monoidal_category.{v} C] where 
   braiding : ∀ X Y : C, X ⊗ Y ≅ Y ⊗ X 
   braiding_naturality' :
   ∀ {X X' Y Y' : C} f : X ⟶ Y g : X' ⟶ Y', (f ⊗ g) ≫ (braiding Y Y').Hom = (braiding X X').Hom ≫ (g ⊗ f) :=  by 
@@ -86,7 +86,7 @@ I couldn't find a detailed proof in print, but this is discussed in:
 -/
 
 
-variable(C : Type u₁)[category.{v₁} C][monoidal_category C][braided_category C]
+variable (C : Type u₁) [category.{v₁} C] [monoidal_category C] [braided_category C]
 
 theorem braiding_left_unitor_aux₁ (X : C) :
   (α_ (𝟙_ C) (𝟙_ C) X).Hom ≫ (𝟙 _ ⊗ (β_ X (𝟙_ C)).inv) ≫ (α_ _ X _).inv ≫ ((λ_ X).Hom ⊗ 𝟙 _) =
@@ -187,7 +187,7 @@ A symmetric monoidal category is a braided monoidal category for which the braid
 
 See https://stacks.math.columbia.edu/tag/0FFW.
 -/
-class symmetric_category(C : Type u)[category.{v} C][monoidal_category.{v} C] extends braided_category.{v} C where 
+class symmetric_category (C : Type u) [category.{v} C] [monoidal_category.{v} C] extends braided_category.{v} C where 
   symmetry' : ∀ X Y : C, (β_ X Y).Hom ≫ (β_ Y X).Hom = 𝟙 (X ⊗ Y) :=  by 
   runTac 
     obviously
@@ -196,11 +196,11 @@ restate_axiom symmetric_category.symmetry'
 
 attribute [simp, reassoc] symmetric_category.symmetry
 
-variable(C : Type u₁)[category.{v₁} C][monoidal_category C][braided_category C]
+variable (C : Type u₁) [category.{v₁} C] [monoidal_category C] [braided_category C]
 
-variable(D : Type u₂)[category.{v₂} D][monoidal_category D][braided_category D]
+variable (D : Type u₂) [category.{v₂} D] [monoidal_category D] [braided_category D]
 
-variable(E : Type u₃)[category.{v₃} E][monoidal_category E][braided_category E]
+variable (E : Type u₃) [category.{v₃} E] [monoidal_category E] [braided_category E]
 
 /--
 A lax braided functor between braided monoidal categories is a lax monoidal functor
@@ -220,10 +220,10 @@ namespace LaxBraidedFunctor
 def id : lax_braided_functor C C :=
   { monoidal_functor.id C with  }
 
-instance  : Inhabited (lax_braided_functor C C) :=
+instance : Inhabited (lax_braided_functor C C) :=
   ⟨id C⟩
 
-variable{C D E}
+variable {C D E}
 
 /-- The composition of lax braided monoidal functors. -/
 @[simps]
@@ -285,10 +285,10 @@ def to_lax_braided_functor (F : braided_functor C D) : lax_braided_functor C D :
 def id : braided_functor C C :=
   { monoidal_functor.id C with  }
 
-instance  : Inhabited (braided_functor C C) :=
+instance : Inhabited (braided_functor C C) :=
   ⟨id C⟩
 
-variable{C D E}
+variable {C D E}
 
 /-- The composition of braided monoidal functors. -/
 @[simps]
@@ -315,17 +315,17 @@ end BraidedFunctor
 
 section CommMonoidₓ
 
-variable(M : Type u)[CommMonoidₓ M]
+variable (M : Type u) [CommMonoidₓ M]
 
 instance comm_monoid_discrete : CommMonoidₓ (discrete M) :=
   by 
     dsimp [discrete]
     infer_instance
 
-instance  : braided_category (discrete M) :=
+instance : braided_category (discrete M) :=
   { braiding := fun X Y => eq_to_iso (mul_commₓ X Y) }
 
-variable{M}{N : Type u}[CommMonoidₓ N]
+variable {M} {N : Type u} [CommMonoidₓ N]
 
 /--
 A multiplicative morphism between commutative monoids gives a braided functor between

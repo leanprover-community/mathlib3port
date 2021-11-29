@@ -34,12 +34,12 @@ universe u v
 
 namespace QuotientGroup
 
-variable{G : Type u}[Groupₓ G](N : Subgroup G)[nN : N.normal]{H : Type v}[Groupₓ H]
+variable {G : Type u} [Groupₓ G] (N : Subgroup G) [nN : N.normal] {H : Type v} [Groupₓ H]
 
 include nN
 
 @[toAdditive QuotientAddGroup.divInvMonoid]
-instance  : DivInvMonoidₓ (Quotientₓ N) :=
+instance : DivInvMonoidₓ (Quotientₓ N) :=
   { one := (1 : G),
     mul :=
       Quotientₓ.map₂' (·*·)
@@ -63,7 +63,7 @@ instance  : DivInvMonoidₓ (Quotientₓ N) :=
                 exact N.inv_mem (nN.mem_comm hab)) }
 
 @[toAdditive QuotientAddGroup.addGroup]
-instance  : Groupₓ (Quotientₓ N) :=
+instance : Groupₓ (Quotientₓ N) :=
   { quotient.div_inv_monoid _ with
     mul_left_inv := fun a => Quotientₓ.induction_on' a fun a => congr_argₓ mk (mul_left_invₓ a) }
 
@@ -109,7 +109,7 @@ theorem eq_iff_div_mem {N : Subgroup G} [nN : N.normal] {x y : G} : (x : Quotien
 omit nN
 
 @[toAdditive QuotientAddGroup.addCommGroup]
-instance  {G : Type _} [CommGroupₓ G] (N : Subgroup G) : CommGroupₓ (Quotientₓ N) :=
+instance {G : Type _} [CommGroupₓ G] (N : Subgroup G) : CommGroupₓ (Quotientₓ N) :=
   { @QuotientGroup.Quotient.group _ _ N N.normal_of_comm with
     mul_comm := fun a b => Quotientₓ.induction_on₂' a b fun a b => congr_argₓ mk (mul_commₓ a b) }
 
@@ -190,7 +190,7 @@ theorem map_mk' (M : Subgroup H) [M.normal] (f : G →* H) (h : N ≤ M.comap f)
 
 omit nN
 
-variable(φ : G →* H)
+variable (φ : G →* H)
 
 open Function MonoidHom
 
@@ -381,7 +381,7 @@ end SndIsomorphismThm
 
 section ThirdIsoThm
 
-variable(M : Subgroup G)[nM : M.normal]
+variable (M : Subgroup G) [nM : M.normal]
 
 include nM nN
 
@@ -393,7 +393,7 @@ instance map_normal : (M.map (QuotientGroup.mk' N)).Normal :=
         refine' induction_on' y fun y => ⟨(y*x)*y⁻¹, Subgroup.Normal.conj_mem nM x hx y, _⟩
         simp only [mk'_apply, coe_mul, coe_inv] }
 
-variable(h : N ≤ M)
+variable (h : N ≤ M)
 
 /-- The map from the third isomorphism theorem for groups: `(G / N) / (M / N) → G / M`. -/
 @[toAdditive QuotientAddGroup.quotientQuotientEquivQuotientAux

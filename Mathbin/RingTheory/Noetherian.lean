@@ -60,7 +60,7 @@ open_locale BigOperators Pointwise
 
 namespace Submodule
 
-variable{R : Type _}{M : Type _}[Semiringₓ R][AddCommMonoidₓ M][Module R M]
+variable {R : Type _} {M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 /-- A submodule of `M` is finitely generated if it is the span of a finite subset of `M`. -/
 def fg (N : Submodule R M) : Prop :=
@@ -196,9 +196,9 @@ theorem fg_sup {N₁ N₂ : Submodule R M} (hN₁ : N₁.fg) (hN₂ : N₂.fg) :
       by 
         rw [span_union, ht₁.2, ht₂.2]⟩
 
-variable{P : Type _}[AddCommMonoidₓ P][Module R P]
+variable {P : Type _} [AddCommMonoidₓ P] [Module R P]
 
-variable{f : M →ₗ[R] P}
+variable {f : M →ₗ[R] P}
 
 theorem fg_map {N : Submodule R M} (hs : N.fg) : (N.map f).Fg :=
   let ⟨t, ht⟩ := fg_def.1 hs 
@@ -406,16 +406,16 @@ end Submodule
 `is_noetherian R M` is the proposition that `M` is a Noetherian `R`-module,
 implemented as the predicate that all `R`-submodules of `M` are finitely generated.
 -/
-class IsNoetherian(R M)[Semiringₓ R][AddCommMonoidₓ M][Module R M] : Prop where 
+class IsNoetherian (R M) [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Prop where 
   noetherian : ∀ s : Submodule R M, s.fg
 
 section 
 
-variable{R : Type _}{M : Type _}{P : Type _}
+variable {R : Type _} {M : Type _} {P : Type _}
 
-variable[Semiringₓ R][AddCommMonoidₓ M][AddCommMonoidₓ P]
+variable [Semiringₓ R] [AddCommMonoidₓ M] [AddCommMonoidₓ P]
 
-variable[Module R M][Module R P]
+variable [Module R M] [Module R P]
 
 open IsNoetherian
 
@@ -450,14 +450,14 @@ instance is_noetherian_submodule' [IsNoetherian R M] (N : Submodule R M) : IsNoe
 theorem is_noetherian_of_le {s t : Submodule R M} [ht : IsNoetherian R t] (h : s ≤ t) : IsNoetherian R s :=
   is_noetherian_submodule.mpr fun s' hs' => is_noetherian_submodule.mp ht _ (le_transₓ hs' h)
 
-variable(M)
+variable (M)
 
 theorem is_noetherian_of_surjective (f : M →ₗ[R] P) (hf : f.range = ⊤) [IsNoetherian R M] : IsNoetherian R P :=
   ⟨fun s =>
       have  : (s.comap f).map f = s := Submodule.map_comap_eq_self$ hf.symm ▸ le_top 
       this ▸ Submodule.fg_map$ noetherian _⟩
 
-variable{M}
+variable {M}
 
 theorem is_noetherian_of_linear_equiv (f : M ≃ₗ[R] P) [IsNoetherian R M] : IsNoetherian R P :=
   is_noetherian_of_surjective _ f.to_linear_map f.range
@@ -481,11 +481,11 @@ end
 
 section 
 
-variable{R : Type _}{M : Type _}{P : Type _}
+variable {R : Type _} {M : Type _} {P : Type _}
 
-variable[Ringₓ R][AddCommGroupₓ M][AddCommGroupₓ P]
+variable [Ringₓ R] [AddCommGroupₓ M] [AddCommGroupₓ P]
 
-variable[Module R M][Module R P]
+variable [Module R M] [Module R P]
 
 open IsNoetherian
 
@@ -600,10 +600,8 @@ section
 
 universe w
 
-variable{R M P :
-    Type
-      _}{N :
-    Type w}[Semiringₓ R][AddCommMonoidₓ M][Module R M][AddCommMonoidₓ N][Module R N][AddCommMonoidₓ P][Module R P]
+variable {R M P : Type _} {N : Type w} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [AddCommMonoidₓ N] [Module R N]
+  [AddCommMonoidₓ P] [Module R P]
 
 theorem is_noetherian_iff_well_founded :
   IsNoetherian R M ↔ WellFounded (· > · : Submodule R M → Submodule R M → Prop) :=
@@ -611,13 +609,13 @@ theorem is_noetherian_iff_well_founded :
     rw [(CompleteLattice.well_founded_characterisations$ Submodule R M).out 0 3]
     exact ⟨fun ⟨h⟩ => fun k => (fg_iff_compact k).mp (h k), fun h => ⟨fun k => (fg_iff_compact k).mpr (h k)⟩⟩
 
-variable(R M)
+variable (R M)
 
 theorem well_founded_submodule_gt R M [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] :
   ∀ [IsNoetherian R M], WellFounded (· > · : Submodule R M → Submodule R M → Prop) :=
   is_noetherian_iff_well_founded.mp
 
-variable{R M}
+variable {R M}
 
 /-- A module is Noetherian iff every nonempty set of submodules has a maximal submodule among them.
 -/
@@ -643,8 +641,8 @@ section
 
 universe w
 
-variable{R M P :
-    Type _}{N : Type w}[Ringₓ R][AddCommGroupₓ M][Module R M][AddCommGroupₓ N][Module R N][AddCommGroupₓ P][Module R P]
+variable {R M P : Type _} {N : Type w} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ N] [Module R N]
+  [AddCommGroupₓ P] [Module R P]
 
 -- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem finite_of_linear_independent
@@ -769,7 +767,7 @@ end
 A (semi)ring is Noetherian if it is Noetherian as a module over itself,
 i.e. all its ideals are finitely generated.
 -/
-class IsNoetherianRing(R)[Semiringₓ R] extends IsNoetherian R R : Prop
+class IsNoetherianRing (R) [Semiringₓ R] extends IsNoetherian R R : Prop
 
 theorem is_noetherian_ring_iff {R} [Semiringₓ R] : IsNoetherianRing R ↔ IsNoetherian R R :=
   ⟨fun h => h.1, @IsNoetherianRing.mk _ _⟩
@@ -889,9 +887,9 @@ theorem is_noetherian_ring_of_ring_equiv R [CommRingₓ R] {S} [CommRingₓ S] (
 
 namespace Submodule
 
-variable{R : Type _}{A : Type _}[CommSemiringₓ R][Semiringₓ A][Algebra R A]
+variable {R : Type _} {A : Type _} [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
-variable(M N : Submodule R A)
+variable (M N : Submodule R A)
 
 theorem fg_mul (hm : M.fg) (hn : N.fg) : (M*N).Fg :=
   let ⟨m, hfm, hm⟩ := fg_def.1 hm 

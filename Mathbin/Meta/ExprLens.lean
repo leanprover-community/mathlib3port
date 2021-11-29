@@ -47,7 +47,7 @@ def dir.to_string : dir → Stringₓ
 | dir.F => "F"
 | dir.A => "A"
 
-instance  : HasToString dir :=
+instance : HasToString dir :=
   ⟨dir.to_string⟩
 
 open Tactic

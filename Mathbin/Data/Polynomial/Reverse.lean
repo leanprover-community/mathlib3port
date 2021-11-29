@@ -21,7 +21,7 @@ open_locale Classical
 
 section Semiringₓ
 
-variable{R : Type _}[Semiringₓ R]{f : Polynomial R}
+variable {R : Type _} [Semiringₓ R] {f : Polynomial R}
 
 /-- If `i ≤ N`, then `rev_at_fun N i` returns `N - i`, otherwise it returns `i`.
 This is the map used by the embedding `rev_at`.
@@ -306,7 +306,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable{R : Type _}[Ringₓ R]
+variable {R : Type _} [Ringₓ R]
 
 @[simp]
 theorem reflect_neg (f : Polynomial R) (N : ℕ) : reflect N (-f) = -reflect N f :=

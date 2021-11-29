@@ -31,7 +31,7 @@ namespace IntermediateField
 
 section AdjoinDef
 
-variable(F : Type _)[Field F]{E : Type _}[Field E][Algebra F E](S : Set E)
+variable (F : Type _) [Field F] {E : Type _} [Field E] [Algebra F E] (S : Set E)
 
 /-- `adjoin F S` extends a field `F` by adjoining a set `S ⊆ E`. -/
 def adjoin : IntermediateField F E :=
@@ -42,7 +42,7 @@ end AdjoinDef
 
 section Lattice
 
-variable{F : Type _}[Field F]{E : Type _}[Field E][Algebra F E]
+variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E]
 
 @[simp]
 theorem adjoin_le_iff {S : Set E} {T : IntermediateField F E} : adjoin F S ≤ T ↔ S ≤ T :=
@@ -59,10 +59,10 @@ def gi : GaloisInsertion (adjoin F : Set E → IntermediateField F E) coeₓ :=
   { choice := fun S _ => adjoin F S, gc := IntermediateField.gc,
     le_l_u := fun S => (IntermediateField.gc (S : Set E) (adjoin F S)).1$ le_reflₓ _, choice_eq := fun _ _ => rfl }
 
-instance  : CompleteLattice (IntermediateField F E) :=
+instance : CompleteLattice (IntermediateField F E) :=
   GaloisInsertion.liftCompleteLattice IntermediateField.gi
 
-instance  : Inhabited (IntermediateField F E) :=
+instance : Inhabited (IntermediateField F E) :=
   ⟨⊤⟩
 
 theorem mem_bot {x : E} : x ∈ (⊥ : IntermediateField F E) ↔ x ∈ Set.Range (algebraMap F E) :=
@@ -112,13 +112,13 @@ theorem equiv_of_eq_trans {S T U : IntermediateField F E} (hST : S = T) (hTU : T
   (equiv_of_eq hST).trans (equiv_of_eq hTU) = equiv_of_eq (trans hST hTU) :=
   rfl
 
-variable(F E)
+variable (F E)
 
 /-- The bottom intermediate_field is isomorphic to the field. -/
 noncomputable def bot_equiv : (⊥ : IntermediateField F E) ≃ₐ[F] F :=
   (Subalgebra.equivOfEq _ _ bot_to_subalgebra).trans (Algebra.botEquiv F E)
 
-variable{F E}
+variable {F E}
 
 @[simp]
 theorem bot_equiv_def (x : F) : bot_equiv F E (algebraMap F (⊥ : IntermediateField F E) x) = x :=
@@ -175,7 +175,7 @@ end Lattice
 
 section AdjoinDef
 
-variable(F : Type _)[Field F]{E : Type _}[Field E][Algebra F E](S : Set E)
+variable (F : Type _) [Field F] {E : Type _} [Field E] [Algebra F E] (S : Set E)
 
 theorem adjoin_eq_range_algebra_map_adjoin : (adjoin F S : Set E) = Set.Range (algebraMap (adjoin F S) E) :=
   Subtype.range_coe.symm
@@ -303,13 +303,13 @@ theorem adjoin_induction {s : Set E} {p : E → Prop} {x} (h : x ∈ adjoin F s)
 Variation on `set.insert` to enable good notation for adjoining elements to fields.
 Used to preferentially use `singleton` rather than `insert` when adjoining one element.
 -/
-class insert{α : Type _}(s : Set α) where 
+class insert {α : Type _} (s : Set α) where 
   insert : α → Set α
 
-instance (priority := 1000)insert_empty {α : Type _} : insert (∅ : Set α) :=
+instance (priority := 1000) insert_empty {α : Type _} : insert (∅ : Set α) :=
   { insert := fun x => @singleton _ _ Set.hasSingleton x }
 
-instance (priority := 900)insert_nonempty {α : Type _} (s : Set α) : insert s :=
+instance (priority := 900) insert_nonempty {α : Type _} (s : Set α) : insert s :=
   { insert := fun x => Set.Insert x s }
 
 -- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
@@ -317,7 +317,7 @@ notation K `⟮`:std.prec.max_plus l:(foldr `, ` (h t, insert.insert t h) «expr
 
 section AdjoinSimple
 
-variable(α : E)
+variable (α : E)
 
 -- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem mem_adjoin_simple_self : «expr ∈ »(α, «expr ⟮ , ⟯»(F, [α])) := subset_adjoin F {α} (set.mem_singleton α)
@@ -375,7 +375,7 @@ end AdjoinDef
 
 section AdjoinIntermediateFieldLattice
 
-variable{F : Type _}[Field F]{E : Type _}[Field E][Algebra F E]{α : E}{S : Set E}
+variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E] {α : E} {S : Set E}
 
 @[simp]
 theorem adjoin_eq_bot_iff : adjoin F S = ⊥ ↔ S ⊆ (⊥ : IntermediateField F E) :=
@@ -409,7 +409,7 @@ section AdjoinDim
 
 open FiniteDimensional Module
 
-variable{K L : IntermediateField F E}
+variable {K L : IntermediateField F E}
 
 @[simp]
 theorem dim_eq_one_iff : Module.rank F K = 1 ↔ K = ⊥ :=
@@ -492,9 +492,9 @@ end AdjoinIntermediateFieldLattice
 
 section AdjoinIntegralElement
 
-variable{F : Type _}[Field F]{E : Type _}[Field E][Algebra F E]{α : E}
+variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E] {α : E}
 
-variable{K : Type _}[Field K][Algebra F K]
+variable {K : Type _} [Field K] [Algebra F K]
 
 -- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:341:40: in have: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem minpoly_gen {α : E} (h : is_integral F α) : «expr = »(minpoly F (adjoin_simple.gen F α), minpoly F α) :=
@@ -504,7 +504,7 @@ begin
   exact [expr minpoly.eq_of_algebra_map_eq inj ((is_integral_algebra_map_iff inj).mp h) (adjoin_simple.algebra_map_gen _ _).symm]
 end
 
-variable(F)
+variable (F)
 
 -- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:341:40: in exact: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem aeval_gen_minpoly (α : E) : «expr = »(aeval (adjoin_simple.gen F α) (minpoly F α), 0) :=
@@ -542,7 +542,7 @@ theorem adjoin_root_equiv_adjoin_apply_root (h : IsIntegral F α) :
 
 section PowerBasis
 
-variable{L : Type _}[Field L][Algebra K L]
+variable {L : Type _} [Field L] [Algebra K L]
 
 -- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 /-- The elements `1, x, ..., x ^ (d - 1)` form a basis for `K⟮x⟯`,
@@ -606,7 +606,7 @@ end AdjoinIntegralElement
 
 section Induction
 
-variable{F : Type _}[Field F]{E : Type _}[Field E][Algebra F E]
+variable {F : Type _} [Field F] {E : Type _} [Field E] [Algebra F E]
 
 /-- An intermediate field `S` is finitely generated if there exists `t : finset E` such that
 `intermediate_field.adjoin F t = S`. -/
@@ -678,13 +678,13 @@ end Induction
 
 section AlgHomMkAdjoinSplits
 
-variable(F E K : Type _)[Field F][Field E][Field K][Algebra F E][Algebra F K]{S : Set E}
+variable (F E K : Type _) [Field F] [Field E] [Field K] [Algebra F E] [Algebra F K] {S : Set E}
 
 /-- Lifts `L → K` of `F → K` -/
 def lifts :=
   ΣL : IntermediateField F E, L →ₐ[F] K
 
-variable{F E K}
+variable {F E K}
 
 -- error in FieldTheory.Adjoin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance : partial_order (lifts F E K) :=
@@ -704,7 +704,7 @@ instance : partial_order (lifts F E K) :=
     exact [expr alg_hom.ext (λ s, hxy2 s s rfl)]
   end }
 
-noncomputable instance  : OrderBot (lifts F E K) :=
+noncomputable instance : OrderBot (lifts F E K) :=
   { bot := ⟨⊥, (Algebra.ofId F K).comp (bot_equiv F E).toAlgHom⟩,
     bot_le :=
       fun x =>
@@ -715,7 +715,7 @@ noncomputable instance  : OrderBot (lifts F E K) :=
               rw [show s = (algebraMap F _) u from Subtype.ext hu.symm, AlgHom.commutes]
               rw [show t = (algebraMap F _) u from Subtype.ext (Eq.trans hu hst).symm, AlgHom.commutes]⟩ }
 
-noncomputable instance  : Inhabited (lifts F E K) :=
+noncomputable instance : Inhabited (lifts F E K) :=
   ⟨⊥⟩
 
 theorem lifts.eq_of_le {x y : lifts F E K} (hxy : x ≤ y) (s : x.1) : x.2 s = y.2 ⟨s, hxy.1 s.mem⟩ :=
@@ -866,7 +866,7 @@ end IntermediateField
 
 section PowerBasis
 
-variable{K L : Type _}[Field K][Field L][Algebra K L]
+variable {K L : Type _} [Field K] [Field L] [Algebra K L]
 
 namespace PowerBasis
 

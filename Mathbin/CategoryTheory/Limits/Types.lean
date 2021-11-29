@@ -10,7 +10,7 @@ open CategoryTheory.Limits
 
 namespace CategoryTheory.Limits.Types
 
-variable{J : Type u}[small_category J]
+variable {J : Type u} [small_category J]
 
 /--
 (internal implementation) the limit cone of a functor,
@@ -35,7 +35,7 @@ The category of types has all limits.
 
 See https://stacks.math.columbia.edu/tag/002U.
 -/
-instance  : has_limits (Type u) :=
+instance : has_limits (Type u) :=
   { HasLimitsOfShape :=
       fun J 𝒥 =>
         by 
@@ -160,7 +160,7 @@ The category of types has all colimits.
 
 See https://stacks.math.columbia.edu/tag/002U.
 -/
-instance  : has_colimits (Type u) :=
+instance : has_colimits (Type u) :=
   { HasColimitsOfShape :=
       fun J 𝒥 =>
         by 
@@ -246,7 +246,7 @@ theorem jointly_surjective' {F : J ⥤ Type u} (x : colimit F) : ∃ j y, colimi
 
 namespace FilteredColimit
 
-variable(F : J ⥤ Type u)
+variable (F : J ⥤ Type u)
 
 /--
 An alternative relation on `Σ j, F.obj j`,
@@ -304,7 +304,7 @@ noncomputable def is_colimit_of (t : cocone F) (hsurj : ∀ x : t.X, ∃ i xi, x
       intro j 
       apply colimit.ι_desc
 
-variable[is_filtered_or_empty J]
+variable [is_filtered_or_empty J]
 
 protected theorem rel_equiv : Equivalenceₓ (filtered_colimit.rel F) :=
   ⟨fun x => ⟨x.1, 𝟙 x.1, 𝟙 x.1, rfl⟩, fun x y ⟨k, f, g, h⟩ => ⟨k, g, f, h.symm⟩,
@@ -366,7 +366,7 @@ theorem colimit_eq_iff {i j : J} {xi : F.obj i} {xj : F.obj j} :
 
 end FilteredColimit
 
-variable{α β : Type u}(f : α ⟶ β)
+variable {α β : Type u} (f : α ⟶ β)
 
 section 
 
@@ -374,17 +374,17 @@ section
 def image : Type u :=
   Set.Range f
 
-instance  [Inhabited α] : Inhabited (image f) :=
+instance [Inhabited α] : Inhabited (image f) :=
   { default := ⟨f (default α), ⟨_, rfl⟩⟩ }
 
 /-- the inclusion of `image f` into the target -/
 def image.ι : image f ⟶ β :=
   Subtype.val
 
-instance  : mono (image.ι f) :=
+instance : mono (image.ι f) :=
   (mono_iff_injective _).2 Subtype.val_injective
 
-variable{f}
+variable {f}
 
 /-- the universal property for the image factorisation -/
 noncomputable def image.lift (F' : mono_factorisation f) : image f ⟶ F'.I :=
@@ -407,10 +407,10 @@ def mono_factorisation : mono_factorisation f :=
 noncomputable def is_image : is_image (mono_factorisation f) :=
   { lift := image.lift, lift_fac' := image.lift_fac }
 
-instance  : has_image f :=
+instance : has_image f :=
   has_image.mk ⟨_, is_image f⟩
 
-instance  : has_images (Type u) :=
+instance : has_images (Type u) :=
   { HasImage :=
       by 
         infer_instance }

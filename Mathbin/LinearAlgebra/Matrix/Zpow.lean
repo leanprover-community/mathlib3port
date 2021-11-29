@@ -22,11 +22,11 @@ open_locale Matrix
 
 namespace Matrix
 
-variable{n' : Type _}[DecidableEq n'][Fintype n']{R : Type _}[CommRingₓ R]
+variable {n' : Type _} [DecidableEq n'] [Fintype n'] {R : Type _} [CommRingₓ R]
 
 local notation "M" => Matrix n' n' R
 
-noncomputable instance  : DivInvMonoidₓ M :=
+noncomputable instance : DivInvMonoidₓ M :=
   { show Monoidₓ M by 
       infer_instance,
     show HasInv M by 

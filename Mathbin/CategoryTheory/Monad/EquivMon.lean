@@ -25,7 +25,7 @@ open Category
 
 universe v u
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 namespace Monad
 
@@ -42,14 +42,14 @@ def to_Mon : Monadₓ C → Mon_ (C ⥤ C) :=
           dsimp 
           simp [M.assoc] }
 
-variable(C)
+variable (C)
 
 /-- Passing from `Monad C` to `Mon_ (C ⥤ C)` is functorial. -/
 @[simps]
 def Monad_to_Mon : Monadₓ C ⥤ Mon_ (C ⥤ C) :=
   { obj := to_Mon, map := fun _ _ f => { Hom := f.to_nat_trans } }
 
-variable{C}
+variable {C}
 
 /-- To every monoid object in `C ⥤ C` we associate a `Monad C`. -/
 @[simps]
@@ -72,7 +72,7 @@ def of_Mon : Mon_ (C ⥤ C) → Monadₓ C :=
             rw [←nat_trans.hcomp_id_app, ←nat_trans.comp_app]
             simp  }
 
-variable(C)
+variable (C)
 
 /-- Passing from `Mon_ (C ⥤ C)` to `Monad C` is functorial. -/
 @[simps]
@@ -94,7 +94,7 @@ def Mon_to_Monad : Mon_ (C ⥤ C) ⥤ Monadₓ C :=
 
 namespace MonadMonEquiv
 
-variable{C}
+variable {C}
 
 /-- Isomorphism of functors used in `Monad_Mon_equiv` -/
 @[simps (config := { rhsMd := semireducible })]
@@ -125,7 +125,7 @@ open MonadMonEquiv
 def Monad_Mon_equiv : Monadₓ C ≌ Mon_ (C ⥤ C) :=
   { Functor := Monad_to_Mon _, inverse := Mon_to_Monad _, unitIso := unit_iso, counitIso := counit_iso }
 
-example  (A : Monadₓ C) {X : C} : ((Monad_Mon_equiv C).unitIso.app A).Hom.app X = 𝟙 _ :=
+example (A : Monadₓ C) {X : C} : ((Monad_Mon_equiv C).unitIso.app A).Hom.app X = 𝟙 _ :=
   rfl
 
 end Monad

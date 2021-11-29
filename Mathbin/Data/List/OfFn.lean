@@ -19,7 +19,7 @@ The main definitions pertain to lists generated using `of_fn`
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 open Nat
 

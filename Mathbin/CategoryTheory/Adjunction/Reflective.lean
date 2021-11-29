@@ -19,16 +19,16 @@ namespace CategoryTheory
 
 open Category Adjunction
 
-variable{C : Type u₁}{D : Type u₂}{E : Type u₃}
+variable {C : Type u₁} {D : Type u₂} {E : Type u₃}
 
-variable[category.{v₁} C][category.{v₂} D][category.{v₃} E]
+variable [category.{v₁} C] [category.{v₂} D] [category.{v₃} E]
 
 /--
 A functor is *reflective*, or *a reflective inclusion*, if it is fully faithful and right adjoint.
 -/
-class reflective(R : D ⥤ C) extends is_right_adjoint R, full R, faithful R
+class reflective (R : D ⥤ C) extends is_right_adjoint R, full R, faithful R
 
-variable{i : D ⥤ C}
+variable {i : D ⥤ C}
 
 /--
 For a reflective functor `i` (with left adjoint `L`), with unit `η`, we have `η_iL = iL η`.

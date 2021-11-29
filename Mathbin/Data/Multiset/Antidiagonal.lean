@@ -12,7 +12,7 @@ namespace Multiset
 
 open List
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 /-- The antidiagonal of a multiset `s` consists of all pairs `(t₁, t₂)`
     such that `t₁ + t₂ = s`. These pairs are counted with multiplicities. -/
@@ -64,7 +64,7 @@ theorem antidiagonal_zero : @antidiagonal α 0 = {(0, 0)} :=
 
 @[simp]
 theorem antidiagonal_cons (a : α) s :
-  antidiagonal (a ::ₘ s) = map (Prod.mapₓ id (cons a)) (antidiagonal s)+map (Prod.mapₓ (cons a) id) (antidiagonal s) :=
+  antidiagonal (a ::ₘ s) = map (Prod.map id (cons a)) (antidiagonal s)+map (Prod.map (cons a) id) (antidiagonal s) :=
   Quotientₓ.induction_on s$
     fun l =>
       by 

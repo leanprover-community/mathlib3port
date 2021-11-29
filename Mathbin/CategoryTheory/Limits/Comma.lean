@@ -22,19 +22,19 @@ open Category Limits
 
 universe v u₁ u₂ u₃
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
-variable{A : Type u₁}[category.{v} A]
+variable {A : Type u₁} [category.{v} A]
 
-variable{B : Type u₂}[category.{v} B]
+variable {B : Type u₂} [category.{v} B]
 
-variable{T : Type u₃}[category.{v} T]
+variable {T : Type u₃} [category.{v} T]
 
 namespace Comma
 
-variable{L : A ⥤ T}{R : B ⥤ T}
+variable {L : A ⥤ T} {R : B ⥤ T}
 
-variable(F : J ⥤ comma L R)
+variable (F : J ⥤ comma L R)
 
 /-- (Implementation). An auxiliary cone which is useful in order to construct limits
 in the comma category. -/
@@ -146,7 +146,7 @@ instance has_limits_of_shape [has_limits_of_shape J A] [has_limits_of_shape J B]
   {  }
 
 instance has_limits [has_limits A] [has_limits B] [preserves_limits R] : has_limits (comma L R) :=
-  {  }
+  ⟨inferInstance⟩
 
 instance has_colimit (F : J ⥤ comma L R) [has_colimit (F ⋙ fst L R)] [has_colimit (F ⋙ snd L R)]
   [preserves_colimit (F ⋙ fst L R) L] : has_colimit F :=
@@ -157,7 +157,7 @@ instance has_colimits_of_shape [has_colimits_of_shape J A] [has_colimits_of_shap
   {  }
 
 instance has_colimits [has_colimits A] [has_colimits B] [preserves_colimits L] : has_colimits (comma L R) :=
-  {  }
+  ⟨inferInstance⟩
 
 end Comma
 
@@ -170,7 +170,7 @@ instance has_limits_of_shape [has_limits_of_shape J T] : has_limits_of_shape J (
   {  }
 
 instance has_limits [has_limits T] : has_limits (arrow T) :=
-  {  }
+  ⟨inferInstance⟩
 
 instance has_colimit (F : J ⥤ arrow T) [i₁ : has_colimit (F ⋙ left_func)] [i₂ : has_colimit (F ⋙ right_func)] :
   has_colimit F :=
@@ -180,13 +180,13 @@ instance has_colimits_of_shape [has_colimits_of_shape J T] : has_colimits_of_sha
   {  }
 
 instance has_colimits [has_colimits T] : has_colimits (arrow T) :=
-  {  }
+  ⟨inferInstance⟩
 
 end Arrow
 
 namespace StructuredArrow
 
-variable{X : T}{G : A ⥤ T}(F : J ⥤ structured_arrow X G)
+variable {X : T} {G : A ⥤ T} (F : J ⥤ structured_arrow X G)
 
 instance has_limit [i₁ : has_limit (F ⋙ proj X G)] [i₂ : preserves_limit (F ⋙ proj X G) G] : has_limit F :=
   @comma.has_limit _ _ _ _ _ _ i₁ i₂
@@ -196,7 +196,7 @@ instance has_limits_of_shape [has_limits_of_shape J A] [preserves_limits_of_shap
   {  }
 
 instance has_limits [has_limits A] [preserves_limits G] : has_limits (structured_arrow X G) :=
-  {  }
+  ⟨inferInstance⟩
 
 noncomputable instance creates_limit [i : preserves_limit (F ⋙ proj X G) G] : creates_limit F (proj X G) :=
   creates_limit_of_reflects_iso$
@@ -215,7 +215,7 @@ end StructuredArrow
 
 namespace CostructuredArrow
 
-variable{G : A ⥤ T}{X : T}(F : J ⥤ costructured_arrow G X)
+variable {G : A ⥤ T} {X : T} (F : J ⥤ costructured_arrow G X)
 
 instance has_colimit [i₁ : has_colimit (F ⋙ proj G X)] [i₂ : preserves_colimit (F ⋙ proj G X) G] : has_colimit F :=
   @comma.has_colimit _ _ _ _ _ i₁ _ i₂
@@ -225,7 +225,7 @@ instance has_colimits_of_shape [has_colimits_of_shape J A] [preserves_colimits_o
   {  }
 
 instance has_colimits [has_colimits A] [preserves_colimits G] : has_colimits (costructured_arrow G X) :=
-  {  }
+  ⟨inferInstance⟩
 
 noncomputable instance creates_colimit [i : preserves_colimit (F ⋙ proj G X) G] : creates_colimit F (proj G X) :=
   creates_colimit_of_reflects_iso$

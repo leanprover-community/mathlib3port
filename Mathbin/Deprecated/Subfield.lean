@@ -1,7 +1,7 @@
 import Mathbin.Deprecated.Subring 
 import Mathbin.Algebra.GroupWithZero.Power
 
-variable{F : Type _}[Field F](S : Set F)
+variable {F : Type _} [Field F] (S : Set F)
 
 structure IsSubfield extends IsSubring S : Prop where 
   inv_mem : ∀ {x : F}, x ∈ S → x⁻¹ ∈ S
@@ -51,7 +51,7 @@ namespace Field
 def closure : Set F :=
   { x | ∃ (y : _)(_ : y ∈ Ringₓ.Closure S), ∃ (z : _)(_ : z ∈ Ringₓ.Closure S), y / z = x }
 
-variable{S}
+variable {S}
 
 theorem ring_closure_subset : Ringₓ.Closure S ⊆ closure S :=
   fun x hx => ⟨x, hx, 1, Ringₓ.Closure.is_subring.to_is_submonoid.one_mem, div_one x⟩

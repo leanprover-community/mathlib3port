@@ -19,65 +19,20 @@ theory for `semi_normed_space` and we specialize to `normed_space` when needed.
 
 open Function Set
 
-variable{R R₂ R₃ R₄ E E₂ E₃ E₄ F :
-    Type
-      _}[Semiringₓ
-      R][Semiringₓ
-      R₂][Semiringₓ
-      R₃][Semiringₓ
-      R₄]{σ₁₂ :
-    R →+*
-      R₂}{σ₂₁ :
-    R₂ →+*
-      R}{σ₁₃ :
-    R →+*
-      R₃}{σ₃₁ :
-    R₃ →+*
-      R}{σ₁₄ :
-    R →+*
-      R₄}{σ₄₁ :
-    R₄ →+*
-      R}{σ₂₃ :
-    R₂ →+*
-      R₃}{σ₃₂ :
-    R₃ →+*
-      R₂}{σ₂₄ :
-    R₂ →+*
-      R₄}{σ₄₂ :
-    R₄ →+*
-      R₂}{σ₃₄ :
-    R₃ →+*
-      R₄}{σ₄₃ :
-    R₄ →+*
-      R₃}[RingHomInvPair σ₁₂
-      σ₂₁][RingHomInvPair σ₂₁
-      σ₁₂][RingHomInvPair σ₁₃
-      σ₃₁][RingHomInvPair σ₃₁
-      σ₁₃][RingHomInvPair σ₂₃
-      σ₃₂][RingHomInvPair σ₃₂
-      σ₂₃][RingHomInvPair σ₁₄
-      σ₄₁][RingHomInvPair σ₄₁
-      σ₁₄][RingHomInvPair σ₂₄
-      σ₄₂][RingHomInvPair σ₄₂
-      σ₂₄][RingHomInvPair σ₃₄
-      σ₄₃][RingHomInvPair σ₄₃
-      σ₃₄][RingHomCompTriple σ₁₂ σ₂₃
-      σ₁₃][RingHomCompTriple σ₁₂ σ₂₄
-      σ₁₄][RingHomCompTriple σ₂₃ σ₃₄
-      σ₂₄][RingHomCompTriple σ₁₃ σ₃₄
-      σ₁₄][RingHomCompTriple σ₃₂ σ₂₁
-      σ₃₁][RingHomCompTriple σ₄₂ σ₂₁
-      σ₄₁][RingHomCompTriple σ₄₃ σ₃₂
-      σ₄₂][RingHomCompTriple σ₄₃ σ₃₁
-      σ₄₁][SemiNormedGroup
-      E][SemiNormedGroup
-      E₂][SemiNormedGroup
-      E₃][SemiNormedGroup E₄][Module R E][Module R₂ E₂][Module R₃ E₃][Module R₄ E₄][NormedGroup F][Module R F]
+variable {R R₂ R₃ R₄ E E₂ E₃ E₄ F : Type _} [Semiringₓ R] [Semiringₓ R₂] [Semiringₓ R₃] [Semiringₓ R₄] {σ₁₂ : R →+* R₂}
+  {σ₂₁ : R₂ →+* R} {σ₁₃ : R →+* R₃} {σ₃₁ : R₃ →+* R} {σ₁₄ : R →+* R₄} {σ₄₁ : R₄ →+* R} {σ₂₃ : R₂ →+* R₃}
+  {σ₃₂ : R₃ →+* R₂} {σ₂₄ : R₂ →+* R₄} {σ₄₂ : R₄ →+* R₂} {σ₃₄ : R₃ →+* R₄} {σ₄₃ : R₄ →+* R₃} [RingHomInvPair σ₁₂ σ₂₁]
+  [RingHomInvPair σ₂₁ σ₁₂] [RingHomInvPair σ₁₃ σ₃₁] [RingHomInvPair σ₃₁ σ₁₃] [RingHomInvPair σ₂₃ σ₃₂]
+  [RingHomInvPair σ₃₂ σ₂₃] [RingHomInvPair σ₁₄ σ₄₁] [RingHomInvPair σ₄₁ σ₁₄] [RingHomInvPair σ₂₄ σ₄₂]
+  [RingHomInvPair σ₄₂ σ₂₄] [RingHomInvPair σ₃₄ σ₄₃] [RingHomInvPair σ₄₃ σ₃₄] [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
+  [RingHomCompTriple σ₁₂ σ₂₄ σ₁₄] [RingHomCompTriple σ₂₃ σ₃₄ σ₂₄] [RingHomCompTriple σ₁₃ σ₃₄ σ₁₄]
+  [RingHomCompTriple σ₃₂ σ₂₁ σ₃₁] [RingHomCompTriple σ₄₂ σ₂₁ σ₄₁] [RingHomCompTriple σ₄₃ σ₃₂ σ₄₂]
+  [RingHomCompTriple σ₄₃ σ₃₁ σ₄₁] [SemiNormedGroup E] [SemiNormedGroup E₂] [SemiNormedGroup E₃] [SemiNormedGroup E₄]
+  [Module R E] [Module R₂ E₂] [Module R₃ E₃] [Module R₄ E₄] [NormedGroup F] [Module R F]
 
 /-- A `σ₁₂`-semilinear isometric embedding of a normed `R`-module into an `R₂`-module. -/
-structure
-  LinearIsometry(σ₁₂ : R →+* R₂)(E E₂ : Type _)[SemiNormedGroup E][SemiNormedGroup E₂][Module R E][Module R₂ E₂] extends
-  E →ₛₗ[σ₁₂] E₂ where 
+structure LinearIsometry (σ₁₂ : R →+* R₂) (E E₂ : Type _) [SemiNormedGroup E] [SemiNormedGroup E₂] [Module R E]
+  [Module R₂ E₂] extends E →ₛₗ[σ₁₂] E₂ where 
   norm_map' : ∀ x, ∥to_linear_map x∥ = ∥x∥
 
 notation:25 E " →ₛₗᵢ[" σ₁₂:25 "] " E₂:0 => LinearIsometry σ₁₂ E E₂
@@ -88,9 +43,9 @@ notation:25 E " →ₗᵢ⋆[" R:25 "] " E₂:0 => LinearIsometry (@starRingAut 
 
 namespace LinearIsometry
 
-variable(f : E →ₛₗᵢ[σ₁₂] E₂)(f₁ : F →ₛₗᵢ[σ₁₂] E₂)
+variable (f : E →ₛₗᵢ[σ₁₂] E₂) (f₁ : F →ₛₗᵢ[σ₁₂] E₂)
 
-instance  : CoeFun (E →ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
+instance : CoeFun (E →ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
   ⟨fun f => f.to_fun⟩
 
 @[simp]
@@ -206,7 +161,7 @@ theorem id_apply (x : E) : (id : E →ₗᵢ[R] E) x = x :=
 theorem id_to_linear_map : (id.toLinearMap : E →ₗ[R] E) = LinearMap.id :=
   rfl
 
-instance  : Inhabited (E →ₗᵢ[R] E) :=
+instance : Inhabited (E →ₗᵢ[R] E) :=
   ⟨id⟩
 
 /-- Composition of linear isometries. -/
@@ -237,7 +192,7 @@ theorem comp_assoc (f : E₃ →ₛₗᵢ[σ₃₄] E₄) (g : E₂ →ₛₗᵢ
 
 omit σ₁₃ σ₂₄ σ₁₄
 
-instance  : Monoidₓ (E →ₗᵢ[R] E) :=
+instance : Monoidₓ (E →ₗᵢ[R] E) :=
   { one := id, mul := comp, mul_assoc := comp_assoc, one_mul := id_comp, mul_one := comp_id }
 
 @[simp]
@@ -260,7 +215,7 @@ def LinearMap.toLinearIsometry (f : E →ₛₗ[σ₁₂] E₂) (hf : Isometry f
 
 namespace Submodule
 
-variable{R' : Type _}[Ringₓ R'][Module R' E](p : Submodule R' E)
+variable {R' : Type _} [Ringₓ R'] [Module R' E] (p : Submodule R' E)
 
 /-- `submodule.subtype` as a `linear_isometry`. -/
 def subtypeₗᵢ : p →ₗᵢ[R'] E :=
@@ -297,15 +252,8 @@ theorem ker_subtypeL : p.subtypeL.ker = ⊥ :=
 end Submodule
 
 /-- A semilinear isometric equivalence between two normed vector spaces. -/
-structure
-  LinearIsometryEquiv(σ₁₂ :
-    R →+*
-      R₂){σ₂₁ :
-    R₂ →+*
-      R}[RingHomInvPair σ₁₂
-      σ₂₁][RingHomInvPair σ₂₁
-      σ₁₂](E E₂ : Type _)[SemiNormedGroup E][SemiNormedGroup E₂][Module R E][Module R₂ E₂] extends
-  E ≃ₛₗ[σ₁₂] E₂ where 
+structure LinearIsometryEquiv (σ₁₂ : R →+* R₂) {σ₂₁ : R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
+  (E E₂ : Type _) [SemiNormedGroup E] [SemiNormedGroup E₂] [Module R E] [Module R₂ E₂] extends E ≃ₛₗ[σ₁₂] E₂ where 
   norm_map' : ∀ x, ∥to_linear_equiv x∥ = ∥x∥
 
 notation:25 E " ≃ₛₗᵢ[" σ₁₂:25 "] " E₂:0 => LinearIsometryEquiv σ₁₂ E E₂
@@ -316,11 +264,11 @@ notation:25 E " ≃ₗᵢ⋆[" R:25 "] " E₂:0 => LinearIsometryEquiv (@starRin
 
 namespace LinearIsometryEquiv
 
-variable(e : E ≃ₛₗᵢ[σ₁₂] E₂)
+variable (e : E ≃ₛₗᵢ[σ₁₂] E₂)
 
 include σ₂₁
 
-instance  : CoeFun (E ≃ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
+instance : CoeFun (E ≃ₛₗᵢ[σ₁₂] E₂) fun _ => E → E₂ :=
   ⟨fun f => f.to_fun⟩
 
 @[simp]
@@ -405,15 +353,15 @@ theorem coe_to_continuous_linear_equiv : «expr⇑ » e.to_continuous_linear_equ
 
 omit σ₂₁
 
-variable(R E)
+variable (R E)
 
 /-- Identity map as a `linear_isometry_equiv`. -/
 def refl : E ≃ₗᵢ[R] E :=
   ⟨LinearEquiv.refl R E, fun x => rfl⟩
 
-variable{R E}
+variable {R E}
 
-instance  : Inhabited (E ≃ₗᵢ[R] E) :=
+instance : Inhabited (E ≃ₗᵢ[R] E) :=
   ⟨refl R E⟩
 
 @[simp]
@@ -482,6 +430,14 @@ theorem self_trans_symm : e.trans e.symm = refl R E :=
 theorem symm_trans_self : e.symm.trans e = refl R₂ E₂ :=
   ext e.apply_symm_apply
 
+@[simp]
+theorem symm_comp_self : (e.symm ∘ e) = id :=
+  funext e.symm_apply_apply
+
+@[simp]
+theorem self_comp_symm : (e ∘ e.symm) = id :=
+  e.symm.symm_comp_self
+
 include σ₁₃ σ₂₁ σ₃₂ σ₃₁
 
 @[simp]
@@ -497,7 +453,7 @@ theorem trans_assoc (eEE₂ : E ≃ₛₗᵢ[σ₁₂] E₂) (eE₂E₃ : E₂ �
 
 omit σ₂₁ σ₃₁ σ₄₁ σ₃₂ σ₄₂ σ₄₃ σ₁₃ σ₂₄ σ₁₄
 
-instance  : Groupₓ (E ≃ₗᵢ[R] E) :=
+instance : Groupₓ (E ≃ₗᵢ[R] E) :=
   { mul := fun e₁ e₂ => e₂.trans e₁, one := refl _ _, inv := symm, one_mul := trans_refl, mul_one := refl_trans,
     mul_assoc := fun _ _ _ => trans_assoc _ _ _, mul_left_inv := self_trans_symm }
 
@@ -516,10 +472,10 @@ theorem coe_inv (e : E ≃ₗᵢ[R] E) : «expr⇑ » (e⁻¹) = e.symm :=
 include σ₂₁
 
 /-- Reinterpret a `linear_isometry_equiv` as a `continuous_linear_equiv`. -/
-instance  : CoeTₓ (E ≃ₛₗᵢ[σ₁₂] E₂) (E ≃SL[σ₁₂] E₂) :=
+instance : CoeTₓ (E ≃ₛₗᵢ[σ₁₂] E₂) (E ≃SL[σ₁₂] E₂) :=
   ⟨fun e => ⟨e.to_linear_equiv, e.continuous, e.to_isometric.symm.continuous⟩⟩
 
-instance  : CoeTₓ (E ≃ₛₗᵢ[σ₁₂] E₂) (E →SL[σ₁₂] E₂) :=
+instance : CoeTₓ (E ≃ₛₗᵢ[σ₁₂] E₂) (E →SL[σ₁₂] E₂) :=
   ⟨fun e => «expr↑ » (e : E ≃SL[σ₁₂] E₂)⟩
 
 @[simp]
@@ -598,7 +554,7 @@ theorem ediam_image (s : Set E) : Emetric.diam (e '' s) = Emetric.diam s :=
 theorem diam_image (s : Set E) : Metric.diam (e '' s) = Metric.diam s :=
   e.isometry.diam_image s
 
-variable{α : Type _}[TopologicalSpace α]
+variable {α : Type _} [TopologicalSpace α]
 
 @[simp]
 theorem comp_continuous_on_iff {f : α → E} {s : Set α} : ContinuousOn (e ∘ f) s ↔ ContinuousOn f s :=
@@ -616,13 +572,13 @@ noncomputable def of_surjective (f : F →ₛₗᵢ[σ₁₂] E₂) (hfr : Funct
 
 omit σ₂₁
 
-variable(R)
+variable (R)
 
 /-- The negation operation on a normed space `E`, considered as a linear isometry equivalence. -/
 def neg : E ≃ₗᵢ[R] E :=
   { LinearEquiv.neg R with norm_map' := norm_neg }
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem coe_neg : (neg R : E → E) = fun x => -x :=
@@ -632,7 +588,7 @@ theorem coe_neg : (neg R : E → E) = fun x => -x :=
 theorem symm_neg : (neg R : E ≃ₗᵢ[R] E).symm = neg R :=
   rfl
 
-variable(R E E₂ E₃)
+variable (R E E₂ E₃)
 
 /-- The natural equivalence `(E × E₂) × E₃ ≃ E × (E₂ × E₃)` is a linear isometry. -/
 noncomputable def prod_assoc [Module R E₂] [Module R E₃] : (E × E₂) × E₃ ≃ₗᵢ[R] E × E₂ × E₃ :=

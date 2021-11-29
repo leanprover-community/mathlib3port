@@ -52,22 +52,13 @@ open filter(Tendsto)
 
 open Metric
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]{G : Type _}[NormedGroup G][NormedSpace 𝕜 G]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
 
 /-- A function `f` satisfies `is_bounded_linear_map 𝕜 f` if it is linear and satisfies the
 inequality `∥f x∥ ≤ M * ∥x∥` for some positive constant `M`. -/
-structure
-  IsBoundedLinearMap(𝕜 :
-    Type
-      _)[NormedField
-      𝕜]{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F](f : E → F) extends
-  IsLinearMap 𝕜 f : Prop where 
+structure IsBoundedLinearMap (𝕜 : Type _) [NormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {F : Type _}
+  [NormedGroup F] [NormedSpace 𝕜 F] (f : E → F) extends IsLinearMap 𝕜 f : Prop where 
   bound : ∃ M, 0 < M ∧ ∀ x : E, ∥f x∥ ≤ M*∥x∥
 
 theorem IsLinearMap.with_bound {f : E → F} (hf : IsLinearMap 𝕜 f) (M : ℝ) (h : ∀ x : E, ∥f x∥ ≤ M*∥x∥) :
@@ -117,7 +108,7 @@ theorem snd : IsBoundedLinearMap 𝕜 fun x : E × F => x.2 :=
     rw [one_mulₓ]
     exact le_max_rightₓ _ _
 
-variable{f g : E → F}
+variable {f g : E → F}
 
 theorem smul (c : 𝕜) (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap 𝕜 (c • f) :=
   let ⟨hlf, M, hMp, hM⟩ := hf
@@ -196,7 +187,7 @@ end IsBoundedLinearMap
 
 section 
 
-variable{ι : Type _}[DecidableEq ι][Fintype ι]
+variable {ι : Type _} [DecidableEq ι] [Fintype ι]
 
 /-- Taking the cartesian product of two continuous multilinear maps
 is a bounded linear operation. -/
@@ -263,20 +254,20 @@ end
 
 section BilinearMap
 
-variable(𝕜)
+variable (𝕜)
 
 /-- A map `f : E × F → G` satisfies `is_bounded_bilinear_map 𝕜 f` if it is bilinear and
 continuous. -/
-structure IsBoundedBilinearMap(f : E × F → G) : Prop where 
+structure IsBoundedBilinearMap (f : E × F → G) : Prop where 
   add_left : ∀ x₁ x₂ : E y : F, f (x₁+x₂, y) = f (x₁, y)+f (x₂, y)
   smul_left : ∀ c : 𝕜 x : E y : F, f (c • x, y) = c • f (x, y)
   add_right : ∀ x : E y₁ y₂ : F, f (x, y₁+y₂) = f (x, y₁)+f (x, y₂)
   smulRight : ∀ c : 𝕜 x : E y : F, f (x, c • y) = c • f (x, y)
   bound : ∃ (C : _)(_ : C > 0), ∀ x : E y : F, ∥f (x, y)∥ ≤ (C*∥x∥)*∥y∥
 
-variable{𝕜}
+variable {𝕜}
 
-variable{f : E × F → G}
+variable {f : E × F → G}
 
 theorem ContinuousLinearMap.is_bounded_bilinear_map (f : E →L[𝕜] F →L[𝕜] G) :
   IsBoundedBilinearMap 𝕜 fun x : E × F => f x.1 x.2 :=
@@ -598,14 +589,14 @@ theorem is_bounded_bilinear_map_deriv_coe (h : IsBoundedBilinearMap 𝕜 f) (p q
   h.deriv p q = f (p.1, q.2)+f (q.1, p.2) :=
   rfl
 
-variable(𝕜)
+variable (𝕜)
 
 /-- The function `lmul_left_right : 𝕜' × 𝕜' → (𝕜' →L[𝕜] 𝕜')` is a bounded bilinear map. -/
 theorem ContinuousLinearMap.lmul_left_right_is_bounded_bilinear (𝕜' : Type _) [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜'] :
   IsBoundedBilinearMap 𝕜 fun p : 𝕜' × 𝕜' => ContinuousLinearMap.lmulLeftRight 𝕜 𝕜' p.1 p.2 :=
   (ContinuousLinearMap.lmulLeftRight 𝕜 𝕜').IsBoundedBilinearMap
 
-variable{𝕜}
+variable {𝕜}
 
 /-- Given a bounded bilinear map `f`, the map associating to a point `p` the derivative of `f` at
 `p` is itself a bounded linear map. -/

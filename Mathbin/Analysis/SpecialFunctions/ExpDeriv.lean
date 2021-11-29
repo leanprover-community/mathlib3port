@@ -74,7 +74,7 @@ end Complex
 
 section 
 
-variable{f : ℂ → ℂ}{f' x : ℂ}{s : Set ℂ}
+variable {f : ℂ → ℂ} {f' x : ℂ} {s : Set ℂ}
 
 theorem HasStrictDerivAt.cexp (hf : HasStrictDerivAt f f' x) :
   HasStrictDerivAt (fun x => Complex.exp (f x)) (Complex.exp (f x)*f') x :=
@@ -99,7 +99,7 @@ end
 
 section 
 
-variable{f : ℝ → ℂ}{f' : ℂ}{x : ℝ}{s : Set ℝ}
+variable {f : ℝ → ℂ} {f' : ℂ} {x : ℝ} {s : Set ℝ}
 
 open Complex
 
@@ -118,7 +118,7 @@ end
 
 section 
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℂ E]{f : E → ℂ}{f' : E →L[ℂ] ℂ}{x : E}{s : Set E}
+variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E] {f : E → ℂ} {f' : E →L[ℂ] ℂ} {x : E} {s : Set E}
 
 theorem HasStrictFderivAt.cexp (hf : HasStrictFderivAt f f' x) :
   HasStrictFderivAt (fun x => Complex.exp (f x)) (Complex.exp (f x) • f') x :=
@@ -164,7 +164,7 @@ end
 
 namespace Real
 
-variable{x y z : ℝ}
+variable {x y z : ℝ}
 
 theorem has_strict_deriv_at_exp (x : ℝ) : HasStrictDerivAt exp (exp x) x :=
   (Complex.has_strict_deriv_at_exp x).real_of_complex
@@ -200,7 +200,7 @@ section
 function, for standalone use and use with `simp`. -/
 
 
-variable{f : ℝ → ℝ}{f' x : ℝ}{s : Set ℝ}
+variable {f : ℝ → ℝ} {f' x : ℝ} {s : Set ℝ}
 
 theorem HasStrictDerivAt.exp (hf : HasStrictDerivAt f f' x) :
   HasStrictDerivAt (fun x => Real.exp (f x)) (Real.exp (f x)*f') x :=
@@ -229,7 +229,7 @@ section
 function, for standalone use and use with `simp`. -/
 
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E]{f : E → ℝ}{f' : E →L[ℝ] ℝ}{x : E}{s : Set E}
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E} {s : Set E}
 
 theorem TimesContDiff.exp {n} (hf : TimesContDiff ℝ n f) : TimesContDiff ℝ n fun x => Real.exp (f x) :=
   Real.times_cont_diff_exp.comp hf

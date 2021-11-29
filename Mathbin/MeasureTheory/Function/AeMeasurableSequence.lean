@@ -19,7 +19,8 @@ open MeasureTheory
 
 open_locale Classical
 
-variable{α β γ ι : Type _}[MeasurableSpace α][MeasurableSpace β]{f : ι → α → β}{μ : Measureₓ α}{p : α → (ι → β) → Prop}
+variable {α β γ ι : Type _} [MeasurableSpace α] [MeasurableSpace β] {f : ι → α → β} {μ : Measureₓ α}
+  {p : α → (ι → β) → Prop}
 
 /-- If we have the additional hypothesis `∀ᵐ x ∂μ, p x (λ n, f n x)`, this is a measurable set
 whose complement has measure 0 such that for all `x ∈ ae_seq_set`, `f i x` is equal to

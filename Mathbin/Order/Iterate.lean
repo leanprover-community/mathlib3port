@@ -12,13 +12,13 @@ a circle homeomorphism.
 -/
 
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 open Function
 
 namespace Monotone
 
-variable[Preorderₓ α]{f : α → α}{x y : ℕ → α}
+variable [Preorderₓ α] {f : α → α} {x y : ℕ → α}
 
 /-!
 ### Comparison of two sequences
@@ -82,7 +82,7 @@ Then we specialize these two lemmas to the case `β = α`, `h = id`.
 -/
 
 
-variable{g : β → β}{h : β → α}
+variable {g : β → β} {h : β → α}
 
 open Function
 
@@ -116,7 +116,7 @@ namespace Function
 
 section Preorderₓ
 
-variable[Preorderₓ α]{f : α → α}
+variable [Preorderₓ α] {f : α → α}
 
 /-- If $x ≤ f x$ for all $x$ (we write this as `id ≤ f`), then the same is true for any iterate
 `f^[n]` of `f`. -/
@@ -152,7 +152,7 @@ namespace Commute
 
 section Preorderₓ
 
-variable[Preorderₓ α]{f g : α → α}
+variable [Preorderₓ α] {f g : α → α}
 
 theorem iterate_le_of_map_le (h : Commute f g) (hf : Monotone f) (hg : Monotone g) {x} (hx : f x ≤ g x) (n : ℕ) :
   (f^[n]) x ≤ (g^[n]) x :=
@@ -172,7 +172,7 @@ theorem iterate_pos_lt_of_map_lt' (h : Commute f g) (hf : StrictMono f) (hg : Mo
 
 end Preorderₓ
 
-variable[LinearOrderₓ α]{f g : α → α}
+variable [LinearOrderₓ α] {f g : α → α}
 
 theorem iterate_pos_lt_iff_map_lt (h : Commute f g) (hf : Monotone f) (hg : StrictMono g) {x n} (hn : 0 < n) :
   (f^[n]) x < (g^[n]) x ↔ f x < g x :=
@@ -210,7 +210,7 @@ end Function
 
 namespace Monotone
 
-variable[Preorderₓ α]{f : α → α}{x : α}
+variable [Preorderₓ α] {f : α → α} {x : α}
 
 /-- If `f` is a monotone map and `x ≤ f x` at some point `x`, then the iterates `f^[n] x` form
 a monotone sequence. -/
@@ -230,7 +230,7 @@ end Monotone
 
 namespace StrictMono
 
-variable[Preorderₓ α]{f : α → α}{x : α}
+variable [Preorderₓ α] {f : α → α} {x : α}
 
 /-- If `f` is a strictly monotone map and `x < f x` at some point `x`, then the iterates `f^[n] x`
 form a strictly monotone sequence. -/

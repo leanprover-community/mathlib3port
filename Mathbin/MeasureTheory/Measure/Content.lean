@@ -54,17 +54,17 @@ open_locale Nnreal Ennreal
 
 namespace MeasureTheory
 
-variable{G : Type w}[TopologicalSpace G]
+variable {G : Type w} [TopologicalSpace G]
 
 /-- A content is an additive function on compact sets taking values in `ℝ≥0`. It is a device
 from which one can define a measure. -/
-structure content(G : Type w)[TopologicalSpace G] where 
+structure content (G : Type w) [TopologicalSpace G] where 
   toFun : compacts G →  ℝ≥0 
   mono' : ∀ K₁ K₂ : compacts G, K₁.1 ⊆ K₂.1 → to_fun K₁ ≤ to_fun K₂ 
   sup_disjoint' : ∀ K₁ K₂ : compacts G, Disjoint K₁.1 K₂.1 → to_fun (K₁⊔K₂) = to_fun K₁+to_fun K₂ 
   sup_le' : ∀ K₁ K₂ : compacts G, to_fun (K₁⊔K₂) ≤ to_fun K₁+to_fun K₂
 
-instance  : Inhabited (content G) :=
+instance : Inhabited (content G) :=
   ⟨{ toFun := fun K => 0,
       mono' :=
         by 
@@ -79,12 +79,12 @@ instance  : Inhabited (content G) :=
 /-- Although the `to_fun` field of a content takes values in `ℝ≥0`, we register a coercion to
 functions taking values in `ℝ≥0∞` as most constructions below rely on taking suprs and infs, which
 is more convenient in a complete lattice, and aim at constructing a measure. -/
-instance  : CoeFun (content G) fun _ => compacts G → ℝ≥0∞ :=
+instance : CoeFun (content G) fun _ => compacts G → ℝ≥0∞ :=
   ⟨fun μ s => μ.to_fun s⟩
 
 namespace Content
 
-variable(μ : content G)
+variable (μ : content G)
 
 theorem apply_eq_coe_to_fun (K : compacts G) : μ K = μ.to_fun K :=
   rfl
@@ -215,7 +215,7 @@ by { have [] [] [":=", expr μ.inner_content_Sup_nat (λ i, ⟨U i, hU i⟩)],
   rwa ["[", expr opens.supr_def, "]"] ["at", ident this] }
 
 theorem inner_content_comap (f : G ≃ₜ G) (h : ∀ ⦃K : compacts G⦄, μ (K.map f f.continuous) = μ K) (U : opens G) :
-  μ.inner_content (U.comap f.continuous) = μ.inner_content U :=
+  μ.inner_content (opens.comap f.to_continuous_map U) = μ.inner_content U :=
   by 
     refine' supr_congr _ (compacts.equiv f).Surjective _ 
     intro K 
@@ -227,7 +227,7 @@ theorem inner_content_comap (f : G ≃ₜ G) (h : ∀ ⦃K : compacts G⦄, μ (
 @[toAdditive]
 theorem is_mul_left_invariant_inner_content [Groupₓ G] [TopologicalGroup G]
   (h : ∀ g : G {K : compacts G}, μ (K.map _$ continuous_mul_left g) = μ K) (g : G) (U : opens G) :
-  μ.inner_content (U.comap$ continuous_mul_left g) = μ.inner_content U :=
+  μ.inner_content (opens.comap (Homeomorph.mulLeft g).toContinuousMap U) = μ.inner_content U :=
   by 
     convert μ.inner_content_comap (Homeomorph.mulLeft g) (fun K => h g) U
 
@@ -248,7 +248,7 @@ begin
   rcases [expr compact_covered_by_mul_left_translates K.2 this, "with", "⟨", ident s, ",", ident hs, "⟩"],
   suffices [] [":", expr «expr ≤ »(μ K, «expr * »(s.card, μ.inner_content U))],
   { exact [expr «expr $ »(ennreal.mul_pos_iff.mp, hK.bot_lt.trans_le this).2] },
-  have [] [":", expr «expr ⊆ »(K.1, «expr↑ »(«expr⨆ , »((g «expr ∈ » s), «expr $ »(U.comap, continuous_mul_left g))))] [],
+  have [] [":", expr «expr ⊆ »(K.1, «expr↑ »(«expr⨆ , »((g «expr ∈ » s), opens.comap (homeomorph.mul_left g).to_continuous_map U)))] [],
   { simpa [] [] ["only"] ["[", expr opens.supr_def, ",", expr opens.coe_comap, ",", expr subtype.coe_mk, "]"] [] [] },
   refine [expr (μ.le_inner_content _ _ this).trans _],
   refine [expr (rel_supr_sum μ.inner_content μ.inner_content_empty ((«expr ≤ »)) μ.inner_content_Sup_nat _ _).trans _],
@@ -263,7 +263,7 @@ theorem inner_content_mono' ⦃U V : Set G⦄ (hU : IsOpen U) (hV : IsOpen V) (h
 protected def outer_measure : outer_measure G :=
   induced_outer_measure (fun U hU => μ.inner_content ⟨U, hU⟩) is_open_empty μ.inner_content_empty
 
-variable[T2Space G]
+variable [T2Space G]
 
 theorem outer_measure_opens (U : opens G) : μ.outer_measure U = μ.inner_content U :=
   induced_outer_measure_eq' (fun _ => is_open_Union) μ.inner_content_Union_nat μ.inner_content_mono U.2
@@ -349,7 +349,7 @@ theorem outer_measure_pos_of_is_mul_left_invariant [Groupₓ G] [TopologicalGrou
     convert μ.inner_content_pos_of_is_mul_left_invariant h3 K hK ⟨U, h1U⟩ h2U 
     exact μ.outer_measure_opens ⟨U, h1U⟩
 
-variable[S : MeasurableSpace G][BorelSpace G]
+variable [S : MeasurableSpace G] [BorelSpace G]
 
 include S
 

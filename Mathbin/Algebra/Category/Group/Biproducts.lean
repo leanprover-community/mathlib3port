@@ -41,7 +41,7 @@ def binary_product_limit_cone (G H : AddCommGroupₓₓ.{u}) : limits.limit_cone
 instance has_binary_product (G H : AddCommGroupₓₓ.{u}) : has_binary_product G H :=
   has_limit.mk (binary_product_limit_cone G H)
 
-instance  (G H : AddCommGroupₓₓ.{u}) : has_binary_biproduct G H :=
+instance (G H : AddCommGroupₓₓ.{u}) : has_binary_biproduct G H :=
   has_binary_biproduct.of_has_binary_product _ _
 
 /--
@@ -51,11 +51,11 @@ the cartesian product of the underlying types:
 noncomputable def biprod_iso_prod (G H : AddCommGroupₓₓ.{u}) : (G ⊞ H : AddCommGroupₓₓ) ≅ AddCommGroupₓₓ.of (G × H) :=
   is_limit.cone_point_unique_up_to_iso (binary_biproduct.is_limit G H) (binary_product_limit_cone G H).IsLimit
 
-example  (G H : AddCommGroupₓₓ.{u}) : has_colimit (pair G H) :=
+example (G H : AddCommGroupₓₓ.{u}) : has_colimit (pair G H) :=
   by 
     infer_instance
 
-variable{J : Type u}(F : discrete J ⥤ AddCommGroupₓₓ.{u})
+variable {J : Type u} (F : discrete J ⥤ AddCommGroupₓₓ.{u})
 
 namespace HasLimit
 
@@ -107,9 +107,9 @@ section
 
 open HasLimit
 
-variable[DecidableEq J][Fintype J]
+variable [DecidableEq J] [Fintype J]
 
-instance  (f : J → AddCommGroupₓₓ.{u}) : has_biproduct f :=
+instance (f : J → AddCommGroupₓₓ.{u}) : has_biproduct f :=
   has_biproduct.of_has_product _
 
 /--
@@ -122,7 +122,7 @@ noncomputable def biproduct_iso_pi (f : J → AddCommGroupₓₓ.{u}) :
 
 end 
 
-instance  : has_finite_biproducts AddCommGroupₓₓ :=
+instance : has_finite_biproducts AddCommGroupₓₓ :=
   ⟨fun J _ _ =>
       by 
         exact

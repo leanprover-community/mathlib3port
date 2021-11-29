@@ -50,9 +50,9 @@ open CategoryTheory.Limits.WalkingParallelPair
 
 namespace CategoryTheory.Limits
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 /-- A morphism `f` has a kernel if the functor `parallel_pair f 0` has a limit. -/
 abbrev has_kernel {X Y : C} (f : X ⟶ Y) : Prop :=
@@ -62,7 +62,7 @@ abbrev has_kernel {X Y : C} (f : X ⟶ Y) : Prop :=
 abbrev has_cokernel {X Y : C} (f : X ⟶ Y) : Prop :=
   has_colimit (parallel_pair f 0)
 
-variable{X Y : C}(f : X ⟶ Y)
+variable {X Y : C} (f : X ⟶ Y)
 
 section 
 
@@ -70,7 +70,7 @@ section
 abbrev kernel_fork :=
   fork f 0
 
-variable{f}
+variable {f}
 
 @[simp, reassoc]
 theorem kernel_fork.condition (s : kernel_fork f) : fork.ι s ≫ f = 0 :=
@@ -162,7 +162,7 @@ end
 
 section 
 
-variable[has_kernel f]
+variable [has_kernel f]
 
 /-- The kernel of a morphism, expressed as the equalizer with the 0 morphism. -/
 abbrev kernel : C :=
@@ -286,7 +286,7 @@ theorem kernel_iso_of_eq_trans {f g h : X ⟶ Y} [has_kernel f] [has_kernel g] [
     ext 
     simp [kernel_iso_of_eq]
 
-variable{f}
+variable {f}
 
 theorem kernel_not_epi_of_nonzero (w : f ≠ 0) : ¬epi (kernel.ι f) :=
   fun I =>
@@ -371,7 +371,7 @@ end
 
 section HasZeroObject
 
-variable[has_zero_object C]
+variable [has_zero_object C]
 
 open_locale ZeroObject
 
@@ -460,7 +460,7 @@ end Transport
 
 section 
 
-variable(X Y)
+variable (X Y)
 
 /-- The kernel morphism of a zero morphism is an isomorphism -/
 theorem kernel.ι_of_zero : is_iso (kernel.ι (0 : X ⟶ Y)) :=
@@ -474,7 +474,7 @@ section
 abbrev cokernel_cofork :=
   cofork f 0
 
-variable{f}
+variable {f}
 
 @[simp, reassoc]
 theorem cokernel_cofork.condition (s : cokernel_cofork f) : f ≫ cofork.π s = 0 :=
@@ -552,7 +552,7 @@ end
 
 section 
 
-variable[has_cokernel f]
+variable [has_cokernel f]
 
 /-- The cokernel of a morphism, expressed as the coequalizer with the 0 morphism. -/
 abbrev cokernel : C :=
@@ -676,7 +676,7 @@ theorem cokernel_iso_of_eq_trans {f g h : X ⟶ Y} [has_cokernel f] [has_cokerne
     ext 
     simp [cokernel_iso_of_eq]
 
-variable{f}
+variable {f}
 
 theorem cokernel_not_mono_of_nonzero (w : f ≠ 0) : ¬mono (cokernel.π f) :=
   fun I =>
@@ -763,7 +763,7 @@ end
 
 section HasZeroObject
 
-variable[has_zero_object C]
+variable [has_zero_object C]
 
 open_locale ZeroObject
 
@@ -828,7 +828,7 @@ end HasImage
 
 section 
 
-variable(X Y)
+variable (X Y)
 
 /-- The cokernel of a zero morphism is an isomorphism -/
 theorem cokernel.π_of_zero : is_iso (cokernel.π (0 : X ⟶ Y)) :=
@@ -838,7 +838,7 @@ end
 
 section HasZeroObject
 
-variable[has_zero_object C]
+variable [has_zero_object C]
 
 open_locale ZeroObject
 
@@ -919,9 +919,9 @@ end CategoryTheory.Limits
 
 namespace CategoryTheory.Limits
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 /-- `has_kernels` represents the existence of kernels for every morphism. -/
 class has_kernels : Prop where 
@@ -937,10 +937,10 @@ class has_cokernels : Prop where
 
 attribute [instance] has_kernels.has_limit has_cokernels.has_colimit
 
-instance (priority := 100)has_kernels_of_has_equalizers [has_equalizers C] : has_kernels C :=
+instance (priority := 100) has_kernels_of_has_equalizers [has_equalizers C] : has_kernels C :=
   {  }
 
-instance (priority := 100)has_cokernels_of_has_coequalizers [has_coequalizers C] : has_cokernels C :=
+instance (priority := 100) has_cokernels_of_has_coequalizers [has_coequalizers C] : has_cokernels C :=
   {  }
 
 end CategoryTheory.Limits

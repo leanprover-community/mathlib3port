@@ -34,7 +34,7 @@ theorem exists_forall_ge_and {α} [LinearOrderₓ α] {P Q : α → Prop} :
 
 section 
 
-variable{α : Type _}[LinearOrderedField α]{β : Type _}[Ringₓ β](abv : β → α)[IsAbsoluteValue abv]
+variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] (abv : β → α) [IsAbsoluteValue abv]
 
 theorem rat_add_continuous_lemma {ε : α} (ε0 : 0 < ε) :
   ∃ (δ : _)(_ : δ > 0), ∀ {a₁ a₂ b₁ b₂ : β}, abv (a₁ - b₁) < δ → abv (a₂ - b₂) < δ → abv ((a₁+a₂) - b₁+b₂) < ε :=
@@ -92,7 +92,7 @@ def IsCauSeq {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] (a
 
 namespace IsCauSeq
 
-variable{α : Type _}[LinearOrderedField α]{β : Type _}[Ringₓ β]{abv : β → α}[IsAbsoluteValue abv]{f : ℕ → β}
+variable {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] {abv : β → α} [IsAbsoluteValue abv] {f : ℕ → β}
 
 @[nolint ge_or_gt]
 theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε :=
@@ -116,13 +116,13 @@ def CauSeq {α : Type _} [LinearOrderedField α] (β : Type _) [Ringₓ β] (abv
 
 namespace CauSeq
 
-variable{α : Type _}[LinearOrderedField α]
+variable {α : Type _} [LinearOrderedField α]
 
 section Ringₓ
 
-variable{β : Type _}[Ringₓ β]{abv : β → α}
+variable {β : Type _} [Ringₓ β] {abv : β → α}
 
-instance  : CoeFun (CauSeq β abv) fun _ => ℕ → β :=
+instance : CoeFun (CauSeq β abv) fun _ => ℕ → β :=
   ⟨Subtype.val⟩
 
 @[simp]
@@ -146,7 +146,7 @@ def of_eq (f : CauSeq β abv) (g : ℕ → β) (e : ∀ i, f i = g i) : CauSeq �
       by 
         rw [show g = f from (funext e).symm] <;> exact f.cauchy⟩
 
-variable[IsAbsoluteValue abv]
+variable [IsAbsoluteValue abv]
 
 @[nolint ge_or_gt]
 theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε :=
@@ -179,7 +179,7 @@ theorem bounded' (f : CauSeq β abv) (x : α) : ∃ (r : _)(_ : r > x), ∀ i, a
   let ⟨r, h⟩ := f.bounded
   ⟨max r (x+1), lt_of_lt_of_leₓ (lt_add_one _) (le_max_rightₓ _ _), fun i => lt_of_lt_of_leₓ (h i) (le_max_leftₓ _ _)⟩
 
-instance  : Add (CauSeq β abv) :=
+instance : Add (CauSeq β abv) :=
   ⟨fun f g =>
       ⟨fun i => (f i+g i : β),
         fun ε ε0 =>
@@ -194,7 +194,7 @@ instance  : Add (CauSeq β abv) :=
 theorem add_apply (f g : CauSeq β abv) (i : ℕ) : (f+g) i = f i+g i :=
   rfl
 
-variable(abv)
+variable (abv)
 
 /-- The constant Cauchy sequence. -/
 def const (x : β) : CauSeq β abv :=
@@ -205,7 +205,7 @@ def const (x : β) : CauSeq β abv :=
           by 
             simpa [abv_zero abv] using ε0⟩⟩
 
-variable{abv}
+variable {abv}
 
 local notation "const" => const abv
 
@@ -216,13 +216,13 @@ theorem const_apply (x : β) (i : ℕ) : (const x : ℕ → β) i = x :=
 theorem const_inj {x y : β} : (const x : CauSeq β abv) = const y ↔ x = y :=
   ⟨fun h => congr_argₓ (fun f : CauSeq β abv => (f : ℕ → β) 0) h, congr_argₓ _⟩
 
-instance  : HasZero (CauSeq β abv) :=
+instance : HasZero (CauSeq β abv) :=
   ⟨const 0⟩
 
-instance  : HasOne (CauSeq β abv) :=
+instance : HasOne (CauSeq β abv) :=
   ⟨const 1⟩
 
-instance  : Inhabited (CauSeq β abv) :=
+instance : Inhabited (CauSeq β abv) :=
   ⟨0⟩
 
 @[simp]
@@ -240,7 +240,7 @@ theorem const_zero : const 0 = 0 :=
 theorem const_add (x y : β) : const (x+y) = const x+const y :=
   ext$ fun i => rfl
 
-instance  : Mul (CauSeq β abv) :=
+instance : Mul (CauSeq β abv) :=
   ⟨fun f g =>
       ⟨fun i => (f i*g i : β),
         fun ε ε0 =>
@@ -260,7 +260,7 @@ theorem mul_apply (f g : CauSeq β abv) (i : ℕ) : (f*g) i = f i*g i :=
 theorem const_mul (x y : β) : const (x*y) = const x*const y :=
   ext$ fun i => rfl
 
-instance  : Neg (CauSeq β abv) :=
+instance : Neg (CauSeq β abv) :=
   ⟨fun f =>
       of_eq (const (-1)*f) (fun x => -f x)
         fun i =>
@@ -274,7 +274,7 @@ theorem neg_apply (f : CauSeq β abv) i : (-f) i = -f i :=
 theorem const_neg (x : β) : const (-x) = -const x :=
   ext$ fun i => rfl
 
-instance  : Sub (CauSeq β abv) :=
+instance : Sub (CauSeq β abv) :=
   ⟨fun f g =>
       of_eq (f+-g) (fun x => f x - g x)
         fun i =>
@@ -288,7 +288,7 @@ theorem sub_apply (f g : CauSeq β abv) (i : ℕ) : (f - g) i = f i - g i :=
 theorem const_sub (x y : β) : const (x - y) = const x - const y :=
   ext$ fun i => rfl
 
-instance  : Ringₓ (CauSeq β abv) :=
+instance : Ringₓ (CauSeq β abv) :=
   by 
     refineStruct
         { neg := Neg.neg, add := ·+·, zero := (0 : CauSeq β abv), mul := ·*·, one := 1, sub := Sub.sub,
@@ -299,7 +299,7 @@ instance  : Ringₓ (CauSeq β abv) :=
             rfl <;>
           apply ext <;> simp [mul_addₓ, mul_assocₓ, add_mulₓ, add_commₓ, add_left_commₓ, sub_eq_add_neg]
 
-instance  {β : Type _} [CommRingₓ β] {abv : β → α} [IsAbsoluteValue abv] : CommRingₓ (CauSeq β abv) :=
+instance {β : Type _} [CommRingₓ β] {abv : β → α} [IsAbsoluteValue abv] : CommRingₓ (CauSeq β abv) :=
   { CauSeq.ring with
     mul_comm :=
       by 
@@ -492,7 +492,7 @@ end Ringₓ
 
 section CommRingₓ
 
-variable{β : Type _}[CommRingₓ β]{abv : β → α}[IsAbsoluteValue abv]
+variable {β : Type _} [CommRingₓ β] {abv : β → α} [IsAbsoluteValue abv]
 
 theorem mul_equiv_zero' (g : CauSeq _ abv) {f : CauSeq _ abv} (hf : f ≈ 0) : (f*g) ≈ 0 :=
   by 
@@ -502,7 +502,7 @@ end CommRingₓ
 
 section IsDomain
 
-variable{β : Type _}[Ringₓ β][IsDomain β](abv : β → α)[IsAbsoluteValue abv]
+variable {β : Type _} [Ringₓ β] [IsDomain β] (abv : β → α) [IsAbsoluteValue abv]
 
 theorem one_not_equiv_zero : ¬const abv 1 ≈ const abv 0 :=
   fun h =>
@@ -524,7 +524,7 @@ end IsDomain
 
 section Field
 
-variable{β : Type _}[Field β]{abv : β → α}[IsAbsoluteValue abv]
+variable {β : Type _} [Field β] {abv : β → α} [IsAbsoluteValue abv]
 
 theorem inv_aux {f : CauSeq β abv} (hf : ¬lim_zero f) : ∀ ε _ : ε > 0, ∃ i, ∀ j _ : j ≥ i, abv (f j⁻¹ - f i⁻¹) < ε
 | ε, ε0 =>
@@ -625,10 +625,10 @@ begin
     exact [expr le_trans (le_of_lt «expr $ »(abs_lt.1, h₂ _ ij).2) h₁] }
 end
 
-instance  : LT (CauSeq α abs) :=
+instance : LT (CauSeq α abs) :=
   ⟨fun f g => Pos (g - f)⟩
 
-instance  : LE (CauSeq α abs) :=
+instance : LE (CauSeq α abs) :=
   ⟨fun f g => f < g ∨ f ≈ g⟩
 
 theorem lt_of_lt_of_eq {f g h : CauSeq α abs} (fg : f < g) (gh : g ≈ h) : f < h :=
@@ -655,7 +655,7 @@ theorem le_of_eq_of_le {f g h : CauSeq α abs} (hfg : f ≈ g) (hgh : g ≤ h) :
 theorem le_of_le_of_eq {f g h : CauSeq α abs} (hfg : f ≤ g) (hgh : g ≈ h) : f ≤ h :=
   hfg.elim (fun h => Or.inl (CauSeq.lt_of_lt_of_eq h hgh)) fun h => Or.inr (Setoidₓ.trans h hgh)
 
-instance  : Preorderₓ (CauSeq α abs) :=
+instance : Preorderₓ (CauSeq α abs) :=
   { lt := · < ·, le := fun f g => f < g ∨ f ≈ g, le_refl := fun f => Or.inr (Setoidₓ.refl _),
     le_trans :=
       fun f g h fg =>

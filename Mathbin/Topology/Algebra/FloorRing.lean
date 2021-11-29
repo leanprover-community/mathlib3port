@@ -23,7 +23,7 @@ open Filter Function Int Set
 
 open_locale TopologicalSpace
 
-variable{α : Type _}[LinearOrderedRing α][FloorRing α]
+variable {α : Type _} [LinearOrderedRing α] [FloorRing α]
 
 theorem tendsto_floor_at_top : tendsto (floor : α → ℤ) at_top at_top :=
   floor_mono.tendsto_at_top_at_top$
@@ -47,7 +47,7 @@ theorem tendsto_ceil_at_bot : tendsto (ceil : α → ℤ) at_bot at_bot :=
           rw [ceil_coe]
           exact (sub_one_lt _).le⟩
 
-variable[TopologicalSpace α]
+variable [TopologicalSpace α]
 
 theorem continuous_on_floor (n : ℤ) : ContinuousOn (fun x => floor x : α → α) (Ico n (n+1) : Set α) :=
   (continuous_on_congr$ floor_eq_on_Ico' n).mpr continuous_on_const

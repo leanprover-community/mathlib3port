@@ -153,7 +153,7 @@ end
 
 section Fibrec
 
-variable{α : Type _}[CommSemiringₓ α]
+variable {α : Type _} [CommSemiringₓ α]
 
 -- error in Data.Real.GoldenRatio: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 /-- The recurrence relation satisfied by the Fibonacci sequence. -/ def fib_rec : linear_recurrence α :=

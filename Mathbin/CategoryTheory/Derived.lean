@@ -44,11 +44,11 @@ universe v u
 
 namespace CategoryTheory
 
-variable{C : Type u}[category.{v} C]{D : Type _}[category D]
+variable {C : Type u} [category.{v} C] {D : Type _} [category D]
 
-variable[preadditive C][has_zero_object C][has_equalizers C][has_images C][has_projective_resolutions C]
+variable [preadditive C] [has_zero_object C] [has_equalizers C] [has_images C] [has_projective_resolutions C]
 
-variable[preadditive D][has_zero_object D][has_equalizers D][has_cokernels D][has_images D][has_image_maps D]
+variable [preadditive D] [has_zero_object D] [has_equalizers D] [has_cokernels D] [has_images D] [has_image_maps D]
 
 /-- The left derived functors of an additive functor. -/
 def functor.left_derived (F : C ⥤ D) [F.additive] (n : ℕ) : C ⥤ D :=

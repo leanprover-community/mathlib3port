@@ -7,7 +7,7 @@ import Mathbin.Data.Finset.Basic
 
 universe u v w
 
-variable{α : Type u}
+variable {α : Type u}
 
 theorem Directed.finset_le {r : α → α → Prop} [IsTrans α r] {ι} [hι : Nonempty ι] {f : ι → α} (D : Directed r f)
   (s : Finset ι) : ∃ z, ∀ i _ : i ∈ s, r (f i) (f z) :=

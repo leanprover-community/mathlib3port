@@ -11,7 +11,7 @@ to be the implication and equivalence as operations on a boolean algebra. More p
 -/
 
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 namespace Lattice
 
@@ -36,7 +36,7 @@ theorem biimp_eq_iff (p q : Prop) : p ⇔ₒ q = (p ↔ q) :=
   by 
     simp [biimp, ←iff_def]
 
-variable[BooleanAlgebra α]{a b c d : α}
+variable [BooleanAlgebra α] {a b c d : α}
 
 @[simp]
 theorem compl_imp (a b : α) : «expr ᶜ» (a ⇒ₒ b) = a \ b :=

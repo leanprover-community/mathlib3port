@@ -49,68 +49,15 @@ open_locale TopologicalSpace Manifold
 /-! ### Definition of smooth functions between manifolds -/
 
 
-variable{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I :
-    ModelWithCorners 𝕜 E
-      H){M :
-    Type
-      _}[TopologicalSpace
-      M][ChartedSpace H
-      M][Is :
-    SmoothManifoldWithCorners I
-      M]{E' :
-    Type
-      _}[NormedGroup
-      E'][NormedSpace 𝕜
-      E']{H' :
-    Type
-      _}[TopologicalSpace
-      H'](I' :
-    ModelWithCorners 𝕜 E'
-      H'){M' :
-    Type
-      _}[TopologicalSpace
-      M'][ChartedSpace H'
-      M'][I's :
-    SmoothManifoldWithCorners I'
-      M']{F :
-    Type
-      _}[NormedGroup
-      F][NormedSpace 𝕜
-      F]{G :
-    Type
-      _}[TopologicalSpace
-      G]{J :
-    ModelWithCorners 𝕜 F
-      G}{N :
-    Type
-      _}[TopologicalSpace
-      N][ChartedSpace G
-      N][Js :
-    SmoothManifoldWithCorners J
-      N]{F' :
-    Type
-      _}[NormedGroup
-      F'][NormedSpace 𝕜
-      F']{G' :
-    Type
-      _}[TopologicalSpace
-      G']{J' :
-    ModelWithCorners 𝕜 F'
-      G'}{N' :
-    Type
-      _}[TopologicalSpace
-      N'][ChartedSpace G'
-      N'][J's : SmoothManifoldWithCorners J' N']{f f₁ : M → M'}{s s₁ t : Set M}{x : M}{m n : WithTop ℕ}
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E] {H : Type _}
+  [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
+  [Is : SmoothManifoldWithCorners I M] {E' : Type _} [NormedGroup E'] [NormedSpace 𝕜 E'] {H' : Type _}
+  [TopologicalSpace H'] (I' : ModelWithCorners 𝕜 E' H') {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
+  [I's : SmoothManifoldWithCorners I' M'] {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F] {G : Type _}
+  [TopologicalSpace G] {J : ModelWithCorners 𝕜 F G} {N : Type _} [TopologicalSpace N] [ChartedSpace G N]
+  [Js : SmoothManifoldWithCorners J N] {F' : Type _} [NormedGroup F'] [NormedSpace 𝕜 F'] {G' : Type _}
+  [TopologicalSpace G'] {J' : ModelWithCorners 𝕜 F' G'} {N' : Type _} [TopologicalSpace N'] [ChartedSpace G' N']
+  [J's : SmoothManifoldWithCorners J' N'] {f f₁ : M → M'} {s s₁ t : Set M} {x : M} {m n : WithTop ℕ}
 
 /-- Property in the model space of a model with corners of being `C^n` within at set at a point,
 when read in the model vector space. This property will be lifted to manifolds to define smooth
@@ -243,7 +190,7 @@ def Smooth (f : M → M') :=
 /-! ### Basic properties of smooth functions between manifolds -/
 
 
-variable{I I'}
+variable {I I'}
 
 theorem TimesContMdiff.smooth (h : TimesContMdiff I I' ⊤ f) : Smooth I I' f :=
   h
@@ -775,14 +722,8 @@ theorem times_cont_mdiff_of_locally_times_cont_mdiff_on (h : ∀ x, ∃ u, IsOpe
 
 section Composition
 
-variable{E'' :
-    Type
-      _}[NormedGroup
-      E''][NormedSpace 𝕜
-      E'']{H'' :
-    Type
-      _}[TopologicalSpace
-      H'']{I'' : ModelWithCorners 𝕜 E'' H''}{M'' : Type _}[TopologicalSpace M''][ChartedSpace H'' M'']
+variable {E'' : Type _} [NormedGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
+  {I'' : ModelWithCorners 𝕜 E'' H''} {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
 
 -- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The composition of `C^n` functions within domains at points is `C^n`. -/
@@ -867,7 +808,7 @@ end Composition
 
 section Atlas
 
-variable{e : LocalHomeomorph M H}
+variable {e : LocalHomeomorph M H}
 
 include Is
 
@@ -933,7 +874,7 @@ end id
 
 section id
 
-variable{c : M'}
+variable {c : M'}
 
 theorem times_cont_mdiff_const : TimesContMdiff I I' n fun x : M => c :=
   by 
@@ -1352,7 +1293,7 @@ end tangentMap
 
 namespace BasicSmoothBundleCore
 
-variable(Z : BasicSmoothBundleCore I M E')
+variable (Z : BasicSmoothBundleCore I M E')
 
 theorem times_cont_mdiff_proj : TimesContMdiff (I.prod 𝓘(𝕜, E')) I n Z.to_topological_fiber_bundle_core.proj :=
   by 
@@ -1465,13 +1406,13 @@ theorem smooth_within_at_proj {s : Set (TangentBundle I M)} {p : TangentBundle I
   SmoothWithinAt I.tangent I (proj I M) s p :=
   BasicSmoothBundleCore.smooth_within_at_proj _
 
-variable(I M)
+variable (I M)
 
 /-- The zero section of the tangent bundle -/
 def zero_section : M → TangentBundle I M :=
   fun x => ⟨x, 0⟩
 
-variable{I M}
+variable {I M}
 
 theorem smooth_zero_section : Smooth I I.tangent (zero_section I M) :=
   by 
@@ -1685,58 +1626,58 @@ end Projections
 
 section prod_mapₓ
 
-variable{g : N → N'}{r : Set N}{y : N}
+variable {g : N → N'} {r : Set N} {y : N}
 
 /-- The product map of two `C^n` functions within a set at a point is `C^n`
 within the product set at the product point. -/
 theorem TimesContMdiffWithinAt.prod_map' {p : M × N} (hf : TimesContMdiffWithinAt I I' n f s p.1)
   (hg : TimesContMdiffWithinAt J J' n g r p.2) :
-  TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.mapₓ f g) (s.prod r) p :=
+  TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s.prod r) p :=
   (hf.comp p times_cont_mdiff_within_at_fst (prod_subset_preimage_fst _ _)).prod_mk$
     hg.comp p times_cont_mdiff_within_at_snd (prod_subset_preimage_snd _ _)
 
 theorem TimesContMdiffWithinAt.prod_map (hf : TimesContMdiffWithinAt I I' n f s x)
   (hg : TimesContMdiffWithinAt J J' n g r y) :
-  TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.mapₓ f g) (s.prod r) (x, y) :=
+  TimesContMdiffWithinAt (I.prod J) (I'.prod J') n (Prod.map f g) (s.prod r) (x, y) :=
   TimesContMdiffWithinAt.prod_map' hf hg
 
 theorem TimesContMdiffAt.prod_map (hf : TimesContMdiffAt I I' n f x) (hg : TimesContMdiffAt J J' n g y) :
-  TimesContMdiffAt (I.prod J) (I'.prod J') n (Prod.mapₓ f g) (x, y) :=
+  TimesContMdiffAt (I.prod J) (I'.prod J') n (Prod.map f g) (x, y) :=
   by 
     rw [←times_cont_mdiff_within_at_univ] at *
     convert hf.prod_map hg 
     exact univ_prod_univ.symm
 
 theorem TimesContMdiffAt.prod_map' {p : M × N} (hf : TimesContMdiffAt I I' n f p.1)
-  (hg : TimesContMdiffAt J J' n g p.2) : TimesContMdiffAt (I.prod J) (I'.prod J') n (Prod.mapₓ f g) p :=
+  (hg : TimesContMdiffAt J J' n g p.2) : TimesContMdiffAt (I.prod J) (I'.prod J') n (Prod.map f g) p :=
   by 
     rcases p with ⟨⟩
     exact hf.prod_map hg
 
 theorem TimesContMdiffOn.prod_map (hf : TimesContMdiffOn I I' n f s) (hg : TimesContMdiffOn J J' n g r) :
-  TimesContMdiffOn (I.prod J) (I'.prod J') n (Prod.mapₓ f g) (s.prod r) :=
+  TimesContMdiffOn (I.prod J) (I'.prod J') n (Prod.map f g) (s.prod r) :=
   (hf.comp times_cont_mdiff_on_fst (prod_subset_preimage_fst _ _)).prod_mk$
     hg.comp times_cont_mdiff_on_snd (prod_subset_preimage_snd _ _)
 
 theorem TimesContMdiff.prod_map (hf : TimesContMdiff I I' n f) (hg : TimesContMdiff J J' n g) :
-  TimesContMdiff (I.prod J) (I'.prod J') n (Prod.mapₓ f g) :=
+  TimesContMdiff (I.prod J) (I'.prod J') n (Prod.map f g) :=
   by 
     intro p 
     exact (hf p.1).prod_map' (hg p.2)
 
 theorem SmoothWithinAt.prod_map (hf : SmoothWithinAt I I' f s x) (hg : SmoothWithinAt J J' g r y) :
-  SmoothWithinAt (I.prod J) (I'.prod J') (Prod.mapₓ f g) (s.prod r) (x, y) :=
+  SmoothWithinAt (I.prod J) (I'.prod J') (Prod.map f g) (s.prod r) (x, y) :=
   hf.prod_map hg
 
 theorem SmoothAt.prod_map (hf : SmoothAt I I' f x) (hg : SmoothAt J J' g y) :
-  SmoothAt (I.prod J) (I'.prod J') (Prod.mapₓ f g) (x, y) :=
+  SmoothAt (I.prod J) (I'.prod J') (Prod.map f g) (x, y) :=
   hf.prod_map hg
 
 theorem SmoothOn.prod_map (hf : SmoothOn I I' f s) (hg : SmoothOn J J' g r) :
-  SmoothOn (I.prod J) (I'.prod J') (Prod.mapₓ f g) (s.prod r) :=
+  SmoothOn (I.prod J) (I'.prod J') (Prod.map f g) (s.prod r) :=
   hf.prod_map hg
 
-theorem Smooth.prod_map (hf : Smooth I I' f) (hg : Smooth J J' g) : Smooth (I.prod J) (I'.prod J') (Prod.mapₓ f g) :=
+theorem Smooth.prod_map (hf : Smooth I I' f) (hg : Smooth J J' g) : Smooth (I.prod J) (I'.prod J') (Prod.map f g) :=
   hf.prod_map hg
 
 end prod_mapₓ
@@ -1751,7 +1692,8 @@ use `𝓘(𝕜, Π i, F i)` as the model space.
 -/
 
 
-variable{ι : Type _}[Fintype ι]{Fi : ι → Type _}[∀ i, NormedGroup (Fi i)][∀ i, NormedSpace 𝕜 (Fi i)]{φ : M → ∀ i, Fi i}
+variable {ι : Type _} [Fintype ι] {Fi : ι → Type _} [∀ i, NormedGroup (Fi i)] [∀ i, NormedSpace 𝕜 (Fi i)]
+  {φ : M → ∀ i, Fi i}
 
 theorem times_cont_mdiff_within_at_pi_space :
   TimesContMdiffWithinAt I 𝓘(𝕜, ∀ i, Fi i) n φ s x ↔ ∀ i, TimesContMdiffWithinAt I 𝓘(𝕜, Fi i) n (fun x => φ x i) s x :=
@@ -1796,7 +1738,7 @@ theorem ContinuousLinearMap.times_cont_mdiff (L : E →L[𝕜] F) : TimesContMdi
 /-! ### Smoothness of standard operations -/
 
 
-variable{V : Type _}[NormedGroup V][NormedSpace 𝕜 V]
+variable {V : Type _} [NormedGroup V] [NormedSpace 𝕜 V]
 
 /-- On any vector space, multiplication by a scalar is a smooth operation. -/
 theorem smooth_smul : Smooth (𝓘(𝕜).Prod 𝓘(𝕜, V)) 𝓘(𝕜, V) fun p : 𝕜 × V => p.1 • p.2 :=

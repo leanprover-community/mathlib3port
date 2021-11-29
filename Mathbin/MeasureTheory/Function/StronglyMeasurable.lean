@@ -55,7 +55,7 @@ local infixr:25 " →ₛ " => simple_func
 
 section Definitions
 
-variable{α β : Type _}[TopologicalSpace β]
+variable {α β : Type _} [TopologicalSpace β]
 
 /-- A function is `strongly_measurable` if it is the limit of simple functions. -/
 def strongly_measurable [MeasurableSpace α] (f : α → β) : Prop :=
@@ -96,7 +96,7 @@ end
 
 namespace StronglyMeasurable
 
-variable{α β : Type _}{f g : α → β}
+variable {α β : Type _} {f g : α → β}
 
 /-- A sequence of simple functions such that `∀ x, tendsto (λ n, hf.approx n x) at_top (𝓝 (f x))`.
 That property is given by `strongly_measurable.tendsto_approx`. -/
@@ -182,11 +182,11 @@ protected theorem fin_strongly_measurable [TopologicalSpace β] [HasZero β] {m0
 /-- A strongly measurable function is measurable. -/
 protected theorem Measurable [MeasurableSpace α] [MetricSpace β] [MeasurableSpace β] [BorelSpace β]
   (hf : strongly_measurable f) : Measurable f :=
-  measurable_of_tendsto_metric (fun n => (hf.approx n).Measurable) (tendsto_pi.mpr hf.tendsto_approx)
+  measurable_of_tendsto_metric (fun n => (hf.approx n).Measurable) (tendsto_pi_nhds.mpr hf.tendsto_approx)
 
 section Arithmetic
 
-variable[MeasurableSpace α][TopologicalSpace β]
+variable [MeasurableSpace α] [TopologicalSpace β]
 
 protected theorem add [Add β] [HasContinuousAdd β] (hf : strongly_measurable f) (hg : strongly_measurable g) :
   strongly_measurable (f+g) :=
@@ -205,7 +205,7 @@ end StronglyMeasurable
 
 section SecondCountableStronglyMeasurable
 
-variable{α β : Type _}[MeasurableSpace α][MeasurableSpace β]{f : α → β}
+variable {α β : Type _} [MeasurableSpace α] [MeasurableSpace β] {f : α → β}
 
 /-- In a space with second countable topology, measurable implies strongly measurable. -/
 theorem _root_.measurable.strongly_measurable [EmetricSpace β] [OpensMeasurableSpace β] [second_countable_topology β]
@@ -235,7 +235,7 @@ end SecondCountableStronglyMeasurable
 
 namespace FinStronglyMeasurable
 
-variable{α β : Type _}[HasZero β]{m0 : MeasurableSpace α}{μ : Measureₓ α}{f : α → β}
+variable {α β : Type _} [HasZero β] {m0 : MeasurableSpace α} {μ : Measureₓ α} {f : α → β}
 
 theorem ae_fin_strongly_measurable [TopologicalSpace β] (hf : fin_strongly_measurable f μ) :
   ae_fin_strongly_measurable f μ :=
@@ -243,7 +243,7 @@ theorem ae_fin_strongly_measurable [TopologicalSpace β] (hf : fin_strongly_meas
 
 section sequence
 
-variable[TopologicalSpace β](hf : fin_strongly_measurable f μ)
+variable [TopologicalSpace β] (hf : fin_strongly_measurable f μ)
 
 /-- A sequence of simple functions such that `∀ x, tendsto (λ n, hf.approx n x) at_top (𝓝 (f x))`
 and `∀ n, μ (support (hf.approx n)) < ∞`. These properties are given by
@@ -292,7 +292,7 @@ end
 /-- A finitely strongly measurable function is measurable. -/
 protected theorem Measurable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] (hf : fin_strongly_measurable f μ) :
   Measurable f :=
-  measurable_of_tendsto_metric (fun n => (hf.some n).Measurable) (tendsto_pi.mpr hf.some_spec.2)
+  measurable_of_tendsto_metric (fun n => (hf.some n).Measurable) (tendsto_pi_nhds.mpr hf.some_spec.2)
 
 protected theorem add {β} [TopologicalSpace β] [AddMonoidₓ β] [HasContinuousAdd β] {f g : α → β}
   (hf : fin_strongly_measurable f μ) (hg : fin_strongly_measurable g μ) : fin_strongly_measurable (f+g) μ :=
@@ -331,7 +331,7 @@ theorem fin_strongly_measurable_iff_strongly_measurable_and_exists_set_sigma_fin
 
 namespace AeFinStronglyMeasurable
 
-variable{α β : Type _}{m : MeasurableSpace α}{μ : Measureₓ α}[TopologicalSpace β]{f g : α → β}
+variable {α β : Type _} {m : MeasurableSpace α} {μ : Measureₓ α} [TopologicalSpace β] {f g : α → β}
 
 protected theorem add [AddMonoidₓ β] [HasContinuousAdd β] (hf : ae_fin_strongly_measurable f μ)
   (hg : ae_fin_strongly_measurable g μ) : ae_fin_strongly_measurable (f+g) μ :=
@@ -345,7 +345,7 @@ protected theorem sub [AddGroupₓ β] [HasContinuousSub β] (hf : ae_fin_strong
   (hg : ae_fin_strongly_measurable g μ) : ae_fin_strongly_measurable (f - g) μ :=
   ⟨hf.some - hg.some, hf.some_spec.1.sub hg.some_spec.1, hf.some_spec.2.sub hg.some_spec.2⟩
 
-variable[HasZero β][T2Space β]
+variable [HasZero β] [T2Space β]
 
 theorem exists_set_sigma_finite (hf : ae_fin_strongly_measurable f μ) :
   ∃ t, MeasurableSet t ∧ f =ᵐ[μ.restrict («expr ᶜ» t)] 0 ∧ sigma_finite (μ.restrict t) :=
@@ -372,12 +372,8 @@ instance sigma_finite_restrict (hf : ae_fin_strongly_measurable f μ) : sigma_fi
 
 end AeFinStronglyMeasurable
 
-variable{α G :
-    Type
-      _}{p :
-    ℝ≥0∞}{m m0 :
-    MeasurableSpace
-      α}{μ : Measureₓ α}[NormedGroup G][MeasurableSpace G][BorelSpace G][second_countable_topology G]{f : α → G}
+variable {α G : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Measureₓ α} [NormedGroup G] [MeasurableSpace G]
+  [BorelSpace G] [second_countable_topology G] {f : α → G}
 
 /-- In a space with second countable topology and a sigma-finite measure, `fin_strongly_measurable`
   and `measurable` are equivalent. -/

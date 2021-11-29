@@ -30,9 +30,9 @@ namespace CategoryTheory
 
 open Limits
 
-variable{J : Type v}
+variable {J : Type v}
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /--
 The functor `G : D ⥤ C` satisfies the *solution set condition* if for every `A : C`, there is a
@@ -48,11 +48,11 @@ def solution_set_condition {D : Type u} [category.{v} D] (G : D ⥤ C) : Prop :=
     ∃ (ι : Type v)(B : ι → D)(f : ∀ i : ι, A ⟶ G.obj (B i)),
       ∀ X h : A ⟶ G.obj X, ∃ (i : ι)(g : B i ⟶ X), f i ≫ G.map g = h
 
-variable{D : Type u}[category.{v} D]
+variable {D : Type u} [category.{v} D]
 
 section GeneralAdjointFunctorTheorem
 
-variable(G : D ⥤ C)
+variable (G : D ⥤ C)
 
 /-- If `G : D ⥤ C` is a right adjoint it satisfies the solution set condition.  -/
 theorem solution_set_condition_of_is_right_adjoint [is_right_adjoint G] : solution_set_condition G :=

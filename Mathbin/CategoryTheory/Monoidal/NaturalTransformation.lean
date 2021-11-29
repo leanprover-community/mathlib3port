@@ -25,7 +25,8 @@ namespace CategoryTheory
 
 open MonoidalCategory
 
-variable{C : Type u₁}[category.{v₁} C][monoidal_category.{v₁} C]{D : Type u₂}[category.{v₂} D][monoidal_category.{v₂} D]
+variable {C : Type u₁} [category.{v₁} C] [monoidal_category.{v₁} C] {D : Type u₂} [category.{v₂} D]
+  [monoidal_category.{v₂} D]
 
 /--
 A monoidal natural transformation is a natural transformation between (lax) monoidal functors
@@ -33,7 +34,7 @@ additionally satisfying:
 `F.μ X Y ≫ app (X ⊗ Y) = (app X ⊗ app Y) ≫ G.μ X Y`
 -/
 @[ext]
-structure monoidal_nat_trans(F G : lax_monoidal_functor C D) extends nat_trans F.to_functor G.to_functor where 
+structure monoidal_nat_trans (F G : lax_monoidal_functor C D) extends nat_trans F.to_functor G.to_functor where 
   unit' : F.ε ≫ app (𝟙_ C) = G.ε :=  by 
   runTac 
     obviously 
@@ -58,7 +59,7 @@ The identity monoidal natural transformation.
 def id (F : lax_monoidal_functor C D) : monoidal_nat_trans F F :=
   { 𝟙 F.to_functor with  }
 
-instance  (F : lax_monoidal_functor C D) : Inhabited (monoidal_nat_trans F F) :=
+instance (F : lax_monoidal_functor C D) : Inhabited (monoidal_nat_trans F F) :=
   ⟨id F⟩
 
 /--
@@ -85,7 +86,7 @@ theorem comp_to_nat_trans {F G H : monoidal_functor C D} {α : F ⟶ G} {β : G 
   (α ≫ β).toNatTrans = @category_struct.comp (C ⥤ D) _ _ _ _ α.to_nat_trans β.to_nat_trans :=
   rfl
 
-variable{E : Type u₃}[category.{v₃} E][monoidal_category.{v₃} E]
+variable {E : Type u₃} [category.{v₃} E] [monoidal_category.{v₃} E]
 
 /--
 Horizontal composition of monoidal natural transformations.
@@ -110,7 +111,7 @@ end MonoidalNatTrans
 
 namespace MonoidalNatIso
 
-variable{F G : lax_monoidal_functor C D}
+variable {F G : lax_monoidal_functor C D}
 
 /--
 Construct a monoidal natural isomorphism from object level isomorphisms,

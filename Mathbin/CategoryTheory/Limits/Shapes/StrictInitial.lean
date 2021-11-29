@@ -41,7 +41,7 @@ namespace Limits
 
 open Category
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 /--
 We say `C` has strict initial objects if every initial object is strict, ie given any morphism
@@ -53,11 +53,11 @@ initial objects exist.
 class has_strict_initial_objects : Prop where 
   out : ∀ {I A : C} f : A ⟶ I, is_initial I → is_iso f
 
-variable{C}
+variable {C}
 
 section 
 
-variable[has_strict_initial_objects C]{I : C}
+variable [has_strict_initial_objects C] {I : C}
 
 theorem is_initial.is_iso_to (hI : is_initial I) {A : C} (f : A ⟶ I) : is_iso f :=
   has_strict_initial_objects.out f hI
@@ -73,7 +73,7 @@ end
 theorem is_initial.subsingleton_to (hI : is_initial I) {A : C} : Subsingleton (A ⟶ I) :=
   ⟨hI.strict_hom_ext⟩
 
-instance (priority := 100)initial_mono_of_strict_initial_objects : initial_mono_class C :=
+instance (priority := 100) initial_mono_of_strict_initial_objects : initial_mono_class C :=
   { is_initial_mono_from := fun I A hI => { right_cancellation := fun B g h i => hI.strict_hom_ext _ _ } }
 
 /-- If `I` is initial, then `X ⨯ I` is isomorphic to it. -/
@@ -94,7 +94,7 @@ noncomputable def is_initial_mul (X : C) [has_binary_product I X] (hI : is_initi
 theorem is_initial_mul_inv (X : C) [has_binary_product I X] (hI : is_initial I) : (is_initial_mul X hI).inv = hI.to _ :=
   hI.hom_ext _ _
 
-variable[has_initial C]
+variable [has_initial C]
 
 instance initial_is_iso_to {A : C} (f : A ⟶ ⊥_ C) : is_iso f :=
   initial_is_initial.is_iso_to _

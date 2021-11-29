@@ -22,14 +22,14 @@ boolean ring, boolean algebra
 
 
 /-- A Boolean ring is a ring where multiplication is idempotent. -/
-class BooleanRing(α) extends Ringₓ α where 
+class BooleanRing (α) extends Ringₓ α where 
   mul_self : ∀ a : α, (a*a) = a
 
 section BooleanRing
 
-variable{α : Type _}[BooleanRing α](a b : α)
+variable {α : Type _} [BooleanRing α] (a b : α)
 
-instance  : IsIdempotent α (·*·) :=
+instance : IsIdempotent α (·*·) :=
   ⟨BooleanRing.mul_self⟩
 
 @[simp]
@@ -105,7 +105,7 @@ end BooleanRing
 
 namespace BooleanRing
 
-variable{α : Type _}[BooleanRing α]
+variable {α : Type _} [BooleanRing α]
 
 instance (priority := 100) : CommRingₓ α :=
   { (inferInstance : BooleanRing α) with

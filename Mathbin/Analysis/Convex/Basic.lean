@@ -28,7 +28,7 @@ define `clopen_segment`/`convex.Ico`/`convex.Ioc`?
 -/
 
 
-variable{𝕜 E F β : Type _}
+variable {𝕜 E F β : Type _}
 
 open LinearMap Set
 
@@ -39,11 +39,11 @@ open_locale BigOperators Classical Pointwise
 
 section OrderedSemiring
 
-variable[OrderedSemiring 𝕜][AddCommMonoidₓ E]
+variable [OrderedSemiring 𝕜] [AddCommMonoidₓ E]
 
 section HasScalar
 
-variable(𝕜)[HasScalar 𝕜 E]
+variable (𝕜) [HasScalar 𝕜 E]
 
 /-- Segments in a vector space. -/
 def Segment (x y : E) : Set E :=
@@ -77,7 +77,7 @@ open_locale Convex
 
 section MulActionWithZero
 
-variable(𝕜)[MulActionWithZero 𝕜 E]
+variable (𝕜) [MulActionWithZero 𝕜 E]
 
 theorem left_mem_segment (x y : E) : x ∈ [x -[𝕜] y] :=
   ⟨1, 0, zero_le_one, le_reflₓ 0, add_zeroₓ 1,
@@ -91,7 +91,7 @@ end MulActionWithZero
 
 section Module
 
-variable(𝕜)[Module 𝕜 E]
+variable (𝕜) [Module 𝕜 E]
 
 theorem segment_same (x : E) : [x -[𝕜] x] = {x} :=
   Set.ext$
@@ -117,7 +117,7 @@ theorem mem_open_segment_of_ne_left_right {x y z : E} (hx : x ≠ z) (hy : y ≠
       exact (hx hz).elim 
     exact ⟨a, b, ha.lt_of_ne (Ne.symm ha'), hb.lt_of_ne (Ne.symm hb'), hab, hz⟩
 
-variable{𝕜}
+variable {𝕜}
 
 theorem open_segment_subset_iff_segment_subset {x y : E} {s : Set E} (hx : x ∈ s) (hy : y ∈ s) :
   OpenSegment 𝕜 x y ⊆ s ↔ [x -[𝕜] y] ⊆ s :=
@@ -143,15 +143,15 @@ open_locale Convex
 
 section OrderedRing
 
-variable[OrderedRing 𝕜]
+variable [OrderedRing 𝕜]
 
 section AddCommGroupₓ
 
-variable(𝕜)[AddCommGroupₓ E][AddCommGroupₓ F][Module 𝕜 E][Module 𝕜 F]
+variable (𝕜) [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F]
 
 section DenselyOrdered
 
-variable[Nontrivial 𝕜][DenselyOrdered 𝕜]
+variable [Nontrivial 𝕜] [DenselyOrdered 𝕜]
 
 @[simp]
 theorem open_segment_same (x : E) : OpenSegment 𝕜 x x = {x} :=
@@ -259,11 +259,11 @@ end OrderedRing
 
 section LinearOrderedField
 
-variable[LinearOrderedField 𝕜]
+variable [LinearOrderedField 𝕜]
 
 section AddCommGroupₓ
 
-variable[AddCommGroupₓ E][AddCommGroupₓ F][Module 𝕜 E][Module 𝕜 F]
+variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F]
 
 @[simp]
 theorem left_mem_open_segment_iff [NoZeroSmulDivisors 𝕜 E] {x y : E} : x ∈ OpenSegment 𝕜 x y ↔ x = y :=
@@ -295,11 +295,11 @@ Relates `segment`, `open_segment` and `set.Icc`, `set.Ico`, `set.Ioc`, `set.Ioo`
 
 section OrderedSemiring
 
-variable[OrderedSemiring 𝕜]
+variable [OrderedSemiring 𝕜]
 
 section OrderedAddCommMonoid
 
-variable[OrderedAddCommMonoid E][Module 𝕜 E][OrderedSmul 𝕜 E]
+variable [OrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
 
 theorem segment_subset_Icc {x y : E} (h : x ≤ y) : [x -[𝕜] y] ⊆ Icc x y :=
   by 
@@ -314,7 +314,7 @@ end OrderedAddCommMonoid
 
 section OrderedCancelAddCommMonoid
 
-variable[OrderedCancelAddCommMonoid E][Module 𝕜 E][OrderedSmul 𝕜 E]
+variable [OrderedCancelAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E]
 
 theorem open_segment_subset_Ioo {x y : E} (h : x < y) : OpenSegment 𝕜 x y ⊆ Ioo x y :=
   by 
@@ -329,7 +329,7 @@ end OrderedCancelAddCommMonoid
 
 section LinearOrderedAddCommMonoid
 
-variable[LinearOrderedAddCommMonoid E][Module 𝕜 E][OrderedSmul 𝕜 E]{𝕜}
+variable [LinearOrderedAddCommMonoid E] [Module 𝕜 E] [OrderedSmul 𝕜 E] {𝕜}
 
 theorem segment_subset_interval (x y : E) : [x -[𝕜] y] ⊆ interval x y :=
   by 
@@ -354,7 +354,7 @@ end OrderedSemiring
 
 section LinearOrderedField
 
-variable[LinearOrderedField 𝕜]
+variable [LinearOrderedField 𝕜]
 
 theorem Icc_subset_segment {x y : 𝕜} : Icc x y ⊆ [x -[𝕜] y] :=
   by 
@@ -476,21 +476,21 @@ end LinearOrderedField
 
 section OrderedSemiring
 
-variable[OrderedSemiring 𝕜]
+variable [OrderedSemiring 𝕜]
 
 section AddCommMonoidₓ
 
-variable[AddCommMonoidₓ E][AddCommMonoidₓ F]
+variable [AddCommMonoidₓ E] [AddCommMonoidₓ F]
 
 section HasScalar
 
-variable(𝕜)[HasScalar 𝕜 E][HasScalar 𝕜 F](s : Set E)
+variable (𝕜) [HasScalar 𝕜 E] [HasScalar 𝕜 F] (s : Set E)
 
 /-- Convexity of sets. -/
 def Convex : Prop :=
   ∀ ⦃x y : E⦄, x ∈ s → y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → (a+b) = 1 → ((a • x)+b • y) ∈ s
 
-variable{𝕜 s}
+variable {𝕜 s}
 
 theorem convex_iff_segment_subset : Convex 𝕜 s ↔ ∀ ⦃x y⦄, x ∈ s → y ∈ s → [x -[𝕜] y] ⊆ s :=
   by 
@@ -563,7 +563,7 @@ end HasScalar
 
 section Module
 
-variable[Module 𝕜 E][Module 𝕜 F]{s : Set E}
+variable [Module 𝕜 E] [Module 𝕜 F] {s : Set E}
 
 theorem convex_iff_forall_pos :
   Convex 𝕜 s ↔ ∀ ⦃x y⦄, x ∈ s → y ∈ s → ∀ ⦃a b : 𝕜⦄, 0 < a → 0 < b → (a+b) = 1 → ((a • x)+b • y) ∈ s :=
@@ -663,7 +663,7 @@ theorem Convex.translate_preimage_left (hs : Convex 𝕜 s) (z : E) : Convex �
 
 section OrderedAddCommMonoid
 
-variable[OrderedAddCommMonoid β][Module 𝕜 β][OrderedSmul 𝕜 β]
+variable [OrderedAddCommMonoid β] [Module 𝕜 β] [OrderedSmul 𝕜 β]
 
 theorem convex_Iic (r : β) : Convex 𝕜 (Iic r) :=
   fun x y hx hy a b ha hb hab =>
@@ -692,7 +692,7 @@ end OrderedAddCommMonoid
 
 section OrderedCancelAddCommMonoid
 
-variable[OrderedCancelAddCommMonoid β][Module 𝕜 β][OrderedSmul 𝕜 β]
+variable [OrderedCancelAddCommMonoid β] [Module 𝕜 β] [OrderedSmul 𝕜 β]
 
 theorem convex_Iio (r : β) : Convex 𝕜 (Iio r) :=
   by 
@@ -728,7 +728,7 @@ end OrderedCancelAddCommMonoid
 
 section LinearOrderedAddCommMonoid
 
-variable[LinearOrderedAddCommMonoid β][Module 𝕜 β][OrderedSmul 𝕜 β]
+variable [LinearOrderedAddCommMonoid β] [Module 𝕜 β] [OrderedSmul 𝕜 β]
 
 theorem convex_interval (r s : β) : Convex 𝕜 (interval r s) :=
   convex_Icc _ _
@@ -741,7 +741,7 @@ end AddCommMonoidₓ
 
 section LinearOrderedAddCommMonoid
 
-variable[LinearOrderedAddCommMonoid E][OrderedAddCommMonoid β][Module 𝕜 E][OrderedSmul 𝕜 E]{s : Set E}{f : E → β}
+variable [LinearOrderedAddCommMonoid E] [OrderedAddCommMonoid β] [Module 𝕜 E] [OrderedSmul 𝕜 E] {s : Set E} {f : E → β}
 
 theorem MonotoneOn.convex_le (hf : MonotoneOn f s) (hs : Convex 𝕜 s) (r : β) : Convex 𝕜 { x∈s | f x ≤ r } :=
   fun x y hx hy a b ha hb hab =>
@@ -801,7 +801,7 @@ end LinearOrderedAddCommMonoid
 
 section AddCommGroupₓ
 
-variable[AddCommGroupₓ E][Module 𝕜 E]{s t : Set E}
+variable [AddCommGroupₓ E] [Module 𝕜 E] {s t : Set E}
 
 theorem Convex.combo_eq_vadd {a b : 𝕜} {x y : E} (h : (a+b) = 1) : ((a • x)+b • y) = (b • (y - x))+x :=
   calc ((a • x)+b • y) = (b • y - b • x)+(a • x)+b • x :=
@@ -846,11 +846,11 @@ end OrderedSemiring
 
 section OrderedCommSemiring
 
-variable[OrderedCommSemiring 𝕜]
+variable [OrderedCommSemiring 𝕜]
 
 section AddCommMonoidₓ
 
-variable[AddCommMonoidₓ E][AddCommMonoidₓ F][Module 𝕜 E][Module 𝕜 F]{s : Set E}
+variable [AddCommMonoidₓ E] [AddCommMonoidₓ F] [Module 𝕜 E] [Module 𝕜 F] {s : Set E}
 
 theorem Convex.smul (hs : Convex 𝕜 s) (c : 𝕜) : Convex 𝕜 (c • s) :=
   hs.linear_image (LinearMap.lsmul _ _ c)
@@ -874,11 +874,11 @@ end OrderedCommSemiring
 
 section OrderedRing
 
-variable[OrderedRing 𝕜]
+variable [OrderedRing 𝕜]
 
 section AddCommGroupₓ
 
-variable[AddCommGroupₓ E][AddCommGroupₓ F][Module 𝕜 E][Module 𝕜 F]{s : Set E}
+variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s : Set E}
 
 -- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem convex.add_smul_mem
@@ -954,11 +954,11 @@ end OrderedRing
 
 section LinearOrderedField
 
-variable[LinearOrderedField 𝕜]
+variable [LinearOrderedField 𝕜]
 
 section AddCommGroupₓ
 
-variable[AddCommGroupₓ E][AddCommGroupₓ F][Module 𝕜 E][Module 𝕜 F]{s : Set E}
+variable [AddCommGroupₓ E] [AddCommGroupₓ F] [Module 𝕜 E] [Module 𝕜 F] {s : Set E}
 
 -- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Alternative definition of set convexity, using division. -/
@@ -1080,7 +1080,7 @@ end Submodule
 
 section Simplex
 
-variable(𝕜)(ι : Type _)[OrderedSemiring 𝕜][Fintype ι]
+variable (𝕜) (ι : Type _) [OrderedSemiring 𝕜] [Fintype ι]
 
 /-- The standard simplex in the space of functions `ι → 𝕜` is the set of vectors with non-negative
 coordinates with total sum `1`. This is the free object in the category of convex spaces. -/
@@ -1102,7 +1102,7 @@ theorem convex_std_simplex : Convex 𝕜 (StdSimplex 𝕜 ι) :=
         mul_oneₓ]
       exact hab
 
-variable{ι}
+variable {ι}
 
 theorem ite_eq_mem_std_simplex (i : ι) : (fun j => ite (i = j) (1 : 𝕜) 0) ∈ StdSimplex 𝕜 ι :=
   ⟨fun j =>

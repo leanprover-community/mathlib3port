@@ -25,13 +25,13 @@ universe u₀ u₁ u₂ v₀ v₁ v₂
 open Function
 
 /-- Lawless bifunctor. This typeclass only holds the data for the bimap. -/
-class Bifunctor(F : Type u₀ → Type u₁ → Type u₂) where 
+class Bifunctor (F : Type u₀ → Type u₁ → Type u₂) where 
   bimap : ∀ {α α' β β'}, (α → α') → (β → β') → F α β → F α' β'
 
 export Bifunctor(bimap)
 
 /-- Bifunctor. This typeclass asserts that a lawless `bifunctor` is lawful. -/
-class IsLawfulBifunctor(F : Type u₀ → Type u₁ → Type u₂)[Bifunctor F] where 
+class IsLawfulBifunctor (F : Type u₀ → Type u₁ → Type u₂) [Bifunctor F] where 
   id_bimap : ∀ {α β} x : F α β, bimap id id x = x 
   bimap_bimap :
   ∀ {α₀ α₁ α₂ β₀ β₁ β₂} f : α₀ → α₁ f' : α₁ → α₂ g : β₀ → β₁ g' : β₁ → β₂ x : F α₀ β₀,
@@ -45,7 +45,7 @@ attribute [higherOrder bimap_comp_bimap] bimap_bimap
 
 export IsLawfulBifunctor(bimap_id_id bimap_comp_bimap)
 
-variable{F : Type u₀ → Type u₁ → Type u₂}[Bifunctor F]
+variable {F : Type u₀ → Type u₁ → Type u₂} [Bifunctor F]
 
 namespace Bifunctor
 
@@ -59,7 +59,7 @@ def fst {α α' β} (f : α → α') : F α β → F α' β :=
 def snd {α β β'} (f : β → β') : F α β → F α β' :=
   bimap id f
 
-variable[IsLawfulBifunctor F]
+variable [IsLawfulBifunctor F]
 
 @[higherOrder fst_id]
 theorem id_fst : ∀ {α β} x : F α β, fst id x = x :=
@@ -96,10 +96,10 @@ end Bifunctor
 
 open Functor
 
-instance  : Bifunctor Prod :=
-  { bimap := @Prod.mapₓ }
+instance : Bifunctor Prod :=
+  { bimap := @Prod.map }
 
-instance  : IsLawfulBifunctor Prod :=
+instance : IsLawfulBifunctor Prod :=
   by 
     refine' { .. } <;> intros  <;> cases x <;> rfl
 
@@ -117,30 +117,30 @@ instance IsLawfulBifunctor.flip [IsLawfulBifunctor F] : IsLawfulBifunctor (flip 
   by 
     refine' { .. } <;> intros  <;> simp' [bimap] with functor_norm
 
-instance  : Bifunctor Sum :=
+instance : Bifunctor Sum :=
   { bimap := @Sum.map }
 
-instance  : IsLawfulBifunctor Sum :=
+instance : IsLawfulBifunctor Sum :=
   by 
     refine' { .. } <;> intros  <;> cases x <;> rfl
 
 open Bifunctor Functor
 
-instance (priority := 10)Bifunctor.functor {α} : Functor (F α) :=
+instance (priority := 10) Bifunctor.functor {α} : Functor (F α) :=
   { map := fun _ _ => snd }
 
-instance (priority := 10)Bifunctor.is_lawful_functor [IsLawfulBifunctor F] {α} : IsLawfulFunctor (F α) :=
+instance (priority := 10) Bifunctor.is_lawful_functor [IsLawfulBifunctor F] {α} : IsLawfulFunctor (F α) :=
   by 
     refine' { .. } <;> intros  <;> simp' [Functor.map] with functor_norm
 
 section Bicompl
 
-variable(G : Type _ → Type u₀)(H : Type _ → Type u₁)[Functor G][Functor H]
+variable (G : Type _ → Type u₀) (H : Type _ → Type u₁) [Functor G] [Functor H]
 
-instance  : Bifunctor (bicompl F G H) :=
+instance : Bifunctor (bicompl F G H) :=
   { bimap := fun α α' β β' f f' x => (bimap (map f) (map f') x : F (G α') (H β')) }
 
-instance  [IsLawfulFunctor G] [IsLawfulFunctor H] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompl F G H) :=
+instance [IsLawfulFunctor G] [IsLawfulFunctor H] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompl F G H) :=
   by 
     constructor <;> intros  <;> simp' [bimap, map_id, map_comp_map] with functor_norm
 
@@ -148,12 +148,12 @@ end Bicompl
 
 section Bicompr
 
-variable(G : Type u₂ → Type _)[Functor G]
+variable (G : Type u₂ → Type _) [Functor G]
 
-instance  : Bifunctor (bicompr G F) :=
+instance : Bifunctor (bicompr G F) :=
   { bimap := fun α α' β β' f f' x => (map (bimap f f') x : G (F α' β')) }
 
-instance  [IsLawfulFunctor G] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompr G F) :=
+instance [IsLawfulFunctor G] [IsLawfulBifunctor F] : IsLawfulBifunctor (bicompr G F) :=
   by 
     constructor <;> intros  <;> simp' [bimap] with functor_norm
 

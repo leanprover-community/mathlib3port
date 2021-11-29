@@ -10,17 +10,17 @@ functions.
 -/
 
 
-variable{R S A B : Type _}
+variable {R S A B : Type _}
 
 namespace AddMonoidHom
 
 section 
 
-variable[Monoidₓ R][Monoidₓ S][AddMonoidₓ A][AddCommMonoidₓ B]
+variable [Monoidₓ R] [Monoidₓ S] [AddMonoidₓ A] [AddCommMonoidₓ B]
 
-variable[DistribMulAction R B][DistribMulAction S B]
+variable [DistribMulAction R B] [DistribMulAction S B]
 
-instance  : DistribMulAction R (A →+ B) :=
+instance : DistribMulAction R (A →+ B) :=
   { smul :=
       fun r f =>
         { toFun := r • f,
@@ -59,15 +59,15 @@ theorem coe_smul (r : R) (f : A →+ B) : «expr⇑ » (r • f) = r • f :=
 theorem smul_apply (r : R) (f : A →+ B) (x : A) : (r • f) x = r • f x :=
   rfl
 
-instance  [SmulCommClass R S B] : SmulCommClass R S (A →+ B) :=
+instance [SmulCommClass R S B] : SmulCommClass R S (A →+ B) :=
   ⟨fun a b f => ext$ fun x => smul_comm _ _ _⟩
 
-instance  [HasScalar R S] [IsScalarTower R S B] : IsScalarTower R S (A →+ B) :=
+instance [HasScalar R S] [IsScalarTower R S B] : IsScalarTower R S (A →+ B) :=
   ⟨fun a b f => ext$ fun x => smul_assoc _ _ _⟩
 
 end 
 
-instance  [Semiringₓ R] [AddMonoidₓ A] [AddCommMonoidₓ B] [Module R B] : Module R (A →+ B) :=
+instance [Semiringₓ R] [AddMonoidₓ A] [AddCommMonoidₓ B] [Module R B] : Module R (A →+ B) :=
   { AddMonoidHom.distribMulAction with
     add_smul :=
       fun r s x =>

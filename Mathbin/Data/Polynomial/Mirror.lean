@@ -24,7 +24,7 @@ coefficients of a polynomial. It is also a coefficient of `p * p.mirror`.
 
 namespace Polynomial
 
-variable{R : Type _}[Semiringₓ R](p : Polynomial R)
+variable {R : Type _} [Semiringₓ R] (p : Polynomial R)
 
 section Mirror
 

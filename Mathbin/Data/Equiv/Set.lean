@@ -21,7 +21,7 @@ open Function
 
 universe u v w z
 
-variable{α : Sort u}{β : Sort v}{γ : Sort w}
+variable {α : Sort u} {β : Sort v} {γ : Sort w}
 
 namespace Equiv
 

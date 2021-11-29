@@ -28,23 +28,23 @@ open_locale BigOperators
 
 section EuclideanDomain
 
-variable(R S K L : Type _)[EuclideanDomain R][CommRingₓ S][IsDomain S]
+variable (R S K L : Type _) [EuclideanDomain R] [CommRingₓ S] [IsDomain S]
 
-variable[Field K][Field L]
+variable [Field K] [Field L]
 
-variable[Algebra R K][IsFractionRing R K]
+variable [Algebra R K] [IsFractionRing R K]
 
-variable[Algebra K L][FiniteDimensional K L][IsSeparable K L]
+variable [Algebra K L] [FiniteDimensional K L] [IsSeparable K L]
 
-variable[algRL : Algebra R L][IsScalarTower R K L]
+variable [algRL : Algebra R L] [IsScalarTower R K L]
 
-variable[Algebra R S][Algebra S L]
+variable [Algebra R S] [Algebra S L]
 
-variable[ist : IsScalarTower R S L][iic : IsIntegralClosure S R L]
+variable [ist : IsScalarTower R S L] [iic : IsIntegralClosure S R L]
 
-variable{R S}(abv : AbsoluteValue R ℤ)
+variable {R S} (abv : AbsoluteValue R ℤ)
 
-variable{ι : Type _}[DecidableEq ι][Fintype ι](bS : Basis ι R S)
+variable {ι : Type _} [DecidableEq ι] [Fintype ι] (bS : Basis ι R S)
 
 /-- If `b` is an `R`-basis of `S` of cardinality `n`, then `norm_bound abv b` is an integer
 such that for every `R`-integral element `a : S` with coordinates `≤ y`,
@@ -148,7 +148,7 @@ theorem exists_min (I : (Ideal S)⁰) :
 
 section IsAdmissible
 
-variable(L){abv}(adm : abv.is_admissible)
+variable (L) {abv} (adm : abv.is_admissible)
 
 include adm
 
@@ -162,13 +162,13 @@ the minimum cardinality can be exponentially smaller.
 noncomputable def cardM : ℕ :=
   adm.card (norm_bound abv bS^(-1 / Fintype.card ι : ℝ))^Fintype.card ι
 
-variable[Infinite R]
+variable [Infinite R]
 
 /-- In the following results, we need a large set of distinct elements of `R`. -/
 noncomputable def distinct_elems : Finₓ (cardM bS adm).succ ↪ R :=
   Function.Embedding.trans (Finₓ.coeEmbedding _).toEmbedding (Infinite.natEmbedding R)
 
-variable[DecidableEq R]
+variable [DecidableEq R]
 
 /-- `finset_approx` is a finite set such that each fractional ideal in the integral closure
 contains an element close to `finset_approx`. -/

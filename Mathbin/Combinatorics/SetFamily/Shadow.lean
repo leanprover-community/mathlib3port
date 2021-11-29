@@ -32,11 +32,11 @@ shadow, set family
 
 open Finset Nat
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Finset
 
-variable[DecidableEq α]{𝒜 : Finset (Finset α)}{s t : Finset α}{a : α}{k : ℕ}
+variable [DecidableEq α] {𝒜 : Finset (Finset α)} {s t : Finset α} {a : α} {k : ℕ}
 
 /-- The shadow of a set family `𝒜` is all sets we can get by removing one element from any set in
 `𝒜`, and the (`k` times) iterated shadow (`shadow^[k]`) is all sets we can get by removing `k`

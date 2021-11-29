@@ -21,11 +21,11 @@ open Finset
 
 open_locale BigOperators
 
-variable{R : Type _}
+variable {R : Type _}
 
 namespace Commute
 
-variable[Semiringₓ R]{x y : R}(h : Commute x y)(n : ℕ)
+variable [Semiringₓ R] {x y : R} (h : Commute x y) (n : ℕ)
 
 include h
 

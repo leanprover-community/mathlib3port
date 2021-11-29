@@ -56,9 +56,9 @@ open Ulift CategoryTheory MulOpposite
 
 namespace Monoidₓ
 
-variable{m : Type u → Type u}[Monadₓ m]
+variable {m : Type u → Type u} [Monadₓ m]
 
-variable{α β : Type u}
+variable {α β : Type u}
 
 /--
 For a list, foldl f x [y₀,y₁] reduces as follows:
@@ -161,7 +161,7 @@ open Monoidₓ Functor
 
 section Defs
 
-variable{α β : Type u}{t : Type u → Type u}[Traversable t]
+variable {α β : Type u} {t : Type u → Type u} [Traversable t]
 
 def fold_map {α ω} [HasOne ω] [Mul ω] (f : α → ω) : t α → ω :=
   traverse (const.mk' ∘ f)
@@ -195,7 +195,7 @@ def to_list : t α → List α :=
 def length (xs : t α) : ℕ :=
   down$ foldl (fun l _ => up$ l.down+1) (up 0) xs
 
-variable{m : Type u → Type u}[Monadₓ m]
+variable {m : Type u → Type u} [Monadₓ m]
 
 def mfoldl (f : α → β → m α) (x : α) (xs : t β) : m α :=
   (fold_map (mfoldl.mk ∘ flip f) xs).get x
@@ -207,7 +207,7 @@ end Defs
 
 section ApplicativeTransformation
 
-variable{α β γ : Type u}
+variable {α β γ : Type u}
 
 open Function hiding const
 
@@ -261,7 +261,7 @@ theorem fold_foldr (f : α → β → β) : IsMonoidHom (foldr.of_free_monoid f)
         simp only [FreeMonoid.mul_def, foldr.of_free_monoid, List.foldr_append, flip]
         rfl }
 
-variable(m : Type u → Type u)[Monadₓ m][IsLawfulMonad m]
+variable (m : Type u → Type u) [Monadₓ m] [IsLawfulMonad m]
 
 @[simp]
 theorem mfoldl.unop_of_free_monoid (f : β → α → m β) (xs : FreeMonoid α) (a : β) :
@@ -280,7 +280,7 @@ theorem fold_mfoldr (f : α → β → m β) : IsMonoidHom (mfoldr.of_free_monoi
       by 
         intros  <;> ext <;> apply List.mfoldr_append }
 
-variable{t : Type u → Type u}[Traversable t][IsLawfulTraversable t]
+variable {t : Type u → Type u} [Traversable t] [IsLawfulTraversable t]
 
 open IsLawfulTraversable
 
@@ -296,7 +296,7 @@ theorem fold_map_hom_free [Monoidₓ β] {f : FreeMonoid α → β} (hf : IsMono
   f (fold_map free.mk x) = fold_map (f ∘ free.mk) x :=
   fold_map_hom hf _ x
 
-variable{m}
+variable {m}
 
 theorem fold_mfoldl_cons (f : α → β → m α) (x : β) (y : α) : List.mfoldl f y (free.mk x) = f y x :=
   by 
@@ -314,9 +314,9 @@ open IsLawfulTraversable
 
 open list(cons)
 
-variable{α β γ : Type u}
+variable {α β γ : Type u}
 
-variable{t : Type u → Type u}[Traversable t][IsLawfulTraversable t]
+variable {t : Type u → Type u} [Traversable t] [IsLawfulTraversable t]
 
 @[simp]
 theorem foldl.of_free_monoid_comp_free_mk (f : α → β → α) : foldl.of_free_monoid f ∘ free.mk = foldl.mk ∘ flip f :=
@@ -417,7 +417,7 @@ theorem length_to_list {xs : t α} : length xs = List.length (to_list xs) :=
         rw [←ih]
         exact tl.foldl_hom (fun x => x+1) f f 0 fun n x => rfl
 
-variable{m : Type u → Type u}[Monadₓ m][IsLawfulMonad m]
+variable {m : Type u → Type u} [Monadₓ m] [IsLawfulMonad m]
 
 theorem mfoldl_to_list {f : α → β → m α} {x : α} {xs : t β} : mfoldl f x xs = List.mfoldl f x (to_list xs) :=
   calc mfoldl f x xs = unop (mfoldl.of_free_monoid f (to_list xs)) x :=

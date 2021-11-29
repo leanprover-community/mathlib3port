@@ -33,7 +33,7 @@ open order_dual(toDual ofDual)
 
 section Intervals
 
-variable{α : Type u}[Preorderₓ α]{a a₁ a₂ b b₁ b₂ x : α}
+variable {α : Type u} [Preorderₓ α] {a a₁ a₂ b b₁ b₂ x : α}
 
 /-- Left-open right-open interval -/
 def Ioo (a b : α) :=
@@ -517,7 +517,7 @@ end Intervals
 
 section PartialOrderₓ
 
-variable{α : Type u}[PartialOrderₓ α]{a b : α}
+variable {α : Type u} [PartialOrderₓ α] {a b : α}
 
 @[simp]
 theorem Icc_self (a : α) : Icc a a = {a} :=
@@ -722,7 +722,7 @@ end PartialOrderₓ
 
 section OrderTop
 
-variable{α : Type u}[Preorderₓ α][OrderTop α]{a : α}
+variable {α : Type u} [Preorderₓ α] [OrderTop α] {a : α}
 
 @[simp]
 theorem Ici_top {α : Type u} [PartialOrderₓ α] [OrderTop α] : Ici (⊤ : α) = {⊤} :=
@@ -746,7 +746,7 @@ end OrderTop
 
 section OrderBot
 
-variable{α : Type u}[Preorderₓ α][OrderBot α]{a : α}
+variable {α : Type u} [Preorderₓ α] [OrderBot α] {a : α}
 
 @[simp]
 theorem Iic_bot {α : Type u} [PartialOrderₓ α] [OrderBot α] : Iic (⊥ : α) = {⊥} :=
@@ -770,7 +770,7 @@ end OrderBot
 
 section LinearOrderₓ
 
-variable{α : Type u}[LinearOrderₓ α]{a a₁ a₂ b b₁ b₂ c d : α}
+variable {α : Type u} [LinearOrderₓ α] {a a₁ a₂ b b₁ b₂ c d : α}
 
 theorem not_mem_Ici : c ∉ Ici a ↔ c < a :=
   not_leₓ
@@ -1411,7 +1411,7 @@ section Lattice
 
 section Inf
 
-variable{α : Type u}[SemilatticeInf α]
+variable {α : Type u} [SemilatticeInf α]
 
 @[simp]
 theorem Iic_inter_Iic {a b : α} : Iic a ∩ Iic b = Iic (a⊓b) :=
@@ -1434,7 +1434,7 @@ end Inf
 
 section Sup
 
-variable{α : Type u}[SemilatticeSup α]
+variable {α : Type u} [SemilatticeSup α]
 
 @[simp]
 theorem Ici_inter_Ici {a b : α} : Ici a ∩ Ici b = Ici (a⊔b) :=
@@ -1462,7 +1462,7 @@ end Sup
 
 section Both
 
-variable{α : Type u}[Lattice α][ht : IsTotal α (· ≤ ·)]{a b c a₁ a₂ b₁ b₂ : α}
+variable {α : Type u} [Lattice α] [ht : IsTotal α (· ≤ ·)] {a b c a₁ a₂ b₁ b₂ : α}
 
 theorem Icc_inter_Icc : Icc a₁ b₁ ∩ Icc a₂ b₂ = Icc (a₁⊔a₂) (b₁⊓b₂) :=
   by 
@@ -1489,7 +1489,7 @@ theorem Ioo_inter_Ioo : Ioo a₁ b₁ ∩ Ioo a₂ b₂ = Ioo (a₁⊔a₂) (b�
 
 end Both
 
-theorem Icc_bot_top {α} [BoundedLattice α] : Icc (⊥ : α) ⊤ = univ :=
+theorem Icc_bot_top {α} [PartialOrderₓ α] [BoundedOrder α] : Icc (⊥ : α) ⊤ = univ :=
   by 
     simp 
 
@@ -1497,7 +1497,7 @@ end Lattice
 
 section LinearOrderₓ
 
-variable{α : Type u}[LinearOrderₓ α]{a a₁ a₂ b b₁ b₂ c d : α}
+variable {α : Type u} [LinearOrderₓ α] {a a₁ a₂ b b₁ b₂ c d : α}
 
 theorem Ioc_inter_Ioo_of_left_lt (h : b₁ < b₂) : Ioc a₁ b₁ ∩ Ioo a₂ b₂ = Ioc (max a₁ a₂) b₁ :=
   ext$
@@ -1571,7 +1571,7 @@ end LinearOrderₓ
 
 section Prod
 
-variable{α β : Type _}[Preorderₓ α][Preorderₓ β]
+variable {α β : Type _} [Preorderₓ α] [Preorderₓ β]
 
 @[simp]
 theorem Iic_prod_Iic (a : α) (b : β) : (Iic a).Prod (Iic b) = Iic (a, b) :=
@@ -1604,7 +1604,7 @@ end Prod
 
 section OrderedCommGroup
 
-variable{α : Type _}[OrderedCommGroup α]{a b c d : α}
+variable {α : Type _} [OrderedCommGroup α] {a b c d : α}
 
 /-! `inv_mem_Ixx_iff`, `sub_mem_Ixx_iff` -/
 
@@ -1629,7 +1629,7 @@ end OrderedCommGroup
 
 section OrderedAddCommGroup
 
-variable{α : Type _}[OrderedAddCommGroup α]{a b c d : α}
+variable {α : Type _} [OrderedAddCommGroup α] {a b c d : α}
 
 /-! `add_mem_Ixx_iff_left` -/
 
@@ -1699,7 +1699,7 @@ end OrderedAddCommGroup
 
 section LinearOrderedAddCommGroup
 
-variable{α : Type u}[LinearOrderedAddCommGroup α]
+variable {α : Type u} [LinearOrderedAddCommGroup α]
 
 /-- If we remove a smaller interval from a larger, the result is nonempty -/
 theorem nonempty_Ico_sdiff {x dx y dy : α} (h : dy < dx) (hx : 0 < dx) :
@@ -1721,11 +1721,11 @@ open Set
 
 namespace OrderIso
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 section Preorderₓ
 
-variable[Preorderₓ α][Preorderₓ β]
+variable [Preorderₓ α] [Preorderₓ β]
 
 @[simp]
 theorem preimage_Iic (e : α ≃o β) (b : β) : e ⁻¹' Iic b = Iic (e.symm b) :=

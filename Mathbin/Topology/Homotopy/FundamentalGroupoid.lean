@@ -15,9 +15,9 @@ group of `x`.
 
 universe u v
 
-variable{X : Type u}{Y : Type v}[TopologicalSpace X][TopologicalSpace Y]
+variable {X : Type u} {Y : Type v} [TopologicalSpace X] [TopologicalSpace Y]
 
-variable{x₀ x₁ : X}
+variable {x₀ x₁ : X}
 
 noncomputable theory
 
@@ -300,14 +300,14 @@ def FundamentalGroupoid (X : Type u) :=
 
 namespace FundamentalGroupoid
 
-instance  {X : Type u} [h : Inhabited X] : Inhabited (FundamentalGroupoid X) :=
+instance {X : Type u} [h : Inhabited X] : Inhabited (FundamentalGroupoid X) :=
   h
 
 attribute [local reducible] FundamentalGroupoid
 
 attribute [local instance] Path.Homotopic.setoid
 
-instance  : CategoryTheory.Groupoid (FundamentalGroupoid X) :=
+instance : CategoryTheory.Groupoid (FundamentalGroupoid X) :=
   { Hom := fun x y => Path.Homotopic.Quotient x y, id := fun x => «expr⟦ ⟧» (Path.refl x),
     comp := fun x y z => Quotientₓ.map₂ Path.trans fun p₀ : Path x y p₁ hp q₀ q₁ hq => Path.Homotopic.hcomp hp hq,
     id_comp' :=

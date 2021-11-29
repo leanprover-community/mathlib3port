@@ -44,7 +44,7 @@ noncomputable theory
 
 namespace Polynomial
 
-variable{R S : Type _}[CommRingₓ R][CommRingₓ S](k : ℕ)(a : R)
+variable {R S : Type _} [CommRingₓ R] [CommRingₓ S] (k : ℕ) (a : R)
 
 /-- `dickson` is the `n`the (generalised) Dickson polynomial of the `k`-th kind associated to the
 element `a ∈ R`. -/
@@ -76,7 +76,7 @@ theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) : dickson k a n = (X*dickson k
     rw [add_commₓ]
     exact dickson_add_two k a n
 
-variable{R S k a}
+variable {R S k a}
 
 theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dickson k (f a) n
 | 0 =>
@@ -90,7 +90,7 @@ theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dicks
     simp only [dickson_add_two, map_sub, map_mul, map_X, map_C]
     rw [map_dickson, map_dickson]
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = (X^n)
@@ -120,7 +120,7 @@ There is exactly one other Lambda structure on `polynomial ℤ` in terms of bino
 -/
 
 
-variable{R}
+variable {R}
 
 theorem dickson_one_one_eval_add_inv (x y : R) (h : (x*y) = 1) : ∀ n, (dickson 1 (1 : R) n).eval (x+y) = (x^n)+y^n
 | 0 =>
@@ -136,7 +136,7 @@ theorem dickson_one_one_eval_add_inv (x y : R) (h : (x*y) = 1) : ∀ n, (dickson
     convLHS => simp only [pow_succₓ, add_mulₓ, mul_addₓ, h, ←mul_assocₓ, mul_commₓ y x, one_mulₓ]
     ringExp
 
-variable(R)
+variable (R)
 
 theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
   ∀ n, dickson 1 (1 : R) n = 2*(chebyshev.T R n).comp (C (⅟ 2)*X)

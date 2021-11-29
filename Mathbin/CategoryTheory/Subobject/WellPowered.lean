@@ -24,7 +24,7 @@ universe v u₁ u₂
 
 namespace CategoryTheory
 
-variable(C : Type u₁)[category.{v} C]
+variable (C : Type u₁) [category.{v} C]
 
 /--
 A category (with morphisms in `Type v`) is well-powered if `subobject X` is `v`-small for every `X`.
@@ -40,10 +40,10 @@ class well_powered : Prop where
 instance small_subobject [well_powered C] (X : C) : Small.{v} (subobject X) :=
   well_powered.subobject_small X
 
-instance (priority := 100)well_powered_of_small_category (C : Type u₁) [small_category C] : well_powered C :=
+instance (priority := 100) well_powered_of_small_category (C : Type u₁) [small_category C] : well_powered C :=
   {  }
 
-variable{C}
+variable {C}
 
 theorem essentially_small_mono_over_iff_small_subobject (X : C) :
   essentially_small.{v} (mono_over X) ↔ Small.{v} (subobject X) :=
@@ -55,7 +55,7 @@ theorem well_powered_of_essentially_small_mono_over (h : ∀ X : C, essentially_
 
 section 
 
-variable[well_powered C]
+variable [well_powered C]
 
 instance essentially_small_mono_over (X : C) : essentially_small.{v} (mono_over X) :=
   (essentially_small_mono_over_iff_small_subobject X).mpr (well_powered.subobject_small X)
@@ -64,7 +64,7 @@ end
 
 section Equivalenceₓ
 
-variable{D : Type u₂}[category.{v} D]
+variable {D : Type u₂} [category.{v} D]
 
 theorem well_powered_of_equiv (e : C ≌ D) [well_powered C] : well_powered D :=
   well_powered_of_essentially_small_mono_over$

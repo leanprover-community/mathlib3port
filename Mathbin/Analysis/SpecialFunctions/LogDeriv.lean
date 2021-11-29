@@ -20,7 +20,7 @@ open_locale TopologicalSpace BigOperators
 
 namespace Real
 
-variable{x : ℝ}
+variable {x : ℝ}
 
 theorem has_strict_deriv_at_log_of_pos (hx : 0 < x) : HasStrictDerivAt log (x⁻¹) x :=
   have  : HasStrictDerivAt log ((exp$ log x)⁻¹) x :=
@@ -84,7 +84,7 @@ open Real
 
 section deriv
 
-variable{f : ℝ → ℝ}{x f' : ℝ}{s : Set ℝ}
+variable {f : ℝ → ℝ} {x f' : ℝ} {s : Set ℝ}
 
 theorem HasDerivWithinAt.log (hf : HasDerivWithinAt f f' s x) (hx : f x ≠ 0) :
   HasDerivWithinAt (fun y => log (f y)) (f' / f x) s x :=
@@ -115,7 +115,7 @@ end deriv
 
 section fderiv
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E]{f : E → ℝ}{x : E}{f' : E →L[ℝ] ℝ}{s : Set E}
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {x : E} {f' : E →L[ℝ] ℝ} {s : Set E}
 
 theorem HasFderivWithinAt.log (hf : HasFderivWithinAt f f' s x) (hx : f x ≠ 0) :
   HasFderivWithinAt (fun x => log (f x)) (f x⁻¹ • f') s x :=

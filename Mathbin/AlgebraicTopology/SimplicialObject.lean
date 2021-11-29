@@ -25,7 +25,7 @@ universe v u
 
 namespace CategoryTheory
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 -- error in AlgebraicTopology.SimplicialObject: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /-- The category of simplicial objects valued in a category `C`.
@@ -39,23 +39,23 @@ namespace SimplicialObject
 localized [Simplicial]
   notation:1000 X "_[" n "]" => (X : CategoryTheory.SimplicialObject _).obj (Opposite.op (SimplexCategory.mk n))
 
-instance  {J : Type v} [small_category J] [has_limits_of_shape J C] : has_limits_of_shape J (simplicial_object C) :=
+instance {J : Type v} [small_category J] [has_limits_of_shape J C] : has_limits_of_shape J (simplicial_object C) :=
   by 
     dsimp [simplicial_object]
     infer_instance
 
-instance  [has_limits C] : has_limits (simplicial_object C) :=
+instance [has_limits C] : has_limits (simplicial_object C) :=
   ⟨inferInstance⟩
 
-instance  {J : Type v} [small_category J] [has_colimits_of_shape J C] : has_colimits_of_shape J (simplicial_object C) :=
+instance {J : Type v} [small_category J] [has_colimits_of_shape J C] : has_colimits_of_shape J (simplicial_object C) :=
   by 
     dsimp [simplicial_object]
     infer_instance
 
-instance  [has_colimits C] : has_colimits (simplicial_object C) :=
+instance [has_colimits C] : has_colimits (simplicial_object C) :=
   ⟨inferInstance⟩
 
-variable{C}(X : simplicial_object C)
+variable {C} (X : simplicial_object C)
 
 /-- Face maps for a simplicial object. -/
 def δ {n} (i : Finₓ (n+2)) : X _[n+1] ⟶ X _[n] :=
@@ -122,7 +122,7 @@ theorem σ_comp_σ {n} {i j : Finₓ (n+1)} (H : i ≤ j) : X.σ j ≫ X.σ i.ca
     dsimp [δ, σ]
     simp only [←X.map_comp, ←op_comp, SimplexCategory.σ_comp_σ H]
 
-variable(C)
+variable (C)
 
 /-- Functor composition induces a functor on simplicial objects. -/
 @[simps]
@@ -135,36 +135,36 @@ def whiskering (D : Type _) [category.{v} D] : (C ⥤ D) ⥤ simplicial_object C
 def truncated (n : exprℕ()) :=
 «expr ⥤ »(«expr ᵒᵖ»(simplex_category.truncated.{v} n), C)
 
-variable{C}
+variable {C}
 
 namespace Truncated
 
-instance  {n} {J : Type v} [small_category J] [has_limits_of_shape J C] :
+instance {n} {J : Type v} [small_category J] [has_limits_of_shape J C] :
   has_limits_of_shape J (simplicial_object.truncated C n) :=
   by 
     dsimp [truncated]
     infer_instance
 
-instance  {n} [has_limits C] : has_limits (simplicial_object.truncated C n) :=
+instance {n} [has_limits C] : has_limits (simplicial_object.truncated C n) :=
   ⟨inferInstance⟩
 
-instance  {n} {J : Type v} [small_category J] [has_colimits_of_shape J C] :
+instance {n} {J : Type v} [small_category J] [has_colimits_of_shape J C] :
   has_colimits_of_shape J (simplicial_object.truncated C n) :=
   by 
     dsimp [truncated]
     infer_instance
 
-instance  {n} [has_colimits C] : has_colimits (simplicial_object.truncated C n) :=
+instance {n} [has_colimits C] : has_colimits (simplicial_object.truncated C n) :=
   ⟨inferInstance⟩
 
-variable(C)
+variable (C)
 
 /-- Functor composition induces a functor on truncated simplicial objects. -/
 @[simps]
 def whiskering {n} (D : Type _) [category.{v} D] : (C ⥤ D) ⥤ truncated C n ⥤ truncated D n :=
   whiskering_right _ _ _
 
-variable{C}
+variable {C}
 
 end Truncated
 
@@ -176,7 +176,7 @@ def sk (n : ℕ) : simplicial_object C ⥤ simplicial_object.truncated C n :=
 
 end Skeleton
 
-variable(C)
+variable (C)
 
 /-- The constant simplicial object is the constant functor. -/
 abbrev const : C ⥤ simplicial_object C :=
@@ -188,7 +188,7 @@ abbrev const : C ⥤ simplicial_object C :=
 def augmented :=
 comma («expr𝟭»() (simplicial_object C)) (const C)
 
-variable{C}
+variable {C}
 
 namespace Augmented
 
@@ -216,7 +216,7 @@ def to_arrow : augmented C ⥤ arrow C :=
               erw [η.w]
               rfl } }
 
-variable(C)
+variable (C)
 
 /-- Functor composition induces a functor on augmented simplicial objects. -/
 @[simp]
@@ -240,7 +240,7 @@ def whiskering_obj (D : Type _) [category.{v} D] (F : C ⥤ D) : augmented C ⥤
 def whiskering (D : Type _) [category.{v} D] : (C ⥤ D) ⥤ augmented C ⥤ augmented D :=
   { obj := whiskering_obj _ _, map := fun X Y η => { app := fun A => { left := whisker_left _ η, right := η.app _ } } }
 
-variable{C}
+variable {C}
 
 end Augmented
 
@@ -280,24 +280,24 @@ namespace CosimplicialObject
 localized [Simplicial]
   notation:1000 X "_[" n "]" => (X : CategoryTheory.CosimplicialObject _).obj (SimplexCategory.mk n)
 
-instance  {J : Type v} [small_category J] [has_limits_of_shape J C] : has_limits_of_shape J (cosimplicial_object C) :=
+instance {J : Type v} [small_category J] [has_limits_of_shape J C] : has_limits_of_shape J (cosimplicial_object C) :=
   by 
     dsimp [cosimplicial_object]
     infer_instance
 
-instance  [has_limits C] : has_limits (cosimplicial_object C) :=
+instance [has_limits C] : has_limits (cosimplicial_object C) :=
   ⟨inferInstance⟩
 
-instance  {J : Type v} [small_category J] [has_colimits_of_shape J C] :
+instance {J : Type v} [small_category J] [has_colimits_of_shape J C] :
   has_colimits_of_shape J (cosimplicial_object C) :=
   by 
     dsimp [cosimplicial_object]
     infer_instance
 
-instance  [has_colimits C] : has_colimits (cosimplicial_object C) :=
+instance [has_colimits C] : has_colimits (cosimplicial_object C) :=
   ⟨inferInstance⟩
 
-variable{C}(X : cosimplicial_object C)
+variable {C} (X : cosimplicial_object C)
 
 /-- Coface maps for a cosimplicial object. -/
 def δ {n} (i : Finₓ (n+2)) : X _[n] ⟶ X _[n+1] :=
@@ -364,7 +364,7 @@ theorem σ_comp_σ {n} {i j : Finₓ (n+1)} (H : i ≤ j) : X.σ i.cast_succ ≫
     dsimp [δ, σ]
     simp only [←X.map_comp, SimplexCategory.σ_comp_σ H]
 
-variable(C)
+variable (C)
 
 /-- Functor composition induces a functor on cosimplicial objects. -/
 @[simps]
@@ -377,36 +377,36 @@ def whiskering (D : Type _) [category.{v} D] : (C ⥤ D) ⥤ cosimplicial_object
 def truncated (n : exprℕ()) :=
 «expr ⥤ »(simplex_category.truncated.{v} n, C)
 
-variable{C}
+variable {C}
 
 namespace Truncated
 
-instance  {n} {J : Type v} [small_category J] [has_limits_of_shape J C] :
+instance {n} {J : Type v} [small_category J] [has_limits_of_shape J C] :
   has_limits_of_shape J (cosimplicial_object.truncated C n) :=
   by 
     dsimp [truncated]
     infer_instance
 
-instance  {n} [has_limits C] : has_limits (cosimplicial_object.truncated C n) :=
+instance {n} [has_limits C] : has_limits (cosimplicial_object.truncated C n) :=
   ⟨inferInstance⟩
 
-instance  {n} {J : Type v} [small_category J] [has_colimits_of_shape J C] :
+instance {n} {J : Type v} [small_category J] [has_colimits_of_shape J C] :
   has_colimits_of_shape J (cosimplicial_object.truncated C n) :=
   by 
     dsimp [truncated]
     infer_instance
 
-instance  {n} [has_colimits C] : has_colimits (cosimplicial_object.truncated C n) :=
+instance {n} [has_colimits C] : has_colimits (cosimplicial_object.truncated C n) :=
   ⟨inferInstance⟩
 
-variable(C)
+variable (C)
 
 /-- Functor composition induces a functor on truncated cosimplicial objects. -/
 @[simps]
 def whiskering {n} (D : Type _) [category.{v} D] : (C ⥤ D) ⥤ truncated C n ⥤ truncated D n :=
   whiskering_right _ _ _
 
-variable{C}
+variable {C}
 
 end Truncated
 
@@ -418,7 +418,7 @@ def sk (n : ℕ) : cosimplicial_object C ⥤ cosimplicial_object.truncated C n :
 
 end Skeleton
 
-variable(C)
+variable (C)
 
 /-- The constant cosimplicial object. -/
 abbrev const : C ⥤ cosimplicial_object C :=
@@ -430,7 +430,7 @@ abbrev const : C ⥤ cosimplicial_object C :=
 def augmented :=
 comma (const C) («expr𝟭»() (cosimplicial_object C))
 
-variable{C}
+variable {C}
 
 namespace Augmented
 
@@ -458,7 +458,7 @@ def to_arrow : augmented C ⥤ arrow C :=
               erw [←η.w]
               rfl } }
 
-variable(C)
+variable (C)
 
 /-- Functor composition induces a functor on augmented cosimplicial objects. -/
 @[simp]
@@ -482,7 +482,7 @@ def whiskering_obj (D : Type _) [category.{v} D] (F : C ⥤ D) : augmented C ⥤
 def whiskering (D : Type _) [category.{v} D] : (C ⥤ D) ⥤ augmented C ⥤ augmented D :=
   { obj := whiskering_obj _ _, map := fun X Y η => { app := fun A => { left := η.app _, right := whisker_left _ η } } }
 
-variable{C}
+variable {C}
 
 end Augmented
 
@@ -515,7 +515,7 @@ end CosimplicialObject
 def simplicial_cosimplicial_equiv : «expr ᵒᵖ» (simplicial_object C) ≌ cosimplicial_object («expr ᵒᵖ» C) :=
   functor.left_op_right_op_equiv _ _
 
-variable{C}
+variable {C}
 
 /-- Construct an augmented cosimplicial object in the opposite
 category from an augmented simplicial object. -/
@@ -555,7 +555,7 @@ def cosimplicial_object.augmented.left_op_right_op_iso (X : cosimplicial_object.
     (by 
       tidy)
 
-variable(C)
+variable (C)
 
 /-- A functorial version of `simplicial_object.augmented.right_op`. -/
 @[simps]

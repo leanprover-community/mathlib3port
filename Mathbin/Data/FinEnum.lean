@@ -15,7 +15,7 @@ open Finset
 
 /-- `fin_enum α` means that `α` is finite and can be enumerated in some order,
   i.e. `α` has an explicit bijection with `fin n` for some n. -/
-class FinEnum(α : Sort _) where 
+class FinEnum (α : Sort _) where 
   card : ℕ 
   Equiv{} : α ≃ Finₓ card
   [decEq : DecidableEq α]
@@ -24,7 +24,7 @@ attribute [instance] FinEnum.decEq
 
 namespace FinEnum
 
-variable{α : Type u}{β : α → Type v}
+variable {α : Type u} {β : α → Type v}
 
 /-- transport a `fin_enum` instance across an equivalence -/
 def of_equiv α {β} [FinEnum α] (h : β ≃ α) : FinEnum β :=
@@ -174,7 +174,7 @@ instance subtype.fin_enum [FinEnum α] (p : α → Prop) [DecidablePred p] : Fin
     (by 
       rintro ⟨x, h⟩ <;> simp  <;> exists x <;> simp )
 
-instance  (β : α → Type v) [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (Sigma β) :=
+instance (β : α → Type v) [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (Sigma β) :=
   of_list ((to_list α).bind$ fun a => (to_list (β a)).map$ Sigma.mk a)
     (by 
       intro x <;> cases x <;> simp )

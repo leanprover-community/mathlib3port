@@ -1,4 +1,5 @@
-import Mathbin.Topology.Sheaves.Presheaf
+import Mathbin.Topology.Sheaves.Presheaf 
+import Mathbin.CategoryTheory.Adjunction.FullyFaithful
 
 /-!
 # Presheafed spaces
@@ -23,7 +24,7 @@ open Opposite
 
 open CategoryTheory.Category CategoryTheory.Functor
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 attribute [local tidy] tactic.op_induction'
 
@@ -34,7 +35,7 @@ structure PresheafedSpace where
   Carrier : Top 
   Presheaf : carrier.presheaf C
 
-variable{C}
+variable {C}
 
 namespace PresheafedSpace
 
@@ -51,20 +52,20 @@ theorem as_coe (X : PresheafedSpace C) : X.carrier = (X : Top.{v}) :=
 theorem mk_coe carrier presheaf : (({ Carrier, Presheaf } : PresheafedSpace.{v} C) : Top.{v}) = carrier :=
   rfl
 
-instance  (X : PresheafedSpace.{v} C) : TopologicalSpace X :=
+instance (X : PresheafedSpace.{v} C) : TopologicalSpace X :=
   X.carrier.str
 
 /-- The constant presheaf on `X` with value `Z`. -/
 def const (X : Top) (Z : C) : PresheafedSpace C :=
   { Carrier := X, Presheaf := { obj := fun U => Z, map := fun U V f => 𝟙 Z } }
 
-instance  [Inhabited C] : Inhabited (PresheafedSpace C) :=
+instance [Inhabited C] : Inhabited (PresheafedSpace C) :=
   ⟨const (Top.of Pempty) (default C)⟩
 
 /-- A morphism between presheafed spaces `X` and `Y` consists of a continuous map
     `f` between the underlying topological spaces, and a (notice contravariant!) map
     from the presheaf on `Y` to the pushforward of the presheaf on `X` via `f`. -/
-structure hom(X Y : PresheafedSpace C) where 
+structure hom (X Y : PresheafedSpace C) where 
   base : (X : Top.{v}) ⟶ (Y : Top.{v})
   c : Y.presheaf ⟶ base _* X.presheaf
 
@@ -105,7 +106,7 @@ theorem comp_c {X Y Z : PresheafedSpace C} (α : hom X Y) (β : hom Y Z) :
   (comp α β).c = β.c ≫ (presheaf.pushforward _ β.base).map α.c :=
   rfl
 
-variable(C)
+variable (C)
 
 section 
 
@@ -147,7 +148,7 @@ instance category_of_PresheafedSpaces : category (PresheafedSpace C) :=
 
 end 
 
-variable{C}
+variable {C}
 
 @[simp]
 theorem id_base (X : PresheafedSpace C) : (𝟙 X : X ⟶ X).base = 𝟙 (X : Top.{v}) :=
@@ -194,7 +195,7 @@ theorem congr_app {X Y : PresheafedSpace C} {α β : X ⟶ Y} (h : α = β) U :
 
 section 
 
-variable(C)
+variable (C)
 
 /-- The forgetful functor from `PresheafedSpace` to `Top`. -/
 @[simps]
@@ -202,6 +203,8 @@ def forget : PresheafedSpace C ⥤ Top :=
   { obj := fun X => (X : Top.{v}), map := fun X Y f => f.base }
 
 end 
+
+section Restrict
 
 /--
 The restriction of a presheafed space along an open embedding into the space.
@@ -213,6 +216,7 @@ def restrict {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : Op
 /--
 The map from the restriction of a presheafed space.
 -/
+@[simps]
 def of_restrict {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h : OpenEmbedding f) : X.restrict h ⟶ X :=
   { base := f,
     c :=
@@ -222,6 +226,36 @@ def of_restrict {U : Top} (X : PresheafedSpace C) {f : U ⟶ (X : Top.{v})} (h :
             show _ = _ ≫ X.presheaf.map _ by 
               rw [←map_comp, ←map_comp]
               rfl } }
+
+-- error in AlgebraicGeometry.PresheafedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+instance of_restrict_mono
+{U : Top}
+(X : PresheafedSpace C)
+(f : «expr ⟶ »(U, X.1))
+(hf : open_embedding f) : mono (X.of_restrict hf) :=
+begin
+  haveI [] [":", expr mono f] [":=", expr (Top.mono_iff_injective _).mpr hf.inj],
+  constructor,
+  intros [ident Z, ident g₁, ident g₂, ident eq],
+  ext [] [ident V] [],
+  { induction [expr V] ["using", ident opposite.rec] [] [],
+    have [ident hV] [":", expr «expr = »((opens.map (X.of_restrict hf).base).obj (hf.is_open_map.functor.obj V), V)] [],
+    { cases [expr V] [],
+      simp [] [] [] ["[", expr opens.map, ",", expr set.preimage_image_eq _ hf.inj, "]"] [] [] },
+    haveI [] [":", expr is_iso (hf.is_open_map.adjunction.counit.app (unop (op (hf.is_open_map.functor.obj V))))] [":=", expr (nat_iso.is_iso_app_of_is_iso (whisker_left hf.is_open_map.functor hf.is_open_map.adjunction.counit) V : _)],
+    have [] [] [":=", expr PresheafedSpace.congr_app eq (op (hf.is_open_map.functor.obj V))],
+    simp [] [] ["only"] ["[", expr PresheafedSpace.comp_c_app, ",", expr PresheafedSpace.of_restrict_c_app, ",", expr category.assoc, ",", expr cancel_epi, "]"] [] ["at", ident this],
+    have [ident h] [":", expr «expr = »(«expr ≫ »(_, _), «expr ≫ »(_, «expr ≫ »(_, _)))] [":=", expr congr_arg (λ
+      f, «expr ≫ »((X.restrict hf).presheaf.map (eq_to_hom hV).op, f)) this],
+    erw ["[", expr g₁.c.naturality, ",", expr g₂.c.naturality_assoc, "]"] ["at", ident h],
+    simp [] [] ["only"] ["[", expr presheaf.pushforward_obj_map, ",", expr eq_to_hom_op, ",", expr category.assoc, ",", expr eq_to_hom_map, ",", expr eq_to_hom_trans, "]"] [] ["at", ident h],
+    rw ["<-", expr is_iso.comp_inv_eq] ["at", ident h],
+    simpa [] [] [] [] [] ["using", expr h] },
+  { have [] [] [":=", expr congr_arg PresheafedSpace.hom.base eq],
+    simp [] [] ["only"] ["[", expr PresheafedSpace.comp_base, ",", expr PresheafedSpace.of_restrict_base, "]"] [] ["at", ident this],
+    rw [expr cancel_mono] ["at", ident this],
+    exact [expr this] }
+end
 
 theorem restrict_top_presheaf (X : PresheafedSpace C) :
   (X.restrict (opens.open_embedding ⊤)).Presheaf = (opens.inclusion_top_iso X.carrier).inv _* X.presheaf :=
@@ -277,6 +311,8 @@ def restrict_top_iso (X : PresheafedSpace C) : X.restrict (opens.open_embedding 
           rw [X.of_restrict_top_c]
           simpa }
 
+end Restrict
+
 /--
 The global sections, notated Gamma.
 -/
@@ -296,11 +332,11 @@ end AlgebraicGeometry
 
 open AlgebraicGeometry AlgebraicGeometry.PresheafedSpace
 
-variable{C}
+variable {C}
 
 namespace CategoryTheory
 
-variable{D : Type u}[category.{v} D]
+variable {D : Type u} [category.{v} D]
 
 attribute [local simp] presheaf.pushforward_obj
 

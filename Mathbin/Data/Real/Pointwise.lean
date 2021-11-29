@@ -18,11 +18,11 @@ open Set
 
 open_locale Pointwise
 
-variable{α : Type _}[LinearOrderedField α]
+variable {α : Type _} [LinearOrderedField α]
 
 section MulActionWithZero
 
-variable[MulActionWithZero α ℝ][OrderedSmul α ℝ]{a : α}
+variable [MulActionWithZero α ℝ] [OrderedSmul α ℝ] {a : α}
 
 theorem Real.Inf_smul_of_nonneg (ha : 0 ≤ a) (s : Set ℝ) : Inf (a • s) = a • Inf s :=
   by 
@@ -58,7 +58,7 @@ end MulActionWithZero
 
 section Module
 
-variable[Module α ℝ][OrderedSmul α ℝ]{a : α}
+variable [Module α ℝ] [OrderedSmul α ℝ] {a : α}
 
 theorem Real.Inf_smul_of_nonpos (ha : a ≤ 0) (s : Set ℝ) : Inf (a • s) = a • Sup s :=
   by 

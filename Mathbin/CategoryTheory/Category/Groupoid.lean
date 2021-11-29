@@ -28,7 +28,7 @@ def Groupoid :=
 
 namespace Groupoid
 
-instance  : Inhabited Groupoid :=
+instance : Inhabited Groupoid :=
   ⟨bundled.of (single_obj PUnit)⟩
 
 instance str (C : Groupoid.{v, u}) : groupoid.{v, u} C.α :=

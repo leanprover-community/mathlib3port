@@ -35,18 +35,18 @@ open Fintype MulAction Subgroup
 
 section InfiniteSylow
 
-variable(p : ℕ)(G : Type _)[Groupₓ G]
+variable (p : ℕ) (G : Type _) [Groupₓ G]
 
 /-- A Sylow `p`-subgroup is a maximal `p`-subgroup. -/
 structure Sylow extends Subgroup G where 
   is_p_group' : IsPGroup p to_subgroup 
   is_maximal' : ∀ {Q : Subgroup G}, IsPGroup p Q → to_subgroup ≤ Q → Q = to_subgroup
 
-variable{p}{G}
+variable {p} {G}
 
 namespace Sylow
 
-instance  : Coe (Sylow p G) (Subgroup G) :=
+instance : Coe (Sylow p G) (Subgroup G) :=
   ⟨Sylow.toSubgroup⟩
 
 @[simp]
@@ -61,7 +61,7 @@ theorem ext {P Q : Sylow p G} (h : (P : Subgroup G) = Q) : P = Q :=
 theorem ext_iff {P Q : Sylow p G} : P = Q ↔ (P : Subgroup G) = Q :=
   ⟨congr_argₓ coeₓ, ext⟩
 
-instance  : SetLike (Sylow p G) G :=
+instance : SetLike (Sylow p G) G :=
   { coe := coeₓ, coe_injective' := fun P Q h => ext (SetLike.coe_injective h) }
 
 end Sylow
@@ -170,7 +170,7 @@ instance [hp : fact p.prime] [fintype (sylow p G)] : is_pretransitive G (sylow p
    convert [] [expr (set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)).symm] [],
    exact [expr set.eq_singleton_iff_unique_mem.mpr ⟨H.mpr rfl, λ R h, subtype.ext (sylow.ext (H.mp h))⟩] }⟩
 
-variable(p)(G)
+variable (p) (G)
 
 -- error in GroupTheory.Sylow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A generalization of **Sylow's third theorem**.
@@ -187,7 +187,7 @@ begin
   exact [expr (P.2.card_modeq_card_fixed_points (sylow p G)).trans (by rw [expr this] [])]
 end
 
-variable{p}{G}
+variable {p} {G}
 
 /-- Sylow subgroups are isomorphic -/
 def Sylow.equivSmul (P : Sylow p G) (g : G) : P ≃* (g • P : Sylow p G) :=
@@ -219,7 +219,7 @@ noncomputable def Sylow.equivQuotientNormalizer [Fact p.prime] [Fintype (Sylow p
       rw [P.stabilizer_eq_normalizer]
     
 
-noncomputable instance  [Fact p.prime] [Fintype (Sylow p G)] (P : Sylow p G) :
+noncomputable instance [Fact p.prime] [Fintype (Sylow p G)] (P : Sylow p G) :
   Fintype (QuotientGroup.Quotient P.1.normalizer) :=
   of_equiv (Sylow p G) P.equiv_quotient_normalizer
 
@@ -262,7 +262,7 @@ open_locale BigOperators
 
 universe u v w
 
-variable{G : Type u}{α : Type v}{β : Type w}[Groupₓ G]
+variable {G : Type u} {α : Type v} {β : Type w} [Groupₓ G]
 
 attribute [local instance] Subtype.fintype setFintype Classical.propDecidable
 

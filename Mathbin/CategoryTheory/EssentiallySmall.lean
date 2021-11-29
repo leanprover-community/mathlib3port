@@ -18,13 +18,13 @@ universe w v v' u u'
 
 open CategoryTheory
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 namespace CategoryTheory
 
 /-- A category is `essentially_small.{w}` if there exists
 an equivalence to some `S : Type w` with `[small_category S]`. -/
-class essentially_small(C : Type u)[category.{v} C] : Prop where 
+class essentially_small (C : Type u) [category.{v} C] : Prop where 
   equiv_small_category :
   ∃ (S : Type w)(_ : small_category S),
     by 
@@ -71,12 +71,12 @@ A category is `w`-locally small if every hom set is `w`-small.
 
 See `shrink_homs C` for a category instance where every hom set has been replaced by a small model.
 -/
-class locally_small(C : Type u)[category.{v} C] : Prop where 
+class locally_small (C : Type u) [category.{v} C] : Prop where 
   hom_small : ∀ X Y : C, Small.{w} (X ⟶ Y) :=  by 
   runTac 
     tactic.apply_instance
 
-instance  (C : Type u) [category.{v} C] [locally_small.{w} C] (X Y : C) : Small (X ⟶ Y) :=
+instance (C : Type u) [category.{v} C] [locally_small.{w} C] (X Y : C) : Small (X ⟶ Y) :=
   locally_small.hom_small X Y
 
 theorem locally_small_congr {C : Type u} [category.{v} C] {D : Type u'} [category.{v'} D] (e : C ≌ D) :
@@ -98,10 +98,10 @@ theorem locally_small_congr {C : Type u} [category.{v} C] {D : Type u'} [categor
       refine' (small_congr _).mpr L 
       exact equiv_of_fully_faithful e.functor
 
-instance (priority := 100)locally_small_self (C : Type u) [category.{v} C] : locally_small.{v} C :=
+instance (priority := 100) locally_small_self (C : Type u) [category.{v} C] : locally_small.{v} C :=
   {  }
 
-instance (priority := 100)locally_small_of_essentially_small (C : Type u) [category.{v} C] [essentially_small.{w} C] :
+instance (priority := 100) locally_small_of_essentially_small (C : Type u) [category.{v} C] [essentially_small.{w} C] :
   locally_small.{w} C :=
   (locally_small_congr (equiv_small_model C)).mpr (CategoryTheory.locally_small_self _)
 
@@ -117,7 +117,7 @@ namespace ShrinkHoms
 
 section 
 
-variable{C' : Type _}
+variable {C' : Type _}
 
 /-- Help the typechecker by explicitly translating from `C` to `shrink_homs C`. -/
 def to_shrink_homs {C' : Type _} (X : C') : shrink_homs C' :=
@@ -137,10 +137,10 @@ theorem from_to (X : shrink_homs C') : to_shrink_homs (from_shrink_homs X) = X :
 
 end 
 
-variable(C)[locally_small.{w} C]
+variable (C) [locally_small.{w} C]
 
 @[simps]
-noncomputable instance  : category.{w} (shrink_homs C) :=
+noncomputable instance : category.{w} (shrink_homs C) :=
   { Hom := fun X Y => Shrink (from_shrink_homs X ⟶ from_shrink_homs Y),
     id := fun X => equivShrink _ (𝟙 (from_shrink_homs X)),
     comp := fun X Y Z f g => equivShrink _ ((equivShrink _).symm f ≫ (equivShrink _).symm g) }
@@ -204,7 +204,7 @@ theorem essentially_small_iff (C : Type u) [category.{v} C] :
 /--
 Any thin category is locally small.
 -/
-instance (priority := 100)locally_small_of_thin {C : Type u} [category.{v} C] [∀ X Y : C, Subsingleton (X ⟶ Y)] :
+instance (priority := 100) locally_small_of_thin {C : Type u} [category.{v} C] [∀ X Y : C, Subsingleton (X ⟶ Y)] :
   locally_small.{w} C :=
   {  }
 

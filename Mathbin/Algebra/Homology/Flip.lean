@@ -18,9 +18,9 @@ open CategoryTheory CategoryTheory.Limits
 
 namespace HomologicalComplex
 
-variable{V : Type u}[category.{v} V][has_zero_morphisms V]
+variable {V : Type u} [category.{v} V] [has_zero_morphisms V]
 
-variable{ι : Type _}{c : ComplexShape ι}{ι' : Type _}{c' : ComplexShape ι'}
+variable {ι : Type _} {c : ComplexShape ι} {ι' : Type _} {c' : ComplexShape ι'}
 
 /--
 Flip a complex of complexes over the diagonal,
@@ -44,7 +44,7 @@ def flip_obj (C : HomologicalComplex (HomologicalComplex V c) c') : HomologicalC
           ext j 
           exact (C.X j).shape i i' w }
 
-variable(V c c')
+variable (V c c')
 
 /-- Flipping a complex of complexes over the diagonal, as a functor. -/
 @[simps]

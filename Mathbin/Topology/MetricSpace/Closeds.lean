@@ -30,7 +30,7 @@ namespace Emetric
 
 section 
 
-variable{α : Type u}[EmetricSpace α]{s : Set α}
+variable {α : Type u} [EmetricSpace α] {s : Set α}
 
 /-- In emetric spaces, the Hausdorff edistance defines an emetric space structure
 on the type of closed subsets -/
@@ -318,7 +318,7 @@ namespace Metric
 
 section 
 
-variable{α : Type u}[MetricSpace α]
+variable {α : Type u} [MetricSpace α]
 
 /-- `nonempty_compacts α` inherits a metric space structure, as the Hausdorff
 edistance between two such sets is finite. -/

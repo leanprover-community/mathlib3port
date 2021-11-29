@@ -13,7 +13,7 @@ open Filter Set
 
 open_locale TopologicalSpace Classical
 
-variable{a b : ℝ}{f f' : ℝ → ℝ}
+variable {a b : ℝ} {f f' : ℝ → ℝ}
 
 -- error in Analysis.Calculus.Darboux: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a < m < f' b`, then `f' c = m` for some

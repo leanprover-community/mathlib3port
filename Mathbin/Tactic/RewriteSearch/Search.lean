@@ -91,7 +91,7 @@ unsafe def mk_graph (conf : config) (rules : List (expr × Bool)) (eq : expr) : 
         ⟨conf, rules, [lhs_vertex, rhs_vertex].toBuffer, native.rb_map.of_list [(lhs_pp, [0]), (rhs_pp, [1])], none,
           lhs, rhs⟩
 
-variable(g : graph)
+variable (g : graph)
 
 namespace Graph
 

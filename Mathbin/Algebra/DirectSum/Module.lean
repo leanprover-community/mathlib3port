@@ -25,22 +25,22 @@ open_locale DirectSum
 
 section General
 
-variable{R : Type u}[Semiringₓ R]
+variable {R : Type u} [Semiringₓ R]
 
-variable{ι : Type v}[dec_ι : DecidableEq ι]
+variable {ι : Type v} [dec_ι : DecidableEq ι]
 
 include R
 
-variable{M : ι → Type w}[∀ i, AddCommMonoidₓ (M i)][∀ i, Module R (M i)]
+variable {M : ι → Type w} [∀ i, AddCommMonoidₓ (M i)] [∀ i, Module R (M i)]
 
-instance  : Module R (⨁i, M i) :=
+instance : Module R (⨁i, M i) :=
   Dfinsupp.module
 
-instance  {S : Type _} [Semiringₓ S] [∀ i, Module S (M i)] [∀ i, SmulCommClass R S (M i)] :
+instance {S : Type _} [Semiringₓ S] [∀ i, Module S (M i)] [∀ i, SmulCommClass R S (M i)] :
   SmulCommClass R S (⨁i, M i) :=
   Dfinsupp.smul_comm_class
 
-instance  {S : Type _} [Semiringₓ S] [HasScalar R S] [∀ i, Module S (M i)] [∀ i, IsScalarTower R S (M i)] :
+instance {S : Type _} [Semiringₓ S] [HasScalar R S] [∀ i, Module S (M i)] [∀ i, IsScalarTower R S (M i)] :
   IsScalarTower R S (⨁i, M i) :=
   Dfinsupp.is_scalar_tower
 
@@ -49,7 +49,7 @@ theorem smul_apply (b : R) (v : ⨁i, M i) (i : ι) : (b • v) i = b • v i :=
 
 include dec_ι
 
-variable(R ι M)
+variable (R ι M)
 
 /-- Create the direct sum given a family `M` of `R` modules indexed over `ι`. -/
 def lmk : ∀ s : Finset ι, (∀ i : («expr↑ » s : Set ι), M i.val) →ₗ[R] ⨁i, M i :=
@@ -62,7 +62,7 @@ def lof : ∀ i : ι, M i →ₗ[R] ⨁i, M i :=
 theorem lof_eq_of (i : ι) (b : M i) : lof R ι M i b = of M i b :=
   rfl
 
-variable{ι M}
+variable {ι M}
 
 theorem single_eq_lof (i : ι) (b : M i) : Dfinsupp.single i b = lof R ι M i b :=
   rfl
@@ -75,16 +75,16 @@ theorem mk_smul (s : Finset ι) (c : R) x : mk M s (c • x) = c • mk M s x :=
 theorem of_smul (i : ι) (c : R) x : of M i (c • x) = c • of M i x :=
   (lof R ι M i).map_smul c x
 
-variable{R}
+variable {R}
 
 theorem support_smul [∀ i : ι x : M i, Decidable (x ≠ 0)] (c : R) (v : ⨁i, M i) : (c • v).support ⊆ v.support :=
   Dfinsupp.support_smul _ _
 
-variable{N : Type u₁}[AddCommMonoidₓ N][Module R N]
+variable {N : Type u₁} [AddCommMonoidₓ N] [Module R N]
 
-variable(φ : ∀ i, M i →ₗ[R] N)
+variable (φ : ∀ i, M i →ₗ[R] N)
 
-variable(R ι N φ)
+variable (R ι N φ)
 
 /-- The linear map constructed using the universal property of the coproduct. -/
 def to_module : (⨁i, M i) →ₗ[R] N :=
@@ -96,7 +96,7 @@ theorem coe_to_module_eq_coe_to_add_monoid :
   (to_module R ι N φ : (⨁i, M i) → N) = to_add_monoid fun i => (φ i).toAddMonoidHom :=
   rfl
 
-variable{ι N φ}
+variable {ι N φ}
 
 /-- The map constructed using the universal property gives back the original maps when
 restricted to each component. -/
@@ -104,14 +104,14 @@ restricted to each component. -/
 theorem to_module_lof i (x : M i) : to_module R ι N φ (lof R ι M i x) = φ i x :=
   to_add_monoid_of (fun i => (φ i).toAddMonoidHom) i x
 
-variable(ψ : (⨁i, M i) →ₗ[R] N)
+variable (ψ : (⨁i, M i) →ₗ[R] N)
 
 /-- Every linear map from a direct sum agrees with the one obtained by applying
 the universal property to each of its components. -/
 theorem to_module.unique (f : ⨁i, M i) : ψ f = to_module R ι N (fun i => ψ.comp$ lof R ι M i) f :=
   to_add_monoid.unique ψ.to_add_monoid_hom f
 
-variable{ψ}{ψ' : (⨁i, M i) →ₗ[R] N}
+variable {ψ} {ψ' : (⨁i, M i) →ₗ[R] N}
 
 /-- Two `linear_map`s out of a direct sum are equal if they agree on the generators.
 
@@ -129,7 +129,7 @@ def lset_to_set (S T : Set ι) (H : S ⊆ T) : (⨁i : S, M i) →ₗ[R] ⨁i : 
 
 omit dec_ι
 
-variable(ι M)
+variable (ι M)
 
 /-- Given `fintype α`, `linear_equiv_fun_on_fintype R` is the natural `R`-linear equivalence
 between `⨁ i, M i` and `Π i, M i`. -/
@@ -147,7 +147,7 @@ def linear_equiv_fun_on_fintype [Fintype ι] : (⨁i, M i) ≃ₗ[R] ∀ i, M i 
           ext 
           simp only [Dfinsupp.coe_smul, RingHom.id_apply] }
 
-variable{ι M}
+variable {ι M}
 
 @[simp]
 theorem linear_equiv_fun_on_fintype_lof [Fintype ι] [DecidableEq ι] (i : ι) (m : M i) :
@@ -177,13 +177,13 @@ theorem linear_equiv_fun_on_fintype_symm_coe [Fintype ι] (f : ⨁i, M i) :
 protected def lid (M : Type v) (ι : Type _ := PUnit) [AddCommMonoidₓ M] [Module R M] [Unique ι] : (⨁_ : ι, M) ≃ₗ[R] M :=
   { DirectSum.id M ι, to_module R ι M fun i => LinearMap.id with  }
 
-variable(ι M)
+variable (ι M)
 
 /-- The projection map onto one component, as a linear map. -/
 def component (i : ι) : (⨁i, M i) →ₗ[R] M i :=
   Dfinsupp.lapply i
 
-variable{ι M}
+variable {ι M}
 
 theorem apply_eq_component (f : ⨁i, M i) (i : ι) : f i = component R ι M i f :=
   rfl
@@ -218,15 +218,15 @@ section Submodule
 
 section Semiringₓ
 
-variable{R : Type u}[Semiringₓ R]
+variable {R : Type u} [Semiringₓ R]
 
-variable{ι : Type v}[dec_ι : DecidableEq ι]
+variable {ι : Type v} [dec_ι : DecidableEq ι]
 
 include dec_ι
 
-variable{M : Type _}[AddCommMonoidₓ M][Module R M]
+variable {M : Type _} [AddCommMonoidₓ M] [Module R M]
 
-variable(A : ι → Submodule R M)
+variable (A : ι → Submodule R M)
 
 /-- The canonical embedding from `⨁ i, A i` to `M`  where `A` is a collection of `submodule R M`
 indexed by `ι`-/
@@ -249,7 +249,7 @@ theorem submodule_is_internal.to_add_submonoid :
   submodule_is_internal A ↔ add_submonoid_is_internal fun i => (A i).toAddSubmonoid :=
   Iff.rfl
 
-variable{A}
+variable {A}
 
 /-- If a direct sum of submodules is internal then the submodules span the module. -/
 theorem submodule_is_internal.supr_eq_top (h : submodule_is_internal A) : supr A = ⊤ :=
@@ -291,13 +291,13 @@ end Semiringₓ
 
 section Ringₓ
 
-variable{R : Type u}[Ringₓ R]
+variable {R : Type u} [Ringₓ R]
 
-variable{ι : Type v}[dec_ι : DecidableEq ι]
+variable {ι : Type v} [dec_ι : DecidableEq ι]
 
 include dec_ι
 
-variable{M : Type _}[AddCommGroupₓ M][Module R M]
+variable {M : Type _} [AddCommGroupₓ M] [Module R M]
 
 theorem submodule_is_internal.to_add_subgroup (A : ι → Submodule R M) :
   submodule_is_internal A ↔ add_subgroup_is_internal fun i => (A i).toAddSubgroup :=

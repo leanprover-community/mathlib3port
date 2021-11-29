@@ -59,17 +59,9 @@ open_locale TopologicalSpace Manifold Classical Filter BigOperators
 
 noncomputable theory
 
-variable{ι :
-    Type
-      uι}{E :
-    Type
-      uE}[NormedGroup
-      E][NormedSpace ℝ
-      E][FiniteDimensional ℝ
-      E]{H :
-    Type
-      uH}[TopologicalSpace
-      H](I : ModelWithCorners ℝ E H){M : Type uM}[TopologicalSpace M][ChartedSpace H M][SmoothManifoldWithCorners I M]
+variable {ι : Type uι} {E : Type uE} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] {H : Type uH}
+  [TopologicalSpace H] (I : ModelWithCorners ℝ E H) {M : Type uM} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M]
 
 /-!
 ### Covering by supports of smooth bump functions
@@ -86,7 +78,7 @@ subordinate to `U`. Then we use this fact to prove a version of the Whitney embe
 compact real manifold can be embedded into `ℝ^n` for large enough `n`.  -/
 
 
-variable(ι M)
+variable (ι M)
 
 /-- We say that a collection of `smooth_bump_function`s is a `smooth_bump_covering` of a set `s` if
 
@@ -102,7 +94,7 @@ subordinate to `U`, see `smooth_bump_covering.exists_is_subordinate`.
 This covering can be used, e.g., to construct a partition of unity and to prove the weak
 Whitney embedding theorem. -/
 @[nolint has_inhabited_instance]
-structure SmoothBumpCovering(s : Set M := univ) where 
+structure SmoothBumpCovering (s : Set M := univ) where 
   c : ι → M 
   toFun : ∀ i, SmoothBumpFunction I (c i)
   c_mem' : ∀ i, c i ∈ s 
@@ -115,20 +107,20 @@ structure SmoothBumpCovering(s : Set M := univ) where
 * the family `λ i, support (f i)` is locally finite;
 * for all `x ∈ s` the sum `∑ᶠ i, f i x` equals one;
 * for all `x`, the sum `∑ᶠ i, f i x` is less than or equal to one. -/
-structure SmoothPartitionOfUnity(s : Set M := univ) where 
+structure SmoothPartitionOfUnity (s : Set M := univ) where 
   toFun : ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯
   locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : ∀ i x, 0 ≤ to_fun i x 
   sum_eq_one' : ∀ x _ : x ∈ s, (∑ᶠi, to_fun i x) = 1
   sum_le_one' : ∀ x, (∑ᶠi, to_fun i x) ≤ 1
 
-variable{ι I M}
+variable {ι I M}
 
 namespace SmoothPartitionOfUnity
 
-variable{s : Set M}(f : SmoothPartitionOfUnity ι I M s)
+variable {s : Set M} (f : SmoothPartitionOfUnity ι I M s)
 
-instance  {s : Set M} : CoeFun (SmoothPartitionOfUnity ι I M s) fun _ => ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯ :=
+instance {s : Set M} : CoeFun (SmoothPartitionOfUnity ι I M s) fun _ => ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯ :=
   ⟨SmoothPartitionOfUnity.toFun⟩
 
 protected theorem LocallyFinite : LocallyFinite fun i => support (f i) :=
@@ -181,7 +173,7 @@ theorem smooth_to_partition_of_unity {E : Type uE} [NormedGroup E] [NormedSpace 
         simp only [mul_support_one_sub]
         exact f.locally_finite
 
-variable{s : Set M}
+variable {s : Set M}
 
 /-- A `bump_covering` such that all functions in this covering are smooth generates a smooth
 partition of unity.
@@ -212,9 +204,9 @@ end BumpCovering
 
 namespace SmoothBumpCovering
 
-variable{s : Set M}{U : M → Set M}(fs : SmoothBumpCovering ι I M s){I}
+variable {s : Set M} {U : M → Set M} (fs : SmoothBumpCovering ι I M s) {I}
 
-instance  : CoeFun (SmoothBumpCovering ι I M s) fun x => ∀ i : ι, SmoothBumpFunction I (x.c i) :=
+instance : CoeFun (SmoothBumpCovering ι I M s) fun x => ∀ i : ι, SmoothBumpFunction I (x.c i) :=
   ⟨to_fun⟩
 
 @[simp]
@@ -235,7 +227,7 @@ theorem is_subordinate.support_subset {fs : SmoothBumpCovering ι I M s} {U : M 
   (i : ι) : support (fs i) ⊆ U (fs.c i) :=
   subset.trans subset_closure (h i)
 
-variable(I)
+variable (I)
 
 -- error in Geometry.Manifold.PartitionOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Let `M` be a smooth manifold with corners modelled on a finite dimensional real vector space.
@@ -267,7 +259,7 @@ begin
   { simpa [] [] ["only"] ["[", expr coe_mk, ",", expr smooth_bump_function.support_update_r, "]"] [] ["using", expr hfU i] }
 end
 
-variable{I M}
+variable {I M}
 
 protected theorem LocallyFinite : LocallyFinite fun i => support (fs i) :=
   fs.locally_finite'
@@ -309,7 +301,7 @@ theorem mem_ext_chart_at_ind_source (x : M) (hx : x ∈ s) : x ∈ (extChartAt I
 protected def Fintype [CompactSpace M] : Fintype ι :=
   fs.locally_finite.fintype_of_compact$ fun i => (fs i).nonempty_support
 
-variable[T2Space M]
+variable [T2Space M]
 
 /-- Reinterpret a `smooth_bump_covering` as a continuous `bump_covering`. Note that not every
 `f : bump_covering ι M s` with smooth functions `f i` is a `smooth_bump_covering`. -/
@@ -361,7 +353,7 @@ theorem sum_to_smooth_partition_of_unity_eq (x : M) :
 
 end SmoothBumpCovering
 
-variable(I)
+variable (I)
 
 -- error in Geometry.Manifold.PartitionOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given two disjoint closed sets in a Hausdorff σ-compact finite dimensional manifold, there
@@ -387,7 +379,7 @@ begin
   exact [expr nmem_support.1 (subset_compl_comm.1 (hf.support_subset i) hx)]
 end
 
-variable{I}
+variable {I}
 
 namespace SmoothPartitionOfUnity
 
@@ -403,10 +395,10 @@ def single (i : ι) (s : Set M) : SmoothPartitionOfUnity ι I M s :=
         ·
           simp only [smooth_zero, BumpCovering.coe_single, Pi.single_eq_of_ne h, ContinuousMap.coe_zero]
 
-instance  [Inhabited ι] (s : Set M) : Inhabited (SmoothPartitionOfUnity ι I M s) :=
+instance [Inhabited ι] (s : Set M) : Inhabited (SmoothPartitionOfUnity ι I M s) :=
   ⟨single (default ι) s⟩
 
-variable[T2Space M][SigmaCompactSpace M]
+variable [T2Space M] [SigmaCompactSpace M]
 
 -- error in Geometry.Manifold.PartitionOfUnity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `X` is a paracompact normal topological space and `U` is an open covering of a closed set

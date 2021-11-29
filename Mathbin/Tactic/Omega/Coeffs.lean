@@ -8,7 +8,7 @@ namespace Coeffs
 
 open List.Func
 
-variable{v : Nat → Int}
+variable {v : Nat → Int}
 
 /-- `val_between v as l o` is the value (under valuation `v`) of the term
     obtained taking the term represented by `(0, as)` and dropping all

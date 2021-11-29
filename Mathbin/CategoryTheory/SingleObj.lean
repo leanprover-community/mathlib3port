@@ -41,7 +41,7 @@ def single_obj (α : Type u) : Type :=
 
 namespace SingleObj
 
-variable(α : Type u)
+variable (α : Type u)
 
 /-- One and `flip (*)` become `id` and `comp` for morphisms of the single object category. -/
 instance category_struct [HasOne α] [Mul α] : category_struct (single_obj α) :=
@@ -155,7 +155,7 @@ end MonoidHom
 
 namespace Units
 
-variable(α : Type u)[Monoidₓ α]
+variable (α : Type u) [Monoidₓ α]
 
 /--
 The units in a monoid are (multiplicatively) equivalent to

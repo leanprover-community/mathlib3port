@@ -22,18 +22,18 @@ ordered module, ordered scalar, ordered smul, ordered action, ordered vector spa
 
 open_locale Pointwise
 
-variable{k M N : Type _}
+variable {k M N : Type _}
 
 namespace OrderDual
 
-instance  [Semiringₓ k] [OrderedAddCommMonoid M] [Module k M] : Module k (OrderDual M) :=
+instance [Semiringₓ k] [OrderedAddCommMonoid M] [Module k M] : Module k (OrderDual M) :=
   { add_smul := fun r s x => OrderDual.rec (add_smul _ _) x, zero_smul := fun m => OrderDual.rec (zero_smul _) m }
 
 end OrderDual
 
 section Semiringₓ
 
-variable[OrderedSemiring k][OrderedAddCommGroup M][Module k M][OrderedSmul k M]{a b : M}{c : k}
+variable [OrderedSemiring k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M} {c : k}
 
 theorem smul_neg_iff_of_pos (hc : 0 < c) : c • a < 0 ↔ a < 0 :=
   by 
@@ -44,7 +44,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable[OrderedRing k][OrderedAddCommGroup M][Module k M][OrderedSmul k M]{a b : M}{c : k}
+variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M} {c : k}
 
 theorem smul_lt_smul_of_neg (h : a < b) (hc : c < 0) : c • b < c • a :=
   by 
@@ -105,7 +105,7 @@ end Ringₓ
 
 section Field
 
-variable[LinearOrderedField k][OrderedAddCommGroup M][Module k M][OrderedSmul k M]{a b : M}{c : k}
+variable [LinearOrderedField k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {a b : M} {c : k}
 
 theorem smul_le_smul_iff_of_neg (hc : c < 0) : c • a ≤ c • b ↔ b ≤ a :=
   by 
@@ -122,7 +122,7 @@ theorem lt_smul_iff_of_neg (hc : c < 0) : a < c • b ↔ b < c⁻¹ • a :=
     rw [←neg_negₓ c, ←neg_negₓ b, neg_smul_neg, inv_neg, neg_smul _ a, neg_lt_neg_iff]
     exact lt_smul_iff_of_pos (neg_pos_of_neg hc)
 
-variable(M)
+variable (M)
 
 /-- Left scalar multiplication as an order isomorphism. -/
 @[simps]
@@ -131,7 +131,7 @@ def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o OrderDual M :=
     left_inv := inv_smul_smul₀ hc.ne, right_inv := smul_inv_smul₀ hc.ne,
     map_rel_iff' := fun b₁ b₂ => smul_le_smul_iff_of_neg hc }
 
-variable{M}[OrderedAddCommGroup N][Module k N][OrderedSmul k N]
+variable {M} [OrderedAddCommGroup N] [Module k N] [OrderedSmul k N]
 
 instance Prod.ordered_smul : OrderedSmul k (M × N) :=
   OrderedSmul.mk'$
@@ -155,7 +155,7 @@ end Field
 
 section OrderedSemiring
 
-variable[OrderedSemiring k][OrderedAddCommMonoid M][SmulWithZero k M][OrderedSmul k M]{s : Set M}{c : k}
+variable [OrderedSemiring k] [OrderedAddCommMonoid M] [SmulWithZero k M] [OrderedSmul k M] {s : Set M} {c : k}
 
 theorem smul_lower_bounds_subset_lower_bounds_smul (hc : 0 ≤ c) : c • LowerBounds s ⊆ LowerBounds (c • s) :=
   (monotone_smul_left hc).image_lower_bounds_subset_lower_bounds_image
@@ -173,7 +173,7 @@ end OrderedSemiring
 
 section OrderedRing
 
-variable[OrderedRing k][OrderedAddCommGroup M][Module k M][OrderedSmul k M]{s : Set M}{c : k}
+variable [OrderedRing k] [OrderedAddCommGroup M] [Module k M] [OrderedSmul k M] {s : Set M} {c : k}
 
 theorem smul_lower_bounds_subset_upper_bounds_smul (hc : c ≤ 0) : c • LowerBounds s ⊆ UpperBounds (c • s) :=
   (antitone_smul_left hc).image_lower_bounds_subset_upper_bounds_image
@@ -191,11 +191,11 @@ end OrderedRing
 
 section LinearOrderedField
 
-variable[LinearOrderedField k][OrderedAddCommGroup M]
+variable [LinearOrderedField k] [OrderedAddCommGroup M]
 
 section MulActionWithZero
 
-variable[MulActionWithZero k M][OrderedSmul k M]{s t : Set M}{c : k}
+variable [MulActionWithZero k M] [OrderedSmul k M] {s t : Set M} {c : k}
 
 @[simp]
 theorem lower_bounds_smul_of_pos (hc : 0 < c) : LowerBounds (c • s) = c • LowerBounds s :=
@@ -217,7 +217,7 @@ end MulActionWithZero
 
 section Module
 
-variable[Module k M][OrderedSmul k M]{s t : Set M}{c : k}
+variable [Module k M] [OrderedSmul k M] {s t : Set M} {c : k}
 
 @[simp]
 theorem lower_bounds_smul_of_neg (hc : c < 0) : LowerBounds (c • s) = c • UpperBounds s :=

@@ -14,13 +14,13 @@ what's to do is taking the lemmas in `data.x.intervals` and abstract away the co
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Finset
 
 section Preorderₓ
 
-variable[Preorderₓ α][LocallyFiniteOrder α]{a b : α}
+variable [Preorderₓ α] [LocallyFiniteOrder α] {a b : α}
 
 @[simp]
 theorem nonempty_Icc : (Icc a b).Nonempty ↔ a ≤ b :=
@@ -88,7 +88,7 @@ theorem Ioc_eq_empty_of_le (h : b ≤ a) : Ioc a b = ∅ :=
 theorem Ioo_eq_empty_of_le (h : b ≤ a) : Ioo a b = ∅ :=
   Ioo_eq_empty h.not_lt
 
-variable(a)
+variable (a)
 
 @[simp]
 theorem Ico_self : Ico a a = ∅ :=
@@ -105,7 +105,7 @@ theorem Ioo_self : Ioo a a = ∅ :=
   by 
     rw [←coe_eq_empty, coe_Ioo, Set.Ioo_self]
 
-variable{a b}
+variable {a b}
 
 theorem left_mem_Icc : a ∈ Icc a b ↔ a ≤ b :=
   by 
@@ -184,7 +184,7 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable[PartialOrderₓ α][LocallyFiniteOrder α]{a b : α}
+variable [PartialOrderₓ α] [LocallyFiniteOrder α] {a b : α}
 
 @[simp]
 theorem Icc_self (a : α) : Icc a a = {a} :=
@@ -193,7 +193,7 @@ theorem Icc_self (a : α) : Icc a a = {a} :=
 
 section DecidableEq
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 theorem Icc_erase_left : (Icc a b).erase a = Ioc a b :=
   by 
@@ -256,7 +256,7 @@ end PartialOrderₓ
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ α][LocallyFiniteOrder α]{a b : α}
+variable [LinearOrderₓ α] [LocallyFiniteOrder α] {a b : α}
 
 theorem Ico_subset_Ico_iff {a₁ b₁ a₂ b₂ : α} (h : a₁ < b₁) : Ico a₁ b₁ ⊆ Ico a₂ b₂ ↔ a₂ ≤ a₁ ∧ b₁ ≤ b₂ :=
   by 
@@ -323,7 +323,7 @@ end LinearOrderₓ
 
 section OrderTop
 
-variable[Preorderₓ α][OrderTop α][LocallyFiniteOrder α]
+variable [Preorderₓ α] [OrderTop α] [LocallyFiniteOrder α]
 
 theorem _root_.bdd_below.finite {s : Set α} (hs : BddBelow s) : s.finite :=
   hs.finite_of_bdd_above$ OrderTop.bdd_above s
@@ -332,7 +332,7 @@ end OrderTop
 
 section OrderBot
 
-variable[Preorderₓ α][OrderBot α][LocallyFiniteOrder α]
+variable [Preorderₓ α] [OrderBot α] [LocallyFiniteOrder α]
 
 theorem _root_.bdd_above.finite {s : Set α} (hs : BddAbove s) : s.finite :=
   hs.dual.finite
@@ -341,7 +341,7 @@ end OrderBot
 
 section OrderedCancelAddCommMonoid
 
-variable[OrderedCancelAddCommMonoid α][HasExistsAddOfLe α][DecidableEq α][LocallyFiniteOrder α]
+variable [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [DecidableEq α] [LocallyFiniteOrder α]
 
 theorem image_add_left_Icc (a b c : α) : (Icc a b).Image ((·+·) c) = Icc (c+a) (c+b) :=
   by 

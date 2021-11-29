@@ -26,7 +26,7 @@ isomorphisms of C. -/
 def core (C : Type u₁) :=
   C
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
 instance core_category : groupoid.{v₁} (core C) :=
   { Hom := fun X Y : C => X ≅ Y, inv := fun X Y f => iso.symm f, id := fun X => iso.refl X,
@@ -42,16 +42,16 @@ theorem id_hom (X : core C) : iso.hom (𝟙 X) = 𝟙 X :=
 theorem comp_hom {X Y Z : core C} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g).Hom = f.hom ≫ g.hom :=
   rfl
 
-variable(C)
+variable (C)
 
 /-- The core of a category is naturally included in the category. -/
 def inclusion : core C ⥤ C :=
   { obj := id, map := fun X Y f => f.hom }
 
-instance  : faithful (inclusion C) :=
+instance : faithful (inclusion C) :=
   {  }
 
-variable{C}{G : Type u₂}[groupoid.{v₂} G]
+variable {C} {G : Type u₂} [groupoid.{v₂} G]
 
 /-- A functor from a groupoid to a category C factors through the core of C. -/
 noncomputable def functor_to_core (F : G ⥤ C) : G ⥤ core C :=

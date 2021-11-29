@@ -97,15 +97,15 @@ theorem HasSsubset.Ssubset.asymm {α : Type _} [HasSsubset α] [IsAsymm α (· �
 
 namespace Set
 
-variable{α : Type _}
+variable {α : Type _}
 
-instance  : LE (Set α) :=
+instance : LE (Set α) :=
   ⟨· ⊆ ·⟩
 
-instance  : LT (Set α) :=
+instance : LT (Set α) :=
   ⟨fun s t => s ≤ t ∧ ¬t ≤ s⟩
 
-instance  {α : Type _} : BooleanAlgebra (Set α) :=
+instance {α : Type _} : BooleanAlgebra (Set α) :=
   { (inferInstance : BooleanAlgebra (α → Prop)) with sup := · ∪ ·, le := · ≤ ·, lt := · < ·, inf := · ∩ ·, bot := ∅,
     Compl := Set.Compl, top := univ, sdiff := · \ · }
 
@@ -137,7 +137,7 @@ theorem compl_eq_compl : Set.Compl = (HasCompl.compl : Set α → Set α) :=
   rfl
 
 /-- Coercion from a set to the corresponding subtype. -/
-instance  {α : Type u} : CoeSort (Set α) (Type u) :=
+instance {α : Type u} : CoeSort (Set α) (Type u) :=
   ⟨fun s => { x // x ∈ s }⟩
 
 instance pi_set_coe.can_lift (ι : Type u) (α : ∀ i : ι, Type v) [ne : ∀ i, Nonempty (α i)] (s : Set ι) :
@@ -154,7 +154,7 @@ end Set
 
 section SetCoe
 
-variable{α : Type u}
+variable {α : Type u}
 
 theorem Set.set_coe_eq_subtype (s : Set α) : coeSortₓ.{u + 1, u + 2} s = { x // x ∈ s } :=
   rfl
@@ -196,9 +196,9 @@ theorem Eq.subset {α} {s t : Set α} : s = t → s ⊆ t :=
 
 namespace Set
 
-variable{α : Type u}{β : Type v}{γ : Type w}{ι : Sort x}{a : α}{s t : Set α}
+variable {α : Type u} {β : Type v} {γ : Type w} {ι : Sort x} {a : α} {s t : Set α}
 
-instance  : Inhabited (Set α) :=
+instance : Inhabited (Set α) :=
   ⟨∅⟩
 
 @[ext]
@@ -298,7 +298,7 @@ theorem not_subset : ¬s ⊆ t ↔ ∃ (a : _)(_ : a ∈ s), a ∉ t :=
 /-! ### Definition of strict subsets `s ⊂ t` and basic properties. -/
 
 
-instance  : HasSsubset (Set α) :=
+instance : HasSsubset (Set α) :=
   ⟨· < ·⟩
 
 @[simp]
@@ -418,7 +418,7 @@ theorem univ_nonempty : ∀ [h : Nonempty α], (univ : Set α).Nonempty
 theorem nonempty.to_subtype (h : s.nonempty) : Nonempty s :=
   nonempty_subtype.2 h
 
-instance  [Nonempty α] : Nonempty (Set.Univ : Set α) :=
+instance [Nonempty α] : Nonempty (Set.Univ : Set α) :=
   Set.univ_nonempty.to_subtype
 
 @[simp]
@@ -481,7 +481,7 @@ theorem subset_eq_empty {s t : Set α} (h : t ⊆ s) (e : s = ∅) : t = ∅ :=
 theorem ball_empty_iff {p : α → Prop} : (∀ x _ : x ∈ (∅ : Set α), p x) ↔ True :=
   iff_true_intro$ fun x => False.elim
 
-instance  (α : Type u) : IsEmpty.{u + 1} (∅ : Set α) :=
+instance (α : Type u) : IsEmpty.{u + 1} (∅ : Set α) :=
   ⟨fun x => x.2⟩
 
 /-!
@@ -871,7 +871,7 @@ theorem union_insert : s ∪ insert a t = insert a (s ∪ t) :=
 theorem insert_nonempty (a : α) (s : Set α) : (insert a s).Nonempty :=
   ⟨a, mem_insert a s⟩
 
-instance  (a : α) (s : Set α) : Nonempty (insert a s : Set α) :=
+instance (a : α) (s : Set α) : Nonempty (insert a s : Set α) :=
   (insert_nonempty a s).to_subtype
 
 theorem insert_inter (x : α) (s t : Set α) : insert x (s ∩ t) = insert x s ∩ insert x t :=
@@ -1551,7 +1551,7 @@ infixl:80 " ⁻¹' " => preimage
 
 section Preimage
 
-variable{f : α → β}{g : β → γ}
+variable {f : α → β} {g : β → γ}
 
 @[simp]
 theorem preimage_empty : f ⁻¹' ∅ = ∅ :=
@@ -1639,7 +1639,7 @@ theorem eq_preimage_subtype_val_iff {p : α → Prop} {s : Set (Subtype p)} {t :
           by 
             simp [h]⟩
 
-theorem preimage_coe_coe_diagonal {α : Type _} (s : Set α) : Prod.mapₓ coeₓ coeₓ ⁻¹' diagonal α = diagonal s :=
+theorem preimage_coe_coe_diagonal {α : Type _} (s : Set α) : Prod.map coeₓ coeₓ ⁻¹' diagonal α = diagonal s :=
   by 
     ext ⟨⟨x, x_in⟩, ⟨y, y_in⟩⟩
     simp [Set.Diagonal]
@@ -1862,7 +1862,7 @@ theorem nonempty.preimage {s : Set β} (hs : s.nonempty) {f : α → β} (hf : s
   let ⟨x, hx⟩ := hf y
   ⟨x, mem_preimage.2$ hx.symm ▸ hy⟩
 
-instance  (f : α → β) (s : Set α) [Nonempty s] : Nonempty (f '' s) :=
+instance (f : α → β) (s : Set α) [Nonempty s] : Nonempty (f '' s) :=
   (Set.Nonempty.image f nonempty_of_nonempty_subtype).to_subtype
 
 /-- image and preimage are a Galois connection -/
@@ -2061,7 +2061,7 @@ theorem univ_eq_true_false : univ = ({True, False} : Set Prop) :=
 
 section Range
 
-variable{f : ι → α}
+variable {f : ι → α}
 
 open Function
 
@@ -2178,7 +2178,12 @@ theorem image_subset_range (f : α → β) s : f '' s ⊆ range f :=
     rw [←image_univ] <;> exact image_subset _ (subset_univ _)
 
 theorem mem_range_of_mem_image (f : α → β) s {x : β} (h : x ∈ f '' s) : x ∈ range f :=
-  mem_of_mem_of_subset h$ image_subset_range f s
+  image_subset_range f s h
+
+theorem nonempty.preimage' {s : Set β} (hs : s.nonempty) {f : α → β} (hf : s ⊆ Set.Range f) : (f ⁻¹' s).Nonempty :=
+  let ⟨y, hy⟩ := hs 
+  let ⟨x, hx⟩ := hf hy
+  ⟨x, Set.mem_preimage.2$ hx.symm ▸ hy⟩
 
 theorem range_comp (g : α → β) (f : ι → α) : range (g ∘ f) = g '' range f :=
   subset.antisymm (forall_range_iff.mpr$ fun i => mem_image_of_mem g (mem_range_self _))
@@ -2205,7 +2210,7 @@ theorem range_eq_empty_iff {f : ι → α} : range f = ∅ ↔ IsEmpty ι :=
 theorem range_eq_empty [IsEmpty ι] (f : ι → α) : range f = ∅ :=
   range_eq_empty_iff.2 ‹_›
 
-instance  [Nonempty ι] (f : ι → α) : Nonempty (range f) :=
+instance [Nonempty ι] (f : ι → α) : Nonempty (range f) :=
   (range_nonempty f).to_subtype
 
 @[simp]
@@ -2447,7 +2452,7 @@ open Set
 
 namespace Function
 
-variable{ι : Sort _}{α : Type _}{β : Type _}{f : α → β}
+variable {ι : Sort _} {α : Type _} {β : Type _} {f : α → β}
 
 theorem surjective.preimage_injective (hf : surjective f) : injective (preimage f) :=
   fun s t => (preimage_eq_preimage hf).1
@@ -2538,7 +2543,7 @@ theorem Option.injective_iff {α β} {f : Option α → β} :
 
 namespace Subtype
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem coe_image {p : α → Prop} {s : Set (Subtype p)} : coeₓ '' s = { x | ∃ h : p x, (⟨x, h⟩ : Subtype p) ∈ s } :=
   Set.ext$ fun a => ⟨fun ⟨⟨a', ha'⟩, in_s, h_eq⟩ => h_eq ▸ ⟨ha', in_s⟩, fun ⟨ha, in_s⟩ => ⟨⟨a, ha⟩, in_s, rfl⟩⟩
@@ -2645,9 +2650,9 @@ namespace Set
 
 section Prod
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
-variable{s s₁ s₂ : Set α}{t t₁ t₂ : Set β}
+variable {s s₁ s₂ : Set α} {t t₁ t₂ : Set β}
 
 /-- The cartesian product `prod s t` is the set of `(a, b)`
   such that `a ∈ s` and `b ∈ t`. -/
@@ -2764,7 +2769,7 @@ theorem prod_preimage_right {g : δ → β} : s.prod (g ⁻¹' t) = (fun p => (p
   rfl
 
 theorem preimage_prod_map_prod (f : α → β) (g : γ → δ) (s : Set β) (t : Set δ) :
-  Prod.mapₓ f g ⁻¹' s.prod t = (f ⁻¹' s).Prod (g ⁻¹' t) :=
+  Prod.map f g ⁻¹' s.prod t = (f ⁻¹' s).Prod (g ⁻¹' t) :=
   rfl
 
 theorem mk_preimage_prod (f : γ → α) (g : γ → β) : (fun x => (f x, g x)) ⁻¹' s.prod t = f ⁻¹' s ∩ g ⁻¹' t :=
@@ -2815,7 +2820,7 @@ theorem mk_preimage_prod_right_fn_eq_if {x : α} [DecidablePred (· ∈ s)] (g :
     rw [←mk_preimage_prod_right_eq_if, prod_preimage_right, preimage_preimage]
 
 theorem image_swap_eq_preimage_swap : image (@Prod.swap α β) = preimage Prod.swap :=
-  image_eq_preimage_of_inverse Prod.swap_left_inverse Prod.swap_right_inverseₓ
+  image_eq_preimage_of_inverse Prod.swap_left_inverseₓ Prod.swap_right_inverseₓ
 
 theorem preimage_swap_prod {s : Set α} {t : Set β} : Prod.swap ⁻¹' t.prod s = s.prod t :=
   by 
@@ -2839,7 +2844,7 @@ theorem prod_range_range_eq {α β γ δ} {m₁ : α → γ} {m₂ : β → δ} 
       simp [range]
 
 @[simp]
-theorem range_prod_map {α β γ δ} {m₁ : α → γ} {m₂ : β → δ} : range (Prod.mapₓ m₁ m₂) = (range m₁).Prod (range m₂) :=
+theorem range_prod_map {α β γ δ} {m₁ : α → γ} {m₂ : β → δ} : range (Prod.map m₁ m₂) = (range m₁).Prod (range m₂) :=
   prod_range_range_eq.symm
 
 theorem prod_range_univ_eq {α β γ} {m₁ : α → γ} :
@@ -2856,7 +2861,7 @@ theorem prod_univ_range_eq {α β δ} {m₂ : β → δ} :
 
 theorem range_pair_subset {α β γ : Type _} (f : α → β) (g : α → γ) :
   (range fun x => (f x, g x)) ⊆ (range f).Prod (range g) :=
-  have  : (fun x => (f x, g x)) = Prod.mapₓ f g ∘ fun x => (x, x) := funext fun x => rfl 
+  have  : (fun x => (f x, g x)) = Prod.map f g ∘ fun x => (x, x) := funext fun x => rfl 
   by 
     rw [this, ←range_prod_map]
     apply range_comp_subset_range
@@ -2946,7 +2951,7 @@ end Prod
 
 section Pi
 
-variable{ι : Type _}{α : ι → Type _}{s s₁ : Set ι}{t t₁ t₂ : ∀ i, Set (α i)}
+variable {ι : Type _} {α : ι → Type _} {s s₁ : Set ι} {t t₁ t₂ : ∀ i, Set (α i)}
 
 /-- Given an index set `ι` and a family of sets `t : Π i, set (α i)`, `pi s t`
 is the set of dependent functions `f : Πa, π a` such that `f a` belongs to `t a`
@@ -3203,7 +3208,7 @@ end Pi
 
 section Inclusion
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- `inclusion` is the "identity" function between two subsets `s` and `t`, where `s ⊆ t` -/
 def inclusion {s t : Set α} (h : s ⊆ t) : s → t :=
@@ -3253,7 +3258,7 @@ end Inclusion
 
 section ImagePreimage
 
-variable{α : Type u}{β : Type v}{f : α → β}
+variable {α : Type u} {β : Type v} {f : α → β}
 
 @[simp]
 theorem preimage_injective : injective (preimage f) ↔ surjective f :=
@@ -3308,9 +3313,9 @@ end ImagePreimage
 
 section NAryImage
 
-variable{α β γ δ ε : Type _}{f f' : α → β → γ}{g g' : α → β → γ → δ}
+variable {α β γ δ ε : Type _} {f f' : α → β → γ} {g g' : α → β → γ → δ}
 
-variable{s s' : Set α}{t t' : Set β}{u u' : Set γ}{a a' : α}{b b' : β}{c c' : γ}{d d' : δ}
+variable {s s' : Set α} {t t' : Set β} {u u' : Set γ} {a a' : α} {b b' : β} {c c' : γ} {d d' : δ}
 
 /-- The image of a binary function `f : α → β → γ` as a function `set α → set β → set γ`.
   Mathematically this should be thought of as the image of the corresponding function `α × β → γ`.
@@ -3548,7 +3553,7 @@ end Set
 
 namespace Subsingleton
 
-variable{α : Type _}[Subsingleton α]
+variable {α : Type _} [Subsingleton α]
 
 theorem eq_univ_of_nonempty {s : Set α} : s.nonempty → s = univ :=
   fun ⟨x, hx⟩ => eq_univ_of_forall$ fun y => Subsingleton.elimₓ x y ▸ hx

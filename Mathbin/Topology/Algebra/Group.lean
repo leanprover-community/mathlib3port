@@ -33,7 +33,7 @@ open_locale Classical TopologicalSpace Filter Pointwise
 
 universe u v w x
 
-variable{α : Type u}{β : Type v}{G : Type w}{H : Type x}
+variable {α : Type u} {β : Type v} {G : Type w} {H : Type x}
 
 section ContinuousMulGroup
 
@@ -44,7 +44,7 @@ In this section we prove a few statements about groups with continuous `(*)`.
 -/
 
 
-variable[TopologicalSpace G][Groupₓ G][HasContinuousMul G]
+variable [TopologicalSpace G] [Groupₓ G] [HasContinuousMul G]
 
 /-- Multiplication from the left in a topological group as a homeomorphism. -/
 @[toAdditive "Addition from the left in a topological additive group as a homeomorphism."]
@@ -124,16 +124,16 @@ that the division operation `λ x y, x * y⁻¹` (resp., subtraction) is continu
 
 /-- A topological (additive) group is a group in which the addition and negation operations are
 continuous. -/
-class TopologicalAddGroup(G : Type u)[TopologicalSpace G][AddGroupₓ G] extends HasContinuousAdd G : Prop where 
+class TopologicalAddGroup (G : Type u) [TopologicalSpace G] [AddGroupₓ G] extends HasContinuousAdd G : Prop where 
   continuous_neg : Continuous fun a : G => -a
 
 /-- A topological group is a group in which the multiplication and inversion operations are
 continuous. -/
 @[toAdditive]
-class TopologicalGroup(G : Type _)[TopologicalSpace G][Groupₓ G] extends HasContinuousMul G : Prop where 
+class TopologicalGroup (G : Type _) [TopologicalSpace G] [Groupₓ G] extends HasContinuousMul G : Prop where 
   continuous_inv : Continuous (HasInv.inv : G → G)
 
-variable[TopologicalSpace G][Groupₓ G][TopologicalGroup G]
+variable [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G]
 
 export TopologicalGroup(continuous_inv)
 
@@ -163,7 +163,7 @@ theorem Filter.Tendsto.inv {f : α → G} {l : Filter α} {y : G} (h : tendsto f
   tendsto (fun x => f x⁻¹) l (𝓝 (y⁻¹)) :=
   (continuous_inv.Tendsto y).comp h
 
-variable[TopologicalSpace α]{f : α → G}{s : Set α}{x : α}
+variable [TopologicalSpace α] {f : α → G} {s : Set α} {x : α}
 
 @[continuity, toAdditive]
 theorem Continuous.inv (hf : Continuous f) : Continuous fun x => f x⁻¹ :=
@@ -183,7 +183,7 @@ theorem ContinuousWithinAt.inv (hf : ContinuousWithinAt f s x) : ContinuousWithi
 
 section OrderedCommGroup
 
-variable[TopologicalSpace H][OrderedCommGroup H][TopologicalGroup H]
+variable [TopologicalSpace H] [OrderedCommGroup H] [TopologicalGroup H]
 
 @[toAdditive]
 theorem tendsto_inv_nhds_within_Ioi {a : H} : tendsto HasInv.inv (𝓝[Ioi a] a) (𝓝[Iio (a⁻¹)] a⁻¹) :=
@@ -232,7 +232,7 @@ theorem tendsto_inv_nhds_within_Iic_inv {a : H} : tendsto HasInv.inv (𝓝[Iic (
 end OrderedCommGroup
 
 @[instance, toAdditive]
-instance  [TopologicalSpace H] [Groupₓ H] [TopologicalGroup H] : TopologicalGroup (G × H) :=
+instance [TopologicalSpace H] [Groupₓ H] [TopologicalGroup H] : TopologicalGroup (G × H) :=
   { continuous_inv := continuous_inv.prod_map continuous_inv }
 
 @[toAdditive]
@@ -240,7 +240,7 @@ instance Pi.topological_group {C : β → Type _} [∀ b, TopologicalSpace (C b)
   [∀ b, TopologicalGroup (C b)] : TopologicalGroup (∀ b, C b) :=
   { continuous_inv := continuous_pi fun i => (continuous_apply i).inv }
 
-variable(G)
+variable (G)
 
 /-- Inversion in a topological group as a homeomorphism. -/
 @[toAdditive "Negation in a topological group as a homeomorphism."]
@@ -266,7 +266,19 @@ theorem Homeomorph.shear_mul_right_symm_coe :
   «expr⇑ » (Homeomorph.shearMulRight G).symm = fun z : G × G => (z.1, z.1⁻¹*z.2) :=
   rfl
 
-variable{G}
+variable {G}
+
+namespace Subgroup
+
+@[toAdditive]
+instance (S : Subgroup G) : TopologicalGroup S :=
+  { S.to_submonoid.has_continuous_mul with
+    continuous_inv :=
+      by 
+        rw [embedding_subtype_coe.to_inducing.continuous_iff]
+        exact continuous_subtype_coe.inv }
+
+end Subgroup
 
 @[toAdditive]
 theorem inv_closure (s : Set G) : Closure s⁻¹ = Closure (s⁻¹) :=
@@ -468,10 +480,10 @@ end TopologicalGroup
 
 section QuotientTopologicalGroup
 
-variable[TopologicalSpace G][Groupₓ G][TopologicalGroup G](N : Subgroup G)(n : N.normal)
+variable [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] (N : Subgroup G) (n : N.normal)
 
 @[toAdditive]
-instance  {G : Type _} [Groupₓ G] [TopologicalSpace G] (N : Subgroup G) : TopologicalSpace (QuotientGroup.Quotient N) :=
+instance {G : Type _} [Groupₓ G] [TopologicalSpace G] (N : Subgroup G) : TopologicalSpace (QuotientGroup.Quotient N) :=
   Quotientₓ.topologicalSpace
 
 open QuotientGroup
@@ -506,18 +518,18 @@ end QuotientTopologicalGroup
 
 /-- A typeclass saying that `λ p : G × G, p.1 - p.2` is a continuous function. This property
 automatically holds for topological additive groups but it also holds, e.g., for `ℝ≥0`. -/
-class HasContinuousSub(G : Type _)[TopologicalSpace G][Sub G] : Prop where 
+class HasContinuousSub (G : Type _) [TopologicalSpace G] [Sub G] : Prop where 
   continuous_sub : Continuous fun p : G × G => p.1 - p.2
 
 /-- A typeclass saying that `λ p : G × G, p.1 / p.2` is a continuous function. This property
 automatically holds for topological groups. Lemmas using this class have primes.
 The unprimed version is for `group_with_zero`. -/
 @[toAdditive]
-class HasContinuousDiv(G : Type _)[TopologicalSpace G][Div G] : Prop where 
+class HasContinuousDiv (G : Type _) [TopologicalSpace G] [Div G] : Prop where 
   continuous_div' : Continuous fun p : G × G => p.1 / p.2
 
 @[toAdditive]
-instance (priority := 100)TopologicalGroup.to_has_continuous_div [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] :
+instance (priority := 100) TopologicalGroup.to_has_continuous_div [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] :
   HasContinuousDiv G :=
   ⟨by 
       simp only [div_eq_mul_inv]
@@ -529,7 +541,7 @@ export HasContinuousDiv(continuous_div')
 
 section HasContinuousDiv
 
-variable[TopologicalSpace G][Div G][HasContinuousDiv G]
+variable [TopologicalSpace G] [Div G] [HasContinuousDiv G]
 
 @[toAdditive sub]
 theorem Filter.Tendsto.div' {f g : α → G} {l : Filter α} {a b : G} (hf : tendsto f l (𝓝 a)) (hg : tendsto g l (𝓝 b)) :
@@ -546,7 +558,7 @@ theorem Filter.Tendsto.div_const' (b : G) {c : G} {f : α → G} {l : Filter α}
   tendsto (fun k : α => f k / b) l (𝓝 (c / b)) :=
   h.div' tendsto_const_nhds
 
-variable[TopologicalSpace α]{f g : α → G}{s : Set α}{x : α}
+variable [TopologicalSpace α] {f g : α → G} {s : Set α} {x : α}
 
 @[continuity, toAdditive sub]
 theorem Continuous.div' (hf : Continuous f) (hg : Continuous g) : Continuous fun x => f x / g x :=
@@ -588,7 +600,7 @@ Only used to construct a topology and uniform space.
 This is currently only available for commutative groups, but it can be extended to
 non-commutative groups too.
 -/
-class AddGroupWithZeroNhd(G : Type u) extends AddCommGroupₓ G where 
+class AddGroupWithZeroNhd (G : Type u) extends AddCommGroupₓ G where 
   z{} : Filter G 
   zero_Z : pure 0 ≤ Z 
   sub_Z : tendsto (fun p : G × G => p.1 - p.2) (Z ×ᶠ Z) Z
@@ -597,7 +609,7 @@ section FilterMul
 
 section 
 
-variable[TopologicalSpace G][Groupₓ G][TopologicalGroup G]
+variable [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G]
 
 -- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]] theorem is_open.mul_left {s t : set G} : is_open t → is_open «expr * »(s, t) :=
@@ -619,7 +631,7 @@ end
   exact [expr is_open_Union (λ a, «expr $ »(is_open_Union, λ ha, this _))]
 end
 
-variable(G)
+variable (G)
 
 @[toAdditive]
 theorem TopologicalGroup.t1_space (h : @IsClosed G _ {1}) : T1Space G :=
@@ -658,7 +670,7 @@ section
 /-! Some results about an open set containing the product of two sets in a topological group. -/
 
 
-variable[TopologicalSpace G][Groupₓ G][TopologicalGroup G]
+variable [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G]
 
 -- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a compact set `K` inside an open set `U`, there is a open neighborhood `V` of `1`
@@ -719,8 +731,8 @@ theorem compact_covered_by_mul_left_translates {K V : Set G} (hK : IsCompact K) 
 /-- Every locally compact separable topological group is σ-compact.
   Note: this is not true if we drop the topological group hypothesis. -/
 @[toAdditive SeparableLocallyCompactAddGroup.sigma_compact_space]
-instance (priority := 100)SeparableLocallyCompactGroup.sigma_compact_space [separable_space G] [LocallyCompactSpace G] :
-  SigmaCompactSpace G :=
+instance (priority := 100) SeparableLocallyCompactGroup.sigma_compact_space [separable_space G]
+  [LocallyCompactSpace G] : SigmaCompactSpace G :=
   by 
     obtain ⟨L, hLc, hL1⟩ := exists_compact_mem_nhds (1 : G)
     refine' ⟨⟨fun n => (fun x => x*dense_seq G n) ⁻¹' L, _, _⟩⟩
@@ -761,7 +773,7 @@ end
 
 section 
 
-variable[TopologicalSpace G][CommGroupₓ G][TopologicalGroup G]
+variable [TopologicalSpace G] [CommGroupₓ G] [TopologicalGroup G]
 
 @[toAdditive]
 theorem nhds_mul (x y : G) : 𝓝 (x*y) = 𝓝 x*𝓝 y :=
@@ -813,9 +825,9 @@ instance Multiplicative.topological_group {G} [h : TopologicalSpace G] [AddGroup
 
 namespace Units
 
-variable[Monoidₓ α][TopologicalSpace α][HasContinuousMul α]
+variable [Monoidₓ α] [TopologicalSpace α] [HasContinuousMul α]
 
-instance  : TopologicalGroup (Units α) :=
+instance : TopologicalGroup (Units α) :=
   { continuous_inv :=
       continuous_induced_rng
         ((continuous_unop.comp (continuous_snd.comp (@continuous_embed_product α _ _))).prod_mk

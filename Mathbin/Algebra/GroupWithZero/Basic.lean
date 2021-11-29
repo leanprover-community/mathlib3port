@@ -34,7 +34,7 @@ open_locale Classical
 
 open Function
 
-variable{M₀ G₀ M₀' G₀' : Type _}
+variable {M₀ G₀ M₀' G₀' : Type _}
 
 mk_simp_attribute field_simps :=
   "The simpset `field_simps` is used by the tactic `field_simp` to\nreduce an expression in a field to an expression of the form `n / d` where `n` and `d` are\ndivision-free."
@@ -45,7 +45,7 @@ section
 
 section MulZeroClass
 
-variable[MulZeroClass M₀]{a b : M₀}
+variable [MulZeroClass M₀] {a b : M₀}
 
 /-- Pullback a `mul_zero_class` instance along an injective function.
 See note [reducible non-instances]. -/
@@ -129,7 +129,7 @@ theorem eq_zero_of_mul_self_eq_zero [Mul M₀] [HasZero M₀] [NoZeroDivisors M�
 
 section 
 
-variable[MulZeroClass M₀][NoZeroDivisors M₀]{a b : M₀}
+variable [MulZeroClass M₀] [NoZeroDivisors M₀] {a b : M₀}
 
 /-- If `α` has no zero divisors, then the product of two elements equals zero iff one of them
 equals zero. -/
@@ -177,7 +177,7 @@ end
 
 section 
 
-variable[MulZeroOneClass M₀]
+variable [MulZeroOneClass M₀]
 
 /-- Pullback a `mul_zero_one_class` instance along an injective function.
 See note [reducible non-instances]. -/
@@ -223,7 +223,7 @@ end
 
 section 
 
-variable[MulZeroOneClass M₀][Nontrivial M₀]{a b : M₀}
+variable [MulZeroOneClass M₀] [Nontrivial M₀] {a b : M₀}
 
 /-- In a nontrivial monoid with zero, zero and one are different. -/
 @[simp]
@@ -319,7 +319,7 @@ protected def Function.Surjective.commMonoidWithZero [HasZero M₀'] [Mul M₀']
   CommMonoidWithZero M₀' :=
   { hf.comm_monoid f one mul, hf.mul_zero_class f zero mul with  }
 
-variable[MonoidWithZeroₓ M₀]
+variable [MonoidWithZeroₓ M₀]
 
 namespace Units
 
@@ -423,7 +423,7 @@ theorem inverse_mul_cancel_left (x y : M₀) (h : IsUnit x) : (inverse x*x*y) = 
   by 
     rw [←mul_assocₓ, inverse_mul_cancel x h, one_mulₓ]
 
-variable(M₀)
+variable (M₀)
 
 @[simp]
 theorem inverse_one : inverse (1 : M₀) = 1 :=
@@ -435,7 +435,7 @@ theorem inverse_zero : inverse (0 : M₀) = 0 :=
     nontriviality 
     exact inverse_non_unit _ not_is_unit_zero
 
-variable{M₀}
+variable {M₀}
 
 theorem mul_inverse_rev' {a b : M₀} (h : Commute a b) : inverse (a*b) = inverse b*inverse a :=
   by 
@@ -473,15 +473,15 @@ theorem is_unit_ring_inverse {a : M₀} : IsUnit (Ring.inverse a) ↔ IsUnit a :
 theorem Commute.ring_inverse_ring_inverse {a b : M₀} (h : Commute a b) : Commute (Ring.inverse a) (Ring.inverse b) :=
   (Ring.mul_inverse_rev' h.symm).symm.trans$ (congr_argₓ _ h.symm.eq).trans$ Ring.mul_inverse_rev' h
 
-variable(M₀)
+variable (M₀)
 
 end MonoidWithZeroₓ
 
 section CancelMonoidWithZero
 
-variable[CancelMonoidWithZero M₀]{a b c : M₀}
+variable [CancelMonoidWithZero M₀] {a b c : M₀}
 
-instance (priority := 10)CancelMonoidWithZero.to_no_zero_divisors : NoZeroDivisors M₀ :=
+instance (priority := 10) CancelMonoidWithZero.to_no_zero_divisors : NoZeroDivisors M₀ :=
   ⟨fun a b ab0 =>
       by 
         byCases' a = 0
@@ -541,7 +541,7 @@ end CancelMonoidWithZero
 
 section CommCancelMonoidWithZero
 
-variable[CommCancelMonoidWithZero M₀]{a b c : M₀}
+variable [CommCancelMonoidWithZero M₀] {a b c : M₀}
 
 /-- Pullback a `comm_cancel_monoid_with_zero` class along an injective function.
 See note [reducible non-instances]. -/
@@ -554,7 +554,7 @@ end CommCancelMonoidWithZero
 
 section GroupWithZeroₓ
 
-variable[GroupWithZeroₓ G₀]{a b c g h x : G₀}
+variable [GroupWithZeroₓ G₀] {a b c g h x : G₀}
 
 alias div_eq_mul_inv ← division_def
 
@@ -795,9 +795,9 @@ end GroupWithZeroₓ
 
 namespace Units
 
-variable[GroupWithZeroₓ G₀]
+variable [GroupWithZeroₓ G₀]
 
-variable{a b : G₀}
+variable {a b : G₀}
 
 /-- Embed a non-zero element of a `group_with_zero` into the unit group.
   By combining this function with the operations on units,
@@ -853,14 +853,14 @@ theorem _root_.group_with_zero.eq_zero_or_unit (a : G₀) : a = 0 ∨ ∃ u : Un
       right 
       simpa only [eq_comm] using units.exists_iff_ne_zero.mpr h
 
-instance  : CanLift G₀ (Units G₀) :=
+instance : CanLift G₀ (Units G₀) :=
   { coe := coeₓ, cond := · ≠ 0, prf := fun x => exists_iff_ne_zero.mpr }
 
 end Units
 
 section GroupWithZeroₓ
 
-variable[GroupWithZeroₓ G₀]
+variable [GroupWithZeroₓ G₀]
 
 theorem IsUnit.mk0 (x : G₀) (hx : x ≠ 0) : IsUnit x :=
   (Units.mk0 x hx).IsUnit
@@ -868,7 +868,7 @@ theorem IsUnit.mk0 (x : G₀) (hx : x ≠ 0) : IsUnit x :=
 theorem is_unit_iff_ne_zero {x : G₀} : IsUnit x ↔ x ≠ 0 :=
   Units.exists_iff_ne_zero
 
-instance (priority := 10)GroupWithZeroₓ.no_zero_divisors : NoZeroDivisors G₀ :=
+instance (priority := 10) GroupWithZeroₓ.no_zero_divisors : NoZeroDivisors G₀ :=
   { (‹_› : GroupWithZeroₓ G₀) with
     eq_zero_or_eq_zero_of_mul_eq_zero :=
       fun a b h =>
@@ -876,7 +876,7 @@ instance (priority := 10)GroupWithZeroₓ.no_zero_divisors : NoZeroDivisors G₀
           contrapose! h 
           exact (Units.mk0 a h.1*Units.mk0 b h.2).ne_zero }
 
-instance (priority := 10)GroupWithZeroₓ.cancelMonoidWithZero : CancelMonoidWithZero G₀ :=
+instance (priority := 10) GroupWithZeroₓ.cancelMonoidWithZero : CancelMonoidWithZero G₀ :=
   { (‹_› : GroupWithZeroₓ G₀) with
     mul_left_cancel_of_ne_zero :=
       fun x y z hx h =>
@@ -1000,7 +1000,7 @@ theorem eq_of_one_div_eq_one_div {a b : G₀} (h : 1 / a = 1 / b) : a = b :=
   by 
     rw [←one_div_one_div a, h, one_div_one_div]
 
-variable{a b c : G₀}
+variable {a b c : G₀}
 
 @[simp]
 theorem inv_eq_zero {a : G₀} : a⁻¹ = 0 ↔ a = 0 :=
@@ -1144,9 +1144,9 @@ end GroupWithZeroₓ
 
 section CommGroupWithZero
 
-variable[CommGroupWithZero G₀]{a b c : G₀}
+variable [CommGroupWithZero G₀] {a b c : G₀}
 
-instance (priority := 10)CommGroupWithZero.commCancelMonoidWithZero : CommCancelMonoidWithZero G₀ :=
+instance (priority := 10) CommGroupWithZero.commCancelMonoidWithZero : CommCancelMonoidWithZero G₀ :=
   { GroupWithZeroₓ.cancelMonoidWithZero, CommGroupWithZero.toCommMonoidWithZero G₀ with  }
 
 /-- Pullback a `comm_group_with_zero` class along an injective function.
@@ -1237,7 +1237,7 @@ end CommGroupWithZero
 
 section CommGroupWithZero
 
-variable[CommGroupWithZero G₀]{a b c d : G₀}
+variable [CommGroupWithZero G₀] {a b c d : G₀}
 
 theorem div_eq_inv_mul : a / b = b⁻¹*a :=
   by 
@@ -1291,7 +1291,7 @@ theorem zero_left [MulZeroClass G₀] (x y : G₀) : SemiconjBy 0 x y :=
   by 
     simp only [SemiconjBy, mul_zero, zero_mul]
 
-variable[GroupWithZeroₓ G₀]{a x y x' y' : G₀}
+variable [GroupWithZeroₓ G₀] {a x y x' y' : G₀}
 
 @[simp]
 theorem inv_symm_left_iff₀ : SemiconjBy (a⁻¹) x y ↔ SemiconjBy a y x :=
@@ -1339,7 +1339,7 @@ theorem zero_right [MulZeroClass G₀] (a : G₀) : Commute a 0 :=
 theorem zero_left [MulZeroClass G₀] (a : G₀) : Commute 0 a :=
   SemiconjBy.zero_left a a
 
-variable[GroupWithZeroₓ G₀]{a b c : G₀}
+variable [GroupWithZeroₓ G₀] {a b c : G₀}
 
 @[simp]
 theorem inv_left_iff₀ : Commute (a⁻¹) b ↔ Commute a b :=
@@ -1372,11 +1372,11 @@ end Commute
 
 namespace MonoidWithZeroHom
 
-variable[GroupWithZeroₓ G₀][GroupWithZeroₓ G₀'][MonoidWithZeroₓ M₀][Nontrivial M₀]
+variable [GroupWithZeroₓ G₀] [GroupWithZeroₓ G₀'] [MonoidWithZeroₓ M₀] [Nontrivial M₀]
 
 section MonoidWithZeroₓ
 
-variable(f : MonoidWithZeroHom G₀ M₀){a : G₀}
+variable (f : MonoidWithZeroHom G₀ M₀) {a : G₀}
 
 theorem map_ne_zero : f a ≠ 0 ↔ a ≠ 0 :=
   ⟨fun hfa ha => hfa$ ha.symm ▸ f.map_zero, fun ha => ((IsUnit.mk0 a ha).map f.to_monoid_hom).ne_zero⟩
@@ -1389,7 +1389,7 @@ end MonoidWithZeroₓ
 
 section GroupWithZeroₓ
 
-variable(f : MonoidWithZeroHom G₀ G₀')(a b : G₀)
+variable (f : MonoidWithZeroHom G₀ G₀') (a b : G₀)
 
 /-- A monoid homomorphism between groups with zeros sending `0` to `0` sends `a⁻¹` to `(f a)⁻¹`. -/
 @[simp]
@@ -1423,7 +1423,7 @@ theorem MonoidWithZeroHom.map_units_inv {M G₀ : Type _} [MonoidWithZeroₓ M] 
 
 section NoncomputableDefs
 
-variable{M : Type _}[Nontrivial M]
+variable {M : Type _} [Nontrivial M]
 
 /-- Constructs a `group_with_zero` structure on a `monoid_with_zero`
   consisting only of units and 0. -/

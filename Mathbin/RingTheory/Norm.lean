@@ -34,15 +34,15 @@ See also `algebra.trace`, which is defined similarly as the trace of
 
 universe u v w
 
-variable{R S T : Type _}[CommRingₓ R][IsDomain R][CommRingₓ S]
+variable {R S T : Type _} [CommRingₓ R] [IsDomain R] [CommRingₓ S]
 
-variable[Algebra R S]
+variable [Algebra R S]
 
-variable{K L F : Type _}[Field K][Field L][Field F]
+variable {K L F : Type _} [Field K] [Field L] [Field F]
 
-variable[Algebra K L][Algebra L F][Algebra K F]
+variable [Algebra K L] [Algebra L F] [Algebra K F]
 
-variable{ι : Type w}[Fintype ι]
+variable {ι : Type w} [Fintype ι]
 
 open FiniteDimensional
 
@@ -56,7 +56,7 @@ open_locale Matrix
 
 namespace Algebra
 
-variable(R)
+variable (R)
 
 /-- The norm of an element `s` of an `R`-algebra is the determinant of `(*) s`. -/
 noncomputable def norm : S →* R :=
@@ -71,7 +71,7 @@ theorem norm_eq_one_of_not_exists_basis (h : ¬∃ s : Finset S, Nonempty (Basis
     splitIfs with h 
     rfl
 
-variable{R}
+variable {R}
 
 theorem norm_eq_matrix_det [DecidableEq ι] (b : Basis ι R S) (s : S) :
   norm R s = Matrix.det (Algebra.leftMulMatrix b s) :=
@@ -168,7 +168,7 @@ end EqZeroIff
 
 open IntermediateField
 
-variable(K)
+variable (K)
 
 -- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:341:40: in letI: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 theorem norm_eq_norm_adjoin
@@ -187,11 +187,11 @@ end
 
 section EqProdEmbeddings
 
-variable{K}
+variable {K}
 
 open IntermediateField IntermediateField.AdjoinSimple Polynomial
 
-variable(E : Type _)[Field E][Algebra K E][IsScalarTower K L F]
+variable (E : Type _) [Field E] [Algebra K E] [IsScalarTower K L F]
 
 -- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem norm_eq_prod_embeddings_gen
@@ -201,14 +201,15 @@ theorem norm_eq_prod_embeddings_gen
   σ, σ pb.gen)) :=
 begin
   letI [] [] [":=", expr classical.dec_eq E],
-  rw ["[", expr norm_gen_eq_prod_roots pb hE, ",", expr fintype.prod_equiv pb.lift_equiv', ",", expr finset.prod_mem_multiset, ",", expr finset.prod_eq_multiset_prod, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr (nodup_roots ((separable_map _).mpr hfx)), ",", expr multiset.map_id, "]"] [],
+  rw ["[", expr norm_gen_eq_prod_roots pb hE, ",", expr fintype.prod_equiv pb.lift_equiv', ",", expr finset.prod_mem_multiset, ",", expr finset.prod_eq_multiset_prod, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr, ",", expr multiset.map_id, "]"] [],
+  { exact [expr nodup_roots ((separable_map _).mpr hfx)] },
   { intro [ident x],
     refl },
   { intro [ident σ],
     rw ["[", expr power_basis.lift_equiv'_apply_coe, ",", expr id.def, "]"] [] }
 end
 
-variable(F)
+variable (F)
 
 -- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem prod_embeddings_eq_finrank_pow
@@ -235,7 +236,7 @@ begin
     simp [] [] ["only"] ["[", expr alg_hom_equiv_sigma, ",", expr equiv.coe_fn_mk, ",", expr alg_hom.restrict_domain, ",", expr alg_hom.comp_apply, ",", expr is_scalar_tower.coe_to_alg_hom', "]"] [] [] }
 end
 
-variable(K)
+variable (K)
 
 -- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:341:40: in haveI: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr ⟮ , ⟯»
 /-- For `L/K` a finite separable extension of fields and `E` an algebraically closed extension

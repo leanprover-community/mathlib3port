@@ -9,11 +9,11 @@ depend on this file.
 -/
 
 
-variable{A G M R : Type _}
+variable {A G M R : Type _}
 
 section Preorderₓ
 
-variable[Monoidₓ M][Preorderₓ M][CovariantClass M M (·*·) (· ≤ ·)]
+variable [Monoidₓ M] [Preorderₓ M] [CovariantClass M M (·*·) (· ≤ ·)]
 
 @[toAdditive nsmul_le_nsmul_of_le_right, mono]
 theorem pow_le_pow_of_le_left' [CovariantClass M M (Function.swap (·*·)) (· ≤ ·)] {a b : M} (hab : a ≤ b) :
@@ -83,7 +83,7 @@ end Preorderₓ
 
 section LinearOrderₓ
 
-variable[Monoidₓ M][LinearOrderₓ M][CovariantClass M M (·*·) (· ≤ ·)]
+variable [Monoidₓ M] [LinearOrderₓ M] [CovariantClass M M (·*·) (· ≤ ·)]
 
 @[toAdditive nsmul_nonneg_iff]
 theorem one_le_pow_iff {x : M} {n : ℕ} (hn : n ≠ 0) : 1 ≤ x ^ n ↔ 1 ≤ x :=
@@ -110,7 +110,7 @@ end LinearOrderₓ
 
 section Groupₓ
 
-variable[Groupₓ G][Preorderₓ G][CovariantClass G G (·*·) (· ≤ ·)]
+variable [Groupₓ G] [Preorderₓ G] [CovariantClass G G (·*·) (· ≤ ·)]
 
 @[toAdditive zsmul_nonneg]
 theorem one_le_zpow {x : G} (H : 1 ≤ x) {n : ℤ} (hn : 0 ≤ n) : 1 ≤ x ^ n :=
@@ -123,7 +123,7 @@ end Groupₓ
 
 namespace CanonicallyOrderedCommSemiring
 
-variable[CanonicallyOrderedCommSemiring R]
+variable [CanonicallyOrderedCommSemiring R]
 
 theorem pow_pos {a : R} (H : 0 < a) (n : ℕ) : 0 < a ^ n :=
   pos_iff_ne_zero.2$ pow_ne_zero _ H.ne'
@@ -132,7 +132,7 @@ end CanonicallyOrderedCommSemiring
 
 section OrderedSemiring
 
-variable[OrderedSemiring R]{a x y : R}{n m : ℕ}
+variable [OrderedSemiring R] {a x y : R} {n m : ℕ}
 
 @[simp]
 theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
@@ -265,7 +265,7 @@ end OrderedSemiring
 
 section OrderedRing
 
-variable[OrderedRing R]{a : R}
+variable [OrderedRing R] {a : R}
 
 theorem sq_pos_of_neg (ha : a < 0) : 0 < a ^ 2 :=
   by 
@@ -286,7 +286,7 @@ end OrderedRing
 
 section LinearOrderedSemiring
 
-variable[LinearOrderedSemiring R]
+variable [LinearOrderedSemiring R]
 
 theorem pow_le_one_iff_of_nonneg {a : R} (ha : 0 ≤ a) {n : ℕ} (hn : n ≠ 0) : a ^ n ≤ 1 ↔ a ≤ 1 :=
   by 
@@ -338,7 +338,7 @@ end LinearOrderedSemiring
 
 section LinearOrderedRing
 
-variable[LinearOrderedRing R]
+variable [LinearOrderedRing R]
 
 theorem pow_abs (a : R) (n : ℕ) : |a| ^ n = |a ^ n| :=
   ((absHom.toMonoidHom : R →* R).map_pow a n).symm
@@ -365,7 +365,7 @@ theorem sq_pos_of_ne_zero (a : R) (h : a ≠ 0) : 0 < a ^ 2 :=
 
 alias sq_pos_of_ne_zero ← pow_two_pos_of_ne_zero
 
-variable{x y : R}
+variable {x y : R}
 
 theorem sq_abs (x : R) : |x| ^ 2 = x ^ 2 :=
   by 
@@ -419,7 +419,7 @@ end LinearOrderedRing
 
 section LinearOrderedCommRing
 
-variable[LinearOrderedCommRing R]
+variable [LinearOrderedCommRing R]
 
 /-- Arithmetic mean-geometric mean (AM-GM) inequality for linearly ordered commutative rings. -/
 theorem two_mul_le_add_sq (a b : R) : ((2*a)*b) ≤ (a ^ 2)+b ^ 2 :=

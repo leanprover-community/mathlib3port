@@ -20,7 +20,7 @@ universe u v
 
 section CommSemiringₓ
 
-variable{R : Type u}[CommSemiringₓ R](x y z : R)
+variable {R : Type u} [CommSemiringₓ R] (x y z : R)
 
 /-- The proposition that `x` and `y` are coprime, defined to be the existence of `a` and `b` such
 that `a * x + b * y = 1`. Note that elements with no common divisors are not necessarily coprime,
@@ -29,7 +29,7 @@ e.g., the multivariate polynomials `x₁` and `x₂` are not coprime. -/
 def IsCoprime : Prop :=
   ∃ a b, ((a*x)+b*y) = 1
 
-variable{x y z}
+variable {x y z}
 
 theorem IsCoprime.symm (H : IsCoprime x y) : IsCoprime y x :=
   let ⟨a, b, H⟩ := H
@@ -174,7 +174,7 @@ theorem IsCoprime.map (H : IsCoprime x y) {S : Type v} [CommSemiringₓ S] (f : 
     by 
       rw [←f.map_mul, ←f.map_mul, ←f.map_add, h, f.map_one]⟩
 
-variable{x y z}
+variable {x y z}
 
 theorem IsCoprime.of_add_mul_left_left (h : IsCoprime (x+y*z) y) : IsCoprime x y :=
   let ⟨a, b, H⟩ := h
@@ -224,7 +224,7 @@ namespace IsCoprime
 
 section CommRingₓ
 
-variable{R : Type u}[CommRingₓ R]
+variable {R : Type u} [CommRingₓ R]
 
 theorem add_mul_left_left {x y : R} (h : IsCoprime x y) (z : R) : IsCoprime (x+y*z) y :=
   @of_add_mul_left_left R _ _ _ (-z)$

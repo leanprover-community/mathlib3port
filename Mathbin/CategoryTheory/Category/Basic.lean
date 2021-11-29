@@ -70,7 +70,7 @@ namespace CategoryTheory
 
 /-- A preliminary structure on the way to defining a category,
 containing the data, but none of the axioms. -/
-class category_struct(obj : Type u) extends Quiver.{v + 1} obj : Type max u (v + 1) where 
+class category_struct (obj : Type u) extends Quiver.{v + 1} obj : Type max u (v + 1) where 
   id : ∀ X : obj, hom X X 
   comp : ∀ {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z)
 
@@ -85,7 +85,7 @@ specified explicitly, as `category.{v} C`. (See also `large_category` and `small
 
 See https://stacks.math.columbia.edu/tag/0014.
 -/
-class category(obj : Type u) extends category_struct.{v} obj : Type max u (v + 1) where 
+class category (obj : Type u) extends category_struct.{v} obj : Type max u (v + 1) where 
   id_comp' : ∀ {X Y : obj} f : hom X Y, 𝟙 X ≫ f = f :=  by 
   runTac 
     obviously 
@@ -122,7 +122,7 @@ abbrev small_category (C : Type u) : Type (u + 1) :=
 
 section 
 
-variable{C : Type u}[category.{v} C]{X Y Z : C}
+variable {C : Type u} [category.{v} C] {X Y Z : C}
 
 initialize_simps_projections category (to_category_struct_to_quiver_hom → Hom, to_category_struct_comp → comp,
   to_category_struct_id → id, -toCategoryStruct)
@@ -191,7 +191,7 @@ A morphism `f` is an epimorphism if it can be "cancelled" when precomposed:
 
 See https://stacks.math.columbia.edu/tag/003B.
 -/
-class epi(f : X ⟶ Y) : Prop where 
+class epi (f : X ⟶ Y) : Prop where 
   left_cancellation : ∀ {Z : C} g h : Y ⟶ Z w : f ≫ g = f ≫ h, g = h
 
 /--
@@ -200,15 +200,15 @@ A morphism `f` is a monomorphism if it can be "cancelled" when postcomposed:
 
 See https://stacks.math.columbia.edu/tag/003B.
 -/
-class mono(f : X ⟶ Y) : Prop where 
+class mono (f : X ⟶ Y) : Prop where 
   right_cancellation : ∀ {Z : C} g h : Z ⟶ X w : g ≫ f = h ≫ f, g = h
 
-instance  (X : C) : epi (𝟙 X) :=
+instance (X : C) : epi (𝟙 X) :=
   ⟨fun Z g h w =>
       by 
         simpa using w⟩
 
-instance  (X : C) : mono (𝟙 X) :=
+instance (X : C) : mono (𝟙 X) :=
   ⟨fun Z g h w =>
       by 
         simpa using w⟩
@@ -282,16 +282,16 @@ end
 
 section 
 
-variable(C : Type u)
+variable (C : Type u)
 
-variable[category.{v} C]
+variable [category.{v} C]
 
 universe u'
 
 instance ulift_category : category.{v} (Ulift.{u'} C) :=
   { Hom := fun X Y => X.down ⟶ Y.down, id := fun X => 𝟙 X.down, comp := fun _ _ _ f g => f ≫ g }
 
-example  (D : Type u) [small_category D] : large_category (Ulift.{u + 1} D) :=
+example (D : Type u) [small_category D] : large_category (Ulift.{u + 1} D) :=
   by 
     infer_instance
 

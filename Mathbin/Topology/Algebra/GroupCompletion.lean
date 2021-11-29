@@ -32,18 +32,18 @@ section Groupₓ
 
 open UniformSpace Cauchyₓ Filter Set
 
-variable{α : Type u}[UniformSpace α]
+variable {α : Type u} [UniformSpace α]
 
-instance  [HasZero α] : HasZero (completion α) :=
+instance [HasZero α] : HasZero (completion α) :=
   ⟨(0 : α)⟩
 
-instance  [Neg α] : Neg (completion α) :=
+instance [Neg α] : Neg (completion α) :=
   ⟨completion.map (fun a => -a : α → α)⟩
 
-instance  [Add α] : Add (completion α) :=
+instance [Add α] : Add (completion α) :=
   ⟨completion.map₂ (·+·)⟩
 
-instance  [Sub α] : Sub (completion α) :=
+instance [Sub α] : Sub (completion α) :=
   ⟨completion.map₂ Sub.sub⟩
 
 @[normCast]
@@ -58,7 +58,7 @@ section UniformAddGroup
 
 open UniformSpace UniformSpace.Completion
 
-variable{α : Type _}[UniformSpace α][AddGroupₓ α][UniformAddGroup α]
+variable {α : Type _} [UniformSpace α] [AddGroupₓ α] [UniformAddGroup α]
 
 @[normCast]
 theorem coe_neg (a : α) : ((-a : α) : completion α) = -a :=
@@ -72,7 +72,7 @@ theorem coe_sub (a b : α) : ((a - b : α) : completion α) = a - b :=
 theorem coe_add (a b : α) : ((a+b : α) : completion α) = a+b :=
   (map₂_coe_coe a b (·+·) uniform_continuous_add).symm
 
-instance  : AddMonoidₓ (completion α) :=
+instance : AddMonoidₓ (completion α) :=
   { completion.has_zero, completion.has_neg, completion.has_add, completion.has_sub with
     zero_add :=
       fun a =>
@@ -99,7 +99,7 @@ instance  : AddMonoidₓ (completion α) :=
               repeat' 
                 rwModCast [add_assocₓ] }
 
-instance  : SubNegMonoidₓ (completion α) :=
+instance : SubNegMonoidₓ (completion α) :=
   { completion.add_monoid, completion.has_neg, completion.has_sub with
     sub_eq_add_neg :=
       fun a b =>
@@ -110,7 +110,7 @@ instance  : SubNegMonoidₓ (completion α) :=
             by 
               exactModCast congr_argₓ coeₓ (sub_eq_add_neg a b) }
 
-instance  : AddGroupₓ (completion α) :=
+instance : AddGroupₓ (completion α) :=
   { completion.sub_neg_monoid with
     add_left_neg :=
       fun a =>
@@ -121,7 +121,7 @@ instance  : AddGroupₓ (completion α) :=
               rwModCast [add_left_negₓ]
               rfl }
 
-instance  : UniformAddGroup (completion α) :=
+instance : UniformAddGroup (completion α) :=
   ⟨uniform_continuous_map₂ Sub.sub⟩
 
 /-- The map from a group to its completion as a group hom. -/
@@ -132,9 +132,9 @@ def to_compl : α →+ completion α :=
 theorem continuous_to_compl : Continuous (to_compl : α → completion α) :=
   continuous_coe α
 
-variable{β : Type v}[UniformSpace β][AddGroupₓ β][UniformAddGroup β]
+variable {β : Type v} [UniformSpace β] [AddGroupₓ β] [UniformAddGroup β]
 
-instance  {α : Type u} [UniformSpace α] [AddCommGroupₓ α] [UniformAddGroup α] : AddCommGroupₓ (completion α) :=
+instance {α : Type u} [UniformSpace α] [AddCommGroupₓ α] [UniformAddGroup α] : AddCommGroupₓ (completion α) :=
   { completion.add_group with
     add_comm :=
       fun a b =>
@@ -151,7 +151,8 @@ end UniformSpace.Completion
 
 section AddMonoidHom
 
-variable{α β : Type _}[UniformSpace α][AddGroupₓ α][UniformAddGroup α][UniformSpace β][AddGroupₓ β][UniformAddGroup β]
+variable {α β : Type _} [UniformSpace α] [AddGroupₓ α] [UniformAddGroup α] [UniformSpace β] [AddGroupₓ β]
+  [UniformAddGroup β]
 
 open UniformSpace UniformSpace.Completion
 

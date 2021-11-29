@@ -21,7 +21,7 @@ open_locale BigOperators
 
 open Real Finset
 
-variable{ι : Type _}[Fintype ι]
+variable {ι : Type _} [Fintype ι]
 
 -- error in LinearAlgebra.QuadraticForm.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The isometry between a weighted sum of squares with weights `u` on the

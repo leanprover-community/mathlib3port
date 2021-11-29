@@ -86,11 +86,11 @@ open List
 
 open_locale BigOperators
 
-variable{n : ℕ}
+variable {n : ℕ}
 
 /-- A composition of `n` is a list of positive integers summing to `n`. -/
 @[ext]
-structure Composition(n : ℕ) where 
+structure Composition (n : ℕ) where 
   blocks : List ℕ 
   blocks_pos : ∀ {i}, i ∈ blocks → 0 < i 
   blocks_sum : blocks.sum = n
@@ -101,12 +101,12 @@ a finset containing `0`. As this does not make sense for `n = 0`, we add `n` to 
 get a finset of `{0, ..., n}` containing `0` and `n`. This is the data in the structure
 `composition_as_set n`. -/
 @[ext]
-structure CompositionAsSet(n : ℕ) where 
+structure CompositionAsSet (n : ℕ) where 
   boundaries : Finset (Finₓ n.succ)
   zero_mem : (0 : Finₓ n.succ) ∈ boundaries 
   last_mem : Finₓ.last n ∈ boundaries
 
-instance  {n : ℕ} : Inhabited (CompositionAsSet n) :=
+instance {n : ℕ} : Inhabited (CompositionAsSet n) :=
   ⟨⟨Finset.univ, Finset.mem_univ _, Finset.mem_univ _⟩⟩
 
 /-!
@@ -119,9 +119,9 @@ positive integers.
 
 namespace Composition
 
-variable(c : Composition n)
+variable (c : Composition n)
 
-instance  (n : ℕ) : HasToString (Composition n) :=
+instance (n : ℕ) : HasToString (Composition n) :=
   ⟨fun c => toString c.blocks⟩
 
 /-- The length of a composition, i.e., the number of blocks in the composition. -/
@@ -473,7 +473,7 @@ def ones (n : ℕ) : Composition n :=
     by 
       simp ⟩
 
-instance  {n : ℕ} : Inhabited (Composition n) :=
+instance {n : ℕ} : Inhabited (Composition n) :=
   ⟨Composition.ones n⟩
 
 @[simp]
@@ -643,7 +643,7 @@ join operation.
 
 namespace List
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- Auxiliary for `list.split_wrt_composition`. -/
 def split_wrt_composition_aux : List α → List ℕ → List (List α)
@@ -839,7 +839,7 @@ end
 
 namespace CompositionAsSet
 
-variable(c : CompositionAsSet n)
+variable (c : CompositionAsSet n)
 
 theorem boundaries_nonempty : c.boundaries.nonempty :=
   ⟨0, c.zero_mem⟩

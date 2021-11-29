@@ -36,9 +36,9 @@ namespace CategoryTheory
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
-variable{C : Type u₁}[category.{v₁} C]{X Y Z : C}
+variable {C : Type u₁} [category.{v₁} C] {X Y Z : C}
 
-variable{D : Type u₂}[category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D]
 
 -- error in CategoryTheory.Subobject.MonoOver: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler category
 /--
@@ -60,7 +60,7 @@ def mk' {X A : C} (f : A ⟶ X) [hf : mono f] : mono_over X :=
 def forget (X : C) : mono_over X ⥤ over X :=
   full_subcategory_inclusion _
 
-instance  : Coe (mono_over X) C :=
+instance : Coe (mono_over X) C :=
   { coe := fun Y => Y.val.left }
 
 @[simp]
@@ -83,10 +83,10 @@ theorem mk'_arrow {X A : C} (f : A ⟶ X) [hf : mono f] : (mk' f).arrow = f :=
 theorem forget_obj_hom {f} : ((forget X).obj f).Hom = f.arrow :=
   rfl
 
-instance  : full (forget X) :=
+instance : full (forget X) :=
   full_subcategory.full _
 
-instance  : faithful (forget X) :=
+instance : faithful (forget X) :=
   full_subcategory.faithful _
 
 instance mono (f : mono_over X) : mono f.arrow :=
@@ -175,7 +175,7 @@ def slice {A : C} {f : over A} h₁ h₂ : mono_over f ≌ mono_over f.left :=
 
 section Pullback
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 /-- When `C` has pullbacks, a morphism `f : X ⟶ Y` induces a functor `mono_over Y ⥤ mono_over X`,
 by pulling back a monomorphism along `f`. -/
@@ -267,7 +267,7 @@ def map_iso {A B : C} (e : A ≅ B) : mono_over A ≌ mono_over B :=
 
 section 
 
-variable(X)
+variable (X)
 
 /-- An equivalence of categories `e` between `C` and `D` induces an equivalence between
     `mono_over X` and `mono_over (e.functor.obj X)` whenever `X` is an object of `C`. -/
@@ -307,7 +307,7 @@ end
 
 section 
 
-variable[has_pullbacks C]
+variable [has_pullbacks C]
 
 /-- `map f` is left adjoint to `pullback f` when `f` is a monomorphism -/
 def map_pullback_adj (f : X ⟶ Y) [mono f] : map f ⊣ pullback f :=
@@ -323,7 +323,7 @@ end Map
 
 section Image
 
-variable(f : X ⟶ Y)[has_image f]
+variable (f : X ⟶ Y) [has_image f]
 
 /--
 The `mono_over Y` for the image inclusion for a morphism `f : X ⟶ Y`.
@@ -339,7 +339,7 @@ end Image
 
 section Image
 
-variable[has_images C]
+variable [has_images C]
 
 /--
 Taking the image of a morphism gives a functor `over X ⥤ mono_over X`.
@@ -385,7 +385,7 @@ def image_forget_adj : image ⊣ forget X :=
                   rw [←cancel_mono g.arrow, assoc, image.lift_fac, image.fac f.hom]
                   exact (over.w k).symm } }
 
-instance  : is_right_adjoint (forget X) :=
+instance : is_right_adjoint (forget X) :=
   { left := image, adj := image_forget_adj }
 
 instance reflective : reflective (forget X) :=
@@ -402,7 +402,7 @@ end Image
 
 section Exists
 
-variable[has_images C]
+variable [has_images C]
 
 /--
 In the case where `f` is not a monomorphism but `C` has images,

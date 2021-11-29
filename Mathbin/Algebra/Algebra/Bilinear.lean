@@ -21,7 +21,7 @@ open Module
 
 section 
 
-variable(R A : Type _)[CommSemiringₓ R][Semiringₓ A][Algebra R A]
+variable (R A : Type _) [CommSemiringₓ R] [Semiringₓ A] [Algebra R A]
 
 /-- The multiplication in an algebra is a bilinear map.
 
@@ -56,13 +56,13 @@ def lmul : A →ₐ[R] End R A :=
         dsimp 
         rw [smul_def] }
 
-variable{R A}
+variable {R A}
 
 @[simp]
 theorem lmul_apply (p q : A) : lmul R A p q = p*q :=
   rfl
 
-variable(R)
+variable (R)
 
 /-- The multiplication on the left in an algebra is a linear map. -/
 def lmul_left (r : A) : A →ₗ[R] A :=
@@ -85,7 +85,7 @@ theorem commute_lmul_left_right (a b : A) : Commute (lmul_left R a) (lmul_right 
 def lmul' : A ⊗[R] A →ₗ[R] A :=
   TensorProduct.lift (lmul R A).toLinearMap
 
-variable{R A}
+variable {R A}
 
 @[simp]
 theorem lmul'_apply {x y : A} : lmul' R (x ⊗ₜ y) = x*y :=
@@ -168,7 +168,7 @@ end
 
 section 
 
-variable{R A : Type _}[CommSemiringₓ R][Ringₓ A][Algebra R A]
+variable {R A : Type _} [CommSemiringₓ R] [Ringₓ A] [Algebra R A]
 
 -- error in Algebra.Algebra.Bilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lmul_left_injective [no_zero_divisors A] {x : A} (hx : «expr ≠ »(x, 0)) : function.injective (lmul_left R x) :=

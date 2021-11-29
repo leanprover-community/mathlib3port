@@ -18,7 +18,7 @@ and should be moved at some point.
 
 universe u v
 
-variable{α : Type _}{β : Type _}{γ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _}
 
 open_locale BigOperators
 
@@ -36,7 +36,7 @@ section
 
 open Finset
 
-variable{ι : Type _}[DecidableEq ι][Fintype ι]
+variable {ι : Type _} [DecidableEq ι] [Fintype ι]
 
 @[toAdditive]
 theorem prod_extend_by_one [CommMonoidₓ α] (s : Finset ι) (f : ι → α) : (∏i, if i ∈ s then f i else 1) = ∏i in s, f i :=
@@ -47,7 +47,7 @@ end
 
 section 
 
-variable{M : Type _}[Fintype α][CommMonoidₓ M]
+variable {M : Type _} [Fintype α] [CommMonoidₓ M]
 
 @[toAdditive]
 theorem prod_eq_one (f : α → M) (h : ∀ a, f a = 1) : (∏a, f a) = 1 :=
@@ -81,7 +81,7 @@ open Finset
 
 section 
 
-variable{M : Type _}[Fintype α][CommMonoidₓ M]
+variable {M : Type _} [Fintype α] [CommMonoidₓ M]
 
 @[simp, toAdditive]
 theorem Fintype.prod_option (f : Option α → M) : (∏i, f i) = f none*∏i, f (some i) :=
@@ -312,7 +312,7 @@ section
 
 open Finset
 
-variable{α₁ : Type _}{α₂ : Type _}{M : Type _}[Fintype α₁][Fintype α₂][CommMonoidₓ M]
+variable {α₁ : Type _} {α₂ : Type _} {M : Type _} [Fintype α₁] [Fintype α₂] [CommMonoidₓ M]
 
 @[toAdditive]
 theorem Fintype.prod_sum_elim (f : α₁ → M) (g : α₂ → M) : (∏x, Sum.elim f g x) = (∏a₁, f a₁)*∏a₂, g a₂ :=

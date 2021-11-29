@@ -55,7 +55,7 @@ theorem PythagoreanTriple.zero : PythagoreanTriple 0 0 0 :=
 
 namespace PythagoreanTriple
 
-variable{x y z : ℤ}(h : PythagoreanTriple x y z)
+variable {x y z : ℤ} (h : PythagoreanTriple x y z)
 
 include h
 
@@ -292,7 +292,7 @@ For the classification of pythogorean triples, we will use a parametrization of 
 -/
 
 
-variable{K : Type _}[Field K]
+variable {K : Type _} [Field K]
 
 -- error in NumberTheory.PythagoreanTriples: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--  A parameterization of the unit circle that is useful for classifying Pythagorean triples.
@@ -491,7 +491,7 @@ end
 
 namespace PythagoreanTriple
 
-variable{x y z : ℤ}(h : PythagoreanTriple x y z)
+variable {x y z : ℤ} (h : PythagoreanTriple x y z)
 
 include h
 

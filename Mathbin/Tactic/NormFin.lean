@@ -180,7 +180,7 @@ unsafe def eval_fin_m.lift {α} (m : tactic α) : eval_fin_m α :=
         let a ← m 
         pure (a, ic, r)⟩
 
-unsafe instance  {α} : Coe (tactic α) (eval_fin_m α) :=
+unsafe instance {α} : Coe (tactic α) (eval_fin_m α) :=
   ⟨eval_fin_m.lift⟩
 
 /-- Lifts an `instance_cache` tactic into the `eval_fin_m` monad. -/

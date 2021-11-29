@@ -20,7 +20,7 @@ namespace CategoryTheory
 
 open Category Limits Comonad
 
-variable{C : Type u}[category.{v} C](X : C)
+variable {C : Type u} [category.{v} C] (X : C)
 
 /--
 The functor from `C` to `over X` which sends `Y : C` to `π₁ : X ⨯ Y ⟶ X`, sometimes denoted `X*`.
@@ -42,7 +42,7 @@ def forget_adj_star [has_binary_products C] : over.forget X ⊣ star X :=
 Note that the binary products assumption is necessary: the existence of a right adjoint to
 `over.forget X` is equivalent to the existence of each binary product `X ⨯ -`.
 -/
-instance  [has_binary_products C] : is_left_adjoint (over.forget X) :=
+instance [has_binary_products C] : is_left_adjoint (over.forget X) :=
   ⟨_, forget_adj_star X⟩
 
 end CategoryTheory

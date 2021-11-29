@@ -22,16 +22,16 @@ open CategoryTheory.Limits
 
 universe v₁ u₁ u₂
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable{X Y : C}
+variable {X Y : C}
 
 section 
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 /-- A normal monomorphism is a morphism which is the kernel of some morphism. -/
-class normal_mono(f : X ⟶ Y) where 
+class normal_mono (f : X ⟶ Y) where 
   z : C 
   g : Y ⟶ Z 
   w : f ≫ g = 0
@@ -53,7 +53,7 @@ def equivalence_reflects_normal_mono {D : Type u₂} [category.{v₁} D] [has_ze
           simp [reassoc_of hf.w],
     IsLimit :=
       reflects_limit.reflects$
-        is_limit.of_cone_equiv (cones.postcompose_equivalence (comp_nat_iso F))$
+        is_limit.of_cone_equiv (cones.postcompose_equivalence (comp_nat_iso F : _))$
           is_limit.of_iso_limit
             (by 
               exact
@@ -68,7 +68,7 @@ def equivalence_reflects_normal_mono {D : Type u₂} [category.{v₁} D] [has_ze
 end 
 
 /-- Every normal monomorphism is a regular monomorphism. -/
-instance (priority := 100)normal_mono.regular_mono (f : X ⟶ Y) [I : normal_mono f] : regular_mono f :=
+instance (priority := 100) normal_mono.regular_mono (f : X ⟶ Y) [I : normal_mono f] : regular_mono f :=
   { I with left := I.g, right := 0,
     w :=
       by 
@@ -125,10 +125,10 @@ end
 
 section 
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 /-- A normal epimorphism is a morphism which is the cokernel of some morphism. -/
-class normal_epi(f : X ⟶ Y) where 
+class normal_epi (f : X ⟶ Y) where 
   w : C 
   g : W ⟶ X 
   w : g ≫ f = 0
@@ -165,7 +165,7 @@ def equivalence_reflects_normal_epi {D : Type u₂} [category.{v₁} D] [has_zer
 end 
 
 /-- Every normal epimorphism is a regular epimorphism. -/
-instance (priority := 100)normal_epi.regular_epi (f : X ⟶ Y) [I : normal_epi f] : regular_epi f :=
+instance (priority := 100) normal_epi.regular_epi (f : X ⟶ Y) [I : normal_epi f] : regular_epi f :=
   { I with left := I.g, right := 0,
     w :=
       by 
@@ -222,7 +222,7 @@ end
 
 open Opposite
 
-variable[has_zero_morphisms C]
+variable [has_zero_morphisms C]
 
 /-- A normal mono becomes a normal epi in the opposite category. -/
 def normal_epi_of_normal_mono_unop {X Y : «expr ᵒᵖ» C} (f : X ⟶ Y) (m : normal_mono f.unop) : normal_epi f :=

@@ -269,7 +269,7 @@ theorem bnot_inj : ∀ {a b : Bool}, !a = !b → a = b :=
   by 
     decide
 
-instance  : LinearOrderₓ Bool :=
+instance : LinearOrderₓ Bool :=
   { le := fun a b => a = ff ∨ b = tt,
     le_refl :=
       by 

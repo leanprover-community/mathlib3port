@@ -25,13 +25,13 @@ open Equiv
 
 open_locale Matrix
 
-variable{l m n o : Type _}{l' m' n' o' : Type _}{m'' n'' : Type _}
+variable {l m n o : Type _} {l' m' n' o' : Type _} {m'' n'' : Type _}
 
-variable(R A : Type _)
+variable (R A : Type _)
 
 section AddCommMonoidₓ
 
-variable[Semiringₓ R][AddCommMonoidₓ A][Module R A]
+variable [Semiringₓ R] [AddCommMonoidₓ A] [Module R A]
 
 /-- The natural map that reindexes a matrix's rows and columns with equivalent types,
 `matrix.reindex`, is a linear equivalence. -/
@@ -81,7 +81,7 @@ end AddCommMonoidₓ
 
 section Semiringₓ
 
-variable[Semiringₓ R][Semiringₓ A][Module R A]
+variable [Semiringₓ R] [Semiringₓ A] [Module R A]
 
 theorem reindex_linear_equiv_mul [Fintype n] [Fintype n'] (eₘ : m ≃ m') (eₙ : n ≃ n') (eₒ : o ≃ o') (M : Matrix m n A)
   (N : Matrix n o A) :
@@ -97,7 +97,7 @@ end Semiringₓ
 
 section Algebra
 
-variable[CommSemiringₓ R][Fintype n][Fintype m][DecidableEq m][DecidableEq n]
+variable [CommSemiringₓ R] [Fintype n] [Fintype m] [DecidableEq m] [DecidableEq n]
 
 /--
 For square matrices with coefficients in commutative semirings, the natural map that reindexes

@@ -20,31 +20,31 @@ in another file. However, the lemmas about it are stated here.
 
 
 /-- A linearly ordered commutative group with a zero element. -/
-class LinearOrderedCommGroupWithZero(α : Type _) extends LinearOrderedCommMonoidWithZero α, CommGroupWithZero α
+class LinearOrderedCommGroupWithZero (α : Type _) extends LinearOrderedCommMonoidWithZero α, CommGroupWithZero α
 
-variable{α : Type _}
+variable {α : Type _}
 
-variable{a b c d x y z : α}
+variable {a b c d x y z : α}
 
-instance  [LinearOrderedAddCommMonoidWithTop α] : LinearOrderedCommMonoidWithZero (Multiplicative (OrderDual α)) :=
+instance [LinearOrderedAddCommMonoidWithTop α] : LinearOrderedCommMonoidWithZero (Multiplicative (OrderDual α)) :=
   { Multiplicative.orderedCommMonoid, Multiplicative.linearOrder with zero := Multiplicative.ofAdd (⊤ : α),
     zero_mul := top_add, mul_zero := add_top, zero_le_one := (le_top : (0 : α) ≤ ⊤) }
 
-instance  [LinearOrderedAddCommGroupWithTop α] : LinearOrderedCommGroupWithZero (Multiplicative (OrderDual α)) :=
+instance [LinearOrderedAddCommGroupWithTop α] : LinearOrderedCommGroupWithZero (Multiplicative (OrderDual α)) :=
   { Multiplicative.divInvMonoid, Multiplicative.linearOrderedCommMonoidWithZero, Multiplicative.nontrivial with
     inv_zero := LinearOrderedAddCommGroupWithTop.neg_top,
     mul_inv_cancel := LinearOrderedAddCommGroupWithTop.add_neg_cancel }
 
-instance  [LinearOrderedCommMonoid α] : LinearOrderedCommMonoidWithZero (WithZero α) :=
+instance [LinearOrderedCommMonoid α] : LinearOrderedCommMonoidWithZero (WithZero α) :=
   { WithZero.linearOrder, WithZero.commMonoidWithZero with mul_le_mul_left := fun x y => mul_le_mul_left',
     zero_le_one := WithZero.zero_le _ }
 
-instance  [LinearOrderedCommGroup α] : LinearOrderedCommGroupWithZero (WithZero α) :=
+instance [LinearOrderedCommGroup α] : LinearOrderedCommGroupWithZero (WithZero α) :=
   { WithZero.linearOrderedCommMonoidWithZero, WithZero.commGroupWithZero with  }
 
 section LinearOrderedCommMonoid
 
-variable[LinearOrderedCommMonoidWithZero α]
+variable [LinearOrderedCommMonoidWithZero α]
 
 /-- Pullback a `linear_ordered_comm_monoid_with_zero` under an injective map.
 See note [reducible non-instances]. -/
@@ -83,13 +83,13 @@ theorem pow_pos_iff [NoZeroDivisors α] {n : ℕ} (hn : 0 < n) : 0 < a ^ n ↔ 0
   by 
     simpRw [zero_lt_iff, pow_ne_zero_iff hn]
 
-instance  : LinearOrderedAddCommMonoidWithTop (Additive (OrderDual α)) :=
+instance : LinearOrderedAddCommMonoidWithTop (Additive (OrderDual α)) :=
   { Additive.orderedAddCommMonoid, Additive.linearOrder with top := (0 : α),
     top_add' := fun a => (zero_mul a : ((0 : α)*a) = 0), le_top := fun _ => zero_le' }
 
 end LinearOrderedCommMonoid
 
-variable[LinearOrderedCommGroupWithZero α]
+variable [LinearOrderedCommGroupWithZero α]
 
 theorem zero_lt_one₀ : (0 : α) < 1 :=
   lt_of_le_of_neₓ zero_le_one' zero_ne_one
@@ -207,13 +207,13 @@ theorem div_le_iff₀ (hc : c ≠ 0) : a / c ≤ b ↔ a ≤ b*c :=
   by 
     rw [div_eq_mul_inv, mul_inv_le_iff₀ hc]
 
-instance  : LinearOrderedAddCommGroupWithTop (Additive (OrderDual α)) :=
+instance : LinearOrderedAddCommGroupWithTop (Additive (OrderDual α)) :=
   { Additive.subNegMonoid, Additive.linearOrderedAddCommMonoidWithTop, Additive.nontrivial with neg_top := inv_zero,
     add_neg_cancel := fun a ha => mul_inv_cancel ha }
 
 namespace MonoidHom
 
-variable{R : Type _}[Ringₓ R](f : R →* α)
+variable {R : Type _} [Ringₓ R] (f : R →* α)
 
 theorem map_neg_one : f (-1) = 1 :=
   (pow_eq_one_iff (Nat.succ_ne_zero 1)).1$

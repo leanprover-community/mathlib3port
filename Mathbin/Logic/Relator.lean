@@ -6,9 +6,9 @@ universe u₁ u₂ v₁ v₂
 
 section 
 
-variable{α : Sort u₁}{β : Sort u₂}{γ : Sort v₁}{δ : Sort v₂}
+variable {α : Sort u₁} {β : Sort u₂} {γ : Sort v₁} {δ : Sort v₂}
 
-variable(R : α → β → Prop)(S : γ → δ → Prop)
+variable (R : α → β → Prop) (S : γ → δ → Prop)
 
 def lift_fun (f : α → γ) (g : β → δ) : Prop :=
   ∀ ⦃a b⦄, R a b → S (f a) (g b)
@@ -19,7 +19,7 @@ end
 
 section 
 
-variable{α : Type u₁}{β : Type u₂}(R : α → β → Prop)
+variable {α : Type u₁} {β : Type u₂} (R : α → β → Prop)
 
 def right_total : Prop :=
   ∀ b, ∃ a, R a b
@@ -39,7 +39,7 @@ def right_unique : Prop :=
 def bi_unique : Prop :=
   left_unique R ∧ right_unique R
 
-variable{R}
+variable {R}
 
 theorem right_total.rel_forall (h : right_total R) : ((R⇒Implies)⇒Implies) (fun p => ∀ i, p i) fun q => ∀ i, q i :=
   fun p q Hrel H b => Exists.elim (h b) fun a Rab => Hrel Rab (H _)
@@ -71,9 +71,9 @@ theorem rel_not : (Iff⇒Iff) Not Not :=
 theorem bi_total_eq {α : Type u₁} : Relator.BiTotal (@Eq α) :=
   { left := fun a => ⟨a, rfl⟩, right := fun a => ⟨a, rfl⟩ }
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
-variable{r : α → β → Prop}{p : β → γ → Prop}{q : γ → δ → Prop}
+variable {r : α → β → Prop} {p : β → γ → Prop} {q : γ → δ → Prop}
 
 theorem left_unique.flip (h : left_unique r) : right_unique (flip r) :=
   fun a b c h₁ h₂ => h h₁ h₂

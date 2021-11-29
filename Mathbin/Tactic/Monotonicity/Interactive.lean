@@ -3,7 +3,7 @@ import Mathbin.Control.Traversable.Lemmas
 import Leanbin.Data.Dlist 
 import Mathbin.Tactic.Monotonicity.Basic
 
-variable{a b c p : Prop}
+variable {a b c p : Prop}
 
 namespace Tactic.Interactive
 
@@ -22,7 +22,7 @@ unsafe inductive mono_function (elab : Bool := tt)
   | assoc : expr elab → Option (expr elab) → Option (expr elab) → mono_function
   | assoc_comm : expr elab → expr elab → mono_function
 
-unsafe instance  : DecidableEq mono_function :=
+unsafe instance : DecidableEq mono_function :=
   by 
     runTac 
       mk_dec_eq_instance
@@ -149,7 +149,7 @@ unsafe def match_prefix : List expr → List expr → tactic (List expr × List 
 | x :: xs, y :: ys =>
   (do 
       compare opt x y 
-      Prod.mapₓ ((· :: ·) x) id <$> match_prefix xs ys) <|>
+      Prod.map ((· :: ·) x) id <$> match_prefix xs ys) <|>
     return ([], x :: xs, y :: ys)
 | xs, ys => return ([], xs, ys)
 

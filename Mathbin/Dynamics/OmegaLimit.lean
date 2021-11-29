@@ -36,7 +36,7 @@ open_locale TopologicalSpace
 
 section OmegaLimit
 
-variable{τ : Type _}{α : Type _}{β : Type _}{ι : Type _}
+variable {τ : Type _} {α : Type _} {β : Type _} {ι : Type _}
 
 /-- The ω-limit of a set `s` under `ϕ` with respect to a filter `f` is
     ⋂ u ∈ f, cl (ϕ u s). -/
@@ -49,9 +49,9 @@ localized [OmegaLimit] notation "ω⁺" => OmegaLimit at_top
 
 localized [OmegaLimit] notation "ω⁻" => OmegaLimit at_bot
 
-variable[TopologicalSpace β]
+variable [TopologicalSpace β]
 
-variable(f : Filter τ)(ϕ : τ → α → β)(s s₁ s₂ : Set α)
+variable (f : Filter τ) (ϕ : τ → α → β) (s s₁ s₂ : Set α)
 
 /-!
 ### Elementary properties
@@ -343,10 +343,8 @@ end OmegaLimit
 
 namespace Flow
 
-variable{τ :
-    Type
-      _}[TopologicalSpace
-      τ][AddMonoidₓ τ][HasContinuousAdd τ]{α : Type _}[TopologicalSpace α](f : Filter τ)(ϕ : Flow τ α)(s : Set α)
+variable {τ : Type _} [TopologicalSpace τ] [AddMonoidₓ τ] [HasContinuousAdd τ] {α : Type _} [TopologicalSpace α]
+  (f : Filter τ) (ϕ : Flow τ α) (s : Set α)
 
 open_locale OmegaLimit
 
@@ -369,10 +367,8 @@ end Flow
 
 namespace Flow
 
-variable{τ :
-    Type
-      _}[TopologicalSpace
-      τ][AddCommGroupₓ τ][TopologicalAddGroup τ]{α : Type _}[TopologicalSpace α](f : Filter τ)(ϕ : Flow τ α)(s : Set α)
+variable {τ : Type _} [TopologicalSpace τ] [AddCommGroupₓ τ] [TopologicalAddGroup τ] {α : Type _} [TopologicalSpace α]
+  (f : Filter τ) (ϕ : Flow τ α) (s : Set α)
 
 open_locale OmegaLimit
 

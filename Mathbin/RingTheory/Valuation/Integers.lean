@@ -15,9 +15,9 @@ namespace Valuation
 
 section Ringₓ
 
-variable{R : Type u}{Γ₀ : Type v}[Ringₓ R][LinearOrderedCommGroupWithZero Γ₀]
+variable {R : Type u} {Γ₀ : Type v} [Ringₓ R] [LinearOrderedCommGroupWithZero Γ₀]
 
-variable(v : Valuation R Γ₀)
+variable (v : Valuation R Γ₀)
 
 /-- The ring of integers under a given valuation is the subring of elements with valuation ≤ 1. -/
 def integer : Subring R :=
@@ -31,11 +31,11 @@ end Ringₓ
 
 section CommRingₓ
 
-variable{R : Type u}{Γ₀ : Type v}[CommRingₓ R][LinearOrderedCommGroupWithZero Γ₀]
+variable {R : Type u} {Γ₀ : Type v} [CommRingₓ R] [LinearOrderedCommGroupWithZero Γ₀]
 
-variable(v : Valuation R Γ₀)
+variable (v : Valuation R Γ₀)
 
-variable(O : Type w)[CommRingₓ O][Algebra O R]
+variable (O : Type w) [CommRingₓ O] [Algebra O R]
 
 /-- Given a valuation v : R → Γ₀ and a ring homomorphism O →+* R, we say that O is the integers of v
 if f is injective, and its range is exactly `v.integer`. -/
@@ -44,7 +44,7 @@ structure integers : Prop where
   map_le_one : ∀ x, v (algebraMap O R x) ≤ 1 
   exists_of_le_one : ∀ ⦃r⦄, v r ≤ 1 → ∃ x, algebraMap O R x = r
 
-instance  : Algebra v.integer R :=
+instance : Algebra v.integer R :=
   Algebra.ofSubring v.integer
 
 theorem integer.integers : v.integers v.integer :=
@@ -52,7 +52,7 @@ theorem integer.integers : v.integers v.integer :=
 
 namespace Integers
 
-variable{v O}(hv : integers v O)
+variable {v O} (hv : integers v O)
 
 include hv
 
@@ -93,9 +93,9 @@ end CommRingₓ
 
 section Field
 
-variable{F : Type u}{Γ₀ : Type v}[Field F][LinearOrderedCommGroupWithZero Γ₀]
+variable {F : Type u} {Γ₀ : Type v} [Field F] [LinearOrderedCommGroupWithZero Γ₀]
 
-variable{v : Valuation F Γ₀}{O : Type w}[CommRingₓ O][Algebra O F](hv : integers v O)
+variable {v : Valuation F Γ₀} {O : Type w} [CommRingₓ O] [Algebra O F] (hv : integers v O)
 
 include hv
 

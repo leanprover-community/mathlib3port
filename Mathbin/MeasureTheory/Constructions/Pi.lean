@@ -54,7 +54,7 @@ open_locale Classical BigOperators TopologicalSpace Ennreal
 
 universe u v
 
-variable{ι ι' : Type _}{α : ι → Type _}
+variable {ι ι' : Type _} {α : ι → Type _}
 
 /-! We start with some measurability properties -/
 
@@ -72,7 +72,7 @@ theorem is_pi_system_pi [∀ i, MeasurableSpace (α i)] :
   IsPiSystem (pi univ '' pi univ fun i => { s:Set (α i) | MeasurableSet s }) :=
   IsPiSystem.pi fun i => is_pi_system_measurable_set
 
-variable[Fintype ι][Fintype ι']
+variable [Fintype ι] [Fintype ι']
 
 -- error in MeasureTheory.Constructions.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Boxes of countably spanning sets are countably spanning. -/
@@ -157,7 +157,7 @@ theorem generate_from_pi [∀ i, MeasurableSpace (α i)] :
 
 namespace MeasureTheory
 
-variable{m : ∀ i, outer_measure (α i)}
+variable {m : ∀ i, outer_measure (α i)}
 
 /-- An upper bound for the measure in a finite product space.
   It is defined to by taking the image of the set under all projections, and taking the product
@@ -224,13 +224,13 @@ end OuterMeasure
 
 namespace Measureₓ
 
-variable[∀ i, MeasurableSpace (α i)](μ : ∀ i, Measureₓ (α i))
+variable [∀ i, MeasurableSpace (α i)] (μ : ∀ i, Measureₓ (α i))
 
 section Tprod
 
 open List
 
-variable{δ : Type _}{π : δ → Type _}[∀ x, MeasurableSpace (π x)]
+variable {δ : Type _} {π : δ → Type _} [∀ x, MeasurableSpace (π x)]
 
 /-- A product of measures in `tprod α l`. -/
 protected def tprod (l : List δ) (μ : ∀ i, Measureₓ (π i)) : Measureₓ (tprod π l) :=
@@ -274,7 +274,7 @@ section Encodable
 
 open List MeasurableEquiv
 
-variable[Encodable ι]
+variable [Encodable ι]
 
 /-- The product measure on an encodable finite type, defined by mapping `measure.tprod` along the
   equivalence `measurable_equiv.pi_measurable_equiv_tprod`.
@@ -342,7 +342,7 @@ begin
     exact [expr (pi'_pi μ s).le] }
 end
 
-variable{μ}
+variable {μ}
 
 -- error in MeasureTheory.Constructions.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `measure.pi μ` has finite spanning sets in rectangles of finite spanning sets. -/
@@ -397,7 +397,7 @@ begin
   simp_rw ["[", expr h₁ s hs, ",", expr pi_pi_aux μ s (λ i, h4C i _ (hs i)), "]"] []
 end
 
-variable[∀ i, sigma_finite (μ i)]
+variable [∀ i, sigma_finite (μ i)]
 
 /-- A measure on a finite product space equals the product measure if they are equal on
   rectangles. -/
@@ -406,7 +406,7 @@ theorem pi_eq {μ' : Measureₓ (∀ i, α i)}
   pi_eq_generate_from (fun i => generate_from_measurable_set) (fun i => is_pi_system_measurable_set)
     (fun i => (μ i).toFiniteSpanningSetsIn) h
 
-variable(μ)
+variable (μ)
 
 theorem pi'_eq_pi [Encodable ι] : pi' μ = measure.pi μ :=
   Eq.symm$ pi_eq$ fun s hs => pi'_pi μ s
@@ -466,12 +466,12 @@ theorem pi_hyperplane (i : ι) [has_no_atoms (μ i)] (x : α i) : measure.pi μ 
 theorem ae_eval_ne (i : ι) [has_no_atoms (μ i)] (x : α i) : ∀ᵐy : ∀ i, α i ∂measure.pi μ, y i ≠ x :=
   compl_mem_ae_iff.2 (pi_hyperplane μ i x)
 
-variable{μ}
+variable {μ}
 
 theorem tendsto_eval_ae_ae {i : ι} : tendsto (eval i) (measure.pi μ).ae (μ i).ae :=
   fun s hs => pi_eval_preimage_null μ hs
 
-theorem ae_pi_le_infi_comap : (measure.pi μ).ae ≤ ⨅i, Filter.comap (eval i) (μ i).ae :=
+theorem ae_pi_le_pi : (measure.pi μ).ae ≤ Filter.pi fun i => (μ i).ae :=
   le_infi$ fun i => tendsto_eval_ae_ae.le_comap
 
 theorem ae_eq_pi {β : ι → Type _} {f f' : ∀ i, α i → β i} (h : ∀ i, f i =ᵐ[μ i] f' i) :
@@ -493,7 +493,7 @@ theorem ae_eq_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀ i _ : i ∈
 
 section Intervals
 
-variable{μ}[∀ i, PartialOrderₓ (α i)][∀ i, has_no_atoms (μ i)]
+variable {μ} [∀ i, PartialOrderₓ (α i)] [∀ i, has_no_atoms (μ i)]
 
 theorem pi_Iio_ae_eq_pi_Iic {s : Set ι} {f : ∀ i, α i} :
   (pi s fun i => Iio (f i)) =ᵐ[measure.pi μ] pi s fun i => Iic (f i) :=
@@ -547,10 +547,10 @@ has no atoms. The instance below assumes that all `μ i` have no atoms. -/
 theorem pi_has_no_atoms (i : ι) [has_no_atoms (μ i)] : has_no_atoms (measure.pi μ) :=
   ⟨fun x => flip measure_mono_null (pi_hyperplane μ i (x i)) (singleton_subset_iff.2 rfl)⟩
 
-instance  [h : Nonempty ι] [∀ i, has_no_atoms (μ i)] : has_no_atoms (measure.pi μ) :=
+instance [h : Nonempty ι] [∀ i, has_no_atoms (μ i)] : has_no_atoms (measure.pi μ) :=
   h.elim$ fun i => pi_has_no_atoms i
 
-instance  [∀ i, TopologicalSpace (α i)] [∀ i, is_locally_finite_measure (μ i)] :
+instance [∀ i, TopologicalSpace (α i)] [∀ i, is_locally_finite_measure (μ i)] :
   is_locally_finite_measure (measure.pi μ) :=
   by 
     refine' ⟨fun x => _⟩
@@ -559,7 +559,7 @@ instance  [∀ i, TopologicalSpace (α i)] [∀ i, is_locally_finite_measure (μ
     rw [pi_pi]
     exact Ennreal.prod_lt_top fun i _ => (hμ i).Ne
 
-variable(μ)
+variable (μ)
 
 -- error in MeasureTheory.Constructions.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Separating the indices into those that satisfy a predicate `p` and those that don't maps

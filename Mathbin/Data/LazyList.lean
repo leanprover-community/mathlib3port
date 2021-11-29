@@ -23,9 +23,9 @@ inductive LazyList (α : Type u) : Type u
 
 namespace LazyList
 
-variable{α : Type u}{β : Type v}{δ : Type w}
+variable {α : Type u} {β : Type v} {δ : Type w}
 
-instance  : Inhabited (LazyList α) :=
+instance : Inhabited (LazyList α) :=
   ⟨nil⟩
 
 /-- The singleton lazy list.  -/

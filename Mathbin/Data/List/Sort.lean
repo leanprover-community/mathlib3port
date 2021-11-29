@@ -22,7 +22,7 @@ namespace List
 
 section Sorted
 
-variable{α : Type uu}{r : α → α → Prop}
+variable {α : Type uu} {r : α → α → Prop}
 
 /-- `sorted r l` is the same as `pairwise r l`, preferred in the case that `r`
   is a `<` or `≤`-like relation (transitive and antisymmetric or asymmetric) -/
@@ -109,7 +109,7 @@ end Sorted
 
 section Sort
 
-variable{α : Type uu}(r : α → α → Prop)[DecidableRel r]
+variable {α : Type uu} (r : α → α → Prop) [DecidableRel r]
 
 local infixl:50 " ≼ " => r
 
@@ -179,7 +179,7 @@ theorem perm_insertion_sort : ∀ l : List α, insertion_sort r l ~ l
   by 
     simpa [insertion_sort] using (perm_ordered_insert _ _ _).trans ((perm_insertion_sort l).cons b)
 
-variable{r}
+variable {r}
 
 /-- If `l` is already `list.sorted` with respect to `r`, then `insertion_sort` does not change
 it. -/
@@ -193,7 +193,7 @@ theorem sorted.insertion_sort_eq : ∀ {l : List α} h : sorted r l, insertion_s
 
 section TotalAndTransitive
 
-variable[IsTotal α r][IsTrans α r]
+variable [IsTotal α r] [IsTrans α r]
 
 theorem sorted.ordered_insert (a : α) : ∀ l, sorted r l → sorted r (ordered_insert r a l)
 | [], h => sorted_singleton a
@@ -217,7 +217,7 @@ theorem sorted.ordered_insert (a : α) : ∀ l, sorted r l → sorted r (ordered
       ·
         exact rel_of_sorted_cons h _ bm
 
-variable(r)
+variable (r)
 
 /-- The list `list.insertion_sort r l` is `list.sorted` with respect to `r`. -/
 theorem sorted_insertion_sort : ∀ l, sorted r (insertion_sort r l)
@@ -353,7 +353,7 @@ theorem length_merge_sort (l : List α) : (merge_sort r l).length = l.length :=
 
 section TotalAndTransitive
 
-variable{r}[IsTotal α r][IsTrans α r]
+variable {r} [IsTotal α r] [IsTrans α r]
 
 -- error in Data.List.Sort: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem sorted.merge : ∀ {l l' : list α}, sorted r l → sorted r l' → sorted r (merge r l l')
@@ -381,7 +381,7 @@ theorem sorted.merge : ∀ {l l' : list α}, sorted r l → sorted r l' → sort
     { exact [expr rel_of_sorted_cons h₂ _ bl'] } }
 end
 
-variable(r)
+variable (r)
 
 theorem sorted_merge_sort : ∀ l : List α, sorted r (merge_sort r l)
 | [] =>

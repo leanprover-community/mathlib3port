@@ -22,9 +22,9 @@ It contains theorems relating these to each other, as well as to `linear_map.ker
 
 universe u v w x y z u' v' w' x' y'
 
-variable{R : Type u}{K : Type u'}{M : Type v}{V : Type v'}{M₂ : Type w}{V₂ : Type w'}
+variable {R : Type u} {K : Type u'} {M : Type v} {V : Type v'} {M₂ : Type w} {V₂ : Type w'}
 
-variable{M₃ : Type y}{V₃ : Type y'}{M₄ : Type z}{ι : Type x}{ι' : Type x'}
+variable {M₃ : Type y} {V₃ : Type y'} {M₄ : Type z} {ι : Type x} {ι' : Type x'}
 
 open Function Submodule
 
@@ -34,9 +34,8 @@ namespace LinearMap
 
 universe i
 
-variable[Semiringₓ
-      R][AddCommMonoidₓ
-      M₂][Module R M₂][AddCommMonoidₓ M₃][Module R M₃]{φ : ι → Type i}[∀ i, AddCommMonoidₓ (φ i)][∀ i, Module R (φ i)]
+variable [Semiringₓ R] [AddCommMonoidₓ M₂] [Module R M₂] [AddCommMonoidₓ M₃] [Module R M₃] {φ : ι → Type i}
+  [∀ i, AddCommMonoidₓ (φ i)] [∀ i, Module R (φ i)]
 
 /-- `pi` construction for linear functions. From a family of linear functions it produces a linear
 function into a family of modules. -/
@@ -111,7 +110,7 @@ def single [DecidableEq ι] (i : ι) : φ i →ₗ[R] ∀ i, φ i :=
 theorem coe_single [DecidableEq ι] (i : ι) : «expr⇑ » (single i : φ i →ₗ[R] ∀ i, φ i) = Pi.single i :=
   rfl
 
-variable(R φ)
+variable (R φ)
 
 /-- The linear equivalence between linear functions on a finite product of modules and
 families of functions on these modules. See note [bundled maps over different rings]. -/
@@ -141,11 +140,11 @@ def lsum S [AddCommMonoidₓ M] [Module R M] [Fintype ι] [DecidableEq ι] [Semi
             simpa [apply_single]
           rw [Finset.univ_sum_single] }
 
-variable{R φ}
+variable {R φ}
 
 section Ext
 
-variable[Fintype ι][DecidableEq ι][AddCommMonoidₓ M][Module R M]{f g : (∀ i, φ i) →ₗ[R] M}
+variable [Fintype ι] [DecidableEq ι] [AddCommMonoidₓ M] [Module R M] {f g : (∀ i, φ i) →ₗ[R] M}
 
 theorem pi_ext (h : ∀ i x, f (Pi.single i x) = g (Pi.single i x)) : f = g :=
   to_add_monoid_hom_injective$ AddMonoidHom.functions_ext _ _ _ h
@@ -168,7 +167,7 @@ end Ext
 
 section 
 
-variable(R φ)
+variable (R φ)
 
 -- error in LinearAlgebra.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `I` and `J` are disjoint index sets, the product of the kernels of the `J`th projections of
@@ -207,7 +206,7 @@ end
 
 section 
 
-variable[DecidableEq ι]
+variable [DecidableEq ι]
 
 /-- `diag i j` is the identity map if `i = j`. Otherwise it is the constant 0 map. -/
 def diag (i j : ι) : φ i →ₗ[R] φ j :=
@@ -228,7 +227,7 @@ end LinearMap
 
 namespace Submodule
 
-variable[Semiringₓ R]{φ : ι → Type _}[∀ i, AddCommMonoidₓ (φ i)][∀ i, Module R (φ i)]
+variable [Semiringₓ R] {φ : ι → Type _} [∀ i, AddCommMonoidₓ (φ i)] [∀ i, Module R (φ i)]
 
 open LinearMap
 
@@ -240,7 +239,7 @@ def pi (I : Set ι) (p : ∀ i, Submodule R (φ i)) : Submodule R (∀ i, φ i) 
     add_mem' := fun x y hx hy i hi => (p i).add_mem (hx i hi) (hy i hi),
     smul_mem' := fun c x hx i hi => (p i).smul_mem c (hx i hi) }
 
-variable{I : Set ι}{p : ∀ i, Submodule R (φ i)}{x : ∀ i, φ i}
+variable {I : Set ι} {p : ∀ i, Submodule R (φ i)} {x : ∀ i, φ i}
 
 @[simp]
 theorem mem_pi : x ∈ pi I p ↔ ∀ i _ : i ∈ I, x i ∈ p i :=
@@ -275,11 +274,11 @@ end Submodule
 
 namespace LinearEquiv
 
-variable[Semiringₓ R]{φ ψ χ : ι → Type _}[∀ i, AddCommMonoidₓ (φ i)][∀ i, Module R (φ i)]
+variable [Semiringₓ R] {φ ψ χ : ι → Type _} [∀ i, AddCommMonoidₓ (φ i)] [∀ i, Module R (φ i)]
 
-variable[∀ i, AddCommMonoidₓ (ψ i)][∀ i, Module R (ψ i)]
+variable [∀ i, AddCommMonoidₓ (ψ i)] [∀ i, Module R (ψ i)]
 
-variable[∀ i, AddCommMonoidₓ (χ i)][∀ i, Module R (χ i)]
+variable [∀ i, AddCommMonoidₓ (χ i)] [∀ i, Module R (χ i)]
 
 /-- Combine a family of linear equivalences into a linear equivalence of `pi`-types.
 
@@ -308,7 +307,7 @@ theorem Pi_congr_right_trans (e : ∀ i, φ i ≃ₗ[R] ψ i) (f : ∀ i, ψ i �
   (Pi_congr_right e).trans (Pi_congr_right f) = (Pi_congr_right$ fun i => (e i).trans (f i)) :=
   rfl
 
-variable(R φ)
+variable (R φ)
 
 /-- Transport dependent functions through an equivalence of the base space.
 
@@ -335,8 +334,8 @@ def pi_option_equiv_prod {ι : Type _} {M : Option ι → Type _} [∀ i, AddCom
       by 
         simp [Function.funext_iffₓ] }
 
-variable(ι R
-    M)(S : Type _)[Fintype ι][DecidableEq ι][Semiringₓ S][AddCommMonoidₓ M][Module R M][Module S M][SmulCommClass R S M]
+variable (ι R M) (S : Type _) [Fintype ι] [DecidableEq ι] [Semiringₓ S] [AddCommMonoidₓ M] [Module R M] [Module S M]
+  [SmulCommClass R S M]
 
 /-- Linear equivalence between linear functions `Rⁿ → M` and `Mⁿ`. The spaces `Rⁿ` and `Mⁿ`
 are represented as `ι → R` and `ι → M`, respectively, where `ι` is a finite type.
@@ -348,7 +347,7 @@ See note [bundled maps over different rings]. -/
 def pi_ring : ((ι → R) →ₗ[R] M) ≃ₗ[S] ι → M :=
   (LinearMap.lsum R (fun i : ι => R) S).symm.trans (Pi_congr_right$ fun i => LinearMap.ringLmapEquivSelf R S M)
 
-variable{ι R M}
+variable {ι R M}
 
 @[simp]
 theorem pi_ring_apply (f : (ι → R) →ₗ[R] M) (i : ι) : pi_ring R M ι S f i = f (Pi.single i 1) :=
@@ -399,7 +398,7 @@ theorem sum_arrow_lequiv_prod_arrow_symm_apply_inr {α β} (f : α → M) (g : �
 def fun_unique (ι R M : Type _) [Unique ι] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : (ι → M) ≃ₗ[R] M :=
   { Equiv.funUnique ι M with map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
 
-variable(R M)
+variable (R M)
 
 /-- Linear equivalence between dependent functions `Π i : fin 2, M i` and `M 0 × M 1`. -/
 @[simps (config := { simpRhs := tt, fullyApplied := ff })]
@@ -415,7 +414,7 @@ end LinearEquiv
 
 section Extend
 
-variable(R){η : Type x}[Semiringₓ R](s : ι → η)
+variable (R) {η : Type x} [Semiringₓ R] (s : ι → η)
 
 /-- `function.extend s f 0` as a bundled linear map. -/
 @[simps]

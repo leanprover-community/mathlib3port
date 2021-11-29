@@ -22,13 +22,13 @@ finset, gcd
 -/
 
 
-variable{α β γ : Type _}
+variable {α β γ : Type _}
 
 namespace Finset
 
 open Multiset
 
-variable[CommCancelMonoidWithZero α][NormalizedGcdMonoid α]
+variable [CommCancelMonoidWithZero α] [NormalizedGcdMonoid α]
 
 /-! ### lcm -/
 
@@ -39,7 +39,7 @@ section Lcm
 def lcm (s : Finset β) (f : β → α) : α :=
   s.fold GcdMonoid.lcm 1 f
 
-variable{s s₁ s₂ : Finset β}{f : β → α}
+variable {s s₁ s₂ : Finset β} {f : β → α}
 
 theorem lcm_def : s.lcm f = (s.1.map f).lcm :=
   rfl
@@ -97,6 +97,10 @@ theorem lcm_mono_fun {g : β → α} (h : ∀ b _ : b ∈ s, f b ∣ g b) : s.lc
 theorem lcm_mono (h : s₁ ⊆ s₂) : s₁.lcm f ∣ s₂.lcm f :=
   lcm_dvd$ fun b hb => dvd_lcm (h hb)
 
+theorem lcm_eq_zero_iff [Nontrivial α] : s.lcm f = 0 ↔ 0 ∈ f '' s :=
+  by 
+    simp only [Multiset.mem_map, lcm_def, Multiset.lcm_eq_zero_iff, Set.mem_image, mem_coe, ←Finset.mem_def]
+
 end Lcm
 
 /-! ### gcd -/
@@ -108,7 +112,7 @@ section Gcd
 def gcd (s : Finset β) (f : β → α) : α :=
   s.fold GcdMonoid.gcd 0 f
 
-variable{s s₁ s₂ : Finset β}{f : β → α}
+variable {s s₁ s₂ : Finset β} {f : β → α}
 
 theorem gcd_def : s.gcd f = (s.1.map f).gcd :=
   rfl
@@ -227,7 +231,7 @@ namespace Finset
 
 section IsDomain
 
-variable[CommRingₓ α][IsDomain α][NormalizedGcdMonoid α]
+variable [CommRingₓ α] [IsDomain α] [NormalizedGcdMonoid α]
 
 theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α} (h : ∀ x : β, x ∈ s → a ∣ f x - g x) :
   GcdMonoid.gcd a (s.gcd f) = GcdMonoid.gcd a (s.gcd g) :=

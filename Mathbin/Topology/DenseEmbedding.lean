@@ -24,19 +24,19 @@ open Set Filter
 
 open_locale Classical TopologicalSpace Filter
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 /-- `i : α → β` is "dense inducing" if it has dense range and the topology on `α`
   is the one induced by `i` from the topology on `β`. -/
 @[protectProj]
-structure DenseInducing[TopologicalSpace α][TopologicalSpace β](i : α → β) extends Inducing i : Prop where 
+structure DenseInducing [TopologicalSpace α] [TopologicalSpace β] (i : α → β) extends Inducing i : Prop where 
   dense : DenseRange i
 
 namespace DenseInducing
 
-variable[TopologicalSpace α][TopologicalSpace β]
+variable [TopologicalSpace α] [TopologicalSpace β]
 
-variable{i : α → β}(di : DenseInducing i)
+variable {i : α → β} (di : DenseInducing i)
 
 theorem nhds_eq_comap (di : DenseInducing i) : ∀ a : α, 𝓝 a = comap i (𝓝$ i a) :=
   di.to_inducing.nhds_eq_comap
@@ -75,7 +75,7 @@ open TopologicalSpace
 protected theorem separable_space [separable_space α] : separable_space β :=
   di.dense.separable_space di.continuous
 
-variable[TopologicalSpace δ]{f : γ → α}{g : γ → δ}{h : δ → β}
+variable [TopologicalSpace δ] {f : γ → α} {g : γ → δ} {h : δ → β}
 
 -- error in Topology.DenseEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -107,7 +107,7 @@ theorem comap_nhds_ne_bot (di : DenseInducing i) (b : β) : ne_bot (comap i (�
       let ⟨_, ⟨ha, a, rfl⟩⟩ := mem_closure_iff_nhds.1 (di.dense b) s hs
       ⟨a, ha⟩
 
-variable[TopologicalSpace γ]
+variable [TopologicalSpace γ]
 
 /-- If `i : α → β` is a dense inducing, then any function `f : α → γ` "extends"
   to a function `g = extend di f : β → γ`. If `γ` is Hausdorff and `f` has a
@@ -202,13 +202,13 @@ theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ Closure (ra
         fun a =>
           le_antisymmₓ (tendsto_iff_comap.1$ c.tendsto _)
             (by 
-              simpa [le_def] using H a),
+              simpa [Filter.le_def] using H a),
     dense }
 
 end DenseInducing
 
 /-- A dense embedding is an embedding with dense image. -/
-structure DenseEmbedding[TopologicalSpace α][TopologicalSpace β](e : α → β) extends DenseInducing e : Prop where 
+structure DenseEmbedding [TopologicalSpace α] [TopologicalSpace β] (e : α → β) extends DenseInducing e : Prop where 
   inj : Function.Injective e
 
 theorem DenseEmbedding.mk' [TopologicalSpace α] [TopologicalSpace β] (e : α → β) (c : Continuous e)
@@ -220,9 +220,9 @@ namespace DenseEmbedding
 
 open TopologicalSpace
 
-variable[TopologicalSpace α][TopologicalSpace β][TopologicalSpace γ][TopologicalSpace δ]
+variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
-variable{e : α → β}(de : DenseEmbedding e)
+variable {e : α → β} (de : DenseEmbedding e)
 
 theorem inj_iff {x y} : e x = e y ↔ x = y :=
   de.inj.eq_iff
@@ -308,9 +308,9 @@ theorem DenseRange.induction_on₃ [TopologicalSpace β] {e : α → β} {p : β
 
 section 
 
-variable[TopologicalSpace β][TopologicalSpace γ][T2Space γ]
+variable [TopologicalSpace β] [TopologicalSpace γ] [T2Space γ]
 
-variable{f : α → β}
+variable {f : α → β}
 
 /-- Two continuous functions to a t2-space that agree on the dense range of a function are equal. -/
 theorem DenseRange.equalizer (hfd : DenseRange f) {g h : β → γ} (hg : Continuous g) (hh : Continuous h)

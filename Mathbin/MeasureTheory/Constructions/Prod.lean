@@ -66,7 +66,7 @@ open TopologicalSpace hiding generateFrom
 
 open Filter hiding prod_eq map
 
-variable{α α' β β' γ E : Type _}
+variable {α α' β β' γ E : Type _}
 
 /-- Rectangles formed by π-systems form a π-system. -/
 theorem IsPiSystem.prod {C : Set (Set α)} {D : Set (Set β)} (hC : IsPiSystem C) (hD : IsPiSystem D) :
@@ -85,13 +85,13 @@ theorem IsCountablySpanning.prod {C : Set (Set α)} {D : Set (Set β)} (hC : IsC
     refine' ⟨fun n => (s n.unpair.1).Prod (t n.unpair.2), fun n => mem_image2_of_mem (h1s _) (h1t _), _⟩
     rw [Union_unpair_prod, h2s, h2t, univ_prod_univ]
 
-variable[MeasurableSpace α][MeasurableSpace α'][MeasurableSpace β][MeasurableSpace β']
+variable [MeasurableSpace α] [MeasurableSpace α'] [MeasurableSpace β] [MeasurableSpace β']
 
-variable[MeasurableSpace γ]
+variable [MeasurableSpace γ]
 
-variable{μ : Measureₓ α}{ν : Measureₓ β}{τ : Measureₓ γ}
+variable {μ : Measureₓ α} {ν : Measureₓ β} {τ : Measureₓ γ}
 
-variable[NormedGroup E][MeasurableSpace E]
+variable [NormedGroup E] [MeasurableSpace E]
 
 /-! ### Measurability
 
@@ -267,7 +267,7 @@ theorem measurable_set_integrable [sigma_finite ν] [OpensMeasurableSpace E] ⦃
 
 section 
 
-variable[second_countable_topology E][NormedSpace ℝ E][CompleteSpace E][BorelSpace E]
+variable [second_countable_topology E] [NormedSpace ℝ E] [CompleteSpace E] [BorelSpace E]
 
 -- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
@@ -300,7 +300,7 @@ begin
     apply [expr measurable_measure_prod_mk_left],
     exact [expr (s n).measurable_set_fiber x] },
   have [ident h2f'] [":", expr tendsto f' at_top (expr𝓝() (λ x : α, «expr∫ , ∂ »((y : β), f x y, ν)))] [],
-  { rw ["[", expr tendsto_pi, "]"] [],
+  { rw ["[", expr tendsto_pi_nhds, "]"] [],
     intro [ident x],
     by_cases [expr hfx, ":", expr integrable (f x) ν],
     { have [] [":", expr ∀ n, integrable (s' n x) ν] [],
@@ -358,7 +358,7 @@ protected def Prod (μ : Measureₓ α) (ν : Measureₓ β) : Measureₓ (α ×
 instance prod.measure_space {α β} [measure_space α] [measure_space β] : measure_space (α × β) :=
   { volume := volume.Prod volume }
 
-variable{μ ν}[sigma_finite ν]
+variable {μ ν} [sigma_finite ν]
 
 theorem volume_eq_prod α β [measure_space α] [measure_space β] :
   (volume : Measureₓ (α × β)) = (volume : Measureₓ α).Prod (volume : Measureₓ β) :=
@@ -468,7 +468,7 @@ theorem prod_snd_absolutely_continuous : map Prod.snd (μ.prod ν) ≪ ν :=
     refine' absolutely_continuous.mk fun s hs h2s => _ 
     rw [map_apply measurable_snd hs, ←univ_prod, prod_prod, h2s, mul_zero]
 
-variable[sigma_finite μ]
+variable [sigma_finite μ]
 
 instance prod.sigma_finite : sigma_finite (μ.prod ν) :=
   (μ.to_finite_spanning_sets_in.prod ν.to_finite_spanning_sets_in).SigmaFinite
@@ -615,7 +615,7 @@ namespace MeasurePreserving
 
 open Measureₓ
 
-variable{δ : Type _}[MeasurableSpace δ]{μa : Measureₓ α}{μb : Measureₓ β}{μc : Measureₓ γ}{μd : Measureₓ δ}
+variable {δ : Type _} [MeasurableSpace δ] {μa : Measureₓ α} {μb : Measureₓ β} {μc : Measureₓ γ} {μd : Measureₓ δ}
 
 -- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem skew_product
@@ -654,7 +654,7 @@ end
 /-- If `f : α → β` sends the measure `μa` to `μb` and `g : γ → δ` sends the measure `μc` to `μd`,
 then `prod.map f g` sends `μa.prod μc` to `μb.prod μd`. -/
 protected theorem Prod [sigma_finite μb] [sigma_finite μd] {f : α → β} {g : γ → δ} (hf : measure_preserving f μa μb)
-  (hg : measure_preserving g μc μd) : measure_preserving (Prod.mapₓ f g) (μa.prod μc) (μb.prod μd) :=
+  (hg : measure_preserving g μc μd) : measure_preserving (Prod.map f g) (μa.prod μc) (μb.prod μd) :=
   have  : Measurable (uncurry$ fun _ : α => g) := hg.1.comp measurable_snd 
   hf.skew_product this$ Filter.eventually_of_forall$ fun _ => hg.map_eq
 
@@ -705,7 +705,7 @@ namespace MeasureTheory
 /-! ### The Lebesgue integral on a product -/
 
 
-variable[sigma_finite ν]
+variable [sigma_finite ν]
 
 theorem lintegral_prod_swap [sigma_finite μ] (f : α × β → ℝ≥0∞) (hf : AeMeasurable f (μ.prod ν)) :
   (∫⁻z, f z.swap ∂ν.prod μ) = ∫⁻z, f z ∂μ.prod ν :=
@@ -795,7 +795,7 @@ theorem lintegral_prod_mul {f : α → ℝ≥0∞} {g : β → ℝ≥0∞} (hf :
 
 section 
 
-variable[OpensMeasurableSpace E]
+variable [OpensMeasurableSpace E]
 
 theorem integrable.swap [sigma_finite μ] ⦃f : α × β → E⦄ (hf : integrable f (μ.prod ν)) :
   integrable (f ∘ Prod.swap) (ν.prod μ) :=
@@ -892,7 +892,7 @@ theorem integrable.integral_norm_prod_right [sigma_finite μ] ⦃f : α × β �
 
 end 
 
-variable[second_countable_topology E][NormedSpace ℝ E][CompleteSpace E][BorelSpace E]
+variable [second_countable_topology E] [NormedSpace ℝ E] [CompleteSpace E] [BorelSpace E]
 
 theorem integrable.integral_prod_left ⦃f : α × β → E⦄ (hf : integrable f (μ.prod ν)) :
   integrable (fun x => ∫y, f (x, y) ∂ν) μ :=
@@ -909,7 +909,7 @@ theorem integrable.integral_prod_right [sigma_finite μ] ⦃f : α × β → E�
 /-! ### The Bochner integral on a product -/
 
 
-variable[sigma_finite μ]
+variable [sigma_finite μ]
 
 theorem integral_prod_swap (f : α × β → E) (hf : AeMeasurable f (μ.prod ν)) :
   (∫z, f z.swap ∂ν.prod μ) = ∫z, f z ∂μ.prod ν :=
@@ -917,10 +917,8 @@ theorem integral_prod_swap (f : α × β → E) (hf : AeMeasurable f (μ.prod ν
     rw [←prod_swap] at hf 
     rw [←integral_map measurable_swap hf, prod_swap]
 
-variable{E' :
-    Type
-      _}[MeasurableSpace
-      E'][NormedGroup E'][BorelSpace E'][CompleteSpace E'][NormedSpace ℝ E'][second_countable_topology E']
+variable {E' : Type _} [MeasurableSpace E'] [NormedGroup E'] [BorelSpace E'] [CompleteSpace E'] [NormedSpace ℝ E']
+  [second_countable_topology E']
 
 /-! Some rules about the sum/difference of double integrals. They follow from `integral_add`, but
   we separate them out as separate lemmas, because they involve quite some steps. -/

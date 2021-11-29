@@ -15,7 +15,7 @@ of the one-dimensional derivative `deriv ℝ f`.
 -/
 
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E]{F : Type _}[NormedGroup F][NormedSpace ℝ F]
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {F : Type _} [NormedGroup F] [NormedSpace ℝ F]
 
 open Filter Set Metric ContinuousLinearMap
 

@@ -43,11 +43,11 @@ namespace MeasureTheory
 
 open Measureₓ
 
-variable{G : Type _}[TopologicalSpace G][MeasurableSpace G][second_countable_topology G]
+variable {G : Type _} [TopologicalSpace G] [MeasurableSpace G] [second_countable_topology G]
 
-variable[BorelSpace G][Groupₓ G][TopologicalGroup G]
+variable [BorelSpace G] [Groupₓ G] [TopologicalGroup G]
 
-variable{μ ν : Measureₓ G}[sigma_finite ν][sigma_finite μ]
+variable {μ ν : Measureₓ G} [sigma_finite ν] [sigma_finite μ]
 
 /-- This condition is part of the definition of a measurable group in [Halmos, §59].
   There, the map in this lemma is called `S`. -/

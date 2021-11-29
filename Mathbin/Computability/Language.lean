@@ -13,7 +13,7 @@ over the languages.
 
 universe u v
 
-variable{α : Type u}
+variable {α : Type u}
 
 -- error in Computability.Language: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_mem (list α)
 /-- A language is a set of strings over an alphabet. -/
@@ -27,21 +27,21 @@ namespace Language
 attribute [local reducible] Language
 
 /-- Zero language has no elements. -/
-instance  : HasZero (Language α) :=
+instance : HasZero (Language α) :=
   ⟨(∅ : Set _)⟩
 
 /-- `1 : language α` contains only one element `[]`. -/
-instance  : HasOne (Language α) :=
+instance : HasOne (Language α) :=
   ⟨{[]}⟩
 
-instance  : Inhabited (Language α) :=
+instance : Inhabited (Language α) :=
   ⟨0⟩
 
 /-- The sum of two languages is the union of  -/
-instance  : Add (Language α) :=
+instance : Add (Language α) :=
   ⟨Set.Union⟩
 
-instance  : Mul (Language α) :=
+instance : Mul (Language α) :=
   ⟨Set.Image2 (· ++ ·)⟩
 
 theorem zero_def : (0 : Language α) = (∅ : Set _) :=
@@ -81,7 +81,7 @@ theorem mem_mul (l m : Language α) (x : List α) : (x ∈ l*m) ↔ ∃ a b, a �
 theorem mem_star (l : Language α) (x : List α) : x ∈ l.star ↔ ∃ S : List (List α), x = S.join ∧ ∀ y _ : y ∈ S, y ∈ l :=
   Iff.rfl
 
-instance  : Semiringₓ (Language α) :=
+instance : Semiringₓ (Language α) :=
   { add := ·+·, add_assoc := Set.union_assoc, zero := 0, zero_add := Set.empty_union, add_zero := Set.union_empty,
     add_comm := Set.union_comm, mul := ·*·,
     mul_assoc :=

@@ -23,7 +23,7 @@ open Function
 
 namespace Subtype
 
-variable{α β γ : Sort _}{p q : α → Prop}
+variable {α β γ : Sort _} {p q : α → Prop}
 
 /-- See Note [custom simps projection] -/
 def simps.coe (x : Subtype p) : α :=
@@ -171,13 +171,13 @@ theorem map_injective {p : α → Prop} {q : β → Prop} {f : α → β} (h : �
 theorem map_involutive {p : α → Prop} {f : α → α} (h : ∀ a, p a → p (f a)) (hf : involutive f) : involutive (map f h) :=
   fun x => Subtype.ext (hf x)
 
-instance  [HasEquivₓ α] (p : α → Prop) : HasEquivₓ (Subtype p) :=
+instance [HasEquivₓ α] (p : α → Prop) : HasEquivₓ (Subtype p) :=
   ⟨fun s t => (s : α) ≈ (t : α)⟩
 
 theorem equiv_iff [HasEquivₓ α] {p : α → Prop} {s t : Subtype p} : s ≈ t ↔ (s : α) ≈ (t : α) :=
   Iff.rfl
 
-variable[Setoidₓ α]
+variable [Setoidₓ α]
 
 protected theorem refl (s : Subtype p) : s ≈ s :=
   Setoidₓ.refl («expr↑ » s)
@@ -191,7 +191,7 @@ protected theorem trans {s t u : Subtype p} (h₁ : s ≈ t) (h₂ : t ≈ u) : 
 theorem Equivalenceₓ (p : α → Prop) : Equivalenceₓ (@HasEquivₓ.Equiv (Subtype p) _) :=
   mk_equivalence _ Subtype.reflₓ (@Subtype.symmₓ _ p _) (@Subtype.transₓ _ p _)
 
-instance  (p : α → Prop) : Setoidₓ (Subtype p) :=
+instance (p : α → Prop) : Setoidₓ (Subtype p) :=
   Setoidₓ.mk (· ≈ ·) (Equivalenceₓ p)
 
 end Subtype
@@ -201,7 +201,7 @@ namespace Subtype
 /-! Some facts about sets, which require that `α` is a type. -/
 
 
-variable{α β γ : Type _}{p : α → Prop}
+variable {α β γ : Type _} {p : α → Prop}
 
 @[simp]
 theorem coe_prop {S : Set α} (a : { a // a ∈ S }) : «expr↑ » a ∈ S :=

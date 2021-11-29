@@ -42,18 +42,15 @@ open_locale Classical Affine BigOperators
 
 open Set
 
-variable(𝕜 :
-    Type
-      _){E :
-    Type
-      _}[NormedLinearOrderedField 𝕜][NormedGroup E][NormedSpace 𝕜 E]{l : E →L[𝕜] 𝕜}{A B C : Set E}{X : Finset E}{x : E}
+variable (𝕜 : Type _) {E : Type _} [NormedLinearOrderedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] {l : E →L[𝕜] 𝕜}
+  {A B C : Set E} {X : Finset E} {x : E}
 
 /-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
 all points maximizing it). Written `is_exposed 𝕜 A B`. -/
 def IsExposed (A B : Set E) : Prop :=
   B.nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x∈A | ∀ y _ : y ∈ A, l y ≤ l x }
 
-variable{𝕜}
+variable {𝕜}
 
 /-- A useful way to build exposed sets from intersecting `A` with halfspaces (modelled by an
 inequality with a functional). -/
@@ -202,14 +199,14 @@ protected theorem IsCompact [OrderClosedTopology 𝕜] (hAB : IsExposed 𝕜 A B
 
 end IsExposed
 
-variable(𝕜)
+variable (𝕜)
 
 /-- A point is exposed with respect to `A` iff there exists an hyperplane whose intersection with
 `A` is exactly that point. -/
 def Set.ExposedPoints (A : Set E) : Set E :=
   { x∈A | ∃ l : E →L[𝕜] 𝕜, ∀ y _ : y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) }
 
-variable{𝕜}
+variable {𝕜}
 
 theorem exposed_point_def :
   x ∈ A.exposed_points 𝕜 ↔ x ∈ A ∧ ∃ l : E →L[𝕜] 𝕜, ∀ y _ : y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) :=

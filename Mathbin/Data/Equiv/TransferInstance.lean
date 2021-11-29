@@ -22,13 +22,13 @@ equiv, group, ring, field, module, algebra
 
 universe u v
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 namespace Equiv
 
 section Instances
 
-variable(e : α ≃ β)
+variable (e : α ≃ β)
 
 /-- Transfer `has_one` across an `equiv` -/
 @[toAdditive "Transfer `has_zero` across an `equiv`"]
@@ -318,13 +318,13 @@ protected def Field [Field β] : Field α :=
 
 section R
 
-variable(R : Type _)
+variable (R : Type _)
 
 include R
 
 section 
 
-variable[Monoidₓ R]
+variable [Monoidₓ R]
 
 /-- Transfer `mul_action` across an `equiv` -/
 protected def MulAction (e : α ≃ β) [MulAction R β] : MulAction R α :=
@@ -355,7 +355,7 @@ end
 
 section 
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
 -- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Transfer `module` across an `equiv` -/ protected def module (e : «expr ≃ »(α, β)) [add_comm_monoid β] : begin
@@ -391,7 +391,7 @@ end
 
 section 
 
-variable[CommSemiringₓ R]
+variable [CommSemiringₓ R]
 
 -- error in Data.Equiv.TransferInstance: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Transfer `algebra` across an `equiv` -/ protected def algebra (e : «expr ≃ »(α, β)) [semiring β] : begin

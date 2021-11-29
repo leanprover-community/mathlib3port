@@ -43,27 +43,27 @@ theorem eventually_residual_irrational : ∀ᶠx in residual ℝ, Irrational x :
 
 namespace Irrational
 
-variable{x : ℝ}
+variable {x : ℝ}
 
-instance  : OrderTopology { x // Irrational x } :=
+instance : OrderTopology { x // Irrational x } :=
   (induced_order_topology _ fun x y => Iff.rfl)$
     fun x y hlt =>
       let ⟨a, ha, hxa, hay⟩ := exists_irrational_btwn hlt
       ⟨⟨a, ha⟩, hxa, hay⟩
 
-instance  : NoTopOrder { x // Irrational x } :=
+instance : NoTopOrder { x // Irrational x } :=
   ⟨fun ⟨x, hx⟩ =>
       ⟨⟨x+(1 : ℕ), hx.add_nat 1⟩,
         by 
           simp ⟩⟩
 
-instance  : NoBotOrder { x // Irrational x } :=
+instance : NoBotOrder { x // Irrational x } :=
   ⟨fun ⟨x, hx⟩ =>
       ⟨⟨x - (1 : ℕ), hx.sub_nat 1⟩,
         by 
           simp ⟩⟩
 
-instance  : DenselyOrdered { x // Irrational x } :=
+instance : DenselyOrdered { x // Irrational x } :=
   ⟨fun x y hlt =>
       let ⟨z, hz, hxz, hzy⟩ := exists_irrational_btwn hlt
       ⟨⟨z, hz⟩, hxz, hzy⟩⟩

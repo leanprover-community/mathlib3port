@@ -13,9 +13,9 @@ section Ringₓ
 
 namespace Submodule
 
-variable{R M : Type _}{r : R}{x y : M}[Ringₓ R][AddCommGroupₓ M][Module R M]
+variable {R M : Type _} {r : R} {x y : M} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
-variable(p p' : Submodule R M)
+variable (p p' : Submodule R M)
 
 open LinearMap
 
@@ -58,10 +58,10 @@ theorem quot_mk_eq_mk {p : Submodule R M} (x : M) : (Quot.mk _ x : Quotientₓ p
 protected theorem Eq {x y : M} : (mk x : Quotientₓ p) = mk y ↔ x - y ∈ p :=
   Quotientₓ.eq'
 
-instance  : HasZero (Quotientₓ p) :=
+instance : HasZero (Quotientₓ p) :=
   ⟨mk 0⟩
 
-instance  : Inhabited (Quotientₓ p) :=
+instance : Inhabited (Quotientₓ p) :=
   ⟨0⟩
 
 @[simp]
@@ -73,7 +73,7 @@ theorem mk_eq_zero : (mk x : Quotientₓ p) = 0 ↔ x ∈ p :=
   by 
     simpa using (Quotientₓ.eq p : mk x = 0 ↔ _)
 
-instance  : Add (Quotientₓ p) :=
+instance : Add (Quotientₓ p) :=
   ⟨fun a b =>
       (Quotientₓ.liftOn₂' a b fun a b => mk (a+b))$
         fun a₁ a₂ b₁ b₂ h₁ h₂ =>
@@ -85,7 +85,7 @@ instance  : Add (Quotientₓ p) :=
 theorem mk_add : (mk (x+y) : Quotientₓ p) = mk x+mk y :=
   rfl
 
-instance  : Neg (Quotientₓ p) :=
+instance : Neg (Quotientₓ p) :=
   ⟨fun a =>
       (Quotientₓ.liftOn' a fun a => mk (-a))$
         fun a b h =>
@@ -97,7 +97,7 @@ instance  : Neg (Quotientₓ p) :=
 theorem mk_neg : (mk (-x) : Quotientₓ p) = -mk x :=
   rfl
 
-instance  : Sub (Quotientₓ p) :=
+instance : Sub (Quotientₓ p) :=
   ⟨fun a b =>
       (Quotientₓ.liftOn₂' a b fun a b => mk (a - b))$
         fun a₁ a₂ b₁ b₂ h₁ h₂ =>
@@ -109,7 +109,7 @@ instance  : Sub (Quotientₓ p) :=
 theorem mk_sub : (mk (x - y) : Quotientₓ p) = mk x - mk y :=
   rfl
 
-instance  : AddCommGroupₓ (Quotientₓ p) :=
+instance : AddCommGroupₓ (Quotientₓ p) :=
   { zero := (0 : Quotientₓ p), add := ·+·, neg := Neg.neg, sub := Sub.sub,
     add_assoc :=
       by 
@@ -177,7 +177,7 @@ instance  : AddCommGroupₓ (Quotientₓ p) :=
 
 section HasScalar
 
-variable{S : Type _}[HasScalar S R][HasScalar S M][IsScalarTower S R M](P : Submodule R M)
+variable {S : Type _} [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] (P : Submodule R M)
 
 instance has_scalar' : HasScalar S (Quotientₓ P) :=
   ⟨fun a =>
@@ -194,7 +194,7 @@ instance HasScalar : HasScalar R (Quotientₓ P) :=
 theorem mk_smul (r : S) (x : M) : (mk (r • x) : Quotientₓ P) = r • mk x :=
   rfl
 
-instance  (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [SmulCommClass S T M] :
+instance (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [SmulCommClass S T M] :
   SmulCommClass S T P.quotient :=
   { smul_comm :=
       fun x y =>
@@ -202,7 +202,7 @@ instance  (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [Sm
           by 
             exact fun z => congr_argₓ mk (smul_comm _ _ _) }
 
-instance  (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [HasScalar S T] [IsScalarTower S T M] :
+instance (T : Type _) [HasScalar T R] [HasScalar T M] [IsScalarTower T R M] [HasScalar S T] [IsScalarTower S T M] :
   IsScalarTower S T P.quotient :=
   { smul_assoc :=
       fun x y =>
@@ -214,7 +214,7 @@ end HasScalar
 
 section Module
 
-variable{S : Type _}
+variable {S : Type _}
 
 instance mul_action' [Monoidₓ S] [HasScalar S R] [MulAction S M] [IsScalarTower S R M] (P : Submodule R M) :
   MulAction S (Quotientₓ P) :=
@@ -237,7 +237,7 @@ instance module' [Semiringₓ S] [HasScalar S R] [Module S M] [IsScalarTower S R
 instance Module (P : Submodule R M) : Module R (Quotientₓ P) :=
   quotient.module' P
 
-variable(S)
+variable (S)
 
 /-- The quotient of `P` as an `S`-submodule is the same as the quotient of `P` as an `R`-submodule,
 where `P : submodule R M`.
@@ -274,7 +274,7 @@ end Quotientₓ
 
 section 
 
-variable{M₂ : Type _}[AddCommGroupₓ M₂][Module R M₂]
+variable {M₂ : Type _} [AddCommGroupₓ M₂] [Module R M₂]
 
 theorem quot_hom_ext ⦃f g : Quotientₓ p →ₗ[R] M₂⦄ (h : ∀ x, f (Quotientₓ.mk x) = g (Quotientₓ.mk x)) : f = g :=
   LinearMap.ext$ fun x => Quotientₓ.induction_on' x h
@@ -295,7 +295,7 @@ theorem mkq_apply (x : M) : p.mkq x = Quotientₓ.mk x :=
 
 end 
 
-variable{R₂ M₂ : Type _}[Ringₓ R₂][AddCommGroupₓ M₂][Module R₂ M₂]{τ₁₂ : R →+* R₂}
+variable {R₂ M₂ : Type _} [Ringₓ R₂] [AddCommGroupₓ M₂] [Module R₂ M₂] {τ₁₂ : R →+* R₂}
 
 /-- Two `linear_map`s from a quotient module are equal if their compositions with
 `submodule.mkq` are equal.
@@ -361,7 +361,7 @@ theorem map_mkq_eq_top : map p.mkq p' = ⊤ ↔ p⊔p' = ⊤ :=
   by 
     simp only [map_eq_top_iff p.range_mkq, sup_comm, ker_mkq]
 
-variable(q : Submodule R₂ M₂)
+variable (q : Submodule R₂ M₂)
 
 /-- The map from the quotient of `M` by submodule `p` to the quotient of `M₂` by submodule `q` along
 `f : M → M₂` is linear. -/
@@ -461,17 +461,17 @@ namespace LinearMap
 
 section Ringₓ
 
-variable{R M R₂ M₂ R₃ M₃ : Type _}
+variable {R M R₂ M₂ R₃ M₃ : Type _}
 
-variable[Ringₓ R][Ringₓ R₂][Ringₓ R₃]
+variable [Ringₓ R] [Ringₓ R₂] [Ringₓ R₃]
 
-variable[AddCommMonoidₓ M][AddCommGroupₓ M₂][AddCommMonoidₓ M₃]
+variable [AddCommMonoidₓ M] [AddCommGroupₓ M₂] [AddCommMonoidₓ M₃]
 
-variable[Module R M][Module R₂ M₂][Module R₃ M₃]
+variable [Module R M] [Module R₂ M₂] [Module R₃ M₃]
 
-variable{τ₁₂ : R →+* R₂}{τ₂₃ : R₂ →+* R₃}{τ₁₃ : R →+* R₃}
+variable {τ₁₂ : R →+* R₂} {τ₂₃ : R₂ →+* R₃} {τ₁₃ : R →+* R₃}
 
-variable[RingHomCompTriple τ₁₂ τ₂₃ τ₁₃][RingHomSurjective τ₁₂]
+variable [RingHomCompTriple τ₁₂ τ₂₃ τ₁₃] [RingHomSurjective τ₁₂]
 
 theorem range_mkq_comp (f : M →ₛₗ[τ₁₂] M₂) : f.range.mkq.comp f = 0 :=
   LinearMap.ext$
@@ -505,9 +505,9 @@ open LinearMap
 
 namespace Submodule
 
-variable{R M : Type _}{r : R}{x y : M}[Ringₓ R][AddCommGroupₓ M][Module R M]
+variable {R M : Type _} {r : R} {x y : M} [Ringₓ R] [AddCommGroupₓ M] [Module R M]
 
-variable(p p' : Submodule R M)
+variable (p p' : Submodule R M)
 
 /-- If `p = ⊥`, then `M / p ≃ₗ[R] M`. -/
 def quot_equiv_of_eq_bot (hp : p = ⊥) : p.quotient ≃ₗ[R] M :=
@@ -552,11 +552,8 @@ end Ringₓ
 
 section CommRingₓ
 
-variable{R M M₂ :
-    Type
-      _}{r :
-    R}{x y :
-    M}[CommRingₓ R][AddCommGroupₓ M][Module R M][AddCommGroupₓ M₂][Module R M₂](p : Submodule R M)(q : Submodule R M₂)
+variable {R M M₂ : Type _} {r : R} {x y : M} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ M₂]
+  [Module R M₂] (p : Submodule R M) (q : Submodule R M₂)
 
 namespace Submodule
 

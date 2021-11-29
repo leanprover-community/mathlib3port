@@ -52,12 +52,12 @@ finite refinement. We use the same universe for all types in the definition to a
 class like `paracompact_space.{u v}`. Due to lemma `precise_refinement` below, every open covering
 `s : α → set X` indexed on `α : Type v` has a *precise* locally finite refinement, i.e., a locally
 finite refinement `t : α → set X` indexed on the same type such that each `∀ i, t i ⊆ s i`. -/
-class ParacompactSpace(X : Type v)[TopologicalSpace X] : Prop where 
+class ParacompactSpace (X : Type v) [TopologicalSpace X] : Prop where 
   locally_finite_refinement :
   ∀ α : Type v s : α → Set X ho : ∀ a, IsOpen (s a) hc : (⋃a, s a) = univ,
     ∃ (β : Type v)(t : β → Set X)(ho : ∀ b, IsOpen (t b))(hc : (⋃b, t b) = univ), LocallyFinite t ∧ ∀ b, ∃ a, t b ⊆ s a
 
-variable{ι : Type u}{X : Type v}[TopologicalSpace X]
+variable {ι : Type u} {X : Type v} [TopologicalSpace X]
 
 -- error in Topology.Paracompact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any open cover of a paracompact space has a locally finite *precise* refinement, that is,

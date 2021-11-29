@@ -52,7 +52,7 @@ another answer, which is constructively more satisfying, could be obtained by sh
 -/
 
 
-variable{ι : Type _}(M : ∀ i : ι, Type _)[∀ i, Monoidₓ (M i)]
+variable {ι : Type _} (M : ∀ i : ι, Type _) [∀ i, Monoidₓ (M i)]
 
 /-- A relation on the free monoid on alphabet `Σ i, M i`, relating `⟨i, 1⟩` with `1` and
 `⟨i, x⟩ * ⟨i, y⟩` with `⟨i, x * y⟩`. -/
@@ -76,7 +76,7 @@ structure word where
   ne_one : ∀ l _ : l ∈ to_list, Sigma.snd l ≠ 1
   chain_ne : to_list.chain' fun l l' => Sigma.fst l ≠ Sigma.fst l'
 
-variable{M}
+variable {M}
 
 /-- The inclusion of a summand into the free product. -/
 def of {i : ι} : M i →* FreeProduct M :=
@@ -87,7 +87,7 @@ def of {i : ι} : M i →* FreeProduct M :=
 theorem of_apply {i} (m : M i) : of m = Con.mk' _ (FreeMonoid.of$ Sigma.mk i m) :=
   rfl
 
-variable{N : Type _}[Monoidₓ N]
+variable {N : Type _} [Monoidₓ N]
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
@@ -156,16 +156,16 @@ theorem of_injective (i : ι) : Function.Injective («expr⇑ » (of : M i →* 
 
 section Groupₓ
 
-variable(G : ι → Type _)[∀ i, Groupₓ (G i)]
+variable (G : ι → Type _) [∀ i, Groupₓ (G i)]
 
-instance  : HasInv (FreeProduct G) :=
+instance : HasInv (FreeProduct G) :=
   { inv := MulOpposite.unop ∘ lift fun i => (of : G i →* _).op.comp (MulEquiv.inv' (G i)).toMonoidHom }
 
 theorem inv_def (x : FreeProduct G) :
   x⁻¹ = MulOpposite.unop (lift (fun i => (of : G i →* _).op.comp (MulEquiv.inv' (G i)).toMonoidHom) x) :=
   rfl
 
-instance  : Groupₓ (FreeProduct G) :=
+instance : Groupₓ (FreeProduct G) :=
   { FreeProduct.hasInv G, FreeProduct.monoid G with
     mul_left_inv :=
       by 
@@ -190,7 +190,7 @@ namespace Word
 def Empty : word M :=
   { toList := [], ne_one := fun _ => False.elim, chain_ne := List.chain'_nil }
 
-instance  : Inhabited (word M) :=
+instance : Inhabited (word M) :=
   ⟨Empty⟩
 
 /-- A reduced word determines an element of the free product, given by multiplication. -/
@@ -211,26 +211,26 @@ theorem fst_idx_ne_iff {w : word M} {i} : fst_idx w ≠ some i ↔ ∀ l _ : l �
     by 
       simp [fst_idx]
 
-variable(M)
+variable (M)
 
 /-- Given an index `i : ι`, `pair M i` is the type of pairs `(head, tail)` where `head : M i` and
 `tail : word M`, subject to the constraint that first letter of `tail` can't be `⟨i, m⟩`.
 By prepending `head` to `tail`, one obtains a new word. We'll show that any word can be uniquely
 obtained in this way. -/
 @[ext]
-structure pair(i : ι) where 
+structure pair (i : ι) where 
   head : M i 
   tail : word M 
   fst_idx_ne : fst_idx tail ≠ some i
 
-instance  (i : ι) : Inhabited (pair M i) :=
+instance (i : ι) : Inhabited (pair M i) :=
   ⟨⟨1, Empty,
       by 
         tauto⟩⟩
 
-variable{M}
+variable {M}
 
-variable[∀ i, DecidableEq (M i)]
+variable [∀ i, DecidableEq (M i)]
 
 /-- Given a pair `(head, tail)`, we can form a word by prepending `head` to `tail`, except if `head`
 is `1 : M i` then we have to just return `word` since we need the result to be reduced. -/
@@ -288,7 +288,7 @@ begin
     exact [expr word.ext _ _ h] }
 end
 
-variable[DecidableEq ι]
+variable [DecidableEq ι]
 
 /-- Given `i : ι`, any reduced word can be decomposed into a pair `p` such that `w = rcons p`. -/
 private def equiv_pair_aux i : ∀ w : word M, { p : pair M i // rcons p = w }
@@ -334,7 +334,7 @@ instance summand_action i : MulAction (M i) (word M) :=
         by 
           simp only [mul_assocₓ, ←equiv_pair_symm, Equiv.apply_symm_apply] }
 
-instance  : MulAction (FreeProduct M) (word M) :=
+instance : MulAction (FreeProduct M) (word M) :=
   MulAction.ofEndHom (lift fun i => MulAction.toEndHom)
 
 theorem of_smul_def i (w : word M) (m : M i) :
@@ -388,10 +388,10 @@ def Equiv : FreeProduct M ≃ word M :=
           intro i m w ih 
           rw [prod_smul, mul_smul, ih] }
 
-instance  : DecidableEq (word M) :=
+instance : DecidableEq (word M) :=
   Function.Injective.decidableEq word.ext
 
-instance  : DecidableEq (FreeProduct M) :=
+instance : DecidableEq (FreeProduct M) :=
   word.equiv.DecidableEq
 
 end Word

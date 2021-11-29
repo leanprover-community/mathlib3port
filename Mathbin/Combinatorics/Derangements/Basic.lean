@@ -26,7 +26,7 @@ open Equiv Function
 def Derangements (α : Type _) : Set (perm α) :=
   { f:perm α | ∀ x : α, f x ≠ x }
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 theorem mem_derangements_iff_fixed_points_eq_empty {f : perm α} : f ∈ Derangements α ↔ fixed_points f = ∅ :=
   Set.eq_empty_iff_forall_not_mem.symm
@@ -106,7 +106,7 @@ def at_most_one_fixed_point_equiv_sum_derangements [DecidableEq α] (a : α) :
 
 namespace Equiv
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- The set of permutations `f` such that the preimage of `(a, f)` under
     `equiv.perm.decompose_option` is a derangement. -/
@@ -167,7 +167,7 @@ end Equiv
 
 section Option
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 -- error in Combinatorics.Derangements.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The set of derangements on `option α` is equivalent to the union over `a : α`

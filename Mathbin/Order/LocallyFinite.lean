@@ -98,7 +98,7 @@ open Finset
 /-- A locally finite order is an order where bounded intervals are finite. When you don't care too
 much about definitional equality, you can use `locally_finite_order.of_Icc` or
 `locally_finite_order.of_finite_Icc` to build a locally finite order from just `finset.Icc`. -/
-class LocallyFiniteOrder(α : Type _)[Preorderₓ α] where 
+class LocallyFiniteOrder (α : Type _) [Preorderₓ α] where 
   finsetIcc : α → α → Finset α 
   finsetIco : α → α → Finset α 
   finsetIoc : α → α → Finset α 
@@ -150,7 +150,7 @@ def LocallyFiniteOrder.ofIcc (α : Type _) [PartialOrderₓ α] [DecidableEq α]
         by 
           rw [Finset.mem_filter, mem_Icc, and_and_and_comm, lt_iff_le_and_ne, lt_iff_le_and_ne] }
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 /-! ### Intervals as finsets -/
 
@@ -159,7 +159,7 @@ namespace Finset
 
 section Preorderₓ
 
-variable[Preorderₓ α][LocallyFiniteOrder α]
+variable [Preorderₓ α] [LocallyFiniteOrder α]
 
 /-- The finset of elements `x` such that `a ≤ x` and `x ≤ b`. Basically `set.Icc a b` as a finset.
 -/
@@ -231,7 +231,7 @@ end Preorderₓ
 
 section OrderTop
 
-variable[Preorderₓ α][OrderTop α][LocallyFiniteOrder α]
+variable [Preorderₓ α] [OrderTop α] [LocallyFiniteOrder α]
 
 /-- The finset of elements `x` such that `a ≤ x`. Basically `set.Ici a` as a finset. -/
 def Ici (a : α) : Finset α :=
@@ -271,7 +271,7 @@ end OrderTop
 
 section OrderBot
 
-variable[Preorderₓ α][OrderBot α][LocallyFiniteOrder α]
+variable [Preorderₓ α] [OrderBot α] [LocallyFiniteOrder α]
 
 /-- The finset of elements `x` such that `x ≤ b`. Basically `set.Iic b` as a finset. -/
 def Iic (b : α) : Finset α :=
@@ -318,7 +318,7 @@ namespace Multiset
 
 section Preorderₓ
 
-variable[Preorderₓ α][LocallyFiniteOrder α]
+variable [Preorderₓ α] [LocallyFiniteOrder α]
 
 /-- The multiset of elements `x` such that `a ≤ x` and `x ≤ b`. Basically `set.Icc a b` as a
 multiset. -/
@@ -364,7 +364,7 @@ end Preorderₓ
 
 section OrderTop
 
-variable[Preorderₓ α][OrderTop α][LocallyFiniteOrder α]
+variable [Preorderₓ α] [OrderTop α] [LocallyFiniteOrder α]
 
 /-- The multiset of elements `x` such that `a ≤ x`. Basically `set.Ici a` as a multiset. -/
 def Ici (a : α) : Multiset α :=
@@ -388,7 +388,7 @@ end OrderTop
 
 section OrderBot
 
-variable[Preorderₓ α][OrderBot α][LocallyFiniteOrder α]
+variable [Preorderₓ α] [OrderBot α] [LocallyFiniteOrder α]
 
 /-- The multiset of elements `x` such that `x ≤ b`. Basically `set.Iic b` as a multiset. -/
 def Iic (b : α) : Multiset α :=
@@ -419,7 +419,7 @@ namespace Set
 
 section Preorderₓ
 
-variable[Preorderₓ α][LocallyFiniteOrder α](a b : α)
+variable [Preorderₓ α] [LocallyFiniteOrder α] (a b : α)
 
 instance fintype_Icc : Fintype (Icc a b) :=
   Fintype.ofFinset (Finset.icc a b)
@@ -461,7 +461,7 @@ end Preorderₓ
 
 section OrderTop
 
-variable[Preorderₓ α][OrderTop α][LocallyFiniteOrder α](a : α)
+variable [Preorderₓ α] [OrderTop α] [LocallyFiniteOrder α] (a : α)
 
 instance fintype_Ici : Fintype (Ici a) :=
   Fintype.ofFinset (Finset.ici a)
@@ -485,7 +485,7 @@ end OrderTop
 
 section OrderBot
 
-variable[Preorderₓ α][OrderBot α][LocallyFiniteOrder α](b : α)
+variable [Preorderₓ α] [OrderBot α] [LocallyFiniteOrder α] (b : α)
 
 instance fintype_Iic : Fintype (Iic b) :=
   Fintype.ofFinset (Finset.iic b)
@@ -516,7 +516,7 @@ open Finset
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 /-- A noncomputable constructor from the finiteness of all closed intervals. -/
 noncomputable def LocallyFiniteOrder.ofFiniteIcc (h : ∀ a b : α, (Set.Icc a b).Finite) : LocallyFiniteOrder α :=
@@ -568,7 +568,7 @@ subsingleton.intro (λ h₀ h₁, begin
    simp_rw ["[", expr hIcc, ",", expr hIco, ",", expr hIoc, ",", expr hIoo, "]"] []
  end)
 
-variable[Preorderₓ β][LocallyFiniteOrder β]
+variable [Preorderₓ β] [LocallyFiniteOrder β]
 
 /-- Given an order embedding `α ↪o β`, pulls back the `locally_finite_order` on `β` to `α`. -/
 noncomputable def OrderEmbedding.locallyFiniteOrder (f : α ↪o β) : LocallyFiniteOrder α :=
@@ -595,7 +595,7 @@ noncomputable def OrderEmbedding.locallyFiniteOrder (f : α ↪o β) : LocallyFi
 
 open OrderDual
 
-variable[LocallyFiniteOrder α](a b : α)
+variable [LocallyFiniteOrder α] (a b : α)
 
 /-- Note we define `Icc (to_dual a) (to_dual b)` as `Icc α _ _ b a` (which has type `finset α` not
 `finset (order_dual α)`!) instead of `(Icc b a).map to_dual.to_embedding` as this means the
@@ -604,7 +604,7 @@ following is defeq:
 lemma this : (Icc (to_dual (to_dual a)) (to_dual (to_dual b)) : _) = (Icc a b : _) := rfl
 ```
 -/
-instance  : LocallyFiniteOrder (OrderDual α) :=
+instance : LocallyFiniteOrder (OrderDual α) :=
   { finsetIcc := fun a b => @Icc α _ _ (of_dual b) (of_dual a),
     finsetIco := fun a b => @Ioc α _ _ (of_dual b) (of_dual a),
     finsetIoc := fun a b => @Ico α _ _ (of_dual b) (of_dual a),
@@ -642,7 +642,7 @@ theorem Ioo_to_dual : Ioo (to_dual a) (to_dual b) = (Ioo b a).map to_dual.toEmbe
     rw [mem_Ioo, mem_Ioo]
     exact and_comm _ _
 
-instance  [DecidableRel (· ≤ · : α × β → α × β → Prop)] : LocallyFiniteOrder (α × β) :=
+instance [DecidableRel (· ≤ · : α × β → α × β → Prop)] : LocallyFiniteOrder (α × β) :=
   LocallyFiniteOrder.ofIcc' (α × β) (fun a b => (Icc a.fst b.fst).product (Icc a.snd b.snd))
     fun a b x =>
       by 
@@ -654,9 +654,9 @@ end Preorderₓ
 /-! #### Subtype of a locally finite order -/
 
 
-variable[Preorderₓ α][LocallyFiniteOrder α](p : α → Prop)[DecidablePred p]
+variable [Preorderₓ α] [LocallyFiniteOrder α] (p : α → Prop) [DecidablePred p]
 
-instance  : LocallyFiniteOrder (Subtype p) :=
+instance : LocallyFiniteOrder (Subtype p) :=
   { finsetIcc := fun a b => (Icc (a : α) b).Subtype p, finsetIco := fun a b => (Ico (a : α) b).Subtype p,
     finsetIoc := fun a b => (Ioc (a : α) b).Subtype p, finsetIoo := fun a b => (Ioo (a : α) b).Subtype p,
     finset_mem_Icc :=
@@ -676,7 +676,7 @@ instance  : LocallyFiniteOrder (Subtype p) :=
         by 
           simpRw [Finset.mem_subtype, mem_Ioo, Subtype.coe_lt_coe] }
 
-variable(a b : Subtype p)
+variable (a b : Subtype p)
 
 namespace Finset
 
@@ -692,7 +692,7 @@ theorem subtype_Ioc_eq : Ioc a b = (Ioc (a : α) b).Subtype p :=
 theorem subtype_Ioo_eq : Ioo a b = (Ioo (a : α) b).Subtype p :=
   rfl
 
-variable(hp : ∀ ⦃a b x⦄, a ≤ x → x ≤ b → p a → p b → p x)
+variable (hp : ∀ ⦃a b x⦄, a ≤ x → x ≤ b → p a → p b → p x)
 
 include hp
 

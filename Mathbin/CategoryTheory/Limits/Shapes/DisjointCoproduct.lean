@@ -26,7 +26,7 @@ namespace Limits
 
 open Category
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /--
 Given any pullback diagram of the form
@@ -38,7 +38,7 @@ X₂ ⟶  X
 where `X₁ ⟶ X ← X₂` is a coproduct diagram, then `Z` is initial, and both `X₁ ⟶ X` and `X₂ ⟶ X`
 are mono.
 -/
-class coproduct_disjoint(X₁ X₂ : C) where 
+class coproduct_disjoint (X₁ X₂ : C) where 
   isInitialOfIsPullbackOfIsCoproduct :
   ∀ {X Z} {pX₁ : X₁ ⟶ X} {pX₂ : X₂ ⟶ X} {f : Z ⟶ X₁} {g : Z ⟶ X₂} cX : is_colimit (binary_cofan.mk pX₁ pX₂)
     {comm : f ≫ pX₁ = g ≫ pX₂}, is_limit (pullback_cone.mk _ _ comm) → is_initial Z 
@@ -94,14 +94,14 @@ noncomputable def is_initial_of_pullback_of_coproduct {X₁ X₂ : C} [has_binar
   is_initial (pullback (coprod.inl : X₁ ⟶ _ ⨿ X₂) coprod.inr) :=
   is_initial_of_is_pullback_of_coproduct (pullback_is_pullback _ _)
 
-instance  {X₁ X₂ : C} [has_binary_coproduct X₁ X₂] [coproduct_disjoint X₁ X₂] : mono (coprod.inl : X₁ ⟶ X₁ ⨿ X₂) :=
+instance {X₁ X₂ : C} [has_binary_coproduct X₁ X₂] [coproduct_disjoint X₁ X₂] : mono (coprod.inl : X₁ ⟶ X₁ ⨿ X₂) :=
   coproduct_disjoint.mono_inl _ _ _ (coprod_is_coprod _ _)
 
-instance  {X₁ X₂ : C} [has_binary_coproduct X₁ X₂] [coproduct_disjoint X₁ X₂] : mono (coprod.inr : X₂ ⟶ X₁ ⨿ X₂) :=
+instance {X₁ X₂ : C} [has_binary_coproduct X₁ X₂] [coproduct_disjoint X₁ X₂] : mono (coprod.inr : X₂ ⟶ X₁ ⨿ X₂) :=
   coproduct_disjoint.mono_inr _ _ _ (coprod_is_coprod _ _)
 
 /-- `C` has disjoint coproducts if every coproduct is disjoint. -/
-class coproducts_disjoint(C : Type u)[category.{v} C] where 
+class coproducts_disjoint (C : Type u) [category.{v} C] where 
   CoproductDisjoint : ∀ X Y : C, coproduct_disjoint X Y
 
 attribute [instance] coproducts_disjoint.coproduct_disjoint

@@ -18,7 +18,7 @@ section
 
 universe u
 
-variable(m : Type u → Type u)[_root_.monad m][IsLawfulMonad m]
+variable (m : Type u → Type u) [_root_.monad m] [IsLawfulMonad m]
 
 /--
 A lawful `control.monad` gives a category theory `monad` on the category of types.

@@ -34,7 +34,7 @@ universe u
 
 noncomputable theory
 
-variable(X : Top.{u})
+variable (X : Top.{u})
 
 open Top
 

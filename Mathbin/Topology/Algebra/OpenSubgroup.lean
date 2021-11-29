@@ -31,12 +31,12 @@ open_locale TopologicalSpace
 
 /-- The type of open subgroups of a topological additive group. -/
 @[ancestor AddSubgroup]
-structure OpenAddSubgroup(G : Type _)[AddGroupₓ G][TopologicalSpace G] extends AddSubgroup G where 
+structure OpenAddSubgroup (G : Type _) [AddGroupₓ G] [TopologicalSpace G] extends AddSubgroup G where 
   is_open' : IsOpen carrier
 
 /-- The type of open subgroups of a topological group. -/
 @[ancestor Subgroup, toAdditive]
-structure OpenSubgroup(G : Type _)[Groupₓ G][TopologicalSpace G] extends Subgroup G where 
+structure OpenSubgroup (G : Type _) [Groupₓ G] [TopologicalSpace G] extends Subgroup G where 
   is_open' : IsOpen carrier
 
 /-- Reinterpret an `open_subgroup` as a `subgroup`. -/
@@ -53,16 +53,16 @@ namespace OpenSubgroup
 
 open Function TopologicalSpace
 
-variable{G : Type _}[Groupₓ G][TopologicalSpace G]
+variable {G : Type _} [Groupₓ G] [TopologicalSpace G]
 
-variable{U V : OpenSubgroup G}{g : G}
+variable {U V : OpenSubgroup G} {g : G}
 
 @[toAdditive]
 instance has_coe_set : CoeTₓ (OpenSubgroup G) (Set G) :=
   ⟨fun U => U.1⟩
 
 @[toAdditive]
-instance  : HasMem G (OpenSubgroup G) :=
+instance : HasMem G (OpenSubgroup G) :=
   ⟨fun g U => g ∈ (U : Set G)⟩
 
 @[toAdditive]
@@ -99,7 +99,7 @@ theorem ext (h : ∀ x, x ∈ U ↔ x ∈ V) : U = V :=
 theorem ext_iff : U = V ↔ ∀ x, x ∈ U ↔ x ∈ V :=
   ⟨fun h x => h ▸ Iff.rfl, ext⟩
 
-variable(U)
+variable (U)
 
 @[toAdditive]
 protected theorem IsOpen : IsOpen (U : Set G) :=
@@ -121,14 +121,14 @@ protected theorem mul_mem {g₁ g₂ : G} (h₁ : g₁ ∈ U) (h₂ : g₂ ∈ U
 theorem mem_nhds_one : (U : Set G) ∈ 𝓝 (1 : G) :=
   IsOpen.mem_nhds U.is_open U.one_mem
 
-variable{U}
+variable {U}
 
 @[toAdditive]
-instance  : HasTop (OpenSubgroup G) :=
+instance : HasTop (OpenSubgroup G) :=
   ⟨{ (⊤ : Subgroup G) with is_open' := is_open_univ }⟩
 
 @[toAdditive]
-instance  : Inhabited (OpenSubgroup G) :=
+instance : Inhabited (OpenSubgroup G) :=
   ⟨⊤⟩
 
 @[toAdditive]
@@ -149,7 +149,7 @@ theorem IsClosed [HasContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G
 
 section 
 
-variable{H : Type _}[Groupₓ H][TopologicalSpace H]
+variable {H : Type _} [Groupₓ H] [TopologicalSpace H]
 
 /-- The product of two open subgroups as an open subgroup of the product group. -/
 @[toAdditive "The product of two open subgroups as an open subgroup of the product group."]
@@ -160,19 +160,19 @@ def Prod (U : OpenSubgroup G) (V : OpenSubgroup H) : OpenSubgroup (G × H) :=
 end 
 
 @[toAdditive]
-instance  : PartialOrderₓ (OpenSubgroup G) :=
+instance : PartialOrderₓ (OpenSubgroup G) :=
   { PartialOrderₓ.lift (coeₓ : OpenSubgroup G → Set G) coe_injective with le := fun U V => ∀ ⦃x⦄, x ∈ U → x ∈ V }
 
 @[toAdditive]
-instance  : OrderTop (OpenSubgroup G) :=
-  { top := ⊤, le_top := fun U => Set.subset_univ _ }
-
-@[toAdditive]
-instance  : SemilatticeInfTop (OpenSubgroup G) :=
-  { OpenSubgroup.orderTop, OpenSubgroup.partialOrder with
+instance : SemilatticeInf (OpenSubgroup G) :=
+  { OpenSubgroup.partialOrder with
     inf := fun U V => { (U : Subgroup G)⊓V with is_open' := IsOpen.inter U.is_open V.is_open },
     inf_le_left := fun U V => Set.inter_subset_left _ _, inf_le_right := fun U V => Set.inter_subset_right _ _,
     le_inf := fun U V W hV hW => Set.subset_inter hV hW }
+
+@[toAdditive]
+instance : OrderTop (OpenSubgroup G) :=
+  { top := ⊤, le_top := fun U => Set.subset_univ _ }
 
 @[simp, normCast, toAdditive]
 theorem coe_inf : («expr↑ » (U⊓V) : Set G) = (U : Set G) ∩ V :=
@@ -186,7 +186,7 @@ theorem coe_subset : (U : Set G) ⊆ V ↔ U ≤ V :=
 theorem coe_subgroup_le : (U : Subgroup G) ≤ (V : Subgroup G) ↔ U ≤ V :=
   Iff.rfl
 
-variable{N : Type _}[Groupₓ N][TopologicalSpace N]
+variable {N : Type _} [Groupₓ N] [TopologicalSpace N]
 
 /-- The preimage of an `open_subgroup` along a continuous `monoid` homomorphism
   is an `open_subgroup`. -/
@@ -213,7 +213,7 @@ end OpenSubgroup
 
 namespace Subgroup
 
-variable{G : Type _}[Groupₓ G][TopologicalSpace G][HasContinuousMul G](H : Subgroup G)
+variable {G : Type _} [Groupₓ G] [TopologicalSpace G] [HasContinuousMul G] (H : Subgroup G)
 
 -- error in Topology.Algebra.OpenSubgroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]] theorem is_open_of_mem_nhds {g : G} (hg : «expr ∈ »((H : set G), expr𝓝() g)) : is_open (H : set G) :=
@@ -241,11 +241,11 @@ end Subgroup
 
 namespace OpenSubgroup
 
-variable{G : Type _}[Groupₓ G][TopologicalSpace G][HasContinuousMul G]
+variable {G : Type _} [Groupₓ G] [TopologicalSpace G] [HasContinuousMul G]
 
 @[toAdditive]
-instance  : SemilatticeSupTop (OpenSubgroup G) :=
-  { OpenSubgroup.semilatticeInfTop with
+instance : SemilatticeSup (OpenSubgroup G) :=
+  { OpenSubgroup.semilatticeInf with
     sup :=
       fun U V =>
         { (U : Subgroup G)⊔V with
@@ -255,8 +255,8 @@ instance  : SemilatticeSupTop (OpenSubgroup G) :=
     sup_le := fun U V W hU hV => coe_subgroup_le.1 (sup_le hU hV) }
 
 @[toAdditive]
-instance  : Lattice (OpenSubgroup G) :=
-  { OpenSubgroup.semilatticeSupTop, OpenSubgroup.semilatticeInfTop with  }
+instance : Lattice (OpenSubgroup G) :=
+  { OpenSubgroup.semilatticeSup, OpenSubgroup.semilatticeInf with  }
 
 end OpenSubgroup
 
@@ -264,9 +264,9 @@ namespace Submodule
 
 open OpenAddSubgroup
 
-variable{R : Type _}{M : Type _}[CommRingₓ R]
+variable {R : Type _} {M : Type _} [CommRingₓ R]
 
-variable[AddCommGroupₓ M][TopologicalSpace M][TopologicalAddGroup M][Module R M]
+variable [AddCommGroupₓ M] [TopologicalSpace M] [TopologicalAddGroup M] [Module R M]
 
 theorem is_open_mono {U P : Submodule R M} (h : U ≤ P) (hU : IsOpen (U : Set M)) : IsOpen (P : Set M) :=
   @AddSubgroup.is_open_mono M _ _ _ U.to_add_subgroup P.to_add_subgroup h hU
@@ -275,9 +275,9 @@ end Submodule
 
 namespace Ideal
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
-variable[TopologicalSpace R][TopologicalRing R]
+variable [TopologicalSpace R] [TopologicalRing R]
 
 theorem is_open_of_open_subideal {U I : Ideal R} (h : U ≤ I) (hU : IsOpen (U : Set R)) : IsOpen (I : Set R) :=
   Submodule.is_open_mono h hU

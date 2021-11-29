@@ -26,20 +26,20 @@ open Set Function
 
 namespace BoxIntegral
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 /-- A tagged prepartition is a prepartition enriched with a tagged point for each box of the
 prepartition. For simiplicity we require that `tag` is defined for all boxes in `ι → ℝ` but
 we will use onle the values of `tag` on the boxes of the partition. -/
-structure tagged_prepartition(I : box ι) extends prepartition I where 
+structure tagged_prepartition (I : box ι) extends prepartition I where 
   Tag : box ι → ι → ℝ 
   tag_mem_Icc : ∀ J, tag J ∈ I.Icc
 
 namespace TaggedPrepartition
 
-variable{I J J₁ J₂ : box ι}(π : tagged_prepartition I){x : ι → ℝ}
+variable {I J J₁ J₂ : box ι} (π : tagged_prepartition I) {x : ι → ℝ}
 
-instance  : HasMem (box ι) (tagged_prepartition I) :=
+instance : HasMem (box ι) (tagged_prepartition I) :=
   ⟨fun J π => J ∈ π.boxes⟩
 
 @[simp]
@@ -100,7 +100,7 @@ end TaggedPrepartition
 
 namespace Prepartition
 
-variable{I J : box ι}
+variable {I J : box ι}
 
 /-- Given a partition `π` of `I : box_integral.box ι` and a collection of tagged partitions
 `πi J` of all boxes `J ∈ π`, returns the tagged partition of `I` into all the boxes of `πi J`
@@ -155,7 +155,7 @@ end Prepartition
 
 namespace TaggedPrepartition
 
-variable{I J : box ι}{π π₁ π₂ : tagged_prepartition I}{x : ι → ℝ}
+variable {I J : box ι} {π π₁ π₂ : tagged_prepartition I} {x : ι → ℝ}
 
 /-- Given a tagged partition `π` of `I` and a (not tagged) partition `πi J hJ` of each `J ∈ π`,
 returns the tagged partition of `I` into all the boxes of all `πi J hJ`. The tag of a box `J`
@@ -221,7 +221,7 @@ the closed ball with center `π.tag J` and radius `r (π.tag J)`. -/
 def is_subordinate [Fintype ι] (π : tagged_prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) : Prop :=
   ∀ J _ : J ∈ π, (J : _).Icc ⊆ closed_ball (π.tag J) (r$ π.tag J)
 
-variable{r r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)}
+variable {r r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)}
 
 @[simp]
 theorem is_subordinate_bUnion_tagged [Fintype ι] {π : prepartition I} {πi : ∀ J, tagged_prepartition J} :
@@ -260,7 +260,7 @@ def single (I J : box ι) (hJ : J ≤ I) (x : ι → ℝ) (h : x ∈ I.Icc) : ta
 theorem mem_single {J'} (hJ : J ≤ I) (h : x ∈ I.Icc) : J' ∈ single I J hJ x h ↔ J' = J :=
   Finset.mem_singleton
 
-instance  (I : box ι) : Inhabited (tagged_prepartition I) :=
+instance (I : box ι) : Inhabited (tagged_prepartition I) :=
   ⟨single I I le_rfl I.upper I.upper_mem_Icc⟩
 
 theorem is_partition_single_iff (hJ : J ≤ I) (h : x ∈ I.Icc) : (single I J hJ x h).IsPartition ↔ J = I :=
@@ -356,7 +356,7 @@ def embed_box (I J : box ι) (h : I ≤ J) : tagged_prepartition I ↪ tagged_pr
 
 section Distortion
 
-variable[Fintype ι](π)
+variable [Fintype ι] (π)
 
 open Finset
 

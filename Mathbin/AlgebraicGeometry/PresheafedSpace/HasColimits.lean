@@ -47,9 +47,9 @@ open CategoryTheory.Limits
 
 open CategoryTheory.Functor
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 namespace AlgebraicGeometry
 
@@ -143,7 +143,7 @@ def pushforward_diagram_to_colimit (F : J ⥤ PresheafedSpace C) :
             simp 
             rfl }
 
-variable[has_limits C]
+variable [has_limits C]
 
 /--
 Auxiliary definition for `PresheafedSpace.has_colimits`.
@@ -277,7 +277,7 @@ Auxiliary definition for `PresheafedSpace.has_colimits`.
 /--
 When `C` has limits, the category of presheaved spaces with values in `C` itself has colimits.
 -/
-instance  : has_colimits (PresheafedSpace C) :=
+instance : has_colimits (PresheafedSpace C) :=
   { HasColimitsOfShape :=
       fun J 𝒥 =>
         by 

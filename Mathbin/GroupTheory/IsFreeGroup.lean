@@ -30,7 +30,7 @@ universe u w
 /-- `is_free_group G` means that `G` has the universal property of a free group,
 That is, it has a family `generators G` of elements, such that a group homomorphism
 `G →* X` is uniquely determined by a function `generators G → X`. -/
-class IsFreeGroup(G : Type u)[Groupₓ G] : Type (u + 1) where 
+class IsFreeGroup (G : Type u) [Groupₓ G] : Type (u + 1) where 
   Generators : Type u 
   of : generators → G 
   unique_lift' : ∀ {X : Type u} [Groupₓ X] f : generators → X, ∃!F : G →* X, ∀ a, F (of a) = f a
@@ -48,7 +48,7 @@ instance free_group_is_free_group {A} : is_free_group (free_group A) :=
 
 namespace IsFreeGroup
 
-variable{G H : Type u}{X : Type w}[Groupₓ G][Groupₓ H][Groupₓ X][IsFreeGroup G]
+variable {G H : Type u} {X : Type w} [Groupₓ G] [Groupₓ H] [Groupₓ X] [IsFreeGroup G]
 
 /-- The equivalence between functions on the generators and group homomorphisms from a free group
 given by those generators. -/
@@ -107,7 +107,7 @@ The lemmas below use `X` in a different universe `w`
 -/
 
 
-variable(G)
+variable (G)
 
 /-- Any free group is isomorphic to "the" free group. -/
 @[simps]
@@ -126,7 +126,7 @@ def to_free_group : G ≃* FreeGroup (generators G) :=
         simp ,
     map_mul' := (lift' FreeGroup.of).map_mul }
 
-variable{G}
+variable {G}
 
 private theorem lift_right_inv_aux (F : G →* X) :
   FreeGroup.lift.symm (F.comp (to_free_group G).symm.toMonoidHom) = F ∘ of :=

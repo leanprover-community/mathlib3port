@@ -54,14 +54,14 @@ namespace CliffordAlgebraRing
 
 open_locale ComplexConjugate
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
 @[simp]
 theorem ι_eq_zero : ι (0 : QuadraticForm R Unit) = 0 :=
   Subsingleton.elimₓ _ _
 
 /-- Since the vector space is empty the ring is commutative. -/
-instance  : CommRingₓ (CliffordAlgebra (0 : QuadraticForm R Unit)) :=
+instance : CommRingₓ (CliffordAlgebra (0 : QuadraticForm R Unit)) :=
   { CliffordAlgebra.ring _ with
     mul_comm :=
       fun x y =>
@@ -199,7 +199,7 @@ protected def Equiv : CliffordAlgebra Q ≃ₐ[ℝ] ℂ :=
 /-- The clifford algebra is commutative since it is isomorphic to the complex numbers.
 
 TODO: prove this is true for all `clifford_algebra`s over a 1-dimensional vector space. -/
-instance  : CommRingₓ (CliffordAlgebra Q) :=
+instance : CommRingₓ (CliffordAlgebra Q) :=
   { CliffordAlgebra.ring _ with
     mul_comm :=
       fun x y =>
@@ -244,7 +244,7 @@ open_locale Quaternion
 
 open QuaternionAlgebra
 
-variable{R : Type _}[CommRingₓ R](c₁ c₂ : R)
+variable {R : Type _} [CommRingₓ R] (c₁ c₂ : R)
 
 /-- `Q c₁ c₂` is a quadratic form over `R × R` such that `clifford_algebra (Q c₁ c₂)` is isomorphic
 as an `R`-algebra to `ℍ[R,c₁,c₂]`. -/
@@ -275,7 +275,7 @@ def quaternion_basis : QuaternionAlgebra.Basis (CliffordAlgebra (Q c₁ c₂)) c
         rw [eq_neg_iff_add_eq_zero, ι_mul_ι_add_swap, QuadraticForm.polar]
         simp  }
 
-variable{c₁ c₂}
+variable {c₁ c₂}
 
 /-- Intermediate result of `clifford_algebra_quaternion.equiv`: clifford algebras over
 `clifford_algebra_quaternion.Q` can be converted to `ℍ[R,c₁,c₂]`. -/

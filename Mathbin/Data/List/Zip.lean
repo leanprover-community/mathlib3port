@@ -20,7 +20,7 @@ open Nat
 
 namespace List
 
-variable{α : Type u}{β γ δ : Type _}
+variable {α : Type u} {β γ δ : Type _}
 
 @[simp]
 theorem zip_with_cons_cons (f : α → β → γ) (a : α) (b : β) (l₁ : List α) (l₂ : List β) :
@@ -109,20 +109,20 @@ theorem zip_append :
     simp only [cons_append, zip_cons_cons, zip_append (succ.inj h)] <;> split  <;> rfl
 
 theorem zip_map (f : α → γ) (g : β → δ) :
-  ∀ l₁ : List α l₂ : List β, zip (l₁.map f) (l₂.map g) = (zip l₁ l₂).map (Prod.mapₓ f g)
+  ∀ l₁ : List α l₂ : List β, zip (l₁.map f) (l₂.map g) = (zip l₁ l₂).map (Prod.map f g)
 | [], l₂ => rfl
 | l₁, [] =>
   by 
     simp only [map, zip_nil_right]
 | a :: l₁, b :: l₂ =>
   by 
-    simp only [map, zip_cons_cons, zip_map l₁ l₂, Prod.mapₓ] <;> split  <;> rfl
+    simp only [map, zip_cons_cons, zip_map l₁ l₂, Prod.map] <;> split  <;> rfl
 
-theorem zip_map_left (f : α → γ) (l₁ : List α) (l₂ : List β) : zip (l₁.map f) l₂ = (zip l₁ l₂).map (Prod.mapₓ f id) :=
+theorem zip_map_left (f : α → γ) (l₁ : List α) (l₂ : List β) : zip (l₁.map f) l₂ = (zip l₁ l₂).map (Prod.map f id) :=
   by 
     rw [←zip_map, map_id]
 
-theorem zip_map_right (f : β → γ) (l₁ : List α) (l₂ : List β) : zip l₁ (l₂.map f) = (zip l₁ l₂).map (Prod.mapₓ id f) :=
+theorem zip_map_right (f : β → γ) (l₁ : List α) (l₂ : List β) : zip l₁ (l₂.map f) = (zip l₁ l₂).map (Prod.map id f) :=
   by 
     rw [←zip_map, map_id]
 
@@ -278,7 +278,7 @@ theorem zip_with_comm (f : α → α → β) (comm : ∀ x y : α, f x y = f y x
       ·
         simp [comm, hl]
 
-instance  (f : α → α → β) [IsSymmOp α β f] : IsSymmOp (List α) (List β) (zip_with f) :=
+instance (f : α → α → β) [IsSymmOp α β f] : IsSymmOp (List α) (List β) (zip_with f) :=
   ⟨zip_with_comm f IsSymmOp.symm_op⟩
 
 @[simp]
@@ -413,7 +413,7 @@ section Distrib
 /-! ### Operations that can be applied before or after a `zip_with` -/
 
 
-variable(f : α → β → γ)(l : List α)(l' : List β)(n : ℕ)
+variable (f : α → β → γ) (l : List α) (l' : List β) (n : ℕ)
 
 theorem zip_with_distrib_take : (zip_with f l l').take n = zip_with f (l.take n) (l'.take n) :=
   by 
@@ -484,7 +484,7 @@ end Distrib
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ α]
+variable [CommMonoidₓ α]
 
 @[toAdditive]
 theorem prod_mul_prod_eq_prod_zip_with_mul_prod_drop :

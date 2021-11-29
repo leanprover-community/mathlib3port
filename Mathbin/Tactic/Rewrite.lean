@@ -47,7 +47,7 @@ unsafe def match_assoc_pattern' (p : List expr) : List expr → tactic (List exp
   unify_prefix p es $> ([], es.drop p.length) <|>
     match es with 
     | [] => failed
-    | x :: xs => Prod.mapₓ (cons x) id <$> match_assoc_pattern' xs
+    | x :: xs => Prod.map (cons x) id <$> match_assoc_pattern' xs
 
 unsafe def match_assoc_pattern (fn p e : expr) : tactic (List expr × List expr) :=
   do 

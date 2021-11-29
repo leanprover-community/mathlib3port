@@ -81,13 +81,13 @@ circular order, cyclic order, circularly ordered set, cyclically ordered set
 
 
 /-- Syntax typeclass for a betweenness relation. -/
-class HasBtw(α : Type _) where 
+class HasBtw (α : Type _) where 
   Btw : α → α → α → Prop
 
 export HasBtw(Btw)
 
 /-- Syntax typeclass for a strict betweenness relation. -/
-class HasSbtw(α : Type _) where 
+class HasSbtw (α : Type _) where 
   Sbtw : α → α → α → Prop
 
 export HasSbtw(Sbtw)
@@ -95,7 +95,7 @@ export HasSbtw(Sbtw)
 /-- A circular preorder is the analogue of a preorder where you can loop around. `≤` and `<` are
 replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive and cyclic. `sbtw` is transitive.
 -/
-class CircularPreorder(α : Type _) extends HasBtw α, HasSbtw α where 
+class CircularPreorder (α : Type _) extends HasBtw α, HasSbtw α where 
   btw_refl (a : α) : btw a a a 
   btw_cyclic_left {a b c : α} : btw a b c → btw b c a 
   Sbtw := fun a b c => btw a b c ∧ ¬btw c b a 
@@ -109,7 +109,7 @@ export CircularPreorder(btw_refl btw_cyclic_left sbtw_trans_left)
 /-- A circular partial order is the analogue of a partial order where you can loop around. `≤` and
 `<` are replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive, cyclic and
 antisymmetric. `sbtw` is transitive. -/
-class CircularPartialOrder(α : Type _) extends CircularPreorder α where 
+class CircularPartialOrder (α : Type _) extends CircularPreorder α where 
   btw_antisymm {a b c : α} : btw a b c → btw c b a → a = b ∨ b = c ∨ c = a
 
 export CircularPartialOrder(btw_antisymm)
@@ -117,7 +117,7 @@ export CircularPartialOrder(btw_antisymm)
 /-- A circular order is the analogue of a linear order where you can loop around. `≤` and `<` are
 replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive, cyclic, antisymmetric and total.
 `sbtw` is transitive. -/
-class CircularOrder(α : Type _) extends CircularPartialOrder α where 
+class CircularOrder (α : Type _) extends CircularPartialOrder α where 
   btw_total : ∀ a b c : α, btw a b c ∨ btw c b a
 
 export CircularOrder(btw_total)
@@ -127,7 +127,7 @@ export CircularOrder(btw_total)
 
 section CircularPreorder
 
-variable{α : Type _}[CircularPreorder α]
+variable {α : Type _} [CircularPreorder α]
 
 theorem btw_rfl {a : α} : btw a a a :=
   btw_refl _
@@ -215,7 +215,7 @@ end CircularPreorder
 
 section CircularPartialOrder
 
-variable{α : Type _}[CircularPartialOrder α]
+variable {α : Type _} [CircularPartialOrder α]
 
 theorem HasBtw.Btw.antisymm {a b c : α} (h : btw a b c) : btw c b a → a = b ∨ b = c ∨ c = a :=
   btw_antisymm h
@@ -227,7 +227,7 @@ end CircularPartialOrder
 
 section CircularOrder
 
-variable{α : Type _}[CircularOrder α]
+variable {α : Type _} [CircularOrder α]
 
 theorem btw_refl_left_right (a b : α) : btw a b a :=
   (or_selfₓ _).1 (btw_total a b a)
@@ -264,7 +264,7 @@ namespace Set
 
 section CircularPreorder
 
-variable{α : Type _}[CircularPreorder α]
+variable {α : Type _} [CircularPreorder α]
 
 /-- Closed-closed circular interval -/
 def cIcc (a b : α) : Set α :=
@@ -286,7 +286,7 @@ end CircularPreorder
 
 section CircularOrder
 
-variable{α : Type _}[CircularOrder α]
+variable {α : Type _} [CircularOrder α]
 
 theorem left_mem_cIcc (a b : α) : a ∈ cIcc a b :=
   btw_rfl_left
@@ -426,21 +426,21 @@ def LinearOrderₓ.toCircularOrder (α : Type _) [LinearOrderₓ α] : CircularO
 
 section OrderDual
 
-instance  (α : Type _) [HasBtw α] : HasBtw (OrderDual α) :=
+instance (α : Type _) [HasBtw α] : HasBtw (OrderDual α) :=
   ⟨fun a b c : α => btw c b a⟩
 
-instance  (α : Type _) [HasSbtw α] : HasSbtw (OrderDual α) :=
+instance (α : Type _) [HasSbtw α] : HasSbtw (OrderDual α) :=
   ⟨fun a b c : α => sbtw c b a⟩
 
-instance  (α : Type _) [h : CircularPreorder α] : CircularPreorder (OrderDual α) :=
+instance (α : Type _) [h : CircularPreorder α] : CircularPreorder (OrderDual α) :=
   { OrderDual.hasBtw α, OrderDual.hasSbtw α with btw_refl := btw_refl, btw_cyclic_left := fun a b c => btw_cyclic_right,
     sbtw_trans_left := fun a b c d habc hbdc => hbdc.trans_right habc,
     sbtw_iff_btw_not_btw := fun a b c => @sbtw_iff_btw_not_btw α _ c b a }
 
-instance  (α : Type _) [CircularPartialOrder α] : CircularPartialOrder (OrderDual α) :=
+instance (α : Type _) [CircularPartialOrder α] : CircularPartialOrder (OrderDual α) :=
   { OrderDual.circularPreorder α with btw_antisymm := fun a b c habc hcba => @btw_antisymm α _ _ _ _ hcba habc }
 
-instance  (α : Type _) [CircularOrder α] : CircularOrder (OrderDual α) :=
+instance (α : Type _) [CircularOrder α] : CircularOrder (OrderDual α) :=
   { OrderDual.circularPartialOrder α with btw_total := fun a b c => btw_total c b a }
 
 end OrderDual

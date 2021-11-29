@@ -11,7 +11,7 @@ category, with all arrows reversed.
 
 universe v u
 
-variable(α : Sort u)
+variable (α : Sort u)
 
 /-- The type of objects of the opposite of `α`; used to define the opposite category.
 
@@ -43,7 +43,7 @@ notation α `ᵒᵖ`:std.prec.max_plus := opposite α
 
 namespace Opposite
 
-variable{α}
+variable {α}
 
 /-- The canonical map `α → αᵒᵖ`. -/
 @[pp_nodot]
@@ -97,7 +97,7 @@ theorem op_eq_iff_eq_unop {x : α} {y} : op x = y ↔ x = unop y :=
 theorem unop_eq_iff_eq_op {x} {y : α} : unop x = y ↔ x = op y :=
   equiv_to_opposite.symm.apply_eq_iff_eq_symm_apply
 
-instance  [Inhabited α] : Inhabited («expr ᵒᵖ» α) :=
+instance [Inhabited α] : Inhabited («expr ᵒᵖ» α) :=
   ⟨op (default _)⟩
 
 /-- A recursor for `opposite`. Use as `induction x using opposite.rec`. -/

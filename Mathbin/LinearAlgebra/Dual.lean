@@ -36,9 +36,9 @@ noncomputable theory
 
 namespace Module
 
-variable(R : Type _)(M : Type _)
+variable (R : Type _) (M : Type _)
 
-variable[CommSemiringₓ R][AddCommMonoidₓ M][Module R M]
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M]
 
 -- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler add_comm_monoid
 /-- The dual space of an R-module M is the R-module of linear maps `M → R`. -/
@@ -46,18 +46,18 @@ variable[CommSemiringₓ R][AddCommMonoidₓ M][Module R M]
 def dual :=
 «expr →ₗ[ ] »(M, R, R)
 
-instance  {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (dual S N) :=
+instance {S : Type _} [CommRingₓ S] {N : Type _} [AddCommGroupₓ N] [Module S N] : AddCommGroupₓ (dual S N) :=
   by 
     unfold dual 
     infer_instance
 
 namespace Dual
 
-instance  : Inhabited (dual R M) :=
+instance : Inhabited (dual R M) :=
   by 
     dunfold dual <;> infer_instance
 
-instance  : CoeFun (dual R M) fun _ => M → R :=
+instance : CoeFun (dual R M) fun _ => M → R :=
   ⟨LinearMap.toFun⟩
 
 /-- Maps a module M to the dual of the dual of M. See `module.erange_coe` and
@@ -71,7 +71,7 @@ theorem eval_apply (v : M) (a : dual R M) : eval R M v a = a v :=
     dunfold eval 
     rw [LinearMap.flip_apply, LinearMap.id_apply]
 
-variable{R M}{M' : Type _}[AddCommMonoidₓ M'][Module R M']
+variable {R M} {M' : Type _} [AddCommMonoidₓ M'] [Module R M']
 
 /-- The transposition of linear maps, as a linear map from `M →ₗ[R] M'` to
 `dual R M' →ₗ[R] dual R M`. -/
@@ -81,7 +81,7 @@ def transpose : (M →ₗ[R] M') →ₗ[R] dual R M' →ₗ[R] dual R M :=
 theorem transpose_apply (u : M →ₗ[R] M') (l : dual R M') : transpose u l = l.comp u :=
   rfl
 
-variable{M'' : Type _}[AddCommMonoidₓ M''][Module R M'']
+variable {M'' : Type _} [AddCommMonoidₓ M''] [Module R M'']
 
 theorem transpose_comp (u : M' →ₗ[R] M'') (v : M →ₗ[R] M') : transpose (u.comp v) = (transpose v).comp (transpose u) :=
   rfl
@@ -96,13 +96,13 @@ universe u v w
 
 open Module Module.Dual Submodule LinearMap Cardinal Function
 
-variable{R M K V ι : Type _}
+variable {R M K V ι : Type _}
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R][AddCommMonoidₓ M][Module R M][DecidableEq ι]
+variable [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] [DecidableEq ι]
 
-variable(b : Basis ι R M)
+variable (b : Basis ι R M)
 
 /-- The linear map from a vector space equipped with basis to its dual vector space,
 taking basis elements to corresponding dual basis elements. -/
@@ -196,9 +196,9 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R][AddCommGroupₓ M][Module R M][DecidableEq ι]
+variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [DecidableEq ι]
 
-variable(b : Basis ι R M)
+variable (b : Basis ι R M)
 
 /-- A vector space is linearly equivalent to its dual space. -/
 @[simps]
@@ -305,9 +305,9 @@ end Basis
 
 namespace Module
 
-variable{K V : Type _}
+variable {K V : Type _}
 
-variable[Field K][AddCommGroupₓ V][Module K V]
+variable [Field K] [AddCommGroupₓ V] [Module K V]
 
 open Module Module.Dual Submodule LinearMap Cardinal Basis FiniteDimensional
 
@@ -326,13 +326,13 @@ begin
   exact [expr (basis.of_vector_space K V).eval_range]
 end
 
-variable(K V)
+variable (K V)
 
 /-- A vector space is linearly equivalent to the dual of its dual space. -/
 def eval_equiv [FiniteDimensional K V] : V ≃ₗ[K] dual K (dual K V) :=
   LinearEquiv.ofBijective (eval K V) (ker_eq_bot.mp eval_ker) (range_eq_top.mp erange_coe)
 
-variable{K V}
+variable {K V}
 
 @[simp]
 theorem eval_equiv_to_linear_map [FiniteDimensional K V] : (eval_equiv K V).toLinearMap = dual.eval K V :=
@@ -344,13 +344,13 @@ section DualPair
 
 open Module
 
-variable{R M ι : Type _}
+variable {R M ι : Type _}
 
-variable[CommRingₓ R][AddCommGroupₓ M][Module R M][DecidableEq ι]
+variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M] [DecidableEq ι]
 
 /-- `e` and `ε` have characteristic properties of a basis and its dual -/
 @[nolint has_inhabited_instance]
-structure DualPair(e : ι → M)(ε : ι → dual R M) where 
+structure DualPair (e : ι → M) (ε : ι → dual R M) where 
   eval : ∀ i j : ι, ε i (e j) = if i = j then 1 else 0
   Total : ∀ {m : M}, (∀ i, ε i m = 0) → m = 0
   [Finite : ∀ m : M, Fintype { i | ε i m ≠ 0 }]
@@ -361,11 +361,11 @@ namespace DualPair
 
 open Module Module.Dual LinearMap Function
 
-variable{R M ι : Type _}
+variable {R M ι : Type _}
 
-variable[CommRingₓ R][AddCommGroupₓ M][Module R M]
+variable [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
 
-variable{e : ι → M}{ε : ι → dual R M}
+variable {e : ι → M} {ε : ι → dual R M}
 
 -- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The coefficients of `v` on the basis `e` -/
@@ -389,7 +389,7 @@ def lc {ι} (e : ι → M) (l : ι →₀ R) : M :=
 theorem lc_def (e : ι → M) (l : ι →₀ R) : lc e l = Finsupp.total _ _ _ e l :=
   rfl
 
-variable[DecidableEq ι](h : DualPair e ε)
+variable [DecidableEq ι] (h : DualPair e ε)
 
 include h
 
@@ -467,9 +467,9 @@ namespace Submodule
 
 universe u v w
 
-variable{R : Type u}{M : Type v}[CommRingₓ R][AddCommGroupₓ M][Module R M]
+variable {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ M] [Module R M]
 
-variable{W : Submodule R M}
+variable {W : Submodule R M}
 
 /-- The `dual_restrict` of a submodule `W` of `M` is the linear map from the
   dual of `M` to the dual of `W` such that the domain of each linear map is
@@ -529,7 +529,7 @@ open Submodule LinearMap
 
 universe u v w
 
-variable{K : Type u}{V : Type v}[Field K][AddCommGroupₓ V][Module K V]
+variable {K : Type u} {V : Type v} [Field K] [AddCommGroupₓ V] [Module K V]
 
 /-- Given a subspace `W` of `V` and an element of its dual `φ`, `dual_lift W φ` is
 the natural extension of `φ` to an element of the dual of `V`.
@@ -538,7 +538,7 @@ noncomputable def dual_lift (W : Subspace K V) : Module.Dual K W →ₗ[K] Modul
   let h := Classical.indefiniteDescription _ W.exists_is_compl
   (LinearMap.ofIsComplProd h.2).comp (LinearMap.inl _ _ _)
 
-variable{W : Subspace K V}
+variable {W : Subspace K V}
 
 @[simp]
 theorem dual_lift_of_subtype {φ : Module.Dual K W} (w : W) : W.dual_lift φ (w : V) = φ w :=
@@ -593,12 +593,12 @@ open_locale Classical
 
 open FiniteDimensional
 
-variable{V₁ : Type _}[AddCommGroupₓ V₁][Module K V₁]
+variable {V₁ : Type _} [AddCommGroupₓ V₁] [Module K V₁]
 
-instance  [H : FiniteDimensional K V] : FiniteDimensional K (Module.Dual K V) :=
+instance [H : FiniteDimensional K V] : FiniteDimensional K (Module.Dual K V) :=
   LinearEquiv.finite_dimensional (Basis.ofVectorSpace K V).toDualEquiv
 
-variable[FiniteDimensional K V][FiniteDimensional K V₁]
+variable [FiniteDimensional K V] [FiniteDimensional K V₁]
 
 @[simp]
 theorem dual_finrank_eq : finrank K (Module.Dual K V) = finrank K V :=
@@ -635,9 +635,9 @@ end
 
 end Subspace
 
-variable{R : Type _}[CommRingₓ R]{M₁ : Type _}{M₂ : Type _}
+variable {R : Type _} [CommRingₓ R] {M₁ : Type _} {M₂ : Type _}
 
-variable[AddCommGroupₓ M₁][Module R M₁][AddCommGroupₓ M₂][Module R M₂]
+variable [AddCommGroupₓ M₁] [Module R M₁] [AddCommGroupₓ M₂] [Module R M₂]
 
 open Module
 
@@ -696,7 +696,7 @@ theorem LinearEquiv.dual_map_trans {M₃ : Type _} [AddCommGroupₓ M₃] [Modul
 
 namespace LinearMap
 
-variable(f : M₁ →ₗ[R] M₂)
+variable (f : M₁ →ₗ[R] M₂)
 
 theorem ker_dual_map_eq_dual_annihilator_range : f.dual_map.ker = f.range.dual_annihilator :=
   by 
@@ -722,13 +722,13 @@ theorem range_dual_map_le_dual_annihilator_ker : f.dual_map.range ≤ f.ker.dual
 
 section FiniteDimensional
 
-variable{K : Type _}[Field K]{V₁ : Type _}{V₂ : Type _}
+variable {K : Type _} [Field K] {V₁ : Type _} {V₂ : Type _}
 
-variable[AddCommGroupₓ V₁][Module K V₁][AddCommGroupₓ V₂][Module K V₂]
+variable [AddCommGroupₓ V₁] [Module K V₁] [AddCommGroupₓ V₂] [Module K V₂]
 
 open FiniteDimensional
 
-variable[FiniteDimensional K V₂]
+variable [FiniteDimensional K V₂]
 
 -- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]

@@ -17,7 +17,7 @@ universe v u
 
 namespace CategoryTheory
 
-variable(C : Type u)[category.{v} C]
+variable (C : Type u) [category.{v} C]
 
 /--
 The category of endofunctors of any category is a monoidal category,
@@ -31,7 +31,7 @@ def endofunctor_monoidal_category : monoidal_category (C ⥤ C) :=
 
 open CategoryTheory.MonoidalCategory
 
-variable[monoidal_category.{v} C]
+variable [monoidal_category.{v} C]
 
 attribute [local instance] endofunctor_monoidal_category
 

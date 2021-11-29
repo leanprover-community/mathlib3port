@@ -18,16 +18,16 @@ universe u v
   alphabet (`step`), a starting state (`start`) and a set of acceptance states (`accept`).
   Note the transition function sends a state to a `set` of states. These are the states that it
   may be sent to. -/
-structure NFA(α : Type u)(σ : Type v) where 
+structure NFA (α : Type u) (σ : Type v) where 
   step : σ → α → Set σ 
   start : Set σ 
   accept : Set σ
 
-variable{α : Type u}{σ σ' : Type v}(M : NFA α σ)
+variable {α : Type u} {σ σ' : Type v} (M : NFA α σ)
 
 namespace NFA
 
-instance  : Inhabited (NFA α σ) :=
+instance : Inhabited (NFA α σ) :=
   ⟨NFA.mk (fun _ _ => ∅) ∅ ∅⟩
 
 /-- `M.step_set S a` is the union of `M.step s a` for all `s ∈ S`. -/

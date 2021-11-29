@@ -20,13 +20,13 @@ open CategoryTheory.MonoidalCategory
 
 namespace CategoryTheory.Monoidal
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable{D : Type u₂}[category.{v₂} D][monoidal_category.{v₂} D]
+variable {D : Type u₂} [category.{v₂} D] [monoidal_category.{v₂} D]
 
 namespace FunctorCategory
 
-variable(F G F' G' : C ⥤ D)
+variable (F G F' G' : C ⥤ D)
 
 /--
 (An auxiliary definition for `functor_category_monoidal`.)
@@ -44,9 +44,9 @@ def tensor_obj : C ⥤ D :=
         by 
           rw [F.map_comp, G.map_comp, tensor_comp] }
 
-variable{F G F' G'}
+variable {F G F' G'}
 
-variable(α : F ⟶ G)(β : F' ⟶ G')
+variable (α : F ⟶ G) (β : F' ⟶ G')
 
 /--
 (An auxiliary definition for `functor_category_monoidal`.)
@@ -187,7 +187,7 @@ section BraidedCategory
 
 open CategoryTheory.BraidedCategory
 
-variable[braided_category.{v₂} D]
+variable [braided_category.{v₂} D]
 
 /--
 When `C` is any category, and `D` is a braided monoidal category,
@@ -211,7 +211,7 @@ instance functor_category_braided : braided_category (C ⥤ D) :=
           ext X 
           apply hexagon_reverse }
 
-example  : braided_category (C ⥤ D) :=
+example : braided_category (C ⥤ D) :=
   CategoryTheory.Monoidal.functorCategoryBraided
 
 end BraidedCategory
@@ -220,7 +220,7 @@ section SymmetricCategory
 
 open CategoryTheory.SymmetricCategory
 
-variable[symmetric_category.{v₂} D]
+variable [symmetric_category.{v₂} D]
 
 /--
 When `C` is any category, and `D` is a symmetric monoidal category,

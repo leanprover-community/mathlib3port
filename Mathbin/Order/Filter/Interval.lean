@@ -36,7 +36,7 @@ that need topology are defined in `topology/algebra/ordered`.
 -/
 
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 open_locale Classical Filter Interval
 
@@ -46,7 +46,7 @@ namespace Filter
 
 section Preorderₓ
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 /-- A pair of filters `l₁`, `l₂` has `tendsto_Ixx_class Ixx` property if `Ixx a b` tends to
 `l₂.lift' powerset` as `a` and `b` tend to `l₁`. In all instances `Ixx` is one of `Icc`, `Ico`,
@@ -57,7 +57,7 @@ n) (u₂ n)` is eventually included in `Iio a`.
 
 We mark `l₂` as an `out_param` so that Lean can automatically find an appropriate `l₂` based on
 `Ixx` and `l₁`. This way, e.g., `tendsto.Ico h₁ h₂` works without specifying explicitly `l₂`. -/
-class tendsto_Ixx_class(Ixx : α → α → Set α)(l₁ : Filter α)(l₂ : outParam$ Filter α) : Prop where 
+class tendsto_Ixx_class (Ixx : α → α → Set α) (l₁ : Filter α) (l₂ : outParam$ Filter α) : Prop where 
   tendsto_Ixx : tendsto (fun p : α × α => Ixx p.1 p.2) (l₁ ×ᶠ l₁) (l₂.lift' powerset)
 
 theorem tendsto.Icc {l₁ l₂ : Filter α} [tendsto_Ixx_class Icc l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
@@ -170,7 +170,7 @@ end Preorderₓ
 
 section PartialOrderₓ
 
-variable[PartialOrderₓ α]
+variable [PartialOrderₓ α]
 
 instance tendsto_Icc_pure_pure {a : α} : tendsto_Ixx_class Icc (pure a) (pure a : Filter α) :=
   by 
@@ -192,7 +192,7 @@ end PartialOrderₓ
 
 section LinearOrderₓ
 
-variable[LinearOrderₓ α]
+variable [LinearOrderₓ α]
 
 -- error in Order.Filter.Interval: ././Mathport/Syntax/Translate/Basic.lean:546:47: unsupported (impossible)
 instance tendsto_Icc_interval_interval

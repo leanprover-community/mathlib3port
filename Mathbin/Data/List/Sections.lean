@@ -12,7 +12,7 @@ open Nat Function
 
 namespace List
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 theorem mem_sections {L : List (List α)} {f} : f ∈ sections L ↔ forall₂ (· ∈ ·) f L :=
   by 

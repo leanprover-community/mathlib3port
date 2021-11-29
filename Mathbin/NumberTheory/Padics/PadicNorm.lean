@@ -80,7 +80,7 @@ namespace padicValRat
 
 open multiplicity
 
-variable{p : ℕ}
+variable {p : ℕ}
 
 /--
 `padic_val_rat p q` is symmetric in `q`.
@@ -206,7 +206,7 @@ namespace padicValRat
 
 open multiplicity
 
-variable(p : ℕ)[p_prime : Fact p.prime]
+variable (p : ℕ) [p_prime : Fact p.prime]
 
 include p_prime
 
@@ -602,7 +602,7 @@ section padicNorm
 
 open padicValRat
 
-variable(p : ℕ)
+variable (p : ℕ)
 
 /--
 Unfolds the definition of the p-adic norm of `q` when `q ≠ 0`.
@@ -716,7 +716,7 @@ protected theorem neg (q : ℚ) : padicNorm p (-q) = padicNorm p q :=
     by 
       simp [padicNorm, hq]
 
-variable[hp : Fact p.prime]
+variable [hp : Fact p.prime]
 
 include hp
 
@@ -878,7 +878,7 @@ end
 The p-adic norm is an absolute value: positive-definite and multiplicative, satisfying the triangle
 inequality.
 -/
-instance  : IsAbsoluteValue (padicNorm p) :=
+instance : IsAbsoluteValue (padicNorm p) :=
   { abv_nonneg := padicNorm.nonneg p,
     abv_eq_zero :=
       by 
@@ -891,7 +891,7 @@ instance  : IsAbsoluteValue (padicNorm p) :=
           simp ,
     abv_add := padicNorm.triangle_ineq p, abv_mul := padicNorm.mul p }
 
-variable{p}
+variable {p}
 
 -- error in NumberTheory.Padics.PadicNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem dvd_iff_norm_le

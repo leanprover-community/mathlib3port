@@ -168,7 +168,7 @@ namespace MonoidalCategory
 
 section 
 
-variable{C : Type u}[category.{v} C][monoidal_category.{v} C]
+variable {C : Type u} [category.{v} C] [monoidal_category.{v} C]
 
 instance tensor_is_iso {W X Y Z : C} (f : W ⟶ X) [is_iso f] (g : Y ⟶ Z) [is_iso g] : is_iso (f ⊗ g) :=
   is_iso.of_iso (as_iso f ⊗ as_iso g)
@@ -179,7 +179,7 @@ theorem inv_tensor {W X Y Z : C} (f : W ⟶ X) [is_iso f] (g : Y ⟶ Z) [is_iso 
     ext 
     simp [←tensor_comp]
 
-variable{U V W X Y Z : C}
+variable {U V W X Y Z : C}
 
 @[reassoc, simp]
 theorem comp_tensor_id (f : W ⟶ X) (g : X ⟶ Y) : f ≫ g ⊗ 𝟙 Z = (f ⊗ 𝟙 Z) ≫ (g ⊗ 𝟙 Z) :=
@@ -443,7 +443,7 @@ end
 
 section 
 
-variable(C : Type u)[category.{v} C][monoidal_category.{v} C]
+variable (C : Type u) [category.{v} C] [monoidal_category.{v} C]
 
 /-- The tensor product expressed as a functor. -/
 def tensor : C × C ⥤ C :=
@@ -516,7 +516,7 @@ def right_unitor_nat_iso : tensor_unit_right C ≅ 𝟭 C :=
 
 section 
 
-variable{C}
+variable {C}
 
 /-- Tensoring on the left with a fixed object, as a functor. -/
 @[simps]
@@ -549,7 +549,7 @@ theorem tensor_left_tensor_inv_app (X Y Z : C) : (tensor_left_tensor X Y).inv.ap
 def tensor_right (X : C) : C ⥤ C :=
   { obj := fun Y => Y ⊗ X, map := fun Y Y' f => f ⊗ 𝟙 X }
 
-variable(C)
+variable (C)
 
 /--
 Tensoring on the left, as a functor from `C` into endofunctors of `C`.
@@ -560,7 +560,7 @@ TODO: show this is a op-monoidal functor.
 def tensoring_left : C ⥤ C ⥤ C :=
   { obj := tensor_left, map := fun X Y f => { app := fun Z => f ⊗ 𝟙 Z } }
 
-instance  : faithful (tensoring_left C) :=
+instance : faithful (tensoring_left C) :=
   { map_injective' :=
       fun X Y f g h =>
         by 
@@ -577,7 +577,7 @@ We later show this is a monoidal functor.
 def tensoring_right : C ⥤ C ⥤ C :=
   { obj := tensor_right, map := fun X Y f => { app := fun Z => 𝟙 Z ⊗ f } }
 
-instance  : faithful (tensoring_right C) :=
+instance : faithful (tensoring_right C) :=
   { map_injective' :=
       fun X Y f g h =>
         by 
@@ -585,7 +585,7 @@ instance  : faithful (tensoring_right C) :=
           replace h := congr_funₓ h (𝟙_ C)
           simpa using h }
 
-variable{C}
+variable {C}
 
 /--
 Tensoring on the right with `X ⊗ Y` is naturally isomorphic to
@@ -608,7 +608,7 @@ theorem tensor_right_tensor_inv_app (X Y Z : C) : (tensor_right_tensor X Y).inv.
   by 
     simp [tensor_right_tensor]
 
-variable{C}
+variable {C}
 
 /--
 Any property closed under `𝟙_` and `⊗` induces a full monoidal subcategory of `C`, where

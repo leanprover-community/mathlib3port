@@ -36,7 +36,7 @@ protected theorem Eq {S : Type u} [Mul S] {a x y : S} (h : SemiconjBy a x y) : (
 
 section Semigroupₓ
 
-variable{S : Type u}[Semigroupₓ S]{a b x y z x' y' : S}
+variable {S : Type u} [Semigroupₓ S] {a b x y z x' y' : S}
 
 /-- If `a` semiconjugates `x` to `y` and `x'` to `y'`,
 then it semiconjugates `x * x'` to `y * y'`. -/
@@ -62,7 +62,7 @@ end Semigroupₓ
 
 section MulOneClass
 
-variable{M : Type u}[MulOneClass M]
+variable {M : Type u} [MulOneClass M]
 
 /-- Any element semiconjugates `1` to `1`. -/
 @[simp, toAdditive]
@@ -86,7 +86,7 @@ end MulOneClass
 
 section Monoidₓ
 
-variable{M : Type u}[Monoidₓ M]
+variable {M : Type u} [Monoidₓ M]
 
 /-- If `a` semiconjugates a unit `x` to a unit `y`, then it semiconjugates `x⁻¹` to `y⁻¹`. -/
 @[toAdditive]
@@ -149,7 +149,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable{G : Type u}[Groupₓ G]{a x y : G}
+variable {G : Type u} [Groupₓ G] {a x y : G}
 
 @[simp, toAdditive]
 theorem inv_right_iff : SemiconjBy a (x⁻¹) (y⁻¹) ↔ SemiconjBy a x y :=

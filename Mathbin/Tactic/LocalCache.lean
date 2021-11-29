@@ -6,7 +6,7 @@ namespace LocalCache
 
 namespace Internal
 
-variable{α : Type}[reflected α][has_reflect α]
+variable {α : Type} [reflected α] [has_reflect α]
 
 unsafe def mk_full_namespace (ns : Name) : Name :=
   `local_cache ++ ns

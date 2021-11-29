@@ -20,11 +20,11 @@ universe v u
 
 open CategoryTheory CategoryTheory.Limits
 
-variable{ι : Type _}
+variable {ι : Type _}
 
-variable{V : Type u}[category.{v} V][has_zero_morphisms V]
+variable {V : Type u} [category.{v} V] [has_zero_morphisms V]
 
-variable{c : ComplexShape ι}(C : HomologicalComplex V c)
+variable {c : ComplexShape ι} (C : HomologicalComplex V c)
 
 open_locale Classical ZeroObject
 
@@ -32,11 +32,11 @@ noncomputable theory
 
 namespace HomologicalComplex
 
-variable[has_zero_object V]
+variable [has_zero_object V]
 
 section Cycles
 
-variable[has_kernels V]
+variable [has_kernels V]
 
 /-- The cycles at index `i`, as a subobject. -/
 def cycles (i : ι) : subobject (C.X i) :=
@@ -68,7 +68,7 @@ end Cycles
 
 section Boundaries
 
-variable[has_images V]
+variable [has_images V]
 
 /-- The boundaries at index `i`, as a subobject. -/
 abbrev boundaries (C : HomologicalComplex V c) (j : ι) : subobject (C.X j) :=
@@ -95,7 +95,7 @@ end Boundaries
 
 section 
 
-variable[has_kernels V][has_images V]
+variable [has_kernels V] [has_images V]
 
 theorem boundaries_le_cycles (C : HomologicalComplex V c) (i : ι) : C.boundaries i ≤ C.cycles i :=
   image_le_kernel _ _ (C.d_to_comp_d_from i)
@@ -119,7 +119,7 @@ theorem boundaries_to_cycles_arrow (C : HomologicalComplex V c) (i : ι) :
     dsimp [cycles]
     simp 
 
-variable[has_cokernels V]
+variable [has_cokernels V]
 
 /--
 The homology of a complex at index `i`.
@@ -138,9 +138,9 @@ open HomologicalComplex
 
 section 
 
-variable[has_zero_object V][has_kernels V]
+variable [has_zero_object V] [has_kernels V]
 
-variable{C₁ C₂ C₃ : HomologicalComplex V c}(f : C₁ ⟶ C₂)
+variable {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
 /--
 The morphism between cycles induced by a chain map.
@@ -168,7 +168,7 @@ theorem cycles_map_comp (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) : cycle
     dunfold cyclesMap 
     simp [subobject.factor_thru_right]
 
-variable(V c)
+variable (V c)
 
 /-- Cycles as a functor. -/
 @[simps]
@@ -182,9 +182,9 @@ end
 
 section 
 
-variable[has_zero_object V][has_images V][has_image_maps V]
+variable [has_zero_object V] [has_images V] [has_image_maps V]
 
-variable{C₁ C₂ C₃ : HomologicalComplex V c}(f : C₁ ⟶ C₂)
+variable {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
 /--
 The morphism between boundaries induced by a chain map.
@@ -192,7 +192,7 @@ The morphism between boundaries induced by a chain map.
 abbrev boundariesMap (f : C₁ ⟶ C₂) (i : ι) : (C₁.boundaries i : V) ⟶ (C₂.boundaries i : V) :=
   image_subobject_map (f.sq_to i)
 
-variable(V c)
+variable (V c)
 
 /-- Boundaries as a functor. -/
 @[simps]
@@ -206,9 +206,9 @@ section
 /-! The `boundaries_to_cycles` morphisms are natural. -/
 
 
-variable[has_zero_object V][has_equalizers V][has_images V][has_image_maps V]
+variable [has_zero_object V] [has_equalizers V] [has_images V] [has_image_maps V]
 
-variable{C₁ C₂ : HomologicalComplex V c}(f : C₁ ⟶ C₂)
+variable {C₁ C₂ : HomologicalComplex V c} (f : C₁ ⟶ C₂)
 
 @[simp, reassoc]
 theorem boundaries_to_cycles_naturality (i : ι) :
@@ -217,7 +217,7 @@ theorem boundaries_to_cycles_naturality (i : ι) :
     ext 
     simp 
 
-variable(V c)
+variable (V c)
 
 /-- The natural transformation from the boundaries functor to the cycles functor. -/
 @[simps]

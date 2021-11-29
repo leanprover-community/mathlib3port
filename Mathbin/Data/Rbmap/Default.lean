@@ -5,7 +5,7 @@ universe u v
 
 namespace Rbmap
 
-variable{α : Type u}{β : Type v}{lt : α → α → Prop}
+variable {α : Type u} {β : Type v} {lt : α → α → Prop}
 
 private def rbmap_lt_is_swo {α : Type u} {β : Type v} {lt : α → α → Prop} [IsStrictWeakOrder α lt] :
   IsStrictWeakOrder (α × β) (RbmapLt lt) :=
@@ -95,7 +95,7 @@ end
 
 section Decidable
 
-variable[DecidableRel lt]
+variable [DecidableRel lt]
 
 theorem not_mem_of_find_entry_none [IsStrictWeakOrder α lt] {k : α} {m : Rbmap α β lt} :
   m.find_entry k = none → k ∉ m :=

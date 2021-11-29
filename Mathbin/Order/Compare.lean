@@ -15,7 +15,7 @@ This file provides basic results about orderings and comparison in linear orders
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- Like `cmp`, but uses a `≤` on the type instead of `<`. Given two elements `x` and `y`, returns a
 three-way comparison result `ordering`. -/
@@ -181,7 +181,7 @@ def linearOrderOfCompares [Preorderₓ α] (cmp : α → α → Ordering) (h : �
     decidableLe := fun a b => decidableOfIff _ (h a b).ne_gt, decidableLt := fun a b => decidableOfIff _ (h a b).eq_lt,
     DecidableEq := fun a b => decidableOfIff _ (h a b).eq_eq }
 
-variable[LinearOrderₓ α](x y : α)
+variable [LinearOrderₓ α] (x y : α)
 
 @[simp]
 theorem cmp_eq_lt_iff : cmp x y = Ordering.lt ↔ x < y :=
@@ -200,7 +200,7 @@ theorem cmp_self_eq_eq : cmp x x = Ordering.eq :=
   by 
     rw [cmp_eq_eq_iff]
 
-variable{x y}{β : Type _}[LinearOrderₓ β]{x' y' : β}
+variable {x y} {β : Type _} [LinearOrderₓ β] {x' y' : β}
 
 theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' :=
   by 

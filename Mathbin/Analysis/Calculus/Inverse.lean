@@ -58,17 +58,17 @@ open_locale TopologicalSpace Classical Nnreal
 
 noncomputable theory
 
-variable{𝕜 : Type _}[NondiscreteNormedField 𝕜]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
 
-variable{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]
+variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
-variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]
+variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
 
-variable{G : Type _}[NormedGroup G][NormedSpace 𝕜 G]
+variable {G : Type _} [NormedGroup G] [NormedSpace 𝕜 G]
 
-variable{G' : Type _}[NormedGroup G'][NormedSpace 𝕜 G']
+variable {G' : Type _} [NormedGroup G'] [NormedSpace 𝕜 G']
 
-variable{ε : ℝ}
+variable {ε : ℝ}
 
 open Asymptotics Filter Metric Set
 
@@ -112,7 +112,7 @@ def ApproximatesLinearOn (f : E → F) (f' : E →L[𝕜] F) (s : Set E) (c :  �
 
 namespace ApproximatesLinearOn
 
-variable[cs : CompleteSpace E]{f : E → F}
+variable [cs : CompleteSpace E] {f : E → F}
 
 /-! First we prove some properties of a function that `approximates_linear_on` a (not necessarily
 invertible) continuous linear map. -/
@@ -120,7 +120,7 @@ invertible) continuous linear map. -/
 
 section 
 
-variable{f' : E →L[𝕜] F}{s t : Set E}{c c' :  ℝ≥0 }
+variable {f' : E →L[𝕜] F} {s t : Set E} {c c' :  ℝ≥0 }
 
 theorem mono_num (hc : c ≤ c') (hf : ApproximatesLinearOn f f' s c) : ApproximatesLinearOn f f' s c' :=
   fun x hx y hy => le_transₓ (hf x hx y hy) (mul_le_mul_of_nonneg_right hc$ norm_nonneg _)
@@ -159,7 +159,7 @@ by Banach's open mapping theorem. -/
 
 include cs
 
-variable{s : Set E}{c :  ℝ≥0 }{f' : E →L[𝕜] F}
+variable {s : Set E} {c :  ℝ≥0 } {f' : E →L[𝕜] F}
 
 -- error in Analysis.Calculus.Inverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function is linearly approximated by a continuous linear map with a (possibly nonlinear)
@@ -321,7 +321,7 @@ We also assume that either `E = {0}`, or `c < ∥f'⁻¹∥⁻¹`. We use `N` as
 -/
 
 
-variable{f' : E ≃L[𝕜] F}{s : Set E}{c :  ℝ≥0 }
+variable {f' : E ≃L[𝕜] F} {s : Set E} {c :  ℝ≥0 }
 
 local notation "N" => nnnorm (f'.symm : F →L[𝕜] E)
 
@@ -366,7 +366,7 @@ include cs
 
 section 
 
-variable(f s)
+variable (f s)
 
 /-- Given a function `f` that approximates a linear equivalence on an open set `s`,
 returns a local homeomorph with `to_fun = f` and `source = s`. -/
@@ -455,7 +455,7 @@ begin
   simp [] [] [] ["[", expr ne_of_gt f'symm_pos, "]"] [] []
 end
 
-variable[cs : CompleteSpace E]{f : E → F}{f' : E ≃L[𝕜] F}{a : E}
+variable [cs : CompleteSpace E] {f : E → F} {f' : E ≃L[𝕜] F} {a : E}
 
 theorem approximates_deriv_on_open_nhds (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) :
   ∃ (s : Set E)(hs : a ∈ s ∧ IsOpen s),
@@ -469,7 +469,7 @@ theorem approximates_deriv_on_open_nhds (hf : HasStrictFderivAt f (f' : E →L[�
 
 include cs
 
-variable(f)
+variable (f)
 
 /-- Given a function with an invertible strict derivative at `a`, returns a `local_homeomorph`
 with `to_fun = f` and `a ∈ source`. This is a part of the inverse function theorem.
@@ -481,7 +481,7 @@ def to_local_homeomorph (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : Loc
     (f'.subsingleton_or_nnnorm_symm_pos.imp id$ fun hf' => Nnreal.half_lt_self$ ne_of_gtₓ$ Nnreal.inv_pos.2$ hf')
     (Classical.some_spec hf.approximates_deriv_on_open_nhds).fst.2
 
-variable{f}
+variable {f}
 
 @[simp]
 theorem to_local_homeomorph_coe (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) :
@@ -499,14 +499,14 @@ theorem image_mem_to_local_homeomorph_target (hf : HasStrictFderivAt f (f' : E �
 theorem map_nhds_eq_of_equiv (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : map f (𝓝 a) = 𝓝 (f a) :=
   (hf.to_local_homeomorph f).map_nhds_eq hf.mem_to_local_homeomorph_source
 
-variable(f f' a)
+variable (f f' a)
 
 /-- Given a function `f` with an invertible derivative, returns a function that is locally inverse
 to `f`. -/
 def local_inverse (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) : F → E :=
   (hf.to_local_homeomorph f).symm
 
-variable{f f' a}
+variable {f f' a}
 
 theorem local_inverse_def (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) a) :
   hf.local_inverse f _ _ = (hf.to_local_homeomorph f).symm :=
@@ -572,18 +572,18 @@ We use `continuous_linear_equiv.units_equiv_aut` to translate `has_strict_deriv_
 
 namespace HasStrictDerivAt
 
-variable[cs : CompleteSpace 𝕜]{f : 𝕜 → 𝕜}{f' a : 𝕜}(hf : HasStrictDerivAt f f' a)(hf' : f' ≠ 0)
+variable [cs : CompleteSpace 𝕜] {f : 𝕜 → 𝕜} {f' a : 𝕜} (hf : HasStrictDerivAt f f' a) (hf' : f' ≠ 0)
 
 include cs
 
-variable(f f' a)
+variable (f f' a)
 
 /-- A function that is inverse to `f` near `a`. -/
 @[reducible]
 def local_inverse : 𝕜 → 𝕜 :=
   (hf.has_strict_fderiv_at_equiv hf').localInverse _ _ _
 
-variable{f f' a}
+variable {f f' a}
 
 theorem map_nhds_eq : map f (𝓝 a) = 𝓝 (f a) :=
   (hf.has_strict_fderiv_at_equiv hf').map_nhds_eq_of_equiv
@@ -609,13 +609,13 @@ theorem open_map_of_strict_deriv [CompleteSpace 𝕜] {f f' : 𝕜 → 𝕜} (hf
 
 namespace TimesContDiffAt
 
-variable{𝕂 : Type _}[IsROrC 𝕂]
+variable {𝕂 : Type _} [IsROrC 𝕂]
 
-variable{E' : Type _}[NormedGroup E'][NormedSpace 𝕂 E']
+variable {E' : Type _} [NormedGroup E'] [NormedSpace 𝕂 E']
 
-variable{F' : Type _}[NormedGroup F'][NormedSpace 𝕂 F']
+variable {F' : Type _} [NormedGroup F'] [NormedSpace 𝕂 F']
 
-variable[CompleteSpace E'](f : E' → F'){f' : E' ≃L[𝕂] F'}{a : E'}
+variable [CompleteSpace E'] (f : E' → F') {f' : E' ≃L[𝕂] F'} {a : E'}
 
 /-- Given a `times_cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible
 derivative at `a`, returns a `local_homeomorph` with `to_fun = f` and `a ∈ source`. -/
@@ -623,7 +623,7 @@ def to_local_homeomorph {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a) (hf'
   (hn : 1 ≤ n) : LocalHomeomorph E' F' :=
   (hf.has_strict_fderiv_at' hf' hn).toLocalHomeomorph f
 
-variable{f}
+variable {f}
 
 @[simp]
 theorem to_local_homeomorph_coe {n : WithTop ℕ} (hf : TimesContDiffAt 𝕂 n f a)

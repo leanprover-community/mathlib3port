@@ -60,7 +60,7 @@ ordered map, ordered set, data structure, verified programming
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Ordnode
 
@@ -905,7 +905,7 @@ theorem all_balance_r {P l x r} (hl : balanced l) (hr : balanced r) (sl : sized 
 
 section 
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 /-- `bounded t lo hi` says that every element `x ∈ t` is in the range `lo < x < hi`, and also this
 property holds recursively in subtrees, making the full tree a BST. The bounds can be set to
@@ -1013,12 +1013,12 @@ end
 
 section 
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 /-- The validity predicate for an `ordnode` subtree. This asserts that the `size` fields are
 correct, the tree is balanced, and the elements of the tree are organized according to the
 ordering. This version of `valid` also puts all elements in the tree in the interval `(lo, hi)`. -/
-structure valid'(lo : WithBot α)(t : Ordnode α)(hi : WithTop α) : Prop where 
+structure valid' (lo : WithBot α) (t : Ordnode α) (hi : WithTop α) : Prop where 
   ord : t.bounded lo hi 
   sz : t.sized 
   bal : t.balanced
@@ -1780,7 +1780,7 @@ namespace Ordset
 
 open Ordnode
 
-variable[Preorderₓ α]
+variable [Preorderₓ α]
 
 /-- O(1). The empty set. -/
 def nil : Ordset α :=
@@ -1794,13 +1794,13 @@ def size (s : Ordset α) : ℕ :=
 protected def singleton (a : α) : Ordset α :=
   ⟨singleton a, valid_singleton⟩
 
-instance  : HasEmptyc (Ordset α) :=
+instance : HasEmptyc (Ordset α) :=
   ⟨nil⟩
 
-instance  : Inhabited (Ordset α) :=
+instance : Inhabited (Ordset α) :=
   ⟨nil⟩
 
-instance  : HasSingleton α (Ordset α) :=
+instance : HasSingleton α (Ordset α) :=
   ⟨Ordset.singleton⟩
 
 /-- O(1). Is the set empty? -/
@@ -1815,7 +1815,7 @@ theorem empty_iff {s : Ordset α} : s = ∅ ↔ s.1.Empty :=
       by 
         cases s <;> cases s_val <;> [exact rfl, cases h]⟩
 
-instance  : DecidablePred (@Empty α _) :=
+instance : DecidablePred (@Empty α _) :=
   fun s => decidableOfIff' _ empty_iff
 
 /-- O(log n). Insert an element into the set, preserving balance and the BST property.
@@ -1823,7 +1823,7 @@ instance  : DecidablePred (@Empty α _) :=
 protected def insert [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x : α) (s : Ordset α) : Ordset α :=
   ⟨Ordnode.insert x s.1, insert.valid _ s.2⟩
 
-instance  [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] : HasInsert α (Ordset α) :=
+instance [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] : HasInsert α (Ordset α) :=
   ⟨Ordset.insert⟩
 
 /-- O(log n). Insert an element into the set, preserving balance and the BST property.
@@ -1833,7 +1833,7 @@ def insert' [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x : α) (s 
 
 section 
 
-variable[@DecidableRel α (· ≤ ·)]
+variable [@DecidableRel α (· ≤ ·)]
 
 /-- O(log n). Does the set contain the element `x`? That is,
   is there an element that is equivalent to `x` in the order? -/
@@ -1845,7 +1845,7 @@ def mem (x : α) (s : Ordset α) : Bool :=
 def find (x : α) (s : Ordset α) : Option α :=
   Ordnode.find x s.val
 
-instance  : HasMem α (Ordset α) :=
+instance : HasMem α (Ordset α) :=
   ⟨fun x s => mem x s⟩
 
 instance mem.decidable (x : α) (s : Ordset α) : Decidable (x ∈ s) :=

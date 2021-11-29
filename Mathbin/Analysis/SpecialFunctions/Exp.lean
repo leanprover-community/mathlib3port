@@ -21,7 +21,7 @@ open_locale Classical TopologicalSpace
 
 namespace Complex
 
-variable{z y x : ℝ}
+variable {z y x : ℝ}
 
 theorem exp_bound_sq (x z : ℂ) (hz : ∥z∥ ≤ 1) : ∥exp (x+z) - exp x - z • exp x∥ ≤ ∥exp x∥*∥z∥^2 :=
   calc ∥exp (x+z) - exp x - z*exp x∥ = ∥exp x*exp z - 1 - z∥ :=
@@ -72,7 +72,7 @@ end Complex
 
 section ComplexContinuousExpComp
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Complex
 
@@ -80,7 +80,7 @@ theorem Filter.Tendsto.cexp {l : Filter α} {f : α → ℂ} {z : ℂ} (hf : ten
   tendsto (fun x => exp (f x)) l (𝓝 (exp z)) :=
   (continuous_exp.Tendsto _).comp hf
 
-variable[TopologicalSpace α]{f : α → ℂ}{s : Set α}{x : α}
+variable [TopologicalSpace α] {f : α → ℂ} {s : Set α} {x : α}
 
 theorem ContinuousWithinAt.cexp (h : ContinuousWithinAt f s x) : ContinuousWithinAt (fun y => exp (f y)) s x :=
   h.cexp
@@ -109,7 +109,7 @@ end Real
 
 section RealContinuousExpComp
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Real
 
@@ -117,7 +117,7 @@ theorem Filter.Tendsto.exp {l : Filter α} {f : α → ℝ} {z : ℝ} (hf : tend
   tendsto (fun x => exp (f x)) l (𝓝 (exp z)) :=
   (continuous_exp.Tendsto _).comp hf
 
-variable[TopologicalSpace α]{f : α → ℝ}{s : Set α}{x : α}
+variable [TopologicalSpace α] {f : α → ℝ} {s : Set α} {x : α}
 
 theorem ContinuousWithinAt.exp (h : ContinuousWithinAt f s x) : ContinuousWithinAt (fun y => exp (f y)) s x :=
   h.exp
@@ -135,7 +135,7 @@ end RealContinuousExpComp
 
 namespace Real
 
-variable{x y z : ℝ}
+variable {x y z : ℝ}
 
 -- error in Analysis.SpecialFunctions.Exp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The real exponential function tends to `+∞` at `+∞`. -/ theorem tendsto_exp_at_top : tendsto exp at_top at_top :=
@@ -143,7 +143,7 @@ begin
   have [ident A] [":", expr tendsto (λ
     x : exprℝ(), «expr + »(x, 1)) at_top at_top] [":=", expr tendsto_at_top_add_const_right at_top 1 tendsto_id],
   have [ident B] [":", expr «expr∀ᶠ in , »((x), at_top, «expr ≤ »(«expr + »(x, 1), exp x))] [":=", expr eventually_at_top.2 ⟨0, λ
-    x hx, add_one_le_exp_of_nonneg hx⟩],
+    x hx, add_one_le_exp x⟩],
   exact [expr tendsto_at_top_mono' at_top B A]
 end
 

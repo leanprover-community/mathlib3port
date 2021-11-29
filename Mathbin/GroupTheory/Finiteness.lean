@@ -25,7 +25,7 @@ group.
 
 open_locale Pointwise
 
-variable{M N : Type _}[Monoidₓ M][AddMonoidₓ N]
+variable {M N : Type _} [Monoidₓ M] [AddMonoidₓ N]
 
 section Submonoid
 
@@ -72,7 +72,7 @@ end Submonoid
 
 section Monoidₓ
 
-variable(M N)
+variable (M N)
 
 /-- A monoid is finitely generated if it is finitely generated as a submonoid of itself. -/
 class Monoidₓ.Fg : Prop where 
@@ -85,7 +85,7 @@ class AddMonoidₓ.Fg : Prop where
 
 attribute [toAdditive] Monoidₓ.Fg
 
-variable{M N}
+variable {M N}
 
 theorem Monoidₓ.fg_def : Monoidₓ.Fg M ↔ (⊤ : Submonoid M).Fg :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
@@ -115,7 +115,7 @@ end Monoidₓ
 /-! ### Groups and subgroups -/
 
 
-variable{G H : Type _}[Groupₓ G][AddGroupₓ H]
+variable {G H : Type _} [Groupₓ G] [AddGroupₓ H]
 
 section Subgroup
 
@@ -172,7 +172,7 @@ end Subgroup
 
 section Groupₓ
 
-variable(G H)
+variable (G H)
 
 /-- A group is finitely generated if it is finitely generated as a submonoid of itself. -/
 class Groupₓ.Fg : Prop where 
@@ -185,7 +185,7 @@ class AddGroupₓ.Fg : Prop where
 
 attribute [toAdditive] Groupₓ.Fg
 
-variable{G H}
+variable {G H}
 
 theorem Groupₓ.fg_def : Groupₓ.Fg G ↔ (⊤ : Subgroup G).Fg :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩

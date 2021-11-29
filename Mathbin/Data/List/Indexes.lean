@@ -14,7 +14,7 @@ open Function
 
 namespace List
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 section MapWithIndex
 
@@ -105,7 +105,7 @@ end FoldlWithIndex
 
 section MfoldWithIndex
 
-variable{m : Type u → Type v}[Monadₓ m]
+variable {m : Type u → Type v} [Monadₓ m]
 
 theorem mfoldr_with_index_eq_mfoldr_enum {α β} (f : ℕ → α → β → m β) (b : β) (as : List α) :
   mfoldr_with_index f b as = mfoldr (uncurry f) b (enum as) :=
@@ -121,7 +121,7 @@ end MfoldWithIndex
 
 section MmapWithIndex
 
-variable{m : Type u → Type v}[Applicativeₓ m]
+variable {m : Type u → Type v} [Applicativeₓ m]
 
 /-- Specification of `mmap_with_index_aux`. -/
 def mmap_with_index_aux_spec {α β} (f : ℕ → α → m β) (start : ℕ) (as : List α) : m (List β) :=
@@ -149,7 +149,7 @@ end MmapWithIndex
 
 section MmapWithIndex'
 
-variable{m : Type u → Type v}[Applicativeₓ m][IsLawfulApplicative m]
+variable {m : Type u → Type v} [Applicativeₓ m] [IsLawfulApplicative m]
 
 theorem mmap_with_index'_aux_eq_mmap_with_index_aux {α} (f : ℕ → α → m PUnit) (start : ℕ) (as : List α) :
   mmap_with_index'_aux f start as = mmap_with_index_aux f start as *> pure PUnit.unit :=

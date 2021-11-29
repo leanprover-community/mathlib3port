@@ -33,7 +33,7 @@ Add `to_additive` to `preimage_mk_equiv_subgroup_times_set`.
 
 open Set Function
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- The left coset `a * s` for an element `a : α` and a subset `s : set α` -/
 @[toAdditive LeftAddCoset "The left coset `a+s` for an element `a : α`\nand a subset `s : set α`"]
@@ -55,7 +55,7 @@ localized [Coset] infixl:70 " +r " => RightAddCoset
 
 section CosetMul
 
-variable[Mul α]
+variable [Mul α]
 
 @[toAdditive mem_left_add_coset]
 theorem mem_left_coset {s : Set α} {x : α} (a : α) (hxS : x ∈ s) : (a*x) ∈ a *l s :=
@@ -87,7 +87,7 @@ end CosetMul
 
 section CosetSemigroup
 
-variable[Semigroupₓ α]
+variable [Semigroupₓ α]
 
 @[simp, toAdditive left_add_coset_assoc]
 theorem left_coset_assoc (s : Set α) (a b : α) : a *l (b *l s) = (a*b) *l s :=
@@ -108,7 +108,7 @@ end CosetSemigroup
 
 section CosetMonoid
 
-variable[Monoidₓ α](s : Set α)
+variable [Monoidₓ α] (s : Set α)
 
 @[simp, toAdditive zero_left_add_coset]
 theorem one_left_coset : 1 *l s = s :=
@@ -128,7 +128,7 @@ section CosetSubmonoid
 
 open Submonoid
 
-variable[Monoidₓ α](s : Submonoid α)
+variable [Monoidₓ α] (s : Submonoid α)
 
 @[toAdditive mem_own_left_add_coset]
 theorem mem_own_left_coset (a : α) : a ∈ a *l s :=
@@ -156,7 +156,7 @@ end CosetSubmonoid
 
 section CosetGroup
 
-variable[Groupₓ α]{s : Set α}{x : α}
+variable [Groupₓ α] {s : Set α} {x : α}
 
 @[toAdditive mem_left_add_coset_iff]
 theorem mem_left_coset_iff (a : α) : x ∈ a *l s ↔ (a⁻¹*x) ∈ s :=
@@ -186,7 +186,7 @@ section CosetSubgroup
 
 open Subgroup
 
-variable[Groupₓ α](s : Subgroup α)
+variable [Groupₓ α] (s : Subgroup α)
 
 @[toAdditive left_add_coset_mem_left_add_coset]
 theorem left_coset_mem_left_coset {a : α} (ha : a ∈ s) : a *l s = s :=
@@ -259,7 +259,7 @@ run_cmd
 
 namespace QuotientGroup
 
-variable[Groupₓ α](s : Subgroup α)
+variable [Groupₓ α] (s : Subgroup α)
 
 /-- The equivalence relation corresponding to the partition of a group by left cosets
 of a subgroup.-/
@@ -308,7 +308,7 @@ end QuotientGroup
 
 namespace QuotientGroup
 
-variable[Groupₓ α]{s : Subgroup α}
+variable [Groupₓ α] {s : Subgroup α}
 
 @[toAdditive]
 instance Fintype [Fintype α] (s : Subgroup α) [DecidableRel (left_rel s).R] : Fintype (QuotientGroup.Quotient s) :=
@@ -324,7 +324,7 @@ theorem induction_on {C : Quotientₓ s → Prop} (x : Quotientₓ s) (H : ∀ z
   Quotientₓ.induction_on' x H
 
 @[toAdditive]
-instance  : CoeTₓ α (Quotientₓ s) :=
+instance : CoeTₓ α (Quotientₓ s) :=
   ⟨mk⟩
 
 @[elab_as_eliminator, toAdditive]
@@ -336,7 +336,7 @@ theorem forall_coe {C : Quotientₓ s → Prop} : (∀ x : Quotientₓ s, C x) �
   ⟨fun hx x => hx _, Quot.ind⟩
 
 @[toAdditive]
-instance  (s : Subgroup α) : Inhabited (Quotientₓ s) :=
+instance (s : Subgroup α) : Inhabited (Quotientₓ s) :=
   ⟨((1 : α) : Quotientₓ s)⟩
 
 @[toAdditive QuotientAddGroup.eq]
@@ -351,7 +351,7 @@ theorem eq' {a b : α} : (mk a : Quotientₓ s) = mk b ↔ (a⁻¹*b) ∈ s :=
 theorem out_eq' (a : Quotientₓ s) : mk a.out' = a :=
   Quotientₓ.out_eq' a
 
-variable(s)
+variable (s)
 
 @[toAdditive QuotientAddGroup.mk_out'_eq_mul]
 theorem mk_out'_eq_mul (g : α) : ∃ h : s, (mk g : Quotientₓ s).out' = g*h :=
@@ -359,7 +359,7 @@ theorem mk_out'_eq_mul (g : α) : ∃ h : s, (mk g : Quotientₓ s).out' = g*h :
     by 
       rw [s.coe_mk, mul_inv_cancel_left]⟩
 
-variable{s}
+variable {s}
 
 @[toAdditive QuotientAddGroup.mk_mul_of_mem]
 theorem mk_mul_of_mem (g₁ g₂ : α) (hg₂ : g₂ ∈ s) : (mk (g₁*g₂) : Quotientₓ s) = mk g₁ :=
@@ -396,7 +396,7 @@ namespace Subgroup
 
 open QuotientGroup
 
-variable[Groupₓ α]{s : Subgroup α}
+variable [Groupₓ α] {s : Subgroup α}
 
 /-- The natural bijection between a left coset `g * s` and `s`. -/
 @[toAdditive "The natural bijection between the cosets `g + s` and `s`."]
@@ -441,7 +441,7 @@ noncomputable def group_equiv_quotient_times_subgroup : α ≃ Quotientₓ s × 
     _ ≃ Quotientₓ s × s := Equiv.sigmaEquivProd _ _
     
 
-variable{t : Subgroup α}
+variable {t : Subgroup α}
 
 -- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `H ≤ K`, then `G/H ≃ G/K × K/H` constructively, using the provided right inverse
@@ -501,7 +501,7 @@ theorem card_quotient_dvd_card [Fintype α] (s : Subgroup α) [DecidablePred fun
 
 open Fintype
 
-variable{H : Type _}[Groupₓ H]
+variable {H : Type _} [Groupₓ H]
 
 theorem card_dvd_of_injective [Fintype α] [Fintype H] (f : α →* H) (hf : Function.Injective f) : card α ∣ card H :=
   by 
@@ -527,7 +527,7 @@ end Subgroup
 
 namespace QuotientGroup
 
-variable[Groupₓ α]
+variable [Groupₓ α]
 
 /-- If `s` is a subgroup of the group `α`, and `t` is a subset of `α/s`, then
 there is a (typically non-canonical) bijection between the preimage of `t` in

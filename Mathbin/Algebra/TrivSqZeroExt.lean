@@ -32,7 +32,7 @@ namespace TrivSqZeroExt
 
 section Basic
 
-variable{R : Type u}{M : Type v}
+variable {R : Type u} {M : Type v}
 
 /-- The canonical inclusion `R → triv_sq_zero_ext R M`. -/
 def inl [HasZero M] (r : R) : tsze R M :=
@@ -80,9 +80,9 @@ end Basic
 
 section Add
 
-variable(R : Type u)(M : Type v)
+variable (R : Type u) (M : Type v)
 
-instance  [HasZero R] [HasZero M] : HasZero (tsze R M) :=
+instance [HasZero R] [HasZero M] : HasZero (tsze R M) :=
   Prod.hasZero
 
 @[simp]
@@ -101,7 +101,7 @@ theorem inl_zero [HasZero R] [HasZero M] : (inl 0 : tsze R M) = 0 :=
 theorem inr_zero [HasZero R] [HasZero M] : (inr 0 : tsze R M) = 0 :=
   rfl
 
-instance  [Add R] [Add M] : Add (tsze R M) :=
+instance [Add R] [Add M] : Add (tsze R M) :=
   Prod.hasAdd
 
 @[simp]
@@ -112,7 +112,7 @@ theorem fst_add [Add R] [Add M] (x₁ x₂ : tsze R M) : (x₁+x₂).fst = x₁.
 theorem snd_add [Add R] [Add M] (x₁ x₂ : tsze R M) : (x₁+x₂).snd = x₁.snd+x₂.snd :=
   rfl
 
-instance  [Neg R] [Neg M] : Neg (tsze R M) :=
+instance [Neg R] [Neg M] : Neg (tsze R M) :=
   Prod.hasNeg
 
 @[simp]
@@ -123,10 +123,10 @@ theorem fst_neg [Neg R] [Neg M] (x : tsze R M) : (-x).fst = -x.fst :=
 theorem snd_neg [Neg R] [Neg M] (x : tsze R M) : (-x).snd = -x.snd :=
   rfl
 
-instance  [AddSemigroupₓ R] [AddSemigroupₓ M] : AddSemigroupₓ (tsze R M) :=
+instance [AddSemigroupₓ R] [AddSemigroupₓ M] : AddSemigroupₓ (tsze R M) :=
   Prod.addSemigroup
 
-instance  [AddMonoidₓ R] [AddMonoidₓ M] : AddMonoidₓ (tsze R M) :=
+instance [AddMonoidₓ R] [AddMonoidₓ M] : AddMonoidₓ (tsze R M) :=
   Prod.addMonoid
 
 @[simp]
@@ -140,7 +140,7 @@ theorem inr_add [AddMonoidₓ R] [Add M] (m₁ m₂ : M) : (inr (m₁+m₂) : ts
 theorem inl_fst_add_inr_snd_eq [AddMonoidₓ R] [AddMonoidₓ M] (x : tsze R M) : (inl x.fst+inr x.snd) = x :=
   ext (add_zeroₓ x.1) (zero_addₓ x.2)
 
-instance  [AddGroupₓ R] [AddGroupₓ M] : AddGroupₓ (tsze R M) :=
+instance [AddGroupₓ R] [AddGroupₓ M] : AddGroupₓ (tsze R M) :=
   Prod.addGroup
 
 @[simp]
@@ -151,22 +151,22 @@ theorem inl_neg [Neg R] [AddGroupₓ M] (r : R) : (inl (-r) : tsze R M) = -inl r
 theorem inr_neg [AddGroupₓ R] [Neg M] (m : M) : (inr (-m) : tsze R M) = -inr m :=
   ext neg_zero.symm rfl
 
-instance  [AddCommSemigroupₓ R] [AddCommSemigroupₓ M] : AddCommSemigroupₓ (tsze R M) :=
+instance [AddCommSemigroupₓ R] [AddCommSemigroupₓ M] : AddCommSemigroupₓ (tsze R M) :=
   Prod.addCommSemigroup
 
-instance  [AddCommMonoidₓ R] [AddCommMonoidₓ M] : AddCommMonoidₓ (tsze R M) :=
+instance [AddCommMonoidₓ R] [AddCommMonoidₓ M] : AddCommMonoidₓ (tsze R M) :=
   Prod.addCommMonoid
 
-instance  [AddCommGroupₓ R] [AddCommGroupₓ M] : AddCommGroupₓ (tsze R M) :=
+instance [AddCommGroupₓ R] [AddCommGroupₓ M] : AddCommGroupₓ (tsze R M) :=
   Prod.addCommGroup
 
 end Add
 
 section Smul
 
-variable(R : Type u)(M : Type v)
+variable (R : Type u) (M : Type v)
 
-instance  [Mul R] [HasScalar R M] : HasScalar R (tsze R M) :=
+instance [Mul R] [HasScalar R M] : HasScalar R (tsze R M) :=
   ⟨fun r x => (r*x.1, r • x.2)⟩
 
 @[simp]
@@ -181,15 +181,15 @@ theorem snd_smul [Mul R] [HasScalar R M] (r : R) (x : tsze R M) : (r • x).snd 
 theorem inr_smul [MulZeroClass R] [HasScalar R M] (r : R) (m : M) : (inr (r • m) : tsze R M) = r • inr m :=
   ext (mul_zero _).symm rfl
 
-instance  [Monoidₓ R] [MulAction R M] : MulAction R (tsze R M) :=
+instance [Monoidₓ R] [MulAction R M] : MulAction R (tsze R M) :=
   { one_smul := fun x => ext (one_mulₓ x.1) (one_smul R x.2),
     mul_smul := fun r₁ r₂ x => ext (mul_assocₓ r₁ r₂ x.1) (mul_smul r₁ r₂ x.2) }
 
-instance  [Semiringₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (tsze R M) :=
+instance [Semiringₓ R] [AddMonoidₓ M] [DistribMulAction R M] : DistribMulAction R (tsze R M) :=
   { smul_add := fun r x₁ x₂ => ext (mul_addₓ r x₁.1 x₂.1) (smul_add r x₁.2 x₂.2),
     smul_zero := fun r => ext (mul_zero r) (smul_zero r) }
 
-instance  [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (tsze R M) :=
+instance [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : Module R (tsze R M) :=
   { add_smul := fun r₁ r₂ x => ext (add_mulₓ r₁ r₂ x.1) (add_smul r₁ r₂ x.2),
     zero_smul := fun x => ext (zero_mul x.1) (zero_smul R x.2) }
 
@@ -202,9 +202,9 @@ end Smul
 
 section Mul
 
-variable(R : Type u)(M : Type v)
+variable (R : Type u) (M : Type v)
 
-instance  [HasOne R] [HasZero M] : HasOne (tsze R M) :=
+instance [HasOne R] [HasZero M] : HasOne (tsze R M) :=
   ⟨(1, 0)⟩
 
 @[simp]
@@ -219,7 +219,7 @@ theorem snd_one [HasOne R] [HasZero M] : (1 : tsze R M).snd = 0 :=
 theorem inl_one [HasOne R] [HasZero M] : (inl 1 : tsze R M) = 1 :=
   rfl
 
-instance  [Mul R] [Add M] [HasScalar R M] : Mul (tsze R M) :=
+instance [Mul R] [Add M] [HasScalar R M] : Mul (tsze R M) :=
   ⟨fun x y => (x.1*y.1, (x.1 • y.2)+y.1 • x.2)⟩
 
 @[simp]
@@ -259,7 +259,7 @@ theorem inr_mul_inr [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (m₁ m₂
     show (((0 : R) • m₂)+(0 : R) • m₁) = 0 by 
       rw [zero_smul, zero_addₓ, zero_smul]
 
-instance  [CommMonoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : Monoidₓ (tsze R M) :=
+instance [CommMonoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : Monoidₓ (tsze R M) :=
   { TrivSqZeroExt.hasOne R M, TrivSqZeroExt.hasMul R M with
     mul_assoc :=
       fun x y z =>
@@ -277,7 +277,7 @@ instance  [CommMonoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] : Monoidₓ 
           show ((x.1 • 0 : M)+(1 : R) • x.2) = x.2by 
             rw [smul_zero, zero_addₓ, one_smul] }
 
-instance  [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] : CommSemiringₓ (tsze R M) :=
+instance [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] : CommSemiringₓ (tsze R M) :=
   { TrivSqZeroExt.monoid R M, TrivSqZeroExt.addCommMonoid R M with
     mul_comm :=
       fun x₁ x₂ =>
@@ -312,9 +312,9 @@ end Mul
 
 section Algebra
 
-variable(R : Type u)(M : Type v)
+variable (R : Type u) (M : Type v)
 
-instance  [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] : Algebra R (tsze R M) :=
+instance [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] : Algebra R (tsze R M) :=
   { TrivSqZeroExt.module R M, TrivSqZeroExt.inlHom R M with commutes' := fun r x => mul_commₓ _ _,
     smul_def' :=
       fun r x =>

@@ -19,13 +19,13 @@ open IsROrC Real Filter
 
 open_locale BigOperators Classical TopologicalSpace
 
-variable{𝕜 E F : Type _}[IsROrC 𝕜]
+variable {𝕜 E F : Type _} [IsROrC 𝕜]
 
-variable[InnerProductSpace 𝕜 E][InnerProductSpace ℝ F]
+variable [InnerProductSpace 𝕜 E] [InnerProductSpace ℝ F]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
-variable[NormedSpace ℝ E][IsScalarTower ℝ 𝕜 E]
+variable [NormedSpace ℝ E] [IsScalarTower ℝ 𝕜 E]
 
 /-- Derivative of the inner product. -/
 def fderivInnerClm (p : E × E) : E × E →L[ℝ] 𝕜 :=
@@ -44,7 +44,8 @@ theorem times_cont_diff_at_inner {p : E × E} {n} : TimesContDiffAt ℝ n (fun p
 theorem differentiable_inner : Differentiable ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
   is_bounded_bilinear_map_inner.DifferentiableAt
 
-variable{G : Type _}[NormedGroup G][NormedSpace ℝ G]{f g : G → E}{f' g' : G →L[ℝ] E}{s : Set G}{x : G}{n : WithTop ℕ}
+variable {G : Type _} [NormedGroup G] [NormedSpace ℝ G] {f g : G → E} {f' g' : G →L[ℝ] E} {s : Set G} {x : G}
+  {n : WithTop ℕ}
 
 include 𝕜
 

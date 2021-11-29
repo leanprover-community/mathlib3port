@@ -11,7 +11,7 @@ indicator, characteristic, filter
 -/
 
 
-variable{α β M E : Type _}
+variable {α β M E : Type _}
 
 open Set Filter Classical
 
@@ -19,7 +19,7 @@ open_locale Filter Classical
 
 section HasZero
 
-variable[HasZero M]{s t : Set α}{f g : α → M}{a : α}{l : Filter α}
+variable [HasZero M] {s t : Set α} {f g : α → M} {a : α} {l : Filter α}
 
 theorem indicator_eventually_eq (hf : f =ᶠ[l⊓𝓟 s] g) (hs : s =ᶠ[l] t) : indicator s f =ᶠ[l] indicator t g :=
   (eventually_inf_principal.1 hf).mp$
@@ -37,7 +37,7 @@ end HasZero
 
 section AddMonoidₓ
 
-variable[AddMonoidₓ M]{s t : Set α}{f g : α → M}{a : α}{l : Filter α}
+variable [AddMonoidₓ M] {s t : Set α} {f g : α → M} {a : α} {l : Filter α}
 
 theorem indicator_union_eventually_eq (h : ∀ᶠa in l, a ∉ s ∩ t) :
   indicator (s ∪ t) f =ᶠ[l] indicator s f+indicator t f :=
@@ -47,7 +47,7 @@ end AddMonoidₓ
 
 section Order
 
-variable[HasZero β][Preorderₓ β]{s t : Set α}{f g : α → β}{a : α}{l : Filter α}
+variable [HasZero β] [Preorderₓ β] {s t : Set α} {f g : α → β} {a : α} {l : Filter α}
 
 theorem indicator_eventually_le_indicator (h : f ≤ᶠ[l⊓𝓟 s] g) : indicator s f ≤ᶠ[l] indicator s g :=
   (eventually_inf_principal.1 h).mono$ fun a h => indicator_rel_indicator (le_reflₓ _) h

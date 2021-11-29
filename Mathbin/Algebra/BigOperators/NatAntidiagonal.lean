@@ -10,7 +10,7 @@ This file contains theorems relevant to big operators over `finset.nat.antidiago
 
 open_locale BigOperators
 
-variable{M N : Type _}[CommMonoidₓ M][AddCommMonoidₓ N]
+variable {M N : Type _} [CommMonoidₓ M] [AddCommMonoidₓ N]
 
 namespace Finset
 

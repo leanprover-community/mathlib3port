@@ -39,11 +39,11 @@ open Function Set Filter
 
 namespace BoxIntegral
 
-variable{ι M : Type _}{n : ℕ}
+variable {ι M : Type _} {n : ℕ}
 
 namespace Box
 
-variable{I : box ι}{i : ι}{x : ℝ}{y : ι → ℝ}
+variable {I : box ι} {i : ι} {x : ℝ} {y : ι → ℝ}
 
 /-- Given a box `I` and `x ∈ (I.lower i, I.upper i)`, the hyperplane `{y : ι → ℝ | y i = x}` splits
 `I` into two boxes. `box_integral.box.split_lower I i x` is the box `I ∩ {y | y i ≤ x}`
@@ -148,7 +148,7 @@ end Box
 
 namespace Prepartition
 
-variable{I J : box ι}{i : ι}{x : ℝ}
+variable {I J : box ι} {i : ι} {x : ℝ}
 
 /-- The partition of `I : box ι` into the boxes `I ∩ {y | y ≤ x i}` and `I ∩ {y | x i < y}`.
 One of these boxes can be empty, then this partition is just the single-box partition `⊤`. -/
@@ -298,7 +298,7 @@ end
 
 section Fintype
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 /-- Let `s` be a finite set of boxes in `ℝⁿ = ι → ℝ`. Then there exists a finite set `t₀` of
 hyperplanes (namely, the set of all hyperfaces of boxes in `s`) such that for any `t ⊇ t₀`

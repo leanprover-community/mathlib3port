@@ -21,7 +21,7 @@ open Nat
 
 namespace List
 
-variable{α : Type u}
+variable {α : Type u}
 
 @[simp]
 theorem length_range' : ∀ s n : ℕ, length (range' s n) = n

@@ -34,15 +34,15 @@ open Polynomial Matrix
 
 open_locale BigOperators
 
-variable{R : Type u}[CommRingₓ R]
+variable {R : Type u} [CommRingₓ R]
 
-variable{n G : Type v}[DecidableEq n][Fintype n]
+variable {n G : Type v} [DecidableEq n] [Fintype n]
 
-variable{α β : Type v}[DecidableEq α]
+variable {α β : Type v} [DecidableEq α]
 
 open Finset
 
-variable{M : Matrix n n R}
+variable {M : Matrix n n R}
 
 theorem charmatrix_apply_nat_degree [Nontrivial R] (i j : n) : (charmatrix M i j).natDegree = ite (i = j) 1 0 :=
   by 
@@ -54,7 +54,7 @@ theorem charmatrix_apply_nat_degree_le (i j : n) : (charmatrix M i j).natDegree 
 
 namespace Matrix
 
-variable(M)
+variable (M)
 
 theorem charpoly_sub_diagonal_degree_lt : (M.charpoly - ∏i : n, X - C (M i i)).degree < «expr↑ » (Fintype.card n - 1) :=
   by 
@@ -210,7 +210,7 @@ theorem det_eq_sign_charpoly_coeff (M : Matrix n n R) : M.det = (-1^Fintype.card
 
 end Matrix
 
-variable{p : ℕ}[Fact p.prime]
+variable {p : ℕ} [Fact p.prime]
 
 theorem mat_poly_equiv_eq_X_pow_sub_C {K : Type _} (k : ℕ) [Field K] (M : Matrix n n K) :
   matPolyEquiv ((expand K k : Polynomial K →+* Polynomial K).mapMatrix (charmatrix (M^k))) = (X^k) - C (M^k) :=

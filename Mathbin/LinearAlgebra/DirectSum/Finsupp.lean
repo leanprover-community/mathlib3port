@@ -18,7 +18,7 @@ open_locale DirectSum
 
 open Set LinearMap Submodule
 
-variable{R : Type u}{M : Type v}{N : Type w}[Ringₓ R][AddCommGroupₓ M][Module R M][AddCommGroupₓ N][Module R N]
+variable {R : Type u} {M : Type v} {N : Type w} [Ringₓ R] [AddCommGroupₓ M] [Module R M] [AddCommGroupₓ N] [Module R N]
 
 section TensorProduct
 
@@ -70,7 +70,7 @@ theorem finsupp_tensor_finsupp_symm_single (R M N ι κ : Sort _) [CommRingₓ R
   (finsuppTensorFinsupp R M N ι κ).symm (Finsupp.single i (m ⊗ₜ n)) = Finsupp.single i.1 m ⊗ₜ Finsupp.single i.2 n :=
   Prod.casesOn i$ fun i k => (LinearEquiv.symm_apply_eq _).2 (finsupp_tensor_finsupp_single _ _ _ _ _ _ _ _ _).symm
 
-variable(S : Type _)[CommRingₓ S](α β : Type _)
+variable (S : Type _) [CommRingₓ S] (α β : Type _)
 
 /--
 A variant of `finsupp_tensor_finsupp` where both modules are the ground ring.

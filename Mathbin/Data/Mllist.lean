@@ -23,13 +23,13 @@ unsafe inductive mllist (m : Type u → Type u) (α : Type u) : Type u
 
 namespace Mllist
 
-variable{α β : Type u}{m : Type u → Type u}
+variable {α β : Type u} {m : Type u → Type u}
 
 /-- Construct an `mllist` recursively. -/
 unsafe def fix [Alternativeₓ m] (f : α → m α) : α → mllist m α
 | x => cons$ ((fun a => (some x, fix a)) <$> f x <|> pure (some x, nil))
 
-variable[Monadₓ m]
+variable [Monadₓ m]
 
 /-- Repeatedly apply a function `f : α → m (α × list β)` to an initial `a : α`,
 accumulating the elements of the resulting `list β` as a single monadic lazy list.

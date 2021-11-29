@@ -31,9 +31,9 @@ open TopologicalSpace.Opens
 
 namespace Top
 
-variable{C : Type u}[category.{v} C][has_products C]
+variable {C : Type u} [category.{v} C] [has_products C]
 
-variable{X : Top.{v}}(F : presheaf C X){ι : Type v}(U : ι → opens X)
+variable {X : Top.{v}} (F : presheaf C X) {ι : Type v} (U : ι → opens X)
 
 namespace Presheaf
 
@@ -116,7 +116,7 @@ theorem fork_π_app_walking_parallel_pair_zero : (fork F U).π.app walking_paral
 theorem fork_π_app_walking_parallel_pair_one : (fork F U).π.app walking_parallel_pair.one = res F U ≫ left_res F U :=
   rfl
 
-variable{F}{G : presheaf C X}
+variable {F} {G : presheaf C X}
 
 /-- Isomorphic presheaves have isomorphic `pi_opens` for any cover `U`. -/
 @[simp]
@@ -166,9 +166,9 @@ def fork.iso_of_iso (α : F ≅ G) : fork F U ≅ (cones.postcompose (diagram.is
 
 section OpenEmbedding
 
-variable{V : Top.{v}}{j : V ⟶ X}(oe : OpenEmbedding j)
+variable {V : Top.{v}} {j : V ⟶ X} (oe : OpenEmbedding j)
 
-variable(𝒰 : ι → opens V)
+variable (𝒰 : ι → opens V)
 
 /--
 Push forward a cover along an open embedding.

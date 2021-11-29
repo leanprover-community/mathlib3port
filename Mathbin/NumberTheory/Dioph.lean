@@ -124,7 +124,7 @@ section
 
 parameter {α : Type u}
 
-instance  : CoeFun (Poly α) fun _ => (α → ℕ) → ℤ :=
+instance : CoeFun (Poly α) fun _ => (α → ℕ) → ℤ :=
   ⟨fun f => f.1⟩
 
 /-- The underlying function of a `poly` is a polynomial -/
@@ -165,7 +165,7 @@ theorem const_eval n x : const n x = n :=
 def zero : Poly α :=
   const 0
 
-instance  : HasZero (Poly α) :=
+instance : HasZero (Poly α) :=
   ⟨Poly.zero⟩
 
 @[simp]
@@ -176,7 +176,7 @@ theorem zero_eval x : (0 : Poly α) x = 0 :=
 def one : Poly α :=
   const 1
 
-instance  : HasOne (Poly α) :=
+instance : HasOne (Poly α) :=
   ⟨Poly.one⟩
 
 @[simp]
@@ -187,7 +187,7 @@ theorem one_eval x : (1 : Poly α) x = 1 :=
 def sub : Poly α → Poly α → Poly α
 | ⟨f, pf⟩, ⟨g, pg⟩ => ⟨_, IsPoly.sub pf pg⟩
 
-instance  : Sub (Poly α) :=
+instance : Sub (Poly α) :=
   ⟨Poly.sub⟩
 
 @[simp]
@@ -198,7 +198,7 @@ theorem sub_eval : ∀ f g x, (f - g : Poly α) x = f x - g x
 def neg (f : Poly α) : Poly α :=
   0 - f
 
-instance  : Neg (Poly α) :=
+instance : Neg (Poly α) :=
   ⟨Poly.neg⟩
 
 @[simp]
@@ -214,7 +214,7 @@ def add : Poly α → Poly α → Poly α
       show f x - (0 - g x) = f x+g x by 
         simp 
 
-instance  : Add (Poly α) :=
+instance : Add (Poly α) :=
   ⟨Poly.add⟩
 
 @[simp]
@@ -225,14 +225,14 @@ theorem add_eval : ∀ f g x, (f+g : Poly α) x = f x+g x
 def mul : Poly α → Poly α → Poly α
 | ⟨f, pf⟩, ⟨g, pg⟩ => ⟨_, IsPoly.mul pf pg⟩
 
-instance  : Mul (Poly α) :=
+instance : Mul (Poly α) :=
   ⟨Poly.mul⟩
 
 @[simp]
 theorem mul_eval : ∀ f g x, (f*g : Poly α) x = f x*g x
 | ⟨f, pf⟩, ⟨g, pg⟩, x => rfl
 
-instance  : CommRingₓ (Poly α) :=
+instance : CommRingₓ (Poly α) :=
   by 
     refineStruct
         { add := (·+· : Poly α → Poly α → Poly α), zero := 0, neg := (Neg.neg : Poly α → Poly α), mul := ·*·, one := 1,
@@ -340,7 +340,7 @@ namespace Dioph
 
 section 
 
-variable{α β γ : Type u}
+variable {α β γ : Type u}
 
 theorem ext {S S' : Set (α → ℕ)} (d : Dioph S) (H : ∀ v, S v ↔ S' v) : Dioph S' :=
   Eq.ndrec d$ show S = S' from Set.ext H
@@ -595,7 +595,7 @@ end
 
 section 
 
-variable{α β γ : Type}
+variable {α β γ : Type}
 
 open Vector3
 
@@ -704,7 +704,7 @@ theorem const_dioph (n : ℕ) : dioph_fn (const (α → ℕ) n) :=
 
 localized [Dioph] prefix:100 "D." => Dioph.const_dioph
 
-variable{f g : (α → ℕ) → ℕ}(df : dioph_fn f)(dg : dioph_fn g)
+variable {f g : (α → ℕ) → ℕ} (df : dioph_fn f) (dg : dioph_fn g)
 
 include df dg
 

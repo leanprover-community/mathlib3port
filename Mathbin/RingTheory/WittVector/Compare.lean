@@ -25,7 +25,7 @@ of the inverse limit of `zmod (p^n)`.
 
 noncomputable theory
 
-variable{p : ℕ}[hp : Fact p.prime]
+variable {p : ℕ} [hp : Fact p.prime]
 
 local notation "𝕎" => WittVector p
 
@@ -33,7 +33,7 @@ include hp
 
 namespace TruncatedWittVector
 
-variable(p)(n : ℕ)(R : Type _)[CommRingₓ R]
+variable (p) (n : ℕ) (R : Type _) [CommRingₓ R]
 
 -- error in RingTheory.WittVector.Compare: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eq_of_le_of_cast_pow_eq_zero
@@ -57,7 +57,7 @@ end
 
 section Iso
 
-variable(p n){R}
+variable (p n) {R}
 
 theorem card_zmod : Fintype.card (TruncatedWittVector p n (Zmod p)) = (p^n) :=
   by 
@@ -142,7 +142,7 @@ namespace WittVector
 
 open TruncatedWittVector
 
-variable(p)
+variable (p)
 
 /--
 `to_zmod_pow` is a family of compatible ring homs. We get this family by composing

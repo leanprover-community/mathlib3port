@@ -25,11 +25,11 @@ open HasInv Set Function MeasureTheory.Measure
 
 namespace MeasureTheory
 
-variable{G : Type _}
+variable {G : Type _}
 
 section 
 
-variable[MeasurableSpace G][Mul G]
+variable [MeasurableSpace G] [Mul G]
 
 /-- A measure `μ` on a topological group is left invariant
   if the measure of left translations of a set are equal to the measure of the set itself.
@@ -67,7 +67,7 @@ end
 
 namespace Measureₓ
 
-variable[MeasurableSpace G]
+variable [MeasurableSpace G]
 
 @[toAdditive]
 theorem map_mul_left_eq_self [TopologicalSpace G] [Mul G] [HasContinuousMul G] [BorelSpace G] {μ : Measureₓ G} :
@@ -111,7 +111,7 @@ theorem map_mul_right_eq_self [TopologicalSpace G] [Mul G] [HasContinuousMul G] 
 protected def inv [HasInv G] (μ : Measureₓ G) : Measureₓ G :=
   measure.map inv μ
 
-variable[Groupₓ G][TopologicalSpace G][TopologicalGroup G][BorelSpace G]
+variable [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G] [BorelSpace G]
 
 @[toAdditive]
 theorem inv_apply (μ : Measureₓ G) (s : Set G) : μ.inv s = μ (s⁻¹) :=
@@ -121,7 +121,7 @@ theorem inv_apply (μ : Measureₓ G) (s : Set G) : μ.inv s = μ (s⁻¹) :=
 protected theorem inv_invₓ (μ : Measureₓ G) : μ.inv.inv = μ :=
   (MeasurableEquiv.inv G).map_symm_map
 
-variable{μ : Measureₓ G}
+variable {μ : Measureₓ G}
 
 @[toAdditive]
 instance regular.inv [T2Space G] [regular μ] : regular μ.inv :=
@@ -131,7 +131,7 @@ end Measureₓ
 
 section Inv
 
-variable[MeasurableSpace G][Groupₓ G][TopologicalSpace G][TopologicalGroup G][BorelSpace G]{μ : Measureₓ G}
+variable [MeasurableSpace G] [Groupₓ G] [TopologicalSpace G] [TopologicalGroup G] [BorelSpace G] {μ : Measureₓ G}
 
 @[simp, toAdditive]
 theorem regular_inv_iff [T2Space G] : μ.inv.regular ↔ μ.regular :=
@@ -187,9 +187,9 @@ end Inv
 
 section Groupₓ
 
-variable[MeasurableSpace G][TopologicalSpace G][BorelSpace G]{μ : Measureₓ G}
+variable [MeasurableSpace G] [TopologicalSpace G] [BorelSpace G] {μ : Measureₓ G}
 
-variable[Groupₓ G][TopologicalGroup G]
+variable [Groupₓ G] [TopologicalGroup G]
 
 /-- If a left-invariant measure gives positive mass to a compact set, then
 it gives positive mass to any open set. -/
@@ -306,9 +306,9 @@ end Groupₓ
 
 section Integration
 
-variable[MeasurableSpace G][TopologicalSpace G][BorelSpace G]{μ : Measureₓ G}
+variable [MeasurableSpace G] [TopologicalSpace G] [BorelSpace G] {μ : Measureₓ G}
 
-variable[Groupₓ G][HasContinuousMul G]
+variable [Groupₓ G] [HasContinuousMul G]
 
 open Measureₓ
 
@@ -352,14 +352,15 @@ namespace Measureₓ
 
 /-- A measure on a group is a Haar measure if it is left-invariant, and gives finite mass to compact
 sets and positive mass to open sets. -/
-class is_haar_measure{G : Type _}[Groupₓ G][TopologicalSpace G][MeasurableSpace G](μ : Measureₓ G) : Prop where 
+class is_haar_measure {G : Type _} [Groupₓ G] [TopologicalSpace G] [MeasurableSpace G] (μ : Measureₓ G) : Prop where 
   left_invariant : is_mul_left_invariant μ 
   compact_lt_top : ∀ K : Set G, IsCompact K → μ K < ∞
   open_pos : ∀ U : Set G, IsOpen U → U.nonempty → 0 < μ U
 
 /-- A measure on an additive group is an additive Haar measure if it is left-invariant, and gives
 finite mass to compact sets and positive mass to open sets. -/
-class is_add_haar_measure{G : Type _}[AddGroupₓ G][TopologicalSpace G][MeasurableSpace G](μ : Measureₓ G) : Prop where 
+class is_add_haar_measure {G : Type _} [AddGroupₓ G] [TopologicalSpace G] [MeasurableSpace G] (μ : Measureₓ G) :
+  Prop where 
   add_left_invariant : is_add_left_invariant μ 
   compact_lt_top : ∀ K : Set G, IsCompact K → μ K < ∞
   open_pos : ∀ U : Set G, IsOpen U → U.nonempty → 0 < μ U
@@ -368,7 +369,7 @@ attribute [toAdditive] is_haar_measure
 
 section 
 
-variable[Groupₓ G][MeasurableSpace G][TopologicalSpace G](μ : Measureₓ G)[is_haar_measure μ]
+variable [Groupₓ G] [MeasurableSpace G] [TopologicalSpace G] (μ : Measureₓ G) [is_haar_measure μ]
 
 @[toAdditive]
 theorem _root_.is_compact.haar_lt_top {K : Set G} (hK : IsCompact K) : μ K < ∞ :=
@@ -471,7 +472,7 @@ theorem is_haar_measure_map
 
 /-- A Haar measure on a sigma-compact space is sigma-finite. -/
 @[toAdditive]
-instance (priority := 100)is_haar_measure.sigma_finite {G : Type _} [Groupₓ G] [MeasurableSpace G] [TopologicalSpace G]
+instance (priority := 100) is_haar_measure.sigma_finite {G : Type _} [Groupₓ G] [MeasurableSpace G] [TopologicalSpace G]
   [SigmaCompactSpace G] (μ : Measureₓ G) [μ.is_haar_measure] : sigma_finite μ :=
   ⟨⟨{ Set := CompactCovering G, set_mem := fun n => mem_univ _,
         Finite := fun n => IsCompact.haar_lt_top μ$ is_compact_compact_covering G n,
@@ -532,7 +533,7 @@ begin
   exact [expr ge_of_tendsto' J I]
 end
 
-example  {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [Nontrivial E] [FiniteDimensional ℝ E] [MeasurableSpace E]
+example {E : Type _} [NormedGroup E] [NormedSpace ℝ E] [Nontrivial E] [FiniteDimensional ℝ E] [MeasurableSpace E]
   [BorelSpace E] (μ : Measureₓ E) [is_add_haar_measure μ] : has_no_atoms μ :=
   by 
     infer_instance

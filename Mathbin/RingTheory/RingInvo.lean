@@ -21,22 +21,22 @@ Ring involution
 -/
 
 
-variable(R : Type _)
+variable (R : Type _)
 
 /-- A ring involution -/
-structure RingInvo[Semiringₓ R] extends R ≃+* «expr ᵐᵒᵖ» R where 
+structure RingInvo [Semiringₓ R] extends R ≃+* «expr ᵐᵒᵖ» R where 
   involution' : ∀ x, (to_fun (to_fun x).unop).unop = x
 
 namespace RingInvo
 
-variable{R}[Semiringₓ R]
+variable {R} [Semiringₓ R]
 
 /-- Construct a ring involution from a ring homomorphism. -/
 def mk' (f : R →+* «expr ᵐᵒᵖ» R) (involution : ∀ r, (f (f r).unop).unop = r) : RingInvo R :=
   { f with invFun := fun r => (f r.unop).unop, left_inv := fun r => involution r,
     right_inv := fun r => MulOpposite.unop_injective$ involution _, involution' := involution }
 
-instance  : CoeFun (RingInvo R) fun _ => R → «expr ᵐᵒᵖ» R :=
+instance : CoeFun (RingInvo R) fun _ => R → «expr ᵐᵒᵖ» R :=
   ⟨fun f => f.to_ring_equiv.to_fun⟩
 
 @[simp]
@@ -64,13 +64,13 @@ open RingInvo
 
 section CommRingₓ
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 /-- The identity function of a `comm_ring` is a ring involution. -/
 protected def RingInvo.id : RingInvo R :=
   { RingEquiv.toOpposite R with involution' := fun r => rfl }
 
-instance  : Inhabited (RingInvo R) :=
+instance : Inhabited (RingInvo R) :=
   ⟨RingInvo.id _⟩
 
 end CommRingₓ

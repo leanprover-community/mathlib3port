@@ -57,12 +57,12 @@ open_locale BigOperators
 
 universe u v w
 
-variable{K : Type u}{L : Type v}{M : Type w}[Field K][Field L][Field M]
+variable {K : Type u} {L : Type v} {M : Type w} [Field K] [Field L] [Field M]
 
 /-- `subfield R` is the type of subfields of `R`. A subfield of `R` is a subset `s` that is a
   multiplicative submonoid and an additive subgroup. Note in particular that it shares the
   same 0 and 1 as R. -/
-structure Subfield(K : Type u)[Field K] extends Subring K where 
+structure Subfield (K : Type u) [Field K] extends Subring K where 
   inv_mem' : ∀ x _ : x ∈ carrier, x⁻¹ ∈ carrier
 
 /-- Reinterpret a `subfield` as a `subring`. -/
@@ -78,7 +78,7 @@ def to_add_subgroup (s : Subfield K) : AddSubgroup K :=
 def to_submonoid (s : Subfield K) : Submonoid K :=
   { s.to_subring.to_submonoid with  }
 
-instance  : SetLike (Subfield K) K :=
+instance : SetLike (Subfield K) K :=
   ⟨Subfield.Carrier,
     fun p q h =>
       by 
@@ -134,7 +134,7 @@ def Subring.toSubfield (s : Subring K) (hinv : ∀ x _ : x ∈ s, x⁻¹ ∈ s) 
 
 namespace Subfield
 
-variable(s t : Subfield K)
+variable (s t : Subfield K)
 
 /-- A subfield contains the ring's 1. -/
 theorem one_mem : (1 : K) ∈ s :=
@@ -204,13 +204,13 @@ theorem coe_int_mem (n : ℤ) : (n : K) ∈ s :=
   by 
     simp only [←zsmul_one, zsmul_mem, one_mem]
 
-instance  : Ringₓ s :=
+instance : Ringₓ s :=
   s.to_subring.to_ring
 
-instance  : Div s :=
+instance : Div s :=
   ⟨fun x y => ⟨x / y, s.div_mem x.2 y.2⟩⟩
 
-instance  : HasInv s :=
+instance : HasInv s :=
   ⟨fun x => ⟨x⁻¹, s.inv_mem x.2⟩⟩
 
 /-- A subfield inherits a field structure -/
@@ -272,7 +272,7 @@ theorem to_subring.subtype_eq_subtype (F : Type _) [Field F] (S : Subfield F) : 
 /-! # Partial order -/
 
 
-variable(s t)
+variable (s t)
 
 @[simp]
 theorem mem_to_submonoid {s : Subfield K} {x : K} : x ∈ s.to_submonoid ↔ x ∈ s :=
@@ -294,10 +294,10 @@ theorem coe_to_add_subgroup : (s.to_add_subgroup : Set K) = s :=
 
 
 /-- The subfield of `K` containing all elements of `K`. -/
-instance  : HasTop (Subfield K) :=
+instance : HasTop (Subfield K) :=
   ⟨{ (⊤ : Subring K) with inv_mem' := fun x _ => Subring.mem_top x }⟩
 
-instance  : Inhabited (Subfield K) :=
+instance : Inhabited (Subfield K) :=
   ⟨⊤⟩
 
 @[simp]
@@ -311,7 +311,7 @@ theorem coe_top : ((⊤ : Subfield K) : Set K) = Set.Univ :=
 /-! # comap -/
 
 
-variable(f : K →+* L)
+variable (f : K →+* L)
 
 /-- The preimage of a subfield along a ring homomorphism is a subfield. -/
 def comap (s : Subfield L) : Subfield K :=
@@ -365,7 +365,7 @@ end Subfield
 
 namespace RingHom
 
-variable(g : L →+* M)(f : K →+* L)
+variable (g : L →+* M) (f : K →+* L)
 
 /-! # range -/
 
@@ -405,7 +405,7 @@ namespace Subfield
 
 
 /-- The inf of two subfields is their intersection. -/
-instance  : HasInf (Subfield K) :=
+instance : HasInf (Subfield K) :=
   ⟨fun s t =>
       { s.to_subring⊓t.to_subring with
         inv_mem' :=
@@ -419,7 +419,7 @@ theorem coe_inf (p p' : Subfield K) : ((p⊓p' : Subfield K) : Set K) = p ∩ p'
 theorem mem_inf {p p' : Subfield K} {x : K} : x ∈ p⊓p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 
-instance  : HasInfₓ (Subfield K) :=
+instance : HasInfₓ (Subfield K) :=
   ⟨fun S =>
       { Inf (Subfield.toSubring '' S) with
         inv_mem' :=
@@ -468,7 +468,7 @@ theorem is_glb_Inf (S : Set (Subfield K)) : IsGlb S (Inf S) :=
     exact coe_Inf _
 
 /-- Subfields of a ring form a complete lattice. -/
-instance  : CompleteLattice (Subfield K) :=
+instance : CompleteLattice (Subfield K) :=
   { completeLatticeOfInf (Subfield K) is_glb_Inf with top := ⊤, le_top := fun s x hx => trivialₓ, inf := ·⊓·,
     inf_le_left := fun s t x => And.left, inf_le_right := fun s t x => And.right,
     le_inf := fun s t₁ t₂ h₁ h₂ x hx => ⟨h₁ hx, h₂ hx⟩ }
@@ -546,14 +546,14 @@ theorem closure_induction {s : Set K} {p : K → Prop} {x} (h : x ∈ closure s)
   (Hmul : ∀ x y, p x → p y → p (x*y)) : p x :=
   (@closure_le _ _ _ ⟨p, H1, Hmul, @add_neg_selfₓ K _ 1 ▸ Hadd _ _ H1 (Hneg _ H1), Hadd, Hneg, Hinv⟩).2 Hs h
 
-variable(K)
+variable (K)
 
 /-- `closure` forms a Galois insertion with the coercion to set. -/
 protected def gi : GaloisInsertion (@closure K _) coeₓ :=
   { choice := fun s _ => closure s, gc := fun s t => closure_le, le_l_u := fun s => subset_closure,
     choice_eq := fun s h => rfl }
 
-variable{K}
+variable {K}
 
 /-- Closure of a subfield `S` equals `S`. -/
 theorem closure_eq (s : Subfield K) : closure (s : Set K) = s :=
@@ -653,7 +653,7 @@ end Subfield
 
 namespace RingHom
 
-variable{s : Subfield K}
+variable {s : Subfield K}
 
 open Subfield
 
@@ -727,7 +727,7 @@ end Subfield
 
 namespace RingEquiv
 
-variable{s t : Subfield K}
+variable {s t : Subfield K}
 
 /-- Makes the identity isomorphism from a proof two subfields of a multiplicative
     monoid are equal. -/
@@ -738,7 +738,7 @@ end RingEquiv
 
 namespace Subfield
 
-variable{s : Set K}
+variable {s : Set K}
 
 theorem closure_preimage_le (f : K →+* L) (s : Set L) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
   closure_le.2$ fun x hx => SetLike.mem_coe.2$ mem_comap.2$ subset_closure hx

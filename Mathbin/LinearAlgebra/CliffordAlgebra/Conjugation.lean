@@ -23,11 +23,11 @@ https://en.wikipedia.org/wiki/Clifford_algebra#Antiautomorphisms
 -/
 
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
-variable{M : Type _}[AddCommGroupₓ M][Module R M]
+variable {M : Type _} [AddCommGroupₓ M] [Module R M]
 
-variable{Q : QuadraticForm R M}
+variable {Q : QuadraticForm R M}
 
 namespace CliffordAlgebra
 

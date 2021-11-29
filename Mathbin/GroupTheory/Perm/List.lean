@@ -24,11 +24,11 @@ nontrivial permutation that is noncyclic.
 
 namespace List
 
-variable{α β : Type _}
+variable {α β : Type _}
 
 section FormPerm
 
-variable[DecidableEq α](l : List α)
+variable [DecidableEq α] (l : List α)
 
 open Equiv Equiv.Perm
 

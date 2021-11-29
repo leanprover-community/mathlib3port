@@ -8,7 +8,7 @@ This file defines instances for binary product of modules
 -/
 
 
-variable{R : Type _}{S : Type _}{M : Type _}{N : Type _}
+variable {R : Type _} {S : Type _} {M : Type _} {N : Type _}
 
 namespace Prod
 
@@ -22,11 +22,11 @@ instance MulActionWithZero [MonoidWithZeroₓ R] [HasZero M] [HasZero N] [MulAct
   { Prod.mulAction with smul_zero := fun r => Prod.extₓ (smul_zero' _ _) (smul_zero' _ _),
     zero_smul := fun ⟨m, n⟩ => Prod.extₓ (zero_smul _ _) (zero_smul _ _) }
 
-instance  {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] : Module R (M × N) :=
+instance {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] : Module R (M × N) :=
   { Prod.distribMulAction with add_smul := fun a p₁ p₂ => mk.inj_iff.mpr ⟨add_smul _ _ _, add_smul _ _ _⟩,
     zero_smul := fun ⟨b, c⟩ => mk.inj_iff.mpr ⟨zero_smul _ _, zero_smul _ _⟩ }
 
-instance  {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] [NoZeroSmulDivisors R M]
+instance {r : Semiringₓ R} [AddCommMonoidₓ M] [AddCommMonoidₓ N] [Module R M] [Module R N] [NoZeroSmulDivisors R M]
   [NoZeroSmulDivisors R N] : NoZeroSmulDivisors R (M × N) :=
   ⟨fun c ⟨x, y⟩ h =>
       or_iff_not_imp_left.mpr

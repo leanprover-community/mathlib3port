@@ -26,14 +26,14 @@ universe u v
 
 namespace Finₓ
 
-variable{m n : ℕ}
+variable {m n : ℕ}
 
 open Function
 
 section Tuple
 
 /-- There is exactly one tuple of size zero. -/
-example  (α : Finₓ 0 → Sort u) : Unique (∀ i : Finₓ 0, α i) :=
+example (α : Finₓ 0 → Sort u) : Unique (∀ i : Finₓ 0, α i) :=
   by 
     infer_instance
 
@@ -41,7 +41,8 @@ example  (α : Finₓ 0 → Sort u) : Unique (∀ i : Finₓ 0, α i) :=
 theorem tuple0_le {α : ∀ i : Finₓ 0, Type _} [∀ i, Preorderₓ (α i)] (f g : ∀ i, α i) : f ≤ g :=
   finZeroElim
 
-variable{α : Finₓ (n+1) → Type u}(x : α 0)(q : ∀ i, α i)(p : ∀ i : Finₓ n, α i.succ)(i : Finₓ n)(y : α i.succ)(z : α 0)
+variable {α : Finₓ (n+1) → Type u} (x : α 0) (q : ∀ i, α i) (p : ∀ i : Finₓ n, α i.succ) (i : Finₓ n) (y : α i.succ)
+  (z : α 0)
 
 /-- The tail of an `n+1` tuple, i.e., its last `n` entries. -/
 def tail (q : ∀ i, α i) : ∀ i : Finₓ n, α i.succ :=
@@ -214,10 +215,8 @@ more help to realize that elements belong to the right types, i.e., we need to i
 several places. -/
 
 
-variable{α :
-    Finₓ (n+1) →
-      Type
-        u}(x : α (last n))(q : ∀ i, α i)(p : ∀ i : Finₓ n, α i.cast_succ)(i : Finₓ n)(y : α i.cast_succ)(z : α (last n))
+variable {α : Finₓ (n+1) → Type u} (x : α (last n)) (q : ∀ i, α i) (p : ∀ i : Finₓ n, α i.cast_succ) (i : Finₓ n)
+  (y : α i.cast_succ) (z : α (last n))
 
 /-- The beginning of an `n+1` tuple, i.e., its first `n` entries -/
 def init (q : ∀ i, α i) (i : Finₓ n) : α i.cast_succ :=
@@ -406,7 +405,7 @@ end TupleRight
 
 section InsertNth
 
-variable{α : Finₓ (n+1) → Type u}{β : Type v}
+variable {α : Finₓ (n+1) → Type u} {β : Type v}
 
 /-- Define a function on `fin (n + 1)` from a value on `i : fin (n + 1)` and values on each
 `fin.succ_above i j`, `j : fin n`. This version is elaborated as eliminator and works for
@@ -552,7 +551,7 @@ theorem insert_nth_sub_same [∀ j, AddGroupₓ (α j)] (i : Finₓ (n+1)) (x y 
   by 
     simpRw [←insert_nth_sub, ←insert_nth_zero_right, Pi.sub_def, sub_self, Pi.zero_def]
 
-variable[∀ i, Preorderₓ (α i)]
+variable [∀ i, Preorderₓ (α i)]
 
 theorem insert_nth_le_iff {i : Finₓ (n+1)} {x : α i} {p : ∀ j, α (i.succ_above j)} {q : ∀ j, α j} :
   i.insert_nth x p ≤ q ↔ x ≤ q i ∧ p ≤ fun j => q (i.succ_above j) :=

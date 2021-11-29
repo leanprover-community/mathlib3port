@@ -29,7 +29,7 @@ open Widget.Html Widget.Attr
 
 namespace InteractiveExpression
 
-unsafe instance  : HasMem Expr.Coord Expr.Address :=
+unsafe instance : HasMem Expr.Coord Expr.Address :=
   List.hasMem
 
 /-- eformat but without any of the formatting stuff like highlighting, groups etc. -/
@@ -50,13 +50,13 @@ unsafe def sf.repr : sf → format
 | sf.block i a => "(block " ++ to_fmt i ++ format.line ++ a.repr ++ ")"
 | sf.highlight c a => "(highlight " ++ c.to_string ++ a.repr ++ ")"
 
-unsafe instance  : has_to_format sf :=
+unsafe instance : has_to_format sf :=
   ⟨sf.repr⟩
 
-unsafe instance  : HasToString sf :=
+unsafe instance : HasToString sf :=
   ⟨fun s => s.repr.to_string⟩
 
-unsafe instance  : HasRepr sf :=
+unsafe instance : HasRepr sf :=
   ⟨fun s => s.repr.to_string⟩
 
 /-- Constructs an `sf` from an `eformat` by forgetting grouping, nesting, etc. -/

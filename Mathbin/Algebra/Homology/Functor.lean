@@ -20,9 +20,9 @@ open CategoryTheory.Limits
 
 namespace HomologicalComplex
 
-variable{V : Type u}[category.{v} V][has_zero_morphisms V]
+variable {V : Type u} [category.{v} V] [has_zero_morphisms V]
 
-variable{ι : Type _}{c : ComplexShape ι}
+variable {ι : Type _} {c : ComplexShape ι}
 
 -- error in Algebra.Homology.Functor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A complex of functors gives a functor to complexes. -/

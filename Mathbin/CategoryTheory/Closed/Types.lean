@@ -20,23 +20,23 @@ open Category Limits
 
 universe v₁ v₂ u₁ u₂
 
-variable{C : Type v₂}[category.{v₁} C]
+variable {C : Type v₂} [category.{v₁} C]
 
 section CartesianClosed
 
-instance  (X : Type v₁) : is_left_adjoint (types.binary_product_functor.obj X) :=
+instance (X : Type v₁) : is_left_adjoint (types.binary_product_functor.obj X) :=
   { right := { obj := fun Y => X ⟶ Y, map := fun Y₁ Y₂ f g => g ≫ f },
     adj :=
       adjunction.mk_of_unit_counit
         { Unit := { app := fun Z z : Z x => ⟨x, z⟩ }, counit := { app := fun Z xf => xf.2 xf.1 } } }
 
-instance  : has_finite_products (Type v₁) :=
+instance : has_finite_products (Type v₁) :=
   has_finite_products_of_has_products _
 
-instance  : cartesian_closed (Type v₁) :=
+instance : cartesian_closed (Type v₁) :=
   { closed := fun X => { isAdj := adjunction.left_adjoint_of_nat_iso (types.binary_product_iso_prod.app X) } }
 
-instance  {C : Type u₁} [category.{v₁} C] : has_finite_products (C ⥤ Type u₁) :=
+instance {C : Type u₁} [category.{v₁} C] : has_finite_products (C ⥤ Type u₁) :=
   has_finite_products_of_has_products _
 
 -- error in CategoryTheory.Closed.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

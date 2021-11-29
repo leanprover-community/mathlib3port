@@ -20,7 +20,7 @@ namespace CategoryTheory
 
 open Limits
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /--
 If `C` has (small) products and a small weakly initial set of objects, then it has a weakly initial

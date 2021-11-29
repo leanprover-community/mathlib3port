@@ -41,7 +41,7 @@ Roughly speaking, saying that `F` is a quotient of a polynomial functor means th
 elements of `F α` are represented by pairs `⟨a, f⟩`, where `a` is the shape of the object and
 `f` indexes the relevant elements of `α`, in a suitably natural manner.
 -/
-class Qpf(F : Type u → Type u)[Functor F] where 
+class Qpf (F : Type u → Type u) [Functor F] where 
   p : Pfunctor.{u}
   abs : ∀ {α}, P.obj α → F α 
   repr : ∀ {α}, F α → P.obj α 
@@ -50,7 +50,7 @@ class Qpf(F : Type u → Type u)[Functor F] where
 
 namespace Qpf
 
-variable{F : Type u → Type u}[Functor F][q : Qpf F]
+variable {F : Type u → Type u} [Functor F] [q : Qpf F]
 
 include q
 
@@ -334,7 +334,7 @@ end Qpf
 
 namespace Qpf
 
-variable{F : Type u → Type u}[Functor F][q : Qpf F]
+variable {F : Type u → Type u} [Functor F] [q : Qpf F]
 
 include q
 
@@ -360,7 +360,7 @@ def Mcongr : q.P.M → q.P.M → Prop :=
 def cofix (F : Type u → Type u) [Functor F] [q : Qpf F] :=
   Quot (@Mcongr F _ q)
 
-instance  [Inhabited q.P.A] : Inhabited (cofix F) :=
+instance [Inhabited q.P.A] : Inhabited (cofix F) :=
   ⟨Quot.mk _ (default _)⟩
 
 /-- corecursor for type defined by `cofix` -/
@@ -492,9 +492,9 @@ end Qpf
 
 namespace Qpf
 
-variable{F₂ : Type u → Type u}[Functor F₂][q₂ : Qpf F₂]
+variable {F₂ : Type u → Type u} [Functor F₂] [q₂ : Qpf F₂]
 
-variable{F₁ : Type u → Type u}[Functor F₁][q₁ : Qpf F₁]
+variable {F₁ : Type u → Type u} [Functor F₁] [q₁ : Qpf F₁]
 
 include q₂ q₁
 
@@ -557,13 +557,13 @@ end Qpf
 
 namespace Qpf
 
-variable{F : Type u → Type u}[Functor F][q : Qpf F]
+variable {F : Type u → Type u} [Functor F] [q : Qpf F]
 
-variable{G : Type u → Type u}[Functor G]
+variable {G : Type u → Type u} [Functor G]
 
-variable{FG_abs : ∀ {α}, F α → G α}
+variable {FG_abs : ∀ {α}, F α → G α}
 
-variable{FG_repr : ∀ {α}, G α → F α}
+variable {FG_repr : ∀ {α}, G α → F α}
 
 /-- Given a qpf `F` and a well-behaved surjection `FG_abs` from F α to
 functor G α, `G` is a qpf. We can consider `G` a quotient on `F` where
@@ -585,7 +585,7 @@ end Qpf
 
 namespace Qpf
 
-variable{F : Type u → Type u}[Functor F][q : Qpf F]
+variable {F : Type u → Type u} [Functor F] [q : Qpf F]
 
 include q
 
@@ -657,7 +657,7 @@ begin
   apply [expr mem_image_of_mem _ (mem_univ _)]
 end
 
-variable(q)
+variable (q)
 
 /-- A qpf is said to be uniform if every polynomial functor
 representing a single value all have the same range. -/
@@ -672,7 +672,7 @@ def liftp_preservation : Prop :=
 def supp_preservation : Prop :=
   ∀ ⦃α⦄ x : q.P.obj α, supp (abs x) = supp x
 
-variable(q)
+variable (q)
 
 theorem supp_eq_of_is_uniform (h : q.is_uniform) {α : Type u} (a : q.P.A) (f : q.P.B a → α) :
   supp (abs ⟨a, f⟩) = f '' univ :=

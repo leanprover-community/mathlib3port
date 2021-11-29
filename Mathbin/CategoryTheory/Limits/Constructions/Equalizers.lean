@@ -19,7 +19,7 @@ open CategoryTheory CategoryTheory.Category
 
 namespace CategoryTheory.Limits
 
-variable{C : Type u}[category.{v} C][has_binary_products C][has_pullbacks C]
+variable {C : Type u} [category.{v} C] [has_binary_products C] [has_pullbacks C]
 
 namespace HasEqualizersOfPullbacksAndBinaryProducts
 

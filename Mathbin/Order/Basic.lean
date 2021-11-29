@@ -57,7 +57,7 @@ open Function
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{γ : Type w}{r : α → α → Prop}
+variable {α : Type u} {β : Type v} {γ : Type w} {r : α → α → Prop}
 
 attribute [simp] le_reflₓ
 
@@ -392,19 +392,19 @@ def OrderDual (α : Type _) : Type _ :=
 
 namespace OrderDual
 
-instance  (α : Type _) [h : Nonempty α] : Nonempty (OrderDual α) :=
+instance (α : Type _) [h : Nonempty α] : Nonempty (OrderDual α) :=
   h
 
-instance  (α : Type _) [h : Subsingleton α] : Subsingleton (OrderDual α) :=
+instance (α : Type _) [h : Subsingleton α] : Subsingleton (OrderDual α) :=
   h
 
-instance  (α : Type _) [LE α] : LE (OrderDual α) :=
+instance (α : Type _) [LE α] : LE (OrderDual α) :=
   ⟨fun x y : α => y ≤ x⟩
 
-instance  (α : Type _) [LT α] : LT (OrderDual α) :=
+instance (α : Type _) [LT α] : LT (OrderDual α) :=
   ⟨fun x y : α => y < x⟩
 
-instance  (α : Type _) [HasZero α] : HasZero (OrderDual α) :=
+instance (α : Type _) [HasZero α] : HasZero (OrderDual α) :=
   ⟨(0 : α)⟩
 
 theorem dual_le [LE α] {a b : α} : @LE.le (OrderDual α) _ a b ↔ @LE.le α _ b a :=
@@ -413,20 +413,20 @@ theorem dual_le [LE α] {a b : α} : @LE.le (OrderDual α) _ a b ↔ @LE.le α _
 theorem dual_lt [LT α] {a b : α} : @LT.lt (OrderDual α) _ a b ↔ @LT.lt α _ b a :=
   Iff.rfl
 
-instance  (α : Type _) [Preorderₓ α] : Preorderₓ (OrderDual α) :=
+instance (α : Type _) [Preorderₓ α] : Preorderₓ (OrderDual α) :=
   { OrderDual.hasLe α, OrderDual.hasLt α with le_refl := le_reflₓ, le_trans := fun a b c hab hbc => hbc.trans hab,
     lt_iff_le_not_le := fun _ _ => lt_iff_le_not_leₓ }
 
-instance  (α : Type _) [PartialOrderₓ α] : PartialOrderₓ (OrderDual α) :=
+instance (α : Type _) [PartialOrderₓ α] : PartialOrderₓ (OrderDual α) :=
   { OrderDual.preorder α with le_antisymm := fun a b hab hba => @le_antisymmₓ α _ a b hba hab }
 
-instance  (α : Type _) [LinearOrderₓ α] : LinearOrderₓ (OrderDual α) :=
+instance (α : Type _) [LinearOrderₓ α] : LinearOrderₓ (OrderDual α) :=
   { OrderDual.partialOrder α with le_total := fun a b : α => le_totalₓ b a,
     decidableLe := (inferInstance : DecidableRel fun a b : α => b ≤ a),
     decidableLt := (inferInstance : DecidableRel fun a b : α => b < a), min := @max α _, max := @min α _,
     min_def := @LinearOrderₓ.max_def α _, max_def := @LinearOrderₓ.min_def α _ }
 
-instance  : ∀ [Inhabited α], Inhabited (OrderDual α) :=
+instance : ∀ [Inhabited α], Inhabited (OrderDual α) :=
   id
 
 theorem preorder.dual_dual (α : Type _) [H : Preorderₓ α] : OrderDual.preorder (OrderDual α) = H :=
@@ -443,12 +443,14 @@ end OrderDual
 /-! ### Order instances on the function space -/
 
 
-instance Pi.preorder {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] : Preorderₓ (∀ i, α i) :=
-  { le := fun x y => ∀ i, x i ≤ y i, le_refl := fun a i => le_reflₓ (a i),
-    le_trans := fun a b c h₁ h₂ i => le_transₓ (h₁ i) (h₂ i) }
+instance Pi.hasLe {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] : LE (∀ i, α i) :=
+  { le := fun x y => ∀ i, x i ≤ y i }
 
-theorem Pi.le_def {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] {x y : ∀ i, α i} : x ≤ y ↔ ∀ i, x i ≤ y i :=
+theorem Pi.le_def {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] {x y : ∀ i, α i} : x ≤ y ↔ ∀ i, x i ≤ y i :=
   Iff.rfl
+
+instance Pi.preorder {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] : Preorderₓ (∀ i, α i) :=
+  { Pi.hasLe with le_refl := fun a i => le_reflₓ (a i), le_trans := fun a b c h₁ h₂ i => le_transₓ (h₁ i) (h₂ i) }
 
 -- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem pi.lt_def
@@ -539,7 +541,7 @@ instance Subtype.linearOrder {α} [LinearOrderₓ α] (p : α → Prop) : Linear
 
 namespace Prod
 
-instance  (α : Type u) (β : Type v) [LE α] [LE β] : LE (α × β) :=
+instance (α : Type u) (β : Type v) [LE α] [LE β] : LE (α × β) :=
   ⟨fun p q => p.1 ≤ q.1 ∧ p.2 ≤ q.2⟩
 
 theorem le_def {α β : Type _} [LE α] [LE β] {x y : α × β} : x ≤ y ↔ x.1 ≤ y.1 ∧ x.2 ≤ y.2 :=
@@ -549,14 +551,14 @@ theorem le_def {α β : Type _} [LE α] [LE β] {x y : α × β} : x ≤ y ↔ x
 theorem mk_le_mk {α β : Type _} [LE α] [LE β] {x₁ x₂ : α} {y₁ y₂ : β} : (x₁, y₁) ≤ (x₂, y₂) ↔ x₁ ≤ x₂ ∧ y₁ ≤ y₂ :=
   Iff.rfl
 
-instance  (α : Type u) (β : Type v) [Preorderₓ α] [Preorderₓ β] : Preorderₓ (α × β) :=
+instance (α : Type u) (β : Type v) [Preorderₓ α] [Preorderₓ β] : Preorderₓ (α × β) :=
   { Prod.hasLe α β with le_refl := fun ⟨a, b⟩ => ⟨le_reflₓ a, le_reflₓ b⟩,
     le_trans := fun ⟨a, b⟩ ⟨c, d⟩ ⟨e, f⟩ ⟨hac, hbd⟩ ⟨hce, hdf⟩ => ⟨le_transₓ hac hce, le_transₓ hbd hdf⟩ }
 
 /-- The pointwise partial order on a product.
     (The lexicographic ordering is defined in order/lexicographic.lean, and the instances are
     available via the type synonym `lex α β = α × β`.) -/
-instance  (α : Type u) (β : Type v) [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (α × β) :=
+instance (α : Type u) (β : Type v) [PartialOrderₓ α] [PartialOrderₓ β] : PartialOrderₓ (α × β) :=
   { Prod.preorder α β with
     le_antisymm := fun ⟨a, b⟩ ⟨c, d⟩ ⟨hac, hbd⟩ ⟨hca, hdb⟩ => Prod.extₓ (hac.antisymm hca) (hbd.antisymm hdb) }
 
@@ -566,7 +568,7 @@ end Prod
 
 
 /-- Order without a maximal element. Sometimes called cofinal. -/
-class NoTopOrder(α : Type u)[Preorderₓ α] : Prop where 
+class NoTopOrder (α : Type u) [Preorderₓ α] : Prop where 
   no_top : ∀ a : α, ∃ a', a < a'
 
 theorem no_top [Preorderₓ α] [NoTopOrder α] : ∀ a : α, ∃ a', a < a' :=
@@ -591,7 +593,7 @@ theorem IsTop.unique {α : Type u} [PartialOrderₓ α] {a b : α} (ha : IsTop a
   le_antisymmₓ hb (ha b)
 
 /-- Order without a minimal element. Sometimes called coinitial or dense. -/
-class NoBotOrder(α : Type u)[Preorderₓ α] : Prop where 
+class NoBotOrder (α : Type u) [Preorderₓ α] : Prop where 
   no_bot : ∀ a : α, ∃ a', a' < a
 
 theorem no_bot [Preorderₓ α] [NoBotOrder α] : ∀ a : α, ∃ a', a' < a :=
@@ -622,7 +624,7 @@ instance nonempty_lt {α : Type u} [Preorderₓ α] [NoBotOrder α] (a : α) : N
   nonempty_subtype.2 (no_bot a)
 
 /-- An order is dense if there is an element between any pair of distinct elements. -/
-class DenselyOrdered(α : Type u)[Preorderₓ α] : Prop where 
+class DenselyOrdered (α : Type u) [Preorderₓ α] : Prop where 
   dense : ∀ a₁ a₂ : α, a₁ < a₂ → ∃ a, a₁ < a ∧ a < a₂
 
 theorem exists_between [Preorderₓ α] [DenselyOrdered α] : ∀ {a₁ a₂ : α}, a₁ < a₂ → ∃ a, a₁ < a ∧ a < a₂ :=
@@ -658,7 +660,7 @@ theorem dense_or_discrete [LinearOrderₓ α] (a₁ a₂ : α) :
     fun h =>
       ⟨fun a ha₁ => le_of_not_gtₓ$ fun ha₂ => h ⟨a, ha₁, ha₂⟩, fun a ha₂ => le_of_not_gtₓ$ fun ha₁ => h ⟨a, ha₁, ha₂⟩⟩
 
-variable{s : β → β → Prop}{t : γ → γ → Prop}
+variable {s : β → β → Prop} {t : γ → γ → Prop}
 
 /-! ### Linear order from a total partial order -/
 
@@ -668,7 +670,7 @@ variable{s : β → β → Prop}{t : γ → γ → Prop}
 def AsLinearOrder (α : Type u) :=
   α
 
-instance  {α} [Inhabited α] : Inhabited (AsLinearOrder α) :=
+instance {α} [Inhabited α] : Inhabited (AsLinearOrder α) :=
   ⟨(default α : α)⟩
 
 noncomputable instance AsLinearOrder.linearOrder {α} [PartialOrderₓ α] [IsTotal α (· ≤ ·)] :

@@ -21,10 +21,10 @@ is_semiring_hom, is_ring_hom
 
 universe u v w
 
-variable{α : Type u}
+variable {α : Type u}
 
 /-- Predicate for semiring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
-structure IsSemiringHom{α : Type u}{β : Type v}[Semiringₓ α][Semiringₓ β](f : α → β) : Prop where 
+structure IsSemiringHom {α : Type u} {β : Type v} [Semiringₓ α] [Semiringₓ β] (f : α → β) : Prop where 
   map_zero{} : f 0 = 0
   map_one{} : f 1 = 1
   map_add{} : ∀ {x y}, f (x+y) = f x+f y 
@@ -32,9 +32,9 @@ structure IsSemiringHom{α : Type u}{β : Type v}[Semiringₓ α][Semiringₓ β
 
 namespace IsSemiringHom
 
-variable{β : Type v}[Semiringₓ α][Semiringₓ β]
+variable {β : Type v} [Semiringₓ α] [Semiringₓ β]
 
-variable{f : α → β}(hf : IsSemiringHom f){x y : α}
+variable {f : α → β} (hf : IsSemiringHom f) {x y : α}
 
 /-- The identity map is a semiring homomorphism. -/
 theorem id : IsSemiringHom (@id α) :=
@@ -69,20 +69,20 @@ theorem to_is_monoid_hom (hf : IsSemiringHom f) : IsMonoidHom f :=
 end IsSemiringHom
 
 /-- Predicate for ring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
-structure IsRingHom{α : Type u}{β : Type v}[Ringₓ α][Ringₓ β](f : α → β) : Prop where 
+structure IsRingHom {α : Type u} {β : Type v} [Ringₓ α] [Ringₓ β] (f : α → β) : Prop where 
   map_one{} : f 1 = 1
   map_mul{} : ∀ {x y}, f (x*y) = f x*f y 
   map_add{} : ∀ {x y}, f (x+y) = f x+f y
 
 namespace IsRingHom
 
-variable{β : Type v}[Ringₓ α][Ringₓ β]
+variable {β : Type v} [Ringₓ α] [Ringₓ β]
 
 /-- A map of rings that is a semiring homomorphism is also a ring homomorphism. -/
 theorem of_semiring {f : α → β} (H : IsSemiringHom f) : IsRingHom f :=
   { H with  }
 
-variable{f : α → β}(hf : IsRingHom f){x y : α}
+variable {f : α → β} (hf : IsRingHom f) {x y : α}
 
 /-- Ring homomorphisms map zero to zero. -/
 theorem map_zero (hf : IsRingHom f) : f 0 = 0 :=
@@ -137,7 +137,7 @@ theorem to_is_add_group_hom (hf : IsRingHom f) : IsAddGroupHom f :=
 
 end IsRingHom
 
-variable{β : Type v}{γ : Type w}[rα : Semiringₓ α][rβ : Semiringₓ β]
+variable {β : Type v} {γ : Type w} [rα : Semiringₓ α] [rβ : Semiringₓ β]
 
 namespace RingHom
 

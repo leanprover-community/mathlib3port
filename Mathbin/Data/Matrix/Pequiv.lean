@@ -34,9 +34,9 @@ open Matrix
 
 universe u v
 
-variable{k l m n : Type _}
+variable {k l m n : Type _}
 
-variable{α : Type v}
+variable {α : Type v}
 
 open_locale Matrix
 

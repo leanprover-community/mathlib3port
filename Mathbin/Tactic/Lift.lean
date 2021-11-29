@@ -14,7 +14,7 @@ lift, tactic
 
 /-- A class specifying that you can lift elements from `α` to `β` assuming `cond` is true.
   Used by the tactic `lift`. -/
-class CanLift(α β : Sort _) where 
+class CanLift (α β : Sort _) where 
   coe : β → α 
   cond : α → Prop 
   prf : ∀ x : α, cond x → ∃ y : β, coeₓ y = x
@@ -40,7 +40,7 @@ unsafe def can_lift_attr : user_attribute (List Name) :=
                       return$ t.is_app_of `can_lift,
         dependencies := [`instance] } }
 
-instance  : CanLift ℤ ℕ :=
+instance : CanLift ℤ ℕ :=
   ⟨coeₓ, fun n => 0 ≤ n, fun n hn => ⟨n.nat_abs, Int.nat_abs_of_nonneg hn⟩⟩
 
 /-- Enable automatic handling of pi types in `can_lift`. -/

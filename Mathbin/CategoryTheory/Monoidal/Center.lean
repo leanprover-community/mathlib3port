@@ -34,7 +34,7 @@ noncomputable theory
 
 namespace CategoryTheory
 
-variable{C : Type u₁}[category.{v₁} C][monoidal_category C]
+variable {C : Type u₁} [category.{v₁} C] [monoidal_category C]
 
 /--
 A half-braiding on `X : C` is a family of isomorphisms `X ⊗ U ≅ U ⊗ X`,
@@ -45,7 +45,7 @@ transformations (in the pseudo- sense) of the identity 2-functor on `C`, which s
 `0`-morphism to `X`.
 -/
 @[nolint has_inhabited_instance]
-structure half_braiding(X : C) where 
+structure half_braiding (X : C) where 
   β : ∀ U, X ⊗ U ≅ U ⊗ X 
   monoidal' :
   ∀ U U',
@@ -65,7 +65,7 @@ restate_axiom half_braiding.naturality'
 
 attribute [simp, reassoc] half_braiding.naturality
 
-variable(C)
+variable (C)
 
 /--
 The Drinfeld center of a monoidal category `C` has as objects pairs `⟨X, b⟩`, where `X : C`
@@ -77,11 +77,11 @@ def center :=
 
 namespace Center
 
-variable{C}
+variable {C}
 
 /-- A morphism in the Drinfeld center of `C`. -/
 @[ext, nolint has_inhabited_instance]
-structure hom(X Y : center C) where 
+structure hom (X Y : center C) where 
   f : X.1 ⟶ Y.1
   comm' : ∀ U, (f ⊗ 𝟙 U) ≫ (Y.2.β U).Hom = (X.2.β U).Hom ≫ (𝟙 U ⊗ f) :=  by 
   runTac 
@@ -91,7 +91,7 @@ restate_axiom hom.comm'
 
 attribute [simp, reassoc] hom.comm
 
-instance  : category (center C) :=
+instance : category (center C) :=
   { Hom := hom, id := fun X => { f := 𝟙 X.1 }, comp := fun X Y Z f g => { f := f.f ≫ g.f } }
 
 @[simp]
@@ -229,7 +229,7 @@ attribute [local simp] associator_naturality left_unitor_naturality right_unitor
 
 attribute [local simp] center.associator center.left_unitor center.right_unitor
 
-instance  : monoidal_category (center C) :=
+instance : monoidal_category (center C) :=
   { tensorObj := fun X Y => tensor_obj X Y, tensorHom := fun X₁ Y₁ X₂ Y₂ f g => tensor_hom f g,
     tensorUnit := tensor_unit, associator := associator, leftUnitor := left_unitor, rightUnitor := right_unitor }
 
@@ -287,14 +287,14 @@ end
 
 section 
 
-variable(C)
+variable (C)
 
 /-- The forgetful monoidal functor from the Drinfeld center to the original category. -/
 @[simps]
 def forget : monoidal_functor (center C) C :=
   { obj := fun X => X.1, map := fun X Y f => f.f, ε := 𝟙 (𝟙_ C), μ := fun X Y => 𝟙 (X.1 ⊗ Y.1) }
 
-instance  : reflects_isomorphisms (forget C).toFunctor :=
+instance : reflects_isomorphisms (forget C).toFunctor :=
   { reflects :=
       fun A B f i =>
         by 
@@ -330,7 +330,7 @@ instance braided_category_center : braided_category (center C) :=
 
 section 
 
-variable[braided_category C]
+variable [braided_category C]
 
 open BraidedCategory
 
@@ -345,7 +345,7 @@ def of_braided_obj (X : C) : center C :=
             rw [iso.eq_inv_comp, ←category.assoc, ←category.assoc, iso.eq_comp_inv, category.assoc, category.assoc]
             exact hexagon_forward X U U' }⟩
 
-variable(C)
+variable (C)
 
 /--
 The functor lifting a braided category to its center, using the braiding as the half-braiding.

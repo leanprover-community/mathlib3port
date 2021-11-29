@@ -25,7 +25,7 @@ namespace Complex
 
 open_locale ComplexConjugate
 
-noncomputable instance  : DecidableEq ℂ :=
+noncomputable instance : DecidableEq ℂ :=
   Classical.decEq _
 
 /-- The equivalence between the complex numbers and `ℝ × ℝ`. -/
@@ -57,7 +57,7 @@ theorem ext_iff {z w : ℂ} : z = w ↔ z.re = w.re ∧ z.im = w.im :=
         simp [H],
     And.ndrec ext⟩
 
-instance  : Coe ℝ ℂ :=
+instance : Coe ℝ ℂ :=
   ⟨fun r => ⟨r, 0⟩⟩
 
 @[simp, normCast]
@@ -75,13 +75,16 @@ theorem of_real_def (r : ℝ) : (r : ℂ) = ⟨r, 0⟩ :=
 theorem of_real_inj {z w : ℝ} : (z : ℂ) = w ↔ z = w :=
   ⟨congr_argₓ re, congr_argₓ _⟩
 
-instance  : CanLift ℂ ℝ :=
+theorem of_real_injective : Function.Injective (coeₓ : ℝ → ℂ) :=
+  fun z w => congr_argₓ re
+
+instance : CanLift ℂ ℝ :=
   { cond := fun z => z.im = 0, coe := coeₓ, prf := fun z hz => ⟨z.re, ext rfl hz.symm⟩ }
 
-instance  : HasZero ℂ :=
+instance : HasZero ℂ :=
   ⟨(0 : ℝ)⟩
 
-instance  : Inhabited ℂ :=
+instance : Inhabited ℂ :=
   ⟨0⟩
 
 @[simp]
@@ -103,7 +106,7 @@ theorem of_real_eq_zero {z : ℝ} : (z : ℂ) = 0 ↔ z = 0 :=
 theorem of_real_ne_zero {z : ℝ} : (z : ℂ) ≠ 0 ↔ z ≠ 0 :=
   not_congr of_real_eq_zero
 
-instance  : HasOne ℂ :=
+instance : HasOne ℂ :=
   ⟨(1 : ℝ)⟩
 
 @[simp]
@@ -118,7 +121,7 @@ theorem one_im : (1 : ℂ).im = 0 :=
 theorem of_real_one : ((1 : ℝ) : ℂ) = 1 :=
   rfl
 
-instance  : Add ℂ :=
+instance : Add ℂ :=
   ⟨fun z w => ⟨z.re+w.re, z.im+w.im⟩⟩
 
 @[simp]
@@ -163,7 +166,7 @@ theorem of_real_bit1 (r : ℝ) : ((bit1 r : ℝ) : ℂ) = bit1 r :=
     by 
       simp [bit1]
 
-instance  : Neg ℂ :=
+instance : Neg ℂ :=
   ⟨fun z => ⟨-z.re, -z.im⟩⟩
 
 @[simp]
@@ -180,10 +183,10 @@ theorem of_real_neg (r : ℝ) : ((-r : ℝ) : ℂ) = -r :=
     by 
       simp 
 
-instance  : Sub ℂ :=
+instance : Sub ℂ :=
   ⟨fun z w => ⟨z.re - w.re, z.im - w.im⟩⟩
 
-instance  : Mul ℂ :=
+instance : Mul ℂ :=
   ⟨fun z w => ⟨(z.re*w.re) - z.im*w.im, (z.re*w.im)+z.im*w.re⟩⟩
 
 @[simp]
@@ -254,7 +257,7 @@ theorem re_add_im (z : ℂ) : ((z.re : ℂ)+z.im*I) = z :=
 /-! ### Commutative ring instance and lemmas -/
 
 
-instance  : CommRingₓ ℂ :=
+instance : CommRingₓ ℂ :=
   by 
     refineStruct
         { zero := (0 : ℂ), add := ·+·, neg := Neg.neg, sub := Sub.sub, one := 1, mul := ·*·,
@@ -283,7 +286,7 @@ instance  : CommRingₓ ℂ :=
 
 /-- This shortcut instance ensures we do not find `ring` via the noncomputable `complex.field`
 instance. -/
-instance  : Ringₓ ℂ :=
+instance : Ringₓ ℂ :=
   by 
     infer_instance
 
@@ -319,7 +322,7 @@ theorem I_pow_bit1 (n : ℕ) : I ^ bit1 n = (-1 ^ n)*I :=
 /-- This defines the complex conjugate as the `star` operation of the `star_ring ℂ`. It
 is recommended to use the ring automorphism version `star_ring_aut`, available under the
 notation `conj` in the locale `complex_conjugate`. -/
-instance  : StarRing ℂ :=
+instance : StarRing ℂ :=
   { star := fun z => ⟨z.re, -z.im⟩,
     star_involutive :=
       fun x =>
@@ -532,7 +535,7 @@ theorem norm_sq_sub (z w : ℂ) : norm_sq (z - w) = (norm_sq z+norm_sq w) - 2*(z
 /-! ### Inversion -/
 
 
-noncomputable instance  : HasInv ℂ :=
+noncomputable instance : HasInv ℂ :=
   ⟨fun z => conj z*(norm_sq z⁻¹ : ℝ)⟩
 
 theorem inv_def (z : ℂ) : z⁻¹ = conj z*(norm_sq z⁻¹ : ℝ) :=
@@ -565,7 +568,7 @@ protected theorem mul_inv_cancel {z : ℂ} (h : z ≠ 0) : (z*z⁻¹) = 1 :=
 /-! ### Field instance and lemmas -/
 
 
-noncomputable instance  : Field ℂ :=
+noncomputable instance : Field ℂ :=
   { Complex.commRing with inv := HasInv.inv, exists_pair_ne := ⟨0, 1, mt (congr_argₓ re) zero_ne_one⟩,
     mul_inv_cancel := @Complex.mul_inv_cancel, inv_zero := Complex.inv_zero }
 
@@ -766,6 +769,14 @@ theorem abs_mul (z w : ℂ) : abs (z*w) = abs z*abs w :=
   by 
     rw [abs, norm_sq_mul, Real.sqrt_mul (norm_sq_nonneg _)] <;> rfl
 
+@[simp]
+theorem abs_pow (z : ℂ) (n : ℕ) : abs (z ^ n) = abs z ^ n :=
+  MonoidHom.map_pow ⟨abs, abs_one, abs_mul⟩ z n
+
+@[simp]
+theorem abs_zpow (z : ℂ) (n : ℤ) : abs (z ^ n) = abs z ^ n :=
+  MonoidWithZeroHom.map_zpow ⟨abs, abs_zero, abs_one, abs_mul⟩ z n
+
 theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z :=
   by 
     rw [mul_self_le_mul_self_iff (_root_.abs_nonneg z.re) (abs_nonneg _), abs_mul_abs_self, mul_self_abs] <;>
@@ -792,7 +803,7 @@ theorem abs_add (z w : ℂ) : abs (z+w) ≤ abs z+abs w :=
         mul_assocₓ, mul_le_mul_left (@zero_lt_two ℝ _ _)]
       simpa [-mul_re] using re_le_abs (z*conj w)
 
-instance  : IsAbsoluteValue abs :=
+instance : IsAbsoluteValue abs :=
   { abv_nonneg := abs_nonneg, abv_eq_zero := fun _ => abs_eq_zero, abv_add := abs_add, abv_mul := abs_mul }
 
 open IsAbsoluteValue
@@ -994,7 +1005,7 @@ theorem equiv_lim_aux (f : cau_seq exprℂ() abs) : «expr ≈ »(f, cau_seq.con
    rwa [expr add_halves] ["at", ident this]
  end)
 
-noncomputable instance  : CauSeq.IsComplete ℂ abs :=
+noncomputable instance : CauSeq.IsComplete ℂ abs :=
   ⟨fun f => ⟨lim_aux f, equiv_lim_aux f⟩⟩
 
 open CauSeq

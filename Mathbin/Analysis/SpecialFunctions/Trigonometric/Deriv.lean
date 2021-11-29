@@ -143,7 +143,7 @@ section
 /-! ### Simp lemmas for derivatives of `λ x, complex.cos (f x)` etc., `f : ℂ → ℂ` -/
 
 
-variable{f : ℂ → ℂ}{f' x : ℂ}{s : Set ℂ}
+variable {f : ℂ → ℂ} {f' x : ℂ} {s : Set ℂ}
 
 /-! #### `complex.cos` -/
 
@@ -246,7 +246,7 @@ section
 /-! ### Simp lemmas for derivatives of `λ x, complex.cos (f x)` etc., `f : E → ℂ` -/
 
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℂ E]{f : E → ℂ}{f' : E →L[ℂ] ℂ}{x : E}{s : Set E}
+variable {E : Type _} [NormedGroup E] [NormedSpace ℂ E] {f : E → ℂ} {f' : E →L[ℂ] ℂ} {x : E} {s : Set E}
 
 /-! #### `complex.cos` -/
 
@@ -464,7 +464,7 @@ end
 
 namespace Real
 
-variable{x y z : ℝ}
+variable {x y z : ℝ}
 
 theorem has_strict_deriv_at_sin (x : ℝ) : HasStrictDerivAt sin (cos x) x :=
   (Complex.has_strict_deriv_at_sin x).real_of_complex
@@ -559,7 +559,7 @@ section
 /-! ### Simp lemmas for derivatives of `λ x, real.cos (f x)` etc., `f : ℝ → ℝ` -/
 
 
-variable{f : ℝ → ℝ}{f' x : ℝ}{s : Set ℝ}
+variable {f : ℝ → ℝ} {f' x : ℝ} {s : Set ℝ}
 
 /-! #### `real.cos` -/
 
@@ -656,7 +656,7 @@ section
 /-! ### Simp lemmas for derivatives of `λ x, real.cos (f x)` etc., `f : E → ℝ` -/
 
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E]{f : E → ℝ}{f' : E →L[ℝ] ℝ}{x : E}{s : Set E}
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {f' : E →L[ℝ] ℝ} {x : E} {s : Set E}
 
 /-! #### `real.cos` -/
 

@@ -28,7 +28,7 @@ localized [Nat] notation:10000 n "!" => Nat.factorial n
 
 section Factorial
 
-variable{m n : ℕ}
+variable {m n : ℕ}
 
 @[simp]
 theorem factorial_zero : 0! = 1 :=

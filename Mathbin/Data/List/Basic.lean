@@ -11,17 +11,17 @@ namespace List
 
 universe u v w x
 
-variable{α : Type u}{β : Type v}{γ : Type w}{δ : Type x}
+variable {α : Type u} {β : Type v} {γ : Type w} {δ : Type x}
 
 attribute [inline] List.headₓ
 
-instance  : IsLeftId (List α) Append.append [] :=
+instance : IsLeftId (List α) Append.append [] :=
   ⟨nil_append⟩
 
-instance  : IsRightId (List α) Append.append [] :=
+instance : IsRightId (List α) Append.append [] :=
   ⟨append_nil⟩
 
-instance  : IsAssociative (List α) Append.append :=
+instance : IsAssociative (List α) Append.append :=
   ⟨append_assoc⟩
 
 theorem cons_ne_nil (a : α) (l : List α) : a :: l ≠ [] :=
@@ -205,7 +205,7 @@ theorem map_bind (g : β → List γ) (f : α → β) : ∀ l : List α, (List.m
 
 /-- If each element of a list can be lifted to some type, then the whole list can be lifted to this
 type. -/
-instance  [h : CanLift α β] : CanLift (List α) (List β) :=
+instance [h : CanLift α β] : CanLift (List α) (List β) :=
   { coe := List.map h.coe, cond := fun l => ∀ x _ : x ∈ l, CanLift.Cond β x,
     prf :=
       fun l H =>
@@ -1335,7 +1335,7 @@ instance decidable_sublist [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable
 
 section IndexOf
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 @[simp]
 theorem index_of_nil (a : α) : index_of a [] = 0 :=
@@ -1853,7 +1853,7 @@ theorem mem_or_eq_of_mem_update_nth : ∀ {l : List α} {n : ℕ} {a b : α} h :
 
 section InsertNth
 
-variable{a : α}
+variable {a : α}
 
 @[simp]
 theorem insert_nth_zero (s : List α) (x : α) : insert_nth 0 x s = x :: s :=
@@ -2614,7 +2614,7 @@ theorem update_nth_eq_nil (l : List α) (n : ℕ) (a : α) : l.update_nth n a = 
 
 section Take'
 
-variable[Inhabited α]
+variable [Inhabited α]
 
 @[simp]
 theorem take'_length : ∀ n l, length (@take' α _ n l) = n
@@ -2833,7 +2833,7 @@ theorem foldl_rec_on_nil {C : β → Sort _} (op : β → α → β) b (hb : C b
 
 section Scanl
 
-variable{f : β → α → β}{b : β}{a : α}{l : List α}
+variable {f : β → α → β} {b : β} {a : α} {l : List α}
 
 theorem length_scanl : ∀ a l, length (scanl f a l) = l.length+1
 | a, [] => rfl
@@ -2933,7 +2933,7 @@ theorem scanr_cons (f : α → β → β) (b : β) (a : α) (l : List α) :
 
 section FoldlEqFoldr
 
-variable{f : α → α → α}(hcomm : Commutative f)(hassoc : Associative f)
+variable {f : α → α → α} (hcomm : Commutative f) (hassoc : Associative f)
 
 include hassoc
 
@@ -2961,9 +2961,9 @@ end FoldlEqFoldr
 
 section FoldlEqFoldlr'
 
-variable{f : α → β → α}
+variable {f : α → β → α}
 
-variable(hf : ∀ a b c, f (f a b) c = f (f a c) b)
+variable (hf : ∀ a b c, f (f a b) c = f (f a c) b)
 
 include hf
 
@@ -2983,9 +2983,9 @@ end FoldlEqFoldlr'
 
 section FoldlEqFoldlr'
 
-variable{f : α → β → β}
+variable {f : α → β → β}
 
-variable(hf : ∀ a b c, f a (f b c) = f b (f a c))
+variable (hf : ∀ a b c, f a (f b c) = f b (f a c))
 
 include hf
 
@@ -2999,7 +2999,7 @@ end FoldlEqFoldlr'
 
 section 
 
-variable{op : α → α → α}[ha : IsAssociative α op][hc : IsCommutative α op]
+variable {op : α → α → α} [ha : IsAssociative α op] [hc : IsCommutative α op]
 
 local notation a "*" b => op a b
 
@@ -3037,7 +3037,7 @@ end
 
 section MfoldlMfoldr
 
-variable{m : Type v → Type w}[Monadₓ m]
+variable {m : Type v → Type w} [Monadₓ m]
 
 @[simp]
 theorem mfoldl_nil (f : β → α → m β) {b} : mfoldl f b [] = pure b :=
@@ -3061,7 +3061,7 @@ theorem mfoldr_eq_foldr (f : α → β → m β) b l : mfoldr f b l = foldr (fun
 
 attribute [simp] mmap mmap'
 
-variable[IsLawfulMonad m]
+variable [IsLawfulMonad m]
 
 theorem mfoldl_eq_foldl (f : β → α → m β) b l : mfoldl f b l = foldl (fun mb a => mb >>= fun b => f b a) (pure b) l :=
   by 
@@ -3211,7 +3211,7 @@ theorem any_iff_exists_prop {p : α → Prop} [DecidablePred p] {l : List α} :
 theorem any_of_mem {p : α → Bool} {a : α} {l : List α} (h₁ : a ∈ l) (h₂ : p a) : any l p :=
   any_iff_exists.2 ⟨_, h₁, h₂⟩
 
-instance (priority := 500)decidable_forall_mem {p : α → Prop} [DecidablePred p] (l : List α) :
+instance (priority := 500) decidable_forall_mem {p : α → Prop} [DecidablePred p] (l : List α) :
   Decidable (∀ x _ : x ∈ l, p x) :=
   decidableOfIff _ all_iff_forall_prop
 
@@ -3343,7 +3343,7 @@ theorem nth_le_pmap {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (h :
 
 section Find
 
-variable{p : α → Prop}[DecidablePred p]{l : List α}{a : α}
+variable {p : α → Prop} [DecidablePred p] {l : List α} {a : α}
 
 @[simp]
 theorem find_nil (p : α → Prop) [DecidablePred p] : find p [] = none :=
@@ -3406,7 +3406,7 @@ end Find
 
 section Lookmap
 
-variable(f : α → Option α)
+variable (f : α → Option α)
 
 @[simp]
 theorem lookmap_nil : [].lookmap f = [] :=
@@ -3707,7 +3707,7 @@ theorem reduce_option_nth_iff {l : List (Option α)} {x : α} :
 
 section Filter
 
-variable{p : α → Prop}[DecidablePred p]
+variable {p : α → Prop} [DecidablePred p]
 
 theorem filter_eq_foldr (p : α → Prop) [DecidablePred p] (l : List α) :
   filter p l = foldr (fun a out => if p a then a :: out else out) [] l :=
@@ -3790,7 +3790,7 @@ theorem filter_eq_nil {l} : filter p l = [] ↔ ∀ a _ : a ∈ l, ¬p a :=
   by 
     simp only [eq_nil_iff_forall_not_mem, mem_filter, not_and]
 
-variable(p)
+variable (p)
 
 theorem sublist.filter {l₁ l₂} (s : l₁ <+ l₂) : filter p l₁ <+ filter p l₂ :=
   filter_map_eq_filter p ▸ s.filter_map _
@@ -4427,7 +4427,7 @@ instance decidable_infix [DecidableEq α] : ∀ l₁ l₂ : List α, Decidable (
 
 section Insert
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 @[simp]
 theorem insert_nil (a : α) : insert a nil = [a] :=
@@ -4497,7 +4497,7 @@ end Insert
 
 section Erasep
 
-variable{p : α → Prop}[DecidablePred p]
+variable {p : α → Prop} [DecidablePred p]
 
 @[simp]
 theorem erasep_nil : [].erasep p = [] :=
@@ -4636,7 +4636,7 @@ end Erasep
 
 section Erase
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 @[simp]
 theorem erase_nil (a : α) : [].erase a = [] :=
@@ -4750,7 +4750,7 @@ end Erase
 
 section Diff
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 @[simp]
 theorem diff_nil (l : List α) : l.diff [] = l :=
@@ -4894,7 +4894,7 @@ theorem mem_enum_from {x : α} {i : ℕ} :
 
 section Choose
 
-variable(p : α → Prop)[DecidablePred p](l : List α)
+variable (p : α → Prop) [DecidablePred p] (l : List α)
 
 theorem choose_spec (hp : ∃ a, a ∈ l ∧ p a) : choose p l hp ∈ l ∧ p (choose p l hp) :=
   (choose_x p l hp).property
@@ -4924,7 +4924,7 @@ end Map₂Left'
 
 section Map₂Right'
 
-variable(f : Option α → β → γ)(a : α)(as : List α)(b : β)(bs : List β)
+variable (f : Option α → β → γ) (a : α) (as : List α) (b : β) (bs : List β)
 
 @[simp]
 theorem map₂_right'_nil_left : map₂_right' f [] bs = (bs.map (f none), []) :=
@@ -4953,7 +4953,7 @@ end Map₂Right'
 
 section ZipLeft'
 
-variable(a : α)(as : List α)(b : β)(bs : List β)
+variable (a : α) (as : List α) (b : β) (bs : List β)
 
 @[simp]
 theorem zip_left'_nil_right : zip_left' as ([] : List β) = (as.map fun a => (a, none), []) :=
@@ -4982,7 +4982,7 @@ end ZipLeft'
 
 section ZipRight'
 
-variable(a : α)(as : List α)(b : β)(bs : List β)
+variable (a : α) (as : List α) (b : β) (bs : List β)
 
 @[simp]
 theorem zip_right'_nil_left : zip_right' ([] : List α) bs = (bs.map fun b => (none, b), []) :=
@@ -5011,7 +5011,7 @@ end ZipRight'
 
 section Map₂Left
 
-variable(f : α → Option β → γ)(as : List α)
+variable (f : α → Option β → γ) (as : List α)
 
 @[simp]
 theorem map₂_left_nil_right : map₂_left f as [] = as.map fun a => f a none :=
@@ -5052,7 +5052,7 @@ end Map₂Left
 
 section Map₂Right
 
-variable(f : Option α → β → γ)(a : α)(as : List α)(b : β)(bs : List β)
+variable (f : Option α → β → γ) (a : α) (as : List α) (b : β) (bs : List β)
 
 @[simp]
 theorem map₂_right_nil_left : map₂_right f [] bs = bs.map (f none) :=
@@ -5090,7 +5090,7 @@ end Map₂Right
 
 section ZipLeft
 
-variable(a : α)(as : List α)(b : β)(bs : List β)
+variable (a : α) (as : List α) (b : β) (bs : List β)
 
 @[simp]
 theorem zip_left_nil_right : zip_left as ([] : List β) = as.map fun a => (a, none) :=
@@ -5120,7 +5120,7 @@ end ZipLeft
 
 section ZipRight
 
-variable(a : α)(as : List α)(b : β)(bs : List β)
+variable (a : α) (as : List α) (b : β) (bs : List β)
 
 @[simp]
 theorem zip_right_nil_left : zip_right ([] : List α) bs = bs.map fun b => (none, b) :=

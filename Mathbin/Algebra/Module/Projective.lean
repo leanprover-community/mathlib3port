@@ -60,7 +60,7 @@ universe u v
 /-- An R-module is projective if it is a direct summand of a free module, or equivalently
   if maps from the module lift along surjections. There are several other equivalent
   definitions. -/
-class Module.Projective(R : Type u)[Semiringₓ R](P : Type max u v)[AddCommMonoidₓ P][Module R P] : Prop where 
+class Module.Projective (R : Type u) [Semiringₓ R] (P : Type max u v) [AddCommMonoidₓ P] [Module R P] : Prop where 
   out : ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s
 
 namespace Module
@@ -71,14 +71,8 @@ theorem projective_def {R : Type u} [Semiringₓ R] {P : Type max u v} [AddCommM
 
 section Semiringₓ
 
-variable{R :
-    Type
-      u}[Semiringₓ
-      R]{P :
-    Type
-      max u
-        v}[AddCommMonoidₓ
-      P][Module R P]{M : Type max u v}[AddCommGroupₓ M][Module R M]{N : Type _}[AddCommGroupₓ N][Module R N]
+variable {R : Type u} [Semiringₓ R] {P : Type max u v} [AddCommMonoidₓ P] [Module R P] {M : Type max u v}
+  [AddCommGroupₓ M] [Module R M] {N : Type _} [AddCommGroupₓ N] [Module R N]
 
 /-- A projective R-module has the property that maps from it lift along surjections. -/
 theorem projective_lifting_property [h : projective R P] (f : M →ₗ[R] N) (g : P →ₗ[R] N) (hf : Function.Surjective f) :
@@ -117,7 +111,7 @@ end Semiringₓ
 
 section Ringₓ
 
-variable{R : Type u}[Ringₓ R]{P : Type max u v}[AddCommGroupₓ P][Module R P]
+variable {R : Type u} [Ringₓ R] {P : Type max u v} [AddCommGroupₓ P] [Module R P]
 
 /-- A variant of `of_lifting_property'` when we're working over a `[ring R]`,
 which only requires quantifying over modules with an `add_comm_group` instance. -/
@@ -149,7 +143,7 @@ theorem projective_of_basis {ι : Type _} (b : Basis ι R P) : projective R P :=
     simp only [b.constr_apply, mul_oneₓ, id.def, Finsupp.smul_single', Finsupp.total_single, LinearMap.map_finsupp_sum]
     exact b.total_repr m
 
-instance (priority := 100)projective_of_free [Module.Free R P] : Module.Projective R P :=
+instance (priority := 100) projective_of_free [Module.Free R P] : Module.Projective R P :=
   projective_of_basis$ Module.Free.chooseBasis R P
 
 end Ringₓ

@@ -263,7 +263,7 @@ See also `nat.coprime_of_dvd` and `nat.coprime_of_dvd'` to prove `nat.coprime m 
 -/
 
 
-instance  (m n : ℕ) : Decidable (coprime m n) :=
+instance (m n : ℕ) : Decidable (coprime m n) :=
   by 
     unfold coprime <;> infer_instance
 

@@ -31,7 +31,7 @@ notation "GL" => general_linear_group
 
 namespace GeneralLinearGroup
 
-variable{n : Type u}[DecidableEq n][Fintype n]{R : Type v}[CommRingₓ R]
+variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 
 /-- The determinant of a unit matrix is itself a unit. -/
 @[simps]
@@ -71,7 +71,7 @@ theorem ext ⦃A B : GL n R⦄ (h : ∀ i j, (A : Matrix n n R) i j = (B : Matri
 
 section CoeLemmas
 
-variable(A B : GL n R)
+variable (A B : GL n R)
 
 @[simp]
 theorem coe_fn_eq_coe : «expr⇑ » A = («expr↑ » A : Matrix n n R) :=
@@ -98,7 +98,7 @@ end GeneralLinearGroup
 
 namespace SpecialLinearGroup
 
-variable{n : Type u}[DecidableEq n][Fintype n]{R : Type v}[CommRingₓ R]
+variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [CommRingₓ R]
 
 instance has_coe_to_general_linear_group : Coe (special_linear_group n R) (GL n R) :=
   ⟨fun A => ⟨«expr↑ » A, «expr↑ » (A⁻¹), congr_argₓ coeₓ (mul_right_invₓ A), congr_argₓ coeₓ (mul_left_invₓ A)⟩⟩
@@ -107,11 +107,11 @@ end SpecialLinearGroup
 
 section 
 
-variable{n : Type u}{R : Type v}[DecidableEq n][Fintype n][LinearOrderedCommRing R]
+variable {n : Type u} {R : Type v} [DecidableEq n] [Fintype n] [LinearOrderedCommRing R]
 
 section 
 
-variable(n R)
+variable (n R)
 
 /-- This is the subgroup of `nxn` matrices with entries over a
 linear ordered ring and positive determinant. -/
@@ -128,7 +128,7 @@ end
 
 section Neg
 
-variable{n : Type u}{R : Type v}[DecidableEq n][Fintype n][LinearOrderedCommRing R][Fact (Even (Fintype.card n))]
+variable {n : Type u} {R : Type v} [DecidableEq n] [Fintype n] [LinearOrderedCommRing R] [Fact (Even (Fintype.card n))]
 
 -- error in LinearAlgebra.GeneralLinearGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Formal operation of negation on general linear group on even cardinality `n` given by negating
@@ -158,14 +158,14 @@ end Neg
 
 namespace SpecialLinearGroup
 
-variable{n : Type u}[DecidableEq n][Fintype n]{R : Type v}[LinearOrderedCommRing R]
+variable {n : Type u} [DecidableEq n] [Fintype n] {R : Type v} [LinearOrderedCommRing R]
 
 /-- `special_linear_group n R` embeds into `GL_pos n R` -/
 def to_GL_pos : special_linear_group n R →* GL_pos n R :=
   { toFun := fun A => ⟨(A : GL n R), show 0 < («expr↑ » A : Matrix n n R).det from A.prop.symm ▸ zero_lt_one⟩,
     map_one' := Subtype.ext$ Units.ext$ rfl, map_mul' := fun A₁ A₂ => Subtype.ext$ Units.ext$ rfl }
 
-instance  : Coe (special_linear_group n R) (GL_pos n R) :=
+instance : Coe (special_linear_group n R) (GL_pos n R) :=
   ⟨to_GL_pos⟩
 
 theorem coe_eq_to_GL_pos : (coeₓ : special_linear_group n R → GL_pos n R) = to_GL_pos :=

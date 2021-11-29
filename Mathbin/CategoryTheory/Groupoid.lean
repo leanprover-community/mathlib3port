@@ -26,7 +26,7 @@ namespace CategoryTheory
 universe v v₂ u u₂
 
 /-- A `groupoid` is a category such that all morphisms are isomorphisms. -/
-class groupoid(obj : Type u) extends category.{v} obj : Type max u (v + 1) where 
+class groupoid (obj : Type u) extends category.{v} obj : Type max u (v + 1) where 
   inv : ∀ {X Y : obj}, (X ⟶ Y) → (Y ⟶ X)
   inv_comp' : ∀ {X Y : obj} f : X ⟶ Y, comp (inv f) f = id Y :=  by 
   runTac 
@@ -57,14 +57,14 @@ abbrev small_groupoid (C : Type u) : Type (u + 1) :=
 
 section 
 
-variable{C : Type u}[groupoid.{v} C]{X Y : C}
+variable {C : Type u} [groupoid.{v} C] {X Y : C}
 
-instance (priority := 100)is_iso.of_groupoid (f : X ⟶ Y) : is_iso f :=
+instance (priority := 100) is_iso.of_groupoid (f : X ⟶ Y) : is_iso f :=
   ⟨⟨groupoid.inv f,
       by 
         simp ⟩⟩
 
-variable(X Y)
+variable (X Y)
 
 /-- In a groupoid, isomorphisms are equivalent to morphisms. -/
 def groupoid.iso_equiv_hom : (X ≅ Y) ≃ (X ⟶ Y) :=
@@ -75,7 +75,7 @@ end
 
 section 
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
 /-- A category where every morphism `is_iso` is a groupoid. -/
 noncomputable def groupoid.of_is_iso (all_is_iso : ∀ {X Y : C} f : X ⟶ Y, is_iso f) : groupoid.{v} C :=

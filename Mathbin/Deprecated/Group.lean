@@ -24,20 +24,20 @@ is_group_hom, is_monoid_hom
 
 universe u v
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 /-- Predicate for maps which preserve an addition. -/
-structure IsAddHom{α β : Type _}[Add α][Add β](f : α → β) : Prop where 
+structure IsAddHom {α β : Type _} [Add α] [Add β] (f : α → β) : Prop where 
   map_add{} : ∀ x y, f (x+y) = f x+f y
 
 /-- Predicate for maps which preserve a multiplication. -/
 @[toAdditive]
-structure IsMulHom{α β : Type _}[Mul α][Mul β](f : α → β) : Prop where 
+structure IsMulHom {α β : Type _} [Mul α] [Mul β] (f : α → β) : Prop where 
   map_mul{} : ∀ x y, f (x*y) = f x*f y
 
 namespace IsMulHom
 
-variable[Mul α][Mul β]{γ : Type _}[Mul γ]
+variable [Mul α] [Mul β] {γ : Type _} [Mul γ]
 
 /-- The identity map preserves multiplication. -/
 @[toAdditive "The identity map preserves addition"]
@@ -71,17 +71,17 @@ theorem inv {α β} [Mul α] [CommGroupₓ β] {f : α → β} (hf : IsMulHom f)
 end IsMulHom
 
 /-- Predicate for add_monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
-structure IsAddMonoidHom[AddZeroClass α][AddZeroClass β](f : α → β) extends IsAddHom f : Prop where 
+structure IsAddMonoidHom [AddZeroClass α] [AddZeroClass β] (f : α → β) extends IsAddHom f : Prop where 
   map_zero{} : f 0 = 0
 
 /-- Predicate for monoid homomorphisms (deprecated -- use the bundled `monoid_hom` version). -/
 @[toAdditive]
-structure IsMonoidHom[MulOneClass α][MulOneClass β](f : α → β) extends IsMulHom f : Prop where 
+structure IsMonoidHom [MulOneClass α] [MulOneClass β] (f : α → β) extends IsMulHom f : Prop where 
   map_one{} : f 1 = 1
 
 namespace MonoidHom
 
-variable{M : Type _}{N : Type _}[mM : MulOneClass M][mN : MulOneClass N]
+variable {M : Type _} {N : Type _} [mM : MulOneClass M] [mN : MulOneClass N]
 
 include mM mN
 
@@ -90,7 +90,7 @@ include mM mN
 def of {f : M → N} (h : IsMonoidHom f) : M →* N :=
   { toFun := f, map_one' := h.2, map_mul' := h.1.1 }
 
-variable{mM mN}
+variable {mM mN}
 
 @[simp, toAdditive]
 theorem coe_of {f : M → N} (hf : IsMonoidHom f) : «expr⇑ » (MonoidHom.of hf) = f :=
@@ -104,7 +104,7 @@ end MonoidHom
 
 namespace MulEquiv
 
-variable{M : Type _}{N : Type _}[MulOneClass M][MulOneClass N]
+variable {M : Type _} {N : Type _} [MulOneClass M] [MulOneClass N]
 
 /-- A multiplicative isomorphism preserves multiplication (deprecated). -/
 @[toAdditive]
@@ -121,7 +121,7 @@ end MulEquiv
 
 namespace IsMonoidHom
 
-variable[MulOneClass α][MulOneClass β]{f : α → β}(hf : IsMonoidHom f)
+variable [MulOneClass α] [MulOneClass β] {f : α → β} (hf : IsMonoidHom f)
 
 /-- A monoid homomorphism preserves multiplication. -/
 @[toAdditive]
@@ -147,7 +147,7 @@ theorem IsMulHom.to_is_monoid_hom [MulOneClass α] [Groupₓ β] {f : α → β}
 
 namespace IsMonoidHom
 
-variable[MulOneClass α][MulOneClass β]{f : α → β}
+variable [MulOneClass α] [MulOneClass β] {f : α → β}
 
 /-- The identity map is a monoid homomorphism. -/
 @[toAdditive]
@@ -179,11 +179,11 @@ theorem is_add_monoid_hom_mul_right {γ : Type _} [NonUnitalNonAssocSemiring γ]
 end IsAddMonoidHom
 
 /-- Predicate for additive group homomorphism (deprecated -- use bundled `monoid_hom`). -/
-structure IsAddGroupHom[AddGroupₓ α][AddGroupₓ β](f : α → β) extends IsAddHom f : Prop
+structure IsAddGroupHom [AddGroupₓ α] [AddGroupₓ β] (f : α → β) extends IsAddHom f : Prop
 
 /-- Predicate for group homomorphisms (deprecated -- use bundled `monoid_hom`). -/
 @[toAdditive]
-structure IsGroupHom[Groupₓ α][Groupₓ β](f : α → β) extends IsMulHom f : Prop
+structure IsGroupHom [Groupₓ α] [Groupₓ β] (f : α → β) extends IsMulHom f : Prop
 
 @[toAdditive]
 theorem MonoidHom.is_group_hom {G H : Type _} {_ : Groupₓ G} {_ : Groupₓ H} (f : G →* H) : IsGroupHom (f : G → H) :=
@@ -200,7 +200,7 @@ theorem IsGroupHom.mk' [Groupₓ α] [Groupₓ β] {f : α → β} (hf : ∀ x y
 
 namespace IsGroupHom
 
-variable[Groupₓ α][Groupₓ β]{f : α → β}(hf : IsGroupHom f)
+variable [Groupₓ α] [Groupₓ β] {f : α → β} (hf : IsGroupHom f)
 
 open is_mul_hom(map_mul)
 
@@ -266,11 +266,11 @@ Nevertheless these are harmless, and helpful for stripping out dependencies on `
 -/
 
 
-variable{R : Type _}{S : Type _}
+variable {R : Type _} {S : Type _}
 
 section 
 
-variable[NonAssocSemiring R][NonAssocSemiring S]
+variable [NonAssocSemiring R] [NonAssocSemiring S]
 
 theorem to_is_monoid_hom (f : R →+* S) : IsMonoidHom f :=
   { map_one := f.map_one, map_mul := f.map_mul }
@@ -282,7 +282,7 @@ end
 
 section 
 
-variable[Ringₓ R][Ringₓ S]
+variable [Ringₓ R] [Ringₓ S]
 
 theorem to_is_add_group_hom (f : R →+* S) : IsAddGroupHom f :=
   { map_add := f.map_add }
@@ -298,7 +298,7 @@ theorem Inv.is_group_hom [CommGroupₓ α] : IsGroupHom (HasInv.inv : α → α)
 
 namespace IsAddGroupHom
 
-variable[AddGroupₓ α][AddGroupₓ β]{f : α → β}(hf : IsAddGroupHom f)
+variable [AddGroupₓ α] [AddGroupₓ β] {f : α → β} (hf : IsAddGroupHom f)
 
 /-- Additive group homomorphisms commute with subtraction. -/
 theorem map_sub a b : f (a - b) = f a - f b :=
@@ -321,7 +321,7 @@ theorem IsAddGroupHom.sub {α β} [AddGroupₓ α] [AddCommGroupₓ β] {f g : �
 
 namespace Units
 
-variable{M : Type _}{N : Type _}[Monoidₓ M][Monoidₓ N]
+variable {M : Type _} {N : Type _} [Monoidₓ M] [Monoidₓ N]
 
 /-- The group homomorphism on units induced by a multiplicative morphism. -/
 @[reducible]
@@ -339,7 +339,7 @@ end Units
 
 namespace IsUnit
 
-variable{M : Type _}{N : Type _}[Monoidₓ M][Monoidₓ N]{x : M}
+variable {M : Type _} {N : Type _} [Monoidₓ M] [Monoidₓ N] {x : M}
 
 theorem map' {f : M → N} (hf : IsMonoidHom f) {x : M} (h : IsUnit x) : IsUnit (f x) :=
   h.map (MonoidHom.of hf)

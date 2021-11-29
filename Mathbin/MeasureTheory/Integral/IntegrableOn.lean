@@ -20,11 +20,11 @@ open Set Filter TopologicalSpace MeasureTheory Function
 
 open_locale Classical TopologicalSpace Interval BigOperators Filter Ennreal MeasureTheory
 
-variable{α β E F : Type _}[MeasurableSpace α]
+variable {α β E F : Type _} [MeasurableSpace α]
 
 section 
 
-variable[MeasurableSpace β]{l l' : Filter α}{f g : α → β}{μ ν : Measureₓ α}
+variable [MeasurableSpace β] {l l' : Filter α} {f g : α → β} {μ ν : Measureₓ α}
 
 /-- A function `f` is measurable at filter `l` w.r.t. a measure `μ` if it is ae-measurable
 w.r.t. `μ.restrict s` for some `s ∈ l`. -/
@@ -78,7 +78,7 @@ theorem has_finite_integral_restrict_of_bounded
 (hf : «expr∀ᵐ ∂ , »((x), μ.restrict s, «expr ≤ »(«expr∥ ∥»(f x), C))) : has_finite_integral f (μ.restrict s) :=
 by haveI [] [":", expr is_finite_measure (μ.restrict s)] [":=", expr ⟨by rwa ["[", expr measure.restrict_apply_univ, "]"] []⟩]; exact [expr has_finite_integral_of_bounded hf]
 
-variable[NormedGroup E][MeasurableSpace E]{f g : α → E}{s t : Set α}{μ ν : Measureₓ α}
+variable [NormedGroup E] [MeasurableSpace E] {f g : α → E} {s t : Set α} {μ ν : Measureₓ α}
 
 /-- A function is `integrable_on` a set `s` if it is almost everywhere measurable on `s` and if the
 integral of its pointwise norm over `s` is less than infinity. -/
@@ -105,6 +105,7 @@ theorem integrable_on_univ : integrable_on f univ μ ↔ integrable f μ :=
 theorem integrable_on_zero : integrable_on (fun _ => (0 : E)) s μ :=
   integrable_zero _ _ _
 
+@[simp]
 theorem integrable_on_const {C : E} : integrable_on (fun _ => C) s μ ↔ C = 0 ∨ μ s < ∞ :=
   integrable_const_iff.trans$
     by 
@@ -120,7 +121,7 @@ theorem integrable_on.mono_measure (h : integrable_on f s ν) (hμ : μ ≤ ν) 
   h.mono (subset.refl _) hμ
 
 theorem integrable_on.mono_set_ae (h : integrable_on f t μ) (hst : s ≤ᵐ[μ] t) : integrable_on f s μ :=
-  h.integrable.mono_measure$ restrict_mono_ae hst
+  h.integrable.mono_measure$ measure.restrict_mono_ae hst
 
 theorem integrable_on.congr_set_ae (h : integrable_on f t μ) (hst : s =ᵐ[μ] t) : integrable_on f s μ :=
   h.mono_set_ae hst.le
@@ -263,7 +264,7 @@ def integrable_at_filter (f : α → E) (l : Filter α)
       volume_tac) :=
   ∃ (s : _)(_ : s ∈ l), integrable_on f s μ
 
-variable{l l' : Filter α}
+variable {l l' : Filter α}
 
 protected theorem integrable_at_filter.eventually (h : integrable_at_filter f l μ) :
   ∀ᶠs in l.lift' powerset, integrable_on f s μ :=
@@ -324,7 +325,7 @@ theorem measure.finite_at_filter.integrable_at_filter_of_tendsto {l : Filter α}
 
 alias measure.finite_at_filter.integrable_at_filter_of_tendsto ← Filter.Tendsto.integrable_at_filter
 
-variable[BorelSpace E][second_countable_topology E]
+variable [BorelSpace E] [second_countable_topology E]
 
 theorem integrable_add_of_disjoint {f g : α → E} (h : Disjoint (support f) (support g)) (hf : Measurable f)
   (hg : Measurable g) : integrable (f+g) μ ↔ integrable f μ ∧ integrable g μ :=
@@ -343,7 +344,7 @@ end MeasureTheory
 
 open MeasureTheory
 
-variable[MeasurableSpace E][NormedGroup E]
+variable [MeasurableSpace E] [NormedGroup E]
 
 /-- If a function is integrable at `𝓝[s] x` for each point `x` of a compact set `s`, then it is
 integrable on `s`. -/
@@ -471,7 +472,7 @@ theorem Continuous.integrable_of_compact_closure_support [TopologicalSpace α] [
 
 section 
 
-variable[TopologicalSpace α][OpensMeasurableSpace α]{μ : Measureₓ α}{s t : Set α}{f g : α → ℝ}
+variable [TopologicalSpace α] [OpensMeasurableSpace α] {μ : Measureₓ α} {s t : Set α} {f g : α → ℝ}
 
 -- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem measure_theory.integrable_on.mul_continuous_on_of_subset
@@ -508,15 +509,9 @@ end
 
 section Monotone
 
-variable[TopologicalSpace
-      α][BorelSpace
-      α][BorelSpace
-      E][ConditionallyCompleteLinearOrder
-      α][ConditionallyCompleteLinearOrder
-      E][OrderTopology
-      α][OrderTopology
-      E][second_countable_topology
-      E]{μ : Measureₓ α}[is_locally_finite_measure μ]{s : Set α}(hs : IsCompact s){f : α → E}
+variable [TopologicalSpace α] [BorelSpace α] [BorelSpace E] [ConditionallyCompleteLinearOrder α]
+  [ConditionallyCompleteLinearOrder E] [OrderTopology α] [OrderTopology E] [second_countable_topology E]
+  {μ : Measureₓ α} [is_locally_finite_measure μ] {s : Set α} (hs : IsCompact s) {f : α → E}
 
 include hs
 

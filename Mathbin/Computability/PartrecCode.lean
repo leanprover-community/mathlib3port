@@ -40,7 +40,7 @@ open nat(mkpair unpair)
 
 open nat.partrec(code)
 
-instance  : Inhabited code :=
+instance : Inhabited code :=
   ⟨zero⟩
 
 protected def const : ℕ → code
@@ -127,7 +127,7 @@ private theorem encode_of_nat_code : ∀ n, encode_code (of_nat_code n) = n
     simp [encode_code, of_nat_code, -add_commₓ]
     cases n.bodd <;> cases n.div2.bodd <;> simp [encode_code, of_nat_code, -add_commₓ, IH, IH1, IH2, m, Nat.bit]
 
-instance  : Denumerable code :=
+instance : Denumerable code :=
   mk'
     ⟨encode_code, of_nat_code,
       fun c =>
@@ -483,7 +483,7 @@ def eval : code → ℕ →. ℕ
             eval cg (mkpair a (mkpair y i))
 | rfind' cf => Nat.unpaired fun a m => (Nat.rfind fun n => (fun m => m = 0) <$> eval cf (mkpair a (n+m))).map (·+m)
 
-instance  : HasMem (ℕ →. ℕ) code :=
+instance : HasMem (ℕ →. ℕ) code :=
   ⟨fun f c => eval c = f⟩
 
 @[simp]

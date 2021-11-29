@@ -142,7 +142,7 @@ theorem mul_smul' (x y : SL(2,ℝ)) (z : ℍ) : smul_aux (x*y) z = smul_aux x (s
     ring
 
 /-- The action of `SL(2, ℝ)` on the upper half-plane by fractional linear transformations. -/
-instance  : MulAction SL(2,ℝ) ℍ :=
+instance : MulAction SL(2,ℝ) ℍ :=
   { smul := smul_aux,
     one_smul :=
       fun z =>

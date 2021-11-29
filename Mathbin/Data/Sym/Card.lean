@@ -36,7 +36,7 @@ open Finset Fintype
 
 namespace Sym2
 
-variable{α : Type _}[DecidableEq α]
+variable {α : Type _} [DecidableEq α]
 
 /-- The `diag` of `s : finset α` is sent on a finset of `sym2 α` of card `s.card`. -/
 theorem card_image_diag (s : Finset α) : (s.diag.image Quotientₓ.mk).card = s.card :=

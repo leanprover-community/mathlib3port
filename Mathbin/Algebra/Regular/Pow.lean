@@ -14,11 +14,11 @@ algebra hierarchy.
 -/
 
 
-variable{R : Type _}{a b : R}
+variable {R : Type _} {a b : R}
 
 section Monoidₓ
 
-variable[Monoidₓ R]
+variable [Monoidₓ R]
 
 /--  Any power of a left-regular element is left-regular. -/
 theorem IsLeftRegular.pow (n : ℕ) (rla : IsLeftRegular a) : IsLeftRegular (a ^ n) :=

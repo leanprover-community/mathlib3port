@@ -37,14 +37,14 @@ for good definitional properties of the default term.
 
 universe u v w
 
-variable{α : Sort u}{β : Sort v}{γ : Sort w}
+variable {α : Sort u} {β : Sort v} {γ : Sort w}
 
 /-- `unique α` expresses that `α` is a type with a unique term `default α`.
 
 This is implemented as a type, rather than a `Prop`-valued predicate,
 for good definitional properties of the default term. -/
 @[ext]
-structure Unique(α : Sort u) extends Inhabited α where 
+structure Unique (α : Sort u) extends Inhabited α where 
   uniq : ∀ a : α, a = default
 
 attribute [class] Unique
@@ -66,13 +66,13 @@ instance PUnit.unique : Unique PUnit.{u} :=
 def uniqueProp {p : Prop} (h : p) : Unique p :=
   { default := h, uniq := fun x => rfl }
 
-instance  : Unique True :=
+instance : Unique True :=
   uniqueProp trivialₓ
 
 theorem Finₓ.eq_zero : ∀ n : Finₓ 1, n = 0
 | ⟨n, hn⟩ => Finₓ.eq_of_veq (Nat.eq_zero_of_le_zeroₓ (Nat.le_of_lt_succₓ hn))
 
-instance  {n : ℕ} : Inhabited (Finₓ n.succ) :=
+instance {n : ℕ} : Inhabited (Finₓ n.succ) :=
   ⟨0⟩
 
 instance inhabitedFinOneAdd (n : ℕ) : Inhabited (Finₓ (1+n)) :=
@@ -91,7 +91,7 @@ open Function
 
 section 
 
-variable[Unique α]
+variable [Unique α]
 
 instance (priority := 100) : Inhabited α :=
   to_inhabited ‹Unique α›
@@ -149,7 +149,7 @@ instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : ∀ a : α, Sort v) : Unique (∀
 
 namespace Function
 
-variable{f : α → β}
+variable {f : α → β}
 
 /-- If the domain of a surjective function is a singleton,
 then the codomain is a singleton as well. -/
@@ -178,7 +178,7 @@ theorem subsingleton_iff_is_empty {α} : Subsingleton (Option α) ↔ IsEmpty α
   ⟨fun h => ⟨fun x => Option.noConfusion$ @Subsingleton.elimₓ _ h x none⟩,
     fun h => ⟨fun x y => Option.casesOn x (Option.casesOn y rfl fun x => h.elim x) fun x => h.elim x⟩⟩
 
-instance  {α} [IsEmpty α] : Unique (Option α) :=
+instance {α} [IsEmpty α] : Unique (Option α) :=
   @Unique.mk' _ _ (subsingleton_iff_is_empty.2 ‹_›)
 
 end Option

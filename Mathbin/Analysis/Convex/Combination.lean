@@ -1,6 +1,6 @@
 import Mathbin.Algebra.BigOperators.Order 
 import Mathbin.Analysis.Convex.Hull 
-import Mathbin.LinearAlgebra.AffineSpace.BarycentricCoords
+import Mathbin.LinearAlgebra.AffineSpace.Basis
 
 /-!
 # Convex combinations
@@ -25,14 +25,15 @@ open_locale BigOperators Classical
 
 universe u u'
 
-variable{R E F ι ι' : Type _}[LinearOrderedField R][AddCommGroupₓ E][AddCommGroupₓ F][Module R E][Module R F]{s : Set E}
+variable {R E F ι ι' : Type _} [LinearOrderedField R] [AddCommGroupₓ E] [AddCommGroupₓ F] [Module R E] [Module R F]
+  {s : Set E}
 
 /-- Center of mass of a finite collection of points with prescribed weights.
 Note that we require neither `0 ≤ w i` nor `∑ w = 1`. -/
 def Finset.centerMass (t : Finset ι) (w : ι → R) (z : ι → E) : E :=
   (∑i in t, w i)⁻¹ • ∑i in t, w i • z i
 
-variable(i j : ι)(c : R)(t : Finset ι)(w : ι → R)(z : ι → E)
+variable (i j : ι) (c : R) (t : Finset ι) (w : ι → R) (z : ι → E)
 
 open Finset
 
@@ -45,7 +46,7 @@ theorem Finset.center_mass_pair (hne : i ≠ j) :
   by 
     simp only [center_mass, sum_pair hne, smul_add, (mul_smul _ _ _).symm, div_eq_inv_mul]
 
-variable{w}
+variable {w}
 
 theorem Finset.center_mass_insert (ha : i ∉ t) (hw : (∑j in t, w j) ≠ 0) :
   (insert i t).centerMass w z =
@@ -106,7 +107,7 @@ theorem Finset.center_mass_ite_eq (hi : i ∈ t) : t.center_mass (fun j => if i 
     ·
       rw [sum_ite_eq, if_pos hi]
 
-variable{t w}
+variable {t w}
 
 theorem Finset.center_mass_subset {t' : Finset ι} (ht : t ⊆ t') (h : ∀ i _ : i ∈ t', i ∉ t → w i = 0) :
   t.center_mass w z = t'.center_mass w z :=
@@ -122,7 +123,7 @@ theorem Finset.center_mass_filter_ne_zero : (t.filter fun i => w i ≠ 0).center
       by 
         simpa only [hit, mem_filter, true_andₓ, Ne.def, not_not] using hit'
 
-variable{z}
+variable {z}
 
 -- error in Analysis.Convex.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The center of mass of a finite subset of a convex set belongs to the set
@@ -408,7 +409,7 @@ end
 /-! ### `std_simplex` -/
 
 
-variable(ι)[Fintype ι]{f : ι → R}
+variable (ι) [Fintype ι] {f : ι → R}
 
 /-- `std_simplex 𝕜 ι` is the convex hull of the canonical basis in `ι → 𝕜`. -/
 theorem convex_hull_basis_eq_std_simplex :
@@ -425,7 +426,7 @@ theorem convex_hull_basis_eq_std_simplex :
         finset.univ.center_mass_mem_convex_hull (fun i hi => hw₀ i) (hw₁.symm ▸ zero_lt_one)
           fun i hi => mem_range_self i
 
-variable{ι}
+variable {ι}
 
 -- error in Analysis.Convex.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The convex hull of a finite set is the image of the standard simplex in `s → ℝ`
@@ -455,28 +456,25 @@ theorem mem_Icc_of_mem_std_simplex (hf : f ∈ StdSimplex R ι) x : f x ∈ Icc 
 corresponding barycentric coordinates. -/
 theorem convex_hull_affine_basis_eq_nonneg_barycentric
 {ι : Type*}
-{p : ι → E}
-(h_ind : affine_independent R p)
-(h_tot : «expr = »(affine_span R (range p), «expr⊤»())) : «expr = »(convex_hull R (range p), {x | ∀
- i, «expr ≤ »(0, barycentric_coord h_ind h_tot i x)}) :=
+(b : affine_basis ι R E) : «expr = »(convex_hull R (range b.points), {x | ∀ i, «expr ≤ »(0, b.coord i x)}) :=
 begin
   rw [expr convex_hull_range_eq_exists_affine_combination] [],
   ext [] [ident x] [],
   split,
   { rintros ["⟨", ident s, ",", ident w, ",", ident hw₀, ",", ident hw₁, ",", ident rfl, "⟩", ident i],
     by_cases [expr hi, ":", expr «expr ∈ »(i, s)],
-    { rw [expr barycentric_coord_apply_combination_of_mem h_ind h_tot hi hw₁] [],
+    { rw [expr b.coord_apply_combination_of_mem hi hw₁] [],
       exact [expr hw₀ i hi] },
-    { rw [expr barycentric_coord_apply_combination_of_not_mem h_ind h_tot hi hw₁] [] } },
+    { rw [expr b.coord_apply_combination_of_not_mem hi hw₁] [] } },
   { intros [ident hx],
-    have [ident hx'] [":", expr «expr ∈ »(x, affine_span R (range p))] [],
-    { rw [expr h_tot] [],
+    have [ident hx'] [":", expr «expr ∈ »(x, affine_span R (range b.points))] [],
+    { rw [expr b.tot] [],
       exact [expr affine_subspace.mem_top R E x] },
     obtain ["⟨", ident s, ",", ident w, ",", ident hw₁, ",", ident rfl, "⟩", ":=", expr (mem_affine_span_iff_eq_affine_combination R E).mp hx'],
     refine [expr ⟨s, w, _, hw₁, rfl⟩],
     intros [ident i, ident hi],
     specialize [expr hx i],
-    rw [expr barycentric_coord_apply_combination_of_mem h_ind h_tot hi hw₁] ["at", ident hx],
+    rw [expr b.coord_apply_combination_of_mem hi hw₁] ["at", ident hx],
     exact [expr hx] }
 end
 

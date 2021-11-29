@@ -16,7 +16,7 @@ relation is `G.adj` for `G : simple_graph α`, this corresponds to independent s
 
 open Function Set
 
-variable{α β : Type _}{r r₁ r₂ : α → α → Prop}{r' : β → β → Prop}{s t : Set α}{a : α}
+variable {α β : Type _} {r r₁ r₂ : α → α → Prop} {r' : β → β → Prop} {s t : Set α} {a : α}
 
 protected theorem Symmetric.compl (h : Symmetric r) : Symmetric («expr ᶜ» r) :=
   fun x y hr hr' => hr$ h hr'

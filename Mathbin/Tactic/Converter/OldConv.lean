@@ -2,7 +2,7 @@ import Mathbin.Control.Basic
 
 open Tactic
 
-unsafe structure old_conv_result(α : Type) where 
+unsafe structure old_conv_result (α : Type) where 
   val : α 
   rhs : expr 
   proof : Option expr
@@ -69,10 +69,10 @@ protected unsafe def bind {α β : Type} (c₁ : old_conv α) (c₂ : α → old
       fun ⟨a, e₁, pr₁⟩ =>
         Bind.bind (c₂ a r e₁) fun ⟨b, e₂, pr₂⟩ => Bind.bind (join_proofs r pr₁ pr₂) fun pr => return ⟨b, e₂, pr⟩
 
-unsafe instance  : Monadₓ old_conv :=
+unsafe instance : Monadₓ old_conv :=
   { map := @old_conv.map, pure := @old_conv.pure, bind := @old_conv.bind }
 
-unsafe instance  : Alternativeₓ old_conv :=
+unsafe instance : Alternativeₓ old_conv :=
   { old_conv.monad with failure := @old_conv.failed, orelse := @old_conv.orelse }
 
 unsafe def whnf (md : transparency := reducible) : old_conv Unit :=

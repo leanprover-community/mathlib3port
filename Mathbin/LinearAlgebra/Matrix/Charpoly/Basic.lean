@@ -28,9 +28,9 @@ open Polynomial Matrix
 
 open_locale BigOperators
 
-variable{R : Type u}[CommRingₓ R]
+variable {R : Type u} [CommRingₓ R]
 
-variable{n : Type w}[DecidableEq n][Fintype n]
+variable {n : Type w} [DecidableEq n] [Fintype n]
 
 open Finset
 

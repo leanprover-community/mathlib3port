@@ -57,7 +57,7 @@ attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]]
 attribute [toAdditive] Mon.largeCategory Mon.concreteCategory
 
 @[toAdditive]
-instance  : CoeSort Mon (Type _) :=
+instance : CoeSort Mon (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled `Mon` from the underlying type and typeclass. -/
@@ -77,11 +77,11 @@ def of_hom {X Y : Type u} [Monoidₓ X] [Monoidₓ Y] (f : X →* Y) : of X ⟶ 
 add_decl_doc AddMon.ofHom
 
 @[toAdditive]
-instance  : Inhabited Mon :=
+instance : Inhabited Mon :=
   ⟨@of PUnit$ @Groupₓ.toMonoid _$ @CommGroupₓ.toGroup _ PUnit.commGroup⟩
 
 @[toAdditive]
-instance  (M : Mon) : Monoidₓ M :=
+instance (M : Mon) : Monoidₓ M :=
   M.str
 
 @[simp, toAdditive]
@@ -101,7 +101,7 @@ add_decl_doc AddCommMon
 namespace CommMon
 
 @[toAdditive]
-instance  : bundled_hom.parent_projection CommMonoidₓ.toMonoid :=
+instance : bundled_hom.parent_projection CommMonoidₓ.toMonoid :=
   ⟨⟩
 
 -- error in Algebra.Category.Mon.Basic: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
@@ -110,7 +110,7 @@ attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]]
 attribute [toAdditive] CommMon.largeCategory CommMon.concreteCategory
 
 @[toAdditive]
-instance  : CoeSort CommMon (Type _) :=
+instance : CoeSort CommMon (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled `CommMon` from the underlying type and typeclass. -/
@@ -122,11 +122,11 @@ def of (M : Type u) [CommMonoidₓ M] : CommMon :=
 add_decl_doc AddCommMon.of
 
 @[toAdditive]
-instance  : Inhabited CommMon :=
+instance : Inhabited CommMon :=
   ⟨@of PUnit$ @CommGroupₓ.toCommMonoid _ PUnit.commGroup⟩
 
 @[toAdditive]
-instance  (M : CommMon) : CommMonoidₓ M :=
+instance (M : CommMon) : CommMonoidₓ M :=
   M.str
 
 @[simp, toAdditive]
@@ -139,13 +139,13 @@ instance has_forget_to_Mon : has_forget₂ CommMon Mon :=
 
 end CommMon
 
-example  {R S : Mon} (f : R ⟶ S) : (R : Type) → (S : Type) :=
+example {R S : Mon} (f : R ⟶ S) : (R : Type) → (S : Type) :=
   f
 
-example  {R S : CommMon} (f : R ⟶ S) : (R : Type) → (S : Type) :=
+example {R S : CommMon} (f : R ⟶ S) : (R : Type) → (S : Type) :=
   f
 
-example  (R : CommMon.{u}) : R ⟶ R :=
+example (R : CommMon.{u}) : R ⟶ R :=
   { toFun :=
       fun x =>
         by 
@@ -160,11 +160,11 @@ example  (R : CommMon.{u}) : R ⟶ R :=
         by 
           rw [mul_assocₓ x y (x*y), ←mul_assocₓ y x y, mul_commₓ y x, mul_assocₓ, mul_assocₓ] }
 
-variable{X Y : Type u}
+variable {X Y : Type u}
 
 section 
 
-variable[Monoidₓ X][Monoidₓ Y]
+variable [Monoidₓ X] [Monoidₓ Y]
 
 /-- Build an isomorphism in the category `Mon` from a `mul_equiv` between `monoid`s. -/
 @[toAdditive AddEquiv.toAddMonIso
@@ -177,7 +177,7 @@ end
 
 section 
 
-variable[CommMonoidₓ X][CommMonoidₓ Y]
+variable [CommMonoidₓ X] [CommMonoidₓ Y]
 
 /-- Build an isomorphism in the category `CommMon` from a `mul_equiv` between `comm_monoid`s. -/
 @[toAdditive AddEquiv.toAddCommMonIso
@@ -243,7 +243,7 @@ reflect isomorphisms.
 -/
 
 
-example  : reflects_isomorphisms (forget₂ CommMon Mon) :=
+example : reflects_isomorphisms (forget₂ CommMon Mon) :=
   by 
     infer_instance
 

@@ -15,7 +15,7 @@ open_locale BigOperators Nat
 
 namespace Finset
 
-variable{α : Type u}{β : Type v}{γ : Type w}{s₂ s₁ s : Finset α}{a : α}{g f : α → β}
+variable {α : Type u} {β : Type v} {γ : Type w} {s₂ s₁ s : Finset α} {a : α} {g f : α → β}
 
 theorem sum_Ico_add [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [LocallyFiniteOrder α] [AddCommMonoidₓ β]
   (f : α → β) (a b c : α) : (∑x in Ico a b, f (c+x)) = ∑x in Ico (a+c) (b+c), f x :=
@@ -29,7 +29,7 @@ theorem prod_Ico_add [OrderedCancelAddCommMonoid α] [HasExistsAddOfLe α] [Loca
   (f : α → β) (a b c : α) : (∏x in Ico a b, f (c+x)) = ∏x in Ico (a+c) (b+c), f x :=
   @sum_Ico_add _ (Additive β) _ _ _ _ f a b c
 
-variable[CommMonoidₓ β]
+variable [CommMonoidₓ β]
 
 theorem sum_Ico_succ_top {δ : Type _} [AddCommMonoidₓ δ] {a b : ℕ} (hab : a ≤ b) (f : ℕ → δ) :
   (∑k in Ico a (b+1), f k) = (∑k in Ico a b, f k)+f b :=

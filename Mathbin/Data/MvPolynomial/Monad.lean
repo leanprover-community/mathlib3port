@@ -47,9 +47,9 @@ namespace MvPolynomial
 
 open Finsupp
 
-variable{σ : Type _}{τ : Type _}
+variable {σ : Type _} {τ : Type _}
 
-variable{R S T : Type _}[CommSemiringₓ R][CommSemiringₓ S][CommSemiringₓ T]
+variable {R S T : Type _} [CommSemiringₓ R] [CommSemiringₓ S] [CommSemiringₓ T]
 
 /--
 `bind₁` is the "left hand side" bind operation on `mv_polynomial`, operating on the variable type.
@@ -105,7 +105,7 @@ theorem eval₂_hom_eq_bind₂ (f : R →+* MvPolynomial σ S) : eval₂_hom f X
 
 section 
 
-variable(σ R)
+variable (σ R)
 
 @[simp]
 theorem aeval_id_eq_join₁ : aeval id = @join₁ σ R _ :=
@@ -144,7 +144,7 @@ theorem aeval_X_left_apply (φ : MvPolynomial σ R) : aeval X φ = φ :=
   by 
     rw [aeval_eq_bind₁, bind₁_X_left, AlgHom.id_apply]
 
-variable(f : σ → MvPolynomial τ R)
+variable (f : σ → MvPolynomial τ R)
 
 @[simp]
 theorem bind₁_C_right (f : σ → MvPolynomial τ R) x : bind₁ f (C x) = C x :=

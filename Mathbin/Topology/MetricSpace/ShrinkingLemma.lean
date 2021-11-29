@@ -20,9 +20,9 @@ open Set Metric
 
 open_locale TopologicalSpace
 
-variable{α : Type u}{ι : Type v}[MetricSpace α][ProperSpace α]{c : ι → α}
+variable {α : Type u} {ι : Type v} [MetricSpace α] [ProperSpace α] {c : ι → α}
 
-variable{x : α}{r : ℝ}{s : Set α}
+variable {x : α} {r : ℝ} {s : Set α}
 
 -- error in Topology.MetricSpace.ShrinkingLemma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover

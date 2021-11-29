@@ -26,7 +26,7 @@ To get a C⋆-algebra `E` over field `𝕜`, use
 local postfix:1000 "⋆" => star
 
 /-- A normed star ring is a star ring endowed with a norm such that `star` is isometric. -/
-class NormedStarMonoid(E : Type _)[NormedGroup E][StarAddMonoid E] where 
+class NormedStarMonoid (E : Type _) [NormedGroup E] [StarAddMonoid E] where 
   norm_star : ∀ {x : E}, ∥x⋆∥ = ∥x∥
 
 export NormedStarMonoid(norm_star)
@@ -35,10 +35,10 @@ attribute [simp] norm_star
 
 /-- A C*-ring is a normed star ring that satifies the stronger condition `∥x⋆ * x∥ = ∥x∥^2`
 for every `x`. -/
-class CstarRing(E : Type _)[NormedRing E][StarRing E] where 
+class CstarRing (E : Type _) [NormedRing E] [StarRing E] where 
   norm_star_mul_self : ∀ {x : E}, ∥x⋆*x∥ = ∥x∥*∥x∥
 
-variable{𝕜 E : Type _}
+variable {𝕜 E : Type _}
 
 open CstarRing
 
@@ -76,17 +76,17 @@ theorem CstarRing.norm_star_mul_self' [NormedRing E] [StarRing E] [CstarRing E] 
 
 section starₗᵢ
 
-variable[CommSemiringₓ 𝕜][StarRing 𝕜][NormedRing E][StarRing E][NormedStarMonoid E]
+variable [CommSemiringₓ 𝕜] [StarRing 𝕜] [NormedRing E] [StarRing E] [NormedStarMonoid E]
 
-variable[Module 𝕜 E][StarModule 𝕜 E]
+variable [Module 𝕜 E] [StarModule 𝕜 E]
 
-variable(𝕜)
+variable (𝕜)
 
 /-- `star` bundled as a linear isometric equivalence -/
 def starₗᵢ : E ≃ₗᵢ⋆[𝕜] E :=
   { starAddEquiv with map_smul' := star_smul, norm_map' := fun x => norm_star }
 
-variable{𝕜}
+variable {𝕜}
 
 @[simp]
 theorem coe_starₗᵢ : (starₗᵢ 𝕜 : E → E) = star :=

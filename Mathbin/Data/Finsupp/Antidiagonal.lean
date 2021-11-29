@@ -17,13 +17,13 @@ namespace Finsupp
 
 open Finset
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- The `finsupp` counterpart of `multiset.antidiagonal`: the antidiagonal of
 `s : α →₀ ℕ` consists of all pairs `(t₁, t₂) : (α →₀ ℕ) × (α →₀ ℕ)` such that `t₁ + t₂ = s`.
 The finitely supported function `antidiagonal s` is equal to the multiplicities of these pairs. -/
 def antidiagonal' (f : α →₀ ℕ) : (α →₀ ℕ) × (α →₀ ℕ) →₀ ℕ :=
-  (f.to_multiset.antidiagonal.map (Prod.mapₓ Multiset.toFinsupp Multiset.toFinsupp)).toFinsupp
+  (f.to_multiset.antidiagonal.map (Prod.map Multiset.toFinsupp Multiset.toFinsupp)).toFinsupp
 
 /-- The antidiagonal of `s : α →₀ ℕ` is the finset of all pairs `(t₁, t₂) : (α →₀ ℕ) × (α →₀ ℕ)`
 such that `t₁ + t₂ = s`. -/

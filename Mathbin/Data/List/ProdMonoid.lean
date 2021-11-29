@@ -15,7 +15,7 @@ namespace List
 
 universe u v
 
-variable{α : Type u}
+variable {α : Type u}
 
 @[simp, toAdditive]
 theorem prod_repeat [Monoidₓ α] (a : α) (n : ℕ) : (repeat a n).Prod = a ^ n :=

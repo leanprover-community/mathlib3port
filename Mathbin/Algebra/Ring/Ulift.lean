@@ -14,7 +14,7 @@ We also provide `ulift.ring_equiv : ulift R ≃+* R`.
 
 universe u v
 
-variable{α : Type u}{x y : Ulift.{v} α}
+variable {α : Type u} {x y : Ulift.{v} α}
 
 namespace Ulift
 

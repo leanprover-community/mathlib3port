@@ -34,7 +34,7 @@ See the documentation of `to_additive.attr` for more information.
 
 universe u v w
 
-variable{β : Type u}{α : Type v}{γ : Type w}
+variable {β : Type u} {α : Type v} {γ : Type w}
 
 namespace Finset
 
@@ -85,7 +85,7 @@ open_locale BigOperators
 
 namespace Finset
 
-variable{s s₁ s₂ : Finset α}{a : α}{f g : α → β}
+variable {s s₁ s₂ : Finset α} {a : α} {f g : α → β}
 
 @[toAdditive]
 theorem prod_eq_multiset_prod [CommMonoidₓ β] (s : Finset α) (f : α → β) : (∏x in s, f x) = (s.1.map f).Prod :=
@@ -151,13 +151,13 @@ theorem MonoidHom.finset_prod_apply [MulOneClass β] [CommMonoidₓ γ] (f : α 
   (∏x in s, f x) b = ∏x in s, f x b :=
   (MonoidHom.eval b).map_prod _ _
 
-variable{s s₁ s₂ : Finset α}{a : α}{f g : α → β}
+variable {s s₁ s₂ : Finset α} {a : α} {f g : α → β}
 
 namespace Finset
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ β]
+variable [CommMonoidₓ β]
 
 @[simp, toAdditive]
 theorem prod_empty {f : α → β} : (∏x in (∅ : Finset α), f x) = 1 :=
@@ -256,7 +256,7 @@ section
 
 open Finset
 
-variable[Fintype α][DecidableEq α][CommMonoidₓ β]
+variable [Fintype α] [DecidableEq α] [CommMonoidₓ β]
 
 @[toAdditive]
 theorem IsCompl.prod_mul_prod {s t : Finset α} (h : IsCompl s t) (f : α → β) :
@@ -271,7 +271,7 @@ namespace Finset
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ β]
+variable [CommMonoidₓ β]
 
 /-- Multiplying the products of a function over `s` and over `sᶜ` gives the whole product.
 For a version expressed with subtypes, see `fintype.prod_subtype_mul_prod_subtype`. -/
@@ -279,12 +279,12 @@ For a version expressed with subtypes, see `fintype.prod_subtype_mul_prod_subtyp
       "Adding the sums of a function over `s` and over `sᶜ` gives the whole sum.\nFor a version expressed with subtypes, see `fintype.sum_subtype_add_sum_subtype`. "]
 theorem prod_mul_prod_compl [Fintype α] [DecidableEq α] (s : Finset α) (f : α → β) :
   ((∏i in s, f i)*∏i in «expr ᶜ» s, f i) = ∏i, f i :=
-  is_compl_compl.prod_mul_prod f
+  IsCompl.prod_mul_prod is_compl_compl f
 
 @[toAdditive]
 theorem prod_compl_mul_prod [Fintype α] [DecidableEq α] (s : Finset α) (f : α → β) :
   ((∏i in «expr ᶜ» s, f i)*∏i in s, f i) = ∏i, f i :=
-  is_compl_compl.symm.prod_mul_prod f
+  (@is_compl_compl _ s _).symm.prod_mul_prod f
 
 @[toAdditive]
 theorem prod_sdiff [DecidableEq α] (h : s₁ ⊆ s₂) : ((∏x in s₂ \ s₁, f x)*∏x in s₁, f x) = ∏x in s₂, f x :=
@@ -1396,7 +1396,7 @@ end Opposite
 
 section CommGroupₓ
 
-variable[CommGroupₓ β]
+variable [CommGroupₓ β]
 
 @[simp, toAdditive]
 theorem prod_inv_distrib : (∏x in s, f x⁻¹) = (∏x in s, f x)⁻¹ :=
@@ -1449,7 +1449,7 @@ theorem sum_sub_distrib [AddCommGroupₓ β] : (∑x in s, f x - g x) = (∑x in
 
 section ProdEqZero
 
-variable[CommMonoidWithZero β]
+variable [CommMonoidWithZero β]
 
 -- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem prod_eq_zero (ha : «expr ∈ »(a, s)) (h : «expr = »(f a, 0)) : «expr = »(«expr∏ in , »((x), s, f x), 0) :=
@@ -1470,7 +1470,7 @@ theorem prod_boole {s : Finset α} {p : α → Prop} [DecidablePred p] :
       apply prod_eq_zero hi 
       rw [if_neg hq]
 
-variable[Nontrivial β][NoZeroDivisors β]
+variable [Nontrivial β] [NoZeroDivisors β]
 
 theorem prod_eq_zero_iff : (∏x in s, f x) = 0 ↔ ∃ (a : _)(_ : a ∈ s), f a = 0 :=
   by 
@@ -1489,7 +1489,7 @@ end ProdEqZero
 
 section CommGroupWithZero
 
-variable[CommGroupWithZero β]
+variable [CommGroupWithZero β]
 
 -- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
@@ -1612,7 +1612,7 @@ end List
 
 namespace Multiset
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 -- error in Algebra.BigOperators.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]

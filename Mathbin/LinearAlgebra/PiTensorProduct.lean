@@ -55,25 +55,25 @@ open Function
 
 section Semiringₓ
 
-variable{ι ι₂ ι₃ : Type _}[DecidableEq ι][DecidableEq ι₂][DecidableEq ι₃]
+variable {ι ι₂ ι₃ : Type _} [DecidableEq ι] [DecidableEq ι₂] [DecidableEq ι₃]
 
-variable{R : Type _}[CommSemiringₓ R]
+variable {R : Type _} [CommSemiringₓ R]
 
-variable{R₁ R₂ : Type _}
+variable {R₁ R₂ : Type _}
 
-variable{s : ι → Type _}[∀ i, AddCommMonoidₓ (s i)][∀ i, Module R (s i)]
+variable {s : ι → Type _} [∀ i, AddCommMonoidₓ (s i)] [∀ i, Module R (s i)]
 
-variable{M : Type _}[AddCommMonoidₓ M][Module R M]
+variable {M : Type _} [AddCommMonoidₓ M] [Module R M]
 
-variable{E : Type _}[AddCommMonoidₓ E][Module R E]
+variable {E : Type _} [AddCommMonoidₓ E] [Module R E]
 
-variable{F : Type _}[AddCommMonoidₓ F]
+variable {F : Type _} [AddCommMonoidₓ F]
 
 namespace PiTensorProduct
 
 include R
 
-variable(R)(s)
+variable (R) (s)
 
 /-- The relation on `free_add_monoid (R × Π i, s i)` that generates a congruence whose quotient is
 the tensor product. -/
@@ -92,14 +92,14 @@ inductive eqv : FreeAddMonoid (R × ∀ i, s i) → FreeAddMonoid (R × ∀ i, s
 
 end PiTensorProduct
 
-variable(R)(s)
+variable (R) (s)
 
 /-- `pi_tensor_product R s` with `R` a commutative semiring and `s : ι → Type*` is the tensor
   product of all the `s i`'s. This is denoted by `⨂[R] i, s i`. -/
 def PiTensorProduct : Type _ :=
   (addConGen (PiTensorProduct.Eqv R s)).Quotient
 
-variable{R}
+variable {R}
 
 localized [TensorProduct] notation3 :100 "⨂[" R "] " (...) ", " r:(scoped f => PiTensorProduct R f) => r
 
@@ -109,15 +109,15 @@ namespace PiTensorProduct
 
 section Module
 
-instance  : AddCommMonoidₓ (⨂[R] i, s i) :=
+instance : AddCommMonoidₓ (⨂[R] i, s i) :=
   { (addConGen (PiTensorProduct.Eqv R s)).AddMonoid with
     add_comm :=
       fun x y => AddCon.induction_on₂ x y$ fun x y => Quotientₓ.sound'$ AddConGen.Rel.of _ _$ eqv.add_comm _ _ }
 
-instance  : Inhabited (⨂[R] i, s i) :=
+instance : Inhabited (⨂[R] i, s i) :=
   ⟨0⟩
 
-variable(R){s}
+variable (R) {s}
 
 /-- `tprod_coeff R r f` with `r : R` and `f : Π i, s i` is the tensor product of the vectors `f i`
 over all `i : ι`, multiplied by the coefficient `r`. Note that this is meant as an auxiliary
@@ -125,7 +125,7 @@ definition for this file alone, and that one should use `tprod` defined below fo
 def tprod_coeff (r : R) (f : ∀ i, s i) : ⨂[R] i, s i :=
   AddCon.mk' _$ FreeAddMonoid.of (r, f)
 
-variable{R}
+variable {R}
 
 theorem zero_tprod_coeff (f : ∀ i, s i) : tprod_coeff R 0 f = 0 :=
   Quotientₓ.sound'$ AddConGen.Rel.of _ _$ eqv.of_zero_scalar _
@@ -220,9 +220,9 @@ end
 
 section DistribMulAction
 
-variable[Monoidₓ R₁][DistribMulAction R₁ R][SmulCommClass R₁ R R]
+variable [Monoidₓ R₁] [DistribMulAction R₁ R] [SmulCommClass R₁ R R]
 
-variable[Monoidₓ R₂][DistribMulAction R₂ R][SmulCommClass R₂ R R]
+variable [Monoidₓ R₂] [DistribMulAction R₂ R] [SmulCommClass R₂ R R]
 
 instance has_scalar' : HasScalar R₁ (⨂[R] i, s i) :=
   ⟨fun r =>
@@ -243,7 +243,7 @@ instance has_scalar' : HasScalar R₁ (⨂[R] i, s i) :=
           by 
             simp [smul_tprod_coeff, mul_smul_comm]⟩
 
-instance  : HasScalar R (⨂[R] i, s i) :=
+instance : HasScalar R (⨂[R] i, s i) :=
   PiTensorProduct.hasScalar'
 
 theorem smul_tprod_coeff' (r : R₁) (z : R) (f : ∀ i, s i) : r • tprod_coeff R z f = tprod_coeff R (r • z) f :=
@@ -318,18 +318,18 @@ instance module' [Semiringₓ R₁] [Module R₁ R] [SmulCommClass R₁ R R] : M
             by 
               rw [PiTensorProduct.smul_add, ihx, ihy, add_zeroₓ] }
 
-instance  : Module R (⨂[R] i, s i) :=
+instance : Module R (⨂[R] i, s i) :=
   PiTensorProduct.module'
 
-instance  : SmulCommClass R R (⨂[R] i, s i) :=
+instance : SmulCommClass R R (⨂[R] i, s i) :=
   PiTensorProduct.smul_comm_class'
 
-instance  : IsScalarTower R R (⨂[R] i, s i) :=
+instance : IsScalarTower R R (⨂[R] i, s i) :=
   PiTensorProduct.is_scalar_tower'
 
-variable{R}
+variable {R}
 
-variable(R)
+variable (R)
 
 /-- The canonical `multilinear_map R s (⨂[R] i, s i)`. -/
 def tprod : MultilinearMap R s (⨂[R] i, s i) :=
@@ -339,7 +339,7 @@ def tprod : MultilinearMap R s (⨂[R] i, s i) :=
         by 
           simpRw [smul_tprod_coeff', ←smul_tprod_coeff (1 : R) _ i, update_idem, update_same] }
 
-variable{R}
+variable {R}
 
 notation3 :100 "⨂ₜ[" R "] " (...) ", " r:(scoped f => tprod R f) => r
 
@@ -383,7 +383,7 @@ section Multilinear
 
 open MultilinearMap
 
-variable{s}
+variable {s}
 
 /-- Auxiliary function to constructing a linear map `(⨂[R] i, s i) → E` given a
 `multilinear map R s E` with the property that its composition with the canonical
@@ -453,7 +453,7 @@ def lift : MultilinearMap R s E ≃ₗ[R] (⨂[R] i, s i) →ₗ[R] E :=
           ext 
           simp [lift_aux_tprod] }
 
-variable{φ : MultilinearMap R s E}
+variable {φ : MultilinearMap R s E}
 
 @[simp]
 theorem lift.tprod (f : ∀ i, s i) : lift φ (tprod R f) = φ f :=
@@ -475,7 +475,7 @@ theorem lift_tprod : lift (tprod R : MultilinearMap R s _) = LinearMap.id :=
 
 section 
 
-variable(R M)
+variable (R M)
 
 /-- Re-index the components of the tensor power by `e`.
 
@@ -543,7 +543,7 @@ theorem reindex_refl : reindex R M (Equiv.refl ι) = LinearEquiv.refl R _ :=
     rw [reindex_comp_tprod, LinearEquiv.refl_to_linear_map, Equiv.refl_symm]
     rfl
 
-variable(ι)
+variable (ι)
 
 -- error in LinearAlgebra.PiTensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The tensor product over an empty index type `ι` is isomorphic to the base ring. -/
@@ -567,7 +567,7 @@ def is_empty_equiv [is_empty ι] : «expr ≃ₗ[ ] »(«expr⨂[ ] , »(R, (i :
 theorem is_empty_equiv_apply_tprod [IsEmpty ι] (f : ι → M) : is_empty_equiv ι (tprod R f) = 1 :=
   lift.tprod _
 
-variable{ι}
+variable {ι}
 
 -- error in LinearAlgebra.PiTensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The tensor product over an single index is isomorphic to the module -/
@@ -625,7 +625,7 @@ private theorem tmul_symm_apply (a : Sum ι ι₂ → M) :
   tmul_symm (⨂ₜ[R] i, a i) = (⨂ₜ[R] i, a (Sum.inl i)) ⊗ₜ[R] ⨂ₜ[R] i, a (Sum.inr i) :=
   PiTensorProduct.lift.tprod _
 
-variable(R M)
+variable (R M)
 
 attribute [local ext] TensorProduct.ext
 
@@ -671,11 +671,11 @@ open PiTensorProduct
 
 open_locale TensorProduct
 
-variable{ι : Type _}[DecidableEq ι]{R : Type _}[CommRingₓ R]
+variable {ι : Type _} [DecidableEq ι] {R : Type _} [CommRingₓ R]
 
-variable{s : ι → Type _}[∀ i, AddCommGroupₓ (s i)][∀ i, Module R (s i)]
+variable {s : ι → Type _} [∀ i, AddCommGroupₓ (s i)] [∀ i, Module R (s i)]
 
-instance  : AddCommGroupₓ (⨂[R] i, s i) :=
+instance : AddCommGroupₓ (⨂[R] i, s i) :=
   Module.addCommMonoidToAddCommGroup R
 
 end PiTensorProduct

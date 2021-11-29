@@ -25,7 +25,7 @@ circulant, matrix
 -/
 
 
-variable{α β m n R : Type _}
+variable {α β m n R : Type _}
 
 namespace Matrix
 

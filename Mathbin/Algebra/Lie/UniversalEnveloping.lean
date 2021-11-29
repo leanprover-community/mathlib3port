@@ -31,9 +31,9 @@ lie algebra, universal enveloping algebra, tensor algebra
 
 universe u₁ u₂ u₃
 
-variable(R : Type u₁)(L : Type u₂)
+variable (R : Type u₁) (L : Type u₂)
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L]
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
 local notation "ιₜ" => TensorAlgebra.ι R
 
@@ -62,7 +62,7 @@ associative algebras. -/
 def mk_alg_hom : TensorAlgebra R L →ₐ[R] UniversalEnvelopingAlgebra R L :=
   RingQuot.mkAlgHom R (rel R L)
 
-variable{L}
+variable {L}
 
 /-- The natural Lie algebra morphism from a Lie algebra to its universal enveloping algebra. -/
 def ι : L →ₗ⁅R⁆ UniversalEnvelopingAlgebra R L :=
@@ -76,7 +76,7 @@ def ι : L →ₗ⁅R⁆ UniversalEnvelopingAlgebra R L :=
             simp [LieRing.of_associative_ring_bracket, ←this]
           exact RingQuot.mk_alg_hom_rel _ (rel.lie_compat x y) }
 
-variable{A : Type u₃}[Ringₓ A][Algebra R A](f : L →ₗ⁅R⁆ A)
+variable {A : Type u₃} [Ringₓ A] [Algebra R A] (f : L →ₗ⁅R⁆ A)
 
 /-- The universal property of the universal enveloping algebra: Lie algebra morphisms into
 associative algebras lift to associative algebra morphisms from the universal enveloping algebra. -/
@@ -113,7 +113,7 @@ theorem ι_comp_lift : lift R f ∘ ι R = f :=
 @[simp]
 theorem lift_ι_apply (x : L) : lift R f (ι R x) = f x :=
   by 
-    rw [←Function.comp_apply (lift R f) (ι R) x, ι_comp_lift]
+    rw [←Function.comp_applyₓ (lift R f) (ι R) x, ι_comp_lift]
 
 theorem lift_unique (g : UniversalEnvelopingAlgebra R L →ₐ[R] A) : g ∘ ι R = f ↔ g = lift R f :=
   by 

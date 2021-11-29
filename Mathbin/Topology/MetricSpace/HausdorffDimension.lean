@@ -80,7 +80,7 @@ open_locale MeasureTheory Ennreal Nnreal TopologicalSpace
 
 open MeasureTheory MeasureTheory.Measure Set TopologicalSpace FiniteDimensional Filter
 
-variable{ι X Y : Type _}[EmetricSpace X][EmetricSpace Y]
+variable {ι X Y : Type _} [EmetricSpace X] [EmetricSpace Y]
 
 -- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Hausdorff dimension of a set in an (e)metric space. -/
@@ -97,7 +97,7 @@ by letI [] [] [":=", expr borel X]; exact [expr «expr⨆ , »((d : «exprℝ≥
 
 section Measurable
 
-variable[MeasurableSpace X][BorelSpace X]
+variable [MeasurableSpace X] [BorelSpace X]
 
 /-- Unfold the definition of `dimH` using `[measurable_space X] [borel_space X]` from the
 environment. -/
@@ -228,7 +228,7 @@ alias dimH_coe_finset ← Finset.dimH_zero
 
 section 
 
-variable[second_countable_topology X]
+variable [second_countable_topology X]
 
 /-- If `r` is less than the Hausdorff dimension of a set `s` in an (extended) metric space with
 second countable topology, then there exists a point `x ∈ s` such that every neighborhood
@@ -288,7 +288,7 @@ end
 -/
 
 
-variable{C K r :  ℝ≥0 }{f : X → Y}{s t : Set X}
+variable {C K r :  ℝ≥0 } {f : X → Y} {s t : Set X}
 
 -- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a Hölder continuous map with exponent `r > 0`, then `dimH (f '' s) ≤ dimH s / r`. -/
@@ -450,7 +450,7 @@ end Isometric
 
 namespace ContinuousLinearEquiv
 
-variable{𝕜 E F : Type _}[NondiscreteNormedField 𝕜][NormedGroup E][NormedSpace 𝕜 E][NormedGroup F][NormedSpace 𝕜 F]
+variable {𝕜 E F : Type _} [NondiscreteNormedField 𝕜] [NormedGroup E] [NormedSpace 𝕜 E] [NormedGroup F] [NormedSpace 𝕜 F]
 
 @[simp]
 theorem dimH_image (e : E ≃L[𝕜] F) (s : Set E) : dimH (e '' s) = dimH s :=
@@ -476,7 +476,7 @@ end ContinuousLinearEquiv
 
 namespace Real
 
-variable{E : Type _}[Fintype ι][NormedGroup E][NormedSpace ℝ E][FiniteDimensional ℝ E]
+variable {E : Type _} [Fintype ι] [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
 -- error in Topology.MetricSpace.HausdorffDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem dimH_ball_pi
@@ -526,7 +526,7 @@ theorem dimH_of_nonempty_interior {s : Set E} (h : (Interior s).Nonempty) : dimH
   let ⟨x, hx⟩ := h 
   dimH_of_mem_nhds (mem_interior_iff_mem_nhds.1 hx)
 
-variable(E)
+variable (E)
 
 theorem dimH_univ_eq_finrank : dimH (univ : Set E) = finrank ℝ E :=
   dimH_of_mem_nhds (@univ_mem _ (𝓝 0))
@@ -537,7 +537,7 @@ theorem dimH_univ : dimH (univ : Set ℝ) = 1 :=
 
 end Real
 
-variable{E F : Type _}[NormedGroup E][NormedSpace ℝ E][FiniteDimensional ℝ E][NormedGroup F][NormedSpace ℝ F]
+variable {E F : Type _} [NormedGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E] [NormedGroup F] [NormedSpace ℝ F]
 
 theorem dense_compl_of_dimH_lt_finrank {s : Set E} (hs : dimH s < finrank ℝ E) : Dense («expr ᶜ» s) :=
   by 

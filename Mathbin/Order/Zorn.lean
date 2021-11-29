@@ -170,7 +170,7 @@ theorem chain_closure_empty : ∅ ∈ chain_closure :=
 theorem chain_closure_closure : ⋃₀chain_closure ∈ chain_closure :=
   chain_closure.union$ fun s hs => hs
 
-variable{c c₁ c₂ c₃ : Set α}
+variable {c c₁ c₂ c₃ : Set α}
 
 -- error in Order.Zorn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private

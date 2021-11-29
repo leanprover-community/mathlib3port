@@ -44,13 +44,8 @@ def IsConformalMap {R : Type _} {X Y : Type _} [NormedField R] [SemiNormedGroup 
   [SemiNormedSpace R X] [SemiNormedSpace R Y] (f' : X →L[R] Y) :=
   ∃ (c : R)(hc : c ≠ 0)(li : X →ₗᵢ[R] Y), (f' : X → Y) = c • li
 
-variable{R M N G M' :
-    Type
-      _}[NormedField
-      R][SemiNormedGroup
-      M][SemiNormedGroup
-      N][SemiNormedGroup
-      G][SemiNormedSpace R M][SemiNormedSpace R N][SemiNormedSpace R G][NormedGroup M'][NormedSpace R M']
+variable {R M N G M' : Type _} [NormedField R] [SemiNormedGroup M] [SemiNormedGroup N] [SemiNormedGroup G]
+  [SemiNormedSpace R M] [SemiNormedSpace R N] [SemiNormedSpace R G] [NormedGroup M'] [NormedSpace R M']
 
 theorem is_conformal_map_id : IsConformalMap (id R M) :=
   ⟨1, one_ne_zero, id,

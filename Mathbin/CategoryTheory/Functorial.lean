@@ -9,10 +9,10 @@ namespace CategoryTheory
 
 universe v v₁ v₂ v₃ u u₁ u₂ u₃
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 /-- A unbundled functor. -/
-class functorial(F : C → D) : Type max v₁ v₂ u₁ u₂ where 
+class functorial (F : C → D) : Type max v₁ v₂ u₁ u₂ where 
   map : ∀ {X Y : C}, (X ⟶ Y) → (F X ⟶ F Y)
   map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (F X) :=  by 
   runTac 
@@ -51,7 +51,7 @@ def of (F : C → D) [I : functorial.{v₁, v₂} F] : C ⥤ D :=
 
 end Functor
 
-instance  (F : C ⥤ D) : functorial.{v₁, v₂} F.obj :=
+instance (F : C ⥤ D) : functorial.{v₁, v₂} F.obj :=
   { F with  }
 
 @[simp]
@@ -63,7 +63,7 @@ instance functorial_id : functorial.{v₁, v₁} (id : C → C) :=
 
 section 
 
-variable{E : Type u₃}[category.{v₃} E]
+variable {E : Type u₃} [category.{v₃} E]
 
 /--
 `G ∘ F` is a functorial if both `F` and `G` are.

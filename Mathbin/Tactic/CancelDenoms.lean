@@ -197,8 +197,6 @@ unsafe def derive_div (e : expr) : tactic (ℕ × expr) :=
     let n' ← tp.of_nat n 
     let tgt ← to_expr (pquote.1 ((%%ₓn') ≠ 0))
     let (_, pn) ← solve_aux tgt sorry 
-    infer_type p >>= trace 
-    infer_type pn >>= trace 
     Prod.mk n <$> mk_mapp `` cancel_factors_eq_div [none, none, n', none, none, p, pn]
 
 /--

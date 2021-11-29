@@ -32,12 +32,12 @@ universe u v w
 
 open List
 
-variable{α : Type u}{β : α → Type v}
+variable {α : Type u} {β : α → Type v}
 
 /-- `alist β` is a key-value map stored as a `list` (i.e. a linked list).
   It is a wrapper around certain `list` functions with the added constraint
   that the list have unique keys. -/
-structure Alist(β : α → Type v) : Type max u v where 
+structure Alist (β : α → Type v) : Type max u v where 
   entries : List (Sigma β)
   Nodupkeys : entries.nodupkeys
 
@@ -57,7 +57,7 @@ theorem ext : ∀ {s t : Alist β}, s.entries = t.entries → s = t
 theorem ext_iff {s t : Alist β} : s = t ↔ s.entries = t.entries :=
   ⟨congr_argₓ _, ext⟩
 
-instance  [DecidableEq α] [∀ a, DecidableEq (β a)] : DecidableEq (Alist β) :=
+instance [DecidableEq α] [∀ a, DecidableEq (β a)] : DecidableEq (Alist β) :=
   fun xs ys =>
     by 
       rw [ext_iff] <;> infer_instance
@@ -76,7 +76,7 @@ theorem keys_nodup (s : Alist β) : s.keys.nodup :=
 
 
 /-- The predicate `a ∈ s` means that `s` has a value associated to the key `a`. -/
-instance  : HasMem α (Alist β) :=
+instance : HasMem α (Alist β) :=
   ⟨fun a s => a ∈ s.keys⟩
 
 theorem mem_keys {a : α} {s : Alist β} : a ∈ s ↔ a ∈ s.keys :=
@@ -89,10 +89,10 @@ theorem mem_of_perm {a : α} {s₁ s₂ : Alist β} (p : s₁.entries ~ s₂.ent
 
 
 /-- The empty association list. -/
-instance  : HasEmptyc (Alist β) :=
+instance : HasEmptyc (Alist β) :=
   ⟨⟨[], nodupkeys_nil⟩⟩
 
-instance  : Inhabited (Alist β) :=
+instance : Inhabited (Alist β) :=
   ⟨∅⟩
 
 theorem not_mem_empty (a : α) : a ∉ (∅ : Alist β) :=
@@ -126,7 +126,7 @@ theorem keys_singleton (a : α) (b : β a) : (singleton a b).keys = [a] :=
 
 section 
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- Look up the value associated to a key in an association list. -/
 def lookup (a : α) (s : Alist β) : Option (β a) :=
@@ -145,7 +145,7 @@ theorem lookup_eq_none {a : α} {s : Alist β} : lookup a s = none ↔ a ∉ s :
 theorem perm_lookup {a : α} {s₁ s₂ : Alist β} (p : s₁.entries ~ s₂.entries) : s₁.lookup a = s₂.lookup a :=
   perm_lookup _ s₁.nodupkeys s₂.nodupkeys p
 
-instance  (a : α) (s : Alist β) : Decidable (a ∈ s) :=
+instance (a : α) (s : Alist β) : Decidable (a ∈ s) :=
   decidableOfIff _ lookup_is_some
 
 /-! ### replace -/
@@ -180,7 +180,7 @@ def foldl {δ : Type w} (f : δ → ∀ a, β a → δ) (d : δ) (m : Alist β) 
 
 section 
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- Erase a key from the map. If the key is not present, do nothing. -/
 def erase (a : α) (s : Alist β) : Alist β :=
@@ -304,7 +304,7 @@ left-biased: if there exists an `a ∈ s₁`, `lookup a (s₁ ∪ s₂) = lookup
 def union (s₁ s₂ : Alist β) : Alist β :=
   ⟨kunion s₁.entries s₂.entries, kunion_nodupkeys s₁.nodupkeys s₂.nodupkeys⟩
 
-instance  : HasUnion (Alist β) :=
+instance : HasUnion (Alist β) :=
   ⟨union⟩
 
 @[simp]
@@ -368,7 +368,7 @@ end
 def Disjoint (s₁ s₂ : Alist β) : Prop :=
   ∀ k _ : k ∈ s₁.keys, ¬k ∈ s₂.keys
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 theorem union_comm_of_disjoint {s₁ s₂ : Alist β} (h : Disjoint s₁ s₂) : (s₁ ∪ s₂).entries ~ (s₂ ∪ s₁).entries :=
   lookup_ext (Alist.nodupkeys _) (Alist.nodupkeys _)

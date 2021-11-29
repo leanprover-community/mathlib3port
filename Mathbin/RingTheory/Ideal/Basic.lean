@@ -23,7 +23,7 @@ Support one-sided ideals, and ideals over non-commutative rings.
 
 universe u v w
 
-variable{α : Type u}{β : Type v}
+variable {α : Type u} {β : Type v}
 
 open Set Function
 
@@ -39,7 +39,7 @@ section Semiringₓ
 
 namespace Ideal
 
-variable[Semiringₓ α](I : Ideal α){a b : α}
+variable [Semiringₓ α] (I : Ideal α) {a b : α}
 
 protected theorem zero_mem : (0 : α) ∈ I :=
   I.zero_mem
@@ -47,12 +47,12 @@ protected theorem zero_mem : (0 : α) ∈ I :=
 protected theorem add_mem : a ∈ I → b ∈ I → (a+b) ∈ I :=
   I.add_mem
 
-variable(a)
+variable (a)
 
 theorem mul_mem_left : b ∈ I → (a*b) ∈ I :=
   I.smul_mem a
 
-variable{a}
+variable {a}
 
 @[ext]
 theorem ext {I J : Ideal α} (h : ∀ x, x ∈ I ↔ x ∈ J) : I = J :=
@@ -151,7 +151,7 @@ def of_rel (r : α → α → Prop) : Ideal α :=
   Submodule.span α { x | ∃ (a b : _)(h : r a b), (x+b) = a }
 
 /-- An ideal `P` of a ring `R` is prime if `P ≠ R` and `xy ∈ P → x ∈ P ∨ y ∈ P` -/
-class is_prime(I : Ideal α) : Prop where 
+class is_prime (I : Ideal α) : Prop where 
   ne_top' : I ≠ ⊤
   mem_or_mem' : ∀ {x y : α}, (x*y) ∈ I → x ∈ I ∨ y ∈ I
 
@@ -197,7 +197,7 @@ theorem bot_prime {R : Type _} [Ringₓ R] [IsDomain R] : (⊥ : Ideal R).IsPrim
           simpa only [Submodule.mem_bot] using h)⟩
 
 /-- An ideal is maximal if it is maximal in the collection of proper ideals. -/
-class is_maximal(I : Ideal α) : Prop where 
+class is_maximal (I : Ideal α) : Prop where 
   out : IsCoatom I
 
 theorem is_maximal_def {I : Ideal α} : I.is_maximal ↔ IsCoatom I :=
@@ -223,7 +223,7 @@ theorem is_maximal_iff {I : Ideal α} :
 theorem is_maximal.eq_of_le {I J : Ideal α} (hI : I.is_maximal) (hJ : J ≠ ⊤) (IJ : I ≤ J) : I = J :=
   eq_iff_le_not_lt.2 ⟨IJ, fun h => hJ (hI.1.2 _ h)⟩
 
-instance  : IsCoatomic (Ideal α) :=
+instance : IsCoatomic (Ideal α) :=
   by 
     apply CompleteLattice.coatomic_of_top_compact 
     rw [←span_singleton_one]
@@ -235,16 +235,16 @@ theorem exists_le_maximal (I : Ideal α) (hI : I ≠ ⊤) : ∃ M : Ideal α, M.
   let ⟨m, hm⟩ := (eq_top_or_exists_le_coatom I).resolve_left hI
   ⟨m, ⟨⟨hm.1⟩, hm.2⟩⟩
 
-variable(α)
+variable (α)
 
 /-- Krull's theorem: a nontrivial ring has a maximal ideal. -/
 theorem exists_maximal [Nontrivial α] : ∃ M : Ideal α, M.is_maximal :=
   let ⟨I, ⟨hI, _⟩⟩ := exists_le_maximal (⊥ : Ideal α) bot_ne_top
   ⟨I, hI⟩
 
-variable{α}
+variable {α}
 
-instance  [Nontrivial α] : Nontrivial (Ideal α) :=
+instance [Nontrivial α] : Nontrivial (Ideal α) :=
   by 
     rcases@exists_maximal α _ _ with ⟨M, hM, _⟩
     exact nontrivial_of_ne M ⊤ hM
@@ -276,7 +276,7 @@ theorem is_maximal.exists_inv {I : Ideal α} (hI : I.is_maximal) {x} (hx : x ∉
 
 section Lattice
 
-variable{R : Type u}[Semiringₓ R]
+variable {R : Type u} [Semiringₓ R]
 
 theorem mem_sup_left {S T : Ideal R} : ∀ {x : R}, x ∈ S → x ∈ S⊔T :=
   show S ≤ S⊔T from le_sup_left
@@ -309,7 +309,7 @@ end Lattice
 
 section Pi
 
-variable(ι : Type v)
+variable (ι : Type v)
 
 /-- `I^n` as an ideal of `R^n`. -/
 def pi : Ideal (ι → α) :=
@@ -327,11 +327,11 @@ end Semiringₓ
 
 section CommSemiringₓ
 
-variable{a b : α}
+variable {a b : α}
 
 namespace Ideal
 
-variable[CommSemiringₓ α](I : Ideal α)
+variable [CommSemiringₓ α] (I : Ideal α)
 
 @[simp]
 theorem mul_unit_mem_iff_mem {x y : α} (hy : IsUnit y) : (x*y) ∈ I ↔ x ∈ I :=
@@ -394,7 +394,7 @@ theorem is_maximal.is_prime {I : ideal α} (H : I.is_maximal) : I.is_prime :=
     rwa [expr submodule.span_eq] ["at", ident h]
   end)⟩
 
-instance (priority := 100)is_maximal.is_prime' (I : Ideal α) : ∀ [H : I.is_maximal], I.is_prime :=
+instance (priority := 100) is_maximal.is_prime' (I : Ideal α) : ∀ [H : I.is_maximal], I.is_prime :=
   is_maximal.is_prime
 
 theorem span_singleton_lt_span_singleton [CommRingₓ β] [IsDomain β] {x y : β} :
@@ -412,12 +412,12 @@ theorem factors_decreasing [CommRingₓ β] [IsDomain β] (b₁ b₂ : β) (h₁
             by 
               rwa [mul_oneₓ, ←Ideal.span_singleton_le_span_singleton]
 
-variable(b)
+variable (b)
 
 theorem mul_mem_right (h : a ∈ I) : (a*b) ∈ I :=
   mul_commₓ b a ▸ I.mul_mem_left b h
 
-variable{b}
+variable {b}
 
 theorem pow_mem_of_mem (ha : a ∈ I) (n : ℕ) (hn : 0 < n) : a ^ n ∈ I :=
   Nat.casesOn n
@@ -444,7 +444,7 @@ section Ringₓ
 
 namespace Ideal
 
-variable[Ringₓ α](I : Ideal α){a b : α}
+variable [Ringₓ α] (I : Ideal α) {a b : α}
 
 theorem neg_mem_iff : -a ∈ I ↔ a ∈ I :=
   I.neg_mem_iff
@@ -467,7 +467,7 @@ end Ringₓ
 
 section DivisionRing
 
-variable{K : Type u}[DivisionRing K](I : Ideal K)
+variable {K : Type u} [DivisionRing K] (I : Ideal K)
 
 namespace Ideal
 
@@ -518,7 +518,7 @@ end CommRingₓ
 
 namespace Ringₓ
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
 theorem not_is_field_of_subsingleton {R : Type _} [Ringₓ R] [Subsingleton R] : ¬IsField R :=
   fun ⟨⟨x, y, hxy⟩, _, _⟩ => hxy (Subsingleton.elimₓ x y)
@@ -573,7 +573,7 @@ end Ringₓ
 
 namespace Ideal
 
-variable{R : Type u}[CommRingₓ R][Nontrivial R]
+variable {R : Type u} [CommRingₓ R] [Nontrivial R]
 
 -- error in RingTheory.Ideal.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bot_lt_of_maximal
@@ -593,7 +593,7 @@ end
 
 end Ideal
 
-variable{a b : α}
+variable {a b : α}
 
 /-- The set of non-invertible elements of a monoid. -/
 def Nonunits (α : Type u) [Monoidₓ α] : Set α :=

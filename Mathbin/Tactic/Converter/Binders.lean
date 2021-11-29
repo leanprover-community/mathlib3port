@@ -4,13 +4,13 @@ namespace OldConv
 
 open Tactic Monadₓ
 
-unsafe instance  : MonadFail old_conv :=
+unsafe instance : MonadFail old_conv :=
   { old_conv.monad with fail := fun α s => (fun r e => tactic.fail (to_fmt s) : old_conv α) }
 
-unsafe instance  : HasMonadLift tactic old_conv :=
+unsafe instance : HasMonadLift tactic old_conv :=
   ⟨fun α => lift_tactic⟩
 
-unsafe instance  (α : Type) : Coe (tactic α) (old_conv α) :=
+unsafe instance (α : Type) : Coe (tactic α) (old_conv α) :=
   ⟨monad_lift⟩
 
 unsafe def current_relation : old_conv Name :=
@@ -221,19 +221,19 @@ unsafe def infi_eq_elim : binder_eq_elim :=
 
 universe u v w w₂
 
-variable{α : Type u}{β : Type v}{ι : Sort w}{ι₂ : Sort w₂}{s t : Set α}{a : α}
+variable {α : Type u} {β : Type v} {ι : Sort w} {ι₂ : Sort w₂} {s t : Set α} {a : α}
 
 section 
 
-variable[CompleteLattice α]
+variable [CompleteLattice α]
 
-example  {s : Set β} {f : β → α} : Inf (Set.Image f s) = ⨅(a : _)(_ : a ∈ s), f a :=
+example {s : Set β} {f : β → α} : Inf (Set.Image f s) = ⨅(a : _)(_ : a ∈ s), f a :=
   by 
     simp [Inf_eq_infi, infi_and]
     runTac 
       conversion infi_eq_elim.old_conv
 
-example  {s : Set β} {f : β → α} : Sup (Set.Image f s) = ⨆(a : _)(_ : a ∈ s), f a :=
+example {s : Set β} {f : β → α} : Sup (Set.Image f s) = ⨆(a : _)(_ : a ∈ s), f a :=
   by 
     simp [Sup_eq_supr, supr_and]
     runTac 

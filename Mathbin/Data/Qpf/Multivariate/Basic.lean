@@ -76,7 +76,7 @@ open_locale Mvfunctor
 /--
 Multivariate quotients of polynomial functors.
 -/
-class Mvqpf{n : ℕ}(F : Typevec.{u} n → Type _)[Mvfunctor F] where 
+class Mvqpf {n : ℕ} (F : Typevec.{u} n → Type _) [Mvfunctor F] where 
   p : Mvpfunctor.{u} n 
   abs : ∀ {α}, P.obj α → F α 
   repr : ∀ {α}, F α → P.obj α 
@@ -85,7 +85,7 @@ class Mvqpf{n : ℕ}(F : Typevec.{u} n → Type _)[Mvfunctor F] where
 
 namespace Mvqpf
 
-variable{n : ℕ}{F : Typevec.{u} n → Type _}[Mvfunctor F][q : Mvqpf F]
+variable {n : ℕ} {F : Typevec.{u} n → Type _} [Mvfunctor F] [q : Mvqpf F]
 
 include q
 
@@ -111,7 +111,7 @@ theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) (x : F �
     rw [←abs_map, ←abs_map, ←abs_map]
     rfl
 
-instance (priority := 100)IsLawfulMvfunctor : IsLawfulMvfunctor F :=
+instance (priority := 100) IsLawfulMvfunctor : IsLawfulMvfunctor F :=
   { id_map := @Mvqpf.id_map n F _ _, comp_map := @comp_map n F _ _ }
 
 theorem liftp_iff {α : Typevec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
@@ -236,7 +236,7 @@ begin
   apply [expr mem_image_of_mem _ (mem_univ _)]
 end
 
-variable(q)
+variable (q)
 
 /-- A qpf is said to be uniform if every polynomial functor
 representing a single value all have the same range. -/
@@ -252,7 +252,7 @@ def liftp_preservation : Prop :=
 def supp_preservation : Prop :=
   ∀ ⦃α⦄ x : q.P.obj α, supp (abs x) = supp x
 
-variable(q)
+variable (q)
 
 theorem supp_eq_of_is_uniform (h : q.is_uniform) {α : Typevec n} (a : q.P.A) (f : q.P.B a ⟹ α) :
   ∀ i, supp (abs ⟨a, f⟩) i = f i '' univ :=

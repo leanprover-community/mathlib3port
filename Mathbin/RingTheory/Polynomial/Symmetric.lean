@@ -44,16 +44,16 @@ noncomputable theory
 
 namespace MvPolynomial
 
-variable{σ : Type _}{R : Type _}
+variable {σ : Type _} {R : Type _}
 
-variable{τ : Type _}{S : Type _}
+variable {τ : Type _} {S : Type _}
 
 /-- A `mv_polynomial φ` is symmetric if it is invariant under
 permutations of its variables by the  `rename` operation -/
 def is_symmetric [CommSemiringₓ R] (φ : MvPolynomial σ R) : Prop :=
   ∀ e : perm σ, rename e φ = φ
 
-variable(σ R)
+variable (σ R)
 
 /-- The subalgebra of symmetric `mv_polynomial`s. -/
 def symmetric_subalgebra [CommSemiringₓ R] : Subalgebra R (MvPolynomial σ R) :=
@@ -67,7 +67,7 @@ def symmetric_subalgebra [CommSemiringₓ R] : Subalgebra R (MvPolynomial σ R) 
         by 
           rw [AlgHom.map_add, ha, hb] }
 
-variable{σ R}
+variable {σ R}
 
 @[simp]
 theorem mem_symmetric_subalgebra [CommSemiringₓ R] (p : MvPolynomial σ R) :
@@ -78,7 +78,7 @@ namespace IsSymmetric
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R][CommSemiringₓ S]{φ ψ : MvPolynomial σ R}
+variable [CommSemiringₓ R] [CommSemiringₓ S] {φ ψ : MvPolynomial σ R}
 
 @[simp]
 theorem C (r : R) : is_symmetric (C r : MvPolynomial σ R) :=
@@ -111,7 +111,7 @@ end CommSemiringₓ
 
 section CommRingₓ
 
-variable[CommRingₓ R]{φ ψ : MvPolynomial σ R}
+variable [CommRingₓ R] {φ ψ : MvPolynomial σ R}
 
 theorem neg (hφ : is_symmetric φ) : is_symmetric (-φ) :=
   (symmetric_subalgebra σ R).neg_mem hφ
@@ -127,7 +127,7 @@ section ElementarySymmetric
 
 open Finset
 
-variable(σ R)[CommSemiringₓ R][CommSemiringₓ S][Fintype σ][Fintype τ]
+variable (σ R) [CommSemiringₓ R] [CommSemiringₓ S] [Fintype σ] [Fintype τ]
 
 /-- The `n`th elementary symmetric `mv_polynomial σ R`. -/
 def esymm (n : ℕ) : MvPolynomial σ R :=

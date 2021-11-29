@@ -39,7 +39,7 @@ multiplicative group actions).
 
 
 /-- Type class for the `-ᵥ` notation. -/
-class HasVsub(G : outParam (Type _))(P : Type _) where 
+class HasVsub (G : outParam (Type _)) (P : Type _) where 
   vsub : P → P → G
 
 infixl:65 " -ᵥ " => HasVsub.vsub
@@ -49,7 +49,7 @@ acted on by an `add_group G` with a transitive and free action given
 by the `+ᵥ` operation and a corresponding subtraction given by the
 `-ᵥ` operation. In the case of a vector space, it is an affine
 space. -/
-class AddTorsor(G : outParam (Type _))(P : Type _)[outParam$ AddGroupₓ G] extends AddAction G P, HasVsub G P where 
+class AddTorsor (G : outParam (Type _)) (P : Type _) [outParam$ AddGroupₓ G] extends AddAction G P, HasVsub G P where 
   [Nonempty : Nonempty P]
   vsub_vadd' : ∀ p1 p2 : P, (p1 -ᵥ p2 : G) +ᵥ p2 = p1 
   vadd_vsub' : ∀ g : G p : P, g +ᵥ p -ᵥ p = g
@@ -71,7 +71,7 @@ theorem vsub_eq_sub {G : Type _} [AddGroupₓ G] (g1 g2 : G) : g1 -ᵥ g2 = g1 -
 
 section General
 
-variable{G : Type _}{P : Type _}[AddGroupₓ G][T : AddTorsor G P]
+variable {G : Type _} {P : Type _} [AddGroupₓ G] [T : AddTorsor G P]
 
 include T
 
@@ -172,7 +172,7 @@ instance HasVsub : HasVsub (Set G) (Set P) :=
 
 section Vsub
 
-variable(s t : Set P)
+variable (s t : Set P)
 
 @[simp]
 theorem vsub_empty : s -ᵥ ∅ = ∅ :=
@@ -195,7 +195,7 @@ theorem singleton_vsub_self (p : P) : ({p} : Set P) -ᵥ {p} = {(0 : G)} :=
   by 
     simp 
 
-variable{s t}
+variable {s t}
 
 /-- `vsub` of a finite set is finite. -/
 theorem finite.vsub (hs : finite s) (ht : finite t) : finite (s -ᵥ t) :=
@@ -238,7 +238,7 @@ instance AddAction : AddAction (Set G) (Set P) :=
           intros 
           apply add_vadd }
 
-variable{s s' : Set G}{t t' : Set P}
+variable {s s' : Set G} {t t' : Set P}
 
 @[mono]
 theorem vadd_subset_vadd (hs : s ⊆ s') (ht : t ⊆ t') : s +ᵥ t ⊆ s' +ᵥ t' :=
@@ -296,7 +296,7 @@ end General
 
 section Comm
 
-variable{G : Type _}{P : Type _}[AddCommGroupₓ G][AddTorsor G P]
+variable {G : Type _} {P : Type _} [AddCommGroupₓ G] [AddTorsor G P]
 
 include G
 
@@ -328,9 +328,10 @@ end Comm
 
 namespace Prod
 
-variable{G : Type _}{P : Type _}{G' : Type _}{P' : Type _}[AddGroupₓ G][AddGroupₓ G'][AddTorsor G P][AddTorsor G' P']
+variable {G : Type _} {P : Type _} {G' : Type _} {P' : Type _} [AddGroupₓ G] [AddGroupₓ G'] [AddTorsor G P]
+  [AddTorsor G' P']
 
-instance  : AddTorsor (G × G') (P × P') :=
+instance : AddTorsor (G × G') (P × P') :=
   { vadd := fun v p => (v.1 +ᵥ p.1, v.2 +ᵥ p.2),
     zero_vadd :=
       fun p =>
@@ -379,12 +380,12 @@ namespace Pi
 
 universe u v w
 
-variable{I : Type u}{fg : I → Type v}[∀ i, AddGroupₓ (fg i)]{fp : I → Type w}
+variable {I : Type u} {fg : I → Type v} [∀ i, AddGroupₓ (fg i)] {fp : I → Type w}
 
 open AddAction AddTorsor
 
 /-- A product of `add_torsor`s is an `add_torsor`. -/
-instance  [T : ∀ i, AddTorsor (fg i) (fp i)] : AddTorsor (∀ i, fg i) (∀ i, fp i) :=
+instance [T : ∀ i, AddTorsor (fg i) (fp i)] : AddTorsor (∀ i, fg i) (∀ i, fp i) :=
   { vadd := fun g p => fun i => g i +ᵥ p i, zero_vadd := fun p => funext$ fun i => zero_vadd (fg i) (p i),
     add_vadd := fun g₁ g₂ p => funext$ fun i => add_vadd (g₁ i) (g₂ i) (p i),
     vsub := fun p₁ p₂ => fun i => p₁ i -ᵥ p₂ i, Nonempty := ⟨fun i => Classical.choice (T i).Nonempty⟩,
@@ -395,7 +396,7 @@ end Pi
 
 namespace Equiv
 
-variable{G : Type _}{P : Type _}[AddGroupₓ G][AddTorsor G P]
+variable {G : Type _} {P : Type _} [AddGroupₓ G] [AddTorsor G P]
 
 include G
 
@@ -432,7 +433,7 @@ theorem coe_const_vsub (p : P) : «expr⇑ » (const_vsub p) = (· -ᵥ ·) p :=
 theorem coe_const_vsub_symm (p : P) : «expr⇑ » (const_vsub p).symm = fun v => -v +ᵥ p :=
   rfl
 
-variable(P)
+variable (P)
 
 /-- The permutation given by `p ↦ v +ᵥ p`. -/
 def const_vadd (v : G) : Equiv.Perm P :=
@@ -450,13 +451,13 @@ def const_vadd (v : G) : Equiv.Perm P :=
 theorem coe_const_vadd (v : G) : «expr⇑ » (const_vadd P v) = (· +ᵥ ·) v :=
   rfl
 
-variable(G)
+variable (G)
 
 @[simp]
 theorem const_vadd_zero : const_vadd P (0 : G) = 1 :=
   ext$ zero_vadd G
 
-variable{G}
+variable {G}
 
 @[simp]
 theorem const_vadd_add (v₁ v₂ : G) : const_vadd P (v₁+v₂) = const_vadd P v₁*const_vadd P v₂ :=
@@ -466,7 +467,7 @@ theorem const_vadd_add (v₁ v₂ : G) : const_vadd P (v₁+v₂) = const_vadd P
 def const_vadd_hom : Multiplicative G →* Equiv.Perm P :=
   { toFun := fun v => const_vadd P v.to_add, map_one' := const_vadd_zero G P, map_mul' := const_vadd_add P }
 
-variable{P}
+variable {P}
 
 open Function
 

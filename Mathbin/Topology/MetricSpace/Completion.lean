@@ -20,13 +20,13 @@ noncomputable theory
 
 universe u
 
-variable{α : Type u}[PseudoMetricSpace α]
+variable {α : Type u} [PseudoMetricSpace α]
 
 namespace Metric
 
 /-- The distance on the completion is obtained by extending the distance on the original space,
 by uniform continuity. -/
-instance  : HasDist (completion α) :=
+instance : HasDist (completion α) :=
   ⟨completion.extension₂ dist⟩
 
 /-- The new distance is uniformly continuous. -/

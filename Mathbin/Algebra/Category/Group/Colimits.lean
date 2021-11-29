@@ -33,7 +33,7 @@ and the identifications given by the morphisms in the diagram.
 -/
 
 
-variable{J : Type v}[small_category J](F : J ⥤ AddCommGroupₓₓ.{v})
+variable {J : Type v} [small_category J] (F : J ⥤ AddCommGroupₓₓ.{v})
 
 /--
 An inductive type representing all group expressions (without relations)
@@ -45,7 +45,7 @@ inductive prequotient
   | neg : prequotient → prequotient
   | add : prequotient → prequotient → prequotient
 
-instance  : Inhabited (prequotient F) :=
+instance : Inhabited (prequotient F) :=
   ⟨prequotient.zero⟩
 
 open Prequotient
@@ -86,7 +86,7 @@ The underlying type of the colimit of a diagram in `AddCommGroup`.
 -/ @[derive #[expr inhabited]] def colimit_type : Type v :=
 quotient (colimit_setoid F)
 
-instance  : AddCommGroupₓ (colimit_type F) :=
+instance : AddCommGroupₓ (colimit_type F) :=
   { zero :=
       by 
         exact Quot.mk _ zero,

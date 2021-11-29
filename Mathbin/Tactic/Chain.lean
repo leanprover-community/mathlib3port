@@ -4,7 +4,7 @@ open Interactive
 
 namespace Tactic
 
-variable{α : Type}
+variable {α : Type}
 
 inductive tactic_script (α : Type) : Type
   | base : α → tactic_script
@@ -15,7 +15,7 @@ unsafe def tactic_script.to_string : tactic_script Stringₓ → Stringₓ
 | tactic_script.work n a l c =>
   "work_on_goal " ++ toString n ++ " { " ++ ", ".intercalate (a :: l.map tactic_script.to_string) ++ " }"
 
-unsafe instance  : HasToString (tactic_script Stringₓ) :=
+unsafe instance : HasToString (tactic_script Stringₓ) :=
   { toString := fun s => s.to_string }
 
 unsafe instance tactic_script_unit_has_to_string : HasToString (tactic_script Unit) :=
@@ -88,7 +88,7 @@ unsafe def chain_core {α : Type} [HasToString (tactic_script α)] (tactics : Li
     when results.empty (fail "`chain` tactic made no progress")
     return (results.map toString)
 
-variable[HasToString (tactic_script α)][has_to_format α]
+variable [HasToString (tactic_script α)] [has_to_format α]
 
 initialize 
   registerTraceClass.1 `chain

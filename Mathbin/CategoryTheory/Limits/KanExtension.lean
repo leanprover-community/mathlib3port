@@ -32,11 +32,11 @@ open Limits
 
 universe v u₁ u₂ u₃
 
-variable{S : Type v}{L : Type u₂}{D : Type u₃}
+variable {S : Type v} {L : Type u₂} {D : Type u₃}
 
-variable[category.{v} S][category.{v} L][category.{v} D]
+variable [category.{v} S] [category.{v} L] [category.{v} D]
 
-variable(ι : S ⥤ L)
+variable (ι : S ⥤ L)
 
 namespace Ran
 
@@ -46,7 +46,7 @@ attribute [local simp] structured_arrow.proj
 abbrev diagram (F : S ⥤ D) (x : L) : structured_arrow x ι ⥤ D :=
   structured_arrow.proj x ι ⋙ F
 
-variable{ι}
+variable {ι}
 
 -- error in CategoryTheory.Limits.KanExtension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A cone over `Ran.diagram ι F x` used to define `Ran`. -/
@@ -67,7 +67,7 @@ def cone
       tidy []
     end } }
 
-variable(ι)
+variable (ι)
 
 /-- An auxiliary definition used to define `Ran`. -/
 @[simps]
@@ -141,7 +141,7 @@ def Ran [∀ X, has_limits_of_shape (structured_arrow X ι) D] : (S ⥤ D) ⥤ L
 
 namespace Ran
 
-variable(D)
+variable (D)
 
 /-- The adjunction associated to `Ran`. -/
 def adjunction [∀ X, has_limits_of_shape (structured_arrow X ι) D] : (whiskering_left _ _ D).obj ι ⊣ Ran ι :=
@@ -170,7 +170,7 @@ attribute [local simp] costructured_arrow.proj
 abbrev diagram (F : S ⥤ D) (x : L) : costructured_arrow ι x ⥤ D :=
   costructured_arrow.proj ι x ⋙ F
 
-variable{ι}
+variable {ι}
 
 /-- A cocone over `Lan.diagram ι F x` used to define `Lan`. -/
 @[simp]
@@ -186,7 +186,7 @@ def cocone {F : S ⥤ D} {G : L ⥤ D} (x : L) (f : F ⟶ ι ⋙ G) : cocone (di
             rw [←G.map_comp, ff]
             tidy } }
 
-variable(ι)
+variable (ι)
 
 -- error in CategoryTheory.Limits.KanExtension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An auxiliary definition used to define `Lan`. -/
@@ -276,7 +276,7 @@ def Lan [∀ X, has_colimits_of_shape (costructured_arrow ι X) D] : (S ⥤ D) �
 
 namespace Lan
 
-variable(D)
+variable (D)
 
 /-- The adjunction associated to `Lan`. -/
 def adjunction [∀ X, has_colimits_of_shape (costructured_arrow ι X) D] : Lan ι ⊣ (whiskering_left _ _ D).obj ι :=

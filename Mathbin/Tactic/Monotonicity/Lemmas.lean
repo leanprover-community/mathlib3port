@@ -4,7 +4,7 @@ import Mathbin.Data.Set.Lattice
 import Mathbin.Order.Directed 
 import Mathbin.Tactic.Monotonicity.Basic
 
-variable{α : Type _}
+variable {α : Type _}
 
 @[mono]
 theorem mul_mono_nonneg {x y z : α} [OrderedSemiring α] (h' : 0 ≤ z) (h : x ≤ y) : (x*z) ≤ y*z :=

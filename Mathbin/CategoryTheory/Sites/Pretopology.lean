@@ -32,9 +32,9 @@ namespace CategoryTheory
 
 open CategoryTheory Category Limits Presieve
 
-variable{C : Type u}[category.{v} C][has_pullbacks C]
+variable {C : Type u} [category.{v} C] [has_pullbacks C]
 
-variable(C)
+variable (C)
 
 /--
 A (Grothendieck) pretopology on `C` consists of a collection of families of morphisms with a fixed
@@ -64,21 +64,31 @@ structure pretopology where
 
 namespace Pretopology
 
-instance  : CoeFun (pretopology C) fun _ => ∀ X : C, Set (presieve X) :=
+instance : CoeFun (pretopology C) fun _ => ∀ X : C, Set (presieve X) :=
   ⟨coverings⟩
 
-instance  : PartialOrderₓ (pretopology C) :=
-  { le := fun K₁ K₂ => (K₁ : ∀ X : C, Set _) ≤ K₂, le_refl := fun K => le_reflₓ _,
-    le_trans := fun K₁ K₂ K₃ h₁₂ h₂₃ => le_transₓ h₁₂ h₂₃,
+variable {C}
+
+instance : LE (pretopology C) :=
+  { le := fun K₁ K₂ => (K₁ : ∀ X : C, Set (presieve X)) ≤ K₂ }
+
+theorem le_def {K₁ K₂ : pretopology C} : K₁ ≤ K₂ ↔ (K₁ : ∀ X : C, Set (presieve X)) ≤ K₂ :=
+  Iff.rfl
+
+variable (C)
+
+instance : PartialOrderₓ (pretopology C) :=
+  { pretopology.has_le with le_refl := fun K => le_def.mpr (le_reflₓ _),
+    le_trans := fun K₁ K₂ K₃ h₁₂ h₂₃ => le_def.mpr (le_transₓ h₁₂ h₂₃),
     le_antisymm := fun K₁ K₂ h₁₂ h₂₁ => pretopology.ext _ _ (le_antisymmₓ h₁₂ h₂₁) }
 
-instance  : OrderTop (pretopology C) :=
+instance : OrderTop (pretopology C) :=
   { top :=
       { Coverings := fun _ => Set.Univ, has_isos := fun _ _ _ _ => Set.mem_univ _,
         pullbacks := fun _ _ _ _ _ => Set.mem_univ _, Transitive := fun _ _ _ _ _ => Set.mem_univ _ },
     le_top := fun K X S hS => Set.mem_univ _ }
 
-instance  : Inhabited (pretopology C) :=
+instance : Inhabited (pretopology C) :=
   ⟨⊤⟩
 
 /--
@@ -212,7 +222,7 @@ def trivialₓ : pretopology C :=
           rw [hTi]
           apply presieve.singleton.mk }
 
-instance  : OrderBot (pretopology C) :=
+instance : OrderBot (pretopology C) :=
   { bot := trivialₓ C,
     bot_le :=
       fun K X R =>

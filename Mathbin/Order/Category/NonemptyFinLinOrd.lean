@@ -12,14 +12,14 @@ universe u v
 open CategoryTheory
 
 /-- A typeclass for nonempty finite linear orders. -/
-class NonemptyFinLinOrd(α : Type _) extends Fintype α, LinearOrderₓ α where 
+class NonemptyFinLinOrd (α : Type _) extends Fintype α, LinearOrderₓ α where 
   Nonempty : Nonempty α :=  by 
   runTac 
     tactic.apply_instance
 
 attribute [instance] NonemptyFinLinOrd.nonempty
 
-instance (priority := 100)NonemptyFinLinOrd.orderBot (α : Type _) [NonemptyFinLinOrd α] : OrderBot α :=
+instance (priority := 100) NonemptyFinLinOrd.orderBot (α : Type _) [NonemptyFinLinOrd α] : OrderBot α :=
   { bot :=
       Finset.min' Finset.univ
         ⟨Classical.arbitrary α,
@@ -31,7 +31,7 @@ instance (priority := 100)NonemptyFinLinOrd.orderBot (α : Type _) [NonemptyFinL
           (by 
             simp ) }
 
-instance (priority := 100)NonemptyFinLinOrd.orderTop (α : Type _) [NonemptyFinLinOrd α] : OrderTop α :=
+instance (priority := 100) NonemptyFinLinOrd.orderTop (α : Type _) [NonemptyFinLinOrd α] : OrderTop α :=
   { top :=
       Finset.max' Finset.univ
         ⟨Classical.arbitrary α,
@@ -58,23 +58,23 @@ def NonemptyFinLinOrdₓ :=
 
 namespace NonemptyFinLinOrdₓ
 
-instance  : bundled_hom.parent_projection @NonemptyFinLinOrd.toLinearOrder :=
+instance : bundled_hom.parent_projection @NonemptyFinLinOrd.toLinearOrder :=
   ⟨⟩
 
 -- error in Order.Category.NonemptyFinLinOrd: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler large_category
 attribute [derive #["[", expr large_category, ",", expr concrete_category, "]"]] NonemptyFinLinOrd
 
-instance  : CoeSort NonemptyFinLinOrdₓ (Type _) :=
+instance : CoeSort NonemptyFinLinOrdₓ (Type _) :=
   bundled.has_coe_to_sort
 
 /-- Construct a bundled NonemptyFinLinOrd from the underlying type and typeclass. -/
 def of (α : Type _) [NonemptyFinLinOrd α] : NonemptyFinLinOrdₓ :=
   bundled.of α
 
-instance  : Inhabited NonemptyFinLinOrdₓ :=
+instance : Inhabited NonemptyFinLinOrdₓ :=
   ⟨of PUnit⟩
 
-instance  (α : NonemptyFinLinOrdₓ) : NonemptyFinLinOrd α :=
+instance (α : NonemptyFinLinOrdₓ) : NonemptyFinLinOrd α :=
   α.str
 
 end NonemptyFinLinOrdₓ

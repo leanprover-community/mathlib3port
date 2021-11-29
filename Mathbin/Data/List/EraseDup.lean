@@ -17,7 +17,7 @@ universe u
 
 namespace List
 
-variable{α : Type u}[DecidableEq α]
+variable {α : Type u} [DecidableEq α]
 
 @[simp]
 theorem erase_dup_nil : erase_dup [] = ([] : List α) :=

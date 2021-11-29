@@ -27,23 +27,23 @@ attribute [simp] IsLawfulTraversable.id_traverse
 
 namespace Traversable
 
-variable{t : Type u → Type u}
+variable {t : Type u → Type u}
 
-variable[Traversable t][IsLawfulTraversable t]
+variable [Traversable t] [IsLawfulTraversable t]
 
-variable(F G : Type u → Type u)
+variable (F G : Type u → Type u)
 
-variable[Applicativeₓ F][IsLawfulApplicative F]
+variable [Applicativeₓ F] [IsLawfulApplicative F]
 
-variable[Applicativeₓ G][IsLawfulApplicative G]
+variable [Applicativeₓ G] [IsLawfulApplicative G]
 
-variable{α β γ : Type u}
+variable {α β γ : Type u}
 
-variable(g : α → F β)
+variable (g : α → F β)
 
-variable(h : β → G γ)
+variable (h : β → G γ)
 
-variable(f : β → γ)
+variable (f : β → γ)
 
 /-- The natural applicative transformation from the identity functor
 to `F`, defined by `pure : Π {α}, α → F α`. -/
@@ -59,7 +59,7 @@ def pure_transformation : ApplicativeTransformation id F :=
 theorem pure_transformation_apply {α} (x : id α) : pure_transformation F x = pure x :=
   rfl
 
-variable{F G}(x : t β)
+variable {F G} (x : t β)
 
 theorem map_eq_traverse_id : map f = @traverse t _ _ _ _ _ (id.mk ∘ f) :=
   funext$ fun y => (traverse_eq_map_id f y).symm

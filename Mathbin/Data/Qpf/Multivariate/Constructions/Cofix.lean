@@ -43,7 +43,7 @@ open Typevec Mvpfunctor
 
 open mvfunctor(Liftp Liftr)
 
-variable{n : ℕ}{F : Typevec.{u} (n+1) → Type u}[Mvfunctor F][q : Mvqpf F]
+variable {n : ℕ} {F : Typevec.{u} (n+1) → Type u} [Mvfunctor F] [q : Mvqpf F]
 
 include q
 
@@ -76,7 +76,7 @@ cofix F a b = F a b (cofix F a b)
 def cofix (F : Typevec (n+1) → Type u) [Mvfunctor F] [q : Mvqpf F] (α : Typevec n) :=
   Quot (@Mcongr _ F _ q α)
 
-instance  {α : Typevec n} [Inhabited q.P.A] [∀ i : Fin2 n, Inhabited (α i)] : Inhabited (cofix F α) :=
+instance {α : Typevec n} [Inhabited q.P.A] [∀ i : Fin2 n, Inhabited (α i)] : Inhabited (cofix F α) :=
   ⟨Quot.mk _ (default _)⟩
 
 /-- maps every element of the W type to a canonical representative -/

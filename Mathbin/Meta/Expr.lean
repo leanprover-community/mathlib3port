@@ -17,7 +17,7 @@ expr, name, declaration, level, environment, meta, metaprogramming, tactic
 -- error in Meta.Expr: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler has_reflect
 attribute [derive #[expr has_reflect], derive #[expr decidable_eq]] binder_info congr_arg_kind
 
-unsafe instance (priority := 100)has_reflect.has_to_pexpr {α} [has_reflect α] : has_to_pexpr α :=
+unsafe instance (priority := 100) has_reflect.has_to_pexpr {α} [has_reflect α] : has_to_pexpr α :=
   ⟨fun b => pexpr.of_expr (reflect b)⟩
 
 namespace BinderInfo
@@ -25,7 +25,7 @@ namespace BinderInfo
 /-! ### Declarations about `binder_info` -/
 
 
-instance  : Inhabited BinderInfo :=
+instance : Inhabited BinderInfo :=
   ⟨BinderInfo.default⟩
 
 /-- The brackets corresponding to a given binder_info. -/
@@ -276,13 +276,13 @@ protected unsafe def toString (b : binder) : Stringₓ :=
 
 open Tactic
 
-unsafe instance  : HasToString binder :=
+unsafe instance : HasToString binder :=
   ⟨binder.to_string⟩
 
-unsafe instance  : has_to_format binder :=
+unsafe instance : has_to_format binder :=
   ⟨fun b => b.to_string⟩
 
-unsafe instance  : has_to_tactic_format binder :=
+unsafe instance : has_to_tactic_format binder :=
   ⟨fun b =>
       let (l, r) := b.info.brackets
       (fun e => l ++ b.name.to_string ++ " : " ++ e ++ r) <$> pp b.type⟩
@@ -1153,7 +1153,7 @@ unsafe def to_tactic_format : declaration → tactic format
 | declaration.cnst nm _ tp is_trusted => print_cnst nm tp is_trusted
 | declaration.ax nm _ tp => print_ax nm tp
 
-unsafe instance  : has_to_tactic_format declaration :=
+unsafe instance : has_to_tactic_format declaration :=
   ⟨to_tactic_format⟩
 
 end Declaration

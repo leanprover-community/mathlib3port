@@ -68,7 +68,7 @@ namespace PadicSeq
 
 section 
 
-variable{p : ℕ}[Fact p.prime]
+variable {p : ℕ} [Fact p.prime]
 
 -- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The p-adic norm of the entries of a nonzero Cauchy sequence of rationals is eventually
@@ -130,7 +130,7 @@ section Embedding
 
 open CauSeq
 
-variable{p : ℕ}[Fact p.prime]
+variable {p : ℕ} [Fact p.prime]
 
 theorem equiv_zero_of_val_eq_of_equiv_zero {f g : PadicSeq p} (h : ∀ k, padicNorm p (f k) = padicNorm p (g k))
   (hf : f ≈ 0) : g ≈ 0 :=
@@ -215,7 +215,7 @@ section Valuation
 
 open CauSeq
 
-variable{p : ℕ}[Fact p.prime]
+variable {p : ℕ} [Fact p.prime]
 
 /-! ### Valuation on `padic_seq` -/
 
@@ -285,7 +285,7 @@ section Embedding
 
 open CauSeq
 
-variable{p : ℕ}[hp : Fact p.prime]
+variable {p : ℕ} [hp : Fact p.prime]
 
 include hp
 
@@ -513,48 +513,48 @@ namespace Padic
 
 section Completion
 
-variable{p : ℕ}[Fact p.prime]
+variable {p : ℕ} [Fact p.prime]
 
 /-- The discrete field structure on `ℚ_p` is inherited from the Cauchy completion construction. -/
 instance Field : Field ℚ_[p] :=
   CauSeq.Completion.field
 
-instance  : Inhabited ℚ_[p] :=
+instance : Inhabited ℚ_[p] :=
   ⟨0⟩
 
-instance  : HasZero ℚ_[p] :=
+instance : HasZero ℚ_[p] :=
   by 
     infer_instance
 
-instance  : HasOne ℚ_[p] :=
+instance : HasOne ℚ_[p] :=
   by 
     infer_instance
 
-instance  : Add ℚ_[p] :=
+instance : Add ℚ_[p] :=
   by 
     infer_instance
 
-instance  : Mul ℚ_[p] :=
+instance : Mul ℚ_[p] :=
   by 
     infer_instance
 
-instance  : Sub ℚ_[p] :=
+instance : Sub ℚ_[p] :=
   by 
     infer_instance
 
-instance  : Neg ℚ_[p] :=
+instance : Neg ℚ_[p] :=
   by 
     infer_instance
 
-instance  : Div ℚ_[p] :=
+instance : Div ℚ_[p] :=
   by 
     infer_instance
 
-instance  : AddCommGroupₓ ℚ_[p] :=
+instance : AddCommGroupₓ ℚ_[p] :=
   by 
     infer_instance
 
-instance  : CommRingₓ ℚ_[p] :=
+instance : CommRingₓ ℚ_[p] :=
   by 
     infer_instance
 
@@ -566,7 +566,7 @@ end Completion
 
 section Completion
 
-variable(p : ℕ)[Fact p.prime]
+variable (p : ℕ) [Fact p.prime]
 
 theorem mk_eq {f g : PadicSeq p} : mk f = mk g ↔ f ≈ g :=
   Quotientₓ.eq
@@ -673,7 +673,7 @@ theorem coe_inj {q r : ℚ} : («expr↑ » q : ℚ_[p]) = «expr↑ » r ↔ q 
   by 
     simp [cast_eq_of_rat, of_rat_eq]
 
-instance  : CharZero ℚ_[p] :=
+instance : CharZero ℚ_[p] :=
   ⟨fun m n =>
       by 
         rw [←Rat.cast_coe_nat]
@@ -695,7 +695,7 @@ section Embedding
 
 open PadicSeq
 
-variable{p : ℕ}[Fact p.prime]
+variable {p : ℕ} [Fact p.prime]
 
 -- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem defn
@@ -777,7 +777,7 @@ protected theorem add (q r : ℚ_[p]) : padicNormE (q+r) ≤ padicNormE q+padicN
 protected theorem mul' (q r : ℚ_[p]) : padicNormE (q*r) = padicNormE q*padicNormE r :=
   Quotientₓ.induction_on₂ q r$ norm_mul
 
-instance  : IsAbsoluteValue (@padicNormE p _) :=
+instance : IsAbsoluteValue (@padicNormE p _) :=
   { abv_nonneg := padicNormE.nonneg, abv_eq_zero := zero_iff, abv_add := padicNormE.add, abv_mul := padicNormE.mul' }
 
 @[simp]
@@ -833,7 +833,7 @@ theorem rat_dense'
         apply [expr le_refl] } }
   end⟩)
 
-variable{p : ℕ}[Fact p.prime](f : CauSeq _ (@padicNormE p _))
+variable {p : ℕ} [Fact p.prime] (f : CauSeq _ (@padicNormE p _))
 
 open Classical
 
@@ -933,12 +933,12 @@ end Complete
 
 section NormedSpace
 
-variable(p : ℕ)[Fact p.prime]
+variable (p : ℕ) [Fact p.prime]
 
-instance  : HasDist ℚ_[p] :=
+instance : HasDist ℚ_[p] :=
   ⟨fun x y => padicNormE (x - y)⟩
 
-instance  : MetricSpace ℚ_[p] :=
+instance : MetricSpace ℚ_[p] :=
   { dist_self :=
       by 
         simp [dist],
@@ -959,10 +959,10 @@ instance  : MetricSpace ℚ_[p] :=
         apply (padicNormE.zero_iff _).1 
         exactModCast h }
 
-instance  : HasNorm ℚ_[p] :=
+instance : HasNorm ℚ_[p] :=
   ⟨fun x => padicNormE x⟩
 
-instance  : NormedField ℚ_[p] :=
+instance : NormedField ℚ_[p] :=
   { dist_eq := fun _ _ => rfl,
     norm_mul' :=
       by 
@@ -994,7 +994,7 @@ namespace padicNormE
 
 section NormedSpace
 
-variable{p : ℕ}[hp : Fact p.prime]
+variable {p : ℕ} [hp : Fact p.prime]
 
 include hp
 
@@ -1045,7 +1045,7 @@ theorem norm_p_pow (n : ℤ) : ∥(p^n : ℚ_[p])∥ = (p^-n) :=
   by 
     rw [NormedField.norm_zpow, norm_p] <;> fieldSimp
 
-instance  : NondiscreteNormedField ℚ_[p] :=
+instance : NondiscreteNormedField ℚ_[p] :=
   { non_trivial :=
       ⟨p⁻¹,
         by 
@@ -1185,7 +1185,7 @@ end padicNormE
 
 namespace Padic
 
-variable{p : ℕ}[hp_prime : Fact p.prime]
+variable {p : ℕ} [hp_prime : Fact p.prime]
 
 include hp_prime
 

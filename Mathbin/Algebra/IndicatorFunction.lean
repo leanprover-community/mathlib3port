@@ -27,13 +27,13 @@ open_locale Classical BigOperators
 
 open Function
 
-variable{α β ι M N : Type _}
+variable {α β ι M N : Type _}
 
 namespace Set
 
 section HasOne
 
-variable[HasOne M][HasOne N]{s t : Set α}{f g : α → M}{a : α}
+variable [HasOne M] [HasOne N] {s t : Set α} {f g : α → M} {a : α}
 
 /-- `indicator s f a` is `f a` if `a ∈ s`, `0` otherwise.  -/
 def indicator {M} [HasZero M] (s : Set α) (f : α → M) : α → M :=
@@ -165,7 +165,7 @@ theorem mul_indicator_empty (f : α → M) : mul_indicator (∅ : Set α) f = fu
 theorem mul_indicator_empty' (f : α → M) : mul_indicator (∅ : Set α) f = 1 :=
   mul_indicator_empty f
 
-variable(M)
+variable (M)
 
 @[simp, toAdditive]
 theorem mul_indicator_one (s : Set α) : (mul_indicator s fun x => (1 : M)) = fun x => (1 : M) :=
@@ -177,7 +177,7 @@ theorem mul_indicator_one (s : Set α) : (mul_indicator s fun x => (1 : M)) = fu
 theorem mul_indicator_one' {s : Set α} : s.mul_indicator (1 : α → M) = 1 :=
   mul_indicator_one M s
 
-variable{M}
+variable {M}
 
 -- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
@@ -247,7 +247,7 @@ end HasOne
 
 section Monoidₓ
 
-variable[MulOneClass M]{s t : Set α}{f g : α → M}{a : α}
+variable [MulOneClass M] {s t : Set α} {f g : α → M} {a : α}
 
 @[toAdditive]
 theorem mul_indicator_union_mul_inter_apply (f : α → M) (s t : Set α) (a : α) :
@@ -345,7 +345,7 @@ end Monoidₓ
 
 section DistribMulAction
 
-variable{A : Type _}[AddMonoidₓ A][Monoidₓ M][DistribMulAction M A]
+variable {A : Type _} [AddMonoidₓ A] [Monoidₓ M] [DistribMulAction M A]
 
 theorem indicator_smul_apply (s : Set α) (r : M) (f : α → A) (x : α) :
   indicator s (fun x => r • f x) x = r • indicator s f x :=
@@ -362,7 +362,7 @@ end DistribMulAction
 
 section Groupₓ
 
-variable{G : Type _}[Groupₓ G]{s t : Set α}{f g : α → G}{a : α}
+variable {G : Type _} [Groupₓ G] {s t : Set α} {f g : α → G} {a : α}
 
 @[toAdditive]
 theorem mul_indicator_inv' (s : Set α) (f : α → G) : mul_indicator s (f⁻¹) = mul_indicator s f⁻¹ :=
@@ -400,7 +400,7 @@ end Groupₓ
 
 section CommMonoidₓ
 
-variable[CommMonoidₓ M]
+variable [CommMonoidₓ M]
 
 /-- Consider a product of `g i (f i)` over a `finset`.  Suppose `g` is a
 function such as `pow`, which maps a second argument of `1` to
@@ -482,7 +482,7 @@ end CommMonoidₓ
 
 section MulZeroClass
 
-variable[MulZeroClass M]{s t : Set α}{f g : α → M}{a : α}
+variable [MulZeroClass M] {s t : Set α} {f g : α → M} {a : α}
 
 theorem indicator_mul (s : Set α) (f g : α → M) :
   (indicator s fun a => f a*g a) = fun a => indicator s f a*indicator s g a :=
@@ -520,7 +520,7 @@ end MulZeroClass
 
 section MonoidWithZeroₓ
 
-variable[MonoidWithZeroₓ M]
+variable [MonoidWithZeroₓ M]
 
 theorem indicator_prod_one {s : Set α} {t : Set β} {x : α} {y : β} :
   (s.prod t).indicator (1 : _ → M) (x, y) = s.indicator 1 x*t.indicator 1 y :=
@@ -531,7 +531,7 @@ end MonoidWithZeroₓ
 
 section Order
 
-variable[HasOne M][Preorderₓ M]{s t : Set α}{f g : α → M}{a : α}{y : M}
+variable [HasOne M] [Preorderₓ M] {s t : Set α} {f g : α → M} {a : α} {y : M}
 
 @[toAdditive]
 theorem mul_indicator_apply_le' (hfg : a ∈ s → f a ≤ y) (hg : a ∉ s → 1 ≤ y) : mul_indicator s f a ≤ y :=
@@ -606,7 +606,7 @@ end Order
 
 section CanonicallyOrderedMonoid
 
-variable[CanonicallyOrderedMonoid M]
+variable [CanonicallyOrderedMonoid M]
 
 @[toAdditive]
 theorem mul_indicator_le_self (s : Set α) (f : α → M) : mul_indicator s f ≤ f :=

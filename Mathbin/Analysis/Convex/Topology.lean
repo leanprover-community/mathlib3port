@@ -22,7 +22,7 @@ We prove the following facts:
 -/
 
 
-variable{ι : Type _}{E : Type _}
+variable {ι : Type _} {E : Type _}
 
 open Set
 
@@ -38,7 +38,7 @@ alias Real.convex_iff_is_preconnected ↔ Convex.is_preconnected IsPreconnected.
 
 section StdSimplex
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 /-- Every vector in `std_simplex 𝕜 ι` has `max`-norm at most `1`. -/
 theorem std_simplex_subset_closed_ball : StdSimplex ℝ ι ⊆ Metric.ClosedBall 0 1 :=
@@ -50,7 +50,7 @@ theorem std_simplex_subset_closed_ball : StdSimplex ℝ ι ⊆ Metric.ClosedBall
     rw [abs_of_nonneg$ hf.1 x]
     exact (mem_Icc_of_mem_std_simplex hf x).2
 
-variable(ι)
+variable (ι)
 
 /-- `std_simplex ℝ ι` is bounded. -/
 theorem bounded_std_simplex : Metric.Bounded (StdSimplex ℝ ι) :=
@@ -73,7 +73,7 @@ end StdSimplex
 
 section HasContinuousSmul
 
-variable[AddCommGroupₓ E][Module ℝ E][TopologicalSpace E][TopologicalAddGroup E][HasContinuousSmul ℝ E]
+variable [AddCommGroupₓ E] [Module ℝ E] [TopologicalSpace E] [TopologicalAddGroup E] [HasContinuousSmul ℝ E]
 
 /-- In a topological vector space, the interior of a convex set is convex. -/
 theorem Convex.interior {s : Set E} (hs : Convex ℝ s) : Convex ℝ (Interior s) :=
@@ -196,7 +196,7 @@ end HasContinuousSmul
 
 section NormedSpace
 
-variable[NormedGroup E][NormedSpace ℝ E]
+variable [NormedGroup E] [NormedSpace ℝ E]
 
 theorem convex_on_dist (z : E) (s : Set E) (hs : Convex ℝ s) : ConvexOn ℝ s fun z' => dist z' z :=
   And.intro hs$
@@ -281,10 +281,10 @@ begin
   exact [expr joined_in.of_line hf.continuous_on h₀ h₁ H]
 end
 
-instance (priority := 100)NormedSpace.path_connected : PathConnectedSpace E :=
+instance (priority := 100) NormedSpace.path_connected : PathConnectedSpace E :=
   path_connected_space_iff_univ.mpr$ convex_univ.IsPathConnected ⟨(0 : E), trivialₓ⟩
 
-instance (priority := 100)NormedSpace.loc_path_connected : LocPathConnectedSpace E :=
+instance (priority := 100) NormedSpace.loc_path_connected : LocPathConnectedSpace E :=
   loc_path_connected_of_bases (fun x => Metric.nhds_basis_ball)
     fun x r r_pos =>
       (convex_ball x r).IsPathConnected$

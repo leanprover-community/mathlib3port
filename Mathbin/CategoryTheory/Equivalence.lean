@@ -68,7 +68,7 @@ universe v₁ v₂ v₃ u₁ u₂ u₃
 
 See https://stacks.math.columbia.edu/tag/001J
 -/
-structure Equivalenceₓ(C : Type u₁)[category.{v₁} C](D : Type u₂)[category.{v₂} D] where mk' :: 
+structure Equivalenceₓ (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D] where mk' :: 
   Functor : C ⥤ D 
   inverse : D ⥤ C 
   unitIso : 𝟭 C ≅ Functor ⋙ inverse 
@@ -85,7 +85,7 @@ restate_axiom equivalence.functor_unit_iso_comp'
 
 infixr:10 " ≌ " => Equivalenceₓ
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D]
 
 namespace Equivalenceₓ
 
@@ -201,7 +201,7 @@ theorem inv_fun_map (e : C ≌ D) (X Y : C) (f : X ⟶ Y) :
 
 section 
 
-variable{F : C ⥤ D}{G : D ⥤ C}(η : 𝟭 C ≅ F ⋙ G)(ε : G ⋙ F ≅ 𝟭 D)
+variable {F : C ⥤ D} {G : D ⥤ C} (η : 𝟭 C ≅ F ⋙ G) (ε : G ⋙ F ≅ 𝟭 D)
 
 /-- If `η : 𝟭 C ≅ F ⋙ G` is part of a (not necessarily half-adjoint) equivalence, we can upgrade it
 to a refined natural isomorphism `adjointify_η η : 𝟭 C ≅ F ⋙ G` which exhibits the properties
@@ -254,7 +254,7 @@ protected def mk (F : C ⥤ D) (G : D ⥤ C) (η : 𝟭 C ≅ F ⋙ G) (ε : G �
 def refl : C ≌ C :=
   ⟨𝟭 C, 𝟭 C, iso.refl _, iso.refl _, fun X => category.id_comp _⟩
 
-instance  : Inhabited (C ≌ C) :=
+instance : Inhabited (C ≌ C) :=
   ⟨refl⟩
 
 /-- Equivalence of categories is symmetric. -/
@@ -262,7 +262,7 @@ instance  : Inhabited (C ≌ C) :=
 def symm (e : C ≌ D) : D ≌ C :=
   ⟨e.inverse, e.functor, e.counit_iso.symm, e.unit_iso.symm, e.inverse_counit_inv_comp⟩
 
-variable{E : Type u₃}[category.{v₃} E]
+variable {E : Type u₃} [category.{v₃} E]
 
 /-- Equivalence of categories is transitive. -/
 @[trans, simps]
@@ -346,7 +346,7 @@ def congr_right (e : C ≌ D) : E ⥤ C ≌ E ⥤ D :=
 
 section CancellationLemmas
 
-variable(e : C ≌ D)
+variable (e : C ≌ D)
 
 @[simp]
 theorem cancel_unit_right {X Y : C} (f f' : X ⟶ Y) : f ≫ e.unit.app Y = f' ≫ e.unit.app Y ↔ f = f' :=
@@ -410,7 +410,7 @@ def pow (e : C ≌ C) : ℤ → (C ≌ C)
 | Int.ofNat n => e.pow_nat n
 | Int.negSucc n => e.symm.pow_nat (n+1)
 
-instance  : Pow (C ≌ C) ℤ :=
+instance : Pow (C ≌ C) ℤ :=
   ⟨pow⟩
 
 @[simp]
@@ -430,7 +430,7 @@ end
 end Equivalenceₓ
 
 /-- A functor that is part of a (half) adjoint equivalence -/
-class is_equivalence(F : C ⥤ D) where mk' :: 
+class is_equivalence (F : C ⥤ D) where mk' :: 
   inverse : D ⥤ C 
   unitIso : 𝟭 C ≅ F ⋙ inverse 
   counitIso : inverse ⋙ F ≅ 𝟭 D 
@@ -487,7 +487,7 @@ theorem as_equivalence_inverse (F : C ⥤ D) [is_equivalence F] : F.as_equivalen
 theorem inv_invₓ (F : C ⥤ D) [is_equivalence F] : inv (inv F) = F :=
   rfl
 
-variable{E : Type u₃}[category.{v₃} E]
+variable {E : Type u₃} [category.{v₃} E]
 
 instance is_equivalence_trans (F : C ⥤ D) (G : D ⥤ E) [is_equivalence F] [is_equivalence G] : is_equivalence (F ⋙ G) :=
   is_equivalence.of_equivalence (equivalence.trans (as_equivalence F) (as_equivalence G))
@@ -562,7 +562,7 @@ An equivalence is full.
 
 See https://stacks.math.columbia.edu/tag/02C3.
 -/
-instance (priority := 100)full_of_equivalence (F : C ⥤ D) [is_equivalence F] : full F :=
+instance (priority := 100) full_of_equivalence (F : C ⥤ D) [is_equivalence F] : full F :=
   { Preimage := fun X Y f => F.as_equivalence.unit.app X ≫ F.inv.map f ≫ F.as_equivalence.unit_inv.app Y,
     witness' :=
       fun X Y f =>

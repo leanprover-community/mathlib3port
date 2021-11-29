@@ -51,7 +51,7 @@ open_locale Nat BigOperators
 
 open Finset Nat Finset.Nat PowerSeries
 
-variable(A : Type _)[CommRingₓ A][Algebra ℚ A]
+variable (A : Type _) [CommRingₓ A] [Algebra ℚ A]
 
 /-! ### Definitions -/
 

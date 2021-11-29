@@ -29,7 +29,7 @@ The axiom `map_id` expresses preservation of identities, and
 
 See https://stacks.math.columbia.edu/tag/001B.
 -/
-structure Functor(C : Type u₁)[category.{v₁} C](D : Type u₂)[category.{v₂} D] extends Prefunctor C D :
+structure Functor (C : Type u₁) [category.{v₁} C] (D : Type u₂) [category.{v₂} D] extends Prefunctor C D :
   Type max v₁ v₂ u₁ u₂ where 
   map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (obj X) :=  by 
   runTac 
@@ -57,7 +57,7 @@ namespace Functor
 
 section 
 
-variable(C : Type u₁)[category.{v₁} C]
+variable (C : Type u₁) [category.{v₁} C]
 
 /-- `𝟭 C` is the identity functor on a category `C`. -/
 protected def id : C ⥤ C :=
@@ -65,10 +65,10 @@ protected def id : C ⥤ C :=
 
 notation "𝟭" => functor.id
 
-instance  : Inhabited (C ⥤ C) :=
+instance : Inhabited (C ⥤ C) :=
   ⟨functor.id C⟩
 
-variable{C}
+variable {C}
 
 @[simp]
 theorem id_obj (X : C) : (𝟭 C).obj X = X :=
@@ -82,7 +82,7 @@ end
 
 section 
 
-variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]{E : Type u₃}[category.{v₃} E]
+variable {C : Type u₁} [category.{v₁} C] {D : Type u₂} [category.{v₂} D] {E : Type u₃} [category.{v₃} E]
 
 /--
 `F ⋙ G` is the composition of a functor `F` and a functor `G` (`F` first, then `G`).

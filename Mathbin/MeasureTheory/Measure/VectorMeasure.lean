@@ -42,11 +42,11 @@ open_locale Classical BigOperators Nnreal Ennreal MeasureTheory
 
 namespace MeasureTheory
 
-variable{α β : Type _}{m : MeasurableSpace α}
+variable {α β : Type _} {m : MeasurableSpace α}
 
 /-- A vector measure on a measurable space `α` is a σ-additive `M`-valued function (for some `M`
 an add monoid) such that the empty set and non-measurable sets are mapped to zero. -/
-structure vector_measure(α : Type _)[MeasurableSpace α](M : Type _)[AddCommMonoidₓ M][TopologicalSpace M] where 
+structure vector_measure (α : Type _) [MeasurableSpace α] (M : Type _) [AddCommMonoidₓ M] [TopologicalSpace M] where 
   measureOf' : Set α → M 
   empty' : measure_of' ∅ = 0
   not_measurable' ⦃i : Set α⦄ : ¬MeasurableSet i → measure_of' i = 0
@@ -67,11 +67,11 @@ namespace VectorMeasure
 
 section 
 
-variable{M : Type _}[AddCommMonoidₓ M][TopologicalSpace M]
+variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
 
 include m
 
-instance  : CoeFun (vector_measure α M) fun _ => Set α → M :=
+instance : CoeFun (vector_measure α M) fun _ => Set α → M :=
   ⟨vector_measure.measure_of'⟩
 
 initialize_simps_projections VectorMeasure (measureOf' → apply)
@@ -125,7 +125,7 @@ theorem ext_iff (v w : vector_measure α M) : v = w ↔ ∀ i : Set α, Measurab
 theorem ext {s t : vector_measure α M} (h : ∀ i : Set α, MeasurableSet i → s i = t i) : s = t :=
   (ext_iff s t).2 h
 
-variable[T2Space M]{v : vector_measure α M}{f : ℕ → Set α}
+variable [T2Space M] {v : vector_measure α M} {f : ℕ → Set α}
 
 -- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_sum_of_disjoint_Union
@@ -244,14 +244,14 @@ end
 
 section AddCommMonoidₓ
 
-variable{M : Type _}[AddCommMonoidₓ M][TopologicalSpace M]
+variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
 
 include m
 
-instance  : HasZero (vector_measure α M) :=
+instance : HasZero (vector_measure α M) :=
   ⟨⟨0, rfl, fun _ _ => rfl, fun _ _ _ => has_sum_zero⟩⟩
 
-instance  : Inhabited (vector_measure α M) :=
+instance : Inhabited (vector_measure α M) :=
   ⟨0⟩
 
 @[simp]
@@ -261,7 +261,7 @@ theorem coe_zero : «expr⇑ » (0 : vector_measure α M) = 0 :=
 theorem zero_apply (i : Set α) : (0 : vector_measure α M) i = 0 :=
   rfl
 
-variable[HasContinuousAdd M]
+variable [HasContinuousAdd M]
 
 /-- The sum of two vector measure is a vector measure. -/
 def add (v w : vector_measure α M) : vector_measure α M :=
@@ -275,7 +275,7 @@ def add (v w : vector_measure α M) : vector_measure α M :=
           simp [v.not_measurable hi, w.not_measurable hi],
     m_Union' := fun f hf₁ hf₂ => HasSum.add (v.m_Union hf₁ hf₂) (w.m_Union hf₁ hf₂) }
 
-instance  : Add (vector_measure α M) :=
+instance : Add (vector_measure α M) :=
   ⟨add⟩
 
 @[simp]
@@ -285,7 +285,7 @@ theorem coe_add (v w : vector_measure α M) : «expr⇑ » (v+w) = v+w :=
 theorem add_apply (v w : vector_measure α M) (i : Set α) : (v+w) i = v i+w i :=
   rfl
 
-instance  : AddCommMonoidₓ (vector_measure α M) :=
+instance : AddCommMonoidₓ (vector_measure α M) :=
   Function.Injective.addCommMonoid _ coe_injective coe_zero coe_add
 
 /-- `coe_fn` is an `add_monoid_hom`. -/
@@ -297,7 +297,7 @@ end AddCommMonoidₓ
 
 section AddCommGroupₓ
 
-variable{M : Type _}[AddCommGroupₓ M][TopologicalSpace M][TopologicalAddGroup M]
+variable {M : Type _} [AddCommGroupₓ M] [TopologicalSpace M] [TopologicalAddGroup M]
 
 include m
 
@@ -313,7 +313,7 @@ def neg (v : vector_measure α M) : vector_measure α M :=
           simp [v.not_measurable hi],
     m_Union' := fun f hf₁ hf₂ => HasSum.neg$ v.m_Union hf₁ hf₂ }
 
-instance  : Neg (vector_measure α M) :=
+instance : Neg (vector_measure α M) :=
   ⟨neg⟩
 
 @[simp]
@@ -335,7 +335,7 @@ def sub (v w : vector_measure α M) : vector_measure α M :=
           simp [v.not_measurable hi, w.not_measurable hi],
     m_Union' := fun f hf₁ hf₂ => HasSum.sub (v.m_Union hf₁ hf₂) (w.m_Union hf₁ hf₂) }
 
-instance  : Sub (vector_measure α M) :=
+instance : Sub (vector_measure α M) :=
   ⟨sub⟩
 
 @[simp]
@@ -345,18 +345,18 @@ theorem coe_sub (v w : vector_measure α M) : «expr⇑ » (v - w) = v - w :=
 theorem sub_apply (v w : vector_measure α M) (i : Set α) : (v - w) i = v i - w i :=
   rfl
 
-instance  : AddCommGroupₓ (vector_measure α M) :=
+instance : AddCommGroupₓ (vector_measure α M) :=
   Function.Injective.addCommGroup _ coe_injective coe_zero coe_add coe_neg coe_sub
 
 end AddCommGroupₓ
 
 section DistribMulAction
 
-variable{M : Type _}[AddCommMonoidₓ M][TopologicalSpace M]
+variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
 
-variable{R : Type _}[Semiringₓ R][DistribMulAction R M]
+variable {R : Type _} [Semiringₓ R] [DistribMulAction R M]
 
-variable[TopologicalSpace R][HasContinuousSmul R M]
+variable [TopologicalSpace R] [HasContinuousSmul R M]
 
 include m
 
@@ -373,7 +373,7 @@ def smul (r : R) (v : vector_measure α M) : vector_measure α M :=
           rw [Pi.smul_apply, v.not_measurable hi, smul_zero],
     m_Union' := fun _ hf₁ hf₂ => HasSum.const_smul (v.m_Union hf₁ hf₂) }
 
-instance  : HasScalar R (vector_measure α M) :=
+instance : HasScalar R (vector_measure α M) :=
   ⟨smul⟩
 
 @[simp]
@@ -383,22 +383,22 @@ theorem coe_smul (r : R) (v : vector_measure α M) : «expr⇑ » (r • v) = r 
 theorem smul_apply (r : R) (v : vector_measure α M) (i : Set α) : (r • v) i = r • v i :=
   rfl
 
-instance  [HasContinuousAdd M] : DistribMulAction R (vector_measure α M) :=
+instance [HasContinuousAdd M] : DistribMulAction R (vector_measure α M) :=
   Function.Injective.distribMulAction coe_fn_add_monoid_hom coe_injective coe_smul
 
 end DistribMulAction
 
 section Module
 
-variable{M : Type _}[AddCommMonoidₓ M][TopologicalSpace M]
+variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
 
-variable{R : Type _}[Semiringₓ R][Module R M]
+variable {R : Type _} [Semiringₓ R] [Module R M]
 
-variable[TopologicalSpace R][HasContinuousSmul R M]
+variable [TopologicalSpace R] [HasContinuousSmul R M]
 
 include m
 
-instance  [HasContinuousAdd M] : Module R (vector_measure α M) :=
+instance [HasContinuousAdd M] : Module R (vector_measure α M) :=
   Function.Injective.module R coe_fn_add_monoid_hom coe_injective coe_smul
 
 end Module
@@ -572,11 +572,11 @@ end
 
 section 
 
-variable[MeasurableSpace α][MeasurableSpace β]
+variable [MeasurableSpace α] [MeasurableSpace β]
 
-variable{M : Type _}[AddCommMonoidₓ M][TopologicalSpace M]
+variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
 
-variable(v : vector_measure α M)
+variable (v : vector_measure α M)
 
 /-- The pushforward of a vector measure along a function. -/
 def map (v : vector_measure α M) (f : α → β) : vector_measure β M :=
@@ -624,7 +624,7 @@ theorem map_zero (f : α → β) : (0 : vector_measure α M).map f = 0 :=
 
 section 
 
-variable{N : Type _}[AddCommMonoidₓ N][TopologicalSpace N]
+variable {N : Type _} [AddCommMonoidₓ N] [TopologicalSpace N]
 
 /-- Given a vector measure `v` on `M` and a continuous add_monoid_hom `f : M → N`, `f ∘ v` is a
 vector measure on `N`. -/
@@ -657,7 +657,7 @@ theorem map_range_zero {f : M →+ N} (hf : Continuous f) : map_range (0 : vecto
 
 section HasContinuousAdd
 
-variable[HasContinuousAdd M][HasContinuousAdd N]
+variable [HasContinuousAdd M] [HasContinuousAdd N]
 
 @[simp]
 theorem map_range_add {v w : vector_measure α M} {f : M →+ N} (hf : Continuous f) :
@@ -675,9 +675,9 @@ end HasContinuousAdd
 
 section Module
 
-variable{R : Type _}[Semiringₓ R][Module R M][Module R N]
+variable {R : Type _} [Semiringₓ R] [Module R M] [Module R N]
 
-variable[TopologicalSpace R][HasContinuousAdd M][HasContinuousAdd N][HasContinuousSmul R M][HasContinuousSmul R N]
+variable [TopologicalSpace R] [HasContinuousAdd M] [HasContinuousAdd N] [HasContinuousSmul R M] [HasContinuousSmul R N]
 
 /-- Given a continuous linear map `f : M → N`, `map_rangeₗ` is the linear map mapping the
 vector measure `v` on `M` to the vector measure `f ∘ v` on `N`. -/
@@ -753,7 +753,7 @@ theorem restrict_zero {i : Set α} : (0 : vector_measure α M).restrict i = 0 :=
 
 section HasContinuousAdd
 
-variable[HasContinuousAdd M]
+variable [HasContinuousAdd M]
 
 theorem map_add (v w : vector_measure α M) (f : α → β) : (v+w).map f = v.map f+w.map f :=
   by 
@@ -789,13 +789,13 @@ end
 
 section 
 
-variable[MeasurableSpace β]
+variable [MeasurableSpace β]
 
-variable{M : Type _}[AddCommMonoidₓ M][TopologicalSpace M]
+variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
 
-variable{R : Type _}[Semiringₓ R][DistribMulAction R M]
+variable {R : Type _} [Semiringₓ R] [DistribMulAction R M]
 
-variable[TopologicalSpace R][HasContinuousSmul R M]
+variable [TopologicalSpace R] [HasContinuousSmul R M]
 
 include m
 
@@ -827,13 +827,13 @@ end
 
 section 
 
-variable[MeasurableSpace β]
+variable [MeasurableSpace β]
 
-variable{M : Type _}[AddCommMonoidₓ M][TopologicalSpace M]
+variable {M : Type _} [AddCommMonoidₓ M] [TopologicalSpace M]
 
-variable{R : Type _}[Semiringₓ R][Module R M]
+variable {R : Type _} [Semiringₓ R] [Module R M]
 
-variable[TopologicalSpace R][HasContinuousSmul R M][HasContinuousAdd M]
+variable [TopologicalSpace R] [HasContinuousSmul R M] [HasContinuousAdd M]
 
 include m
 
@@ -851,19 +851,19 @@ end
 
 section 
 
-variable{M : Type _}[TopologicalSpace M][AddCommMonoidₓ M][PartialOrderₓ M]
+variable {M : Type _} [TopologicalSpace M] [AddCommMonoidₓ M] [PartialOrderₓ M]
 
 include m
 
 /-- Vector measures over a partially ordered monoid is partially ordered.
 
 This definition is consistent with `measure.partial_order`. -/
-instance  : PartialOrderₓ (vector_measure α M) :=
+instance : PartialOrderₓ (vector_measure α M) :=
   { le := fun v w => ∀ i, MeasurableSet i → v i ≤ w i, le_refl := fun v i hi => le_reflₓ _,
     le_trans := fun u v w h₁ h₂ i hi => le_transₓ (h₁ i hi) (h₂ i hi),
     le_antisymm := fun v w h₁ h₂ => ext fun i hi => le_antisymmₓ (h₁ i hi) (h₂ i hi) }
 
-variable{u v w : vector_measure α M}
+variable {u v w : vector_measure α M}
 
 theorem le_iff : v ≤ w ↔ ∀ i, MeasurableSet i → v i ≤ w i :=
   Iff.rfl
@@ -885,9 +885,9 @@ localized [MeasureTheory]
 
 section 
 
-variable{M : Type _}[TopologicalSpace M][AddCommMonoidₓ M][PartialOrderₓ M]
+variable {M : Type _} [TopologicalSpace M] [AddCommMonoidₓ M] [PartialOrderₓ M]
 
-variable(v w : vector_measure α M)
+variable (v w : vector_measure α M)
 
 theorem restrict_le_restrict_iff {i : Set α} (hi : MeasurableSet i) :
   v ≤[i] w ↔ ∀ ⦃j⦄, MeasurableSet j → j ⊆ i → v j ≤ w j :=
@@ -940,9 +940,9 @@ end
 
 section 
 
-variable{M : Type _}[TopologicalSpace M][OrderedAddCommGroup M][TopologicalAddGroup M]
+variable {M : Type _} [TopologicalSpace M] [OrderedAddCommGroup M] [TopologicalAddGroup M]
 
-variable(v w : vector_measure α M)
+variable (v w : vector_measure α M)
 
 theorem neg_le_neg {i : Set α} (hi : MeasurableSet i) (h : v ≤[i] w) : -w ≤[i] -v :=
   by 
@@ -960,9 +960,9 @@ end
 
 section 
 
-variable{M : Type _}[TopologicalSpace M][OrderedAddCommMonoid M][OrderClosedTopology M]
+variable {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M] [OrderClosedTopology M]
 
-variable(v w : vector_measure α M){i j : Set α}
+variable (v w : vector_measure α M) {i j : Set α}
 
 -- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem restrict_le_restrict_Union
@@ -1020,9 +1020,9 @@ end
 
 section 
 
-variable{M : Type _}[TopologicalSpace M][OrderedAddCommMonoid M]
+variable {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M]
 
-variable(v w : vector_measure α M){i j : Set α}
+variable (v w : vector_measure α M) {i j : Set α}
 
 theorem nonneg_of_zero_le_restrict (hi₂ : 0 ≤[i] v) : 0 ≤ v i :=
   by 
@@ -1068,9 +1068,9 @@ end
 
 section 
 
-variable{M : Type _}[TopologicalSpace M][LinearOrderedAddCommMonoid M]
+variable {M : Type _} [TopologicalSpace M] [LinearOrderedAddCommMonoid M]
 
-variable(v w : vector_measure α M){i j : Set α}
+variable (v w : vector_measure α M) {i j : Set α}
 
 include m
 
@@ -1089,8 +1089,8 @@ end
 
 section 
 
-variable{M :
-    Type _}[TopologicalSpace M][AddCommMonoidₓ M][PartialOrderₓ M][CovariantClass M M (·+·) (· ≤ ·)][HasContinuousAdd M]
+variable {M : Type _} [TopologicalSpace M] [AddCommMonoidₓ M] [PartialOrderₓ M] [CovariantClass M M (·+·) (· ≤ ·)]
+  [HasContinuousAdd M]
 
 include m
 
@@ -1101,10 +1101,10 @@ end
 
 section 
 
-variable{L M N : Type _}
+variable {L M N : Type _}
 
-variable[AddCommMonoidₓ
-      L][TopologicalSpace L][AddCommMonoidₓ M][TopologicalSpace M][AddCommMonoidₓ N][TopologicalSpace N]
+variable [AddCommMonoidₓ L] [TopologicalSpace L] [AddCommMonoidₓ M] [TopologicalSpace M] [AddCommMonoidₓ N]
+  [TopologicalSpace N]
 
 include m
 
@@ -1119,7 +1119,7 @@ open_locale MeasureTheory
 
 namespace AbsolutelyContinuous
 
-variable{v : vector_measure α M}{w : vector_measure α N}
+variable {v : vector_measure α M} {w : vector_measure α N}
 
 theorem mk (h : ∀ ⦃s : Set α⦄, MeasurableSet s → w s = 0 → v s = 0) : v ≪ᵥ w :=
   by 
@@ -1218,7 +1218,7 @@ localized [MeasureTheory] infixl:60 " ⊥ᵥ " => MeasureTheory.VectorMeasure.Mu
 
 namespace MutuallySingular
 
-variable{v v₁ v₂ : vector_measure α M}{w w₁ w₂ : vector_measure α N}
+variable {v v₁ v₂ : vector_measure α M} {w w₁ w₂ : vector_measure α N}
 
 theorem mk (s : Set α) (hs : MeasurableSet s) (h₁ : ∀ t _ : t ⊆ s, MeasurableSet t → v t = 0)
   (h₂ : ∀ t _ : t ⊆ «expr ᶜ» s, MeasurableSet t → w t = 0) : v ⊥ᵥ w :=
@@ -1331,7 +1331,7 @@ def trim {m n : measurable_space α} (v : vector_measure α M) (hle : «expr ≤
     { rw [expr if_pos (@measurable_set.Union _ _ m _ _ hf₁)] [] }
   end }
 
-variable{n : MeasurableSpace α}{v : vector_measure α M}
+variable {n : MeasurableSpace α} {v : vector_measure α M}
 
 theorem trim_eq_self : v.trim le_rfl = v :=
   by 
@@ -1404,7 +1404,7 @@ measure.of_measurable (s.to_measure_of_zero_le' i hi₂) (by { simp_rw ["[", exp
    { exact [expr (nnreal.summable_coe_of_nonneg h).2 (s.m_Union h₁ h₂).summable] }
  end)
 
-variable(s : signed_measure α){i j : Set α}
+variable (s : signed_measure α) {i j : Set α}
 
 theorem to_measure_of_zero_le_apply (hi : 0 ≤[i] s) (hi₁ : MeasurableSet i) (hj₁ : MeasurableSet j) :
   s.to_measure_of_zero_le i hi₁ hi j =
@@ -1468,7 +1468,7 @@ namespace Measureₓ
 
 open VectorMeasure
 
-variable(μ : Measureₓ α)[is_finite_measure μ]
+variable (μ : Measureₓ α) [is_finite_measure μ]
 
 theorem zero_le_to_signed_measure : 0 ≤ μ.to_signed_measure :=
   by 

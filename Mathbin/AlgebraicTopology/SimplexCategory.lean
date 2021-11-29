@@ -355,7 +355,7 @@ theorem skeletal : skeletal SimplexCategory.{u} :=
 
 namespace SkeletalFunctor
 
-instance  : full skeletal_functor.{u, v} :=
+instance : full skeletal_functor.{u, v} :=
   { Preimage := fun a b f => SimplexCategory.Hom.mk ⟨fun i => (f (Ulift.up i)).down, fun i j h => f.monotone h⟩,
     witness' :=
       by 
@@ -367,7 +367,7 @@ instance  : full skeletal_functor.{u, v} :=
         cases x 
         simp  }
 
-instance  : faithful skeletal_functor.{u, v} :=
+instance : faithful skeletal_functor.{u, v} :=
   { map_injective' :=
       fun m n f g h =>
         by 
@@ -428,7 +428,7 @@ noncomputable def is_skeleton_of : is_skeleton_of NonemptyFinLinOrdₓ SimplexCa
 
 namespace Truncated
 
-instance  {n} : Inhabited (truncated n) :=
+instance {n} : Inhabited (truncated n) :=
   ⟨⟨[0],
       by 
         simp ⟩⟩
@@ -446,7 +446,7 @@ end Truncated
 
 section Concrete
 
-instance  : concrete_category.{0} SimplexCategory.{u} :=
+instance : concrete_category.{0} SimplexCategory.{u} :=
   { forget := { obj := fun i => Finₓ (i.len+1), map := fun i j f => f.to_preorder_hom }, forget_faithful := {  } }
 
 end Concrete

@@ -1,3 +1,4 @@
+import Mathbin.Order.Filter.Pi 
 import Mathbin.Topology.Bases 
 import Mathbin.Data.Finset.Order 
 import Mathbin.Data.Set.Accumulate 
@@ -47,7 +48,7 @@ open_locale Classical TopologicalSpace Filter
 
 universe u v
 
-variable{α : Type u}{β : Type v}[TopologicalSpace α]{s t : Set α}
+variable {α : Type u} {β : Type v} [TopologicalSpace α] {s t : Set α}
 
 section Compact
 
@@ -526,7 +527,7 @@ end Filter
 
 section TubeLemma
 
-variable[TopologicalSpace β]
+variable [TopologicalSpace β]
 
 /-- `nhds_contain_boxes s t` means that any open neighborhood of `s × t` in `α × β` includes
 a product of an open neighborhood of `s` by an open neighborhood of `t`. -/
@@ -613,10 +614,10 @@ end TubeLemma
 
 /-- Type class for compact spaces. Separation is sometimes included in the definition, especially
 in the French literature, but we do not include it here. -/
-class CompactSpace(α : Type _)[TopologicalSpace α] : Prop where 
+class CompactSpace (α : Type _) [TopologicalSpace α] : Prop where 
   compact_univ : IsCompact (univ : Set α)
 
-instance (priority := 10)Subsingleton.compact_space [Subsingleton α] : CompactSpace α :=
+instance (priority := 10) Subsingleton.compact_space [Subsingleton α] : CompactSpace α :=
   ⟨subsingleton_univ.IsCompact⟩
 
 theorem is_compact_univ_iff : IsCompact (univ : Set α) ↔ CompactSpace α :=
@@ -658,12 +659,12 @@ theorem IsClosed.is_compact [CompactSpace α] {s : Set α} (h : IsClosed s) : Is
   compact_of_is_closed_subset compact_univ h (subset_univ _)
 
 /-- `α` is a noncompact topological space if it not a compact space. -/
-class NoncompactSpace(α : Type _)[TopologicalSpace α] : Prop where 
+class NoncompactSpace (α : Type _) [TopologicalSpace α] : Prop where 
   noncompact_univ{} : ¬IsCompact (univ : Set α)
 
 export NoncompactSpace(noncompact_univ)
 
-instance  [NoncompactSpace α] : ne_bot (Filter.cocompact α) :=
+instance [NoncompactSpace α] : ne_bot (Filter.cocompact α) :=
   by 
     refine' filter.has_basis_cocompact.ne_bot_iff.2 fun s hs => _ 
     contrapose hs 
@@ -671,7 +672,7 @@ instance  [NoncompactSpace α] : ne_bot (Filter.cocompact α) :=
     rw [hs]
     exact noncompact_univ α
 
-instance  [NoncompactSpace α] : ne_bot (Filter.coclosedCompact α) :=
+instance [NoncompactSpace α] : ne_bot (Filter.coclosedCompact α) :=
   ne_bot_of_le Filter.cocompact_le_coclosed_compact
 
 theorem noncompact_space_of_ne_bot (h : ne_bot (Filter.cocompact α)) : NoncompactSpace α :=
@@ -719,7 +720,7 @@ noncomputable def LocallyFinite.fintypeOfCompact {ι : Type _} [CompactSpace α]
   (hne : ∀ i, (f i).Nonempty) : Fintype ι :=
   fintype_of_univ_finite (hf.finite_of_compact hne)
 
-variable[TopologicalSpace β]
+variable [TopologicalSpace β]
 
 -- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_compact.image_of_continuous_on
@@ -890,17 +891,17 @@ theorem Inducing.is_compact_iff {f : α → β} (hf : Inducing f) {s : Set α} :
       exact hs.image hf.continuous
 
 /-- Finite topological spaces are compact. -/
-instance (priority := 100)Fintype.compact_space [Fintype α] : CompactSpace α :=
+instance (priority := 100) Fintype.compact_space [Fintype α] : CompactSpace α :=
   { compact_univ := finite_univ.IsCompact }
 
 /-- The product of two compact spaces is compact. -/
-instance  [CompactSpace α] [CompactSpace β] : CompactSpace (α × β) :=
+instance [CompactSpace α] [CompactSpace β] : CompactSpace (α × β) :=
   ⟨by 
       rw [←univ_prod_univ]
       exact compact_univ.prod compact_univ⟩
 
 /-- The disjoint union of two compact spaces is compact. -/
-instance  [CompactSpace α] [CompactSpace β] : CompactSpace (Sum α β) :=
+instance [CompactSpace α] [CompactSpace β] : CompactSpace (Sum α β) :=
   ⟨by 
       rw [←range_inl_union_range_inr]
       exact (is_compact_range continuous_inl).union (is_compact_range continuous_inr)⟩
@@ -942,22 +943,22 @@ theorem Prod.noncompact_space_iff :
   by 
     simp [←Filter.cocompact_ne_bot_iff, ←Filter.coprod_cocompact, Filter.coprod_ne_bot_iff]
 
-instance (priority := 100)Prod.noncompact_space_left [NoncompactSpace α] [Nonempty β] : NoncompactSpace (α × β) :=
+instance (priority := 100) Prod.noncompact_space_left [NoncompactSpace α] [Nonempty β] : NoncompactSpace (α × β) :=
   Prod.noncompact_space_iff.2 (Or.inl ⟨‹_›, ‹_›⟩)
 
-instance (priority := 100)Prod.noncompact_space_right [Nonempty α] [NoncompactSpace β] : NoncompactSpace (α × β) :=
+instance (priority := 100) Prod.noncompact_space_right [Nonempty α] [NoncompactSpace β] : NoncompactSpace (α × β) :=
   Prod.noncompact_space_iff.2 (Or.inr ⟨‹_›, ‹_›⟩)
 
 section Tychonoff
 
-variable{ι : Type _}{π : ι → Type _}[∀ i, TopologicalSpace (π i)]
+variable {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)]
 
 -- error in Topology.SubsetProperties: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Tychonoff's theorem** -/
 theorem is_compact_pi_infinite
 {s : ∀ i, set (π i)} : ∀ i, is_compact (s i) → is_compact {x : ∀ i, π i | ∀ i, «expr ∈ »(x i, s i)} :=
 begin
-  simp [] [] ["only"] ["[", expr is_compact_iff_ultrafilter_le_nhds, ",", expr nhds_pi, ",", expr exists_prop, ",", expr mem_set_of_eq, ",", expr le_infi_iff, ",", expr le_principal_iff, "]"] [] [],
+  simp [] [] ["only"] ["[", expr is_compact_iff_ultrafilter_le_nhds, ",", expr nhds_pi, ",", expr filter.pi, ",", expr exists_prop, ",", expr mem_set_of_eq, ",", expr le_infi_iff, ",", expr le_principal_iff, "]"] [] [],
   intros [ident h, ident f, ident hfs],
   have [] [":", expr ∀
    i : ι, «expr∃ , »((a), «expr ∧ »(«expr ∈ »(a, s i), tendsto (λ x : ∀ i : ι, π i, x i) f (expr𝓝() a)))] [],
@@ -971,7 +972,7 @@ end
 theorem is_compact_univ_pi {s : ∀ i, Set (π i)} (h : ∀ i, IsCompact (s i)) : IsCompact (pi univ s) :=
   by 
     convert is_compact_pi_infinite h 
-    simp only [pi, forall_prop_of_true, mem_univ]
+    simp only [←mem_univ_pi, set_of_mem_eq]
 
 instance Pi.compact_space [∀ i, CompactSpace (π i)] : CompactSpace (∀ i, π i) :=
   ⟨by 
@@ -1010,7 +1011,7 @@ instance Quotientₓ.compact_space {s : Setoidₓ α} [CompactSpace α] : Compac
 Hausdorff spaces but not in general. This one is the precise condition on X needed for the
 evaluation `map C(X, Y) × X → Y` to be continuous for all `Y` when `C(X, Y)` is given the
 compact-open topology. -/
-class LocallyCompactSpace(α : Type _)[TopologicalSpace α] : Prop where 
+class LocallyCompactSpace (α : Type _) [TopologicalSpace α] : Prop where 
   local_compact_nhds : ∀ x : α n _ : n ∈ 𝓝 x, ∃ (s : _)(_ : s ∈ 𝓝 x), s ⊆ n ∧ IsCompact s
 
 theorem compact_basis_nhds [LocallyCompactSpace α] (x : α) :
@@ -1117,17 +1118,17 @@ end
 /-- A σ-compact space is a space that is the union of a countable collection of compact subspaces.
   Note that a locally compact separable T₂ space need not be σ-compact.
   The sequence can be extracted using `topological_space.compact_covering`. -/
-class SigmaCompactSpace(α : Type _)[TopologicalSpace α] : Prop where 
+class SigmaCompactSpace (α : Type _) [TopologicalSpace α] : Prop where 
   exists_compact_covering : ∃ K : ℕ → Set α, (∀ n, IsCompact (K n)) ∧ (⋃n, K n) = univ
 
-instance (priority := 200)CompactSpace.sigma_compact [CompactSpace α] : SigmaCompactSpace α :=
+instance (priority := 200) CompactSpace.sigma_compact [CompactSpace α] : SigmaCompactSpace α :=
   ⟨⟨fun _ => univ, fun _ => compact_univ, Union_const _⟩⟩
 
 theorem SigmaCompactSpace.of_countable (S : Set (Set α)) (Hc : countable S) (Hcomp : ∀ s _ : s ∈ S, IsCompact s)
   (HU : ⋃₀S = univ) : SigmaCompactSpace α :=
   ⟨(exists_seq_cover_iff_countable ⟨_, is_compact_empty⟩).2 ⟨S, Hc, Hcomp, HU⟩⟩
 
-instance (priority := 100)sigma_compact_space_of_locally_compact_second_countable [LocallyCompactSpace α]
+instance (priority := 100) sigma_compact_space_of_locally_compact_second_countable [LocallyCompactSpace α]
   [second_countable_topology α] : SigmaCompactSpace α :=
   by 
     choose K hKc hxK using fun x : α => exists_compact_mem_nhds x 
@@ -1135,7 +1136,7 @@ instance (priority := 100)sigma_compact_space_of_locally_compact_second_countabl
     refine' SigmaCompactSpace.of_countable _ (hsc.image K) (ball_image_iff.2$ fun x _ => hKc x) _ 
     rwa [sUnion_image]
 
-variable(α)[SigmaCompactSpace α]
+variable (α) [SigmaCompactSpace α]
 
 open SigmaCompactSpace
 
@@ -1155,7 +1156,7 @@ theorem Union_compact_covering : (⋃n, CompactCovering α n) = univ :=
 theorem compact_covering_subset ⦃m n : ℕ⦄ (h : m ≤ n) : CompactCovering α m ⊆ CompactCovering α n :=
   monotone_accumulate h
 
-variable{α}
+variable {α}
 
 theorem exists_mem_compact_covering (x : α) : ∃ n, x ∈ CompactCovering α n :=
   Union_eq_univ_iff.mp (Union_compact_covering α) x
@@ -1211,7 +1212,7 @@ topological space is a sequence of compact sets `K n` such that `K n ⊆ interio
 If `X` is a locally compact sigma compact space, then `compact_exhaustion.choice X` provides
 a choice of an exhaustion by compact sets. This choice is also available as
 `(default : compact_exhaustion X)`. -/
-structure CompactExhaustion(X : Type _)[TopologicalSpace X] where 
+structure CompactExhaustion (X : Type _) [TopologicalSpace X] where 
   toFun : ℕ → Set X 
   is_compact' : ∀ n, IsCompact (to_fun n)
   subset_interior_succ' : ∀ n, to_fun n ⊆ Interior (to_fun (n+1))
@@ -1219,10 +1220,10 @@ structure CompactExhaustion(X : Type _)[TopologicalSpace X] where
 
 namespace CompactExhaustion
 
-instance  : CoeFun (CompactExhaustion α) fun _ => ℕ → Set α :=
+instance : CoeFun (CompactExhaustion α) fun _ => ℕ → Set α :=
   ⟨to_fun⟩
 
-variable{α}(K : CompactExhaustion α)
+variable {α} (K : CompactExhaustion α)
 
 protected theorem IsCompact (n : ℕ) : IsCompact (K n) :=
   K.is_compact' n
@@ -1292,7 +1293,7 @@ noncomputable def choice (X : Type _) [TopologicalSpace X] [LocallyCompactSpace 
       refine' univ_subset_iff.1 (Union_compact_covering X ▸ _)
       exact Union_subset_Union2 fun n => ⟨n+1, subset_union_right _ _⟩
 
-noncomputable instance  [LocallyCompactSpace α] [SigmaCompactSpace α] : Inhabited (CompactExhaustion α) :=
+noncomputable instance [LocallyCompactSpace α] [SigmaCompactSpace α] : Inhabited (CompactExhaustion α) :=
   ⟨CompactExhaustion.choice α⟩
 
 end CompactExhaustion
@@ -1461,12 +1462,12 @@ theorem is_closed_irreducible_component {x : α} : IsClosed (IrreducibleComponen
     eq_irreducible_component is_irreducible_irreducible_component.IsPreirreducible.closure subset_closure
 
 /-- A preirreducible space is one where there is no non-trivial pair of disjoint opens. -/
-class PreirreducibleSpace(α : Type u)[TopologicalSpace α] : Prop where 
+class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where 
   is_preirreducible_univ{} : IsPreirreducible (univ : Set α)
 
 /-- An irreducible space is one that is nonempty
 and where there is no non-trivial pair of disjoint opens. -/
-class IrreducibleSpace(α : Type u)[TopologicalSpace α] extends PreirreducibleSpace α : Prop where 
+class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends PreirreducibleSpace α : Prop where 
   to_nonempty{} : Nonempty α
 
 attribute [instance] IrreducibleSpace.to_nonempty

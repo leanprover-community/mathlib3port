@@ -45,11 +45,11 @@ noncomputable theory
 
 namespace Besicovitch
 
-variable{E : Type _}[NormedGroup E]
+variable {E : Type _} [NormedGroup E]
 
 namespace SatelliteConfig
 
-variable[NormedSpace ℝ E]{N : ℕ}{τ : ℝ}(a : satellite_config E N τ)
+variable [NormedSpace ℝ E] {N : ℕ} {τ : ℝ} (a : satellite_config E N τ)
 
 -- error in MeasureTheory.Covering.BesicovitchVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Rescaling a satellite configuration in a vector space, to put the basepoint at `0` and the base
@@ -121,7 +121,7 @@ def multiplicity (E : Type _) [NormedGroup E] :=
 
 section 
 
-variable[NormedSpace ℝ E][FiniteDimensional ℝ E]
+variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
 -- error in MeasureTheory.Covering.BesicovitchVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any `1`-separated set in the ball of radius `2` has cardinality at most `5 ^ dim`. This is
@@ -194,7 +194,7 @@ theorem card_le_multiplicity {s : Finset E} (hs : ∀ c _ : c ∈ s, ∥c∥ ≤
       simp only [mem_set_of_eq, Ne.def]
       exact ⟨s, rfl, hs, h's⟩
 
-variable(E)
+variable (E)
 
 -- error in MeasureTheory.Covering.BesicovitchVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `δ` is small enough, a `(1-δ)`-separated set in the ball of radius `2` also has cardinality
@@ -296,7 +296,7 @@ theorem one_lt_good_τ : 1 < good_τ E :=
     dsimp [good_τ, good_δ]
     linarith [(exists_good_δ E).some_spec.1]
 
-variable{E}
+variable {E}
 
 theorem card_le_multiplicity_of_δ {s : Finset E} (hs : ∀ c _ : c ∈ s, ∥c∥ ≤ 2)
   (h's : ∀ c _ : c ∈ s d _ : d ∈ s, c ≠ d → 1 - good_δ E ≤ ∥c - d∥) : s.card ≤ multiplicity E :=
@@ -400,7 +400,7 @@ begin
     exact [expr hτ' j] }
 end
 
-variable[NormedSpace ℝ E]
+variable [NormedSpace ℝ E]
 
 -- error in MeasureTheory.Covering.BesicovitchVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_normalized_aux2
@@ -589,7 +589,7 @@ end
 
 end SatelliteConfig
 
-variable(E)[NormedSpace ℝ E][FiniteDimensional ℝ E]
+variable (E) [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
 /-- In a normed vector space `E`, there can be no satellite configuration with `multiplicity E + 1`
 points and the parameter `good_τ E`. This will ensure that in the inductive construction to get

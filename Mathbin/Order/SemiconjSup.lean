@@ -25,7 +25,7 @@ homeomorphisms to the real line first.
 -/
 
 
-variable{α β γ : Type _}
+variable {α β γ : Type _}
 
 open Set
 
@@ -83,7 +83,7 @@ theorem semiconj.symm_adjoint [PartialOrderₓ α] [Preorderₓ β] {fa : α ≃
     rw [←fa.surjective.image_preimage { x | g x ≤ fb y }, preimage_set_of_eq]
     simp only [h.eq, fb.le_iff_le, fa.left_ord_continuous (hg' _)]
 
-variable{G : Type _}
+variable {G : Type _}
 
 -- error in Order.SemiconjSup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem semiconj_of_is_lub

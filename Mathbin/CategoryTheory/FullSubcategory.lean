@@ -34,9 +34,9 @@ universe v u₁ u₂
 
 section Induced
 
-variable{C : Type u₁}(D : Type u₂)[category.{v} D]
+variable {C : Type u₁} (D : Type u₂) [category.{v} D]
 
-variable(F : C → D)
+variable (F : C → D)
 
 include F
 
@@ -49,7 +49,7 @@ in `D` from `F X` to `F Y`.
 def induced_category : Type u₁ :=
   C
 
-variable{D}
+variable {D}
 
 instance induced_category.has_coe_to_sort {α : Sort _} [CoeSort D α] : CoeSort (induced_category D F) α :=
   ⟨fun c => «expr↥ » (F c)⟩
@@ -75,9 +75,9 @@ end Induced
 
 section FullSubcategory
 
-variable{C : Type u₂}[category.{v} C]
+variable {C : Type u₂} [category.{v} C]
 
-variable(Z : C → Prop)
+variable (Z : C → Prop)
 
 /--
 The category structure on a subtype; morphisms just ignore the property.

@@ -27,7 +27,7 @@ universe u v w u'
 
 section 
 
-variable{R : Type _}{M : Type _}[Ringₓ R][TopologicalSpace R][TopologicalSpace M][AddCommGroupₓ M][Module R M]
+variable {R : Type _} {M : Type _} [Ringₓ R] [TopologicalSpace R] [TopologicalSpace M] [AddCommGroupₓ M] [Module R M]
 
 -- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_continuous_smul.of_nhds_zero
@@ -78,12 +78,8 @@ end
 
 section 
 
-variable{R :
-    Type
-      _}{M :
-    Type
-      _}[Ringₓ
-      R][TopologicalSpace R][TopologicalSpace M][AddCommGroupₓ M][HasContinuousAdd M][Module R M][HasContinuousSmul R M]
+variable {R : Type _} {M : Type _} [Ringₓ R] [TopologicalSpace R] [TopologicalSpace M] [AddCommGroupₓ M]
+  [HasContinuousAdd M] [Module R M] [HasContinuousSmul R M]
 
 -- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `M` is a topological module over `R` and `0` is a limit of invertible elements of `R`, then
@@ -106,7 +102,7 @@ begin
   rwa ["[", expr s.add_mem_iff_right hy', ",", "<-", expr units.smul_def, ",", expr s.smul_mem_iff' u, "]"] ["at", ident hu]
 end
 
-variable(R M)
+variable (R M)
 
 /-- Let `R` be a topological ring such that zero is not an isolated point (e.g., a nondiscrete
 normed field, see `normed_field.punctured_nhds_ne_bot`). Let `M` be a nontrivial module over `R`
@@ -133,12 +129,26 @@ theorem Module.punctured_nhds_ne_bot [Nontrivial M] [ne_bot (𝓝[«expr ᶜ» {
 
 end 
 
+namespace Submodule
+
+variable {α β : Type _} [TopologicalSpace β]
+
+instance [TopologicalSpace α] [Semiringₓ α] [AddCommMonoidₓ β] [Module α β] [HasContinuousSmul α β]
+  (S : Submodule α β) : HasContinuousSmul α S :=
+  { continuous_smul :=
+      by 
+        rw [embedding_subtype_coe.to_inducing.continuous_iff]
+        exact continuous_fst.smul (continuous_subtype_coe.comp continuous_snd) }
+
+instance [Ringₓ α] [AddCommGroupₓ β] [Module α β] [TopologicalAddGroup β] (S : Submodule α β) : TopologicalAddGroup S :=
+  S.to_add_subgroup.topological_add_group
+
+end Submodule
+
 section Closure
 
-variable{R :
-    Type
-      u}{M :
-    Type v}[Semiringₓ R][TopologicalSpace R][TopologicalSpace M][AddCommMonoidₓ M][Module R M][HasContinuousSmul R M]
+variable {R : Type u} {M : Type v} [Semiringₓ R] [TopologicalSpace R] [TopologicalSpace M] [AddCommMonoidₓ M]
+  [Module R M] [HasContinuousSmul R M]
 
 theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
   (fun p : R × M => p.1 • p.2) '' (Set.Univ : Set R).Prod (Closure (s : Set M)) ⊆ Closure (s : Set M) :=
@@ -162,7 +172,7 @@ theorem Submodule.closure_smul_self_eq (s : Submodule R M) :
   (fun p : R × M => p.1 • p.2) '' (Set.Univ : Set R).Prod (Closure (s : Set M)) = Closure (s : Set M) :=
   Set.Subset.antisymm s.closure_smul_self_subset fun x hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩
 
-variable[HasContinuousAdd M]
+variable [HasContinuousAdd M]
 
 /-- The (topological-space) closure of a submodule of a topological `R`-module `M` is itself
 a submodule. -/
@@ -203,20 +213,9 @@ end Closure
 /-- Continuous linear maps between modules. We only put the type classes that are necessary for the
 definition, although in applications `M` and `M₂` will be topological modules over the topological
 ring `R`. -/
-structure
-  ContinuousLinearMap{R :
-    Type
-      _}{S :
-    Type
-      _}[Semiringₓ
-      R][Semiringₓ
-      S](σ :
-    R →+*
-      S)(M :
-    Type
-      _)[TopologicalSpace
-      M][AddCommMonoidₓ M](M₂ : Type _)[TopologicalSpace M₂][AddCommMonoidₓ M₂][Module R M][Module S M₂] extends
-  M →ₛₗ[σ] M₂ where 
+structure ContinuousLinearMap {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] (σ : R →+* S) (M : Type _)
+  [TopologicalSpace M] [AddCommMonoidₓ M] (M₂ : Type _) [TopologicalSpace M₂] [AddCommMonoidₓ M₂] [Module R M]
+  [Module S M₂] extends M →ₛₗ[σ] M₂ where 
   cont : Continuous to_fun :=  by 
   runTac 
     tactic.interactive.continuity'
@@ -231,24 +230,9 @@ notation:25 M " →L⋆[" R "] " M₂ => ContinuousLinearMap (@starRingAut R _ _
 for the definition, although in applications `M` and `M₂` will be topological modules over the
 topological ring `R`. -/
 @[nolint has_inhabited_instance]
-structure
-  ContinuousLinearEquiv{R :
-    Type
-      _}{S :
-    Type
-      _}[Semiringₓ
-      R][Semiringₓ
-      S](σ :
-    R →+*
-      S){σ' :
-    S →+*
-      R}[RingHomInvPair σ
-      σ'][RingHomInvPair σ'
-      σ](M :
-    Type
-      _)[TopologicalSpace
-      M][AddCommMonoidₓ M](M₂ : Type _)[TopologicalSpace M₂][AddCommMonoidₓ M₂][Module R M][Module S M₂] extends
-  M ≃ₛₗ[σ] M₂ where 
+structure ContinuousLinearEquiv {R : Type _} {S : Type _} [Semiringₓ R] [Semiringₓ S] (σ : R →+* S) {σ' : S →+* R}
+  [RingHomInvPair σ σ'] [RingHomInvPair σ' σ] (M : Type _) [TopologicalSpace M] [AddCommMonoidₓ M] (M₂ : Type _)
+  [TopologicalSpace M₂] [AddCommMonoidₓ M₂] [Module R M] [Module S M₂] extends M ≃ₛₗ[σ] M₂ where 
   continuous_to_fun : Continuous to_fun :=  by 
   runTac 
     tactic.interactive.continuity' 
@@ -271,35 +255,13 @@ section Semiringₓ
 -/
 
 
-variable{R₁ :
-    Type
-      _}{R₂ :
-    Type
-      _}{R₃ :
-    Type
-      _}[Semiringₓ
-      R₁][Semiringₓ
-      R₂][Semiringₓ
-      R₃]{σ₁₂ :
-    R₁ →+*
-      R₂}{σ₂₃ :
-    R₂ →+*
-      R₃}{M₁ :
-    Type
-      _}[TopologicalSpace
-      M₁][AddCommMonoidₓ
-      M₁]{M₂ :
-    Type
-      _}[TopologicalSpace
-      M₂][AddCommMonoidₓ
-      M₂]{M₃ :
-    Type
-      _}[TopologicalSpace
-      M₃][AddCommMonoidₓ
-      M₃]{M₄ : Type _}[TopologicalSpace M₄][AddCommMonoidₓ M₄][Module R₁ M₁][Module R₂ M₂][Module R₃ M₃]
+variable {R₁ : Type _} {R₂ : Type _} {R₃ : Type _} [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃] {σ₁₂ : R₁ →+* R₂}
+  {σ₂₃ : R₂ →+* R₃} {M₁ : Type _} [TopologicalSpace M₁] [AddCommMonoidₓ M₁] {M₂ : Type _} [TopologicalSpace M₂]
+  [AddCommMonoidₓ M₂] {M₃ : Type _} [TopologicalSpace M₃] [AddCommMonoidₓ M₃] {M₄ : Type _} [TopologicalSpace M₄]
+  [AddCommMonoidₓ M₄] [Module R₁ M₁] [Module R₂ M₂] [Module R₃ M₃]
 
 /-- Coerce continuous linear maps to linear maps. -/
-instance  : Coe (M₁ →SL[σ₁₂] M₂) (M₁ →ₛₗ[σ₁₂] M₂) :=
+instance : Coe (M₁ →SL[σ₁₂] M₂) (M₁ →ₛₗ[σ₁₂] M₂) :=
   ⟨to_linear_map⟩
 
 @[simp]
@@ -358,7 +320,7 @@ theorem ext_iff {f g : M₁ →SL[σ₁₂] M₂} : f = g ↔ ∀ x, f x = g x :
     by 
       ext⟩
 
-variable(f g : M₁ →SL[σ₁₂] M₂)(c : R₁)(h : M₂ →SL[σ₂₃] M₃)(x y z : M₁)
+variable (f g : M₁ →SL[σ₁₂] M₂) (c : R₁) (h : M₂ →SL[σ₂₃] M₃) (x y z : M₁)
 
 @[simp]
 theorem map_zero : f (0 : M₁) = 0 :=
@@ -429,10 +391,10 @@ theorem _root_.dense_range.topological_closure_map_submodule [RingHomSurjective 
     exact hf'.dense_image f.continuous hs
 
 /-- The continuous map that is constantly zero. -/
-instance  : HasZero (M₁ →SL[σ₁₂] M₂) :=
+instance : HasZero (M₁ →SL[σ₁₂] M₂) :=
   ⟨⟨0, continuous_zero⟩⟩
 
-instance  : Inhabited (M₁ →SL[σ₁₂] M₂) :=
+instance : Inhabited (M₁ →SL[σ₁₂] M₂) :=
   ⟨0⟩
 
 @[simp]
@@ -459,7 +421,7 @@ instance unique_of_right [Subsingleton M₂] : Unique (M₁ →SL[σ₁₂] M₂
 
 section 
 
-variable(R₁ M₁)
+variable (R₁ M₁)
 
 /-- the identity map as a continuous linear map. -/
 def id : M₁ →L[R₁] M₁ :=
@@ -467,7 +429,7 @@ def id : M₁ →L[R₁] M₁ :=
 
 end 
 
-instance  : HasOne (M₁ →L[R₁] M₁) :=
+instance : HasOne (M₁ →L[R₁] M₁) :=
   ⟨id R₁ M₁⟩
 
 theorem one_def : (1 : M₁ →L[R₁] M₁) = id R₁ M₁ :=
@@ -495,9 +457,9 @@ theorem one_apply : (1 : M₁ →L[R₁] M₁) x = x :=
 
 section Add
 
-variable[HasContinuousAdd M₂]
+variable [HasContinuousAdd M₂]
 
-instance  : Add (M₁ →SL[σ₁₂] M₂) :=
+instance : Add (M₁ →SL[σ₁₂] M₂) :=
   ⟨fun f g => ⟨f+g, f.2.add g.2⟩⟩
 
 theorem continuous_nsmul (n : ℕ) : Continuous fun x : M₂ => n • x :=
@@ -526,7 +488,7 @@ theorem coe_add : ((f+g : M₁ →SL[σ₁₂] M₂) : M₁ →ₛₗ[σ₁₂] 
 theorem coe_add' : ((f+g : M₁ →SL[σ₁₂] M₂) : M₁ → M₂) = (f : M₁ → M₂)+g :=
   rfl
 
-instance  : AddCommMonoidₓ (M₁ →SL[σ₁₂] M₂) :=
+instance : AddCommMonoidₓ (M₁ →SL[σ₁₂] M₂) :=
   { zero := (0 : M₁ →SL[σ₁₂] M₂), add := ·+·,
     zero_add :=
       by 
@@ -576,7 +538,7 @@ theorem sum_apply {ι : Type _} (t : Finset ι) (f : ι → M₁ →SL[σ₁₂]
 
 end Add
 
-variable{σ₁₃ : R₁ →+* R₃}[RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
+variable {σ₁₃ : R₁ →+* R₃} [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
 /-- Composition of bounded linear maps. -/
 def comp (g : M₂ →SL[σ₂₃] M₃) (f : M₁ →SL[σ₁₂] M₂) : M₁ →SL[σ₁₃] M₃ :=
@@ -644,7 +606,7 @@ theorem comp_assoc {R₄ : Type _} [Semiringₓ R₄] [Module R₄ M₄] {σ₁�
   (g : M₂ →SL[σ₂₃] M₃) (f : M₁ →SL[σ₁₂] M₂) : (h.comp g).comp f = h.comp (g.comp f) :=
   rfl
 
-instance  : Mul (M₁ →L[R₁] M₁) :=
+instance : Mul (M₁ →L[R₁] M₁) :=
   ⟨comp⟩
 
 theorem mul_def (f g : M₁ →L[R₁] M₁) : (f*g) = f.comp g :=
@@ -673,7 +635,7 @@ theorem prod_apply [Module R₁ M₂] [Module R₁ M₃] (f₁ : M₁ →L[R₁]
 
 section 
 
-variable(R₁ M₁ M₂)
+variable (R₁ M₁ M₂)
 
 /-- The left injection into a product is a continuous linear map. -/
 def inl [Module R₁ M₂] : M₁ →L[R₁] M₁ × M₂ :=
@@ -780,7 +742,7 @@ theorem coe_subtype_val (p : Submodule R₁ M₁) : (subtype_val p : p →ₗ[R�
 theorem subtype_val_apply (p : Submodule R₁ M₁) (x : p) : (subtype_val p : p → M₁) x = x :=
   rfl
 
-variable(R₁ M₁ M₂)
+variable (R₁ M₁ M₂)
 
 /-- `prod.fst` as a `continuous_linear_map`. -/
 def fst [Module R₁ M₂] : M₁ × M₂ →L[R₁] M₁ :=
@@ -790,7 +752,7 @@ def fst [Module R₁ M₂] : M₁ × M₂ →L[R₁] M₁ :=
 def snd [Module R₁ M₂] : M₁ × M₂ →L[R₁] M₂ :=
   { cont := continuous_snd, toLinearMap := LinearMap.snd R₁ M₁ M₂ }
 
-variable{R₁ M₁ M₂}
+variable {R₁ M₁ M₂}
 
 @[simp, normCast]
 theorem coe_fst [Module R₁ M₂] : (fst R₁ M₁ M₂ : M₁ × M₂ →ₗ[R₁] M₁) = LinearMap.fst R₁ M₁ M₂ :=
@@ -834,7 +796,7 @@ theorem coe_prod_map [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (f
 
 @[simp, normCast]
 theorem coe_prod_map' [Module R₁ M₂] [Module R₁ M₃] [Module R₁ M₄] (f₁ : M₁ →L[R₁] M₂) (f₂ : M₃ →L[R₁] M₄) :
-  «expr⇑ » (f₁.prod_map f₂) = Prod.mapₓ f₁ f₂ :=
+  «expr⇑ » (f₁.prod_map f₂) = Prod.map f₁ f₂ :=
   rfl
 
 /-- The continuous linear map given by `(x, y) ↦ f₁ x + f₂ y`. -/
@@ -858,12 +820,8 @@ theorem range_coprod [Module R₁ M₂] [Module R₁ M₃] [HasContinuousAdd M�
 
 section 
 
-variable{R S :
-    Type
-      _}[Semiringₓ
-      R][Semiringₓ
-      S][Module R
-      M₁][Module R M₂][Module R S][Module S M₂][IsScalarTower R S M₂][TopologicalSpace S][HasContinuousSmul S M₂]
+variable {R S : Type _} [Semiringₓ R] [Semiringₓ S] [Module R M₁] [Module R M₂] [Module R S] [Module S M₂]
+  [IsScalarTower R S M₂] [TopologicalSpace S] [HasContinuousSmul S M₂]
 
 /-- The linear map `λ x, c x • f`.  Associates to a scalar-valued linear map and an element of
 `M₂` the `M₂`-valued linear map obtained by multiplying the two (a.k.a. tensoring by `M₂`).
@@ -877,7 +835,7 @@ theorem smul_right_apply {c : M₁ →L[R] S} {f : M₂} {x : M₁} : (smul_righ
 
 end 
 
-variable[Module R₁ M₂][TopologicalSpace R₁][HasContinuousSmul R₁ M₂]
+variable [Module R₁ M₂] [TopologicalSpace R₁] [HasContinuousSmul R₁ M₂]
 
 @[simp]
 theorem smul_right_one_one (c : R₁ →L[R₁] M₂) : smul_right (1 : R₁ →L[R₁] R₁) (c 1) = c :=
@@ -900,20 +858,9 @@ end Semiringₓ
 
 section Pi
 
-variable{R :
-    Type
-      _}[Semiringₓ
-      R]{M :
-    Type
-      _}[TopologicalSpace
-      M][AddCommMonoidₓ
-      M][Module R
-      M]{M₂ :
-    Type
-      _}[TopologicalSpace
-      M₂][AddCommMonoidₓ
-      M₂][Module R
-      M₂]{ι : Type _}{φ : ι → Type _}[∀ i, TopologicalSpace (φ i)][∀ i, AddCommMonoidₓ (φ i)][∀ i, Module R (φ i)]
+variable {R : Type _} [Semiringₓ R] {M : Type _} [TopologicalSpace M] [AddCommMonoidₓ M] [Module R M] {M₂ : Type _}
+  [TopologicalSpace M₂] [AddCommMonoidₓ M₂] [Module R M₂] {ι : Type _} {φ : ι → Type _} [∀ i, TopologicalSpace (φ i)]
+  [∀ i, AddCommMonoidₓ (φ i)] [∀ i, Module R (φ i)]
 
 /-- `pi` construction for continuous linear functions. From a family of continuous linear functions
 it produces a continuous linear function into a family of topological modules. -/
@@ -956,7 +903,7 @@ theorem proj_pi (f : ∀ i, M₂ →L[R] φ i) (i : ι) : (proj i).comp (pi f) =
 theorem infi_ker_proj : (⨅i, ker (proj i) : Submodule R (∀ i, φ i)) = ⊥ :=
   LinearMap.infi_ker_proj
 
-variable(R φ)
+variable (R φ)
 
 -- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `I` and `J` are complementary index sets, the product of the kernels of the `J`th projections
@@ -981,29 +928,13 @@ end Pi
 
 section Ringₓ
 
-variable{R :
-    Type
-      _}[Ringₓ
-      R]{R₂ :
-    Type
-      _}[Ringₓ
-      R₂]{M :
-    Type
-      _}[TopologicalSpace
-      M][AddCommGroupₓ
-      M]{M₂ :
-    Type
-      _}[TopologicalSpace
-      M₂][AddCommGroupₓ
-      M₂]{M₃ :
-    Type
-      _}[TopologicalSpace
-      M₃][AddCommGroupₓ
-      M₃]{M₄ : Type _}[TopologicalSpace M₄][AddCommGroupₓ M₄][Module R M][Module R₂ M₂]{σ₁₂ : R →+* R₂}
+variable {R : Type _} [Ringₓ R] {R₂ : Type _} [Ringₓ R₂] {M : Type _} [TopologicalSpace M] [AddCommGroupₓ M]
+  {M₂ : Type _} [TopologicalSpace M₂] [AddCommGroupₓ M₂] {M₃ : Type _} [TopologicalSpace M₃] [AddCommGroupₓ M₃]
+  {M₄ : Type _} [TopologicalSpace M₄] [AddCommGroupₓ M₄] [Module R M] [Module R₂ M₂] {σ₁₂ : R →+* R₂}
 
 section 
 
-variable(f g : M →SL[σ₁₂] M₂)(x y : M)
+variable (f g : M →SL[σ₁₂] M₂) (x y : M)
 
 @[simp]
 theorem map_neg : f (-x) = -f x :=
@@ -1021,9 +952,9 @@ end
 
 section 
 
-variable[Module R M₂][Module R M₃][Module R M₄]
+variable [Module R M₂] [Module R M₃] [Module R M₄]
 
-variable(c : R)(f g : M →L[R] M₂)(h : M₂ →L[R] M₃)(x y z : M)
+variable (c : R) (f g : M →L[R] M₂) (h : M₂ →L[R] M₃) (x y z : M)
 
 theorem range_prod_eq {f : M →L[R] M₂} {g : M →L[R] M₃} (h : ker f⊔ker g = ⊤) :
   range (f.prod g) = (range f).Prod (range g) :=
@@ -1041,11 +972,11 @@ end
 
 section 
 
-variable[TopologicalAddGroup M₂]
+variable [TopologicalAddGroup M₂]
 
-variable(f g : M →SL[σ₁₂] M₂)(x y : M)
+variable (f g : M →SL[σ₁₂] M₂) (x y : M)
 
-instance  : Neg (M →SL[σ₁₂] M₂) :=
+instance : Neg (M →SL[σ₁₂] M₂) :=
   ⟨fun f => ⟨-f, f.2.neg⟩⟩
 
 @[simp]
@@ -1060,7 +991,7 @@ theorem coe_neg : ((-f : M →SL[σ₁₂] M₂) : M →ₛₗ[σ₁₂] M₂) =
 theorem coe_neg' : ((-f : M →SL[σ₁₂] M₂) : M → M₂) = -(f : M → M₂) :=
   rfl
 
-instance  : Sub (M →SL[σ₁₂] M₂) :=
+instance : Sub (M →SL[σ₁₂] M₂) :=
   ⟨fun f g => ⟨f - g, f.2.sub g.2⟩⟩
 
 theorem continuous_zsmul : ∀ n : ℤ, Continuous fun x : M₂ => n • x
@@ -1078,7 +1009,7 @@ theorem continuous.zsmul {α : Type _} [TopologicalSpace α] {n : ℤ} {f : α �
   Continuous fun x : α => n • f x :=
   (continuous_zsmul n).comp hf
 
-instance  : AddCommGroupₓ (M →SL[σ₁₂] M₂) :=
+instance : AddCommGroupₓ (M →SL[σ₁₂] M₂) :=
   by 
     refine'
         { ContinuousLinearMap.addCommMonoid with zero := 0, add := ·+·, neg := Neg.neg, sub := Sub.sub,
@@ -1132,7 +1063,7 @@ theorem coe_sub' : ((f - g : M →SL[σ₁₂] M₂) : M → M₂) = (f : M → 
 
 end 
 
-instance  [TopologicalAddGroup M] : Ringₓ (M →L[R] M) :=
+instance [TopologicalAddGroup M] : Ringₓ (M →L[R] M) :=
   { ContinuousLinearMap.addCommGroup with mul := ·*·, one := 1, mul_one := fun _ => ext$ fun _ => rfl,
     one_mul := fun _ => ext$ fun _ => rfl, mul_assoc := fun _ _ _ => ext$ fun _ => rfl,
     left_distrib := fun _ _ _ => ext$ fun _ => map_add _ _ _,
@@ -1150,7 +1081,7 @@ theorem smul_right_one_pow [TopologicalSpace R] [TopologicalRing R] (c : R) (n :
 
 section 
 
-variable{σ₂₁ : R₂ →+* R}[RingHomInvPair σ₁₂ σ₂₁]
+variable {σ₂₁ : R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁]
 
 /-- Given a right inverse `f₂ : M₂ →L[R] M` to `f₁ : M →L[R] M₂`,
 `proj_ker_of_right_inverse f₁ f₂ h` is the projection `M →L[R] f₁.ker` along `f₂.range`. -/
@@ -1186,37 +1117,22 @@ end Ringₓ
 
 section SmulMonoid
 
-variable{R S :
-    Type
-      _}[Semiringₓ
-      R][Monoidₓ
-      S][TopologicalSpace
-      S]{M :
-    Type
-      _}[TopologicalSpace
-      M][AddCommMonoidₓ
-      M][Module R
-      M]{M₂ :
-    Type
-      _}[TopologicalSpace
-      M₂][AddCommMonoidₓ
-      M₂][Module R
-      M₂]{M₃ :
-    Type
-      _}[TopologicalSpace
-      M₃][AddCommMonoidₓ M₃][Module R M₃][DistribMulAction S M₃][SmulCommClass R S M₃][HasContinuousSmul S M₃]
+variable {R S : Type _} [Semiringₓ R] [Monoidₓ S] [TopologicalSpace S] {M : Type _} [TopologicalSpace M]
+  [AddCommMonoidₓ M] [Module R M] {M₂ : Type _} [TopologicalSpace M₂] [AddCommMonoidₓ M₂] [Module R M₂] {M₃ : Type _}
+  [TopologicalSpace M₃] [AddCommMonoidₓ M₃] [Module R M₃] [DistribMulAction S M₃] [SmulCommClass R S M₃]
+  [HasContinuousSmul S M₃]
 
-instance  : MulAction S (M →L[R] M₃) :=
+instance : MulAction S (M →L[R] M₃) :=
   { smul := fun c f => ⟨c • f, (continuous_const.smul f.2 : Continuous fun x => c • f x)⟩,
     one_smul := fun f => ext$ fun x => one_smul _ _, mul_smul := fun a b f => ext$ fun x => mul_smul _ _ _ }
 
-variable(c : S)(h : M₂ →L[R] M₃)(f g : M →L[R] M₂)(x y z : M)
+variable (c : S) (h : M₂ →L[R] M₃) (f g : M →L[R] M₂) (x y z : M)
 
 @[simp]
 theorem smul_comp : (c • h).comp f = c • h.comp f :=
   rfl
 
-variable[DistribMulAction S M₂][HasContinuousSmul S M₂][SmulCommClass R S M₂]
+variable [DistribMulAction S M₂] [HasContinuousSmul S M₂] [SmulCommClass R S M₂]
 
 theorem smul_apply : (c • f) x = c • f x :=
   rfl
@@ -1235,46 +1151,25 @@ theorem comp_smul [LinearMap.CompatibleSmul M₂ M₃ S R] : h.comp (c • f) = 
     ext x 
     exact h.map_smul_of_tower c (f x)
 
-instance  {T : Type _} [Monoidₓ T] [TopologicalSpace T] [DistribMulAction T M₂] [HasContinuousSmul T M₂]
+instance {T : Type _} [Monoidₓ T] [TopologicalSpace T] [DistribMulAction T M₂] [HasContinuousSmul T M₂]
   [SmulCommClass R T M₂] [HasScalar S T] [IsScalarTower S T M₂] : IsScalarTower S T (M →L[R] M₂) :=
   ⟨fun a b f => ext$ fun x => smul_assoc a b (f x)⟩
 
-instance  {T : Type _} [Monoidₓ T] [TopologicalSpace T] [DistribMulAction T M₂] [HasContinuousSmul T M₂]
+instance {T : Type _} [Monoidₓ T] [TopologicalSpace T] [DistribMulAction T M₂] [HasContinuousSmul T M₂]
   [SmulCommClass R T M₂] [SmulCommClass S T M₂] : SmulCommClass S T (M →L[R] M₂) :=
   ⟨fun a b f => ext$ fun x => smul_comm a b (f x)⟩
 
-instance  [HasContinuousAdd M₂] : DistribMulAction S (M →L[R] M₂) :=
+instance [HasContinuousAdd M₂] : DistribMulAction S (M →L[R] M₂) :=
   { smul_add := fun a f g => ext$ fun x => smul_add a (f x) (g x), smul_zero := fun a => ext$ fun x => smul_zero _ }
 
 end SmulMonoid
 
 section Smul
 
-variable{R S :
-    Type
-      _}[Semiringₓ
-      R][Semiringₓ
-      S][TopologicalSpace
-      S]{M :
-    Type
-      _}[TopologicalSpace
-      M][AddCommMonoidₓ
-      M][Module R
-      M]{M₂ :
-    Type
-      _}[TopologicalSpace
-      M₂][AddCommMonoidₓ
-      M₂][Module R
-      M₂]{M₃ :
-    Type
-      _}[TopologicalSpace
-      M₃][AddCommMonoidₓ
-      M₃][Module R
-      M₃][Module S
-      M₃][HasContinuousSmul S
-      M₃][SmulCommClass R S
-      M₃][Module S
-      M₂][HasContinuousSmul S M₂][SmulCommClass R S M₂](c : S)(h : M₂ →L[R] M₃)(f g : M →L[R] M₂)(x y z : M)
+variable {R S : Type _} [Semiringₓ R] [Semiringₓ S] [TopologicalSpace S] {M : Type _} [TopologicalSpace M]
+  [AddCommMonoidₓ M] [Module R M] {M₂ : Type _} [TopologicalSpace M₂] [AddCommMonoidₓ M₂] [Module R M₂] {M₃ : Type _}
+  [TopologicalSpace M₃] [AddCommMonoidₓ M₃] [Module R M₃] [Module S M₃] [HasContinuousSmul S M₃] [SmulCommClass R S M₃]
+  [Module S M₂] [HasContinuousSmul S M₂] [SmulCommClass R S M₂] (c : S) (h : M₂ →L[R] M₃) (f g : M →L[R] M₂) (x y z : M)
 
 /-- `continuous_linear_map.prod` as an `equiv`. -/
 @[simps apply]
@@ -1300,12 +1195,12 @@ theorem prod_ext {f g : M × M₂ →L[R] M₃} (hl : f.comp (inl _ _ _) = g.com
   (hr : f.comp (inr _ _ _) = g.comp (inr _ _ _)) : f = g :=
   prod_ext_iff.2 ⟨hl, hr⟩
 
-variable[HasContinuousAdd M₂]
+variable [HasContinuousAdd M₂]
 
-instance  : Module S (M →L[R] M₂) :=
+instance : Module S (M →L[R] M₂) :=
   { zero_smul := fun _ => ext$ fun _ => zero_smul _ _, add_smul := fun _ _ _ => ext$ fun _ => add_smul _ _ _ }
 
-variable(S)[HasContinuousAdd M₃]
+variable (S) [HasContinuousAdd M₃]
 
 /-- `continuous_linear_map.prod` as a `linear_equiv`. -/
 @[simps apply]
@@ -1321,24 +1216,10 @@ end Smul
 
 section SmulRightₗ
 
-variable{R S T M M₂ :
-    Type
-      _}[Ringₓ
-      R][Ringₓ
-      S][Ringₓ
-      T][Module R
-      S][AddCommGroupₓ
-      M₂][Module R
-      M₂][Module S
-      M₂][IsScalarTower R S
-      M₂][TopologicalSpace
-      S][TopologicalSpace
-      M₂][HasContinuousSmul S
-      M₂][TopologicalSpace
-      M][AddCommGroupₓ
-      M][Module R
-      M][TopologicalAddGroup
-      M₂][TopologicalSpace T][Module T M₂][HasContinuousSmul T M₂][SmulCommClass R T M₂][SmulCommClass S T M₂]
+variable {R S T M M₂ : Type _} [Ringₓ R] [Ringₓ S] [Ringₓ T] [Module R S] [AddCommGroupₓ M₂] [Module R M₂] [Module S M₂]
+  [IsScalarTower R S M₂] [TopologicalSpace S] [TopologicalSpace M₂] [HasContinuousSmul S M₂] [TopologicalSpace M]
+  [AddCommGroupₓ M] [Module R M] [TopologicalAddGroup M₂] [TopologicalSpace T] [Module T M₂] [HasContinuousSmul T M₂]
+  [SmulCommClass R T M₂] [SmulCommClass S T M₂]
 
 /-- Given `c : E →L[𝕜] 𝕜`, `c.smul_rightₗ` is the linear map from `F` to `E →L[𝕜] F`
 sending `f` to `λ e, c e • f`. See also `continuous_linear_map.smul_rightL`. -/
@@ -1364,39 +1245,22 @@ end SmulRightₗ
 
 section CommRingₓ
 
-variable{R :
-    Type
-      _}[CommRingₓ
-      R][TopologicalSpace
-      R]{M :
-    Type
-      _}[TopologicalSpace
-      M][AddCommGroupₓ
-      M]{M₂ :
-    Type
-      _}[TopologicalSpace
-      M₂][AddCommGroupₓ
-      M₂]{M₃ :
-    Type _}[TopologicalSpace M₃][AddCommGroupₓ M₃][Module R M][Module R M₂][Module R M₃][HasContinuousSmul R M₃]
+variable {R : Type _} [CommRingₓ R] [TopologicalSpace R] {M : Type _} [TopologicalSpace M] [AddCommGroupₓ M]
+  {M₂ : Type _} [TopologicalSpace M₂] [AddCommGroupₓ M₂] {M₃ : Type _} [TopologicalSpace M₃] [AddCommGroupₓ M₃]
+  [Module R M] [Module R M₂] [Module R M₃] [HasContinuousSmul R M₃]
 
-variable[TopologicalAddGroup M₂][HasContinuousSmul R M₂]
+variable [TopologicalAddGroup M₂] [HasContinuousSmul R M₂]
 
-instance  : Algebra R (M₂ →L[R] M₂) :=
+instance : Algebra R (M₂ →L[R] M₂) :=
   Algebra.ofModule smul_comp fun _ _ _ => comp_smul _ _ _
 
 end CommRingₓ
 
 section RestrictScalars
 
-variable{A M M₂ :
-    Type
-      _}[Ringₓ
-      A][AddCommGroupₓ
-      M][AddCommGroupₓ
-      M₂][Module A
-      M][Module A
-      M₂][TopologicalSpace
-      M][TopologicalSpace M₂](R : Type _)[Ringₓ R][Module R M][Module R M₂][LinearMap.CompatibleSmul M M₂ R A]
+variable {A M M₂ : Type _} [Ringₓ A] [AddCommGroupₓ M] [AddCommGroupₓ M₂] [Module A M] [Module A M₂]
+  [TopologicalSpace M] [TopologicalSpace M₂] (R : Type _) [Ringₓ R] [Module R M] [Module R M₂]
+  [LinearMap.CompatibleSmul M M₂ R A]
 
 /-- If `A` is an `R`-algebra, then a continuous `A`-linear map can be interpreted as a continuous
 `R`-linear map. We assume `linear_map.compatible_smul M M₂ R A` to match assumptions of
@@ -1404,7 +1268,7 @@ variable{A M M₂ :
 def restrict_scalars (f : M →L[A] M₂) : M →L[R] M₂ :=
   ⟨(f : M →ₗ[A] M₂).restrictScalars R, f.continuous⟩
 
-variable{R}
+variable {R}
 
 @[simp, normCast]
 theorem coe_restrict_scalars (f : M →L[A] M₂) :
@@ -1421,7 +1285,7 @@ theorem restrict_scalars_zero : (0 : M →L[A] M₂).restrictScalars R = 0 :=
 
 section 
 
-variable[TopologicalAddGroup M₂]
+variable [TopologicalAddGroup M₂]
 
 @[simp]
 theorem restrict_scalars_add (f g : M →L[A] M₂) : (f+g).restrictScalars R = f.restrict_scalars R+g.restrict_scalars R :=
@@ -1433,22 +1297,21 @@ theorem restrict_scalars_neg (f : M →L[A] M₂) : (-f).restrictScalars R = -f.
 
 end 
 
-variable{S :
-    Type
-      _}[Ringₓ S][TopologicalSpace S][Module S M₂][HasContinuousSmul S M₂][SmulCommClass A S M₂][SmulCommClass R S M₂]
+variable {S : Type _} [Ringₓ S] [TopologicalSpace S] [Module S M₂] [HasContinuousSmul S M₂] [SmulCommClass A S M₂]
+  [SmulCommClass R S M₂]
 
 @[simp]
 theorem restrict_scalars_smul (c : S) (f : M →L[A] M₂) : (c • f).restrictScalars R = c • f.restrict_scalars R :=
   rfl
 
-variable(A M M₂ R S)[TopologicalAddGroup M₂]
+variable (A M M₂ R S) [TopologicalAddGroup M₂]
 
 /-- `continuous_linear_map.restrict_scalars` as a `linear_map`. See also
 `continuous_linear_map.restrict_scalarsL`. -/
 def restrict_scalarsₗ : (M →L[A] M₂) →ₗ[S] M →L[R] M₂ :=
   { toFun := restrict_scalars R, map_add' := restrict_scalars_add, map_smul' := restrict_scalars_smul }
 
-variable{A M M₂ R S}
+variable {A M M₂ R S}
 
 @[simp]
 theorem coe_restrict_scalarsₗ : «expr⇑ » (restrict_scalarsₗ A M M₂ R S) = restrict_scalars R :=
@@ -1462,48 +1325,13 @@ namespace ContinuousLinearEquiv
 
 section AddCommMonoidₓ
 
-variable{R₁ :
-    Type
-      _}{R₂ :
-    Type
-      _}{R₃ :
-    Type
-      _}[Semiringₓ
-      R₁][Semiringₓ
-      R₂][Semiringₓ
-      R₃]{σ₁₂ :
-    R₁ →+*
-      R₂}{σ₂₁ :
-    R₂ →+*
-      R₁}[RingHomInvPair σ₁₂
-      σ₂₁][RingHomInvPair σ₂₁
-      σ₁₂]{σ₂₃ :
-    R₂ →+*
-      R₃}{σ₃₂ :
-    R₃ →+*
-      R₂}[RingHomInvPair σ₂₃
-      σ₃₂][RingHomInvPair σ₃₂
-      σ₂₃]{σ₁₃ :
-    R₁ →+*
-      R₃}{σ₃₁ :
-    R₃ →+*
-      R₁}[RingHomInvPair σ₁₃
-      σ₃₁][RingHomInvPair σ₃₁
-      σ₁₃][RingHomCompTriple σ₁₂ σ₂₃
-      σ₁₃][RingHomCompTriple σ₃₂ σ₂₁
-      σ₃₁]{M₁ :
-    Type
-      _}[TopologicalSpace
-      M₁][AddCommMonoidₓ
-      M₁]{M₂ :
-    Type
-      _}[TopologicalSpace
-      M₂][AddCommMonoidₓ
-      M₂]{M₃ :
-    Type
-      _}[TopologicalSpace
-      M₃][AddCommMonoidₓ
-      M₃]{M₄ : Type _}[TopologicalSpace M₄][AddCommMonoidₓ M₄][Module R₁ M₁][Module R₂ M₂][Module R₃ M₃]
+variable {R₁ : Type _} {R₂ : Type _} {R₃ : Type _} [Semiringₓ R₁] [Semiringₓ R₂] [Semiringₓ R₃] {σ₁₂ : R₁ →+* R₂}
+  {σ₂₁ : R₂ →+* R₁} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂] {σ₂₃ : R₂ →+* R₃} {σ₃₂ : R₃ →+* R₂}
+  [RingHomInvPair σ₂₃ σ₃₂] [RingHomInvPair σ₃₂ σ₂₃] {σ₁₃ : R₁ →+* R₃} {σ₃₁ : R₃ →+* R₁} [RingHomInvPair σ₁₃ σ₃₁]
+  [RingHomInvPair σ₃₁ σ₁₃] [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃] [RingHomCompTriple σ₃₂ σ₂₁ σ₃₁] {M₁ : Type _}
+  [TopologicalSpace M₁] [AddCommMonoidₓ M₁] {M₂ : Type _} [TopologicalSpace M₂] [AddCommMonoidₓ M₂] {M₃ : Type _}
+  [TopologicalSpace M₃] [AddCommMonoidₓ M₃] {M₄ : Type _} [TopologicalSpace M₄] [AddCommMonoidₓ M₄] [Module R₁ M₁]
+  [Module R₂ M₂] [Module R₃ M₃]
 
 include σ₂₁
 
@@ -1512,11 +1340,11 @@ def to_continuous_linear_map (e : M₁ ≃SL[σ₁₂] M₂) : M₁ →SL[σ₁�
   { e.to_linear_equiv.to_linear_map with cont := e.continuous_to_fun }
 
 /-- Coerce continuous linear equivs to continuous linear maps. -/
-instance  : Coe (M₁ ≃SL[σ₁₂] M₂) (M₁ →SL[σ₁₂] M₂) :=
+instance : Coe (M₁ ≃SL[σ₁₂] M₂) (M₁ →SL[σ₁₂] M₂) :=
   ⟨to_continuous_linear_map⟩
 
 /-- Coerce continuous linear equivs to maps. -/
-instance  : CoeFun (M₁ ≃SL[σ₁₂] M₂) fun _ => M₁ → M₂ :=
+instance : CoeFun (M₁ ≃SL[σ₁₂] M₂) fun _ => M₁ → M₂ :=
   ⟨fun f => f⟩
 
 @[simp]
@@ -1630,7 +1458,7 @@ theorem ext₁ [TopologicalSpace R₁] {f g : R₁ ≃L[R₁] M₁} (h : f 1 = g
 
 section 
 
-variable(R₁ M₁)
+variable (R₁ M₁)
 
 /-- The identity map as a continuous linear equivalence. -/
 @[refl]
@@ -1854,7 +1682,7 @@ theorem symm_equiv_of_inverse (f₁ : M₁ →SL[σ₁₂] M₂) f₂ h₁ h₂ 
 
 omit σ₂₁
 
-variable(M₁)
+variable (M₁)
 
 /-- The continuous linear equivalences from `M` to itself form a group under composition. -/
 instance automorphism_group : Groupₓ (M₁ ≃L[R₁] M₁) :=
@@ -1880,19 +1708,9 @@ instance automorphism_group : Groupₓ (M₁ ≃L[R₁] M₁) :=
           ext 
           exact f.left_inv x }
 
-variable{M₁}{R₄ :
-    Type
-      _}[Semiringₓ
-      R₄][Module R₄
-      M₄]{σ₃₄ :
-    R₃ →+*
-      R₄}{σ₄₃ :
-    R₄ →+*
-      R₃}[RingHomInvPair σ₃₄
-      σ₄₃][RingHomInvPair σ₄₃
-      σ₃₄]{σ₂₄ :
-    R₂ →+*
-      R₄}{σ₁₄ : R₁ →+* R₄}[RingHomCompTriple σ₂₁ σ₁₄ σ₂₄][RingHomCompTriple σ₂₄ σ₄₃ σ₂₃][RingHomCompTriple σ₁₃ σ₃₄ σ₁₄]
+variable {M₁} {R₄ : Type _} [Semiringₓ R₄] [Module R₄ M₄] {σ₃₄ : R₃ →+* R₄} {σ₄₃ : R₄ →+* R₃} [RingHomInvPair σ₃₄ σ₄₃]
+  [RingHomInvPair σ₄₃ σ₃₄] {σ₂₄ : R₂ →+* R₄} {σ₁₄ : R₁ →+* R₄} [RingHomCompTriple σ₂₁ σ₁₄ σ₂₄]
+  [RingHomCompTriple σ₂₄ σ₄₃ σ₂₃] [RingHomCompTriple σ₁₃ σ₃₄ σ₁₄]
 
 include σ₂₁ σ₃₄ σ₂₃ σ₂₄ σ₁₃
 
@@ -1919,24 +1737,11 @@ end AddCommMonoidₓ
 
 section AddCommGroupₓ
 
-variable{R :
-    Type
-      _}[Semiringₓ
-      R]{M :
-    Type
-      _}[TopologicalSpace
-      M][AddCommGroupₓ
-      M]{M₂ :
-    Type
-      _}[TopologicalSpace
-      M₂][AddCommGroupₓ
-      M₂]{M₃ :
-    Type
-      _}[TopologicalSpace
-      M₃][AddCommGroupₓ
-      M₃]{M₄ : Type _}[TopologicalSpace M₄][AddCommGroupₓ M₄][Module R M][Module R M₂][Module R M₃][Module R M₄]
+variable {R : Type _} [Semiringₓ R] {M : Type _} [TopologicalSpace M] [AddCommGroupₓ M] {M₂ : Type _}
+  [TopologicalSpace M₂] [AddCommGroupₓ M₂] {M₃ : Type _} [TopologicalSpace M₃] [AddCommGroupₓ M₃] {M₄ : Type _}
+  [TopologicalSpace M₄] [AddCommGroupₓ M₄] [Module R M] [Module R M₂] [Module R M₃] [Module R M₄]
 
-variable[TopologicalAddGroup M₄]
+variable [TopologicalAddGroup M₄]
 
 /-- Equivalence given by a block lower diagonal matrix. `e` and `e'` are diagonal square blocks,
   and `f` is a rectangular block below the diagonal. -/
@@ -1963,18 +1768,10 @@ end AddCommGroupₓ
 
 section Ringₓ
 
-variable{R :
-    Type
-      _}[Ringₓ
-      R]{R₂ :
-    Type
-      _}[Ringₓ
-      R₂]{M :
-    Type
-      _}[TopologicalSpace
-      M][AddCommGroupₓ M][Module R M]{M₂ : Type _}[TopologicalSpace M₂][AddCommGroupₓ M₂][Module R₂ M₂]
+variable {R : Type _} [Ringₓ R] {R₂ : Type _} [Ringₓ R₂] {M : Type _} [TopologicalSpace M] [AddCommGroupₓ M]
+  [Module R M] {M₂ : Type _} [TopologicalSpace M₂] [AddCommGroupₓ M₂] [Module R₂ M₂]
 
-variable{σ₁₂ : R →+* R₂}{σ₂₁ : R₂ →+* R}[RingHomInvPair σ₁₂ σ₂₁][RingHomInvPair σ₂₁ σ₁₂]
+variable {σ₁₂ : R →+* R₂} {σ₂₁ : R₂ →+* R} [RingHomInvPair σ₁₂ σ₂₁] [RingHomInvPair σ₂₁ σ₁₂]
 
 include σ₂₁
 
@@ -1994,7 +1791,7 @@ section
 `M →L[R] M`. -/
 
 
-variable[TopologicalAddGroup M]
+variable [TopologicalAddGroup M]
 
 /-- An invertible continuous linear map `f` determines a continuous equivalence from `M` to itself.
 -/
@@ -2032,7 +1829,7 @@ def to_unit (f : M ≃L[R] M) : Units (M →L[R] M) :=
         ext 
         simp  }
 
-variable(R M)
+variable (R M)
 
 /-- The units of the algebra of continuous `R`-linear endomorphisms of `M` is multiplicatively
 equivalent to the type of continuous linear equivalences between `M` and itself. -/
@@ -2062,7 +1859,7 @@ end
 
 section 
 
-variable(R)[TopologicalSpace R][HasContinuousMul R]
+variable (R) [TopologicalSpace R] [HasContinuousMul R]
 
 /-- Continuous linear equivalences `R ≃L[R] R` are enumerated by `units R`. -/
 def units_equiv_aut : Units R ≃ R ≃L[R] R :=
@@ -2094,7 +1891,7 @@ def units_equiv_aut : Units R ≃ R ≃L[R] R :=
           by 
             simp  }
 
-variable{R}
+variable {R}
 
 @[simp]
 theorem units_equiv_aut_apply (u : Units R) (x : R) : units_equiv_aut R u x = x*u :=
@@ -2110,7 +1907,7 @@ theorem units_equiv_aut_symm_apply (e : R ≃L[R] R) : «expr↑ » ((units_equi
 
 end 
 
-variable[Module R M₂][TopologicalAddGroup M]
+variable [Module R M₂] [TopologicalAddGroup M]
 
 open _root_.continuous_linear_map(id fst snd subtypeVal mem_ker)
 
@@ -2146,13 +1943,13 @@ end Ringₓ
 
 section 
 
-variable(ι R M : Type _)[Unique ι][Semiringₓ R][AddCommMonoidₓ M][Module R M][TopologicalSpace M]
+variable (ι R M : Type _) [Unique ι] [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] [TopologicalSpace M]
 
 /-- If `ι` has a unique element, then `ι → M` is continuously linear equivalent to `M`. -/
 def fun_unique : (ι → M) ≃L[R] M :=
   { Homeomorph.funUnique ι M with toLinearEquiv := LinearEquiv.funUnique ι R M }
 
-variable{ι R M}
+variable {ι R M}
 
 @[simp]
 theorem coe_fun_unique : «expr⇑ » (fun_unique ι R M) = Function.eval (default ι) :=
@@ -2162,7 +1959,7 @@ theorem coe_fun_unique : «expr⇑ » (fun_unique ι R M) = Function.eval (defau
 theorem coe_fun_unique_symm : «expr⇑ » (fun_unique ι R M).symm = Function.const ι :=
   rfl
 
-variable(R M)
+variable (R M)
 
 /-- Continuous linear equivalence between dependent functions `Π i : fin 2, M i` and `M 0 × M 1`. -/
 @[simps (config := { fullyApplied := ff })]
@@ -2183,15 +1980,15 @@ namespace ContinuousLinearMap
 
 open_locale Classical
 
-variable{R : Type _}{M : Type _}{M₂ : Type _}[TopologicalSpace M][TopologicalSpace M₂]
+variable {R : Type _} {M : Type _} {M₂ : Type _} [TopologicalSpace M] [TopologicalSpace M₂]
 
 section 
 
-variable[Semiringₓ R]
+variable [Semiringₓ R]
 
-variable[AddCommMonoidₓ M₂][Module R M₂]
+variable [AddCommMonoidₓ M₂] [Module R M₂]
 
-variable[AddCommMonoidₓ M][Module R M]
+variable [AddCommMonoidₓ M] [Module R M]
 
 /-- Introduce a function `inverse` from `M →L[R] M₂` to `M₂ →L[R] M`, which sends `f` to `f.symm` if
 `f` is a continuous linear equivalence and to `0` otherwise.  This definition is somewhat ad hoc,
@@ -2220,11 +2017,11 @@ end
 
 section 
 
-variable[Ringₓ R]
+variable [Ringₓ R]
 
-variable[AddCommGroupₓ M][TopologicalAddGroup M][Module R M]
+variable [AddCommGroupₓ M] [TopologicalAddGroup M] [Module R M]
 
-variable[AddCommGroupₓ M₂][Module R M₂]
+variable [AddCommGroupₓ M₂] [Module R M₂]
 
 @[simp]
 theorem ring_inverse_equiv (e : M ≃L[R] M) : Ring.inverse («expr↑ » e) = inverse (e : M →L[R] M) :=
@@ -2270,13 +2067,8 @@ end ContinuousLinearMap
 
 namespace Submodule
 
-variable{R :
-    Type
-      _}[Ringₓ
-      R]{M :
-    Type
-      _}[TopologicalSpace
-      M][AddCommGroupₓ M][Module R M]{M₂ : Type _}[TopologicalSpace M₂][AddCommGroupₓ M₂][Module R M₂]
+variable {R : Type _} [Ringₓ R] {M : Type _} [TopologicalSpace M] [AddCommGroupₓ M] [Module R M] {M₂ : Type _}
+  [TopologicalSpace M₂] [AddCommGroupₓ M₂] [Module R M₂]
 
 open ContinuousLinearMap
 

@@ -12,19 +12,13 @@ open_locale Classical
 
 noncomputable theory
 
-variable{α : Type _}{β : Type _}[HasZero β]{μ : Type _}[CanonicallyOrderedAddMonoid μ]
+variable {α : Type _} {β : Type _} [HasZero β] {μ : Type _} [CanonicallyOrderedAddMonoid μ]
 
-variable{γ : Type _}[CanonicallyLinearOrderedAddMonoid γ]
+variable {γ : Type _} [CanonicallyLinearOrderedAddMonoid γ]
 
 namespace Finsupp
 
-instance  : OrderBot (α →₀ μ) :=
-  { bot := 0,
-    bot_le :=
-      by 
-        simp [Finsupp.le_def, ←bot_eq_zero] }
-
-instance  [SemilatticeInf β] : SemilatticeInf (α →₀ β) :=
+instance [SemilatticeInf β] : SemilatticeInf (α →₀ β) :=
   { Finsupp.partialOrder with inf := zip_with (·⊓·) inf_idem, inf_le_left := fun a b c => inf_le_left,
     inf_le_right := fun a b c => inf_le_right, le_inf := fun a b c h1 h2 s => le_inf (h1 s) (h2 s) }
 
@@ -39,7 +33,7 @@ theorem support_inf {f g : α →₀ γ} : (f⊓g).Support = f.support ∩ g.sup
     simp only [inf_apply, mem_support_iff, Ne.def, Finset.mem_union, Finset.mem_filter, Finset.mem_inter]
     simp only [inf_eq_min, ←nonpos_iff_eq_zero, min_le_iff, not_or_distrib]
 
-instance  [SemilatticeSup β] : SemilatticeSup (α →₀ β) :=
+instance [SemilatticeSup β] : SemilatticeSup (α →₀ β) :=
   { Finsupp.partialOrder with sup := zip_with (·⊔·) sup_idem, le_sup_left := fun a b c => le_sup_left,
     le_sup_right := fun a b c => le_sup_right, sup_le := fun a b c h1 h2 s => sup_le (h1 s) (h2 s) }
 
@@ -58,9 +52,6 @@ theorem support_sup {f g : α →₀ γ} : (f⊔g).Support = f.support ∪ g.sup
 instance Lattice [Lattice β] : Lattice (α →₀ β) :=
   { Finsupp.semilatticeInf, Finsupp.semilatticeSup with  }
 
-instance SemilatticeInfBot : SemilatticeInfBot (α →₀ γ) :=
-  { Finsupp.orderBot, Finsupp.lattice with  }
-
 theorem bot_eq_zero : (⊥ : α →₀ γ) = 0 :=
   rfl
 
@@ -72,7 +63,7 @@ theorem disjoint_iff {x y : α →₀ γ} : Disjoint x y ↔ Disjoint x.support 
     rw [Finsupp.bot_eq_zero, ←Finsupp.support_eq_empty, Finsupp.support_inf]
     rfl
 
-variable[PartialOrderₓ β]
+variable [PartialOrderₓ β]
 
 /-- The order on `finsupp`s over a partial order embeds into the order on functions -/
 def order_embedding_to_fun : (α →₀ β) ↪o (α → β) :=

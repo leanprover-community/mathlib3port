@@ -17,9 +17,9 @@ universe v u
 
 open CategoryTheory CategoryTheory.Limits
 
-variable{ι : Type _}
+variable {ι : Type _}
 
-variable{V : Type u}[category.{v} V][has_zero_morphisms V]
+variable {V : Type u} [category.{v} V] [has_zero_morphisms V]
 
 open_locale Classical
 
@@ -27,7 +27,7 @@ noncomputable theory
 
 section 
 
-variable{A B C : V}(f : A ⟶ B)[has_image f](g : B ⟶ C)[has_kernel g]
+variable {A B C : V} (f : A ⟶ B) [has_image f] (g : B ⟶ C) [has_kernel g]
 
 theorem image_le_kernel (w : f ≫ g = 0) : image_subobject f ≤ kernel_subobject g :=
   image_subobject_le_mk _ _ (kernel.lift _ _ w)
@@ -65,7 +65,7 @@ end
 
 section 
 
-variable{A B C : V}(f : A ⟶ B)(g : B ⟶ C)
+variable {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
 
 @[simp]
 theorem image_to_kernel_zero_left [has_kernels V] [has_zero_object V] {w} : imageToKernel (0 : A ⟶ B) g w = 0 :=
@@ -81,7 +81,7 @@ theorem image_to_kernel_zero_right [has_images V] {w} :
 
 section 
 
-variable[has_kernels V][has_images V]
+variable [has_kernels V] [has_images V]
 
 theorem image_to_kernel_comp_right {D : V} (h : C ⟶ D) (w : f ≫ g = 0) :
   imageToKernel f (g ≫ h)
@@ -173,7 +173,7 @@ end
 
 section 
 
-variable{A B C : V}(f : A ⟶ B)[has_image f](g : B ⟶ C)[has_kernel g]
+variable {A B C : V} (f : A ⟶ B) [has_image f] (g : B ⟶ C) [has_kernel g]
 
 /--
 The homology of a pair of morphisms `f : A ⟶ B` and `g : B ⟶ C` satisfying `f ≫ g = 0`
@@ -185,7 +185,7 @@ def homology {A B C : V} (f : A ⟶ B) [has_image f] (g : B ⟶ C) [has_kernel g
 
 section 
 
-variable(w : f ≫ g = 0)[has_cokernel (imageToKernel f g w)]
+variable (w : f ≫ g = 0) [has_cokernel (imageToKernel f g w)]
 
 /-- The morphism from cycles to homology. -/
 def homology.π : (kernel_subobject g : V) ⟶ homology f g w :=
@@ -239,58 +239,12 @@ end
 
 section 
 
-variable{f
-    g}(w :
-    f ≫ g =
-      0){A' B' C' :
-    V}{f' :
-    A' ⟶
-      B'}[has_image
-      f']{g' :
-    B' ⟶
-      C'}[has_kernel
-      g'](w' :
-    f' ≫ g' =
-      0)(α :
-    arrow.mk f ⟶
-      arrow.mk
-        f')[has_image_map
-      α](β :
-    arrow.mk g ⟶
-      arrow.mk
-        g'){A₁ B₁ C₁ :
-    V}{f₁ :
-    A₁ ⟶
-      B₁}[has_image
-      f₁]{g₁ :
-    B₁ ⟶
-      C₁}[has_kernel
-      g₁](w₁ :
-    f₁ ≫ g₁ =
-      0){A₂ B₂ C₂ :
-    V}{f₂ :
-    A₂ ⟶
-      B₂}[has_image
-      f₂]{g₂ :
-    B₂ ⟶
-      C₂}[has_kernel
-      g₂](w₂ :
-    f₂ ≫ g₂ =
-      0){A₃ B₃ C₃ :
-    V}{f₃ :
-    A₃ ⟶
-      B₃}[has_image
-      f₃]{g₃ :
-    B₃ ⟶
-      C₃}[has_kernel
-      g₃](w₃ :
-    f₃ ≫ g₃ =
-      0)(α₁ :
-    arrow.mk f₁ ⟶
-      arrow.mk
-        f₂)[has_image_map
-      α₁](β₁ :
-    arrow.mk g₁ ⟶ arrow.mk g₂)(α₂ : arrow.mk f₂ ⟶ arrow.mk f₃)[has_image_map α₂](β₂ : arrow.mk g₂ ⟶ arrow.mk g₃)
+variable {f g} (w : f ≫ g = 0) {A' B' C' : V} {f' : A' ⟶ B'} [has_image f'] {g' : B' ⟶ C'} [has_kernel g']
+  (w' : f' ≫ g' = 0) (α : arrow.mk f ⟶ arrow.mk f') [has_image_map α] (β : arrow.mk g ⟶ arrow.mk g') {A₁ B₁ C₁ : V}
+  {f₁ : A₁ ⟶ B₁} [has_image f₁] {g₁ : B₁ ⟶ C₁} [has_kernel g₁] (w₁ : f₁ ≫ g₁ = 0) {A₂ B₂ C₂ : V} {f₂ : A₂ ⟶ B₂}
+  [has_image f₂] {g₂ : B₂ ⟶ C₂} [has_kernel g₂] (w₂ : f₂ ≫ g₂ = 0) {A₃ B₃ C₃ : V} {f₃ : A₃ ⟶ B₃} [has_image f₃]
+  {g₃ : B₃ ⟶ C₃} [has_kernel g₃] (w₃ : f₃ ≫ g₃ = 0) (α₁ : arrow.mk f₁ ⟶ arrow.mk f₂) [has_image_map α₁]
+  (β₁ : arrow.mk g₁ ⟶ arrow.mk g₂) (α₂ : arrow.mk f₂ ⟶ arrow.mk f₃) [has_image_map α₂] (β₂ : arrow.mk g₂ ⟶ arrow.mk g₃)
 
 /--
 Given compatible commutative squares between
@@ -304,13 +258,13 @@ theorem image_subobject_map_comp_image_to_kernel (p : α.right = β.left) :
     ext 
     simp [p]
 
-variable[has_cokernel (imageToKernel f g w)][has_cokernel (imageToKernel f' g' w')]
+variable [has_cokernel (imageToKernel f g w)] [has_cokernel (imageToKernel f' g' w')]
 
-variable[has_cokernel (imageToKernel f₁ g₁ w₁)]
+variable [has_cokernel (imageToKernel f₁ g₁ w₁)]
 
-variable[has_cokernel (imageToKernel f₂ g₂ w₂)]
+variable [has_cokernel (imageToKernel f₂ g₂ w₂)]
 
-variable[has_cokernel (imageToKernel f₃ g₃ w₃)]
+variable [has_cokernel (imageToKernel f₃ g₃ w₃)]
 
 /--
 Given compatible commutative squares between
@@ -384,13 +338,8 @@ end
 
 section 
 
-variable{A B C :
-    V}{f :
-    A ⟶
-      B}{g :
-    B ⟶
-      C}(w :
-    f ≫ g = 0){f' : A ⟶ B}{g' : B ⟶ C}(w' : f' ≫ g' = 0)[has_kernels V][has_cokernels V][has_images V][has_image_maps V]
+variable {A B C : V} {f : A ⟶ B} {g : B ⟶ C} (w : f ≫ g = 0) {f' : A ⟶ B} {g' : B ⟶ C} (w' : f' ≫ g' = 0)
+  [has_kernels V] [has_cokernels V] [has_images V] [has_image_maps V]
 
 /-- Custom tactic to golf and speedup boring proofs in `homology.congr`. -/
 private unsafe def aux_tac : tactic Unit :=
@@ -447,7 +396,7 @@ and use this to give alternative formulas for `homology f g w`.
 
 section imageToKernel'
 
-variable{A B C : V}(f : A ⟶ B)(g : B ⟶ C)(w : f ≫ g = 0)[has_kernels V][has_images V]
+variable {A B C : V} (f : A ⟶ B) (g : B ⟶ C) (w : f ≫ g = 0) [has_kernels V] [has_images V]
 
 /--
 While `image_to_kernel f g w` provides a morphism
@@ -477,7 +426,7 @@ theorem image_to_kernel'_kernel_subobject_iso (w : f ≫ g = 0) :
     ext 
     simp [imageToKernel']
 
-variable[has_cokernels V]
+variable [has_cokernels V]
 
 /--
 `homology f g w` can be computed as the cokernel of `image_to_kernel' f g w`.
@@ -502,7 +451,7 @@ def homologyIsoCokernelImageToKernel' (w : f ≫ g = 0) : homology f g w ≅ cok
         ext1 
         simp only [iso.inv_hom_id_assoc, cokernel.π_desc, category.comp_id, cokernel.π_desc_assoc, category.assoc] }
 
-variable[has_equalizers V]
+variable [has_equalizers V]
 
 -- error in Algebra.Homology.ImageToKernel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

@@ -45,7 +45,7 @@ open MeasureTheory Metric Set Filter TopologicalSpace MeasureTheory.Measure
 
 open_locale Filter MeasureTheory TopologicalSpace
 
-variable{α : Type _}[MetricSpace α]
+variable {α : Type _} [MetricSpace α]
 
 /-- On a metric space `X` with a measure `μ`, consider for each `x : X` a family of measurable sets
 with nonempty interiors, called `sets_at x`. This family is a Vitali family if it satisfies the
@@ -58,7 +58,7 @@ Vitali covering theorem. They make it possible to formulate general versions of 
 differentiations of measure that apply in both contexts.
 -/
 @[nolint has_inhabited_instance]
-structure VitaliFamily{m : MeasurableSpace α}(μ : Measureₓ α) where 
+structure VitaliFamily {m : MeasurableSpace α} (μ : Measureₓ α) where 
   SetsAt : ∀ x : α, Set (Set α)
   MeasurableSet' : ∀ x : α, ∀ a : Set α, a ∈ sets_at x → MeasurableSet a 
   nonempty_interior : ∀ x : α, ∀ y : Set α, y ∈ sets_at x → (Interior y).Nonempty 
@@ -72,7 +72,7 @@ structure VitaliFamily{m : MeasurableSpace α}(μ : Measureₓ α) where
 
 namespace VitaliFamily
 
-variable{m0 : MeasurableSpace α}{μ : Measureₓ α}
+variable {m0 : MeasurableSpace α} {μ : Measureₓ α}
 
 include μ
 
@@ -96,7 +96,7 @@ def fine_subfamily_on (v : VitaliFamily μ) (f : α → Set (Set α)) (s : Set �
 
 namespace FineSubfamilyOn
 
-variable{v : VitaliFamily μ}{f : α → Set (Set α)}{s : Set α}(h : v.fine_subfamily_on f s)
+variable {v : VitaliFamily μ} {f : α → Set (Set α)} {s : Set α} (h : v.fine_subfamily_on f s)
 
 include h
 
@@ -158,7 +158,7 @@ theorem measure_le_tsum [second_countable_topology α] : μ s ≤ ∑'x : h.inde
 
 end FineSubfamilyOn
 
-variable(v : VitaliFamily μ)
+variable (v : VitaliFamily μ)
 
 include v
 

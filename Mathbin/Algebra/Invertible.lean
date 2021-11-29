@@ -53,10 +53,10 @@ invertible, inverse element, inv_of, a half, one half, a third, one third, ½, �
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 /-- `invertible a` gives a two-sided multiplicative inverse of `a`. -/
-class Invertible[Mul α][HasOne α](a : α) : Type u where 
+class Invertible [Mul α] [HasOne α] (a : α) : Type u where 
   invOf : α 
   inv_of_mul_self : (inv_of*a) = 1
   mul_inv_of_self : (a*inv_of) = 1
@@ -102,7 +102,7 @@ theorem invertible_unique {α : Type u} [Monoidₓ α] (a b : α) (h : a = b) [I
     apply inv_of_eq_right_inv 
     rw [h, mul_inv_of_self]
 
-instance  [Monoidₓ α] (a : α) : Subsingleton (Invertible a) :=
+instance [Monoidₓ α] (a : α) : Subsingleton (Invertible a) :=
   ⟨fun ⟨b, hba, hab⟩ ⟨c, hca, hac⟩ =>
       by 
         congr 
@@ -243,7 +243,7 @@ theorem commute_inv_of {M : Type _} [HasOne M] [Mul M] (m : M) [Invertible m] : 
 
 section MonoidWithZeroₓ
 
-variable[MonoidWithZeroₓ α]
+variable [MonoidWithZeroₓ α]
 
 /-- A variant of `ring.inverse_unit`. -/
 @[simp]
@@ -254,7 +254,7 @@ end MonoidWithZeroₓ
 
 section GroupWithZeroₓ
 
-variable[GroupWithZeroₓ α]
+variable [GroupWithZeroₓ α]
 
 theorem nonzero_of_invertible (a : α) [Invertible a] : a ≠ 0 :=
   fun ha =>

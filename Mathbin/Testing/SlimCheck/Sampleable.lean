@@ -93,7 +93,7 @@ universe u v w
 
 namespace SlimCheck
 
-variable(α : Type u)
+variable (α : Type u)
 
 local infixl:50 " ≺ " => HasWellFounded.R
 
@@ -122,7 +122,7 @@ attribute [instance] sampleable.wf
 /-- `sampleable_functor F` makes it possible to create samples of and
 shrink `F α` given a sampling function and a shrinking function for
 arbitrary `α` -/
-class sampleable_functor(F : Type u → Type v)[Functor F] where 
+class sampleable_functor (F : Type u → Type v) [Functor F] where 
   [wf : ∀ α [SizeOf α], SizeOf (F α)]
   sample{} : ∀ {α}, gen α → gen (F α)
   shrink : ∀ α [SizeOf α], shrink_fn α → shrink_fn (F α)
@@ -131,7 +131,7 @@ class sampleable_functor(F : Type u → Type v)[Functor F] where
 /-- `sampleable_bifunctor F` makes it possible to create samples of
 and shrink `F α β` given a sampling function and a shrinking function
 for arbitrary `α` and `β` -/
-class sampleable_bifunctor(F : Type u → Type v → Type w)[Bifunctor F] where 
+class sampleable_bifunctor (F : Type u → Type v → Type w) [Bifunctor F] where 
   [wf : ∀ α β [SizeOf α] [SizeOf β], SizeOf (F α β)]
   sample{} : ∀ {α β}, gen α → gen β → gen (F α β)
   shrink : ∀ α β [SizeOf α] [SizeOf β], shrink_fn α → shrink_fn β → shrink_fn (F α β)
@@ -153,7 +153,7 @@ counter-examples cannot be shrunken or printed meaningfully.
 For that purpose, `sampleable_ext` provides a proxy representation
 `proxy_repr` that can be printed and shrunken as well
 as interpreted (using `interp`) as an object of the right type. -/
-class sampleable_ext(α : Sort u) where 
+class sampleable_ext (α : Sort u) where 
   ProxyRepr : Type v
   [wf : SizeOf proxy_repr]
   interp{} : proxy_repr → α :=  by 
@@ -300,7 +300,7 @@ def iterate_shrink {α} [HasToString α] [sampleable α] (p : α → Prop) [Deci
 instance fin.sampleable {n} [Fact$ 0 < n] : sampleable (Finₓ n) :=
   sampleable.lift ℕ Finₓ.ofNat' Subtype.val$ fun i => (mod_le _ _ : i % n ≤ i)
 
-instance (priority := 100)fin.sampleable' {n} : sampleable (Finₓ (succ n)) :=
+instance (priority := 100) fin.sampleable' {n} : sampleable (Finₓ (succ n)) :=
   sampleable.lift ℕ Finₓ.ofNat Subtype.val$ fun i => (mod_le _ _ : i % succ n ≤ i)
 
 instance pnat.sampleable : sampleable ℕ+ :=
@@ -465,11 +465,11 @@ def sampleable_char (length : Nat) (characters : Stringₓ) : sampleable Charₓ
 instance char.sampleable : sampleable Charₓ :=
   sampleable_char 3 " 0123abcABC:,;`\\/"
 
-variable{α}
+variable {α}
 
 section ListShrink
 
-variable[SizeOf α](shr : ∀ x : α, LazyList { y : α // sizeof_lt y x })
+variable [SizeOf α] (shr : ∀ x : α, LazyList { y : α // sizeof_lt y x })
 
 -- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem list.sizeof_drop_lt_sizeof_of_lt_length
@@ -630,7 +630,7 @@ theorem tree.one_le_sizeof {α} [SizeOf α] (t : Tree α) : 1 ≤ sizeof t :=
   by 
     cases t <;> unfoldWf <;> linarith
 
-instance  : Functor Tree :=
+instance : Functor Tree :=
   { map := @Tree.mapₓ }
 
 /--

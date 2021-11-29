@@ -38,7 +38,7 @@ open_locale Classical TopologicalSpace
 
 universe u v
 
-variable{α : Type u}{β : Type v}[TopologicalSpace α]{s t : Set α}
+variable {α : Type u} {β : Type v} [TopologicalSpace α] {s t u v : Set α}
 
 section Preconnected
 
@@ -210,6 +210,89 @@ theorem is_preconnected_closed_iff
    contradiction
  end⟩
 
+-- error in Topology.Connected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_preconnected.preimage_of_open_map
+[topological_space β]
+{s : set β}
+(hs : is_preconnected s)
+{f : α → β}
+(hinj : function.injective f)
+(hf : is_open_map f)
+(hsf : «expr ⊆ »(s, set.range f)) : is_preconnected «expr ⁻¹' »(f, s) :=
+λ u v hu hv hsuv hsu hsv, begin
+  obtain ["⟨", ident b, ",", ident hbs, ",", ident hbu, ",", ident hbv, "⟩", ":=", expr hs «expr '' »(f, u) «expr '' »(f, v) (hf u hu) (hf v hv) _ _ _],
+  obtain ["⟨", ident a, ",", ident rfl, "⟩", ":=", expr hsf hbs],
+  rw [expr hinj.mem_set_image] ["at", ident hbu, ident hbv],
+  exact [expr ⟨a, hbs, hbu, hbv⟩],
+  { have [] [] [":=", expr set.image_subset f hsuv],
+    rwa ["[", expr set.image_preimage_eq_of_subset hsf, ",", expr set.image_union, "]"] ["at", ident this] },
+  { obtain ["⟨", ident x, ",", ident hx1, ",", ident hx2, "⟩", ":=", expr hsu],
+    exact [expr ⟨f x, hx1, x, hx2, rfl⟩] },
+  { obtain ["⟨", ident y, ",", ident hy1, ",", ident hy2, "⟩", ":=", expr hsv],
+    exact [expr ⟨f y, hy1, y, hy2, rfl⟩] }
+end
+
+-- error in Topology.Connected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem is_preconnected.preimage_of_closed_map
+[topological_space β]
+{s : set β}
+(hs : is_preconnected s)
+{f : α → β}
+(hinj : function.injective f)
+(hf : is_closed_map f)
+(hsf : «expr ⊆ »(s, set.range f)) : is_preconnected «expr ⁻¹' »(f, s) :=
+«expr $ »(is_preconnected_closed_iff.2, λ u v hu hv hsuv hsu hsv, begin
+   obtain ["⟨", ident b, ",", ident hbs, ",", ident hbu, ",", ident hbv, "⟩", ":=", expr is_preconnected_closed_iff.1 hs «expr '' »(f, u) «expr '' »(f, v) (hf u hu) (hf v hv) _ _ _],
+   obtain ["⟨", ident a, ",", ident rfl, "⟩", ":=", expr hsf hbs],
+   rw [expr hinj.mem_set_image] ["at", ident hbu, ident hbv],
+   exact [expr ⟨a, hbs, hbu, hbv⟩],
+   { have [] [] [":=", expr set.image_subset f hsuv],
+     rwa ["[", expr set.image_preimage_eq_of_subset hsf, ",", expr set.image_union, "]"] ["at", ident this] },
+   { obtain ["⟨", ident x, ",", ident hx1, ",", ident hx2, "⟩", ":=", expr hsu],
+     exact [expr ⟨f x, hx1, x, hx2, rfl⟩] },
+   { obtain ["⟨", ident y, ",", ident hy1, ",", ident hy2, "⟩", ":=", expr hsv],
+     exact [expr ⟨f y, hy1, y, hy2, rfl⟩] }
+ end)
+
+theorem IsConnected.preimage_of_open_map [TopologicalSpace β] {s : Set β} (hs : IsConnected s) {f : α → β}
+  (hinj : Function.Injective f) (hf : IsOpenMap f) (hsf : s ⊆ Set.Range f) : IsConnected (f ⁻¹' s) :=
+  ⟨hs.nonempty.preimage' hsf, hs.is_preconnected.preimage_of_open_map hinj hf hsf⟩
+
+theorem IsConnected.preimage_of_closed_map [TopologicalSpace β] {s : Set β} (hs : IsConnected s) {f : α → β}
+  (hinj : Function.Injective f) (hf : IsClosedMap f) (hsf : s ⊆ Set.Range f) : IsConnected (f ⁻¹' s) :=
+  ⟨hs.nonempty.preimage' hsf, hs.is_preconnected.preimage_of_closed_map hinj hf hsf⟩
+
+theorem IsPreconnected.subset_or_subset (hu : IsOpen u) (hv : IsOpen v) (huv : Disjoint u v) (hsuv : s ⊆ u ∪ v)
+  (hs : IsPreconnected s) : s ⊆ u ∨ s ⊆ v :=
+  by 
+    specialize hs u v hu hv hsuv 
+    obtain hsu | hsu := (s ∩ u).eq_empty_or_nonempty
+    ·
+      exact Or.inr ((Set.disjoint_iff_inter_eq_empty.2 hsu).subset_right_of_subset_union hsuv)
+    ·
+      replace hs := mt (hs hsu)
+      simpRw [Set.not_nonempty_iff_eq_empty, ←Set.disjoint_iff_inter_eq_empty, Set.disjoint_iff_inter_eq_empty.1 huv]
+         at hs 
+      exact Or.inl ((hs s.disjoint_empty).subset_left_of_subset_union hsuv)
+
+theorem IsPreconnected.subset_left_of_subset_union (hu : IsOpen u) (hv : IsOpen v) (huv : Disjoint u v)
+  (hsuv : s ⊆ u ∪ v) (hsu : (s ∩ u).Nonempty) (hs : IsPreconnected s) : s ⊆ u :=
+  Disjoint.subset_left_of_subset_union hsuv
+    (by 
+      byContra hsv 
+      rw [Set.not_disjoint_iff_nonempty_inter] at hsv 
+      obtain ⟨x, _, hx⟩ := hs u v hu hv hsuv hsu hsv 
+      exact Set.disjoint_iff.1 huv hx)
+
+theorem IsPreconnected.subset_right_of_subset_union (hu : IsOpen u) (hv : IsOpen v) (huv : Disjoint u v)
+  (hsuv : s ⊆ u ∪ v) (hsv : (s ∩ v).Nonempty) (hs : IsPreconnected s) : s ⊆ v :=
+  Disjoint.subset_right_of_subset_union hsuv
+    (by 
+      byContra hsu 
+      rw [Set.not_disjoint_iff_nonempty_inter] at hsu 
+      obtain ⟨x, _, hx⟩ := hs u v hu hv hsuv hsu hsv 
+      exact Set.disjoint_iff.1 huv hx)
+
 theorem IsPreconnected.prod [TopologicalSpace β] {s : Set α} {t : Set β} (hs : IsPreconnected s)
   (ht : IsPreconnected t) : IsPreconnected (s.prod t) :=
   by 
@@ -319,13 +402,13 @@ theorem irreducible_component_subset_connected_component {x : α} : IrreducibleC
   is_irreducible_irreducible_component.IsConnected.subset_connected_component mem_irreducible_component
 
 /-- A preconnected space is one where there is no non-trivial open partition. -/
-class PreconnectedSpace(α : Type u)[TopologicalSpace α] : Prop where 
+class PreconnectedSpace (α : Type u) [TopologicalSpace α] : Prop where 
   is_preconnected_univ : IsPreconnected (univ : Set α)
 
 export PreconnectedSpace(is_preconnected_univ)
 
 /-- A connected space is a nonempty one where there is no non-trivial open partition. -/
-class ConnectedSpace(α : Type u)[TopologicalSpace α] extends PreconnectedSpace α : Prop where 
+class ConnectedSpace (α : Type u) [TopologicalSpace α] extends PreconnectedSpace α : Prop where 
   to_nonempty : Nonempty α
 
 attribute [instance] ConnectedSpace.to_nonempty
@@ -354,32 +437,32 @@ begin
     exact [expr ⟨⟨x⟩⟩] }
 end
 
-instance  [TopologicalSpace β] [PreconnectedSpace α] [PreconnectedSpace β] : PreconnectedSpace (α × β) :=
+instance [TopologicalSpace β] [PreconnectedSpace α] [PreconnectedSpace β] : PreconnectedSpace (α × β) :=
   ⟨by 
       rw [←univ_prod_univ]
       exact is_preconnected_univ.prod is_preconnected_univ⟩
 
-instance  [TopologicalSpace β] [ConnectedSpace α] [ConnectedSpace β] : ConnectedSpace (α × β) :=
+instance [TopologicalSpace β] [ConnectedSpace α] [ConnectedSpace β] : ConnectedSpace (α × β) :=
   ⟨Prod.nonempty⟩
 
-instance  {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] [∀ i, PreconnectedSpace (π i)] :
+instance {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] [∀ i, PreconnectedSpace (π i)] :
   PreconnectedSpace (∀ i, π i) :=
   ⟨by 
       rw [←pi_univ univ]
       exact is_preconnected_univ_pi fun i => is_preconnected_univ⟩
 
-instance  {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] [∀ i, ConnectedSpace (π i)] :
+instance {ι : Type _} {π : ι → Type _} [∀ i, TopologicalSpace (π i)] [∀ i, ConnectedSpace (π i)] :
   ConnectedSpace (∀ i, π i) :=
   ⟨Classical.nonempty_pi.2$
       fun i =>
         by 
           infer_instance⟩
 
-instance (priority := 100)PreirreducibleSpace.preconnected_space (α : Type u) [TopologicalSpace α]
+instance (priority := 100) PreirreducibleSpace.preconnected_space (α : Type u) [TopologicalSpace α]
   [PreirreducibleSpace α] : PreconnectedSpace α :=
   ⟨(PreirreducibleSpace.is_preirreducible_univ α).IsPreconnected⟩
 
-instance (priority := 100)IrreducibleSpace.connected_space (α : Type u) [TopologicalSpace α] [IrreducibleSpace α] :
+instance (priority := 100) IrreducibleSpace.connected_space (α : Type u) [TopologicalSpace α] [IrreducibleSpace α] :
   ConnectedSpace α :=
   { to_nonempty := IrreducibleSpace.to_nonempty α }
 
@@ -772,7 +855,7 @@ theorem is_totally_disconnected_singleton {x} : IsTotallyDisconnected ({x} : Set
   fun _ ht _ => subsingleton.mono subsingleton_singleton ht
 
 /-- A space is totally disconnected if all of its connected components are singletons. -/
-class TotallyDisconnectedSpace(α : Type u)[TopologicalSpace α] : Prop where 
+class TotallyDisconnectedSpace (α : Type u) [TopologicalSpace α] : Prop where 
   is_totally_disconnected_univ : IsTotallyDisconnected (univ : Set α)
 
 theorem IsPreconnected.subsingleton [TotallyDisconnectedSpace α] {s : Set α} (h : IsPreconnected s) : s.subsingleton :=
@@ -878,14 +961,14 @@ alias is_totally_disconnected_of_is_totally_separated ← IsTotallySeparated.is_
 
 /-- A space is totally separated if any two points can be separated by two disjoint open sets
 covering the whole space. -/
-class TotallySeparatedSpace(α : Type u)[TopologicalSpace α] : Prop where 
+class TotallySeparatedSpace (α : Type u) [TopologicalSpace α] : Prop where 
   is_totally_separated_univ{} : IsTotallySeparated (univ : Set α)
 
-instance (priority := 100)TotallySeparatedSpace.totally_disconnected_space (α : Type u) [TopologicalSpace α]
+instance (priority := 100) TotallySeparatedSpace.totally_disconnected_space (α : Type u) [TopologicalSpace α]
   [TotallySeparatedSpace α] : TotallyDisconnectedSpace α :=
   ⟨is_totally_disconnected_of_is_totally_separated$ TotallySeparatedSpace.is_totally_separated_univ α⟩
 
-instance (priority := 100)TotallySeparatedSpace.of_discrete (α : Type _) [TopologicalSpace α] [DiscreteTopology α] :
+instance (priority := 100) TotallySeparatedSpace.of_discrete (α : Type _) [TopologicalSpace α] [DiscreteTopology α] :
   TotallySeparatedSpace α :=
   ⟨fun a _ b _ h =>
       ⟨«expr ᶜ» {b}, {b}, is_open_discrete _, is_open_discrete _,
@@ -936,7 +1019,7 @@ theorem connected_component_nrel_iff {x y : α} :
 def ConnectedComponents (α : Type u) [TopologicalSpace α] :=
   Quotientₓ (connectedComponentSetoid α)
 
-instance  [Inhabited α] : Inhabited (ConnectedComponents α) :=
+instance [Inhabited α] : Inhabited (ConnectedComponents α) :=
   ⟨Quotientₓ.mk (default _)⟩
 
 instance ConnectedComponents.topologicalSpace : TopologicalSpace (ConnectedComponents α) :=

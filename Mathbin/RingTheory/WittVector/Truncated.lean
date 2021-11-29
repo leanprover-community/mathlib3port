@@ -35,7 +35,7 @@ open function(Injective Surjective)
 
 noncomputable theory
 
-variable{p : ℕ}[hp : Fact p.prime](n : ℕ)(R : Type _)
+variable {p : ℕ} [hp : Fact p.prime] (n : ℕ) (R : Type _)
 
 local notation "𝕎" => WittVector p
 
@@ -55,20 +55,20 @@ equal as types but will have different ring operations.)
 def TruncatedWittVector (p : ℕ) (n : ℕ) (R : Type _) :=
   Finₓ n → R
 
-instance  (p n : ℕ) (R : Type _) [Inhabited R] : Inhabited (TruncatedWittVector p n R) :=
+instance (p n : ℕ) (R : Type _) [Inhabited R] : Inhabited (TruncatedWittVector p n R) :=
   ⟨fun _ => default R⟩
 
-variable{n R}
+variable {n R}
 
 namespace TruncatedWittVector
 
-variable(p)
+variable (p)
 
 /-- Create a `truncated_witt_vector` from a vector `x`. -/
 def mk (x : Finₓ n → R) : TruncatedWittVector p n R :=
   x
 
-variable{p}
+variable {p}
 
 /-- `x.coeff i` is the `i`th entry of `x`. -/
 def coeff (i : Finₓ n) (x : TruncatedWittVector p n R) : R :=
@@ -94,7 +94,7 @@ theorem mk_coeff (x : TruncatedWittVector p n R) : (mk p fun i => x.coeff i) = x
     ext i 
     rw [coeff_mk]
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 /--
 We can turn a truncated Witt vector `x` into a Witt vector
@@ -119,7 +119,7 @@ end TruncatedWittVector
 
 namespace WittVector
 
-variable{p}(n)
+variable {p} (n)
 
 section 
 
@@ -131,14 +131,14 @@ def truncate_fun (x : 𝕎 R) : TruncatedWittVector p n R :=
 
 end 
 
-variable{n}
+variable {n}
 
 @[simp]
 theorem coeff_truncate_fun (x : 𝕎 R) (i : Finₓ n) : (truncate_fun n x).coeff i = x.coeff i :=
   by 
     rw [truncate_fun, TruncatedWittVector.coeff_mk]
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 @[simp]
 theorem out_truncate_fun (x : 𝕎 R) : (truncate_fun n x).out = init n x :=
@@ -155,7 +155,7 @@ end WittVector
 
 namespace TruncatedWittVector
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 @[simp]
 theorem truncate_fun_out (x : TruncatedWittVector p n R) : x.out.truncate_fun n = x :=
@@ -164,26 +164,26 @@ theorem truncate_fun_out (x : TruncatedWittVector p n R) : x.out.truncate_fun n 
 
 open WittVector
 
-variable(p n R)
+variable (p n R)
 
 include hp
 
-instance  : HasZero (TruncatedWittVector p n R) :=
+instance : HasZero (TruncatedWittVector p n R) :=
   ⟨truncate_fun n 0⟩
 
-instance  : HasOne (TruncatedWittVector p n R) :=
+instance : HasOne (TruncatedWittVector p n R) :=
   ⟨truncate_fun n 1⟩
 
-instance  : Add (TruncatedWittVector p n R) :=
+instance : Add (TruncatedWittVector p n R) :=
   ⟨fun x y => truncate_fun n (x.out+y.out)⟩
 
-instance  : Mul (TruncatedWittVector p n R) :=
+instance : Mul (TruncatedWittVector p n R) :=
   ⟨fun x y => truncate_fun n (x.out*y.out)⟩
 
-instance  : Neg (TruncatedWittVector p n R) :=
+instance : Neg (TruncatedWittVector p n R) :=
   ⟨fun x => truncate_fun n (-x.out)⟩
 
-instance  : Sub (TruncatedWittVector p n R) :=
+instance : Sub (TruncatedWittVector p n R) :=
   ⟨fun x y => truncate_fun n (x.out - y.out)⟩
 
 @[simp]
@@ -200,9 +200,9 @@ unsafe def tactic.interactive.witt_truncate_fun_tac : tactic Unit :=
 
 namespace WittVector
 
-variable(p n R)
+variable (p n R)
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 theorem truncate_fun_surjective : surjective (@truncate_fun p n R) :=
   Function.RightInverse.surjective TruncatedWittVector.truncate_fun_out
@@ -217,7 +217,7 @@ theorem truncate_fun_zero : truncate_fun n (0 : 𝕎 R) = 0 :=
 theorem truncate_fun_one : truncate_fun n (1 : 𝕎 R) = 1 :=
   rfl
 
-variable{p R}
+variable {p R}
 
 @[simp]
 theorem truncate_fun_add (x y : 𝕎 R) : truncate_fun n (x+y) = truncate_fun n x+truncate_fun n y :=
@@ -243,13 +243,13 @@ namespace TruncatedWittVector
 
 open WittVector
 
-variable(p n R)
+variable (p n R)
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 include hp
 
-instance  : CommRingₓ (TruncatedWittVector p n R) :=
+instance : CommRingₓ (TruncatedWittVector p n R) :=
   (truncate_fun_surjective p n R).CommRing _ (truncate_fun_zero p n R) (truncate_fun_one p n R) (truncate_fun_add n)
     (truncate_fun_mul n) (truncate_fun_neg n) (truncate_fun_sub n)
 
@@ -259,9 +259,9 @@ namespace WittVector
 
 open TruncatedWittVector
 
-variable(n)
+variable (n)
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 include hp
 
@@ -271,18 +271,18 @@ def truncate : 𝕎 R →+* TruncatedWittVector p n R :=
   { toFun := truncate_fun n, map_zero' := truncate_fun_zero p n R, map_add' := truncate_fun_add n,
     map_one' := truncate_fun_one p n R, map_mul' := truncate_fun_mul n }
 
-variable(p n R)
+variable (p n R)
 
 theorem truncate_surjective : surjective (truncate n : 𝕎 R → TruncatedWittVector p n R) :=
   truncate_fun_surjective p n R
 
-variable{p n R}
+variable {p n R}
 
 @[simp]
 theorem coeff_truncate (x : 𝕎 R) (i : Finₓ n) : (truncate n x).coeff i = x.coeff i :=
   coeff_truncate_fun _ _
 
-variable(n)
+variable (n)
 
 theorem mem_ker_truncate (x : 𝕎 R) : x ∈ (@truncate p _ n R _).ker ↔ ∀ i _ : i < n, x.coeff i = 0 :=
   by 
@@ -290,7 +290,7 @@ theorem mem_ker_truncate (x : 𝕎 R) : x ∈ (@truncate p _ n R _).ker ↔ ∀ 
       TruncatedWittVector.coeff_mk, coeff_zero]
     exact Subtype.forall
 
-variable(p)
+variable (p)
 
 @[simp]
 theorem truncate_mk (f : ℕ → R) : truncate n (mk p f) = TruncatedWittVector.mk _ fun k => f k :=
@@ -302,7 +302,7 @@ end WittVector
 
 namespace TruncatedWittVector
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
 include hp
 
@@ -360,10 +360,10 @@ section Fintype
 
 omit hp
 
-instance  {R : Type _} [Fintype R] : Fintype (TruncatedWittVector p n R) :=
+instance {R : Type _} [Fintype R] : Fintype (TruncatedWittVector p n R) :=
   Pi.fintype
 
-variable(p n R)
+variable (p n R)
 
 theorem card {R : Type _} [Fintype R] : Fintype.card (TruncatedWittVector p n R) = (Fintype.card R^n) :=
   by 
@@ -387,17 +387,17 @@ open TruncatedWittVector hiding truncate coeff
 
 section lift
 
-variable[CommRingₓ R]
+variable [CommRingₓ R]
 
-variable{S : Type _}[Semiringₓ S]
+variable {S : Type _} [Semiringₓ S]
 
-variable(f : ∀ k : ℕ, S →+* TruncatedWittVector p k R)
+variable (f : ∀ k : ℕ, S →+* TruncatedWittVector p k R)
 
-variable(f_compat : ∀ k₁ k₂ : ℕ hk : k₁ ≤ k₂, (TruncatedWittVector.truncate hk).comp (f k₂) = f k₁)
+variable (f_compat : ∀ k₁ k₂ : ℕ hk : k₁ ≤ k₂, (TruncatedWittVector.truncate hk).comp (f k₂) = f k₁)
 
-variable{p R}
+variable {p R}
 
-variable(n)
+variable (n)
 
 /--
 Given a family `fₖ : S → truncated_witt_vector p k R` and `s : S`, we produce a Witt vector by
@@ -406,7 +406,7 @@ defining the `k`th entry to be the final entry of `fₖ s`.
 def lift_fun (s : S) : 𝕎 R :=
   WittVector.mk p$ fun k => TruncatedWittVector.coeff (Finₓ.last k) (f (k+1) s)
 
-variable{f}
+variable {f}
 
 include f_compat
 
@@ -419,7 +419,7 @@ theorem truncate_lift_fun (s : S) : WittVector.truncate n (lift_fun f s) = f n s
     congr with _ 
     simp only [Finₓ.coe_last, Finₓ.coe_cast_le]
 
-variable(f)
+variable (f)
 
 /--
 Given compatible ring homs from `S` into `truncated_witt_vector n` for each `n`, we can lift these
@@ -435,7 +435,7 @@ def lift : S →+* 𝕎 R :=
         rw [←sub_eq_zero, ←Ideal.mem_bot, ←infi_ker_truncate, Ideal.mem_infi]
         simp [RingHom.mem_ker, f_compat]
 
-variable{f}
+variable {f}
 
 @[simp]
 theorem truncate_lift (s : S) : WittVector.truncate n (lift _ f_compat s) = f n s :=

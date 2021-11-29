@@ -19,7 +19,7 @@ diag, diagonal, matrix
 
 namespace Matrix
 
-variable{α β R n m : Type _}
+variable {α β R n m : Type _}
 
 open Function
 

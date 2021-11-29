@@ -21,19 +21,19 @@ universe u v w
 
 namespace MvPolynomial
 
-variable{σ τ : Type _}{R : Type u}{S : Type v}{r : R}{e : ℕ}{n m : σ}
+variable {σ τ : Type _} {R : Type u} {S : Type v} {r : R} {e : ℕ} {n m : σ}
 
 section CommSemiringₓ
 
-variable[CommSemiringₓ R]{p q : MvPolynomial σ R}
+variable [CommSemiringₓ R] {p q : MvPolynomial σ R}
 
-variable(R)
+variable (R)
 
 /-- The set of polynomials whose variables are contained in `s` as a `subalgebra` over `R`. -/
 noncomputable def supported (s : Set σ) : Subalgebra R (MvPolynomial σ R) :=
   Algebra.adjoin R (X '' s)
 
-variable{σ R}
+variable {σ R}
 
 open_locale Classical
 
@@ -61,7 +61,7 @@ theorem supported_equiv_mv_polynomial_symm_X (s : Set σ) (i : s) :
   by 
     simp [supported_equiv_mv_polynomial]
 
-variable{s t : Set σ}
+variable {s t : Set σ}
 
 theorem mem_supported : p ∈ supported R s ↔ «expr↑ » p.vars ⊆ s :=
   by 
@@ -86,7 +86,7 @@ theorem mem_supported_vars (p : MvPolynomial σ R) : p ∈ supported R («expr�
   by 
     rw [mem_supported]
 
-variable(s)
+variable (s)
 
 theorem supported_eq_adjoin_X : supported R s = Algebra.adjoin R (X '' s) :=
   rfl
@@ -101,7 +101,7 @@ theorem supported_empty : supported R (∅ : Set σ) = ⊥ :=
   by 
     simp [supported_eq_adjoin_X]
 
-variable{s}
+variable {s}
 
 theorem supported_mono (st : s ⊆ t) : supported R s ≤ supported R t :=
   Algebra.adjoin_mono (Set.image_subset _ st)

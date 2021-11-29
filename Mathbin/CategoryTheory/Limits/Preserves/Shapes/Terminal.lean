@@ -18,15 +18,15 @@ noncomputable theory
 
 open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
-variable{C : Type u₁}[category.{v} C]
+variable {C : Type u₁} [category.{v} C]
 
-variable{D : Type u₂}[category.{v} D]
+variable {D : Type u₂} [category.{v} D]
 
-variable(G : C ⥤ D)
+variable (G : C ⥤ D)
 
 namespace CategoryTheory.Limits
 
-variable(X : C)
+variable (X : C)
 
 section Terminal
 
@@ -34,7 +34,7 @@ section Terminal
 The map of an empty cone is a limit iff the mapped object is terminal.
 -/
 def is_limit_map_cone_empty_cone_equiv : is_limit (G.map_cone (as_empty_cone X)) ≃ is_terminal (G.obj X) :=
-  (is_limit.postcompose_hom_equiv (functor.empty_ext _ _) _).symm.trans
+  (is_limit.postcompose_hom_equiv (functor.empty_ext.{v} _ _) _).symm.trans
     (is_limit.equiv_iso_limit
       (cones.ext (iso.refl _)
         (by 
@@ -48,7 +48,7 @@ def is_terminal.is_terminal_obj [preserves_limit (functor.empty C) G] (l : is_te
 def is_terminal.is_terminal_of_obj [reflects_limit (functor.empty C) G] (l : is_terminal (G.obj X)) : is_terminal X :=
   reflects_limit.reflects ((is_limit_map_cone_empty_cone_equiv G X).symm l)
 
-variable[has_terminal C]
+variable [has_terminal C]
 
 /--
 If `G` preserves the terminal object and `C` has a terminal object, then the image of the terminal
@@ -70,7 +70,7 @@ has limits of shape `J` and `G` preserves them, then `D` does not necessarily ha
    apply [expr has_limit_of_iso F.unique_from_empty.symm]
  end⟩
 
-variable[has_terminal D]
+variable [has_terminal D]
 
 /--
 If the terminal comparison map for `G` is an isomorphism, then `G` preserves terminal objects.
@@ -92,7 +92,7 @@ def preserves_terminal_of_is_iso (f : G.obj (⊤_ C) ⟶ ⊤_ D) [i : is_iso f] 
 def preserves_terminal_of_iso (f : G.obj (⊤_ C) ≅ ⊤_ D) : preserves_limit (functor.empty C) G :=
   preserves_terminal_of_is_iso G f.hom
 
-variable[preserves_limit (functor.empty C) G]
+variable [preserves_limit (functor.empty C) G]
 
 /--
 If `G` preserves terminal objects, then the terminal comparison map for `G` is an isomorphism.
@@ -104,7 +104,7 @@ def preserves_terminal.iso : G.obj (⊤_ C) ≅ ⊤_ D :=
 theorem preserves_terminal.iso_hom : (preserves_terminal.iso G).Hom = terminal_comparison G :=
   rfl
 
-instance  : is_iso (terminal_comparison G) :=
+instance : is_iso (terminal_comparison G) :=
   by 
     rw [←preserves_terminal.iso_hom]
     infer_instance
@@ -117,7 +117,7 @@ section Initial
 The map of an empty cocone is a colimit iff the mapped object is initial.
 -/
 def is_colimit_map_cocone_empty_cocone_equiv : is_colimit (G.map_cocone (as_empty_cocone X)) ≃ is_initial (G.obj X) :=
-  (is_colimit.precompose_hom_equiv (functor.empty_ext _ _) _).symm.trans
+  (is_colimit.precompose_hom_equiv (functor.empty_ext.{v} _ _) _).symm.trans
     (is_colimit.equiv_iso_colimit
       (cocones.ext (iso.refl _)
         (by 
@@ -131,7 +131,7 @@ def is_initial.is_initial_obj [preserves_colimit (functor.empty C) G] (l : is_in
 def is_initial.is_initial_of_obj [reflects_colimit (functor.empty C) G] (l : is_initial (G.obj X)) : is_initial X :=
   reflects_colimit.reflects ((is_colimit_map_cocone_empty_cocone_equiv G X).symm l)
 
-variable[has_initial C]
+variable [has_initial C]
 
 /--
 If `G` preserves the initial object and `C` has a initial object, then the image of the initial
@@ -154,7 +154,7 @@ shape `J`.
    apply [expr has_colimit_of_iso F.unique_from_empty]
  end⟩
 
-variable[has_initial D]
+variable [has_initial D]
 
 /--
 If the initial comparison map for `G` is an isomorphism, then `G` preserves initial objects.
@@ -176,7 +176,7 @@ def preserves_initial_of_is_iso (f : ⊥_ D ⟶ G.obj (⊥_ C)) [i : is_iso f] :
 def preserves_initial_of_iso (f : ⊥_ D ≅ G.obj (⊥_ C)) : preserves_colimit (functor.empty C) G :=
   preserves_initial_of_is_iso G f.hom
 
-variable[preserves_colimit (functor.empty C) G]
+variable [preserves_colimit (functor.empty C) G]
 
 /-- If `G` preserves initial objects, then the initial comparison map for `G` is an isomorphism. -/
 def preserves_initial.iso : G.obj (⊥_ C) ≅ ⊥_ D :=
@@ -186,7 +186,7 @@ def preserves_initial.iso : G.obj (⊥_ C) ≅ ⊥_ D :=
 theorem preserves_initial.iso_hom : (preserves_initial.iso G).inv = initial_comparison G :=
   rfl
 
-instance  : is_iso (initial_comparison G) :=
+instance : is_iso (initial_comparison G) :=
   by 
     rw [←preserves_initial.iso_hom]
     infer_instance

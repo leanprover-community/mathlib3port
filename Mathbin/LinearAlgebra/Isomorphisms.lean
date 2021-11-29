@@ -12,13 +12,13 @@ import Mathbin.LinearAlgebra.Quotient
 
 universe u v
 
-variable{R M M₂ M₃ : Type _}
+variable {R M M₂ M₃ : Type _}
 
-variable[Ringₓ R][AddCommGroupₓ M][AddCommGroupₓ M₂][AddCommGroupₓ M₃]
+variable [Ringₓ R] [AddCommGroupₓ M] [AddCommGroupₓ M₂] [AddCommGroupₓ M₃]
 
-variable[Module R M][Module R M₂][Module R M₃]
+variable [Module R M] [Module R M₂] [Module R M₃]
 
-variable(f : M →ₗ[R] M₂)
+variable (f : M →ₗ[R] M₂)
 
 /-! The first and second isomorphism theorems for modules. -/
 
@@ -117,7 +117,7 @@ end LinearMap
 
 namespace Submodule
 
-variable(S T : Submodule R M)(h : S ≤ T)
+variable (S T : Submodule R M) (h : S ≤ T)
 
 /-- The map from the third isomorphism theorem for modules: `(M / S) / (T / S) → M / T`. -/
 def quotient_quotient_equiv_quotient_aux : Quotientₓ (T.map S.mkq) →ₗ[R] Quotientₓ T :=

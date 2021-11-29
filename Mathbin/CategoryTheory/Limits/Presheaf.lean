@@ -41,11 +41,11 @@ open Category Limits
 
 universe u₁ u₂
 
-variable{C : Type u₁}[small_category C]
+variable {C : Type u₁} [small_category C]
 
-variable{ℰ : Type u₂}[category.{u₁} ℰ]
+variable {ℰ : Type u₂} [category.{u₁} ℰ]
 
-variable(A : C ⥤ ℰ)
+variable (A : C ⥤ ℰ)
 
 namespace ColimitAdj
 
@@ -86,7 +86,7 @@ It is shown in `restrict_yoneda_hom_equiv_natural` that this is a natural biject
 -/
 def restrict_yoneda_hom_equiv (P : «expr ᵒᵖ» C ⥤ Type u₁) (E : ℰ) {c : cocone ((category_of_elements.π P).leftOp ⋙ A)}
   (t : is_colimit c) : (c.X ⟶ E) ≃ (P ⟶ (restricted_yoneda A).obj E) :=
-  (t.hom_iso' E).toEquiv.trans
+  ((ulift_trivial _).symm ≪≫ t.hom_iso' E).toEquiv.trans
     { toFun :=
         fun k =>
           { app := fun c p => k.1 (Opposite.op ⟨_, p⟩),
@@ -127,7 +127,7 @@ theorem restrict_yoneda_hom_equiv_natural (P : «expr ᵒᵖ» C ⥤ Type u₁) 
     ext _ X p 
     apply (assoc _ _ _).symm
 
-variable[has_colimits ℰ]
+variable [has_colimits ℰ]
 
 /--
 The left adjoint to the functor `restricted_yoneda` (shown in `yoneda_adjunction`). It is also an
@@ -148,7 +148,7 @@ theorem extend_along_yoneda_map {X Y : «expr ᵒᵖ» C ⥤ Type u₁} (f : X �
   by 
     ext J 
     erw [colimit.ι_pre ((category_of_elements.π Y).leftOp ⋙ A) (category_of_elements.map f).op]
-    dsimp only [extend_along_yoneda, restrict_yoneda_hom_equiv, is_colimit.hom_iso', is_colimit.hom_iso]
+    dsimp only [extend_along_yoneda, restrict_yoneda_hom_equiv, is_colimit.hom_iso', is_colimit.hom_iso, ulift_trivial]
     simpa
 
 /--
@@ -204,7 +204,7 @@ def is_extension_along_yoneda : (yoneda : C ⥤ «expr ᵒᵖ» C ⥤ Type u₁)
       congr 1)
 
 /-- See Property 2 of https://ncatlab.org/nlab/show/Yoneda+extension#properties. -/
-instance  : preserves_colimits (extend_along_yoneda A) :=
+instance : preserves_colimits (extend_along_yoneda A) :=
   (yoneda_adjunction A).leftAdjointPreservesColimits
 
 /--
@@ -347,7 +347,7 @@ begin
     refl }
 end
 
-variable[has_colimits ℰ]
+variable [has_colimits ℰ]
 
 /--
 Show that `extend_along_yoneda` is the unique colimit-preserving functor which extends `A` to

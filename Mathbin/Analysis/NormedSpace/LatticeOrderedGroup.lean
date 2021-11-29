@@ -38,7 +38,7 @@ respect which `α` forms a lattice. Suppose that `α` is *solid*, that is to say
 `α`, with absolute values `|a|` and `|b|` respectively, `|a| ≤ |b|` implies `∥a∥ ≤ ∥b∥`. Then `α` is
 said to be a normed lattice ordered group.
 -/
-class NormedLatticeAddCommGroup(α : Type _) extends NormedGroup α, Lattice α where 
+class NormedLatticeAddCommGroup (α : Type _) extends NormedGroup α, Lattice α where 
   add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, (c+a) ≤ c+b 
   solid : ∀ a b : α, |a| ≤ |b| → ∥a∥ ≤ ∥b∥
 
@@ -48,7 +48,7 @@ theorem solid {α : Type _} [NormedLatticeAddCommGroup α] {a b : α} (h : |a| �
 /--
 A normed lattice ordered group is an ordered additive commutative group
 -/
-instance (priority := 100)normedLatticeAddCommGroupToOrderedAddCommGroup {α : Type _}
+instance (priority := 100) normedLatticeAddCommGroupToOrderedAddCommGroup {α : Type _}
   [h : NormedLatticeAddCommGroup α] : OrderedAddCommGroup α :=
   { h with  }
 
@@ -142,7 +142,7 @@ instance normed_lattice_add_comm_group_has_continuous_inf
 /--
 Let `α` be a normed lattice ordered group. Then `α` is a topological lattice in the norm topology.
 -/
-instance (priority := 100)normedLatticeAddCommGroupTopologicalLattice {α : Type _} [NormedLatticeAddCommGroup α] :
+instance (priority := 100) normedLatticeAddCommGroupTopologicalLattice {α : Type _} [NormedLatticeAddCommGroup α] :
   TopologicalLattice α :=
   TopologicalLattice.mk
 

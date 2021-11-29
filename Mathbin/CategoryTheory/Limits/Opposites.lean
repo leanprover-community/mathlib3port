@@ -22,11 +22,11 @@ open Opposite
 
 namespace CategoryTheory.Limits
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable{J : Type v}[small_category J]
+variable {J : Type v} [small_category J]
 
-variable(F : J ⥤ «expr ᵒᵖ» C)
+variable (F : J ⥤ «expr ᵒᵖ» C)
 
 -- error in CategoryTheory.Limits.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -63,7 +63,7 @@ attribute [local instance] has_limits_of_shape_op_of_has_colimits_of_shape
 If `C` has colimits, we can construct limits for `Cᵒᵖ`.
 -/
 theorem has_limits_op_of_has_colimits [has_colimits C] : has_limits («expr ᵒᵖ» C) :=
-  {  }
+  ⟨inferInstance⟩
 
 -- error in CategoryTheory.Limits.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -100,9 +100,9 @@ attribute [local instance] has_colimits_of_shape_op_of_has_limits_of_shape
 If `C` has limits, we can construct colimits for `Cᵒᵖ`.
 -/
 theorem has_colimits_op_of_has_limits [has_limits C] : has_colimits («expr ᵒᵖ» C) :=
-  {  }
+  ⟨inferInstance⟩
 
-variable(X : Type v)
+variable (X : Type v)
 
 -- error in CategoryTheory.Limits.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

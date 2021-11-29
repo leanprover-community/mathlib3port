@@ -37,13 +37,13 @@ theorem mk_eq {f g} : mk f = mk g ↔ f ≈ g :=
 def of_rat (x : β) : Cauchy :=
   mk (const abv x)
 
-instance  : HasZero Cauchy :=
+instance : HasZero Cauchy :=
   ⟨of_rat 0⟩
 
-instance  : HasOne Cauchy :=
+instance : HasOne Cauchy :=
   ⟨of_rat 1⟩
 
-instance  : Inhabited Cauchy :=
+instance : Inhabited Cauchy :=
   ⟨0⟩
 
 theorem of_rat_zero : of_rat 0 = 0 :=
@@ -56,7 +56,7 @@ theorem of_rat_one : of_rat 1 = 1 :=
 @[simp] theorem mk_eq_zero {f} : «expr ↔ »(«expr = »(mk f, 0), lim_zero f) :=
 by have [] [":", expr «expr ↔ »(«expr = »(mk f, 0), lim_zero «expr - »(f, 0))] [":=", expr quotient.eq]; rwa [expr sub_zero] ["at", ident this]
 
-instance  : Add Cauchy :=
+instance : Add Cauchy :=
   ⟨fun x y =>
       (Quotientₓ.liftOn₂ x y fun f g => mk (f+g))$
         fun f₁ g₁ f₂ g₂ hf hg =>
@@ -68,7 +68,7 @@ instance  : Add Cauchy :=
 theorem mk_add (f g : CauSeq β abv) : (mk f+mk g) = mk (f+g) :=
   rfl
 
-instance  : Neg Cauchy :=
+instance : Neg Cauchy :=
   ⟨fun x =>
       (Quotientₓ.liftOn x fun f => mk (-f))$
         fun f₁ f₂ hf =>
@@ -80,7 +80,7 @@ instance  : Neg Cauchy :=
 theorem mk_neg (f : CauSeq β abv) : -mk f = mk (-f) :=
   rfl
 
-instance  : Mul Cauchy :=
+instance : Mul Cauchy :=
   ⟨fun x y =>
       (Quotientₓ.liftOn₂ x y fun f g => mk (f*g))$
         fun f₁ g₁ f₂ g₂ hf hg =>
@@ -93,7 +93,7 @@ instance  : Mul Cauchy :=
 theorem mk_mul (f g : CauSeq β abv) : (mk f*mk g) = mk (f*g) :=
   rfl
 
-instance  : Sub Cauchy :=
+instance : Sub Cauchy :=
   ⟨fun x y =>
       (Quotientₓ.liftOn₂ x y fun f g => mk (f - g))$
         fun f₁ g₁ f₂ g₂ hf hg =>
@@ -120,7 +120,7 @@ private theorem zero_def : 0 = mk 0 :=
 private theorem one_def : 1 = mk 1 :=
   rfl
 
-instance  : CommRingₓ Cauchy :=
+instance : CommRingₓ Cauchy :=
   by 
     refine'
         { neg := Neg.neg, sub := Sub.sub, sub_eq_add_neg := _, add := ·+·, zero := (0 : Cauchy), mul := ·*·, one := 1,
@@ -220,13 +220,13 @@ end
 
 end CauSeq.Completion
 
-variable{α : Type _}[LinearOrderedField α]
+variable {α : Type _} [LinearOrderedField α]
 
 namespace CauSeq
 
 section 
 
-variable(β : Type _)[Ringₓ β](abv : β → α)[IsAbsoluteValue abv]
+variable (β : Type _) [Ringₓ β] (abv : β → α) [IsAbsoluteValue abv]
 
 /-- A class stating that a ring with an absolute value is complete, i.e. every Cauchy
 sequence has a limit. -/
@@ -237,9 +237,9 @@ end
 
 section 
 
-variable{β : Type _}[Ringₓ β]{abv : β → α}[IsAbsoluteValue abv]
+variable {β : Type _} [Ringₓ β] {abv : β → α} [IsAbsoluteValue abv]
 
-variable[is_complete β abv]
+variable [is_complete β abv]
 
 theorem complete : ∀ s : CauSeq β abv, ∃ b : β, s ≈ const abv b :=
   is_complete.is_complete
@@ -302,7 +302,7 @@ end
 
 section 
 
-variable{β : Type _}[Field β]{abv : β → α}[IsAbsoluteValue abv][is_complete β abv]
+variable {β : Type _} [Field β] {abv : β → α} [IsAbsoluteValue abv] [is_complete β abv]
 
 theorem lim_inv {f : CauSeq β abv} (hf : ¬lim_zero f) : lim (inv f hf) = lim f⁻¹ :=
   have hl : lim f ≠ 0 :=
@@ -334,7 +334,7 @@ end
 
 section 
 
-variable[is_complete α abs]
+variable [is_complete α abs]
 
 theorem lim_le {f : CauSeq α abs} {x : α} (h : f ≤ CauSeq.const abs x) : lim f ≤ x :=
   CauSeq.const_le.1$ CauSeq.le_of_eq_of_le (Setoidₓ.symm (equiv_lim f)) h

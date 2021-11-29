@@ -24,11 +24,11 @@ open CategoryTheory
 
 namespace CategoryTheory.Limits
 
-variable{J K : Type v}[small_category J][small_category K]
+variable {J K : Type v} [small_category J] [small_category K]
 
-variable{C : Type u}[category.{v} C]
+variable {C : Type u} [category.{v} C]
 
-variable(F : J × K ⥤ C)
+variable (F : J × K ⥤ C)
 
 open CategoryTheory.prod
 
@@ -40,9 +40,9 @@ theorem map_id_right_eq_curry_swap_map {j j' : J} {f : j ⟶ j'} {k : K} :
   F.map ((f, 𝟙 k) : (j, k) ⟶ (j', k)) = ((curry.obj (swap K J ⋙ F)).obj k).map f :=
   rfl
 
-variable[has_limits_of_shape J C]
+variable [has_limits_of_shape J C]
 
-variable[has_colimits_of_shape K C]
+variable [has_colimits_of_shape K C]
 
 /--
 The universal morphism

@@ -19,7 +19,7 @@ defines the limit value of an eventually-constant sequence.
 
 namespace RelEmbedding
 
-variable{α : Type _}{r : α → α → Prop}[IsStrictOrder α r]
+variable {α : Type _} {r : α → α → Prop} [IsStrictOrder α r]
 
 /-- If `f` is a strictly `r`-increasing sequence, then this returns `f` as an order embedding. -/
 def nat_lt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n+1))) : (· < · : ℕ → ℕ → Prop) ↪r r :=
@@ -78,7 +78,7 @@ end RelEmbedding
 
 namespace Nat
 
-variable(s : Set ℕ)[DecidablePred (· ∈ s)][Infinite s]
+variable (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s]
 
 /-- An order embedding from `ℕ` to itself with a specified range -/
 def order_embedding_of_set : ℕ ↪o ℕ :=
@@ -93,7 +93,7 @@ noncomputable def subtype.order_iso_of_nat : ℕ ≃o s :=
       (RelEmbedding.natLt (Nat.Subtype.ofNat s) fun n => Nat.Subtype.lt_succ_self _))
     Nat.Subtype.of_nat_surjective
 
-variable{s}
+variable {s}
 
 @[simp]
 theorem order_embedding_of_set_apply {n : ℕ} : order_embedding_of_set s n = subtype.of_nat s n :=
@@ -104,7 +104,7 @@ theorem subtype.order_iso_of_nat_apply {n : ℕ} : subtype.order_iso_of_nat s n 
   by 
     simp [subtype.order_iso_of_nat]
 
-variable(s)
+variable (s)
 
 @[simp]
 theorem order_embedding_of_set_range : Set.Range (Nat.orderEmbeddingOfSet s) = s :=

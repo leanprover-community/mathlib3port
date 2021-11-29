@@ -51,13 +51,13 @@ open MeasureTheory
 
 /-- We say that a type `has_measurable_add` if `((+) c)` and `(+ c)` are measurable functions.
 For a typeclass assuming measurability of `uncurry (+)` see `has_measurable_add₂`. -/
-class HasMeasurableAdd(M : Type _)[MeasurableSpace M][Add M] : Prop where 
+class HasMeasurableAdd (M : Type _) [MeasurableSpace M] [Add M] : Prop where 
   measurable_const_add : ∀ c : M, Measurable ((·+·) c)
   measurable_add_const : ∀ c : M, Measurable (·+c)
 
 /-- We say that a type `has_measurable_add` if `uncurry (+)` is a measurable functions.
 For a typeclass assuming measurability of `((+) c)` and `(+ c)` see `has_measurable_add`. -/
-class HasMeasurableAdd₂(M : Type _)[MeasurableSpace M][Add M] : Prop where 
+class HasMeasurableAdd₂ (M : Type _) [MeasurableSpace M] [Add M] : Prop where 
   measurable_add : Measurable fun p : M × M => p.1+p.2
 
 export HasMeasurableAdd₂(measurable_add)
@@ -67,14 +67,14 @@ export HasMeasurableAdd(measurable_const_add measurable_add_const)
 /-- We say that a type `has_measurable_mul` if `((*) c)` and `(* c)` are measurable functions.
 For a typeclass assuming measurability of `uncurry (*)` see `has_measurable_mul₂`. -/
 @[toAdditive]
-class HasMeasurableMul(M : Type _)[MeasurableSpace M][Mul M] : Prop where 
+class HasMeasurableMul (M : Type _) [MeasurableSpace M] [Mul M] : Prop where 
   measurable_const_mul : ∀ c : M, Measurable ((·*·) c)
   measurable_mul_const : ∀ c : M, Measurable (·*c)
 
 /-- We say that a type `has_measurable_mul` if `uncurry (*)` is a measurable functions.
 For a typeclass assuming measurability of `((*) c)` and `(* c)` see `has_measurable_mul`. -/
 @[toAdditive HasMeasurableAdd₂]
-class HasMeasurableMul₂(M : Type _)[MeasurableSpace M][Mul M] : Prop where 
+class HasMeasurableMul₂ (M : Type _) [MeasurableSpace M] [Mul M] : Prop where 
   measurable_mul : Measurable fun p : M × M => p.1*p.2
 
 export HasMeasurableMul₂(measurable_mul)
@@ -83,7 +83,7 @@ export HasMeasurableMul(measurable_const_mul measurable_mul_const)
 
 section Mul
 
-variable{M α : Type _}[MeasurableSpace M][Mul M][MeasurableSpace α]
+variable {M α : Type _} [MeasurableSpace M] [Mul M] [MeasurableSpace α]
 
 @[toAdditive, measurability]
 theorem Measurable.const_mul [HasMeasurableMul M] {f : α → M} (hf : Measurable f) (c : M) : Measurable fun x => c*f x :=
@@ -124,7 +124,7 @@ theorem AeMeasurable.mul [HasMeasurableMul₂ M] {μ : Measureₓ α} {f g : α 
   measurable_mul.comp_ae_measurable (hf.prod_mk hg)
 
 @[toAdditive]
-instance (priority := 100)HasMeasurableMul₂.to_has_measurable_mul [HasMeasurableMul₂ M] : HasMeasurableMul M :=
+instance (priority := 100) HasMeasurableMul₂.to_has_measurable_mul [HasMeasurableMul₂ M] : HasMeasurableMul M :=
   ⟨fun c => measurable_const.mul measurable_id, fun c => measurable_id.mul measurable_const⟩
 
 attribute [measurability] Measurable.add' Measurable.add AeMeasurable.add AeMeasurable.add' Measurable.const_add
@@ -133,7 +133,7 @@ attribute [measurability] Measurable.add' Measurable.add AeMeasurable.add AeMeas
 end Mul
 
 /-- This class assumes that the map `β × γ → β` given by `(x, y) ↦ x ^ y` is measurable. -/
-class HasMeasurablePow(β γ : Type _)[MeasurableSpace β][MeasurableSpace γ][Pow β γ] where 
+class HasMeasurablePow (β γ : Type _) [MeasurableSpace β] [MeasurableSpace γ] [Pow β γ] where 
   measurable_pow : Measurable fun p : β × γ => p.1 ^ p.2
 
 export HasMeasurablePow(measurable_pow)
@@ -155,7 +155,7 @@ instance has_measurable_mul.has_measurable_pow
 
 section Pow
 
-variable{β γ α : Type _}[MeasurableSpace β][MeasurableSpace γ][Pow β γ][HasMeasurablePow β γ][MeasurableSpace α]
+variable {β γ α : Type _} [MeasurableSpace β] [MeasurableSpace γ] [Pow β γ] [HasMeasurablePow β γ] [MeasurableSpace α]
 
 @[measurability]
 theorem Measurable.pow {f : α → β} {g : α → γ} (hf : Measurable f) (hg : Measurable g) :
@@ -189,13 +189,13 @@ end Pow
 
 /-- We say that a type `has_measurable_sub` if `(λ x, c - x)` and `(λ x, x - c)` are measurable
 functions. For a typeclass assuming measurability of `uncurry (-)` see `has_measurable_sub₂`. -/
-class HasMeasurableSub(G : Type _)[MeasurableSpace G][Sub G] : Prop where 
+class HasMeasurableSub (G : Type _) [MeasurableSpace G] [Sub G] : Prop where 
   measurable_const_sub : ∀ c : G, Measurable fun x => c - x 
   measurable_sub_const : ∀ c : G, Measurable fun x => x - c
 
 /-- We say that a type `has_measurable_sub` if `uncurry (-)` is a measurable functions.
 For a typeclass assuming measurability of `((-) c)` and `(- c)` see `has_measurable_sub`. -/
-class HasMeasurableSub₂(G : Type _)[MeasurableSpace G][Sub G] : Prop where 
+class HasMeasurableSub₂ (G : Type _) [MeasurableSpace G] [Sub G] : Prop where 
   measurable_sub : Measurable fun p : G × G => p.1 - p.2
 
 export HasMeasurableSub₂(measurable_sub)
@@ -203,21 +203,21 @@ export HasMeasurableSub₂(measurable_sub)
 /-- We say that a type `has_measurable_div` if `((/) c)` and `(/ c)` are measurable functions.
 For a typeclass assuming measurability of `uncurry (/)` see `has_measurable_div₂`. -/
 @[toAdditive]
-class HasMeasurableDiv(G₀ : Type _)[MeasurableSpace G₀][Div G₀] : Prop where 
+class HasMeasurableDiv (G₀ : Type _) [MeasurableSpace G₀] [Div G₀] : Prop where 
   measurable_const_div : ∀ c : G₀, Measurable ((· / ·) c)
   measurable_div_const : ∀ c : G₀, Measurable (· / c)
 
 /-- We say that a type `has_measurable_div` if `uncurry (/)` is a measurable functions.
 For a typeclass assuming measurability of `((/) c)` and `(/ c)` see `has_measurable_div`. -/
 @[toAdditive HasMeasurableSub₂]
-class HasMeasurableDiv₂(G₀ : Type _)[MeasurableSpace G₀][Div G₀] : Prop where 
+class HasMeasurableDiv₂ (G₀ : Type _) [MeasurableSpace G₀] [Div G₀] : Prop where 
   measurable_div : Measurable fun p : G₀ × G₀ => p.1 / p.2
 
 export HasMeasurableDiv₂(measurable_div)
 
 section Div
 
-variable{G α : Type _}[MeasurableSpace G][Div G][MeasurableSpace α]
+variable {G α : Type _} [MeasurableSpace G] [Div G] [MeasurableSpace α]
 
 @[toAdditive, measurability]
 theorem Measurable.const_div [HasMeasurableDiv G] {f : α → G} (hf : Measurable f) (c : G) :
@@ -260,7 +260,7 @@ theorem AeMeasurable.div [HasMeasurableDiv₂ G] {f g : α → G} {μ : Measure�
   measurable_div.comp_ae_measurable (hf.prod_mk hg)
 
 @[toAdditive]
-instance (priority := 100)HasMeasurableDiv₂.to_has_measurable_div [HasMeasurableDiv₂ G] : HasMeasurableDiv G :=
+instance (priority := 100) HasMeasurableDiv₂.to_has_measurable_div [HasMeasurableDiv₂ G] : HasMeasurableDiv G :=
   ⟨fun c => measurable_const.div measurable_id, fun c => measurable_id.div measurable_const⟩
 
 attribute [measurability] Measurable.sub Measurable.sub' AeMeasurable.sub AeMeasurable.sub' Measurable.const_sub
@@ -287,12 +287,12 @@ theorem ae_eq_trim_of_measurable {α E} {m m0 : MeasurableSpace α} {μ : Measur
 end Div
 
 /-- We say that a type `has_measurable_neg` if `x ↦ -x` is a measurable function. -/
-class HasMeasurableNeg(G : Type _)[Neg G][MeasurableSpace G] : Prop where 
+class HasMeasurableNeg (G : Type _) [Neg G] [MeasurableSpace G] : Prop where 
   measurable_neg : Measurable (Neg.neg : G → G)
 
 /-- We say that a type `has_measurable_inv` if `x ↦ x⁻¹` is a measurable function. -/
 @[toAdditive]
-class HasMeasurableInv(G : Type _)[HasInv G][MeasurableSpace G] : Prop where 
+class HasMeasurableInv (G : Type _) [HasInv G] [MeasurableSpace G] : Prop where 
   measurable_inv : Measurable (HasInv.inv : G → G)
 
 export HasMeasurableInv(measurable_inv)
@@ -300,7 +300,7 @@ export HasMeasurableInv(measurable_inv)
 export HasMeasurableNeg(measurable_neg)
 
 @[toAdditive]
-instance (priority := 100)has_measurable_div_of_mul_inv (G : Type _) [MeasurableSpace G] [DivInvMonoidₓ G]
+instance (priority := 100) has_measurable_div_of_mul_inv (G : Type _) [MeasurableSpace G] [DivInvMonoidₓ G]
   [HasMeasurableMul G] [HasMeasurableInv G] : HasMeasurableDiv G :=
   { measurable_const_div :=
       fun c =>
@@ -317,7 +317,7 @@ instance (priority := 100)has_measurable_div_of_mul_inv (G : Type _) [Measurable
 
 section Inv
 
-variable{G α : Type _}[HasInv G][MeasurableSpace G][HasMeasurableInv G][MeasurableSpace α]
+variable {G α : Type _} [HasInv G] [MeasurableSpace G] [HasMeasurableInv G] [MeasurableSpace α]
 
 @[toAdditive, measurability]
 theorem Measurable.inv {f : α → G} (hf : Measurable f) : Measurable fun x => f x⁻¹ :=
@@ -391,7 +391,7 @@ begin
 end
 
 @[toAdditive]
-instance (priority := 100)has_measurable_div₂_of_mul_inv (G : Type _) [MeasurableSpace G] [DivInvMonoidₓ G]
+instance (priority := 100) has_measurable_div₂_of_mul_inv (G : Type _) [MeasurableSpace G] [DivInvMonoidₓ G]
   [HasMeasurableMul₂ G] [HasMeasurableInv G] : HasMeasurableDiv₂ G :=
   ⟨by 
       simp only [div_eq_mul_inv]
@@ -399,26 +399,26 @@ instance (priority := 100)has_measurable_div₂_of_mul_inv (G : Type _) [Measura
 
 /-- We say that the action of `M` on `α` `has_measurable_vadd` if for each `c` the map `x ↦ c +ᵥ x`
 is a measurable function and for each `x` the map `c ↦ c +ᵥ x` is a measurable function. -/
-class HasMeasurableVadd(M α : Type _)[HasVadd M α][MeasurableSpace M][MeasurableSpace α] : Prop where 
+class HasMeasurableVadd (M α : Type _) [HasVadd M α] [MeasurableSpace M] [MeasurableSpace α] : Prop where 
   measurable_const_vadd : ∀ c : M, Measurable ((· +ᵥ ·) c : α → α)
   measurable_vadd_const : ∀ x : α, Measurable fun c : M => c +ᵥ x
 
 /-- We say that the action of `M` on `α` `has_measurable_smul` if for each `c` the map `x ↦ c • x`
 is a measurable function and for each `x` the map `c ↦ c • x` is a measurable function. -/
 @[toAdditive]
-class HasMeasurableSmul(M α : Type _)[HasScalar M α][MeasurableSpace M][MeasurableSpace α] : Prop where 
+class HasMeasurableSmul (M α : Type _) [HasScalar M α] [MeasurableSpace M] [MeasurableSpace α] : Prop where 
   measurable_const_smul : ∀ c : M, Measurable ((· • ·) c : α → α)
   measurable_smul_const : ∀ x : α, Measurable fun c : M => c • x
 
 /-- We say that the action of `M` on `α` `has_measurable_vadd₂` if the map
 `(c, x) ↦ c +ᵥ x` is a measurable function. -/
-class HasMeasurableVadd₂(M α : Type _)[HasVadd M α][MeasurableSpace M][MeasurableSpace α] : Prop where 
+class HasMeasurableVadd₂ (M α : Type _) [HasVadd M α] [MeasurableSpace M] [MeasurableSpace α] : Prop where 
   measurable_vadd : Measurable (Function.uncurry (· +ᵥ ·) : M × α → α)
 
 /-- We say that the action of `M` on `α` `has_measurable_smul₂` if the map
 `(c, x) ↦ c • x` is a measurable function. -/
 @[toAdditive HasMeasurableVadd₂]
-class HasMeasurableSmul₂(M α : Type _)[HasScalar M α][MeasurableSpace M][MeasurableSpace α] : Prop where 
+class HasMeasurableSmul₂ (M α : Type _) [HasScalar M α] [MeasurableSpace M] [MeasurableSpace α] : Prop where 
   measurable_smul : Measurable (Function.uncurry (· • ·) : M × α → α)
 
 export HasMeasurableSmul(measurable_const_smul measurable_smul_const)
@@ -441,7 +441,7 @@ instance has_measurable_smul₂_of_mul (M : Type _) [Mul M] [MeasurableSpace M] 
 
 section Smul
 
-variable{M β α : Type _}[MeasurableSpace M][MeasurableSpace β][HasScalar M β][MeasurableSpace α]
+variable {M β α : Type _} [MeasurableSpace M] [MeasurableSpace β] [HasScalar M β] [MeasurableSpace α]
 
 @[measurability, toAdditive]
 theorem Measurable.smul [HasMeasurableSmul₂ M β] {f : α → M} {g : α → β} (hf : Measurable f) (hg : Measurable g) :
@@ -454,10 +454,10 @@ theorem AeMeasurable.smul [HasMeasurableSmul₂ M β] {f : α → M} {g : α →
   HasMeasurableSmul₂.measurable_smul.comp_ae_measurable (hf.prod_mk hg)
 
 @[toAdditive]
-instance (priority := 100)HasMeasurableSmul₂.to_has_measurable_smul [HasMeasurableSmul₂ M β] : HasMeasurableSmul M β :=
+instance (priority := 100) HasMeasurableSmul₂.to_has_measurable_smul [HasMeasurableSmul₂ M β] : HasMeasurableSmul M β :=
   ⟨fun c => measurable_const.smul measurable_id, fun y => measurable_id.smul measurable_const⟩
 
-variable[HasMeasurableSmul M β]{μ : Measureₓ α}
+variable [HasMeasurableSmul M β] {μ : Measureₓ α}
 
 @[measurability, toAdditive]
 theorem Measurable.smul_const {f : α → M} (hf : Measurable f) (y : β) : Measurable fun x => f x • y :=
@@ -487,13 +487,10 @@ end Smul
 
 section MulAction
 
-variable{M β α :
-    Type
-      _}[MeasurableSpace
-      M][MeasurableSpace
-      β][Monoidₓ M][MulAction M β][HasMeasurableSmul M β][MeasurableSpace α]{f : α → β}{μ : Measureₓ α}
+variable {M β α : Type _} [MeasurableSpace M] [MeasurableSpace β] [Monoidₓ M] [MulAction M β] [HasMeasurableSmul M β]
+  [MeasurableSpace α] {f : α → β} {μ : Measureₓ α}
 
-variable{G : Type _}[Groupₓ G][MeasurableSpace G][MulAction G β][HasMeasurableSmul G β]
+variable {G : Type _} [Groupₓ G] [MeasurableSpace G] [MulAction G β] [HasMeasurableSmul G β]
 
 @[toAdditive]
 theorem measurable_const_smul_iff (c : G) : (Measurable fun x => c • f x) ↔ Measurable f :=
@@ -510,7 +507,7 @@ theorem ae_measurable_const_smul_iff (c : G) : AeMeasurable (fun x => c • f x)
     fun h => h.const_smul c⟩
 
 @[toAdditive]
-instance  : MeasurableSpace (Units M) :=
+instance : MeasurableSpace (Units M) :=
   MeasurableSpace.comap (coeₓ : Units M → M) ‹_›
 
 @[toAdditive]
@@ -530,7 +527,7 @@ theorem IsUnit.ae_measurable_const_smul_iff {c : M} (hc : IsUnit c) :
   let ⟨u, hu⟩ := hc 
   hu ▸ ae_measurable_const_smul_iff u
 
-variable{G₀ : Type _}[GroupWithZeroₓ G₀][MeasurableSpace G₀][MulAction G₀ β][HasMeasurableSmul G₀ β]
+variable {G₀ : Type _} [GroupWithZeroₓ G₀] [MeasurableSpace G₀] [MulAction G₀ β] [HasMeasurableSmul G₀ β]
 
 theorem measurable_const_smul_iff₀ {c : G₀} (hc : c ≠ 0) : (Measurable fun x => c • f x) ↔ Measurable f :=
   (IsUnit.mk0 c hc).measurable_const_smul_iff
@@ -549,7 +546,7 @@ section Opposite
 
 open MulOpposite
 
-instance  {α : Type _} [h : MeasurableSpace α] : MeasurableSpace («expr ᵐᵒᵖ» α) :=
+instance {α : Type _} [h : MeasurableSpace α] : MeasurableSpace («expr ᵐᵒᵖ» α) :=
   MeasurableSpace.map op h
 
 theorem measurable_op {α : Type _} [MeasurableSpace α] : Measurable (op : α → «expr ᵐᵒᵖ» α) :=
@@ -558,10 +555,10 @@ theorem measurable_op {α : Type _} [MeasurableSpace α] : Measurable (op : α �
 theorem measurable_unop {α : Type _} [MeasurableSpace α] : Measurable (unop : «expr ᵐᵒᵖ» α → α) :=
   fun s => id
 
-instance  {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] : HasMeasurableMul («expr ᵐᵒᵖ» M) :=
+instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] : HasMeasurableMul («expr ᵐᵒᵖ» M) :=
   ⟨fun c => measurable_op.comp (measurable_unop.mul_const _), fun c => measurable_op.comp (measurable_unop.const_mul _)⟩
 
-instance  {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasMeasurableMul₂ («expr ᵐᵒᵖ» M) :=
+instance {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul₂ M] : HasMeasurableMul₂ («expr ᵐᵒᵖ» M) :=
   ⟨measurable_op.comp ((measurable_unop.comp measurable_snd).mul (measurable_unop.comp measurable_fst))⟩
 
 instance has_measurable_smul_opposite_of_mul {M : Type _} [Mul M] [MeasurableSpace M] [HasMeasurableMul M] :
@@ -581,7 +578,7 @@ end Opposite
 
 section Monoidₓ
 
-variable{M α : Type _}[Monoidₓ M][MeasurableSpace M][HasMeasurableMul₂ M][MeasurableSpace α]
+variable {M α : Type _} [Monoidₓ M] [MeasurableSpace M] [HasMeasurableMul₂ M] [MeasurableSpace α]
 
 @[toAdditive, measurability]
 theorem List.measurable_prod' (l : List (α → M)) (hl : ∀ f _ : f ∈ l, Measurable f) : Measurable l.prod :=
@@ -620,7 +617,7 @@ end Monoidₓ
 
 section CommMonoidₓ
 
-variable{M ι α : Type _}[CommMonoidₓ M][MeasurableSpace M][HasMeasurableMul₂ M][MeasurableSpace α]
+variable {M ι α : Type _} [CommMonoidₓ M] [MeasurableSpace M] [HasMeasurableMul₂ M] [MeasurableSpace α]
 
 @[toAdditive, measurability]
 theorem Multiset.measurable_prod' (l : Multiset (α → M)) (hl : ∀ f _ : f ∈ l, Measurable f) : Measurable l.prod :=

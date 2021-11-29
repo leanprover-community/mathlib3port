@@ -4,7 +4,7 @@ import Mathbin.Combinatorics.SimpleGraph.Basic
 # Subgraphs of a simple graph
 
 A subgraph of a simple graph consists of subsets of the graph's vertices and edges such that the
-endpoints of each edge are present in the vertex subset.  The edge subset is formalized as a
+endpoints of each edge are present in the vertex subset. The edge subset is formalized as a
 sub-relation of the adjacency relation of the simple graph.
 
 ## Main definitions
@@ -20,7 +20,7 @@ sub-relation of the adjacency relation of the simple graph.
 * `subgraph.is_spanning` for whether a subgraph is a spanning subgraph and
   `subgraph.is_induced` for whether a subgraph is an induced subgraph.
 
-* A `bounded_lattice (subgraph G)` instance, under the `subgraph` relation.
+* A `bounded_order (subgraph G)` instance, under the `subgraph` relation.
 
 * `simple_graph.to_subgraph`: If a `simple_graph` is a subgraph of another, then you can turn it
   into a member of the larger graph's `simple_graph.subgraph` type.
@@ -50,7 +50,7 @@ relation that is symmetric and is supported by the vertex subset.  They also for
 Thinking of `V → V → Prop` as `set (V × V)`, a set of darts (i.e., half-edges), then
 `subgraph.adj_sub` is that the darts of a subgraph are a subset of the darts of `G`. -/
 @[ext]
-structure subgraph{V : Type u}(G : SimpleGraph V) where 
+structure subgraph {V : Type u} (G : SimpleGraph V) where 
   Verts : Set V 
   Adj : V → V → Prop 
   adj_sub : ∀ {v w : V}, adj v w → G.adj v w 
@@ -61,7 +61,7 @@ structure subgraph{V : Type u}(G : SimpleGraph V) where
 
 namespace Subgraph
 
-variable{V : Type u}{G : SimpleGraph V}
+variable {V : Type u} {G : SimpleGraph V}
 
 theorem adj_comm (G' : subgraph G) (v w : V) : G'.adj v w ↔ G'.adj w v :=
   ⟨fun x => G'.symm x, fun x => G'.symm x⟩
@@ -82,6 +82,9 @@ theorem coe_adj_sub (G' : subgraph G) (u v : G'.verts) (h : G'.coe.adj u v) : G.
 /-- A subgraph is called a *spanning subgraph* if it contains all the vertices of `G`. --/
 def is_spanning (G' : subgraph G) : Prop :=
   ∀ v : V, v ∈ G'.verts
+
+theorem is_spanning_iff {G' : subgraph G} : G'.is_spanning ↔ G'.verts = Set.Univ :=
+  Set.eq_univ_iff_forall.symm
 
 /-- Coercion from `subgraph G` to `simple_graph V`.  If `G'` is a spanning
 subgraph, then `G'.spanning_coe` yields an isomorphic graph.
@@ -104,6 +107,16 @@ def spanning_coe_equiv_coe_of_spanning (G' : subgraph G) (h : G'.is_spanning) : 
 they are adjacent in `G`. -/
 def is_induced (G' : subgraph G) : Prop :=
   ∀ {v w : V}, v ∈ G'.verts → w ∈ G'.verts → G.adj v w → G'.adj v w
+
+/-- `H.support` is the set of vertices that form edges in the subgraph `H`. -/
+def support (H : subgraph G) : Set V :=
+  Rel.Dom H.adj
+
+theorem mem_support (H : subgraph G) {v : V} : v ∈ H.support ↔ ∃ w, H.adj v w :=
+  Iff.rfl
+
+theorem support_subset_verts (H : subgraph G) : H.support ⊆ H.verts :=
+  fun v ⟨w, h⟩ => H.edge_vert h
 
 /-- `G'.neighbor_set v` is the set of vertices adjacent to `v` in `G'`. -/
 def neighbor_set (G' : subgraph G) (v : V) : Set V :=
@@ -225,9 +238,8 @@ instance subgraph_inhabited : Inhabited (subgraph G) :=
 def is_subgraph (x y : subgraph G) : Prop :=
   x.verts ⊆ y.verts ∧ ∀ ⦃v w : V⦄, x.adj v w → y.adj v w
 
-instance  : BoundedLattice (subgraph G) :=
-  { le := is_subgraph, sup := union, inf := inter, top := top, bot := bot,
-    le_refl := fun x => ⟨rfl.Subset, fun _ _ h => h⟩,
+instance : Lattice (subgraph G) :=
+  { le := is_subgraph, sup := union, inf := inter, le_refl := fun x => ⟨rfl.Subset, fun _ _ h => h⟩,
     le_trans := fun x y z hxy hyz => ⟨hxy.1.trans hyz.1, fun _ _ h => hyz.2 (hxy.2 h)⟩,
     le_antisymm :=
       by 
@@ -236,8 +248,6 @@ instance  : BoundedLattice (subgraph G) :=
         exact Set.Subset.antisymm hxy.1 hyx.1 
         ext v w 
         exact Iff.intro (fun h => hxy.2 h) fun h => hyx.2 h,
-    le_top := fun x => ⟨Set.subset_univ _, fun v w h => x.adj_sub h⟩,
-    bot_le := fun x => ⟨Set.empty_subset _, fun v w h => False.ndrec _ h⟩,
     sup_le :=
       fun x y z hxy hyz => ⟨Set.union_subset hxy.1 hyz.1, fun v w h => h.cases_on (fun h => hxy.2 h) fun h => hyz.2 h⟩,
     le_sup_left := fun x y => ⟨Set.subset_union_left x.verts y.verts, fun v w h => Or.inl h⟩,
@@ -246,10 +256,17 @@ instance  : BoundedLattice (subgraph G) :=
     inf_le_left := fun x y => ⟨Set.inter_subset_left x.verts y.verts, fun v w h => h.1⟩,
     inf_le_right := fun x y => ⟨Set.inter_subset_right x.verts y.verts, fun v w h => h.2⟩ }
 
+instance : BoundedOrder (subgraph G) :=
+  { top := top, bot := bot, le_top := fun x => ⟨Set.subset_univ _, fun v w h => x.adj_sub h⟩,
+    bot_le := fun x => ⟨Set.empty_subset _, fun v w h => False.ndrec _ h⟩ }
+
 /-- Turn a subgraph of a `simple_graph` into a member of its subgraph type. -/
 @[simps]
 def _root_.simple_graph.to_subgraph (H : SimpleGraph V) (h : H ≤ G) : G.subgraph :=
   { Verts := Set.Univ, Adj := H.adj, adj_sub := h, edge_vert := fun v w h => Set.mem_univ v, symm := H.symm }
+
+theorem support_mono {H H' : subgraph G} (h : H ≤ H') : H.support ⊆ H'.support :=
+  Rel.dom_mono h.2
 
 theorem _root_.simple_graph.to_subgraph.is_spanning (H : SimpleGraph V) (h : H ≤ G) : (H.to_subgraph h).IsSpanning :=
   Set.mem_univ

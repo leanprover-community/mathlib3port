@@ -14,7 +14,7 @@ function indeed satisfies the following recurrences:
 
 namespace GeneralizedContinuedFraction
 
-variable{K : Type _}{g : GeneralizedContinuedFraction K}{n : ℕ}[DivisionRing K]
+variable {K : Type _} {g : GeneralizedContinuedFraction K} {n : ℕ} [DivisionRing K]
 
 theorem continuants_aux_recurrence {gp ppred pred : pair K} (nth_s_eq : g.s.nth n = some gp)
   (nth_conts_aux_eq : g.continuants_aux n = ppred) (succ_nth_conts_aux_eq : g.continuants_aux (n+1) = pred) :

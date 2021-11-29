@@ -30,7 +30,7 @@ noncomputable theory
 
 namespace Quaternion
 
-instance  : HasInner ℝ ℍ :=
+instance : HasInner ℝ ℍ :=
   ⟨fun a b => (a*b.conj).re⟩
 
 theorem inner_self (a : ℍ) : ⟪a, a⟫ = norm_sq a :=
@@ -39,7 +39,7 @@ theorem inner_self (a : ℍ) : ⟪a, a⟫ = norm_sq a :=
 theorem inner_def (a b : ℍ) : ⟪a, b⟫ = (a*b.conj).re :=
   rfl
 
-instance  : InnerProductSpace ℝ ℍ :=
+instance : InnerProductSpace ℝ ℍ :=
   InnerProductSpace.ofCore
     { inner := HasInner.inner,
       conj_sym :=
@@ -60,7 +60,7 @@ theorem norm_sq_eq_norm_sq (a : ℍ) : norm_sq a = ∥a∥*∥a∥ :=
   by 
     rw [←inner_self, real_inner_self_eq_norm_mul_norm]
 
-instance  : NormOneClass ℍ :=
+instance : NormOneClass ℍ :=
   ⟨by 
       rw [norm_eq_sqrt_real_inner, inner_self, norm_sq.map_one, Real.sqrt_one]⟩
 
@@ -75,13 +75,13 @@ theorem norm_coe (a : ℝ) : ∥(a : ℍ)∥ = ∥a∥ :=
   by 
     rw [norm_eq_sqrt_real_inner, inner_self, norm_sq_coe, Real.sqrt_sq_eq_abs, Real.norm_eq_abs]
 
-noncomputable instance  : NormedRing ℍ :=
+noncomputable instance : NormedRing ℍ :=
   { dist_eq := fun _ _ => rfl, norm_mul := fun a b => (norm_mul a b).le }
 
-noncomputable instance  : NormedAlgebra ℝ ℍ :=
+noncomputable instance : NormedAlgebra ℝ ℍ :=
   { norm_algebra_map_eq := norm_coe, toAlgebra := Quaternion.algebra }
 
-instance  : Coe ℂ ℍ :=
+instance : Coe ℂ ℍ :=
   ⟨fun z => ⟨z.re, z.im, 0, 0⟩⟩
 
 @[simp, normCast]

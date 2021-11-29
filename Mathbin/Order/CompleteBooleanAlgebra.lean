@@ -17,21 +17,21 @@ distributive Boolean algebras.
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{ι : Sort w}
+variable {α : Type u} {β : Type v} {ι : Sort w}
 
 /-- A complete distributive lattice is a bit stronger than the name might
   suggest; perhaps completely distributive lattice is more descriptive,
   as this class includes a requirement that the lattice join
   distribute over *arbitrary* infima, and similarly for the dual. -/
-class CompleteDistribLattice(α) extends CompleteLattice α where 
+class CompleteDistribLattice (α) extends CompleteLattice α where 
   infi_sup_le_sup_Inf : ∀ a s, (⨅(b : _)(_ : b ∈ s), a⊔b) ≤ a⊔Inf s 
   inf_Sup_le_supr_inf : ∀ a s, a⊓Sup s ≤ ⨆(b : _)(_ : b ∈ s), a⊓b
 
 section CompleteDistribLattice
 
-variable[CompleteDistribLattice α]{a b : α}{s t : Set α}
+variable [CompleteDistribLattice α] {a b : α} {s t : Set α}
 
-instance  : CompleteDistribLattice (OrderDual α) :=
+instance : CompleteDistribLattice (OrderDual α) :=
   { OrderDual.completeLattice α with infi_sup_le_sup_Inf := CompleteDistribLattice.inf_Sup_le_supr_inf,
     inf_Sup_le_supr_inf := CompleteDistribLattice.infi_sup_le_sup_Inf }
 
@@ -113,8 +113,7 @@ theorem disjoint_supr_iff {f : ι → α} : Disjoint a (⨆i, f i) ↔ ∀ i, Di
 
 end CompleteDistribLattice
 
-instance (priority := 100)CompleteDistribLattice.boundedDistribLattice [d : CompleteDistribLattice α] :
-  BoundedDistribLattice α :=
+instance (priority := 100) CompleteDistribLattice.toDistribLattice [d : CompleteDistribLattice α] : DistribLattice α :=
   { d with
     le_sup_inf :=
       fun x y z =>
@@ -122,7 +121,7 @@ instance (priority := 100)CompleteDistribLattice.boundedDistribLattice [d : Comp
           rw [←Inf_pair, ←Inf_pair, sup_Inf_eq, ←Inf_image, Set.image_pair] }
 
 /-- A complete Boolean algebra is a completely distributive Boolean algebra. -/
-class CompleteBooleanAlgebra(α) extends BooleanAlgebra α, CompleteDistribLattice α
+class CompleteBooleanAlgebra (α) extends BooleanAlgebra α, CompleteDistribLattice α
 
 instance Pi.completeBooleanAlgebra {ι : Type _} {π : ι → Type _} [∀ i, CompleteBooleanAlgebra (π i)] :
   CompleteBooleanAlgebra (∀ i, π i) :=
@@ -143,7 +142,7 @@ instance Prop.completeBooleanAlgebra : CompleteBooleanAlgebra Prop :=
 
 section CompleteBooleanAlgebra
 
-variable[CompleteBooleanAlgebra α]{a b : α}{s : Set α}{f : ι → α}
+variable [CompleteBooleanAlgebra α] {a b : α} {s : Set α} {f : ι → α}
 
 theorem compl_infi : «expr ᶜ» (infi f) = ⨆i, «expr ᶜ» (f i) :=
   le_antisymmₓ (compl_le_of_compl_le$ le_infi$ fun i => compl_le_of_compl_le$ le_supr (compl ∘ f) i)

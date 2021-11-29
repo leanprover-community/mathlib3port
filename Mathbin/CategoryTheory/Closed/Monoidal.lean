@@ -19,11 +19,11 @@ namespace CategoryTheory
 open Category MonoidalCategory
 
 /-- An object `X` is (right) closed if `(X ⊗ -)` is a left adjoint. -/
-class closed{C : Type u}[category.{v} C][monoidal_category.{v} C](X : C) where 
+class closed {C : Type u} [category.{v} C] [monoidal_category.{v} C] (X : C) where 
   isAdj : is_left_adjoint (tensor_left X)
 
 /-- A monoidal category `C` is (right) monoidal closed if every object is (right) closed. -/
-class monoidal_closed(C : Type u)[category.{v} C][monoidal_category.{v} C] where 
+class monoidal_closed (C : Type u) [category.{v} C] [monoidal_category.{v} C] where 
   Closed : ∀ X : C, closed X
 
 attribute [instance] monoidal_closed.closed

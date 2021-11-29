@@ -25,12 +25,12 @@ open CategoryTheory.Limits
 
 universe v₁ u₁ u₂
 
-variable{C : Type u₁}[category.{v₁} C]
+variable {C : Type u₁} [category.{v₁} C]
 
-variable{X Y : C}
+variable {X Y : C}
 
 /-- A regular monomorphism is a morphism which is the equalizer of some parallel pair. -/
-class regular_mono(f : X ⟶ Y) where 
+class regular_mono (f : X ⟶ Y) where 
   z : C
   (left right : Y ⟶ Z)
   w : f ≫ left = f ≫ right 
@@ -39,7 +39,7 @@ class regular_mono(f : X ⟶ Y) where
 attribute [reassoc] regular_mono.w
 
 /-- Every regular monomorphism is a monomorphism. -/
-instance (priority := 100)regular_mono.mono (f : X ⟶ Y) [regular_mono f] : mono f :=
+instance (priority := 100) regular_mono.mono (f : X ⟶ Y) [regular_mono f] : mono f :=
   mono_of_is_limit_parallel_pair regular_mono.is_limit
 
 instance equalizer_regular (g h : X ⟶ Y) [has_limit (parallel_pair g h)] : regular_mono (equalizer.ι g h) :=
@@ -54,7 +54,7 @@ instance equalizer_regular (g h : X ⟶ Y) [has_limit (parallel_pair g h)] : reg
             simp [←w] }
 
 /-- Every split monomorphism is a regular monomorphism. -/
-instance (priority := 100)regular_mono.of_split_mono (f : X ⟶ Y) [split_mono f] : regular_mono f :=
+instance (priority := 100) regular_mono.of_split_mono (f : X ⟶ Y) [split_mono f] : regular_mono f :=
   { z := Y, left := 𝟙 Y, right := retraction f ≫ f,
     w :=
       by 
@@ -119,7 +119,7 @@ theorem is_iso_of_regular_mono_of_epi (f : X ⟶ Y) [regular_mono f] [e : epi f]
   @is_iso_limit_cone_parallel_pair_of_epi _ _ _ _ _ _ _ regular_mono.is_limit e
 
 /-- A regular epimorphism is a morphism which is the coequalizer of some parallel pair. -/
-class regular_epi(f : X ⟶ Y) where 
+class regular_epi (f : X ⟶ Y) where 
   w : C
   (left right : W ⟶ X)
   w : left ≫ f = right ≫ f 
@@ -128,7 +128,7 @@ class regular_epi(f : X ⟶ Y) where
 attribute [reassoc] regular_epi.w
 
 /-- Every regular epimorphism is an epimorphism. -/
-instance (priority := 100)regular_epi.epi (f : X ⟶ Y) [regular_epi f] : epi f :=
+instance (priority := 100) regular_epi.epi (f : X ⟶ Y) [regular_epi f] : epi f :=
   epi_of_is_colimit_parallel_pair regular_epi.is_colimit
 
 instance coequalizer_regular (g h : X ⟶ Y) [has_colimit (parallel_pair g h)] : regular_epi (coequalizer.π g h) :=
@@ -143,7 +143,7 @@ instance coequalizer_regular (g h : X ⟶ Y) [has_colimit (parallel_pair g h)] :
             simp [←w] }
 
 /-- Every split epimorphism is a regular epimorphism. -/
-instance (priority := 100)regular_epi.of_split_epi (f : X ⟶ Y) [split_epi f] : regular_epi f :=
+instance (priority := 100) regular_epi.of_split_epi (f : X ⟶ Y) [split_epi f] : regular_epi f :=
   { w := X, left := 𝟙 X, right := f ≫ section_ f,
     w :=
       by 

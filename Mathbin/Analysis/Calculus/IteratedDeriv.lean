@@ -42,11 +42,11 @@ open_locale Classical TopologicalSpace BigOperators
 
 open Filter Asymptotics Set
 
-variable{𝕜 : Type _}[NondiscreteNormedField 𝕜]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜]
 
-variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]
+variable {F : Type _} [NormedGroup F] [NormedSpace 𝕜 F]
 
-variable{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]
+variable {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
 /-- The `n`-th iterated derivative of a function from `𝕜` to `F`, as a function from `𝕜` to `F`. -/
 def iteratedDeriv (n : ℕ) (f : 𝕜 → F) (x : 𝕜) : F :=
@@ -57,7 +57,7 @@ from `𝕜` to `F`. -/
 def iteratedDerivWithin (n : ℕ) (f : 𝕜 → F) (s : Set 𝕜) (x : 𝕜) : F :=
   (iteratedFderivWithin 𝕜 n f s x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1
 
-variable{n : ℕ}{f : 𝕜 → F}{s : Set 𝕜}{x : 𝕜}
+variable {n : ℕ} {f : 𝕜 → F} {s : Set 𝕜} {x : 𝕜}
 
 theorem iterated_deriv_within_univ : iteratedDerivWithin n f univ = iteratedDeriv n f :=
   by 
@@ -85,8 +85,7 @@ iterated derivative. -/
 theorem iterated_fderiv_within_eq_equiv_comp :
   iteratedFderivWithin 𝕜 n f s = (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F ∘ iteratedDerivWithin n f s) :=
   by 
-    rw [iterated_deriv_within_eq_equiv_comp, ←Function.comp.assoc, ContinuousLinearEquiv.self_comp_symm]
-    rfl
+    rw [iterated_deriv_within_eq_equiv_comp, ←Function.comp.assoc, LinearIsometryEquiv.self_comp_symm, Function.left_id]
 
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
 multiplied by the product of the `m i`s. -/
@@ -120,9 +119,9 @@ theorem times_cont_diff_on_of_continuous_on_differentiable_on_deriv {n : WithTop
   by 
     apply times_cont_diff_on_of_continuous_on_differentiable_on
     ·
-      simpa [iterated_fderiv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_continuous_on_iff]
+      simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff]
     ·
-      simpa [iterated_fderiv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_differentiable_on_iff]
+      simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
 
 /-- To check that a function is `n` times continuously differentiable, it suffices to check that its
 first `n` derivatives are differentiable. This is slightly too strong as the condition we
@@ -133,23 +132,23 @@ theorem times_cont_diff_on_of_differentiable_on_deriv {n : WithTop ℕ}
   (h : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s) : TimesContDiffOn 𝕜 n f s :=
   by 
     apply times_cont_diff_on_of_differentiable_on 
-    simpa [iterated_fderiv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_differentiable_on_iff, -coe_fn_coe_base]
+    simpa only [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
 
 /-- On a set with unique derivatives, a `C^n` function has derivatives up to `n` which are
 continuous. -/
 theorem TimesContDiffOn.continuous_on_iterated_deriv_within {n : WithTop ℕ} {m : ℕ} (h : TimesContDiffOn 𝕜 n f s)
   (hmn : (m : WithTop ℕ) ≤ n) (hs : UniqueDiffOn 𝕜 s) : ContinuousOn (iteratedDerivWithin m f s) s :=
   by 
-    simp [iterated_deriv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_continuous_on_iff, -coe_fn_coe_base]
-    exact h.continuous_on_iterated_fderiv_within hmn hs
+    simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff] using
+      h.continuous_on_iterated_fderiv_within hmn hs
 
 /-- On a set with unique derivatives, a `C^n` function has derivatives less than `n` which are
 differentiable. -/
 theorem TimesContDiffOn.differentiable_on_iterated_deriv_within {n : WithTop ℕ} {m : ℕ} (h : TimesContDiffOn 𝕜 n f s)
   (hmn : (m : WithTop ℕ) < n) (hs : UniqueDiffOn 𝕜 s) : DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s :=
   by 
-    simp [iterated_deriv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_differentiable_on_iff, -coe_fn_coe_base]
-    exact h.differentiable_on_iterated_fderiv_within hmn hs
+    simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff] using
+      h.differentiable_on_iterated_fderiv_within hmn hs
 
 /-- The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
 reformulated in terms of the one-dimensional derivative on sets with unique derivatives. -/
@@ -159,7 +158,7 @@ theorem times_cont_diff_on_iff_continuous_on_differentiable_on_deriv {n : WithTo
       ∀ m : ℕ, (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s :=
   by 
     simp only [times_cont_diff_on_iff_continuous_on_differentiable_on hs, iterated_fderiv_within_eq_equiv_comp,
-      ContinuousLinearEquiv.comp_continuous_on_iff, ContinuousLinearEquiv.comp_differentiable_on_iff]
+      LinearIsometryEquiv.comp_continuous_on_iff, LinearIsometryEquiv.comp_differentiable_on_iff]
 
 /-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
 differentiating the `n`-th iterated derivative. -/
@@ -167,7 +166,7 @@ theorem iterated_deriv_within_succ {x : 𝕜} (hxs : UniqueDiffWithinAt 𝕜 s x
   iteratedDerivWithin (n+1) f s x = derivWithin (iteratedDerivWithin n f s) s x :=
   by 
     rw [iterated_deriv_within_eq_iterated_fderiv_within, iterated_fderiv_within_succ_apply_left,
-      iterated_fderiv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_fderiv_within _ hxs, derivWithin]
+      iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_fderiv_within _ hxs, derivWithin]
     change
       ((ContinuousMultilinearMap.mkPiField 𝕜 (Finₓ n) ((fderivWithin 𝕜 (iteratedDerivWithin n f s) s x : 𝕜 → F) 1) :
           (Finₓ n → 𝕜) → F)
@@ -215,8 +214,7 @@ iterated derivative. -/
 theorem iterated_fderiv_eq_equiv_comp :
   iteratedFderiv 𝕜 n f = (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F ∘ iteratedDeriv n f) :=
   by 
-    rw [iterated_deriv_eq_equiv_comp, ←Function.comp.assoc, ContinuousLinearEquiv.self_comp_symm]
-    rfl
+    rw [iterated_deriv_eq_equiv_comp, ←Function.comp.assoc, LinearIsometryEquiv.self_comp_symm, Function.left_id]
 
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
 multiplied by the product of the `m i`s. -/
@@ -247,7 +245,7 @@ theorem times_cont_diff_iff_iterated_deriv {n : WithTop ℕ} :
       ∀ m : ℕ, (m : WithTop ℕ) < n → Differentiable 𝕜 (iteratedDeriv m f) :=
   by 
     simp only [times_cont_diff_iff_continuous_differentiable, iterated_fderiv_eq_equiv_comp,
-      ContinuousLinearEquiv.comp_continuous_iff, ContinuousLinearEquiv.comp_differentiable_iff]
+      LinearIsometryEquiv.comp_continuous_iff, LinearIsometryEquiv.comp_differentiable_iff]
 
 /-- To check that a function is `n` times continuously differentiable, it suffices to check that its
 first `n` derivatives are differentiable. This is slightly too strong as the condition we

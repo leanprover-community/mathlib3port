@@ -26,13 +26,13 @@ universe u v w w₁ w₂
 
 namespace LieSubmodule
 
-variable{R : Type u}{L : Type v}{M : Type w}
+variable {R : Type u} {L : Type v} {M : Type w}
 
-variable[CommRingₓ R][LieRing L][LieAlgebra R L][AddCommGroupₓ M][Module R M]
+variable [CommRingₓ R] [LieRing L] [LieAlgebra R L] [AddCommGroupₓ M] [Module R M]
 
-variable[LieRingModule L M][LieModule R L M]
+variable [LieRingModule L M] [LieModule R L M]
 
-variable(N N' : LieSubmodule R L M)(I J : LieIdeal R L)
+variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L)
 
 /-- The quotient of a Lie module by a Lie submodule. It is a Lie module. -/
 abbrev Quotientₓ :=
@@ -40,7 +40,7 @@ abbrev Quotientₓ :=
 
 namespace Quotientₓ
 
-variable{N I}
+variable {N I}
 
 /-- Map sending an element of `M` to the corresponding element of `M/N`, when `N` is a
 lie_submodule of the lie_module `N`. -/
@@ -55,7 +55,7 @@ is a natural linear map from `L` to the endomorphisms of `M` leaving `N` invaria
 def lie_submodule_invariant : L →ₗ[R] Submodule.compatibleMaps N.to_submodule N.to_submodule :=
   LinearMap.codRestrict _ (LieModule.toEndomorphism R L M) N.lie_mem
 
-variable(N)
+variable (N)
 
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there
 is a natural Lie algebra morphism from `L` to the linear endomorphism of the quotient `M/N`. -/

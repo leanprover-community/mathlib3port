@@ -34,7 +34,7 @@ open Parser ParseResult
 
 namespace Parser
 
-variable(α : Type)[HasZero α][HasOne α][Add α]
+variable (α : Type) [HasZero α] [HasOne α] [Add α]
 
 -- error in Data.Buffer.Parser.Numeral: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler mono
 /--

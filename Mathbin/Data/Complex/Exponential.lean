@@ -23,7 +23,7 @@ open Real IsAbsoluteValue Finset
 
 section 
 
-variable{α : Type _}{β : Type _}[Ringₓ β][LinearOrderedField α][Archimedean α]{abv : β → α}[IsAbsoluteValue abv]
+variable {α : Type _} {β : Type _} [Ringₓ β] [LinearOrderedField α] [Archimedean α] {abv : β → α} [IsAbsoluteValue abv]
 
 -- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_cau_of_decreasing_bounded
@@ -78,7 +78,7 @@ end
 
 section NoArchimedean
 
-variable{α : Type _}{β : Type _}[Ringₓ β][LinearOrderedField α]{abv : β → α}[IsAbsoluteValue abv]
+variable {α : Type _} {β : Type _} [Ringₓ β] [LinearOrderedField α] {abv : β → α} [IsAbsoluteValue abv]
 
 -- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_cau_series_of_abv_le_cau
@@ -119,7 +119,7 @@ end NoArchimedean
 
 section 
 
-variable{α : Type _}{β : Type _}[Ringₓ β][LinearOrderedField α][Archimedean α]{abv : β → α}[IsAbsoluteValue abv]
+variable {α : Type _} {β : Type _} [Ringₓ β] [LinearOrderedField α] [Archimedean α] {abv : β → α} [IsAbsoluteValue abv]
 
 -- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_cau_geo_series
@@ -238,7 +238,7 @@ end
 
 section NoArchimedean
 
-variable{α : Type _}{β : Type _}[Ringₓ β][LinearOrderedField α]{abv : β → α}[IsAbsoluteValue abv]
+variable {α : Type _} {β : Type _} [Ringₓ β] [LinearOrderedField α] {abv : β → α} [IsAbsoluteValue abv]
 
 -- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem abv_sum_le_sum_abv
@@ -497,7 +497,7 @@ end Real
 
 namespace Complex
 
-variable(x y : ℂ)
+variable (x y : ℂ)
 
 @[simp]
 theorem exp_zero : exp 0 = 1 :=
@@ -1147,7 +1147,7 @@ namespace Real
 
 open Complex
 
-variable(x y : ℝ)
+variable (x y : ℝ)
 
 @[simp]
 theorem exp_zero : exp 0 = 1 :=
@@ -1467,6 +1467,8 @@ theorem sinh_three_mul : sinh (3*x) = (4*sinh x ^ 3)+3*sinh x :=
 
 open IsAbsoluteValue
 
+/-- This is an intermediate result that is later replaced by `real.add_one_le_exp`; use that lemma
+instead. -/
 theorem add_one_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : (x+1) ≤ exp x :=
   calc (x+1) ≤ limₓ (⟨fun n : ℕ => ((exp' x) n).re, is_cau_seq_re (exp' x)⟩ : CauSeq ℝ HasAbs.abs) :=
     le_lim
@@ -1742,6 +1744,23 @@ begin
   have [ident hxc] [":", expr «expr ≤ »(complex.abs x, 1)] [],
   by exact_mod_cast [expr hx],
   convert [] [expr exp_bound hxc hn] []; norm_cast []
+end
+
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exp_bound'
+{x : exprℝ()}
+(h1 : «expr ≤ »(0, x))
+(h2 : «expr ≤ »(x, 1))
+{n : exprℕ()}
+(hn : «expr < »(0, n)) : «expr ≤ »(real.exp x, «expr + »(«expr∑ in , »((m), finset.range n, «expr / »(«expr ^ »(x, m), «expr !»(m))), «expr / »(«expr * »(«expr ^ »(x, n), «expr + »(n, 1)), «expr * »(«expr !»(n), n)))) :=
+begin
+  have [ident h3] [":", expr «expr = »(«expr| |»(x), x)] [":=", expr by simpa [] [] [] [] [] []],
+  have [ident h4] [":", expr «expr ≤ »(«expr| |»(x), 1)] [":=", expr by rwa [expr h3] []],
+  have [ident h'] [] [":=", expr real.exp_bound h4 hn],
+  rw [expr h3] ["at", ident h'],
+  have [ident h''] [] [":=", expr (abs_sub_le_iff.1 h').1],
+  have [ident t] [] [":=", expr sub_le_iff_le_add'.1 h''],
+  simpa [] [] [] ["[", expr mul_div_assoc, "]"] [] ["using", expr t]
 end
 
 /-- A finite initial segment of the exponential series, followed by an arbitrary tail.
@@ -2032,10 +2051,82 @@ theorem cos_two_neg : cos 2 < 0 :=
       normNum
     
 
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exp_bound_div_one_sub_of_interval_approx
+{x : exprℝ()}
+(h1 : «expr ≤ »(0, x))
+(h2 : «expr ≤ »(x, 1)) : «expr ≤ »(«expr + »(«expr∑ in , »((j : exprℕ()), finset.range 3, «expr / »(«expr ^ »(x, j), j.factorial)), «expr / »(«expr * »(«expr ^ »(x, 3), «expr + »((3 : exprℕ()), 1)), «expr * »((3 : exprℕ()).factorial, (3 : exprℕ())))), «expr∑ in , »((j), finset.range 3, «expr ^ »(x, j))) :=
+begin
+  norm_num ["[", expr finset.sum, "]"] [],
+  rw ["[", expr add_assoc, ",", expr add_comm «expr + »(x, 1) «expr / »(«expr * »(«expr ^ »(x, 3), 4), 18), ",", "<-", expr add_assoc, ",", expr add_le_add_iff_right, ",", "<-", expr add_le_add_iff_left «expr- »(«expr / »(«expr ^ »(x, 2), 2)), ",", "<-", expr add_assoc, ",", expr comm_ring.add_left_neg «expr / »(«expr ^ »(x, 2), 2), ",", expr zero_add, ",", expr neg_add_eq_sub, ",", expr sub_half, ",", expr sq, ",", expr pow_succ, ",", expr sq, "]"] [],
+  have [ident i1] [":", expr «expr ≤ »(«expr / »(«expr * »(x, 4), 18), «expr / »(1, 2))] [":=", expr by linarith [] [] []],
+  have [ident i2] [":", expr «expr ≤ »(0, «expr / »(«expr * »(x, 4), 18))] [":=", expr by linarith [] [] []],
+  have [ident i3] [] [":=", expr mul_le_mul h1 h1 le_rfl h1],
+  rw [expr zero_mul] ["at", ident i3],
+  have [ident t] [] [":=", expr mul_le_mul le_rfl i1 i2 i3],
+  rw ["<-", expr mul_assoc] [],
+  rwa ["[", expr mul_one_div, ",", "<-", expr mul_div_assoc, ",", "<-", expr mul_assoc, "]"] ["at", ident t]
+end
+
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exp_bound_div_one_sub_of_interval
+{x : exprℝ()}
+(h1 : «expr ≤ »(0, x))
+(h2 : «expr < »(x, 1)) : «expr ≤ »(real.exp x, «expr / »(1, «expr - »(1, x))) :=
+begin
+  have [ident h] [":", expr «expr ≤ »(«expr∑ in , »((j), finset.range 3, «expr ^ »(x, j)), «expr / »(1, «expr - »(1, x)))] [],
+  { norm_num ["[", expr finset.sum, "]"] [],
+    have [ident h1x] [":", expr «expr < »(0, «expr - »(1, x))] [":=", expr by simpa [] [] [] [] [] []],
+    rw [expr le_div_iff h1x] [],
+    norm_num ["[", "<-", expr add_assoc, ",", expr mul_sub_left_distrib, ",", expr mul_one, ",", expr add_mul, ",", expr sub_add_eq_sub_sub, ",", expr pow_succ' x 2, "]"] [],
+    have [ident hx3] [":", expr «expr ≤ »(0, «expr ^ »(x, 3))] [],
+    { norm_num [] [],
+      exact [expr h1] },
+    linarith [] [] [] },
+  exact [expr «expr $ »(exp_bound' h1 h2.le, by linarith [] [] []).trans ((exp_bound_div_one_sub_of_interval_approx h1 h2.le).trans h)]
+end
+
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem one_sub_le_exp_minus_of_pos
+{y : exprℝ()}
+(h : «expr ≤ »(0, y)) : «expr ≤ »(«expr - »(1, y), real.exp «expr- »(y)) :=
+begin
+  rw [expr real.exp_neg] [],
+  have [ident r1] [":", expr «expr ≤ »(«expr * »(«expr - »(1, y), real.exp y), 1)] [],
+  { cases [expr le_or_lt «expr - »(1, y) 0] [],
+    { have [ident h''] [":", expr «expr ≤ »(«expr * »(«expr - »(1, y), y.exp), 0)] [],
+      { rw [expr mul_nonpos_iff] [],
+        right,
+        exact [expr ⟨h_1, y.exp_pos.le⟩] },
+      linarith [] [] [] },
+    have [ident hy1] [":", expr «expr < »(y, 1)] [":=", expr by linarith [] [] []],
+    rw ["<-", expr le_div_iff' h_1] [],
+    exact [expr exp_bound_div_one_sub_of_interval h hy1] },
+  rw [expr inv_eq_one_div] [],
+  rw [expr le_div_iff' y.exp_pos] [],
+  rwa [expr mul_comm] ["at", ident r1]
+end
+
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_one_le_exp_of_nonpos {x : exprℝ()} (h : «expr ≤ »(x, 0)) : «expr ≤ »(«expr + »(x, 1), real.exp x) :=
+begin
+  rw [expr add_comm] [],
+  have [ident h1] [":", expr «expr ≤ »(0, «expr- »(x))] [":=", expr by linarith [] [] []],
+  simpa [] [] [] [] [] ["using", expr one_sub_le_exp_minus_of_pos h1]
+end
+
+theorem add_one_le_exp (x : ℝ) : (x+1) ≤ Real.exp x :=
+  by 
+    cases le_or_ltₓ 0 x
+    ·
+      exact Real.add_one_le_exp_of_nonneg h 
+    exact add_one_le_exp_of_nonpos h.le
+
 end Real
 
 namespace Complex
 
+@[simp]
 theorem abs_cos_add_sin_mul_I (x : ℝ) : abs (cos x+sin x*I) = 1 :=
   have  := Real.sin_sq_add_cos_sq x 
   by 
@@ -2045,6 +2136,11 @@ theorem abs_cos_add_sin_mul_I (x : ℝ) : abs (cos x+sin x*I) = 1 :=
 theorem abs_exp_of_real (x : ℝ) : abs (exp x) = Real.exp x :=
   by 
     rw [←of_real_exp] <;> exact abs_of_nonneg (le_of_ltₓ (Real.exp_pos _))
+
+@[simp]
+theorem abs_exp_of_real_mul_I (x : ℝ) : abs (exp (x*I)) = 1 :=
+  by 
+    rw [exp_mul_I, abs_cos_add_sin_mul_I]
 
 theorem abs_exp (z : ℂ) : abs (exp z) = Real.exp z.re :=
   by 

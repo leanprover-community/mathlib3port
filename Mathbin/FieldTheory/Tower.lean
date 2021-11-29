@@ -33,11 +33,11 @@ section Field
 
 open Cardinal
 
-variable(F : Type u)(K : Type v)(A : Type w)
+variable (F : Type u) (K : Type v) (A : Type w)
 
-variable[Field F][Field K][AddCommGroupₓ A]
+variable [Field F] [Field K] [AddCommGroupₓ A]
 
-variable[Algebra F K][Module K A][Module F A][IsScalarTower F K A]
+variable [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A]
 
 /-- Tower law: if `A` is a `K`-vector space and `K` is a field extension of `F` then
 `dim_F(A) = dim_F(K) * dim_K(A)`. -/

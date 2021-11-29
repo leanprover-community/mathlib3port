@@ -30,7 +30,7 @@ universe u v
 Type class for associating a type `α` with typical variable names for elements
 of `α`. See `tactic.typical_variable_names`.
 -/
-class HasVariableNames(α : Sort u) : Type where 
+class HasVariableNames (α : Sort u) : Type where 
   names : List Name 
   names_nonempty : 0 < names.length :=  by 
   runTac 
@@ -81,87 +81,87 @@ end HasVariableNames
 
 open HasVariableNames
 
-instance  {n α} [HasVariableNames α] : HasVariableNames (DArray n fun _ => α) :=
+instance {n α} [HasVariableNames α] : HasVariableNames (DArray n fun _ => α) :=
   make_listlike_instance α
 
-instance  : HasVariableNames Bool :=
+instance : HasVariableNames Bool :=
   ⟨[`b]⟩
 
-instance  : HasVariableNames Charₓ :=
+instance : HasVariableNames Charₓ :=
   ⟨[`c]⟩
 
-instance  {n} : HasVariableNames (Finₓ n) :=
+instance {n} : HasVariableNames (Finₓ n) :=
   ⟨[`n, `m, `o]⟩
 
-instance  : HasVariableNames ℤ :=
+instance : HasVariableNames ℤ :=
   ⟨[`n, `m, `o]⟩
 
-instance  {α} [HasVariableNames α] : HasVariableNames (List α) :=
+instance {α} [HasVariableNames α] : HasVariableNames (List α) :=
   make_listlike_instance α
 
-instance  : HasVariableNames ℕ :=
+instance : HasVariableNames ℕ :=
   ⟨[`n, `m, `o]⟩
 
 instance Prop.hasVariableNames : HasVariableNames Prop :=
   ⟨[`P, `Q, `R]⟩
 
-instance  {α} [HasVariableNames α] : HasVariableNames (Thunkₓ α) :=
+instance {α} [HasVariableNames α] : HasVariableNames (Thunkₓ α) :=
   make_inheriting_instance α
 
-instance  {α β} : HasVariableNames (Prod α β) :=
+instance {α β} : HasVariableNames (Prod α β) :=
   ⟨[`p]⟩
 
-instance  {α β} : HasVariableNames (PProd α β) :=
+instance {α β} : HasVariableNames (PProd α β) :=
   ⟨[`p]⟩
 
-instance  {α} {β : α → Type _} : HasVariableNames (Sigma β) :=
+instance {α} {β : α → Type _} : HasVariableNames (Sigma β) :=
   ⟨[`p]⟩
 
-instance  {α} {β : α → Sort _} : HasVariableNames (Psigma β) :=
+instance {α} {β : α → Sort _} : HasVariableNames (Psigma β) :=
   ⟨[`p]⟩
 
-instance  {α} [HasVariableNames α] {p : α → Prop} : HasVariableNames (Subtype p) :=
+instance {α} [HasVariableNames α] {p : α → Prop} : HasVariableNames (Subtype p) :=
   make_inheriting_instance α
 
-instance  {α} [HasVariableNames α] : HasVariableNames (Option α) :=
+instance {α} [HasVariableNames α] : HasVariableNames (Option α) :=
   make_inheriting_instance α
 
-instance  {α} : HasVariableNames (BinTree α) :=
+instance {α} : HasVariableNames (BinTree α) :=
   ⟨[`t]⟩
 
-instance  {α} [HasVariableNames α] {lt : α → α → Prop} : HasVariableNames (Rbtree α lt) :=
+instance {α} [HasVariableNames α] {lt : α → α → Prop} : HasVariableNames (Rbtree α lt) :=
   make_listlike_instance α
 
-unsafe instance  {α} [HasVariableNames α] : HasVariableNames (native.rb_set α) :=
+unsafe instance {α} [HasVariableNames α] : HasVariableNames (native.rb_set α) :=
   make_listlike_instance α
 
-instance  {α} [HasVariableNames α] : HasVariableNames (Set α) :=
+instance {α} [HasVariableNames α] : HasVariableNames (Set α) :=
   make_listlike_instance α
 
-instance  : HasVariableNames Stringₓ :=
+instance : HasVariableNames Stringₓ :=
   ⟨[`s]⟩
 
-instance  : HasVariableNames Unsigned :=
+instance : HasVariableNames Unsigned :=
   ⟨[`n, `m, `o]⟩
 
-instance  {α} {β : α → Sort _} : HasVariableNames (∀ a : α, β a) :=
+instance {α} {β : α → Sort _} : HasVariableNames (∀ a : α, β a) :=
   ⟨[`f, `g, `h]⟩
 
-instance  : HasVariableNames Name :=
+instance : HasVariableNames Name :=
   ⟨[`n]⟩
 
-unsafe instance  {α} : HasVariableNames (tactic α) :=
+unsafe instance {α} : HasVariableNames (tactic α) :=
   ⟨[`t]⟩
 
-unsafe instance  : HasVariableNames expr :=
+unsafe instance : HasVariableNames expr :=
   ⟨[`e]⟩
 
-unsafe instance  : HasVariableNames pexpr :=
+unsafe instance : HasVariableNames pexpr :=
   ⟨[`e]⟩
 
-unsafe instance  : HasVariableNames level :=
+unsafe instance : HasVariableNames level :=
   ⟨[`u, `v, `w]⟩
 
-instance  : HasVariableNames BinderInfo :=
+instance : HasVariableNames BinderInfo :=
   ⟨[`bi]⟩
 

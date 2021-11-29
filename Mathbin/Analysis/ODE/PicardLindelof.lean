@@ -31,12 +31,12 @@ open_locale Filter TopologicalSpace Nnreal Ennreal Nat Interval
 
 noncomputable theory
 
-variable{E : Type _}[NormedGroup E][NormedSpace ℝ E]
+variable {E : Type _} [NormedGroup E] [NormedSpace ℝ E]
 
 /-- This structure holds arguments of the Picard-Lipschitz (Cauchy-Lipschitz) theorem. Unless you
 want to use one of the auxiliary lemmas, use
 `exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous` instead of using this structure. -/
-structure PicardLindelof(E : Type _)[NormedGroup E][NormedSpace ℝ E] where 
+structure PicardLindelof (E : Type _) [NormedGroup E] [NormedSpace ℝ E] where 
   toFun : ℝ → E → E
   (tMin tMax : ℝ)
   t₀ : Icc t_min t_max 
@@ -49,12 +49,12 @@ structure PicardLindelof(E : Type _)[NormedGroup E][NormedSpace ℝ E] where
 
 namespace PicardLindelof
 
-variable(v : PicardLindelof E)
+variable (v : PicardLindelof E)
 
-instance  : CoeFun (PicardLindelof E) fun _ => ℝ → E → E :=
+instance : CoeFun (PicardLindelof E) fun _ => ℝ → E → E :=
   ⟨to_fun⟩
 
-instance  : Inhabited (PicardLindelof E) :=
+instance : Inhabited (PicardLindelof E) :=
   ⟨⟨0, 0, 0, ⟨0, le_rfl, le_rfl⟩, 0, 0, 0, 0, fun t ht => (LipschitzWith.const 0).LipschitzOnWith _,
       fun _ _ =>
         by 
@@ -124,12 +124,12 @@ structure fun_space where
 
 namespace FunSpace
 
-variable{v}(f : fun_space v)
+variable {v} (f : fun_space v)
 
-instance  : CoeFun (fun_space v) fun _ => Icc v.t_min v.t_max → E :=
+instance : CoeFun (fun_space v) fun _ => Icc v.t_min v.t_max → E :=
   ⟨to_fun⟩
 
-instance  : Inhabited v.fun_space :=
+instance : Inhabited v.fun_space :=
   ⟨⟨fun _ => v.x₀, rfl, (LipschitzWith.const _).weaken (zero_le _)⟩⟩
 
 protected theorem lipschitz : LipschitzWith v.C f :=
@@ -147,7 +147,7 @@ def to_continuous_map : v.fun_space ↪ C(Icc v.t_min v.t_max, E) :=
         cases g 
         simpa using h⟩
 
-instance  : MetricSpace v.fun_space :=
+instance : MetricSpace v.fun_space :=
   MetricSpace.induced to_continuous_map to_continuous_map.Injective inferInstance
 
 theorem uniform_inducing_to_continuous_map : UniformInducing (@to_continuous_map _ _ _ v) :=
@@ -217,12 +217,12 @@ begin
   exact [expr this.preimage continuous_map.continuous_coe]
 end
 
-variable[MeasurableSpace E][BorelSpace E]
+variable [MeasurableSpace E] [BorelSpace E]
 
 theorem interval_integrable_v_comp (t₁ t₂ : ℝ) : IntervalIntegrable f.v_comp volume t₁ t₂ :=
   f.continuous_v_comp.IntervalIntegrable _ _
 
-variable[second_countable_topology E][CompleteSpace E]
+variable [second_countable_topology E] [CompleteSpace E]
 
 /-- The Picard-Lindelöf operator. This is a contracting map on `picard_lindelof.fun_space v` such
 that the fixed point of this map is the solution of the corresponding ODE.
@@ -309,11 +309,11 @@ end
 
 end FunSpace
 
-variable[second_countable_topology E][CompleteSpace E]
+variable [second_countable_topology E] [CompleteSpace E]
 
 section 
 
-variable[MeasurableSpace E][BorelSpace E]
+variable [MeasurableSpace E] [BorelSpace E]
 
 -- error in Analysis.ODE.PicardLindelof: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exists_contracting_iterate : «expr∃ , »((N : exprℕ())

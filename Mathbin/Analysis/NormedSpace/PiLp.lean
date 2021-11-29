@@ -49,7 +49,7 @@ open_locale BigOperators uniformity TopologicalSpace Nnreal Ennreal
 
 noncomputable theory
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 /-- A copy of a Pi type, on which we will put the `L^p` distance. Since the Pi type itself is
 already endowed with the `L^∞` distance, we need the type synonym to avoid confusing typeclass
@@ -59,7 +59,7 @@ different distances. -/
 def PiLp {ι : Type _} (p : ℝ) (α : ι → Type _) : Type _ :=
   ∀ i : ι, α i
 
-instance  {ι : Type _} (p : ℝ) (α : ι → Type _) [∀ i, Inhabited (α i)] : Inhabited (PiLp p α) :=
+instance {ι : Type _} (p : ℝ) (α : ι → Type _) [∀ i, Inhabited (α i)] : Inhabited (PiLp p α) :=
   ⟨fun i => default (α i)⟩
 
 theorem fact_one_le_one_real : Fact ((1 : ℝ) ≤ 1) :=
@@ -70,7 +70,7 @@ theorem fact_one_le_two_real : Fact ((1 : ℝ) ≤ 2) :=
 
 namespace PiLp
 
-variable(p : ℝ)[fact_one_le_p : Fact (1 ≤ p)](α : ι → Type _)(β : ι → Type _)
+variable (p : ℝ) [fact_one_le_p : Fact (1 ≤ p)] (α : ι → Type _) (β : ι → Type _)
 
 /-- Canonical bijection between `pi_Lp p α` and the original Pi type. We introduce it to be able
 to compare the `L^p` and `L^∞` distances through it. -/
@@ -94,7 +94,7 @@ explaining why having definitionally the right uniformity is often important.
 -/
 
 
-variable[∀ i, EmetricSpace (α i)][∀ i, PseudoEmetricSpace (β i)][Fintype ι]
+variable [∀ i, EmetricSpace (α i)] [∀ i, PseudoEmetricSpace (β i)] [Fintype ι]
 
 include fact_one_le_p
 
@@ -200,18 +200,18 @@ end
 instance UniformSpace [∀ i, UniformSpace (β i)] : UniformSpace (PiLp p β) :=
   Pi.uniformSpace _
 
-variable[Fintype ι]
+variable [Fintype ι]
 
 include fact_one_le_p
 
 /-- pseudoemetric space instance on the product of finitely many pseudoemetric spaces, using the
 `L^p` pseudoedistance, and having as uniformity the product uniformity. -/
-instance  [∀ i, PseudoEmetricSpace (β i)] : PseudoEmetricSpace (PiLp p β) :=
+instance [∀ i, PseudoEmetricSpace (β i)] : PseudoEmetricSpace (PiLp p β) :=
   (pseudo_emetric_aux p β).replaceUniformity (aux_uniformity_eq p β).symm
 
 /-- emetric space instance on the product of finitely many emetric spaces, using the `L^p`
 edistance, and having as uniformity the product uniformity. -/
-instance  [∀ i, EmetricSpace (α i)] : EmetricSpace (PiLp p α) :=
+instance [∀ i, EmetricSpace (α i)] : EmetricSpace (PiLp p α) :=
   (emetric_aux p α).replaceUniformity (aux_uniformity_eq p α).symm
 
 omit fact_one_le_p
@@ -285,7 +285,7 @@ theorem norm_eq_of_nat {p : ℝ} [Fact (1 ≤ p)] {β : ι → Type _} [∀ i, S
 
 include fact_one_le_p
 
-variable(𝕜 : Type _)[NormedField 𝕜]
+variable (𝕜 : Type _) [NormedField 𝕜]
 
 -- error in Analysis.NormedSpace.PiLp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product of finitely many seminormed spaces is a seminormed space, with the `L^p` norm. -/
@@ -305,7 +305,7 @@ instance semi_normed_space
 instance NormedSpace [∀ i, NormedGroup (α i)] [∀ i, NormedSpace 𝕜 (α i)] : NormedSpace 𝕜 (PiLp p α) :=
   { PiLp.semiNormedSpace p α 𝕜 with  }
 
-variable{𝕜 p α}[∀ i, SemiNormedGroup (β i)][∀ i, SemiNormedSpace 𝕜 (β i)](c : 𝕜)(x y : PiLp p β)(i : ι)
+variable {𝕜 p α} [∀ i, SemiNormedGroup (β i)] [∀ i, SemiNormedSpace 𝕜 (β i)] (c : 𝕜) (x y : PiLp p β) (i : ι)
 
 @[simp]
 theorem add_apply : (x+y) i = x i+y i :=

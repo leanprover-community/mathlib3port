@@ -16,13 +16,13 @@ open Function
 
 universe u v₁ v₂ v₃
 
-variable{I : Type u}
+variable {I : Type u}
 
-variable{α β γ : Type _}
+variable {α β γ : Type _}
 
-variable{f : I → Type v₁}{g : I → Type v₂}{h : I → Type v₃}
+variable {f : I → Type v₁} {g : I → Type v₂} {h : I → Type v₃}
 
-variable(x y : ∀ i, f i)(i : I)
+variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
@@ -115,9 +115,9 @@ theorem const_div [Div β] (a b : β) : const α a / const α b = const α (a / 
 
 section 
 
-variable[DecidableEq I]
+variable [DecidableEq I]
 
-variable[∀ i, HasZero (f i)][∀ i, HasZero (g i)][∀ i, HasZero (h i)]
+variable [∀ i, HasZero (f i)] [∀ i, HasZero (g i)] [∀ i, HasZero (h i)]
 
 /-- The function supported at `i`, with value `x` there. -/
 def single (i : I) (x : f i) : ∀ i, f i :=
@@ -173,7 +173,7 @@ theorem single_op₂ {g₁ g₂ : I → Type _} [∀ i, HasZero (g₁ i)] [∀ i
   single i (op i x₁ x₂) = fun j => op j (single i x₁ j) (single i x₂ j) :=
   Eq.symm$ funext$ apply_single₂ op h i x₁ x₂
 
-variable(f)
+variable (f)
 
 theorem single_injective (i : I) : Function.Injective (single i : f i → ∀ i, f i) :=
   Function.update_injective _ i

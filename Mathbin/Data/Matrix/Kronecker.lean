@@ -38,9 +38,9 @@ namespace Matrix
 
 open_locale Matrix
 
-variable{R α α' β β' γ γ' : Type _}
+variable {R α α' β β' γ γ' : Type _}
 
-variable{l m n p : Type _}{q r : Type _}{l' m' n' p' : Type _}
+variable {l m n p : Type _} {q r : Type _} {l' m' n' p' : Type _}
 
 section KroneckerMap
 
@@ -169,7 +169,7 @@ end KroneckerMap
 
 section Kronecker
 
-variable(R)
+variable (R)
 
 open_locale Matrix
 
@@ -242,7 +242,7 @@ end Kronecker
 
 section KroneckerTmul
 
-variable(R)
+variable (R)
 
 open TensorProduct
 
@@ -250,9 +250,9 @@ open_locale Matrix TensorProduct
 
 section Module
 
-variable[CommSemiringₓ R][AddCommMonoidₓ α][AddCommMonoidₓ β][AddCommMonoidₓ γ]
+variable [CommSemiringₓ R] [AddCommMonoidₓ α] [AddCommMonoidₓ β] [AddCommMonoidₓ γ]
 
-variable[Module R α][Module R β][Module R γ]
+variable [Module R α] [Module R β] [Module R γ]
 
 /-- The Kronecker tensor product. This is just a shorthand for `kronecker_map (⊗ₜ)`.
 Prefer the notation `⊗ₖₜ` rather than this definition. -/
@@ -311,7 +311,7 @@ end Module
 
 section Algebra
 
-variable[CommSemiringₓ R][Semiringₓ α][Semiringₓ β][Algebra R α][Algebra R β]
+variable [CommSemiringₓ R] [Semiringₓ α] [Semiringₓ β] [Algebra R α] [Algebra R β]
 
 open_locale Kronecker
 

@@ -21,9 +21,9 @@ open_locale BigOperators Classical Affine
 
 section AffineSpace'
 
-variable(k : Type _){V : Type _}{P : Type _}[Field k][AddCommGroupₓ V][Module k V][affine_space V P]
+variable (k : Type _) {V : Type _} {P : Type _} [Field k] [AddCommGroupₓ V] [Module k V] [affine_space V P]
 
-variable{ι : Type _}
+variable {ι : Type _}
 
 include V
 
@@ -83,7 +83,7 @@ theorem finite_of_fin_dim_affine_independent [FiniteDimensional k V] {s : Set P}
   (hi : AffineIndependent k (coeₓ : s → P)) : s.finite :=
   ⟨fintypeOfFinDimAffineIndependent k hi⟩
 
-variable{k}
+variable {k}
 
 -- error in LinearAlgebra.AffineSpace.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `vector_span` of a finite subset of an affinely independent
@@ -197,7 +197,7 @@ begin
     exact [expr hi.affine_span_eq_of_le_of_card_eq_finrank_add_one le_top hc] }
 end
 
-variable(k)
+variable (k)
 
 -- error in LinearAlgebra.AffineSpace.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The `vector_span` of `n + 1` points in an indexed family has
@@ -294,7 +294,7 @@ begin
   exact_mod_cast [expr h]
 end
 
-variable(P)
+variable (P)
 
 /-- The empty set is collinear. -/
 theorem collinear_empty : Collinear k (∅ : Set P) :=
@@ -302,7 +302,7 @@ theorem collinear_empty : Collinear k (∅ : Set P) :=
     rw [collinear_iff_dim_le_one, vector_span_empty]
     simp 
 
-variable{P}
+variable {P}
 
 /-- A single point is collinear. -/
 theorem collinear_singleton (p : P) : Collinear k ({p} : Set P) :=

@@ -34,7 +34,7 @@ universe u v
 
 namespace HallMarriageTheorem
 
-variable{ι : Type u}{α : Type v}[Fintype ι]
+variable {ι : Type u} {α : Type v} [Fintype ι]
 
 theorem hall_hard_inductive_zero (t : ι → Finset α) (hn : Fintype.card ι = 0) :
   ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
@@ -42,7 +42,7 @@ theorem hall_hard_inductive_zero (t : ι → Finset α) (hn : Fintype.card ι = 
     rw [Fintype.card_eq_zero_iff] at hn 
     exact ⟨isEmptyElim, isEmptyElim, isEmptyElim⟩
 
-variable{t : ι → Finset α}[DecidableEq α]
+variable {t : ι → Finset α} [DecidableEq α]
 
 -- error in Combinatorics.Hall.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem hall_cond_of_erase

@@ -15,11 +15,11 @@ universe u u₁ u₂ v v₁ v₂ v₃ w x y l
 
 open_locale BigOperators
 
-variable(ι : Type u){γ : Type w}(β : ι → Type v){β₁ : ι → Type v₁}{β₂ : ι → Type v₂}
+variable (ι : Type u) {γ : Type w} (β : ι → Type v) {β₁ : ι → Type v₁} {β₂ : ι → Type v₂}
 
 namespace Dfinsupp
 
-variable[∀ i, HasZero (β i)]
+variable [∀ i, HasZero (β i)]
 
 /-- An auxiliary structure used in the definition of of `dfinsupp`,
 the type used to make infinite direct sum of modules over a ring. -/
@@ -31,20 +31,20 @@ structure pre : Type max u v where
 instance inhabited_pre : Inhabited (pre ι β) :=
   ⟨⟨fun i => 0, ∅, fun i => Or.inr rfl⟩⟩
 
-instance  : Setoidₓ (pre ι β) :=
+instance : Setoidₓ (pre ι β) :=
   { R := fun x y => ∀ i, x.to_fun i = y.to_fun i,
     iseqv := ⟨fun f i => rfl, fun f g H i => (H i).symm, fun f g h H1 H2 i => (H1 i).trans (H2 i)⟩ }
 
 end Dfinsupp
 
-variable{ι}
+variable {ι}
 
 /-- A dependent function `Π i, β i` with finite support. -/
 @[reducible]
 def Dfinsupp [∀ i, HasZero (β i)] : Type _ :=
   Quotientₓ (Dfinsupp.Pre.setoid ι β)
 
-variable{β}
+variable {β}
 
 notation3  "Π₀" (...) ", " r:(scoped f => Dfinsupp f) => r
 
@@ -54,15 +54,15 @@ namespace Dfinsupp
 
 section Basic
 
-variable[∀ i, HasZero (β i)][∀ i, HasZero (β₁ i)][∀ i, HasZero (β₂ i)]
+variable [∀ i, HasZero (β i)] [∀ i, HasZero (β₁ i)] [∀ i, HasZero (β₂ i)]
 
-instance  : CoeFun (Π₀i, β i) fun _ => ∀ i, β i :=
+instance : CoeFun (Π₀i, β i) fun _ => ∀ i, β i :=
   ⟨fun f => Quotientₓ.liftOn f pre.to_fun$ fun _ _ => funext⟩
 
-instance  : HasZero (Π₀i, β i) :=
+instance : HasZero (Π₀i, β i) :=
   ⟨«expr⟦ ⟧» ⟨0, ∅, fun i => Or.inr rfl⟩⟩
 
-instance  : Inhabited (Π₀i, β i) :=
+instance : Inhabited (Π₀i, β i) :=
   ⟨0⟩
 
 @[simp]
@@ -169,7 +169,7 @@ end Basic
 
 section Algebra
 
-instance  [∀ i, AddZeroClass (β i)] : Add (Π₀i, β i) :=
+instance [∀ i, AddZeroClass (β i)] : Add (Π₀i, β i) :=
   ⟨zip_with (fun _ => ·+·) fun _ => add_zeroₓ 0⟩
 
 theorem add_apply [∀ i, AddZeroClass (β i)] (g₁ g₂ : Π₀i, β i) (i : ι) : (g₁+g₂) i = g₁ i+g₂ i :=
@@ -179,7 +179,7 @@ theorem add_apply [∀ i, AddZeroClass (β i)] (g₁ g₂ : Π₀i, β i) (i : �
 theorem coe_add [∀ i, AddZeroClass (β i)] (g₁ g₂ : Π₀i, β i) : «expr⇑ » (g₁+g₂) = g₁+g₂ :=
   funext$ add_apply g₁ g₂
 
-instance  [∀ i, AddZeroClass (β i)] : AddZeroClass (Π₀i, β i) :=
+instance [∀ i, AddZeroClass (β i)] : AddZeroClass (Π₀i, β i) :=
   { zero := 0, add := ·+·,
     zero_add :=
       fun f =>
@@ -194,7 +194,7 @@ instance  [∀ i, AddZeroClass (β i)] : AddZeroClass (Π₀i, β i) :=
             by 
               simp only [add_apply, zero_apply, add_zeroₓ] }
 
-instance  [∀ i, AddMonoidₓ (β i)] : AddMonoidₓ (Π₀i, β i) :=
+instance [∀ i, AddMonoidₓ (β i)] : AddMonoidₓ (Π₀i, β i) :=
   { Dfinsupp.addZeroClass with zero := 0, add := ·+·,
     add_assoc :=
       fun f g h =>
@@ -212,7 +212,7 @@ def coe_fn_add_monoid_hom [∀ i, AddZeroClass (β i)] : (Π₀i, β i) →+ ∀
 def eval_add_monoid_hom [∀ i, AddZeroClass (β i)] (i : ι) : (Π₀i, β i) →+ β i :=
   (Pi.evalAddMonoidHom β i).comp coe_fn_add_monoid_hom
 
-instance  [∀ i, AddCommMonoidₓ (β i)] : AddCommMonoidₓ (Π₀i, β i) :=
+instance [∀ i, AddCommMonoidₓ (β i)] : AddCommMonoidₓ (Π₀i, β i) :=
   { Dfinsupp.addMonoid with
     add_comm :=
       fun f g =>
@@ -244,7 +244,7 @@ theorem finset_sum_apply {α} [∀ i, AddCommMonoidₓ (β i)] (s : Finset α) (
   (∑a in s, g a) i = ∑a in s, g a i :=
   (eval_add_monoid_hom i : _ →+ β i).map_sum g s
 
-instance  [∀ i, AddGroupₓ (β i)] : Neg (Π₀i, β i) :=
+instance [∀ i, AddGroupₓ (β i)] : Neg (Π₀i, β i) :=
   ⟨fun f => f.map_range (fun _ => Neg.neg) fun _ => neg_zero⟩
 
 theorem neg_apply [∀ i, AddGroupₓ (β i)] (g : Π₀i, β i) (i : ι) : (-g) i = -g i :=
@@ -254,7 +254,7 @@ theorem neg_apply [∀ i, AddGroupₓ (β i)] (g : Π₀i, β i) (i : ι) : (-g)
 theorem coe_neg [∀ i, AddGroupₓ (β i)] (g : Π₀i, β i) : «expr⇑ » (-g) = -g :=
   funext$ neg_apply g
 
-instance  [∀ i, AddGroupₓ (β i)] : Sub (Π₀i, β i) :=
+instance [∀ i, AddGroupₓ (β i)] : Sub (Π₀i, β i) :=
   ⟨zip_with (fun _ => Sub.sub) fun _ => sub_zero 0⟩
 
 theorem sub_apply [∀ i, AddGroupₓ (β i)] (g₁ g₂ : Π₀i, β i) (i : ι) : (g₁ - g₂) i = g₁ i - g₂ i :=
@@ -264,7 +264,7 @@ theorem sub_apply [∀ i, AddGroupₓ (β i)] (g₁ g₂ : Π₀i, β i) (i : ι
 theorem coe_sub [∀ i, AddGroupₓ (β i)] (g₁ g₂ : Π₀i, β i) : «expr⇑ » (g₁ - g₂) = g₁ - g₂ :=
   funext$ sub_apply g₁ g₂
 
-instance  [∀ i, AddGroupₓ (β i)] : AddGroupₓ (Π₀i, β i) :=
+instance [∀ i, AddGroupₓ (β i)] : AddGroupₓ (Π₀i, β i) :=
   { Dfinsupp.addMonoid, Dfinsupp.hasSub, Dfinsupp.hasNeg with
     add_left_neg :=
       fun f =>
@@ -279,7 +279,7 @@ instance  [∀ i, AddGroupₓ (β i)] : AddGroupₓ (Π₀i, β i) :=
             by 
               simp only [sub_apply, add_apply, neg_apply, sub_eq_add_neg] }
 
-instance  [∀ i, AddCommGroupₓ (β i)] : AddCommGroupₓ (Π₀i, β i) :=
+instance [∀ i, AddCommGroupₓ (β i)] : AddCommGroupₓ (Π₀i, β i) :=
   { @Dfinsupp.addCommMonoid _ β _, Dfinsupp.addGroup with
     zsmul := fun n v => v.map_range (fun _ => (· • ·) n) fun _ => smul_zero _,
     zsmul_neg' :=
@@ -304,7 +304,7 @@ instance  [∀ i, AddCommGroupₓ (β i)] : AddCommGroupₓ (Π₀i, β i) :=
 
 /-- Dependent functions with finite support inherit a semiring action from an action on each
 coordinate. -/
-instance  [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)] : HasScalar γ (Π₀i, β i) :=
+instance [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)] : HasScalar γ (Π₀i, β i) :=
   ⟨fun c v => v.map_range (fun _ => (· • ·) c) fun _ => smul_zero _⟩
 
 theorem smul_apply [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)] (b : γ) (v : Π₀i, β i) (i : ι) :
@@ -316,7 +316,7 @@ theorem coe_smul [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulA
   «expr⇑ » (b • v) = b • v :=
   funext$ smul_apply b v
 
-instance  {δ : Type _} [Monoidₓ γ] [Monoidₓ δ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)]
+instance {δ : Type _} [Monoidₓ γ] [Monoidₓ δ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)]
   [∀ i, DistribMulAction δ (β i)] [∀ i, SmulCommClass γ δ (β i)] : SmulCommClass γ δ (Π₀i, β i) :=
   { smul_comm :=
       fun r s m =>
@@ -325,7 +325,7 @@ instance  {δ : Type _} [Monoidₓ γ] [Monoidₓ δ] [∀ i, AddMonoidₓ (β i
             by 
               simp only [smul_apply, smul_comm r s (m i)] }
 
-instance  {δ : Type _} [Monoidₓ γ] [Monoidₓ δ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)]
+instance {δ : Type _} [Monoidₓ γ] [Monoidₓ δ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)]
   [∀ i, DistribMulAction δ (β i)] [HasScalar γ δ] [∀ i, IsScalarTower γ δ (β i)] : IsScalarTower γ δ (Π₀i, β i) :=
   { smul_assoc :=
       fun r s m =>
@@ -336,7 +336,7 @@ instance  {δ : Type _} [Monoidₓ γ] [Monoidₓ δ] [∀ i, AddMonoidₓ (β i
 
 /-- Dependent functions with finite support inherit a `distrib_mul_action` structure from such a
 structure on each coordinate. -/
-instance  [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)] : DistribMulAction γ (Π₀i, β i) :=
+instance [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)] : DistribMulAction γ (Π₀i, β i) :=
   { Dfinsupp.hasScalar with
     smul_zero :=
       fun c =>
@@ -365,7 +365,7 @@ instance  [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction �
 
 /-- Dependent functions with finite support inherit a module structure from such a structure on
 each coordinate. -/
-instance  [Semiringₓ γ] [∀ i, AddCommMonoidₓ (β i)] [∀ i, Module γ (β i)] : Module γ (Π₀i, β i) :=
+instance [Semiringₓ γ] [∀ i, AddCommMonoidₓ (β i)] [∀ i, Module γ (β i)] : Module γ (Π₀i, β i) :=
   { Dfinsupp.distribMulAction with
     zero_smul :=
       fun c =>
@@ -440,7 +440,7 @@ theorem filter_smul [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribM
     ext 
     simp [smul_ite]
 
-variable(γ β)
+variable (γ β)
 
 /-- `dfinsupp.filter` as an `add_monoid_hom`. -/
 @[simps]
@@ -453,7 +453,7 @@ def filter_linear_map [Semiringₓ γ] [∀ i, AddCommMonoidₓ (β i)] [∀ i, 
   (Π₀i, β i) →ₗ[γ] Π₀i, β i :=
   { toFun := filter p, map_add' := filter_add p, map_smul' := filter_smul p }
 
-variable{γ β}
+variable {γ β}
 
 @[simp]
 theorem filter_neg [∀ i, AddGroupₓ (β i)] (p : ι → Prop) [DecidablePred p] (f : Π₀i, β i) :
@@ -500,7 +500,7 @@ theorem subtype_domain_smul [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, 
   [DecidablePred p] (r : γ) (f : Π₀i, β i) : (r • f).subtypeDomain p = r • f.subtype_domain p :=
   Quotientₓ.induction_on f$ fun x => rfl
 
-variable(γ β)
+variable (γ β)
 
 /-- `subtype_domain` but as an `add_monoid_hom`. -/
 @[simps]
@@ -514,7 +514,7 @@ def subtype_domain_linear_map [Semiringₓ γ] [∀ i, AddCommMonoidₓ (β i)] 
   [DecidablePred p] : (Π₀i, β i) →ₗ[γ] Π₀i : Subtype p, β i :=
   { toFun := subtype_domain p, map_add' := subtype_domain_add, map_smul' := subtype_domain_smul }
 
-variable{γ β}
+variable {γ β}
 
 @[simp]
 theorem subtype_domain_neg [∀ i, AddGroupₓ (β i)] {p : ι → Prop} [DecidablePred p] {v : Π₀i, β i} :
@@ -534,13 +534,13 @@ theorem subtype_domain_sub [∀ i, AddGroupₓ (β i)] {p : ι → Prop} [Decida
 
 end FilterAndSubtypeDomain
 
-variable[dec : DecidableEq ι]
+variable [dec : DecidableEq ι]
 
 include dec
 
 section Basic
 
-variable[∀ i, HasZero (β i)]
+variable [∀ i, HasZero (β i)]
 
 omit dec
 
@@ -799,7 +799,7 @@ theorem erase_single_ne {i j : ι} (x : β i) (h : i ≠ j) : (single i x).erase
 
 section Update
 
-variable(f : Π₀i, β i)(i : ι)(b : β i)[Decidable (b = 0)]
+variable (f : Π₀i, β i) (i : ι) (b : β i) [Decidable (b = 0)]
 
 /-- Replace the value of a `Π₀ i, β i` at a given point `i : ι` by a given value `b : β i`.
 If `b = 0`, this amounts to removing `i` from the support.
@@ -830,7 +830,7 @@ def update : Π₀i, β i :=
         rw [(funext h : x.to_fun = y.to_fun)])
     f
 
-variable(j : ι)
+variable (j : ι)
 
 @[simp]
 theorem coe_update : (f.update i b : ∀ i : ι, β i) = Function.update f i b :=
@@ -883,7 +883,7 @@ end Basic
 
 section AddMonoidₓ
 
-variable[∀ i, AddZeroClass (β i)]
+variable [∀ i, AddZeroClass (β i)]
 
 @[simp]
 theorem single_add (i : ι) (b₁ b₂ : β i) : single i (b₁+b₂) = single i b₁+single i b₂ :=
@@ -904,7 +904,7 @@ theorem erase_add (i : ι) (f₁ f₂ : Π₀i, β i) : erase i (f₁+f₂) = er
       by 
         simp [ite_zero_add]
 
-variable(β)
+variable (β)
 
 /-- `dfinsupp.single` as an `add_monoid_hom`. -/
 @[simps]
@@ -916,7 +916,7 @@ def single_add_hom (i : ι) : β i →+ Π₀i, β i :=
 def erase_add_hom (i : ι) : (Π₀i, β i) →+ Π₀i, β i :=
   { toFun := erase i, map_zero' := erase_zero i, map_add' := erase_add i }
 
-variable{β}
+variable {β}
 
 @[simp]
 theorem single_neg {β : ι → Type v} [∀ i, AddGroupₓ (β i)] (i : ι) (x : β i) : single i (-x) = -single i x :=
@@ -1108,7 +1108,7 @@ def mk_add_group_hom [∀ i, AddGroupₓ (β i)] (s : Finset ι) : (∀ i : (s :
 
 section 
 
-variable[Monoidₓ γ][∀ i, AddMonoidₓ (β i)][∀ i, DistribMulAction γ (β i)]
+variable [Monoidₓ γ] [∀ i, AddMonoidₓ (β i)] [∀ i, DistribMulAction γ (β i)]
 
 @[simp]
 theorem mk_smul {s : Finset ι} (c : γ) (x : ∀ i : («expr↑ » s : Set ι), β (i : ι)) : mk s (c • x) = c • mk s x :=
@@ -1128,7 +1128,7 @@ end
 
 section SupportBasic
 
-variable[∀ i, HasZero (β i)][∀ i x : β i, Decidable (x ≠ 0)]
+variable [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
 
 /-- Set `{i | f x ≠ 0}` as a `finset`. -/
 def support (f : Π₀i, β i) : Finset ι :=
@@ -1200,7 +1200,7 @@ theorem support_single_subset {i : ι} {b : β i} : (single i b).support ⊆ {i}
 
 section MapRangeAndZipWith
 
-variable[∀ i, HasZero (β₁ i)][∀ i, HasZero (β₂ i)]
+variable [∀ i, HasZero (β₁ i)] [∀ i, HasZero (β₂ i)]
 
 theorem map_range_def [∀ i x : β₁ i, Decidable (x ≠ 0)] {f : ∀ i, β₁ i → β₂ i} {hf : ∀ i, f i 0 = 0} {g : Π₀i, β₁ i} :
   map_range f hf g = mk g.support fun i => f i.1 (g i.1) :=
@@ -1220,7 +1220,7 @@ theorem map_range_single {f : ∀ i, β₁ i → β₂ i} {hf : ∀ i, f i 0 = 0
             simp ,
           simp [h, hf]]
 
-variable[∀ i x : β₁ i, Decidable (x ≠ 0)][∀ i x : β₂ i, Decidable (x ≠ 0)]
+variable [∀ i x : β₁ i, Decidable (x ≠ 0)] [∀ i x : β₂ i, Decidable (x ≠ 0)]
 
 theorem support_map_range {f : ∀ i, β₁ i → β₂ i} {hf : ∀ i, f i 0 = 0} {g : Π₀i, β₁ i} :
   (map_range f hf g).support ⊆ g.support :=
@@ -1275,7 +1275,7 @@ theorem support_update (f : Π₀i, β i) (i : ι) (b : β i) [Decidable (b = 0)
 
 section FilterAndSubtypeDomain
 
-variable{p : ι → Prop}[DecidablePred p]
+variable {p : ι → Prop} [DecidablePred p]
 
 theorem filter_def (f : Π₀i, β i) : f.filter p = mk (f.support.filter p) fun i => f i.1 :=
   by 
@@ -1322,7 +1322,7 @@ theorem support_smul {γ : Type w} [Semiringₓ γ] [∀ i, AddCommMonoidₓ (β
   [∀ i : ι x : β i, Decidable (x ≠ 0)] (b : γ) (v : Π₀i, β i) : (b • v).support ⊆ v.support :=
   support_map_range
 
-instance  [∀ i, HasZero (β i)] [∀ i, DecidableEq (β i)] : DecidableEq (Π₀i, β i) :=
+instance [∀ i, HasZero (β i)] [∀ i, DecidableEq (β i)] : DecidableEq (Π₀i, β i) :=
   fun f g =>
     decidableOfIff (f.support = g.support ∧ ∀ i _ : i ∈ f.support, f i = g i)
       ⟨fun ⟨h₁, h₂⟩ =>
@@ -1792,7 +1792,7 @@ section MapRange
 
 omit dec
 
-variable[∀ i, AddZeroClass (β i)][∀ i, AddZeroClass (β₁ i)][∀ i, AddZeroClass (β₂ i)]
+variable [∀ i, AddZeroClass (β i)] [∀ i, AddZeroClass (β₁ i)] [∀ i, AddZeroClass (β₂ i)]
 
 theorem map_range_add (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) (hf' : ∀ i x y, f i (x+y) = f i x+f i y)
   (g₁ g₂ : Π₀i, β₁ i) : map_range f hf (g₁+g₂) = map_range f hf g₁+map_range f hf g₂ :=
@@ -1866,13 +1866,13 @@ Lemmas for `linear_map` and `linear_equiv` are in another file.
 
 section 
 
-variable[DecidableEq ι]
+variable [DecidableEq ι]
 
 namespace MonoidHom
 
-variable{R S : Type _}
+variable {R S : Type _}
 
-variable[∀ i, HasZero (β i)][∀ i x : β i, Decidable (x ≠ 0)]
+variable [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
 
 @[simp, toAdditive]
 theorem map_dfinsupp_prod [CommMonoidₓ R] [CommMonoidₓ S] (h : R →* S) (f : Π₀i, β i) (g : ∀ i, β i → R) :
@@ -1893,9 +1893,9 @@ end MonoidHom
 
 namespace RingHom
 
-variable{R S : Type _}
+variable {R S : Type _}
 
-variable[∀ i, HasZero (β i)][∀ i x : β i, Decidable (x ≠ 0)]
+variable [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
 
 @[simp]
 theorem map_dfinsupp_prod [CommSemiringₓ R] [CommSemiringₓ S] (h : R →+* S) (f : Π₀i, β i) (g : ∀ i, β i → R) :
@@ -1911,9 +1911,9 @@ end RingHom
 
 namespace MulEquiv
 
-variable{R S : Type _}
+variable {R S : Type _}
 
-variable[∀ i, HasZero (β i)][∀ i x : β i, Decidable (x ≠ 0)]
+variable [∀ i, HasZero (β i)] [∀ i x : β i, Decidable (x ≠ 0)]
 
 @[simp, toAdditive]
 theorem map_dfinsupp_prod [CommMonoidₓ R] [CommMonoidₓ S] (h : R ≃* S) (f : Π₀i, β i) (g : ∀ i, β i → R) :
@@ -1927,7 +1927,7 @@ end MulEquiv
 
 namespace AddMonoidHom
 
-variable{R S : Type _}
+variable {R S : Type _}
 
 open Dfinsupp
 
@@ -1949,7 +1949,7 @@ end AddMonoidHom
 
 namespace RingHom
 
-variable{R S : Type _}
+variable {R S : Type _}
 
 open Dfinsupp
 
@@ -1962,7 +1962,7 @@ end RingHom
 
 namespace AddEquiv
 
-variable{R S : Type _}
+variable {R S : Type _}
 
 open Dfinsupp
 

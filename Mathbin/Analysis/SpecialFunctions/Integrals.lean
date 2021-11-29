@@ -30,13 +30,13 @@ open Real Nat Set Finset
 
 open_locale Real BigOperators Interval
 
-variable{a b : ℝ}(n : ℕ)
+variable {a b : ℝ} (n : ℕ)
 
 namespace intervalIntegral
 
 open MeasureTheory
 
-variable{f : ℝ → ℝ}{μ ν : Measureₓ ℝ}[is_locally_finite_measure μ](c d : ℝ)
+variable {f : ℝ → ℝ} {μ ν : Measureₓ ℝ} [is_locally_finite_measure μ] (c d : ℝ)
 
 /-! ### Interval integrability -/
 
@@ -116,22 +116,6 @@ theorem interval_integrable_one_div_one_add_sq : IntervalIntegrable (fun x : ℝ
 theorem interval_integrable_inv_one_add_sq : IntervalIntegrable (fun x : ℝ => (1+x^2)⁻¹) μ a b :=
   by 
     simpa only [one_div] using interval_integrable_one_div_one_add_sq
-
-/-! ### Integral of a function scaled by a constant -/
-
-
-@[simp]
-theorem integral_const_mul : (∫x in a..b, c*f x) = c*∫x in a..b, f x :=
-  integral_smul c f
-
-@[simp]
-theorem integral_mul_const : (∫x in a..b, f x*c) = (∫x in a..b, f x)*c :=
-  by 
-    simp only [mul_commₓ, integral_const_mul]
-
-@[simp]
-theorem integral_div : (∫x in a..b, f x / c) = (∫x in a..b, f x) / c :=
-  integral_mul_const (c⁻¹)
 
 /-! ### Integrals of the form `c * ∫ x in a..b, f (c * x + d)` -/
 

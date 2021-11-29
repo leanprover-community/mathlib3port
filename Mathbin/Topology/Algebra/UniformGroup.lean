@@ -21,11 +21,11 @@ section UniformAddGroup
 
 open Filter Set
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
 /-- A uniform (additive) group is a group in which the addition and negation are
   uniformly continuous. -/
-class UniformAddGroup(α : Type _)[UniformSpace α][AddGroupₓ α] : Prop where 
+class UniformAddGroup (α : Type _) [UniformSpace α] [AddGroupₓ α] : Prop where 
   uniform_continuous_sub : UniformContinuous fun p : α × α => p.1 - p.2
 
 theorem UniformAddGroup.mk' {α} [UniformSpace α] [AddGroupₓ α] (h₁ : UniformContinuous fun p : α × α => p.1+p.2)
@@ -33,7 +33,7 @@ theorem UniformAddGroup.mk' {α} [UniformSpace α] [AddGroupₓ α] (h₁ : Unif
   ⟨by 
       simpa only [sub_eq_add_neg] using h₁.comp (uniform_continuous_fst.prod_mk (h₂.comp uniform_continuous_snd))⟩
 
-variable[UniformSpace α][AddGroupₓ α][UniformAddGroup α]
+variable [UniformSpace α] [AddGroupₓ α] [UniformAddGroup α]
 
 theorem uniform_continuous_sub : UniformContinuous fun p : α × α => p.1 - p.2 :=
   UniformAddGroup.uniform_continuous_sub
@@ -60,10 +60,10 @@ theorem UniformContinuous.add [UniformSpace β] {f : β → α} {g : β → α} 
 theorem uniform_continuous_add : UniformContinuous fun p : α × α => p.1+p.2 :=
   uniform_continuous_fst.add uniform_continuous_snd
 
-instance (priority := 10)UniformAddGroup.to_topological_add_group : TopologicalAddGroup α :=
+instance (priority := 10) UniformAddGroup.to_topological_add_group : TopologicalAddGroup α :=
   { continuous_add := uniform_continuous_add.Continuous, continuous_neg := uniform_continuous_neg.Continuous }
 
-instance  [UniformSpace β] [AddGroupₓ β] [UniformAddGroup β] : UniformAddGroup (α × β) :=
+instance [UniformSpace β] [AddGroupₓ β] [UniformAddGroup β] : UniformAddGroup (α × β) :=
   ⟨((uniform_continuous_fst.comp uniform_continuous_fst).sub
           (uniform_continuous_fst.comp uniform_continuous_snd)).prod_mk
       ((uniform_continuous_snd.comp uniform_continuous_fst).sub (uniform_continuous_snd.comp uniform_continuous_snd))⟩
@@ -88,7 +88,7 @@ theorem uniform_embedding_translate (a : α) : uniform_embedding (λ x : α, «e
 
 section 
 
-variable(α)
+variable (α)
 
 theorem uniformity_eq_comap_nhds_zero : 𝓤 α = comap (fun x : α × α => x.2 - x.1) (𝓝 (0 : α)) :=
   by 
@@ -156,9 +156,9 @@ universe u v w x
 
 open Filter
 
-variable{G : Type u}[AddCommGroupₓ G][TopologicalSpace G][TopologicalAddGroup G]
+variable {G : Type u} [AddCommGroupₓ G] [TopologicalSpace G] [TopologicalAddGroup G]
 
-variable(G)
+variable (G)
 
 -- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The right uniformity on a topological group. -/ def topological_add_group.to_uniform_space : uniform_space G :=
@@ -220,7 +220,7 @@ attribute [local instance] TopologicalAddGroup.toUniformSpace
 theorem uniformity_eq_comap_nhds_zero' : 𝓤 G = comap (fun p : G × G => p.2 - p.1) (𝓝 (0 : G)) :=
   rfl
 
-variable{G}
+variable {G}
 
 theorem topological_add_group_is_uniform : UniformAddGroup G :=
   have  :
@@ -290,13 +290,13 @@ open AddCommGroupₓ Filter Set Function
 
 section 
 
-variable{α : Type _}{β : Type _}
+variable {α : Type _} {β : Type _}
 
-variable[TopologicalSpace α][AddCommGroupₓ α][TopologicalAddGroup α]
+variable [TopologicalSpace α] [AddCommGroupₓ α] [TopologicalAddGroup α]
 
-variable[TopologicalSpace β][AddCommGroupₓ β]
+variable [TopologicalSpace β] [AddCommGroupₓ β]
 
-variable{e : β →+ α}(de : DenseInducing e)
+variable {e : β →+ α} (de : DenseInducing e)
 
 include de
 
@@ -322,33 +322,33 @@ end
 
 namespace DenseInducing
 
-variable{α : Type _}{β : Type _}{γ : Type _}{δ : Type _}
+variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
-variable{G : Type _}
+variable {G : Type _}
 
-variable[TopologicalSpace α][AddCommGroupₓ α][TopologicalAddGroup α]
+variable [TopologicalSpace α] [AddCommGroupₓ α] [TopologicalAddGroup α]
 
-variable[TopologicalSpace β][AddCommGroupₓ β][TopologicalAddGroup β]
+variable [TopologicalSpace β] [AddCommGroupₓ β] [TopologicalAddGroup β]
 
-variable[TopologicalSpace γ][AddCommGroupₓ γ][TopologicalAddGroup γ]
+variable [TopologicalSpace γ] [AddCommGroupₓ γ] [TopologicalAddGroup γ]
 
-variable[TopologicalSpace δ][AddCommGroupₓ δ][TopologicalAddGroup δ]
+variable [TopologicalSpace δ] [AddCommGroupₓ δ] [TopologicalAddGroup δ]
 
-variable[UniformSpace G][AddCommGroupₓ G][UniformAddGroup G][SeparatedSpace G][CompleteSpace G]
+variable [UniformSpace G] [AddCommGroupₓ G] [UniformAddGroup G] [SeparatedSpace G] [CompleteSpace G]
 
-variable{e : β →+ α}(de : DenseInducing e)
+variable {e : β →+ α} (de : DenseInducing e)
 
-variable{f : δ →+ γ}(df : DenseInducing f)
+variable {f : δ →+ γ} (df : DenseInducing f)
 
-variable{φ : β →+ δ →+ G}
+variable {φ : β →+ δ →+ G}
 
 local notation "Φ" => fun p : β × δ => φ p.1 p.2
 
-variable(hφ : Continuous Φ)
+variable (hφ : Continuous Φ)
 
 include de df hφ
 
-variable{W' : Set G}(W'_nhd : W' ∈ 𝓝 (0 : G))
+variable {W' : Set G} (W'_nhd : W' ∈ 𝓝 (0 : G))
 
 include W'_nhd
 

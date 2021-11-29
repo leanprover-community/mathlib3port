@@ -89,7 +89,7 @@ there exists a lift `a : R` of `a₀` that is a root of `f`.
 unit. Warning: if `R/I` is not a field then it is not enough to assume that `g` has a factorization
 into monic linear factors in which `X - b` shows up only once; for example `1` is not a simple root
 of `X^2-1` over `ℤ/4ℤ`.) -/
-class HenselianRing(R : Type _)[CommRingₓ R](I : Ideal R) : Prop where 
+class HenselianRing (R : Type _) [CommRingₓ R] (I : Ideal R) : Prop where 
   jac : I ≤ Ideal.jacobson ⊥
   is_henselian :
   ∀ f : Polynomial R hf : f.monic a₀ : R h₁ : f.eval a₀ ∈ I h₂ : IsUnit (Ideal.Quotient.mk I (f.derivative.eval a₀)),
@@ -103,12 +103,12 @@ there exists a lift `a : R` of `a₀` that is a root of `f`.
 
 In other words, `R` is local Henselian if it is Henselian at the ideal `I`,
 in the sense of `henselian_ring`. -/
-class HenselianLocalRing(R : Type _)[CommRingₓ R] extends LocalRing R : Prop where 
+class HenselianLocalRing (R : Type _) [CommRingₓ R] extends LocalRing R : Prop where 
   is_henselian :
   ∀ f : Polynomial R hf : f.monic a₀ : R h₁ : f.eval a₀ ∈ maximal_ideal R h₂ : IsUnit (f.derivative.eval a₀),
     ∃ a : R, f.is_root a ∧ a - a₀ ∈ maximal_ideal R
 
-instance (priority := 100)Field.henselian (K : Type _) [Field K] : HenselianLocalRing K :=
+instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLocalRing K :=
   { is_henselian :=
       fun f hf a₀ h₁ h₂ =>
         by 
@@ -162,7 +162,7 @@ begin
   tfae_finish
 end
 
-instance  (R : Type _) [CommRingₓ R] [hR : HenselianLocalRing R] : HenselianRing R (maximal_ideal R) :=
+instance (R : Type _) [CommRingₓ R] [hR : HenselianLocalRing R] : HenselianRing R (maximal_ideal R) :=
   { jac :=
       by 
         rw [Ideal.jacobson, le_Inf_iff]

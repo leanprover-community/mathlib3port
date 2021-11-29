@@ -19,7 +19,7 @@ can be proven using more general going-up/going-down theory.
 -/
 
 
-variable{R : Type _}[CommRingₓ R]
+variable {R : Type _} [CommRingₓ R]
 
 namespace Ideal
 
@@ -29,7 +29,7 @@ open Submodule
 
 section CommRingₓ
 
-variable{S : Type _}[CommRingₓ S]{f : R →+* S}{I J : Ideal S}
+variable {S : Type _} [CommRingₓ S] {f : R →+* S} {I J : Ideal S}
 
 theorem coeff_zero_mem_comap_of_root_mem_of_eval_mem {r : S} (hr : r ∈ I) {p : Polynomial R} (hp : p.eval₂ f r ∈ I) :
   p.coeff 0 ∈ I.comap f :=
@@ -111,7 +111,7 @@ theorem exists_nonzero_mem_of_ne_bot {P : Ideal (Polynomial R)} (Pb : P ≠ ⊥)
     rw [mk_ker]
     exact (Submodule.eq_bot_iff _).mpr fun x hx => hP x (mem_comap.mp hx)
 
-variable{p : Ideal R}{P : Ideal S}
+variable {p : Ideal R} {P : Ideal S}
 
 /-- If there is an injective map `R/p → S/P` such that following diagram commutes:
 ```
@@ -165,7 +165,7 @@ end CommRingₓ
 
 section IsDomain
 
-variable{S : Type _}[CommRingₓ S]{f : R →+* S}{I J : Ideal S}
+variable {S : Type _} [CommRingₓ S] {f : R →+* S} {I J : Ideal S}
 
 theorem exists_coeff_ne_zero_mem_comap_of_root_mem [IsDomain S] {r : S} (r_ne_zero : r ≠ 0) (hr : r ∈ I)
   {p : Polynomial R} : ∀ p_ne_zero : p ≠ 0 hp : p.eval₂ f r = 0, ∃ i, p.coeff i ≠ 0 ∧ p.coeff i ∈ I.comap f :=
@@ -236,7 +236,7 @@ theorem is_maximal_of_is_integral_of_is_maximal_comap' (f : R →+* S) (hf : f.i
   [hI' : I.is_prime] (hI : is_maximal (I.comap f)) : is_maximal I :=
   @is_maximal_of_is_integral_of_is_maximal_comap R _ S _ f.to_algebra hf I hI' hI
 
-variable[Algebra R S]
+variable [Algebra R S]
 
 theorem comap_ne_bot_of_algebraic_mem [IsDomain S] {x : S} (x_ne_zero : x ≠ 0) (x_mem : x ∈ I) (hx : IsAlgebraic R x) :
   I.comap (algebraMap R S) ≠ ⊥ :=
@@ -274,9 +274,9 @@ theorem is_maximal_comap_of_is_integral_of_is_maximal' {R S : Type _} [CommRing�
 
 section IsIntegralClosure
 
-variable(S){A : Type _}[CommRingₓ A]
+variable (S) {A : Type _} [CommRingₓ A]
 
-variable[Algebra R A][Algebra A S][IsScalarTower R A S][IsIntegralClosure A R S]
+variable [Algebra R A] [Algebra A S] [IsScalarTower R A S] [IsIntegralClosure A R S]
 
 theorem is_integral_closure.comap_lt_comap {I J : Ideal A} [I.is_prime] (I_lt_J : I < J) :
   I.comap (algebraMap R A) < J.comap (algebraMap _ _) :=
@@ -287,7 +287,7 @@ theorem is_integral_closure.is_maximal_of_is_maximal_comap (I : Ideal A) [I.is_p
   (hI : is_maximal (I.comap (algebraMap R A))) : is_maximal I :=
   is_maximal_of_is_integral_of_is_maximal_comap (fun x => IsIntegralClosure.is_integral R S x) I hI
 
-variable[IsDomain A]
+variable [IsDomain A]
 
 theorem is_integral_closure.comap_ne_bot [Nontrivial R] {I : Ideal A} (I_ne_bot : I ≠ ⊥) :
   I.comap (algebraMap R A) ≠ ⊥ :=
@@ -310,7 +310,7 @@ theorem integral_closure.is_maximal_of_is_maximal_comap (I : Ideal (integralClos
 
 section 
 
-variable[IsDomain S]
+variable [IsDomain S]
 
 theorem integral_closure.comap_ne_bot [Nontrivial R] {I : Ideal (integralClosure R S)} (I_ne_bot : I ≠ ⊥) :
   I.comap (algebraMap R (integralClosure R S)) ≠ ⊥ :=

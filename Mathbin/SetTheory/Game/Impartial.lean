@@ -36,7 +36,7 @@ theorem impartial_aux_def {G : Pgame} :
       exact hi
 
 /-- A typeclass on impartial games. -/
-class impartial(G : Pgame) : Prop where 
+class impartial (G : Pgame) : Prop where 
   out : impartial_aux G
 
 theorem impartial_iff_aux {G : Pgame} : G.impartial ↔ G.impartial_aux :=

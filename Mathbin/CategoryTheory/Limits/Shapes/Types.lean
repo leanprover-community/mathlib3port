@@ -169,7 +169,7 @@ The category of types has `Σ j, f j` as the coproduct of a type family `f : J �
 
 section Fork
 
-variable{X Y Z : Type u}(f : X ⟶ Y){g h : Y ⟶ Z}(w : f ≫ g = f ≫ h)
+variable {X Y Z : Type u} (f : X ⟶ Y) {g h : Y ⟶ Z} (w : f ≫ g = f ≫ h)
 
 /--
 Show the given fork in `Type u` is an equalizer given that any element in the "difference kernel"
@@ -230,7 +230,7 @@ end Fork
 
 section Cofork
 
-variable{X Y Z : Type u}(f g : X ⟶ Y)
+variable {X Y Z : Type u} (f g : X ⟶ Y)
 
 /-- (Implementation) The relation to be quotiented to obtain the coequalizer. -/
 inductive coequalizer_rel : Y → Y → Prop
@@ -262,9 +262,9 @@ open CategoryTheory.Limits.WalkingCospan
 
 open CategoryTheory.Limits.WalkingCospan.Hom
 
-variable{W X Y Z : Type u}
+variable {W X Y Z : Type u}
 
-variable(f : X ⟶ Z)(g : Y ⟶ Z)
+variable (f : X ⟶ Z) (g : Y ⟶ Z)
 
 /--
 The usual explicit pullback in the category of types, as a subtype of the product.
@@ -274,7 +274,7 @@ The full `limit_cone` data is bundled as `pullback_limit_cone f g`.
 abbrev pullback_obj : Type u :=
   { p : X × Y // f p.1 = g p.2 }
 
-example  (p : pullback_obj f g) : X × Y :=
+example (p : pullback_obj f g) : X × Y :=
   p
 
 /--

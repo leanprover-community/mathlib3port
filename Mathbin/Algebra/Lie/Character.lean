@@ -24,13 +24,13 @@ universe u v w w₁
 
 namespace LieAlgebra
 
-variable(R : Type u)(L : Type v)[CommRingₓ R][LieRing L][LieAlgebra R L]
+variable (R : Type u) (L : Type v) [CommRingₓ R] [LieRing L] [LieAlgebra R L]
 
 /-- A character of a Lie algebra is a morphism to the scalars. -/
 abbrev lie_character :=
   L →ₗ⁅R⁆ R
 
-variable{R L}
+variable {R L}
 
 @[simp]
 theorem lie_character_apply_lie (χ : lie_character R L) (x y : L) : χ ⁅x,y⁆ = 0 :=

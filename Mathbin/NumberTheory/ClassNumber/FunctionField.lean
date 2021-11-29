@@ -17,13 +17,13 @@ cardinality of the class group of its ring of integers
 
 namespace FunctionField
 
-variable(Fq F : Type)[Field Fq][Fintype Fq][Field F]
+variable (Fq F : Type) [Field Fq] [Fintype Fq] [Field F]
 
-variable[Algebra (Polynomial Fq) F][Algebra (Ratfunc Fq) F]
+variable [Algebra (Polynomial Fq) F] [Algebra (Ratfunc Fq) F]
 
-variable[IsScalarTower (Polynomial Fq) (Ratfunc Fq) F]
+variable [IsScalarTower (Polynomial Fq) (Ratfunc Fq) F]
 
-variable[FunctionField Fq F][IsSeparable (Ratfunc Fq) F]
+variable [FunctionField Fq F] [IsSeparable (Ratfunc Fq) F]
 
 open_locale Classical
 
@@ -31,7 +31,7 @@ namespace RingOfIntegers
 
 open FunctionField
 
-noncomputable instance  : Fintype (ClassGroup (ring_of_integers Fq F) F) :=
+noncomputable instance : Fintype (ClassGroup (ring_of_integers Fq F) F) :=
   ClassGroup.fintypeOfAdmissibleOfFinite (Ratfunc Fq) F
     (Polynomial.cardPowDegreeIsAdmissible :
     AbsoluteValue.IsAdmissible (Polynomial.cardPowDegree : AbsoluteValue (Polynomial Fq) ℤ))

@@ -25,7 +25,7 @@ open Nat Function
 
 namespace List
 
-variable{α β : Type _}{R : α → α → Prop}
+variable {α β : Type _} {R : α → α → Prop}
 
 mk_iff_of_inductive_prop List.Pairwise List.pairwise_iff
 
@@ -359,7 +359,7 @@ by have [] [] [":=", expr pairwise_sublists' (pairwise_reverse.2 H)]; rwa ["[", 
 /-! ### Pairwise filtering -/
 
 
-variable[DecidableRel R]
+variable [DecidableRel R]
 
 @[simp]
 theorem pw_filter_nil : pw_filter R [] = [] :=

@@ -55,7 +55,7 @@ open_locale Classical BigOperators Nnreal TopologicalSpace Ennreal
 namespace MeasureTheory
 
 /-- An outer measure is a countably subadditive monotone function that sends `∅` to `0`. -/
-structure outer_measure(α : Type _) where 
+structure outer_measure (α : Type _) where 
   measureOf : Set α → ℝ≥0∞
   Empty : measure_of ∅ = 0
   mono : ∀ {s₁ s₂}, s₁ ⊆ s₂ → measure_of s₁ ≤ measure_of s₂ 
@@ -65,9 +65,9 @@ namespace OuterMeasure
 
 section Basic
 
-variable{α : Type _}{β : Type _}{ms : Set (outer_measure α)}{m : outer_measure α}
+variable {α : Type _} {β : Type _} {ms : Set (outer_measure α)} {m : outer_measure α}
 
-instance  : CoeFun (outer_measure α) fun _ => Set α → ℝ≥0∞ :=
+instance : CoeFun (outer_measure α) fun _ => Set α → ℝ≥0∞ :=
   ⟨fun m => m.measure_of⟩
 
 @[simp]
@@ -189,17 +189,17 @@ theorem ext_nonempty {μ₁ μ₂ : outer_measure α} (h : ∀ s : Set α, s.non
             rw [he, empty', empty'])
         (h s)
 
-instance  : HasZero (outer_measure α) :=
+instance : HasZero (outer_measure α) :=
   ⟨{ measureOf := fun _ => 0, Empty := rfl, mono := fun _ _ _ => le_reflₓ 0, Union_nat := fun s => zero_le _ }⟩
 
 @[simp]
 theorem coe_zero : «expr⇑ » (0 : outer_measure α) = 0 :=
   rfl
 
-instance  : Inhabited (outer_measure α) :=
+instance : Inhabited (outer_measure α) :=
   ⟨0⟩
 
-instance  : Add (outer_measure α) :=
+instance : Add (outer_measure α) :=
   ⟨fun m₁ m₂ =>
       { measureOf := fun s => m₁ s+m₂ s,
         Empty :=
@@ -224,7 +224,7 @@ instance AddCommMonoidₓ : AddCommMonoidₓ (outer_measure α) :=
   { injective.add_comm_monoid (show outer_measure α → Set α → ℝ≥0∞ from coeFn) coe_fn_injective rfl fun _ _ => rfl with
     zero := 0, add := ·+· }
 
-instance  : HasScalar ℝ≥0∞ (outer_measure α) :=
+instance : HasScalar ℝ≥0∞ (outer_measure α) :=
   ⟨fun c m =>
       { measureOf := fun s => c*m s,
         Empty :=
@@ -244,12 +244,12 @@ theorem coe_smul (c : ℝ≥0∞) (m : outer_measure α) : «expr⇑ » (c • m
 theorem smul_apply (c : ℝ≥0∞) (m : outer_measure α) (s : Set α) : (c • m) s = c*m s :=
   rfl
 
-instance  : Module ℝ≥0∞ (outer_measure α) :=
+instance : Module ℝ≥0∞ (outer_measure α) :=
   { injective.module ℝ≥0∞ ⟨show outer_measure α → Set α → ℝ≥0∞ from coeFn, coe_zero, coe_add⟩ coe_fn_injective
       coe_smul with
     smul := · • · }
 
-instance  : HasBot (outer_measure α) :=
+instance : HasBot (outer_measure α) :=
   ⟨0⟩
 
 @[simp]
@@ -270,7 +270,7 @@ instance outer_measure.order_bot : OrderBot (outer_measure α) :=
 
 section Supremum
 
-instance  : HasSupₓ (outer_measure α) :=
+instance : HasSupₓ (outer_measure α) :=
   ⟨fun ms =>
       { measureOf := fun s => ⨆(m : _)(_ : m ∈ ms), (m : outer_measure α) s,
         Empty := nonpos_iff_eq_zero.1$ bsupr_le$ fun m h => le_of_eqₓ m.empty,
@@ -284,7 +284,7 @@ instance  : HasSupₓ (outer_measure α) :=
                   Ennreal.tsum_le_tsum$ fun i => le_bsupr m hm
                    }⟩
 
-instance  : CompleteLattice (outer_measure α) :=
+instance : CompleteLattice (outer_measure α) :=
   { outer_measure.order_bot,
     completeLatticeOfSup (outer_measure α)
       fun ms => ⟨fun m hm s => le_bsupr m hm, fun m hm s => bsupr_le fun m' hm' => hm hm' s⟩ with
@@ -366,10 +366,10 @@ theorem map_supr {β ι} (f : α → β) (m : ι → outer_measure α) : map f (
       by 
         simp only [map_apply, supr_apply]
 
-instance  : Functor outer_measure :=
+instance : Functor outer_measure :=
   { map := fun α β f => map f }
 
-instance  : IsLawfulFunctor outer_measure :=
+instance : IsLawfulFunctor outer_measure :=
   { id_map := fun α => map_id, comp_map := fun α β γ f g m => (map_map f g m).symm }
 
 /-- The dirac outer measure. -/
@@ -558,7 +558,7 @@ section OfFunction
 
 set_option eqn_compiler.zeta true
 
-variable{α : Type _}(m : Set α → ℝ≥0∞)(m_empty : m ∅ = 0)
+variable {α : Type _} (m : Set α → ℝ≥0∞) (m_empty : m ∅ = 0)
 
 include m_empty
 
@@ -597,7 +597,7 @@ theorem of_function_apply (s : Set α) :
   outer_measure.of_function m m_empty s = ⨅(t : ℕ → Set α)(h : s ⊆ Union t), ∑'n, m (t n) :=
   rfl
 
-variable{m m_empty}
+variable {m m_empty}
 
 theorem of_function_le (s : Set α) : outer_measure.of_function m m_empty s ≤ m s :=
   let f : ℕ → Set α := fun i => Nat.casesOn i s fun _ => ∅
@@ -727,7 +727,7 @@ end OfFunction
 
 section BoundedBy
 
-variable{α : Type _}(m : Set α → ℝ≥0∞)
+variable {α : Type _} (m : Set α → ℝ≥0∞)
 
 /-- Given any function `m` assigning measures to sets, there is a unique maximal outer measure `μ`
   satisfying `μ s ≤ m s` for all `s : set α`. This is the same as `outer_measure.of_function`,
@@ -737,7 +737,7 @@ def bounded_by : outer_measure α :=
     (by 
       simp [empty_not_nonempty])
 
-variable{m}
+variable {m}
 
 theorem bounded_by_le (s : Set α) : bounded_by m s ≤ m s :=
   (of_function_le _).trans supr_const_le
@@ -825,7 +825,7 @@ include m
 
 attribute [local simp] Set.inter_comm Set.inter_left_comm Set.inter_assoc
 
-variable{s s₁ s₂ : Set α}
+variable {s s₁ s₂ : Set α}
 
 /-- A set `s` is Carathéodory-measurable for an outer measure `m` if for all sets `t` we have
   `m t = m (t ∩ s) + m (t \ s)`. -/
@@ -946,7 +946,7 @@ protected theorem Union_eq_of_caratheodory {s : ℕ → Set α} (h : ∀ i, cara
 
 end CaratheodoryMeasurable
 
-variable{α : Type _}
+variable {α : Type _}
 
 theorem of_function_caratheodory {m : Set α → ℝ≥0∞} {s : Set α} {h₀ : m ∅ = 0} (hs : ∀ t, (m (t ∩ s)+m (t \ s)) ≤ m t) :
   (outer_measure.of_function m h₀).caratheodory.MeasurableSet' s :=
@@ -1214,9 +1214,9 @@ open OuterMeasure
 
 section Extend
 
-variable{α : Type _}{P : α → Prop}
+variable {α : Type _} {P : α → Prop}
 
-variable(m : ∀ s : α, P s → ℝ≥0∞)
+variable (m : ∀ s : α, P s → ℝ≥0∞)
 
 /-- We can trivially extend a function defined on a subclass of objects (with codomain `ℝ≥0∞`)
   to all objects by defining it to be `∞` on the objects not in the class. -/
@@ -1245,19 +1245,20 @@ end Extend
 
 section ExtendSet
 
-variable{α : Type _}{P : Set α → Prop}
+variable {α : Type _} {P : Set α → Prop}
 
-variable{m : ∀ s : Set α, P s → ℝ≥0∞}
+variable {m : ∀ s : Set α, P s → ℝ≥0∞}
 
-variable(P0 : P ∅)(m0 : m ∅ P0 = 0)
+variable (P0 : P ∅) (m0 : m ∅ P0 = 0)
 
-variable(PU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), P (⋃i, f i))
+variable (PU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), P (⋃i, f i))
 
-variable(mU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), Pairwise (Disjoint on f) → m (⋃i, f i) (PU hm) = ∑'i, m (f i) (hm i))
+variable
+  (mU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), Pairwise (Disjoint on f) → m (⋃i, f i) (PU hm) = ∑'i, m (f i) (hm i))
 
-variable(msU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), m (⋃i, f i) (PU hm) ≤ ∑'i, m (f i) (hm i))
+variable (msU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), m (⋃i, f i) (PU hm) ≤ ∑'i, m (f i) (hm i))
 
-variable(m_mono : ∀ ⦃s₁ s₂ : Set α⦄ hs₁ : P s₁ hs₂ : P s₂, s₁ ⊆ s₂ → m s₁ hs₁ ≤ m s₂ hs₂)
+variable (m_mono : ∀ ⦃s₁ s₂ : Set α⦄ hs₁ : P s₁ hs₂ : P s₂, s₁ ⊆ s₂ → m s₁ hs₁ ≤ m s₂ hs₂)
 
 theorem extend_empty : extend m ∅ = 0 :=
   (extend_eq _ P0).trans m0
@@ -1326,14 +1327,14 @@ theorem extend_union {s₁ s₂ : Set α} (hd : Disjoint s₁ s₂) (h₁ : P s�
 
 end Unions
 
-variable(m)
+variable (m)
 
 /-- Given an arbitrary function on a subset of sets, we can define the outer measure corresponding
   to it (this is the unique maximal outer measure that is at most `m` on the domain of `m`). -/
 def induced_outer_measure : outer_measure α :=
   outer_measure.of_function (extend m) (extend_empty P0 m0)
 
-variable{m P0 m0}
+variable {m P0 m0}
 
 theorem le_induced_outer_measure {μ : outer_measure α} :
   μ ≤ induced_outer_measure m P0 m0 ↔ ∀ s hs : P s, μ s ≤ m s hs :=
@@ -1444,13 +1445,14 @@ end ExtendSet
 
 section MeasurableSpace
 
-variable{α : Type _}[MeasurableSpace α]
+variable {α : Type _} [MeasurableSpace α]
 
-variable{m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞}
+variable {m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞}
 
-variable(m0 : m ∅ MeasurableSet.empty = 0)
+variable (m0 : m ∅ MeasurableSet.empty = 0)
 
-variable(mU :
+variable
+  (mU :
     ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, MeasurableSet (f i),
       Pairwise (Disjoint on f) → m (⋃i, f i) (MeasurableSet.Union hm) = ∑'i, m (f i) (hm i))
 
@@ -1495,7 +1497,7 @@ end MeasurableSpace
 
 namespace OuterMeasure
 
-variable{α : Type _}[MeasurableSpace α](m : outer_measure α)
+variable {α : Type _} [MeasurableSpace α] (m : outer_measure α)
 
 /-- Given an outer measure `m` we can forget its value on non-measurable sets, and then consider
   `m.trim`, the unique maximal outer measure less than that function. -/

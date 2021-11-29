@@ -19,7 +19,7 @@ rotated, rotation, permutation, cycle
 
 universe u
 
-variable{α : Type u}
+variable {α : Type u}
 
 open Nat
 
@@ -435,7 +435,7 @@ end
 
 section IsRotated
 
-variable(l l' : List α)
+variable (l l' : List α)
 
 /-- `is_rotated l₁ l₂` or `l₁ ~r l₂` asserts that `l₁` and `l₂` are cyclic permutations
   of each other. This is defined by claiming that `∃ n, l.rotate n = l'`. -/
@@ -444,7 +444,7 @@ def is_rotated : Prop :=
 
 infixr:1000 " ~r " => is_rotated
 
-variable{l l'}
+variable {l l'}
 
 @[refl]
 theorem is_rotated.refl (l : List α) : l ~r l :=
@@ -744,12 +744,12 @@ end
 
 section Decidable
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 instance is_rotated_decidable (l l' : List α) : Decidable (l ~r l') :=
   decidableOfIff' _ is_rotated_iff_mem_map_range
 
-instance  {l l' : List α} : Decidable (@Setoidₓ.R _ (is_rotated.setoid α) l l') :=
+instance {l l' : List α} : Decidable (@Setoidₓ.R _ (is_rotated.setoid α) l l') :=
   List.isRotatedDecidable _ _
 
 end Decidable

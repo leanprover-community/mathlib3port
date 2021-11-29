@@ -34,7 +34,7 @@ Partition
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 open Multiset
 
@@ -91,7 +91,7 @@ def of_multiset (l : Multiset ℕ) : partition l.sum :=
 def indiscrete_partition (n : ℕ) : partition n :=
   of_sums n {n} rfl
 
-instance  {n : ℕ} : Inhabited (partition n) :=
+instance {n : ℕ} : Inhabited (partition n) :=
   ⟨indiscrete_partition n⟩
 
 /--
@@ -111,7 +111,7 @@ theorem count_of_sums_zero {n : ℕ} {l : Multiset ℕ} (hl : l.sum = n) : (of_s
 Show there are finitely many partitions by considering the surjection from compositions to
 partitions.
 -/
-instance  (n : ℕ) : Fintype (partition n) :=
+instance (n : ℕ) : Fintype (partition n) :=
   Fintype.ofSurjective (of_composition n) of_composition_surj
 
 /-- The finset of those partitions in which every part is odd. -/

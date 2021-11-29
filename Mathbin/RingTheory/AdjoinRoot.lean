@@ -41,7 +41,7 @@ open_locale BigOperators
 
 universe u v w
 
-variable{R : Type u}{S : Type v}{K : Type w}
+variable {R : Type u} {S : Type v} {K : Type w}
 
 open Polynomial Ideal
 
@@ -54,15 +54,15 @@ namespace AdjoinRoot
 
 section CommRingₓ
 
-variable[CommRingₓ R](f : Polynomial R)
+variable [CommRingₓ R] (f : Polynomial R)
 
-instance  : CommRingₓ (AdjoinRoot f) :=
+instance : CommRingₓ (AdjoinRoot f) :=
   Ideal.Quotient.commRing _
 
-instance  : Inhabited (AdjoinRoot f) :=
+instance : Inhabited (AdjoinRoot f) :=
   ⟨0⟩
 
-instance  : DecidableEq (AdjoinRoot f) :=
+instance : DecidableEq (AdjoinRoot f) :=
   Classical.decEq _
 
 /-- Ring homomorphism from `R[x]` to `adjoin_root f` sending `X` to the `root`. -/
@@ -77,14 +77,14 @@ theorem induction_on {C : AdjoinRoot f → Prop} (x : AdjoinRoot f) (ih : ∀ p 
 def of : R →+* AdjoinRoot f :=
   (mk f).comp C
 
-instance  [CommSemiringₓ S] [Algebra S R] : Algebra S (AdjoinRoot f) :=
+instance [CommSemiringₓ S] [Algebra S R] : Algebra S (AdjoinRoot f) :=
   Ideal.Quotient.algebra S
 
-instance  [CommSemiringₓ S] [CommSemiringₓ K] [HasScalar S K] [Algebra S R] [Algebra K R] [IsScalarTower S K R] :
+instance [CommSemiringₓ S] [CommSemiringₓ K] [HasScalar S K] [Algebra S R] [Algebra K R] [IsScalarTower S K R] :
   IsScalarTower S K (AdjoinRoot f) :=
   Submodule.Quotient.is_scalar_tower _ _
 
-instance  [CommSemiringₓ S] [CommSemiringₓ K] [Algebra S R] [Algebra K R] [SmulCommClass S K R] :
+instance [CommSemiringₓ S] [CommSemiringₓ K] [Algebra S R] [Algebra K R] [SmulCommClass S K R] :
   SmulCommClass S K (AdjoinRoot f) :=
   Submodule.Quotient.smul_comm_class _ _
 
@@ -92,18 +92,18 @@ instance  [CommSemiringₓ S] [CommSemiringₓ K] [Algebra S R] [Algebra K R] [S
 theorem algebra_map_eq : algebraMap R (AdjoinRoot f) = of f :=
   rfl
 
-variable(S)
+variable (S)
 
 theorem algebra_map_eq' [CommSemiringₓ S] [Algebra S R] : algebraMap S (AdjoinRoot f) = (of f).comp (algebraMap S R) :=
   rfl
 
-variable{S}
+variable {S}
 
 /-- The adjoined root. -/
 def root : AdjoinRoot f :=
   mk f X
 
-variable{f}
+variable {f}
 
 instance adjoin_root.has_coe_t : CoeTₓ R (AdjoinRoot f) :=
   ⟨of f⟩
@@ -158,7 +158,7 @@ theorem is_root_root (f : Polynomial R) : is_root (f.map (of f)) (root f) :=
 theorem is_algebraic_root (hf : f ≠ 0) : IsAlgebraic R (root f) :=
   ⟨f, hf, eval₂_root f⟩
 
-variable[CommRingₓ S]
+variable [CommRingₓ S]
 
 /-- Lift a ring homomorphism `i : R →+* S` to `adjoin_root f →+* S`. -/
 def lift (i : R →+* S) (x : S) (h : f.eval₂ i x = 0) : AdjoinRoot f →+* S :=
@@ -168,7 +168,7 @@ def lift (i : R →+* S) (x : S) (h : f.eval₂ i x = 0) : AdjoinRoot f →+* S 
     rcases mem_span_singleton.1 H with ⟨y, hy⟩
     rw [hy, RingHom.map_mul, coe_eval₂_ring_hom, h, zero_mul]
 
-variable{i : R →+* S}{a : S}(h : f.eval₂ i a = 0)
+variable {i : R →+* S} {a : S} (h : f.eval₂ i a = 0)
 
 @[simp]
 theorem lift_mk (g : Polynomial R) : lift i a h (mk f g) = g.eval₂ i a :=
@@ -188,7 +188,7 @@ theorem lift_of {x : R} : lift i a h x = i x :=
 theorem lift_comp_of : (lift i a h).comp (of f) = i :=
   RingHom.ext$ fun _ => @lift_of _ _ _ _ _ _ _ h _
 
-variable(f)[Algebra R S]
+variable (f) [Algebra R S]
 
 /-- Produce an algebra homomorphism `adjoin_root f →ₐ[R] S` sending `root f` to
 a root of `f` in `S`. -/
@@ -218,7 +218,7 @@ theorem lift_hom_eq_alg_hom (f : Polynomial R) (ϕ : AdjoinRoot f →ₐ[R] S) :
     rw [eq_top_iff, ←adjoin_root_eq_top, Algebra.adjoin_le_iff, Set.singleton_subset_iff]
     exact (@lift_root _ _ _ _ _ _ _ (aeval_alg_hom_eq_zero f ϕ)).symm
 
-variable(hfx : aeval a f = 0)
+variable (hfx : aeval a f = 0)
 
 @[simp]
 theorem lift_hom_mk {g : Polynomial R} : lift_hom f a hfx (mk f g) = aeval a g :=
@@ -236,7 +236,7 @@ end CommRingₓ
 
 section Irreducible
 
-variable[Field K]{f : Polynomial K}[Irreducible f]
+variable [Field K] {f : Polynomial K} [Irreducible f]
 
 instance is_maximal_span : is_maximal (span {f} : Ideal (Polynomial K)) :=
   PrincipalIdealRing.is_maximal_of_irreducible ‹Irreducible f›
@@ -247,7 +247,7 @@ noncomputable instance Field : Field (AdjoinRoot f) :=
 theorem coe_injective : Function.Injective (coeₓ : K → AdjoinRoot f) :=
   (of f).Injective
 
-variable(f)
+variable (f)
 
 theorem mul_div_root_cancel :
   ((X - C (root f))*f.map (of f) / (X - C (root f)) : Polynomial (AdjoinRoot f)) = f.map (of f) :=
@@ -257,7 +257,7 @@ end Irreducible
 
 section PowerBasis
 
-variable[CommRingₓ R]{g : Polynomial R}
+variable [CommRingₓ R] {g : Polynomial R}
 
 theorem is_integral_root' (hg : g.monic) : IsIntegral R (root g) :=
   ⟨g, hg, eval₂_root g⟩
@@ -342,7 +342,7 @@ def power_basis' [nontrivial R] (hg : g.monic) : power_basis R (adjoin_root g) :
       contradiction }
   end }
 
-variable[Field K]{f : Polynomial K}
+variable [Field K] {f : Polynomial K}
 
 theorem is_integral_root (hf : f ≠ 0) : IsIntegral K (root f) :=
   (is_algebraic_iff_is_integral _).mp (is_algebraic_root hf)
@@ -413,9 +413,9 @@ section Equiv
 
 section IsDomain
 
-variable[CommRingₓ R][IsDomain R][CommRingₓ S][IsDomain S][Algebra R S]
+variable [CommRingₓ R] [IsDomain R] [CommRingₓ S] [IsDomain S] [Algebra R S]
 
-variable(g : Polynomial R)(pb : _root_.power_basis R S)
+variable (g : Polynomial R) (pb : _root_.power_basis R S)
 
 /-- If `S` is an extension of `R` with power basis `pb` and `g` is a monic polynomial over `R`
 such that `pb.gen` has a minimal polynomial `g`, then `S` is isomorphic to `adjoin_root g`.
@@ -452,9 +452,9 @@ end IsDomain
 
 section Field
 
-variable(K)(L F : Type _)[Field F][Field K][Field L][Algebra F K][Algebra F L]
+variable (K) (L F : Type _) [Field F] [Field K] [Field L] [Algebra F K] [Algebra F L]
 
-variable(pb : _root_.power_basis F K)
+variable (pb : _root_.power_basis F K)
 
 /-- If `L` is a field extension of `F` and `f` is a polynomial over `F` then the set
 of maps from `F[x]/(f)` into `L` is in bijection with the set of roots of `f` in `L`. -/

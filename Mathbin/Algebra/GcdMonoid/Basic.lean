@@ -56,12 +56,12 @@ divisibility, gcd, lcm, normalize
 -/
 
 
-variable{α : Type _}
+variable {α : Type _}
 
 /-- Normalization monoid: multiplying with `norm_unit` gives a normal form for associated
 elements. -/
 @[protectProj]
-class NormalizationMonoid(α : Type _)[CommCancelMonoidWithZero α] where 
+class NormalizationMonoid (α : Type _) [CommCancelMonoidWithZero α] where 
   normUnit : α → Units α 
   norm_unit_zero : norm_unit 0 = 1
   norm_unit_mul : ∀ {a b}, a ≠ 0 → b ≠ 0 → norm_unit (a*b) = norm_unit a*norm_unit b 
@@ -73,7 +73,7 @@ attribute [simp] norm_unit_coe_units norm_unit_zero norm_unit_mul
 
 section NormalizationMonoid
 
-variable[CommCancelMonoidWithZero α][NormalizationMonoid α]
+variable [CommCancelMonoidWithZero α] [NormalizationMonoid α]
 
 @[simp]
 theorem norm_unit_one : norm_unit (1 : α) = 1 :=
@@ -185,7 +185,7 @@ end NormalizationMonoid
 
 namespace Associates
 
-variable[CommCancelMonoidWithZero α][NormalizationMonoid α]
+variable [CommCancelMonoidWithZero α] [NormalizationMonoid α]
 
 attribute [local instance] Associated.setoid
 
@@ -232,7 +232,7 @@ end Associates
 and we derive the corresponding `lcm` facts from `gcd`.
 -/
 @[protectProj]
-class GcdMonoid(α : Type _)[CommCancelMonoidWithZero α] where 
+class GcdMonoid (α : Type _) [CommCancelMonoidWithZero α] where 
   gcd : α → α → α 
   lcm : α → α → α 
   gcd_dvd_left : ∀ a b, gcd a b ∣ a 
@@ -248,7 +248,7 @@ class GcdMonoid(α : Type _)[CommCancelMonoidWithZero α] where
 supremum, `1` is bottom, and `0` is top. The type class focuses on `gcd` and we derive the
 corresponding `lcm` facts from `gcd`.
 -/
-class NormalizedGcdMonoid(α : Type _)[CommCancelMonoidWithZero α] extends NormalizationMonoid α, GcdMonoid α where 
+class NormalizedGcdMonoid (α : Type _) [CommCancelMonoidWithZero α] extends NormalizationMonoid α, GcdMonoid α where 
   normalize_gcd : ∀ a b, normalize (gcd a b) = gcd a b 
   normalize_lcm : ∀ a b, normalize (lcm a b) = lcm a b
 
@@ -258,7 +258,7 @@ attribute [simp] lcm_zero_left lcm_zero_right
 
 section GcdMonoid
 
-variable[CommCancelMonoidWithZero α]
+variable [CommCancelMonoidWithZero α]
 
 @[simp]
 theorem normalize_gcd [NormalizedGcdMonoid α] : ∀ a b : α, normalize (gcd a b) = gcd a b :=
@@ -294,10 +294,10 @@ theorem gcd_assoc' [GcdMonoid α] (m n k : α) : Associated (gcd (gcd m n) k) (g
     (dvd_gcd (dvd_gcd (gcd_dvd_left m (gcd n k)) ((gcd_dvd_right m (gcd n k)).trans (gcd_dvd_left n k)))
       ((gcd_dvd_right m (gcd n k)).trans (gcd_dvd_right n k)))
 
-instance  [NormalizedGcdMonoid α] : IsCommutative α gcd :=
+instance [NormalizedGcdMonoid α] : IsCommutative α gcd :=
   ⟨gcd_comm⟩
 
-instance  [NormalizedGcdMonoid α] : IsAssociative α gcd :=
+instance [NormalizedGcdMonoid α] : IsAssociative α gcd :=
   ⟨gcd_assoc⟩
 
 theorem gcd_eq_normalize [NormalizedGcdMonoid α] {a b c : α} (habc : gcd a b ∣ c) (hcab : c ∣ gcd a b) :
@@ -646,10 +646,10 @@ theorem lcm_assoc' [GcdMonoid α] (m n k : α) : Associated (lcm (lcm m n) k) (l
     (lcm_dvd ((dvd_lcm_left _ _).trans (dvd_lcm_left _ _))
       (lcm_dvd ((dvd_lcm_right _ _).trans (dvd_lcm_left _ _)) (dvd_lcm_right _ _)))
 
-instance  [NormalizedGcdMonoid α] : IsCommutative α lcm :=
+instance [NormalizedGcdMonoid α] : IsCommutative α lcm :=
   ⟨lcm_comm⟩
 
-instance  [NormalizedGcdMonoid α] : IsAssociative α lcm :=
+instance [NormalizedGcdMonoid α] : IsAssociative α lcm :=
   ⟨lcm_assoc⟩
 
 theorem lcm_eq_normalize [NormalizedGcdMonoid α] {a b c : α} (habc : lcm a b ∣ c) (hcab : c ∣ lcm a b) :
@@ -766,9 +766,9 @@ end GcdMonoid
 
 section UniqueUnit
 
-variable[CommCancelMonoidWithZero α][Unique (Units α)]
+variable [CommCancelMonoidWithZero α] [Unique (Units α)]
 
-instance (priority := 100)normalizationMonoidOfUniqueUnits : NormalizationMonoid α :=
+instance (priority := 100) normalizationMonoidOfUniqueUnits : NormalizationMonoid α :=
   { normUnit := fun x => 1, norm_unit_zero := rfl, norm_unit_mul := fun x y hx hy => (mul_oneₓ 1).symm,
     norm_unit_coe_units := fun u => Subsingleton.elimₓ _ _ }
 
@@ -784,7 +784,7 @@ end UniqueUnit
 
 section IsDomain
 
-variable[CommRingₓ α][IsDomain α][NormalizedGcdMonoid α]
+variable [CommRingₓ α] [IsDomain α] [NormalizedGcdMonoid α]
 
 theorem gcd_eq_of_dvd_sub_right {a b c : α} (h : a ∣ b - c) : gcd a b = gcd a c :=
   by 
@@ -815,7 +815,7 @@ noncomputable theory
 
 open Associates
 
-variable[CommCancelMonoidWithZero α]
+variable [CommCancelMonoidWithZero α]
 
 private theorem map_mk_unit_aux [DecidableEq α] {f : Associates α →* α} (hinv : Function.RightInverse f Associates.mk)
   (a : α) : (a*«expr↑ » (Classical.some (associated_map_mk hinv a))) = f (Associates.mk a) :=
@@ -1104,7 +1104,7 @@ end Constructors
 
 namespace CommGroupWithZero
 
-variable(G₀ : Type _)[CommGroupWithZero G₀][DecidableEq G₀]
+variable (G₀ : Type _) [CommGroupWithZero G₀] [DecidableEq G₀]
 
 instance (priority := 100) : NormalizedGcdMonoid G₀ :=
   { normUnit := fun x => if h : x = 0 then 1 else Units.mk0 x h⁻¹, norm_unit_zero := dif_pos rfl,

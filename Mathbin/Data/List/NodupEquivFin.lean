@@ -24,7 +24,7 @@ Given a list `l`,
 
 namespace List
 
-variable{α : Type _}
+variable {α : Type _}
 
 namespace Nodup
 
@@ -39,7 +39,7 @@ def nth_le_bijection_of_forall_mem_list (l : List α) (nd : l.nodup) (h : ∀ x 
       let ⟨i, hi, hl⟩ := List.mem_iff_nth_le.1 (h x)
       ⟨⟨i, hi⟩, hl⟩⟩
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- If `l` has no duplicates, then `list.nth_le` defines an equivalence between `fin (length l)` and
 the set of elements of `l`. -/
@@ -77,7 +77,7 @@ end Nodup
 
 namespace Sorted
 
-variable[Preorderₓ α]{l : List α}
+variable [Preorderₓ α] {l : List α}
 
 theorem nth_le_mono (h : l.sorted (· ≤ ·)) : Monotone fun i : Finₓ l.length => l.nth_le i i.2 :=
   fun i j => h.rel_nth_le_of_le _ _
@@ -85,14 +85,14 @@ theorem nth_le_mono (h : l.sorted (· ≤ ·)) : Monotone fun i : Finₓ l.lengt
 theorem nth_le_strict_mono (h : l.sorted (· < ·)) : StrictMono fun i : Finₓ l.length => l.nth_le i i.2 :=
   fun i j => h.rel_nth_le_of_lt _ _
 
-variable[DecidableEq α]
+variable [DecidableEq α]
 
 /-- If `l` is a list sorted w.r.t. `(<)`, then `list.nth_le` defines an order isomorphism between
 `fin (length l)` and the set of elements of `l`. -/
 def nth_le_iso (l : List α) (H : sorted (· < ·) l) : Finₓ (length l) ≃o { x // x ∈ l } :=
   { toEquiv := H.nodup.nth_le_equiv l, map_rel_iff' := fun i j => H.nth_le_strict_mono.le_iff_le }
 
-variable(H : sorted (· < ·) l){x : { x // x ∈ l }}{i : Finₓ l.length}
+variable (H : sorted (· < ·) l) {x : { x // x ∈ l }} {i : Finₓ l.length}
 
 @[simp]
 theorem coe_nth_le_iso_apply : (H.nth_le_iso l i : α) = nth_le l i i.2 :=

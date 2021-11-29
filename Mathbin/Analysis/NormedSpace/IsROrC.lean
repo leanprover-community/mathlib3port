@@ -29,7 +29,7 @@ theorem IsROrC.norm_coe_norm {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedG
     unfoldCoes 
     simp only [norm_algebra_map_eq, RingHom.to_fun_eq_coe, norm_norm]
 
-variable{𝕜 : Type _}[IsROrC 𝕜]{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]
+variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
 -- error in Analysis.NormedSpace.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem linear_map.bound_of_sphere_bound

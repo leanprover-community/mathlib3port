@@ -8,13 +8,13 @@ sum of elements of a list. These are defined in [`data.list.defs`](./data/list/d
 -/
 
 
-variable{α β γ : Type _}
+variable {α β γ : Type _}
 
 namespace List
 
 section Monoidₓ
 
-variable[Monoidₓ α]{l l₁ l₂ : List α}{a : α}
+variable [Monoidₓ α] {l l₁ l₂ : List α} {a : α}
 
 @[simp, toAdditive]
 theorem prod_nil : ([] : List α).Prod = 1 :=
@@ -177,7 +177,7 @@ end Monoidₓ
 
 section Groupₓ
 
-variable[Groupₓ α]
+variable [Groupₓ α]
 
 /-- This is the `list.prod` version of `mul_inv_rev` -/
 @[toAdditive "This is the `list.sum` version of `add_neg_rev`"]
@@ -208,7 +208,7 @@ end Groupₓ
 
 section CommGroupₓ
 
-variable[CommGroupₓ α]
+variable [CommGroupₓ α]
 
 /-- This is the `list.prod` version of `mul_inv` -/
 @[toAdditive "This is the `list.sum` version of `add_neg`"]
@@ -458,7 +458,7 @@ theorem tail_sum (L : List ℕ) : L.tail.sum = L.sum - L.head :=
 
 section Alternating
 
-variable{G : Type _}[CommGroupₓ G]
+variable {G : Type _} [CommGroupₓ G]
 
 @[simp, toAdditive]
 theorem alternating_prod_nil : alternating_prod ([] : List G) = 1 :=

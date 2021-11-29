@@ -88,11 +88,8 @@ theorem fact_one_le_top_ennreal : Fact ((1 : ℝ≥0∞) ≤ ∞) :=
 
 attribute [local instance] fact_one_le_one_ennreal fact_one_le_two_ennreal fact_one_le_top_ennreal
 
-variable{α E F G :
-    Type
-      _}{m m0 :
-    MeasurableSpace
-      α}{p : ℝ≥0∞}{q : ℝ}{μ ν : Measureₓ α}[MeasurableSpace E][NormedGroup E][NormedGroup F][NormedGroup G]
+variable {α E F G : Type _} {m m0 : MeasurableSpace α} {p : ℝ≥0∞} {q : ℝ} {μ ν : Measureₓ α} [MeasurableSpace E]
+  [NormedGroup E] [NormedGroup F] [NormedGroup G]
 
 namespace MeasureTheory
 
@@ -266,7 +263,7 @@ theorem zero_mem_ℒp' : mem_ℒp (fun x : α => (0 : E)) p μ :=
   by 
     convert zero_mem_ℒp
 
-variable[MeasurableSpace α]
+variable [MeasurableSpace α]
 
 theorem snorm'_measure_zero_of_pos {f : α → F} (hq_pos : 0 < q) : snorm' f q (0 : Measureₓ α) = 0 :=
   by 
@@ -660,7 +657,7 @@ theorem snorm_one_smul_measure {f : α → F} (c : ℝ≥0∞) : snorm f 1 (c �
 
 section OpensMeasurableSpace
 
-variable[OpensMeasurableSpace E]
+variable [OpensMeasurableSpace E]
 
 theorem mem_ℒp.norm {f : α → E} (h : mem_ℒp f p μ) : mem_ℒp (fun x => ∥f x∥) p μ :=
   h.of_le h.ae_measurable.norm
@@ -922,7 +919,7 @@ theorem snorm_neg {f : α → F} : snorm (-f) p μ = snorm f p μ :=
 
 section BorelSpace
 
-variable[BorelSpace E]
+variable [BorelSpace E]
 
 theorem mem_ℒp.neg {f : α → E} (hf : mem_ℒp f p μ) : mem_ℒp (-f) p μ :=
   ⟨AeMeasurable.neg hf.1,
@@ -1117,7 +1114,7 @@ theorem snorm_sum_le [second_countable_topology E] {ι} {f : ι → α → E} {s
 
 section SecondCountableTopology
 
-variable[second_countable_topology E]
+variable [second_countable_topology E]
 
 theorem mem_ℒp.add {f g : α → E} (hf : mem_ℒp f p μ) (hg : mem_ℒp g p μ) : mem_ℒp (f+g) p μ :=
   ⟨AeMeasurable.add hf.1 hg.1, snorm_add_lt_top hf hg⟩
@@ -1149,7 +1146,7 @@ end BorelSpace
 
 section NormedSpace
 
-variable{𝕜 : Type _}[NormedField 𝕜][NormedSpace 𝕜 E][NormedSpace 𝕜 F]
+variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F]
 
 theorem snorm'_const_smul {f : α → F} (c : 𝕜) (hq_pos : 0 < q) : snorm' (c • f) q μ = (nnnorm c : ℝ≥0∞)*snorm' f q μ :=
   by 
@@ -1250,7 +1247,7 @@ end Monotonicity
 
 section IsROrC
 
-variable{𝕜 : Type _}[IsROrC 𝕜][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]{f : α → 𝕜}
+variable {𝕜 : Type _} [IsROrC 𝕜] {f : α → 𝕜}
 
 -- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mem_ℒp.re (hf : mem_ℒp f p μ) : mem_ℒp (λ x, is_R_or_C.re (f x)) p μ :=
@@ -1276,12 +1273,8 @@ end IsROrC
 
 section InnerProduct
 
-variable{E' 𝕜 :
-    Type
-      _}[IsROrC
-      𝕜][MeasurableSpace
-      𝕜][BorelSpace
-      𝕜][InnerProductSpace 𝕜 E'][MeasurableSpace E'][OpensMeasurableSpace E'][second_countable_topology E']
+variable {E' 𝕜 : Type _} [IsROrC 𝕜] [InnerProductSpace 𝕜 E'] [MeasurableSpace E'] [OpensMeasurableSpace E']
+  [second_countable_topology E']
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
 
@@ -1340,7 +1333,7 @@ localized [MeasureTheory] notation:25 α " →₂[" μ "] " E => MeasureTheory.l
 
 namespace Memℒp
 
-variable[BorelSpace E][second_countable_topology E]
+variable [BorelSpace E] [second_countable_topology E]
 
 /-- make an element of Lp from a function verifying `mem_ℒp` -/
 def to_Lp (f : α → E) (h_mem_ℒp : mem_ℒp f p μ) : Lp E p μ :=
@@ -1374,9 +1367,9 @@ end Memℒp
 
 namespace Lp
 
-variable[BorelSpace E][second_countable_topology E]
+variable [BorelSpace E] [second_countable_topology E]
 
-instance  : CoeFun (Lp E p μ) fun _ => α → E :=
+instance : CoeFun (Lp E p μ) fun _ => α → E :=
   ⟨fun f => ((f : α →ₘ[μ] E) : α → E)⟩
 
 @[ext]
@@ -1434,12 +1427,12 @@ protected theorem AeMeasurable (f : Lp E p μ) : AeMeasurable f μ :=
 protected theorem mem_ℒp (f : Lp E p μ) : mem_ℒp f p μ :=
   ⟨Lp.ae_measurable f, f.prop⟩
 
-variable(E p μ)
+variable (E p μ)
 
 theorem coe_fn_zero : «expr⇑ » (0 : Lp E p μ) =ᵐ[μ] 0 :=
   ae_eq_fun.coe_fn_zero
 
-variable{E p μ}
+variable {E p μ}
 
 theorem coe_fn_neg (f : Lp E p μ) : «expr⇑ » (-f) =ᵐ[μ] -f :=
   ae_eq_fun.coe_fn_neg _
@@ -1454,13 +1447,13 @@ theorem mem_Lp_const α {m : MeasurableSpace α} (μ : Measureₓ α) (c : E) [i
   @ae_eq_fun.const α _ _ μ _ c ∈ Lp E p μ :=
   (mem_ℒp_const c).snorm_mk_lt_top
 
-instance  : HasNorm (Lp E p μ) :=
+instance : HasNorm (Lp E p μ) :=
   { norm := fun f => Ennreal.toReal (snorm f p μ) }
 
-instance  : HasDist (Lp E p μ) :=
+instance : HasDist (Lp E p μ) :=
   { dist := fun f g => ∥f - g∥ }
 
-instance  : HasEdist (Lp E p μ) :=
+instance : HasEdist (Lp E p μ) :=
   { edist := fun f g => Ennreal.ofReal (dist f g) }
 
 theorem norm_def (f : Lp E p μ) : ∥f∥ = Ennreal.toReal (snorm f p μ) :=
@@ -1595,7 +1588,7 @@ theorem norm_le_of_ae_bound [is_finite_measure μ] {f : Lp E p μ} {C : ℝ} (hC
     congr 
     rw [max_eq_leftₓ hC]
 
-instance  [hp : Fact (1 ≤ p)] : NormedGroup (Lp E p μ) :=
+instance [hp : Fact (1 ≤ p)] : NormedGroup (Lp E p μ) :=
   NormedGroup.ofCore _
     { norm_eq_zero_iff := fun f => norm_eq_zero_iff (Ennreal.zero_lt_one.trans_le hp.1),
       triangle :=
@@ -1627,14 +1620,14 @@ instance normed_group_Ltop : NormedGroup (Lp E ∞ μ) :=
 
 section NormedSpace
 
-variable{𝕜 : Type _}[NormedField 𝕜][NormedSpace 𝕜 E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 E] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
 theorem mem_Lp_const_smul (c : 𝕜) (f : Lp E p μ) : c • «expr↑ » f ∈ Lp E p μ :=
   by 
     rw [mem_Lp_iff_snorm_lt_top, snorm_congr_ae (ae_eq_fun.coe_fn_smul _ _), snorm_const_smul, Ennreal.mul_lt_top_iff]
     exact Or.inl ⟨Ennreal.coe_lt_top, f.prop⟩
 
-variable(E p μ 𝕜)
+variable (E p μ 𝕜)
 
 /-- The `𝕜`-submodule of elements of `α →ₘ[μ] E` whose `Lp` norm is finite.  This is `Lp E p μ`,
 with extra structure. -/
@@ -1645,12 +1638,12 @@ def Lp_submodule : Submodule 𝕜 (α →ₘ[μ] E) :=
         by 
           simpa using mem_Lp_const_smul c ⟨f, hf⟩ }
 
-variable{E p μ 𝕜}
+variable {E p μ 𝕜}
 
 theorem coe_Lp_submodule : (Lp_submodule E p μ 𝕜).toAddSubgroup = Lp E p μ :=
   rfl
 
-instance  : Module 𝕜 (Lp E p μ) :=
+instance : Module 𝕜 (Lp E p μ) :=
   { (Lp_submodule E p μ 𝕜).Module with  }
 
 theorem coe_fn_smul (c : 𝕜) (f : Lp E p μ) : «expr⇑ » (c • f) =ᵐ[μ] c • f :=
@@ -1661,7 +1654,7 @@ theorem norm_const_smul (c : 𝕜) (f : Lp E p μ) : ∥c • f∥ = ∥c∥*∥
     rw [norm_def, snorm_congr_ae (coe_fn_smul _ _), snorm_const_smul c, Ennreal.to_real_mul, Ennreal.coe_to_real,
       coe_nnnorm, norm_def]
 
-instance  [Fact (1 ≤ p)] : NormedSpace 𝕜 (Lp E p μ) :=
+instance [Fact (1 ≤ p)] : NormedSpace 𝕜 (Lp E p μ) :=
   { norm_smul_le :=
       fun _ _ =>
         by 
@@ -1679,7 +1672,7 @@ instance normed_space_Ltop : NormedSpace 𝕜 (Lp E ∞ μ) :=
   by 
     infer_instance
 
-instance  [NormedSpace ℝ E] [HasScalar ℝ 𝕜] [IsScalarTower ℝ 𝕜 E] : IsScalarTower ℝ 𝕜 (Lp E p μ) :=
+instance [NormedSpace ℝ E] [HasScalar ℝ 𝕜] [IsScalarTower ℝ 𝕜 E] : IsScalarTower ℝ 𝕜 (Lp E p μ) :=
   by 
     refine' ⟨fun r c f => _⟩
     ext1 
@@ -1695,9 +1688,8 @@ end Lp
 
 namespace Memℒp
 
-variable[BorelSpace
-      E][second_countable_topology
-      E]{𝕜 : Type _}[NormedField 𝕜][NormedSpace 𝕜 E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable [BorelSpace E] [second_countable_topology E] {𝕜 : Type _} [NormedField 𝕜] [NormedSpace 𝕜 E] [MeasurableSpace 𝕜]
+  [OpensMeasurableSpace 𝕜]
 
 theorem to_Lp_const_smul {f : α → E} (c : 𝕜) (hf : mem_ℒp f p μ) : (hf.const_smul c).toLp (c • f) = c • hf.to_Lp f :=
   rfl
@@ -1713,7 +1705,7 @@ For a set `s` with `(hs : measurable_set s)` and `(hμs : μ s < ∞)`, we build
 
 section Indicator
 
-variable{s : Set α}{hs : MeasurableSet s}{c : E}{f : α → E}{hf : AeMeasurable f μ}
+variable {s : Set α} {hs : MeasurableSet s} {c : E} {f : α → E} {hf : AeMeasurable f μ}
 
 theorem snorm_ess_sup_indicator_le (s : Set α) (f : α → G) : snorm_ess_sup (s.indicator f) μ ≤ snorm_ess_sup f μ :=
   by 
@@ -1746,7 +1738,7 @@ begin
   exact [expr le_rfl]
 end
 
-variable(hs)
+variable (hs)
 
 theorem snorm_indicator_le {E : Type _} [NormedGroup E] (f : α → E) : snorm (s.indicator f) p μ ≤ snorm f p μ :=
   by 
@@ -1757,7 +1749,7 @@ theorem snorm_indicator_le {E : Type _} [NormedGroup E] (f : α → E) : snorm (
     rw [nnnorm_indicator_eq_indicator_nnnorm]
     exact s.indicator_le_self _ x
 
-variable{hs}
+variable {hs}
 
 -- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem snorm_indicator_const
@@ -1864,7 +1856,7 @@ section IndicatorConstLp
 
 open Set Function
 
-variable{s : Set α}{hs : MeasurableSet s}{hμs : μ s ≠ ∞}{c : E}[BorelSpace E][second_countable_topology E]
+variable {s : Set α} {hs : MeasurableSet s} {hμs : μ s ≠ ∞} {c : E} [BorelSpace E] [second_countable_topology E]
 
 /-- Indicator of a set as an element of `Lp`. -/
 def indicator_const_Lp (p : ℝ≥0∞) (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (c : E) : Lp E p μ :=
@@ -1954,8 +1946,8 @@ part of an `L^p` function.
 
 section Composition
 
-variable[second_countable_topology
-      E][BorelSpace E][second_countable_topology F][MeasurableSpace F][BorelSpace F]{g : E → F}{c :  ℝ≥0 }
+variable [second_countable_topology E] [BorelSpace E] [second_countable_topology F] [MeasurableSpace F] [BorelSpace F]
+  {g : E → F} {c :  ℝ≥0 }
 
 -- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lipschitz_with.comp_mem_ℒp
@@ -2072,7 +2064,7 @@ end LipschitzWith
 
 namespace ContinuousLinearMap
 
-variable{𝕜 : Type _}[NondiscreteNormedField 𝕜][NormedSpace 𝕜 E][NormedSpace 𝕜 F]
+variable {𝕜 : Type _} [NondiscreteNormedField 𝕜] [NormedSpace 𝕜 E] [NormedSpace 𝕜 F]
 
 /-- Composing `f : Lp ` with `L : E →L[𝕜] F`. -/
 def comp_Lp (L : E →L[𝕜] F) (f : Lp E p μ) : Lp F p μ :=
@@ -2092,7 +2084,7 @@ theorem comp_mem_ℒp' (L : E →L[𝕜] F) {f : α → E} (hf : mem_ℒp f p μ
 
 section IsROrC
 
-variable{K : Type _}[IsROrC K][MeasurableSpace K][BorelSpace K]
+variable {K : Type _} [IsROrC K]
 
 theorem _root_.measure_theory.mem_ℒp.of_real {f : α → ℝ} (hf : mem_ℒp f p μ) : mem_ℒp (fun x => (f x : K)) p μ :=
   (@IsROrC.ofRealClm K _).comp_mem_ℒp' hf
@@ -2133,7 +2125,7 @@ theorem smul_comp_Lp {𝕜'} [NormedField 𝕜'] [MeasurableSpace 𝕜'] [OpensM
 theorem norm_comp_Lp_le (L : E →L[𝕜] F) (f : Lp E p μ) : ∥L.comp_Lp f∥ ≤ ∥L∥*∥f∥ :=
   LipschitzWith.norm_comp_Lp_le _ _ _
 
-variable(μ p)[MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+variable (μ p) [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
 
 /-- Composing `f : Lp E p μ` with `L : E →L[𝕜] F`, seen as a `𝕜`-linear map on `Lp E p μ`. -/
 def comp_Lpₗ (L : E →L[𝕜] F) : Lp E p μ →ₗ[𝕜] Lp F p μ :=
@@ -2165,7 +2157,7 @@ def comp_Lpₗ (L : E →L[𝕜] F) : Lp E p μ →ₗ[𝕜] Lp F p μ :=
 def comp_LpL [Fact (1 ≤ p)] (L : E →L[𝕜] F) : Lp E p μ →L[𝕜] Lp F p μ :=
   LinearMap.mkContinuous (L.comp_Lpₗ p μ) ∥L∥ L.norm_comp_Lp_le
 
-variable{μ p}
+variable {μ p}
 
 theorem coe_fn_comp_LpL [Fact (1 ≤ p)] (L : E →L[𝕜] F) (f : Lp E p μ) : L.comp_LpL p μ f =ᵐ[μ] fun a => L (f a) :=
   L.coe_fn_comp_Lp f
@@ -2277,7 +2269,7 @@ We show that `L^p` is a complete space for `1 ≤ p`.
 
 section CompleteSpace
 
-variable[BorelSpace E][second_countable_topology E]
+variable [BorelSpace E] [second_countable_topology E]
 
 namespace MeasureTheory
 
@@ -2756,7 +2748,7 @@ end
 /-! ### `Lp` is complete for `1 ≤ p` -/
 
 
-instance  [CompleteSpace E] [hp : Fact (1 ≤ p)] : CompleteSpace (Lp E p μ) :=
+instance [CompleteSpace E] [hp : Fact (1 ≤ p)] : CompleteSpace (Lp E p μ) :=
   complete_space_Lp_of_cauchy_complete_ℒp$ fun f hf B hB h_cau => cauchy_complete_ℒp hp.elim hf hB.ne h_cau
 
 end Lp
@@ -2772,16 +2764,16 @@ open_locale BoundedContinuousFunction
 
 open BoundedContinuousFunction
 
-variable[BorelSpace E][second_countable_topology E][TopologicalSpace α][BorelSpace α]
+variable [BorelSpace E] [second_countable_topology E] [TopologicalSpace α] [BorelSpace α]
 
-variable(E p μ)
+variable (E p μ)
 
 /-- An additive subgroup of `Lp E p μ`, consisting of the equivalence classes which contain a
 bounded continuous representative. -/
 def MeasureTheory.lp.boundedContinuousFunction : AddSubgroup (Lp E p μ) :=
   AddSubgroup.addSubgroupOf ((ContinuousMap.toAeEqFunAddHom μ).comp (forget_boundedness_add_hom α E)).range (Lp E p μ)
 
-variable{E p μ}
+variable {E p μ}
 
 /-- By definition, the elements of `Lp.bounded_continuous_function E p μ` are the elements of
 `Lp E p μ` which contain a bounded continuous representative. -/
@@ -2792,7 +2784,7 @@ theorem MeasureTheory.lp.mem_bounded_continuous_function_iff {f : Lp E p μ} :
 
 namespace BoundedContinuousFunction
 
-variable[is_finite_measure μ]
+variable [is_finite_measure μ]
 
 /-- A bounded continuous function on a finite-measure space is in `Lp`. -/
 theorem mem_Lp (f : α →ᵇ E) : f.to_continuous_map.to_ae_eq_fun μ ∈ Lp E p μ :=
@@ -2815,7 +2807,7 @@ theorem Lp_norm_le (f : α →ᵇ E) :
     ·
       infer_instance
 
-variable(p μ)
+variable (p μ)
 
 /-- The normed group homomorphism of considering a bounded continuous function on a finite-measure
 space as an element of `Lp`. -/
@@ -2836,7 +2828,7 @@ theorem range_to_Lp_hom [Fact (1 ≤ p)] :
           exact mem_Lp f :
         _ ≤ Lp E p μ)
 
-variable(𝕜 : Type _)[MeasurableSpace 𝕜]
+variable (𝕜 : Type _) [MeasurableSpace 𝕜]
 
 /-- The bounded linear map of considering a bounded continuous function on a finite-measure space
 as an element of `Lp`. -/
@@ -2846,13 +2838,13 @@ def to_Lp [NormedField 𝕜] [OpensMeasurableSpace 𝕜] [NormedSpace 𝕜 E] [F
       ((ContinuousMap.toAeEqFunLinearMap μ).comp (forget_boundedness_linear_map α E 𝕜)) mem_Lp)
     _ Lp_norm_le
 
-variable{𝕜}
+variable {𝕜}
 
 theorem range_to_Lp [NormedField 𝕜] [OpensMeasurableSpace 𝕜] [NormedSpace 𝕜 E] [Fact (1 ≤ p)] :
   ((to_Lp p μ 𝕜).range.toAddSubgroup : AddSubgroup (Lp E p μ)) = MeasureTheory.lp.boundedContinuousFunction E p μ :=
   range_to_Lp_hom p μ
 
-variable{p}
+variable {p}
 
 theorem coe_fn_to_Lp [NormedField 𝕜] [OpensMeasurableSpace 𝕜] [NormedSpace 𝕜 E] [Fact (1 ≤ p)] (f : α →ᵇ E) :
   to_Lp p μ 𝕜 f =ᵐ[μ] f :=
@@ -2866,9 +2858,9 @@ end BoundedContinuousFunction
 
 namespace ContinuousMap
 
-variable[CompactSpace α][is_finite_measure μ]
+variable [CompactSpace α] [is_finite_measure μ]
 
-variable(𝕜 : Type _)[MeasurableSpace 𝕜](p μ)[Fact (1 ≤ p)]
+variable (𝕜 : Type _) [MeasurableSpace 𝕜] (p μ) [Fact (1 ≤ p)]
 
 /-- The bounded linear map of considering a continuous function on a compact finite-measure
 space `α` as an element of `Lp`.  By definition, the norm on `C(α, E)` is the sup-norm, transferred
@@ -2878,7 +2870,7 @@ def to_Lp [NormedField 𝕜] [OpensMeasurableSpace 𝕜] [NormedSpace 𝕜 E] : 
   (BoundedContinuousFunction.toLp p μ 𝕜).comp
     (linear_isometry_bounded_of_compact α E 𝕜).toLinearIsometry.toContinuousLinearMap
 
-variable{𝕜}
+variable {𝕜}
 
 -- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem range_to_Lp
@@ -2893,7 +2885,7 @@ begin
   refl
 end
 
-variable{p}
+variable {p}
 
 theorem coe_fn_to_Lp [NormedField 𝕜] [OpensMeasurableSpace 𝕜] [NormedSpace 𝕜 E] (f : C(α, E)) : to_Lp p μ 𝕜 f =ᵐ[μ] f :=
   ae_eq_fun.coe_fn_mk f _
@@ -2912,7 +2904,7 @@ theorem coe_to_Lp [NormedField 𝕜] [OpensMeasurableSpace 𝕜] [NormedSpace �
   (to_Lp p μ 𝕜 f : α →ₘ[μ] E) = f.to_ae_eq_fun μ :=
   rfl
 
-variable[NondiscreteNormedField 𝕜][OpensMeasurableSpace 𝕜][NormedSpace 𝕜 E]
+variable [NondiscreteNormedField 𝕜] [OpensMeasurableSpace 𝕜] [NormedSpace 𝕜 E]
 
 theorem to_Lp_norm_eq_to_Lp_norm_coe :
   ∥(to_Lp p μ 𝕜 : C(α, E) →L[𝕜] Lp E p μ)∥ = ∥(BoundedContinuousFunction.toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] Lp E p μ)∥ :=

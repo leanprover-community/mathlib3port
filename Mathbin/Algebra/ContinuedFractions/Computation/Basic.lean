@@ -59,7 +59,7 @@ numerics, number theory, approximations, fractions
 
 namespace GeneralizedContinuedFraction
 
-variable(K : Type _)
+variable (K : Type _)
 
 /--
 We collect an integer part `b = ⌊v⌋` and fractional part `fr = v - ⌊v⌋` of a value `v` in a pair
@@ -69,7 +69,7 @@ structure int_fract_pair where
   b : ℤ 
   fr : K
 
-variable{K}
+variable {K}
 
 /-! Interlude: define some expected coercions and instances. -/
 
@@ -77,7 +77,7 @@ variable{K}
 namespace IntFractPair
 
 /-- Make an `int_fract_pair` printable. -/
-instance  [HasRepr K] : HasRepr (int_fract_pair K) :=
+instance [HasRepr K] : HasRepr (int_fract_pair K) :=
   ⟨fun p => "(b : " ++ reprₓ p.b ++ ", fract : " ++ reprₓ p.fr ++ ")"⟩
 
 instance Inhabited [Inhabited K] : Inhabited (int_fract_pair K) :=
@@ -94,7 +94,7 @@ section coeₓ
 /-! Interlude: define some expected coercions. -/
 
 
-variable{β : Type _}[Coe K β]
+variable {β : Type _} [Coe K β]
 
 /-- Coerce a pair by coercing the fractional component. -/
 instance has_coe_to_int_fract_pair : Coe (int_fract_pair K) (int_fract_pair β) :=
@@ -107,7 +107,7 @@ theorem coe_to_int_fract_pair {b : ℤ} {fr : K} :
 
 end coeₓ
 
-variable[LinearOrderedField K][FloorRing K]
+variable [LinearOrderedField K] [FloorRing K]
 
 /-- Creates the integer and fractional part of a value `v`, i.e. `⟨⌊v⌋, v - ⌊v⌋⟩`. -/
 protected def of (v : K) : int_fract_pair K :=

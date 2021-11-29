@@ -66,7 +66,7 @@ open_locale TopologicalSpace Classical
 
 section Module
 
-variable{E : Type u}[NormedGroup E][NormedSpace ℝ E]{f : E → ℝ}{a : E}{f' : E →L[ℝ] ℝ}
+variable {E : Type u} [NormedGroup E] [NormedSpace ℝ E] {f : E → ℝ} {a : E} {f' : E →L[ℝ] ℝ}
 
 /-- "Positive" tangent cone to `s` at `x`; the only difference from `tangent_cone_at`
 is that we require `c n → ∞` instead of `∥c n∥ → ∞`. One can think about `pos_tangent_cone_at`
@@ -84,7 +84,7 @@ theorem pos_tangent_cone_at_mono : Monotone fun s => PosTangentConeAt s a :=
 theorem mem_pos_tangent_cone_at_of_segment_subset {s : Set E} {x y : E} (h : Segment ℝ x y ⊆ s) :
   y - x ∈ PosTangentConeAt s x :=
   by 
-    let c := fun n : ℕ => (2 : ℝ) ^ n 
+    let c := fun n : ℕ => (2 : ℝ)^n 
     let d := fun n : ℕ => c n⁻¹ • (y - x)
     refine' ⟨c, d, Filter.univ_mem' fun n => h _, tendsto_pow_at_top_at_top_of_one_lt one_lt_two, _⟩
     show (x+d n) ∈ Segment ℝ x y
@@ -226,7 +226,7 @@ end Module
 
 section Real
 
-variable{f : ℝ → ℝ}{f' : ℝ}{a b : ℝ}
+variable {f : ℝ → ℝ} {f' : ℝ} {a b : ℝ}
 
 /-- **Fermat's Theorem**: the derivative of a function at a local minimum equals zero. -/
 theorem IsLocalMin.has_deriv_at_eq_zero (h : IsLocalMin f a) (hf : HasDerivAt f f' a) : f' = 0 :=
@@ -257,7 +257,7 @@ end Real
 
 section Rolle
 
-variable(f f' : ℝ → ℝ){a b : ℝ}
+variable (f f' : ℝ → ℝ) {a b : ℝ}
 
 -- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A continuous function on a closed interval with `f a = f b` takes either its maximum
@@ -309,7 +309,7 @@ theorem exists_deriv_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.deriv_eq_zero⟩
 
-variable{f f'}{l : ℝ}
+variable {f f'} {l : ℝ}
 
 -- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **Rolle's Theorem**, a version for a function on an open interval: if `f` has derivative `f'`

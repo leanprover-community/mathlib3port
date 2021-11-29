@@ -17,7 +17,7 @@ directed iff each pair of elements has a shared upper bound.
 
 universe u v w
 
-variable{α : Type u}{β : Type v}{ι : Sort w}(r : α → α → Prop)
+variable {α : Type u} {β : Type v} {ι : Sort w} (r : α → α → Prop)
 
 local infixl:50 " ≼ " => r
 
@@ -31,7 +31,7 @@ def Directed (f : ι → α) :=
 def DirectedOn (s : Set α) :=
   ∀ x _ : x ∈ s y _ : y ∈ s, ∃ (z : _)(_ : z ∈ s), x ≼ z ∧ y ≼ z
 
-variable{r}
+variable {r}
 
 theorem directed_on_iff_directed {s} : @DirectedOn α r s ↔ Directed r (coeₓ : s → α) :=
   by 
@@ -81,9 +81,9 @@ theorem directed_of_inf [SemilatticeInf α] {r : β → β → Prop} {f : α →
 
 /-- A `preorder` is a `directed_order` if for any two elements `i`, `j`
 there is an element `k` such that `i ≤ k` and `j ≤ k`. -/
-class DirectedOrder(α : Type u) extends Preorderₓ α where 
+class DirectedOrder (α : Type u) extends Preorderₓ α where 
   Directed : ∀ i j : α, ∃ k, i ≤ k ∧ j ≤ k
 
-instance (priority := 100)LinearOrderₓ.toDirectedOrder α [LinearOrderₓ α] : DirectedOrder α :=
+instance (priority := 100) LinearOrderₓ.toDirectedOrder α [LinearOrderₓ α] : DirectedOrder α :=
   ⟨fun i j => Or.cases_on (le_totalₓ i j) (fun hij => ⟨j, hij, le_reflₓ j⟩) fun hji => ⟨i, le_reflₓ i, hji⟩⟩
 

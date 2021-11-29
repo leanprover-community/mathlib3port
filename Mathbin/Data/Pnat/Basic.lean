@@ -18,7 +18,7 @@ notation "ℕ+" => Pnat
 instance coePnatNat : Coe ℕ+ ℕ :=
   ⟨Subtype.val⟩
 
-instance  : HasRepr ℕ+ :=
+instance : HasRepr ℕ+ :=
   ⟨fun n => reprₓ n.1⟩
 
 /-- Predecessor of a `ℕ+`, as a `ℕ`. -/
@@ -74,12 +74,12 @@ open Nat
  obvious way, but there are a few things to be said about
  subtraction, division and powers.
 -/
-instance  : DecidableEq ℕ+ :=
+instance : DecidableEq ℕ+ :=
   fun a b : ℕ+ =>
     by 
       infer_instance
 
-instance  : LinearOrderₓ ℕ+ :=
+instance : LinearOrderₓ ℕ+ :=
   Subtype.linearOrder _
 
 @[simp]
@@ -116,10 +116,10 @@ theorem coe_injective : Function.Injective (coeₓ : ℕ+ → ℕ) :=
 theorem mk_coe n h : ((⟨n, h⟩ : ℕ+) : ℕ) = n :=
   rfl
 
-instance  : Add ℕ+ :=
+instance : Add ℕ+ :=
   ⟨fun a b => ⟨(a+b : ℕ), add_pos a.pos b.pos⟩⟩
 
-instance  : AddCommSemigroupₓ ℕ+ :=
+instance : AddCommSemigroupₓ ℕ+ :=
   coe_injective.AddCommSemigroup coeₓ fun _ _ => rfl
 
 @[simp]
@@ -130,10 +130,10 @@ theorem add_coe (m n : ℕ+) : ((m+n : ℕ+) : ℕ) = m+n :=
 def coe_add_hom : AddHom ℕ+ ℕ :=
   { toFun := coeₓ, map_add' := add_coe }
 
-instance  : AddLeftCancelSemigroup ℕ+ :=
+instance : AddLeftCancelSemigroup ℕ+ :=
   coe_injective.AddLeftCancelSemigroup coeₓ fun _ _ => rfl
 
-instance  : AddRightCancelSemigroup ℕ+ :=
+instance : AddRightCancelSemigroup ℕ+ :=
   coe_injective.AddRightCancelSemigroup coeₓ fun _ _ => rfl
 
 @[simp]
@@ -147,13 +147,13 @@ theorem to_pnat'_coe {n : ℕ} : 0 < n → (n.to_pnat' : ℕ) = n :=
 theorem coe_to_pnat' (n : ℕ+) : (n : ℕ).toPnat' = n :=
   Eq (to_pnat'_coe n.pos)
 
-instance  : Mul ℕ+ :=
+instance : Mul ℕ+ :=
   ⟨fun m n => ⟨m.1*n.1, mul_pos m.2 n.2⟩⟩
 
-instance  : HasOne ℕ+ :=
+instance : HasOne ℕ+ :=
   ⟨succ_pnat 0⟩
 
-instance  : CommMonoidₓ ℕ+ :=
+instance : CommMonoidₓ ℕ+ :=
   coe_injective.CommMonoid coeₓ rfl fun _ _ => rfl
 
 theorem lt_add_one_iff : ∀ {a b : ℕ+}, (a < b+1) ↔ a ≤ b :=
@@ -166,14 +166,14 @@ theorem add_one_le_iff : ∀ {a b : ℕ+}, (a+1) ≤ b ↔ a < b :=
 theorem one_le (n : ℕ+) : (1 : ℕ+) ≤ n :=
   n.2
 
-instance  : OrderBot ℕ+ :=
+instance : OrderBot ℕ+ :=
   { bot := 1, bot_le := fun a => a.property }
 
 @[simp]
 theorem bot_eq_one : (⊥ : ℕ+) = 1 :=
   rfl
 
-instance  : Inhabited ℕ+ :=
+instance : Inhabited ℕ+ :=
   ⟨1⟩
 
 @[simp]
@@ -242,7 +242,7 @@ theorem pow_coe (m : ℕ+) (n : ℕ) : ((m ^ n : ℕ+) : ℕ) = (m : ℕ) ^ n :=
   by 
     induction' n with n ih <;> [rfl, rw [pow_succ'ₓ, pow_succₓ, mul_coe, mul_commₓ, ih]]
 
-instance  : OrderedCancelCommMonoid ℕ+ :=
+instance : OrderedCancelCommMonoid ℕ+ :=
   { Pnat.commMonoid, Pnat.linearOrder with
     mul_le_mul_left :=
       by 
@@ -259,13 +259,13 @@ instance  : OrderedCancelCommMonoid ℕ+ :=
           replace h := congr_argₓ (coeₓ : ℕ+ → ℕ) h 
           exact Eq ((Nat.mul_right_inj a.pos).mp h) }
 
-instance  : Distrib ℕ+ :=
+instance : Distrib ℕ+ :=
   coe_injective.Distrib coeₓ (fun _ _ => rfl) fun _ _ => rfl
 
 /-- Subtraction a - b is defined in the obvious way when
   a > b, and by a - b = 1 if a ≤ b.
 -/
-instance  : Sub ℕ+ :=
+instance : Sub ℕ+ :=
   ⟨fun a b => to_pnat' (a - b : ℕ)⟩
 
 theorem sub_coe (a b : ℕ+) : ((a - b : ℕ+) : ℕ) = ite (b < a) (a - b : ℕ) 1 :=
@@ -285,7 +285,7 @@ theorem add_sub_of_lt {a b : ℕ+} : a < b → (a+b - a) = b :=
         rw [add_coe, sub_coe, if_pos h]
         exact add_tsub_cancel_of_le h.le
 
-instance  : HasWellFounded ℕ+ :=
+instance : HasWellFounded ℕ+ :=
   ⟨· < ·, measure_wf coeₓ⟩
 
 /-- Strong induction on `ℕ+`. -/

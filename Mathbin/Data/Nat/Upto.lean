@@ -30,13 +30,13 @@ def upto (p : ℕ → Prop) : Type :=
 
 namespace Upto
 
-variable{p : ℕ → Prop}
+variable {p : ℕ → Prop}
 
 /-- Lift the "greater than" relation on natural numbers to `nat.upto`. -/
 protected def Gt p (x y : upto p) : Prop :=
   x.1 > y.1
 
-instance  : LT (upto p) :=
+instance : LT (upto p) :=
   ⟨fun x y => x.1 < y.1⟩
 
 /-- The "greater than" relation on `upto p` is well founded if (and only if) there exists a value

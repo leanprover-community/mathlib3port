@@ -43,7 +43,7 @@ open_locale Classical
 
 universe u v
 
-variable(R : Type u)[CommRingₓ R]
+variable (R : Type u) [CommRingₓ R]
 
 /-- The prime spectrum of a commutative ring `R`
 is the type of all prime ideals of `R`.
@@ -55,7 +55,7 @@ It is a fundamental building block in algebraic geometry. -/
 def PrimeSpectrum :=
   { I : Ideal R // I.is_prime }
 
-variable{R}
+variable {R}
 
 namespace PrimeSpectrum
 
@@ -75,14 +75,14 @@ theorem PUnit (x : PrimeSpectrum PUnit) : False :=
 
 section 
 
-variable(R)(S : Type v)[CommRingₓ S]
+variable (R) (S : Type v) [CommRingₓ S]
 
 /-- The prime spectrum of `R × S` is in bijection with the disjoint unions of the prime spectrum of
     `R` and the prime spectrum of `S`. -/
 noncomputable def prime_spectrum_prod : PrimeSpectrum (R × S) ≃ Sum (PrimeSpectrum R) (PrimeSpectrum S) :=
   Ideal.primeIdealsEquiv R S
 
-variable{R S}
+variable {R S}
 
 @[simp]
 theorem prime_spectrum_prod_symm_inl_as_ideal (x : PrimeSpectrum R) :
@@ -167,7 +167,7 @@ theorem subset_zero_locus_iff_le_vanishing_ideal (t : Set (PrimeSpectrum R)) (I 
 
 section Gc
 
-variable(R)
+variable (R)
 
 /-- `zero_locus` and `vanishing_ideal` form a galois connection. -/
 theorem gc :
@@ -442,46 +442,51 @@ end
 
 section Comap
 
-variable{S : Type v}[CommRingₓ S]{S' : Type _}[CommRingₓ S']
+variable {S : Type v} [CommRingₓ S] {S' : Type _} [CommRingₓ S']
+
+theorem preimage_comap_zero_locus_aux (f : R →+* S) (s : Set R) :
+  (fun y => ⟨Ideal.comap f y.as_ideal, inferInstance⟩ : PrimeSpectrum S → PrimeSpectrum R) ⁻¹' zero_locus s =
+    zero_locus (f '' s) :=
+  by 
+    ext x 
+    simp only [mem_zero_locus, Set.image_subset_iff]
+    rfl
 
 /-- The function between prime spectra of commutative rings induced by a ring homomorphism.
 This function is continuous. -/
-def comap (f : R →+* S) : PrimeSpectrum S → PrimeSpectrum R :=
-  fun y => ⟨Ideal.comap f y.as_ideal, inferInstance⟩
+def comap (f : R →+* S) : C(PrimeSpectrum S, PrimeSpectrum R) :=
+  { toFun := fun y => ⟨Ideal.comap f y.as_ideal, inferInstance⟩,
+    continuous_to_fun :=
+      by 
+        simp only [continuous_iff_is_closed, is_closed_iff_zero_locus]
+        rintro _ ⟨s, rfl⟩
+        exact ⟨_, preimage_comap_zero_locus_aux f s⟩ }
 
-variable(f : R →+* S)
+variable (f : R →+* S)
 
 @[simp]
 theorem comap_as_ideal (y : PrimeSpectrum S) : (comap f y).asIdeal = Ideal.comap f y.as_ideal :=
   rfl
 
 @[simp]
-theorem comap_id : comap (RingHom.id R) = id :=
-  funext$ fun _ => Subtype.ext$ Ideal.ext$ fun _ => Iff.rfl
+theorem comap_id : comap (RingHom.id R) = ContinuousMap.id :=
+  by 
+    ext 
+    rfl
 
 @[simp]
-theorem comap_comp (f : R →+* S) (g : S →+* S') : comap (g.comp f) = (comap f ∘ comap g) :=
-  funext$ fun _ => Subtype.ext$ Ideal.ext$ fun _ => Iff.rfl
+theorem comap_comp (f : R →+* S) (g : S →+* S') : comap (g.comp f) = (comap f).comp (comap g) :=
+  rfl
 
 @[simp]
 theorem preimage_comap_zero_locus (s : Set R) : comap f ⁻¹' zero_locus s = zero_locus (f '' s) :=
-  by 
-    ext x 
-    simp only [mem_zero_locus, Set.mem_preimage, comap_as_ideal, Set.image_subset_iff]
-    rfl
+  preimage_comap_zero_locus_aux f s
 
 theorem comap_injective_of_surjective (f : R →+* S) (hf : Function.Surjective f) : Function.Injective (comap f) :=
   fun x y h =>
     PrimeSpectrum.ext.2
       (Ideal.comap_injective_of_surjective f hf
         (congr_argₓ PrimeSpectrum.asIdeal h : (comap f x).asIdeal = (comap f y).asIdeal))
-
-theorem comap_continuous (f : R →+* S) : Continuous (comap f) :=
-  by 
-    rw [continuous_iff_is_closed]
-    simp only [is_closed_iff_zero_locus]
-    rintro _ ⟨s, rfl⟩
-    exact ⟨_, preimage_comap_zero_locus f s⟩
 
 -- error in AlgebraicGeometry.PrimeSpectrum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem comap_singleton_is_closed_of_surjective
@@ -606,7 +611,7 @@ theorem is_compact_basic_open (f : R) : is_compact (basic_open f : set (prime_sp
 end BasicOpen
 
 /-- The prime spectrum of a commutative ring is a compact topological space. -/
-instance  : CompactSpace (PrimeSpectrum R) :=
+instance : CompactSpace (PrimeSpectrum R) :=
   { compact_univ :=
       by 
         convert is_compact_basic_open (1 : R)
@@ -625,7 +630,7 @@ TODO: maybe define sober topological spaces, and generalise this instance to tho
 -/
 
 
-instance  : PartialOrderₓ (PrimeSpectrum R) :=
+instance : PartialOrderₓ (PrimeSpectrum R) :=
   Subtype.partialOrder _
 
 @[simp]
@@ -647,7 +652,7 @@ end PrimeSpectrum
 
 namespace LocalRing
 
-variable(R)[LocalRing R]
+variable (R) [LocalRing R]
 
 /--
 The closed point in the prime spectrum of a local ring.
@@ -655,10 +660,10 @@ The closed point in the prime spectrum of a local ring.
 def closed_point : PrimeSpectrum R :=
   ⟨maximal_ideal R, (maximal_ideal.is_maximal R).IsPrime⟩
 
-variable{R}
+variable {R}
 
 theorem local_hom_iff_comap_closed_point {S : Type v} [CommRingₓ S] [LocalRing S] {f : R →+* S} :
-  IsLocalRingHom f ↔ (closed_point S).comap f = closed_point R :=
+  IsLocalRingHom f ↔ PrimeSpectrum.comap f (closed_point S) = closed_point R :=
   by 
     rw [(local_hom_tfae f).out 0 4, Subtype.ext_iff]
     rfl

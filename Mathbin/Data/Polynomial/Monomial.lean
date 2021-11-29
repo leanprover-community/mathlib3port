@@ -13,15 +13,15 @@ namespace Polynomial
 
 universe u
 
-variable{R : Type u}{a b : R}{m n : ℕ}
+variable {R : Type u} {a b : R} {m n : ℕ}
 
-variable[Semiringₓ R]{p q r : Polynomial R}
+variable [Semiringₓ R] {p q r : Polynomial R}
 
 theorem monomial_one_eq_iff [Nontrivial R] {i j : ℕ} : (monomial i 1 : Polynomial R) = monomial j 1 ↔ i = j :=
   by 
     simp [monomial, monomial_fun, Finsupp.single_eq_single_iff]
 
-instance  [Nontrivial R] : Infinite (Polynomial R) :=
+instance [Nontrivial R] : Infinite (Polynomial R) :=
   (Infinite.of_injective fun i => monomial i 1)$
     fun m n h =>
       by 

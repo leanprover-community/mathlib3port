@@ -12,7 +12,7 @@ intervals as finsets and fintypes.
 
 open Finset Int
 
-instance  : LocallyFiniteOrder ℤ :=
+instance : LocallyFiniteOrder ℤ :=
   { finsetIcc := fun a b => (Finset.range ((b+1) - a).toNat).map$ Nat.castEmbedding.trans$ addLeftEmbedding a,
     finsetIco := fun a b => (Finset.range (b - a).toNat).map$ Nat.castEmbedding.trans$ addLeftEmbedding a,
     finsetIoc := fun a b => (Finset.range (b - a).toNat).map$ Nat.castEmbedding.trans$ addLeftEmbedding (a+1),
@@ -80,7 +80,7 @@ instance  : LocallyFiniteOrder ℤ :=
 
 namespace Int
 
-variable(a b : ℤ)
+variable (a b : ℤ)
 
 theorem Icc_eq_finset_map :
   Icc a b = (Finset.range ((b+1) - a).toNat).map (Nat.castEmbedding.trans$ addLeftEmbedding a) :=
