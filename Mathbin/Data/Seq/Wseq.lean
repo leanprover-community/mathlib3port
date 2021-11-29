@@ -281,25 +281,19 @@ def split_at (s : Wseq α) (n : ℕ) : Computation (List α × Wseq α) :=
       | m+1, some (some a, s') => Sum.inr (m, a :: l, s'))
     (n, [], s)
 
-/-- Returns `tt` if any element of `s` satisfies `p` -/
-def any (s : Wseq α) (p : α → Bool) : Computation Bool :=
-  Computation.corec
-    (fun s : Wseq α =>
-      match Seqₓₓ.destruct s with 
-      | none => Sum.inl ff
-      | some (none, s') => Sum.inr s'
-      | some (some a, s') => if p a then Sum.inl tt else Sum.inr s')
-    s
+-- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Returns `tt` if any element of `s` satisfies `p` -/ def any (s : wseq α) (p : α → bool) : computation bool :=
+computation.corec (λ s : wseq α, match seq.destruct s with
+ | none := sum.inl ff
+ | some (none, s') := sum.inr s'
+ | some (some a, s') := if p a then sum.inl tt else sum.inr s' end) s
 
-/-- Returns `tt` if every element of `s` satisfies `p` -/
-def all (s : Wseq α) (p : α → Bool) : Computation Bool :=
-  Computation.corec
-    (fun s : Wseq α =>
-      match Seqₓₓ.destruct s with 
-      | none => Sum.inl tt
-      | some (none, s') => Sum.inr s'
-      | some (some a, s') => if p a then Sum.inr s' else Sum.inl ff)
-    s
+-- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Returns `tt` if every element of `s` satisfies `p` -/ def all (s : wseq α) (p : α → bool) : computation bool :=
+computation.corec (λ s : wseq α, match seq.destruct s with
+ | none := sum.inl tt
+ | some (none, s') := sum.inr s'
+ | some (some a, s') := if p a then sum.inr s' else sum.inl ff end) s
 
 /-- Apply a function to the elements of the sequence to produce a sequence
   of partial results. (There is no `scanr` because this would require
@@ -343,15 +337,12 @@ def append : Wseq α → Wseq α → Wseq α :=
 def map (f : α → β) : Wseq α → Wseq β :=
   Seqₓₓ.map (Option.map f)
 
+-- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Flatten a sequence of weak sequences. (Note that this allows
-  empty sequences, unlike `seq.join`.) -/
-def join (S : Wseq (Wseq α)) : Wseq α :=
-  Seqₓₓ.join
-    ((fun o : Option (Wseq α) =>
-        match o with 
-        | none => Seq1.ret none
-        | some s => (none, s)) <$>
-      S)
+  empty sequences, unlike `seq.join`.) -/ def join (S : wseq (wseq α)) : wseq α :=
+seq.join «expr <$> »(λ o : option (wseq α), match o with
+ | none := seq1.ret none
+ | some s := (none, s) end, S)
 
 /-- Monadic bind operator for weak sequences -/
 def bind (s : Wseq α) (f : α → Wseq β) : Wseq β :=
@@ -429,17 +420,18 @@ theorem destruct_congr {s t : Wseq α} : s ~ t → Computation.LiftRel (bisim_o 
 theorem destruct_congr_iff {s t : Wseq α} : s ~ t ↔ Computation.LiftRel (bisim_o (· ~ ·)) (destruct s) (destruct t) :=
   lift_rel_destruct_iff
 
-theorem lift_rel.refl (R : α → α → Prop) (H : Reflexive R) : Reflexive (lift_rel R) :=
-  fun s =>
-    by 
-      refine' ⟨· = ·, rfl, fun s t h : s = t => _⟩
-      rw [←h]
-      apply Computation.LiftRel.refl 
-      intro a 
-      cases' a with a 
-      simp 
-      cases a <;> simp 
-      apply H
+-- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lift_rel.refl (R : α → α → exprProp()) (H : reflexive R) : reflexive (lift_rel R) :=
+λ s, begin
+  refine [expr ⟨(«expr = »), rfl, λ (s t) (h : «expr = »(s, t)), _⟩],
+  rw ["<-", expr h] [],
+  apply [expr computation.lift_rel.refl],
+  intro [ident a],
+  cases [expr a] ["with", ident a],
+  simp [] [] [] [] [] [],
+  cases [expr a] []; simp [] [] [] [] [] [],
+  apply [expr H]
+end
 
 theorem lift_rel_o.swap (R : α → β → Prop) C : swap (lift_rel_o R C) = lift_rel_o (swap R) (swap C) :=
   by 
@@ -448,28 +440,23 @@ theorem lift_rel_o.swap (R : α → β → Prop) C : swap (lift_rel_o R C) = lif
         ·
           cases' y with y <;> [skip, cases y] <;> rfl
 
-theorem lift_rel.swap_lem {R : α → β → Prop} {s1 s2} (h : lift_rel R s1 s2) : lift_rel (swap R) s2 s1 :=
-  by 
-    refine' ⟨swap (lift_rel R), h, fun s t h : lift_rel R t s => _⟩
-    rw [←lift_rel_o.swap, Computation.LiftRel.swap]
-    apply lift_rel_destruct h
+-- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lift_rel.swap_lem {R : α → β → exprProp()} {s1 s2} (h : lift_rel R s1 s2) : lift_rel (swap R) s2 s1 :=
+begin
+  refine [expr ⟨swap (lift_rel R), h, λ (s t) (h : lift_rel R t s), _⟩],
+  rw ["[", "<-", expr lift_rel_o.swap, ",", expr computation.lift_rel.swap, "]"] [],
+  apply [expr lift_rel_destruct h]
+end
 
 theorem lift_rel.swap (R : α → β → Prop) : swap (lift_rel R) = lift_rel (swap R) :=
   funext$ fun x => funext$ fun y => propext ⟨lift_rel.swap_lem, lift_rel.swap_lem⟩
 
-theorem lift_rel.symm (R : α → α → Prop) (H : Symmetric R) : Symmetric (lift_rel R) :=
-  fun s1 s2 h : swap (lift_rel R) s2 s1 =>
-    by 
-      rwa [lift_rel.swap,
-        show swap R = R from
-          funext$
-            fun a =>
-              funext$
-                fun b =>
-                  propext$
-                    by 
-                      constructor <;> apply H] at
-        h
+-- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lift_rel.symm (R : α → α → exprProp()) (H : symmetric R) : symmetric (lift_rel R) :=
+λ
+(s1 s2)
+(h : swap (lift_rel R) s2 s1), by rwa ["[", expr lift_rel.swap, ",", expr show «expr = »(swap R, R), from «expr $ »(funext, λ
+  a, «expr $ »(funext, λ b, «expr $ »(propext, by constructor; apply [expr H]))), "]"] ["at", ident h]
 
 -- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem lift_rel.trans (R : α → α → exprProp()) (H : transitive R) : transitive (lift_rel R) :=
@@ -506,7 +493,7 @@ theorem lift_rel.equiv (R : α → α → Prop) : Equivalenceₓ R → Equivalen
 | ⟨refl, symm, trans⟩ => ⟨lift_rel.refl R refl, lift_rel.symm R symm, lift_rel.trans R trans⟩
 
 @[refl]
-theorem Equiv.refl : ∀ s : Wseq α, s ~ s :=
+theorem Equiv.refl : ∀ (s : Wseq α), s ~ s :=
   lift_rel.refl (· = ·) Eq.refl
 
 @[symm]
@@ -717,7 +704,7 @@ theorem drop.aux_none : ∀ n, @drop.aux α n none = return none
   show Computation.bind (return none) (drop.aux n) = return none by 
     rw [ret_bind, drop.aux_none]
 
-theorem destruct_dropn : ∀ s : Wseq α n, destruct (drop s n) = destruct s >>= drop.aux n
+theorem destruct_dropn : ∀ (s : Wseq α) n, destruct (drop s n) = destruct s >>= drop.aux n
 | s, 0 => (bind_ret' _).symm
 | s, n+1 =>
   by 
@@ -1779,13 +1766,17 @@ theorem join_join (SS : Wseq (Wseq (Wseq α))) : join (join SS) ~ join (map join
           ·
             exact ⟨s, S, SS, rfl, rfl⟩
 
+-- error in Data.Seq.Wseq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem bind_assoc (s : Wseq α) (f : α → Wseq β) (g : β → Wseq γ) :
-  bind (bind s f) g ~ bind s fun x : α => bind (f x) g :=
-  by 
-    simp [bind]
-    rw [←map_comp f (map g), map_comp (map g ∘ f) join]
-    apply join_join
+theorem bind_assoc
+(s : wseq α)
+(f : α → wseq β)
+(g : β → wseq γ) : [«expr ~ »/«expr ~ »](bind (bind s f) g, bind s (λ x : α, bind (f x) g)) :=
+begin
+  simp [] [] [] ["[", expr bind, "]"] [] [],
+  rw ["[", "<-", expr map_comp f (map g), ",", expr map_comp «expr ∘ »(map g, f) join, "]"] [],
+  apply [expr join_join]
+end
 
 instance  : Monadₓ Wseq :=
   { map := @map, pure := @ret, bind := @bind }

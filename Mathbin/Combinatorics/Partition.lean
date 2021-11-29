@@ -116,7 +116,7 @@ instance  (n : ℕ) : Fintype (partition n) :=
 
 /-- The finset of those partitions in which every part is odd. -/
 def odds (n : ℕ) : Finset (partition n) :=
-  Finset.univ.filter fun c => ∀ i _ : i ∈ c.parts, ¬Even i
+  Finset.univ.filter fun c => ∀ i (_ : i ∈ c.parts), ¬Even i
 
 /-- The finset of those partitions in which each part is used at most once. -/
 def distincts (n : ℕ) : Finset (partition n) :=

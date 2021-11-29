@@ -5,7 +5,7 @@ import Mathbin.LinearAlgebra.Prod
 # Partially defined linear maps
 
 A `linear_pmap R E F` is a linear map from a submodule of `E` to `F`. We define
-a `semilattice_inf_bot` instance on this this, and define three operations:
+a `semilattice_inf` with `order_bot` instance on this this, and define three operations:
 
 * `mk_span_singleton` defines a partial linear map defined on the span of a singleton.
 * `sup` takes two partial linear maps `f`, `g` that agree on the intersection of their
@@ -45,8 +45,8 @@ namespace LinearPmap
 
 open Submodule
 
-instance  : CoeFun (LinearPmap R E F) fun f : LinearPmap R E F => f.domain → F :=
-  ⟨fun f => f.to_fun⟩
+-- error in LinearAlgebra.LinearPmap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_coe_to_fun (linear_pmap R E F) (λ f : linear_pmap R E F, f.domain → F) := ⟨λ f, f.to_fun⟩
 
 @[simp]
 theorem to_fun_eq_coe (f : LinearPmap R E F) (x : f.domain) : f.to_fun x = f x :=
@@ -74,10 +74,10 @@ theorem mk_apply (p : Submodule R E) (f : p →ₗ[R] F) (x : p) : mk p f x = f 
 
 /-- The unique `linear_pmap` on `R ∙ x` that sends `x` to `y`. This version works for modules
 over rings, and requires a proof of `∀ c, c • x = 0 → c • y = 0`. -/
-noncomputable def mk_span_singleton' (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) : LinearPmap R E F :=
+noncomputable def mk_span_singleton' (x : E) (y : F) (H : ∀ (c : R), c • x = 0 → c • y = 0) : LinearPmap R E F :=
   { domain := R∙x,
     toFun :=
-      have H : ∀ c₁ c₂ : R, c₁ • x = c₂ • x → c₁ • y = c₂ • y :=
+      have H : ∀ (c₁ c₂ : R), c₁ • x = c₂ • x → c₁ • y = c₂ • y :=
         by 
           intro c₁ c₂ h 
           rw [←sub_eq_zero, ←sub_smul] at h⊢
@@ -99,12 +99,12 @@ noncomputable def mk_span_singleton' (x : E) (y : F) (H : ∀ c : R, c • x = 0
               apply coe_smul } }
 
 @[simp]
-theorem domain_mk_span_singleton (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) :
+theorem domain_mk_span_singleton (x : E) (y : F) (H : ∀ (c : R), c • x = 0 → c • y = 0) :
   (mk_span_singleton' x y H).domain = R∙x :=
   rfl
 
 @[simp]
-theorem mk_span_singleton_apply (x : E) (y : F) (H : ∀ c : R, c • x = 0 → c • y = 0) (c : R) h :
+theorem mk_span_singleton_apply (x : E) (y : F) (H : ∀ (c : R), c • x = 0 → c • y = 0) (c : R) h :
   mk_span_singleton' x y H ⟨c • x, h⟩ = c • y :=
   by 
     dsimp [mk_span_singleton']
@@ -150,7 +150,7 @@ theorem neg_apply (f : LinearPmap R E F) x : (-f) x = -f x :=
   rfl
 
 instance  : LE (LinearPmap R E F) :=
-  ⟨fun f g => f.domain ≤ g.domain ∧ ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ h : (x : E) = y, f x = g y⟩
+  ⟨fun f g => f.domain ≤ g.domain ∧ ∀ ⦃x : f.domain⦄ ⦃y : g.domain⦄ (h : (x : E) = y), f x = g y⟩
 
 -- error in LinearAlgebra.LinearPmap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eq_of_le_of_domain_eq
@@ -192,19 +192,8 @@ instance  : HasBot (LinearPmap R E F) :=
 instance  : Inhabited (LinearPmap R E F) :=
   ⟨⊥⟩
 
-instance  : OrderBot (LinearPmap R E F) :=
-  { bot := ⊥,
-    bot_le :=
-      fun f =>
-        ⟨bot_le,
-          fun x y h =>
-            have hx : x = 0 := Subtype.eq ((mem_bot R).1 x.2)
-            have hy : y = 0 := Subtype.eq (h.symm.trans (congr_argₓ _ hx))
-            by 
-              rw [hx, hy, map_zero, map_zero]⟩ }
-
-instance  : SemilatticeInfBot (LinearPmap R E F) :=
-  { LinearPmap.orderBot with le := · ≤ ·, le_refl := fun f => ⟨le_reflₓ f.domain, fun x y h => Subtype.eq h ▸ rfl⟩,
+instance  : SemilatticeInf (LinearPmap R E F) :=
+  { le := · ≤ ·, le_refl := fun f => ⟨le_reflₓ f.domain, fun x y h => Subtype.eq h ▸ rfl⟩,
     le_trans :=
       fun f g h ⟨fg_le, fg_eq⟩ ⟨gh_le, gh_eq⟩ =>
         ⟨le_transₓ fg_le gh_le,
@@ -239,6 +228,17 @@ instance  : SemilatticeInfBot (LinearPmap R E F) :=
                 Subtype.eq$
                   by 
                     exact h⟩ }
+
+instance  : OrderBot (LinearPmap R E F) :=
+  { bot := ⊥,
+    bot_le :=
+      fun f =>
+        ⟨bot_le,
+          fun x y h =>
+            have hx : x = 0 := Subtype.eq ((mem_bot R).1 x.2)
+            have hy : y = 0 := Subtype.eq (h.symm.trans (congr_argₓ _ hx))
+            by 
+              rw [hx, hy, map_zero, map_zero]⟩ }
 
 theorem le_of_eq_locus_ge {f g : LinearPmap R E F} (H : f.domain ≤ f.eq_locus g) : f ≤ g :=
   suffices f ≤ f⊓g from le_transₓ this inf_le_right
@@ -288,20 +288,20 @@ end
 /-- Given two partial linear maps that agree on the intersection of their domains,
 `f.sup g h` is the unique partial linear map on `f.domain ⊔ g.domain` that agrees
 with `f` and `g`. -/
-protected noncomputable def sup (f g : LinearPmap R E F) (h : ∀ x : f.domain y : g.domain, (x : E) = y → f x = g y) :
-  LinearPmap R E F :=
+protected noncomputable def sup (f g : LinearPmap R E F)
+  (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) : LinearPmap R E F :=
   ⟨_, Classical.some (sup_aux f g h)⟩
 
 @[simp]
-theorem domain_sup (f g : LinearPmap R E F) (h : ∀ x : f.domain y : g.domain, (x : E) = y → f x = g y) :
+theorem domain_sup (f g : LinearPmap R E F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
   (f.sup g h).domain = f.domain⊔g.domain :=
   rfl
 
-theorem sup_apply {f g : LinearPmap R E F} (H : ∀ x : f.domain y : g.domain, (x : E) = y → f x = g y) x y z
+theorem sup_apply {f g : LinearPmap R E F} (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) x y z
   (hz : ((«expr↑ » x : E)+«expr↑ » y) = «expr↑ » z) : f.sup g H z = f x+g y :=
   Classical.some_spec (sup_aux f g H) x y z hz
 
-protected theorem left_le_sup (f g : LinearPmap R E F) (h : ∀ x : f.domain y : g.domain, (x : E) = y → f x = g y) :
+protected theorem left_le_sup (f g : LinearPmap R E F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
   f ≤ f.sup g h :=
   by 
     refine' ⟨le_sup_left, fun z₁ z₂ hz => _⟩
@@ -309,7 +309,7 @@ protected theorem left_le_sup (f g : LinearPmap R E F) (h : ∀ x : f.domain y :
     refine' (sup_apply h _ _ _ _).symm 
     simpa
 
-protected theorem right_le_sup (f g : LinearPmap R E F) (h : ∀ x : f.domain y : g.domain, (x : E) = y → f x = g y) :
+protected theorem right_le_sup (f g : LinearPmap R E F) (h : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y) :
   g ≤ f.sup g h :=
   by 
     refine' ⟨le_sup_right, fun z₁ z₂ hz => _⟩
@@ -317,7 +317,7 @@ protected theorem right_le_sup (f g : LinearPmap R E F) (h : ∀ x : f.domain y 
     refine' (sup_apply h _ _ _ _).symm 
     simpa
 
-protected theorem sup_le {f g h : LinearPmap R E F} (H : ∀ x : f.domain y : g.domain, (x : E) = y → f x = g y)
+protected theorem sup_le {f g h : LinearPmap R E F} (H : ∀ (x : f.domain) (y : g.domain), (x : E) = y → f x = g y)
   (fh : f ≤ h) (gh : g ≤ h) : f.sup g H ≤ h :=
   have Hf : f ≤ f.sup g H⊓h := le_inf (f.left_le_sup g H) fh 
   have Hg : g ≤ f.sup g H⊓h := le_inf (f.right_le_sup g H) gh 
@@ -417,7 +417,7 @@ protected theorem le_Sup {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ �
   Classical.some_spec (Sup_aux c hc) hf
 
 protected theorem Sup_le {c : Set (LinearPmap R E F)} (hc : DirectedOn (· ≤ ·) c) {g : LinearPmap R E F}
-  (hg : ∀ f _ : f ∈ c, f ≤ g) : LinearPmap.supₓ c hc ≤ g :=
+  (hg : ∀ f (_ : f ∈ c), f ≤ g) : LinearPmap.supₓ c hc ≤ g :=
   le_of_eq_locus_ge$
     Sup_le$
       fun _ ⟨f, hf, Eq⟩ =>
@@ -454,7 +454,7 @@ def cod_restrict (f : LinearPmap R E F) (p : Submodule R F) (H : ∀ x, f x ∈ 
   { domain := f.domain, toFun := f.to_fun.cod_restrict p H }
 
 /-- Compose two `linear_pmap`s -/
-def comp (g : LinearPmap R F G) (f : LinearPmap R E F) (H : ∀ x : f.domain, f x ∈ g.domain) : LinearPmap R E G :=
+def comp (g : LinearPmap R F G) (f : LinearPmap R E F) (H : ∀ (x : f.domain), f x ∈ g.domain) : LinearPmap R E G :=
   g.to_fun.comp_pmap$ f.cod_restrict _ H
 
 /-- `f.coprod g` is the partially defined linear map defined on `f.domain × g.domain`,

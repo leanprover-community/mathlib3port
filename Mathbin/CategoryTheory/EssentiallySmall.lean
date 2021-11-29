@@ -72,7 +72,7 @@ A category is `w`-locally small if every hom set is `w`-small.
 See `shrink_homs C` for a category instance where every hom set has been replaced by a small model.
 -/
 class locally_small(C : Type u)[category.{v} C] : Prop where 
-  hom_small : ∀ X Y : C, Small.{w} (X ⟶ Y) :=  by 
+  hom_small : ∀ (X Y : C), Small.{w} (X ⟶ Y) :=  by 
   runTac 
     tactic.apply_instance
 
@@ -204,14 +204,14 @@ theorem essentially_small_iff (C : Type u) [category.{v} C] :
 /--
 Any thin category is locally small.
 -/
-instance (priority := 100)locally_small_of_thin {C : Type u} [category.{v} C] [∀ X Y : C, Subsingleton (X ⟶ Y)] :
+instance (priority := 100)locally_small_of_thin {C : Type u} [category.{v} C] [∀ (X Y : C), Subsingleton (X ⟶ Y)] :
   locally_small.{w} C :=
   {  }
 
 /--
 A thin category is essentially small if and only if the underlying type of its skeleton is small.
 -/
-theorem essentially_small_iff_of_thin {C : Type u} [category.{v} C] [∀ X Y : C, Subsingleton (X ⟶ Y)] :
+theorem essentially_small_iff_of_thin {C : Type u} [category.{v} C] [∀ (X Y : C), Subsingleton (X ⟶ Y)] :
   essentially_small.{w} C ↔ Small.{w} (skeleton C) :=
   by 
     simp [essentially_small_iff, CategoryTheory.locally_small_of_thin]

@@ -37,8 +37,9 @@ variable[Semiringₓ R]{p q r : Polynomial R}
 def degree (p : Polynomial R) : WithBot ℕ :=
   p.support.sup some
 
-theorem degree_lt_wf : WellFounded fun p q : Polynomial R => degree p < degree q :=
-  InvImage.wfₓ degree (WithBot.well_founded_lt Nat.lt_wf)
+-- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem degree_lt_wf : well_founded (λ p q : polynomial R, «expr < »(degree p, degree q)) :=
+inv_image.wf degree (with_bot.well_founded_lt nat.lt_wf)
 
 instance  : HasWellFounded (Polynomial R) :=
   ⟨_, degree_lt_wf⟩
@@ -593,24 +594,19 @@ theorem degree_add_eq_right_of_degree_lt (h : degree p < degree q) : degree (p+q
 theorem degree_add_C (hp : 0 < degree p) : degree (p+C a) = degree p :=
   add_commₓ (C a) p ▸ degree_add_eq_right_of_degree_lt$ lt_of_le_of_ltₓ degree_C_le hp
 
-theorem degree_add_eq_of_leading_coeff_add_ne_zero (h : (leading_coeff p+leading_coeff q) ≠ 0) :
-  degree (p+q) = max p.degree q.degree :=
-  le_antisymmₓ (degree_add_le _ _)$
-    match lt_trichotomyₓ (degree p) (degree q) with 
-    | Or.inl hlt =>
-      by 
-        rw [degree_add_eq_right_of_degree_lt hlt, max_eq_right_of_ltₓ hlt] <;> exact le_reflₓ _
-    | Or.inr (Or.inl HEq) =>
-      le_of_not_gtₓ$
-        fun hlt : max (degree p) (degree q) > degree (p+q) =>
-          h$
-            show (leading_coeff p+leading_coeff q) = 0 by 
-              rw [HEq, max_selfₓ] at hlt 
-              rw [leading_coeff, leading_coeff, nat_degree_eq_of_degree_eq HEq, ←coeff_add]
-              exact coeff_nat_degree_eq_zero_of_degree_lt hlt
-    | Or.inr (Or.inr hlt) =>
-      by 
-        rw [degree_add_eq_left_of_degree_lt hlt, max_eq_left_of_ltₓ hlt] <;> exact le_reflₓ _
+-- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem degree_add_eq_of_leading_coeff_add_ne_zero
+(h : «expr ≠ »(«expr + »(leading_coeff p, leading_coeff q), 0)) : «expr = »(degree «expr + »(p, q), max p.degree q.degree) :=
+«expr $ »(le_antisymm (degree_add_le _ _), match lt_trichotomy (degree p) (degree q) with
+ | or.inl hlt := by rw ["[", expr degree_add_eq_right_of_degree_lt hlt, ",", expr max_eq_right_of_lt hlt, "]"] []; exact [expr le_refl _]
+ | or.inr (or.inl heq) := «expr $ »(le_of_not_gt, assume
+  hlt : «expr > »(max (degree p) (degree q), degree «expr + »(p, q)), «expr $ »(h, show «expr = »(«expr + »(leading_coeff p, leading_coeff q), 0), begin
+     rw ["[", expr heq, ",", expr max_self, "]"] ["at", ident hlt],
+     rw ["[", expr leading_coeff, ",", expr leading_coeff, ",", expr nat_degree_eq_of_degree_eq heq, ",", "<-", expr coeff_add, "]"] [],
+     exact [expr coeff_nat_degree_eq_zero_of_degree_lt hlt]
+   end))
+ | or.inr (or.inr hlt) := by rw ["[", expr degree_add_eq_left_of_degree_lt hlt, ",", expr max_eq_left_of_lt hlt, "]"] []; exact [expr le_refl _]
+ end)
 
 theorem degree_erase_le (p : Polynomial R) (n : ℕ) : degree (p.erase n) ≤ degree p :=
   by 
@@ -664,7 +660,7 @@ theorem degree_mul_le (p q : Polynomial R) : degree (p*q) ≤ degree p+degree q 
       exact add_le_add (le_degree_of_ne_zero ha) (le_degree_of_ne_zero hb)
     
 
-theorem degree_pow_le (p : Polynomial R) : ∀ n : ℕ, degree (p ^ n) ≤ n • degree p
+theorem degree_pow_le (p : Polynomial R) : ∀ (n : ℕ), degree (p ^ n) ≤ n • degree p
 | 0 =>
   by 
     rw [pow_zeroₓ, zero_nsmul] <;> exact degree_one_le
@@ -908,14 +904,13 @@ theorem nat_degree_pow' {n : ℕ} (h : leading_coeff p ^ n ≠ 0) : nat_degree (
       show (nat_degree (p ^ n) : WithBot ℕ) = (n*nat_degree p : ℕ)by 
         rw [←degree_eq_nat_degree hpn, degree_pow' h, degree_eq_nat_degree hp0, ←WithBot.coe_nsmul] <;> simp 
 
-theorem leading_coeff_mul_monic {p q : Polynomial R} (hq : monic q) : leading_coeff (p*q) = leading_coeff p :=
-  Decidable.byCases
-    (fun H : leading_coeff p = 0 =>
-      by 
-        rw [H, leading_coeff_eq_zero.1 H, zero_mul, leading_coeff_zero])
-    fun H : leading_coeff p ≠ 0 =>
-      by 
-        rw [leading_coeff_mul', hq.leading_coeff, mul_oneₓ] <;> rwa [hq.leading_coeff, mul_oneₓ]
+-- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem leading_coeff_mul_monic
+{p q : polynomial R}
+(hq : monic q) : «expr = »(leading_coeff «expr * »(p, q), leading_coeff p) :=
+decidable.by_cases (λ
+ H : «expr = »(leading_coeff p, 0), by rw ["[", expr H, ",", expr leading_coeff_eq_zero.1 H, ",", expr zero_mul, ",", expr leading_coeff_zero, "]"] []) (λ
+ H : «expr ≠ »(leading_coeff p, 0), by rw ["[", expr leading_coeff_mul', ",", expr hq.leading_coeff, ",", expr mul_one, "]"] []; rwa ["[", expr hq.leading_coeff, ",", expr mul_one, "]"] [])
 
 @[simp]
 theorem leading_coeff_mul_X_pow {p : Polynomial R} {n : ℕ} : leading_coeff (p*X ^ n) = leading_coeff p :=
@@ -932,7 +927,8 @@ theorem nat_degree_mul_le {p q : Polynomial R} : nat_degree (p*q) ≤ nat_degree
     rw [WithBot.coe_add]
     refine' add_le_add _ _ <;> apply degree_le_nat_degree
 
-theorem subsingleton_of_monic_zero (h : monic (0 : Polynomial R)) : (∀ p q : Polynomial R, p = q) ∧ ∀ a b : R, a = b :=
+theorem subsingleton_of_monic_zero (h : monic (0 : Polynomial R)) :
+  (∀ (p q : Polynomial R), p = q) ∧ ∀ (a b : R), a = b :=
   by 
     rw [monic.def, leading_coeff_zero] at h <;>
       exact
@@ -969,15 +965,21 @@ theorem nat_degree_eq_zero_iff_degree_le_zero : p.nat_degree = 0 ↔ p.degree �
   by 
     rw [←nonpos_iff_eq_zero, nat_degree_le_iff_degree_le, WithBot.coe_zero]
 
-theorem degree_le_iff_coeff_zero (f : Polynomial R) (n : WithBot ℕ) : degree f ≤ n ↔ ∀ m : ℕ, n < m → coeff f m = 0 :=
-  ⟨fun H : Finset.sup f.support some ≤ n m Hm : n < (m : WithBot ℕ) =>
-      Decidable.of_not_not$
-        fun H4 =>
-          have H1 : m ∉ f.support := fun H2 => not_lt_of_geₓ ((Finset.sup_le_iff.1 H) m H2 : (m : WithBot ℕ) ≤ n) Hm 
-          H1$ mem_support_iff.2 H4,
-    fun H => Finset.sup_le$ fun b Hb => Decidable.of_not_not$ fun Hn => mem_support_iff.1 Hb$ H b$ lt_of_not_geₓ Hn⟩
+-- error in Data.Polynomial.Degree.Definitions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem degree_le_iff_coeff_zero
+(f : polynomial R)
+(n : with_bot exprℕ()) : «expr ↔ »(«expr ≤ »(degree f, n), ∀ m : exprℕ(), «expr < »(n, m) → «expr = »(coeff f m, 0)) :=
+⟨λ
+ (H : «expr ≤ »(finset.sup f.support some, n))
+ (m)
+ (Hm : «expr < »(n, (m : with_bot exprℕ()))), «expr $ »(decidable.of_not_not, λ
+  H4, have H1 : «expr ∉ »(m, f.support), from λ
+  H2, not_lt_of_ge (finset.sup_le_iff.1 H m H2 : «expr ≤ »((m : with_bot exprℕ()), n)) Hm,
+  «expr $ »(H1, mem_support_iff.2 H4)), λ
+ H, «expr $ »(finset.sup_le, λ
+  b Hb, «expr $ »(decidable.of_not_not, λ Hn, «expr $ »(mem_support_iff.1 Hb, «expr $ »(H b, lt_of_not_ge Hn))))⟩
 
-theorem degree_lt_iff_coeff_zero (f : Polynomial R) (n : ℕ) : degree f < n ↔ ∀ m : ℕ, n ≤ m → coeff f m = 0 :=
+theorem degree_lt_iff_coeff_zero (f : Polynomial R) (n : ℕ) : degree f < n ↔ ∀ (m : ℕ), n ≤ m → coeff f m = 0 :=
   by 
     refine' ⟨fun hf m hm => coeff_eq_zero_of_degree_lt (lt_of_lt_of_leₓ hf (WithBot.coe_le_coe.2 hm)), _⟩
     simp only [degree, Finset.sup_lt_iff (WithBot.bot_lt_coe n), mem_support_iff, WithBot.some_eq_coe,

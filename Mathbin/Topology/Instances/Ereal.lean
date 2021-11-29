@@ -130,8 +130,12 @@ theorem continuous_coe_iff {f : α → ℝ} : (Continuous fun a => (f a : Ereal)
 theorem nhds_coe {r : ℝ} : 𝓝 (r : Ereal) = (𝓝 r).map coeₓ :=
   (open_embedding_coe.map_nhds_eq r).symm
 
-theorem nhds_coe_coe {r p : ℝ} : 𝓝 ((r : Ereal), (p : Ereal)) = (𝓝 (r, p)).map fun p : ℝ × ℝ => (p.1, p.2) :=
-  ((open_embedding_coe.Prod open_embedding_coe).map_nhds_eq (r, p)).symm
+-- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_coe_coe
+{r
+ p : exprℝ()} : «expr = »(expr𝓝() ((r : ereal), (p : ereal)), (expr𝓝() (r, p)).map (λ
+  p : «expr × »(exprℝ(), exprℝ()), (p.1, p.2))) :=
+((open_embedding_coe.prod open_embedding_coe).map_nhds_eq (r, p)).symm
 
 theorem tendsto_to_real {a : Ereal} (ha : a ≠ ⊤) (h'a : a ≠ ⊥) : tendsto Ereal.toReal (𝓝 a) (𝓝 a.to_real) :=
   by 
@@ -255,7 +259,7 @@ theorem mem_nhds_top_iff {s : Set Ereal} : s ∈ 𝓝 (⊤ : Ereal) ↔ ∃ y : 
             simp [le_reflₓ]⟩
 
 theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → Ereal} {f : Filter α} :
-  tendsto m f (𝓝 ⊤) ↔ ∀ x : ℝ, ∀ᶠa in f, «expr↑ » x < m a :=
+  tendsto m f (𝓝 ⊤) ↔ ∀ (x : ℝ), ∀ᶠa in f, «expr↑ » x < m a :=
   by 
     simp only [nhds_top', mem_Ioi, tendsto_infi, tendsto_principal]
 
@@ -302,113 +306,125 @@ theorem mem_nhds_bot_iff {s : Set Ereal} : s ∈ 𝓝 (⊥ : Ereal) ↔ ∃ y : 
             simp [le_reflₓ]⟩
 
 theorem tendsto_nhds_bot_iff_real {α : Type _} {m : α → Ereal} {f : Filter α} :
-  tendsto m f (𝓝 ⊥) ↔ ∀ x : ℝ, ∀ᶠa in f, m a < x :=
+  tendsto m f (𝓝 ⊥) ↔ ∀ (x : ℝ), ∀ᶠa in f, m a < x :=
   by 
     simp only [nhds_bot', mem_Iio, tendsto_infi, tendsto_principal]
 
 /-! ### Continuity of addition -/
 
 
-theorem continuous_at_add_coe_coe (a b : ℝ) : ContinuousAt (fun p : Ereal × Ereal => p.1+p.2) (a, b) :=
-  by 
-    simp only [ContinuousAt, nhds_coe_coe, ←coe_add, tendsto_map'_iff, · ∘ ·, tendsto_coe, tendsto_add]
+-- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_add_coe_coe
+(a b : exprℝ()) : continuous_at (λ p : «expr × »(ereal, ereal), «expr + »(p.1, p.2)) (a, b) :=
+by simp [] [] ["only"] ["[", expr continuous_at, ",", expr nhds_coe_coe, ",", "<-", expr coe_add, ",", expr tendsto_map'_iff, ",", expr («expr ∘ »), ",", expr tendsto_coe, ",", expr tendsto_add, "]"] [] []
 
-theorem continuous_at_add_top_coe (a : ℝ) : ContinuousAt (fun p : Ereal × Ereal => p.1+p.2) (⊤, a) :=
-  by 
-    simp only [ContinuousAt, tendsto_nhds_top_iff_real, top_add, nhds_prod_eq]
-    intro r 
-    rw [eventually_prod_iff]
-    refine'
-      ⟨fun z => ((r - (a - 1) : ℝ) : Ereal) < z, Ioi_mem_nhds (coe_lt_top _), fun z => ((a - 1 : ℝ) : Ereal) < z,
-        Ioi_mem_nhds
-          (by 
-            simp [zero_lt_one]),
-        fun x hx y hy => _⟩
-    dsimp 
-    convert add_lt_add hx hy 
-    simp 
+-- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_add_top_coe
+(a : exprℝ()) : continuous_at (λ p : «expr × »(ereal, ereal), «expr + »(p.1, p.2)) («expr⊤»(), a) :=
+begin
+  simp [] [] ["only"] ["[", expr continuous_at, ",", expr tendsto_nhds_top_iff_real, ",", expr top_add, ",", expr nhds_prod_eq, "]"] [] [],
+  assume [binders (r)],
+  rw [expr eventually_prod_iff] [],
+  refine [expr ⟨λ
+    z, «expr < »(((«expr - »(r, «expr - »(a, 1)) : exprℝ()) : ereal), z), Ioi_mem_nhds (coe_lt_top _), λ
+    z, «expr < »(((«expr - »(a, 1) : exprℝ()) : ereal), z), Ioi_mem_nhds (by simp [] [] [] ["[", expr zero_lt_one, "]"] [] []), λ
+    x hx y hy, _⟩],
+  dsimp [] [] [] [],
+  convert [] [expr add_lt_add hx hy] [],
+  simp [] [] [] [] [] []
+end
 
-theorem continuous_at_add_coe_top (a : ℝ) : ContinuousAt (fun p : Ereal × Ereal => p.1+p.2) (a, ⊤) :=
-  by 
-    change ContinuousAt ((fun p : Ereal × Ereal => p.2+p.1) ∘ Prod.swap) (a, ⊤)
-    apply ContinuousAt.comp _ continuous_swap.continuous_at 
-    simpRw [add_commₓ]
-    exact continuous_at_add_top_coe a
+-- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_add_coe_top
+(a : exprℝ()) : continuous_at (λ p : «expr × »(ereal, ereal), «expr + »(p.1, p.2)) (a, «expr⊤»()) :=
+begin
+  change [expr continuous_at «expr ∘ »(λ
+    p : «expr × »(ereal, ereal), «expr + »(p.2, p.1), prod.swap) (a, «expr⊤»())] [] [],
+  apply [expr continuous_at.comp _ continuous_swap.continuous_at],
+  simp_rw [expr add_comm] [],
+  exact [expr continuous_at_add_top_coe a]
+end
 
-theorem continuous_at_add_top_top : ContinuousAt (fun p : Ereal × Ereal => p.1+p.2) (⊤, ⊤) :=
-  by 
-    simp only [ContinuousAt, tendsto_nhds_top_iff_real, top_add, nhds_prod_eq]
-    intro r 
-    rw [eventually_prod_iff]
-    refine'
-      ⟨fun z => (r : Ereal) < z, Ioi_mem_nhds (coe_lt_top _), fun z => ((0 : ℝ) : Ereal) < z,
-        Ioi_mem_nhds
-          (by 
-            simp [zero_lt_one]),
-        fun x hx y hy => _⟩
-    dsimp 
-    convert add_lt_add hx hy 
-    simp 
+-- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_add_top_top : continuous_at (λ
+ p : «expr × »(ereal, ereal), «expr + »(p.1, p.2)) («expr⊤»(), «expr⊤»()) :=
+begin
+  simp [] [] ["only"] ["[", expr continuous_at, ",", expr tendsto_nhds_top_iff_real, ",", expr top_add, ",", expr nhds_prod_eq, "]"] [] [],
+  assume [binders (r)],
+  rw [expr eventually_prod_iff] [],
+  refine [expr ⟨λ
+    z, «expr < »((r : ereal), z), Ioi_mem_nhds (coe_lt_top _), λ
+    z, «expr < »(((0 : exprℝ()) : ereal), z), Ioi_mem_nhds (by simp [] [] [] ["[", expr zero_lt_one, "]"] [] []), λ
+    x hx y hy, _⟩],
+  dsimp [] [] [] [],
+  convert [] [expr add_lt_add hx hy] [],
+  simp [] [] [] [] [] []
+end
 
-theorem continuous_at_add_bot_coe (a : ℝ) : ContinuousAt (fun p : Ereal × Ereal => p.1+p.2) (⊥, a) :=
-  by 
-    simp only [ContinuousAt, tendsto_nhds_bot_iff_real, nhds_prod_eq, bot_add_coe]
-    intro r 
-    rw [eventually_prod_iff]
-    refine'
-      ⟨fun z => z < ((r - a+1 : ℝ) : Ereal), Iio_mem_nhds (bot_lt_coe _), fun z => z < ((a+1 : ℝ) : Ereal),
-        Iio_mem_nhds
-          (by 
-            simp [-coe_add, zero_lt_one]),
-        fun x hx y hy => _⟩
-    dsimp 
-    convert add_lt_add hx hy 
-    dsimp 
-    ring
+-- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_add_bot_coe
+(a : exprℝ()) : continuous_at (λ p : «expr × »(ereal, ereal), «expr + »(p.1, p.2)) («expr⊥»(), a) :=
+begin
+  simp [] [] ["only"] ["[", expr continuous_at, ",", expr tendsto_nhds_bot_iff_real, ",", expr nhds_prod_eq, ",", expr bot_add_coe, "]"] [] [],
+  assume [binders (r)],
+  rw [expr eventually_prod_iff] [],
+  refine [expr ⟨λ
+    z, «expr < »(z, ((«expr - »(r, «expr + »(a, 1)) : exprℝ()) : ereal)), Iio_mem_nhds (bot_lt_coe _), λ
+    z, «expr < »(z, ((«expr + »(a, 1) : exprℝ()) : ereal)), Iio_mem_nhds (by simp [] [] [] ["[", "-", ident coe_add, ",", expr zero_lt_one, "]"] [] []), λ
+    x hx y hy, _⟩],
+  dsimp [] [] [] [],
+  convert [] [expr add_lt_add hx hy] [],
+  dsimp [] [] [] [],
+  ring []
+end
 
-theorem continuous_at_add_coe_bot (a : ℝ) : ContinuousAt (fun p : Ereal × Ereal => p.1+p.2) (a, ⊥) :=
-  by 
-    change ContinuousAt ((fun p : Ereal × Ereal => p.2+p.1) ∘ Prod.swap) (a, ⊥)
-    apply ContinuousAt.comp _ continuous_swap.continuous_at 
-    simpRw [add_commₓ]
-    exact continuous_at_add_bot_coe a
+-- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_add_coe_bot
+(a : exprℝ()) : continuous_at (λ p : «expr × »(ereal, ereal), «expr + »(p.1, p.2)) (a, «expr⊥»()) :=
+begin
+  change [expr continuous_at «expr ∘ »(λ
+    p : «expr × »(ereal, ereal), «expr + »(p.2, p.1), prod.swap) (a, «expr⊥»())] [] [],
+  apply [expr continuous_at.comp _ continuous_swap.continuous_at],
+  simp_rw [expr add_comm] [],
+  exact [expr continuous_at_add_bot_coe a]
+end
 
-theorem continuous_at_add_bot_bot : ContinuousAt (fun p : Ereal × Ereal => p.1+p.2) (⊥, ⊥) :=
-  by 
-    simp only [ContinuousAt, tendsto_nhds_bot_iff_real, nhds_prod_eq, bot_add_bot]
-    intro r 
-    rw [eventually_prod_iff]
-    refine'
-      ⟨fun z => z < r, Iio_mem_nhds (bot_lt_coe _), fun z => z < 0, Iio_mem_nhds (bot_lt_coe _), fun x hx y hy => _⟩
-    dsimp 
-    convert add_lt_add hx hy 
-    simp 
+-- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_add_bot_bot : continuous_at (λ
+ p : «expr × »(ereal, ereal), «expr + »(p.1, p.2)) («expr⊥»(), «expr⊥»()) :=
+begin
+  simp [] [] ["only"] ["[", expr continuous_at, ",", expr tendsto_nhds_bot_iff_real, ",", expr nhds_prod_eq, ",", expr bot_add_bot, "]"] [] [],
+  assume [binders (r)],
+  rw [expr eventually_prod_iff] [],
+  refine [expr ⟨λ
+    z, «expr < »(z, r), Iio_mem_nhds (bot_lt_coe _), λ
+    z, «expr < »(z, 0), Iio_mem_nhds (bot_lt_coe _), λ x hx y hy, _⟩],
+  dsimp [] [] [] [],
+  convert [] [expr add_lt_add hx hy] [],
+  simp [] [] [] [] [] []
+end
 
+-- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The addition on `ereal` is continuous except where it doesn't make sense (i.e., at `(⊥, ⊤)`
 and at `(⊤, ⊥)`). -/
-theorem continuous_at_add {p : Ereal × Ereal} (h : p.1 ≠ ⊤ ∨ p.2 ≠ ⊥) (h' : p.1 ≠ ⊥ ∨ p.2 ≠ ⊤) :
-  ContinuousAt (fun p : Ereal × Ereal => p.1+p.2) p :=
-  by 
-    rcases p with ⟨x, y⟩
-    induction x using Ereal.rec <;> induction y using Ereal.rec
-    ·
-      exact continuous_at_add_bot_bot
-    ·
-      exact continuous_at_add_bot_coe _
-    ·
-      simpa using h'
-    ·
-      exact continuous_at_add_coe_bot _
-    ·
-      exact continuous_at_add_coe_coe _ _
-    ·
-      exact continuous_at_add_coe_top _
-    ·
-      simpa using h
-    ·
-      exact continuous_at_add_top_coe _
-    ·
-      exact continuous_at_add_top_top
+theorem continuous_at_add
+{p : «expr × »(ereal, ereal)}
+(h : «expr ∨ »(«expr ≠ »(p.1, «expr⊤»()), «expr ≠ »(p.2, «expr⊥»())))
+(h' : «expr ∨ »(«expr ≠ »(p.1, «expr⊥»()), «expr ≠ »(p.2, «expr⊤»()))) : continuous_at (λ
+ p : «expr × »(ereal, ereal), «expr + »(p.1, p.2)) p :=
+begin
+  rcases [expr p, "with", "⟨", ident x, ",", ident y, "⟩"],
+  induction [expr x] ["using", ident ereal.rec] [] []; induction [expr y] ["using", ident ereal.rec] [] [],
+  { exact [expr continuous_at_add_bot_bot] },
+  { exact [expr continuous_at_add_bot_coe _] },
+  { simpa [] [] [] [] [] ["using", expr h'] },
+  { exact [expr continuous_at_add_coe_bot _] },
+  { exact [expr continuous_at_add_coe_coe _ _] },
+  { exact [expr continuous_at_add_coe_top _] },
+  { simpa [] [] [] [] [] ["using", expr h] },
+  { exact [expr continuous_at_add_top_coe _] },
+  { exact [expr continuous_at_add_top_top] }
+end
 
 /-! ### Negation-/
 
@@ -417,8 +433,8 @@ theorem continuous_at_add {p : Ereal × Ereal} (h : p.1 ≠ ⊤ ∨ p.2 ≠ ⊥)
 def neg_homeo : Ereal ≃ₜ Ereal :=
   neg_order_iso.toHomeomorph
 
-theorem continuous_neg : Continuous fun x : Ereal => -x :=
-  neg_homeo.Continuous
+-- error in Topology.Instances.Ereal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_neg : continuous (λ x : ereal, «expr- »(x)) := neg_homeo.continuous
 
 end Ereal
 

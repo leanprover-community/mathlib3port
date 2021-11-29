@@ -77,7 +77,7 @@ theorem infty_ne_coe (x : X) : ∞ ≠ (x : Alexandroff X) :=
 
 /-- Recursor for `alexandroff` using the preferred forms `∞` and `↑x`. -/
 @[elab_as_eliminator]
-protected def rec (C : Alexandroff X → Sort _) (h₁ : C ∞) (h₂ : ∀ x : X, C x) : ∀ z : Alexandroff X, C z :=
+protected def rec (C : Alexandroff X → Sort _) (h₁ : C ∞) (h₂ : ∀ (x : X), C x) : ∀ (z : Alexandroff X), C z :=
   Option.rec h₁ h₂
 
 theorem is_compl_range_coe_infty : IsCompl (range (coeₓ : X → Alexandroff X)) {∞} :=
@@ -274,7 +274,7 @@ instance nhds_within_compl_infty_ne_bot [NoncompactSpace X] : ne_bot (𝓝[«exp
     rw [nhds_within_compl_infty_eq]
     infer_instance
 
-instance (priority := 900)nhds_within_compl_ne_bot [∀ x : X, ne_bot (𝓝[«expr ᶜ» {x}] x)] [NoncompactSpace X]
+instance (priority := 900)nhds_within_compl_ne_bot [∀ (x : X), ne_bot (𝓝[«expr ᶜ» {x}] x)] [NoncompactSpace X]
   (x : Alexandroff X) : ne_bot (𝓝[«expr ᶜ» {x}] x) :=
   Alexandroff.rec _ Alexandroff.nhds_within_compl_infty_ne_bot (fun y => Alexandroff.nhds_within_compl_coe_ne_bot y) x
 
@@ -282,11 +282,13 @@ theorem nhds_infty_eq : 𝓝 (∞ : Alexandroff X) = map coeₓ (coclosed_compac
   by 
     rw [←nhds_within_compl_infty_eq, nhds_within_compl_singleton_sup_pure]
 
-theorem has_basis_nhds_infty :
-  (𝓝 (∞ : Alexandroff X)).HasBasis (fun s : Set X => IsClosed s ∧ IsCompact s) fun s => coeₓ '' «expr ᶜ» s ∪ {∞} :=
-  by 
-    rw [nhds_infty_eq]
-    exact (has_basis_coclosed_compact.map _).sup_pure _
+-- error in Topology.Alexandroff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis_nhds_infty : (expr𝓝() («expr∞»() : alexandroff X)).has_basis (λ
+ s : set X, «expr ∧ »(is_closed s, is_compact s)) (λ s, «expr ∪ »(«expr '' »(coe, «expr ᶜ»(s)), {«expr∞»()})) :=
+begin
+  rw [expr nhds_infty_eq] [],
+  exact [expr (has_basis_coclosed_compact.map _).sup_pure _]
+end
 
 @[simp]
 theorem comap_coe_nhds_infty : comap (coeₓ : X → Alexandroff X) (𝓝 ∞) = coclosed_compact X :=
@@ -294,12 +296,12 @@ theorem comap_coe_nhds_infty : comap (coeₓ : X → Alexandroff X) (𝓝 ∞) =
     simp [nhds_infty_eq, comap_sup, comap_map coe_injective]
 
 theorem le_nhds_infty {f : Filter (Alexandroff X)} :
-  f ≤ 𝓝 ∞ ↔ ∀ s : Set X, IsClosed s → IsCompact s → coeₓ '' «expr ᶜ» s ∪ {∞} ∈ f :=
+  f ≤ 𝓝 ∞ ↔ ∀ (s : Set X), IsClosed s → IsCompact s → coeₓ '' «expr ᶜ» s ∪ {∞} ∈ f :=
   by 
     simp only [has_basis_nhds_infty.ge_iff, and_imp]
 
 theorem ultrafilter_le_nhds_infty {f : Ultrafilter (Alexandroff X)} :
-  (f : Filter (Alexandroff X)) ≤ 𝓝 ∞ ↔ ∀ s : Set X, IsClosed s → IsCompact s → coeₓ '' s ∉ f :=
+  (f : Filter (Alexandroff X)) ≤ 𝓝 ∞ ↔ ∀ (s : Set X), IsClosed s → IsCompact s → coeₓ '' s ∉ f :=
   by 
     simp only [le_nhds_infty, ←compl_image_coe, Ultrafilter.mem_coe, Ultrafilter.compl_mem_iff_not_mem]
 
@@ -310,7 +312,7 @@ theorem tendsto_nhds_infty' {α : Type _} {f : Alexandroff X → α} {l : Filter
 
 theorem tendsto_nhds_infty {α : Type _} {f : Alexandroff X → α} {l : Filter α} :
   tendsto f (𝓝 ∞) l ↔
-    ∀ s _ : s ∈ l, f ∞ ∈ s ∧ ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ maps_to (f ∘ coeₓ) («expr ᶜ» t) s :=
+    ∀ s (_ : s ∈ l), f ∞ ∈ s ∧ ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ maps_to (f ∘ coeₓ) («expr ᶜ» t) s :=
   tendsto_nhds_infty'.trans$
     by 
       simp only [tendsto_pure_left, has_basis_coclosed_compact.tendsto_left_iff, forall_and_distrib, and_assoc,
@@ -321,7 +323,7 @@ theorem continuous_at_infty' {Y : Type _} [TopologicalSpace Y] {f : Alexandroff 
   tendsto_nhds_infty'.trans$ and_iff_right (tendsto_pure_nhds _ _)
 
 theorem continuous_at_infty {Y : Type _} [TopologicalSpace Y] {f : Alexandroff X → Y} :
-  ContinuousAt f ∞ ↔ ∀ s _ : s ∈ 𝓝 (f ∞), ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ maps_to (f ∘ coeₓ) («expr ᶜ» t) s :=
+  ContinuousAt f ∞ ↔ ∀ s (_ : s ∈ 𝓝 (f ∞)), ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ maps_to (f ∘ coeₓ) («expr ᶜ» t) s :=
   continuous_at_infty'.trans$
     by 
       simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_prop, and_assoc]

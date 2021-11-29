@@ -31,16 +31,18 @@ variable(A : Type u)[TopologicalSpace A]
 
 variable[Semiringₓ A]
 
-theorem continuous_algebra_map_iff_smul [Algebra R A] [TopologicalRing A] :
-  Continuous (algebraMap R A) ↔ Continuous fun p : R × A => p.1 • p.2 :=
-  by 
-    refine' ⟨fun h => _, fun h => _⟩
-    ·
-      simp only [Algebra.smul_def]
-      exact (h.comp continuous_fst).mul continuous_snd
-    ·
-      rw [algebra_map_eq_smul_one']
-      exact h.comp (continuous_id.prod_mk continuous_const)
+-- error in Topology.Algebra.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_algebra_map_iff_smul
+[algebra R A]
+[topological_ring A] : «expr ↔ »(continuous (algebra_map R A), continuous (λ
+  p : «expr × »(R, A), «expr • »(p.1, p.2))) :=
+begin
+  refine [expr ⟨λ h, _, λ h, _⟩],
+  { simp [] [] ["only"] ["[", expr algebra.smul_def, "]"] [] [],
+    exact [expr (h.comp continuous_fst).mul continuous_snd] },
+  { rw [expr algebra_map_eq_smul_one'] [],
+    exact [expr h.comp (continuous_id.prod_mk continuous_const)] }
+end
 
 @[continuity]
 theorem continuous_algebra_map [Algebra R A] [TopologicalRing A] [HasContinuousSmul R A] :

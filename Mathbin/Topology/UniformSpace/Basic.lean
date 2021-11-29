@@ -220,8 +220,8 @@ structure UniformSpace.Core(α : Type u) where
 
 /-- An alternative constructor for `uniform_space.core`. This version unfolds various
 `filter`-related definitions. -/
-def UniformSpace.Core.mk' {α : Type u} (U : Filter (α × α)) (refl : ∀ r _ : r ∈ U x, (x, x) ∈ r)
-  (symm : ∀ r _ : r ∈ U, Prod.swap ⁻¹' r ∈ U) (comp : ∀ r _ : r ∈ U, ∃ (t : _)(_ : t ∈ U), t ○ t ⊆ r) :
+def UniformSpace.Core.mk' {α : Type u} (U : Filter (α × α)) (refl : ∀ r (_ : r ∈ U) x, (x, x) ∈ r)
+  (symm : ∀ r (_ : r ∈ U), Prod.swap ⁻¹' r ∈ U) (comp : ∀ r (_ : r ∈ U), ∃ (t : _)(_ : t ∈ U), t ○ t ⊆ r) :
   UniformSpace.Core α :=
   ⟨U, fun r ru => id_rel_subset.2 (refl _ ru), symm,
     by 
@@ -257,12 +257,12 @@ theorem UniformSpace.core_eq : ∀ {u₁ u₂ : UniformSpace.Core α}, u₁.unif
   A metric space has a natural uniformity, and a uniform space has a natural topology.
   A topological group also has a natural uniformity, even when it is not metrizable. -/
 class UniformSpace(α : Type u) extends TopologicalSpace α, UniformSpace.Core α where 
-  is_open_uniformity : ∀ s, IsOpen s ↔ ∀ x _ : x ∈ s, { p:α × α | p.1 = x → p.2 ∈ s } ∈ uniformity
+  is_open_uniformity : ∀ s, IsOpen s ↔ ∀ x (_ : x ∈ s), { p:α × α | p.1 = x → p.2 ∈ s } ∈ uniformity
 
 /-- Alternative constructor for `uniform_space α` when a topology is already given. -/
 @[matchPattern]
 def UniformSpace.mk' {α} (t : TopologicalSpace α) (c : UniformSpace.Core α)
-  (is_open_uniformity : ∀ s : Set α, t.is_open s ↔ ∀ x _ : x ∈ s, { p:α × α | p.1 = x → p.2 ∈ s } ∈ c.uniformity) :
+  (is_open_uniformity : ∀ (s : Set α), t.is_open s ↔ ∀ x (_ : x ∈ s), { p:α × α | p.1 = x → p.2 ∈ s } ∈ c.uniformity) :
   UniformSpace α :=
   ⟨c, is_open_uniformity⟩
 
@@ -312,7 +312,7 @@ def uniformity (α : Type u) [UniformSpace α] : Filter (α × α) :=
 
 localized [uniformity] notation "𝓤" => uniformity
 
-theorem is_open_uniformity {s : Set α} : IsOpen s ↔ ∀ x _ : x ∈ s, { p:α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α :=
+theorem is_open_uniformity {s : Set α} : IsOpen s ↔ ∀ x (_ : x ∈ s), { p:α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α :=
   UniformSpace.is_open_uniformity s
 
 theorem refl_le_uniformity : 𝓟 IdRel ≤ 𝓤 α :=
@@ -327,15 +327,19 @@ theorem mem_uniformity_of_eq {x y : α} {s : Set (α × α)} (h : s ∈ 𝓤 α)
 theorem symm_le_uniformity : map (@Prod.swap α α) (𝓤 _) ≤ 𝓤 _ :=
   (@UniformSpace.toCore α _).symm
 
-theorem comp_le_uniformity : ((𝓤 α).lift' fun s : Set (α × α) => s ○ s) ≤ 𝓤 α :=
-  (@UniformSpace.toCore α _).comp
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem comp_le_uniformity : «expr ≤ »((expr𝓤() α).lift' (λ s : set «expr × »(α, α), «expr ○ »(s, s)), expr𝓤() α) :=
+(@uniform_space.to_core α _).comp
 
 theorem tendsto_swap_uniformity : tendsto (@Prod.swap α α) (𝓤 α) (𝓤 α) :=
   symm_le_uniformity
 
-theorem comp_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤 α) : ∃ (t : _)(_ : t ∈ 𝓤 α), t ○ t ⊆ s :=
-  have  : s ∈ (𝓤 α).lift' fun t : Set (α × α) => t ○ t := comp_le_uniformity hs
-  (mem_lift'_sets$ monotone_comp_rel monotone_id monotone_id).mp this
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem comp_mem_uniformity_sets
+{s : set «expr × »(α, α)}
+(hs : «expr ∈ »(s, expr𝓤() α)) : «expr∃ , »((t «expr ∈ » expr𝓤() α), «expr ⊆ »(«expr ○ »(t, t), s)) :=
+have «expr ∈ »(s, (expr𝓤() α).lift' (λ t : set «expr × »(α, α), «expr ○ »(t, t))), from comp_le_uniformity hs,
+«expr $ »(mem_lift'_sets, monotone_comp_rel monotone_id monotone_id).mp this
 
 /-- Relation `λ f g, tendsto (λ x, (f x, g x)) l (𝓤 α)` is transitive. -/
 theorem Filter.Tendsto.uniformity_trans {l : Filter β} {f₁ f₂ f₃ : β → α}
@@ -390,32 +394,39 @@ theorem uniformity_lift_le_swap {g : Set (α × α) → Filter β} {f : Filter �
       rw [map_lift_eq2 hg, image_swap_eq_preimage_swap] <;> exact h
     
 
-theorem uniformity_lift_le_comp {f : Set (α × α) → Filter β} (h : Monotone f) :
-  ((𝓤 α).lift fun s => f (s ○ s)) ≤ (𝓤 α).lift f :=
-  calc ((𝓤 α).lift fun s => f (s ○ s)) = ((𝓤 α).lift' fun s : Set (α × α) => s ○ s).lift f :=
-    by 
-      rw [lift_lift'_assoc]
-      exact monotone_comp_rel monotone_id monotone_id 
-      exact h 
-    _ ≤ (𝓤 α).lift f := lift_mono comp_le_uniformity (le_reflₓ _)
-    
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_lift_le_comp
+{f : set «expr × »(α, α) → filter β}
+(h : monotone f) : «expr ≤ »((expr𝓤() α).lift (λ s, f «expr ○ »(s, s)), (expr𝓤() α).lift f) :=
+calc
+  «expr = »((expr𝓤() α).lift (λ
+    s, f «expr ○ »(s, s)), ((expr𝓤() α).lift' (λ s : set «expr × »(α, α), «expr ○ »(s, s))).lift f) : begin
+    rw ["[", expr lift_lift'_assoc, "]"] [],
+    exact [expr monotone_comp_rel monotone_id monotone_id],
+    exact [expr h]
+  end
+  «expr ≤ »(..., (expr𝓤() α).lift f) : lift_mono comp_le_uniformity (le_refl _)
 
-theorem comp_le_uniformity3 : ((𝓤 α).lift' fun s : Set (α × α) => s ○ (s ○ s)) ≤ 𝓤 α :=
-  calc ((𝓤 α).lift' fun d => d ○ (d ○ d)) = (𝓤 α).lift fun s => (𝓤 α).lift' fun t : Set (α × α) => s ○ (t ○ t) :=
-    by 
-      rw [lift_lift'_same_eq_lift']
-      exact fun x => monotone_comp_rel monotone_const$ monotone_comp_rel monotone_id monotone_id 
-      exact fun x => monotone_comp_rel monotone_id monotone_const 
-    _ ≤ (𝓤 α).lift fun s => (𝓤 α).lift' fun t : Set (α × α) => s ○ t :=
-    lift_mono'$
-      fun s hs =>
-        @uniformity_lift_le_comp α _ _ (𝓟 ∘ (· ○ ·) s)$
-          monotone_principal.comp (monotone_comp_rel monotone_const monotone_id)
-    _ = (𝓤 α).lift' fun s : Set (α × α) => s ○ s :=
-    lift_lift'_same_eq_lift' (fun s => monotone_comp_rel monotone_const monotone_id)
-      fun s => monotone_comp_rel monotone_id monotone_const 
-    _ ≤ 𝓤 α := comp_le_uniformity
-    
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem comp_le_uniformity3 : «expr ≤ »((expr𝓤() α).lift' (λ
+  s : set «expr × »(α, α), «expr ○ »(s, «expr ○ »(s, s))), expr𝓤() α) :=
+calc
+  «expr = »((expr𝓤() α).lift' (λ
+    d, «expr ○ »(d, «expr ○ »(d, d))), (expr𝓤() α).lift (λ
+    s, (expr𝓤() α).lift' (λ t : set «expr × »(α, α), «expr ○ »(s, «expr ○ »(t, t))))) : begin
+    rw ["[", expr lift_lift'_same_eq_lift', "]"] [],
+    exact [expr assume x, «expr $ »(monotone_comp_rel monotone_const, monotone_comp_rel monotone_id monotone_id)],
+    exact [expr assume x, monotone_comp_rel monotone_id monotone_const]
+  end
+  «expr ≤ »(..., (expr𝓤() α).lift (λ
+    s, (expr𝓤() α).lift' (λ
+     t : set «expr × »(α, α), «expr ○ »(s, t)))) : «expr $ »(lift_mono', assume
+   s
+   hs, «expr $ »(@uniformity_lift_le_comp α _ _ «expr ∘ »(expr𝓟(), ((«expr ○ »)) s), monotone_principal.comp (monotone_comp_rel monotone_const monotone_id)))
+  «expr = »(..., (expr𝓤() α).lift' (λ
+    s : set «expr × »(α, α), «expr ○ »(s, s))) : lift_lift'_same_eq_lift' (assume
+   s, monotone_comp_rel monotone_const monotone_id) (assume s, monotone_comp_rel monotone_id monotone_const)
+  «expr ≤ »(..., expr𝓤() α) : comp_le_uniformity
 
 -- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- See also `comp_open_symm_mem_uniformity_sets`. -/
@@ -527,48 +538,49 @@ theorem mem_comp_comp {V W M : Set (β × β)} (hW' : SymmetricRel W) {p : β ×
 -/
 
 
-theorem mem_nhds_uniformity_iff_right {x : α} {s : Set α} : s ∈ 𝓝 x ↔ { p:α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α :=
-  ⟨by 
-      simp only [mem_nhds_iff, is_open_uniformity, and_imp, exists_imp_distrib]
-      exact
-        fun t ts ht xt =>
-          by 
-            filterUpwards [ht x xt] fun ⟨x', y⟩ h eq => ts$ h Eq,
-    fun hs =>
-      mem_nhds_iff.mpr
-        ⟨{ x | { p:α × α | p.1 = x → p.2 ∈ s } ∈ 𝓤 α }, fun x' hx' => refl_mem_uniformity hx' rfl,
-          is_open_uniformity.mpr$
-            fun x' hx' =>
-              let ⟨t, ht, tr⟩ := comp_mem_uniformity_sets hx' 
-              by 
-                filterUpwards [ht]
-                  fun ⟨a, b⟩ hp' hax' : a = x' =>
-                    by 
-                      filterUpwards [ht]
-                        fun ⟨a, b'⟩ hp'' hab : a = b =>
-                          have hp : (x', b) ∈ t := hax' ▸ hp' 
-                          have  : (b, b') ∈ t := hab ▸ hp'' 
-                          have  : (x', b') ∈ t ○ t := ⟨b, hp, this⟩
-                          show b' ∈ s from tr this rfl,
-          hs⟩⟩
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_nhds_uniformity_iff_right
+{x : α}
+{s : set α} : «expr ↔ »(«expr ∈ »(s, expr𝓝() x), «expr ∈ »({p : «expr × »(α, α) | «expr = »(p.1, x) → «expr ∈ »(p.2, s)}, expr𝓤() α)) :=
+⟨begin
+   simp [] [] ["only"] ["[", expr mem_nhds_iff, ",", expr is_open_uniformity, ",", expr and_imp, ",", expr exists_imp_distrib, "]"] [] [],
+   exact [expr assume
+    t ts ht xt, by filter_upwards ["[", expr ht x xt, "]"] [expr assume ⟨x', y⟩ (h eq), «expr $ »(ts, h eq)]]
+ end, assume
+ hs, mem_nhds_iff.mpr ⟨{x | «expr ∈ »({p : «expr × »(α, α) | «expr = »(p.1, x) → «expr ∈ »(p.2, s)}, expr𝓤() α)}, assume
+  x'
+  hx', refl_mem_uniformity hx' rfl, «expr $ »(is_open_uniformity.mpr, assume
+   x' hx', let ⟨t, ht, tr⟩ := comp_mem_uniformity_sets hx' in
+   by filter_upwards ["[", expr ht, "]"] [expr assume
+    ⟨a, b⟩
+    (hp')
+    (hax' : «expr = »(a, x')), by filter_upwards ["[", expr ht, "]"] [expr assume
+     ⟨a, b'⟩
+     (hp'')
+     (hab : «expr = »(a, b)), have hp : «expr ∈ »((x', b), t), from «expr ▸ »(hax', hp'),
+     have «expr ∈ »((b, b'), t), from «expr ▸ »(hab, hp''),
+     have «expr ∈ »((x', b'), «expr ○ »(t, t)), from ⟨b, hp, this⟩,
+     show «expr ∈ »(b', s), from tr this rfl]]), hs⟩⟩
 
 theorem mem_nhds_uniformity_iff_left {x : α} {s : Set α} : s ∈ 𝓝 x ↔ { p:α × α | p.2 = x → p.1 ∈ s } ∈ 𝓤 α :=
   by 
     rw [uniformity_eq_symm, mem_nhds_uniformity_iff_right]
     rfl
 
-theorem nhds_eq_comap_uniformity_aux {α : Type u} {x : α} {s : Set α} {F : Filter (α × α)} :
-  { p:α × α | p.fst = x → p.snd ∈ s } ∈ F ↔ s ∈ comap (Prod.mk x) F :=
-  by 
-    rw [mem_comap] <;>
-      exact
-        Iff.intro (fun hs => ⟨_, hs, fun x hx => hx rfl⟩)
-          fun ⟨t, h, ht⟩ =>
-            F.sets_of_superset h$
-              fun ⟨p₁, p₂⟩ hp h : p₁ = x =>
-                ht$
-                  by 
-                    simp [h.symm, hp]
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_eq_comap_uniformity_aux
+{α : Type u}
+{x : α}
+{s : set α}
+{F : filter «expr × »(α, α)} : «expr ↔ »(«expr ∈ »({p : «expr × »(α, α) | «expr = »(p.fst, x) → «expr ∈ »(p.snd, s)}, F), «expr ∈ »(s, comap (prod.mk x) F)) :=
+by rw [expr mem_comap] []; from [expr iff.intro (assume
+  hs, ⟨_, hs, assume
+   x
+   hx, hx rfl⟩) (assume
+  ⟨t, h, ht⟩, «expr $ »(F.sets_of_superset h, assume
+   ⟨p₁, p₂⟩
+   (hp)
+   (h : «expr = »(p₁, x)), «expr $ »(ht, by simp [] [] [] ["[", expr h.symm, ",", expr hp, "]"] [] [])))]
 
 theorem nhds_eq_comap_uniformity {x : α} : 𝓝 x = (𝓤 α).comap (Prod.mk x) :=
   by 
@@ -577,7 +589,7 @@ theorem nhds_eq_comap_uniformity {x : α} : 𝓝 x = (𝓤 α).comap (Prod.mk x)
     exact nhds_eq_comap_uniformity_aux
 
 /-- See also `is_open_iff_open_ball_subset`. -/
-theorem is_open_iff_ball_subset {s : Set α} : IsOpen s ↔ ∀ x _ : x ∈ s, ∃ (V : _)(_ : V ∈ 𝓤 α), ball x V ⊆ s :=
+theorem is_open_iff_ball_subset {s : Set α} : IsOpen s ↔ ∀ x (_ : x ∈ s), ∃ (V : _)(_ : V ∈ 𝓤 α), ball x V ⊆ s :=
   by 
     simpRw [is_open_iff_mem_nhds, nhds_eq_comap_uniformity]
     exact Iff.rfl
@@ -618,11 +630,11 @@ theorem UniformSpace.mem_nhds_iff_symm {x : α} {s : Set α} :
       rintro ⟨V, V_in, V_symm, V_sub⟩
       exact ⟨V, V_in, V_sub⟩
 
-theorem UniformSpace.has_basis_nhds (x : α) :
-  has_basis (𝓝 x) (fun s : Set (α × α) => s ∈ 𝓤 α ∧ SymmetricRel s) fun s => ball x s :=
-  ⟨fun t =>
-      by 
-        simp [UniformSpace.mem_nhds_iff_symm, and_assoc]⟩
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_space.has_basis_nhds
+(x : α) : has_basis (expr𝓝() x) (λ
+ s : set «expr × »(α, α), «expr ∧ »(«expr ∈ »(s, expr𝓤() α), symmetric_rel s)) (λ s, ball x s) :=
+⟨λ t, by simp [] [] [] ["[", expr uniform_space.mem_nhds_iff_symm, ",", expr and_assoc, "]"] [] []⟩
 
 open UniformSpace
 
@@ -660,74 +672,91 @@ theorem tendsto_right_nhds_uniformity {a : α} : tendsto (fun a' => (a', a)) (�
 theorem tendsto_left_nhds_uniformity {a : α} : tendsto (fun a' => (a, a')) (𝓝 a) (𝓤 α) :=
   fun s => mem_nhds_left a
 
-theorem lift_nhds_left {x : α} {g : Set α → Filter β} (hg : Monotone g) :
-  (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g { y | (x, y) ∈ s } :=
-  Eq.trans
-    (by 
-      rw [nhds_eq_uniformity]
-      exact Filter.lift_assoc$ monotone_principal.comp$ monotone_preimage.comp monotone_preimage)
-    (congr_argₓ _$ funext$ fun s => Filter.lift_principal hg)
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lift_nhds_left
+{x : α}
+{g : set α → filter β}
+(hg : monotone g) : «expr = »((expr𝓝() x).lift g, (expr𝓤() α).lift (λ
+  s : set «expr × »(α, α), g {y | «expr ∈ »((x, y), s)})) :=
+eq.trans (begin
+   rw ["[", expr nhds_eq_uniformity, "]"] [],
+   exact [expr «expr $ »(filter.lift_assoc, «expr $ »(monotone_principal.comp, monotone_preimage.comp monotone_preimage))]
+ end) «expr $ »(congr_arg _, «expr $ »(funext, assume s, filter.lift_principal hg))
 
-theorem lift_nhds_right {x : α} {g : Set α → Filter β} (hg : Monotone g) :
-  (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g { y | (y, x) ∈ s } :=
-  calc (𝓝 x).lift g = (𝓤 α).lift fun s : Set (α × α) => g { y | (x, y) ∈ s } := lift_nhds_left hg 
-    _ = (@Prod.swap α α <$> 𝓤 α).lift fun s : Set (α × α) => g { y | (x, y) ∈ s } :=
-    by 
-      rw [←uniformity_eq_symm]
-    _ = (𝓤 α).lift fun s : Set (α × α) => g { y | (x, y) ∈ image Prod.swap s } :=
-    map_lift_eq2$ hg.comp monotone_preimage 
-    _ = _ :=
-    by 
-      simp [image_swap_eq_preimage_swap]
-    
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lift_nhds_right
+{x : α}
+{g : set α → filter β}
+(hg : monotone g) : «expr = »((expr𝓝() x).lift g, (expr𝓤() α).lift (λ
+  s : set «expr × »(α, α), g {y | «expr ∈ »((y, x), s)})) :=
+calc
+  «expr = »((expr𝓝() x).lift g, (expr𝓤() α).lift (λ
+    s : set «expr × »(α, α), g {y | «expr ∈ »((x, y), s)})) : lift_nhds_left hg
+  «expr = »(..., «expr <$> »(@prod.swap α α, expr𝓤() α).lift (λ
+    s : set «expr × »(α, α), g {y | «expr ∈ »((x, y), s)})) : by rw ["[", "<-", expr uniformity_eq_symm, "]"] []
+  «expr = »(..., (expr𝓤() α).lift (λ
+    s : set «expr × »(α, α), g {y | «expr ∈ »((x, y), image prod.swap s)})) : «expr $ »(map_lift_eq2, hg.comp monotone_preimage)
+  «expr = »(..., _) : by simp [] [] [] ["[", expr image_swap_eq_preimage_swap, "]"] [] []
 
-theorem nhds_nhds_eq_uniformity_uniformity_prod {a b : α} :
-  𝓝 a ×ᶠ 𝓝 b =
-    (𝓤 α).lift
-      fun s : Set (α × α) => (𝓤 α).lift' fun t : Set (α × α) => Set.Prod { y:α | (y, a) ∈ s } { y:α | (b, y) ∈ t } :=
-  by 
-    rw [prod_def]
-    show ((𝓝 a).lift fun s : Set α => (𝓝 b).lift fun t : Set α => 𝓟 (Set.Prod s t)) = _ 
-    rw [lift_nhds_right]
-    apply congr_argₓ 
-    funext s 
-    rw [lift_nhds_left]
-    rfl 
-    exact monotone_principal.comp (monotone_prod monotone_const monotone_id)
-    exact monotone_lift' monotone_const$ monotone_lam$ fun x => monotone_prod monotone_id monotone_const
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_nhds_eq_uniformity_uniformity_prod
+{a
+ b : α} : «expr = »(«expr ×ᶠ »(expr𝓝() a, expr𝓝() b), (expr𝓤() α).lift (λ
+  s : set «expr × »(α, α), (expr𝓤() α).lift' (λ
+   t : set «expr × »(α, α), set.prod {y : α | «expr ∈ »((y, a), s)} {y : α | «expr ∈ »((b, y), t)}))) :=
+begin
+  rw ["[", expr prod_def, "]"] [],
+  show [expr «expr = »((expr𝓝() a).lift (λ s : set α, (expr𝓝() b).lift (λ t : set α, expr𝓟() (set.prod s t))), _)],
+  rw ["[", expr lift_nhds_right, "]"] [],
+  apply [expr congr_arg],
+  funext [ident s],
+  rw ["[", expr lift_nhds_left, "]"] [],
+  refl,
+  exact [expr monotone_principal.comp (monotone_prod monotone_const monotone_id)],
+  exact [expr «expr $ »(monotone_lift' monotone_const, «expr $ »(monotone_lam, assume
+     x, monotone_prod monotone_id monotone_const))]
+end
 
-theorem nhds_eq_uniformity_prod {a b : α} :
-  𝓝 (a, b) = (𝓤 α).lift' fun s : Set (α × α) => Set.Prod { y:α | (y, a) ∈ s } { y:α | (b, y) ∈ s } :=
-  by 
-    rw [nhds_prod_eq, nhds_nhds_eq_uniformity_uniformity_prod, lift_lift'_same_eq_lift']
-    ·
-      intro s 
-      exact monotone_prod monotone_const monotone_preimage
-    ·
-      intro t 
-      exact monotone_prod monotone_preimage monotone_const
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_eq_uniformity_prod
+{a
+ b : α} : «expr = »(expr𝓝() (a, b), (expr𝓤() α).lift' (λ
+  s : set «expr × »(α, α), set.prod {y : α | «expr ∈ »((y, a), s)} {y : α | «expr ∈ »((b, y), s)})) :=
+begin
+  rw ["[", expr nhds_prod_eq, ",", expr nhds_nhds_eq_uniformity_uniformity_prod, ",", expr lift_lift'_same_eq_lift', "]"] [],
+  { intro [ident s],
+    exact [expr monotone_prod monotone_const monotone_preimage] },
+  { intro [ident t],
+    exact [expr monotone_prod monotone_preimage monotone_const] }
+end
 
-theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd : d ∈ 𝓤 α) :
-  ∃ t : Set (α × α), IsOpen t ∧ s ⊆ t ∧ t ⊆ { p | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d } :=
-  let cl_d := { p:α × α | ∃ x y, (p.1, x) ∈ d ∧ (x, y) ∈ s ∧ (y, p.2) ∈ d }
-  have  : ∀ p _ : p ∈ s, ∃ (t : _)(_ : t ⊆ cl_d), IsOpen t ∧ p ∈ t :=
-    fun ⟨x, y⟩ hp =>
-      _root_.mem_nhds_iff.mp$
-        show cl_d ∈ 𝓝 (x, y)by 
-          rw [nhds_eq_uniformity_prod, mem_lift'_sets]
-          exact ⟨d, hd, fun ⟨a, b⟩ ⟨ha, hb⟩ => ⟨x, y, ha, hp, hb⟩⟩
-          exact monotone_prod monotone_preimage monotone_preimage 
-  have  : ∃ t : ∀ p : α × α h : p ∈ s, Set (α × α), ∀ p, ∀ h : p ∈ s, t p h ⊆ cl_d ∧ IsOpen (t p h) ∧ p ∈ t p h :=
-    by 
-      simp [Classical.skolem] at this <;> simp  <;> assumption 
-  match this with 
-  | ⟨t, ht⟩ =>
-    ⟨(⋃p : α × α, ⋃h : p ∈ s, t p h : Set (α × α)),
-      is_open_Union$ fun p : α × α => is_open_Union$ fun hp => (ht p hp).right.left,
-      fun ⟨a, b⟩ hp =>
-        by 
-          simp  <;> exact ⟨a, b, hp, (ht (a, b) hp).right.right⟩,
-      Union_subset$ fun p => Union_subset$ fun hp => (ht p hp).left⟩
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhdset_of_mem_uniformity
+{d : set «expr × »(α, α)}
+(s : set «expr × »(α, α))
+(hd : «expr ∈ »(d, expr𝓤() α)) : «expr∃ , »((t : set «expr × »(α, α)), «expr ∧ »(is_open t, «expr ∧ »(«expr ⊆ »(s, t), «expr ⊆ »(t, {p | «expr∃ , »((x
+      y), «expr ∧ »(«expr ∈ »((p.1, x), d), «expr ∧ »(«expr ∈ »((x, y), s), «expr ∈ »((y, p.2), d))))})))) :=
+let cl_d := {p : «expr × »(α, α) | «expr∃ , »((x
+      y), «expr ∧ »(«expr ∈ »((p.1, x), d), «expr ∧ »(«expr ∈ »((x, y), s), «expr ∈ »((y, p.2), d))))} in
+have ∀
+p «expr ∈ » s, «expr∃ , »((t «expr ⊆ » cl_d), «expr ∧ »(is_open t, «expr ∈ »(p, t))), from assume
+⟨x, y⟩
+(hp), «expr $ »(_root_.mem_nhds_iff.mp, show «expr ∈ »(cl_d, expr𝓝() (x, y)), begin
+   rw ["[", expr nhds_eq_uniformity_prod, ",", expr mem_lift'_sets, "]"] [],
+   exact [expr ⟨d, hd, assume ⟨a, b⟩ ⟨ha, hb⟩, ⟨x, y, ha, hp, hb⟩⟩],
+   exact [expr monotone_prod monotone_preimage monotone_preimage]
+ end),
+have «expr∃ , »((t : ∀
+  (p : «expr × »(α, α))
+  (h : «expr ∈ »(p, s)), set «expr × »(α, α)), ∀
+ p, ∀
+ h : «expr ∈ »(p, s), «expr ∧ »(«expr ⊆ »(t p h, cl_d), «expr ∧ »(is_open (t p h), «expr ∈ »(p, t p h)))), by simp [] [] [] ["[", expr classical.skolem, "]"] [] ["at", ident this]; simp [] [] [] [] [] []; assumption,
+match this with
+| ⟨t, ht⟩ := ⟨(«expr⋃ , »((p : «expr × »(α, α)), «expr⋃ , »((h : «expr ∈ »(p, s)), t p h)) : set «expr × »(α, α)), «expr $ »(is_open_Union, assume
+  p : «expr × »(α, α), «expr $ »(is_open_Union, assume hp, (ht p hp).right.left)), assume ⟨a, b⟩ (hp), begin
+   simp [] [] [] [] [] []; exact [expr ⟨a, b, hp, (ht (a, b) hp).right.right⟩]
+ end, «expr $ »(Union_subset, assume p, «expr $ »(Union_subset, assume hp, (ht p hp).left))⟩
+end
 
 -- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Entourages are neighborhoods of the diagonal. -/
@@ -764,69 +793,63 @@ theorem closure_eq_uniformity (s : Set$ α × α) :
     simpRw [mem_comp_comp V_symm, inter_comm, exists_prop]
     exact Iff.rfl
 
-theorem uniformity_has_basis_closed : has_basis (𝓤 α) (fun V : Set (α × α) => V ∈ 𝓤 α ∧ IsClosed V) id :=
-  by 
-    refine' Filter.has_basis_self.2 fun t h => _ 
-    rcases comp_comp_symm_mem_uniformity_sets h with ⟨w, w_in, w_symm, r⟩
-    refine' ⟨Closure w, mem_of_superset w_in subset_closure, is_closed_closure, _⟩
-    refine' subset.trans _ r 
-    rw [closure_eq_uniformity]
-    apply Inter_subset_of_subset 
-    apply Inter_subset 
-    exact ⟨w_in, w_symm⟩
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_has_basis_closed : has_basis (expr𝓤() α) (λ
+ V : set «expr × »(α, α), «expr ∧ »(«expr ∈ »(V, expr𝓤() α), is_closed V)) id :=
+begin
+  refine [expr filter.has_basis_self.2 (λ t h, _)],
+  rcases [expr comp_comp_symm_mem_uniformity_sets h, "with", "⟨", ident w, ",", ident w_in, ",", ident w_symm, ",", ident r, "⟩"],
+  refine [expr ⟨closure w, mem_of_superset w_in subset_closure, is_closed_closure, _⟩],
+  refine [expr subset.trans _ r],
+  rw [expr closure_eq_uniformity] [],
+  apply [expr Inter_subset_of_subset],
+  apply [expr Inter_subset],
+  exact [expr ⟨w_in, w_symm⟩]
+end
 
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Closed entourages form a basis of the uniformity filter. -/
-theorem uniformity_has_basis_closure : has_basis (𝓤 α) (fun V : Set (α × α) => V ∈ 𝓤 α) Closure :=
-  ⟨by 
-      intro t 
-      rw [uniformity_has_basis_closed.mem_iff]
-      split 
-      ·
-        rintro ⟨r, ⟨r_in, r_closed⟩, r_sub⟩
-        use r, r_in 
-        convert r_sub 
-        rw [r_closed.closure_eq]
-        rfl
-      ·
-        rintro ⟨r, r_in, r_sub⟩
-        exact ⟨Closure r, ⟨mem_of_superset r_in subset_closure, is_closed_closure⟩, r_sub⟩⟩
+theorem uniformity_has_basis_closure : has_basis (expr𝓤() α) (λ
+ V : set «expr × »(α, α), «expr ∈ »(V, expr𝓤() α)) closure :=
+⟨begin
+   intro [ident t],
+   rw [expr uniformity_has_basis_closed.mem_iff] [],
+   split,
+   { rintros ["⟨", ident r, ",", "⟨", ident r_in, ",", ident r_closed, "⟩", ",", ident r_sub, "⟩"],
+     use ["[", expr r, ",", expr r_in, "]"],
+     convert [] [expr r_sub] [],
+     rw [expr r_closed.closure_eq] [],
+     refl },
+   { rintros ["⟨", ident r, ",", ident r_in, ",", ident r_sub, "⟩"],
+     exact [expr ⟨closure r, ⟨mem_of_superset r_in subset_closure, is_closed_closure⟩, r_sub⟩] }
+ end⟩
 
-theorem closure_eq_inter_uniformity {t : Set (α × α)} : Closure t = ⋂(d : _)(_ : d ∈ 𝓤 α), d ○ (t ○ d) :=
-  Set.ext$
-    fun ⟨a, b⟩ =>
-      calc (a, b) ∈ Closure t ↔ 𝓝 (a, b)⊓𝓟 t ≠ ⊥ := mem_closure_iff_nhds_ne_bot 
-        _ ↔
-          ((@Prod.swap α α <$> 𝓤 α).lift'
-                fun s : Set (α × α) => Set.Prod { x:α | (x, a) ∈ s } { y:α | (b, y) ∈ s })⊓𝓟 t ≠
-            ⊥ :=
-        by 
-          rw [←uniformity_eq_symm, nhds_eq_uniformity_prod]
-        _ ↔
-          ((map (@Prod.swap α α) (𝓤 α)).lift'
-                fun s : Set (α × α) => Set.Prod { x:α | (x, a) ∈ s } { y:α | (b, y) ∈ s })⊓𝓟 t ≠
-            ⊥ :=
-        by 
-          rfl 
-        _ ↔ ((𝓤 α).lift' fun s : Set (α × α) => Set.Prod { y:α | (a, y) ∈ s } { x:α | (x, b) ∈ s })⊓𝓟 t ≠ ⊥ :=
-        by 
-          rw [map_lift'_eq2]
-          simp [image_swap_eq_preimage_swap, Function.comp]
-          exact monotone_prod monotone_preimage monotone_preimage 
-        _ ↔ ∀ s _ : s ∈ 𝓤 α, (Set.Prod { y:α | (a, y) ∈ s } { x:α | (x, b) ∈ s } ∩ t).Nonempty :=
-        by 
-          rw [lift'_inf_principal_eq, ←ne_bot_iff, lift'_ne_bot_iff]
-          exact monotone_inter (monotone_prod monotone_preimage monotone_preimage) monotone_const 
-        _ ↔ ∀ s _ : s ∈ 𝓤 α, (a, b) ∈ s ○ (t ○ s) :=
-        forall_congrₓ$
-          fun s =>
-            forall_congrₓ$
-              fun hs =>
-                ⟨fun ⟨⟨x, y⟩, ⟨⟨hx, hy⟩, hxyt⟩⟩ => ⟨x, hx, y, hxyt, hy⟩,
-                  fun ⟨x, hx, y, hxyt, hy⟩ => ⟨⟨x, y⟩, ⟨⟨hx, hy⟩, hxyt⟩⟩⟩
-        _ ↔ _ :=
-        by 
-          simp 
-        
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem closure_eq_inter_uniformity
+{t : set «expr × »(α, α)} : «expr = »(closure t, «expr⋂ , »((d «expr ∈ » expr𝓤() α), «expr ○ »(d, «expr ○ »(t, d)))) :=
+«expr $ »(set.ext, assume ⟨a, b⟩, calc
+   «expr ↔ »(«expr ∈ »((a, b), closure t), «expr ≠ »(«expr ⊓ »(expr𝓝() (a, b), expr𝓟() t), «expr⊥»())) : mem_closure_iff_nhds_ne_bot
+   «expr ↔ »(..., «expr ≠ »(«expr ⊓ »(«expr <$> »(@prod.swap α α, expr𝓤() α).lift' (λ
+       s : set «expr × »(α, α), set.prod {x : α | «expr ∈ »((x, a), s)} {y : α | «expr ∈ »((b, y), s)}), expr𝓟() t), «expr⊥»())) : by rw ["[", "<-", expr uniformity_eq_symm, ",", expr nhds_eq_uniformity_prod, "]"] []
+   «expr ↔ »(..., «expr ≠ »(«expr ⊓ »((map (@prod.swap α α) (expr𝓤() α)).lift' (λ
+       s : set «expr × »(α, α), set.prod {x : α | «expr ∈ »((x, a), s)} {y : α | «expr ∈ »((b, y), s)}), expr𝓟() t), «expr⊥»())) : by refl
+   «expr ↔ »(..., «expr ≠ »(«expr ⊓ »((expr𝓤() α).lift' (λ
+       s : set «expr × »(α, α), set.prod {y : α | «expr ∈ »((a, y), s)} {x : α | «expr ∈ »((x, b), s)}), expr𝓟() t), «expr⊥»())) : begin
+     rw ["[", expr map_lift'_eq2, "]"] [],
+     simp [] [] [] ["[", expr image_swap_eq_preimage_swap, ",", expr function.comp, "]"] [] [],
+     exact [expr monotone_prod monotone_preimage monotone_preimage]
+   end
+   «expr ↔ »(..., ∀
+    s «expr ∈ » expr𝓤() α, «expr ∩ »(set.prod {y : α | «expr ∈ »((a, y), s)} {x : α | «expr ∈ »((x, b), s)}, t).nonempty) : begin
+     rw ["[", expr lift'_inf_principal_eq, ",", "<-", expr ne_bot_iff, ",", expr lift'_ne_bot_iff, "]"] [],
+     exact [expr monotone_inter (monotone_prod monotone_preimage monotone_preimage) monotone_const]
+   end
+   «expr ↔ »(..., ∀
+    s «expr ∈ » expr𝓤() α, «expr ∈ »((a, b), «expr ○ »(s, «expr ○ »(t, s)))) : «expr $ »(forall_congr, assume
+    s, «expr $ »(forall_congr, assume
+     hs, ⟨assume
+      ⟨⟨x, y⟩, ⟨⟨hx, hy⟩, hxyt⟩⟩, ⟨x, hx, y, hxyt, hy⟩, assume ⟨x, hx, y, hxyt, hy⟩, ⟨⟨x, y⟩, ⟨⟨hx, hy⟩, hxyt⟩⟩⟩))
+   «expr ↔ »(..., _) : by simp [] [] [] [] [] [])
 
 theorem uniformity_eq_uniformity_closure : 𝓤 α = (𝓤 α).lift' Closure :=
   le_antisymmₓ
@@ -843,30 +866,21 @@ theorem uniformity_eq_uniformity_closure : 𝓤 α = (𝓤 α).lift' Closure :=
       _ ≤ 𝓤 α := comp_le_uniformity3
       )
 
-theorem uniformity_eq_uniformity_interior : 𝓤 α = (𝓤 α).lift' Interior :=
-  le_antisymmₓ
-    (le_infi$
-      fun d =>
-        le_infi$
-          fun hd =>
-            let ⟨s, hs, hs_comp⟩ :=
-              (mem_lift'_sets$ monotone_comp_rel monotone_id$ monotone_comp_rel monotone_id monotone_id).mp
-                (comp_le_uniformity3 hd)
-            let ⟨t, ht, hst, ht_comp⟩ := nhdset_of_mem_uniformity s hs 
-            have  : s ⊆ Interior d :=
-              calc s ⊆ t := hst 
-                _ ⊆ Interior d :=
-                (subset_interior_iff_subset_of_open ht).mpr$
-                  fun x hx : x ∈ t =>
-                    let ⟨x, y, h₁, h₂, h₃⟩ := ht_comp hx 
-                    hs_comp ⟨x, h₁, y, h₂, h₃⟩
-                
-            have  : Interior d ∈ 𝓤 α :=
-              by 
-                filterUpwards [hs] this 
-            by 
-              simp [this])
-    fun s hs => ((𝓤 α).lift' Interior).sets_of_superset (mem_lift' hs) interior_subset
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_eq_uniformity_interior : «expr = »(expr𝓤() α, (expr𝓤() α).lift' interior) :=
+le_antisymm «expr $ »(le_infi, assume
+ d, «expr $ »(le_infi, assume
+  hd, let ⟨s, hs, hs_comp⟩ := «expr $ »(mem_lift'_sets, «expr $ »(monotone_comp_rel monotone_id, monotone_comp_rel monotone_id monotone_id)).mp (comp_le_uniformity3 hd) in
+  let ⟨t, ht, hst, ht_comp⟩ := nhdset_of_mem_uniformity s hs in
+  have «expr ⊆ »(s, interior d), from calc
+    «expr ⊆ »(s, t) : hst
+    «expr ⊆ »(..., interior d) : «expr $ »((subset_interior_iff_subset_of_open ht).mpr, λ
+     (x)
+     (hx : «expr ∈ »(x, t)), let ⟨x, y, h₁, h₂, h₃⟩ := ht_comp hx in
+     hs_comp ⟨x, h₁, y, h₂, h₃⟩),
+  have «expr ∈ »(interior d, expr𝓤() α), by filter_upwards ["[", expr hs, "]"] [expr this],
+  by simp [] [] [] ["[", expr this, "]"] [] [])) (assume
+ s hs, ((expr𝓤() α).lift' interior).sets_of_superset (mem_lift' hs) interior_subset)
 
 theorem interior_mem_uniformity {s : Set (α × α)} (hs : s ∈ 𝓤 α) : Interior s ∈ 𝓤 α :=
   by 
@@ -877,7 +891,7 @@ theorem mem_uniformity_is_closed {s : Set (α × α)} (h : s ∈ 𝓤 α) : ∃ 
   ⟨t, ht_mem, htc, hts⟩
 
 theorem is_open_iff_open_ball_subset {s : Set α} :
-  IsOpen s ↔ ∀ x _ : x ∈ s, ∃ (V : _)(_ : V ∈ 𝓤 α), IsOpen V ∧ ball x V ⊆ s :=
+  IsOpen s ↔ ∀ x (_ : x ∈ s), ∃ (V : _)(_ : V ∈ 𝓤 α), IsOpen V ∧ ball x V ⊆ s :=
   by 
     rw [is_open_iff_ball_subset]
     split  <;> intro h x hx
@@ -901,9 +915,11 @@ theorem Dense.bUnion_uniformity_ball {s : Set α} {U : Set (α × α)} (hs : Den
 -/
 
 
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Open elements of `𝓤 α` form a basis of `𝓤 α`. -/
-theorem uniformity_has_basis_open : has_basis (𝓤 α) (fun V : Set (α × α) => V ∈ 𝓤 α ∧ IsOpen V) id :=
-  has_basis_self.2$ fun s hs => ⟨Interior s, interior_mem_uniformity hs, is_open_interior, interior_subset⟩
+theorem uniformity_has_basis_open : has_basis (expr𝓤() α) (λ
+ V : set «expr × »(α, α), «expr ∧ »(«expr ∈ »(V, expr𝓤() α), is_open V)) id :=
+«expr $ »(has_basis_self.2, λ s hs, ⟨interior s, interior_mem_uniformity hs, is_open_interior, interior_subset⟩)
 
 theorem Filter.HasBasis.mem_uniformity_iff {p : β → Prop} {s : β → Set (α × α)} (h : (𝓤 α).HasBasis p s)
   {t : Set (α × α)} : t ∈ 𝓤 α ↔ ∃ (i : _)(hi : p i), ∀ a b, (a, b) ∈ s i → (a, b) ∈ t :=
@@ -911,22 +927,23 @@ theorem Filter.HasBasis.mem_uniformity_iff {p : β → Prop} {s : β → Set (α
     by 
       simp only [Prod.forall, subset_def]
 
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Symmetric entourages form a basis of `𝓤 α` -/
-theorem UniformSpace.has_basis_symmetric : (𝓤 α).HasBasis (fun s : Set (α × α) => s ∈ 𝓤 α ∧ SymmetricRel s) id :=
-  has_basis_self.2$
-    fun t t_in =>
-      ⟨SymmetrizeRel t, symmetrize_mem_uniformity t_in, symmetric_symmetrize_rel t, symmetrize_rel_subset_self t⟩
+theorem uniform_space.has_basis_symmetric : (expr𝓤() α).has_basis (λ
+ s : set «expr × »(α, α), «expr ∧ »(«expr ∈ »(s, expr𝓤() α), symmetric_rel s)) id :=
+«expr $ »(has_basis_self.2, λ
+ t t_in, ⟨symmetrize_rel t, symmetrize_mem_uniformity t_in, symmetric_symmetrize_rel t, symmetrize_rel_subset_self t⟩)
 
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Open elements `s : set (α × α)` of `𝓤 α` such that `(x, y) ∈ s ↔ (y, x) ∈ s` form a basis
 of `𝓤 α`. -/
-theorem uniformity_has_basis_open_symmetric :
-  has_basis (𝓤 α) (fun V : Set (α × α) => V ∈ 𝓤 α ∧ IsOpen V ∧ SymmetricRel V) id :=
-  by 
-    simp only [←and_assoc]
-    refine' uniformity_has_basis_open.restrict fun s hs => ⟨SymmetrizeRel s, _⟩
-    exact
-      ⟨⟨symmetrize_mem_uniformity hs.1, IsOpen.inter hs.2 (hs.2.Preimage continuous_swap)⟩, symmetric_symmetrize_rel s,
-        symmetrize_rel_subset_self s⟩
+theorem uniformity_has_basis_open_symmetric : has_basis (expr𝓤() α) (λ
+ V : set «expr × »(α, α), «expr ∧ »(«expr ∈ »(V, expr𝓤() α), «expr ∧ »(is_open V, symmetric_rel V))) id :=
+begin
+  simp [] [] ["only"] ["[", "<-", expr and_assoc, "]"] [] [],
+  refine [expr uniformity_has_basis_open.restrict (λ s hs, ⟨symmetrize_rel s, _⟩)],
+  exact [expr ⟨⟨symmetrize_mem_uniformity hs.1, is_open.inter hs.2 (hs.2.preimage continuous_swap)⟩, symmetric_symmetrize_rel s, symmetrize_rel_subset_self s⟩]
+end
 
 theorem comp_open_symm_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤 α) :
   ∃ (t : _)(_ : t ∈ 𝓤 α), IsOpen t ∧ SymmetricRel t ∧ t ○ t ⊆ s :=
@@ -955,45 +972,49 @@ theorem Filter.HasBasis.bInter_bUnion_ball {p : ι → Prop} {U : ι → Set (α
 /-! ### Uniform continuity -/
 
 
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A function `f : α → β` is *uniformly continuous* if `(f x, f y)` tends to the diagonal
 as `(x, y)` tends to the diagonal. In other words, if `x` is sufficiently close to `y`, then
 `f x` is close to `f y` no matter where `x` and `y` are located in `α`. -/
-def UniformContinuous [UniformSpace β] (f : α → β) :=
-  tendsto (fun x : α × α => (f x.1, f x.2)) (𝓤 α) (𝓤 β)
+def uniform_continuous [uniform_space β] (f : α → β) :=
+tendsto (λ x : «expr × »(α, α), (f x.1, f x.2)) (expr𝓤() α) (expr𝓤() β)
 
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A function `f : α → β` is *uniformly continuous* on `s : set α` if `(f x, f y)` tends to
 the diagonal as `(x, y)` tends to the diagonal while remaining in `s.prod s`.
 In other words, if `x` is sufficiently close to `y`, then `f x` is close to
 `f y` no matter where `x` and `y` are located in `s`.-/
-def UniformContinuousOn [UniformSpace β] (f : α → β) (s : Set α) : Prop :=
-  tendsto (fun x : α × α => (f x.1, f x.2)) (𝓤 α⊓principal (s.prod s)) (𝓤 β)
+def uniform_continuous_on [uniform_space β] (f : α → β) (s : set α) : exprProp() :=
+tendsto (λ x : «expr × »(α, α), (f x.1, f x.2)) «expr ⊓ »(expr𝓤() α, principal (s.prod s)) (expr𝓤() β)
 
 theorem uniform_continuous_def [UniformSpace β] {f : α → β} :
-  UniformContinuous f ↔ ∀ r _ : r ∈ 𝓤 β, { x:α × α | (f x.1, f x.2) ∈ r } ∈ 𝓤 α :=
+  UniformContinuous f ↔ ∀ r (_ : r ∈ 𝓤 β), { x:α × α | (f x.1, f x.2) ∈ r } ∈ 𝓤 α :=
   Iff.rfl
 
 theorem uniform_continuous_iff_eventually [UniformSpace β] {f : α → β} :
-  UniformContinuous f ↔ ∀ r _ : r ∈ 𝓤 β, ∀ᶠx : α × α in 𝓤 α, (f x.1, f x.2) ∈ r :=
+  UniformContinuous f ↔ ∀ r (_ : r ∈ 𝓤 β), ∀ᶠx : α × α in 𝓤 α, (f x.1, f x.2) ∈ r :=
   Iff.rfl
 
 theorem uniform_continuous_on_univ [UniformSpace β] {f : α → β} : UniformContinuousOn f univ ↔ UniformContinuous f :=
   by 
     rw [UniformContinuousOn, UniformContinuous, univ_prod_univ, principal_univ, inf_top_eq]
 
-theorem uniform_continuous_of_const [UniformSpace β] {c : α → β} (h : ∀ a b, c a = c b) : UniformContinuous c :=
-  have  : (fun x : α × α => (c x.fst, c x.snd)) ⁻¹' IdRel = univ := eq_univ_iff_forall.2$ fun ⟨a, b⟩ => h a b 
-  le_transₓ
-    (map_le_iff_le_comap.2$
-      by 
-        simp [comap_principal, this, univ_mem])
-    refl_le_uniformity
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_of_const
+[uniform_space β]
+{c : α → β}
+(h : ∀ a b, «expr = »(c a, c b)) : uniform_continuous c :=
+have «expr = »(«expr ⁻¹' »(λ
+  x : «expr × »(α, α), (c x.fst, c x.snd), id_rel), univ), from «expr $ »(eq_univ_iff_forall.2, assume ⟨a, b⟩, h a b),
+le_trans «expr $ »(map_le_iff_le_comap.2, by simp [] [] [] ["[", expr comap_principal, ",", expr this, ",", expr univ_mem, "]"] [] []) refl_le_uniformity
 
 theorem uniform_continuous_id : UniformContinuous (@id α) :=
   by 
     simp [UniformContinuous] <;> exact tendsto_id
 
-theorem uniform_continuous_const [UniformSpace β] {b : β} : UniformContinuous fun a : α => b :=
-  uniform_continuous_of_const$ fun _ _ => rfl
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_const [uniform_space β] {b : β} : uniform_continuous (λ a : α, b) :=
+«expr $ »(uniform_continuous_of_const, λ _ _, rfl)
 
 theorem UniformContinuous.comp [UniformSpace β] [UniformSpace γ] {g : β → γ} {f : α → β} (hg : UniformContinuous g)
   (hf : UniformContinuous f) : UniformContinuous (g ∘ f) :=
@@ -1001,7 +1022,7 @@ theorem UniformContinuous.comp [UniformSpace β] [UniformSpace γ] {g : β → �
 
 theorem Filter.HasBasis.uniform_continuous_iff [UniformSpace β] {p : γ → Prop} {s : γ → Set (α × α)}
   (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)} (hb : (𝓤 β).HasBasis q t) {f : α → β} :
-  UniformContinuous f ↔ ∀ i hi : q i, ∃ (j : _)(hj : p j), ∀ x y, (x, y) ∈ s j → (f x, f y) ∈ t i :=
+  UniformContinuous f ↔ ∀ i (hi : q i), ∃ (j : _)(hj : p j), ∀ x y, (x, y) ∈ s j → (f x, f y) ∈ t i :=
   (ha.tendsto_iff hb).trans$
     by 
       simp only [Prod.forall]
@@ -1009,7 +1030,7 @@ theorem Filter.HasBasis.uniform_continuous_iff [UniformSpace β] {p : γ → Pro
 theorem Filter.HasBasis.uniform_continuous_on_iff [UniformSpace β] {p : γ → Prop} {s : γ → Set (α × α)}
   (ha : (𝓤 α).HasBasis p s) {q : δ → Prop} {t : δ → Set (β × β)} (hb : (𝓤 β).HasBasis q t) {f : α → β} {S : Set α} :
   UniformContinuousOn f S ↔
-    ∀ i hi : q i, ∃ (j : _)(hj : p j), ∀ x y _ : x ∈ S _ : y ∈ S, (x, y) ∈ s j → (f x, f y) ∈ t i :=
+    ∀ i (hi : q i), ∃ (j : _)(hj : p j), ∀ x y (_ : x ∈ S) (_ : y ∈ S), (x, y) ∈ s j → (f x, f y) ∈ t i :=
   ((ha.inf_principal (S.prod S)).tendsto_iff hb).trans$
     by 
       finish [Prod.forall]
@@ -1036,7 +1057,7 @@ instance  : HasInfₓ (UniformSpace α) :=
 private theorem Inf_le {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : t ∈ tt) : Inf tt ≤ t :=
   show (⨅(u : _)(_ : u ∈ tt), @uniformity α u) ≤ t.uniformity from infi_le_of_le t$ infi_le _ h
 
-private theorem le_Inf {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : ∀ t' _ : t' ∈ tt, t ≤ t') : t ≤ Inf tt :=
+private theorem le_Inf {tt : Set (UniformSpace α)} {t : UniformSpace α} (h : ∀ t' (_ : t' ∈ tt), t ≤ t') : t ≤ Inf tt :=
   show t.uniformity ≤ ⨅(u : _)(_ : u ∈ tt), @uniformity α u from le_infi$ fun t' => le_infi$ fun ht' => h t' ht'
 
 instance  : HasTop (UniformSpace α) :=
@@ -1079,7 +1100,7 @@ instance  : CompleteLattice (UniformSpace α) :=
           (by 
             simp ),
     top := ⊤, le_top := fun a => show a.uniformity ≤ ⊤ from le_top, bot := ⊥, bot_le := fun u => u.refl,
-    sup := fun tt => Inf { t | ∀ t' _ : t' ∈ tt, t' ≤ t }, le_Sup := fun s u h => le_Inf fun u' h' => h' u h,
+    sup := fun tt => Inf { t | ∀ t' (_ : t' ∈ tt), t' ≤ t }, le_Sup := fun s u h => le_Inf fun u' h' => h' u h,
     Sup_le := fun s u h => Inf_le h, inf := Inf, le_Inf := fun s a hs => le_Inf hs, Inf_le := fun s a ha => Inf_le ha }
 
 theorem infi_uniformity {ι : Sort _} {u : ι → UniformSpace α} : (infi u).uniformity = ⨅i, (u i).uniformity :=
@@ -1105,43 +1126,33 @@ instance inhabitedUniformSpace : Inhabited (UniformSpace α) :=
 instance inhabitedUniformSpaceCore : Inhabited (UniformSpace.Core α) :=
   ⟨@UniformSpace.toCore _ (default _)⟩
 
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given `f : α → β` and a uniformity `u` on `β`, the inverse image of `u` under `f`
   is the inverse image in the filter sense of the induced function `α × α → β × β`. -/
-def UniformSpace.comap (f : α → β) (u : UniformSpace β) : UniformSpace α :=
-  { uniformity := u.uniformity.comap fun p : α × α => (f p.1, f p.2),
-    toTopologicalSpace := u.to_topological_space.induced f,
-    refl :=
-      le_transₓ
-        (by 
-          simp  <;> exact fun ⟨a, b⟩ h : a = b => h ▸ rfl)
-        (comap_mono u.refl),
-    symm :=
-      by 
-        simp [tendsto_comap_iff, Prod.swap, · ∘ ·] <;> exact tendsto_swap_uniformity.comp tendsto_comap,
-    comp :=
-      le_transₓ
-        (by 
-          rw [comap_lift'_eq, comap_lift'_eq2]
-          exact lift'_mono'$ fun s hs ⟨a₁, a₂⟩ ⟨x, h₁, h₂⟩ => ⟨f x, h₁, h₂⟩
-          repeat' 
-            exact monotone_comp_rel monotone_id monotone_id)
-        (comap_mono u.comp),
-    is_open_uniformity :=
-      fun s =>
-        by 
-          change @IsOpen α (u.to_topological_space.induced f) s ↔ _ 
-          simp [is_open_iff_nhds, nhds_induced, mem_nhds_uniformity_iff_right, Filter.comap, and_comm]
-          refine' ball_congr fun x hx => ⟨_, _⟩
-          ·
-            rintro ⟨t, hts, ht⟩
-            refine' ⟨_, ht, _⟩
-            rintro ⟨x₁, x₂⟩ h rfl 
-            exact hts (h rfl)
-          ·
-            rintro ⟨t, ht, hts⟩
-            exact
-              ⟨{ y | (f x, y) ∈ t }, fun y hy => @hts (x, y) hy rfl,
-                mem_nhds_uniformity_iff_right.1$ mem_nhds_left _ ht⟩ }
+def uniform_space.comap (f : α → β) (u : uniform_space β) : uniform_space α :=
+{ uniformity := u.uniformity.comap (λ p : «expr × »(α, α), (f p.1, f p.2)),
+  to_topological_space := u.to_topological_space.induced f,
+  refl := le_trans (by simp [] [] [] [] [] []; exact [expr assume
+    ⟨a, b⟩
+    (h : «expr = »(a, b)), «expr ▸ »(h, rfl)]) (comap_mono u.refl),
+  symm := by simp [] [] [] ["[", expr tendsto_comap_iff, ",", expr prod.swap, ",", expr («expr ∘ »), "]"] [] []; exact [expr tendsto_swap_uniformity.comp tendsto_comap],
+  comp := le_trans (begin
+     rw ["[", expr comap_lift'_eq, ",", expr comap_lift'_eq2, "]"] [],
+     exact [expr «expr $ »(lift'_mono', assume (s hs) ⟨a₁, a₂⟩ ⟨x, h₁, h₂⟩, ⟨f x, h₁, h₂⟩)],
+     repeat { exact [expr monotone_comp_rel monotone_id monotone_id] }
+   end) (comap_mono u.comp),
+  is_open_uniformity := λ s, begin
+    change [expr «expr ↔ »(@is_open α (u.to_topological_space.induced f) s, _)] [] [],
+    simp [] [] [] ["[", expr is_open_iff_nhds, ",", expr nhds_induced, ",", expr mem_nhds_uniformity_iff_right, ",", expr filter.comap, ",", expr and_comm, "]"] [] [],
+    refine [expr ball_congr (λ x hx, ⟨_, _⟩)],
+    { rintro ["⟨", ident t, ",", ident hts, ",", ident ht, "⟩"],
+      refine [expr ⟨_, ht, _⟩],
+      rintro ["⟨", ident x₁, ",", ident x₂, "⟩", ident h, ident rfl],
+      exact [expr hts (h rfl)] },
+    { rintro ["⟨", ident t, ",", ident ht, ",", ident hts, "⟩"],
+      exact [expr ⟨{y | «expr ∈ »((f x, y), t)}, λ
+        y hy, @hts (x, y) hy rfl, «expr $ »(mem_nhds_uniformity_iff_right.1, mem_nhds_left _ ht)⟩] }
+  end }
 
 theorem uniformity_comap [UniformSpace α] [UniformSpace β] {f : α → β}
   (h : ‹UniformSpace α› = UniformSpace.comap f ‹UniformSpace β›) : 𝓤 α = comap (Prod.mapₓ f f) (𝓤 β) :=
@@ -1245,9 +1256,12 @@ instance  : UniformSpace ℤ :=
 instance  {p : α → Prop} [t : UniformSpace α] : UniformSpace (Subtype p) :=
   UniformSpace.comap Subtype.val t
 
-theorem uniformity_subtype {p : α → Prop} [t : UniformSpace α] :
-  𝓤 (Subtype p) = comap (fun q : Subtype p × Subtype p => (q.1.1, q.2.1)) (𝓤 α) :=
-  rfl
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_subtype
+{p : α → exprProp()}
+[t : uniform_space α] : «expr = »(expr𝓤() (subtype p), comap (λ
+  q : «expr × »(subtype p, subtype p), (q.1.1, q.2.1)) (expr𝓤() α)) :=
+rfl
 
 theorem uniform_continuous_subtype_val {p : α → Prop} [UniformSpace α] :
   UniformContinuous (Subtype.val : { a : α // p a } → α) :=
@@ -1257,25 +1271,31 @@ theorem uniform_continuous_subtype_mk {p : α → Prop} [UniformSpace α] [Unifo
   (hf : UniformContinuous f) (h : ∀ x, p (f x)) : UniformContinuous (fun x => ⟨f x, h x⟩ : β → Subtype p) :=
   uniform_continuous_comap' hf
 
-theorem uniform_continuous_on_iff_restrict [UniformSpace α] [UniformSpace β] {f : α → β} {s : Set α} :
-  UniformContinuousOn f s ↔ UniformContinuous (s.restrict f) :=
-  by 
-    unfold UniformContinuousOn Set.restrict UniformContinuous tendsto 
-    rw
-      [show (fun x : s × s => (f x.1, f x.2)) = (Prod.mapₓ f f ∘ coeₓ)by 
-        ext x <;> cases x <;> rfl,
-      uniformity_comap rfl,
-      show Prod.mapₓ Subtype.val Subtype.val = (coeₓ : s × s → α × α)by 
-        ext x <;> cases x <;> rfl]
-    conv  in map _ (comap _ _) => rw [←Filter.map_map]
-    rw [subtype_coe_map_comap_prod]
-    rfl
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_on_iff_restrict
+[uniform_space α]
+[uniform_space β]
+{f : α → β}
+{s : set α} : «expr ↔ »(uniform_continuous_on f s, uniform_continuous (s.restrict f)) :=
+begin
+  unfold [ident uniform_continuous_on, ident set.restrict, ident uniform_continuous, ident tendsto] [],
+  rw ["[", expr show «expr = »(λ
+    x : «expr × »(s, s), (f x.1, f x.2), «expr ∘ »(prod.map f f, coe)), by ext [] [ident x] []; cases [expr x] []; refl, ",", expr uniformity_comap rfl, ",", expr show «expr = »(prod.map subtype.val subtype.val, (coe : «expr × »(s, s) → «expr × »(α, α))), by ext [] [ident x] []; cases [expr x] []; refl, "]"] [],
+  conv [] ["in", expr map _ (comap _ _)] { rw ["<-", expr filter.map_map] },
+  rw [expr subtype_coe_map_comap_prod] [],
+  refl
+end
 
-theorem tendsto_of_uniform_continuous_subtype [UniformSpace α] [UniformSpace β] {f : α → β} {s : Set α} {a : α}
-  (hf : UniformContinuous fun x : s => f x.val) (ha : s ∈ 𝓝 a) : tendsto f (𝓝 a) (𝓝 (f a)) :=
-  by 
-    rw [(@map_nhds_subtype_coe_eq α _ s a (mem_of_mem_nhds ha) ha).symm] <;>
-      exact tendsto_map' (continuous_iff_continuous_at.mp hf.continuous _)
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_of_uniform_continuous_subtype
+[uniform_space α]
+[uniform_space β]
+{f : α → β}
+{s : set α}
+{a : α}
+(hf : uniform_continuous (λ x : s, f x.val))
+(ha : «expr ∈ »(s, expr𝓝() a)) : tendsto f (expr𝓝() a) (expr𝓝() (f a)) :=
+by rw ["[", expr (@map_nhds_subtype_coe_eq α _ s a (mem_of_mem_nhds ha) ha).symm, "]"] []; exact [expr tendsto_map' (continuous_iff_continuous_at.mp hf.continuous _)]
 
 theorem UniformContinuousOn.continuous_on [UniformSpace α] [UniformSpace β] {f : α → β} {s : Set α}
   (h : UniformContinuousOn f s) : ContinuousOn f s :=
@@ -1296,56 +1316,76 @@ instance  [u₁ : UniformSpace α] [u₂ : UniformSpace β] : UniformSpace (α �
         rw [UniformSpace.to_core_to_topological_space]
       )
 
-theorem uniformity_prod [UniformSpace α] [UniformSpace β] :
-  𝓤 (α × β) =
-    ((𝓤 α).comap fun p : (α × β) × α × β => (p.1.1, p.2.1))⊓(𝓤 β).comap fun p : (α × β) × α × β => (p.1.2, p.2.2) :=
-  inf_uniformity
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_prod
+[uniform_space α]
+[uniform_space β] : «expr = »(expr𝓤() «expr × »(α, β), «expr ⊓ »((expr𝓤() α).comap (λ
+   p : «expr × »(«expr × »(α, β), «expr × »(α, β)), (p.1.1, p.2.1)), (expr𝓤() β).comap (λ
+   p : «expr × »(«expr × »(α, β), «expr × »(α, β)), (p.1.2, p.2.2)))) :=
+inf_uniformity
 
-theorem uniformity_prod_eq_prod [UniformSpace α] [UniformSpace β] :
-  𝓤 (α × β) = map (fun p : (α × α) × β × β => ((p.1.1, p.2.1), (p.1.2, p.2.2))) (𝓤 α ×ᶠ 𝓤 β) :=
-  have  :
-    (map fun p : (α × α) × β × β => ((p.1.1, p.2.1), (p.1.2, p.2.2))) =
-      comap fun p : (α × β) × α × β => ((p.1.1, p.2.1), (p.1.2, p.2.2)) :=
-    funext$ fun f => map_eq_comap_of_inverse (funext$ fun ⟨⟨_, _⟩, ⟨_, _⟩⟩ => rfl) (funext$ fun ⟨⟨_, _⟩, ⟨_, _⟩⟩ => rfl)
-  by 
-    rw [this, uniformity_prod, Filter.prod, comap_inf, comap_comap, comap_comap]
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_prod_eq_prod
+[uniform_space α]
+[uniform_space β] : «expr = »(expr𝓤() «expr × »(α, β), map (λ
+  p : «expr × »(«expr × »(α, α), «expr × »(β, β)), ((p.1.1, p.2.1), (p.1.2, p.2.2))) «expr ×ᶠ »(expr𝓤() α, expr𝓤() β)) :=
+have «expr = »(map (λ
+  p : «expr × »(«expr × »(α, α), «expr × »(β, β)), ((p.1.1, p.2.1), (p.1.2, p.2.2))), comap (λ
+  p : «expr × »(«expr × »(α, β), «expr × »(α, β)), ((p.1.1, p.2.1), (p.1.2, p.2.2)))), from «expr $ »(funext, assume
+ f, map_eq_comap_of_inverse «expr $ »(funext, assume
+  ⟨⟨_, _⟩, ⟨_, _⟩⟩, rfl) «expr $ »(funext, assume ⟨⟨_, _⟩, ⟨_, _⟩⟩, rfl)),
+by rw ["[", expr this, ",", expr uniformity_prod, ",", expr filter.prod, ",", expr comap_inf, ",", expr comap_comap, ",", expr comap_comap, "]"] []
 
 theorem mem_map_iff_exists_image' {α : Type _} {β : Type _} {f : Filter α} {m : α → β} {t : Set β} :
   t ∈ (map m f).Sets ↔ ∃ (s : _)(_ : s ∈ f), m '' s ⊆ t :=
   mem_map_iff_exists_image
 
-theorem mem_uniformity_of_uniform_continuous_invariant [UniformSpace α] {s : Set (α × α)} {f : α → α → α}
-  (hf : UniformContinuous fun p : α × α => f p.1 p.2) (hs : s ∈ 𝓤 α) :
-  ∃ (u : _)(_ : u ∈ 𝓤 α), ∀ a b c, (a, b) ∈ u → (f a c, f b c) ∈ s :=
-  by 
-    rw [UniformContinuous, uniformity_prod_eq_prod, tendsto_map'_iff, · ∘ ·] at hf 
-    rcases mem_map_iff_exists_image'.1 (hf hs) with ⟨t, ht, hts⟩
-    clear hf 
-    rcases mem_prod_iff.1 ht with ⟨u, hu, v, hv, huvt⟩
-    clear ht 
-    refine' ⟨u, hu, fun a b c hab => hts$ (mem_image _ _ _).2 ⟨⟨⟨a, b⟩, ⟨c, c⟩⟩, huvt ⟨_, _⟩, _⟩⟩
-    exact hab 
-    exact refl_mem_uniformity hv 
-    rfl
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_uniformity_of_uniform_continuous_invariant
+[uniform_space α]
+{s : set «expr × »(α, α)}
+{f : α → α → α}
+(hf : uniform_continuous (λ p : «expr × »(α, α), f p.1 p.2))
+(hs : «expr ∈ »(s, expr𝓤() α)) : «expr∃ , »((u «expr ∈ » expr𝓤() α), ∀
+ a b c, «expr ∈ »((a, b), u) → «expr ∈ »((f a c, f b c), s)) :=
+begin
+  rw ["[", expr uniform_continuous, ",", expr uniformity_prod_eq_prod, ",", expr tendsto_map'_iff, ",", expr («expr ∘ »), "]"] ["at", ident hf],
+  rcases [expr mem_map_iff_exists_image'.1 (hf hs), "with", "⟨", ident t, ",", ident ht, ",", ident hts, "⟩"],
+  clear [ident hf],
+  rcases [expr mem_prod_iff.1 ht, "with", "⟨", ident u, ",", ident hu, ",", ident v, ",", ident hv, ",", ident huvt, "⟩"],
+  clear [ident ht],
+  refine [expr ⟨u, hu, assume a b c hab, «expr $ »(hts, (mem_image _ _ _).2 ⟨⟨⟨a, b⟩, ⟨c, c⟩⟩, huvt ⟨_, _⟩, _⟩)⟩],
+  exact [expr hab],
+  exact [expr refl_mem_uniformity hv],
+  refl
+end
 
 theorem mem_uniform_prod [t₁ : UniformSpace α] [t₂ : UniformSpace β] {a : Set (α × α)} {b : Set (β × β)} (ha : a ∈ 𝓤 α)
   (hb : b ∈ 𝓤 β) : { p:(α × β) × α × β | (p.1.1, p.2.1) ∈ a ∧ (p.1.2, p.2.2) ∈ b } ∈ @uniformity (α × β) _ :=
   by 
     rw [uniformity_prod] <;> exact inter_mem_inf (preimage_mem_comap ha) (preimage_mem_comap hb)
 
-theorem tendsto_prod_uniformity_fst [UniformSpace α] [UniformSpace β] :
-  tendsto (fun p : (α × β) × α × β => (p.1.1, p.2.1)) (𝓤 (α × β)) (𝓤 α) :=
-  le_transₓ (map_mono (@inf_le_left (UniformSpace (α × β)) _ _ _)) map_comap_le
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_prod_uniformity_fst
+[uniform_space α]
+[uniform_space β] : tendsto (λ
+ p : «expr × »(«expr × »(α, β), «expr × »(α, β)), (p.1.1, p.2.1)) (expr𝓤() «expr × »(α, β)) (expr𝓤() α) :=
+le_trans (map_mono (@inf_le_left (uniform_space «expr × »(α, β)) _ _ _)) map_comap_le
 
-theorem tendsto_prod_uniformity_snd [UniformSpace α] [UniformSpace β] :
-  tendsto (fun p : (α × β) × α × β => (p.1.2, p.2.2)) (𝓤 (α × β)) (𝓤 β) :=
-  le_transₓ (map_mono (@inf_le_right (UniformSpace (α × β)) _ _ _)) map_comap_le
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_prod_uniformity_snd
+[uniform_space α]
+[uniform_space β] : tendsto (λ
+ p : «expr × »(«expr × »(α, β), «expr × »(α, β)), (p.1.2, p.2.2)) (expr𝓤() «expr × »(α, β)) (expr𝓤() β) :=
+le_trans (map_mono (@inf_le_right (uniform_space «expr × »(α, β)) _ _ _)) map_comap_le
 
-theorem uniform_continuous_fst [UniformSpace α] [UniformSpace β] : UniformContinuous fun p : α × β => p.1 :=
-  tendsto_prod_uniformity_fst
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_fst [uniform_space α] [uniform_space β] : uniform_continuous (λ p : «expr × »(α, β), p.1) :=
+tendsto_prod_uniformity_fst
 
-theorem uniform_continuous_snd [UniformSpace α] [UniformSpace β] : UniformContinuous fun p : α × β => p.2 :=
-  tendsto_prod_uniformity_snd
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_snd [uniform_space α] [uniform_space β] : uniform_continuous (λ p : «expr × »(α, β), p.2) :=
+tendsto_prod_uniformity_snd
 
 variable[UniformSpace α][UniformSpace β][UniformSpace γ]
 
@@ -1439,13 +1479,17 @@ uniform_space.core.mk' «expr ⊔ »(map (λ
      exact [expr Htβ A] }
  end)
 
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The union of an entourage of the diagonal in each set of a disjoint union is again an entourage
 of the diagonal. -/
-theorem union_mem_uniformity_sum {a : Set (α × α)} (ha : a ∈ 𝓤 α) {b : Set (β × β)} (hb : b ∈ 𝓤 β) :
-  (fun p : α × α => (inl p.1, inl p.2)) '' a ∪ (fun p : β × β => (inr p.1, inr p.2)) '' b ∈
-    (@UniformSpace.Core.sum α β _ _).uniformity :=
-  ⟨mem_map_iff_exists_image.2 ⟨_, ha, subset_union_left _ _⟩,
-    mem_map_iff_exists_image.2 ⟨_, hb, subset_union_right _ _⟩⟩
+theorem union_mem_uniformity_sum
+{a : set «expr × »(α, α)}
+(ha : «expr ∈ »(a, expr𝓤() α))
+{b : set «expr × »(β, β)}
+(hb : «expr ∈ »(b, expr𝓤() β)) : «expr ∈ »(«expr ∪ »(«expr '' »(λ
+   p : «expr × »(α, α), (inl p.1, inl p.2), a), «expr '' »(λ
+   p : «expr × »(β, β), (inr p.1, inr p.2), b)), (@uniform_space.core.sum α β _ _).uniformity) :=
+⟨mem_map_iff_exists_image.2 ⟨_, ha, subset_union_left _ _⟩, mem_map_iff_exists_image.2 ⟨_, hb, subset_union_right _ _⟩⟩
 
 theorem uniformity_sum_of_open_aux {s : Set (Sum α β)} (hs : IsOpen s) {x : Sum α β} (xs : x ∈ s) :
   { p:Sum α β × Sum α β | p.1 = x → p.2 ∈ s } ∈ (@UniformSpace.Core.sum α β _ _).uniformity :=
@@ -1467,7 +1511,7 @@ theorem uniformity_sum_of_open_aux {s : Set (Sum α β)} (hs : IsOpen s) {x : Su
       exact h rfl
 
 theorem open_of_uniformity_sum_aux {s : Set (Sum α β)}
-  (hs : ∀ x _ : x ∈ s, { p:Sum α β × Sum α β | p.1 = x → p.2 ∈ s } ∈ (@UniformSpace.Core.sum α β _ _).uniformity) :
+  (hs : ∀ x (_ : x ∈ s), { p:Sum α β × Sum α β | p.1 = x → p.2 ∈ s } ∈ (@UniformSpace.Core.sum α β _ _).uniformity) :
   IsOpen s :=
   by 
     split 
@@ -1488,9 +1532,11 @@ instance Sum.uniformSpace : UniformSpace (Sum α β) :=
   { toCore := UniformSpace.Core.sum,
     is_open_uniformity := fun s => ⟨uniformity_sum_of_open_aux, open_of_uniformity_sum_aux⟩ }
 
-theorem Sum.uniformity :
-  𝓤 (Sum α β) = map (fun p : α × α => (inl p.1, inl p.2)) (𝓤 α)⊔map (fun p : β × β => (inr p.1, inr p.2)) (𝓤 β) :=
-  rfl
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sum.uniformity : «expr = »(expr𝓤() «expr ⊕ »(α, β), «expr ⊔ »(map (λ
+   p : «expr × »(α, α), (inl p.1, inl p.2)) (expr𝓤() α), map (λ
+   p : «expr × »(β, β), (inr p.1, inr p.2)) (expr𝓤() β))) :=
+rfl
 
 end Sum
 
@@ -1537,8 +1583,8 @@ end
 /-- Let `c : set (set α)` be an open cover of a compact set `s`. Then there exists an entourage
 `n` such that for each `x ∈ s` its `n`-neighborhood is contained in some `t ∈ c`. -/
 theorem lebesgue_number_lemma_sUnion {α : Type u} [UniformSpace α] {s : Set α} {c : Set (Set α)} (hs : IsCompact s)
-  (hc₁ : ∀ t _ : t ∈ c, IsOpen t) (hc₂ : s ⊆ ⋃₀c) :
-  ∃ (n : _)(_ : n ∈ 𝓤 α), ∀ x _ : x ∈ s, ∃ (t : _)(_ : t ∈ c), ∀ y, (x, y) ∈ n → y ∈ t :=
+  (hc₁ : ∀ t (_ : t ∈ c), IsOpen t) (hc₂ : s ⊆ ⋃₀c) :
+  ∃ (n : _)(_ : n ∈ 𝓤 α), ∀ x (_ : x ∈ s), ∃ (t : _)(_ : t ∈ c), ∀ y, (x, y) ∈ n → y ∈ t :=
   by 
     rw [sUnion_eq_Union] at hc₂ <;>
       simpa using
@@ -1626,10 +1672,14 @@ theorem continuous_at_iff'_left [TopologicalSpace β] {f : β → α} {b : β} :
   by 
     rw [ContinuousAt, tendsto_nhds_left]
 
-theorem continuous_at_iff_prod [TopologicalSpace β] {f : β → α} {b : β} :
-  ContinuousAt f b ↔ tendsto (fun x : β × β => (f x.1, f x.2)) (𝓝 (b, b)) (𝓤 α) :=
-  ⟨fun H => le_transₓ (H.prod_map' H) (nhds_le_uniformity _),
-    fun H => continuous_at_iff'_left.2$ H.comp$ tendsto_id.prod_mk_nhds tendsto_const_nhds⟩
+-- error in Topology.UniformSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_iff_prod
+[topological_space β]
+{f : β → α}
+{b : β} : «expr ↔ »(continuous_at f b, tendsto (λ x : «expr × »(β, β), (f x.1, f x.2)) (expr𝓝() (b, b)) (expr𝓤() α)) :=
+⟨λ
+ H, le_trans (H.prod_map' H) (nhds_le_uniformity _), λ
+ H, «expr $ »(continuous_at_iff'_left.2, «expr $ »(H.comp, tendsto_id.prod_mk_nhds tendsto_const_nhds))⟩
 
 theorem continuous_within_at_iff'_right [TopologicalSpace β] {f : β → α} {b : β} {s : Set β} :
   ContinuousWithinAt f s b ↔ tendsto (fun x => (f b, f x)) (𝓝[s] b) (𝓤 α) :=
@@ -1642,12 +1692,12 @@ theorem continuous_within_at_iff'_left [TopologicalSpace β] {f : β → α} {b 
     rw [ContinuousWithinAt, tendsto_nhds_left]
 
 theorem continuous_on_iff'_right [TopologicalSpace β] {f : β → α} {s : Set β} :
-  ContinuousOn f s ↔ ∀ b _ : b ∈ s, tendsto (fun x => (f b, f x)) (𝓝[s] b) (𝓤 α) :=
+  ContinuousOn f s ↔ ∀ b (_ : b ∈ s), tendsto (fun x => (f b, f x)) (𝓝[s] b) (𝓤 α) :=
   by 
     simp [ContinuousOn, continuous_within_at_iff'_right]
 
 theorem continuous_on_iff'_left [TopologicalSpace β] {f : β → α} {s : Set β} :
-  ContinuousOn f s ↔ ∀ b _ : b ∈ s, tendsto (fun x => (f x, f b)) (𝓝[s] b) (𝓤 α) :=
+  ContinuousOn f s ↔ ∀ b (_ : b ∈ s), tendsto (fun x => (f x, f b)) (𝓝[s] b) (𝓤 α) :=
   by 
     simp [ContinuousOn, continuous_within_at_iff'_left]
 

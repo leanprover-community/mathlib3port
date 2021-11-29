@@ -100,11 +100,11 @@ theorem coe_div_circle (z w : circle) : «expr↑ » (z / w) = (z : ℂ) / w :=
 instance  : CompactSpace circle :=
   Metric.Sphere.compact_space _ _
 
-instance  : TopologicalGroup circle :=
-  { continuous_mul :=
-      let h : Continuous fun x : circle => (x : ℂ) := continuous_subtype_coe 
-      continuous_induced_rng (continuous_mul.comp (h.prod_map h)),
-    continuous_inv := continuous_induced_rng$ Complex.conjCle.Continuous.comp continuous_subtype_coe }
+-- error in Analysis.Complex.Circle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : topological_group circle :=
+{ continuous_mul := let h : continuous (λ x : circle, (x : exprℂ())) := continuous_subtype_coe in
+  continuous_induced_rng (continuous_mul.comp (h.prod_map h)),
+  continuous_inv := «expr $ »(continuous_induced_rng, complex.conj_cle.continuous.comp continuous_subtype_coe) }
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ`. -/
 def expMapCircle : C(ℝ, circle) :=

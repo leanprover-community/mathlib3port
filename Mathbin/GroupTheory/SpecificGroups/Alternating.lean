@@ -55,7 +55,7 @@ namespace Equiv.Perm
 theorem mem_alternating_group {f : perm α} : f ∈ alternatingGroup α ↔ sign f = 1 :=
   sign.mem_ker
 
-theorem prod_list_swap_mem_alternating_group_iff_even_length {l : List (perm α)} (hl : ∀ g _ : g ∈ l, is_swap g) :
+theorem prod_list_swap_mem_alternating_group_iff_even_length {l : List (perm α)} (hl : ∀ g (_ : g ∈ l), is_swap g) :
   l.prod ∈ alternatingGroup α ↔ Even l.length :=
   by 
     rw [mem_alternating_group, sign_prod_list_swap hl, ←Units.coe_eq_one, Units.coe_pow, Units.coe_neg_one,
@@ -130,7 +130,7 @@ theorem closure_three_cycles_eq_alternating : closure { σ:perm α | is_three_cy
     fun σ hσ =>
       by 
         suffices hind :
-          ∀ n : ℕ l : List (perm α) hl : ∀ g, g ∈ l → is_swap g hn : l.length = 2*n,
+          ∀ (n : ℕ) (l : List (perm α)) (hl : ∀ g, g ∈ l → is_swap g) (hn : l.length = 2*n),
             l.prod ∈ closure { σ:perm α | is_three_cycle σ }
         ·
           obtain ⟨l, rfl, hl⟩ := trunc_swap_factors σ 

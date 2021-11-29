@@ -51,10 +51,10 @@ universe u v w
 /-- `bilin_form R M` is the type of `R`-bilinear functions `M → M → R`. -/
 structure BilinForm(R : Type _)(M : Type _)[Semiringₓ R][AddCommMonoidₓ M][Module R M] where 
   bilin : M → M → R 
-  bilin_add_left : ∀ x y z : M, bilin (x+y) z = bilin x z+bilin y z 
-  bilin_smul_left : ∀ a : R x y : M, bilin (a • x) y = a*bilin x y 
-  bilin_add_right : ∀ x y z : M, bilin x (y+z) = bilin x y+bilin x z 
-  bilin_smul_right : ∀ a : R x y : M, bilin x (a • y) = a*bilin x y
+  bilin_add_left : ∀ (x y z : M), bilin (x+y) z = bilin x z+bilin y z 
+  bilin_smul_left : ∀ (a : R) (x y : M), bilin (a • x) y = a*bilin x y 
+  bilin_add_right : ∀ (x y z : M), bilin x (y+z) = bilin x y+bilin x z 
+  bilin_smul_right : ∀ (a : R) (x y : M), bilin x (a • y) = a*bilin x y
 
 variable{R : Type _}{M : Type _}[Semiringₓ R][AddCommMonoidₓ M][Module R M]
 
@@ -131,7 +131,7 @@ theorem sub_right (x y z : M₁) : B₁ x (y - z) = B₁ x y - B₁ x z :=
 variable{D : BilinForm R M}
 
 @[ext]
-theorem ext (H : ∀ x y : M, B x y = D x y) : B = D :=
+theorem ext (H : ∀ (x y : M), B x y = D x y) : B = D :=
   by 
     cases B 
     cases D 
@@ -767,7 +767,7 @@ def is_Ortho {n : Type w} (B : BilinForm R M) (v : n → M) : Prop :=
   Pairwise (B.is_ortho on v)
 
 theorem is_Ortho_def {n : Type w} {B : BilinForm R M} {v : n → M} :
-  B.is_Ortho v ↔ ∀ i j : n, i ≠ j → B (v i) (v j) = 0 :=
+  B.is_Ortho v ↔ ∀ (i j : n), i ≠ j → B (v i) (v j) = 0 :=
   Iff.rfl
 
 section 
@@ -1207,7 +1207,7 @@ namespace BilinForm
 
 /-- The proposition that a bilinear form is reflexive -/
 def IsRefl (B : BilinForm R M) : Prop :=
-  ∀ x y : M, B x y = 0 → B y x = 0
+  ∀ (x y : M), B x y = 0 → B y x = 0
 
 namespace IsRefl
 
@@ -1223,7 +1223,7 @@ end IsRefl
 
 /-- The proposition that a bilinear form is symmetric -/
 def IsSymm (B : BilinForm R M) : Prop :=
-  ∀ x y : M, B x y = B y x
+  ∀ (x y : M), B x y = B y x
 
 namespace IsSymm
 
@@ -1254,7 +1254,7 @@ theorem is_symm_iff_flip' [Algebra R₂ R] : B.is_symm ↔ flip_hom R₂ B = B :
 
 /-- The proposition that a bilinear form is alternating -/
 def is_alt (B : BilinForm R M) : Prop :=
-  ∀ x : M, B x x = 0
+  ∀ (x : M), B x x = 0
 
 namespace IsAlt
 
@@ -1588,7 +1588,7 @@ chirality; in addition to this "left" orthogonal complement one could define a "
 complement for which, for all `y` in `N`, `B y x = 0`.  This variant definition is not currently
 provided in mathlib. -/
 def orthogonal (B : BilinForm R M) (N : Submodule R M) : Submodule R M :=
-  { Carrier := { m | ∀ n _ : n ∈ N, is_ortho B n m }, zero_mem' := fun x _ => is_ortho_zero_right x,
+  { Carrier := { m | ∀ n (_ : n ∈ N), is_ortho B n m }, zero_mem' := fun x _ => is_ortho_zero_right x,
     add_mem' :=
       fun x y hx hy n hn =>
         by 
@@ -1609,7 +1609,7 @@ def orthogonal (B : BilinForm R M) (N : Submodule R M) : Submodule R M :=
 variable{N L : Submodule R M}
 
 @[simp]
-theorem mem_orthogonal_iff {N : Submodule R M} {m : M} : m ∈ B.orthogonal N ↔ ∀ n _ : n ∈ N, is_ortho B n m :=
+theorem mem_orthogonal_iff {N : Submodule R M} {m : M} : m ∈ B.orthogonal N ↔ ∀ n (_ : n ∈ N), is_ortho B n m :=
   Iff.rfl
 
 theorem orthogonal_le (h : N ≤ L) : B.orthogonal L ≤ B.orthogonal N :=
@@ -1685,7 +1685,7 @@ chirality; in addition to this "left" nondegeneracy condition one could define a
 nondegeneracy condition that in the situation described, `B n m ≠ 0`.  This variant definition is
 not currently provided in mathlib. In finite dimension either definition implies the other. -/
 def nondegenerate (B : BilinForm R M) : Prop :=
-  ∀ m : M, (∀ n : M, B m n = 0) → m = 0
+  ∀ (m : M), (∀ (n : M), B m n = 0) → m = 0
 
 section 
 

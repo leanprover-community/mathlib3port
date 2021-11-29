@@ -175,12 +175,12 @@ noncomputable instance decidable_restrict_degree (m : ℕ) : DecidablePred (· �
     simp only [Set.mem_set_of_eq] <;> infer_instance
 
 theorem dim_R : Module.rank K (R σ K) = Fintype.card (σ → K) :=
-  calc Module.rank K (R σ K) = Module.rank K («expr↥ » { s:σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } →₀ K) :=
-    LinearEquiv.dim_eq (Finsupp.supportedEquivFinsupp { s:σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 })
-    _ = # { s:σ →₀ ℕ | ∀ n : σ, s n ≤ Fintype.card K - 1 } :=
+  calc Module.rank K (R σ K) = Module.rank K («expr↥ » { s:σ →₀ ℕ | ∀ (n : σ), s n ≤ Fintype.card K - 1 } →₀ K) :=
+    LinearEquiv.dim_eq (Finsupp.supportedEquivFinsupp { s:σ →₀ ℕ | ∀ (n : σ), s n ≤ Fintype.card K - 1 })
+    _ = # { s:σ →₀ ℕ | ∀ (n : σ), s n ≤ Fintype.card K - 1 } :=
     by 
       rw [Finsupp.dim_eq, dim_self, mul_oneₓ]
-    _ = # { s:σ → ℕ | ∀ n : σ, s n < Fintype.card K } :=
+    _ = # { s:σ → ℕ | ∀ (n : σ), s n < Fintype.card K } :=
     by 
       refine' Quotientₓ.sound ⟨Equiv.subtypeEquiv Finsupp.equivFunOnFintype$ fun f => _⟩
       refine' forall_congrₓ fun n => le_tsub_iff_right _ 
@@ -214,7 +214,7 @@ theorem ker_evalₗ : (evalᵢ σ K).ker = ⊥ :=
     refine' (ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank _).mpr (range_evalᵢ _ _)
     rw [FiniteDimensional.finrank_fintype_fun_eq_card, finrank_R]
 
-theorem eq_zero_of_eval_eq_zero (p : MvPolynomial σ K) (h : ∀ v : σ → K, eval v p = 0)
+theorem eq_zero_of_eval_eq_zero (p : MvPolynomial σ K) (h : ∀ (v : σ → K), eval v p = 0)
   (hp : p ∈ restrict_degree σ K (Fintype.card K - 1)) : p = 0 :=
   let p' : R σ K := ⟨p, hp⟩
   have  : p' ∈ (evalᵢ σ K).ker :=

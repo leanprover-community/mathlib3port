@@ -13,8 +13,8 @@ open_locale TopologicalSpace
 structure Ctop(α σ : Type _) where 
   f : σ → Set α 
   top : α → σ 
-  top_mem : ∀ x : α, x ∈ f (top x)
-  inter : ∀ a b x : α, x ∈ f a ∩ f b → σ 
+  top_mem : ∀ (x : α), x ∈ f (top x)
+  inter : ∀ a b (x : α), x ∈ f a ∩ f b → σ 
   inter_mem : ∀ a b x h, x ∈ f (inter a b x h)
   inter_sub : ∀ a b x h, f (inter a b x h) ⊆ f a ∩ f b
 
@@ -112,7 +112,7 @@ theorem mem_nhds
 by have [] [] [":=", expr mem_nhds_to_topsp F.F]; rwa [expr F.eq] ["at", ident this]
 
 theorem is_open_iff [TopologicalSpace α] (F : realizer α) {s : Set α} :
-  IsOpen s ↔ ∀ a _ : a ∈ s, ∃ b, a ∈ F.F b ∧ F.F b ⊆ s :=
+  IsOpen s ↔ ∀ a (_ : a ∈ s), ∃ b, a ∈ F.F b ∧ F.F b ⊆ s :=
   is_open_iff_mem_nhds.trans$ ball_congr$ fun a h => F.mem_nhds
 
 -- error in Data.Analysis.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -203,14 +203,14 @@ theorem nhds_F (m : α → β) (F : realizer α) (a : α) s : (F.nhds a).f s = F
   rfl
 
 theorem tendsto_nhds_iff {m : β → α} {f : Filter β} (F : f.realizer) (R : realizer α) {a : α} :
-  tendsto m f (𝓝 a) ↔ ∀ t, a ∈ R.F t → ∃ s, ∀ x _ : x ∈ F.F s, m x ∈ R.F t :=
+  tendsto m f (𝓝 a) ↔ ∀ t, a ∈ R.F t → ∃ s, ∀ x (_ : x ∈ F.F s), m x ∈ R.F t :=
   (F.tendsto_iff _ (R.nhds a)).trans Subtype.forall
 
 end Ctop.Realizer
 
 structure LocallyFinite.Realizer[TopologicalSpace α](F : realizer α)(f : β → Set α) where 
   bas : ∀ a, { s // a ∈ F.F s }
-  Sets : ∀ x : α, Fintype { i | (f i ∩ F.F (bas x)).Nonempty }
+  Sets : ∀ (x : α), Fintype { i | (f i ∩ F.F (bas x)).Nonempty }
 
 theorem LocallyFinite.Realizer.to_locally_finite [TopologicalSpace α] {F : realizer α} {f : β → Set α}
   (R : LocallyFinite.Realizer F f) : LocallyFinite f :=
@@ -234,5 +234,5 @@ theorem locally_finite_iff_exists_realizer [TopologicalSpace α] (F : realizer �
     fun ⟨R⟩ => R.to_locally_finite⟩
 
 def Compact.Realizer [TopologicalSpace α] (R : realizer α) (s : Set α) :=
-  ∀ {f : Filter α} F : f.realizer x : F.σ, f ≠ ⊥ → F.F x ⊆ s → { a // a ∈ s ∧ 𝓝 a⊓f ≠ ⊥ }
+  ∀ {f : Filter α} (F : f.realizer) (x : F.σ), f ≠ ⊥ → F.F x ⊆ s → { a // a ∈ s ∧ 𝓝 a⊓f ≠ ⊥ }
 

@@ -28,10 +28,10 @@ universe v v₂ u u₂
 /-- A `groupoid` is a category such that all morphisms are isomorphisms. -/
 class groupoid(obj : Type u) extends category.{v} obj : Type max u (v + 1) where 
   inv : ∀ {X Y : obj}, (X ⟶ Y) → (Y ⟶ X)
-  inv_comp' : ∀ {X Y : obj} f : X ⟶ Y, comp (inv f) f = id Y :=  by 
+  inv_comp' : ∀ {X Y : obj} (f : X ⟶ Y), comp (inv f) f = id Y :=  by 
   runTac 
     obviously 
-  comp_inv' : ∀ {X Y : obj} f : X ⟶ Y, comp f (inv f) = id X :=  by 
+  comp_inv' : ∀ {X Y : obj} (f : X ⟶ Y), comp f (inv f) = id X :=  by 
   runTac 
     obviously
 
@@ -78,7 +78,7 @@ section
 variable{C : Type u}[category.{v} C]
 
 /-- A category where every morphism `is_iso` is a groupoid. -/
-noncomputable def groupoid.of_is_iso (all_is_iso : ∀ {X Y : C} f : X ⟶ Y, is_iso f) : groupoid.{v} C :=
+noncomputable def groupoid.of_is_iso (all_is_iso : ∀ {X Y : C} (f : X ⟶ Y), is_iso f) : groupoid.{v} C :=
   { inv := fun X Y f => inv f }
 
 end 

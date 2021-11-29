@@ -65,7 +65,7 @@ is a subgroup of `G` (because it is the preimage in `G` of the centre of the
 quotient group `G/H`.)
 -/
 def upperCentralSeriesStep : Subgroup G :=
-  { Carrier := { x:G | ∀ y : G, (((x*y)*x⁻¹)*y⁻¹) ∈ H },
+  { Carrier := { x:G | ∀ (y : G), (((x*y)*x⁻¹)*y⁻¹) ∈ H },
     one_mem' :=
       fun y =>
         by 
@@ -132,7 +132,7 @@ theorem upper_central_series_zero : upperCentralSeries G 0 = ⊥ :=
 /-- The `n+1`st term of the upper central series `H i` has underlying set equal to the `x` such
 that `⁅x,G⁆ ⊆ H n`-/
 theorem mem_upper_central_series_succ_iff (n : ℕ) (x : G) :
-  x ∈ upperCentralSeries G (n+1) ↔ ∀ y : G, (((x*y)*x⁻¹)*y⁻¹) ∈ upperCentralSeries G n :=
+  x ∈ upperCentralSeries G (n+1) ↔ ∀ (y : G), (((x*y)*x⁻¹)*y⁻¹) ∈ upperCentralSeries G n :=
   Iff.rfl
 
 /-- A group `G` is nilpotent if its upper central series is eventually `G`. -/
@@ -157,12 +157,12 @@ variable{G}
 /-- A sequence of subgroups of `G` is an ascending central series if `H 0` is trivial and
   `⁅H (n + 1), G⁆ ⊆ H n` for all `n`. Note that we do not require that `H n = G` for some `n`. -/
 def IsAscendingCentralSeries (H : ℕ → Subgroup G) : Prop :=
-  H 0 = ⊥ ∧ ∀ x : G n : ℕ, x ∈ H (n+1) → ∀ g, (((x*g)*x⁻¹)*g⁻¹) ∈ H n
+  H 0 = ⊥ ∧ ∀ (x : G) (n : ℕ), x ∈ H (n+1) → ∀ g, (((x*g)*x⁻¹)*g⁻¹) ∈ H n
 
 /-- A sequence of subgroups of `G` is a descending central series if `H 0` is `G` and
   `⁅H n, G⁆ ⊆ H (n + 1)` for all `n`. Note that we do not requre that `H n = {1}` for some `n`. -/
 def IsDescendingCentralSeries (H : ℕ → Subgroup G) :=
-  H 0 = ⊤ ∧ ∀ x : G n : ℕ, x ∈ H n → ∀ g, (((x*g)*x⁻¹)*g⁻¹) ∈ H (n+1)
+  H 0 = ⊤ ∧ ∀ (x : G) (n : ℕ), x ∈ H n → ∀ g, (((x*g)*x⁻¹)*g⁻¹) ∈ H (n+1)
 
 -- error in GroupTheory.Nilpotent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Any ascending central series for a group is bounded above by the upper central series. -/
@@ -308,7 +308,7 @@ theorem lower_central_series_is_descending_central_series : IsDescendingCentralS
 
 /-- Any descending central series for a group is bounded below by the lower central series. -/
 theorem descending_central_series_ge_lower (H : ℕ → Subgroup G) (hH : IsDescendingCentralSeries H) :
-  ∀ n : ℕ, lowerCentralSeries G n ≤ H n
+  ∀ (n : ℕ), lowerCentralSeries G n ≤ H n
 | 0 => hH.1.symm ▸ le_reflₓ ⊤
 | n+1 =>
   by 

@@ -147,12 +147,14 @@ noncomputable def arrow {X : C} (Y : subobject X) : (Y : C) ⟶ X :=
 instance arrow_mono {X : C} (Y : subobject X) : mono Y.arrow :=
   (representative.obj Y).property
 
+-- error in CategoryTheory.Subobject.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem arrow_congr {A : C} (X Y : subobject A) (h : X = Y) :
-  eq_to_hom (congr_argₓ (fun X : subobject A => (X : C)) h) ≫ Y.arrow = X.arrow :=
-  by 
-    induction h 
-    simp 
+theorem arrow_congr
+{A : C}
+(X Y : subobject A)
+(h : «expr = »(X, Y)) : «expr = »(«expr ≫ »(eq_to_hom (congr_arg (λ X : subobject A, (X : C)) h), Y.arrow), X.arrow) :=
+by { induction [expr h] [] [] [],
+  simp [] [] [] [] [] [] }
 
 @[simp]
 theorem representative_coe (Y : subobject X) : (representative.obj Y : C) = (Y : C) :=

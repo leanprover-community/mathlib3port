@@ -102,26 +102,20 @@ obtained by applying the functor `F : lax_monoidal_functor V W` to each hom obje
 def transport_enrichment (F : lax_monoidal_functor V W) (C : Type u₁) :=
   C
 
-instance  (F : lax_monoidal_functor V W) : enriched_category W (transport_enrichment F C) :=
-  { Hom := fun X Y : C => F.obj (X ⟶[V] Y), id := fun X : C => F.ε ≫ F.map (e_id V X),
-    comp := fun X Y Z : C => F.μ _ _ ≫ F.map (e_comp V X Y Z),
-    id_comp :=
-      fun X Y =>
-        by 
-          rw [comp_tensor_id, category.assoc, ←F.to_functor.map_id, F.μ_natural_assoc, F.to_functor.map_id,
-            F.left_unitality_inv_assoc, ←F.to_functor.map_comp, ←F.to_functor.map_comp, e_id_comp, F.to_functor.map_id],
-    comp_id :=
-      fun X Y =>
-        by 
-          rw [id_tensor_comp, category.assoc, ←F.to_functor.map_id, F.μ_natural_assoc, F.to_functor.map_id,
-            F.right_unitality_inv_assoc, ←F.to_functor.map_comp, ←F.to_functor.map_comp, e_comp_id,
-            F.to_functor.map_id],
-    assoc :=
-      fun P Q R S =>
-        by 
-          rw [comp_tensor_id, category.assoc, ←F.to_functor.map_id, F.μ_natural_assoc, F.to_functor.map_id,
-            ←F.associativity_inv_assoc, ←F.to_functor.map_comp, ←F.to_functor.map_comp, e_assoc, id_tensor_comp,
-            category.assoc, ←F.to_functor.map_id, F.μ_natural_assoc, F.to_functor.map_comp] }
+-- error in CategoryTheory.Enriched.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance (F : lax_monoidal_functor V W) : enriched_category W (transport_enrichment F C) :=
+{ hom := λ X Y : C, F.obj «expr ⟶[ ] »(X, V, Y),
+  id := λ X : C, «expr ≫ »(F.ε, F.map (e_id V X)),
+  comp := λ X Y Z : C, «expr ≫ »(F.μ _ _, F.map (e_comp V X Y Z)),
+  id_comp := λ X Y, begin
+    rw ["[", expr comp_tensor_id, ",", expr category.assoc, ",", "<-", expr F.to_functor.map_id, ",", expr F.μ_natural_assoc, ",", expr F.to_functor.map_id, ",", expr F.left_unitality_inv_assoc, ",", "<-", expr F.to_functor.map_comp, ",", "<-", expr F.to_functor.map_comp, ",", expr e_id_comp, ",", expr F.to_functor.map_id, "]"] []
+  end,
+  comp_id := λ X Y, begin
+    rw ["[", expr id_tensor_comp, ",", expr category.assoc, ",", "<-", expr F.to_functor.map_id, ",", expr F.μ_natural_assoc, ",", expr F.to_functor.map_id, ",", expr F.right_unitality_inv_assoc, ",", "<-", expr F.to_functor.map_comp, ",", "<-", expr F.to_functor.map_comp, ",", expr e_comp_id, ",", expr F.to_functor.map_id, "]"] []
+  end,
+  assoc := λ P Q R S, begin
+    rw ["[", expr comp_tensor_id, ",", expr category.assoc, ",", "<-", expr F.to_functor.map_id, ",", expr F.μ_natural_assoc, ",", expr F.to_functor.map_id, ",", "<-", expr F.associativity_inv_assoc, ",", "<-", expr F.to_functor.map_comp, ",", "<-", expr F.to_functor.map_comp, ",", expr e_assoc, ",", expr id_tensor_comp, ",", expr category.assoc, ",", "<-", expr F.to_functor.map_id, ",", expr F.μ_natural_assoc, ",", expr F.to_functor.map_comp, "]"] []
+  end }
 
 end 
 
@@ -285,11 +279,11 @@ satisfying the usual axioms.
 -/
 structure enriched_functor(C : Type u₁)[enriched_category V C](D : Type u₂)[enriched_category V D] where 
   obj : C → D 
-  map : ∀ X Y : C, (X ⟶[V] Y) ⟶ obj X ⟶[V] obj Y 
-  map_id' : ∀ X : C, e_id V X ≫ map X X = e_id V (obj X) :=  by 
+  map : ∀ (X Y : C), (X ⟶[V] Y) ⟶ obj X ⟶[V] obj Y 
+  map_id' : ∀ (X : C), e_id V X ≫ map X X = e_id V (obj X) :=  by 
   runTac 
     obviously 
-  map_comp' : ∀ X Y Z : C, e_comp V X Y Z ≫ map X Z = (map X Y ⊗ map Y Z) ≫ e_comp V (obj X) (obj Y) (obj Z) :=  by 
+  map_comp' : ∀ (X Y Z : C), e_comp V X Y Z ≫ map X Z = (map X Y ⊗ map Y Z) ≫ e_comp V (obj X) (obj Y) (obj Z) :=  by 
   runTac 
     obviously
 
@@ -403,9 +397,9 @@ This is the type of morphisms in `V` from `A` to the `V`-object of natural trans
 -/
 @[ext, nolint has_inhabited_instance]
 structure graded_nat_trans(A : center V)(F G : enriched_functor V C D) where 
-  app : ∀ X : C, A.1 ⟶ F.obj X ⟶[V] G.obj X 
+  app : ∀ (X : C), A.1 ⟶ F.obj X ⟶[V] G.obj X 
   naturality :
-  ∀ X Y : C, (A.2.β (X ⟶[V] Y)).Hom ≫ (F.map X Y ⊗ app Y) ≫ e_comp V _ _ _ = (app X ⊗ G.map X Y) ≫ e_comp V _ _ _
+  ∀ (X Y : C), (A.2.β (X ⟶[V] Y)).Hom ≫ (F.map X Y ⊗ app Y) ≫ e_comp V _ _ _ = (app X ⊗ G.map X Y) ≫ e_comp V _ _ _
 
 variable[braided_category V]
 

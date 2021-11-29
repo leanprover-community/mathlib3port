@@ -297,7 +297,7 @@ x : list α, «expr ↔ »((star P).rmatch x, «expr∃ , »((S : list (list α)
 end
 
 @[simp]
-theorem rmatch_iff_matches (P : RegularExpression α) : ∀ x : List α, P.rmatch x ↔ x ∈ P.matches :=
+theorem rmatch_iff_matches (P : RegularExpression α) : ∀ (x : List α), P.rmatch x ↔ x ∈ P.matches :=
   by 
     intro x 
     induction P generalizing x 

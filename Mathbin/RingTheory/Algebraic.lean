@@ -34,13 +34,13 @@ variable{R}
 
 /-- A subalgebra is algebraic if all its elements are algebraic. -/
 def Subalgebra.IsAlgebraic (S : Subalgebra R A) : Prop :=
-  ∀ x _ : x ∈ S, IsAlgebraic R x
+  ∀ x (_ : x ∈ S), IsAlgebraic R x
 
 variable(R A)
 
 /-- An algebra is algebraic if all its elements are algebraic. -/
 def Algebra.IsAlgebraic : Prop :=
-  ∀ x : A, IsAlgebraic R x
+  ∀ (x : A), IsAlgebraic R x
 
 variable{R A}
 

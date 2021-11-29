@@ -15,7 +15,7 @@ variable{α : Type _}
 
 section Sup
 
-variable[SemilatticeSupBot α]
+variable[SemilatticeSup α][OrderBot α]
 
 /-- Supremum of a multiset: `sup {a, b, c} = a ⊔ b ⊔ c` -/
 def sup (s : Multiset α) : α :=
@@ -72,7 +72,7 @@ theorem sup_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).sup = a⊔s.sup
     rw [←sup_erase_dup, erase_dup_ext.2, sup_erase_dup, sup_cons] <;> simp 
 
 theorem nodup_sup_iff {α : Type _} [DecidableEq α] {m : Multiset (Multiset α)} :
-  m.sup.nodup ↔ ∀ a : Multiset α, a ∈ m → a.nodup :=
+  m.sup.nodup ↔ ∀ (a : Multiset α), a ∈ m → a.nodup :=
   by 
     apply m.induction_on
     ·
@@ -88,7 +88,7 @@ end Sup
 
 section Inf
 
-variable[SemilatticeInfTop α]
+variable[SemilatticeInf α][OrderTop α]
 
 /-- Infimum of a multiset: `inf {a, b, c} = a ⊓ b ⊓ c` -/
 def inf (s : Multiset α) : α :=

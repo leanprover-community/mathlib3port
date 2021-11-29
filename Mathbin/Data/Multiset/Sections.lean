@@ -30,16 +30,17 @@ theorem sections_cons (s : Multiset (Multiset α)) (m : Multiset α) :
   sections (m ::ₘ s) = m.bind fun a => (sections s).map (Multiset.cons a) :=
   rec_on_cons m s
 
-theorem coe_sections :
-  ∀ l : List (List α),
-    sections (l.map fun l : List α => (l : Multiset α) : Multiset (Multiset α)) =
-      (l.sections.map fun l : List α => (l : Multiset α) : Multiset (Multiset α))
-| [] => rfl
-| a :: l =>
-  by 
-    simp 
-    rw [←cons_coe, sections_cons, bind_map_comm, coe_sections l]
-    simp [List.sections, · ∘ ·, List.bind]
+-- error in Data.Multiset.Sections: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem coe_sections : ∀
+l : list (list α), «expr = »(sections (l.map (λ
+  l : list α, (l : multiset α)) : multiset (multiset α)), (l.sections.map (λ
+  l : list α, (l : multiset α)) : multiset (multiset α)))
+| «expr[ , ]»([]) := rfl
+| «expr :: »(a, l) := begin
+  simp [] [] [] [] [] [],
+  rw ["[", "<-", expr cons_coe, ",", expr sections_cons, ",", expr bind_map_comm, ",", expr coe_sections l, "]"] [],
+  simp [] [] [] ["[", expr list.sections, ",", expr («expr ∘ »), ",", expr list.bind, "]"] [] []
+end
 
 @[simp]
 theorem sections_add (s t : Multiset (Multiset α)) :

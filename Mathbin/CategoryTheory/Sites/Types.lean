@@ -17,11 +17,14 @@ namespace CategoryTheory
 
 open_locale CategoryTheory.Type
 
+-- error in CategoryTheory.Sites.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A Grothendieck topology associated to the category of all types.
 A sieve is a covering iff it is jointly surjective. -/
 def types_grothendieck_topology : grothendieck_topology (Type u) :=
-  { Sieves := fun α S => ∀ x : α, S fun _ : PUnit => x, top_mem' := fun α x => trivialₓ,
-    pullback_stable' := fun α β S f hs x => hs (f x), transitive' := fun α S hs R hr x => hr (hs x) PUnit.unit }
+{ sieves := λ α S, ∀ x : α, S (λ _ : punit, x),
+  top_mem' := λ α x, trivial,
+  pullback_stable' := λ α β S f hs x, hs (f x),
+  transitive' := λ α S hs R hr x, hr (hs x) punit.star }
 
 /-- The discrete sieve on a type, which only includes arrows whose image is a subsingleton. -/
 @[simps]
@@ -33,7 +36,7 @@ theorem discrete_sieve_mem (α : Type u) : discrete_sieve α ∈ types_grothendi
 
 /-- The discrete presieve on a type, which only includes arrows whose domain is a singleton. -/
 def discrete_presieve (α : Type u) : presieve α :=
-  fun β f => ∃ x : β, ∀ y : β, y = x
+  fun β f => ∃ x : β, ∀ (y : β), y = x
 
 theorem generate_discrete_presieve_mem (α : Type u) :
   sieve.generate (discrete_presieve α) ∈ types_grothendieck_topology α :=
@@ -133,9 +136,14 @@ noncomputable def equiv_yoneda' (S : SheafOfTypes types_grothendieck_topology) :
   { Hom := (equiv_yoneda S.1 S.2).Hom, inv := (equiv_yoneda S.1 S.2).inv,
     hom_inv_id' := (equiv_yoneda S.1 S.2).hom_inv_id, inv_hom_id' := (equiv_yoneda S.1 S.2).inv_hom_id }
 
-theorem eval_app (S₁ S₂ : SheafOfTypes.{u} types_grothendieck_topology) (f : S₁ ⟶ S₂) (α : Type u) (s : S₁.1.obj (op α))
-  (x : α) : eval S₂.1 α (f.app (op α) s) x = f.app (op PUnit) (eval S₁.1 α s x) :=
-  (congr_funₓ (f.2 (↾fun _ : PUnit => x).op) s).symm
+-- error in CategoryTheory.Sites.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem eval_app
+(S₁ S₂ : SheafOfTypes.{u} types_grothendieck_topology)
+(f : «expr ⟶ »(S₁, S₂))
+(α : Type u)
+(s : S₁.1.obj (op α))
+(x : α) : «expr = »(eval S₂.1 α (f.app (op α) s) x, f.app (op punit) (eval S₁.1 α s x)) :=
+(congr_fun (f.2 «expr↾ »(λ _ : punit, x).op) s).symm
 
 /-- `yoneda'` induces an equivalence of category between `Type u` and
 `Sheaf types_grothendieck_topology`. -/

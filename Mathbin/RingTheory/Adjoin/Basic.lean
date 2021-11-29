@@ -55,10 +55,53 @@ theorem adjoin_eq (S : Subalgebra R A) : adjoin R («expr↑ » S) = S :=
   adjoin_eq_of_le _ (Set.Subset.refl _) subset_adjoin
 
 @[elab_as_eliminator]
-theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : ∀ x _ : x ∈ s, p x)
+theorem adjoin_induction {p : A → Prop} {x : A} (h : x ∈ adjoin R s) (Hs : ∀ x (_ : x ∈ s), p x)
   (Halg : ∀ r, p (algebraMap R A r)) (Hadd : ∀ x y, p x → p y → p (x+y)) (Hmul : ∀ x y, p x → p y → p (x*y)) : p x :=
   let S : Subalgebra R A := { Carrier := p, mul_mem' := Hmul, add_mem' := Hadd, algebra_map_mem' := Halg }
   adjoin_le (show s ≤ S from Hs) h
+
+-- error in RingTheory.Adjoin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The difference with `algebra.adjoin_induction` is that this acts on the subtype. -/
+theorem adjoin_induction'
+{p : adjoin R s → exprProp()}
+(Hs : ∀ (x) (h : «expr ∈ »(x, s)), p ⟨x, subset_adjoin h⟩)
+(Halg : ∀ r, p (algebra_map R _ r))
+(Hadd : ∀ x y, p x → p y → p «expr + »(x, y))
+(Hmul : ∀ x y, p x → p y → p «expr * »(x, y))
+(x : adjoin R s) : p x :=
+«expr $ »(subtype.rec_on x, λ x hx, begin
+   refine [expr exists.elim _ (λ (hx : «expr ∈ »(x, adjoin R s)) (hc : p ⟨x, hx⟩), hc)],
+   exact [expr adjoin_induction hx (λ
+     x
+     hx, ⟨subset_adjoin hx, Hs x hx⟩) (λ
+     r, ⟨subalgebra.algebra_map_mem _ r, Halg r⟩) (λ
+     x
+     y
+     hx
+     hy, «expr $ »(exists.elim hx, λ
+      hx'
+      hx, «expr $ »(exists.elim hy, λ
+       hy'
+       hy, ⟨subalgebra.add_mem _ hx' hy', Hadd _ _ hx hy⟩))) (λ
+     x
+     y
+     hx
+     hy, «expr $ »(exists.elim hx, λ
+      hx' hx, «expr $ »(exists.elim hy, λ hy' hy, ⟨subalgebra.mul_mem _ hx' hy', Hmul _ _ hx hy⟩)))]
+ end)
+
+@[simp]
+theorem adjoin_adjoin_coe_preimage {s : Set A} : adjoin R ((coeₓ : adjoin R s → A) ⁻¹' s) = ⊤ :=
+  by 
+    refine' eq_top_iff.2 fun x => adjoin_induction' (fun a ha => _) (fun r => _) (fun _ _ => _) (fun _ _ => _) x
+    ·
+      exact subset_adjoin ha
+    ·
+      exact Subalgebra.algebra_map_mem _ r
+    ·
+      exact Subalgebra.add_mem _
+    ·
+      exact Subalgebra.mul_mem _
 
 theorem adjoin_union (s t : Set A) : adjoin R (s ∪ t) = adjoin R s⊔adjoin R t :=
   (Algebra.gc : GaloisConnection _ (coeₓ : Subalgebra R A → Set A)).l_sup

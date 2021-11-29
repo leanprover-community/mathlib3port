@@ -26,7 +26,7 @@ bundling just the distance and using an instance for the pseudometric space
 results in type class problems). -/
 class SemiNormedAddTorsor(V : outParam$ Type _)(P : Type _)[outParam$ SemiNormedGroup V][PseudoMetricSpace P] extends
   AddTorsor V P where 
-  dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
+  dist_eq_norm' : ∀ (x y : P), dist x y = ∥(x -ᵥ y : V)∥
 
 /-- A `normed_add_torsor V P` is a torsor of an additive normed group
 action by a `normed_group V` on points `P`. We bundle the metric space
@@ -36,7 +36,7 @@ bundling just the distance and using an instance for the metric space
 results in type class problems). -/
 class NormedAddTorsor(V : outParam$ Type _)(P : Type _)[outParam$ NormedGroup V][MetricSpace P] extends
   AddTorsor V P where 
-  dist_eq_norm' : ∀ x y : P, dist x y = ∥(x -ᵥ y : V)∥
+  dist_eq_norm' : ∀ (x y : P), dist x y = ∥(x -ᵥ y : V)∥
 
 /-- A `normed_add_torsor` is a `semi_normed_add_torsor`. -/
 instance (priority := 100)NormedAddTorsor.toSemiNormedAddTorsor {V P : Type _} [NormedGroup V] [MetricSpace P]
@@ -191,17 +191,19 @@ theorem LipschitzWith.vsub [PseudoEmetricSpace α] {f g : α → P} {Kf Kg :  �
       _ = (Kf+Kg)*edist x y := (add_mulₓ _ _ _).symm
       
 
-theorem uniform_continuous_vadd : UniformContinuous fun x : V × P => x.1 +ᵥ x.2 :=
-  (LipschitzWith.prod_fst.vadd LipschitzWith.prod_snd).UniformContinuous
+-- error in Analysis.NormedSpace.AddTorsor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_vadd : uniform_continuous (λ x : «expr × »(V, P), «expr +ᵥ »(x.1, x.2)) :=
+(lipschitz_with.prod_fst.vadd lipschitz_with.prod_snd).uniform_continuous
 
-theorem uniform_continuous_vsub : UniformContinuous fun x : P × P => x.1 -ᵥ x.2 :=
-  (LipschitzWith.prod_fst.vsub LipschitzWith.prod_snd).UniformContinuous
+-- error in Analysis.NormedSpace.AddTorsor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_vsub : uniform_continuous (λ x : «expr × »(P, P), «expr -ᵥ »(x.1, x.2)) :=
+(lipschitz_with.prod_fst.vsub lipschitz_with.prod_snd).uniform_continuous
 
 instance (priority := 100)SemiNormedAddTorsor.has_continuous_vadd : HasContinuousVadd V P :=
   { continuous_vadd := uniform_continuous_vadd.Continuous }
 
-theorem continuous_vsub : Continuous fun x : P × P => x.1 -ᵥ x.2 :=
-  uniform_continuous_vsub.Continuous
+-- error in Analysis.NormedSpace.AddTorsor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_vsub : continuous (λ x : «expr × »(P, P), «expr -ᵥ »(x.1, x.2)) := uniform_continuous_vsub.continuous
 
 theorem Filter.Tendsto.vsub {l : Filter α} {f g : α → P} {x y : P} (hf : tendsto f l (𝓝 x)) (hg : tendsto g l (𝓝 y)) :
   tendsto (f -ᵥ g) l (𝓝 (x -ᵥ y)) :=

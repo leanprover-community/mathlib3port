@@ -45,7 +45,7 @@ class galgebra where
   map_one : to_fun 1 = GradedMonoid.GhasOne.one 
   map_mul : ∀ r s, GradedMonoid.mk _ (to_fun (r*s)) = ⟨_, GradedMonoid.GhasMul.mul (to_fun r) (to_fun s)⟩
   commutes : ∀ r x, (GradedMonoid.mk _ (to_fun r)*x) = x*⟨_, to_fun r⟩
-  smul_def : ∀ r x : GradedMonoid A, GradedMonoid.mk x.1 (r • x.2) = ⟨_, to_fun r⟩*x
+  smul_def : ∀ r (x : GradedMonoid A), GradedMonoid.mk x.1 (r • x.2) = ⟨_, to_fun r⟩*x
 
 end 
 
@@ -95,7 +95,7 @@ coercions such as `submodule.subtype (A i)`, and the `[gmonoid A]` structure ori
 can be discharged by `rfl`. -/
 @[simps]
 def to_algebra (f : ∀ i, A i →ₗ[R] B) (hone : f _ GradedMonoid.GhasOne.one = 1)
-  (hmul : ∀ {i j} ai : A i aj : A j, f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai*f _ aj)
+  (hmul : ∀ {i j} (ai : A i) (aj : A j), f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai*f _ aj)
   (hcommutes : ∀ r, (f 0) (galgebra.to_fun r) = (algebraMap R B) r) : (⨁i, A i) →ₐ[R] B :=
   { to_semiring (fun i => (f i).toAddMonoidHom) hone @hmul with
     toFun := to_semiring (fun i => (f i).toAddMonoidHom) hone @hmul,
@@ -114,16 +114,25 @@ end DirectSum
 /-! ### Concrete instances -/
 
 
+-- error in Algebra.DirectSum.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A direct sum of copies of a `algebra` inherits the algebra structure.
 
 -/
-@[simps]
-instance Algebra.directSumGalgebra {R A : Type _} [DecidableEq ι] [AddMonoidₓ ι] [CommSemiringₓ R] [Semiringₓ A]
-  [Algebra R A] : DirectSum.Galgebra R fun i : ι => A :=
-  { toFun := (algebraMap R A).toAddMonoidHom, map_one := (algebraMap R A).map_one,
-    map_mul := fun a b => Sigma.ext (zero_addₓ _).symm (heq_of_eq$ (algebraMap R A).map_mul a b),
-    commutes := fun r ⟨ai, a⟩ => Sigma.ext ((zero_addₓ _).trans (add_zeroₓ _).symm) (heq_of_eq$ Algebra.commutes _ _),
-    smul_def := fun r ⟨ai, a⟩ => Sigma.ext (zero_addₓ _).symm (heq_of_eq$ Algebra.smul_def _ _) }
+@[simps #[]]
+instance algebra.direct_sum_galgebra
+{R A : Type*}
+[decidable_eq ι]
+[add_monoid ι]
+[comm_semiring R]
+[semiring A]
+[algebra R A] : direct_sum.galgebra R (λ i : ι, A) :=
+{ to_fun := (algebra_map R A).to_add_monoid_hom,
+  map_one := (algebra_map R A).map_one,
+  map_mul := λ a b, sigma.ext (zero_add _).symm «expr $ »(heq_of_eq, (algebra_map R A).map_mul a b),
+  commutes := λ
+  (r)
+  ⟨ai, a⟩, sigma.ext ((zero_add _).trans (add_zero _).symm) «expr $ »(heq_of_eq, algebra.commutes _ _),
+  smul_def := λ (r) ⟨ai, a⟩, sigma.ext (zero_add _).symm «expr $ »(heq_of_eq, algebra.smul_def _ _) }
 
 namespace Submodule
 

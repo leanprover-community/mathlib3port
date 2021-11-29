@@ -56,7 +56,7 @@ def to_pnat' (n : ℕ) : ℕ+ :=
   succ_pnat (pred n)
 
 @[simp]
-theorem to_pnat'_coe : ∀ n : ℕ, (to_pnat' n : ℕ) = ite (0 < n) n 1
+theorem to_pnat'_coe : ∀ (n : ℕ), (to_pnat' n : ℕ) = ite (0 < n) n 1
 | 0 => rfl
 | m+1 =>
   by 
@@ -69,15 +69,13 @@ namespace Pnat
 
 open Nat
 
+-- error in Data.Pnat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- We now define a long list of structures on ℕ+ induced by
  similar structures on ℕ. Most of these behave in a completely
  obvious way, but there are a few things to be said about
  subtraction, division and powers.
--/
-instance  : DecidableEq ℕ+ :=
-  fun a b : ℕ+ =>
-    by 
-      infer_instance
+-/ instance : decidable_eq «exprℕ+»() :=
+λ a b : «exprℕ+»(), by apply_instance
 
 instance  : LinearOrderₓ ℕ+ :=
   Subtype.linearOrder _
@@ -289,11 +287,11 @@ instance  : HasWellFounded ℕ+ :=
   ⟨· < ·, measure_wf coeₓ⟩
 
 /-- Strong induction on `ℕ+`. -/
-def strong_induction_on {p : ℕ+ → Sort _} : ∀ n : ℕ+ h : ∀ k, (∀ m, m < k → p m) → p k, p n
+def strong_induction_on {p : ℕ+ → Sort _} : ∀ (n : ℕ+) (h : ∀ k, (∀ m, m < k → p m) → p k), p n
 | n => fun IH => IH _ fun a h => strong_induction_on a IH
 
 /-- If `n : ℕ+` is different from `1`, then it is the successor of some `k : ℕ+`. -/
-theorem exists_eq_succ_of_ne_one : ∀ {n : ℕ+} h1 : n ≠ 1, ∃ k : ℕ+, n = k+1
+theorem exists_eq_succ_of_ne_one : ∀ {n : ℕ+} (h1 : n ≠ 1), ∃ k : ℕ+, n = k+1
 | ⟨1, _⟩, h1 => False.elim$ h1 rfl
 | ⟨n+2, _⟩, _ =>
   ⟨⟨n+1,
@@ -360,7 +358,7 @@ def mod_div_aux : ℕ+ → ℕ → ℕ → ℕ+ × ℕ
 | k, r+1, q => ⟨⟨r+1, Nat.succ_posₓ r⟩, q⟩
 
 theorem mod_div_aux_spec :
-  ∀ k : ℕ+ r q : ℕ h : ¬(r = 0 ∧ q = 0), (((mod_div_aux k r q).1 : ℕ)+k*(mod_div_aux k r q).2) = r+k*q
+  ∀ (k : ℕ+) (r q : ℕ) (h : ¬(r = 0 ∧ q = 0)), (((mod_div_aux k r q).1 : ℕ)+k*(mod_div_aux k r q).2) = r+k*q
 | k, 0, 0, h => (h ⟨rfl, rfl⟩).elim
 | k, 0, q+1, h =>
   by 

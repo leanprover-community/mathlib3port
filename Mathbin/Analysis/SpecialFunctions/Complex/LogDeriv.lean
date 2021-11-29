@@ -127,7 +127,7 @@ theorem DifferentiableWithinAt.clog {f : E → ℂ} {s : Set E} {x : E} (h₁ : 
   (h₁.has_fderiv_within_at.clog h₂).DifferentiableWithinAt
 
 theorem DifferentiableOn.clog {f : E → ℂ} {s : Set E} (h₁ : DifferentiableOn ℂ f s)
-  (h₂ : ∀ x _ : x ∈ s, 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableOn ℂ (fun t => log (f t)) s :=
+  (h₂ : ∀ x (_ : x ∈ s), 0 < (f x).re ∨ (f x).im ≠ 0) : DifferentiableOn ℂ (fun t => log (f t)) s :=
   fun x hx => (h₁ x hx).clog (h₂ x hx)
 
 theorem Differentiable.clog {f : E → ℂ} (h₁ : Differentiable ℂ f) (h₂ : ∀ x, 0 < (f x).re ∨ (f x).im ≠ 0) :

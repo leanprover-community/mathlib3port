@@ -45,7 +45,7 @@ This is implemented as a type, rather than a `Prop`-valued predicate,
 for good definitional properties of the default term. -/
 @[ext]
 structure Unique(α : Sort u) extends Inhabited α where 
-  uniq : ∀ a : α, a = default
+  uniq : ∀ (a : α), a = default
 
 attribute [class] Unique
 
@@ -69,7 +69,7 @@ def uniqueProp {p : Prop} (h : p) : Unique p :=
 instance  : Unique True :=
   uniqueProp trivialₓ
 
-theorem Finₓ.eq_zero : ∀ n : Finₓ 1, n = 0
+theorem Finₓ.eq_zero : ∀ (n : Finₓ 1), n = 0
 | ⟨n, hn⟩ => Finₓ.eq_of_veq (Nat.eq_zero_of_le_zeroₓ (Nat.le_of_lt_succₓ hn))
 
 instance  {n : ℕ} : Inhabited (Finₓ n.succ) :=
@@ -117,7 +117,7 @@ theorem exists_iff {p : α → Prop} : Exists p ↔ p (default α) :=
 end 
 
 @[ext]
-protected theorem subsingleton_unique' : ∀ h₁ h₂ : Unique α, h₁ = h₂
+protected theorem subsingleton_unique' : ∀ (h₁ h₂ : Unique α), h₁ = h₂
 | ⟨⟨x⟩, h⟩, ⟨⟨y⟩, _⟩ =>
   by 
     congr <;> rw [h x, h y]
@@ -134,17 +134,18 @@ def mk' (α : Sort u) [h₁ : Inhabited α] [Subsingleton α] : Unique α :=
 end Unique
 
 @[simp]
-theorem Pi.default_def {β : ∀ a : α, Sort v} [∀ a, Inhabited (β a)] : default (∀ a, β a) = fun a => default (β a) :=
+theorem Pi.default_def {β : ∀ (a : α), Sort v} [∀ a, Inhabited (β a)] : default (∀ a, β a) = fun a => default (β a) :=
   rfl
 
-theorem Pi.default_apply {β : ∀ a : α, Sort v} [∀ a, Inhabited (β a)] (a : α) : default (∀ a, β a) a = default (β a) :=
+theorem Pi.default_apply {β : ∀ (a : α), Sort v} [∀ a, Inhabited (β a)] (a : α) :
+  default (∀ a, β a) a = default (β a) :=
   rfl
 
-instance Pi.unique {β : ∀ a : α, Sort v} [∀ a, Unique (β a)] : Unique (∀ a, β a) :=
+instance Pi.unique {β : ∀ (a : α), Sort v} [∀ a, Unique (β a)] : Unique (∀ a, β a) :=
   { Pi.inhabited α with uniq := fun f => funext$ fun x => Unique.eq_default _ }
 
 /-- There is a unique function on an empty domain. -/
-instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : ∀ a : α, Sort v) : Unique (∀ a, β a) :=
+instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : ∀ (a : α), Sort v) : Unique (∀ a, β a) :=
   { default := isEmptyElim, uniq := fun f => funext isEmptyElim }
 
 namespace Function

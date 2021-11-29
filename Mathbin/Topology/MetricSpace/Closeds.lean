@@ -39,25 +39,19 @@ instance closeds.emetric_space : EmetricSpace (closeds α) :=
     edist_comm := fun s t => Hausdorff_edist_comm, edist_triangle := fun s t u => Hausdorff_edist_triangle,
     eq_of_edist_eq_zero := fun s t h => Subtype.eq ((Hausdorff_edist_zero_iff_eq_of_closed s.property t.property).1 h) }
 
+-- error in Topology.MetricSpace.Closeds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The edistance to a closed set depends continuously on the point and the set -/
-theorem continuous_inf_edist_Hausdorff_edist : Continuous fun p : α × closeds α => inf_edist p.1 p.2.val :=
-  by 
-    refine'
-      continuous_of_le_add_edist 2
-        (by 
-          simp )
-        _ 
-    rintro ⟨x, s⟩ ⟨y, t⟩
-    calc inf_edist x s.val ≤ inf_edist x t.val+Hausdorff_edist t.val s.val :=
-      inf_edist_le_inf_edist_add_Hausdorff_edist _ ≤ (inf_edist y t.val+edist x y)+Hausdorff_edist t.val s.val :=
-      add_le_add_right inf_edist_le_inf_edist_add_edist _ _ = inf_edist y t.val+edist x y+Hausdorff_edist s.val t.val :=
-      by 
-        simp [add_commₓ, add_left_commₓ, Hausdorff_edist_comm,
-          -Subtype.val_eq_coe]_ ≤ inf_edist y t.val+edist (x, s) (y, t)+edist (x, s) (y, t) :=
-      add_le_add_left (add_le_add (le_max_leftₓ _ _) (le_max_rightₓ _ _))
-        _ _ = inf_edist y t.val+2*edist (x, s) (y, t) :=
-      by 
-        rw [←mul_two, mul_commₓ]
+theorem continuous_inf_edist_Hausdorff_edist : continuous (λ p : «expr × »(α, closeds α), inf_edist p.1 p.2.val) :=
+begin
+  refine [expr continuous_of_le_add_edist 2 (by simp [] [] [] [] [] []) _],
+  rintros ["⟨", ident x, ",", ident s, "⟩", "⟨", ident y, ",", ident t, "⟩"],
+  calc
+    «expr ≤ »(inf_edist x s.val, «expr + »(inf_edist x t.val, Hausdorff_edist t.val s.val)) : inf_edist_le_inf_edist_add_Hausdorff_edist
+    «expr ≤ »(..., «expr + »(«expr + »(inf_edist y t.val, edist x y), Hausdorff_edist t.val s.val)) : add_le_add_right inf_edist_le_inf_edist_add_edist _
+    «expr = »(..., «expr + »(inf_edist y t.val, «expr + »(edist x y, Hausdorff_edist s.val t.val))) : by simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, ",", expr Hausdorff_edist_comm, ",", "-", ident subtype.val_eq_coe, "]"] [] []
+    «expr ≤ »(..., «expr + »(inf_edist y t.val, «expr + »(edist (x, s) (y, t), edist (x, s) (y, t)))) : add_le_add_left (add_le_add (le_max_left _ _) (le_max_right _ _)) _
+    «expr = »(..., «expr + »(inf_edist y t.val, «expr * »(2, edist (x, s) (y, t)))) : by rw ["[", "<-", expr mul_two, ",", expr mul_comm, "]"] []
+end
 
 -- error in Topology.MetricSpace.Closeds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Subsets of a given closed subset form a closed set -/
@@ -330,20 +324,21 @@ instance nonempty_compacts.metric_space : MetricSpace (nonempty_compacts α) :=
 theorem nonempty_compacts.dist_eq {x y : nonempty_compacts α} : dist x y = Hausdorff_dist x.val y.val :=
   rfl
 
-theorem lipschitz_inf_dist_set (x : α) : LipschitzWith 1 fun s : nonempty_compacts α => inf_dist x s.val :=
-  LipschitzWith.of_le_add$
-    fun s t =>
-      by 
-        rw [dist_comm]
-        exact inf_dist_le_inf_dist_add_Hausdorff_dist (edist_ne_top t s)
+-- error in Topology.MetricSpace.Closeds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lipschitz_inf_dist_set (x : α) : lipschitz_with 1 (λ s : nonempty_compacts α, inf_dist x s.val) :=
+«expr $ »(lipschitz_with.of_le_add, assume s t, by { rw [expr dist_comm] [],
+   exact [expr inf_dist_le_inf_dist_add_Hausdorff_dist (edist_ne_top t s)] })
 
-theorem lipschitz_inf_dist : LipschitzWith 2 fun p : α × nonempty_compacts α => inf_dist p.1 p.2.val :=
-  @LipschitzWith.uncurry _ _ _ _ _ _ (fun x : α s : nonempty_compacts α => inf_dist x s.val) 1 1
-    (fun s => lipschitz_inf_dist_pt s.val) lipschitz_inf_dist_set
+-- error in Topology.MetricSpace.Closeds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lipschitz_inf_dist : lipschitz_with 2 (λ p : «expr × »(α, nonempty_compacts α), inf_dist p.1 p.2.val) :=
+@lipschitz_with.uncurry _ _ _ _ _ _ (λ
+ (x : α)
+ (s : nonempty_compacts α), inf_dist x s.val) 1 1 (λ s, lipschitz_inf_dist_pt s.val) lipschitz_inf_dist_set
 
-theorem uniform_continuous_inf_dist_Hausdorff_dist :
-  UniformContinuous fun p : α × nonempty_compacts α => inf_dist p.1 p.2.val :=
-  lipschitz_inf_dist.UniformContinuous
+-- error in Topology.MetricSpace.Closeds: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_inf_dist_Hausdorff_dist : uniform_continuous (λ
+ p : «expr × »(α, nonempty_compacts α), inf_dist p.1 p.2.val) :=
+lipschitz_inf_dist.uniform_continuous
 
 end 
 

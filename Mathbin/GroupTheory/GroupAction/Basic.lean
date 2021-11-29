@@ -21,10 +21,11 @@ namespace MulAction
 
 variable(α)[Monoidₓ α][MulAction α β]
 
+-- error in GroupTheory.GroupAction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The orbit of an element under an action. -/
-@[toAdditive "The orbit of an element under an action."]
+@[to_additive #[expr "The orbit of an element under an action."]]
 def orbit (b : β) :=
-  Set.Range fun x : α => x • b
+set.range (λ x : α, «expr • »(x, b))
 
 variable{α}
 
@@ -72,7 +73,7 @@ variable(α)(β)
 /-- The set of elements fixed under the whole action. -/
 @[toAdditive "The set of elements fixed under the whole action."]
 def fixed_points : Set β :=
-  { b:β | ∀ x : α, x • b = b }
+  { b:β | ∀ (x : α), x • b = b }
 
 /-- `fixed_by g` is the subfield of elements fixed by `g`. -/
 @[toAdditive "`fixed_by g` is the subfield of elements fixed by `g`."]
@@ -91,7 +92,7 @@ theorem fixed_eq_Inter_fixed_by : fixed_points α β = ⋂g : α, fixed_by α β
 variable{α}(β)
 
 @[simp, toAdditive]
-theorem mem_fixed_points {b : β} : b ∈ fixed_points α β ↔ ∀ x : α, x • b = b :=
+theorem mem_fixed_points {b : β} : b ∈ fixed_points α β ↔ ∀ (x : α), x • b = b :=
   Iff.rfl
 
 @[simp, toAdditive]
@@ -107,14 +108,16 @@ theorem mem_fixed_points' {b : β} : b ∈ fixed_points α β ↔ ∀ b', b' ∈
 
 variable(α){β}
 
+-- error in GroupTheory.GroupAction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The stabilizer of a point `b` as a submonoid of `α`. -/
-@[toAdditive "The stabilizer of a point `b` as an additive submonoid of `α`."]
-def stabilizer.submonoid (b : β) : Submonoid α :=
-  { Carrier := { a | a • b = b }, one_mem' := one_smul _ b,
-    mul_mem' :=
-      fun a a' ha : a • b = b hb : a' • b = b =>
-        show (a*a') • b = b by 
-          rw [←smul_smul, hb, ha] }
+@[to_additive #[expr "The stabilizer of a point `b` as an additive submonoid of `α`."]]
+def stabilizer.submonoid (b : β) : submonoid α :=
+{ carrier := {a | «expr = »(«expr • »(a, b), b)},
+  one_mem' := one_smul _ b,
+  mul_mem' := λ
+  (a a')
+  (ha : «expr = »(«expr • »(a, b), b))
+  (hb : «expr = »(«expr • »(a', b), b)), show «expr = »(«expr • »(«expr * »(a, a'), b), b), by rw ["[", "<-", expr smul_smul, ",", expr hb, ",", expr ha, "]"] [] }
 
 @[simp, toAdditive]
 theorem mem_stabilizer_submonoid_iff {b : β} {a : α} : a ∈ stabilizer.submonoid α b ↔ a • b = b :=
@@ -132,16 +135,15 @@ variable(α)
 
 variable[Groupₓ α][MulAction α β]
 
+-- error in GroupTheory.GroupAction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The stabilizer of an element under an action, i.e. what sends the element to itself.
 A subgroup. -/
-@[toAdditive
-      "The stabilizer of an element under an action, i.e. what sends the element to itself.\nAn additive subgroup."]
-def stabilizer (b : β) : Subgroup α :=
-  { stabilizer.submonoid α b with
-    inv_mem' :=
-      fun a ha : a • b = b =>
-        show a⁻¹ • b = b by 
-          rw [inv_smul_eq_iff, ha] }
+@[to_additive #[expr "The stabilizer of an element under an action, i.e. what sends the element to itself.\nAn additive subgroup."]]
+def stabilizer (b : β) : subgroup α :=
+{ inv_mem' := λ
+  (a)
+  (ha : «expr = »(«expr • »(a, b), b)), show «expr = »(«expr • »(«expr ⁻¹»(a), b), b), by rw ["[", expr inv_smul_eq_iff, ",", expr ha, "]"] [],
+  ..stabilizer.submonoid α b }
 
 variable{α}{β}
 
@@ -299,14 +301,14 @@ variable[Groupₓ α][MulAction α β]
 
 open QuotientGroup
 
+-- error in GroupTheory.GroupAction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Action on left cosets. -/
-@[toAdditive "Action on left cosets."]
-def mul_left_cosets (H : Subgroup α) (x : α) (y : Quotientₓ H) : Quotientₓ H :=
-  Quotientₓ.liftOn' y (fun y => QuotientGroup.mk ((x : α)*y))
-    fun a b hab : _ ∈ H =>
-      QuotientGroup.eq.2
-        (by 
-          rwa [mul_inv_rev, ←mul_assocₓ, mul_assocₓ (a⁻¹), inv_mul_selfₓ, mul_oneₓ])
+@[to_additive #[expr "Action on left cosets."]]
+def mul_left_cosets (H : subgroup α) (x : α) (y : quotient H) : quotient H :=
+quotient.lift_on' y (λ
+ y, quotient_group.mk «expr * »((x : α), y)) (λ
+ (a b)
+ (hab : «expr ∈ »(_, H)), quotient_group.eq.2 (by rwa ["[", expr mul_inv_rev, ",", "<-", expr mul_assoc, ",", expr mul_assoc «expr ⁻¹»(a), ",", expr inv_mul_self, ",", expr mul_one, "]"] []))
 
 @[toAdditive]
 instance Quotientₓ (H : Subgroup α) : MulAction α (Quotientₓ H) :=
@@ -365,14 +367,13 @@ theorem of_quotient_stabilizer_smul (g : α) (g' : Quotientₓ (MulAction.stabil
   of_quotient_stabilizer α x (g • g') = g • of_quotient_stabilizer α x g' :=
   Quotientₓ.induction_on' g'$ fun _ => mul_smul _ _ _
 
-@[toAdditive]
-theorem injective_of_quotient_stabilizer : Function.Injective (of_quotient_stabilizer α x) :=
-  fun y₁ y₂ =>
-    Quotientₓ.induction_on₂' y₁ y₂$
-      fun g₁ g₂ H : g₁ • x = g₂ • x =>
-        Quotientₓ.sound'$
-          show (g₁⁻¹*g₂) • x = x by 
-            rw [mul_smul, ←H, inv_smul_smul]
+-- error in GroupTheory.GroupAction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem injective_of_quotient_stabilizer : function.injective (of_quotient_stabilizer α x) :=
+λ
+y₁
+y₂, «expr $ »(quotient.induction_on₂' y₁ y₂, λ
+ (g₁ g₂)
+ (H : «expr = »(«expr • »(g₁, x), «expr • »(g₂, x))), «expr $ »(quotient.sound', show «expr = »(«expr • »(«expr * »(«expr ⁻¹»(g₁), g₂), x), x), by rw ["[", expr mul_smul, ",", "<-", expr H, ",", expr inv_smul_smul, "]"] []))
 
 /-- Orbit-stabilizer theorem. -/
 @[toAdditive "Orbit-stabilizer theorem."]
@@ -458,28 +459,34 @@ noncomputable def self_equiv_sigma_orbits_quotient_stabilizer : β ≃ Σω : Ω
 /-- **Class formula** for a finite group acting on a finite type. -/
 @[toAdditive "**Class formula** for a finite group acting on a finite type."]
 theorem card_eq_sum_card_group_div_card_stabilizer [Fintype α] [Fintype β] [Fintype Ω]
-  [∀ b : β, Fintype$ stabilizer α b] : Fintype.card β = ∑ω : Ω, Fintype.card α / Fintype.card (stabilizer α ω.out') :=
+  [∀ (b : β), Fintype$ stabilizer α b] : Fintype.card β = ∑ω : Ω, Fintype.card α / Fintype.card (stabilizer α ω.out') :=
   card_eq_sum_card_group_div_card_stabilizer' α β Quotientₓ.out_eq'
 
+-- error in GroupTheory.GroupAction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- **Burnside's lemma** : a (noncomputable) bijection between the disjoint union of all
 `{x ∈ X | g • x = x}` for `g ∈ G` and the product `G × X/G`, where `G` is a group acting on `X` and
 `X/G`denotes the quotient of `X` by the relation `orbit_rel G X`. -/
-@[toAdditive
-      "**Burnside's lemma** : a (noncomputable) bijection between the disjoint union of all\n`{x ∈ X | g • x = x}` for `g ∈ G` and the product `G × X/G`, where `G` is an additive group acting\non `X` and `X/G`denotes the quotient of `X` by the relation `orbit_rel G X`. "]
-noncomputable def sigma_fixed_by_equiv_orbits_prod_group : (Σa : α, fixed_by α β a) ≃ Ω × α :=
-  calc (Σa : α, fixed_by α β a) ≃ { ab : α × β // ab.1 • ab.2 = ab.2 } := (Equiv.subtypeProdEquivSigmaSubtype _).symm 
-    _ ≃ { ba : β × α // ba.2 • ba.1 = ba.1 } := (Equiv.prodComm α β).subtypeEquiv fun ab => Iff.rfl 
-    _ ≃ Σb : β, stabilizer α b := Equiv.subtypeProdEquivSigmaSubtype fun b : β a => a ∈ stabilizer α b 
-    _ ≃ Σωb : Σω : Ω, orbit α ω.out', stabilizer α (ωb.2 : β) := (self_equiv_sigma_orbits α β).sigmaCongrLeft' 
-    _ ≃ Σω : Ω, Σb : orbit α ω.out', stabilizer α (b : β) :=
-    Equiv.sigmaAssoc fun ω : Ω b : orbit α ω.out' => stabilizer α (b : β)
-    _ ≃ Σω : Ω, Σb : orbit α ω.out', stabilizer α ω.out' :=
-    Equiv.sigmaCongrRight
-      fun ω => Equiv.sigmaCongrRight$ fun ⟨b, hb⟩ => (stabilizer_equiv_stabilizer_of_orbit_rel hb).toEquiv 
-    _ ≃ Σω : Ω, orbit α ω.out' × stabilizer α ω.out' := Equiv.sigmaCongrRight fun ω => Equiv.sigmaEquivProd _ _ 
-    _ ≃ Σω : Ω, α := Equiv.sigmaCongrRight fun ω => orbit_prod_stabilizer_equiv_group α ω.out' 
-    _ ≃ Ω × α := Equiv.sigmaEquivProd Ω α
-    
+@[to_additive #[expr "**Burnside's lemma** : a (noncomputable) bijection between the disjoint union of all\n`{x ∈ X | g • x = x}` for `g ∈ G` and the product `G × X/G`, where `G` is an additive group acting\non `X` and `X/G`denotes the quotient of `X` by the relation `orbit_rel G X`. "]]
+noncomputable
+def sigma_fixed_by_equiv_orbits_prod_group : «expr ≃ »(«exprΣ , »((a : α), fixed_by α β a), «expr × »(exprΩ(), α)) :=
+calc
+  «expr ≃ »(«exprΣ , »((a : α), fixed_by α β a), {ab : «expr × »(α, β) // «expr = »(«expr • »(ab.1, ab.2), ab.2)}) : (equiv.subtype_prod_equiv_sigma_subtype _).symm
+  «expr ≃ »(..., {ba : «expr × »(β, α) // «expr = »(«expr • »(ba.2, ba.1), ba.1)}) : (equiv.prod_comm α β).subtype_equiv (λ
+   ab, iff.rfl)
+  «expr ≃ »(..., «exprΣ , »((b : β), stabilizer α b)) : equiv.subtype_prod_equiv_sigma_subtype (λ
+   (b : β)
+   (a), «expr ∈ »(a, stabilizer α b))
+  «expr ≃ »(..., «exprΣ , »((ωb : «exprΣ , »((ω : exprΩ()), orbit α ω.out')), stabilizer α (ωb.2 : β))) : (self_equiv_sigma_orbits α β).sigma_congr_left'
+  «expr ≃ »(..., «exprΣ , »((ω : exprΩ()), «exprΣ , »((b : orbit α ω.out'), stabilizer α (b : β)))) : equiv.sigma_assoc (λ
+   (ω : exprΩ())
+   (b : orbit α ω.out'), stabilizer α (b : β))
+  «expr ≃ »(..., «exprΣ , »((ω : exprΩ()), «exprΣ , »((b : orbit α ω.out'), stabilizer α ω.out'))) : equiv.sigma_congr_right (λ
+   ω, «expr $ »(equiv.sigma_congr_right, λ ⟨b, hb⟩, (stabilizer_equiv_stabilizer_of_orbit_rel hb).to_equiv))
+  «expr ≃ »(..., «exprΣ , »((ω : exprΩ()), «expr × »(orbit α ω.out', stabilizer α ω.out'))) : equiv.sigma_congr_right (λ
+   ω, equiv.sigma_equiv_prod _ _)
+  «expr ≃ »(..., «exprΣ , »((ω : exprΩ()), α)) : equiv.sigma_congr_right (λ
+   ω, orbit_prod_stabilizer_equiv_group α ω.out')
+  «expr ≃ »(..., «expr × »(exprΩ(), α)) : equiv.sigma_equiv_prod exprΩ() α
 
 /-- **Burnside's lemma** : given a finite group `G` acting on a set `X`, the average number of
 elements fixed by each `g ∈ G` is the number of orbits. -/
@@ -511,7 +518,7 @@ theorem List.smul_sum {r : α} {l : List β} : r • l.sum = (l.map ((· • ·)
 The general theory of such `k` is elaborated by `is_smul_regular`.
 The typeclass that restricts all terms of `M` to have this property is `no_zero_smul_divisors`. -/
 theorem smul_cancel_of_non_zero_divisor {M R : Type _} [Monoidₓ M] [Ringₓ R] [DistribMulAction M R] (k : M)
-  (h : ∀ x : R, k • x = 0 → x = 0) {a b : R} (h' : k • a = k • b) : a = b :=
+  (h : ∀ (x : R), k • x = 0 → x = 0) {a b : R} (h' : k • a = k • b) : a = b :=
   by 
     rw [←sub_eq_zero]
     refine' h _ _ 

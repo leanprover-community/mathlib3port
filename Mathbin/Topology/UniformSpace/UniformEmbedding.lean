@@ -19,27 +19,29 @@ variable{α : Type _}{β : Type _}{γ : Type _}[UniformSpace α][UniformSpace β
 
 universe u
 
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A map `f : α → β` between uniform spaces is called *uniform inducing* if the uniformity filter
 on `α` is the pullback of the uniformity filter on `β` under `prod.map f f`. If `α` is a separated
 space, then this implies that `f` is injective, hence it is a `uniform_embedding`. -/
-structure UniformInducing(f : α → β) : Prop where 
-  comap_uniformity : comap (fun x : α × α => (f x.1, f x.2)) (𝓤 β) = 𝓤 α
+structure uniform_inducing
+(f : α → β) : exprProp() :=
+  (comap_uniformity : «expr = »(comap (λ x : «expr × »(α, α), (f x.1, f x.2)) (expr𝓤() β), expr𝓤() α))
 
 theorem UniformInducing.mk' {f : α → β}
-  (h : ∀ s, s ∈ 𝓤 α ↔ ∃ (t : _)(_ : t ∈ 𝓤 β), ∀ x y : α, (f x, f y) ∈ t → (x, y) ∈ s) : UniformInducing f :=
+  (h : ∀ s, s ∈ 𝓤 α ↔ ∃ (t : _)(_ : t ∈ 𝓤 β), ∀ (x y : α), (f x, f y) ∈ t → (x, y) ∈ s) : UniformInducing f :=
   ⟨by 
       simp [eq_comm, Filter.ext_iff, subset_def, h]⟩
 
-theorem UniformInducing.comp {g : β → γ} (hg : UniformInducing g) {f : α → β} (hf : UniformInducing f) :
-  UniformInducing (g ∘ f) :=
-  ⟨by 
-      rw
-        [show
-          (fun x : α × α => ((g ∘ f) x.1, (g ∘ f) x.2)) =
-            ((fun y : β × β => (g y.1, g y.2)) ∘ fun x : α × α => (f x.1, f x.2))by
-          
-          ext <;> simp ,
-        ←Filter.comap_comap, hg.1, hf.1]⟩
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_inducing.comp
+{g : β → γ}
+(hg : uniform_inducing g)
+{f : α → β}
+(hf : uniform_inducing f) : uniform_inducing «expr ∘ »(g, f) :=
+⟨by rw ["[", expr show «expr = »(λ
+   x : «expr × »(α, α), («expr ∘ »(g, f) x.1, «expr ∘ »(g, f) x.2), «expr ∘ »(λ
+    y : «expr × »(β, β), (g y.1, g y.2), λ
+    x : «expr × »(α, α), (f x.1, f x.2))), by ext [] [] []; simp [] [] [] [] [] [], ",", "<-", expr filter.comap_comap, ",", expr hg.1, ",", expr hf.1, "]"] []⟩
 
 theorem UniformInducing.basis_uniformity {f : α → β} (hf : UniformInducing f) {ι : Sort _} {p : ι → Prop}
   {s : ι → Set (β × β)} (H : (𝓤 β).HasBasis p s) : (𝓤 α).HasBasis p fun i => Prod.mapₓ f f ⁻¹' s i :=
@@ -69,7 +71,7 @@ theorem UniformEmbedding.comp {g : β → γ} (hg : UniformEmbedding g) {f : α 
 
 theorem uniform_embedding_def {f : α → β} :
   UniformEmbedding f ↔
-    Function.Injective f ∧ ∀ s, s ∈ 𝓤 α ↔ ∃ (t : _)(_ : t ∈ 𝓤 β), ∀ x y : α, (f x, f y) ∈ t → (x, y) ∈ s :=
+    Function.Injective f ∧ ∀ s, s ∈ 𝓤 α ↔ ∃ (t : _)(_ : t ∈ 𝓤 β), ∀ (x y : α), (f x, f y) ∈ t → (x, y) ∈ s :=
   by 
     split 
     ·
@@ -85,7 +87,7 @@ theorem uniform_embedding_def {f : α → β} :
 theorem uniform_embedding_def' {f : α → β} :
   UniformEmbedding f ↔
     Function.Injective f ∧
-      UniformContinuous f ∧ ∀ s, s ∈ 𝓤 α → ∃ (t : _)(_ : t ∈ 𝓤 β), ∀ x y : α, (f x, f y) ∈ t → (x, y) ∈ s :=
+      UniformContinuous f ∧ ∀ s, s ∈ 𝓤 α → ∃ (t : _)(_ : t ∈ 𝓤 β), ∀ (x y : α), (f x, f y) ∈ t → (x, y) ∈ s :=
   by 
     simp only [uniform_embedding_def, uniform_continuous_def] <;>
       exact
@@ -149,10 +151,17 @@ theorem UniformInducing.inducing {f : α → β} (h : UniformInducing f) : Induc
           rfl|
           exact monotone_preimage
 
-theorem UniformInducing.prod {α' : Type _} {β' : Type _} [UniformSpace α'] [UniformSpace β'] {e₁ : α → α'} {e₂ : β → β'}
-  (h₁ : UniformInducing e₁) (h₂ : UniformInducing e₂) : UniformInducing fun p : α × β => (e₁ p.1, e₂ p.2) :=
-  ⟨by 
-      simp [· ∘ ·, uniformity_prod, h₁.comap_uniformity.symm, h₂.comap_uniformity.symm, comap_inf, comap_comap]⟩
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_inducing.prod
+{α' : Type*}
+{β' : Type*}
+[uniform_space α']
+[uniform_space β']
+{e₁ : α → α'}
+{e₂ : β → β'}
+(h₁ : uniform_inducing e₁)
+(h₂ : uniform_inducing e₂) : uniform_inducing (λ p : «expr × »(α, β), (e₁ p.1, e₂ p.2)) :=
+⟨by simp [] [] [] ["[", expr («expr ∘ »), ",", expr uniformity_prod, ",", expr h₁.comap_uniformity.symm, ",", expr h₂.comap_uniformity.symm, ",", expr comap_inf, ",", expr comap_comap, "]"] [] []⟩
 
 theorem UniformInducing.dense_inducing {f : α → β} (h : UniformInducing f) (hd : DenseRange f) : DenseInducing f :=
   { dense := hd, induced := h.inducing.induced }
@@ -180,36 +189,44 @@ begin
      ..(uniform_embedding_of_spaced_out hs hf).embedding }]
 end
 
-theorem closure_image_mem_nhds_of_uniform_inducing {s : Set (α × α)} {e : α → β} (b : β) (he₁ : UniformInducing e)
-  (he₂ : DenseInducing e) (hs : s ∈ 𝓤 α) : ∃ a, Closure (e '' { a' | (a, a') ∈ s }) ∈ 𝓝 b :=
-  have  : s ∈ comap (fun p : α × α => (e p.1, e p.2)) (𝓤 β) := he₁.comap_uniformity.symm ▸ hs 
-  let ⟨t₁, ht₁u, ht₁⟩ := this 
-  have ht₁ : ∀ p : α × α, (e p.1, e p.2) ∈ t₁ → p ∈ s := ht₁ 
-  let ⟨t₂, ht₂u, ht₂s, ht₂c⟩ := comp_symm_of_uniformity ht₁u 
-  let ⟨t, htu, hts, htc⟩ := comp_symm_of_uniformity ht₂u 
-  have  : preimage e { b' | (b, b') ∈ t₂ } ∈ comap e (𝓝 b) := preimage_mem_comap$ mem_nhds_left b ht₂u 
-  let ⟨a, (ha : (b, e a) ∈ t₂)⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this 
-  have  :
-    ∀ b' s' : Set (β × β), (b, b') ∈ t → s' ∈ 𝓤 β → ({ y:β | (b', y) ∈ s' } ∩ e '' { a':α | (a, a') ∈ s }).Nonempty :=
-    fun b' s' hb' hs' =>
-      have  : preimage e { b'' | (b', b'') ∈ s' ∩ t } ∈ comap e (𝓝 b') :=
-        preimage_mem_comap$ mem_nhds_left b'$ inter_mem hs' htu 
-      let ⟨a₂, ha₂s', ha₂t⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this 
-      have  : (e a, e a₂) ∈ t₁ := ht₂c$ prod_mk_mem_comp_rel (ht₂s ha)$ htc$ prod_mk_mem_comp_rel hb' ha₂t 
-      have  : e a₂ ∈ { b'':β | (b', b'') ∈ s' } ∩ e '' { a' | (a, a') ∈ s } :=
-        ⟨ha₂s', mem_image_of_mem _$ ht₁ (a, a₂) this⟩
-      ⟨_, this⟩
-  have  : ∀ b', (b, b') ∈ t → ne_bot (𝓝 b'⊓𝓟 (e '' { a' | (a, a') ∈ s })) :=
-    by 
-      intro b' hb' 
-      rw [nhds_eq_uniformity, lift'_inf_principal_eq, lift'_ne_bot_iff]
-      exact fun s => this b' s hb' 
-      exact monotone_inter monotone_preimage monotone_const 
-  have  : ∀ b', (b, b') ∈ t → b' ∈ Closure (e '' { a' | (a, a') ∈ s }) :=
-    fun b' hb' =>
-      by 
-        rw [closure_eq_cluster_pts] <;> exact this b' hb'
-  ⟨a, (𝓝 b).sets_of_superset (mem_nhds_left b htu) this⟩
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem closure_image_mem_nhds_of_uniform_inducing
+{s : set «expr × »(α, α)}
+{e : α → β}
+(b : β)
+(he₁ : uniform_inducing e)
+(he₂ : dense_inducing e)
+(hs : «expr ∈ »(s, expr𝓤() α)) : «expr∃ , »((a), «expr ∈ »(closure «expr '' »(e, {a' | «expr ∈ »((a, a'), s)}), expr𝓝() b)) :=
+have «expr ∈ »(s, comap (λ
+  p : «expr × »(α, α), (e p.1, e p.2)) (expr𝓤() β)), from «expr ▸ »(he₁.comap_uniformity.symm, hs),
+let ⟨t₁, ht₁u, ht₁⟩ := this in
+have ht₁ : ∀ p : «expr × »(α, α), «expr ∈ »((e p.1, e p.2), t₁) → «expr ∈ »(p, s), from ht₁,
+let ⟨t₂, ht₂u, ht₂s, ht₂c⟩ := comp_symm_of_uniformity ht₁u in
+let ⟨t, htu, hts, htc⟩ := comp_symm_of_uniformity ht₂u in
+have «expr ∈ »(preimage e {b' | «expr ∈ »((b, b'), t₂)}, comap e (expr𝓝() b)), from «expr $ »(preimage_mem_comap, mem_nhds_left b ht₂u),
+let ⟨a, (ha : «expr ∈ »((b, e a), t₂))⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this in
+have ∀
+(b')
+(s' : set «expr × »(β, β)), «expr ∈ »((b, b'), t) → «expr ∈ »(s', expr𝓤() β) → «expr ∩ »({y : β | «expr ∈ »((b', y), s')}, «expr '' »(e, {a' : α | «expr ∈ »((a, a'), s)})).nonempty, from assume
+b'
+s'
+hb'
+hs', have «expr ∈ »(preimage e {b'' | «expr ∈ »((b', b''), «expr ∩ »(s', t))}, comap e (expr𝓝() b')), from «expr $ »(preimage_mem_comap, «expr $ »(mem_nhds_left b', inter_mem hs' htu)),
+let ⟨a₂, ha₂s', ha₂t⟩ := (he₂.comap_nhds_ne_bot _).nonempty_of_mem this in
+have «expr ∈ »((e a, e a₂), t₁), from «expr $ »(ht₂c, «expr $ »(prod_mk_mem_comp_rel (ht₂s ha), «expr $ »(htc, prod_mk_mem_comp_rel hb' ha₂t))),
+have «expr ∈ »(e a₂, «expr ∩ »({b'' : β | «expr ∈ »((b', b''), s')}, «expr '' »(e, {a' | «expr ∈ »((a, a'), s)}))), from ⟨ha₂s', «expr $ »(mem_image_of_mem _, ht₁ (a, a₂) this)⟩,
+⟨_, this⟩,
+have ∀
+b', «expr ∈ »((b, b'), t) → ne_bot «expr ⊓ »(expr𝓝() b', expr𝓟() «expr '' »(e, {a' | «expr ∈ »((a, a'), s)})), begin
+  intros [ident b', ident hb'],
+  rw ["[", expr nhds_eq_uniformity, ",", expr lift'_inf_principal_eq, ",", expr lift'_ne_bot_iff, "]"] [],
+  exact [expr assume s, this b' s hb'],
+  exact [expr monotone_inter monotone_preimage monotone_const]
+end,
+have ∀
+b', «expr ∈ »((b, b'), t) → «expr ∈ »(b', closure «expr '' »(e, {a' | «expr ∈ »((a, a'), s)})), from assume
+b' hb', by rw ["[", expr closure_eq_cluster_pts, "]"] []; exact [expr this b' hb'],
+⟨a, (expr𝓝() b).sets_of_superset (mem_nhds_left b htu) this⟩
 
 theorem uniform_embedding_subtype_emb (p : α → Prop) {e : α → β} (ue : UniformEmbedding e) (de : DenseEmbedding e) :
   UniformEmbedding (DenseEmbedding.subtypeEmb p e) :=
@@ -218,10 +235,17 @@ theorem uniform_embedding_subtype_emb (p : α → Prop) {e : α → β} (ue : Un
         simp [comap_comap, · ∘ ·, DenseEmbedding.subtypeEmb, uniformity_subtype, ue.comap_uniformity.symm],
     inj := (de.subtype p).inj }
 
-theorem UniformEmbedding.prod {α' : Type _} {β' : Type _} [UniformSpace α'] [UniformSpace β'] {e₁ : α → α'}
-  {e₂ : β → β'} (h₁ : UniformEmbedding e₁) (h₂ : UniformEmbedding e₂) :
-  UniformEmbedding fun p : α × β => (e₁ p.1, e₂ p.2) :=
-  { h₁.to_uniform_inducing.prod h₂.to_uniform_inducing with inj := h₁.inj.prod_map h₂.inj }
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_embedding.prod
+{α' : Type*}
+{β' : Type*}
+[uniform_space α']
+[uniform_space β']
+{e₁ : α → α'}
+{e₂ : β → β'}
+(h₁ : uniform_embedding e₁)
+(h₂ : uniform_embedding e₂) : uniform_embedding (λ p : «expr × »(α, β), (e₁ p.1, e₂ p.2)) :=
+{ inj := h₁.inj.prod_map h₂.inj, ..h₁.to_uniform_inducing.prod h₂.to_uniform_inducing }
 
 theorem is_complete_of_complete_image {m : α → β} {s : Set α} (hm : UniformInducing m) (hs : IsComplete (m '' s)) :
   IsComplete s :=
@@ -282,61 +306,53 @@ theorem complete_space_coe_iff_is_complete {s : Set α} : CompleteSpace s ↔ Is
 theorem IsClosed.complete_space_coe [CompleteSpace α] {s : Set α} (hs : IsClosed s) : CompleteSpace s :=
   hs.is_complete.complete_space_coe
 
-theorem complete_space_extension {m : β → α} (hm : UniformInducing m) (dense : DenseRange m)
-  (h : ∀ f : Filter β, Cauchy f → ∃ x : α, map m f ≤ 𝓝 x) : CompleteSpace α :=
-  ⟨fun f : Filter α =>
-      fun hf : Cauchy f =>
-        let p : Set (α × α) → Set α → Set α := fun s t => { y:α | ∃ x : α, x ∈ t ∧ (x, y) ∈ s }
-        let g := (𝓤 α).lift fun s => f.lift' (p s)
-        have mp₀ : Monotone p := fun a b h t s ⟨x, xs, xa⟩ => ⟨x, xs, h xa⟩
-        have mp₁ : ∀ {s}, Monotone (p s) := fun s a b h x ⟨y, ya, yxs⟩ => ⟨y, h ya, yxs⟩
-        have  : f ≤ g :=
-          le_infi$
-            fun s =>
-              le_infi$
-                fun hs =>
-                  le_infi$
-                    fun t =>
-                      le_infi$
-                        fun ht => le_principal_iff.mpr$ mem_of_superset ht$ fun x hx => ⟨x, hx, refl_mem_uniformity hs⟩
-        have  : ne_bot g := hf.left.mono this 
-        have  : ne_bot (comap m g) :=
-          comap_ne_bot$
-            fun t ht =>
-              let ⟨t', ht', ht_mem⟩ := (mem_lift_sets$ monotone_lift' monotone_const mp₀).mp ht 
-              let ⟨t'', ht'', ht'_sub⟩ := (mem_lift'_sets mp₁).mp ht_mem 
-              let ⟨x, (hx : x ∈ t'')⟩ := hf.left.nonempty_of_mem ht'' 
-              have h₀ : ne_bot (𝓝[range m] x) := dense.nhds_within_ne_bot x 
-              have h₁ : { y | (x, y) ∈ t' } ∈ 𝓝[range m] x :=
-                @mem_inf_of_left α (𝓝 x) (𝓟 (range m)) _$ mem_nhds_left x ht' 
-              have h₂ : range m ∈ 𝓝[range m] x := @mem_inf_of_right α (𝓝 x) (𝓟 (range m)) _$ subset.refl _ 
-              have  : { y | (x, y) ∈ t' } ∩ range m ∈ 𝓝[range m] x := @inter_mem α (𝓝[range m] x) _ _ h₁ h₂ 
-              let ⟨y, xyt', b, b_eq⟩ := h₀.nonempty_of_mem this
-              ⟨b, b_eq.symm ▸ ht'_sub ⟨x, hx, xyt'⟩⟩
-        have  : Cauchy g :=
-          ⟨‹ne_bot g›,
-            fun s hs =>
-              let ⟨s₁, hs₁, (comp_s₁ : CompRel s₁ s₁ ⊆ s)⟩ := comp_mem_uniformity_sets hs 
-              let ⟨s₂, hs₂, (comp_s₂ : CompRel s₂ s₂ ⊆ s₁)⟩ := comp_mem_uniformity_sets hs₁ 
-              let ⟨t, ht, (prod_t : Set.Prod t t ⊆ s₂)⟩ := mem_prod_same_iff.mp (hf.right hs₂)
-              have hg₁ : p (preimage Prod.swap s₁) t ∈ g := mem_lift (symm_le_uniformity hs₁)$ @mem_lift' α α f _ t ht 
-              have hg₂ : p s₂ t ∈ g := mem_lift hs₂$ @mem_lift' α α f _ t ht 
-              have hg : Set.Prod (p (preimage Prod.swap s₁) t) (p s₂ t) ∈ g ×ᶠ g := @prod_mem_prod α α _ _ g g hg₁ hg₂
-              (g ×ᶠ g).sets_of_superset hg
-                fun ⟨a, b⟩ ⟨⟨c₁, c₁t, hc₁⟩, ⟨c₂, c₂t, hc₂⟩⟩ =>
-                  have  : (c₁, c₂) ∈ Set.Prod t t := ⟨c₁t, c₂t⟩
-                  comp_s₁$ prod_mk_mem_comp_rel hc₁$ comp_s₂$ prod_mk_mem_comp_rel (prod_t this) hc₂⟩
-        have  : Cauchy (Filter.comap m g) := ‹Cauchy g›.comap' (le_of_eqₓ hm.comap_uniformity) ‹_›
-        let ⟨x, (hx : map m (Filter.comap m g) ≤ 𝓝 x)⟩ := h _ this 
-        have  : ClusterPt x (map m (Filter.comap m g)) :=
-          (le_nhds_iff_adhp_of_cauchy (this.map hm.uniform_continuous)).mp hx 
-        have  : ClusterPt x g := this.mono map_comap_le
-        ⟨x,
-          calc f ≤ g :=
-            by 
-              assumption 
-            _ ≤ 𝓝 x := le_nhds_of_cauchy_adhp ‹Cauchy g› this
-            ⟩⟩
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem complete_space_extension
+{m : β → α}
+(hm : uniform_inducing m)
+(dense : dense_range m)
+(h : ∀ f : filter β, cauchy f → «expr∃ , »((x : α), «expr ≤ »(map m f, expr𝓝() x))) : complete_space α :=
+⟨assume
+ f : filter α, assume
+ hf : cauchy f, let p : set «expr × »(α, α) → set α → set α := λ
+     s t, {y : α | «expr∃ , »((x : α), «expr ∧ »(«expr ∈ »(x, t), «expr ∈ »((x, y), s)))},
+     g := (expr𝓤() α).lift (λ s, f.lift' (p s)) in
+ have mp₀ : monotone p, from assume (a b h t s) ⟨x, xs, xa⟩, ⟨x, xs, h xa⟩,
+ have mp₁ : ∀ {s}, monotone (p s), from assume (s a b h x) ⟨y, ya, yxs⟩, ⟨y, h ya, yxs⟩,
+ have «expr ≤ »(f, g), from «expr $ »(le_infi, assume
+  s, «expr $ »(le_infi, assume
+   hs, «expr $ »(le_infi, assume
+    t, «expr $ »(le_infi, assume
+     ht, «expr $ »(le_principal_iff.mpr, «expr $ »(mem_of_superset ht, assume
+       x hx, ⟨x, hx, refl_mem_uniformity hs⟩)))))),
+ have ne_bot g, from hf.left.mono this,
+ have ne_bot (comap m g), from «expr $ »(comap_ne_bot, assume
+  t ht, let ⟨t', ht', ht_mem⟩ := «expr $ »(mem_lift_sets, monotone_lift' monotone_const mp₀).mp ht in
+  let ⟨t'', ht'', ht'_sub⟩ := (mem_lift'_sets mp₁).mp ht_mem in
+  let ⟨x, (hx : «expr ∈ »(x, t''))⟩ := hf.left.nonempty_of_mem ht'' in
+  have h₀ : ne_bot «expr𝓝[ ] »(range m, x), from dense.nhds_within_ne_bot x,
+  have h₁ : «expr ∈ »({y | «expr ∈ »((x, y), t')}, «expr𝓝[ ] »(range m, x)), from «expr $ »(@mem_inf_of_left α (expr𝓝() x) (expr𝓟() (range m)) _, mem_nhds_left x ht'),
+  have h₂ : «expr ∈ »(range m, «expr𝓝[ ] »(range m, x)), from «expr $ »(@mem_inf_of_right α (expr𝓝() x) (expr𝓟() (range m)) _, subset.refl _),
+  have «expr ∈ »(«expr ∩ »({y | «expr ∈ »((x, y), t')}, range m), «expr𝓝[ ] »(range m, x)), from @inter_mem α «expr𝓝[ ] »(range m, x) _ _ h₁ h₂,
+  let ⟨y, xyt', b, b_eq⟩ := h₀.nonempty_of_mem this in
+  ⟨b, «expr ▸ »(b_eq.symm, ht'_sub ⟨x, hx, xyt'⟩)⟩),
+ have cauchy g, from ⟨«expr‹ ›»(ne_bot g), assume
+  s
+  hs, let ⟨s₁, hs₁, (comp_s₁ : «expr ⊆ »(comp_rel s₁ s₁, s))⟩ := comp_mem_uniformity_sets hs,
+      ⟨s₂, hs₂, (comp_s₂ : «expr ⊆ »(comp_rel s₂ s₂, s₁))⟩ := comp_mem_uniformity_sets hs₁,
+      ⟨t, ht, (prod_t : «expr ⊆ »(set.prod t t, s₂))⟩ := mem_prod_same_iff.mp (hf.right hs₂) in
+  have hg₁ : «expr ∈ »(p (preimage prod.swap s₁) t, g), from «expr $ »(mem_lift (symm_le_uniformity hs₁), @mem_lift' α α f _ t ht),
+  have hg₂ : «expr ∈ »(p s₂ t, g), from «expr $ »(mem_lift hs₂, @mem_lift' α α f _ t ht),
+  have hg : «expr ∈ »(set.prod (p (preimage prod.swap s₁) t) (p s₂ t), «expr ×ᶠ »(g, g)), from @prod_mem_prod α α _ _ g g hg₁ hg₂,
+  «expr ×ᶠ »(g, g).sets_of_superset hg (assume
+   ⟨a, b⟩
+   ⟨⟨c₁, c₁t, hc₁⟩, ⟨c₂, c₂t, hc₂⟩⟩, have «expr ∈ »((c₁, c₂), set.prod t t), from ⟨c₁t, c₂t⟩,
+   «expr $ »(comp_s₁, «expr $ »(prod_mk_mem_comp_rel hc₁, «expr $ »(comp_s₂, prod_mk_mem_comp_rel (prod_t this) hc₂))))⟩,
+ have cauchy (filter.comap m g), from «expr‹ ›»(cauchy g).comap' (le_of_eq hm.comap_uniformity) «expr‹ ›»(_),
+ let ⟨x, (hx : «expr ≤ »(map m (filter.comap m g), expr𝓝() x))⟩ := h _ this in
+ have cluster_pt x (map m (filter.comap m g)), from (le_nhds_iff_adhp_of_cauchy (this.map hm.uniform_continuous)).mp hx,
+ have cluster_pt x g, from this.mono map_comap_le,
+ ⟨x, calc «expr ≤ »(f, g) : by assumption «expr ≤ »(..., expr𝓝() x) : le_nhds_of_cauchy_adhp «expr‹ ›»(cauchy g) this⟩⟩
 
 -- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem totally_bounded_preimage
@@ -384,31 +400,37 @@ theorem uniformly_extend_exists [CompleteSpace γ] (a : α) : ∃ c, tendsto f (
   have  : Cauchy (map f (comap e (𝓝 a))) := this.map h_f 
   CompleteSpace.complete this
 
-theorem uniform_extend_subtype [CompleteSpace γ] {p : α → Prop} {e : α → β} {f : α → γ} {b : β} {s : Set α}
-  (hf : UniformContinuous fun x : Subtype p => f x.val) (he : UniformEmbedding e) (hd : ∀ x : β, x ∈ Closure (range e))
-  (hb : Closure (e '' s) ∈ 𝓝 b) (hs : IsClosed s) (hp : ∀ x _ : x ∈ s, p x) : ∃ c, tendsto f (comap e (𝓝 b)) (𝓝 c) :=
-  have de : DenseEmbedding e := he.dense_embedding hd 
-  have de' : DenseEmbedding (DenseEmbedding.subtypeEmb p e) :=
-    by 
-      exact de.subtype p 
-  have ue' : UniformEmbedding (DenseEmbedding.subtypeEmb p e) := uniform_embedding_subtype_emb _ he de 
-  have  : b ∈ Closure (e '' { x | p x }) := (closure_mono$ monotone_image$ hp) (mem_of_mem_nhds hb)
-  let ⟨c, (hc : tendsto (f ∘ Subtype.val) (comap (DenseEmbedding.subtypeEmb p e) (𝓝 ⟨b, this⟩)) (𝓝 c))⟩ :=
-    uniformly_extend_exists ue'.to_uniform_inducing de'.dense hf _ 
-  by 
-    rw [nhds_subtype_eq_comap] at hc 
-    simp [comap_comap] at hc 
-    change tendsto (f ∘ @Subtype.val α p) (comap (e ∘ @Subtype.val α p) (𝓝 b)) (𝓝 c) at hc 
-    rw [←comap_comap, tendsto_comap'_iff] at hc 
-    exact ⟨c, hc⟩
-    exact
-      ⟨_, hb,
-        fun x =>
-          by 
-            change e x ∈ Closure (e '' s) → x ∈ range Subtype.val 
-            rw [←closure_induced, mem_closure_iff_cluster_pt, ClusterPt, ne_bot_iff, nhds_induced,
-              ←de.to_dense_inducing.nhds_eq_comap, ←mem_closure_iff_nhds_ne_bot, hs.closure_eq]
-            exact fun hxs => ⟨⟨x, hp x hxs⟩, rfl⟩⟩
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_extend_subtype
+[complete_space γ]
+{p : α → exprProp()}
+{e : α → β}
+{f : α → γ}
+{b : β}
+{s : set α}
+(hf : uniform_continuous (λ x : subtype p, f x.val))
+(he : uniform_embedding e)
+(hd : ∀ x : β, «expr ∈ »(x, closure (range e)))
+(hb : «expr ∈ »(closure «expr '' »(e, s), expr𝓝() b))
+(hs : is_closed s)
+(hp : ∀ x «expr ∈ » s, p x) : «expr∃ , »((c), tendsto f (comap e (expr𝓝() b)) (expr𝓝() c)) :=
+have de : dense_embedding e, from he.dense_embedding hd,
+have de' : dense_embedding (dense_embedding.subtype_emb p e), by exact [expr de.subtype p],
+have ue' : uniform_embedding (dense_embedding.subtype_emb p e), from uniform_embedding_subtype_emb _ he de,
+have «expr ∈ »(b, closure «expr '' »(e, {x | p x})), from «expr $ »(closure_mono, «expr $ »(monotone_image, hp)) (mem_of_mem_nhds hb),
+let ⟨c, (hc : tendsto «expr ∘ »(f, subtype.val) (comap (dense_embedding.subtype_emb p e) (expr𝓝() ⟨b, this⟩)) (expr𝓝() c))⟩ := uniformly_extend_exists ue'.to_uniform_inducing de'.dense hf _ in
+begin
+  rw ["[", expr nhds_subtype_eq_comap, "]"] ["at", ident hc],
+  simp [] [] [] ["[", expr comap_comap, "]"] [] ["at", ident hc],
+  change [expr tendsto «expr ∘ »(f, @subtype.val α p) (comap «expr ∘ »(e, @subtype.val α p) (expr𝓝() b)) (expr𝓝() c)] [] ["at", ident hc],
+  rw ["[", "<-", expr comap_comap, ",", expr tendsto_comap'_iff, "]"] ["at", ident hc],
+  exact [expr ⟨c, hc⟩],
+  exact [expr ⟨_, hb, assume x, begin
+      change [expr «expr ∈ »(e x, closure «expr '' »(e, s)) → «expr ∈ »(x, range subtype.val)] [] [],
+      rw ["[", "<-", expr closure_induced, ",", expr mem_closure_iff_cluster_pt, ",", expr cluster_pt, ",", expr ne_bot_iff, ",", expr nhds_induced, ",", "<-", expr de.to_dense_inducing.nhds_eq_comap, ",", "<-", expr mem_closure_iff_nhds_ne_bot, ",", expr hs.closure_eq, "]"] [],
+      exact [expr assume hxs, ⟨⟨x, hp x hxs⟩, rfl⟩]
+    end⟩]
+end
 
 variable[SeparatedSpace γ]
 
@@ -432,49 +454,42 @@ theorem uniformly_extend_spec [CompleteSpace γ] (a : α) : tendsto f (comap e (
       simp only [DenseInducing.extend, dif_neg ha]
       exact tendsto_nhds_lim (uniformly_extend_exists h_e h_dense h_f _)
 
-theorem uniform_continuous_uniformly_extend [cγ : CompleteSpace γ] : UniformContinuous ψ :=
-  fun d hd =>
-    let ⟨s, hs, hs_comp⟩ :=
-      (mem_lift'_sets$ monotone_comp_rel monotone_id$ monotone_comp_rel monotone_id monotone_id).mp
-        (comp_le_uniformity3 hd)
-    have h_pnt : ∀ {a m}, m ∈ 𝓝 a → ∃ c, c ∈ f '' preimage e m ∧ (c, ψ a) ∈ s ∧ (ψ a, c) ∈ s :=
-      fun a m hm =>
-        have nb : ne_bot (map f (comap e (𝓝 a))) := ((h_e.dense_inducing h_dense).comap_nhds_ne_bot _).map _ 
-        have  : f '' preimage e m ∩ ({ c | (c, ψ a) ∈ s } ∩ { c | (ψ a, c) ∈ s }) ∈ map f (comap e (𝓝 a)) :=
-          inter_mem (image_mem_map$ preimage_mem_comap$ hm)
-            (uniformly_extend_spec h_e h_dense h_f _ (inter_mem (mem_nhds_right _ hs) (mem_nhds_left _ hs)))
-        nb.nonempty_of_mem this 
-    have  : preimage (fun p : β × β => (f p.1, f p.2)) s ∈ 𝓤 β := h_f hs 
-    have  : preimage (fun p : β × β => (f p.1, f p.2)) s ∈ comap (fun x : β × β => (e x.1, e x.2)) (𝓤 α) :=
-      by 
-        rwa [h_e.comap_uniformity.symm] at this 
-    let ⟨t, ht, ts⟩ := this 
-    show preimage (fun p : α × α => (ψ p.1, ψ p.2)) d ∈ 𝓤 α from
-      (𝓤 α).sets_of_superset (interior_mem_uniformity ht)$
-        fun ⟨x₁, x₂⟩ hx_t =>
-          have  : 𝓝 (x₁, x₂) ≤ 𝓟 (Interior t) := is_open_iff_nhds.mp is_open_interior (x₁, x₂) hx_t 
-          have  : Interior t ∈ 𝓝 x₁ ×ᶠ 𝓝 x₂ :=
-            by 
-              rwa [nhds_prod_eq, le_principal_iff] at this 
-          let ⟨m₁, hm₁, m₂, hm₂, (hm : Set.Prod m₁ m₂ ⊆ Interior t)⟩ := mem_prod_iff.mp this 
-          let ⟨a, ha₁, _, ha₂⟩ := h_pnt hm₁ 
-          let ⟨b, hb₁, hb₂, _⟩ := h_pnt hm₂ 
-          have  : Set.Prod (preimage e m₁) (preimage e m₂) ⊆ preimage (fun p : β × β => (f p.1, f p.2)) s :=
-            calc _ ⊆ preimage (fun p : β × β => (e p.1, e p.2)) (Interior t) := preimage_mono hm 
-              _ ⊆ preimage (fun p : β × β => (e p.1, e p.2)) t := preimage_mono interior_subset 
-              _ ⊆ preimage (fun p : β × β => (f p.1, f p.2)) s := ts 
-              
-          have  : Set.Prod (f '' preimage e m₁) (f '' preimage e m₂) ⊆ s :=
-            calc
-              Set.Prod (f '' preimage e m₁) (f '' preimage e m₂) =
-                (fun p : β × β => (f p.1, f p.2)) '' Set.Prod (preimage e m₁) (preimage e m₂) :=
-              prod_image_image_eq 
-              _ ⊆ (fun p : β × β => (f p.1, f p.2)) '' preimage (fun p : β × β => (f p.1, f p.2)) s :=
-              monotone_image this 
-              _ ⊆ s := image_subset_iff.mpr$ subset.refl _ 
-              
-          have  : (a, b) ∈ s := @this (a, b) ⟨ha₁, hb₁⟩
-          hs_comp$ show (ψ x₁, ψ x₂) ∈ CompRel s (CompRel s s) from ⟨a, ha₂, ⟨b, this, hb₂⟩⟩
+-- error in Topology.UniformSpace.UniformEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_uniformly_extend [cγ : complete_space γ] : uniform_continuous exprψ() :=
+assume
+d
+hd, let ⟨s, hs, hs_comp⟩ := «expr $ »(mem_lift'_sets, «expr $ »(monotone_comp_rel monotone_id, monotone_comp_rel monotone_id monotone_id)).mp (comp_le_uniformity3 hd) in
+have h_pnt : ∀
+{a
+ m}, «expr ∈ »(m, expr𝓝() a) → «expr∃ , »((c), «expr ∧ »(«expr ∈ »(c, «expr '' »(f, preimage e m)), «expr ∧ »(«expr ∈ »((c, exprψ() a), s), «expr ∈ »((exprψ() a, c), s)))), from assume
+a m hm, have nb : ne_bot (map f (comap e (expr𝓝() a))), from ((h_e.dense_inducing h_dense).comap_nhds_ne_bot _).map _,
+have «expr ∈ »(«expr ∩ »(«expr '' »(f, preimage e m), «expr ∩ »({c | «expr ∈ »((c, exprψ() a), s)}, {c | «expr ∈ »((exprψ() a, c), s)})), map f (comap e (expr𝓝() a))), from inter_mem «expr $ »(image_mem_map, «expr $ »(preimage_mem_comap, hm)) (uniformly_extend_spec h_e h_dense h_f _ (inter_mem (mem_nhds_right _ hs) (mem_nhds_left _ hs))),
+nb.nonempty_of_mem this,
+have «expr ∈ »(preimage (λ p : «expr × »(β, β), (f p.1, f p.2)) s, expr𝓤() β), from h_f hs,
+have «expr ∈ »(preimage (λ
+  p : «expr × »(β, β), (f p.1, f p.2)) s, comap (λ
+  x : «expr × »(β, β), (e x.1, e x.2)) (expr𝓤() α)), by rwa ["[", expr h_e.comap_uniformity.symm, "]"] ["at", ident this],
+let ⟨t, ht, ts⟩ := this in
+show «expr ∈ »(preimage (λ
+  p : «expr × »(α, α), (exprψ() p.1, exprψ() p.2)) d, expr𝓤() α), from «expr $ »((expr𝓤() α).sets_of_superset (interior_mem_uniformity ht), assume
+ ⟨x₁, x₂⟩
+ (hx_t), have «expr ≤ »(expr𝓝() (x₁, x₂), expr𝓟() (interior t)), from is_open_iff_nhds.mp is_open_interior (x₁, x₂) hx_t,
+ have «expr ∈ »(interior t, «expr ×ᶠ »(expr𝓝() x₁, expr𝓝() x₂)), by rwa ["[", expr nhds_prod_eq, ",", expr le_principal_iff, "]"] ["at", ident this],
+ let ⟨m₁, hm₁, m₂, hm₂, (hm : «expr ⊆ »(set.prod m₁ m₂, interior t))⟩ := mem_prod_iff.mp this in
+ let ⟨a, ha₁, _, ha₂⟩ := h_pnt hm₁ in
+ let ⟨b, hb₁, hb₂, _⟩ := h_pnt hm₂ in
+ have «expr ⊆ »(set.prod (preimage e m₁) (preimage e m₂), preimage (λ p : «expr × »(β, β), (f p.1, f p.2)) s), from calc
+   «expr ⊆ »(_, preimage (λ p : «expr × »(β, β), (e p.1, e p.2)) (interior t)) : preimage_mono hm
+   «expr ⊆ »(..., preimage (λ p : «expr × »(β, β), (e p.1, e p.2)) t) : preimage_mono interior_subset
+   «expr ⊆ »(..., preimage (λ p : «expr × »(β, β), (f p.1, f p.2)) s) : ts,
+ have «expr ⊆ »(set.prod «expr '' »(f, preimage e m₁) «expr '' »(f, preimage e m₂), s), from calc
+   «expr = »(set.prod «expr '' »(f, preimage e m₁) «expr '' »(f, preimage e m₂), «expr '' »(λ
+     p : «expr × »(β, β), (f p.1, f p.2), set.prod (preimage e m₁) (preimage e m₂))) : prod_image_image_eq
+   «expr ⊆ »(..., «expr '' »(λ
+     p : «expr × »(β, β), (f p.1, f p.2), preimage (λ p : «expr × »(β, β), (f p.1, f p.2)) s)) : monotone_image this
+   «expr ⊆ »(..., s) : «expr $ »(image_subset_iff.mpr, subset.refl _),
+ have «expr ∈ »((a, b), s), from @this (a, b) ⟨ha₁, hb₁⟩,
+ «expr $ »(hs_comp, show «expr ∈ »((exprψ() x₁, exprψ() x₂), comp_rel s (comp_rel s s)), from ⟨a, ha₂, ⟨b, this, hb₂⟩⟩))
 
 end UniformExtension
 

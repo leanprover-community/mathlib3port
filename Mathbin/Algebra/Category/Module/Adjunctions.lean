@@ -144,15 +144,15 @@ variable(R : Type _)[CommRingₓ R](C : Type u)[category.{v} C]
 
 open Finsupp
 
+-- error in Algebra.Category.Module.Adjunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 instance category_Free : category (Free R C) :=
-  { Hom := fun X Y : C => (X ⟶ Y) →₀ R, id := fun X : C => Finsupp.single (𝟙 X) 1,
-    comp := fun X Y Z : C f g => f.sum fun f' s => g.sum fun g' t => Finsupp.single (f' ≫ g') (s*t),
-    assoc' :=
-      fun W X Y Z f g h =>
-        by 
-          dsimp 
-          simp only [sum_sum_index, sum_single_index, single_zero, single_add, eq_self_iff_true, forall_true_iff,
-            forall_3_true_iff, add_mulₓ, mul_addₓ, category.assoc, mul_assocₓ, zero_mul, mul_zero, sum_zero, sum_add] }
+{ hom := λ X Y : C, «expr →₀ »(«expr ⟶ »(X, Y), R),
+  id := λ X : C, finsupp.single («expr𝟙»() X) 1,
+  comp := λ (X Y Z : C) (f g), f.sum (λ f' s, g.sum (λ g' t, finsupp.single «expr ≫ »(f', g') «expr * »(s, t))),
+  assoc' := λ W X Y Z f g h, begin
+    dsimp [] [] [] [],
+    simp [] [] ["only"] ["[", expr sum_sum_index, ",", expr sum_single_index, ",", expr single_zero, ",", expr single_add, ",", expr eq_self_iff_true, ",", expr forall_true_iff, ",", expr forall_3_true_iff, ",", expr add_mul, ",", expr mul_add, ",", expr category.assoc, ",", expr mul_assoc, ",", expr zero_mul, ",", expr mul_zero, ",", expr sum_zero, ",", expr sum_add, "]"] [] []
+  end }
 
 namespace Free
 

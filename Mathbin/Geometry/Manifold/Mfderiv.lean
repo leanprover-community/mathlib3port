@@ -139,7 +139,7 @@ def UniqueMdiffWithinAt (s : Set M) (x : M) :=
 
 /-- Predicate ensuring that, at all points of a set, a function can have at most one derivative. -/
 def UniqueMdiffOn (s : Set M) :=
-  ∀ x _ : x ∈ s, UniqueMdiffWithinAt I s x
+  ∀ x (_ : x ∈ s), UniqueMdiffWithinAt I s x
 
 /-- Conjugating a function to write it in the preferred charts around `x`. The manifold derivative
 of `f` will just be the derivative of this conjugated function. -/
@@ -174,7 +174,7 @@ def MdifferentiableAt (f : M → M') (x : M) :=
 has a derivative within `s` at all points of `s`.
 This is a generalization of `differentiable_on` to manifolds. -/
 def MdifferentiableOn (f : M → M') (s : Set M) :=
-  ∀ x _ : x ∈ s, MdifferentiableWithinAt I I' f s x
+  ∀ x (_ : x ∈ s), MdifferentiableWithinAt I I' f s x
 
 /-- `mdifferentiable I I' f` indicates that the function `f` between manifolds
 has a derivative everywhere.
@@ -528,7 +528,7 @@ theorem Mdifferentiable.mdifferentiable_on (h : Mdifferentiable I I' f) : Mdiffe
   (mdifferentiable_on_univ.2 h).mono (subset_univ _)
 
 theorem mdifferentiable_on_of_locally_mdifferentiable_on
-  (h : ∀ x _ : x ∈ s, ∃ u, IsOpen u ∧ x ∈ u ∧ MdifferentiableOn I I' f (s ∩ u)) : MdifferentiableOn I I' f s :=
+  (h : ∀ x (_ : x ∈ s), ∃ u, IsOpen u ∧ x ∈ u ∧ MdifferentiableOn I I' f (s ∩ u)) : MdifferentiableOn I I' f s :=
   by 
     intro x xs 
     rcases h x xs with ⟨t, t_open, xt, ht⟩
@@ -630,7 +630,7 @@ begin
   { simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [] }
 end
 
-theorem HasMfderivWithinAt.congr_mono (h : HasMfderivWithinAt I I' f s x f') (ht : ∀ x _ : x ∈ t, f₁ x = f x)
+theorem HasMfderivWithinAt.congr_mono (h : HasMfderivWithinAt I I' f s x f') (ht : ∀ x (_ : x ∈ t), f₁ x = f x)
   (hx : f₁ x = f x) (h₁ : t ⊆ s) : HasMfderivWithinAt I I' f₁ t x f' :=
   (h.mono h₁).congr_of_eventually_eq (Filter.mem_inf_of_right ht) hx
 
@@ -665,15 +665,15 @@ theorem Filter.EventuallyEq.mdifferentiable_within_at_iff (h₁ : f₁ =ᶠ[𝓝
 
 variable{I I'}
 
-theorem MdifferentiableWithinAt.congr_mono (h : MdifferentiableWithinAt I I' f s x) (ht : ∀ x _ : x ∈ t, f₁ x = f x)
+theorem MdifferentiableWithinAt.congr_mono (h : MdifferentiableWithinAt I I' f s x) (ht : ∀ x (_ : x ∈ t), f₁ x = f x)
   (hx : f₁ x = f x) (h₁ : t ⊆ s) : MdifferentiableWithinAt I I' f₁ t x :=
   (HasMfderivWithinAt.congr_mono h.has_mfderiv_within_at ht hx h₁).MdifferentiableWithinAt
 
-theorem MdifferentiableWithinAt.congr (h : MdifferentiableWithinAt I I' f s x) (ht : ∀ x _ : x ∈ s, f₁ x = f x)
+theorem MdifferentiableWithinAt.congr (h : MdifferentiableWithinAt I I' f s x) (ht : ∀ x (_ : x ∈ s), f₁ x = f x)
   (hx : f₁ x = f x) : MdifferentiableWithinAt I I' f₁ s x :=
   (HasMfderivWithinAt.congr_mono h.has_mfderiv_within_at ht hx (subset.refl _)).MdifferentiableWithinAt
 
-theorem MdifferentiableOn.congr_mono (h : MdifferentiableOn I I' f s) (h' : ∀ x _ : x ∈ t, f₁ x = f x) (h₁ : t ⊆ s) :
+theorem MdifferentiableOn.congr_mono (h : MdifferentiableOn I I' f s) (h' : ∀ x (_ : x ∈ t), f₁ x = f x) (h₁ : t ⊆ s) :
   MdifferentiableOn I I' f₁ t :=
   fun x hx => (h x (h₁ hx)).congr_mono h' (h' x hx) h₁
 
@@ -682,7 +682,7 @@ theorem MdifferentiableAt.congr_of_eventually_eq (h : MdifferentiableAt I I' f x
   (h.has_mfderiv_at.congr_of_eventually_eq hL).MdifferentiableAt
 
 theorem MdifferentiableWithinAt.mfderiv_within_congr_mono (h : MdifferentiableWithinAt I I' f s x)
-  (hs : ∀ x _ : x ∈ t, f₁ x = f x) (hx : f₁ x = f x) (hxt : UniqueMdiffWithinAt I t x) (h₁ : t ⊆ s) :
+  (hs : ∀ x (_ : x ∈ t), f₁ x = f x) (hx : f₁ x = f x) (hxt : UniqueMdiffWithinAt I t x) (h₁ : t ⊆ s) :
   mfderivWithin I I' f₁ t x = (mfderivWithin I I' f s x : _) :=
   (HasMfderivWithinAt.congr_mono h.has_mfderiv_within_at hs hx h₁).mfderivWithin hxt
 
@@ -697,11 +697,11 @@ theorem Filter.EventuallyEq.mfderiv_within_eq (hs : UniqueMdiffWithinAt I s x) (
       rw [dif_neg h, dif_neg]
       rwa [←hL.mdifferentiable_within_at_iff I I' hx]
 
-theorem mfderiv_within_congr (hs : UniqueMdiffWithinAt I s x) (hL : ∀ x _ : x ∈ s, f₁ x = f x) (hx : f₁ x = f x) :
+theorem mfderiv_within_congr (hs : UniqueMdiffWithinAt I s x) (hL : ∀ x (_ : x ∈ s), f₁ x = f x) (hx : f₁ x = f x) :
   mfderivWithin I I' f₁ s x = (mfderivWithin I I' f s x : _) :=
   Filter.EventuallyEq.mfderiv_within_eq hs (Filter.eventually_eq_of_mem self_mem_nhds_within hL) hx
 
-theorem tangent_map_within_congr (h : ∀ x _ : x ∈ s, f x = f₁ x) (p : TangentBundle I M) (hp : p.1 ∈ s)
+theorem tangent_map_within_congr (h : ∀ x (_ : x ∈ s), f x = f₁ x) (p : TangentBundle I M) (hp : p.1 ∈ s)
   (hs : UniqueMdiffWithinAt I s p.1) : tangentMapWithin I I' f s p = tangentMapWithin I I' f₁ s p :=
   by 
     simp only [tangentMapWithin, h p.fst hp, true_andₓ, eq_self_iff_true, heq_iff_eq, Sigma.mk.inj_iff]
@@ -1100,35 +1100,48 @@ section Const
 
 variable{c : M'}
 
-theorem has_mfderiv_at_const (c : M') (x : M) :
-  HasMfderivAt I I' (fun y : M => c) x (0 : TangentSpace I x →L[𝕜] TangentSpace I' c) :=
-  by 
-    refine' ⟨continuous_const.continuous_at, _⟩
-    simp only [writtenInExtChartAt, · ∘ ·, has_fderiv_within_at_const]
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_mfderiv_at_const
+(c : M')
+(x : M) : has_mfderiv_at I I' (λ y : M, c) x (0 : «expr →L[ ] »(tangent_space I x, 𝕜, tangent_space I' c)) :=
+begin
+  refine [expr ⟨continuous_const.continuous_at, _⟩],
+  simp [] [] ["only"] ["[", expr written_in_ext_chart_at, ",", expr («expr ∘ »), ",", expr has_fderiv_within_at_const, "]"] [] []
+end
 
-theorem has_mfderiv_within_at_const (c : M') (s : Set M) (x : M) :
-  HasMfderivWithinAt I I' (fun y : M => c) s x (0 : TangentSpace I x →L[𝕜] TangentSpace I' c) :=
-  (has_mfderiv_at_const I I' c x).HasMfderivWithinAt
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_mfderiv_within_at_const
+(c : M')
+(s : set M)
+(x : M) : has_mfderiv_within_at I I' (λ y : M, c) s x (0 : «expr →L[ ] »(tangent_space I x, 𝕜, tangent_space I' c)) :=
+(has_mfderiv_at_const I I' c x).has_mfderiv_within_at
 
-theorem mdifferentiable_at_const : MdifferentiableAt I I' (fun y : M => c) x :=
-  (has_mfderiv_at_const I I' c x).MdifferentiableAt
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mdifferentiable_at_const : mdifferentiable_at I I' (λ y : M, c) x :=
+(has_mfderiv_at_const I I' c x).mdifferentiable_at
 
-theorem mdifferentiable_within_at_const : MdifferentiableWithinAt I I' (fun y : M => c) s x :=
-  (mdifferentiable_at_const I I').MdifferentiableWithinAt
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mdifferentiable_within_at_const : mdifferentiable_within_at I I' (λ y : M, c) s x :=
+(mdifferentiable_at_const I I').mdifferentiable_within_at
 
-theorem mdifferentiable_const : Mdifferentiable I I' fun y : M => c :=
-  fun x => mdifferentiable_at_const I I'
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mdifferentiable_const : mdifferentiable I I' (λ y : M, c) := λ x, mdifferentiable_at_const I I'
 
-theorem mdifferentiable_on_const : MdifferentiableOn I I' (fun y : M => c) s :=
-  (mdifferentiable_const I I').MdifferentiableOn
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mdifferentiable_on_const : mdifferentiable_on I I' (λ y : M, c) s :=
+(mdifferentiable_const I I').mdifferentiable_on
 
-@[simp, mfld_simps]
-theorem mfderiv_const : mfderiv I I' (fun y : M => c) x = (0 : TangentSpace I x →L[𝕜] TangentSpace I' c) :=
-  HasMfderivAt.mfderiv (has_mfderiv_at_const I I' c x)
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, mfld_simps #[]]
+theorem mfderiv_const : «expr = »(mfderiv I I' (λ
+  y : M, c) x, (0 : «expr →L[ ] »(tangent_space I x, 𝕜, tangent_space I' c))) :=
+has_mfderiv_at.mfderiv (has_mfderiv_at_const I I' c x)
 
-theorem mfderiv_within_const (hxs : UniqueMdiffWithinAt I s x) :
-  mfderivWithin I I' (fun y : M => c) s x = (0 : TangentSpace I x →L[𝕜] TangentSpace I' c) :=
-  (has_mfderiv_within_at_const _ _ _ _ _).mfderivWithin hxs
+-- error in Geometry.Manifold.Mfderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mfderiv_within_const
+(hxs : unique_mdiff_within_at I s x) : «expr = »(mfderiv_within I I' (λ
+  y : M, c) s x, (0 : «expr →L[ ] »(tangent_space I x, 𝕜, tangent_space I' c))) :=
+(has_mfderiv_within_at_const _ _ _ _ _).mfderiv_within hxs
 
 end Const
 

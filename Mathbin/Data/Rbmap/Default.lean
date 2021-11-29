@@ -72,7 +72,7 @@ theorem eq_none_of_to_value_eq_none {e : Option (α × β)} : to_value e = none 
   by 
     cases e <;> simp [to_value, false_implies_iff]
 
-theorem not_mem_mk_rbmap : ∀ k : α, k ∉ mkRbmap α β lt :=
+theorem not_mem_mk_rbmap : ∀ (k : α), k ∉ mkRbmap α β lt :=
   by 
     simp [HasMem.Mem, mkRbmap, mkRbtree, Rbmap.Mem]
 

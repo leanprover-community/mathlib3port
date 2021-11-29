@@ -32,7 +32,7 @@ Note: `open_locale direct_sum` will enable the notation `⨁ i, β i` for `direc
 def direct_sum [∀ i, add_comm_monoid (β i)] : Type* :=
 «exprΠ₀ , »((i), β i)
 
-instance  [∀ i, AddCommMonoidₓ (β i)] : CoeFun (DirectSum ι β) fun _ => ∀ i : ι, β i :=
+instance  [∀ i, AddCommMonoidₓ (β i)] : CoeFun (DirectSum ι β) fun _ => ∀ (i : ι), β i :=
   Dfinsupp.hasCoeToFun
 
 localized [DirectSum] notation3  "⨁" (...) ", " r:(scoped f => DirectSum _ f) => r
@@ -74,7 +74,7 @@ include dec_ι
 
 /-- `mk β s x` is the element of `⨁ i, β i` that is zero outside `s`
 and has coefficient `x i` for `i` in `s`. -/
-def mk (s : Finset ι) : (∀ i : («expr↑ » s : Set ι), β i.1) →+ ⨁i, β i :=
+def mk (s : Finset ι) : (∀ (i : («expr↑ » s : Set ι)), β i.1) →+ ⨁i, β i :=
   { toFun := Dfinsupp.mk s, map_add' := fun _ _ => Dfinsupp.mk_add, map_zero' := Dfinsupp.mk_zero }
 
 /-- `of i` is the natural inclusion map from `β i` to `⨁ i, β i`. -/
@@ -89,17 +89,17 @@ theorem of_eq_of_ne (i j : ι) (x : β i) (h : i ≠ j) : (of _ i x) j = 0 :=
   Dfinsupp.single_eq_of_ne h
 
 @[simp]
-theorem support_zero [∀ i : ι x : β i, Decidable (x ≠ 0)] : (0 : ⨁i, β i).support = ∅ :=
+theorem support_zero [∀ (i : ι) (x : β i), Decidable (x ≠ 0)] : (0 : ⨁i, β i).support = ∅ :=
   Dfinsupp.support_zero
 
 @[simp]
-theorem support_of [∀ i : ι x : β i, Decidable (x ≠ 0)] (i : ι) (x : β i) (h : x ≠ 0) : (of _ i x).support = {i} :=
+theorem support_of [∀ (i : ι) (x : β i), Decidable (x ≠ 0)] (i : ι) (x : β i) (h : x ≠ 0) : (of _ i x).support = {i} :=
   Dfinsupp.support_single_ne_zero h
 
-theorem support_of_subset [∀ i : ι x : β i, Decidable (x ≠ 0)] {i : ι} {b : β i} : (of _ i b).support ⊆ {i} :=
+theorem support_of_subset [∀ (i : ι) (x : β i), Decidable (x ≠ 0)] {i : ι} {b : β i} : (of _ i b).support ⊆ {i} :=
   Dfinsupp.support_single_subset
 
-theorem sum_support_of [∀ i : ι x : β i, Decidable (x ≠ 0)] (x : ⨁i, β i) : (∑i in x.support, of β i (x i)) = x :=
+theorem sum_support_of [∀ (i : ι) (x : β i), Decidable (x ≠ 0)] (x : ⨁i, β i) : (∑i in x.support, of β i (x i)) = x :=
   Dfinsupp.sum_single
 
 variable{β}
@@ -128,7 +128,7 @@ end
 /-- If two additive homomorphisms from `⨁ i, β i` are equal on each `of β i y`,
 then they are equal. -/
 theorem add_hom_ext {γ : Type _} [AddMonoidₓ γ] ⦃f g : (⨁i, β i) →+ γ⦄
-  (H : ∀ i : ι y : β i, f (of _ i y) = g (of _ i y)) : f = g :=
+  (H : ∀ (i : ι) (y : β i), f (of _ i y) = g (of _ i y)) : f = g :=
   Dfinsupp.add_hom_ext H
 
 /-- If two additive homomorphisms from `⨁ i, β i` are equal on each `of β i y`,
@@ -137,7 +137,7 @@ then they are equal.
 See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem add_hom_ext' {γ : Type _} [AddMonoidₓ γ] ⦃f g : (⨁i, β i) →+ γ⦄
-  (H : ∀ i : ι, f.comp (of _ i) = g.comp (of _ i)) : f = g :=
+  (H : ∀ (i : ι), f.comp (of _ i) = g.comp (of _ i)) : f = g :=
   add_hom_ext$ fun i => AddMonoidHom.congr_fun$ H i
 
 variable{γ : Type u₁}[AddCommMonoidₓ γ]
@@ -186,10 +186,11 @@ end FromAddMonoid
 
 variable(β)
 
+-- error in Algebra.DirectSum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `set_to_set β S T h` is the natural homomorphism `⨁ (i : S), β i → ⨁ (i : T), β i`,
 where `h : S ⊆ T`. -/
-def set_to_set (S T : Set ι) (H : S ⊆ T) : (⨁i : S, β i) →+ ⨁i : T, β i :=
-  to_add_monoid$ fun i => of (fun i : Subtype T => β i) ⟨«expr↑ » i, H i.prop⟩
+def set_to_set (S T : set ι) (H : «expr ⊆ »(S, T)) : «expr →+ »(«expr⨁ , »((i : S), β i), «expr⨁ , »((i : T), β i)) :=
+«expr $ »(to_add_monoid, λ i, of (λ i : subtype T, β i) ⟨«expr↑ »(i), H i.prop⟩)
 
 variable{β}
 

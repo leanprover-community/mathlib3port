@@ -151,8 +151,9 @@ def unary_encode_nat : Nat → List Bool
 def unary_decode_nat : List Bool → Nat :=
   List.length
 
-theorem unary_decode_encode_nat : ∀ n, unary_decode_nat (unary_encode_nat n) = n :=
-  fun n => Nat.rec rfl (fun m : ℕ hm => (congr_argₓ Nat.succ hm.symm).symm) n
+-- error in Computability.Encoding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem unary_decode_encode_nat : ∀ n, «expr = »(unary_decode_nat (unary_encode_nat n), n) :=
+λ n, nat.rec rfl (λ (m : exprℕ()) (hm), (congr_arg nat.succ hm.symm).symm) n
 
 /-- A unary fin_encoding of ℕ. -/
 def unary_fin_encoding_nat : fin_encoding ℕ :=

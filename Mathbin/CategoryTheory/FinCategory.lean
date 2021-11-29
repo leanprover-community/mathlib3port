@@ -35,10 +35,10 @@ class fin_category(J : Type v)[small_category J] where
   fintypeObj : Fintype J :=  by 
   runTac 
     tactic.apply_instance 
-  decidableEqHom : ∀ j j' : J, DecidableEq (j ⟶ j') :=  by 
+  decidableEqHom : ∀ (j j' : J), DecidableEq (j ⟶ j') :=  by 
   runTac 
     tactic.apply_instance 
-  fintypeHom : ∀ j j' : J, Fintype (j ⟶ j') :=  by 
+  fintypeHom : ∀ (j j' : J), Fintype (j ⟶ j') :=  by 
   runTac 
     tactic.apply_instance
 

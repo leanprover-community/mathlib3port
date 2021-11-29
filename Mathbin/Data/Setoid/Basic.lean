@@ -121,7 +121,7 @@ theorem inf_iff_and {r s : Setoidₓ α} {x y} : (r⊓s).Rel x y ↔ r.rel x y �
 /-- The infimum of a set of equivalence relations. -/
 instance  : HasInfₓ (Setoidₓ α) :=
   ⟨fun S =>
-      ⟨fun x y => ∀ r _ : r ∈ S, rel r x y,
+      ⟨fun x y => ∀ r (_ : r ∈ S), rel r x y,
         ⟨fun x r hr => r.refl' x, fun _ _ h r hr => r.symm'$ h r hr,
           fun _ _ _ h1 h2 r hr => r.trans' (h1 r hr)$ h2 r hr⟩⟩⟩
 
@@ -157,7 +157,7 @@ theorem top_def : (⊤ : Setoidₓ α).Rel = ⊤ :=
 theorem bot_def : (⊥ : Setoidₓ α).Rel = (· = ·) :=
   rfl
 
-theorem eq_top_iff {s : Setoidₓ α} : s = (⊤ : Setoidₓ α) ↔ ∀ x y : α, s.rel x y :=
+theorem eq_top_iff {s : Setoidₓ α} : s = (⊤ : Setoidₓ α) ↔ ∀ (x y : α), s.rel x y :=
   by 
     simp [eq_top_iff, Setoidₓ.le_def, Setoidₓ.top_def, Pi.top_apply]
 

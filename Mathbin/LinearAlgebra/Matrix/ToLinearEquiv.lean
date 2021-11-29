@@ -120,7 +120,7 @@ begin
     exact [expr matrix.det_ne_zero_of_right_inverse this] }
 end
 
--- error in LinearAlgebra.Matrix.ToLinearEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.Matrix.ToLinearEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem exists_mul_vec_eq_zero_iff'
 {A : Type*}
 (K : Type*)

@@ -79,7 +79,7 @@ section Zpow
 open Int
 
 @[simp]
-theorem one_zpow : ∀ n : ℤ, ((1 : M)^n) = 1
+theorem one_zpow : ∀ (n : ℤ), ((1 : M)^n) = 1
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat, one_pow]
@@ -87,7 +87,7 @@ theorem one_zpow : ∀ n : ℤ, ((1 : M)^n) = 1
   by 
     rw [zpow_neg_succ_of_nat, one_pow, inv_one]
 
-theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → ((0 : M)^z) = 0
+theorem zero_zpow : ∀ (z : ℤ), z ≠ 0 → ((0 : M)^z) = 0
 | (n : ℕ), h =>
   by 
     rw [zpow_coe_nat, zero_pow]
@@ -105,7 +105,7 @@ theorem zero_zpow_eq (n : ℤ) : ((0 : M)^n) = if n = 0 then 1 else 0 :=
     ·
       rw [zero_zpow _ h]
 
-theorem inv_zpow (A : M) : ∀ n : ℤ, (A⁻¹^n) = (A^n)⁻¹
+theorem inv_zpow (A : M) : ∀ (n : ℤ), (A⁻¹^n) = (A^n)⁻¹
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat, zpow_coe_nat, inv_pow']
@@ -153,7 +153,7 @@ theorem is_unit_det_zpow_iff {A : M} {z : ℤ} : IsUnit (A^z).det ↔ IsUnit A.d
         is_unit_pos_pow_iff z.zero_lt_succ, neg_eq_zero, ←Int.coe_nat_zero, Int.coe_nat_eq_coe_nat_iff]
       simp 
 
-theorem zpow_neg {A : M} (h : IsUnit A.det) : ∀ n : ℤ, (A^-n) = (A^n)⁻¹
+theorem zpow_neg {A : M} (h : IsUnit A.det) : ∀ (n : ℤ), (A^-n) = (A^n)⁻¹
 | (n : ℕ) => zpow_neg_coe_nat _ _
 | -[1+ n] =>
   by 
@@ -165,7 +165,7 @@ theorem inv_zpow' {A : M} (h : IsUnit A.det) (n : ℤ) : (A⁻¹^n) = (A^-n) :=
   by 
     rw [zpow_neg h, inv_zpow]
 
-theorem zpow_add_one {A : M} (h : IsUnit A.det) : ∀ n : ℤ, (A^n+1) = (A^n)*A
+theorem zpow_add_one {A : M} (h : IsUnit A.det) : ∀ (n : ℤ), (A^n+1) = (A^n)*A
 | (n : ℕ) =>
   by 
     simp [←Int.coe_nat_succ, pow_succ'ₓ]
@@ -280,7 +280,7 @@ theorem zpow_bit0 (A : M) (n : ℤ) : (A^bit0 n) = (A^n)*A^n :=
     ·
       exact zpow_add_of_nonpos nonpos nonpos
 
-theorem zpow_add_one_of_ne_neg_one {A : M} : ∀ n : ℤ, n ≠ -1 → (A^n+1) = (A^n)*A
+theorem zpow_add_one_of_ne_neg_one {A : M} : ∀ (n : ℤ), n ≠ -1 → (A^n+1) = (A^n)*A
 | (n : ℕ), _ =>
   by 
     simp [←Int.coe_nat_succ, pow_succ'ₓ]
@@ -300,7 +300,7 @@ theorem zpow_bit1 (A : M) (n : ℤ) : (A^bit1 n) = ((A^n)*A^n)*A :=
     intro h 
     simpa using congr_argₓ bodd h
 
-theorem zpow_mul (A : M) (h : IsUnit A.det) : ∀ m n : ℤ, (A^m*n) = ((A^m)^n)
+theorem zpow_mul (A : M) (h : IsUnit A.det) : ∀ (m n : ℤ), (A^m*n) = ((A^m)^n)
 | (m : ℕ), (n : ℕ) =>
   by 
     rw [zpow_coe_nat, zpow_coe_nat, ←pow_mulₓ, ←zpow_coe_nat, Int.coe_nat_mul]
@@ -329,7 +329,7 @@ theorem units.coe_inv'' (u : Units M) : ((u⁻¹ : Units M) : M) = u⁻¹ :=
     rw [←mul_eq_mul, ←Units.coe_mul, inv_mul_selfₓ, Units.coe_one]
 
 @[simp, normCast]
-theorem Units.coe_zpow (u : Units M) : ∀ n : ℤ, ((u^n : Units M) : M) = (u^n)
+theorem Units.coe_zpow (u : Units M) : ∀ (n : ℤ), ((u^n : Units M) : M) = (u^n)
 | (n : ℕ) =>
   by 
     rw [_root_.zpow_coe_nat, zpow_coe_nat, Units.coe_pow]
@@ -355,7 +355,7 @@ theorem zpow_sub {A : M} (ha : IsUnit A.det) (z1 z2 : ℤ) : (A^z1 - z2) = (A^z1
   by 
     rw [sub_eq_add_neg, zpow_add ha, zpow_neg ha, div_eq_mul_inv]
 
-theorem Commute.mul_zpow {A B : M} (h : Commute A B) : ∀ i : ℤ, ((A*B)^i) = (A^i)*B^i
+theorem Commute.mul_zpow {A B : M} (h : Commute A B) : ∀ (i : ℤ), ((A*B)^i) = (A^i)*B^i
 | (n : ℕ) =>
   by 
     simp [h.mul_pow n, -mul_eq_mul]

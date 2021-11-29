@@ -65,7 +65,7 @@ Pointwise equality of lists. If lists are different lengths, compare with the de
 element.
 -/
 def Equiv (as1 as2 : List α) : Prop :=
-  ∀ m : Nat, get m as1 = get m as2
+  ∀ (m : Nat), get m as1 = get m as2
 
 /-- Pointwise operations on lists. If lists are different lengths, use the default element. -/
 @[simp]
@@ -102,7 +102,7 @@ theorem get_nil {k : ℕ} : get k [] = default α :=
   by 
     cases k <;> rfl
 
-theorem get_eq_default_of_le : ∀ k : ℕ {as : List α}, as.length ≤ k → get k as = default α
+theorem get_eq_default_of_le : ∀ (k : ℕ) {as : List α}, as.length ≤ k → get k as = default α
 | 0, [], h1 => rfl
 | 0, a :: as, h1 =>
   by 
@@ -123,7 +123,7 @@ theorem get_set {a : α} : ∀ {k : ℕ} {as : List α}, get k (as {k ↦ a}) = 
   by 
     cases as <;> simp [get_set]
 
-theorem eq_get_of_mem {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
+theorem eq_get_of_mem {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ (d : α), a = get n as
 | [], h =>
   by 
     cases h
@@ -215,7 +215,7 @@ theorem get_map' {f : α → β} {n : ℕ} {as : List α} : f (default α) = def
       apply h2
 
 theorem forall_val_of_forall_mem {as : List α} {p : α → Prop} :
-  p (default α) → (∀ x _ : x ∈ as, p x) → ∀ n, p (get n as) :=
+  p (default α) → (∀ x (_ : x ∈ as), p x) → ∀ n, p (get n as) :=
   by 
     intro h1 h2 n 
     byCases' h3 : n < as.length
@@ -274,13 +274,13 @@ theorem length_neg [Neg α] (as : List α) : (neg as).length = as.length :=
 
 variable[Inhabited α][Inhabited β]
 
-theorem nil_pointwise {f : α → β → γ} : ∀ bs : List β, pointwise f [] bs = bs.map (f$ default α)
+theorem nil_pointwise {f : α → β → γ} : ∀ (bs : List β), pointwise f [] bs = bs.map (f$ default α)
 | [] => rfl
 | b :: bs =>
   by 
     simp only [nil_pointwise bs, pointwise, eq_self_iff_true, and_selfₓ, map]
 
-theorem pointwise_nil {f : α → β → γ} : ∀ as : List α, pointwise f as [] = as.map fun a => f a$ default β
+theorem pointwise_nil {f : α → β → γ} : ∀ (as : List α), pointwise f as [] = as.map fun a => f a$ default β
 | [] => rfl
 | a :: as =>
   by 

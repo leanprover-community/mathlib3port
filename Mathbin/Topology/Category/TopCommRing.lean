@@ -23,6 +23,9 @@ structure TopCommRing where
 
 namespace TopCommRing
 
+instance  : Inhabited TopCommRing :=
+  ⟨⟨PUnit⟩⟩
+
 instance  : CoeSort TopCommRing (Type u) :=
   ⟨TopCommRing.α⟩
 

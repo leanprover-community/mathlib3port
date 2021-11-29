@@ -146,7 +146,7 @@ theorem LinearIsometry.re_apply_eq_re {f : ℂ →ₗᵢ[ℝ] ℂ} (h : f 1 = 1)
     intro z 
     apply LinearIsometry.im_apply_eq_im h
 
--- error in Analysis.Complex.Isometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Complex.Isometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem linear_isometry_complex_aux
 {f : «expr ≃ₗᵢ[ ] »(exprℂ(), exprℝ(), exprℂ())}
 (h : «expr = »(f 1, 1)) : «expr ∨ »(«expr = »(f, linear_isometry_equiv.refl exprℝ() exprℂ()), «expr = »(f, conj_lie)) :=

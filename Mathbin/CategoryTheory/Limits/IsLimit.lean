@@ -49,11 +49,11 @@ See https://stacks.math.columbia.edu/tag/002E.
   -/
 @[nolint has_inhabited_instance]
 structure is_limit(t : cone F) where 
-  lift : ∀ s : cone F, s.X ⟶ t.X 
-  fac' : ∀ s : cone F j : J, lift s ≫ t.π.app j = s.π.app j :=  by 
+  lift : ∀ (s : cone F), s.X ⟶ t.X 
+  fac' : ∀ (s : cone F) (j : J), lift s ≫ t.π.app j = s.π.app j :=  by 
   runTac 
     obviously 
-  uniq' : ∀ s : cone F m : s.X ⟶ t.X w : ∀ j : J, m ≫ t.π.app j = s.π.app j, m = lift s :=  by 
+  uniq' : ∀ (s : cone F) (m : s.X ⟶ t.X) (w : ∀ (j : J), m ≫ t.π.app j = s.π.app j), m = lift s :=  by 
   runTac 
     obviously
 
@@ -99,7 +99,7 @@ providing a morphism of cones rather than a morphism between the cone points
 and separately the factorisation condition.
 -/
 @[simps]
-def mk_cone_morphism {t : cone F} (lift : ∀ s : cone F, s ⟶ t) (uniq' : ∀ s : cone F m : s ⟶ t, m = lift s) :
+def mk_cone_morphism {t : cone F} (lift : ∀ (s : cone F), s ⟶ t) (uniq' : ∀ (s : cone F) (m : s ⟶ t), m = lift s) :
   is_limit t :=
   { lift := fun s => (lift s).Hom,
     uniq' :=
@@ -358,7 +358,7 @@ Another, more explicit, formulation of the universal property of a limit cone.
 See also `hom_iso`.
 -/
 def hom_iso' (h : is_limit t) (W : C) :
-  (W ⟶ t.X : Type v) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j'} f : j ⟶ j', p j ≫ F.map f = p j' } :=
+  (W ⟶ t.X : Type v) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j'} (f : j ⟶ j'), p j ≫ F.map f = p j' } :=
   h.hom_iso W ≪≫
     { Hom :=
         fun π =>
@@ -380,7 +380,7 @@ def hom_iso' (h : is_limit t) (W : C) :
   then it suffices to check that the induced maps for the image of t
   can be lifted to maps of C. -/
 def of_faithful {t : cone F} {D : Type u'} [category.{v} D] (G : C ⥤ D) [faithful G] (ht : is_limit (G.map_cone t))
-  (lift : ∀ s : cone F, s.X ⟶ t.X) (h : ∀ s, G.map (lift s) = ht.lift (G.map_cone s)) : is_limit t :=
+  (lift : ∀ (s : cone F), s.X ⟶ t.X) (h : ∀ s, G.map (lift s) = ht.lift (G.map_cone s)) : is_limit t :=
   { lift,
     fac' :=
       fun s j =>
@@ -510,11 +510,11 @@ See https://stacks.math.columbia.edu/tag/002F.
 -/
 @[nolint has_inhabited_instance]
 structure is_colimit(t : cocone F) where 
-  desc : ∀ s : cocone F, t.X ⟶ s.X 
-  fac' : ∀ s : cocone F j : J, t.ι.app j ≫ desc s = s.ι.app j :=  by 
+  desc : ∀ (s : cocone F), t.X ⟶ s.X 
+  fac' : ∀ (s : cocone F) (j : J), t.ι.app j ≫ desc s = s.ι.app j :=  by 
   runTac 
     obviously 
-  uniq' : ∀ s : cocone F m : t.X ⟶ s.X w : ∀ j : J, t.ι.app j ≫ m = s.ι.app j, m = desc s :=  by 
+  uniq' : ∀ (s : cocone F) (m : t.X ⟶ s.X) (w : ∀ (j : J), t.ι.app j ≫ m = s.ι.app j), m = desc s :=  by 
   runTac 
     obviously
 
@@ -561,8 +561,8 @@ providing a morphism of cocones rather than a morphism between the cocone points
 and separately the factorisation condition.
 -/
 @[simps]
-def mk_cocone_morphism {t : cocone F} (desc : ∀ s : cocone F, t ⟶ s) (uniq' : ∀ s : cocone F m : t ⟶ s, m = desc s) :
-  is_colimit t :=
+def mk_cocone_morphism {t : cocone F} (desc : ∀ (s : cocone F), t ⟶ s)
+  (uniq' : ∀ (s : cocone F) (m : t ⟶ s), m = desc s) : is_colimit t :=
   { desc := fun s => (desc s).Hom,
     uniq' :=
       fun s m w =>
@@ -830,7 +830,7 @@ Another, more explicit, formulation of the universal property of a colimit cocon
 See also `hom_iso`.
 -/
 def hom_iso' (h : is_colimit t) (W : C) :
-  (t.X ⟶ W : Type v) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j' : J} f : j ⟶ j', F.map f ≫ p j' = p j } :=
+  (t.X ⟶ W : Type v) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j' : J} (f : j ⟶ j'), F.map f ≫ p j' = p j } :=
   h.hom_iso W ≪≫
     { Hom :=
         fun ι =>
@@ -852,7 +852,7 @@ def hom_iso' (h : is_colimit t) (W : C) :
   then it suffices to check that the induced maps for the image of t
   can be lifted to maps of C. -/
 def of_faithful {t : cocone F} {D : Type u'} [category.{v} D] (G : C ⥤ D) [faithful G]
-  (ht : is_colimit (G.map_cocone t)) (desc : ∀ s : cocone F, t.X ⟶ s.X)
+  (ht : is_colimit (G.map_cocone t)) (desc : ∀ (s : cocone F), t.X ⟶ s.X)
   (h : ∀ s, G.map (desc s) = ht.desc (G.map_cocone s)) : is_colimit t :=
   { desc,
     fac' :=

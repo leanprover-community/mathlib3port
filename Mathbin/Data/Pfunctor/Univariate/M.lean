@@ -36,7 +36,7 @@ protected def cofix_a.default [Inhabited F.A] : ∀ n, cofix_a F n
 instance  [Inhabited F.A] {n} : Inhabited (cofix_a F n) :=
   ⟨cofix_a.default F n⟩
 
-theorem cofix_a_eq_zero : ∀ x y : cofix_a F 0, x = y
+theorem cofix_a_eq_zero : ∀ (x y : cofix_a F 0), x = y
 | cofix_a.continue, cofix_a.continue => rfl
 
 variable{F}
@@ -49,7 +49,7 @@ def head' : ∀ {n}, cofix_a F (succ n) → F.A
 | n, cofix_a.intro i _ => i
 
 /-- for a non-trivial approximation, return all the subtrees of the root -/
-def children' : ∀ {n} x : cofix_a F (succ n), F.B (head' x) → cofix_a F n
+def children' : ∀ {n} (x : cofix_a F (succ n)), F.B (head' x) → cofix_a F n
 | n, cofix_a.intro a f => f
 
 theorem approx_eta {n : ℕ} (x : cofix_a F (n+1)) : x = cofix_a.intro (head' x) (children' x) :=
@@ -61,7 +61,7 @@ that state they both contain the same data until one of them is truncated -/
 inductive agree : ∀ {n : ℕ}, cofix_a F n → cofix_a F (n+1) → Prop
   | continue (x : cofix_a F 0) (y : cofix_a F 1) : agree x y
   | intro {n} {a} (x : F.B a → cofix_a F n) (x' : F.B a → cofix_a F (n+1)) :
-  (∀ i : F.B a, agree (x i) (x' i)) → agree (cofix_a.intro a x) (cofix_a.intro a x')
+  (∀ (i : F.B a), agree (x i) (x' i)) → agree (cofix_a.intro a x) (cofix_a.intro a x')
 
 /--
 Given an infinite series of approximations `approx`,
@@ -106,7 +106,7 @@ variable(f : X → F.obj X)
 
 /-- `s_corec f i n` creates an approximation of height `n`
 of the final coalgebra of `f` -/
-def s_corec : ∀ i : X n, cofix_a F n
+def s_corec : ∀ (i : X) n, cofix_a F n
 | _, 0 => cofix_a.continue
 | j, succ n => cofix_a.intro (f j).1 fun i => s_corec ((f j).2 i) _
 
@@ -192,7 +192,7 @@ instance M_intl.inhabited [Inhabited F.A] : Inhabited (M_intl F) :=
 
 namespace M
 
-theorem ext' (x y : M F) (H : ∀ i : ℕ, x.approx i = y.approx i) : x = y :=
+theorem ext' (x y : M F) (H : ∀ (i : ℕ), x.approx i = y.approx i) : x = y :=
   by 
     cases x 
     cases y 
@@ -246,10 +246,10 @@ def ichildren [Inhabited (M F)] [DecidableEq F.A] (i : F.Idx) (x : M F) : M F :=
 theorem head_succ (n m : ℕ) (x : M F) : head' (x.approx (succ n)) = head' (x.approx (succ m)) :=
   head_succ' n m _ x.consistent
 
-theorem head_eq_head' : ∀ x : M F n : ℕ, head x = head' (x.approx$ n+1)
+theorem head_eq_head' : ∀ (x : M F) (n : ℕ), head x = head' (x.approx$ n+1)
 | ⟨x, h⟩, n => head_succ' _ _ _ h
 
-theorem head'_eq_head : ∀ x : M F n : ℕ, head' (x.approx$ n+1) = head x
+theorem head'_eq_head : ∀ (x : M F) (n : ℕ), head' (x.approx$ n+1) = head x
 | ⟨x, h⟩, n => head_succ' _ _ _ h
 
 theorem truncate_approx (x : M F) (n : ℕ) : truncate (x.approx$ n+1) = x.approx n :=
@@ -343,7 +343,7 @@ suffices r (M.mk (dest x)), by { haveI [] [] [":=", expr classical.prop_decidabl
 f _
 
 /-- destructor for M-types -/
-protected def cases_on {r : M F → Sort w} (x : M F) (f : ∀ x : F.obj$ M F, r (M.mk x)) : r x :=
+protected def cases_on {r : M F → Sort w} (x : M F) (f : ∀ (x : F.obj$ M F), r (M.mk x)) : r x :=
   M.cases f x
 
 /-- destructor for M-types, similar to `cases_on` but also
@@ -399,7 +399,7 @@ begin
 end
 
 @[simp]
-theorem cases_mk {r : M F → Sort _} (x : F.obj$ M F) (f : ∀ x : F.obj$ M F, r (M.mk x)) :
+theorem cases_mk {r : M F → Sort _} (x : F.obj$ M F) (f : ∀ (x : F.obj$ M F), r (M.mk x)) :
   Pfunctor.M.cases f (M.mk x) = f x :=
   by 
     dsimp only [M.mk, Pfunctor.M.cases, dest, head, approx.s_mk, head']
@@ -416,12 +416,12 @@ theorem cases_mk {r : M F → Sort _} (x : F.obj$ M F) (f : ∀ x : F.obj$ M F, 
     rw [h]
 
 @[simp]
-theorem cases_on_mk {r : M F → Sort _} (x : F.obj$ M F) (f : ∀ x : F.obj$ M F, r (M.mk x)) :
+theorem cases_on_mk {r : M F → Sort _} (x : F.obj$ M F) (f : ∀ (x : F.obj$ M F), r (M.mk x)) :
   Pfunctor.M.casesOn (M.mk x) f = f x :=
   cases_mk x f
 
 @[simp]
-theorem cases_on_mk' {r : M F → Sort _} {a} (x : F.B a → M F) (f : ∀ a f : F.B a → M F, r (M.mk ⟨a, f⟩)) :
+theorem cases_on_mk' {r : M F → Sort _} {a} (x : F.B a → M F) (f : ∀ a (f : F.B a → M F), r (M.mk ⟨a, f⟩)) :
   Pfunctor.M.casesOn' (M.mk ⟨a, x⟩) f = f a x :=
   cases_mk ⟨_, x⟩ _
 
@@ -479,10 +479,10 @@ def isubtree [DecidableEq F.A] [Inhabited (M F)] : path F → M F → M F
       else default (M F) :
       (fun x => M F) (M.mk ⟨a', f⟩))
 
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- similar to `isubtree` but returns the data at the end of the path instead
-of the whole subtree -/
-def iselect [DecidableEq F.A] [Inhabited (M F)] (ps : path F) : M F → F.A :=
-  fun x : M F => head$ isubtree ps x
+of the whole subtree -/ def iselect [decidable_eq F.A] [inhabited (M F)] (ps : path F) : M F → F.A :=
+λ x : M F, «expr $ »(head, isubtree ps x)
 
 theorem iselect_eq_default [DecidableEq F.A] [Inhabited (M F)] (ps : path F) (x : M F) (h : ¬is_path ps x) :
   iselect ps x = head (default$ M F) :=
@@ -649,7 +649,7 @@ local infixl:50 " ~ " => R
 infinite tree-like structures -/
 structure is_bisimulation : Prop where 
   head : ∀ {a a'} {f f'}, M.mk ⟨a, f⟩ ~ M.mk ⟨a', f'⟩ → a = a' 
-  tail : ∀ {a} {f f' : F.B a → M F}, M.mk ⟨a, f⟩ ~ M.mk ⟨a, f'⟩ → ∀ i : F.B a, f i ~ f' i
+  tail : ∀ {a} {f f' : F.B a → M F}, M.mk ⟨a, f⟩ ~ M.mk ⟨a, f'⟩ → ∀ (i : F.B a), f i ~ f' i
 
 -- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem nth_of_bisim
@@ -740,17 +740,20 @@ begin
     apply [expr h₂] }
 end
 
-theorem bisim' {α : Type _} (Q : α → Prop) (u v : α → M P)
-  (h :
-    ∀ x, Q x → ∃ a f f', M.dest (u x) = ⟨a, f⟩ ∧ M.dest (v x) = ⟨a, f'⟩ ∧ ∀ i, ∃ x', Q x' ∧ f i = u x' ∧ f' i = v x') :
-  ∀ x, Q x → u x = v x :=
-  fun x Qx =>
-    let R := fun w z : M P => ∃ x', Q x' ∧ w = u x' ∧ z = v x'
-    @M.bisim P R
-      (fun x y ⟨x', Qx', xeq, yeq⟩ =>
-        let ⟨a, f, f', ux'eq, vx'eq, h'⟩ := h x' Qx'
-        ⟨a, f, f', xeq.symm ▸ ux'eq, yeq.symm ▸ vx'eq, h'⟩)
-      _ _ ⟨x, Qx, rfl, rfl⟩
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem bisim'
+{α : Type*}
+(Q : α → exprProp())
+(u v : α → M P)
+(h : ∀
+ x, Q x → «expr∃ , »((a
+   f
+   f'), «expr ∧ »(«expr = »(M.dest (u x), ⟨a, f⟩), «expr ∧ »(«expr = »(M.dest (v x), ⟨a, f'⟩), ∀
+    i, «expr∃ , »((x'), «expr ∧ »(Q x', «expr ∧ »(«expr = »(f i, u x'), «expr = »(f' i, v x')))))))) : ∀
+x, Q x → «expr = »(u x, v x) :=
+λ x Qx, let R := λ w z : M P, «expr∃ , »((x'), «expr ∧ »(Q x', «expr ∧ »(«expr = »(w, u x'), «expr = »(z, v x')))) in
+@M.bisim P R (λ (x y) ⟨x', Qx', xeq, yeq⟩, let ⟨a, f, f', ux'eq, vx'eq, h'⟩ := h x' Qx' in
+ ⟨a, f, f', «expr ▸ »(xeq.symm, ux'eq), «expr ▸ »(yeq.symm, vx'eq), h'⟩) _ _ ⟨x, Qx, rfl, rfl⟩
 
 theorem bisim_equiv (R : M P → M P → Prop)
   (h : ∀ x y, R x y → ∃ a f f', M.dest x = ⟨a, f⟩ ∧ M.dest y = ⟨a, f'⟩ ∧ ∀ i, R (f i) (f' i)) : ∀ x y, R x y → x = y :=
@@ -787,16 +790,14 @@ in the form of a recursive call -/
 def corec₁ {α : Type u} (F : ∀ X, (α → X) → α → P.obj X) : α → M P :=
   M.corec (F _ id)
 
+-- error in Data.Pfunctor.Univariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- corecursor where it is possible to return a fully formed value at any point
 of the computation -/
-def corec' {α : Type u} (F : ∀ {X : Type u}, (α → X) → α → Sum (M P) (P.obj X)) (x : α) : M P :=
-  corec₁
-    (fun X rec a : Sum (M P) α =>
-      let y := a >>= F (rec ∘ Sum.inr)
-      match y with 
-      | Sum.inr y => y
-      | Sum.inl y => (rec ∘ Sum.inl) <$> M.dest y)
-    (@Sum.inr (M P) _ x)
+def corec' {α : Type u} (F : ∀ {X : Type u}, (α → X) → α → «expr ⊕ »(M P, P.obj X)) (x : α) : M P :=
+corec₁ (λ (X rec) (a : «expr ⊕ »(M P, α)), let y := «expr >>= »(a, F «expr ∘ »(rec, sum.inr)) in
+ match y with
+ | sum.inr y := y
+ | sum.inl y := «expr <$> »(«expr ∘ »(rec, sum.inl), M.dest y) end) (@sum.inr (M P) _ x)
 
 end M
 

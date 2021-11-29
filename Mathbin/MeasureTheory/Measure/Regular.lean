@@ -139,7 +139,7 @@ of measure greater than `r`.
 This definition is used to prove some facts about regular and weakly regular measures without
 repeating the proofs. -/
 def inner_regular {α} {m : MeasurableSpace α} (μ : Measureₓ α) (p q : Set α → Prop) :=
-  ∀ ⦃U⦄, q U → ∀ r _ : r < μ U, ∃ (K : _)(_ : K ⊆ U), p K ∧ r < μ K
+  ∀ ⦃U⦄, q U → ∀ r (_ : r < μ U), ∃ (K : _)(_ : K ⊆ U), p K ∧ r < μ K
 
 namespace InnerRegular
 
@@ -195,7 +195,7 @@ This definition implies the same equality for any (not necessarily measurable) s
 `set.measure_eq_infi_is_open`. -/
 @[protectProj]
 class outer_regular(μ : Measureₓ α) : Prop where 
-  OuterRegular : ∀ ⦃A : Set α⦄, MeasurableSet A → ∀ r _ : r > μ A, ∃ (U : _)(_ : U ⊇ A), IsOpen U ∧ μ U < r
+  OuterRegular : ∀ ⦃A : Set α⦄, MeasurableSet A → ∀ r (_ : r > μ A), ∃ (U : _)(_ : U ⊇ A), IsOpen U ∧ μ U < r
 
 /-- A measure `μ` is regular if
   - it is finite on all compact sets;

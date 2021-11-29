@@ -59,7 +59,7 @@ and `x, y ∈ s`. -/
 structure ConvexCone[AddCommMonoidₓ E][HasScalar 𝕜 E] where 
   Carrier : Set E 
   smul_mem' : ∀ ⦃c : 𝕜⦄, 0 < c → ∀ ⦃x : E⦄, x ∈ carrier → c • x ∈ carrier 
-  add_mem' : ∀ ⦃x⦄ hx : x ∈ carrier ⦃y⦄ hy : y ∈ carrier, (x+y) ∈ carrier
+  add_mem' : ∀ ⦃x⦄ (hx : x ∈ carrier) ⦃y⦄ (hy : y ∈ carrier), (x+y) ∈ carrier
 
 end Definitions
 
@@ -144,7 +144,7 @@ instance  : HasInfₓ (ConvexCone 𝕜 E) :=
                 (by 
                   apply mem_bInter_iff.1 hy s hs)⟩⟩
 
-theorem mem_Inf {x : E} {S : Set (ConvexCone 𝕜 E)} : x ∈ Inf S ↔ ∀ s _ : s ∈ S, x ∈ s :=
+theorem mem_Inf {x : E} {S : Set (ConvexCone 𝕜 E)} : x ∈ Inf S ↔ ∀ s (_ : s ∈ S), x ∈ s :=
   mem_bInter_iff
 
 variable(𝕜)
@@ -164,7 +164,7 @@ theorem mem_top (x : E) : x ∈ (⊤ : ConvexCone 𝕜 E) :=
 instance  : CompleteLattice (ConvexCone 𝕜 E) :=
   { PartialOrderₓ.lift (coeₓ : ConvexCone 𝕜 E → Set E) fun a b => ext' with le := · ≤ ·, lt := · < ·, bot := ⊥,
     bot_le := fun S x => False.elim, top := ⊤, le_top := fun S x hx => mem_top 𝕜 x, inf := ·⊓·, inf := HasInfₓ.inf,
-    sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x }, sup := fun s => Inf { T | ∀ S _ : S ∈ s, S ≤ T },
+    sup := fun a b => Inf { x | a ≤ x ∧ b ≤ x }, sup := fun s => Inf { T | ∀ S (_ : S ∈ s), S ≤ T },
     le_sup_left := fun a b => fun x hx => mem_Inf.2$ fun s hs => hs.1 hx,
     le_sup_right := fun a b => fun x hx => mem_Inf.2$ fun s hs => hs.2 hx,
     sup_le := fun a b c ha hb x hx => mem_Inf.1 hx c ⟨ha, hb⟩, le_inf := fun a b c ha hb x hx => ⟨ha hx, hb hx⟩,
@@ -260,7 +260,7 @@ variable[OrderedAddCommGroup E][Module 𝕜 E]
 Constructs an ordered module given an `ordered_add_comm_group`, a cone, and a proof that
 the order relation is the one defined by the cone.
 -/
-theorem to_ordered_smul (S : ConvexCone 𝕜 E) (h : ∀ x y : E, x ≤ y ↔ y - x ∈ S) : OrderedSmul 𝕜 E :=
+theorem to_ordered_smul (S : ConvexCone 𝕜 E) (h : ∀ (x y : E), x ≤ y ↔ y - x ∈ S) : OrderedSmul 𝕜 E :=
   OrderedSmul.mk'
     (by 
       intro x y z xy hz 
@@ -309,7 +309,7 @@ def flat : Prop :=
 
 /-- A convex cone is salient if it doesn't include `x` and `-x` for any nonzero `x`. -/
 def salient : Prop :=
-  ∀ x _ : x ∈ S, x ≠ (0 : E) → -x ∉ S
+  ∀ x (_ : x ∈ S), x ≠ (0 : E) → -x ∉ S
 
 theorem salient_iff_not_flat (S : ConvexCone 𝕜 E) : S.salient ↔ ¬S.flat :=
   by 
@@ -384,18 +384,18 @@ section PositiveCone
 
 variable(𝕜 E)[OrderedSemiring 𝕜][OrderedAddCommGroup E][Module 𝕜 E][OrderedSmul 𝕜 E]
 
+-- error in Analysis.Convex.Cone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The positive cone is the convex cone formed by the set of nonnegative elements in an ordered
 module.
--/
-def positive_cone : ConvexCone 𝕜 E :=
-  { Carrier := { x | 0 ≤ x },
-    smul_mem' :=
-      by 
-        rintro c hc x (hx : _ ≤ _)
-        rw [←smul_zero c]
-        exact smul_le_smul_of_nonneg hx hc.le,
-    add_mem' := fun x hx : _ ≤ _ y hy : _ ≤ _ => add_nonneg hx hy }
+-/ def positive_cone : convex_cone 𝕜 E :=
+{ carrier := {x | «expr ≤ »(0, x)},
+  smul_mem' := begin
+    rintro [ident c, ident hc, ident x, "(", ident hx, ":", expr «expr ≤ »(_, _), ")"],
+    rw ["<-", expr smul_zero c] [],
+    exact [expr smul_le_smul_of_nonneg hx hc.le]
+  end,
+  add_mem' := λ (x) (hx : «expr ≤ »(_, _)) (y) (hy : «expr ≤ »(_, _)), add_nonneg hx hy }
 
 /-- The positive cone of an ordered module is always salient. -/
 theorem salient_positive_cone : salient (positive_cone 𝕜 E) :=
@@ -612,9 +612,9 @@ end riesz_extension
 and a linear `f : p → ℝ`, assume that `f` is nonnegative on `p ∩ s` and `p + s = E`. Then
 there exists a globally defined linear function `g : E → ℝ` that agrees with `f` on `p`,
 and is nonnegative on `s`. -/
-theorem riesz_extension (s : ConvexCone ℝ E) (f : LinearPmap ℝ E ℝ) (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
+theorem riesz_extension (s : ConvexCone ℝ E) (f : LinearPmap ℝ E ℝ) (nonneg : ∀ (x : f.domain), (x : E) ∈ s → 0 ≤ f x)
   (dense : ∀ y, ∃ x : f.domain, ((x : E)+y) ∈ s) :
-  ∃ g : E →ₗ[ℝ] ℝ, (∀ x : f.domain, g x = f x) ∧ ∀ x _ : x ∈ s, 0 ≤ g x :=
+  ∃ g : E →ₗ[ℝ] ℝ, (∀ (x : f.domain), g x = f x) ∧ ∀ x (_ : x ∈ s), 0 ≤ g x :=
   by 
     rcases RieszExtension.exists_top s f nonneg Dense with ⟨⟨g_dom, g⟩, ⟨hpg, hfg⟩, htop, hgs⟩
     clear hpg 
@@ -677,7 +677,7 @@ open_locale RealInnerProductSpace
 /-- The dual cone is the cone consisting of all points `y` such that for
 all points `x` in a given set `0 ≤ ⟪ x, y ⟫`. -/
 noncomputable def Set.innerDualCone (s : Set H) : ConvexCone ℝ H :=
-  { Carrier := { y | ∀ x _ : x ∈ s, 0 ≤ ⟪x, y⟫ },
+  { Carrier := { y | ∀ x (_ : x ∈ s), 0 ≤ ⟪x, y⟫ },
     smul_mem' :=
       fun c hc y hy x hx =>
         by 
@@ -689,7 +689,7 @@ noncomputable def Set.innerDualCone (s : Set H) : ConvexCone ℝ H :=
           rw [inner_add_right]
           exact add_nonneg (hu x hx) (hv x hx) }
 
-theorem mem_inner_dual_cone (y : H) (s : Set H) : y ∈ s.inner_dual_cone ↔ ∀ x _ : x ∈ s, 0 ≤ ⟪x, y⟫ :=
+theorem mem_inner_dual_cone (y : H) (s : Set H) : y ∈ s.inner_dual_cone ↔ ∀ x (_ : x ∈ s), 0 ≤ ⟪x, y⟫ :=
   by 
     rfl
 

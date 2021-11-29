@@ -26,30 +26,36 @@ has a limit in `s` (formally, it satisfies `f ≤ 𝓝 x` for some `x ∈ s`). -
 def IsComplete (s : Set α) :=
   ∀ f, Cauchy f → f ≤ 𝓟 s → ∃ (x : _)(_ : x ∈ s), f ≤ 𝓝 x
 
-theorem Filter.HasBasis.cauchy_iff {p : β → Prop} {s : β → Set (α × α)} (h : (𝓤 α).HasBasis p s) {f : Filter α} :
-  Cauchy f ↔ ne_bot f ∧ ∀ i, p i → ∃ (t : _)(_ : t ∈ f), ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s i :=
+theorem Filter.HasBasis.cauchy_iff {ι} {p : ι → Prop} {s : ι → Set (α × α)} (h : (𝓤 α).HasBasis p s) {f : Filter α} :
+  Cauchy f ↔ ne_bot f ∧ ∀ i, p i → ∃ (t : _)(_ : t ∈ f), ∀ x y (_ : x ∈ t) (_ : y ∈ t), (x, y) ∈ s i :=
   and_congr Iff.rfl$
     (f.basis_sets.prod_self.le_basis_iff h).trans$
       by 
         simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id]
 
 theorem cauchy_iff' {f : Filter α} :
-  Cauchy f ↔ ne_bot f ∧ ∀ s _ : s ∈ 𝓤 α, ∃ (t : _)(_ : t ∈ f), ∀ x y _ : x ∈ t _ : y ∈ t, (x, y) ∈ s :=
+  Cauchy f ↔ ne_bot f ∧ ∀ s (_ : s ∈ 𝓤 α), ∃ (t : _)(_ : t ∈ f), ∀ x y (_ : x ∈ t) (_ : y ∈ t), (x, y) ∈ s :=
   (𝓤 α).basis_sets.cauchy_iff
 
-theorem cauchy_iff {f : Filter α} : Cauchy f ↔ ne_bot f ∧ ∀ s _ : s ∈ 𝓤 α, ∃ (t : _)(_ : t ∈ f), Set.Prod t t ⊆ s :=
-  (𝓤 α).basis_sets.cauchy_iff.trans$
+theorem cauchy_iff {f : Filter α} : Cauchy f ↔ ne_bot f ∧ ∀ s (_ : s ∈ 𝓤 α), ∃ (t : _)(_ : t ∈ f), Set.Prod t t ⊆ s :=
+  cauchy_iff'.trans$
     by 
       simp only [subset_def, Prod.forall, mem_prod_eq, and_imp, id]
 
-theorem cauchy_map_iff {l : Filter β} {f : β → α} :
-  Cauchy (l.map f) ↔ ne_bot l ∧ tendsto (fun p : β × β => (f p.1, f p.2)) (l ×ᶠ l) (𝓤 α) :=
-  by 
-    rw [Cauchy, map_ne_bot_iff, prod_map_map_eq, tendsto]
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy_map_iff
+{l : filter β}
+{f : β → α} : «expr ↔ »(cauchy (l.map f), «expr ∧ »(ne_bot l, tendsto (λ
+   p : «expr × »(β, β), (f p.1, f p.2)) «expr ×ᶠ »(l, l) (expr𝓤() α))) :=
+by rw ["[", expr cauchy, ",", expr map_ne_bot_iff, ",", expr prod_map_map_eq, ",", expr tendsto, "]"] []
 
-theorem cauchy_map_iff' {l : Filter β} [hl : ne_bot l] {f : β → α} :
-  Cauchy (l.map f) ↔ tendsto (fun p : β × β => (f p.1, f p.2)) (l ×ᶠ l) (𝓤 α) :=
-  cauchy_map_iff.trans$ and_iff_right hl
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy_map_iff'
+{l : filter β}
+[hl : ne_bot l]
+{f : β → α} : «expr ↔ »(cauchy (l.map f), tendsto (λ
+  p : «expr × »(β, β), (f p.1, f p.2)) «expr ×ᶠ »(l, l) (expr𝓤() α)) :=
+«expr $ »(cauchy_map_iff.trans, and_iff_right hl)
 
 theorem Cauchy.mono {f g : Filter α} [hg : ne_bot g] (h_c : Cauchy f) (h_le : g ≤ f) : Cauchy g :=
   ⟨hg, le_transₓ (Filter.prod_mono h_le h_le) h_c.right⟩
@@ -58,25 +64,7 @@ theorem Cauchy.mono' {f g : Filter α} (h_c : Cauchy f) (hg : ne_bot g) (h_le : 
   h_c.mono h_le
 
 theorem cauchy_nhds {a : α} : Cauchy (𝓝 a) :=
-  ⟨nhds_ne_bot,
-    calc
-      𝓝 a ×ᶠ 𝓝 a =
-        (𝓤 α).lift
-          fun s : Set (α × α) =>
-            (𝓤 α).lift' fun t : Set (α × α) => Set.Prod { y:α | (y, a) ∈ s } { y:α | (a, y) ∈ t } :=
-      nhds_nhds_eq_uniformity_uniformity_prod 
-      _ ≤ (𝓤 α).lift' fun s : Set (α × α) => CompRel s s :=
-      le_infi$
-        fun s =>
-          le_infi$
-            fun hs =>
-              infi_le_of_le s$
-                infi_le_of_le hs$
-                  infi_le_of_le s$
-                    infi_le_of_le hs$
-                      principal_mono.mpr$ fun ⟨x, y⟩ ⟨(hx : (x, a) ∈ s), (hy : (a, y) ∈ s)⟩ => ⟨a, hx, hy⟩
-      _ ≤ 𝓤 α := comp_le_uniformity
-      ⟩
+  ⟨nhds_ne_bot, nhds_prod_eq.symm.trans_le (nhds_le_uniformity a)⟩
 
 theorem cauchy_pure {a : α} : Cauchy (pure a) :=
   cauchy_nhds.mono (pure_le_nhds a)
@@ -96,7 +84,7 @@ theorem Cauchy.prod [UniformSpace β] {f : Filter α} {g : Filter β} (hf : Cauc
 one can choose a set `t ∈ f` of diameter `s` such that it contains a point `y`
 with `(x, y) ∈ s`, then `f` converges to `x`. -/
 theorem le_nhds_of_cauchy_adhp_aux {f : Filter α} {x : α}
-  (adhs : ∀ s _ : s ∈ 𝓤 α, ∃ (t : _)(_ : t ∈ f), Set.Prod t t ⊆ s ∧ ∃ y, (x, y) ∈ s ∧ y ∈ t) : f ≤ 𝓝 x :=
+  (adhs : ∀ s (_ : s ∈ 𝓤 α), ∃ (t : _)(_ : t ∈ f), Set.Prod t t ⊆ s ∧ ∃ y, (x, y) ∈ s ∧ y ∈ t) : f ≤ 𝓝 x :=
   by 
     intro s hs 
     rcases comp_mem_uniformity_sets (mem_nhds_uniformity_iff_right.1 hs) with ⟨U, U_mem, hU⟩
@@ -118,25 +106,42 @@ theorem le_nhds_of_cauchy_adhp {f : Filter α} {x : α} (hf : Cauchy f) (adhs : 
 theorem le_nhds_iff_adhp_of_cauchy {f : Filter α} {x : α} (hf : Cauchy f) : f ≤ 𝓝 x ↔ ClusterPt x f :=
   ⟨fun h => ClusterPt.of_le_nhds' h hf.1, le_nhds_of_cauchy_adhp hf⟩
 
-theorem Cauchy.map [UniformSpace β] {f : Filter α} {m : α → β} (hf : Cauchy f) (hm : UniformContinuous m) :
-  Cauchy (map m f) :=
-  ⟨hf.1.map _,
-    calc map m f ×ᶠ map m f = map (fun p : α × α => (m p.1, m p.2)) (f ×ᶠ f) := Filter.prod_map_map_eq 
-      _ ≤ map (fun p : α × α => (m p.1, m p.2)) (𝓤 α) := map_mono hf.right 
-      _ ≤ 𝓤 β := hm
-      ⟩
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy.map
+[uniform_space β]
+{f : filter α}
+{m : α → β}
+(hf : cauchy f)
+(hm : uniform_continuous m) : cauchy (map m f) :=
+⟨hf.1.map _, calc
+   «expr = »(«expr ×ᶠ »(map m f, map m f), map (λ
+     p : «expr × »(α, α), (m p.1, m p.2)) «expr ×ᶠ »(f, f)) : filter.prod_map_map_eq
+   «expr ≤ »(..., map (λ p : «expr × »(α, α), (m p.1, m p.2)) (expr𝓤() α)) : map_mono hf.right
+   «expr ≤ »(..., expr𝓤() β) : hm⟩
 
-theorem Cauchy.comap [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cauchy f)
-  (hm : comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) ≤ 𝓤 α) [ne_bot (comap m f)] : Cauchy (comap m f) :=
-  ⟨‹_›,
-    calc comap m f ×ᶠ comap m f = comap (fun p : α × α => (m p.1, m p.2)) (f ×ᶠ f) := Filter.prod_comap_comap_eq 
-      _ ≤ comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) := comap_mono hf.right 
-      _ ≤ 𝓤 α := hm
-      ⟩
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy.comap
+[uniform_space β]
+{f : filter β}
+{m : α → β}
+(hf : cauchy f)
+(hm : «expr ≤ »(comap (λ p : «expr × »(α, α), (m p.1, m p.2)) (expr𝓤() β), expr𝓤() α))
+[ne_bot (comap m f)] : cauchy (comap m f) :=
+⟨«expr‹ ›»(_), calc
+   «expr = »(«expr ×ᶠ »(comap m f, comap m f), comap (λ
+     p : «expr × »(α, α), (m p.1, m p.2)) «expr ×ᶠ »(f, f)) : filter.prod_comap_comap_eq
+   «expr ≤ »(..., comap (λ p : «expr × »(α, α), (m p.1, m p.2)) (expr𝓤() β)) : comap_mono hf.right
+   «expr ≤ »(..., expr𝓤() α) : hm⟩
 
-theorem Cauchy.comap' [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cauchy f)
-  (hm : comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) ≤ 𝓤 α) (hb : ne_bot (comap m f)) : Cauchy (comap m f) :=
-  hf.comap hm
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy.comap'
+[uniform_space β]
+{f : filter β}
+{m : α → β}
+(hf : cauchy f)
+(hm : «expr ≤ »(comap (λ p : «expr × »(α, α), (m p.1, m p.2)) (expr𝓤() β), expr𝓤() α))
+(hb : ne_bot (comap m f)) : cauchy (comap m f) :=
+hf.comap hm
 
 /-- Cauchy sequences. Usually defined on ℕ, but often it is also useful to say that a function
 defined on ℝ is Cauchy at +∞ to deduce convergence. Therefore, we define it in a type class that
@@ -172,8 +177,8 @@ theorem Filter.Tendsto.cauchy_seq [SemilatticeSup β] [Nonempty β] {f : β → 
   CauchySeq f :=
   hx.cauchy_map
 
-theorem cauchy_seq_const (x : α) : CauchySeq fun n : ℕ => x :=
-  tendsto_const_nhds.CauchySeq
+-- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy_seq_const (x : α) : cauchy_seq (λ n : exprℕ(), x) := tendsto_const_nhds.cauchy_seq
 
 theorem cauchy_seq_iff_tendsto [Nonempty β] [SemilatticeSup β] {u : β → α} :
   CauchySeq u ↔ tendsto (Prod.mapₓ u u) at_top (𝓤 α) :=
@@ -192,11 +197,12 @@ theorem CauchySeq.subseq_subseq_mem {V : ℕ → Set (α × α)} (hV : ∀ n, V 
     rw [cauchy_seq_iff_tendsto] at hu 
     exact ((hu.comp$ hf.prod_at_top hg).comp tendsto_at_top_diagonal).subseq_mem hV
 
-theorem cauchy_seq_iff' {u : ℕ → α} : CauchySeq u ↔ ∀ V _ : V ∈ 𝓤 α, ∀ᶠk in at_top, k ∈ Prod.mapₓ u u ⁻¹' V :=
+theorem cauchy_seq_iff' {u : ℕ → α} : CauchySeq u ↔ ∀ V (_ : V ∈ 𝓤 α), ∀ᶠk in at_top, k ∈ Prod.mapₓ u u ⁻¹' V :=
   by 
     simpa only [cauchy_seq_iff_tendsto]
 
-theorem cauchy_seq_iff {u : ℕ → α} : CauchySeq u ↔ ∀ V _ : V ∈ 𝓤 α, ∃ N, ∀ k _ : k ≥ N, ∀ l _ : l ≥ N, (u k, u l) ∈ V :=
+theorem cauchy_seq_iff {u : ℕ → α} :
+  CauchySeq u ↔ ∀ V (_ : V ∈ 𝓤 α), ∃ N, ∀ k (_ : k ≥ N), ∀ l (_ : l ≥ N), (u k, u l) ∈ V :=
   by 
     simp [cauchy_seq_iff', Filter.eventually_at_top_prod_self', prod_mapₓ]
 
@@ -258,7 +264,7 @@ theorem tendsto_nhds_of_cauchy_seq_of_subseq [SemilatticeSup β] {u : β → α}
 @[nolint ge_or_gt]
 theorem Filter.HasBasis.cauchy_seq_iff {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}
   {s : γ → Set (α × α)} (h : (𝓤 α).HasBasis p s) :
-  CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, (u m, u n) ∈ s i :=
+  CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ m n (_ : m ≥ N) (_ : n ≥ N), (u m, u n) ∈ s i :=
   by 
     rw [cauchy_seq_iff_tendsto, ←prod_at_top_at_top_eq]
     refine' (at_top_basis.prod_self.tendsto_iff h).trans _ 
@@ -266,7 +272,7 @@ theorem Filter.HasBasis.cauchy_seq_iff {γ} [Nonempty β] [SemilatticeSup β] {u
       and_imp, Prod.mapₓ]
 
 theorem Filter.HasBasis.cauchy_seq_iff' {γ} [Nonempty β] [SemilatticeSup β] {u : β → α} {p : γ → Prop}
-  {s : γ → Set (α × α)} (H : (𝓤 α).HasBasis p s) : CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ n _ : n ≥ N, (u n, u N) ∈ s i :=
+  {s : γ → Set (α × α)} (H : (𝓤 α).HasBasis p s) : CauchySeq u ↔ ∀ i, p i → ∃ N, ∀ n (_ : n ≥ N), (u n, u N) ∈ s i :=
   by 
     refine' H.cauchy_seq_iff.trans ⟨fun h i hi => _, fun h i hi => _⟩
     ·
@@ -281,7 +287,7 @@ theorem Filter.HasBasis.cauchy_seq_iff' {γ} [Nonempty β] [SemilatticeSup β] {
         exact hN n hn
 
 theorem cauchy_seq_of_controlled [SemilatticeSup β] [Nonempty β] (U : β → Set (α × α))
-  (hU : ∀ s _ : s ∈ 𝓤 α, ∃ n, U n ⊆ s) {f : β → α} (hf : ∀ {N m n : β}, N ≤ m → N ≤ n → (f m, f n) ∈ U N) :
+  (hU : ∀ s (_ : s ∈ 𝓤 α), ∃ n, U n ⊆ s) {f : β → α} (hf : ∀ {N m n : β}, N ≤ m → N ≤ n → (f m, f n) ∈ U N) :
   CauchySeq f :=
   cauchy_seq_iff_tendsto.2
     (by 
@@ -368,7 +374,7 @@ theorem IsClosed.is_complete [CompleteSpace α] {s : Set α} (h : IsClosed s) : 
 /-- A set `s` is totally bounded if for every entourage `d` there is a finite
   set of points `t` such that every element of `s` is `d`-near to some element of `t`. -/
 def TotallyBounded (s : Set α) : Prop :=
-  ∀ d _ : d ∈ 𝓤 α, ∃ t : Set α, finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), { x | (x, y) ∈ d }
+  ∀ d (_ : d ∈ 𝓤 α), ∃ t : Set α, finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), { x | (x, y) ∈ d }
 
 -- error in Topology.UniformSpace.Cauchy: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem totally_bounded_iff_subset
@@ -393,7 +399,7 @@ theorem totally_bounded_iff_subset
  ⟨t, ht⟩⟩
 
 theorem totally_bounded_of_forall_symm {s : Set α}
-  (h : ∀ V _ : V ∈ 𝓤 α, SymmetricRel V → ∃ t : Set α, finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), ball y V) :
+  (h : ∀ V (_ : V ∈ 𝓤 α), SymmetricRel V → ∃ t : Set α, finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), ball y V) :
   TotallyBounded s :=
   by 
     intro V V_in 
@@ -486,7 +492,7 @@ begin
 end
 
 theorem totally_bounded_iff_ultrafilter {s : Set α} :
-  TotallyBounded s ↔ ∀ f : Ultrafilter α, «expr↑ » f ≤ 𝓟 s → Cauchy (f : Filter α) :=
+  TotallyBounded s ↔ ∀ (f : Ultrafilter α), «expr↑ » f ≤ 𝓟 s → Cauchy (f : Filter α) :=
   by 
     refine' ⟨fun hs f => f.cauchy_of_totally_bounded hs, fun H => totally_bounded_iff_filter.2 _⟩
     intros f hf hfs 
@@ -535,7 +541,8 @@ that this is a Cauchy sequence. If this sequence converges to some `a`, then `f 
 
 namespace SequentiallyComplete
 
-variable{f : Filter α}(hf : Cauchy f){U : ℕ → Set (α × α)}(U_mem : ∀ n, U n ∈ 𝓤 α)(U_le : ∀ s _ : s ∈ 𝓤 α, ∃ n, U n ⊆ s)
+variable{f :
+    Filter α}(hf : Cauchy f){U : ℕ → Set (α × α)}(U_mem : ∀ n, U n ∈ 𝓤 α)(U_le : ∀ s (_ : s ∈ 𝓤 α), ∃ n, U n ⊆ s)
 
 open Set Finset
 
@@ -630,7 +637,7 @@ end
 
 /-- A sequentially complete uniform space with a countable basis of the uniformity filter is
 complete. -/
-theorem complete_of_cauchy_seq_tendsto (H' : ∀ u : ℕ → α, CauchySeq u → ∃ a, tendsto u at_top (𝓝 a)) :
+theorem complete_of_cauchy_seq_tendsto (H' : ∀ (u : ℕ → α), CauchySeq u → ∃ a, tendsto u at_top (𝓝 a)) :
   CompleteSpace α :=
   let ⟨U', U'_mono, hU'⟩ := (𝓤 α).exists_antitone_seq 
   complete_of_convergent_controlled_sequences U' (fun n => hU'.2 ⟨n, subset.refl _⟩)
@@ -653,7 +660,7 @@ theorem second_countable_of_separable [separable_space α] : second_countable_to
   by 
     rcases exists_countable_dense α with ⟨s, hsc, hsd⟩
     obtain
-      ⟨t : ℕ → Set (α × α), hto : ∀ i : ℕ, t i ∈ (𝓤 α).Sets ∧ IsOpen (t i) ∧ SymmetricRel (t i), h_basis :
+      ⟨t : ℕ → Set (α × α), hto : ∀ (i : ℕ), t i ∈ (𝓤 α).Sets ∧ IsOpen (t i) ∧ SymmetricRel (t i), h_basis :
         (𝓤 α).HasAntitoneBasis (fun _ => True) t⟩ :=
       (@uniformity_has_basis_open_symmetric α _).exists_antitone_subbasis 
     refine' ⟨⟨⋃(x : _)(_ : x ∈ s), range fun k => ball x (t k), hsc.bUnion fun x hx => countable_range _, _⟩⟩

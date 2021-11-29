@@ -20,7 +20,7 @@ namespace MvPolynomial
 
 variable{R : Type _}[CommRingₓ R][IsDomain R][Infinite R]
 
-private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x : Finₓ n → R, eval x p = 0) : p = 0 :=
+private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ (x : Finₓ n → R), eval x p = 0) : p = 0 :=
   by 
     (
       induction' n with n ih generalizing R)
@@ -78,9 +78,9 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Finₓ n) R} (h : ∀ x 
 
 /-- Two multivariate polynomials over an infinite integral domain are equal
 if they are equal upon evaluating them on an arbitrary assignment of the variables. -/
-theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, eval x p = eval x q) : p = q :=
+theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ (x : σ → R), eval x p = eval x q) : p = q :=
   by 
-    suffices  : ∀ p, (∀ x : σ → R, eval x p = 0) → p = 0
+    suffices  : ∀ p, (∀ (x : σ → R), eval x p = 0) → p = 0
     ·
       rw [←sub_eq_zero, this (p - q)]
       simp only [h, RingHom.map_sub, forall_const, sub_self]
@@ -96,7 +96,7 @@ theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, ev
     convert h (Function.extendₓ f x 0)
     simp only [eval, eval₂_hom_rename, Function.extend_compₓ hf]
 
-theorem funext_iff {σ : Type _} {p q : MvPolynomial σ R} : p = q ↔ ∀ x : σ → R, eval x p = eval x q :=
+theorem funext_iff {σ : Type _} {p q : MvPolynomial σ R} : p = q ↔ ∀ (x : σ → R), eval x p = eval x q :=
   ⟨by 
       rintro rfl <;> simp only [forall_const, eq_self_iff_true],
     funext⟩

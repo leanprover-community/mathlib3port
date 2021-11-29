@@ -111,7 +111,7 @@ theorem coe_to_continuous_map : «expr⇑ » γ.to_continuous_map = γ :=
 
 /-- Any function `φ : Π (a : α), path (x a) (y a)` can be seen as a function `α × I → X`. -/
 instance has_uncurry_path {X α : Type _} [TopologicalSpace X] {x y : α → X} :
-  has_uncurry (∀ a : α, Path (x a) (y a)) (α × I) X :=
+  has_uncurry (∀ (a : α), Path (x a) (y a)) (α × I) X :=
   ⟨fun φ p => φ p.1 p.2⟩
 
 /-- The constant path from a point to itself -/
@@ -229,26 +229,17 @@ theorem of_line_mem {f : ℝ → X} (hf : ContinuousOn f I) (h₀ : f 0 = x) (h�
 
 attribute [local simp] Iic_def
 
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Concatenation of two paths from `x` to `y` and from `y` to `z`, putting the first
-path on `[0, 1/2]` and the second one on `[1/2, 1]`. -/
-@[trans]
-def trans (γ : Path x y) (γ' : Path y z) : Path x z :=
-  { toFun := (fun t : ℝ => if t ≤ 1 / 2 then γ.extend (2*t) else γ'.extend ((2*t) - 1)) ∘ coeₓ,
-    continuous_to_fun :=
-      by 
-        refine'
-          (Continuous.if_le _ _ continuous_id continuous_const
-                (by 
-                  normNum)).comp
-            continuous_subtype_coe 
-        exacts[γ.continuous_extend.comp (continuous_const.mul continuous_id),
-          γ'.continuous_extend.comp ((continuous_const.mul continuous_id).sub continuous_const)],
-    source' :=
-      by 
-        normNum,
-    target' :=
-      by 
-        normNum }
+path on `[0, 1/2]` and the second one on `[1/2, 1]`. -/ @[trans] def trans (γ : path x y) (γ' : path y z) : path x z :=
+{ to_fun := «expr ∘ »(λ
+   t : exprℝ(), if «expr ≤ »(t, «expr / »(1, 2)) then γ.extend «expr * »(2, t) else γ'.extend «expr - »(«expr * »(2, t), 1), coe),
+  continuous_to_fun := begin
+    refine [expr (continuous.if_le _ _ continuous_id continuous_const (by norm_num [] [])).comp continuous_subtype_coe],
+    exacts ["[", expr γ.continuous_extend.comp (continuous_const.mul continuous_id), ",", expr γ'.continuous_extend.comp ((continuous_const.mul continuous_id).sub continuous_const), "]"]
+  end,
+  source' := by norm_num [] [],
+  target' := by norm_num [] [] }
 
 theorem trans_apply (γ : Path x y) (γ' : Path y z) (t : I) :
   (γ.trans γ') t =
@@ -403,16 +394,16 @@ theorem cast_coe (γ : Path x y) {x' y'} (hx : x' = x) (hy : y' = y) : (γ.cast 
 
 @[continuity]
 theorem symm_continuous_family {X ι : Type _} [TopologicalSpace X] [TopologicalSpace ι] {a b : ι → X}
-  (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous («expr↿ » γ)) : Continuous («expr↿ » fun t => (γ t).symm) :=
+  (γ : ∀ (t : ι), Path (a t) (b t)) (h : Continuous («expr↿ » γ)) : Continuous («expr↿ » fun t => (γ t).symm) :=
   h.comp (continuous_id.prod_map continuous_symm)
 
 @[continuity]
 theorem continuous_uncurry_extend_of_continuous_family {X ι : Type _} [TopologicalSpace X] [TopologicalSpace ι]
-  {a b : ι → X} (γ : ∀ t : ι, Path (a t) (b t)) (h : Continuous («expr↿ » γ)) :
+  {a b : ι → X} (γ : ∀ (t : ι), Path (a t) (b t)) (h : Continuous («expr↿ » γ)) :
   Continuous («expr↿ » fun t => (γ t).extend) :=
   h.comp (continuous_id.prod_map continuous_proj_Icc)
 
--- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[continuity #[]]
 theorem trans_continuous_family
 {X ι : Type*}
@@ -813,12 +804,12 @@ theorem is_path_connected_iff_eq : IsPathConnected F ↔ ∃ (x : _)(_ : x ∈ F
       intro y y_in 
       rwa [←h] at y_in
 
-theorem IsPathConnected.joined_in (h : IsPathConnected F) : ∀ x y _ : x ∈ F _ : y ∈ F, JoinedIn F x y :=
+theorem IsPathConnected.joined_in (h : IsPathConnected F) : ∀ x y (_ : x ∈ F) (_ : y ∈ F), JoinedIn F x y :=
   fun x y x_in y_in =>
     let ⟨b, b_in, hb⟩ := h
     (hb x_in).symm.trans (hb y_in)
 
-theorem is_path_connected_iff : IsPathConnected F ↔ F.nonempty ∧ ∀ x y _ : x ∈ F _ : y ∈ F, JoinedIn F x y :=
+theorem is_path_connected_iff : IsPathConnected F ↔ F.nonempty ∧ ∀ x y (_ : x ∈ F) (_ : y ∈ F), JoinedIn F x y :=
   ⟨fun h =>
       ⟨let ⟨b, b_in, hb⟩ := h
         ⟨b, b_in⟩,
@@ -953,7 +944,7 @@ theorem IsPathConnected.exists_path_through_family' {X : Type _} [TopologicalSpa
 joined by a continuous path. -/
 class PathConnectedSpace(X : Type _)[TopologicalSpace X] : Prop where 
   Nonempty : Nonempty X 
-  Joined : ∀ x y : X, Joined x y
+  Joined : ∀ (x y : X), Joined x y
 
 attribute [instance] PathConnectedSpace.nonempty
 
@@ -1060,10 +1051,14 @@ end PathConnectedSpace
 /-! ### Locally path connected spaces -/
 
 
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A topological space is locally path connected, at every point, path connected
 neighborhoods form a neighborhood basis. -/
-class LocPathConnectedSpace(X : Type _)[TopologicalSpace X] : Prop where 
-  path_connected_basis : ∀ x : X, (𝓝 x).HasBasis (fun s : Set X => s ∈ 𝓝 x ∧ IsPathConnected s) id
+class loc_path_connected_space
+(X : Type*)
+[topological_space X] : exprProp() :=
+  (path_connected_basis : ∀
+   x : X, (expr𝓝() x).has_basis (λ s : set X, «expr ∧ »(«expr ∈ »(s, expr𝓝() x), is_path_connected s)) id)
 
 export LocPathConnectedSpace(path_connected_basis)
 
@@ -1115,9 +1110,14 @@ theorem path_connected_space_iff_connected_space [LocPathConnectedSpace X] : Pat
         rcases H U U_in with ⟨z, hz, hz'⟩
         exact (hU.joined_in z y hz$ mem_of_mem_nhds U_in).Joined.mem_path_component hz'
 
-theorem path_connected_subset_basis [LocPathConnectedSpace X] {U : Set X} (h : IsOpen U) (hx : x ∈ U) :
-  (𝓝 x).HasBasis (fun s : Set X => s ∈ 𝓝 x ∧ IsPathConnected s ∧ s ⊆ U) id :=
-  (path_connected_basis x).has_basis_self_subset (IsOpen.mem_nhds h hx)
+-- error in Topology.PathConnected: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem path_connected_subset_basis
+[loc_path_connected_space X]
+{U : set X}
+(h : is_open U)
+(hx : «expr ∈ »(x, U)) : (expr𝓝() x).has_basis (λ
+ s : set X, «expr ∧ »(«expr ∈ »(s, expr𝓝() x), «expr ∧ »(is_path_connected s, «expr ⊆ »(s, U)))) id :=
+(path_connected_basis x).has_basis_self_subset (is_open.mem_nhds h hx)
 
 theorem loc_path_connected_of_is_open [LocPathConnectedSpace X] {U : Set X} (h : IsOpen U) : LocPathConnectedSpace U :=
   ⟨by 

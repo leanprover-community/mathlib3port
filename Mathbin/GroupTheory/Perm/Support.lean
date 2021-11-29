@@ -72,7 +72,7 @@ theorem disjoint_one_left (f : perm α) : Disjoint 1 f :=
 theorem disjoint_one_right (f : perm α) : Disjoint f 1 :=
   fun _ => Or.inr rfl
 
-theorem disjoint_iff_eq_or_eq : Disjoint f g ↔ ∀ x : α, f x = x ∨ g x = x :=
+theorem disjoint_iff_eq_or_eq : Disjoint f g ↔ ∀ (x : α), f x = x ∨ g x = x :=
   Iff.rfl
 
 @[simp]
@@ -113,7 +113,7 @@ theorem disjoint.mul_right (H1 : Disjoint f g) (H2 : Disjoint f h) : Disjoint f 
     rw [disjoint_comm]
     exact H1.symm.mul_left H2.symm
 
-theorem disjoint_prod_right (l : List (perm α)) (h : ∀ g _ : g ∈ l, Disjoint f g) : Disjoint f l.prod :=
+theorem disjoint_prod_right (l : List (perm α)) (h : ∀ g (_ : g ∈ l), Disjoint f g) : Disjoint f l.prod :=
   by 
     induction' l with g l ih
     ·
@@ -135,19 +135,19 @@ theorem nodup_of_pairwise_disjoint {l : List (perm α)} (h1 : (1 : perm α) ∉ 
       exact h1 h_mem 
     exact ext fun a => (or_selfₓ _).mp (h_disjoint a)
 
-theorem pow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ n : ℕ, (f ^ n) x = x
+theorem pow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ (n : ℕ), (f ^ n) x = x
 | 0 => rfl
 | n+1 =>
   by 
     rw [pow_succ'ₓ, mul_apply, hfx, pow_apply_eq_self_of_apply_eq_self]
 
-theorem zpow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ n : ℤ, (f ^ n) x = x
+theorem zpow_apply_eq_self_of_apply_eq_self {x : α} (hfx : f x = x) : ∀ (n : ℤ), (f ^ n) x = x
 | (n : ℕ) => pow_apply_eq_self_of_apply_eq_self hfx n
 | -[1+ n] =>
   by 
     rw [zpow_neg_succ_of_nat, inv_eq_iff_eq, pow_apply_eq_self_of_apply_eq_self hfx]
 
-theorem pow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ n : ℕ, (f ^ n) x = x ∨ (f ^ n) x = f x
+theorem pow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ (n : ℕ), (f ^ n) x = x ∨ (f ^ n) x = f x
 | 0 => Or.inl rfl
 | n+1 =>
   (pow_apply_eq_of_apply_apply_eq_self n).elim
@@ -160,7 +160,7 @@ theorem pow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ 
         (by 
           rw [pow_succₓ, mul_apply, h, hffx])
 
-theorem zpow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ i : ℤ, (f ^ i) x = x ∨ (f ^ i) x = f x
+theorem zpow_apply_eq_of_apply_apply_eq_self {x : α} (hffx : f (f x) = x) : ∀ (i : ℤ), (f ^ i) x = x ∨ (f ^ i) x = f x
 | (n : ℕ) => pow_apply_eq_of_apply_apply_eq_self hffx n
 | -[1+ n] =>
   by 
@@ -295,7 +295,7 @@ theorem support_one : (1 : perm α).support = ∅ :=
 theorem support_refl : support (Equiv.refl α) = ∅ :=
   support_one
 
-theorem support_congr (h : f.support ⊆ g.support) (h' : ∀ x _ : x ∈ g.support, f x = g x) : f = g :=
+theorem support_congr (h : f.support ⊆ g.support) (h' : ∀ x (_ : x ∈ g.support), f x = g x) : f = g :=
   by 
     ext x 
     byCases' hx : x ∈ g.support
@@ -353,8 +353,8 @@ theorem zpow_apply_mem_support {n : ℤ} {x : α} : (f ^ n) x ∈ f.support ↔ 
     ·
       rw [zpow_neg_succ_of_nat, ←support_inv, ←inv_pow, pow_apply_mem_support]
 
-theorem pow_eq_on_of_mem_support (h : ∀ x _ : x ∈ f.support ∩ g.support, f x = g x) (k : ℕ) :
-  ∀ x _ : x ∈ f.support ∩ g.support, (f ^ k) x = (g ^ k) x :=
+theorem pow_eq_on_of_mem_support (h : ∀ x (_ : x ∈ f.support ∩ g.support), f x = g x) (k : ℕ) :
+  ∀ x (_ : x ∈ f.support ∩ g.support), (f ^ k) x = (g ^ k) x :=
   by 
     induction' k with k hk
     ·
@@ -483,7 +483,7 @@ theorem disjoint.mem_imp (h : Disjoint f g) {x : α} (hx : x ∈ f.support) : x 
   fun H => h.disjoint_support (mem_inter_of_mem hx H)
 
 theorem eq_on_support_mem_disjoint {l : List (perm α)} (h : f ∈ l) (hl : l.pairwise Disjoint) :
-  ∀ x _ : x ∈ f.support, f x = l.prod x :=
+  ∀ x (_ : x ∈ f.support), f x = l.prod x :=
   by 
     induction' l with hd tl IH
     ·

@@ -78,7 +78,7 @@ theorem Finsupp.to_dfinsupp_single (i : ι) (m : M) : (Finsupp.single i m).toDfi
     ext 
     simp [Finsupp.single_apply, Dfinsupp.single_apply]
 
-variable[∀ m : M, Decidable (m ≠ 0)]
+variable[∀ (m : M), Decidable (m ≠ 0)]
 
 @[simp]
 theorem to_dfinsupp_support (f : ι →₀ M) : f.to_dfinsupp.support = f.support :=
@@ -161,26 +161,26 @@ namespace Dfinsupp
 variable[DecidableEq ι]
 
 @[simp]
-theorem to_finsupp_zero [HasZero M] [∀ m : M, Decidable (m ≠ 0)] : to_finsupp 0 = (0 : ι →₀ M) :=
+theorem to_finsupp_zero [HasZero M] [∀ (m : M), Decidable (m ≠ 0)] : to_finsupp 0 = (0 : ι →₀ M) :=
   Finsupp.coe_fn_injective rfl
 
 @[simp]
-theorem to_finsupp_add [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀i : ι, M) :
+theorem to_finsupp_add [AddZeroClass M] [∀ (m : M), Decidable (m ≠ 0)] (f g : Π₀i : ι, M) :
   (to_finsupp (f+g) : ι →₀ M) = to_finsupp f+to_finsupp g :=
   Finsupp.coe_fn_injective$ Dfinsupp.coe_add _ _
 
 @[simp]
-theorem to_finsupp_neg [AddGroupₓ M] [∀ m : M, Decidable (m ≠ 0)] (f : Π₀i : ι, M) :
+theorem to_finsupp_neg [AddGroupₓ M] [∀ (m : M), Decidable (m ≠ 0)] (f : Π₀i : ι, M) :
   (to_finsupp (-f) : ι →₀ M) = -to_finsupp f :=
   Finsupp.coe_fn_injective$ Dfinsupp.coe_neg _
 
 @[simp]
-theorem to_finsupp_sub [AddGroupₓ M] [∀ m : M, Decidable (m ≠ 0)] (f g : Π₀i : ι, M) :
+theorem to_finsupp_sub [AddGroupₓ M] [∀ (m : M), Decidable (m ≠ 0)] (f g : Π₀i : ι, M) :
   (to_finsupp (f - g) : ι →₀ M) = to_finsupp f - to_finsupp g :=
   Finsupp.coe_fn_injective$ Dfinsupp.coe_sub _ _
 
 @[simp]
-theorem to_finsupp_smul [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] [∀ m : M, Decidable (m ≠ 0)] (r : R)
+theorem to_finsupp_smul [Monoidₓ R] [AddMonoidₓ M] [DistribMulAction R M] [∀ (m : M), Decidable (m ≠ 0)] (r : R)
   (f : Π₀i : ι, M) : (to_finsupp (r • f) : ι →₀ M) = r • to_finsupp f :=
   Finsupp.coe_fn_injective$ Dfinsupp.coe_smul _ _
 
@@ -195,14 +195,14 @@ section Equivs
 
 /-- `finsupp.to_dfinsupp` and `dfinsupp.to_finsupp` together form an equiv. -/
 @[simps (config := { fullyApplied := ff })]
-def finsuppEquivDfinsupp [DecidableEq ι] [HasZero M] [∀ m : M, Decidable (m ≠ 0)] : (ι →₀ M) ≃ Π₀i : ι, M :=
+def finsuppEquivDfinsupp [DecidableEq ι] [HasZero M] [∀ (m : M), Decidable (m ≠ 0)] : (ι →₀ M) ≃ Π₀i : ι, M :=
   { toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp, left_inv := Finsupp.to_dfinsupp_to_finsupp,
     right_inv := Dfinsupp.to_finsupp_to_dfinsupp }
 
 /-- The additive version of `finsupp.to_finsupp`. Note that this is `noncomputable` because
 `finsupp.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := ff })]
-noncomputable def finsuppAddEquivDfinsupp [DecidableEq ι] [AddZeroClass M] [∀ m : M, Decidable (m ≠ 0)] :
+noncomputable def finsuppAddEquivDfinsupp [DecidableEq ι] [AddZeroClass M] [∀ (m : M), Decidable (m ≠ 0)] :
   (ι →₀ M) ≃+ Π₀i : ι, M :=
   { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
     map_add' := Finsupp.to_dfinsupp_add }
@@ -212,7 +212,7 @@ variable(R)
 /-- The additive version of `finsupp.to_finsupp`. Note that this is `noncomputable` because
 `finsupp.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := ff })]
-noncomputable def finsuppLequivDfinsupp [DecidableEq ι] [Semiringₓ R] [AddCommMonoidₓ M] [∀ m : M, Decidable (m ≠ 0)]
+noncomputable def finsuppLequivDfinsupp [DecidableEq ι] [Semiringₓ R] [AddCommMonoidₓ M] [∀ (m : M), Decidable (m ≠ 0)]
   [Module R M] : (ι →₀ M) ≃ₗ[R] Π₀i : ι, M :=
   { finsuppEquivDfinsupp with toFun := Finsupp.toDfinsupp, invFun := Dfinsupp.toFinsupp,
     map_smul' := Finsupp.to_dfinsupp_smul, map_add' := Finsupp.to_dfinsupp_add }

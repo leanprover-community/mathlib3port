@@ -30,7 +30,7 @@ namespace Pi
 
 
 @[toAdditive]
-instance HasOne [∀ i, HasOne$ f i] : HasOne (∀ i : I, f i) :=
+instance HasOne [∀ i, HasOne$ f i] : HasOne (∀ (i : I), f i) :=
   ⟨fun _ => 1⟩
 
 @[simp, toAdditive]
@@ -54,7 +54,7 @@ theorem comp_one [HasOne β] (x : β → γ) : x ∘ 1 = const α (x 1) :=
   rfl
 
 @[toAdditive]
-instance Mul [∀ i, Mul$ f i] : Mul (∀ i : I, f i) :=
+instance Mul [∀ i, Mul$ f i] : Mul (∀ (i : I), f i) :=
   ⟨fun f g i => f i*g i⟩
 
 @[simp, toAdditive]
@@ -74,7 +74,7 @@ theorem mul_comp [Mul γ] (x y : β → γ) (z : α → β) : (x*y) ∘ z = (x �
   rfl
 
 @[toAdditive]
-instance HasInv [∀ i, HasInv$ f i] : HasInv (∀ i : I, f i) :=
+instance HasInv [∀ i, HasInv$ f i] : HasInv (∀ (i : I), f i) :=
   ⟨fun f i => f i⁻¹⟩
 
 @[simp, toAdditive]
@@ -94,7 +94,7 @@ theorem inv_comp [HasInv γ] (x : β → γ) (y : α → β) : x⁻¹ ∘ y = (x
   rfl
 
 @[toAdditive]
-instance Div [∀ i, Div$ f i] : Div (∀ i : I, f i) :=
+instance Div [∀ i, Div$ f i] : Div (∀ (i : I), f i) :=
   ⟨fun f g i => f i / g i⟩
 
 @[simp, toAdditive]
@@ -219,17 +219,23 @@ theorem extend_div [Div γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ :
 
 end Extend
 
-theorem surjective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, surjective (F i)) :
-  surjective fun x : ∀ i, f i => fun i => F i (x i) :=
-  fun y => ⟨fun i => (hF i (y i)).some, funext$ fun i => (hF i (y i)).some_spec⟩
+-- error in Data.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem surjective_pi_map
+{F : ∀ i, f i → g i}
+(hF : ∀ i, surjective (F i)) : surjective (λ x : ∀ i, f i, λ i, F i (x i)) :=
+λ y, ⟨λ i, (hF i (y i)).some, «expr $ »(funext, λ i, (hF i (y i)).some_spec)⟩
 
-theorem injective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, injective (F i)) :
-  injective fun x : ∀ i, f i => fun i => F i (x i) :=
-  fun x y h => funext$ fun i => hF i$ (congr_funₓ h i : _)
+-- error in Data.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem injective_pi_map
+{F : ∀ i, f i → g i}
+(hF : ∀ i, injective (F i)) : injective (λ x : ∀ i, f i, λ i, F i (x i)) :=
+λ x y h, «expr $ »(funext, λ i, «expr $ »(hF i, (congr_fun h i : _)))
 
-theorem bijective_pi_map {F : ∀ i, f i → g i} (hF : ∀ i, bijective (F i)) :
-  bijective fun x : ∀ i, f i => fun i => F i (x i) :=
-  ⟨injective_pi_map fun i => (hF i).Injective, surjective_pi_map fun i => (hF i).Surjective⟩
+-- error in Data.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem bijective_pi_map
+{F : ∀ i, f i → g i}
+(hF : ∀ i, bijective (F i)) : bijective (λ x : ∀ i, f i, λ i, F i (x i)) :=
+⟨injective_pi_map (λ i, (hF i).injective), surjective_pi_map (λ i, (hF i).surjective)⟩
 
 end Function
 

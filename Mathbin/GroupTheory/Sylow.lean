@@ -275,31 +275,27 @@ namespace Sylow
 
 open Subgroup Submonoid MulAction
 
-theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer {H : Subgroup G} [Fintype ((H : Set G) : Type u)] {x : G} :
-  (x : Quotientₓ H) ∈ fixed_points H (Quotientₓ H) ↔ x ∈ normalizer H :=
-  ⟨fun hx =>
-      have ha : ∀ {y : Quotientₓ H}, y ∈ orbit H (x : Quotientₓ H) → y = x := fun _ => (mem_fixed_points' _).1 hx _
-      (inv_mem_iff _).1
-        (@mem_normalizer_fintype _ _ _ _inst_2 _
-          fun n hn : n ∈ H =>
-            have  : ((n⁻¹*x)⁻¹*x) ∈ H := QuotientGroup.eq.1 (ha (mem_orbit _ ⟨n⁻¹, H.inv_mem hn⟩))
-            show _ ∈ H by 
-              rw [mul_inv_rev, inv_invₓ] at this 
-              convert this 
-              rw [inv_invₓ]),
-    fun hx : ∀ n : G, n ∈ H ↔ ((x*n)*x⁻¹) ∈ H =>
-      (mem_fixed_points' _).2$
-        fun y =>
-          Quotientₓ.induction_on' y$
-            fun y hy =>
-              QuotientGroup.eq.2
-                (let ⟨⟨b, hb₁⟩, hb₂⟩ := hy 
-                have hb₂ : ((b*x)⁻¹*y) ∈ H := QuotientGroup.eq.1 hb₂
-                (inv_mem_iff H).1$
-                  (hx _).2$
-                    (mul_mem_cancel_left H (H.inv_mem hb₁)).1$
-                      by 
-                        rw [hx] at hb₂ <;> simpa [mul_inv_rev, mul_assocₓ] using hb₂)⟩
+-- error in GroupTheory.Sylow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_fixed_points_mul_left_cosets_iff_mem_normalizer
+{H : subgroup G}
+[fintype ((H : set G) : Type u)]
+{x : G} : «expr ↔ »(«expr ∈ »((x : quotient H), fixed_points H (quotient H)), «expr ∈ »(x, normalizer H)) :=
+⟨λ
+ hx, have ha : ∀
+ {y : quotient H}, «expr ∈ »(y, orbit H (x : quotient H)) → «expr = »(y, x), from λ _, (mem_fixed_points' _).1 hx _,
+ (inv_mem_iff _).1 (@mem_normalizer_fintype _ _ _ _inst_2 _ (λ
+   (n)
+   (hn : «expr ∈ »(n, H)), have «expr ∈ »(«expr * »(«expr ⁻¹»(«expr * »(«expr ⁻¹»(n), x)), x), H) := quotient_group.eq.1 (ha (mem_orbit _ ⟨«expr ⁻¹»(n), H.inv_mem hn⟩)),
+   show «expr ∈ »(_, H), by { rw ["[", expr mul_inv_rev, ",", expr inv_inv, "]"] ["at", ident this],
+     convert [] [expr this] [],
+     rw [expr inv_inv] [] })), λ
+ hx : ∀
+ n : G, «expr ↔ »(«expr ∈ »(n, H), «expr ∈ »(«expr * »(«expr * »(x, n), «expr ⁻¹»(x)), H)), «expr $ »((mem_fixed_points' _).2, λ
+  y, «expr $ »(quotient.induction_on' y, λ
+   y
+   hy, quotient_group.eq.2 (let ⟨⟨b, hb₁⟩, hb₂⟩ := hy in
+    have hb₂ : «expr ∈ »(«expr * »(«expr ⁻¹»(«expr * »(b, x)), y), H) := quotient_group.eq.1 hb₂,
+    «expr $ »((inv_mem_iff H).1, «expr $ »((hx _).2, «expr $ »((mul_mem_cancel_left H (H.inv_mem hb₁)).1, by rw [expr hx] ["at", ident hb₂]; simpa [] [] [] ["[", expr mul_inv_rev, ",", expr mul_assoc, "]"] [] ["using", expr hb₂]))))))⟩
 
 def fixed_points_mul_left_cosets_equiv_quotient (H : Subgroup G) [Fintype (H : Set G)] :
   MulAction.FixedPoints H (Quotientₓ H) ≃ Quotientₓ (Subgroup.comap ((normalizer H).Subtype : normalizer H →* G) H) :=
@@ -397,33 +393,32 @@ theorem exists_subgroup_card_pow_succ [Fintype G] {p : ℕ} {n : ℕ} [hp : Fact
       rw [zpow_zero, eq_comm, QuotientGroup.eq_one_iff]
       simpa using hy⟩
 
+-- error in GroupTheory.Sylow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `H` is a subgroup of `G` of cardinality `p ^ n`,
   then `H` is contained in a subgroup of cardinality `p ^ m`
   if `n ≤ m` and `p ^ m` divides the cardinality of `G` -/
-theorem exists_subgroup_card_pow_prime_le [Fintype G] (p : ℕ) :
-  ∀ {n m : ℕ} [hp : Fact p.prime] hdvd : (p^m) ∣ card G H : Subgroup G hH : card H = (p^n) hnm : n ≤ m,
-    ∃ K : Subgroup G, card K = (p^m) ∧ H ≤ K
-| n, m =>
-  fun hp hdvd H hH hnm =>
-    (lt_or_eq_of_leₓ hnm).elim
-      (fun hnm : n < m =>
-        have h0m : 0 < m := lt_of_le_of_ltₓ n.zero_le hnm 
-        have wf : m - 1 < m := Nat.sub_ltₓ h0m zero_lt_one 
-        have hnm1 : n ≤ m - 1 := le_tsub_of_add_le_right hnm 
-        let ⟨K, hK⟩ :=
-          @exists_subgroup_card_pow_prime_le n (m - 1) hp (Nat.pow_dvd_of_le_of_pow_dvd tsub_le_self hdvd) H hH hnm1 
-        have hdvd' : (p^(m - 1)+1) ∣ card G :=
-          by 
-            rwa [tsub_add_cancel_of_le h0m.nat_succ_le]
-        let ⟨K', hK'⟩ := @exists_subgroup_card_pow_succ _ _ _ _ _ hp hdvd' K hK.1
-        ⟨K',
-          by 
-            rw [hK'.1, tsub_add_cancel_of_le h0m.nat_succ_le],
-          le_transₓ hK.2 hK'.2⟩)
-      fun hnm : n = m =>
-        ⟨H,
-          by 
-            simp [hH, hnm]⟩
+theorem exists_subgroup_card_pow_prime_le
+[fintype G]
+(p : exprℕ()) : ∀
+{n m : exprℕ()}
+[hp : fact p.prime]
+(hdvd : «expr ∣ »(«expr ^ »(p, m), card G))
+(H : subgroup G)
+(hH : «expr = »(card H, «expr ^ »(p, n)))
+(hnm : «expr ≤ »(n, m)), «expr∃ , »((K : subgroup G), «expr ∧ »(«expr = »(card K, «expr ^ »(p, m)), «expr ≤ »(H, K)))
+| n, m := λ
+hp
+hdvd
+H
+hH
+hnm, (lt_or_eq_of_le hnm).elim (λ hnm : «expr < »(n, m), have h0m : «expr < »(0, m), from lt_of_le_of_lt n.zero_le hnm,
+ have wf : «expr < »(«expr - »(m, 1), m), from nat.sub_lt h0m zero_lt_one,
+ have hnm1 : «expr ≤ »(n, «expr - »(m, 1)), from le_tsub_of_add_le_right hnm,
+ let ⟨K, hK⟩ := @exists_subgroup_card_pow_prime_le n «expr - »(m, 1) hp (nat.pow_dvd_of_le_of_pow_dvd tsub_le_self hdvd) H hH hnm1 in
+ have hdvd' : «expr ∣ »(«expr ^ »(p, «expr + »(«expr - »(m, 1), 1)), card G), by rwa ["[", expr tsub_add_cancel_of_le h0m.nat_succ_le, "]"] [],
+ let ⟨K', hK'⟩ := @exists_subgroup_card_pow_succ _ _ _ _ _ hp hdvd' K hK.1 in
+ ⟨K', by rw ["[", expr hK'.1, ",", expr tsub_add_cancel_of_le h0m.nat_succ_le, "]"] [], le_trans hK.2 hK'.2⟩) (λ
+ hnm : «expr = »(n, m), ⟨H, by simp [] [] [] ["[", expr hH, ",", expr hnm, "]"] [] []⟩)
 
 /-- A generalisation of **Sylow's first theorem**. If `p ^ n` divides
   the cardinality of `G`, then there is a subgroup of cardinality `p ^ n` -/

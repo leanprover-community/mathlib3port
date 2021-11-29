@@ -81,28 +81,30 @@ theorem ndinsert_le {a : α} {s t : Multiset α} : ndinsert a s ≤ t ↔ s ≤ 
         by 
           rw [ndinsert_of_not_mem h, ←cons_erase m, cons_le_cons_iff, ←le_cons_of_not_mem h, cons_erase m] <;> exact l⟩
 
-theorem attach_ndinsert (a : α) (s : Multiset α) :
-  (s.ndinsert a).attach = ndinsert ⟨a, mem_ndinsert_self a s⟩ (s.attach.map$ fun p => ⟨p.1, mem_ndinsert_of_mem p.2⟩) :=
-  have eq :
-    ∀ h : ∀ p : { x // x ∈ s }, p.1 ∈ s,
-      (fun p : { x // x ∈ s } => ⟨p.val, h p⟩ : { x // x ∈ s } → { x // x ∈ s }) = id :=
-    fun h => funext$ fun p => Subtype.eq rfl 
-  have  :
-    ∀ t eq : s.ndinsert a = t,
-      t.attach =
-        ndinsert ⟨a, Eq ▸ mem_ndinsert_self a s⟩ (s.attach.map$ fun p => ⟨p.1, Eq ▸ mem_ndinsert_of_mem p.2⟩) :=
-    by 
-      intro t ht 
-      byCases' a ∈ s
-      ·
-        rw [ndinsert_of_mem h] at ht 
-        subst ht 
-        rw [Eq, map_id, ndinsert_of_mem (mem_attach _ _)]
-      ·
-        rw [ndinsert_of_not_mem h] at ht 
-        subst ht 
-        simp [attach_cons, h]
-  this _ rfl
+-- error in Data.Multiset.FinsetOps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem attach_ndinsert
+(a : α)
+(s : multiset α) : «expr = »((s.ndinsert a).attach, ndinsert ⟨a, mem_ndinsert_self a s⟩ «expr $ »(s.attach.map, λ
+  p, ⟨p.1, mem_ndinsert_of_mem p.2⟩)) :=
+have eq : ∀
+h : ∀
+p : {x // «expr ∈ »(x, s)}, «expr ∈ »(p.1, s), «expr = »((λ
+ p : {x // «expr ∈ »(x, s)}, ⟨p.val, h p⟩ : {x // «expr ∈ »(x, s)} → {x // «expr ∈ »(x, s)}), id), from assume
+h, «expr $ »(funext, assume p, subtype.eq rfl),
+have ∀
+(t)
+(eq : «expr = »(s.ndinsert a, t)), «expr = »(t.attach, ndinsert ⟨a, «expr ▸ »(eq, mem_ndinsert_self a s)⟩ «expr $ »(s.attach.map, λ
+  p, ⟨p.1, «expr ▸ »(eq, mem_ndinsert_of_mem p.2)⟩)), begin
+  intros [ident t, ident ht],
+  by_cases [expr «expr ∈ »(a, s)],
+  { rw ["[", expr ndinsert_of_mem h, "]"] ["at", ident ht],
+    subst [expr ht],
+    rw ["[", expr eq, ",", expr map_id, ",", expr ndinsert_of_mem (mem_attach _ _), "]"] [] },
+  { rw ["[", expr ndinsert_of_not_mem h, "]"] ["at", ident ht],
+    subst [expr ht],
+    simp [] [] [] ["[", expr attach_cons, ",", expr h, "]"] [] [] }
+end,
+this _ rfl
 
 @[simp]
 theorem disjoint_ndinsert_left {a : α} {s t : Multiset α} : Disjoint (ndinsert a s) t ↔ a ∉ t ∧ Disjoint s t :=

@@ -45,7 +45,7 @@ variable{α β : Type _}
 namespace List
 
 theorem permutations_aux2_fst (t : α) (ts : List α) (r : List β) :
-  ∀ ys : List α f : List α → β, (permutations_aux2 t ts r ys f).1 = ys ++ ts
+  ∀ (ys : List α) (f : List α → β), (permutations_aux2 t ts r ys f).1 = ys ++ ts
 | [], f => rfl
 | y :: ys, f =>
   match _, permutations_aux2_fst ys _ with 
@@ -56,12 +56,19 @@ theorem permutations_aux2_snd_nil (t : α) (ts : List α) (r : List β) (f : Lis
   (permutations_aux2 t ts r [] f).2 = r :=
   rfl
 
+-- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem permutations_aux2_snd_cons (t : α) (ts : List α) (r : List β) (y : α) (ys : List α) (f : List α → β) :
-  (permutations_aux2 t ts r (y :: ys) f).2 =
-    f (t :: y :: ys ++ ts) :: (permutations_aux2 t ts r ys fun x : List α => f (y :: x)).2 :=
-  match _, permutations_aux2_fst t ts r _ _ with 
-  | ⟨_, zs⟩, rfl => rfl
+theorem permutations_aux2_snd_cons
+(t : α)
+(ts : list α)
+(r : list β)
+(y : α)
+(ys : list α)
+(f : list α → β) : «expr = »((permutations_aux2 t ts r «expr :: »(y, ys) f).2, «expr :: »(f «expr ++ »(«expr :: »(t, «expr :: »(y, ys)), ts), (permutations_aux2 t ts r ys (λ
+    x : list α, f «expr :: »(y, x))).2)) :=
+match _, permutations_aux2_fst t ts r _ _ : ∀
+o : «expr × »(list α, list β), «expr = »(o.1, «expr ++ »(ys, ts)) → «expr = »((permutations_aux2._match_1 t y f o).2, «expr :: »(f «expr ++ »(«expr :: »(t, «expr :: »(y, ys)), ts), o.2)) with
+| ⟨_, zs⟩, rfl := rfl end
 
 /-- The `r` argument to `permutations_aux2` is the same as appending. -/
 theorem permutations_aux2_append (t : α) (ts : List α) (r : List β) (ys : List α) (f : List α → β) :
@@ -133,7 +140,7 @@ begin
   simp [] [] [] ["[", expr map_permutations_aux2, "]"] [] []
 end
 
--- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.List.Permutation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem mem_permutations_aux2
 {t : α}
 {ts : list α}

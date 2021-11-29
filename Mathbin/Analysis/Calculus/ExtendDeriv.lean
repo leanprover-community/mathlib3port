@@ -203,7 +203,7 @@ end
 
 /-- If a real function `f` has a derivative `g` everywhere but at a point, and `f` and `g` are
 continuous at this point, then `g` is the derivative of `f` everywhere. -/
-theorem has_deriv_at_of_has_deriv_at_of_ne' {f g : ℝ → E} {x : ℝ} (f_diff : ∀ y _ : y ≠ x, HasDerivAt f (g y) y)
+theorem has_deriv_at_of_has_deriv_at_of_ne' {f g : ℝ → E} {x : ℝ} (f_diff : ∀ y (_ : y ≠ x), HasDerivAt f (g y) y)
   (hf : ContinuousAt f x) (hg : ContinuousAt g x) (y : ℝ) : HasDerivAt f (g y) y :=
   by 
     rcases eq_or_ne y x with (rfl | hne)

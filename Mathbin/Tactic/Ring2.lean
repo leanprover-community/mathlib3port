@@ -377,7 +377,7 @@ begin
 end
 
 theorem cseval_pow {α} [CommSemiringₓ α] (t : Tree α) {x : horner_expr} (cs : x.is_cs) :
-  ∀ n : Num, (pow x n).IsCs ∧ cseval t (pow x n) = cseval t x ^ (n : ℕ)
+  ∀ (n : Num), (pow x n).IsCs ∧ cseval t (pow x n) = cseval t x ^ (n : ℕ)
 | 0 => ⟨⟨1, rfl⟩, (pow_zeroₓ _).symm⟩
 | Num.pos p =>
   by 
@@ -399,7 +399,7 @@ theorem cseval_pow {α} [CommSemiringₓ α] (t : Tree α) {x : horner_expr} (cs
 the Horner form of `r` is a valid csring expression, and under `t`,
 the Horner form evaluates to the same thing as `r`. -/
 theorem cseval_of_csexpr {α} [CommSemiringₓ α] (t : Tree α) :
-  ∀ r : csring_expr, (of_csexpr r).IsCs ∧ cseval t (of_csexpr r) = r.eval t
+  ∀ (r : csring_expr), (of_csexpr r).IsCs ∧ cseval t (of_csexpr r) = r.eval t
 | csring_expr.atom n => cseval_atom _ _
 | csring_expr.const n =>
   ⟨⟨n, rfl⟩,

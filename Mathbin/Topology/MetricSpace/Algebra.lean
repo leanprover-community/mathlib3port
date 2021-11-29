@@ -26,16 +26,20 @@ variable(α β : Type _)[PseudoMetricSpace α][PseudoMetricSpace β]
 
 section HasLipschitzMul
 
+-- error in Topology.MetricSpace.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Class `has_lipschitz_add M` says that the addition `(+) : X × X → X` is Lipschitz jointly in
 the two arguments. -/
-class HasLipschitzAdd[AddMonoidₓ β] : Prop where 
-  lipschitz_add : ∃ C, LipschitzWith C fun p : β × β => p.1+p.2
+class has_lipschitz_add
+[add_monoid β] : exprProp() :=
+  (lipschitz_add : «expr∃ , »((C), lipschitz_with C (λ p : «expr × »(β, β), «expr + »(p.1, p.2))))
 
+-- error in Topology.MetricSpace.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Class `has_lipschitz_mul M` says that the multiplication `(*) : X × X → X` is Lipschitz jointly
 in the two arguments. -/
-@[toAdditive]
-class HasLipschitzMul[Monoidₓ β] : Prop where 
-  lipschitz_mul : ∃ C, LipschitzWith C fun p : β × β => p.1*p.2
+@[to_additive #[]]
+class has_lipschitz_mul
+[monoid β] : exprProp() :=
+  (lipschitz_mul : «expr∃ , »((C), lipschitz_with C (λ p : «expr × »(β, β), «expr * »(p.1, p.2))))
 
 variable[Monoidₓ β]
 
@@ -46,15 +50,16 @@ def HasLipschitzMul.c [_i : HasLipschitzMul β] :  ℝ≥0  :=
 
 variable{β}
 
-@[toAdditive]
-theorem lipschitz_with_lipschitz_const_mul_edist [_i : HasLipschitzMul β] :
-  LipschitzWith (HasLipschitzMul.c β) fun p : β × β => p.1*p.2 :=
-  Classical.some_spec _i.lipschitz_mul
+-- error in Topology.MetricSpace.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem lipschitz_with_lipschitz_const_mul_edist
+[_i : has_lipschitz_mul β] : lipschitz_with (has_lipschitz_mul.C β) (λ p : «expr × »(β, β), «expr * »(p.1, p.2)) :=
+classical.some_spec _i.lipschitz_mul
 
 variable[HasLipschitzMul β]
 
 @[toAdditive]
-theorem lipschitz_with_lipschitz_const_mul : ∀ p q : β × β, dist (p.1*p.2) (q.1*q.2) ≤ HasLipschitzMul.c β*dist p q :=
+theorem lipschitz_with_lipschitz_const_mul : ∀ (p q : β × β), dist (p.1*p.2) (q.1*q.2) ≤ HasLipschitzMul.c β*dist p q :=
   by 
     rw [←lipschitz_with_iff_dist_le_mul]
     exact lipschitz_with_lipschitz_const_mul_edist
@@ -102,8 +107,8 @@ distinguished points `0`, requiring compatibility of the action in the sense tha
 `dist (x • y₁) (x • y₂) ≤ dist x 0 * dist y₁ y₂` and
 `dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂ * dist y 0`. -/
 class HasBoundedSmul : Prop where 
-  dist_smul_pair' : ∀ x : α, ∀ y₁ y₂ : β, dist (x • y₁) (x • y₂) ≤ dist x 0*dist y₁ y₂ 
-  dist_pair_smul' : ∀ x₁ x₂ : α, ∀ y : β, dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂*dist y 0
+  dist_smul_pair' : ∀ (x : α), ∀ (y₁ y₂ : β), dist (x • y₁) (x • y₂) ≤ dist x 0*dist y₁ y₂ 
+  dist_pair_smul' : ∀ (x₁ x₂ : α), ∀ (y : β), dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂*dist y 0
 
 variable{α β}[HasBoundedSmul α β]
 

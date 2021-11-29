@@ -63,12 +63,15 @@ def Finset.toColex {α} (s : Finset α) : Finset.Colex α :=
 theorem Colex.eq_iff (A B : Finset α) : A.to_colex = B.to_colex ↔ A = B :=
   Iff.rfl
 
+-- error in Combinatorics.Colex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 `A` is less than `B` in the colex ordering if the largest thing that's not in both sets is in B.
 In other words, max (A Δ B) ∈ B (if the maximum exists).
--/
-instance  [LT α] : LT (Finset.Colex α) :=
-  ⟨fun A B : Finset α => ∃ k : α, (∀ {x}, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A ∧ k ∈ B⟩
+-/ instance [has_lt α] : has_lt (finset.colex α) :=
+⟨λ
+ A
+ B : finset α, «expr∃ , »((k : α), «expr ∧ »(∀
+   {x}, «expr < »(k, x) → «expr ↔ »(«expr ∈ »(x, A), «expr ∈ »(x, B)), «expr ∧ »(«expr ∉ »(k, A), «expr ∈ »(k, B))))⟩
 
 /-- We can define (≤) in the obvious way. -/
 instance  [LT α] : LE (Finset.Colex α) :=
@@ -126,11 +129,16 @@ theorem hom_lt_iff {β : Type _} [LinearOrderₓ α] [DecidableEq β] [Preorder�
       simp only [h₁.injective, Function.Injective.eq_iff]
       exact fun x hx => ne_of_mem_of_not_mem hx ka
 
+-- error in Combinatorics.Colex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A special case of `colex.hom_lt_iff` which is sometimes useful. -/
 @[simp]
-theorem hom_fin_lt_iff {n : ℕ} (A B : Finset (Finₓ n)) :
-  (A.image fun i : Finₓ n => (i : ℕ)).toColex < (B.image fun i : Finₓ n => (i : ℕ)).toColex ↔ A.to_colex < B.to_colex :=
-  Colex.hom_lt_iff (fun x y k => k) _ _
+theorem hom_fin_lt_iff
+{n : exprℕ()}
+(A
+ B : finset (fin n)) : «expr ↔ »(«expr < »((A.image (λ
+    i : fin n, (i : exprℕ()))).to_colex, (B.image (λ
+    i : fin n, (i : exprℕ()))).to_colex), «expr < »(A.to_colex, B.to_colex)) :=
+colex.hom_lt_iff (λ x y k, k) _ _
 
 instance  [LT α] : IsIrrefl (Finset.Colex α) (· < ·) :=
   ⟨fun A h => Exists.elim h fun _ ⟨_, a, b⟩ => a b⟩
@@ -200,9 +208,9 @@ instance  [LinearOrderₓ α] : IsTrichotomous (Finset.Colex α) (· < ·) :=
   ⟨lt_trichotomyₓ⟩
 
 instance decidable_lt [LinearOrderₓ α] : ∀ {A B : Finset.Colex α}, Decidable (A < B) :=
-  show ∀ A B : Finset α, Decidable (A.to_colex < B.to_colex) from
+  show ∀ (A B : Finset α), Decidable (A.to_colex < B.to_colex) from
     fun A B =>
-      decidableOfIff' (∃ (k : _)(_ : k ∈ B), (∀ x _ : x ∈ A ∪ B, k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A)
+      decidableOfIff' (∃ (k : _)(_ : k ∈ B), (∀ x (_ : x ∈ A ∪ B), k < x → (x ∈ A ↔ x ∈ B)) ∧ k ∉ A)
         (by 
           rw [Colex.lt_def]
           apply exists_congr 
@@ -254,17 +262,22 @@ theorem hom_le_iff {β : Type _} [LinearOrderₓ α] [LinearOrderₓ β] {f : α
   by 
     rw [le_iff_le_iff_lt_iff_lt, hom_lt_iff h₁]
 
+-- error in Combinatorics.Colex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A special case of `colex_hom` which is sometimes useful. -/
 @[simp]
-theorem hom_fin_le_iff {n : ℕ} (A B : Finset (Finₓ n)) :
-  (A.image fun i : Finₓ n => (i : ℕ)).toColex ≤ (B.image fun i : Finₓ n => (i : ℕ)).toColex ↔ A.to_colex ≤ B.to_colex :=
-  Colex.hom_le_iff (fun x y k => k) _ _
+theorem hom_fin_le_iff
+{n : exprℕ()}
+(A
+ B : finset (fin n)) : «expr ↔ »(«expr ≤ »((A.image (λ
+    i : fin n, (i : exprℕ()))).to_colex, (B.image (λ
+    i : fin n, (i : exprℕ()))).to_colex), «expr ≤ »(A.to_colex, B.to_colex)) :=
+colex.hom_le_iff (λ x y k, k) _ _
 
 /--
 If `A` is before `B` in colex, and everything in `B` is small, then everything in `A` is small.
 -/
 theorem forall_lt_of_colex_lt_of_forall_lt [LinearOrderₓ α] {A B : Finset α} (t : α) (h₁ : A.to_colex < B.to_colex)
-  (h₂ : ∀ x _ : x ∈ B, x < t) : ∀ x _ : x ∈ A, x < t :=
+  (h₂ : ∀ x (_ : x ∈ B), x < t) : ∀ x (_ : x ∈ A), x < t :=
   by 
     rw [Colex.lt_def] at h₁ 
     rcases h₁ with ⟨k, z, _, _⟩
@@ -277,7 +290,7 @@ theorem forall_lt_of_colex_lt_of_forall_lt [LinearOrderₓ α] {A B : Finset α}
 
 /-- `s.to_colex < {r}.to_colex` iff all elements of `s` are less than `r`. -/
 theorem lt_singleton_iff_mem_lt [LinearOrderₓ α] {r : α} {s : Finset α} :
-  s.to_colex < ({r} : Finset α).toColex ↔ ∀ x _ : x ∈ s, x < r :=
+  s.to_colex < ({r} : Finset α).toColex ↔ ∀ x (_ : x ∈ s), x < r :=
   by 
     simp only [lt_def, mem_singleton, ←and_assoc, exists_eq_right]
     split 
@@ -395,30 +408,22 @@ instance  [LinearOrderₓ α] : OrderBot (Finset.Colex α) :=
 instance  [LinearOrderₓ α] [Fintype α] : OrderTop (Finset.Colex α) :=
   { top := Finset.univ.toColex, le_top := fun x => colex_le_of_subset (subset_univ _) }
 
-instance  [LinearOrderₓ α] : SemilatticeInfBot (Finset.Colex α) :=
-  { finset.colex.order_bot,
+instance  [LinearOrderₓ α] : Lattice (Finset.Colex α) :=
+  { (by 
+      infer_instance :
+    SemilatticeSup (Finset.Colex α)),
     (by 
       infer_instance :
     SemilatticeInf (Finset.Colex α)) with
      }
 
-instance  [LinearOrderₓ α] : SemilatticeSupBot (Finset.Colex α) :=
-  { finset.colex.order_bot,
-    (by 
-      infer_instance :
-    SemilatticeSup (Finset.Colex α)) with
-     }
-
-instance  [LinearOrderₓ α] [Fintype α] : BoundedLattice (Finset.Colex α) :=
+instance  [LinearOrderₓ α] [Fintype α] : BoundedOrder (Finset.Colex α) :=
   { (by 
       infer_instance :
     OrderTop (Finset.Colex α)),
     (by 
       infer_instance :
-    SemilatticeSup (Finset.Colex α)),
-    (by 
-      infer_instance :
-    SemilatticeInfBot (Finset.Colex α)) with
+    OrderBot (Finset.Colex α)) with
      }
 
 -- error in Combinatorics.Colex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

@@ -57,7 +57,7 @@ resolution. Also, we let it depend on `p`, to get a whole family of type on whic
 different distances. -/
 @[nolint unused_arguments]
 def PiLp {ι : Type _} (p : ℝ) (α : ι → Type _) : Type _ :=
-  ∀ i : ι, α i
+  ∀ (i : ι), α i
 
 instance  {ι : Type _} (p : ℝ) (α : ι → Type _) [∀ i, Inhabited (α i)] : Inhabited (PiLp p α) :=
   ⟨fun i => default (α i)⟩
@@ -74,7 +74,7 @@ variable(p : ℝ)[fact_one_le_p : Fact (1 ≤ p)](α : ι → Type _)(β : ι �
 
 /-- Canonical bijection between `pi_Lp p α` and the original Pi type. We introduce it to be able
 to compare the `L^p` and `L^∞` distances through it. -/
-protected def Equiv : PiLp p α ≃ ∀ i : ι, α i :=
+protected def Equiv : PiLp p α ≃ ∀ (i : ι), α i :=
   Equiv.refl _
 
 section 

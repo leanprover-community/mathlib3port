@@ -156,14 +156,15 @@ instance  : NonAssocSemiring (MonoidAlgebra k G) :=
 
 variable{R : Type _}[Semiringₓ R]
 
+-- error in Algebra.MonoidAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A non-commutative version of `monoid_algebra.lift`: given a additive homomorphism `f : k →+ R`
 and a multiplicative monoid homomorphism `g : G →* R`, returns the additive homomorphism from
 `monoid_algebra k G` such that `lift_nc f g (single a b) = f b * g a`. If `f` is a ring homomorphism
 and the range of either `f` or `g` is in center of `R`, then the result is a ring homomorphism.  If
 `R` is a `k`-algebra and `f = algebra_map k R`, then the result is an algebra homomorphism called
 `monoid_algebra.lift`. -/
-def lift_nc (f : k →+ R) (g : G →* R) : MonoidAlgebra k G →+ R :=
-  lift_add_hom fun x : G => (AddMonoidHom.mulRight (g x)).comp f
+def lift_nc (f : «expr →+ »(k, R)) (g : «expr →* »(G, R)) : «expr →+ »(monoid_algebra k G, R) :=
+lift_add_hom (λ x : G, (add_monoid_hom.mul_right (g x)).comp f)
 
 @[simp]
 theorem lift_nc_single (f : k →+ R) (g : G →* R) (a : G) (b : k) : lift_nc f g (single a b) = f b*g a :=
@@ -273,30 +274,31 @@ theorem mul_apply [Mul G] (f g : MonoidAlgebra k G) (x : G) :
     rw [mul_def]
     simp only [Finsupp.sum_apply, single_apply]
 
-theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Finset (G × G))
-  (hs : ∀ {p : G × G}, p ∈ s ↔ (p.1*p.2) = x) : (f*g) x = ∑p in s, f p.1*g p.2 :=
-  let F : G × G → k := fun p => if (p.1*p.2) = x then f p.1*g p.2 else 0
-  calc (f*g) x = ∑a₁ in f.support, ∑a₂ in g.support, F (a₁, a₂) := mul_apply f g x 
-    _ = ∑p in f.support.product g.support, F p := Finset.sum_product.symm 
-    _ = ∑p in (f.support.product g.support).filter fun p : G × G => (p.1*p.2) = x, f p.1*g p.2 :=
-    (Finset.sum_filter _ _).symm 
-    _ = ∑p in s.filter fun p : G × G => p.1 ∈ f.support ∧ p.2 ∈ g.support, f p.1*g p.2 :=
-    sum_congr
-      (by 
-        ext 
-        simp only [mem_filter, mem_product, hs, and_comm])
-      fun _ _ => rfl 
-    _ = ∑p in s, f p.1*g p.2 :=
-    sum_subset (filter_subset _ _)$
-      fun p hps hp =>
-        by 
-          simp only [mem_filter, mem_support_iff, not_and, not_not] at hp⊢
-          byCases' h1 : f p.1 = 0
-          ·
-            rw [h1, zero_mul]
-          ·
-            rw [hp hps h1, mul_zero]
-    
+-- error in Algebra.MonoidAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mul_apply_antidiagonal
+[has_mul G]
+(f g : monoid_algebra k G)
+(x : G)
+(s : finset «expr × »(G, G))
+(hs : ∀
+ {p : «expr × »(G, G)}, «expr ↔ »(«expr ∈ »(p, s), «expr = »(«expr * »(p.1, p.2), x))) : «expr = »(«expr * »(f, g) x, «expr∑ in , »((p), s, «expr * »(f p.1, g p.2))) :=
+let F : «expr × »(G, G) → k := λ p, if «expr = »(«expr * »(p.1, p.2), x) then «expr * »(f p.1, g p.2) else 0 in
+calc
+  «expr = »(«expr * »(f, g) x, «expr∑ in , »((a₁), f.support, «expr∑ in , »((a₂), g.support, F (a₁, a₂)))) : mul_apply f g x
+  «expr = »(..., «expr∑ in , »((p), f.support.product g.support, F p)) : finset.sum_product.symm
+  «expr = »(..., «expr∑ in , »((p), (f.support.product g.support).filter (λ
+     p : «expr × »(G, G), «expr = »(«expr * »(p.1, p.2), x)), «expr * »(f p.1, g p.2))) : (finset.sum_filter _ _).symm
+  «expr = »(..., «expr∑ in , »((p), s.filter (λ
+     p : «expr × »(G, G), «expr ∧ »(«expr ∈ »(p.1, f.support), «expr ∈ »(p.2, g.support))), «expr * »(f p.1, g p.2))) : sum_congr (by { ext [] [] [],
+     simp [] [] ["only"] ["[", expr mem_filter, ",", expr mem_product, ",", expr hs, ",", expr and_comm, "]"] [] [] }) (λ
+   _ _, rfl)
+  «expr = »(..., «expr∑ in , »((p), s, «expr * »(f p.1, g p.2))) : «expr $ »(sum_subset (filter_subset _ _), λ
+   p hps hp, begin
+     simp [] [] ["only"] ["[", expr mem_filter, ",", expr mem_support_iff, ",", expr not_and, ",", expr not_not, "]"] [] ["at", ident hp, "⊢"],
+     by_cases [expr h1, ":", expr «expr = »(f p.1, 0)],
+     { rw ["[", expr h1, ",", expr zero_mul, "]"] [] },
+     { rw ["[", expr hp hps h1, ",", expr mul_zero, "]"] [] }
+   end)
 
 theorem support_mul [Mul G] (a b : MonoidAlgebra k G) :
   (a*b).Support ⊆ a.support.bUnion fun a₁ => b.support.bUnion$ fun a₂ => {a₁*a₂} :=
@@ -314,7 +316,8 @@ theorem single_mul_single [Mul G] {a₁ a₂ : G} {b₁ b₂ : k} :
         rw [mul_zero, single_zero]))
 
 @[simp]
-theorem single_pow [Monoidₓ G] {a : G} {b : k} : ∀ n : ℕ, (single a b : MonoidAlgebra k G) ^ n = single (a ^ n) (b ^ n)
+theorem single_pow [Monoidₓ G] {a : G} {b : k} :
+  ∀ (n : ℕ), (single a b : MonoidAlgebra k G) ^ n = single (a ^ n) (b ^ n)
 | 0 =>
   by 
     simp only [pow_zeroₓ]
@@ -430,6 +433,20 @@ theorem single_one_mul_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x 
     fun a =>
       by 
         rw [one_mulₓ]
+
+theorem support_single_mul [LeftCancelSemigroup G] (f : MonoidAlgebra k G) (r : k) (hr : ∀ y, (r*y) = 0 ↔ y = 0)
+  (x : G) : (single x r*f).Support = f.support.map (mulLeftEmbedding x) :=
+  by 
+    ext y 
+    simp only [mem_support_iff, mem_map, exists_prop, mul_left_embedding_apply]
+    byCases' H : ∃ a, (x*a) = y
+    ·
+      rcases H with ⟨a, rfl⟩
+      rw [single_mul_apply_aux f fun _ => mul_right_injₓ x]
+      simp [hr]
+    ·
+      pushNeg  at H 
+      simp [mul_apply, H]
 
 theorem lift_nc_smul [MulOneClass G] {R : Type _} [Semiringₓ R] (f : k →+* R) (g : G →* R) (c : k)
   (φ : MonoidAlgebra k G) : lift_nc (f : k →+ R) g (c • φ) = f c*lift_nc (f : k →+ R) g φ :=
@@ -611,8 +628,8 @@ theorem single_algebra_map_eq_algebra_map_mul_of {A : Type _} [CommSemiringₓ k
     simp 
 
 theorem induction_on [Semiringₓ k] [Monoidₓ G] {p : MonoidAlgebra k G → Prop} (f : MonoidAlgebra k G)
-  (hM : ∀ g, p (of k G g)) (hadd : ∀ f g : MonoidAlgebra k G, p f → p g → p (f+g))
-  (hsmul : ∀ r : k f, p f → p (r • f)) : p f :=
+  (hM : ∀ g, p (of k G g)) (hadd : ∀ (f g : MonoidAlgebra k G), p f → p g → p (f+g))
+  (hsmul : ∀ (r : k) f, p f → p (r • f)) : p f :=
   by 
     refine' Finsupp.induction_linear f _ (fun f g hf hg => hadd f g hf hg) fun g r => _
     ·
@@ -736,7 +753,7 @@ variable[Monoidₓ
       W][Module k
       W][Module (MonoidAlgebra k G)
       W][IsScalarTower k (MonoidAlgebra k G)
-      W](f : V →ₗ[k] W)(h : ∀ g : G v : V, f (single g (1 : k) • v : V) = (single g (1 : k) • f v : W))
+      W](f : V →ₗ[k] W)(h : ∀ (g : G) (v : V), f (single g (1 : k) • v : V) = (single g (1 : k) • f v : W))
 
 include h
 
@@ -989,14 +1006,15 @@ instance  : NonAssocSemiring (AddMonoidAlgebra k G) :=
 
 variable{R : Type _}[Semiringₓ R]
 
+-- error in Algebra.MonoidAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A non-commutative version of `add_monoid_algebra.lift`: given a additive homomorphism `f : k →+
 R` and a multiplicative monoid homomorphism `g : multiplicative G →* R`, returns the additive
 homomorphism from `add_monoid_algebra k G` such that `lift_nc f g (single a b) = f b * g a`. If `f`
 is a ring homomorphism and the range of either `f` or `g` is in center of `R`, then the result is a
 ring homomorphism.  If `R` is a `k`-algebra and `f = algebra_map k R`, then the result is an algebra
 homomorphism called `add_monoid_algebra.lift`. -/
-def lift_nc (f : k →+ R) (g : Multiplicative G →* R) : AddMonoidAlgebra k G →+ R :=
-  lift_add_hom fun x : G => (AddMonoidHom.mulRight (g$ Multiplicative.ofAdd x)).comp f
+def lift_nc (f : «expr →+ »(k, R)) (g : «expr →* »(multiplicative G, R)) : «expr →+ »(add_monoid_algebra k G, R) :=
+lift_add_hom (λ x : G, (add_monoid_hom.mul_right «expr $ »(g, multiplicative.of_add x)).comp f)
 
 @[simp]
 theorem lift_nc_single (f : k →+ R) (g : Multiplicative G →* R) (a : G) (b : k) :
@@ -1109,7 +1127,7 @@ theorem single_mul_single [Add G] {a₁ a₂ : G} {b₁ b₂ : k} :
   @MonoidAlgebra.single_mul_single k (Multiplicative G) _ _ _ _ _ _
 
 theorem single_pow [AddMonoidₓ G] {a : G} {b : k} :
-  ∀ n : ℕ, (single a b ^ n : AddMonoidAlgebra k G) = single (n • a) (b ^ n)
+  ∀ (n : ℕ), (single a b ^ n : AddMonoidAlgebra k G) = single (n • a) (b ^ n)
 | 0 =>
   by 
     simp only [pow_zeroₓ, zero_nsmul]
@@ -1210,6 +1228,10 @@ theorem support_mul_single [AddRightCancelSemigroup G] (f : AddMonoidAlgebra k G
   (x : G) : (f*single x r : AddMonoidAlgebra k G).Support = f.support.map (addRightEmbedding x) :=
   @MonoidAlgebra.support_mul_single k (Multiplicative G) _ _ _ _ hr _
 
+theorem support_single_mul [AddLeftCancelSemigroup G] (f : AddMonoidAlgebra k G) (r : k) (hr : ∀ y, (r*y) = 0 ↔ y = 0)
+  (x : G) : (single x r*f : AddMonoidAlgebra k G).Support = f.support.map (addLeftEmbedding x) :=
+  @MonoidAlgebra.support_single_mul k (Multiplicative G) _ _ _ _ hr _
+
 theorem lift_nc_smul {R : Type _} [AddZeroClass G] [Semiringₓ R] (f : k →+* R) (g : Multiplicative G →* R) (c : k)
   (φ : MonoidAlgebra k G) : lift_nc (f : k →+ R) g (c • φ) = f c*lift_nc (f : k →+ R) g φ :=
   @MonoidAlgebra.lift_nc_smul k (Multiplicative G) _ _ _ _ f g c φ
@@ -1217,8 +1239,8 @@ theorem lift_nc_smul {R : Type _} [AddZeroClass G] [Semiringₓ R] (f : k →+* 
 variable{k G}
 
 theorem induction_on [AddMonoidₓ G] {p : AddMonoidAlgebra k G → Prop} (f : AddMonoidAlgebra k G)
-  (hM : ∀ g, p (of k G (Multiplicative.ofAdd g))) (hadd : ∀ f g : AddMonoidAlgebra k G, p f → p g → p (f+g))
-  (hsmul : ∀ r : k f, p f → p (r • f)) : p f :=
+  (hM : ∀ g, p (of k G (Multiplicative.ofAdd g))) (hadd : ∀ (f g : AddMonoidAlgebra k G), p f → p g → p (f+g))
+  (hsmul : ∀ (r : k) f, p f → p (r • f)) : p f :=
   by 
     refine' Finsupp.induction_linear f _ (fun f g hf hg => hadd f g hf hg) fun g r => _
     ·

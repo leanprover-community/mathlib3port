@@ -78,12 +78,12 @@ instance mvfunctor_M : Mvfunctor P.M :=
   by 
     delta' M <;> infer_instance
 
-instance inhabited_M {α : Typevec _} [I : Inhabited P.A] [∀ i : Fin2 n, Inhabited (α i)] : Inhabited (P.M α) :=
+instance inhabited_M {α : Typevec _} [I : Inhabited P.A] [∀ (i : Fin2 n), Inhabited (α i)] : Inhabited (P.M α) :=
   @obj.inhabited _ (Mp P) _ (@Pfunctor.M.inhabited P.last I) _
 
 /-- construct through corecursion the shape of an M-type
 without its contents -/
-def M.corec_shape {β : Type u} (g₀ : β → P.A) (g₂ : ∀ b : β, P.last.B (g₀ b) → β) : β → P.last.M :=
+def M.corec_shape {β : Type u} (g₀ : β → P.A) (g₂ : ∀ (b : β), P.last.B (g₀ b) → β) : β → P.last.M :=
   Pfunctor.M.corec fun b => ⟨g₀ b, g₂ b⟩
 
 /-- Proof of type equality as an arrow -/
@@ -95,8 +95,8 @@ def cast_lastB {a a' : P.A} (h : a = a') : P.last.B a → P.last.B a' :=
   fun b => Eq.recOnₓ h b
 
 /-- Using corecursion, construct the contents of an M-type -/
-def M.corec_contents {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α)
-  (g₂ : ∀ b : β, P.last.B (g₀ b) → β) : ∀ x b, x = M.corec_shape P g₀ g₂ b → M.path P x ⟹ α
+def M.corec_contents {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ (b : β), P.drop.B (g₀ b) ⟹ α)
+  (g₂ : ∀ (b : β), P.last.B (g₀ b) → β) : ∀ x b, x = M.corec_shape P g₀ g₂ b → M.path P x ⟹ α
 | _, b, h, _, M.path.root x a f h' i c =>
   have  : a = g₀ b :=
     by 
@@ -118,8 +118,8 @@ def M.corec_contents {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A) (g�
   M.corec_contents (f j) (g₂ b (P.cast_lastB h₀ j)) h₁ i c
 
 /-- Corecursor for M-type of `P` -/
-def M.corec' {α : Typevec n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α)
-  (g₂ : ∀ b : β, P.last.B (g₀ b) → β) : β → P.M α :=
+def M.corec' {α : Typevec n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ (b : β), P.drop.B (g₀ b) ⟹ α)
+  (g₂ : ∀ (b : β), P.last.B (g₀ b) → β) : β → P.M α :=
   fun b => ⟨M.corec_shape P g₀ g₂ b, M.corec_contents P g₀ g₁ g₂ _ _ rfl⟩
 
 /-- Corecursor for M-type of `P` -/
@@ -133,7 +133,7 @@ def M.path_dest_left {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a �
 
 /-- Implementation of destructor for M-type of `P` -/
 def M.path_dest_right {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B a → P.last.M}
-  (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.path P x ⟹ α) : ∀ j : P.last.B a, M.path P (f j) ⟹ α :=
+  (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.path P x ⟹ α) : ∀ (j : P.last.B a), M.path P (f j) ⟹ α :=
   fun j i c => f' i (M.path.child x a f h j i c)
 
 /-- Destructor for M-type of `P` -/
@@ -159,8 +159,8 @@ theorem M.dest_eq_dest' {α : Typevec n} {x : P.last.M} {a : P.A} {f : P.last.B 
   (h : Pfunctor.M.dest x = ⟨a, f⟩) (f' : M.path P x ⟹ α) : M.dest P ⟨x, f'⟩ = M.dest' P h f' :=
   M.dest'_eq_dest' _ _ _ _
 
-theorem M.dest_corec' {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ b : β, P.drop.B (g₀ b) ⟹ α)
-  (g₂ : ∀ b : β, P.last.B (g₀ b) → β) (x : β) :
+theorem M.dest_corec' {α : Typevec.{u} n} {β : Type u} (g₀ : β → P.A) (g₁ : ∀ (b : β), P.drop.B (g₀ b) ⟹ α)
+  (g₂ : ∀ (b : β), P.last.B (g₀ b) → β) (x : β) :
   M.dest P (M.corec' P g₀ g₁ g₂ x) = ⟨g₀ x, split_fun (g₁ x) (M.corec' P g₀ g₁ g₂ ∘ g₂ x)⟩ :=
   rfl
 
@@ -176,16 +176,24 @@ theorem M.dest_corec {α : Typevec n} {β : Type u} (g : β → P.obj (α.append
     conv  => toRHS rw [←split_drop_fun_last_fun f, append_fun_comp_split_fun]
     rfl
 
-theorem M.bisim_lemma {α : Typevec n} {a₁ : (Mp P).A} {f₁ : (Mp P).B a₁ ⟹ α} {a' : P.A} {f' : (P.B a').drop ⟹ α}
-  {f₁' : (P.B a').last → M P α} (e₁ : M.dest P ⟨a₁, f₁⟩ = ⟨a', split_fun f' f₁'⟩) :
-  ∃ (g₁' : _)(e₁' : Pfunctor.M.dest a₁ = ⟨a', g₁'⟩),
-    f' = M.path_dest_left P e₁' f₁ ∧ f₁' = fun x : (last P).B a' => ⟨g₁' x, M.path_dest_right P e₁' f₁ x⟩ :=
-  by 
-    generalize ef : @split_fun n _ (append1 α (M P α)) f' f₁' = ff  at e₁ 
-    cases' e₁' : Pfunctor.M.dest a₁ with a₁' g₁' 
-    rw [M.dest_eq_dest' _ e₁'] at e₁ 
-    cases e₁ 
-    exact ⟨_, e₁', split_fun_inj ef⟩
+-- error in Data.Pfunctor.Multivariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem M.bisim_lemma
+{α : typevec n}
+{a₁ : (Mp P).A}
+{f₁ : «expr ⟹ »((Mp P).B a₁, α)}
+{a' : P.A}
+{f' : «expr ⟹ »((P.B a').drop, α)}
+{f₁' : (P.B a').last → M P α}
+(e₁ : «expr = »(M.dest P ⟨a₁, f₁⟩, ⟨a', split_fun f' f₁'⟩)) : «expr∃ , »((g₁')
+ (e₁' : «expr = »(pfunctor.M.dest a₁, ⟨a', g₁'⟩)), «expr ∧ »(«expr = »(f', M.path_dest_left P e₁' f₁), «expr = »(f₁', λ
+   x : (last P).B a', ⟨g₁' x, M.path_dest_right P e₁' f₁ x⟩))) :=
+begin
+  generalize_hyp [ident ef] [":"] [expr «expr = »(@split_fun n _ (append1 α (M P α)) f' f₁', ff)] ["at", ident e₁],
+  cases [expr e₁', ":", expr pfunctor.M.dest a₁] ["with", ident a₁', ident g₁'],
+  rw [expr M.dest_eq_dest' _ e₁'] ["at", ident e₁],
+  cases [expr e₁] [],
+  exact [expr ⟨_, e₁', split_fun_inj ef⟩]
+end
 
 -- error in Data.Pfunctor.Multivariate.M: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem M.bisim
@@ -295,7 +303,7 @@ theorem M.dest_map {α β : Typevec n} (g : α ⟹ β) (x : P.M α) :
     rfl
 
 theorem M.map_dest {α β : Typevec n} (g : (α ::: P.M α) ⟹ (β ::: P.M β)) (x : P.M α)
-  (h : ∀ x : P.M α, last_fun g x = (drop_fun g <$$> x : P.M β)) : g <$$> M.dest P x = M.dest P (drop_fun g <$$> x) :=
+  (h : ∀ (x : P.M α), last_fun g x = (drop_fun g <$$> x : P.M β)) : g <$$> M.dest P x = M.dest P (drop_fun g <$$> x) :=
   by 
     rw [M.dest_map]
     congr 

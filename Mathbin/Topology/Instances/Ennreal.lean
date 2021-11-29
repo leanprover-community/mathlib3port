@@ -122,8 +122,12 @@ theorem continuous_at_coe_iff {α : Type _} [TopologicalSpace α] {x :  ℝ≥0 
   ContinuousAt f («expr↑ » x) ↔ ContinuousAt (f ∘ coeₓ :  ℝ≥0  → α) x :=
   tendsto_nhds_coe_iff
 
-theorem nhds_coe_coe {r p :  ℝ≥0 } : 𝓝 ((r : ℝ≥0∞), (p : ℝ≥0∞)) = (𝓝 (r, p)).map fun p :  ℝ≥0  ×  ℝ≥0  => (p.1, p.2) :=
-  ((open_embedding_coe.Prod open_embedding_coe).map_nhds_eq (r, p)).symm
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_coe_coe
+{r
+ p : «exprℝ≥0»()} : «expr = »(expr𝓝() ((r : «exprℝ≥0∞»()), (p : «exprℝ≥0∞»())), (expr𝓝() (r, p)).map (λ
+  p : «expr × »(«exprℝ≥0»(), «exprℝ≥0»()), (p.1, p.2))) :=
+((open_embedding_coe.prod open_embedding_coe).map_nhds_eq (r, p)).symm
 
 theorem continuous_of_real : Continuous Ennreal.ofReal :=
   (continuous_coe_iff.2 continuous_id).comp Nnreal.continuous_of_real
@@ -174,12 +178,12 @@ theorem nhds_top_basis : (𝓝 ∞).HasBasis (fun a => a < ∞) fun a => Ioi a :
   nhds_top_basis
 
 theorem tendsto_nhds_top_iff_nnreal {m : α → ℝ≥0∞} {f : Filter α} :
-  tendsto m f (𝓝 ⊤) ↔ ∀ x :  ℝ≥0 , ∀ᶠa in f, «expr↑ » x < m a :=
+  tendsto m f (𝓝 ⊤) ↔ ∀ (x :  ℝ≥0 ), ∀ᶠa in f, «expr↑ » x < m a :=
   by 
     simp only [nhds_top', tendsto_infi, tendsto_principal, mem_Ioi]
 
 theorem tendsto_nhds_top_iff_nat {m : α → ℝ≥0∞} {f : Filter α} :
-  tendsto m f (𝓝 ⊤) ↔ ∀ n : ℕ, ∀ᶠa in f, «expr↑ » n < m a :=
+  tendsto m f (𝓝 ⊤) ↔ ∀ (n : ℕ), ∀ᶠa in f, «expr↑ » n < m a :=
   tendsto_nhds_top_iff_nnreal.trans
     ⟨fun h n =>
         by 
@@ -192,11 +196,14 @@ theorem tendsto_nhds_top_iff_nat {m : α → ℝ≥0∞} {f : Filter α} :
               by 
                 rwa [←Ennreal.coe_nat, coe_lt_coe]⟩
 
-theorem tendsto_nhds_top {m : α → ℝ≥0∞} {f : Filter α} (h : ∀ n : ℕ, ∀ᶠa in f, «expr↑ » n < m a) : tendsto m f (𝓝 ⊤) :=
+theorem tendsto_nhds_top {m : α → ℝ≥0∞} {f : Filter α} (h : ∀ (n : ℕ), ∀ᶠa in f, «expr↑ » n < m a) :
+  tendsto m f (𝓝 ⊤) :=
   tendsto_nhds_top_iff_nat.2 h
 
-theorem tendsto_nat_nhds_top : tendsto (fun n : ℕ => «expr↑ » n) at_top (𝓝 ∞) :=
-  tendsto_nhds_top$ fun n => mem_at_top_sets.2 ⟨n+1, fun m hm => Ennreal.coe_nat_lt_coe_nat.2$ Nat.lt_of_succ_leₓ hm⟩
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_nat_nhds_top : tendsto (λ n : exprℕ(), «expr↑ »(n)) at_top (expr𝓝() «expr∞»()) :=
+«expr $ »(tendsto_nhds_top, λ
+ n, mem_at_top_sets.2 ⟨«expr + »(n, 1), λ m hm, «expr $ »(ennreal.coe_nat_lt_coe_nat.2, nat.lt_of_succ_le hm)⟩)
 
 @[simp, normCast]
 theorem tendsto_coe_nhds_top {f : α →  ℝ≥0 } {l : Filter α} :
@@ -209,11 +216,13 @@ theorem nhds_zero : 𝓝 (0 : ℝ≥0∞) = ⨅(a : _)(_ : a ≠ 0), 𝓟 (Iio a
     by 
       simp [bot_lt_iff_ne_bot, Iio]
 
-theorem nhds_zero_basis : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) fun a => Iio a :=
-  nhds_bot_basis
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_zero_basis : (expr𝓝() (0 : «exprℝ≥0∞»())).has_basis (λ a : «exprℝ≥0∞»(), «expr < »(0, a)) (λ a, Iio a) :=
+nhds_bot_basis
 
-theorem nhds_zero_basis_Iic : (𝓝 (0 : ℝ≥0∞)).HasBasis (fun a : ℝ≥0∞ => 0 < a) Iic :=
-  nhds_bot_basis_Iic
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_zero_basis_Iic : (expr𝓝() (0 : «exprℝ≥0∞»())).has_basis (λ a : «exprℝ≥0∞»(), «expr < »(0, a)) Iic :=
+nhds_bot_basis_Iic
 
 @[instance]
 theorem nhds_within_Ioi_coe_ne_bot {r :  ℝ≥0 } : (𝓝[Ioi r] (r : ℝ≥0∞)).ne_bot :=
@@ -280,12 +289,12 @@ end
 /-- Characterization of neighborhoods for `ℝ≥0∞` numbers. See also `tendsto_order`
 for a version with strict inequalities. -/
 protected theorem tendsto_nhds {f : Filter α} {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha : a ≠ ⊤) :
-  tendsto u f (𝓝 a) ↔ ∀ ε _ : ε > 0, ∀ᶠx in f, u x ∈ Icc (a - ε) (a+ε) :=
+  tendsto u f (𝓝 a) ↔ ∀ ε (_ : ε > 0), ∀ᶠx in f, u x ∈ Icc (a - ε) (a+ε) :=
   by 
     simp only [nhds_of_ne_top ha, tendsto_infi, tendsto_principal, mem_Icc]
 
 protected theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {f : β → ℝ≥0∞} {a : ℝ≥0∞} (ha : a ≠ ⊤) :
-  tendsto f at_top (𝓝 a) ↔ ∀ ε _ : ε > 0, ∃ N, ∀ n _ : n ≥ N, f n ∈ Icc (a - ε) (a+ε) :=
+  tendsto f at_top (𝓝 a) ↔ ∀ ε (_ : ε > 0), ∃ N, ∀ n (_ : n ≥ N), f n ∈ Icc (a - ε) (a+ε) :=
   by 
     simp only [Ennreal.tendsto_nhds ha, mem_at_top_sets, mem_set_of_eq, Filter.Eventually]
 
@@ -301,7 +310,7 @@ instance  : HasContinuousAdd ℝ≥0∞ :=
     simp only [ContinuousAt, some_eq_coe, nhds_coe_coe, ←coe_add, tendsto_map'_iff, · ∘ ·, tendsto_coe, tendsto_add]
 
 protected theorem tendsto_at_top_zero [hβ : Nonempty β] [SemilatticeSup β] {f : β → ℝ≥0∞} :
-  Filter.atTop.Tendsto f (𝓝 0) ↔ ∀ ε _ : ε > 0, ∃ N, ∀ n _ : n ≥ N, f n ≤ ε :=
+  Filter.atTop.Tendsto f (𝓝 0) ↔ ∀ ε (_ : ε > 0), ∃ N, ∀ n (_ : n ≥ N), f n ≤ ε :=
   by 
     rw [Ennreal.tendsto_at_top zero_ne_top]
     ·
@@ -309,43 +318,63 @@ protected theorem tendsto_at_top_zero [hβ : Nonempty β] [SemilatticeSup β] {f
     ·
       exact hβ
 
-protected theorem tendsto_mul (ha : a ≠ 0 ∨ b ≠ ⊤) (hb : b ≠ 0 ∨ a ≠ ⊤) :
-  tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1*p.2) (𝓝 (a, b)) (𝓝 (a*b)) :=
-  have ht : ∀ b : ℝ≥0∞, b ≠ 0 → tendsto (fun p : ℝ≥0∞ × ℝ≥0∞ => p.1*p.2) (𝓝 ((⊤ : ℝ≥0∞), b)) (𝓝 ⊤) :=
-    by 
-      refine' fun b hb => tendsto_nhds_top_iff_nnreal.2$ fun n => _ 
-      rcases lt_iff_exists_nnreal_btwn.1 (pos_iff_ne_zero.2 hb) with ⟨ε, hε, hεb⟩
-      replace hε : 0 < ε 
-      exact coe_pos.1 hε 
-      filterUpwards [ProdIsOpen.mem_nhds (lt_mem_nhds$ @coe_lt_top (n / ε)) (lt_mem_nhds hεb)]
-      rintro ⟨a₁, a₂⟩ ⟨h₁, h₂⟩
-      dsimp  at h₁ h₂⊢
-      rw [←div_mul_cancel n hε.ne', coe_mul]
-      exact mul_lt_mul h₁ h₂ 
-  by 
-    cases a
-    ·
-      simp [none_eq_top] at hb 
-      simp [none_eq_top, ht b hb, top_mul, hb]
-    cases b
-    ·
-      simp [none_eq_top] at ha 
-      simp [nhds_swap (a : ℝ≥0∞) ⊤, none_eq_top, some_eq_coe, top_mul, tendsto_map'_iff, · ∘ ·, mul_commₓ]
-    simp [some_eq_coe, nhds_coe_coe, tendsto_map'_iff, · ∘ ·]
-    simp only [coe_mul.symm, tendsto_coe, tendsto_mul]
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem tendsto_mul
+(ha : «expr ∨ »(«expr ≠ »(a, 0), «expr ≠ »(b, «expr⊤»())))
+(hb : «expr ∨ »(«expr ≠ »(b, 0), «expr ≠ »(a, «expr⊤»()))) : tendsto (λ
+ p : «expr × »(«exprℝ≥0∞»(), «exprℝ≥0∞»()), «expr * »(p.1, p.2)) (expr𝓝() (a, b)) (expr𝓝() «expr * »(a, b)) :=
+have ht : ∀
+b : «exprℝ≥0∞»(), «expr ≠ »(b, 0) → tendsto (λ
+ p : «expr × »(«exprℝ≥0∞»(), «exprℝ≥0∞»()), «expr * »(p.1, p.2)) (expr𝓝() ((«expr⊤»() : «exprℝ≥0∞»()), b)) (expr𝓝() «expr⊤»()), begin
+  refine [expr assume b hb, «expr $ »(tendsto_nhds_top_iff_nnreal.2, assume n, _)],
+  rcases [expr lt_iff_exists_nnreal_btwn.1 (pos_iff_ne_zero.2 hb), "with", "⟨", ident ε, ",", ident hε, ",", ident hεb, "⟩"],
+  replace [ident hε] [":", expr «expr < »(0, ε)] [],
+  from [expr coe_pos.1 hε],
+  filter_upwards ["[", expr prod_is_open.mem_nhds «expr $ »(lt_mem_nhds, @coe_lt_top «expr / »(n, ε)) (lt_mem_nhds hεb), "]"] [],
+  rintros ["⟨", ident a₁, ",", ident a₂, "⟩", "⟨", ident h₁, ",", ident h₂, "⟩"],
+  dsimp [] [] [] ["at", ident h₁, ident h₂, "⊢"],
+  rw ["[", "<-", expr div_mul_cancel n hε.ne', ",", expr coe_mul, "]"] [],
+  exact [expr mul_lt_mul h₁ h₂]
+end,
+begin
+  cases [expr a] [],
+  { simp [] [] [] ["[", expr none_eq_top, "]"] [] ["at", ident hb],
+    simp [] [] [] ["[", expr none_eq_top, ",", expr ht b hb, ",", expr top_mul, ",", expr hb, "]"] [] [] },
+  cases [expr b] [],
+  { simp [] [] [] ["[", expr none_eq_top, "]"] [] ["at", ident ha],
+    simp [] [] [] ["[", "*", ",", expr nhds_swap (a : «exprℝ≥0∞»()) «expr⊤»(), ",", expr none_eq_top, ",", expr some_eq_coe, ",", expr top_mul, ",", expr tendsto_map'_iff, ",", expr («expr ∘ »), ",", expr mul_comm, "]"] [] [] },
+  simp [] [] [] ["[", expr some_eq_coe, ",", expr nhds_coe_coe, ",", expr tendsto_map'_iff, ",", expr («expr ∘ »), "]"] [] [],
+  simp [] [] ["only"] ["[", expr coe_mul.symm, ",", expr tendsto_coe, ",", expr tendsto_mul, "]"] [] []
+end
 
-protected theorem tendsto.mul {f : Filter α} {ma : α → ℝ≥0∞} {mb : α → ℝ≥0∞} {a b : ℝ≥0∞} (hma : tendsto ma f (𝓝 a))
-  (ha : a ≠ 0 ∨ b ≠ ⊤) (hmb : tendsto mb f (𝓝 b)) (hb : b ≠ 0 ∨ a ≠ ⊤) : tendsto (fun a => ma a*mb a) f (𝓝 (a*b)) :=
-  show tendsto ((fun p : ℝ≥0∞ × ℝ≥0∞ => p.1*p.2) ∘ fun a => (ma a, mb a)) f (𝓝 (a*b)) from
-    tendsto.comp (Ennreal.tendsto_mul ha hb) (hma.prod_mk_nhds hmb)
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem tendsto.mul
+{f : filter α}
+{ma : α → «exprℝ≥0∞»()}
+{mb : α → «exprℝ≥0∞»()}
+{a b : «exprℝ≥0∞»()}
+(hma : tendsto ma f (expr𝓝() a))
+(ha : «expr ∨ »(«expr ≠ »(a, 0), «expr ≠ »(b, «expr⊤»())))
+(hmb : tendsto mb f (expr𝓝() b))
+(hb : «expr ∨ »(«expr ≠ »(b, 0), «expr ≠ »(a, «expr⊤»()))) : tendsto (λ
+ a, «expr * »(ma a, mb a)) f (expr𝓝() «expr * »(a, b)) :=
+show tendsto «expr ∘ »(λ
+ p : «expr × »(«exprℝ≥0∞»(), «exprℝ≥0∞»()), «expr * »(p.1, p.2), λ
+ a, (ma a, mb a)) f (expr𝓝() «expr * »(a, b)), from tendsto.comp (ennreal.tendsto_mul ha hb) (hma.prod_mk_nhds hmb)
 
-protected theorem tendsto.const_mul {f : Filter α} {m : α → ℝ≥0∞} {a b : ℝ≥0∞} (hm : tendsto m f (𝓝 b))
-  (hb : b ≠ 0 ∨ a ≠ ⊤) : tendsto (fun b => a*m b) f (𝓝 (a*b)) :=
-  by_cases
-    (fun this : a = 0 =>
-      by 
-        simp [this, tendsto_const_nhds])
-    fun ha : a ≠ 0 => Ennreal.Tendsto.mul tendsto_const_nhds (Or.inl ha) hm hb
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem tendsto.const_mul
+{f : filter α}
+{m : α → «exprℝ≥0∞»()}
+{a b : «exprℝ≥0∞»()}
+(hm : tendsto m f (expr𝓝() b))
+(hb : «expr ∨ »(«expr ≠ »(b, 0), «expr ≠ »(a, «expr⊤»()))) : tendsto (λ
+ b, «expr * »(a, m b)) f (expr𝓝() «expr * »(a, b)) :=
+by_cases (assume: «expr = »(a, 0), by simp [] [] [] ["[", expr this, ",", expr tendsto_const_nhds, "]"] [] []) (assume
+ ha : «expr ≠ »(a, 0), ennreal.tendsto.mul tendsto_const_nhds (or.inl ha) hm hb)
 
 protected theorem tendsto.mul_const {f : Filter α} {m : α → ℝ≥0∞} {a b : ℝ≥0∞} (hm : tendsto m f (𝓝 a))
   (ha : a ≠ 0 ∨ b ≠ ⊤) : tendsto (fun x => m x*b) f (𝓝 (a*b)) :=
@@ -353,7 +382,7 @@ protected theorem tendsto.mul_const {f : Filter α} {m : α → ℝ≥0∞} {a b
     simpa only [mul_commₓ] using Ennreal.Tendsto.const_mul hm ha
 
 theorem tendsto_finset_prod_of_ne_top {ι : Type _} {f : ι → α → ℝ≥0∞} {x : Filter α} {a : ι → ℝ≥0∞} (s : Finset ι)
-  (h : ∀ i _ : i ∈ s, tendsto (f i) x (𝓝 (a i))) (h' : ∀ i _ : i ∈ s, a i ≠ ∞) :
+  (h : ∀ i (_ : i ∈ s), tendsto (f i) x (𝓝 (a i))) (h' : ∀ i (_ : i ∈ s), a i ≠ ∞) :
   tendsto (fun b => ∏c in s, f c b) x (𝓝 (∏c in s, a c)) :=
   by 
     induction' s using Finset.induction with a s has IH
@@ -381,24 +410,19 @@ protected theorem continuous_const_mul {a : ℝ≥0∞} (ha : a ≠ ⊤) : Conti
 protected theorem continuous_mul_const {a : ℝ≥0∞} (ha : a ≠ ⊤) : Continuous fun x => x*a :=
   continuous_iff_continuous_at.2$ fun x => Ennreal.continuous_at_mul_const (Or.inl ha)
 
-@[continuity]
-theorem continuous_pow (n : ℕ) : Continuous fun a : ℝ≥0∞ => a ^ n :=
-  by 
-    induction' n with n IH
-    ·
-      simp [continuous_const]
-    simpRw [Nat.succ_eq_add_one, pow_addₓ, pow_oneₓ, continuous_iff_continuous_at]
-    intro x 
-    refine' Ennreal.Tendsto.mul (IH.tendsto _) _ tendsto_id _ <;> byCases' H : x = 0
-    ·
-      simp only [H, zero_ne_top, Ne.def, or_trueₓ, not_false_iff]
-    ·
-      exact Or.inl fun h => H (pow_eq_zero h)
-    ·
-      simp only [H, pow_eq_top_iff, zero_ne_top, false_orₓ, eq_self_iff_true, not_true, Ne.def, not_false_iff,
-        false_andₓ]
-    ·
-      simp only [H, true_orₓ, Ne.def, not_false_iff]
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_pow (n : exprℕ()) : continuous (λ a : «exprℝ≥0∞»(), «expr ^ »(a, n)) :=
+begin
+  induction [expr n] [] ["with", ident n, ident IH] [],
+  { simp [] [] [] ["[", expr continuous_const, "]"] [] [] },
+  simp_rw ["[", expr nat.succ_eq_add_one, ",", expr pow_add, ",", expr pow_one, ",", expr continuous_iff_continuous_at, "]"] [],
+  assume [binders (x)],
+  refine [expr ennreal.tendsto.mul (IH.tendsto _) _ tendsto_id _]; by_cases [expr H, ":", expr «expr = »(x, 0)],
+  { simp [] [] ["only"] ["[", expr H, ",", expr zero_ne_top, ",", expr ne.def, ",", expr or_true, ",", expr not_false_iff, "]"] [] [] },
+  { exact [expr or.inl (λ h, H (pow_eq_zero h))] },
+  { simp [] [] ["only"] ["[", expr H, ",", expr pow_eq_top_iff, ",", expr zero_ne_top, ",", expr false_or, ",", expr eq_self_iff_true, ",", expr not_true, ",", expr ne.def, ",", expr not_false_iff, ",", expr false_and, "]"] [] [] },
+  { simp [] [] ["only"] ["[", expr H, ",", expr true_or, ",", expr ne.def, ",", expr not_false_iff, "]"] [] [] }
+end
 
 protected theorem tendsto.pow {f : Filter α} {m : α → ℝ≥0∞} {a : ℝ≥0∞} {n : ℕ} (hm : tendsto m f (𝓝 a)) :
   tendsto (fun x => m x ^ n) f (𝓝 (a ^ n)) :=
@@ -487,8 +511,10 @@ protected theorem tendsto.div_const {f : Filter α} {m : α → ℝ≥0∞} {a b
     apply tendsto.mul_const hm 
     simp [ha]
 
-protected theorem tendsto_inv_nat_nhds_zero : tendsto (fun n : ℕ => (n : ℝ≥0∞)⁻¹) at_top (𝓝 0) :=
-  Ennreal.inv_top ▸ Ennreal.tendsto_inv_iff.2 tendsto_nat_nhds_top
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem tendsto_inv_nat_nhds_zero : tendsto (λ n : exprℕ(), «expr ⁻¹»((n : «exprℝ≥0∞»()))) at_top (expr𝓝() 0) :=
+«expr ▸ »(ennreal.inv_top, ennreal.tendsto_inv_iff.2 tendsto_nat_nhds_top)
 
 theorem bsupr_add {ι} {s : Set ι} (hs : s.nonempty) {f : ι → ℝ≥0∞} :
   ((⨆(i : _)(_ : i ∈ s), f i)+a) = ⨆(i : _)(_ : i ∈ s), f i+a :=
@@ -629,12 +655,16 @@ section tsum
 
 variable{f g : α → ℝ≥0∞}
 
-@[normCast]
-protected theorem has_sum_coe {f : α →  ℝ≥0 } {r :  ℝ≥0 } : HasSum (fun a => (f a : ℝ≥0∞)) («expr↑ » r) ↔ HasSum f r :=
-  have  : (fun s : Finset α => ∑a in s, «expr↑ » (f a)) = ((coeₓ :  ℝ≥0  → ℝ≥0∞) ∘ fun s : Finset α => ∑a in s, f a) :=
-    funext$ fun s => Ennreal.coe_finset_sum.symm 
-  by 
-    unfold HasSum <;> rw [this, tendsto_coe]
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[norm_cast #[]]
+protected
+theorem has_sum_coe
+{f : α → «exprℝ≥0»()}
+{r : «exprℝ≥0»()} : «expr ↔ »(has_sum (λ a, (f a : «exprℝ≥0∞»())) «expr↑ »(r), has_sum f r) :=
+have «expr = »(λ
+ s : finset α, «expr∑ in , »((a), s, «expr↑ »(f a)), «expr ∘ »((coe : «exprℝ≥0»() → «exprℝ≥0∞»()), λ
+  s : finset α, «expr∑ in , »((a), s, f a))), from «expr $ »(funext, assume s, ennreal.coe_finset_sum.symm),
+by unfold [ident has_sum] []; rw ["[", expr this, ",", expr tendsto_coe, "]"] []
 
 protected theorem tsum_coe_eq {f : α →  ℝ≥0 } (h : HasSum f r) : (∑'a, (f a : ℝ≥0∞)) = r :=
   (Ennreal.has_sum_coe.2 h).tsum_eq
@@ -662,13 +692,20 @@ theorem tsum_coe_ne_top_iff_summable {f : β →  ℝ≥0 } : (∑'b, (f b : ℝ
 protected theorem tsum_eq_supr_sum : (∑'a, f a) = ⨆s : Finset α, ∑a in s, f a :=
   Ennreal.has_sum.tsum_eq
 
-protected theorem tsum_eq_supr_sum' {ι : Type _} (s : ι → Finset α) (hs : ∀ t, ∃ i, t ⊆ s i) :
-  (∑'a, f a) = ⨆i, ∑a in s i, f a :=
-  by 
-    rw [Ennreal.tsum_eq_supr_sum]
-    symm 
-    change (⨆i : ι, (fun t : Finset α => ∑a in t, f a) (s i)) = ⨆s : Finset α, ∑a in s, f a 
-    exact (Finset.sum_mono_set f).supr_comp_eq hs
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem tsum_eq_supr_sum'
+{ι : Type*}
+(s : ι → finset α)
+(hs : ∀
+ t, «expr∃ , »((i), «expr ⊆ »(t, s i))) : «expr = »(«expr∑' , »((a), f a), «expr⨆ , »((i), «expr∑ in , »((a), s i, f a))) :=
+begin
+  rw ["[", expr ennreal.tsum_eq_supr_sum, "]"] [],
+  symmetry,
+  change [expr «expr = »(«expr⨆ , »((i : ι), λ
+     t : finset α, «expr∑ in , »((a), t, f a) (s i)), «expr⨆ , »((s : finset α), «expr∑ in , »((a), s, f a)))] [] [],
+  exact [expr (finset.sum_mono_set f).supr_comp_eq hs]
+end
 
 protected theorem tsum_sigma {β : α → Type _} (f : ∀ a, β a → ℝ≥0∞) : (∑'p : Σa, β a, f p.1 p.2) = ∑'a b, f a b :=
   tsum_sigma' (fun b => Ennreal.summable) Ennreal.summable
@@ -754,68 +791,56 @@ end
 protected theorem ne_top_of_tsum_ne_top (h : (∑'a, f a) ≠ ∞) (a : α) : f a ≠ ∞ :=
   fun ha => h$ Ennreal.tsum_eq_top_of_eq_top ⟨a, ha⟩
 
-protected theorem tsum_mul_left : (∑'i, a*f i) = a*∑'i, f i :=
-  if h : ∀ i, f i = 0 then
-    by 
-      simp [h]
-  else
-    let ⟨i, (hi : f i ≠ 0)⟩ := not_forall.mp h 
-    have sum_ne_0 : (∑'i, f i) ≠ 0 :=
-      ne_of_gtₓ$
-        calc 0 < f i := lt_of_le_of_neₓ (zero_le _) hi.symm 
-          _ ≤ ∑'i, f i := Ennreal.le_tsum _ 
-          
-    have  : tendsto (fun s : Finset α => ∑j in s, a*f j) at_top (𝓝 (a*∑'i, f i)) :=
-      by 
-        rw
-            [←show ((·*·) a ∘ fun s : Finset α => ∑j in s, f j) = fun s => ∑j in s, a*f j from
-              funext$ fun s => Finset.mul_sum] <;>
-          exact Ennreal.Tendsto.const_mul ennreal.summable.has_sum (Or.inl sum_ne_0)
-    HasSum.tsum_eq this
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected theorem tsum_mul_left : «expr = »(«expr∑' , »((i), «expr * »(a, f i)), «expr * »(a, «expr∑' , »((i), f i))) :=
+if h : ∀
+i, «expr = »(f i, 0) then by simp [] [] [] ["[", expr h, "]"] [] [] else let ⟨i, (hi : «expr ≠ »(f i, 0))⟩ := not_forall.mp h in
+have sum_ne_0 : «expr ≠ »(«expr∑' , »((i), f i), 0), from «expr $ »(ne_of_gt, calc
+   «expr < »(0, f i) : lt_of_le_of_ne (zero_le _) hi.symm
+   «expr ≤ »(..., «expr∑' , »((i), f i)) : ennreal.le_tsum _),
+have tendsto (λ
+ s : finset α, «expr∑ in , »((j), s, «expr * »(a, f j))) at_top (expr𝓝() «expr * »(a, «expr∑' , »((i), f i))), by rw ["[", "<-", expr show «expr = »(«expr ∘ »(((«expr * »)) a, λ
+   s : finset α, «expr∑ in , »((j), s, f j)), λ
+  s, «expr∑ in , »((j), s, «expr * »(a, f j))), from «expr $ »(funext, λ
+  s, finset.mul_sum), "]"] []; exact [expr ennreal.tendsto.const_mul ennreal.summable.has_sum (or.inl sum_ne_0)],
+has_sum.tsum_eq this
 
 protected theorem tsum_mul_right : (∑'i, f i*a) = (∑'i, f i)*a :=
   by 
     simp [mul_commₓ, Ennreal.tsum_mul_left]
 
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem tsum_supr_eq {α : Type _} (a : α) {f : α → ℝ≥0∞} : (∑'b : α, ⨆h : a = b, f b) = f a :=
-  le_antisymmₓ
-    (by 
-      rw [Ennreal.tsum_eq_supr_sum] <;>
-        exact
-          supr_le
-            fun s =>
-              calc (∑b in s, ⨆h : a = b, f b) ≤ ∑b in {a}, ⨆h : a = b, f b :=
-                Finset.sum_le_sum_of_ne_zero$
-                  fun b _ hb =>
-                    suffices a = b by 
-                      simpa using this.symm 
-                    Classical.by_contradiction$
-                      fun h =>
-                        by 
-                          simpa [h] using hb 
-                _ = f a :=
-                by 
-                  simp 
-                )
-    (calc f a ≤ ⨆h : a = a, f a := le_supr (fun h : a = a => f a) rfl 
-      _ ≤ ∑'b : α, ⨆h : a = b, f b := Ennreal.le_tsum _
-      )
+theorem tsum_supr_eq
+{α : Type*}
+(a : α)
+{f : α → «exprℝ≥0∞»()} : «expr = »(«expr∑' , »((b : α), «expr⨆ , »((h : «expr = »(a, b)), f b)), f a) :=
+le_antisymm (by rw ["[", expr ennreal.tsum_eq_supr_sum, "]"] []; exact [expr supr_le (assume s, calc
+     «expr ≤ »(«expr∑ in , »((b), s, «expr⨆ , »((h : «expr = »(a, b)), f b)), «expr∑ in , »((b), {a}, «expr⨆ , »((h : «expr = »(a, b)), f b))) : «expr $ »(finset.sum_le_sum_of_ne_zero, assume
+      b _ hb, suffices «expr = »(a, b), by simpa [] [] [] [] [] ["using", expr this.symm],
+      «expr $ »(classical.by_contradiction, assume h, by simpa [] [] [] ["[", expr h, "]"] [] ["using", expr hb]))
+     «expr = »(..., f a) : by simp [] [] [] [] [] [])]) (calc
+   «expr ≤ »(f a, «expr⨆ , »((h : «expr = »(a, a)), f a)) : le_supr (λ h : «expr = »(a, a), f a) rfl
+   «expr ≤ »(..., «expr∑' , »((b : α), «expr⨆ , »((h : «expr = »(a, b)), f b))) : ennreal.le_tsum _)
 
-theorem has_sum_iff_tendsto_nat {f : ℕ → ℝ≥0∞} (r : ℝ≥0∞) :
-  HasSum f r ↔ tendsto (fun n : ℕ => ∑i in Finset.range n, f i) at_top (𝓝 r) :=
-  by 
-    refine' ⟨HasSum.tendsto_sum_nat, fun h => _⟩
-    rw [←supr_eq_of_tendsto _ h, ←Ennreal.tsum_eq_supr_nat]
-    ·
-      exact ennreal.summable.has_sum
-    ·
-      exact fun s t hst => Finset.sum_le_sum_of_subset (Finset.range_subset.2 hst)
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_sum_iff_tendsto_nat
+{f : exprℕ() → «exprℝ≥0∞»()}
+(r : «exprℝ≥0∞»()) : «expr ↔ »(has_sum f r, tendsto (λ
+  n : exprℕ(), «expr∑ in , »((i), finset.range n, f i)) at_top (expr𝓝() r)) :=
+begin
+  refine [expr ⟨has_sum.tendsto_sum_nat, assume h, _⟩],
+  rw ["[", "<-", expr supr_eq_of_tendsto _ h, ",", "<-", expr ennreal.tsum_eq_supr_nat, "]"] [],
+  { exact [expr ennreal.summable.has_sum] },
+  { exact [expr assume s t hst, finset.sum_le_sum_of_subset (finset.range_subset.2 hst)] }
+end
 
-theorem tendsto_nat_tsum (f : ℕ → ℝ≥0∞) : tendsto (fun n : ℕ => ∑i in Finset.range n, f i) at_top (𝓝 (∑'n, f n)) :=
-  by 
-    rw [←has_sum_iff_tendsto_nat]
-    exact ennreal.summable.has_sum
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_nat_tsum
+(f : exprℕ() → «exprℝ≥0∞»()) : tendsto (λ
+ n : exprℕ(), «expr∑ in , »((i), finset.range n, f i)) at_top (expr𝓝() «expr∑' , »((n), f n)) :=
+by { rw ["<-", expr has_sum_iff_tendsto_nat] [],
+  exact [expr ennreal.summable.has_sum] }
 
 theorem to_nnreal_apply_of_tsum_ne_top {α : Type _} {f : α → ℝ≥0∞} (hf : (∑'i, f i) ≠ ∞) (x : α) :
   (((Ennreal.toNnreal ∘ f) x :  ℝ≥0 ) : ℝ≥0∞) = f x :=
@@ -845,16 +870,21 @@ theorem tendsto_at_top_zero_of_tsum_ne_top {f : ℕ → ℝ≥0∞} (hf : (∑'x
     rw [←Nat.cofinite_eq_at_top]
     exact tendsto_cofinite_zero_of_tsum_ne_top hf
 
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The sum over the complement of a finset tends to `0` when the finset grows to cover the whole
 space. This does not need a summability assumption, as otherwise all sums are zero. -/
-theorem tendsto_tsum_compl_at_top_zero {α : Type _} {f : α → ℝ≥0∞} (hf : (∑'x, f x) ≠ ∞) :
-  tendsto (fun s : Finset α => ∑'b : { x // x ∉ s }, f b) at_top (𝓝 0) :=
-  by 
-    lift f to α →  ℝ≥0  using Ennreal.ne_top_of_tsum_ne_top hf 
-    convert Ennreal.tendsto_coe.2 (Nnreal.tendsto_tsum_compl_at_top_zero f)
-    ext1 s 
-    rw [Ennreal.coe_tsum]
-    exact Nnreal.summable_comp_injective (tsum_coe_ne_top_iff_summable.1 hf) Subtype.coe_injective
+theorem tendsto_tsum_compl_at_top_zero
+{α : Type*}
+{f : α → «exprℝ≥0∞»()}
+(hf : «expr ≠ »(«expr∑' , »((x), f x), «expr∞»())) : tendsto (λ
+ s : finset α, «expr∑' , »((b : {x // «expr ∉ »(x, s)}), f b)) at_top (expr𝓝() 0) :=
+begin
+  lift [expr f] ["to", expr α → «exprℝ≥0»()] ["using", expr ennreal.ne_top_of_tsum_ne_top hf] [],
+  convert [] [expr ennreal.tendsto_coe.2 (nnreal.tendsto_tsum_compl_at_top_zero f)] [],
+  ext1 [] [ident s],
+  rw [expr ennreal.coe_tsum] [],
+  exact [expr nnreal.summable_comp_injective (tsum_coe_ne_top_iff_summable.1 hf) subtype.coe_injective]
+end
 
 protected theorem tsum_apply {ι α : Type _} {f : ι → α → ℝ≥0∞} {x : α} : (∑'i, f i) x = ∑'i, f i x :=
   tsum_apply$ Pi.summable.mpr$ fun _ => Ennreal.summable
@@ -943,31 +973,37 @@ theorem summable_of_le {f g : β →  ℝ≥0 } (hgf : ∀ b, g b ≤ f b) : Sum
   let ⟨p, _, hp⟩ := exists_le_has_sum_of_le hgf hfr 
   hp.summable
 
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A series of non-negative real numbers converges to `r` in the sense of `has_sum` if and only if
 the sequence of partial sum converges to `r`. -/
-theorem has_sum_iff_tendsto_nat {f : ℕ →  ℝ≥0 } {r :  ℝ≥0 } :
-  HasSum f r ↔ tendsto (fun n : ℕ => ∑i in Finset.range n, f i) at_top (𝓝 r) :=
-  by 
-    rw [←Ennreal.has_sum_coe, Ennreal.has_sum_iff_tendsto_nat]
-    simp only [ennreal.coe_finset_sum.symm]
-    exact Ennreal.tendsto_coe
+theorem has_sum_iff_tendsto_nat
+{f : exprℕ() → «exprℝ≥0»()}
+{r : «exprℝ≥0»()} : «expr ↔ »(has_sum f r, tendsto (λ
+  n : exprℕ(), «expr∑ in , »((i), finset.range n, f i)) at_top (expr𝓝() r)) :=
+begin
+  rw ["[", "<-", expr ennreal.has_sum_coe, ",", expr ennreal.has_sum_iff_tendsto_nat, "]"] [],
+  simp [] [] ["only"] ["[", expr ennreal.coe_finset_sum.symm, "]"] [] [],
+  exact [expr ennreal.tendsto_coe]
+end
 
-theorem not_summable_iff_tendsto_nat_at_top {f : ℕ →  ℝ≥0 } :
-  ¬Summable f ↔ tendsto (fun n : ℕ => ∑i in Finset.range n, f i) at_top at_top :=
-  by 
-    split 
-    ·
-      intro h 
-      refine' ((tendsto_of_monotone _).resolve_right h).comp _ 
-      exacts[Finset.sum_mono_set _, tendsto_finset_range]
-    ·
-      rintro hnat ⟨r, hr⟩
-      exact not_tendsto_nhds_of_tendsto_at_top hnat _ (has_sum_iff_tendsto_nat.1 hr)
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem not_summable_iff_tendsto_nat_at_top
+{f : exprℕ() → «exprℝ≥0»()} : «expr ↔ »(«expr¬ »(summable f), tendsto (λ
+  n : exprℕ(), «expr∑ in , »((i), finset.range n, f i)) at_top at_top) :=
+begin
+  split,
+  { intros [ident h],
+    refine [expr ((tendsto_of_monotone _).resolve_right h).comp _],
+    exacts ["[", expr finset.sum_mono_set _, ",", expr tendsto_finset_range, "]"] },
+  { rintros [ident hnat, "⟨", ident r, ",", ident hr, "⟩"],
+    exact [expr not_tendsto_nhds_of_tendsto_at_top hnat _ (has_sum_iff_tendsto_nat.1 hr)] }
+end
 
-theorem summable_iff_not_tendsto_nat_at_top {f : ℕ →  ℝ≥0 } :
-  Summable f ↔ ¬tendsto (fun n : ℕ => ∑i in Finset.range n, f i) at_top at_top :=
-  by 
-    rw [←not_iff_not, not_not, not_summable_iff_tendsto_nat_at_top]
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_iff_not_tendsto_nat_at_top
+{f : exprℕ() → «exprℝ≥0»()} : «expr ↔ »(summable f, «expr¬ »(tendsto (λ
+   n : exprℕ(), «expr∑ in , »((i), finset.range n, f i)) at_top at_top)) :=
+by rw ["[", "<-", expr not_iff_not, ",", expr not_not, ",", expr not_summable_iff_tendsto_nat_at_top, "]"] []
 
 theorem summable_of_sum_range_le {f : ℕ →  ℝ≥0 } {c :  ℝ≥0 } (h : ∀ n, (∑i in Finset.range n, f i) ≤ c) : Summable f :=
   by 
@@ -983,7 +1019,7 @@ theorem tsum_comp_le_tsum_of_inj {β : Type _} {f : α →  ℝ≥0 } (hf : Summ
   (hi : Function.Injective i) : (∑'x, f (i x)) ≤ ∑'x, f x :=
   tsum_le_tsum_of_inj i hi (fun c hc => zero_le _) (fun b => le_reflₓ _) (summable_comp_injective hf hi) hf
 
-theorem summable_sigma {β : ∀ x : α, Type _} {f : (Σx, β x) →  ℝ≥0 } :
+theorem summable_sigma {β : ∀ (x : α), Type _} {f : (Σx, β x) →  ℝ≥0 } :
   Summable f ↔ (∀ x, Summable fun y => f ⟨x, y⟩) ∧ Summable fun x => ∑'y, f ⟨x, y⟩ :=
   by 
     split 
@@ -1039,7 +1075,7 @@ theorem has_sum_strict_mono {f g : α →  ℝ≥0 } {sf sg :  ℝ≥0 } (hf : H
   let ⟨hle, i, hi⟩ := Pi.lt_def.mp h 
   has_sum_lt hle hi hf hg
 
-theorem tsum_lt_tsum {f g : α →  ℝ≥0 } {i : α} (h : ∀ a : α, f a ≤ g a) (hi : f i < g i) (hg : Summable g) :
+theorem tsum_lt_tsum {f g : α →  ℝ≥0 } {i : α} (h : ∀ (a : α), f a ≤ g a) (hi : f i < g i) (hg : Summable g) :
   (∑'n, f n) < ∑'n, g n :=
   has_sum_lt h hi (summable_of_le h hg).HasSum hg.has_sum
 
@@ -1095,38 +1131,51 @@ theorem summable_of_nonneg_of_le {f g : β → ℝ} (hg : ∀ b, 0 ≤ g b) (hgf
     rw [Nnreal.summable_coe] at hf⊢
     exact Nnreal.summable_of_le (fun b => Nnreal.coe_le_coe.1 (hgf b)) hf
 
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A series of non-negative real numbers converges to `r` in the sense of `has_sum` if and only if
 the sequence of partial sum converges to `r`. -/
-theorem has_sum_iff_tendsto_nat_of_nonneg {f : ℕ → ℝ} (hf : ∀ i, 0 ≤ f i) (r : ℝ) :
-  HasSum f r ↔ tendsto (fun n : ℕ => ∑i in Finset.range n, f i) at_top (𝓝 r) :=
-  by 
-    lift f to ℕ →  ℝ≥0  using hf 
-    simp only [HasSum, ←Nnreal.coe_sum, Nnreal.tendsto_coe']
-    exact exists_congr fun hr => Nnreal.has_sum_iff_tendsto_nat
+theorem has_sum_iff_tendsto_nat_of_nonneg
+{f : exprℕ() → exprℝ()}
+(hf : ∀ i, «expr ≤ »(0, f i))
+(r : exprℝ()) : «expr ↔ »(has_sum f r, tendsto (λ
+  n : exprℕ(), «expr∑ in , »((i), finset.range n, f i)) at_top (expr𝓝() r)) :=
+begin
+  lift [expr f] ["to", expr exprℕ() → «exprℝ≥0»()] ["using", expr hf] [],
+  simp [] [] ["only"] ["[", expr has_sum, ",", "<-", expr nnreal.coe_sum, ",", expr nnreal.tendsto_coe', "]"] [] [],
+  exact [expr exists_congr (λ hr, nnreal.has_sum_iff_tendsto_nat)]
+end
 
 theorem Ennreal.of_real_tsum_of_nonneg {f : α → ℝ} (hf_nonneg : ∀ n, 0 ≤ f n) (hf : Summable f) :
   Ennreal.ofReal (∑'n, f n) = ∑'n, Ennreal.ofReal (f n) :=
   by 
     simpRw [Ennreal.ofReal, Ennreal.tsum_coe_eq (Nnreal.has_sum_of_real_of_nonneg hf_nonneg hf)]
 
-theorem not_summable_iff_tendsto_nat_at_top_of_nonneg {f : ℕ → ℝ} (hf : ∀ n, 0 ≤ f n) :
-  ¬Summable f ↔ tendsto (fun n : ℕ => ∑i in Finset.range n, f i) at_top at_top :=
-  by 
-    lift f to ℕ →  ℝ≥0  using hf 
-    exactModCast Nnreal.not_summable_iff_tendsto_nat_at_top
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem not_summable_iff_tendsto_nat_at_top_of_nonneg
+{f : exprℕ() → exprℝ()}
+(hf : ∀
+ n, «expr ≤ »(0, f n)) : «expr ↔ »(«expr¬ »(summable f), tendsto (λ
+  n : exprℕ(), «expr∑ in , »((i), finset.range n, f i)) at_top at_top) :=
+begin
+  lift [expr f] ["to", expr exprℕ() → «exprℝ≥0»()] ["using", expr hf] [],
+  exact_mod_cast [expr nnreal.not_summable_iff_tendsto_nat_at_top]
+end
 
-theorem summable_iff_not_tendsto_nat_at_top_of_nonneg {f : ℕ → ℝ} (hf : ∀ n, 0 ≤ f n) :
-  Summable f ↔ ¬tendsto (fun n : ℕ => ∑i in Finset.range n, f i) at_top at_top :=
-  by 
-    rw [←not_iff_not, not_not, not_summable_iff_tendsto_nat_at_top_of_nonneg hf]
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_iff_not_tendsto_nat_at_top_of_nonneg
+{f : exprℕ() → exprℝ()}
+(hf : ∀
+ n, «expr ≤ »(0, f n)) : «expr ↔ »(summable f, «expr¬ »(tendsto (λ
+   n : exprℕ(), «expr∑ in , »((i), finset.range n, f i)) at_top at_top)) :=
+by rw ["[", "<-", expr not_iff_not, ",", expr not_not, ",", expr not_summable_iff_tendsto_nat_at_top_of_nonneg hf, "]"] []
 
-theorem summable_sigma_of_nonneg {β : ∀ x : α, Type _} {f : (Σx, β x) → ℝ} (hf : ∀ x, 0 ≤ f x) :
+theorem summable_sigma_of_nonneg {β : ∀ (x : α), Type _} {f : (Σx, β x) → ℝ} (hf : ∀ x, 0 ≤ f x) :
   Summable f ↔ (∀ x, Summable fun y => f ⟨x, y⟩) ∧ Summable fun x => ∑'y, f ⟨x, y⟩ :=
   by 
     lift f to (Σx, β x) →  ℝ≥0  using hf 
     exactModCast Nnreal.summable_sigma
 
-theorem summable_of_sum_le {ι : Type _} {f : ι → ℝ} {c : ℝ} (hf : 0 ≤ f) (h : ∀ u : Finset ι, (∑x in u, f x) ≤ c) :
+theorem summable_of_sum_le {ι : Type _} {f : ι → ℝ} {c : ℝ} (hf : 0 ≤ f) (h : ∀ (u : Finset ι), (∑x in u, f x) ≤ c) :
   Summable f :=
   ⟨⨆u : Finset ι, ∑x in u, f x, tendsto_at_top_csupr (Finset.sum_mono_set_of_nonneg hf) ⟨c, fun y ⟨u, hu⟩ => hu ▸ h u⟩⟩
 
@@ -1144,8 +1193,8 @@ theorem tsum_le_of_sum_range_le {f : ℕ → ℝ} {c : ℝ} (hf : ∀ n, 0 ≤ f
 /-- If a sequence `f` with non-negative terms is dominated by a sequence `g` with summable
 series and at least one term of `f` is strictly smaller than the corresponding term in `g`,
 then the series of `f` is strictly smaller than the series of `g`. -/
-theorem tsum_lt_tsum_of_nonneg {i : ℕ} {f g : ℕ → ℝ} (h0 : ∀ b : ℕ, 0 ≤ f b) (h : ∀ b : ℕ, f b ≤ g b) (hi : f i < g i)
-  (hg : Summable g) : (∑'n, f n) < ∑'n, g n :=
+theorem tsum_lt_tsum_of_nonneg {i : ℕ} {f g : ℕ → ℝ} (h0 : ∀ (b : ℕ), 0 ≤ f b) (h : ∀ (b : ℕ), f b ≤ g b)
+  (hi : f i < g i) (hg : Summable g) : (∑'n, f n) < ∑'n, g n :=
   tsum_lt_tsum h hi (summable_of_nonneg_of_le h0 h hg) hg
 
 section 
@@ -1231,7 +1280,7 @@ theorem emetric.cauchy_seq_iff_le_tendsto_0
        «expr < »(..., ε) : hN _ (le_refl N)⟩]
  end⟩
 
--- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem continuous_of_le_add_edist
 {f : α → «exprℝ≥0∞»()}
 (C : «exprℝ≥0∞»())
@@ -1264,20 +1313,17 @@ begin
           «expr = »(..., «expr + »(f x, ε)) : by rw [expr hεC] [] } } }
 end
 
-theorem continuous_edist : Continuous fun p : α × α => edist p.1 p.2 :=
-  by 
-    apply
-      continuous_of_le_add_edist 2
-        (by 
-          normNum)
-    rintro ⟨x, y⟩ ⟨x', y'⟩
-    calc edist x y ≤ (edist x x'+edist x' y')+edist y' y :=
-      edist_triangle4 _ _ _ _ _ = edist x' y'+edist x x'+edist y y' :=
-      by 
-        simp [edist_comm] <;> cc _ ≤ edist x' y'+edist (x, y) (x', y')+edist (x, y) (x', y') :=
-      add_le_add_left (add_le_add (le_max_leftₓ _ _) (le_max_rightₓ _ _)) _ _ = edist x' y'+2*edist (x, y) (x', y') :=
-      by 
-        rw [←mul_two, mul_commₓ]
+-- error in Topology.Instances.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_edist : continuous (λ p : «expr × »(α, α), edist p.1 p.2) :=
+begin
+  apply [expr continuous_of_le_add_edist 2 (by norm_num [] [])],
+  rintros ["⟨", ident x, ",", ident y, "⟩", "⟨", ident x', ",", ident y', "⟩"],
+  calc
+    «expr ≤ »(edist x y, «expr + »(«expr + »(edist x x', edist x' y'), edist y' y)) : edist_triangle4 _ _ _ _
+    «expr = »(..., «expr + »(edist x' y', «expr + »(edist x x', edist y y'))) : by simp [] [] [] ["[", expr edist_comm, "]"] [] []; cc
+    «expr ≤ »(..., «expr + »(edist x' y', «expr + »(edist (x, y) (x', y'), edist (x, y) (x', y')))) : add_le_add_left (add_le_add (le_max_left _ _) (le_max_right _ _)) _
+    «expr = »(..., «expr + »(edist x' y', «expr * »(2, edist (x, y) (x', y')))) : by rw ["[", "<-", expr mul_two, ",", expr mul_comm, "]"] []
+end
 
 @[continuity]
 theorem Continuous.edist [TopologicalSpace β] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :

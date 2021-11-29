@@ -125,15 +125,18 @@ section
 
 open_locale Classical
 
-theorem of_injective : Function.Injective (of : α → FreeAbelianGroup α) :=
-  fun x y hoxy =>
-    Classical.by_contradiction$
-      fun hxy : x ≠ y =>
-        let f : FreeAbelianGroup α →+ ℤ := lift fun z => if x = z then (1 : ℤ) else 0
-        have hfx1 : f (of x) = 1 := (lift.of _ _).trans$ if_pos rfl 
-        have hfy1 : f (of y) = 1 := hoxy ▸ hfx1 
-        have hfy0 : f (of y) = 0 := (lift.of _ _).trans$ if_neg hxy 
-        one_ne_zero$ hfy1.symm.trans hfy0
+-- error in GroupTheory.FreeAbelianGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of_injective : function.injective (of : α → free_abelian_group α) :=
+λ
+x
+y
+hoxy, «expr $ »(classical.by_contradiction, assume
+ hxy : «expr ≠ »(x, y), let f : «expr →+ »(free_abelian_group α, exprℤ()) := lift (λ
+      z, if «expr = »(x, z) then (1 : exprℤ()) else 0) in
+ have hfx1 : «expr = »(f (of x), 1), from «expr $ »((lift.of _ _).trans, if_pos rfl),
+ have hfy1 : «expr = »(f (of y), 1), from «expr ▸ »(hoxy, hfx1),
+ have hfy0 : «expr = »(f (of y), 0), from «expr $ »((lift.of _ _).trans, if_neg hxy),
+ «expr $ »(one_ne_zero, hfy1.symm.trans hfy0))
 
 end 
 

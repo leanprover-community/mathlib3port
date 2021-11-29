@@ -514,7 +514,7 @@ instance (priority := 2000)exists_testable (p : Prop) [testable (named_binder va
 
 /-- Test a universal property by creating a sample of the right type and instantiating the
 bound variable with it -/
-instance var_testable [sampleable_ext α] [∀ x, testable (β x)] : testable (named_binder var$ ∀ x : α, β x) :=
+instance var_testable [sampleable_ext α] [∀ x, testable (β x)] : testable (named_binder var$ ∀ (x : α), β x) :=
   ⟨fun cfg min =>
       do 
         Uliftable.adaptDown (sampleable_ext.sample α)$
@@ -529,32 +529,43 @@ instance var_testable [sampleable_ext α] [∀ x, testable (β x)] : testable (n
                         trace_if_giveup cfg.trace_discarded var x r
                           (add_var_to_counter_example var x (·$ sampleable_ext.interp α x) r)⟩
 
+-- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Test a universal property about propositions -/
-instance prop_var_testable (β : Prop → Prop) [I : ∀ b : Bool, testable (β b)] :
-  testable (named_binder var$ ∀ p : Prop, β p) :=
-  ⟨fun cfg min =>
-      do 
-        (convert_counter_example fun h b : Bool => h b) <$> @testable.run (named_binder var$ ∀ b : Bool, β b) _ cfg min⟩
+instance prop_var_testable
+(β : exprProp() → exprProp())
+[I : ∀ b : bool, testable (β b)] : testable «expr $ »(named_binder var, ∀ p : exprProp(), β p) :=
+⟨λ cfg min, do {
+ «expr <$> »(convert_counter_example (λ
+     (h)
+     (b : bool), h b), @testable.run «expr $ »(named_binder var, ∀ b : bool, β b) _ cfg min) }⟩
 
-instance (priority := 3000)unused_var_testable β [Inhabited α] [testable β] : testable (named_binder var$ ∀ x : α, β) :=
+instance (priority := 3000)unused_var_testable β [Inhabited α] [testable β] :
+  testable (named_binder var$ ∀ (x : α), β) :=
   ⟨fun cfg min =>
       do 
         let r ← testable.run β cfg min 
         pure$ convert_counter_example (·$ default _) r (Psum.inr$ fun x _ => x)⟩
 
-instance (priority := 2000)subtype_var_testable {p : α → Prop} [∀ x, printable_prop (p x)] [∀ x, testable (β x)]
-  [I : sampleable_ext (Subtype p)] : testable (named_binder var$ ∀ x : α, named_binder var'$ p x → β x) :=
-  ⟨fun cfg min =>
-      do 
-        let test (x : Subtype p) : testable (β x) :=
-          ⟨fun cfg min =>
-              do 
-                let r ← testable.run (β x.val) cfg min 
-                match print_prop (p x) with 
-                  | none => pure r
-                  | some str => pure$ add_to_counter_example (s! "guard: {str} (by construction)") id r (Psum.inr id)⟩
-        let r ← @testable.run (∀ x : Subtype p, β x.val) (@SlimCheck.varTestable var _ _ I test) cfg min 
-        pure$ convert_counter_example' ⟨fun h : ∀ x : Subtype p, β x x h' => h ⟨x, h'⟩, fun h ⟨x, h'⟩ => h x h'⟩ r⟩
+-- error in Testing.SlimCheck.Testable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[priority 2000]
+instance subtype_var_testable
+{p : α → exprProp()}
+[∀ x, printable_prop (p x)]
+[∀ x, testable (β x)]
+[I : sampleable_ext (subtype p)] : testable «expr $ »(named_binder var, ∀
+ x : α, «expr $ »(named_binder var', p x → β x)) :=
+⟨λ cfg min, do {
+ let test
+   (x : subtype p) : testable (β x) := ⟨λ cfg min, do {
+    r ← testable.run (β x.val) cfg min,
+      match print_prop (p x) with
+      | none := pure r
+      | some str := «expr $ »(pure, add_to_counter_example «exprsformat! »(sformat_macro "guard: {str} (by construction)" [[expr str]]) id r (psum.inr id))
+      end }⟩,
+   r ← @testable.run (∀ x : subtype p, β x.val) (@slim_check.var_testable var _ _ I test) cfg min,
+   «expr $ »(pure, convert_counter_example' ⟨λ
+     (h : ∀ x : subtype p, β x)
+     (x h'), h ⟨x, h'⟩, λ (h) ⟨x, h'⟩, h x h'⟩ r) }⟩
 
 instance (priority := 100)decidable_testable (p : Prop) [printable_prop p] [Decidable p] : testable p :=
   ⟨fun cfg min =>

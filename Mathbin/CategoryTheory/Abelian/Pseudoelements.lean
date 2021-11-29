@@ -165,9 +165,10 @@ theorem pseudo_apply_aux {P Q : C} (f : P ⟶ Q) (a b : over P) : a ≈ b → ap
       show p ≫ a.hom ≫ f = q ≫ b.hom ≫ f by 
         rw [reassoc_of comm]⟩
 
+-- error in CategoryTheory.Abelian.Pseudoelements: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A morphism `f` induces a function `pseudo_apply f` on pseudoelements. -/
-def pseudo_apply {P Q : C} (f : P ⟶ Q) : P → Q :=
-  Quotientₓ.map (fun g : over P => app f g) (pseudo_apply_aux f)
+def pseudo_apply {P Q : C} (f : «expr ⟶ »(P, Q)) : P → Q :=
+quotient.map (λ g : over P, app f g) (pseudo_apply_aux f)
 
 /-- A coercion from morphisms to functions on pseudoelements -/
 def hom_to_fun {P Q : C} : CoeFun (P ⟶ Q) fun _ => P → Q :=

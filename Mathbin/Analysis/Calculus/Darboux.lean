@@ -59,7 +59,7 @@ end
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a > m > f' b`, then `f' c = m` for some `c ∈ [a, b]`.
 -/
 theorem exists_has_deriv_within_at_eq_of_lt_of_gt (hab : a ≤ b)
-  (hf : ∀ x _ : x ∈ Icc a b, HasDerivWithinAt f (f' x) (Icc a b) x) {m : ℝ} (hma : m < f' a) (hmb : f' b < m) :
+  (hf : ∀ x (_ : x ∈ Icc a b), HasDerivWithinAt f (f' x) (Icc a b) x) {m : ℝ} (hma : m < f' a) (hmb : f' b < m) :
   m ∈ f' '' Icc a b :=
   let ⟨c, cmem, hc⟩ :=
     exists_has_deriv_within_at_eq_of_gt_of_lt hab (fun x hx => (hf x hx).neg) (neg_lt_neg hma) (neg_lt_neg hmb)
@@ -96,8 +96,8 @@ end
 /-- If the derivative of a function is never equal to `m`, then either
 it is always greater than `m`, or it is always less than `m`. -/
 theorem deriv_forall_lt_or_forall_gt_of_forall_ne {s : Set ℝ} (hs : Convex ℝ s)
-  (hf : ∀ x _ : x ∈ s, HasDerivAt f (f' x) x) {m : ℝ} (hf' : ∀ x _ : x ∈ s, f' x ≠ m) :
-  (∀ x _ : x ∈ s, f' x < m) ∨ ∀ x _ : x ∈ s, m < f' x :=
+  (hf : ∀ x (_ : x ∈ s), HasDerivAt f (f' x) x) {m : ℝ} (hf' : ∀ x (_ : x ∈ s), f' x ≠ m) :
+  (∀ x (_ : x ∈ s), f' x < m) ∨ ∀ x (_ : x ∈ s), m < f' x :=
   by 
     contrapose! hf' 
     rcases hf' with ⟨⟨b, hb, hmb⟩, ⟨a, ha, hma⟩⟩

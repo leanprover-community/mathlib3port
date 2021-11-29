@@ -169,15 +169,15 @@ theorem inj_right (hm : is_homogeneous φ m) (hn : is_homogeneous φ n) (hφ : �
 theorem add (hφ : is_homogeneous φ n) (hψ : is_homogeneous ψ n) : is_homogeneous (φ+ψ) n :=
   (homogeneous_submodule σ R n).add_mem hφ hψ
 
-theorem Sum {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ℕ) (h : ∀ i _ : i ∈ s, is_homogeneous (φ i) n) :
-  is_homogeneous (∑i in s, φ i) n :=
+theorem Sum {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ℕ)
+  (h : ∀ i (_ : i ∈ s), is_homogeneous (φ i) n) : is_homogeneous (∑i in s, φ i) n :=
   (homogeneous_submodule σ R n).sum_mem h
 
 theorem mul (hφ : is_homogeneous φ m) (hψ : is_homogeneous ψ n) : is_homogeneous (φ*ψ) (m+n) :=
   homogeneous_submodule_mul m n$ Submodule.mul_mem_mul hφ hψ
 
 theorem Prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → ℕ)
-  (h : ∀ i _ : i ∈ s, is_homogeneous (φ i) (n i)) : is_homogeneous (∏i in s, φ i) (∑i in s, n i) :=
+  (h : ∀ i (_ : i ∈ s), is_homogeneous (φ i) (n i)) : is_homogeneous (∏i in s, φ i) (∑i in s, n i) :=
   by 
     classical 
     revert h 
@@ -243,15 +243,17 @@ open Finset
 
 variable[CommSemiringₓ R](n : ℕ)(φ : MvPolynomial σ R)
 
-theorem coeff_homogeneous_component (d : σ →₀ ℕ) :
-  coeff d (homogeneous_component n φ) = if (∑i in d.support, d i) = n then coeff d φ else 0 :=
-  by 
-    convert Finsupp.filter_apply (fun d : σ →₀ ℕ => (∑i in d.support, d i) = n) φ d
+-- error in RingTheory.Polynomial.Homogeneous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem coeff_homogeneous_component
+(d : «expr →₀ »(σ, exprℕ())) : «expr = »(coeff d (homogeneous_component n φ), if «expr = »(«expr∑ in , »((i), d.support, d i), n) then coeff d φ else 0) :=
+by convert [] [expr finsupp.filter_apply (λ
+  d : «expr →₀ »(σ, exprℕ()), «expr = »(«expr∑ in , »((i), d.support, d i), n)) φ d] []
 
-theorem homogeneous_component_apply :
-  homogeneous_component n φ = ∑d in φ.support.filter fun d => (∑i in d.support, d i) = n, monomial d (coeff d φ) :=
-  by 
-    convert Finsupp.filter_eq_sum (fun d : σ →₀ ℕ => (∑i in d.support, d i) = n) φ
+-- error in RingTheory.Polynomial.Homogeneous: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem homogeneous_component_apply : «expr = »(homogeneous_component n φ, «expr∑ in , »((d), φ.support.filter (λ
+   d, «expr = »(«expr∑ in , »((i), d.support, d i), n)), monomial d (coeff d φ))) :=
+by convert [] [expr finsupp.filter_eq_sum (λ
+  d : «expr →₀ »(σ, exprℕ()), «expr = »(«expr∑ in , »((i), d.support, d i), n)) φ] []
 
 theorem homogeneous_component_is_homogeneous : (homogeneous_component n φ).IsHomogeneous n :=
   by 
@@ -271,7 +273,7 @@ theorem homogeneous_component_zero : homogeneous_component 0 φ = C (coeff 0 φ)
       simp only [Finsupp.ext_iff, Finsupp.zero_apply] at hd 
       simp [hd]
 
-theorem homogeneous_component_eq_zero' (h : ∀ d : σ →₀ ℕ, d ∈ φ.support → (∑i in d.support, d i) ≠ n) :
+theorem homogeneous_component_eq_zero' (h : ∀ (d : σ →₀ ℕ), d ∈ φ.support → (∑i in d.support, d i) ≠ n) :
   homogeneous_component n φ = 0 :=
   by 
     rw [homogeneous_component_apply, sum_eq_zero]

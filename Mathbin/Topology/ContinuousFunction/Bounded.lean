@@ -23,7 +23,7 @@ variable{α : Type u}{β : Type v}{γ : Type w}
 /-- The type of bounded continuous functions from a topological space to a metric space -/
 structure BoundedContinuousFunction(α : Type u)(β : Type v)[TopologicalSpace α][MetricSpace β] extends
   ContinuousMap α β : Type max u v where 
-  bounded' : ∃ C, ∀ x y : α, dist (to_fun x) (to_fun y) ≤ C
+  bounded' : ∃ C, ∀ (x y : α), dist (to_fun x) (to_fun y) ≤ C
 
 localized [BoundedContinuousFunction] infixr:25 " →ᵇ " => BoundedContinuousFunction
 
@@ -49,7 +49,7 @@ def simps.apply (h : α →ᵇ β) : α → β :=
 
 initialize_simps_projections BoundedContinuousFunction (to_continuous_map_to_fun → apply)
 
-protected theorem Bounded (f : α →ᵇ β) : ∃ C, ∀ x y : α, dist (f x) (f y) ≤ C :=
+protected theorem Bounded (f : α →ᵇ β) : ∃ C, ∀ (x y : α), dist (f x) (f y) ≤ C :=
   f.bounded'
 
 @[continuity]
@@ -75,7 +75,7 @@ theorem eq_of_empty [IsEmpty α] (f g : α →ᵇ β) : f = g :=
   ext$ IsEmpty.elim ‹_›
 
 /-- A continuous function with an explicit bound is a bounded continuous function. -/
-def mk_of_bound (f : C(α, β)) (C : ℝ) (h : ∀ x y : α, dist (f x) (f y) ≤ C) : α →ᵇ β :=
+def mk_of_bound (f : C(α, β)) (C : ℝ) (h : ∀ (x y : α), dist (f x) (f y) ≤ C) : α →ᵇ β :=
   ⟨f, ⟨C, h⟩⟩
 
 @[simp]
@@ -93,7 +93,7 @@ theorem mk_of_compact_apply [CompactSpace α] (f : C(α, β)) (a : α) : mk_of_c
 /-- If a function is bounded on a discrete space, it is automatically continuous,
 and therefore gives rise to an element of the type of bounded continuous functions -/
 @[simps]
-def mk_of_discrete [DiscreteTopology α] (f : α → β) (C : ℝ) (h : ∀ x y : α, dist (f x) (f y) ≤ C) : α →ᵇ β :=
+def mk_of_discrete [DiscreteTopology α] (f : α → β) (C : ℝ) (h : ∀ (x y : α), dist (f x) (f y) ≤ C) : α →ᵇ β :=
   ⟨⟨f, continuous_of_discrete_topology⟩, ⟨C, h⟩⟩
 
 section 
@@ -114,12 +114,12 @@ end
 
 /-- The uniform distance between two bounded continuous functions -/
 instance  : HasDist (α →ᵇ β) :=
-  ⟨fun f g => Inf { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C }⟩
+  ⟨fun f g => Inf { C | 0 ≤ C ∧ ∀ (x : α), dist (f x) (g x) ≤ C }⟩
 
-theorem dist_eq : dist f g = Inf { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C } :=
+theorem dist_eq : dist f g = Inf { C | 0 ≤ C ∧ ∀ (x : α), dist (f x) (g x) ≤ C } :=
   rfl
 
-theorem dist_set_exists : ∃ C, 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C :=
+theorem dist_set_exists : ∃ C, 0 ≤ C ∧ ∀ (x : α), dist (f x) (g x) ≤ C :=
   by 
     refine' if h : Nonempty α then _ else ⟨0, le_reflₓ _, fun x => h.elim ⟨x⟩⟩
     cases' h with x 
@@ -141,7 +141,7 @@ private theorem dist_nonneg' : 0 ≤ dist f g :=
   le_cInf dist_set_exists fun C => And.left
 
 /-- The distance between two functions is controlled by the supremum of the pointwise distances -/
-theorem dist_le (C0 : (0 : ℝ) ≤ C) : dist f g ≤ C ↔ ∀ x : α, dist (f x) (g x) ≤ C :=
+theorem dist_le (C0 : (0 : ℝ) ≤ C) : dist f g ≤ C ↔ ∀ (x : α), dist (f x) (g x) ≤ C :=
   ⟨fun h x => le_transₓ (dist_coe_le_dist x) h, fun H => cInf_le ⟨0, fun C => And.left⟩ ⟨C0, H⟩⟩
 
 theorem dist_le_iff_of_nonempty [Nonempty α] : dist f g ≤ C ↔ ∀ x, dist (f x) (g x) ≤ C :=
@@ -160,7 +160,7 @@ begin
   exact [expr lt_of_le_of_lt (dist_le_iff_of_nonempty.mpr (λ y, le y trivial)) (w x)]
 end
 
-theorem dist_lt_iff_of_compact [CompactSpace α] (C0 : (0 : ℝ) < C) : dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C :=
+theorem dist_lt_iff_of_compact [CompactSpace α] (C0 : (0 : ℝ) < C) : dist f g < C ↔ ∀ (x : α), dist (f x) (g x) < C :=
   by 
     fsplit
     ·
@@ -178,7 +178,8 @@ theorem dist_lt_iff_of_compact [CompactSpace α] (C0 : (0 : ℝ) < C) : dist f g
         rw [dist_eq]
         exact cInf_le ⟨0, fun C => And.left⟩ ⟨le_reflₓ _, fun x => False.elim (h (Nonempty.intro x))⟩
 
-theorem dist_lt_iff_of_nonempty_compact [Nonempty α] [CompactSpace α] : dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C :=
+theorem dist_lt_iff_of_nonempty_compact [Nonempty α] [CompactSpace α] :
+  dist f g < C ↔ ∀ (x : α), dist (f x) (g x) < C :=
   ⟨fun w x => lt_of_le_of_ltₓ (dist_coe_le_dist x) w, dist_lt_of_nonempty_compact⟩
 
 /-- The type of bounded continuous functions, with the uniform distance, is a metric space. -/
@@ -226,24 +227,28 @@ theorem const_apply' (a : α) (b : β) : (const α b : α → β) a = b :=
 instance  [Inhabited β] : Inhabited (α →ᵇ β) :=
   ⟨const α (default β)⟩
 
-theorem lipschitz_evalx (x : α) : LipschitzWith 1 fun f : α →ᵇ β => f x :=
-  LipschitzWith.mk_one$ fun f g => dist_coe_le_dist x
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lipschitz_evalx (x : α) : lipschitz_with 1 (λ f : «expr →ᵇ »(α, β), f x) :=
+«expr $ »(lipschitz_with.mk_one, λ f g, dist_coe_le_dist x)
 
 theorem uniform_continuous_coe : @UniformContinuous (α →ᵇ β) (α → β) _ _ coeFn :=
   uniform_continuous_pi.2$ fun x => (lipschitz_evalx x).UniformContinuous
 
-theorem continuous_coe : Continuous fun f : α →ᵇ β x => f x :=
-  UniformContinuous.continuous uniform_continuous_coe
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_coe : continuous (λ (f : «expr →ᵇ »(α, β)) (x), f x) :=
+uniform_continuous.continuous uniform_continuous_coe
 
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- When `x` is fixed, `(f : α →ᵇ β) ↦ f x` is continuous -/
-@[continuity]
-theorem continuous_evalx {x : α} : Continuous fun f : α →ᵇ β => f x :=
-  (continuous_apply x).comp continuous_coe
+@[continuity #[]]
+theorem continuous_evalx {x : α} : continuous (λ f : «expr →ᵇ »(α, β), f x) :=
+(continuous_apply x).comp continuous_coe
 
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The evaluation map is continuous, as a joint function of `u` and `x` -/
-@[continuity]
-theorem continuous_eval : Continuous fun p : (α →ᵇ β) × α => p.1 p.2 :=
-  (continuous_prod_of_continuous_lipschitz _ 1 fun f => f.continuous)$ lipschitz_evalx
+@[continuity #[]]
+theorem continuous_eval : continuous (λ p : «expr × »(«expr →ᵇ »(α, β), α), p.1 p.2) :=
+«expr $ »(continuous_prod_of_continuous_lipschitz _ 1 (λ f, f.continuous), lipschitz_evalx)
 
 -- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Bounded continuous functions taking values in a complete space form a complete space. -/
@@ -266,7 +271,7 @@ instance [complete_space β] : complete_space «expr →ᵇ »(α, β) :=
        refine [expr ((tendsto_order.1 b_lim).2 ε ε0).mono (λ n hn x, _)],
        rw [expr dist_comm] [],
        exact [expr lt_of_le_of_lt (fF_bdd x n) hn] },
-     exact [expr this.continuous (λ N, (f N).continuous)] },
+     exact [expr this.continuous «expr $ »(eventually_of_forall, λ N, (f N).continuous)] },
    { rcases [expr (f 0).bounded, "with", "⟨", ident C, ",", ident hC, "⟩"],
      refine [expr ⟨«expr + »(C, «expr + »(b 0, b 0)), λ x y, _⟩],
      calc
@@ -281,13 +286,19 @@ instance [complete_space β] : complete_space «expr →ᵇ »(α, β) :=
 def comp_continuous {δ : Type _} [TopologicalSpace δ] (f : α →ᵇ β) (g : C(δ, α)) : δ →ᵇ β :=
   { toContinuousMap := f.1.comp g, bounded' := f.bounded'.imp fun C hC x y => hC _ _ }
 
-theorem lipschitz_comp_continuous {δ : Type _} [TopologicalSpace δ] (g : C(δ, α)) :
-  LipschitzWith 1 fun f : α →ᵇ β => f.comp_continuous g :=
-  LipschitzWith.mk_one$ fun f₁ f₂ => (dist_le dist_nonneg).2$ fun x => dist_coe_le_dist (g x)
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lipschitz_comp_continuous
+{δ : Type*}
+[topological_space δ]
+(g : «exprC( , )»(δ, α)) : lipschitz_with 1 (λ f : «expr →ᵇ »(α, β), f.comp_continuous g) :=
+«expr $ »(lipschitz_with.mk_one, λ f₁ f₂, «expr $ »((dist_le dist_nonneg).2, λ x, dist_coe_le_dist (g x)))
 
-theorem continuous_comp_continuous {δ : Type _} [TopologicalSpace δ] (g : C(δ, α)) :
-  Continuous fun f : α →ᵇ β => f.comp_continuous g :=
-  (lipschitz_comp_continuous g).Continuous
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_comp_continuous
+{δ : Type*}
+[topological_space δ]
+(g : «exprC( , )»(δ, α)) : continuous (λ f : «expr →ᵇ »(α, β), f.comp_continuous g) :=
+(lipschitz_comp_continuous g).continuous
 
 /-- Restrict a bounded continuous function to a set. -/
 @[simps (config := { fullyApplied := ff }) apply]
@@ -338,7 +349,7 @@ variable[TopologicalSpace α][CompactSpace α][MetricSpace β]
 
 variable{f g : α →ᵇ β}{x : α}{C : ℝ}
 
--- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- First version, with pointwise equicontinuity and range in a compact space -/
 theorem arzela_ascoli₁
 [compact_space β]
@@ -420,9 +431,10 @@ end
 
 /-- Third (main) version, with pointwise equicontinuity and range in a compact subset, but
 without closedness. The closure is then compact -/
-theorem arzela_ascoli (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (in_s : ∀ f : α →ᵇ β x : α, f ∈ A → f x ∈ s)
+theorem arzela_ascoli (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (in_s : ∀ (f : α →ᵇ β) (x : α), f ∈ A → f x ∈ s)
   (H :
-    ∀ x : α ε _ : ε > 0, ∃ (U : _)(_ : U ∈ 𝓝 x), ∀ y z _ : y ∈ U _ : z ∈ U f : α →ᵇ β, f ∈ A → dist (f y) (f z) < ε) :
+    ∀ (x : α) ε (_ : ε > 0),
+      ∃ (U : _)(_ : U ∈ 𝓝 x), ∀ y z (_ : y ∈ U) (_ : z ∈ U) (f : α →ᵇ β), f ∈ A → dist (f y) (f z) < ε) :
   IsCompact (Closure A) :=
   arzela_ascoli₂ s hs (Closure A) is_closed_closure
     (fun f x hf =>
@@ -431,7 +443,8 @@ theorem arzela_ascoli (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)) (
           let ⟨g, gA, dist_fg⟩ := Metric.mem_closure_iff.1 hf ε ε0
           ⟨g x, in_s g x gA, lt_of_le_of_ltₓ (dist_coe_le_dist _) dist_fg⟩)
     fun x ε ε0 =>
-      show ∃ (U : _)(_ : U ∈ 𝓝 x), ∀ y z _ : y ∈ U _ : z ∈ U, ∀ f : α →ᵇ β, f ∈ Closure A → dist (f y) (f z) < ε by 
+      show
+        ∃ (U : _)(_ : U ∈ 𝓝 x), ∀ y z (_ : y ∈ U) (_ : z ∈ U), ∀ (f : α →ᵇ β), f ∈ Closure A → dist (f y) (f z) < ε by 
         refine' Bex.imp_right (fun U U_set hU y z hy hz f hf => _) (H x (ε / 2) (half_pos ε0))
         rcases Metric.mem_closure_iff.1 hf (ε / 2 / 2) (half_pos (half_pos ε0)) with ⟨g, gA, dist_fg⟩
         replace dist_fg := fun x => lt_of_le_of_ltₓ (dist_coe_le_dist x) dist_fg 
@@ -608,13 +621,13 @@ theorem norm_def : ∥f∥ = dist f 0 :=
 
 /-- The norm of a bounded continuous function is the supremum of `∥f x∥`.
 We use `Inf` to ensure that the definition works if `α` has no elements. -/
-theorem norm_eq (f : α →ᵇ β) : ∥f∥ = Inf { C:ℝ | 0 ≤ C ∧ ∀ x : α, ∥f x∥ ≤ C } :=
+theorem norm_eq (f : α →ᵇ β) : ∥f∥ = Inf { C:ℝ | 0 ≤ C ∧ ∀ (x : α), ∥f x∥ ≤ C } :=
   by 
     simp [norm_def, BoundedContinuousFunction.dist_eq]
 
 /-- When the domain is non-empty, we do not need the `0 ≤ C` condition in the formula for ∥f∥ as an
 `Inf`. -/
-theorem norm_eq_of_nonempty [h : Nonempty α] : ∥f∥ = Inf { C:ℝ | ∀ x : α, ∥f x∥ ≤ C } :=
+theorem norm_eq_of_nonempty [h : Nonempty α] : ∥f∥ = Inf { C:ℝ | ∀ (x : α), ∥f x∥ ≤ C } :=
   by 
     (
       obtain ⟨a⟩ := h)
@@ -648,7 +661,7 @@ theorem dist_le_two_norm (x y : α) : dist (f x) (f y) ≤ 2*∥f∥ :=
 variable{f}
 
 /-- The norm of a function is controlled by the supremum of the pointwise norms -/
-theorem norm_le (C0 : (0 : ℝ) ≤ C) : ∥f∥ ≤ C ↔ ∀ x : α, ∥f x∥ ≤ C :=
+theorem norm_le (C0 : (0 : ℝ) ≤ C) : ∥f∥ ≤ C ↔ ∀ (x : α), ∥f x∥ ≤ C :=
   by 
     simpa using @dist_le _ _ _ _ f 0 _ C0
 
@@ -1032,12 +1045,13 @@ variable[NormedRing γ][NormedAlgebra 𝕜 γ]
 
 variable{f g : α →ᵇ γ}{x : α}{c : 𝕜}
 
-/-- `bounded_continuous_function.const` as a `ring_hom`. -/
-def C : 𝕜 →+* α →ᵇ γ :=
-  { toFun := fun c : 𝕜 => const α ((algebraMap 𝕜 γ) c), map_one' := ext$ fun x => (algebraMap 𝕜 γ).map_one,
-    map_mul' := fun c₁ c₂ => ext$ fun x => (algebraMap 𝕜 γ).map_mul _ _,
-    map_zero' := ext$ fun x => (algebraMap 𝕜 γ).map_zero,
-    map_add' := fun c₁ c₂ => ext$ fun x => (algebraMap 𝕜 γ).map_add _ _ }
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- `bounded_continuous_function.const` as a `ring_hom`. -/ def C : «expr →+* »(𝕜, «expr →ᵇ »(α, γ)) :=
+{ to_fun := λ c : 𝕜, const α (algebra_map 𝕜 γ c),
+  map_one' := «expr $ »(ext, λ x, (algebra_map 𝕜 γ).map_one),
+  map_mul' := λ c₁ c₂, «expr $ »(ext, λ x, (algebra_map 𝕜 γ).map_mul _ _),
+  map_zero' := «expr $ »(ext, λ x, (algebra_map 𝕜 γ).map_zero),
+  map_add' := λ c₁ c₂, «expr $ »(ext, λ x, (algebra_map 𝕜 γ).map_add _ _) }
 
 instance  : Algebra 𝕜 (α →ᵇ γ) :=
   { BoundedContinuousFunction.module, BoundedContinuousFunction.ring with toRingHom := C,
@@ -1067,13 +1081,14 @@ functions from `α` to `β` is naturally a module over the algebra of bounded co
 functions from `α` to `𝕜`. -/
 
 
-instance has_scalar' : HasScalar (α →ᵇ 𝕜) (α →ᵇ β) :=
-  ⟨fun f : α →ᵇ 𝕜 g : α →ᵇ β =>
-      of_normed_group (fun x => f x • g x) (f.continuous.smul g.continuous) (∥f∥*∥g∥)
-        fun x =>
-          calc ∥f x • g x∥ ≤ ∥f x∥*∥g x∥ := NormedSpace.norm_smul_le _ _ 
-            _ ≤ ∥f∥*∥g∥ := mul_le_mul (f.norm_coe_le_norm _) (g.norm_coe_le_norm _) (norm_nonneg _) (norm_nonneg _)
-            ⟩
+-- error in Topology.ContinuousFunction.Bounded: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance has_scalar' : has_scalar «expr →ᵇ »(α, 𝕜) «expr →ᵇ »(α, β) :=
+⟨λ
+ (f : «expr →ᵇ »(α, 𝕜))
+ (g : «expr →ᵇ »(α, β)), of_normed_group (λ
+  x, «expr • »(f x, g x)) (f.continuous.smul g.continuous) «expr * »(«expr∥ ∥»(f), «expr∥ ∥»(g)) (λ x, calc
+    «expr ≤ »(«expr∥ ∥»(«expr • »(f x, g x)), «expr * »(«expr∥ ∥»(f x), «expr∥ ∥»(g x))) : normed_space.norm_smul_le _ _
+    «expr ≤ »(..., «expr * »(«expr∥ ∥»(f), «expr∥ ∥»(g))) : mul_le_mul (f.norm_coe_le_norm _) (g.norm_coe_le_norm _) (norm_nonneg _) (norm_nonneg _))⟩
 
 instance module' : Module (α →ᵇ 𝕜) (α →ᵇ β) :=
   Module.ofCore$

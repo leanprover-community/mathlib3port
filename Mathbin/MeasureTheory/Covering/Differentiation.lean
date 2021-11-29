@@ -198,8 +198,8 @@ include hρ
 sets in a Vitali family has measure `0` if `c < d`. Indeed, the first inequality should imply
 that `ρ s ≤ c * μ s`, and the second one that `ρ s ≥ d * μ s`, a contradiction if `0 < μ s`. -/
 theorem null_of_frequently_le_of_frequently_ge {c d :  ℝ≥0 } (hcd : c < d) (s : Set α)
-  (hc : ∀ x _ : x ∈ s, ∃ᶠa in v.filter_at x, ρ a ≤ c*μ a)
-  (hd : ∀ x _ : x ∈ s, ∃ᶠa in v.filter_at x, ((d : ℝ≥0∞)*μ a) ≤ ρ a) : μ s = 0 :=
+  (hc : ∀ x (_ : x ∈ s), ∃ᶠa in v.filter_at x, ρ a ≤ c*μ a)
+  (hd : ∀ x (_ : x ∈ s), ∃ᶠa in v.filter_at x, ((d : ℝ≥0∞)*μ a) ≤ ρ a) : μ s = 0 :=
   by 
     apply null_of_locally_null s fun x hx => _ 
     obtain ⟨o, xo, o_open, μo⟩ : ∃ o : Set α, x ∈ o ∧ IsOpen o ∧ μ o < ∞ := measure.exists_is_open_measure_lt_top μ x 

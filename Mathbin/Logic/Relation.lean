@@ -213,8 +213,8 @@ theorem cases_tail : refl_trans_gen r a b → b = a ∨ ∃ c, refl_trans_gen r 
   (cases_tail_iff r a b).1
 
 @[elab_as_eliminator]
-theorem head_induction_on {P : ∀ a : α, refl_trans_gen r a b → Prop} {a : α} (h : refl_trans_gen r a b)
-  (refl : P b refl) (head : ∀ {a c} h' : r a c h : refl_trans_gen r c b, P c h → P a (h.head h')) : P a h :=
+theorem head_induction_on {P : ∀ (a : α), refl_trans_gen r a b → Prop} {a : α} (h : refl_trans_gen r a b)
+  (refl : P b refl) (head : ∀ {a c} (h' : r a c) (h : refl_trans_gen r c b), P c h → P a (h.head h')) : P a h :=
   by 
     induction h generalizing P 
     case refl_trans_gen.refl => 
@@ -228,8 +228,8 @@ theorem head_induction_on {P : ∀ a : α, refl_trans_gen r a b → Prop} {a : �
 
 @[elab_as_eliminator]
 theorem trans_induction_on {P : ∀ {a b : α}, refl_trans_gen r a b → Prop} {a b : α} (h : refl_trans_gen r a b)
-  (ih₁ : ∀ a, @P a a refl) (ih₂ : ∀ {a b} h : r a b, P (single h))
-  (ih₃ : ∀ {a b c} h₁ : refl_trans_gen r a b h₂ : refl_trans_gen r b c, P h₁ → P h₂ → P (h₁.trans h₂)) : P h :=
+  (ih₁ : ∀ a, @P a a refl) (ih₂ : ∀ {a b} (h : r a b), P (single h))
+  (ih₃ : ∀ {a b c} (h₁ : refl_trans_gen r a b) (h₂ : refl_trans_gen r b c), P h₁ → P h₂ → P (h₁.trans h₂)) : P h :=
   by 
     induction h 
     case refl_trans_gen.refl => 
@@ -313,9 +313,9 @@ theorem head (hab : r a b) (hbc : trans_gen r b c) : trans_gen r a c :=
   head' hab hbc.to_refl
 
 @[elab_as_eliminator]
-theorem head_induction_on {P : ∀ a : α, trans_gen r a b → Prop} {a : α} (h : trans_gen r a b)
-  (base : ∀ {a} h : r a b, P a (single h)) (ih : ∀ {a c} h' : r a c h : trans_gen r c b, P c h → P a (h.head h')) :
-  P a h :=
+theorem head_induction_on {P : ∀ (a : α), trans_gen r a b → Prop} {a : α} (h : trans_gen r a b)
+  (base : ∀ {a} (h : r a b), P a (single h))
+  (ih : ∀ {a c} (h' : r a c) (h : trans_gen r c b), P c h → P a (h.head h')) : P a h :=
   by 
     induction h generalizing P 
     case single a h => 
@@ -329,8 +329,8 @@ theorem head_induction_on {P : ∀ a : α, trans_gen r a b → Prop} {a : α} (h
 
 @[elab_as_eliminator]
 theorem trans_induction_on {P : ∀ {a b : α}, trans_gen r a b → Prop} {a b : α} (h : trans_gen r a b)
-  (base : ∀ {a b} h : r a b, P (single h))
-  (ih : ∀ {a b c} h₁ : trans_gen r a b h₂ : trans_gen r b c, P h₁ → P h₂ → P (h₁.trans h₂)) : P h :=
+  (base : ∀ {a b} (h : r a b), P (single h))
+  (ih : ∀ {a b c} (h₁ : trans_gen r a b) (h₂ : trans_gen r b c), P h₁ → P h₂ → P (h₁.trans h₂)) : P h :=
   by 
     induction h 
     case single a h => 

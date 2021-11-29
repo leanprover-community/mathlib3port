@@ -49,7 +49,7 @@ end Preform
 @[simp]
 def univ_close (p : preform) : (Nat → Nat) → Nat → Prop
 | v, 0 => p.holds v
-| v, k+1 => ∀ i : Nat, univ_close (update_zero i v) k
+| v, k+1 => ∀ (i : Nat), univ_close (update_zero i v) k
 
 namespace Preform
 
@@ -78,7 +78,7 @@ def fresh_index : preform → Nat
 | p ∧* q => max p.fresh_index q.fresh_index
 
 theorem holds_constant {v w : Nat → Nat} :
-  ∀ p : preform, (∀ x _ : x < p.fresh_index, v x = w x) → (p.holds v ↔ p.holds w)
+  ∀ (p : preform), (∀ x (_ : x < p.fresh_index), v x = w x) → (p.holds v ↔ p.holds w)
 | t =* s, h1 =>
   by 
     simp only [holds]

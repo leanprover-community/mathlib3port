@@ -402,13 +402,13 @@ open Polynomial
 
 /-- If every coefficient of a polynomial is in an ideal `I`, then so is the polynomial itself -/
 theorem polynomial_mem_ideal_of_coeff_mem_ideal (I : Ideal (Polynomial R)) (p : Polynomial R)
-  (hp : ∀ n : ℕ, p.coeff n ∈ I.comap C) : p ∈ I :=
+  (hp : ∀ (n : ℕ), p.coeff n ∈ I.comap C) : p ∈ I :=
   sum_C_mul_X_eq p ▸ Submodule.sum_mem I fun n hn => I.mul_mem_right _ (hp n)
 
 /-- The push-forward of an ideal `I` of `R` to `polynomial R` via inclusion
  is exactly the set of polynomials whose coefficients are in `I` -/
 theorem mem_map_C_iff {I : Ideal R} {f : Polynomial R} :
-  f ∈ (Ideal.map C I : Ideal (Polynomial R)) ↔ ∀ n : ℕ, f.coeff n ∈ I :=
+  f ∈ (Ideal.map C I : Ideal (Polynomial R)) ↔ ∀ (n : ℕ), f.coeff n ∈ I :=
   by 
     split 
     ·
@@ -449,14 +449,14 @@ theorem _root_.polynomial.ker_map_ring_hom (f : R →+* S) : (Polynomial.mapRing
     simpRw [coe_map_ring_hom, coeff_map, coeff_zero, RingHom.mem_ker]
 
 theorem quotient_map_C_eq_zero {I : Ideal R} :
-  ∀ a _ : a ∈ I, ((Quotientₓ.mk (map C I : Ideal (Polynomial R))).comp C) a = 0 :=
+  ∀ a (_ : a ∈ I), ((Quotientₓ.mk (map C I : Ideal (Polynomial R))).comp C) a = 0 :=
   by 
     intro a ha 
     rw [RingHom.comp_apply, quotient.eq_zero_iff_mem]
     exact mem_map_of_mem _ ha
 
 theorem eval₂_C_mk_eq_zero {I : Ideal R} :
-  ∀ f _ : f ∈ (map C I : Ideal (Polynomial R)), eval₂_ring_hom (C.comp (Quotientₓ.mk I)) X f = 0 :=
+  ∀ f (_ : f ∈ (map C I : Ideal (Polynomial R))), eval₂_ring_hom (C.comp (Quotientₓ.mk I)) X f = 0 :=
   by 
     intro a ha 
     rw [←sum_monomial_eq a]
@@ -541,7 +541,7 @@ theorem is_domain_map_C_quotient {P : Ideal R} (H : is_prime P) :
 theorem is_prime_map_C_of_is_prime {P : Ideal R} (H : is_prime P) : is_prime (map C P : Ideal (Polynomial R)) :=
   (quotient.is_domain_iff_prime (map C P : Ideal (Polynomial R))).mp (is_domain_map_C_quotient H)
 
--- error in RingTheory.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given any ring `R` and an ideal `I` of `polynomial R`, we get a map `R → R[x] → R[x]/I`.
   If we let `R` be the image of `R` in `R[x]/I` then we also have a map `R[x] → R'[x]`.
   In particular we can map `I` across this map, to get `I'` and a new map `R' → R'[x] → R'[x]/I`.
@@ -824,43 +824,46 @@ theorem exists_irreducible_of_nat_degree_ne_zero {R : Type u} [CommRingₓ R] [I
   {f : Polynomial R} (hf : f.nat_degree ≠ 0) : ∃ g, Irreducible g ∧ g ∣ f :=
   exists_irreducible_of_nat_degree_pos$ Nat.pos_of_ne_zeroₓ hf
 
-theorem linear_independent_powers_iff_aeval (f : M →ₗ[R] M) (v : M) :
-  (LinearIndependent R fun n : ℕ => (f^n) v) ↔ ∀ p : Polynomial R, aeval f p v = 0 → p = 0 :=
-  by 
-    rw [linear_independent_iff]
-    simp only [Finsupp.total_apply, aeval_endomorphism, forall_iff_forall_finsupp, Sum, support, coeff,
-      ←zero_to_finsupp]
-    exact Iff.rfl
+-- error in RingTheory.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem linear_independent_powers_iff_aeval
+(f : «expr →ₗ[ ] »(M, R, M))
+(v : M) : «expr ↔ »(linear_independent R (λ
+  n : exprℕ(), «expr ^ »(f, n) v), ∀ p : polynomial R, «expr = »(aeval f p v, 0) → «expr = »(p, 0)) :=
+begin
+  rw [expr linear_independent_iff] [],
+  simp [] [] ["only"] ["[", expr finsupp.total_apply, ",", expr aeval_endomorphism, ",", expr forall_iff_forall_finsupp, ",", expr sum, ",", expr support, ",", expr coeff, ",", "<-", expr zero_to_finsupp, "]"] [] [],
+  exact [expr iff.rfl]
+end
 
-theorem disjoint_ker_aeval_of_coprime (f : M →ₗ[R] M) {p q : Polynomial R} (hpq : IsCoprime p q) :
-  Disjoint (aeval f p).ker (aeval f q).ker :=
-  by 
-    intro v hv 
-    rcases hpq with ⟨p', q', hpq'⟩
-    simpa [LinearMap.mem_ker.1 (Submodule.mem_inf.1 hv).1, LinearMap.mem_ker.1 (Submodule.mem_inf.1 hv).2] using
-      congr_argₓ (fun p : Polynomial R => aeval f p v) hpq'.symm
+-- error in RingTheory.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem disjoint_ker_aeval_of_coprime
+(f : «expr →ₗ[ ] »(M, R, M))
+{p q : polynomial R}
+(hpq : is_coprime p q) : disjoint (aeval f p).ker (aeval f q).ker :=
+begin
+  intros [ident v, ident hv],
+  rcases [expr hpq, "with", "⟨", ident p', ",", ident q', ",", ident hpq', "⟩"],
+  simpa [] [] [] ["[", expr linear_map.mem_ker.1 (submodule.mem_inf.1 hv).1, ",", expr linear_map.mem_ker.1 (submodule.mem_inf.1 hv).2, "]"] [] ["using", expr congr_arg (λ
+    p : polynomial R, aeval f p v) hpq'.symm]
+end
 
-theorem sup_aeval_range_eq_top_of_coprime (f : M →ₗ[R] M) {p q : Polynomial R} (hpq : IsCoprime p q) :
-  (aeval f p).range⊔(aeval f q).range = ⊤ :=
-  by 
-    rw [eq_top_iff]
-    intro v hv 
-    rw [Submodule.mem_sup]
-    rcases hpq with ⟨p', q', hpq'⟩
-    use aeval f (p*p') v 
-    use
-      LinearMap.mem_range.2
-        ⟨aeval f p' v,
-          by 
-            simp only [LinearMap.mul_apply, aeval_mul]⟩
-    use aeval f (q*q') v 
-    use
-      LinearMap.mem_range.2
-        ⟨aeval f q' v,
-          by 
-            simp only [LinearMap.mul_apply, aeval_mul]⟩
-    simpa only [mul_commₓ p p', mul_commₓ q q', aeval_one, aeval_add] using
-      congr_argₓ (fun p : Polynomial R => aeval f p v) hpq'
+-- error in RingTheory.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sup_aeval_range_eq_top_of_coprime
+(f : «expr →ₗ[ ] »(M, R, M))
+{p q : polynomial R}
+(hpq : is_coprime p q) : «expr = »(«expr ⊔ »((aeval f p).range, (aeval f q).range), «expr⊤»()) :=
+begin
+  rw [expr eq_top_iff] [],
+  intros [ident v, ident hv],
+  rw [expr submodule.mem_sup] [],
+  rcases [expr hpq, "with", "⟨", ident p', ",", ident q', ",", ident hpq', "⟩"],
+  use [expr aeval f «expr * »(p, p') v],
+  use [expr linear_map.mem_range.2 ⟨aeval f p' v, by simp [] [] ["only"] ["[", expr linear_map.mul_apply, ",", expr aeval_mul, "]"] [] []⟩],
+  use [expr aeval f «expr * »(q, q') v],
+  use [expr linear_map.mem_range.2 ⟨aeval f q' v, by simp [] [] ["only"] ["[", expr linear_map.mul_apply, ",", expr aeval_mul, "]"] [] []⟩],
+  simpa [] [] ["only"] ["[", expr mul_comm p p', ",", expr mul_comm q q', ",", expr aeval_one, ",", expr aeval_add, "]"] [] ["using", expr congr_arg (λ
+    p : polynomial R, aeval f p v) hpq']
+end
 
 -- error in RingTheory.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem sup_ker_aeval_le_ker_aeval_mul
@@ -876,7 +879,7 @@ begin
   rw ["[", expr linear_map.mem_ker, ",", "<-", expr hxy, ",", expr linear_map.map_add, ",", expr h_eval_x, ",", expr h_eval_y, ",", expr add_zero, "]"] []
 end
 
--- error in RingTheory.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem sup_ker_aeval_eq_ker_aeval_mul_of_coprime
 (f : «expr →ₗ[ ] »(M, R, M))
 {p q : polynomial R}
@@ -998,10 +1001,10 @@ theorem quotient_map_C_eq_zero {I : Ideal R} {i : R} (hi : i ∈ I) :
 /-- If every coefficient of a polynomial is in an ideal `I`, then so is the polynomial itself,
 multivariate version. -/
 theorem mem_ideal_of_coeff_mem_ideal (I : Ideal (MvPolynomial σ R)) (p : MvPolynomial σ R)
-  (hcoe : ∀ m : σ →₀ ℕ, p.coeff m ∈ I.comap C) : p ∈ I :=
+  (hcoe : ∀ (m : σ →₀ ℕ), p.coeff m ∈ I.comap C) : p ∈ I :=
   by 
     rw [as_sum p]
-    suffices  : ∀ m _ : m ∈ p.support, monomial m (MvPolynomial.coeff m p) ∈ I
+    suffices  : ∀ m (_ : m ∈ p.support), monomial m (MvPolynomial.coeff m p) ∈ I
     ·
       exact Submodule.sum_mem I this 
     intro m hm 
@@ -1014,7 +1017,7 @@ theorem mem_ideal_of_coeff_mem_ideal (I : Ideal (MvPolynomial σ R)) (p : MvPoly
 /-- The push-forward of an ideal `I` of `R` to `mv_polynomial σ R` via inclusion
  is exactly the set of polynomials whose coefficients are in `I` -/
 theorem mem_map_C_iff {I : Ideal R} {f : MvPolynomial σ R} :
-  f ∈ (Ideal.map C I : Ideal (MvPolynomial σ R)) ↔ ∀ m : σ →₀ ℕ, f.coeff m ∈ I :=
+  f ∈ (Ideal.map C I : Ideal (MvPolynomial σ R)) ↔ ∀ (m : σ →₀ ℕ), f.coeff m ∈ I :=
   by 
     split 
     ·
@@ -1043,7 +1046,7 @@ theorem mem_map_C_iff {I : Ideal R} {f : MvPolynomial σ R} :
     ·
       intro hf 
       rw [as_sum f]
-      suffices  : ∀ m _ : m ∈ f.support, monomial m (coeff m f) ∈ (Ideal.map C I : Ideal (MvPolynomial σ R))
+      suffices  : ∀ m (_ : m ∈ f.support), monomial m (coeff m f) ∈ (Ideal.map C I : Ideal (MvPolynomial σ R))
       ·
         exact Submodule.sum_mem _ this 
       intro m hm 

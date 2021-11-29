@@ -48,10 +48,10 @@ protected theorem map_eq {α β : Type _} (f : α → β) (a : P.A) (g : P.B a �
   @Functor.map P.obj _ _ _ f ⟨a, g⟩ = ⟨a, f ∘ g⟩ :=
   rfl
 
-protected theorem id_map {α : Type _} : ∀ x : P.obj α, id <$> x = id x :=
+protected theorem id_map {α : Type _} : ∀ (x : P.obj α), id <$> x = id x :=
   fun ⟨a, b⟩ => rfl
 
-protected theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) : ∀ x : P.obj α, (g ∘ f) <$> x = g <$> f <$> x :=
+protected theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) : ∀ (x : P.obj α), (g ∘ f) <$> x = g <$> f <$> x :=
   fun ⟨a, b⟩ => rfl
 
 instance  : IsLawfulFunctor P.obj :=
@@ -71,7 +71,7 @@ def W.head : W P → P.A
 | ⟨a, f⟩ => a
 
 /-- children of the root of a W tree -/
-def W.children : ∀ x : W P, P.B (W.head x) → W P
+def W.children : ∀ (x : W P), P.B (W.head x) → W P
 | ⟨a, f⟩ => f
 
 /-- destructor for W-types -/

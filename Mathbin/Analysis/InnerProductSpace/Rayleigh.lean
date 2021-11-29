@@ -43,7 +43,8 @@ namespace ContinuousLinearMap
 
 variable(T : E →L[𝕜] E)
 
-local notation "rayleigh_quotient" => fun x : E => T.re_apply_inner_self x / (∥(x : E)∥^2)
+-- error in Analysis.InnerProductSpace.Rayleigh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+local notation `rayleigh_quotient` := λ x : E, «expr / »(T.re_apply_inner_self x, «expr ^ »(«expr∥ ∥»((x : E)), 2))
 
 -- error in Analysis.InnerProductSpace.Rayleigh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem rayleigh_smul
@@ -79,14 +80,14 @@ begin
 end
 
 theorem supr_rayleigh_eq_supr_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
-  (⨆x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨆x : sphere (0 : E) r, rayleigh_quotient x :=
-  show (⨆x : «expr ᶜ» ({0} : Set E), rayleigh_quotient x) = _ by 
-    simp only [@csupr_set _ _ _ _ rayleigh_quotient, T.image_rayleigh_eq_image_rayleigh_sphere hr]
+  (⨆x : { x : E // x ≠ 0 }, (exprrayleigh_quotient) x) = ⨆x : sphere (0 : E) r, (exprrayleigh_quotient) x :=
+  show (⨆x : «expr ᶜ» ({0} : Set E), (exprrayleigh_quotient) x) = _ by 
+    simp only [@csupr_set _ _ _ _ (exprrayleigh_quotient), T.image_rayleigh_eq_image_rayleigh_sphere hr]
 
 theorem infi_rayleigh_eq_infi_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
-  (⨅x : { x : E // x ≠ 0 }, rayleigh_quotient x) = ⨅x : sphere (0 : E) r, rayleigh_quotient x :=
-  show (⨅x : «expr ᶜ» ({0} : Set E), rayleigh_quotient x) = _ by 
-    simp only [@cinfi_set _ _ _ _ rayleigh_quotient, T.image_rayleigh_eq_image_rayleigh_sphere hr]
+  (⨅x : { x : E // x ≠ 0 }, (exprrayleigh_quotient) x) = ⨅x : sphere (0 : E) r, (exprrayleigh_quotient) x :=
+  show (⨅x : «expr ᶜ» ({0} : Set E), (exprrayleigh_quotient) x) = _ by 
+    simp only [@cinfi_set _ _ _ _ (exprrayleigh_quotient), T.image_rayleigh_eq_image_rayleigh_sphere hr]
 
 end ContinuousLinearMap
 
@@ -105,7 +106,8 @@ theorem has_strict_fderiv_at_re_apply_inner_self {T : F →L[ℝ] F} (hT : IsSel
 
 variable[CompleteSpace F]{T : F →L[ℝ] F}
 
-local notation "rayleigh_quotient" => fun x : F => T.re_apply_inner_self x / (∥(x : F)∥^2)
+-- error in Analysis.InnerProductSpace.Rayleigh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+local notation `rayleigh_quotient` := λ x : F, «expr / »(T.re_apply_inner_self x, «expr ^ »(«expr∥ ∥»((x : F)), 2))
 
 -- error in Analysis.InnerProductSpace.Rayleigh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem linearly_dependent_of_is_local_extr_on
@@ -159,7 +161,8 @@ section CompleteSpace
 
 variable[CompleteSpace E]{T : E →L[𝕜] E}
 
-local notation "rayleigh_quotient" => fun x : E => T.re_apply_inner_self x / (∥(x : E)∥^2)
+-- error in Analysis.InnerProductSpace.Rayleigh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+local notation `rayleigh_quotient` := λ x : E, «expr / »(T.re_apply_inner_self x, «expr ^ »(«expr∥ ∥»((x : E)), 2))
 
 -- error in Analysis.InnerProductSpace.Rayleigh: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem eq_smul_self_of_is_local_extr_on
@@ -181,7 +184,7 @@ end
 centred at the origin is an eigenvector of `T`. -/
 theorem has_eigenvector_of_is_local_extr_on (hT : IsSelfAdjoint (T : E →ₗ[𝕜] E)) {x₀ : E} (hx₀ : x₀ ≠ 0)
   (hextr : IsLocalExtrOn T.re_apply_inner_self (sphere (0 : E) ∥x₀∥) x₀) :
-  has_eigenvector (T : E →ₗ[𝕜] E) («expr↑ » (rayleigh_quotient x₀)) x₀ :=
+  has_eigenvector (T : E →ₗ[𝕜] E) («expr↑ » ((exprrayleigh_quotient) x₀)) x₀ :=
   by 
     refine' ⟨_, hx₀⟩
     rw [Module.End.mem_eigenspace_iff]
@@ -284,7 +287,7 @@ end
 omit _i
 
 theorem subsingleton_of_no_eigenvalue_finite_dimensional (hT : IsSelfAdjoint T)
-  (hT' : ∀ μ : 𝕜, Module.End.eigenspace (T : E →ₗ[𝕜] E) μ = ⊥) : Subsingleton E :=
+  (hT' : ∀ (μ : 𝕜), Module.End.eigenspace (T : E →ₗ[𝕜] E) μ = ⊥) : Subsingleton E :=
   (subsingleton_or_nontrivial E).resolve_right
     fun h =>
       by 

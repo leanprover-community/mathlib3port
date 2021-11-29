@@ -58,30 +58,32 @@ def rhs : Nat → Int → List Int → term
   let m := get n as+1
   ⟨symmod b m, (as.map fun x => symmod x m) {n ↦ -m}⟩
 
-theorem rhs_correct_aux {v : Nat → Int} {m : Int} {as : List Int} :
-  ∀ {k}, ∃ d, ((m*d)+coeffs.val_between v (as.map fun x : ℤ => symmod x m) 0 k) = coeffs.val_between v as 0 k
-| 0 =>
-  by 
-    exists (0 : Int)
-    simp only [add_zeroₓ, mul_zero, coeffs.val_between]
-| k+1 =>
-  by 
-    simp only [zero_addₓ, coeffs.val_between, List.map]
-    cases' @rhs_correct_aux k with d h1 
-    rw [←h1]
-    byCases' hk : k < as.length
-    ·
-      rw [get_map hk, symmod_eq, sub_mul]
-      exists d+symdiv (get k as) m*v k 
-      ring
-    ·
-      rw [not_ltₓ] at hk 
-      repeat' 
-        rw [get_eq_default_of_le]
-      exists d 
-      rw [add_assocₓ]
-      exact hk 
-      simp only [hk, List.length_map]
+-- error in Tactic.Omega.EqElim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem rhs_correct_aux
+{v : nat → int}
+{m : int}
+{as : list int} : ∀
+{k}, «expr∃ , »((d), «expr = »(«expr + »(«expr * »(m, d), coeffs.val_between v (as.map (λ
+     x : exprℤ(), symmod x m)) 0 k), coeffs.val_between v as 0 k))
+| 0 := begin
+  existsi [expr (0 : int)],
+  simp [] [] ["only"] ["[", expr add_zero, ",", expr mul_zero, ",", expr coeffs.val_between, "]"] [] []
+end
+| «expr + »(k, 1) := begin
+  simp [] [] ["only"] ["[", expr zero_add, ",", expr coeffs.val_between, ",", expr list.map, "]"] [] [],
+  cases [expr @rhs_correct_aux k] ["with", ident d, ident h1],
+  rw ["<-", expr h1] [],
+  by_cases [expr hk, ":", expr «expr < »(k, as.length)],
+  { rw ["[", expr get_map hk, ",", expr symmod_eq, ",", expr sub_mul, "]"] [],
+    existsi [expr «expr + »(d, «expr * »(symdiv (get k as) m, v k))],
+    ring [] },
+  { rw [expr not_lt] ["at", ident hk],
+    repeat { rw [expr get_eq_default_of_le] [] },
+    existsi [expr d],
+    rw [expr add_assoc] [],
+    exact [expr hk],
+    simp [] [] ["only"] ["[", expr hk, ",", expr list.length_map, "]"] [] [] }
+end
 
 open_locale Omega
 
@@ -321,9 +323,9 @@ def eq_elim : List ee → clause → clause
 | _ :: _, ([], les) => ([], [])
 | ee.drop :: es, (Eq :: eqs, les) => eq_elim es (eqs, les)
 | ee.neg :: es, (Eq :: eqs, les) => eq_elim es (eq.neg :: eqs, les)
-| ee.nondiv i :: es, ((b, as) :: eqs, les) => if ¬i ∣ b ∧ ∀ x _ : x ∈ as, i ∣ x then ([], [⟨-1, []⟩]) else ([], [])
+| ee.nondiv i :: es, ((b, as) :: eqs, les) => if ¬i ∣ b ∧ ∀ x (_ : x ∈ as), i ∣ x then ([], [⟨-1, []⟩]) else ([], [])
 | ee.factor i :: es, ((b, as) :: eqs, les) =>
-  if i ∣ b ∧ ∀ x _ : x ∈ as, i ∣ x then eq_elim es (term.div i (b, as) :: eqs, les) else ([], [])
+  if i ∣ b ∧ ∀ x (_ : x ∈ as), i ∣ x then eq_elim es (term.div i (b, as) :: eqs, les) else ([], [])
 | ee.reduce n :: es, ((b, as) :: eqs, les) =>
   if 0 < get n as then
     let eq' := coeffs_reduce n b as 

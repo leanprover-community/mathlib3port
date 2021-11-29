@@ -26,11 +26,12 @@ namespace Subgroup
 
 variable{G : Type _}[Groupₓ G](H K : Subgroup G)(S T : Set G)
 
+-- error in GroupTheory.Complement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `S` and `T` are complements if `(*) : S × T → G` is a bijection.
   This notion generalizes left transversals, right transversals, and complementary subgroups. -/
-@[toAdditive "`S` and `T` are complements if `(*) : S × T → G` is a bijection"]
-def is_complement : Prop :=
-  Function.Bijective fun x : S × T => x.1.1*x.2.1
+@[to_additive #[expr "`S` and `T` are complements if `(*) : S × T → G` is a bijection"]]
+def is_complement : exprProp() :=
+function.bijective (λ x : «expr × »(S, T), «expr * »(x.1.1, x.2.1))
 
 /-- `H` and `K` are complements if `(*) : H × K → G` is a bijection -/
 @[toAdditive "`H` and `K` are complements if `(*) : H × K → G` is a bijection"]
@@ -54,24 +55,27 @@ theorem is_complement'_def : is_complement' H K ↔ is_complement (H : Set G) (K
   Iff.rfl
 
 @[toAdditive]
-theorem is_complement_iff_exists_unique : is_complement S T ↔ ∀ g : G, ∃!x : S × T, (x.1.1*x.2.1) = g :=
+theorem is_complement_iff_exists_unique : is_complement S T ↔ ∀ (g : G), ∃!x : S × T, (x.1.1*x.2.1) = g :=
   Function.bijective_iff_exists_unique _
 
 @[toAdditive]
 theorem is_complement.exists_unique (h : is_complement S T) (g : G) : ∃!x : S × T, (x.1.1*x.2.1) = g :=
   is_complement_iff_exists_unique.mp h g
 
-@[toAdditive]
-theorem is_complement'.symm (h : is_complement' H K) : is_complement' K H :=
-  by 
-    let ϕ : H × K ≃ K × H :=
-      Equiv.mk (fun x => ⟨x.2⁻¹, x.1⁻¹⟩) (fun x => ⟨x.2⁻¹, x.1⁻¹⟩) (fun x => Prod.extₓ (inv_invₓ _) (inv_invₓ _))
-        fun x => Prod.extₓ (inv_invₓ _) (inv_invₓ _)
-    let ψ : G ≃ G := Equiv.mk (fun g : G => g⁻¹) (fun g : G => g⁻¹) inv_invₓ inv_invₓ 
-    suffices  : (ψ ∘ fun x : H × K => x.1.1*x.2.1) = (fun x : K × H => x.1.1*x.2.1) ∘ ϕ
-    ·
-      rwa [is_complement'_def, is_complement, ←Equiv.bijective_comp, ←this, Equiv.comp_bijective]
-    exact funext fun x => mul_inv_rev _ _
+-- error in GroupTheory.Complement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem is_complement'.symm (h : is_complement' H K) : is_complement' K H :=
+begin
+  let [ident ϕ] [":", expr «expr ≃ »(«expr × »(H, K), «expr × »(K, H))] [":=", expr equiv.mk (λ
+    x, ⟨«expr ⁻¹»(x.2), «expr ⁻¹»(x.1)⟩) (λ
+    x, ⟨«expr ⁻¹»(x.2), «expr ⁻¹»(x.1)⟩) (λ
+    x, prod.ext (inv_inv _) (inv_inv _)) (λ x, prod.ext (inv_inv _) (inv_inv _))],
+  let [ident ψ] [":", expr «expr ≃ »(G, G)] [":=", expr equiv.mk (λ
+    g : G, «expr ⁻¹»(g)) (λ g : G, «expr ⁻¹»(g)) inv_inv inv_inv],
+  suffices [] [":", expr «expr = »(«expr ∘ »(ψ, λ
+     x : «expr × »(H, K), «expr * »(x.1.1, x.2.1)), «expr ∘ »(λ x : «expr × »(K, H), «expr * »(x.1.1, x.2.1), ϕ))],
+  { rwa ["[", expr is_complement'_def, ",", expr is_complement, ",", "<-", expr equiv.bijective_comp, ",", "<-", expr this, ",", expr equiv.comp_bijective, "]"] [] },
+  exact [expr funext (λ x, mul_inv_rev _ _)]
+end
 
 @[toAdditive]
 theorem is_complement'_comm : is_complement' H K ↔ is_complement' K H :=

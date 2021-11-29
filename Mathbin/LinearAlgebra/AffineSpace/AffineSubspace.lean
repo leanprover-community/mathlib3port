@@ -164,7 +164,7 @@ structure
   AffineSubspace(k : Type _){V : Type _}(P : Type _)[Ringₓ k][AddCommGroupₓ V][Module k V][affine_space V P] where 
   Carrier : Set P 
   smul_vsub_vadd_mem :
-  ∀ c : k {p1 p2 p3 : P}, p1 ∈ carrier → p2 ∈ carrier → p3 ∈ carrier → c • (p1 -ᵥ p2 : V) +ᵥ p3 ∈ carrier
+  ∀ (c : k) {p1 p2 p3 : P}, p1 ∈ carrier → p2 ∈ carrier → p3 ∈ carrier → c • (p1 -ᵥ p2 : V) +ᵥ p3 ∈ carrier
 
 namespace Submodule
 
@@ -584,7 +584,7 @@ theorem le_def (s1 s2 : AffineSubspace k P) : s1 ≤ s2 ↔ (s1 : Set P) ⊆ s2 
 
 /-- One subspace is less than or equal to another if and only if all
 its points are in the second subspace. -/
-theorem le_def' (s1 s2 : AffineSubspace k P) : s1 ≤ s2 ↔ ∀ p _ : p ∈ s1, p ∈ s2 :=
+theorem le_def' (s1 s2 : AffineSubspace k P) : s1 ≤ s2 ↔ ∀ p (_ : p ∈ s1), p ∈ s2 :=
   Iff.rfl
 
 /-- The `<` order on subspaces is the same as that on the corresponding
@@ -1045,51 +1045,57 @@ theorem vector_span_image_eq_span_vsub_set_right_ne (p : ι → P) {s : Set ι} 
         ←Set.insert_diff_singleton, Set.image_insert_eq, Set.image_insert_eq]
     simp [Submodule.span_insert_eq_span]
 
+-- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The `vector_span` of an indexed family is the span of the pairwise
 subtractions with a given point on the left. -/
-theorem vector_span_range_eq_span_range_vsub_left (p : ι → P) (i0 : ι) :
-  vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : ι => p i0 -ᵥ p i) :=
-  by 
-    rw [vector_span_eq_span_vsub_set_left k (Set.mem_range_self i0), ←Set.range_comp]
+theorem vector_span_range_eq_span_range_vsub_left
+(p : ι → P)
+(i0 : ι) : «expr = »(vector_span k (set.range p), submodule.span k (set.range (λ i : ι, «expr -ᵥ »(p i0, p i)))) :=
+by rw ["[", expr vector_span_eq_span_vsub_set_left k (set.mem_range_self i0), ",", "<-", expr set.range_comp, "]"] []
 
+-- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The `vector_span` of an indexed family is the span of the pairwise
 subtractions with a given point on the right. -/
-theorem vector_span_range_eq_span_range_vsub_right (p : ι → P) (i0 : ι) :
-  vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : ι => p i -ᵥ p i0) :=
-  by 
-    rw [vector_span_eq_span_vsub_set_right k (Set.mem_range_self i0), ←Set.range_comp]
+theorem vector_span_range_eq_span_range_vsub_right
+(p : ι → P)
+(i0 : ι) : «expr = »(vector_span k (set.range p), submodule.span k (set.range (λ i : ι, «expr -ᵥ »(p i, p i0)))) :=
+by rw ["[", expr vector_span_eq_span_vsub_set_right k (set.mem_range_self i0), ",", "<-", expr set.range_comp, "]"] []
 
+-- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The `vector_span` of an indexed family is the span of the pairwise
 subtractions with a given point on the left, excluding the subtraction
 of that point from itself. -/
-theorem vector_span_range_eq_span_range_vsub_left_ne (p : ι → P) (i₀ : ι) :
-  vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : { x // x ≠ i₀ } => p i₀ -ᵥ p i) :=
-  by 
-    rw [←Set.image_univ, vector_span_image_eq_span_vsub_set_left_ne k _ (Set.mem_univ i₀)]
-    congr with v 
-    simp only [Set.mem_range, Set.mem_image, Set.mem_diff, Set.mem_singleton_iff, Subtype.exists, Subtype.coe_mk]
-    split 
-    ·
-      rintro ⟨x, ⟨i₁, ⟨⟨hi₁u, hi₁⟩, rfl⟩⟩, hv⟩
-      exact ⟨i₁, hi₁, hv⟩
-    ·
-      exact fun ⟨i₁, hi₁, hv⟩ => ⟨p i₁, ⟨i₁, ⟨Set.mem_univ _, hi₁⟩, rfl⟩, hv⟩
+theorem vector_span_range_eq_span_range_vsub_left_ne
+(p : ι → P)
+(i₀ : ι) : «expr = »(vector_span k (set.range p), submodule.span k (set.range (λ
+   i : {x // «expr ≠ »(x, i₀)}, «expr -ᵥ »(p i₀, p i)))) :=
+begin
+  rw ["[", "<-", expr set.image_univ, ",", expr vector_span_image_eq_span_vsub_set_left_ne k _ (set.mem_univ i₀), "]"] [],
+  congr' [] ["with", ident v],
+  simp [] [] ["only"] ["[", expr set.mem_range, ",", expr set.mem_image, ",", expr set.mem_diff, ",", expr set.mem_singleton_iff, ",", expr subtype.exists, ",", expr subtype.coe_mk, "]"] [] [],
+  split,
+  { rintros ["⟨", ident x, ",", "⟨", ident i₁, ",", "⟨", "⟨", ident hi₁u, ",", ident hi₁, "⟩", ",", ident rfl, "⟩", "⟩", ",", ident hv, "⟩"],
+    exact [expr ⟨i₁, hi₁, hv⟩] },
+  { exact [expr λ ⟨i₁, hi₁, hv⟩, ⟨p i₁, ⟨i₁, ⟨set.mem_univ _, hi₁⟩, rfl⟩, hv⟩] }
+end
 
+-- error in LinearAlgebra.AffineSpace.AffineSubspace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The `vector_span` of an indexed family is the span of the pairwise
 subtractions with a given point on the right, excluding the subtraction
 of that point from itself. -/
-theorem vector_span_range_eq_span_range_vsub_right_ne (p : ι → P) (i₀ : ι) :
-  vectorSpan k (Set.Range p) = Submodule.span k (Set.Range fun i : { x // x ≠ i₀ } => p i -ᵥ p i₀) :=
-  by 
-    rw [←Set.image_univ, vector_span_image_eq_span_vsub_set_right_ne k _ (Set.mem_univ i₀)]
-    congr with v 
-    simp only [Set.mem_range, Set.mem_image, Set.mem_diff, Set.mem_singleton_iff, Subtype.exists, Subtype.coe_mk]
-    split 
-    ·
-      rintro ⟨x, ⟨i₁, ⟨⟨hi₁u, hi₁⟩, rfl⟩⟩, hv⟩
-      exact ⟨i₁, hi₁, hv⟩
-    ·
-      exact fun ⟨i₁, hi₁, hv⟩ => ⟨p i₁, ⟨i₁, ⟨Set.mem_univ _, hi₁⟩, rfl⟩, hv⟩
+theorem vector_span_range_eq_span_range_vsub_right_ne
+(p : ι → P)
+(i₀ : ι) : «expr = »(vector_span k (set.range p), submodule.span k (set.range (λ
+   i : {x // «expr ≠ »(x, i₀)}, «expr -ᵥ »(p i, p i₀)))) :=
+begin
+  rw ["[", "<-", expr set.image_univ, ",", expr vector_span_image_eq_span_vsub_set_right_ne k _ (set.mem_univ i₀), "]"] [],
+  congr' [] ["with", ident v],
+  simp [] [] ["only"] ["[", expr set.mem_range, ",", expr set.mem_image, ",", expr set.mem_diff, ",", expr set.mem_singleton_iff, ",", expr subtype.exists, ",", expr subtype.coe_mk, "]"] [] [],
+  split,
+  { rintros ["⟨", ident x, ",", "⟨", ident i₁, ",", "⟨", "⟨", ident hi₁u, ",", ident hi₁, "⟩", ",", ident rfl, "⟩", "⟩", ",", ident hv, "⟩"],
+    exact [expr ⟨i₁, hi₁, hv⟩] },
+  { exact [expr λ ⟨i₁, hi₁, hv⟩, ⟨p i₁, ⟨i₁, ⟨set.mem_univ _, hi₁⟩, rfl⟩, hv⟩] }
+end
 
 /-- The affine span of a set is nonempty if and only if that set
 is. -/

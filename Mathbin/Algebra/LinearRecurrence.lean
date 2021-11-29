@@ -80,7 +80,7 @@ theorem is_sol_mk_sol (init : Finₓ E.order → α) : E.is_solution (E.mk_sol i
       rw [mk_sol] <;> simp 
 
 /-- `E.mk_sol init`'s first `E.order` terms are `init`. -/
-theorem mk_sol_eq_init (init : Finₓ E.order → α) : ∀ n : Finₓ E.order, E.mk_sol init n = init n :=
+theorem mk_sol_eq_init (init : Finₓ E.order → α) : ∀ (n : Finₓ E.order), E.mk_sol init n = init n :=
   fun n =>
     by 
       rw [mk_sol]
@@ -89,7 +89,7 @@ theorem mk_sol_eq_init (init : Finₓ E.order → α) : ∀ n : Finₓ E.order, 
 /-- If `u` is a solution to `E` and `init` designates its first `E.order` values,
   then `∀ n, u n = E.mk_sol init n`. -/
 theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Finₓ E.order → α} (h : E.is_solution u)
-  (heq : ∀ n : Finₓ E.order, u n = init n) : ∀ n, u n = E.mk_sol init n
+  (heq : ∀ (n : Finₓ E.order), u n = init n) : ∀ n, u n = E.mk_sol init n
 | n =>
   if h' : n < E.order then
     by 
@@ -115,7 +115,7 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Finₓ E.order → �
   then `u = E.mk_sol init`. This proves that `E.mk_sol init` is the only solution
   of `E` whose first `E.order` values are given by `init`. -/
 theorem eq_mk_of_is_sol_of_eq_init' {u : ℕ → α} {init : Finₓ E.order → α} (h : E.is_solution u)
-  (heq : ∀ n : Finₓ E.order, u n = init n) : u = E.mk_sol init :=
+  (heq : ∀ (n : Finₓ E.order), u n = init n) : u = E.mk_sol init :=
   funext (E.eq_mk_of_is_sol_of_eq_init h HEq)
 
 /-- The space of solutions of `E`, as a `submodule` over `α` of the module `ℕ → α`. -/

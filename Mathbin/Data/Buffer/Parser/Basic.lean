@@ -52,7 +52,7 @@ is always at a `parse_result.pos` that is at least `n`.
 The `mono` property is used mainly for proper `orelse` behavior.
 -/
 class mono : Prop where 
-  le' : ∀ cb : CharBuffer n : ℕ, n ≤ (p cb n).Pos
+  le' : ∀ (cb : CharBuffer) (n : ℕ), n ≤ (p cb n).Pos
 
 theorem mono.le [p.mono] : n ≤ (p cb n).Pos :=
   mono.le' cb n
@@ -96,7 +96,7 @@ theorem bounded.exists (p : Parser α) [p.bounded] {cb : CharBuffer} {n : ℕ} (
 A `parser a` is defined to be `unfailing` if it always produces a `done` `parse_result`.
 -/
 class unfailing : Prop where 
-  ex' : ∀ cb : CharBuffer n : ℕ, ∃ (n' : ℕ)(a : α), p cb n = done n' a
+  ex' : ∀ (cb : CharBuffer) (n : ℕ), ∃ (n' : ℕ)(a : α), p cb n = done n' a
 
 /--
 A `parser a` is defined to be `conditionally_unfailing` if it produces a
@@ -474,7 +474,7 @@ instance map [p.mono] {f : α → β} : (f <$> p).mono :=
 instance seq {f : Parser (α → β)} [f.mono] [p.mono] : (f<*>p).mono :=
   mono.bind
 
-instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a _ : a ∈ l, (f a).mono], (l.mmap f).mono
+instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a (_ : a ∈ l), (f a).mono], (l.mmap f).mono
 | [], _, _ => mono.pure
 | a :: l, f, h =>
   by 
@@ -487,7 +487,7 @@ instance mmap : ∀ {l : List α} {f : α → Parser β} [∀ a _ : a ∈ l, (f 
       convert mmap 
       exact fun _ ha => h _ (List.mem_cons_of_memₓ _ ha)
 
-instance mmap' : ∀ {l : List α} {f : α → Parser β} [∀ a _ : a ∈ l, (f a).mono], (l.mmap' f).mono
+instance mmap' : ∀ {l : List α} {f : α → Parser β} [∀ a (_ : a ∈ l), (f a).mono], (l.mmap' f).mono
 | [], _, _ => mono.pure
 | a :: l, f, h =>
   by 
@@ -632,8 +632,8 @@ instance sep_by1 [p.mono] [sep.mono] : mono (sep_by1 sep p) :=
 instance sep_by [p.mono] [hs : sep.mono] : mono (sep_by sep p) :=
   mono.orelse
 
-theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.mono → (F p).mono) :
-  ∀ max_depth : ℕ, mono (fix_core F max_depth)
+theorem fix_core {F : Parser α → Parser α} (hF : ∀ (p : Parser α), p.mono → (F p).mono) :
+  ∀ (max_depth : ℕ), mono (fix_core F max_depth)
 | 0 => mono.failure
 | max_depth+1 => hF _ (fix_core _)
 
@@ -643,7 +643,7 @@ instance digit : digit.mono :=
 instance Nat : Nat.mono :=
   mono.decorate_error
 
-theorem fix {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.mono → (F p).mono) : mono (fix F) :=
+theorem fix {F : Parser α → Parser α} (hF : ∀ (p : Parser α), p.mono → (F p).mono) : mono (fix F) :=
   ⟨fun _ _ =>
       by 
         convert mono.le (Parser.fixCore F _) _ _ 
@@ -699,7 +699,7 @@ theorem sat_eq_done {p : Charₓ → Prop} [DecidablePred p] :
       simp [sat, hn]
 
 theorem sat_eq_fail {p : Charₓ → Prop} [DecidablePred p] :
-  sat p cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty ∧ ∀ h : n < cb.size, ¬p (cb.read ⟨n, h⟩) :=
+  sat p cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty ∧ ∀ (h : n < cb.size), ¬p (cb.read ⟨n, h⟩) :=
   by 
     dsimp only [sat]
     splitIfs <;> simp [eq_comm]
@@ -1042,7 +1042,7 @@ end
 
 theorem digit_eq_fail :
   digit cb n = fail n' err ↔
-    n = n' ∧ err = Dlist.ofList ["<digit>"] ∧ ∀ h : n < cb.size, ¬(fun c => '0' ≤ c ∧ c ≤ '9') (cb.read ⟨n, h⟩) :=
+    n = n' ∧ err = Dlist.ofList ["<digit>"] ∧ ∀ (h : n < cb.size), ¬(fun c => '0' ≤ c ∧ c ≤ '9') (cb.read ⟨n, h⟩) :=
   by 
     simp [digit, sat_eq_fail]
 
@@ -1301,8 +1301,8 @@ instance sep_by1 [p.static] [sep.static] : static (sep_by1 sep p) :=
 instance sep_by [p.static] [sep.static] : static (sep_by sep p) :=
   static.orelse
 
-theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.static → (F p).Static) :
-  ∀ max_depth : ℕ, static (fix_core F max_depth)
+theorem fix_core {F : Parser α → Parser α} (hF : ∀ (p : Parser α), p.static → (F p).Static) :
+  ∀ (max_depth : ℕ), static (fix_core F max_depth)
 | 0 => static.failure
 | max_depth+1 => hF _ (fix_core _)
 
@@ -1577,8 +1577,8 @@ instance many_char1 {p : Parser Charₓ} [p.bounded] : p.many_char1.bounded :=
 instance sep_by1 {sep : Parser Unit} [p.bounded] : Bounded (sep_by1 sep p) :=
   bounded.seq
 
-theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.bounded → (F p).Bounded) :
-  ∀ max_depth : ℕ, Bounded (fix_core F max_depth)
+theorem fix_core {F : Parser α → Parser α} (hF : ∀ (p : Parser α), p.bounded → (F p).Bounded) :
+  ∀ (max_depth : ℕ), Bounded (fix_core F max_depth)
 | 0 => bounded.failure
 | max_depth+1 => hF _ (fix_core _)
 
@@ -1948,8 +1948,8 @@ instance remaining : remaining.ErrStatic :=
 instance eof : eof.ErrStatic :=
   err_static.decorate_error
 
-theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.err_static → (F p).ErrStatic) :
-  ∀ max_depth : ℕ, err_static (fix_core F max_depth)
+theorem fix_core {F : Parser α → Parser α} (hF : ∀ (p : Parser α), p.err_static → (F p).ErrStatic) :
+  ∀ (max_depth : ℕ), err_static (fix_core F max_depth)
 | 0 => err_static.failure
 | max_depth+1 => hF _ (fix_core _)
 
@@ -2152,8 +2152,8 @@ theorem eof : ¬eof.step :=
     use Buffer.nil, 0
     simp 
 
-theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.step → (F p).step) :
-  ∀ max_depth : ℕ, step (fix_core F max_depth)
+theorem fix_core {F : Parser α → Parser α} (hF : ∀ (p : Parser α), p.step → (F p).step) :
+  ∀ (max_depth : ℕ), step (fix_core F max_depth)
 | 0 => step.failure
 | max_depth+1 => hF _ (fix_core _)
 
@@ -2398,8 +2398,8 @@ instance many1 [p.mono] [p.prog] : p.many1.prog :=
       rintro ⟨np, hp, h⟩
       exact (of_done hp).trans_le (mono.of_done h)
 
-theorem fix_core {F : Parser α → Parser α} (hF : ∀ p : Parser α, p.prog → (F p).Prog) :
-  ∀ max_depth : ℕ, prog (fix_core F max_depth)
+theorem fix_core {F : Parser α → Parser α} (hF : ∀ (p : Parser α), p.prog → (F p).Prog) :
+  ∀ (max_depth : ℕ), prog (fix_core F max_depth)
 | 0 => prog.failure
 | max_depth+1 => hF _ (fix_core _)
 
@@ -2426,7 +2426,7 @@ variable{a : α}{b : β}
 section Many
 
 theorem many_sublist_of_done [p.step] [p.bounded] {l : List α} (h : p.many cb n = done n' l) :
-  ∀ k _ : k < n' - n, p.many cb (n+k) = done n' (l.drop k) :=
+  ∀ k (_ : k < n' - n), p.many cb (n+k) = done n' (l.drop k) :=
   by 
     induction' l with hd tl hl generalizing n
     ·
@@ -2644,7 +2644,7 @@ then it must be the case that for the ending position `n'`, either it is beyond 
 This is a necessary part of proving one of the directions of `nat_eq_done`.
 -/
 theorem nat_of_done_bounded {val : ℕ} (h : Nat cb n = done n' val) :
-  ∀ hn : n' < cb.size, '0' ≤ cb.read ⟨n', hn⟩ → '9' < cb.read ⟨n', hn⟩ :=
+  ∀ (hn : n' < cb.size), '0' ≤ cb.read ⟨n', hn⟩ → '9' < cb.read ⟨n', hn⟩ :=
   by 
     simp only [Nat, pure_eq_done, And.left_comm, decorate_error_eq_done, bind_eq_done, exists_eq_left,
       exists_and_distrib_left] at h 

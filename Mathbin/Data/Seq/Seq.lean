@@ -108,7 +108,7 @@ theorem not_mem_nil (a : α) : a ∉ @nil α :=
     by 
       injection h
 
-theorem mem_cons (a : α) : ∀ s : Seqₓₓ α, a ∈ cons a s
+theorem mem_cons (a : α) : ∀ (s : Seqₓₓ α), a ∈ cons a s
 | ⟨f, al⟩ => Streamₓ.mem_cons (some a) _
 
 theorem mem_cons_of_mem (y : α) {a : α} : ∀ {s : Seqₓₓ α}, a ∈ s → a ∈ cons y s
@@ -362,18 +362,25 @@ end Bisim
 
 theorem coinduction :
   ∀ {s₁ s₂ : Seqₓₓ α},
-    head s₁ = head s₂ → (∀ β : Type u fr : Seqₓₓ α → β, fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂)) → s₁ = s₂
+    head s₁ = head s₂ → (∀ (β : Type u) (fr : Seqₓₓ α → β), fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂)) → s₁ = s₂
 | ⟨f₁, a₁⟩, ⟨f₂, a₂⟩, hh, ht => Subtype.eq (Streamₓ.coinduction hh fun β fr => ht β fun s => fr s.1)
 
-theorem coinduction2 s (f g : Seqₓₓ α → Seqₓₓ β)
-  (H : ∀ s, bisim_o (fun s1 s2 : Seqₓₓ β => ∃ s : Seqₓₓ α, s1 = f s ∧ s2 = g s) (destruct (f s)) (destruct (g s))) :
-  f s = g s :=
-  by 
-    refine' eq_of_bisim (fun s1 s2 => ∃ s, s1 = f s ∧ s2 = g s) _ ⟨s, rfl, rfl⟩
-    intro s1 s2 h 
-    rcases h with ⟨s, h1, h2⟩
-    rw [h1, h2]
-    apply H
+-- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem coinduction2
+(s)
+(f g : seq α → seq β)
+(H : ∀
+ s, bisim_o (λ
+  s1
+  s2 : seq β, «expr∃ , »((s : seq α), «expr ∧ »(«expr = »(s1, f s), «expr = »(s2, g s)))) (destruct (f s)) (destruct (g s))) : «expr = »(f s, g s) :=
+begin
+  refine [expr eq_of_bisim (λ
+    s1 s2, «expr∃ , »((s), «expr ∧ »(«expr = »(s1, f s), «expr = »(s2, g s)))) _ ⟨s, rfl, rfl⟩],
+  intros [ident s1, ident s2, ident h],
+  rcases [expr h, "with", "⟨", ident s, ",", ident h1, ",", ident h2, "⟩"],
+  rw ["[", expr h1, ",", expr h2, "]"] [],
+  apply [expr H]
+end
 
 /-- Embed an infinite stream as a sequence -/
 def of_stream (s : Streamₓ α) : Seqₓₓ α :=
@@ -657,7 +664,7 @@ theorem map_cons (f : α → β) a : ∀ s, map f (cons a s) = cons (f a) (map f
     apply Subtype.eq <;> dsimp [cons, map] <;> rw [Streamₓ.map_cons] <;> rfl
 
 @[simp]
-theorem map_id : ∀ s : Seqₓₓ α, map id s = s
+theorem map_id : ∀ (s : Seqₓₓ α), map id s = s
 | ⟨s, al⟩ =>
   by 
     apply Subtype.eq <;> dsimp [map]
@@ -669,13 +676,14 @@ theorem map_tail (f : α → β) : ∀ s, map f (tail s) = tail (map f s)
   by 
     apply Subtype.eq <;> dsimp [tail, map] <;> rw [Streamₓ.map_tail] <;> rfl
 
-theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Seqₓₓ α, map (g ∘ f) s = map g (map f s)
-| ⟨s, al⟩ =>
-  by 
-    apply Subtype.eq <;> dsimp [map]
-    rw [Streamₓ.map_map]
-    apply congr_argₓ fun f : _ → Option γ => Streamₓ.map f s 
-    ext ⟨⟩ <;> rfl
+-- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem map_comp (f : α → β) (g : β → γ) : ∀ s : seq α, «expr = »(map «expr ∘ »(g, f) s, map g (map f s))
+| ⟨s, al⟩ := begin
+  apply [expr subtype.eq]; dsimp [] ["[", expr map, "]"] [] [],
+  rw [expr stream.map_map] [],
+  apply [expr congr_arg (λ f : _ → option γ, stream.map f s)],
+  ext [] ["⟨", "⟩"] []; refl
+end
 
 @[simp]
 theorem map_append (f : α → β) s t : map f (append s t) = append (map f s) (map f t) :=
@@ -826,27 +834,27 @@ theorem dropn_tail (s : Seqₓₓ α) n : drop (tail s) n = drop s (n+1) :=
   by 
     rw [add_commₓ] <;> symm <;> apply dropn_add
 
-theorem nth_tail : ∀ s : Seqₓₓ α n, nth (tail s) n = nth s (n+1)
+theorem nth_tail : ∀ (s : Seqₓₓ α) n, nth (tail s) n = nth s (n+1)
 | ⟨f, al⟩, n => rfl
 
-@[ext]
-protected theorem ext (s s' : Seqₓₓ α) (hyp : ∀ n : ℕ, s.nth n = s'.nth n) : s = s' :=
-  by 
-    let ext := fun s s' : Seqₓₓ α => ∀ n, s.nth n = s'.nth n 
-    apply Seqₓₓ.eq_of_bisim ext _ hyp 
-    clear hyp s s' 
-    intro s s'(hyp : ext s s')
-    unfold Seqₓₓ.destruct 
-    rw [hyp 0]
-    cases s'.nth 0
-    ·
-      simp [Seqₓₓ.BisimO]
-    ·
-      suffices  : ext s.tail s'.tail
-      ·
-        simpa 
-      intro n 
-      simp only [Seqₓₓ.nth_tail _ n, hyp$ n+1]
+-- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[ext #[]]
+protected
+theorem ext (s s' : seq α) (hyp : ∀ n : exprℕ(), «expr = »(s.nth n, s'.nth n)) : «expr = »(s, s') :=
+begin
+  let [ident ext] [] [":=", expr λ s s' : seq α, ∀ n, «expr = »(s.nth n, s'.nth n)],
+  apply [expr seq.eq_of_bisim ext _ hyp],
+  clear [ident hyp, ident s, ident s'],
+  assume [binders (s s') (hyp : ext s s')],
+  unfold [ident seq.destruct] [],
+  rw [expr hyp 0] [],
+  cases [expr s'.nth 0] [],
+  { simp [] [] [] ["[", expr seq.bisim_o, "]"] [] [] },
+  { suffices [] [":", expr ext s.tail s'.tail],
+    by simpa [] [] [] [] [] [],
+    assume [binders (n)],
+    simp [] [] ["only"] ["[", expr seq.nth_tail _ n, ",", expr «expr $ »(hyp, «expr + »(n, 1)), "]"] [] [] }
+end
 
 @[simp]
 theorem head_dropn (s : Seqₓₓ α) n : head (drop s n) = nth s n :=
@@ -914,7 +922,7 @@ instance coe_seq : Coe (Seq1 α) (Seqₓₓ α) :=
 def map (f : α → β) : Seq1 α → Seq1 β
 | (a, s) => (f a, Seqₓₓ.map f s)
 
-theorem map_id : ∀ s : Seq1 α, map id s = s
+theorem map_id : ∀ (s : Seq1 α), map id s = s
 | ⟨a, s⟩ =>
   by 
     simp [map]
@@ -1035,23 +1043,25 @@ theorem join_join (SS : Seqₓₓ (Seq1 (Seq1 α))) : Seqₓₓ.join (Seqₓₓ.
     ·
       refine' ⟨nil, SS, _, _⟩ <;> simp 
 
+-- error in Data.Seq.Seq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem bind_assoc (s : Seq1 α) (f : α → Seq1 β) (g : β → Seq1 γ) :
-  bind (bind s f) g = bind s fun x : α => bind (f x) g :=
-  by 
-    cases' s with a s 
-    simp [bind, map]
-    rw [←map_comp]
-    change fun x => join (map g (f x)) with join ∘ map g ∘ f 
-    rw [map_comp _ join]
-    generalize Seqₓₓ.map (map g ∘ f) s = SS 
-    rcases map g (f a) with ⟨⟨a, s⟩, S⟩
-    apply cases_on s <;> intros  <;> apply cases_on S <;> intros  <;> simp 
-    ·
-      cases' x with x t 
-      apply cases_on t <;> intros  <;> simp 
-    ·
-      cases' x_1 with y t <;> simp 
+theorem bind_assoc
+(s : seq1 α)
+(f : α → seq1 β)
+(g : β → seq1 γ) : «expr = »(bind (bind s f) g, bind s (λ x : α, bind (f x) g)) :=
+begin
+  cases [expr s] ["with", ident a, ident s],
+  simp [] [] [] ["[", expr bind, ",", expr map, "]"] [] [],
+  rw ["[", "<-", expr map_comp, "]"] [],
+  change [expr λ x, join (map g (f x))] ["with", expr «expr ∘ »(join, «expr ∘ »(map g, f))] [],
+  rw ["[", expr map_comp _ join, "]"] [],
+  generalize [] [":"] [expr «expr = »(seq.map «expr ∘ »(map g, f) s, SS)],
+  rcases [expr map g (f a), "with", "⟨", "⟨", ident a, ",", ident s, "⟩", ",", ident S, "⟩"],
+  apply [expr cases_on s]; intros []; apply [expr cases_on S]; intros []; simp [] [] [] [] [] [],
+  { cases [expr x] ["with", ident x, ident t],
+    apply [expr cases_on t]; intros []; simp [] [] [] [] [] [] },
+  { cases [expr x_1] ["with", ident y, ident t]; simp [] [] [] [] [] [] }
+end
 
 instance  : Monadₓ Seq1 :=
   { map := @map, pure := @ret, bind := @bind }

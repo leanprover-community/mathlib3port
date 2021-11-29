@@ -175,7 +175,7 @@ def limit_cone {J : Type u} [small_category J] (F : J ⥤ Profinite.{u}) : limit
       { toCompHaus := (CompHaus.limitCone (F ⋙ profiniteToCompHaus)).x,
         IsTotallyDisconnected :=
           by 
-            change TotallyDisconnectedSpace («expr↥ » { u:∀ j : J, F.obj j | _ })
+            change TotallyDisconnectedSpace («expr↥ » { u:∀ (j : J), F.obj j | _ })
             exact Subtype.totally_disconnected_space },
     π := { app := (CompHaus.limitCone (F ⋙ profiniteToCompHaus)).π.app } }
 

@@ -182,25 +182,21 @@ def decidable_range_encode (α : Type _) [Encodable α] : DecidablePred (· ∈ 
           by 
             rw [←hn, encodek₂] <;> exact rfl⟩
 
+-- error in Data.Equiv.Encodable.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An encodable type is equivalent to the range of its encoding function. -/
-def equiv_range_encode (α : Type _) [Encodable α] : α ≃ Set.Range (@encode α _) :=
-  { toFun := fun a : α => ⟨encode a, Set.mem_range_self _⟩,
-    invFun :=
-      fun n =>
-        Option.get
-          (show is_some (decode₂ α n.1)by 
-            cases' n.2 with x hx <;> rw [←hx, encodek₂] <;> exact rfl),
-    left_inv :=
-      fun a =>
-        by 
-          dsimp <;> rw [←Option.some_inj, Option.some_get, encodek₂],
-    right_inv :=
-      fun ⟨n, x, hx⟩ =>
-        by 
-          apply Subtype.eq 
-          dsimp 
-          conv  => toRHS rw [←hx]
-          rw [encode_injective.eq_iff, ←Option.some_inj, Option.some_get, ←hx, encodek₂] }
+def equiv_range_encode (α : Type*) [encodable α] : «expr ≃ »(α, set.range (@encode α _)) :=
+{ to_fun := λ a : α, ⟨encode a, set.mem_range_self _⟩,
+  inv_fun := λ
+  n, option.get (show is_some (decode₂ α n.1), by cases [expr n.2] ["with", ident x, ident hx]; rw ["[", "<-", expr hx, ",", expr encodek₂, "]"] []; exact [expr rfl]),
+  left_inv := λ
+  a, by dsimp [] [] [] []; rw ["[", "<-", expr option.some_inj, ",", expr option.some_get, ",", expr encodek₂, "]"] [],
+  right_inv := λ ⟨n, x, hx⟩, begin
+    apply [expr subtype.eq],
+    dsimp [] [] [] [],
+    conv [] [] { to_rhs,
+      rw ["<-", expr hx] },
+    rw ["[", expr encode_injective.eq_iff, ",", "<-", expr option.some_inj, ",", expr option.some_get, ",", "<-", expr hx, ",", expr encodek₂, "]"] []
+  end }
 
 /-- A type with unique element is encodable. This is not an instance to avoid diamonds. -/
 def _root_.unique.encodable [Unique α] : Encodable α :=

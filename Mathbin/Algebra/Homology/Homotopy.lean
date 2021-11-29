@@ -384,8 +384,8 @@ variable(e :
           zero)+one ≫
           Q.d 2
             1)(succ :
-    ∀ n : ℕ p :
-      Σ'(f : P.X n ⟶ Q.X (n+1))(f' : P.X (n+1) ⟶ Q.X (n+2)), e.f (n+1) = (P.d (n+1) n ≫ f)+f' ≫ Q.d (n+2) (n+1),
+    ∀ (n : ℕ)
+      (p : Σ'(f : P.X n ⟶ Q.X (n+1))(f' : P.X (n+1) ⟶ Q.X (n+2)), e.f (n+1) = (P.d (n+1) n ≫ f)+f' ≫ Q.d (n+2) (n+1)),
       Σ'f'' : P.X (n+2) ⟶ Q.X (n+3), e.f (n+2) = (P.d (n+2) (n+1) ≫ p.2.1)+f'' ≫ Q.d (n+3) (n+2))
 
 include comm_one comm_zero

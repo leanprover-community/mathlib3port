@@ -58,13 +58,13 @@ variable(R)
 /-- The relation on `free_add_monoid (M × N)` that generates a congruence whose quotient is
 the tensor product. -/
 inductive eqv : FreeAddMonoid (M × N) → FreeAddMonoid (M × N) → Prop
-  | of_zero_left : ∀ n : N, eqv (FreeAddMonoid.of (0, n)) 0
-  | of_zero_right : ∀ m : M, eqv (FreeAddMonoid.of (m, 0)) 0
+  | of_zero_left : ∀ (n : N), eqv (FreeAddMonoid.of (0, n)) 0
+  | of_zero_right : ∀ (m : M), eqv (FreeAddMonoid.of (m, 0)) 0
   | of_add_left :
-  ∀ m₁ m₂ : M n : N, eqv (FreeAddMonoid.of (m₁, n)+FreeAddMonoid.of (m₂, n)) (FreeAddMonoid.of (m₁+m₂, n))
+  ∀ (m₁ m₂ : M) (n : N), eqv (FreeAddMonoid.of (m₁, n)+FreeAddMonoid.of (m₂, n)) (FreeAddMonoid.of (m₁+m₂, n))
   | of_add_right :
-  ∀ m : M n₁ n₂ : N, eqv (FreeAddMonoid.of (m, n₁)+FreeAddMonoid.of (m, n₂)) (FreeAddMonoid.of (m, n₁+n₂))
-  | of_smul : ∀ r : R m : M n : N, eqv (FreeAddMonoid.of (r • m, n)) (FreeAddMonoid.of (m, r • n))
+  ∀ (m : M) (n₁ n₂ : N), eqv (FreeAddMonoid.of (m, n₁)+FreeAddMonoid.of (m, n₂)) (FreeAddMonoid.of (m, n₁+n₂))
+  | of_smul : ∀ (r : R) (m : M) (n : N), eqv (FreeAddMonoid.of (r • m, n)) (FreeAddMonoid.of (m, r • n))
   | add_commₓ : ∀ x y, eqv (x+y) (y+x)
 
 end 
@@ -161,7 +161,7 @@ needed if `tensor_product.smul_tmul`, `tensor_product.smul_tmul'`, or `tensor_pr
 used.
 -/
 class compatible_smul[DistribMulAction R' N] where 
-  smul_tmul : ∀ r : R' m : M n : N, (r • m) ⊗ₜ n = m ⊗ₜ[R] (r • n)
+  smul_tmul : ∀ (r : R') (m : M) (n : N), (r • m) ⊗ₜ n = m ⊗ₜ[R] (r • n)
 
 end 
 
@@ -181,9 +181,13 @@ theorem smul_tmul [DistribMulAction R' N] [compatible_smul R R' M N] (r : R') (m
   (r • m) ⊗ₜ n = m ⊗ₜ[R] (r • n) :=
   compatible_smul.smul_tmul _ _ _
 
+-- error in LinearAlgebra.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Auxiliary function to defining scalar multiplication on tensor product. -/
-def smul.aux {R' : Type _} [HasScalar R' M] (r : R') : FreeAddMonoid (M × N) →+ M ⊗[R] N :=
-  FreeAddMonoid.lift$ fun p : M × N => (r • p.1) ⊗ₜ p.2
+def smul.aux
+{R' : Type*}
+[has_scalar R' M]
+(r : R') : «expr →+ »(free_add_monoid «expr × »(M, N), «expr ⊗[ ] »(M, R, N)) :=
+«expr $ »(free_add_monoid.lift, λ p : «expr × »(M, N), «expr ⊗ₜ »(«expr • »(r, p.1), p.2))
 
 theorem smul.aux_of {R' : Type _} [HasScalar R' M] (r : R') (m : M) (n : N) :
   smul.aux r (FreeAddMonoid.of (m, n)) = (r • m) ⊗ₜ[R] n :=
@@ -246,7 +250,7 @@ protected theorem smul_add (r : R') (x y : M ⊗[R] N) : (r • x+y) = (r • x)
   AddMonoidHom.map_add _ _ _
 
 protected theorem zero_smul (x : M ⊗[R] N) : (0 : R'') • x = 0 :=
-  have  : ∀ r : R'' m : M n : N, r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl 
+  have  : ∀ (r : R'') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl 
   TensorProduct.induction_on x
     (by 
       rw [TensorProduct.smul_zero])
@@ -258,7 +262,7 @@ protected theorem zero_smul (x : M ⊗[R] N) : (0 : R'') • x = 0 :=
         rw [TensorProduct.smul_add, ihx, ihy, add_zeroₓ]
 
 protected theorem one_smul (x : M ⊗[R] N) : (1 : R') • x = x :=
-  have  : ∀ r : R' m : M n : N, r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl 
+  have  : ∀ (r : R') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl 
   TensorProduct.induction_on x
     (by 
       rw [TensorProduct.smul_zero])
@@ -270,7 +274,7 @@ protected theorem one_smul (x : M ⊗[R] N) : (1 : R') • x = x :=
         rw [TensorProduct.smul_add, ihx, ihy]
 
 protected theorem add_smul (r s : R'') (x : M ⊗[R] N) : (r+s) • x = (r • x)+s • x :=
-  have  : ∀ r : R'' m : M n : N, r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl 
+  have  : ∀ (r : R'') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl 
   TensorProduct.induction_on x
     (by 
       simpRw [TensorProduct.smul_zero, add_zeroₓ])
@@ -292,7 +296,7 @@ instance  : AddCommMonoidₓ (M ⊗[R] N) :=
         simp [Nat.succ_eq_one_add, TensorProduct.one_smul, TensorProduct.add_smul] }
 
 instance left_distrib_mul_action : DistribMulAction R' (M ⊗[R] N) :=
-  have  : ∀ r : R' m : M n : N, r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
+  have  : ∀ (r : R') (m : M) (n : N), r • m ⊗ₜ[R] n = (r • m) ⊗ₜ n := fun _ _ _ => rfl
   { smul := · • ·, smul_add := fun r x y => TensorProduct.smul_add r x y,
     mul_smul :=
       fun r s x =>
@@ -445,38 +449,19 @@ variable{M N P Q}
 
 variable(f : M →ₗ[R] N →ₗ[R] P)
 
+-- error in LinearAlgebra.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Auxiliary function to constructing a linear map `M ⊗ N → P` given a bilinear map `M → N → P`
 with the property that its composition with the canonical bilinear map `M → N → M ⊗ N` is
-the given bilinear map `M → N → P`. -/
-def lift_aux : M ⊗[R] N →+ P :=
-  (addConGen (TensorProduct.Eqv R M N)).lift (FreeAddMonoid.lift$ fun p : M × N => f p.1 p.2)$
-    AddCon.add_con_gen_le$
-      fun x y hxy =>
-        match x, y, hxy with 
-        | _, _, eqv.of_zero_left n =>
-          (AddCon.ker_rel _).2$
-            by 
-              simpRw [AddMonoidHom.map_zero, FreeAddMonoid.lift_eval_of, f.map_zero₂]
-        | _, _, eqv.of_zero_right m =>
-          (AddCon.ker_rel _).2$
-            by 
-              simpRw [AddMonoidHom.map_zero, FreeAddMonoid.lift_eval_of, (f m).map_zero]
-        | _, _, eqv.of_add_left m₁ m₂ n =>
-          (AddCon.ker_rel _).2$
-            by 
-              simpRw [AddMonoidHom.map_add, FreeAddMonoid.lift_eval_of, f.map_add₂]
-        | _, _, eqv.of_add_right m n₁ n₂ =>
-          (AddCon.ker_rel _).2$
-            by 
-              simpRw [AddMonoidHom.map_add, FreeAddMonoid.lift_eval_of, (f m).map_add]
-        | _, _, eqv.of_smul r m n =>
-          (AddCon.ker_rel _).2$
-            by 
-              simpRw [FreeAddMonoid.lift_eval_of, f.map_smul₂, (f m).map_smul]
-        | _, _, eqv.add_comm x y =>
-          (AddCon.ker_rel _).2$
-            by 
-              simpRw [AddMonoidHom.map_add, add_commₓ]
+the given bilinear map `M → N → P`. -/ def lift_aux : «expr →+ »(«expr ⊗[ ] »(M, R, N), P) :=
+«expr $ »((add_con_gen (tensor_product.eqv R M N)).lift «expr $ »(free_add_monoid.lift, λ
+  p : «expr × »(M, N), f p.1 p.2), «expr $ »(add_con.add_con_gen_le, λ x y hxy, match x, y, hxy with
+  | _, _, eqv.of_zero_left n := «expr $ »((add_con.ker_rel _).2, by simp_rw ["[", expr add_monoid_hom.map_zero, ",", expr free_add_monoid.lift_eval_of, ",", expr f.map_zero₂, "]"] [])
+  | _, _, eqv.of_zero_right m := «expr $ »((add_con.ker_rel _).2, by simp_rw ["[", expr add_monoid_hom.map_zero, ",", expr free_add_monoid.lift_eval_of, ",", expr (f m).map_zero, "]"] [])
+  | _, _, eqv.of_add_left m₁ m₂ n := «expr $ »((add_con.ker_rel _).2, by simp_rw ["[", expr add_monoid_hom.map_add, ",", expr free_add_monoid.lift_eval_of, ",", expr f.map_add₂, "]"] [])
+  | _, _, eqv.of_add_right m n₁ n₂ := «expr $ »((add_con.ker_rel _).2, by simp_rw ["[", expr add_monoid_hom.map_add, ",", expr free_add_monoid.lift_eval_of, ",", expr (f m).map_add, "]"] [])
+  | _, _, eqv.of_smul r m n := «expr $ »((add_con.ker_rel _).2, by simp_rw ["[", expr free_add_monoid.lift_eval_of, ",", expr f.map_smul₂, ",", expr (f m).map_smul, "]"] [])
+  | _, _, eqv.add_comm x y := «expr $ »((add_con.ker_rel _).2, by simp_rw ["[", expr add_monoid_hom.map_add, ",", expr add_comm, "]"] [])
+  end))
 
 theorem lift_aux_tmul m n : lift_aux f (m ⊗ₜ n) = f m n :=
   zero_addₓ _
@@ -1076,9 +1061,10 @@ open LinearMap
 
 variable(R)
 
+-- error in LinearAlgebra.TensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Auxiliary function to defining negation multiplication on tensor product. -/
-def neg.aux : FreeAddMonoid (M × N) →+ M ⊗[R] N :=
-  FreeAddMonoid.lift$ fun p : M × N => (-p.1) ⊗ₜ p.2
+def neg.aux : «expr →+ »(free_add_monoid «expr × »(M, N), «expr ⊗[ ] »(M, R, N)) :=
+«expr $ »(free_add_monoid.lift, λ p : «expr × »(M, N), «expr ⊗ₜ »(«expr- »(p.1), p.2))
 
 variable{R}
 

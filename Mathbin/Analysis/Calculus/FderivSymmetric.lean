@@ -66,7 +66,7 @@ variable{E F :
     E →L[ℝ]
       E →L[ℝ]
         F}(hf :
-    ∀ x _ : x ∈ Interior s, HasFderivAt f (f' x) x){x : E}(xs : x ∈ s)(hx : HasFderivWithinAt f' f'' (Interior s) x)
+    ∀ x (_ : x ∈ Interior s), HasFderivAt f (f' x) x){x : E}(xs : x ∈ s)(hx : HasFderivWithinAt f' f'' (Interior s) x)
 
 include s_conv xs hx hf
 

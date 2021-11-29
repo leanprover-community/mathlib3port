@@ -143,14 +143,14 @@ a limit and a colimit, with the same cone points,
 of every function `F : J → C`.
 -/
 class has_biproducts_of_shape : Prop where 
-  HasBiproduct : ∀ F : J → C, has_biproduct F
+  HasBiproduct : ∀ (F : J → C), has_biproduct F
 
 attribute [instance] has_biproducts_of_shape.has_biproduct
 
 /-- `has_finite_biproducts C` represents a choice of biproduct for every family of objects in `C`
 indexed by a finite type with decidable equality. -/
 class has_finite_biproducts : Prop where 
-  HasBiproductsOfShape : ∀ J : Type v [DecidableEq J] [Fintype J], has_biproducts_of_shape J C
+  HasBiproductsOfShape : ∀ (J : Type v) [DecidableEq J] [Fintype J], has_biproducts_of_shape J C
 
 attribute [instance] has_finite_biproducts.has_biproducts_of_shape
 
@@ -560,7 +560,7 @@ variable(C)
 simultaneously a limit and a colimit of the diagram `pair P Q`, for every `P Q : C`.
 -/
 class has_binary_biproducts : Prop where 
-  HasBinaryBiproduct : ∀ P Q : C, has_binary_biproduct P Q
+  HasBinaryBiproduct : ∀ (P Q : C), has_binary_biproduct P Q
 
 attribute [instance] has_binary_biproducts.has_binary_biproduct
 

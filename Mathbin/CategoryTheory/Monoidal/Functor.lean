@@ -53,21 +53,21 @@ equipped with morphisms `ε : 𝟙 _D ⟶ F.obj (𝟙_ C)` and `μ X Y : F.obj X
 satisfying the appropriate coherences. -/
 structure lax_monoidal_functor extends C ⥤ D where 
   ε : 𝟙_ D ⟶ obj (𝟙_ C)
-  μ : ∀ X Y : C, obj X ⊗ obj Y ⟶ obj (X ⊗ Y)
-  μ_natural' : ∀ {X Y X' Y' : C} f : X ⟶ Y g : X' ⟶ Y', (map f ⊗ map g) ≫ μ Y Y' = μ X X' ≫ map (f ⊗ g) :=  by 
+  μ : ∀ (X Y : C), obj X ⊗ obj Y ⟶ obj (X ⊗ Y)
+  μ_natural' : ∀ {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y'), (map f ⊗ map g) ≫ μ Y Y' = μ X X' ≫ map (f ⊗ g) :=  by 
   runTac 
     obviously 
   associativity' :
-  ∀ X Y Z : C,
+  ∀ (X Y Z : C),
     (μ X Y ⊗ 𝟙 (obj Z)) ≫ μ (X ⊗ Y) Z ≫ map (α_ X Y Z).Hom =
       (α_ (obj X) (obj Y) (obj Z)).Hom ≫ (𝟙 (obj X) ⊗ μ Y Z) ≫ μ X (Y ⊗ Z) :=
    by 
   runTac 
     obviously 
-  left_unitality' : ∀ X : C, (λ_ (obj X)).Hom = (ε ⊗ 𝟙 (obj X)) ≫ μ (𝟙_ C) X ≫ map (λ_ X).Hom :=  by 
+  left_unitality' : ∀ (X : C), (λ_ (obj X)).Hom = (ε ⊗ 𝟙 (obj X)) ≫ μ (𝟙_ C) X ≫ map (λ_ X).Hom :=  by 
   runTac 
     obviously 
-  right_unitality' : ∀ X : C, (ρ_ (obj X)).Hom = (𝟙 (obj X) ⊗ ε) ≫ μ X (𝟙_ C) ≫ map (ρ_ X).Hom :=  by 
+  right_unitality' : ∀ (X : C), (ρ_ (obj X)).Hom = (𝟙 (obj X) ⊗ ε) ≫ μ X (𝟙_ C) ≫ map (ρ_ X).Hom :=  by 
   runTac 
     obviously
 
@@ -123,7 +123,7 @@ structure monoidal_functor extends lax_monoidal_functor.{v₁, v₂} C D where
   ε_is_iso : is_iso ε :=  by 
   runTac 
     tactic.apply_instance 
-  μ_is_iso : ∀ X Y : C, is_iso (μ X Y) :=  by 
+  μ_is_iso : ∀ (X Y : C), is_iso (μ X Y) :=  by 
   runTac 
     tactic.apply_instance
 

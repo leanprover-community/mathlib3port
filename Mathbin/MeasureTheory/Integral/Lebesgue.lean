@@ -96,7 +96,7 @@ theorem mem_range_of_measure_ne_zero {f : α →ₛ β} {x : β} {μ : Measure�
   let ⟨a, ha⟩ := nonempty_of_measure_ne_zero H 
   mem_range.2 ⟨a, ha⟩
 
-theorem forall_range_iff {f : α →ₛ β} {p : β → Prop} : (∀ y _ : y ∈ f.range, p y) ↔ ∀ x, p (f x) :=
+theorem forall_range_iff {f : α →ₛ β} {p : β → Prop} : (∀ y (_ : y ∈ f.range), p y) ↔ ∀ x, p (f x) :=
   by 
     simp only [mem_range, Set.forall_range_iff]
 
@@ -450,14 +450,23 @@ theorem mul_apply [Mul β] (f g : α →ₛ β) (a : α) : (f*g) a = f a*g a :=
 theorem add_apply [Add β] (f g : α →ₛ β) (a : α) : (f+g) a = f a+g a :=
   rfl
 
-theorem add_eq_map₂ [Add β] (f g : α →ₛ β) : (f+g) = (pair f g).map fun p : β × β => p.1+p.2 :=
-  rfl
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem add_eq_map₂
+[has_add β]
+(f g : «expr →ₛ »(α, β)) : «expr = »(«expr + »(f, g), (pair f g).map (λ p : «expr × »(β, β), «expr + »(p.1, p.2))) :=
+rfl
 
-theorem mul_eq_map₂ [Mul β] (f g : α →ₛ β) : (f*g) = (pair f g).map fun p : β × β => p.1*p.2 :=
-  rfl
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mul_eq_map₂
+[has_mul β]
+(f g : «expr →ₛ »(α, β)) : «expr = »(«expr * »(f, g), (pair f g).map (λ p : «expr × »(β, β), «expr * »(p.1, p.2))) :=
+rfl
 
-theorem sup_eq_map₂ [HasSup β] (f g : α →ₛ β) : f⊔g = (pair f g).map fun p : β × β => p.1⊔p.2 :=
-  rfl
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sup_eq_map₂
+[has_sup β]
+(f g : «expr →ₛ »(α, β)) : «expr = »(«expr ⊔ »(f, g), (pair f g).map (λ p : «expr × »(β, β), «expr ⊔ »(p.1, p.2))) :=
+rfl
 
 theorem const_mul_eq_map [Mul β] (f : α →ₛ β) (b : β) : (const α b*f) = f.map fun a => b*a :=
   rfl
@@ -534,16 +543,13 @@ instance  [SemilatticeSup β] : SemilatticeSup (α →ₛ β) :=
   { simple_func.partial_order with sup := ·⊔·, le_sup_left := fun f g a => le_sup_left,
     le_sup_right := fun f g a => le_sup_right, sup_le := fun f g h hfh hgh a => sup_le (hfh a) (hgh a) }
 
-instance  [SemilatticeSupBot β] : SemilatticeSupBot (α →ₛ β) :=
-  { simple_func.semilattice_sup, simple_func.order_bot with  }
-
 instance  [Lattice β] : Lattice (α →ₛ β) :=
   { simple_func.semilattice_sup, simple_func.semilattice_inf with  }
 
-instance  [BoundedLattice β] : BoundedLattice (α →ₛ β) :=
-  { simple_func.lattice, simple_func.order_bot, simple_func.order_top with  }
+instance  [LE β] [BoundedOrder β] : BoundedOrder (α →ₛ β) :=
+  { simple_func.order_bot, simple_func.order_top with  }
 
-theorem finset_sup_apply [SemilatticeSupBot β] {f : γ → α →ₛ β} (s : Finset γ) (a : α) :
+theorem finset_sup_apply [SemilatticeSup β] [OrderBot β] {f : γ → α →ₛ β} (s : Finset γ) (a : α) :
   s.sup f a = s.sup fun c => f c a :=
   by 
     refine' Finset.induction_on s rfl _ 
@@ -641,7 +647,7 @@ section Approx
 
 section 
 
-variable[SemilatticeSupBot β][HasZero β]
+variable[SemilatticeSup β][OrderBot β][HasZero β]
 
 /-- Fix a sequence `i : ℕ → β`. Given a function `α → β`, its `n`-th approximation
 by simple functions is defined so that in case `β = ℝ≥0∞` it sends each `a` to the supremum
@@ -759,7 +765,7 @@ theorem eapprox_comp [MeasurableSpace γ] {f : γ → ℝ≥0∞} {g : α → γ
 
 /-- Approximate a function `α → ℝ≥0∞` by a series of simple functions taking their values
 in `ℝ≥0`. -/
-def eapprox_diff (f : α → ℝ≥0∞) : ∀ n : ℕ, α →ₛ  ℝ≥0 
+def eapprox_diff (f : α → ℝ≥0∞) : ∀ (n : ℕ), α →ₛ  ℝ≥0 
 | 0 => (eapprox f 0).map Ennreal.toNnreal
 | n+1 => (eapprox f (n+1) - eapprox f n).map Ennreal.toNnreal
 
@@ -1025,17 +1031,18 @@ protected def fin_meas_supp {m : MeasurableSpace α} (f : α →ₛ β) (μ : Me
 theorem fin_meas_supp_iff_support : f.fin_meas_supp μ ↔ μ (support f) < ∞ :=
   Iff.rfl
 
-theorem fin_meas_supp_iff : f.fin_meas_supp μ ↔ ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞ :=
-  by 
-    split 
-    ·
-      refine' fun h y hy => lt_of_le_of_ltₓ (measure_mono _) h 
-      exact fun x hx H : f x = 0 => hy$ H ▸ Eq.symm hx
-    ·
-      intro H 
-      rw [fin_meas_supp_iff_support, support_eq]
-      refine' lt_of_le_of_ltₓ (measure_bUnion_finset_le _ _) (sum_lt_top _)
-      exact fun y hy => (H y (Finset.mem_filter.1 hy).2).Ne
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem fin_meas_supp_iff : «expr ↔ »(f.fin_meas_supp μ, ∀
+ y «expr ≠ » 0, «expr < »(μ «expr ⁻¹' »(f, {y}), «expr∞»())) :=
+begin
+  split,
+  { refine [expr λ h y hy, lt_of_le_of_lt (measure_mono _) h],
+    exact [expr λ (x hx) (H : «expr = »(f x, 0)), «expr $ »(hy, «expr ▸ »(H, eq.symm hx))] },
+  { intro [ident H],
+    rw ["[", expr fin_meas_supp_iff_support, ",", expr support_eq, "]"] [],
+    refine [expr lt_of_le_of_lt (measure_bUnion_finset_le _ _) (sum_lt_top _)],
+    exact [expr λ y hy, (H y (finset.mem_filter.1 hy).2).ne] }
+end
 
 namespace FinMeasSupp
 
@@ -1327,7 +1334,7 @@ theorem set_lintegral_mono_ae {s : Set α} {f g : α → ℝ≥0∞} (hf : Measu
   lintegral_mono_ae$ (ae_restrict_iff$ measurable_set_le hf hg).2 hfg
 
 theorem set_lintegral_mono {s : Set α} {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Measurable g)
-  (hfg : ∀ x _ : x ∈ s, f x ≤ g x) : (∫⁻x in s, f x ∂μ) ≤ ∫⁻x in s, g x ∂μ :=
+  (hfg : ∀ x (_ : x ∈ s), f x ≤ g x) : (∫⁻x in s, f x ∂μ) ≤ ∫⁻x in s, g x ∂μ :=
   set_lintegral_mono_ae hf hg (ae_of_all _ hfg)
 
 theorem lintegral_congr_ae {f g : α → ℝ≥0∞} (h : f =ᵐ[μ] g) : (∫⁻a, f a ∂μ) = ∫⁻a, g a ∂μ :=
@@ -1661,7 +1668,7 @@ theorem set_lintegral_measure_zero (s : Set α) (f : α → ℝ≥0∞) (hs' : �
     convert lintegral_zero_measure _ 
     exact measure.restrict_eq_zero.2 hs'
 
-theorem lintegral_finset_sum (s : Finset β) {f : β → α → ℝ≥0∞} (hf : ∀ b _ : b ∈ s, Measurable (f b)) :
+theorem lintegral_finset_sum (s : Finset β) {f : β → α → ℝ≥0∞} (hf : ∀ b (_ : b ∈ s), Measurable (f b)) :
   (∫⁻a, ∑b in s, f b a ∂μ) = ∑b in s, ∫⁻a, f b a ∂μ :=
   by 
     induction' s using Finset.induction_on with a s has ih
@@ -1963,7 +1970,7 @@ theorem set_lintegral_strict_mono {f g : α → ℝ≥0∞} {s : Set α} (hsm : 
     hf hg hfi ((ae_restrict_iff' hsm).mpr h)
 
 /-- Monotone convergence theorem for nonincreasing sequences of functions -/
-theorem lintegral_infi_ae {f : ℕ → α → ℝ≥0∞} (h_meas : ∀ n, Measurable (f n)) (h_mono : ∀ n : ℕ, f n.succ ≤ᵐ[μ] f n)
+theorem lintegral_infi_ae {f : ℕ → α → ℝ≥0∞} (h_meas : ∀ n, Measurable (f n)) (h_mono : ∀ (n : ℕ), f n.succ ≤ᵐ[μ] f n)
   (h_fin : (∫⁻a, f 0 a ∂μ) ≠ ∞) : (∫⁻a, ⨅n, f n a ∂μ) = ⨅n, ∫⁻a, f n a ∂μ :=
   have fn_le_f0 : (∫⁻a, ⨅n, f n a ∂μ) ≤ ∫⁻a, f 0 a ∂μ := lintegral_mono fun a => infi_le_of_le 0 (le_reflₓ _)
   have fn_le_f0' : (⨅n, ∫⁻a, f n a ∂μ) ≤ ∫⁻a, f 0 a ∂μ := infi_le_of_le 0 (le_reflₓ _)
@@ -1978,7 +1985,7 @@ theorem lintegral_infi_ae {f : ℕ → α → ℝ≥0∞} (h_meas : ∀ n, Measu
         lintegral_supr_ae (fun n => (h_meas 0).sub (h_meas n))
           fun n => (h_mono n).mono$ fun a ha => tsub_le_tsub (le_reflₓ _) ha 
         _ = ⨆n, (∫⁻a, f 0 a ∂μ) - ∫⁻a, f n a ∂μ :=
-        have h_mono : ∀ᵐa ∂μ, ∀ n : ℕ, f n.succ a ≤ f n a := ae_all_iff.2 h_mono 
+        have h_mono : ∀ᵐa ∂μ, ∀ (n : ℕ), f n.succ a ≤ f n a := ae_all_iff.2 h_mono 
         have h_mono : ∀ n, ∀ᵐa ∂μ, f n a ≤ f 0 a :=
           fun n =>
             h_mono.mono$
@@ -2043,20 +2050,28 @@ theorem limsup_lintegral_le {f : ℕ → α → ℝ≥0∞} {g : α → ℝ≥0�
       simp only [limsup_eq_infi_supr_of_nat]
     
 
+-- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Dominated convergence theorem for nonnegative functions -/
-theorem tendsto_lintegral_of_dominated_convergence {F : ℕ → α → ℝ≥0∞} {f : α → ℝ≥0∞} (bound : α → ℝ≥0∞)
-  (hF_meas : ∀ n, Measurable (F n)) (h_bound : ∀ n, F n ≤ᵐ[μ] bound) (h_fin : (∫⁻a, bound a ∂μ) ≠ ∞)
-  (h_lim : ∀ᵐa ∂μ, tendsto (fun n => F n a) at_top (𝓝 (f a))) :
-  tendsto (fun n => ∫⁻a, F n a ∂μ) at_top (𝓝 (∫⁻a, f a ∂μ)) :=
-  tendsto_of_le_liminf_of_limsup_le
-    (calc (∫⁻a, f a ∂μ) = ∫⁻a, liminf at_top fun n : ℕ => F n a ∂μ :=
-      lintegral_congr_ae$ h_lim.mono$ fun a h => h.liminf_eq.symm 
-      _ ≤ liminf at_top fun n => ∫⁻a, F n a ∂μ := lintegral_liminf_le hF_meas
-      )
-    (calc (limsup at_top fun n : ℕ => ∫⁻a, F n a ∂μ) ≤ ∫⁻a, limsup at_top fun n => F n a ∂μ :=
-      limsup_lintegral_le hF_meas h_bound h_fin 
-      _ = ∫⁻a, f a ∂μ := lintegral_congr_ae$ h_lim.mono$ fun a h => h.limsup_eq
-      )
+theorem tendsto_lintegral_of_dominated_convergence
+{F : exprℕ() → α → «exprℝ≥0∞»()}
+{f : α → «exprℝ≥0∞»()}
+(bound : α → «exprℝ≥0∞»())
+(hF_meas : ∀ n, measurable (F n))
+(h_bound : ∀ n, «expr ≤ᵐ[ ] »(F n, μ, bound))
+(h_fin : «expr ≠ »(«expr∫⁻ , ∂ »((a), bound a, μ), «expr∞»()))
+(h_lim : «expr∀ᵐ ∂ , »((a), μ, tendsto (λ
+   n, F n a) at_top (expr𝓝() (f a)))) : tendsto (λ
+ n, «expr∫⁻ , ∂ »((a), F n a, μ)) at_top (expr𝓝() «expr∫⁻ , ∂ »((a), f a, μ)) :=
+tendsto_of_le_liminf_of_limsup_le (calc
+   «expr = »(«expr∫⁻ , ∂ »((a), f a, μ), «expr∫⁻ , ∂ »((a), liminf at_top (λ
+      n : exprℕ(), F n a), μ)) : «expr $ »(lintegral_congr_ae, «expr $ »(h_lim.mono, assume a h, h.liminf_eq.symm))
+   «expr ≤ »(..., liminf at_top (λ
+     n, «expr∫⁻ , ∂ »((a), F n a, μ))) : lintegral_liminf_le hF_meas) (calc
+   «expr ≤ »(limsup at_top (λ
+     n : exprℕ(), «expr∫⁻ , ∂ »((a), F n a, μ)), «expr∫⁻ , ∂ »((a), limsup at_top (λ
+      n, F n a), μ)) : limsup_lintegral_le hF_meas h_bound h_fin
+   «expr = »(..., «expr∫⁻ , ∂ »((a), f a, μ)) : «expr $ »(lintegral_congr_ae, «expr $ »(h_lim.mono, λ
+     a h, h.limsup_eq)))
 
 -- error in MeasureTheory.Integral.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Dominated convergence theorem for nonnegative functions which are just almost everywhere
@@ -2384,7 +2399,7 @@ theorem with_density_add {f g : α → ℝ≥0∞} (hf : Measurable f) (hg : Mea
   μ.with_density (f+g) = μ.with_density f+μ.with_density g :=
   by 
     refine' measure.ext fun s hs => _ 
-    rw [with_density_apply _ hs, measure.coe_add, Pi.add_apply, with_density_apply _ hs, with_density_apply _ hs,
+    rw [with_density_apply _ hs, measure.add_apply, with_density_apply _ hs, with_density_apply _ hs,
       ←lintegral_add hf hg]
     rfl
 
@@ -2485,9 +2500,10 @@ a simple function with a multiple of a characteristic function and that the inte
 of their images is a subset of `{0}`. -/
 @[elab_as_eliminator]
 theorem Measurable.ennreal_induction {α} [MeasurableSpace α] {P : (α → ℝ≥0∞) → Prop}
-  (h_ind : ∀ c : ℝ≥0∞ ⦃s⦄, MeasurableSet s → P (indicator s fun _ => c))
+  (h_ind : ∀ (c : ℝ≥0∞) ⦃s⦄, MeasurableSet s → P (indicator s fun _ => c))
   (h_add : ∀ ⦃f g : α → ℝ≥0∞⦄, Disjoint (support f) (support g) → Measurable f → Measurable g → P f → P g → P (f+g))
-  (h_supr : ∀ ⦃f : ℕ → α → ℝ≥0∞⦄ hf : ∀ n, Measurable (f n) h_mono : Monotone f hP : ∀ n, P (f n), P fun x => ⨆n, f n x)
+  (h_supr :
+    ∀ ⦃f : ℕ → α → ℝ≥0∞⦄ (hf : ∀ n, Measurable (f n)) (h_mono : Monotone f) (hP : ∀ n, P (f n)), P fun x => ⨆n, f n x)
   ⦃f : α → ℝ≥0∞⦄ (hf : Measurable f) : P f :=
   by 
     convert h_supr (fun n => (eapprox f n).Measurable) (monotone_eapprox f) _
@@ -2708,7 +2724,7 @@ constant. -/
 theorem lintegral_le_of_forall_fin_meas_le [MeasurableSpace α] {μ : Measureₓ α} [sigma_finite μ] (C : ℝ≥0∞)
   {f : α → ℝ≥0∞} (hf_meas : AeMeasurable f μ) (hf : ∀ s, MeasurableSet s → μ s ≠ ∞ → (∫⁻x in s, f x ∂μ) ≤ C) :
   (∫⁻x, f x ∂μ) ≤ C :=
-  @lintegral_le_of_forall_fin_meas_le' _ _ _ _ le_rfl
+  @lintegral_le_of_forall_fin_meas_le' _ _ _ _ _
     (by 
       rwa [trim_eq_self])
     C _ hf_meas hf

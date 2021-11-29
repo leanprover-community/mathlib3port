@@ -210,7 +210,7 @@ protected def mem {α} (x : α) : LazyList α → Prop
 instance  {α} : HasMem α (LazyList α) :=
   ⟨LazyList.Mem⟩
 
-instance mem.decidable {α} [DecidableEq α] (x : α) : ∀ xs : LazyList α, Decidable (x ∈ xs)
+instance mem.decidable {α} [DecidableEq α] (x : α) : ∀ (xs : LazyList α), Decidable (x ∈ xs)
 | LazyList.nil => Decidable.false
 | LazyList.cons y ys =>
   if h : x = y then Decidable.isTrue (Or.inl h) else
@@ -227,7 +227,7 @@ theorem mem_cons {α} (x y : α) (ys : Thunkₓ (LazyList α)) : x ∈ @LazyList
   Iff.rfl
 
 theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunkₓ (LazyList α)} :
-  (∀ x _ : x ∈ @LazyList.cons _ a l, p x) ↔ p a ∧ ∀ x _ : x ∈ l (), p x :=
+  (∀ x (_ : x ∈ @LazyList.cons _ a l), p x) ↔ p a ∧ ∀ x (_ : x ∈ l ()), p x :=
   by 
     simp only [HasMem.Mem, LazyList.Mem, or_imp_distrib, forall_and_distrib, forall_eq]
 
@@ -239,7 +239,7 @@ theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunkₓ (LazyList 
   but is defined only when all members of `l` satisfy `p`, using the proof
   to apply `f`. -/
 @[simp]
-def pmap {α β} {p : α → Prop} (f : ∀ a, p a → β) : ∀ l : LazyList α, (∀ a _ : a ∈ l, p a) → LazyList β
+def pmap {α β} {p : α → Prop} (f : ∀ a, p a → β) : ∀ (l : LazyList α), (∀ a (_ : a ∈ l), p a) → LazyList β
 | LazyList.nil, H => LazyList.nil
 | LazyList.cons x xs, H => LazyList.cons (f x (forall_mem_cons.1 H).1) (pmap (xs ()) (forall_mem_cons.1 H).2)
 

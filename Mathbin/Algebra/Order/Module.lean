@@ -133,12 +133,15 @@ def OrderIso.smulLeftDual {c : k} (hc : c < 0) : M ≃o OrderDual M :=
 
 variable{M}[OrderedAddCommGroup N][Module k N][OrderedSmul k N]
 
-instance Prod.ordered_smul : OrderedSmul k (M × N) :=
-  OrderedSmul.mk'$
-    fun v u : M × N c : k h hc => ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩
+-- error in Algebra.Order.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance prod.ordered_smul : ordered_smul k «expr × »(M, N) :=
+«expr $ »(ordered_smul.mk', λ
+ (v u : «expr × »(M, N))
+ (c : k)
+ (h hc), ⟨smul_le_smul_of_nonneg h.1.1 hc.le, smul_le_smul_of_nonneg h.1.2 hc.le⟩)
 
 instance Pi.ordered_smul {ι : Type _} {M : ι → Type _} [∀ i, OrderedAddCommGroup (M i)] [∀ i, MulActionWithZero k (M i)]
-  [∀ i, OrderedSmul k (M i)] : OrderedSmul k (∀ i : ι, M i) :=
+  [∀ i, OrderedSmul k (M i)] : OrderedSmul k (∀ (i : ι), M i) :=
   by 
     refine' OrderedSmul.mk'$ fun v u c h hc i => _ 
     change c • v i ≤ c • u i 

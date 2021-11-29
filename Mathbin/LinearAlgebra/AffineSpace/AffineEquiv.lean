@@ -43,7 +43,7 @@ structure
       k][AddCommGroupₓ V₁][Module k V₁][AddTorsor V₁ P₁][AddCommGroupₓ V₂][Module k V₂][AddTorsor V₂ P₂] extends
   P₁ ≃ P₂ where 
   linear : V₁ ≃ₗ[k] V₂ 
-  map_vadd' : ∀ p : P₁ v : V₁, to_equiv (v +ᵥ p) = linear v +ᵥ to_equiv p
+  map_vadd' : ∀ (p : P₁) (v : V₁), to_equiv (v +ᵥ p) = linear v +ᵥ to_equiv p
 
 notation:25 P₁ " ≃ᵃ[" k:25 "] " P₂:0 => AffineEquiv k P₁ P₂
 
@@ -160,25 +160,24 @@ theorem to_equiv_inj {e e' : P₁ ≃ᵃ[k] P₂} : e.to_equiv = e'.to_equiv ↔
 theorem coe_mk (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) h : ((⟨e, e', h⟩ : P₁ ≃ᵃ[k] P₂) : P₁ → P₂) = e :=
   rfl
 
+-- error in LinearAlgebra.AffineSpace.AffineEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Construct an affine equivalence by verifying the relation between the map and its linear part at
 one base point. Namely, this function takes a map `e : P₁ → P₂`, a linear equivalence
 `e' : V₁ ≃ₗ[k] V₂`, and a point `p` such that for any other point `p'` we have
 `e p' = e' (p' -ᵥ p) +ᵥ e p`. -/
-def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗ[k] V₂) (p : P₁) (h : ∀ p' : P₁, e p' = e' (p' -ᵥ p) +ᵥ e p) : P₁ ≃ᵃ[k] P₂ :=
-  { toFun := e, invFun := fun q' : P₂ => e'.symm (q' -ᵥ e p) +ᵥ p,
-    left_inv :=
-      fun p' =>
-        by 
-          simp [h p'],
-    right_inv :=
-      fun q' =>
-        by 
-          simp [h (e'.symm (q' -ᵥ e p) +ᵥ p)],
-    linear := e',
-    map_vadd' :=
-      fun p' v =>
-        by 
-          simp [h p', h (v +ᵥ p'), vadd_vsub_assoc, vadd_vadd] }
+def mk'
+(e : P₁ → P₂)
+(e' : «expr ≃ₗ[ ] »(V₁, k, V₂))
+(p : P₁)
+(h : ∀ p' : P₁, «expr = »(e p', «expr +ᵥ »(e' «expr -ᵥ »(p', p), e p))) : «expr ≃ᵃ[ ] »(P₁, k, P₂) :=
+{ to_fun := e,
+  inv_fun := λ q' : P₂, «expr +ᵥ »(e'.symm «expr -ᵥ »(q', e p), p),
+  left_inv := λ p', by simp [] [] [] ["[", expr h p', "]"] [] [],
+  right_inv := λ q', by simp [] [] [] ["[", expr h «expr +ᵥ »(e'.symm «expr -ᵥ »(q', e p), p), "]"] [] [],
+  linear := e',
+  map_vadd' := λ
+  p'
+  v, by { simp [] [] [] ["[", expr h p', ",", expr h «expr +ᵥ »(v, p'), ",", expr vadd_vsub_assoc, ",", expr vadd_vadd, "]"] [] [] } }
 
 @[simp]
 theorem coe_mk' (e : P₁ ≃ P₂) (e' : V₁ ≃ₗ[k] V₂) p h : «expr⇑ » (mk' e e' p h) = e :=
@@ -461,16 +460,19 @@ theorem point_reflection_fixed_iff_of_injective_bit0 {x y : P₁} (h : injective
   point_reflection k x y = y ↔ y = x :=
   Equiv.point_reflection_fixed_iff_of_injective_bit0 h
 
-theorem injective_point_reflection_left_of_injective_bit0 (h : injective (bit0 : V₁ → V₁)) (y : P₁) :
-  injective fun x : P₁ => point_reflection k x y :=
-  Equiv.injective_point_reflection_left_of_injective_bit0 h y
+-- error in LinearAlgebra.AffineSpace.AffineEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem injective_point_reflection_left_of_injective_bit0
+(h : injective (bit0 : V₁ → V₁))
+(y : P₁) : injective (λ x : P₁, point_reflection k x y) :=
+equiv.injective_point_reflection_left_of_injective_bit0 h y
 
-theorem injective_point_reflection_left_of_module [Invertible (2 : k)] :
-  ∀ y, injective fun x : P₁ => point_reflection k x y :=
-  injective_point_reflection_left_of_injective_bit0 k$
-    fun x y h =>
-      by 
-        rwa [bit0, bit0, ←two_smul k x, ←two_smul k y, (is_unit_of_invertible (2 : k)).smul_left_cancel] at h
+-- error in LinearAlgebra.AffineSpace.AffineEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem injective_point_reflection_left_of_module
+[invertible (2 : k)] : ∀ y, injective (λ x : P₁, point_reflection k x y) :=
+«expr $ »(injective_point_reflection_left_of_injective_bit0 k, λ
+ x
+ y
+ h, by rwa ["[", expr bit0, ",", expr bit0, ",", "<-", expr two_smul k x, ",", "<-", expr two_smul k y, ",", expr (is_unit_of_invertible (2 : k)).smul_left_cancel, "]"] ["at", ident h])
 
 theorem point_reflection_fixed_iff_of_module [Invertible (2 : k)] {x y : P₁} : point_reflection k x y = y ↔ y = x :=
   ((injective_point_reflection_left_of_module k y).eq_iff' (point_reflection_self k y)).trans eq_comm

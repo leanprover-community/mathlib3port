@@ -61,7 +61,7 @@ protected theorem AnalyticAt (f : E →L[𝕜] F) (x : E) : AnalyticAt 𝕜 f x 
 `(E × F) [×2]→L[𝕜] G`. This multilinear map is the second term in the formal
 multilinear series expansion of `uncurry f`. It is given by
 `f.uncurry_bilinear ![(x, y), (x', y')] = f x y'`. -/
-def uncurry_bilinear (f : E →L[𝕜] F →L[𝕜] G) : E × F[×2]→L[𝕜] G :=
+def uncurry_bilinear (f : E →L[𝕜] F →L[𝕜] G) : «expr [× ]→L[ ] » (E × F) 2 𝕜 G :=
   @ContinuousLinearMap.uncurryLeft 𝕜 1 (fun _ => E × F) G _ _ _ _ _$
     («expr↑ » (continuousMultilinearCurryFin1 𝕜 (E × F) G).symm : (E × F →L[𝕜] G) →L[𝕜] _).comp$
       f.bilinear_comp (fst _ _ _) (snd _ _ _)
@@ -83,27 +83,35 @@ def fpower_series_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : Form
 theorem fpower_series_bilinear_radius (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : (f.fpower_series_bilinear x).radius = ∞ :=
   (f.fpower_series_bilinear x).radius_eq_top_of_forall_image_add_eq_zero 3$ fun n => rfl
 
-protected theorem has_fpower_series_on_ball_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
-  HasFpowerSeriesOnBall (fun x : E × F => f x.1 x.2) (f.fpower_series_bilinear x) x ∞ :=
-  { r_le :=
-      by 
-        simp ,
-    r_pos := Ennreal.coe_lt_top,
-    HasSum :=
-      fun y _ =>
-        (has_sum_nat_add_iff' 3).1$
-          by 
-            simp only [Finset.sum_range_succ, Finset.sum_range_one, Prod.fst_add, Prod.snd_add, f.map_add₂]
-            dsimp 
-            simp only [add_commₓ, sub_self, has_sum_zero] }
+-- error in Analysis.Analytic.Linear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem has_fpower_series_on_ball_bilinear
+(f : «expr →L[ ] »(E, 𝕜, «expr →L[ ] »(F, 𝕜, G)))
+(x : «expr × »(E, F)) : has_fpower_series_on_ball (λ
+ x : «expr × »(E, F), f x.1 x.2) (f.fpower_series_bilinear x) x «expr∞»() :=
+{ r_le := by simp [] [] [] [] [] [],
+  r_pos := ennreal.coe_lt_top,
+  has_sum := λ
+  y
+  _, «expr $ »((has_sum_nat_add_iff' 3).1, begin
+     simp [] [] ["only"] ["[", expr finset.sum_range_succ, ",", expr finset.sum_range_one, ",", expr prod.fst_add, ",", expr prod.snd_add, ",", expr f.map_add₂, "]"] [] [],
+     dsimp [] [] [] [],
+     simp [] [] ["only"] ["[", expr add_comm, ",", expr sub_self, ",", expr has_sum_zero, "]"] [] []
+   end) }
 
-protected theorem has_fpower_series_at_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
-  HasFpowerSeriesAt (fun x : E × F => f x.1 x.2) (f.fpower_series_bilinear x) x :=
-  ⟨∞, f.has_fpower_series_on_ball_bilinear x⟩
+-- error in Analysis.Analytic.Linear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem has_fpower_series_at_bilinear
+(f : «expr →L[ ] »(E, 𝕜, «expr →L[ ] »(F, 𝕜, G)))
+(x : «expr × »(E, F)) : has_fpower_series_at (λ x : «expr × »(E, F), f x.1 x.2) (f.fpower_series_bilinear x) x :=
+⟨«expr∞»(), f.has_fpower_series_on_ball_bilinear x⟩
 
-protected theorem analytic_at_bilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :
-  AnalyticAt 𝕜 (fun x : E × F => f x.1 x.2) x :=
-  (f.has_fpower_series_at_bilinear x).AnalyticAt
+-- error in Analysis.Analytic.Linear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem analytic_at_bilinear
+(f : «expr →L[ ] »(E, 𝕜, «expr →L[ ] »(F, 𝕜, G)))
+(x : «expr × »(E, F)) : analytic_at 𝕜 (λ x : «expr × »(E, F), f x.1 x.2) x :=
+(f.has_fpower_series_at_bilinear x).analytic_at
 
 end ContinuousLinearMap
 

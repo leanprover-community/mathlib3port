@@ -103,11 +103,11 @@ variable(C)
 
 /-- `C` has reflexive coequalizers if it has coequalizers for every reflexive pair. -/
 class has_reflexive_coequalizers : Prop where 
-  has_coeq : ∀ ⦃A B : C⦄ f g : A ⟶ B [is_reflexive_pair f g], has_coequalizer f g
+  has_coeq : ∀ ⦃A B : C⦄ (f g : A ⟶ B) [is_reflexive_pair f g], has_coequalizer f g
 
 /-- `C` has coreflexive equalizers if it has equalizers for every coreflexive pair. -/
 class has_coreflexive_equalizers : Prop where 
-  has_eq : ∀ ⦃A B : C⦄ f g : A ⟶ B [is_coreflexive_pair f g], has_equalizer f g
+  has_eq : ∀ ⦃A B : C⦄ (f g : A ⟶ B) [is_coreflexive_pair f g], has_equalizer f g
 
 attribute [instance] has_reflexive_coequalizers.has_coeq
 

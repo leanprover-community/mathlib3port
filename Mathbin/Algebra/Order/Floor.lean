@@ -185,10 +185,10 @@ theorem floor_eq_iff' (hn : n ≠ 0) : ⌊a⌋₊ = n ↔ «expr↑ » n ≤ a �
     rw [←le_floor_iff' hn, ←Nat.cast_one, ←Nat.cast_add, ←floor_lt' (Nat.add_one_ne_zero n), Nat.lt_add_one_iff,
       le_antisymm_iffₓ, And.comm]
 
-theorem floor_eq_on_Ico (n : ℕ) : ∀ a _ : a ∈ (Set.Ico n (n+1) : Set α), ⌊a⌋₊ = n :=
+theorem floor_eq_on_Ico (n : ℕ) : ∀ a (_ : a ∈ (Set.Ico n (n+1) : Set α)), ⌊a⌋₊ = n :=
   fun a ⟨h₀, h₁⟩ => (floor_eq_iff$ n.cast_nonneg.trans h₀).mpr ⟨h₀, h₁⟩
 
-theorem floor_eq_on_Ico' (n : ℕ) : ∀ a _ : a ∈ (Set.Ico n (n+1) : Set α), (⌊a⌋₊ : α) = n :=
+theorem floor_eq_on_Ico' (n : ℕ) : ∀ a (_ : a ∈ (Set.Ico n (n+1) : Set α)), (⌊a⌋₊ : α) = n :=
   fun x hx =>
     by 
       exactModCast floor_eq_on_Ico n x hx
@@ -513,10 +513,10 @@ theorem floor_eq_iff : ⌊a⌋ = z ↔ «expr↑ » z ≤ a ∧ a < z+1 :=
   by 
     rw [le_antisymm_iffₓ, le_floor, ←Int.lt_add_one_iff, floor_lt, Int.cast_add, Int.cast_one, And.comm]
 
-theorem floor_eq_on_Ico (n : ℤ) : ∀ a _ : a ∈ Set.Ico (n : α) (n+1), ⌊a⌋ = n :=
+theorem floor_eq_on_Ico (n : ℤ) : ∀ a (_ : a ∈ Set.Ico (n : α) (n+1)), ⌊a⌋ = n :=
   fun a ⟨h₀, h₁⟩ => floor_eq_iff.mpr ⟨h₀, h₁⟩
 
-theorem floor_eq_on_Ico' (n : ℤ) : ∀ a _ : a ∈ Set.Ico (n : α) (n+1), (⌊a⌋ : α) = n :=
+theorem floor_eq_on_Ico' (n : ℤ) : ∀ a (_ : a ∈ Set.Ico (n : α) (n+1)), (⌊a⌋ : α) = n :=
   fun a ha => congr_argₓ _$ floor_eq_on_Ico n a ha
 
 @[simp]
@@ -755,10 +755,10 @@ theorem ceil_eq_iff : ⌈a⌉ = z ↔ «expr↑ » z - 1 < a ∧ a ≤ z :=
   by 
     rw [←ceil_le, ←Int.cast_one, ←Int.cast_sub, ←lt_ceil, Int.sub_one_lt_iff, le_antisymm_iffₓ, And.comm]
 
-theorem ceil_eq_on_Ioc (z : ℤ) : ∀ a _ : a ∈ Set.Ioc (z - 1 : α) z, ⌈a⌉ = z :=
+theorem ceil_eq_on_Ioc (z : ℤ) : ∀ a (_ : a ∈ Set.Ioc (z - 1 : α) z), ⌈a⌉ = z :=
   fun a ⟨h₀, h₁⟩ => ceil_eq_iff.mpr ⟨h₀, h₁⟩
 
-theorem ceil_eq_on_Ioc' (z : ℤ) : ∀ a _ : a ∈ Set.Ioc (z - 1 : α) z, (⌈a⌉ : α) = z :=
+theorem ceil_eq_on_Ioc' (z : ℤ) : ∀ a (_ : a ∈ Set.Ioc (z - 1 : α) z), (⌈a⌉ : α) = z :=
   fun a ha =>
     by 
       exactModCast ceil_eq_on_Ioc z a ha

@@ -29,7 +29,7 @@ section Applicativeₓ
 
 variable{F : Type u → Type v}[Applicativeₓ F]
 
-def mzipWith {α₁ α₂ φ : Type u} (f : α₁ → α₂ → F φ) : ∀ ma₁ : List α₁ ma₂ : List α₂, F (List φ)
+def mzipWith {α₁ α₂ φ : Type u} (f : α₁ → α₂ → F φ) : ∀ (ma₁ : List α₁) (ma₂ : List α₂), F (List φ)
 | x :: xs, y :: ys => (· :: ·) <$> f x y <*> mzipWith xs ys
 | _, _ => pure []
 
@@ -48,12 +48,18 @@ theorem pure_id'_seq (x : F α) : (pure fun x => x) <*> x = x :=
 
 attribute [functor_norm] seq_assoc pure_seq_eq_map
 
-@[functor_norm]
-theorem seq_map_assoc (x : F (α → β)) (f : γ → α) (y : F γ) : x <*> f <$> y = (fun m : α → β => m ∘ f) <$> x <*> y :=
-  by 
-    simp [(pure_seq_eq_map _ _).symm]
-    simp [seq_assoc, (comp_map _ _ _).symm, · ∘ ·]
-    simp [pure_seq_eq_map]
+-- error in Control.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[functor_norm #[]]
+theorem seq_map_assoc
+(x : F (α → β))
+(f : γ → α)
+(y : F γ) : «expr = »(«expr <*> »(x, «expr <$> »(f, y)), «expr <*> »(«expr <$> »(λ
+   m : α → β, «expr ∘ »(m, f), x), y)) :=
+begin
+  simp [] [] [] ["[", expr (pure_seq_eq_map _ _).symm, "]"] [] [],
+  simp [] [] [] ["[", expr seq_assoc, ",", expr (comp_map _ _ _).symm, ",", expr («expr ∘ »), "]"] [] [],
+  simp [] [] [] ["[", expr pure_seq_eq_map, "]"] [] []
+end
 
 @[functor_norm]
 theorem map_seq (f : β → γ) (x : F (α → β)) (y : F α) : f <$> (x <*> y) = (· ∘ ·) f <$> x <*> y :=
@@ -210,17 +216,23 @@ instance  : IsLawfulMonad (Sum.{v, u} e) :=
 end Sum
 
 class IsCommApplicative(m : Type _ → Type _)[Applicativeₓ m] extends IsLawfulApplicative m : Prop where 
-  commutative_prod : ∀ {α β} a : m α b : m β, Prod.mk <$> a <*> b = (fun b a => (a, b)) <$> b <*> a
+  commutative_prod : ∀ {α β} (a : m α) (b : m β), Prod.mk <$> a <*> b = (fun b a => (a, b)) <$> b <*> a
 
 open Functor
 
-theorem IsCommApplicative.commutative_map {m : Type _ → Type _} [Applicativeₓ m] [IsCommApplicative m] {α β γ} (a : m α)
-  (b : m β) {f : α → β → γ} : f <$> a <*> b = flip f <$> b <*> a :=
-  calc f <$> a <*> b = (fun p : α × β => f p.1 p.2) <$> (Prod.mk <$> a <*> b) :=
-    by 
-      simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
-    _ = (fun b a => f a b) <$> b <*> a :=
-    by 
-      rw [IsCommApplicative.commutative_prod] <;> simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
-    
+-- error in Control.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_comm_applicative.commutative_map
+{m : Type* → Type*}
+[applicative m]
+[is_comm_applicative m]
+{α β γ}
+(a : m α)
+(b : m β)
+{f : α → β → γ} : «expr = »(«expr <*> »(«expr <$> »(f, a), b), «expr <*> »(«expr <$> »(flip f, b), a)) :=
+calc
+  «expr = »(«expr <*> »(«expr <$> »(f, a), b), «expr <$> »(λ
+    p : «expr × »(α, β), f p.1 p.2, «expr <*> »(«expr <$> »(prod.mk, a), b))) : by simp [] [] [] ["[", expr seq_map_assoc, ",", expr map_seq, ",", expr seq_assoc, ",", expr seq_pure, ",", expr map_map, "]"] [] []
+  «expr = »(..., «expr <*> »(«expr <$> »(λ
+     b
+     a, f a b, b), a)) : by rw ["[", expr is_comm_applicative.commutative_prod, "]"] []; simp [] [] [] ["[", expr seq_map_assoc, ",", expr map_seq, ",", expr seq_assoc, ",", expr seq_pure, ",", expr map_map, "]"] [] []
 

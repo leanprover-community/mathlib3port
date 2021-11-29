@@ -217,7 +217,7 @@ theorem ContinuousWithinAt.clog {f : α → ℂ} {s : Set α} {x : α} (h₁ : C
   h₁.clog h₂
 
 theorem ContinuousOn.clog {f : α → ℂ} {s : Set α} (h₁ : ContinuousOn f s)
-  (h₂ : ∀ x _ : x ∈ s, 0 < (f x).re ∨ (f x).im ≠ 0) : ContinuousOn (fun t => log (f t)) s :=
+  (h₂ : ∀ x (_ : x ∈ s), 0 < (f x).re ∨ (f x).im ≠ 0) : ContinuousOn (fun t => log (f t)) s :=
   fun x hx => (h₁ x hx).clog (h₂ x hx)
 
 theorem Continuous.clog {f : α → ℂ} (h₁ : Continuous f) (h₂ : ∀ x, 0 < (f x).re ∨ (f x).im ≠ 0) :

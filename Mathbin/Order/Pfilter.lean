@@ -95,7 +95,7 @@ instance  [Inhabited P] : Inhabited (pfilter P) :=
 
 /-- Two filters are equal when their underlying sets are equal. -/
 @[ext]
-theorem ext : ∀ F G : pfilter P, (F : Set P) = G → F = G
+theorem ext : ∀ (F G : pfilter P), (F : Set P) = G → F = G
 | ⟨⟨_, _, _, _⟩⟩, ⟨⟨_, _, _, _⟩⟩, rfl => rfl
 
 /-- The partial ordering by subset inclusion, inherited from `set P`. -/

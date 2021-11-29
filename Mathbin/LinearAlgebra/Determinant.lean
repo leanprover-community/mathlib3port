@@ -111,6 +111,7 @@ theorem det_to_matrix_eq_det_to_matrix [DecidableEq κ] (b : Basis ι A M) (c : 
         Matrix.det_conj] <;>
       rw [Basis.to_matrix_mul_to_matrix, Basis.to_matrix_self]
 
+-- error in LinearAlgebra.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The determinant of an endomorphism given a basis.
 
 See `linear_map.det` for a version that populates the basis non-computably.
@@ -119,10 +120,10 @@ Although the `trunc (basis ι A M)` parameter makes it slightly more convenient 
 there is no good way to generalize over universe parameters, so we can't fully state in `det_aux`'s
 type that it does not depend on the choice of basis. Instead you can use the `det_aux_def'` lemma,
 or avoid mentioning a basis at all using `linear_map.det`.
--/
-def det_aux : Trunc (Basis ι A M) → (M →ₗ[A] M) →* A :=
-  Trunc.lift (fun b : Basis ι A M => det_monoid_hom.comp (to_matrix_alg_equiv b : (M →ₗ[A] M) →* Matrix ι ι A))
-    fun b c => MonoidHom.ext$ det_to_matrix_eq_det_to_matrix b c
+-/ def det_aux : trunc (basis ι A M) → «expr →* »(«expr →ₗ[ ] »(M, A, M), A) :=
+trunc.lift (λ
+ b : basis ι A M, det_monoid_hom.comp (to_matrix_alg_equiv b : «expr →* »(«expr →ₗ[ ] »(M, A, M), matrix ι ι A))) (λ
+ b c, «expr $ »(monoid_hom.ext, det_to_matrix_eq_det_to_matrix b c))
 
 /-- Unfold lemma for `det_aux`.
 
@@ -195,7 +196,7 @@ theorem det_to_matrix' {ι : Type _} [Fintype ι] [DecidableEq ι] (f : (ι → 
 /-- To show `P f.det` it suffices to consider `P (to_matrix _ _ f).det` and `P 1`. -/
 @[elab_as_eliminator]
 theorem det_cases [DecidableEq M] {P : A → Prop} (f : M →ₗ[A] M)
-  (hb : ∀ s : Finset M b : Basis s A M, P (to_matrix b b f).det) (h1 : P 1) : P f.det :=
+  (hb : ∀ (s : Finset M) (b : Basis s A M), P (to_matrix b b f).det) (h1 : P 1) : P f.det :=
   by 
     unfold LinearMap.det 
     splitIfs with h

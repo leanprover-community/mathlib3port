@@ -826,17 +826,23 @@ theorem is_O_zero_right_iff : is_O f' (fun x => (0 : F')) l ↔ ∀ᶠx in l, f'
 theorem is_o_zero_right_iff : is_o f' (fun x => (0 : F')) l ↔ ∀ᶠx in l, f' x = 0 :=
   ⟨fun h => is_O_zero_right_iff.1 h.is_O, fun h => is_o.of_is_O_with$ fun c hc => is_O_with_zero_right_iff.2 h⟩
 
-theorem is_O_with_const_const (c : E) {c' : F'} (hc' : c' ≠ 0) (l : Filter α) :
-  is_O_with (∥c∥ / ∥c'∥) (fun x : α => c) (fun x => c') l :=
-  by 
-    unfold is_O_with 
-    apply univ_mem' 
-    intro x 
-    rw [mem_set_of_eq, div_mul_cancel]
-    rwa [Ne.def, norm_eq_zero]
+-- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_O_with_const_const
+(c : E)
+{c' : F'}
+(hc' : «expr ≠ »(c', 0))
+(l : filter α) : is_O_with «expr / »(«expr∥ ∥»(c), «expr∥ ∥»(c')) (λ x : α, c) (λ x, c') l :=
+begin
+  unfold [ident is_O_with] [],
+  apply [expr univ_mem'],
+  intro [ident x],
+  rw ["[", expr mem_set_of_eq, ",", expr div_mul_cancel, "]"] [],
+  rwa ["[", expr ne.def, ",", expr norm_eq_zero, "]"] []
+end
 
-theorem is_O_const_const (c : E) {c' : F'} (hc' : c' ≠ 0) (l : Filter α) : is_O (fun x : α => c) (fun x => c') l :=
-  (is_O_with_const_const c hc' l).IsO
+-- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_O_const_const (c : E) {c' : F'} (hc' : «expr ≠ »(c', 0)) (l : filter α) : is_O (λ x : α, c) (λ x, c') l :=
+(is_O_with_const_const c hc' l).is_O
 
 end ZeroConst
 
@@ -863,24 +869,24 @@ begin
 end
 
 @[simp]
-theorem is_O_with_principal {s : Set α} : is_O_with c f g (𝓟 s) ↔ ∀ x _ : x ∈ s, ∥f x∥ ≤ c*∥g x∥ :=
+theorem is_O_with_principal {s : Set α} : is_O_with c f g (𝓟 s) ↔ ∀ x (_ : x ∈ s), ∥f x∥ ≤ c*∥g x∥ :=
   by 
     rw [is_O_with] <;> rfl
 
-theorem is_O_principal {s : Set α} : is_O f g (𝓟 s) ↔ ∃ c, ∀ x _ : x ∈ s, ∥f x∥ ≤ c*∥g x∥ :=
+theorem is_O_principal {s : Set α} : is_O f g (𝓟 s) ↔ ∃ c, ∀ x (_ : x ∈ s), ∥f x∥ ≤ c*∥g x∥ :=
   by 
     rw [is_O_iff] <;> rfl
 
-theorem is_O_with_const_one (c : E) (l : Filter α) : is_O_with ∥c∥ (fun x : α => c) (fun x => (1 : 𝕜)) l :=
-  by 
-    refine' (is_O_with_const_const c _ l).congr_const _
-    ·
-      rw [norm_one, div_one]
-    ·
-      exact one_ne_zero
+-- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_O_with_const_one (c : E) (l : filter α) : is_O_with «expr∥ ∥»(c) (λ x : α, c) (λ x, (1 : 𝕜)) l :=
+begin
+  refine [expr (is_O_with_const_const c _ l).congr_const _],
+  { rw ["[", expr norm_one, ",", expr div_one, "]"] [] },
+  { exact [expr one_ne_zero] }
+end
 
-theorem is_O_const_one (c : E) (l : Filter α) : is_O (fun x : α => c) (fun x => (1 : 𝕜)) l :=
-  (is_O_with_const_one c l).IsO
+-- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_O_const_one (c : E) (l : filter α) : is_O (λ x : α, c) (λ x, (1 : 𝕜)) l := (is_O_with_const_one c l).is_O
 
 section 
 
@@ -905,8 +911,9 @@ theorem is_o_const_const_iff [ne_bot l] {d : E'} {c : F'} (hc : c ≠ 0) : is_o 
     rintro rfl 
     exact tendsto_const_nhds
 
-theorem is_o_id_const {c : F'} (hc : c ≠ 0) : is_o (fun x : E' => x) (fun x => c) (𝓝 0) :=
-  (is_o_const_iff hc).mpr (continuous_id.Tendsto 0)
+-- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_o_id_const {c : F'} (hc : «expr ≠ »(c, 0)) : is_o (λ x : E', x) (λ x, c) (expr𝓝() 0) :=
+(is_o_const_iff hc).mpr (continuous_id.tendsto 0)
 
 -- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_O_const_of_tendsto
@@ -1077,7 +1084,7 @@ theorem is_o.mul {f₁ f₂ : α → R} {g₁ g₂ : α → 𝕜} (h₁ : is_o f
   h₁.mul_is_O h₂.is_O
 
 theorem is_O_with.pow' {f : α → R} {g : α → 𝕜} (h : is_O_with c f g l) :
-  ∀ n : ℕ, is_O_with (Nat.casesOn n ∥(1 : R)∥ fun n => c ^ n+1) (fun x => f x ^ n) (fun x => g x ^ n) l
+  ∀ (n : ℕ), is_O_with (Nat.casesOn n ∥(1 : R)∥ fun n => c ^ n+1) (fun x => f x ^ n) (fun x => g x ^ n) l
 | 0 =>
   by 
     simpa using is_O_with_const_const (1 : R) (@one_ne_zero 𝕜 _ _) l
@@ -1089,7 +1096,7 @@ theorem is_O_with.pow' {f : α → R} {g : α → 𝕜} (h : is_O_with c f g l) 
     simpa [pow_succₓ] using h.mul (is_O_with.pow' (n+1))
 
 theorem is_O_with.pow [NormOneClass R] {f : α → R} {g : α → 𝕜} (h : is_O_with c f g l) :
-  ∀ n : ℕ, is_O_with (c ^ n) (fun x => f x ^ n) (fun x => g x ^ n) l
+  ∀ (n : ℕ), is_O_with (c ^ n) (fun x => f x ^ n) (fun x => g x ^ n) l
 | 0 =>
   by 
     simpa using h.pow' 0
@@ -1225,7 +1232,7 @@ section Sum
 
 variable{ι : Type _}{A : ι → α → E'}{C : ι → ℝ}{s : Finset ι}
 
-theorem is_O_with.sum (h : ∀ i _ : i ∈ s, is_O_with (C i) (A i) g l) :
+theorem is_O_with.sum (h : ∀ i (_ : i ∈ s), is_O_with (C i) (A i) g l) :
   is_O_with (∑i in s, C i) (fun x => ∑i in s, A i x) g l :=
   by 
     induction' s using Finset.induction_on with i s is IH
@@ -1235,7 +1242,7 @@ theorem is_O_with.sum (h : ∀ i _ : i ∈ s, is_O_with (C i) (A i) g l) :
       simp only [is, Finset.sum_insert, not_false_iff]
       exact (h _ (Finset.mem_insert_self i s)).add (IH fun j hj => h _ (Finset.mem_insert_of_mem hj))
 
-theorem is_O.sum (h : ∀ i _ : i ∈ s, is_O (A i) g l) : is_O (fun x => ∑i in s, A i x) g l :=
+theorem is_O.sum (h : ∀ i (_ : i ∈ s), is_O (A i) g l) : is_O (fun x => ∑i in s, A i x) g l :=
   by 
     induction' s using Finset.induction_on with i s is IH
     ·
@@ -1244,7 +1251,7 @@ theorem is_O.sum (h : ∀ i _ : i ∈ s, is_O (A i) g l) : is_O (fun x => ∑i i
       simp only [is, Finset.sum_insert, not_false_iff]
       exact (h _ (Finset.mem_insert_self i s)).add (IH fun j hj => h _ (Finset.mem_insert_of_mem hj))
 
-theorem is_o.sum (h : ∀ i _ : i ∈ s, is_o (A i) g' l) : is_o (fun x => ∑i in s, A i x) g' l :=
+theorem is_o.sum (h : ∀ i (_ : i ∈ s), is_o (A i) g' l) : is_o (fun x => ∑i in s, A i x) g' l :=
   by 
     induction' s using Finset.induction_on with i s is IH
     ·
@@ -1435,17 +1442,23 @@ begin
   exact [expr (zero_pow (tsub_pos_of_lt h)).symm]
 end
 
-theorem is_o_norm_pow_norm_pow {m n : ℕ} (h : m < n) : is_o (fun x : E' => ∥x∥ ^ n) (fun x => ∥x∥ ^ m) (𝓝 (0 : E')) :=
-  (is_o_pow_pow h).comp_tendsto tendsto_norm_zero
+-- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_o_norm_pow_norm_pow
+{m n : exprℕ()}
+(h : «expr < »(m, n)) : is_o (λ
+ x : E', «expr ^ »(«expr∥ ∥»(x), n)) (λ x, «expr ^ »(«expr∥ ∥»(x), m)) (expr𝓝() (0 : E')) :=
+(is_o_pow_pow h).comp_tendsto tendsto_norm_zero
 
-theorem is_o_pow_id {n : ℕ} (h : 1 < n) : is_o (fun x : 𝕜 => x ^ n) (fun x => x) (𝓝 0) :=
-  by 
-    convert is_o_pow_pow h 
-    simp only [pow_oneₓ]
+-- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_o_pow_id {n : exprℕ()} (h : «expr < »(1, n)) : is_o (λ x : 𝕜, «expr ^ »(x, n)) (λ x, x) (expr𝓝() 0) :=
+by { convert [] [expr is_o_pow_pow h] [],
+  simp [] [] ["only"] ["[", expr pow_one, "]"] [] [] }
 
-theorem is_o_norm_pow_id {n : ℕ} (h : 1 < n) : is_o (fun x : E' => ∥x∥ ^ n) (fun x => x) (𝓝 0) :=
-  by 
-    simpa only [pow_oneₓ, is_o_norm_right] using @is_o_norm_pow_norm_pow E' _ _ _ h
+-- error in Analysis.Asymptotics.Asymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_o_norm_pow_id
+{n : exprℕ()}
+(h : «expr < »(1, n)) : is_o (λ x : E', «expr ^ »(«expr∥ ∥»(x), n)) (λ x, x) (expr𝓝() 0) :=
+by simpa [] [] ["only"] ["[", expr pow_one, ",", expr is_o_norm_right, "]"] [] ["using", expr @is_o_norm_pow_norm_pow E' _ _ _ h]
 
 theorem is_O_with.right_le_sub_of_lt_1 {f₁ f₂ : α → E'} (h : is_O_with c f₁ f₂ l) (hc : c < 1) :
   is_O_with (1 / (1 - c)) f₂ (fun x => f₂ x - f₁ x) l :=

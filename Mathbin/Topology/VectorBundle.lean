@@ -109,13 +109,15 @@ end
 
 variable[∀ x, TopologicalSpace (E x)]
 
+-- error in Topology.VectorBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The space `total_space E` (for `E : B → Type*` such that each `E x` is a topological vector
 space) has a topological vector space structure with fiber `F` (denoted with
 `topological_vector_bundle R F E`) if around every point there is a fiber bundle trivialization
 which is linear in the fibers. -/
-class TopologicalVectorBundle : Prop where 
-  Inducing{} : ∀ b : B, Inducing fun x : E b => (id ⟨b, x⟩ : total_space E)
-  locally_trivial{} : ∀ b : B, ∃ e : TopologicalVectorBundle.Trivialization R F E, b ∈ e.base_set
+class topological_vector_bundle : exprProp() :=
+  (inducing [] : ∀ b : B, inducing (λ x : E b, (id ⟨b, x⟩ : total_space E)))
+  (locally_trivial [] : ∀
+   b : B, «expr∃ , »((e : topological_vector_bundle.trivialization R F E), «expr ∈ »(b, e.base_set)))
 
 variable[TopologicalVectorBundle R F E]
 
@@ -123,7 +125,7 @@ namespace TopologicalVectorBundle
 
 /-- `trivialization_at R F E b` is some choice of trivialization of a vector bundle whose base set
 contains a given point `b`. -/
-def trivialization_at : ∀ b : B, trivialization R F E :=
+def trivialization_at : ∀ (b : B), trivialization R F E :=
   fun b => Classical.some (locally_trivial R F E b)
 
 @[simp, mfld_simps]
@@ -281,23 +283,28 @@ end TopologicalVectorBundle
 
 variable(B)
 
+-- error in Topology.VectorBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Analogous construction of `topological_fiber_bundle_core` for vector bundles. This
 construction gives a way to construct vector bundles from a structure registering how
 trivialization changes act on fibers.-/
-@[nolint has_inhabited_instance]
-structure TopologicalVectorBundleCore(ι : Type _) where 
-  BaseSet : ι → Set B 
-  is_open_base_set : ∀ i, IsOpen (base_set i)
-  indexAt : B → ι 
-  mem_base_set_at : ∀ x, x ∈ base_set (index_at x)
-  coordChange : ι → ι → B → F →ₗ[R] F 
-  coord_change_self : ∀ i, ∀ x _ : x ∈ base_set i, ∀ v, coord_change i i x v = v 
-  coord_change_continuous :
-  ∀ i j, ContinuousOn (fun p : B × F => coord_change i j p.1 p.2) (Set.Prod (base_set i ∩ base_set j) univ)
-  coord_change_comp :
-  ∀ i j k,
-    ∀ x _ : x ∈ base_set i ∩ base_set j ∩ base_set k,
-      ∀ v, (coord_change j k x) (coord_change i j x v) = coord_change i k x v
+@[nolint #[ident has_inhabited_instance]]
+structure topological_vector_bundle_core
+(ι : Type*) :=
+  (base_set : ι → set B)
+  (is_open_base_set : ∀ i, is_open (base_set i))
+  (index_at : B → ι)
+  (mem_base_set_at : ∀ x, «expr ∈ »(x, base_set (index_at x)))
+  (coord_change : ι → ι → B → «expr →ₗ[ ] »(F, R, F))
+  (coord_change_self : ∀ i, ∀ x «expr ∈ » base_set i, ∀ v, «expr = »(coord_change i i x v, v))
+  (coord_change_continuous : ∀
+   i
+   j, continuous_on (λ p : «expr × »(B, F), coord_change i j p.1 p.2) (set.prod «expr ∩ »(base_set i, base_set j) univ))
+  (coord_change_comp : ∀
+   i
+   j
+   k, ∀
+   x «expr ∈ » «expr ∩ »(«expr ∩ »(base_set i, base_set j), base_set k), ∀
+   v, «expr = »(coord_change j k x (coord_change i j x v), coord_change i k x v))
 
 attribute [simp, mfld_simps] TopologicalVectorBundleCore.mem_base_set_at
 
@@ -316,7 +323,7 @@ instance to_topological_vector_bundle_core_coe :
 include Z
 
 theorem coord_change_linear_comp (i j k : ι) :
-  ∀ x _ : x ∈ Z.base_set i ∩ Z.base_set j ∩ Z.base_set k,
+  ∀ x (_ : x ∈ Z.base_set i ∩ Z.base_set j ∩ Z.base_set k),
     (Z.coord_change j k x).comp (Z.coord_change i j x) = Z.coord_change i k x :=
   fun x hx =>
     by 
@@ -347,12 +354,12 @@ instance topological_space_fiber (x : B) : TopologicalSpace (Z.fiber x) :=
   by 
     infer_instance
 
-instance add_comm_monoid_fiber : ∀ x : B, AddCommMonoidₓ (Z.fiber x) :=
+instance add_comm_monoid_fiber : ∀ (x : B), AddCommMonoidₓ (Z.fiber x) :=
   fun x =>
     by 
       infer_instance
 
-instance module_fiber : ∀ x : B, Module R (Z.fiber x) :=
+instance module_fiber : ∀ (x : B), Module R (Z.fiber x) :=
   fun x =>
     by 
       infer_instance

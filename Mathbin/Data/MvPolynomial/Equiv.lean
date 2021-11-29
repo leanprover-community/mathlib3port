@@ -50,41 +50,39 @@ section Equiv
 
 variable(R)[CommSemiringₓ R]
 
+-- error in Data.MvPolynomial.Equiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The ring isomorphism between multivariable polynomials in a single variable and
 polynomials over the ground ring.
--/
-@[simps]
-def punit_alg_equiv : MvPolynomial PUnit R ≃ₐ[R] Polynomial R :=
-  { toFun := eval₂ Polynomial.c fun u : PUnit => Polynomial.x, invFun := Polynomial.eval₂ MvPolynomial.c (X PUnit.unit),
-    left_inv :=
-      by 
-        let f : Polynomial R →+* MvPolynomial PUnit R := Polynomial.eval₂RingHom MvPolynomial.c (X PUnit.unit)
-        let g : MvPolynomial PUnit R →+* Polynomial R := eval₂_hom Polynomial.c fun u : PUnit => Polynomial.x 
-        show ∀ p, f.comp g p = p 
-        apply is_id
-        ·
-          ext a 
-          dsimp 
-          rw [eval₂_C, Polynomial.eval₂_C]
-        ·
-          rintro ⟨⟩
-          dsimp 
-          rw [eval₂_X, Polynomial.eval₂_X],
-    right_inv :=
-      fun p =>
-        Polynomial.induction_on p
-          (fun a =>
-            by 
-              rw [Polynomial.eval₂_C, MvPolynomial.eval₂_C])
-          (fun p q hp hq =>
-            by 
-              rw [Polynomial.eval₂_add, MvPolynomial.eval₂_add, hp, hq])
-          fun p n hp =>
-            by 
-              rw [Polynomial.eval₂_mul, Polynomial.eval₂_pow, Polynomial.eval₂_X, Polynomial.eval₂_C, eval₂_mul,
-                eval₂_C, eval₂_pow, eval₂_X],
-    map_mul' := fun _ _ => eval₂_mul _ _, map_add' := fun _ _ => eval₂_add _ _, commutes' := fun _ => eval₂_C _ _ _ }
+-/ @[simps #[]] def punit_alg_equiv : «expr ≃ₐ[ ] »(mv_polynomial punit R, R, polynomial R) :=
+{ to_fun := eval₂ polynomial.C (λ u : punit, polynomial.X),
+  inv_fun := polynomial.eval₂ mv_polynomial.C (X punit.star),
+  left_inv := begin
+    let [ident f] [":", expr «expr →+* »(polynomial R, mv_polynomial punit R)] [":=", expr polynomial.eval₂_ring_hom mv_polynomial.C (X punit.star)],
+    let [ident g] [":", expr «expr →+* »(mv_polynomial punit R, polynomial R)] [":=", expr eval₂_hom polynomial.C (λ
+      u : punit, polynomial.X)],
+    show [expr ∀ p, «expr = »(f.comp g p, p)],
+    apply [expr is_id],
+    { ext [] [ident a] [],
+      dsimp [] [] [] [],
+      rw ["[", expr eval₂_C, ",", expr polynomial.eval₂_C, "]"] [] },
+    { rintros ["⟨", "⟩"],
+      dsimp [] [] [] [],
+      rw ["[", expr eval₂_X, ",", expr polynomial.eval₂_X, "]"] [] }
+  end,
+  right_inv := assume
+  p, polynomial.induction_on p (assume
+   a, by rw ["[", expr polynomial.eval₂_C, ",", expr mv_polynomial.eval₂_C, "]"] []) (assume
+   p
+   q
+   hp
+   hq, by rw ["[", expr polynomial.eval₂_add, ",", expr mv_polynomial.eval₂_add, ",", expr hp, ",", expr hq, "]"] []) (assume
+   p
+   n
+   hp, by rw ["[", expr polynomial.eval₂_mul, ",", expr polynomial.eval₂_pow, ",", expr polynomial.eval₂_X, ",", expr polynomial.eval₂_C, ",", expr eval₂_mul, ",", expr eval₂_C, ",", expr eval₂_pow, ",", expr eval₂_X, "]"] []),
+  map_mul' := λ _ _, eval₂_mul _ _,
+  map_add' := λ _ _, eval₂_add _ _,
+  commutes' := λ _, eval₂_C _ _ _ }
 
 section Map
 
@@ -297,29 +295,26 @@ polynomials over multivariable polynomials in `fin n`.
 def finSuccEquiv (n : ℕ) : MvPolynomial (Finₓ (n+1)) R ≃ₐ[R] Polynomial (MvPolynomial (Finₓ n) R) :=
   (rename_equiv R (finSuccEquiv n)).trans (option_equiv_left R (Finₓ n))
 
-theorem fin_succ_equiv_eq (n : ℕ) :
-  (finSuccEquiv R n : MvPolynomial (Finₓ (n+1)) R →+* Polynomial (MvPolynomial (Finₓ n) R)) =
-    eval₂_hom (Polynomial.c.comp (C : R →+* MvPolynomial (Finₓ n) R))
-      fun i : Finₓ (n+1) => Finₓ.cases Polynomial.x (fun k => Polynomial.c (X k)) i :=
-  by 
-    ext : 2
-    ·
-      simp only [finSuccEquiv, option_equiv_left_apply, aeval_C, AlgEquiv.coe_trans, AlgEquiv.coe_alg_hom,
-        coe_eval₂_hom, AlgHom.coe_to_ring_hom, comp_app, rename_equiv_apply, eval₂_C, RingHom.coe_comp, coe_coe,
-        rename_C]
-      rfl
-    ·
-      intro i 
-      refine' Finₓ.cases _ _ i <;> simp [finSuccEquiv]
+-- error in Data.MvPolynomial.Equiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem fin_succ_equiv_eq
+(n : exprℕ()) : «expr = »((fin_succ_equiv R n : «expr →+* »(mv_polynomial (fin «expr + »(n, 1)) R, polynomial (mv_polynomial (fin n) R))), eval₂_hom (polynomial.C.comp (C : «expr →+* »(R, mv_polynomial (fin n) R))) (λ
+  i : fin «expr + »(n, 1), fin.cases polynomial.X (λ k, polynomial.C (X k)) i)) :=
+begin
+  ext [] [] [":", 2],
+  { simp [] [] ["only"] ["[", expr fin_succ_equiv, ",", expr option_equiv_left_apply, ",", expr aeval_C, ",", expr alg_equiv.coe_trans, ",", expr alg_equiv.coe_alg_hom, ",", expr coe_eval₂_hom, ",", expr alg_hom.coe_to_ring_hom, ",", expr comp_app, ",", expr rename_equiv_apply, ",", expr eval₂_C, ",", expr ring_hom.coe_comp, ",", expr coe_coe, ",", expr rename_C, "]"] [] [],
+    refl },
+  { intro [ident i],
+    refine [expr fin.cases _ _ i]; simp [] [] [] ["[", expr fin_succ_equiv, "]"] [] [] }
+end
 
+-- error in Data.MvPolynomial.Equiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem fin_succ_equiv_apply (n : ℕ) (p : MvPolynomial (Finₓ (n+1)) R) :
-  finSuccEquiv R n p =
-    eval₂_hom (Polynomial.c.comp (C : R →+* MvPolynomial (Finₓ n) R))
-      (fun i : Finₓ (n+1) => Finₓ.cases Polynomial.x (fun k => Polynomial.c (X k)) i) p :=
-  by 
-    rw [←fin_succ_equiv_eq]
-    rfl
+theorem fin_succ_equiv_apply
+(n : exprℕ())
+(p : mv_polynomial (fin «expr + »(n, 1)) R) : «expr = »(fin_succ_equiv R n p, eval₂_hom (polynomial.C.comp (C : «expr →+* »(R, mv_polynomial (fin n) R))) (λ
+  i : fin «expr + »(n, 1), fin.cases polynomial.X (λ k, polynomial.C (X k)) i) p) :=
+by { rw ["<-", expr fin_succ_equiv_eq] [],
+  refl }
 
 theorem fin_succ_equiv_comp_C_eq_C {R : Type u} [CommSemiringₓ R] (n : ℕ) :
   («expr↑ » (MvPolynomial.finSuccEquiv R n).symm : Polynomial (MvPolynomial (Finₓ n) R) →+* _).comp

@@ -80,11 +80,11 @@ Then `p I` is true. See also `box_integral.box.subbox_induction_on'` for a versi
 `box_integral.box.split_center_box` instead of `box_integral.prepartition.split_center`. -/
 @[elab_as_eliminator]
 theorem subbox_induction_on {p : box ι → Prop} (I : box ι)
-  (H_ind : ∀ J _ : J ≤ I, (∀ J' _ : J' ∈ split_center J, p J') → p J)
+  (H_ind : ∀ J (_ : J ≤ I), (∀ J' (_ : J' ∈ split_center J), p J') → p J)
   (H_nhds :
-    ∀ z _ : z ∈ I.Icc,
+    ∀ z (_ : z ∈ I.Icc),
       ∃ (U : _)(_ : U ∈ 𝓝[I.Icc] z),
-        ∀ J _ : J ≤ I m : ℕ,
+        ∀ J (_ : J ≤ I) (m : ℕ),
           z ∈ J.Icc → J.Icc ⊆ U → (∀ i, J.upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) → p J) :
   p I :=
   by 

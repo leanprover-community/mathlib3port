@@ -177,13 +177,13 @@ variable{K : Type max v u}[small_category K]
 
 variable[concrete_category.{max v u} D]
 
-variable[∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
+variable[∀ (P : «expr ᵒᵖ» C ⥤ D) (X : C) (S : J.cover X), has_multiequalizer (S.index P)]
 
 variable[preserves_limits (forget D)]
 
-variable[∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
+variable[∀ (X : C), has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
 
-variable[∀ X : C, preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)]
+variable[∀ (X : C), preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)]
 
 variable[reflects_isomorphisms (forget D)]
 

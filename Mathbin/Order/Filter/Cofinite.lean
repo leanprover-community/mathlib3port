@@ -1,4 +1,5 @@
-import Mathbin.Order.Filter.AtTopBot
+import Mathbin.Order.Filter.AtTopBot 
+import Mathbin.Order.Filter.Pi
 
 /-!
 # The cofinite filter
@@ -23,17 +24,18 @@ variable{α : Type _}
 
 namespace Filter
 
-/-- The cofinite filter is the filter of subsets whose complements are finite. -/
-def cofinite : Filter α :=
-  { Sets := { s | finite («expr ᶜ» s) },
-    univ_sets :=
-      by 
-        simp only [compl_univ, finite_empty, mem_set_of_eq],
-    sets_of_superset := fun s t hs : finite («expr ᶜ» s) st : s ⊆ t => hs.subset$ compl_subset_compl.2 st,
-    inter_sets :=
-      fun s t hs : finite («expr ᶜ» s) ht : finite («expr ᶜ» t) =>
-        by 
-          simp only [compl_inter, finite.union, ht, hs, mem_set_of_eq] }
+-- error in Order.Filter.Cofinite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The cofinite filter is the filter of subsets whose complements are finite. -/ def cofinite : filter α :=
+{ sets := {s | finite «expr ᶜ»(s)},
+  univ_sets := by simp [] [] ["only"] ["[", expr compl_univ, ",", expr finite_empty, ",", expr mem_set_of_eq, "]"] [] [],
+  sets_of_superset := assume
+  (s t)
+  (hs : finite «expr ᶜ»(s))
+  (st : «expr ⊆ »(s, t)), «expr $ »(hs.subset, compl_subset_compl.2 st),
+  inter_sets := assume
+  (s t)
+  (hs : finite «expr ᶜ»(s))
+  (ht : finite «expr ᶜ»(t)), by simp [] [] ["only"] ["[", expr compl_inter, ",", expr finite.union, ",", expr ht, ",", expr hs, ",", expr mem_set_of_eq, "]"] [] [] }
 
 @[simp]
 theorem mem_cofinite {s : Set α} : s ∈ @cofinite α ↔ finite («expr ᶜ» s) :=
@@ -43,11 +45,12 @@ theorem mem_cofinite {s : Set α} : s ∈ @cofinite α ↔ finite («expr ᶜ» 
 theorem eventually_cofinite {p : α → Prop} : (∀ᶠx in cofinite, p x) ↔ finite { x | ¬p x } :=
   Iff.rfl
 
+-- error in Order.Filter.Cofinite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis_cofinite : has_basis cofinite (λ s : set α, s.finite) compl :=
+⟨λ s, ⟨λ h, ⟨«expr ᶜ»(s), h, (compl_compl s).subset⟩, λ ⟨t, htf, hts⟩, «expr $ »(htf.subset, compl_subset_comm.2 hts)⟩⟩
+
 instance cofinite_ne_bot [Infinite α] : ne_bot (@cofinite α) :=
-  ⟨mt empty_mem_iff_bot.mpr$
-      by 
-        simp only [mem_cofinite, compl_empty]
-        exact infinite_univ⟩
+  has_basis_cofinite.ne_bot_iff.2$ fun s hs => hs.infinite_compl.nonempty
 
 theorem frequently_cofinite_iff_infinite {p : α → Prop} : (∃ᶠx in cofinite, p x) ↔ Set.Infinite { x | p x } :=
   by 
@@ -159,7 +162,7 @@ theorem Filter.Tendsto.exists_forall_le {α β : Type _} [Nonempty α] [LinearOr
   ⟨a₀, fun a => ha₀ a (mem_univ _)⟩
 
 theorem Filter.Tendsto.exists_within_forall_ge {α β : Type _} [LinearOrderₓ β] {s : Set α} (hs : s.nonempty) {f : α → β}
-  (hf : Filter.Tendsto f Filter.cofinite Filter.atBot) : ∃ (a₀ : _)(_ : a₀ ∈ s), ∀ a _ : a ∈ s, f a ≤ f a₀ :=
+  (hf : Filter.Tendsto f Filter.cofinite Filter.atBot) : ∃ (a₀ : _)(_ : a₀ ∈ s), ∀ a (_ : a ∈ s), f a ≤ f a₀ :=
   @Filter.Tendsto.exists_within_forall_le _ (OrderDual β) _ _ hs _ hf
 
 theorem Filter.Tendsto.exists_forall_ge {α β : Type _} [Nonempty α] [LinearOrderₓ β] {f : α → β}

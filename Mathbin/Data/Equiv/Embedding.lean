@@ -60,20 +60,21 @@ def cod_restrict (α : Type _) {β : Type _} (bs : Set β) : { f : α ↪ β // 
         by 
           ext <;> rfl }
 
+-- error in Data.Equiv.Embedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Pairs of embeddings with disjoint ranges are equivalent to a dependent sum of embeddings,
 in which the second embedding cannot take values in the range of the first. -/
-def prod_embedding_disjoint_equiv_sigma_embedding_restricted {α β γ : Type _} :
-  { f : (α ↪ γ) × (β ↪ γ) // Disjoint (Set.Range f.1) (Set.Range f.2) } ≃
-    Σf : α ↪ γ, β ↪ «expr↥ » («expr ᶜ» (Set.Range f)) :=
-  (subtype_prod_equiv_sigma_subtype$ fun a : α ↪ γ b : β ↪ _ => Disjoint (Set.Range a) (Set.Range b)).trans$
-    Equiv.sigmaCongrRight$
-      fun a =>
-        (subtype_equiv_prop
-              (by 
-                ext f 
-                rw [←Set.range_subset_iff, Set.subset_compl_iff_disjoint]
-                exact disjoint.comm.trans disjoint_iff)).trans
-          (cod_restrict _ _)
+def prod_embedding_disjoint_equiv_sigma_embedding_restricted
+{α
+ β
+ γ : Type*} : «expr ≃ »({f : «expr × »(«expr ↪ »(α, γ), «expr ↪ »(β, γ)) // disjoint (set.range f.1) (set.range f.2)}, «exprΣ , »((f : «expr ↪ »(α, γ)), «expr ↪ »(β, «expr↥ »(«expr ᶜ»(set.range f))))) :=
+«expr $ »(«expr $ »(subtype_prod_equiv_sigma_subtype, λ
+  (a : «expr ↪ »(α, γ))
+  (b : «expr ↪ »(β, _)), disjoint (set.range a) (set.range b)).trans, «expr $ »(equiv.sigma_congr_right, λ
+  a, (subtype_equiv_prop (begin
+      ext [] [ident f] [],
+      rw ["[", "<-", expr set.range_subset_iff, ",", expr set.subset_compl_iff_disjoint, "]"] [],
+      exact [expr disjoint.comm.trans disjoint_iff]
+    end)).trans (cod_restrict _ _)))
 
 /-- A combination of the above results, allowing us to turn one embedding over a sum type
 into two dependent embeddings, the second of which avoids any members of the range

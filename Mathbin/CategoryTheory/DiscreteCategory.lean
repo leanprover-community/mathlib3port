@@ -111,11 +111,11 @@ For functors out of a discrete category,
 a natural transformation is just a collection of maps,
 as the naturality squares are trivial.
 -/
-def nat_trans {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ⟶ G.obj i) : F ⟶ G :=
+def nat_trans {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ (i : discrete I), F.obj i ⟶ G.obj i) : F ⟶ G :=
   { app := f }
 
 @[simp]
-theorem nat_trans_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ⟶ G.obj i) i :
+theorem nat_trans_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ (i : discrete I), F.obj i ⟶ G.obj i) i :
   (discrete.nat_trans f).app i = f i :=
   rfl
 
@@ -124,23 +124,23 @@ For functors out of a discrete category,
 a natural isomorphism is just a collection of isomorphisms,
 as the naturality squares are trivial.
 -/
-def nat_iso {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ≅ G.obj i) : F ≅ G :=
+def nat_iso {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ (i : discrete I), F.obj i ≅ G.obj i) : F ≅ G :=
   nat_iso.of_components f
     (by 
       tidy)
 
 @[simp]
-theorem nat_iso_hom_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ≅ G.obj i) (i : I) :
+theorem nat_iso_hom_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ (i : discrete I), F.obj i ≅ G.obj i) (i : I) :
   (discrete.nat_iso f).Hom.app i = (f i).Hom :=
   rfl
 
 @[simp]
-theorem nat_iso_inv_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ≅ G.obj i) (i : I) :
+theorem nat_iso_inv_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ (i : discrete I), F.obj i ≅ G.obj i) (i : I) :
   (discrete.nat_iso f).inv.app i = (f i).inv :=
   rfl
 
 @[simp]
-theorem nat_iso_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ i : discrete I, F.obj i ≅ G.obj i) (i : I) :
+theorem nat_iso_app {I : Type u₁} {F G : discrete I ⥤ C} (f : ∀ (i : discrete I), F.obj i ≅ G.obj i) (i : I) :
   (discrete.nat_iso f).app i = f i :=
   by 
     tidy

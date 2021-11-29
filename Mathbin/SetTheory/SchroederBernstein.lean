@@ -98,14 +98,14 @@ parameter {ι : Type u}{β : ι → Type v}
 
 @[reducible]
 private def sets :=
-  { s:Set (∀ i, β i) | ∀ x _ : x ∈ s y _ : y ∈ s i, (x : ∀ i, β i) i = y i → x = y }
+  { s:Set (∀ i, β i) | ∀ x (_ : x ∈ s) y (_ : y ∈ s) i, (x : ∀ i, β i) i = y i → x = y }
 
 /-- The cardinals are well-ordered. We express it here by the fact that in any set of cardinals
 there is an element that injects into the others. See `cardinal.linear_order` for (one of) the
 lattice instance. -/
 theorem min_injective (I : Nonempty ι) : ∃ i, Nonempty (∀ j, β i ↪ β j) :=
   let ⟨s, hs, ms⟩ :=
-    show ∃ (s : _)(_ : s ∈ sets), ∀ a _ : a ∈ sets, s ⊆ a → a = s from
+    show ∃ (s : _)(_ : s ∈ sets), ∀ a (_ : a ∈ sets), s ⊆ a → a = s from
       Zorn.zorn_subset sets
         fun c hc hcc =>
           ⟨⋃₀c,
@@ -116,7 +116,7 @@ theorem min_injective (I : Nonempty ι) : ∃ i, Nonempty (∀ j, β i ↪ β j)
     show ∃ i, ∀ y, ∃ (x : _)(_ : x ∈ s), (x : ∀ i, β i) i = y from
       Classical.by_contradiction$
         fun h =>
-          have h : ∀ i, ∃ y, ∀ x _ : x ∈ s, (x : ∀ i, β i) i ≠ y :=
+          have h : ∀ i, ∃ y, ∀ x (_ : x ∈ s), (x : ∀ i, β i) i ≠ y :=
             by 
               simpa only [not_exists, not_forall] using h 
           let ⟨f, hf⟩ := Classical.axiom_of_choice h 

@@ -75,8 +75,9 @@ structure
       ι][Semiringₓ R][∀ i, AddCommMonoidₓ (M₁ i)][AddCommMonoidₓ M₂][∀ i, Module R (M₁ i)][Module R M₂] where
   
   toFun : (∀ i, M₁ i) → M₂ 
-  map_add' : ∀ m : ∀ i, M₁ i i : ι x y : M₁ i, to_fun (update m i (x+y)) = to_fun (update m i x)+to_fun (update m i y)
-  map_smul' : ∀ m : ∀ i, M₁ i i : ι c : R x : M₁ i, to_fun (update m i (c • x)) = c • to_fun (update m i x)
+  map_add' :
+  ∀ (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i), to_fun (update m i (x+y)) = to_fun (update m i x)+to_fun (update m i y)
+  map_smul' : ∀ (m : ∀ i, M₁ i) (i : ι) (c : R) (x : M₁ i), to_fun (update m i (c • x)) = c • to_fun (update m i x)
 
 namespace MultilinearMap
 
@@ -108,11 +109,13 @@ theorem to_fun_eq_coe : f.to_fun = f :=
 theorem coe_mk (f : (∀ i, M₁ i) → M₂) h₁ h₂ : «expr⇑ » (⟨f, h₁, h₂⟩ : MultilinearMap R M₁ M₂) = f :=
   rfl
 
-theorem congr_funₓ {f g : MultilinearMap R M₁ M₂} (h : f = g) (x : ∀ i, M₁ i) : f x = g x :=
-  congr_argₓ (fun h : MultilinearMap R M₁ M₂ => h x) h
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem congr_fun {f g : multilinear_map R M₁ M₂} (h : «expr = »(f, g)) (x : ∀ i, M₁ i) : «expr = »(f x, g x) :=
+congr_arg (λ h : multilinear_map R M₁ M₂, h x) h
 
-theorem congr_argₓ (f : MultilinearMap R M₁ M₂) {x y : ∀ i, M₁ i} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : ∀ i, M₁ i => f x) h
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem congr_arg (f : multilinear_map R M₁ M₂) {x y : ∀ i, M₁ i} (h : «expr = »(x, y)) : «expr = »(f x, f y) :=
+congr_arg (λ x : ∀ i, M₁ i, f x) h
 
 theorem coe_injective : injective (coeFn : MultilinearMap R M₁ M₂ → (∀ i, M₁ i) → M₂) :=
   by 
@@ -132,6 +135,12 @@ theorem ext {f f' : MultilinearMap R M₁ M₂} (H : ∀ x, f x = f' x) : f = f'
 
 theorem ext_iff {f g : MultilinearMap R M₁ M₂} : f = g ↔ ∀ x, f x = g x :=
   ⟨fun h x => h ▸ rfl, fun h => ext h⟩
+
+@[simp]
+theorem mk_coe (f : MultilinearMap R M₁ M₂) h₁ h₂ : (⟨f, h₁, h₂⟩ : MultilinearMap R M₁ M₂) = f :=
+  by 
+    ext 
+    rfl
 
 @[simp]
 theorem map_add (m : ∀ i, M₁ i) (i : ι) (x y : M₁ i) : f (update m i (x+y)) = f (update m i x)+f (update m i y) :=
@@ -275,21 +284,14 @@ section
 
 variable(R M₂)
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The evaluation map from `ι → M₂` to `M₂` is multilinear at a given `i` when `ι` is subsingleton.
--/
-@[simps]
-def of_subsingleton [Subsingleton ι] (i' : ι) : MultilinearMap R (fun _ : ι => M₂) M₂ :=
-  { toFun := Function.eval i',
-    map_add' :=
-      fun m i x y =>
-        by 
-          rw [Subsingleton.elimₓ i i']
-          simp only [Function.eval, Function.update_same],
-    map_smul' :=
-      fun m i r x =>
-        by 
-          rw [Subsingleton.elimₓ i i']
-          simp only [Function.eval, Function.update_same] }
+-/ @[simps #[]] def of_subsingleton [subsingleton ι] (i' : ι) : multilinear_map R (λ _ : ι, M₂) M₂ :=
+{ to_fun := function.eval i',
+  map_add' := λ m i x y, by { rw [expr subsingleton.elim i i'] [],
+    simp [] [] ["only"] ["[", expr function.eval, ",", expr function.update_same, "]"] [] [] },
+  map_smul' := λ m i r x, by { rw [expr subsingleton.elim i i'] [],
+    simp [] [] ["only"] ["[", expr function.eval, ",", expr function.update_same, "]"] [] [] } }
 
 variable{M₂}
 
@@ -300,31 +302,34 @@ def const_of_is_empty [IsEmpty ι] (m : M₂) : MultilinearMap R M₁ M₂ :=
 
 end 
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a multilinear map `f` on `n` variables (parameterized by `fin n`) and a subset `s` of `k`
 of these variables, one gets a new multilinear map on `fin k` by varying these variables, and fixing
 the other ones equal to a given value `z`. It is denoted by `f.restr s hk z`, where `hk` is a
 proof that the cardinality of `s` is `k`. The implicit identification between `fin k` and `s` that
 we use is the canonical (increasing) bijection. -/
-def restr {k n : ℕ} (f : MultilinearMap R (fun i : Finₓ n => M') M₂) (s : Finset (Finₓ n)) (hk : s.card = k) (z : M') :
-  MultilinearMap R (fun i : Finₓ k => M') M₂ :=
-  { toFun := fun v => f fun j => if h : j ∈ s then v ((s.order_iso_of_fin hk).symm ⟨j, h⟩) else z,
-    map_add' :=
-      fun v i x y =>
-        by 
-          erw [dite_comp_equiv_update, dite_comp_equiv_update, dite_comp_equiv_update]
-          simp ,
-    map_smul' :=
-      fun v i c x =>
-        by 
-          erw [dite_comp_equiv_update, dite_comp_equiv_update]
-          simp  }
+def restr
+{k n : exprℕ()}
+(f : multilinear_map R (λ i : fin n, M') M₂)
+(s : finset (fin n))
+(hk : «expr = »(s.card, k))
+(z : M') : multilinear_map R (λ i : fin k, M') M₂ :=
+{ to_fun := λ v, f (λ j, if h : «expr ∈ »(j, s) then v ((s.order_iso_of_fin hk).symm ⟨j, h⟩) else z),
+  map_add' := λ
+  v
+  i
+  x
+  y, by { erw ["[", expr dite_comp_equiv_update, ",", expr dite_comp_equiv_update, ",", expr dite_comp_equiv_update, "]"] [],
+    simp [] [] [] [] [] [] },
+  map_smul' := λ v i c x, by { erw ["[", expr dite_comp_equiv_update, ",", expr dite_comp_equiv_update, "]"] [],
+    simp [] [] [] [] [] [] } }
 
 variable{R}
 
 /-- In the specific case of multilinear maps on spaces indexed by `fin (n+1)`, where one can build
 an element of `Π(i : fin (n+1)), M i` using `cons`, one can express directly the additivity of a
 multilinear map along the first variable. -/
-theorem cons_add (f : MultilinearMap R M M₂) (m : ∀ i : Finₓ n, M i.succ) (x y : M 0) :
+theorem cons_add (f : MultilinearMap R M M₂) (m : ∀ (i : Finₓ n), M i.succ) (x y : M 0) :
   f (cons (x+y) m) = f (cons x m)+f (cons y m) :=
   by 
     rw [←update_cons_zero x m (x+y), f.map_add, update_cons_zero, update_cons_zero]
@@ -332,7 +337,7 @@ theorem cons_add (f : MultilinearMap R M M₂) (m : ∀ i : Finₓ n, M i.succ) 
 /-- In the specific case of multilinear maps on spaces indexed by `fin (n+1)`, where one can build
 an element of `Π(i : fin (n+1)), M i` using `cons`, one can express directly the multiplicativity
 of a multilinear map along the first variable. -/
-theorem cons_smul (f : MultilinearMap R M M₂) (m : ∀ i : Finₓ n, M i.succ) (c : R) (x : M 0) :
+theorem cons_smul (f : MultilinearMap R M M₂) (m : ∀ (i : Finₓ n), M i.succ) (c : R) (x : M 0) :
   f (cons (c • x) m) = c • f (cons x m) :=
   by 
     rw [←update_cons_zero x m (c • x), f.map_smul, update_cons_zero]
@@ -340,7 +345,7 @@ theorem cons_smul (f : MultilinearMap R M M₂) (m : ∀ i : Finₓ n, M i.succ)
 /-- In the specific case of multilinear maps on spaces indexed by `fin (n+1)`, where one can build
 an element of `Π(i : fin (n+1)), M i` using `snoc`, one can express directly the additivity of a
 multilinear map along the first variable. -/
-theorem snoc_add (f : MultilinearMap R M M₂) (m : ∀ i : Finₓ n, M i.cast_succ) (x y : M (last n)) :
+theorem snoc_add (f : MultilinearMap R M M₂) (m : ∀ (i : Finₓ n), M i.cast_succ) (x y : M (last n)) :
   f (snoc m (x+y)) = f (snoc m x)+f (snoc m y) :=
   by 
     rw [←update_snoc_last x m (x+y), f.map_add, update_snoc_last, update_snoc_last]
@@ -348,7 +353,7 @@ theorem snoc_add (f : MultilinearMap R M M₂) (m : ∀ i : Finₓ n, M i.cast_s
 /-- In the specific case of multilinear maps on spaces indexed by `fin (n+1)`, where one can build
 an element of `Π(i : fin (n+1)), M i` using `cons`, one can express directly the multiplicativity
 of a multilinear map along the first variable. -/
-theorem snoc_smul (f : MultilinearMap R M M₂) (m : ∀ i : Finₓ n, M i.cast_succ) (c : R) (x : M (last n)) :
+theorem snoc_smul (f : MultilinearMap R M M₂) (m : ∀ (i : Finₓ n), M i.cast_succ) (c : R) (x : M (last n)) :
   f (snoc m (c • x)) = c • f (snoc m x) :=
   by 
     rw [←update_snoc_last x m (c • x), f.map_smul, update_snoc_last]
@@ -607,7 +612,7 @@ section RestrictScalar
 variable(R){A :
     Type
       _}[Semiringₓ
-      A][HasScalar R A][∀ i : ι, Module A (M₁ i)][Module A M₂][∀ i, IsScalarTower R A (M₁ i)][IsScalarTower R A M₂]
+      A][HasScalar R A][∀ (i : ι), Module A (M₁ i)][Module A M₂][∀ i, IsScalarTower R A (M₁ i)][IsScalarTower R A M₂]
 
 /-- Reinterpret an `A`-multilinear map as an `R`-multilinear map, if `A` is an algebra over `R`
 and their actions on all involved modules agree with the action of `R` on `A`. -/
@@ -624,61 +629,63 @@ section
 
 variable{ι₁ ι₂ ι₃ : Type _}[DecidableEq ι₁][DecidableEq ι₂][DecidableEq ι₃]
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Transfer the arguments to a map along an equivalence between argument indices.
 
 The naming is derived from `finsupp.dom_congr`, noting that here the permutation applies to the
 domain of the domain. -/
-@[simps apply]
-def dom_dom_congr (σ : ι₁ ≃ ι₂) (m : MultilinearMap R (fun i : ι₁ => M₂) M₃) : MultilinearMap R (fun i : ι₂ => M₂) M₃ :=
-  { toFun := fun v => m fun i => v (σ i),
-    map_add' :=
-      fun v i a b =>
-        by 
-          simpRw [Function.update_apply_equiv_apply v]
-          rw [m.map_add],
-    map_smul' :=
-      fun v i a b =>
-        by 
-          simpRw [Function.update_apply_equiv_apply v]
-          rw [m.map_smul] }
+@[simps #[ident apply]]
+def dom_dom_congr
+(σ : «expr ≃ »(ι₁, ι₂))
+(m : multilinear_map R (λ i : ι₁, M₂) M₃) : multilinear_map R (λ i : ι₂, M₂) M₃ :=
+{ to_fun := λ v, m (λ i, v (σ i)),
+  map_add' := λ v i a b, by { simp_rw [expr function.update_apply_equiv_apply v] [],
+    rw [expr m.map_add] [] },
+  map_smul' := λ v i a b, by { simp_rw [expr function.update_apply_equiv_apply v] [],
+    rw [expr m.map_smul] [] } }
 
-theorem dom_dom_congr_trans (σ₁ : ι₁ ≃ ι₂) (σ₂ : ι₂ ≃ ι₃) (m : MultilinearMap R (fun i : ι₁ => M₂) M₃) :
-  m.dom_dom_congr (σ₁.trans σ₂) = (m.dom_dom_congr σ₁).domDomCongr σ₂ :=
-  rfl
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dom_dom_congr_trans
+(σ₁ : «expr ≃ »(ι₁, ι₂))
+(σ₂ : «expr ≃ »(ι₂, ι₃))
+(m : multilinear_map R (λ
+  i : ι₁, M₂) M₃) : «expr = »(m.dom_dom_congr (σ₁.trans σ₂), (m.dom_dom_congr σ₁).dom_dom_congr σ₂) :=
+rfl
 
-theorem dom_dom_congr_mul (σ₁ : Equiv.Perm ι₁) (σ₂ : Equiv.Perm ι₁) (m : MultilinearMap R (fun i : ι₁ => M₂) M₃) :
-  m.dom_dom_congr (σ₂*σ₁) = (m.dom_dom_congr σ₁).domDomCongr σ₂ :=
-  rfl
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dom_dom_congr_mul
+(σ₁ : equiv.perm ι₁)
+(σ₂ : equiv.perm ι₁)
+(m : multilinear_map R (λ
+  i : ι₁, M₂) M₃) : «expr = »(m.dom_dom_congr «expr * »(σ₂, σ₁), (m.dom_dom_congr σ₁).dom_dom_congr σ₂) :=
+rfl
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `multilinear_map.dom_dom_congr` as an equivalence.
 
 This is declared separately because it does not work with dot notation. -/
-@[simps apply symmApply]
-def dom_dom_congr_equiv (σ : ι₁ ≃ ι₂) :
-  MultilinearMap R (fun i : ι₁ => M₂) M₃ ≃+ MultilinearMap R (fun i : ι₂ => M₂) M₃ :=
-  { toFun := dom_dom_congr σ, invFun := dom_dom_congr σ.symm,
-    left_inv :=
-      fun m =>
-        by 
-          ext 
-          simp ,
-    right_inv :=
-      fun m =>
-        by 
-          ext 
-          simp ,
-    map_add' :=
-      fun a b =>
-        by 
-          ext 
-          simp  }
+@[simps #[ident apply, ident symm_apply]]
+def dom_dom_congr_equiv
+(σ : «expr ≃ »(ι₁, ι₂)) : «expr ≃+ »(multilinear_map R (λ i : ι₁, M₂) M₃, multilinear_map R (λ i : ι₂, M₂) M₃) :=
+{ to_fun := dom_dom_congr σ,
+  inv_fun := dom_dom_congr σ.symm,
+  left_inv := λ m, by { ext [] [] [],
+    simp [] [] [] [] [] [] },
+  right_inv := λ m, by { ext [] [] [],
+    simp [] [] [] [] [] [] },
+  map_add' := λ a b, by { ext [] [] [],
+    simp [] [] [] [] [] [] } }
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The results of applying `dom_dom_congr` to two maps are equal if
 and only if those maps are. -/
 @[simp]
-theorem dom_dom_congr_eq_iff (σ : ι₁ ≃ ι₂) (f g : MultilinearMap R (fun i : ι₁ => M₂) M₃) :
-  f.dom_dom_congr σ = g.dom_dom_congr σ ↔ f = g :=
-  (dom_dom_congr_equiv σ : _ ≃+ MultilinearMap R (fun i => M₂) M₃).apply_eq_iff_eq
+theorem dom_dom_congr_eq_iff
+(σ : «expr ≃ »(ι₁, ι₂))
+(f
+ g : multilinear_map R (λ
+  i : ι₁, M₂) M₃) : «expr ↔ »(«expr = »(f.dom_dom_congr σ, g.dom_dom_congr σ), «expr = »(f, g)) :=
+(dom_dom_congr_equiv σ : «expr ≃+ »(_, multilinear_map R (λ i, M₂) M₃)).apply_eq_iff_eq
 
 end 
 
@@ -718,13 +725,15 @@ theorem comp_multilinear_map_apply (g : M₂ →ₗ[R] M₃) (f : MultilinearMap
 
 variable{ι₁ ι₂ : Type _}[DecidableEq ι₁][DecidableEq ι₂]
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem comp_multilinear_map_dom_dom_congr (σ : ι₁ ≃ ι₂) (g : M₂ →ₗ[R] M₃)
-  (f : MultilinearMap R (fun i : ι₁ => M') M₂) :
-  (g.comp_multilinear_map f).domDomCongr σ = g.comp_multilinear_map (f.dom_dom_congr σ) :=
-  by 
-    ext 
-    simp 
+theorem comp_multilinear_map_dom_dom_congr
+(σ : «expr ≃ »(ι₁, ι₂))
+(g : «expr →ₗ[ ] »(M₂, R, M₃))
+(f : multilinear_map R (λ
+  i : ι₁, M') M₂) : «expr = »((g.comp_multilinear_map f).dom_dom_congr σ, g.comp_multilinear_map (f.dom_dom_congr σ)) :=
+by { ext [] [] [],
+  simp [] [] [] [] [] [] }
 
 end LinearMap
 
@@ -828,16 +837,25 @@ instance  [NoZeroSmulDivisors R' M₃] : NoZeroSmulDivisors R' (MultilinearMap A
 
 variable(M₂ M₃ R' A)
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `multilinear_map.dom_dom_congr` as a `linear_equiv`. -/
-@[simps apply symmApply]
-def dom_dom_congr_linear_equiv {ι₁ ι₂} [DecidableEq ι₁] [DecidableEq ι₂] (σ : ι₁ ≃ ι₂) :
-  MultilinearMap A (fun i : ι₁ => M₂) M₃ ≃ₗ[R'] MultilinearMap A (fun i : ι₂ => M₂) M₃ :=
-  { (dom_dom_congr_equiv σ : MultilinearMap A (fun i : ι₁ => M₂) M₃ ≃+ MultilinearMap A (fun i : ι₂ => M₂) M₃) with
-    map_smul' :=
-      fun c f =>
-        by 
-          ext 
-          simp  }
+@[simps #[ident apply, ident symm_apply]]
+def dom_dom_congr_linear_equiv
+{ι₁ ι₂}
+[decidable_eq ι₁]
+[decidable_eq ι₂]
+(σ : «expr ≃ »(ι₁, ι₂)) : «expr ≃ₗ[ ] »(multilinear_map A (λ i : ι₁, M₂) M₃, R', multilinear_map A (λ i : ι₂, M₂) M₃) :=
+{ map_smul' := λ c f, by { ext [] [] [],
+    simp [] [] [] [] [] [] },
+  ..(dom_dom_congr_equiv σ : «expr ≃+ »(multilinear_map A (λ i : ι₁, M₂) M₃, multilinear_map A (λ i : ι₂, M₂) M₃)) }
+
+/-- The space of constant maps is equivalent to the space of maps that are multilinear with respect
+to an empty family. -/
+@[simps]
+def const_linear_equiv_of_is_empty [IsEmpty ι] : M₂ ≃ₗ[R] MultilinearMap R M₁ M₂ :=
+  { toFun := MultilinearMap.constOfIsEmpty R, map_add' := fun x y => rfl, map_smul' := fun t x => rfl,
+    invFun := fun f => f 0, left_inv := fun _ => rfl,
+    right_inv := fun f => ext$ fun x => MultilinearMap.congr_arg f$ Subsingleton.elimₓ _ _ }
 
 end Module
 
@@ -845,21 +863,15 @@ section
 
 variable(R ι)(A : Type _)[CommSemiringₓ A][Algebra R A][Fintype ι]
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given an `R`-algebra `A`, `mk_pi_algebra` is the multilinear map on `A^ι` associating
 to `m` the product of all the `m i`.
 
 See also `multilinear_map.mk_pi_algebra_fin` for a version that works with a non-commutative
-algebra `A` but requires `ι = fin n`. -/
-protected def mk_pi_algebra : MultilinearMap R (fun i : ι => A) A :=
-  { toFun := fun m => ∏i, m i,
-    map_add' :=
-      fun m i x y =>
-        by 
-          simp [Finset.prod_update_of_mem, add_mulₓ],
-    map_smul' :=
-      fun m i c x =>
-        by 
-          simp [Finset.prod_update_of_mem] }
+algebra `A` but requires `ι = fin n`. -/ protected def mk_pi_algebra : multilinear_map R (λ i : ι, A) A :=
+{ to_fun := λ m, «expr∏ , »((i), m i),
+  map_add' := λ m i x y, by simp [] [] [] ["[", expr finset.prod_update_of_mem, ",", expr add_mul, "]"] [] [],
+  map_smul' := λ m i c x, by simp [] [] [] ["[", expr finset.prod_update_of_mem, "]"] [] [] }
 
 variable{R A ι}
 
@@ -916,11 +928,13 @@ theorem smul_right_apply (f : MultilinearMap R M₁ R) (z : M₂) (m : ∀ i, M�
 
 variable(R ι)
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The canonical multilinear map on `R^ι` when `ι` is finite, associating to `m` the product of
 all the `m i` (multiplied by a fixed reference element `z` in the target module). See also
 `mk_pi_algebra` for a more general version. -/
-protected def mk_pi_ring [Fintype ι] (z : M₂) : MultilinearMap R (fun i : ι => R) M₂ :=
-  (MultilinearMap.mkPiAlgebra R ι R).smulRight z
+protected
+def mk_pi_ring [fintype ι] (z : M₂) : multilinear_map R (λ i : ι, R) M₂ :=
+(multilinear_map.mk_pi_algebra R ι R).smul_right z
 
 variable{R ι}
 
@@ -1028,26 +1042,20 @@ section CommSemiringₓ
 
 variable[CommSemiringₓ R][∀ i, AddCommMonoidₓ (M₁ i)][AddCommMonoidₓ M₂][∀ i, Module R (M₁ i)][Module R M₂]
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- When `ι` is finite, multilinear maps on `R^ι` with values in `M₂` are in bijection with `M₂`,
 as such a multilinear map is completely determined by its value on the constant vector made of ones.
 We register this bijection as a linear equivalence in `multilinear_map.pi_ring_equiv`. -/
-protected def pi_ring_equiv [Fintype ι] : M₂ ≃ₗ[R] MultilinearMap R (fun i : ι => R) M₂ :=
-  { toFun := fun z => MultilinearMap.mkPiRing R ι z, invFun := fun f => f fun i => 1,
-    map_add' :=
-      fun z z' =>
-        by 
-          ext m 
-          simp [smul_add],
-    map_smul' :=
-      fun c z =>
-        by 
-          ext m 
-          simp [smul_smul, mul_commₓ],
-    left_inv :=
-      fun z =>
-        by 
-          simp ,
-    right_inv := fun f => f.mk_pi_ring_apply_one_eq_self }
+protected
+def pi_ring_equiv [fintype ι] : «expr ≃ₗ[ ] »(M₂, R, multilinear_map R (λ i : ι, R) M₂) :=
+{ to_fun := λ z, multilinear_map.mk_pi_ring R ι z,
+  inv_fun := λ f, f (λ i, 1),
+  map_add' := λ z z', by { ext [] [ident m] [],
+    simp [] [] [] ["[", expr smul_add, "]"] [] [] },
+  map_smul' := λ c z, by { ext [] [ident m] [],
+    simp [] [] [] ["[", expr smul_smul, ",", expr mul_comm, "]"] [] [] },
+  left_inv := λ z, by simp [] [] [] [] [] [],
+  right_inv := λ f, f.mk_pi_ring_apply_one_eq_self }
 
 end CommSemiringₓ
 
@@ -1079,81 +1087,69 @@ variable{R M
 /-! #### Left currying -/
 
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a linear map `f` from `M 0` to multilinear maps on `n` variables,
 construct the corresponding multilinear map on `n+1` variables obtained by concatenating
 the variables, given by `m ↦ f (m 0) (tail m)`-/
-def LinearMap.uncurryLeft (f : M 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n => M i.succ) M₂) : MultilinearMap R M M₂ :=
-  { toFun := fun m => f (m 0) (tail m),
-    map_add' :=
-      fun m i x y =>
-        by 
-          byCases' h : i = 0
-          ·
-            subst i 
-            rw [update_same, update_same, update_same, f.map_add, add_apply, tail_update_zero, tail_update_zero,
-              tail_update_zero]
-          ·
-            rw [update_noteq (Ne.symm h), update_noteq (Ne.symm h), update_noteq (Ne.symm h)]
-            revert x y 
-            rw [←succ_pred i h]
-            intro x y 
-            rw [tail_update_succ, map_add, tail_update_succ, tail_update_succ],
-    map_smul' :=
-      fun m i c x =>
-        by 
-          byCases' h : i = 0
-          ·
-            subst i 
-            rw [update_same, update_same, tail_update_zero, tail_update_zero, ←smul_apply, f.map_smul]
-          ·
-            rw [update_noteq (Ne.symm h), update_noteq (Ne.symm h)]
-            revert x 
-            rw [←succ_pred i h]
-            intro x 
-            rw [tail_update_succ, tail_update_succ, map_smul] }
+def linear_map.uncurry_left
+(f : «expr →ₗ[ ] »(M 0, R, multilinear_map R (λ i : fin n, M i.succ) M₂)) : multilinear_map R M M₂ :=
+{ to_fun := λ m, f (m 0) (tail m),
+  map_add' := λ m i x y, begin
+    by_cases [expr h, ":", expr «expr = »(i, 0)],
+    { subst [expr i],
+      rw ["[", expr update_same, ",", expr update_same, ",", expr update_same, ",", expr f.map_add, ",", expr add_apply, ",", expr tail_update_zero, ",", expr tail_update_zero, ",", expr tail_update_zero, "]"] [] },
+    { rw ["[", expr update_noteq (ne.symm h), ",", expr update_noteq (ne.symm h), ",", expr update_noteq (ne.symm h), "]"] [],
+      revert [ident x, ident y],
+      rw ["<-", expr succ_pred i h] [],
+      assume [binders (x y)],
+      rw ["[", expr tail_update_succ, ",", expr map_add, ",", expr tail_update_succ, ",", expr tail_update_succ, "]"] [] }
+  end,
+  map_smul' := λ m i c x, begin
+    by_cases [expr h, ":", expr «expr = »(i, 0)],
+    { subst [expr i],
+      rw ["[", expr update_same, ",", expr update_same, ",", expr tail_update_zero, ",", expr tail_update_zero, ",", "<-", expr smul_apply, ",", expr f.map_smul, "]"] [] },
+    { rw ["[", expr update_noteq (ne.symm h), ",", expr update_noteq (ne.symm h), "]"] [],
+      revert [ident x],
+      rw ["<-", expr succ_pred i h] [],
+      assume [binders (x)],
+      rw ["[", expr tail_update_succ, ",", expr tail_update_succ, ",", expr map_smul, "]"] [] }
+  end }
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem LinearMap.uncurry_left_apply (f : M 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n => M i.succ) M₂) (m : ∀ i, M i) :
-  f.uncurry_left m = f (m 0) (tail m) :=
-  rfl
+theorem linear_map.uncurry_left_apply
+(f : «expr →ₗ[ ] »(M 0, R, multilinear_map R (λ i : fin n, M i.succ) M₂))
+(m : ∀ i, M i) : «expr = »(f.uncurry_left m, f (m 0) (tail m)) :=
+rfl
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a multilinear map `f` in `n+1` variables, split the first variable to obtain
 a linear map into multilinear maps in `n` variables, given by `x ↦ (m ↦ f (cons x m))`. -/
-def MultilinearMap.curryLeft (f : MultilinearMap R M M₂) : M 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n => M i.succ) M₂ :=
-  { toFun :=
-      fun x =>
-        { toFun := fun m => f (cons x m),
-          map_add' :=
-            fun m i y y' =>
-              by 
-                simp ,
-          map_smul' :=
-            fun m i y c =>
-              by 
-                simp  },
-    map_add' :=
-      fun x y =>
-        by 
-          ext m 
-          exact cons_add f m x y,
-    map_smul' :=
-      fun c x =>
-        by 
-          ext m 
-          exact cons_smul f m c x }
+def multilinear_map.curry_left
+(f : multilinear_map R M M₂) : «expr →ₗ[ ] »(M 0, R, multilinear_map R (λ i : fin n, M i.succ) M₂) :=
+{ to_fun := λ
+  x, { to_fun := λ m, f (cons x m),
+    map_add' := λ m i y y', by simp [] [] [] [] [] [],
+    map_smul' := λ m i y c, by simp [] [] [] [] [] [] },
+  map_add' := λ x y, by { ext [] [ident m] [],
+    exact [expr cons_add f m x y] },
+  map_smul' := λ c x, by { ext [] [ident m] [],
+    exact [expr cons_smul f m c x] } }
 
 @[simp]
-theorem MultilinearMap.curry_left_apply (f : MultilinearMap R M M₂) (x : M 0) (m : ∀ i : Finₓ n, M i.succ) :
+theorem MultilinearMap.curry_left_apply (f : MultilinearMap R M M₂) (x : M 0) (m : ∀ (i : Finₓ n), M i.succ) :
   f.curry_left x m = f (cons x m) :=
   rfl
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem LinearMap.curry_uncurry_left (f : M 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n => M i.succ) M₂) :
-  f.uncurry_left.curry_left = f :=
-  by 
-    ext m x 
-    simp only [tail_cons, LinearMap.uncurry_left_apply, MultilinearMap.curry_left_apply]
-    rw [cons_zero]
+theorem linear_map.curry_uncurry_left
+(f : «expr →ₗ[ ] »(M 0, R, multilinear_map R (λ i : fin n, M i.succ) M₂)) : «expr = »(f.uncurry_left.curry_left, f) :=
+begin
+  ext [] [ident m, ident x] [],
+  simp [] [] ["only"] ["[", expr tail_cons, ",", expr linear_map.uncurry_left_apply, ",", expr multilinear_map.curry_left_apply, "]"] [] [],
+  rw [expr cons_zero] []
+end
 
 @[simp]
 theorem MultilinearMap.uncurry_curry_left (f : MultilinearMap R M M₂) : f.curry_left.uncurry_left = f :=
@@ -1163,6 +1159,7 @@ theorem MultilinearMap.uncurry_curry_left (f : MultilinearMap R M M₂) : f.curr
 
 variable(R M M₂)
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The space of multilinear maps on `Π(i : fin (n+1)), M i` is canonically isomorphic to
 the space of linear maps from `M 0` to the space of multilinear maps on
 `Π(i : fin n), M i.succ `, by separating the first variable. We register this isomorphism as a
@@ -1170,21 +1167,16 @@ linear isomorphism in `multilinear_curry_left_equiv R M M₂`.
 
 The direct and inverse maps are given by `f.uncurry_left` and `f.curry_left`. Use these
 unless you need the full framework of linear equivs. -/
-def multilinearCurryLeftEquiv :
-  (M 0 →ₗ[R] MultilinearMap R (fun i : Finₓ n => M i.succ) M₂) ≃ₗ[R] MultilinearMap R M M₂ :=
-  { toFun := LinearMap.uncurryLeft,
-    map_add' :=
-      fun f₁ f₂ =>
-        by 
-          ext m 
-          rfl,
-    map_smul' :=
-      fun c f =>
-        by 
-          ext m 
-          rfl,
-    invFun := MultilinearMap.curryLeft, left_inv := LinearMap.curry_uncurry_left,
-    right_inv := MultilinearMap.uncurry_curry_left }
+def multilinear_curry_left_equiv : «expr ≃ₗ[ ] »(«expr →ₗ[ ] »(M 0, R, multilinear_map R (λ
+   i : fin n, M i.succ) M₂), R, multilinear_map R M M₂) :=
+{ to_fun := linear_map.uncurry_left,
+  map_add' := λ f₁ f₂, by { ext [] [ident m] [],
+    refl },
+  map_smul' := λ c f, by { ext [] [ident m] [],
+    refl },
+  inv_fun := multilinear_map.curry_left,
+  left_inv := linear_map.curry_uncurry_left,
+  right_inv := multilinear_map.uncurry_curry_left }
 
 variable{R M M₂}
 
@@ -1225,53 +1217,49 @@ def multilinear_map.uncurry_right
       rw ["[", expr update_same, ",", expr update_same, ",", expr init_update_last, ",", expr init_update_last, ",", expr linear_map.map_smul, "]"] [] }
   end }
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem MultilinearMap.uncurry_right_apply
-  (f : MultilinearMap R (fun i : Finₓ n => M i.cast_succ) (M (last n) →ₗ[R] M₂)) (m : ∀ i, M i) :
-  f.uncurry_right m = f (init m) (m (last n)) :=
-  rfl
+theorem multilinear_map.uncurry_right_apply
+(f : multilinear_map R (λ i : fin n, M i.cast_succ) «expr →ₗ[ ] »(M (last n), R, M₂))
+(m : ∀ i, M i) : «expr = »(f.uncurry_right m, f (init m) (m (last n))) :=
+rfl
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a multilinear map `f` in `n+1` variables, split the last variable to obtain
 a multilinear map in `n` variables taking values in linear maps from `M (last n)` to `M₂`, given by
 `m ↦ (x ↦ f (snoc m x))`. -/
-def MultilinearMap.curryRight (f : MultilinearMap R M M₂) :
-  MultilinearMap R (fun i : Finₓ n => M (Finₓ.castSucc i)) (M (last n) →ₗ[R] M₂) :=
-  { toFun :=
-      fun m =>
-        { toFun := fun x => f (snoc m x),
-          map_add' :=
-            fun x y =>
-              by 
-                rw [f.snoc_add],
-          map_smul' :=
-            fun c x =>
-              by 
-                simp only [f.snoc_smul, RingHom.id_apply] },
-    map_add' :=
-      fun m i x y =>
-        by 
-          ext z 
-          change f (snoc (update m i (x+y)) z) = f (snoc (update m i x) z)+f (snoc (update m i y) z)
-          rw [snoc_update, snoc_update, snoc_update, f.map_add],
-    map_smul' :=
-      fun m i c x =>
-        by 
-          ext z 
-          change f (snoc (update m i (c • x)) z) = c • f (snoc (update m i x) z)
-          rw [snoc_update, snoc_update, f.map_smul] }
+def multilinear_map.curry_right
+(f : multilinear_map R M M₂) : multilinear_map R (λ i : fin n, M (fin.cast_succ i)) «expr →ₗ[ ] »(M (last n), R, M₂) :=
+{ to_fun := λ
+  m, { to_fun := λ x, f (snoc m x),
+    map_add' := λ x y, by rw [expr f.snoc_add] [],
+    map_smul' := λ c x, by simp [] [] ["only"] ["[", expr f.snoc_smul, ",", expr ring_hom.id_apply, "]"] [] [] },
+  map_add' := λ m i x y, begin
+    ext [] [ident z] [],
+    change [expr «expr = »(f (snoc (update m i «expr + »(x, y)) z), «expr + »(f (snoc (update m i x) z), f (snoc (update m i y) z)))] [] [],
+    rw ["[", expr snoc_update, ",", expr snoc_update, ",", expr snoc_update, ",", expr f.map_add, "]"] []
+  end,
+  map_smul' := λ m i c x, begin
+    ext [] [ident z] [],
+    change [expr «expr = »(f (snoc (update m i «expr • »(c, x)) z), «expr • »(c, f (snoc (update m i x) z)))] [] [],
+    rw ["[", expr snoc_update, ",", expr snoc_update, ",", expr f.map_smul, "]"] []
+  end }
 
 @[simp]
-theorem MultilinearMap.curry_right_apply (f : MultilinearMap R M M₂) (m : ∀ i : Finₓ n, M i.cast_succ)
+theorem MultilinearMap.curry_right_apply (f : MultilinearMap R M M₂) (m : ∀ (i : Finₓ n), M i.cast_succ)
   (x : M (last n)) : f.curry_right m x = f (snoc m x) :=
   rfl
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem MultilinearMap.curry_uncurry_right
-  (f : MultilinearMap R (fun i : Finₓ n => M i.cast_succ) (M (last n) →ₗ[R] M₂)) : f.uncurry_right.curry_right = f :=
-  by 
-    ext m x 
-    simp only [snoc_last, MultilinearMap.curry_right_apply, MultilinearMap.uncurry_right_apply]
-    rw [init_snoc]
+theorem multilinear_map.curry_uncurry_right
+(f : multilinear_map R (λ
+  i : fin n, M i.cast_succ) «expr →ₗ[ ] »(M (last n), R, M₂)) : «expr = »(f.uncurry_right.curry_right, f) :=
+begin
+  ext [] [ident m, ident x] [],
+  simp [] [] ["only"] ["[", expr snoc_last, ",", expr multilinear_map.curry_right_apply, ",", expr multilinear_map.uncurry_right_apply, "]"] [] [],
+  rw [expr init_snoc] []
+end
 
 @[simp]
 theorem MultilinearMap.uncurry_curry_right (f : MultilinearMap R M M₂) : f.curry_right.uncurry_right = f :=
@@ -1281,6 +1269,7 @@ theorem MultilinearMap.uncurry_curry_right (f : MultilinearMap R M M₂) : f.cur
 
 variable(R M M₂)
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The space of multilinear maps on `Π(i : fin (n+1)), M i` is canonically isomorphic to
 the space of linear maps from the space of multilinear maps on `Π(i : fin n), M i.cast_succ` to the
 space of linear maps on `M (last n)`, by separating the last variable. We register this isomorphism
@@ -1288,113 +1277,96 @@ as a linear isomorphism in `multilinear_curry_right_equiv R M M₂`.
 
 The direct and inverse maps are given by `f.uncurry_right` and `f.curry_right`. Use these
 unless you need the full framework of linear equivs. -/
-def multilinearCurryRightEquiv :
-  MultilinearMap R (fun i : Finₓ n => M i.cast_succ) (M (last n) →ₗ[R] M₂) ≃ₗ[R] MultilinearMap R M M₂ :=
-  { toFun := MultilinearMap.uncurryRight,
-    map_add' :=
-      fun f₁ f₂ =>
-        by 
-          ext m 
-          rfl,
-    map_smul' :=
-      fun c f =>
-        by 
-          ext m 
-          rw [smul_apply]
-          rfl,
-    invFun := MultilinearMap.curryRight, left_inv := MultilinearMap.curry_uncurry_right,
-    right_inv := MultilinearMap.uncurry_curry_right }
+def multilinear_curry_right_equiv : «expr ≃ₗ[ ] »(multilinear_map R (λ
+  i : fin n, M i.cast_succ) «expr →ₗ[ ] »(M (last n), R, M₂), R, multilinear_map R M M₂) :=
+{ to_fun := multilinear_map.uncurry_right,
+  map_add' := λ f₁ f₂, by { ext [] [ident m] [],
+    refl },
+  map_smul' := λ c f, by { ext [] [ident m] [],
+    rw ["[", expr smul_apply, "]"] [],
+    refl },
+  inv_fun := multilinear_map.curry_right,
+  left_inv := multilinear_map.curry_uncurry_right,
+  right_inv := multilinear_map.uncurry_curry_right }
 
 namespace MultilinearMap
 
 variable{ι' : Type _}[DecidableEq ι'][DecidableEq (Sum ι ι')]{R M₂}
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A multilinear map on `Π i : ι ⊕ ι', M'` defines a multilinear map on `Π i : ι, M'`
 taking values in the space of multilinear maps on `Π i : ι', M'`. -/
-def curry_sum (f : MultilinearMap R (fun x : Sum ι ι' => M') M₂) :
-  MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun x : ι' => M') M₂) :=
-  { toFun :=
-      fun u =>
-        { toFun := fun v => f (Sum.elim u v),
-          map_add' :=
-            fun v i x y =>
-              by 
-                simp only [←Sum.update_elim_inr, f.map_add],
-          map_smul' :=
-            fun v i c x =>
-              by 
-                simp only [←Sum.update_elim_inr, f.map_smul] },
-    map_add' :=
-      fun u i x y =>
-        ext$
-          fun v =>
-            by 
-              simp only [MultilinearMap.coe_mk, add_apply, ←Sum.update_elim_inl, f.map_add],
-    map_smul' :=
-      fun u i c x =>
-        ext$
-          fun v =>
-            by 
-              simp only [MultilinearMap.coe_mk, smul_apply, ←Sum.update_elim_inl, f.map_smul] }
+def curry_sum
+(f : multilinear_map R (λ
+  x : «expr ⊕ »(ι, ι'), M') M₂) : multilinear_map R (λ x : ι, M') (multilinear_map R (λ x : ι', M') M₂) :=
+{ to_fun := λ
+  u, { to_fun := λ v, f (sum.elim u v),
+    map_add' := λ v i x y, by simp [] [] ["only"] ["[", "<-", expr sum.update_elim_inr, ",", expr f.map_add, "]"] [] [],
+    map_smul' := λ
+    v i c x, by simp [] [] ["only"] ["[", "<-", expr sum.update_elim_inr, ",", expr f.map_smul, "]"] [] [] },
+  map_add' := λ
+  u
+  i
+  x
+  y, «expr $ »(ext, λ
+   v, by simp [] [] ["only"] ["[", expr multilinear_map.coe_mk, ",", expr add_apply, ",", "<-", expr sum.update_elim_inl, ",", expr f.map_add, "]"] [] []),
+  map_smul' := λ
+  u
+  i
+  c
+  x, «expr $ »(ext, λ
+   v, by simp [] [] ["only"] ["[", expr multilinear_map.coe_mk, ",", expr smul_apply, ",", "<-", expr sum.update_elim_inl, ",", expr f.map_smul, "]"] [] []) }
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem curry_sum_apply (f : MultilinearMap R (fun x : Sum ι ι' => M') M₂) (u : ι → M') (v : ι' → M') :
-  f.curry_sum u v = f (Sum.elim u v) :=
-  rfl
+theorem curry_sum_apply
+(f : multilinear_map R (λ x : «expr ⊕ »(ι, ι'), M') M₂)
+(u : ι → M')
+(v : ι' → M') : «expr = »(f.curry_sum u v, f (sum.elim u v)) :=
+rfl
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A multilinear map on `Π i : ι, M'` taking values in the space of multilinear maps
 on `Π i : ι', M'` defines a multilinear map on `Π i : ι ⊕ ι', M'`. -/
-def uncurry_sum (f : MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun x : ι' => M') M₂)) :
-  MultilinearMap R (fun x : Sum ι ι' => M') M₂ :=
-  { toFun := fun u => f (u ∘ Sum.inl) (u ∘ Sum.inr),
-    map_add' :=
-      fun u i x y =>
-        by 
-          cases i <;>
-            simp only [map_add, add_apply, Sum.update_inl_comp_inl, Sum.update_inl_comp_inr, Sum.update_inr_comp_inl,
-              Sum.update_inr_comp_inr],
-    map_smul' :=
-      fun u i c x =>
-        by 
-          cases i <;>
-            simp only [map_smul, smul_apply, Sum.update_inl_comp_inl, Sum.update_inl_comp_inr, Sum.update_inr_comp_inl,
-              Sum.update_inr_comp_inr] }
+def uncurry_sum
+(f : multilinear_map R (λ
+  x : ι, M') (multilinear_map R (λ x : ι', M') M₂)) : multilinear_map R (λ x : «expr ⊕ »(ι, ι'), M') M₂ :=
+{ to_fun := λ u, f «expr ∘ »(u, sum.inl) «expr ∘ »(u, sum.inr),
+  map_add' := λ
+  u
+  i
+  x
+  y, by cases [expr i] []; simp [] [] ["only"] ["[", expr map_add, ",", expr add_apply, ",", expr sum.update_inl_comp_inl, ",", expr sum.update_inl_comp_inr, ",", expr sum.update_inr_comp_inl, ",", expr sum.update_inr_comp_inr, "]"] [] [],
+  map_smul' := λ
+  u
+  i
+  c
+  x, by cases [expr i] []; simp [] [] ["only"] ["[", expr map_smul, ",", expr smul_apply, ",", expr sum.update_inl_comp_inl, ",", expr sum.update_inl_comp_inr, ",", expr sum.update_inr_comp_inl, ",", expr sum.update_inr_comp_inr, "]"] [] [] }
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem uncurry_sum_aux_apply (f : MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun x : ι' => M') M₂))
-  (u : Sum ι ι' → M') : f.uncurry_sum u = f (u ∘ Sum.inl) (u ∘ Sum.inr) :=
-  rfl
+theorem uncurry_sum_aux_apply
+(f : multilinear_map R (λ x : ι, M') (multilinear_map R (λ x : ι', M') M₂))
+(u : «expr ⊕ »(ι, ι') → M') : «expr = »(f.uncurry_sum u, f «expr ∘ »(u, sum.inl) «expr ∘ »(u, sum.inr)) :=
+rfl
 
 variable(ι ι' R M₂ M')
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Linear equivalence between the space of multilinear maps on `Π i : ι ⊕ ι', M'` and the space
 of multilinear maps on `Π i : ι, M'` taking values in the space of multilinear maps
 on `Π i : ι', M'`. -/
-def curry_sum_equiv :
-  MultilinearMap R (fun x : Sum ι ι' => M') M₂ ≃ₗ[R]
-    MultilinearMap R (fun x : ι => M') (MultilinearMap R (fun x : ι' => M') M₂) :=
-  { toFun := curry_sum, invFun := uncurry_sum,
-    left_inv :=
-      fun f =>
-        ext$
-          fun u =>
-            by 
-              simp ,
-    right_inv :=
-      fun f =>
-        by 
-          ext 
-          simp ,
-    map_add' :=
-      fun f g =>
-        by 
-          ext 
-          rfl,
-    map_smul' :=
-      fun c f =>
-        by 
-          ext 
-          rfl }
+def curry_sum_equiv : «expr ≃ₗ[ ] »(multilinear_map R (λ
+  x : «expr ⊕ »(ι, ι'), M') M₂, R, multilinear_map R (λ x : ι, M') (multilinear_map R (λ x : ι', M') M₂)) :=
+{ to_fun := curry_sum,
+  inv_fun := uncurry_sum,
+  left_inv := λ f, «expr $ »(ext, λ u, by simp [] [] [] [] [] []),
+  right_inv := λ f, by { ext [] [] [],
+    simp [] [] [] [] [] [] },
+  map_add' := λ f g, by { ext [] [] [],
+    refl },
+  map_smul' := λ c f, by { ext [] [] [],
+    refl } }
 
 variable{ι ι' R M₂ M'}
 
@@ -1408,62 +1380,91 @@ theorem coe_curr_sum_equiv_symm : «expr⇑ » (curry_sum_equiv R ι M₂ M' ι'
 
 variable(R M₂ M')
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `s : finset (fin n)` is a finite set of cardinality `k` and its complement has cardinality
 `l`, then the space of multilinear maps on `λ i : fin n, M'` is isomorphic to the space of
 multilinear maps on `λ i : fin k, M'` taking values in the space of multilinear maps
 on `λ i : fin l, M'`. -/
-def curry_fin_finset {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : («expr ᶜ» s).card = l) :
-  MultilinearMap R (fun x : Finₓ n => M') M₂ ≃ₗ[R]
-    MultilinearMap R (fun x : Finₓ k => M') (MultilinearMap R (fun x : Finₓ l => M') M₂) :=
-  (dom_dom_congr_linear_equiv M' M₂ R R (finSumEquivOfFinset hk hl).symm).trans
-    (curry_sum_equiv R (Finₓ k) M₂ M' (Finₓ l))
+def curry_fin_finset
+{k l n : exprℕ()}
+{s : finset (fin n)}
+(hk : «expr = »(s.card, k))
+(hl : «expr = »(«expr ᶜ»(s).card, l)) : «expr ≃ₗ[ ] »(multilinear_map R (λ
+  x : fin n, M') M₂, R, multilinear_map R (λ x : fin k, M') (multilinear_map R (λ x : fin l, M') M₂)) :=
+(dom_dom_congr_linear_equiv M' M₂ R R (fin_sum_equiv_of_finset hk hl).symm).trans (curry_sum_equiv R (fin k) M₂ M' (fin l))
 
 variable{R M₂ M'}
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem curry_fin_finset_apply {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : («expr ᶜ» s).card = l)
-  (f : MultilinearMap R (fun x : Finₓ n => M') M₂) (mk : Finₓ k → M') (ml : Finₓ l → M') :
-  curry_fin_finset R M₂ M' hk hl f mk ml = f fun i => Sum.elim mk ml ((finSumEquivOfFinset hk hl).symm i) :=
-  rfl
+theorem curry_fin_finset_apply
+{k l n : exprℕ()}
+{s : finset (fin n)}
+(hk : «expr = »(s.card, k))
+(hl : «expr = »(«expr ᶜ»(s).card, l))
+(f : multilinear_map R (λ x : fin n, M') M₂)
+(mk : fin k → M')
+(ml : fin l → M') : «expr = »(curry_fin_finset R M₂ M' hk hl f mk ml, f (λ
+  i, sum.elim mk ml ((fin_sum_equiv_of_finset hk hl).symm i))) :=
+rfl
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem curry_fin_finset_symm_apply {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : («expr ᶜ» s).card = l)
-  (f : MultilinearMap R (fun x : Finₓ k => M') (MultilinearMap R (fun x : Finₓ l => M') M₂)) (m : Finₓ n → M') :
-  (curry_fin_finset R M₂ M' hk hl).symm f m =
-    f (fun i => m$ finSumEquivOfFinset hk hl (Sum.inl i)) fun i => m$ finSumEquivOfFinset hk hl (Sum.inr i) :=
-  rfl
+theorem curry_fin_finset_symm_apply
+{k l n : exprℕ()}
+{s : finset (fin n)}
+(hk : «expr = »(s.card, k))
+(hl : «expr = »(«expr ᶜ»(s).card, l))
+(f : multilinear_map R (λ x : fin k, M') (multilinear_map R (λ x : fin l, M') M₂))
+(m : fin n → M') : «expr = »((curry_fin_finset R M₂ M' hk hl).symm f m, f (λ
+  i, «expr $ »(m, fin_sum_equiv_of_finset hk hl (sum.inl i))) (λ
+  i, «expr $ »(m, fin_sum_equiv_of_finset hk hl (sum.inr i)))) :=
+rfl
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem curry_fin_finset_symm_apply_piecewise_const {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k)
-  (hl : («expr ᶜ» s).card = l)
-  (f : MultilinearMap R (fun x : Finₓ k => M') (MultilinearMap R (fun x : Finₓ l => M') M₂)) (x y : M') :
-  (curry_fin_finset R M₂ M' hk hl).symm f (s.piecewise (fun _ => x) fun _ => y) = f (fun _ => x) fun _ => y :=
-  by 
-    rw [curry_fin_finset_symm_apply]
-    congr
-    ·
-      ext i 
-      rw [fin_sum_equiv_of_finset_inl, Finset.piecewise_eq_of_mem]
-      apply Finset.order_emb_of_fin_mem
-    ·
-      ext i 
-      rw [fin_sum_equiv_of_finset_inr, Finset.piecewise_eq_of_not_mem]
-      exact Finset.mem_compl.1 (Finset.order_emb_of_fin_mem _ _ _)
+theorem curry_fin_finset_symm_apply_piecewise_const
+{k l n : exprℕ()}
+{s : finset (fin n)}
+(hk : «expr = »(s.card, k))
+(hl : «expr = »(«expr ᶜ»(s).card, l))
+(f : multilinear_map R (λ x : fin k, M') (multilinear_map R (λ x : fin l, M') M₂))
+(x y : M') : «expr = »((curry_fin_finset R M₂ M' hk hl).symm f (s.piecewise (λ _, x) (λ _, y)), f (λ _, x) (λ _, y)) :=
+begin
+  rw [expr curry_fin_finset_symm_apply] [],
+  congr,
+  { ext [] [ident i] [],
+    rw ["[", expr fin_sum_equiv_of_finset_inl, ",", expr finset.piecewise_eq_of_mem, "]"] [],
+    apply [expr finset.order_emb_of_fin_mem] },
+  { ext [] [ident i] [],
+    rw ["[", expr fin_sum_equiv_of_finset_inr, ",", expr finset.piecewise_eq_of_not_mem, "]"] [],
+    exact [expr finset.mem_compl.1 (finset.order_emb_of_fin_mem _ _ _)] }
+end
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem curry_fin_finset_symm_apply_const {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k)
-  (hl : («expr ᶜ» s).card = l)
-  (f : MultilinearMap R (fun x : Finₓ k => M') (MultilinearMap R (fun x : Finₓ l => M') M₂)) (x : M') :
-  ((curry_fin_finset R M₂ M' hk hl).symm f fun _ => x) = f (fun _ => x) fun _ => x :=
-  rfl
+theorem curry_fin_finset_symm_apply_const
+{k l n : exprℕ()}
+{s : finset (fin n)}
+(hk : «expr = »(s.card, k))
+(hl : «expr = »(«expr ᶜ»(s).card, l))
+(f : multilinear_map R (λ x : fin k, M') (multilinear_map R (λ x : fin l, M') M₂))
+(x : M') : «expr = »((curry_fin_finset R M₂ M' hk hl).symm f (λ _, x), f (λ _, x) (λ _, x)) :=
+rfl
 
+-- error in LinearAlgebra.Multilinear.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem curry_fin_finset_apply_const {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : («expr ᶜ» s).card = l)
-  (f : MultilinearMap R (fun x : Finₓ n => M') M₂) (x y : M') :
-  (curry_fin_finset R M₂ M' hk hl f (fun _ => x) fun _ => y) = f (s.piecewise (fun _ => x) fun _ => y) :=
-  by 
-    refine' (curry_fin_finset_symm_apply_piecewise_const hk hl _ _ _).symm.trans _ 
-    rw [LinearEquiv.symm_apply_apply]
+theorem curry_fin_finset_apply_const
+{k l n : exprℕ()}
+{s : finset (fin n)}
+(hk : «expr = »(s.card, k))
+(hl : «expr = »(«expr ᶜ»(s).card, l))
+(f : multilinear_map R (λ x : fin n, M') M₂)
+(x y : M') : «expr = »(curry_fin_finset R M₂ M' hk hl f (λ _, x) (λ _, y), f (s.piecewise (λ _, x) (λ _, y))) :=
+begin
+  refine [expr (curry_fin_finset_symm_apply_piecewise_const hk hl _ _ _).symm.trans _],
+  rw [expr linear_equiv.symm_apply_apply] []
+end
 
 end MultilinearMap
 

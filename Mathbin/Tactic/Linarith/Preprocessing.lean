@@ -162,27 +162,21 @@ unsafe def remove_negations : preprocessor :=
             | quote.1 ¬%%ₓp => singleton <$> rem_neg h p
             | _ => return [h] }
 
+-- error in Tactic.Linarith.Preprocessing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If `h` is an equality or inequality between natural numbers,
 `nat_to_int` lifts this inequality to the integers.
 It also adds the facts that the integers involved are nonnegative.
 To avoid adding the same nonnegativity facts many times, it is a global preprocessor.
- -/
-unsafe def nat_to_int : global_preprocessor :=
-  { Name := "move nats to ints",
-    transform :=
-      fun l =>
-        do 
-          let l ←
-            lock_tactic_state$ l.mmap$ fun h => infer_type h >>= guardb ∘ is_nat_prop >> zify_proof [] h <|> return h 
-          let nonnegs ←
-            l.mfoldl
-                (fun es : expr_set h =>
-                  do 
-                    let (a, b) ← infer_type h >>= get_rel_sides 
-                    return$ (es.insert_list (get_nat_comps a)).insert_list (get_nat_comps b))
-                mk_rb_set
-          (· ++ ·) l <$> nonnegs.to_list.mmap mk_coe_nat_nonneg_prf }
+ -/ meta def nat_to_int : global_preprocessor :=
+{ name := "move nats to ints",
+  transform := λ l, do {
+  l ← «expr $ »(lock_tactic_state, «expr $ »(l.mmap, λ
+      h, «expr <|> »(«expr >> »(«expr >>= »(infer_type h, «expr ∘ »(guardb, is_nat_prop)), zify_proof «expr[ , ]»([]) h), return h))),
+    nonnegs ← l.mfoldl (λ (es : expr_set) (h), do {
+     (a, b) ← «expr >>= »(infer_type h, get_rel_sides),
+       «expr $ »(return, (es.insert_list (get_nat_comps a)).insert_list (get_nat_comps b)) }) mk_rb_set,
+    «expr <$> »(((«expr ++ »)) l, nonnegs.to_list.mmap mk_coe_nat_nonneg_prf) } }
 
 /-- `strengthen_strict_int h` turns a proof `h` of a strict integer inequality `t1 < t2`
 into a proof of `t1 ≤ t2 + 1`. -/
@@ -299,31 +293,23 @@ unsafe def nlinarith_extras : global_preprocessor :=
           let products ← make_comp_with_zero.globalize.transform products.reduce_option 
           return$ new_es ++ ls ++ products }
 
+-- error in Tactic.Linarith.Preprocessing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 `remove_ne_aux` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`.
 This produces `2^n` branches when there are `n` such hypotheses in the input.
--/
-unsafe def remove_ne_aux : List expr → tactic (List branch) :=
-  fun hs =>
-    (do 
-        let e ←
-          hs.mfind
-              fun e : expr =>
-                do 
-                  let e ← infer_type e 
-                  guardₓ$ e.is_ne.is_some 
-        let [(_, ng1), (_, ng2)] ← to_expr (pquote.1 (Or.elim (lt_or_gt_of_neₓ (%%ₓe)))) >>= apply 
-        let do_goal : expr → tactic (List branch) :=
-            fun g =>
-              do 
-                set_goals [g]
-                let h ← intro1 
-                let ls ← remove_ne_aux$ hs.remove_all [e]
-                return$ ls.map fun b : branch => (b.1, h :: b.2)
-          ((· ++ ·) <$> do_goal ng1)<*>do_goal ng2) <|>
-      do 
-        let g ← get_goal 
-        return [(g, hs)]
+-/ meta def remove_ne_aux : list expr → tactic (list branch) :=
+λ
+hs, «expr <|> »(do {
+ e ← hs.mfind (λ e : expr, do { e ← infer_type e, «expr $ »(guard, e.is_ne.is_some) }),
+   «expr[ , ]»([(_, ng1), (_, ng2)]) ← «expr >>= »(to_expr (``(or.elim (lt_or_gt_of_ne (%%e)))), apply),
+   let do_goal : expr → tactic (list branch) := λ g, do {
+       set_goals «expr[ , ]»([g]),
+         h ← intro1,
+         ls ← «expr $ »(remove_ne_aux, hs.remove_all «expr[ , ]»([e])),
+         «expr $ »(return, ls.map (λ b : branch, (b.1, [«expr :: »/«expr :: »/«expr :: »](h, b.2)))) } in
+   «expr <*> »(«expr <$> »((«expr ++ »), do_goal ng1), do_goal ng2) }, do {
+ g ← get_goal,
+   return «expr[ , ]»([(g, hs)]) })
 
 /--
 `remove_ne` case splits on any proof `h : a ≠ b` in the input, turning it into `a < b ∨ a > b`,

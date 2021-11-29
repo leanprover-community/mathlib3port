@@ -46,8 +46,8 @@ variable{R : Type u}{k : Type u'}{S : Type v}{M : Type w}{M₂ : Type x}{M₃ : 
   distributivity axioms similar to those on a ring. -/
 @[protectProj]
 class Module(R : Type u)(M : Type v)[Semiringₓ R][AddCommMonoidₓ M] extends DistribMulAction R M where 
-  add_smul : ∀ r s : R x : M, (r+s) • x = (r • x)+s • x 
-  zero_smul : ∀ x : M, (0 : R) • x = 0
+  add_smul : ∀ (r s : R) (x : M), (r+s) • x = (r • x)+s • x 
+  zero_smul : ∀ (x : M), (0 : R) • x = 0
 
 section AddCommMonoidₓ
 
@@ -77,7 +77,7 @@ theorem two_smul' : (2 : R) • x = bit0 x :=
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasScalar R M₂] (f : M₂ →+ M) (hf : injective f)
-  (smul : ∀ c : R x, f (c • x) = c • f x) : Module R M₂ :=
+  (smul : ∀ (c : R) x, f (c • x) = c • f x) : Module R M₂ :=
   { hf.distrib_mul_action f smul with smul := · • ·,
     add_smul :=
       fun c₁ c₂ x =>
@@ -92,7 +92,7 @@ protected def Function.Injective.module [AddCommMonoidₓ M₂] [HasScalar R M�
 
 /-- Pushforward a `module` structure along a surjective additive monoid homomorphism. -/
 protected def Function.Surjective.module [AddCommMonoidₓ M₂] [HasScalar R M₂] (f : M →+ M₂) (hf : surjective f)
-  (smul : ∀ c : R x, f (c • x) = c • f x) : Module R M₂ :=
+  (smul : ∀ (c : R) x, f (c • x) = c • f x) : Module R M₂ :=
   { hf.distrib_mul_action f smul with smul := · • ·,
     add_smul :=
       fun c₁ c₂ x =>
@@ -195,14 +195,14 @@ this provides a way to construct a module structure by checking less properties,
 `module.of_core`. -/
 @[nolint has_inhabited_instance]
 structure Module.Core extends HasScalar R M where 
-  smul_add : ∀ r : R x y : M, (r • x+y) = (r • x)+r • y 
-  add_smul : ∀ r s : R x : M, (r+s) • x = (r • x)+s • x 
-  mul_smul : ∀ r s : R x : M, (r*s) • x = r • s • x 
-  one_smul : ∀ x : M, (1 : R) • x = x
+  smul_add : ∀ (r : R) (x y : M), (r • x+y) = (r • x)+r • y 
+  add_smul : ∀ (r s : R) (x : M), (r+s) • x = (r • x)+s • x 
+  mul_smul : ∀ (r s : R) (x : M), (r*s) • x = r • s • x 
+  one_smul : ∀ (x : M), (1 : R) • x = x
 
 variable{R M}
 
--- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Define `module` without proving `zero_smul` and `smul_zero` by using an auxiliary
 structure `module.core`, when the underlying space is an `add_comm_group`. -/
 def module.of_core (H : module.core R M) : module R M :=
@@ -533,7 +533,7 @@ export NoZeroSmulDivisors(eq_zero_or_eq_zero_of_smul_eq_zero)
 /-- Pullback a `no_zero_smul_divisors` instance along an injective function. -/
 theorem Function.Injective.no_zero_smul_divisors {R M N : Type _} [HasZero R] [HasZero M] [HasZero N] [HasScalar R M]
   [HasScalar R N] [NoZeroSmulDivisors R N] (f : M → N) (hf : Function.Injective f) (h0 : f 0 = 0)
-  (hs : ∀ c : R x : M, f (c • x) = c • f x) : NoZeroSmulDivisors R M :=
+  (hs : ∀ (c : R) (x : M), f (c • x) = c • f x) : NoZeroSmulDivisors R M :=
   ⟨fun c m h =>
       Or.imp_rightₓ (@hf _ _)$
         h0.symm ▸
@@ -586,14 +586,17 @@ section SmulInjective
 
 variable(M)
 
-theorem smul_right_injective [NoZeroSmulDivisors R M] {c : R} (hc : c ≠ 0) : Function.Injective fun x : M => c • x :=
-  fun x y h =>
-    sub_eq_zero.mp
-      ((smul_eq_zero.mp
-            (calc c • (x - y) = c • x - c • y := smul_sub c x y 
-              _ = 0 := sub_eq_zero.mpr h
-              )).resolve_left
-        hc)
+-- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem smul_right_injective
+[no_zero_smul_divisors R M]
+{c : R}
+(hc : «expr ≠ »(c, 0)) : function.injective (λ x : M, «expr • »(c, x)) :=
+λ
+x
+y
+h, sub_eq_zero.mp ((smul_eq_zero.mp (calc
+     «expr = »(«expr • »(c, «expr - »(x, y)), «expr - »(«expr • »(c, x), «expr • »(c, y))) : smul_sub c x y
+     «expr = »(..., 0) : sub_eq_zero.mpr h)).resolve_left hc)
 
 end SmulInjective
 
@@ -624,14 +627,14 @@ section SmulInjective
 
 variable(R)
 
-theorem smul_left_injective {x : M} (hx : x ≠ 0) : Function.Injective fun c : R => c • x :=
-  fun c d h =>
-    sub_eq_zero.mp
-      ((smul_eq_zero.mp
-            (calc (c - d) • x = c • x - d • x := sub_smul c d x 
-              _ = 0 := sub_eq_zero.mpr h
-              )).resolve_right
-        hx)
+-- error in Algebra.Module.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem smul_left_injective {x : M} (hx : «expr ≠ »(x, 0)) : function.injective (λ c : R, «expr • »(c, x)) :=
+λ
+c
+d
+h, sub_eq_zero.mp ((smul_eq_zero.mp (calc
+     «expr = »(«expr • »(«expr - »(c, d), x), «expr - »(«expr • »(c, x), «expr • »(d, x))) : sub_smul c d x
+     «expr = »(..., 0) : sub_eq_zero.mpr h)).resolve_right hx)
 
 end SmulInjective
 

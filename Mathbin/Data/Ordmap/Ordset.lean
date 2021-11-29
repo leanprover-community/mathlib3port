@@ -143,7 +143,7 @@ theorem sized.pos {s l x r} (h : sized (@node α s l x r)) : 0 < s :=
 /-! `dual` -/
 
 
-theorem dual_dual : ∀ t : Ordnode α, dual (dual t) = t
+theorem dual_dual : ∀ (t : Ordnode α), dual (dual t) = t
 | nil => rfl
 | node s l x r =>
   by 
@@ -363,7 +363,7 @@ theorem node4_l_size {l x m y r} (hm : sized m) : size (@node4_l α l x m y r) =
       simp [node4_l, node3_l, node', add_commₓ, add_left_commₓ] <;> [skip, simp [size, hm.1]] <;>
         rw [←add_assocₓ, ←bit0] <;> simp [add_commₓ, add_left_commₓ]
 
-theorem sized.dual : ∀ {t : Ordnode α} h : sized t, sized (dual t)
+theorem sized.dual : ∀ {t : Ordnode α} (h : sized t), sized (dual t)
 | nil, h => ⟨⟩
 | node s l x r, ⟨rfl, sl, sr⟩ =>
   ⟨by 
@@ -510,7 +510,7 @@ theorem all_balance' {P l x r} : @all α P (balance' l x r) ↔ all P l ∧ P x 
 /-! ### `to_list` -/
 
 
-theorem foldr_cons_eq_to_list : ∀ t : Ordnode α r : List α, t.foldr List.cons r = to_list t ++ r
+theorem foldr_cons_eq_to_list : ∀ (t : Ordnode α) (r : List α), t.foldr List.cons r = to_list t ++ r
 | nil, r => rfl
 | node _ l x r, r' =>
   by 
@@ -531,7 +531,7 @@ theorem emem_iff_mem_to_list {x : α} {t} : emem x t ↔ x ∈ to_list t :=
   by 
     unfold emem <;> induction t <;> simp [any, or_assoc]
 
-theorem length_to_list' : ∀ t : Ordnode α, (to_list t).length = t.real_size
+theorem length_to_list' : ∀ (t : Ordnode α), (to_list t).length = t.real_size
 | nil => rfl
 | node _ l _ r =>
   by 
@@ -562,7 +562,7 @@ theorem pos_size_of_mem [LE α] [@DecidableRel α (· ≤ ·)] {x : α} {t : Ord
 /-! ### `(find/erase/split)_(min/max)` -/
 
 
-theorem find_min'_dual : ∀ t x : α, find_min' (dual t) x = find_max' x t
+theorem find_min'_dual : ∀ t (x : α), find_min' (dual t) x = find_max' x t
 | nil, x => rfl
 | node _ l x r, _ => find_min'_dual r x
 
@@ -570,7 +570,7 @@ theorem find_max'_dual t (x : α) : find_max' x (dual t) = find_min' t x :=
   by 
     rw [←find_min'_dual, dual_dual]
 
-theorem find_min_dual : ∀ t : Ordnode α, find_min (dual t) = find_max t
+theorem find_min_dual : ∀ (t : Ordnode α), find_min (dual t) = find_max t
 | nil => rfl
 | node _ l x r => congr_argₓ some$ find_min'_dual _ _
 
@@ -578,7 +578,7 @@ theorem find_max_dual (t : Ordnode α) : find_max (dual t) = find_min t :=
   by 
     rw [←find_min_dual, dual_dual]
 
-theorem dual_erase_min : ∀ t : Ordnode α, dual (erase_min t) = erase_max (dual t)
+theorem dual_erase_min : ∀ (t : Ordnode α), dual (erase_min t) = erase_max (dual t)
 | nil => rfl
 | node _ nil x r => rfl
 | node _ (l@(node _ _ _ _)) x r =>
@@ -589,25 +589,25 @@ theorem dual_erase_max (t : Ordnode α) : dual (erase_max t) = erase_min (dual t
   by 
     rw [←dual_dual (erase_min _), dual_erase_min, dual_dual]
 
-theorem split_min_eq : ∀ s l x : α r, split_min' l x r = (find_min' l x, erase_min (node s l x r))
+theorem split_min_eq : ∀ s l (x : α) r, split_min' l x r = (find_min' l x, erase_min (node s l x r))
 | _, nil, x, r => rfl
 | _, node ls ll lx lr, x, r =>
   by 
     rw [split_min', split_min_eq, split_min', find_min', erase_min]
 
-theorem split_max_eq : ∀ s l x : α r, split_max' l x r = (erase_max (node s l x r), find_max' x r)
+theorem split_max_eq : ∀ s l (x : α) r, split_max' l x r = (erase_max (node s l x r), find_max' x r)
 | _, l, x, nil => rfl
 | _, l, x, node ls ll lx lr =>
   by 
     rw [split_max', split_max_eq, split_max', find_max', erase_max]
 
 @[elab_as_eliminator]
-theorem find_min'_all {P : α → Prop} : ∀ t x : α, all P t → P x → P (find_min' t x)
+theorem find_min'_all {P : α → Prop} : ∀ t (x : α), all P t → P x → P (find_min' t x)
 | nil, x, h, hx => hx
 | node _ ll lx lr, x, ⟨h₁, h₂, h₃⟩, hx => find_min'_all _ _ h₁ h₂
 
 @[elab_as_eliminator]
-theorem find_max'_all {P : α → Prop} : ∀ x : α t, P x → all P t → P (find_max' x t)
+theorem find_max'_all {P : α → Prop} : ∀ (x : α) t, P x → all P t → P (find_max' x t)
 | x, nil, hx, h => hx
 | x, node _ ll lx lr, hx, ⟨h₁, h₂, h₃⟩ => find_max'_all _ _ h₂ h₃
 
@@ -638,7 +638,7 @@ theorem merge_node {ls ll lx lr rs rl rx rr} :
 
 
 theorem dual_insert [Preorderₓ α] [IsTotal α (· ≤ ·)] [@DecidableRel α (· ≤ ·)] (x : α) :
-  ∀ t : Ordnode α, dual (Ordnode.insert x t) = @Ordnode.insert (OrderDual α) _ _ x (dual t)
+  ∀ (t : Ordnode α), dual (Ordnode.insert x t) = @Ordnode.insert (OrderDual α) _ _ x (dual t)
 | nil => rfl
 | node _ l y r =>
   by 
@@ -915,7 +915,7 @@ def Bounded : Ordnode α → WithBot α → WithTop α → Prop
 | nil, _, _ => True
 | node _ l x r, o₁, o₂ => Bounded l o₁ («expr↑ » x) ∧ Bounded r («expr↑ » x) o₂
 
-theorem bounded.dual : ∀ {t : Ordnode α} {o₁ o₂} h : Bounded t o₁ o₂, @Bounded (OrderDual α) _ (dual t) o₂ o₁
+theorem bounded.dual : ∀ {t : Ordnode α} {o₁ o₂} (h : Bounded t o₁ o₂), @Bounded (OrderDual α) _ (dual t) o₂ o₁
 | nil, o₁, o₂, h =>
   by 
     cases o₁ <;>
@@ -1002,9 +1002,13 @@ theorem bounded.of_gt :
 | nil, o₁, o₂, x, _, hn, _ => hn
 | node _ l y r, o₁, o₂, x, ⟨h₁, h₂⟩, hn, ⟨al₁, al₂, al₃⟩ => ⟨h₁.of_gt al₂ al₁, h₂⟩
 
-theorem bounded.to_sep {t₁ t₂ o₁ o₂} {x : α} (h₁ : Bounded t₁ o₁ («expr↑ » x)) (h₂ : Bounded t₂ («expr↑ » x) o₂) :
-  t₁.all fun y => t₂.all fun z : α => y < z :=
-  h₁.mem_lt.imp$ fun y yx => h₂.mem_gt.imp$ fun z xz => lt_transₓ yx xz
+-- error in Data.Ordmap.Ordset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem bounded.to_sep
+{t₁ t₂ o₁ o₂}
+{x : α}
+(h₁ : bounded t₁ o₁ «expr↑ »(x))
+(h₂ : bounded t₂ «expr↑ »(x) o₂) : t₁.all (λ y, t₂.all (λ z : α, «expr < »(y, z))) :=
+«expr $ »(h₁.mem_lt.imp, λ y yx, «expr $ »(h₂.mem_gt.imp, λ z xz, lt_trans yx xz))
 
 end 
 
@@ -1066,7 +1070,7 @@ theorem valid'.node {s l x r o₁ o₂} (hl : valid' o₁ l («expr↑ » x)) (h
   (H : balanced_sz (size l) (size r)) (hs : s = (size l+size r)+1) : valid' o₁ (@node α s l x r) o₂ :=
   ⟨⟨hl.1, hr.1⟩, ⟨hs, hl.2, hr.2⟩, ⟨H, hl.3, hr.3⟩⟩
 
-theorem valid'.dual : ∀ {t : Ordnode α} {o₁ o₂} h : valid' o₁ t o₂, @valid' (OrderDual α) _ o₂ (dual t) o₁
+theorem valid'.dual : ∀ {t : Ordnode α} {o₁ o₂} (h : valid' o₁ t o₂), @valid' (OrderDual α) _ o₂ (dual t) o₁
 | nil, o₁, o₂, h => valid'_nil h.1.dual
 | node s l x r, o₁, o₂, ⟨⟨ol, Or⟩, ⟨rfl, sl, sr⟩, ⟨b, bl, br⟩⟩ =>
   let ⟨ol', sl', bl'⟩ := valid'.dual ⟨ol, sl, bl⟩
@@ -1455,7 +1459,7 @@ theorem valid'.erase_min_aux
 (H : valid' o₁ (node s l x r) o₂) : «expr ∧ »(valid' «expr↑ »(find_min' l x) (@erase_min α (node' l x r)) o₂, «expr = »(size (node' l x r), «expr + »(size (erase_min (node' l x r)), 1))) :=
 by have [] [] [":=", expr H.dual.erase_max_aux]; rwa ["[", "<-", expr dual_node', ",", expr size_dual, ",", "<-", expr dual_erase_min, ",", expr size_dual, ",", "<-", expr valid'.dual_iff, ",", expr find_max'_dual, "]"] ["at", ident this]
 
-theorem erase_min.valid : ∀ {t} h : @valid α _ t, valid (erase_min t)
+theorem erase_min.valid : ∀ {t} (h : @valid α _ t), valid (erase_min t)
 | nil, _ => valid_nil
 | node _ l x r, h =>
   by 

@@ -102,16 +102,19 @@ theorem remove_zero_of_pos {n : ℕ} (h : 0 < n) : p.remove_zero n = p n :=
 /-- Convenience congruence lemma stating in a dependent setting that, if the arguments to a formal
 multilinear series are equal, then the values are also equal. -/
 theorem congr (p : FormalMultilinearSeries 𝕜 E F) {m n : ℕ} {v : Finₓ m → E} {w : Finₓ n → E} (h1 : m = n)
-  (h2 : ∀ i : ℕ him : i < m hin : i < n, v ⟨i, him⟩ = w ⟨i, hin⟩) : p m v = p n w :=
+  (h2 : ∀ (i : ℕ) (him : i < m) (hin : i < n), v ⟨i, him⟩ = w ⟨i, hin⟩) : p m v = p n w :=
   by 
     cases h1 
     congr with ⟨i, hi⟩
     exact h2 i hi hi
 
+-- error in Analysis.Calculus.FormalMultilinearSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Composing each term `pₙ` in a formal multilinear series with `(u, ..., u)` where `u` is a fixed
 continuous linear map, gives a new formal multilinear series `p.comp_continuous_linear_map u`. -/
-def comp_continuous_linear_map (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) : FormalMultilinearSeries 𝕜 E G :=
-  fun n => (p n).compContinuousLinearMap fun i : Finₓ n => u
+def comp_continuous_linear_map
+(p : formal_multilinear_series 𝕜 F G)
+(u : «expr →L[ ] »(E, 𝕜, F)) : formal_multilinear_series 𝕜 E G :=
+λ n, (p n).comp_continuous_linear_map (λ i : fin n, u)
 
 @[simp]
 theorem comp_continuous_linear_map_apply (p : FormalMultilinearSeries 𝕜 F G) (u : E →L[𝕜] F) (n : ℕ) (v : Finₓ n → E) :

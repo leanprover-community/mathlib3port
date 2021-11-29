@@ -78,16 +78,17 @@ variable(R)(s)
 /-- The relation on `free_add_monoid (R × Π i, s i)` that generates a congruence whose quotient is
 the tensor product. -/
 inductive eqv : FreeAddMonoid (R × ∀ i, s i) → FreeAddMonoid (R × ∀ i, s i) → Prop
-  | of_zero : ∀ r : R f : ∀ i, s i i : ι hf : f i = 0, eqv (FreeAddMonoid.of (r, f)) 0
-  | of_zero_scalar : ∀ f : ∀ i, s i, eqv (FreeAddMonoid.of (0, f)) 0
+  | of_zero : ∀ (r : R) (f : ∀ i, s i) (i : ι) (hf : f i = 0), eqv (FreeAddMonoid.of (r, f)) 0
+  | of_zero_scalar : ∀ (f : ∀ i, s i), eqv (FreeAddMonoid.of (0, f)) 0
   | of_add :
-  ∀ r : R f : ∀ i, s i i : ι m₁ m₂ : s i,
+  ∀ (r : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i),
     eqv (FreeAddMonoid.of (r, update f i m₁)+FreeAddMonoid.of (r, update f i m₂))
       (FreeAddMonoid.of (r, update f i (m₁+m₂)))
   | of_add_scalar :
-  ∀ r r' : R f : ∀ i, s i, eqv (FreeAddMonoid.of (r, f)+FreeAddMonoid.of (r', f)) (FreeAddMonoid.of (r+r', f))
+  ∀ (r r' : R) (f : ∀ i, s i), eqv (FreeAddMonoid.of (r, f)+FreeAddMonoid.of (r', f)) (FreeAddMonoid.of (r+r', f))
   | of_smul :
-  ∀ r : R f : ∀ i, s i i : ι r' : R, eqv (FreeAddMonoid.of (r, update f i (r' • f i))) (FreeAddMonoid.of (r'*r, f))
+  ∀ (r : R) (f : ∀ i, s i) (i : ι) (r' : R),
+    eqv (FreeAddMonoid.of (r, update f i (r' • f i))) (FreeAddMonoid.of (r'*r, f))
   | add_commₓ : ∀ x y, eqv (x+y) (y+x)
 
 end PiTensorProduct
@@ -164,12 +165,14 @@ end
 
 /-- Construct an `add_monoid_hom` from `(⨂[R] i, s i)` to some space `F` from a function
 `φ : (R × Π i, s i) → F` with the appropriate properties. -/
-def lift_add_hom (φ : (R × ∀ i, s i) → F) (C0 : ∀ r : R f : ∀ i, s i i : ι hf : f i = 0, φ (r, f) = 0)
-  (C0' : ∀ f : ∀ i, s i, φ (0, f) = 0)
+def lift_add_hom (φ : (R × ∀ i, s i) → F) (C0 : ∀ (r : R) (f : ∀ i, s i) (i : ι) (hf : f i = 0), φ (r, f) = 0)
+  (C0' : ∀ (f : ∀ i, s i), φ (0, f) = 0)
   (C_add :
-    ∀ r : R f : ∀ i, s i i : ι m₁ m₂ : s i, (φ (r, update f i m₁)+φ (r, update f i m₂)) = φ (r, update f i (m₁+m₂)))
-  (C_add_scalar : ∀ r r' : R f : ∀ i, s i, (φ (r, f)+φ (r', f)) = φ (r+r', f))
-  (C_smul : ∀ r : R f : ∀ i, s i i : ι r' : R, φ (r, update f i (r' • f i)) = φ (r'*r, f)) : (⨂[R] i, s i) →+ F :=
+    ∀ (r : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i),
+      (φ (r, update f i m₁)+φ (r, update f i m₂)) = φ (r, update f i (m₁+m₂)))
+  (C_add_scalar : ∀ (r r' : R) (f : ∀ i, s i), (φ (r, f)+φ (r', f)) = φ (r+r', f))
+  (C_smul : ∀ (r : R) (f : ∀ i, s i) (i : ι) (r' : R), φ (r, update f i (r' • f i)) = φ (r'*r, f)) :
+  (⨂[R] i, s i) →+ F :=
   (addConGen (PiTensorProduct.Eqv R s)).lift (FreeAddMonoid.lift φ)$
     AddCon.add_con_gen_le$
       fun x y hxy =>
@@ -224,24 +227,26 @@ variable[Monoidₓ R₁][DistribMulAction R₁ R][SmulCommClass R₁ R R]
 
 variable[Monoidₓ R₂][DistribMulAction R₂ R][SmulCommClass R₂ R R]
 
-instance has_scalar' : HasScalar R₁ (⨂[R] i, s i) :=
-  ⟨fun r =>
-      lift_add_hom (fun f : R × ∀ i, s i => tprod_coeff R (r • f.1) f.2)
-        (fun r' f i hf =>
-          by 
-            simpRw [zero_tprod_coeff' _ f i hf])
-        (fun f =>
-          by 
-            simp [zero_tprod_coeff])
-        (fun r' f i m₁ m₂ =>
-          by 
-            simp [add_tprod_coeff])
-        (fun r' r'' f =>
-          by 
-            simp [add_tprod_coeff', mul_addₓ])
-        fun z f i r' =>
-          by 
-            simp [smul_tprod_coeff, mul_smul_comm]⟩
+-- error in LinearAlgebra.PiTensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance has_scalar' : has_scalar R₁ «expr⨂[ ] , »(R, (i), s i) :=
+⟨λ
+ r, lift_add_hom (λ
+  f : «expr × »(R, ∀
+   i, s i), tprod_coeff R «expr • »(r, f.1) f.2) (λ
+  r'
+  f
+  i
+  hf, by simp_rw ["[", expr zero_tprod_coeff' _ f i hf, "]"] []) (λ
+  f, by simp [] [] [] ["[", expr zero_tprod_coeff, "]"] [] []) (λ
+  r'
+  f
+  i
+  m₁
+  m₂, by simp [] [] [] ["[", expr add_tprod_coeff, "]"] [] []) (λ
+  r'
+  r''
+  f, by simp [] [] [] ["[", expr add_tprod_coeff', ",", expr mul_add, "]"] [] []) (λ
+  z f i r', by simp [] [] [] ["[", expr smul_tprod_coeff, ",", expr mul_smul_comm, "]"] [] [])⟩
 
 instance  : HasScalar R (⨂[R] i, s i) :=
   PiTensorProduct.hasScalar'
@@ -385,26 +390,28 @@ open MultilinearMap
 
 variable{s}
 
+-- error in LinearAlgebra.PiTensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Auxiliary function to constructing a linear map `(⨂[R] i, s i) → E` given a
 `multilinear map R s E` with the property that its composition with the canonical
 `multilinear_map R s (⨂[R] i, s i)` is the given multilinear map. -/
-def lift_aux (φ : MultilinearMap R s E) : (⨂[R] i, s i) →+ E :=
-  lift_add_hom (fun p : R × ∀ i, s i => p.1 • φ p.2)
-    (fun z f i hf =>
-      by 
-        rw [map_coord_zero φ i hf, smul_zero])
-    (fun f =>
-      by 
-        rw [zero_smul])
-    (fun z f i m₁ m₂ =>
-      by 
-        rw [←smul_add, φ.map_add])
-    (fun z₁ z₂ f =>
-      by 
-        rw [←add_smul])
-    fun z f i r =>
-      by 
-        simp [φ.map_smul, smul_smul, mul_commₓ]
+def lift_aux (φ : multilinear_map R s E) : «expr →+ »(«expr⨂[ ] , »(R, (i), s i), E) :=
+lift_add_hom (λ
+ p : «expr × »(R, ∀
+  i, s i), «expr • »(p.1, φ p.2)) (λ
+ z
+ f
+ i
+ hf, by rw ["[", expr map_coord_zero φ i hf, ",", expr smul_zero, "]"] []) (λ
+ f, by rw ["[", expr zero_smul, "]"] []) (λ
+ z
+ f
+ i
+ m₁
+ m₂, by rw ["[", "<-", expr smul_add, ",", expr φ.map_add, "]"] []) (λ
+ z₁
+ z₂
+ f, by rw ["[", "<-", expr add_smul, "]"] []) (λ
+ z f i r, by simp [] [] [] ["[", expr φ.map_smul, ",", expr smul_smul, ",", expr mul_comm, "]"] [] [])
 
 theorem lift_aux_tprod (φ : MultilinearMap R s E) (f : ∀ i, s i) : lift_aux φ (tprod R f) = φ f :=
   by 
@@ -505,12 +512,14 @@ theorem reindex_comp_tprod (e : ι ≃ ι₂) :
     (tprod R : MultilinearMap R (fun i => M) _).domDomCongr e.symm :=
   MultilinearMap.ext$ reindex_tprod e
 
+-- error in LinearAlgebra.PiTensorProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem lift_comp_reindex (e : ι ≃ ι₂) (φ : MultilinearMap R (fun _ : ι₂ => M) E) :
-  lift φ ∘ₗ «expr↑ » (reindex R M e) = lift (φ.dom_dom_congr e.symm) :=
-  by 
-    ext 
-    simp 
+theorem lift_comp_reindex
+(e : «expr ≃ »(ι, ι₂))
+(φ : multilinear_map R (λ
+  _ : ι₂, M) E) : «expr = »(«expr ∘ₗ »(lift φ, «expr↑ »(reindex R M e)), lift (φ.dom_dom_congr e.symm)) :=
+by { ext [] [] [],
+  simp [] [] [] [] [] [] }
 
 @[simp]
 theorem lift_reindex (e : ι ≃ ι₂) (φ : MultilinearMap R (fun _ => M) E) (x : ⨂[R] i, M) :

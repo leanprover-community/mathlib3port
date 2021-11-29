@@ -29,10 +29,12 @@ by uniform continuity. -/
 instance  : HasDist (completion α) :=
   ⟨completion.extension₂ dist⟩
 
+-- error in Topology.MetricSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The new distance is uniformly continuous. -/
-protected theorem completion.uniform_continuous_dist :
-  UniformContinuous fun p : completion α × completion α => dist p.1 p.2 :=
-  uniform_continuous_extension₂ dist
+protected
+theorem completion.uniform_continuous_dist : uniform_continuous (λ
+ p : «expr × »(completion α, completion α), dist p.1 p.2) :=
+uniform_continuous_extension₂ dist
 
 /-- The new distance is an extension of the original distance. -/
 protected theorem completion.dist_eq (x y : α) : dist (x : completion α) y = dist x y :=

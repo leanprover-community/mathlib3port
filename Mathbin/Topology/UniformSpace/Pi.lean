@@ -20,9 +20,10 @@ variable{ι : Type _}(α : ι → Type u)[U : ∀ i, UniformSpace (α i)]
 
 include U
 
-instance Pi.uniformSpace : UniformSpace (∀ i, α i) :=
-  UniformSpace.ofCoreEq (⨅i, UniformSpace.comap (fun a : ∀ i, α i => a i) (U i)).toCore Pi.topologicalSpace$
-    Eq.symm to_topological_space_infi
+-- error in Topology.UniformSpace.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance Pi.uniform_space : uniform_space (∀ i, α i) :=
+«expr $ »(uniform_space.of_core_eq «expr⨅ , »((i), uniform_space.comap (λ
+   a : ∀ i, α i, a i) (U i)).to_core Pi.topological_space, eq.symm to_topological_space_infi)
 
 theorem Pi.uniformity : 𝓤 (∀ i, α i) = ⨅i : ι, (Filter.comap fun a => (a.1 i, a.2 i))$ 𝓤 (α i) :=
   infi_uniformity
@@ -36,8 +37,9 @@ theorem uniform_continuous_pi {β : Type _} [UniformSpace β] {f : β → ∀ i,
 
 variable(α)
 
-theorem Pi.uniform_continuous_proj (i : ι) : UniformContinuous fun a : ∀ i : ι, α i => a i :=
-  uniform_continuous_pi.1 uniform_continuous_id i
+-- error in Topology.UniformSpace.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Pi.uniform_continuous_proj (i : ι) : uniform_continuous (λ a : ∀ i : ι, α i, a i) :=
+uniform_continuous_pi.1 uniform_continuous_id i
 
 -- error in Topology.UniformSpace.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance Pi.complete [∀ i, complete_space (α i)] : complete_space (∀ i, α i) :=
@@ -51,8 +53,7 @@ instance Pi.complete [∀ i, complete_space (α i)] : complete_space (∀ i, α 
      exact [expr cauchy_iff_exists_le_nhds.1 key] },
    choose [] [ident x] [ident hx] ["using", expr this],
    use [expr x],
-   rw ["[", expr nhds_pi, ",", expr le_infi_iff, "]"] [],
-   exact [expr λ i, map_le_iff_le_comap.mp (hx i)]
+   rwa ["[", expr nhds_pi, ",", expr le_pi, "]"] []
  end⟩
 
 instance Pi.separated [∀ i, SeparatedSpace (α i)] : SeparatedSpace (∀ i, α i) :=

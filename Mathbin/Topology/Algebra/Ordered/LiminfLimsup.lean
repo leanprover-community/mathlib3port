@@ -29,6 +29,13 @@ theorem Filter.Tendsto.is_bounded_under_le {f : Filter β} {u : β → α} {a : 
   f.is_bounded_under (· ≤ ·) u :=
   (is_bounded_le_nhds a).mono h
 
+theorem Filter.Tendsto.bdd_above_range_of_cofinite {u : β → α} {a : α} (h : tendsto u cofinite (𝓝 a)) :
+  BddAbove (Set.Range u) :=
+  h.is_bounded_under_le.bdd_above_range_of_cofinite
+
+theorem Filter.Tendsto.bdd_above_range {u : ℕ → α} {a : α} (h : tendsto u at_top (𝓝 a)) : BddAbove (Set.Range u) :=
+  h.is_bounded_under_le.bdd_above_range
+
 theorem is_cobounded_ge_nhds (a : α) : (𝓝 a).IsCobounded (· ≥ ·) :=
   (is_bounded_le_nhds a).is_cobounded_flip
 
@@ -48,6 +55,13 @@ theorem is_bounded_ge_nhds (a : α) : (𝓝 a).IsBounded (· ≥ ·) :=
 theorem Filter.Tendsto.is_bounded_under_ge {f : Filter β} {u : β → α} {a : α} (h : tendsto u f (𝓝 a)) :
   f.is_bounded_under (· ≥ ·) u :=
   (is_bounded_ge_nhds a).mono h
+
+theorem Filter.Tendsto.bdd_below_range_of_cofinite {u : β → α} {a : α} (h : tendsto u cofinite (𝓝 a)) :
+  BddBelow (Set.Range u) :=
+  h.is_bounded_under_ge.bdd_below_range_of_cofinite
+
+theorem Filter.Tendsto.bdd_below_range {u : ℕ → α} {a : α} (h : tendsto u at_top (𝓝 a)) : BddBelow (Set.Range u) :=
+  h.is_bounded_under_ge.bdd_below_range
 
 theorem is_cobounded_le_nhds (a : α) : (𝓝 a).IsCobounded (· ≤ ·) :=
   (is_bounded_ge_nhds a).is_cobounded_flip
@@ -79,16 +93,18 @@ theorem le_nhds_of_Limsup_eq_Liminf {f : Filter α} {a : α} (hl : f.is_bounded 
     And.intro (fun b hb => gt_mem_sets_of_Liminf_gt hg$ hi.symm ▸ hb)
       fun b hb => lt_mem_sets_of_Limsup_lt hl$ hs.symm ▸ hb
 
-theorem Limsup_nhds (a : α) : Limsup (𝓝 a) = a :=
-  cInf_eq_of_forall_ge_of_forall_gt_exists_lt (is_bounded_le_nhds a)
-    (fun a' h : { n:α | n ≤ a' } ∈ 𝓝 a => show a ≤ a' from @mem_of_mem_nhds α _ a _ h)
-    fun b hba : a < b =>
-      show ∃ (c : _)(h : { n:α | n ≤ c } ∈ 𝓝 a), c < b from
-        match dense_or_discrete a b with 
-        | Or.inl ⟨c, hac, hcb⟩ => ⟨c, ge_mem_nhds hac, hcb⟩
-        | Or.inr ⟨_, h⟩ => ⟨a, (𝓝 a).sets_of_superset (gt_mem_nhds hba) h, hba⟩
+-- error in Topology.Algebra.Ordered.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Limsup_nhds (a : α) : «expr = »(Limsup (expr𝓝() a), a) :=
+cInf_eq_of_forall_ge_of_forall_gt_exists_lt (is_bounded_le_nhds a) (assume
+ (a')
+ (h : «expr ∈ »({n : α | «expr ≤ »(n, a')}, expr𝓝() a)), show «expr ≤ »(a, a'), from @mem_of_mem_nhds α _ a _ h) (assume
+ (b)
+ (hba : «expr < »(a, b)), show «expr∃ , »((c)
+  (h : «expr ∈ »({n : α | «expr ≤ »(n, c)}, expr𝓝() a)), «expr < »(c, b)), from match dense_or_discrete a b with
+ | or.inl ⟨c, hac, hcb⟩ := ⟨c, ge_mem_nhds hac, hcb⟩
+ | or.inr ⟨_, h⟩ := ⟨a, (expr𝓝() a).sets_of_superset (gt_mem_nhds hba) h, hba⟩ end)
 
-theorem Liminf_nhds : ∀ a : α, Liminf (𝓝 a) = a :=
+theorem Liminf_nhds : ∀ (a : α), Liminf (𝓝 a) = a :=
   @Limsup_nhds (OrderDual α) _ _ _
 
 /-- If a filter is converging, its limsup coincides with its limit. -/

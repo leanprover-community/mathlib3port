@@ -101,14 +101,14 @@ theorem Convex.interior {s : Set E} (hs : Convex ℝ s) : Convex ℝ (Interior s
             apply add_subset_add <;> exact image_subset _ interior_subset)
           (convex_iff_pointwise_add_subset.mp hs ha hb hab)
 
+-- error in Analysis.Convex.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In a topological vector space, the closure of a convex set is convex. -/
-theorem Convex.closure {s : Set E} (hs : Convex ℝ s) : Convex ℝ (Closure s) :=
-  fun x y hx hy a b ha hb hab =>
-    let f : E → E → E := fun x' y' => (a • x')+b • y' 
-    have hf : Continuous fun p : E × E => f p.1 p.2 :=
-      (continuous_const.smul continuous_fst).add (continuous_const.smul continuous_snd)
-    show f x y ∈ Closure s from
-      mem_closure_of_continuous2 hf hx hy fun x' hx' y' hy' => subset_closure (hs hx' hy' ha hb hab)
+theorem convex.closure {s : set E} (hs : convex exprℝ() s) : convex exprℝ() (closure s) :=
+λ x y hx hy a b ha hb hab, let f : E → E → E := λ x' y', «expr + »(«expr • »(a, x'), «expr • »(b, y')) in
+have hf : continuous (λ
+ p : «expr × »(E, E), f p.1 p.2), from (continuous_const.smul continuous_fst).add (continuous_const.smul continuous_snd),
+show «expr ∈ »(f x y, closure s), from mem_closure_of_continuous2 hf hx hy (λ
+ x' hx' y' hy', subset_closure (hs hx' hy' ha hb hab))
 
 -- error in Analysis.Convex.Topology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Convex hull of a finite set is compact. -/

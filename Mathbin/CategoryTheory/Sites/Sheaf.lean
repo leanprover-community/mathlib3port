@@ -55,7 +55,7 @@ presheaf of types given by sending U : C to Hom_{A}(X, P U) is a sheaf of types.
 https://stacks.math.columbia.edu/tag/00VR
 -/
 def is_sheaf (P : «expr ᵒᵖ» C ⥤ A) : Prop :=
-  ∀ X : A, presieve.is_sheaf J (P ⋙ coyoneda.obj (op X))
+  ∀ (X : A), presieve.is_sheaf J (P ⋙ coyoneda.obj (op X))
 
 variable{J}
 
@@ -64,15 +64,15 @@ variable{J}
   to `P` evaluated at terms in the cover which are compatible, then we can amalgamate
   the `x`s to obtain a single morphism `E ⟶ P.obj (op X)`. -/
 def is_sheaf.amalgamate {A : Type u₂} [category.{max v₁ u₁} A] {E : A} {X : C} {P : «expr ᵒᵖ» C ⥤ A}
-  (hP : presheaf.is_sheaf J P) (S : J.cover X) (x : ∀ I : S.arrow, E ⟶ P.obj (op I.Y))
-  (hx : ∀ I : S.relation, x I.fst ≫ P.map I.g₁.op = x I.snd ≫ P.map I.g₂.op) : E ⟶ P.obj (op X) :=
+  (hP : presheaf.is_sheaf J P) (S : J.cover X) (x : ∀ (I : S.arrow), E ⟶ P.obj (op I.Y))
+  (hx : ∀ (I : S.relation), x I.fst ≫ P.map I.g₁.op = x I.snd ≫ P.map I.g₂.op) : E ⟶ P.obj (op X) :=
   ((hP _ _ S.condition).amalgamate fun Y f hf => x ⟨Y, f, hf⟩)$
     fun Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ w => hx ⟨Y₁, Y₂, Z, g₁, g₂, f₁, f₂, h₁, h₂, w⟩
 
 @[simp, reassoc]
 theorem is_sheaf.amalgamate_map {A : Type u₂} [category.{max v₁ u₁} A] {E : A} {X : C} {P : «expr ᵒᵖ» C ⥤ A}
-  (hP : presheaf.is_sheaf J P) (S : J.cover X) (x : ∀ I : S.arrow, E ⟶ P.obj (op I.Y))
-  (hx : ∀ I : S.relation, x I.fst ≫ P.map I.g₁.op = x I.snd ≫ P.map I.g₂.op) (I : S.arrow) :
+  (hP : presheaf.is_sheaf J P) (S : J.cover X) (x : ∀ (I : S.arrow), E ⟶ P.obj (op I.Y))
+  (hx : ∀ (I : S.relation), x I.fst ≫ P.map I.g₁.op = x I.snd ≫ P.map I.g₂.op) (I : S.arrow) :
   hP.amalgamate S x hx ≫ P.map I.f.op = x _ :=
   by 
     rcases I with ⟨Y, f, hf⟩
@@ -82,7 +82,7 @@ theorem is_sheaf.amalgamate_map {A : Type u₂} [category.{max v₁ u₁} A] {E 
 
 theorem is_sheaf.hom_ext {A : Type u₂} [category.{max v₁ u₁} A] {E : A} {X : C} {P : «expr ᵒᵖ» C ⥤ A}
   (hP : presheaf.is_sheaf J P) (S : J.cover X) (e₁ e₂ : E ⟶ P.obj (op X))
-  (h : ∀ I : S.arrow, e₁ ≫ P.map I.f.op = e₂ ≫ P.map I.f.op) : e₁ = e₂ :=
+  (h : ∀ (I : S.arrow), e₁ ≫ P.map I.f.op = e₂ ≫ P.map I.f.op) : e₁ = e₂ :=
   (hP _ _ S.condition).IsSeparatedFor.ext fun Y f hf => h ⟨Y, f, hf⟩
 
 variable(J)
@@ -189,28 +189,27 @@ variable(P : «expr ᵒᵖ» C ⥤ A)
 
 section MultiequalizerConditions
 
+-- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- When `P` is a sheaf and `S` is a cover, the associated multifork is a limit. -/
 def is_limit_of_is_sheaf {X : C} (S : J.cover X) (hP : is_sheaf J P) : is_limit (S.multifork P) :=
-  { lift := fun E : multifork _ => hP.amalgamate S (fun I => E.ι _) fun I => E.condition _,
-    fac' :=
-      by 
-        rintro (E : multifork _) (a | b)
-        ·
-          apply hP.amalgamate_map
-        ·
-          rw [←E.w (walking_multicospan.hom.fst b), ←(S.multifork P).w (walking_multicospan.hom.fst b), ←category.assoc]
-          congr 1
-          apply hP.amalgamate_map,
-    uniq' :=
-      by 
-        rintro (E : multifork _) m hm 
-        apply hP.hom_ext S 
-        intro I 
-        erw [hm (walking_multicospan.left I)]
-        symm 
-        apply hP.amalgamate_map }
+{ lift := λ E : multifork _, hP.amalgamate S (λ I, E.ι _) (λ I, E.condition _),
+  fac' := begin
+    rintros ["(", ident E, ":", expr multifork _, ")", "(", ident a, "|", ident b, ")"],
+    { apply [expr hP.amalgamate_map] },
+    { rw ["[", "<-", expr E.w (walking_multicospan.hom.fst b), ",", "<-", expr (S.multifork P).w (walking_multicospan.hom.fst b), ",", "<-", expr category.assoc, "]"] [],
+      congr' [1] [],
+      apply [expr hP.amalgamate_map] }
+  end,
+  uniq' := begin
+    rintros ["(", ident E, ":", expr multifork _, ")", ident m, ident hm],
+    apply [expr hP.hom_ext S],
+    intros [ident I],
+    erw [expr hm (walking_multicospan.left I)] [],
+    symmetry,
+    apply [expr hP.amalgamate_map]
+  end }
 
-theorem is_sheaf_iff_multifork : is_sheaf J P ↔ ∀ X : C S : J.cover X, Nonempty (is_limit (S.multifork P)) :=
+theorem is_sheaf_iff_multifork : is_sheaf J P ↔ ∀ (X : C) (S : J.cover X), Nonempty (is_limit (S.multifork P)) :=
   by 
     refine' ⟨fun hP X S => ⟨is_limit_of_is_sheaf _ _ _ hP⟩, _⟩
     intro h E X S hS x hx 
@@ -234,8 +233,8 @@ theorem is_sheaf_iff_multifork : is_sheaf J P ↔ ∀ X : C S : J.cover X, Nonem
         congr 1
         apply he
 
-theorem is_sheaf_iff_multiequalizer [∀ X : C S : J.cover X, has_multiequalizer (S.index P)] :
-  is_sheaf J P ↔ ∀ X : C S : J.cover X, is_iso (S.to_multiequalizer P) :=
+theorem is_sheaf_iff_multiequalizer [∀ (X : C) (S : J.cover X), has_multiequalizer (S.index P)] :
+  is_sheaf J P ↔ ∀ (X : C) (S : J.cover X), is_iso (S.to_multiequalizer P) :=
   by 
     rw [is_sheaf_iff_multifork]
     apply forall_congrₓ fun X => _ 
@@ -263,12 +262,12 @@ section
 
 variable[has_products A]
 
+-- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The middle object of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
 of https://stacks.math.columbia.edu/tag/00VM.
--/
-def first_obj : A :=
-  ∏ fun f : ΣV, { f : V ⟶ U // R f } => P.obj (op f.1)
+-/ def first_obj : A :=
+«expr∏ »(λ f : «exprΣ , »((V), {f : «expr ⟶ »(V, U) // R f}), P.obj (op f.1))
 
 /--
 The left morphism of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
@@ -279,12 +278,13 @@ def fork_map : P.obj (op U) ⟶ first_obj R P :=
 
 variable[has_pullbacks C]
 
+-- error in CategoryTheory.Sites.Sheaf: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The rightmost object of the fork diagram of https://stacks.math.columbia.edu/tag/00VM, which
 contains the data used to check a family of elements for a presieve is compatible.
--/
-def second_obj : A :=
-  ∏ fun fg : (ΣV, { f : V ⟶ U // R f }) × ΣW, { g : W ⟶ U // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
+-/ def second_obj : A :=
+«expr∏ »(λ
+ fg : «expr × »(«exprΣ , »((V), {f : «expr ⟶ »(V, U) // R f}), «exprΣ , »((W), {g : «expr ⟶ »(W, U) // R g})), P.obj (op (pullback fg.1.2.1 fg.2.2.1)))
 
 /-- The map `pr₀*` of https://stacks.math.columbia.edu/tag/00VM. -/
 def first_map : first_obj R P ⟶ second_obj R P :=
@@ -308,7 +308,7 @@ An alternative definition of the sheaf condition in terms of equalizers. This is
 equivalent in `category_theory.presheaf.is_sheaf_iff_is_sheaf'`.
 -/
 def is_sheaf' (P : «expr ᵒᵖ» C ⥤ A) : Prop :=
-  ∀ U : C R : presieve U hR : generate R ∈ J U, Nonempty (is_limit (fork.of_ι _ (w R P)))
+  ∀ (U : C) (R : presieve U) (hR : generate R ∈ J U), Nonempty (is_limit (fork.of_ι _ (w R P)))
 
 /-- (Implementation). An auxiliary lemma to convert between sheaf conditions. -/
 def is_sheaf_for_is_sheaf_for' (P : «expr ᵒᵖ» C ⥤ A) (s : A ⥤ Type max v₁ u₁)

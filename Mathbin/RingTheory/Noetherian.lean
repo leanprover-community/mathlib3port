@@ -407,7 +407,7 @@ end Submodule
 implemented as the predicate that all `R`-submodules of `M` are finitely generated.
 -/
 class IsNoetherian(R M)[Semiringₓ R][AddCommMonoidₓ M][Module R M] : Prop where 
-  noetherian : ∀ s : Submodule R M, s.fg
+  noetherian : ∀ (s : Submodule R M), s.fg
 
 section 
 
@@ -422,7 +422,7 @@ open IsNoetherian
 include R
 
 /-- An R-module is Noetherian iff all its submodules are finitely-generated. -/
-theorem is_noetherian_def : IsNoetherian R M ↔ ∀ s : Submodule R M, s.fg :=
+theorem is_noetherian_def : IsNoetherian R M ↔ ∀ (s : Submodule R M), s.fg :=
   ⟨fun h => h.noetherian, IsNoetherian.mk⟩
 
 -- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -438,10 +438,10 @@ begin
   exact [expr (submodule.fg_top _).1 «expr ▸ »(h₂, h₃)]
 end
 
-theorem is_noetherian_submodule_left {N : Submodule R M} : IsNoetherian R N ↔ ∀ s : Submodule R M, (N⊓s).Fg :=
+theorem is_noetherian_submodule_left {N : Submodule R M} : IsNoetherian R N ↔ ∀ (s : Submodule R M), (N⊓s).Fg :=
   is_noetherian_submodule.trans ⟨fun H s => H _ inf_le_left, fun H s hs => inf_of_le_right hs ▸ H _⟩
 
-theorem is_noetherian_submodule_right {N : Submodule R M} : IsNoetherian R N ↔ ∀ s : Submodule R M, (s⊓N).Fg :=
+theorem is_noetherian_submodule_right {N : Submodule R M} : IsNoetherian R N ↔ ∀ (s : Submodule R M), (s⊓N).Fg :=
   is_noetherian_submodule.trans ⟨fun H s => H _ inf_le_right, fun H s hs => inf_of_le_left hs ▸ H _⟩
 
 instance is_noetherian_submodule' [IsNoetherian R M] (N : Submodule R M) : IsNoetherian R N :=
@@ -622,18 +622,19 @@ variable{R M}
 /-- A module is Noetherian iff every nonempty set of submodules has a maximal submodule among them.
 -/
 theorem set_has_maximal_iff_noetherian :
-  (∀ a : Set$ Submodule R M, a.nonempty → ∃ (M' : _)(_ : M' ∈ a), ∀ I _ : I ∈ a, M' ≤ I → I = M') ↔ IsNoetherian R M :=
+  (∀ (a : Set$ Submodule R M), a.nonempty → ∃ (M' : _)(_ : M' ∈ a), ∀ I (_ : I ∈ a), M' ≤ I → I = M') ↔
+    IsNoetherian R M :=
   by 
     rw [is_noetherian_iff_well_founded, WellFounded.well_founded_iff_has_max']
 
 /-- A module is Noetherian iff every increasing chain of submodules stabilizes. -/
 theorem monotone_stabilizes_iff_noetherian :
-  (∀ f : ℕ →ₘ Submodule R M, ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsNoetherian R M :=
+  (∀ (f : ℕ →ₘ Submodule R M), ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsNoetherian R M :=
   by 
     rw [is_noetherian_iff_well_founded, WellFounded.monotone_chain_condition]
 
 /-- If `∀ I > J, P I` implies `P J`, then `P` holds for all submodules. -/
-theorem IsNoetherian.induction [IsNoetherian R M] {P : Submodule R M → Prop} (hgt : ∀ I, (∀ J _ : J > I, P J) → P I)
+theorem IsNoetherian.induction [IsNoetherian R M] {P : Submodule R M → Prop} (hgt : ∀ I, (∀ J (_ : J > I), P J) → P I)
   (I : Submodule R M) : P I :=
   WellFounded.recursionₓ (well_founded_submodule_gt R M) I hgt
 
@@ -775,7 +776,7 @@ theorem is_noetherian_ring_iff {R} [Semiringₓ R] : IsNoetherianRing R ↔ IsNo
   ⟨fun h => h.1, @IsNoetherianRing.mk _ _⟩
 
 /-- A commutative ring is Noetherian if and only if all its ideals are finitely-generated. -/
-theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [CommSemiringₓ R] : IsNoetherianRing R ↔ ∀ I : Ideal R, I.fg :=
+theorem is_noetherian_ring_iff_ideal_fg (R : Type _) [CommSemiringₓ R] : IsNoetherianRing R ↔ ∀ (I : Ideal R), I.fg :=
   is_noetherian_ring_iff.trans is_noetherian_def
 
 -- error in RingTheory.Noetherian: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

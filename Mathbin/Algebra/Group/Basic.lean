@@ -97,11 +97,11 @@ section CommSemigroupₓ
 variable{G : Type u}[CommSemigroupₓ G]
 
 @[no_rsimp, toAdditive]
-theorem mul_left_commₓ : ∀ a b c : G, (a*b*c) = b*a*c :=
+theorem mul_left_commₓ : ∀ (a b c : G), (a*b*c) = b*a*c :=
   left_comm Mul.mul mul_commₓ mul_assocₓ
 
 @[toAdditive]
-theorem mul_right_commₓ : ∀ a b c : G, ((a*b)*c) = (a*c)*b :=
+theorem mul_right_commₓ : ∀ (a b c : G), ((a*b)*c) = (a*c)*b :=
   right_comm Mul.mul mul_commₓ mul_assocₓ
 
 @[toAdditive]
@@ -214,9 +214,10 @@ theorem inv_mul_cancel_right (a b : G) : ((a*b⁻¹)*b) = a :=
 theorem one_inv : 1⁻¹ = (1 : G) :=
   inv_eq_of_mul_eq_oneₓ (one_mulₓ 1)
 
-@[toAdditive]
-theorem left_inverse_inv G [Groupₓ G] : Function.LeftInverse (fun a : G => a⁻¹) fun a => a⁻¹ :=
-  inv_invₓ
+-- error in Algebra.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem left_inverse_inv (G) [group G] : function.left_inverse (λ a : G, «expr ⁻¹»(a)) (λ a, «expr ⁻¹»(a)) :=
+inv_inv
 
 @[simp, toAdditive]
 theorem inv_involutive : Function.Involutive (HasInv.inv : G → G) :=
@@ -409,6 +410,17 @@ theorem div_one' (a : G) : a / 1 = a :=
     _ = a := mul_oneₓ a
     
 
+@[simp, toAdditive neg_sub]
+theorem inv_div' (a b : G) : (a / b)⁻¹ = b / a :=
+  inv_eq_of_mul_eq_oneₓ
+    (by 
+      rw [div_eq_mul_inv, div_eq_mul_inv, mul_assocₓ, inv_mul_cancel_leftₓ, mul_right_invₓ])
+
+@[simp, toAdditive sub_add_cancel]
+theorem div_mul_cancel' (a b : G) : ((a / b)*b) = a :=
+  by 
+    rw [div_eq_mul_inv, inv_mul_cancel_right a b]
+
 end Groupₓ
 
 section AddGroupₓ
@@ -419,11 +431,6 @@ variable{G : Type u}[AddGroupₓ G]{a b c d : G}
 theorem sub_self (a : G) : a - a = 0 :=
   by 
     rw [sub_eq_add_neg, add_right_negₓ a]
-
-@[simp]
-theorem sub_add_cancel (a b : G) : ((a - b)+b) = a :=
-  by 
-    rw [sub_eq_add_neg, neg_add_cancel_right a b]
 
 @[simp]
 theorem add_sub_cancel (a b : G) : (a+b) - b = a :=
@@ -448,12 +455,6 @@ theorem sub_ne_zero_of_ne (h : a ≠ b) : a - b ≠ 0 :=
 theorem sub_neg_eq_add (a b : G) : a - -b = a+b :=
   by 
     rw [sub_eq_add_neg, neg_negₓ]
-
-@[simp]
-theorem neg_sub (a b : G) : -(a - b) = b - a :=
-  neg_eq_of_add_eq_zeroₓ
-    (by 
-      rw [sub_eq_add_neg, sub_eq_add_neg, add_assocₓ, neg_add_cancel_leftₓ, add_right_negₓ])
 
 attribute [local simp] add_assocₓ
 

@@ -95,7 +95,7 @@ theorem dist_apply_le_dist (x : α) : dist (f x) (g x) ≤ dist f g :=
     simp only [←dist_mk_of_compact, dist_coe_le_dist, ←mk_of_compact_apply]
 
 /-- The distance between two functions is controlled by the supremum of the pointwise distances -/
-theorem dist_le (C0 : (0 : ℝ) ≤ C) : dist f g ≤ C ↔ ∀ x : α, dist (f x) (g x) ≤ C :=
+theorem dist_le (C0 : (0 : ℝ) ≤ C) : dist f g ≤ C ↔ ∀ (x : α), dist (f x) (g x) ≤ C :=
   by 
     simp only [←dist_mk_of_compact, dist_le C0, mk_of_compact_apply]
 
@@ -103,14 +103,14 @@ theorem dist_le_iff_of_nonempty [Nonempty α] : dist f g ≤ C ↔ ∀ x, dist (
   by 
     simp only [←dist_mk_of_compact, dist_le_iff_of_nonempty, mk_of_compact_apply]
 
-theorem dist_lt_iff_of_nonempty [Nonempty α] : dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C :=
+theorem dist_lt_iff_of_nonempty [Nonempty α] : dist f g < C ↔ ∀ (x : α), dist (f x) (g x) < C :=
   by 
     simp only [←dist_mk_of_compact, dist_lt_iff_of_nonempty_compact, mk_of_compact_apply]
 
-theorem dist_lt_of_nonempty [Nonempty α] (w : ∀ x : α, dist (f x) (g x) < C) : dist f g < C :=
+theorem dist_lt_of_nonempty [Nonempty α] (w : ∀ (x : α), dist (f x) (g x) < C) : dist f g < C :=
   dist_lt_iff_of_nonempty.2 w
 
-theorem dist_lt_iff (C0 : (0 : ℝ) < C) : dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C :=
+theorem dist_lt_iff (C0 : (0 : ℝ) < C) : dist f g < C ↔ ∀ (x : α), dist (f x) (g x) < C :=
   by 
     simp only [←dist_mk_of_compact, dist_lt_iff_of_compact C0, mk_of_compact_apply]
 
@@ -119,13 +119,13 @@ end
 instance  [CompleteSpace β] : CompleteSpace C(α, β) :=
   (isometric_bounded_of_compact α β).CompleteSpace
 
-@[continuity]
-theorem continuous_eval : Continuous fun p : C(α, β) × α => p.1 p.2 :=
-  continuous_eval.comp ((isometric_bounded_of_compact α β).Continuous.prod_map continuous_id)
+-- error in Topology.ContinuousFunction.Compact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_eval : continuous (λ p : «expr × »(«exprC( , )»(α, β), α), p.1 p.2) :=
+continuous_eval.comp ((isometric_bounded_of_compact α β).continuous.prod_map continuous_id)
 
-@[continuity]
-theorem continuous_evalx (x : α) : Continuous fun f : C(α, β) => f x :=
-  continuous_eval.comp (continuous_id.prod_mk continuous_const)
+-- error in Topology.ContinuousFunction.Compact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_evalx (x : α) : continuous (λ f : «exprC( , )»(α, β), f x) :=
+continuous_eval.comp (continuous_id.prod_mk continuous_const)
 
 theorem continuous_coe : @Continuous C(α, β) (α → β) _ _ coeFn :=
   continuous_pi continuous_evalx
@@ -163,7 +163,7 @@ theorem dist_le_two_norm (x y : α) : dist (f x) (f y) ≤ 2*∥f∥ :=
   (mk_of_compact f).dist_le_two_norm x y
 
 /-- The norm of a function is controlled by the supremum of the pointwise norms -/
-theorem norm_le {C : ℝ} (C0 : (0 : ℝ) ≤ C) : ∥f∥ ≤ C ↔ ∀ x : α, ∥f x∥ ≤ C :=
+theorem norm_le {C : ℝ} (C0 : (0 : ℝ) ≤ C) : ∥f∥ ≤ C ↔ ∀ (x : α), ∥f x∥ ≤ C :=
   @BoundedContinuousFunction.norm_le _ _ _ _ (mk_of_compact f) _ C0
 
 theorem norm_le_of_nonempty [Nonempty α] {M : ℝ} : ∥f∥ ≤ M ↔ ∀ x, ∥f x∥ ≤ M :=

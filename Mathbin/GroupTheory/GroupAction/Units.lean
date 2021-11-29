@@ -110,3 +110,8 @@ example  [Monoidₓ M] [Monoidₓ N] [MulAction M N] [SmulCommClass M N N] [IsSc
 
 end Units
 
+theorem IsUnit.smul [Groupₓ G] [Monoidₓ M] [MulAction G M] [SmulCommClass G M M] [IsScalarTower G M M] {m : M} (g : G)
+  (h : IsUnit m) : IsUnit (g • m) :=
+  let ⟨u, hu⟩ := h 
+  hu ▸ ⟨g • u, Units.coe_smul _ _⟩
+

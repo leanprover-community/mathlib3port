@@ -49,61 +49,77 @@ variable[BorelSpace G][Groupₓ G][TopologicalGroup G]
 
 variable{μ ν : Measureₓ G}[sigma_finite ν][sigma_finite μ]
 
+-- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- This condition is part of the definition of a measurable group in [Halmos, §59].
   There, the map in this lemma is called `S`. -/
-@[toAdditive map_prod_sum_eq]
-theorem map_prod_mul_eq (hν : is_mul_left_invariant ν) : map (fun z : G × G => (z.1, z.1*z.2)) (μ.prod ν) = μ.prod ν :=
-  by 
-    refine' (prod_eq _).symm 
-    intro s t hs ht 
-    simpRw [map_apply (measurable_fst.prod_mk (measurable_fst.mul measurable_snd)) (hs.prod ht),
-      prod_apply ((measurable_fst.prod_mk (measurable_fst.mul measurable_snd)) (hs.prod ht)), preimage_preimage]
-    convLHS => congr skip ext rw [mk_preimage_prod_right_fn_eq_if ((·*·) x), measure_if]
-    simpRw [hν _ ht, lintegral_indicator _ hs, set_lintegral_const, mul_commₓ]
+@[to_additive #[ident map_prod_sum_eq]]
+theorem map_prod_mul_eq
+(hν : is_mul_left_invariant ν) : «expr = »(map (λ
+  z : «expr × »(G, G), (z.1, «expr * »(z.1, z.2))) (μ.prod ν), μ.prod ν) :=
+begin
+  refine [expr (prod_eq _).symm],
+  intros [ident s, ident t, ident hs, ident ht],
+  simp_rw ["[", expr map_apply (measurable_fst.prod_mk (measurable_fst.mul measurable_snd)) (hs.prod ht), ",", expr prod_apply (measurable_fst.prod_mk (measurable_fst.mul measurable_snd) (hs.prod ht)), ",", expr preimage_preimage, "]"] [],
+  conv_lhs [] [] { congr,
+    skip,
+    funext,
+    rw ["[", expr mk_preimage_prod_right_fn_eq_if (((«expr * »)) x), ",", expr measure_if, "]"] },
+  simp_rw ["[", expr hν _ ht, ",", expr lintegral_indicator _ hs, ",", expr set_lintegral_const, ",", expr mul_comm, "]"] []
+end
 
+-- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function we are mapping along is `SR` in [Halmos, §59],
   where `S` is the map in `map_prod_mul_eq` and `R` is `prod.swap`. -/
-@[toAdditive map_prod_add_eq_swap]
-theorem map_prod_mul_eq_swap (hμ : is_mul_left_invariant μ) :
-  map (fun z : G × G => (z.2, z.2*z.1)) (μ.prod ν) = ν.prod μ :=
-  by 
-    rw [←prod_swap]
-    simpRw [map_map (measurable_snd.prod_mk (measurable_snd.mul measurable_fst)) measurable_swap]
-    exact map_prod_mul_eq hμ
+@[to_additive #[ident map_prod_add_eq_swap]]
+theorem map_prod_mul_eq_swap
+(hμ : is_mul_left_invariant μ) : «expr = »(map (λ
+  z : «expr × »(G, G), (z.2, «expr * »(z.2, z.1))) (μ.prod ν), ν.prod μ) :=
+begin
+  rw ["[", "<-", expr prod_swap, "]"] [],
+  simp_rw ["[", expr map_map (measurable_snd.prod_mk (measurable_snd.mul measurable_fst)) measurable_swap, "]"] [],
+  exact [expr map_prod_mul_eq hμ]
+end
 
+-- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function we are mapping along is `S⁻¹` in [Halmos, §59],
   where `S` is the map in `map_prod_mul_eq`. -/
-@[toAdditive map_prod_neg_add_eq]
-theorem map_prod_inv_mul_eq (hν : is_mul_left_invariant ν) :
-  map (fun z : G × G => (z.1, z.1⁻¹*z.2)) (μ.prod ν) = μ.prod ν :=
-  (Homeomorph.shearMulRight G).toMeasurableEquiv.map_apply_eq_iff_map_symm_apply_eq.mp$ map_prod_mul_eq hν
+@[to_additive #[ident map_prod_neg_add_eq]]
+theorem map_prod_inv_mul_eq
+(hν : is_mul_left_invariant ν) : «expr = »(map (λ
+  z : «expr × »(G, G), (z.1, «expr * »(«expr ⁻¹»(z.1), z.2))) (μ.prod ν), μ.prod ν) :=
+«expr $ »((homeomorph.shear_mul_right G).to_measurable_equiv.map_apply_eq_iff_map_symm_apply_eq.mp, map_prod_mul_eq hν)
 
+-- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function we are mapping along is `S⁻¹R` in [Halmos, §59],
   where `S` is the map in `map_prod_mul_eq` and `R` is `prod.swap`. -/
-@[toAdditive map_prod_neg_add_eq_swap]
-theorem map_prod_inv_mul_eq_swap (hμ : is_mul_left_invariant μ) :
-  map (fun z : G × G => (z.2, z.2⁻¹*z.1)) (μ.prod ν) = ν.prod μ :=
-  by 
-    rw [←prod_swap]
-    simpRw [map_map (measurable_snd.prod_mk$ measurable_snd.inv.mul measurable_fst) measurable_swap]
-    exact map_prod_inv_mul_eq hμ
+@[to_additive #[ident map_prod_neg_add_eq_swap]]
+theorem map_prod_inv_mul_eq_swap
+(hμ : is_mul_left_invariant μ) : «expr = »(map (λ
+  z : «expr × »(G, G), (z.2, «expr * »(«expr ⁻¹»(z.2), z.1))) (μ.prod ν), ν.prod μ) :=
+begin
+  rw ["[", "<-", expr prod_swap, "]"] [],
+  simp_rw ["[", expr map_map «expr $ »(measurable_snd.prod_mk, measurable_snd.inv.mul measurable_fst) measurable_swap, "]"] [],
+  exact [expr map_prod_inv_mul_eq hμ]
+end
 
+-- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function we are mapping along is `S⁻¹RSR` in [Halmos, §59],
   where `S` is the map in `map_prod_mul_eq` and `R` is `prod.swap`. -/
-@[toAdditive map_prod_add_neg_eq]
-theorem map_prod_mul_inv_eq (hμ : is_mul_left_invariant μ) (hν : is_mul_left_invariant ν) :
-  map (fun z : G × G => (z.2*z.1, z.1⁻¹)) (μ.prod ν) = μ.prod ν :=
-  by 
-    let S := (Homeomorph.shearMulRight G).toMeasurableEquiv 
-    suffices  : map ((fun z : G × G => (z.2, z.2⁻¹*z.1)) ∘ fun z : G × G => (z.2, z.2*z.1)) (μ.prod ν) = μ.prod ν
-    ·
-      convert this 
-      ext1 ⟨x, y⟩
-      simp 
-    simpRw
-      [←map_map (measurable_snd.prod_mk (measurable_snd.inv.mul measurable_fst))
-        (measurable_snd.prod_mk (measurable_snd.mul measurable_fst)),
-      map_prod_mul_eq_swap hμ, map_prod_inv_mul_eq_swap hν]
+@[to_additive #[ident map_prod_add_neg_eq]]
+theorem map_prod_mul_inv_eq
+(hμ : is_mul_left_invariant μ)
+(hν : is_mul_left_invariant ν) : «expr = »(map (λ
+  z : «expr × »(G, G), («expr * »(z.2, z.1), «expr ⁻¹»(z.1))) (μ.prod ν), μ.prod ν) :=
+begin
+  let [ident S] [] [":=", expr (homeomorph.shear_mul_right G).to_measurable_equiv],
+  suffices [] [":", expr «expr = »(map «expr ∘ »(λ
+     z : «expr × »(G, G), (z.2, «expr * »(«expr ⁻¹»(z.2), z.1)), λ
+     z : «expr × »(G, G), (z.2, «expr * »(z.2, z.1))) (μ.prod ν), μ.prod ν)],
+  { convert [] [expr this] [],
+    ext1 [] ["⟨", ident x, ",", ident y, "⟩"],
+    simp [] [] [] [] [] [] },
+  simp_rw ["[", "<-", expr map_map (measurable_snd.prod_mk (measurable_snd.inv.mul measurable_fst)) (measurable_snd.prod_mk (measurable_snd.mul measurable_fst)), ",", expr map_prod_mul_eq_swap hμ, ",", expr map_prod_inv_mul_eq_swap hν, "]"] []
+end
 
 -- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]
@@ -128,18 +144,21 @@ theorem measure_inv_null (hμ : is_mul_left_invariant μ) {E : Set G} : μ ((fun
     convert (quasi_measure_preserving_inv hμ).preimage_null hE 
     exact set.inv_inv.symm
 
-@[toAdditive]
-theorem measurable_measure_mul_right {E : Set G} (hE : MeasurableSet E) :
-  Measurable fun x => μ ((fun y => y*x) ⁻¹' E) :=
-  by 
-    suffices  : Measurable fun y => μ ((fun x => (x, y)) ⁻¹' ((fun z : G × G => (1, z.1*z.2)) ⁻¹' Set.Prod univ E))
-    ·
-      convert this 
-      ext1 x 
-      congr 1 with y : 1
-      simp 
-    apply measurable_measure_prod_mk_right 
-    exact measurable_const.prod_mk (measurable_fst.mul measurable_snd) (measurable_set.univ.prod hE)
+-- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem measurable_measure_mul_right
+{E : set G}
+(hE : measurable_set E) : measurable (λ x, μ «expr ⁻¹' »(λ y, «expr * »(y, x), E)) :=
+begin
+  suffices [] [":", expr measurable (λ
+    y, μ «expr ⁻¹' »(λ x, (x, y), «expr ⁻¹' »(λ z : «expr × »(G, G), (1, «expr * »(z.1, z.2)), set.prod univ E)))],
+  { convert [] [expr this] [],
+    ext1 [] [ident x],
+    congr' [1] ["with", ident y, ":", 1],
+    simp [] [] [] [] [] [] },
+  apply [expr measurable_measure_prod_mk_right],
+  exact [expr measurable_const.prod_mk (measurable_fst.mul measurable_snd) (measurable_set.univ.prod hE)]
+end
 
 -- error in MeasureTheory.Group.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[to_additive #[]]

@@ -144,7 +144,7 @@ begin
     simp [] [] ["only"] ["[", expr hg, ",", expr mem_filter, ",", expr one_mul, ",", expr monoid_hom.map_mul, ",", expr mem_univ, ",", expr mul_right_inv, ",", expr eq_self_iff_true, ",", expr exists_prop_of_true, ",", expr monoid_hom.map_mul_inv, ",", expr and_self, ",", expr mul_inv_cancel_right, ",", expr inv_mul_cancel_right, "]"] [] [] }
 end
 
--- error in RingTheory.IntegralDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.IntegralDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In an integral domain, a sum indexed by a nontrivial homomorphism from a finite group is zero.
 -/
 theorem sum_hom_units_eq_zero (f : «expr →* »(G, R)) (hf : «expr ≠ »(f, 1)) : «expr = »(«expr∑ , »((g : G), f g), 0) :=

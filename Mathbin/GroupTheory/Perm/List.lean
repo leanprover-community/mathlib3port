@@ -222,7 +222,7 @@ begin
     { simp [] [] [] ["[", expr form_perm_apply_lt, ",", expr h, ",", expr nat.mod_eq_of_lt, ",", expr nat.succ_lt_succ hn', "]"] [] [] } }
 end
 
-theorem support_form_perm_of_nodup' (l : List α) (h : nodup l) (h' : ∀ x : α, l ≠ [x]) :
+theorem support_form_perm_of_nodup' (l : List α) (h : nodup l) (h' : ∀ (x : α), l ≠ [x]) :
   { x | form_perm l x ≠ x } = l.to_finset :=
   by 
     apply le_antisymmₓ
@@ -244,7 +244,7 @@ theorem support_form_perm_of_nodup' (l : List α) (h : nodup l) (h' : ∀ x : α
       ·
         simpa [Nat.mod_eq_of_ltₓ hn'] using h
 
-theorem support_form_perm_of_nodup [Fintype α] (l : List α) (h : nodup l) (h' : ∀ x : α, l ≠ [x]) :
+theorem support_form_perm_of_nodup [Fintype α] (l : List α) (h : nodup l) (h' : ∀ (x : α), l ≠ [x]) :
   support (form_perm l) = l.to_finset :=
   by 
     rw [←Finset.coe_inj]

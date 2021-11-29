@@ -199,11 +199,11 @@ variable(C)
 
 /-- An abbreviation for `Π J, has_limits_of_shape (discrete J) C` -/
 abbrev has_products :=
-  ∀ J : Type v, has_limits_of_shape (discrete J) C
+  ∀ (J : Type v), has_limits_of_shape (discrete J) C
 
 /-- An abbreviation for `Π J, has_colimits_of_shape (discrete J) C` -/
 abbrev has_coproducts :=
-  ∀ J : Type v, has_colimits_of_shape (discrete J) C
+  ∀ (J : Type v), has_colimits_of_shape (discrete J) C
 
 end CategoryTheory.Limits
 

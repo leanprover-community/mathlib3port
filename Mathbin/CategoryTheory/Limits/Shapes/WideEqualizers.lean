@@ -81,7 +81,7 @@ open WalkingParallelFamily.Hom
 
 /-- Composition of morphisms in the indexing diagram for wide (co)equalizers. -/
 def walking_parallel_family.hom.comp :
-  ∀ X Y Z : walking_parallel_family J f : walking_parallel_family.hom J X Y g : walking_parallel_family.hom J Y Z,
+  ∀ (X Y Z : walking_parallel_family J) (f : walking_parallel_family.hom J X Y) (g : walking_parallel_family.hom J Y Z),
     walking_parallel_family.hom J X Z
 | _, _, _, id _, h => h
 | _, _, _, line j, id one => line j
@@ -264,7 +264,7 @@ theorem cotrident.condition (j₁ j₂ : J) (t : cotrident f) : f j₁ ≫ t.π 
 /-- To check whether two maps are equalized by both maps of a trident, it suffices to check it for
 the first map -/
 theorem trident.equalizer_ext [Nonempty J] (s : trident f) {W : C} {k l : W ⟶ s.X} (h : k ≫ s.ι = l ≫ s.ι) :
-  ∀ j : walking_parallel_family J, k ≫ s.π.app j = l ≫ s.π.app j
+  ∀ (j : walking_parallel_family J), k ≫ s.π.app j = l ≫ s.π.app j
 | zero => h
 | one =>
   by 
@@ -273,7 +273,7 @@ theorem trident.equalizer_ext [Nonempty J] (s : trident f) {W : C} {k l : W ⟶ 
 /-- To check whether two maps are coequalized by both maps of a cotrident, it suffices to check it
 for the second map -/
 theorem cotrident.coequalizer_ext [Nonempty J] (s : cotrident f) {W : C} {k l : s.X ⟶ W} (h : s.π ≫ k = s.π ≫ l) :
-  ∀ j : walking_parallel_family J, s.ι.app j ≫ k = s.ι.app j ≫ l
+  ∀ (j : walking_parallel_family J), s.ι.app j ≫ k = s.ι.app j ≫ l
 | zero =>
   by 
     rw [←s.app_one (Classical.arbitrary J), category.assoc, category.assoc, h]
@@ -303,9 +303,10 @@ def cotrident.is_colimit.desc' [Nonempty J] {s : cotrident f} (hs : is_colimit s
 
 /-- This is a slightly more convenient method to verify that a trident is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
-def trident.is_limit.mk [Nonempty J] (t : trident f) (lift : ∀ s : trident f, s.X ⟶ t.X)
-  (fac : ∀ s : trident f, lift s ≫ t.ι = s.ι)
-  (uniq : ∀ s : trident f m : s.X ⟶ t.X w : ∀ j : walking_parallel_family J, m ≫ t.π.app j = s.π.app j, m = lift s) :
+def trident.is_limit.mk [Nonempty J] (t : trident f) (lift : ∀ (s : trident f), s.X ⟶ t.X)
+  (fac : ∀ (s : trident f), lift s ≫ t.ι = s.ι)
+  (uniq :
+    ∀ (s : trident f) (m : s.X ⟶ t.X) (w : ∀ (j : walking_parallel_family J), m ≫ t.π.app j = s.π.app j), m = lift s) :
   is_limit t :=
   { lift,
     fac' :=
@@ -319,14 +320,16 @@ def trident.is_limit.mk [Nonempty J] (t : trident f) (lift : ∀ s : trident f, 
     only asks for a proof of facts that carry any mathematical content, and allows access to the
     same `s` for all parts. -/
 def trident.is_limit.mk' [Nonempty J] (t : trident f)
-  (create : ∀ s : trident f, { l // l ≫ t.ι = s.ι ∧ ∀ {m}, m ≫ t.ι = s.ι → m = l }) : is_limit t :=
+  (create : ∀ (s : trident f), { l // l ≫ t.ι = s.ι ∧ ∀ {m}, m ≫ t.ι = s.ι → m = l }) : is_limit t :=
   trident.is_limit.mk t (fun s => (create s).1) (fun s => (create s).2.1) fun s m w => (create s).2.2 (w zero)
 
 /-- This is a slightly more convenient method to verify that a cotrident is a colimit cocone. It
     only asks for a proof of facts that carry any mathematical content -/
-def cotrident.is_colimit.mk [Nonempty J] (t : cotrident f) (desc : ∀ s : cotrident f, t.X ⟶ s.X)
-  (fac : ∀ s : cotrident f, t.π ≫ desc s = s.π)
-  (uniq : ∀ s : cotrident f m : t.X ⟶ s.X w : ∀ j : walking_parallel_family J, t.ι.app j ≫ m = s.ι.app j, m = desc s) :
+def cotrident.is_colimit.mk [Nonempty J] (t : cotrident f) (desc : ∀ (s : cotrident f), t.X ⟶ s.X)
+  (fac : ∀ (s : cotrident f), t.π ≫ desc s = s.π)
+  (uniq :
+    ∀ (s : cotrident f) (m : t.X ⟶ s.X) (w : ∀ (j : walking_parallel_family J), t.ι.app j ≫ m = s.ι.app j),
+      m = desc s) :
   is_colimit t :=
   { desc,
     fac' :=
@@ -341,7 +344,7 @@ def cotrident.is_colimit.mk [Nonempty J] (t : cotrident f) (desc : ∀ s : cotri
     only asks for a proof of facts that carry any mathematical content, and allows access to the
     same `s` for all parts. -/
 def cotrident.is_colimit.mk' [Nonempty J] (t : cotrident f)
-  (create : ∀ s : cotrident f, { l : t.X ⟶ s.X // t.π ≫ l = s.π ∧ ∀ {m}, t.π ≫ m = s.π → m = l }) : is_colimit t :=
+  (create : ∀ (s : cotrident f), { l : t.X ⟶ s.X // t.π ≫ l = s.π ∧ ∀ {m}, t.π ≫ m = s.π → m = l }) : is_colimit t :=
   cotrident.is_colimit.mk t (fun s => (create s).1) (fun s => (create s).2.1) fun s m w => (create s).2.2 (w one)
 
 /--

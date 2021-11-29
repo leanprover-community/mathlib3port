@@ -23,7 +23,7 @@ A Liouville number is a real number `x` such that for every natural number `n`, 
 In the implementation, the condition `x ≠ a/b` replaces the traditional equivalent `0 < |x - a/b|`.
 -/
 def Liouville (x : ℝ) :=
-  ∀ n : ℕ, ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / (b^n)
+  ∀ (n : ℕ), ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / (b^n)
 
 namespace Liouville
 

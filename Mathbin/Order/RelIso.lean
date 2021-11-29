@@ -99,10 +99,10 @@ protected def swap (f : r →r s) : swap r →r swap s :=
 def preimage (f : α → β) (s : β → β → Prop) : f ⁻¹'o s →r s :=
   ⟨f, fun a b => id⟩
 
-protected theorem IsIrrefl : ∀ f : r →r s [IsIrrefl β s], IsIrrefl α r
+protected theorem IsIrrefl : ∀ (f : r →r s) [IsIrrefl β s], IsIrrefl α r
 | ⟨f, o⟩, ⟨H⟩ => ⟨fun a h => H _ (o h)⟩
 
-protected theorem IsAsymm : ∀ f : r →r s [IsAsymm β s], IsAsymm α r
+protected theorem IsAsymm : ∀ (f : r →r s) [IsAsymm β s], IsAsymm α r
 | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b h₁ h₂ => H _ _ (o h₁) (o h₂)⟩
 
 protected theorem Acc (f : r →r s) (a : α) : Acc s (f a) → Acc r a :=
@@ -113,7 +113,7 @@ protected theorem Acc (f : r →r s) (a : α) : Acc s (f a) → Acc r a :=
     subst h 
     exact ⟨_, fun a' h => IH (f a') (f.map_rel h) _ rfl⟩
 
-protected theorem WellFounded : ∀ f : r →r s h : WellFounded s, WellFounded r
+protected theorem WellFounded : ∀ (f : r →r s) (h : WellFounded s), WellFounded r
 | f, ⟨H⟩ => ⟨fun a => f.acc _ (H _)⟩
 
 theorem map_inf {α β : Type _} [SemilatticeInf α] [LinearOrderₓ β]
@@ -309,39 +309,39 @@ protected theorem IsSymm (f : r ↪r s) [IsSymm β s] : IsSymm α r :=
 protected theorem IsAsymm (f : r ↪r s) [IsAsymm β s] : IsAsymm α r :=
   ⟨fun a b h₁ h₂ => asymm (f.map_rel_iff.2 h₁) (f.map_rel_iff.2 h₂)⟩
 
-protected theorem IsAntisymm : ∀ f : r ↪r s [IsAntisymm β s], IsAntisymm α r
+protected theorem IsAntisymm : ∀ (f : r ↪r s) [IsAntisymm β s], IsAntisymm α r
 | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b h₁ h₂ => f.inj' (H _ _ (o.2 h₁) (o.2 h₂))⟩
 
-protected theorem IsTrans : ∀ f : r ↪r s [IsTrans β s], IsTrans α r
+protected theorem IsTrans : ∀ (f : r ↪r s) [IsTrans β s], IsTrans α r
 | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b c h₁ h₂ => o.1 (H _ _ _ (o.2 h₁) (o.2 h₂))⟩
 
-protected theorem IsTotal : ∀ f : r ↪r s [IsTotal β s], IsTotal α r
+protected theorem IsTotal : ∀ (f : r ↪r s) [IsTotal β s], IsTotal α r
 | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o o).1 (H _ _)⟩
 
-protected theorem IsPreorder : ∀ f : r ↪r s [IsPreorder β s], IsPreorder α r
+protected theorem IsPreorder : ∀ (f : r ↪r s) [IsPreorder β s], IsPreorder α r
 | f, H =>
   by 
     exact { f.is_refl, f.is_trans with  }
 
-protected theorem IsPartialOrder : ∀ f : r ↪r s [IsPartialOrder β s], IsPartialOrder α r
+protected theorem IsPartialOrder : ∀ (f : r ↪r s) [IsPartialOrder β s], IsPartialOrder α r
 | f, H =>
   by 
     exact { f.is_preorder, f.is_antisymm with  }
 
-protected theorem IsLinearOrder : ∀ f : r ↪r s [IsLinearOrder β s], IsLinearOrder α r
+protected theorem IsLinearOrder : ∀ (f : r ↪r s) [IsLinearOrder β s], IsLinearOrder α r
 | f, H =>
   by 
     exact { f.is_partial_order, f.is_total with  }
 
-protected theorem IsStrictOrder : ∀ f : r ↪r s [IsStrictOrder β s], IsStrictOrder α r
+protected theorem IsStrictOrder : ∀ (f : r ↪r s) [IsStrictOrder β s], IsStrictOrder α r
 | f, H =>
   by 
     exact { f.is_irrefl, f.is_trans with  }
 
-protected theorem IsTrichotomous : ∀ f : r ↪r s [IsTrichotomous β s], IsTrichotomous α r
+protected theorem IsTrichotomous : ∀ (f : r ↪r s) [IsTrichotomous β s], IsTrichotomous α r
 | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o (or_congr f.inj'.eq_iff o)).1 (H _ _)⟩
 
-protected theorem IsStrictTotalOrder' : ∀ f : r ↪r s [IsStrictTotalOrder' β s], IsStrictTotalOrder' α r
+protected theorem IsStrictTotalOrder' : ∀ (f : r ↪r s) [IsStrictTotalOrder' β s], IsStrictTotalOrder' α r
 | f, H =>
   by 
     exact { f.is_trichotomous, f.is_strict_order with  }
@@ -354,10 +354,10 @@ protected theorem Acc (f : r ↪r s) (a : α) : Acc s (f a) → Acc r a :=
     subst h 
     exact ⟨_, fun a' h => IH (f a') (f.map_rel_iff.2 h) _ rfl⟩
 
-protected theorem WellFounded : ∀ f : r ↪r s h : WellFounded s, WellFounded r
+protected theorem WellFounded : ∀ (f : r ↪r s) (h : WellFounded s), WellFounded r
 | f, ⟨H⟩ => ⟨fun a => f.acc _ (H _)⟩
 
-protected theorem IsWellOrder : ∀ f : r ↪r s [IsWellOrder β s], IsWellOrder α r
+protected theorem IsWellOrder : ∀ (f : r ↪r s) [IsWellOrder β s], IsWellOrder α r
 | f, H =>
   by 
     exact { f.is_strict_total_order' with wf := f.well_founded H.wf }
@@ -853,8 +853,8 @@ theorem lt_iff_lt (e : α ≃o β) {x y : α} : e x < e y ↔ x < y :=
 /-- To show that `f : α → β`, `g : β → α` make up an order isomorphism of linear orders,
     it suffices to prove `cmp a (g b) = cmp (f a) b`. --/
 def of_cmp_eq_cmp {α β} [LinearOrderₓ α] [LinearOrderₓ β] (f : α → β) (g : β → α)
-  (h : ∀ a : α b : β, cmp a (g b) = cmp (f a) b) : α ≃o β :=
-  have gf : ∀ a : α, a = g (f a) :=
+  (h : ∀ (a : α) (b : β), cmp a (g b) = cmp (f a) b) : α ≃o β :=
+  have gf : ∀ (a : α), a = g (f a) :=
     by 
       intro 
       rw [←cmp_eq_eq_iff, h, cmp_self_eq_eq]
@@ -999,15 +999,15 @@ theorem OrderIso.map_inf [SemilatticeInf α] [SemilatticeInf β] (f : α ≃o β
     simpa [←f.symm.le_iff_le] using f.symm.to_order_embedding.map_inf_le (f x) (f y)
 
 /-- Note that this goal could also be stated `(disjoint on f) a b` -/
-theorem Disjoint.map_order_iso [SemilatticeInfBot α] [SemilatticeInfBot β] {a b : α} (f : α ≃o β) (ha : Disjoint a b) :
-  Disjoint (f a) (f b) :=
+theorem Disjoint.map_order_iso [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β] {a b : α} (f : α ≃o β)
+  (ha : Disjoint a b) : Disjoint (f a) (f b) :=
   by 
     rw [Disjoint, ←f.map_inf, ←f.map_bot]
     exact f.monotone ha
 
 @[simp]
-theorem disjoint_map_order_iso_iff [SemilatticeInfBot α] [SemilatticeInfBot β] {a b : α} (f : α ≃o β) :
-  Disjoint (f a) (f b) ↔ Disjoint a b :=
+theorem disjoint_map_order_iso_iff [SemilatticeInf α] [OrderBot α] [SemilatticeInf β] [OrderBot β] {a b : α}
+  (f : α ≃o β) : Disjoint (f a) (f b) ↔ Disjoint a b :=
   ⟨fun h => f.symm_apply_apply a ▸ f.symm_apply_apply b ▸ h.map_order_iso f.symm, fun h => h.map_order_iso f⟩
 
 theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ↪o β) (x y : α) : f x⊔f y ≤ f (x⊔y) :=
@@ -1016,9 +1016,9 @@ theorem OrderEmbedding.le_map_sup [SemilatticeSup α] [SemilatticeSup β] (f : �
 theorem OrderIso.map_sup [SemilatticeSup α] [SemilatticeSup β] (f : α ≃o β) (x y : α) : f (x⊔y) = f x⊔f y :=
   f.dual.map_inf x y
 
-section BoundedLattice
+section BoundedOrder
 
-variable[BoundedLattice α][BoundedLattice β](f : α ≃o β)
+variable[Lattice α][Lattice β][BoundedOrder α][BoundedOrder β](f : α ≃o β)
 
 include f
 
@@ -1052,7 +1052,7 @@ theorem OrderIso.is_complemented_iff : IsComplemented α ↔ IsComplemented β :
       intro 
       exact f.symm.is_complemented⟩
 
-end BoundedLattice
+end BoundedOrder
 
 end LatticeIsos
 

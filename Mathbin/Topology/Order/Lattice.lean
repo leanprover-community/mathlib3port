@@ -19,21 +19,27 @@ topological, lattice
 -/
 
 
+-- error in Topology.Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Let `L` be a topological space and let `L×L` be equipped with the product topology and let
 `⊓:L×L → L` be an infimum. Then `L` is said to have *(jointly) continuous infimum* if the map
 `⊓:L×L → L` is continuous.
 -/
-class HasContinuousInf(L : Type _)[TopologicalSpace L][HasInf L] : Prop where 
-  continuous_inf : Continuous fun p : L × L => p.1⊓p.2
+class has_continuous_inf
+(L : Type*)
+[topological_space L]
+[has_inf L] : exprProp() := (continuous_inf : continuous (λ p : «expr × »(L, L), «expr ⊓ »(p.1, p.2)))
 
+-- error in Topology.Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Let `L` be a topological space and let `L×L` be equipped with the product topology and let
 `⊓:L×L → L` be a supremum. Then `L` is said to have *(jointly) continuous supremum* if the map
 `⊓:L×L → L` is continuous.
 -/
-class HasContinuousSup(L : Type _)[TopologicalSpace L][HasSup L] : Prop where 
-  continuous_sup : Continuous fun p : L × L => p.1⊔p.2
+class has_continuous_sup
+(L : Type*)
+[topological_space L]
+[has_sup L] : exprProp() := (continuous_sup : continuous (λ p : «expr × »(L, L), «expr ⊔ »(p.1, p.2)))
 
 /--
 Let `L` be a topological space with a supremum. If the order dual has a continuous infimum then the
@@ -53,18 +59,20 @@ variable{L : Type _}[TopologicalSpace L]
 
 variable{X : Type _}[TopologicalSpace X]
 
-@[continuity]
-theorem continuous_inf [HasInf L] [HasContinuousInf L] : Continuous fun p : L × L => p.1⊓p.2 :=
-  HasContinuousInf.continuous_inf
+-- error in Topology.Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]]
+theorem continuous_inf [has_inf L] [has_continuous_inf L] : continuous (λ p : «expr × »(L, L), «expr ⊓ »(p.1, p.2)) :=
+has_continuous_inf.continuous_inf
 
 @[continuity]
 theorem Continuous.inf [HasInf L] [HasContinuousInf L] {f g : X → L} (hf : Continuous f) (hg : Continuous g) :
   Continuous fun x => f x⊓g x :=
   continuous_inf.comp (hf.prod_mk hg : _)
 
-@[continuity]
-theorem continuous_sup [HasSup L] [HasContinuousSup L] : Continuous fun p : L × L => p.1⊔p.2 :=
-  HasContinuousSup.continuous_sup
+-- error in Topology.Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]]
+theorem continuous_sup [has_sup L] [has_continuous_sup L] : continuous (λ p : «expr × »(L, L), «expr ⊔ »(p.1, p.2)) :=
+has_continuous_sup.continuous_sup
 
 @[continuity]
 theorem Continuous.sup [HasSup L] [HasContinuousSup L] {f g : X → L} (hf : Continuous f) (hg : Continuous g) :

@@ -54,7 +54,7 @@ A presheaf is a sheaf if `F` sends the cone `(pairwise.cocone U).op` to a limit 
 (Recall `pairwise.cocone U` has cone point `supr U`, mapping down to the `U i` and the `U i ⊓ U j`.)
 -/
 def is_sheaf_pairwise_intersections (F : presheaf C X) : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → opens X, Nonempty (is_limit (F.map_cone (pairwise.cocone U).op))
+  ∀ ⦃ι : Type v⦄ (U : ι → opens X), Nonempty (is_limit (F.map_cone (pairwise.cocone U).op))
 
 /--
 An alternative formulation of the sheaf condition
@@ -66,7 +66,7 @@ A presheaf is a sheaf if `F` preserves the limit of `pairwise.diagram U`.
 `U i ⊓ U j` mapping into the open sets `U i`. This diagram has limit `supr U`.)
 -/
 def is_sheaf_preserves_limit_pairwise_intersections (F : presheaf C X) : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → opens X, Nonempty (preserves_limit (pairwise.diagram U).op F)
+  ∀ ⦃ι : Type v⦄ (U : ι → opens X), Nonempty (preserves_limit (pairwise.diagram U).op F)
 
 /-!
 The remainder of this file shows that these conditions are equivalent

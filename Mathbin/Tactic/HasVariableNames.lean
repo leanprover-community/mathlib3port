@@ -144,7 +144,7 @@ instance  : HasVariableNames Stringₓ :=
 instance  : HasVariableNames Unsigned :=
   ⟨[`n, `m, `o]⟩
 
-instance  {α} {β : α → Sort _} : HasVariableNames (∀ a : α, β a) :=
+instance  {α} {β : α → Sort _} : HasVariableNames (∀ (a : α), β a) :=
   ⟨[`f, `g, `h]⟩
 
 instance  : HasVariableNames Name :=

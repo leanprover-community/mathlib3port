@@ -202,25 +202,22 @@ This lemma is not an instance, to avoid loops in type class inference.
 theorem mono_of_mono_left {f g : over X} (k : f ⟶ g) [hk : mono k.left] : mono k :=
   faithful_reflects_mono (forget X) hk
 
+-- error in CategoryTheory.Over: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If `k` is a monomorphism, then `k.left` is a monomorphism. In other words, `over.forget X` preserves
 monomorphisms.
 The converse of `category_theory.over.mono_of_mono_left`.
--/
-instance mono_left_of_mono {f g : over X} (k : f ⟶ g) [mono k] : mono k.left :=
-  by 
-    refine' ⟨fun Y : T l m a => _⟩
-    let l' : mk (m ≫ f.hom) ⟶ f :=
-      hom_mk l
-        (by 
-          dsimp 
-          rw [←over.w k, reassoc_of a])
-    suffices  : l' = hom_mk m
-    ·
-      apply congr_argₓ comma_morphism.left this 
-    rw [←cancel_mono k]
-    ext 
-    apply a
+-/ instance mono_left_of_mono {f g : over X} (k : «expr ⟶ »(f, g)) [mono k] : mono k.left :=
+begin
+  refine [expr ⟨λ (Y : T) (l m a), _⟩],
+  let [ident l'] [":", expr «expr ⟶ »(mk «expr ≫ »(m, f.hom), f)] [":=", expr hom_mk l (by { dsimp [] [] [] [],
+      rw ["[", "<-", expr over.w k, ",", expr reassoc_of a, "]"] [] })],
+  suffices [] [":", expr «expr = »(l', hom_mk m)],
+  { apply [expr congr_arg comma_morphism.left this] },
+  rw ["<-", expr cancel_mono k] [],
+  ext [] [] [],
+  apply [expr a]
+end
 
 section IteratedSlice
 

@@ -75,13 +75,13 @@ def hom_to_index (V : opens_le_cover U) : V.val ⟶ U (index V) :=
 
 end OpensLeCover
 
+-- error in Topology.Sheaves.SheafCondition.OpensLeCover: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 `supr U` as a cocone over the opens sets contained in some element of the cover.
 
 (In fact this is a colimit cocone.)
--/
-def opens_le_cover_cocone : cocone (full_subcategory_inclusion _ : opens_le_cover U ⥤ opens X) :=
-  { x := supr U, ι := { app := fun V : opens_le_cover U => V.hom_to_index ≫ opens.le_supr U _ } }
+-/ def opens_le_cover_cocone : cocone (full_subcategory_inclusion _ : «expr ⥤ »(opens_le_cover U, opens X)) :=
+{ X := supr U, ι := { app := λ V : opens_le_cover U, «expr ≫ »(V.hom_to_index, opens.le_supr U _) } }
 
 end SheafCondition
 
@@ -97,7 +97,7 @@ A presheaf is a sheaf if `F` sends the cone `(opens_le_cover_cocone U).op` to a 
 mapping down to any `V` which is contained in some `U i`.)
 -/
 def is_sheaf_opens_le_cover : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → opens X, Nonempty (is_limit (F.map_cone (opens_le_cover_cocone U).op))
+  ∀ ⦃ι : Type v⦄ (U : ι → opens X), Nonempty (is_limit (F.map_cone (opens_le_cover_cocone U).op))
 
 namespace SheafCondition
 

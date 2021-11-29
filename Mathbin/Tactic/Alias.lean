@@ -91,6 +91,7 @@ unsafe def make_left_right : Name → tactic (Name × Name)
         p <.> "_".intercalate (left ++ "of" :: right ++ suffix))
 | _ => failed
 
+-- error in Tactic.Alias: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The `alias` command can be used to create copies
 of a theorem or definition with different names.
@@ -126,27 +127,23 @@ The `..` notation attempts to generate the 'of'-names automatically when the
 input theorem has the form `A_iff_B` or `A_iff_B_left` etc.
 -/
 @[user_command]
-unsafe def alias_cmd (meta_info : decl_meta_info) (_ : parse$ tk "alias") : lean.parser Unit :=
-  do 
-    let old ← ident 
-    let d ←
-      (do 
-            let old ← resolve_constant old 
-            get_decl old) <|>
-          fail ("declaration " ++ toString old ++ " not found")
-    let doc := fun al : Name => meta_info.doc_string.get_or_else$ "**Alias** of `" ++ toString old ++ "`."
-    (do 
-          tk "←" <|> tk "<-"
-          let aliases ← many ident
-          «expr↑ » (aliases.mmap'$ fun al => alias_direct d (doc al) al)) <|>
-        do 
-          tk "↔" <|> tk "<->"
-          let (left, right) ←
-            mcond (tk "." *> tk "." >> pure tt <|> pure ff)
-                (make_left_right old <|> fail "invalid name for automatic name generation")
-                (Prod.mk <$> types.ident_ <*> types.ident_)
-          alias_iff d (doc left) left `iff.mp 
-          alias_iff d (doc right) right `iff.mpr
+meta
+def alias_cmd (meta_info : decl_meta_info) (_ : «expr $ »(parse, tk "alias")) : lean.parser unit :=
+do {
+old ← ident,
+  d ← «expr <|> »(do {
+   old ← resolve_constant old,
+     get_decl old }, fail «expr ++ »(«expr ++ »("declaration ", to_string old), " not found")),
+  let doc := λ
+  al : name, «expr $ »(meta_info.doc_string.get_or_else, «expr ++ »(«expr ++ »("**Alias** of `", to_string old), "`.")),
+  «expr <|> »(do
+   «expr <|> »(tk "←", tk "<-"),
+     aliases ← many ident,
+     «expr↑ »(«expr $ »(aliases.mmap', λ al, alias_direct d (doc al) al)), do
+   «expr <|> »(tk "↔", tk "<->"),
+     (left, right) ← mcond «expr <|> »(«expr >> »(«expr *> »(tk ".", tk "."), pure tt), pure ff) «expr <|> »(make_left_right old, fail "invalid name for automatic name generation") «expr <*> »(«expr <$> »(prod.mk, types.ident_), types.ident_),
+     alias_iff d (doc left) left (`iff.mp),
+     alias_iff d (doc right) right (`iff.mpr)) }
 
 add_tactic_doc
   { Name := "alias", category := DocCategory.cmd, declNames := [`tactic.alias.alias_cmd], tags := ["renaming"] }

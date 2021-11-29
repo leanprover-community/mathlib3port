@@ -55,13 +55,13 @@ theorem fold_map {g : γ ↪ α} {s : Finset γ} : (s.map g).fold op b f = s.fol
     simp only [fold, map, Multiset.map_map]
 
 @[simp]
-theorem fold_image [DecidableEq α] {g : γ → α} {s : Finset γ} (H : ∀ x _ : x ∈ s y _ : y ∈ s, g x = g y → x = y) :
+theorem fold_image [DecidableEq α] {g : γ → α} {s : Finset γ} (H : ∀ x (_ : x ∈ s) y (_ : y ∈ s), g x = g y → x = y) :
   (s.image g).fold op b f = s.fold op b (f ∘ g) :=
   by 
     simp only [fold, image_val_of_inj_on H, Multiset.map_map]
 
 @[congr]
-theorem fold_congr {g : α → β} (H : ∀ x _ : x ∈ s, f x = g x) : s.fold op b f = s.fold op b g :=
+theorem fold_congr {g : α → β} (H : ∀ x (_ : x ∈ s), f x = g x) : s.fold op b f = s.fold op b g :=
   by 
     rw [fold, fold, map_congr H]
 
@@ -184,7 +184,7 @@ section Order
 
 variable[LinearOrderₓ β](c : β)
 
-theorem le_fold_min : c ≤ s.fold min b f ↔ c ≤ b ∧ ∀ x _ : x ∈ s, c ≤ f x :=
+theorem le_fold_min : c ≤ s.fold min b f ↔ c ≤ b ∧ ∀ x (_ : x ∈ s), c ≤ f x :=
   fold_op_rel_iff_and$ fun x y z => le_min_iff
 
 theorem fold_min_le : s.fold min b f ≤ c ↔ b ≤ c ∨ ∃ (x : _)(_ : x ∈ s), f x ≤ c :=
@@ -195,7 +195,7 @@ theorem fold_min_le : s.fold min b f ≤ c ↔ b ≤ c ∨ ∃ (x : _)(_ : x ∈
     show _ ≤ _ ↔ _ 
     exact min_le_iff
 
-theorem lt_fold_min : c < s.fold min b f ↔ c < b ∧ ∀ x _ : x ∈ s, c < f x :=
+theorem lt_fold_min : c < s.fold min b f ↔ c < b ∧ ∀ x (_ : x ∈ s), c < f x :=
   fold_op_rel_iff_and$ fun x y z => lt_min_iff
 
 theorem fold_min_lt : s.fold min b f < c ↔ b < c ∨ ∃ (x : _)(_ : x ∈ s), f x < c :=
@@ -206,7 +206,7 @@ theorem fold_min_lt : s.fold min b f < c ↔ b < c ∨ ∃ (x : _)(_ : x ∈ s),
     show _ < _ ↔ _ 
     exact min_lt_iff
 
-theorem fold_max_le : s.fold max b f ≤ c ↔ b ≤ c ∧ ∀ x _ : x ∈ s, f x ≤ c :=
+theorem fold_max_le : s.fold max b f ≤ c ↔ b ≤ c ∧ ∀ x (_ : x ∈ s), f x ≤ c :=
   by 
     show _ ≥ _ ↔ _ 
     apply fold_op_rel_iff_and 
@@ -217,7 +217,7 @@ theorem fold_max_le : s.fold max b f ≤ c ↔ b ≤ c ∧ ∀ x _ : x ∈ s, f 
 theorem le_fold_max : c ≤ s.fold max b f ↔ c ≤ b ∨ ∃ (x : _)(_ : x ∈ s), c ≤ f x :=
   fold_op_rel_iff_or$ fun x y z => le_max_iff
 
-theorem fold_max_lt : s.fold max b f < c ↔ b < c ∧ ∀ x _ : x ∈ s, f x < c :=
+theorem fold_max_lt : s.fold max b f < c ↔ b < c ∧ ∀ x (_ : x ∈ s), f x < c :=
   by 
     show _ > _ ↔ _ 
     apply fold_op_rel_iff_and 

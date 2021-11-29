@@ -51,14 +51,14 @@ variable(𝕜 :
 /-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
 all points maximizing it). Written `is_exposed 𝕜 A B`. -/
 def IsExposed (A B : Set E) : Prop :=
-  B.nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x∈A | ∀ y _ : y ∈ A, l y ≤ l x }
+  B.nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x∈A | ∀ y (_ : y ∈ A), l y ≤ l x }
 
 variable{𝕜}
 
 /-- A useful way to build exposed sets from intersecting `A` with halfspaces (modelled by an
 inequality with a functional). -/
 def ContinuousLinearMap.ToExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
-  { x∈A | ∀ y _ : y ∈ A, l y ≤ l x }
+  { x∈A | ∀ y (_ : y ∈ A), l y ≤ l x }
 
 theorem ContinuousLinearMap.ToExposed.is_exposed : IsExposed 𝕜 A (l.to_exposed A) :=
   fun h => ⟨l, rfl⟩
@@ -134,7 +134,7 @@ protected theorem inter (hB : IsExposed 𝕜 A B) (hC : IsExposed 𝕜 A C) : Is
     ·
       exact (add_le_add_iff_left (l₁ x)).1 (le_transₓ (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
 
-theorem sInter {F : Finset (Set E)} (hF : F.nonempty) (hAF : ∀ B _ : B ∈ F, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀F) :=
+theorem sInter {F : Finset (Set E)} (hF : F.nonempty) (hAF : ∀ B (_ : B ∈ F), IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀F) :=
   by 
     revert hF F 
     refine' Finset.induction _ _
@@ -207,12 +207,12 @@ variable(𝕜)
 /-- A point is exposed with respect to `A` iff there exists an hyperplane whose intersection with
 `A` is exactly that point. -/
 def Set.ExposedPoints (A : Set E) : Set E :=
-  { x∈A | ∃ l : E →L[𝕜] 𝕜, ∀ y _ : y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) }
+  { x∈A | ∃ l : E →L[𝕜] 𝕜, ∀ y (_ : y ∈ A), l y ≤ l x ∧ (l x ≤ l y → y = x) }
 
 variable{𝕜}
 
 theorem exposed_point_def :
-  x ∈ A.exposed_points 𝕜 ↔ x ∈ A ∧ ∃ l : E →L[𝕜] 𝕜, ∀ y _ : y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) :=
+  x ∈ A.exposed_points 𝕜 ↔ x ∈ A ∧ ∃ l : E →L[𝕜] 𝕜, ∀ y (_ : y ∈ A), l y ≤ l x ∧ (l x ≤ l y → y = x) :=
   Iff.rfl
 
 theorem exposed_points_subset : A.exposed_points 𝕜 ⊆ A :=

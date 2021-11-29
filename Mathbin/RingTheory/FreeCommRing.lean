@@ -352,20 +352,17 @@ protected theorem coe_surjective : surjective (coeₓ : FreeRing α → FreeComm
         use x*y 
         exact (FreeRing.lift _).map_mul _ _
 
-theorem coe_eq :
-  (coeₓ : FreeRing α → FreeCommRing α) = @Functor.map FreeAbelianGroup _ _ _ fun l : List α => (l : Multiset α) :=
-  funext$
-    fun x =>
-      FreeAbelianGroup.lift.unique _ _$
-        fun L =>
-          by 
-            simpRw [FreeAbelianGroup.lift.of, · ∘ ·]
-            exact
-              FreeMonoid.recOn L rfl
-                fun hd tl ih =>
-                  by 
-                    rw [(FreeMonoid.lift _).map_mul, FreeMonoid.lift_eval_of, ih]
-                    rfl
+-- error in RingTheory.FreeCommRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem coe_eq : «expr = »((coe : free_ring α → free_comm_ring α), @functor.map free_abelian_group _ _ _ (λ
+  l : list α, (l : multiset α))) :=
+«expr $ »(funext, λ
+ x, «expr $ »(free_abelian_group.lift.unique _ _, λ
+  L, by { simp_rw ["[", expr free_abelian_group.lift.of, ",", expr («expr ∘ »), "]"] [],
+    exact [expr free_monoid.rec_on L rfl (λ
+      hd
+      tl
+      ih, by { rw ["[", expr (free_monoid.lift _).map_mul, ",", expr free_monoid.lift_eval_of, ",", expr ih, "]"] [],
+        refl })] }))
 
 /-- Interpret an equivalence `f : R ≃ S` as a ring equivalence `R ≃+* S`. -/
 def of' {R S : Type _} [Ringₓ R] [Ringₓ S] (e : R ≃ S) (he : IsRingHom e) : R ≃+* S :=

@@ -32,21 +32,20 @@ variable(T : Monadₓ C)
 instance  [Inhabited C] (T : Monadₓ C) : Inhabited (kleisli T) :=
   ⟨(default _ : C)⟩
 
+-- error in CategoryTheory.Monad.Kleisli: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The Kleisli category on a monad `T`.
-    cf Definition 5.2.9 in [Riehl][riehl2017]. -/
-instance kleisli.category : category (kleisli T) :=
-  { Hom := fun X Y : C => X ⟶ (T : C ⥤ C).obj Y, id := fun X => T.η.app X,
-    comp := fun X Y Z f g => f ≫ (T : C ⥤ C).map g ≫ T.μ.app Z,
-    id_comp' :=
-      fun X Y f =>
-        by 
-          rw [←T.η.naturality_assoc f, T.left_unit]
-          apply category.comp_id,
-    assoc' :=
-      fun W X Y Z f g h =>
-        by 
-          simp only [functor.map_comp, category.assoc, monad.assoc]
-          erw [T.μ.naturality_assoc] }
+    cf Definition 5.2.9 in [Riehl][riehl2017]. -/ instance kleisli.category : category (kleisli T) :=
+{ hom := λ X Y : C, «expr ⟶ »(X, (T : «expr ⥤ »(C, C)).obj Y),
+  id := λ X, T.η.app X,
+  comp := λ X Y Z f g, «expr ≫ »(f, «expr ≫ »((T : «expr ⥤ »(C, C)).map g, T.μ.app Z)),
+  id_comp' := λ X Y f, begin
+    rw ["[", "<-", expr T.η.naturality_assoc f, ",", expr T.left_unit, "]"] [],
+    apply [expr category.comp_id]
+  end,
+  assoc' := λ W X Y Z f g h, begin
+    simp [] [] ["only"] ["[", expr functor.map_comp, ",", expr category.assoc, ",", expr monad.assoc, "]"] [] [],
+    erw [expr T.μ.naturality_assoc] []
+  end }
 
 namespace Adjunction
 

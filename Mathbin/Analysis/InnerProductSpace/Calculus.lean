@@ -35,14 +35,19 @@ def fderivInnerClm (p : E × E) : E × E →L[ℝ] 𝕜 :=
 theorem fderiv_inner_clm_apply (p x : E × E) : fderivInnerClm p x = ⟪p.1, x.2⟫+⟪x.1, p.2⟫ :=
   rfl
 
-theorem times_cont_diff_inner {n} : TimesContDiff ℝ n fun p : E × E => ⟪p.1, p.2⟫ :=
-  is_bounded_bilinear_map_inner.TimesContDiff
+-- error in Analysis.InnerProductSpace.Calculus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_inner {n} : times_cont_diff exprℝ() n (λ p : «expr × »(E, E), «expr⟪ , ⟫»(p.1, p.2)) :=
+is_bounded_bilinear_map_inner.times_cont_diff
 
-theorem times_cont_diff_at_inner {p : E × E} {n} : TimesContDiffAt ℝ n (fun p : E × E => ⟪p.1, p.2⟫) p :=
-  times_cont_diff_inner.TimesContDiffAt
+-- error in Analysis.InnerProductSpace.Calculus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_at_inner
+{p : «expr × »(E, E)}
+{n} : times_cont_diff_at exprℝ() n (λ p : «expr × »(E, E), «expr⟪ , ⟫»(p.1, p.2)) p :=
+times_cont_diff_inner.times_cont_diff_at
 
-theorem differentiable_inner : Differentiable ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
-  is_bounded_bilinear_map_inner.DifferentiableAt
+-- error in Analysis.InnerProductSpace.Calculus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem differentiable_inner : differentiable exprℝ() (λ p : «expr × »(E, E), «expr⟪ , ⟫»(p.1, p.2)) :=
+is_bounded_bilinear_map_inner.differentiable_at
 
 variable{G : Type _}[NormedGroup G][NormedSpace ℝ G]{f g : G → E}{f' g' : G →L[ℝ] E}{s : Set G}{x : G}{n : WithTop ℕ}
 
@@ -113,10 +118,12 @@ theorem deriv_inner_apply {f g : ℝ → E} {x : ℝ} (hf : DifferentiableAt ℝ
   deriv (fun t => ⟪f t, g t⟫) x = ⟪f x, deriv g x⟫+⟪deriv f x, g x⟫ :=
   (hf.has_deriv_at.inner hg.has_deriv_at).deriv
 
-theorem times_cont_diff_norm_sq : TimesContDiff ℝ n fun x : E => ∥x∥^2 :=
-  by 
-    simp only [sq, ←inner_self_eq_norm_mul_norm]
-    exact (re_clm : 𝕜 →L[ℝ] ℝ).TimesContDiff.comp (times_cont_diff_id.inner times_cont_diff_id)
+-- error in Analysis.InnerProductSpace.Calculus: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_norm_sq : times_cont_diff exprℝ() n (λ x : E, «expr ^ »(«expr∥ ∥»(x), 2)) :=
+begin
+  simp [] [] ["only"] ["[", expr sq, ",", "<-", expr inner_self_eq_norm_mul_norm, "]"] [] [],
+  exact [expr (re_clm : «expr →L[ ] »(𝕜, exprℝ(), exprℝ())).times_cont_diff.comp (times_cont_diff_id.inner times_cont_diff_id)]
+end
 
 theorem TimesContDiff.norm_sq (hf : TimesContDiff ℝ n f) : TimesContDiff ℝ n fun x => ∥f x∥^2 :=
   times_cont_diff_norm_sq.comp hf
@@ -155,12 +162,12 @@ theorem TimesContDiffWithinAt.dist (hf : TimesContDiffWithinAt ℝ n f s x) (hg 
 theorem TimesContDiffOn.norm_sq (hf : TimesContDiffOn ℝ n f s) : TimesContDiffOn ℝ n (fun y => ∥f y∥^2) s :=
   fun x hx => (hf x hx).normSq
 
-theorem TimesContDiffOn.norm (hf : TimesContDiffOn ℝ n f s) (h0 : ∀ x _ : x ∈ s, f x ≠ 0) :
+theorem TimesContDiffOn.norm (hf : TimesContDiffOn ℝ n f s) (h0 : ∀ x (_ : x ∈ s), f x ≠ 0) :
   TimesContDiffOn ℝ n (fun y => ∥f y∥) s :=
   fun x hx => (hf x hx).norm (h0 x hx)
 
 theorem TimesContDiffOn.dist (hf : TimesContDiffOn ℝ n f s) (hg : TimesContDiffOn ℝ n g s)
-  (hne : ∀ x _ : x ∈ s, f x ≠ g x) : TimesContDiffOn ℝ n (fun y => dist (f y) (g y)) s :=
+  (hne : ∀ x (_ : x ∈ s), f x ≠ g x) : TimesContDiffOn ℝ n (fun y => dist (f y) (g y)) s :=
   fun x hx => (hf x hx).dist (hg x hx) (hne x hx)
 
 theorem TimesContDiff.norm (hf : TimesContDiff ℝ n f) (h0 : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun y => ∥f y∥ :=
@@ -220,11 +227,11 @@ theorem DifferentiableWithinAt.dist (hf : DifferentiableWithinAt ℝ f s x) (hg 
 theorem DifferentiableOn.norm_sq (hf : DifferentiableOn ℝ f s) : DifferentiableOn ℝ (fun y => ∥f y∥^2) s :=
   fun x hx => (hf x hx).normSq
 
-theorem DifferentiableOn.norm (hf : DifferentiableOn ℝ f s) (h0 : ∀ x _ : x ∈ s, f x ≠ 0) :
+theorem DifferentiableOn.norm (hf : DifferentiableOn ℝ f s) (h0 : ∀ x (_ : x ∈ s), f x ≠ 0) :
   DifferentiableOn ℝ (fun y => ∥f y∥) s :=
   fun x hx => (hf x hx).norm (h0 x hx)
 
 theorem DifferentiableOn.dist (hf : DifferentiableOn ℝ f s) (hg : DifferentiableOn ℝ g s)
-  (hne : ∀ x _ : x ∈ s, f x ≠ g x) : DifferentiableOn ℝ (fun y => dist (f y) (g y)) s :=
+  (hne : ∀ x (_ : x ∈ s), f x ≠ g x) : DifferentiableOn ℝ (fun y => dist (f y) (g y)) s :=
   fun x hx => (hf x hx).dist (hg x hx) (hne x hx)
 

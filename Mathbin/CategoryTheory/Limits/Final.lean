@@ -174,6 +174,7 @@ When `F : C ⥤ D` is cofinal, we denote by `hom_to_lift` an arbitrary choice of
 def hom_to_lift (d : D) : d ⟶ F.obj (lift F d) :=
   (Classical.arbitrary (structured_arrow d F)).Hom
 
+-- error in CategoryTheory.Limits.Final: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
 We want to perform some construction (usually just a proof) about
@@ -183,27 +184,37 @@ it suffices to perform that construction for some other pair of choices
 and to show how to transport such a construction
 *both* directions along a morphism between such choices.
 -/
-def induction {d : D} (Z : ∀ X : C k : d ⟶ F.obj X, Sort _)
-  (h₁ : ∀ X₁ X₂ k₁ : d ⟶ F.obj X₁ k₂ : d ⟶ F.obj X₂ f : X₁ ⟶ X₂, k₁ ≫ F.map f = k₂ → Z X₁ k₁ → Z X₂ k₂)
-  (h₂ : ∀ X₁ X₂ k₁ : d ⟶ F.obj X₁ k₂ : d ⟶ F.obj X₂ f : X₁ ⟶ X₂, k₁ ≫ F.map f = k₂ → Z X₂ k₂ → Z X₁ k₁) {X₀ : C}
-  {k₀ : d ⟶ F.obj X₀} (z : Z X₀ k₀) : Z (lift F d) (hom_to_lift F d) :=
-  by 
-    apply Nonempty.some 
-    apply
-      @is_preconnected_induction _ _ _ (fun Y : structured_arrow d F => Z Y.right Y.hom) _ _ { right := X₀, Hom := k₀ }
-        z
-    ·
-      intro j₁ j₂ f a 
-      fapply h₁ _ _ _ _ f.right _ a 
-      convert f.w.symm 
-      dsimp 
-      simp 
-    ·
-      intro j₁ j₂ f a 
-      fapply h₂ _ _ _ _ f.right _ a 
-      convert f.w.symm 
-      dsimp 
-      simp 
+def induction
+{d : D}
+(Z : ∀ (X : C) (k : «expr ⟶ »(d, F.obj X)), Sort*)
+(h₁ : ∀
+ (X₁ X₂)
+ (k₁ : «expr ⟶ »(d, F.obj X₁))
+ (k₂ : «expr ⟶ »(d, F.obj X₂))
+ (f : «expr ⟶ »(X₁, X₂)), «expr = »(«expr ≫ »(k₁, F.map f), k₂) → Z X₁ k₁ → Z X₂ k₂)
+(h₂ : ∀
+ (X₁ X₂)
+ (k₁ : «expr ⟶ »(d, F.obj X₁))
+ (k₂ : «expr ⟶ »(d, F.obj X₂))
+ (f : «expr ⟶ »(X₁, X₂)), «expr = »(«expr ≫ »(k₁, F.map f), k₂) → Z X₂ k₂ → Z X₁ k₁)
+{X₀ : C}
+{k₀ : «expr ⟶ »(d, F.obj X₀)}
+(z : Z X₀ k₀) : Z (lift F d) (hom_to_lift F d) :=
+begin
+  apply [expr nonempty.some],
+  apply [expr @is_preconnected_induction _ _ _ (λ
+    Y : structured_arrow d F, Z Y.right Y.hom) _ _ { right := X₀, hom := k₀ } z],
+  { intros [ident j₁, ident j₂, ident f, ident a],
+    fapply [expr h₁ _ _ _ _ f.right _ a],
+    convert [] [expr f.w.symm] [],
+    dsimp [] [] [] [],
+    simp [] [] [] [] [] [] },
+  { intros [ident j₁, ident j₂, ident f, ident a],
+    fapply [expr h₂ _ _ _ _ f.right _ a],
+    convert [] [expr f.w.symm] [],
+    dsimp [] [] [] [],
+    simp [] [] [] [] [] [] }
+end
 
 variable{F G}
 
@@ -449,6 +460,7 @@ When `F : C ⥤ D` is initial, we denote by `hom_to_lift` an arbitrary choice of
 def hom_to_lift (d : D) : F.obj (lift F d) ⟶ d :=
   (Classical.arbitrary (costructured_arrow F d)).Hom
 
+-- error in CategoryTheory.Limits.Final: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 We provide an induction principle for reasoning about `lift` and `hom_to_lift`.
 We want to perform some construction (usually just a proof) about
@@ -458,27 +470,37 @@ it suffices to perform that construction for some other pair of choices
 and to show how to transport such a construction
 *both* directions along a morphism between such choices.
 -/
-def induction {d : D} (Z : ∀ X : C k : F.obj X ⟶ d, Sort _)
-  (h₁ : ∀ X₁ X₂ k₁ : F.obj X₁ ⟶ d k₂ : F.obj X₂ ⟶ d f : X₁ ⟶ X₂, F.map f ≫ k₂ = k₁ → Z X₁ k₁ → Z X₂ k₂)
-  (h₂ : ∀ X₁ X₂ k₁ : F.obj X₁ ⟶ d k₂ : F.obj X₂ ⟶ d f : X₁ ⟶ X₂, F.map f ≫ k₂ = k₁ → Z X₂ k₂ → Z X₁ k₁) {X₀ : C}
-  {k₀ : F.obj X₀ ⟶ d} (z : Z X₀ k₀) : Z (lift F d) (hom_to_lift F d) :=
-  by 
-    apply Nonempty.some 
-    apply
-      @is_preconnected_induction _ _ _ (fun Y : costructured_arrow F d => Z Y.left Y.hom) _ _ { left := X₀, Hom := k₀ }
-        z
-    ·
-      intro j₁ j₂ f a 
-      fapply h₁ _ _ _ _ f.left _ a 
-      convert f.w 
-      dsimp 
-      simp 
-    ·
-      intro j₁ j₂ f a 
-      fapply h₂ _ _ _ _ f.left _ a 
-      convert f.w 
-      dsimp 
-      simp 
+def induction
+{d : D}
+(Z : ∀ (X : C) (k : «expr ⟶ »(F.obj X, d)), Sort*)
+(h₁ : ∀
+ (X₁ X₂)
+ (k₁ : «expr ⟶ »(F.obj X₁, d))
+ (k₂ : «expr ⟶ »(F.obj X₂, d))
+ (f : «expr ⟶ »(X₁, X₂)), «expr = »(«expr ≫ »(F.map f, k₂), k₁) → Z X₁ k₁ → Z X₂ k₂)
+(h₂ : ∀
+ (X₁ X₂)
+ (k₁ : «expr ⟶ »(F.obj X₁, d))
+ (k₂ : «expr ⟶ »(F.obj X₂, d))
+ (f : «expr ⟶ »(X₁, X₂)), «expr = »(«expr ≫ »(F.map f, k₂), k₁) → Z X₂ k₂ → Z X₁ k₁)
+{X₀ : C}
+{k₀ : «expr ⟶ »(F.obj X₀, d)}
+(z : Z X₀ k₀) : Z (lift F d) (hom_to_lift F d) :=
+begin
+  apply [expr nonempty.some],
+  apply [expr @is_preconnected_induction _ _ _ (λ
+    Y : costructured_arrow F d, Z Y.left Y.hom) _ _ { left := X₀, hom := k₀ } z],
+  { intros [ident j₁, ident j₂, ident f, ident a],
+    fapply [expr h₁ _ _ _ _ f.left _ a],
+    convert [] [expr f.w] [],
+    dsimp [] [] [] [],
+    simp [] [] [] [] [] [] },
+  { intros [ident j₁, ident j₂, ident f, ident a],
+    fapply [expr h₂ _ _ _ _ f.left _ a],
+    convert [] [expr f.w] [],
+    dsimp [] [] [] [],
+    simp [] [] [] [] [] [] }
+end
 
 variable{F G}
 

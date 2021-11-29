@@ -87,7 +87,7 @@ def concrete_category.has_coe_to_fun {X Y : C} : CoeFun (X ⟶ Y) fun f => X →
 attribute [local instance] concrete_category.has_coe_to_fun
 
 /-- In any concrete category, we can test equality of morphisms by pointwise evaluations.-/
-theorem concrete_category.hom_ext {X Y : C} (f g : X ⟶ Y) (w : ∀ x : X, f x = g x) : f = g :=
+theorem concrete_category.hom_ext {X Y : C} (f g : X ⟶ Y) (w : ∀ (x : X), f x = g x) : f = g :=
   by 
     apply faithful.map_injective (forget C)
     ext 
@@ -97,12 +97,12 @@ theorem concrete_category.hom_ext {X Y : C} (f g : X ⟶ Y) (w : ∀ x : X, f x 
 theorem forget_map_eq_coe {X Y : C} (f : X ⟶ Y) : (forget C).map f = f :=
   rfl
 
+-- error in CategoryTheory.ConcreteCategory.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Analogue of `congr_fun h x`,
 when `h : f = g` is an equality between morphisms in a concrete category.
--/
-theorem congr_hom {X Y : C} {f g : X ⟶ Y} (h : f = g) (x : X) : f x = g x :=
-  congr_funₓ (congr_argₓ (fun k : X ⟶ Y => (k : X → Y)) h) x
+-/ theorem congr_hom {X Y : C} {f g : «expr ⟶ »(X, Y)} (h : «expr = »(f, g)) (x : X) : «expr = »(f x, g x) :=
+congr_fun (congr_arg (λ k : «expr ⟶ »(X, Y), (k : X → Y)) h) x
 
 theorem coe_id {X : C} : (𝟙 X : X → X) = id :=
   (forget _).map_id X
@@ -126,8 +126,13 @@ theorem coe_hom_inv_id {X Y : C} (f : X ≅ Y) (x : X) : f.inv (f.hom x) = x :=
 theorem coe_inv_hom_id {X Y : C} (f : X ≅ Y) (y : Y) : f.hom (f.inv y) = y :=
   congr_funₓ ((forget C).mapIso f).inv_hom_id y
 
-theorem concrete_category.congr_hom {X Y : C} {f g : X ⟶ Y} (h : f = g) (x : X) : f x = g x :=
-  congr_funₓ (congr_argₓ (fun f : X ⟶ Y => (f : X → Y)) h) x
+-- error in CategoryTheory.ConcreteCategory.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem concrete_category.congr_hom
+{X Y : C}
+{f g : «expr ⟶ »(X, Y)}
+(h : «expr = »(f, g))
+(x : X) : «expr = »(f x, g x) :=
+congr_fun (congr_arg (λ f : «expr ⟶ »(X, Y), (f : X → Y)) h) x
 
 theorem concrete_category.congr_arg {X Y : C} (f : X ⟶ Y) {x x' : X} (h : x = x') : f x = f x' :=
   congr_argₓ (f : X → Y) h

@@ -29,7 +29,7 @@ morphism `f : A ⟶ B`, if `F.map f` is an isomorphism then `f` is as well.
 Note that we do not assume or require that `F` is faithful.
 -/
 class reflects_isomorphisms(F : C ⥤ D) : Prop where 
-  reflects : ∀ {A B : C} f : A ⟶ B [is_iso (F.map f)], is_iso f
+  reflects : ∀ {A B : C} (f : A ⟶ B) [is_iso (F.map f)], is_iso f
 
 /-- If `F` reflects isos and `F.map f` is an iso, then `f` is an iso. -/
 theorem is_iso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [is_iso (F.map f)] [reflects_isomorphisms F] :

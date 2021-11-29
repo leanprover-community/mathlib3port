@@ -37,13 +37,13 @@ theorem log_of_one_lt_of_le {b n : ℕ} (h : 1 < b) (hn : b ≤ n) : log b n = l
     rw [log]
     exact if_pos ⟨hn, h⟩
 
-theorem log_of_lt {b n : ℕ} (hnb : n < b) : log b n = 0 :=
-  by 
-    rw [log, if_neg fun h : b ≤ n ∧ 1 < b => h.1.not_lt hnb]
+-- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem log_of_lt {b n : exprℕ()} (hnb : «expr < »(n, b)) : «expr = »(log b n, 0) :=
+by rw ["[", expr log, ",", expr if_neg (λ h : «expr ∧ »(«expr ≤ »(b, n), «expr < »(1, b)), h.1.not_lt hnb), "]"] []
 
-theorem log_of_left_le_one {b n : ℕ} (hb : b ≤ 1) : log b n = 0 :=
-  by 
-    rw [log, if_neg fun h : b ≤ n ∧ 1 < b => h.2.not_le hb]
+-- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem log_of_left_le_one {b n : exprℕ()} (hb : «expr ≤ »(b, 1)) : «expr = »(log b n, 0) :=
+by rw ["[", expr log, ",", expr if_neg (λ h : «expr ∧ »(«expr ≤ »(b, n), «expr < »(1, b)), h.2.not_le hb), "]"] []
 
 -- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem log_eq_zero_iff
@@ -162,8 +162,8 @@ theorem log_le_log_of_left_ge {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : log b 
       pow_le_pow_of_le_left (le_of_ltₓ$ zero_lt_one.trans hc) hb _ _ ≤ n.succ :=
       pow_log_le_self (lt_of_lt_of_leₓ hc hb) (zero_lt_succ n)
 
-theorem log_monotone {b : ℕ} : Monotone fun n : ℕ => log b n :=
-  fun x y => log_le_log_of_le
+-- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem log_monotone {b : exprℕ()} : monotone (λ n : exprℕ(), log b n) := λ x y, log_le_log_of_le
 
 theorem log_antitone_left {n : ℕ} : AntitoneOn (fun b => log b n) (Set.Ioi 1) :=
   fun _ hc _ _ hb => log_le_log_of_left_ge (Set.mem_Iio.1 hc) hb
@@ -187,13 +187,13 @@ def clog (b : ℕ) : ℕ → ℕ
     clog (((n+b) - 1) / b)+1
   else 0
 
-theorem clog_of_left_le_one {b : ℕ} (hb : b ≤ 1) (n : ℕ) : clog b n = 0 :=
-  by 
-    rw [clog, if_neg fun h : 1 < b ∧ 1 < n => h.1.not_le hb]
+-- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem clog_of_left_le_one {b : exprℕ()} (hb : «expr ≤ »(b, 1)) (n : exprℕ()) : «expr = »(clog b n, 0) :=
+by rw ["[", expr clog, ",", expr if_neg (λ h : «expr ∧ »(«expr < »(1, b), «expr < »(1, n)), h.1.not_le hb), "]"] []
 
-theorem clog_of_right_le_one {n : ℕ} (hn : n ≤ 1) (b : ℕ) : clog b n = 0 :=
-  by 
-    rw [clog, if_neg fun h : 1 < b ∧ 1 < n => h.2.not_le hn]
+-- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem clog_of_right_le_one {n : exprℕ()} (hn : «expr ≤ »(n, 1)) (b : exprℕ()) : «expr = »(clog b n, 0) :=
+by rw ["[", expr clog, ",", expr if_neg (λ h : «expr ∧ »(«expr < »(1, b), «expr < »(1, n)), h.2.not_le hn), "]"] []
 
 @[simp]
 theorem clog_zero_left (n : ℕ) : clog 0 n = 0 :=
@@ -292,8 +292,9 @@ theorem clog_le_clog_of_left_ge {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : clog
 theorem clog_monotone (b : ℕ) : Monotone (clog b) :=
   fun x y => clog_le_clog_of_le _
 
-theorem clog_antitone_left {n : ℕ} : AntitoneOn (fun b : ℕ => clog b n) (Set.Ioi 1) :=
-  fun _ hc _ _ hb => clog_le_clog_of_left_ge (Set.mem_Iio.1 hc) hb
+-- error in Data.Nat.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem clog_antitone_left {n : exprℕ()} : antitone_on (λ b : exprℕ(), clog b n) (set.Ioi 1) :=
+λ _ hc _ _ hb, clog_le_clog_of_left_ge (set.mem_Iio.1 hc) hb
 
 theorem log_le_clog (b n : ℕ) : log b n ≤ clog b n :=
   by 

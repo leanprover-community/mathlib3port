@@ -127,7 +127,7 @@ theorem mem_span_singleton' {x y : α} : x ∈ span ({y} : Set α) ↔ ∃ a, (a
 theorem span_insert x (s : Set α) : span (insert x s) = span ({x} : Set α)⊔span s :=
   Submodule.span_insert x s
 
-theorem span_eq_bot {s : Set α} : span s = ⊥ ↔ ∀ x _ : x ∈ s, (x : α) = 0 :=
+theorem span_eq_bot {s : Set α} : span s = ⊥ ↔ ∀ x (_ : x ∈ s), (x : α) = 0 :=
   Submodule.span_eq_bot
 
 @[simp]
@@ -207,7 +207,7 @@ theorem is_maximal.ne_top {I : Ideal α} (h : I.is_maximal) : I ≠ ⊤ :=
   (is_maximal_def.1 h).1
 
 theorem is_maximal_iff {I : Ideal α} :
-  I.is_maximal ↔ (1 : α) ∉ I ∧ ∀ J : Ideal α x, I ≤ J → x ∉ I → x ∈ J → (1 : α) ∈ J :=
+  I.is_maximal ↔ (1 : α) ∉ I ∧ ∀ (J : Ideal α) x, I ≤ J → x ∉ I → x ∈ J → (1 : α) ∈ J :=
   is_maximal_def.trans$
     and_congr I.ne_top_iff_one$
       forall_congrₓ$
@@ -251,8 +251,8 @@ instance  [Nontrivial α] : Nontrivial (Ideal α) :=
 
 /-- If P is not properly contained in any maximal ideal then it is not properly contained
   in any proper ideal -/
-theorem maximal_of_no_maximal {R : Type u} [CommSemiringₓ R] {P : Ideal R} (hmax : ∀ m : Ideal R, P < m → ¬is_maximal m)
-  (J : Ideal R) (hPJ : P < J) : J = ⊤ :=
+theorem maximal_of_no_maximal {R : Type u} [CommSemiringₓ R] {P : Ideal R}
+  (hmax : ∀ (m : Ideal R), P < m → ¬is_maximal m) (J : Ideal R) (hPJ : P < J) : J = ⊤ :=
   by 
     byContra hnonmax 
     rcases exists_le_maximal J hnonmax with ⟨M, hM1, hM2⟩
@@ -375,7 +375,7 @@ theorem span_singleton_prime {p : α} (hp : p ≠ 0) : is_prime (span ({p} : Set
   by 
     simp [is_prime_iff, Prime, span_singleton_eq_top, hp, mem_span_singleton]
 
--- error in RingTheory.Ideal.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.Ideal.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem is_maximal.is_prime {I : ideal α} (H : I.is_maximal) : I.is_prime :=
 ⟨H.1.1, λ
  x

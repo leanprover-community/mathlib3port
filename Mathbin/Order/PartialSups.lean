@@ -34,9 +34,11 @@ section SemilatticeSup
 
 variable[SemilatticeSup α]
 
+-- error in Order.PartialSups: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The monotone sequence whose value at `n` is the supremum of the `f m` where `m ≤ n`. -/
-def partialSups (f : ℕ → α) : ℕ →ₘ α :=
-  ⟨@Nat.rec (fun _ => α) (f 0) fun n : ℕ a : α => a⊔f (n+1), monotone_nat_of_le_succ fun n => le_sup_left⟩
+def partial_sups (f : exprℕ() → α) : «expr →ₘ »(exprℕ(), α) :=
+⟨@nat.rec (λ
+  _, α) (f 0) (λ (n : exprℕ()) (a : α), «expr ⊔ »(a, f «expr + »(n, 1))), monotone_nat_of_le_succ (λ n, le_sup_left)⟩
 
 @[simp]
 theorem partial_sups_zero (f : ℕ → α) : partialSups f 0 = f 0 :=
@@ -118,7 +120,7 @@ theorem partial_sups_eq_sup'_range (f : ℕ → α) (n : ℕ) :
 
 end SemilatticeSup
 
-theorem partial_sups_eq_sup_range [SemilatticeSupBot α] (f : ℕ → α) (n : ℕ) :
+theorem partial_sups_eq_sup_range [SemilatticeSup α] [OrderBot α] (f : ℕ → α) (n : ℕ) :
   partialSups f n = (Finset.range (n+1)).sup f :=
   by 
     induction' n with n ih
@@ -128,8 +130,8 @@ theorem partial_sups_eq_sup_range [SemilatticeSupBot α] (f : ℕ → α) (n : �
       dsimp [partialSups]  at ih⊢
       rw [Finset.range_succ, Finset.sup_insert, sup_comm, ih]
 
-theorem partial_sups_disjoint_of_disjoint [DistribLatticeBot α] (f : ℕ → α) (h : Pairwise (Disjoint on f)) {m n : ℕ}
-  (hmn : m < n) : Disjoint (partialSups f m) (f n) :=
+theorem partial_sups_disjoint_of_disjoint [DistribLattice α] [OrderBot α] (f : ℕ → α) (h : Pairwise (Disjoint on f))
+  {m n : ℕ} (hmn : m < n) : Disjoint (partialSups f m) (f n) :=
   by 
     induction' m with m ih
     ·

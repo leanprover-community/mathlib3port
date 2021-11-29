@@ -23,13 +23,13 @@ open_locale Pointwise
 /-- An action of an additive monoid `M` on a topological space is called *minimal* if the `M`-orbit
 of every point `x : α` is dense. -/
 class AddAction.IsMinimal(M α : Type _)[AddMonoidₓ M][TopologicalSpace α][AddAction M α] : Prop where 
-  dense_orbit : ∀ x : α, Dense (AddAction.Orbit M x)
+  dense_orbit : ∀ (x : α), Dense (AddAction.Orbit M x)
 
 /-- An action of a monoid `M` on a topological space is called *minimal* if the `M`-orbit of every
 point `x : α` is dense. -/
 @[toAdditive]
 class MulAction.IsMinimal(M α : Type _)[Monoidₓ M][TopologicalSpace α][MulAction M α] : Prop where 
-  dense_orbit : ∀ x : α, Dense (MulAction.Orbit M x)
+  dense_orbit : ∀ (x : α), Dense (MulAction.Orbit M x)
 
 open MulAction Set
 
@@ -39,9 +39,9 @@ variable(M G : Type _){α : Type _}[Monoidₓ M][Groupₓ G][TopologicalSpace α
 theorem MulAction.dense_orbit [is_minimal M α] (x : α) : Dense (orbit M x) :=
   MulAction.IsMinimal.dense_orbit x
 
-@[toAdditive]
-theorem dense_range_smul [is_minimal M α] (x : α) : DenseRange fun c : M => c • x :=
-  MulAction.dense_orbit M x
+-- error in Dynamics.Minimal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem dense_range_smul [is_minimal M α] (x : α) : dense_range (λ c : M, «expr • »(c, x)) :=
+mul_action.dense_orbit M x
 
 @[toAdditive]
 instance (priority := 100)MulAction.is_minimal_of_pretransitive [is_pretransitive M α] : is_minimal M α :=
@@ -64,28 +64,34 @@ theorem IsOpen.Union_smul [is_minimal G α] {U : Set α} (hUo : IsOpen U) (hne :
       let ⟨g, hg⟩ := hUo.exists_smul_mem G x hne
       ⟨g⁻¹, _, hg, inv_smul_smul _ _⟩
 
-@[toAdditive]
-theorem IsCompact.exists_finite_cover_smul [TopologicalSpace G] [is_minimal G α] [HasContinuousSmul G α] {K U : Set α}
-  (hK : IsCompact K) (hUo : IsOpen U) (hne : U.nonempty) : ∃ I : Finset G, K ⊆ ⋃(g : _)(_ : g ∈ I), g • U :=
-  (hK.elim_finite_subcover (fun g : G => g • U) fun g => hUo.smul _)$
-    calc K ⊆ univ := subset_univ K 
-      _ = ⋃g : G, g • U := (hUo.Union_smul G hne).symm
-      
+-- error in Dynamics.Minimal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem is_compact.exists_finite_cover_smul
+[topological_space G]
+[is_minimal G α]
+[has_continuous_smul G α]
+{K U : set α}
+(hK : is_compact K)
+(hUo : is_open U)
+(hne : U.nonempty) : «expr∃ , »((I : finset G), «expr ⊆ »(K, «expr⋃ , »((g «expr ∈ » I), «expr • »(g, U)))) :=
+«expr $ »(hK.elim_finite_subcover (λ g : G, «expr • »(g, U)) (λ g, hUo.smul _), calc
+   «expr ⊆ »(K, univ) : subset_univ K
+   «expr = »(..., «expr⋃ , »((g : G), «expr • »(g, U))) : (hUo.Union_smul G hne).symm)
 
 @[toAdditive]
-theorem dense_of_nonempty_smul_invariant [is_minimal M α] {s : Set α} (hne : s.nonempty) (hsmul : ∀ c : M, c • s ⊆ s) :
-  Dense s :=
+theorem dense_of_nonempty_smul_invariant [is_minimal M α] {s : Set α} (hne : s.nonempty)
+  (hsmul : ∀ (c : M), c • s ⊆ s) : Dense s :=
   let ⟨x, hx⟩ := hne
   (MulAction.dense_orbit M x).mono (range_subset_iff.2$ fun c => hsmul c$ ⟨x, hx, rfl⟩)
 
 @[toAdditive]
 theorem eq_empty_or_univ_of_smul_invariant_closed [is_minimal M α] {s : Set α} (hs : IsClosed s)
-  (hsmul : ∀ c : M, c • s ⊆ s) : s = ∅ ∨ s = univ :=
+  (hsmul : ∀ (c : M), c • s ⊆ s) : s = ∅ ∨ s = univ :=
   s.eq_empty_or_nonempty.imp_right$ fun hne => hs.closure_eq ▸ (dense_of_nonempty_smul_invariant M hne hsmul).closure_eq
 
 @[toAdditive]
 theorem is_minimal_iff_closed_smul_invariant [TopologicalSpace M] [HasContinuousSmul M α] :
-  is_minimal M α ↔ ∀ s : Set α, IsClosed s → (∀ c : M, c • s ⊆ s) → s = ∅ ∨ s = univ :=
+  is_minimal M α ↔ ∀ (s : Set α), IsClosed s → (∀ (c : M), c • s ⊆ s) → s = ∅ ∨ s = univ :=
   by 
     split 
     ·

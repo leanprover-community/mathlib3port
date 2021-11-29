@@ -43,7 +43,7 @@ This is satisfied both by the subtraction in additive ordered groups and by trun
 in canonically ordered monoids on many specific types.
 -/
 class HasOrderedSub(α : Type _)[LE α][Add α][Sub α] where 
-  tsub_le_iff_right : ∀ a b c : α, a - b ≤ c ↔ a ≤ c+b
+  tsub_le_iff_right : ∀ (a b c : α), a - b ≤ c ↔ a ≤ c+b
 
 section Add
 
@@ -812,7 +812,7 @@ section
 variable[Sub α][HasZero α]
 
 /-- If `α` has subtraction and `0`, we can extend the subtraction to `with_top α`. -/
-protected def sub : ∀ a b : WithTop α, WithTop α
+protected def sub : ∀ (a b : WithTop α), WithTop α
 | _, ⊤ => 0
 | ⊤, (x : α) => ⊤
 | (x : α), (y : α) => (x - y : α)

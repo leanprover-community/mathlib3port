@@ -130,7 +130,7 @@ Lift a functor between over categories to a functor between `mono_over` categori
 given suitable evidence that morphisms are taken to monomorphisms.
 -/
 @[simps]
-def lift {Y : D} (F : over Y ⥤ over X) (h : ∀ f : mono_over Y, mono (F.obj ((mono_over.forget Y).obj f)).Hom) :
+def lift {Y : D} (F : over Y ⥤ over X) (h : ∀ (f : mono_over Y), mono (F.obj ((mono_over.forget Y).obj f)).Hom) :
   mono_over Y ⥤ mono_over X :=
   { obj := fun f => ⟨_, h f⟩, map := fun _ _ k => (mono_over.forget X).Preimage ((mono_over.forget Y ⋙ F).map k) }
 
@@ -150,13 +150,13 @@ def lift_id : (lift (𝟭 (over X)) fun f => f.2) ≅ 𝟭 _ :=
   fully_faithful_cancel_right (mono_over.forget _) (iso.refl _)
 
 @[simp]
-theorem lift_comm (F : over Y ⥤ over X) (h : ∀ f : mono_over Y, mono (F.obj ((mono_over.forget Y).obj f)).Hom) :
+theorem lift_comm (F : over Y ⥤ over X) (h : ∀ (f : mono_over Y), mono (F.obj ((mono_over.forget Y).obj f)).Hom) :
   lift F h ⋙ mono_over.forget X = mono_over.forget Y ⋙ F :=
   rfl
 
 @[simp]
 theorem lift_obj_arrow {Y : D} (F : over Y ⥤ over X)
-  (h : ∀ f : mono_over Y, mono (F.obj ((mono_over.forget Y).obj f)).Hom) (f : mono_over Y) :
+  (h : ∀ (f : mono_over Y), mono (F.obj ((mono_over.forget Y).obj f)).Hom) (f : mono_over Y) :
   ((lift F h).obj f).arrow = (F.obj ((forget Y).obj f)).Hom :=
   rfl
 

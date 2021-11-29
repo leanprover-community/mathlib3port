@@ -152,12 +152,12 @@ theorem coe_eq_zero {f : α →₀ M} : (f : α → M) = 0 ↔ f = 0 :=
 theorem ext {f g : α →₀ M} (h : ∀ a, f a = g a) : f = g :=
   coe_fn_injective (funext h)
 
-theorem ext_iff {f g : α →₀ M} : f = g ↔ ∀ a : α, f a = g a :=
+theorem ext_iff {f g : α →₀ M} : f = g ↔ ∀ (a : α), f a = g a :=
   ⟨by 
       rintro rfl a <;> rfl,
     ext⟩
 
-theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.support = g.support ∧ ∀ x _ : x ∈ f.support, f x = g x :=
+theorem ext_iff' {f g : α →₀ M} : f = g ↔ f.support = g.support ∧ ∀ x (_ : x ∈ f.support), f x = g x :=
   ⟨fun h => h ▸ ⟨rfl, fun _ _ => rfl⟩,
     fun ⟨h₁, h₂⟩ =>
       ext$
@@ -191,12 +191,12 @@ theorem card_support_eq_zero {f : α →₀ M} : card f.support = 0 ↔ f = 0 :=
     simp 
 
 instance  [DecidableEq α] [DecidableEq M] : DecidableEq (α →₀ M) :=
-  fun f g => decidableOfIff (f.support = g.support ∧ ∀ a _ : a ∈ f.support, f a = g a) ext_iff'.symm
+  fun f g => decidableOfIff (f.support = g.support ∧ ∀ a (_ : a ∈ f.support), f a = g a) ext_iff'.symm
 
 theorem finite_support (f : α →₀ M) : Set.Finite (Function.Support f) :=
   f.fun_support_eq.symm ▸ f.support.finite_to_set
 
-theorem support_subset_iff {s : Set α} {f : α →₀ M} : «expr↑ » f.support ⊆ s ↔ ∀ a _ : a ∉ s, f a = 0 :=
+theorem support_subset_iff {s : Set α} {f : α →₀ M} : «expr↑ » f.support ⊆ s ↔ ∀ a (_ : a ∉ s), f a = 0 :=
   by 
     simp only [Set.subset_def, mem_coe, mem_support_iff] <;> exact forall_congrₓ fun a => not_imp_comm
 
@@ -351,10 +351,11 @@ begin
     { rw ["[", expr single_zero, ",", expr single_zero, "]"] [] } }
 end
 
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `finsupp.single a b` is injective in `a`. For the statement that it is injective in `b`, see
 `finsupp.single_injective` -/
-theorem single_left_injective (h : b ≠ 0) : Function.Injective fun a : α => single a b :=
-  fun a a' H => (((single_eq_single_iff _ _ _ _).mp H).resolve_right$ fun hb => h hb.1).left
+theorem single_left_injective (h : «expr ≠ »(b, 0)) : function.injective (λ a : α, single a b) :=
+λ a a' H, «expr $ »(((single_eq_single_iff _ _ _ _).mp H).resolve_right, λ hb, h hb.1).left
 
 theorem single_left_inj (h : b ≠ 0) : single a b = single a' b ↔ a = a' :=
   (single_left_injective h).eq_iff
@@ -522,12 +523,12 @@ theorem support_on_finset_subset {s : Finset α} {f : α → M} {hf} : (on_finse
   filter_subset _ _
 
 @[simp]
-theorem mem_support_on_finset {s : Finset α} {f : α → M} (hf : ∀ a : α, f a ≠ 0 → a ∈ s) {a : α} :
+theorem mem_support_on_finset {s : Finset α} {f : α → M} (hf : ∀ (a : α), f a ≠ 0 → a ∈ s) {a : α} :
   a ∈ (Finsupp.onFinset s f hf).Support ↔ f a ≠ 0 :=
   by 
     rw [Finsupp.mem_support_iff, Finsupp.on_finset_apply]
 
-theorem support_on_finset {s : Finset α} {f : α → M} (hf : ∀ a : α, f a ≠ 0 → a ∈ s) :
+theorem support_on_finset {s : Finset α} {f : α → M} (hf : ∀ (a : α), f a ≠ 0 → a ∈ s) :
   (Finsupp.onFinset s f hf).Support = s.filter fun a => f a ≠ 0 :=
   rfl
 
@@ -832,7 +833,7 @@ variable[HasZero M][HasZero M'][CommMonoidₓ N]
 
 @[toAdditive]
 theorem prod_of_support_subset (f : α →₀ M) {s : Finset α} (hs : f.support ⊆ s) (g : α → M → N)
-  (h : ∀ i _ : i ∈ s, g i 0 = 1) : f.prod g = ∏x in s, g x (f x) :=
+  (h : ∀ i (_ : i ∈ s), g i 0 = 1) : f.prod g = ∏x in s, g x (f x) :=
   Finset.prod_subset hs$ fun x hxs hx => h x hxs ▸ congr_argₓ (g x)$ not_mem_support_iff.1 hx
 
 @[toAdditive]
@@ -1026,8 +1027,8 @@ def erase_add_hom (a : α) : (α →₀ M) →+ α →₀ M :=
 
 @[elab_as_eliminator]
 protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
-  (ha : ∀ a b f : α →₀ M, a ∉ f.support → b ≠ 0 → p f → p (single a b+f)) : p f :=
-  suffices ∀ s f : α →₀ M, f.support = s → p f from this _ _ rfl 
+  (ha : ∀ a b (f : α →₀ M), a ∉ f.support → b ≠ 0 → p f → p (single a b+f)) : p f :=
+  suffices ∀ s (f : α →₀ M), f.support = s → p f from this _ _ rfl 
   fun s =>
     (Finset.induction_on s
         fun f hf =>
@@ -1049,8 +1050,8 @@ protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 :
             rw [support_erase, hf, Finset.erase_insert has]
 
 theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
-  (ha : ∀ a b f : α →₀ M, a ∉ f.support → b ≠ 0 → p f → p (f+single a b)) : p f :=
-  suffices ∀ s f : α →₀ M, f.support = s → p f from this _ _ rfl 
+  (ha : ∀ a b (f : α →₀ M), a ∉ f.support → b ≠ 0 → p f → p (f+single a b)) : p f :=
+  suffices ∀ s (f : α →₀ M), f.support = s → p f from this _ _ rfl 
   fun s =>
     (Finset.induction_on s
         fun f hf =>
@@ -1071,7 +1072,7 @@ theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
             apply ih _ _ 
             rw [support_erase, hf, Finset.erase_insert has]
 
-theorem induction_linear {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0) (hadd : ∀ f g : α →₀ M, p f → p g → p (f+g))
+theorem induction_linear {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0) (hadd : ∀ (f g : α →₀ M), p f → p g → p (f+g))
   (hsingle : ∀ a b, p (single a b)) : p f :=
   induction₂ f h0 fun a b f _ _ w => hadd _ _ w (hsingle _ _)
 
@@ -1431,13 +1432,22 @@ theorem prod_sum_index [AddCommMonoidₓ M] [AddCommMonoidₓ N] [CommMonoidₓ 
   (f.sum g).Prod h = f.prod fun a b => (g a b).Prod h :=
   (prod_finset_sum_index h_zero h_add).symm
 
-theorem multiset_sum_sum_index [AddCommMonoidₓ M] [AddCommMonoidₓ N] (f : Multiset (α →₀ M)) (h : α → M → N)
-  (h₀ : ∀ a, h a 0 = 0) (h₁ : ∀ a : α b₁ b₂ : M, h a (b₁+b₂) = h a b₁+h a b₂) :
-  f.sum.sum h = (f.map$ fun g : α →₀ M => g.sum h).Sum :=
-  Multiset.induction_on f rfl$
-    fun a s ih =>
-      by 
-        rw [Multiset.sum_cons, Multiset.map_cons, Multiset.sum_cons, sum_add_index h₀ h₁, ih]
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem multiset_sum_sum_index
+[add_comm_monoid M]
+[add_comm_monoid N]
+(f : multiset «expr →₀ »(α, M))
+(h : α → M → N)
+(h₀ : ∀ a, «expr = »(h a 0, 0))
+(h₁ : ∀
+ (a : α)
+ (b₁
+  b₂ : M), «expr = »(h a «expr + »(b₁, b₂), «expr + »(h a b₁, h a b₂))) : «expr = »(f.sum.sum h, «expr $ »(f.map, λ
+  g : «expr →₀ »(α, M), g.sum h).sum) :=
+«expr $ »(multiset.induction_on f rfl, assume
+ a
+ s
+ ih, by rw ["[", expr multiset.sum_cons, ",", expr multiset.map_cons, ",", expr multiset.sum_cons, ",", expr sum_add_index h₀ h₁, ",", expr ih, "]"] [])
 
 -- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem support_sum_eq_bUnion
@@ -1680,7 +1690,7 @@ theorem map_domain_single {f : α → β} {a : α} {b : M} : map_domain f (singl
 theorem map_domain_zero {f : α → β} : map_domain f (0 : α →₀ M) = (0 : β →₀ M) :=
   sum_zero_index
 
-theorem map_domain_congr {f g : α → β} (h : ∀ x _ : x ∈ v.support, f x = g x) : v.map_domain f = v.map_domain g :=
+theorem map_domain_congr {f g : α → β} (h : ∀ x (_ : x ∈ v.support), f x = g x) : v.map_domain f = v.map_domain g :=
   Finset.sum_congr rfl$
     fun _ H =>
       by 
@@ -2096,7 +2106,7 @@ theorem subtype_domain_eq_zero_iff' {f : α →₀ M} : f.subtype_domain p = 0 �
   by 
     simpRw [←support_eq_empty, support_subtype_domain, subtype_eq_empty, not_mem_support_iff]
 
-theorem subtype_domain_eq_zero_iff {f : α →₀ M} (hf : ∀ x _ : x ∈ f.support, p x) : f.subtype_domain p = 0 ↔ f = 0 :=
+theorem subtype_domain_eq_zero_iff {f : α →₀ M} (hf : ∀ x (_ : x ∈ f.support), p x) : f.subtype_domain p = 0 ↔ f = 0 :=
   subtype_domain_eq_zero_iff'.trans
     ⟨fun H => ext$ fun x => if hx : p x then H x hx else not_mem_support_iff.1$ mt (hf x) hx,
       fun H x _ =>
@@ -2104,7 +2114,7 @@ theorem subtype_domain_eq_zero_iff {f : α →₀ M} (hf : ∀ x _ : x ∈ f.sup
           simp [H]⟩
 
 @[toAdditive]
-theorem prod_subtype_domain_index [CommMonoidₓ N] {v : α →₀ M} {h : α → M → N} (hp : ∀ x _ : x ∈ v.support, p x) :
+theorem prod_subtype_domain_index [CommMonoidₓ N] {v : α →₀ M} {h : α → M → N} (hp : ∀ x (_ : x ∈ v.support), p x) :
   ((v.subtype_domain p).Prod fun a b => h a b) = v.prod h :=
   prod_bij (fun p _ => p.val) (fun _ => mem_subtype.1) (fun _ _ => rfl) (fun _ _ _ _ => Subtype.eq)
     fun b hb => ⟨⟨b, hp b hb⟩, mem_subtype.2 hb, rfl⟩
@@ -2409,17 +2419,19 @@ def finsupp_prod_equiv : (α × β →₀ M) ≃ (α →₀ β →₀ M) :=
         single_zero, single_add, eq_self_iff_true, forall_true_iff, forall_3_true_iff, Prod.mk.eta,
         (single_sum _ _ _).symm, sum_single]
 
-theorem filter_curry (f : α × β →₀ M) (p : α → Prop) : (f.filter fun a : α × β => p a.1).curry = f.curry.filter p :=
-  by 
-    rw [Finsupp.curry, Finsupp.curry, Finsupp.sum, Finsupp.sum, filter_sum, support_filter, sum_filter]
-    refine' Finset.sum_congr rfl _ 
-    rintro ⟨a₁, a₂⟩ ha 
-    dsimp only 
-    splitIfs
-    ·
-      rw [filter_apply_pos, filter_single_of_pos] <;> exact h
-    ·
-      rwa [filter_single_of_neg]
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem filter_curry
+(f : «expr →₀ »(«expr × »(α, β), M))
+(p : α → exprProp()) : «expr = »((f.filter (λ a : «expr × »(α, β), p a.1)).curry, f.curry.filter p) :=
+begin
+  rw ["[", expr finsupp.curry, ",", expr finsupp.curry, ",", expr finsupp.sum, ",", expr finsupp.sum, ",", expr filter_sum, ",", expr support_filter, ",", expr sum_filter, "]"] [],
+  refine [expr finset.sum_congr rfl _],
+  rintros ["⟨", ident a₁, ",", ident a₂, "⟩", ident ha],
+  dsimp ["only"] [] [] [],
+  split_ifs [] [],
+  { rw ["[", expr filter_apply_pos, ",", expr filter_single_of_pos, "]"] []; exact [expr h] },
+  { rwa ["[", expr filter_single_of_neg, "]"] [] }
+end
 
 theorem support_curry [DecidableEq α] (f : α × β →₀ M) : f.curry.support ⊆ f.support.image Prod.fst :=
   by 
@@ -2628,15 +2640,15 @@ theorem _root_.is_smul_regular.finsupp {_ : Monoidₓ R} [AddMonoidₓ M] [Distr
   (hk : IsSmulRegular M k) : IsSmulRegular (α →₀ M) k :=
   fun _ _ h => ext$ fun i => hk (congr_funₓ h i)
 
-instance  [Monoidₓ R] [Nonempty α] [AddMonoidₓ M] [DistribMulAction R M] [HasFaithfulScalar R M] :
-  HasFaithfulScalar R (α →₀ M) :=
-  { eq_of_smul_eq_smul :=
-      fun r₁ r₂ h =>
-        let ⟨a⟩ := ‹Nonempty α›
-        eq_of_smul_eq_smul$
-          fun m : M =>
-            by 
-              simpa using congr_funₓ (h (single a m)) a }
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance
+[monoid R]
+[nonempty α]
+[add_monoid M]
+[distrib_mul_action R M]
+[has_faithful_scalar R M] : has_faithful_scalar R «expr →₀ »(α, M) :=
+{ eq_of_smul_eq_smul := λ r₁ r₂ h, let ⟨a⟩ := «expr‹ ›»(nonempty α) in
+  «expr $ »(eq_of_smul_eq_smul, λ m : M, by simpa [] [] [] [] [] ["using", expr congr_fun (h (single a m)) a]) }
 
 variable(α M)
 
@@ -2759,14 +2771,14 @@ def distrib_mul_action_hom.single (a : α) : M →+[R] α →₀ M :=
         by 
           simp only [AddMonoidHom.to_fun_eq_coe, single_add_hom_apply, smul_single] }
 
-theorem distrib_mul_action_hom_ext {f g : (α →₀ M) →+[R] N} (h : ∀ a : α m : M, f (single a m) = g (single a m)) :
+theorem distrib_mul_action_hom_ext {f g : (α →₀ M) →+[R] N} (h : ∀ (a : α) (m : M), f (single a m) = g (single a m)) :
   f = g :=
   DistribMulActionHom.to_add_monoid_hom_injective$ add_hom_ext h
 
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem distrib_mul_action_hom_ext' {f g : (α →₀ M) →+[R] N}
-  (h : ∀ a : α, f.comp (distrib_mul_action_hom.single a) = g.comp (distrib_mul_action_hom.single a)) : f = g :=
+  (h : ∀ (a : α), f.comp (distrib_mul_action_hom.single a) = g.comp (distrib_mul_action_hom.single a)) : f = g :=
   distrib_mul_action_hom_ext$ fun a => DistribMulActionHom.congr_fun (h a)
 
 end DistribMulActionHom
@@ -2785,36 +2797,35 @@ instance unique_of_left [IsEmpty α] : Unique (α →₀ R) :=
 
 end 
 
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given an `add_comm_monoid M` and `s : set α`, `restrict_support_equiv s M` is the `equiv`
 between the subtype of finitely supported functions with support contained in `s` and
 the type of finitely supported functions from `s`. -/
-def restrict_support_equiv (s : Set α) (M : Type _) [AddCommMonoidₓ M] :
-  { f : α →₀ M // «expr↑ » f.support ⊆ s } ≃ (s →₀ M) :=
-  by 
-    refine' ⟨fun f => subtype_domain (fun x => x ∈ s) f.1, fun f => ⟨f.map_domain Subtype.val, _⟩, _, _⟩
-    ·
-      refine' Set.Subset.trans (Finset.coe_subset.2 map_domain_support) _ 
-      rw [Finset.coe_image, Set.image_subset_iff]
-      exact fun x hx => x.2
-    ·
-      rintro ⟨f, hf⟩
-      apply Subtype.eq 
-      ext a 
-      dsimp only 
-      refine' Classical.by_cases (fun h : a ∈ Set.Range (Subtype.val : s → α) => _) fun h => _
-      ·
-        rcases h with ⟨x, rfl⟩
-        rw [map_domain_apply Subtype.val_injective, subtype_domain_apply]
-      ·
-        convert map_domain_notin_range _ _ h 
-        rw [←not_mem_support_iff]
-        refine' mt _ h 
-        exact fun ha => ⟨⟨a, hf ha⟩, rfl⟩
-    ·
-      intro f 
-      ext ⟨a, ha⟩
-      dsimp only 
-      rw [subtype_domain_apply, map_domain_apply Subtype.val_injective]
+def restrict_support_equiv
+(s : set α)
+(M : Type*)
+[add_comm_monoid M] : «expr ≃ »({f : «expr →₀ »(α, M) // «expr ⊆ »(«expr↑ »(f.support), s)}, «expr →₀ »(s, M)) :=
+begin
+  refine [expr ⟨λ f, subtype_domain (λ x, «expr ∈ »(x, s)) f.1, λ f, ⟨f.map_domain subtype.val, _⟩, _, _⟩],
+  { refine [expr set.subset.trans (finset.coe_subset.2 map_domain_support) _],
+    rw ["[", expr finset.coe_image, ",", expr set.image_subset_iff, "]"] [],
+    exact [expr assume x hx, x.2] },
+  { rintros ["⟨", ident f, ",", ident hf, "⟩"],
+    apply [expr subtype.eq],
+    ext [] [ident a] [],
+    dsimp ["only"] [] [] [],
+    refine [expr classical.by_cases (assume h : «expr ∈ »(a, set.range (subtype.val : s → α)), _) (assume h, _)],
+    { rcases [expr h, "with", "⟨", ident x, ",", ident rfl, "⟩"],
+      rw ["[", expr map_domain_apply subtype.val_injective, ",", expr subtype_domain_apply, "]"] [] },
+    { convert [] [expr map_domain_notin_range _ _ h] [],
+      rw ["[", "<-", expr not_mem_support_iff, "]"] [],
+      refine [expr mt _ h],
+      exact [expr assume ha, ⟨⟨a, hf ha⟩, rfl⟩] } },
+  { assume [binders (f)],
+    ext [] ["⟨", ident a, ",", ident ha, "⟩"] [],
+    dsimp ["only"] [] [] [],
+    rw ["[", expr subtype_domain_apply, ",", expr map_domain_apply subtype.val_injective, "]"] [] }
+end
 
 /-- Given `add_comm_monoid M` and `e : α ≃ β`, `dom_congr e` is the corresponding `equiv` between
 `α →₀ M` and `β →₀ M`.
@@ -2905,10 +2916,13 @@ theorem sigma_support : l.support = l.split_support.sigma fun i => (l.split i).S
     simp only [Finset.ext_iff, split_support, split, comap_domain, mem_image, mem_preimage, Sigma.forall, mem_sigma] <;>
       tauto
 
-theorem sigma_sum [AddCommMonoidₓ N] (f : (Σi : ι, αs i) → M → N) :
-  l.sum f = ∑i in split_support l, (split l i).Sum fun a : αs i b => f ⟨i, a⟩ b :=
-  by 
-    simp only [Sum, sigma_support, sum_sigma, split_apply]
+-- error in Data.Finsupp.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sigma_sum
+[add_comm_monoid N]
+(f : «exprΣ , »((i : ι), αs i) → M → N) : «expr = »(l.sum f, «expr∑ in , »((i), split_support l, (split l i).sum (λ
+   (a : αs i)
+   (b), f ⟨i, a⟩ b))) :=
+by simp [] [] ["only"] ["[", expr sum, ",", expr sigma_support, ",", expr sum_sigma, ",", expr split_apply, "]"] [] []
 
 variable{η : Type _}[Fintype η]{ιs : η → Type _}[HasZero α]
 
@@ -3034,11 +3048,11 @@ theorem le_def [Preorderₓ M] [HasZero M] {f g : α →₀ M} : f ≤ g ↔ ∀
   Iff.rfl
 
 theorem le_iff' [CanonicallyOrderedAddMonoid M] (f g : α →₀ M) {t : Finset α} (hf : f.support ⊆ t) :
-  f ≤ g ↔ ∀ s _ : s ∈ t, f s ≤ g s :=
+  f ≤ g ↔ ∀ s (_ : s ∈ t), f s ≤ g s :=
   ⟨fun h s hs => h s,
     fun h s => if H : s ∈ f.support then h s (hf H) else (not_mem_support_iff.1 H).symm ▸ zero_le (g s)⟩
 
-theorem le_iff [CanonicallyOrderedAddMonoid M] (f g : α →₀ M) : f ≤ g ↔ ∀ s _ : s ∈ f.support, f s ≤ g s :=
+theorem le_iff [CanonicallyOrderedAddMonoid M] (f g : α →₀ M) : f ≤ g ↔ ∀ s (_ : s ∈ f.support), f s ≤ g s :=
   le_iff' f g (subset.refl _)
 
 instance decidable_le [CanonicallyOrderedAddMonoid M] [DecidableRel (@LE.le M _)] : DecidableRel (@LE.le (α →₀ M) _) :=
@@ -3097,6 +3111,12 @@ section NatSub
 
 section CanonicallyOrderedMonoid
 
+instance  [CanonicallyOrderedAddMonoid M] : OrderBot (α →₀ M) :=
+  { bot := 0,
+    bot_le :=
+      by 
+        simp [Finsupp.le_def] }
+
 variable[CanonicallyOrderedAddMonoid M][Sub M][HasOrderedSub M]
 
 /-- This is called `tsub` for truncated subtraction, to distinguish it with subtraction in an
@@ -3112,10 +3132,10 @@ theorem tsub_apply (g₁ g₂ : α →₀ M) (a : α) : (g₁ - g₂) a = g₁ a
   rfl
 
 instance  : CanonicallyOrderedAddMonoid (α →₀ M) :=
-  { (by 
+  { Finsupp.orderBot,
+    (by 
       infer_instance :
     OrderedAddCommMonoid (α →₀ M)) with
-    bot := 0, bot_le := fun f s => zero_le (f s),
     le_iff_exists_add :=
       by 
         intro f g 

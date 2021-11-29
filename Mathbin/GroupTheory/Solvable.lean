@@ -204,7 +204,7 @@ theorem solvable_of_ker_le_range {G' G'' : Type _} [Groupₓ G'] [Groupₓ G''] 
     runTac 
       tactic.unfreeze_local_instances 
     obtain ⟨n, hn⟩ := hG'' 
-    suffices  : ∀ k : ℕ, derivedSeries G (n+k) ≤ (derivedSeries G' k).map f
+    suffices  : ∀ (k : ℕ), derivedSeries G (n+k) ≤ (derivedSeries G' k).map f
     ·
       obtain ⟨m, hm⟩ := hG' 
       use n+m 
@@ -238,7 +238,7 @@ theorem IsSimpleGroup.derived_series_succ {n : ℕ} : derivedSeries G n.succ = c
     rw [derived_series_succ, ih]
     cases' (commutator.normal G).eq_bot_or_eq_top with h h <;> simp [h]
 
-theorem IsSimpleGroup.comm_iff_is_solvable : (∀ a b : G, (a*b) = b*a) ↔ IsSolvable G :=
+theorem IsSimpleGroup.comm_iff_is_solvable : (∀ (a b : G), (a*b) = b*a) ↔ IsSolvable G :=
   ⟨is_solvable_of_comm,
     fun ⟨⟨n, hn⟩⟩ =>
       by 
@@ -260,7 +260,8 @@ end IsSimpleGroup
 
 section PermNotSolvable
 
-theorem not_solvable_of_mem_derived_series {g : G} (h1 : g ≠ 1) (h2 : ∀ n : ℕ, g ∈ derivedSeries G n) : ¬IsSolvable G :=
+theorem not_solvable_of_mem_derived_series {g : G} (h1 : g ≠ 1) (h2 : ∀ (n : ℕ), g ∈ derivedSeries G n) :
+  ¬IsSolvable G :=
   mt (is_solvable_def _).mp
     (not_exists_of_forall_not fun n h => h1 (Subgroup.mem_bot.mp ((congr_argₓ (HasMem.Mem g) h).mp (h2 n))))
 

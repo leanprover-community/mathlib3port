@@ -204,7 +204,7 @@ theorem finrank_fixed_field_eq_card [FiniteDimensional F E] : finrank (fixed_fie
 
 /-- The subgroup fixing an intermediate_field -/
 def fixing_subgroup : Subgroup (E ≃ₐ[F] E) :=
-  { Carrier := fun ϕ => ∀ x : K, ϕ x = x, one_mem' := fun _ => rfl,
+  { Carrier := fun ϕ => ∀ (x : K), ϕ x = x, one_mem' := fun _ => rfl,
     mul_mem' := fun _ _ hx hy _ => (congr_argₓ _ (hy _)).trans (hx _),
     inv_mem' := fun _ hx _ => (Equiv.symm_apply_eq (to_equiv _)).mpr (hx _).symm }
 

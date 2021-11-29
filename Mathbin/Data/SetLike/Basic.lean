@@ -108,7 +108,7 @@ variable{p q}
 protected theorem exists {q : p → Prop} : (∃ x, q x) ↔ ∃ (x : _)(_ : x ∈ p), q ⟨x, ‹_›⟩ :=
   SetCoe.exists
 
-protected theorem forall {q : p → Prop} : (∀ x, q x) ↔ ∀ x _ : x ∈ p, q ⟨x, ‹_›⟩ :=
+protected theorem forall {q : p → Prop} : (∀ x, q x) ↔ ∀ x (_ : x ∈ p), q ⟨x, ‹_›⟩ :=
   SetCoe.forall
 
 theorem coe_injective : Function.Injective (coeₓ : A → Set B) :=

@@ -4,7 +4,7 @@ import Mathbin.CategoryTheory.Subobject.WellPowered
 /-!
 # The lattice of subobjects
 
-We provide the `semilattice_inf_top (subobject X)` instance when `[has_pullback C]`,
+We provide the `semilattice_inf` with `order_top (subobject X)` instance when `[has_pullback C]`,
 and the `semilattice_sup (subobject X)` instance when `[has_images C] [has_binary_coproducts C]`.
 -/
 
@@ -377,8 +377,8 @@ theorem le_inf {A : C} (h f g : subobject A) : h ≤ f → h ≤ g → h ≤ (in
       rintro f g h ⟨k⟩ ⟨l⟩
       exact ⟨mono_over.le_inf _ _ _ k l⟩)
 
-instance  {B : C} : SemilatticeInfTop (subobject B) :=
-  { subobject.order_top, subobject.partial_order B with inf := fun m n => (inf.obj m).obj n, inf_le_left := inf_le_left,
+instance  {B : C} : SemilatticeInf (subobject B) :=
+  { subobject.partial_order _ with inf := fun m n => (inf.obj m).obj n, inf_le_left := inf_le_left,
     inf_le_right := inf_le_right, le_inf := le_inf }
 
 theorem factors_left_of_inf_factors {A B : C} {X Y : subobject B} {f : A ⟶ B} (h : (X⊓Y).Factors f) : X.factors f :=
@@ -410,7 +410,7 @@ theorem inf_arrow_factors_right {B : C} (X Y : subobject B) : Y.factors (X⊓Y).
 
 @[simp]
 theorem finset_inf_factors {I : Type _} {A B : C} {s : Finset I} {P : I → subobject B} (f : A ⟶ B) :
-  (s.inf P).Factors f ↔ ∀ i _ : i ∈ s, (P i).Factors f :=
+  (s.inf P).Factors f ↔ ∀ i (_ : i ∈ s), (P i).Factors f :=
   by 
     classical 
     apply Finset.induction_on s
@@ -503,9 +503,6 @@ theorem sup_factors_of_factors_right {A B : C} {X Y : subobject B} {f : A ⟶ B}
 
 variable[has_initial C][initial_mono_class C]
 
-instance  {B : C} : SemilatticeSupBot (subobject B) :=
-  { subobject.order_bot, subobject.semilattice_sup with  }
-
 theorem finset_sup_factors {I : Type _} {A B : C} {s : Finset I} {P : I → subobject B} {f : A ⟶ B}
   (h : ∃ (i : _)(_ : i ∈ s), (P i).Factors f) : (s.sup P).Factors f :=
   by 
@@ -528,15 +525,13 @@ end SemilatticeSup
 
 section Lattice
 
+instance  [has_initial C] [initial_mono_class C] {B : C} : BoundedOrder (subobject B) :=
+  { subobject.order_top, subobject.order_bot with  }
+
 variable[has_pullbacks C][has_images C][has_binary_coproducts C]
 
 instance  {B : C} : Lattice (subobject B) :=
-  { subobject.semilattice_inf_top, subobject.semilattice_sup with  }
-
-variable[has_initial C][initial_mono_class C]
-
-instance  {B : C} : BoundedLattice (subobject B) :=
-  { subobject.semilattice_inf_top, subobject.semilattice_sup_bot with  }
+  { subobject.semilattice_inf, subobject.semilattice_sup with  }
 
 end Lattice
 
@@ -544,14 +539,15 @@ section Inf
 
 variable[well_powered C]
 
+-- error in CategoryTheory.Subobject.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The "wide cospan" diagram, with a small indexing type, constructed from a set of subobjects.
 (This is just the diagram of all the subobjects pasted together, but using `well_powered C`
 to make the diagram small.)
--/
-def wide_cospan {A : C} (s : Set (subobject A)) : wide_pullback_shape (equivShrink _ '' s) ⥤ C :=
-  wide_pullback_shape.wide_cospan A (fun j : equivShrink _ '' s => ((equivShrink (subobject A)).symm j : C))
-    fun j => ((equivShrink (subobject A)).symm j).arrow
+-/ def wide_cospan {A : C} (s : set (subobject A)) : «expr ⥤ »(wide_pullback_shape «expr '' »(equiv_shrink _, s), C) :=
+wide_pullback_shape.wide_cospan A (λ
+ j : «expr '' »(equiv_shrink _, s), ((equiv_shrink (subobject A)).symm j : C)) (λ
+ j, ((equiv_shrink (subobject A)).symm j).arrow)
 
 @[simp]
 theorem wide_cospan_map_term {A : C} (s : Set (subobject A)) j :
@@ -559,7 +555,7 @@ theorem wide_cospan_map_term {A : C} (s : Set (subobject A)) j :
   rfl
 
 /-- Auxiliary construction of a cone for `le_Inf`. -/
-def le_Inf_cone {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ : g ∈ s, f ≤ g) : cone (wide_cospan s) :=
+def le_Inf_cone {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g (_ : g ∈ s), f ≤ g) : cone (wide_cospan s) :=
   wide_pullback_shape.mk_cone f.arrow
     (fun j =>
       underlying.map
@@ -572,7 +568,7 @@ def le_Inf_cone {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ :
       tidy)
 
 @[simp]
-theorem le_Inf_cone_π_app_none {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ : g ∈ s, f ≤ g) :
+theorem le_Inf_cone_π_app_none {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g (_ : g ∈ s), f ≤ g) :
   (le_Inf_cone s f k).π.app none = f.arrow :=
   rfl
 
@@ -610,24 +606,20 @@ When `[well_powered C]` and `[has_wide_pullbacks C]`, `subobject A` has arbitrar
 def Inf {A : C} (s : Set (subobject A)) : subobject A :=
   subobject.mk (wide_pullback_ι s)
 
-theorem Inf_le {A : C} (s : Set (subobject A)) f (_ : f ∈ s) : Inf s ≤ f :=
-  by 
-    fapply le_of_comm
-    ·
-      refine'
-        (underlying_iso _).Hom ≫
-          limits.limit.π (wide_cospan s) (some ⟨equivShrink _ f, Set.mem_image_of_mem (equivShrink (subobject A)) H⟩) ≫
-            _ 
-      apply eq_to_hom 
-      apply congr_argₓ fun X : subobject A => (X : C)
-      exact Equiv.symm_apply_apply _ _
-    ·
-      dsimp [Inf]
-      simp only [category.comp_id, category.assoc, ←underlying_iso_hom_comp_eq_mk, subobject.arrow_congr,
-        congr_arg_mpr_hom_left, iso.cancel_iso_hom_left]
-      convert limit.w (wide_cospan s) (wide_pullback_shape.hom.term _)
+-- error in CategoryTheory.Subobject.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Inf_le {A : C} (s : set (subobject A)) (f «expr ∈ » s) : «expr ≤ »(Inf s, f) :=
+begin
+  fapply [expr le_of_comm],
+  { refine [expr «expr ≫ »((underlying_iso _).hom, «expr ≫ »(limits.limit.π (wide_cospan s) (some ⟨equiv_shrink _ f, set.mem_image_of_mem (equiv_shrink (subobject A)) H⟩), _))],
+    apply [expr eq_to_hom],
+    apply [expr congr_arg (λ X : subobject A, (X : C))],
+    exact [expr equiv.symm_apply_apply _ _] },
+  { dsimp [] ["[", expr Inf, "]"] [] [],
+    simp [] [] ["only"] ["[", expr category.comp_id, ",", expr category.assoc, ",", "<-", expr underlying_iso_hom_comp_eq_mk, ",", expr subobject.arrow_congr, ",", expr congr_arg_mpr_hom_left, ",", expr iso.cancel_iso_hom_left, "]"] [] [],
+    convert [] [expr limit.w (wide_cospan s) (wide_pullback_shape.hom.term _)] [] }
+end
 
-theorem le_Inf {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ : g ∈ s, f ≤ g) : f ≤ Inf s :=
+theorem le_Inf {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g (_ : g ∈ s), f ≤ g) : f ≤ Inf s :=
   by 
     fapply le_of_comm
     ·
@@ -645,12 +637,12 @@ section Sup
 
 variable[well_powered C][has_coproducts C]
 
+-- error in CategoryTheory.Subobject.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The univesal morphism out of the coproduct of a set of subobjects,
 after using `[well_powered C]` to reindex by a small type.
--/
-def small_coproduct_desc {A : C} (s : Set (subobject A)) : _ ⟶ A :=
-  limits.sigma.desc fun j : equivShrink _ '' s => ((equivShrink (subobject A)).symm j).arrow
+-/ def small_coproduct_desc {A : C} (s : set (subobject A)) : «expr ⟶ »(_, A) :=
+limits.sigma.desc (λ j : «expr '' »(equiv_shrink _, s), ((equiv_shrink (subobject A)).symm j).arrow)
 
 variable[has_images C]
 
@@ -659,24 +651,19 @@ variable[has_images C]
 def Sup {A : C} (s : Set (subobject A)) : subobject A :=
   subobject.mk (image.ι (small_coproduct_desc s))
 
-theorem le_Sup {A : C} (s : Set (subobject A)) f (_ : f ∈ s) : f ≤ Sup s :=
-  by 
-    fapply le_of_comm
-    ·
-      dsimp [Sup]
-      refine' _ ≫ factor_thru_image _ ≫ (underlying_iso _).inv 
-      refine'
-        _ ≫
-          sigma.ι _
-            ⟨equivShrink _ f,
-              by 
-                simpa [Set.mem_image] using H⟩
-      exact eq_to_hom (congr_argₓ (fun X : subobject A => (X : C)) (Equiv.symm_apply_apply _ _).symm)
-    ·
-      dsimp [Sup, small_coproduct_desc]
-      simp 
-      dsimp 
-      simp 
+-- error in CategoryTheory.Subobject.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem le_Sup {A : C} (s : set (subobject A)) (f «expr ∈ » s) : «expr ≤ »(f, Sup s) :=
+begin
+  fapply [expr le_of_comm],
+  { dsimp [] ["[", expr Sup, "]"] [] [],
+    refine [expr «expr ≫ »(_, «expr ≫ »(factor_thru_image _, (underlying_iso _).inv))],
+    refine [expr «expr ≫ »(_, sigma.ι _ ⟨equiv_shrink _ f, by simpa [] [] [] ["[", expr set.mem_image, "]"] [] ["using", expr H]⟩)],
+    exact [expr eq_to_hom (congr_arg (λ X : subobject A, (X : C)) (equiv.symm_apply_apply _ _).symm)] },
+  { dsimp [] ["[", expr Sup, ",", expr small_coproduct_desc, "]"] [] [],
+    simp [] [] [] [] [] [],
+    dsimp [] [] [] [],
+    simp [] [] [] [] [] [] }
+end
 
 theorem symm_apply_mem_iff_mem_image {α β : Type _} (e : α ≃ β) (s : Set α) (x : β) : e.symm x ∈ s ↔ x ∈ e '' s :=
   ⟨fun h =>
@@ -687,7 +674,7 @@ theorem symm_apply_mem_iff_mem_image {α β : Type _} (e : α ≃ β) (s : Set �
       rintro ⟨a, m, rfl⟩
       simpa using m⟩
 
-theorem Sup_le {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g _ : g ∈ s, g ≤ f) : Sup s ≤ f :=
+theorem Sup_le {A : C} (s : Set (subobject A)) (f : subobject A) (k : ∀ g (_ : g ∈ s), g ≤ f) : Sup s ≤ f :=
   by 
     fapply le_of_comm
     ·
@@ -719,7 +706,7 @@ section CompleteLattice
 variable[well_powered C][has_wide_pullbacks C][has_images C][has_coproducts C][initial_mono_class C]
 
 instance  {B : C} : CompleteLattice (subobject B) :=
-  { subobject.semilattice_inf_top, subobject.semilattice_sup_bot, subobject.complete_semilattice_Inf,
+  { subobject.semilattice_inf, subobject.semilattice_sup, subobject.bounded_order, subobject.complete_semilattice_Inf,
     subobject.complete_semilattice_Sup with  }
 
 end CompleteLattice

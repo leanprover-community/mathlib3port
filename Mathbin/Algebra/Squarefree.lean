@@ -28,7 +28,7 @@ variable{R : Type _}
 /-- An element of a monoid is squarefree if the only squares that
   divide it are the squares of units. -/
 def Squarefree [Monoidₓ R] (r : R) : Prop :=
-  ∀ x : R, (x*x) ∣ r → IsUnit x
+  ∀ (x : R), (x*x) ∣ r → IsUnit x
 
 @[simp]
 theorem IsUnit.squarefree [CommMonoidₓ R] {x : R} (h : IsUnit x) : Squarefree x :=
@@ -69,7 +69,7 @@ namespace multiplicity
 
 variable[CommMonoidₓ R][DecidableRel (HasDvd.Dvd : R → R → Prop)]
 
-theorem squarefree_iff_multiplicity_le_one (r : R) : Squarefree r ↔ ∀ x : R, multiplicity x r ≤ 1 ∨ IsUnit x :=
+theorem squarefree_iff_multiplicity_le_one (r : R) : Squarefree r ↔ ∀ (x : R), multiplicity x r ≤ 1 ∨ IsUnit x :=
   by 
     refine' forall_congrₓ fun a => _ 
     rw [←sq, pow_dvd_iff_le_multiplicity, or_iff_not_imp_left, not_leₓ, imp_congr]

@@ -35,13 +35,13 @@ protected theorem ext (x x' : WriterT ω m α) (h : x.run = x'.run) : x = x' :=
 protected def tell (w : ω) : WriterT ω m PUnit :=
   ⟨pure (PUnit.unit, w)⟩
 
-@[inline]
-protected def listen : WriterT ω m α → WriterT ω m (α × ω)
-| ⟨cmd⟩ => ⟨(fun x : α × ω => ((x.1, x.2), x.2)) <$> cmd⟩
+-- error in Control.Monad.Writer: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[inline] protected def listen : writer_t ω m α → writer_t ω m «expr × »(α, ω)
+| ⟨cmd⟩ := ⟨«expr <$> »(λ x : «expr × »(α, ω), ((x.1, x.2), x.2), cmd)⟩
 
-@[inline]
-protected def pass : WriterT ω m (α × (ω → ω)) → WriterT ω m α
-| ⟨cmd⟩ => ⟨uncurry (uncurry$ fun x f : ω → ω w => (x, f w)) <$> cmd⟩
+-- error in Control.Monad.Writer: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[inline] protected def pass : writer_t ω m «expr × »(α, ω → ω) → writer_t ω m α
+| ⟨cmd⟩ := ⟨«expr <$> »(uncurry «expr $ »(uncurry, λ (x) (f : ω → ω) (w), (x, f w)), cmd)⟩
 
 @[inline]
 protected def pure [HasOne ω] (a : α) : WriterT ω m α :=

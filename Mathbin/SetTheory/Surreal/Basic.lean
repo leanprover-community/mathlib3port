@@ -60,7 +60,7 @@ theorem numeric.move_right {x : Pgame} (o : numeric x) (j : x.right_moves) : num
 @[elab_as_eliminator]
 theorem numeric_rec {C : Pgame → Prop}
   (H :
-    ∀ l r L : l → Pgame R : r → Pgame,
+    ∀ l r (L : l → Pgame) (R : r → Pgame),
       (∀ i j, L i < R j) →
         (∀ i, numeric (L i)) → (∀ i, numeric (R i)) → (∀ i, C (L i)) → (∀ i, C (R i)) → C ⟨l, r, L, R⟩) :
   ∀ x, numeric x → C x
@@ -104,7 +104,7 @@ theorem numeric_one : numeric 1 :=
       by 
         rintro ⟨⟩⟩⟩
 
-theorem numeric_neg : ∀ {x : Pgame} o : numeric x, numeric (-x)
+theorem numeric_neg : ∀ {x : Pgame} (o : numeric x), numeric (-x)
 | ⟨l, r, L, R⟩, o =>
   ⟨fun j i => lt_iff_neg_gt.1 (o.1 i j), ⟨fun j => numeric_neg (o.2.2 j), fun i => numeric_neg (o.2.1 i)⟩⟩
 
@@ -157,7 +157,7 @@ theorem add_lt_add {w x y z : Pgame.{u}} (oy : numeric y) (oz : numeric z) (hwx 
       calc (move_right w jw+y) ≤ x+y := add_le_add_right hjw _ ≤ x+move_right y jy :=
         add_le_add_left (oy.le_move_right jy)_ ≤ x+z := add_le_add_left hjy
 
-theorem numeric_add : ∀ {x y : Pgame} ox : numeric x oy : numeric y, numeric (x+y)
+theorem numeric_add : ∀ {x y : Pgame} (ox : numeric x) (oy : numeric y), numeric (x+y)
 | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ox, oy =>
   ⟨by 
       rintro (ix | iy) (jx | jy)
@@ -187,7 +187,7 @@ theorem numeric_add : ∀ {x y : Pgame} ox : numeric x oy : numeric y, numeric (
           apply numeric_add ox (oy.move_right jy)⟩
 
 /-- Pre-games defined by natural numbers are numeric. -/
-theorem numeric_nat : ∀ n : ℕ, numeric n
+theorem numeric_nat : ∀ (n : ℕ), numeric n
 | 0 => numeric_zero
 | n+1 => numeric_add (numeric_nat n) numeric_one
 
@@ -288,15 +288,18 @@ instance  : HasOne Surreal :=
 instance  : Inhabited Surreal :=
   ⟨0⟩
 
+-- error in SetTheory.Surreal.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Lift an equivalence-respecting function on pre-games to surreals. -/
-def lift {α} (f : ∀ x, numeric x → α) (H : ∀ {x y} hx : numeric x hy : numeric y, x.equiv y → f x hx = f y hy) :
-  Surreal → α :=
-  Quotientₓ.lift (fun x : { x // numeric x } => f x.1 x.2) fun x y => H x.2 y.2
+def lift
+{α}
+(f : ∀ x, numeric x → α)
+(H : ∀ {x y} (hx : numeric x) (hy : numeric y), x.equiv y → «expr = »(f x hx, f y hy)) : surreal → α :=
+quotient.lift (λ x : {x // numeric x}, f x.1 x.2) (λ x y, H x.2 y.2)
 
 /-- Lift a binary equivalence-respecting function on pre-games to surreals. -/
 def lift₂ {α} (f : ∀ x y, numeric x → numeric y → α)
   (H :
-    ∀ {x₁ y₁ x₂ y₂} ox₁ : numeric x₁ oy₁ : numeric y₁ ox₂ : numeric x₂ oy₂ : numeric y₂,
+    ∀ {x₁ y₁ x₂ y₂} (ox₁ : numeric x₁) (oy₁ : numeric y₁) (ox₂ : numeric x₂) (oy₂ : numeric y₂),
       x₁.equiv x₂ → y₁.equiv y₂ → f x₁ y₁ ox₁ oy₁ = f x₂ y₂ ox₂ oy₂) :
   Surreal → Surreal → α :=
   lift (fun x ox => lift (fun y oy => f x y ox oy) fun y₁ y₂ oy₁ oy₂ h => H _ _ _ _ (equiv_refl _) h)
@@ -318,11 +321,15 @@ theorem not_leₓ : ∀ {x y : Surreal}, ¬le x y ↔ lt y x :=
   by 
     rintro ⟨⟨x, ox⟩⟩ ⟨⟨y, oy⟩⟩ <;> exact not_leₓ
 
+-- error in SetTheory.Surreal.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Addition on surreals is inherited from pre-game addition:
 the sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
-def add : Surreal → Surreal → Surreal :=
-  Surreal.lift₂ (fun x y : Pgame ox oy => «expr⟦ ⟧» ⟨x+y, numeric_add ox oy⟩)
-    fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy => Quotientₓ.sound (Pgame.add_congr hx hy)
+def add : surreal → surreal → surreal :=
+surreal.lift₂ (λ
+ (x y : pgame)
+ (ox)
+ (oy), «expr⟦ ⟧»(⟨«expr + »(x, y), numeric_add ox oy⟩)) (λ
+ x₁ y₁ x₂ y₂ _ _ _ _ hx hy, quotient.sound (pgame.add_congr hx hy))
 
 /-- Negation for surreal numbers is inherited from pre-game negation:
 the negation of `{L | R}` is `{-R | -L}`. -/

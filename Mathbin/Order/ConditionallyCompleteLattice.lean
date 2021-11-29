@@ -92,13 +92,15 @@ hold in both worlds, sometimes with additional assumptions of nonemptiness or
 boundedness.-/
 @[ancestor ConditionallyCompleteLinearOrder HasBot]
 class ConditionallyCompleteLinearOrderBot(α : Type _) extends ConditionallyCompleteLinearOrder α, HasBot α where 
-  bot_le : ∀ x : α, ⊥ ≤ x 
+  bot_le : ∀ (x : α), ⊥ ≤ x 
   cSup_empty : Sup ∅ = ⊥
 
-instance (priority := 100)ConditionallyCompleteLinearOrderBot.toOrderBot (α : Type _)
-  [h : ConditionallyCompleteLinearOrderBot α] : OrderBot α :=
+instance (priority := 100)ConditionallyCompleteLinearOrderBot.toOrderBot [h : ConditionallyCompleteLinearOrderBot α] :
+  OrderBot α :=
   { h with  }
 
+/-- A complete lattice is a conditionally complete lattice, as there are no restrictions
+on the properties of Inf and Sup in a complete lattice.-/
 instance (priority := 100)conditionallyCompleteLatticeOfCompleteLattice [CompleteLattice α] :
   ConditionallyCompleteLattice α :=
   { ‹CompleteLattice α› with
@@ -195,13 +197,13 @@ variable[ConditionallyCompleteLattice α]{s t : Set α}{a b : α}
 theorem le_cSup (h₁ : BddAbove s) (h₂ : a ∈ s) : a ≤ Sup s :=
   ConditionallyCompleteLattice.le_cSup s a h₁ h₂
 
-theorem cSup_le (h₁ : s.nonempty) (h₂ : ∀ b _ : b ∈ s, b ≤ a) : Sup s ≤ a :=
+theorem cSup_le (h₁ : s.nonempty) (h₂ : ∀ b (_ : b ∈ s), b ≤ a) : Sup s ≤ a :=
   ConditionallyCompleteLattice.cSup_le s a h₁ h₂
 
 theorem cInf_le (h₁ : BddBelow s) (h₂ : a ∈ s) : Inf s ≤ a :=
   ConditionallyCompleteLattice.cInf_le s a h₁ h₂
 
-theorem le_cInf (h₁ : s.nonempty) (h₂ : ∀ b _ : b ∈ s, a ≤ b) : a ≤ Inf s :=
+theorem le_cInf (h₁ : s.nonempty) (h₂ : ∀ b (_ : b ∈ s), a ≤ b) : a ≤ Inf s :=
   ConditionallyCompleteLattice.le_cInf s a h₁ h₂
 
 theorem le_cSup_of_le (_ : BddAbove s) (hb : b ∈ s) (h : a ≤ b) : a ≤ Sup s :=
@@ -210,11 +212,13 @@ theorem le_cSup_of_le (_ : BddAbove s) (hb : b ∈ s) (h : a ≤ b) : a ≤ Sup 
 theorem cInf_le_of_le (_ : BddBelow s) (hb : b ∈ s) (h : b ≤ a) : Inf s ≤ a :=
   le_transₓ (cInf_le ‹BddBelow s› hb) h
 
-theorem cSup_le_cSup (_ : BddAbove t) (_ : s.nonempty) (h : s ⊆ t) : Sup s ≤ Sup t :=
-  cSup_le ‹_› fun a ha : a ∈ s => le_cSup ‹BddAbove t› (h ha)
+-- error in Order.ConditionallyCompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cSup_le_cSup (_ : bdd_above t) (_ : s.nonempty) (h : «expr ⊆ »(s, t)) : «expr ≤ »(Sup s, Sup t) :=
+cSup_le «expr‹ ›»(_) (assume (a) (ha : «expr ∈ »(a, s)), le_cSup «expr‹ ›»(bdd_above t) (h ha))
 
-theorem cInf_le_cInf (_ : BddBelow t) (_ : s.nonempty) (h : s ⊆ t) : Inf t ≤ Inf s :=
-  le_cInf ‹_› fun a ha : a ∈ s => cInf_le ‹BddBelow t› (h ha)
+-- error in Order.ConditionallyCompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cInf_le_cInf (_ : bdd_below t) (_ : s.nonempty) (h : «expr ⊆ »(s, t)) : «expr ≤ »(Inf t, Inf s) :=
+le_cInf «expr‹ ›»(_) (assume (a) (ha : «expr ∈ »(a, s)), cInf_le «expr‹ ›»(bdd_below t) (h ha))
 
 theorem is_lub_cSup (ne : s.nonempty) (H : BddAbove s) : IsLub s (Sup s) :=
   ⟨fun x => le_cSup H, fun x => cSup_le Ne⟩
@@ -273,10 +277,10 @@ theorem IsLeast.Inf_mem (H : IsLeast s a) : Inf s ∈ s :=
 theorem subset_Icc_cInf_cSup (hb : BddBelow s) (ha : BddAbove s) : s ⊆ Icc (Inf s) (Sup s) :=
   fun x hx => ⟨cInf_le hb hx, le_cSup ha hx⟩
 
-theorem cSup_le_iff (hb : BddAbove s) (ne : s.nonempty) : Sup s ≤ a ↔ ∀ b _ : b ∈ s, b ≤ a :=
+theorem cSup_le_iff (hb : BddAbove s) (ne : s.nonempty) : Sup s ≤ a ↔ ∀ b (_ : b ∈ s), b ≤ a :=
   is_lub_le_iff (is_lub_cSup Ne hb)
 
-theorem le_cInf_iff (hb : BddBelow s) (ne : s.nonempty) : a ≤ Inf s ↔ ∀ b _ : b ∈ s, a ≤ b :=
+theorem le_cInf_iff (hb : BddBelow s) (ne : s.nonempty) : a ≤ Inf s ↔ ∀ b (_ : b ∈ s), a ≤ b :=
   le_is_glb_iff (is_glb_cInf Ne hb)
 
 theorem cSup_lower_bounds_eq_cInf {s : Set α} (h : BddBelow s) (hs : s.nonempty) : Sup (LowerBounds s) = Inf s :=
@@ -294,13 +298,13 @@ theorem not_mem_of_cSup_lt {x : α} {s : Set α} (h : Sup s < x) (hs : BddAbove 
 /--Introduction rule to prove that `b` is the supremum of `s`: it suffices to check that `b`
 is larger than all elements of `s`, and that this is not the case of any `w<b`.
 See `Sup_eq_of_forall_le_of_forall_lt_exists_gt` for a version in complete lattices. -/
-theorem cSup_eq_of_forall_le_of_forall_lt_exists_gt (_ : s.nonempty) (_ : ∀ a _ : a ∈ s, a ≤ b)
+theorem cSup_eq_of_forall_le_of_forall_lt_exists_gt (_ : s.nonempty) (_ : ∀ a (_ : a ∈ s), a ≤ b)
   (H : ∀ w, w < b → ∃ (a : _)(_ : a ∈ s), w < a) : Sup s = b :=
   have  : BddAbove s :=
     ⟨b,
       by 
         assumption⟩
-  have  : Sup s < b ∨ Sup s = b := lt_or_eq_of_leₓ (cSup_le ‹_› ‹∀ a _ : a ∈ s, a ≤ b›)
+  have  : Sup s < b ∨ Sup s = b := lt_or_eq_of_leₓ (cSup_le ‹_› ‹∀ a (_ : a ∈ s), a ≤ b›)
   have  : ¬Sup s < b :=
     fun this : Sup s < b =>
       let ⟨a, _, _⟩ := H (Sup s) ‹Sup s < b›
@@ -313,7 +317,7 @@ theorem cSup_eq_of_forall_le_of_forall_lt_exists_gt (_ : s.nonempty) (_ : ∀ a 
 /--Introduction rule to prove that `b` is the infimum of `s`: it suffices to check that `b`
 is smaller than all elements of `s`, and that this is not the case of any `w>b`.
 See `Inf_eq_of_forall_ge_of_forall_gt_exists_lt` for a version in complete lattices. -/
-theorem cInf_eq_of_forall_ge_of_forall_gt_exists_lt (_ : s.nonempty) (_ : ∀ a _ : a ∈ s, b ≤ a)
+theorem cInf_eq_of_forall_ge_of_forall_gt_exists_lt (_ : s.nonempty) (_ : ∀ a (_ : a ∈ s), b ≤ a)
   (H : ∀ w, b < w → ∃ (a : _)(_ : a ∈ s), a < w) : Inf s = b :=
   @cSup_eq_of_forall_le_of_forall_lt_exists_gt (OrderDual α) _ _ _ ‹_› ‹_› ‹_›
 
@@ -335,7 +339,7 @@ theorem cInf_lt_of_lt (_ : BddBelow s) (_ : a ∈ s) (_ : a < b) : Inf s < b :=
 
 /-- If all elements of a nonempty set `s` are less than or equal to all elements
 of a nonempty set `t`, then there exists an element between these sets. -/
-theorem exists_between_of_forall_le (sne : s.nonempty) (tne : t.nonempty) (hst : ∀ x _ : x ∈ s y _ : y ∈ t, x ≤ y) :
+theorem exists_between_of_forall_le (sne : s.nonempty) (tne : t.nonempty) (hst : ∀ x (_ : x ∈ s) y (_ : y ∈ t), x ≤ y) :
   (UpperBounds s ∩ LowerBounds t).Nonempty :=
   ⟨Inf t, fun x hx => le_cInf tne$ hst x hx, fun y hy => cInf_le (sne.mono hst) hy⟩
 
@@ -638,10 +642,10 @@ theorem Set.Nonempty.cSup_mem (h : s.nonempty) (hs : finite s) : Sup s ∈ s :=
 theorem Set.Nonempty.cInf_mem (h : s.nonempty) (hs : finite s) : Inf s ∈ s :=
   @Set.Nonempty.cSup_mem (OrderDual α) _ _ h hs
 
-theorem Set.Finite.cSup_lt_iff (hs : finite s) (h : s.nonempty) : Sup s < a ↔ ∀ x _ : x ∈ s, x < a :=
+theorem Set.Finite.cSup_lt_iff (hs : finite s) (h : s.nonempty) : Sup s < a ↔ ∀ x (_ : x ∈ s), x < a :=
   ⟨fun h x hx => (le_cSup hs.bdd_above hx).trans_lt h, fun H => H _$ h.cSup_mem hs⟩
 
-theorem Set.Finite.lt_cInf_iff (hs : finite s) (h : s.nonempty) : a < Inf s ↔ ∀ x _ : x ∈ s, a < x :=
+theorem Set.Finite.lt_cInf_iff (hs : finite s) (h : s.nonempty) : a < Inf s ↔ ∀ x (_ : x ∈ s), a < x :=
   @Set.Finite.cSup_lt_iff (OrderDual α) _ _ _ hs h
 
 /-- When b < Sup s, there is an element a in s with b < a, if s is nonempty and the order is
@@ -675,8 +679,8 @@ theorem exists_lt_of_cinfi_lt [Nonempty ι] {f : ι → α} (h : infi f < a) : �
 /--Introduction rule to prove that b is the supremum of s: it suffices to check that
 1) b is an upper bound
 2) every other upper bound b' satisfies b ≤ b'.-/
-theorem cSup_eq_of_is_forall_le_of_forall_le_imp_ge (_ : s.nonempty) (h_is_ub : ∀ a _ : a ∈ s, a ≤ b)
-  (h_b_le_ub : ∀ ub, (∀ a _ : a ∈ s, a ≤ ub) → b ≤ ub) : Sup s = b :=
+theorem cSup_eq_of_is_forall_le_of_forall_le_imp_ge (_ : s.nonempty) (h_is_ub : ∀ a (_ : a ∈ s), a ≤ b)
+  (h_b_le_ub : ∀ ub, (∀ a (_ : a ∈ s), a ≤ ub) → b ≤ ub) : Sup s = b :=
   le_antisymmₓ (show Sup s ≤ b from cSup_le ‹s.nonempty› h_is_ub)
     (show b ≤ Sup s from h_b_le_ub _$ fun a => le_cSup ⟨b, h_is_ub⟩)
 
@@ -730,7 +734,7 @@ theorem is_lub_cSup' {s : Set α} (hs : BddAbove s) : IsLub s (Sup s) :=
     ·
       exact is_lub_cSup hne hs
 
-theorem cSup_le_iff' {s : Set α} (hs : BddAbove s) {a : α} : Sup s ≤ a ↔ ∀ x _ : x ∈ s, x ≤ a :=
+theorem cSup_le_iff' {s : Set α} (hs : BddAbove s) {a : α} : Sup s ≤ a ↔ ∀ x (_ : x ∈ s), x ≤ a :=
   is_lub_le_iff (is_lub_cSup' hs)
 
 theorem cSup_le' {s : Set α} {a : α} (h : a ∈ UpperBounds s) : Sup s ≤ a :=
@@ -1105,14 +1109,9 @@ noncomputable instance WithBot.conditionallyCompleteLattice {α : Type _} [Condi
     cInf_le := (@WithTop.conditionallyCompleteLattice (OrderDual α) _).le_cSup,
     le_cInf := (@WithTop.conditionallyCompleteLattice (OrderDual α) _).cSup_le }
 
-/-- Adding a bottom and a top to a conditionally complete lattice gives a bounded lattice-/
-noncomputable instance WithTop.WithBot.boundedLattice {α : Type _} [ConditionallyCompleteLattice α] :
-  BoundedLattice (WithTop (WithBot α)) :=
-  { WithTop.orderBot, WithTop.orderTop, ConditionallyCompleteLattice.toLattice _ with  }
-
 noncomputable instance WithTop.WithBot.completeLattice {α : Type _} [ConditionallyCompleteLattice α] :
   CompleteLattice (WithTop (WithBot α)) :=
-  { WithTop.hasInf, WithTop.hasSup, WithTop.WithBot.boundedLattice with
+  { WithTop.hasInf, WithTop.hasSup, WithTop.boundedOrder, WithTop.lattice with
     le_Sup := fun S a haS => (WithTop.is_lub_Sup' ⟨a, haS⟩).1 haS,
     Sup_le :=
       fun S a ha =>

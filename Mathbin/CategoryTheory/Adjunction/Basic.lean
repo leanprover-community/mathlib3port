@@ -141,13 +141,16 @@ theorem right_triangle : whisker_left G adj.unit ≫ whisker_right adj.counit G 
     erw [←adj.hom_equiv_unit, ←Equiv.eq_symm_apply, adj.hom_equiv_counit]
     simp 
 
-@[simp, reassoc]
-theorem left_triangle_components : F.map (adj.unit.app X) ≫ adj.counit.app (F.obj X) = 𝟙 (F.obj X) :=
-  congr_argₓ (fun t : nat_trans _ (𝟭 C ⋙ F) => t.app X) adj.left_triangle
+-- error in CategoryTheory.Adjunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, reassoc #[]]
+theorem left_triangle_components : «expr = »(«expr ≫ »(F.map (adj.unit.app X), adj.counit.app (F.obj X)), «expr𝟙»() (F.obj X)) :=
+congr_arg (λ t : nat_trans _ «expr ⋙ »(«expr𝟭»() C, F), t.app X) adj.left_triangle
 
-@[simp, reassoc]
-theorem right_triangle_components {Y : D} : adj.unit.app (G.obj Y) ≫ G.map (adj.counit.app Y) = 𝟙 (G.obj Y) :=
-  congr_argₓ (fun t : nat_trans _ (G ⋙ 𝟭 C) => t.app Y) adj.right_triangle
+-- error in CategoryTheory.Adjunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, reassoc #[]]
+theorem right_triangle_components
+{Y : D} : «expr = »(«expr ≫ »(adj.unit.app (G.obj Y), G.map (adj.counit.app Y)), «expr𝟙»() (G.obj Y)) :=
+congr_arg (λ t : nat_trans _ «expr ⋙ »(G, «expr𝟭»() C), t.app Y) adj.right_triangle
 
 @[simp, reassoc]
 theorem counit_naturality {X Y : D} (f : X ⟶ Y) : F.map (G.map f) ≫ adj.counit.app Y = adj.counit.app X ≫ f :=
@@ -194,11 +197,11 @@ This structure won't typically be used anywhere else.
 structure core_hom_equiv(F : C ⥤ D)(G : D ⥤ C) where 
   homEquiv : ∀ X Y, (F.obj X ⟶ Y) ≃ (X ⟶ G.obj Y)
   hom_equiv_naturality_left_symm' :
-  ∀ {X' X Y} f : X' ⟶ X g : X ⟶ G.obj Y, (hom_equiv X' Y).symm (f ≫ g) = F.map f ≫ (hom_equiv X Y).symm g :=  by 
+  ∀ {X' X Y} (f : X' ⟶ X) (g : X ⟶ G.obj Y), (hom_equiv X' Y).symm (f ≫ g) = F.map f ≫ (hom_equiv X Y).symm g :=  by 
   runTac 
     obviously 
   hom_equiv_naturality_right' :
-  ∀ {X Y Y'} f : F.obj X ⟶ Y g : Y ⟶ Y', (hom_equiv X Y') (f ≫ g) = (hom_equiv X Y) f ≫ G.map g :=  by 
+  ∀ {X Y Y'} (f : F.obj X ⟶ Y) (g : Y ⟶ Y'), (hom_equiv X Y') (f ≫ g) = (hom_equiv X Y) f ≫ G.map g :=  by 
   runTac 
     obviously
 
@@ -286,7 +289,7 @@ def mk_of_hom_equiv (adj : core_hom_equiv F G) : F ⊣ G :=
         by 
           erw [←adj.hom_equiv_naturality_left_symm] <;> simp  }
 
--- error in CategoryTheory.Adjunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in CategoryTheory.Adjunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Construct an adjunction between functors `F` and `G` given a unit and counit for the adjunction
 satisfying the triangle identities. -/
 @[simps #[]]

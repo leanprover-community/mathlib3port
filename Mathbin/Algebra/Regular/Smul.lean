@@ -54,14 +54,12 @@ variable[HasScalar R M][HasScalar R S][HasScalar S M][IsScalarTower R S M]
 theorem smul (ra : IsSmulRegular M a) (rs : IsSmulRegular M s) : IsSmulRegular M (a • s) :=
   fun a b ab => rs (ra ((smul_assoc _ _ _).symm.trans (ab.trans (smul_assoc _ _ _))))
 
+-- error in Algebra.Regular.Smul: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If an element `b` becomes `M`-regular after multiplying it on the left by an `M`-regular
 element, then `b` is `M`-regular. -/
-theorem of_smul (a : R) (ab : IsSmulRegular M (a • s)) : IsSmulRegular M s :=
-  @Function.Injective.of_comp _ _ _ (fun m : M => a • m) _
-    fun c d cd =>
-      ab
-        (by 
-          rwa [smul_assoc, smul_assoc])
+theorem of_smul (a : R) (ab : is_smul_regular M «expr • »(a, s)) : is_smul_regular M s :=
+@function.injective.of_comp _ _ _ (λ
+ m : M, «expr • »(a, m)) _ (λ c d cd, ab (by rwa ["[", expr smul_assoc, ",", expr smul_assoc, "]"] []))
 
 /-- An element is `M`-regular if and only if multiplying it on the left by an `M`-regular element
 is `M`-regular. -/

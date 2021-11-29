@@ -169,7 +169,7 @@ theorem splits_mul_iff {f g : Polynomial K} (hf : f ≠ 0) (hg : g ≠ 0) : (f*g
   ⟨splits_of_splits_mul i (mul_ne_zero hf hg), fun ⟨hfs, hgs⟩ => splits_mul i hfs hgs⟩
 
 theorem splits_prod {ι : Type u} {s : ι → Polynomial K} {t : Finset ι} :
-  (∀ j _ : j ∈ t, (s j).Splits i) → (∏x in t, s x).Splits i :=
+  (∀ j (_ : j ∈ t), (s j).Splits i) → (∏x in t, s x).Splits i :=
   by 
     refine' Finset.induction_on t (fun _ => splits_one i) fun a t hat ih ht => _ 
     rw [Finset.forall_mem_insert] at ht 
@@ -185,7 +185,7 @@ theorem splits_X_pow (n : ℕ) : (X^n).Splits i :=
   splits_pow i (splits_X i) n
 
 theorem splits_prod_iff {ι : Type u} {s : ι → Polynomial K} {t : Finset ι} :
-  (∀ j _ : j ∈ t, s j ≠ 0) → ((∏x in t, s x).Splits i ↔ ∀ j _ : j ∈ t, (s j).Splits i) :=
+  (∀ j (_ : j ∈ t), s j ≠ 0) → ((∏x in t, s x).Splits i ↔ ∀ j (_ : j ∈ t), (s j).Splits i) :=
   by 
     refine' Finset.induction_on t (fun _ => ⟨fun _ _ h => h.elim, fun _ => splits_one i⟩) fun a t hat ih ht => _ 
     rw [Finset.forall_mem_insert] at ht⊢
@@ -220,38 +220,25 @@ theorem exists_root_of_splits {f : Polynomial K} (hs : splits i f) (hf0 : degree
       by 
         rw [←eval_map, hi, eval_mul, show _ = _ from hx, zero_mul]⟩
 
-theorem exists_multiset_of_splits {f : Polynomial K} :
-  splits i f → ∃ s : Multiset L, f.map i = C (i f.leading_coeff)*(s.map fun a : L => (X : Polynomial L) - C a).Prod :=
-  suffices
-    splits (RingHom.id _) (f.map i) →
-      ∃ s : Multiset L, f.map i = C (f.map i).leadingCoeff*(s.map fun a : L => (X : Polynomial L) - C a).Prod by
-    
-    rwa [splits_map_iff, leading_coeff_map i] at this 
-  WfDvdMonoid.induction_on_irreducible (f.map i)
-    (fun _ =>
-      ⟨{37},
-        by 
-          simp [i.map_zero]⟩)
-    (fun u hu _ =>
-      ⟨0,
-        by 
-          convLHS => rw [eq_C_of_degree_eq_zero (is_unit_iff_degree_eq_zero.1 hu)] <;>
-            simp [leading_coeff, nat_degree_eq_of_degree_eq_some (is_unit_iff_degree_eq_zero.1 hu)]⟩)
-    fun f p hf0 hp ih hfs =>
-      have hpf0 : (p*f) ≠ 0 := mul_ne_zero hp.ne_zero hf0 
-      let ⟨s, hs⟩ := ih (splits_of_splits_mul _ hpf0 hfs).2
-      ⟨-(p*norm_unit p).coeff 0 ::ₘ s,
-        have hp1 : degree p = 1 :=
-          hfs.resolve_left hpf0 hp
-            (by 
-              simp )
-        by 
-          rw [Multiset.map_cons, Multiset.prod_cons, leading_coeff_mul, C_mul, mul_assocₓ,
-            mul_left_commₓ (C f.leading_coeff), ←hs, ←mul_assocₓ, mul_left_inj' hf0]
-          convLHS => rw [eq_X_add_C_of_degree_eq_one hp1]
-          simp only [mul_addₓ, coe_norm_unit_of_ne_zero hp.ne_zero, mul_commₓ p, coeff_neg, C_neg, sub_eq_add_neg,
-            neg_negₓ, coeff_C_mul, (mul_assocₓ _ _ _).symm, C_mul.symm,
-            mul_inv_cancel (show p.leading_coeff ≠ 0 from mt leading_coeff_eq_zero.1 hp.ne_zero), one_mulₓ]⟩
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem exists_multiset_of_splits
+{f : polynomial K} : splits i f → «expr∃ , »((s : multiset L), «expr = »(f.map i, «expr * »(C (i f.leading_coeff), (s.map (λ
+     a : L, «expr - »((X : polynomial L), C a))).prod))) :=
+suffices splits (ring_hom.id _) (f.map i) → «expr∃ , »((s : multiset L), «expr = »(f.map i, «expr * »(C (f.map i).leading_coeff, (s.map (λ
+     a : L, «expr - »((X : polynomial L), C a))).prod))), by rwa ["[", expr splits_map_iff, ",", expr leading_coeff_map i, "]"] ["at", ident this],
+wf_dvd_monoid.induction_on_irreducible (f.map i) (λ
+ _, ⟨{37}, by simp [] [] [] ["[", expr i.map_zero, "]"] [] []⟩) (λ
+ u
+ hu
+ _, ⟨0, by conv_lhs [] [] { rw [expr eq_C_of_degree_eq_zero (is_unit_iff_degree_eq_zero.1 hu)] }; simp [] [] [] ["[", expr leading_coeff, ",", expr nat_degree_eq_of_degree_eq_some (is_unit_iff_degree_eq_zero.1 hu), "]"] [] []⟩) (λ
+ f p hf0 hp ih hfs, have hpf0 : «expr ≠ »(«expr * »(p, f), 0), from mul_ne_zero hp.ne_zero hf0,
+ let ⟨s, hs⟩ := ih (splits_of_splits_mul _ hpf0 hfs).2 in
+ ⟨«expr ::ₘ »(«expr- »(«expr * »(p, norm_unit p).coeff 0), s), have hp1 : «expr = »(degree p, 1), from hfs.resolve_left hpf0 hp (by simp [] [] [] [] [] []),
+  begin
+    rw ["[", expr multiset.map_cons, ",", expr multiset.prod_cons, ",", expr leading_coeff_mul, ",", expr C_mul, ",", expr mul_assoc, ",", expr mul_left_comm (C f.leading_coeff), ",", "<-", expr hs, ",", "<-", expr mul_assoc, ",", expr mul_left_inj' hf0, "]"] [],
+    conv_lhs [] [] { rw [expr eq_X_add_C_of_degree_eq_one hp1] },
+    simp [] [] ["only"] ["[", expr mul_add, ",", expr coe_norm_unit_of_ne_zero hp.ne_zero, ",", expr mul_comm p, ",", expr coeff_neg, ",", expr C_neg, ",", expr sub_eq_add_neg, ",", expr neg_neg, ",", expr coeff_C_mul, ",", expr (mul_assoc _ _ _).symm, ",", expr C_mul.symm, ",", expr mul_inv_cancel (show «expr ≠ »(p.leading_coeff, 0), from mt leading_coeff_eq_zero.1 hp.ne_zero), ",", expr one_mul, "]"] [] []
+  end⟩)
 
 /-- Pick a root of a polynomial that splits. -/
 def root_of_splits {f : Polynomial K} (hf : f.splits i) (hfd : f.degree ≠ 0) : L :=
@@ -349,38 +336,28 @@ local infixl:50 " ~ᵤ " => Associated
 
 open UniqueFactorizationMonoid Associates
 
-theorem splits_of_exists_multiset {f : Polynomial K} {s : Multiset L}
-  (hs : f.map i = C (i f.leading_coeff)*(s.map fun a : L => (X : Polynomial L) - C a).Prod) : splits i f :=
-  if hf0 : f = 0 then Or.inl hf0 else
-    Or.inr$
-      fun p hp hdp =>
-        have ht :
-          Multiset.Rel Associated (normalized_factors (f.map i)) (s.map fun a : L => (X : Polynomial L) - C a) :=
-          factors_unique (fun p hp => irreducible_of_normalized_factor _ hp)
-            (fun p' m =>
-              by 
-                obtain ⟨a, m, rfl⟩ := Multiset.mem_map.1 m 
-                exact irreducible_of_degree_eq_one (degree_X_sub_C _))
-            (Associated.symm$
-              calc _ ~ᵤ f.map i :=
-                ⟨(Units.map C.toMonoidHom : Units L →* Units (Polynomial L))
-                    (Units.mk0 (f.map i).leadingCoeff (mt leading_coeff_eq_zero.1 (map_ne_zero hf0))),
-                  by 
-                    convRHS => rw [hs, ←leading_coeff_map i, mul_commₓ] <;> rfl⟩
-                _ ~ᵤ _ :=
-                (UniqueFactorizationMonoid.normalized_factors_prod
-                    (by 
-                      simpa using hf0)).symm
-                )
-        let ⟨q, hq, hpq⟩ :=
-          exists_mem_normalized_factors_of_dvd
-            (by 
-              simpa)
-            hp hdp 
-        let ⟨q', hq', hqq'⟩ := Multiset.exists_mem_of_rel_of_mem ht hq 
-        let ⟨a, ha⟩ := Multiset.mem_map.1 hq' 
-        by 
-          rw [←degree_X_sub_C a, ha.2] <;> exact degree_eq_degree_of_associated (hpq.trans hqq')
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem splits_of_exists_multiset
+{f : polynomial K}
+{s : multiset L}
+(hs : «expr = »(f.map i, «expr * »(C (i f.leading_coeff), (s.map (λ
+     a : L, «expr - »((X : polynomial L), C a))).prod))) : splits i f :=
+if hf0 : «expr = »(f, 0) then or.inl hf0 else «expr $ »(or.inr, λ
+ p
+ hp
+ hdp, have ht : multiset.rel associated (normalized_factors (f.map i)) (s.map (λ
+   a : L, «expr - »((X : polynomial L), C a))) := factors_unique (λ
+  p
+  hp, irreducible_of_normalized_factor _ hp) (λ p' m, begin
+    obtain ["⟨", ident a, ",", ident m, ",", ident rfl, "⟩", ":=", expr multiset.mem_map.1 m],
+    exact [expr irreducible_of_degree_eq_one (degree_X_sub_C _)]
+  end) «expr $ »(associated.symm, calc
+    «expr ~ᵤ »(_, f.map i) : ⟨(units.map C.to_monoid_hom : «expr →* »(units L, units (polynomial L))) (units.mk0 (f.map i).leading_coeff (mt leading_coeff_eq_zero.1 (map_ne_zero hf0))), by conv_rhs [] [] { rw ["[", expr hs, ",", "<-", expr leading_coeff_map i, ",", expr mul_comm, "]"] }; refl⟩
+    «expr ~ᵤ »(..., _) : (unique_factorization_monoid.normalized_factors_prod (by simpa [] [] [] [] [] ["using", expr hf0])).symm),
+ let ⟨q, hq, hpq⟩ := exists_mem_normalized_factors_of_dvd (by simpa [] [] [] [] [] []) hp hdp in
+ let ⟨q', hq', hqq'⟩ := multiset.exists_mem_of_rel_of_mem ht hq in
+ let ⟨a, ha⟩ := multiset.mem_map.1 hq' in
+ by rw ["[", "<-", expr degree_X_sub_C a, ",", expr ha.2, "]"] []; exact [expr degree_eq_degree_of_associated (hpq.trans hqq')])
 
 theorem splits_of_splits_id {f : Polynomial K} : splits (RingHom.id _) f → splits i f :=
   UniqueFactorizationMonoid.induction_on_prime f (fun _ => splits_zero _)
@@ -399,9 +376,11 @@ theorem splits_of_splits_id {f : Polynomial K} : splits (RingHom.id _) f → spl
 
 end UFD
 
-theorem splits_iff_exists_multiset {f : Polynomial K} :
-  splits i f ↔ ∃ s : Multiset L, f.map i = C (i f.leading_coeff)*(s.map fun a : L => (X : Polynomial L) - C a).Prod :=
-  ⟨exists_multiset_of_splits i, fun ⟨s, hs⟩ => splits_of_exists_multiset i hs⟩
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem splits_iff_exists_multiset
+{f : polynomial K} : «expr ↔ »(splits i f, «expr∃ , »((s : multiset L), «expr = »(f.map i, «expr * »(C (i f.leading_coeff), (s.map (λ
+      a : L, «expr - »((X : polynomial L), C a))).prod)))) :=
+⟨exists_multiset_of_splits i, λ ⟨s, hs⟩, splits_of_exists_multiset i hs⟩
 
 theorem splits_comp_of_splits (j : L →+* F) {f : Polynomial K} (h : splits i f) : splits (j.comp i) f :=
   by 
@@ -446,7 +425,7 @@ begin
   exact [expr eq_of_monic_of_associated hprodmonic hmonic hassoc]
 end
 
--- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in FieldTheory.SplittingField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A polynomial `p` that has as many roots as its degree
 can be written `p = p.leading_coeff * ∏(X - a)`, for `a` in `p.roots`. -/
 theorem C_leading_coeff_mul_prod_multiset_X_sub_C
@@ -625,7 +604,7 @@ theorem nat_degree_remove_factor' {f : Polynomial K} {n : ℕ} (hfn : f.nat_degr
 def splitting_field_aux (n : ℕ) :
   ∀ {K : Type u} [Field K],
     by 
-      exact ∀ f : Polynomial K, f.nat_degree = n → Type u :=
+      exact ∀ (f : Polynomial K), f.nat_degree = n → Type u :=
   (Nat.recOn n fun K _ _ _ => K)$
     fun n ih K _ f hf =>
       by 
@@ -640,16 +619,16 @@ theorem succ (n : ℕ) (f : Polynomial K) (hfn : f.nat_degree = n+1) :
 instance Field (n : ℕ) :
   ∀ {K : Type u} [Field K],
     by 
-      exact ∀ {f : Polynomial K} hfn : f.nat_degree = n, Field (splitting_field_aux n f hfn) :=
+      exact ∀ {f : Polynomial K} (hfn : f.nat_degree = n), Field (splitting_field_aux n f hfn) :=
   (Nat.recOn n fun K _ _ _ => ‹Field K›)$ fun n ih K _ f hf => ih _
 
 instance Inhabited {n : ℕ} {f : Polynomial K} (hfn : f.nat_degree = n) : Inhabited (splitting_field_aux n f hfn) :=
   ⟨37⟩
 
 instance Algebra (n : ℕ) :
-  ∀ R : Type _ {K : Type u} [CommSemiringₓ R] [Field K],
+  ∀ (R : Type _) {K : Type u} [CommSemiringₓ R] [Field K],
     by 
-      exact ∀ [Algebra R K] {f : Polynomial K} hfn : f.nat_degree = n, Algebra R (splitting_field_aux n f hfn) :=
+      exact ∀ [Algebra R K] {f : Polynomial K} (hfn : f.nat_degree = n), Algebra R (splitting_field_aux n f hfn) :=
   (Nat.recOn n
       fun R K _ _ _ _ _ =>
         by 
@@ -659,13 +638,13 @@ instance Algebra (n : ℕ) :
         exact ih R (nat_degree_remove_factor' hfn)
 
 instance IsScalarTower (n : ℕ) :
-  ∀ R₁ R₂ : Type _ {K : Type u} [CommSemiringₓ R₁] [CommSemiringₓ R₂] [HasScalar R₁ R₂] [Field K],
+  ∀ (R₁ R₂ : Type _) {K : Type u} [CommSemiringₓ R₁] [CommSemiringₓ R₂] [HasScalar R₁ R₂] [Field K],
     by 
       exact
         ∀ [Algebra R₁ K] [Algebra R₂ K],
           by 
             exact
-              ∀ [IsScalarTower R₁ R₂ K] {f : Polynomial K} hfn : f.nat_degree = n,
+              ∀ [IsScalarTower R₁ R₂ K] {f : Polynomial K} (hfn : f.nat_degree = n),
                 IsScalarTower R₁ R₂ (splitting_field_aux n f hfn) :=
   (Nat.recOn n
       fun R₁ R₂ K _ _ _ _ _ _ _ _ _ =>
@@ -712,7 +691,7 @@ theorem algebra_map_succ (n : ℕ) (f : Polynomial K) (hfn : f.nat_degree = n+1)
 protected theorem splits (n : ℕ) :
   ∀ {K : Type u} [Field K],
     by 
-      exact ∀ f : Polynomial K hfn : f.nat_degree = n, splits (algebraMap K$ splitting_field_aux n f hfn) f :=
+      exact ∀ (f : Polynomial K) (hfn : f.nat_degree = n), splits (algebraMap K$ splitting_field_aux n f hfn) f :=
   (Nat.recOn n
       fun K _ _ hf =>
         by 
@@ -732,9 +711,10 @@ theorem exists_lift (n : ℕ) :
   ∀ {K : Type u} [Field K],
     by 
       exact
-        ∀ f : Polynomial K hfn : f.nat_degree = n {L : Type _} [Field L],
+        ∀ (f : Polynomial K) (hfn : f.nat_degree = n) {L : Type _} [Field L],
           by 
-            exact ∀ j : K →+* L hf : splits j f, ∃ k : splitting_field_aux n f hfn →+* L, k.comp (algebraMap _ _) = j :=
+            exact
+              ∀ (j : K →+* L) (hf : splits j f), ∃ k : splitting_field_aux n f hfn →+* L, k.comp (algebraMap _ _) = j :=
   (Nat.recOn n
       fun K _ _ _ L _ j _ =>
         by 
@@ -771,7 +751,7 @@ theorem adjoin_roots (n : ℕ) :
   ∀ {K : Type u} [Field K],
     by 
       exact
-        ∀ f : Polynomial K hfn : f.nat_degree = n,
+        ∀ (f : Polynomial K) (hfn : f.nat_degree = n),
           Algebra.adjoin K
               («expr↑ » (f.map$ algebraMap K$ splitting_field_aux n f hfn).roots.toFinset :
               Set (splitting_field_aux n f hfn)) =

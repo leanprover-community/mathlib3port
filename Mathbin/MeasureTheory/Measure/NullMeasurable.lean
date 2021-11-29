@@ -137,10 +137,10 @@ protected theorem bUnion_decode₂ [Encodable ι] ⦃f : ι → Set α⦄ (h : �
   MeasurableSet.bUnion_decode₂ h n
 
 protected theorem bUnion {f : ι → Set α} {s : Set ι} (hs : countable s)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋃(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b (_ : b ∈ s), null_measurable_set (f b) μ) : null_measurable_set (⋃(b : _)(_ : b ∈ s), f b) μ :=
   MeasurableSet.bUnion hs h
 
-protected theorem sUnion {s : Set (Set α)} (hs : countable s) (h : ∀ t _ : t ∈ s, null_measurable_set t μ) :
+protected theorem sUnion {s : Set (Set α)} (hs : countable s) (h : ∀ t (_ : t ∈ s), null_measurable_set t μ) :
   null_measurable_set (⋃₀s) μ :=
   by 
     rw [sUnion_eq_bUnion]
@@ -159,10 +159,10 @@ protected theorem Inter [Encodable ι] {f : ι → Set α} (h : ∀ i, null_meas
   MeasurableSet.Inter h
 
 protected theorem bInter {f : β → Set α} {s : Set β} (hs : countable s)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋂(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b (_ : b ∈ s), null_measurable_set (f b) μ) : null_measurable_set (⋂(b : _)(_ : b ∈ s), f b) μ :=
   MeasurableSet.bInter hs h
 
-protected theorem sInter {s : Set (Set α)} (hs : countable s) (h : ∀ t _ : t ∈ s, null_measurable_set t μ) :
+protected theorem sInter {s : Set (Set α)} (hs : countable s) (h : ∀ t (_ : t ∈ s), null_measurable_set t μ) :
   null_measurable_set (⋂₀s) μ :=
   MeasurableSet.sInter hs h
 
@@ -289,27 +289,27 @@ protected theorem _root_.finset.null_measurable_set (s : Finset α) : null_measu
 end MeasurableSingletonClass
 
 theorem _root_.set.finite.null_measurable_set_bUnion {f : ι → Set α} {s : Set ι} (hs : finite s)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋃(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b (_ : b ∈ s), null_measurable_set (f b) μ) : null_measurable_set (⋃(b : _)(_ : b ∈ s), f b) μ :=
   finite.measurable_set_bUnion hs h
 
 theorem _root_.finset.null_measurable_set_bUnion {f : ι → Set α} (s : Finset ι)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋃(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b (_ : b ∈ s), null_measurable_set (f b) μ) : null_measurable_set (⋃(b : _)(_ : b ∈ s), f b) μ :=
   Finset.measurable_set_bUnion s h
 
 theorem _root_.set.finite.null_measurable_set_sUnion {s : Set (Set α)} (hs : finite s)
-  (h : ∀ t _ : t ∈ s, null_measurable_set t μ) : null_measurable_set (⋃₀s) μ :=
+  (h : ∀ t (_ : t ∈ s), null_measurable_set t μ) : null_measurable_set (⋃₀s) μ :=
   finite.measurable_set_sUnion hs h
 
 theorem _root_.set.finite.null_measurable_set_bInter {f : ι → Set α} {s : Set ι} (hs : finite s)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋂(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b (_ : b ∈ s), null_measurable_set (f b) μ) : null_measurable_set (⋂(b : _)(_ : b ∈ s), f b) μ :=
   finite.measurable_set_bInter hs h
 
 theorem _root_.finset.null_measurable_set_bInter {f : ι → Set α} (s : Finset ι)
-  (h : ∀ b _ : b ∈ s, null_measurable_set (f b) μ) : null_measurable_set (⋂(b : _)(_ : b ∈ s), f b) μ :=
+  (h : ∀ b (_ : b ∈ s), null_measurable_set (f b) μ) : null_measurable_set (⋂(b : _)(_ : b ∈ s), f b) μ :=
   s.finite_to_set.null_measurable_set_bInter h
 
 theorem _root_.set.finite.null_measurable_set_sInter {s : Set (Set α)} (hs : finite s)
-  (h : ∀ t _ : t ∈ s, null_measurable_set t μ) : null_measurable_set (⋂₀s) μ :=
+  (h : ∀ t (_ : t ∈ s), null_measurable_set t μ) : null_measurable_set (⋂₀s) μ :=
   null_measurable_set.sInter hs.countable h
 
 theorem null_measurable_set_to_measurable : null_measurable_set (to_measurable μ s) μ :=

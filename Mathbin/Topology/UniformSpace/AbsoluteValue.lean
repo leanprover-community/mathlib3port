@@ -67,7 +67,7 @@ def uniform_space_core : UniformSpace.Core R :=
           le_infi$
             fun h =>
               lift'_le (mem_infi_of_mem (ε / 2)$ mem_infi_of_mem (div_pos h zero_lt_two) (subset.refl _))$
-                have  : ∀ a b c : R, abv (c - a) < ε / 2 → abv (b - c) < ε / 2 → abv (b - a) < ε :=
+                have  : ∀ (a b c : R), abv (c - a) < ε / 2 → abv (b - c) < ε / 2 → abv (b - a) < ε :=
                   fun a b c hac hcb =>
                     calc abv (b - a) ≤ _ := abv_sub_le abv b c a 
                       _ = abv (c - a)+abv (b - c) := add_commₓ _ _ 

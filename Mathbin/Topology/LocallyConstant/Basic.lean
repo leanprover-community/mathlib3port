@@ -29,14 +29,14 @@ open_locale TopologicalSpace
 
 /-- A function between topological spaces is locally constant if the preimage of any set is open. -/
 def IsLocallyConstant (f : X → Y) : Prop :=
-  ∀ s : Set Y, IsOpen (f ⁻¹' s)
+  ∀ (s : Set Y), IsOpen (f ⁻¹' s)
 
 namespace IsLocallyConstant
 
 protected theorem tfae (f : X → Y) :
   tfae
     [IsLocallyConstant f, ∀ x, ∀ᶠx' in 𝓝 x, f x' = f x, ∀ x, IsOpen { x' | f x' = f x }, ∀ y, IsOpen (f ⁻¹' {y}),
-      ∀ x, ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' _ : x' ∈ U, f x' = f x] :=
+      ∀ x, ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' (_ : x' ∈ U), f x' = f x] :=
   by 
     tfaeHave 1 → 4 
     exact fun h y => h {y}
@@ -71,14 +71,14 @@ theorem is_clopen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClo
   ⟨is_open_fiber hf _, is_closed_fiber hf _⟩
 
 theorem iff_exists_open (f : X → Y) :
-  IsLocallyConstant f ↔ ∀ x, ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' _ : x' ∈ U, f x' = f x :=
+  IsLocallyConstant f ↔ ∀ x, ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' (_ : x' ∈ U), f x' = f x :=
   (IsLocallyConstant.tfae f).out 0 4
 
 theorem iff_eventually_eq (f : X → Y) : IsLocallyConstant f ↔ ∀ x, ∀ᶠy in 𝓝 x, f y = f x :=
   (IsLocallyConstant.tfae f).out 0 1
 
 theorem exists_open {f : X → Y} (hf : IsLocallyConstant f) (x : X) :
-  ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' _ : x' ∈ U, f x' = f x :=
+  ∃ (U : Set X)(hU : IsOpen U)(hx : x ∈ U), ∀ x' (_ : x' ∈ U), f x' = f x :=
   (iff_exists_open f).1 hf x
 
 protected theorem eventually_eq {f : X → Y} (hf : IsLocallyConstant f) (x : X) : ∀ᶠy in 𝓝 x, f y = f x :=
@@ -110,9 +110,15 @@ theorem prod_mk {Y'} {f : X → Y} {f' : X → Y'} (hf : IsLocallyConstant f) (h
   (iff_eventually_eq _).2$
     fun x => (hf.eventually_eq x).mp$ (hf'.eventually_eq x).mono$ fun x' hf' hf => Prod.extₓ hf hf'
 
-theorem comp₂ {Y₁ Y₂ Z : Type _} {f : X → Y₁} {g : X → Y₂} (hf : IsLocallyConstant f) (hg : IsLocallyConstant g)
-  (h : Y₁ → Y₂ → Z) : IsLocallyConstant fun x => h (f x) (g x) :=
-  (hf.prod_mk hg).comp fun x : Y₁ × Y₂ => h x.1 x.2
+-- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem comp₂
+{Y₁ Y₂ Z : Type*}
+{f : X → Y₁}
+{g : X → Y₂}
+(hf : is_locally_constant f)
+(hg : is_locally_constant g)
+(h : Y₁ → Y₂ → Z) : is_locally_constant (λ x, h (f x) (g x)) :=
+(hf.prod_mk hg).comp (λ x : «expr × »(Y₁, Y₂), h x.1 x.2)
 
 theorem comp_continuous [TopologicalSpace Y] {g : Y → Z} {f : X → Y} (hg : IsLocallyConstant g) (hf : Continuous f) :
   IsLocallyConstant (g ∘ f) :=
@@ -208,11 +214,13 @@ theorem to_fun_eq_coe (f : LocallyConstant X Y) : f.to_fun = f :=
 theorem coe_mk (f : X → Y) h : «expr⇑ » (⟨f, h⟩ : LocallyConstant X Y) = f :=
   rfl
 
-theorem congr_funₓ {f g : LocallyConstant X Y} (h : f = g) (x : X) : f x = g x :=
-  congr_argₓ (fun h : LocallyConstant X Y => h x) h
+-- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem congr_fun {f g : locally_constant X Y} (h : «expr = »(f, g)) (x : X) : «expr = »(f x, g x) :=
+congr_arg (λ h : locally_constant X Y, h x) h
 
-theorem congr_argₓ (f : LocallyConstant X Y) {x y : X} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : X => f x) h
+-- error in Topology.LocallyConstant.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem congr_arg (f : locally_constant X Y) {x y : X} (h : «expr = »(x, y)) : «expr = »(f x, f y) :=
+congr_arg (λ x : X, f x) h
 
 theorem coe_injective : @Function.Injective (LocallyConstant X Y) (X → Y) coeFn
 | ⟨f, hf⟩, ⟨g, hg⟩, h =>

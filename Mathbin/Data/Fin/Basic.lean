@@ -163,7 +163,7 @@ theorem val_eq_coe (a : Finₓ n) : a.val = a :=
 /-- Assume `k = l`. If two functions defined on `fin k` and `fin l` are equal on each element,
 then they coincide (in the heq sense). -/
 protected theorem heq_fun_iff {α : Sort _} {k l : ℕ} (h : k = l) {f : Finₓ k → α} {g : Finₓ l → α} :
-  HEq f g ↔ ∀ i : Finₓ k, f i = g ⟨(i : ℕ), h ▸ i.2⟩ :=
+  HEq f g ↔ ∀ (i : Finₓ k), f i = g ⟨(i : ℕ), h ▸ i.2⟩ :=
   by 
     induction h 
     simp [heq_iff_eq, Function.funext_iffₓ]
@@ -289,7 +289,7 @@ theorem last_val (n : ℕ) : (last n).val = n :=
 theorem le_last (i : Finₓ (n+1)) : i ≤ last n :=
   le_of_lt_succ i.is_lt
 
-instance  : BoundedLattice (Finₓ (n+1)) :=
+instance  : BoundedOrder (Finₓ (n+1)) :=
   { Finₓ.linearOrder, latticeOfLinearOrder with top := last n, le_top := le_last, bot := 0, bot_le := zero_le }
 
 theorem last_pos : (0 : Finₓ (n+2)) < last (n+1) :=
@@ -432,10 +432,10 @@ instance AddCommMonoidₓ (n : ℕ) : AddCommMonoidₓ (Finₓ (n+1)) :=
 
 end Monoidₓ
 
-theorem val_add {n : ℕ} : ∀ a b : Finₓ n, (a+b).val = (a.val+b.val) % n
+theorem val_add {n : ℕ} : ∀ (a b : Finₓ n), (a+b).val = (a.val+b.val) % n
 | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
-theorem coe_add {n : ℕ} : ∀ a b : Finₓ n, ((a+b : Finₓ n) : ℕ) = (a+b) % n
+theorem coe_add {n : ℕ} : ∀ (a b : Finₓ n), ((a+b : Finₓ n) : ℕ) = (a+b) % n
 | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
 theorem coe_add_eq_ite {n : ℕ} (a b : Finₓ n) : («expr↑ » (a+b) : ℕ) = if n ≤ a+b then (a+b) - n else a+b :=
@@ -635,7 +635,7 @@ theorem succ_injective (n : ℕ) : injective (@Finₓ.succ n) :=
 theorem succ_inj {a b : Finₓ n} : a.succ = b.succ ↔ a = b :=
   (succ_injective n).eq_iff
 
-theorem succ_ne_zero {n} : ∀ k : Finₓ n, Finₓ.succ k ≠ 0
+theorem succ_ne_zero {n} : ∀ (k : Finₓ n), Finₓ.succ k ≠ 0
 | ⟨k, hk⟩, HEq => Nat.succ_ne_zero k$ (ext_iff _ _).1 HEq
 
 @[simp]
@@ -1023,7 +1023,7 @@ theorem coe_pred (j : Finₓ (n+1)) (h : j ≠ 0) : (j.pred h : ℕ) = j - 1 :=
     rfl
 
 @[simp]
-theorem succ_pred : ∀ i : Finₓ (n+1) h : i ≠ 0, (i.pred h).succ = i
+theorem succ_pred : ∀ (i : Finₓ (n+1)) (h : i ≠ 0), (i.pred h).succ = i
 | ⟨0, h⟩, hi =>
   by 
     contradiction
@@ -1150,7 +1150,7 @@ and `Hs n i` defines `(i+1)`-st element of `(n+1)`-tuple based on `n`, `i`, and 
 of `n`-tuple. -/
 @[elab_as_eliminator]
 def succ_rec {C : ∀ n, Finₓ n → Sort _} (H0 : ∀ n, C (succ n) 0) (Hs : ∀ n i, C n i → C (succ n) i.succ) :
-  ∀ {n : ℕ} i : Finₓ n, C n i
+  ∀ {n : ℕ} (i : Finₓ n), C n i
 | 0, i => i.elim0
 | succ n, ⟨0, _⟩ => H0 _
 | succ n, ⟨succ i, h⟩ => Hs _ _ (succ_rec ⟨i, lt_of_succ_lt_succ h⟩)
@@ -1182,8 +1182,8 @@ This function has two arguments: `h0` handles the base case on `C 0`,
 and `hs` defines the inductive step using `C i.cast_succ`.
 -/
 @[elab_as_eliminator]
-def induction {C : Finₓ (n+1) → Sort _} (h0 : C 0) (hs : ∀ i : Finₓ n, C i.cast_succ → C i.succ) :
-  ∀ i : Finₓ (n+1), C i :=
+def induction {C : Finₓ (n+1) → Sort _} (h0 : C 0) (hs : ∀ (i : Finₓ n), C i.cast_succ → C i.succ) :
+  ∀ (i : Finₓ (n+1)), C i :=
   by 
     rintro ⟨i, hi⟩
     induction' i with i IH
@@ -1201,14 +1201,14 @@ and `hs` defines the inductive step using `C i.cast_succ`.
 A version of `fin.induction` taking `i : fin (n + 1)` as the first argument.
 -/
 @[elab_as_eliminator]
-def induction_on (i : Finₓ (n+1)) {C : Finₓ (n+1) → Sort _} (h0 : C 0) (hs : ∀ i : Finₓ n, C i.cast_succ → C i.succ) :
+def induction_on (i : Finₓ (n+1)) {C : Finₓ (n+1) → Sort _} (h0 : C 0) (hs : ∀ (i : Finₓ n), C i.cast_succ → C i.succ) :
   C i :=
   induction h0 hs i
 
 /-- Define `f : Π i : fin n.succ, C i` by separately handling the cases `i = 0` and
 `i = j.succ`, `j : fin n`. -/
 @[elab_as_eliminator]
-def cases {C : Finₓ (succ n) → Sort _} (H0 : C 0) (Hs : ∀ i : Finₓ n, C i.succ) : ∀ i : Finₓ (succ n), C i :=
+def cases {C : Finₓ (succ n) → Sort _} (H0 : C 0) (Hs : ∀ (i : Finₓ n), C i.succ) : ∀ (i : Finₓ (succ n)), C i :=
   induction H0 fun i _ => Hs i
 
 @[simp]
@@ -1226,7 +1226,7 @@ theorem cases_succ' {n} {C : Finₓ (succ n) → Sort _} {H0 Hs} {i : ℕ} (h : 
   by 
     cases i <;> rfl
 
-theorem forall_fin_succ {P : Finₓ (n+1) → Prop} : (∀ i, P i) ↔ P 0 ∧ ∀ i : Finₓ n, P i.succ :=
+theorem forall_fin_succ {P : Finₓ (n+1) → Prop} : (∀ i, P i) ↔ P 0 ∧ ∀ (i : Finₓ n), P i.succ :=
   ⟨fun H => ⟨H 0, fun i => H _⟩, fun ⟨H0, H1⟩ i => Finₓ.cases H0 H1 i⟩
 
 theorem exists_fin_succ {P : Finₓ (n+1) → Prop} : (∃ i, P i) ↔ P 0 ∨ ∃ i : Finₓ n, P i.succ :=
@@ -1252,7 +1252,7 @@ and `hs` defines the inductive step using `C i.succ`, inducting downwards.
 -/
 @[elab_as_eliminator]
 def reverse_induction {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ.last n))
-  (hs : ∀ i : Finₓ n, C i.succ → C i.cast_succ) : ∀ i : Finₓ (n+1), C i
+  (hs : ∀ (i : Finₓ n), C i.succ → C i.cast_succ) : ∀ (i : Finₓ (n+1)), C i
 | i =>
   if hi : i = Finₓ.last n then
     _root_.cast
@@ -1273,13 +1273,13 @@ def reverse_induction {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ
 
 @[simp]
 theorem reverse_induction_last {n : ℕ} {C : Finₓ (n+1) → Sort _} (h0 : C (Finₓ.last n))
-  (hs : ∀ i : Finₓ n, C i.succ → C i.cast_succ) : (reverse_induction h0 hs (Finₓ.last n) : C (Finₓ.last n)) = h0 :=
+  (hs : ∀ (i : Finₓ n), C i.succ → C i.cast_succ) : (reverse_induction h0 hs (Finₓ.last n) : C (Finₓ.last n)) = h0 :=
   by 
     rw [reverse_induction] <;> simp 
 
 @[simp]
 theorem reverse_induction_cast_succ {n : ℕ} {C : Finₓ (n+1) → Sort _} (h0 : C (Finₓ.last n))
-  (hs : ∀ i : Finₓ n, C i.succ → C i.cast_succ) (i : Finₓ n) :
+  (hs : ∀ (i : Finₓ n), C i.succ → C i.cast_succ) (i : Finₓ n) :
   (reverse_induction h0 hs i.cast_succ : C i.cast_succ) = hs i (reverse_induction h0 hs i.succ) :=
   by 
     rw [reverse_induction, dif_neg (ne_of_ltₓ (Finₓ.cast_succ_lt_last i))]
@@ -1289,18 +1289,18 @@ theorem reverse_induction_cast_succ {n : ℕ} {C : Finₓ (n+1) → Sort _} (h0 
 /-- Define `f : Π i : fin n.succ, C i` by separately handling the cases `i = fin.last n` and
 `i = j.cast_succ`, `j : fin n`. -/
 @[elab_as_eliminator, elab_strategy]
-def last_cases {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ.last n)) (hcast : ∀ i : Finₓ n, C i.cast_succ)
+def last_cases {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ.last n)) (hcast : ∀ (i : Finₓ n), C i.cast_succ)
   (i : Finₓ (n+1)) : C i :=
   reverse_induction hlast (fun i _ => hcast i) i
 
 @[simp]
 theorem last_cases_last {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ.last n))
-  (hcast : ∀ i : Finₓ n, C i.cast_succ) : (Finₓ.lastCases hlast hcast (Finₓ.last n) : C (Finₓ.last n)) = hlast :=
+  (hcast : ∀ (i : Finₓ n), C i.cast_succ) : (Finₓ.lastCases hlast hcast (Finₓ.last n) : C (Finₓ.last n)) = hlast :=
   reverse_induction_last _ _
 
 @[simp]
 theorem last_cases_cast_succ {n : ℕ} {C : Finₓ (n+1) → Sort _} (hlast : C (Finₓ.last n))
-  (hcast : ∀ i : Finₓ n, C i.cast_succ) (i : Finₓ n) :
+  (hcast : ∀ (i : Finₓ n), C i.cast_succ) (i : Finₓ n) :
   (Finₓ.lastCases hlast hcast (Finₓ.castSucc i) : C (Finₓ.castSucc i)) = hcast i :=
   reverse_induction_cast_succ _ _ _
 
@@ -1375,10 +1375,11 @@ end AddGroupₓ
 
 section SuccAbove
 
-theorem succ_above_aux (p : Finₓ (n+1)) :
-  StrictMono fun i : Finₓ n => if i.cast_succ < p then i.cast_succ else i.succ :=
-  (cast_succ : Finₓ n ↪o _).StrictMono.ite (succ_embedding n).StrictMono
-    (fun i j hij hj => lt_transₓ ((cast_succ : Finₓ n ↪o _).lt_iff_lt.2 hij) hj) fun i => (cast_succ_lt_succ i).le
+-- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem succ_above_aux
+(p : fin «expr + »(n, 1)) : strict_mono (λ i : fin n, if «expr < »(i.cast_succ, p) then i.cast_succ else i.succ) :=
+(cast_succ : «expr ↪o »(fin n, _)).strict_mono.ite (succ_embedding n).strict_mono (λ
+ i j hij hj, lt_trans ((cast_succ : «expr ↪o »(fin n, _)).lt_iff_lt.2 hij) hj) (λ i, (cast_succ_lt_succ i).le)
 
 /-- `succ_above p i` embeds `fin n` into `fin (n + 1)` with a hole around `p`. -/
 def succ_above (p : Finₓ (n+1)) : Finₓ n ↪o Finₓ (n+1) :=
@@ -1544,11 +1545,13 @@ theorem succ_above_right_injective {x : Finₓ (n+1)} : injective (succ_above x)
 theorem succ_above_right_inj {x : Finₓ (n+1)} : x.succ_above a = x.succ_above b ↔ a = b :=
   succ_above_right_injective.eq_iff
 
-/-- `succ_above` is injective at the pivot -/
-theorem succ_above_left_injective : injective (@succ_above n) :=
-  fun _ _ h =>
-    by 
-      simpa [range_succ_above] using congr_argₓ (fun f : Finₓ n ↪o Finₓ (n+1) => «expr ᶜ» (Set.Range f)) h
+-- error in Data.Fin.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- `succ_above` is injective at the pivot -/ theorem succ_above_left_injective : injective (@succ_above n) :=
+λ
+_
+_
+h, by simpa [] [] [] ["[", expr range_succ_above, "]"] [] ["using", expr congr_arg (λ
+  f : «expr ↪o »(fin n, fin «expr + »(n, 1)), «expr ᶜ»(set.range f)) h]
 
 /-- `succ_above` is injective at the pivot -/
 @[simp]
@@ -1853,10 +1856,10 @@ section Mul
 -/
 
 
-theorem val_mul {n : ℕ} : ∀ a b : Finₓ n, (a*b).val = (a.val*b.val) % n
+theorem val_mul {n : ℕ} : ∀ (a b : Finₓ n), (a*b).val = (a.val*b.val) % n
 | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
-theorem coe_mul {n : ℕ} : ∀ a b : Finₓ n, ((a*b : Finₓ n) : ℕ) = (a*b) % n
+theorem coe_mul {n : ℕ} : ∀ (a b : Finₓ n), ((a*b : Finₓ n) : ℕ) = (a*b) % n
 | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
 @[simp]

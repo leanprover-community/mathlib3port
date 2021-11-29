@@ -16,8 +16,9 @@ open_locale Real
 
 namespace circle
 
-theorem injective_arg : injective fun z : circle => arg z :=
-  fun z w h => Subtype.ext$ ext_abs_arg ((abs_eq_of_mem_circle z).trans (abs_eq_of_mem_circle w).symm) h
+-- error in Analysis.SpecialFunctions.Complex.Circle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem injective_arg : injective (λ z : circle, arg z) :=
+λ z w h, «expr $ »(subtype.ext, ext_abs_arg ((abs_eq_of_mem_circle z).trans (abs_eq_of_mem_circle w).symm) h)
 
 @[simp]
 theorem arg_eq_arg {z w : circle} : arg z = arg w ↔ z = w :=

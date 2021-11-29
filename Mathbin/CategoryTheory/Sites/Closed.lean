@@ -67,7 +67,7 @@ every open set which it covers.
 Note this has no relation to a closed subset of a topological space.
 -/
 def is_closed {X : C} (S : sieve X) : Prop :=
-  ∀ ⦃Y : C⦄ f : Y ⟶ X, J₁.covers S f → S f
+  ∀ ⦃Y : C⦄ (f : Y ⟶ X), J₁.covers S f → S f
 
 /-- If `S` is `J₁`-closed, then `S` covers exactly the arrows it contains. -/
 theorem covers_iff_mem_of_closed {X : C} {S : sieve X} (h : J₁.is_closed S) {Y : C} (f : Y ⟶ X) : J₁.covers S f ↔ S f :=
@@ -253,7 +253,7 @@ end
 
 /-- If being a sheaf for `J₁` is equivalent to being a sheaf for `J₂`, then `J₁ = J₂`. -/
 theorem topology_eq_iff_same_sheaves {J₁ J₂ : grothendieck_topology C} :
-  J₁ = J₂ ↔ ∀ P : «expr ᵒᵖ» C ⥤ Type max v u, presieve.is_sheaf J₁ P ↔ presieve.is_sheaf J₂ P :=
+  J₁ = J₂ ↔ ∀ (P : «expr ᵒᵖ» C ⥤ Type max v u), presieve.is_sheaf J₁ P ↔ presieve.is_sheaf J₂ P :=
   by 
     split 
     ·
@@ -278,8 +278,8 @@ induces a Grothendieck topology.
 In fact, such operations are in bijection with Grothendieck topologies.
 -/
 @[simps]
-def topology_of_closure_operator (c : ∀ X : C, ClosureOperator (sieve X))
-  (hc : ∀ ⦃X Y : C⦄ f : Y ⟶ X S : sieve X, c _ (S.pullback f) = (c _ S).pullback f) : grothendieck_topology C :=
+def topology_of_closure_operator (c : ∀ (X : C), ClosureOperator (sieve X))
+  (hc : ∀ ⦃X Y : C⦄ (f : Y ⟶ X) (S : sieve X), c _ (S.pullback f) = (c _ S).pullback f) : grothendieck_topology C :=
   { Sieves := fun X => { S | c X S = ⊤ }, top_mem' := fun X => top_unique ((c X).le_closure _),
     pullback_stable' :=
       fun X Y S f hS =>
@@ -304,8 +304,8 @@ theorem topology_of_closure_operator_self :
     ext X S 
     apply grothendieck_topology.close_eq_top_iff_mem
 
-theorem topology_of_closure_operator_close (c : ∀ X : C, ClosureOperator (sieve X))
-  (pb : ∀ ⦃X Y : C⦄ f : Y ⟶ X S : sieve X, c Y (S.pullback f) = (c X S).pullback f) (X : C) (S : sieve X) :
+theorem topology_of_closure_operator_close (c : ∀ (X : C), ClosureOperator (sieve X))
+  (pb : ∀ ⦃X Y : C⦄ (f : Y ⟶ X) (S : sieve X), c Y (S.pullback f) = (c X S).pullback f) (X : C) (S : sieve X) :
   (topology_of_closure_operator c pb).close S = c X S :=
   by 
     ext 

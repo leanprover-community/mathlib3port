@@ -23,7 +23,7 @@ boolean ring, boolean algebra
 
 /-- A Boolean ring is a ring where multiplication is idempotent. -/
 class BooleanRing(α) extends Ringₓ α where 
-  mul_self : ∀ a : α, (a*a) = a
+  mul_self : ∀ (a : α), (a*a) = a
 
 section BooleanRing
 

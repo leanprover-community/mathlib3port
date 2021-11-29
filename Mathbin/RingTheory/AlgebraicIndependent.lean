@@ -65,11 +65,11 @@ theorem algebraic_independent_iff_ker_eq_bot :
   RingHom.injective_iff_ker_eq_bot _
 
 theorem algebraic_independent_iff :
-  AlgebraicIndependent R x ↔ ∀ p : MvPolynomial ι R, MvPolynomial.aeval (x : ι → A) p = 0 → p = 0 :=
+  AlgebraicIndependent R x ↔ ∀ (p : MvPolynomial ι R), MvPolynomial.aeval (x : ι → A) p = 0 → p = 0 :=
   RingHom.injective_iff _
 
 theorem AlgebraicIndependent.eq_zero_of_aeval_eq_zero (h : AlgebraicIndependent R x) :
-  ∀ p : MvPolynomial ι R, MvPolynomial.aeval (x : ι → A) p = 0 → p = 0 :=
+  ∀ (p : MvPolynomial ι R), MvPolynomial.aeval (x : ι → A) p = 0 → p = 0 :=
   algebraic_independent_iff.1 h
 
 theorem algebraic_independent_iff_injective_aeval :
@@ -130,7 +130,7 @@ theorem map {f : A →ₐ[R] A'} (hf_inj : Set.InjOn f (adjoin R (range x))) : A
   have  : aeval (f ∘ x) = f.comp (aeval x) :=
     by 
       ext <;> simp 
-  have h : ∀ p : MvPolynomial ι R, aeval x p ∈ (@aeval R _ _ _ _ _ (coeₓ : range x → A)).range :=
+  have h : ∀ (p : MvPolynomial ι R), aeval x p ∈ (@aeval R _ _ _ _ _ (coeₓ : range x → A)).range :=
     by 
       intro p 
       rw [AlgHom.mem_range]
@@ -181,13 +181,20 @@ theorem algebraic_independent_subtype_range {ι} {f : ι → A} (hf : injective 
 
 alias algebraic_independent_subtype_range ↔ AlgebraicIndependent.of_subtype_range _
 
-theorem algebraic_independent_image {ι} {s : Set ι} {f : ι → A} (hf : Set.InjOn f s) :
-  (AlgebraicIndependent R fun x : s => f x) ↔ AlgebraicIndependent R fun x : f '' s => (x : A) :=
-  algebraic_independent_equiv' (Equiv.Set.imageOfInjOn _ _ hf) rfl
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem algebraic_independent_image
+{ι}
+{s : set ι}
+{f : ι → A}
+(hf : set.inj_on f s) : «expr ↔ »(algebraic_independent R (λ
+  x : s, f x), algebraic_independent R (λ x : «expr '' »(f, s), (x : A))) :=
+algebraic_independent_equiv' (equiv.set.image_of_inj_on _ _ hf) rfl
 
-theorem algebraic_independent_adjoin (hs : AlgebraicIndependent R x) :
-  @AlgebraicIndependent ι R (adjoin R (range x)) (fun i : ι => ⟨x i, subset_adjoin (mem_range_self i)⟩) _ _ _ :=
-  AlgebraicIndependent.of_comp (adjoin R (range x)).val hs
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem algebraic_independent_adjoin
+(hs : algebraic_independent R x) : @algebraic_independent ι R (adjoin R (range x)) (λ
+ i : ι, ⟨x i, subset_adjoin (mem_range_self i)⟩) _ _ _ :=
+algebraic_independent.of_comp (adjoin R (range x)).val hs
 
 /-- A set of algebraically independent elements in an algebra `A` over a ring `K` is also
 algebraically independent over a subring `R` of `K`. -/
@@ -223,20 +230,25 @@ theorem algebraic_independent_finset_map_embedding_subtype (s : Set A) (li : Alg
     obtain ⟨b, hb, rfl⟩ := hy 
     simp only [imp_self, Subtype.mk_eq_mk]
 
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If every finite set of algebraically independent element has cardinality at most `n`,
 then the same is true for arbitrary sets of algebraically independent elements.
 -/
-theorem algebraic_independent_bounded_of_finset_algebraic_independent_bounded {n : ℕ}
-  (H : ∀ s : Finset A, (AlgebraicIndependent R fun i : s => (i : A)) → s.card ≤ n) :
-  ∀ s : Set A, AlgebraicIndependent R (coeₓ : s → A) → Cardinal.mk s ≤ n :=
-  by 
-    intro s li 
-    apply Cardinal.card_le_of 
-    intro t 
-    rw [←Finset.card_map (embedding.subtype s)]
-    apply H 
-    apply algebraic_independent_finset_map_embedding_subtype _ li
+theorem algebraic_independent_bounded_of_finset_algebraic_independent_bounded
+{n : exprℕ()}
+(H : ∀
+ s : finset A, algebraic_independent R (λ
+  i : s, (i : A)) → «expr ≤ »(s.card, n)) : ∀
+s : set A, algebraic_independent R (coe : s → A) → «expr ≤ »(cardinal.mk s, n) :=
+begin
+  intros [ident s, ident li],
+  apply [expr cardinal.card_le_of],
+  intro [ident t],
+  rw ["<-", expr finset.card_map (embedding.subtype s)] [],
+  apply [expr H],
+  apply [expr algebraic_independent_finset_map_embedding_subtype _ li]
+end
 
 section Subtype
 
@@ -272,11 +284,11 @@ theorem AlgebraicIndependent.to_subtype_range' {ι} {f : ι → A} (hf : Algebra
   ht ▸ hf.to_subtype_range
 
 theorem algebraic_independent_comp_subtype {s : Set ι} :
-  AlgebraicIndependent R (x ∘ coeₓ : s → A) ↔ ∀ p _ : p ∈ MvPolynomial.supported R s, aeval x p = 0 → p = 0 :=
+  AlgebraicIndependent R (x ∘ coeₓ : s → A) ↔ ∀ p (_ : p ∈ MvPolynomial.supported R s), aeval x p = 0 → p = 0 :=
   have  : (aeval (x ∘ coeₓ : s → A) : _ →ₐ[R] _) = (aeval x).comp (rename coeₓ) :=
     by 
       ext <;> simp 
-  have  : ∀ p : MvPolynomial s R, rename (coeₓ : s → ι) p = 0 ↔ p = 0 :=
+  have  : ∀ (p : MvPolynomial s R), rename (coeₓ : s → ι) p = 0 ↔ p = 0 :=
     (RingHom.injective_iff' (rename (coeₓ : s → ι) : MvPolynomial s R →ₐ[R] _).toRingHom).1
       (rename_injective _ Subtype.val_injective)
   by 
@@ -284,12 +296,12 @@ theorem algebraic_independent_comp_subtype {s : Set ι} :
 
 theorem algebraic_independent_subtype {s : Set A} :
   AlgebraicIndependent R (fun x => x : s → A) ↔
-    ∀ p : MvPolynomial A R, p ∈ MvPolynomial.supported R s → aeval id p = 0 → p = 0 :=
+    ∀ (p : MvPolynomial A R), p ∈ MvPolynomial.supported R s → aeval id p = 0 → p = 0 :=
   by 
     apply @algebraic_independent_comp_subtype _ _ _ id
 
 theorem algebraic_independent_of_finite (s : Set A)
-  (H : ∀ t _ : t ⊆ s, finite t → AlgebraicIndependent R (fun x => x : t → A)) :
+  (H : ∀ t (_ : t ⊆ s), finite t → AlgebraicIndependent R (fun x => x : t → A)) :
   AlgebraicIndependent R (fun x => x : s → A) :=
   algebraic_independent_subtype.2$
     fun p hp =>
@@ -311,10 +323,13 @@ begin
   exact [expr (algebraic_independent_equiv' (equiv.set.image_of_inj_on f s this) rfl).1 hs]
 end
 
-theorem AlgebraicIndependent.image {ι} {s : Set ι} {f : ι → A} (hs : AlgebraicIndependent R fun x : s => f x) :
-  AlgebraicIndependent R fun x : f '' s => (x : A) :=
-  by 
-    convert AlgebraicIndependent.image_of_comp s f id hs
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem algebraic_independent.image
+{ι}
+{s : set ι}
+{f : ι → A}
+(hs : algebraic_independent R (λ x : s, f x)) : algebraic_independent R (λ x : «expr '' »(f, s), (x : A)) :=
+by convert [] [expr algebraic_independent.image_of_comp s f id hs] []
 
 theorem algebraic_independent_Union_of_directed {η : Type _} [Nonempty η] {s : η → Set A} (hs : Directed (· ⊆ ·) s)
   (h : ∀ i, AlgebraicIndependent R (fun x => x : s i → A)) : AlgebraicIndependent R (fun x => x : (⋃i, s i) → A) :=
@@ -337,7 +352,7 @@ by letI [] [":", expr nonempty s] [":=", expr nonempty.to_subtype hsn]; rw [expr
 theorem exists_maximal_algebraic_independent (s t : Set A) (hst : s ⊆ t) (hs : AlgebraicIndependent R (coeₓ : s → A)) :
   ∃ u : Set A,
     AlgebraicIndependent R (coeₓ : u → A) ∧
-      s ⊆ u ∧ u ⊆ t ∧ ∀ x : Set A, AlgebraicIndependent R (coeₓ : x → A) → u ⊆ x → x ⊆ t → x = u :=
+      s ⊆ u ∧ u ⊆ t ∧ ∀ (x : Set A), AlgebraicIndependent R (coeₓ : x → A) → u ⊆ x → x ⊆ t → x = u :=
   by 
     rcases
       Zorn.zorn_subset_nonempty { u:Set A | AlgebraicIndependent R (coeₓ : u → A) ∧ s ⊆ u ∧ u ⊆ t }
@@ -415,12 +430,13 @@ def AlgebraicIndependent.mvPolynomialOptionEquivPolynomialAdjoin (hx : Algebraic
   MvPolynomial (Option ι) R ≃+* Polynomial (adjoin R (Set.Range x)) :=
   (MvPolynomial.optionEquivLeft _ _).toRingEquiv.trans (Polynomial.mapEquiv hx.aeval_equiv.to_ring_equiv)
 
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply (hx : AlgebraicIndependent R x) y :
-  hx.mv_polynomial_option_equiv_polynomial_adjoin y =
-    Polynomial.map (hx.aeval_equiv : MvPolynomial ι R →+* adjoin R (range x))
-      (aeval (fun o : Option ι => o.elim Polynomial.x fun s : ι => Polynomial.c (X s)) y) :=
-  rfl
+theorem algebraic_independent.mv_polynomial_option_equiv_polynomial_adjoin_apply
+(hx : algebraic_independent R x)
+(y) : «expr = »(hx.mv_polynomial_option_equiv_polynomial_adjoin y, polynomial.map (hx.aeval_equiv : «expr →+* »(mv_polynomial ι R, adjoin R (range x))) (aeval (λ
+   o : option ι, o.elim polynomial.X (λ s : ι, polynomial.C (X s))) y)) :=
+rfl
 
 -- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
@@ -445,35 +461,26 @@ theorem AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_X_some
     rw [AlgebraicIndependent.mv_polynomial_option_equiv_polynomial_adjoin_apply, aeval_X, Option.elim, Polynomial.map_C,
       coe_coe, AlgHom.coe_to_ring_hom, AlgEquiv.coe_alg_hom]
 
-theorem AlgebraicIndependent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin (hx : AlgebraicIndependent R x)
-  (a : A) :
-  RingHom.comp
-      («expr↑ » (Polynomial.aeval a : Polynomial (adjoin R (Set.Range x)) →ₐ[_] A) :
-      Polynomial (adjoin R (Set.Range x)) →+* A)
-      hx.mv_polynomial_option_equiv_polynomial_adjoin.to_ring_hom =
-    «expr↑ » (MvPolynomial.aeval fun o : Option ι => o.elim a x : MvPolynomial (Option ι) R →ₐ[R] A) :=
-  by 
-    refine' MvPolynomial.ring_hom_ext _ _ <;>
-      simp only [RingHom.comp_apply, RingEquiv.to_ring_hom_eq_coe, RingEquiv.coe_to_ring_hom, AlgHom.coe_to_ring_hom,
-        AlgHom.coe_to_ring_hom]
-    ·
-      intro r 
-      rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_C, aeval_C, Polynomial.aeval_C,
-        IsScalarTower.algebra_map_apply R (adjoin R (range x)) A]
-    ·
-      rintro (⟨⟩ | ⟨i⟩)
-      ·
-        rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_none, aeval_X, Polynomial.aeval_X, Option.elim]
-      ·
-        rw [hx.mv_polynomial_option_equiv_polynomial_adjoin_X_some, Polynomial.aeval_C, hx.algebra_map_aeval_equiv,
-          aeval_X, aeval_X, Option.elim]
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem algebraic_independent.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin
+(hx : algebraic_independent R x)
+(a : A) : «expr = »(ring_hom.comp («expr↑ »((polynomial.aeval a : «expr →ₐ[ ] »(polynomial (adjoin R (set.range x)), _, A))) : «expr →+* »(polynomial (adjoin R (set.range x)), A)) hx.mv_polynomial_option_equiv_polynomial_adjoin.to_ring_hom, «expr↑ »((mv_polynomial.aeval (λ
+   o : option ι, o.elim a x) : «expr →ₐ[ ] »(mv_polynomial (option ι) R, R, A)))) :=
+begin
+  refine [expr mv_polynomial.ring_hom_ext _ _]; simp [] [] ["only"] ["[", expr ring_hom.comp_apply, ",", expr ring_equiv.to_ring_hom_eq_coe, ",", expr ring_equiv.coe_to_ring_hom, ",", expr alg_hom.coe_to_ring_hom, ",", expr alg_hom.coe_to_ring_hom, "]"] [] [],
+  { intro [ident r],
+    rw ["[", expr hx.mv_polynomial_option_equiv_polynomial_adjoin_C, ",", expr aeval_C, ",", expr polynomial.aeval_C, ",", expr is_scalar_tower.algebra_map_apply R (adjoin R (range x)) A, "]"] [] },
+  { rintro ["(", "⟨", "⟩", "|", "⟨", ident i, "⟩", ")"],
+    { rw ["[", expr hx.mv_polynomial_option_equiv_polynomial_adjoin_X_none, ",", expr aeval_X, ",", expr polynomial.aeval_X, ",", expr option.elim, "]"] [] },
+    { rw ["[", expr hx.mv_polynomial_option_equiv_polynomial_adjoin_X_some, ",", expr polynomial.aeval_C, ",", expr hx.algebra_map_aeval_equiv, ",", expr aeval_X, ",", expr aeval_X, ",", expr option.elim, "]"] [] } }
+end
 
-theorem AlgebraicIndependent.option_iff (hx : AlgebraicIndependent R x) (a : A) :
-  (AlgebraicIndependent R fun o : Option ι => o.elim a x) ↔ ¬IsAlgebraic (adjoin R (Set.Range x)) a :=
-  by 
-    erw [algebraic_independent_iff_injective_aeval, is_algebraic_iff_not_injective, not_not, ←AlgHom.coe_to_ring_hom,
-      ←hx.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin, RingHom.coe_comp,
-      injective.of_comp_iff' _ (RingEquiv.bijective _), AlgHom.coe_to_ring_hom]
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem algebraic_independent.option_iff
+(hx : algebraic_independent R x)
+(a : A) : «expr ↔ »(algebraic_independent R (λ
+  o : option ι, o.elim a x), «expr¬ »(is_algebraic (adjoin R (set.range x)) a)) :=
+by erw ["[", expr algebraic_independent_iff_injective_aeval, ",", expr is_algebraic_iff_not_injective, ",", expr not_not, ",", "<-", expr alg_hom.coe_to_ring_hom, ",", "<-", expr hx.aeval_comp_mv_polynomial_option_equiv_polynomial_adjoin, ",", expr ring_hom.coe_comp, ",", expr injective.of_comp_iff' _ (ring_equiv.bijective _), ",", expr alg_hom.coe_to_ring_hom, "]"] []
 
 variable(R)
 
@@ -481,7 +488,7 @@ variable(R)
   A family is a transcendence basis if it is a maximal algebraically independent subset.
 -/
 def IsTranscendenceBasis (x : ι → A) : Prop :=
-  AlgebraicIndependent R x ∧ ∀ s : Set A i' : AlgebraicIndependent R (coeₓ : s → A) h : range x ≤ s, range x = s
+  AlgebraicIndependent R x ∧ ∀ (s : Set A) (i' : AlgebraicIndependent R (coeₓ : s → A)) (h : range x ≤ s), range x = s
 
 theorem exists_is_transcendence_basis (h : injective (algebraMap R A)) :
   ∃ s : Set A, IsTranscendenceBasis R (coeₓ : s → A) :=
@@ -530,7 +537,7 @@ begin
     simpa [] [] [] [] [] ["using", expr q] }
 end
 
--- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.AlgebraicIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem is_transcendence_basis.is_algebraic
 [nontrivial R]
 (hx : is_transcendence_basis R x) : is_algebraic (adjoin R (range x)) A :=

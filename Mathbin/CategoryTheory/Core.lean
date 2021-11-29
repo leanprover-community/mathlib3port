@@ -28,9 +28,12 @@ def core (C : Type u₁) :=
 
 variable{C : Type u₁}[category.{v₁} C]
 
+-- error in CategoryTheory.Core: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 instance core_category : groupoid.{v₁} (core C) :=
-  { Hom := fun X Y : C => X ≅ Y, inv := fun X Y f => iso.symm f, id := fun X => iso.refl X,
-    comp := fun X Y Z f g => iso.trans f g }
+{ hom := λ X Y : C, «expr ≅ »(X, Y),
+  inv := λ X Y f, iso.symm f,
+  id := λ X, iso.refl X,
+  comp := λ X Y Z f g, iso.trans f g }
 
 namespace Core
 

@@ -40,7 +40,7 @@ An inductive type representing all group expressions (without relations)
 on a collection of types indexed by the objects of `J`.
 -/
 inductive prequotient
-  | of : ∀ j : J x : F.obj j, prequotient
+  | of : ∀ (j : J) (x : F.obj j), prequotient
   | zero : prequotient
   | neg : prequotient → prequotient
   | add : prequotient → prequotient → prequotient
@@ -57,15 +57,15 @@ because one element is mapped to another by a morphism in the diagram.
 -/
 inductive relation : prequotient F → prequotient F → Prop
   | refl : ∀ x, relation x x
-  | symm : ∀ x y h : relation x y, relation y x
-  | trans : ∀ x y z h : relation x y k : relation y z, relation x z
-  | map : ∀ j j' : J f : j ⟶ j' x : F.obj j, relation (of j' (F.map f x)) (of j x)
+  | symm : ∀ x y (h : relation x y), relation y x
+  | trans : ∀ x y z (h : relation x y) (k : relation y z), relation x z
+  | map : ∀ (j j' : J) (f : j ⟶ j') (x : F.obj j), relation (of j' (F.map f x)) (of j x)
   | zero : ∀ j, relation (of j 0) zero
-  | neg : ∀ j x : F.obj j, relation (of j (-x)) (neg (of j x))
-  | add : ∀ j x y : F.obj j, relation (of j (x+y)) (add (of j x) (of j y))
-  | neg_1 : ∀ x x' r : relation x x', relation (neg x) (neg x')
-  | add_1 : ∀ x x' y r : relation x x', relation (add x y) (add x' y)
-  | add_2 : ∀ x y y' r : relation y y', relation (add x y) (add x y')
+  | neg : ∀ j (x : F.obj j), relation (of j (-x)) (neg (of j x))
+  | add : ∀ j (x y : F.obj j), relation (of j (x+y)) (add (of j x) (of j y))
+  | neg_1 : ∀ x x' (r : relation x x'), relation (neg x) (neg x')
+  | add_1 : ∀ x x' y (r : relation x x'), relation (add x y) (add x' y)
+  | add_2 : ∀ x y y' (r : relation y y'), relation (add x y) (add x y')
   | zero_addₓ : ∀ x, relation (add zero x) x
   | add_zeroₓ : ∀ x, relation (add x zero) x
   | add_left_negₓ : ∀ x, relation (add (neg x) x) zero
@@ -278,7 +278,7 @@ def desc_morphism (s : cocone F) : colimit F ⟶ s.X :=
         by 
           induction x <;> induction y <;> rfl }
 
--- error in Algebra.Category.Group.Colimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Category.Group.Colimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Evidence that the proposed colimit is the colimit. -/
 def colimit_cocone_is_colimit : is_colimit (colimit_cocone F) :=
 { desc := λ s, desc_morphism F s,

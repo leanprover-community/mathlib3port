@@ -8,12 +8,12 @@ variable{α : Type u}
 
 @[elabWithoutExpectedType]
 theorem find.induction {p : Rbnode α → Prop} lt [DecidableRel lt] t x (h₁ : p leaf)
-  (h₂ : ∀ l y r h : cmpUsing lt x y = Ordering.lt ih : p l, p (red_node l y r))
-  (h₃ : ∀ l y r h : cmpUsing lt x y = Ordering.eq, p (red_node l y r))
-  (h₄ : ∀ l y r h : cmpUsing lt x y = Ordering.gt ih : p r, p (red_node l y r))
-  (h₅ : ∀ l y r h : cmpUsing lt x y = Ordering.lt ih : p l, p (black_node l y r))
-  (h₆ : ∀ l y r h : cmpUsing lt x y = Ordering.eq, p (black_node l y r))
-  (h₇ : ∀ l y r h : cmpUsing lt x y = Ordering.gt ih : p r, p (black_node l y r)) : p t :=
+  (h₂ : ∀ l y r (h : cmpUsing lt x y = Ordering.lt) (ih : p l), p (red_node l y r))
+  (h₃ : ∀ l y r (h : cmpUsing lt x y = Ordering.eq), p (red_node l y r))
+  (h₄ : ∀ l y r (h : cmpUsing lt x y = Ordering.gt) (ih : p r), p (red_node l y r))
+  (h₅ : ∀ l y r (h : cmpUsing lt x y = Ordering.lt) (ih : p l), p (black_node l y r))
+  (h₆ : ∀ l y r (h : cmpUsing lt x y = Ordering.eq), p (black_node l y r))
+  (h₇ : ∀ l y r (h : cmpUsing lt x y = Ordering.gt) (ih : p r), p (black_node l y r)) : p t :=
   by 
     induction t 
     case leaf => 
@@ -166,7 +166,7 @@ begin
 end
 
 theorem eqv_of_find_some {t : Rbnode α} {lt x y} [DecidableRel lt] :
-  ∀ {lo hi} hs : is_searchable lt t lo hi he : find lt t x = some y, x ≈[lt]y :=
+  ∀ {lo hi} (hs : is_searchable lt t lo hi) (he : find lt t x = some y), x ≈[lt]y :=
   by 
     apply find.induction lt t x <;> intros  <;> simp_all only [mem, find]
     iterate 2

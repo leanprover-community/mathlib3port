@@ -29,11 +29,11 @@ variable[CommRingₓ R]{p q : Polynomial R}
 variable[CommRingₓ S]
 
 theorem nat_degree_pos_of_aeval_root [Algebra R S] {p : Polynomial R} (hp : p ≠ 0) {z : S} (hz : aeval z p = 0)
-  (inj : ∀ x : R, algebraMap R S x = 0 → x = 0) : 0 < p.nat_degree :=
+  (inj : ∀ (x : R), algebraMap R S x = 0 → x = 0) : 0 < p.nat_degree :=
   nat_degree_pos_of_eval₂_root hp (algebraMap R S) hz inj
 
 theorem degree_pos_of_aeval_root [Algebra R S] {p : Polynomial R} (hp : p ≠ 0) {z : S} (hz : aeval z p = 0)
-  (inj : ∀ x : R, algebraMap R S x = 0 → x = 0) : 0 < p.degree :=
+  (inj : ∀ (x : R), algebraMap R S x = 0 → x = 0) : 0 < p.degree :=
   nat_degree_pos_iff_degree_pos.mp (nat_degree_pos_of_aeval_root hp hz inj)
 
 theorem aeval_mod_by_monic_eq_self_of_root [Algebra R S] {p q : Polynomial R} (hq : q.monic) {x : S}
@@ -178,7 +178,7 @@ theorem degree_coe_units (u : Units (Polynomial R)) : degree (u : Polynomial R) 
   degree_eq_zero_of_is_unit ⟨u, rfl⟩
 
 theorem prime_X_sub_C (r : R) : Prime (X - C r) :=
-  ⟨X_sub_C_ne_zero r, not_is_unit_X_sub_C,
+  ⟨X_sub_C_ne_zero r, not_is_unit_X_sub_C r,
     fun _ _ =>
       by 
         simpRw [dvd_iff_is_root, is_root.def, eval_mul, mul_eq_zero]
@@ -395,18 +395,12 @@ theorem roots_X_sub_C (r : R) : roots (X - C r) = {r} :=
     ·
       rw [singleton_eq_cons, count_cons_of_ne h, count_zero]
 
-@[simp]
-theorem roots_C (x : R) : (C x).roots = 0 :=
-  if H : x = 0 then
-    by 
-      rw [H, C_0, roots_zero]
-  else
-    Multiset.ext.mpr$
-      fun r =>
-        have h : C x ≠ 0 := fun h => H$ C_inj.1$ h.symm ▸ C_0.symm 
-        have not_root : ¬is_root (C x) r := mt (fun h : eval r (C x) = 0 => trans eval_C.symm h) H 
-        by 
-          rw [count_roots h, count_zero, root_multiplicity_eq_zero not_root]
+-- error in Data.Polynomial.RingDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem roots_C (x : R) : «expr = »((C x).roots, 0) :=
+if H : «expr = »(x, 0) then by rw ["[", expr H, ",", expr C_0, ",", expr roots_zero, "]"] [] else «expr $ »(multiset.ext.mpr, λ
+ r, have h : «expr ≠ »(C x, 0), from λ h, «expr $ »(H, «expr $ »(C_inj.1, «expr ▸ »(h.symm, C_0.symm))),
+ have not_root : «expr¬ »(is_root (C x) r) := mt (λ h : «expr = »(eval r (C x), 0), trans eval_C.symm h) H,
+ by rw ["[", expr count_roots h, ",", expr count_zero, ",", expr root_multiplicity_eq_zero not_root, "]"] [])
 
 @[simp]
 theorem roots_one : (1 : Polynomial R).roots = ∅ :=
@@ -575,7 +569,7 @@ theorem zero_of_eval_zero [Infinite R] (p : Polynomial R) (h : ∀ x, p.eval x =
       byContra hp <;>
         exact Fintype.false ⟨p.roots.to_finset, fun x => multiset.mem_to_finset.mpr ((mem_roots hp).mpr (h _))⟩
 
-theorem funext [Infinite R] {p q : Polynomial R} (ext : ∀ r : R, p.eval r = q.eval r) : p = q :=
+theorem funext [Infinite R] {p q : Polynomial R} (ext : ∀ (r : R), p.eval r = q.eval r) : p = q :=
   by 
     rw [←sub_eq_zero]
     apply zero_of_eval_zero 

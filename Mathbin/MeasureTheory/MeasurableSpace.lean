@@ -197,7 +197,7 @@ theorem measurable_from_top [MeasurableSpace β] {f : α → β} : @Measurable _
   fun s hs => trivialₓ
 
 theorem measurable_generate_from [MeasurableSpace α] {s : Set (Set β)} {f : α → β}
-  (h : ∀ t _ : t ∈ s, MeasurableSet (f ⁻¹' t)) : @Measurable _ _ _ (generate_from s) f :=
+  (h : ∀ t (_ : t ∈ s), MeasurableSet (f ⁻¹' t)) : @Measurable _ _ _ (generate_from s) f :=
   Measurable.of_le_map$ generate_from_le h
 
 variable[MeasurableSpace α][MeasurableSpace β][MeasurableSpace γ]
@@ -345,11 +345,11 @@ theorem measurable_to_nat {f : α → ℕ} : (∀ y, MeasurableSet (f ⁻¹' {f 
   measurable_to_encodable
 
 theorem measurable_find_greatest' {p : α → ℕ → Prop} {N}
-  (hN : ∀ k _ : k ≤ N, MeasurableSet { x | Nat.findGreatest (p x) N = k }) :
+  (hN : ∀ k (_ : k ≤ N), MeasurableSet { x | Nat.findGreatest (p x) N = k }) :
   Measurable fun x => Nat.findGreatest (p x) N :=
   measurable_to_nat$ fun x => hN _ Nat.find_greatest_le
 
-theorem measurable_find_greatest {p : α → ℕ → Prop} {N} (hN : ∀ k _ : k ≤ N, MeasurableSet { x | p x k }) :
+theorem measurable_find_greatest {p : α → ℕ → Prop} {N} (hN : ∀ k (_ : k ≤ N), MeasurableSet { x | p x k }) :
   Measurable fun x => Nat.findGreatest (p x) N :=
   by 
     refine' measurable_find_greatest' fun k hk => _ 
@@ -424,10 +424,13 @@ instance  {α} {p : α → Prop} [m : MeasurableSpace α] : MeasurableSpace (Sub
 theorem measurable_subtype_coe {p : α → Prop} : Measurable (coeₓ : Subtype p → α) :=
   MeasurableSpace.le_map_comap
 
-@[measurability]
-theorem Measurable.subtype_coe {p : β → Prop} {f : α → Subtype p} (hf : Measurable f) :
-  Measurable fun a : α => (f a : β) :=
-  measurable_subtype_coe.comp hf
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]]
+theorem measurable.subtype_coe
+{p : β → exprProp()}
+{f : α → subtype p}
+(hf : measurable f) : measurable (λ a : α, (f a : β)) :=
+measurable_subtype_coe.comp hf
 
 @[measurability]
 theorem Measurable.subtype_mk {p : β → Prop} {f : α → β} (hf : Measurable f) {h : ∀ x, p (f x)} :
@@ -444,14 +447,21 @@ theorem MeasurableSet.subtype_image {s : Set α} {t : Set s} (hs : MeasurableSet
     rw [←Eq, Subtype.image_preimage_coe]
     exact hu.inter hs
 
-theorem measurable_of_measurable_union_cover {f : α → β} (s t : Set α) (hs : MeasurableSet s) (ht : MeasurableSet t)
-  (h : univ ⊆ s ∪ t) (hc : Measurable fun a : s => f a) (hd : Measurable fun a : t => f a) : Measurable f :=
-  by 
-    intro u hu 
-    convert (hs.subtype_image (hc hu)).union (ht.subtype_image (hd hu))
-    change f ⁻¹' u = coeₓ '' (coeₓ ⁻¹' (f ⁻¹' u) : Set s) ∪ coeₓ '' (coeₓ ⁻¹' (f ⁻¹' u) : Set t)
-    rw [image_preimage_eq_inter_range, image_preimage_eq_inter_range, Subtype.range_coe, Subtype.range_coe,
-      ←inter_distrib_left, univ_subset_iff.1 h, inter_univ]
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_of_measurable_union_cover
+{f : α → β}
+(s t : set α)
+(hs : measurable_set s)
+(ht : measurable_set t)
+(h : «expr ⊆ »(univ, «expr ∪ »(s, t)))
+(hc : measurable (λ a : s, f a))
+(hd : measurable (λ a : t, f a)) : measurable f :=
+begin
+  intros [ident u, ident hu],
+  convert [] [expr (hs.subtype_image (hc hu)).union (ht.subtype_image (hd hu))] [],
+  change [expr «expr = »(«expr ⁻¹' »(f, u), «expr ∪ »(«expr '' »(coe, («expr ⁻¹' »(coe, «expr ⁻¹' »(f, u)) : set s)), «expr '' »(coe, («expr ⁻¹' »(coe, «expr ⁻¹' »(f, u)) : set t))))] [] [],
+  rw ["[", expr image_preimage_eq_inter_range, ",", expr image_preimage_eq_inter_range, ",", expr subtype.range_coe, ",", expr subtype.range_coe, ",", "<-", expr inter_distrib_left, ",", expr univ_subset_iff.1 h, ",", expr inter_univ, "]"] []
+end
 
 theorem measurable_of_restrict_of_restrict_compl {f : α → β} {s : Set α} (hs : MeasurableSet s)
   (h₁ : Measurable (restrict f s)) (h₂ : Measurable (restrict f («expr ᶜ» s))) : Measurable f :=
@@ -505,15 +515,17 @@ instance  {α β} [m₁ : MeasurableSpace α] [m₂ : MeasurableSpace β] : Meas
 theorem measurable_fst : Measurable (Prod.fst : α × β → α) :=
   Measurable.of_comap_le le_sup_left
 
-theorem Measurable.fst {f : α → β × γ} (hf : Measurable f) : Measurable fun a : α => (f a).1 :=
-  measurable_fst.comp hf
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable.fst {f : α → «expr × »(β, γ)} (hf : measurable f) : measurable (λ a : α, (f a).1) :=
+measurable_fst.comp hf
 
 @[measurability]
 theorem measurable_snd : Measurable (Prod.snd : α × β → β) :=
   Measurable.of_comap_le le_sup_right
 
-theorem Measurable.snd {f : α → β × γ} (hf : Measurable f) : Measurable fun a : α => (f a).2 :=
-  measurable_snd.comp hf
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable.snd {f : α → «expr × »(β, γ)} (hf : measurable f) : measurable (λ a : α, (f a).2) :=
+measurable_snd.comp hf
 
 @[measurability]
 theorem Measurable.prod {f : α → β × γ} (hf₁ : Measurable fun a => (f a).1) (hf₂ : Measurable fun a => (f a).2) :
@@ -530,15 +542,19 @@ theorem Measurable.prod {f : α → β × γ} (hf₁ : Measurable fun a => (f a)
 theorem measurable_prod {f : α → β × γ} : Measurable f ↔ (Measurable fun a => (f a).1) ∧ Measurable fun a => (f a).2 :=
   ⟨fun hf => ⟨measurable_fst.comp hf, measurable_snd.comp hf⟩, fun h => Measurable.prod h.1 h.2⟩
 
-theorem Measurable.prod_mk {f : α → β} {g : α → γ} (hf : Measurable f) (hg : Measurable g) :
-  Measurable fun a : α => (f a, g a) :=
-  Measurable.prod hf hg
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable.prod_mk
+{f : α → β}
+{g : α → γ}
+(hf : measurable f)
+(hg : measurable g) : measurable (λ a : α, (f a, g a)) :=
+measurable.prod hf hg
 
 theorem measurable_prod_mk_left {x : α} : Measurable (@Prod.mk _ β x) :=
   measurable_const.prod_mk measurable_id
 
-theorem measurable_prod_mk_right {y : β} : Measurable fun x : α => (x, y) :=
-  measurable_id.prod_mk measurable_const
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_prod_mk_right {y : β} : measurable (λ x : α, (x, y)) := measurable_id.prod_mk measurable_const
 
 theorem Measurable.prod_map [MeasurableSpace δ] {f : α → β} {g : γ → δ} (hf : Measurable f) (hg : Measurable g) :
   Measurable (Prod.mapₓ f g) :=
@@ -629,9 +645,9 @@ theorem measurable_pi_iff {g : α → ∀ a, π a} : Measurable g ↔ ∀ a, Mea
     simpRw [measurable_iff_comap_le, MeasurableSpace.pi, MeasurableSpace.comap_supr, MeasurableSpace.comap_comp,
       Function.comp, supr_le_iff]
 
-@[measurability]
-theorem measurable_pi_apply (a : δ) : Measurable fun f : ∀ a, π a => f a :=
-  Measurable.of_comap_le$ le_supr _ a
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]] theorem measurable_pi_apply (a : δ) : measurable (λ f : ∀ a, π a, f a) :=
+«expr $ »(measurable.of_comap_le, le_supr _ a)
 
 @[measurability]
 theorem Measurable.eval {a : δ} {g : α → ∀ a, π a} (hg : Measurable g) : Measurable fun x => g x a :=
@@ -645,7 +661,7 @@ theorem measurable_pi_lambda (f : α → ∀ a, π a) (hf : ∀ a, Measurable fu
   This doesn't require `f` to be measurable.
   This should not be confused with the statement that `update f a x` is measurable. -/
 @[measurability]
-theorem measurable_update (f : ∀ a : δ, π a) {a : δ} : Measurable (update f a) :=
+theorem measurable_update (f : ∀ (a : δ), π a) {a : δ} : Measurable (update f a) :=
   by 
     apply measurable_pi_lambda 
     intro x 
@@ -659,18 +675,18 @@ theorem measurable_update (f : ∀ a : δ, π a) {a : δ} : Measurable (update f
     apply measurable_const
 
 @[measurability]
-theorem MeasurableSet.pi {s : Set δ} {t : ∀ i : δ, Set (π i)} (hs : countable s)
-  (ht : ∀ i _ : i ∈ s, MeasurableSet (t i)) : MeasurableSet (s.pi t) :=
+theorem MeasurableSet.pi {s : Set δ} {t : ∀ (i : δ), Set (π i)} (hs : countable s)
+  (ht : ∀ i (_ : i ∈ s), MeasurableSet (t i)) : MeasurableSet (s.pi t) :=
   by 
     rw [pi_def]
     exact MeasurableSet.bInter hs fun i hi => measurable_pi_apply _ (ht i hi)
 
-theorem MeasurableSet.univ_pi [Encodable δ] {t : ∀ i : δ, Set (π i)} (ht : ∀ i, MeasurableSet (t i)) :
+theorem MeasurableSet.univ_pi [Encodable δ] {t : ∀ (i : δ), Set (π i)} (ht : ∀ i, MeasurableSet (t i)) :
   MeasurableSet (pi univ t) :=
   MeasurableSet.pi (countable_encodable _) fun i _ => ht i
 
 theorem measurable_set_pi_of_nonempty {s : Set δ} {t : ∀ i, Set (π i)} (hs : countable s) (h : (pi s t).Nonempty) :
-  MeasurableSet (pi s t) ↔ ∀ i _ : i ∈ s, MeasurableSet (t i) :=
+  MeasurableSet (pi s t) ↔ ∀ i (_ : i ∈ s), MeasurableSet (t i) :=
   by 
     rcases h with ⟨f, hf⟩
     refine' ⟨fun hst i hi => _, MeasurableSet.pi hs⟩
@@ -679,7 +695,7 @@ theorem measurable_set_pi_of_nonempty {s : Set δ} {t : ∀ i, Set (π i)} (hs :
     exact fun j hj _ => hf j hj
 
 theorem measurable_set_pi {s : Set δ} {t : ∀ i, Set (π i)} (hs : countable s) :
-  MeasurableSet (pi s t) ↔ (∀ i _ : i ∈ s, MeasurableSet (t i)) ∨ pi s t = ∅ :=
+  MeasurableSet (pi s t) ↔ (∀ i (_ : i ∈ s), MeasurableSet (t i)) ∨ pi s t = ∅ :=
   by 
     cases' (pi s t).eq_empty_or_nonempty with h h
     ·
@@ -726,7 +742,7 @@ section Fintype
 attribute [local instance] Fintype.encodable
 
 theorem MeasurableSet.pi_fintype [Fintype δ] {s : Set δ} {t : ∀ i, Set (π i)}
-  (ht : ∀ i _ : i ∈ s, MeasurableSet (t i)) : MeasurableSet (pi s t) :=
+  (ht : ∀ i (_ : i ∈ s), MeasurableSet (t i)) : MeasurableSet (pi s t) :=
   MeasurableSet.pi (countable_encodable _) ht
 
 theorem MeasurableSet.univ_pi_fintype [Fintype δ] {t : ∀ i, Set (π i)} (ht : ∀ i, MeasurableSet (t i)) :
@@ -738,7 +754,7 @@ end Fintype
 end Pi
 
 instance Tprod.measurableSpaceₓ (π : δ → Type _) [∀ x, MeasurableSpace (π x)] :
-  ∀ l : List δ, MeasurableSpace (List.Tprod π l)
+  ∀ (l : List δ), MeasurableSpace (List.Tprod π l)
 | [] => PUnit.measurableSpace
 | i :: is => @Prod.measurableSpace _ _ _ (Tprod.measurableSpaceₓ is)
 
@@ -756,16 +772,15 @@ theorem measurable_tprod_mk (l : List δ) : Measurable (@tprod.mk δ π l) :=
     ·
       exact (measurable_pi_apply i).prod_mk ih
 
-theorem measurable_tprod_elim : ∀ {l : List δ} {i : δ} hi : i ∈ l, Measurable fun v : tprod π l => v.elim hi
-| i :: is, j, hj =>
-  by 
-    byCases' hji : j = i
-    ·
-      subst hji 
-      simp [measurable_fst]
-    ·
-      rw [funext$ tprod.elim_of_ne _ hji]
-      exact (measurable_tprod_elim (hj.resolve_left hji)).comp measurable_snd
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_tprod_elim : ∀ {l : list δ} {i : δ} (hi : «expr ∈ »(i, l)), measurable (λ v : tprod π l, v.elim hi)
+| [«expr :: »/«expr :: »/«expr :: »](i, is), j, hj := begin
+  by_cases [expr hji, ":", expr «expr = »(j, i)],
+  { subst [expr hji],
+    simp [] [] [] ["[", expr measurable_fst, "]"] [] [] },
+  { rw ["[", expr «expr $ »(funext, tprod.elim_of_ne _ hji), "]"] [],
+    exact [expr (measurable_tprod_elim (hj.resolve_left hji)).comp measurable_snd] }
+end
 
 theorem measurable_tprod_elim' {l : List δ} (h : ∀ i, i ∈ l) : Measurable (tprod.elim' h : tprod π l → ∀ i, π i) :=
   measurable_pi_lambda _ fun i => measurable_tprod_elim (h i)
@@ -930,7 +945,7 @@ theorem measurable_comp_iff (hg : MeasurableEmbedding g) : Measurable (g ∘ f) 
 end MeasurableEmbedding
 
 theorem MeasurableSet.exists_measurable_proj [MeasurableSpace α] {s : Set α} (hs : MeasurableSet s) (hne : s.nonempty) :
-  ∃ f : α → s, Measurable f ∧ ∀ x : s, f x = x :=
+  ∃ f : α → s, Measurable f ∧ ∀ (x : s), f x = x :=
   let ⟨f, hfm, hf⟩ :=
     (MeasurableEmbedding.subtype_coe hs).exists_measurable_extend measurable_id fun _ => hne.to_subtype
   ⟨f, hfm, congr_funₓ hf⟩
@@ -1174,57 +1189,45 @@ noncomputable def Set.Range (f : α → β) (hf : injective f) (hfm : Measurable
         (by 
           rw [image_univ])
 
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `α` is equivalent to its image in `α ⊕ β` as measurable spaces. -/
-def set.range_inl : (range Sum.inl : Set (Sum α β)) ≃ᵐ α :=
-  { toFun :=
-      fun ab =>
-        match ab with 
-        | ⟨Sum.inl a, _⟩ => a
-        | ⟨Sum.inr b, p⟩ =>
-          have  : False :=
-            by 
-              cases p 
-              contradiction 
-          this.elim,
-    invFun := fun a => ⟨Sum.inl a, a, rfl⟩,
-    left_inv :=
-      by 
-        rintro ⟨ab, a, rfl⟩
-        rfl,
-    right_inv := fun a => rfl,
-    measurable_to_fun :=
-      fun s hs : MeasurableSet s =>
-        by 
-          refine' ⟨_, hs.inl_image, Set.ext _⟩
-          rintro ⟨ab, a, rfl⟩
-          simp [set.range_inl._match_1],
-    measurable_inv_fun := Measurable.subtype_mk measurable_inl }
+def set.range_inl : «expr ≃ᵐ »((range sum.inl : set «expr ⊕ »(α, β)), α) :=
+{ to_fun := λ ab, match ab with
+  | ⟨sum.inl a, _⟩ := a
+  | ⟨sum.inr b, p⟩ := have false, by { cases [expr p] [],
+    contradiction },
+  this.elim
+  end,
+  inv_fun := λ a, ⟨sum.inl a, a, rfl⟩,
+  left_inv := by { rintro ["⟨", ident ab, ",", ident a, ",", ident rfl, "⟩"],
+    refl },
+  right_inv := assume a, rfl,
+  measurable_to_fun := assume (s) (hs : measurable_set s), begin
+    refine [expr ⟨_, hs.inl_image, set.ext _⟩],
+    rintros ["⟨", ident ab, ",", ident a, ",", ident rfl, "⟩"],
+    simp [] [] [] ["[", expr set.range_inl._match_1, "]"] [] []
+  end,
+  measurable_inv_fun := measurable.subtype_mk measurable_inl }
 
+-- error in MeasureTheory.MeasurableSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `β` is equivalent to its image in `α ⊕ β` as measurable spaces. -/
-def set.range_inr : (range Sum.inr : Set (Sum α β)) ≃ᵐ β :=
-  { toFun :=
-      fun ab =>
-        match ab with 
-        | ⟨Sum.inr b, _⟩ => b
-        | ⟨Sum.inl a, p⟩ =>
-          have  : False :=
-            by 
-              cases p 
-              contradiction 
-          this.elim,
-    invFun := fun b => ⟨Sum.inr b, b, rfl⟩,
-    left_inv :=
-      by 
-        rintro ⟨ab, b, rfl⟩
-        rfl,
-    right_inv := fun b => rfl,
-    measurable_to_fun :=
-      fun s hs : MeasurableSet s =>
-        by 
-          refine' ⟨_, measurable_set_inr_image hs, Set.ext _⟩
-          rintro ⟨ab, b, rfl⟩
-          simp [set.range_inr._match_1],
-    measurable_inv_fun := Measurable.subtype_mk measurable_inr }
+def set.range_inr : «expr ≃ᵐ »((range sum.inr : set «expr ⊕ »(α, β)), β) :=
+{ to_fun := λ ab, match ab with
+  | ⟨sum.inr b, _⟩ := b
+  | ⟨sum.inl a, p⟩ := have false, by { cases [expr p] [],
+    contradiction },
+  this.elim
+  end,
+  inv_fun := λ b, ⟨sum.inr b, b, rfl⟩,
+  left_inv := by { rintro ["⟨", ident ab, ",", ident b, ",", ident rfl, "⟩"],
+    refl },
+  right_inv := assume b, rfl,
+  measurable_to_fun := assume (s) (hs : measurable_set s), begin
+    refine [expr ⟨_, measurable_set_inr_image hs, set.ext _⟩],
+    rintros ["⟨", ident ab, ",", ident b, ",", ident rfl, "⟩"],
+    simp [] [] [] ["[", expr set.range_inr._match_1, "]"] [] []
+  end,
+  measurable_inv_fun := measurable.subtype_mk measurable_inr }
 
 /-- Products distribute over sums (on the right) as measurable spaces. -/
 def sum_prod_distrib α β γ [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] :
@@ -1342,7 +1345,7 @@ instance is_measurably_generated_top : is_measurably_generated (⊤ : Filter α)
   ⟨fun s hs => ⟨univ, univ_mem, MeasurableSet.univ, fun x _ => hs x⟩⟩
 
 theorem eventually.exists_measurable_mem {f : Filter α} [is_measurably_generated f] {p : α → Prop} (h : ∀ᶠx in f, p x) :
-  ∃ (s : _)(_ : s ∈ f), MeasurableSet s ∧ ∀ x _ : x ∈ s, p x :=
+  ∃ (s : _)(_ : s ∈ f), MeasurableSet s ∧ ∀ x (_ : x ∈ s), p x :=
   is_measurably_generated.exists_measurable_subset h
 
 theorem eventually.exists_measurable_mem_of_lift' {f : Filter α} [is_measurably_generated f] {p : Set α → Prop}
@@ -1480,19 +1483,22 @@ theorem coe_top : «expr↑ » (⊤ : Subtype (MeasurableSet : Set α → Prop))
 instance  : PartialOrderₓ (Subtype (MeasurableSet : Set α → Prop)) :=
   PartialOrderₓ.lift _ Subtype.coe_injective
 
-instance  : BoundedDistribLattice (Subtype (MeasurableSet : Set α → Prop)) :=
+instance  : DistribLattice (Subtype (MeasurableSet : Set α → Prop)) :=
   { MeasurableSet.Subtype.partialOrder with sup := · ∪ ·,
     le_sup_left := fun a b => show (a : Set α) ≤ a⊔b from le_sup_left,
     le_sup_right := fun a b => show (b : Set α) ≤ a⊔b from le_sup_right,
     sup_le := fun a b c ha hb => show (a⊔b : Set α) ≤ c from sup_le ha hb, inf := · ∩ ·,
     inf_le_left := fun a b => show (a⊓b : Set α) ≤ a from inf_le_left,
     inf_le_right := fun a b => show (a⊓b : Set α) ≤ b from inf_le_right,
-    le_inf := fun a b c ha hb => show (a : Set α) ≤ b⊓c from le_inf ha hb, top := ⊤,
-    le_top := fun a => show (a : Set α) ≤ ⊤ from le_top, bot := ⊥, bot_le := fun a => show (⊥ : Set α) ≤ a from bot_le,
+    le_inf := fun a b c ha hb => show (a : Set α) ≤ b⊓c from le_inf ha hb,
     le_sup_inf := fun x y z => show ((x⊔y)⊓(x⊔z) : Set α) ≤ x⊔y⊓z from le_sup_inf }
 
+instance  : BoundedOrder (Subtype (MeasurableSet : Set α → Prop)) :=
+  { top := ⊤, le_top := fun a => show (a : Set α) ≤ ⊤ from le_top, bot := ⊥,
+    bot_le := fun a => show (⊥ : Set α) ≤ a from bot_le }
+
 instance  : BooleanAlgebra (Subtype (MeasurableSet : Set α → Prop)) :=
-  { MeasurableSet.Subtype.boundedDistribLattice with sdiff := · \ ·,
+  { MeasurableSet.Subtype.boundedOrder, MeasurableSet.Subtype.distribLattice with sdiff := · \ ·,
     sup_inf_sdiff := fun a b => Subtype.eq$ sup_inf_sdiff a b,
     inf_inf_sdiff := fun a b => Subtype.eq$ inf_inf_sdiff a b, Compl := HasCompl.compl,
     inf_compl_le_bot := fun a => BooleanAlgebra.inf_compl_le_bot (a : Set α),

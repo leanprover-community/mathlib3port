@@ -77,7 +77,7 @@ def lift : (G →* A) ≃ (Abelianization G →* A) :=
 theorem lift.of (x : G) : lift f (of x) = f x :=
   rfl
 
-theorem lift.unique (φ : Abelianization G →* A) (hφ : ∀ x : G, φ (of x) = f x) {x : Abelianization G} :
+theorem lift.unique (φ : Abelianization G →* A) (hφ : ∀ (x : G), φ (of x) = f x) {x : Abelianization G} :
   φ x = lift f x :=
   QuotientGroup.induction_on x hφ
 

@@ -81,7 +81,7 @@ instance  : Inhabited (ClosureOperator α) :=
 variable{α}(c : ClosureOperator α)
 
 @[ext]
-theorem ext : ∀ c₁ c₂ : ClosureOperator α, (c₁ : α → α) = (c₂ : α → α) → c₁ = c₂
+theorem ext : ∀ (c₁ c₂ : ClosureOperator α), (c₁ : α → α) = (c₂ : α → α) → c₁ = c₂
 | ⟨⟨c₁, _⟩, _, _⟩, ⟨⟨c₂, _⟩, _, _⟩, h =>
   by 
     congr 
@@ -281,7 +281,7 @@ theorem gc : GaloisConnection l u :=
   l.gc'
 
 @[ext]
-theorem ext : ∀ l₁ l₂ : LowerAdjoint u, (l₁ : α → β) = (l₂ : α → β) → l₁ = l₂
+theorem ext : ∀ (l₁ l₂ : LowerAdjoint u), (l₁ : α → β) = (l₂ : α → β) → l₁ = l₂
 | ⟨l₁, _⟩, ⟨l₂, _⟩, h =>
   by 
     congr 
@@ -408,7 +408,7 @@ theorem not_mem_of_not_mem_closure {s : Set β} {P : β} (hP : P ∉ l s) : P �
 theorem le_iff_subset (s : Set β) (S : α) : l s ≤ S ↔ s ⊆ S :=
   l.gc s S
 
-theorem mem_iff (s : Set β) (x : β) : x ∈ l s ↔ ∀ S : α, s ⊆ S → x ∈ S :=
+theorem mem_iff (s : Set β) (x : β) : x ∈ l s ↔ ∀ (S : α), s ⊆ S → x ∈ S :=
   by 
     simpRw [←SetLike.mem_coe, ←Set.singleton_subset_iff, ←l.le_iff_subset]
     exact ⟨fun h S => h.trans, fun h => h _ le_rfl⟩

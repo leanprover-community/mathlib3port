@@ -60,13 +60,13 @@ instance Groupₓ.Swap.CovariantClassLt.to_contravariant_class_lt [Groupₓ α] 
 with a partial order in which addition is strictly monotone. -/
 @[protectProj, ancestor AddCommGroupₓ PartialOrderₓ]
 class OrderedAddCommGroup(α : Type u) extends AddCommGroupₓ α, PartialOrderₓ α where 
-  add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, (c+a) ≤ c+b
+  add_le_add_left : ∀ (a b : α), a ≤ b → ∀ (c : α), (c+a) ≤ c+b
 
 /-- An ordered commutative group is an commutative group
 with a partial order in which multiplication is strictly monotone. -/
 @[protectProj, ancestor CommGroupₓ PartialOrderₓ]
 class OrderedCommGroup(α : Type u) extends CommGroupₓ α, PartialOrderₓ α where 
-  mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, (c*a) ≤ c*b
+  mul_le_mul_left : ∀ (a b : α), a ≤ b → ∀ (c : α), (c*a) ≤ c*b
 
 attribute [toAdditive] OrderedCommGroup
 
@@ -944,7 +944,7 @@ section VariableNames
 variable{a b c : α}
 
 @[toAdditive]
-theorem le_of_forall_one_lt_lt_mul (h : ∀ ε : α, 1 < ε → a < b*ε) : a ≤ b :=
+theorem le_of_forall_one_lt_lt_mul (h : ∀ (ε : α), 1 < ε → a < b*ε) : a ≤ b :=
   le_of_not_ltₓ
     fun h₁ =>
       lt_irreflₓ a
@@ -982,7 +982,7 @@ section DenselyOrdered
 variable[DenselyOrdered α]{a b c : α}
 
 @[toAdditive]
-theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b*ε) : a ≤ b :=
+theorem le_of_forall_one_lt_le_mul (h : ∀ (ε : α), 1 < ε → a ≤ b*ε) : a ≤ b :=
   le_of_forall_le_of_dense$
     fun c hc =>
       calc a ≤ b*b⁻¹*c := h _ (lt_inv_mul_iff_lt.mpr hc)
@@ -990,11 +990,11 @@ theorem le_of_forall_one_lt_le_mul (h : ∀ ε : α, 1 < ε → a ≤ b*ε) : a 
         
 
 @[toAdditive]
-theorem le_of_forall_lt_one_mul_le (h : ∀ ε _ : ε < 1, (a*ε) ≤ b) : a ≤ b :=
+theorem le_of_forall_lt_one_mul_le (h : ∀ ε (_ : ε < 1), (a*ε) ≤ b) : a ≤ b :=
   @le_of_forall_one_lt_le_mul (OrderDual α) _ _ _ _ _ _ h
 
 @[toAdditive]
-theorem le_of_forall_one_lt_div_le (h : ∀ ε : α, 1 < ε → a / ε ≤ b) : a ≤ b :=
+theorem le_of_forall_one_lt_div_le (h : ∀ (ε : α), 1 < ε → a / ε ≤ b) : a ≤ b :=
   le_of_forall_lt_one_mul_le$
     fun ε ε1 =>
       by 
@@ -1005,7 +1005,7 @@ theorem le_iff_forall_one_lt_le_mul : a ≤ b ↔ ∀ ε, 1 < ε → a ≤ b*ε 
   ⟨fun h ε ε_pos => le_mul_of_le_of_one_le h ε_pos.le, le_of_forall_one_lt_le_mul⟩
 
 @[toAdditive]
-theorem le_iff_forall_lt_one_mul_le : a ≤ b ↔ ∀ ε _ : ε < 1, (a*ε) ≤ b :=
+theorem le_iff_forall_lt_one_mul_le : a ≤ b ↔ ∀ ε (_ : ε < 1), (a*ε) ≤ b :=
   @le_iff_forall_one_lt_le_mul (OrderDual α) _ _ _ _ _ _
 
 end DenselyOrdered
@@ -1029,7 +1029,7 @@ class LinearOrderedAddCommGroup(α : Type u) extends OrderedAddCommGroup α, Lin
 class LinearOrderedAddCommGroupWithTop(α : Type _) extends LinearOrderedAddCommMonoidWithTop α, SubNegMonoidₓ α,
   Nontrivial α where 
   neg_top : -(⊤ : α) = ⊤
-  add_neg_cancel : ∀ a : α, a ≠ ⊤ → (a+-a) = 0
+  add_neg_cancel : ∀ (a : α), a ≠ ⊤ → (a+-a) = 0
 
 /-- A linearly ordered commutative group is a
 commutative group with a linear order in which
@@ -1407,16 +1407,17 @@ theorem abs_max_sub_max_le_abs (a b c : α) : |max a c - max b c| ≤ |a - b| :=
   by 
     simpa only [sub_self, abs_zero, max_eq_leftₓ (abs_nonneg _)] using abs_max_sub_max_le_max a c b c
 
-instance WithTop.linearOrderedAddCommGroupWithTop : LinearOrderedAddCommGroupWithTop (WithTop α) :=
-  { WithTop.linearOrderedAddCommMonoidWithTop, Option.nontrivial with neg := Option.map fun a : α => -a,
-    neg_top := @Option.map_none _ _ fun a : α => -a,
-    add_neg_cancel :=
-      by 
-        rintro (a | a) ha
-        ·
-          exact (ha rfl).elim
-        ·
-          exact with_top.coe_add.symm.trans (WithTop.coe_eq_coe.2 (add_neg_selfₓ a)) }
+-- error in Algebra.Order.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance with_top.linear_ordered_add_comm_group_with_top : linear_ordered_add_comm_group_with_top (with_top α) :=
+{ neg := option.map (λ a : α, «expr- »(a)),
+  neg_top := @option.map_none _ _ (λ a : α, «expr- »(a)),
+  add_neg_cancel := begin
+    rintro ["(", ident a, "|", ident a, ")", ident ha],
+    { exact [expr (ha rfl).elim] },
+    { exact [expr with_top.coe_add.symm.trans (with_top.coe_eq_coe.2 (add_neg_self a))] }
+  end,
+  ..with_top.linear_ordered_add_comm_monoid_with_top,
+  ..option.nontrivial }
 
 end LinearOrderedAddCommGroup
 
@@ -1441,7 +1442,7 @@ for every `a`, either `a` or `-a` is non-negative. -/
 @[nolint has_inhabited_instance]
 structure total_positive_cone(α : Type _)[AddCommGroupₓ α] extends positive_cone α where 
   nonnegDecidable : DecidablePred nonneg 
-  nonneg_total : ∀ a : α, nonneg a ∨ nonneg (-a)
+  nonneg_total : ∀ (a : α), nonneg a ∨ nonneg (-a)
 
 /-- Forget that a `total_positive_cone` is total. -/
 add_decl_doc total_positive_cone.to_positive_cone

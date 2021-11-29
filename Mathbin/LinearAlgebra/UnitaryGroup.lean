@@ -35,19 +35,17 @@ section
 
 variable(M : Type v)[Monoidₓ M][StarMonoid M]
 
+-- error in LinearAlgebra.UnitaryGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 In a `star_monoid M`, `unitary_submonoid M` is the submonoid consisting of all the elements of
 `M` such that `star A * A = 1`.
--/
-def unitarySubmonoid : Submonoid M :=
-  { Carrier := { A | (star A*A) = 1 },
-    one_mem' :=
-      by 
-        simp ,
-    mul_mem' :=
-      fun A B hA : (star A*A) = 1 hB : (star B*B) = 1 =>
-        show (star (A*B)*A*B) = 1by 
-          rwa [star_mul, ←mul_assocₓ, mul_assocₓ _ _ A, hA, mul_oneₓ] }
+-/ def unitary_submonoid : submonoid M :=
+{ carrier := {A | «expr = »(«expr * »(star A, A), 1)},
+  one_mem' := by simp [] [] [] [] [] [],
+  mul_mem' := λ
+  (A B)
+  (hA : «expr = »(«expr * »(star A, A), 1))
+  (hB : «expr = »(«expr * »(star B, B), 1)), show «expr = »(«expr * »(star «expr * »(A, B), «expr * »(A, B)), 1), by rwa ["[", expr star_mul, ",", "<-", expr mul_assoc, ",", expr mul_assoc _ _ A, ",", expr hA, ",", expr mul_one, "]"] [] }
 
 end 
 

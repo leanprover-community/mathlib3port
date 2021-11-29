@@ -130,7 +130,7 @@ calc
   «expr = »(..., 0) : by rw ["[", expr hz, ",", expr _root_.mul_zero, "]"] []
 
 theorem integral_normalization_aeval_eq_zero [Algebra R S] {f : Polynomial R} {z : S} (hz : aeval z f = 0)
-  (inj : ∀ x : R, algebraMap R S x = 0 → x = 0) :
+  (inj : ∀ (x : R), algebraMap R S x = 0 → x = 0) :
   aeval (z*algebraMap R S f.leading_coeff) (integral_normalization f) = 0 :=
   integral_normalization_eval₂_eq_zero (algebraMap R S) hz inj
 

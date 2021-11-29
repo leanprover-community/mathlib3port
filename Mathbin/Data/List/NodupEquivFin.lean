@@ -32,7 +32,7 @@ namespace Nodup
 a bijection `fin l.length → α`.  See `list.nodup.nth_le_equiv_of_forall_mem_list`
 for a version giving an equivalence when there is decidable equality. -/
 @[simps]
-def nth_le_bijection_of_forall_mem_list (l : List α) (nd : l.nodup) (h : ∀ x : α, x ∈ l) :
+def nth_le_bijection_of_forall_mem_list (l : List α) (nd : l.nodup) (h : ∀ (x : α), x ∈ l) :
   { f : Finₓ l.length → α // Function.Bijective f } :=
   ⟨fun i => l.nth_le i i.property, fun i j h => Finₓ.ext$ (nd.nth_le_inj_iff _ _).1 h,
     fun x =>
@@ -62,7 +62,7 @@ an equivalence between `fin l.length` and `α`.
 See `list.nodup.nth_le_bijection_of_forall_mem_list` for a version without
 decidable equality. -/
 @[simps]
-def nth_le_equiv_of_forall_mem_list (l : List α) (nd : l.nodup) (h : ∀ x : α, x ∈ l) : Finₓ l.length ≃ α :=
+def nth_le_equiv_of_forall_mem_list (l : List α) (nd : l.nodup) (h : ∀ (x : α), x ∈ l) : Finₓ l.length ≃ α :=
   { toFun := fun i => l.nth_le i i.2, invFun := fun a => ⟨_, index_of_lt_length.2 (h a)⟩,
     left_inv :=
       fun i =>
@@ -79,11 +79,13 @@ namespace Sorted
 
 variable[Preorderₓ α]{l : List α}
 
-theorem nth_le_mono (h : l.sorted (· ≤ ·)) : Monotone fun i : Finₓ l.length => l.nth_le i i.2 :=
-  fun i j => h.rel_nth_le_of_le _ _
+-- error in Data.List.NodupEquivFin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nth_le_mono (h : l.sorted ((«expr ≤ »))) : monotone (λ i : fin l.length, l.nth_le i i.2) :=
+λ i j, h.rel_nth_le_of_le _ _
 
-theorem nth_le_strict_mono (h : l.sorted (· < ·)) : StrictMono fun i : Finₓ l.length => l.nth_le i i.2 :=
-  fun i j => h.rel_nth_le_of_lt _ _
+-- error in Data.List.NodupEquivFin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nth_le_strict_mono (h : l.sorted ((«expr < »))) : strict_mono (λ i : fin l.length, l.nth_le i i.2) :=
+λ i j, h.rel_nth_le_of_lt _ _
 
 variable[DecidableEq α]
 
@@ -135,44 +137,34 @@ begin
   apply [expr list.nth_le_mem]
 end
 
+-- error in Data.List.NodupEquivFin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 A `l : list α` is `sublist l l'` for `l' : list α` iff
 there is `f`, an order-preserving embedding of `ℕ` into `ℕ` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`.
 -/
-theorem sublist_iff_exists_order_embedding_nth_eq {l l' : List α} :
-  l <+ l' ↔ ∃ f : ℕ ↪o ℕ, ∀ ix : ℕ, l.nth ix = l'.nth (f ix) :=
-  by 
-    split 
-    ·
-      intro H 
-      induction' H with xs ys y H IH xs ys x H IH
-      ·
-        simp 
-      ·
-        obtain ⟨f, hf⟩ := IH 
-        refine'
-          ⟨f.trans
-              (OrderEmbedding.ofStrictMono (·+1)
-                fun _ =>
-                  by 
-                    simp ),
-            _⟩
-        simpa using hf
-      ·
-        obtain ⟨f, hf⟩ := IH 
-        refine' ⟨OrderEmbedding.ofMapLeIff (fun ix : ℕ => if ix = 0 then 0 else (f ix.pred).succ) _, _⟩
-        ·
-          rintro ⟨_ | a⟩ ⟨_ | b⟩ <;> simp [Nat.succ_le_succ_iff]
-        ·
-          rintro ⟨_ | i⟩
-          ·
-            simp 
-          ·
-            simpa using hf _
-    ·
-      rintro ⟨f, hf⟩
-      exact sublist_of_order_embedding_nth_eq f hf
+theorem sublist_iff_exists_order_embedding_nth_eq
+{l
+ l' : list α} : «expr ↔ »(«expr <+ »(l, l'), «expr∃ , »((f : «expr ↪o »(exprℕ(), exprℕ())), ∀
+  ix : exprℕ(), «expr = »(l.nth ix, l'.nth (f ix)))) :=
+begin
+  split,
+  { intro [ident H],
+    induction [expr H] [] ["with", ident xs, ident ys, ident y, ident H, ident IH, ident xs, ident ys, ident x, ident H, ident IH] [],
+    { simp [] [] [] [] [] [] },
+    { obtain ["⟨", ident f, ",", ident hf, "⟩", ":=", expr IH],
+      refine [expr ⟨f.trans (order_embedding.of_strict_mono ((«expr + » 1)) (λ _, by simp [] [] [] [] [] [])), _⟩],
+      simpa [] [] [] [] [] ["using", expr hf] },
+    { obtain ["⟨", ident f, ",", ident hf, "⟩", ":=", expr IH],
+      refine [expr ⟨order_embedding.of_map_le_iff (λ
+         ix : exprℕ(), if «expr = »(ix, 0) then 0 else (f ix.pred).succ) _, _⟩],
+      { rintro ["⟨", "_", "|", ident a, "⟩", "⟨", "_", "|", ident b, "⟩"]; simp [] [] [] ["[", expr nat.succ_le_succ_iff, "]"] [] [] },
+      { rintro ["⟨", "_", "|", ident i, "⟩"],
+        { simp [] [] [] [] [] [] },
+        { simpa [] [] [] [] [] ["using", expr hf _] } } } },
+  { rintro ["⟨", ident f, ",", ident hf, "⟩"],
+    exact [expr sublist_of_order_embedding_nth_eq f hf] }
+end
 
 -- error in Data.List.NodupEquivFin: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

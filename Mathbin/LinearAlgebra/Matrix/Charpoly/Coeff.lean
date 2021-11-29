@@ -56,27 +56,27 @@ namespace Matrix
 
 variable(M)
 
-theorem charpoly_sub_diagonal_degree_lt : (M.charpoly - ∏i : n, X - C (M i i)).degree < «expr↑ » (Fintype.card n - 1) :=
-  by 
-    rw [charpoly, det_apply', ←insert_erase (mem_univ (Equiv.refl n)), sum_insert (not_mem_erase (Equiv.refl n) univ),
-      add_commₓ]
-    simp only [charmatrix_apply_eq, one_mulₓ, Equiv.Perm.sign_refl, id.def, Int.cast_one, Units.coe_one, add_sub_cancel,
-      Equiv.coe_refl]
-    rw [←mem_degree_lt]
-    apply Submodule.sum_mem (degree_lt R (Fintype.card n - 1))
-    intro c hc 
-    rw [←C_eq_int_cast, C_mul']
-    apply Submodule.smul_mem (degree_lt R (Fintype.card n - 1)) («expr↑ » («expr↑ » (Equiv.Perm.sign c)))
-    rw [mem_degree_lt]
-    apply lt_of_le_of_ltₓ degree_le_nat_degree _ 
-    rw [WithBot.coe_lt_coe]
-    apply lt_of_le_of_ltₓ _ (Equiv.Perm.fixed_point_card_lt_of_ne_one (ne_of_mem_erase hc))
-    apply le_transₓ (Polynomial.nat_degree_prod_le univ fun i : n => charmatrix M (c i) i) _ 
-    rw [card_eq_sum_ones]
-    rw [sum_filter]
-    apply sum_le_sum 
-    intros 
-    apply charmatrix_apply_nat_degree_le
+-- error in LinearAlgebra.Matrix.Charpoly.Coeff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem charpoly_sub_diagonal_degree_lt : «expr < »(«expr - »(M.charpoly, «expr∏ , »((i : n), «expr - »(X, C (M i i)))).degree, «expr↑ »(«expr - »(fintype.card n, 1))) :=
+begin
+  rw ["[", expr charpoly, ",", expr det_apply', ",", "<-", expr insert_erase (mem_univ (equiv.refl n)), ",", expr sum_insert (not_mem_erase (equiv.refl n) univ), ",", expr add_comm, "]"] [],
+  simp [] [] ["only"] ["[", expr charmatrix_apply_eq, ",", expr one_mul, ",", expr equiv.perm.sign_refl, ",", expr id.def, ",", expr int.cast_one, ",", expr units.coe_one, ",", expr add_sub_cancel, ",", expr equiv.coe_refl, "]"] [] [],
+  rw ["<-", expr mem_degree_lt] [],
+  apply [expr submodule.sum_mem (degree_lt R «expr - »(fintype.card n, 1))],
+  intros [ident c, ident hc],
+  rw ["[", "<-", expr C_eq_int_cast, ",", expr C_mul', "]"] [],
+  apply [expr submodule.smul_mem (degree_lt R «expr - »(fintype.card n, 1)) «expr↑ »(«expr↑ »(equiv.perm.sign c))],
+  rw [expr mem_degree_lt] [],
+  apply [expr lt_of_le_of_lt degree_le_nat_degree _],
+  rw [expr with_bot.coe_lt_coe] [],
+  apply [expr lt_of_le_of_lt _ (equiv.perm.fixed_point_card_lt_of_ne_one (ne_of_mem_erase hc))],
+  apply [expr le_trans (polynomial.nat_degree_prod_le univ (λ i : n, charmatrix M (c i) i)) _],
+  rw [expr card_eq_sum_ones] [],
+  rw [expr sum_filter] [],
+  apply [expr sum_le_sum],
+  intros [],
+  apply [expr charmatrix_apply_nat_degree_le]
+end
 
 theorem charpoly_coeff_eq_prod_coeff_of_le {k : ℕ} (h : Fintype.card n - 1 ≤ k) :
   M.charpoly.coeff k = (∏i : n, X - C (M i i)).coeff k :=
@@ -130,7 +130,7 @@ end
 theorem charpoly_nat_degree_eq_dim [Nontrivial R] (M : Matrix n n R) : M.charpoly.nat_degree = Fintype.card n :=
   nat_degree_eq_of_degree_eq_some (charpoly_degree_eq_dim M)
 
--- error in LinearAlgebra.Matrix.Charpoly.Coeff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.Matrix.Charpoly.Coeff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem charpoly_monic (M : matrix n n R) : M.charpoly.monic :=
 begin
   nontriviality [] [],
@@ -154,17 +154,20 @@ begin
   apply [expr h]
 end
 
-theorem trace_eq_neg_charpoly_coeff [Nonempty n] (M : Matrix n n R) :
-  (trace n R R) M = -M.charpoly.coeff (Fintype.card n - 1) :=
-  by 
-    nontriviality 
-    rw [charpoly_coeff_eq_prod_coeff_of_le]
-    swap 
-    rfl 
-    rw [Fintype.card, prod_X_sub_C_coeff_card_pred univ fun i : n => M i i]
-    simp 
-    rw [←Fintype.card, Fintype.card_pos_iff]
-    infer_instance
+-- error in LinearAlgebra.Matrix.Charpoly.Coeff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem trace_eq_neg_charpoly_coeff
+[nonempty n]
+(M : matrix n n R) : «expr = »(trace n R R M, «expr- »(M.charpoly.coeff «expr - »(fintype.card n, 1))) :=
+begin
+  nontriviality [] [],
+  rw [expr charpoly_coeff_eq_prod_coeff_of_le] [],
+  swap,
+  refl,
+  rw ["[", expr fintype.card, ",", expr prod_X_sub_C_coeff_card_pred univ (λ i : n, M i i), "]"] [],
+  simp [] [] [] [] [] [],
+  rw ["[", "<-", expr fintype.card, ",", expr fintype.card_pos_iff, "]"] [],
+  apply_instance
+end
 
 -- error in LinearAlgebra.Matrix.Charpoly.Coeff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mat_poly_equiv_eval

@@ -25,7 +25,7 @@ variable[∀ i, Module R (M i)][Module R M₂][Module R M₃]
 /-- Two multilinear maps indexed by `fin n` are equal if they are equal when all arguments are
 basis vectors. -/
 theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Finₓ n → Type _} (e : ∀ i, Basis (ι₁ i) R (M i))
-  (h : ∀ v : ∀ i, ι₁ i, (f fun i => e i (v i)) = g fun i => e i (v i)) : f = g :=
+  (h : ∀ (v : ∀ i, ι₁ i), (f fun i => e i (v i)) = g fun i => e i (v i)) : f = g :=
   by 
     (
       induction' n with m hm)
@@ -46,11 +46,18 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin�
         dsimp [Finₓ.tail]
         rw [Finₓ.cons_succ, Finₓ.cons_succ]
 
+-- error in LinearAlgebra.Multilinear.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Two multilinear maps indexed by a `fintype` are equal if they are equal when all arguments
 are basis vectors. Unlike `basis.ext_multilinear_fin`, this only uses a single basis; a
 dependently-typed version would still be true, but the proof would need a dependently-typed
 version of `dom_dom_congr`. -/
-theorem Basis.ext_multilinear [DecidableEq ι] [Fintype ι] {f g : MultilinearMap R (fun i : ι => M₂) M₃} {ι₁ : Type _}
-  (e : Basis ι₁ R M₂) (h : ∀ v : ι → ι₁, (f fun i => e (v i)) = g fun i => e (v i)) : f = g :=
-  (dom_dom_congr_eq_iff (Fintype.equivFin ι) f g).mp$ Basis.ext_multilinear_fin (fun i => e) fun i => h (i ∘ _)
+theorem basis.ext_multilinear
+[decidable_eq ι]
+[fintype ι]
+{f g : multilinear_map R (λ i : ι, M₂) M₃}
+{ι₁ : Type*}
+(e : basis ι₁ R M₂)
+(h : ∀ v : ι → ι₁, «expr = »(f (λ i, e (v i)), g (λ i, e (v i)))) : «expr = »(f, g) :=
+«expr $ »((dom_dom_congr_eq_iff (fintype.equiv_fin ι) f g).mp, basis.ext_multilinear_fin (λ
+  i, e) (λ i, h «expr ∘ »(i, _)))
 

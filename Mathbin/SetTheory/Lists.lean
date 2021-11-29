@@ -88,9 +88,9 @@ theorem to_of_list (l : List (Lists α)) : to_list (of_list l) = l :=
     induction l <;> simp 
 
 @[simp]
-theorem of_to_list : ∀ l : Lists' α tt, of_list (to_list l) = l :=
+theorem of_to_list : ∀ (l : Lists' α tt), of_list (to_list l) = l :=
   suffices
-    ∀ b h : tt = b l : Lists' α b,
+    ∀ b (h : tt = b) (l : Lists' α b),
       let l' : Lists' α tt :=
         by 
           rw [h] <;> exact l 
@@ -190,7 +190,7 @@ theorem mem_of_subset' {a} {l₁ l₂ : Lists' α tt} (s : l₁ ⊆ l₂) (h : a
     rcases h with (rfl | h)
     exacts[⟨_, m, e⟩, IH h]
 
-theorem subset_def {l₁ l₂ : Lists' α tt} : l₁ ⊆ l₂ ↔ ∀ a _ : a ∈ l₁.to_list, a ∈ l₂ :=
+theorem subset_def {l₁ l₂ : Lists' α tt} : l₁ ⊆ l₂ ↔ ∀ a (_ : a ∈ l₁.to_list), a ∈ l₂ :=
   ⟨fun H a => mem_of_subset' H,
     fun H =>
       by 
@@ -258,7 +258,7 @@ def induction_mut (C : Lists α → Sort _) (D : Lists' α tt → Sort _) (C0 : 
   (D0 : D Lists'.nil) (D1 : ∀ a l, C a → D l → D (Lists'.cons a l)) : PProd (∀ l, C l) (∀ l, D l) :=
   by 
     suffices  :
-      ∀ {b} l : Lists' α b,
+      ∀ {b} (l : Lists' α b),
         PProd (C ⟨_, l⟩)
           (match b, l with 
           | tt, l => D l
@@ -311,42 +311,36 @@ theorem Equiv.symm {l₁ l₂ : Lists α} (h : l₁ ~ l₂) : l₂ ~ l₁ :=
   by 
     cases' h with _ _ _ h₁ h₂ <;> [rfl, exact equiv.antisymm h₂ h₁]
 
-theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l₃ → l₁ ~ l₃ :=
-  by 
-    let trans := fun l₁ : Lists α => ∀ ⦃l₂ l₃⦄, l₁ ~ l₂ → l₂ ~ l₃ → l₁ ~ l₃ 
-    suffices  : PProd (∀ l₁, trans l₁) (∀ l : Lists' α tt l' _ : l' ∈ l.to_list, trans l')
-    ·
-      exact this.1
-    apply induction_mut
-    ·
-      intro a l₂ l₃ h₁ h₂ 
-      rwa [←equiv_atom.1 h₁] at h₂
-    ·
-      intro l₁ IH l₂ l₃ h₁ h₂ 
-      cases' h₁ with _ _ l₂
-      ·
-        exact h₂ 
-      cases' h₂ with _ _ l₃
-      ·
-        exact h₁ 
-      cases' equiv.antisymm_iff.1 h₁ with hl₁ hr₁ 
-      cases' equiv.antisymm_iff.1 h₂ with hl₂ hr₂ 
-      apply equiv.antisymm_iff.2 <;> split  <;> apply Lists'.subset_def.2
-      ·
-        intro a₁ m₁ 
-        rcases Lists'.mem_of_subset' hl₁ m₁ with ⟨a₂, m₂, e₁₂⟩
-        rcases Lists'.mem_of_subset' hl₂ m₂ with ⟨a₃, m₃, e₂₃⟩
-        exact ⟨a₃, m₃, IH _ m₁ e₁₂ e₂₃⟩
-      ·
-        intro a₃ m₃ 
-        rcases Lists'.mem_of_subset' hr₂ m₃ with ⟨a₂, m₂, e₃₂⟩
-        rcases Lists'.mem_of_subset' hr₁ m₂ with ⟨a₁, m₁, e₂₁⟩
-        exact ⟨a₁, m₁, (IH _ m₁ e₂₁.symm e₃₂.symm).symm⟩
-    ·
-      rintro _ ⟨⟩
-    ·
-      intro a l IH₁ IH₂ 
-      simpa [IH₁] using IH₂
+-- error in SetTheory.Lists: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem equiv.trans : ∀ {l₁ l₂ l₃ : lists α}, «expr ~ »(l₁, l₂) → «expr ~ »(l₂, l₃) → «expr ~ »(l₁, l₃) :=
+begin
+  let [ident trans] [] [":=", expr λ
+   l₁ : lists α, ∀ {{l₂ l₃}}, «expr ~ »(l₁, l₂) → «expr ~ »(l₂, l₃) → «expr ~ »(l₁, l₃)],
+  suffices [] [":", expr pprod (∀ l₁, trans l₁) (∀ (l : lists' α tt) (l' «expr ∈ » l.to_list), trans l')],
+  { exact [expr this.1] },
+  apply [expr induction_mut],
+  { intros [ident a, ident l₂, ident l₃, ident h₁, ident h₂],
+    rwa ["<-", expr equiv_atom.1 h₁] ["at", ident h₂] },
+  { intros [ident l₁, ident IH, ident l₂, ident l₃, ident h₁, ident h₂],
+    cases [expr h₁] ["with", "_", "_", ident l₂],
+    { exact [expr h₂] },
+    cases [expr h₂] ["with", "_", "_", ident l₃],
+    { exact [expr h₁] },
+    cases [expr equiv.antisymm_iff.1 h₁] ["with", ident hl₁, ident hr₁],
+    cases [expr equiv.antisymm_iff.1 h₂] ["with", ident hl₂, ident hr₂],
+    apply [expr equiv.antisymm_iff.2]; split; apply [expr lists'.subset_def.2],
+    { intros [ident a₁, ident m₁],
+      rcases [expr lists'.mem_of_subset' hl₁ m₁, "with", "⟨", ident a₂, ",", ident m₂, ",", ident e₁₂, "⟩"],
+      rcases [expr lists'.mem_of_subset' hl₂ m₂, "with", "⟨", ident a₃, ",", ident m₃, ",", ident e₂₃, "⟩"],
+      exact [expr ⟨a₃, m₃, IH _ m₁ e₁₂ e₂₃⟩] },
+    { intros [ident a₃, ident m₃],
+      rcases [expr lists'.mem_of_subset' hr₂ m₃, "with", "⟨", ident a₂, ",", ident m₂, ",", ident e₃₂, "⟩"],
+      rcases [expr lists'.mem_of_subset' hr₁ m₂, "with", "⟨", ident a₁, ",", ident m₁, ",", ident e₂₁, "⟩"],
+      exact [expr ⟨a₁, m₁, (IH _ m₁ e₂₁.symm e₃₂.symm).symm⟩] } },
+  { rintro ["_", "⟨", "⟩"] },
+  { intros [ident a, ident l, ident IH₁, ident IH₂],
+    simpa [] [] [] ["[", expr IH₁, "]"] [] ["using", expr IH₂] }
+end
 
 instance  : Setoidₓ (Lists α) :=
   ⟨· ~ ·, Equiv.refl, @Equiv.symm _, @Equiv.trans _⟩

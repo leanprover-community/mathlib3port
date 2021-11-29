@@ -68,7 +68,7 @@ and it holds for monomials.
 -/
 @[elab_as_eliminator]
 protected theorem induction_on' {M : Polynomial R → Prop} (p : Polynomial R) (h_add : ∀ p q, M p → M q → M (p+q))
-  (h_monomial : ∀ n : ℕ a : R, M (monomial n a)) : M p :=
+  (h_monomial : ∀ (n : ℕ) (a : R), M (monomial n a)) : M p :=
   Polynomial.induction_on p (h_monomial 0) h_add
     fun n a h =>
       by 
@@ -99,7 +99,7 @@ variable{f : Polynomial R}{I : Submodule (Polynomial R) (Polynomial R)}
 
 /--  If the coefficients of a polynomial belong to n ideal contains the submodule span of the
 coefficients of a polynomial. -/
-theorem span_le_of_coeff_mem_C_inverse (cf : ∀ i : ℕ, f.coeff i ∈ C ⁻¹' I.carrier) :
+theorem span_le_of_coeff_mem_C_inverse (cf : ∀ (i : ℕ), f.coeff i ∈ C ⁻¹' I.carrier) :
   span (Polynomial R) { g | ∃ i, g = C (f.coeff i) } ≤ I :=
   by 
     refine' bInter_subset_of_mem _ 

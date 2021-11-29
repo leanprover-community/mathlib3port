@@ -97,9 +97,10 @@ instance ghas_one.to_has_one [HasZero ι] [ghas_one A] : HasOne (GradedMonoid A)
 class ghas_mul[Add ι] where 
   mul {i j} : A i → A j → A (i+j)
 
+-- error in Algebra.GradedMonoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `ghas_mul` implies `has_mul (graded_monoid A)`. -/
-instance ghas_mul.to_has_mul [Add ι] [ghas_mul A] : Mul (GradedMonoid A) :=
-  ⟨fun x y : GradedMonoid A => ⟨_, ghas_mul.mul x.snd y.snd⟩⟩
+instance ghas_mul.to_has_mul [has_add ι] [ghas_mul A] : has_mul (graded_monoid A) :=
+⟨λ x y : graded_monoid A, ⟨_, ghas_mul.mul x.snd y.snd⟩⟩
 
 theorem mk_mul_mk [Add ι] [ghas_mul A] {i j} (a : A i) (b : A j) : (mk i a*mk j b) = mk (i+j) (ghas_mul.mul a b) :=
   rfl
@@ -110,7 +111,7 @@ variable{A}[AddMonoidₓ ι][ghas_mul A][ghas_one A]
 
 /-- A default implementation of power on a graded monoid, like `npow_rec`.
 `gmonoid.gnpow` should be used instead. -/
-def gnpow_rec : ∀ n : ℕ {i}, A i → A (n • i)
+def gnpow_rec : ∀ (n : ℕ) {i}, A i → A (n • i)
 | 0, i, a => cast (congr_argₓ A (zero_nsmul i).symm) ghas_one.one
 | n+1, i, a => cast (congr_argₓ A (succ_nsmul i n).symm) (ghas_mul.mul a$ gnpow_rec _ a)
 
@@ -143,11 +144,11 @@ class gmonoid[AddMonoidₓ ι] extends ghas_mul A, ghas_one A where
   one_mul (a : GradedMonoid A) : (1*a) = a 
   mul_one (a : GradedMonoid A) : (a*1) = a 
   mul_assoc (a b c : GradedMonoid A) : ((a*b)*c) = a*b*c 
-  gnpow : ∀ n : ℕ {i}, A i → A (n • i) := gmonoid.gnpow_rec 
-  gnpow_zero' : ∀ a : GradedMonoid A, GradedMonoid.mk _ (gnpow 0 a.snd) = 1 :=  by 
+  gnpow : ∀ (n : ℕ) {i}, A i → A (n • i) := gmonoid.gnpow_rec 
+  gnpow_zero' : ∀ (a : GradedMonoid A), GradedMonoid.mk _ (gnpow 0 a.snd) = 1 :=  by 
   runTac 
     gmonoid.apply_gnpow_rec_zero_tac 
-  gnpow_succ' : ∀ n : ℕ a : GradedMonoid A, (GradedMonoid.mk _$ gnpow n.succ a.snd) = a*⟨_, gnpow n a.snd⟩ :=  by 
+  gnpow_succ' : ∀ (n : ℕ) (a : GradedMonoid A), (GradedMonoid.mk _$ gnpow n.succ a.snd) = a*⟨_, gnpow n a.snd⟩ :=  by 
   runTac 
     gmonoid.apply_gnpow_rec_succ_tac
 
@@ -278,28 +279,33 @@ section
 
 variable(ι){R : Type _}
 
-@[simps one]
-instance HasOne.ghasOne [HasZero ι] [HasOne R] : GradedMonoid.GhasOne fun i : ι => R :=
-  { one := 1 }
+-- error in Algebra.GradedMonoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simps #[ident one]] instance has_one.ghas_one [has_zero ι] [has_one R] : graded_monoid.ghas_one (λ i : ι, R) :=
+{ one := 1 }
 
-@[simps mul]
-instance Mul.ghasMul [Add ι] [Mul R] : GradedMonoid.GhasMul fun i : ι => R :=
-  { mul := fun i j => ·*· }
+-- error in Algebra.GradedMonoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simps #[ident mul]] instance has_mul.ghas_mul [has_add ι] [has_mul R] : graded_monoid.ghas_mul (λ i : ι, R) :=
+{ mul := λ i j, («expr * ») }
 
+-- error in Algebra.GradedMonoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If all grades are the same type and themselves form a monoid, then there is a trivial grading
 structure. -/
-@[simps gnpow]
-instance Monoidₓ.gmonoid [AddMonoidₓ ι] [Monoidₓ R] : GradedMonoid.Gmonoid fun i : ι => R :=
-  { HasOne.ghasOne ι, Mul.ghasMul ι with one_mul := fun a => Sigma.ext (zero_addₓ _) (heq_of_eq (one_mulₓ _)),
-    mul_one := fun a => Sigma.ext (add_zeroₓ _) (heq_of_eq (mul_oneₓ _)),
-    mul_assoc := fun a b c => Sigma.ext (add_assocₓ _ _ _) (heq_of_eq (mul_assocₓ _ _ _)), gnpow := fun n i a => a ^ n,
-    gnpow_zero' := fun a => Sigma.ext (zero_nsmul _) (heq_of_eq (Monoidₓ.npow_zero' _)),
-    gnpow_succ' := fun n ⟨i, a⟩ => Sigma.ext (succ_nsmul _ _) (heq_of_eq (Monoidₓ.npow_succ' _ _)) }
+@[simps #[ident gnpow]]
+instance monoid.gmonoid [add_monoid ι] [monoid R] : graded_monoid.gmonoid (λ i : ι, R) :=
+{ one_mul := λ a, sigma.ext (zero_add _) (heq_of_eq (one_mul _)),
+  mul_one := λ a, sigma.ext (add_zero _) (heq_of_eq (mul_one _)),
+  mul_assoc := λ a b c, sigma.ext (add_assoc _ _ _) (heq_of_eq (mul_assoc _ _ _)),
+  gnpow := λ n i a, «expr ^ »(a, n),
+  gnpow_zero' := λ a, sigma.ext (zero_nsmul _) (heq_of_eq (monoid.npow_zero' _)),
+  gnpow_succ' := λ (n) ⟨i, a⟩, sigma.ext (succ_nsmul _ _) (heq_of_eq (monoid.npow_succ' _ _)),
+  ..has_one.ghas_one ι,
+  ..has_mul.ghas_mul ι }
 
+-- error in Algebra.GradedMonoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If all grades are the same type and themselves form a commutative monoid, then there is a
 trivial grading structure. -/
-instance CommMonoidₓ.gcommMonoid [AddCommMonoidₓ ι] [CommMonoidₓ R] : GradedMonoid.GcommMonoid fun i : ι => R :=
-  { Monoidₓ.gmonoid ι with mul_comm := fun a b => Sigma.ext (add_commₓ _ _) (heq_of_eq (mul_commₓ _ _)) }
+instance comm_monoid.gcomm_monoid [add_comm_monoid ι] [comm_monoid R] : graded_monoid.gcomm_monoid (λ i : ι, R) :=
+{ mul_comm := λ a b, sigma.ext (add_comm _ _) (heq_of_eq (mul_comm _ _)), ..monoid.gmonoid ι }
 
 end 
 

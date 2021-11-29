@@ -52,7 +52,7 @@ theorem iterate_id (n : ℕ) : (id : α → α)^[n] = id :=
       by 
         rw [iterate_succ, ihn, comp.left_id]
 
-theorem iterate_add : ∀ m n : ℕ, f^[m+n] = f^[m] ∘ f^[n]
+theorem iterate_add : ∀ (m n : ℕ), f^[m+n] = f^[m] ∘ f^[n]
 | m, 0 => rfl
 | m, Nat.succ n =>
   by 
@@ -202,8 +202,9 @@ theorem iterate_comm (f : α → α) (m n : ℕ) : f^[n]^[m] = f^[m]^[n] :=
         rw [Nat.mul_comm])
       (iterate_mul _ _ _))
 
-theorem iterate_commute (m n : ℕ) : commute (fun f : α → α => f^[m]) fun f => f^[n] :=
-  fun f => iterate_comm f m n
+-- error in Logic.Function.Iterate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem iterate_commute (m n : exprℕ()) : commute (λ f : α → α, «expr ^[ ]»(f, m)) (λ f, «expr ^[ ]»(f, n)) :=
+λ f, iterate_comm f m n
 
 end Function
 

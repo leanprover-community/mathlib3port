@@ -32,6 +32,7 @@ variable{C : Type u}[category.{v} C]
 
 variable{D : Type u'}[category.{v} D]
 
+-- error in CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given `n+1` objects of `C`, a fan for the last `n` with point `c₁.X` and a binary fan on `c₁.X` and
 `f 0`, we can build a fan for all `n+1`.
@@ -39,59 +40,59 @@ Given `n+1` objects of `C`, a fan for the last `n` with point `c₁.X` and a bin
 In `extend_fan_is_limit` we show that if the two given fans are limits, then this fan is also a
 limit.
 -/
-@[simps (config := { rhsMd := semireducible })]
-def extend_fan {n : ℕ} {f : Ulift (Finₓ (n+1)) → C} (c₁ : fan fun i : Ulift (Finₓ n) => f ⟨i.down.succ⟩)
-  (c₂ : binary_fan (f ⟨0⟩) c₁.X) : fan f :=
-  fan.mk c₂.X
-    (by 
-      rintro ⟨i⟩
-      revert i 
-      refine' Finₓ.cases _ _
-      ·
-        apply c₂.fst
-      ·
-        intro i 
-        apply c₂.snd ≫ c₁.π.app (Ulift.up i))
+@[simps #[expr { rhs_md := semireducible }]]
+def extend_fan
+{n : exprℕ()}
+{f : ulift (fin «expr + »(n, 1)) → C}
+(c₁ : fan (λ i : ulift (fin n), f ⟨i.down.succ⟩))
+(c₂ : binary_fan (f ⟨0⟩) c₁.X) : fan f :=
+fan.mk c₂.X (begin
+   rintro ["⟨", ident i, "⟩"],
+   revert [ident i],
+   refine [expr fin.cases _ _],
+   { apply [expr c₂.fst] },
+   { intro [ident i],
+     apply [expr «expr ≫ »(c₂.snd, c₁.π.app (ulift.up i))] }
+ end)
 
+-- error in CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Show that if the two given fans in `extend_fan` are limits, then the constructed fan is also a
 limit.
 -/
-def extend_fan_is_limit {n : ℕ} (f : Ulift (Finₓ (n+1)) → C) {c₁ : fan fun i : Ulift (Finₓ n) => f ⟨i.down.succ⟩}
-  {c₂ : binary_fan (f ⟨0⟩) c₁.X} (t₁ : is_limit c₁) (t₂ : is_limit c₂) : is_limit (extend_fan c₁ c₂) :=
-  { lift :=
-      fun s =>
-        by 
-          apply (binary_fan.is_limit.lift' t₂ (s.π.app ⟨0⟩) _).1
-          apply t₁.lift ⟨_, discrete.nat_trans fun i => s.π.app ⟨i.down.succ⟩⟩,
-    fac' :=
-      fun s =>
-        by 
-          rintro ⟨j⟩
-          apply Finₓ.inductionOn j
-          ·
-            apply (binary_fan.is_limit.lift' t₂ _ _).2.1
-          ·
-            rintro i -
-            dsimp only [extend_fan_π_app]
-            rw [Finₓ.cases_succ, ←assoc, (binary_fan.is_limit.lift' t₂ _ _).2.2, t₁.fac]
-            rfl,
-    uniq' :=
-      fun s m w =>
-        by 
-          apply binary_fan.is_limit.hom_ext t₂
-          ·
-            rw [(binary_fan.is_limit.lift' t₂ _ _).2.1]
-            apply w ⟨0⟩
-          ·
-            rw [(binary_fan.is_limit.lift' t₂ _ _).2.2]
-            apply t₁.uniq ⟨_, _⟩
-            rintro ⟨j⟩
-            rw [assoc]
-            dsimp only [discrete.nat_trans_app]
-            rw [←w ⟨j.succ⟩]
-            dsimp only [extend_fan_π_app]
-            rw [Finₓ.cases_succ] }
+def extend_fan_is_limit
+{n : exprℕ()}
+(f : ulift (fin «expr + »(n, 1)) → C)
+{c₁ : fan (λ i : ulift (fin n), f ⟨i.down.succ⟩)}
+{c₂ : binary_fan (f ⟨0⟩) c₁.X}
+(t₁ : is_limit c₁)
+(t₂ : is_limit c₂) : is_limit (extend_fan c₁ c₂) :=
+{ lift := λ s, begin
+    apply [expr (binary_fan.is_limit.lift' t₂ (s.π.app ⟨0⟩) _).1],
+    apply [expr t₁.lift ⟨_, discrete.nat_trans (λ i, s.π.app ⟨i.down.succ⟩)⟩]
+  end,
+  fac' := λ s, begin
+    rintro ["⟨", ident j, "⟩"],
+    apply [expr fin.induction_on j],
+    { apply [expr (binary_fan.is_limit.lift' t₂ _ _).2.1] },
+    { rintro [ident i, "-"],
+      dsimp ["only"] ["[", expr extend_fan_π_app, "]"] [] [],
+      rw ["[", expr fin.cases_succ, ",", "<-", expr assoc, ",", expr (binary_fan.is_limit.lift' t₂ _ _).2.2, ",", expr t₁.fac, "]"] [],
+      refl }
+  end,
+  uniq' := λ s m w, begin
+    apply [expr binary_fan.is_limit.hom_ext t₂],
+    { rw [expr (binary_fan.is_limit.lift' t₂ _ _).2.1] [],
+      apply [expr w ⟨0⟩] },
+    { rw [expr (binary_fan.is_limit.lift' t₂ _ _).2.2] [],
+      apply [expr t₁.uniq ⟨_, _⟩],
+      rintro ["⟨", ident j, "⟩"],
+      rw [expr assoc] [],
+      dsimp ["only"] ["[", expr discrete.nat_trans_app, "]"] [] [],
+      rw ["<-", expr w ⟨j.succ⟩] [],
+      dsimp ["only"] ["[", expr extend_fan_π_app, "]"] [] [],
+      rw [expr fin.cases_succ] [] }
+  end }
 
 section 
 
@@ -208,6 +209,7 @@ end
 
 end Preserves
 
+-- error in CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given `n+1` objects of `C`, a cofan for the last `n` with point `c₁.X`
 and a binary cofan on `c₁.X` and `f 0`, we can build a cofan for all `n+1`.
@@ -215,58 +217,58 @@ and a binary cofan on `c₁.X` and `f 0`, we can build a cofan for all `n+1`.
 In `extend_cofan_is_colimit` we show that if the two given cofans are colimits,
 then this cofan is also a colimit.
 -/
-@[simps (config := { rhsMd := semireducible })]
-def extend_cofan {n : ℕ} {f : Ulift (Finₓ (n+1)) → C} (c₁ : cofan fun i : Ulift (Finₓ n) => f ⟨i.down.succ⟩)
-  (c₂ : binary_cofan (f ⟨0⟩) c₁.X) : cofan f :=
-  cofan.mk c₂.X
-    (by 
-      rintro ⟨i⟩
-      revert i 
-      refine' Finₓ.cases _ _
-      ·
-        apply c₂.inl
-      ·
-        intro i 
-        apply c₁.ι.app (Ulift.up i) ≫ c₂.inr)
+@[simps #[expr { rhs_md := semireducible }]]
+def extend_cofan
+{n : exprℕ()}
+{f : ulift (fin «expr + »(n, 1)) → C}
+(c₁ : cofan (λ i : ulift (fin n), f ⟨i.down.succ⟩))
+(c₂ : binary_cofan (f ⟨0⟩) c₁.X) : cofan f :=
+cofan.mk c₂.X (begin
+   rintro ["⟨", ident i, "⟩"],
+   revert [ident i],
+   refine [expr fin.cases _ _],
+   { apply [expr c₂.inl] },
+   { intro [ident i],
+     apply [expr «expr ≫ »(c₁.ι.app (ulift.up i), c₂.inr)] }
+ end)
 
+-- error in CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Show that if the two given cofans in `extend_cofan` are colimits,
 then the constructed cofan is also a colimit.
 -/
-def extend_cofan_is_colimit {n : ℕ} (f : Ulift (Finₓ (n+1)) → C) {c₁ : cofan fun i : Ulift (Finₓ n) => f ⟨i.down.succ⟩}
-  {c₂ : binary_cofan (f ⟨0⟩) c₁.X} (t₁ : is_colimit c₁) (t₂ : is_colimit c₂) : is_colimit (extend_cofan c₁ c₂) :=
-  { desc :=
-      fun s =>
-        by 
-          apply (binary_cofan.is_colimit.desc' t₂ (s.ι.app ⟨0⟩) _).1
-          apply t₁.desc ⟨_, discrete.nat_trans fun i => s.ι.app ⟨i.down.succ⟩⟩,
-    fac' :=
-      fun s =>
-        by 
-          rintro ⟨j⟩
-          apply Finₓ.inductionOn j
-          ·
-            apply (binary_cofan.is_colimit.desc' t₂ _ _).2.1
-          ·
-            rintro i -
-            dsimp only [extend_cofan_ι_app]
-            rw [Finₓ.cases_succ, assoc, (binary_cofan.is_colimit.desc' t₂ _ _).2.2, t₁.fac]
-            rfl,
-    uniq' :=
-      fun s m w =>
-        by 
-          apply binary_cofan.is_colimit.hom_ext t₂
-          ·
-            rw [(binary_cofan.is_colimit.desc' t₂ _ _).2.1]
-            apply w ⟨0⟩
-          ·
-            rw [(binary_cofan.is_colimit.desc' t₂ _ _).2.2]
-            apply t₁.uniq ⟨_, _⟩
-            rintro ⟨j⟩
-            dsimp only [discrete.nat_trans_app]
-            rw [←w ⟨j.succ⟩]
-            dsimp only [extend_cofan_ι_app]
-            rw [Finₓ.cases_succ, assoc] }
+def extend_cofan_is_colimit
+{n : exprℕ()}
+(f : ulift (fin «expr + »(n, 1)) → C)
+{c₁ : cofan (λ i : ulift (fin n), f ⟨i.down.succ⟩)}
+{c₂ : binary_cofan (f ⟨0⟩) c₁.X}
+(t₁ : is_colimit c₁)
+(t₂ : is_colimit c₂) : is_colimit (extend_cofan c₁ c₂) :=
+{ desc := λ s, begin
+    apply [expr (binary_cofan.is_colimit.desc' t₂ (s.ι.app ⟨0⟩) _).1],
+    apply [expr t₁.desc ⟨_, discrete.nat_trans (λ i, s.ι.app ⟨i.down.succ⟩)⟩]
+  end,
+  fac' := λ s, begin
+    rintro ["⟨", ident j, "⟩"],
+    apply [expr fin.induction_on j],
+    { apply [expr (binary_cofan.is_colimit.desc' t₂ _ _).2.1] },
+    { rintro [ident i, "-"],
+      dsimp ["only"] ["[", expr extend_cofan_ι_app, "]"] [] [],
+      rw ["[", expr fin.cases_succ, ",", expr assoc, ",", expr (binary_cofan.is_colimit.desc' t₂ _ _).2.2, ",", expr t₁.fac, "]"] [],
+      refl }
+  end,
+  uniq' := λ s m w, begin
+    apply [expr binary_cofan.is_colimit.hom_ext t₂],
+    { rw [expr (binary_cofan.is_colimit.desc' t₂ _ _).2.1] [],
+      apply [expr w ⟨0⟩] },
+    { rw [expr (binary_cofan.is_colimit.desc' t₂ _ _).2.2] [],
+      apply [expr t₁.uniq ⟨_, _⟩],
+      rintro ["⟨", ident j, "⟩"],
+      dsimp ["only"] ["[", expr discrete.nat_trans_app, "]"] [] [],
+      rw ["<-", expr w ⟨j.succ⟩] [],
+      dsimp ["only"] ["[", expr extend_cofan_ι_app, "]"] [] [],
+      rw ["[", expr fin.cases_succ, ",", expr assoc, "]"] [] }
+  end }
 
 section 
 

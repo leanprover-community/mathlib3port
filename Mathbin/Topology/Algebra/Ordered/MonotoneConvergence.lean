@@ -34,7 +34,7 @@ in the definition, then prove it for any `f` in `tendsto_at_top_is_lub`.
 
 This property holds for linear orders with order topology as well as their products. -/
 class SupConvergenceClass(α : Type _)[Preorderₓ α][TopologicalSpace α] : Prop where 
-  tendsto_coe_at_top_is_lub : ∀ a : α s : Set α, IsLub s a → tendsto (coeₓ : s → α) at_top (𝓝 a)
+  tendsto_coe_at_top_is_lub : ∀ (a : α) (s : Set α), IsLub s a → tendsto (coeₓ : s → α) at_top (𝓝 a)
 
 /-- We say that `α` is an `Inf_convergence_class` if the following holds. Let `f : ι → α` be a
 monotone function, let `a : α` be a greatest lower bound of `set.range f`. Then `f x` tends to `𝓝 a`
@@ -43,7 +43,7 @@ as `x → -∞` (formally, at the filter `filter.at_bot`). We require this for `
 
 This property holds for linear orders with order topology as well as their products. -/
 class InfConvergenceClass(α : Type _)[Preorderₓ α][TopologicalSpace α] : Prop where 
-  tendsto_coe_at_bot_is_glb : ∀ a : α s : Set α, IsGlb s a → tendsto (coeₓ : s → α) at_bot (𝓝 a)
+  tendsto_coe_at_bot_is_glb : ∀ (a : α) (s : Set α), IsGlb s a → tendsto (coeₓ : s → α) at_bot (𝓝 a)
 
 instance OrderDual.Sup_convergence_class [Preorderₓ α] [TopologicalSpace α] [InfConvergenceClass α] :
   SupConvergenceClass (OrderDual α) :=
@@ -181,7 +181,7 @@ instance  {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i,
   by 
     refine' ⟨fun f s h => _⟩
     simp only [is_lub_pi, ←range_restrict] at h 
-    exact tendsto_pi.2 fun i => tendsto_at_top_is_lub ((monotone_eval _).restrict _) (h i)
+    exact tendsto_pi_nhds.2 fun i => tendsto_at_top_is_lub ((monotone_eval _).restrict _) (h i)
 
 instance  {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] [∀ i, TopologicalSpace (α i)]
   [∀ i, InfConvergenceClass (α i)] : InfConvergenceClass (∀ i, α i) :=
@@ -266,12 +266,22 @@ theorem infi_eq_of_tendsto {α} [TopologicalSpace α] [CompleteLinearOrder α] [
   [SemilatticeSup β] {f : β → α} {a : α} (hf : Antitone f) : tendsto f at_top (𝓝 a) → infi f = a :=
   tendsto_nhds_unique (tendsto_at_top_infi hf)
 
-theorem supr_eq_supr_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]
-  {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f) (hφ : tendsto φ l at_top) : (⨆i, f i) = ⨆i, f (φ i) :=
-  le_antisymmₓ
-    (supr_le_supr2$
-      fun i => exists_imp_exists (fun j hj : i ≤ φ j => hf hj) (hφ.eventually$ eventually_ge_at_top i).exists)
-    (supr_le_supr2$ fun i => ⟨φ i, le_reflₓ _⟩)
+-- error in Topology.Algebra.Ordered.MonotoneConvergence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem supr_eq_supr_subseq_of_monotone
+{ι₁ ι₂ α : Type*}
+[preorder ι₂]
+[complete_lattice α]
+{l : filter ι₁}
+[l.ne_bot]
+{f : ι₂ → α}
+{φ : ι₁ → ι₂}
+(hf : monotone f)
+(hφ : tendsto φ l at_top) : «expr = »(«expr⨆ , »((i), f i), «expr⨆ , »((i), f (φ i))) :=
+le_antisymm «expr $ »(supr_le_supr2, λ
+ i, exists_imp_exists (λ
+  (j)
+  (hj : «expr ≤ »(i, φ j)), hf hj) «expr $ »(hφ.eventually, eventually_ge_at_top i).exists) «expr $ »(supr_le_supr2, λ
+ i, ⟨φ i, le_refl _⟩)
 
 theorem infi_eq_infi_subseq_of_monotone {ι₁ ι₂ α : Type _} [Preorderₓ ι₂] [CompleteLattice α] {l : Filter ι₁} [l.ne_bot]
   {f : ι₂ → α} {φ : ι₁ → ι₂} (hf : Monotone f) (hφ : tendsto φ l at_bot) : (⨅i, f i) = ⨅i, f (φ i) :=

@@ -116,10 +116,11 @@ include t
 
 namespace Subtype
 
-instance  {p : α → Prop} : OrderClosedTopology (Subtype p) :=
-  have this : Continuous fun p : Subtype p × Subtype p => ((p.fst : α), (p.snd : α)) :=
-    (continuous_subtype_coe.comp continuous_fst).prod_mk (continuous_subtype_coe.comp continuous_snd)
-  OrderClosedTopology.mk (t.is_closed_le'.preimage this)
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance {p : α → exprProp()} : order_closed_topology (subtype p) :=
+have this : continuous (λ
+ p : «expr × »(subtype p, subtype p), ((p.fst : α), (p.snd : α))) := (continuous_subtype_coe.comp continuous_fst).prod_mk (continuous_subtype_coe.comp continuous_snd),
+order_closed_topology.mk (t.is_closed_le'.preimage this)
 
 end Subtype
 
@@ -199,7 +200,7 @@ theorem closure_lt_subset_le [TopologicalSpace β] {f g : β → α} (hf : Conti
     exact closure_mono fun b => le_of_ltₓ
 
 theorem ContinuousWithinAt.closure_le [TopologicalSpace β] {f g : β → α} {s : Set β} {x : β} (hx : x ∈ Closure s)
-  (hf : ContinuousWithinAt f s x) (hg : ContinuousWithinAt g s x) (h : ∀ y _ : y ∈ s, f y ≤ g y) : f x ≤ g x :=
+  (hf : ContinuousWithinAt f s x) (hg : ContinuousWithinAt g s x) (h : ∀ y (_ : y ∈ s), f y ≤ g y) : f x ≤ g x :=
   show (f x, g x) ∈ { p:α × α | p.1 ≤ p.2 } from
     OrderClosedTopology.is_closed_le'.closure_subset ((hf.prod hg).mem_closure hx h)
 
@@ -286,6 +287,30 @@ theorem interior_Iio : Interior (Iio a) = Iio a :=
 @[simp]
 theorem interior_Ioo : Interior (Ioo a b) = Ioo a b :=
   is_open_Ioo.interior_eq
+
+theorem Iio_mem_nhds {a b : α} (h : a < b) : Iio b ∈ 𝓝 a :=
+  IsOpen.mem_nhds is_open_Iio h
+
+theorem Ioi_mem_nhds {a b : α} (h : a < b) : Ioi a ∈ 𝓝 b :=
+  IsOpen.mem_nhds is_open_Ioi h
+
+theorem Iic_mem_nhds {a b : α} (h : a < b) : Iic b ∈ 𝓝 a :=
+  mem_of_superset (Iio_mem_nhds h) Iio_subset_Iic_self
+
+theorem Ici_mem_nhds {a b : α} (h : a < b) : Ici a ∈ 𝓝 b :=
+  mem_of_superset (Ioi_mem_nhds h) Ioi_subset_Ici_self
+
+theorem Ioo_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ioo a b ∈ 𝓝 x :=
+  IsOpen.mem_nhds is_open_Ioo ⟨ha, hb⟩
+
+theorem Ioc_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ioc a b ∈ 𝓝 x :=
+  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Ioc_self
+
+theorem Ico_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ico a b ∈ 𝓝 x :=
+  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Ico_self
+
+theorem Icc_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Icc a b ∈ 𝓝 x :=
+  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Icc_self
 
 theorem eventually_le_of_tendsto_lt {l : Filter γ} {f : γ → α} {u v : α} (hv : v < u) (h : tendsto f l (𝓝 v)) :
   ∀ᶠa in l, f a ≤ u :=
@@ -529,11 +554,11 @@ theorem Continuous.max (hf : Continuous f) (hg : Continuous g) : Continuous fun 
 
 end 
 
-theorem continuous_min : Continuous fun p : α × α => min p.1 p.2 :=
-  continuous_fst.min continuous_snd
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_min : continuous (λ p : «expr × »(α, α), min p.1 p.2) := continuous_fst.min continuous_snd
 
-theorem continuous_max : Continuous fun p : α × α => max p.1 p.2 :=
-  continuous_fst.max continuous_snd
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_max : continuous (λ p : «expr × »(α, α), max p.1 p.2) := continuous_fst.max continuous_snd
 
 theorem Filter.Tendsto.max {b : Filter β} {a₁ a₂ : α} (hf : tendsto f b (𝓝 a₁)) (hg : tendsto g b (𝓝 a₂)) :
   tendsto (fun b => max (f b) (g b)) b (𝓝 (max a₁ a₂)) :=
@@ -662,7 +687,7 @@ theorem nhds_eq_order (a : α) : 𝓝 a = (⨅(b : _)(_ : b ∈ Iio a), 𝓟 (Io
                   | _, h, Or.inr rfl => inf_le_of_right_le$ infi_le_of_le b$ infi_le _ h)
 
 theorem tendsto_order {f : β → α} {a : α} {x : Filter β} :
-  tendsto f x (𝓝 a) ↔ (∀ a' _ : a' < a, ∀ᶠb in x, a' < f b) ∧ ∀ a' _ : a' > a, ∀ᶠb in x, f b < a' :=
+  tendsto f x (𝓝 a) ↔ (∀ a' (_ : a' < a), ∀ᶠb in x, a' < f b) ∧ ∀ a' (_ : a' > a), ∀ᶠb in x, f b < a' :=
   by 
     simp [nhds_eq_order a, tendsto_inf, tendsto_infi, tendsto_principal]
 
@@ -736,7 +761,7 @@ instance tendsto_Icc_class_nhds_pi
 (f : ∀ i, α i) : tendsto_Ixx_class Icc (expr𝓝() f) (expr𝓝() f) :=
 begin
   constructor,
-  conv [] ["in", expr (expr𝓝() f).lift' powerset] { rw ["[", expr nhds_pi, "]"] },
+  conv [] ["in", expr (expr𝓝() f).lift' powerset] { rw ["[", expr nhds_pi, ",", expr filter.pi, "]"] },
   simp [] [] ["only"] ["[", expr lift'_infi_powerset, ",", expr comap_lift'_eq2 monotone_powerset, ",", expr tendsto_infi, ",", expr tendsto_lift', ",", expr mem_powerset_iff, ",", expr subset_def, ",", expr mem_preimage, "]"] [] [],
   intros [ident i, ident s, ident hs],
   have [] [":", expr tendsto (λ
@@ -852,35 +877,57 @@ theorem nhds_bot_order [TopologicalSpace α] [PartialOrderₓ α] [OrderBot α] 
   by 
     simp [nhds_eq_order (⊥ : α)]
 
-theorem nhds_top_basis [TopologicalSpace α] [SemilatticeSupTop α] [IsTotal α LE.le] [OrderTopology α] [Nontrivial α] :
-  (𝓝 ⊤).HasBasis (fun a : α => a < ⊤) fun a : α => Ioi a :=
-  ⟨by 
-      simp only [nhds_top_order]
-      refine' @Filter.mem_binfi_of_directed α α (fun a => 𝓟 (Ioi a)) (fun a => a < ⊤) _ _
-      ·
-        rintro a (ha : a < ⊤) b (hb : b < ⊤)
-        use a⊔b 
-        simp only [Filter.le_principal_iff, ge_iff_le, Order.Preimage]
-        exact ⟨sup_lt_iff.mpr ⟨ha, hb⟩, Ioi_subset_Ioi le_sup_left, Ioi_subset_Ioi le_sup_right⟩
-      ·
-        obtain ⟨a, ha⟩ : ∃ a : α, a ≠ ⊤ := exists_ne ⊤
-        exact ⟨a, lt_top_iff_ne_top.mpr ha⟩⟩
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_top_basis
+[topological_space α]
+[semilattice_sup α]
+[order_top α]
+[is_total α has_le.le]
+[order_topology α]
+[nontrivial α] : (expr𝓝() «expr⊤»()).has_basis (λ a : α, «expr < »(a, «expr⊤»())) (λ a : α, Ioi a) :=
+⟨begin
+   simp [] [] ["only"] ["[", expr nhds_top_order, "]"] [] [],
+   refine [expr @filter.mem_binfi_of_directed α α (λ a, expr𝓟() (Ioi a)) (λ a, «expr < »(a, «expr⊤»())) _ _],
+   { rintros [ident a, "(", ident ha, ":", expr «expr < »(a, «expr⊤»()), ")", ident b, "(", ident hb, ":", expr «expr < »(b, «expr⊤»()), ")"],
+     use [expr «expr ⊔ »(a, b)],
+     simp [] [] ["only"] ["[", expr filter.le_principal_iff, ",", expr ge_iff_le, ",", expr order.preimage, "]"] [] [],
+     exact [expr ⟨sup_lt_iff.mpr ⟨ha, hb⟩, Ioi_subset_Ioi le_sup_left, Ioi_subset_Ioi le_sup_right⟩] },
+   { obtain ["⟨", ident a, ",", ident ha, "⟩", ":", expr «expr∃ , »((a : α), «expr ≠ »(a, «expr⊤»())), ":=", expr exists_ne «expr⊤»()],
+     exact [expr ⟨a, lt_top_iff_ne_top.mpr ha⟩] }
+ end⟩
 
-theorem nhds_bot_basis [TopologicalSpace α] [SemilatticeInfBot α] [IsTotal α LE.le] [OrderTopology α] [Nontrivial α] :
-  (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) fun a : α => Iio a :=
-  @nhds_top_basis (OrderDual α) _ _ _ _ _
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_bot_basis
+[topological_space α]
+[semilattice_inf α]
+[order_bot α]
+[is_total α has_le.le]
+[order_topology α]
+[nontrivial α] : (expr𝓝() «expr⊥»()).has_basis (λ a : α, «expr < »(«expr⊥»(), a)) (λ a : α, Iio a) :=
+@nhds_top_basis (order_dual α) _ _ _ _ _ _
 
-theorem nhds_top_basis_Ici [TopologicalSpace α] [SemilatticeSupTop α] [IsTotal α LE.le] [OrderTopology α] [Nontrivial α]
-  [DenselyOrdered α] : (𝓝 ⊤).HasBasis (fun a : α => a < ⊤) Ici :=
-  nhds_top_basis.to_has_basis
-    (fun a ha =>
-      let ⟨b, hab, hb⟩ := exists_between ha
-      ⟨b, hb, Ici_subset_Ioi.mpr hab⟩)
-    fun a ha => ⟨a, ha, Ioi_subset_Ici_self⟩
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_top_basis_Ici
+[topological_space α]
+[semilattice_sup α]
+[order_top α]
+[is_total α has_le.le]
+[order_topology α]
+[nontrivial α]
+[densely_ordered α] : (expr𝓝() «expr⊤»()).has_basis (λ a : α, «expr < »(a, «expr⊤»())) Ici :=
+nhds_top_basis.to_has_basis (λ a ha, let ⟨b, hab, hb⟩ := exists_between ha in
+ ⟨b, hb, Ici_subset_Ioi.mpr hab⟩) (λ a ha, ⟨a, ha, Ioi_subset_Ici_self⟩)
 
-theorem nhds_bot_basis_Iic [TopologicalSpace α] [SemilatticeInfBot α] [IsTotal α LE.le] [OrderTopology α] [Nontrivial α]
-  [DenselyOrdered α] : (𝓝 ⊥).HasBasis (fun a : α => ⊥ < a) Iic :=
-  @nhds_top_basis_Ici (OrderDual α) _ _ _ _ _ _
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_bot_basis_Iic
+[topological_space α]
+[semilattice_inf α]
+[order_bot α]
+[is_total α has_le.le]
+[order_topology α]
+[nontrivial α]
+[densely_ordered α] : (expr𝓝() «expr⊥»()).has_basis (λ a : α, «expr < »(«expr⊥»(), a)) Iic :=
+@nhds_top_basis_Ici (order_dual α) _ _ _ _ _ _ _
 
 theorem tendsto_nhds_top_mono [TopologicalSpace β] [PartialOrderₓ β] [OrderTop β] [OrderTopology β] {l : Filter α}
   {f g : α → β} (hf : tendsto f l (𝓝 ⊤)) (hg : f ≤ᶠ[l] g) : tendsto g l (𝓝 ⊤) :=
@@ -968,7 +1015,7 @@ theorem IsOpen.exists_Ioo_subset [Nontrivial α] {s : Set α} (hs : IsOpen s) (h
       exact ⟨l, x, lx, Ioo_subset_Ioc_self.trans hl⟩
 
 theorem order_separated {a₁ a₂ : α} (h : a₁ < a₂) :
-  ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ a₁ ∈ u ∧ a₂ ∈ v ∧ ∀ b₁ _ : b₁ ∈ u, ∀ b₂ _ : b₂ ∈ v, b₁ < b₂ :=
+  ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ a₁ ∈ u ∧ a₂ ∈ v ∧ ∀ b₁ (_ : b₁ ∈ u), ∀ b₂ (_ : b₂ ∈ v), b₁ < b₂ :=
   match dense_or_discrete a₁ a₂ with 
   | Or.inl ⟨a, ha₁, ha₂⟩ =>
     ⟨{ a' | a' < a }, { a' | a < a' }, is_open_gt' a, is_open_lt' a, ha₁, ha₂, fun b₁ h₁ b₂ h₂ => lt_transₓ h₁ h₂⟩
@@ -980,68 +1027,65 @@ theorem order_separated {a₁ a₂ : α} (h : a₁ < a₂) :
           _ ≤ b₂ := h₁ _ hb₂
           ⟩
 
-instance (priority := 100)OrderTopology.to_order_closed_topology : OrderClosedTopology α :=
-  { is_closed_le' :=
-      is_open_compl_iff.1$
-        is_open_prod_iff.mpr$
-          fun a₁ a₂ h : ¬a₁ ≤ a₂ =>
-            have h : a₂ < a₁ := lt_of_not_geₓ h 
-            let ⟨u, v, hu, hv, ha₁, ha₂, h⟩ := order_separated h
-            ⟨v, u, hv, hu, ha₂, ha₁, fun ⟨b₁, b₂⟩ ⟨h₁, h₂⟩ => not_le_of_gtₓ$ h b₂ h₂ b₁ h₁⟩ }
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[priority 100] instance order_topology.to_order_closed_topology : order_closed_topology α :=
+{ is_closed_le' := «expr $ »(is_open_compl_iff.1, «expr $ »(is_open_prod_iff.mpr, assume
+    (a₁ a₂)
+    (h : «expr¬ »(«expr ≤ »(a₁, a₂))), have h : «expr < »(a₂, a₁), from lt_of_not_ge h,
+    let ⟨u, v, hu, hv, ha₁, ha₂, h⟩ := order_separated h in
+    ⟨v, u, hv, hu, ha₂, ha₁, assume ⟨b₁, b₂⟩ ⟨h₁, h₂⟩, «expr $ »(not_le_of_gt, h b₂ h₂ b₁ h₁)⟩)) }
 
 theorem OrderTopology.t2_space : T2Space α :=
   by 
     infer_instance
 
-instance (priority := 100)OrderTopology.regular_space : RegularSpace α :=
-  { OrderTopology.t2_space with
-    regular :=
-      fun s a hs ha =>
-        have hs' : «expr ᶜ» s ∈ 𝓝 a := IsOpen.mem_nhds hs.is_open_compl ha 
-        have  : ∃ t : Set α, IsOpen t ∧ (∀ l _ : l ∈ s, l < a → l ∈ t) ∧ 𝓝[t] a = ⊥ :=
-          by_cases
-            (fun h : ∃ l, l < a =>
-              let ⟨l, hl, h⟩ := exists_Ioc_subset_of_mem_nhds hs' h 
-              match dense_or_discrete l a with 
-              | Or.inl ⟨b, hb₁, hb₂⟩ =>
-                ⟨{ a | a < b }, is_open_gt' _,
-                  fun c hcs hca =>
-                    show c < b from lt_of_not_geₓ$ fun hbc => h ⟨lt_of_lt_of_leₓ hb₁ hbc, le_of_ltₓ hca⟩ hcs,
-                  inf_principal_eq_bot.2$
-                    (𝓝 a).sets_of_superset ((is_open_lt' _).mem_nhds hb₂)$
-                      fun x hx : b < x => show ¬x < b from not_ltₓ.2$ le_of_ltₓ hx⟩
-              | Or.inr ⟨h₁, h₂⟩ =>
-                ⟨{ a' | a' < a }, is_open_gt' _, fun b hbs hba => hba,
-                  inf_principal_eq_bot.2$
-                    (𝓝 a).sets_of_superset ((is_open_lt' _).mem_nhds hl)$
-                      fun x hx : l < x => show ¬x < a from not_ltₓ.2$ h₁ _ hx⟩)
-            fun this : ¬∃ l, l < a => ⟨∅, is_open_empty, fun l _ hl => (this ⟨l, hl⟩).elim, nhds_within_empty _⟩
-        let ⟨t₁, ht₁o, ht₁s, ht₁a⟩ := this 
-        have  : ∃ t : Set α, IsOpen t ∧ (∀ u _ : u ∈ s, u > a → u ∈ t) ∧ 𝓝[t] a = ⊥ :=
-          by_cases
-            (fun h : ∃ u, u > a =>
-              let ⟨u, hu, h⟩ := exists_Ico_subset_of_mem_nhds hs' h 
-              match dense_or_discrete a u with 
-              | Or.inl ⟨b, hb₁, hb₂⟩ =>
-                ⟨{ a | b < a }, is_open_lt' _,
-                  fun c hcs hca =>
-                    show c > b from lt_of_not_geₓ$ fun hbc => h ⟨le_of_ltₓ hca, lt_of_le_of_ltₓ hbc hb₂⟩ hcs,
-                  inf_principal_eq_bot.2$
-                    (𝓝 a).sets_of_superset ((is_open_gt' _).mem_nhds hb₁)$
-                      fun x hx : b > x => show ¬x > b from not_ltₓ.2$ le_of_ltₓ hx⟩
-              | Or.inr ⟨h₁, h₂⟩ =>
-                ⟨{ a' | a' > a }, is_open_lt' _, fun b hbs hba => hba,
-                  inf_principal_eq_bot.2$
-                    (𝓝 a).sets_of_superset ((is_open_gt' _).mem_nhds hu)$
-                      fun x hx : u > x => show ¬x > a from not_ltₓ.2$ h₂ _ hx⟩)
-            fun this : ¬∃ u, u > a => ⟨∅, is_open_empty, fun l _ hl => (this ⟨l, hl⟩).elim, nhds_within_empty _⟩
-        let ⟨t₂, ht₂o, ht₂s, ht₂a⟩ := this
-        ⟨t₁ ∪ t₂, IsOpen.union ht₁o ht₂o,
-          fun x hx =>
-            have  : x ≠ a := fun eq => ha$ Eq ▸ hx
-            (ne_iff_lt_or_gtₓ.mp this).imp (ht₁s _ hx) (ht₂s _ hx),
-          by 
-            rw [nhds_within_union, ht₁a, ht₂a, bot_sup_eq]⟩ }
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[priority 100] instance order_topology.regular_space : regular_space α :=
+{ regular := assume s a hs ha, have hs' : «expr ∈ »(«expr ᶜ»(s), expr𝓝() a), from is_open.mem_nhds hs.is_open_compl ha,
+  have «expr∃ , »((t : set α), «expr ∧ »(is_open t, «expr ∧ »(∀
+     l «expr ∈ » s, «expr < »(l, a) → «expr ∈ »(l, t), «expr = »(«expr𝓝[ ] »(t, a), «expr⊥»())))), from by_cases (assume
+   h : «expr∃ , »((l), «expr < »(l, a)), let ⟨l, hl, h⟩ := exists_Ioc_subset_of_mem_nhds hs' h in
+   match dense_or_discrete l a with
+   | or.inl ⟨b, hb₁, hb₂⟩ := ⟨{a | «expr < »(a, b)}, is_open_gt' _, assume
+    c
+    hcs
+    hca, show «expr < »(c, b), from «expr $ »(lt_of_not_ge, assume
+     hbc, h ⟨lt_of_lt_of_le hb₁ hbc, le_of_lt hca⟩ hcs), «expr $ »(inf_principal_eq_bot.2, «expr $ »((expr𝓝() a).sets_of_superset ((is_open_lt' _).mem_nhds hb₂), assume
+      (x)
+      (hx : «expr < »(b, x)), show «expr¬ »(«expr < »(x, b)), from «expr $ »(not_lt.2, le_of_lt hx)))⟩
+   | or.inr ⟨h₁, h₂⟩ := ⟨{a' | «expr < »(a', a)}, is_open_gt' _, assume
+    b
+    hbs
+    hba, hba, «expr $ »(inf_principal_eq_bot.2, «expr $ »((expr𝓝() a).sets_of_superset ((is_open_lt' _).mem_nhds hl), assume
+      (x)
+      (hx : «expr < »(l, x)), show «expr¬ »(«expr < »(x, a)), from «expr $ »(not_lt.2, h₁ _ hx)))⟩
+   end) (assume: «expr¬ »(«expr∃ , »((l), «expr < »(l, a))), ⟨«expr∅»(), is_open_empty, assume
+    l _ hl, (this ⟨l, hl⟩).elim, nhds_within_empty _⟩),
+  let ⟨t₁, ht₁o, ht₁s, ht₁a⟩ := this in
+  have «expr∃ , »((t : set α), «expr ∧ »(is_open t, «expr ∧ »(∀
+     u «expr ∈ » s, «expr > »(u, a) → «expr ∈ »(u, t), «expr = »(«expr𝓝[ ] »(t, a), «expr⊥»())))), from by_cases (assume
+   h : «expr∃ , »((u), «expr > »(u, a)), let ⟨u, hu, h⟩ := exists_Ico_subset_of_mem_nhds hs' h in
+   match dense_or_discrete a u with
+   | or.inl ⟨b, hb₁, hb₂⟩ := ⟨{a | «expr < »(b, a)}, is_open_lt' _, assume
+    c
+    hcs
+    hca, show «expr > »(c, b), from «expr $ »(lt_of_not_ge, assume
+     hbc, h ⟨le_of_lt hca, lt_of_le_of_lt hbc hb₂⟩ hcs), «expr $ »(inf_principal_eq_bot.2, «expr $ »((expr𝓝() a).sets_of_superset ((is_open_gt' _).mem_nhds hb₁), assume
+      (x)
+      (hx : «expr > »(b, x)), show «expr¬ »(«expr > »(x, b)), from «expr $ »(not_lt.2, le_of_lt hx)))⟩
+   | or.inr ⟨h₁, h₂⟩ := ⟨{a' | «expr > »(a', a)}, is_open_lt' _, assume
+    b
+    hbs
+    hba, hba, «expr $ »(inf_principal_eq_bot.2, «expr $ »((expr𝓝() a).sets_of_superset ((is_open_gt' _).mem_nhds hu), assume
+      (x)
+      (hx : «expr > »(u, x)), show «expr¬ »(«expr > »(x, a)), from «expr $ »(not_lt.2, h₂ _ hx)))⟩
+   end) (assume: «expr¬ »(«expr∃ , »((u), «expr > »(u, a))), ⟨«expr∅»(), is_open_empty, assume
+    l _ hl, (this ⟨l, hl⟩).elim, nhds_within_empty _⟩),
+  let ⟨t₂, ht₂o, ht₂s, ht₂a⟩ := this in
+  ⟨«expr ∪ »(t₁, t₂), is_open.union ht₁o ht₂o, assume
+   x hx, have «expr ≠ »(x, a), from assume eq, «expr $ »(ha, «expr ▸ »(eq, hx)),
+   (ne_iff_lt_or_gt.mp this).imp (ht₁s _ hx) (ht₂s _ hx), by rw ["[", expr nhds_within_union, ",", expr ht₁a, ",", expr ht₂a, ",", expr bot_sup_eq, "]"] []⟩,
+  ..order_topology.t2_space }
 
 /-- A set is a neighborhood of `a` if and only if it contains an interval `(l, u)` containing `a`,
 provided `a` is neither a bottom element nor a top element. -/
@@ -1069,44 +1113,25 @@ theorem mem_nhds_iff_exists_Ioo_subset [NoTopOrder α] [NoBotOrder α] {a : α} 
   s ∈ 𝓝 a ↔ ∃ l u, a ∈ Ioo l u ∧ Ioo l u ⊆ s :=
   mem_nhds_iff_exists_Ioo_subset' (no_bot a) (no_top a)
 
-theorem nhds_basis_Ioo' {a : α} (hl : ∃ l, l < a) (hu : ∃ u, a < u) :
-  (𝓝 a).HasBasis (fun b : α × α => b.1 < a ∧ a < b.2) fun b => Ioo b.1 b.2 :=
-  ⟨fun s =>
-      (mem_nhds_iff_exists_Ioo_subset' hl hu).trans$
-        by 
-          simp ⟩
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_Ioo'
+{a : α}
+(hl : «expr∃ , »((l), «expr < »(l, a)))
+(hu : «expr∃ , »((u), «expr < »(a, u))) : (expr𝓝() a).has_basis (λ
+ b : «expr × »(α, α), «expr ∧ »(«expr < »(b.1, a), «expr < »(a, b.2))) (λ b, Ioo b.1 b.2) :=
+⟨λ s, «expr $ »((mem_nhds_iff_exists_Ioo_subset' hl hu).trans, by simp [] [] [] [] [] [])⟩
 
-theorem nhds_basis_Ioo [NoTopOrder α] [NoBotOrder α] (a : α) :
-  (𝓝 a).HasBasis (fun b : α × α => b.1 < a ∧ a < b.2) fun b => Ioo b.1 b.2 :=
-  nhds_basis_Ioo' (no_bot a) (no_top a)
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_Ioo
+[no_top_order α]
+[no_bot_order α]
+(a : α) : (expr𝓝() a).has_basis (λ
+ b : «expr × »(α, α), «expr ∧ »(«expr < »(b.1, a), «expr < »(a, b.2))) (λ b, Ioo b.1 b.2) :=
+nhds_basis_Ioo' (no_bot a) (no_top a)
 
 theorem Filter.Eventually.exists_Ioo_subset [NoTopOrder α] [NoBotOrder α] {a : α} {p : α → Prop}
   (hp : ∀ᶠx in 𝓝 a, p x) : ∃ l u, a ∈ Ioo l u ∧ Ioo l u ⊆ { x | p x } :=
   mem_nhds_iff_exists_Ioo_subset.1 hp
-
-theorem Iio_mem_nhds {a b : α} (h : a < b) : Iio b ∈ 𝓝 a :=
-  IsOpen.mem_nhds is_open_Iio h
-
-theorem Ioi_mem_nhds {a b : α} (h : a < b) : Ioi a ∈ 𝓝 b :=
-  IsOpen.mem_nhds is_open_Ioi h
-
-theorem Iic_mem_nhds {a b : α} (h : a < b) : Iic b ∈ 𝓝 a :=
-  mem_of_superset (Iio_mem_nhds h) Iio_subset_Iic_self
-
-theorem Ici_mem_nhds {a b : α} (h : a < b) : Ici a ∈ 𝓝 b :=
-  mem_of_superset (Ioi_mem_nhds h) Ioi_subset_Ici_self
-
-theorem Ioo_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ioo a b ∈ 𝓝 x :=
-  IsOpen.mem_nhds is_open_Ioo ⟨ha, hb⟩
-
-theorem Ioc_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ioc a b ∈ 𝓝 x :=
-  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Ioc_self
-
-theorem Ico_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Ico a b ∈ 𝓝 x :=
-  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Ico_self
-
-theorem Icc_mem_nhds {a b x : α} (ha : a < x) (hb : x < b) : Icc a b ∈ 𝓝 x :=
-  mem_of_superset (Ioo_mem_nhds ha hb) Ioo_subset_Icc_self
 
 section Pi
 
@@ -1461,7 +1486,7 @@ theorem mem_nhds_within_Iic_iff_exists_Icc_subset' [NoBotOrder α] [DenselyOrder
   s ∈ 𝓝[Iic a] a ↔ ∃ (l : _)(_ : l ∈ Iio a), Icc l a ⊆ s :=
   by 
     convert @mem_nhds_within_Ici_iff_exists_Icc_subset' (OrderDual α) _ _ _ _ _ _ _ 
-    simpRw [show ∀ u : OrderDual α, @Icc (OrderDual α) _ a u = @Icc α _ u a from fun u => dual_Icc]
+    simpRw [show ∀ (u : OrderDual α), @Icc (OrderDual α) _ a u = @Icc α _ u a from fun u => dual_Icc]
     rfl
 
 /-- A set is a neighborhood of `a` within `[a, +∞)` if and only if it contains an interval `[a, u]`
@@ -1547,7 +1572,7 @@ begin
 end
 
 theorem LinearOrderedAddCommGroup.tendsto_nhds {x : Filter β} {a : α} :
-  tendsto f x (𝓝 a) ↔ ∀ ε _ : ε > (0 : α), ∀ᶠb in x, |f b - a| < ε :=
+  tendsto f x (𝓝 a) ↔ ∀ ε (_ : ε > (0 : α)), ∀ᶠb in x, |f b - a| < ε :=
   by 
     simp [nhds_eq_infi_abs_sub, abs_sub_comm a]
 
@@ -1593,60 +1618,73 @@ theorem Filter.Tendsto.abs {f : β → α} {a : α} {l : Filter β} (h : tendsto
   tendsto (fun x => |f x|) l (𝓝 |a|) :=
   (continuous_abs.Tendsto _).comp h
 
-theorem nhds_basis_Ioo_pos [NoBotOrder α] [NoTopOrder α] (a : α) :
-  (𝓝 a).HasBasis (fun ε : α => (0 : α) < ε) fun ε => Ioo (a - ε) (a+ε) :=
-  ⟨by 
-      refine' fun t => (nhds_basis_Ioo a).mem_iff.trans ⟨_, _⟩
-      ·
-        rintro ⟨⟨l, u⟩, ⟨hl : l < a, hu : a < u⟩, h' : Ioo l u ⊆ t⟩
-        refine'
-          ⟨min (a - l) (u - a),
-            by 
-              apply lt_minₓ <;> rwa [sub_pos],
-            _⟩
-        rintro x ⟨hx, hx'⟩
-        apply h' 
-        rw [sub_lt, lt_min_iff, sub_lt_sub_iff_left] at hx 
-        rw [←sub_lt_iff_lt_add', lt_min_iff, sub_lt_sub_iff_right] at hx' 
-        exact ⟨hx.1, hx'.2⟩
-      ·
-        rintro ⟨ε, ε_pos, h⟩
-        exact
-          ⟨(a - ε, a+ε),
-            by 
-              simp [ε_pos],
-            h⟩⟩
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem tendsto_zero_iff_abs_tendsto_zero
+(f : β → α)
+{l : filter β} : «expr ↔ »(tendsto f l (expr𝓝() 0), tendsto «expr ∘ »(abs, f) l (expr𝓝() 0)) :=
+begin
+  refine [expr ⟨λ h, «expr ▸ »((abs_zero : «expr = »(«expr| |»((0 : α)), 0)), h.abs), λ h, _⟩],
+  have [] [":", expr tendsto (λ
+    a, «expr- »(«expr| |»(f a))) l (expr𝓝() 0)] [":=", expr «expr ▸ »((neg_zero : «expr = »(«expr- »((0 : α)), 0)), h.neg)],
+  exact [expr tendsto_of_tendsto_of_tendsto_of_le_of_le this h (λ
+    x, «expr $ »(neg_abs_le_self, f x)) (λ x, «expr $ »(le_abs_self, f x))]
+end
 
-theorem nhds_basis_abs_sub_lt [NoBotOrder α] [NoTopOrder α] (a : α) :
-  (𝓝 a).HasBasis (fun ε : α => (0 : α) < ε) fun ε => { b | |b - a| < ε } :=
-  by 
-    convert nhds_basis_Ioo_pos a
-    ·
-      ext ε 
-      change |x - a| < ε ↔ a - ε < x ∧ x < a+ε 
-      simp [abs_lt, sub_lt_iff_lt_add, add_commₓ ε a, add_commₓ x ε]
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_Ioo_pos
+[no_bot_order α]
+[no_top_order α]
+(a : α) : (expr𝓝() a).has_basis (λ ε : α, «expr < »((0 : α), ε)) (λ ε, Ioo «expr - »(a, ε) «expr + »(a, ε)) :=
+⟨begin
+   refine [expr λ t, (nhds_basis_Ioo a).mem_iff.trans ⟨_, _⟩],
+   { rintros ["⟨", "⟨", ident l, ",", ident u, "⟩", ",", "⟨", ident hl, ":", expr «expr < »(l, a), ",", ident hu, ":", expr «expr < »(a, u), "⟩", ",", ident h', ":", expr «expr ⊆ »(Ioo l u, t), "⟩"],
+     refine [expr ⟨min «expr - »(a, l) «expr - »(u, a), by apply [expr lt_min]; rwa [expr sub_pos] [], _⟩],
+     rintros [ident x, "⟨", ident hx, ",", ident hx', "⟩"],
+     apply [expr h'],
+     rw ["[", expr sub_lt, ",", expr lt_min_iff, ",", expr sub_lt_sub_iff_left, "]"] ["at", ident hx],
+     rw ["[", "<-", expr sub_lt_iff_lt_add', ",", expr lt_min_iff, ",", expr sub_lt_sub_iff_right, "]"] ["at", ident hx'],
+     exact [expr ⟨hx.1, hx'.2⟩] },
+   { rintros ["⟨", ident ε, ",", ident ε_pos, ",", ident h, "⟩"],
+     exact [expr ⟨(«expr - »(a, ε), «expr + »(a, ε)), by simp [] [] [] ["[", expr ε_pos, "]"] [] [], h⟩] }
+ end⟩
+
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_abs_sub_lt
+[no_bot_order α]
+[no_top_order α]
+(a : α) : (expr𝓝() a).has_basis (λ
+ ε : α, «expr < »((0 : α), ε)) (λ ε, {b | «expr < »(«expr| |»(«expr - »(b, a)), ε)}) :=
+begin
+  convert [] [expr nhds_basis_Ioo_pos a] [],
+  { ext [] [ident ε] [],
+    change [expr «expr ↔ »(«expr < »(«expr| |»(«expr - »(x, a)), ε), «expr ∧ »(«expr < »(«expr - »(a, ε), x), «expr < »(x, «expr + »(a, ε))))] [] [],
+    simp [] [] [] ["[", expr abs_lt, ",", expr sub_lt_iff_lt_add, ",", expr add_comm ε a, ",", expr add_comm x ε, "]"] [] [] }
+end
 
 variable(α)
 
-theorem nhds_basis_zero_abs_sub_lt [NoBotOrder α] [NoTopOrder α] :
-  (𝓝 (0 : α)).HasBasis (fun ε : α => (0 : α) < ε) fun ε => { b | |b| < ε } :=
-  by 
-    simpa using nhds_basis_abs_sub_lt (0 : α)
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_zero_abs_sub_lt
+[no_bot_order α]
+[no_top_order α] : (expr𝓝() (0 : α)).has_basis (λ
+ ε : α, «expr < »((0 : α), ε)) (λ ε, {b | «expr < »(«expr| |»(b), ε)}) :=
+by simpa [] [] [] [] [] ["using", expr nhds_basis_abs_sub_lt (0 : α)]
 
 variable{α}
 
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `a` is positive we can form a basis from only nonnegative `Ioo` intervals -/
-theorem nhds_basis_Ioo_pos_of_pos [NoBotOrder α] [NoTopOrder α] {a : α} (ha : 0 < a) :
-  (𝓝 a).HasBasis (fun ε : α => (0 : α) < ε ∧ ε ≤ a) fun ε => Ioo (a - ε) (a+ε) :=
-  ⟨fun t =>
-      (nhds_basis_Ioo_pos a).mem_iff.trans
-        ⟨fun h =>
-            let ⟨i, hi, hit⟩ := h
-            ⟨min i a, ⟨lt_minₓ hi ha, min_le_rightₓ i a⟩,
-              trans (Ioo_subset_Ioo (sub_le_sub_left (min_le_leftₓ i a) a) (add_le_add_left (min_le_leftₓ i a) a)) hit⟩,
-          fun h =>
-            let ⟨i, hi, hit⟩ := h
-            ⟨i, hi.1, hit⟩⟩⟩
+theorem nhds_basis_Ioo_pos_of_pos
+[no_bot_order α]
+[no_top_order α]
+{a : α}
+(ha : «expr < »(0, a)) : (expr𝓝() a).has_basis (λ
+ ε : α, «expr ∧ »(«expr < »((0 : α), ε), «expr ≤ »(ε, a))) (λ ε, Ioo «expr - »(a, ε) «expr + »(a, ε)) :=
+⟨λ
+ t, (nhds_basis_Ioo_pos a).mem_iff.trans ⟨λ h, let ⟨i, hi, hit⟩ := h in
+  ⟨min i a, ⟨lt_min hi ha, min_le_right i a⟩, trans (Ioo_subset_Ioo (sub_le_sub_left (min_le_left i a) a) (add_le_add_left (min_le_left i a) a)) hit⟩, λ
+  h, let ⟨i, hi, hit⟩ := h in
+  ⟨i, hi.1, hit⟩⟩⟩
 
 section 
 
@@ -1804,7 +1842,7 @@ begin
       «expr ≤ »(..., «expr + »(1, ε)) : by ring_nf [] [] [] }
 end
 
--- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[priority 100] instance linear_ordered_field.has_continuous_mul : has_continuous_mul α :=
 ⟨begin
    rw [expr continuous_iff_continuous_at] [],
@@ -1918,8 +1956,9 @@ begin
   exact [expr ⟨inv_pos.2 this, (inv_le this hb).2 hx⟩]
 end
 
-theorem tendsto_inv_at_top_zero : tendsto (fun r : α => r⁻¹) at_top (𝓝 0) :=
-  tendsto_inv_at_top_zero'.mono_right inf_le_left
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_inv_at_top_zero : tendsto (λ r : α, «expr ⁻¹»(r)) at_top (expr𝓝() 0) :=
+tendsto_inv_at_top_zero'.mono_right inf_le_left
 
 theorem Filter.Tendsto.div_at_top [HasContinuousMul α] {f g : β → α} {l : Filter β} {a : α} (h : tendsto f l (𝓝 a))
   (hg : tendsto g l at_top) : tendsto (fun x => f x / g x) l (𝓝 0) :=
@@ -1933,13 +1972,14 @@ theorem Filter.Tendsto.inv_tendsto_at_top (h : tendsto f l at_top) : tendsto (f�
 theorem Filter.Tendsto.inv_tendsto_zero (h : tendsto f l (𝓝[Set.Ioi 0] 0)) : tendsto (f⁻¹) l at_top :=
   tendsto_inv_zero_at_top.comp h
 
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function `x^(-n)` tends to `0` at `+∞` for any positive natural `n`.
 A version for positive real powers exists as `tendsto_rpow_neg_at_top`. -/
-theorem tendsto_pow_neg_at_top {n : ℕ} (hn : 1 ≤ n) : tendsto (fun x : α => x ^ -(n : ℤ)) at_top (𝓝 0) :=
-  tendsto.congr (fun x => (zpow_neg₀ x n).symm)
-    (Filter.Tendsto.inv_tendsto_at_top
-      (by 
-        simpa [zpow_coe_nat] using tendsto_pow_at_top hn))
+theorem tendsto_pow_neg_at_top
+{n : exprℕ()}
+(hn : «expr ≤ »(1, n)) : tendsto (λ x : α, «expr ^ »(x, «expr- »((n : exprℤ())))) at_top (expr𝓝() 0) :=
+tendsto.congr (λ
+ x, (zpow_neg₀ x n).symm) (filter.tendsto.inv_tendsto_at_top (by simpa [] [] [] ["[", expr zpow_coe_nat, "]"] [] ["using", expr tendsto_pow_at_top hn]))
 
 -- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem tendsto_zpow_at_top_zero
@@ -1980,27 +2020,26 @@ begin
     simpa [] [] [] ["[", expr hn, ",", expr hcd, "]"] [] ["using", expr tendsto_const_nhds] }
 end
 
-theorem tendsto_const_mul_zpow_at_top_zero_iff {n : ℤ} {c d : α} (hc : c ≠ 0) :
-  tendsto (fun x : α => c*x ^ n) at_top (𝓝 d) ↔ n = 0 ∧ c = d ∨ n < 0 ∧ d = 0 :=
-  by 
-    refine' ⟨fun h => _, fun h => _⟩
-    ·
-      byCases' hn : 0 ≤ n
-      ·
-        lift n to ℕ using hn 
-        simp only [zpow_coe_nat] at h 
-        rw [tendsto_const_mul_pow_nhds_iff hc, ←Int.coe_nat_eq_zero] at h 
-        exact Or.inl h
-      ·
-        rw [not_leₓ] at hn 
-        refine' Or.inr ⟨hn, tendsto_nhds_unique h (tendsto_const_mul_zpow_at_top_zero hn)⟩
-    ·
-      cases h
-      ·
-        simp only [h.left, h.right, zpow_zero, mul_oneₓ]
-        exact tendsto_const_nhds
-      ·
-        exact h.2.symm ▸ tendsto_const_mul_zpow_at_top_zero h.1
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_const_mul_zpow_at_top_zero_iff
+{n : exprℤ()}
+{c d : α}
+(hc : «expr ≠ »(c, 0)) : «expr ↔ »(tendsto (λ
+  x : α, «expr * »(c, «expr ^ »(x, n))) at_top (expr𝓝() d), «expr ∨ »(«expr ∧ »(«expr = »(n, 0), «expr = »(c, d)), «expr ∧ »(«expr < »(n, 0), «expr = »(d, 0)))) :=
+begin
+  refine [expr ⟨λ h, _, λ h, _⟩],
+  { by_cases [expr hn, ":", expr «expr ≤ »(0, n)],
+    { lift [expr n] ["to", expr exprℕ()] ["using", expr hn] [],
+      simp [] [] ["only"] ["[", expr zpow_coe_nat, "]"] [] ["at", ident h],
+      rw ["[", expr tendsto_const_mul_pow_nhds_iff hc, ",", "<-", expr int.coe_nat_eq_zero, "]"] ["at", ident h],
+      exact [expr or.inl h] },
+    { rw [expr not_le] ["at", ident hn],
+      refine [expr or.inr ⟨hn, tendsto_nhds_unique h (tendsto_const_mul_zpow_at_top_zero hn)⟩] } },
+  { cases [expr h] [],
+    { simp [] [] ["only"] ["[", expr h.left, ",", expr h.right, ",", expr zpow_zero, ",", expr mul_one, "]"] [] [],
+      exact [expr tendsto_const_nhds] },
+    { exact [expr «expr ▸ »(h.2.symm, tendsto_const_mul_zpow_at_top_zero h.1)] } }
+end
 
 end LinearOrderedField
 
@@ -2273,22 +2312,30 @@ theorem exists_seq_tendsto_Inf {α : Type _} [ConditionallyCompleteLinearOrder �
   ∃ u : ℕ → α, Antitone u ∧ tendsto u at_top (𝓝 (Inf S)) ∧ ∀ n, u n ∈ S :=
   @exists_seq_tendsto_Sup (OrderDual α) _ _ _ _ S hS hS'
 
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A compact set is bounded below -/
-theorem IsCompact.bdd_below {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α] [Nonempty α]
-  {s : Set α} (hs : IsCompact s) : BddBelow s :=
-  by 
-    byContra H 
-    rcases hs.elim_finite_subcover_image (fun x _ : x ∈ s => @is_open_Ioi _ _ _ _ x) _ with ⟨t, st, ft, ht⟩
-    ·
-      refine' H (ft.bdd_below.imp$ fun C hC y hy => _)
-      rcases mem_bUnion_iff.1 (ht hy) with ⟨x, hx, xy⟩
-      exact le_transₓ (hC hx) (le_of_ltₓ xy)
-    ·
-      refine' fun x hx => mem_bUnion_iff.2 (not_imp_comm.1 _ H)
-      exact fun h => ⟨x, fun y hy => le_of_not_ltₓ (h.imp$ fun ys => ⟨_, hy, ys⟩)⟩
+theorem is_compact.bdd_below
+{α : Type u}
+[topological_space α]
+[linear_order α]
+[order_closed_topology α]
+[nonempty α]
+{s : set α}
+(hs : is_compact s) : bdd_below s :=
+begin
+  by_contra [ident H],
+  rcases [expr hs.elim_finite_subcover_image (λ
+    (x)
+    (_ : «expr ∈ »(x, s)), @is_open_Ioi _ _ _ _ x) _, "with", "⟨", ident t, ",", ident st, ",", ident ft, ",", ident ht, "⟩"],
+  { refine [expr H «expr $ »(ft.bdd_below.imp, λ C hC y hy, _)],
+    rcases [expr mem_bUnion_iff.1 (ht hy), "with", "⟨", ident x, ",", ident hx, ",", ident xy, "⟩"],
+    exact [expr le_trans (hC hx) (le_of_lt xy)] },
+  { refine [expr λ x hx, mem_bUnion_iff.2 (not_imp_comm.1 _ H)],
+    exact [expr λ h, ⟨x, λ y hy, le_of_not_lt «expr $ »(h.imp, λ ys, ⟨_, hy, ys⟩)⟩] }
+end
 
 /-- A compact set is bounded above -/
-theorem IsCompact.bdd_above {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α] :
+theorem IsCompact.bdd_above {α : Type u} [TopologicalSpace α] [LinearOrderₓ α] [OrderClosedTopology α] :
   ∀ [Nonempty α] {s : Set α}, IsCompact s → BddAbove s :=
   @IsCompact.bdd_below (OrderDual α) _ _ _
 
@@ -2512,7 +2559,7 @@ theorem comap_coe_nhds_within_Ioi_of_Ioo_subset (ha : s ⊆ Ioi a) (hs : s.nonem
       by 
         simpa only [OrderDual.exists, dual_Ioo] using hs h
 
-theorem map_coe_at_top_of_Ioo_subset (hb : s ⊆ Iio b) (hs : ∀ a' _ : a' < b, ∃ (a : _)(_ : a < b), Ioo a b ⊆ s) :
+theorem map_coe_at_top_of_Ioo_subset (hb : s ⊆ Iio b) (hs : ∀ a' (_ : a' < b), ∃ (a : _)(_ : a < b), Ioo a b ⊆ s) :
   map (coeₓ : s → α) at_top = 𝓝[Iio b] b :=
   by 
     rcases eq_empty_or_nonempty (Iio b) with (hb' | ⟨a, ha⟩)
@@ -2524,7 +2571,7 @@ theorem map_coe_at_top_of_Ioo_subset (hb : s ⊆ Iio b) (hs : ∀ a' _ : a' < b,
       rw [Subtype.range_coe]
       exact (mem_nhds_within_Iio_iff_exists_Ioo_subset' ha).2 (hs a ha)
 
-theorem map_coe_at_bot_of_Ioo_subset (ha : s ⊆ Ioi a) (hs : ∀ b' _ : b' > a, ∃ (b : _)(_ : b > a), Ioo a b ⊆ s) :
+theorem map_coe_at_bot_of_Ioo_subset (ha : s ⊆ Ioi a) (hs : ∀ b' (_ : b' > a), ∃ (b : _)(_ : b > a), Ioo a b ⊆ s) :
   map (coeₓ : s → α) at_bot = 𝓝[Ioi a] a :=
   by 
     refine' (map_coe_at_top_of_Ioo_subset (show of_dual ⁻¹' s ⊆ Iio (to_dual a) from ha) fun b' hb' => _ : _)
@@ -2564,27 +2611,29 @@ theorem map_coe_Iio_at_top (a : α) : map (coeₓ : Iio a → α) at_top = 𝓝[
 
 variable{l : Filter β}{f : α → β}
 
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem tendsto_comp_coe_Ioo_at_top (h : a < b) :
-  tendsto (fun x : Ioo a b => f x) at_top l ↔ tendsto f (𝓝[Iio b] b) l :=
-  by 
-    rw [←map_coe_Ioo_at_top h, tendsto_map'_iff]
+theorem tendsto_comp_coe_Ioo_at_top
+(h : «expr < »(a, b)) : «expr ↔ »(tendsto (λ x : Ioo a b, f x) at_top l, tendsto f «expr𝓝[ ] »(Iio b, b) l) :=
+by rw ["[", "<-", expr map_coe_Ioo_at_top h, ",", expr tendsto_map'_iff, "]"] []
 
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem tendsto_comp_coe_Ioo_at_bot (h : a < b) :
-  tendsto (fun x : Ioo a b => f x) at_bot l ↔ tendsto f (𝓝[Ioi a] a) l :=
-  by 
-    rw [←map_coe_Ioo_at_bot h, tendsto_map'_iff]
+theorem tendsto_comp_coe_Ioo_at_bot
+(h : «expr < »(a, b)) : «expr ↔ »(tendsto (λ x : Ioo a b, f x) at_bot l, tendsto f «expr𝓝[ ] »(Ioi a, a) l) :=
+by rw ["[", "<-", expr map_coe_Ioo_at_bot h, ",", expr tendsto_map'_iff, "]"] []
 
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem tendsto_comp_coe_Ioi_at_bot : tendsto (fun x : Ioi a => f x) at_bot l ↔ tendsto f (𝓝[Ioi a] a) l :=
-  by 
-    rw [←map_coe_Ioi_at_bot, tendsto_map'_iff]
+theorem tendsto_comp_coe_Ioi_at_bot : «expr ↔ »(tendsto (λ
+  x : Ioi a, f x) at_bot l, tendsto f «expr𝓝[ ] »(Ioi a, a) l) :=
+by rw ["[", "<-", expr map_coe_Ioi_at_bot, ",", expr tendsto_map'_iff, "]"] []
 
+-- error in Topology.Algebra.Ordered.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem tendsto_comp_coe_Iio_at_top : tendsto (fun x : Iio a => f x) at_top l ↔ tendsto f (𝓝[Iio a] a) l :=
-  by 
-    rw [←map_coe_Iio_at_top, tendsto_map'_iff]
+theorem tendsto_comp_coe_Iio_at_top : «expr ↔ »(tendsto (λ
+  x : Iio a, f x) at_top l, tendsto f «expr𝓝[ ] »(Iio a, a) l) :=
+by rw ["[", "<-", expr map_coe_Iio_at_top, ",", expr tendsto_map'_iff, "]"] []
 
 @[simp]
 theorem tendsto_Ioo_at_top {f : β → Ioo a b} : tendsto f l at_top ↔ tendsto (fun x => (f x : α)) l (𝓝[Iio b] b) :=

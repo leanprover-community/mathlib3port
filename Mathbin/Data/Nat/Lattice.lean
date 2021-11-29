@@ -22,12 +22,13 @@ noncomputable instance  : HasInfₓ ℕ :=
   ⟨fun s => if h : ∃ n, n ∈ s then @Nat.findₓ (fun n => n ∈ s) _ h else 0⟩
 
 noncomputable instance  : HasSupₓ ℕ :=
-  ⟨fun s => if h : ∃ n, ∀ a _ : a ∈ s, a ≤ n then @Nat.findₓ (fun n => ∀ a _ : a ∈ s, a ≤ n) _ h else 0⟩
+  ⟨fun s => if h : ∃ n, ∀ a (_ : a ∈ s), a ≤ n then @Nat.findₓ (fun n => ∀ a (_ : a ∈ s), a ≤ n) _ h else 0⟩
 
 theorem Inf_def {s : Set ℕ} (h : s.nonempty) : Inf s = @Nat.findₓ (fun n => n ∈ s) _ h :=
   dif_pos _
 
-theorem Sup_def {s : Set ℕ} (h : ∃ n, ∀ a _ : a ∈ s, a ≤ n) : Sup s = @Nat.findₓ (fun n => ∀ a _ : a ∈ s, a ≤ n) _ h :=
+theorem Sup_def {s : Set ℕ} (h : ∃ n, ∀ a (_ : a ∈ s), a ≤ n) :
+  Sup s = @Nat.findₓ (fun n => ∀ a (_ : a ∈ s), a ≤ n) _ h :=
   dif_pos _
 
 -- error in Data.Nat.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -86,10 +87,10 @@ theorem nonempty_of_Inf_eq_succ {s : Set ℕ} {k : ℕ} (h : Inf s = k+1) : s.no
   nonempty_of_pos_Inf (h.symm ▸ succ_pos k : Inf s > 0)
 
 theorem eq_Ici_of_nonempty_of_upward_closed {s : Set ℕ} (hs : s.nonempty)
-  (hs' : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) : s = Ici (Inf s) :=
+  (hs' : ∀ (k₁ k₂ : ℕ), k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) : s = Ici (Inf s) :=
   ext fun n => ⟨fun H => Nat.Inf_le H, fun H => hs' (Inf s) n H (Inf_mem hs)⟩
 
-theorem Inf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) (k : ℕ) :
+theorem Inf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ (k₁ k₂ : ℕ), k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s) (k : ℕ) :
   (Inf s = k+1) ↔ (k+1) ∈ s ∧ k ∉ s :=
   by 
     split 

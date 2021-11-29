@@ -17,37 +17,57 @@ section LinearOrderedField
 
 variable{𝕜 : Type _}[LinearOrderedField 𝕜]
 
-theorem pow_div_pow_eventually_eq_at_top {p q : ℕ} :
-  (fun x : 𝕜 => x ^ p / x ^ q) =ᶠ[at_top] fun x => x ^ ((p : ℤ) - q) :=
-  by 
-    apply (eventually_gt_at_top (0 : 𝕜)).mono fun x hx => _ 
-    simp [zpow_sub₀ hx.ne']
+-- error in Analysis.Asymptotics.SpecificAsymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pow_div_pow_eventually_eq_at_top
+{p
+ q : exprℕ()} : «expr =ᶠ[ ] »(λ
+ x : 𝕜, «expr / »(«expr ^ »(x, p), «expr ^ »(x, q)), at_top, λ x, «expr ^ »(x, «expr - »((p : exprℤ()), q))) :=
+begin
+  apply [expr (eventually_gt_at_top (0 : 𝕜)).mono (λ x hx, _)],
+  simp [] [] [] ["[", expr zpow_sub₀ hx.ne', "]"] [] []
+end
 
-theorem pow_div_pow_eventually_eq_at_bot {p q : ℕ} :
-  (fun x : 𝕜 => x ^ p / x ^ q) =ᶠ[at_bot] fun x => x ^ ((p : ℤ) - q) :=
-  by 
-    apply (eventually_lt_at_bot (0 : 𝕜)).mono fun x hx => _ 
-    simp [zpow_sub₀ hx.ne'.symm]
+-- error in Analysis.Asymptotics.SpecificAsymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pow_div_pow_eventually_eq_at_bot
+{p
+ q : exprℕ()} : «expr =ᶠ[ ] »(λ
+ x : 𝕜, «expr / »(«expr ^ »(x, p), «expr ^ »(x, q)), at_bot, λ x, «expr ^ »(x, «expr - »((p : exprℤ()), q))) :=
+begin
+  apply [expr (eventually_lt_at_bot (0 : 𝕜)).mono (λ x hx, _)],
+  simp [] [] [] ["[", expr zpow_sub₀ hx.ne'.symm, "]"] [] []
+end
 
-theorem tendsto_zpow_at_top_at_top {n : ℤ} (hn : 0 < n) : tendsto (fun x : 𝕜 => x ^ n) at_top at_top :=
-  by 
-    lift n to ℕ using hn.le 
-    simp only [zpow_coe_nat]
-    exact tendsto_pow_at_top (nat.succ_le_iff.mpr$ int.coe_nat_pos.mp hn)
+-- error in Analysis.Asymptotics.SpecificAsymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_zpow_at_top_at_top
+{n : exprℤ()}
+(hn : «expr < »(0, n)) : tendsto (λ x : 𝕜, «expr ^ »(x, n)) at_top at_top :=
+begin
+  lift [expr n] ["to", expr exprℕ()] ["using", expr hn.le] [],
+  simp [] [] ["only"] ["[", expr zpow_coe_nat, "]"] [] [],
+  exact [expr tendsto_pow_at_top «expr $ »(nat.succ_le_iff.mpr, int.coe_nat_pos.mp hn)]
+end
 
-theorem tendsto_pow_div_pow_at_top_at_top {p q : ℕ} (hpq : q < p) :
-  tendsto (fun x : 𝕜 => x ^ p / x ^ q) at_top at_top :=
-  by 
-    rw [tendsto_congr' pow_div_pow_eventually_eq_at_top]
-    apply tendsto_zpow_at_top_at_top 
-    linarith
+-- error in Analysis.Asymptotics.SpecificAsymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_pow_div_pow_at_top_at_top
+{p q : exprℕ()}
+(hpq : «expr < »(q, p)) : tendsto (λ x : 𝕜, «expr / »(«expr ^ »(x, p), «expr ^ »(x, q))) at_top at_top :=
+begin
+  rw [expr tendsto_congr' pow_div_pow_eventually_eq_at_top] [],
+  apply [expr tendsto_zpow_at_top_at_top],
+  linarith [] [] []
+end
 
-theorem tendsto_pow_div_pow_at_top_zero [TopologicalSpace 𝕜] [OrderTopology 𝕜] {p q : ℕ} (hpq : p < q) :
-  tendsto (fun x : 𝕜 => x ^ p / x ^ q) at_top (𝓝 0) :=
-  by 
-    rw [tendsto_congr' pow_div_pow_eventually_eq_at_top]
-    apply tendsto_zpow_at_top_zero 
-    linarith
+-- error in Analysis.Asymptotics.SpecificAsymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_pow_div_pow_at_top_zero
+[topological_space 𝕜]
+[order_topology 𝕜]
+{p q : exprℕ()}
+(hpq : «expr < »(p, q)) : tendsto (λ x : 𝕜, «expr / »(«expr ^ »(x, p), «expr ^ »(x, q))) at_top (expr𝓝() 0) :=
+begin
+  rw [expr tendsto_congr' pow_div_pow_eventually_eq_at_top] [],
+  apply [expr tendsto_zpow_at_top_zero],
+  linarith [] [] []
+end
 
 end LinearOrderedField
 
@@ -55,11 +75,15 @@ section NormedLinearOrderedField
 
 variable{𝕜 : Type _}[NormedLinearOrderedField 𝕜]
 
-theorem Asymptotics.is_o_pow_pow_at_top_of_lt [OrderTopology 𝕜] {p q : ℕ} (hpq : p < q) :
-  is_o (fun x : 𝕜 => x ^ p) (fun x => x ^ q) at_top :=
-  by 
-    refine' (is_o_iff_tendsto' _).mpr (tendsto_pow_div_pow_at_top_zero hpq)
-    exact (eventually_gt_at_top 0).mono fun x hx hxq => (pow_ne_zero q hx.ne' hxq).elim
+-- error in Analysis.Asymptotics.SpecificAsymptotics: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem asymptotics.is_o_pow_pow_at_top_of_lt
+[order_topology 𝕜]
+{p q : exprℕ()}
+(hpq : «expr < »(p, q)) : is_o (λ x : 𝕜, «expr ^ »(x, p)) (λ x, «expr ^ »(x, q)) at_top :=
+begin
+  refine [expr (is_o_iff_tendsto' _).mpr (tendsto_pow_div_pow_at_top_zero hpq)],
+  exact [expr (eventually_gt_at_top 0).mono (λ x hx hxq, (pow_ne_zero q hx.ne' hxq).elim)]
+end
 
 theorem Asymptotics.IsO.trans_tendsto_norm_at_top {α : Type _} {u v : α → 𝕜} {l : Filter α} (huv : is_O u v l)
   (hu : tendsto (fun x => ∥u x∥) l at_top) : tendsto (fun x => ∥v x∥) l at_top :=

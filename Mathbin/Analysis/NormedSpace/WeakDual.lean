@@ -113,11 +113,13 @@ theorem _root_.weak_dual.to_normed_dual_eq_iff (x' y' : WeakDual 𝕜 E) :
   x'.to_normed_dual = y'.to_normed_dual ↔ x' = y' :=
   WeakDual.toNormedDual.Injective.eq_iff
 
-theorem to_weak_dual_continuous : Continuous fun x' : dual 𝕜 E => x'.to_weak_dual :=
-  by 
-    apply WeakDual.continuous_of_continuous_eval 
-    intro z 
-    exact (inclusion_in_double_dual 𝕜 E z).Continuous
+-- error in Analysis.NormedSpace.WeakDual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem to_weak_dual_continuous : continuous (λ x' : dual 𝕜 E, x'.to_weak_dual) :=
+begin
+  apply [expr weak_dual.continuous_of_continuous_eval],
+  intros [ident z],
+  exact [expr (inclusion_in_double_dual 𝕜 E z).continuous]
+end
 
 /-- For a normed space `E`, according to `to_weak_dual_continuous` the "identity mapping"
 `dual 𝕜 E → weak_dual 𝕜 E` is continuous. This definition implements it as a continuous linear

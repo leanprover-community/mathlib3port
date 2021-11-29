@@ -104,7 +104,7 @@ theorem mem_principal : x ∈ principal y ↔ x ≤ y :=
 
 /-- Two ideals are equal when their underlying sets are equal. -/
 @[ext]
-theorem ext : ∀ I J : ideal P, (I : Set P) = J → I = J
+theorem ext : ∀ (I J : ideal P), (I : Set P) = J → I = J
 | ⟨_, _, _, _⟩, ⟨_, _, _, _⟩, rfl => rfl
 
 @[simp, normCast]
@@ -127,9 +127,11 @@ instance  : PartialOrderₓ (ideal P) :=
 theorem mem_of_mem_of_le : x ∈ I → I ≤ J → x ∈ J :=
   @Set.mem_of_mem_of_subset P x I J
 
-@[simp]
-theorem principal_le_iff : principal x ≤ I ↔ x ∈ I :=
-  ⟨fun h : ∀ {y}, y ≤ x → y ∈ I => h (le_reflₓ x), fun h_mem y h_le : y ≤ x => I.mem_of_le h_le h_mem⟩
+-- error in Order.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem principal_le_iff : «expr ↔ »(«expr ≤ »(principal x, I), «expr ∈ »(x, I)) :=
+⟨λ
+ h : ∀
+ {y}, «expr ≤ »(y, x) → «expr ∈ »(y, I), h (le_refl x), λ (h_mem y) (h_le : «expr ≤ »(y, x)), I.mem_of_le h_le h_mem⟩
 
 theorem mem_compl_of_ge {x y : P} : x ≤ y → x ∈ «expr ᶜ» (I : Set P) → y ∈ «expr ᶜ» (I : Set P) :=
   fun h => mt (I.mem_of_le h)
@@ -162,7 +164,7 @@ variable(P)
     satisfies that its ideal poset is a lattice.
 -/
 class ideal_inter_nonempty : Prop where 
-  inter_nonempty : ∀ I J : ideal P, ((I : Set P) ∩ (J : Set P)).Nonempty
+  inter_nonempty : ∀ (I J : ideal P), ((I : Set P) ∩ (J : Set P)).Nonempty
 
 /-- A preorder `P` has the `ideal_Inter_nonempty` property if the
     intersection of all ideals is nonempty.
@@ -174,24 +176,24 @@ class ideal_Inter_nonempty : Prop where
 
 variable{P}
 
-theorem inter_nonempty [ideal_inter_nonempty P] : ∀ I J : ideal P, ((I : Set P) ∩ (J : Set P)).Nonempty :=
+theorem inter_nonempty [ideal_inter_nonempty P] : ∀ (I J : ideal P), ((I : Set P) ∩ (J : Set P)).Nonempty :=
   ideal_inter_nonempty.inter_nonempty
 
 theorem Inter_nonempty [ideal_Inter_nonempty P] : (⋂I : ideal P, (I : Set P)).Nonempty :=
   ideal_Inter_nonempty.Inter_nonempty
 
-theorem ideal_Inter_nonempty.exists_all_mem [ideal_Inter_nonempty P] : ∃ a : P, ∀ I : ideal P, a ∈ I :=
+theorem ideal_Inter_nonempty.exists_all_mem [ideal_Inter_nonempty P] : ∃ a : P, ∀ (I : ideal P), a ∈ I :=
   by 
-    change ∃ a : P, ∀ I : ideal P, a ∈ (I : Set P)
+    change ∃ a : P, ∀ (I : ideal P), a ∈ (I : Set P)
     rw [←Set.nonempty_Inter]
     exact Inter_nonempty
 
-theorem ideal_Inter_nonempty_of_exists_all_mem (h : ∃ a : P, ∀ I : ideal P, a ∈ I) : ideal_Inter_nonempty P :=
+theorem ideal_Inter_nonempty_of_exists_all_mem (h : ∃ a : P, ∀ (I : ideal P), a ∈ I) : ideal_Inter_nonempty P :=
   { Inter_nonempty :=
       by 
         rwa [Set.nonempty_Inter] }
 
-theorem ideal_Inter_nonempty_iff : ideal_Inter_nonempty P ↔ ∃ a : P, ∀ I : ideal P, a ∈ I :=
+theorem ideal_Inter_nonempty_iff : ideal_Inter_nonempty P ↔ ∃ a : P, ∀ (I : ideal P), a ∈ I :=
   ⟨fun _ =>
       by 
         exact ideal_Inter_nonempty.exists_all_mem,
@@ -342,20 +344,19 @@ theorem sup_le : I ≤ K → J ≤ K → sup I J ≤ K :=
   fun hIK hJK x ⟨i, hiI, j, hjJ, hxij⟩ =>
     K.mem_of_le hxij$ sup_mem i j (mem_of_mem_of_le hiI hIK) (mem_of_mem_of_le hjJ hJK)
 
-instance  : Lattice (ideal P) :=
-  { ideal.partial_order with sup := sup,
-    le_sup_left :=
-      fun I J i _ : i ∈ I =>
-        by 
-          cases Nonempty J 
-          exact ⟨i, ‹_›, w, ‹_›, le_sup_left⟩,
-    le_sup_right :=
-      fun I J j _ : j ∈ J =>
-        by 
-          cases Nonempty I 
-          exact ⟨w, ‹_›, j, ‹_›, le_sup_right⟩,
-    sup_le := @sup_le _ _ _, inf := inf, inf_le_left := fun I J => Set.inter_subset_left I J,
-    inf_le_right := fun I J => Set.inter_subset_right I J, le_inf := fun I J K => Set.subset_inter }
+-- error in Order.Ideal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : lattice (ideal P) :=
+{ sup := sup,
+  le_sup_left := λ (I J) (i «expr ∈ » I), by { cases [expr nonempty J] [],
+    exact [expr ⟨i, «expr‹ ›»(_), w, «expr‹ ›»(_), le_sup_left⟩] },
+  le_sup_right := λ (I J) (j «expr ∈ » J), by { cases [expr nonempty I] [],
+    exact [expr ⟨w, «expr‹ ›»(_), j, «expr‹ ›»(_), le_sup_right⟩] },
+  sup_le := @sup_le _ _ _,
+  inf := inf,
+  inf_le_left := λ I J, set.inter_subset_left I J,
+  inf_le_right := λ I J, set.inter_subset_right I J,
+  le_inf := λ I J K, set.subset_inter,
+  ..ideal.partial_order }
 
 @[simp]
 theorem mem_inf : x ∈ I⊓J ↔ x ∈ I ∧ x ∈ J :=
@@ -382,14 +383,14 @@ instance (priority := 100)ideal_Inter_nonempty.ideal_inter_nonempty : ideal_inte
   { inter_nonempty :=
       fun _ _ =>
         by 
-          obtain ⟨a, ha⟩ : ∃ a : P, ∀ I : ideal P, a ∈ I := ideal_Inter_nonempty.exists_all_mem 
+          obtain ⟨a, ha⟩ : ∃ a : P, ∀ (I : ideal P), a ∈ I := ideal_Inter_nonempty.exists_all_mem 
           exact ⟨a, ha _, ha _⟩ }
 
 variable{α β γ : Type _}{ι : Sort _}
 
 theorem ideal_Inter_nonempty.all_Inter_nonempty {f : ι → ideal P} : (⋂x, (f x : Set P)).Nonempty :=
   by 
-    obtain ⟨a, ha⟩ : ∃ a : P, ∀ I : ideal P, a ∈ I := ideal_Inter_nonempty.exists_all_mem 
+    obtain ⟨a, ha⟩ : ∃ a : P, ∀ (I : ideal P), a ∈ I := ideal_Inter_nonempty.exists_all_mem 
     exact
       ⟨a,
         by 
@@ -398,7 +399,7 @@ theorem ideal_Inter_nonempty.all_Inter_nonempty {f : ι → ideal P} : (⋂x, (f
 theorem ideal_Inter_nonempty.all_bInter_nonempty {f : α → ideal P} {s : Set α} :
   (⋂(x : _)(_ : x ∈ s), (f x : Set P)).Nonempty :=
   by 
-    obtain ⟨a, ha⟩ : ∃ a : P, ∀ I : ideal P, a ∈ I := ideal_Inter_nonempty.exists_all_mem 
+    obtain ⟨a, ha⟩ : ∃ a : P, ∀ (I : ideal P), a ∈ I := ideal_Inter_nonempty.exists_all_mem 
     exact
       ⟨a,
         by 
@@ -433,9 +434,9 @@ instance  : HasInfₓ (ideal P) :=
 variable{s : Set (ideal P)}
 
 @[simp]
-theorem mem_Inf : x ∈ Inf s ↔ ∀ I _ : I ∈ s, x ∈ I :=
+theorem mem_Inf : x ∈ Inf s ↔ ∀ I (_ : I ∈ s), x ∈ I :=
   by 
-    change (x ∈ ⋂(I : _)(_ : I ∈ s), (I : Set P)) ↔ ∀ I _ : I ∈ s, x ∈ I 
+    change (x ∈ ⋂(I : _)(_ : I ∈ s), (I : Set P)) ↔ ∀ I (_ : I ∈ s), x ∈ I 
     simp 
 
 @[simp]
@@ -449,7 +450,7 @@ theorem Inf_le (hI : I ∈ s) : Inf s ≤ I :=
         by 
           simp [hI]⟩
 
-theorem le_Inf (h : ∀ J _ : J ∈ s, I ≤ J) : I ≤ Inf s :=
+theorem le_Inf (h : ∀ J (_ : J ∈ s), I ≤ J) : I ≤ Inf s :=
   fun _ _ =>
     by 
       simp only [mem_coe, coe_Inf, Set.mem_Inter]
@@ -524,7 +525,7 @@ end Ideal
   the topology whose open sets are terminal segments. -/
 structure cofinal(P)[Preorderₓ P] where 
   Carrier : Set P 
-  mem_gt : ∀ x : P, ∃ (y : _)(_ : y ∈ carrier), x ≤ y
+  mem_gt : ∀ (x : P), ∃ (y : _)(_ : y ∈ carrier), x ≤ y
 
 namespace Cofinal
 

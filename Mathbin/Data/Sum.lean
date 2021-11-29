@@ -76,7 +76,7 @@ theorem map_inr (f : α → α') (g : β → β') (x : β) : (inr x).map f g = i
 
 @[simp]
 theorem map_map {α'' β''} (f' : α' → α'') (g' : β' → β'') (f : α → α') (g : β → β') :
-  ∀ x : Sum α β, (x.map f g).map f' g' = x.map (f' ∘ f) (g' ∘ g)
+  ∀ (x : Sum α β), (x.map f g).map f' g' = x.map (f' ∘ f) (g' ∘ g)
 | inl a => rfl
 | inr b => rfl
 

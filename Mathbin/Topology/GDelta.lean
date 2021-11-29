@@ -42,7 +42,7 @@ variable[TopologicalSpace α]
 
 /-- A Gδ set is a countable intersection of open sets. -/
 def IsGδ (s : Set α) : Prop :=
-  ∃ T : Set (Set α), (∀ t _ : t ∈ T, IsOpen t) ∧ countable T ∧ s = ⋂₀T
+  ∃ T : Set (Set α), (∀ t (_ : t ∈ T), IsOpen t) ∧ countable T ∧ s = ⋂₀T
 
 /-- An open set is a Gδ set. -/
 theorem IsOpen.is_Gδ {s : Set α} (h : IsOpen s) : IsGδ s :=
@@ -59,7 +59,7 @@ theorem is_Gδ_empty : IsGδ (∅ : Set α) :=
 theorem is_Gδ_univ : IsGδ (univ : Set α) :=
   is_open_univ.IsGδ
 
-theorem is_Gδ_bInter_of_open {I : Set ι} (hI : countable I) {f : ι → Set α} (hf : ∀ i _ : i ∈ I, IsOpen (f i)) :
+theorem is_Gδ_bInter_of_open {I : Set ι} (hI : countable I) {f : ι → Set α} (hf : ∀ i (_ : i ∈ I), IsOpen (f i)) :
   IsGδ (⋂(i : _)(_ : i ∈ I), f i) :=
   ⟨f '' I,
     by 
@@ -97,7 +97,7 @@ begin
 end
 
 /-- A countable intersection of Gδ sets is a Gδ set. -/
-theorem is_Gδ_sInter {S : Set (Set α)} (h : ∀ s _ : s ∈ S, IsGδ s) (hS : countable S) : IsGδ (⋂₀S) :=
+theorem is_Gδ_sInter {S : Set (Set α)} (h : ∀ s (_ : s ∈ S), IsGδ s) (hS : countable S) : IsGδ (⋂₀S) :=
   by 
     simpa only [sInter_eq_bInter] using is_Gδ_bInter hS h
 
@@ -117,7 +117,7 @@ theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ 
     exact (Sopen a ha).union (Topen b hb)
 
 /-- The union of finitely many Gδ sets is a Gδ set. -/
-theorem is_Gδ_bUnion {s : Set ι} (hs : s.finite) {f : ι → Set α} (h : ∀ i _ : i ∈ s, IsGδ (f i)) :
+theorem is_Gδ_bUnion {s : Set ι} (hs : s.finite) {f : ι → Set α} (h : ∀ i (_ : i ∈ s), IsGδ (f i)) :
   IsGδ (⋃(i : _)(_ : i ∈ s), f i) :=
   by 
     refine'

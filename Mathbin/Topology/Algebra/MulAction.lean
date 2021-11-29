@@ -33,19 +33,27 @@ open_locale TopologicalSpace Pointwise
 
 open Filter
 
+-- error in Topology.Algebra.MulAction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Class `has_continuous_smul M α` says that the scalar multiplication `(•) : M → α → α`
 is continuous in both arguments. We use the same class for all kinds of multiplicative actions,
 including (semi)modules and algebras. -/
-class HasContinuousSmul(M α : Type _)[HasScalar M α][TopologicalSpace M][TopologicalSpace α] : Prop where 
-  continuous_smul : Continuous fun p : M × α => p.1 • p.2
+class has_continuous_smul
+(M α : Type*)
+[has_scalar M α]
+[topological_space M]
+[topological_space α] : exprProp() := (continuous_smul : continuous (λ p : «expr × »(M, α), «expr • »(p.1, p.2)))
 
 export HasContinuousSmul(continuous_smul)
 
+-- error in Topology.Algebra.MulAction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Class `has_continuous_vadd M α` says that the additive action `(+ᵥ) : M → α → α`
 is continuous in both arguments. We use the same class for all kinds of additive actions,
 including (semi)modules and algebras. -/
-class HasContinuousVadd(M α : Type _)[HasVadd M α][TopologicalSpace M][TopologicalSpace α] : Prop where 
-  continuous_vadd : Continuous fun p : M × α => p.1 +ᵥ p.2
+class has_continuous_vadd
+(M α : Type*)
+[has_vadd M α]
+[topological_space M]
+[topological_space α] : exprProp() := (continuous_vadd : continuous (λ p : «expr × »(M, α), «expr +ᵥ »(p.1, p.2)))
 
 export HasContinuousVadd(continuous_vadd)
 
@@ -114,10 +122,11 @@ section Monoidₓ
 
 variable[Monoidₓ M][MulAction M α][HasContinuousSmul M α]
 
-instance Units.has_continuous_smul : HasContinuousSmul (Units M) α :=
-  { continuous_smul :=
-      show Continuous ((fun p : M × α => p.fst • p.snd) ∘ fun p : Units M × α => (p.1, p.2)) from
-        continuous_smul.comp ((Units.continuous_coe.comp continuous_fst).prod_mk continuous_snd) }
+-- error in Topology.Algebra.MulAction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance units.has_continuous_smul : has_continuous_smul (units M) α :=
+{ continuous_smul := show continuous «expr ∘ »(λ
+   p : «expr × »(M, α), «expr • »(p.fst, p.snd), λ
+   p : «expr × »(units M, α), (p.1, p.2)), from continuous_smul.comp ((units.continuous_coe.comp continuous_fst).prod_mk continuous_snd) }
 
 @[toAdditive]
 theorem smul_closure_subset (c : M) (s : Set α) : c • Closure s ⊆ Closure (c • s) :=
@@ -176,17 +185,17 @@ protected def Homeomorph.vadd {G : Type _} [TopologicalSpace G] [AddGroupₓ G] 
 
 attribute [toAdditive] Homeomorph.smul
 
-@[toAdditive]
-theorem is_open_map_smul (c : G) : IsOpenMap fun x : α => c • x :=
-  (Homeomorph.smul c).IsOpenMap
+-- error in Topology.Algebra.MulAction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem is_open_map_smul (c : G) : is_open_map (λ x : α, «expr • »(c, x)) :=
+(homeomorph.smul c).is_open_map
 
 @[toAdditive]
 theorem IsOpen.smul {s : Set α} (hs : IsOpen s) (c : G) : IsOpen (c • s) :=
   is_open_map_smul c s hs
 
-@[toAdditive]
-theorem is_closed_map_smul (c : G) : IsClosedMap fun x : α => c • x :=
-  (Homeomorph.smul c).IsClosedMap
+-- error in Topology.Algebra.MulAction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem is_closed_map_smul (c : G) : is_closed_map (λ x : α, «expr • »(c, x)) :=
+(homeomorph.smul c).is_closed_map
 
 @[toAdditive]
 theorem IsClosed.smul {s : Set α} (hs : IsClosed s) (c : G) : IsClosed (c • s) :=
@@ -222,29 +231,39 @@ homeomorphism from `α` onto itself. -/
 protected def Homeomorph.smulOfNeZero (c : G₀) (hc : c ≠ 0) : α ≃ₜ α :=
   Homeomorph.smul (Units.mk0 c hc)
 
-theorem is_open_map_smul₀ {c : G₀} (hc : c ≠ 0) : IsOpenMap fun x : α => c • x :=
-  (Homeomorph.smulOfNeZero c hc).IsOpenMap
+-- error in Topology.Algebra.MulAction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_open_map_smul₀ {c : G₀} (hc : «expr ≠ »(c, 0)) : is_open_map (λ x : α, «expr • »(c, x)) :=
+(homeomorph.smul_of_ne_zero c hc).is_open_map
 
+-- error in Topology.Algebra.MulAction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `smul` is a closed map in the second argument.
 
 The lemma that `smul` is a closed map in the first argument (for a normed space over a complete
 normed field) is `is_closed_map_smul_left` in `analysis.normed_space.finite_dimension`. -/
-theorem is_closed_map_smul_of_ne_zero {c : G₀} (hc : c ≠ 0) : IsClosedMap fun x : α => c • x :=
-  (Homeomorph.smulOfNeZero c hc).IsClosedMap
+theorem is_closed_map_smul_of_ne_zero {c : G₀} (hc : «expr ≠ »(c, 0)) : is_closed_map (λ x : α, «expr • »(c, x)) :=
+(homeomorph.smul_of_ne_zero c hc).is_closed_map
 
+-- error in Topology.Algebra.MulAction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `smul` is a closed map in the second argument.
 
 The lemma that `smul` is a closed map in the first argument (for a normed space over a complete
 normed field) is `is_closed_map_smul_left` in `analysis.normed_space.finite_dimension`. -/
-theorem is_closed_map_smul₀ {𝕜 M : Type _} [DivisionRing 𝕜] [AddCommMonoidₓ M] [TopologicalSpace M] [T1Space M]
-  [Module 𝕜 M] [TopologicalSpace 𝕜] [HasContinuousSmul 𝕜 M] (c : 𝕜) : IsClosedMap fun x : M => c • x :=
-  by 
-    rcases eq_or_ne c 0 with (rfl | hne)
-    ·
-      simp only [zero_smul]
-      exact is_closed_map_const
-    ·
-      exact (Homeomorph.smulOfNeZero c hne).IsClosedMap
+theorem is_closed_map_smul₀
+{𝕜 M : Type*}
+[division_ring 𝕜]
+[add_comm_monoid M]
+[topological_space M]
+[t1_space M]
+[module 𝕜 M]
+[topological_space 𝕜]
+[has_continuous_smul 𝕜 M]
+(c : 𝕜) : is_closed_map (λ x : M, «expr • »(c, x)) :=
+begin
+  rcases [expr eq_or_ne c 0, "with", "(", ident rfl, "|", ident hne, ")"],
+  { simp [] [] ["only"] ["[", expr zero_smul, "]"] [] [],
+    exact [expr is_closed_map_const] },
+  { exact [expr (homeomorph.smul_of_ne_zero c hne).is_closed_map] }
+end
 
 end GroupWithZeroₓ
 
@@ -276,13 +295,15 @@ theorem continuous_const_smul_iff (hc : IsUnit c) : (Continuous fun x => c • f
   let ⟨u, hu⟩ := hc 
   hu ▸ continuous_const_smul_iff u
 
-theorem is_open_map_smul (hc : IsUnit c) : IsOpenMap fun x : α => c • x :=
-  let ⟨u, hu⟩ := hc 
-  hu ▸ is_open_map_smul u
+-- error in Topology.Algebra.MulAction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_open_map_smul (hc : is_unit c) : is_open_map (λ x : α, «expr • »(c, x)) :=
+let ⟨u, hu⟩ := hc in
+«expr ▸ »(hu, is_open_map_smul u)
 
-theorem is_closed_map_smul (hc : IsUnit c) : IsClosedMap fun x : α => c • x :=
-  let ⟨u, hu⟩ := hc 
-  hu ▸ is_closed_map_smul u
+-- error in Topology.Algebra.MulAction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_closed_map_smul (hc : is_unit c) : is_closed_map (λ x : α, «expr • »(c, x)) :=
+let ⟨u, hu⟩ := hc in
+«expr ▸ »(hu, is_closed_map_smul u)
 
 end IsUnit
 

@@ -29,7 +29,7 @@ universe u v w w₁ w₂
 
 /-- A Lie (ring) module is trivial iff all brackets vanish. -/
 class LieModule.IsTrivial(L : Type v)(M : Type w)[HasBracket L M][HasZero M] : Prop where 
-  trivial : ∀ x : L m : M, ⁅x,m⁆ = 0
+  trivial : ∀ (x : L) (m : M), ⁅x,m⁆ = 0
 
 @[simp]
 theorem trivial_lie_zero (L : Type v) (M : Type w) [HasBracket L M] [HasZero M] [LieModule.IsTrivial L M] (x : L)
@@ -73,8 +73,8 @@ theorem lie_abelian_iff_equiv_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : T
   ⟨e.symm.injective.is_lie_abelian, e.injective.is_lie_abelian⟩
 
 theorem commutative_ring_iff_abelian_lie_ring {A : Type v} [Ringₓ A] : IsCommutative A (·*·) ↔ IsLieAbelian A :=
-  have h₁ : IsCommutative A (·*·) ↔ ∀ a b : A, (a*b) = b*a := ⟨fun h => h.1, fun h => ⟨h⟩⟩
-  have h₂ : IsLieAbelian A ↔ ∀ a b : A, ⁅a,b⁆ = 0 := ⟨fun h => h.1, fun h => ⟨h⟩⟩
+  have h₁ : IsCommutative A (·*·) ↔ ∀ (a b : A), (a*b) = b*a := ⟨fun h => h.1, fun h => ⟨h⟩⟩
+  have h₂ : IsLieAbelian A ↔ ∀ (a b : A), ⁅a,b⁆ = 0 := ⟨fun h => h.1, fun h => ⟨h⟩⟩
   by 
     simp only [h₁, h₂, LieRing.of_associative_ring_bracket, sub_eq_zero]
 
@@ -101,13 +101,13 @@ protected def ker : LieIdeal R L :=
   (to_endomorphism R L M).ker
 
 @[simp]
-protected theorem mem_ker (x : L) : x ∈ LieModule.ker R L M ↔ ∀ m : M, ⁅x,m⁆ = 0 :=
+protected theorem mem_ker (x : L) : x ∈ LieModule.ker R L M ↔ ∀ (m : M), ⁅x,m⁆ = 0 :=
   by 
     simp only [LieModule.ker, LieHom.mem_ker, LinearMap.ext_iff, LinearMap.zero_apply, to_endomorphism_apply_apply]
 
 /-- The largest submodule of a Lie module `M` on which the Lie algebra `L` acts trivially. -/
 def max_triv_submodule : LieSubmodule R L M :=
-  { Carrier := { m | ∀ x : L, ⁅x,m⁆ = 0 }, zero_mem' := fun x => lie_zero x,
+  { Carrier := { m | ∀ (x : L), ⁅x,m⁆ = 0 }, zero_mem' := fun x => lie_zero x,
     add_mem' :=
       fun x y hx hy z =>
         by 
@@ -122,7 +122,7 @@ def max_triv_submodule : LieSubmodule R L M :=
           rw [hm, lie_zero] }
 
 @[simp]
-theorem mem_max_triv_submodule (m : M) : m ∈ max_triv_submodule R L M ↔ ∀ x : L, ⁅x,m⁆ = 0 :=
+theorem mem_max_triv_submodule (m : M) : m ∈ max_triv_submodule R L M ↔ ∀ (x : L), ⁅x,m⁆ = 0 :=
   Iff.rfl
 
 instance  : is_trivial L (max_triv_submodule R L M) :=

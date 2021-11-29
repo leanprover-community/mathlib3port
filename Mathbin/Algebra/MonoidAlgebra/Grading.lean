@@ -46,31 +46,35 @@ instance grade.graded_monoid [AddMonoidₓ ι] [CommSemiringₓ R] :
 
 variable{R}[DecidableEq ι][AddMonoidₓ ι][CommSemiringₓ R]
 
+-- error in Algebra.MonoidAlgebra.Grading: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The canonical grade decomposition. -/
-def to_grades : AddMonoidAlgebra R ι →ₐ[R] ⨁i : ι, grade R i :=
-  AddMonoidAlgebra.lift _ _ _
-    { toFun := fun i => DirectSum.of (fun i : ι => grade R i) i.to_add ⟨_, 1, rfl⟩, map_one' := rfl,
-      map_mul' :=
-        fun i j =>
-          by 
-            rw [DirectSum.of_mul_of, to_add_mul]
-            congr 
-            refine' Eq.trans _ single_mul_single.symm 
-            rw [one_mulₓ]
-            rfl }
+def to_grades : «expr →ₐ[ ] »(add_monoid_algebra R ι, R, «expr⨁ , »((i : ι), grade R i)) :=
+add_monoid_algebra.lift _ _ _ { to_fun := λ i, direct_sum.of (λ i : ι, grade R i) i.to_add ⟨_, 1, rfl⟩,
+  map_one' := rfl,
+  map_mul' := λ i j, begin
+    rw ["[", expr direct_sum.of_mul_of, ",", expr to_add_mul, "]"] [],
+    congr,
+    refine [expr eq.trans _ single_mul_single.symm],
+    rw [expr one_mul] [],
+    refl
+  end }
 
+-- error in Algebra.MonoidAlgebra.Grading: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem to_grades_single (i : ι) (r : R) :
-  to_grades (Finsupp.single i r) = DirectSum.of (fun i : ι => grade R i) i ⟨Finsupp.single _ _, r, rfl⟩ :=
-  by 
-    refine' (AddMonoidAlgebra.lift_single _ _ _).trans _ 
-    refine' (DirectSum.of_smul _ _ _ _).symm.trans _ 
-    dsimp 
-    congr 1 
-    ext : 1
-    refine' (Finsupp.smul_single _ _ _).trans _ 
-    rw [smul_eq_mul, mul_oneₓ]
-    rfl
+theorem to_grades_single
+(i : ι)
+(r : R) : «expr = »(to_grades (finsupp.single i r), direct_sum.of (λ
+  i : ι, grade R i) i ⟨finsupp.single _ _, r, rfl⟩) :=
+begin
+  refine [expr (add_monoid_algebra.lift_single _ _ _).trans _],
+  refine [expr (direct_sum.of_smul _ _ _ _).symm.trans _],
+  dsimp [] [] [] [],
+  congr' [1] [],
+  ext [] [] [":", 1],
+  refine [expr (finsupp.smul_single _ _ _).trans _],
+  rw ["[", expr smul_eq_mul, ",", expr mul_one, "]"] [],
+  refl
+end
 
 @[simp]
 theorem to_grades_coe {i : ι} (x : grade R i) : to_grades («expr↑ » x) = DirectSum.of (fun i => grade R i) i x :=

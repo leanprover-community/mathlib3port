@@ -90,23 +90,21 @@ unsafe def hint : tactic (List (Stringₓ × ℕ)) :=
 
 namespace Interactive
 
+-- error in Tactic.Hint: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Report a list of tactics that can make progress against the current goal.
--/
-unsafe def hint : tactic Unit :=
-  do 
-    let hints ← tactic.hint 
-    if hints.length = 0 then fail "no hints available" else
-        do 
-          let t ← hints.nth 0
-          if t.2 = 0 then
-              do 
-                trace "the following tactics solve the goal:\n----"
-                (hints.filter fun p : Stringₓ × ℕ => p.2 = 0).mmap' fun p => tactic.trace f! "Try this: {p.1}"
-            else
-              do 
-                trace "the following tactics make progress:\n----"
-                hints.mmap' fun p => tactic.trace f! "Try this: {p.1}"
+-/ meta def hint : tactic unit :=
+do {
+hints ← tactic.hint,
+  if «expr = »(hints.length, 0) then fail "no hints available" else do {
+  t ← hints.nth 0,
+    if «expr = »(t.2, 0) then do {
+    trace "the following tactics solve the goal:\n----",
+      (hints.filter (λ
+        p : «expr × »(string, exprℕ()), «expr = »(p.2, 0))).mmap' (λ
+       p, tactic.trace «exprformat! »(format_macro "Try this: {p.1}" [[expr p.1]])) } else do {
+    trace "the following tactics make progress:\n----",
+      hints.mmap' (λ p, tactic.trace «exprformat! »(format_macro "Try this: {p.1}" [[expr p.1]])) } } }
 
 /--
 `hint` lists possible tactics which will make progress (that is, not fail) against the current goal.

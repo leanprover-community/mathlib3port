@@ -176,7 +176,7 @@ variable{M}
 theorem mem_supported {s : Set α} (p : α →₀ M) : p ∈ supported M R s ↔ «expr↑ » p.support ⊆ s :=
   Iff.rfl
 
--- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem mem_supported'
 {s : set α}
 (p : «expr →₀ »(α, M)) : «expr ↔ »(«expr ∈ »(p, supported M R s), ∀ x «expr ∉ » s, «expr = »(p x, 0)) :=
@@ -406,12 +406,16 @@ theorem lmap_domain_comp (f : α → α') (g : α' → α'') :
   lmap_domain M R (g ∘ f) = (lmap_domain M R g).comp (lmap_domain M R f) :=
   LinearMap.ext$ fun l => map_domain_comp
 
-theorem supported_comap_lmap_domain (f : α → α') (s : Set α') :
-  supported M R (f ⁻¹' s) ≤ (supported M R s).comap (lmap_domain M R f) :=
-  fun l hl : «expr↑ » l.support ⊆ f ⁻¹' s =>
-    show «expr↑ » (map_domain f l).Support ⊆ s by 
-      rw [←Set.image_subset_iff, ←Finset.coe_image] at hl 
-      exact Set.Subset.trans map_domain_support hl
+-- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem supported_comap_lmap_domain
+(f : α → α')
+(s : set α') : «expr ≤ »(supported M R «expr ⁻¹' »(f, s), (supported M R s).comap (lmap_domain M R f)) :=
+λ
+(l)
+(hl : «expr ⊆ »(«expr↑ »(l.support), «expr ⁻¹' »(f, s))), show «expr ⊆ »(«expr↑ »((map_domain f l).support), s), begin
+  rw ["[", "<-", expr set.image_subset_iff, ",", "<-", expr finset.coe_image, "]"] ["at", ident hl],
+  exact [expr set.subset.trans map_domain_support hl]
+end
 
 theorem lmap_domain_supported [Nonempty α] (f : α → α') (s : Set α) :
   (supported M R s).map (lmap_domain M R f) = supported M R (f '' s) :=
@@ -658,14 +662,21 @@ theorem total_comap_domain (f : α → α') (l : α' →₀ R) (hf : Set.InjOn f
   by 
     rw [Finsupp.total_apply] <;> rfl
 
-theorem total_on_finset {s : Finset α} {f : α → R} (g : α → M) (hf : ∀ a, f a ≠ 0 → a ∈ s) :
-  Finsupp.total α M R g (Finsupp.onFinset s f hf) = Finset.sum s fun x : α => f x • g x :=
-  by 
-    simp only [Finsupp.total_apply, Finsupp.sum, Finsupp.on_finset_apply, Finsupp.support_on_finset]
-    rw [Finset.sum_filter_of_ne]
-    intro x hx h 
-    contrapose! h 
-    simp [h]
+-- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem total_on_finset
+{s : finset α}
+{f : α → R}
+(g : α → M)
+(hf : ∀
+ a, «expr ≠ »(f a, 0) → «expr ∈ »(a, s)) : «expr = »(finsupp.total α M R g (finsupp.on_finset s f hf), finset.sum s (λ
+  x : α, «expr • »(f x, g x))) :=
+begin
+  simp [] [] ["only"] ["[", expr finsupp.total_apply, ",", expr finsupp.sum, ",", expr finsupp.on_finset_apply, ",", expr finsupp.support_on_finset, "]"] [] [],
+  rw [expr finset.sum_filter_of_ne] [],
+  intros [ident x, ident hx, ident h],
+  contrapose ["!"] [ident h],
+  simp [] [] [] ["[", expr h, "]"] [] []
+end
 
 end Total
 
@@ -1018,9 +1029,12 @@ variable{R M}{α : Type _}
 
 open Finsupp Function
 
+-- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A surjective linear map to finitely supported functions has a splitting. -/
-def splitting_of_finsupp_surjective (f : M →ₗ[R] α →₀ R) (s : surjective f) : (α →₀ R) →ₗ[R] M :=
-  Finsupp.lift _ _ _ fun x : α => (s (Finsupp.single x 1)).some
+def splitting_of_finsupp_surjective
+(f : «expr →ₗ[ ] »(M, R, «expr →₀ »(α, R)))
+(s : surjective f) : «expr →ₗ[ ] »(«expr →₀ »(α, R), R, M) :=
+finsupp.lift _ _ _ (λ x : α, (s (finsupp.single x 1)).some)
 
 theorem splitting_of_finsupp_surjective_splits (f : M →ₗ[R] α →₀ R) (s : surjective f) :
   f.comp (splitting_of_finsupp_surjective f s) = LinearMap.id :=
@@ -1042,10 +1056,14 @@ theorem splitting_of_finsupp_surjective_injective (f : M →ₗ[R] α →₀ R) 
   injective (splitting_of_finsupp_surjective f s) :=
   (left_inverse_splitting_of_finsupp_surjective f s).Injective
 
+-- error in LinearAlgebra.Finsupp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A surjective linear map to functions on a finite type has a splitting. -/
-def splitting_of_fun_on_fintype_surjective [Fintype α] (f : M →ₗ[R] α → R) (s : surjective f) : (α → R) →ₗ[R] M :=
-  (Finsupp.lift _ _ _ fun x : α => (s (Finsupp.single x 1)).some).comp
-    (linear_equiv_fun_on_fintype R R α).symm.toLinearMap
+def splitting_of_fun_on_fintype_surjective
+[fintype α]
+(f : «expr →ₗ[ ] »(M, R, α → R))
+(s : surjective f) : «expr →ₗ[ ] »(α → R, R, M) :=
+(finsupp.lift _ _ _ (λ
+  x : α, (s (finsupp.single x 1)).some)).comp (linear_equiv_fun_on_fintype R R α).symm.to_linear_map
 
 theorem splitting_of_fun_on_fintype_surjective_splits [Fintype α] (f : M →ₗ[R] α → R) (s : surjective f) :
   f.comp (splitting_of_fun_on_fintype_surjective f s) = LinearMap.id :=

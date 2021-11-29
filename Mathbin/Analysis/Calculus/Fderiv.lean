@@ -145,12 +145,15 @@ def HasFderivWithinAt (f : E → F) (f' : E →L[𝕜] F) (s : Set E) (x : E) :=
 def HasFderivAt (f : E → F) (f' : E →L[𝕜] F) (x : E) :=
   HasFderivAtFilter f f' x (𝓝 x)
 
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A function `f` has derivative `f'` at `a` in the sense of *strict differentiability*
 if `f x - f y - f' (x - y) = o(x - y)` as `x, y → a`. This form of differentiability is required,
 e.g., by the inverse function theorem. Any `C^1` function on a vector space over `ℝ` is strictly
 differentiable but this definition works, e.g., for vector spaces over `p`-adic numbers. -/
-def HasStrictFderivAt (f : E → F) (f' : E →L[𝕜] F) (x : E) :=
-  is_o (fun p : E × E => f p.1 - f p.2 - f' (p.1 - p.2)) (fun p : E × E => p.1 - p.2) (𝓝 (x, x))
+def has_strict_fderiv_at (f : E → F) (f' : «expr →L[ ] »(E, 𝕜, F)) (x : E) :=
+is_o (λ
+ p : «expr × »(E, E), «expr - »(«expr - »(f p.1, f p.2), f' «expr - »(p.1, p.2))) (λ
+ p : «expr × »(E, E), «expr - »(p.1, p.2)) (expr𝓝() (x, x))
 
 variable(𝕜)
 
@@ -176,7 +179,7 @@ def fderiv (f : E → F) (x : E) : E →L[𝕜] F :=
 
 /-- `differentiable_on 𝕜 f s` means that `f` is differentiable within `s` at any point of `s`. -/
 def DifferentiableOn (f : E → F) (s : Set E) :=
-  ∀ x _ : x ∈ s, DifferentiableWithinAt 𝕜 f s x
+  ∀ x (_ : x ∈ s), DifferentiableWithinAt 𝕜 f s x
 
 /-- `differentiable 𝕜 f` means that `f` is differentiable at any point. -/
 def Differentiable (f : E → F) :=
@@ -357,9 +360,11 @@ theorem has_fderiv_within_at_univ : HasFderivWithinAt f f' univ x ↔ HasFderivA
     simp only [HasFderivWithinAt, nhds_within_univ]
     rfl
 
-theorem HasStrictFderivAt.is_O_sub (hf : HasStrictFderivAt f f' x) :
-  is_O (fun p : E × E => f p.1 - f p.2) (fun p : E × E => p.1 - p.2) (𝓝 (x, x)) :=
-  hf.is_O.congr_of_sub.2 (f'.is_O_comp _ _)
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_strict_fderiv_at.is_O_sub
+(hf : has_strict_fderiv_at f f' x) : is_O (λ
+ p : «expr × »(E, E), «expr - »(f p.1, f p.2)) (λ p : «expr × »(E, E), «expr - »(p.1, p.2)) (expr𝓝() (x, x)) :=
+hf.is_O.congr_of_sub.2 (f'.is_O_comp _ _)
 
 theorem HasFderivAtFilter.is_O_sub (h : HasFderivAtFilter f f' x L) :
   is_O (fun x' => f x' - f x) (fun x' => x' - x) L :=
@@ -520,7 +525,7 @@ theorem Differentiable.differentiable_on (h : Differentiable 𝕜 f) : Different
   (differentiable_on_univ.2 h).mono (subset_univ _)
 
 theorem differentiable_on_of_locally_differentiable_on
-  (h : ∀ x _ : x ∈ s, ∃ u, IsOpen u ∧ x ∈ u ∧ DifferentiableOn 𝕜 f (s ∩ u)) : DifferentiableOn 𝕜 f s :=
+  (h : ∀ x (_ : x ∈ s), ∃ u, IsOpen u ∧ x ∈ u ∧ DifferentiableOn 𝕜 f (s ∩ u)) : DifferentiableOn 𝕜 f s :=
   by 
     intro x xs 
     rcases h x xs with ⟨t, t_open, xt, ht⟩
@@ -637,10 +642,13 @@ theorem Differentiable.continuous (h : Differentiable 𝕜 f) : Continuous f :=
 protected theorem HasStrictFderivAt.continuous_at (hf : HasStrictFderivAt f f' x) : ContinuousAt f x :=
   hf.has_fderiv_at.continuous_at
 
-theorem HasStrictFderivAt.is_O_sub_rev {f' : E ≃L[𝕜] F} (hf : HasStrictFderivAt f (f' : E →L[𝕜] F) x) :
-  is_O (fun p : E × E => p.1 - p.2) (fun p : E × E => f p.1 - f p.2) (𝓝 (x, x)) :=
-  ((f'.is_O_comp_rev _ _).trans (hf.trans_is_O (f'.is_O_comp_rev _ _)).right_is_O_add).congr (fun _ => rfl)
-    fun _ => sub_add_cancel _ _
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_strict_fderiv_at.is_O_sub_rev
+{f' : «expr ≃L[ ] »(E, 𝕜, F)}
+(hf : has_strict_fderiv_at f (f' : «expr →L[ ] »(E, 𝕜, F)) x) : is_O (λ
+ p : «expr × »(E, E), «expr - »(p.1, p.2)) (λ p : «expr × »(E, E), «expr - »(f p.1, f p.2)) (expr𝓝() (x, x)) :=
+((f'.is_O_comp_rev _ _).trans (hf.trans_is_O (f'.is_O_comp_rev _ _)).right_is_O_add).congr (λ
+ _, rfl) (λ _, sub_add_cancel _ _)
 
 theorem HasFderivAtFilter.is_O_sub_rev {f' : E ≃L[𝕜] F} (hf : HasFderivAtFilter f (f' : E →L[𝕜] F) x L) :
   is_O (fun x' => x' - x) (fun x' => f x' - f x) L :=
@@ -678,15 +686,15 @@ theorem HasFderivAtFilter.congr_of_eventually_eq (h : HasFderivAtFilter f f' x L
   HasFderivAtFilter f₁ f' x L :=
   (hL.has_fderiv_at_filter_iff hx$ fun _ => rfl).2 h
 
-theorem HasFderivWithinAt.congr_mono (h : HasFderivWithinAt f f' s x) (ht : ∀ x _ : x ∈ t, f₁ x = f x) (hx : f₁ x = f x)
-  (h₁ : t ⊆ s) : HasFderivWithinAt f₁ f' t x :=
+theorem HasFderivWithinAt.congr_mono (h : HasFderivWithinAt f f' s x) (ht : ∀ x (_ : x ∈ t), f₁ x = f x)
+  (hx : f₁ x = f x) (h₁ : t ⊆ s) : HasFderivWithinAt f₁ f' t x :=
   HasFderivAtFilter.congr_of_eventually_eq (h.mono h₁) (Filter.mem_inf_of_right ht) hx
 
-theorem HasFderivWithinAt.congr (h : HasFderivWithinAt f f' s x) (hs : ∀ x _ : x ∈ s, f₁ x = f x) (hx : f₁ x = f x) :
+theorem HasFderivWithinAt.congr (h : HasFderivWithinAt f f' s x) (hs : ∀ x (_ : x ∈ s), f₁ x = f x) (hx : f₁ x = f x) :
   HasFderivWithinAt f₁ f' s x :=
   h.congr_mono hs hx (subset.refl _)
 
-theorem HasFderivWithinAt.congr' (h : HasFderivWithinAt f f' s x) (hs : ∀ x _ : x ∈ s, f₁ x = f x) (hx : x ∈ s) :
+theorem HasFderivWithinAt.congr' (h : HasFderivWithinAt f f' s x) (hs : ∀ x (_ : x ∈ s), f₁ x = f x) (hx : x ∈ s) :
   HasFderivWithinAt f₁ f' s x :=
   h.congr hs (hs x hx)
 
@@ -697,11 +705,11 @@ theorem HasFderivWithinAt.congr_of_eventually_eq (h : HasFderivWithinAt f f' s x
 theorem HasFderivAt.congr_of_eventually_eq (h : HasFderivAt f f' x) (h₁ : f₁ =ᶠ[𝓝 x] f) : HasFderivAt f₁ f' x :=
   HasFderivAtFilter.congr_of_eventually_eq h h₁ (mem_of_mem_nhds h₁ : _)
 
-theorem DifferentiableWithinAt.congr_mono (h : DifferentiableWithinAt 𝕜 f s x) (ht : ∀ x _ : x ∈ t, f₁ x = f x)
+theorem DifferentiableWithinAt.congr_mono (h : DifferentiableWithinAt 𝕜 f s x) (ht : ∀ x (_ : x ∈ t), f₁ x = f x)
   (hx : f₁ x = f x) (h₁ : t ⊆ s) : DifferentiableWithinAt 𝕜 f₁ t x :=
   (HasFderivWithinAt.congr_mono h.has_fderiv_within_at ht hx h₁).DifferentiableWithinAt
 
-theorem DifferentiableWithinAt.congr (h : DifferentiableWithinAt 𝕜 f s x) (ht : ∀ x _ : x ∈ s, f₁ x = f x)
+theorem DifferentiableWithinAt.congr (h : DifferentiableWithinAt 𝕜 f s x) (ht : ∀ x (_ : x ∈ s), f₁ x = f x)
   (hx : f₁ x = f x) : DifferentiableWithinAt 𝕜 f₁ s x :=
   DifferentiableWithinAt.congr_mono h ht hx (subset.refl _)
 
@@ -709,15 +717,15 @@ theorem DifferentiableWithinAt.congr_of_eventually_eq (h : DifferentiableWithinA
   (hx : f₁ x = f x) : DifferentiableWithinAt 𝕜 f₁ s x :=
   (h.has_fderiv_within_at.congr_of_eventually_eq h₁ hx).DifferentiableWithinAt
 
-theorem DifferentiableOn.congr_mono (h : DifferentiableOn 𝕜 f s) (h' : ∀ x _ : x ∈ t, f₁ x = f x) (h₁ : t ⊆ s) :
+theorem DifferentiableOn.congr_mono (h : DifferentiableOn 𝕜 f s) (h' : ∀ x (_ : x ∈ t), f₁ x = f x) (h₁ : t ⊆ s) :
   DifferentiableOn 𝕜 f₁ t :=
   fun x hx => (h x (h₁ hx)).congr_mono h' (h' x hx) h₁
 
-theorem DifferentiableOn.congr (h : DifferentiableOn 𝕜 f s) (h' : ∀ x _ : x ∈ s, f₁ x = f x) :
+theorem DifferentiableOn.congr (h : DifferentiableOn 𝕜 f s) (h' : ∀ x (_ : x ∈ s), f₁ x = f x) :
   DifferentiableOn 𝕜 f₁ s :=
   fun x hx => (h x hx).congr h' (h' x hx)
 
-theorem differentiable_on_congr (h' : ∀ x _ : x ∈ s, f₁ x = f x) : DifferentiableOn 𝕜 f₁ s ↔ DifferentiableOn 𝕜 f s :=
+theorem differentiable_on_congr (h' : ∀ x (_ : x ∈ s), f₁ x = f x) : DifferentiableOn 𝕜 f₁ s ↔ DifferentiableOn 𝕜 f s :=
   ⟨fun h => DifferentiableOn.congr h fun y hy => (h' y hy).symm, fun h => DifferentiableOn.congr h h'⟩
 
 theorem DifferentiableAt.congr_of_eventually_eq (h : DifferentiableAt 𝕜 f x) (hL : f₁ =ᶠ[𝓝 x] f) :
@@ -725,7 +733,7 @@ theorem DifferentiableAt.congr_of_eventually_eq (h : DifferentiableAt 𝕜 f x) 
   HasFderivAt.differentiable_at (HasFderivAtFilter.congr_of_eventually_eq h.has_fderiv_at hL (mem_of_mem_nhds hL : _))
 
 theorem DifferentiableWithinAt.fderiv_within_congr_mono (h : DifferentiableWithinAt 𝕜 f s x)
-  (hs : ∀ x _ : x ∈ t, f₁ x = f x) (hx : f₁ x = f x) (hxt : UniqueDiffWithinAt 𝕜 t x) (h₁ : t ⊆ s) :
+  (hs : ∀ x (_ : x ∈ t), f₁ x = f x) (hx : f₁ x = f x) (hxt : UniqueDiffWithinAt 𝕜 t x) (h₁ : t ⊆ s) :
   fderivWithin 𝕜 f₁ t x = fderivWithin 𝕜 f s x :=
   (HasFderivWithinAt.congr_mono h.has_fderiv_within_at hs hx h₁).fderivWithin hxt
 
@@ -738,7 +746,7 @@ theorem Filter.EventuallyEq.fderiv_within_eq (hs : UniqueDiffWithinAt 𝕜 s x) 
     by 
       rw [fderiv_within_zero_of_not_differentiable_within_at h, fderiv_within_zero_of_not_differentiable_within_at h']
 
-theorem fderiv_within_congr (hs : UniqueDiffWithinAt 𝕜 s x) (hL : ∀ y _ : y ∈ s, f₁ y = f y) (hx : f₁ x = f x) :
+theorem fderiv_within_congr (hs : UniqueDiffWithinAt 𝕜 s x) (hL : ∀ y (_ : y ∈ s), f₁ y = f y) (hx : f₁ x = f x) :
   fderivWithin 𝕜 f₁ s x = fderivWithin 𝕜 f s x :=
   by 
     apply Filter.EventuallyEq.fderiv_within_eq hs _ hx 
@@ -796,9 +804,8 @@ theorem differentiable_within_at_id : DifferentiableWithinAt 𝕜 id s x :=
 theorem differentiable_id : Differentiable 𝕜 (id : E → E) :=
   fun x => differentiable_at_id
 
-@[simp]
-theorem differentiable_id' : Differentiable 𝕜 fun x : E => x :=
-  fun x => differentiable_at_id
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem differentiable_id' : differentiable 𝕜 (λ x : E, x) := λ x, differentiable_at_id
 
 theorem differentiable_on_id : DifferentiableOn 𝕜 id s :=
   differentiable_id.DifferentiableOn
@@ -806,18 +813,18 @@ theorem differentiable_on_id : DifferentiableOn 𝕜 id s :=
 theorem fderiv_id : fderiv 𝕜 id x = id 𝕜 E :=
   HasFderivAt.fderiv (has_fderiv_at_id x)
 
-@[simp]
-theorem fderiv_id' : fderiv 𝕜 (fun x : E => x) x = ContinuousLinearMap.id 𝕜 E :=
-  fderiv_id
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem fderiv_id' : «expr = »(fderiv 𝕜 (λ x : E, x) x, continuous_linear_map.id 𝕜 E) := fderiv_id
 
 theorem fderiv_within_id (hxs : UniqueDiffWithinAt 𝕜 s x) : fderivWithin 𝕜 id s x = id 𝕜 E :=
   by 
     rw [DifferentiableAt.fderiv_within differentiable_at_id hxs]
     exact fderiv_id
 
-theorem fderiv_within_id' (hxs : UniqueDiffWithinAt 𝕜 s x) :
-  fderivWithin 𝕜 (fun x : E => x) s x = ContinuousLinearMap.id 𝕜 E :=
-  fderiv_within_id hxs
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem fderiv_within_id'
+(hxs : unique_diff_within_at 𝕜 s x) : «expr = »(fderiv_within 𝕜 (λ x : E, x) s x, continuous_linear_map.id 𝕜 E) :=
+fderiv_within_id hxs
 
 end id
 
@@ -855,21 +862,19 @@ theorem differentiable_within_at_const (c : F) : DifferentiableWithinAt 𝕜 (fu
 theorem fderiv_const_apply (c : F) : fderiv 𝕜 (fun y => c) x = 0 :=
   HasFderivAt.fderiv (has_fderiv_at_const c x)
 
-@[simp]
-theorem fderiv_const (c : F) : (fderiv 𝕜 fun y : E => c) = 0 :=
-  by 
-    ext m 
-    rw [fderiv_const_apply]
-    rfl
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem fderiv_const (c : F) : «expr = »(fderiv 𝕜 (λ y : E, c), 0) :=
+by { ext [] [ident m] [],
+  rw [expr fderiv_const_apply] [],
+  refl }
 
 theorem fderiv_within_const_apply (c : F) (hxs : UniqueDiffWithinAt 𝕜 s x) : fderivWithin 𝕜 (fun y => c) s x = 0 :=
   by 
     rw [DifferentiableAt.fderiv_within (differentiable_at_const _) hxs]
     exact fderiv_const_apply _
 
-@[simp]
-theorem differentiable_const (c : F) : Differentiable 𝕜 fun x : E => c :=
-  fun x => differentiable_at_const _
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem differentiable_const (c : F) : differentiable 𝕜 (λ x : E, c) := λ x, differentiable_at_const _
 
 theorem differentiable_on_const (c : F) : DifferentiableOn 𝕜 (fun x => c) s :=
   (differentiable_const _).DifferentiableOn
@@ -1190,34 +1195,49 @@ theorem HasFderivAt.prod (hf₁ : HasFderivAt f₁ f₁' x) (hf₂ : HasFderivAt
   HasFderivAt (fun x => (f₁ x, f₂ x)) (ContinuousLinearMap.prod f₁' f₂') x :=
   hf₁.prod hf₂
 
-theorem DifferentiableWithinAt.prod (hf₁ : DifferentiableWithinAt 𝕜 f₁ s x) (hf₂ : DifferentiableWithinAt 𝕜 f₂ s x) :
-  DifferentiableWithinAt 𝕜 (fun x : E => (f₁ x, f₂ x)) s x :=
-  (hf₁.has_fderiv_within_at.prod hf₂.has_fderiv_within_at).DifferentiableWithinAt
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem differentiable_within_at.prod
+(hf₁ : differentiable_within_at 𝕜 f₁ s x)
+(hf₂ : differentiable_within_at 𝕜 f₂ s x) : differentiable_within_at 𝕜 (λ x : E, (f₁ x, f₂ x)) s x :=
+(hf₁.has_fderiv_within_at.prod hf₂.has_fderiv_within_at).differentiable_within_at
 
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem DifferentiableAt.prod (hf₁ : DifferentiableAt 𝕜 f₁ x) (hf₂ : DifferentiableAt 𝕜 f₂ x) :
-  DifferentiableAt 𝕜 (fun x : E => (f₁ x, f₂ x)) x :=
-  (hf₁.has_fderiv_at.prod hf₂.has_fderiv_at).DifferentiableAt
+theorem differentiable_at.prod
+(hf₁ : differentiable_at 𝕜 f₁ x)
+(hf₂ : differentiable_at 𝕜 f₂ x) : differentiable_at 𝕜 (λ x : E, (f₁ x, f₂ x)) x :=
+(hf₁.has_fderiv_at.prod hf₂.has_fderiv_at).differentiable_at
 
-theorem DifferentiableOn.prod (hf₁ : DifferentiableOn 𝕜 f₁ s) (hf₂ : DifferentiableOn 𝕜 f₂ s) :
-  DifferentiableOn 𝕜 (fun x : E => (f₁ x, f₂ x)) s :=
-  fun x hx => DifferentiableWithinAt.prod (hf₁ x hx) (hf₂ x hx)
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem differentiable_on.prod
+(hf₁ : differentiable_on 𝕜 f₁ s)
+(hf₂ : differentiable_on 𝕜 f₂ s) : differentiable_on 𝕜 (λ x : E, (f₁ x, f₂ x)) s :=
+λ x hx, differentiable_within_at.prod (hf₁ x hx) (hf₂ x hx)
 
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem Differentiable.prod (hf₁ : Differentiable 𝕜 f₁) (hf₂ : Differentiable 𝕜 f₂) :
-  Differentiable 𝕜 fun x : E => (f₁ x, f₂ x) :=
-  fun x => DifferentiableAt.prod (hf₁ x) (hf₂ x)
+theorem differentiable.prod
+(hf₁ : differentiable 𝕜 f₁)
+(hf₂ : differentiable 𝕜 f₂) : differentiable 𝕜 (λ x : E, (f₁ x, f₂ x)) :=
+λ x, differentiable_at.prod (hf₁ x) (hf₂ x)
 
-theorem DifferentiableAt.fderiv_prod (hf₁ : DifferentiableAt 𝕜 f₁ x) (hf₂ : DifferentiableAt 𝕜 f₂ x) :
-  fderiv 𝕜 (fun x : E => (f₁ x, f₂ x)) x = (fderiv 𝕜 f₁ x).Prod (fderiv 𝕜 f₂ x) :=
-  (hf₁.has_fderiv_at.prod hf₂.has_fderiv_at).fderiv
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem differentiable_at.fderiv_prod
+(hf₁ : differentiable_at 𝕜 f₁ x)
+(hf₂ : differentiable_at 𝕜 f₂ x) : «expr = »(fderiv 𝕜 (λ
+  x : E, (f₁ x, f₂ x)) x, (fderiv 𝕜 f₁ x).prod (fderiv 𝕜 f₂ x)) :=
+(hf₁.has_fderiv_at.prod hf₂.has_fderiv_at).fderiv
 
-theorem DifferentiableAt.fderiv_within_prod (hf₁ : DifferentiableWithinAt 𝕜 f₁ s x)
-  (hf₂ : DifferentiableWithinAt 𝕜 f₂ s x) (hxs : UniqueDiffWithinAt 𝕜 s x) :
-  fderivWithin 𝕜 (fun x : E => (f₁ x, f₂ x)) s x = (fderivWithin 𝕜 f₁ s x).Prod (fderivWithin 𝕜 f₂ s x) :=
-  by 
-    apply HasFderivWithinAt.fderiv_within _ hxs 
-    exact HasFderivWithinAt.prod hf₁.has_fderiv_within_at hf₂.has_fderiv_within_at
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem differentiable_at.fderiv_within_prod
+(hf₁ : differentiable_within_at 𝕜 f₁ s x)
+(hf₂ : differentiable_within_at 𝕜 f₂ s x)
+(hxs : unique_diff_within_at 𝕜 s x) : «expr = »(fderiv_within 𝕜 (λ
+  x : E, (f₁ x, f₂ x)) s x, (fderiv_within 𝕜 f₁ s x).prod (fderiv_within 𝕜 f₂ s x)) :=
+begin
+  apply [expr has_fderiv_within_at.fderiv_within _ hxs],
+  exact [expr has_fderiv_within_at.prod hf₁.has_fderiv_within_at hf₂.has_fderiv_within_at]
+end
 
 end Prod
 
@@ -1381,10 +1401,13 @@ protected theorem HasFderivAt.prod_map (hf : HasFderivAt f f' p.1) (hf₂ : HasF
   HasFderivAt (Prod.mapₓ f f₂) (f'.prod_map f₂') p :=
   (hf.comp p has_fderiv_at_fst).Prod (hf₂.comp p has_fderiv_at_snd)
 
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-protected theorem DifferentiableAt.prod_map (hf : DifferentiableAt 𝕜 f p.1) (hf₂ : DifferentiableAt 𝕜 f₂ p.2) :
-  DifferentiableAt 𝕜 (fun p : E × G => (f p.1, f₂ p.2)) p :=
-  (hf.comp p differentiable_at_fst).Prod (hf₂.comp p differentiable_at_snd)
+protected
+theorem differentiable_at.prod_map
+(hf : differentiable_at 𝕜 f p.1)
+(hf₂ : differentiable_at 𝕜 f₂ p.2) : differentiable_at 𝕜 (λ p : «expr × »(E, G), (f p.1, f₂ p.2)) p :=
+(hf.comp p differentiable_at_fst).prod (hf₂.comp p differentiable_at_snd)
 
 end prod_mapₓ
 
@@ -1630,50 +1653,50 @@ open_locale BigOperators
 
 variable{ι : Type _}{u : Finset ι}{A : ι → E → F}{A' : ι → E →L[𝕜] F}
 
-theorem HasStrictFderivAt.sum (h : ∀ i _ : i ∈ u, HasStrictFderivAt (A i) (A' i) x) :
+theorem HasStrictFderivAt.sum (h : ∀ i (_ : i ∈ u), HasStrictFderivAt (A i) (A' i) x) :
   HasStrictFderivAt (fun y => ∑i in u, A i y) (∑i in u, A' i) x :=
   by 
     dsimp [HasStrictFderivAt]  at *
     convert is_o.sum h 
     simp [Finset.sum_sub_distrib, ContinuousLinearMap.sum_apply]
 
-theorem HasFderivAtFilter.sum (h : ∀ i _ : i ∈ u, HasFderivAtFilter (A i) (A' i) x L) :
+theorem HasFderivAtFilter.sum (h : ∀ i (_ : i ∈ u), HasFderivAtFilter (A i) (A' i) x L) :
   HasFderivAtFilter (fun y => ∑i in u, A i y) (∑i in u, A' i) x L :=
   by 
     dsimp [HasFderivAtFilter]  at *
     convert is_o.sum h 
     simp [ContinuousLinearMap.sum_apply]
 
-theorem HasFderivWithinAt.sum (h : ∀ i _ : i ∈ u, HasFderivWithinAt (A i) (A' i) s x) :
+theorem HasFderivWithinAt.sum (h : ∀ i (_ : i ∈ u), HasFderivWithinAt (A i) (A' i) s x) :
   HasFderivWithinAt (fun y => ∑i in u, A i y) (∑i in u, A' i) s x :=
   HasFderivAtFilter.sum h
 
-theorem HasFderivAt.sum (h : ∀ i _ : i ∈ u, HasFderivAt (A i) (A' i) x) :
+theorem HasFderivAt.sum (h : ∀ i (_ : i ∈ u), HasFderivAt (A i) (A' i) x) :
   HasFderivAt (fun y => ∑i in u, A i y) (∑i in u, A' i) x :=
   HasFderivAtFilter.sum h
 
-theorem DifferentiableWithinAt.sum (h : ∀ i _ : i ∈ u, DifferentiableWithinAt 𝕜 (A i) s x) :
+theorem DifferentiableWithinAt.sum (h : ∀ i (_ : i ∈ u), DifferentiableWithinAt 𝕜 (A i) s x) :
   DifferentiableWithinAt 𝕜 (fun y => ∑i in u, A i y) s x :=
   HasFderivWithinAt.differentiable_within_at$ HasFderivWithinAt.sum$ fun i hi => (h i hi).HasFderivWithinAt
 
 @[simp]
-theorem DifferentiableAt.sum (h : ∀ i _ : i ∈ u, DifferentiableAt 𝕜 (A i) x) :
+theorem DifferentiableAt.sum (h : ∀ i (_ : i ∈ u), DifferentiableAt 𝕜 (A i) x) :
   DifferentiableAt 𝕜 (fun y => ∑i in u, A i y) x :=
   HasFderivAt.differentiable_at$ HasFderivAt.sum$ fun i hi => (h i hi).HasFderivAt
 
-theorem DifferentiableOn.sum (h : ∀ i _ : i ∈ u, DifferentiableOn 𝕜 (A i) s) :
+theorem DifferentiableOn.sum (h : ∀ i (_ : i ∈ u), DifferentiableOn 𝕜 (A i) s) :
   DifferentiableOn 𝕜 (fun y => ∑i in u, A i y) s :=
   fun x hx => DifferentiableWithinAt.sum$ fun i hi => h i hi x hx
 
 @[simp]
-theorem Differentiable.sum (h : ∀ i _ : i ∈ u, Differentiable 𝕜 (A i)) : Differentiable 𝕜 fun y => ∑i in u, A i y :=
+theorem Differentiable.sum (h : ∀ i (_ : i ∈ u), Differentiable 𝕜 (A i)) : Differentiable 𝕜 fun y => ∑i in u, A i y :=
   fun x => DifferentiableAt.sum$ fun i hi => h i hi x
 
-theorem fderiv_within_sum (hxs : UniqueDiffWithinAt 𝕜 s x) (h : ∀ i _ : i ∈ u, DifferentiableWithinAt 𝕜 (A i) s x) :
+theorem fderiv_within_sum (hxs : UniqueDiffWithinAt 𝕜 s x) (h : ∀ i (_ : i ∈ u), DifferentiableWithinAt 𝕜 (A i) s x) :
   fderivWithin 𝕜 (fun y => ∑i in u, A i y) s x = ∑i in u, fderivWithin 𝕜 (A i) s x :=
   (HasFderivWithinAt.sum fun i hi => (h i hi).HasFderivWithinAt).fderivWithin hxs
 
-theorem fderiv_sum (h : ∀ i _ : i ∈ u, DifferentiableAt 𝕜 (A i) x) :
+theorem fderiv_sum (h : ∀ i (_ : i ∈ u), DifferentiableAt 𝕜 (A i) x) :
   fderiv 𝕜 (fun y => ∑i in u, A i y) x = ∑i in u, fderiv 𝕜 (A i) x :=
   (HasFderivAt.sum fun i hi => (h i hi).HasFderivAt).fderiv
 
@@ -2814,12 +2837,16 @@ begin
   simp [] [] [] ["[", expr norm_smul, ",", expr real.norm_eq_abs, ",", expr abs_of_nonneg this, "]"] [] []
 end
 
-theorem HasFderivAt.lim_real (hf : HasFderivAt f f' x) (v : E) :
-  tendsto (fun c : ℝ => c • (f (x+c⁻¹ • v) - f x)) at_top (𝓝 (f' v)) :=
-  by 
-    apply hf.lim v 
-    rw [tendsto_at_top_at_top]
-    exact fun b => ⟨b, fun a ha => le_transₓ ha (le_abs_self _)⟩
+-- error in Analysis.Calculus.Fderiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_fderiv_at.lim_real
+(hf : has_fderiv_at f f' x)
+(v : E) : tendsto (λ
+ c : exprℝ(), «expr • »(c, «expr - »(f «expr + »(x, «expr • »(«expr ⁻¹»(c), v)), f x))) at_top (expr𝓝() (f' v)) :=
+begin
+  apply [expr hf.lim v],
+  rw [expr tendsto_at_top_at_top] [],
+  exact [expr λ b, ⟨b, λ a ha, le_trans ha (le_abs_self _)⟩]
+end
 
 end 
 
@@ -2859,7 +2886,7 @@ theorem HasFderivWithinAt.unique_diff_within_at {x : E} (h : HasFderivWithinAt f
     exact h.maps_to_tangent_cone.mono (subset.refl _) Submodule.subset_span
 
 theorem UniqueDiffOn.image {f' : E → E →L[𝕜] F} (hs : UniqueDiffOn 𝕜 s)
-  (hf' : ∀ x _ : x ∈ s, HasFderivWithinAt f (f' x) s x) (hd : ∀ x _ : x ∈ s, DenseRange (f' x)) :
+  (hf' : ∀ x (_ : x ∈ s), HasFderivWithinAt f (f' x) s x) (hd : ∀ x (_ : x ∈ s), DenseRange (f' x)) :
   UniqueDiffOn 𝕜 (f '' s) :=
   ball_image_iff.2$ fun x hx => (hf' x hx).UniqueDiffWithinAt (hs x hx) (hd x hx)
 

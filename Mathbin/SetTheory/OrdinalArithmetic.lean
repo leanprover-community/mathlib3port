@@ -294,7 +294,7 @@ theorem lift_pred o : lift (pred o) = pred (lift o) :=
 
 /-- A limit ordinal is an ordinal which is not zero and not a successor. -/
 def is_limit (o : Ordinal) : Prop :=
-  o ≠ 0 ∧ ∀ a _ : a < o, succ a < o
+  o ≠ 0 ∧ ∀ a (_ : a < o), succ a < o
 
 theorem not_zero_is_limit : ¬is_limit 0
 | ⟨h, _⟩ => h rfl
@@ -311,7 +311,7 @@ theorem succ_lt_of_is_limit {o} (h : is_limit o) {a} : succ a < o ↔ a < o :=
 theorem le_succ_of_is_limit {o} (h : is_limit o) {a} : o ≤ succ a ↔ o ≤ a :=
   le_iff_le_iff_lt_iff_lt.2$ succ_lt_of_is_limit h
 
-theorem limit_le {o} (h : is_limit o) {a} : o ≤ a ↔ ∀ x _ : x < o, x ≤ a :=
+theorem limit_le {o} (h : is_limit o) {a} : o ≤ a ↔ ∀ x (_ : x < o), x ≤ a :=
   ⟨fun h x l => le_transₓ (le_of_ltₓ l) h,
     fun H => (le_succ_of_is_limit h).1$ le_of_not_ltₓ$ fun hn => not_lt_of_le (H _ hn) (lt_succ_self _)⟩
 
@@ -341,7 +341,7 @@ theorem is_limit.one_lt {o : Ordinal} (h : is_limit o) : 1 < o :=
   by 
     simpa only [succ_zero] using h.2 _ h.pos
 
-theorem is_limit.nat_lt {o : Ordinal} (h : is_limit o) : ∀ n : ℕ, (n : Ordinal) < o
+theorem is_limit.nat_lt {o : Ordinal} (h : is_limit o) : ∀ (n : ℕ), (n : Ordinal) < o
 | 0 => h.pos
 | n+1 => h.2 _ (is_limit.nat_lt n)
 
@@ -353,7 +353,7 @@ theorem zero_or_succ_or_limit (o : Ordinal) : o = 0 ∨ (∃ a, o = succ a) ∨ 
   induction at successor ordinals and at limit ordinals, then it holds for all ordinals. -/
 @[elab_as_eliminator]
 def limit_rec_on {C : Ordinal → Sort _} (o : Ordinal) (H₁ : C 0) (H₂ : ∀ o, C o → C (succ o))
-  (H₃ : ∀ o, is_limit o → (∀ o' _ : o' < o, C o') → C o) : C o :=
+  (H₃ : ∀ o, is_limit o → (∀ o' (_ : o' < o), C o') → C o) : C o :=
   wf.fix
     (fun o IH =>
       if o0 : o = 0 then
@@ -423,9 +423,9 @@ theorem mk_initial_seg (o : Ordinal.{u}) : # { o':Ordinal | o' < o } = Cardinal.
   order-continuous, i.e., the image `f o` of a limit ordinal `o` is the sup of `f a` for
   `a < o`.  -/
 def is_normal (f : Ordinal → Ordinal) : Prop :=
-  (∀ o, f o < f (succ o)) ∧ ∀ o, is_limit o → ∀ a, f o ≤ a ↔ ∀ b _ : b < o, f b ≤ a
+  (∀ o, f o < f (succ o)) ∧ ∀ o, is_limit o → ∀ a, f o ≤ a ↔ ∀ b (_ : b < o), f b ≤ a
 
-theorem is_normal.limit_le {f} (H : is_normal f) : ∀ {o}, is_limit o → ∀ {a}, f o ≤ a ↔ ∀ b _ : b < o, f b ≤ a :=
+theorem is_normal.limit_le {f} (H : is_normal f) : ∀ {o}, is_limit o → ∀ {a}, f o ≤ a ↔ ∀ b (_ : b < o), f b ≤ a :=
   H.2
 
 theorem is_normal.limit_lt {f} (H : is_normal f) {o} (h : is_limit o) {a} : a < f o ↔ ∃ (b : _)(_ : b < o), a < f b :=
@@ -814,7 +814,7 @@ begin
     { simpa [] [] ["only"] ["[", expr dif_neg e₁, ",", expr dif_neg e₂, ",", expr prod.lex_def, ",", expr subrel_val, ",", expr subtype.mk_eq_mk, ",", expr sum.lex_inl_inl, "]"] [] ["using", expr h] } }
 end
 
-theorem mul_le_of_limit {a b c : Ordinal.{u}} (h : is_limit b) : (a*b) ≤ c ↔ ∀ b' _ : b' < b, (a*b') ≤ c :=
+theorem mul_le_of_limit {a b c : Ordinal.{u}} (h : is_limit b) : (a*b) ≤ c ↔ ∀ b' (_ : b' < b), (a*b') ≤ c :=
   ⟨fun h b' l => le_transₓ (mul_le_mul_left _ (le_of_ltₓ l)) h,
     fun H =>
       le_of_not_ltₓ$
@@ -1040,15 +1040,10 @@ theorem div_mul_cancel : ∀ {a b : Ordinal}, a ≠ 0 → a ∣ b → (a*b / a) 
   by 
     rw [mul_div_cancel _ a0]
 
-theorem le_of_dvd : ∀ {a b : Ordinal}, b ≠ 0 → a ∣ b → a ≤ b
-| a, _, b0, ⟨b, rfl⟩ =>
-  by 
-    simpa only [mul_oneₓ] using
-      mul_le_mul_left a
-        (one_le_iff_ne_zero.2
-          fun h : b = 0 =>
-            by 
-              simpa only [h, mul_zero] using b0)
+-- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem le_of_dvd : ∀ {a b : ordinal}, «expr ≠ »(b, 0) → «expr ∣ »(a, b) → «expr ≤ »(a, b)
+| a, _, b0, ⟨b, rfl⟩ := by simpa [] [] ["only"] ["[", expr mul_one, "]"] [] ["using", expr mul_le_mul_left a (one_le_iff_ne_zero.2 (λ
+   h : «expr = »(b, 0), by simpa [] [] ["only"] ["[", expr h, ",", expr mul_zero, "]"] [] ["using", expr b0]))]
 
 theorem dvd_antisymm {a b : Ordinal} (h₁ : a ∣ b) (h₂ : b ∣ a) : a = b :=
   if a0 : a = 0 then
@@ -1123,15 +1118,17 @@ theorem lt_sup {ι} {f : ι → Ordinal} {a} : a < sup f ↔ ∃ i, a < f i :=
   by 
     simpa only [not_forall, not_leₓ] using not_congr (@sup_le _ f a)
 
-theorem is_normal.sup {f} (H : is_normal f) {ι} {g : ι → Ordinal} (h : Nonempty ι) : f (sup g) = sup (f ∘ g) :=
-  eq_of_forall_ge_iff$
-    fun a =>
-      by 
-        rw [sup_le, comp,
-            H.le_set' (fun _ : ι => True) g
-              (let ⟨i⟩ := h
-              ⟨i, ⟨⟩⟩)] <;>
-          intros  <;> simp only [sup_le, true_implies_iff]
+-- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_normal.sup
+{f}
+(H : is_normal f)
+{ι}
+{g : ι → ordinal}
+(h : nonempty ι) : «expr = »(f (sup g), sup «expr ∘ »(f, g)) :=
+«expr $ »(eq_of_forall_ge_iff, λ
+ a, by rw ["[", expr sup_le, ",", expr comp, ",", expr H.le_set' (λ
+   _ : ι, true) g (let ⟨i⟩ := h in
+   ⟨i, ⟨⟩⟩), "]"] []; intros []; simp [] [] ["only"] ["[", expr sup_le, ",", expr true_implies_iff, "]"] [] [])
 
 theorem sup_ord {ι} (f : ι → Cardinal) : (sup fun i => (f i).ord) = (Cardinal.sup f).ord :=
   eq_of_forall_ge_iff$
@@ -1165,7 +1162,7 @@ theorem unbounded_range_of_sup_ge {α β : Type u} (r : α → α → Prop) [IsW
   (This is not a special case of `sup` over the subtype,
   because `{a // a < o} : Type (u+1)` and `sup` only works over
   families in `Type u`.) -/
-def bsup (o : Ordinal.{u}) : (∀ a _ : a < o, Ordinal.{max u v}) → Ordinal.{max u v} :=
+def bsup (o : Ordinal.{u}) : (∀ a (_ : a < o), Ordinal.{max u v}) → Ordinal.{max u v} :=
   match o, o.out, o.out_eq with 
   | _, ⟨α, r, _⟩, rfl, f =>
     by 
@@ -1194,11 +1191,11 @@ theorem bsup_type (r : α → α → Prop) [IsWellOrder α r] f :
                 by 
                   simpa only [typein_enum] using H (enum r i h)⟩
 
-theorem le_bsup {o} (f : ∀ a _ : a < o, Ordinal) i h : f i h ≤ bsup o f :=
+theorem le_bsup {o} (f : ∀ a (_ : a < o), Ordinal) i h : f i h ≤ bsup o f :=
   bsup_le.1 (le_reflₓ _) _ _
 
-theorem lt_bsup {o : Ordinal} {f : ∀ a _ : a < o, Ordinal}
-  (hf : ∀ {a a'} ha : a < o ha' : a' < o, a < a' → f a ha < f a' ha') (ho : o.is_limit) i h : f i h < bsup o f :=
+theorem lt_bsup {o : Ordinal} {f : ∀ a (_ : a < o), Ordinal}
+  (hf : ∀ {a a'} (ha : a < o) (ha' : a' < o), a < a' → f a ha < f a' ha') (ho : o.is_limit) i h : f i h < bsup o f :=
   lt_of_lt_of_leₓ (hf _ _$ lt_succ_self i) (le_bsup f i.succ$ ho.2 _ h)
 
 theorem bsup_id {o} (ho : is_limit o) : (bsup.{u, u} o fun x _ => x) = o :=
@@ -1216,7 +1213,7 @@ theorem bsup_id {o} (ho : is_limit o) : (bsup.{u, u} o fun x _ => x) = o :=
     assumption
 
 theorem is_normal.bsup {f} (H : is_normal f) {o : Ordinal} :
-  ∀ g : ∀ a _ : a < o, Ordinal h : o ≠ 0, f (bsup o g) = bsup o fun a h => f (g a h) :=
+  ∀ (g : ∀ a (_ : a < o), Ordinal) (h : o ≠ 0), f (bsup o g) = bsup o fun a h => f (g a h) :=
   induction_on o$
     fun α r _ g h =>
       by 
@@ -1265,7 +1262,7 @@ theorem power_limit {a b : Ordinal} (a0 : a ≠ 0) (h : is_limit b) : (a^b) = bs
   by 
     simp only [pow, power, if_neg a0] <;> rw [limit_rec_on_limit _ _ _ _ h] <;> rfl
 
-theorem power_le_of_limit {a b c : Ordinal} (a0 : a ≠ 0) (h : is_limit b) : (a^b) ≤ c ↔ ∀ b' _ : b' < b, (a^b') ≤ c :=
+theorem power_le_of_limit {a b c : Ordinal} (a0 : a ≠ 0) (h : is_limit b) : (a^b) ≤ c ↔ ∀ b' (_ : b' < b), (a^b') ≤ c :=
   by 
     rw [power_limit a0 h, bsup_le]
 
@@ -1608,7 +1605,7 @@ theorem CNF_foldr {b : Ordinal} (b0 : b ≠ 0) o : (CNF b o).foldr (fun p r => (
     o
 
 theorem CNF_pairwise_aux (b := omega) o :
-  (∀ p _ : p ∈ CNF b o, Prod.fst p ≤ log b o) ∧ (CNF b o).Pairwise fun p q => q.1 < p.1 :=
+  (∀ p (_ : p ∈ CNF b o), Prod.fst p ≤ log b o) ∧ (CNF b o).Pairwise fun p q => q.1 < p.1 :=
   by 
     byCases' b0 : b = 0
     ·
@@ -1647,7 +1644,7 @@ theorem CNF_pairwise_aux (b := omega) o :
 theorem CNF_pairwise (b := omega) o : (CNF b o).Pairwise fun p q => Prod.fst q < p.1 :=
   (CNF_pairwise_aux _ _).2
 
-theorem CNF_fst_le_log (b := omega) o : ∀ p _ : p ∈ CNF b o, Prod.fst p ≤ log b o :=
+theorem CNF_fst_le_log (b := omega) o : ∀ p (_ : p ∈ CNF b o), Prod.fst p ≤ log b o :=
   (CNF_pairwise_aux _ _).1
 
 theorem CNF_fst_le (b := omega) o p (_ : p ∈ CNF b o) : Prod.fst p ≤ o :=
@@ -1835,7 +1832,7 @@ theorem omega_is_limit : is_limit omega :=
       by 
         rw [e] <;> exact nat_lt_omega (n+1)⟩
 
-theorem omega_le {o : Ordinal.{u}} : omega ≤ o ↔ ∀ n : ℕ, (n : Ordinal) ≤ o :=
+theorem omega_le {o : Ordinal.{u}} : omega ≤ o ↔ ∀ (n : ℕ), (n : Ordinal) ≤ o :=
   ⟨fun h n => le_transₓ (le_of_ltₓ (nat_lt_omega _)) h,
     fun H =>
       le_of_forall_lt$
@@ -1844,7 +1841,7 @@ theorem omega_le {o : Ordinal.{u}} : omega ≤ o ↔ ∀ n : ℕ, (n : Ordinal) 
           by 
             rw [e, ←succ_le] <;> exact H (n+1)⟩
 
-theorem nat_lt_limit {o} (h : is_limit o) : ∀ n : ℕ, (n : Ordinal) < o
+theorem nat_lt_limit {o} (h : is_limit o) : ∀ (n : ℕ), (n : Ordinal) < o
 | 0 => lt_of_le_of_neₓ (Ordinal.zero_le o) h.1.symm
 | n+1 => h.2 _ (nat_lt_limit n)
 
@@ -1952,7 +1949,7 @@ theorem add_absorp_iff
   end⟩, λ ⟨b, e⟩, «expr ▸ »(e.symm, λ a, add_omega_power)⟩
 
 theorem add_mul_limit_aux {a b c : Ordinal} (ba : (b+a) = a) (l : is_limit c)
-  (IH : ∀ c' _ : c' < c, ((a+b)*succ c') = (a*succ c')+b) : ((a+b)*c) = a*c :=
+  (IH : ∀ c' (_ : c' < c), ((a+b)*succ c') = (a*succ c')+b) : ((a+b)*c) = a*c :=
   le_antisymmₓ
     ((mul_le_of_limit l).2$
       fun c' h =>
@@ -2041,10 +2038,10 @@ theorem power_omega {a : Ordinal} (a1 : 1 < a) (h : a < omega) : (a^omega) = ome
 /-! ### Fixed points of normal functions -/
 
 
+-- error in SetTheory.OrdinalArithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The next fixed point function, the least fixed point of the
-  normal function `f` above `a`. -/
-def nfp (f : Ordinal → Ordinal) (a : Ordinal) :=
-  sup fun n : ℕ => (f^[n]) a
+  normal function `f` above `a`. -/ def nfp (f : ordinal → ordinal) (a : ordinal) :=
+sup (λ n : exprℕ(), «expr ^[ ]»(f, n) a)
 
 theorem iterate_le_nfp f a n : (f^[n]) a ≤ nfp f a :=
   le_sup _ n
@@ -2149,7 +2146,7 @@ end
 theorem is_normal.fp_iff_deriv {f} (H : is_normal f) {a} : f a ≤ a ↔ ∃ o, a = deriv f o :=
   ⟨fun ha =>
       by 
-        suffices  : ∀ o _ : a ≤ deriv f o, ∃ o, a = deriv f o 
+        suffices  : ∀ o (_ : a ≤ deriv f o), ∃ o, a = deriv f o 
         exact this a ((deriv_is_normal _).le_self _)
         intro o 
         apply limit_rec_on o

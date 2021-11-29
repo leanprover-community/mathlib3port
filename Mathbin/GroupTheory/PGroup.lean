@@ -21,13 +21,13 @@ variable(p : ℕ)(G : Type _)[Groupₓ G]
 
 /-- A p-group is a group in which every element has prime power order -/
 def IsPGroup : Prop :=
-  ∀ g : G, ∃ k : ℕ, (g^p^k) = 1
+  ∀ (g : G), ∃ k : ℕ, (g^p^k) = 1
 
 variable{p}{G}
 
 namespace IsPGroup
 
-theorem iff_order_of [hp : Fact p.prime] : IsPGroup p G ↔ ∀ g : G, ∃ k : ℕ, orderOf g = (p^k) :=
+theorem iff_order_of [hp : Fact p.prime] : IsPGroup p G ↔ ∀ (g : G), ∃ k : ℕ, orderOf g = (p^k) :=
   forall_congrₓ
     fun g =>
       ⟨fun ⟨k, hk⟩ =>
@@ -248,23 +248,31 @@ theorem to_sup_of_normal_right {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPG
     apply (hH.map (QuotientGroup.mk' K)).comap_of_ker_is_p_group 
     rwa [QuotientGroup.ker_mk]
 
-theorem to_sup_of_normal_left {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K) [H.normal] :
-  IsPGroup p (H⊔K : Subgroup G) :=
-  (congr_argₓ (fun H : Subgroup G => IsPGroup p H) sup_comm).mp (to_sup_of_normal_right hK hH)
+-- error in GroupTheory.PGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem to_sup_of_normal_left
+{H K : subgroup G}
+(hH : is_p_group p H)
+(hK : is_p_group p K)
+[H.normal] : is_p_group p («expr ⊔ »(H, K) : subgroup G) :=
+(congr_arg (λ H : subgroup G, is_p_group p H) sup_comm).mp (to_sup_of_normal_right hK hH)
 
-theorem to_sup_of_normal_right' {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K) (hHK : H ≤ K.normalizer) :
-  IsPGroup p (H⊔K : Subgroup G) :=
-  let hHK' :=
-    to_sup_of_normal_right (hH.of_equiv (Subgroup.comapSubtypeEquivOfLe hHK).symm)
-      (hK.of_equiv (Subgroup.comapSubtypeEquivOfLe Subgroup.le_normalizer).symm)
-  ((congr_argₓ (fun H : Subgroup K.normalizer => IsPGroup p H)
-            (Subgroup.sup_subgroup_of_eq hHK Subgroup.le_normalizer)).mp
-        hHK').ofEquiv
-    (Subgroup.comapSubtypeEquivOfLe (sup_le hHK Subgroup.le_normalizer))
+-- error in GroupTheory.PGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem to_sup_of_normal_right'
+{H K : subgroup G}
+(hH : is_p_group p H)
+(hK : is_p_group p K)
+(hHK : «expr ≤ »(H, K.normalizer)) : is_p_group p («expr ⊔ »(H, K) : subgroup G) :=
+let hHK' := to_sup_of_normal_right (hH.of_equiv (subgroup.comap_subtype_equiv_of_le hHK).symm) (hK.of_equiv (subgroup.comap_subtype_equiv_of_le subgroup.le_normalizer).symm) in
+((congr_arg (λ
+   H : subgroup K.normalizer, is_p_group p H) (subgroup.sup_subgroup_of_eq hHK subgroup.le_normalizer)).mp hHK').of_equiv (subgroup.comap_subtype_equiv_of_le (sup_le hHK subgroup.le_normalizer))
 
-theorem to_sup_of_normal_left' {H K : Subgroup G} (hH : IsPGroup p H) (hK : IsPGroup p K) (hHK : K ≤ H.normalizer) :
-  IsPGroup p (H⊔K : Subgroup G) :=
-  (congr_argₓ (fun H : Subgroup G => IsPGroup p H) sup_comm).mp (to_sup_of_normal_right' hK hH hHK)
+-- error in GroupTheory.PGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem to_sup_of_normal_left'
+{H K : subgroup G}
+(hH : is_p_group p H)
+(hK : is_p_group p K)
+(hHK : «expr ≤ »(K, H.normalizer)) : is_p_group p («expr ⊔ »(H, K) : subgroup G) :=
+(congr_arg (λ H : subgroup G, is_p_group p H) sup_comm).mp (to_sup_of_normal_right' hK hH hHK)
 
 end IsPGroup
 

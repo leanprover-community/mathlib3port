@@ -144,21 +144,21 @@ unsafe def linter.impossible_instance : linter :=
           "therefore can never succeed. Either mark the arguments with square brackets (if it is a " ++
         "class), or don't make it an instance." }
 
+-- error in Tactic.Lint.TypeClasses: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Checks whether an instance can never be applied. -/
-private unsafe def incorrect_type_class_argument (d : declaration) : tactic (Option Stringₓ) :=
-  do 
-    let (binders, _) ← get_pi_binders d.type 
-    let instance_arguments := binders.indexes_values$ fun b : binder => b.info = BinderInfo.inst_implicit 
-    let bad_arguments ←
-      instance_arguments.mfilter
-          fun ⟨_, b⟩ =>
-            do 
-              let (_, head) ← open_pis b.type 
-              if head.get_app_fn.is_local_constant then return ff else
-                  do 
-                    bnot <$> is_class head 
-    let _ :: _ ← return bad_arguments | return none
-    (fun s => some$ "These are not classes. " ++ s) <$> print_arguments bad_arguments
+private
+meta
+def incorrect_type_class_argument (d : declaration) : tactic (option string) :=
+do {
+(binders, _) ← get_pi_binders d.type,
+  let instance_arguments := «expr $ »(binders.indexes_values, λ
+   b : binder, «expr = »(b.info, binder_info.inst_implicit)),
+  bad_arguments ← instance_arguments.mfilter (λ ⟨_, b⟩, do {
+   (_, head) ← open_pis b.type,
+     if head.get_app_fn.is_local_constant then return ff else do {
+     «expr <$> »(bnot, is_class head) } }),
+  «expr :: »(_, _) ← return bad_arguments | return none,
+  «expr <$> »(λ s, «expr $ »(some, «expr ++ »("These are not classes. ", s)), print_arguments bad_arguments) }
 
 /-- A linter object for `incorrect_type_class_argument`. -/
 @[linter]
@@ -167,22 +167,21 @@ unsafe def linter.incorrect_type_class_argument : linter :=
     no_errors_found := "All declarations have correct type-class arguments.",
     errors_found := "INCORRECT TYPE-CLASS ARGUMENTS.\nSome declarations have non-classes between [square brackets]:" }
 
+-- error in Tactic.Lint.TypeClasses: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Checks whether an instance is dangerous: it creates a new type-class problem with metavariable
-arguments. -/
-private unsafe def dangerous_instance (d : declaration) : tactic (Option Stringₓ) :=
-  do 
-    let tt ← is_instance d.to_name | return none 
-    let (local_constants, target) ← open_pis d.type 
-    let instance_arguments :=
-      local_constants.indexes_values$ fun e : expr => e.local_binding_info = BinderInfo.inst_implicit 
-    let bad_arguments :=
-      local_constants.indexes_values$
-        fun x =>
-          !target.has_local_constant x && x.local_binding_info ≠ BinderInfo.inst_implicit &&
-            instance_arguments.any fun nb => nb.2.local_type.has_local_constant x 
-    let bad_arguments : List (ℕ × binder) := bad_arguments.map$ fun ⟨n, e⟩ => ⟨n, e.to_binder⟩
-    let _ :: _ ← return bad_arguments | return none
-    (fun s => some$ "The following arguments become metavariables. " ++ s) <$> print_arguments bad_arguments
+arguments. -/ private meta def dangerous_instance (d : declaration) : tactic (option string) :=
+do {
+tt ← is_instance d.to_name | return none,
+  (local_constants, target) ← open_pis d.type,
+  let instance_arguments := «expr $ »(local_constants.indexes_values, λ
+   e : expr, «expr = »(e.local_binding_info, binder_info.inst_implicit)),
+  let bad_arguments := «expr $ »(local_constants.indexes_values, λ
+   x, «expr && »(«expr && »(«expr! »(target.has_local_constant x), «expr ≠ »(x.local_binding_info, binder_info.inst_implicit)), instance_arguments.any (λ
+     nb, nb.2.local_type.has_local_constant x))),
+  let bad_arguments : list «expr × »(exprℕ(), binder) := «expr $ »(bad_arguments.map, λ ⟨n, e⟩, ⟨n, e.to_binder⟩),
+  «expr :: »(_, _) ← return bad_arguments | return none,
+  «expr <$> »(λ
+   s, «expr $ »(some, «expr ++ »("The following arguments become metavariables. ", s)), print_arguments bad_arguments) }
 
 /-- A linter object for `dangerous_instance`. -/
 @[linter]

@@ -200,7 +200,7 @@ begin
 end
 
 @[simp]
-theorem choose_succ_self_right : ∀ n : ℕ, (n+1).choose n = n+1
+theorem choose_succ_self_right : ∀ (n : ℕ), (n+1).choose n = n+1
 | 0 => rfl
 | n+1 =>
   by 

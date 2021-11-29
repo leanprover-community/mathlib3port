@@ -372,7 +372,7 @@ theorem coe_zero_root_subalgebra : (zero_root_subalgebra R L H : Submodule R L) 
   rfl
 
 theorem mem_zero_root_subalgebra (x : L) :
-  x ∈ zero_root_subalgebra R L H ↔ ∀ y : H, ∃ k : ℕ, (to_endomorphism R H L y^k) x = 0 :=
+  x ∈ zero_root_subalgebra R L H ↔ ∀ (y : H), ∃ k : ℕ, (to_endomorphism R H L y^k) x = 0 :=
   by 
     simp only [zero_root_subalgebra, mem_weight_space, mem_pre_weight_space, Pi.zero_apply, sub_zero, SetLike.mem_coe,
       zero_smul, LieSubmodule.mem_coe_submodule, Submodule.mem_carrier, LieSubalgebra.mem_mk_iff]

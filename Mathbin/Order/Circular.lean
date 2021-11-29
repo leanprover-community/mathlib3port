@@ -118,7 +118,7 @@ export CircularPartialOrder(btw_antisymm)
 replaced by ternary relations `btw` and `sbtw`. `btw` is reflexive, cyclic, antisymmetric and total.
 `sbtw` is transitive. -/
 class CircularOrder(α : Type _) extends CircularPartialOrder α where 
-  btw_total : ∀ a b c : α, btw a b c ∨ btw c b a
+  btw_total : ∀ (a b c : α), btw a b c ∨ btw c b a
 
 export CircularOrder(btw_total)
 
@@ -426,11 +426,11 @@ def LinearOrderₓ.toCircularOrder (α : Type _) [LinearOrderₓ α] : CircularO
 
 section OrderDual
 
-instance  (α : Type _) [HasBtw α] : HasBtw (OrderDual α) :=
-  ⟨fun a b c : α => btw c b a⟩
+-- error in Order.Circular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance (α : Type*) [has_btw α] : has_btw (order_dual α) := ⟨λ a b c : α, btw c b a⟩
 
-instance  (α : Type _) [HasSbtw α] : HasSbtw (OrderDual α) :=
-  ⟨fun a b c : α => sbtw c b a⟩
+-- error in Order.Circular: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance (α : Type*) [has_sbtw α] : has_sbtw (order_dual α) := ⟨λ a b c : α, sbtw c b a⟩
 
 instance  (α : Type _) [h : CircularPreorder α] : CircularPreorder (OrderDual α) :=
   { OrderDual.hasBtw α, OrderDual.hasSbtw α with btw_refl := btw_refl, btw_cyclic_left := fun a b c => btw_cyclic_right,

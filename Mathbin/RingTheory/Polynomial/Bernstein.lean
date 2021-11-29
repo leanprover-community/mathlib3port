@@ -99,36 +99,31 @@ theorem eval_at_1 (n ν : ℕ) : (bernsteinPolynomial R n ν).eval 1 = if ν = n
       ·
         simp [zero_pow w]
 
-theorem derivative_succ_aux (n ν : ℕ) :
-  (bernsteinPolynomial R (n+1) (ν+1)).derivative = (n+1)*bernsteinPolynomial R n ν - bernsteinPolynomial R n (ν+1) :=
-  by 
-    dsimp [bernsteinPolynomial]
-    suffices  :
-      (((«expr↑ » ((n+1).choose (ν+1))*(«expr↑ » ν+1)*X^ν)*1 - X^n - ν) -
-          («expr↑ » ((n+1).choose (ν+1))*X^ν+1)*«expr↑ » (n - ν)*1 - X^n - ν - 1) =
-        («expr↑ » n+1)*((«expr↑ » (n.choose ν)*X^ν)*1 - X^n - ν) - («expr↑ » (n.choose (ν+1))*X^ν+1)*1 - X^n - ν+1
-    ·
-      simpa [Polynomial.derivative_pow, ←sub_eq_add_neg]
-    convRHS => rw [mul_sub]
-    refine' congr (congr_argₓ Sub.sub _) _
-    ·
-      simp only [←mul_assocₓ]
-      refine' congr (congr_argₓ (·*·) (congr (congr_argₓ (·*·) _) rfl)) rfl 
-      exactModCast congr_argₓ (fun m : ℕ => (m : Polynomial R)) (Nat.succ_mul_choose_eq n ν).symm
-    ·
-      rw [←tsub_add_eq_tsub_tsub, ←mul_assocₓ, ←mul_assocₓ]
-      congr 1
-      rw [mul_commₓ]
-      rw [←mul_assocₓ, ←mul_assocₓ]
-      congr 1
-      normCast 
-      congr 1
-      convert (Nat.choose_mul_succ_eq n (ν+1)).symm using 1
-      ·
-        convert mul_commₓ _ _ using 2
-        simp 
-      ·
-        apply mul_commₓ
+-- error in RingTheory.Polynomial.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem derivative_succ_aux
+(n
+ ν : exprℕ()) : «expr = »((bernstein_polynomial R «expr + »(n, 1) «expr + »(ν, 1)).derivative, «expr * »(«expr + »(n, 1), «expr - »(bernstein_polynomial R n ν, bernstein_polynomial R n «expr + »(ν, 1)))) :=
+begin
+  dsimp [] ["[", expr bernstein_polynomial, "]"] [] [],
+  suffices [] [":", expr «expr = »(«expr - »(«expr * »(«expr * »(«expr↑ »(«expr + »(n, 1).choose «expr + »(ν, 1)), «expr * »(«expr + »(«expr↑ »(ν), 1), «expr ^ »(X, ν))), «expr ^ »(«expr - »(1, X), «expr - »(n, ν))), «expr * »(«expr * »(«expr↑ »(«expr + »(n, 1).choose «expr + »(ν, 1)), «expr ^ »(X, «expr + »(ν, 1))), «expr * »(«expr↑ »(«expr - »(n, ν)), «expr ^ »(«expr - »(1, X), «expr - »(«expr - »(n, ν), 1))))), «expr * »(«expr + »(«expr↑ »(n), 1), «expr - »(«expr * »(«expr * »(«expr↑ »(n.choose ν), «expr ^ »(X, ν)), «expr ^ »(«expr - »(1, X), «expr - »(n, ν))), «expr * »(«expr * »(«expr↑ »(n.choose «expr + »(ν, 1)), «expr ^ »(X, «expr + »(ν, 1))), «expr ^ »(«expr - »(1, X), «expr - »(n, «expr + »(ν, 1)))))))],
+  { simpa [] [] [] ["[", expr polynomial.derivative_pow, ",", "<-", expr sub_eq_add_neg, "]"] [] [] },
+  conv_rhs [] [] { rw [expr mul_sub] },
+  refine [expr congr (congr_arg has_sub.sub _) _],
+  { simp [] [] ["only"] ["[", "<-", expr mul_assoc, "]"] [] [],
+    refine [expr congr (congr_arg ((«expr * »)) (congr (congr_arg ((«expr * »)) _) rfl)) rfl],
+    exact_mod_cast [expr congr_arg (λ m : exprℕ(), (m : polynomial R)) (nat.succ_mul_choose_eq n ν).symm] },
+  { rw ["[", "<-", expr tsub_add_eq_tsub_tsub, ",", "<-", expr mul_assoc, ",", "<-", expr mul_assoc, "]"] [],
+    congr' [1] [],
+    rw [expr mul_comm] [],
+    rw ["[", "<-", expr mul_assoc, ",", "<-", expr mul_assoc, "]"] [],
+    congr' [1] [],
+    norm_cast [],
+    congr' [1] [],
+    convert [] [expr (nat.choose_mul_succ_eq n «expr + »(ν, 1)).symm] ["using", 1],
+    { convert [] [expr mul_comm _ _] ["using", 2],
+      simp [] [] [] [] [] [] },
+    { apply [expr mul_comm] } }
+end
 
 theorem derivative_succ (n ν : ℕ) :
   (bernsteinPolynomial R n (ν+1)).derivative =
@@ -246,46 +241,41 @@ theorem iterate_derivative_at_1_ne_zero [CharZero R] (n ν : ℕ) (h : ν ≤ n)
 
 open Submodule
 
-theorem linear_independent_aux (n k : ℕ) (h : k ≤ n+1) :
-  LinearIndependent ℚ fun ν : Finₓ k => bernsteinPolynomial ℚ n ν :=
-  by 
-    induction' k with k ih
-    ·
-      apply linear_independent_empty_type
-    ·
-      apply linear_independent_fin_succ'.mpr 
-      fsplit
-      ·
-        exact ih (le_of_ltₓ h)
-      ·
-        clear ih 
-        simp only [Nat.succ_eq_add_one, add_le_add_iff_right] at h 
-        simp only [Finₓ.coe_last, Finₓ.init_def]
-        dsimp 
-        apply not_mem_span_of_apply_not_mem_span_image (Polynomial.derivativeLhom ℚ^n - k)
-        simp only [not_exists, not_and, Submodule.mem_map, Submodule.span_image]
-        intro p m 
-        applyFun Polynomial.eval (1 : ℚ)
-        simp only [Polynomial.derivative_lhom_coe, LinearMap.pow_apply]
-        suffices  : ((Polynomial.derivative^[n - k]) p).eval 1 = 0
-        ·
-          rw [this]
-          exact (iterate_derivative_at_1_ne_zero ℚ n k h).symm 
-        apply span_induction m
-        ·
-          simp 
-          rintro ⟨a, w⟩
-          simp only [Finₓ.coe_mk]
-          rw [iterate_derivative_at_1_eq_zero_of_lt ℚ n ((tsub_lt_tsub_iff_left_of_le h).mpr w)]
-        ·
-          simp 
-        ·
-          intro x y hx hy 
-          simp [hx, hy]
-        ·
-          intro a x h 
-          simp [h]
+-- error in RingTheory.Polynomial.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem linear_independent_aux
+(n k : exprℕ())
+(h : «expr ≤ »(k, «expr + »(n, 1))) : linear_independent exprℚ() (λ ν : fin k, bernstein_polynomial exprℚ() n ν) :=
+begin
+  induction [expr k] [] ["with", ident k, ident ih] [],
+  { apply [expr linear_independent_empty_type] },
+  { apply [expr linear_independent_fin_succ'.mpr],
+    fsplit,
+    { exact [expr ih (le_of_lt h)] },
+    { clear [ident ih],
+      simp [] [] ["only"] ["[", expr nat.succ_eq_add_one, ",", expr add_le_add_iff_right, "]"] [] ["at", ident h],
+      simp [] [] ["only"] ["[", expr fin.coe_last, ",", expr fin.init_def, "]"] [] [],
+      dsimp [] [] [] [],
+      apply [expr not_mem_span_of_apply_not_mem_span_image «expr ^ »(polynomial.derivative_lhom exprℚ(), «expr - »(n, k))],
+      simp [] [] ["only"] ["[", expr not_exists, ",", expr not_and, ",", expr submodule.mem_map, ",", expr submodule.span_image, "]"] [] [],
+      intros [ident p, ident m],
+      apply_fun [expr polynomial.eval (1 : exprℚ())] [] [],
+      simp [] [] ["only"] ["[", expr polynomial.derivative_lhom_coe, ",", expr linear_map.pow_apply, "]"] [] [],
+      suffices [] [":", expr «expr = »((«expr ^[ ]»(polynomial.derivative, «expr - »(n, k)) p).eval 1, 0)],
+      { rw ["[", expr this, "]"] [],
+        exact [expr (iterate_derivative_at_1_ne_zero exprℚ() n k h).symm] },
+      apply [expr span_induction m],
+      { simp [] [] [] [] [] [],
+        rintro ["⟨", ident a, ",", ident w, "⟩"],
+        simp [] [] ["only"] ["[", expr fin.coe_mk, "]"] [] [],
+        rw ["[", expr iterate_derivative_at_1_eq_zero_of_lt exprℚ() n ((tsub_lt_tsub_iff_left_of_le h).mpr w), "]"] [] },
+      { simp [] [] [] [] [] [] },
+      { intros [ident x, ident y, ident hx, ident hy],
+        simp [] [] [] ["[", expr hx, ",", expr hy, "]"] [] [] },
+      { intros [ident a, ident x, ident h],
+        simp [] [] [] ["[", expr h, "]"] [] [] } } }
+end
 
+-- error in RingTheory.Polynomial.Bernstein: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The Bernstein polynomials are linearly independent.
 
@@ -294,8 +284,9 @@ are linearly independent.
 The inductive step relies on the observation that the `(n-k)`-th derivative, evaluated at 1,
 annihilates `bernstein_polynomial n ν` for `ν < k`, but has a nonzero value at `ν = k`.
 -/
-theorem LinearIndependent (n : ℕ) : LinearIndependent ℚ fun ν : Finₓ (n+1) => bernsteinPolynomial ℚ n ν :=
-  linear_independent_aux n (n+1) (le_reflₓ _)
+theorem linear_independent
+(n : exprℕ()) : linear_independent exprℚ() (λ ν : fin «expr + »(n, 1), bernstein_polynomial exprℚ() n ν) :=
+linear_independent_aux n «expr + »(n, 1) (le_refl _)
 
 theorem Sum (n : ℕ) : ((Finset.range (n+1)).Sum fun ν => bernsteinPolynomial R n ν) = 1 :=
   by 

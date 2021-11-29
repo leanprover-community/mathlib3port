@@ -31,7 +31,7 @@ def of_equiv α {β} [FinEnum α] (h : β ≃ α) : FinEnum β :=
   { card := card α, Equiv := h.trans (Equiv α), decEq := (h.trans (Equiv _)).DecidableEq }
 
 /-- create a `fin_enum` instance from an exhaustive list without duplicates -/
-def of_nodup_list [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h' : List.Nodup xs) : FinEnum α :=
+def of_nodup_list [DecidableEq α] (xs : List α) (h : ∀ (x : α), x ∈ xs) (h' : List.Nodup xs) : FinEnum α :=
   { card := xs.length,
     Equiv :=
       ⟨fun x =>
@@ -47,7 +47,7 @@ def of_nodup_list [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) (h'
             simp [of_nodup_list._match_1] <;> rw [List.nth_le_index_of] <;> apply List.nodup_erase_dup⟩ }
 
 /-- create a `fin_enum` instance from an exhaustive list; duplicates are removed -/
-def of_list [DecidableEq α] (xs : List α) (h : ∀ x : α, x ∈ xs) : FinEnum α :=
+def of_list [DecidableEq α] (xs : List α) (h : ∀ (x : α), x ∈ xs) : FinEnum α :=
   of_nodup_list xs.erase_dup
     (by 
       simp )
@@ -225,7 +225,7 @@ def pi.tail {x : α} {xs : List α} (f : ∀ a, a ∈ (x :: xs : List α) → β
 | a, h => f a (List.mem_cons_of_memₓ _ h)
 
 /-- `pi xs f` creates the list of functions `g` such that, for `x ∈ xs`, `g x ∈ f x` -/
-def pi {β : α → Type max u v} [DecidableEq α] : ∀ xs : List α, (∀ a, List (β a)) → List (∀ a, a ∈ xs → β a)
+def pi {β : α → Type max u v} [DecidableEq α] : ∀ (xs : List α), (∀ a, List (β a)) → List (∀ a, a ∈ xs → β a)
 | [], fs => [fun x h => h.elim]
 | x :: xs, fs => (FinEnum.Pi.cons x xs <$> fs x)<*>pi xs fs
 
@@ -262,7 +262,7 @@ theorem pi.mem_enum {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β 
 instance pi.fin_enum {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] : FinEnum (∀ a, β a) :=
   of_list (pi.enum _) fun x => pi.mem_enum _
 
-instance pfun_fin_enum (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, FinEnum (α hp)] : FinEnum (∀ hp : p, α hp) :=
+instance pfun_fin_enum (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, FinEnum (α hp)] : FinEnum (∀ (hp : p), α hp) :=
   if hp : p then
     of_list ((to_list (α hp)).map$ fun x hp' => x)
       (by 

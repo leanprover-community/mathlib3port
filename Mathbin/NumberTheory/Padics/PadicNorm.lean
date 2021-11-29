@@ -288,7 +288,7 @@ in terms of divisibility by `p^n`.
 -/
 theorem padic_val_rat_le_padic_val_rat_iff {n₁ n₂ d₁ d₂ : ℤ} (hn₁ : n₁ ≠ 0) (hn₂ : n₂ ≠ 0) (hd₁ : d₁ ≠ 0)
   (hd₂ : d₂ ≠ 0) :
-  padicValRat p (n₁ /. d₁) ≤ padicValRat p (n₂ /. d₂) ↔ ∀ n : ℕ, ((«expr↑ » p^n) ∣ n₁*d₂) → («expr↑ » p^n) ∣ n₂*d₁ :=
+  padicValRat p (n₁ /. d₁) ≤ padicValRat p (n₂ /. d₂) ↔ ∀ (n : ℕ), ((«expr↑ » p^n) ∣ n₁*d₂) → («expr↑ » p^n) ∣ n₂*d₁ :=
   have hf1 : finite (p : ℤ) (n₁*d₂) := finite_int_prime_iff.2 (mul_ne_zero hn₁ hd₂)
   have hf2 : finite (p : ℤ) (n₂*d₁) := finite_int_prime_iff.2 (mul_ne_zero hn₂ hd₁)
   by 
@@ -485,7 +485,7 @@ theorem padic_val_nat_primes {p q : ℕ} [p_prime : Fact p.prime] [q_prime : Fac
   @padic_val_nat_of_not_dvd p p_prime q$ (not_congr (Iff.symm (prime_dvd_prime_iff_eq p_prime.1 q_prime.1))).mp neq
 
 protected theorem padicValNat.div' {p : ℕ} [p_prime : Fact p.prime] :
-  ∀ {m : ℕ} cpm : coprime p m {b : ℕ} dvd : m ∣ b, padicValNat p (b / m) = padicValNat p b
+  ∀ {m : ℕ} (cpm : coprime p m) {b : ℕ} (dvd : m ∣ b), padicValNat p (b / m) = padicValNat p b
 | 0 =>
   fun cpm b dvd =>
     by 

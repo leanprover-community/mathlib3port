@@ -95,8 +95,8 @@ functions are inverses and natural in `Z`.
 ```
 -/
 def ext (X Y : C) (p : ∀ {Z : C}, (Z ⟶ X) → (Z ⟶ Y)) (q : ∀ {Z : C}, (Z ⟶ Y) → (Z ⟶ X))
-  (h₁ : ∀ {Z : C} f : Z ⟶ X, q (p f) = f) (h₂ : ∀ {Z : C} f : Z ⟶ Y, p (q f) = f)
-  (n : ∀ {Z Z' : C} f : Z' ⟶ Z g : Z ⟶ X, p (f ≫ g) = f ≫ p g) : X ≅ Y :=
+  (h₁ : ∀ {Z : C} (f : Z ⟶ X), q (p f) = f) (h₂ : ∀ {Z : C} (f : Z ⟶ Y), p (q f) = f)
+  (n : ∀ {Z Z' : C} (f : Z' ⟶ Z) (g : Z ⟶ X), p (f ≫ g) = f ≫ p g) : X ≅ Y :=
   @preimage_iso _ _ _ _ yoneda _ _ _ _
     (nat_iso.of_components (fun Z => { Hom := p, inv := q })
       (by 

@@ -95,13 +95,13 @@ theorem smul_zpow [Groupₓ β] [SmulCommClass α β β] [IsScalarTower α β β
   by 
     cases p <;> simp [smul_pow, smul_inv]
 
-@[toAdditive]
-protected theorem MulAction.bijective (g : α) : Function.Bijective fun b : β => g • b :=
-  (MulAction.toPerm g).Bijective
+-- error in GroupTheory.GroupAction.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] protected theorem mul_action.bijective (g : α) : function.bijective (λ b : β, «expr • »(g, b)) :=
+(mul_action.to_perm g).bijective
 
-@[toAdditive]
-protected theorem MulAction.injective (g : α) : Function.Injective fun b : β => g • b :=
-  (MulAction.bijective g).Injective
+-- error in GroupTheory.GroupAction.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] protected theorem mul_action.injective (g : α) : function.injective (λ b : β, «expr • »(g, b)) :=
+(mul_action.bijective g).injective
 
 @[toAdditive]
 theorem smul_left_cancel (g : α) {x y : β} (h : g • x = g • y) : x = y :=
@@ -277,4 +277,9 @@ theorem smul_eq_zero {u : α} (hu : IsUnit u) {x : β} : u • x = 0 ↔ x = 0 :
 end DistribMulAction
 
 end IsUnit
+
+@[simp]
+theorem is_unit_smul_iff [Groupₓ α] [Monoidₓ β] [MulAction α β] [SmulCommClass α β β] [IsScalarTower α β β] {g : α}
+  {m : β} : IsUnit (g • m) ↔ IsUnit m :=
+  ⟨fun h => inv_smul_smul g m ▸ h.smul (g⁻¹), IsUnit.smul g⟩
 

@@ -100,7 +100,7 @@ theorem of_fn_succ {n} (f : Finₓ (succ n) → α) : of_fn f = f 0 :: of_fn fun
     rw [of_fn_aux, IH]
     rfl
 
-theorem of_fn_nth_le : ∀ l : List α, (of_fn fun i => nth_le l i i.2) = l
+theorem of_fn_nth_le : ∀ (l : List α), (of_fn fun i => nth_le l i i.2) = l
 | [] => rfl
 | a :: l =>
   by 
@@ -121,18 +121,13 @@ theorem mem_of_fn {n} (f : Finₓ n → α) (a : α) : a ∈ of_fn f ↔ a ∈ S
 
 @[simp]
 theorem forall_mem_of_fn_iff {n : ℕ} {f : Finₓ n → α} {P : α → Prop} :
-  (∀ i _ : i ∈ of_fn f, P i) ↔ ∀ j : Finₓ n, P (f j) :=
+  (∀ i (_ : i ∈ of_fn f), P i) ↔ ∀ (j : Finₓ n), P (f j) :=
   by 
     simp only [mem_of_fn, Set.forall_range_iff]
 
-@[simp]
-theorem of_fn_const (n : ℕ) (c : α) : (of_fn fun i : Finₓ n => c) = repeat c n :=
-  Nat.recOn n
-      (by 
-        simp )$
-    fun n ihn =>
-      by 
-        simp [ihn]
+-- error in Data.List.OfFn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem of_fn_const (n : exprℕ()) (c : α) : «expr = »(of_fn (λ i : fin n, c), repeat c n) :=
+«expr $ »(nat.rec_on n (by simp [] [] [] [] [] []), λ n ihn, by simp [] [] [] ["[", expr ihn, "]"] [] [])
 
 end List
 

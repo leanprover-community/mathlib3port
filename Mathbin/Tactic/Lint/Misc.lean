@@ -265,22 +265,19 @@ unsafe def linter.check_type : linter :=
 
 open Native
 
+-- error in Tactic.Lint.Misc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
   `univ_params_grouped e` computes for each `level` `u` of `e` the parameters that occur in `u`,
   and returns the corresponding set of lists of parameters.
   In pseudo-mathematical form, this returns `{ { p : parameter | p ∈ u } | (u : level) ∈ e }`
   We use `list name` instead of `name_set`, since `name_set` does not have an order.
   It will ignore `nm₀._proof_i` declarations.
--/
-unsafe def expr.univ_params_grouped (e : expr) (nm₀ : Name) : rb_set (List Name) :=
-  e.fold mk_rb_set$
-    fun e n l =>
-      match e with 
-      | e@(sort u) => l.insert u.params.to_list
-      | e@(const nm us) =>
-        if nm.get_prefix = nm₀ ∧ nm.last.starts_with "_proof_" then l else
-          l.union$ rb_set.of_list$ us.map$ fun u : level => u.params.to_list
-      | _ => l
+-/ meta def expr.univ_params_grouped (e : expr) (nm₀ : name) : rb_set (list name) :=
+«expr $ »(e.fold mk_rb_set, λ e n l, match e with
+ | e@(sort u) := l.insert u.params.to_list
+ | e@(const nm us) := if «expr ∧ »(«expr = »(nm.get_prefix, nm₀), nm.last.starts_with "_proof_") then l else «expr $ »(l.union, «expr $ »(rb_set.of_list, «expr $ »(us.map, λ
+    u : level, u.params.to_list)))
+ | _ := l end)
 
 /--
   The good parameters are the parameters that occur somewhere in the `rb_set` as a singleton or

@@ -23,10 +23,10 @@ structure Monadₓ extends C ⥤ C where
   assoc' : ∀ X, to_functor.map (nat_trans.app μ' X) ≫ μ'.app _ = μ'.app _ ≫ μ'.app _ :=  by 
   runTac 
     obviously 
-  left_unit' : ∀ X : C, η'.app (to_functor.obj X) ≫ μ'.app _ = 𝟙 _ :=  by 
+  left_unit' : ∀ (X : C), η'.app (to_functor.obj X) ≫ μ'.app _ = 𝟙 _ :=  by 
   runTac 
     obviously 
-  right_unit' : ∀ X : C, to_functor.map (η'.app X) ≫ μ'.app _ = 𝟙 _ :=  by 
+  right_unit' : ∀ (X : C), to_functor.map (η'.app X) ≫ μ'.app _ = 𝟙 _ :=  by 
   runTac 
     obviously
 
@@ -43,10 +43,10 @@ structure comonad extends C ⥤ C where
   coassoc' : ∀ X, nat_trans.app δ' _ ≫ to_functor.map (δ'.app X) = δ'.app _ ≫ δ'.app _ :=  by 
   runTac 
     obviously 
-  left_counit' : ∀ X : C, δ'.app X ≫ ε'.app (to_functor.obj X) = 𝟙 _ :=  by 
+  left_counit' : ∀ (X : C), δ'.app X ≫ ε'.app (to_functor.obj X) = 𝟙 _ :=  by 
   runTac 
     obviously 
-  right_counit' : ∀ X : C, δ'.app X ≫ to_functor.map (ε'.app X) = 𝟙 _ :=  by 
+  right_counit' : ∀ (X : C), δ'.app X ≫ to_functor.map (ε'.app X) = 𝟙 _ :=  by 
   runTac 
     obviously
 

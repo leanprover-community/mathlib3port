@@ -43,7 +43,7 @@ variable{n : ℕ}
 
 /-- arrow in the category of `typevec` -/
 def arrow (α β : Typevec n) :=
-  ∀ i : Fin2 n, α i → β i
+  ∀ (i : Fin2 n), α i → β i
 
 localized [Mvfunctor] infixl:40 " ⟹ " => Typevec.Arrow
 
@@ -257,19 +257,24 @@ local prefix:0 "♯" =>
 protected def cases_nil {β : Typevec 0 → Sort _} (f : β Fin2.elim0) : ∀ v, β v :=
   fun v => ♯f
 
+-- error in Data.Typevec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- cases distinction for (n+1)-length type vector -/
-protected def cases_cons (n : ℕ) {β : Typevec (n+1) → Sort _} (f : ∀ t v : Typevec n, β (v ::: t)) : ∀ v, β v :=
-  fun v : Typevec (n+1) => ♯f v.last v.drop
+protected
+def cases_cons
+(n : exprℕ())
+{β : typevec «expr + »(n, 1) → Sort*}
+(f : ∀ (t) (v : typevec n), β [«expr ::: »/«expr ::: »](v, t)) : ∀ v, β v :=
+λ v : typevec «expr + »(n, 1), «expr♯ »(f v.last v.drop)
 
 protected theorem cases_nil_append1 {β : Typevec 0 → Sort _} (f : β Fin2.elim0) : Typevec.casesNil f Fin2.elim0 = f :=
   rfl
 
-protected theorem cases_cons_append1 (n : ℕ) {β : Typevec (n+1) → Sort _} (f : ∀ t v : Typevec n, β (v ::: t))
+protected theorem cases_cons_append1 (n : ℕ) {β : Typevec (n+1) → Sort _} (f : ∀ t (v : Typevec n), β (v ::: t))
   (v : Typevec n) α : Typevec.casesCons n f (v ::: α) = f α v :=
   rfl
 
 /-- cases distinction for an arrow in the category of 0-length type vectors -/
-def typevec_cases_nil₃ {β : ∀ v v' : Typevec 0, v ⟹ v' → Sort _} (f : β Fin2.elim0 Fin2.elim0 nil_fun) :
+def typevec_cases_nil₃ {β : ∀ (v v' : Typevec 0), v ⟹ v' → Sort _} (f : β Fin2.elim0 Fin2.elim0 nil_fun) :
   ∀ v v' fs, β v v' fs :=
   fun v v' fs =>
     by 
@@ -281,8 +286,9 @@ def typevec_cases_nil₃ {β : ∀ v v' : Typevec 0, v ⟹ v' → Sort _} (f : �
       rfl
 
 /-- cases distinction for an arrow in the category of (n+1)-length type vectors -/
-def typevec_cases_cons₃ (n : ℕ) {β : ∀ v v' : Typevec (n+1), v ⟹ v' → Sort _}
-  (F : ∀ t t' f : t → t' v v' : Typevec n fs : v ⟹ v', β (v ::: t) (v' ::: t') (fs ::: f)) : ∀ v v' fs, β v v' fs :=
+def typevec_cases_cons₃ (n : ℕ) {β : ∀ (v v' : Typevec (n+1)), v ⟹ v' → Sort _}
+  (F : ∀ t t' (f : t → t') (v v' : Typevec n) (fs : v ⟹ v'), β (v ::: t) (v' ::: t') (fs ::: f)) :
+  ∀ v v' fs, β v v' fs :=
   by 
     intro v v' 
     rw [←append1_drop_last v, ←append1_drop_last v']
@@ -303,7 +309,7 @@ end
 
 /-- specialized cases distinction for an arrow in the category of (n+1)-length type vectors -/
 def typevec_cases_cons₂ (n : ℕ) (t t' : Type _) (v v' : Typevec n) {β : (v ::: t) ⟹ (v' ::: t') → Sort _}
-  (F : ∀ f : t → t' fs : v ⟹ v', β (fs ::: f)) : ∀ fs, β fs :=
+  (F : ∀ (f : t → t') (fs : v ⟹ v'), β (fs ::: f)) : ∀ fs, β fs :=
   by 
     intro fs 
     rw [←split_drop_fun_last_fun fs]
@@ -314,7 +320,7 @@ theorem typevec_cases_nil₂_append_fun {β : Fin2.elim0 ⟹ Fin2.elim0 → Sort
   rfl
 
 theorem typevec_cases_cons₂_append_fun (n : ℕ) (t t' : Type _) (v v' : Typevec n) {β : (v ::: t) ⟹ (v' ::: t') → Sort _}
-  (F : ∀ f : t → t' fs : v ⟹ v', β (fs ::: f)) f fs : typevec_cases_cons₂ n t t' v v' F (fs ::: f) = F f fs :=
+  (F : ∀ (f : t → t') (fs : v ⟹ v'), β (fs ::: f)) f fs : typevec_cases_cons₂ n t t' v v' F (fs ::: f) = F f fs :=
   rfl
 
 /-- `pred_last α p x` predicates `p` of the last element of `x : α.append1 β`. -/
@@ -333,12 +339,12 @@ section Liftp'
 open Nat
 
 /-- `repeat n t` is a `n-length` type vector that contains `n` occurences of `t` -/
-def repeat : ∀ n : ℕ t : Sort _, Typevec n
+def repeat : ∀ (n : ℕ) (t : Sort _), Typevec n
 | 0, t => Fin2.elim0
 | Nat.succ i, t => append1 (repeat i t) t
 
 /-- `prod α β` is the pointwise product of the components of `α` and `β` -/
-def Prod : ∀ {n} α β : Typevec.{u} n, Typevec n
+def Prod : ∀ {n} (α β : Typevec.{u} n), Typevec n
 | 0, α, β => Fin2.elim0
 | n+1, α, β => Prod (drop α) (drop β) ::: last α × last β
 
@@ -346,14 +352,14 @@ localized [Mvfunctor] infixl:45 " ⊗ " => Typevec.Prod
 
 /-- `const x α` is an arrow that ignores its source and constructs a `typevec` that
 contains nothing but `x` -/
-protected def const {β} (x : β) : ∀ {n} α : Typevec n, α ⟹ repeat _ β
+protected def const {β} (x : β) : ∀ {n} (α : Typevec n), α ⟹ repeat _ β
 | succ n, α, Fin2.fs i => const (drop α) _
 | succ n, α, Fin2.fz => fun _ => x
 
 open function(uncurry)
 
 /-- vector of equality on a product of vectors -/
-def repeat_eq : ∀ {n} α : Typevec n, α ⊗ α ⟹ repeat _ Prop
+def repeat_eq : ∀ {n} (α : Typevec n), α ⊗ α ⟹ repeat _ Prop
 | 0, α => nil_fun
 | succ n, α => repeat_eq (drop α) ::: uncurry Eq
 
@@ -435,7 +441,7 @@ def prod.diag : ∀ {n} {α : Typevec.{u} n}, α ⟹ α ⊗ α
 | succ n, α, Fin2.fz, x => (x, x)
 
 /-- constructor for `prod` -/
-def Prod.mk : ∀ {n} {α β : Typevec.{u} n} i : Fin2 n, α i → β i → (α ⊗ β) i
+def Prod.mk : ∀ {n} {α β : Typevec.{u} n} (i : Fin2 n), α i → β i → (α ⊗ β) i
 | succ n, α, β, Fin2.fs i => Prod.mk i
 | succ n, α, β, Fin2.fz => _root_.prod.mk
 
@@ -481,52 +487,54 @@ theorem repeat_eq_iff_eq {α : Typevec n} {i x y} : of_repeat (repeat_eq α i (P
 
 /-- given a predicate vector `p` over vector `α`, `subtype_ p` is the type of vectors
 that contain an `α` that satisfies `p` -/
-def subtype_ : ∀ {n} {α : Typevec.{u} n} p : α ⟹ repeat n Prop, Typevec n
+def subtype_ : ∀ {n} {α : Typevec.{u} n} (p : α ⟹ repeat n Prop), Typevec n
 | _, α, p, Fin2.fz => _root_.subtype fun x => p Fin2.fz x
 | _, α, p, Fin2.fs i => subtype_ (drop_fun p) i
 
 /-- projection on `subtype_` -/
-def subtype_val : ∀ {n} {α : Typevec.{u} n} p : α ⟹ repeat n Prop, subtype_ p ⟹ α
+def subtype_val : ∀ {n} {α : Typevec.{u} n} (p : α ⟹ repeat n Prop), subtype_ p ⟹ α
 | succ n, α, p, Fin2.fs i => @subtype_val n _ _ i
 | succ n, α, p, Fin2.fz => _root_.subtype.val
 
+-- error in Data.Typevec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- arrow that rearranges the type of `subtype_` to turn a subtype of vector into
 a vector of subtypes -/
-def to_subtype :
-  ∀ {n} {α : Typevec.{u} n} p : α ⟹ repeat n Prop, (fun i : Fin2 n => { x // of_repeat$ p i x }) ⟹ subtype_ p
-| succ n, α, p, Fin2.fs i, x => to_subtype (drop_fun p) i x
-| succ n, α, p, Fin2.fz, x => x
+def to_subtype : ∀
+{n}
+{α : typevec.{u} n}
+(p : «expr ⟹ »(α, repeat n exprProp())), «expr ⟹ »(λ i : fin2 n, {x // «expr $ »(of_repeat, p i x)}, subtype_ p)
+| succ n, α, p, fin2.fs i, x := to_subtype (drop_fun p) i x
+| succ n, α, p, fin2.fz, x := x
 
+-- error in Data.Typevec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- arrow that rearranges the type of `subtype_` to turn a vector of subtypes
 into a subtype of vector -/
-def of_subtype :
-  ∀ {n} {α : Typevec.{u} n} p : α ⟹ repeat n Prop, subtype_ p ⟹ fun i : Fin2 n => { x // of_repeat$ p i x }
-| succ n, α, p, Fin2.fs i, x => of_subtype _ i x
-| succ n, α, p, Fin2.fz, x => x
+def of_subtype : ∀
+{n}
+{α : typevec.{u} n}
+(p : «expr ⟹ »(α, repeat n exprProp())), «expr ⟹ »(subtype_ p, λ i : fin2 n, {x // «expr $ »(of_repeat, p i x)})
+| succ n, α, p, fin2.fs i, x := of_subtype _ i x
+| succ n, α, p, fin2.fz, x := x
 
+-- error in Data.Typevec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- similar to `to_subtype` adapted to relations (i.e. predicate on product) -/
-def to_subtype' :
-  ∀ {n} {α : Typevec.{u} n} p : α ⊗ α ⟹ repeat n Prop,
-    (fun i : Fin2 n => { x : α i × α i // of_repeat$ p i (Prod.mk _ x.1 x.2) }) ⟹ subtype_ p
-| succ n, α, p, Fin2.fs i, x => to_subtype' (drop_fun p) i x
-| succ n, α, p, Fin2.fz, x =>
-  ⟨x.val,
-    cast
-      (by 
-        congr <;> simp [Prod.mk])
-      x.property⟩
+def to_subtype' : ∀
+{n}
+{α : typevec.{u} n}
+(p : «expr ⟹ »(«expr ⊗ »(α, α), repeat n exprProp())), «expr ⟹ »(λ
+ i : fin2 n, {x : «expr × »(α i, α i) // «expr $ »(of_repeat, p i (prod.mk _ x.1 x.2))}, subtype_ p)
+| succ n, α, p, fin2.fs i, x := to_subtype' (drop_fun p) i x
+| succ n, α, p, fin2.fz, x := ⟨x.val, cast (by congr; simp [] [] [] ["[", expr prod.mk, "]"] [] []) x.property⟩
 
+-- error in Data.Typevec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- similar to `of_subtype` adapted to relations (i.e. predicate on product) -/
-def of_subtype' :
-  ∀ {n} {α : Typevec.{u} n} p : α ⊗ α ⟹ repeat n Prop,
-    subtype_ p ⟹ fun i : Fin2 n => { x : α i × α i // of_repeat$ p i (Prod.mk _ x.1 x.2) }
-| _, α, p, Fin2.fs i, x => of_subtype' _ i x
-| _, α, p, Fin2.fz, x =>
-  ⟨x.val,
-    cast
-      (by 
-        congr <;> simp [Prod.mk])
-      x.property⟩
+def of_subtype' : ∀
+{n}
+{α : typevec.{u} n}
+(p : «expr ⟹ »(«expr ⊗ »(α, α), repeat n exprProp())), «expr ⟹ »(subtype_ p, λ
+ i : fin2 n, {x : «expr × »(α i, α i) // «expr $ »(of_repeat, p i (prod.mk _ x.1 x.2))})
+| ._, α, p, fin2.fs i, x := of_subtype' _ i x
+| ._, α, p, fin2.fz, x := ⟨x.val, cast (by congr; simp [] [] [] ["[", expr prod.mk, "]"] [] []) x.property⟩
 
 /-- similar to `diag` but the target vector is a `subtype_`
 guaranteeing the equality of the components -/

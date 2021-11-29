@@ -26,7 +26,7 @@ class EquivFunctor(f : Type u₀ → Type u₁) where
   map_refl' : ∀ α, map (Equiv.refl α) = @id (f α) :=  by 
   runTac 
     obviously 
-  map_trans' : ∀ {α β γ} k : α ≃ β h : β ≃ γ, map (k.trans h) = map h ∘ map k :=  by 
+  map_trans' : ∀ {α β γ} (k : α ≃ β) (h : β ≃ γ), map (k.trans h) = map h ∘ map k :=  by 
   runTac 
     obviously
 

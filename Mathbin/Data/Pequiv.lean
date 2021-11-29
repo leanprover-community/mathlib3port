@@ -24,7 +24,7 @@ then `g b` is `option.some a`.
 `pequiv` is canonically ordered by inclusion; that is, if a function `f` defined on a subset `s`
 is equal to `g` on that subset, but `g` is also defined on a larger set, then `f ≤ g`. We also have
 a definition of `⊥`, which is the empty `pequiv` (sends all to `none`), which in the end gives us a
-`semilattice_inf_bot` instance.
+`semilattice_inf` with an `order_bot` instance.
 
 ## Tags
 
@@ -41,7 +41,7 @@ universe u v w x
 structure Pequiv(α : Type u)(β : Type v) where 
   toFun : α → Option β 
   invFun : β → Option α 
-  inv : ∀ a : α b : β, a ∈ inv_fun b ↔ b ∈ to_fun a
+  inv : ∀ (a : α) (b : β), a ∈ inv_fun b ↔ b ∈ to_fun a
 
 infixr:25 " ≃. " => Pequiv
 
@@ -166,7 +166,7 @@ has_left_inverse.injective ⟨λ b, option.rec_on b a₂ (λ b', option.rec_on (
  end⟩
 
 /-- If the domain of a `pequiv` is all of `α`, its forward direction is injective. -/
-theorem injective_of_forall_is_some {f : α ≃. β} (h : ∀ a : α, is_some (f a)) : injective f :=
+theorem injective_of_forall_is_some {f : α ≃. β} (h : ∀ (a : α), is_some (f a)) : injective f :=
   (Classical.em (Nonempty α)).elim (fun hn => injective_of_forall_ne_is_some f (Classical.choice hn) fun a _ => h a)
     fun hn x => (hn ⟨x⟩).elim
 
@@ -364,7 +364,7 @@ end Single
 section Order
 
 instance  : PartialOrderₓ (α ≃. β) :=
-  { le := fun f g => ∀ a : α b : β, b ∈ f a → b ∈ g a, le_refl := fun _ _ _ => id,
+  { le := fun f g => ∀ (a : α) (b : β), b ∈ f a → b ∈ g a, le_refl := fun _ _ _ => id,
     le_trans := fun f g h fg gh a b => gh a b ∘ fg a b,
     le_antisymm :=
       fun f g fg gf =>
@@ -377,14 +377,14 @@ instance  : PartialOrderₓ (α ≃. β) :=
             ·
               exact gf _ _ h) }
 
-theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ a : α b : β, b ∈ f a → b ∈ g a :=
+theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ (a : α) (b : β), b ∈ f a → b ∈ g a :=
   Iff.rfl
 
 instance  : OrderBot (α ≃. β) :=
-  { Pequiv.partialOrder, Pequiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
+  { Pequiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
 
 -- error in Data.Pequiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-instance [decidable_eq α] [decidable_eq β] : semilattice_inf_bot «expr ≃. »(α, β) :=
+instance [decidable_eq α] [decidable_eq β] : semilattice_inf «expr ≃. »(α, β) :=
 { inf := λ
   f
   g, { to_fun := λ a, if «expr = »(f a, g a) then f a else none,
@@ -402,7 +402,6 @@ instance [decidable_eq α] [decidable_eq β] : semilattice_inf_bot «expr ≃. �
     simp [] [] [] ["[", expr le_def, "]"] [] [],
     split_ifs [] []; finish [] []
   end,
-  ..pequiv.order_bot,
   ..pequiv.partial_order }
 
 end Order

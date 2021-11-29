@@ -202,7 +202,7 @@ theorem sheaf_for_finest_topology (Ps : Set («expr ᵒᵖ» C ⥤ Type v)) (h :
 Check that if each `P ∈ Ps` is a sheaf for `J`, then `J` is a subtopology of `finest_topology Ps`.
 -/
 theorem le_finest_topology (Ps : Set («expr ᵒᵖ» C ⥤ Type v)) (J : grothendieck_topology C)
-  (hJ : ∀ P _ : P ∈ Ps, presieve.is_sheaf J P) : J ≤ finest_topology Ps :=
+  (hJ : ∀ P (_ : P ∈ Ps), presieve.is_sheaf J P) : J ≤ finest_topology Ps :=
   by 
     rintro X S hS _ ⟨⟨_, _, ⟨P, hP, rfl⟩, rfl⟩, rfl⟩
     intro Y f 

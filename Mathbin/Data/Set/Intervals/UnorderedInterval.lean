@@ -165,7 +165,7 @@ theorem interval_oc_of_lt (h : b < a) : Ι a b = Ioc b a :=
     simp [interval_oc, le_of_ltₓ h]
 
 theorem forall_interval_oc_iff {P : α → Prop} :
-  (∀ x _ : x ∈ Ι a b, P x) ↔ (∀ x _ : x ∈ Ioc a b, P x) ∧ ∀ x _ : x ∈ Ioc b a, P x :=
+  (∀ x (_ : x ∈ Ι a b), P x) ↔ (∀ x (_ : x ∈ Ioc a b), P x) ∧ ∀ x (_ : x ∈ Ioc b a), P x :=
   by 
     dsimp [interval_oc]
     cases' le_totalₓ a b with hab hab <;> simp [hab]

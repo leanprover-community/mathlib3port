@@ -65,27 +65,31 @@ theorem tendsto_ceil_left' [OrderClosedTopology α] (n : ℤ) : tendsto (fun x =
     rw [←nhds_within_Ioc_eq_nhds_within_Iic (sub_one_lt (n : α))]
     simpa only [ceil_coe] using (continuous_on_ceil _ _ (right_mem_Ioc.mpr$ sub_one_lt (_ : α))).Tendsto
 
-theorem tendsto_floor_right [OrderClosedTopology α] (n : ℤ) :
-  tendsto (fun x => floor x : α → α) (𝓝[Ici n] n) (𝓝[Ici n] n) :=
-  tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_floor_right' _)
-    (by 
-      refine' eventually_nhds_with_of_forall$ fun x hx : (n : α) ≤ x => _ 
-      change _ ≤ _ 
-      normCast 
-      convert ← floor_mono hx 
-      rw [floor_eq_iff]
-      exact ⟨le_reflₓ _, lt_add_one _⟩)
+-- error in Topology.Algebra.FloorRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_floor_right
+[order_closed_topology α]
+(n : exprℤ()) : tendsto (λ x, floor x : α → α) «expr𝓝[ ] »(Ici n, n) «expr𝓝[ ] »(Ici n, n) :=
+tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_floor_right' _) (begin
+   refine [expr «expr $ »(eventually_nhds_with_of_forall, λ (x) (hx : «expr ≤ »((n : α), x)), _)],
+   change [expr «expr ≤ »(_, _)] [] [],
+   norm_cast [],
+   convert ["<-"] [expr floor_mono hx] [],
+   rw [expr floor_eq_iff] [],
+   exact [expr ⟨le_refl _, lt_add_one _⟩]
+ end)
 
-theorem tendsto_ceil_left [OrderClosedTopology α] (n : ℤ) :
-  tendsto (fun x => ceil x : α → α) (𝓝[Iic n] n) (𝓝[Iic n] n) :=
-  tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_ceil_left' _)
-    (by 
-      refine' eventually_nhds_with_of_forall$ fun x hx : x ≤ (n : α) => _ 
-      change _ ≤ _ 
-      normCast 
-      convert ← ceil_mono hx 
-      rw [ceil_eq_iff]
-      exact ⟨sub_one_lt _, le_reflₓ _⟩)
+-- error in Topology.Algebra.FloorRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_ceil_left
+[order_closed_topology α]
+(n : exprℤ()) : tendsto (λ x, ceil x : α → α) «expr𝓝[ ] »(Iic n, n) «expr𝓝[ ] »(Iic n, n) :=
+tendsto_nhds_within_of_tendsto_nhds_of_eventually_within _ (tendsto_ceil_left' _) (begin
+   refine [expr «expr $ »(eventually_nhds_with_of_forall, λ (x) (hx : «expr ≤ »(x, (n : α))), _)],
+   change [expr «expr ≤ »(_, _)] [] [],
+   norm_cast [],
+   convert ["<-"] [expr ceil_mono hx] [],
+   rw [expr ceil_eq_iff] [],
+   exact [expr ⟨sub_one_lt _, le_refl _⟩]
+ end)
 
 theorem tendsto_floor_left [OrderClosedTopology α] (n : ℤ) :
   tendsto (fun x => floor x : α → α) (𝓝[Iio n] n) (𝓝[Iic (n - 1)] (n - 1)) :=

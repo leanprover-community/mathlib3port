@@ -126,7 +126,7 @@ theorem continuous_extend : Continuous (pkg.extend f) :=
   pkg.uniform_continuous_extend.continuous
 
 theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : UniformContinuous g)
-  (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g :=
+  (h : ∀ (a : α), f a = g (ι a)) : pkg.extend f = g :=
   by 
     apply pkg.funext pkg.continuous_extend hg.continuous 
     simpa only [pkg.extend_coe hf] using h
@@ -312,9 +312,16 @@ protected def map₂ (f : α → β → γ) : hatα → hatβ → hatγ :=
 theorem uniform_continuous_map₂ (f : α → β → γ) : UniformContinuous₂ (pkg.map₂ pkg' pkg'' f) :=
   pkg.uniform_continuous_extension₂ pkg' _
 
-theorem continuous_map₂ {δ} [TopologicalSpace δ] {f : α → β → γ} {a : δ → hatα} {b : δ → hatβ} (ha : Continuous a)
-  (hb : Continuous b) : Continuous fun d : δ => pkg.map₂ pkg' pkg'' f (a d) (b d) :=
-  ((pkg.uniform_continuous_map₂ pkg' pkg'' f).Continuous.comp (Continuous.prod_mk ha hb) : _)
+-- error in Topology.UniformSpace.AbstractCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_map₂
+{δ}
+[topological_space δ]
+{f : α → β → γ}
+{a : δ → exprhatα()}
+{b : δ → exprhatβ()}
+(ha : continuous a)
+(hb : continuous b) : continuous (λ d : δ, pkg.map₂ pkg' pkg'' f (a d) (b d)) :=
+((pkg.uniform_continuous_map₂ pkg' pkg'' f).continuous.comp (continuous.prod_mk ha hb) : _)
 
 theorem map₂_coe_coe (a : α) (b : β) (f : α → β → γ) (hf : UniformContinuous₂ f) :
   pkg.map₂ pkg' pkg'' f (ι a) (ι' b) = ι'' (f a b) :=

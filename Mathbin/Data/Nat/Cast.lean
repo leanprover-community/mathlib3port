@@ -191,7 +191,7 @@ section
 variable[OrderedSemiring α]
 
 @[simp]
-theorem cast_nonneg : ∀ n : ℕ, 0 ≤ (n : α)
+theorem cast_nonneg : ∀ (n : ℕ), 0 ≤ (n : α)
 | 0 => le_reflₓ _
 | n+1 => add_nonneg (cast_nonneg n) zero_le_one
 
@@ -332,7 +332,7 @@ theorem ext_nat {f g : ℕ →+ A} (h : f 1 = g 1) : f = g :=
 
 variable[HasOne A][AddMonoidₓ B][HasOne B]
 
-theorem eq_nat_cast (f : ℕ →+ A) (h1 : f 1 = 1) : ∀ n : ℕ, f n = n :=
+theorem eq_nat_cast (f : ℕ →+ A) (h1 : f 1 = 1) : ∀ (n : ℕ), f n = n :=
   congr_funₓ$ show f = Nat.castAddMonoidHom A from ext_nat (h1.trans Nat.cast_one.symm)
 
 theorem map_nat_cast (f : A →+ B) (h1 : f 1 = 1) (n : ℕ) : f n = n :=
@@ -381,7 +381,7 @@ theorem Nat.cast_id (n : ℕ) : «expr↑ » n = n :=
   ((RingHom.id ℕ).eq_nat_cast n).symm
 
 @[simp]
-theorem Nat.cast_with_bot : ∀ n : ℕ, @coeₓ ℕ (WithBot ℕ) (@coeToLift _ _ Nat.castCoe) n = n
+theorem Nat.cast_with_bot : ∀ (n : ℕ), @coeₓ ℕ (WithBot ℕ) (@coeToLift _ _ Nat.castCoe) n = n
 | 0 => rfl
 | n+1 =>
   by 
@@ -397,7 +397,7 @@ variable{α : Type _}
 variable[HasZero α][HasOne α][Add α]
 
 @[simp, normCast]
-theorem coe_nat : ∀ n : Nat, ((n : α) : WithTop α) = n
+theorem coe_nat : ∀ (n : Nat), ((n : α) : WithTop α) = n
 | 0 => rfl
 | n+1 =>
   by 
@@ -453,7 +453,7 @@ namespace Pi
 
 variable{α β : Type _}
 
-theorem nat_apply [HasZero β] [HasOne β] [Add β] : ∀ n : ℕ a : α, (n : α → β) a = n
+theorem nat_apply [HasZero β] [HasOne β] [Add β] : ∀ (n : ℕ) (a : α), (n : α → β) a = n
 | 0, a => rfl
 | n+1, a =>
   by 

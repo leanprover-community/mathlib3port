@@ -64,7 +64,7 @@ A `*`-monoid is a monoid `R` with an involutive operations `star`
 so `star (r * s) = star s * star r`.
 -/
 class StarMonoid(R : Type u)[Monoidₓ R] extends HasInvolutiveStar R where 
-  star_mul : ∀ r s : R, star (r*s) = star s*star r
+  star_mul : ∀ (r s : R), star (r*s) = star s*star r
 
 export StarMonoid(star_mul)
 
@@ -146,7 +146,7 @@ A `*`-additive monoid `R` is an additive monoid with an involutive `star` operat
 preserves addition.
 -/
 class StarAddMonoid(R : Type u)[AddMonoidₓ R] extends HasInvolutiveStar R where 
-  star_add : ∀ r s : R, star (r+s) = star r+star s
+  star_add : ∀ (r s : R), star (r+s) = star r+star s
 
 export StarAddMonoid(star_add)
 
@@ -198,7 +198,7 @@ which makes `R` with its multiplicative structure into a `*`-monoid
 (i.e. `star (r * s) = star s * star r`).
 -/
 class StarRing(R : Type u)[Semiringₓ R] extends StarMonoid R where 
-  star_add : ∀ r s : R, star (r+s) = star r+star s
+  star_add : ∀ (r s : R), star (r+s) = star r+star s
 
 instance (priority := 100)StarRing.toStarAddMonoid [Semiringₓ R] [StarRing R] : StarAddMonoid R :=
   { star_add := StarRing.star_add }
@@ -271,7 +271,7 @@ which is the closure of the sums of elements `star r * r`.
 This ordering makes the Banach algebra an ordered `*`-ring.)
 -/
 class StarOrderedRing(R : Type u)[OrderedSemiring R] extends StarRing R where 
-  star_mul_self_nonneg : ∀ r : R, 0 ≤ star r*r
+  star_mul_self_nonneg : ∀ (r : R), 0 ≤ star r*r
 
 theorem star_mul_self_nonneg [OrderedSemiring R] [StarOrderedRing R] {r : R} : 0 ≤ star r*r :=
   StarOrderedRing.star_mul_self_nonneg r
@@ -289,7 +289,7 @@ If used as `[comm_ring R] [star_ring R] [semiring A] [star_ring A] [algebra R A]
 star algebra.
 -/
 class StarModule(R : Type u)(A : Type v)[HasStar R][HasStar A][HasScalar R A] where 
-  star_smul : ∀ r : R a : A, star (r • a) = star r • star a
+  star_smul : ∀ (r : R) (a : A), star (r • a) = star r • star a
 
 export StarModule(star_smul)
 

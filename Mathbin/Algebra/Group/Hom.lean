@@ -231,37 +231,83 @@ theorem MonoidWithZeroHom.to_monoid_hom_coe [MulZeroOneClass M] [MulZeroOneClass
   (f.to_monoid_hom : M → N) = f :=
   rfl
 
-@[toAdditive]
-theorem OneHom.congr_fun [HasOne M] [HasOne N] {f g : OneHom M N} (h : f = g) (x : M) : f x = g x :=
-  congr_argₓ (fun h : OneHom M N => h x) h
+-- error in Algebra.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem one_hom.congr_fun
+[has_one M]
+[has_one N]
+{f g : one_hom M N}
+(h : «expr = »(f, g))
+(x : M) : «expr = »(f x, g x) :=
+congr_arg (λ h : one_hom M N, h x) h
 
-@[toAdditive]
-theorem MulHom.congr_fun [Mul M] [Mul N] {f g : MulHom M N} (h : f = g) (x : M) : f x = g x :=
-  congr_argₓ (fun h : MulHom M N => h x) h
+-- error in Algebra.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem mul_hom.congr_fun
+[has_mul M]
+[has_mul N]
+{f g : mul_hom M N}
+(h : «expr = »(f, g))
+(x : M) : «expr = »(f x, g x) :=
+congr_arg (λ h : mul_hom M N, h x) h
 
-@[toAdditive]
-theorem MonoidHom.congr_fun [MulOneClass M] [MulOneClass N] {f g : M →* N} (h : f = g) (x : M) : f x = g x :=
-  congr_argₓ (fun h : M →* N => h x) h
+-- error in Algebra.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem monoid_hom.congr_fun
+[mul_one_class M]
+[mul_one_class N]
+{f g : «expr →* »(M, N)}
+(h : «expr = »(f, g))
+(x : M) : «expr = »(f x, g x) :=
+congr_arg (λ h : «expr →* »(M, N), h x) h
 
-theorem MonoidWithZeroHom.congr_fun [MulZeroOneClass M] [MulZeroOneClass N] {f g : MonoidWithZeroHom M N} (h : f = g)
-  (x : M) : f x = g x :=
-  congr_argₓ (fun h : MonoidWithZeroHom M N => h x) h
+-- error in Algebra.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem monoid_with_zero_hom.congr_fun
+[mul_zero_one_class M]
+[mul_zero_one_class N]
+{f g : monoid_with_zero_hom M N}
+(h : «expr = »(f, g))
+(x : M) : «expr = »(f x, g x) :=
+congr_arg (λ h : monoid_with_zero_hom M N, h x) h
 
-@[toAdditive]
-theorem OneHom.congr_arg [HasOne M] [HasOne N] (f : OneHom M N) {x y : M} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : M => f x) h
+-- error in Algebra.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem one_hom.congr_arg
+[has_one M]
+[has_one N]
+(f : one_hom M N)
+{x y : M}
+(h : «expr = »(x, y)) : «expr = »(f x, f y) :=
+congr_arg (λ x : M, f x) h
 
-@[toAdditive]
-theorem MulHom.congr_arg [Mul M] [Mul N] (f : MulHom M N) {x y : M} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : M => f x) h
+-- error in Algebra.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem mul_hom.congr_arg
+[has_mul M]
+[has_mul N]
+(f : mul_hom M N)
+{x y : M}
+(h : «expr = »(x, y)) : «expr = »(f x, f y) :=
+congr_arg (λ x : M, f x) h
 
-@[toAdditive]
-theorem MonoidHom.congr_arg [MulOneClass M] [MulOneClass N] (f : M →* N) {x y : M} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : M => f x) h
+-- error in Algebra.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem monoid_hom.congr_arg
+[mul_one_class M]
+[mul_one_class N]
+(f : «expr →* »(M, N))
+{x y : M}
+(h : «expr = »(x, y)) : «expr = »(f x, f y) :=
+congr_arg (λ x : M, f x) h
 
-theorem MonoidWithZeroHom.congr_arg [MulZeroOneClass M] [MulZeroOneClass N] (f : MonoidWithZeroHom M N) {x y : M}
-  (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : M => f x) h
+-- error in Algebra.Group.Hom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem monoid_with_zero_hom.congr_arg
+[mul_zero_one_class M]
+[mul_zero_one_class N]
+(f : monoid_with_zero_hom M N)
+{x y : M}
+(h : «expr = »(x, y)) : «expr = »(f x, f y) :=
+congr_arg (λ x : M, f x) h
 
 @[toAdditive]
 theorem OneHom.coe_inj [HasOne M] [HasOne N] ⦃f g : OneHom M N⦄ (h : (f : M → N) = g) : f = g :=
@@ -662,7 +708,7 @@ theorem MonoidWithZeroHom.id_comp [MulZeroOneClass M] [MulZeroOneClass N] (f : M
   MonoidWithZeroHom.ext$ fun x => rfl
 
 @[simp, toAdditive AddMonoidHom.map_nsmul]
-theorem MonoidHom.map_pow [Monoidₓ M] [Monoidₓ N] (f : M →* N) (a : M) : ∀ n : ℕ, f (a ^ n) = f a ^ n
+theorem MonoidHom.map_pow [Monoidₓ M] [Monoidₓ N] (f : M →* N) (a : M) : ∀ (n : ℕ), f (a ^ n) = f a ^ n
 | 0 =>
   by 
     rw [pow_zeroₓ, pow_zeroₓ, f.map_one]
@@ -672,7 +718,7 @@ theorem MonoidHom.map_pow [Monoidₓ M] [Monoidₓ N] (f : M →* N) (a : M) : �
 
 @[toAdditive]
 theorem MonoidHom.map_zpow' [DivInvMonoidₓ M] [DivInvMonoidₓ N] (f : M →* N) (hf : ∀ x, f (x⁻¹) = f x⁻¹) (a : M) :
-  ∀ n : ℤ, f (a ^ n) = f a ^ n
+  ∀ (n : ℤ), f (a ^ n) = f a ^ n
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat, f.map_pow, zpow_coe_nat]
@@ -914,7 +960,7 @@ include mM
 /-- Makes a group homomorphism from a proof that the map preserves multiplication. -/
 @[toAdditive "Makes an additive group homomorphism from a proof that the map preserves addition.",
   simps (config := { fullyApplied := ff })]
-def mk' (f : M → G) (map_mul : ∀ a b : M, f (a*b) = f a*f b) : M →* G :=
+def mk' (f : M → G) (map_mul : ∀ (a b : M), f (a*b) = f a*f b) : M →* G :=
   { toFun := f, map_mul' := map_mul,
     map_one' :=
       mul_left_eq_self.1$
@@ -928,7 +974,7 @@ See also `monoid_hom.of_map_div` for a version using `λ x y, x / y`.
 -/
 @[toAdditive
       "Makes an additive group homomorphism from a proof that the map preserves\nthe operation `λ a b, a + -b`. See also `add_monoid_hom.of_map_sub` for a version using\n`λ a b, a - b`."]
-def of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a*b⁻¹) = f a*f b⁻¹) : G →* H :=
+def of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ (a b : G), f (a*b⁻¹) = f a*f b⁻¹) : G →* H :=
   mk' f$
     fun x y =>
       calc f (x*y) = f x*(f$ (1*1⁻¹)*y⁻¹)⁻¹ :=
@@ -941,7 +987,7 @@ def of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : 
         
 
 @[simp, toAdditive]
-theorem coe_of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ a b : G, f (a*b⁻¹) = f a*f b⁻¹) :
+theorem coe_of_map_mul_inv {H : Type _} [Groupₓ H] (f : G → H) (map_div : ∀ (a b : G), f (a*b⁻¹) = f a*f b⁻¹) :
   «expr⇑ » (of_map_mul_inv f map_div) = f :=
   rfl
 

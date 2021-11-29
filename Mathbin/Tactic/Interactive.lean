@@ -190,7 +190,7 @@ private unsafe def generalize_arg_p : parser (pexpr × Name) :=
   with_desc "expr = id"$ parser.pexpr 0 >>= generalize_arg_p_aux
 
 @[nolint def_lemma]
-theorem generalize_a_aux.{u} {α : Sort u} (h : ∀ x : Sort u, (α → x) → x) : α :=
+theorem generalize_a_aux.{u} {α : Sort u} (h : ∀ (x : Sort u), (α → x) → x) : α :=
   h α id
 
 /--
@@ -276,36 +276,30 @@ unsafe def collect_struct' : pexpr → StateTₓ (List$ expr × structure_instan
 unsafe def collect_struct (e : pexpr) : tactic$ pexpr × List (expr × structure_instance_info) :=
   Prod.mapₓ id List.reverse <$> (collect_struct' e).run []
 
-unsafe def refine_one (str : structure_instance_info) : tactic$ List (expr × structure_instance_info) :=
-  do 
-    let tgt ← target >>= whnf 
-    let struct_n : Name := tgt.get_app_fn.const_name 
-    let exp_fields ← expanded_field_list struct_n 
-    let missing_f := exp_fields.filter fun f => (f.2 : Name) ∉ str.field_names 
-    let (src_field_names, src_field_vals) ←
-      (@List.unzip Name _ ∘ List.join) <$> str.sources.mmap (source_fields$ missing_f.map Prod.snd)
-    let provided := exp_fields.filter fun f => (f.2 : Name) ∈ str.field_names 
-    let missing_f' := missing_f.filter fun x => x.2 ∉ src_field_names 
-    let vs ← mk_mvar_list missing_f'.length 
-    let (field_values, new_goals) ← List.unzip <$> (str.field_values.mmap collect_struct : tactic _)
-    let e' ←
-      to_expr$
-          pexpr.mk_structure_instance
-            { struct := some struct_n, field_names := str.field_names ++ missing_f'.map Prod.snd ++ src_field_names,
-              field_values := field_values ++ vs.map to_pexpr ++ src_field_vals }
-    tactic.exact e' 
-    let gs ←
-      with_enable_tags
-          (mzipWith
-            (fun n : Name × Name v =>
-              do 
-                set_goals [v]
-                try (dsimp_target simp_lemmas.mk)
-                apply_auto_param <|> apply_opt_param <|> set_main_tag [`_field, n.2, n.1]
-                get_goals)
-            missing_f' vs)
-    set_goals gs.join 
-    return new_goals.join
+-- error in Tactic.Interactive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+meta
+def refine_one (str : structure_instance_info) : «expr $ »(tactic, list «expr × »(expr, structure_instance_info)) :=
+do {
+tgt ← «expr >>= »(target, whnf),
+  let struct_n : name := tgt.get_app_fn.const_name,
+  exp_fields ← expanded_field_list struct_n,
+  let missing_f := exp_fields.filter (λ f, «expr ∉ »((f.2 : name), str.field_names)),
+  (src_field_names, src_field_vals) ← «expr <$> »(«expr ∘ »(@list.unzip name _, list.join), str.sources.mmap «expr $ »(source_fields, missing_f.map prod.snd)),
+  let provided := exp_fields.filter (λ f, «expr ∈ »((f.2 : name), str.field_names)),
+  let missing_f' := missing_f.filter (λ x, «expr ∉ »(x.2, src_field_names)),
+  vs ← mk_mvar_list missing_f'.length,
+  (field_values, new_goals) ← «expr <$> »(list.unzip, (str.field_values.mmap collect_struct : tactic _)),
+  e' ← «expr $ »(to_expr, pexpr.mk_structure_instance { struct := some struct_n,
+     field_names := «expr ++ »(«expr ++ »(str.field_names, missing_f'.map prod.snd), src_field_names),
+     field_values := «expr ++ »(«expr ++ »(field_values, vs.map to_pexpr), src_field_vals) }),
+  tactic.exact e',
+  gs ← with_enable_tags (mzip_with (λ (n : «expr × »(name, name)) (v), do {
+    set_goals «expr[ , ]»([v]),
+      try (dsimp_target simp_lemmas.mk),
+      «expr <|> »(apply_auto_param, «expr <|> »(apply_opt_param, set_main_tag «expr[ , ]»([`_field, n.2, n.1]))),
+      get_goals }) missing_f' vs),
+  set_goals gs.join,
+  return new_goals.join }
 
 unsafe def refine_recursively : expr × structure_instance_info → tactic (List expr)
 | (e, str) =>

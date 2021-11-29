@@ -34,14 +34,15 @@ namespace Nat
 
 variable(n : ℕ)
 
+-- error in NumberTheory.Divisors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `divisors n` is the `finset` of divisors of `n`. As a special case, `divisors 0 = ∅`. -/
-def divisors : Finset ℕ :=
-  Finset.filter (fun x : ℕ => x ∣ n) (Finset.ico 1 (n+1))
+def divisors : finset exprℕ() :=
+finset.filter (λ x : exprℕ(), «expr ∣ »(x, n)) (finset.Ico 1 «expr + »(n, 1))
 
+-- error in NumberTheory.Divisors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `proper_divisors n` is the `finset` of divisors of `n`, other than `n`.
-  As a special case, `proper_divisors 0 = ∅`. -/
-def proper_divisors : Finset ℕ :=
-  Finset.filter (fun x : ℕ => x ∣ n) (Finset.ico 1 n)
+  As a special case, `proper_divisors 0 = ∅`. -/ def proper_divisors : finset exprℕ() :=
+finset.filter (λ x : exprℕ(), «expr ∣ »(x, n)) (finset.Ico 1 n)
 
 /-- `divisors_antidiagonal n` is the `finset` of pairs `(x,y)` such that `x * y = n`.
   As a special case, `divisors_antidiagonal 0 = ∅`. -/
@@ -406,14 +407,18 @@ theorem prod_divisors_prime_pow {α : Type _} [CommMonoidₓ α] {k p : ℕ} {f 
   by 
     simp [h, divisors_prime_pow]
 
+-- error in NumberTheory.Divisors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem filter_dvd_eq_divisors {n : ℕ} (h : n ≠ 0) :
-  Finset.filter (fun x : ℕ => x ∣ n) (Finset.range (n : ℕ).succ) = (n : ℕ).divisors :=
-  by 
-    apply Finset.ext 
-    simp only [h, mem_filter, and_trueₓ, and_iff_right_iff_imp, cast_id, mem_range, Ne.def, not_false_iff, mem_divisors]
-    intro a ha 
-    exact Nat.lt_succ_of_leₓ (Nat.divisor_le (Nat.mem_divisors.2 ⟨ha, h⟩))
+theorem filter_dvd_eq_divisors
+{n : exprℕ()}
+(h : «expr ≠ »(n, 0)) : «expr = »(finset.filter (λ
+  x : exprℕ(), «expr ∣ »(x, n)) (finset.range (n : exprℕ()).succ), (n : exprℕ()).divisors) :=
+begin
+  apply [expr finset.ext],
+  simp [] [] ["only"] ["[", expr h, ",", expr mem_filter, ",", expr and_true, ",", expr and_iff_right_iff_imp, ",", expr cast_id, ",", expr mem_range, ",", expr ne.def, ",", expr not_false_iff, ",", expr mem_divisors, "]"] [] [],
+  intros [ident a, ident ha],
+  exact [expr nat.lt_succ_of_le (nat.divisor_le (nat.mem_divisors.2 ⟨ha, h⟩))]
+end
 
 /-- The factors of `n` are the prime divisors -/
 theorem prime_divisors_eq_to_filter_divisors_prime (n : ℕ) : n.factors.to_finset = (divisors n).filter prime :=

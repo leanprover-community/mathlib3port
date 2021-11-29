@@ -37,7 +37,7 @@ open CategoryTheory TopologicalSpace CategoryTheory.Limits
 
 /-- The Grothendieck topology associated to a topological space. -/
 def grothendieck_topology : grothendieck_topology (opens T) :=
-  { Sieves := fun X S => ∀ x _ : x ∈ X, ∃ (U : _)(f : U ⟶ X), S f ∧ x ∈ U,
+  { Sieves := fun X S => ∀ x (_ : x ∈ X), ∃ (U : _)(f : U ⟶ X), S f ∧ x ∈ U,
     top_mem' := fun X x hx => ⟨_, 𝟙 _, trivialₓ, hx⟩,
     pullback_stable' :=
       fun X Y S f hf y hy =>

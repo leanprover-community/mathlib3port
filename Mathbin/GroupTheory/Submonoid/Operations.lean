@@ -471,25 +471,43 @@ theorem coe_equiv_map_of_injective_apply (f : M →* N) (hf : Function.Injective
   (equiv_map_of_injective S f hf x : N) = f x :=
   rfl
 
+-- error in GroupTheory.Submonoid.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An induction principle on elements of the type `submonoid.closure s`.
 If `p` holds for `1` and all elements of `s`, and is preserved under multiplication, then `p`
 holds for all elements of the closure of `s`.
 
 The difference with `submonoid.closure_induction` is that this acts on the subtype.
 -/
-@[elab_as_eliminator,
-  toAdditive
-      "An induction principle on elements of the type\n`add_submonoid.closure s`.  If `p` holds for `0` and all elements of `s`, and is preserved under\naddition, then `p` holds for all elements of the closure of `s`.\n\nThe difference with `add_submonoid.closure_induction` is that this acts on the subtype."]
-theorem closure_induction' (s : Set M) {p : closure s → Prop} (Hs : ∀ x h : x ∈ s, p ⟨x, subset_closure h⟩) (H1 : p 1)
-  (Hmul : ∀ x y, p x → p y → p (x*y)) (x : closure s) : p x :=
-  Subtype.recOn x$
-    fun x hx =>
-      by 
-        refine' Exists.elim _ fun hx : x ∈ closure s hc : p ⟨x, hx⟩ => hc 
-        exact
-          closure_induction hx (fun x hx => ⟨subset_closure hx, Hs x hx⟩) ⟨one_mem _, H1⟩
-            fun x y hx hy =>
-              Exists.elim hx$ fun hx' hx => Exists.elim hy$ fun hy' hy => ⟨mul_mem _ hx' hy', Hmul _ _ hx hy⟩
+@[elab_as_eliminator, to_additive #[expr "An induction principle on elements of the type\n`add_submonoid.closure s`.  If `p` holds for `0` and all elements of `s`, and is preserved under\naddition, then `p` holds for all elements of the closure of `s`.\n\nThe difference with `add_submonoid.closure_induction` is that this acts on the subtype."]]
+theorem closure_induction'
+(s : set M)
+{p : closure s → exprProp()}
+(Hs : ∀ (x) (h : «expr ∈ »(x, s)), p ⟨x, subset_closure h⟩)
+(H1 : p 1)
+(Hmul : ∀ x y, p x → p y → p «expr * »(x, y))
+(x : closure s) : p x :=
+«expr $ »(subtype.rec_on x, λ x hx, begin
+   refine [expr exists.elim _ (λ (hx : «expr ∈ »(x, closure s)) (hc : p ⟨x, hx⟩), hc)],
+   exact [expr closure_induction hx (λ
+     x
+     hx, ⟨subset_closure hx, Hs x hx⟩) ⟨one_mem _, H1⟩ (λ
+     x
+     y
+     hx
+     hy, «expr $ »(exists.elim hx, λ hx' hx, «expr $ »(exists.elim hy, λ hy' hy, ⟨mul_mem _ hx' hy', Hmul _ _ hx hy⟩)))]
+ end)
+
+@[simp, toAdditive]
+theorem closure_closure_coe_preimage {s : Set M} : closure ((coeₓ : closure s → M) ⁻¹' s) = ⊤ :=
+  by 
+    refine' eq_top_iff.2 fun x hx => closure_induction' (fun x => _) _ _ (fun g₁ g₂ hg₁ hg₂ => _) x
+    ·
+      intro g hg 
+      exact subset_closure hg
+    ·
+      exact Submonoid.one_mem _
+    ·
+      exact Submonoid.mul_mem _ hg₁ hg₂
 
 /-- Given `submonoid`s `s`, `t` of monoids `M`, `N` respectively, `s × t` as a submonoid
 of `M × N`. -/
@@ -784,7 +802,7 @@ theorem range_subtype (s : Submonoid M) : s.subtype.mrange = s :=
   SetLike.coe_injective$ (coe_mrange _).trans$ Subtype.range_coe
 
 @[toAdditive]
-theorem eq_top_iff' : S = ⊤ ↔ ∀ x : M, x ∈ S :=
+theorem eq_top_iff' : S = ⊤ ↔ ∀ (x : M), x ∈ S :=
   eq_top_iff.trans ⟨fun h m => h$ mem_top m, fun h m _ => h m⟩
 
 -- error in GroupTheory.Submonoid.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

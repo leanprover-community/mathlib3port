@@ -49,7 +49,7 @@ variable(M){F}
 
 /-- A typeclass for subrings invariant under a `mul_semiring_action`. -/
 class IsInvariantSubfield(S : Subfield F) : Prop where 
-  smul_mem : ∀ m : M {x : F}, x ∈ S → m • x ∈ S
+  smul_mem : ∀ (m : M) {x : F}, x ∈ S → m • x ∈ S
 
 variable(S : Subfield F)
 

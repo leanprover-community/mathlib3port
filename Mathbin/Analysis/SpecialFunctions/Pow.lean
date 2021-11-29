@@ -119,7 +119,7 @@ theorem cpow_neg_one (x : ℂ) : (x^(-1 : ℂ)) = x⁻¹ :=
     simpa using cpow_neg x 1
 
 @[simp]
-theorem cpow_nat_cast (x : ℂ) : ∀ n : ℕ, (x^(n : ℂ)) = (x^n)
+theorem cpow_nat_cast (x : ℂ) : ∀ (n : ℕ), (x^(n : ℂ)) = (x^n)
 | 0 =>
   by 
     simp 
@@ -132,7 +132,7 @@ theorem cpow_nat_cast (x : ℂ) : ∀ n : ℕ, (x^(n : ℂ)) = (x^n)
       simp [cpow_add, hx, pow_addₓ, cpow_nat_cast n]
 
 @[simp]
-theorem cpow_int_cast (x : ℂ) : ∀ n : ℤ, (x^(n : ℂ)) = (x^n)
+theorem cpow_int_cast (x : ℂ) : ∀ (n : ℤ), (x^(n : ℂ)) = (x^n)
 | (n : ℕ) =>
   by 
     simp  <;> rfl
@@ -293,10 +293,10 @@ theorem ContinuousAt.const_cpow {b : ℂ} (hf : ContinuousAt f a) (h : b ≠ 0 �
   hf.const_cpow h
 
 theorem ContinuousOn.cpow (hf : ContinuousOn f s) (hg : ContinuousOn g s)
-  (h0 : ∀ a _ : a ∈ s, 0 < (f a).re ∨ (f a).im ≠ 0) : ContinuousOn (fun x => f x^g x) s :=
+  (h0 : ∀ a (_ : a ∈ s), 0 < (f a).re ∨ (f a).im ≠ 0) : ContinuousOn (fun x => f x^g x) s :=
   fun a ha => (hf a ha).cpow (hg a ha) (h0 a ha)
 
-theorem ContinuousOn.const_cpow {b : ℂ} (hf : ContinuousOn f s) (h : b ≠ 0 ∨ ∀ a _ : a ∈ s, f a ≠ 0) :
+theorem ContinuousOn.const_cpow {b : ℂ} (hf : ContinuousOn f s) (h : b ≠ 0 ∨ ∀ a (_ : a ∈ s), f a ≠ 0) :
   ContinuousOn (fun x => b^f x) s :=
   fun a ha => (hf a ha).const_cpow (h.imp id$ fun h => h a ha)
 
@@ -820,48 +820,47 @@ begin
   exact [expr h]
 end
 
-theorem rpow_eq_nhds_of_neg {p : ℝ × ℝ} (hp_fst : p.fst < 0) :
-  (fun x : ℝ × ℝ => x.1^x.2) =ᶠ[𝓝 p] fun x => exp (log x.1*x.2)*cos (x.2*π) :=
-  by 
-    suffices  : ∀ᶠx : ℝ × ℝ in 𝓝 p, x.1 < 0 
-    exact
-      this.mono
-        fun x hx =>
-          by 
-            dsimp only 
-            rw [rpow_def_of_neg hx]
-    exact IsOpen.eventually_mem (is_open_lt continuous_fst continuous_const) hp_fst
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem rpow_eq_nhds_of_neg
+{p : «expr × »(exprℝ(), exprℝ())}
+(hp_fst : «expr < »(p.fst, 0)) : «expr =ᶠ[ ] »(λ
+ x : «expr × »(exprℝ(), exprℝ()), «expr ^ »(x.1, x.2), expr𝓝() p, λ
+ x, «expr * »(exp «expr * »(log x.1, x.2), cos «expr * »(x.2, exprπ()))) :=
+begin
+  suffices [] [":", expr «expr∀ᶠ in , »((x : «expr × »(exprℝ(), exprℝ())), expr𝓝() p, «expr < »(x.1, 0))],
+  from [expr this.mono (λ x hx, by { dsimp ["only"] [] [] [], rw [expr rpow_def_of_neg hx] [] })],
+  exact [expr is_open.eventually_mem (is_open_lt continuous_fst continuous_const) hp_fst]
+end
 
-theorem rpow_eq_nhds_of_pos {p : ℝ × ℝ} (hp_fst : 0 < p.fst) :
-  (fun x : ℝ × ℝ => x.1^x.2) =ᶠ[𝓝 p] fun x => exp (log x.1*x.2) :=
-  by 
-    suffices  : ∀ᶠx : ℝ × ℝ in 𝓝 p, 0 < x.1 
-    exact
-      this.mono
-        fun x hx =>
-          by 
-            dsimp only 
-            rw [rpow_def_of_pos hx]
-    exact IsOpen.eventually_mem (is_open_lt continuous_const continuous_fst) hp_fst
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem rpow_eq_nhds_of_pos
+{p : «expr × »(exprℝ(), exprℝ())}
+(hp_fst : «expr < »(0, p.fst)) : «expr =ᶠ[ ] »(λ
+ x : «expr × »(exprℝ(), exprℝ()), «expr ^ »(x.1, x.2), expr𝓝() p, λ x, exp «expr * »(log x.1, x.2)) :=
+begin
+  suffices [] [":", expr «expr∀ᶠ in , »((x : «expr × »(exprℝ(), exprℝ())), expr𝓝() p, «expr < »(0, x.1))],
+  from [expr this.mono (λ x hx, by { dsimp ["only"] [] [] [], rw [expr rpow_def_of_pos hx] [] })],
+  exact [expr is_open.eventually_mem (is_open_lt continuous_const continuous_fst) hp_fst]
+end
 
-theorem continuous_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) : ContinuousAt (fun p : ℝ × ℝ => p.1^p.2) p :=
-  by 
-    rw [ne_iff_lt_or_gtₓ] at hp 
-    cases hp
-    ·
-      rw [continuous_at_congr (rpow_eq_nhds_of_neg hp)]
-      refine' ContinuousAt.mul _ (continuous_cos.continuous_at.comp _)
-      ·
-        refine' continuous_exp.continuous_at.comp (ContinuousAt.mul _ continuous_snd.continuous_at)
-        refine' (continuous_at_log _).comp continuous_fst.continuous_at 
-        exact hp.ne
-      ·
-        exact continuous_snd.continuous_at.mul continuous_at_const
-    ·
-      rw [continuous_at_congr (rpow_eq_nhds_of_pos hp)]
-      refine' continuous_exp.continuous_at.comp (ContinuousAt.mul _ continuous_snd.continuous_at)
-      refine' (continuous_at_log _).comp continuous_fst.continuous_at 
-      exact hp.lt.ne.symm
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_rpow_of_ne
+(p : «expr × »(exprℝ(), exprℝ()))
+(hp : «expr ≠ »(p.1, 0)) : continuous_at (λ p : «expr × »(exprℝ(), exprℝ()), «expr ^ »(p.1, p.2)) p :=
+begin
+  rw [expr ne_iff_lt_or_gt] ["at", ident hp],
+  cases [expr hp] [],
+  { rw [expr continuous_at_congr (rpow_eq_nhds_of_neg hp)] [],
+    refine [expr continuous_at.mul _ (continuous_cos.continuous_at.comp _)],
+    { refine [expr continuous_exp.continuous_at.comp (continuous_at.mul _ continuous_snd.continuous_at)],
+      refine [expr (continuous_at_log _).comp continuous_fst.continuous_at],
+      exact [expr hp.ne] },
+    { exact [expr continuous_snd.continuous_at.mul continuous_at_const] } },
+  { rw [expr continuous_at_congr (rpow_eq_nhds_of_pos hp)] [],
+    refine [expr continuous_exp.continuous_at.comp (continuous_at.mul _ continuous_snd.continuous_at)],
+    refine [expr (continuous_at_log _).comp continuous_fst.continuous_at],
+    exact [expr hp.lt.ne.symm] }
+end
 
 -- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_at_rpow_of_pos
@@ -883,8 +882,12 @@ begin
   simpa [] [] ["only"] ["[", "<-", expr sup_prod, ",", "<-", expr nhds_within_union, ",", expr set.compl_union_self, ",", expr nhds_within_univ, ",", expr nhds_prod_eq, ",", expr continuous_at, ",", expr zero_rpow hp.ne', "]"] [] ["using", expr B.sup (C.mono_right (pure_le_nhds _))]
 end
 
-theorem continuous_at_rpow (p : ℝ × ℝ) (h : p.1 ≠ 0 ∨ 0 < p.2) : ContinuousAt (fun p : ℝ × ℝ => p.1^p.2) p :=
-  h.elim (fun h => continuous_at_rpow_of_ne p h) fun h => continuous_at_rpow_of_pos p h
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_rpow
+(p : «expr × »(exprℝ(), exprℝ()))
+(h : «expr ∨ »(«expr ≠ »(p.1, 0), «expr < »(0, p.2))) : continuous_at (λ
+ p : «expr × »(exprℝ(), exprℝ()), «expr ^ »(p.1, p.2)) p :=
+h.elim (λ h, continuous_at_rpow_of_ne p h) (λ h, continuous_at_rpow_of_pos p h)
 
 end Real
 
@@ -914,7 +917,7 @@ theorem ContinuousWithinAt.rpow (hf : ContinuousWithinAt f s x) (hg : Continuous
   (h : f x ≠ 0 ∨ 0 < g x) : ContinuousWithinAt (fun t => f t^g t) s x :=
   hf.rpow hg h
 
-theorem ContinuousOn.rpow (hf : ContinuousOn f s) (hg : ContinuousOn g s) (h : ∀ x _ : x ∈ s, f x ≠ 0 ∨ 0 < g x) :
+theorem ContinuousOn.rpow (hf : ContinuousOn f s) (hg : ContinuousOn g s) (h : ∀ x (_ : x ∈ s), f x ≠ 0 ∨ 0 < g x) :
   ContinuousOn (fun t => f t^g t) s :=
   fun t ht => (hf t ht).rpow (hg t ht) (h t ht)
 
@@ -929,7 +932,7 @@ theorem ContinuousWithinAt.rpow_const (hf : ContinuousWithinAt f s x) (h : f x �
 theorem ContinuousAt.rpow_const (hf : ContinuousAt f x) (h : f x ≠ 0 ∨ 0 ≤ p) : ContinuousAt (fun x => f x^p) x :=
   hf.rpow_const h
 
-theorem ContinuousOn.rpow_const (hf : ContinuousOn f s) (h : ∀ x _ : x ∈ s, f x ≠ 0 ∨ 0 ≤ p) :
+theorem ContinuousOn.rpow_const (hf : ContinuousOn f s) (h : ∀ x (_ : x ∈ s), f x ≠ 0 ∨ 0 ≤ p) :
   ContinuousOn (fun x => f x^p) s :=
   fun x hx => (hf x hx).rpow_const (h x hx)
 
@@ -963,23 +966,27 @@ section Limits
 
 open Real Filter
 
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function `x ^ y` tends to `+∞` at `+∞` for any positive real `y`. -/
-theorem tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) : tendsto (fun x : ℝ => x^y) at_top at_top :=
-  by 
-    rw [tendsto_at_top_at_top]
-    intro b 
-    use max b 0^1 / y 
-    intro x hx 
-    exact
-      le_of_max_le_left
-        (by 
-          convert rpow_le_rpow (rpow_nonneg_of_nonneg (le_max_rightₓ b 0) (1 / y)) hx (le_of_ltₓ hy)
-          rw [←rpow_mul (le_max_rightₓ b 0), (eq_div_iff (ne_of_gtₓ hy)).mp rfl, rpow_one])
+theorem tendsto_rpow_at_top
+{y : exprℝ()}
+(hy : «expr < »(0, y)) : tendsto (λ x : exprℝ(), «expr ^ »(x, y)) at_top at_top :=
+begin
+  rw [expr tendsto_at_top_at_top] [],
+  intro [ident b],
+  use [expr «expr ^ »(max b 0, «expr / »(1, y))],
+  intros [ident x, ident hx],
+  exact [expr le_of_max_le_left (by { convert [] [expr rpow_le_rpow (rpow_nonneg_of_nonneg (le_max_right b 0) «expr / »(1, y)) hx (le_of_lt hy)] [],
+      rw ["[", "<-", expr rpow_mul (le_max_right b 0), ",", expr (eq_div_iff (ne_of_gt hy)).mp rfl, ",", expr rpow_one, "]"] [] })]
+end
 
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function `x ^ (-y)` tends to `0` at `+∞` for any positive real `y`. -/
-theorem tendsto_rpow_neg_at_top {y : ℝ} (hy : 0 < y) : tendsto (fun x : ℝ => x^-y) at_top (𝓝 0) :=
-  tendsto.congr' (eventually_eq_of_mem (Ioi_mem_at_top 0) fun x hx => (rpow_neg (le_of_ltₓ hx) y).symm)
-    (tendsto_rpow_at_top hy).inv_tendsto_at_top
+theorem tendsto_rpow_neg_at_top
+{y : exprℝ()}
+(hy : «expr < »(0, y)) : tendsto (λ x : exprℝ(), «expr ^ »(x, «expr- »(y))) at_top (expr𝓝() 0) :=
+tendsto.congr' (eventually_eq_of_mem (Ioi_mem_at_top 0) (λ
+  x hx, (rpow_neg (le_of_lt hx) y).symm)) (tendsto_rpow_at_top hy).inv_tendsto_at_top
 
 /-- The function `x ^ (a / (b * x + c))` tends to `1` at `+∞`, for any real numbers `a`, `b`, and
 `c` such that `b` is nonzero. -/
@@ -1205,17 +1212,22 @@ theorem continuous_at_rpow_const {x :  ℝ≥0 } {y : ℝ} (h : x ≠ 0 ∨ 0 �
               simp only [rpow_zero, continuous_at_const])
         fun h => tendsto_id.nnrpow tendsto_const_nhds (Or.inr h)
 
-theorem continuous_rpow_const {y : ℝ} (h : 0 ≤ y) : Continuous fun x :  ℝ≥0  => x^y :=
-  continuous_iff_continuous_at.2$ fun x => continuous_at_rpow_const (Or.inr h)
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_rpow_const {y : exprℝ()} (h : «expr ≤ »(0, y)) : continuous (λ x : «exprℝ≥0»(), «expr ^ »(x, y)) :=
+«expr $ »(continuous_iff_continuous_at.2, λ x, continuous_at_rpow_const (or.inr h))
 
-theorem tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) : tendsto (fun x :  ℝ≥0  => x^y) at_top at_top :=
-  by 
-    rw [Filter.tendsto_at_top_at_top]
-    intro b 
-    obtain ⟨c, hc⟩ := tendsto_at_top_at_top.mp (tendsto_rpow_at_top hy) b 
-    use c.to_nnreal 
-    intro a ha 
-    exactModCast hc a (real.to_nnreal_le_iff_le_coe.mp ha)
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_rpow_at_top
+{y : exprℝ()}
+(hy : «expr < »(0, y)) : tendsto (λ x : «exprℝ≥0»(), «expr ^ »(x, y)) at_top at_top :=
+begin
+  rw [expr filter.tendsto_at_top_at_top] [],
+  intros [ident b],
+  obtain ["⟨", ident c, ",", ident hc, "⟩", ":=", expr tendsto_at_top_at_top.mp (tendsto_rpow_at_top hy) b],
+  use [expr c.to_nnreal],
+  intros [ident a, ident ha],
+  exact_mod_cast [expr hc a (real.to_nnreal_le_iff_le_coe.mp ha)]
+end
 
 end Nnreal
 
@@ -1488,24 +1500,24 @@ theorem div_rpow_of_nonneg (x y : ℝ≥0∞) {z : ℝ} (hz : 0 ≤ z) : (x / y^
   by 
     rw [div_eq_mul_inv, mul_rpow_of_nonneg _ _ hz, inv_rpow, div_eq_mul_inv]
 
-theorem strict_mono_rpow_of_pos {z : ℝ} (h : 0 < z) : StrictMono fun x : ℝ≥0∞ => x^z :=
-  by 
-    intro x y hxy 
-    lift x to  ℝ≥0  using ne_top_of_lt hxy 
-    rcases eq_or_ne y ∞ with (rfl | hy)
-    ·
-      simp only [top_rpow_of_pos h, coe_rpow_of_nonneg _ h.le, coe_lt_top]
-    ·
-      lift y to  ℝ≥0  using hy 
-      simp only [coe_rpow_of_nonneg _ h.le, Nnreal.rpow_lt_rpow (coe_lt_coe.1 hxy) h, coe_lt_coe]
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem strict_mono_rpow_of_pos
+{z : exprℝ()}
+(h : «expr < »(0, z)) : strict_mono (λ x : «exprℝ≥0∞»(), «expr ^ »(x, z)) :=
+begin
+  intros [ident x, ident y, ident hxy],
+  lift [expr x] ["to", expr «exprℝ≥0»()] ["using", expr ne_top_of_lt hxy] [],
+  rcases [expr eq_or_ne y «expr∞»(), "with", ident rfl, "|", ident hy],
+  { simp [] [] ["only"] ["[", expr top_rpow_of_pos h, ",", expr coe_rpow_of_nonneg _ h.le, ",", expr coe_lt_top, "]"] [] [] },
+  { lift [expr y] ["to", expr «exprℝ≥0»()] ["using", expr hy] [],
+    simp [] [] ["only"] ["[", expr coe_rpow_of_nonneg _ h.le, ",", expr nnreal.rpow_lt_rpow (coe_lt_coe.1 hxy) h, ",", expr coe_lt_coe, "]"] [] [] }
+end
 
-theorem monotone_rpow_of_nonneg {z : ℝ} (h : 0 ≤ z) : Monotone fun x : ℝ≥0∞ => x^z :=
-  h.eq_or_lt.elim
-    (fun h0 =>
-      h0 ▸
-        by 
-          simp only [rpow_zero, monotone_const])
-    fun h0 => (strict_mono_rpow_of_pos h0).Monotone
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem monotone_rpow_of_nonneg {z : exprℝ()} (h : «expr ≤ »(0, z)) : monotone (λ x : «exprℝ≥0∞»(), «expr ^ »(x, z)) :=
+h.eq_or_lt.elim (λ
+ h0, «expr ▸ »(h0, by simp [] [] ["only"] ["[", expr rpow_zero, ",", expr monotone_const, "]"] [] [])) (λ
+ h0, (strict_mono_rpow_of_pos h0).monotone)
 
 theorem rpow_le_rpow {x y : ℝ≥0∞} {z : ℝ} (h₁ : x ≤ y) (h₂ : 0 ≤ z) : (x^z) ≤ (y^z) :=
   monotone_rpow_of_nonneg h₂ h₁
@@ -1717,26 +1729,40 @@ begin
   exact [expr of_real_rpow_of_pos (hx_nonneg.lt_of_ne hx0.symm)]
 end
 
-theorem rpow_left_injective {x : ℝ} (hx : x ≠ 0) : Function.Injective fun y : ℝ≥0∞ => y^x :=
-  by 
-    intro y z hyz 
-    dsimp only  at hyz 
-    rw [←rpow_one y, ←rpow_one z, ←_root_.mul_inv_cancel hx, rpow_mul, rpow_mul, hyz]
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem rpow_left_injective
+{x : exprℝ()}
+(hx : «expr ≠ »(x, 0)) : function.injective (λ y : «exprℝ≥0∞»(), «expr ^ »(y, x)) :=
+begin
+  intros [ident y, ident z, ident hyz],
+  dsimp ["only"] [] [] ["at", ident hyz],
+  rw ["[", "<-", expr rpow_one y, ",", "<-", expr rpow_one z, ",", "<-", expr _root_.mul_inv_cancel hx, ",", expr rpow_mul, ",", expr rpow_mul, ",", expr hyz, "]"] []
+end
 
-theorem rpow_left_surjective {x : ℝ} (hx : x ≠ 0) : Function.Surjective fun y : ℝ≥0∞ => y^x :=
-  fun y =>
-    ⟨y^x⁻¹,
-      by 
-        simpRw [←rpow_mul, _root_.inv_mul_cancel hx, rpow_one]⟩
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem rpow_left_surjective
+{x : exprℝ()}
+(hx : «expr ≠ »(x, 0)) : function.surjective (λ y : «exprℝ≥0∞»(), «expr ^ »(y, x)) :=
+λ
+y, ⟨«expr ^ »(y, «expr ⁻¹»(x)), by simp_rw ["[", "<-", expr rpow_mul, ",", expr _root_.inv_mul_cancel hx, ",", expr rpow_one, "]"] []⟩
 
-theorem rpow_left_bijective {x : ℝ} (hx : x ≠ 0) : Function.Bijective fun y : ℝ≥0∞ => y^x :=
-  ⟨rpow_left_injective hx, rpow_left_surjective hx⟩
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem rpow_left_bijective
+{x : exprℝ()}
+(hx : «expr ≠ »(x, 0)) : function.bijective (λ y : «exprℝ≥0∞»(), «expr ^ »(y, x)) :=
+⟨rpow_left_injective hx, rpow_left_surjective hx⟩
 
-theorem rpow_left_monotone_of_nonneg {x : ℝ} (hx : 0 ≤ x) : Monotone fun y : ℝ≥0∞ => y^x :=
-  fun y z hyz => rpow_le_rpow hyz hx
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem rpow_left_monotone_of_nonneg
+{x : exprℝ()}
+(hx : «expr ≤ »(0, x)) : monotone (λ y : «exprℝ≥0∞»(), «expr ^ »(y, x)) :=
+λ y z hyz, rpow_le_rpow hyz hx
 
-theorem rpow_left_strict_mono_of_pos {x : ℝ} (hx : 0 < x) : StrictMono fun y : ℝ≥0∞ => y^x :=
-  fun y z hyz => rpow_lt_rpow hyz hx
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem rpow_left_strict_mono_of_pos
+{x : exprℝ()}
+(hx : «expr < »(0, x)) : strict_mono (λ y : «exprℝ≥0∞»(), «expr ^ »(y, x)) :=
+λ y z hyz, rpow_lt_rpow hyz hx
 
 -- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem tendsto_rpow_at_top
@@ -1757,19 +1783,23 @@ begin
   exact_mod_cast [expr hc a (by exact_mod_cast [expr ha])]
 end
 
-private theorem continuous_at_rpow_const_of_pos {x : ℝ≥0∞} {y : ℝ} (h : 0 < y) :
-  ContinuousAt (fun a : Ennreal => a^y) x :=
-  by 
-    byCases' hx : x = ⊤
-    ·
-      rw [hx, ContinuousAt]
-      convert tendsto_rpow_at_top h 
-      simp [h]
-    lift x to  ℝ≥0  using hx 
-    rw [continuous_at_coe_iff]
-    convert continuous_coe.continuous_at.comp (Nnreal.continuous_at_rpow_const (Or.inr h.le)) using 1 
-    ext1 x 
-    simp [coe_rpow_of_nonneg _ h.le]
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+theorem continuous_at_rpow_const_of_pos
+{x : «exprℝ≥0∞»()}
+{y : exprℝ()}
+(h : «expr < »(0, y)) : continuous_at (λ a : ennreal, «expr ^ »(a, y)) x :=
+begin
+  by_cases [expr hx, ":", expr «expr = »(x, «expr⊤»())],
+  { rw ["[", expr hx, ",", expr continuous_at, "]"] [],
+    convert [] [expr tendsto_rpow_at_top h] [],
+    simp [] [] [] ["[", expr h, "]"] [] [] },
+  lift [expr x] ["to", expr «exprℝ≥0»()] ["using", expr hx] [],
+  rw [expr continuous_at_coe_iff] [],
+  convert [] [expr continuous_coe.continuous_at.comp (nnreal.continuous_at_rpow_const (or.inr h.le))] ["using", 1],
+  ext1 [] [ident x],
+  simp [] [] [] ["[", expr coe_rpow_of_nonneg _ h.le, "]"] [] []
+end
 
 -- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[continuity #[]] theorem continuous_rpow_const {y : exprℝ()} : continuous (λ a : ennreal, «expr ^ »(a, y)) :=
@@ -1786,14 +1816,17 @@ begin
     exact [expr ennreal.continuous_inv.continuous_at.comp (continuous_at_rpow_const_of_pos z_pos)] }
 end
 
-theorem tendsto_const_mul_rpow_nhds_zero_of_pos {c : ℝ≥0∞} (hc : c ≠ ∞) {y : ℝ} (hy : 0 < y) :
-  tendsto (fun x : ℝ≥0∞ => c*x^y) (𝓝 0) (𝓝 0) :=
-  by 
-    convert Ennreal.Tendsto.const_mul (ennreal.continuous_rpow_const.tendsto 0) _
-    ·
-      simp [hy]
-    ·
-      exact Or.inr hc
+-- error in Analysis.SpecialFunctions.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_const_mul_rpow_nhds_zero_of_pos
+{c : «exprℝ≥0∞»()}
+(hc : «expr ≠ »(c, «expr∞»()))
+{y : exprℝ()}
+(hy : «expr < »(0, y)) : tendsto (λ x : «exprℝ≥0∞»(), «expr * »(c, «expr ^ »(x, y))) (expr𝓝() 0) (expr𝓝() 0) :=
+begin
+  convert [] [expr ennreal.tendsto.const_mul (ennreal.continuous_rpow_const.tendsto 0) _] [],
+  { simp [] [] [] ["[", expr hy, "]"] [] [] },
+  { exact [expr or.inr hc] }
+end
 
 end Ennreal
 

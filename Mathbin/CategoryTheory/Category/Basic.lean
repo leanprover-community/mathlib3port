@@ -71,7 +71,7 @@ namespace CategoryTheory
 /-- A preliminary structure on the way to defining a category,
 containing the data, but none of the axioms. -/
 class category_struct(obj : Type u) extends Quiver.{v + 1} obj : Type max u (v + 1) where 
-  id : ∀ X : obj, hom X X 
+  id : ∀ (X : obj), hom X X 
   comp : ∀ {X Y Z : obj}, (X ⟶ Y) → (Y ⟶ Z) → (X ⟶ Z)
 
 notation "𝟙" => category_struct.id
@@ -86,13 +86,13 @@ specified explicitly, as `category.{v} C`. (See also `large_category` and `small
 See https://stacks.math.columbia.edu/tag/0014.
 -/
 class category(obj : Type u) extends category_struct.{v} obj : Type max u (v + 1) where 
-  id_comp' : ∀ {X Y : obj} f : hom X Y, 𝟙 X ≫ f = f :=  by 
+  id_comp' : ∀ {X Y : obj} (f : hom X Y), 𝟙 X ≫ f = f :=  by 
   runTac 
     obviously 
-  comp_id' : ∀ {X Y : obj} f : hom X Y, f ≫ 𝟙 Y = f :=  by 
+  comp_id' : ∀ {X Y : obj} (f : hom X Y), f ≫ 𝟙 Y = f :=  by 
   runTac 
     obviously 
-  assoc' : ∀ {W X Y Z : obj} f : hom W X g : hom X Y h : hom Y Z, (f ≫ g) ≫ h = f ≫ g ≫ h :=  by 
+  assoc' : ∀ {W X Y Z : obj} (f : hom W X) (g : hom X Y) (h : hom Y Z), (f ≫ g) ≫ h = f ≫ g ≫ h :=  by 
   runTac 
     obviously
 
@@ -141,36 +141,38 @@ infixr:80 " =≫ " => eq_whisker
 
 infixr:80 " ≫= " => whisker_eq
 
-theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} h : Y ⟶ Z, f ≫ h = g ≫ h) : f = g :=
+theorem eq_of_comp_left_eq {f g : X ⟶ Y} (w : ∀ {Z : C} (h : Y ⟶ Z), f ≫ h = g ≫ h) : f = g :=
   by 
     convert w (𝟙 Y)
     tidy
 
-theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} h : X ⟶ Y, h ≫ f = h ≫ g) : f = g :=
+theorem eq_of_comp_right_eq {f g : Y ⟶ Z} (w : ∀ {X : C} (h : X ⟶ Y), h ≫ f = h ≫ g) : f = g :=
   by 
     convert w (𝟙 Y)
     tidy
 
-theorem eq_of_comp_left_eq' (f g : X ⟶ Y) (w : (fun {Z : C} h : Y ⟶ Z => f ≫ h) = fun {Z : C} h : Y ⟶ Z => g ≫ h) :
-  f = g :=
-  eq_of_comp_left_eq
-    fun Z h =>
-      by 
-        convert congr_funₓ (congr_funₓ w Z) h
+-- error in CategoryTheory.Category.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem eq_of_comp_left_eq'
+(f g : «expr ⟶ »(X, Y))
+(w : «expr = »(λ
+  {Z : C}
+  (h : «expr ⟶ »(Y, Z)), «expr ≫ »(f, h), λ {Z : C} (h : «expr ⟶ »(Y, Z)), «expr ≫ »(g, h))) : «expr = »(f, g) :=
+eq_of_comp_left_eq (λ Z h, by convert [] [expr congr_fun (congr_fun w Z) h] [])
 
-theorem eq_of_comp_right_eq' (f g : Y ⟶ Z) (w : (fun {X : C} h : X ⟶ Y => h ≫ f) = fun {X : C} h : X ⟶ Y => h ≫ g) :
-  f = g :=
-  eq_of_comp_right_eq
-    fun X h =>
-      by 
-        convert congr_funₓ (congr_funₓ w X) h
+-- error in CategoryTheory.Category.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem eq_of_comp_right_eq'
+(f g : «expr ⟶ »(Y, Z))
+(w : «expr = »(λ
+  {X : C}
+  (h : «expr ⟶ »(X, Y)), «expr ≫ »(h, f), λ {X : C} (h : «expr ⟶ »(X, Y)), «expr ≫ »(h, g))) : «expr = »(f, g) :=
+eq_of_comp_right_eq (λ X h, by convert [] [expr congr_fun (congr_fun w X) h] [])
 
-theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} g : X ⟶ Y, f ≫ g = g) : f = 𝟙 X :=
+theorem id_of_comp_left_id (f : X ⟶ X) (w : ∀ {Y : C} (g : X ⟶ Y), f ≫ g = g) : f = 𝟙 X :=
   by 
     convert w (𝟙 X)
     tidy
 
-theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} g : Y ⟶ X, g ≫ f = g) : f = 𝟙 X :=
+theorem id_of_comp_right_id (f : X ⟶ X) (w : ∀ {Y : C} (g : Y ⟶ X), g ≫ f = g) : f = 𝟙 X :=
   by 
     convert w (𝟙 X)
     tidy
@@ -192,7 +194,7 @@ A morphism `f` is an epimorphism if it can be "cancelled" when precomposed:
 See https://stacks.math.columbia.edu/tag/003B.
 -/
 class epi(f : X ⟶ Y) : Prop where 
-  left_cancellation : ∀ {Z : C} g h : Y ⟶ Z w : f ≫ g = f ≫ h, g = h
+  left_cancellation : ∀ {Z : C} (g h : Y ⟶ Z) (w : f ≫ g = f ≫ h), g = h
 
 /--
 A morphism `f` is a monomorphism if it can be "cancelled" when postcomposed:
@@ -201,7 +203,7 @@ A morphism `f` is a monomorphism if it can be "cancelled" when postcomposed:
 See https://stacks.math.columbia.edu/tag/003B.
 -/
 class mono(f : X ⟶ Y) : Prop where 
-  right_cancellation : ∀ {Z : C} g h : Z ⟶ X w : g ≫ f = h ≫ f, g = h
+  right_cancellation : ∀ {Z : C} (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h
 
 instance  (X : C) : epi (𝟙 X) :=
   ⟨fun Z g h w =>

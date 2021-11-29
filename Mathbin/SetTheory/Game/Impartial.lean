@@ -64,7 +64,7 @@ instance move_left_impartial {G : Pgame} [h : G.impartial] (i : G.left_moves) : 
 instance move_right_impartial {G : Pgame} [h : G.impartial] (j : G.right_moves) : (G.move_right j).Impartial :=
   (impartial_def.1 h).2.2 j
 
-instance impartial_add : ∀ G H : Pgame [G.impartial] [H.impartial], (G+H).Impartial
+instance impartial_add : ∀ (G H : Pgame) [G.impartial] [H.impartial], (G+H).Impartial
 | G, H =>
   by 
     intros hG hH 
@@ -84,7 +84,7 @@ instance impartial_add : ∀ G H : Pgame [G.impartial] [H.impartial], (G+H).Impa
       simp only [add_move_left_inl, add_move_right_inl, add_move_left_inr, add_move_right_inr]
       exact impartial_add _ _
 
-instance impartial_neg : ∀ G : Pgame [G.impartial], (-G).Impartial
+instance impartial_neg : ∀ (G : Pgame) [G.impartial], (-G).Impartial
 | G =>
   by 
     intro hG 
@@ -172,7 +172,7 @@ theorem first_wins_symm' (G : Pgame) [G.impartial] : G.first_wins ↔ 0 < G :=
   ⟨And.left, fun h => ⟨h, lt_zero_iff.2 h⟩⟩
 
 theorem no_good_left_moves_iff_first_loses (G : Pgame) [G.impartial] :
-  (∀ i : G.left_moves, (G.move_left i).FirstWins) ↔ G.first_loses :=
+  (∀ (i : G.left_moves), (G.move_left i).FirstWins) ↔ G.first_loses :=
   by 
     split 
     ·
@@ -192,7 +192,7 @@ theorem no_good_left_moves_iff_first_loses (G : Pgame) [G.impartial] :
       exact (le_def_lt.1$ (first_loses_symm G).1 hp).1 i
 
 theorem no_good_right_moves_iff_first_loses (G : Pgame) [G.impartial] :
-  (∀ j : G.right_moves, (G.move_right j).FirstWins) ↔ G.first_loses :=
+  (∀ (j : G.right_moves), (G.move_right j).FirstWins) ↔ G.first_loses :=
   by 
     rw [first_loses_of_equiv_iff (neg_equiv_self G), ←no_good_left_moves_iff_first_loses]
     refine' ⟨fun h i => _, fun h i => _⟩

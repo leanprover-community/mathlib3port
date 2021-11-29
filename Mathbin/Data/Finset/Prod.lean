@@ -73,31 +73,39 @@ theorem product_bUnion [DecidableEq γ] (s : Finset α) (t : Finset β) (f : α 
 theorem card_product (s : Finset α) (t : Finset β) : card (s.product t) = card s*card t :=
   Multiset.card_product _ _
 
-theorem filter_product (p : α → Prop) (q : β → Prop) [DecidablePred p] [DecidablePred q] :
-  ((s.product t).filter fun x : α × β => p x.1 ∧ q x.2) = (s.filter p).product (t.filter q) :=
-  by 
-    ext ⟨a, b⟩
-    simp only [mem_filter, mem_product]
-    finish
+-- error in Data.Finset.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem filter_product
+(p : α → exprProp())
+(q : β → exprProp())
+[decidable_pred p]
+[decidable_pred q] : «expr = »((s.product t).filter (λ
+  x : «expr × »(α, β), «expr ∧ »(p x.1, q x.2)), (s.filter p).product (t.filter q)) :=
+by { ext [] ["⟨", ident a, ",", ident b, "⟩"] [],
+  simp [] [] ["only"] ["[", expr mem_filter, ",", expr mem_product, "]"] [] [],
+  finish [] [] }
 
-theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q : β → Prop) [DecidablePred p]
-  [DecidablePred q] :
-  ((s.product t).filter fun x : α × β => p x.1 ↔ q x.2).card =
-    ((s.filter p).card*(t.filter q).card)+(s.filter (Not ∘ p)).card*(t.filter (Not ∘ q)).card :=
-  by 
-    classical 
-    rw [←card_product, ←card_product, ←filter_product, ←filter_product, ←card_union_eq]
-    ·
-      apply congr_argₓ 
-      ext ⟨a, b⟩
-      simp only [filter_union_right, mem_filter, mem_product]
-      split  <;> intros  <;> finish
-    ·
-      rw [disjoint_iff]
-      change _ ∩ _ = ∅
-      ext ⟨a, b⟩
-      rw [mem_inter]
-      finish
+-- error in Data.Finset.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem filter_product_card
+(s : finset α)
+(t : finset β)
+(p : α → exprProp())
+(q : β → exprProp())
+[decidable_pred p]
+[decidable_pred q] : «expr = »(((s.product t).filter (λ
+   x : «expr × »(α, β), «expr ↔ »(p x.1, q x.2))).card, «expr + »(«expr * »((s.filter p).card, (t.filter q).card), «expr * »((s.filter «expr ∘ »(not, p)).card, (t.filter «expr ∘ »(not, q)).card))) :=
+begin
+  classical,
+  rw ["[", "<-", expr card_product, ",", "<-", expr card_product, ",", "<-", expr filter_product, ",", "<-", expr filter_product, ",", "<-", expr card_union_eq, "]"] [],
+  { apply [expr congr_arg],
+    ext [] ["⟨", ident a, ",", ident b, "⟩"] [],
+    simp [] [] ["only"] ["[", expr filter_union_right, ",", expr mem_filter, ",", expr mem_product, "]"] [] [],
+    split; intros []; finish [] [] },
+  { rw [expr disjoint_iff] [],
+    change [expr «expr = »(«expr ∩ »(_, _), «expr∅»())] [] [],
+    ext [] ["⟨", ident a, ",", ident b, "⟩"] [],
+    rw [expr mem_inter] [],
+    finish [] [] }
+end
 
 theorem empty_product (t : Finset β) : (∅ : Finset α).product t = ∅ :=
   rfl
@@ -140,15 +148,15 @@ section Diag
 
 variable(s : Finset α)[DecidableEq α]
 
+-- error in Data.Finset.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a finite set `s`, the diagonal, `s.diag` is the set of pairs of the form `(a, a)` for
-`a ∈ s`. -/
-def diag :=
-  (s.product s).filter fun a : α × α => a.fst = a.snd
+`a ∈ s`. -/ def diag :=
+(s.product s).filter (λ a : «expr × »(α, α), «expr = »(a.fst, a.snd))
 
+-- error in Data.Finset.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a finite set `s`, the off-diagonal, `s.off_diag` is the set of pairs `(a, b)` with `a ≠ b`
-for `a, b ∈ s`. -/
-def off_diag :=
-  (s.product s).filter fun a : α × α => a.fst ≠ a.snd
+for `a, b ∈ s`. -/ def off_diag :=
+(s.product s).filter (λ a : «expr × »(α, α), «expr ≠ »(a.fst, a.snd))
 
 @[simp]
 theorem mem_diag (x : α × α) : x ∈ s.diag ↔ x.1 ∈ s ∧ x.1 = x.2 :=

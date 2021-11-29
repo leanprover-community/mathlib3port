@@ -306,7 +306,7 @@ theorem surjective_range_restrict : Function.Surjective f.range_restrict :=
 end LieHom
 
 theorem Submodule.exists_lie_subalgebra_coe_eq_iff (p : Submodule R L) :
-  (∃ K : LieSubalgebra R L, «expr↑ » K = p) ↔ ∀ x y : L, x ∈ p → y ∈ p → ⁅x,y⁆ ∈ p :=
+  (∃ K : LieSubalgebra R L, «expr↑ » K = p) ↔ ∀ (x y : L), x ∈ p → y ∈ p → ⁅x,y⁆ ∈ p :=
   by 
     split 
     ·
@@ -489,7 +489,7 @@ theorem mem_inf (x : L) : x ∈ K⊓K' ↔ x ∈ K ∧ x ∈ K' :=
   by 
     rw [←mem_coe_submodule, ←mem_coe_submodule, ←mem_coe_submodule, inf_coe_to_submodule, Submodule.mem_inf]
 
-theorem eq_bot_iff : K = ⊥ ↔ ∀ x : L, x ∈ K → x = 0 :=
+theorem eq_bot_iff : K = ⊥ ↔ ∀ (x : L), x ∈ K → x = 0 :=
   by 
     rw [eq_bot_iff]
     exact Iff.rfl
@@ -581,7 +581,7 @@ def lie_span : LieSubalgebra R L :=
 
 variable{R L s}
 
-theorem mem_lie_span {x : L} : x ∈ lie_span R L s ↔ ∀ K : LieSubalgebra R L, s ⊆ K → x ∈ K :=
+theorem mem_lie_span {x : L} : x ∈ lie_span R L s ↔ ∀ (K : LieSubalgebra R L), s ⊆ K → x ∈ K :=
   by 
     change x ∈ (lie_span R L s : Set L) ↔ _ 
     erw [Inf_coe]

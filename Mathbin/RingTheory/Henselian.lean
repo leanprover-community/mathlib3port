@@ -92,8 +92,8 @@ of `X^2-1` over `ℤ/4ℤ`.) -/
 class HenselianRing(R : Type _)[CommRingₓ R](I : Ideal R) : Prop where 
   jac : I ≤ Ideal.jacobson ⊥
   is_henselian :
-  ∀ f : Polynomial R hf : f.monic a₀ : R h₁ : f.eval a₀ ∈ I h₂ : IsUnit (Ideal.Quotient.mk I (f.derivative.eval a₀)),
-    ∃ a : R, f.is_root a ∧ a - a₀ ∈ I
+  ∀ (f : Polynomial R) (hf : f.monic) (a₀ : R) (h₁ : f.eval a₀ ∈ I)
+    (h₂ : IsUnit (Ideal.Quotient.mk I (f.derivative.eval a₀))), ∃ a : R, f.is_root a ∧ a - a₀ ∈ I
 
 /-- A local ring `R` is *Henselian* if the following condition holds:
 for every polynomial `f` over `R`, with a *simple* root `a₀` over the residue field,
@@ -105,7 +105,7 @@ In other words, `R` is local Henselian if it is Henselian at the ideal `I`,
 in the sense of `henselian_ring`. -/
 class HenselianLocalRing(R : Type _)[CommRingₓ R] extends LocalRing R : Prop where 
   is_henselian :
-  ∀ f : Polynomial R hf : f.monic a₀ : R h₁ : f.eval a₀ ∈ maximal_ideal R h₂ : IsUnit (f.derivative.eval a₀),
+  ∀ (f : Polynomial R) (hf : f.monic) (a₀ : R) (h₁ : f.eval a₀ ∈ maximal_ideal R) (h₂ : IsUnit (f.derivative.eval a₀)),
     ∃ a : R, f.is_root a ∧ a - a₀ ∈ maximal_ideal R
 
 instance (priority := 100)Field.henselian (K : Type _) [Field K] : HenselianLocalRing K :=

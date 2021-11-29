@@ -336,12 +336,12 @@ def circle_equiv_gen
   end }
 
 @[simp]
-theorem circle_equiv_apply (hk : ∀ x : K, (1+x^2) ≠ 0) (x : K) :
+theorem circle_equiv_apply (hk : ∀ (x : K), (1+x^2) ≠ 0) (x : K) :
   (circleEquivGen hk x : K × K) = ⟨(2*x) / 1+x^2, (1 - (x^2)) / 1+x^2⟩ :=
   rfl
 
 @[simp]
-theorem circle_equiv_symm_apply (hk : ∀ x : K, (1+x^2) ≠ 0) (v : { p : K × K // ((p.1^2)+p.2^2) = 1 ∧ p.2 ≠ -1 }) :
+theorem circle_equiv_symm_apply (hk : ∀ (x : K), (1+x^2) ≠ 0) (v : { p : K × K // ((p.1^2)+p.2^2) = 1 ∧ p.2 ≠ -1 }) :
   (circleEquivGen hk).symm v = (v : K × K).1 / (v : K × K).2+1 :=
   rfl
 

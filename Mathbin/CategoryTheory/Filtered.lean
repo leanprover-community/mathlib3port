@@ -2,7 +2,7 @@ import Mathbin.CategoryTheory.FinCategory
 import Mathbin.CategoryTheory.Limits.Cones 
 import Mathbin.CategoryTheory.Adjunction.Basic 
 import Mathbin.CategoryTheory.Category.Preorder 
-import Mathbin.Order.BoundedLattice
+import Mathbin.Order.BoundedOrder
 
 /-!
 # Filtered categories
@@ -57,8 +57,8 @@ A category `is_filtered_or_empty` if
    are equal.
 -/
 class is_filtered_or_empty : Prop where 
-  cocone_objs : ∀ X Y : C, ∃ (Z : _)(f : X ⟶ Z)(g : Y ⟶ Z), True 
-  cocone_maps : ∀ ⦃X Y : C⦄ f g : X ⟶ Y, ∃ (Z : _)(h : Y ⟶ Z), f ≫ h = g ≫ h
+  cocone_objs : ∀ (X Y : C), ∃ (Z : _)(f : X ⟶ Z)(g : Y ⟶ Z), True 
+  cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (Z : _)(h : Y ⟶ Z), f ≫ h = g ≫ h
 
 /--
 A category `is_filtered` if
@@ -101,11 +101,11 @@ instance (priority := 100)is_filtered_of_directed_order_nonempty (α : Type u) [
   is_filtered α :=
   {  }
 
-example  (α : Type u) [SemilatticeSupBot α] : is_filtered α :=
+example  (α : Type u) [SemilatticeSup α] [OrderBot α] : is_filtered α :=
   by 
     infer_instance
 
-example  (α : Type u) [SemilatticeSupTop α] : is_filtered α :=
+example  (α : Type u) [SemilatticeSup α] [OrderTop α] : is_filtered α :=
   by 
     infer_instance
 
@@ -194,7 +194,7 @@ such that the triangles commute: `f ≫ T Y = T X`, for `f : X ⟶ Y` in the `fi
 -/
 theorem sup_exists :
   ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (X ⟶ S)),
-    ∀ {X Y : C} mX : X ∈ O mY : Y ∈ O {f : X ⟶ Y},
+    ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
       (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
   by 
     classical 
@@ -249,44 +249,29 @@ theorem to_sup_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
 
 variable{J : Type v}[small_category J][fin_category J]
 
+-- error in CategoryTheory.Filtered: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If we have `is_filtered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cocone over `F`.
--/
-theorem cocone_nonempty (F : J ⥤ C) : _root_.nonempty (cocone F) :=
-  by 
-    classical 
-    let O := finset.univ.image F.obj 
-    let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
-      finset.univ.bUnion
-        fun X : J =>
-          finset.univ.bUnion
-            fun Y : J =>
-              finset.univ.image
-                fun f : X ⟶ Y =>
-                  ⟨F.obj X, F.obj Y,
-                    by 
-                      simp ,
-                    by 
-                      simp ,
-                    F.map f⟩
-    obtain ⟨Z, f, w⟩ := sup_exists O H 
-    refine'
-      ⟨⟨Z,
-          ⟨fun X =>
-              f
-                (by 
-                  simp ),
-            _⟩⟩⟩
-    intro j j' g 
-    dsimp 
-    simp only [category.comp_id]
-    apply w 
-    simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
-    exact
-      ⟨j, rfl, j', g,
-        by 
-          simp ⟩
+-/ theorem cocone_nonempty (F : «expr ⥤ »(J, C)) : _root_.nonempty (cocone F) :=
+begin
+  classical,
+  let [ident O] [] [":=", expr finset.univ.image F.obj],
+  let [ident H] [":", expr finset «exprΣ' , »((X Y : C)
+    (mX : «expr ∈ »(X, O))
+    (mY : «expr ∈ »(Y, O)), «expr ⟶ »(X, Y))] [":=", expr finset.univ.bUnion (λ
+    X : J, finset.univ.bUnion (λ
+     Y : J, finset.univ.image (λ
+      f : «expr ⟶ »(X, Y), ⟨F.obj X, F.obj Y, by simp [] [] [] [] [] [], by simp [] [] [] [] [] [], F.map f⟩)))],
+  obtain ["⟨", ident Z, ",", ident f, ",", ident w, "⟩", ":=", expr sup_exists O H],
+  refine [expr ⟨⟨Z, ⟨λ X, f (by simp [] [] [] [] [] []), _⟩⟩⟩],
+  intros [ident j, ident j', ident g],
+  dsimp [] [] [] [],
+  simp [] [] ["only"] ["[", expr category.comp_id, "]"] [] [],
+  apply [expr w],
+  simp [] [] ["only"] ["[", expr finset.mem_univ, ",", expr finset.mem_bUnion, ",", expr exists_and_distrib_left, ",", expr exists_prop_of_true, ",", expr finset.mem_image, "]"] [] [],
+  exact [expr ⟨j, rfl, j', g, by simp [] [] [] [] [] []⟩]
+end
 
 /--
 An arbitrary choice of cocone over `F : J ⥤ C`, for `fin_category J` and `is_filtered C`.
@@ -476,8 +461,8 @@ A category `is_cofiltered_or_empty` if
    are equal.
 -/
 class is_cofiltered_or_empty : Prop where 
-  cocone_objs : ∀ X Y : C, ∃ (W : _)(f : W ⟶ X)(g : W ⟶ Y), True 
-  cocone_maps : ∀ ⦃X Y : C⦄ f g : X ⟶ Y, ∃ (W : _)(h : W ⟶ X), h ≫ f = h ≫ g
+  cocone_objs : ∀ (X Y : C), ∃ (W : _)(f : W ⟶ X)(g : W ⟶ Y), True 
+  cocone_maps : ∀ ⦃X Y : C⦄ (f g : X ⟶ Y), ∃ (W : _)(h : W ⟶ X), h ≫ f = h ≫ g
 
 /--
 A category `is_cofiltered` if
@@ -504,11 +489,11 @@ instance (priority := 100)is_cofiltered_of_semilattice_inf_nonempty (α : Type u
   is_cofiltered α :=
   {  }
 
-example  (α : Type u) [SemilatticeInfBot α] : is_cofiltered α :=
+example  (α : Type u) [SemilatticeInf α] [OrderBot α] : is_cofiltered α :=
   by 
     infer_instance
 
-example  (α : Type u) [SemilatticeInfTop α] : is_cofiltered α :=
+example  (α : Type u) [SemilatticeInf α] [OrderTop α] : is_cofiltered α :=
   by 
     infer_instance
 
@@ -597,7 +582,7 @@ such that the triangles commute: `T X ≫ f = T Y`, for `f : X ⟶ Y` in the `fi
 -/
 theorem inf_exists :
   ∃ (S : C)(T : ∀ {X : C}, X ∈ O → (S ⟶ X)),
-    ∀ {X Y : C} mX : X ∈ O mY : Y ∈ O {f : X ⟶ Y},
+    ∀ {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y},
       (⟨X, Y, mX, mY, f⟩ : Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
   by 
     classical 
@@ -652,45 +637,30 @@ theorem inf_to_commutes {X Y : C} (mX : X ∈ O) (mY : Y ∈ O) {f : X ⟶ Y}
 
 variable{J : Type v}[small_category J][fin_category J]
 
+-- error in CategoryTheory.Filtered: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If we have `is_cofiltered C`, then for any functor `F : J ⥤ C` with `fin_category J`,
 there exists a cone over `F`.
--/
-theorem cone_nonempty (F : J ⥤ C) : _root_.nonempty (cone F) :=
-  by 
-    classical 
-    let O := finset.univ.image F.obj 
-    let H : Finset (Σ'(X Y : C)(mX : X ∈ O)(mY : Y ∈ O), X ⟶ Y) :=
-      finset.univ.bUnion
-        fun X : J =>
-          finset.univ.bUnion
-            fun Y : J =>
-              finset.univ.image
-                fun f : X ⟶ Y =>
-                  ⟨F.obj X, F.obj Y,
-                    by 
-                      simp ,
-                    by 
-                      simp ,
-                    F.map f⟩
-    obtain ⟨Z, f, w⟩ := inf_exists O H 
-    refine'
-      ⟨⟨Z,
-          ⟨fun X =>
-              f
-                (by 
-                  simp ),
-            _⟩⟩⟩
-    intro j j' g 
-    dsimp 
-    simp only [category.id_comp]
-    symm 
-    apply w 
-    simp only [Finset.mem_univ, Finset.mem_bUnion, exists_and_distrib_left, exists_prop_of_true, Finset.mem_image]
-    exact
-      ⟨j, rfl, j', g,
-        by 
-          simp ⟩
+-/ theorem cone_nonempty (F : «expr ⥤ »(J, C)) : _root_.nonempty (cone F) :=
+begin
+  classical,
+  let [ident O] [] [":=", expr finset.univ.image F.obj],
+  let [ident H] [":", expr finset «exprΣ' , »((X Y : C)
+    (mX : «expr ∈ »(X, O))
+    (mY : «expr ∈ »(Y, O)), «expr ⟶ »(X, Y))] [":=", expr finset.univ.bUnion (λ
+    X : J, finset.univ.bUnion (λ
+     Y : J, finset.univ.image (λ
+      f : «expr ⟶ »(X, Y), ⟨F.obj X, F.obj Y, by simp [] [] [] [] [] [], by simp [] [] [] [] [] [], F.map f⟩)))],
+  obtain ["⟨", ident Z, ",", ident f, ",", ident w, "⟩", ":=", expr inf_exists O H],
+  refine [expr ⟨⟨Z, ⟨λ X, f (by simp [] [] [] [] [] []), _⟩⟩⟩],
+  intros [ident j, ident j', ident g],
+  dsimp [] [] [] [],
+  simp [] [] ["only"] ["[", expr category.id_comp, "]"] [] [],
+  symmetry,
+  apply [expr w],
+  simp [] [] ["only"] ["[", expr finset.mem_univ, ",", expr finset.mem_bUnion, ",", expr exists_and_distrib_left, ",", expr exists_prop_of_true, ",", expr finset.mem_image, "]"] [] [],
+  exact [expr ⟨j, rfl, j', g, by simp [] [] [] [] [] []⟩]
+end
 
 /--
 An arbitrary choice of cone over `F : J ⥤ C`, for `fin_category J` and `is_cofiltered C`.

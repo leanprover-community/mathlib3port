@@ -135,7 +135,7 @@ measure has the Caratheodory property.
 /-- We say that an outer measure `μ` in an (e)metric space is *metric* if `μ (s ∪ t) = μ s + μ t`
 for any two metric separated sets `s`, `t`. -/
 def is_metric (μ : outer_measure X) : Prop :=
-  ∀ s t : Set X, IsMetricSeparated s t → μ (s ∪ t) = μ s+μ t
+  ∀ (s t : Set X), IsMetricSeparated s t → μ (s ∪ t) = μ s+μ t
 
 namespace IsMetric
 
@@ -143,7 +143,7 @@ variable{μ : outer_measure X}
 
 /-- A metric outer measure is additive on a finite set of pairwise metric separated sets. -/
 theorem finset_Union_of_pairwise_separated (hm : is_metric μ) {I : Finset ι} {s : ι → Set X}
-  (hI : ∀ i _ : i ∈ I j _ : j ∈ I, i ≠ j → IsMetricSeparated (s i) (s j)) :
+  (hI : ∀ i (_ : i ∈ I) j (_ : j ∈ I), i ≠ j → IsMetricSeparated (s i) (s j)) :
   μ (⋃(i : _)(_ : i ∈ I), s i) = ∑i in I, μ (s i) :=
   by 
     classical 
@@ -252,11 +252,12 @@ measures. We also prove basic lemmas about `map`/`comap` of these measures.
 -/
 
 
+-- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Auxiliary definition for `outer_measure.mk_metric'`: given a function on sets
 `m : set X → ℝ≥0∞`, returns the maximal outer measure `μ` such that `μ s ≤ m s`
 for any set `s` of diameter at most `r`.-/
-def mk_metric'.pre (m : Set X → ℝ≥0∞) (r : ℝ≥0∞) : outer_measure X :=
-  bounded_by$ extend fun s hs : diam s ≤ r => m s
+def mk_metric'.pre (m : set X → «exprℝ≥0∞»()) (r : «exprℝ≥0∞»()) : outer_measure X :=
+«expr $ »(bounded_by, extend (λ (s) (hs : «expr ≤ »(diam s, r)), m s))
 
 /-- Given a function `m : set X → ℝ≥0∞`, `mk_metric' m` is the supremum of `mk_metric'.pre m r`
 over `r > 0`. Equivalently, it is the limit of `mk_metric'.pre m r` as `r` tends to zero from
@@ -275,7 +276,7 @@ namespace MkMetric'
 
 variable{m : Set X → ℝ≥0∞}{r : ℝ≥0∞}{μ : outer_measure X}{s : Set X}
 
-theorem le_pre : μ ≤ pre m r ↔ ∀ s : Set X, diam s ≤ r → μ s ≤ m s :=
+theorem le_pre : μ ≤ pre m r ↔ ∀ (s : Set X), diam s ≤ r → μ s ≤ m s :=
   by 
     simp only [pre, le_bounded_by, extend, le_infi_iff]
 
@@ -285,14 +286,9 @@ theorem pre_le (hs : diam s ≤ r) : pre m r s ≤ m s :=
 theorem mono_pre (m : Set X → ℝ≥0∞) {r r' : ℝ≥0∞} (h : r ≤ r') : pre m r' ≤ pre m r :=
   le_pre.2$ fun s hs => pre_le (hs.trans h)
 
-theorem mono_pre_nat (m : Set X → ℝ≥0∞) : Monotone fun k : ℕ => pre m (k⁻¹) :=
-  fun k l h =>
-    le_pre.2$
-      fun s hs =>
-        pre_le
-          (hs.trans$
-            by 
-              simpa)
+-- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mono_pre_nat (m : set X → «exprℝ≥0∞»()) : monotone (λ k : exprℕ(), pre m «expr ⁻¹»(k)) :=
+λ k l h, «expr $ »(le_pre.2, λ s hs, pre_le «expr $ »(hs.trans, by simpa [] [] [] [] [] []))
 
 theorem tendsto_pre (m : Set X → ℝ≥0∞) (s : Set X) : tendsto (fun r => pre m r s) (𝓝[Ioi 0] 0) (𝓝$ mk_metric' m s) :=
   by 
@@ -300,12 +296,15 @@ theorem tendsto_pre (m : Set X → ℝ≥0∞) (s : Set X) : tendsto (fun r => p
     simp only [mk_metric', outer_measure.supr_apply, supr_subtype']
     exact tendsto_at_bot_supr fun r r' hr => mono_pre _ hr _
 
-theorem tendsto_pre_nat (m : Set X → ℝ≥0∞) (s : Set X) :
-  tendsto (fun n : ℕ => pre m (n⁻¹) s) at_top (𝓝$ mk_metric' m s) :=
-  by 
-    refine' (tendsto_pre m s).comp (tendsto_inf.2 ⟨Ennreal.tendsto_inv_nat_nhds_zero, _⟩)
-    refine' tendsto_principal.2 (eventually_of_forall$ fun n => _)
-    simp 
+-- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_pre_nat
+(m : set X → «exprℝ≥0∞»())
+(s : set X) : tendsto (λ n : exprℕ(), pre m «expr ⁻¹»(n) s) at_top «expr $ »(expr𝓝(), mk_metric' m s) :=
+begin
+  refine [expr (tendsto_pre m s).comp (tendsto_inf.2 ⟨ennreal.tendsto_inv_nat_nhds_zero, _⟩)],
+  refine [expr tendsto_principal.2 «expr $ »(eventually_of_forall, λ n, _)],
+  simp [] [] [] [] [] []
+end
 
 theorem eq_supr_nat (m : Set X → ℝ≥0∞) : mk_metric' m = ⨆n : ℕ, mk_metric'.pre m (n⁻¹) :=
   by 
@@ -377,7 +376,7 @@ theorem mk_metric_mono {m₁ m₂ : ℝ≥0∞ → ℝ≥0∞} (hle : m₁ ≤�
   by 
     convert mk_metric_mono_smul Ennreal.one_ne_top ennreal.zero_lt_one.ne' _ <;> simp 
 
--- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem isometry_comap_mk_metric
 (m : «exprℝ≥0∞»() → «exprℝ≥0∞»())
 {f : X → Y}
@@ -400,11 +399,14 @@ begin
     exact [expr le_supr (λ h : «expr¬ »((t : set Y).subsingleton), m (diam (t : set Y))) ht] }
 end
 
-theorem isometry_map_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) {f : X → Y} (hf : Isometry f)
-  (H : (Monotone fun d : { d:ℝ≥0∞ | d ≠ 0 } => m d) ∨ surjective f) :
-  map f (mk_metric m) = restrict (range f) (mk_metric m) :=
-  by 
-    rw [←isometry_comap_mk_metric _ hf H, map_comap]
+-- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem isometry_map_mk_metric
+(m : «exprℝ≥0∞»() → «exprℝ≥0∞»())
+{f : X → Y}
+(hf : isometry f)
+(H : «expr ∨ »(monotone (λ
+   d : {d : «exprℝ≥0∞»() | «expr ≠ »(d, 0)}, m d), surjective f)) : «expr = »(map f (mk_metric m), restrict (range f) (mk_metric m)) :=
+by rw ["[", "<-", expr isometry_comap_mk_metric _ hf H, ",", expr map_comap, "]"] []
 
 theorem isometric_comap_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) (f : X ≃ᵢ Y) : comap f (mk_metric m) = mk_metric m :=
   isometry_comap_mk_metric _ f.isometry (Or.inr f.surjective)
@@ -529,44 +531,43 @@ theorem mk_metric_apply (m : ℝ≥0∞ → ℝ≥0∞) (s : Set X) :
       exact ⟨x, hx⟩
 
 theorem le_mk_metric (m : ℝ≥0∞ → ℝ≥0∞) (μ : Measureₓ X) [has_no_atoms μ] (ε : ℝ≥0∞) (h₀ : 0 < ε)
-  (h : ∀ s : Set X, diam s ≤ ε → ¬s.subsingleton → μ s ≤ m (diam s)) : μ ≤ mk_metric m :=
+  (h : ∀ (s : Set X), diam s ≤ ε → ¬s.subsingleton → μ s ≤ m (diam s)) : μ ≤ mk_metric m :=
   by 
     rw [←to_outer_measure_le, mk_metric_to_outer_measure]
     exact outer_measure.le_mk_metric m μ.to_outer_measure measure_singleton ε h₀ h
 
+-- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- To bound the Hausdorff measure (or, more generally, for a measure defined using
 `measure_theory.measure.mk_metric`) of a set, one may use coverings with maximum diameter tending to
 `0`, indexed by any sequence of encodable types. -/
-theorem mk_metric_le_liminf_tsum {β : Type _} {ι : β → Type _} [∀ n, Encodable (ι n)] (s : Set X) {l : Filter β}
-  (r : β → ℝ≥0∞) (hr : tendsto r l (𝓝 0)) (t : ∀ n : β, ι n → Set X) (ht : ∀ᶠn in l, ∀ i, diam (t n i) ≤ r n)
-  (hst : ∀ᶠn in l, s ⊆ ⋃i, t n i) (m : ℝ≥0∞ → ℝ≥0∞) : mk_metric m s ≤ liminf l fun n => ∑'i, m (diam (t n i)) :=
-  by 
-    simp only [mk_metric_apply]
-    refine' bsupr_le fun ε hε => _ 
-    refine' le_of_forall_le_of_dense fun c hc => _ 
-    rcases((frequently_lt_of_liminf_lt
-              (by 
-                inferAutoParam)
-              hc).and_eventually
-          ((hr.eventually (gt_mem_nhds hε)).And (ht.and hst))).exists with
-      ⟨n, hn, hrn, htn, hstn⟩
-    set u : ℕ → Set X := fun j => ⋃(b : _)(_ : b ∈ decode₂ (ι n) j), t n b 
-    refine'
-      binfi_le_of_le u
-        (by 
-          rwa [Union_decode₂])
-        _ 
-    refine' infi_le_of_le (fun j => _) _
-    ·
-      rw [Emetric.diam_Union_mem_option]
-      exact bsupr_le fun _ _ => (htn _).trans hrn.le
-    ·
-      calc (∑'j : ℕ, ⨆ht : ¬(u j).Subsingleton, m (diam (u j))) = _ :=
-        tsum_Union_decode₂ (fun t : Set X => ⨆h : ¬t.subsingleton, m (diam t))
-          (by 
-            simp )
-          _ _ ≤ _ :=
-        Ennreal.tsum_le_tsum fun b => supr_le$ fun htb => le_rfl _ ≤ c := hn.le
+theorem mk_metric_le_liminf_tsum
+{β : Type*}
+{ι : β → Type*}
+[∀ n, encodable (ι n)]
+(s : set X)
+{l : filter β}
+(r : β → «exprℝ≥0∞»())
+(hr : tendsto r l (expr𝓝() 0))
+(t : ∀ n : β, ι n → set X)
+(ht : «expr∀ᶠ in , »((n), l, ∀ i, «expr ≤ »(diam (t n i), r n)))
+(hst : «expr∀ᶠ in , »((n), l, «expr ⊆ »(s, «expr⋃ , »((i), t n i))))
+(m : «exprℝ≥0∞»() → «exprℝ≥0∞»()) : «expr ≤ »(mk_metric m s, liminf l (λ n, «expr∑' , »((i), m (diam (t n i))))) :=
+begin
+  simp [] [] ["only"] ["[", expr mk_metric_apply, "]"] [] [],
+  refine [expr bsupr_le (λ ε hε, _)],
+  refine [expr le_of_forall_le_of_dense (λ c hc, _)],
+  rcases [expr ((frequently_lt_of_liminf_lt (by apply_auto_param) hc).and_eventually ((hr.eventually (gt_mem_nhds hε)).and (ht.and hst))).exists, "with", "⟨", ident n, ",", ident hn, ",", ident hrn, ",", ident htn, ",", ident hstn, "⟩"],
+  set [] [ident u] [":", expr exprℕ() → set X] [":="] [expr λ j, «expr⋃ , »((b «expr ∈ » decode₂ (ι n) j), t n b)] [],
+  refine [expr binfi_le_of_le u (by rwa [expr Union_decode₂] []) _],
+  refine [expr infi_le_of_le (λ j, _) _],
+  { rw [expr emetric.diam_Union_mem_option] [],
+    exact [expr bsupr_le (λ _ _, (htn _).trans hrn.le)] },
+  { calc
+      «expr = »(«expr∑' , »((j : exprℕ()), «expr⨆ , »((ht : «expr¬ »((u j).subsingleton)), m (diam (u j)))), _) : tsum_Union_decode₂ (λ
+       t : set X, «expr⨆ , »((h : «expr¬ »(t.subsingleton)), m (diam t))) (by simp [] [] [] [] [] []) _
+      «expr ≤ »(..., _) : ennreal.tsum_le_tsum (λ b, «expr $ »(supr_le, λ htb, le_rfl))
+      «expr ≤ »(..., c) : hn.le }
+end
 
 -- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- To bound the Hausdorff measure (or, more generally, for a measure defined using
@@ -602,7 +603,7 @@ def hausdorff_measure (d : ℝ) : Measureₓ X :=
 localized [MeasureTheory] notation "μH[" d "]" => MeasureTheory.Measure.hausdorffMeasure d
 
 theorem le_hausdorff_measure (d : ℝ) (μ : Measureₓ X) [has_no_atoms μ] (ε : ℝ≥0∞) (h₀ : 0 < ε)
-  (h : ∀ s : Set X, diam s ≤ ε → ¬s.subsingleton → μ s ≤ (diam s^d)) : μ ≤ μH[d] :=
+  (h : ∀ (s : Set X), diam s ≤ ε → ¬s.subsingleton → μ s ≤ (diam s^d)) : μ ≤ μH[d] :=
   le_mk_metric _ μ ε h₀ h
 
 /-- A formula for `μH[d] s` that works for all `d`. In case of a positive `d` a simpler formula
@@ -636,7 +637,7 @@ theorem hausdorff_measure_apply {d : ℝ} (hd : 0 < d) (s : Set X) :
 /-- To bound the Hausdorff measure of a set, one may use coverings with maximum diameter tending
 to `0`, indexed by any sequence of encodable types. -/
 theorem hausdorff_measure_le_liminf_tsum {β : Type _} {ι : β → Type _} [hι : ∀ n, Encodable (ι n)] (d : ℝ) (s : Set X)
-  {l : Filter β} (r : β → ℝ≥0∞) (hr : tendsto r l (𝓝 0)) (t : ∀ n : β, ι n → Set X)
+  {l : Filter β} (r : β → ℝ≥0∞) (hr : tendsto r l (𝓝 0)) (t : ∀ (n : β), ι n → Set X)
   (ht : ∀ᶠn in l, ∀ i, diam (t n i) ≤ r n) (hst : ∀ᶠn in l, s ⊆ ⋃i, t n i) :
   μH[d] s ≤ liminf l fun n => ∑'i, diam (t n i)^d :=
   mk_metric_le_liminf_tsum s r hr t ht hst _
@@ -644,7 +645,7 @@ theorem hausdorff_measure_le_liminf_tsum {β : Type _} {ι : β → Type _} [hι
 /-- To bound the Hausdorff measure of a set, one may use coverings with maximum diameter tending
 to `0`, indexed by any sequence of finite types. -/
 theorem hausdorff_measure_le_liminf_sum {β : Type _} {ι : β → Type _} [hι : ∀ n, Fintype (ι n)] (d : ℝ) (s : Set X)
-  {l : Filter β} (r : β → ℝ≥0∞) (hr : tendsto r l (𝓝 0)) (t : ∀ n : β, ι n → Set X)
+  {l : Filter β} (r : β → ℝ≥0∞) (hr : tendsto r l (𝓝 0)) (t : ∀ (n : β), ι n → Set X)
   (ht : ∀ᶠn in l, ∀ i, diam (t n i) ≤ r n) (hst : ∀ᶠn in l, s ⊆ ⋃i, t n i) :
   μH[d] s ≤ liminf l fun n => ∑i, diam (t n i)^d :=
   mk_metric_le_liminf_sum s r hr t ht hst _
@@ -713,7 +714,7 @@ open Measureₓ
 -/
 
 
--- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Measure.Hausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In the space `ι → ℝ`, Hausdorff measure coincides exactly with Lebesgue measure. -/
 @[simp]
 theorem hausdorff_measure_pi_real

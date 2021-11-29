@@ -86,11 +86,15 @@ theorem exp_series_sum_eq (x : 𝔸) : (expSeries 𝕂 𝔸).Sum x = ∑'n : ℕ
 theorem exp_series_sum_eq_field (x : 𝕂) : (expSeries 𝕂 𝕂).Sum x = ∑'n : ℕ, (x^n) / n ! :=
   tsum_congr fun n => exp_series_apply_eq_field x n
 
-theorem exp_eq_tsum : exp 𝕂 𝔸 = fun x : 𝔸 => ∑'n : ℕ, (1 / n ! : 𝕂) • (x^n) :=
-  funext exp_series_sum_eq
+-- error in Analysis.NormedSpace.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem exp_eq_tsum : «expr = »(exp 𝕂 𝔸, λ
+ x : 𝔸, «expr∑' , »((n : exprℕ()), «expr • »((«expr / »(1, «expr !»(n)) : 𝕂), «expr ^ »(x, n)))) :=
+funext exp_series_sum_eq
 
-theorem exp_eq_tsum_field : exp 𝕂 𝕂 = fun x : 𝕂 => ∑'n : ℕ, (x^n) / n ! :=
-  funext exp_series_sum_eq_field
+-- error in Analysis.NormedSpace.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem exp_eq_tsum_field : «expr = »(exp 𝕂 𝕂, λ
+ x : 𝕂, «expr∑' , »((n : exprℕ()), «expr / »(«expr ^ »(x, n), «expr !»(n)))) :=
+funext exp_series_sum_eq_field
 
 -- error in Analysis.NormedSpace.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem exp_zero : «expr = »(exp 𝕂 𝔸 0, 1) :=

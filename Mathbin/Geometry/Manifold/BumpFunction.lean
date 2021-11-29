@@ -194,22 +194,19 @@ theorem compact_symm_image_closed_ball :
   (is_compact_closed_ball.inter_right I.closed_range).image_of_continuous_on$
     (ext_chart_at_continuous_on_symm _ _).mono f.closed_ball_subset
 
+-- error in Geometry.Manifold.BumpFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a smooth bump function `f : smooth_bump_function I c`, the closed ball of radius `f.R` is
 known to include the support of `f`. These closed balls (in the model normed space `E`) intersected
 with `set.range I` form a basis of `𝓝[range I] (ext_chart_at I c c)`. -/
-theorem nhds_within_range_basis :
-  (𝓝[range I] extChartAt I c c).HasBasis (fun f : SmoothBumpFunction I c => True)
-    fun f => closed_ball (extChartAt I c c) f.R ∩ range I :=
-  by 
-    refine'
-      ((nhds_within_has_basis Euclidean.nhds_basis_closed_ball _).restrict_subset
-            (ext_chart_at_target_mem_nhds_within _ _)).to_has_basis'
-        _ _
-    ·
-      rintro R ⟨hR0, hsub⟩
-      exact ⟨⟨⟨⟨R / 2, R, half_pos hR0, half_lt_self hR0⟩⟩, hsub⟩, trivialₓ, subset.rfl⟩
-    ·
-      exact fun f _ => inter_mem (mem_nhds_within_of_mem_nhds$ closed_ball_mem_nhds f.R_pos) self_mem_nhds_within
+theorem nhds_within_range_basis : «expr𝓝[ ] »(range I, ext_chart_at I c c).has_basis (λ
+ f : smooth_bump_function I c, true) (λ f, «expr ∩ »(closed_ball (ext_chart_at I c c) f.R, range I)) :=
+begin
+  refine [expr ((nhds_within_has_basis euclidean.nhds_basis_closed_ball _).restrict_subset (ext_chart_at_target_mem_nhds_within _ _)).to_has_basis' _ _],
+  { rintro [ident R, "⟨", ident hR0, ",", ident hsub, "⟩"],
+    exact [expr ⟨⟨⟨⟨«expr / »(R, 2), R, half_pos hR0, half_lt_self hR0⟩⟩, hsub⟩, trivial, subset.rfl⟩] },
+  { exact [expr λ
+     f _, inter_mem «expr $ »(mem_nhds_within_of_mem_nhds, closed_ball_mem_nhds f.R_pos) self_mem_nhds_within] }
+end
 
 theorem closed_image_of_closed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) : IsClosed (extChartAt I c '' s) :=
   by 
@@ -303,14 +300,17 @@ end
 
 variable{c}
 
+-- error in Geometry.Manifold.BumpFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given `s ∈ 𝓝 c`, the supports of smooth bump functions `f : smooth_bump_function I c` such that
 `closure (support f) ⊆ s` form a basis of `𝓝 c`.  In other words, each of these supports is a
 neighborhood of `c` and each neighborhood of `c` includes `support f` for some `f :
 smooth_bump_function I c` such that `closure (support f) ⊆ s`. -/
-theorem nhds_basis_support {s : Set M} (hs : s ∈ 𝓝 c) :
-  (𝓝 c).HasBasis (fun f : SmoothBumpFunction I c => Closure (support f) ⊆ s) fun f => support f :=
-  ((nhds_basis_closure_support I c).restrict_subset hs).to_has_basis' (fun f hf => ⟨f, hf.2, subset_closure⟩)
-    fun f hf => f.support_mem_nhds
+theorem nhds_basis_support
+{s : set M}
+(hs : «expr ∈ »(s, expr𝓝() c)) : (expr𝓝() c).has_basis (λ
+ f : smooth_bump_function I c, «expr ⊆ »(closure (support f), s)) (λ f, support f) :=
+((nhds_basis_closure_support I c).restrict_subset hs).to_has_basis' (λ
+ f hf, ⟨f, hf.2, subset_closure⟩) (λ f hf, f.support_mem_nhds)
 
 variable[SmoothManifoldWithCorners I M]{I}
 

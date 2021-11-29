@@ -394,46 +394,41 @@ theorem to_list_eq_self {xs : List α} : to_list xs = xs :=
       rw [ih]
       rfl
 
-theorem length_to_list {xs : t α} : length xs = List.length (to_list xs) :=
-  by 
-    unfold length 
-    rw [foldl_to_list]
-    generalize to_list xs = ys 
-    let f := fun n : ℕ a : α => n+1
-    trans List.foldlₓ f 0 ys
-    ·
-      generalize 0 = n 
-      induction' ys with _ _ ih generalizing n
-      ·
-        simp only [List.foldl_nil]
-      ·
-        simp only [List.foldlₓ, ih (n+1)]
-    ·
-      induction' ys with _ tl ih
-      ·
-        simp only [List.length, List.foldl_nil]
-      ·
-        simp only [List.foldlₓ, List.length]
-        rw [←ih]
-        exact tl.foldl_hom (fun x => x+1) f f 0 fun n x => rfl
+-- error in Control.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem length_to_list {xs : t α} : «expr = »(length xs, list.length (to_list xs)) :=
+begin
+  unfold [ident length] [],
+  rw [expr foldl_to_list] [],
+  generalize [] [":"] [expr «expr = »(to_list xs, ys)],
+  let [ident f] [] [":=", expr λ (n : exprℕ()) (a : α), «expr + »(n, 1)],
+  transitivity [expr list.foldl f 0 ys],
+  { generalize [] [":"] [expr «expr = »(0, n)],
+    induction [expr ys] [] ["with", "_", "_", ident ih] ["generalizing", ident n],
+    { simp [] [] ["only"] ["[", expr list.foldl_nil, "]"] [] [] },
+    { simp [] [] ["only"] ["[", expr list.foldl, ",", expr ih «expr + »(n, 1), "]"] [] [] } },
+  { induction [expr ys] [] ["with", "_", ident tl, ident ih] [],
+    { simp [] [] ["only"] ["[", expr list.length, ",", expr list.foldl_nil, "]"] [] [] },
+    { simp [] [] ["only"] ["[", expr list.foldl, ",", expr list.length, "]"] [] [],
+      rw ["[", "<-", expr ih, "]"] [],
+      exact [expr tl.foldl_hom (λ x, «expr + »(x, 1)) f f 0 (λ n x, rfl)] } }
+end
 
 variable{m : Type u → Type u}[Monadₓ m][IsLawfulMonad m]
 
-theorem mfoldl_to_list {f : α → β → m α} {x : α} {xs : t β} : mfoldl f x xs = List.mfoldl f x (to_list xs) :=
-  calc mfoldl f x xs = unop (mfoldl.of_free_monoid f (to_list xs)) x :=
-    by 
-      simp only [mfoldl, to_list_spec, fold_map_hom_free (fold_mfoldl (fun β : Type u => m β) f),
-        mfoldl.of_free_monoid_comp_free_mk, mfoldl.get]
-    _ = List.mfoldl f x (to_list xs) :=
-    by 
-      simp only [mfoldl.of_free_monoid, unop_op, flip]
-    
+-- error in Control.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mfoldl_to_list {f : α → β → m α} {x : α} {xs : t β} : «expr = »(mfoldl f x xs, list.mfoldl f x (to_list xs)) :=
+calc
+  «expr = »(mfoldl f x xs, unop (mfoldl.of_free_monoid f (to_list xs)) x) : by simp [] [] ["only"] ["[", expr mfoldl, ",", expr to_list_spec, ",", expr fold_map_hom_free (fold_mfoldl (λ
+     β : Type u, m β) f), ",", expr mfoldl.of_free_monoid_comp_free_mk, ",", expr mfoldl.get, "]"] [] []
+  «expr = »(..., list.mfoldl f x (to_list xs)) : by simp [] [] ["only"] ["[", expr mfoldl.of_free_monoid, ",", expr unop_op, ",", expr flip, "]"] [] []
 
-theorem mfoldr_to_list (f : α → β → m β) (x : β) (xs : t α) : mfoldr f x xs = List.mfoldr f x (to_list xs) :=
-  by 
-    change _ = mfoldr.of_free_monoid f (to_list xs) x 
-    simp only [mfoldr, to_list_spec, fold_map_hom_free (fold_mfoldr (fun β : Type u => m β) f),
-      mfoldr.of_free_monoid_comp_free_mk, mfoldr.get]
+-- error in Control.Fold: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mfoldr_to_list (f : α → β → m β) (x : β) (xs : t α) : «expr = »(mfoldr f x xs, list.mfoldr f x (to_list xs)) :=
+begin
+  change [expr «expr = »(_, mfoldr.of_free_monoid f (to_list xs) x)] [] [],
+  simp [] [] ["only"] ["[", expr mfoldr, ",", expr to_list_spec, ",", expr fold_map_hom_free (fold_mfoldr (λ
+     β : Type u, m β) f), ",", expr mfoldr.of_free_monoid_comp_free_mk, ",", expr mfoldr.get, "]"] [] []
+end
 
 @[simp]
 theorem mfoldl_map (g : β → γ) (f : α → γ → m α) (a : α) (l : t β) :

@@ -114,7 +114,7 @@ theorem hausdorff_measure_of_lt_dimH {s : Set X} {d :  ℝ≥0 } (h : «expr↑ 
     rw [Ennreal.coe_lt_coe, ←Nnreal.coe_lt_coe] at hdd' 
     exact top_unique (hsd' ▸ hausdorff_measure_mono hdd'.le _)
 
-theorem dimH_le {s : Set X} {d : ℝ≥0∞} (H : ∀ d' :  ℝ≥0 , μH[d'] s = ∞ → «expr↑ » d' ≤ d) : dimH s ≤ d :=
+theorem dimH_le {s : Set X} {d : ℝ≥0∞} (H : ∀ (d' :  ℝ≥0 ), μH[d'] s = ∞ → «expr↑ » d' ≤ d) : dimH s ≤ d :=
   (dimH_def s).trans_le$ bsupr_le H
 
 theorem dimH_le_of_hausdorff_measure_ne_top {s : Set X} {d :  ℝ≥0 } (h : μH[d] s ≠ ∞) : dimH s ≤ d :=
@@ -234,7 +234,7 @@ variable[second_countable_topology X]
 second countable topology, then there exists a point `x ∈ s` such that every neighborhood
 `t` of `x` within `s` has Hausdorff dimension greater than `r`. -/
 theorem exists_mem_nhds_within_lt_dimH_of_lt_dimH {s : Set X} {r : ℝ≥0∞} (h : r < dimH s) :
-  ∃ (x : _)(_ : x ∈ s), ∀ t _ : t ∈ 𝓝[s] x, r < dimH t :=
+  ∃ (x : _)(_ : x ∈ s), ∀ t (_ : t ∈ 𝓝[s] x), r < dimH t :=
   by 
     contrapose! h 
     choose! t htx htr using h 
@@ -329,7 +329,7 @@ continuous in a neighborhood within `s` of every point `x ∈ s` with the same p
 but possibly different coefficients, then the Hausdorff dimension of the image `f '' s` is at most
 the Hausdorff dimension of `s` divided by `r`. -/
 theorem dimH_image_le_of_locally_holder_on [second_countable_topology X] {r :  ℝ≥0 } {f : X → Y} (hr : 0 < r)
-  {s : Set X} (hf : ∀ x _ : x ∈ s, ∃ (C :  ℝ≥0 )(t : _)(_ : t ∈ 𝓝[s] x), HolderOnWith C r f t) :
+  {s : Set X} (hf : ∀ x (_ : x ∈ s), ∃ (C :  ℝ≥0 )(t : _)(_ : t ∈ 𝓝[s] x), HolderOnWith C r f t) :
   dimH (f '' s) ≤ dimH s / r :=
   by 
     choose! C t htn hC using hf 
@@ -344,7 +344,8 @@ theorem dimH_image_le_of_locally_holder_on [second_countable_topology X] {r :  �
 positive exponent `r` but possibly different coefficients, then the Hausdorff dimension of the range
 of `f` is at most the Hausdorff dimension of `X` divided by `r`. -/
 theorem dimH_range_le_of_locally_holder_on [second_countable_topology X] {r :  ℝ≥0 } {f : X → Y} (hr : 0 < r)
-  (hf : ∀ x : X, ∃ (C :  ℝ≥0 )(s : _)(_ : s ∈ 𝓝 x), HolderOnWith C r f s) : dimH (range f) ≤ dimH (univ : Set X) / r :=
+  (hf : ∀ (x : X), ∃ (C :  ℝ≥0 )(s : _)(_ : s ∈ 𝓝 x), HolderOnWith C r f s) :
+  dimH (range f) ≤ dimH (univ : Set X) / r :=
   by 
     rw [←image_univ]
     refine' dimH_image_le_of_locally_holder_on hr fun x _ => _ 
@@ -394,7 +395,7 @@ end
 /-- If `f : X → Y` is Lipschitz in a neighborhood of each point `x : X`, then the Hausdorff
 dimension of `range f` is at most the Hausdorff dimension of `X`. -/
 theorem dimH_range_le_of_locally_lipschitz_on [second_countable_topology X] {f : X → Y}
-  (hf : ∀ x : X, ∃ (C :  ℝ≥0 )(s : _)(_ : s ∈ 𝓝 x), LipschitzOnWith C f s) : dimH (range f) ≤ dimH (univ : Set X) :=
+  (hf : ∀ (x : X), ∃ (C :  ℝ≥0 )(s : _)(_ : s ∈ 𝓝 x), LipschitzOnWith C f s) : dimH (range f) ≤ dimH (univ : Set X) :=
   by 
     rw [←image_univ]
     refine' dimH_image_le_of_locally_lipschitz_on fun x _ => _ 

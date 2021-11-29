@@ -59,12 +59,12 @@ theorem image_restrict (f : α → β) (s t : Set α) : s.restrict f '' (coeₓ 
     rw [restrict, image_comp, image_preimage_eq_inter_range, Subtype.range_coe]
 
 @[simp]
-theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a _ : a ∈ s, β) (g : ∀ a _ : a ∉ s, β) :
+theorem restrict_dite {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a (_ : a ∈ s), β) (g : ∀ a (_ : a ∉ s), β) :
   restrict (fun a => if h : a ∈ s then f a h else g a h) s = fun a => f a a.2 :=
   funext$ fun a => dif_pos a.2
 
 @[simp]
-theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a _ : a ∈ s, β) (g : ∀ a _ : a ∉ s, β) :
+theorem restrict_dite_compl {s : Set α} [∀ x, Decidable (x ∈ s)] (f : ∀ a (_ : a ∈ s), β) (g : ∀ a (_ : a ∉ s), β) :
   restrict (fun a => if h : a ∈ s then f a h else g a h) («expr ᶜ» s) = fun a => g a a.2 :=
   funext$ fun a => dif_neg a.2
 
@@ -194,7 +194,7 @@ def maps_to.restrict (f : α → β) (s : Set α) (t : Set β) (h : maps_to f s 
 theorem maps_to.coe_restrict_apply (h : maps_to f s t) (x : s) : (h.restrict f s t x : β) = f x :=
   rfl
 
-theorem maps_to_iff_exists_map_subtype : maps_to f s t ↔ ∃ g : s → t, ∀ x : s, f x = g x :=
+theorem maps_to_iff_exists_map_subtype : maps_to f s t ↔ ∃ g : s → t, ∀ (x : s), f x = g x :=
   ⟨fun h => ⟨h.restrict f s t, fun _ => rfl⟩,
     fun ⟨g, hg⟩ x hx =>
       by 
@@ -331,7 +331,7 @@ theorem inj_on.mono (h : s₁ ⊆ s₂) (ht : inj_on f s₂) : inj_on f s₁ :=
   fun x hx y hy H => ht (h hx) (h hy) H
 
 theorem inj_on_union (h : Disjoint s₁ s₂) :
-  inj_on f (s₁ ∪ s₂) ↔ inj_on f s₁ ∧ inj_on f s₂ ∧ ∀ x _ : x ∈ s₁ y _ : y ∈ s₂, f x ≠ f y :=
+  inj_on f (s₁ ∪ s₂) ↔ inj_on f s₁ ∧ inj_on f s₂ ∧ ∀ x (_ : x ∈ s₁) y (_ : y ∈ s₂), f x ≠ f y :=
   by 
     refine' ⟨fun H => ⟨H.mono$ subset_union_left _ _, H.mono$ subset_union_right _ _, _⟩, _⟩
     ·
@@ -390,7 +390,7 @@ theorem surj_on.subset_range (h : surj_on f s t) : t ⊆ range f :=
   subset.trans h$ image_subset_range f s
 
 theorem surj_on_iff_exists_map_subtype :
-  surj_on f s t ↔ ∃ (t' : Set β)(g : s → t'), t ⊆ t' ∧ surjective g ∧ ∀ x : s, f x = g x :=
+  surj_on f s t ↔ ∃ (t' : Set β)(g : s → t'), t ⊆ t' ∧ surjective g ∧ ∀ (x : s), f x = g x :=
   ⟨fun h => ⟨_, (maps_to_image f s).restrict f s _, h, surjective_maps_to_image_restrict _ _, fun _ => rfl⟩,
     fun ⟨t', g, htt', hg, hfg⟩ y hy =>
       let ⟨x, hx⟩ := hg ⟨y, htt' hy⟩
@@ -789,13 +789,13 @@ namespace Set
 variable{δ : α → Sort y}(s : Set α)(f g : ∀ i, δ i)
 
 @[simp]
-theorem piecewise_empty [∀ i : α, Decidable (i ∈ (∅ : Set α))] : piecewise ∅ f g = g :=
+theorem piecewise_empty [∀ (i : α), Decidable (i ∈ (∅ : Set α))] : piecewise ∅ f g = g :=
   by 
     ext i 
     simp [piecewise]
 
 @[simp]
-theorem piecewise_univ [∀ i : α, Decidable (i ∈ (Set.Univ : Set α))] : piecewise Set.Univ f g = f :=
+theorem piecewise_univ [∀ (i : α), Decidable (i ∈ (Set.Univ : Set α))] : piecewise Set.Univ f g = f :=
   by 
     ext i 
     simp [piecewise]
@@ -848,7 +848,7 @@ theorem piecewise_eq_on_compl (f g : α → β) : eq_on (s.piecewise f g) g («e
   fun _ => piecewise_eq_of_not_mem _ _ _
 
 theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
-  (h₁ : ∀ i _ : i ∈ s, f₁ i ≤ g i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g :=
+  (h₁ : ∀ i (_ : i ∈ s), f₁ i ≤ g i) (h₂ : ∀ i (_ : i ∉ s), f₂ i ≤ g i) : s.piecewise f₁ f₂ ≤ g :=
   fun i =>
     if h : i ∈ s then
       by 
@@ -858,11 +858,11 @@ theorem piecewise_le {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set �
         simp 
 
 theorem le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)] {f₁ f₂ g : ∀ i, δ i}
-  (h₁ : ∀ i _ : i ∈ s, g i ≤ f₁ i) (h₂ : ∀ i _ : i ∉ s, g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
+  (h₁ : ∀ i (_ : i ∈ s), g i ≤ f₁ i) (h₂ : ∀ i (_ : i ∉ s), g i ≤ f₂ i) : g ≤ s.piecewise f₁ f₂ :=
   @piecewise_le α (fun i => OrderDual (δ i)) _ s _ _ _ _ h₁ h₂
 
 theorem piecewise_le_piecewise {δ : α → Type _} [∀ i, Preorderₓ (δ i)] {s : Set α} [∀ j, Decidable (j ∈ s)]
-  {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀ i _ : i ∈ s, f₁ i ≤ g₁ i) (h₂ : ∀ i _ : i ∉ s, f₂ i ≤ g₂ i) :
+  {f₁ f₂ g₁ g₂ : ∀ i, δ i} (h₁ : ∀ i (_ : i ∈ s), f₁ i ≤ g₁ i) (h₂ : ∀ i (_ : i ∉ s), f₂ i ≤ g₂ i) :
   s.piecewise f₁ f₂ ≤ s.piecewise g₁ g₂ :=
   by 
     apply piecewise_le <;> intros  <;> simp 
@@ -956,7 +956,7 @@ theorem range_piecewise (f g : α → β) : range (s.piecewise f g) = f '' s ∪
       rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all 
 
 theorem injective_piecewise_iff {f g : α → β} :
-  injective (s.piecewise f g) ↔ inj_on f s ∧ inj_on g («expr ᶜ» s) ∧ ∀ x _ : x ∈ s y _ : y ∉ s, f x ≠ g y :=
+  injective (s.piecewise f g) ↔ inj_on f s ∧ inj_on g («expr ᶜ» s) ∧ ∀ x (_ : x ∈ s) y (_ : y ∉ s), f x ≠ g y :=
   by 
     rw [injective_iff_inj_on_univ, ←union_compl_self s, inj_on_union (@disjoint_compl_right _ s _),
       (piecewise_eq_on s f g).inj_on_iff, (piecewise_eq_on_compl s f g).inj_on_iff]

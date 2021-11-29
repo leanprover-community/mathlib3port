@@ -49,7 +49,7 @@ instance : conditionally_complete_linear_order exprℤ() :=
 
 namespace Int
 
-theorem cSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z _ : z ∈ s, z ≤ b)
+theorem cSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z (_ : z ∈ s), z ≤ b)
   (Hinh : ∃ z : ℤ, z ∈ s) : Sup s = greatest_of_bdd b Hb Hinh :=
   by 
     convert dif_pos _ using 1
@@ -69,7 +69,7 @@ theorem cSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : Sup s = 0 :=
     (by 
       simp [h])
 
-theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z _ : z ∈ s, b ≤ z)
+theorem cInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z (_ : z ∈ s), b ≤ z)
   (Hinh : ∃ z : ℤ, z ∈ s) : Inf s = least_of_bdd b Hb Hinh :=
   by 
     convert dif_pos _ using 1

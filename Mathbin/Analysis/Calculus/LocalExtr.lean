@@ -81,24 +81,26 @@ theorem pos_tangent_cone_at_mono : Monotone fun s => PosTangentConeAt s a :=
     rintro s t hst y ⟨c, d, hd, hc, hcd⟩
     exact ⟨c, d, mem_of_superset hd$ fun h hn => hst hn, hc, hcd⟩
 
-theorem mem_pos_tangent_cone_at_of_segment_subset {s : Set E} {x y : E} (h : Segment ℝ x y ⊆ s) :
-  y - x ∈ PosTangentConeAt s x :=
-  by 
-    let c := fun n : ℕ => (2 : ℝ) ^ n 
-    let d := fun n : ℕ => c n⁻¹ • (y - x)
-    refine' ⟨c, d, Filter.univ_mem' fun n => h _, tendsto_pow_at_top_at_top_of_one_lt one_lt_two, _⟩
-    show (x+d n) ∈ Segment ℝ x y
-    ·
-      rw [segment_eq_image']
-      refine' ⟨c n⁻¹, ⟨_, _⟩, rfl⟩
-      exacts[inv_nonneg.2 (pow_nonneg zero_le_two _), inv_le_one (one_le_pow_of_one_le one_le_two _)]
-    show tendsto (fun n => c n • d n) at_top (𝓝 (y - x))
-    ·
-      convert tendsto_const_nhds 
-      ext n 
-      simp only [d, smul_smul]
-      rw [mul_inv_cancel, one_smul]
-      exact pow_ne_zero _ two_ne_zero
+-- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_pos_tangent_cone_at_of_segment_subset
+{s : set E}
+{x y : E}
+(h : «expr ⊆ »(segment exprℝ() x y, s)) : «expr ∈ »(«expr - »(y, x), pos_tangent_cone_at s x) :=
+begin
+  let [ident c] [] [":=", expr λ n : exprℕ(), «expr ^ »((2 : exprℝ()), n)],
+  let [ident d] [] [":=", expr λ n : exprℕ(), «expr • »(«expr ⁻¹»(c n), «expr - »(y, x))],
+  refine [expr ⟨c, d, filter.univ_mem' (λ n, h _), tendsto_pow_at_top_at_top_of_one_lt one_lt_two, _⟩],
+  show [expr «expr ∈ »(«expr + »(x, d n), segment exprℝ() x y)],
+  { rw [expr segment_eq_image'] [],
+    refine [expr ⟨«expr ⁻¹»(c n), ⟨_, _⟩, rfl⟩],
+    exacts ["[", expr inv_nonneg.2 (pow_nonneg zero_le_two _), ",", expr inv_le_one (one_le_pow_of_one_le one_le_two _), "]"] },
+  show [expr tendsto (λ n, «expr • »(c n, d n)) at_top (expr𝓝() «expr - »(y, x))],
+  { convert [] [expr tendsto_const_nhds] [],
+    ext [] [ident n] [],
+    simp [] [] ["only"] ["[", expr d, ",", expr smul_smul, "]"] [] [],
+    rw ["[", expr mul_inv_cancel, ",", expr one_smul, "]"] [],
+    exact [expr pow_ne_zero _ two_ne_zero] }
+end
 
 theorem mem_pos_tangent_cone_at_of_segment_subset' {s : Set E} {x y : E} (h : Segment ℝ x (x+y) ⊆ s) :
   y ∈ PosTangentConeAt s x :=
@@ -299,7 +301,7 @@ theorem exists_local_extr_Ioo (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hf
 
 /-- **Rolle's Theorem** `has_deriv_at` version -/
 theorem exists_has_deriv_at_eq_zero (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hfI : f a = f b)
-  (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x) : ∃ (c : _)(_ : c ∈ Ioo a b), f' c = 0 :=
+  (hff' : ∀ x (_ : x ∈ Ioo a b), HasDerivAt f (f' x) x) : ∃ (c : _)(_ : c ∈ Ioo a b), f' c = 0 :=
   let ⟨c, cmem, hc⟩ := exists_local_extr_Ioo f hab hfc hfI
   ⟨c, cmem, hc.has_deriv_at_eq_zero$ hff' c cmem⟩
 
@@ -333,29 +335,31 @@ begin
   exact [expr ⟨Ioo a b, Ioo_mem_nhds hc.1 hc.2, extend_from_extends this⟩]
 end
 
+-- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- **Rolle's Theorem**, a version for a function on an open interval: if `f` has the same limit
 `l` at `𝓝[Ioi a] a` and `𝓝[Iio b] b`, then `deriv f c = 0` for some `c ∈ (a, b)`. This version
 does not require differentiability of `f` because we define `deriv f c = 0` whenever `f` is not
 differentiable at `c`. -/
-theorem exists_deriv_eq_zero' (hab : a < b) (hfa : tendsto f (𝓝[Ioi a] a) (𝓝 l)) (hfb : tendsto f (𝓝[Iio b] b) (𝓝 l)) :
-  ∃ (c : _)(_ : c ∈ Ioo a b), deriv f c = 0 :=
-  Classical.by_cases
-    (fun h : ∀ x _ : x ∈ Ioo a b, DifferentiableAt ℝ f x =>
-      show ∃ (c : _)(_ : c ∈ Ioo a b), deriv f c = 0 from
-        exists_has_deriv_at_eq_zero' hab hfa hfb fun x hx => (h x hx).HasDerivAt)
-    fun h : ¬∀ x _ : x ∈ Ioo a b, DifferentiableAt ℝ f x =>
-      have h : ∃ x, x ∈ Ioo a b ∧ ¬DifferentiableAt ℝ f x :=
-        by 
-          pushNeg  at h 
-          exact h 
-      let ⟨c, hc, hcdiff⟩ := h
-      ⟨c, hc, deriv_zero_of_not_differentiable_at hcdiff⟩
+theorem exists_deriv_eq_zero'
+(hab : «expr < »(a, b))
+(hfa : tendsto f «expr𝓝[ ] »(Ioi a, a) (expr𝓝() l))
+(hfb : tendsto f «expr𝓝[ ] »(Iio b, b) (expr𝓝() l)) : «expr∃ , »((c «expr ∈ » Ioo a b), «expr = »(deriv f c, 0)) :=
+classical.by_cases (assume
+ h : ∀
+ x «expr ∈ » Ioo a b, differentiable_at exprℝ() f x, show «expr∃ , »((c «expr ∈ » Ioo a b), «expr = »(deriv f c, 0)), from exists_has_deriv_at_eq_zero' hab hfa hfb (λ
+  x
+  hx, (h x hx).has_deriv_at)) (assume
+ h : «expr¬ »(∀
+  x «expr ∈ » Ioo a b, differentiable_at exprℝ() f x), have h : «expr∃ , »((x), «expr ∧ »(«expr ∈ »(x, Ioo a b), «expr¬ »(differentiable_at exprℝ() f x))), by { push_neg ["at", ident h],
+   exact [expr h] },
+ let ⟨c, hc, hcdiff⟩ := h in
+ ⟨c, hc, deriv_zero_of_not_differentiable_at hcdiff⟩)
 
 end Rolle
 
 namespace Polynomial
 
--- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Calculus.LocalExtr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem card_root_set_le_derivative
 {F : Type*}
 [field F]

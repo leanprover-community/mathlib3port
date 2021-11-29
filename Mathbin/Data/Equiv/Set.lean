@@ -170,8 +170,8 @@ protected def Pempty α : (∅ : Set α) ≃ Pempty :=
 
 /-- If sets `s` and `t` are separated by a decidable predicate, then `s ∪ t` is equivalent to
 `s ⊕ t`. -/
-protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs : ∀ x _ : x ∈ s, p x)
-  (ht : ∀ x _ : x ∈ t, ¬p x) : (s ∪ t : Set α) ≃ Sum s t :=
+protected def union' {α} {s t : Set α} (p : α → Prop) [DecidablePred p] (hs : ∀ x (_ : x ∈ s), p x)
+  (ht : ∀ x (_ : x ∈ t), ¬p x) : (s ∪ t : Set α) ≃ Sum s t :=
   { toFun :=
       fun x =>
         if hp : p x then Sum.inl ⟨_, x.2.resolve_right fun xt => ht _ xt hp⟩ else
@@ -374,7 +374,7 @@ protected def union_sum_inter {α : Type u} (s t : Set α) [DecidablePred (· �
 `e : α ≃ β` such that `e ↑x = ↑(e₀ x)` for each `x : s` is equivalent to the set of equivalences
 between `sᶜ` and `tᶜ`. -/
 protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [DecidablePred (· ∈ s)] [DecidablePred (· ∈ t)]
-  (e₀ : s ≃ t) : { e : α ≃ β // ∀ x : s, e x = e₀ x } ≃ ((«expr ᶜ» s : Set α) ≃ («expr ᶜ» t : Set β)) :=
+  (e₀ : s ≃ t) : { e : α ≃ β // ∀ (x : s), e x = e₀ x } ≃ ((«expr ᶜ» s : Set α) ≃ («expr ᶜ» t : Set β)) :=
   { toFun :=
       fun e =>
         subtype_equiv e
@@ -461,22 +461,15 @@ protected def congr {α β : Type _} (e : α ≃ β) : Set α ≃ Set β :=
 protected def sep {α : Type u} (s : Set α) (t : α → Prop) : ({ x∈s | t x } : Set α) ≃ { x:s | t x } :=
   (Equiv.subtypeSubtypeEquivSubtypeInter s t).symm
 
+-- error in Data.Equiv.Set: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The set `𝒫 S := {x | x ⊆ S}` is equivalent to the type `set S`. -/
-protected def powerset {α} (S : Set α) : 𝒫 S ≃ Set S :=
-  { toFun := fun x : 𝒫 S => coeₓ ⁻¹' (x : Set α),
-    invFun :=
-      fun x : Set S =>
-        ⟨coeₓ '' x,
-          by 
-            rintro _ ⟨a : S, _, rfl⟩ <;> exact a.2⟩,
-    left_inv :=
-      fun x =>
-        by 
-          ext y <;> exact ⟨fun ⟨⟨_, _⟩, h, rfl⟩ => h, fun h => ⟨⟨_, x.2 h⟩, h, rfl⟩⟩,
-    right_inv :=
-      fun x =>
-        by 
-          ext <;> simp  }
+protected
+def powerset {α} (S : set α) : «expr ≃ »(«expr𝒫 »(S), set S) :=
+{ to_fun := λ x : «expr𝒫 »(S), «expr ⁻¹' »(coe, (x : set α)),
+  inv_fun := λ
+  x : set S, ⟨«expr '' »(coe, x), by rintro ["_", "⟨", ident a, ":", expr S, ",", "_", ",", ident rfl, "⟩"]; exact [expr a.2]⟩,
+  left_inv := λ x, by ext [] [ident y] []; exact [expr ⟨λ ⟨⟨_, _⟩, h, rfl⟩, h, λ h, ⟨⟨_, x.2 h⟩, h, rfl⟩⟩],
+  right_inv := λ x, by ext [] [] []; simp [] [] [] [] [] [] }
 
 /--
 If `s` is a set in `range f`,
@@ -515,7 +508,7 @@ empty too. This hypothesis is absent on analogous definitions on stronger `equiv
 are already sufficient to ensure non-emptiness. -/
 @[simps]
 def of_left_inverse {α β : Sort _} (f : α → β) (f_inv : Nonempty α → β → α)
-  (hf : ∀ h : Nonempty α, left_inverse (f_inv h) f) : α ≃ Set.Range f :=
+  (hf : ∀ (h : Nonempty α), left_inverse (f_inv h) f) : α ≃ Set.Range f :=
   { toFun := fun a => ⟨f a, a, rfl⟩, invFun := fun b => f_inv (nonempty_of_exists b.2) b, left_inv := fun a => hf ⟨a⟩ a,
     right_inv :=
       fun ⟨b, a, ha⟩ =>

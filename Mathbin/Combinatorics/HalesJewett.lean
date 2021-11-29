@@ -93,10 +93,11 @@ instance  α ι [Nonempty ι] : Inhabited (line α ι) :=
 structure almost_mono{α ι κ : Type _}(C : (ι → Option α) → κ) where 
   line : line (Option α) ι 
   Color : κ 
-  has_color : ∀ x : α, C (line (some x)) = color
+  has_color : ∀ (x : α), C (line (some x)) = color
 
-instance  {α ι κ : Type _} [Nonempty ι] [Inhabited κ] : Inhabited (almost_mono fun v : ι → Option α => default κ) :=
-  ⟨{ line := default _, Color := default κ, has_color := fun _ => rfl }⟩
+-- error in Combinatorics.HalesJewett: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance {α ι κ : Type*} [nonempty ι] [inhabited κ] : inhabited (almost_mono (λ v : ι → option α, default κ)) :=
+⟨{ line := default _, color := default κ, has_color := λ _, rfl }⟩
 
 /-- The type of collections of lines such that
 - each line is only one color except possibly at its endpoint
@@ -106,7 +107,7 @@ Used in the proof `exists_mono_in_high_dimension`. -/
 structure color_focused{α ι κ : Type _}(C : (ι → Option α) → κ) where 
   lines : Multiset (almost_mono C)
   focus : ι → Option α 
-  is_focused : ∀ p _ : p ∈ lines, almost_mono.line p none = focus 
+  is_focused : ∀ p (_ : p ∈ lines), almost_mono.line p none = focus 
   distinct_colors : (lines.map almost_mono.color).Nodup
 
 instance  {α ι κ} (C : (ι → Option α) → κ) : Inhabited (color_focused C) :=
@@ -254,7 +255,7 @@ fintype.induction_empty_option (λ
 /-- The Hales-Jewett theorem: for any finite types `α` and `κ`, there exists a finite type `ι` such
 that whenever the hypercube `ι → α` is `κ`-colored, there is a monochromatic combinatorial line. -/
 theorem exists_mono_in_high_dimension (α : Type u) [Fintype α] (κ : Type v) [Fintype κ] :
-  ∃ (ι : Type)(_ : Fintype ι), ∀ C : (ι → α) → κ, ∃ l : line α ι, l.is_mono C :=
+  ∃ (ι : Type)(_ : Fintype ι), ∀ (C : (ι → α) → κ), ∃ l : line α ι, l.is_mono C :=
   let ⟨ι, ιfin, hι⟩ := exists_mono_in_high_dimension' α (Ulift κ)
   ⟨ι, ιfin,
     fun C =>
@@ -269,7 +270,7 @@ end Line
 /-- A generalization of Van der Waerden's theorem: if `M` is a finitely colored commutative
 monoid, and `S` is a finite subset, then there exists a monochromatic homothetic copy of `S`. -/
 theorem exists_mono_homothetic_copy {M κ} [AddCommMonoidₓ M] (S : Finset M) [Fintype κ] (C : M → κ) :
-  ∃ (a : _)(_ : a > 0)(b : M)(c : κ), ∀ s _ : s ∈ S, C ((a • s)+b) = c :=
+  ∃ (a : _)(_ : a > 0)(b : M)(c : κ), ∀ s (_ : s ∈ S), C ((a • s)+b) = c :=
   by 
     obtain ⟨ι, _inst, hι⟩ := line.exists_mono_in_high_dimension S κ 
     skip 

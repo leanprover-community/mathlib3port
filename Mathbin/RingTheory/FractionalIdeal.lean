@@ -75,7 +75,7 @@ variable(S)
 
 /-- A submodule `I` is a fractional ideal if `a I ⊆ R` for some `a ≠ 0`. -/
 def IsFractional (I : Submodule R P) :=
-  ∃ (a : _)(_ : a ∈ S), ∀ b _ : b ∈ I, is_integer R (a • b)
+  ∃ (a : _)(_ : a ∈ S), ∀ b (_ : b ∈ I), is_integer R (a • b)
 
 variable(S P)
 
@@ -240,7 +240,7 @@ variable{P}
 theorem coe_to_fractional_ideal_injective (h : S ≤ nonZeroDivisors R) :
   Function.Injective (coeₓ : Ideal R → FractionalIdeal S P) :=
   fun I J heq =>
-    have  : ∀ x : R, algebraMap R P x ∈ (I : FractionalIdeal S P) ↔ algebraMap R P x ∈ (J : FractionalIdeal S P) :=
+    have  : ∀ (x : R), algebraMap R P x ∈ (I : FractionalIdeal S P) ↔ algebraMap R P x ∈ (J : FractionalIdeal S P) :=
       fun x => HEq ▸ Iff.rfl 
     Ideal.ext
       (by 
@@ -337,7 +337,7 @@ theorem bot_eq_zero : (⊥ : FractionalIdeal S P) = 0 :=
 theorem le_zero_iff {I : FractionalIdeal S P} : I ≤ 0 ↔ I = 0 :=
   le_bot_iff
 
-theorem eq_zero_iff {I : FractionalIdeal S P} : I = 0 ↔ ∀ x _ : x ∈ I, x = (0 : P) :=
+theorem eq_zero_iff {I : FractionalIdeal S P} : I = 0 ↔ ∀ x (_ : x ∈ I), x = (0 : P) :=
   ⟨fun h x hx =>
       by 
         simpa [h, mem_zero_iff] using hx,
@@ -378,8 +378,8 @@ instance Lattice : Lattice (FractionalIdeal S P) :=
     le_sup_right := fun I J => show (J : Submodule R P) ≤ I⊔J from le_sup_right,
     sup_le := fun I J K hIK hJK => show (I⊔J : Submodule R P) ≤ K from sup_le hIK hJK }
 
-instance  : SemilatticeSupBot (FractionalIdeal S P) :=
-  { FractionalIdeal.orderBot, FractionalIdeal.lattice with  }
+instance  : SemilatticeSup (FractionalIdeal S P) :=
+  { FractionalIdeal.lattice with  }
 
 end Lattice
 
@@ -464,13 +464,13 @@ theorem mul_right_mono (I : FractionalIdeal S P) : Monotone fun J => J*I :=
 theorem mul_mem_mul {I J : FractionalIdeal S P} {i j : P} (hi : i ∈ I) (hj : j ∈ J) : (i*j) ∈ I*J :=
   Submodule.mul_mem_mul hi hj
 
-theorem mul_le {I J K : FractionalIdeal S P} : (I*J) ≤ K ↔ ∀ i _ : i ∈ I j _ : j ∈ J, (i*j) ∈ K :=
+theorem mul_le {I J K : FractionalIdeal S P} : (I*J) ≤ K ↔ ∀ i (_ : i ∈ I) j (_ : j ∈ J), (i*j) ∈ K :=
   Submodule.mul_le
 
 @[elab_as_eliminator]
 protected theorem mul_induction_on {I J : FractionalIdeal S P} {C : P → Prop} {r : P} (hr : r ∈ I*J)
-  (hm : ∀ i _ : i ∈ I j _ : j ∈ J, C (i*j)) (h0 : C 0) (ha : ∀ x y, C x → C y → C (x+y))
-  (hs : ∀ r : R x, C x → C (r • x)) : C r :=
+  (hm : ∀ i (_ : i ∈ I) j (_ : j ∈ J), C (i*j)) (h0 : C 0) (ha : ∀ x y, C x → C y → C (x+y))
+  (hs : ∀ (r : R) x, C x → C (r • x)) : C r :=
   Submodule.mul_induction_on hr hm h0 ha hs
 
 -- error in RingTheory.FractionalIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -723,7 +723,7 @@ theorem map_equiv_refl : map_equiv AlgEquiv.refl = RingEquiv.refl (FractionalIde
         simp 
 
 theorem is_fractional_span_iff {s : Set P} :
-  IsFractional S (span R s) ↔ ∃ (a : _)(_ : a ∈ S), ∀ b : P, b ∈ s → is_integer R (a • b) :=
+  IsFractional S (span R s) ↔ ∃ (a : _)(_ : a ∈ S), ∀ (b : P), b ∈ s → is_integer R (a • b) :=
   ⟨fun ⟨a, a_mem, h⟩ => ⟨a, a_mem, fun b hb => h b (subset_span hb)⟩,
     fun ⟨a, a_mem, h⟩ =>
       ⟨a, a_mem,
@@ -805,14 +805,17 @@ noncomputable def canonical_equiv : FractionalIdeal S P ≃+* FractionalIdeal S 
           rw [RingEquiv.to_monoid_hom_refl, Submonoid.map_id]) with
       commutes' := fun r => ring_equiv_of_ring_equiv_eq _ _ }
 
+-- error in RingTheory.FractionalIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem mem_canonical_equiv_apply {I : FractionalIdeal S P} {x : P'} :
-  x ∈ canonical_equiv S P P' I ↔
-    ∃ (y : _)(_ : y ∈ I),
-      IsLocalization.map P' (RingHom.id R) (fun y hy : y ∈ S => show RingHom.id R y ∈ S from hy) (y : P) = x :=
-  by 
-    rw [canonical_equiv, map_equiv_apply, mem_map]
-    exact ⟨fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩, fun ⟨y, mem, Eq⟩ => ⟨y, mem, Eq⟩⟩
+theorem mem_canonical_equiv_apply
+{I : fractional_ideal S P}
+{x : P'} : «expr ↔ »(«expr ∈ »(x, canonical_equiv S P P' I), «expr∃ , »((y «expr ∈ » I), «expr = »(is_localization.map P' (ring_hom.id R) (λ
+    (y)
+    (hy : «expr ∈ »(y, S)), show «expr ∈ »(ring_hom.id R y, S), from hy) (y : P), x))) :=
+begin
+  rw ["[", expr canonical_equiv, ",", expr map_equiv_apply, ",", expr mem_map, "]"] [],
+  exact [expr ⟨λ ⟨y, mem, eq⟩, ⟨y, mem, eq⟩, λ ⟨y, mem, eq⟩, ⟨y, mem, eq⟩⟩]
+end
 
 @[simp]
 theorem canonical_equiv_symm : (canonical_equiv S P P').symm = canonical_equiv S P' P :=
@@ -972,7 +975,7 @@ theorem coe_div {I J : FractionalIdeal R₁⁰ K} (hJ : J ≠ 0) :
     unfold Div.div 
     simp only [dif_neg hJ, coe_mk, val_eq_coe]
 
-theorem mem_div_iff_of_nonzero {I J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) {x} : x ∈ I / J ↔ ∀ y _ : y ∈ J, (x*y) ∈ I :=
+theorem mem_div_iff_of_nonzero {I J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) {x} : x ∈ I / J ↔ ∀ y (_ : y ∈ J), (x*y) ∈ I :=
   by 
     rw [div_nonzero h]
     exact Submodule.mem_div_iff_forall_mul_mem
@@ -999,7 +1002,7 @@ theorem le_self_mul_one_div {I : FractionalIdeal R₁⁰ K} (hI : I ≤ (1 : Fra
       exact Submodule.le_self_mul_one_div hI
 
 theorem le_div_iff_of_nonzero {I J J' : FractionalIdeal R₁⁰ K} (hJ' : J' ≠ 0) :
-  I ≤ J / J' ↔ ∀ x _ : x ∈ I y _ : y ∈ J', (x*y) ∈ J :=
+  I ≤ J / J' ↔ ∀ x (_ : x ∈ I) y (_ : y ∈ J'), (x*y) ∈ J :=
   ⟨fun h x hx => (mem_div_iff_of_nonzero hJ').mp (h hx), fun h x hx => (mem_div_iff_of_nonzero hJ').mpr (h x hx)⟩
 
 theorem le_div_iff_mul_le {I J J' : FractionalIdeal R₁⁰ K} (hJ' : J' ≠ 0) : I ≤ J / J' ↔ (I*J') ≤ J :=
@@ -1203,27 +1206,32 @@ theorem coe_ideal_span_singleton (x : R) :
       refine' ⟨y'*x, submodule.mem_span_singleton.mpr ⟨y', rfl⟩, _⟩
       rw [RingHom.map_mul, Algebra.smul_def]
 
+-- error in RingTheory.FractionalIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem canonical_equiv_span_singleton {P'} [CommRingₓ P'] [Algebra R P'] [IsLocalization S P'] (x : P) :
-  canonical_equiv S P P' (span_singleton S x) =
-    span_singleton S (IsLocalization.map P' (RingHom.id R) (fun y hy : y ∈ S => show RingHom.id R y ∈ S from hy) x) :=
-  by 
-    apply set_like.ext_iff.mpr 
-    intro y 
-    split  <;> intro h
-    ·
-      rw [mem_span_singleton]
-      obtain ⟨x', hx', rfl⟩ := (mem_canonical_equiv_apply _ _ _).mp h 
-      obtain ⟨z, rfl⟩ := (mem_span_singleton _).mp hx' 
-      use z 
-      rw [IsLocalization.map_smul]
-      rfl
-    ·
-      rw [mem_canonical_equiv_apply]
-      obtain ⟨z, rfl⟩ := (mem_span_singleton _).mp h 
-      use z • x 
-      use (mem_span_singleton _).mpr ⟨z, rfl⟩
-      simp [IsLocalization.map_smul]
+theorem canonical_equiv_span_singleton
+{P'}
+[comm_ring P']
+[algebra R P']
+[is_localization S P']
+(x : P) : «expr = »(canonical_equiv S P P' (span_singleton S x), span_singleton S (is_localization.map P' (ring_hom.id R) (λ
+   (y)
+   (hy : «expr ∈ »(y, S)), show «expr ∈ »(ring_hom.id R y, S), from hy) x)) :=
+begin
+  apply [expr set_like.ext_iff.mpr],
+  intro [ident y],
+  split; intro [ident h],
+  { rw [expr mem_span_singleton] [],
+    obtain ["⟨", ident x', ",", ident hx', ",", ident rfl, "⟩", ":=", expr (mem_canonical_equiv_apply _ _ _).mp h],
+    obtain ["⟨", ident z, ",", ident rfl, "⟩", ":=", expr (mem_span_singleton _).mp hx'],
+    use [expr z],
+    rw [expr is_localization.map_smul] [],
+    refl },
+  { rw [expr mem_canonical_equiv_apply] [],
+    obtain ["⟨", ident z, ",", ident rfl, "⟩", ":=", expr (mem_span_singleton _).mp h],
+    use [expr «expr • »(z, x)],
+    use [expr (mem_span_singleton _).mpr ⟨z, rfl⟩],
+    simp [] [] [] ["[", expr is_localization.map_smul, "]"] [] [] }
+end
 
 theorem mem_singleton_mul {x y : P} {I : FractionalIdeal S P} :
   (y ∈ span_singleton S x*I) ↔ ∃ (y' : _)(_ : y' ∈ I), y = x*y' :=
@@ -1346,12 +1354,12 @@ instance is_principal {R} [CommRingₓ R] [IsDomain R] [IsPrincipalIdealRing R] 
 include loc
 
 theorem le_span_singleton_mul_iff {x : P} {I J : FractionalIdeal S P} :
-  (I ≤ span_singleton S x*J) ↔ ∀ zI _ : zI ∈ I, ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI :=
-  show (∀ {zI} hzI : zI ∈ I, zI ∈ span_singleton _ x*J) ↔ ∀ zI _ : zI ∈ I, ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI by 
+  (I ≤ span_singleton S x*J) ↔ ∀ zI (_ : zI ∈ I), ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI :=
+  show (∀ {zI} (hzI : zI ∈ I), zI ∈ span_singleton _ x*J) ↔ ∀ zI (_ : zI ∈ I), ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI by 
     simp only [FractionalIdeal.mem_singleton_mul, eq_comm]
 
 theorem span_singleton_mul_le_iff {x : P} {I J : FractionalIdeal S P} :
-  (span_singleton _ x*I) ≤ J ↔ ∀ z _ : z ∈ I, (x*z) ∈ J :=
+  (span_singleton _ x*I) ≤ J ↔ ∀ z (_ : z ∈ I), (x*z) ∈ J :=
   by 
     simp only [FractionalIdeal.mul_le, FractionalIdeal.mem_singleton_mul, FractionalIdeal.mem_span_singleton]
     split 
@@ -1364,7 +1372,7 @@ theorem span_singleton_mul_le_iff {x : P} {I J : FractionalIdeal S P} :
       exact Submodule.smul_mem J.1 _ (h zI hzI)
 
 theorem eq_span_singleton_mul {x : P} {I J : FractionalIdeal S P} :
-  (I = span_singleton _ x*J) ↔ (∀ zI _ : zI ∈ I, ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI) ∧ ∀ z _ : z ∈ J, (x*z) ∈ I :=
+  (I = span_singleton _ x*J) ↔ (∀ zI (_ : zI ∈ I), ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI) ∧ ∀ z (_ : z ∈ J), (x*z) ∈ I :=
   by 
     simp only [le_antisymm_iffₓ, FractionalIdeal.le_span_singleton_mul_iff, FractionalIdeal.span_singleton_mul_le_iff]
 
@@ -1376,15 +1384,15 @@ variable{K : Type _}[Field K][Algebra R₁ K][frac : IsFractionRing R₁ K]
 
 attribute [local instance] Classical.propDecidable
 
-theorem is_noetherian_zero : IsNoetherian R₁ (0 : FractionalIdeal R₁⁰ K) :=
-  is_noetherian_submodule.mpr
-    fun I hI : I ≤ (0 : FractionalIdeal R₁⁰ K) =>
-      by 
-        rw [coe_zero] at hI 
-        rw [le_bot_iff.mp hI]
-        exact fg_bot
+-- error in RingTheory.FractionalIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_noetherian_zero : is_noetherian R₁ (0 : fractional_ideal «expr ⁰»(R₁) K) :=
+is_noetherian_submodule.mpr (λ
+ (I)
+ (hI : «expr ≤ »(I, (0 : fractional_ideal «expr ⁰»(R₁) K))), by { rw [expr coe_zero] ["at", ident hI],
+   rw [expr le_bot_iff.mp hI] [],
+   exact [expr fg_bot] })
 
-theorem is_noetherian_iff {I : FractionalIdeal R₁⁰ K} : IsNoetherian R₁ I ↔ ∀ J _ : J ≤ I, (J : Submodule R₁ K).Fg :=
+theorem is_noetherian_iff {I : FractionalIdeal R₁⁰ K} : IsNoetherian R₁ I ↔ ∀ J (_ : J ≤ I), (J : Submodule R₁ K).Fg :=
   is_noetherian_submodule.trans ⟨fun h J hJ => h _ hJ, fun h J hJ => h ⟨J, is_fractional_of_le hJ⟩ hJ⟩
 
 theorem is_noetherian_coe_to_fractional_ideal [_root_.is_noetherian_ring R₁] (I : Ideal R₁) :

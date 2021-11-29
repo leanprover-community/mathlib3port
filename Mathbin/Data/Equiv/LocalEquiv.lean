@@ -813,9 +813,9 @@ protected def pi : LocalEquiv (∀ i, αi i) (∀ i, βi i) :=
 
 attribute [mfld_simps] pi_source pi_target
 
-@[simp, mfld_simps]
-theorem pi_coe : «expr⇑ » (LocalEquiv.pi ei) = fun f : ∀ i, αi i i => ei i (f i) :=
-  rfl
+-- error in Data.Equiv.LocalEquiv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, mfld_simps #[]] theorem pi_coe : «expr = »(«expr⇑ »(local_equiv.pi ei), λ (f : ∀ i, αi i) (i), ei i (f i)) :=
+rfl
 
 @[simp, mfld_simps]
 theorem pi_symm : (LocalEquiv.pi ei).symm = LocalEquiv.pi fun i => (ei i).symm :=

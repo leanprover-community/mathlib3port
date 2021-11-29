@@ -164,8 +164,9 @@ theorem bij_on_pts_of_period (f : α → α) {n : ℕ} (hn : 0 < n) : bij_on f (
         by 
           rw [←comp_app f, comp_iterate_pred_of_pos f hn, hx.eq]⟩⟩
 
-theorem directed_pts_of_period_pnat (f : α → α) : Directed (· ⊆ ·) fun n : ℕ+ => pts_of_period f n :=
-  fun m n => ⟨m*n, fun x hx => hx.mul_const n, fun x hx => hx.const_mul m⟩
+-- error in Dynamics.PeriodicPts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem directed_pts_of_period_pnat (f : α → α) : directed ((«expr ⊆ »)) (λ n : «exprℕ+»(), pts_of_period f n) :=
+λ m n, ⟨«expr * »(m, n), λ x hx, hx.mul_const n, λ x hx, hx.const_mul m⟩
 
 /-- The set of periodic points of a map `f : α → α`. -/
 def periodic_pts (f : α → α) : Set α :=
@@ -263,7 +264,7 @@ theorem is_periodic_pt.eq_zero_of_lt_minimal_period (hx : is_periodic_pt f n x) 
   Eq.symm$ (eq_or_lt_of_le$ n.zero_le).resolve_right$ fun hn0 => not_ltₓ.2 (hx.minimal_period_le hn0) hn
 
 theorem not_is_periodic_pt_of_pos_of_lt_minimal_period :
-  ∀ {n : ℕ} n0 : n ≠ 0 hn : n < minimal_period f x, ¬is_periodic_pt f n x
+  ∀ {n : ℕ} (n0 : n ≠ 0) (hn : n < minimal_period f x), ¬is_periodic_pt f n x
 | 0, n0, _ => (n0 rfl).elim
 | n+1, _, hn => fun hp => Nat.succ_ne_zero _ (hp.eq_zero_of_lt_minimal_period hn)
 

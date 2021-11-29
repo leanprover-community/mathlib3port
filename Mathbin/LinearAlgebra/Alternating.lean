@@ -53,11 +53,17 @@ section
 
 variable(R M N ι)
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 An alternating map is a multilinear map that vanishes when two of its arguments are equal.
 -/
-structure AlternatingMap extends MultilinearMap R (fun i : ι => M) N where 
-  map_eq_zero_of_eq' : ∀ v : ι → M i j : ι h : v i = v j hij : i ≠ j, to_fun v = 0
+structure alternating_mapextends multilinear_map R (λ
+ i : ι, M) N :=
+  (map_eq_zero_of_eq' : ∀
+   (v : ι → M)
+   (i j : ι)
+   (h : «expr = »(v i, v j))
+   (hij : «expr ≠ »(i, j)), «expr = »(to_fun v, 0))
 
 end 
 
@@ -94,11 +100,13 @@ theorem to_fun_eq_coe : f.to_fun = f :=
 theorem coe_mk (f : (ι → M) → N) h₁ h₂ h₃ : «expr⇑ » (⟨f, h₁, h₂, h₃⟩ : AlternatingMap R M N ι) = f :=
   rfl
 
-theorem congr_funₓ {f g : AlternatingMap R M N ι} (h : f = g) (x : ι → M) : f x = g x :=
-  congr_argₓ (fun h : AlternatingMap R M N ι => h x) h
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem congr_fun {f g : alternating_map R M N ι} (h : «expr = »(f, g)) (x : ι → M) : «expr = »(f x, g x) :=
+congr_arg (λ h : alternating_map R M N ι, h x) h
 
-theorem congr_argₓ (f : AlternatingMap R M N ι) {x y : ι → M} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : ι → M => f x) h
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem congr_arg (f : alternating_map R M N ι) {x y : ι → M} (h : «expr = »(x, y)) : «expr = »(f x, f y) :=
+congr_arg (λ x : ι → M, f x) h
 
 theorem coe_injective : injective (coeFn : AlternatingMap R M N ι → (ι → M) → N) :=
   fun f g h =>
@@ -119,25 +127,28 @@ theorem ext {f f' : AlternatingMap R M N ι} (H : ∀ x, f x = f' x) : f = f' :=
 theorem ext_iff {f g : AlternatingMap R M N ι} : f = g ↔ ∀ x, f x = g x :=
   ⟨fun h x => h ▸ rfl, fun h => ext h⟩
 
-instance  : Coe (AlternatingMap R M N ι) (MultilinearMap R (fun i : ι => M) N) :=
-  ⟨fun x => x.to_multilinear_map⟩
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_coe (alternating_map R M N ι) (multilinear_map R (λ i : ι, M) N) := ⟨λ x, x.to_multilinear_map⟩
 
-@[simp, normCast]
-theorem coe_multilinear_map : «expr⇑ » (f : MultilinearMap R (fun i : ι => M) N) = f :=
-  rfl
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, norm_cast #[]] theorem coe_multilinear_map : «expr = »(«expr⇑ »((f : multilinear_map R (λ i : ι, M) N)), f) :=
+rfl
 
-theorem coe_multilinear_map_injective :
-  Function.Injective (coeₓ : AlternatingMap R M N ι → MultilinearMap R (fun i : ι => M) N) :=
-  fun x y h => ext$ MultilinearMap.congr_fun h
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem coe_multilinear_map_injective : function.injective (coe : alternating_map R M N ι → multilinear_map R (λ
+ i : ι, M) N) :=
+λ x y h, «expr $ »(ext, multilinear_map.congr_fun h)
 
 @[simp]
 theorem to_multilinear_map_eq_coe : f.to_multilinear_map = f :=
   rfl
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem coe_multilinear_map_mk (f : (ι → M) → N) h₁ h₂ h₃ :
-  ((⟨f, h₁, h₂, h₃⟩ : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι => M) N) = ⟨f, h₁, h₂⟩ :=
-  rfl
+theorem coe_multilinear_map_mk
+(f : (ι → M) → N)
+(h₁ h₂ h₃) : «expr = »(((⟨f, h₁, h₂, h₃⟩ : alternating_map R M N ι) : multilinear_map R (λ i : ι, M) N), ⟨f, h₁, h₂⟩) :=
+rfl
 
 end Coercions
 
@@ -194,144 +205,140 @@ as `multilinear_map`
 -/
 
 
-instance  : Add (AlternatingMap R M N ι) :=
-  ⟨fun a b =>
-      { (a+b : MultilinearMap R (fun i : ι => M) N) with
-        map_eq_zero_of_eq' :=
-          fun v i j h hij =>
-            by 
-              simp [a.map_eq_zero_of_eq v h hij, b.map_eq_zero_of_eq v h hij] }⟩
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_add (alternating_map R M N ι) :=
+⟨λ
+ a
+ b, { map_eq_zero_of_eq' := λ
+   v
+   i
+   j
+   h
+   hij, by simp [] [] [] ["[", expr a.map_eq_zero_of_eq v h hij, ",", expr b.map_eq_zero_of_eq v h hij, "]"] [] [],
+   ..(«expr + »(a, b) : multilinear_map R (λ i : ι, M) N) }⟩
 
 @[simp]
 theorem add_apply : (f+f') v = f v+f' v :=
   rfl
 
-@[normCast]
-theorem coe_add : («expr↑ » (f+f') : MultilinearMap R (fun i : ι => M) N) = f+f' :=
-  rfl
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[norm_cast #[]]
+theorem coe_add : «expr = »((«expr↑ »(«expr + »(f, f')) : multilinear_map R (λ i : ι, M) N), «expr + »(f, f')) :=
+rfl
 
-instance  : HasZero (AlternatingMap R M N ι) :=
-  ⟨{ (0 : MultilinearMap R (fun i : ι => M) N) with
-      map_eq_zero_of_eq' :=
-        fun v i j h hij =>
-          by 
-            simp  }⟩
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_zero (alternating_map R M N ι) :=
+⟨{ map_eq_zero_of_eq' := λ v i j h hij, by simp [] [] [] [] [] [], ..(0 : multilinear_map R (λ i : ι, M) N) }⟩
 
 @[simp]
 theorem zero_apply : (0 : AlternatingMap R M N ι) v = 0 :=
   rfl
 
-@[normCast]
-theorem coe_zero : ((0 : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι => M) N) = 0 :=
-  rfl
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[norm_cast #[]] theorem coe_zero : «expr = »(((0 : alternating_map R M N ι) : multilinear_map R (λ i : ι, M) N), 0) :=
+rfl
 
 instance  : Inhabited (AlternatingMap R M N ι) :=
   ⟨0⟩
 
-instance  : AddCommMonoidₓ (AlternatingMap R M N ι) :=
-  { zero := 0, add := ·+·,
-    zero_add :=
-      by 
-        intros  <;> ext <;> simp [add_commₓ, add_left_commₓ],
-    add_zero :=
-      by 
-        intros  <;> ext <;> simp [add_commₓ, add_left_commₓ],
-    add_comm :=
-      by 
-        intros  <;> ext <;> simp [add_commₓ, add_left_commₓ],
-    add_assoc :=
-      by 
-        intros  <;> ext <;> simp [add_commₓ, add_left_commₓ],
-    nsmul :=
-      fun n f =>
-        { (n • f : MultilinearMap R (fun i : ι => M) N) with
-          map_eq_zero_of_eq' :=
-            fun v i j h hij =>
-              by 
-                simp [f.map_eq_zero_of_eq v h hij] },
-    nsmul_zero' :=
-      by 
-        intros 
-        ext 
-        simp [add_smul],
-    nsmul_succ' :=
-      by 
-        intros 
-        ext 
-        simp [add_smul, Nat.succ_eq_one_add] }
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : add_comm_monoid (alternating_map R M N ι) :=
+{ zero := 0,
+  add := («expr + »),
+  zero_add := by intros []; ext [] [] []; simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, "]"] [] [],
+  add_zero := by intros []; ext [] [] []; simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, "]"] [] [],
+  add_comm := by intros []; ext [] [] []; simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, "]"] [] [],
+  add_assoc := by intros []; ext [] [] []; simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, "]"] [] [],
+  nsmul := λ
+  n
+  f, { map_eq_zero_of_eq' := λ v i j h hij, by simp [] [] [] ["[", expr f.map_eq_zero_of_eq v h hij, "]"] [] [],
+    ..(«expr • »(n, f) : multilinear_map R (λ i : ι, M) N) },
+  nsmul_zero' := by { intros [],
+    ext [] [] [],
+    simp [] [] [] ["[", expr add_smul, "]"] [] [] },
+  nsmul_succ' := by { intros [],
+    ext [] [] [],
+    simp [] [] [] ["[", expr add_smul, ",", expr nat.succ_eq_one_add, "]"] [] [] } }
 
-instance  : Neg (AlternatingMap R M N' ι) :=
-  ⟨fun f =>
-      { -(f : MultilinearMap R (fun i : ι => M) N') with
-        map_eq_zero_of_eq' :=
-          fun v i j h hij =>
-            by 
-              simp [f.map_eq_zero_of_eq v h hij] }⟩
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_neg (alternating_map R M N' ι) :=
+⟨λ
+ f, { map_eq_zero_of_eq' := λ v i j h hij, by simp [] [] [] ["[", expr f.map_eq_zero_of_eq v h hij, "]"] [] [],
+   ..«expr- »((f : multilinear_map R (λ i : ι, M) N')) }⟩
 
 @[simp]
 theorem neg_apply (m : ι → M) : (-g) m = -g m :=
   rfl
 
-@[normCast]
-theorem coe_neg : ((-g : AlternatingMap R M N' ι) : MultilinearMap R (fun i : ι => M) N') = -g :=
-  rfl
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[norm_cast #[]]
+theorem coe_neg : «expr = »(((«expr- »(g) : alternating_map R M N' ι) : multilinear_map R (λ
+  i : ι, M) N'), «expr- »(g)) :=
+rfl
 
-instance  : Sub (AlternatingMap R M N' ι) :=
-  ⟨fun f g =>
-      { (f - g : MultilinearMap R (fun i : ι => M) N') with
-        map_eq_zero_of_eq' :=
-          fun v i j h hij =>
-            by 
-              simp [f.map_eq_zero_of_eq v h hij, g.map_eq_zero_of_eq v h hij] }⟩
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_sub (alternating_map R M N' ι) :=
+⟨λ
+ f
+ g, { map_eq_zero_of_eq' := λ
+   v
+   i
+   j
+   h
+   hij, by simp [] [] [] ["[", expr f.map_eq_zero_of_eq v h hij, ",", expr g.map_eq_zero_of_eq v h hij, "]"] [] [],
+   ..(«expr - »(f, g) : multilinear_map R (λ i : ι, M) N') }⟩
 
 @[simp]
 theorem sub_apply (m : ι → M) : (g - g₂) m = g m - g₂ m :=
   rfl
 
-@[normCast]
-theorem coe_sub : («expr↑ » (g - g₂) : MultilinearMap R (fun i : ι => M) N') = g - g₂ :=
-  rfl
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[norm_cast #[]]
+theorem coe_sub : «expr = »((«expr↑ »(«expr - »(g, g₂)) : multilinear_map R (λ i : ι, M) N'), «expr - »(g, g₂)) :=
+rfl
 
-instance  : AddCommGroupₓ (AlternatingMap R M N' ι) :=
-  by 
-    refine'
-        { AlternatingMap.addCommMonoid with zero := 0, add := ·+·, neg := Neg.neg, sub := Sub.sub, sub_eq_add_neg := _,
-          nsmul :=
-            fun n f =>
-              { (n • f : MultilinearMap R (fun i : ι => M) N') with
-                map_eq_zero_of_eq' :=
-                  fun v i j h hij =>
-                    by 
-                      simp [f.map_eq_zero_of_eq v h hij] },
-          zsmul :=
-            fun n f =>
-              { (n • f : MultilinearMap R (fun i : ι => M) N') with
-                map_eq_zero_of_eq' :=
-                  fun v i j h hij =>
-                    by 
-                      simp [f.map_eq_zero_of_eq v h hij] },
-          zsmul_zero' := _, zsmul_succ' := _, zsmul_neg' := _, .. } <;>
-      intros  <;> ext <;> simp [add_commₓ, add_left_commₓ, sub_eq_add_neg, add_smul, Nat.succ_eq_add_one, coe_nat_zsmul]
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : add_comm_group (alternating_map R M N' ι) :=
+by refine [expr { zero := 0,
+   add := («expr + »),
+   neg := has_neg.neg,
+   sub := has_sub.sub,
+   sub_eq_add_neg := _,
+   nsmul := λ
+   n
+   f, { map_eq_zero_of_eq' := λ v i j h hij, by simp [] [] [] ["[", expr f.map_eq_zero_of_eq v h hij, "]"] [] [],
+     ..(«expr • »(n, f) : multilinear_map R (λ i : ι, M) N') },
+   zsmul := λ
+   n
+   f, { map_eq_zero_of_eq' := λ v i j h hij, by simp [] [] [] ["[", expr f.map_eq_zero_of_eq v h hij, "]"] [] [],
+     ..(«expr • »(n, f) : multilinear_map R (λ i : ι, M) N') },
+   zsmul_zero' := _,
+   zsmul_succ' := _,
+   zsmul_neg' := _,
+   ..alternating_map.add_comm_monoid,
+   .. }]; intros []; ext [] [] []; simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, ",", expr sub_eq_add_neg, ",", expr add_smul, ",", expr nat.succ_eq_add_one, ",", expr coe_nat_zsmul, "]"] [] []
 
 section DistribMulAction
 
 variable{S : Type _}[Monoidₓ S][DistribMulAction S N][SmulCommClass R S N]
 
-instance  : HasScalar S (AlternatingMap R M N ι) :=
-  ⟨fun c f =>
-      { (c • f : MultilinearMap R (fun i : ι => M) N) with
-        map_eq_zero_of_eq' :=
-          fun v i j h hij =>
-            by 
-              simp [f.map_eq_zero_of_eq v h hij] }⟩
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_scalar S (alternating_map R M N ι) :=
+⟨λ
+ c
+ f, { map_eq_zero_of_eq' := λ v i j h hij, by simp [] [] [] ["[", expr f.map_eq_zero_of_eq v h hij, "]"] [] [],
+   ..(«expr • »(c, f) : multilinear_map R (λ i : ι, M) N) }⟩
 
 @[simp]
 theorem smul_apply (c : S) (m : ι → M) : (c • f) m = c • f m :=
   rfl
 
-@[normCast]
-theorem coe_smul (c : S) : ((c • f : AlternatingMap R M N ι) : MultilinearMap R (fun i : ι => M) N) = c • f :=
-  rfl
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[norm_cast #[]]
+theorem coe_smul
+(c : S) : «expr = »(((«expr • »(c, f) : alternating_map R M N ι) : multilinear_map R (λ
+  i : ι, M) N), «expr • »(c, f)) :=
+rfl
 
 theorem coe_fn_smul (c : S) (f : AlternatingMap R M N ι) : «expr⇑ » (c • f) = c • f :=
   rfl
@@ -380,24 +387,17 @@ namespace LinearMap
 
 variable{N₂ : Type _}[AddCommMonoidₓ N₂][Module R N₂]
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Composing a alternating map with a linear map on the left gives again an alternating map. -/
-def comp_alternating_map (g : N →ₗ[R] N₂) : AlternatingMap R M N ι →+ AlternatingMap R M N₂ ι :=
-  { toFun :=
-      fun f =>
-        { g.comp_multilinear_map (f : MultilinearMap R (fun _ : ι => M) N) with
-          map_eq_zero_of_eq' :=
-            fun v i j h hij =>
-              by 
-                simp [f.map_eq_zero_of_eq v h hij] },
-    map_zero' :=
-      by 
-        ext 
-        simp ,
-    map_add' :=
-      fun a b =>
-        by 
-          ext 
-          simp  }
+def comp_alternating_map
+(g : «expr →ₗ[ ] »(N, R, N₂)) : «expr →+ »(alternating_map R M N ι, alternating_map R M N₂ ι) :=
+{ to_fun := λ
+  f, { map_eq_zero_of_eq' := λ v i j h hij, by simp [] [] [] ["[", expr f.map_eq_zero_of_eq v h hij, "]"] [] [],
+    ..g.comp_multilinear_map (f : multilinear_map R (λ _ : ι, M) N) },
+  map_zero' := by { ext [] [] [],
+    simp [] [] [] [] [] [] },
+  map_add' := λ a b, by { ext [] [] [],
+    simp [] [] [] [] [] [] } }
 
 @[simp]
 theorem coe_comp_alternating_map (g : N →ₗ[R] N₂) (f : AlternatingMap R M N ι) :
@@ -414,11 +414,12 @@ namespace AlternatingMap
 
 variable{M₂ : Type _}[AddCommMonoidₓ M₂][Module R M₂]
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Composing a alternating map with the same linear map on each argument gives again an
 alternating map. -/
-def comp_linear_map (f : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) : AlternatingMap R M₂ N ι :=
-  { (f : MultilinearMap R (fun _ : ι => M) N).compLinearMap fun _ => g with
-    map_eq_zero_of_eq' := fun v i j h hij => f.map_eq_zero_of_eq _ (LinearMap.congr_arg h) hij }
+def comp_linear_map (f : alternating_map R M N ι) (g : «expr →ₗ[ ] »(M₂, R, M)) : alternating_map R M₂ N ι :=
+{ map_eq_zero_of_eq' := λ v i j h hij, f.map_eq_zero_of_eq _ (linear_map.congr_arg h) hij,
+  ..(f : multilinear_map R (λ _ : ι, M) N).comp_linear_map (λ _, g) }
 
 theorem coe_comp_linear_map (f : AlternatingMap R M N ι) (g : M₂ →ₗ[R] M) :
   «expr⇑ » (f.comp_linear_map g) = f ∘ (· ∘ ·) g :=
@@ -522,9 +523,12 @@ theorem map_congr_perm [Fintype ι] (σ : Equiv.Perm ι) : g v = σ.sign • g (
     rw [g.map_perm, smul_smul]
     simp 
 
-theorem coe_dom_dom_congr [Fintype ι] (σ : Equiv.Perm ι) :
-  (g : MultilinearMap R (fun _ : ι => M) N').domDomCongr σ = σ.sign • (g : MultilinearMap R (fun _ : ι => M) N') :=
-  MultilinearMap.ext$ fun v => g.map_perm v σ
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem coe_dom_dom_congr
+[fintype ι]
+(σ : equiv.perm ι) : «expr = »((g : multilinear_map R (λ
+  _ : ι, M) N').dom_dom_congr σ, «expr • »(σ.sign, (g : multilinear_map R (λ _ : ι, M) N'))) :=
+«expr $ »(multilinear_map.ext, λ v, g.map_perm v σ)
 
 /-- If the arguments are linearly dependent then the result is `0`. -/
 theorem map_linear_dependent {K : Type _} [Ringₓ K] {M : Type _} [AddCommGroupₓ M] [Module K M] {N : Type _}
@@ -554,49 +558,57 @@ open Equiv
 
 variable[Fintype ι]
 
-private theorem alternization_map_eq_zero_of_eq_aux (m : MultilinearMap R (fun i : ι => M) N') (v : ι → M) (i j : ι)
-  (i_ne_j : i ≠ j) (hv : v i = v j) : (∑σ : perm ι, σ.sign • m.dom_dom_congr σ) v = 0 :=
-  by 
-    rw [sum_apply]
-    exact
-      Finset.sum_involution (fun σ _ => swap i j*σ)
-        (fun σ _ =>
-          by 
-            simp [perm.sign_swap i_ne_j, apply_swap_eq_self hv])
-        (fun σ _ _ => (not_congr swap_mul_eq_iff).mpr i_ne_j) (fun σ _ => Finset.mem_univ _)
-        fun σ _ => swap_mul_involutive i j σ
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+theorem alternization_map_eq_zero_of_eq_aux
+(m : multilinear_map R (λ i : ι, M) N')
+(v : ι → M)
+(i j : ι)
+(i_ne_j : «expr ≠ »(i, j))
+(hv : «expr = »(v i, v j)) : «expr = »(«expr∑ , »((σ : perm ι), «expr • »(σ.sign, m.dom_dom_congr σ)) v, 0) :=
+begin
+  rw [expr sum_apply] [],
+  exact [expr finset.sum_involution (λ
+    σ
+    _, «expr * »(swap i j, σ)) (λ
+    σ
+    _, by simp [] [] [] ["[", expr perm.sign_swap i_ne_j, ",", expr apply_swap_eq_self hv, "]"] [] []) (λ
+    σ _ _, (not_congr swap_mul_eq_iff).mpr i_ne_j) (λ σ _, finset.mem_univ _) (λ σ _, swap_mul_involutive i j σ)]
+end
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Produce an `alternating_map` out of a `multilinear_map`, by summing over all argument
-permutations. -/
-def alternatization : MultilinearMap R (fun i : ι => M) N' →+ AlternatingMap R M N' ι :=
-  { toFun :=
-      fun m =>
-        { ∑σ : perm ι, σ.sign • m.dom_dom_congr σ with toFun := «expr⇑ » (∑σ : perm ι, σ.sign • m.dom_dom_congr σ),
-          map_eq_zero_of_eq' := fun v i j hvij hij => alternization_map_eq_zero_of_eq_aux m v i j hij hvij },
-    map_add' :=
-      fun a b =>
-        by 
-          ext 
-          simp only [Finset.sum_add_distrib, smul_add, add_apply, dom_dom_congr_apply, AlternatingMap.add_apply,
-            AlternatingMap.coe_mk, smul_apply, sum_apply],
-    map_zero' :=
-      by 
-        ext 
-        simp only [Finset.sum_const_zero, smul_zero, zero_apply, dom_dom_congr_apply, AlternatingMap.zero_apply,
-          AlternatingMap.coe_mk, smul_apply, sum_apply] }
+permutations. -/ def alternatization : «expr →+ »(multilinear_map R (λ i : ι, M) N', alternating_map R M N' ι) :=
+{ to_fun := λ
+  m, { to_fun := «expr⇑ »(«expr∑ , »((σ : perm ι), «expr • »(σ.sign, m.dom_dom_congr σ))),
+    map_eq_zero_of_eq' := λ v i j hvij hij, alternization_map_eq_zero_of_eq_aux m v i j hij hvij,
+    ..«expr∑ , »((σ : perm ι), «expr • »(σ.sign, m.dom_dom_congr σ)) },
+  map_add' := λ a b, begin
+    ext [] [] [],
+    simp [] [] ["only"] ["[", expr finset.sum_add_distrib, ",", expr smul_add, ",", expr add_apply, ",", expr dom_dom_congr_apply, ",", expr alternating_map.add_apply, ",", expr alternating_map.coe_mk, ",", expr smul_apply, ",", expr sum_apply, "]"] [] []
+  end,
+  map_zero' := begin
+    ext [] [] [],
+    simp [] [] ["only"] ["[", expr finset.sum_const_zero, ",", expr smul_zero, ",", expr zero_apply, ",", expr dom_dom_congr_apply, ",", expr alternating_map.zero_apply, ",", expr alternating_map.coe_mk, ",", expr smul_apply, ",", expr sum_apply, "]"] [] []
+  end }
 
-theorem alternatization_def (m : MultilinearMap R (fun i : ι => M) N') :
-  «expr⇑ » (alternatization m) = (∑σ : perm ι, σ.sign • m.dom_dom_congr σ : _) :=
-  rfl
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem alternatization_def
+(m : multilinear_map R (λ
+  i : ι, M) N') : «expr = »(«expr⇑ »(alternatization m), («expr∑ , »((σ : perm ι), «expr • »(σ.sign, m.dom_dom_congr σ)) : _)) :=
+rfl
 
-theorem alternatization_coe (m : MultilinearMap R (fun i : ι => M) N') :
-  «expr↑ » m.alternatization = (∑σ : perm ι, σ.sign • m.dom_dom_congr σ : _) :=
-  coe_injective rfl
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem alternatization_coe
+(m : multilinear_map R (λ
+  i : ι, M) N') : «expr = »(«expr↑ »(m.alternatization), («expr∑ , »((σ : perm ι), «expr • »(σ.sign, m.dom_dom_congr σ)) : _)) :=
+coe_injective rfl
 
-theorem alternatization_apply (m : MultilinearMap R (fun i : ι => M) N') (v : ι → M) :
-  alternatization m v = ∑σ : perm ι, σ.sign • m.dom_dom_congr σ v :=
-  by 
-    simp only [alternatization_def, smul_apply, sum_apply]
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem alternatization_apply
+(m : multilinear_map R (λ i : ι, M) N')
+(v : ι → M) : «expr = »(alternatization m v, «expr∑ , »((σ : perm ι), «expr • »(σ.sign, m.dom_dom_congr σ v))) :=
+by simp [] [] ["only"] ["[", expr alternatization_def, ",", expr smul_apply, ",", expr sum_apply, "]"] [] []
 
 end MultilinearMap
 
@@ -617,12 +629,14 @@ namespace LinearMap
 
 variable{N'₂ : Type _}[AddCommGroupₓ N'₂][Module R N'₂][Fintype ι]
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Composition with a linear map before and after alternatization are equivalent. -/
-theorem comp_multilinear_map_alternatization (g : N' →ₗ[R] N'₂) (f : MultilinearMap R (fun _ : ι => M) N') :
-  (g.comp_multilinear_map f).alternatization = g.comp_alternating_map f.alternatization :=
-  by 
-    ext 
-    simp [MultilinearMap.alternatization_def]
+theorem comp_multilinear_map_alternatization
+(g : «expr →ₗ[ ] »(N', R, N'₂))
+(f : multilinear_map R (λ
+  _ : ι, M) N') : «expr = »((g.comp_multilinear_map f).alternatization, g.comp_alternating_map f.alternatization) :=
+by { ext [] [] [],
+  simp [] [] [] ["[", expr multilinear_map.alternatization_def, "]"] [] [] }
 
 end LinearMap
 
@@ -807,20 +821,21 @@ end AlternatingMap
 
 open Equiv
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A helper lemma for `multilinear_map.dom_coprod_alternization`. -/
-theorem MultilinearMap.dom_coprod_alternization_coe (a : MultilinearMap R' (fun _ : ιa => Mᵢ) N₁)
-  (b : MultilinearMap R' (fun _ : ιb => Mᵢ) N₂) :
-  MultilinearMap.domCoprod («expr↑ » a.alternatization) («expr↑ » b.alternatization) =
-    ∑(σa : perm ιa)(σb : perm ιb),
-      σa.sign • σb.sign • MultilinearMap.domCoprod (a.dom_dom_congr σa) (b.dom_dom_congr σb) :=
-  by 
-    simpRw [←MultilinearMap.dom_coprod'_apply, MultilinearMap.alternatization_coe]
-    simpRw [TensorProduct.sum_tmul, TensorProduct.tmul_sum, LinearMap.map_sum, ←TensorProduct.smul_tmul',
-      TensorProduct.tmul_smul, LinearMap.map_smul_of_tower]
+theorem multilinear_map.dom_coprod_alternization_coe
+(a : multilinear_map R' (λ _ : ιa, Mᵢ) N₁)
+(b : multilinear_map R' (λ
+  _ : ιb, Mᵢ) N₂) : «expr = »(multilinear_map.dom_coprod «expr↑ »(a.alternatization) «expr↑ »(b.alternatization), «expr∑ , »((σa : perm ιa)
+  (σb : perm ιb), «expr • »(σa.sign, «expr • »(σb.sign, multilinear_map.dom_coprod (a.dom_dom_congr σa) (b.dom_dom_congr σb))))) :=
+begin
+  simp_rw ["[", "<-", expr multilinear_map.dom_coprod'_apply, ",", expr multilinear_map.alternatization_coe, "]"] [],
+  simp_rw ["[", expr tensor_product.sum_tmul, ",", expr tensor_product.tmul_sum, ",", expr linear_map.map_sum, ",", "<-", expr tensor_product.smul_tmul', ",", expr tensor_product.tmul_smul, ",", expr linear_map.map_smul_of_tower, "]"] []
+end
 
 open AlternatingMap
 
--- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Computing the `multilinear_map.alternatization` of the `multilinear_map.dom_coprod` is the same
 as computing the `alternating_map.dom_coprod` of the `multilinear_map.alternatization`s.
 -/
@@ -858,18 +873,19 @@ begin
   rw ["[", expr multilinear_map.dom_dom_congr_mul, ",", expr perm.sign_mul, ",", expr perm.sum_congr_hom_apply, ",", expr multilinear_map.dom_coprod_dom_dom_congr_sum_congr, ",", expr perm.sign_sum_congr, ",", expr mul_smul, ",", expr mul_smul, "]"] []
 end
 
+-- error in LinearAlgebra.Alternating: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Taking the `multilinear_map.alternatization` of the `multilinear_map.dom_coprod` of two
 `alternating_map`s gives a scaled version of the `alternating_map.coprod` of those maps.
 -/
-theorem MultilinearMap.dom_coprod_alternization_eq (a : AlternatingMap R' Mᵢ N₁ ιa) (b : AlternatingMap R' Mᵢ N₂ ιb) :
-  (MultilinearMap.domCoprod a b : MultilinearMap R' (fun _ : Sum ιa ιb => Mᵢ) (N₁ ⊗ N₂)).alternatization =
-    ((Fintype.card ιa).factorial*(Fintype.card ιb).factorial) • a.dom_coprod b :=
-  by 
-    rw [MultilinearMap.dom_coprod_alternization, coe_alternatization, coe_alternatization, mul_smul, ←dom_coprod'_apply,
-      ←dom_coprod'_apply, ←TensorProduct.smul_tmul', TensorProduct.tmul_smul, LinearMap.map_smul_of_tower dom_coprod',
-      LinearMap.map_smul_of_tower dom_coprod']
-    infer_instance 
-    infer_instance
+theorem multilinear_map.dom_coprod_alternization_eq
+(a : alternating_map R' Mᵢ N₁ ιa)
+(b : alternating_map R' Mᵢ N₂ ιb) : «expr = »((multilinear_map.dom_coprod a b : multilinear_map R' (λ
+  _ : «expr ⊕ »(ιa, ιb), Mᵢ) «expr ⊗ »(N₁, N₂)).alternatization, «expr • »(«expr * »((fintype.card ιa).factorial, (fintype.card ιb).factorial), a.dom_coprod b)) :=
+begin
+  rw ["[", expr multilinear_map.dom_coprod_alternization, ",", expr coe_alternatization, ",", expr coe_alternatization, ",", expr mul_smul, ",", "<-", expr dom_coprod'_apply, ",", "<-", expr dom_coprod'_apply, ",", "<-", expr tensor_product.smul_tmul', ",", expr tensor_product.tmul_smul, ",", expr linear_map.map_smul_of_tower dom_coprod', ",", expr linear_map.map_smul_of_tower dom_coprod', "]"] [],
+  apply_instance,
+  apply_instance
+end
 
 end Coprod
 

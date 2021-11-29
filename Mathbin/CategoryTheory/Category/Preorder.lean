@@ -191,16 +191,19 @@ variable{X : Type u}{Y : Type v}[PartialOrderₓ X][PartialOrderₓ Y]
 theorem iso.to_eq {x y : X} (f : x ≅ y) : x = y :=
   le_antisymmₓ f.hom.le f.inv.le
 
+-- error in CategoryTheory.Category.Preorder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 A categorical equivalence between partial orders is just an order isomorphism.
--/
-def equivalence.to_order_iso (e : X ≌ Y) : X ≃o Y :=
-  { toFun := e.functor.obj, invFun := e.inverse.obj, left_inv := fun a => (e.unit_iso.app a).to_eq.symm,
-    right_inv := fun b => (e.counit_iso.app b).to_eq,
-    map_rel_iff' :=
-      fun a a' =>
-        ⟨fun h => ((equivalence.unit e).app a ≫ e.inverse.map h.hom ≫ (equivalence.unit_inv e).app a').le,
-          fun h : a ≤ a' => (e.functor.map h.hom).le⟩ }
+-/ def equivalence.to_order_iso (e : «expr ≌ »(X, Y)) : «expr ≃o »(X, Y) :=
+{ to_fun := e.functor.obj,
+  inv_fun := e.inverse.obj,
+  left_inv := λ a, (e.unit_iso.app a).to_eq.symm,
+  right_inv := λ b, (e.counit_iso.app b).to_eq,
+  map_rel_iff' := λ
+  a
+  a', ⟨λ
+   h, «expr ≫ »((equivalence.unit e).app a, «expr ≫ »(e.inverse.map h.hom, (equivalence.unit_inv e).app a')).le, λ
+   h : «expr ≤ »(a, a'), (e.functor.map h.hom).le⟩ }
 
 @[simp]
 theorem equivalence.to_order_iso_apply (e : X ≌ Y) (x : X) : e.to_order_iso x = e.functor.obj x :=

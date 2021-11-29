@@ -27,7 +27,7 @@ theorem product_cons (a : α) (l₁ : List α) (l₂ : List β) :
   rfl
 
 @[simp]
-theorem product_nil : ∀ l : List α, product l (@nil β) = []
+theorem product_nil : ∀ (l : List α), product l (@nil β) = []
 | [] => rfl
 | a :: l =>
   by 
@@ -59,7 +59,7 @@ theorem sigma_cons (a : α) (l₁ : List α) (l₂ : ∀ a, List (σ a)) :
   rfl
 
 @[simp]
-theorem sigma_nil : ∀ l : List α, (l.sigma fun a => @nil (σ a)) = []
+theorem sigma_nil : ∀ (l : List α), (l.sigma fun a => @nil (σ a)) = []
 | [] => rfl
 | a :: l =>
   by 

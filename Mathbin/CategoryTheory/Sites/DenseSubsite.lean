@@ -1,4 +1,6 @@
-import Mathbin.CategoryTheory.Sites.Sheaf
+import Mathbin.CategoryTheory.Sites.Sheaf 
+import Mathbin.CategoryTheory.Sites.CoverLifting 
+import Mathbin.CategoryTheory.Adjunction.FullyFaithful
 
 /-!
 # Dense subsites
@@ -21,6 +23,9 @@ we would need, and some sheafification would be needed for here and there.
 - `category_theory.cover_dense.iso_of_restrict_iso`: If `G : C ⥤ (D, K)` is full and cover-dense,
   then given any sheaves `ℱ, ℱ'` on `D`, and a morphism `α : ℱ ⟶ ℱ'`, then `α` is an iso if
   `G ⋙ ℱ ⟶ G ⋙ ℱ'` is iso.
+- `category_theory.cover_dense.Sheaf_equiv_of_cover_preserving_cover_lifting`:
+  If `G : (C, J) ⥤ (D, K)` is fully-faithful, cover-lifting, cover-preserving, and cover-dense,
+  then it will induce an equivalence of categories of sheaves valued in a complete category.
 
 ## References
 
@@ -31,7 +36,7 @@ we would need, and some sheafification would be needed for here and there.
 -/
 
 
-universe v
+universe v u
 
 namespace CategoryTheory
 
@@ -87,7 +92,7 @@ A functor `G : (C, J) ⥤ (D, K)` is called `cover_dense` if for each object in 
 This definition can be found in https://ncatlab.org/nlab/show/dense+sub-site Definition 2.2.
 -/
 structure cover_dense(K : grothendieck_topology D)(G : C ⥤ D) : Prop where 
-  is_cover : ∀ U : D, sieve.cover_by_image G U ∈ K U
+  is_cover : ∀ (U : D), sieve.cover_by_image G U ∈ K U
 
 open Presieve Opposite
 
@@ -98,7 +103,7 @@ variable{K}
 variable{A : Type _}[category A]{G : C ⥤ D}(H : cover_dense K G)
 
 theorem ext (H : cover_dense K G) (ℱ : SheafOfTypes K) (X : D) {s t : ℱ.val.obj (op X)}
-  (h : ∀ ⦃Y : C⦄ f : G.obj Y ⟶ X, ℱ.val.map f.op s = ℱ.val.map f.op t) : s = t :=
+  (h : ∀ ⦃Y : C⦄ (f : G.obj Y ⟶ X), ℱ.val.map f.op s = ℱ.val.map f.op t) : s = t :=
   by 
     apply (ℱ.property (sieve.cover_by_image G X) (H.is_cover X)).IsSeparatedFor.ext 
     rintro Y _ ⟨Z, f₁, f₂, ⟨rfl⟩⟩
@@ -420,7 +425,74 @@ theorem iso_of_restrict_iso {ℱ ℱ' : Sheaf K A} (α : ℱ ⟶ ℱ') (i : is_i
     symm 
     apply sheaf_hom_eq
 
+/-- A fully faithful cover-dense functor preserves compatible families. -/
+theorem compatible_preserving [faithful G] : compatible_preserving K G :=
+  by 
+    constructor 
+    intro ℱ Z T x hx Y₁ Y₂ X f₁ f₂ g₁ g₂ hg₁ hg₂ eq 
+    apply H.ext 
+    intro W i 
+    simp only [←functor_to_types.map_comp_apply, ←op_comp]
+    rw [←G.image_preimage (i ≫ f₁)]
+    rw [←G.image_preimage (i ≫ f₂)]
+    apply hx 
+    apply G.map_injective 
+    simp [Eq]
+
+noncomputable instance sites.pullback.full [faithful G] (Hp : cover_preserving J K G) :
+  full (sites.pullback A H.compatible_preserving Hp) :=
+  { Preimage := fun ℱ ℱ' α => H.sheaf_hom α, witness' := fun ℱ ℱ' α => H.sheaf_hom_restrict_eq α }
+
+-- error in CategoryTheory.Sites.DenseSubsite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance sites.pullback.faithful
+[faithful G]
+(Hp : cover_preserving J K G) : faithful (sites.pullback A H.compatible_preserving Hp) :=
+{ map_injective' := λ
+  (ℱ ℱ' α β)
+  (eq : «expr = »(whisker_left G.op α, whisker_left G.op β)), by rw ["[", "<-", expr H.sheaf_hom_eq α, ",", "<-", expr H.sheaf_hom_eq β, ",", expr eq, "]"] [] }
+
 end CoverDense
 
 end CategoryTheory
+
+namespace CategoryTheory.CoverDense
+
+open CategoryTheory
+
+variable{C : Type u}[small_category C]{D : Type u}[small_category D]
+
+variable{G : C ⥤ D}[full G][faithful G]
+
+variable{J : grothendieck_topology C}{K : grothendieck_topology D}
+
+variable{A : Type v}[category.{u} A][limits.has_limits A]
+
+variable(Hd : cover_dense K G)(Hp : cover_preserving J K G)(Hl : cover_lifting J K G)
+
+include Hd Hp Hl
+
+-- error in CategoryTheory.Sites.DenseSubsite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/--
+Given a functor between small sites that is cover-dense, cover-preserving, and cover-lifting,
+it induces an equivalence of category of sheaves valued in a complete category.
+-/
+@[simps #[ident functor, ident inverse]]
+noncomputable
+def Sheaf_equiv_of_cover_preserving_cover_lifting : «expr ≌ »(Sheaf J A, Sheaf K A) :=
+begin
+  symmetry,
+  let [ident α] [] [":=", expr sites.pullback_copullback_adjunction A Hp Hl Hd.compatible_preserving],
+  haveI [] [":", expr ∀ X : Sheaf J A, is_iso (α.counit.app X)] [],
+  { intro [ident ℱ],
+    apply_with [expr reflects_isomorphisms.reflects (Sheaf_to_presheaf J A)] { instances := ff },
+    exact [expr is_iso.of_iso ((@as_iso _ _ _ _ _ (Ran.reflective A G.op)).app ℱ.val)] },
+  haveI [] [":", expr is_iso α.counit] [":=", expr nat_iso.is_iso_of_is_iso_app _],
+  exact [expr { functor := sites.pullback A Hd.compatible_preserving Hp,
+     inverse := sites.copullback A Hl,
+     unit_iso := as_iso α.unit,
+     counit_iso := as_iso α.counit,
+     functor_unit_iso_comp' := λ ℱ, by convert [] [expr α.left_triangle_components] [] }]
+end
+
+end CategoryTheory.CoverDense
 

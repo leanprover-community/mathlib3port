@@ -73,7 +73,7 @@ variable(R : Type u)[Ringₓ R]
     implies `n ≤ m`. -/
 @[mkIff]
 class StrongRankCondition : Prop where 
-  le_of_fin_injective : ∀ {n m : ℕ} f : (Finₓ n → R) →ₗ[R] Finₓ m → R, injective f → n ≤ m
+  le_of_fin_injective : ∀ {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R), injective f → n ≤ m
 
 theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R) :
   injective f → n ≤ m :=
@@ -112,7 +112,7 @@ theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintype 
 /-- We say that `R` satisfies the rank condition if `(fin n → R) →ₗ[R] (fin m → R)` surjective
     implies `m ≤ n`. -/
 class RankCondition : Prop where 
-  le_of_fin_surjective : ∀ {n m : ℕ} f : (Finₓ n → R) →ₗ[R] Finₓ m → R, surjective f → m ≤ n
+  le_of_fin_surjective : ∀ {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R), surjective f → m ≤ n
 
 theorem le_of_fin_surjective [RankCondition R] {n m : ℕ} (f : (Finₓ n → R) →ₗ[R] Finₓ m → R) : surjective f → m ≤ n :=
   RankCondition.le_of_fin_surjective f

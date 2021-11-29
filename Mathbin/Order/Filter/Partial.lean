@@ -82,7 +82,8 @@ theorem rmap_compose (r : Rel α β) (s : Rel β γ) : (rmap s ∘ rmap r) = rma
 def rtendsto (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁.rmap r ≤ l₂
 
-theorem rtendsto_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) : rtendsto r l₁ l₂ ↔ ∀ s _ : s ∈ l₂, r.core s ∈ l₁ :=
+theorem rtendsto_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :
+  rtendsto r l₁ l₂ ↔ ∀ s (_ : s ∈ l₂), r.core s ∈ l₁ :=
   Iff.rfl
 
 /-- One way of taking the inverse map of a filter under a relation. One generalization of
@@ -116,7 +117,7 @@ theorem rcomap_compose (r : Rel α β) (s : Rel β γ) : (rcomap r ∘ rcomap s)
 theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) : rtendsto r l₁ l₂ ↔ l₁ ≤ l₂.rcomap r :=
   by 
     rw [rtendsto_def]
-    change (∀ s : Set β, s ∈ l₂.sets → r.core s ∈ l₁) ↔ l₁ ≤ rcomap r l₂ 
+    change (∀ (s : Set β), s ∈ l₂.sets → r.core s ∈ l₁) ↔ l₁ ≤ rcomap r l₂ 
     simp [Filter.le_def, rcomap, Rel.mem_image]
     split 
     ·
@@ -166,7 +167,7 @@ def rtendsto' (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁ ≤ l₂.rcomap' r
 
 theorem rtendsto'_def (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :
-  rtendsto' r l₁ l₂ ↔ ∀ s _ : s ∈ l₂, r.preimage s ∈ l₁ :=
+  rtendsto' r l₁ l₂ ↔ ∀ s (_ : s ∈ l₂), r.preimage s ∈ l₁ :=
   by 
     unfold rtendsto' rcomap' 
     simp [le_def, Rel.mem_image]
@@ -204,7 +205,8 @@ theorem mem_pmap (f : α →. β) (l : Filter α) (s : Set β) : s ∈ l.pmap f 
 def ptendsto (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁.pmap f ≤ l₂
 
-theorem ptendsto_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) : ptendsto f l₁ l₂ ↔ ∀ s _ : s ∈ l₂, f.core s ∈ l₁ :=
+theorem ptendsto_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :
+  ptendsto f l₁ l₂ ↔ ∀ s (_ : s ∈ l₂), f.core s ∈ l₁ :=
   Iff.rfl
 
 theorem ptendsto_iff_rtendsto (l₁ : Filter α) (l₂ : Filter β) (f : α →. β) :
@@ -240,7 +242,7 @@ def ptendsto' (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :=
   l₁ ≤ l₂.rcomap' f.graph'
 
 theorem ptendsto'_def (f : α →. β) (l₁ : Filter α) (l₂ : Filter β) :
-  ptendsto' f l₁ l₂ ↔ ∀ s _ : s ∈ l₂, f.preimage s ∈ l₁ :=
+  ptendsto' f l₁ l₂ ↔ ∀ s (_ : s ∈ l₂), f.preimage s ∈ l₁ :=
   rtendsto'_def _ _ _
 
 theorem ptendsto_of_ptendsto' {f : α →. β} {l₁ : Filter α} {l₂ : Filter β} : ptendsto' f l₁ l₂ → ptendsto f l₁ l₂ :=

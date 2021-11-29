@@ -190,10 +190,10 @@ derivative of `p m` for `m < n`, and is continuous for `m ≤ n`. This is a pred
 `has_fderiv_within_at` but for higher order derivatives. -/
 structure HasFtaylorSeriesUpToOn(n : WithTop ℕ)(f : E → F)(p : E → FormalMultilinearSeries 𝕜 E F)(s : Set E) :
   Prop where 
-  zero_eq : ∀ x _ : x ∈ s, (p x 0).uncurry0 = f x 
+  zero_eq : ∀ x (_ : x ∈ s), (p x 0).uncurry0 = f x 
   fderivWithin :
-  ∀ m : ℕ hm : (m : WithTop ℕ) < n, ∀ x _ : x ∈ s, HasFderivWithinAt (fun y => p y m) (p x m.succ).curryLeft s x 
-  cont : ∀ m : ℕ hm : (m : WithTop ℕ) ≤ n, ContinuousOn (fun x => p x m) s
+  ∀ (m : ℕ) (hm : (m : WithTop ℕ) < n), ∀ x (_ : x ∈ s), HasFderivWithinAt (fun y => p y m) (p x m.succ).curryLeft s x 
+  cont : ∀ (m : ℕ) (hm : (m : WithTop ℕ) ≤ n), ContinuousOn (fun x => p x m) s
 
 theorem HasFtaylorSeriesUpToOn.zero_eq' {n : WithTop ℕ} (h : HasFtaylorSeriesUpToOn n f p s) {x : E} (hx : x ∈ s) :
   p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) :=
@@ -205,7 +205,7 @@ theorem HasFtaylorSeriesUpToOn.zero_eq' {n : WithTop ℕ} (h : HasFtaylorSeriesU
 /-- If two functions coincide on a set `s`, then a Taylor series for the first one is as well a
 Taylor series for the second one. -/
 theorem HasFtaylorSeriesUpToOn.congr {n : WithTop ℕ} (h : HasFtaylorSeriesUpToOn n f p s)
-  (h₁ : ∀ x _ : x ∈ s, f₁ x = f x) : HasFtaylorSeriesUpToOn n f₁ p s :=
+  (h₁ : ∀ x (_ : x ∈ s), f₁ x = f x) : HasFtaylorSeriesUpToOn n f₁ p s :=
   by 
     refine' ⟨fun x hx => _, h.fderiv_within, h.cont⟩
     rw [h₁ x hx]
@@ -247,7 +247,7 @@ begin
 end
 
 theorem has_ftaylor_series_up_to_on_top_iff :
-  HasFtaylorSeriesUpToOn ∞ f p s ↔ ∀ n : ℕ, HasFtaylorSeriesUpToOn n f p s :=
+  HasFtaylorSeriesUpToOn ∞ f p s ↔ ∀ (n : ℕ), HasFtaylorSeriesUpToOn n f p s :=
   by 
     split 
     ·
@@ -420,7 +420,7 @@ For instance, a real function which is `C^m` on `(-1/m, 1/m)` for each natural `
 better, is `C^∞` at `0` within `univ`.
 -/
 def TimesContDiffWithinAt (n : WithTop ℕ) (f : E → F) (s : Set E) (x : E) :=
-  ∀ m : ℕ,
+  ∀ (m : ℕ),
     (m : WithTop ℕ) ≤ n →
       ∃ (u : _)(_ : u ∈ 𝓝[insert x s] x), ∃ p : E → FormalMultilinearSeries 𝕜 E F, HasFtaylorSeriesUpToOn m f p u
 
@@ -436,10 +436,10 @@ theorem TimesContDiffWithinAt.of_le {m n : WithTop ℕ} (h : TimesContDiffWithin
   fun k hk => h k (le_transₓ hk hmn)
 
 theorem times_cont_diff_within_at_iff_forall_nat_le {n : WithTop ℕ} :
-  TimesContDiffWithinAt 𝕜 n f s x ↔ ∀ m : ℕ, «expr↑ » m ≤ n → TimesContDiffWithinAt 𝕜 m f s x :=
+  TimesContDiffWithinAt 𝕜 n f s x ↔ ∀ (m : ℕ), «expr↑ » m ≤ n → TimesContDiffWithinAt 𝕜 m f s x :=
   ⟨fun H m hm => H.of_le hm, fun H m hm => H m hm _ le_rfl⟩
 
-theorem times_cont_diff_within_at_top : TimesContDiffWithinAt 𝕜 ∞ f s x ↔ ∀ n : ℕ, TimesContDiffWithinAt 𝕜 n f s x :=
+theorem times_cont_diff_within_at_top : TimesContDiffWithinAt 𝕜 ∞ f s x ↔ ∀ (n : ℕ), TimesContDiffWithinAt 𝕜 n f s x :=
   times_cont_diff_within_at_iff_forall_nat_le.trans$
     by 
       simp only [forall_prop_of_true, le_top]
@@ -467,11 +467,11 @@ theorem Filter.EventuallyEq.times_cont_diff_within_at_iff {n : WithTop ℕ} (h�
   ⟨fun H => TimesContDiffWithinAt.congr_of_eventually_eq H h₁.symm hx.symm, fun H => H.congr_of_eventually_eq h₁ hx⟩
 
 theorem TimesContDiffWithinAt.congr {n : WithTop ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x)
-  (h₁ : ∀ y _ : y ∈ s, f₁ y = f y) (hx : f₁ x = f x) : TimesContDiffWithinAt 𝕜 n f₁ s x :=
+  (h₁ : ∀ y (_ : y ∈ s), f₁ y = f y) (hx : f₁ x = f x) : TimesContDiffWithinAt 𝕜 n f₁ s x :=
   h.congr_of_eventually_eq (Filter.eventually_eq_of_mem self_mem_nhds_within h₁) hx
 
 theorem TimesContDiffWithinAt.congr' {n : WithTop ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x)
-  (h₁ : ∀ y _ : y ∈ s, f₁ y = f y) (hx : x ∈ s) : TimesContDiffWithinAt 𝕜 n f₁ s x :=
+  (h₁ : ∀ y (_ : y ∈ s), f₁ y = f y) (hx : x ∈ s) : TimesContDiffWithinAt 𝕜 n f₁ s x :=
   h.congr h₁ (h₁ _ hx)
 
 theorem TimesContDiffWithinAt.mono_of_mem {n : WithTop ℕ} (h : TimesContDiffWithinAt 𝕜 n f s x) {t : Set E}
@@ -520,7 +520,7 @@ theorem TimesContDiffWithinAt.differentiable_within_at {n : WithTop ℕ} (h : Ti
   (hn : 1 ≤ n) : DifferentiableWithinAt 𝕜 f s x :=
   (h.differentiable_within_at' hn).mono (subset_insert x s)
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A function is `C^(n + 1)` on a domain iff locally, it has a derivative which is `C^n`. -/
 theorem times_cont_diff_within_at_succ_iff_has_fderiv_within_at
 {n : exprℕ()} : «expr ↔ »(times_cont_diff_within_at 𝕜 («expr + »(n, 1) : exprℕ()) f s x, «expr∃ , »((u «expr ∈ » «expr𝓝[ ] »(insert x s, x)), «expr∃ , »((f' : E → «expr →L[ ] »(E, 𝕜, F)), «expr ∧ »(∀
@@ -580,7 +580,7 @@ For `n = ∞`, we only require that this holds up to any finite order (where the
 depend on the finite order we consider).
 -/
 def TimesContDiffOn (n : WithTop ℕ) (f : E → F) (s : Set E) :=
-  ∀ x _ : x ∈ s, TimesContDiffWithinAt 𝕜 n f s x
+  ∀ x (_ : x ∈ s), TimesContDiffWithinAt 𝕜 n f s x
 
 variable{𝕜}
 
@@ -616,15 +616,15 @@ theorem TimesContDiffOn.of_le {m n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f 
   fun x hx => (h x hx).ofLe hmn
 
 theorem times_cont_diff_on_iff_forall_nat_le {n : WithTop ℕ} :
-  TimesContDiffOn 𝕜 n f s ↔ ∀ m : ℕ, «expr↑ » m ≤ n → TimesContDiffOn 𝕜 m f s :=
+  TimesContDiffOn 𝕜 n f s ↔ ∀ (m : ℕ), «expr↑ » m ≤ n → TimesContDiffOn 𝕜 m f s :=
   ⟨fun H m hm => H.of_le hm, fun H x hx m hm => H m hm x hx m le_rfl⟩
 
-theorem times_cont_diff_on_top : TimesContDiffOn 𝕜 ∞ f s ↔ ∀ n : ℕ, TimesContDiffOn 𝕜 n f s :=
+theorem times_cont_diff_on_top : TimesContDiffOn 𝕜 ∞ f s ↔ ∀ (n : ℕ), TimesContDiffOn 𝕜 n f s :=
   times_cont_diff_on_iff_forall_nat_le.trans$
     by 
       simp only [le_top, forall_prop_of_true]
 
-theorem times_cont_diff_on_all_iff_nat : (∀ n, TimesContDiffOn 𝕜 n f s) ↔ ∀ n : ℕ, TimesContDiffOn 𝕜 n f s :=
+theorem times_cont_diff_on_all_iff_nat : (∀ n, TimesContDiffOn 𝕜 n f s) ↔ ∀ (n : ℕ), TimesContDiffOn 𝕜 n f s :=
   by 
     refine' ⟨fun H n => H n, _⟩
     rintro H (_ | n)
@@ -633,11 +633,11 @@ theorem times_cont_diff_on_all_iff_nat : (∀ n, TimesContDiffOn 𝕜 n f s) ↔
 theorem TimesContDiffOn.continuous_on {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s) : ContinuousOn f s :=
   fun x hx => (h x hx).ContinuousWithinAt
 
-theorem TimesContDiffOn.congr {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s) (h₁ : ∀ x _ : x ∈ s, f₁ x = f x) :
+theorem TimesContDiffOn.congr {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s) (h₁ : ∀ x (_ : x ∈ s), f₁ x = f x) :
   TimesContDiffOn 𝕜 n f₁ s :=
   fun x hx => (h x hx).congr h₁ (h₁ x hx)
 
-theorem times_cont_diff_on_congr {n : WithTop ℕ} (h₁ : ∀ x _ : x ∈ s, f₁ x = f x) :
+theorem times_cont_diff_on_congr {n : WithTop ℕ} (h₁ : ∀ x (_ : x ∈ s), f₁ x = f x) :
   TimesContDiffOn 𝕜 n f₁ s ↔ TimesContDiffOn 𝕜 n f s :=
   ⟨fun H => H.congr fun x hx => (h₁ x hx).symm, fun H => H.congr h₁⟩
 
@@ -645,7 +645,7 @@ theorem TimesContDiffOn.mono {n : WithTop ℕ} (h : TimesContDiffOn 𝕜 n f s) 
   TimesContDiffOn 𝕜 n f t :=
   fun x hx => (h x (hst hx)).mono hst
 
-theorem TimesContDiffOn.congr_mono {n : WithTop ℕ} (hf : TimesContDiffOn 𝕜 n f s) (h₁ : ∀ x _ : x ∈ s₁, f₁ x = f x)
+theorem TimesContDiffOn.congr_mono {n : WithTop ℕ} (hf : TimesContDiffOn 𝕜 n f s) (h₁ : ∀ x (_ : x ∈ s₁), f₁ x = f x)
   (hs : s₁ ⊆ s) : TimesContDiffOn 𝕜 n f₁ s₁ :=
   (hf.mono hs).congr h₁
 
@@ -656,7 +656,7 @@ theorem TimesContDiffOn.differentiable_on {n : WithTop ℕ} (h : TimesContDiffOn
 
 /-- If a function is `C^n` around each point in a set, then it is `C^n` on the set. -/
 theorem times_cont_diff_on_of_locally_times_cont_diff_on {n : WithTop ℕ}
-  (h : ∀ x _ : x ∈ s, ∃ u, IsOpen u ∧ x ∈ u ∧ TimesContDiffOn 𝕜 n f (s ∩ u)) : TimesContDiffOn 𝕜 n f s :=
+  (h : ∀ x (_ : x ∈ s), ∃ u, IsOpen u ∧ x ∈ u ∧ TimesContDiffOn 𝕜 n f (s ∩ u)) : TimesContDiffOn 𝕜 n f s :=
   by 
     intro x xs 
     rcases h x xs with ⟨u, u_open, xu, hu⟩
@@ -698,7 +698,7 @@ The `n`-th derivative of a function along a set, defined inductively by saying t
 derivative of `f` is the derivative of the `n`-th derivative of `f` along this set, together with
 an uncurrying step to see it as a multilinear map in `n+1` variables..
 -/
-noncomputable def iteratedFderivWithin (n : ℕ) (f : E → F) (s : Set E) : E → E[×n]→L[𝕜] F :=
+noncomputable def iteratedFderivWithin (n : ℕ) (f : E → F) (s : Set E) : E → «expr [× ]→L[ ] » E n 𝕜 F :=
   Nat.recOn n (fun x => ContinuousMultilinearMap.curry0 𝕜 E (f x))
     fun n rec x => ContinuousLinearMap.uncurryLeft (fderivWithin 𝕜 rec s x)
 
@@ -719,16 +719,16 @@ theorem iterated_fderiv_within_zero_eq_comp :
 
 theorem iterated_fderiv_within_succ_apply_left {n : ℕ} (m : Finₓ (n+1) → E) :
   (iteratedFderivWithin 𝕜 (n+1) f s x : (Finₓ (n+1) → E) → F) m =
-    (fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n f s) s x : E → E[×n]→L[𝕜] F) (m 0) (tail m) :=
+    (fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n f s) s x : E → «expr [× ]→L[ ] » E n 𝕜 F) (m 0) (tail m) :=
   rfl
 
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Writing explicitly the `n+1`-th derivative as the composition of a currying linear equiv,
 and the derivative of the `n`-th derivative. -/
-theorem iterated_fderiv_within_succ_eq_comp_left {n : ℕ} :
-  iteratedFderivWithin 𝕜 (n+1) f s =
-    (continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Finₓ (n+1) => E) F ∘
-      fderivWithin 𝕜 (iteratedFderivWithin 𝕜 n f s) s) :=
-  rfl
+theorem iterated_fderiv_within_succ_eq_comp_left
+{n : exprℕ()} : «expr = »(iterated_fderiv_within 𝕜 «expr + »(n, 1) f s, «expr ∘ »(continuous_multilinear_curry_left_equiv 𝕜 (λ
+   i : fin «expr + »(n, 1), E) F, fderiv_within 𝕜 (iterated_fderiv_within 𝕜 n f s) s)) :=
+rfl
 
 -- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem iterated_fderiv_within_succ_apply_right
@@ -945,8 +945,8 @@ begin
 end
 
 theorem times_cont_diff_on_of_continuous_on_differentiable_on {n : WithTop ℕ}
-  (Hcont : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContinuousOn (fun x => iteratedFderivWithin 𝕜 m f s x) s)
-  (Hdiff : ∀ m : ℕ, (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (fun x => iteratedFderivWithin 𝕜 m f s x) s) :
+  (Hcont : ∀ (m : ℕ), (m : WithTop ℕ) ≤ n → ContinuousOn (fun x => iteratedFderivWithin 𝕜 m f s x) s)
+  (Hdiff : ∀ (m : ℕ), (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (fun x => iteratedFderivWithin 𝕜 m f s x) s) :
   TimesContDiffOn 𝕜 n f s :=
   by 
     intro x hx m hm 
@@ -967,7 +967,8 @@ theorem times_cont_diff_on_of_continuous_on_differentiable_on {n : WithTop ℕ}
       exact Hcont k (le_transₓ hk hm)
 
 theorem times_cont_diff_on_of_differentiable_on {n : WithTop ℕ}
-  (h : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → DifferentiableOn 𝕜 (iteratedFderivWithin 𝕜 m f s) s) : TimesContDiffOn 𝕜 n f s :=
+  (h : ∀ (m : ℕ), (m : WithTop ℕ) ≤ n → DifferentiableOn 𝕜 (iteratedFderivWithin 𝕜 m f s) s) :
+  TimesContDiffOn 𝕜 n f s :=
   times_cont_diff_on_of_continuous_on_differentiable_on (fun m hm => (h m hm).ContinuousOn)
     fun m hm => h m (le_of_ltₓ hm)
 
@@ -981,8 +982,8 @@ theorem TimesContDiffOn.differentiable_on_iterated_fderiv_within {n : WithTop �
 
 theorem times_cont_diff_on_iff_continuous_on_differentiable_on {n : WithTop ℕ} (hs : UniqueDiffOn 𝕜 s) :
   TimesContDiffOn 𝕜 n f s ↔
-    (∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContinuousOn (fun x => iteratedFderivWithin 𝕜 m f s x) s) ∧
-      ∀ m : ℕ, (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (fun x => iteratedFderivWithin 𝕜 m f s x) s :=
+    (∀ (m : ℕ), (m : WithTop ℕ) ≤ n → ContinuousOn (fun x => iteratedFderivWithin 𝕜 m f s x) s) ∧
+      ∀ (m : ℕ), (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (fun x => iteratedFderivWithin 𝕜 m f s x) s :=
   by 
     split 
     ·
@@ -1123,8 +1124,8 @@ derivative of `p m` for `m < n`, and is continuous for `m ≤ n`. This is a pred
 `has_fderiv_at` but for higher order derivatives. -/
 structure HasFtaylorSeriesUpTo(n : WithTop ℕ)(f : E → F)(p : E → FormalMultilinearSeries 𝕜 E F) : Prop where 
   zero_eq : ∀ x, (p x 0).uncurry0 = f x 
-  fderiv : ∀ m : ℕ hm : (m : WithTop ℕ) < n, ∀ x, HasFderivAt (fun y => p y m) (p x m.succ).curryLeft x 
-  cont : ∀ m : ℕ hm : (m : WithTop ℕ) ≤ n, Continuous fun x => p x m
+  fderiv : ∀ (m : ℕ) (hm : (m : WithTop ℕ) < n), ∀ x, HasFderivAt (fun y => p y m) (p x m.succ).curryLeft x 
+  cont : ∀ (m : ℕ) (hm : (m : WithTop ℕ) ≤ n), Continuous fun x => p x m
 
 theorem HasFtaylorSeriesUpTo.zero_eq' {n : WithTop ℕ} (h : HasFtaylorSeriesUpTo n f p) (x : E) :
   p x 0 = (continuousMultilinearCurryFin0 𝕜 E F).symm (f x) :=
@@ -1224,7 +1225,7 @@ variable{𝕜}
 theorem times_cont_diff_within_at_univ {n : WithTop ℕ} : TimesContDiffWithinAt 𝕜 n f univ x ↔ TimesContDiffAt 𝕜 n f x :=
   Iff.rfl
 
-theorem times_cont_diff_at_top : TimesContDiffAt 𝕜 ∞ f x ↔ ∀ n : ℕ, TimesContDiffAt 𝕜 n f x :=
+theorem times_cont_diff_at_top : TimesContDiffAt 𝕜 ∞ f x ↔ ∀ (n : ℕ), TimesContDiffAt 𝕜 n f x :=
   by 
     simp [←times_cont_diff_within_at_univ, times_cont_diff_within_at_top]
 
@@ -1260,7 +1261,8 @@ theorem TimesContDiffAt.differentiable_at {n : WithTop ℕ} (h : TimesContDiffAt
 /-- A function is `C^(n + 1)` at a point iff locally, it has a derivative which is `C^n`. -/
 theorem times_cont_diff_at_succ_iff_has_fderiv_at {n : ℕ} :
   TimesContDiffAt 𝕜 (n+1 : ℕ) f x ↔
-    ∃ f' : E → E →L[𝕜] F, (∃ (u : _)(_ : u ∈ 𝓝 x), ∀ x _ : x ∈ u, HasFderivAt f (f' x) x) ∧ TimesContDiffAt 𝕜 n f' x :=
+    ∃ f' : E → E →L[𝕜] F,
+      (∃ (u : _)(_ : u ∈ 𝓝 x), ∀ x (_ : x ∈ u), HasFderivAt f (f' x) x) ∧ TimesContDiffAt 𝕜 n f' x :=
   by 
     rw [←times_cont_diff_within_at_univ, times_cont_diff_within_at_succ_iff_has_fderiv_within_at]
     simp only [nhds_within_univ, exists_prop, mem_univ, insert_eq_of_mem]
@@ -1321,11 +1323,11 @@ theorem TimesContDiff.times_cont_diff_within_at {n : WithTop ℕ} (h : TimesCont
   TimesContDiffWithinAt 𝕜 n f s x :=
   h.times_cont_diff_at.times_cont_diff_within_at
 
-theorem times_cont_diff_top : TimesContDiff 𝕜 ∞ f ↔ ∀ n : ℕ, TimesContDiff 𝕜 n f :=
+theorem times_cont_diff_top : TimesContDiff 𝕜 ∞ f ↔ ∀ (n : ℕ), TimesContDiff 𝕜 n f :=
   by 
     simp [times_cont_diff_on_univ.symm, times_cont_diff_on_top]
 
-theorem times_cont_diff_all_iff_nat : (∀ n, TimesContDiff 𝕜 n f) ↔ ∀ n : ℕ, TimesContDiff 𝕜 n f :=
+theorem times_cont_diff_all_iff_nat : (∀ n, TimesContDiff 𝕜 n f) ↔ ∀ (n : ℕ), TimesContDiff 𝕜 n f :=
   by 
     simp only [←times_cont_diff_on_univ, times_cont_diff_on_all_iff_nat]
 
@@ -1359,7 +1361,7 @@ theorem TimesContDiff.differentiable {n : WithTop ℕ} (h : TimesContDiff 𝕜 n
 variable(𝕜)
 
 /-- The `n`-th derivative of a function, as a multilinear map, defined inductively. -/
-noncomputable def iteratedFderiv (n : ℕ) (f : E → F) : E → E[×n]→L[𝕜] F :=
+noncomputable def iteratedFderiv (n : ℕ) (f : E → F) : E → «expr [× ]→L[ ] » E n 𝕜 F :=
   Nat.recOn n (fun x => ContinuousMultilinearMap.curry0 𝕜 E (f x))
     fun n rec x => ContinuousLinearMap.uncurryLeft (fderiv 𝕜 rec x)
 
@@ -1378,15 +1380,16 @@ theorem iterated_fderiv_zero_eq_comp : iteratedFderiv 𝕜 0 f = ((continuousMul
 
 theorem iterated_fderiv_succ_apply_left {n : ℕ} (m : Finₓ (n+1) → E) :
   (iteratedFderiv 𝕜 (n+1) f x : (Finₓ (n+1) → E) → F) m =
-    (fderiv 𝕜 (iteratedFderiv 𝕜 n f) x : E → E[×n]→L[𝕜] F) (m 0) (tail m) :=
+    (fderiv 𝕜 (iteratedFderiv 𝕜 n f) x : E → «expr [× ]→L[ ] » E n 𝕜 F) (m 0) (tail m) :=
   rfl
 
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Writing explicitly the `n+1`-th derivative as the composition of a currying linear equiv,
 and the derivative of the `n`-th derivative. -/
-theorem iterated_fderiv_succ_eq_comp_left {n : ℕ} :
-  iteratedFderiv 𝕜 (n+1) f =
-    (continuousMultilinearCurryLeftEquiv 𝕜 (fun i : Finₓ (n+1) => E) F ∘ fderiv 𝕜 (iteratedFderiv 𝕜 n f)) :=
-  rfl
+theorem iterated_fderiv_succ_eq_comp_left
+{n : exprℕ()} : «expr = »(iterated_fderiv 𝕜 «expr + »(n, 1) f, «expr ∘ »(continuous_multilinear_curry_left_equiv 𝕜 (λ
+   i : fin «expr + »(n, 1), E) F, fderiv 𝕜 (iterated_fderiv 𝕜 n f))) :=
+rfl
 
 theorem iterated_fderiv_within_univ {n : ℕ} : iteratedFderivWithin 𝕜 n f univ = iteratedFderiv 𝕜 n f :=
   by 
@@ -1444,14 +1447,14 @@ theorem times_cont_diff_on_iff_ftaylor_series {n : WithTop ℕ} :
 
 theorem times_cont_diff_iff_continuous_differentiable {n : WithTop ℕ} :
   TimesContDiff 𝕜 n f ↔
-    (∀ m : ℕ, (m : WithTop ℕ) ≤ n → Continuous fun x => iteratedFderiv 𝕜 m f x) ∧
-      ∀ m : ℕ, (m : WithTop ℕ) < n → Differentiable 𝕜 fun x => iteratedFderiv 𝕜 m f x :=
+    (∀ (m : ℕ), (m : WithTop ℕ) ≤ n → Continuous fun x => iteratedFderiv 𝕜 m f x) ∧
+      ∀ (m : ℕ), (m : WithTop ℕ) < n → Differentiable 𝕜 fun x => iteratedFderiv 𝕜 m f x :=
   by 
     simp [times_cont_diff_on_univ.symm, continuous_iff_continuous_on_univ, differentiable_on_univ.symm,
       iterated_fderiv_within_univ, times_cont_diff_on_iff_continuous_on_differentiable_on unique_diff_on_univ]
 
 theorem times_cont_diff_of_differentiable_iterated_fderiv {n : WithTop ℕ}
-  (h : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → Differentiable 𝕜 (iteratedFderiv 𝕜 m f)) : TimesContDiff 𝕜 n f :=
+  (h : ∀ (m : ℕ), (m : WithTop ℕ) ≤ n → Differentiable 𝕜 (iteratedFderiv 𝕜 m f)) : TimesContDiff 𝕜 n f :=
   times_cont_diff_iff_continuous_differentiable.2 ⟨fun m hm => (h m hm).Continuous, fun m hm => h m (le_of_ltₓ hm)⟩
 
 /-- A function is `C^(n + 1)` on a domain with unique derivatives if and only if
@@ -1493,46 +1496,54 @@ end
 /-! ### Constants -/
 
 
-theorem iterated_fderiv_within_zero_fun {n : ℕ} : (iteratedFderiv 𝕜 n fun x : E => (0 : F)) = 0 :=
-  by 
-    induction' n with n IH
-    ·
-      ext m 
-      simp 
-    ·
-      ext x m 
-      rw [iterated_fderiv_succ_apply_left, IH]
-      change (fderiv 𝕜 (fun x : E => (0 : E[×n]→L[𝕜] F)) x : E → E[×n]→L[𝕜] F) (m 0) (tail m) = _ 
-      rw [fderiv_const]
-      rfl
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem iterated_fderiv_within_zero_fun {n : exprℕ()} : «expr = »(iterated_fderiv 𝕜 n (λ x : E, (0 : F)), 0) :=
+begin
+  induction [expr n] [] ["with", ident n, ident IH] [],
+  { ext [] [ident m] [],
+    simp [] [] [] [] [] [] },
+  { ext [] [ident x, ident m] [],
+    rw ["[", expr iterated_fderiv_succ_apply_left, ",", expr IH, "]"] [],
+    change [expr «expr = »((fderiv 𝕜 (λ
+       x : E, (0 : «expr [× ]→L[ ] »(E, n, 𝕜, F))) x : E → «expr [× ]→L[ ] »(E, n, 𝕜, F)) (m 0) (tail m), _)] [] [],
+    rw [expr fderiv_const] [],
+    refl }
+end
 
-theorem times_cont_diff_zero_fun {n : WithTop ℕ} : TimesContDiff 𝕜 n fun x : E => (0 : F) :=
-  by 
-    apply times_cont_diff_of_differentiable_iterated_fderiv fun m hm => _ 
-    rw [iterated_fderiv_within_zero_fun]
-    apply differentiable_const (0 : E[×m]→L[𝕜] F)
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_zero_fun {n : with_top exprℕ()} : times_cont_diff 𝕜 n (λ x : E, (0 : F)) :=
+begin
+  apply [expr times_cont_diff_of_differentiable_iterated_fderiv (λ m hm, _)],
+  rw [expr iterated_fderiv_within_zero_fun] [],
+  apply [expr differentiable_const (0 : «expr [× ]→L[ ] »(E, m, 𝕜, F))]
+end
 
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Constants are `C^∞`.
--/
-theorem times_cont_diff_const {n : WithTop ℕ} {c : F} : TimesContDiff 𝕜 n fun x : E => c :=
-  by 
-    suffices h : TimesContDiff 𝕜 ∞ fun x : E => c
-    ·
-      exact h.of_le le_top 
-    rw [times_cont_diff_top_iff_fderiv]
-    refine' ⟨differentiable_const c, _⟩
-    rw [fderiv_const]
-    exact times_cont_diff_zero_fun
+-/ theorem times_cont_diff_const {n : with_top exprℕ()} {c : F} : times_cont_diff 𝕜 n (λ x : E, c) :=
+begin
+  suffices [ident h] [":", expr times_cont_diff 𝕜 «expr∞»() (λ x : E, c)],
+  by exact [expr h.of_le le_top],
+  rw [expr times_cont_diff_top_iff_fderiv] [],
+  refine [expr ⟨differentiable_const c, _⟩],
+  rw [expr fderiv_const] [],
+  exact [expr times_cont_diff_zero_fun]
+end
 
-theorem times_cont_diff_on_const {n : WithTop ℕ} {c : F} {s : Set E} : TimesContDiffOn 𝕜 n (fun x : E => c) s :=
-  times_cont_diff_const.TimesContDiffOn
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_on_const {n : with_top exprℕ()} {c : F} {s : set E} : times_cont_diff_on 𝕜 n (λ x : E, c) s :=
+times_cont_diff_const.times_cont_diff_on
 
-theorem times_cont_diff_at_const {n : WithTop ℕ} {c : F} : TimesContDiffAt 𝕜 n (fun x : E => c) x :=
-  times_cont_diff_const.TimesContDiffAt
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_at_const {n : with_top exprℕ()} {c : F} : times_cont_diff_at 𝕜 n (λ x : E, c) x :=
+times_cont_diff_const.times_cont_diff_at
 
-theorem times_cont_diff_within_at_const {n : WithTop ℕ} {c : F} : TimesContDiffWithinAt 𝕜 n (fun x : E => c) s x :=
-  times_cont_diff_at_const.TimesContDiffWithinAt
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_within_at_const
+{n : with_top exprℕ()}
+{c : F} : times_cont_diff_within_at 𝕜 n (λ x : E, c) s x :=
+times_cont_diff_at_const.times_cont_diff_within_at
 
 @[nontriviality]
 theorem times_cont_diff_of_subsingleton [Subsingleton F] {n : WithTop ℕ} : TimesContDiff 𝕜 n f :=
@@ -1688,7 +1699,8 @@ theorem HasFtaylorSeriesUpToOn.continuous_linear_map_comp {n : WithTop ℕ} (g :
   (hf : HasFtaylorSeriesUpToOn n f p s) :
   HasFtaylorSeriesUpToOn n (g ∘ f) (fun x k => g.comp_continuous_multilinear_map (p x k)) s :=
   by 
-    set L : ∀ m : ℕ, (E[×m]→L[𝕜] F) →L[𝕜] E[×m]→L[𝕜] G := fun m => ContinuousLinearMap.compContinuousMultilinearMapL g 
+    set L : ∀ (m : ℕ), «expr [× ]→L[ ] » E m 𝕜 F →L[𝕜] «expr [× ]→L[ ] » E m 𝕜 G :=
+      fun m => ContinuousLinearMap.compContinuousMultilinearMapL g 
     split 
     ·
       exact fun x hx => congr_argₓ g (hf.zero_eq x hx)
@@ -1740,7 +1752,7 @@ theorem ContinuousLinearEquiv.comp_times_cont_diff_on_iff {n : WithTop ℕ} (e :
   by 
     simp [TimesContDiffOn, e.comp_times_cont_diff_within_at_iff]
 
--- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `f` admits a Taylor series `p` in a set `s`, and `g` is linear, then `f ∘ g` admits a Taylor
 series in `g ⁻¹' s`, whose `k`-th term is given by `p k (g v₁, ..., g vₖ)` . -/
 theorem has_ftaylor_series_up_to_on.comp_continuous_linear_map
@@ -1828,53 +1840,76 @@ begin
   exact [expr H.comp_continuous_linear_map (e.symm : «expr →L[ ] »(E, 𝕜, G))]
 end
 
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If two functions `f` and `g` admit Taylor series `p` and `q` in a set `s`, then the cartesian
 product of `f` and `g` admits the cartesian product of `p` and `q` as a Taylor series. -/
-theorem HasFtaylorSeriesUpToOn.prod {n : WithTop ℕ} (hf : HasFtaylorSeriesUpToOn n f p s) {g : E → G}
-  {q : E → FormalMultilinearSeries 𝕜 E G} (hg : HasFtaylorSeriesUpToOn n g q s) :
-  HasFtaylorSeriesUpToOn n (fun y => (f y, g y)) (fun y k => (p y k).Prod (q y k)) s :=
-  by 
-    set L := fun m => ContinuousMultilinearMap.prodL 𝕜 (fun i : Finₓ m => E) F G 
-    split 
-    ·
-      intro x hx 
-      rw [←hf.zero_eq x hx, ←hg.zero_eq x hx]
-      rfl
-    ·
-      intro m hm x hx 
-      convert
-        (L m).HasFderivAt.comp_has_fderiv_within_at x ((hf.fderiv_within m hm x hx).Prod (hg.fderiv_within m hm x hx))
-    ·
-      intro m hm 
-      exact (L m).Continuous.comp_continuous_on ((hf.cont m hm).Prod (hg.cont m hm))
+theorem has_ftaylor_series_up_to_on.prod
+{n : with_top exprℕ()}
+(hf : has_ftaylor_series_up_to_on n f p s)
+{g : E → G}
+{q : E → formal_multilinear_series 𝕜 E G}
+(hg : has_ftaylor_series_up_to_on n g q s) : has_ftaylor_series_up_to_on n (λ
+ y, (f y, g y)) (λ y k, (p y k).prod (q y k)) s :=
+begin
+  set [] [ident L] [] [":="] [expr λ m, continuous_multilinear_map.prodL 𝕜 (λ i : fin m, E) F G] [],
+  split,
+  { assume [binders (x hx)],
+    rw ["[", "<-", expr hf.zero_eq x hx, ",", "<-", expr hg.zero_eq x hx, "]"] [],
+    refl },
+  { assume [binders (m hm x hx)],
+    convert [] [expr (L m).has_fderiv_at.comp_has_fderiv_within_at x ((hf.fderiv_within m hm x hx).prod (hg.fderiv_within m hm x hx))] [] },
+  { assume [binders (m hm)],
+    exact [expr (L m).continuous.comp_continuous_on ((hf.cont m hm).prod (hg.cont m hm))] }
+end
 
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The cartesian product of `C^n` functions at a point in a domain is `C^n`. -/
-theorem TimesContDiffWithinAt.prod {n : WithTop ℕ} {s : Set E} {f : E → F} {g : E → G}
-  (hf : TimesContDiffWithinAt 𝕜 n f s x) (hg : TimesContDiffWithinAt 𝕜 n g s x) :
-  TimesContDiffWithinAt 𝕜 n (fun x : E => (f x, g x)) s x :=
-  by 
-    intro m hm 
-    rcases hf m hm with ⟨u, hu, p, hp⟩
-    rcases hg m hm with ⟨v, hv, q, hq⟩
-    exact ⟨u ∩ v, Filter.inter_mem hu hv, _, (hp.mono (inter_subset_left u v)).Prod (hq.mono (inter_subset_right u v))⟩
+theorem times_cont_diff_within_at.prod
+{n : with_top exprℕ()}
+{s : set E}
+{f : E → F}
+{g : E → G}
+(hf : times_cont_diff_within_at 𝕜 n f s x)
+(hg : times_cont_diff_within_at 𝕜 n g s x) : times_cont_diff_within_at 𝕜 n (λ x : E, (f x, g x)) s x :=
+begin
+  assume [binders (m hm)],
+  rcases [expr hf m hm, "with", "⟨", ident u, ",", ident hu, ",", ident p, ",", ident hp, "⟩"],
+  rcases [expr hg m hm, "with", "⟨", ident v, ",", ident hv, ",", ident q, ",", ident hq, "⟩"],
+  exact [expr ⟨«expr ∩ »(u, v), filter.inter_mem hu hv, _, (hp.mono (inter_subset_left u v)).prod (hq.mono (inter_subset_right u v))⟩]
+end
 
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The cartesian product of `C^n` functions on domains is `C^n`. -/
-theorem TimesContDiffOn.prod {n : WithTop ℕ} {s : Set E} {f : E → F} {g : E → G} (hf : TimesContDiffOn 𝕜 n f s)
-  (hg : TimesContDiffOn 𝕜 n g s) : TimesContDiffOn 𝕜 n (fun x : E => (f x, g x)) s :=
-  fun x hx => (hf x hx).Prod (hg x hx)
+theorem times_cont_diff_on.prod
+{n : with_top exprℕ()}
+{s : set E}
+{f : E → F}
+{g : E → G}
+(hf : times_cont_diff_on 𝕜 n f s)
+(hg : times_cont_diff_on 𝕜 n g s) : times_cont_diff_on 𝕜 n (λ x : E, (f x, g x)) s :=
+λ x hx, (hf x hx).prod (hg x hx)
 
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The cartesian product of `C^n` functions at a point is `C^n`. -/
-theorem TimesContDiffAt.prod {n : WithTop ℕ} {f : E → F} {g : E → G} (hf : TimesContDiffAt 𝕜 n f x)
-  (hg : TimesContDiffAt 𝕜 n g x) : TimesContDiffAt 𝕜 n (fun x : E => (f x, g x)) x :=
-  times_cont_diff_within_at_univ.1$
-    TimesContDiffWithinAt.prod (times_cont_diff_within_at_univ.2 hf) (times_cont_diff_within_at_univ.2 hg)
+theorem times_cont_diff_at.prod
+{n : with_top exprℕ()}
+{f : E → F}
+{g : E → G}
+(hf : times_cont_diff_at 𝕜 n f x)
+(hg : times_cont_diff_at 𝕜 n g x) : times_cont_diff_at 𝕜 n (λ x : E, (f x, g x)) x :=
+«expr $ »(times_cont_diff_within_at_univ.1, times_cont_diff_within_at.prod (times_cont_diff_within_at_univ.2 hf) (times_cont_diff_within_at_univ.2 hg))
 
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The cartesian product of `C^n` functions is `C^n`.
 -/
-theorem TimesContDiff.prod {n : WithTop ℕ} {f : E → F} {g : E → G} (hf : TimesContDiff 𝕜 n f)
-  (hg : TimesContDiff 𝕜 n g) : TimesContDiff 𝕜 n fun x : E => (f x, g x) :=
-  times_cont_diff_on_univ.1$ TimesContDiffOn.prod (times_cont_diff_on_univ.2 hf) (times_cont_diff_on_univ.2 hg)
+theorem times_cont_diff.prod
+{n : with_top exprℕ()}
+{f : E → F}
+{g : E → G}
+(hf : times_cont_diff 𝕜 n f)
+(hg : times_cont_diff 𝕜 n g) : times_cont_diff 𝕜 n (λ x : E, (f x, g x)) :=
+«expr $ »(times_cont_diff_on_univ.1, times_cont_diff_on.prod (times_cont_diff_on_univ.2 hf) (times_cont_diff_on_univ.2 hg))
 
 /-!
 ### Smoothness of functions `f : E → Π i, F' i`
@@ -2207,19 +2242,26 @@ begin
   exact [expr A.comp_times_cont_diff_on B]
 end
 
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The bundled derivative of a `C^{n+1}` function is `C^n`. -/
-theorem TimesContDiff.times_cont_diff_fderiv_apply {n m : WithTop ℕ} {f : E → F} (hf : TimesContDiff 𝕜 n f)
-  (hmn : (m+1) ≤ n) : TimesContDiff 𝕜 m fun p : E × E => (fderiv 𝕜 f p.1 : E →L[𝕜] F) p.2 :=
-  by 
-    rw [←times_cont_diff_on_univ] at hf⊢
-    rw [←fderiv_within_univ, ←univ_prod_univ]
-    exact times_cont_diff_on_fderiv_within_apply hf unique_diff_on_univ hmn
+theorem times_cont_diff.times_cont_diff_fderiv_apply
+{n m : with_top exprℕ()}
+{f : E → F}
+(hf : times_cont_diff 𝕜 n f)
+(hmn : «expr ≤ »(«expr + »(m, 1), n)) : times_cont_diff 𝕜 m (λ
+ p : «expr × »(E, E), (fderiv 𝕜 f p.1 : «expr →L[ ] »(E, 𝕜, F)) p.2) :=
+begin
+  rw ["<-", expr times_cont_diff_on_univ] ["at", "⊢", ident hf],
+  rw ["[", "<-", expr fderiv_within_univ, ",", "<-", expr univ_prod_univ, "]"] [],
+  exact [expr times_cont_diff_on_fderiv_within_apply hf unique_diff_on_univ hmn]
+end
 
 /-! ### Sum of two functions -/
 
 
-theorem times_cont_diff_add {n : WithTop ℕ} : TimesContDiff 𝕜 n fun p : F × F => p.1+p.2 :=
-  (IsBoundedLinearMap.fst.add IsBoundedLinearMap.snd).TimesContDiff
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_add {n : with_top exprℕ()} : times_cont_diff 𝕜 n (λ p : «expr × »(F, F), «expr + »(p.1, p.2)) :=
+(is_bounded_linear_map.fst.add is_bounded_linear_map.snd).times_cont_diff
 
 /-- The sum of two `C^n` functions within a set at a point is `C^n` within this set
 at this point. -/
@@ -2246,8 +2288,9 @@ theorem TimesContDiffOn.add {n : WithTop ℕ} {s : Set E} {f g : E → F} (hf : 
 /-! ### Negative -/
 
 
-theorem times_cont_diff_neg {n : WithTop ℕ} : TimesContDiff 𝕜 n fun p : F => -p :=
-  IsBoundedLinearMap.id.neg.TimesContDiff
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_neg {n : with_top exprℕ()} : times_cont_diff 𝕜 n (λ p : F, «expr- »(p)) :=
+is_bounded_linear_map.id.neg.times_cont_diff
 
 /-- The negative of a `C^n` function within a domain at a point is `C^n` within this domain at
 this point. -/
@@ -2302,7 +2345,7 @@ theorem TimesContDiff.sub {n : WithTop ℕ} {f g : E → F} (hf : TimesContDiff 
 
 
 theorem TimesContDiffWithinAt.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {n : WithTop ℕ} {t : Set E} {x : E}
-  (h : ∀ i _ : i ∈ s, TimesContDiffWithinAt 𝕜 n (fun x => f i x) t x) :
+  (h : ∀ i (_ : i ∈ s), TimesContDiffWithinAt 𝕜 n (fun x => f i x) t x) :
   TimesContDiffWithinAt 𝕜 n (fun x => ∑i in s, f i x) t x :=
   by 
     classical 
@@ -2314,24 +2357,25 @@ theorem TimesContDiffWithinAt.sum {ι : Type _} {f : ι → E → F} {s : Finset
       exact (h _ (Finset.mem_insert_self i s)).add (IH fun j hj => h _ (Finset.mem_insert_of_mem hj))
 
 theorem TimesContDiffAt.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {n : WithTop ℕ} {x : E}
-  (h : ∀ i _ : i ∈ s, TimesContDiffAt 𝕜 n (fun x => f i x) x) : TimesContDiffAt 𝕜 n (fun x => ∑i in s, f i x) x :=
+  (h : ∀ i (_ : i ∈ s), TimesContDiffAt 𝕜 n (fun x => f i x) x) : TimesContDiffAt 𝕜 n (fun x => ∑i in s, f i x) x :=
   by 
     rw [←times_cont_diff_within_at_univ] at * <;> exact TimesContDiffWithinAt.sum h
 
 theorem TimesContDiffOn.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {n : WithTop ℕ} {t : Set E}
-  (h : ∀ i _ : i ∈ s, TimesContDiffOn 𝕜 n (fun x => f i x) t) : TimesContDiffOn 𝕜 n (fun x => ∑i in s, f i x) t :=
+  (h : ∀ i (_ : i ∈ s), TimesContDiffOn 𝕜 n (fun x => f i x) t) : TimesContDiffOn 𝕜 n (fun x => ∑i in s, f i x) t :=
   fun x hx => TimesContDiffWithinAt.sum fun i hi => h i hi x hx
 
 theorem TimesContDiff.sum {ι : Type _} {f : ι → E → F} {s : Finset ι} {n : WithTop ℕ}
-  (h : ∀ i _ : i ∈ s, TimesContDiff 𝕜 n fun x => f i x) : TimesContDiff 𝕜 n fun x => ∑i in s, f i x :=
+  (h : ∀ i (_ : i ∈ s), TimesContDiff 𝕜 n fun x => f i x) : TimesContDiff 𝕜 n fun x => ∑i in s, f i x :=
   by 
     simp [←times_cont_diff_on_univ] at * <;> exact TimesContDiffOn.sum h
 
 /-! ### Product of two functions -/
 
 
-theorem times_cont_diff_mul {n : WithTop ℕ} : TimesContDiff 𝕜 n fun p : 𝕜 × 𝕜 => p.1*p.2 :=
-  is_bounded_bilinear_map_mul.TimesContDiff
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_mul {n : with_top exprℕ()} : times_cont_diff 𝕜 n (λ p : «expr × »(𝕜, 𝕜), «expr * »(p.1, p.2)) :=
+is_bounded_bilinear_map_mul.times_cont_diff
 
 /-- The product of two `C^n` functions within a set at a point is `C^n` within this set
 at this point. -/
@@ -2376,7 +2420,7 @@ theorem TimesContDiff.div_const {f : E → 𝕜} {n} {c : 𝕜} (hf : TimesContD
     simpa only [div_eq_mul_inv] using hf.mul times_cont_diff_const
 
 theorem TimesContDiff.pow {n : WithTop ℕ} {f : E → 𝕜} (hf : TimesContDiff 𝕜 n f) :
-  ∀ m : ℕ, TimesContDiff 𝕜 n fun x => f x^m
+  ∀ (m : ℕ), TimesContDiff 𝕜 n fun x => f x^m
 | 0 =>
   by 
     simpa using times_cont_diff_const
@@ -2399,8 +2443,10 @@ theorem TimesContDiffOn.pow {n : WithTop ℕ} {f : E → 𝕜} (hf : TimesContDi
 /-! ### Scalar multiplication -/
 
 
-theorem times_cont_diff_smul {n : WithTop ℕ} : TimesContDiff 𝕜 n fun p : 𝕜 × F => p.1 • p.2 :=
-  is_bounded_bilinear_map_smul.TimesContDiff
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_smul
+{n : with_top exprℕ()} : times_cont_diff 𝕜 n (λ p : «expr × »(𝕜, F), «expr • »(p.1, p.2)) :=
+is_bounded_bilinear_map_smul.times_cont_diff
 
 /-- The scalar multiplication of two `C^n` functions within a set at a point is `C^n` within this
 set at this point. -/
@@ -2487,40 +2533,35 @@ variable(𝕜){R : Type _}[NormedRing R][NormedAlgebra 𝕜 R]
 
 open NormedRing ContinuousLinearMap Ringₓ
 
+-- error in Analysis.Calculus.TimesContDiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In a complete normed algebra, the operation of inversion is `C^n`, for all `n`, at each
 invertible element.  The proof is by induction, bootstrapping using an identity expressing the
 derivative of inversion as a bilinear map of inversion itself. -/
-theorem times_cont_diff_at_ring_inverse [CompleteSpace R] {n : WithTop ℕ} (x : Units R) :
-  TimesContDiffAt 𝕜 n Ring.inverse (x : R) :=
-  by 
-    induction' n using WithTop.nat_induction with n IH Itop
-    ·
-      intro m hm 
-      refine' ⟨{ y:R | IsUnit y }, _, _⟩
-      ·
-        simp [nhds_within_univ]
-        exact x.nhds
-      ·
-        use ftaylorSeriesWithin 𝕜 inverse univ 
-        rw [le_antisymmₓ hm bot_le, has_ftaylor_series_up_to_on_zero_iff]
-        split 
-        ·
-          rintro _ ⟨x', rfl⟩
-          exact (inverse_continuous_at x').ContinuousWithinAt
-        ·
-          simp [ftaylorSeriesWithin]
-    ·
-      apply times_cont_diff_at_succ_iff_has_fderiv_at.mpr 
-      refine' ⟨fun x : R => -lmul_left_right 𝕜 R (inverse x) (inverse x), _, _⟩
-      ·
-        refine' ⟨{ y:R | IsUnit y }, x.nhds, _⟩
-        rintro _ ⟨y, rfl⟩
-        rw [inverse_unit]
-        exact has_fderiv_at_ring_inverse y
-      ·
-        convert (lmul_left_right_is_bounded_bilinear 𝕜 R).TimesContDiff.neg.comp_times_cont_diff_at (x : R) (IH.prod IH)
-    ·
-      exact times_cont_diff_at_top.mpr Itop
+theorem times_cont_diff_at_ring_inverse
+[complete_space R]
+{n : with_top exprℕ()}
+(x : units R) : times_cont_diff_at 𝕜 n ring.inverse (x : R) :=
+begin
+  induction [expr n] ["using", ident with_top.nat_induction] ["with", ident n, ident IH, ident Itop] [],
+  { intros [ident m, ident hm],
+    refine [expr ⟨{y : R | is_unit y}, _, _⟩],
+    { simp [] [] [] ["[", expr nhds_within_univ, "]"] [] [],
+      exact [expr x.nhds] },
+    { use [expr ftaylor_series_within 𝕜 inverse univ],
+      rw ["[", expr le_antisymm hm bot_le, ",", expr has_ftaylor_series_up_to_on_zero_iff, "]"] [],
+      split,
+      { rintros ["_", "⟨", ident x', ",", ident rfl, "⟩"],
+        exact [expr (inverse_continuous_at x').continuous_within_at] },
+      { simp [] [] [] ["[", expr ftaylor_series_within, "]"] [] [] } } },
+  { apply [expr times_cont_diff_at_succ_iff_has_fderiv_at.mpr],
+    refine [expr ⟨λ x : R, «expr- »(lmul_left_right 𝕜 R (inverse x) (inverse x)), _, _⟩],
+    { refine [expr ⟨{y : R | is_unit y}, x.nhds, _⟩],
+      rintros ["_", "⟨", ident y, ",", ident rfl, "⟩"],
+      rw ["[", expr inverse_unit, "]"] [],
+      exact [expr has_fderiv_at_ring_inverse y] },
+    { convert [] [expr (lmul_left_right_is_bounded_bilinear 𝕜 R).times_cont_diff.neg.comp_times_cont_diff_at (x : R) (IH.prod IH)] [] } },
+  { exact [expr times_cont_diff_at_top.mpr Itop] }
+end
 
 variable(𝕜){𝕜' : Type _}[NormedField 𝕜'][NormedAlgebra 𝕜 𝕜'][CompleteSpace 𝕜']
 
@@ -2537,7 +2578,7 @@ theorem TimesContDiffWithinAt.inv {f : E → 𝕜'} {n} (hf : TimesContDiffWithi
   TimesContDiffWithinAt 𝕜 n (fun x => f x⁻¹) s x :=
   (times_cont_diff_at_inv 𝕜 hx).comp_times_cont_diff_within_at x hf
 
-theorem TimesContDiffOn.inv {f : E → 𝕜'} {n} (hf : TimesContDiffOn 𝕜 n f s) (h : ∀ x _ : x ∈ s, f x ≠ 0) :
+theorem TimesContDiffOn.inv {f : E → 𝕜'} {n} (hf : TimesContDiffOn 𝕜 n f s) (h : ∀ x (_ : x ∈ s), f x ≠ 0) :
   TimesContDiffOn 𝕜 n (fun x => f x⁻¹) s :=
   fun x hx => (hf.times_cont_diff_within_at hx).inv (h x hx)
 
@@ -2557,7 +2598,7 @@ theorem TimesContDiffWithinAt.div [CompleteSpace 𝕜] {f g : E → 𝕜} {n} (h
     simpa only [div_eq_mul_inv] using hf.mul (hg.inv hx)
 
 theorem TimesContDiffOn.div [CompleteSpace 𝕜] {f g : E → 𝕜} {n} (hf : TimesContDiffOn 𝕜 n f s)
-  (hg : TimesContDiffOn 𝕜 n g s) (h₀ : ∀ x _ : x ∈ s, g x ≠ 0) : TimesContDiffOn 𝕜 n (f / g) s :=
+  (hg : TimesContDiffOn 𝕜 n g s) (h₀ : ∀ x (_ : x ∈ s), g x ≠ 0) : TimesContDiffOn 𝕜 n (f / g) s :=
   fun x hx => (hf x hx).div (hg x hx) (h₀ x hx)
 
 theorem TimesContDiffAt.div [CompleteSpace 𝕜] {f g : E → 𝕜} {n} (hf : TimesContDiffAt 𝕜 n f x)

@@ -494,7 +494,7 @@ theorem sin_eq_zero_iff {x : ℝ} : sin x = 0 ↔ ∃ n : ℤ, ((n : ℝ)*π) = 
                     simp [sub_eq_add_neg, sin_add, h, sin_int_mul_pi]))⟩,
     fun ⟨n, hn⟩ => hn ▸ sin_int_mul_pi _⟩
 
-theorem sin_ne_zero_iff {x : ℝ} : sin x ≠ 0 ↔ ∀ n : ℤ, ((n : ℝ)*π) ≠ x :=
+theorem sin_ne_zero_iff {x : ℝ} : sin x ≠ 0 ↔ ∀ (n : ℤ), ((n : ℝ)*π) ≠ x :=
   by 
     rw [←not_exists, not_iff_not, sin_eq_zero_iff]
 
@@ -752,15 +752,15 @@ theorem sqrt_two_add_series_two : sqrt_two_add_series 0 2 = sqrt (2+sqrt 2) :=
   by 
     simp 
 
-theorem sqrt_two_add_series_zero_nonneg : ∀ n : ℕ, 0 ≤ sqrt_two_add_series 0 n
+theorem sqrt_two_add_series_zero_nonneg : ∀ (n : ℕ), 0 ≤ sqrt_two_add_series 0 n
 | 0 => le_reflₓ 0
 | n+1 => sqrt_nonneg _
 
-theorem sqrt_two_add_series_nonneg {x : ℝ} (h : 0 ≤ x) : ∀ n : ℕ, 0 ≤ sqrt_two_add_series x n
+theorem sqrt_two_add_series_nonneg {x : ℝ} (h : 0 ≤ x) : ∀ (n : ℕ), 0 ≤ sqrt_two_add_series x n
 | 0 => h
 | n+1 => sqrt_nonneg _
 
-theorem sqrt_two_add_series_lt_two : ∀ n : ℕ, sqrt_two_add_series 0 n < 2
+theorem sqrt_two_add_series_lt_two : ∀ (n : ℕ), sqrt_two_add_series 0 n < 2
 | 0 =>
   by 
     normNum
@@ -774,14 +774,14 @@ theorem sqrt_two_add_series_lt_two : ∀ n : ℕ, sqrt_two_add_series 0 n < 2
     ·
       exact add_nonneg zero_le_two (sqrt_two_add_series_zero_nonneg n)
 
-theorem sqrt_two_add_series_succ (x : ℝ) : ∀ n : ℕ, sqrt_two_add_series x (n+1) = sqrt_two_add_series (sqrt (2+x)) n
+theorem sqrt_two_add_series_succ (x : ℝ) : ∀ (n : ℕ), sqrt_two_add_series x (n+1) = sqrt_two_add_series (sqrt (2+x)) n
 | 0 => rfl
 | n+1 =>
   by 
     rw [sqrt_two_add_series, sqrt_two_add_series_succ, sqrt_two_add_series]
 
 theorem sqrt_two_add_series_monotone_left {x y : ℝ} (h : x ≤ y) :
-  ∀ n : ℕ, sqrt_two_add_series x n ≤ sqrt_two_add_series y n
+  ∀ (n : ℕ), sqrt_two_add_series x n ≤ sqrt_two_add_series y n
 | 0 => h
 | n+1 =>
   by 

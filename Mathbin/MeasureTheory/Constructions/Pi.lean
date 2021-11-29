@@ -208,7 +208,7 @@ theorem pi_pi_le (m : ∀ i, outer_measure (α i)) (s : ∀ i, Set (α i)) : out
     exact (bounded_by_le _).trans_eq (pi_premeasure_pi h)
 
 theorem le_pi {m : ∀ i, outer_measure (α i)} {n : outer_measure (∀ i, α i)} :
-  n ≤ outer_measure.pi m ↔ ∀ s : ∀ i, Set (α i), (pi univ s).Nonempty → n (pi univ s) ≤ ∏i, m i (s i) :=
+  n ≤ outer_measure.pi m ↔ ∀ (s : ∀ i, Set (α i)), (pi univ s).Nonempty → n (pi univ s) ≤ ∏i, m i (s i) :=
   by 
     rw [outer_measure.pi, le_bounded_by']
     split 
@@ -402,7 +402,7 @@ variable[∀ i, sigma_finite (μ i)]
 /-- A measure on a finite product space equals the product measure if they are equal on
   rectangles. -/
 theorem pi_eq {μ' : Measureₓ (∀ i, α i)}
-  (h : ∀ s : ∀ i, Set (α i), (∀ i, MeasurableSet (s i)) → μ' (pi univ s) = ∏i, μ i (s i)) : measure.pi μ = μ' :=
+  (h : ∀ (s : ∀ i, Set (α i)), (∀ i, MeasurableSet (s i)) → μ' (pi univ s) = ∏i, μ i (s i)) : measure.pi μ = μ' :=
   pi_eq_generate_from (fun i => generate_from_measurable_set) (fun i => is_pi_system_measurable_set)
     (fun i => (μ i).toFiniteSpanningSetsIn) h
 
@@ -471,23 +471,32 @@ variable{μ}
 theorem tendsto_eval_ae_ae {i : ι} : tendsto (eval i) (measure.pi μ).ae (μ i).ae :=
   fun s hs => pi_eval_preimage_null μ hs
 
-theorem ae_pi_le_infi_comap : (measure.pi μ).ae ≤ ⨅i, Filter.comap (eval i) (μ i).ae :=
+theorem ae_pi_le_pi : (measure.pi μ).ae ≤ Filter.pi fun i => (μ i).ae :=
   le_infi$ fun i => tendsto_eval_ae_ae.le_comap
 
-theorem ae_eq_pi {β : ι → Type _} {f f' : ∀ i, α i → β i} (h : ∀ i, f i =ᵐ[μ i] f' i) :
-  (fun x : ∀ i, α i i => f i (x i)) =ᵐ[measure.pi μ] fun x i => f' i (x i) :=
-  (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono$ fun x hx => funext hx
+-- error in MeasureTheory.Constructions.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ae_eq_pi
+{β : ι → Type*}
+{f f' : ∀ i, α i → β i}
+(h : ∀
+ i, «expr =ᵐ[ ] »(f i, μ i, f' i)) : «expr =ᵐ[ ] »(λ (x : ∀ i, α i) (i), f i (x i), measure.pi μ, λ x i, f' i (x i)) :=
+«expr $ »((eventually_all.2 (λ i, tendsto_eval_ae_ae.eventually (h i))).mono, λ x hx, funext hx)
 
-theorem ae_le_pi {β : ι → Type _} [∀ i, Preorderₓ (β i)] {f f' : ∀ i, α i → β i} (h : ∀ i, f i ≤ᵐ[μ i] f' i) :
-  (fun x : ∀ i, α i i => f i (x i)) ≤ᵐ[measure.pi μ] fun x i => f' i (x i) :=
-  (eventually_all.2 fun i => tendsto_eval_ae_ae.Eventually (h i)).mono$ fun x hx => hx
+-- error in MeasureTheory.Constructions.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ae_le_pi
+{β : ι → Type*}
+[∀ i, preorder (β i)]
+{f f' : ∀ i, α i → β i}
+(h : ∀
+ i, «expr ≤ᵐ[ ] »(f i, μ i, f' i)) : «expr ≤ᵐ[ ] »(λ (x : ∀ i, α i) (i), f i (x i), measure.pi μ, λ x i, f' i (x i)) :=
+«expr $ »((eventually_all.2 (λ i, tendsto_eval_ae_ae.eventually (h i))).mono, λ x hx, hx)
 
-theorem ae_le_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀ i _ : i ∈ I, s i ≤ᵐ[μ i] t i) :
+theorem ae_le_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀ i (_ : i ∈ I), s i ≤ᵐ[μ i] t i) :
   Set.Pi I s ≤ᵐ[measure.pi μ] Set.Pi I t :=
   ((eventually_all_finite (finite.of_fintype I)).2 fun i hi => tendsto_eval_ae_ae.Eventually (h i hi)).mono$
     fun x hst hx i hi => hst i hi$ hx i hi
 
-theorem ae_eq_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀ i _ : i ∈ I, s i =ᵐ[μ i] t i) :
+theorem ae_eq_set_pi {I : Set ι} {s t : ∀ i, Set (α i)} (h : ∀ i (_ : i ∈ I), s i =ᵐ[μ i] t i) :
   Set.Pi I s =ᵐ[measure.pi μ] Set.Pi I t :=
   (ae_le_set_pi fun i hi => (h i hi).le).antisymm (ae_le_set_pi fun i hi => (h i hi).symm.le)
 

@@ -33,7 +33,7 @@ namespace Nat
   at least 2 whose only divisors are `p` and `1`. -/
 @[pp_nodot]
 def prime (p : ℕ) :=
-  2 ≤ p ∧ ∀ m _ : m ∣ p, m = 1 ∨ m = p
+  2 ≤ p ∧ ∀ m (_ : m ∣ p), m = 1 ∨ m = p
 
 theorem prime.two_le {p : ℕ} : prime p → 2 ≤ p :=
   And.left
@@ -47,7 +47,7 @@ instance prime.one_lt' (p : ℕ) [hp : _root_.fact p.prime] : _root_.fact (1 < p
 theorem prime.ne_one {p : ℕ} (hp : p.prime) : p ≠ 1 :=
   Ne.symm$ ne_of_ltₓ hp.one_lt
 
-theorem prime_def_lt {p : ℕ} : prime p ↔ 2 ≤ p ∧ ∀ m _ : m < p, m ∣ p → m = 1 :=
+theorem prime_def_lt {p : ℕ} : prime p ↔ 2 ≤ p ∧ ∀ m (_ : m < p), m ∣ p → m = 1 :=
   and_congr_right$
     fun p2 =>
       forall_congrₓ$
@@ -333,19 +333,16 @@ theorem le_min_fac {m n : ℕ} : n = 1 ∨ m ≤ min_fac n ↔ ∀ p, prime p �
         fun h => le_transₓ h$ min_fac_le_of_dvd pp.two_le d,
     fun H => or_iff_not_imp_left.2$ fun n1 => H _ (min_fac_prime n1) (min_fac_dvd _)⟩
 
-theorem le_min_fac' {m n : ℕ} : n = 1 ∨ m ≤ min_fac n ↔ ∀ p, 2 ≤ p → p ∣ n → m ≤ p :=
-  ⟨fun h p pp : 1 < p d =>
-      h.elim
-        (by 
-          rintro rfl <;>
-            cases
-              not_le_of_lt pp
-                (le_of_dvd
-                  (by 
-                    decide)
-                  d))
-        fun h => le_transₓ h$ min_fac_le_of_dvd pp d,
-    fun H => le_min_fac.2 fun p pp d => H p pp.two_le d⟩
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem le_min_fac'
+{m
+ n : exprℕ()} : «expr ↔ »(«expr ∨ »(«expr = »(n, 1), «expr ≤ »(m, min_fac n)), ∀
+ p, «expr ≤ »(2, p) → «expr ∣ »(p, n) → «expr ≤ »(m, p)) :=
+⟨λ
+ (h p)
+ (pp : «expr < »(1, p))
+ (d), h.elim (by rintro [ident rfl]; cases [expr not_le_of_lt pp (le_of_dvd exprdec_trivial() d)] []) (λ
+  h, «expr $ »(le_trans h, min_fac_le_of_dvd pp d)), λ H, le_min_fac.2 (λ p pp d, H p pp.two_le d)⟩
 
 theorem prime_def_min_fac {p : ℕ} : prime p ↔ 2 ≤ p ∧ min_fac p = p :=
   ⟨fun pp =>
@@ -669,9 +666,14 @@ theorem prime.not_coprime_iff_dvd {m n : ℕ} : ¬coprime m n ↔ ∃ p, prime p
       cases' h with p hp 
       apply Nat.not_coprime_of_dvd_of_dvdₓ (prime.one_lt hp.1) hp.2.1 hp.2.2
 
-theorem prime.dvd_mul {p m n : ℕ} (pp : prime p) : (p ∣ m*n) ↔ p ∣ m ∨ p ∣ n :=
-  ⟨fun H => or_iff_not_imp_left.2$ fun h => (pp.coprime_iff_not_dvd.2 h).dvd_of_dvd_mul_left H,
-    Or.ndrec (fun h : p ∣ m => h.mul_right _) fun h : p ∣ n => h.mul_left _⟩
+-- error in Data.Nat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prime.dvd_mul
+{p m n : exprℕ()}
+(pp : prime p) : «expr ↔ »(«expr ∣ »(p, «expr * »(m, n)), «expr ∨ »(«expr ∣ »(p, m), «expr ∣ »(p, n))) :=
+⟨λ
+ H, «expr $ »(or_iff_not_imp_left.2, λ
+  h, (pp.coprime_iff_not_dvd.2 h).dvd_of_dvd_mul_left H), or.rec (λ
+  h : «expr ∣ »(p, m), h.mul_right _) (λ h : «expr ∣ »(p, n), h.mul_left _)⟩
 
 theorem prime.not_dvd_mul {p m n : ℕ} (pp : prime p) (Hm : ¬p ∣ m) (Hn : ¬p ∣ n) : ¬p ∣ m*n :=
   mt pp.dvd_mul.1$
@@ -751,7 +753,7 @@ theorem prime.mul_eq_prime_sq_iff
      _, by clear_aux_decl; simp [] [] [] ["[", "*", ",", expr sq, ",", expr mul_comm, ",", expr mul_assoc, ",", expr nat.mul_right_inj hp.pos, ",", expr nat.mul_right_eq_self_iff hp.pos, "]"] [] ["at", "*"] { contextual := tt })]
  end, λ ⟨h₁, h₂⟩, «expr ▸ »(h₁.symm, «expr ▸ »(h₂.symm, (sq _).symm))⟩
 
-theorem prime.dvd_factorial : ∀ {n p : ℕ} hp : prime p, p ∣ n ! ↔ p ≤ n
+theorem prime.dvd_factorial : ∀ {n p : ℕ} (hp : prime p), p ∣ n ! ↔ p ≤ n
 | 0, p, hp => iff_of_false hp.not_dvd_one (not_le_of_lt hp.pos)
 | n+1, p, hp =>
   by 
@@ -830,7 +832,7 @@ section
 open List
 
 theorem mem_list_primes_of_dvd_prod {p : ℕ} (hp : prime p) :
-  ∀ {l : List ℕ}, (∀ p _ : p ∈ l, prime p) → p ∣ Prod l → p ∈ l
+  ∀ {l : List ℕ}, (∀ p (_ : p ∈ l), prime p) → p ∣ Prod l → p ∈ l
 | [] => fun h₁ h₂ => absurd h₂ (prime.not_dvd_one hp)
 | q :: l =>
   fun h₁ h₂ =>
@@ -841,7 +843,7 @@ theorem mem_list_primes_of_dvd_prod {p : ℕ} (hp : prime p) :
         by 
           rw [prime.dvd_iff_not_coprime hp, coprime_primes hp hq, Ne.def, not_not] at h <;> exact h ▸ mem_cons_self _ _)
       fun h =>
-        have hl : ∀ p _ : p ∈ l, prime p := fun p hlp => h₁ p ((mem_cons_iff _ _ _).2 (Or.inr hlp))
+        have hl : ∀ p (_ : p ∈ l), prime p := fun p hlp => h₁ p ((mem_cons_iff _ _ _).2 (Or.inr hlp))
         (mem_cons_iff _ _ _).2 (Or.inr (mem_list_primes_of_dvd_prod hl h))
 
 theorem mem_factors_iff_dvd {n p : ℕ} (hn : 0 < n) (hp : prime p) : p ∈ factors n ↔ p ∣ n :=
@@ -881,7 +883,7 @@ theorem factors_subset_of_dvd {n k : ℕ} (h : n ∣ k) (h' : k ≠ 0) : n.facto
     exact factors_subset_right (right_ne_zero_of_mul h')
 
 theorem perm_of_prod_eq_prod :
-  ∀ {l₁ l₂ : List ℕ}, Prod l₁ = Prod l₂ → (∀ p _ : p ∈ l₁, prime p) → (∀ p _ : p ∈ l₂, prime p) → l₁ ~ l₂
+  ∀ {l₁ l₂ : List ℕ}, Prod l₁ = Prod l₂ → (∀ p (_ : p ∈ l₁), prime p) → (∀ p (_ : p ∈ l₂), prime p) → l₁ ~ l₂
 | [], [], _, _, _ => perm.nil
 | [], a :: l, h₁, h₂, h₃ =>
   have ha : a ∣ 1 := @prod_nil ℕ _ ▸ h₁.symm ▸ (@prod_cons _ _ l a).symm ▸ dvd_mul_right _ _ 
@@ -890,8 +892,8 @@ theorem perm_of_prod_eq_prod :
   have ha : a ∣ 1 := @prod_nil ℕ _ ▸ h₁ ▸ (@prod_cons _ _ l a).symm ▸ dvd_mul_right _ _ 
   absurd ha (prime.not_dvd_one (h₂ a (mem_cons_self _ _)))
 | a :: l₁, b :: l₂, h, hl₁, hl₂ =>
-  have hl₁' : ∀ p _ : p ∈ l₁, prime p := fun p hp => hl₁ p (mem_cons_of_mem _ hp)
-  have hl₂' : ∀ p _ : p ∈ (b :: l₂).erase a, prime p := fun p hp => hl₂ p (mem_of_mem_erase hp)
+  have hl₁' : ∀ p (_ : p ∈ l₁), prime p := fun p hp => hl₁ p (mem_cons_of_mem _ hp)
+  have hl₂' : ∀ p (_ : p ∈ (b :: l₂).erase a), prime p := fun p hp => hl₂ p (mem_of_mem_erase hp)
   have ha : a ∈ b :: l₂ :=
     mem_list_primes_of_dvd_prod (hl₁ a (mem_cons_self _ _)) hl₂
       (h ▸
@@ -905,7 +907,7 @@ theorem perm_of_prod_eq_prod :
   perm.trans ((perm_of_prod_eq_prod hl hl₁' hl₂').cons _) hb.symm
 
 /-- **Fundamental theorem of arithmetic**-/
-theorem factors_unique {n : ℕ} {l : List ℕ} (h₁ : Prod l = n) (h₂ : ∀ p _ : p ∈ l, prime p) : l ~ factors n :=
+theorem factors_unique {n : ℕ} {l : List ℕ} (h₁ : Prod l = n) (h₂ : ∀ p (_ : p ∈ l), prime p) : l ~ factors n :=
   have hn : 0 < n :=
     Nat.pos_of_ne_zeroₓ$
       fun h =>
@@ -936,6 +938,28 @@ theorem prime.factors_pow {p : ℕ} (hp : p.prime) (n : ℕ) : (p ^ n).factors =
     ·
       intro q hq 
       rwa [eq_of_mem_repeat hq]
+
+/-- For positive `a` and `b`, the prime factors of `a * b` are the union of those of `a` and `b` -/
+theorem perm_factors_mul_of_pos {a b : ℕ} (ha : 0 < a) (hb : 0 < b) : (a*b).factors ~ a.factors ++ b.factors :=
+  by 
+    refine' (factors_unique _ _).symm
+    ·
+      rw [List.prod_append, prod_factors ha, prod_factors hb]
+    ·
+      intro p hp 
+      rw [List.mem_appendₓ] at hp 
+      cases hp <;> exact prime_of_mem_factors hp
+
+/-- For coprime `a` and `b`, the prime factors of `a * b` are the union of those of `a` and `b` -/
+theorem perm_factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) : (a*b).factors ~ a.factors ++ b.factors :=
+  by 
+    rcases a.eq_zero_or_pos with (rfl | ha)
+    ·
+      simp [(coprime_zero_left _).mp hab]
+    rcases b.eq_zero_or_pos with (rfl | hb)
+    ·
+      simp [(coprime_zero_right _).mp hab]
+    exact perm_factors_mul_of_pos ha hb
 
 end 
 
@@ -1142,7 +1166,7 @@ unsafe def prove_min_fac (ic : instance_cache) (e : expr) : tactic (instance_cac
 /-- A partial proof of `factors`. Asserts that `l` is a sorted list of primes, lower bounded by a
 prime `p`, which multiplies to `n`. -/
 def factors_helper (n p : ℕ) (l : List ℕ) : Prop :=
-  p.prime → List.Chain (· ≤ ·) p l ∧ (∀ a _ : a ∈ l, Nat.Prime a) ∧ List.prod l = n
+  p.prime → List.Chain (· ≤ ·) p l ∧ (∀ a (_ : a ∈ l), Nat.Prime a) ∧ List.prod l = n
 
 theorem factors_helper_nil (a : ℕ) : factors_helper 1 a [] :=
   fun pa =>
@@ -1293,6 +1317,52 @@ theorem factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) (p : ℕ) : p ∈
     ·
       simp [(coprime_zero_right _).mp hab]
     rw [mem_factors_mul_of_pos ha hb p, List.mem_union]
+
+open List
+
+/-- For `b > 0`, the power of `p` in `a * b` is at least that in `a` -/
+theorem le_factors_count_mul_left {p a b : ℕ} (hb : 0 < b) : List.count p a.factors ≤ List.count p (a*b).factors :=
+  by 
+    rcases a.eq_zero_or_pos with (rfl | ha)
+    ·
+      simp 
+    ·
+      rw [perm.count_eq (perm_factors_mul_of_pos ha hb) p, count_append p]
+      simp 
+
+/-- For `a > 0`, the power of `p` in `a * b` is at least that in `b` -/
+theorem le_factors_count_mul_right {p a b : ℕ} (ha : 0 < a) : List.count p b.factors ≤ List.count p (a*b).factors :=
+  by 
+    rw [mul_commₓ]
+    apply le_factors_count_mul_left ha
+
+/-- If `p` is a prime factor of `a` then `p` is also a prime factor of `a * b` for any `b > 0` -/
+theorem mem_factors_mul_left {p a b : ℕ} (hpa : p ∈ a.factors) (hb : 0 < b) : p ∈ (a*b).factors :=
+  by 
+    rw [←List.count_pos]
+    exact gt_of_ge_of_gtₓ (le_factors_count_mul_left hb) (count_pos.mpr hpa)
+
+/-- If `p` is a prime factor of `b` then `p` is also a prime factor of `a * b` for any `a > 0` -/
+theorem mem_factors_mul_right {p a b : ℕ} (hpb : p ∈ b.factors) (ha : 0 < a) : p ∈ (a*b).factors :=
+  by 
+    rw [mul_commₓ]
+    exact mem_factors_mul_left hpb ha
+
+/-- If `p` is a prime factor of `a` then the power of `p` in `a` is the same that in `a * b`,
+for any `b` coprime to `a`. -/
+theorem factors_count_eq_of_coprime_left {p a b : ℕ} (hab : coprime a b) (hpa : p ∈ a.factors) :
+  List.count p (a*b).factors = List.count p a.factors :=
+  by 
+    rw [perm.count_eq (perm_factors_mul_of_coprime hab) p, count_append]
+    simpa only [count_eq_zero_of_not_mem (coprime_factors_disjoint hab hpa)]
+
+/-- If `p` is a prime factor of `b` then the power of `p` in `b` is the same that in `a * b`,
+for any `a` coprime to `b`. -/
+theorem factors_count_eq_of_coprime_right {p a b : ℕ} (hab : coprime a b) (hpb : p ∈ b.factors) :
+  List.count p (a*b).factors = List.count p b.factors :=
+  by 
+    rw [mul_commₓ]
+    exact factors_count_eq_of_coprime_left (coprime_comm.mp hab) hpb
 
 end Nat
 

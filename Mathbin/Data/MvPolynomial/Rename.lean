@@ -249,7 +249,7 @@ theorem coeff_rename_map_domain (f : σ → τ) (hf : injective f) (φ : MvPolyn
       simp only [AlgHom.map_add, coeff_add]
 
 theorem coeff_rename_eq_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ →₀ ℕ)
-  (h : ∀ u : σ →₀ ℕ, u.map_domain f = d → φ.coeff u = 0) : (rename f φ).coeff d = 0 :=
+  (h : ∀ (u : σ →₀ ℕ), u.map_domain f = d → φ.coeff u = 0) : (rename f φ).coeff d = 0 :=
   by 
     rw [rename_eq, ←not_mem_support_iff]
     intro H 

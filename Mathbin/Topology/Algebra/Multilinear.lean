@@ -65,7 +65,8 @@ structure
   MultilinearMap R M₁ M₂ where 
   cont : Continuous to_fun
 
-notation:25 M "[×" n "]→L[" R "] " M' => ContinuousMultilinearMap R (fun i : Finₓ n => M) M'
+-- error in Topology.Algebra.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+notation M `[×`:25 n `]→L[`:25 R `] ` M' := continuous_multilinear_map R (λ i : fin n, M) M'
 
 namespace ContinuousMultilinearMap
 
@@ -216,13 +217,13 @@ theorem pi_apply {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ (
 /-- If `g` is continuous multilinear and `f` is a collection of continuous linear maps,
 then `g (f₁ m₁, ..., fₙ mₙ)` is again a continuous multilinear map, that we call
 `g.comp_continuous_linear_map f`. -/
-def comp_continuous_linear_map (g : ContinuousMultilinearMap R M₁' M₄) (f : ∀ i : ι, M₁ i →L[R] M₁' i) :
+def comp_continuous_linear_map (g : ContinuousMultilinearMap R M₁' M₄) (f : ∀ (i : ι), M₁ i →L[R] M₁' i) :
   ContinuousMultilinearMap R M₁ M₄ :=
   { g.to_multilinear_map.comp_linear_map fun i => (f i).toLinearMap with
     cont := g.cont.comp$ continuous_pi$ fun j => (f j).cont.comp$ continuous_apply _ }
 
 @[simp]
-theorem comp_continuous_linear_map_apply (g : ContinuousMultilinearMap R M₁' M₄) (f : ∀ i : ι, M₁ i →L[R] M₁' i)
+theorem comp_continuous_linear_map_apply (g : ContinuousMultilinearMap R M₁' M₄) (f : ∀ (i : ι), M₁ i →L[R] M₁' i)
   (m : ∀ i, M₁ i) : g.comp_continuous_linear_map f m = g fun i => f i$ m i :=
   rfl
 
@@ -260,14 +261,14 @@ def pi_equiv {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoidₓ (M' i
 /-- In the specific case of continuous multilinear maps on spaces indexed by `fin (n+1)`, where one
 can build an element of `Π(i : fin (n+1)), M i` using `cons`, one can express directly the
 additivity of a multilinear map along the first variable. -/
-theorem cons_add (f : ContinuousMultilinearMap R M M₂) (m : ∀ i : Finₓ n, M i.succ) (x y : M 0) :
+theorem cons_add (f : ContinuousMultilinearMap R M M₂) (m : ∀ (i : Finₓ n), M i.succ) (x y : M 0) :
   f (cons (x+y) m) = f (cons x m)+f (cons y m) :=
   f.to_multilinear_map.cons_add m x y
 
 /-- In the specific case of continuous multilinear maps on spaces indexed by `fin (n+1)`, where one
 can build an element of `Π(i : fin (n+1)), M i` using `cons`, one can express directly the
 multiplicativity of a multilinear map along the first variable. -/
-theorem cons_smul (f : ContinuousMultilinearMap R M M₂) (m : ∀ i : Finₓ n, M i.succ) (c : R) (x : M 0) :
+theorem cons_smul (f : ContinuousMultilinearMap R M M₂) (m : ∀ (i : Finₓ n), M i.succ) (c : R) (x : M 0) :
   f (cons (c • x) m) = c • f (cons x m) :=
   f.to_multilinear_map.cons_smul m c x
 
@@ -306,7 +307,7 @@ section RestrictScalar
 variable(R){A :
     Type
       _}[Semiringₓ
-      A][HasScalar R A][∀ i : ι, Module A (M₁ i)][Module A M₂][∀ i, IsScalarTower R A (M₁ i)][IsScalarTower R A M₂]
+      A][HasScalar R A][∀ (i : ι), Module A (M₁ i)][Module A M₂][∀ i, IsScalarTower R A (M₁ i)][IsScalarTower R A M₂]
 
 /-- Reinterpret an `A`-multilinear map as an `R`-multilinear map, if `A` is an algebra over `R`
 and their actions on all involved modules agree with the action of `R` on `A`. -/

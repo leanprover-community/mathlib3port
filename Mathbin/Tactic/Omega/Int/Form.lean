@@ -49,7 +49,7 @@ end Preform
 @[simp]
 def univ_close (p : preform) : (Nat → Int) → Nat → Prop
 | v, 0 => p.holds v
-| v, k+1 => ∀ i : Int, univ_close (update_zero i v) k
+| v, k+1 => ∀ (i : Int), univ_close (update_zero i v) k
 
 namespace Preform
 

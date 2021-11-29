@@ -107,7 +107,7 @@ version of the elements of the middle object in https://stacks.math.columbia.edu
 more useful for direct calculations. It is also used implicitly in Definition C2.1.2 in [Elephant].
 -/
 def family_of_elements (P : «expr ᵒᵖ» C ⥤ Type w) (R : presieve X) :=
-  ∀ ⦃Y : C⦄ f : Y ⟶ X, R f → P.obj (op Y)
+  ∀ ⦃Y : C⦄ (f : Y ⟶ X), R f → P.obj (op Y)
 
 instance  : Inhabited (family_of_elements P (⊥ : presieve X)) :=
   ⟨fun Y f => False.elim⟩
@@ -133,7 +133,7 @@ This is referred to as a "compatible family" in Definition C2.1.2 of [Elephant],
 https://ncatlab.org/nlab/show/sheaf#GeneralDefinitionInComponents
 -/
 def family_of_elements.compatible (x : family_of_elements P R) : Prop :=
-  ∀ ⦃Y₁ Y₂ Z⦄ g₁ : Z ⟶ Y₁ g₂ : Z ⟶ Y₂ ⦃f₁ : Y₁ ⟶ X⦄ ⦃f₂ : Y₂ ⟶ X⦄ h₁ : R f₁ h₂ : R f₂,
+  ∀ ⦃Y₁ Y₂ Z⦄ (g₁ : Z ⟶ Y₁) (g₂ : Z ⟶ Y₂) ⦃f₁ : Y₁ ⟶ X⦄ ⦃f₂ : Y₂ ⟶ X⦄ (h₁ : R f₁) (h₂ : R f₂),
     g₁ ≫ f₁ = g₂ ≫ f₂ → P.map g₁.op (x f₁ h₁) = P.map g₂.op (x f₂ h₂)
 
 /--
@@ -149,7 +149,7 @@ https://stacks.math.columbia.edu/tag/00VM, this condition expresses that `pr₀*
 using the notation defined there.
 -/
 def family_of_elements.pullback_compatible (x : family_of_elements P R) [has_pullbacks C] : Prop :=
-  ∀ ⦃Y₁ Y₂⦄ ⦃f₁ : Y₁ ⟶ X⦄ ⦃f₂ : Y₂ ⟶ X⦄ h₁ : R f₁ h₂ : R f₂,
+  ∀ ⦃Y₁ Y₂⦄ ⦃f₁ : Y₁ ⟶ X⦄ ⦃f₂ : Y₂ ⟶ X⦄ (h₁ : R f₁) (h₂ : R f₂),
     P.map (pullback.fst : pullback f₁ f₂ ⟶ _).op (x f₁ h₁) = P.map pullback.snd.op (x f₂ h₂)
 
 theorem pullback_compatible_iff (x : family_of_elements P R) [has_pullbacks C] : x.compatible ↔ x.pullback_compatible :=
@@ -219,7 +219,7 @@ Section 4, Equation 1, and nlab: https://ncatlab.org/nlab/show/matching+family.
 See also the discussion before Lemma C2.1.4 of [Elephant].
 -/
 def family_of_elements.sieve_compatible (x : family_of_elements P S) : Prop :=
-  ∀ ⦃Y Z⦄ f : Y ⟶ X g : Z ⟶ Y hf, x (g ≫ f) (S.downward_closed hf g) = P.map g.op (x f hf)
+  ∀ ⦃Y Z⦄ (f : Y ⟶ X) (g : Z ⟶ Y) hf, x (g ≫ f) (S.downward_closed hf g) = P.map g.op (x f hf)
 
 theorem compatible_iff_sieve_compatible (x : family_of_elements P S) : x.compatible ↔ x.sieve_compatible :=
   by 
@@ -358,7 +358,7 @@ and https://ncatlab.org/nlab/show/matching+family, as well as [MM92], Chapter II
 equation (2).
 -/
 def family_of_elements.is_amalgamation (x : family_of_elements P R) (t : P.obj (op X)) : Prop :=
-  ∀ ⦃Y : C⦄ f : Y ⟶ X h : R f, P.map f.op t = x f h
+  ∀ ⦃Y : C⦄ (f : Y ⟶ X) (h : R f), P.map f.op t = x f h
 
 theorem family_of_elements.is_amalgamation.comp_presheaf_map {x : family_of_elements P R} {t} (f : P ⟶ Q)
   (h : x.is_amalgamation t) : (x.comp_presheaf_map f).IsAmalgamation (f.app (op X) t) :=
@@ -389,10 +389,10 @@ theorem is_amalgamation_sieve_extend {R : presieve X} (x : family_of_elements P 
 
 /-- A presheaf is separated for a presieve if there is at most one amalgamation. -/
 def is_separated_for (P : «expr ᵒᵖ» C ⥤ Type w) (R : presieve X) : Prop :=
-  ∀ x : family_of_elements P R t₁ t₂, x.is_amalgamation t₁ → x.is_amalgamation t₂ → t₁ = t₂
+  ∀ (x : family_of_elements P R) t₁ t₂, x.is_amalgamation t₁ → x.is_amalgamation t₂ → t₁ = t₂
 
 theorem is_separated_for.ext {R : presieve X} (hR : is_separated_for P R) {t₁ t₂ : P.obj (op X)}
-  (h : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ hf : R f, P.map f.op t₁ = P.map f.op t₂) : t₁ = t₂ :=
+  (h : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (hf : R f), P.map f.op t₁ = P.map f.op t₂) : t₁ = t₂ :=
   hR (fun Y f hf => P.map f.op t₂) t₁ t₂ (fun Y f hf => h hf) fun Y f hf => rfl
 
 theorem is_separated_for_iff_generate : is_separated_for P R ↔ is_separated_for P (generate R) :=
@@ -432,7 +432,7 @@ Using `compatible_iff_sieve_compatible`,
 this is equivalent to the definition of a sheaf in [MM92], Chapter III, Section 4.
 -/
 def is_sheaf_for (P : «expr ᵒᵖ» C ⥤ Type w) (R : presieve X) : Prop :=
-  ∀ x : family_of_elements P R, x.compatible → ∃!t, x.is_amalgamation t
+  ∀ (x : family_of_elements P R), x.compatible → ∃!t, x.is_amalgamation t
 
 /--
 This is an equivalent condition to be a sheaf, which is useful for the abstraction to local
@@ -445,7 +445,7 @@ See the discussion before Equation (3) of [MM92], Chapter III, Section 4. See al
 [Elephant]. This is also a direct reformulation of https://stacks.math.columbia.edu/tag/00Z8.
 -/
 def yoneda_sheaf_condition (P : «expr ᵒᵖ» C ⥤ Type v₁) (S : sieve X) : Prop :=
-  ∀ f : S.functor ⟶ P, ∃!g, S.functor_inclusion ≫ g = f
+  ∀ (f : S.functor ⟶ P), ∃!g, S.functor_inclusion ≫ g = f
 
 /--
 (Implementation). This is a (primarily internal) equivalence between natural transformations
@@ -572,7 +572,7 @@ theorem is_sheaf_for.hom_ext {P : «expr ᵒᵖ» C ⥤ Type v₁} (h : is_sheaf
 
 /-- `P` is a sheaf for `R` iff it is separated for `R` and there exists an amalgamation. -/
 theorem is_separated_for_and_exists_is_amalgamation_iff_sheaf_for :
-  (is_separated_for P R ∧ ∀ x : family_of_elements P R, x.compatible → ∃ t, x.is_amalgamation t) ↔ is_sheaf_for P R :=
+  (is_separated_for P R ∧ ∀ (x : family_of_elements P R), x.compatible → ∃ t, x.is_amalgamation t) ↔ is_sheaf_for P R :=
   by 
     rw [is_separated_for, ←forall_and_distrib]
     apply forall_congrₓ 
@@ -592,7 +592,7 @@ theorem is_separated_for_and_exists_is_amalgamation_iff_sheaf_for :
 If `P` is separated for `R` and every family has an amalgamation, then `P` is a sheaf for `R`.
 -/
 theorem is_separated_for.is_sheaf_for (t : is_separated_for P R) :
-  (∀ x : family_of_elements P R, x.compatible → ∃ t, x.is_amalgamation t) → is_sheaf_for P R :=
+  (∀ (x : family_of_elements P R), x.compatible → ∃ t, x.is_amalgamation t) → is_sheaf_for P R :=
   by 
     rw [←is_separated_for_and_exists_is_amalgamation_iff_sheaf_for]
     exact And.intro t
@@ -718,7 +718,7 @@ contains `S`.
 This is closely related to [Elephant] C2.1.6.
 -/
 theorem is_sheaf_for_subsieve (P : «expr ᵒᵖ» C ⥤ Type w) {S : sieve X} {R : presieve X} (h : (S : presieve X) ≤ R)
-  (trans : ∀ ⦃Y⦄ f : Y ⟶ X, is_sheaf_for P (S.pullback f)) : is_sheaf_for P R :=
+  (trans : ∀ ⦃Y⦄ (f : Y ⟶ X), is_sheaf_for P (S.pullback f)) : is_sheaf_for P R :=
   is_sheaf_for_subsieve_aux P h
     (by 
       simpa using trans (𝟙 _))
@@ -726,7 +726,7 @@ theorem is_sheaf_for_subsieve (P : «expr ᵒᵖ» C ⥤ Type w) {S : sieve X} {
 
 /-- A presheaf is separated for a topology if it is separated for every sieve in the topology. -/
 def is_separated (P : «expr ᵒᵖ» C ⥤ Type w) : Prop :=
-  ∀ {X} S : sieve X, S ∈ J X → is_separated_for P S
+  ∀ {X} (S : sieve X), S ∈ J X → is_separated_for P S
 
 /--
 A presheaf is a sheaf for a topology if it is a sheaf for every sieve in the topology.
@@ -735,7 +735,7 @@ If the given topology is given by a pretopology, `is_sheaf_for_pretopology` show
 check the sheaf condition at presieves in the pretopology.
 -/
 def is_sheaf (P : «expr ᵒᵖ» C ⥤ Type w) : Prop :=
-  ∀ ⦃X⦄ S : sieve X, S ∈ J X → is_sheaf_for P S
+  ∀ ⦃X⦄ (S : sieve X), S ∈ J X → is_sheaf_for P S
 
 theorem is_sheaf.is_sheaf_for {P : «expr ᵒᵖ» C ⥤ Type w} (hp : is_sheaf J P) (R : presieve X) (hr : generate R ∈ J X) :
   is_sheaf_for P R :=
@@ -752,7 +752,7 @@ theorem is_separated_of_is_sheaf (P : «expr ᵒᵖ» C ⥤ Type w) (h : is_shea
 theorem is_sheaf_iso {P' : «expr ᵒᵖ» C ⥤ Type w} (i : P ≅ P') (h : is_sheaf J P) : is_sheaf J P' :=
   fun X S hS => is_sheaf_for_iso i (h S hS)
 
-theorem is_sheaf_of_yoneda {P : «expr ᵒᵖ» C ⥤ Type v₁} (h : ∀ {X} S : sieve X, S ∈ J X → yoneda_sheaf_condition P S) :
+theorem is_sheaf_of_yoneda {P : «expr ᵒᵖ» C ⥤ Type v₁} (h : ∀ {X} (S : sieve X), S ∈ J X → yoneda_sheaf_condition P S) :
   is_sheaf J P :=
   fun X S hS => is_sheaf_for_iff_yoneda_sheaf_condition.2 (h _ hS)
 
@@ -795,26 +795,27 @@ variable{C : Type u₁}[category.{v₁} C](P : «expr ᵒᵖ» C ⥤ Type max v�
 
 noncomputable theory
 
+-- error in CategoryTheory.Sites.SheafOfTypes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The middle object of the fork diagram given in Equation (3) of [MM92], as well as the fork diagram
 of https://stacks.math.columbia.edu/tag/00VM.
--/
-def first_obj : Type max v₁ u₁ :=
-  ∏ fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)
+-/ def first_obj : Type max v₁ u₁ :=
+«expr∏ »(λ f : «exprΣ , »((Y), {f : «expr ⟶ »(Y, X) // R f}), P.obj (op f.1))
 
+-- error in CategoryTheory.Sites.SheafOfTypes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Show that `first_obj` is isomorphic to `family_of_elements`. -/
-@[simps]
-def first_obj_eq_family : first_obj P R ≅ R.family_of_elements P :=
-  { Hom := fun t Y f hf => pi.π (fun f : ΣY, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t,
-    inv := pi.lift fun f x => x _ f.2.2,
-    hom_inv_id' :=
-      by 
-        ext ⟨Y, f, hf⟩ p 
-        simpa,
-    inv_hom_id' :=
-      by 
-        ext x Y f hf 
-        apply limits.types.limit.lift_π_apply }
+@[simps #[]]
+def first_obj_eq_family : «expr ≅ »(first_obj P R, R.family_of_elements P) :=
+{ hom := λ t Y f hf, pi.π (λ f : «exprΣ , »((Y), {f : «expr ⟶ »(Y, X) // R f}), P.obj (op f.1)) ⟨_, _, hf⟩ t,
+  inv := pi.lift (λ f x, x _ f.2.2),
+  hom_inv_id' := begin
+    ext [] ["⟨", ident Y, ",", ident f, ",", ident hf, "⟩", ident p] [],
+    simpa [] [] [] [] [] []
+  end,
+  inv_hom_id' := begin
+    ext [] [ident x, ident Y, ident f, ident hf] [],
+    apply [expr limits.types.limit.lift_π_apply]
+  end }
 
 instance  : Inhabited (first_obj P (⊥ : presieve X)) :=
   (first_obj_eq_family P _).toEquiv.Inhabited
@@ -834,12 +835,12 @@ the definition of `is_sheaf_for`.
 
 namespace Sieve
 
+-- error in CategoryTheory.Sites.SheafOfTypes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The rightmost object of the fork diagram of Equation (3) [MM92], which contains the data used
 to check a family is compatible.
--/
-def second_obj : Type max v₁ u₁ :=
-  ∏ fun f : Σ(Y Z : _)(g : Z ⟶ Y), { f' : Y ⟶ X // S f' } => P.obj (op f.2.1)
+-/ def second_obj : Type max v₁ u₁ :=
+«expr∏ »(λ f : «exprΣ , »((Y Z) (g : «expr ⟶ »(Z, Y)), {f' : «expr ⟶ »(Y, X) // S f'}), P.obj (op f.2.1))
 
 /-- The map `p` of Equations (3,4) [MM92]. -/
 def first_map : first_obj P S ⟶ second_obj P S :=
@@ -910,12 +911,13 @@ namespace Presieve
 
 variable[has_pullbacks C]
 
+-- error in CategoryTheory.Sites.SheafOfTypes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The rightmost object of the fork diagram of https://stacks.math.columbia.edu/tag/00VM, which
 contains the data used to check a family of elements for a presieve is compatible.
--/
-def second_obj : Type max v₁ u₁ :=
-  ∏ fun fg : (ΣY, { f : Y ⟶ X // R f }) × ΣZ, { g : Z ⟶ X // R g } => P.obj (op (pullback fg.1.2.1 fg.2.2.1))
+-/ def second_obj : Type max v₁ u₁ :=
+«expr∏ »(λ
+ fg : «expr × »(«exprΣ , »((Y), {f : «expr ⟶ »(Y, X) // R f}), «exprΣ , »((Z), {g : «expr ⟶ »(Z, X) // R g})), P.obj (op (pullback fg.1.2.1 fg.2.2.1)))
 
 /-- The map `pr₀*` of https://stacks.math.columbia.edu/tag/00VL. -/
 def first_map : first_obj P R ⟶ second_obj P R :=

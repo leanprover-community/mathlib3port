@@ -94,7 +94,7 @@ section
 
 variable{J : Type w₀}{D : J → Type u₁}[∀ j, category.{v₁} (D j)]
 
-instance sum_elim_category : ∀ s : Sum I J, category.{v₁} (Sum.elim C D s)
+instance sum_elim_category : ∀ (s : Sum I J), category.{v₁} (Sum.elim C D s)
 | Sum.inl i =>
   by 
     dsimp 
@@ -109,7 +109,7 @@ The bifunctor combining an `I`-indexed family of objects with a `J`-indexed fami
 to obtain an `I ⊕ J`-indexed family of objects.
 -/
 @[simps]
-def Sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : Sum I J, Sum.elim C D s :=
+def Sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ (s : Sum I J), Sum.elim C D s :=
   { obj := fun f => { obj := fun g s => Sum.rec f g s, map := fun g g' α s => Sum.rec (fun i => 𝟙 (f i)) α s },
     map := fun f f' α => { app := fun g s => Sum.rec α (fun j => 𝟙 (g j)) s } }
 

@@ -62,7 +62,7 @@ if for all covering sieves `R` in `C`, `R.pushforward_functor G` is a covering s
 -/
 @[nolint has_inhabited_instance]
 structure cover_preserving(G : C ⥤ D) : Prop where 
-  cover_preserve : ∀ {U : C} {S : sieve U} hS : S ∈ J U, S.functor_pushforward G ∈ K (G.obj U)
+  cover_preserve : ∀ {U : C} {S : sieve U} (hS : S ∈ J U), S.functor_pushforward G ∈ K (G.obj U)
 
 /-- The identity functor on a site is cover-preserving. -/
 theorem id_cover_preserving : cover_preserving J J (𝟭 _) :=
@@ -90,9 +90,9 @@ This is actually stronger than merely preserving compatible families because of 
 @[nolint has_inhabited_instance]
 structure compatible_preserving(K : grothendieck_topology D)(G : C ⥤ D) : Prop where 
   Compatible :
-  ∀ ℱ : SheafOfTypes.{w} K {Z} {T : presieve Z} {x : family_of_elements (G.op ⋙ ℱ.val) T} h : x.compatible {Y₁ Y₂} {X}
-    f₁ : X ⟶ G.obj Y₁ f₂ : X ⟶ G.obj Y₂ {g₁ : Y₁ ⟶ Z} {g₂ : Y₂ ⟶ Z} hg₁ : T g₁ hg₂ : T g₂ eq :
-    f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂, ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
+  ∀ (ℱ : SheafOfTypes.{w} K) {Z} {T : presieve Z} {x : family_of_elements (G.op ⋙ ℱ.val) T} (h : x.compatible) {Y₁ Y₂}
+    {X} (f₁ : X ⟶ G.obj Y₁) (f₂ : X ⟶ G.obj Y₂) {g₁ : Y₁ ⟶ Z} {g₂ : Y₂ ⟶ Z} (hg₁ : T g₁) (hg₂ : T g₂)
+    (eq : f₁ ≫ G.map g₁ = f₂ ≫ G.map g₂), ℱ.val.map f₁.op (x g₁ hg₁) = ℱ.val.map f₂.op (x g₂ hg₂)
 
 variable{J K}{G : C ⥤ D}(hG : compatible_preserving.{w} K G)(ℱ : SheafOfTypes.{w} K){Z : C}
 

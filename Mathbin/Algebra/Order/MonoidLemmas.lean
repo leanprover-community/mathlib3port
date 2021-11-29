@@ -663,18 +663,18 @@ section PartialOrderₓ
 
 variable[MulOneClass α][PartialOrderₓ α][CovariantClass α α (·*·) (· ≤ ·)][CovariantClass α α (swap (·*·)) (· ≤ ·)]
 
-@[toAdditive]
-theorem mul_eq_one_iff' (ha : 1 ≤ a) (hb : 1 ≤ b) : (a*b) = 1 ↔ a = 1 ∧ b = 1 :=
-  Iff.intro
-    (fun hab : (a*b) = 1 =>
-      have  : a ≤ 1 := hab ▸ le_mul_of_le_of_one_le le_rfl hb 
-      have  : a = 1 := le_antisymmₓ this ha 
-      have  : b ≤ 1 := hab ▸ le_mul_of_one_le_of_le ha le_rfl 
-      have  : b = 1 := le_antisymmₓ this hb 
-      And.intro ‹a = 1› ‹b = 1›)
-    fun ⟨ha', hb'⟩ =>
-      by 
-        rw [ha', hb', mul_oneₓ]
+-- error in Algebra.Order.MonoidLemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem mul_eq_one_iff'
+(ha : «expr ≤ »(1, a))
+(hb : «expr ≤ »(1, b)) : «expr ↔ »(«expr = »(«expr * »(a, b), 1), «expr ∧ »(«expr = »(a, 1), «expr = »(b, 1))) :=
+iff.intro (assume
+ hab : «expr = »(«expr * »(a, b), 1), have «expr ≤ »(a, 1), from «expr ▸ »(hab, le_mul_of_le_of_one_le le_rfl hb),
+ have «expr = »(a, 1), from le_antisymm this ha,
+ have «expr ≤ »(b, 1), from «expr ▸ »(hab, le_mul_of_one_le_of_le ha le_rfl),
+ have «expr = »(b, 1), from le_antisymm this hb,
+ and.intro «expr‹ ›»(«expr = »(a, 1)) «expr‹ ›»(«expr = »(b, 1))) (assume
+ ⟨ha', hb'⟩, by rw ["[", expr ha', ",", expr hb', ",", expr mul_one, "]"] [])
 
 end PartialOrderₓ
 

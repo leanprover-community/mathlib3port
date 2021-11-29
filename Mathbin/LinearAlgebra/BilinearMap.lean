@@ -58,9 +58,9 @@ variable(ρ₁₂ σ₁₂)
 
 /-- Create a bilinear map from a function that is semilinear in each component.
 See `mk₂'` and `mk₂` for the linear case. -/
-def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f m₁ n+f m₂ n) (H2 : ∀ c : R m n, f (c • m) n = ρ₁₂ c • f m n)
-  (H3 : ∀ m n₁ n₂, f m (n₁+n₂) = f m n₁+f m n₂) (H4 : ∀ c : S m n, f m (c • n) = σ₁₂ c • f m n) :
-  M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P :=
+def mk₂'ₛₗ (f : M → N → P) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f m₁ n+f m₂ n)
+  (H2 : ∀ (c : R) m n, f (c • m) n = ρ₁₂ c • f m n) (H3 : ∀ m n₁ n₂, f m (n₁+n₂) = f m n₁+f m n₂)
+  (H4 : ∀ (c : S) m n, f m (c • n) = σ₁₂ c • f m n) : M →ₛₗ[ρ₁₂] N →ₛₗ[σ₁₂] P :=
   { toFun := fun m => { toFun := f m, map_add' := H3 m, map_smul' := fun c => H4 c m },
     map_add' := fun m₁ m₂ => LinearMap.ext$ H1 m₁ m₂, map_smul' := fun c m => LinearMap.ext$ H2 c m }
 
@@ -75,8 +75,8 @@ variable(R S)
 
 /-- Create a bilinear map from a function that is linear in each component.
 See `mk₂` for the special case where both arguments come from modules over the same ring. -/
-def mk₂' (f : M → N → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f m₁ n+f m₂ n) (H2 : ∀ c : R m n, f (c • m) n = c • f m n)
-  (H3 : ∀ m n₁ n₂, f m (n₁+n₂) = f m n₁+f m n₂) (H4 : ∀ c : S m n, f m (c • n) = c • f m n) : M →ₗ[R] N →ₗ[S] Pₗ :=
+def mk₂' (f : M → N → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f m₁ n+f m₂ n) (H2 : ∀ (c : R) m n, f (c • m) n = c • f m n)
+  (H3 : ∀ m n₁ n₂, f m (n₁+n₂) = f m n₁+f m n₂) (H4 : ∀ (c : S) m n, f m (c • n) = c • f m n) : M →ₗ[R] N →ₗ[S] Pₗ :=
   mk₂'ₛₗ (RingHom.id R) (RingHom.id S) f H1 H2 H3 H4
 
 variable{R S}
@@ -173,8 +173,8 @@ variable(R)
 /-- Create a bilinear map from a function that is linear in each component.
 
 This is a shorthand for `mk₂'` for the common case when `R = S`. -/
-def mk₂ (f : M → Nₗ → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f m₁ n+f m₂ n) (H2 : ∀ c : R m n, f (c • m) n = c • f m n)
-  (H3 : ∀ m n₁ n₂, f m (n₁+n₂) = f m n₁+f m n₂) (H4 : ∀ c : R m n, f m (c • n) = c • f m n) : M →ₗ[R] Nₗ →ₗ[R] Pₗ :=
+def mk₂ (f : M → Nₗ → Pₗ) (H1 : ∀ m₁ m₂ n, f (m₁+m₂) n = f m₁ n+f m₂ n) (H2 : ∀ (c : R) m n, f (c • m) n = c • f m n)
+  (H3 : ∀ m n₁ n₂, f m (n₁+n₂) = f m n₁+f m n₂) (H4 : ∀ (c : R) m n, f m (c • n) = c • f m n) : M →ₗ[R] Nₗ →ₗ[R] Pₗ :=
   mk₂' R R f H1 H2 H3 H4
 
 @[simp]
@@ -228,11 +228,12 @@ omit σ₁₃
 
 variable(R M Nₗ Pₗ)
 
+-- error in LinearAlgebra.BilinearMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Composing a linear map `M → N` and a linear map `N → P` to form a linear map `M → P`. -/
-def llcomp : (Nₗ →ₗ[R] Pₗ) →ₗ[R] (M →ₗ[R] Nₗ) →ₗ[R] M →ₗ[R] Pₗ :=
-  flip
-    { toFun := lcomp R Pₗ, map_add' := fun f f' => ext₂$ fun g x => g.map_add _ _,
-      map_smul' := fun c : R f => ext₂$ fun g x => g.map_smul _ _ }
+def llcomp : «expr →ₗ[ ] »(«expr →ₗ[ ] »(Nₗ, R, Pₗ), R, «expr →ₗ[ ] »(«expr →ₗ[ ] »(M, R, Nₗ), R, «expr →ₗ[ ] »(M, R, Pₗ))) :=
+flip { to_fun := lcomp R Pₗ,
+  map_add' := λ f f', «expr $ »(ext₂, λ g x, g.map_add _ _),
+  map_smul' := λ (c : R) (f), «expr $ »(ext₂, λ g x, g.map_smul _ _) }
 
 variable{R M Nₗ Pₗ}
 

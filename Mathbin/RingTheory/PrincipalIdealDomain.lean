@@ -54,7 +54,7 @@ variable(R)
 
 /-- A ring is a principal ideal ring if all (left) ideals are principal. -/
 class IsPrincipalIdealRing(R : Type u)[Ringₓ R] : Prop where 
-  principal : ∀ S : Ideal R, S.is_principal
+  principal : ∀ (S : Ideal R), S.is_principal
 
 attribute [instance] IsPrincipalIdealRing.principal
 
@@ -217,13 +217,13 @@ namespace PrincipalIdealRing
 
 open IsPrincipalIdealRing
 
-instance (priority := 100)IsNoetherianRing [Ringₓ R] [IsPrincipalIdealRing R] : IsNoetherianRing R :=
-  is_noetherian_ring_iff.2
-    ⟨fun s : Ideal R =>
-        by 
-          rcases(IsPrincipalIdealRing.principal s).principal with ⟨a, rfl⟩
-          rw [←Finset.coe_singleton]
-          exact ⟨{a}, SetLike.coe_injective rfl⟩⟩
+-- error in RingTheory.PrincipalIdealDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[priority 100] instance is_noetherian_ring [ring R] [is_principal_ideal_ring R] : is_noetherian_ring R :=
+is_noetherian_ring_iff.2 ⟨assume s : ideal R, begin
+   rcases [expr (is_principal_ideal_ring.principal s).principal, "with", "⟨", ident a, ",", ident rfl, "⟩"],
+   rw ["[", "<-", expr finset.coe_singleton, "]"] [],
+   exact [expr ⟨{a}, set_like.coe_injective rfl⟩]
+ end⟩
 
 theorem is_maximal_of_irreducible [CommRingₓ R] [IsPrincipalIdealRing R] {p : R} (hp : Irreducible p) :
   Ideal.IsMaximal (span R ({p} : Set R)) :=
@@ -253,7 +253,7 @@ open_locale Classical
 noncomputable def factors (a : R) : Multiset R :=
   if h : a = 0 then ∅ else Classical.some (WfDvdMonoid.exists_factors a h)
 
-theorem factors_spec (a : R) (h : a ≠ 0) : (∀ b _ : b ∈ factors a, Irreducible b) ∧ Associated (factors a).Prod a :=
+theorem factors_spec (a : R) (h : a ≠ 0) : (∀ b (_ : b ∈ factors a), Irreducible b) ∧ Associated (factors a).Prod a :=
   by 
     unfold factors 
     rw [dif_neg h]
@@ -264,7 +264,7 @@ theorem ne_zero_of_mem_factors {R : Type v} [CommRingₓ R] [IsDomain R] [IsPrin
   Irreducible.ne_zero ((factors_spec a ha).1 b hb)
 
 theorem mem_submonoid_of_factors_subset_of_units_subset (s : Submonoid R) {a : R} (ha : a ≠ 0)
-  (hfac : ∀ b _ : b ∈ factors a, b ∈ s) (hunit : ∀ c : Units R, (c : R) ∈ s) : a ∈ s :=
+  (hfac : ∀ b (_ : b ∈ factors a), b ∈ s) (hunit : ∀ (c : Units R), (c : R) ∈ s) : a ∈ s :=
   by 
     rcases(factors_spec a ha).2 with ⟨c, hc⟩
     rw [←hc]
@@ -274,7 +274,7 @@ theorem mem_submonoid_of_factors_subset_of_units_subset (s : Submonoid R) {a : R
 also maps `a` into that submonoid. -/
 theorem ring_hom_mem_submonoid_of_factors_subset_of_units_subset {R S : Type _} [CommRingₓ R] [IsDomain R]
   [IsPrincipalIdealRing R] [Semiringₓ S] (f : R →+* S) (s : Submonoid S) (a : R) (ha : a ≠ 0)
-  (h : ∀ b _ : b ∈ factors a, f b ∈ s) (hf : ∀ c : Units R, f c ∈ s) : f a ∈ s :=
+  (h : ∀ b (_ : b ∈ factors a), f b ∈ s) (hf : ∀ (c : Units R), f c ∈ s) : f a ∈ s :=
   mem_submonoid_of_factors_subset_of_units_subset (s.comap f.to_monoid_hom) ha h hf
 
 /-- A principal ideal domain has unique factorization -/

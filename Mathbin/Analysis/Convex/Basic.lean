@@ -153,66 +153,72 @@ section DenselyOrdered
 
 variable[Nontrivial 𝕜][DenselyOrdered 𝕜]
 
-@[simp]
-theorem open_segment_same (x : E) : OpenSegment 𝕜 x x = {x} :=
-  Set.ext$
-    fun z =>
-      ⟨fun ⟨a, b, ha, hb, hab, hz⟩ =>
-          by 
-            simpa only [←add_smul, mem_singleton_iff, hab, one_smul, eq_comm] using hz,
-        fun h : z = x =>
-          by 
-            obtain ⟨a, ha₀, ha₁⟩ := DenselyOrdered.dense (0 : 𝕜) 1 zero_lt_one 
-            refine' ⟨a, 1 - a, ha₀, sub_pos_of_lt ha₁, add_sub_cancel'_right _ _, _⟩
-            rw [←add_smul, add_sub_cancel'_right, one_smul, h]⟩
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem open_segment_same (x : E) : «expr = »(open_segment 𝕜 x x, {x}) :=
+«expr $ »(set.ext, λ
+ z, ⟨λ
+  ⟨a, b, ha, hb, hab, hz⟩, by simpa [] [] ["only"] ["[", "<-", expr add_smul, ",", expr mem_singleton_iff, ",", expr hab, ",", expr one_smul, ",", expr eq_comm, "]"] [] ["using", expr hz], λ
+  h : «expr = »(z, x), begin
+    obtain ["⟨", ident a, ",", ident ha₀, ",", ident ha₁, "⟩", ":=", expr densely_ordered.dense (0 : 𝕜) 1 zero_lt_one],
+    refine [expr ⟨a, «expr - »(1, a), ha₀, sub_pos_of_lt ha₁, add_sub_cancel'_right _ _, _⟩],
+    rw ["[", "<-", expr add_smul, ",", expr add_sub_cancel'_right, ",", expr one_smul, ",", expr h, "]"] []
+  end⟩)
 
 end DenselyOrdered
 
-theorem segment_eq_image (x y : E) : [x -[𝕜] y] = (fun θ : 𝕜 => ((1 - θ) • x)+θ • y) '' Icc (0 : 𝕜) 1 :=
-  Set.ext$
-    fun z =>
-      ⟨fun ⟨a, b, ha, hb, hab, hz⟩ =>
-          ⟨b, ⟨hb, hab ▸ le_add_of_nonneg_left ha⟩,
-            hab ▸
-              hz ▸
-                by 
-                  simp only [add_sub_cancel]⟩,
-        fun ⟨θ, ⟨hθ₀, hθ₁⟩, hz⟩ => ⟨1 - θ, θ, sub_nonneg.2 hθ₁, hθ₀, sub_add_cancel _ _, hz⟩⟩
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem segment_eq_image
+(x
+ y : E) : «expr = »(«expr[ -[ ] ]»(x, 𝕜, y), «expr '' »(λ
+  θ : 𝕜, «expr + »(«expr • »(«expr - »(1, θ), x), «expr • »(θ, y)), Icc (0 : 𝕜) 1)) :=
+«expr $ »(set.ext, λ
+ z, ⟨λ
+  ⟨a, b, ha, hb, hab, hz⟩, ⟨b, ⟨hb, «expr ▸ »(hab, le_add_of_nonneg_left ha)⟩, «expr ▸ »(hab, «expr ▸ »(hz, by simp [] [] ["only"] ["[", expr add_sub_cancel, "]"] [] []))⟩, λ
+  ⟨θ, ⟨hθ₀, hθ₁⟩, hz⟩, ⟨«expr - »(1, θ), θ, sub_nonneg.2 hθ₁, hθ₀, sub_add_cancel _ _, hz⟩⟩)
 
-theorem open_segment_eq_image (x y : E) : OpenSegment 𝕜 x y = (fun θ : 𝕜 => ((1 - θ) • x)+θ • y) '' Ioo (0 : 𝕜) 1 :=
-  Set.ext$
-    fun z =>
-      ⟨fun ⟨a, b, ha, hb, hab, hz⟩ =>
-          ⟨b, ⟨hb, hab ▸ lt_add_of_pos_left _ ha⟩,
-            hab ▸
-              hz ▸
-                by 
-                  simp only [add_sub_cancel]⟩,
-        fun ⟨θ, ⟨hθ₀, hθ₁⟩, hz⟩ => ⟨1 - θ, θ, sub_pos.2 hθ₁, hθ₀, sub_add_cancel _ _, hz⟩⟩
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem open_segment_eq_image
+(x
+ y : E) : «expr = »(open_segment 𝕜 x y, «expr '' »(λ
+  θ : 𝕜, «expr + »(«expr • »(«expr - »(1, θ), x), «expr • »(θ, y)), Ioo (0 : 𝕜) 1)) :=
+«expr $ »(set.ext, λ
+ z, ⟨λ
+  ⟨a, b, ha, hb, hab, hz⟩, ⟨b, ⟨hb, «expr ▸ »(hab, lt_add_of_pos_left _ ha)⟩, «expr ▸ »(hab, «expr ▸ »(hz, by simp [] [] ["only"] ["[", expr add_sub_cancel, "]"] [] []))⟩, λ
+  ⟨θ, ⟨hθ₀, hθ₁⟩, hz⟩, ⟨«expr - »(1, θ), θ, sub_pos.2 hθ₁, hθ₀, sub_add_cancel _ _, hz⟩⟩)
 
-theorem segment_eq_image₂ (x y : E) :
-  [x -[𝕜] y] = (fun p : 𝕜 × 𝕜 => (p.1 • x)+p.2 • y) '' { p | 0 ≤ p.1 ∧ 0 ≤ p.2 ∧ (p.1+p.2) = 1 } :=
-  by 
-    simp only [Segment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc]
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem segment_eq_image₂
+(x
+ y : E) : «expr = »(«expr[ -[ ] ]»(x, 𝕜, y), «expr '' »(λ
+  p : «expr × »(𝕜, 𝕜), «expr + »(«expr • »(p.1, x), «expr • »(p.2, y)), {p | «expr ∧ »(«expr ≤ »(0, p.1), «expr ∧ »(«expr ≤ »(0, p.2), «expr = »(«expr + »(p.1, p.2), 1)))})) :=
+by simp [] [] ["only"] ["[", expr segment, ",", expr image, ",", expr prod.exists, ",", expr mem_set_of_eq, ",", expr exists_prop, ",", expr and_assoc, "]"] [] []
 
-theorem open_segment_eq_image₂ (x y : E) :
-  OpenSegment 𝕜 x y = (fun p : 𝕜 × 𝕜 => (p.1 • x)+p.2 • y) '' { p | 0 < p.1 ∧ 0 < p.2 ∧ (p.1+p.2) = 1 } :=
-  by 
-    simp only [OpenSegment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc]
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem open_segment_eq_image₂
+(x
+ y : E) : «expr = »(open_segment 𝕜 x y, «expr '' »(λ
+  p : «expr × »(𝕜, 𝕜), «expr + »(«expr • »(p.1, x), «expr • »(p.2, y)), {p | «expr ∧ »(«expr < »(0, p.1), «expr ∧ »(«expr < »(0, p.2), «expr = »(«expr + »(p.1, p.2), 1)))})) :=
+by simp [] [] ["only"] ["[", expr open_segment, ",", expr image, ",", expr prod.exists, ",", expr mem_set_of_eq, ",", expr exists_prop, ",", expr and_assoc, "]"] [] []
 
-theorem segment_eq_image' (x y : E) : [x -[𝕜] y] = (fun θ : 𝕜 => x+θ • (y - x)) '' Icc (0 : 𝕜) 1 :=
-  by 
-    convert segment_eq_image 𝕜 x y 
-    ext θ 
-    simp only [smul_sub, sub_smul, one_smul]
-    abel
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem segment_eq_image'
+(x
+ y : E) : «expr = »(«expr[ -[ ] ]»(x, 𝕜, y), «expr '' »(λ
+  θ : 𝕜, «expr + »(x, «expr • »(θ, «expr - »(y, x))), Icc (0 : 𝕜) 1)) :=
+by { convert [] [expr segment_eq_image 𝕜 x y] [],
+  ext [] [ident θ] [],
+  simp [] [] ["only"] ["[", expr smul_sub, ",", expr sub_smul, ",", expr one_smul, "]"] [] [],
+  abel [] [] [] }
 
-theorem open_segment_eq_image' (x y : E) : OpenSegment 𝕜 x y = (fun θ : 𝕜 => x+θ • (y - x)) '' Ioo (0 : 𝕜) 1 :=
-  by 
-    convert open_segment_eq_image 𝕜 x y 
-    ext θ 
-    simp only [smul_sub, sub_smul, one_smul]
-    abel
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem open_segment_eq_image'
+(x
+ y : E) : «expr = »(open_segment 𝕜 x y, «expr '' »(λ
+  θ : 𝕜, «expr + »(x, «expr • »(θ, «expr - »(y, x))), Ioo (0 : 𝕜) 1)) :=
+by { convert [] [expr open_segment_eq_image 𝕜 x y] [],
+  ext [] [ident θ] [],
+  simp [] [] ["only"] ["[", expr smul_sub, ",", expr sub_smul, ",", expr one_smul, "]"] [] [],
+  abel [] [] [] }
 
 theorem segment_image (f : E →ₗ[𝕜] F) (a b : E) : f '' [a -[𝕜] b] = [f a -[𝕜] f b] :=
   Set.ext
@@ -523,14 +529,21 @@ theorem convex_empty : Convex 𝕜 (∅ : Set E) :=
 theorem convex_univ : Convex 𝕜 (Set.Univ : Set E) :=
   fun _ _ _ _ _ _ _ _ _ => trivialₓ
 
-theorem Convex.inter {t : Set E} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s ∩ t) :=
-  fun x y hx : x ∈ s ∩ t hy : y ∈ s ∩ t a b ha : 0 ≤ a hb : 0 ≤ b hab : (a+b) = 1 =>
-    ⟨hs hx.left hy.left ha hb hab, ht hx.right hy.right ha hb hab⟩
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem convex.inter {t : set E} (hs : convex 𝕜 s) (ht : convex 𝕜 t) : convex 𝕜 «expr ∩ »(s, t) :=
+λ
+(x y)
+(hx : «expr ∈ »(x, «expr ∩ »(s, t)))
+(hy : «expr ∈ »(y, «expr ∩ »(s, t)))
+(a b)
+(ha : «expr ≤ »(0, a))
+(hb : «expr ≤ »(0, b))
+(hab : «expr = »(«expr + »(a, b), 1)), ⟨hs hx.left hy.left ha hb hab, ht hx.right hy.right ha hb hab⟩
 
-theorem convex_sInter {S : Set (Set E)} (h : ∀ s _ : s ∈ S, Convex 𝕜 s) : Convex 𝕜 (⋂₀S) :=
+theorem convex_sInter {S : Set (Set E)} (h : ∀ s (_ : s ∈ S), Convex 𝕜 s) : Convex 𝕜 (⋂₀S) :=
   fun x y hx hy a b ha hb hab s hs => h s hs (hx s hs) (hy s hs) ha hb hab
 
-theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ i : ι, Convex 𝕜 (s i)) : Convex 𝕜 (⋂i, s i) :=
+theorem convex_Inter {ι : Sort _} {s : ι → Set E} (h : ∀ (i : ι), Convex 𝕜 (s i)) : Convex 𝕜 (⋂i, s i) :=
   sInter_range s ▸ convex_sInter$ forall_range_iff.2 h
 
 theorem Convex.prod {s : Set E} {t : Set F} (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 (s.prod t) :=
@@ -812,8 +825,11 @@ theorem Convex.combo_eq_vadd {a b : 𝕜} {x y : E} (h : (a+b) = 1) : ((a • x)
       rw [smul_sub, Convex.combo_self h]
     
 
-theorem Convex.sub (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) : Convex 𝕜 ((fun x : E × E => x.1 - x.2) '' s.prod t) :=
-  (hs.prod ht).is_linear_image IsLinearMap.is_linear_map_sub
+-- error in Analysis.Convex.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem convex.sub
+(hs : convex 𝕜 s)
+(ht : convex 𝕜 t) : convex 𝕜 «expr '' »(λ x : «expr × »(E, E), «expr - »(x.1, x.2), s.prod t) :=
+(hs.prod ht).is_linear_image is_linear_map.is_linear_map_sub
 
 theorem convex_segment (x y : E) : Convex 𝕜 [x -[𝕜] y] :=
   by 

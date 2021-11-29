@@ -51,18 +51,18 @@ variable(α)
 /-- A compactness property for a complete lattice is that any `sup`-closed non-empty subset
 contains its `Sup`. -/
 def is_sup_closed_compact : Prop :=
-  ∀ s : Set α h : s.nonempty, (∀ a b, a ∈ s → b ∈ s → a⊔b ∈ s) → Sup s ∈ s
+  ∀ (s : Set α) (h : s.nonempty), (∀ a b, a ∈ s → b ∈ s → a⊔b ∈ s) → Sup s ∈ s
 
 /-- A compactness property for a complete lattice is that any subset has a finite subset with the
 same `Sup`. -/
 def is_Sup_finite_compact : Prop :=
-  ∀ s : Set α, ∃ t : Finset α, «expr↑ » t ⊆ s ∧ Sup s = t.sup id
+  ∀ (s : Set α), ∃ t : Finset α, «expr↑ » t ⊆ s ∧ Sup s = t.sup id
 
 /-- An element `k` of a complete lattice is said to be compact if any set with `Sup`
 above `k` has a finite subset with `Sup` above `k`.  Such an element is also called
 "finite" or "S-compact". -/
 def is_compact_element {α : Type _} [CompleteLattice α] (k : α) :=
-  ∀ s : Set α, k ≤ Sup s → ∃ t : Finset α, «expr↑ » t ⊆ s ∧ k ≤ t.sup id
+  ∀ (s : Set α), k ≤ Sup s → ∃ t : Finset α, «expr↑ » t ⊆ s ∧ k ≤ t.sup id
 
 -- error in Order.CompactlyGenerated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An element `k` is compact if and only if any directed set with `Sup` above
@@ -139,7 +139,7 @@ begin
 end
 
 theorem finset_sup_compact_of_compact {α β : Type _} [CompleteLattice α] {f : β → α} (s : Finset β)
-  (h : ∀ x _ : x ∈ s, is_compact_element (f x)) : is_compact_element (s.sup f) :=
+  (h : ∀ x (_ : x ∈ s), is_compact_element (f x)) : is_compact_element (s.sup f) :=
   by 
     classical 
     rw [is_compact_element_iff_le_of_directed_Sup_le]
@@ -247,7 +247,7 @@ end
 theorem well_founded_characterisations :
   tfae
     [WellFounded (· > · : α → α → Prop), is_Sup_finite_compact α, is_sup_closed_compact α,
-      ∀ k : α, is_compact_element k] :=
+      ∀ (k : α), is_compact_element k] :=
   by 
     tfaeHave 1 → 2
     ·
@@ -287,7 +287,7 @@ end CompleteLattice
 /-- A complete lattice is said to be compactly generated if any
 element is the `Sup` of compact elements. -/
 class IsCompactlyGenerated(α : Type _)[CompleteLattice α] : Prop where 
-  exists_Sup_eq : ∀ x : α, ∃ s : Set α, (∀ x _ : x ∈ s, CompleteLattice.IsCompactElement x) ∧ Sup s = x
+  exists_Sup_eq : ∀ (x : α), ∃ s : Set α, (∀ x (_ : x ∈ s), CompleteLattice.IsCompactElement x) ∧ Sup s = x
 
 section 
 
@@ -305,7 +305,7 @@ theorem Sup_compact_eq_top : Sup { a:α | CompleteLattice.IsCompactElement a } =
     refine' Eq.trans (congr rfl (Set.ext fun x => _)) (Sup_compact_le_eq ⊤)
     exact (and_iff_left le_top).symm
 
-theorem le_iff_compact_le_imp {a b : α} : a ≤ b ↔ ∀ c : α, CompleteLattice.IsCompactElement c → c ≤ a → c ≤ b :=
+theorem le_iff_compact_le_imp {a b : α} : a ≤ b ↔ ∀ (c : α), CompleteLattice.IsCompactElement c → c ≤ a → c ≤ b :=
   ⟨fun ab c hc ca => le_transₓ ca ab,
     fun h =>
       by 
@@ -374,7 +374,7 @@ theorem CompleteLattice.set_independent_Union_of_directed {η : Type _} {s : η 
       exact hη ⟨i⟩
 
 theorem CompleteLattice.independent_sUnion_of_directed {s : Set (Set α)} (hs : DirectedOn (· ⊆ ·) s)
-  (h : ∀ a _ : a ∈ s, CompleteLattice.SetIndependent a) : CompleteLattice.SetIndependent (⋃₀s) :=
+  (h : ∀ a (_ : a ∈ s), CompleteLattice.SetIndependent a) : CompleteLattice.SetIndependent (⋃₀s) :=
   by 
     rw [Set.sUnion_eq_Union] <;>
       exact

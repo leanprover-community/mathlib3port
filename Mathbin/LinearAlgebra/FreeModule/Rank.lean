@@ -59,8 +59,8 @@ theorem rank_prod' (N : Type v) [AddCommGroupₓ N] [Module R N] [Module.Free R 
 
 /-- The rank of the direct sum is the sum of the ranks. -/
 @[simp]
-theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGroupₓ (M i)] [∀ i : ι, Module R (M i)]
-  [∀ i : ι, Module.Free R (M i)] : Module.rank R (⨁i, M i) = Cardinal.sum fun i => Module.rank R (M i) :=
+theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ (i : ι), AddCommGroupₓ (M i)] [∀ (i : ι), Module R (M i)]
+  [∀ (i : ι), Module.Free R (M i)] : Module.rank R (⨁i, M i) = Cardinal.sum fun i => Module.rank R (M i) :=
   by 
     let B := fun i => choose_basis R (M i)
     let b : Basis _ R (⨁i, M i) := Dfinsupp.basis fun i => B i 
@@ -68,8 +68,8 @@ theorem rank_direct_sum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGr
 
 /-- The rank of a finite product is the sum of the ranks. -/
 @[simp]
-theorem rank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i : ι, AddCommGroupₓ (M i)]
-  [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] :
+theorem rank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ (i : ι), AddCommGroupₓ (M i)]
+  [∀ (i : ι), Module R (M i)] [∀ (i : ι), Module.Free R (M i)] :
   Module.rank R (∀ i, M i) = Cardinal.sum fun i => Module.rank R (M i) :=
   by 
     rw [←(DirectSum.linearEquivFunOnFintype _ _ M).dim_eq, rank_direct_sum]

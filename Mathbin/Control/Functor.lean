@@ -183,12 +183,13 @@ variable[IsLawfulFunctor F][IsLawfulFunctor G]
 
 variable{α β γ : Type v}
 
-protected theorem id_map : ∀ x : comp F G α, comp.map id x = x
+protected theorem id_map : ∀ (x : comp F G α), comp.map id x = x
 | comp.mk x =>
   by 
     simp [comp.map, Functor.map_id]
 
-protected theorem comp_map (g' : α → β) (h : β → γ) : ∀ x : comp F G α, comp.map (h ∘ g') x = comp.map h (comp.map g' x)
+protected theorem comp_map (g' : α → β) (h : β → γ) :
+  ∀ (x : comp F G α), comp.map (h ∘ g') x = comp.map h (comp.map g' x)
 | comp.mk x =>
   by 
     simp' [comp.map, Functor.map_comp_map g' h] with functor_norm
@@ -225,7 +226,7 @@ instance  : Seqₓ (comp F G) :=
   ⟨fun _ _ f x => comp.seq f x⟩
 
 @[simp]
-protected theorem run_pure {α : Type v} : ∀ x : α, (pure x : comp F G α).run = pure (pure x)
+protected theorem run_pure {α : Type v} : ∀ (x : α), (pure x : comp F G α).run = pure (pure x)
 | _ => rfl
 
 @[simp]
@@ -245,20 +246,21 @@ predicate `liftp p x` holds iff every value contained by `x` satisfies `p`. -/
 def liftp {α : Type u} (p : α → Prop) (x : F α) : Prop :=
   ∃ u : F (Subtype p), Subtype.val <$> u = x
 
+-- error in Control.Functor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If we consider `x : F α` to, in some sense, contain values of type `α`, then
 `liftr r x y` relates `x` and `y` iff (1) `x` and `y` have the same shape and
 (2) we can pair values `a` from `x` and `b` from `y` so that `r a b` holds. -/
-def liftr {α : Type u} (r : α → α → Prop) (x y : F α) : Prop :=
-  ∃ u : F { p : α × α // r p.fst p.snd },
-    (fun t : { p : α × α // r p.fst p.snd } => t.val.fst) <$> u = x ∧
-      (fun t : { p : α × α // r p.fst p.snd } => t.val.snd) <$> u = y
+def liftr {α : Type u} (r : α → α → exprProp()) (x y : F α) : exprProp() :=
+«expr∃ , »((u : F {p : «expr × »(α, α) // r p.fst p.snd}), «expr ∧ »(«expr = »(«expr <$> »(λ
+    t : {p : «expr × »(α, α) // r p.fst p.snd}, t.val.fst, u), x), «expr = »(«expr <$> »(λ
+    t : {p : «expr × »(α, α) // r p.fst p.snd}, t.val.snd, u), y)))
 
 /-- If we consider `x : F α` to, in some sense, contain values of type `α`, then
 `supp x` is the set of values of type `α` that `x` contains. -/
 def supp {α : Type u} (x : F α) : Set α :=
   { y:α | ∀ ⦃p⦄, liftp p x → p y }
 
-theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : liftp p x) : ∀ y _ : y ∈ supp x, p y :=
+theorem of_mem_supp {α : Type u} {x : F α} {p : α → Prop} (h : liftp p x) : ∀ y (_ : y ∈ supp x), p y :=
   fun y hy => hy h
 
 end Functor

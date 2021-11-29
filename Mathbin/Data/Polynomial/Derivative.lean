@@ -328,12 +328,13 @@ theorem derivative_prod {s : Multiset ι} {f : ι → Polynomial R} :
     ·
       simp [hij]
 
-theorem of_mem_support_derivative {p : Polynomial R} {n : ℕ} (h : n ∈ p.derivative.support) : (n+1) ∈ p.support :=
-  mem_support_iff.2$
-    fun h1 : p.coeff (n+1) = 0 =>
-      mem_support_iff.1 h$
-        show p.derivative.coeff n = 0 by 
-          rw [coeff_derivative, h1, zero_mul]
+-- error in Data.Polynomial.Derivative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of_mem_support_derivative
+{p : polynomial R}
+{n : exprℕ()}
+(h : «expr ∈ »(n, p.derivative.support)) : «expr ∈ »(«expr + »(n, 1), p.support) :=
+«expr $ »(mem_support_iff.2, λ
+ h1 : «expr = »(p.coeff «expr + »(n, 1), 0), «expr $ »(mem_support_iff.1 h, show «expr = »(p.derivative.coeff n, 0), by rw ["[", expr coeff_derivative, ",", expr h1, ",", expr zero_mul, "]"] []))
 
 theorem degree_derivative_lt {p : Polynomial R} (hp : p ≠ 0) : p.derivative.degree < p.degree :=
   (Finset.sup_lt_iff$ bot_lt_iff_ne_bot.2$ mt degree_eq_bot.1 hp).2$

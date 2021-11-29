@@ -162,7 +162,7 @@ theorem antilipschitz_of_norm_ge {K :  ℝ≥0 } (h : ∀ x, ∥x∥ ≤ K*∥f 
 abstract version of `f` having a right inverse defined on `K` with operator norm
 at most `C`. -/
 def surjective_on_with (f : NormedGroupHom V₁ V₂) (K : AddSubgroup V₂) (C : ℝ) : Prop :=
-  ∀ h _ : h ∈ K, ∃ g, f g = h ∧ ∥g∥ ≤ C*∥h∥
+  ∀ h (_ : h ∈ K), ∃ g, f g = h ∧ ∥g∥ ≤ C*∥h∥
 
 theorem surjective_on_with.mono {f : NormedGroupHom V₁ V₂} {K : AddSubgroup V₂} {C C' : ℝ}
   (h : f.surjective_on_with K C) (H : C ≤ C') : f.surjective_on_with K C' :=
@@ -256,7 +256,7 @@ theorem op_norm_le_bound {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ x, ∥f x∥ ≤ M*
   cInf_le bounds_bdd_below ⟨hMp, hM⟩
 
 theorem op_norm_eq_of_bounds {M : ℝ} (M_nonneg : 0 ≤ M) (h_above : ∀ x, ∥f x∥ ≤ M*∥x∥)
-  (h_below : ∀ N _ : N ≥ 0, (∀ x, ∥f x∥ ≤ N*∥x∥) → M ≤ N) : ∥f∥ = M :=
+  (h_below : ∀ N (_ : N ≥ 0), (∀ x, ∥f x∥ ≤ N*∥x∥) → M ≤ N) : ∥f∥ = M :=
   le_antisymmₓ (f.op_norm_le_bound M_nonneg h_above)
     ((le_cInf_iff NormedGroupHom.bounds_bdd_below ⟨M, M_nonneg, h_above⟩).mpr$
       fun N ⟨N_nonneg, hN⟩ => h_below N N_nonneg hN)
@@ -963,7 +963,7 @@ theorem controlled_closure_range_of_complete {f : NormedGroupHom G H} {K : Type 
   {j : NormedGroupHom K H} (hj : ∀ x, ∥j x∥ = ∥x∥) {C ε : ℝ} (hC : 0 < C) (hε : 0 < ε)
   (hyp : ∀ k, ∃ g, f g = j k ∧ ∥g∥ ≤ C*∥k∥) : f.surjective_on_with j.range.topological_closure (C+ε) :=
   by 
-    replace hyp : ∀ h _ : h ∈ j.range, ∃ g, f g = h ∧ ∥g∥ ≤ C*∥h∥
+    replace hyp : ∀ h (_ : h ∈ j.range), ∃ g, f g = h ∧ ∥g∥ ≤ C*∥h∥
     ·
       intro h h_in 
       rcases(j.mem_range _).mp h_in with ⟨k, rfl⟩

@@ -145,8 +145,8 @@ theorem reflect_monomial (N n : ℕ) : reflect N ((X : Polynomial R) ^ n) = X ^ 
     rw [←one_mulₓ (X ^ n), ←one_mulₓ (X ^ rev_at N n), ←C_1, reflect_C_mul_X_pow]
 
 theorem reflect_mul_induction (cf cg : ℕ) :
-  ∀ N O : ℕ,
-    ∀ f g : Polynomial R,
+  ∀ (N O : ℕ),
+    ∀ (f g : Polynomial R),
       f.support.card ≤ cf.succ →
         g.support.card ≤ cg.succ →
           f.nat_degree ≤ N → g.nat_degree ≤ O → reflect (N+O) (f*g) = reflect N f*reflect O g :=

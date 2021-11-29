@@ -179,7 +179,7 @@ monoids. -/
 def powMonoidHom (n : ℕ) : M →* M :=
   { toFun := · ^ n, map_one' := one_pow _, map_mul' := fun a b => mul_powₓ a b n }
 
-theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} hn : n ≠ 0, x ∣ y ^ n
+theorem dvd_pow {x y : M} (hxy : x ∣ y) : ∀ {n : ℕ} (hn : n ≠ 0), x ∣ y ^ n
 | 0, hn => (hn rfl).elim
 | n+1, hn =>
   by 
@@ -249,7 +249,7 @@ theorem inv_pow_sub (a : G) {m n : ℕ} (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ 
 end Nat
 
 @[simp, toAdditive zsmul_zero]
-theorem one_zpow : ∀ n : ℤ, (1 : G) ^ n = 1
+theorem one_zpow : ∀ (n : ℤ), (1 : G) ^ n = 1
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat, one_pow]
@@ -258,7 +258,7 @@ theorem one_zpow : ∀ n : ℤ, (1 : G) ^ n = 1
     rw [zpow_neg_succ_of_nat, one_pow, one_inv]
 
 @[simp, toAdditive neg_zsmul]
-theorem zpow_neg (a : G) : ∀ n : ℤ, a ^ -n = (a ^ n)⁻¹
+theorem zpow_neg (a : G) : ∀ (n : ℤ), a ^ -n = (a ^ n)⁻¹
 | (n+1 : ℕ) => DivInvMonoidₓ.zpow_neg' _ _
 | 0 =>
   by 
@@ -280,7 +280,7 @@ theorem zpow_neg_one (x : G) : x ^ (-1 : ℤ) = x⁻¹ :=
     rfl
 
 @[toAdditive zsmul_neg]
-theorem inv_zpow (a : G) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
+theorem inv_zpow (a : G) : ∀ (n : ℤ), a⁻¹ ^ n = (a ^ n)⁻¹
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat, zpow_coe_nat, inv_pow]
@@ -289,7 +289,7 @@ theorem inv_zpow (a : G) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, inv_pow]
 
 @[toAdditive AddCommute.zsmul_add]
-theorem Commute.mul_zpow {a b : G} (h : Commute a b) : ∀ n : ℤ, (a*b) ^ n = (a ^ n)*b ^ n
+theorem Commute.mul_zpow {a b : G} (h : Commute a b) : ∀ (n : ℤ), (a*b) ^ n = (a ^ n)*b ^ n
 | (n : ℕ) =>
   by 
     simp [zpow_coe_nat, h.mul_pow n]
@@ -344,7 +344,7 @@ namespace RingHom
 variable[Semiringₓ R][Semiringₓ S]
 
 @[simp]
-theorem map_pow (f : R →+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
+theorem map_pow (f : R →+* S) a : ∀ (n : ℕ), f (a ^ n) = f a ^ n :=
   f.to_monoid_hom.map_pow a
 
 end RingHom
@@ -353,7 +353,7 @@ section
 
 variable(R)
 
-theorem neg_one_pow_eq_or [Ringₓ R] : ∀ n : ℕ, (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
+theorem neg_one_pow_eq_or [Ringₓ R] : ∀ (n : ℕ), (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
 | 0 => Or.inl (pow_zeroₓ _)
 | n+1 =>
   (neg_one_pow_eq_or n).swap.imp
@@ -381,7 +381,7 @@ theorem pow_dvd_pow [Monoidₓ R] (a : R) {m n : ℕ} (h : m ≤ n) : a ^ m ∣ 
     by 
       rw [←pow_addₓ, Nat.add_comm, tsub_add_cancel_of_le h]⟩
 
-theorem pow_dvd_pow_of_dvd [CommMonoidₓ R] {a b : R} (h : a ∣ b) : ∀ n : ℕ, a ^ n ∣ b ^ n
+theorem pow_dvd_pow_of_dvd [CommMonoidₓ R] {a b : R} (h : a ∣ b) : ∀ (n : ℕ), a ^ n ∣ b ^ n
 | 0 =>
   by 
     rw [pow_zeroₓ, pow_zeroₓ]
@@ -475,7 +475,7 @@ theorem of_mul_zpow [Groupₓ G] (x : G) (n : ℤ) : Additive.ofMul (x ^ n) = n 
   rfl
 
 @[simp]
-theorem SemiconjBy.zpow_right [Groupₓ G] {a x y : G} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
+theorem SemiconjBy.zpow_right [Groupₓ G] {a x y : G} (h : SemiconjBy a x y) : ∀ (m : ℤ), SemiconjBy a (x ^ m) (y ^ m)
 | (n : ℕ) =>
   by 
     simp [zpow_coe_nat, h.pow_right n]

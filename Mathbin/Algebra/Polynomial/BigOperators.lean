@@ -195,7 +195,7 @@ theorem nat_degree_prod' (h : (∏i in s, (f i).leadingCoeff) ≠ 0) :
         (by 
           simpa using h)
 
-theorem nat_degree_multiset_prod_of_monic [Nontrivial R] (h : ∀ f _ : f ∈ t, monic f) :
+theorem nat_degree_multiset_prod_of_monic [Nontrivial R] (h : ∀ f (_ : f ∈ t), monic f) :
   t.prod.nat_degree = (t.map nat_degree).Sum :=
   by 
     apply nat_degree_multiset_prod' 
@@ -213,7 +213,7 @@ theorem nat_degree_multiset_prod_of_monic [Nontrivial R] (h : ∀ f _ : f ∈ t,
     ·
       simp 
 
-theorem nat_degree_prod_of_monic [Nontrivial R] (h : ∀ i _ : i ∈ s, (f i).Monic) :
+theorem nat_degree_prod_of_monic [Nontrivial R] (h : ∀ i (_ : i ∈ s), (f i).Monic) :
   (∏i in s, f i).natDegree = ∑i in s, (f i).natDegree :=
   by 
     simpa using
@@ -221,13 +221,13 @@ theorem nat_degree_prod_of_monic [Nontrivial R] (h : ∀ i _ : i ∈ s, (f i).Mo
         (by 
           simpa using h)
 
-theorem coeff_multiset_prod_of_nat_degree_le (n : ℕ) (hl : ∀ p _ : p ∈ t, nat_degree p ≤ n) :
+theorem coeff_multiset_prod_of_nat_degree_le (n : ℕ) (hl : ∀ p (_ : p ∈ t), nat_degree p ≤ n) :
   coeff t.prod (t.card*n) = (t.map fun p => coeff p n).Prod :=
   by 
     induction t using Quotientₓ.induction_on 
     simpa using coeff_list_prod_of_nat_degree_le _ _ hl
 
-theorem coeff_prod_of_nat_degree_le (f : ι → Polynomial R) (n : ℕ) (h : ∀ p _ : p ∈ s, nat_degree (f p) ≤ n) :
+theorem coeff_prod_of_nat_degree_le (f : ι → Polynomial R) (n : ℕ) (h : ∀ p (_ : p ∈ s), nat_degree (f p) ≤ n) :
   coeff (∏i in s, f i) (s.card*n) = ∏i in s, coeff (f i) n :=
   by 
     cases' s with l hl 
@@ -319,7 +319,7 @@ the sum of the degrees.
 See `polynomial.nat_degree_prod'` (with a `'`) for a version for commutative semirings,
 where additionally, the product of the leading coefficients must be nonzero.
 -/
-theorem nat_degree_prod [Nontrivial R] (h : ∀ i _ : i ∈ s, f i ≠ 0) :
+theorem nat_degree_prod [Nontrivial R] (h : ∀ i (_ : i ∈ s), f i ≠ 0) :
   (∏i in s, f i).natDegree = ∑i in s, (f i).natDegree :=
   by 
     apply nat_degree_prod' 

@@ -101,8 +101,9 @@ theorem conj_zpow {i : ℤ} {a b : α} : ((a*b)*a⁻¹) ^ i = (a*b ^ i)*a⁻¹ :
     ·
       simp [zpow_neg_succ_of_nat, conj_pow]
 
-theorem conj_injective {x : α} : Function.Injective fun g : α => (x*g)*x⁻¹ :=
-  (MulAut.conj x).Injective
+-- error in Algebra.Group.Conj: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem conj_injective {x : α} : function.injective (λ g : α, «expr * »(«expr * »(x, g), «expr ⁻¹»(x))) :=
+(mul_aut.conj x).injective
 
 end Groupₓ
 
@@ -189,13 +190,13 @@ theorem mk_injective : Function.Injective (@ConjClasses.mk α _) :=
 theorem mk_bijective : Function.Bijective (@ConjClasses.mk α _) :=
   ⟨mk_injective, mk_surjective⟩
 
-/-- The bijection between a `comm_group` and its `conj_classes`. -/
-def mk_equiv : α ≃ ConjClasses α :=
-  ⟨ConjClasses.mk, Quotientₓ.lift id fun a : α b => is_conj_iff_eq.1, Quotientₓ.lift_mk _ _,
-    by 
-      rw [Function.RightInverse, Function.LeftInverse, forall_is_conj]
-      intro x 
-      rw [←quotient_mk_eq_mk, ←quotient_mk_eq_mk, Quotientₓ.lift_mk, id.def]⟩
+-- error in Algebra.Group.Conj: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The bijection between a `comm_group` and its `conj_classes`. -/ def mk_equiv : «expr ≃ »(α, conj_classes α) :=
+⟨conj_classes.mk, quotient.lift id (λ (a : α) (b), is_conj_iff_eq.1), quotient.lift_mk _ _, begin
+   rw ["[", expr function.right_inverse, ",", expr function.left_inverse, ",", expr forall_is_conj, "]"] [],
+   intro [ident x],
+   rw ["[", "<-", expr quotient_mk_eq_mk, ",", "<-", expr quotient_mk_eq_mk, ",", expr quotient.lift_mk, ",", expr id.def, "]"] []
+ end⟩
 
 end CommMonoidₓ
 
@@ -230,9 +231,9 @@ variable[Monoidₓ α]
 
 attribute [local instance] IsConj.setoid
 
-/-- Given a conjugacy class `a`, `carrier a` is the set it represents. -/
-def carrier : ConjClasses α → Set α :=
-  Quotientₓ.lift ConjugatesOf fun a : α b ab => IsConj.conjugates_of_eq ab
+-- error in Algebra.Group.Conj: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Given a conjugacy class `a`, `carrier a` is the set it represents. -/ def carrier : conj_classes α → set α :=
+quotient.lift conjugates_of (λ (a : α) (b ab), is_conj.conjugates_of_eq ab)
 
 theorem mem_carrier_mk {a : α} : a ∈ carrier (ConjClasses.mk a) :=
   IsConj.refl _

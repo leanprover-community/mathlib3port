@@ -25,7 +25,7 @@ variable{C :
     Type
       u}[category.{v} C][concrete_category.{v} C]{J : Type v}[small_category J](F : J ⥤ C)[preserves_limit F (forget C)]
 
--- error in CategoryTheory.Limits.ConcreteCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in CategoryTheory.Limits.ConcreteCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem concrete.to_product_injective_of_is_limit
 {D : cone F}
 (hD : is_limit D) : function.injective (λ (x : D.X) (j : J), D.π.app j x) :=
@@ -58,7 +58,7 @@ open WidePullback
 
 open WidePullbackShape
 
-theorem concrete.wide_pullback_ext {B : C} {ι : Type _} {X : ι → C} (f : ∀ j : ι, X j ⟶ B) [has_wide_pullback B X f]
+theorem concrete.wide_pullback_ext {B : C} {ι : Type _} {X : ι → C} (f : ∀ (j : ι), X j ⟶ B) [has_wide_pullback B X f]
   [preserves_limit (wide_cospan B X f) (forget C)] (x y : wide_pullback B X f) (h₀ : base f x = base f y)
   (h : ∀ j, π f j x = π f j y) : x = y :=
   by 
@@ -69,7 +69,7 @@ theorem concrete.wide_pullback_ext {B : C} {ι : Type _} {X : ι → C} (f : ∀
     ·
       apply h
 
-theorem concrete.wide_pullback_ext' {B : C} {ι : Type _} [Nonempty ι] {X : ι → C} (f : ∀ j : ι, X j ⟶ B)
+theorem concrete.wide_pullback_ext' {B : C} {ι : Type _} [Nonempty ι] {X : ι → C} (f : ∀ (j : ι), X j ⟶ B)
   [has_wide_pullback B X f] [preserves_limit (wide_cospan B X f) (forget C)] (x y : wide_pullback B X f)
   (h : ∀ j, π f j x = π f j y) : x = y :=
   by 
@@ -83,7 +83,7 @@ section Multiequalizer
 
 theorem concrete.multiequalizer_ext {I : multicospan_index C} [has_multiequalizer I]
   [preserves_limit I.multicospan (forget C)] (x y : multiequalizer I)
-  (h : ∀ t : I.L, multiequalizer.ι I t x = multiequalizer.ι I t y) : x = y :=
+  (h : ∀ (t : I.L), multiequalizer.ι I t x = multiequalizer.ι I t y) : x = y :=
   by 
     apply concrete.limit_ext 
     rintro (a | b)
@@ -135,7 +135,7 @@ def concrete.multiequalizer_equiv_aux
 and the concrete multiequalizer. -/
 noncomputable def concrete.multiequalizer_equiv (I : multicospan_index C) [has_multiequalizer I]
   [preserves_limit I.multicospan (forget C)] :
-  (multiequalizer I : C) ≃ { x : ∀ i : I.L, I.left i // ∀ i : I.R, I.fst i (x _) = I.snd i (x _) } :=
+  (multiequalizer I : C) ≃ { x : ∀ (i : I.L), I.left i // ∀ (i : I.R), I.fst i (x _) = I.snd i (x _) } :=
   let h1 := limit.is_limit I.multicospan 
   let h2 := is_limit_of_preserves (forget C) h1 
   let E := h2.cone_point_unique_up_to_iso (types.limit_cone_is_limit _)
@@ -144,7 +144,7 @@ noncomputable def concrete.multiequalizer_equiv (I : multicospan_index C) [has_m
 @[simp]
 theorem concrete.multiequalizer_equiv_apply (I : multicospan_index C) [has_multiequalizer I]
   [preserves_limit I.multicospan (forget C)] (x : multiequalizer I) (i : I.L) :
-  ((concrete.multiequalizer_equiv I) x : ∀ i : I.L, I.left i) i = multiequalizer.ι I i x :=
+  ((concrete.multiequalizer_equiv I) x : ∀ (i : I.L), I.left i) i = multiequalizer.ι I i x :=
   rfl
 
 end Multiequalizer
@@ -250,7 +250,7 @@ theorem concrete.is_colimit_exists_of_rep_eq {D : cocone F} {i j : J} (hD : is_c
     erw [T.hom.w, T.hom.w] at h 
     replace h := Quot.exact _ h 
     suffices  :
-      ∀ a b : Σj, F.obj j h : EqvGen (limits.types.quot.rel (F ⋙ forget C)) a b,
+      ∀ (a b : Σj, F.obj j) (h : EqvGen (limits.types.quot.rel (F ⋙ forget C)) a b),
         ∃ (k : _)(f : a.1 ⟶ k)(g : b.1 ⟶ k), F.map f a.2 = F.map g b.2
     ·
       exact this ⟨i, x⟩ ⟨j, y⟩ h 
@@ -298,7 +298,7 @@ open WidePushout
 
 open WidePushoutShape
 
-theorem concrete.wide_pushout_exists_rep {B : C} {α : Type _} {X : α → C} (f : ∀ j : α, B ⟶ X j)
+theorem concrete.wide_pushout_exists_rep {B : C} {α : Type _} {X : α → C} (f : ∀ (j : α), B ⟶ X j)
   [has_wide_pushout B X f] [preserves_colimit (wide_span B X f) (forget C)] (x : wide_pushout B X f) :
   (∃ y : B, head f y = x) ∨ ∃ (i : α)(y : X i), ι f i y = x :=
   by 
@@ -309,7 +309,7 @@ theorem concrete.wide_pushout_exists_rep {B : C} {α : Type _} {X : α → C} (f
       right 
       use j, y
 
-theorem concrete.wide_pushout_exists_rep' {B : C} {α : Type _} [Nonempty α] {X : α → C} (f : ∀ j : α, B ⟶ X j)
+theorem concrete.wide_pushout_exists_rep' {B : C} {α : Type _} [Nonempty α] {X : α → C} (f : ∀ (j : α), B ⟶ X j)
   [has_wide_pushout B X f] [preserves_colimit (wide_span B X f) (forget C)] (x : wide_pushout B X f) :
   ∃ (i : α)(y : X i), ι f i y = x :=
   by 

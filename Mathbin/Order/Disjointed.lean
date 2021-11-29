@@ -121,7 +121,7 @@ theorem disjointed_unique {f d : ℕ → α} (hdisj : Pairwise (Disjoint on d)) 
     ·
       rw [h, hsups, partial_sups_succ, disjointed_succ, sup_sdiff, sdiff_self, bot_sup_eq]
     rw [partial_sups_succ, sup_sdiff, sdiff_self, bot_sup_eq, eq_comm, sdiff_eq_self_iff_disjoint]
-    suffices h : ∀ m _ : m ≤ n, Disjoint (partialSups d m) (d n.succ)
+    suffices h : ∀ m (_ : m ≤ n), Disjoint (partialSups d m) (d n.succ)
     ·
       exact h n le_rfl 
     rintro m hm 

@@ -49,10 +49,10 @@ variable{α : Type u}
 
 /-- The open sets of the least topology containing a collection of basic sets. -/
 inductive generate_open (g : Set (Set α)) : Set α → Prop
-  | basic : ∀ s _ : s ∈ g, generate_open s
+  | basic : ∀ s (_ : s ∈ g), generate_open s
   | univ : generate_open univ
   | inter : ∀ s t, generate_open s → generate_open t → generate_open (s ∩ t)
-  | sUnion : ∀ k, (∀ s _ : s ∈ k, generate_open s) → generate_open (⋃₀k)
+  | sUnion : ∀ k, (∀ s (_ : s ∈ k), generate_open s) → generate_open (⋃₀k)
 
 /-- The smallest topological space containing the collection `g` of basic sets -/
 def generate_from (g : Set (Set α)) : TopologicalSpace α :=
@@ -92,18 +92,18 @@ theorem nhds_generate_from {g : Set (Set α)} {a : α} :
                             )
 
 theorem tendsto_nhds_generate_from {β : Type _} {m : α → β} {f : Filter α} {g : Set (Set β)} {b : β}
-  (h : ∀ s _ : s ∈ g, b ∈ s → m ⁻¹' s ∈ f) : tendsto m f (@nhds β (generate_from g) b) :=
+  (h : ∀ s (_ : s ∈ g), b ∈ s → m ⁻¹' s ∈ f) : tendsto m f (@nhds β (generate_from g) b) :=
   by 
     rw [nhds_generate_from] <;>
       exact tendsto_infi.2$ fun s => tendsto_infi.2$ fun ⟨hbs, hsg⟩ => tendsto_principal.2$ h s hsg hbs
 
 /-- Construct a topology on α given the filter of neighborhoods of each point of α. -/
 protected def mk_of_nhds (n : α → Filter α) : TopologicalSpace α :=
-  { IsOpen := fun s => ∀ a _ : a ∈ s, s ∈ n a, is_open_univ := fun x h => univ_mem,
+  { IsOpen := fun s => ∀ a (_ : a ∈ s), s ∈ n a, is_open_univ := fun x h => univ_mem,
     is_open_inter := fun s t hs ht x ⟨hxs, hxt⟩ => inter_mem (hs x hxs) (ht x hxt),
     is_open_sUnion := fun s hs a ⟨x, hx, hxa⟩ => mem_of_superset (hs x hx _ hxa) (Set.subset_sUnion_of_mem hx) }
 
--- error in Topology.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem nhds_mk_of_nhds
 (n : α → filter α)
 (a : α)
@@ -160,15 +160,17 @@ theorem mk_of_closure_sets {s : Set (Set α)} {hs : { u | (TopologicalSpace.gene
   mkOfClosure s hs = TopologicalSpace.generateFrom s :=
   topological_space_eq hs.symm
 
+-- error in Topology.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The Galois insertion between `set (set α)` and `topological_space α` whose lower part
   sends a collection of subsets of α to the topology they generate, and whose upper part
   sends a topology to its collection of open subsets. -/
-def giGenerateFrom (α : Type _) :
-  GaloisInsertion TopologicalSpace.generateFrom fun t : TopologicalSpace α => { s | t.is_open s } :=
-  { gc := fun g t => generate_from_le_iff_subset_is_open,
-    le_l_u := fun ts s hs => TopologicalSpace.GenerateOpen.basic s hs,
-    choice := fun g hg => mkOfClosure g (subset.antisymm hg$ generate_from_le_iff_subset_is_open.1$ le_reflₓ _),
-    choice_eq := fun s hs => mk_of_closure_sets }
+def gi_generate_from
+(α : Type*) : galois_insertion topological_space.generate_from (λ t : topological_space α, {s | t.is_open s}) :=
+{ gc := assume g t, generate_from_le_iff_subset_is_open,
+  le_l_u := assume ts s hs, topological_space.generate_open.basic s hs,
+  choice := λ
+  g hg, mk_of_closure g «expr $ »(subset.antisymm hg, «expr $ »(generate_from_le_iff_subset_is_open.1, le_refl _)),
+  choice_eq := assume s hs, mk_of_closure_sets }
 
 theorem generate_from_mono {α} {g₁ g₂ : Set (Set α)} (h : g₁ ⊆ g₂) :
   TopologicalSpace.generateFrom g₁ ≤ TopologicalSpace.generateFrom g₂ :=
@@ -177,16 +179,18 @@ theorem generate_from_mono {α} {g₁ g₂ : Set (Set α)} (h : g₁ ⊆ g₂) :
 theorem generate_from_set_of_is_open (t : TopologicalSpace α) : TopologicalSpace.generateFrom { s | t.is_open s } = t :=
   (giGenerateFrom α).l_u_eq t
 
-theorem left_inverse_generate_from :
-  Function.LeftInverse TopologicalSpace.generateFrom fun t : TopologicalSpace α => { s | t.is_open s } :=
-  (giGenerateFrom α).left_inverse_l_u
+-- error in Topology.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem left_inverse_generate_from : function.left_inverse topological_space.generate_from (λ
+ t : topological_space α, {s | t.is_open s}) :=
+(gi_generate_from α).left_inverse_l_u
 
 theorem generate_from_surjective :
   Function.Surjective (TopologicalSpace.generateFrom : Set (Set α) → TopologicalSpace α) :=
   (giGenerateFrom α).l_surjective
 
-theorem set_of_is_open_injective : Function.Injective fun t : TopologicalSpace α => { s | t.is_open s } :=
-  (giGenerateFrom α).u_injective
+-- error in Topology.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem set_of_is_open_injective : function.injective (λ t : topological_space α, {s | t.is_open s}) :=
+(gi_generate_from α).u_injective
 
 /-- The "temporary" order `tmp_order` on `topological_space α`, i.e. the inclusion order, is a
 complete lattice.  (Note that later `topological_space α` will equipped with the dual order to
@@ -194,11 +198,18 @@ complete lattice.  (Note that later `topological_space α` will equipped with th
 def tmpCompleteLattice {α : Type u} : CompleteLattice (TopologicalSpace α) :=
   (giGenerateFrom α).liftCompleteLattice
 
+instance  : LE (TopologicalSpace α) :=
+  { le := fun t s => s.is_open ≤ t.is_open }
+
+protected theorem TopologicalSpace.le_def {α} {t s : TopologicalSpace α} : t ≤ s ↔ s.is_open ≤ t.is_open :=
+  Iff.rfl
+
 /-- The ordering on topologies on the type `α`.
   `t ≤ s` if every set open in `s` is also open in `t` (`t` is finer than `s`). -/
 instance  : PartialOrderₓ (TopologicalSpace α) :=
-  { le := fun t s => s.is_open ≤ t.is_open, le_antisymm := fun t s h₁ h₂ => topological_space_eq$ le_antisymmₓ h₂ h₁,
-    le_refl := fun t => le_reflₓ t.is_open, le_trans := fun a b c h₁ h₂ => le_transₓ h₂ h₁ }
+  { TopologicalSpace.hasLe with le_antisymm := fun t s h₁ h₂ => topological_space_eq$ le_antisymmₓ h₂ h₁,
+    le_refl := fun t => le_reflₓ t.is_open,
+    le_trans := fun a b c h₁ h₂ => TopologicalSpace.le_def.mpr (le_transₓ h₂ h₁) }
 
 theorem le_generate_from_iff_subset_is_open {g : Set (Set α)} {t : TopologicalSpace α} :
   t ≤ TopologicalSpace.generateFrom g ↔ g ⊆ { s | t.is_open s } :=
@@ -256,7 +267,7 @@ theorem eq_of_nhds_eq_nhds {t₁ t₂ : TopologicalSpace α} (h : ∀ x, @nhds �
 theorem eq_bot_of_singletons_open {t : TopologicalSpace α} (h : ∀ x, t.is_open {x}) : t = ⊥ :=
   bot_unique$ fun s hs => bUnion_of_singleton s ▸ is_open_bUnion fun x _ => h x
 
-theorem forall_open_iff_discrete {X : Type _} [TopologicalSpace X] : (∀ s : Set X, IsOpen s) ↔ DiscreteTopology X :=
+theorem forall_open_iff_discrete {X : Type _} [TopologicalSpace X] : (∀ (s : Set X), IsOpen s) ↔ DiscreteTopology X :=
   ⟨fun h =>
       ⟨by 
           ext U 
@@ -265,7 +276,7 @@ theorem forall_open_iff_discrete {X : Type _} [TopologicalSpace X] : (∀ s : Se
     fun a => @is_open_discrete _ _ a⟩
 
 theorem singletons_open_iff_discrete {X : Type _} [TopologicalSpace X] :
-  (∀ a : X, IsOpen ({a} : Set X)) ↔ DiscreteTopology X :=
+  (∀ (a : X), IsOpen ({a} : Set X)) ↔ DiscreteTopology X :=
   ⟨fun h => ⟨eq_bot_of_singletons_open h⟩, fun a _ => @is_open_discrete _ _ a _⟩
 
 end Lattice
@@ -412,8 +423,9 @@ theorem induced_compose [tγ : TopologicalSpace γ] {f : α → β} {g : β → 
         propext$
           ⟨fun ⟨s', ⟨s, hs, h₂⟩, h₁⟩ => h₁ ▸ h₂ ▸ ⟨s, hs, rfl⟩, fun ⟨s, hs, h⟩ => ⟨preimage g s, ⟨s, hs, rfl⟩, h ▸ rfl⟩⟩
 
-theorem induced_const [t : TopologicalSpace α] {x : α} : (t.induced fun y : β => x) = ⊤ :=
-  le_antisymmₓ le_top (@continuous_const β α ⊤ t x).le_induced
+-- error in Topology.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem induced_const [t : topological_space α] {x : α} : «expr = »(t.induced (λ y : β, x), «expr⊤»()) :=
+le_antisymm le_top (@continuous_const β α «expr⊤»() t x).le_induced
 
 theorem coinduced_id [t : TopologicalSpace α] : t.coinduced id = t :=
   topological_space_eq rfl
@@ -483,7 +495,7 @@ instance  : DiscreteTopology ℤ :=
 instance sierpinskiSpace : TopologicalSpace Prop :=
   generate_from {{True}}
 
-theorem le_generate_from {t : TopologicalSpace α} {g : Set (Set α)} (h : ∀ s _ : s ∈ g, IsOpen s) :
+theorem le_generate_from {t : TopologicalSpace α} {g : Set (Set α)} (h : ∀ s (_ : s ∈ g), IsOpen s) :
   t ≤ generate_from g :=
   le_generate_from_iff_subset_is_open.2 h
 
@@ -493,7 +505,7 @@ theorem induced_generate_from_eq {α β} {b : Set (Set β)} {f : α → β} :
     (coinduced_le_iff_le_induced.1$ le_generate_from$ fun s hs => generate_open.basic _$ mem_image_of_mem _ hs)
 
 theorem le_induced_generate_from {α β} [t : TopologicalSpace α] {b : Set (Set β)} {f : α → β}
-  (h : ∀ a : Set β, a ∈ b → IsOpen (f ⁻¹' a)) : t ≤ induced f (generate_from b) :=
+  (h : ∀ (a : Set β), a ∈ b → IsOpen (f ⁻¹' a)) : t ≤ induced f (generate_from b) :=
   by 
     rw [induced_generate_from_eq]
     apply le_generate_from 
@@ -542,7 +554,7 @@ theorem continuous_iff_coinduced_le {t₁ : tspace α} {t₂ : tspace β} : cont
 theorem continuous_iff_le_induced {t₁ : tspace α} {t₂ : tspace β} : cont t₁ t₂ f ↔ t₁ ≤ induced f t₂ :=
   Iff.trans continuous_iff_coinduced_le (gc_coinduced_induced f _ _)
 
-theorem continuous_generated_from {t : tspace α} {b : Set (Set β)} (h : ∀ s _ : s ∈ b, IsOpen (f ⁻¹' s)) :
+theorem continuous_generated_from {t : tspace α} {b : Set (Set β)} (h : ∀ s (_ : s ∈ b), IsOpen (f ⁻¹' s)) :
   cont t (generate_from b) f :=
   continuous_iff_coinduced_le.2$ le_generate_from h
 
@@ -602,7 +614,7 @@ theorem continuous_sup_rng_left {t₁ : tspace α} {t₃ t₂ : tspace β} : con
 theorem continuous_sup_rng_right {t₁ : tspace α} {t₃ t₂ : tspace β} : cont t₁ t₃ f → cont t₁ (t₂⊔t₃) f :=
   continuous_le_rng le_sup_right
 
-theorem continuous_Sup_dom {t₁ : Set (tspace α)} {t₂ : tspace β} (h : ∀ t _ : t ∈ t₁, cont t t₂ f) :
+theorem continuous_Sup_dom {t₁ : Set (tspace α)} {t₂ : tspace β} (h : ∀ t (_ : t ∈ t₁), cont t t₂ f) :
   cont (Sup t₁) t₂ f :=
   continuous_iff_le_induced.2$ Sup_le$ fun t ht => continuous_iff_le_induced.1$ h t ht
 
@@ -630,7 +642,7 @@ theorem continuous_Inf_dom {t₁ : Set (tspace α)} {t₂ : tspace β} {t : tspa
   cont t t₂ f → cont (Inf t₁) t₂ f :=
   continuous_le_dom$ Inf_le h₁
 
-theorem continuous_Inf_rng {t₁ : tspace α} {t₂ : Set (tspace β)} (h : ∀ t _ : t ∈ t₂, cont t₁ t f) :
+theorem continuous_Inf_rng {t₁ : tspace α} {t₂ : Set (tspace β)} (h : ∀ t (_ : t ∈ t₂), cont t₁ t f) :
   cont t₁ (Inf t₂) f :=
   continuous_iff_coinduced_le.2$ le_Inf$ fun b hb => continuous_iff_coinduced_le.1$ h b hb
 
@@ -726,16 +738,13 @@ theorem is_open_singleton_true : IsOpen ({True} : Set Prop) :=
     (by 
       simp )
 
-theorem continuous_Prop {p : α → Prop} : Continuous p ↔ IsOpen { x | p x } :=
-  ⟨fun h : Continuous p =>
-      have  : IsOpen (p ⁻¹' {True}) := is_open_singleton_true.Preimage h 
-      by 
-        simp [preimage, eq_trueₓ] at this <;> assumption,
-    fun h : IsOpen { x | p x } =>
-      continuous_generated_from$
-        fun s hs : s ∈ {{True}} =>
-          by 
-            simp  at hs <;> simp [hs, preimage, eq_trueₓ, h]⟩
+-- error in Topology.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_Prop {p : α → exprProp()} : «expr ↔ »(continuous p, is_open {x | p x}) :=
+⟨assume h : continuous p, have is_open «expr ⁻¹' »(p, {true}), from is_open_singleton_true.preimage h,
+ by simp [] [] [] ["[", expr preimage, ",", expr eq_true, "]"] [] ["at", ident this]; assumption, assume
+ h : is_open {x | p x}, «expr $ »(continuous_generated_from, assume
+  (s)
+  (hs : «expr ∈ »(s, {{true}})), by simp [] [] [] [] [] ["at", ident hs]; simp [] [] [] ["[", expr hs, ",", expr preimage, ",", expr eq_true, ",", expr h, "]"] [] [])⟩
 
 theorem is_open_iff_continuous_mem {s : Set α} : IsOpen s ↔ Continuous fun x => x ∈ s :=
   continuous_Prop.symm
@@ -797,7 +806,7 @@ theorem generate_from_Inter_of_generate_from_eq_self (f : ι → Set (Set α))
 variable{t : ι → TopologicalSpace α}
 
 theorem is_open_supr_iff {s : Set α} : @IsOpen _ (⨆i, t i) s ↔ ∀ i, @IsOpen _ (t i) s :=
-  show s ∈ SetOf (supr t).IsOpen ↔ s ∈ { x:Set α | ∀ i : ι, (t i).IsOpen x }by 
+  show s ∈ SetOf (supr t).IsOpen ↔ s ∈ { x:Set α | ∀ (i : ι), (t i).IsOpen x }by 
     simp [set_of_is_open_supr]
 
 theorem is_closed_infi_iff {s : Set α} : @IsClosed _ (⨆i, t i) s ↔ ∀ i, @IsClosed _ (t i) s :=

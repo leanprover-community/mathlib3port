@@ -113,8 +113,7 @@ theorem disjoint_supr_iff {f : ι → α} : Disjoint a (⨆i, f i) ↔ ∀ i, Di
 
 end CompleteDistribLattice
 
-instance (priority := 100)CompleteDistribLattice.boundedDistribLattice [d : CompleteDistribLattice α] :
-  BoundedDistribLattice α :=
+instance (priority := 100)CompleteDistribLattice.toDistribLattice [d : CompleteDistribLattice α] : DistribLattice α :=
   { d with
     le_sup_inf :=
       fun x y z =>

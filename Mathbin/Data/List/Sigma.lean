@@ -53,10 +53,10 @@ theorem exists_of_mem_keys {a} {l : List (Sigma β)} (h : a ∈ l.keys) : ∃ b 
 theorem mem_keys {a} {l : List (Sigma β)} : a ∈ l.keys ↔ ∃ b : β a, Sigma.mk a b ∈ l :=
   ⟨exists_of_mem_keys, fun ⟨b, h⟩ => mem_keys_of_mem h⟩
 
-theorem not_mem_keys {a} {l : List (Sigma β)} : a ∉ l.keys ↔ ∀ b : β a, Sigma.mk a b ∉ l :=
+theorem not_mem_keys {a} {l : List (Sigma β)} : a ∉ l.keys ↔ ∀ (b : β a), Sigma.mk a b ∉ l :=
   (not_iff_not_of_iff mem_keys).trans not_exists
 
-theorem not_eq_key {a} {l : List (Sigma β)} : a ∉ l.keys ↔ ∀ s : Sigma β, s ∈ l → a ≠ s.1 :=
+theorem not_eq_key {a} {l : List (Sigma β)} : a ∉ l.keys ↔ ∀ (s : Sigma β), s ∈ l → a ≠ s.1 :=
   Iff.intro
     (fun h₁ s h₂ e =>
       absurd (mem_keys_of_mem h₂)
@@ -73,11 +73,13 @@ theorem not_eq_key {a} {l : List (Sigma β)} : a ∉ l.keys ↔ ∀ s : Sigma β
 def nodupkeys (l : List (Sigma β)) : Prop :=
   l.keys.nodup
 
-theorem nodupkeys_iff_pairwise {l} : nodupkeys l ↔ Pairwise (fun s s' : Sigma β => s.1 ≠ s'.1) l :=
-  pairwise_map _
+-- error in Data.List.Sigma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nodupkeys_iff_pairwise {l} : «expr ↔ »(nodupkeys l, pairwise (λ s s' : sigma β, «expr ≠ »(s.1, s'.1)) l) :=
+pairwise_map _
 
-theorem nodupkeys.pairwise_ne {l} (h : nodupkeys l) : Pairwise (fun s s' : Sigma β => s.1 ≠ s'.1) l :=
-  nodupkeys_iff_pairwise.1 h
+-- error in Data.List.Sigma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nodupkeys.pairwise_ne {l} (h : nodupkeys l) : pairwise (λ s s' : sigma β, «expr ≠ »(s.1, s'.1)) l :=
+nodupkeys_iff_pairwise.1 h
 
 @[simp]
 theorem nodupkeys_nil : @nodupkeys α β [] :=
@@ -88,10 +90,17 @@ theorem nodupkeys_cons {s : Sigma β} {l : List (Sigma β)} : nodupkeys (s :: l)
   by 
     simp [keys, nodupkeys]
 
-theorem nodupkeys.eq_of_fst_eq {l : List (Sigma β)} (nd : nodupkeys l) {s s' : Sigma β} (h : s ∈ l) (h' : s' ∈ l) :
-  s.1 = s'.1 → s = s' :=
-  @forall_of_forall_of_pairwise _ (fun s s' : Sigma β => s.1 = s'.1 → s = s') (fun s s' H h => (H h.symm).symm) _
-    (fun x h _ => rfl) ((nodupkeys_iff_pairwise.1 nd).imp fun s s' h h' => (h h').elim) _ h _ h'
+-- error in Data.List.Sigma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nodupkeys.eq_of_fst_eq
+{l : list (sigma β)}
+(nd : nodupkeys l)
+{s s' : sigma β}
+(h : «expr ∈ »(s, l))
+(h' : «expr ∈ »(s', l)) : «expr = »(s.1, s'.1) → «expr = »(s, s') :=
+@forall_of_forall_of_pairwise _ (λ
+ s
+ s' : sigma β, «expr = »(s.1, s'.1) → «expr = »(s, s')) (λ
+ s s' H h, (H h.symm).symm) _ (λ x h _, rfl) ((nodupkeys_iff_pairwise.1 nd).imp (λ s s' h h', (h h').elim)) _ h _ h'
 
 theorem nodupkeys.eq_of_mk_mem {a : α} {b b' : β a} {l : List (Sigma β)} (nd : nodupkeys l) (h : Sigma.mk a b ∈ l)
   (h' : Sigma.mk a b' ∈ l) : b = b' :=
@@ -111,7 +120,7 @@ theorem perm_nodupkeys {l₁ l₂ : List (Sigma β)} (h : l₁ ~ l₂) : nodupke
   (h.map _).nodup_iff
 
 theorem nodupkeys_join {L : List (List (Sigma β))} :
-  nodupkeys (join L) ↔ (∀ l _ : l ∈ L, nodupkeys l) ∧ Pairwise Disjoint (L.map keys) :=
+  nodupkeys (join L) ↔ (∀ l (_ : l ∈ L), nodupkeys l) ∧ Pairwise Disjoint (L.map keys) :=
   by 
     rw [nodupkeys_iff_pairwise, pairwise_join, pairwise_map]
     refine'
@@ -221,7 +230,7 @@ theorem lookup_cons_eq l (a : α) (b : β a) : lookup a (⟨a, b⟩ :: l) = some
   dif_pos rfl
 
 @[simp]
-theorem lookup_cons_ne l {a} : ∀ s : Sigma β, a ≠ s.1 → lookup a (s :: l) = lookup a l
+theorem lookup_cons_ne l {a} : ∀ (s : Sigma β), a ≠ s.1 → lookup a (s :: l) = lookup a l
 | ⟨a', b⟩, h => dif_neg h.symm
 
 theorem lookup_is_some {a : α} : ∀ {l : List (Sigma β)}, (lookup a l).isSome ↔ a ∈ l.keys
@@ -259,7 +268,7 @@ theorem mem_lookup {a} {b : β a} {l : List (Sigma β)} (nd : l.nodupkeys) (h : 
     cases nd.eq_of_mk_mem h (of_mem_lookup h')
     exact h'
 
-theorem map_lookup_eq_find (a : α) : ∀ l : List (Sigma β), (lookup a l).map (Sigma.mk a) = find (fun s => a = s.1) l
+theorem map_lookup_eq_find (a : α) : ∀ (l : List (Sigma β)), (lookup a l).map (Sigma.mk a) = find (fun s => a = s.1) l
 | [] => rfl
 | ⟨a', b'⟩ :: l =>
   by 
@@ -302,10 +311,10 @@ theorem lookup_all_cons_eq l (a : α) (b : β a) : lookup_all a (⟨a, b⟩ :: l
   dif_pos rfl
 
 @[simp]
-theorem lookup_all_cons_ne l {a} : ∀ s : Sigma β, a ≠ s.1 → lookup_all a (s :: l) = lookup_all a l
+theorem lookup_all_cons_ne l {a} : ∀ (s : Sigma β), a ≠ s.1 → lookup_all a (s :: l) = lookup_all a l
 | ⟨a', b⟩, h => dif_neg h.symm
 
-theorem lookup_all_eq_nil {a : α} : ∀ {l : List (Sigma β)}, lookup_all a l = [] ↔ ∀ b : β a, Sigma.mk a b ∉ l
+theorem lookup_all_eq_nil {a : α} : ∀ {l : List (Sigma β)}, lookup_all a l = [] ↔ ∀ (b : β a), Sigma.mk a b ∉ l
 | [] =>
   by 
     simp 
@@ -318,7 +327,7 @@ theorem lookup_all_eq_nil {a : α} : ∀ {l : List (Sigma β)}, lookup_all a l =
     ·
       simp [h, lookup_all_eq_nil]
 
-theorem head_lookup_all (a : α) : ∀ l : List (Sigma β), head' (lookup_all a l) = lookup a l
+theorem head_lookup_all (a : α) : ∀ (l : List (Sigma β)), head' (lookup_all a l) = lookup a l
 | [] =>
   by 
     simp 
@@ -342,7 +351,7 @@ theorem mem_lookup_all {a : α} {b : β a} : ∀ {l : List (Sigma β)}, b ∈ lo
         simp ,
       simp ]
 
-theorem lookup_all_sublist (a : α) : ∀ l : List (Sigma β), (lookup_all a l).map (Sigma.mk a) <+ l
+theorem lookup_all_sublist (a : α) : ∀ (l : List (Sigma β)), (lookup_all a l).map (Sigma.mk a) <+ l
 | [] =>
   by 
     simp 
@@ -393,7 +402,7 @@ theorem perm_lookup_all (a : α) {l₁ l₂ : List (Sigma β)} (nd₁ : l₁.nod
 def kreplace (a : α) (b : β a) : List (Sigma β) → List (Sigma β) :=
   lookmap$ fun s => if a = s.1 then some ⟨a, b⟩ else none
 
-theorem kreplace_of_forall_not (a : α) (b : β a) {l : List (Sigma β)} (H : ∀ b : β a, Sigma.mk a b ∉ l) :
+theorem kreplace_of_forall_not (a : α) (b : β a) {l : List (Sigma β)} (H : ∀ (b : β a), Sigma.mk a b ∉ l) :
   kreplace a b l = l :=
   lookmap_of_forall_not _$
     by 
@@ -698,7 +707,7 @@ def kextract (a : α) : List (Sigma β) → Option (β a) × List (Sigma β)
     (b', s :: l')
 
 @[simp]
-theorem kextract_eq_lookup_kerase (a : α) : ∀ l : List (Sigma β), kextract a l = (lookup a l, kerase a l)
+theorem kextract_eq_lookup_kerase (a : α) : ∀ (l : List (Sigma β)), kextract a l = (lookup a l, kerase a l)
 | [] => rfl
 | ⟨a', b⟩ :: l =>
   by 

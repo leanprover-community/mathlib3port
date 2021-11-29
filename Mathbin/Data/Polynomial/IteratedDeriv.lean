@@ -178,7 +178,7 @@ begin
 end
 
 theorem coeff_iterated_deriv_as_prod_range :
-  ∀ m : ℕ, (iterated_deriv f k).coeff m = f.coeff (m+k)*∏i in range k, «expr↑ » ((m+k) - i) :=
+  ∀ (m : ℕ), (iterated_deriv f k).coeff m = f.coeff (m+k)*∏i in range k, «expr↑ » ((m+k) - i) :=
   by 
     induction' k with k ih
     ·

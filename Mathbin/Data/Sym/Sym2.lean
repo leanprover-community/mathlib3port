@@ -104,7 +104,7 @@ protected theorem induction_on {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x 
 protected theorem exists {α : Sort _} {f : Sym2 α → Prop} : (∃ x : Sym2 α, f x) ↔ ∃ x y, f («expr⟦ ⟧» (x, y)) :=
   (surjective_quotient_mk _).exists.trans Prod.exists
 
-protected theorem forall {α : Sort _} {f : Sym2 α → Prop} : (∀ x : Sym2 α, f x) ↔ ∀ x y, f («expr⟦ ⟧» (x, y)) :=
+protected theorem forall {α : Sort _} {f : Sym2 α → Prop} : (∀ (x : Sym2 α), f x) ↔ ∀ x y, f («expr⟦ ⟧» (x, y)) :=
   (surjective_quotient_mk _).forall.trans Prod.forall
 
 theorem eq_swap {a b : α} : «expr⟦ ⟧» (a, b) = «expr⟦ ⟧» (b, a) :=
@@ -421,72 +421,54 @@ private theorem perm_card_two_iff {α : Type _} {a₁ b₁ a₂ b₂ : α} :
         apply List.Perm.swap' 
         rfl }
 
+-- error in Data.Sym.Sym2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The symmetric square is equivalent to length-2 vectors up to permutations.
--/
-def sym2_equiv_sym' {α : Type _} : Equiv (Sym2 α) (sym' α 2) :=
-  { toFun :=
-      Quotientₓ.map (fun x : α × α => ⟨[x.1, x.2], rfl⟩)
-        (by 
-          rintro _ _ ⟨_⟩
-          ·
-            rfl 
-          apply List.Perm.swap' 
-          rfl),
-    invFun :=
-      Quotientₓ.map from_vector
-        (by 
-          rintro ⟨x, hx⟩ ⟨y, hy⟩ h 
-          cases' x with _ x
-          ·
-            simpa using hx 
-          cases' x with _ x
-          ·
-            simpa using hx 
-          cases' x with _ x 
-          swap
-          ·
-            exfalso 
-            simp  at hx 
-            linarith [hx]
-          cases' y with _ y
-          ·
-            simpa using hy 
-          cases' y with _ y
-          ·
-            simpa using hy 
-          cases' y with _ y 
-          swap
-          ·
-            exfalso 
-            simp  at hy 
-            linarith [hy]
-          rcases perm_card_two_iff.mp h with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
-          ·
-            rfl 
-          apply Sym2.Rel.swap),
-    left_inv :=
-      by 
-        tidy,
-    right_inv :=
-      fun x =>
-        by 
-          refine' Quotientₓ.recOnSubsingleton x fun x => _
-          ·
-            cases' x with x hx 
-            cases' x with _ x
-            ·
-              simpa using hx 
-            cases' x with _ x
-            ·
-              simpa using hx 
-            cases' x with _ x 
-            swap
-            ·
-              exfalso 
-              simp  at hx 
-              linarith [hx]
-            rfl }
+-/ def sym2_equiv_sym' {α : Type*} : equiv (sym2 α) (sym' α 2) :=
+{ to_fun := quotient.map (λ
+   x : «expr × »(α, α), ⟨«expr[ , ]»([x.1, x.2]), rfl⟩) (by { rintros ["_", "_", "⟨", "_", "⟩"],
+     { refl },
+     apply [expr list.perm.swap'],
+     refl }),
+  inv_fun := quotient.map from_vector (begin
+     rintros ["⟨", ident x, ",", ident hx, "⟩", "⟨", ident y, ",", ident hy, "⟩", ident h],
+     cases [expr x] ["with", "_", ident x],
+     { simpa [] [] [] [] [] ["using", expr hx] },
+     cases [expr x] ["with", "_", ident x],
+     { simpa [] [] [] [] [] ["using", expr hx] },
+     cases [expr x] ["with", "_", ident x],
+     swap,
+     { exfalso,
+       simp [] [] [] [] [] ["at", ident hx],
+       linarith [] [] ["[", expr hx, "]"] },
+     cases [expr y] ["with", "_", ident y],
+     { simpa [] [] [] [] [] ["using", expr hy] },
+     cases [expr y] ["with", "_", ident y],
+     { simpa [] [] [] [] [] ["using", expr hy] },
+     cases [expr y] ["with", "_", ident y],
+     swap,
+     { exfalso,
+       simp [] [] [] [] [] ["at", ident hy],
+       linarith [] [] ["[", expr hy, "]"] },
+     rcases [expr perm_card_two_iff.mp h, "with", "⟨", ident rfl, ",", ident rfl, "⟩", "|", "⟨", ident rfl, ",", ident rfl, "⟩"],
+     { refl },
+     apply [expr sym2.rel.swap]
+   end),
+  left_inv := by tidy [],
+  right_inv := λ x, begin
+    refine [expr quotient.rec_on_subsingleton x (λ x, _)],
+    { cases [expr x] ["with", ident x, ident hx],
+      cases [expr x] ["with", "_", ident x],
+      { simpa [] [] [] [] [] ["using", expr hx] },
+      cases [expr x] ["with", "_", ident x],
+      { simpa [] [] [] [] [] ["using", expr hx] },
+      cases [expr x] ["with", "_", ident x],
+      swap,
+      { exfalso,
+        simp [] [] [] [] [] ["at", ident hx],
+        linarith [] [] ["[", expr hx, "]"] },
+      refl }
+  end }
 
 /--
 The symmetric square is equivalent to the second symmetric power.
@@ -646,22 +628,24 @@ theorem filter_image_quotient_mk_is_diag [DecidableEq α] (s : Finset α) :
       rw [←h]
       exact ⟨⟨a, a, ⟨ha, ha⟩, rfl⟩, rfl⟩
 
-theorem filter_image_quotient_mk_not_is_diag [DecidableEq α] (s : Finset α) :
-  (((s.product s).Image Quotientₓ.mk).filter fun a : Sym2 α => ¬a.is_diag) = s.off_diag.image Quotientₓ.mk :=
-  by 
-    ext z 
-    induction z using Quotientₓ.induction_on 
-    rcases z with ⟨x, y⟩
-    simp only [mem_image, mem_off_diag, exists_prop, mem_filter, Prod.exists, mem_product]
-    split 
-    ·
-      rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
-      rw [←h, Sym2.is_diag_iff_eq] at hab 
-      exact ⟨a, b, ⟨ha, hb, hab⟩, h⟩
-    ·
-      rintro ⟨a, b, ⟨ha, hb, hab⟩, h⟩
-      rw [Ne.def, ←Sym2.is_diag_iff_eq, h] at hab 
-      exact ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
+-- error in Data.Sym.Sym2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem filter_image_quotient_mk_not_is_diag
+[decidable_eq α]
+(s : finset α) : «expr = »(((s.product s).image quotient.mk).filter (λ
+  a : sym2 α, «expr¬ »(a.is_diag)), s.off_diag.image quotient.mk) :=
+begin
+  ext [] [ident z] [],
+  induction [expr z] ["using", ident quotient.induction_on] [] [],
+  rcases [expr z, "with", "⟨", ident x, ",", ident y, "⟩"],
+  simp [] [] ["only"] ["[", expr mem_image, ",", expr mem_off_diag, ",", expr exists_prop, ",", expr mem_filter, ",", expr prod.exists, ",", expr mem_product, "]"] [] [],
+  split,
+  { rintro ["⟨", "⟨", ident a, ",", ident b, ",", "⟨", ident ha, ",", ident hb, "⟩", ",", ident h, "⟩", ",", ident hab, "⟩"],
+    rw ["[", "<-", expr h, ",", expr sym2.is_diag_iff_eq, "]"] ["at", ident hab],
+    exact [expr ⟨a, b, ⟨ha, hb, hab⟩, h⟩] },
+  { rintro ["⟨", ident a, ",", ident b, ",", "⟨", ident ha, ",", ident hb, ",", ident hab, "⟩", ",", ident h, "⟩"],
+    rw ["[", expr ne.def, ",", "<-", expr sym2.is_diag_iff_eq, ",", expr h, "]"] ["at", ident hab],
+    exact [expr ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩] }
+end
 
 end Decidable
 

@@ -91,39 +91,27 @@ theorem comp_ι_sq_scalar (g : CliffordAlgebra Q →ₐ[R] A) (m : M) : (g (ι Q
 
 variable(Q)
 
+-- error in LinearAlgebra.CliffordAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given a linear map `f : M →ₗ[R] A` into an `R`-algebra `A`, which satisfies the condition:
 `cond : ∀ m : M, f m * f m = Q(m)`, this is the canonical lift of `f` to a morphism of `R`-algebras
 from `clifford_algebra Q` to `A`.
 -/
-@[simps symmApply]
-def lift : { f : M →ₗ[R] A // ∀ m, (f m*f m) = algebraMap _ _ (Q m) } ≃ (CliffordAlgebra Q →ₐ[R] A) :=
-  { toFun :=
-      fun f =>
-        RingQuot.liftAlgHom R
-          ⟨TensorAlgebra.lift R (f : M →ₗ[R] A),
-            fun x y h : rel Q x y =>
-              by 
-                induction h 
-                rw [AlgHom.commutes, AlgHom.map_mul, TensorAlgebra.lift_ι_apply, f.prop]⟩,
-    invFun :=
-      fun F =>
-        ⟨F.to_linear_map.comp (ι Q),
-          fun m =>
-            by 
-              rw [LinearMap.comp_apply, AlgHom.to_linear_map_apply, comp_ι_sq_scalar]⟩,
-    left_inv :=
-      fun f =>
-        by 
-          ext 
-          simp only [ι, AlgHom.to_linear_map_apply, Function.comp_app, LinearMap.coe_comp, Subtype.coe_mk,
-            RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply],
-    right_inv :=
-      fun F =>
-        by 
-          ext 
-          simp only [ι, AlgHom.comp_to_linear_map, AlgHom.to_linear_map_apply, Function.comp_app, LinearMap.coe_comp,
-            Subtype.coe_mk, RingQuot.lift_alg_hom_mk_alg_hom_apply, TensorAlgebra.lift_ι_apply] }
+@[simps #[ident symm_apply]]
+def lift : «expr ≃ »({f : «expr →ₗ[ ] »(M, R, A) // ∀
+ m, «expr = »(«expr * »(f m, f m), algebra_map _ _ (Q m))}, «expr →ₐ[ ] »(clifford_algebra Q, R, A)) :=
+{ to_fun := λ
+  f, ring_quot.lift_alg_hom R ⟨tensor_algebra.lift R (f : «expr →ₗ[ ] »(M, R, A)), λ
+   (x y)
+   (h : rel Q x y), by { induction [expr h] [] [] [],
+     rw ["[", expr alg_hom.commutes, ",", expr alg_hom.map_mul, ",", expr tensor_algebra.lift_ι_apply, ",", expr f.prop, "]"] [] }⟩,
+  inv_fun := λ
+  F, ⟨F.to_linear_map.comp (ι Q), λ
+   m, by rw ["[", expr linear_map.comp_apply, ",", expr alg_hom.to_linear_map_apply, ",", expr comp_ι_sq_scalar, "]"] []⟩,
+  left_inv := λ f, by { ext [] [] [],
+    simp [] [] ["only"] ["[", expr ι, ",", expr alg_hom.to_linear_map_apply, ",", expr function.comp_app, ",", expr linear_map.coe_comp, ",", expr subtype.coe_mk, ",", expr ring_quot.lift_alg_hom_mk_alg_hom_apply, ",", expr tensor_algebra.lift_ι_apply, "]"] [] [] },
+  right_inv := λ F, by { ext [] [] [],
+    simp [] [] ["only"] ["[", expr ι, ",", expr alg_hom.comp_to_linear_map, ",", expr alg_hom.to_linear_map_apply, ",", expr function.comp_app, ",", expr linear_map.coe_comp, ",", expr subtype.coe_mk, ",", expr ring_quot.lift_alg_hom_mk_alg_hom_apply, ",", expr tensor_algebra.lift_ι_apply, "]"] [] [] } }
 
 variable{Q}
 
@@ -138,8 +126,8 @@ theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, (f m*f m) = algebraMap 
   (LinearMap.ext_iff.mp$ ι_comp_lift f cond) x
 
 @[simp]
-theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m : M, (f m*f m) = algebraMap _ _ (Q m)) (g : CliffordAlgebra Q →ₐ[R] A) :
-  g.to_linear_map.comp (ι Q) = f ↔ g = lift Q ⟨f, cond⟩ :=
+theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ (m : M), (f m*f m) = algebraMap _ _ (Q m))
+  (g : CliffordAlgebra Q →ₐ[R] A) : g.to_linear_map.comp (ι Q) = f ↔ g = lift Q ⟨f, cond⟩ :=
   by 
     convert (lift Q).symm_apply_eq 
     rw [lift_symm_apply]

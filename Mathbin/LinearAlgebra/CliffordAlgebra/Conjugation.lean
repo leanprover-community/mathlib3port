@@ -55,7 +55,7 @@ theorem involute_involutive : Function.Involutive (involute : _ → CliffordAlge
   AlgHom.congr_fun involute_comp_involute
 
 @[simp]
-theorem involute_involute : ∀ a : CliffordAlgebra Q, involute (involute a) = a :=
+theorem involute_involute : ∀ (a : CliffordAlgebra Q), involute (involute a) = a :=
   involute_involutive
 
 end Involute
@@ -115,7 +115,7 @@ theorem reverse_involutive : Function.Involutive (reverse : _ → CliffordAlgebr
   LinearMap.congr_fun reverse_comp_reverse
 
 @[simp]
-theorem reverse_reverse : ∀ a : CliffordAlgebra Q, reverse (reverse a) = a :=
+theorem reverse_reverse : ∀ (a : CliffordAlgebra Q), reverse (reverse a) = a :=
   reverse_involutive
 
 theorem reverse_comp_involute :
@@ -138,7 +138,7 @@ is sometimes referred to as the "clifford conjugate". -/
 theorem reverse_involute_commute : Function.Commute (reverse : _ → CliffordAlgebra Q) involute :=
   LinearMap.congr_fun reverse_comp_involute
 
-theorem reverse_involute : ∀ a : CliffordAlgebra Q, reverse (involute a) = involute (reverse a) :=
+theorem reverse_involute : ∀ (a : CliffordAlgebra Q), reverse (involute a) = involute (reverse a) :=
   reverse_involute_commute
 
 end Reverse
@@ -152,7 +152,7 @@ section List
 
 /-- Taking the reverse of the product a list of $n$ vectors lifted via `ι` is equivalent to
 taking the product of the reverse of that list. -/
-theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map$ ι Q).Prod = (l.map$ ι Q).reverse.Prod
+theorem reverse_prod_map_ι : ∀ (l : List M), reverse (l.map$ ι Q).Prod = (l.map$ ι Q).reverse.Prod
 | [] =>
   by 
     simp 
@@ -162,7 +162,7 @@ theorem reverse_prod_map_ι : ∀ l : List M, reverse (l.map$ ι Q).Prod = (l.ma
 
 /-- Taking the involute of the product a list of $n$ vectors lifted via `ι` is equivalent to
 premultiplying by ${-1}^n$. -/
-theorem involute_prod_map_ι : ∀ l : List M, involute (l.map$ ι Q).Prod = ((-1 : R)^l.length) • (l.map$ ι Q).Prod
+theorem involute_prod_map_ι : ∀ (l : List M), involute (l.map$ ι Q).Prod = ((-1 : R)^l.length) • (l.map$ ι Q).Prod
 | [] =>
   by 
     simp 

@@ -18,17 +18,21 @@ namespace Pnat
 
 variable(a b : ℕ+)
 
-theorem Icc_eq_finset_subtype : Icc a b = (Icc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
-  rfl
+-- error in Data.Pnat.Interval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Icc_eq_finset_subtype : «expr = »(Icc a b, (Icc (a : exprℕ()) b).subtype (λ n : exprℕ(), «expr < »(0, n))) :=
+rfl
 
-theorem Ico_eq_finset_subtype : Ico a b = (Ico (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
-  rfl
+-- error in Data.Pnat.Interval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Ico_eq_finset_subtype : «expr = »(Ico a b, (Ico (a : exprℕ()) b).subtype (λ n : exprℕ(), «expr < »(0, n))) :=
+rfl
 
-theorem Ioc_eq_finset_subtype : Ioc a b = (Ioc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
-  rfl
+-- error in Data.Pnat.Interval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Ioc_eq_finset_subtype : «expr = »(Ioc a b, (Ioc (a : exprℕ()) b).subtype (λ n : exprℕ(), «expr < »(0, n))) :=
+rfl
 
-theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
-  rfl
+-- error in Data.Pnat.Interval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Ioo_eq_finset_subtype : «expr = »(Ioo a b, (Ioo (a : exprℕ()) b).subtype (λ n : exprℕ(), «expr < »(0, n))) :=
+rfl
 
 theorem map_subtype_embedding_Icc : (Icc a b).map (Function.Embedding.subtype _) = Icc (a : ℕ) b :=
   map_subtype_embedding_Icc _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx

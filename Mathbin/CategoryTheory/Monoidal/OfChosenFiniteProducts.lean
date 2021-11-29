@@ -167,7 +167,7 @@ def binary_fan.associator {X Y Z : C} {sXY : binary_fan X Y} (P : is_limit sXY) 
 Given a fixed family of limit data for every pair `X Y`, we obtain an associator.
 -/
 @[reducible]
-def binary_fan.associator_of_limit_cone (L : ∀ X Y : C, limit_cone (pair X Y)) (X Y Z : C) :
+def binary_fan.associator_of_limit_cone (L : ∀ (X Y : C), limit_cone (pair X Y)) (X Y Z : C) :
   (L (L X Y).Cone.x Z).Cone.x ≅ (L X (L Y Z).Cone.x).Cone.x :=
   binary_fan.associator (L X Y).IsLimit (L Y Z).IsLimit (L (L X Y).Cone.x Z).IsLimit (L X (L Y Z).Cone.x).IsLimit
 
@@ -219,7 +219,7 @@ variable{C}
 
 variable(𝒯 : limit_cone (functor.empty C))
 
-variable(ℬ : ∀ X Y : C, limit_cone (pair X Y))
+variable(ℬ : ∀ (X Y : C), limit_cone (pair X Y))
 
 namespace MonoidalOfChosenFiniteProducts
 

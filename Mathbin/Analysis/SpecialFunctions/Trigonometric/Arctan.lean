@@ -18,7 +18,7 @@ open_locale TopologicalSpace Real
 
 theorem tan_add {x y : ℝ}
   (h :
-    ((∀ k : ℤ, x ≠ (((2*k)+1)*π) / 2) ∧ ∀ l : ℤ, y ≠ (((2*l)+1)*π) / 2) ∨
+    ((∀ (k : ℤ), x ≠ (((2*k)+1)*π) / 2) ∧ ∀ (l : ℤ), y ≠ (((2*l)+1)*π) / 2) ∨
       (∃ k : ℤ, x = (((2*k)+1)*π) / 2) ∧ ∃ l : ℤ, y = (((2*l)+1)*π) / 2) :
   tan (x+y) = (tan x+tan y) / (1 - tan x*tan y) :=
   by 
@@ -28,7 +28,7 @@ theorem tan_add {x y : ℝ}
         (by 
           convert h <;> normCast)
 
-theorem tan_add' {x y : ℝ} (h : (∀ k : ℤ, x ≠ (((2*k)+1)*π) / 2) ∧ ∀ l : ℤ, y ≠ (((2*l)+1)*π) / 2) :
+theorem tan_add' {x y : ℝ} (h : (∀ (k : ℤ), x ≠ (((2*k)+1)*π) / 2) ∧ ∀ (l : ℤ), y ≠ (((2*l)+1)*π) / 2) :
   tan (x+y) = (tan x+tan y) / (1 - tan x*tan y) :=
   tan_add (Or.inl h)
 
@@ -37,7 +37,7 @@ theorem tan_two_mul {x : ℝ} : tan (2*x) = (2*tan x) / (1 - (tan x^2)) :=
     simpa only [←Complex.of_real_inj, Complex.of_real_sub, Complex.of_real_div, Complex.of_real_pow,
       Complex.of_real_mul, Complex.of_real_tan, Complex.of_real_bit0, Complex.of_real_one] using Complex.tan_two_mul
 
-theorem tan_ne_zero_iff {θ : ℝ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (k*π) / 2 :=
+theorem tan_ne_zero_iff {θ : ℝ} : tan θ ≠ 0 ↔ ∀ (k : ℤ), θ ≠ (k*π) / 2 :=
   by 
     rw [←Complex.of_real_ne_zero, Complex.of_real_tan, Complex.tan_ne_zero_iff] <;> normCast
 
@@ -61,9 +61,9 @@ begin
   exact [expr continuous_on_sin.div continuous_on_cos (λ x, id)]
 end
 
-@[continuity]
-theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
-  continuous_on_iff_continuous_restrict.1 continuous_on_tan
+-- error in Analysis.SpecialFunctions.Trigonometric.Arctan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_tan : continuous (λ x : {x | «expr ≠ »(cos x, 0)}, tan x) :=
+continuous_on_iff_continuous_restrict.1 continuous_on_tan
 
 -- error in Analysis.SpecialFunctions.Trigonometric.Arctan: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_on_tan_Ioo : continuous_on tan (Ioo «expr- »(«expr / »(exprπ(), 2)) «expr / »(exprπ(), 2)) :=

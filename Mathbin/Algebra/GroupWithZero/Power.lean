@@ -13,7 +13,7 @@ section Zero
 variable{M : Type _}[MonoidWithZeroₓ M]
 
 @[simp]
-theorem zero_pow' : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
+theorem zero_pow' : ∀ (n : ℕ), n ≠ 0 → (0 : M) ^ n = 0
 | 0, h => absurd rfl h
 | k+1, h =>
   by 
@@ -37,7 +37,7 @@ theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
     ·
       exact zero_pow' n h.ne.symm
 
-theorem Ringₓ.inverse_pow (r : M) : ∀ n : ℕ, Ring.inverse r ^ n = Ring.inverse (r ^ n)
+theorem Ringₓ.inverse_pow (r : M) : ∀ (n : ℕ), Ring.inverse r ^ n = Ring.inverse (r ^ n)
 | 0 =>
   by 
     rw [pow_zeroₓ, pow_zeroₓ, Ring.inverse_one]
@@ -87,7 +87,7 @@ variable{G₀ : Type _}[GroupWithZeroₓ G₀]
 attribute [local ematch] le_of_ltₓ
 
 @[simp]
-theorem one_zpow₀ : ∀ n : ℤ, (1 : G₀) ^ n = 1
+theorem one_zpow₀ : ∀ (n : ℤ), (1 : G₀) ^ n = 1
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat, one_pow]
@@ -95,7 +95,7 @@ theorem one_zpow₀ : ∀ n : ℤ, (1 : G₀) ^ n = 1
   by 
     rw [zpow_neg_succ_of_nat, one_pow, inv_one]
 
-theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : G₀) ^ z = 0
+theorem zero_zpow : ∀ (z : ℤ), z ≠ 0 → (0 : G₀) ^ z = 0
 | (n : ℕ), h =>
   by 
     rw [zpow_coe_nat, zero_pow']
@@ -113,7 +113,7 @@ theorem fzero_pow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 :=
       rw [zero_zpow _ h]
 
 @[simp]
-theorem zpow_neg₀ (a : G₀) : ∀ n : ℤ, a ^ -n = (a ^ n)⁻¹
+theorem zpow_neg₀ (a : G₀) : ∀ (n : ℤ), a ^ -n = (a ^ n)⁻¹
 | (n+1 : ℕ) => DivInvMonoidₓ.zpow_neg' _ _
 | 0 =>
   by 
@@ -129,7 +129,7 @@ theorem zpow_neg_one₀ (x : G₀) : x ^ (-1 : ℤ) = x⁻¹ :=
     rw [←congr_argₓ HasInv.inv (pow_oneₓ x), zpow_neg₀, ←zpow_coe_nat]
     rfl
 
-theorem inv_zpow₀ (a : G₀) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
+theorem inv_zpow₀ (a : G₀) : ∀ (n : ℤ), a⁻¹ ^ n = (a ^ n)⁻¹
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat, zpow_coe_nat, inv_pow₀]
@@ -137,7 +137,7 @@ theorem inv_zpow₀ (a : G₀) : ∀ n : ℤ, a⁻¹ ^ n = (a ^ n)⁻¹
   by 
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, inv_pow₀]
 
-theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ n : ℤ, (a ^ n+1) = (a ^ n)*a
+theorem zpow_add_one₀ {a : G₀} (ha : a ≠ 0) : ∀ (n : ℤ), (a ^ n+1) = (a ^ n)*a
 | (n : ℕ) =>
   by 
     simp [←Int.coe_nat_succ, pow_succ'ₓ]
@@ -188,7 +188,7 @@ theorem zpow_one_add₀ {a : G₀} (h : a ≠ 0) (i : ℤ) : (a ^ 1+i) = a*a ^ i
   by 
     rw [zpow_add₀ h, zpow_one]
 
-theorem SemiconjBy.zpow_right₀ {a x y : G₀} (h : SemiconjBy a x y) : ∀ m : ℤ, SemiconjBy a (x ^ m) (y ^ m)
+theorem SemiconjBy.zpow_right₀ {a x y : G₀} (h : SemiconjBy a x y) : ∀ (m : ℤ), SemiconjBy a (x ^ m) (y ^ m)
 | (n : ℕ) =>
   by 
     simp [h.pow_right n]
@@ -196,7 +196,7 @@ theorem SemiconjBy.zpow_right₀ {a x y : G₀} (h : SemiconjBy a x y) : ∀ m :
   by 
     simp [(h.pow_right (n+1)).inv_right₀]
 
-theorem Commute.zpow_right₀ {a b : G₀} (h : Commute a b) : ∀ m : ℤ, Commute a (b ^ m) :=
+theorem Commute.zpow_right₀ {a b : G₀} (h : Commute a b) : ∀ (m : ℤ), Commute a (b ^ m) :=
   h.zpow_right₀
 
 theorem Commute.zpow_left₀ {a b : G₀} (h : Commute a b) (m : ℤ) : Commute (a ^ m) b :=
@@ -231,7 +231,7 @@ theorem zpow_bit1₀ (a : G₀) (n : ℤ) : a ^ bit1 n = ((a ^ n)*a ^ n)*a :=
     left 
     apply bit1_ne_zero
 
-theorem zpow_mul₀ (a : G₀) : ∀ m n : ℤ, (a ^ m*n) = (a ^ m) ^ n
+theorem zpow_mul₀ (a : G₀) : ∀ (m n : ℤ), (a ^ m*n) = (a ^ m) ^ n
 | (m : ℕ), (n : ℕ) =>
   by 
     rw [zpow_coe_nat, zpow_coe_nat, ←pow_mulₓ, ←zpow_coe_nat]
@@ -255,7 +255,7 @@ theorem zpow_mul₀' (a : G₀) (m n : ℤ) : (a ^ m*n) = (a ^ n) ^ m :=
     rw [mul_commₓ, zpow_mul₀]
 
 @[simp, normCast]
-theorem Units.coe_zpow₀ (u : Units G₀) : ∀ n : ℤ, ((u ^ n : Units G₀) : G₀) = u ^ n
+theorem Units.coe_zpow₀ (u : Units G₀) : ∀ (n : ℤ), ((u ^ n : Units G₀) : G₀) = u ^ n
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat, zpow_coe_nat]
@@ -264,7 +264,7 @@ theorem Units.coe_zpow₀ (u : Units G₀) : ∀ n : ℤ, ((u ^ n : Units G₀) 
   by 
     rw [zpow_neg_succ_of_nat, zpow_neg_succ_of_nat, Units.coe_inv', u.coe_pow]
 
-theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ z : ℤ, a ^ z ≠ 0
+theorem zpow_ne_zero_of_ne_zero {a : G₀} (ha : a ≠ 0) : ∀ (z : ℤ), a ^ z ≠ 0
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat]
@@ -278,7 +278,7 @@ theorem zpow_sub₀ {a : G₀} (ha : a ≠ 0) (z1 z2 : ℤ) : a ^ (z1 - z2) = a 
   by 
     rw [sub_eq_add_neg, zpow_add₀ ha, zpow_neg₀, div_eq_mul_inv]
 
-theorem Commute.mul_zpow₀ {a b : G₀} (h : Commute a b) : ∀ i : ℤ, (a*b) ^ i = (a ^ i)*b ^ i
+theorem Commute.mul_zpow₀ {a b : G₀} (h : Commute a b) : ∀ (i : ℤ), (a*b) ^ i = (a ^ i)*b ^ i
 | (n : ℕ) =>
   by 
     simp [h.mul_pow n]
@@ -346,7 +346,7 @@ end
 /-- If a monoid homomorphism `f` between two `group_with_zero`s maps `0` to `0`, then it maps `x^n`,
 `n : ℤ`, to `(f x)^n`. -/
 theorem MonoidWithZeroHom.map_zpow {G₀ G₀' : Type _} [GroupWithZeroₓ G₀] [GroupWithZeroₓ G₀']
-  (f : MonoidWithZeroHom G₀ G₀') (x : G₀) : ∀ n : ℤ, f (x ^ n) = f x ^ n
+  (f : MonoidWithZeroHom G₀ G₀') (x : G₀) : ∀ (n : ℤ), f (x ^ n) = f x ^ n
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat, zpow_coe_nat]

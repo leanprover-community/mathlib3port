@@ -183,7 +183,7 @@ theorem homothety_one_half {k : Type _} {V P : Type _} [Field k] [CharZero k] [A
     rw [one_div, homothety_inv_two]
 
 @[simp]
-theorem pi_midpoint_apply {k ι : Type _} {V : ∀ i : ι, Type _} {P : ∀ i : ι, Type _} [Field k] [Invertible (2 : k)]
+theorem pi_midpoint_apply {k ι : Type _} {V : ∀ (i : ι), Type _} {P : ∀ (i : ι), Type _} [Field k] [Invertible (2 : k)]
   [∀ i, AddCommGroupₓ (V i)] [∀ i, Module k (V i)] [∀ i, AddTorsor (V i) (P i)] (f g : ∀ i, P i) (i : ι) :
   midpoint k f g i = midpoint k (f i) (g i) :=
   rfl

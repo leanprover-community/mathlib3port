@@ -676,7 +676,7 @@ from which the distance of all those three points equals the circumradius. -/
 theorem exists_dist_eq_circumradius_of_subset_insert_orthocenter {t : triangle ℝ P}
   (ho : t.orthocenter ∉ Set.Range t.points) {p : Finₓ 3 → P}
   (hps : Set.Range p ⊆ insert t.orthocenter (Set.Range t.points)) (hpi : Function.Injective p) :
-  ∃ (c : _)(_ : c ∈ affineSpan ℝ (Set.Range t.points)), ∀ p₁ _ : p₁ ∈ Set.Range p, dist p₁ c = t.circumradius :=
+  ∃ (c : _)(_ : c ∈ affineSpan ℝ (Set.Range t.points)), ∀ p₁ (_ : p₁ ∈ Set.Range p), dist p₁ c = t.circumradius :=
   by 
     rcases exists_of_range_subset_orthocentric_system ho hps hpi with
       (⟨i₁, i₂, i₃, j₂, j₃, h₁₂, h₁₃, h₂₃, h₁₂₃, h₁, hj₂₃, h₂, h₃⟩ | hs)

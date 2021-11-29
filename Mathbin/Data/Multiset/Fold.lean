@@ -46,7 +46,7 @@ theorem fold_zero (b : α) : (0 : Multiset α).fold op b = b :=
   rfl
 
 @[simp]
-theorem fold_cons_left : ∀ b a : α s : Multiset α, (a ::ₘ s).fold op b = a*s.fold op b :=
+theorem fold_cons_left : ∀ (b a : α) (s : Multiset α), (a ::ₘ s).fold op b = a*s.fold op b :=
   foldr_cons _ _
 
 theorem fold_cons_right (b a : α) (s : Multiset α) : (a ::ₘ s).fold op b = s.fold op b*a :=
@@ -112,12 +112,12 @@ end Fold
 section Order
 
 theorem max_le_of_forall_le {α : Type _} [CanonicallyLinearOrderedAddMonoid α] (l : Multiset α) (n : α)
-  (h : ∀ x _ : x ∈ l, x ≤ n) : l.fold max ⊥ ≤ n :=
+  (h : ∀ x (_ : x ∈ l), x ≤ n) : l.fold max ⊥ ≤ n :=
   by 
     induction l using Quotientₓ.induction_on 
     simpa using List.max_le_of_forall_le _ _ h
 
-theorem max_nat_le_of_forall_le (l : Multiset ℕ) (n : ℕ) (h : ∀ x _ : x ∈ l, x ≤ n) : l.fold max 0 ≤ n :=
+theorem max_nat_le_of_forall_le (l : Multiset ℕ) (n : ℕ) (h : ∀ x (_ : x ∈ l), x ≤ n) : l.fold max 0 ≤ n :=
   max_le_of_forall_le l n h
 
 end Order

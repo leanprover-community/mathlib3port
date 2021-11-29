@@ -40,8 +40,8 @@ Naturality is expressed by `α.naturality_lemma`.
 -/
 @[ext]
 structure nat_trans(F G : C ⥤ D) : Type max u₁ v₂ where 
-  app : ∀ X : C, F.obj X ⟶ G.obj X 
-  naturality' : ∀ ⦃X Y : C⦄ f : X ⟶ Y, F.map f ≫ app Y = app X ≫ G.map f :=  by 
+  app : ∀ (X : C), F.obj X ⟶ G.obj X 
+  naturality' : ∀ ⦃X Y : C⦄ (f : X ⟶ Y), F.map f ≫ app Y = app X ≫ G.map f :=  by 
   runTac 
     obviously
 

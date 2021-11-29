@@ -105,7 +105,7 @@ def sizeof_lt {α} [SizeOf α] (x y : α) :=
 argument of type `α` -/
 @[reducible]
 def shrink_fn (α : Type _) [SizeOf α] :=
-  ∀ x : α, LazyList { y : α // sizeof_lt y x }
+  ∀ (x : α), LazyList { y : α // sizeof_lt y x }
 
 /-- `sampleable α` provides ways of creating examples of type `α`,
 and given such an example `x : α`, gives us a way to shrink it
@@ -113,7 +113,7 @@ and find simpler examples.  -/
 class sampleable where 
   [wf : SizeOf α]
   sample{} : gen α 
-  shrink : ∀ x : α, LazyList { y : α // @sizeof _ wf y < @sizeof _ wf x } := fun _ => LazyList.nil
+  shrink : ∀ (x : α), LazyList { y : α // @sizeof _ wf y < @sizeof _ wf x } := fun _ => LazyList.nil
 
 attribute [instance] hasWellFoundedOfHasSizeof defaultHasSizeof
 
@@ -206,7 +206,7 @@ end Prio
 successively dividing `n` by 2 and subtracting the difference from
 `k`. For example, `nat.shrink 100 = [50, 75, 88, 94, 97, 99]`. -/
 def nat.shrink' (k : ℕ) :
-  ∀ n : ℕ, n ≤ k → List { m : ℕ // HasWellFounded.R m k } → List { m : ℕ // HasWellFounded.R m k }
+  ∀ (n : ℕ), n ≤ k → List { m : ℕ // HasWellFounded.R m k } → List { m : ℕ // HasWellFounded.R m k }
 | n, hn, ls =>
   if h : n ≤ 1 then ls.reverse else
     have h₂ : 0 < n :=
@@ -411,13 +411,16 @@ def sum.shrink
 | sum.inl x := «expr $ »((shrink_α x).map, «expr $ »(subtype.map sum.inl, λ
   a, by dsimp [] ["[", expr sizeof_lt, "]"] [] []; unfold_wf; solve_by_elim [] [] [] []))
 
-instance sum.sampleable : sampleable_bifunctor.{u, v} Sum :=
-  { wf := _,
-    sample :=
-      fun α : Type u β : Type v sam_α sam_β =>
-        @Uliftable.upMap gen.{u} gen.{max u v} _ _ _ _ (@Sum.inl α β) sam_α <|>
-          @Uliftable.upMap gen.{v} gen.{max v u} _ _ _ _ (@Sum.inr α β) sam_β,
-    shrink := fun α β Iα Iβ shr_α shr_β => @sum.shrink _ _ Iα Iβ shr_α shr_β, pRepr := @Sum.hasRepr }
+-- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance sum.sampleable : sampleable_bifunctor.{u, v} sum :=
+{ wf := _,
+  sample := λ
+  (α : Type u)
+  (β : Type v)
+  (sam_α
+   sam_β), «expr <|> »(@uliftable.up_map gen.{u} gen.{max u v} _ _ _ _ (@sum.inl α β) sam_α, @uliftable.up_map gen.{v} gen.{max v u} _ _ _ _ (@sum.inr α β) sam_β),
+  shrink := λ α β Iα Iβ shr_α shr_β, @sum.shrink _ _ Iα Iβ shr_α shr_β,
+  p_repr := @sum.has_repr }
 
 instance rat.sampleable : sampleable ℚ :=
   (sampleable.lift (ℤ × ℕ+) (fun x => Prod.casesOn x Rat.mkPnat) fun r => (r.num, ⟨r.denom, r.pos⟩))$
@@ -469,7 +472,7 @@ variable{α}
 
 section ListShrink
 
-variable[SizeOf α](shr : ∀ x : α, LazyList { y : α // sizeof_lt y x })
+variable[SizeOf α](shr : ∀ (x : α), LazyList { y : α // sizeof_lt y x })
 
 -- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 theorem list.sizeof_drop_lt_sizeof_of_lt_length
@@ -618,13 +621,17 @@ def tree.sample (sample : gen α) : ℕ → gen (Tree α)
     ((Tree.node <$> sample)<*>tree.sample (n / 2))<*>tree.sample (n / 2)
   else pure Tree.nil
 
+-- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `rec_shrink x f_rec` takes the recursive call `f_rec` introduced
 by `well_founded.fix` and turns it into a shrinking function whose
 result is adequate to use in a recursive call. -/
-def rec_shrink {α : Type _} [SizeOf α] (t : α) (sh : ∀ x : α, sizeof_lt x t → LazyList { y : α // sizeof_lt y x }) :
-  shrink_fn { t' : α // sizeof_lt t' t }
-| ⟨t', ht'⟩ =>
-  (fun t'' : { y : α // sizeof_lt y t' } => ⟨⟨t''.val, lt_transₓ t''.property ht'⟩, t''.property⟩) <$> sh t' ht'
+def rec_shrink
+{α : Type*}
+[has_sizeof α]
+(t : α)
+(sh : ∀ x : α, sizeof_lt x t → lazy_list {y : α // sizeof_lt y x}) : shrink_fn {t' : α // sizeof_lt t' t}
+| ⟨t', ht'⟩ := «expr <$> »(λ
+ t'' : {y : α // sizeof_lt y t'}, ⟨⟨t''.val, lt_trans t''.property ht'⟩, t''.property⟩, sh t' ht')
 
 theorem tree.one_le_sizeof {α} [SizeOf α] (t : Tree α) : 1 ≤ sizeof t :=
   by 
@@ -637,13 +644,13 @@ instance  : Functor Tree :=
 Recursion principle for shrinking tree-like structures.
 -/
 def rec_shrink_with [SizeOf α]
-  (shrink_a : ∀ x : α, shrink_fn { y : α // sizeof_lt y x } → List (LazyList { y : α // sizeof_lt y x })) :
+  (shrink_a : ∀ (x : α), shrink_fn { y : α // sizeof_lt y x } → List (LazyList { y : α // sizeof_lt y x })) :
   shrink_fn α :=
   WellFounded.fix (sizeof_measure_wf _)$
     fun t f_rec => LazyList.join (LazyList.ofList$ shrink_a t$ fun ⟨t', h⟩ => rec_shrink _ f_rec _)
 
 theorem rec_shrink_with_eq [SizeOf α]
-  (shrink_a : ∀ x : α, shrink_fn { y : α // sizeof_lt y x } → List (LazyList { y : α // sizeof_lt y x })) (x : α) :
+  (shrink_a : ∀ (x : α), shrink_fn { y : α // sizeof_lt y x } → List (LazyList { y : α // sizeof_lt y x })) (x : α) :
   rec_shrink_with shrink_a x =
     LazyList.join (LazyList.ofList$ shrink_a x$ fun t' => rec_shrink _ (fun x h' => rec_shrink_with shrink_a x) _) :=
   by 
@@ -729,31 +736,24 @@ of `j`.
 /-! ### Subtypes of `ℕ` -/
 
 
-instance nat_le.sampleable {y} : SlimCheck.Sampleable { x : ℕ // x ≤ y } :=
-  { sample :=
-      do 
-        let ⟨x, h⟩ ←
-          SlimCheck.Gen.chooseNat 0 y
-              (by 
-                decide)
-        pure ⟨x, h.2⟩,
-    shrink :=
-      fun ⟨x, h⟩ =>
-        (fun a : Subtype _ => Subtype.recOn a$ fun x' h' => ⟨⟨x', le_transₓ (le_of_ltₓ h') h⟩, h'⟩) <$> shrink x }
+-- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance nat_le.sampleable {y} : slim_check.sampleable {x : exprℕ() // «expr ≤ »(x, y)} :=
+{ sample := do
+  ⟨x, h⟩ ← slim_check.gen.choose_nat 0 y exprdec_trivial(),
+    pure ⟨x, h.2⟩,
+  shrink := λ
+  ⟨x, h⟩, «expr <$> »(λ
+   a : subtype _, «expr $ »(subtype.rec_on a, λ x' h', ⟨⟨x', le_trans (le_of_lt h') h⟩, h'⟩), shrink x) }
 
-instance nat_ge.sampleable {x} : SlimCheck.Sampleable { y : ℕ // x ≤ y } :=
-  { sample :=
-      do 
-        let (y : ℕ) ← SlimCheck.Sampleable.sample ℕ 
-        pure
-            ⟨x+y,
-              by 
-                normNum⟩,
-    shrink :=
-      fun ⟨y, h⟩ =>
-        (fun a : { y' // sizeof y' < sizeof (y - x) } =>
-            Subtype.recOn a$ fun δ h' => ⟨⟨x+δ, Nat.le_add_rightₓ _ _⟩, lt_tsub_iff_left.mp h'⟩) <$>
-          shrink (y - x) }
+-- error in Testing.SlimCheck.Sampleable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance nat_ge.sampleable {x} : slim_check.sampleable {y : exprℕ() // «expr ≤ »(x, y)} :=
+{ sample := do
+  (y : exprℕ()) ← slim_check.sampleable.sample exprℕ(),
+    pure ⟨«expr + »(x, y), by norm_num [] []⟩,
+  shrink := λ
+  ⟨y, h⟩, «expr <$> »(λ
+   a : {y' // «expr < »(sizeof y', sizeof «expr - »(y, x))}, «expr $ »(subtype.rec_on a, λ
+    δ h', ⟨⟨«expr + »(x, δ), nat.le_add_right _ _⟩, lt_tsub_iff_left.mp h'⟩), shrink «expr - »(y, x)) }
 
 instance nat_gt.sampleable {x} : SlimCheck.Sampleable { y : ℕ // x < y } :=
   { sample :=

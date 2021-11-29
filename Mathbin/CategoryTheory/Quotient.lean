@@ -30,8 +30,8 @@ include r
 from left and right. -/
 class congruence : Prop where 
   IsEquiv : ∀ {X Y}, IsEquiv _ (@r X Y)
-  compLeft : ∀ {X Y Z} f : X ⟶ Y {g g' : Y ⟶ Z}, r g g' → r (f ≫ g) (f ≫ g')
-  compRight : ∀ {X Y Z} {f f' : X ⟶ Y} g : Y ⟶ Z, r f f' → r (f ≫ g) (f' ≫ g)
+  compLeft : ∀ {X Y Z} (f : X ⟶ Y) {g g' : Y ⟶ Z}, r g g' → r (f ≫ g) (f ≫ g')
+  compRight : ∀ {X Y Z} {f f' : X ⟶ Y} (g : Y ⟶ Z), r f f' → r (f ≫ g) (f' ≫ g)
 
 attribute [instance] congruence.is_equiv
 
@@ -49,12 +49,14 @@ namespace Quotientₓ
 inductive comp_closure ⦃s t : C⦄ : (s ⟶ t) → (s ⟶ t) → Prop
   | intro {a b} (f : s ⟶ a) (m₁ m₂ : a ⟶ b) (g : b ⟶ t) (h : r m₁ m₂) : comp_closure (f ≫ m₁ ≫ g) (f ≫ m₂ ≫ g)
 
-theorem comp_left {a b c : C} (f : a ⟶ b) : ∀ g₁ g₂ : b ⟶ c h : comp_closure r g₁ g₂, comp_closure r (f ≫ g₁) (f ≫ g₂)
+theorem comp_left {a b c : C} (f : a ⟶ b) :
+  ∀ (g₁ g₂ : b ⟶ c) (h : comp_closure r g₁ g₂), comp_closure r (f ≫ g₁) (f ≫ g₂)
 | _, _, ⟨x, m₁, m₂, y, h⟩ =>
   by 
     simpa using comp_closure.intro (f ≫ x) m₁ m₂ y h
 
-theorem comp_right {a b c : C} (g : b ⟶ c) : ∀ f₁ f₂ : a ⟶ b h : comp_closure r f₁ f₂, comp_closure r (f₁ ≫ g) (f₂ ≫ g)
+theorem comp_right {a b c : C} (g : b ⟶ c) :
+  ∀ (f₁ f₂ : a ⟶ b) (h : comp_closure r f₁ f₂), comp_closure r (f₁ ≫ g) (f₂ ≫ g)
 | _, _, ⟨x, m₁, m₂, y, h⟩ =>
   by 
     simpa using comp_closure.intro x m₁ m₂ (y ≫ g) h
@@ -99,7 +101,7 @@ instance  : ess_surj (Functor r) :=
                 rfl)⟩⟩ }
 
 protected theorem induction {P : ∀ {a b : Quotientₓ r}, (a ⟶ b) → Prop}
-  (h : ∀ {x y : C} f : x ⟶ y, P ((Functor r).map f)) : ∀ {a b : Quotientₓ r} f : a ⟶ b, P f :=
+  (h : ∀ {x y : C} (f : x ⟶ y), P ((Functor r).map f)) : ∀ {a b : Quotientₓ r} (f : a ⟶ b), P f :=
   by 
     rintro ⟨x⟩ ⟨y⟩ ⟨f⟩
     exact h f
@@ -130,7 +132,7 @@ theorem functor_map_eq_iff [congruence r] {X Y : C} (f f' : X ⟶ Y) : (Functor 
     ·
       apply Quotientₓ.sound
 
-variable{D : Type _}[category D](F : C ⥤ D)(H : ∀ x y : C f₁ f₂ : x ⟶ y, r f₁ f₂ → F.map f₁ = F.map f₂)
+variable{D : Type _}[category D](F : C ⥤ D)(H : ∀ (x y : C) (f₁ f₂ : x ⟶ y), r f₁ f₂ → F.map f₁ = F.map f₂)
 
 include H
 

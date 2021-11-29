@@ -973,7 +973,8 @@ def option_is_some_equiv (α : Type _) : { x : Option α // x.is_some } ≃ α :
 /-- The product over `option α` of `β a` is the binary product of the
 product over `α` of `β (some α)` and `β none` -/
 @[simps]
-def pi_option_equiv_prod {α : Type _} {β : Option α → Type _} : (∀ a : Option α, β a) ≃ β none × ∀ a : α, β (some a) :=
+def pi_option_equiv_prod {α : Type _} {β : Option α → Type _} :
+  (∀ (a : Option α), β a) ≃ β none × ∀ (a : α), β (some a) :=
   { toFun := fun f => (f none, fun a => f (some a)), invFun := fun x a => Option.casesOn a x.fst x.snd,
     left_inv :=
       fun f =>
@@ -1129,28 +1130,20 @@ section SubtypePreimage
 
 variable(p : α → Prop)[DecidablePred p](x₀ : { a // p a } → β)
 
+-- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- For a fixed function `x₀ : {a // p a} → β` defined on a subtype of `α`,
 the subtype of functions `x : α → β` that agree with `x₀` on the subtype `{a // p a}`
 is naturally equivalent to the type of functions `{a // ¬ p a} → β`. -/
-@[simps]
-def subtype_preimage : { x : α → β // x ∘ coeₓ = x₀ } ≃ ({ a // ¬p a } → β) :=
-  { toFun := fun x : { x : α → β // x ∘ coeₓ = x₀ } a => (x : α → β) a,
-    invFun := fun x => ⟨fun a => if h : p a then x₀ ⟨a, h⟩ else x ⟨a, h⟩, funext$ fun ⟨a, h⟩ => dif_pos h⟩,
-    left_inv :=
-      fun ⟨x, hx⟩ =>
-        Subtype.val_injective$
-          funext$
-            fun a =>
-              by 
-                dsimp 
-                splitIfs <;> [rw [←hx], skip] <;> rfl,
-    right_inv :=
-      fun x =>
-        funext$
-          fun ⟨a, h⟩ =>
-            show dite (p a) _ _ = _ by 
-              dsimp 
-              rw [dif_neg h] }
+@[simps #[]]
+def subtype_preimage : «expr ≃ »({x : α → β // «expr = »(«expr ∘ »(x, coe), x₀)}, {a // «expr¬ »(p a)} → β) :=
+{ to_fun := λ (x : {x : α → β // «expr = »(«expr ∘ »(x, coe), x₀)}) (a), (x : α → β) a,
+  inv_fun := λ x, ⟨λ a, if h : p a then x₀ ⟨a, h⟩ else x ⟨a, h⟩, «expr $ »(funext, λ ⟨a, h⟩, dif_pos h)⟩,
+  left_inv := λ
+  ⟨x, hx⟩, «expr $ »(subtype.val_injective, «expr $ »(funext, λ a, by { dsimp [] [] [] [],
+      split_ifs [] []; [rw ["<-", expr hx] [], skip]; refl })),
+  right_inv := λ
+  x, «expr $ »(funext, λ ⟨a, h⟩, show «expr = »(dite (p a) _ _, _), by { dsimp [] [] [] [],
+     rw ["[", expr dif_neg h, "]"] [] }) }
 
 theorem subtype_preimage_symm_apply_coe_pos (x : { a // ¬p a } → β) (a : α) (h : p a) :
   ((subtype_preimage p x₀).symm x : α → β) a = x₀ ⟨a, h⟩ :=
@@ -1181,7 +1174,7 @@ def Pi_congr_right {α} {β₁ β₂ : α → Sort _} (F : ∀ a, β₁ a ≃ β
 to the type of dependent functions of two arguments (i.e., functions to the space of functions).
 
 This is `sigma.curry` and `sigma.uncurry` together as an equiv. -/
-def Pi_curry {α} {β : α → Sort _} (γ : ∀ a, β a → Sort _) : (∀ x : Σi, β i, γ x.1 x.2) ≃ ∀ a b, γ a b :=
+def Pi_curry {α} {β : α → Sort _} (γ : ∀ a, β a → Sort _) : (∀ (x : Σi, β i), γ x.1 x.2) ≃ ∀ a b, γ a b :=
   { toFun := Sigma.curry, invFun := Sigma.uncurry, left_inv := Sigma.uncurry_curry, right_inv := Sigma.curry_uncurry }
 
 end 
@@ -1338,7 +1331,7 @@ def sigma_equiv_prod_of_equiv {α β} {β₁ : α → Sort _} (F : ∀ a, β₁ 
   (sigma_congr_right F).trans (sigma_equiv_prod α β)
 
 /-- Dependent product of types is associative up to an equivalence. -/
-def sigma_assoc {α : Type _} {β : α → Type _} (γ : ∀ a : α, β a → Type _) :
+def sigma_assoc {α : Type _} {β : α → Type _} (γ : ∀ (a : α), β a → Type _) :
   (Σab : Σa : α, β a, γ ab.1 ab.2) ≃ Σa : α, Σb : β a, γ a b :=
   { toFun := fun x => ⟨x.1.1, ⟨x.1.2, x.2⟩⟩, invFun := fun x => ⟨⟨x.1, x.2.1⟩, x.2.2⟩,
     left_inv := fun ⟨⟨a, b⟩, c⟩ => rfl, right_inv := fun ⟨a, ⟨b, c⟩⟩ => rfl }
@@ -1420,21 +1413,21 @@ theorem sigma_equiv_prod_sigma_congr_right :
     ext ⟨a, b⟩ : 1
     simp 
 
+-- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A variation on `equiv.prod_congr` where the equivalence in the second component can depend
   on the first component. A typical example is a shear mapping, explaining the name of this
   declaration. -/
-@[simps (config := { fullyApplied := ff })]
-def prod_shear {α₁ β₁ α₂ β₂ : Type _} (e₁ : α₁ ≃ α₂) (e₂ : α₁ → β₁ ≃ β₂) : α₁ × β₁ ≃ α₂ × β₂ :=
-  { toFun := fun x : α₁ × β₁ => (e₁ x.1, e₂ x.1 x.2),
-    invFun := fun y : α₂ × β₂ => (e₁.symm y.1, (e₂$ e₁.symm y.1).symm y.2),
-    left_inv :=
-      by 
-        rintro ⟨x₁, y₁⟩
-        simp only [symm_apply_apply],
-    right_inv :=
-      by 
-        rintro ⟨x₁, y₁⟩
-        simp only [apply_symm_apply] }
+@[simps #[expr { fully_applied := ff }]]
+def prod_shear
+{α₁ β₁ α₂ β₂ : Type*}
+(e₁ : «expr ≃ »(α₁, α₂))
+(e₂ : α₁ → «expr ≃ »(β₁, β₂)) : «expr ≃ »(«expr × »(α₁, β₁), «expr × »(α₂, β₂)) :=
+{ to_fun := λ x : «expr × »(α₁, β₁), (e₁ x.1, e₂ x.1 x.2),
+  inv_fun := λ y : «expr × »(α₂, β₂), (e₁.symm y.1, «expr $ »(e₂, e₁.symm y.1).symm y.2),
+  left_inv := by { rintro ["⟨", ident x₁, ",", ident y₁, "⟩"],
+    simp [] [] ["only"] ["[", expr symm_apply_apply, "]"] [] [] },
+  right_inv := by { rintro ["⟨", ident x₁, ",", ident y₁, "⟩"],
+    simp [] [] ["only"] ["[", expr apply_symm_apply, "]"] [] [] } }
 
 end ProdCongr
 
@@ -1701,7 +1694,7 @@ theorem subtype_equiv_refl {p : α → Prop} (h : ∀ a, p a ↔ p (Equiv.refl _
     rfl
 
 @[simp]
-theorem subtype_equiv_symm {p : α → Prop} {q : β → Prop} (e : α ≃ β) (h : ∀ a : α, p a ↔ q (e a)) :
+theorem subtype_equiv_symm {p : α → Prop} {q : β → Prop} (e : α ≃ β) (h : ∀ (a : α), p a ↔ q (e a)) :
   (e.subtype_equiv h).symm =
     e.symm.subtype_equiv
       fun a =>
@@ -1712,13 +1705,13 @@ theorem subtype_equiv_symm {p : α → Prop} {q : β → Prop} (e : α ≃ β) (
 
 @[simp]
 theorem subtype_equiv_trans {p : α → Prop} {q : β → Prop} {r : γ → Prop} (e : α ≃ β) (f : β ≃ γ)
-  (h : ∀ a : α, p a ↔ q (e a)) (h' : ∀ b : β, q b ↔ r (f b)) :
+  (h : ∀ (a : α), p a ↔ q (e a)) (h' : ∀ (b : β), q b ↔ r (f b)) :
   (e.subtype_equiv h).trans (f.subtype_equiv h') = (e.trans f).subtypeEquiv fun a => (h a).trans (h'$ e a) :=
   rfl
 
 @[simp]
-theorem subtype_equiv_apply {p : α → Prop} {q : β → Prop} (e : α ≃ β) (h : ∀ a : α, p a ↔ q (e a)) (x : { x // p x }) :
-  e.subtype_equiv h x = ⟨e x, (h _).1 x.2⟩ :=
+theorem subtype_equiv_apply {p : α → Prop} {q : β → Prop} (e : α ≃ β) (h : ∀ (a : α), p a ↔ q (e a))
+  (x : { x // p x }) : e.subtype_equiv h x = ⟨e x, (h _).1 x.2⟩ :=
   rfl
 
 /-- If two predicates `p` and `q` are pointwise equivalent, then `{x // p x}` is equivalent to
@@ -1815,21 +1808,26 @@ def sigma_subtype_preimage_equiv {α : Type u} {β : Type v} (f : α → β) (p 
     _ ≃ α := sigma_preimage_equiv f
     
 
+-- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If for each `x` we have `p x ↔ q (f x)`, then `Σ y : {y // q y}, f ⁻¹' {y}` is equivalent
 to `{x // p x}`. -/
-def sigma_subtype_preimage_equiv_subtype {α : Type u} {β : Type v} (f : α → β) {p : α → Prop} {q : β → Prop}
-  (h : ∀ x, p x ↔ q (f x)) : (Σy : Subtype q, { x : α // f x = y }) ≃ Subtype p :=
-  calc
-    (Σy : Subtype q, { x : α // f x = y }) ≃ Σy : Subtype q, { x : Subtype p // Subtype.mk (f x) ((h x).1 x.2) = y } :=
-    by 
-      apply sigma_congr_right 
-      intro y 
-      symm 
-      refine' (subtype_subtype_equiv_subtype_exists _ _).trans (subtype_equiv_right _)
-      intro x 
-      exact ⟨fun ⟨hp, h'⟩ => congr_argₓ Subtype.val h', fun h' => ⟨(h x).2 (h'.symm ▸ y.2), Subtype.eq h'⟩⟩
-    _ ≃ Subtype p := sigma_preimage_equiv fun x : Subtype p => (⟨f x, (h x).1 x.property⟩ : Subtype q)
-    
+def sigma_subtype_preimage_equiv_subtype
+{α : Type u}
+{β : Type v}
+(f : α → β)
+{p : α → exprProp()}
+{q : β → exprProp()}
+(h : ∀ x, «expr ↔ »(p x, q (f x))) : «expr ≃ »(«exprΣ , »((y : subtype q), {x : α // «expr = »(f x, y)}), subtype p) :=
+calc
+  «expr ≃ »(«exprΣ , »((y : subtype q), {x : α // «expr = »(f x, y)}), «exprΣ , »((y : subtype q), {x : subtype p // «expr = »(subtype.mk (f x) ((h x).1 x.2), y)})) : begin
+    apply [expr sigma_congr_right],
+    assume [binders (y)],
+    symmetry,
+    refine [expr (subtype_subtype_equiv_subtype_exists _ _).trans (subtype_equiv_right _)],
+    assume [binders (x)],
+    exact [expr ⟨λ ⟨hp, h'⟩, congr_arg subtype.val h', λ h', ⟨(h x).2 «expr ▸ »(h'.symm, y.2), subtype.eq h'⟩⟩]
+  end
+  «expr ≃ »(..., subtype p) : sigma_preimage_equiv (λ x : subtype p, (⟨f x, (h x).1 x.property⟩ : subtype q))
 
 -- error in Data.Equiv.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A sigma type over an `option` is equivalent to the sigma set over the original type,
@@ -1896,7 +1894,7 @@ def subtype_prod_equiv_sigma_subtype {α β : Type _} (p : α → β → Prop) :
 depending on whether they satisfy a predicate `p` or not. -/
 @[simps]
 def pi_equiv_pi_subtype_prod {α : Type _} (p : α → Prop) (β : α → Type _) [DecidablePred p] :
-  (∀ i : α, β i) ≃ (∀ i : { x // p x }, β i) × ∀ i : { x // ¬p x }, β i :=
+  (∀ (i : α), β i) ≃ (∀ (i : { x // p x }), β i) × ∀ (i : { x // ¬p x }), β i :=
   { toFun := fun f => (fun x => f x, fun x => f x), invFun := fun f x => if h : p x then f.1 ⟨x, h⟩ else f.2 ⟨x, h⟩,
     right_inv :=
       by 
@@ -2033,7 +2031,7 @@ of this predicate to `α`: `p₁ a ↔ p₂ ⟦a⟧`. Let `~₂` be the restrict
 Then `{x // p₂ x}` is equivalent to the quotient of `{x // p₁ x}` by `~₂`. -/
 def subtype_quotient_equiv_quotient_subtype (p₁ : α → Prop) [s₁ : Setoidₓ α] [s₂ : Setoidₓ (Subtype p₁)]
   (p₂ : Quotientₓ s₁ → Prop) (hp₂ : ∀ a, p₁ a ↔ p₂ («expr⟦ ⟧» a))
-  (h : ∀ x y : Subtype p₁, @Setoidₓ.R _ s₂ x y ↔ (x : α) ≈ y) : { x // p₂ x } ≃ Quotientₓ s₂ :=
+  (h : ∀ (x y : Subtype p₁), @Setoidₓ.R _ s₂ x y ↔ (x : α) ≈ y) : { x // p₂ x } ≃ Quotientₓ s₂ :=
   { toFun :=
       fun a =>
         Quotientₓ.hrecOn a.1 (fun a h => «expr⟦ ⟧» ⟨a, (hp₂ _).2 h⟩)
@@ -2386,7 +2384,7 @@ end
 
 section 
 
-variable{W : α → Sort w}{Z : β → Sort z}(h₁ : α ≃ β)(h₂ : ∀ a : α, W a ≃ Z (h₁ a))
+variable{W : α → Sort w}{Z : β → Sort z}(h₁ : α ≃ β)(h₂ : ∀ (a : α), W a ≃ Z (h₁ a))
 
 /--
 Transport dependent functions through
@@ -2400,7 +2398,7 @@ end
 
 section 
 
-variable{W : α → Sort w}{Z : β → Sort z}(h₁ : α ≃ β)(h₂ : ∀ b : β, W (h₁.symm b) ≃ Z b)
+variable{W : α → Sort w}{Z : β → Sort z}(h₁ : α ≃ β)(h₂ : ∀ (b : β), W (h₁.symm b) ≃ Z b)
 
 /--
 Transport dependent functions through
@@ -2479,7 +2477,7 @@ protected def congr {ra : α → α → Prop} {rb : β → β → Prop} (e : α 
         simp only [Equiv.apply_symm_apply] }
 
 @[simp]
-theorem congr_mk {ra : α → α → Prop} {rb : β → β → Prop} (e : α ≃ β) (eq : ∀ a₁ a₂ : α, ra a₁ a₂ ↔ rb (e a₁) (e a₂))
+theorem congr_mk {ra : α → α → Prop} {rb : β → β → Prop} (e : α ≃ β) (eq : ∀ (a₁ a₂ : α), ra a₁ a₂ ↔ rb (e a₁) (e a₂))
   (a : α) : Quot.congr e Eq (Quot.mk ra a) = Quot.mk rb (e a) :=
   rfl
 
@@ -2508,7 +2506,7 @@ protected def congr {ra : Setoidₓ α} {rb : Setoidₓ β} (e : α ≃ β)
 
 @[simp]
 theorem congr_mk {ra : Setoidₓ α} {rb : Setoidₓ β} (e : α ≃ β)
-  (eq : ∀ a₁ a₂ : α, Setoidₓ.R a₁ a₂ ↔ Setoidₓ.R (e a₁) (e a₂)) (a : α) :
+  (eq : ∀ (a₁ a₂ : α), Setoidₓ.R a₁ a₂ ↔ Setoidₓ.R (e a₁) (e a₂)) (a : α) :
   Quotientₓ.congr e Eq (Quotientₓ.mk a) = Quotientₓ.mk (e a) :=
   rfl
 

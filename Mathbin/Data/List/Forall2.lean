@@ -42,7 +42,7 @@ theorem forall₂.flip : ∀ {a b}, forall₂ (flip r) b a → forall₂ r a b
 | _, _, forall₂.nil => forall₂.nil
 | a :: as, b :: bs, forall₂.cons h₁ h₂ => forall₂.cons h₁ h₂.flip
 
-theorem forall₂_same {r : α → α → Prop} : ∀ {l}, (∀ x _ : x ∈ l, r x x) → forall₂ r l l
+theorem forall₂_same {r : α → α → Prop} : ∀ {l}, (∀ x (_ : x ∈ l), r x x) → forall₂ r l l
 | [], _ => forall₂.nil
 | a :: as, h => forall₂.cons (h _ (mem_cons_self _ _)) (forall₂_same$ fun a ha => h a$ mem_cons_of_mem _ ha)
 
@@ -100,7 +100,7 @@ theorem forall₂_cons_right_iff {b l u} : forall₂ r u (b :: l) ↔ ∃ a u', 
       | _, ⟨b, u', h₁, h₂, rfl⟩ => forall₂.cons h₁ h₂
 
 theorem forall₂_and_left {r : α → β → Prop} {p : α → Prop} :
-  ∀ l u, forall₂ (fun a b => p a ∧ r a b) l u ↔ (∀ a _ : a ∈ l, p a) ∧ forall₂ r l u
+  ∀ l u, forall₂ (fun a b => p a ∧ r a b) l u ↔ (∀ a (_ : a ∈ l), p a) ∧ forall₂ r l u
 | [], u =>
   by 
     simp only [forall₂_nil_left_iff, forall_prop_of_false (not_mem_nil _), imp_true_iff, true_andₓ]

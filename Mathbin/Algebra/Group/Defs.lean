@@ -59,27 +59,29 @@ section Mul
 
 variable{G : Type u}[Mul G]
 
+-- error in Algebra.Group.Defs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `left_mul g` denotes left multiplication by `g` -/
-@[toAdditive "`left_add g` denotes left addition by `g`"]
-def leftMul : G → G → G :=
-  fun g : G => fun x : G => g*x
+@[to_additive #[expr "`left_add g` denotes left addition by `g`"]]
+def left_mul : G → G → G :=
+λ g : G, λ x : G, «expr * »(g, x)
 
+-- error in Algebra.Group.Defs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `right_mul g` denotes right multiplication by `g` -/
-@[toAdditive "`right_add g` denotes right addition by `g`"]
-def rightMul : G → G → G :=
-  fun g : G => fun x : G => x*g
+@[to_additive #[expr "`right_add g` denotes right addition by `g`"]]
+def right_mul : G → G → G :=
+λ g : G, λ x : G, «expr * »(x, g)
 
 end Mul
 
 /-- A semigroup is a type with an associative `(*)`. -/
 @[protectProj, ancestor Mul, ext]
 class Semigroupₓ(G : Type u) extends Mul G where 
-  mul_assoc : ∀ a b c : G, ((a*b)*c) = a*b*c
+  mul_assoc : ∀ (a b c : G), ((a*b)*c) = a*b*c
 
 /-- An additive semigroup is a type with an associative `(+)`. -/
 @[protectProj, ancestor Add, ext]
 class AddSemigroupₓ(G : Type u) extends Add G where 
-  add_assoc : ∀ a b c : G, ((a+b)+c) = a+b+c
+  add_assoc : ∀ (a b c : G), ((a+b)+c) = a+b+c
 
 attribute [toAdditive] Semigroupₓ
 
@@ -88,7 +90,7 @@ section Semigroupₓ
 variable{G : Type u}[Semigroupₓ G]
 
 @[no_rsimp, toAdditive]
-theorem mul_assocₓ : ∀ a b c : G, ((a*b)*c) = a*b*c :=
+theorem mul_assocₓ : ∀ (a b c : G), ((a*b)*c) = a*b*c :=
   Semigroupₓ.mul_assoc
 
 @[toAdditive]
@@ -100,12 +102,12 @@ end Semigroupₓ
 /-- A commutative semigroup is a type with an associative commutative `(*)`. -/
 @[protectProj, ancestor Semigroupₓ, ext]
 class CommSemigroupₓ(G : Type u) extends Semigroupₓ G where 
-  mul_comm : ∀ a b : G, (a*b) = b*a
+  mul_comm : ∀ (a b : G), (a*b) = b*a
 
 /-- A commutative additive semigroup is a type with an associative commutative `(+)`. -/
 @[protectProj, ancestor AddSemigroupₓ, ext]
 class AddCommSemigroupₓ(G : Type u) extends AddSemigroupₓ G where 
-  add_comm : ∀ a b : G, (a+b) = b+a
+  add_comm : ∀ (a b : G), (a+b) = b+a
 
 attribute [toAdditive] CommSemigroupₓ
 
@@ -114,7 +116,7 @@ section CommSemigroupₓ
 variable{G : Type u}[CommSemigroupₓ G]
 
 @[no_rsimp, toAdditive]
-theorem mul_commₓ : ∀ a b : G, (a*b) = b*a :=
+theorem mul_commₓ : ∀ (a b : G), (a*b) = b*a :=
   CommSemigroupₓ.mul_comm
 
 @[toAdditive]
@@ -126,13 +128,13 @@ end CommSemigroupₓ
 /-- A `left_cancel_semigroup` is a semigroup such that `a * b = a * c` implies `b = c`. -/
 @[protectProj, ancestor Semigroupₓ, ext]
 class LeftCancelSemigroup(G : Type u) extends Semigroupₓ G where 
-  mul_left_cancel : ∀ a b c : G, ((a*b) = a*c) → b = c
+  mul_left_cancel : ∀ (a b c : G), ((a*b) = a*c) → b = c
 
 /-- An `add_left_cancel_semigroup` is an additive semigroup such that
 `a + b = a + c` implies `b = c`. -/
 @[protectProj, ancestor AddSemigroupₓ, ext]
 class AddLeftCancelSemigroup(G : Type u) extends AddSemigroupₓ G where 
-  add_left_cancel : ∀ a b c : G, ((a+b) = a+c) → b = c
+  add_left_cancel : ∀ (a b c : G), ((a+b) = a+c) → b = c
 
 attribute [toAdditive AddLeftCancelSemigroup] LeftCancelSemigroup
 
@@ -165,13 +167,13 @@ end LeftCancelSemigroup
 /-- A `right_cancel_semigroup` is a semigroup such that `a * b = c * b` implies `a = c`. -/
 @[protectProj, ancestor Semigroupₓ, ext]
 class RightCancelSemigroup(G : Type u) extends Semigroupₓ G where 
-  mul_right_cancel : ∀ a b c : G, ((a*b) = c*b) → a = c
+  mul_right_cancel : ∀ (a b c : G), ((a*b) = c*b) → a = c
 
 /-- An `add_right_cancel_semigroup` is an additive semigroup such that
 `a + b = c + b` implies `a = c`. -/
 @[protectProj, ancestor AddSemigroupₓ, ext]
 class AddRightCancelSemigroup(G : Type u) extends AddSemigroupₓ G where 
-  add_right_cancel : ∀ a b c : G, ((a+b) = c+b) → a = c
+  add_right_cancel : ∀ (a b c : G), ((a+b) = c+b) → a = c
 
 attribute [toAdditive AddRightCancelSemigroup] RightCancelSemigroup
 
@@ -205,15 +207,15 @@ end RightCancelSemigroup
 `1 * a = a` and `a * 1 = a` for all `a : M`. -/
 @[ancestor HasOne Mul]
 class MulOneClass(M : Type u) extends HasOne M, Mul M where 
-  one_mul : ∀ a : M, (1*a) = a 
-  mul_one : ∀ a : M, (a*1) = a
+  one_mul : ∀ (a : M), (1*a) = a 
+  mul_one : ∀ (a : M), (a*1) = a
 
 /-- Typeclass for expressing that a type `M` with addition and a zero satisfies
 `0 + a = a` and `a + 0 = a` for all `a : M`. -/
 @[ancestor HasZero Add]
 class AddZeroClass(M : Type u) extends HasZero M, Add M where 
-  zero_add : ∀ a : M, (0+a) = a 
-  add_zero : ∀ a : M, (a+0) = a
+  zero_add : ∀ (a : M), (0+a) = a 
+  add_zero : ∀ (a : M), (a+0) = a
 
 attribute [toAdditive] MulOneClass
 
@@ -229,11 +231,11 @@ section MulOneClass
 variable{M : Type u}[MulOneClass M]
 
 @[ematch, simp, toAdditive]
-theorem one_mulₓ : ∀ a : M, (1*a) = a :=
+theorem one_mulₓ : ∀ (a : M), (1*a) = a :=
   MulOneClass.one_mul
 
 @[ematch, simp, toAdditive]
-theorem mul_oneₓ : ∀ a : M, (a*1) = a :=
+theorem mul_oneₓ : ∀ (a : M), (a*1) = a :=
   MulOneClass.mul_one
 
 @[toAdditive]
@@ -364,7 +366,7 @@ class AddMonoidₓ(M : Type u) extends AddSemigroupₓ M, AddZeroClass M where
   nsmul_zero' : ∀ x, nsmul 0 x = 0 :=  by 
   runTac 
     try_refl_tac 
-  nsmul_succ' : ∀ n : ℕ x, nsmul n.succ x = x+nsmul n x :=  by 
+  nsmul_succ' : ∀ (n : ℕ) x, nsmul n.succ x = x+nsmul n x :=  by 
   runTac 
     try_refl_tac
 
@@ -375,7 +377,7 @@ class Monoidₓ(M : Type u) extends Semigroupₓ M, MulOneClass M where
   npow_zero' : ∀ x, npow 0 x = 1 :=  by 
   runTac 
     try_refl_tac 
-  npow_succ' : ∀ n : ℕ x, npow n.succ x = x*npow n x :=  by 
+  npow_succ' : ∀ (n : ℕ) x, npow n.succ x = x*npow n x :=  by 
   runTac 
     try_refl_tac
 
@@ -519,17 +521,17 @@ explanations on this.
 @[protectProj, ancestor Monoidₓ HasInv Div]
 class DivInvMonoidₓ(G : Type u) extends Monoidₓ G, HasInv G, Div G where 
   div := fun a b => a*b⁻¹
-  div_eq_mul_inv : ∀ a b : G, a / b = a*b⁻¹ :=  by 
+  div_eq_mul_inv : ∀ (a b : G), a / b = a*b⁻¹ :=  by 
   runTac 
     try_refl_tac 
   zpow : ℤ → G → G := zpowRec 
-  zpow_zero' : ∀ a : G, zpow 0 a = 1 :=  by 
+  zpow_zero' : ∀ (a : G), zpow 0 a = 1 :=  by 
   runTac 
     try_refl_tac 
-  zpow_succ' : ∀ n : ℕ a : G, zpow (Int.ofNat n.succ) a = a*zpow (Int.ofNat n) a :=  by 
+  zpow_succ' : ∀ (n : ℕ) (a : G), zpow (Int.ofNat n.succ) a = a*zpow (Int.ofNat n) a :=  by 
   runTac 
     try_refl_tac 
-  zpow_neg' : ∀ n : ℕ a : G, zpow -[1+ n] a = zpow n.succ a⁻¹ :=  by 
+  zpow_neg' : ∀ (n : ℕ) (a : G), zpow -[1+ n] a = zpow n.succ a⁻¹ :=  by 
   runTac 
     try_refl_tac
 
@@ -553,17 +555,17 @@ explanations on this.
 @[protectProj, ancestor AddMonoidₓ Neg Sub]
 class SubNegMonoidₓ(G : Type u) extends AddMonoidₓ G, Neg G, Sub G where 
   sub := fun a b => a+-b 
-  sub_eq_add_neg : ∀ a b : G, a - b = a+-b :=  by 
+  sub_eq_add_neg : ∀ (a b : G), a - b = a+-b :=  by 
   runTac 
     try_refl_tac 
   zsmul : ℤ → G → G := zsmulRec 
-  zsmul_zero' : ∀ a : G, zsmul 0 a = 0 :=  by 
+  zsmul_zero' : ∀ (a : G), zsmul 0 a = 0 :=  by 
   runTac 
     try_refl_tac 
-  zsmul_succ' : ∀ n : ℕ a : G, zsmul (Int.ofNat n.succ) a = a+zsmul (Int.ofNat n) a :=  by 
+  zsmul_succ' : ∀ (n : ℕ) (a : G), zsmul (Int.ofNat n.succ) a = a+zsmul (Int.ofNat n) a :=  by 
   runTac 
     try_refl_tac 
-  zsmul_neg' : ∀ n : ℕ a : G, zsmul -[1+ n] a = -zsmul n.succ a :=  by 
+  zsmul_neg' : ∀ (n : ℕ) (a : G), zsmul -[1+ n] a = -zsmul n.succ a :=  by 
   runTac 
     try_refl_tac
 
@@ -590,7 +592,7 @@ theorem zpow_zero (a : G) : a ^ (0 : ℤ) = 1 :=
   DivInvMonoidₓ.zpow_zero' a
 
 @[simp, normCast, toAdditive coe_nat_zsmul]
-theorem zpow_coe_nat (a : G) : ∀ n : ℕ, a ^ (n : ℤ) = a ^ n
+theorem zpow_coe_nat (a : G) : ∀ (n : ℕ), a ^ (n : ℤ) = a ^ n
 | 0 => (zpow_zero _).trans (pow_zeroₓ _).symm
 | n+1 =>
   calc a ^ («expr↑ » (n+1) : ℤ) = a*a ^ (n : ℤ) := DivInvMonoidₓ.zpow_succ' _ _ 
@@ -611,7 +613,7 @@ theorem zpow_neg_succ_of_nat (a : G) (n : ℕ) : a ^ -[1+ n] = (a ^ n+1)⁻¹ :=
 end 
 
 @[toAdditive]
-theorem div_eq_mul_inv {G : Type u} [DivInvMonoidₓ G] : ∀ a b : G, a / b = a*b⁻¹ :=
+theorem div_eq_mul_inv {G : Type u} [DivInvMonoidₓ G] : ∀ (a b : G), a / b = a*b⁻¹ :=
   DivInvMonoidₓ.div_eq_mul_inv
 
 /-- A `group` is a `monoid` with an operation `⁻¹` satisfying `a⁻¹ * a = 1`.
@@ -621,7 +623,7 @@ with a default so that `a / b = a * b⁻¹` holds by definition.
 -/
 @[protectProj, ancestor DivInvMonoidₓ]
 class Groupₓ(G : Type u) extends DivInvMonoidₓ G where 
-  mul_left_inv : ∀ a : G, (a⁻¹*a) = 1
+  mul_left_inv : ∀ (a : G), (a⁻¹*a) = 1
 
 /-- An `add_group` is an `add_monoid` with a unary `-` satisfying `-a + a = 0`.
 
@@ -630,7 +632,7 @@ with a default so that `a - b = a + -b` holds by definition.
 -/
 @[protectProj, ancestor SubNegMonoidₓ]
 class AddGroupₓ(A : Type u) extends SubNegMonoidₓ A where 
-  add_left_neg : ∀ a : A, ((-a)+a) = 0
+  add_left_neg : ∀ (a : A), ((-a)+a) = 0
 
 attribute [toAdditive] Groupₓ
 
@@ -650,7 +652,7 @@ section Groupₓ
 variable{G : Type u}[Groupₓ G]{a b c : G}
 
 @[simp, toAdditive]
-theorem mul_left_invₓ : ∀ a : G, (a⁻¹*a) = 1 :=
+theorem mul_left_invₓ : ∀ (a : G), (a⁻¹*a) = 1 :=
   Groupₓ.mul_left_inv
 
 @[toAdditive]

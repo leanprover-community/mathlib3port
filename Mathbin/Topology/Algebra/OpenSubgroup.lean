@@ -164,15 +164,15 @@ instance  : PartialOrderₓ (OpenSubgroup G) :=
   { PartialOrderₓ.lift (coeₓ : OpenSubgroup G → Set G) coe_injective with le := fun U V => ∀ ⦃x⦄, x ∈ U → x ∈ V }
 
 @[toAdditive]
-instance  : OrderTop (OpenSubgroup G) :=
-  { top := ⊤, le_top := fun U => Set.subset_univ _ }
-
-@[toAdditive]
-instance  : SemilatticeInfTop (OpenSubgroup G) :=
-  { OpenSubgroup.orderTop, OpenSubgroup.partialOrder with
+instance  : SemilatticeInf (OpenSubgroup G) :=
+  { OpenSubgroup.partialOrder with
     inf := fun U V => { (U : Subgroup G)⊓V with is_open' := IsOpen.inter U.is_open V.is_open },
     inf_le_left := fun U V => Set.inter_subset_left _ _, inf_le_right := fun U V => Set.inter_subset_right _ _,
     le_inf := fun U V W hV hW => Set.subset_inter hV hW }
+
+@[toAdditive]
+instance  : OrderTop (OpenSubgroup G) :=
+  { top := ⊤, le_top := fun U => Set.subset_univ _ }
 
 @[simp, normCast, toAdditive]
 theorem coe_inf : («expr↑ » (U⊓V) : Set G) = (U : Set G) ∩ V :=
@@ -244,8 +244,8 @@ namespace OpenSubgroup
 variable{G : Type _}[Groupₓ G][TopologicalSpace G][HasContinuousMul G]
 
 @[toAdditive]
-instance  : SemilatticeSupTop (OpenSubgroup G) :=
-  { OpenSubgroup.semilatticeInfTop with
+instance  : SemilatticeSup (OpenSubgroup G) :=
+  { OpenSubgroup.semilatticeInf with
     sup :=
       fun U V =>
         { (U : Subgroup G)⊔V with
@@ -256,7 +256,7 @@ instance  : SemilatticeSupTop (OpenSubgroup G) :=
 
 @[toAdditive]
 instance  : Lattice (OpenSubgroup G) :=
-  { OpenSubgroup.semilatticeSupTop, OpenSubgroup.semilatticeInfTop with  }
+  { OpenSubgroup.semilatticeSup, OpenSubgroup.semilatticeInf with  }
 
 end OpenSubgroup
 

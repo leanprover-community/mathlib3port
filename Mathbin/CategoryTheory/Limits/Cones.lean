@@ -190,7 +190,7 @@ commutes with the cone legs. -/
 @[ext]
 structure cone_morphism(A B : cone F) where 
   Hom : A.X ⟶ B.X 
-  w' : ∀ j : J, hom ≫ B.π.app j = A.π.app j :=  by 
+  w' : ∀ (j : J), hom ≫ B.π.app j = A.π.app j :=  by 
   runTac 
     obviously
 
@@ -420,7 +420,7 @@ which commutes with the cocone legs. -/
 @[ext]
 structure cocone_morphism(A B : cocone F) where 
   Hom : A.X ⟶ B.X 
-  w' : ∀ j : J, A.ι.app j ≫ hom = B.ι.app j :=  by 
+  w' : ∀ (j : J), A.ι.app j ≫ hom = B.ι.app j :=  by 
   runTac 
     obviously
 

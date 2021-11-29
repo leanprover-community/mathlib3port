@@ -56,22 +56,24 @@ theorem chain_split {a b : α} {l₁ l₂ : List α} : chain R a (l₁ ++ b :: l
     induction' l₁ with x l₁ IH generalizing a <;>
       simp only [nil_append, cons_append, chain.nil, chain_cons, and_trueₓ, and_assoc]
 
-theorem chain_map (f : β → α) {b : β} {l : List β} :
-  chain R (f b) (map f l) ↔ chain (fun a b : β => R (f a) (f b)) b l :=
-  by 
-    induction l generalizing b <;> simp only [map, chain.nil, chain_cons]
+-- error in Data.List.Chain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem chain_map
+(f : β → α)
+{b : β}
+{l : list β} : «expr ↔ »(chain R (f b) (map f l), chain (λ a b : β, R (f a) (f b)) b l) :=
+by induction [expr l] [] [] ["generalizing", ident b]; simp [] [] ["only"] ["[", expr map, ",", expr chain.nil, ",", expr chain_cons, ",", "*", "]"] [] []
 
-theorem chain_of_chain_map {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, S (f a) (f b) → R a b) {a : α} {l : List α}
+theorem chain_of_chain_map {S : β → β → Prop} (f : α → β) (H : ∀ (a b : α), S (f a) (f b) → R a b) {a : α} {l : List α}
   (p : chain S (f a) (map f l)) : chain R a l :=
   ((chain_map f).1 p).imp H
 
-theorem chain_map_of_chain {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b)) {a : α} {l : List α}
+theorem chain_map_of_chain {S : β → β → Prop} (f : α → β) (H : ∀ (a b : α), R a b → S (f a) (f b)) {a : α} {l : List α}
   (p : chain R a l) : chain S (f a) (map f l) :=
   (chain_map f).2$ p.imp H
 
 theorem chain_pmap_of_chain {S : β → β → Prop} {p : α → Prop} {f : ∀ a, p a → β}
   (H : ∀ a b ha hb, R a b → S (f a ha) (f b hb)) {a : α} {l : List α} (hl₁ : chain R a l) (ha : p a)
-  (hl₂ : ∀ a _ : a ∈ l, p a) : chain S (f a ha) (List.pmap f l hl₂) :=
+  (hl₂ : ∀ a (_ : a ∈ l), p a) : chain S (f a ha) (List.pmap f l hl₂) :=
   by 
     induction' l with lh lt l_ih generalizing a
     ·
@@ -79,9 +81,9 @@ theorem chain_pmap_of_chain {S : β → β → Prop} {p : α → Prop} {f : ∀ 
     ·
       simp [H _ _ _ _ (rel_of_chain_cons hl₁), l_ih _ (chain_of_chain_cons hl₁)]
 
-theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ a, p a → β) {l : List α} (hl₁ : ∀ a _ : a ∈ l, p a)
-  {a : α} (ha : p a) (hl₂ : chain S (f a ha) (List.pmap f l hl₁)) (H : ∀ a b ha hb, S (f a ha) (f b hb) → R a b) :
-  chain R a l :=
+theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ a, p a → β) {l : List α}
+  (hl₁ : ∀ a (_ : a ∈ l), p a) {a : α} (ha : p a) (hl₂ : chain S (f a ha) (List.pmap f l hl₁))
+  (H : ∀ a b ha hb, S (f a ha) (f b hb) → R a b) : chain R a l :=
   by 
     induction' l with lh lt l_ih generalizing a
     ·
@@ -107,15 +109,15 @@ theorem chain_iff_pairwise (tr : Transitive R) {a : α} {l : List α} : chain R 
           exact pairwise_singleton _ _ 
         apply IH.cons _ 
         simp only [mem_cons_iff, forall_eq_or_imp, r, true_andₓ]
-        show ∀ x _ : x ∈ l, R b x 
+        show ∀ x (_ : x ∈ l), R b x 
         exact fun x m => tr r (rel_of_pairwise_cons IH m),
     chain_of_pairwise⟩
 
 theorem chain_iff_nth_le {R} :
   ∀ {a : α} {l : List α},
     chain R a l ↔
-      (∀ h : 0 < length l, R a (nth_le l 0 h)) ∧
-        ∀ i h : i < length l - 1, R (nth_le l i (lt_of_lt_pred h)) (nth_le l (i+1) (lt_pred_iff.mp h))
+      (∀ (h : 0 < length l), R a (nth_le l 0 h)) ∧
+        ∀ i (h : i < length l - 1), R (nth_le l i (lt_of_lt_pred h)) (nth_le l (i+1) (lt_pred_iff.mp h))
 | a, [] =>
   by 
     simp 
@@ -172,15 +174,15 @@ theorem chain'_split {a : α} : ∀ {l₁ l₂ : List α}, chain' R (l₁ ++ a :
 | [], l₂ => (and_iff_right (chain'_singleton a)).symm
 | b :: l₁, l₂ => chain_split
 
-theorem chain'_map (f : β → α) {l : List β} : chain' R (map f l) ↔ chain' (fun a b : β => R (f a) (f b)) l :=
-  by 
-    cases l <;> [rfl, exact chain_map _]
+-- error in Data.List.Chain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem chain'_map (f : β → α) {l : list β} : «expr ↔ »(chain' R (map f l), chain' (λ a b : β, R (f a) (f b)) l) :=
+by cases [expr l] []; [refl, exact [expr chain_map _]]
 
-theorem chain'_of_chain'_map {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, S (f a) (f b) → R a b) {l : List α}
+theorem chain'_of_chain'_map {S : β → β → Prop} (f : α → β) (H : ∀ (a b : α), S (f a) (f b) → R a b) {l : List α}
   (p : chain' S (map f l)) : chain' R l :=
   ((chain'_map f).1 p).imp H
 
-theorem chain'_map_of_chain' {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b)) {l : List α}
+theorem chain'_map_of_chain' {S : β → β → Prop} (f : α → β) (H : ∀ (a b : α), R a b → S (f a) (f b)) {l : List α}
   (p : chain' R l) : chain' S (map f l) :=
   (chain'_map f).2$ p.imp H
 
@@ -199,7 +201,7 @@ theorem chain'_cons {x y l} : chain' R (x :: y :: l) ↔ R x y ∧ chain' R (y :
 theorem chain'.cons {x y l} (h₁ : R x y) (h₂ : chain' R (y :: l)) : chain' R (x :: y :: l) :=
   chain'_cons.2 ⟨h₁, h₂⟩
 
-theorem chain'.tail : ∀ {l} h : chain' R l, chain' R l.tail
+theorem chain'.tail : ∀ {l} (h : chain' R l), chain' R l.tail
 | [], _ => trivialₓ
 | [x], _ => trivialₓ
 | x :: y :: l, h => (chain'_cons.mp h).right
@@ -212,14 +214,14 @@ theorem chain'.rel_head' {x l} (h : chain' R (x :: l)) ⦃y⦄ (hy : y ∈ head'
     rw [←cons_head'_tail hy] at h 
     exact h.rel_head
 
-theorem chain'.cons' {x} : ∀ {l : List α}, chain' R l → (∀ y _ : y ∈ l.head', R x y) → chain' R (x :: l)
+theorem chain'.cons' {x} : ∀ {l : List α}, chain' R l → (∀ y (_ : y ∈ l.head'), R x y) → chain' R (x :: l)
 | [], _, _ => chain'_singleton x
 | a :: l, hl, H => hl.cons$ H _ rfl
 
-theorem chain'_cons' {x l} : chain' R (x :: l) ↔ (∀ y _ : y ∈ head' l, R x y) ∧ chain' R l :=
+theorem chain'_cons' {x l} : chain' R (x :: l) ↔ (∀ y (_ : y ∈ head' l), R x y) ∧ chain' R l :=
   ⟨fun h => ⟨h.rel_head', h.tail⟩, fun ⟨h₁, h₂⟩ => h₂.cons' h₁⟩
 
-theorem chain'.drop : ∀ n {l} h : chain' R l, chain' R (drop n l)
+theorem chain'.drop : ∀ n {l} (h : chain' R l), chain' R (drop n l)
 | 0, _, h => h
 | _, [], _ =>
   by 
@@ -265,7 +267,7 @@ theorem chain'_reverse : ∀ {l}, chain' R (reverse l) ↔ chain' (flip R) l
 
 theorem chain'_iff_nth_le {R} :
   ∀ {l : List α},
-    chain' R l ↔ ∀ i h : i < length l - 1, R (nth_le l i (lt_of_lt_pred h)) (nth_le l (i+1) (lt_pred_iff.mp h))
+    chain' R l ↔ ∀ i (h : i < length l - 1), R (nth_le l i (lt_of_lt_pred h)) (nth_le l (i+1) (lt_pred_iff.mp h))
 | [] =>
   by 
     simp 
@@ -300,7 +302,7 @@ theorem chain'_iff_nth_le {R} :
 /-- If `l₁ l₂` and `l₃` are lists and `l₁ ++ l₂` and `l₂ ++ l₃` both satisfy
   `chain' R`, then so does `l₁ ++ l₂ ++ l₃` provided `l₂ ≠ []` -/
 theorem chain'.append_overlap :
-  ∀ {l₁ l₂ l₃ : List α} h₁ : chain' R (l₁ ++ l₂) h₂ : chain' R (l₂ ++ l₃) hn : l₂ ≠ [], chain' R (l₁ ++ l₂ ++ l₃)
+  ∀ {l₁ l₂ l₃ : List α} (h₁ : chain' R (l₁ ++ l₂)) (h₂ : chain' R (l₂ ++ l₃)) (hn : l₂ ≠ []), chain' R (l₁ ++ l₂ ++ l₃)
 | [], l₂, l₃, h₁, h₂, hn => h₂
 | l₁, [], l₃, h₁, h₂, hn => (hn rfl).elim
 | [a], b :: l₂, l₃, h₁, h₂, hn =>
@@ -338,7 +340,7 @@ the predicate is true everywhere in the chain and at `a`.
 That is, we can propagate the predicate up the chain.
 -/
 theorem chain.induction (p : α → Prop) (l : List α) (h : chain r a l) (hb : last (a :: l) (cons_ne_nil _ _) = b)
-  (carries : ∀ ⦃x y : α⦄, r x y → p y → p x) (final : p b) : ∀ i _ : i ∈ a :: l, p i :=
+  (carries : ∀ ⦃x y : α⦄, r x y → p y → p x) (final : p b) : ∀ i (_ : i ∈ a :: l), p i :=
   by 
     induction l generalizing a
     ·

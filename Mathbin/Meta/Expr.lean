@@ -800,12 +800,14 @@ looking for. For `pexpr → expr` see `tactic.to_expr`. For `expr → pexpr` see
 unsafe def unsafe_cast {elab₁ elab₂ : Bool} : expr elab₁ → expr elab₂ :=
   unchecked_cast
 
+-- error in Meta.Expr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `replace_subexprs e mappings` takes an `e : expr` and interprets a `list (expr × expr)` as
 a collection of rules for variable replacements. A pair `(f, t)` encodes a rule which says "whenever
 `f` is encountered in `e` verbatim, replace it with `t`". -/
-unsafe def replace_subexprs {elab : Bool} (e : expr elab) (mappings : List (expr × expr)) : expr elab :=
-  unsafe_cast$
-    e.unsafe_cast.replace$ fun e n => (mappings.filter$ fun ent : expr × expr => ent.1 = e).head'.map Prod.snd
+meta
+def replace_subexprs {elab : bool} (e : expr elab) (mappings : list «expr × »(expr, expr)) : expr elab :=
+«expr $ »(unsafe_cast, «expr $ »(e.unsafe_cast.replace, λ
+  e n, «expr $ »(mappings.filter, λ ent : «expr × »(expr, expr), «expr = »(ent.1, e)).head'.map prod.snd))
 
 /-- `is_implicitly_included_variable e vs` accepts `e`, an `expr.local_const`, and a list `vs` of
     other `expr.local_const`s. It determines whether `e` should be considered "available in context"

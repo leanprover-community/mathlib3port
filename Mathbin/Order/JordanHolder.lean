@@ -133,7 +133,7 @@ and `s.bot` is the least element.
 structure CompositionSeries(X : Type u)[Lattice X][JordanHolderLattice X] : Type u where 
   length : ℕ 
   series : Finₓ (length+1) → X 
-  step' : ∀ i : Finₓ length, is_maximal (series i.cast_succ) (series i.succ)
+  step' : ∀ (i : Finₓ length), is_maximal (series i.cast_succ) (series i.succ)
 
 namespace CompositionSeries
 
@@ -147,7 +147,7 @@ instance  [Inhabited X] : Inhabited (CompositionSeries X) :=
 
 variable{X}
 
-theorem step (s : CompositionSeries X) : ∀ i : Finₓ s.length, is_maximal (s i.cast_succ) (s i.succ) :=
+theorem step (s : CompositionSeries X) : ∀ (i : Finₓ s.length), is_maximal (s i.cast_succ) (s i.succ) :=
   s.step'
 
 @[simp]
@@ -205,23 +205,25 @@ theorem to_list_ne_nil (s : CompositionSeries X) : s.to_list ≠ [] :=
   by 
     rw [←List.length_pos_iff_ne_nilₓ, length_to_list] <;> exact Nat.succ_posₓ _
 
-theorem to_list_injective : Function.Injective (@CompositionSeries.toList X _ _) :=
-  fun s₁ s₂ h : List.ofFn s₁ = List.ofFn s₂ =>
-    have h₁ : s₁.length = s₂.length :=
-      Nat.succ_injective ((List.length_of_fn s₁).symm.trans$ (congr_argₓ List.length h).trans$ List.length_of_fn s₂)
-    have h₂ : ∀ i : Finₓ s₁.length.succ, s₁ i = s₂ (Finₓ.cast (congr_argₓ Nat.succ h₁) i) :=
-      by 
-        intro i 
-        rw [←List.nth_le_of_fn s₁ i, ←List.nth_le_of_fn s₂]
-        simp [h]
-    by 
-      cases s₁ 
-      cases s₂ 
-      dsimp  at *
-      subst h₁ 
-      simp only [heq_iff_eq, eq_self_iff_true, true_andₓ]
-      simp only [Finₓ.cast_refl] at h₂ 
-      exact funext h₂
+-- error in Order.JordanHolder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem to_list_injective : function.injective (@composition_series.to_list X _ _) :=
+λ
+(s₁ s₂)
+(h : «expr = »(list.of_fn s₁, list.of_fn s₂)), have h₁ : «expr = »(s₁.length, s₂.length), from nat.succ_injective «expr $ »((list.length_of_fn s₁).symm.trans, «expr $ »((congr_arg list.length h).trans, list.length_of_fn s₂)),
+have h₂ : ∀ i : fin s₁.length.succ, «expr = »(s₁ i, s₂ (fin.cast (congr_arg nat.succ h₁) i)), begin
+  assume [binders (i)],
+  rw ["[", "<-", expr list.nth_le_of_fn s₁ i, ",", "<-", expr list.nth_le_of_fn s₂, "]"] [],
+  simp [] [] [] ["[", expr h, "]"] [] []
+end,
+begin
+  cases [expr s₁] [],
+  cases [expr s₂] [],
+  dsimp [] [] [] ["at", "*"],
+  subst [expr h₁],
+  simp [] [] ["only"] ["[", expr heq_iff_eq, ",", expr eq_self_iff_true, ",", expr true_and, "]"] [] [],
+  simp [] [] ["only"] ["[", expr fin.cast_refl, "]"] [] ["at", ident h₂],
+  exact [expr funext h₂]
+end
 
 theorem chain'_to_list (s : CompositionSeries X) : List.Chain' is_maximal s.to_list :=
   List.chain'_iff_nth_le.2
@@ -579,7 +581,7 @@ theorem snoc_erase_top_top {s : CompositionSeries X} (h : is_maximal s.erase_top
 `iso (s₁ i) (s₁ i.succ) (s₂ (e i), s₂ (e i.succ))` -/
 def equivalent (s₁ s₂ : CompositionSeries X) : Prop :=
   ∃ f : Finₓ s₁.length ≃ Finₓ s₂.length,
-    ∀ i : Finₓ s₁.length, iso (s₁ i.cast_succ, s₁ i.succ) (s₂ (f i).cast_succ, s₂ (f i).succ)
+    ∀ (i : Finₓ s₁.length), iso (s₁ i.cast_succ, s₁ i.succ) (s₂ (f i).cast_succ, s₂ (f i).succ)
 
 namespace Equivalent
 

@@ -48,18 +48,18 @@ class IsROrC(K : Type _) extends NondiscreteNormedField K, StarRing K, NormedAlg
   i : K 
   I_re_ax : re I = 0
   I_mul_I_ax : I = 0 ∨ (I*I) = -1
-  re_add_im_ax : ∀ z : K, (𝓚 (re z)+𝓚 (im z)*I) = z 
-  of_real_re_ax : ∀ r : ℝ, re (𝓚 r) = r 
-  of_real_im_ax : ∀ r : ℝ, im (𝓚 r) = 0
-  mul_re_ax : ∀ z w : K, re (z*w) = (re z*re w) - im z*im w 
-  mul_im_ax : ∀ z w : K, im (z*w) = (re z*im w)+im z*re w 
-  conj_re_ax : ∀ z : K, re (conj z) = re z 
-  conj_im_ax : ∀ z : K, im (conj z) = -im z 
+  re_add_im_ax : ∀ (z : K), (𝓚 (re z)+𝓚 (im z)*I) = z 
+  of_real_re_ax : ∀ (r : ℝ), re (𝓚 r) = r 
+  of_real_im_ax : ∀ (r : ℝ), im (𝓚 r) = 0
+  mul_re_ax : ∀ (z w : K), re (z*w) = (re z*re w) - im z*im w 
+  mul_im_ax : ∀ (z w : K), im (z*w) = (re z*im w)+im z*re w 
+  conj_re_ax : ∀ (z : K), re (conj z) = re z 
+  conj_im_ax : ∀ (z : K), im (conj z) = -im z 
   conj_I_ax : conj I = -I 
-  norm_sq_eq_def_ax : ∀ z : K, (∥z∥^2) = (re z*re z)+im z*im z 
-  mul_im_I_ax : ∀ z : K, (im z*im I) = im z 
-  inv_def_ax : ∀ z : K, z⁻¹ = conj z*𝓚 ((∥z∥^2)⁻¹)
-  div_I_ax : ∀ z : K, z / I = -z*I
+  norm_sq_eq_def_ax : ∀ (z : K), (∥z∥^2) = (re z*re z)+im z*im z 
+  mul_im_I_ax : ∀ (z : K), (im z*im I) = im z 
+  inv_def_ax : ∀ (z : K), z⁻¹ = conj z*𝓚 ((∥z∥^2)⁻¹)
+  div_I_ax : ∀ (z : K), z / I = -z*I
 
 end 
 
@@ -83,19 +83,19 @@ theorem re_add_im (z : K) : ((re z : K)+im z*I) = z :=
   IsROrC.re_add_im_ax z
 
 @[simp, normCast]
-theorem of_real_re : ∀ r : ℝ, re (r : K) = r :=
+theorem of_real_re : ∀ (r : ℝ), re (r : K) = r :=
   IsROrC.of_real_re_ax
 
 @[simp, normCast]
-theorem of_real_im : ∀ r : ℝ, im (r : K) = 0 :=
+theorem of_real_im : ∀ (r : ℝ), im (r : K) = 0 :=
   IsROrC.of_real_im_ax
 
 @[simp]
-theorem mul_re : ∀ z w : K, re (z*w) = (re z*re w) - im z*im w :=
+theorem mul_re : ∀ (z w : K), re (z*w) = (re z*re w) - im z*im w :=
   IsROrC.mul_re_ax
 
 @[simp]
-theorem mul_im : ∀ z w : K, im (z*w) = (re z*im w)+im z*re w :=
+theorem mul_im : ∀ (z w : K), im (z*w) = (re z*im w)+im z*re w :=
   IsROrC.mul_im_ax
 
 theorem inv_def (z : K) : z⁻¹ = conj z*((∥z∥^2)⁻¹ : ℝ) :=
@@ -230,13 +230,13 @@ theorem of_real_mul_im (r : ℝ) (z : K) : im («expr↑ » r*z) = r*im z :=
   by 
     simp only [add_zeroₓ, of_real_im, zero_mul, of_real_re, mul_im]
 
-theorem smul_re : ∀ r : ℝ z : K, re (r • z) = r*re z :=
+theorem smul_re : ∀ (r : ℝ) (z : K), re (r • z) = r*re z :=
   fun r z =>
     by 
       rw [Algebra.smul_def]
       apply of_real_mul_re
 
-theorem smul_im : ∀ r : ℝ z : K, im (r • z) = r*im z :=
+theorem smul_im : ∀ (r : ℝ) (z : K), im (r • z) = r*im z :=
   fun r z =>
     by 
       rw [Algebra.smul_def]
@@ -766,24 +766,24 @@ theorem abs_pos {z : K} : 0 < abs z ↔ z ≠ 0 :=
   abv_pos abs
 
 @[simp]
-theorem abs_neg : ∀ z : K, abs (-z) = abs z :=
+theorem abs_neg : ∀ (z : K), abs (-z) = abs z :=
   abv_neg abs
 
-theorem abs_sub : ∀ z w : K, abs (z - w) = abs (w - z) :=
+theorem abs_sub : ∀ (z w : K), abs (z - w) = abs (w - z) :=
   abv_sub abs
 
-theorem abs_sub_le : ∀ a b c : K, abs (a - c) ≤ abs (a - b)+abs (b - c) :=
+theorem abs_sub_le : ∀ (a b c : K), abs (a - c) ≤ abs (a - b)+abs (b - c) :=
   abv_sub_le abs
 
 @[simp]
-theorem abs_inv : ∀ z : K, abs (z⁻¹) = abs z⁻¹ :=
+theorem abs_inv : ∀ (z : K), abs (z⁻¹) = abs z⁻¹ :=
   abv_inv abs
 
 @[simp]
-theorem abs_div : ∀ z w : K, abs (z / w) = abs z / abs w :=
+theorem abs_div : ∀ (z w : K), abs (z / w) = abs z / abs w :=
   abv_div abs
 
-theorem abs_abs_sub_le_abs_sub : ∀ z w : K, abs' (abs z - abs w) ≤ abs (z - w) :=
+theorem abs_abs_sub_le_abs_sub : ∀ (z w : K), abs' (abs z - abs w) ≤ abs (z - w) :=
   abs_abv_sub_le_abv_sub abs
 
 theorem abs_re_div_abs_le_one (z : K) : abs' (re z / abs z) ≤ 1 :=

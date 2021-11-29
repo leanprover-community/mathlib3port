@@ -140,8 +140,8 @@ theorem compl_eq_compl : Set.Compl = (HasCompl.compl : Set α → Set α) :=
 instance  {α : Type u} : CoeSort (Set α) (Type u) :=
   ⟨fun s => { x // x ∈ s }⟩
 
-instance pi_set_coe.can_lift (ι : Type u) (α : ∀ i : ι, Type v) [ne : ∀ i, Nonempty (α i)] (s : Set ι) :
-  CanLift (∀ i : s, α i) (∀ i, α i) :=
+instance pi_set_coe.can_lift (ι : Type u) (α : ∀ (i : ι), Type v) [ne : ∀ i, Nonempty (α i)] (s : Set ι) :
+  CanLift (∀ (i : s), α i) (∀ i, α i) :=
   { PiSubtype.canLift ι α s with coe := fun f i => f i }
 
 instance pi_set_coe.can_lift' (ι : Type u) (α : Type v) [ne : Nonempty α] (s : Set ι) : CanLift (s → α) (ι → α) :=
@@ -160,7 +160,7 @@ theorem Set.set_coe_eq_subtype (s : Set α) : coeSortₓ.{u + 1, u + 2} s = { x 
   rfl
 
 @[simp]
-theorem SetCoe.forall {s : Set α} {p : s → Prop} : (∀ x : s, p x) ↔ ∀ x h : x ∈ s, p ⟨x, h⟩ :=
+theorem SetCoe.forall {s : Set α} {p : s → Prop} : (∀ (x : s), p x) ↔ ∀ x (h : x ∈ s), p ⟨x, h⟩ :=
   Subtype.forall
 
 @[simp]
@@ -170,11 +170,11 @@ theorem SetCoe.exists {s : Set α} {p : s → Prop} : (∃ x : s, p x) ↔ ∃ (
 theorem SetCoe.exists' {s : Set α} {p : ∀ x, x ∈ s → Prop} : (∃ (x : _)(h : x ∈ s), p x h) ↔ ∃ x : s, p x x.2 :=
   (@SetCoe.exists _ _$ fun x => p x.1 x.2).symm
 
-theorem SetCoe.forall' {s : Set α} {p : ∀ x, x ∈ s → Prop} : (∀ x h : x ∈ s, p x h) ↔ ∀ x : s, p x x.2 :=
+theorem SetCoe.forall' {s : Set α} {p : ∀ x, x ∈ s → Prop} : (∀ x (h : x ∈ s), p x h) ↔ ∀ (x : s), p x x.2 :=
   (@SetCoe.forall _ _$ fun x => p x.1 x.2).symm
 
 @[simp]
-theorem set_coe_cast : ∀ {s t : Set α} H' : s = t H : @Eq (Type u) s t x : s, cast H x = ⟨x.1, H' ▸ x.2⟩
+theorem set_coe_cast : ∀ {s t : Set α} (H' : s = t) (H : @Eq (Type u) s t) (x : s), cast H x = ⟨x.1, H' ▸ x.2⟩
 | s, _, rfl, _, ⟨x, h⟩ => rfl
 
 theorem SetCoe.ext {s : Set α} {a b : s} : («expr↑ » a : α) = «expr↑ » b → a = b :=
@@ -478,7 +478,7 @@ theorem eq_empty_or_nonempty (s : Set α) : s = ∅ ∨ s.nonempty :=
 theorem subset_eq_empty {s t : Set α} (h : t ⊆ s) (e : s = ∅) : t = ∅ :=
   subset_empty_iff.1$ e ▸ h
 
-theorem ball_empty_iff {p : α → Prop} : (∀ x _ : x ∈ (∅ : Set α), p x) ↔ True :=
+theorem ball_empty_iff {p : α → Prop} : (∀ x (_ : x ∈ (∅ : Set α)), p x) ↔ True :=
   iff_true_intro$ fun x => False.elim
 
 instance  (α : Type u) : IsEmpty.{u + 1} (∅ : Set α) :=
@@ -889,7 +889,8 @@ theorem bex_insert_iff {P : α → Prop} {a : α} {s : Set α} :
   (∃ (x : _)(_ : x ∈ insert a s), P x) ↔ P a ∨ ∃ (x : _)(_ : x ∈ s), P x :=
   bex_or_left_distrib.trans$ or_congr_left bex_eq_left
 
-theorem ball_insert_iff {P : α → Prop} {a : α} {s : Set α} : (∀ x _ : x ∈ insert a s, P x) ↔ P a ∧ ∀ x _ : x ∈ s, P x :=
+theorem ball_insert_iff {P : α → Prop} {a : α} {s : Set α} :
+  (∀ x (_ : x ∈ insert a s), P x) ↔ P a ∧ ∀ x (_ : x ∈ s), P x :=
   ball_or_left_distrib.trans$ and_congr_left' forall_eq
 
 /-! ### Lemmas about singletons -/
@@ -978,14 +979,14 @@ theorem nmem_singleton_empty {s : Set α} : s ∉ ({∅} : Set (Set α)) ↔ s.n
 instance unique_singleton (a : α) : Unique («expr↥ » ({a} : Set α)) :=
   ⟨⟨⟨a, mem_singleton a⟩⟩, fun ⟨x, h⟩ => Subtype.eq h⟩
 
-theorem eq_singleton_iff_unique_mem : s = {a} ↔ a ∈ s ∧ ∀ x _ : x ∈ s, x = a :=
+theorem eq_singleton_iff_unique_mem : s = {a} ↔ a ∈ s ∧ ∀ x (_ : x ∈ s), x = a :=
   subset.antisymm_iff.trans$ And.comm.trans$ and_congr_left' singleton_subset_iff
 
-theorem eq_singleton_iff_nonempty_unique_mem : s = {a} ↔ s.nonempty ∧ ∀ x _ : x ∈ s, x = a :=
+theorem eq_singleton_iff_nonempty_unique_mem : s = {a} ↔ s.nonempty ∧ ∀ x (_ : x ∈ s), x = a :=
   eq_singleton_iff_unique_mem.trans$ and_congr_left$ fun H => ⟨fun h' => ⟨_, h'⟩, fun ⟨x, h⟩ => H x h ▸ h⟩
 
 theorem exists_eq_singleton_iff_nonempty_unique_mem :
-  (∃ a : α, s = {a}) ↔ s.nonempty ∧ ∀ a b _ : a ∈ s _ : b ∈ s, a = b :=
+  (∃ a : α, s = {a}) ↔ s.nonempty ∧ ∀ a b (_ : a ∈ s) (_ : b ∈ s), a = b :=
   by 
     refine' ⟨_, fun h => _⟩
     ·
@@ -1049,7 +1050,7 @@ theorem sep_inter_sep {p q : α → Prop} : { x∈s | p x } ∩ { x∈s | q x } 
     rw [and_and_and_comm, and_selfₓ]
 
 @[simp]
-theorem subset_singleton_iff {α : Type _} {s : Set α} {x : α} : s ⊆ {x} ↔ ∀ y _ : y ∈ s, y = x :=
+theorem subset_singleton_iff {α : Type _} {s : Set α} {x : α} : s ⊆ {x} ↔ ∀ y (_ : y ∈ s), y = x :=
   Iff.rfl
 
 theorem subset_singleton_iff_eq {s : Set α} {x : α} : s ⊆ {x} ↔ s = ∅ ∨ s = {x} :=
@@ -1349,10 +1350,14 @@ begin
   { simp [] [] [] ["[", expr h, ",", expr h', "]"] [] [] }
 end
 
-theorem insert_diff_self_of_not_mem {a : α} {s : Set α} (h : a ∉ s) : insert a s \ {a} = s :=
-  by 
-    ext 
-    simp [and_iff_left_of_imp fun hx : x ∈ s => show x ≠ a from fun hxa => h$ hxa ▸ hx]
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem insert_diff_self_of_not_mem
+{a : α}
+{s : set α}
+(h : «expr ∉ »(a, s)) : «expr = »(«expr \ »(insert a s, {a}), s) :=
+by { ext [] [] [],
+  simp [] [] [] ["[", expr and_iff_left_of_imp (λ
+    hx : «expr ∈ »(x, s), show «expr ≠ »(x, a), from λ hxa, «expr $ »(h, «expr ▸ »(hxa, hx))), "]"] [] [] }
 
 theorem insert_inter_of_mem {s₁ s₂ : Set α} {a : α} (h : a ∈ s₂) : insert a s₁ ∩ s₂ = insert a (s₁ ∩ s₂) :=
   by 
@@ -1561,7 +1566,7 @@ theorem preimage_empty : f ⁻¹' ∅ = ∅ :=
 theorem mem_preimage {s : Set β} {a : α} : a ∈ f ⁻¹' s ↔ f a ∈ s :=
   Iff.rfl
 
-theorem preimage_congr {f g : α → β} {s : Set β} (h : ∀ x : α, f x = g x) : f ⁻¹' s = g ⁻¹' s :=
+theorem preimage_congr {f g : α → β} {s : Set β} (h : ∀ (x : α), f x = g x) : f ⁻¹' s = g ⁻¹' s :=
   by 
     congr with x 
     applyAssumption
@@ -1608,18 +1613,26 @@ theorem preimage_id {s : Set α} : id ⁻¹' s = s :=
 theorem preimage_id' {s : Set α} : (fun x => x) ⁻¹' s = s :=
   rfl
 
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem preimage_const_of_mem {b : β} {s : Set β} (h : b ∈ s) : (fun x : α => b) ⁻¹' s = univ :=
-  eq_univ_of_forall$ fun x => h
+theorem preimage_const_of_mem {b : β} {s : set β} (h : «expr ∈ »(b, s)) : «expr = »(«expr ⁻¹' »(λ x : α, b, s), univ) :=
+«expr $ »(eq_univ_of_forall, λ x, h)
 
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem preimage_const_of_not_mem {b : β} {s : Set β} (h : b ∉ s) : (fun x : α => b) ⁻¹' s = ∅ :=
-  eq_empty_of_subset_empty$ fun x hx => h hx
+theorem preimage_const_of_not_mem
+{b : β}
+{s : set β}
+(h : «expr ∉ »(b, s)) : «expr = »(«expr ⁻¹' »(λ x : α, b, s), «expr∅»()) :=
+«expr $ »(eq_empty_of_subset_empty, λ x hx, h hx)
 
-theorem preimage_const (b : β) (s : Set β) [Decidable (b ∈ s)] : (fun x : α => b) ⁻¹' s = if b ∈ s then univ else ∅ :=
-  by 
-    splitIfs with hb hb 
-    exacts[preimage_const_of_mem hb, preimage_const_of_not_mem hb]
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem preimage_const
+(b : β)
+(s : set β)
+[decidable «expr ∈ »(b, s)] : «expr = »(«expr ⁻¹' »(λ x : α, b, s), if «expr ∈ »(b, s) then univ else «expr∅»()) :=
+by { split_ifs [] ["with", ident hb, ident hb],
+  exacts ["[", expr preimage_const_of_mem hb, ",", expr preimage_const_of_not_mem hb, "]"] }
 
 theorem preimage_comp {s : Set γ} : g ∘ f ⁻¹' s = f ⁻¹' (g ⁻¹' s) :=
   rfl
@@ -1628,7 +1641,7 @@ theorem preimage_preimage {g : β → γ} {f : α → β} {s : Set γ} : f ⁻¹
   preimage_comp.symm
 
 theorem eq_preimage_subtype_val_iff {p : α → Prop} {s : Set (Subtype p)} {t : Set α} :
-  s = Subtype.val ⁻¹' t ↔ ∀ x h : p x, (⟨x, h⟩ : Subtype p) ∈ s ↔ x ∈ t :=
+  s = Subtype.val ⁻¹' t ↔ ∀ x (h : p x), (⟨x, h⟩ : Subtype p) ∈ s ↔ x ∈ t :=
   ⟨fun s_eq x h =>
       by 
         rw [s_eq]
@@ -1673,12 +1686,13 @@ theorem _root_.function.injective.mem_set_image {f : α → β} (hf : injective 
   f a ∈ f '' s ↔ a ∈ s :=
   ⟨fun ⟨b, hb, Eq⟩ => hf Eq ▸ hb, mem_image_of_mem f⟩
 
-theorem ball_image_iff {f : α → β} {s : Set α} {p : β → Prop} : (∀ y _ : y ∈ f '' s, p y) ↔ ∀ x _ : x ∈ s, p (f x) :=
+theorem ball_image_iff {f : α → β} {s : Set α} {p : β → Prop} :
+  (∀ y (_ : y ∈ f '' s), p y) ↔ ∀ x (_ : x ∈ s), p (f x) :=
   by 
     simp 
 
-theorem ball_image_of_ball {f : α → β} {s : Set α} {p : β → Prop} (h : ∀ x _ : x ∈ s, p (f x)) :
-  ∀ y _ : y ∈ f '' s, p y :=
+theorem ball_image_of_ball {f : α → β} {s : Set α} {p : β → Prop} (h : ∀ x (_ : x ∈ s), p (f x)) :
+  ∀ y (_ : y ∈ f '' s), p y :=
   ball_image_iff.2 h
 
 theorem bex_image_iff {f : α → β} {s : Set α} {p : β → Prop} :
@@ -1686,21 +1700,21 @@ theorem bex_image_iff {f : α → β} {s : Set α} {p : β → Prop} :
   by 
     simp 
 
-theorem mem_image_elim {f : α → β} {s : Set α} {C : β → Prop} (h : ∀ x : α, x ∈ s → C (f x)) :
+theorem mem_image_elim {f : α → β} {s : Set α} {C : β → Prop} (h : ∀ (x : α), x ∈ s → C (f x)) :
   ∀ {y : β}, y ∈ f '' s → C y
 | _, ⟨a, a_in, rfl⟩ => h a a_in
 
 theorem mem_image_elim_on {f : α → β} {s : Set α} {C : β → Prop} {y : β} (h_y : y ∈ f '' s)
-  (h : ∀ x : α, x ∈ s → C (f x)) : C y :=
+  (h : ∀ (x : α), x ∈ s → C (f x)) : C y :=
   mem_image_elim h h_y
 
 @[congr]
-theorem image_congr {f g : α → β} {s : Set α} (h : ∀ a _ : a ∈ s, f a = g a) : f '' s = g '' s :=
+theorem image_congr {f g : α → β} {s : Set α} (h : ∀ a (_ : a ∈ s), f a = g a) : f '' s = g '' s :=
   by 
     safe [ext_iff, iff_def]
 
 /-- A common special case of `image_congr` -/
-theorem image_congr' {f g : α → β} {s : Set α} (h : ∀ x : α, f x = g x) : f '' s = g '' s :=
+theorem image_congr' {f g : α → β} {s : Set α} (h : ∀ (x : α), f x = g x) : f '' s = g '' s :=
   image_congr fun x _ => h x
 
 theorem image_comp (f : β → γ) (g : α → β) (a : Set α) : f ∘ g '' a = f '' (g '' a) :=
@@ -1734,7 +1748,7 @@ theorem image_empty (f : α → β) : f '' ∅ = ∅ :=
 theorem image_inter_subset (f : α → β) (s t : Set α) : f '' (s ∩ t) ⊆ f '' s ∩ f '' t :=
   subset_inter (image_subset _$ inter_subset_left _ _) (image_subset _$ inter_subset_right _ _)
 
-theorem image_inter_on {f : α → β} {s t : Set α} (h : ∀ x _ : x ∈ t, ∀ y _ : y ∈ s, f x = f y → x = y) :
+theorem image_inter_on {f : α → β} {s t : Set α} (h : ∀ x (_ : x ∈ t), ∀ y (_ : y ∈ s), f x = f y → x = y) :
   f '' s ∩ f '' t = f '' (s ∩ t) :=
   subset.antisymm
     (fun b ⟨⟨a₁, ha₁, h₁⟩, ⟨a₂, ha₂, h₂⟩⟩ =>
@@ -1930,7 +1944,7 @@ theorem union_preimage_subset (s : Set α) (t : Set β) (f : α → β) : s ∪ 
 theorem subset_image_union (f : α → β) (s : Set α) (t : Set β) : f '' (s ∪ f ⁻¹' t) ⊆ f '' s ∪ t :=
   image_subset_iff.2 (union_preimage_subset _ _ _)
 
-theorem preimage_subset_iff {A : Set α} {B : Set β} {f : α → β} : f ⁻¹' B ⊆ A ↔ ∀ a : α, f a ∈ B → a ∈ A :=
+theorem preimage_subset_iff {A : Set α} {B : Set β} {f : α → β} : f ⁻¹' B ⊆ A ↔ ∀ (a : α), f a ∈ B → a ∈ A :=
   Iff.rfl
 
 theorem image_eq_image {f : α → β} (hf : injective f) : f '' s = f '' t ↔ s = t :=
@@ -1946,18 +1960,21 @@ theorem image_subset_image_iff {f : α → β} (hf : injective f) : f '' s ⊆ f
     rw [←preimage_image_eq s hf, ←preimage_image_eq t hf]
     exact preimage_mono h
 
-theorem prod_quotient_preimage_eq_image [s : Setoidₓ α] (g : Quotientₓ s → β) {h : α → β} (Hh : h = g ∘ Quotientₓ.mk)
-  (r : Set (β × β)) :
-  { x:Quotientₓ s × Quotientₓ s | (g x.1, g x.2) ∈ r } =
-    (fun a : α × α => («expr⟦ ⟧» a.1, «expr⟦ ⟧» a.2)) '' ((fun a : α × α => (h a.1, h a.2)) ⁻¹' r) :=
-  Hh.symm ▸
-    Set.ext
-      fun ⟨a₁, a₂⟩ =>
-        ⟨Quotientₓ.induction_on₂ a₁ a₂ fun a₁ a₂ h => ⟨(a₁, a₂), h, rfl⟩,
-          fun ⟨⟨b₁, b₂⟩, h₁, h₂⟩ =>
-            show (g a₁, g a₂) ∈ r from
-              have h₃ : «expr⟦ ⟧» b₁ = a₁ ∧ «expr⟦ ⟧» b₂ = a₂ := Prod.ext_iff.1 h₂ 
-              h₃.1 ▸ h₃.2 ▸ h₁⟩
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prod_quotient_preimage_eq_image
+[s : setoid α]
+(g : quotient s → β)
+{h : α → β}
+(Hh : «expr = »(h, «expr ∘ »(g, quotient.mk)))
+(r : set «expr × »(β, β)) : «expr = »({x : «expr × »(quotient s, quotient s) | «expr ∈ »((g x.1, g x.2), r)}, «expr '' »(λ
+  a : «expr × »(α, α), («expr⟦ ⟧»(a.1), «expr⟦ ⟧»(a.2)), «expr ⁻¹' »(λ a : «expr × »(α, α), (h a.1, h a.2), r))) :=
+«expr ▸ »(Hh.symm, set.ext (λ
+  ⟨a₁, a₂⟩, ⟨quotient.induction_on₂ a₁ a₂ (λ
+    a₁
+    a₂
+    h, ⟨(a₁, a₂), h, rfl⟩), λ
+   ⟨⟨b₁, b₂⟩, h₁, h₂⟩, show «expr ∈ »((g a₁, g a₂), r), from have h₃ : «expr ∧ »(«expr = »(«expr⟦ ⟧»(b₁), a₁), «expr = »(«expr⟦ ⟧»(b₂), a₂)) := prod.ext_iff.1 h₂,
+   «expr ▸ »(h₃.1, «expr ▸ »(h₃.2, h₁))⟩))
 
 /-- Restriction of `f` to `s` factors through `s.image_factorization f : s → f '' s`. -/
 def image_factorization (f : α → β) (s : Set α) : s → f '' s :=
@@ -1976,7 +1993,7 @@ end Image
 
 /-- A set `s` is a `subsingleton`, if it has at most one element. -/
 protected def Subsingleton (s : Set α) : Prop :=
-  ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, x = y
+  ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), x = y
 
 theorem subsingleton.mono (ht : t.subsingleton) (hst : s ⊆ t) : s.subsingleton :=
   fun x hx y hy => ht (hst hx) (hst hy)
@@ -2080,11 +2097,11 @@ theorem mem_range {x : α} : x ∈ range f ↔ ∃ y, f y = x :=
 theorem mem_range_self (i : ι) : f i ∈ range f :=
   ⟨i, rfl⟩
 
-theorem forall_range_iff {p : α → Prop} : (∀ a _ : a ∈ range f, p a) ↔ ∀ i, p (f i) :=
+theorem forall_range_iff {p : α → Prop} : (∀ a (_ : a ∈ range f), p a) ↔ ∀ i, p (f i) :=
   by 
     simp 
 
-theorem forall_subtype_range_iff {p : range f → Prop} : (∀ a : range f, p a) ↔ ∀ i, p ⟨f i, mem_range_self _⟩ :=
+theorem forall_subtype_range_iff {p : range f → Prop} : (∀ (a : range f), p a) ↔ ∀ i, p ⟨f i, mem_range_self _⟩ :=
   ⟨fun H i => H _,
     fun H ⟨y, i, hi⟩ =>
       by 
@@ -2178,7 +2195,12 @@ theorem image_subset_range (f : α → β) s : f '' s ⊆ range f :=
     rw [←image_univ] <;> exact image_subset _ (subset_univ _)
 
 theorem mem_range_of_mem_image (f : α → β) s {x : β} (h : x ∈ f '' s) : x ∈ range f :=
-  mem_of_mem_of_subset h$ image_subset_range f s
+  image_subset_range f s h
+
+theorem nonempty.preimage' {s : Set β} (hs : s.nonempty) {f : α → β} (hf : s ⊆ Set.Range f) : (f ⁻¹' s).Nonempty :=
+  let ⟨y, hy⟩ := hs 
+  let ⟨x, hx⟩ := hf hy
+  ⟨x, Set.mem_preimage.2$ hx.symm ▸ hy⟩
 
 theorem range_comp (g : α → β) (f : ι → α) : range (g ∘ f) = g '' range f :=
   subset.antisymm (forall_range_iff.mpr$ fun i => mem_image_of_mem g (mem_range_self _))
@@ -2227,7 +2249,7 @@ theorem image_preimage_eq_of_subset {f : α → β} {s : Set β} (hs : s ⊆ ran
     rw [image_preimage_eq_inter_range, inter_eq_self_of_subset_left hs]
 
 instance set.can_lift [CanLift α β] : CanLift (Set α) (Set β) :=
-  { coe := fun s => CanLift.coe '' s, cond := fun s => ∀ x _ : x ∈ s, CanLift.Cond β x,
+  { coe := fun s => CanLift.coe '' s, cond := fun s => ∀ x (_ : x ∈ s), CanLift.Cond β x,
     prf := fun s hs => ⟨CanLift.coe ⁻¹' s, image_preimage_eq_of_subset$ fun x hx => CanLift.prf _ (hs x hx)⟩ }
 
 theorem image_preimage_eq_iff {f : α → β} {s : Set β} : f '' (f ⁻¹' s) = s ↔ s ⊆ range f :=
@@ -2272,16 +2294,17 @@ theorem preimage_image_preimage {f : α → β} {s : Set β} : f ⁻¹' (f '' (f
   by 
     rw [image_preimage_eq_inter_range, preimage_inter_range]
 
-@[simp]
-theorem quot_mk_range_eq [Setoidₓ α] : (range fun x : α => «expr⟦ ⟧» x) = univ :=
-  range_iff_surjective.2 Quot.exists_rep
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem quot_mk_range_eq [setoid α] : «expr = »(range (λ x : α, «expr⟦ ⟧»(x)), univ) :=
+range_iff_surjective.2 quot.exists_rep
 
-theorem range_const_subset {c : α} : (range fun x : ι => c) ⊆ {c} :=
-  range_subset_iff.2$ fun x => rfl
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem range_const_subset {c : α} : «expr ⊆ »(range (λ x : ι, c), {c}) := «expr $ »(range_subset_iff.2, λ x, rfl)
 
-@[simp]
-theorem range_const : ∀ [Nonempty ι] {c : α}, (range fun x : ι => c) = {c}
-| ⟨x⟩, c => subset.antisymm range_const_subset$ fun y hy => (mem_singleton_iff.1 hy).symm ▸ mem_range_self x
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem range_const : ∀ [nonempty ι] {c : α}, «expr = »(range (λ x : ι, c), {c})
+| ⟨x⟩, c := «expr $ »(subset.antisymm range_const_subset, assume
+ y hy, «expr ▸ »((mem_singleton_iff.1 hy).symm, mem_range_self x))
 
 theorem diagonal_eq_range {α : Type _} : diagonal α = range fun x => (x, x) :=
   by 
@@ -2331,14 +2354,14 @@ theorem coe_comp_range_factorization (f : ι → β) : coeₓ ∘ range_factoriz
 theorem surjective_onto_range : surjective (range_factorization f) :=
   fun ⟨_, ⟨i, rfl⟩⟩ => ⟨i, rfl⟩
 
-theorem image_eq_range (f : α → β) (s : Set α) : f '' s = range fun x : s => f x :=
-  by 
-    ext 
-    split 
-    rintro ⟨x, h1, h2⟩
-    exact ⟨⟨x, h1⟩, h2⟩
-    rintro ⟨⟨x, h1⟩, h2⟩
-    exact ⟨x, h1, h2⟩
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem image_eq_range (f : α → β) (s : set α) : «expr = »(«expr '' »(f, s), range (λ x : s, f x)) :=
+by { ext [] [] [],
+  split,
+  rintro ["⟨", ident x, ",", ident h1, ",", ident h2, "⟩"],
+  exact [expr ⟨⟨x, h1⟩, h2⟩],
+  rintro ["⟨", "⟨", ident x, ",", ident h1, "⟩", ",", ident h2, "⟩"],
+  exact [expr ⟨x, h1, h2⟩] }
 
 @[simp]
 theorem sum.elim_range {α β γ : Type _} (f : α → γ) (g : β → γ) : range (Sum.elim f g) = range f ∪ range g :=
@@ -2674,10 +2697,10 @@ theorem mk_mem_prod {a : α} {b : β} (a_in : a ∈ s) (b_in : b ∈ t) : (a, b)
 theorem prod_mono {s₁ s₂ : Set α} {t₁ t₂ : Set β} (hs : s₁ ⊆ s₂) (ht : t₁ ⊆ t₂) : s₁.prod t₁ ⊆ s₂.prod t₂ :=
   fun x ⟨h₁, h₂⟩ => ⟨hs h₁, ht h₂⟩
 
-theorem prod_subset_iff {P : Set (α × β)} : s.prod t ⊆ P ↔ ∀ x _ : x ∈ s y _ : y ∈ t, (x, y) ∈ P :=
+theorem prod_subset_iff {P : Set (α × β)} : s.prod t ⊆ P ↔ ∀ x (_ : x ∈ s) y (_ : y ∈ t), (x, y) ∈ P :=
   ⟨fun h _ xin _ yin => h (mk_mem_prod xin yin), fun h ⟨_, _⟩ pin => h _ pin.1 _ pin.2⟩
 
-theorem forall_prod_set {p : α × β → Prop} : (∀ x _ : x ∈ s.prod t, p x) ↔ ∀ x _ : x ∈ s y _ : y ∈ t, p (x, y) :=
+theorem forall_prod_set {p : α × β → Prop} : (∀ x (_ : x ∈ s.prod t), p x) ↔ ∀ x (_ : x ∈ s) y (_ : y ∈ t), p (x, y) :=
   prod_subset_iff
 
 theorem exists_prod_set {p : α × β → Prop} :
@@ -2826,33 +2849,35 @@ theorem image_swap_prod : Prod.swap '' t.prod s = s.prod t :=
   by 
     rw [image_swap_eq_preimage_swap, preimage_swap_prod]
 
-theorem prod_image_image_eq {m₁ : α → γ} {m₂ : β → δ} :
-  (m₁ '' s).Prod (m₂ '' t) = image (fun p : α × β => (m₁ p.1, m₂ p.2)) (s.prod t) :=
-  ext$
-    by 
-      simp [-exists_and_distrib_right, exists_and_distrib_right.symm, And.left_comm, And.assoc, And.comm]
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prod_image_image_eq
+{m₁ : α → γ}
+{m₂ : β → δ} : «expr = »(«expr '' »(m₁, s).prod «expr '' »(m₂, t), image (λ
+  p : «expr × »(α, β), (m₁ p.1, m₂ p.2)) (s.prod t)) :=
+«expr $ »(ext, by simp [] [] [] ["[", "-", ident exists_and_distrib_right, ",", expr exists_and_distrib_right.symm, ",", expr and.left_comm, ",", expr and.assoc, ",", expr and.comm, "]"] [] [])
 
-theorem prod_range_range_eq {α β γ δ} {m₁ : α → γ} {m₂ : β → δ} :
-  (range m₁).Prod (range m₂) = range fun p : α × β => (m₁ p.1, m₂ p.2) :=
-  ext$
-    by 
-      simp [range]
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prod_range_range_eq
+{α β γ δ}
+{m₁ : α → γ}
+{m₂ : β → δ} : «expr = »((range m₁).prod (range m₂), range (λ p : «expr × »(α, β), (m₁ p.1, m₂ p.2))) :=
+«expr $ »(ext, by simp [] [] [] ["[", expr range, "]"] [] [])
 
 @[simp]
 theorem range_prod_map {α β γ δ} {m₁ : α → γ} {m₂ : β → δ} : range (Prod.mapₓ m₁ m₂) = (range m₁).Prod (range m₂) :=
   prod_range_range_eq.symm
 
-theorem prod_range_univ_eq {α β γ} {m₁ : α → γ} :
-  (range m₁).Prod (univ : Set β) = range fun p : α × β => (m₁ p.1, p.2) :=
-  ext$
-    by 
-      simp [range]
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prod_range_univ_eq
+{α β γ}
+{m₁ : α → γ} : «expr = »((range m₁).prod (univ : set β), range (λ p : «expr × »(α, β), (m₁ p.1, p.2))) :=
+«expr $ »(ext, by simp [] [] [] ["[", expr range, "]"] [] [])
 
-theorem prod_univ_range_eq {α β δ} {m₂ : β → δ} :
-  (univ : Set α).Prod (range m₂) = range fun p : α × β => (p.1, m₂ p.2) :=
-  ext$
-    by 
-      simp [range]
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prod_univ_range_eq
+{α β δ}
+{m₂ : β → δ} : «expr = »((univ : set α).prod (range m₂), range (λ p : «expr × »(α, β), (p.1, m₂ p.2))) :=
+«expr $ »(ext, by simp [] [] [] ["[", expr range, "]"] [] [])
 
 theorem range_pair_subset {α β γ : Type _} (f : α → β) (g : α → γ) :
   (range fun x => (f x, g x)) ⊆ (range f).Prod (range g) :=
@@ -2952,10 +2977,10 @@ variable{ι : Type _}{α : ι → Type _}{s s₁ : Set ι}{t t₁ t₂ : ∀ i, 
 is the set of dependent functions `f : Πa, π a` such that `f a` belongs to `t a`
 whenever `a ∈ s`. -/
 def pi (s : Set ι) (t : ∀ i, Set (α i)) : Set (∀ i, α i) :=
-  { f | ∀ i _ : i ∈ s, f i ∈ t i }
+  { f | ∀ i (_ : i ∈ s), f i ∈ t i }
 
 @[simp]
-theorem mem_pi {f : ∀ i, α i} : f ∈ s.pi t ↔ ∀ i _ : i ∈ s, f i ∈ t i :=
+theorem mem_pi {f : ∀ i, α i} : f ∈ s.pi t ↔ ∀ i (_ : i ∈ s), f i ∈ t i :=
   by 
     rfl
 
@@ -2974,7 +2999,7 @@ theorem empty_pi (s : ∀ i, Set (α i)) : pi ∅ s = univ :=
 theorem pi_univ (s : Set ι) : (pi s fun i => (univ : Set (α i))) = univ :=
   eq_univ_of_forall$ fun f i hi => mem_univ _
 
-theorem pi_mono (h : ∀ i _ : i ∈ s, t₁ i ⊆ t₂ i) : pi s t₁ ⊆ pi s t₂ :=
+theorem pi_mono (h : ∀ i (_ : i ∈ s), t₁ i ⊆ t₂ i) : pi s t₁ ⊆ pi s t₂ :=
   fun x hx i hi => h i hi$ hx i hi
 
 theorem pi_inter_distrib : (s.pi fun i => t i ∩ t₁ i) = s.pi t ∩ s.pi t₁ :=
@@ -2983,7 +3008,7 @@ theorem pi_inter_distrib : (s.pi fun i => t i ∩ t₁ i) = s.pi t ∩ s.pi t₁
       by 
         simp only [forall_and_distrib, mem_pi, mem_inter_eq]
 
-theorem pi_congr (h : s = s₁) (h' : ∀ i _ : i ∈ s, t i = t₁ i) : pi s t = pi s₁ t₁ :=
+theorem pi_congr (h : s = s₁) (h' : ∀ i (_ : i ∈ s), t i = t₁ i) : pi s t = pi s₁ t₁ :=
   h ▸ (ext$ fun x => forall_congrₓ$ fun i => forall_congrₓ$ fun hi => h' i hi ▸ Iff.rfl)
 
 theorem pi_eq_empty {i : ι} (hs : i ∈ s) (ht : t i = ∅) : s.pi t = ∅ :=
@@ -3039,18 +3064,19 @@ theorem univ_pi_eq_empty_iff : pi univ t = ∅ ↔ ∃ i, t i = ∅ :=
 theorem univ_pi_empty [h : Nonempty ι] : pi univ (fun i => ∅ : ∀ i, Set (α i)) = ∅ :=
   univ_pi_eq_empty_iff.2$ h.elim$ fun x => ⟨x, rfl⟩
 
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem range_dcomp {β : ι → Type _} (f : ∀ i, α i → β i) :
-  (range fun g : ∀ i, α i => fun i => f i (g i)) = pi univ fun i => range (f i) :=
-  by 
-    apply subset.antisymm
-    ·
-      rintro _ ⟨x, rfl⟩ i -
-      exact ⟨x i, rfl⟩
-    ·
-      intro x hx 
-      choose y hy using hx 
-      exact ⟨fun i => y i trivialₓ, funext$ fun i => hy i trivialₓ⟩
+theorem range_dcomp
+{β : ι → Type*}
+(f : ∀ i, α i → β i) : «expr = »(range (λ g : ∀ i, α i, λ i, f i (g i)), pi univ (λ i, range (f i))) :=
+begin
+  apply [expr subset.antisymm],
+  { rintro ["_", "⟨", ident x, ",", ident rfl, "⟩", ident i, "-"],
+    exact [expr ⟨x i, rfl⟩] },
+  { intros [ident x, ident hx],
+    choose [] [ident y] [ident hy] ["using", expr hx],
+    exact [expr ⟨λ i, y i trivial, «expr $ »(funext, λ i, hy i trivial)⟩] }
+end
 
 @[simp]
 theorem insert_pi (i : ι) (s : Set ι) (t : ∀ i, Set (α i)) : pi (insert i s) t = eval i ⁻¹' t i ∩ pi s t :=
@@ -3116,10 +3142,13 @@ theorem univ_pi_update [DecidableEq ι] {β : ∀ i, Type _} (i : ι) (f : ∀ j
   by 
     rw [compl_eq_univ_diff, ←pi_update_of_mem (mem_univ _)]
 
-theorem univ_pi_update_univ [DecidableEq ι] (i : ι) (s : Set (α i)) :
-  pi univ (update (fun j : ι => (univ : Set (α j))) i s) = eval i ⁻¹' s :=
-  by 
-    rw [univ_pi_update i (fun j => (univ : Set (α j))) s fun j t => t, pi_univ, inter_univ, preimage]
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem univ_pi_update_univ
+[decidable_eq ι]
+(i : ι)
+(s : set (α i)) : «expr = »(pi univ (update (λ j : ι, (univ : set (α j))) i s), «expr ⁻¹' »(eval i, s)) :=
+by rw ["[", expr univ_pi_update i (λ
+  j, (univ : set (α j))) s (λ j t, t), ",", expr pi_univ, ",", expr inter_univ, ",", expr preimage, "]"] []
 
 open_locale Classical
 
@@ -3146,9 +3175,12 @@ theorem eval_image_pi {i : ι} (hs : i ∈ s) (ht : (s.pi t).Nonempty) : eval i 
         rw [mem_pi] at hf 
         simp [hji, hf, hj]
 
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem eval_image_univ_pi {i : ι} (ht : (pi univ t).Nonempty) : (fun f : ∀ i, α i => f i) '' pi univ t = t i :=
-  eval_image_pi (mem_univ i) ht
+theorem eval_image_univ_pi
+{i : ι}
+(ht : (pi univ t).nonempty) : «expr = »(«expr '' »(λ f : ∀ i, α i, f i, pi univ t), t i) :=
+eval_image_pi (mem_univ i) ht
 
 theorem eval_preimage {ι} {α : ι → Type _} {i : ι} {s : Set (α i)} :
   eval i ⁻¹' s = pi univ (update (fun i => univ) i s) :=
@@ -3162,7 +3194,7 @@ theorem eval_preimage' {ι} {α : ι → Type _} {i : ι} {s : Set (α i)} :
     ext 
     simp 
 
-theorem update_preimage_pi {i : ι} {f : ∀ i, α i} (hi : i ∈ s) (hf : ∀ j _ : j ∈ s, j ≠ i → f j ∈ t j) :
+theorem update_preimage_pi {i : ι} {f : ∀ i, α i} (hi : i ∈ s) (hf : ∀ j (_ : j ∈ s), j ≠ i → f j ∈ t j) :
   update f i ⁻¹' s.pi t = t i :=
   by 
     ext x 
@@ -3181,7 +3213,7 @@ theorem update_preimage_pi {i : ι} {f : ∀ i, α i} (hi : i ∈ s) (hf : ∀ j
         rw [update_noteq h]
         exact hf j hj h
 
-theorem update_preimage_univ_pi {i : ι} {f : ∀ i, α i} (hf : ∀ j _ : j ≠ i, f j ∈ t j) :
+theorem update_preimage_univ_pi {i : ι} {f : ∀ i, α i} (hf : ∀ j (_ : j ≠ i), f j ∈ t j) :
   update f i ⁻¹' pi univ t = t i :=
   update_preimage_pi (mem_univ i) fun j _ => hf j
 
@@ -3205,9 +3237,10 @@ section Inclusion
 
 variable{α : Type _}
 
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `inclusion` is the "identity" function between two subsets `s` and `t`, where `s ⊆ t` -/
-def inclusion {s t : Set α} (h : s ⊆ t) : s → t :=
-  fun x : s => (⟨x, h x.2⟩ : t)
+def inclusion {s t : set α} (h : «expr ⊆ »(s, t)) : s → t :=
+λ x : s, (⟨x, h x.2⟩ : t)
 
 @[simp]
 theorem inclusion_self {s : Set α} (x : s) : inclusion (Set.Subset.refl _) x = x :=
@@ -3341,11 +3374,12 @@ theorem image2_subset (hs : s ⊆ s') (ht : t ⊆ t') : image2 f s t ⊆ image2 
     rintro _ ⟨a, b, ha, hb, rfl⟩
     exact mem_image2_of_mem (hs ha) (ht hb)
 
-theorem forall_image2_iff {p : γ → Prop} : (∀ z _ : z ∈ image2 f s t, p z) ↔ ∀ x _ : x ∈ s y _ : y ∈ t, p (f x y) :=
+theorem forall_image2_iff {p : γ → Prop} :
+  (∀ z (_ : z ∈ image2 f s t), p z) ↔ ∀ x (_ : x ∈ s) y (_ : y ∈ t), p (f x y) :=
   ⟨fun h x hx y hy => h _ ⟨x, y, hx, hy, rfl⟩, fun h z ⟨x, y, hx, hy, hz⟩ => hz ▸ h x hx y hy⟩
 
 @[simp]
-theorem image2_subset_iff {u : Set γ} : image2 f s t ⊆ u ↔ ∀ x _ : x ∈ s y _ : y ∈ t, f x y ∈ u :=
+theorem image2_subset_iff {u : Set γ} : image2 f s t ⊆ u ↔ ∀ x (_ : x ∈ s) y (_ : y ∈ t), f x y ∈ u :=
   forall_image2_iff
 
 theorem image2_union_left : image2 f (s ∪ s') t = image2 f s t ∪ image2 f s' t :=
@@ -3407,7 +3441,7 @@ theorem image2_singleton : image2 f {a} {b} = {f a b} :=
     simp 
 
 @[congr]
-theorem image2_congr (h : ∀ a _ : a ∈ s b _ : b ∈ t, f a b = f' a b) : image2 f s t = image2 f' s t :=
+theorem image2_congr (h : ∀ a (_ : a ∈ s) b (_ : b ∈ t), f a b = f' a b) : image2 f s t = image2 f' s t :=
   by 
     ext 
     split  <;>
@@ -3433,7 +3467,7 @@ theorem mem_image3 : d ∈ image3 g s t u ↔ ∃ a b c, a ∈ s ∧ b ∈ t ∧
   Iff.rfl
 
 @[congr]
-theorem image3_congr (h : ∀ a _ : a ∈ s b _ : b ∈ t c _ : c ∈ u, g a b c = g' a b c) :
+theorem image3_congr (h : ∀ a (_ : a ∈ s) b (_ : b ∈ t) c (_ : c ∈ u), g a b c = g' a b c) :
   image3 g s t u = image3 g' s t u :=
   by 
     ext x 
@@ -3525,16 +3559,13 @@ theorem image2_right (h : s.nonempty) : image2 (fun x y => y) s t = t :=
   by 
     simp [nonempty_def.mp h, ext_iff]
 
+-- error in Data.Set.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem image_prod (f : α → β → γ) : (fun x : α × β => f x.1 x.2) '' s.prod t = image2 f s t :=
-  Set.ext$
-    fun a =>
-      ⟨by 
-          rintro ⟨_, _, rfl⟩
-          exact ⟨_, _, (mem_prod.mp ‹_›).1, (mem_prod.mp ‹_›).2, rfl⟩,
-        by 
-          rintro ⟨_, _, _, _, rfl⟩
-          exact ⟨(_, _), mem_prod.mpr ⟨‹_›, ‹_›⟩, rfl⟩⟩
+theorem image_prod (f : α → β → γ) : «expr = »(«expr '' »(λ x : «expr × »(α, β), f x.1 x.2, s.prod t), image2 f s t) :=
+«expr $ »(set.ext, λ
+ a, ⟨by { rintros ["⟨", "_", ",", "_", ",", ident rfl, "⟩"],
+    exact [expr ⟨_, _, (mem_prod.mp «expr‹ ›»(_)).1, (mem_prod.mp «expr‹ ›»(_)).2, rfl⟩] }, by { rintros ["⟨", "_", ",", "_", ",", "_", ",", "_", ",", ident rfl, "⟩"],
+    exact [expr ⟨(_, _), mem_prod.mpr ⟨«expr‹ ›»(_), «expr‹ ›»(_)⟩, rfl⟩] }⟩)
 
 theorem nonempty.image2 (hs : s.nonempty) (ht : t.nonempty) : (image2 f s t).Nonempty :=
   by 

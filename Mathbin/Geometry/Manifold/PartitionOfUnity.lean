@@ -107,7 +107,7 @@ structure SmoothBumpCovering(s : Set M := univ) where
   toFun : ∀ i, SmoothBumpFunction I (c i)
   c_mem' : ∀ i, c i ∈ s 
   locally_finite' : LocallyFinite fun i => support (to_fun i)
-  eventually_eq_one' : ∀ x _ : x ∈ s, ∃ i, to_fun i =ᶠ[𝓝 x] 1
+  eventually_eq_one' : ∀ x (_ : x ∈ s), ∃ i, to_fun i =ᶠ[𝓝 x] 1
 
 /-- We say that that a collection of functions form a smooth partition of unity on a set `s` if
 
@@ -119,7 +119,7 @@ structure SmoothPartitionOfUnity(s : Set M := univ) where
   toFun : ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯
   locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : ∀ i x, 0 ≤ to_fun i x 
-  sum_eq_one' : ∀ x _ : x ∈ s, (∑ᶠi, to_fun i x) = 1
+  sum_eq_one' : ∀ x (_ : x ∈ s), (∑ᶠi, to_fun i x) = 1
   sum_le_one' : ∀ x, (∑ᶠi, to_fun i x) ≤ 1
 
 variable{ι I M}
@@ -214,7 +214,7 @@ namespace SmoothBumpCovering
 
 variable{s : Set M}{U : M → Set M}(fs : SmoothBumpCovering ι I M s){I}
 
-instance  : CoeFun (SmoothBumpCovering ι I M s) fun x => ∀ i : ι, SmoothBumpFunction I (x.c i) :=
+instance  : CoeFun (SmoothBumpCovering ι I M s) fun x => ∀ (i : ι), SmoothBumpFunction I (x.c i) :=
   ⟨to_fun⟩
 
 @[simp]

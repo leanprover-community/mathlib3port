@@ -17,7 +17,7 @@ variable[Monoidₓ M][Preorderₓ M][CovariantClass M M (·*·) (· ≤ ·)]
 
 @[toAdditive nsmul_le_nsmul_of_le_right, mono]
 theorem pow_le_pow_of_le_left' [CovariantClass M M (Function.swap (·*·)) (· ≤ ·)] {a b : M} (hab : a ≤ b) :
-  ∀ i : ℕ, a ^ i ≤ b ^ i
+  ∀ (i : ℕ), a ^ i ≤ b ^ i
 | 0 =>
   by 
     simp 
@@ -29,7 +29,7 @@ theorem pow_le_pow_of_le_left' [CovariantClass M M (Function.swap (·*·)) (· �
 attribute [mono] nsmul_le_nsmul_of_le_right
 
 @[toAdditive nsmul_nonneg]
-theorem one_le_pow_of_one_le' {a : M} (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
+theorem one_le_pow_of_one_le' {a : M} (H : 1 ≤ a) : ∀ (n : ℕ), 1 ≤ a ^ n
 | 0 =>
   by 
     simp 
@@ -135,7 +135,7 @@ section OrderedSemiring
 variable[OrderedSemiring R]{a x y : R}{n m : ℕ}
 
 @[simp]
-theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
+theorem pow_pos (H : 0 < a) : ∀ (n : ℕ), 0 < a ^ n
 | 0 =>
   by 
     nontriviality 
@@ -147,7 +147,7 @@ theorem pow_pos (H : 0 < a) : ∀ n : ℕ, 0 < a ^ n
     exact mul_pos H (pow_pos _)
 
 @[simp]
-theorem pow_nonneg (H : 0 ≤ a) : ∀ n : ℕ, 0 ≤ a ^ n
+theorem pow_nonneg (H : 0 ≤ a) : ∀ (n : ℕ), 0 ≤ a ^ n
 | 0 =>
   by 
     rw [pow_zeroₓ]
@@ -198,10 +198,11 @@ theorem pow_lt_pow_of_lt_left (Hxy : x < y) (Hxpos : 0 ≤ x) (Hnpos : 0 < n) : 
 theorem pow_lt_one (h₀ : 0 ≤ a) (h₁ : a < 1) {n : ℕ} (hn : n ≠ 0) : a ^ n < 1 :=
   (one_pow n).subst (pow_lt_pow_of_lt_left h₁ h₀ (Nat.pos_of_ne_zeroₓ hn))
 
-theorem strict_mono_on_pow (hn : 0 < n) : StrictMonoOn (fun x : R => x ^ n) (Set.Ici 0) :=
-  fun x hx y hy h => pow_lt_pow_of_lt_left h hx hn
+-- error in Algebra.GroupPower.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem strict_mono_on_pow (hn : «expr < »(0, n)) : strict_mono_on (λ x : R, «expr ^ »(x, n)) (set.Ici 0) :=
+λ x hx y hy h, pow_lt_pow_of_lt_left h hx hn
 
-theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
+theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ (n : ℕ), 1 ≤ a ^ n
 | 0 =>
   by 
     rw [pow_zeroₓ]
@@ -210,22 +211,19 @@ theorem one_le_pow_of_one_le (H : 1 ≤ a) : ∀ n : ℕ, 1 ≤ a ^ n
     rw [pow_succₓ]
     simpa only [mul_oneₓ] using mul_le_mul H (one_le_pow_of_one_le n) zero_le_one (le_transₓ zero_le_one H)
 
-theorem pow_mono (h : 1 ≤ a) : Monotone fun n : ℕ => a ^ n :=
-  monotone_nat_of_le_succ$
-    fun n =>
-      by 
-        rw [pow_succₓ]
-        exact le_mul_of_one_le_left (pow_nonneg (zero_le_one.trans h) _) h
+-- error in Algebra.GroupPower.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pow_mono (h : «expr ≤ »(1, a)) : monotone (λ n : exprℕ(), «expr ^ »(a, n)) :=
+«expr $ »(monotone_nat_of_le_succ, λ n, by { rw [expr pow_succ] [],
+   exact [expr le_mul_of_one_le_left (pow_nonneg (zero_le_one.trans h) _) h] })
 
 theorem pow_le_pow (ha : 1 ≤ a) (h : n ≤ m) : a ^ n ≤ a ^ m :=
   pow_mono ha h
 
-theorem strict_mono_pow (h : 1 < a) : StrictMono fun n : ℕ => a ^ n :=
-  have  : 0 < a := zero_le_one.trans_lt h 
-  strict_mono_nat_of_lt_succ$
-    fun n =>
-      by 
-        simpa only [one_mulₓ, pow_succₓ] using mul_lt_mul h (le_reflₓ (a ^ n)) (pow_pos this _) this.le
+-- error in Algebra.GroupPower.Order: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem strict_mono_pow (h : «expr < »(1, a)) : strict_mono (λ n : exprℕ(), «expr ^ »(a, n)) :=
+have «expr < »(0, a) := zero_le_one.trans_lt h,
+«expr $ »(strict_mono_nat_of_lt_succ, λ
+ n, by simpa [] [] ["only"] ["[", expr one_mul, ",", expr pow_succ, "]"] [] ["using", expr mul_lt_mul h (le_refl «expr ^ »(a, n)) (pow_pos this _) this.le])
 
 theorem pow_lt_pow (h : 1 < a) (h2 : n < m) : a ^ n < a ^ m :=
   strict_mono_pow h h2
@@ -234,7 +232,7 @@ theorem pow_lt_pow_iff (h : 1 < a) : a ^ n < a ^ m ↔ n < m :=
   (strict_mono_pow h).lt_iff_lt
 
 @[mono]
-theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i : ℕ, a ^ i ≤ b ^ i
+theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ (i : ℕ), a ^ i ≤ b ^ i
 | 0 =>
   by 
     simp 
@@ -252,7 +250,7 @@ theorem one_lt_pow (ha : 1 < a) : ∀ {n : ℕ}, n ≠ 0 → 1 < a ^ n
     rw [←one_mulₓ (1 : R), pow_succₓ]
     exact mul_lt_mul ha (one_lt_pow (Nat.succ_ne_zero _)).le zero_lt_one (zero_lt_one.trans ha).le
 
-theorem pow_le_one : ∀ n : ℕ h₀ : 0 ≤ a h₁ : a ≤ 1, a ^ n ≤ 1
+theorem pow_le_one : ∀ (n : ℕ) (h₀ : 0 ≤ a) (h₁ : a ≤ 1), a ^ n ≤ 1
 | 0, h₀, h₁ => (pow_zeroₓ a).le
 | n+1, h₀, h₁ => (pow_succ'ₓ a n).le.trans (mul_le_one (pow_le_one n h₀ h₁) h₀ h₁)
 

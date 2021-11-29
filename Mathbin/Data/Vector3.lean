@@ -74,7 +74,7 @@ def nil_elim {α} {C : Vector3 α 0 → Sort u} (H : C []) (v : Vector3 α 0) : 
   by 
     rw [eq_nil v] <;> apply H
 
-def cons_elim {α n} {C : Vector3 α (succ n) → Sort u} (H : ∀ a : α t : Vector3 α n, C (a :: t))
+def cons_elim {α n} {C : Vector3 α (succ n) → Sort u} (H : ∀ (a : α) (t : Vector3 α n), C (a :: t))
   (v : Vector3 α (succ n)) : C v :=
   by 
     rw [←cons_head_tail v] <;> apply H
@@ -85,7 +85,7 @@ theorem cons_elim_cons {α n C H a t} : @cons_elim α n C H (a :: t) = H a t :=
 
 @[elab_as_eliminator]
 protected def rec_on {α} {C : ∀ {n}, Vector3 α n → Sort u} {n} (v : Vector3 α n) (H0 : C [])
-  (Hs : ∀ {n} a w : Vector3 α n, C w → C (a :: w)) : C v :=
+  (Hs : ∀ {n} a (w : Vector3 α n), C w → C (a :: w)) : C v :=
   Nat.recOn n (fun v => v.nil_elim H0) (fun n IH v => v.cons_elim fun a t => Hs _ _ (IH _)) v
 
 @[simp]
@@ -112,7 +112,7 @@ theorem append_cons {α} (a : α) {m} (v : Vector3 α m) {n} (w : Vector3 α n) 
   rfl
 
 @[simp]
-theorem append_left {α} : ∀ {m} i : Fin2 m v : Vector3 α m {n} w : Vector3 α n, (v +-+ w) (left n i) = v i
+theorem append_left {α} : ∀ {m} (i : Fin2 m) (v : Vector3 α m) {n} (w : Vector3 α n), (v +-+ w) (left n i) = v i
 | _, @fz m, v, n, w =>
   v.cons_elim
     fun a t =>
@@ -125,7 +125,7 @@ theorem append_left {α} : ∀ {m} i : Fin2 m v : Vector3 α m {n} w : Vector3 �
         simp [left]
 
 @[simp]
-theorem append_add {α} : ∀ {m} v : Vector3 α m {n} w : Vector3 α n i : Fin2 n, (v +-+ w) (add i m) = w i
+theorem append_add {α} : ∀ {m} (v : Vector3 α m) {n} (w : Vector3 α n) (i : Fin2 n), (v +-+ w) (add i m) = w i
 | 0, v, n, w, i => rfl
 | succ m, v, n, w, i =>
   v.cons_elim
@@ -188,7 +188,7 @@ def VectorEx {α} : ∀ k, (Vector3 α k → Prop) → Prop
 /-- "Curried" forall, i.e. ∀ x1 ... xn, f [x1, ..., xn] -/
 def VectorAll {α} : ∀ k, (Vector3 α k → Prop) → Prop
 | 0, f => f []
-| succ k, f => ∀ x : α, VectorAll k fun v => f (x :: v)
+| succ k, f => ∀ (x : α), VectorAll k fun v => f (x :: v)
 
 theorem exists_vector_zero {α} (f : Vector3 α 0 → Prop) : Exists f ↔ f [] :=
   ⟨fun ⟨v, fv⟩ =>
@@ -203,11 +203,11 @@ theorem exists_vector_succ {α n} (f : Vector3 α (succ n) → Prop) : Exists f 
           rw [cons_head_tail v] <;> exact fv⟩,
     fun ⟨x, v, fxv⟩ => ⟨_, fxv⟩⟩
 
-theorem vector_ex_iff_exists {α} : ∀ {n} f : Vector3 α n → Prop, VectorEx n f ↔ Exists f
+theorem vector_ex_iff_exists {α} : ∀ {n} (f : Vector3 α n → Prop), VectorEx n f ↔ Exists f
 | 0, f => (exists_vector_zero f).symm
 | succ n, f => Iff.trans (exists_congr fun x => vector_ex_iff_exists _) (exists_vector_succ f).symm
 
-theorem vector_all_iff_forall {α} : ∀ {n} f : Vector3 α n → Prop, VectorAll n f ↔ ∀ v, f v
+theorem vector_all_iff_forall {α} : ∀ {n} (f : Vector3 α n → Prop), VectorAll n f ↔ ∀ v, f v
 | 0, f => ⟨fun f0 v => v.nil_elim f0, fun al => al []⟩
 | succ n, f =>
   (forall_congrₓ fun x => vector_all_iff_forall fun v => f (x :: v)).trans

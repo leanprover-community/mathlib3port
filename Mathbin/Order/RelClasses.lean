@@ -387,7 +387,7 @@ def Unbounded (r : α → α → Prop) (s : Set α) : Prop :=
 
 /-- A bounded or final set -/
 def Bounded (r : α → α → Prop) (s : Set α) : Prop :=
-  ∃ a, ∀ b _ : b ∈ s, r b a
+  ∃ a, ∀ b (_ : b ∈ s), r b a
 
 @[simp]
 theorem not_bounded_iff {r : α → α → Prop} (s : Set α) : ¬Bounded r s ↔ Unbounded r s :=

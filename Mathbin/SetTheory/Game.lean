@@ -47,17 +47,17 @@ def le : Game → Game → Prop :=
 instance  : LE Game :=
   { le := le }
 
-theorem le_reflₓ : ∀ x : Game, x ≤ x :=
+theorem le_reflₓ : ∀ (x : Game), x ≤ x :=
   by 
     rintro ⟨x⟩
     apply Pgame.le_refl
 
-theorem le_transₓ : ∀ x y z : Game, x ≤ y → y ≤ z → x ≤ z :=
+theorem le_transₓ : ∀ (x y z : Game), x ≤ y → y ≤ z → x ≤ z :=
   by 
     rintro ⟨x⟩ ⟨y⟩ ⟨z⟩
     apply Pgame.le_trans
 
-theorem le_antisymmₓ : ∀ x y : Game, x ≤ y → y ≤ x → x = y :=
+theorem le_antisymmₓ : ∀ (x y : Game), x ≤ y → y ≤ x → x = y :=
   by 
     rintro ⟨x⟩ ⟨y⟩ h₁ h₂ 
     apply Quot.sound 
@@ -88,14 +88,15 @@ def neg : Game → Game :=
 instance  : Neg Game :=
   { neg := neg }
 
+-- error in SetTheory.Game: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The sum of `x = {xL | xR}` and `y = {yL | yR}` is `{xL + y, x + yL | xR + y, x + yR}`. -/
-def add : Game → Game → Game :=
-  Quotientₓ.lift₂ (fun x y : Pgame => «expr⟦ ⟧» (x+y)) fun x₁ y₁ x₂ y₂ hx hy => Quot.sound (Pgame.add_congr hx hy)
+def add : game → game → game :=
+quotient.lift₂ (λ x y : pgame, «expr⟦ ⟧»(«expr + »(x, y))) (λ x₁ y₁ x₂ y₂ hx hy, quot.sound (pgame.add_congr hx hy))
 
 instance  : Add Game :=
   ⟨add⟩
 
-theorem add_assocₓ : ∀ x y z : Game, ((x+y)+z) = x+y+z :=
+theorem add_assocₓ : ∀ (x y z : Game), ((x+y)+z) = x+y+z :=
   by 
     rintro ⟨x⟩ ⟨y⟩ ⟨z⟩
     apply Quot.sound 
@@ -104,13 +105,13 @@ theorem add_assocₓ : ∀ x y z : Game, ((x+y)+z) = x+y+z :=
 instance  : AddSemigroupₓ Game.{u} :=
   { Game.hasAdd with add_assoc := add_assocₓ }
 
-theorem add_zeroₓ : ∀ x : Game, (x+0) = x :=
+theorem add_zeroₓ : ∀ (x : Game), (x+0) = x :=
   by 
     rintro ⟨x⟩
     apply Quot.sound 
     apply add_zero_equiv
 
-theorem zero_addₓ : ∀ x : Game, (0+x) = x :=
+theorem zero_addₓ : ∀ (x : Game), (0+x) = x :=
   by 
     rintro ⟨x⟩
     apply Quot.sound 
@@ -119,7 +120,7 @@ theorem zero_addₓ : ∀ x : Game, (0+x) = x :=
 instance  : AddMonoidₓ Game :=
   { Game.hasZero, Game.addSemigroup with add_zero := add_zeroₓ, zero_add := zero_addₓ }
 
-theorem add_left_negₓ : ∀ x : Game, ((-x)+x) = 0 :=
+theorem add_left_negₓ : ∀ (x : Game), ((-x)+x) = 0 :=
   by 
     rintro ⟨x⟩
     apply Quot.sound 
@@ -128,7 +129,7 @@ theorem add_left_negₓ : ∀ x : Game, ((-x)+x) = 0 :=
 instance  : AddGroupₓ Game :=
   { Game.hasNeg, Game.addMonoid with add_left_neg := add_left_negₓ }
 
-theorem add_commₓ : ∀ x y : Game, (x+y) = y+x :=
+theorem add_commₓ : ∀ (x y : Game), (x+y) = y+x :=
   by 
     rintro ⟨x⟩ ⟨y⟩
     apply Quot.sound 
@@ -140,7 +141,7 @@ instance  : AddCommSemigroupₓ Game :=
 instance  : AddCommGroupₓ Game :=
   { Game.addCommSemigroup, Game.addGroup with  }
 
-theorem add_le_add_left : ∀ a b : Game, a ≤ b → ∀ c : Game, (c+a) ≤ c+b :=
+theorem add_le_add_left : ∀ (a b : Game), a ≤ b → ∀ (c : Game), (c+a) ≤ c+b :=
   by 
     rintro ⟨a⟩ ⟨b⟩ h ⟨c⟩
     apply Pgame.add_le_add_left h
@@ -170,8 +171,8 @@ theorem quot_sub (a b : Pgame) : «expr⟦ ⟧» (a - b) = «expr⟦ ⟧» a - �
   rfl
 
 theorem quot_eq_of_mk_quot_eq {x y : Pgame} (L : x.left_moves ≃ y.left_moves) (R : x.right_moves ≃ y.right_moves)
-  (hl : ∀ i : x.left_moves, «expr⟦ ⟧» (x.move_left i) = «expr⟦ ⟧» (y.move_left (L i)))
-  (hr : ∀ j : y.right_moves, «expr⟦ ⟧» (x.move_right (R.symm j)) = «expr⟦ ⟧» (y.move_right j)) :
+  (hl : ∀ (i : x.left_moves), «expr⟦ ⟧» (x.move_left i) = «expr⟦ ⟧» (y.move_left (L i)))
+  (hr : ∀ (j : y.right_moves), «expr⟦ ⟧» (x.move_right (R.symm j)) = «expr⟦ ⟧» (y.move_right j)) :
   «expr⟦ ⟧» x = «expr⟦ ⟧» y :=
   by 
     simp only [Quotientₓ.eq] at hl hr 
@@ -275,7 +276,7 @@ theorem mul_move_right_inr {x y : Pgame} {i j} :
     cases y 
     rfl
 
-theorem quot_mul_comm : ∀ x y : Pgame.{u}, «expr⟦ ⟧» (x*y) = «expr⟦ ⟧» (y*x)
+theorem quot_mul_comm : ∀ (x y : Pgame.{u}), «expr⟦ ⟧» (x*y) = «expr⟦ ⟧» (y*x)
 | mk xl xr xL xR, mk yl yr yL yR =>
   by 
     let x := mk xl xr xL xR 
@@ -318,7 +319,7 @@ theorem mul_comm_equiv (x y : Pgame) : (x*y) ≈ y*x :=
   Quotientₓ.exact$ quot_mul_comm _ _
 
 /-- `x * 0` has exactly the same moves as `0`. -/
-def mul_zero_relabelling : ∀ x : Pgame, relabelling (x*0) 0
+def mul_zero_relabelling : ∀ (x : Pgame), relabelling (x*0) 0
 | mk xl xr xL xR =>
   ⟨by 
       fsplit <;> rintro (⟨_, ⟨⟩⟩ | ⟨_, ⟨⟩⟩),
@@ -338,7 +339,7 @@ theorem quot_mul_zero (x : Pgame) : «expr⟦ ⟧» (x*0) = «expr⟦ ⟧» 0 :=
   @Quotientₓ.sound _ _ (x*0) _ x.mul_zero_equiv
 
 /-- `0 * x` has exactly the same moves as `0`. -/
-def zero_mul_relabelling : ∀ x : Pgame, relabelling (0*x) 0
+def zero_mul_relabelling : ∀ (x : Pgame), relabelling (0*x) 0
 | mk xl xr xL xR =>
   ⟨by 
       fsplit <;> rintro (⟨⟨⟩, _⟩ | ⟨⟨⟩, _⟩),
@@ -467,7 +468,7 @@ theorem quot_right_distrib_sub (x y z : Pgame) : «expr⟦ ⟧» ((y - z)*x) = �
     rw [quot_right_distrib, quot_neg_mul]
 
 @[simp]
-theorem quot_mul_one : ∀ x : Pgame, «expr⟦ ⟧» (x*1) = «expr⟦ ⟧» x
+theorem quot_mul_one : ∀ (x : Pgame), «expr⟦ ⟧» (x*1) = «expr⟦ ⟧» x
 | mk xl xr xL xR =>
   by 
     let x := mk xl xr xL xR 

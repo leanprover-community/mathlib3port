@@ -162,8 +162,8 @@ argument list.
 
 -/
 unsafe def squeeze_simp_core (slow no_dflt : Bool) (args : List simp_arg_type)
-  (tac : ∀ no_dflt : Bool args : List simp_arg_type, tactic Unit) (mk_suggestion : List simp_arg_type → tactic Unit) :
-  tactic Unit :=
+  (tac : ∀ (no_dflt : Bool) (args : List simp_arg_type), tactic Unit)
+  (mk_suggestion : List simp_arg_type → tactic Unit) : tactic Unit :=
   do 
     let v ← target >>= mk_meta_var 
     let args ←

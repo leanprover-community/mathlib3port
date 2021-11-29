@@ -58,8 +58,8 @@ begin
     «expr < »(..., «expr + »(f j, ε)) : add_lt_add_right (hl j (le_trans hi.1 hj)) _
 end
 
-theorem is_cau_of_mono_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n _ : n ≥ m, |f n| ≤ a)
-  (hnm : ∀ n _ : n ≥ m, f n ≤ f n.succ) : IsCauSeq abs f :=
+theorem is_cau_of_mono_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n (_ : n ≥ m), |f n| ≤ a)
+  (hnm : ∀ n (_ : n ≥ m), f n ≤ f n.succ) : IsCauSeq abs f :=
   by 
     refine'
       @Eq.recOnₓ (ℕ → α) _ (IsCauSeq abs) _ _
@@ -254,7 +254,7 @@ by haveI [] [] [":=", expr classical.dec_eq γ]; exact [expr finset.induction_on
 theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑n in range m, abv (a n))
   (hb : IsCauSeq abv fun m => ∑n in range m, b n) (ε : α) (ε0 : 0 < ε) :
   ∃ i : ℕ,
-    ∀ j _ : j ≥ i,
+    ∀ j (_ : j ≥ i),
       abv (((∑k in range j, a k)*∑k in range j, b k) - ∑n in range j, ∑m in range (n+1), a m*b (n - m)) < ε :=
   let ⟨Q, hQ⟩ := CauSeq.bounded ⟨_, hb⟩
   let ⟨P, hP⟩ := CauSeq.bounded ⟨_, ha⟩
@@ -550,7 +550,7 @@ theorem exp_multiset_sum (s : Multiset ℂ) : exp s.sum = (s.map exp).Prod :=
 theorem exp_sum {α : Type _} (s : Finset α) (f : α → ℂ) : exp (∑x in s, f x) = ∏x in s, exp (f x) :=
   @MonoidHom.map_prod (Multiplicative ℂ) α ℂ _ _ ⟨exp, exp_zero, exp_add⟩ f s
 
-theorem exp_nat_mul (x : ℂ) : ∀ n : ℕ, exp (n*x) = exp x ^ n
+theorem exp_nat_mul (x : ℂ) : ∀ (n : ℕ), exp (n*x) = exp x ^ n
 | 0 =>
   by 
     rw [Nat.cast_zero, zero_mul, exp_zero, pow_zeroₓ]
@@ -1167,7 +1167,7 @@ theorem exp_multiset_sum (s : Multiset ℝ) : exp s.sum = (s.map exp).Prod :=
 theorem exp_sum {α : Type _} (s : Finset α) (f : α → ℝ) : exp (∑x in s, f x) = ∏x in s, exp (f x) :=
   @MonoidHom.map_prod (Multiplicative ℝ) α ℝ _ _ ⟨exp, exp_zero, exp_add⟩ f s
 
-theorem exp_nat_mul (x : ℝ) : ∀ n : ℕ, exp (n*x) = exp x ^ n
+theorem exp_nat_mul (x : ℝ) : ∀ (n : ℕ), exp (n*x) = exp x ^ n
 | 0 =>
   by 
     rw [Nat.cast_zero, zero_mul, exp_zero, pow_zeroₓ]
@@ -1467,29 +1467,23 @@ theorem sinh_three_mul : sinh (3*x) = (4*sinh x ^ 3)+3*sinh x :=
 
 open IsAbsoluteValue
 
-theorem add_one_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : (x+1) ≤ exp x :=
-  calc (x+1) ≤ limₓ (⟨fun n : ℕ => ((exp' x) n).re, is_cau_seq_re (exp' x)⟩ : CauSeq ℝ HasAbs.abs) :=
-    le_lim
-      (CauSeq.le_of_exists
-        ⟨2,
-          fun j hj =>
-            show (x+(1 : ℝ)) ≤ (∑m in range j, (x ^ m / m ! : ℂ)).re from
-              have h₁ : (((fun m : ℕ => (x ^ m / m ! : ℂ)) ∘ Nat.succ) 0).re = x :=
-                by 
-                  simp 
-              have h₂ : ((x : ℂ) ^ 0 / 0!).re = 1 :=
-                by 
-                  simp 
-              by 
-                rw [←tsub_add_cancel_of_le hj, sum_range_succ', sum_range_succ', add_re, add_re, h₁, h₂, add_assocₓ,
-                  ←coe_re_add_group_hom, re_add_group_hom.map_sum, coe_re_add_group_hom]
-                refine' le_add_of_nonneg_of_le (sum_nonneg fun m hm => _) (le_reflₓ _)
-                rw [←of_real_pow, ←of_real_nat_cast, ←of_real_div, of_real_re]
-                exact div_nonneg (pow_nonneg hx _) (Nat.cast_nonneg _)⟩)
-    _ = exp x :=
-    by 
-      rw [exp, Complex.exp, ←cau_seq_re, lim_re]
-    
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- This is an intermediate result that is later replaced by `real.add_one_le_exp`; use that lemma
+instead. -/ theorem add_one_le_exp_of_nonneg {x : exprℝ()} (hx : «expr ≤ »(0, x)) : «expr ≤ »(«expr + »(x, 1), exp x) :=
+calc
+  «expr ≤ »(«expr + »(x, 1), lim (⟨λ
+    n : exprℕ(), (exp' x n).re, is_cau_seq_re (exp' x)⟩ : cau_seq exprℝ() has_abs.abs)) : le_lim (cau_seq.le_of_exists ⟨2, λ
+    j
+    hj, show «expr ≤ »(«expr + »(x, (1 : exprℝ())), «expr∑ in , »((m), range j, («expr / »(«expr ^ »(x, m), «expr !»(m)) : exprℂ())).re), from have h₁ : «expr = »((«expr ∘ »(λ
+       m : exprℕ(), («expr / »(«expr ^ »(x, m), «expr !»(m)) : exprℂ()), nat.succ) 0).re, x), by simp [] [] [] [] [] [],
+    have h₂ : «expr = »(«expr / »(«expr ^ »((x : exprℂ()), 0), «expr !»(0)).re, 1), by simp [] [] [] [] [] [],
+    begin
+      rw ["[", "<-", expr tsub_add_cancel_of_le hj, ",", expr sum_range_succ', ",", expr sum_range_succ', ",", expr add_re, ",", expr add_re, ",", expr h₁, ",", expr h₂, ",", expr add_assoc, ",", "<-", expr coe_re_add_group_hom, ",", expr re_add_group_hom.map_sum, ",", expr coe_re_add_group_hom, "]"] [],
+      refine [expr le_add_of_nonneg_of_le (sum_nonneg (λ m hm, _)) (le_refl _)],
+      rw ["[", "<-", expr of_real_pow, ",", "<-", expr of_real_nat_cast, ",", "<-", expr of_real_div, ",", expr of_real_re, "]"] [],
+      exact [expr div_nonneg (pow_nonneg hx _) (nat.cast_nonneg _)]
+    end⟩)
+  «expr = »(..., exp x) : by rw ["[", expr exp, ",", expr complex.exp, ",", "<-", expr cau_seq_re, ",", expr lim_re, "]"] []
 
 theorem one_le_exp {x : ℝ} (hx : 0 ≤ x) : 1 ≤ exp x :=
   by 
@@ -1744,6 +1738,23 @@ begin
   convert [] [expr exp_bound hxc hn] []; norm_cast []
 end
 
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exp_bound'
+{x : exprℝ()}
+(h1 : «expr ≤ »(0, x))
+(h2 : «expr ≤ »(x, 1))
+{n : exprℕ()}
+(hn : «expr < »(0, n)) : «expr ≤ »(real.exp x, «expr + »(«expr∑ in , »((m), finset.range n, «expr / »(«expr ^ »(x, m), «expr !»(m))), «expr / »(«expr * »(«expr ^ »(x, n), «expr + »(n, 1)), «expr * »(«expr !»(n), n)))) :=
+begin
+  have [ident h3] [":", expr «expr = »(«expr| |»(x), x)] [":=", expr by simpa [] [] [] [] [] []],
+  have [ident h4] [":", expr «expr ≤ »(«expr| |»(x), 1)] [":=", expr by rwa [expr h3] []],
+  have [ident h'] [] [":=", expr real.exp_bound h4 hn],
+  rw [expr h3] ["at", ident h'],
+  have [ident h''] [] [":=", expr (abs_sub_le_iff.1 h').1],
+  have [ident t] [] [":=", expr sub_le_iff_le_add'.1 h''],
+  simpa [] [] [] ["[", expr mul_div_assoc, "]"] [] ["using", expr t]
+end
+
 /-- A finite initial segment of the exponential series, followed by an arbitrary tail.
 For fixed `n` this is just a linear map wrt `r`, and each map is a simple linear function
 of the previous (see `exp_near_succ`), with `exp_near n x r ⟶ exp x` as `n ⟶ ∞`,
@@ -1809,115 +1820,41 @@ theorem exp_approx_start (x a b : ℝ) (h : |exp x - exp_near 0 x a| ≤ (|x| ^ 
   by 
     simpa using h
 
-theorem cos_bound {x : ℝ} (hx : |x| ≤ 1) : |cos x - (1 - x ^ 2 / 2)| ≤ (|x| ^ 4)*5 / 96 :=
-  calc |cos x - (1 - x ^ 2 / 2)| = abs (Complex.cos x - (1 - x ^ 2 / 2)) :=
-    by 
-      rw [←abs_of_real] <;> simp [of_real_bit0, of_real_one, of_real_inv]
-    _ = abs (((Complex.exp (x*I)+Complex.exp ((-x)*I)) - (2 - x ^ 2)) / 2) :=
-    by 
-      simp [Complex.cos, sub_div, add_div, neg_div, div_self (@two_ne_zero' ℂ _ _ _)]
-    _ =
-      abs
-        (((Complex.exp (x*I) -
-              ∑m in range 4, (x*I) ^ m / m !)+Complex.exp ((-x)*I) - ∑m in range 4, ((-x)*I) ^ m / m !) /
-          2) :=
-    congr_argₓ abs
-      (congr_argₓ (fun x : ℂ => x / 2)
-        (by 
-          simp only [sum_range_succ]
-          simp [pow_succₓ]
-          apply Complex.ext <;> simp [div_eq_mul_inv, norm_sq] <;> ring))
-    _ ≤
-      abs
-          ((Complex.exp (x*I) - ∑m in range 4, (x*I) ^ m / m !) /
-            2)+abs ((Complex.exp ((-x)*I) - ∑m in range 4, ((-x)*I) ^ m / m !) / 2) :=
-    by 
-      rw [add_div] <;> exact abs_add _ _ 
-    _ =
-      (abs (Complex.exp (x*I) - ∑m in range 4, (x*I) ^ m / m !) /
-          2)+abs (Complex.exp ((-x)*I) - ∑m in range 4, ((-x)*I) ^ m / m !) / 2 :=
-    by 
-      simp [Complex.abs_div]
-    _ ≤
-      (((Complex.abs (x*I) ^ 4)*Nat.succ 4*(4!*(4 : ℕ))⁻¹) /
-          2)+((Complex.abs ((-x)*I) ^ 4)*Nat.succ 4*(4!*(4 : ℕ))⁻¹) / 2 :=
-    add_le_add
-      ((div_le_div_right
-            (by 
-              normNum)).2
-        (Complex.exp_bound
-          (by 
-            simpa)
-          (by 
-            decide)))
-      ((div_le_div_right
-            (by 
-              normNum)).2
-        (Complex.exp_bound
-          (by 
-            simpa)
-          (by 
-            decide)))
-    _ ≤ (|x| ^ 4)*5 / 96 :=
-    by 
-      normNum <;> simp [mul_assocₓ, mul_commₓ, mul_left_commₓ, mul_div_assoc]
-    
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cos_bound
+{x : exprℝ()}
+(hx : «expr ≤ »(«expr| |»(x), 1)) : «expr ≤ »(«expr| |»(«expr - »(cos x, «expr - »(1, «expr / »(«expr ^ »(x, 2), 2)))), «expr * »(«expr ^ »(«expr| |»(x), 4), «expr / »(5, 96))) :=
+calc
+  «expr = »(«expr| |»(«expr - »(cos x, «expr - »(1, «expr / »(«expr ^ »(x, 2), 2)))), abs «expr - »(complex.cos x, «expr - »(1, «expr / »(«expr ^ »(x, 2), 2)))) : by rw ["<-", expr abs_of_real] []; simp [] [] [] ["[", expr of_real_bit0, ",", expr of_real_one, ",", expr of_real_inv, "]"] [] []
+  «expr = »(..., abs «expr / »(«expr - »(«expr + »(complex.exp «expr * »(x, I), complex.exp «expr * »(«expr- »(x), I)), «expr - »(2, «expr ^ »(x, 2))), 2)) : by simp [] [] [] ["[", expr complex.cos, ",", expr sub_div, ",", expr add_div, ",", expr neg_div, ",", expr div_self (@two_ne_zero' exprℂ() _ _ _), "]"] [] []
+  «expr = »(..., abs «expr / »(«expr + »(«expr - »(complex.exp «expr * »(x, I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(x, I), m), «expr !»(m)))), «expr - »(complex.exp «expr * »(«expr- »(x), I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(«expr- »(x), I), m), «expr !»(m))))), 2)) : congr_arg abs (congr_arg (λ
+    x : exprℂ(), «expr / »(x, 2)) (begin
+      simp [] [] ["only"] ["[", expr sum_range_succ, "]"] [] [],
+      simp [] [] [] ["[", expr pow_succ, "]"] [] [],
+      apply [expr complex.ext]; simp [] [] [] ["[", expr div_eq_mul_inv, ",", expr norm_sq, "]"] [] []; ring []
+    end))
+  «expr ≤ »(..., «expr + »(abs «expr / »(«expr - »(complex.exp «expr * »(x, I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(x, I), m), «expr !»(m)))), 2), abs «expr / »(«expr - »(complex.exp «expr * »(«expr- »(x), I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(«expr- »(x), I), m), «expr !»(m)))), 2))) : by rw [expr add_div] []; exact [expr abs_add _ _]
+  «expr = »(..., «expr + »(«expr / »(abs «expr - »(complex.exp «expr * »(x, I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(x, I), m), «expr !»(m)))), 2), «expr / »(abs «expr - »(complex.exp «expr * »(«expr- »(x), I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(«expr- »(x), I), m), «expr !»(m)))), 2))) : by simp [] [] [] ["[", expr complex.abs_div, "]"] [] []
+  «expr ≤ »(..., «expr + »(«expr / »(«expr * »(«expr ^ »(complex.abs «expr * »(x, I), 4), «expr * »(nat.succ 4, «expr ⁻¹»(«expr * »(«expr !»(4), (4 : exprℕ()))))), 2), «expr / »(«expr * »(«expr ^ »(complex.abs «expr * »(«expr- »(x), I), 4), «expr * »(nat.succ 4, «expr ⁻¹»(«expr * »(«expr !»(4), (4 : exprℕ()))))), 2))) : add_le_add ((div_le_div_right (by norm_num [] [])).2 (complex.exp_bound (by simpa [] [] [] [] [] []) exprdec_trivial())) ((div_le_div_right (by norm_num [] [])).2 (complex.exp_bound (by simpa [] [] [] [] [] []) exprdec_trivial()))
+  «expr ≤ »(..., «expr * »(«expr ^ »(«expr| |»(x), 4), «expr / »(5, 96))) : by norm_num [] []; simp [] [] [] ["[", expr mul_assoc, ",", expr mul_comm, ",", expr mul_left_comm, ",", expr mul_div_assoc, "]"] [] []
 
-theorem sin_bound {x : ℝ} (hx : |x| ≤ 1) : |sin x - (x - x ^ 3 / 6)| ≤ (|x| ^ 4)*5 / 96 :=
-  calc |sin x - (x - x ^ 3 / 6)| = abs (Complex.sin x - (x - x ^ 3 / 6)) :=
-    by 
-      rw [←abs_of_real] <;> simp [of_real_bit0, of_real_one, of_real_inv]
-    _ = abs ((((Complex.exp ((-x)*I) - Complex.exp (x*I))*I) - ((2*x) - x ^ 3 / 3)) / 2) :=
-    by 
-      simp [Complex.sin, sub_div, add_div, neg_div, mul_div_cancel_left _ (@two_ne_zero' ℂ _ _ _), div_div_eq_div_mul,
-        show ((3 : ℂ)*2) = 6by 
-          normNum]
-    _ =
-      abs
-        ((((Complex.exp ((-x)*I) - ∑m in range 4, ((-x)*I) ^ m / m !) -
-              (Complex.exp (x*I) - ∑m in range 4, (x*I) ^ m / m !))*I) /
-          2) :=
-    congr_argₓ abs
-      (congr_argₓ (fun x : ℂ => x / 2)
-        (by 
-          simp only [sum_range_succ]
-          simp [pow_succₓ]
-          apply Complex.ext <;> simp [div_eq_mul_inv, norm_sq] <;> ring))
-    _ ≤
-      abs
-          (((Complex.exp ((-x)*I) - ∑m in range 4, ((-x)*I) ^ m / m !)*I) /
-            2)+abs ((-(Complex.exp (x*I) - ∑m in range 4, (x*I) ^ m / m !)*I) / 2) :=
-    by 
-      rw [sub_mul, sub_eq_add_neg, add_div] <;> exact abs_add _ _ 
-    _ =
-      (abs (Complex.exp (x*I) - ∑m in range 4, (x*I) ^ m / m !) /
-          2)+abs (Complex.exp ((-x)*I) - ∑m in range 4, ((-x)*I) ^ m / m !) / 2 :=
-    by 
-      simp [add_commₓ, Complex.abs_div, Complex.abs_mul]
-    _ ≤
-      (((Complex.abs (x*I) ^ 4)*Nat.succ 4*(4!*(4 : ℕ))⁻¹) /
-          2)+((Complex.abs ((-x)*I) ^ 4)*Nat.succ 4*(4!*(4 : ℕ))⁻¹) / 2 :=
-    add_le_add
-      ((div_le_div_right
-            (by 
-              normNum)).2
-        (Complex.exp_bound
-          (by 
-            simpa)
-          (by 
-            decide)))
-      ((div_le_div_right
-            (by 
-              normNum)).2
-        (Complex.exp_bound
-          (by 
-            simpa)
-          (by 
-            decide)))
-    _ ≤ (|x| ^ 4)*5 / 96 :=
-    by 
-      normNum <;> simp [mul_assocₓ, mul_commₓ, mul_left_commₓ, mul_div_assoc]
-    
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sin_bound
+{x : exprℝ()}
+(hx : «expr ≤ »(«expr| |»(x), 1)) : «expr ≤ »(«expr| |»(«expr - »(sin x, «expr - »(x, «expr / »(«expr ^ »(x, 3), 6)))), «expr * »(«expr ^ »(«expr| |»(x), 4), «expr / »(5, 96))) :=
+calc
+  «expr = »(«expr| |»(«expr - »(sin x, «expr - »(x, «expr / »(«expr ^ »(x, 3), 6)))), abs «expr - »(complex.sin x, «expr - »(x, «expr / »(«expr ^ »(x, 3), 6)))) : by rw ["<-", expr abs_of_real] []; simp [] [] [] ["[", expr of_real_bit0, ",", expr of_real_one, ",", expr of_real_inv, "]"] [] []
+  «expr = »(..., abs «expr / »(«expr - »(«expr * »(«expr - »(complex.exp «expr * »(«expr- »(x), I), complex.exp «expr * »(x, I)), I), «expr - »(«expr * »(2, x), «expr / »(«expr ^ »(x, 3), 3))), 2)) : by simp [] [] [] ["[", expr complex.sin, ",", expr sub_div, ",", expr add_div, ",", expr neg_div, ",", expr mul_div_cancel_left _ (@two_ne_zero' exprℂ() _ _ _), ",", expr div_div_eq_div_mul, ",", expr show «expr = »(«expr * »((3 : exprℂ()), 2), 6), by norm_num [] [], "]"] [] []
+  «expr = »(..., abs «expr / »(«expr * »(«expr - »(«expr - »(complex.exp «expr * »(«expr- »(x), I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(«expr- »(x), I), m), «expr !»(m)))), «expr - »(complex.exp «expr * »(x, I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(x, I), m), «expr !»(m))))), I), 2)) : congr_arg abs (congr_arg (λ
+    x : exprℂ(), «expr / »(x, 2)) (begin
+      simp [] [] ["only"] ["[", expr sum_range_succ, "]"] [] [],
+      simp [] [] [] ["[", expr pow_succ, "]"] [] [],
+      apply [expr complex.ext]; simp [] [] [] ["[", expr div_eq_mul_inv, ",", expr norm_sq, "]"] [] []; ring []
+    end))
+  «expr ≤ »(..., «expr + »(abs «expr / »(«expr * »(«expr - »(complex.exp «expr * »(«expr- »(x), I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(«expr- »(x), I), m), «expr !»(m)))), I), 2), abs «expr / »(«expr- »(«expr * »(«expr - »(complex.exp «expr * »(x, I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(x, I), m), «expr !»(m)))), I)), 2))) : by rw ["[", expr sub_mul, ",", expr sub_eq_add_neg, ",", expr add_div, "]"] []; exact [expr abs_add _ _]
+  «expr = »(..., «expr + »(«expr / »(abs «expr - »(complex.exp «expr * »(x, I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(x, I), m), «expr !»(m)))), 2), «expr / »(abs «expr - »(complex.exp «expr * »(«expr- »(x), I), «expr∑ in , »((m), range 4, «expr / »(«expr ^ »(«expr * »(«expr- »(x), I), m), «expr !»(m)))), 2))) : by simp [] [] [] ["[", expr add_comm, ",", expr complex.abs_div, ",", expr complex.abs_mul, "]"] [] []
+  «expr ≤ »(..., «expr + »(«expr / »(«expr * »(«expr ^ »(complex.abs «expr * »(x, I), 4), «expr * »(nat.succ 4, «expr ⁻¹»(«expr * »(«expr !»(4), (4 : exprℕ()))))), 2), «expr / »(«expr * »(«expr ^ »(complex.abs «expr * »(«expr- »(x), I), 4), «expr * »(nat.succ 4, «expr ⁻¹»(«expr * »(«expr !»(4), (4 : exprℕ()))))), 2))) : add_le_add ((div_le_div_right (by norm_num [] [])).2 (complex.exp_bound (by simpa [] [] [] [] [] []) exprdec_trivial())) ((div_le_div_right (by norm_num [] [])).2 (complex.exp_bound (by simpa [] [] [] [] [] []) exprdec_trivial()))
+  «expr ≤ »(..., «expr * »(«expr ^ »(«expr| |»(x), 4), «expr / »(5, 96))) : by norm_num [] []; simp [] [] [] ["[", expr mul_assoc, ",", expr mul_comm, ",", expr mul_left_comm, ",", expr mul_div_assoc, "]"] [] []
 
 theorem cos_pos_of_le_one {x : ℝ} (hx : |x| ≤ 1) : 0 < cos x :=
   calc 0 < 1 - x ^ 2 / 2 - (|x| ^ 4)*5 / 96 :=
@@ -2032,10 +1969,82 @@ theorem cos_two_neg : cos 2 < 0 :=
       normNum
     
 
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exp_bound_div_one_sub_of_interval_approx
+{x : exprℝ()}
+(h1 : «expr ≤ »(0, x))
+(h2 : «expr ≤ »(x, 1)) : «expr ≤ »(«expr + »(«expr∑ in , »((j : exprℕ()), finset.range 3, «expr / »(«expr ^ »(x, j), j.factorial)), «expr / »(«expr * »(«expr ^ »(x, 3), «expr + »((3 : exprℕ()), 1)), «expr * »((3 : exprℕ()).factorial, (3 : exprℕ())))), «expr∑ in , »((j), finset.range 3, «expr ^ »(x, j))) :=
+begin
+  norm_num ["[", expr finset.sum, "]"] [],
+  rw ["[", expr add_assoc, ",", expr add_comm «expr + »(x, 1) «expr / »(«expr * »(«expr ^ »(x, 3), 4), 18), ",", "<-", expr add_assoc, ",", expr add_le_add_iff_right, ",", "<-", expr add_le_add_iff_left «expr- »(«expr / »(«expr ^ »(x, 2), 2)), ",", "<-", expr add_assoc, ",", expr comm_ring.add_left_neg «expr / »(«expr ^ »(x, 2), 2), ",", expr zero_add, ",", expr neg_add_eq_sub, ",", expr sub_half, ",", expr sq, ",", expr pow_succ, ",", expr sq, "]"] [],
+  have [ident i1] [":", expr «expr ≤ »(«expr / »(«expr * »(x, 4), 18), «expr / »(1, 2))] [":=", expr by linarith [] [] []],
+  have [ident i2] [":", expr «expr ≤ »(0, «expr / »(«expr * »(x, 4), 18))] [":=", expr by linarith [] [] []],
+  have [ident i3] [] [":=", expr mul_le_mul h1 h1 le_rfl h1],
+  rw [expr zero_mul] ["at", ident i3],
+  have [ident t] [] [":=", expr mul_le_mul le_rfl i1 i2 i3],
+  rw ["<-", expr mul_assoc] [],
+  rwa ["[", expr mul_one_div, ",", "<-", expr mul_div_assoc, ",", "<-", expr mul_assoc, "]"] ["at", ident t]
+end
+
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem exp_bound_div_one_sub_of_interval
+{x : exprℝ()}
+(h1 : «expr ≤ »(0, x))
+(h2 : «expr < »(x, 1)) : «expr ≤ »(real.exp x, «expr / »(1, «expr - »(1, x))) :=
+begin
+  have [ident h] [":", expr «expr ≤ »(«expr∑ in , »((j), finset.range 3, «expr ^ »(x, j)), «expr / »(1, «expr - »(1, x)))] [],
+  { norm_num ["[", expr finset.sum, "]"] [],
+    have [ident h1x] [":", expr «expr < »(0, «expr - »(1, x))] [":=", expr by simpa [] [] [] [] [] []],
+    rw [expr le_div_iff h1x] [],
+    norm_num ["[", "<-", expr add_assoc, ",", expr mul_sub_left_distrib, ",", expr mul_one, ",", expr add_mul, ",", expr sub_add_eq_sub_sub, ",", expr pow_succ' x 2, "]"] [],
+    have [ident hx3] [":", expr «expr ≤ »(0, «expr ^ »(x, 3))] [],
+    { norm_num [] [],
+      exact [expr h1] },
+    linarith [] [] [] },
+  exact [expr «expr $ »(exp_bound' h1 h2.le, by linarith [] [] []).trans ((exp_bound_div_one_sub_of_interval_approx h1 h2.le).trans h)]
+end
+
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem one_sub_le_exp_minus_of_pos
+{y : exprℝ()}
+(h : «expr ≤ »(0, y)) : «expr ≤ »(«expr - »(1, y), real.exp «expr- »(y)) :=
+begin
+  rw [expr real.exp_neg] [],
+  have [ident r1] [":", expr «expr ≤ »(«expr * »(«expr - »(1, y), real.exp y), 1)] [],
+  { cases [expr le_or_lt «expr - »(1, y) 0] [],
+    { have [ident h''] [":", expr «expr ≤ »(«expr * »(«expr - »(1, y), y.exp), 0)] [],
+      { rw [expr mul_nonpos_iff] [],
+        right,
+        exact [expr ⟨h_1, y.exp_pos.le⟩] },
+      linarith [] [] [] },
+    have [ident hy1] [":", expr «expr < »(y, 1)] [":=", expr by linarith [] [] []],
+    rw ["<-", expr le_div_iff' h_1] [],
+    exact [expr exp_bound_div_one_sub_of_interval h hy1] },
+  rw [expr inv_eq_one_div] [],
+  rw [expr le_div_iff' y.exp_pos] [],
+  rwa [expr mul_comm] ["at", ident r1]
+end
+
+-- error in Data.Complex.Exponential: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+theorem add_one_le_exp_of_nonpos {x : exprℝ()} (h : «expr ≤ »(x, 0)) : «expr ≤ »(«expr + »(x, 1), real.exp x) :=
+begin
+  rw [expr add_comm] [],
+  have [ident h1] [":", expr «expr ≤ »(0, «expr- »(x))] [":=", expr by linarith [] [] []],
+  simpa [] [] [] [] [] ["using", expr one_sub_le_exp_minus_of_pos h1]
+end
+
+theorem add_one_le_exp (x : ℝ) : (x+1) ≤ Real.exp x :=
+  by 
+    cases le_or_ltₓ 0 x
+    ·
+      exact Real.add_one_le_exp_of_nonneg h 
+    exact add_one_le_exp_of_nonpos h.le
+
 end Real
 
 namespace Complex
 
+@[simp]
 theorem abs_cos_add_sin_mul_I (x : ℝ) : abs (cos x+sin x*I) = 1 :=
   have  := Real.sin_sq_add_cos_sq x 
   by 
@@ -2045,6 +2054,11 @@ theorem abs_cos_add_sin_mul_I (x : ℝ) : abs (cos x+sin x*I) = 1 :=
 theorem abs_exp_of_real (x : ℝ) : abs (exp x) = Real.exp x :=
   by 
     rw [←of_real_exp] <;> exact abs_of_nonneg (le_of_ltₓ (Real.exp_pos _))
+
+@[simp]
+theorem abs_exp_of_real_mul_I (x : ℝ) : abs (exp (x*I)) = 1 :=
+  by 
+    rw [exp_mul_I, abs_cos_add_sin_mul_I]
 
 theorem abs_exp (z : ℂ) : abs (exp z) = Real.exp z.re :=
   by 

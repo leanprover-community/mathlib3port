@@ -103,10 +103,10 @@ class LocallyFiniteOrder(α : Type _)[Preorderₓ α] where
   finsetIco : α → α → Finset α 
   finsetIoc : α → α → Finset α 
   finsetIoo : α → α → Finset α 
-  finset_mem_Icc : ∀ a b x : α, x ∈ finset_Icc a b ↔ a ≤ x ∧ x ≤ b 
-  finset_mem_Ico : ∀ a b x : α, x ∈ finset_Ico a b ↔ a ≤ x ∧ x < b 
-  finset_mem_Ioc : ∀ a b x : α, x ∈ finset_Ioc a b ↔ a < x ∧ x ≤ b 
-  finset_mem_Ioo : ∀ a b x : α, x ∈ finset_Ioo a b ↔ a < x ∧ x < b
+  finset_mem_Icc : ∀ (a b x : α), x ∈ finset_Icc a b ↔ a ≤ x ∧ x ≤ b 
+  finset_mem_Ico : ∀ (a b x : α), x ∈ finset_Ico a b ↔ a ≤ x ∧ x < b 
+  finset_mem_Ioc : ∀ (a b x : α), x ∈ finset_Ioc a b ↔ a < x ∧ x ≤ b 
+  finset_mem_Ioo : ∀ (a b x : α), x ∈ finset_Ioo a b ↔ a < x ∧ x < b
 
 /-- A constructor from a definition of `finset.Icc` alone, the other ones being derived by removing
 the ends. As opposed to `locally_finite_order.of_Icc`, this one requires `decidable_rel (≤)` but
@@ -519,7 +519,7 @@ section Preorderₓ
 variable[Preorderₓ α]
 
 /-- A noncomputable constructor from the finiteness of all closed intervals. -/
-noncomputable def LocallyFiniteOrder.ofFiniteIcc (h : ∀ a b : α, (Set.Icc a b).Finite) : LocallyFiniteOrder α :=
+noncomputable def LocallyFiniteOrder.ofFiniteIcc (h : ∀ (a b : α), (Set.Icc a b).Finite) : LocallyFiniteOrder α :=
   @LocallyFiniteOrder.ofIcc' α _ (Classical.decRel _) (fun a b => (h a b).toFinset)
     fun a b x =>
       by 

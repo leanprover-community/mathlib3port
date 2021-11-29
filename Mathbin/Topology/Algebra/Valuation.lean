@@ -32,57 +32,55 @@ namespace Valued
 
 variable{R : Type _}[Ringₓ R][Valued R]
 
+-- error in Topology.Algebra.Valuation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The basis of open subgroups for the topology on a valued ring.-/
-theorem subgroups_basis : RingSubgroupsBasis fun γ : Units (Γ₀ R) => Valued.v.ltAddSubgroup γ :=
-  { inter :=
-      by 
-        rintro γ₀ γ₁ 
-        use min γ₀ γ₁ 
-        simp [Valuation.ltAddSubgroup] <;> tauto,
-    mul :=
-      by 
-        rintro γ 
-        cases' exists_square_le γ with γ₀ h 
-        use γ₀ 
-        rintro - ⟨r, s, r_in, s_in, rfl⟩
-        calc v (r*s) = v r*v s := Valuation.map_mul _ _ _ _ < γ₀*γ₀ := mul_lt_mul₀ r_in s_in _ ≤ γ :=
-          by 
-            exactModCast h,
-    leftMul :=
-      by 
-        rintro x γ 
-        rcases GroupWithZeroₓ.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
-        ·
-          use 1
-          rintro y (y_in : v y < 1)
-          change v (x*y) < _ 
-          rw [Valuation.map_mul, Hx, zero_mul]
-          exact Units.zero_lt γ
-        ·
-          simp only [image_subset_iff, set_of_subset_set_of, preimage_set_of_eq, Valuation.map_mul]
-          use γx⁻¹*γ 
-          rintro y (vy_lt : v y < «expr↑ » (γx⁻¹*γ))
-          change v (x*y) < γ 
-          rw [Valuation.map_mul, Hx, mul_commₓ]
-          rw [Units.coe_mul, mul_commₓ] at vy_lt 
-          simpa using mul_inv_lt_of_lt_mul₀ vy_lt,
-    rightMul :=
-      by 
-        rintro x γ 
-        rcases GroupWithZeroₓ.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
-        ·
-          use 1
-          rintro y (y_in : v y < 1)
-          change v (y*x) < _ 
-          rw [Valuation.map_mul, Hx, mul_zero]
-          exact Units.zero_lt γ
-        ·
-          use γx⁻¹*γ 
-          rintro y (vy_lt : v y < «expr↑ » (γx⁻¹*γ))
-          change v (y*x) < γ 
-          rw [Valuation.map_mul, Hx]
-          rw [Units.coe_mul, mul_commₓ] at vy_lt 
-          simpa using mul_inv_lt_of_lt_mul₀ vy_lt }
+theorem subgroups_basis : ring_subgroups_basis (λ γ : units (Γ₀ R), valued.v.lt_add_subgroup γ) :=
+{ inter := begin
+    rintros [ident γ₀, ident γ₁],
+    use [expr min γ₀ γ₁],
+    simp [] [] [] ["[", expr valuation.lt_add_subgroup, "]"] [] []; tauto []
+  end,
+  mul := begin
+    rintros [ident γ],
+    cases [expr exists_square_le γ] ["with", ident γ₀, ident h],
+    use [expr γ₀],
+    rintro ["-", "⟨", ident r, ",", ident s, ",", ident r_in, ",", ident s_in, ",", ident rfl, "⟩"],
+    calc
+      «expr = »(v «expr * »(r, s), «expr * »(v r, v s)) : valuation.map_mul _ _ _
+      «expr < »(..., «expr * »(γ₀, γ₀)) : mul_lt_mul₀ r_in s_in
+      «expr ≤ »(..., γ) : by exact_mod_cast [expr h]
+  end,
+  left_mul := begin
+    rintros [ident x, ident γ],
+    rcases [expr group_with_zero.eq_zero_or_unit (v x), "with", ident Hx, "|", "⟨", ident γx, ",", ident Hx, "⟩"],
+    { use [expr 1],
+      rintros [ident y, "(", ident y_in, ":", expr «expr < »(v y, 1), ")"],
+      change [expr «expr < »(v «expr * »(x, y), _)] [] [],
+      rw ["[", expr valuation.map_mul, ",", expr Hx, ",", expr zero_mul, "]"] [],
+      exact [expr units.zero_lt γ] },
+    { simp [] [] ["only"] ["[", expr image_subset_iff, ",", expr set_of_subset_set_of, ",", expr preimage_set_of_eq, ",", expr valuation.map_mul, "]"] [] [],
+      use [expr «expr * »(«expr ⁻¹»(γx), γ)],
+      rintros [ident y, "(", ident vy_lt, ":", expr «expr < »(v y, «expr↑ »(«expr * »(«expr ⁻¹»(γx), γ))), ")"],
+      change [expr «expr < »(v «expr * »(x, y), γ)] [] [],
+      rw ["[", expr valuation.map_mul, ",", expr Hx, ",", expr mul_comm, "]"] [],
+      rw ["[", expr units.coe_mul, ",", expr mul_comm, "]"] ["at", ident vy_lt],
+      simpa [] [] [] [] [] ["using", expr mul_inv_lt_of_lt_mul₀ vy_lt] }
+  end,
+  right_mul := begin
+    rintros [ident x, ident γ],
+    rcases [expr group_with_zero.eq_zero_or_unit (v x), "with", ident Hx, "|", "⟨", ident γx, ",", ident Hx, "⟩"],
+    { use [expr 1],
+      rintros [ident y, "(", ident y_in, ":", expr «expr < »(v y, 1), ")"],
+      change [expr «expr < »(v «expr * »(y, x), _)] [] [],
+      rw ["[", expr valuation.map_mul, ",", expr Hx, ",", expr mul_zero, "]"] [],
+      exact [expr units.zero_lt γ] },
+    { use [expr «expr * »(«expr ⁻¹»(γx), γ)],
+      rintros [ident y, "(", ident vy_lt, ":", expr «expr < »(v y, «expr↑ »(«expr * »(«expr ⁻¹»(γx), γ))), ")"],
+      change [expr «expr < »(v «expr * »(y, x), γ)] [] [],
+      rw ["[", expr valuation.map_mul, ",", expr Hx, "]"] [],
+      rw ["[", expr units.coe_mul, ",", expr mul_comm, "]"] ["at", ident vy_lt],
+      simpa [] [] [] [] [] ["using", expr mul_inv_lt_of_lt_mul₀ vy_lt] }
+  end }
 
 instance (priority := 100) : TopologicalSpace R :=
   subgroups_basis.topology
@@ -113,7 +111,7 @@ instance (priority := 100)UniformAddGroup : UniformAddGroup R :=
   topological_add_group_is_uniform
 
 theorem cauchy_iff {F : Filter R} :
-  Cauchy F ↔ F.ne_bot ∧ ∀ γ : Units (Γ₀ R), ∃ (M : _)(_ : M ∈ F), ∀ x y, x ∈ M → y ∈ M → v (y - x) < γ :=
+  Cauchy F ↔ F.ne_bot ∧ ∀ (γ : Units (Γ₀ R)), ∃ (M : _)(_ : M ∈ F), ∀ x y, x ∈ M → y ∈ M → v (y - x) < γ :=
   by 
     rw [AddGroupFilterBasis.cauchy_iff]
     apply and_congr Iff.rfl 

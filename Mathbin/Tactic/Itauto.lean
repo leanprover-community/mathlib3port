@@ -554,47 +554,33 @@ namespace Interactive
 
 open Itauto
 
+-- error in Tactic.Itauto: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A decision procedure for intuitionistic propositional logic. Unlike `finish` and `tauto!` this
 tactic never uses the law of excluded middle, and the proof search is tailored for this use case.
 
 ```lean
 example (p : Prop) : ¬ (p ↔ ¬ p) := by itauto
 ```
--/
-unsafe def itauto : tactic Unit :=
-  using_new_ref mkBuffer$
-    fun atoms =>
-      using_new_ref mk_name_map$
-        fun hs =>
-          do 
-            let t ← target 
-            let t ← mcond (is_prop t) (reify atoms t) (tactic.exfalso $> prop.false)
-            let hyps ← local_context 
-            let Γ ←
-              hyps.mfoldl
-                  (fun Γ : Except (prop → proof) context h =>
-                    do 
-                      let e ← infer_type h 
-                      mcond (is_prop e)
-                          (do 
-                            let A ← reify atoms e 
-                            let n := h.local_uniq_name 
-                            read_ref hs >>= fun Γ => write_ref hs (Γ.insert n h)
-                            pure (Γ >>= fun Γ' => Γ'.add A (proof.hyp n)))
-                          (pure Γ))
-                  (Except.ok (native.rb_map.mk _ _))
-            let o :=
-              StateTₓ.run
-                (match Γ with 
-                | Except.ok Γ => prove Γ t
-                | Except.error p => pure (p t))
-                0
-            match o with 
-              | none => fail "itauto failed"
-              | some (p, _) =>
-                do 
-                  let hs ← read_ref hs 
-                  apply_proof hs p
+-/ meta def itauto : tactic unit :=
+«expr $ »(using_new_ref mk_buffer, λ
+ atoms, «expr $ »(using_new_ref mk_name_map, λ hs, do {
+  t ← target,
+    t ← mcond (is_prop t) (reify atoms t) «expr $> »(tactic.exfalso, prop.false),
+    hyps ← local_context,
+    Γ ← hyps.mfoldl (λ (Γ : except (prop → proof) context) (h), do {
+     e ← infer_type h,
+       mcond (is_prop e) (do {
+        A ← reify atoms e,
+          let n := h.local_uniq_name,
+          «expr >>= »(read_ref hs, λ Γ, write_ref hs (Γ.insert n h)),
+          pure «expr >>= »(Γ, λ Γ', Γ'.add A (proof.hyp n)) }) (pure Γ) }) (except.ok (native.rb_map.mk _ _)),
+    let o := state_t.run match Γ with
+    | except.ok Γ := prove Γ t
+    | except.error p := pure (p t)
+    end 0,
+    match o with
+    | none := fail "itauto failed"
+    | some (p, _) := do { hs ← read_ref hs, apply_proof hs p } end }))
 
 add_hint_tactic itauto
 

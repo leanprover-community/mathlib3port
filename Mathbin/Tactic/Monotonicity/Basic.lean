@@ -1,4 +1,4 @@
-import Mathbin.Order.BoundedLattice
+import Mathbin.Order.BoundedOrder
 
 namespace Tactic.Interactive
 

@@ -56,7 +56,7 @@ theorem coe_finset_prod {ι M} [CommMonoidₓ M] (S : Submonoid M) (f : ι → S
 
 /-- Product of a list of elements in a submonoid is in the submonoid. -/
 @[toAdditive "Sum of a list of elements in an `add_submonoid` is in the `add_submonoid`."]
-theorem list_prod_mem {l : List M} (hl : ∀ x _ : x ∈ l, x ∈ S) : l.prod ∈ S :=
+theorem list_prod_mem {l : List M} (hl : ∀ x (_ : x ∈ l), x ∈ S) : l.prod ∈ S :=
   by 
     lift l to List S using hl 
     rw [←coe_list_prod]
@@ -64,7 +64,7 @@ theorem list_prod_mem {l : List M} (hl : ∀ x _ : x ∈ l, x ∈ S) : l.prod �
 
 /-- Product of a multiset of elements in a submonoid of a `comm_monoid` is in the submonoid. -/
 @[toAdditive "Sum of a multiset of elements in an `add_submonoid` of an `add_comm_monoid` is\nin the `add_submonoid`."]
-theorem multiset_prod_mem {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset M) (hm : ∀ a _ : a ∈ m, a ∈ S) :
+theorem multiset_prod_mem {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset M) (hm : ∀ a (_ : a ∈ m), a ∈ S) :
   m.prod ∈ S :=
   by 
     lift m to Multiset S using hm 
@@ -76,7 +76,7 @@ theorem multiset_prod_mem {M} [CommMonoidₓ M] (S : Submonoid M) (m : Multiset 
 @[toAdditive
       "Sum of elements in an `add_submonoid` of an `add_comm_monoid` indexed by a `finset`\nis in the `add_submonoid`."]
 theorem prod_mem {M : Type _} [CommMonoidₓ M] (S : Submonoid M) {ι : Type _} {t : Finset ι} {f : ι → M}
-  (h : ∀ c _ : c ∈ t, f c ∈ S) : (∏c in t, f c) ∈ S :=
+  (h : ∀ c (_ : c ∈ t), f c ∈ S) : (∏c in t, f c) ∈ S :=
   S.multiset_prod_mem (t.1.map f)$
     fun x hx =>
       let ⟨i, hi, hix⟩ := Multiset.mem_map.1 hx 
@@ -207,7 +207,7 @@ theorem closure_eq_mrange (s : Set M) : closure s = (FreeMonoid.lift (coeₓ : s
 
 @[toAdditive]
 theorem exists_list_of_mem_closure {s : Set M} {x : M} (hx : x ∈ closure s) :
-  ∃ (l : List M)(hl : ∀ y _ : y ∈ l, y ∈ s), l.prod = x :=
+  ∃ (l : List M)(hl : ∀ y (_ : y ∈ l), y ∈ s), l.prod = x :=
   by 
     rw [closure_eq_mrange, mem_mrange] at hx 
     rcases hx with ⟨l, hx⟩
@@ -220,7 +220,7 @@ theorem exists_list_of_mem_closure {s : Set M} {x : M} (hx : x ∈ closure s) :
 
 @[toAdditive]
 theorem exists_multiset_of_mem_closure {M : Type _} [CommMonoidₓ M] {s : Set M} {x : M} (hx : x ∈ closure s) :
-  ∃ (l : Multiset M)(hl : ∀ y _ : y ∈ l, y ∈ s), l.prod = x :=
+  ∃ (l : Multiset M)(hl : ∀ y (_ : y ∈ l), y ∈ s), l.prod = x :=
   by 
     obtain ⟨l, h1, h2⟩ := exists_list_of_mem_closure hx 
     exact ⟨l, h1, (Multiset.coe_prod l).trans h2⟩
@@ -264,13 +264,18 @@ def log [DecidableEq M] {n : M} (p : powers n) : ℕ :=
 theorem pow_log_eq_self [DecidableEq M] {n : M} (p : powers n) : pow n (log p) = p :=
   Subtype.ext$ Nat.find_specₓ p.prop
 
-theorem pow_right_injective_iff_pow_injective {n : M} :
-  (Function.Injective fun m : ℕ => n ^ m) ↔ Function.Injective (pow n) :=
-  Subtype.coe_injective.of_comp_iff (pow n)
+-- error in GroupTheory.Submonoid.Membership: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pow_right_injective_iff_pow_injective
+{n : M} : «expr ↔ »(function.injective (λ m : exprℕ(), «expr ^ »(n, m)), function.injective (pow n)) :=
+subtype.coe_injective.of_comp_iff (pow n)
 
-theorem log_pow_eq_self [DecidableEq M] {n : M} (h : Function.Injective fun m : ℕ => n ^ m) (m : ℕ) :
-  log (pow n m) = m :=
-  pow_right_injective_iff_pow_injective.mp h$ pow_log_eq_self _
+-- error in GroupTheory.Submonoid.Membership: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem log_pow_eq_self
+[decidable_eq M]
+{n : M}
+(h : function.injective (λ m : exprℕ(), «expr ^ »(n, m)))
+(m : exprℕ()) : «expr = »(log (pow n m), m) :=
+«expr $ »(pow_right_injective_iff_pow_injective.mp h, pow_log_eq_self _)
 
 theorem log_pow_int_eq_self {x : ℤ} (h : 1 < x.nat_abs) (m : ℕ) : log (pow x m) = m :=
   log_pow_eq_self (Int.pow_right_injective h) _

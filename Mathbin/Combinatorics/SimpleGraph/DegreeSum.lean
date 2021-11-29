@@ -120,18 +120,19 @@ section DegreeSum
 
 variable[Fintype V][DecidableRel G.adj]
 
-theorem dart_fst_fiber [DecidableEq V] (v : V) :
-  (univ.filter fun d : G.dart => d.fst = v) = univ.Image (G.dart_of_neighbor_set v) :=
-  by 
-    ext d 
-    simp only [mem_image, true_andₓ, mem_filter, SetCoe.exists, mem_univ, exists_prop_of_true]
-    split 
-    ·
-      rintro rfl 
-      exact ⟨_, d.is_adj, dart.ext _ _ rfl rfl⟩
-    ·
-      rintro ⟨e, he, rfl⟩
-      rfl
+-- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dart_fst_fiber
+[decidable_eq V]
+(v : V) : «expr = »(univ.filter (λ d : G.dart, «expr = »(d.fst, v)), univ.image (G.dart_of_neighbor_set v)) :=
+begin
+  ext [] [ident d] [],
+  simp [] [] ["only"] ["[", expr mem_image, ",", expr true_and, ",", expr mem_filter, ",", expr set_coe.exists, ",", expr mem_univ, ",", expr exists_prop_of_true, "]"] [] [],
+  split,
+  { rintro [ident rfl],
+    exact [expr ⟨_, d.is_adj, dart.ext _ _ rfl rfl⟩] },
+  { rintro ["⟨", ident e, ",", ident he, ",", ident rfl, "⟩"],
+    refl }
+end
 
 -- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem dart_fst_fiber_card_eq_degree
@@ -155,23 +156,25 @@ end
 
 variable{G}[DecidableEq V]
 
-theorem dart.edge_fiber (d : G.dart) : (univ.filter fun d' : G.dart => d'.edge = d.edge) = {d, d.rev} :=
-  Finset.ext
-    fun d' =>
-      by 
-        simpa using dart_edge_eq_iff d' d
+-- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dart.edge_fiber (d : G.dart) : «expr = »(univ.filter (λ d' : G.dart, «expr = »(d'.edge, d.edge)), {d, d.rev}) :=
+finset.ext (λ d', by simpa [] [] [] [] [] ["using", expr dart_edge_eq_iff d' d])
 
 variable(G)
 
-theorem dart_edge_fiber_card (e : Sym2 V) (h : e ∈ G.edge_set) : (univ.filter fun d : G.dart => d.edge = e).card = 2 :=
-  by 
-    refine' Quotientₓ.ind (fun p h => _) e h 
-    cases' p with v w 
-    let d : G.dart := ⟨v, w, h⟩
-    convert congr_argₓ card d.edge_fiber 
-    rw [card_insert_of_not_mem, card_singleton]
-    rw [mem_singleton]
-    exact d.rev_ne.symm
+-- error in Combinatorics.SimpleGraph.DegreeSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dart_edge_fiber_card
+(e : sym2 V)
+(h : «expr ∈ »(e, G.edge_set)) : «expr = »((univ.filter (λ d : G.dart, «expr = »(d.edge, e))).card, 2) :=
+begin
+  refine [expr quotient.ind (λ p h, _) e h],
+  cases [expr p] ["with", ident v, ident w],
+  let [ident d] [":", expr G.dart] [":=", expr ⟨v, w, h⟩],
+  convert [] [expr congr_arg card d.edge_fiber] [],
+  rw ["[", expr card_insert_of_not_mem, ",", expr card_singleton, "]"] [],
+  rw ["[", expr mem_singleton, "]"] [],
+  exact [expr d.rev_ne.symm]
+end
 
 theorem dart_card_eq_twice_card_edges : Fintype.card G.dart = 2*G.edge_finset.card :=
   by 

@@ -156,7 +156,7 @@ theorem two_not_dvd_two_mul_add_one (n : ℕ) : ¬2 ∣ (2*n)+1 :=
   by 
     convert not_even_bit1 n <;> exact two_mul n
 
-theorem two_not_dvd_two_mul_sub_one : ∀ {n} w : 0 < n, ¬2 ∣ (2*n) - 1
+theorem two_not_dvd_two_mul_sub_one : ∀ {n} (w : 0 < n), ¬2 ∣ (2*n) - 1
 | n+1, _ => two_not_dvd_two_mul_add_one n
 
 @[parity_simps]

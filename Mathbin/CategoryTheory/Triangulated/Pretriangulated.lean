@@ -57,14 +57,14 @@ See https://stacks.math.columbia.edu/tag/0145
 class pretriangulated where 
   DistinguishedTriangles{} : Set (triangle C)
   isomorphic_distinguished :
-  ∀ T₁ _ : T₁ ∈ distinguished_triangles T₂ : triangle C T₁ _ : T₁ ≅ T₂, T₂ ∈ distinguished_triangles 
-  contractible_distinguished : ∀ X : C, contractible_triangle C X ∈ distinguished_triangles 
+  ∀ T₁ (_ : T₁ ∈ distinguished_triangles) (T₂ : triangle C) T₁ (_ : T₁ ≅ T₂), T₂ ∈ distinguished_triangles 
+  contractible_distinguished : ∀ (X : C), contractible_triangle C X ∈ distinguished_triangles 
   distinguished_cocone_triangle :
-  ∀ X Y : C f : X ⟶ Y, ∃ (Z : C)(g : Y ⟶ Z)(h : Z ⟶ X⟦1⟧), triangle.mk _ f g h ∈ distinguished_triangles 
-  rotate_distinguished_triangle : ∀ T : triangle C, T ∈ distinguished_triangles ↔ T.rotate ∈ distinguished_triangles 
+  ∀ (X Y : C) (f : X ⟶ Y), ∃ (Z : C)(g : Y ⟶ Z)(h : Z ⟶ X⟦1⟧), triangle.mk _ f g h ∈ distinguished_triangles 
+  rotate_distinguished_triangle : ∀ (T : triangle C), T ∈ distinguished_triangles ↔ T.rotate ∈ distinguished_triangles 
   complete_distinguished_triangle_morphism :
-  ∀ T₁ T₂ : triangle C h₁ : T₁ ∈ distinguished_triangles h₂ : T₂ ∈ distinguished_triangles a : T₁.obj₁ ⟶ T₂.obj₁ b :
-    T₁.obj₂ ⟶ T₂.obj₂ comm₁ : T₁.mor₁ ≫ b = a ≫ T₂.mor₁,
+  ∀ (T₁ T₂ : triangle C) (h₁ : T₁ ∈ distinguished_triangles) (h₂ : T₂ ∈ distinguished_triangles) (a : T₁.obj₁ ⟶ T₂.obj₁)
+    (b : T₁.obj₂ ⟶ T₂.obj₂) (comm₁ : T₁.mor₁ ≫ b = a ≫ T₂.mor₁),
     ∃ c : T₁.obj₃ ⟶ T₂.obj₃, T₁.mor₂ ≫ c = b ≫ T₂.mor₂ ∧ T₁.mor₃ ≫ a⟦1⟧' = c ≫ T₂.mor₃
 
 namespace Pretriangulated
@@ -189,7 +189,7 @@ See https://stacks.math.columbia.edu/tag/014V
 -/
 structure triangulated_functor[pretriangulated C][pretriangulated D] extends triangulated_functor_struct C D where 
   map_distinguished' :
-  ∀ T : triangle C, T ∈ (dist_triang C) → to_triangulated_functor_struct.map_triangle T ∈ (dist_triang D)
+  ∀ (T : triangle C), T ∈ (dist_triang C) → to_triangulated_functor_struct.map_triangle T ∈ (dist_triang D)
 
 instance  [pretriangulated C] : Inhabited (triangulated_functor C C) :=
   ⟨{ obj := fun X => X, map := fun _ _ f => f,

@@ -74,22 +74,22 @@ theorem at_bot_ne_bot [Nonempty α] [SemilatticeInf α] : ne_bot (at_bot : Filte
 
 @[simp]
 theorem mem_at_top_sets [Nonempty α] [SemilatticeSup α] {s : Set α} :
-  s ∈ (at_top : Filter α) ↔ ∃ a : α, ∀ b _ : b ≥ a, b ∈ s :=
+  s ∈ (at_top : Filter α) ↔ ∃ a : α, ∀ b (_ : b ≥ a), b ∈ s :=
   at_top_basis.mem_iff.trans$ exists_congr$ fun _ => exists_const _
 
 @[simp]
 theorem mem_at_bot_sets [Nonempty α] [SemilatticeInf α] {s : Set α} :
-  s ∈ (at_bot : Filter α) ↔ ∃ a : α, ∀ b _ : b ≤ a, b ∈ s :=
+  s ∈ (at_bot : Filter α) ↔ ∃ a : α, ∀ b (_ : b ≤ a), b ∈ s :=
   @mem_at_top_sets (OrderDual α) _ _ _
 
 @[simp]
 theorem eventually_at_top [SemilatticeSup α] [Nonempty α] {p : α → Prop} :
-  (∀ᶠx in at_top, p x) ↔ ∃ a, ∀ b _ : b ≥ a, p b :=
+  (∀ᶠx in at_top, p x) ↔ ∃ a, ∀ b (_ : b ≥ a), p b :=
   mem_at_top_sets
 
 @[simp]
 theorem eventually_at_bot [SemilatticeInf α] [Nonempty α] {p : α → Prop} :
-  (∀ᶠx in at_bot, p x) ↔ ∃ a, ∀ b _ : b ≤ a, p b :=
+  (∀ᶠx in at_bot, p x) ↔ ∃ a, ∀ b (_ : b ≤ a), p b :=
   mem_at_bot_sets
 
 theorem eventually_ge_at_top [Preorderₓ α] (a : α) : ∀ᶠx in at_top, a ≤ x :=
@@ -152,11 +152,11 @@ theorem tendsto_at_bot_pure [PartialOrderₓ α] [OrderBot α] (f : α → β) :
   @tendsto_at_top_pure (OrderDual α) _ _ _ _
 
 theorem eventually.exists_forall_of_at_top [SemilatticeSup α] [Nonempty α] {p : α → Prop} (h : ∀ᶠx in at_top, p x) :
-  ∃ a, ∀ b _ : b ≥ a, p b :=
+  ∃ a, ∀ b (_ : b ≥ a), p b :=
   eventually_at_top.mp h
 
 theorem eventually.exists_forall_of_at_bot [SemilatticeInf α] [Nonempty α] {p : α → Prop} (h : ∀ᶠx in at_bot, p x) :
-  ∃ a, ∀ b _ : b ≤ a, p b :=
+  ∃ a, ∀ b (_ : b ≤ a), p b :=
   eventually_at_bot.mp h
 
 theorem frequently_at_top [SemilatticeSup α] [Nonempty α] {p : α → Prop} :
@@ -221,12 +221,12 @@ theorem tendsto_at_bot_mono [Preorderₓ β] {l : Filter α} {f g : α → β} (
 
 
 theorem inf_map_at_top_ne_bot_iff [SemilatticeSup α] [Nonempty α] {F : Filter β} {u : α → β} :
-  ne_bot (F⊓map u at_top) ↔ ∀ U _ : U ∈ F, ∀ N, ∃ (n : _)(_ : n ≥ N), u n ∈ U :=
+  ne_bot (F⊓map u at_top) ↔ ∀ U (_ : U ∈ F), ∀ N, ∃ (n : _)(_ : n ≥ N), u n ∈ U :=
   by 
     simpRw [inf_ne_bot_iff_frequently_left, frequently_map, frequently_at_top] <;> rfl
 
 theorem inf_map_at_bot_ne_bot_iff [SemilatticeInf α] [Nonempty α] {F : Filter β} {u : α → β} :
-  ne_bot (F⊓map u at_bot) ↔ ∀ U _ : U ∈ F, ∀ N, ∃ (n : _)(_ : n ≤ N), u n ∈ U :=
+  ne_bot (F⊓map u at_bot) ↔ ∀ U (_ : U ∈ F), ∀ N, ∃ (n : _)(_ : n ≤ N), u n ∈ U :=
   @inf_map_at_top_ne_bot_iff (OrderDual α) _ _ _ _ _
 
 theorem extraction_of_frequently_at_top' {P : ℕ → Prop} (h : ∀ N, ∃ (n : _)(_ : n > N), P n) :
@@ -265,7 +265,7 @@ theorem extraction_forall_of_eventually {P : ℕ → ℕ → Prop} (h : ∀ n, �
   ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P n (φ n) :=
   extraction_forall_of_frequently fun n => (h n).Frequently
 
-theorem extraction_forall_of_eventually' {P : ℕ → ℕ → Prop} (h : ∀ n, ∃ N, ∀ k _ : k ≥ N, P n k) :
+theorem extraction_forall_of_eventually' {P : ℕ → ℕ → Prop} (h : ∀ n, ∃ N, ∀ k (_ : k ≥ N), P n k) :
   ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P n (φ n) :=
   extraction_forall_of_eventually
     (by 
@@ -344,7 +344,7 @@ then after any point, it reaches a value strictly smaller than all previous valu
 -/
 @[nolint ge_or_gt]
 theorem low_scores [LinearOrderₓ β] [NoBotOrder β] {u : ℕ → β} (hu : tendsto u at_top at_bot) :
-  ∀ N, ∃ (n : _)(_ : n ≥ N), ∀ k _ : k < n, u n < u k :=
+  ∀ N, ∃ (n : _)(_ : n ≥ N), ∀ k (_ : k < n), u n < u k :=
   @high_scores (OrderDual β) _ _ _ hu
 
 /--
@@ -352,7 +352,7 @@ If `u` is a sequence which is unbounded above,
 then it `frequently` reaches a value strictly greater than all previous values.
 -/
 theorem frequently_high_scores [LinearOrderₓ β] [NoTopOrder β] {u : ℕ → β} (hu : tendsto u at_top at_top) :
-  ∃ᶠn in at_top, ∀ k _ : k < n, u k < u n :=
+  ∃ᶠn in at_top, ∀ k (_ : k < n), u k < u n :=
   by 
     simpa [frequently_at_top] using high_scores hu
 
@@ -361,7 +361,7 @@ If `u` is a sequence which is unbounded below,
 then it `frequently` reaches a value strictly smaller than all previous values.
 -/
 theorem frequently_low_scores [LinearOrderₓ β] [NoBotOrder β] {u : ℕ → β} (hu : tendsto u at_top at_bot) :
-  ∃ᶠn in at_top, ∀ k _ : k < n, u n < u k :=
+  ∃ᶠn in at_top, ∀ k (_ : k < n), u n < u k :=
   @frequently_high_scores (OrderDual β) _ _ _ hu
 
 theorem strict_mono_subseq_of_tendsto_at_top {β : Type _} [LinearOrderₓ β] [NoTopOrder β] {u : ℕ → β}
@@ -569,24 +569,35 @@ theorem tendsto.at_top_mul_at_top (hf : tendsto f l at_top) (hg : tendsto g l at
     filterUpwards [hg.eventually (eventually_ge_at_top 0), hf.eventually (eventually_ge_at_top 1)]
     exact fun x => le_mul_of_one_le_left
 
-theorem tendsto_mul_self_at_top : tendsto (fun x : α => x*x) at_top at_top :=
-  tendsto_id.at_top_mul_at_top tendsto_id
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_mul_self_at_top : tendsto (λ x : α, «expr * »(x, x)) at_top at_top :=
+tendsto_id.at_top_mul_at_top tendsto_id
 
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The monomial function `x^n` tends to `+∞` at `+∞` for any positive natural `n`.
 A version for positive real powers exists as `tendsto_rpow_at_top`. -/
-theorem tendsto_pow_at_top {n : ℕ} (hn : 1 ≤ n) : tendsto (fun x : α => x ^ n) at_top at_top :=
-  by 
-    refine' tendsto_at_top_mono' _ ((eventually_ge_at_top 1).mono$ fun x hx => _) tendsto_id 
-    simpa only [pow_oneₓ] using pow_le_pow hx hn
+theorem tendsto_pow_at_top {n : exprℕ()} (hn : «expr ≤ »(1, n)) : tendsto (λ x : α, «expr ^ »(x, n)) at_top at_top :=
+begin
+  refine [expr tendsto_at_top_mono' _ «expr $ »((eventually_ge_at_top 1).mono, λ x hx, _) tendsto_id],
+  simpa [] [] ["only"] ["[", expr pow_one, "]"] [] ["using", expr pow_le_pow hx hn]
+end
+
+theorem eventually_ne_of_tendsto_at_top [Nontrivial α] (hf : tendsto f l at_top) (c : α) : ∀ᶠx in l, f x ≠ c :=
+  (tendsto_at_top.1 hf$ c+1).mono fun x hx => ne_of_gtₓ (lt_of_lt_of_leₓ (lt_add_one c) hx)
 
 end OrderedSemiring
 
-theorem zero_pow_eventually_eq [MonoidWithZeroₓ α] : (fun n : ℕ => (0 : α) ^ n) =ᶠ[at_top] fun n => 0 :=
-  eventually_at_top.2 ⟨1, fun n hn => zero_pow (zero_lt_one.trans_le hn)⟩
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem zero_pow_eventually_eq
+[monoid_with_zero α] : «expr =ᶠ[ ] »(λ n : exprℕ(), «expr ^ »((0 : α), n), at_top, λ n, 0) :=
+eventually_at_top.2 ⟨1, λ n hn, zero_pow (zero_lt_one.trans_le hn)⟩
 
 section OrderedRing
 
 variable[OrderedRing α]{l : Filter β}{f g : β → α}
+
+theorem eventually_ne_of_tendsto_at_bot [Nontrivial α] (hf : tendsto f l at_bot) (c : α) : ∀ᶠx in l, f x ≠ c :=
+  (tendsto_at_bot.1 hf$ c - 1).mono fun x hx => ne_of_ltₓ (lt_of_le_of_ltₓ hx ((sub_lt_self_iff c).2 zero_lt_one))
 
 theorem tendsto.at_top_mul_at_bot (hf : tendsto f l at_top) (hg : tendsto g l at_bot) :
   tendsto (fun x => f x*g x) l at_bot :=
@@ -758,38 +769,38 @@ end LinearOrderedField
 open_locale Filter
 
 theorem tendsto_at_top' [Nonempty α] [SemilatticeSup α] {f : α → β} {l : Filter β} :
-  tendsto f at_top l ↔ ∀ s _ : s ∈ l, ∃ a, ∀ b _ : b ≥ a, f b ∈ s :=
+  tendsto f at_top l ↔ ∀ s (_ : s ∈ l), ∃ a, ∀ b (_ : b ≥ a), f b ∈ s :=
   by 
     simp only [tendsto_def, mem_at_top_sets] <;> rfl
 
 theorem tendsto_at_bot' [Nonempty α] [SemilatticeInf α] {f : α → β} {l : Filter β} :
-  tendsto f at_bot l ↔ ∀ s _ : s ∈ l, ∃ a, ∀ b _ : b ≤ a, f b ∈ s :=
+  tendsto f at_bot l ↔ ∀ s (_ : s ∈ l), ∃ a, ∀ b (_ : b ≤ a), f b ∈ s :=
   @tendsto_at_top' (OrderDual α) _ _ _ _ _
 
 theorem tendsto_at_top_principal [Nonempty β] [SemilatticeSup β] {f : β → α} {s : Set α} :
-  tendsto f at_top (𝓟 s) ↔ ∃ N, ∀ n _ : n ≥ N, f n ∈ s :=
+  tendsto f at_top (𝓟 s) ↔ ∃ N, ∀ n (_ : n ≥ N), f n ∈ s :=
   by 
     rw [tendsto_iff_comap, comap_principal, le_principal_iff, mem_at_top_sets] <;> rfl
 
 theorem tendsto_at_bot_principal [Nonempty β] [SemilatticeInf β] {f : β → α} {s : Set α} :
-  tendsto f at_bot (𝓟 s) ↔ ∃ N, ∀ n _ : n ≤ N, f n ∈ s :=
+  tendsto f at_bot (𝓟 s) ↔ ∃ N, ∀ n (_ : n ≤ N), f n ∈ s :=
   @tendsto_at_top_principal _ (OrderDual β) _ _ _ _
 
 /-- A function `f` grows to `+∞` independent of an order-preserving embedding `e`. -/
 theorem tendsto_at_top_at_top [Nonempty α] [SemilatticeSup α] [Preorderₓ β] {f : α → β} :
-  tendsto f at_top at_top ↔ ∀ b : β, ∃ i : α, ∀ a : α, i ≤ a → b ≤ f a :=
+  tendsto f at_top at_top ↔ ∀ (b : β), ∃ i : α, ∀ (a : α), i ≤ a → b ≤ f a :=
   Iff.trans tendsto_infi$ forall_congrₓ$ fun b => tendsto_at_top_principal
 
 theorem tendsto_at_top_at_bot [Nonempty α] [SemilatticeSup α] [Preorderₓ β] {f : α → β} :
-  tendsto f at_top at_bot ↔ ∀ b : β, ∃ i : α, ∀ a : α, i ≤ a → f a ≤ b :=
+  tendsto f at_top at_bot ↔ ∀ (b : β), ∃ i : α, ∀ (a : α), i ≤ a → f a ≤ b :=
   @tendsto_at_top_at_top α (OrderDual β) _ _ _ f
 
 theorem tendsto_at_bot_at_top [Nonempty α] [SemilatticeInf α] [Preorderₓ β] {f : α → β} :
-  tendsto f at_bot at_top ↔ ∀ b : β, ∃ i : α, ∀ a : α, a ≤ i → b ≤ f a :=
+  tendsto f at_bot at_top ↔ ∀ (b : β), ∃ i : α, ∀ (a : α), a ≤ i → b ≤ f a :=
   @tendsto_at_top_at_top (OrderDual α) β _ _ _ f
 
 theorem tendsto_at_bot_at_bot [Nonempty α] [SemilatticeInf α] [Preorderₓ β] {f : α → β} :
-  tendsto f at_bot at_bot ↔ ∀ b : β, ∃ i : α, ∀ a : α, a ≤ i → f a ≤ b :=
+  tendsto f at_bot at_bot ↔ ∀ (b : β), ∃ i : α, ∀ (a : α), a ≤ i → f a ≤ b :=
   @tendsto_at_top_at_top (OrderDual α) (OrderDual β) _ _ _ f
 
 theorem tendsto_at_top_at_top_of_monotone [Preorderₓ α] [Preorderₓ β] {f : α → β} (hf : Monotone f)
@@ -809,12 +820,12 @@ theorem tendsto_at_bot_at_bot_of_monotone [Preorderₓ α] [Preorderₓ β] {f :
         mem_of_superset (mem_at_bot a)$ fun a' ha' => le_transₓ (hf ha') ha
 
 theorem tendsto_at_top_at_top_iff_of_monotone [Nonempty α] [SemilatticeSup α] [Preorderₓ β] {f : α → β}
-  (hf : Monotone f) : tendsto f at_top at_top ↔ ∀ b : β, ∃ a : α, b ≤ f a :=
+  (hf : Monotone f) : tendsto f at_top at_top ↔ ∀ (b : β), ∃ a : α, b ≤ f a :=
   tendsto_at_top_at_top.trans$
     forall_congrₓ$ fun b => exists_congr$ fun a => ⟨fun h => h a (le_reflₓ a), fun h a' ha' => le_transₓ h$ hf ha'⟩
 
 theorem tendsto_at_bot_at_bot_iff_of_monotone [Nonempty α] [SemilatticeInf α] [Preorderₓ β] {f : α → β}
-  (hf : Monotone f) : tendsto f at_bot at_bot ↔ ∀ b : β, ∃ a : α, f a ≤ b :=
+  (hf : Monotone f) : tendsto f at_bot at_bot ↔ ∀ (b : β), ∃ a : α, f a ≤ b :=
   tendsto_at_bot_at_bot.trans$
     forall_congrₓ$ fun b => exists_congr$ fun a => ⟨fun h => h a (le_reflₓ a), fun h a' ha' => le_transₓ (hf ha') h⟩
 
@@ -853,7 +864,7 @@ theorem at_top_finset_eq_infi : (at_top : Filter$ Finset α) = ⨅x : α, 𝓟 (
 /-- If `f` is a monotone sequence of `finset`s and each `x` belongs to one of `f n`, then
 `tendsto f at_top at_top`. -/
 theorem tendsto_at_top_finset_of_monotone [Preorderₓ β] {f : β → Finset α} (h : Monotone f)
-  (h' : ∀ x : α, ∃ n, x ∈ f n) : tendsto f at_top at_top :=
+  (h' : ∀ (x : α), ∃ n, x ∈ f n) : tendsto f at_top at_top :=
   by 
     simp only [at_top_finset_eq_infi, tendsto_infi, tendsto_principal]
     intro a 
@@ -870,10 +881,12 @@ theorem tendsto_finset_image_at_top_at_top {i : β → γ} {j : γ → β} (h : 
         by 
           simp only [Finset.image_singleton, h a, Finset.mem_singleton]⟩
 
-theorem tendsto_finset_preimage_at_top_at_top {f : α → β} (hf : Function.Injective f) :
-  tendsto (fun s : Finset β => s.preimage f (hf.inj_on _)) at_top at_top :=
-  (Finset.monotone_preimage hf).tendsto_at_top_finset$
-    fun x => ⟨{f x}, Finset.mem_preimage.2$ Finset.mem_singleton_self _⟩
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_finset_preimage_at_top_at_top
+{f : α → β}
+(hf : function.injective f) : tendsto (λ s : finset β, s.preimage f (hf.inj_on _)) at_top at_top :=
+«expr $ »((finset.monotone_preimage hf).tendsto_at_top_finset, λ
+ x, ⟨{f x}, «expr $ »(finset.mem_preimage.2, finset.mem_singleton_self _)⟩)
 
 theorem prod_at_top_at_top_eq {β₁ β₂ : Type _} [SemilatticeSup β₁] [SemilatticeSup β₂] :
   (at_top : Filter β₁) ×ᶠ (at_top : Filter β₂) = (at_top : Filter (β₁ × β₂)) :=
@@ -903,17 +916,17 @@ theorem prod_map_at_bot_eq {α₁ α₂ β₁ β₂ : Type _} [SemilatticeInf β
 
 theorem tendsto.subseq_mem {F : Filter α} {V : ℕ → Set α} (h : ∀ n, V n ∈ F) {u : ℕ → α} (hu : tendsto u at_top F) :
   ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, u (φ n) ∈ V n :=
-  extraction_forall_of_eventually' (fun n => tendsto_at_top'.mp hu _ (h n) : ∀ n, ∃ N, ∀ k _ : k ≥ N, u k ∈ V n)
+  extraction_forall_of_eventually' (fun n => tendsto_at_top'.mp hu _ (h n) : ∀ n, ∃ N, ∀ k (_ : k ≥ N), u k ∈ V n)
 
-theorem tendsto_at_bot_diagonal [SemilatticeInf α] : tendsto (fun a : α => (a, a)) at_bot at_bot :=
-  by 
-    rw [←prod_at_bot_at_bot_eq]
-    exact tendsto_id.prod_mk tendsto_id
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_at_bot_diagonal [semilattice_inf α] : tendsto (λ a : α, (a, a)) at_bot at_bot :=
+by { rw ["<-", expr prod_at_bot_at_bot_eq] [],
+  exact [expr tendsto_id.prod_mk tendsto_id] }
 
-theorem tendsto_at_top_diagonal [SemilatticeSup α] : tendsto (fun a : α => (a, a)) at_top at_top :=
-  by 
-    rw [←prod_at_top_at_top_eq]
-    exact tendsto_id.prod_mk tendsto_id
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_at_top_diagonal [semilattice_sup α] : tendsto (λ a : α, (a, a)) at_top at_top :=
+by { rw ["<-", expr prod_at_top_at_top_eq] [],
+  exact [expr tendsto_id.prod_mk tendsto_id] }
 
 theorem tendsto.prod_map_prod_at_bot [SemilatticeInf γ] {F : Filter α} {G : Filter β} {f : α → γ} {g : β → γ}
   (hf : tendsto f F at_bot) (hg : tendsto g G at_bot) : tendsto (Prod.mapₓ f g) (F ×ᶠ G) at_bot :=
@@ -950,14 +963,14 @@ theorem eventually_at_top_prod_self [SemilatticeSup α] [Nonempty α] {p : α ×
     simp [←prod_at_top_at_top_eq, at_top_basis.prod_self.eventually_iff]
 
 theorem eventually_at_bot_prod_self' [SemilatticeInf α] [Nonempty α] {p : α × α → Prop} :
-  (∀ᶠx in at_bot, p x) ↔ ∃ a, ∀ k _ : k ≤ a, ∀ l _ : l ≤ a, p (k, l) :=
+  (∀ᶠx in at_bot, p x) ↔ ∃ a, ∀ k (_ : k ≤ a), ∀ l (_ : l ≤ a), p (k, l) :=
   by 
     rw [Filter.eventually_at_bot_prod_self]
     apply exists_congr 
     tauto
 
 theorem eventually_at_top_prod_self' [SemilatticeSup α] [Nonempty α] {p : α × α → Prop} :
-  (∀ᶠx in at_top, p x) ↔ ∃ a, ∀ k _ : k ≥ a, ∀ l _ : l ≥ a, p (k, l) :=
+  (∀ᶠx in at_top, p x) ↔ ∃ a, ∀ k (_ : k ≥ a), ∀ l (_ : l ≥ a), p (k, l) :=
   by 
     rw [Filter.eventually_at_top_prod_self]
     apply exists_congr 
@@ -967,7 +980,7 @@ theorem eventually_at_top_prod_self' [SemilatticeSup α] [Nonempty α] {p : α �
 Galois insertion. The Galois "insertion" and "connection" is weakened to only require it to be an
 insertion and a connetion above `b'`. -/
 theorem map_at_top_eq_of_gc [SemilatticeSup α] [SemilatticeSup β] {f : α → β} (g : β → α) (b' : β) (hf : Monotone f)
-  (gc : ∀ a, ∀ b _ : b ≥ b', f a ≤ b ↔ a ≤ g b) (hgi : ∀ b _ : b ≥ b', b ≤ f (g b)) : map f at_top = at_top :=
+  (gc : ∀ a, ∀ b (_ : b ≥ b'), f a ≤ b ↔ a ≤ g b) (hgi : ∀ b (_ : b ≥ b'), b ≤ f (g b)) : map f at_top = at_top :=
   by 
     refine' le_antisymmₓ (hf.tendsto_at_top_at_top$ fun b => ⟨g (b⊔b'), le_sup_left.trans$ hgi _ le_sup_right⟩) _ 
     rw [@map_at_top_eq _ _ ⟨g b'⟩]
@@ -976,7 +989,7 @@ theorem map_at_top_eq_of_gc [SemilatticeSup α] [SemilatticeSup β] {f : α → 
     exact ⟨g b, (gc _ _ hb.2).1 hb.1, le_antisymmₓ ((gc _ _ hb.2).2 (le_reflₓ _)) (hgi _ hb.2)⟩
 
 theorem map_at_bot_eq_of_gc [SemilatticeInf α] [SemilatticeInf β] {f : α → β} (g : β → α) (b' : β) (hf : Monotone f)
-  (gc : ∀ a, ∀ b _ : b ≤ b', b ≤ f a ↔ g b ≤ a) (hgi : ∀ b _ : b ≤ b', f (g b) ≤ b) : map f at_bot = at_bot :=
+  (gc : ∀ a, ∀ b (_ : b ≤ b'), b ≤ f a ↔ g b ≤ a) (hgi : ∀ b (_ : b ≤ b'), f (g b) ≤ b) : map f at_bot = at_bot :=
   @map_at_top_eq_of_gc (OrderDual α) (OrderDual β) _ _ _ _ _ hf.dual gc hgi
 
 -- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -1072,29 +1085,43 @@ theorem tendsto_Iic_at_bot [SemilatticeInf α] {a : α} {f : β → Iic a} {l : 
   by 
     rw [at_bot_Iic_eq, tendsto_comap_iff]
 
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem tendsto_comp_coe_Ioi_at_top [SemilatticeSup α] [NoTopOrder α] {a : α} {f : α → β} {l : Filter β} :
-  tendsto (fun x : Ioi a => f x) at_top l ↔ tendsto f at_top l :=
-  by 
-    rw [←map_coe_Ioi_at_top a, tendsto_map'_iff]
+theorem tendsto_comp_coe_Ioi_at_top
+[semilattice_sup α]
+[no_top_order α]
+{a : α}
+{f : α → β}
+{l : filter β} : «expr ↔ »(tendsto (λ x : Ioi a, f x) at_top l, tendsto f at_top l) :=
+by rw ["[", "<-", expr map_coe_Ioi_at_top a, ",", expr tendsto_map'_iff, "]"] []
 
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem tendsto_comp_coe_Ici_at_top [SemilatticeSup α] {a : α} {f : α → β} {l : Filter β} :
-  tendsto (fun x : Ici a => f x) at_top l ↔ tendsto f at_top l :=
-  by 
-    rw [←map_coe_Ici_at_top a, tendsto_map'_iff]
+theorem tendsto_comp_coe_Ici_at_top
+[semilattice_sup α]
+{a : α}
+{f : α → β}
+{l : filter β} : «expr ↔ »(tendsto (λ x : Ici a, f x) at_top l, tendsto f at_top l) :=
+by rw ["[", "<-", expr map_coe_Ici_at_top a, ",", expr tendsto_map'_iff, "]"] []
 
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem tendsto_comp_coe_Iio_at_bot [SemilatticeInf α] [NoBotOrder α] {a : α} {f : α → β} {l : Filter β} :
-  tendsto (fun x : Iio a => f x) at_bot l ↔ tendsto f at_bot l :=
-  by 
-    rw [←map_coe_Iio_at_bot a, tendsto_map'_iff]
+theorem tendsto_comp_coe_Iio_at_bot
+[semilattice_inf α]
+[no_bot_order α]
+{a : α}
+{f : α → β}
+{l : filter β} : «expr ↔ »(tendsto (λ x : Iio a, f x) at_bot l, tendsto f at_bot l) :=
+by rw ["[", "<-", expr map_coe_Iio_at_bot a, ",", expr tendsto_map'_iff, "]"] []
 
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem tendsto_comp_coe_Iic_at_bot [SemilatticeInf α] {a : α} {f : α → β} {l : Filter β} :
-  tendsto (fun x : Iic a => f x) at_bot l ↔ tendsto f at_bot l :=
-  by 
-    rw [←map_coe_Iic_at_bot a, tendsto_map'_iff]
+theorem tendsto_comp_coe_Iic_at_bot
+[semilattice_inf α]
+{a : α}
+{f : α → β}
+{l : filter β} : «expr ↔ »(tendsto (λ x : Iic a, f x) at_bot l, tendsto f at_bot l) :=
+by rw ["[", "<-", expr map_coe_Iic_at_bot a, ",", expr tendsto_map'_iff, "]"] []
 
 theorem map_add_at_top_eq_nat (k : ℕ) : map (fun a => a+k) at_top = at_top :=
   map_at_top_eq_of_gc (fun a => a - k) k (fun a b h => add_le_add_right h k) (fun a b h => (le_tsub_iff_right h).symm)
@@ -1195,26 +1222,26 @@ theorem tendsto_at_bot_of_monotone_of_subseq [Preorderₓ ι] [Preorderₓ α] {
   {l : Filter ι'} [ne_bot l] (H : tendsto (u ∘ φ) l at_bot) : tendsto u at_bot at_bot :=
   tendsto_at_bot_of_monotone_of_filter h (tendsto_map' H)
 
+-- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Let `f` and `g` be two maps to the same commutative monoid. This lemma gives a sufficient
 condition for comparison of the filter `at_top.map (λ s, ∏ b in s, f b)` with
 `at_top.map (λ s, ∏ b in s, g b)`. This is useful to compare the set of limit points of
 `Π b in s, f b` as `s → at_top` with the similar set for `g`. -/
-@[toAdditive]
-theorem map_at_top_finset_prod_le_of_prod_eq [CommMonoidₓ α] {f : β → α} {g : γ → α}
-  (h_eq : ∀ u : Finset γ, ∃ v : Finset β, ∀ v', v ⊆ v' → ∃ u', u ⊆ u' ∧ (∏x in u', g x) = ∏b in v', f b) :
-  (at_top.map fun s : Finset β => ∏b in s, f b) ≤ at_top.map fun s : Finset γ => ∏x in s, g x :=
-  by 
-    rw [map_at_top_eq, map_at_top_eq] <;>
-      exact
-        le_infi$
-          fun b =>
-            let ⟨v, hv⟩ := h_eq b 
-            infi_le_of_le v$
-              by 
-                simp [Set.image_subset_iff] <;> exact hv
+@[to_additive #[]]
+theorem map_at_top_finset_prod_le_of_prod_eq
+[comm_monoid α]
+{f : β → α}
+{g : γ → α}
+(h_eq : ∀
+ u : finset γ, «expr∃ , »((v : finset β), ∀
+  v', «expr ⊆ »(v, v') → «expr∃ , »((u'), «expr ∧ »(«expr ⊆ »(u, u'), «expr = »(«expr∏ in , »((x), u', g x), «expr∏ in , »((b), v', f b)))))) : «expr ≤ »(at_top.map (λ
+  s : finset β, «expr∏ in , »((b), s, f b)), at_top.map (λ s : finset γ, «expr∏ in , »((x), s, g x))) :=
+by rw ["[", expr map_at_top_eq, ",", expr map_at_top_eq, "]"] []; from [expr «expr $ »(le_infi, assume
+  b, let ⟨v, hv⟩ := h_eq b in
+  «expr $ »(infi_le_of_le v, by simp [] [] [] ["[", expr set.image_subset_iff, "]"] [] []; exact [expr hv]))]
 
 theorem has_antitone_basis.tendsto [SemilatticeSup ι] [Nonempty ι] {l : Filter α} {p : ι → Prop} {s : ι → Set α}
-  (hl : l.has_antitone_basis p s) {φ : ι → α} (h : ∀ i : ι, φ i ∈ s i) : tendsto φ at_top l :=
+  (hl : l.has_antitone_basis p s) {φ : ι → α} (h : ∀ (i : ι), φ i ∈ s i) : tendsto φ at_top l :=
   (at_top_basis.tendsto_iff hl.to_has_basis).2$
     fun i hi => ⟨i, trivialₓ, fun j hij => hl.decreasing hi (hl.mono hij hi) hij (h j)⟩
 
@@ -1222,8 +1249,8 @@ theorem has_antitone_basis.tendsto [SemilatticeSup ι] [Nonempty ι] {l : Filter
 if a filter `k` is countably generated then `tendsto f k l` iff for every sequence `u`
 converging to `k`, `f ∘ u` tends to `l`. -/
 theorem tendsto_iff_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} [k.is_countably_generated] :
-  tendsto f k l ↔ ∀ x : ℕ → α, tendsto x at_top k → tendsto (f ∘ x) at_top l :=
-  suffices (∀ x : ℕ → α, tendsto x at_top k → tendsto (f ∘ x) at_top l) → tendsto f k l from
+  tendsto f k l ↔ ∀ (x : ℕ → α), tendsto x at_top k → tendsto (f ∘ x) at_top l :=
+  suffices (∀ (x : ℕ → α), tendsto x at_top k → tendsto (f ∘ x) at_top l) → tendsto f k l from
     ⟨by 
         intros  <;> apply tendsto.comp <;> assumption,
       by 
@@ -1246,7 +1273,7 @@ theorem tendsto_iff_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} 
       apply (h i).right
 
 theorem tendsto_of_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} [k.is_countably_generated] :
-  (∀ x : ℕ → α, tendsto x at_top k → tendsto (f ∘ x) at_top l) → tendsto f k l :=
+  (∀ (x : ℕ → α), tendsto x at_top k → tendsto (f ∘ x) at_top l) → tendsto f k l :=
   tendsto_iff_seq_tendsto.2
 
 -- error in Order.Filter.AtTopBot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -1353,7 +1380,7 @@ The additive version of this lemma is used to prove the equality `∑' x, f (g x
 the same assumptions.-/
 @[toAdditive]
 theorem Function.Injective.map_at_top_finset_prod_eq [CommMonoidₓ α] {g : γ → β} (hg : Function.Injective g) {f : β → α}
-  (hf : ∀ x _ : x ∉ Set.Range g, f x = 1) :
+  (hf : ∀ x (_ : x ∉ Set.Range g), f x = 1) :
   map (fun s => ∏i in s, f (g i)) at_top = map (fun s => ∏i in s, f i) at_top :=
   by 
     apply le_antisymmₓ <;> refine' map_at_top_finset_prod_le_of_prod_eq fun s => _

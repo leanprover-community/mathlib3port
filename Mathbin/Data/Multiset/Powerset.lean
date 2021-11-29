@@ -163,7 +163,7 @@ begin
   exact [expr powerset_aux_perm_powerset_aux'.map _]
 end
 
--- error in Data.Multiset.Powerset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Multiset.Powerset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem revzip_powerset_aux_perm
 {l₁ l₂ : list α}
 (p : «expr ~ »(l₁, l₂)) : «expr ~ »(revzip (powerset_aux l₁), revzip (powerset_aux l₂)) :=

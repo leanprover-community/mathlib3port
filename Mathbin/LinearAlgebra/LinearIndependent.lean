@@ -101,7 +101,7 @@ theorem linear_independent_iff : LinearIndependent R v ↔ ∀ l, Finsupp.total 
     simp [LinearIndependent, LinearMap.ker_eq_bot']
 
 theorem linear_independent_iff' :
-  LinearIndependent R v ↔ ∀ s : Finset ι, ∀ g : ι → R, (∑i in s, g i • v i) = 0 → ∀ i _ : i ∈ s, g i = 0 :=
+  LinearIndependent R v ↔ ∀ (s : Finset ι), ∀ (g : ι → R), (∑i in s, g i • v i) = 0 → ∀ i (_ : i ∈ s), g i = 0 :=
   linear_independent_iff.trans
     ⟨fun hf s g hg i his =>
         have h :=
@@ -126,7 +126,7 @@ theorem linear_independent_iff' :
 
 theorem linear_independent_iff'' :
   LinearIndependent R v ↔
-    ∀ s : Finset ι g : ι → R hg : ∀ i _ : i ∉ s, g i = 0, (∑i in s, g i • v i) = 0 → ∀ i, g i = 0 :=
+    ∀ (s : Finset ι) (g : ι → R) (hg : ∀ i (_ : i ∉ s), g i = 0), (∑i in s, g i • v i) = 0 → ∀ i, g i = 0 :=
   linear_independent_iff'.trans
     ⟨fun H s g hg hv i => if his : i ∈ s then H s g hv i his else hg i his,
       fun H s g hg i hi =>
@@ -145,7 +145,7 @@ theorem linear_dependent_iff :
     simp only [exists_prop, not_forall]
 
 theorem Fintype.linear_independent_iff [Fintype ι] :
-  LinearIndependent R v ↔ ∀ g : ι → R, (∑i, g i • v i) = 0 → ∀ i, g i = 0 :=
+  LinearIndependent R v ↔ ∀ (g : ι → R), (∑i, g i • v i) = 0 → ∀ i, g i = 0 :=
   by 
     refine'
       ⟨fun H g =>
@@ -156,12 +156,13 @@ theorem Fintype.linear_independent_iff [Fintype ι] :
     refine' (Finset.sum_subset (Finset.subset_univ _) fun i _ hi => _).symm 
     rw [hg i hi, zero_smul]
 
+-- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A finite family of vectors `v i` is linear independent iff the linear map that sends
 `c : ι → R` to `∑ i, c i • v i` has the trivial kernel. -/
-theorem Fintype.linear_independent_iff' [Fintype ι] :
-  LinearIndependent R v ↔ (LinearMap.lsum R (fun i : ι => R) ℕ fun i => LinearMap.id.smulRight (v i)).ker = ⊥ :=
-  by 
-    simp [Fintype.linear_independent_iff, LinearMap.ker_eq_bot', funext_iff]
+theorem fintype.linear_independent_iff'
+[fintype ι] : «expr ↔ »(linear_independent R v, «expr = »((linear_map.lsum R (λ
+    i : ι, R) exprℕ() (λ i, linear_map.id.smul_right (v i))).ker, «expr⊥»())) :=
+by simp [] [] [] ["[", expr fintype.linear_independent_iff, ",", expr linear_map.ker_eq_bot', ",", expr funext_iff, "]"] [] []
 
 theorem linear_independent_empty_type [IsEmpty ι] : LinearIndependent R v :=
   linear_independent_iff.mpr$ fun v hv => Subsingleton.elimₓ v 0
@@ -263,13 +264,20 @@ theorem linear_independent_subtype_range {ι} {f : ι → M} (hf : injective f) 
 
 alias linear_independent_subtype_range ↔ LinearIndependent.of_subtype_range _
 
-theorem linear_independent_image {ι} {s : Set ι} {f : ι → M} (hf : Set.InjOn f s) :
-  (LinearIndependent R fun x : s => f x) ↔ LinearIndependent R fun x : f '' s => (x : M) :=
-  linear_independent_equiv' (Equiv.Set.imageOfInjOn _ _ hf) rfl
+-- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem linear_independent_image
+{ι}
+{s : set ι}
+{f : ι → M}
+(hf : set.inj_on f s) : «expr ↔ »(linear_independent R (λ
+  x : s, f x), linear_independent R (λ x : «expr '' »(f, s), (x : M))) :=
+linear_independent_equiv' (equiv.set.image_of_inj_on _ _ hf) rfl
 
-theorem linear_independent_span (hs : LinearIndependent R v) :
-  @LinearIndependent ι R (span R (range v)) (fun i : ι => ⟨v i, subset_span (mem_range_self i)⟩) _ _ _ :=
-  LinearIndependent.of_comp (span R (range v)).Subtype hs
+-- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem linear_independent_span
+(hs : linear_independent R v) : @linear_independent ι R (span R (range v)) (λ
+ i : ι, ⟨v i, subset_span (mem_range_self i)⟩) _ _ _ :=
+linear_independent.of_comp (span R (range v)).subtype hs
 
 -- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- See `linear_independent.fin_cons` for a family of elements in a vector space. -/
@@ -297,18 +305,25 @@ begin
   simpa [] [] ["only"] ["[", expr this, ",", expr zero_smul, ",", expr zero_add, "]"] [] ["using", expr total_eq]
 end
 
+-- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A set of linearly independent vectors in a module `M` over a semiring `K` is also linearly
 independent over a subring `R` of `K`.
 The implementation uses minimal assumptions about the relationship between `R`, `K` and `M`.
 The version where `K` is an `R`-algebra is `linear_independent.restrict_scalars_algebras`.
  -/
-theorem LinearIndependent.restrict_scalars [Semiringₓ K] [SmulWithZero R K] [Module K M] [IsScalarTower R K M]
-  (hinj : Function.Injective fun r : R => r • (1 : K)) (li : LinearIndependent K v) : LinearIndependent R v :=
-  by 
-    refine' linear_independent_iff'.mpr fun s g hg i hi => hinj (Eq.trans _ (zero_smul _ _).symm)
-    refine' (linear_independent_iff'.mp li : _) _ _ _ i hi 
-    simpRw [smul_assoc, one_smul]
-    exact hg
+theorem linear_independent.restrict_scalars
+[semiring K]
+[smul_with_zero R K]
+[module K M]
+[is_scalar_tower R K M]
+(hinj : function.injective (λ r : R, «expr • »(r, (1 : K))))
+(li : linear_independent K v) : linear_independent R v :=
+begin
+  refine [expr linear_independent_iff'.mpr (λ s g hg i hi, hinj (eq.trans _ (zero_smul _ _).symm))],
+  refine [expr (linear_independent_iff'.mp li : _) _ _ _ i hi],
+  simp_rw ["[", expr smul_assoc, ",", expr one_smul, "]"] [],
+  exact [expr hg]
+end
 
 /-- Every finite subset of a linearly independent set is linearly independent. -/
 theorem linear_independent_finset_map_embedding_subtype (s : Set M) (li : LinearIndependent R (coeₓ : s → M))
@@ -329,20 +344,25 @@ theorem linear_independent_finset_map_embedding_subtype (s : Set M) (li : Linear
     obtain ⟨b, hb, rfl⟩ := hy 
     simp only [imp_self, Subtype.mk_eq_mk]
 
+-- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If every finite set of linearly independent vectors has cardinality at most `n`,
 then the same is true for arbitrary sets of linearly independent vectors.
 -/
-theorem linear_independent_bounded_of_finset_linear_independent_bounded {n : ℕ}
-  (H : ∀ s : Finset M, (LinearIndependent R fun i : s => (i : M)) → s.card ≤ n) :
-  ∀ s : Set M, LinearIndependent R (coeₓ : s → M) → # s ≤ n :=
-  by 
-    intro s li 
-    apply Cardinal.card_le_of 
-    intro t 
-    rw [←Finset.card_map (embedding.subtype s)]
-    apply H 
-    apply linear_independent_finset_map_embedding_subtype _ li
+theorem linear_independent_bounded_of_finset_linear_independent_bounded
+{n : exprℕ()}
+(H : ∀
+ s : finset M, linear_independent R (λ
+  i : s, (i : M)) → «expr ≤ »(s.card, n)) : ∀
+s : set M, linear_independent R (coe : s → M) → «expr ≤ »(«expr#»() s, n) :=
+begin
+  intros [ident s, ident li],
+  apply [expr cardinal.card_le_of],
+  intro [ident t],
+  rw ["<-", expr finset.card_map (embedding.subtype s)] [],
+  apply [expr H],
+  apply [expr linear_independent_finset_map_embedding_subtype _ li]
+end
 
 section Subtype
 
@@ -383,7 +403,7 @@ theorem linear_dependent_comp_subtype {s : Set ι} :
 
 theorem linear_independent_subtype {s : Set M} :
   LinearIndependent R (fun x => x : s → M) ↔
-    ∀ l _ : l ∈ Finsupp.supported R R s, (Finsupp.total M M R id) l = 0 → l = 0 :=
+    ∀ l (_ : l ∈ Finsupp.supported R R s), (Finsupp.total M M R id) l = 0 → l = 0 :=
   by 
     apply @linear_independent_comp_subtype _ _ _ id
 
@@ -423,7 +443,8 @@ theorem LinearIndependent.mono {t s : Set M} (h : t ⊆ s) :
     exact Disjoint.mono_left (Finsupp.supported_mono h)
 
 theorem linear_independent_of_finite (s : Set M)
-  (H : ∀ t _ : t ⊆ s, finite t → LinearIndependent R (fun x => x : t → M)) : LinearIndependent R (fun x => x : s → M) :=
+  (H : ∀ t (_ : t ⊆ s), finite t → LinearIndependent R (fun x => x : t → M)) :
+  LinearIndependent R (fun x => x : s → M) :=
   linear_independent_subtype.2$
     fun l hl => linear_independent_subtype.1 (H _ hl (Finset.finite_to_set _)) l (subset.refl _)
 
@@ -443,7 +464,7 @@ theorem linear_independent_Union_of_directed {η : Type _} {s : η → Set M} (h
       exact hη ⟨i⟩
 
 theorem linear_independent_sUnion_of_directed {s : Set (Set M)} (hs : DirectedOn (· ⊆ ·) s)
-  (h : ∀ a _ : a ∈ s, LinearIndependent R (fun x => x : (a : Set M) → M)) :
+  (h : ∀ a (_ : a ∈ s), LinearIndependent R (fun x => x : (a : Set M) → M)) :
   LinearIndependent R (fun x => x : ⋃₀s → M) :=
   by 
     rw [sUnion_eq_Union] <;>
@@ -453,7 +474,7 @@ theorem linear_independent_sUnion_of_directed {s : Set (Set M)} (hs : DirectedOn
             simpa using h)
 
 theorem linear_independent_bUnion_of_directed {η} {s : Set η} {t : η → Set M} (hs : DirectedOn (t ⁻¹'o (· ⊆ ·)) s)
-  (h : ∀ a _ : a ∈ s, LinearIndependent R (fun x => x : t a → M)) :
+  (h : ∀ a (_ : a ∈ s), LinearIndependent R (fun x => x : t a → M)) :
   LinearIndependent R (fun x => x : (⋃(a : _)(_ : a ∈ s), t a) → M) :=
   by 
     rw [bUnion_eq_Union] <;>
@@ -522,10 +543,13 @@ begin
   exact [expr (linear_independent_equiv' (equiv.set.image_of_inj_on f s this) rfl).1 hs]
 end
 
-theorem LinearIndependent.image {ι} {s : Set ι} {f : ι → M} (hs : LinearIndependent R fun x : s => f x) :
-  LinearIndependent R fun x : f '' s => (x : M) :=
-  by 
-    convert LinearIndependent.image_of_comp s f id hs
+-- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem linear_independent.image
+{ι}
+{s : set ι}
+{f : ι → M}
+(hs : linear_independent R (λ x : s, f x)) : linear_independent R (λ x : «expr '' »(f, s), (x : M)) :=
+by convert [] [expr linear_independent.image_of_comp s f id hs] []
 
 theorem LinearIndependent.group_smul {G : Type _} [hG : Groupₓ G] [DistribMulAction G R] [DistribMulAction G M]
   [IsScalarTower G R M] [SmulCommClass G R M] {v : ι → M} (hv : LinearIndependent R v) (w : ι → G) :
@@ -569,7 +593,7 @@ A linearly independent family is maximal if there is no strictly larger linearly
 @[nolint unused_arguments]
 def LinearIndependent.Maximal {ι : Type w} {R : Type u} [Semiringₓ R] {M : Type v} [AddCommMonoidₓ M] [Module R M]
   {v : ι → M} (i : LinearIndependent R v) : Prop :=
-  ∀ s : Set M i' : LinearIndependent R (coeₓ : s → M) h : range v ≤ s, range v = s
+  ∀ (s : Set M) (i' : LinearIndependent R (coeₓ : s → M)) (h : range v ≤ s), range v = s
 
 -- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--
@@ -729,7 +753,7 @@ theorem LinearIndependent.union {s t : Set M} (hs : LinearIndependent R (fun x =
 
 theorem linear_independent_Union_finite_subtype {ι : Type _} {f : ι → Set M}
   (hl : ∀ i, LinearIndependent R (fun x => x : f i → M))
-  (hd : ∀ i, ∀ t : Set ι, finite t → i ∉ t → Disjoint (span R (f i)) (⨆(i : _)(_ : i ∈ t), span R (f i))) :
+  (hd : ∀ i, ∀ (t : Set ι), finite t → i ∉ t → Disjoint (span R (f i)) (⨆(i : _)(_ : i ∈ t), span R (f i))) :
   LinearIndependent R (fun x => x : (⋃i, f i) → M) :=
   by 
     rw [Union_eq_Union_finset f]
@@ -863,7 +887,7 @@ begin
   simp [] [] [] ["[", "<-", expr p, "]"] [] []
 end
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem linear_independent_iff_not_smul_mem_span : «expr ↔ »(linear_independent R v, ∀
  (i : ι)
  (a : R), «expr ∈ »(«expr • »(a, v i), span R «expr '' »(v, «expr \ »(univ, {i}))) → «expr = »(a, 0)) :=
@@ -1025,7 +1049,7 @@ theorem linear_independent_inl_union_inr' {v : ι → M} {v' : ι' → M'} (hv :
     by 
       refine' is_compl_range_inl_inr.disjoint.mono _ _ <;> simp only [span_le, range_coe, range_comp_subset_range]
 
--- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Dedekind's linear independence of characters -/
 theorem linear_independent_monoid_hom
 (G : Type*)
@@ -1211,22 +1235,25 @@ theorem linear_independent_option {v : Option ι → V} :
   by 
     simp only [←linear_independent_option', Option.cases_on'_none_coe]
 
-theorem linear_independent_insert' {ι} {s : Set ι} {a : ι} {f : ι → V} (has : a ∉ s) :
-  (LinearIndependent K fun x : insert a s => f x) ↔
-    (LinearIndependent K fun x : s => f x) ∧ f a ∉ Submodule.span K (f '' s) :=
-  by 
-    rw [←linear_independent_equiv ((Equiv.optionEquivSumPunit _).trans (Equiv.Set.insert has).symm),
-      linear_independent_option]
-    simp [· ∘ ·, range_comp f]
+-- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem linear_independent_insert'
+{ι}
+{s : set ι}
+{a : ι}
+{f : ι → V}
+(has : «expr ∉ »(a, s)) : «expr ↔ »(linear_independent K (λ
+  x : insert a s, f x), «expr ∧ »(linear_independent K (λ
+   x : s, f x), «expr ∉ »(f a, submodule.span K «expr '' »(f, s)))) :=
+by { rw ["[", "<-", expr linear_independent_equiv ((equiv.option_equiv_sum_punit _).trans (equiv.set.insert has).symm), ",", expr linear_independent_option, "]"] [],
+  simp [] [] [] ["[", expr («expr ∘ »), ",", expr range_comp f, "]"] [] [] }
 
-theorem linear_independent_insert (hxs : x ∉ s) :
-  (LinearIndependent K fun b : insert x s => (b : V)) ↔
-    (LinearIndependent K fun b : s => (b : V)) ∧ x ∉ Submodule.span K s :=
-  (@linear_independent_insert' _ _ _ _ _ _ _ _ id hxs).trans$
-    by 
-      simp 
+-- error in LinearAlgebra.LinearIndependent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem linear_independent_insert
+(hxs : «expr ∉ »(x, s)) : «expr ↔ »(linear_independent K (λ
+  b : insert x s, (b : V)), «expr ∧ »(linear_independent K (λ b : s, (b : V)), «expr ∉ »(x, submodule.span K s))) :=
+«expr $ »((@linear_independent_insert' _ _ _ _ _ _ _ _ id hxs).trans, by simp [] [] [] [] [] [])
 
-theorem linear_independent_pair {x y : V} (hx : x ≠ 0) (hy : ∀ a : K, a • x ≠ y) :
+theorem linear_independent_pair {x y : V} (hx : x ≠ 0) (hy : ∀ (a : K), a • x ≠ y) :
   LinearIndependent K (coeₓ : ({x, y} : Set V) → V) :=
   pair_comm y x ▸ (linear_independent_singleton hx).insert$ mt mem_span_singleton.1 (not_exists.2 hy)
 
@@ -1263,7 +1290,7 @@ theorem linear_independent_fin_succ' {n} {v : Finₓ (n+1) → V} :
   by 
     rw [←linear_independent_fin_snoc, Finₓ.snoc_init_self]
 
-theorem linear_independent_fin2 {f : Finₓ 2 → V} : LinearIndependent K f ↔ f 1 ≠ 0 ∧ ∀ a : K, a • f 1 ≠ f 0 :=
+theorem linear_independent_fin2 {f : Finₓ 2 → V} : LinearIndependent K f ↔ f 1 ≠ 0 ∧ ∀ (a : K), a • f 1 ≠ f 0 :=
   by 
     rw [linear_independent_fin_succ, linear_independent_unique_iff, range_unique, mem_span_singleton, not_exists,
       show Finₓ.tail f (default (Finₓ 1)) = f 1by 

@@ -42,11 +42,11 @@ theorem sorted_of_sorted_cons {a : α} {l : List α} : sorted r (a :: l) → sor
 theorem sorted.tail {r : α → α → Prop} {l : List α} (h : sorted r l) : sorted r l.tail :=
   h.tail
 
-theorem rel_of_sorted_cons {a : α} {l : List α} : sorted r (a :: l) → ∀ b _ : b ∈ l, r a b :=
+theorem rel_of_sorted_cons {a : α} {l : List α} : sorted r (a :: l) → ∀ b (_ : b ∈ l), r a b :=
   rel_of_pairwise_cons
 
 @[simp]
-theorem sorted_cons {a : α} {l : List α} : sorted r (a :: l) ↔ (∀ b _ : b ∈ l, r a b) ∧ sorted r l :=
+theorem sorted_cons {a : α} {l : List α} : sorted r (a :: l) ↔ (∀ b (_ : b ∈ l), r a b) ∧ sorted r l :=
   pairwise_cons
 
 protected theorem sorted.nodup {r : α → α → Prop} [IsIrrefl α r] {l : List α} (h : sorted r l) : nodup l :=
@@ -135,7 +135,7 @@ def insertion_sort : List α → List α
 theorem ordered_insert_nil (a : α) : [].orderedInsert r a = [a] :=
   rfl
 
-theorem ordered_insert_length : ∀ L : List α a : α, (L.ordered_insert r a).length = L.length+1
+theorem ordered_insert_length : ∀ (L : List α) (a : α), (L.ordered_insert r a).length = L.length+1
 | [], a => rfl
 | hd :: tl, a =>
   by 
@@ -144,7 +144,7 @@ theorem ordered_insert_length : ∀ L : List α a : α, (L.ordered_insert r a).l
 
 /-- An alternative definition of `ordered_insert` using `take_while` and `drop_while`. -/
 theorem ordered_insert_eq_take_drop (a : α) :
-  ∀ l : List α, l.ordered_insert r a = (l.take_while fun b => ¬a ≼ b) ++ a :: l.drop_while fun b => ¬a ≼ b
+  ∀ (l : List α), l.ordered_insert r a = (l.take_while fun b => ¬a ≼ b) ++ a :: l.drop_while fun b => ¬a ≼ b
 | [] => rfl
 | b :: l =>
   by 
@@ -160,7 +160,7 @@ section Correctness
 
 open Perm
 
-theorem perm_ordered_insert a : ∀ l : List α, ordered_insert r a l ~ a :: l
+theorem perm_ordered_insert a : ∀ (l : List α), ordered_insert r a l ~ a :: l
 | [] => perm.refl _
 | b :: l =>
   by 
@@ -173,7 +173,7 @@ theorem ordered_insert_count [DecidableEq α] (L : List α) (a b : α) :
     rw [(L.perm_ordered_insert r b).count_eq, count_cons]
     splitIfs <;> simp only [Nat.succ_eq_add_one, add_zeroₓ]
 
-theorem perm_insertion_sort : ∀ l : List α, insertion_sort r l ~ l
+theorem perm_insertion_sort : ∀ (l : List α), insertion_sort r l ~ l
 | [] => perm.nil
 | b :: l =>
   by 
@@ -183,7 +183,7 @@ variable{r}
 
 /-- If `l` is already `list.sorted` with respect to `r`, then `insertion_sort` does not change
 it. -/
-theorem sorted.insertion_sort_eq : ∀ {l : List α} h : sorted r l, insertion_sort r l = l
+theorem sorted.insertion_sort_eq : ∀ {l : List α} (h : sorted r l), insertion_sort r l = l
 | [], _ => rfl
 | [a], _ => rfl
 | a :: b :: l, h =>
@@ -203,7 +203,7 @@ theorem sorted.ordered_insert (a : α) : ∀ l, sorted r l → sorted r (ordered
     ·
       simpa [ordered_insert, h', h] using fun b' bm => trans h' (rel_of_sorted_cons h _ bm)
     ·
-      suffices  : ∀ b' : α, b' ∈ ordered_insert r a l → r b b'
+      suffices  : ∀ (b' : α), b' ∈ ordered_insert r a l → r b b'
       ·
         simpa [ordered_insert, h', (sorted_of_sorted_cons h).orderedInsert l]
       intro b' bm 
@@ -297,21 +297,27 @@ def merge_sort : List α → List α
     cases' length_split_lt e with h₁ h₂ 
     exact merge r (merge_sort l₁) (merge_sort l₂)
 
-theorem merge_sort_cons_cons {a b} {l l₁ l₂ : List α} (h : split (a :: b :: l) = (l₁, l₂)) :
-  merge_sort r (a :: b :: l) = merge r (merge_sort r l₁) (merge_sort r l₂) :=
-  by 
-    suffices  :
-      ∀ L : List α h1, @And.ndrec (fun a a _ : (length l₁ < (length l+1)+1) ∧ length l₂ < (length l+1)+1 => L) h1 h1 = L
-    ·
-      simp [merge_sort, h]
-      apply this 
-    intros 
-    cases h1 
-    rfl
+-- error in Data.List.Sort: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem merge_sort_cons_cons
+{a b}
+{l l₁ l₂ : list α}
+(h : «expr = »(split «expr :: »(a, «expr :: »(b, l)), (l₁, l₂))) : «expr = »(merge_sort r «expr :: »(a, «expr :: »(b, l)), merge r (merge_sort r l₁) (merge_sort r l₂)) :=
+begin
+  suffices [] [":", expr ∀
+   (L : list α)
+   (h1), «expr = »(@@and.rec (λ
+     (a a)
+     (_ : «expr ∧ »(«expr < »(length l₁, «expr + »(«expr + »(length l, 1), 1)), «expr < »(length l₂, «expr + »(«expr + »(length l, 1), 1)))), L) h1 h1, L)],
+  { simp [] [] [] ["[", expr merge_sort, ",", expr h, "]"] [] [],
+    apply [expr this] },
+  intros [],
+  cases [expr h1] [],
+  refl
+end
 
 section Correctness
 
-theorem perm_merge : ∀ l l' : List α, merge r l l' ~ l ++ l'
+theorem perm_merge : ∀ (l l' : List α), merge r l l' ~ l ++ l'
 | [], [] =>
   by 
     simp [merge]
@@ -332,7 +338,7 @@ theorem perm_merge : ∀ l l' : List α, merge r l l' ~ l ++ l'
         simpa [merge, h]
       exact ((perm_merge _ _).cons _).trans ((swap _ _ _).trans (perm_middle.symm.cons _))
 
-theorem perm_merge_sort : ∀ l : List α, merge_sort r l ~ l
+theorem perm_merge_sort : ∀ (l : List α), merge_sort r l ~ l
 | [] =>
   by 
     simp [merge_sort]
@@ -383,7 +389,7 @@ end
 
 variable(r)
 
-theorem sorted_merge_sort : ∀ l : List α, sorted r (merge_sort r l)
+theorem sorted_merge_sort : ∀ (l : List α), sorted r (merge_sort r l)
 | [] =>
   by 
     simp [merge_sort]

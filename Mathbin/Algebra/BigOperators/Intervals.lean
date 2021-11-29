@@ -75,20 +75,23 @@ theorem sum_Ico_eq_sub {δ : Type _} [AddCommGroupₓ δ] (f : ℕ → δ) {m n 
   by 
     simpa only [sub_eq_add_neg] using sum_Ico_eq_add_neg f h
 
+-- error in Algebra.BigOperators.Intervals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The two ways of summing over `(i,j)` in the range `a<=i<=j<b` are equal. -/
-theorem sum_Ico_Ico_comm {M : Type _} [AddCommMonoidₓ M] (a b : ℕ) (f : ℕ → ℕ → M) :
-  (∑i in Finset.ico a b, ∑j in Finset.ico i b, f i j) = ∑j in Finset.ico a b, ∑i in Finset.ico a (j+1), f i j :=
-  by 
-    rw [Finset.sum_sigma', Finset.sum_sigma']
-    refine'
-        Finset.sum_bij' (fun x : Σi : ℕ, ℕ _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _ (fun _ _ => rfl)
-          (fun x : Σi : ℕ, ℕ _ => (⟨x.2, x.1⟩ : Σi : ℕ, ℕ)) _
-          (by 
-            rintro ⟨⟩ _ <;> rfl)
-          (by 
-            rintro ⟨⟩ _ <;> rfl) <;>
-      simp only [Finset.mem_Ico, Sigma.forall, Finset.mem_sigma] <;>
-        rintro a b ⟨⟨h₁, h₂⟩, ⟨h₃, h₄⟩⟩ <;> refine' ⟨⟨_, _⟩, ⟨_, _⟩⟩ <;> linarith
+theorem sum_Ico_Ico_comm
+{M : Type*}
+[add_comm_monoid M]
+(a b : exprℕ())
+(f : exprℕ() → exprℕ() → M) : «expr = »(«expr∑ in , »((i), finset.Ico a b, «expr∑ in , »((j), finset.Ico i b, f i j)), «expr∑ in , »((j), finset.Ico a b, «expr∑ in , »((i), finset.Ico a «expr + »(j, 1), f i j))) :=
+begin
+  rw ["[", expr finset.sum_sigma', ",", expr finset.sum_sigma', "]"] [],
+  refine [expr finset.sum_bij' (λ
+    (x : «exprΣ , »((i : exprℕ()), exprℕ()))
+    (_), (⟨x.2, x.1⟩ : «exprΣ , »((i : exprℕ()), exprℕ()))) _ (λ
+    _
+    _, rfl) (λ
+    (x : «exprΣ , »((i : exprℕ()), exprℕ()))
+    (_), (⟨x.2, x.1⟩ : «exprΣ , »((i : exprℕ()), exprℕ()))) _ (by rintro ["⟨", "⟩", "_"]; refl) (by rintro ["⟨", "⟩", "_"]; refl)]; simp [] [] ["only"] ["[", expr finset.mem_Ico, ",", expr sigma.forall, ",", expr finset.mem_sigma, "]"] [] []; rintros [ident a, ident b, "⟨", "⟨", ident h₁, ",", ident h₂, "⟩", ",", "⟨", ident h₃, ",", ident h₄, "⟩", "⟩"]; refine [expr ⟨⟨_, _⟩, ⟨_, _⟩⟩]; linarith [] [] []
+end
 
 @[toAdditive]
 theorem prod_Ico_eq_prod_range (f : ℕ → β) (m n : ℕ) : (∏k in Ico m n, f k) = ∏k in range (n - m), f (m+k) :=
@@ -138,7 +141,7 @@ theorem sum_range_reflect {δ : Type _} [AddCommMonoidₓ δ] (f : ℕ → δ) (
   @prod_range_reflect (Multiplicative δ) _ f n
 
 @[simp]
-theorem prod_Ico_id_eq_factorial : ∀ n : ℕ, (∏x in Ico 1 (n+1), x) = n !
+theorem prod_Ico_id_eq_factorial : ∀ (n : ℕ), (∏x in Ico 1 (n+1), x) = n !
 | 0 => rfl
 | n+1 =>
   by 
@@ -146,7 +149,7 @@ theorem prod_Ico_id_eq_factorial : ∀ n : ℕ, (∏x in Ico 1 (n+1), x) = n !
       Nat.succ_eq_add_one, mul_commₓ]
 
 @[simp]
-theorem prod_range_add_one_eq_factorial : ∀ n : ℕ, (∏x in range n, x+1) = n !
+theorem prod_range_add_one_eq_factorial : ∀ (n : ℕ), (∏x in range n, x+1) = n !
 | 0 => rfl
 | n+1 =>
   by 

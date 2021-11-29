@@ -40,10 +40,10 @@ are mono.
 -/
 class coproduct_disjoint(X₁ X₂ : C) where 
   isInitialOfIsPullbackOfIsCoproduct :
-  ∀ {X Z} {pX₁ : X₁ ⟶ X} {pX₂ : X₂ ⟶ X} {f : Z ⟶ X₁} {g : Z ⟶ X₂} cX : is_colimit (binary_cofan.mk pX₁ pX₂)
+  ∀ {X Z} {pX₁ : X₁ ⟶ X} {pX₂ : X₂ ⟶ X} {f : Z ⟶ X₁} {g : Z ⟶ X₂} (cX : is_colimit (binary_cofan.mk pX₁ pX₂))
     {comm : f ≫ pX₁ = g ≫ pX₂}, is_limit (pullback_cone.mk _ _ comm) → is_initial Z 
-  mono_inl : ∀ X X₁ : X₁ ⟶ X X₂ : X₂ ⟶ X cX : is_colimit (binary_cofan.mk X₁ X₂), mono X₁ 
-  mono_inr : ∀ X X₁ : X₁ ⟶ X X₂ : X₂ ⟶ X cX : is_colimit (binary_cofan.mk X₁ X₂), mono X₂
+  mono_inl : ∀ X (X₁ : X₁ ⟶ X) (X₂ : X₂ ⟶ X) (cX : is_colimit (binary_cofan.mk X₁ X₂)), mono X₁ 
+  mono_inr : ∀ X (X₁ : X₁ ⟶ X) (X₂ : X₂ ⟶ X) (cX : is_colimit (binary_cofan.mk X₁ X₂)), mono X₂
 
 /--
 If the coproduct of `X₁` and `X₂` is disjoint, then given any pullback square
@@ -102,20 +102,21 @@ instance  {X₁ X₂ : C} [has_binary_coproduct X₁ X₂] [coproduct_disjoint X
 
 /-- `C` has disjoint coproducts if every coproduct is disjoint. -/
 class coproducts_disjoint(C : Type u)[category.{v} C] where 
-  CoproductDisjoint : ∀ X Y : C, coproduct_disjoint X Y
+  CoproductDisjoint : ∀ (X Y : C), coproduct_disjoint X Y
 
 attribute [instance] coproducts_disjoint.coproduct_disjoint
 
+-- error in CategoryTheory.Limits.Shapes.DisjointCoproduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `C` has disjoint coproducts, any morphism out of initial is mono. Note it isn't true in
 general that `C` has strict initial objects, for instance consider the category of types and
 partial functions. -/
 theorem initial_mono_class_of_disjoint_coproducts [coproducts_disjoint C] : initial_mono_class C :=
-  { is_initial_mono_from :=
-      fun I X hI =>
-        coproduct_disjoint.mono_inl _ _ (𝟙 X)
-          { desc := fun s : binary_cofan _ _ => s.inr,
-            fac' := fun s j => walking_pair.cases_on j (hI.hom_ext _ _) (id_comp _),
-            uniq' := fun s : binary_cofan _ _ m w => (id_comp _).symm.trans (w walking_pair.right) } }
+{ is_initial_mono_from := λ
+  I
+  X
+  hI, coproduct_disjoint.mono_inl _ _ («expr𝟙»() X) { desc := λ s : binary_cofan _ _, s.inr,
+    fac' := λ s j, walking_pair.cases_on j (hI.hom_ext _ _) (id_comp _),
+    uniq' := λ (s : binary_cofan _ _) (m w), (id_comp _).symm.trans (w walking_pair.right) } }
 
 end Limits
 

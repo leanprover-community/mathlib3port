@@ -54,7 +54,7 @@ class like `paracompact_space.{u v}`. Due to lemma `precise_refinement` below, e
 finite refinement `t : α → set X` indexed on the same type such that each `∀ i, t i ⊆ s i`. -/
 class ParacompactSpace(X : Type v)[TopologicalSpace X] : Prop where 
   locally_finite_refinement :
-  ∀ α : Type v s : α → Set X ho : ∀ a, IsOpen (s a) hc : (⋃a, s a) = univ,
+  ∀ (α : Type v) (s : α → Set X) (ho : ∀ a, IsOpen (s a)) (hc : (⋃a, s a) = univ),
     ∃ (β : Type v)(t : β → Set X)(ho : ∀ b, IsOpen (t b))(hc : (⋃b, t b) = univ), LocallyFinite t ∧ ∀ b, ∃ a, t b ⊆ s a
 
 variable{ι : Type u}{X : Type v}[TopologicalSpace X]
@@ -225,7 +225,7 @@ theorem refinement_of_locally_compact_sigma_compact_of_nhds_basis [LocallyCompac
     refinement_of_locally_compact_sigma_compact_of_nhds_basis_set is_closed_univ fun x _ => hB x
   ⟨α, c, r, fun a => (hp a).2, univ_subset_iff.1 hU, hfin⟩
 
--- error in Topology.Paracompact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Paracompact: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A locally compact sigma compact Hausdorff space is paracompact. See also
 `refinement_of_locally_compact_sigma_compact_of_nhds_basis` for a more precise statement. -/
 @[priority 100]

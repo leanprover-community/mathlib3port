@@ -686,28 +686,26 @@ theorem norm_integral_le (f : α →₁[μ] E) : ∥integral f∥ ≤ ∥f∥ :=
     _ = ∥f∥ := one_mulₓ _
     
 
-@[continuity]
-theorem continuous_integral : Continuous fun f : α →₁[μ] E => integral f :=
-  L1.integral_clm.Continuous
+-- error in MeasureTheory.Integral.Bochner: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_integral : continuous (λ f : «expr →₁[ ] »(α, μ, E), integral f) :=
+L1.integral_clm.continuous
 
 section PosPart
 
 attribute [local instance] fact_one_le_one_ennreal
 
-theorem integral_eq_norm_pos_part_sub (f : α →₁[μ] ℝ) : integral f = ∥Lp.pos_part f∥ - ∥Lp.neg_part f∥ :=
-  by 
-    refine'
-      @is_closed_property _ _ _ (coeₓ : (α →₁ₛ[μ] ℝ) → α →₁[μ] ℝ)
-        (fun f : α →₁[μ] ℝ => integral f = ∥Lp.pos_part f∥ - ∥Lp.neg_part f∥) (simple_func.dense_range one_ne_top)
-        (is_closed_eq _ _) _ f
-    ·
-      exact cont _
-    ·
-      refine' Continuous.sub (continuous_norm.comp Lp.continuous_pos_part) (continuous_norm.comp Lp.continuous_neg_part)
-    ·
-      intro s 
-      normCast 
-      exact simple_func.integral_eq_norm_pos_part_sub _
+-- error in MeasureTheory.Integral.Bochner: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem integral_eq_norm_pos_part_sub
+(f : «expr →₁[ ] »(α, μ, exprℝ())) : «expr = »(integral f, «expr - »(«expr∥ ∥»(Lp.pos_part f), «expr∥ ∥»(Lp.neg_part f))) :=
+begin
+  refine [expr @is_closed_property _ _ _ (coe : «expr →₁ₛ[ ] »(α, μ, exprℝ()) → «expr →₁[ ] »(α, μ, exprℝ())) (λ
+    f : «expr →₁[ ] »(α, μ, exprℝ()), «expr = »(integral f, «expr - »(«expr∥ ∥»(Lp.pos_part f), «expr∥ ∥»(Lp.neg_part f)))) (simple_func.dense_range one_ne_top) (is_closed_eq _ _) _ f],
+  { exact [expr cont _] },
+  { refine [expr continuous.sub (continuous_norm.comp Lp.continuous_pos_part) (continuous_norm.comp Lp.continuous_neg_part)] },
+  { assume [binders (s)],
+    norm_cast [],
+    exact [expr simple_func.integral_eq_norm_pos_part_sub _] }
+end
 
 end PosPart
 
@@ -791,6 +789,16 @@ theorem integral_add (hf : integrable f μ) (hg : integrable g μ) : (∫a, f a+
 theorem integral_add' (hf : integrable f μ) (hg : integrable g μ) : (∫a, (f+g) a ∂μ) = (∫a, f a ∂μ)+∫a, g a ∂μ :=
   integral_add hf hg
 
+theorem integral_finset_sum {ι} (s : Finset ι) {f : ι → α → E} (hf : ∀ i (_ : i ∈ s), integrable (f i) μ) :
+  (∫a, ∑i in s, f i a ∂μ) = ∑i in s, ∫a, f i a ∂μ :=
+  by 
+    induction' s using Finset.induction_on with i s hi ihs
+    ·
+      simp only [integral_zero, Finset.sum_empty]
+    ·
+      rw [Finset.forall_mem_insert] at hf 
+      simp only [Finset.sum_insert hi, ←ihs hf.2, integral_add hf.1 (integrable_finset_sum s hf.2)]
+
 theorem integral_neg (f : α → E) : (∫a, -f a ∂μ) = -∫a, f a ∂μ :=
   set_to_fun_neg (dominated_fin_meas_additive_weighted_smul μ) f
 
@@ -825,9 +833,9 @@ theorem integral_congr_ae (h : f =ᵐ[μ] g) : (∫a, f a ∂μ) = ∫a, g a ∂
 theorem L1.integral_of_fun_eq_integral {f : α → E} (hf : integrable f μ) : (∫a, (hf.to_L1 f) a ∂μ) = ∫a, f a ∂μ :=
   set_to_fun_to_L1 (dominated_fin_meas_additive_weighted_smul μ) hf
 
-@[continuity]
-theorem continuous_integral : Continuous fun f : α →₁[μ] E => ∫a, f a ∂μ :=
-  continuous_set_to_fun (dominated_fin_meas_additive_weighted_smul μ)
+-- error in MeasureTheory.Integral.Bochner: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_integral : continuous (λ f : «expr →₁[ ] »(α, μ, E), «expr∫ , ∂ »((a), f a, μ)) :=
+continuous_set_to_fun (dominated_fin_meas_additive_weighted_smul μ)
 
 theorem norm_integral_le_lintegral_norm (f : α → E) : ∥∫a, f a ∂μ∥ ≤ Ennreal.toReal (∫⁻a, Ennreal.ofReal ∥f a∥ ∂μ) :=
   by 
@@ -899,6 +907,45 @@ theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l
   tendsto (fun n => ∫a, F n a ∂μ) l (𝓝$ ∫a, f a ∂μ) :=
   tendsto_set_to_fun_filter_of_dominated_convergence (dominated_fin_meas_additive_weighted_smul μ) bound hF_meas h_bound
     bound_integrable h_lim
+
+-- error in MeasureTheory.Integral.Bochner: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- Lebesgue dominated convergence theorem for series. -/
+theorem has_sum_integral_of_dominated_convergence
+{ι}
+[encodable ι]
+{F : ι → α → E}
+{f : α → E}
+(bound : ι → α → exprℝ())
+(hF_meas : ∀ n, ae_measurable (F n) μ)
+(h_bound : ∀ n, «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(«expr∥ ∥»(F n a), bound n a)))
+(bound_summable : «expr∀ᵐ ∂ , »((a), μ, summable (λ n, bound n a)))
+(bound_integrable : integrable (λ a, «expr∑' , »((n), bound n a)) μ)
+(h_lim : «expr∀ᵐ ∂ , »((a), μ, has_sum (λ
+   n, F n a) (f a))) : has_sum (λ n, «expr∫ , ∂ »((a), F n a, μ)) «expr∫ , ∂ »((a), f a, μ) :=
+begin
+  have [ident hb_nonneg] [":", expr «expr∀ᵐ ∂ , »((a), μ, ∀
+    n, «expr ≤ »(0, bound n a))] [":=", expr eventually_countable_forall.2 (λ
+    n, «expr $ »((h_bound n).mono, λ a, (norm_nonneg _).trans))],
+  have [ident hb_le_tsum] [":", expr ∀ n, «expr ≤ᵐ[ ] »(bound n, μ, λ a, «expr∑' , »((n), bound n a))] [],
+  { intro [ident n],
+    filter_upwards ["[", expr hb_nonneg, ",", expr bound_summable, "]"] [],
+    intros [ident a, ident ha0, ident ha_sum],
+    exact [expr le_tsum ha_sum _ (λ i _, ha0 i)] },
+  have [ident hF_integrable] [":", expr ∀ n, integrable (F n) μ] [],
+  { refine [expr λ n, bound_integrable.mono' (hF_meas n) _],
+    exact [expr eventually_le.trans (h_bound n) (hb_le_tsum n)] },
+  simp [] [] ["only"] ["[", expr has_sum, ",", "<-", expr integral_finset_sum _ (λ n _, hF_integrable n), "]"] [] [],
+  refine [expr tendsto_integral_filter_of_dominated_convergence (λ
+    a, «expr∑' , »((n), bound n a)) _ _ bound_integrable h_lim],
+  { exact [expr eventually_of_forall (λ s, «expr $ »(s.ae_measurable_sum, λ n hn, hF_meas n))] },
+  { refine [expr eventually_of_forall (λ s, _)],
+    filter_upwards ["[", expr eventually_countable_forall.2 h_bound, ",", expr hb_nonneg, ",", expr bound_summable, "]"] [],
+    intros [ident a, ident hFa, ident ha0, ident has],
+    calc
+      «expr ≤ »(«expr∥ ∥»(«expr∑ in , »((n), s, F n a)), «expr∑ in , »((n), s, bound n a)) : norm_sum_le_of_le _ (λ
+       n hn, hFa n)
+      «expr ≤ »(..., «expr∑' , »((n), bound n a)) : sum_le_tsum _ (λ n hn, ha0 n) has }
+end
 
 variable{X : Type _}[TopologicalSpace X][first_countable_topology X]
 
@@ -1124,34 +1171,23 @@ theorem integral_mono_of_nonneg {f g : α → ℝ} (hf : 0 ≤ᵐ[μ] f) (hgi : 
       rw [integral_non_ae_measurable hfm]
       exact integral_nonneg_of_ae (hf.trans h)
 
-theorem norm_integral_le_integral_norm (f : α → E) : ∥∫a, f a ∂μ∥ ≤ ∫a, ∥f a∥ ∂μ :=
-  have le_ae : ∀ᵐa ∂μ, 0 ≤ ∥f a∥ := eventually_of_forall fun a => norm_nonneg _ 
-  Classical.by_cases
-    (fun h : AeMeasurable f μ =>
-      calc ∥∫a, f a ∂μ∥ ≤ Ennreal.toReal (∫⁻a, Ennreal.ofReal ∥f a∥ ∂μ) := norm_integral_le_lintegral_norm _ 
-        _ = ∫a, ∥f a∥ ∂μ := (integral_eq_lintegral_of_nonneg_ae le_ae$ AeMeasurable.norm h).symm
-        )
-    fun h : ¬AeMeasurable f μ =>
-      by 
-        rw [integral_non_ae_measurable h, norm_zero]
-        exact integral_nonneg_of_ae le_ae
+-- error in MeasureTheory.Integral.Bochner: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem norm_integral_le_integral_norm
+(f : α → E) : «expr ≤ »(«expr∥ ∥»(«expr∫ , ∂ »((a), f a, μ)), «expr∫ , ∂ »((a), «expr∥ ∥»(f a), μ)) :=
+have le_ae : «expr∀ᵐ ∂ , »((a), μ, «expr ≤ »(0, «expr∥ ∥»(f a))) := eventually_of_forall (λ a, norm_nonneg _),
+classical.by_cases (λ h : ae_measurable f μ, calc
+   «expr ≤ »(«expr∥ ∥»(«expr∫ , ∂ »((a), f a, μ)), ennreal.to_real «expr∫⁻ , ∂ »((a), ennreal.of_real «expr∥ ∥»(f a), μ)) : norm_integral_le_lintegral_norm _
+   «expr = »(..., «expr∫ , ∂ »((a), «expr∥ ∥»(f a), μ)) : «expr $ »(integral_eq_lintegral_of_nonneg_ae le_ae, ae_measurable.norm h).symm) (λ
+ h : «expr¬ »(ae_measurable f μ), begin
+   rw ["[", expr integral_non_ae_measurable h, ",", expr norm_zero, "]"] [],
+   exact [expr integral_nonneg_of_ae le_ae]
+ end)
 
 theorem norm_integral_le_of_norm_le {f : α → E} {g : α → ℝ} (hg : integrable g μ) (h : ∀ᵐx ∂μ, ∥f x∥ ≤ g x) :
   ∥∫x, f x ∂μ∥ ≤ ∫x, g x ∂μ :=
   calc ∥∫x, f x ∂μ∥ ≤ ∫x, ∥f x∥ ∂μ := norm_integral_le_integral_norm f 
     _ ≤ ∫x, g x ∂μ := integral_mono_of_nonneg (eventually_of_forall$ fun x => norm_nonneg _) hg h
     
-
-theorem integral_finset_sum {ι} (s : Finset ι) {f : ι → α → E} (hf : ∀ i, integrable (f i) μ) :
-  (∫a, ∑i in s, f i a ∂μ) = ∑i in s, ∫a, f i a ∂μ :=
-  by 
-    refine' Finset.induction_on s _ _
-    ·
-      simp only [integral_zero, Finset.sum_empty]
-    ·
-      intro i s his ih 
-      simp only [his, Finset.sum_insert, not_false_iff]
-      rw [integral_add (hf _) (integrable_finset_sum s hf), ih]
 
 theorem simple_func.integral_eq_integral (f : α →ₛ E) (hfi : integrable f μ) : f.integral μ = ∫x, f x ∂μ :=
   by 
@@ -1481,7 +1517,7 @@ begin
   have [ident hf] [":", expr @measurable _ _ m _ f] [],
   from [expr @simple_func.measurable β F m _ f],
   have [ident hf_int_m] [] [":=", expr hf_int.trim hm hf],
-  rw ["[", expr integral_simple_func_larger_space le_rfl f hf_int_m, ",", expr integral_simple_func_larger_space hm f hf_int, "]"] [],
+  rw ["[", expr integral_simple_func_larger_space (le_refl m) f hf_int_m, ",", expr integral_simple_func_larger_space hm f hf_int, "]"] [],
   congr,
   ext1 [] [ident x],
   congr,

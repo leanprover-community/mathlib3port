@@ -52,6 +52,9 @@ instance  (x : X) : Lattice (open_nhds x) :=
 instance  (x : X) : OrderTop (open_nhds x) :=
   { top := ⟨⊤, trivialₓ⟩, le_top := fun _ => le_top }
 
+instance  (x : X) : Inhabited (open_nhds x) :=
+  ⟨⊤⟩
+
 instance open_nhds_category (x : X) : category.{u} (open_nhds x) :=
   by 
     unfold open_nhds 

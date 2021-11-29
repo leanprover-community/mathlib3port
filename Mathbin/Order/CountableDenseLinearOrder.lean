@@ -36,8 +36,8 @@ namespace Order
     before `hi`. Then there is an element of `α` strictly between `lo`
     and `hi`. -/
 theorem exists_between_finsets {α : Type _} [LinearOrderₓ α] [DenselyOrdered α] [NoBotOrder α] [NoTopOrder α]
-  [nonem : Nonempty α] (lo hi : Finset α) (lo_lt_hi : ∀ x _ : x ∈ lo y _ : y ∈ hi, x < y) :
-  ∃ m : α, (∀ x _ : x ∈ lo, x < m) ∧ ∀ y _ : y ∈ hi, m < y :=
+  [nonem : Nonempty α] (lo hi : Finset α) (lo_lt_hi : ∀ x (_ : x ∈ lo) y (_ : y ∈ hi), x < y) :
+  ∃ m : α, (∀ x (_ : x ∈ lo), x < m) ∧ ∀ y (_ : y ∈ hi), m < y :=
   if nlo : lo.nonempty then
     if nhi : hi.nonempty then
       Exists.elim (exists_between (lo_lt_hi _ (Finset.max'_mem _ nlo) _ (Finset.min'_mem _ nhi)))
@@ -59,7 +59,7 @@ variable(α β : Type _)[LinearOrderₓ α][LinearOrderₓ β]
     A partial order isomorphism is encoded as a finite subset of `α × β`, consisting
     of pairs which should be identified. -/
 def partial_iso : Type _ :=
-  { f : Finset (α × β) // ∀ p q _ : p ∈ f _ : q ∈ f, cmp (Prod.fst p) (Prod.fst q) = cmp (Prod.snd p) (Prod.snd q) }
+  { f : Finset (α × β) // ∀ p q (_ : p ∈ f) (_ : q ∈ f), cmp (Prod.fst p) (Prod.fst q) = cmp (Prod.snd p) (Prod.snd q) }
 
 namespace PartialIso
 

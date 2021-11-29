@@ -56,7 +56,7 @@ begin
   assumption
 end
 
-theorem not_mem_mk_rbtree : ∀ a : α, a ∉ mkRbtree α lt :=
+theorem not_mem_mk_rbtree : ∀ (a : α), a ∉ mkRbtree α lt :=
   by 
     simp [HasMem.Mem, Rbtree.Mem, Rbnode.Mem, mkRbtree]
 
@@ -216,7 +216,7 @@ theorem mem_insert_of_incomp {a b : α} (t : Rbtree α lt) : ¬lt a b ∧ ¬lt b
     cases t 
     apply Rbnode.mem_insert_of_incomp
 
-theorem mem_insert [IsIrrefl α lt] : ∀ a : α t : Rbtree α lt, a∈t.insert a :=
+theorem mem_insert [IsIrrefl α lt] : ∀ (a : α) (t : Rbtree α lt), a∈t.insert a :=
   by 
     intros 
     apply mem_insert_of_incomp 

@@ -70,7 +70,7 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : Polynomial R
         _ ≤ _ := card_roots_sub_C' hp
         
 
--- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in FieldTheory.Finite.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `f` and `g` are quadratic polynomials, then the `f.eval a + g.eval b = 0` has a solution. -/
 theorem exists_root_sum_quadratic
 [fintype R]
@@ -185,7 +185,7 @@ theorem cast_card_eq_zero : (q : K) = 0 :=
     conv  => congr rw [←pow_oneₓ p]
     exact pow_dvd_pow _ n.2
 
-theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : Units K, (x^i) = 1) ↔ q - 1 ∣ i :=
+theorem forall_pow_eq_one_iff (i : ℕ) : (∀ (x : Units K), (x^i) = 1) ↔ q - 1 ∣ i :=
   by 
     classical 
     obtain ⟨x, hx⟩ := IsCyclic.exists_generator (Units K)
@@ -346,9 +346,7 @@ begin
   rcases [expr finite_field.card K p, "with", "⟨", "⟨", ident n, ",", ident npos, "⟩", ",", "⟨", ident hp, ",", ident hn, "⟩", "⟩"],
   haveI [] [":", expr fact p.prime] [":=", expr ⟨hp⟩],
   dsimp [] [] [] ["at", ident hn],
-  rw [expr hn] ["at", "*"],
-  rw ["<-", expr map_expand_pow_char] [],
-  rw ["[", expr frobenius_pow hn, ",", expr ring_hom.one_def, ",", expr map_id, "]"] []
+  rw ["[", expr hn, ",", "<-", expr map_expand_pow_char, ",", expr frobenius_pow hn, ",", expr ring_hom.one_def, ",", expr map_id, "]"] []
 end
 
 end FiniteField

@@ -83,10 +83,10 @@ def type : PSet → Type u
 | ⟨α, A⟩ => α
 
 /-- The underlying pre-set family of a pre-set -/
-def func : ∀ x : PSet, x.type → PSet
+def func : ∀ (x : PSet), x.type → PSet
 | ⟨α, A⟩ => A
 
-theorem mk_type_func : ∀ x : PSet, mk x.type x.func = x
+theorem mk_type_func : ∀ (x : PSet), mk x.type x.func = x
 | ⟨α, A⟩ => rfl
 
 /-- Two pre-sets are extensionally equivalent if every element of the first family is extensionally
@@ -131,7 +131,7 @@ protected def subset : PSet → PSet → Prop
 instance  : HasSubset PSet :=
   ⟨PSet.Subset⟩
 
-theorem Equiv.ext : ∀ x y : PSet, Equiv x y ↔ x ⊆ y ∧ y ⊆ x
+theorem Equiv.ext : ∀ (x y : PSet), Equiv x y ↔ x ⊆ y ∧ y ⊆ x
 | ⟨α, A⟩, ⟨β, B⟩ =>
   ⟨fun ⟨αβ, βα⟩ =>
       ⟨αβ,
@@ -176,7 +176,7 @@ instance  : HasMem PSet.{u} PSet.{u} :=
 theorem mem.mk {α : Type u} (A : α → PSet) (a : α) : A a ∈ mk α A :=
   ⟨a, Equiv.refl (A a)⟩
 
-theorem mem.ext : ∀ {x y : PSet.{u}}, (∀ w : PSet.{u}, w ∈ x ↔ w ∈ y) → Equiv x y
+theorem mem.ext : ∀ {x y : PSet.{u}}, (∀ (w : PSet.{u}), w ∈ x ↔ w ∈ y) → Equiv x y
 | ⟨α, A⟩, ⟨β, B⟩, h =>
   ⟨fun a => (h (A a)).1 (mem.mk A a),
     fun b =>
@@ -308,7 +308,7 @@ protected def lift : PSet.{u} → PSet.{max u v}
 def embed : PSet.{max (u + 1) v} :=
   ⟨Ulift.{v, u + 1} PSet, fun ⟨x⟩ => PSet.lift.{u, max (u + 1) v} x⟩
 
-theorem lift_mem_embed : ∀ x : PSet.{u}, PSet.lift.{u, max (u + 1) v} x ∈ embed.{u, v} :=
+theorem lift_mem_embed : ∀ (x : PSet.{u}), PSet.lift.{u, max (u + 1) v} x ∈ embed.{u, v} :=
   fun x => ⟨⟨x⟩, equiv.rfl⟩
 
 /-- Function equivalence is defined so that `f ~ g` iff `∀ x y, x ~ y → f x ~ g y`. This extends to
@@ -361,7 +361,7 @@ namespace PSet
 namespace Resp
 
 /-- Helper function for `pSet.eval`. -/
-def eval_aux : ∀ {n}, { f : resp n → Arity Setₓ.{u} n // ∀ a b : resp n, resp.equiv a b → f a = f b }
+def eval_aux : ∀ {n}, { f : resp n → Arity Setₓ.{u} n // ∀ (a b : resp n), resp.equiv a b → f a = f b }
 | 0 => ⟨fun a => «expr⟦ ⟧» a.1, fun a b h => Quotientₓ.sound h⟩
 | n+1 =>
   let F : resp (n+1) → Arity Setₓ (n+1) :=
@@ -390,14 +390,14 @@ class inductive definable n : Arity Setₓ.{u} n → Type (u + 1)
 attribute [instance] definable.mk
 
 /-- The evaluation of a function respecting equivalence is definable, by that same function. -/
-def definable.eq_mk {n} f : ∀ {s : Arity Setₓ.{u} n} H : resp.eval _ f = s, definable n s
+def definable.eq_mk {n} f : ∀ {s : Arity Setₓ.{u} n} (H : resp.eval _ f = s), definable n s
 | _, rfl => ⟨f⟩
 
 /-- Turns a definable function into a function that respects equivalence. -/
-def definable.resp {n} : ∀ s : Arity Setₓ.{u} n [definable n s], resp n
+def definable.resp {n} : ∀ (s : Arity Setₓ.{u} n) [definable n s], resp n
 | _, ⟨f⟩ => f
 
-theorem definable.eq {n} : ∀ s : Arity Setₓ.{u} n [H : definable n s], (@definable.resp n s H).eval _ = s
+theorem definable.eq {n} : ∀ (s : Arity Setₓ.{u} n) [H : definable n s], (@definable.resp n s H).eval _ = s
 | _, ⟨f⟩ => rfl
 
 end PSet
@@ -406,7 +406,7 @@ namespace Classical
 
 open PSet
 
--- error in SetTheory.Zfc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in SetTheory.Zfc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- All functions are classically definable. -/
 noncomputable
 def all_definable : ∀ {n} (F : arity Set.{u} n), definable n F
@@ -463,7 +463,7 @@ instance HasSubset : HasSubset Setₓ :=
 theorem subset_def {x y : Setₓ.{u}} : x ⊆ y ↔ ∀ ⦃z⦄, z ∈ x → z ∈ y :=
   Iff.rfl
 
-theorem subset_iff : ∀ x y : PSet, mk x ⊆ mk y ↔ x ⊆ y
+theorem subset_iff : ∀ (x y : PSet), mk x ⊆ mk y ↔ x ⊆ y
 | ⟨α, A⟩, ⟨β, B⟩ =>
   ⟨fun h a => @h («expr⟦ ⟧» (A a)) (mem.mk A a),
     fun h z =>
@@ -472,10 +472,10 @@ theorem subset_iff : ∀ x y : PSet, mk x ⊆ mk y ↔ x ⊆ y
           let ⟨b, ab⟩ := h a
           ⟨b, za.trans ab⟩⟩
 
-theorem ext {x y : Setₓ.{u}} : (∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y) → x = y :=
+theorem ext {x y : Setₓ.{u}} : (∀ (z : Setₓ.{u}), z ∈ x ↔ z ∈ y) → x = y :=
   Quotientₓ.induction_on₂ x y fun u v h => Quotientₓ.sound (mem.ext fun w => h («expr⟦ ⟧» w))
 
-theorem ext_iff {x y : Setₓ.{u}} : (∀ z : Setₓ.{u}, z ∈ x ↔ z ∈ y) ↔ x = y :=
+theorem ext_iff {x y : Setₓ.{u}} : (∀ (z : Setₓ.{u}), z ∈ x ↔ z ∈ y) ↔ x = y :=
   ⟨ext,
     fun h =>
       by 
@@ -495,7 +495,7 @@ instance  : Inhabited Setₓ :=
 theorem mem_empty x : x ∉ (∅ : Setₓ.{u}) :=
   Quotientₓ.induction_on x PSet.mem_empty
 
-theorem eq_empty (x : Setₓ.{u}) : x = ∅ ↔ ∀ y : Setₓ.{u}, y ∉ x :=
+theorem eq_empty (x : Setₓ.{u}) : x = ∅ ↔ ∀ (y : Setₓ.{u}), y ∉ x :=
   ⟨fun h y => h.symm ▸ mem_empty y,
     fun h => ext fun y => ⟨fun yx => absurd yx (h y), fun y0 => absurd y0 (mem_empty _)⟩⟩
 
@@ -716,15 +716,19 @@ theorem mem_union {x y z : Setₓ.{u}} : z ∈ x ∪ y ↔ z ∈ x ∨ z ∈ y :
         | Or.inl zx => ⟨x, mem_pair.2 (Or.inl rfl), zx⟩
         | Or.inr zy => ⟨y, mem_pair.2 (Or.inr rfl), zy⟩⟩
 
+-- error in SetTheory.Zfc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem mem_inter {x y z : Setₓ.{u}} : z ∈ x ∩ y ↔ z ∈ x ∧ z ∈ y :=
-  @mem_sep fun z : Setₓ.{u} => z ∈ y
+theorem mem_inter
+{x y z : Set.{u}} : «expr ↔ »(«expr ∈ »(z, «expr ∩ »(x, y)), «expr ∧ »(«expr ∈ »(z, x), «expr ∈ »(z, y))) :=
+@@mem_sep (λ z : Set.{u}, «expr ∈ »(z, y))
 
+-- error in SetTheory.Zfc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem mem_diff {x y z : Setₓ.{u}} : z ∈ x \ y ↔ z ∈ x ∧ z ∉ y :=
-  @mem_sep fun z : Setₓ.{u} => z ∉ y
+theorem mem_diff
+{x y z : Set.{u}} : «expr ↔ »(«expr ∈ »(z, «expr \ »(x, y)), «expr ∧ »(«expr ∈ »(z, x), «expr ∉ »(z, y))) :=
+@@mem_sep (λ z : Set.{u}, «expr ∉ »(z, y))
 
-theorem induction_on {p : Setₓ → Prop} x (h : ∀ x, (∀ y _ : y ∈ x, p y) → p x) : p x :=
+theorem induction_on {p : Setₓ → Prop} x (h : ∀ x, (∀ y (_ : y ∈ x), p y) → p x) : p x :=
   Quotientₓ.induction_on x$
     fun u =>
       PSet.recOn u$
@@ -738,22 +742,17 @@ theorem induction_on {p : Setₓ → Prop} x (h : ∀ x, (∀ y _ : y ∈ x, p y
                       rw [@Quotientₓ.sound PSet _ _ _ ha]
                       exact IH a
 
-theorem regularity (x : Setₓ.{u}) (h : x ≠ ∅) : ∃ (y : _)(_ : y ∈ x), x ∩ y = ∅ :=
-  Classical.by_contradiction$
-    fun ne =>
-      h$
-        (eq_empty x).2$
-          fun y =>
-            induction_on y$
-              fun z IH : ∀ w : Setₓ.{u}, w ∈ z → w ∉ x =>
-                show z ∉ x from
-                  fun zx =>
-                    Ne
-                      ⟨z, zx,
-                        (eq_empty _).2
-                          fun w wxz =>
-                            let ⟨wx, wz⟩ := mem_inter.1 wxz 
-                            IH w wz wx⟩
+-- error in SetTheory.Zfc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem regularity
+(x : Set.{u})
+(h : «expr ≠ »(x, «expr∅»())) : «expr∃ , »((y «expr ∈ » x), «expr = »(«expr ∩ »(x, y), «expr∅»())) :=
+«expr $ »(classical.by_contradiction, λ
+ ne, «expr $ »(h, «expr $ »((eq_empty x).2, λ
+   y, «expr $ »(induction_on y, λ
+    (z)
+    (IH : ∀
+     w : Set.{u}, «expr ∈ »(w, z) → «expr ∉ »(w, x)), show «expr ∉ »(z, x), from λ
+    zx, ne ⟨z, zx, (eq_empty _).2 (λ w wxz, let ⟨wx, wz⟩ := mem_inter.1 wxz in IH w wz wx)⟩))))
 
 /-- The image of a (definable) ZFC set function -/
 def image (f : Setₓ → Setₓ) [H : definable 1 f] : Setₓ → Setₓ :=
@@ -771,7 +770,7 @@ def image (f : Setₓ → Setₓ) [H : definable 1 f] : Setₓ → Setₓ :=
                         fun ⟨w, h1, h2⟩ => ⟨w, (mem.congr_right e).2 h1, h2⟩⟩)$
                 Iff.symm (mem_image r.2)⟩
 
-theorem image.mk : ∀ f : Setₓ.{u} → Setₓ.{u} [H : definable 1 f] x {y} h : y ∈ x, f y ∈ @image f H x
+theorem image.mk : ∀ (f : Setₓ.{u} → Setₓ.{u}) [H : definable 1 f] x {y} (h : y ∈ x), f y ∈ @image f H x
 | _, ⟨F⟩, x, y => Quotientₓ.induction_on₂ x y$ fun ⟨α, A⟩ y ⟨a, ya⟩ => ⟨a, F.2 _ _ ya⟩
 
 @[simp]
@@ -861,7 +860,7 @@ theorem pair_mem_prod {x y a b : Setₓ.{u}} : pair a b ∈ Prod x y ↔ a ∈ x
 /-- `is_func x y f` is the assertion that `f` is a subset of `x × y` which relates to each element
 of `x` a unique element of `y`, so that we can consider `f`as a ZFC function `x → y`. -/
 def is_func (x y f : Setₓ.{u}) : Prop :=
-  f ⊆ Prod x y ∧ ∀ z : Setₓ.{u}, z ∈ x → ∃!w, pair z w ∈ f
+  f ⊆ Prod x y ∧ ∀ (z : Setₓ.{u}), z ∈ x → ∃!w, pair z w ∈ f
 
 /-- `funs x y` is `y ^ x`, the set of all set functions `x → y` -/
 def funs (x y : Setₓ.{u}) : Setₓ.{u} :=
@@ -895,7 +894,7 @@ theorem map_unique {f : Setₓ.{u} → Setₓ.{u}} [H : definable 1 f] {x z : Se
 
 @[simp]
 theorem map_is_func {f : Setₓ → Setₓ} [H : definable 1 f] {x y : Setₓ} :
-  is_func x y (map f x) ↔ ∀ z _ : z ∈ x, f z ∈ y :=
+  is_func x y (map f x) ↔ ∀ z (_ : z ∈ x), f z ∈ y :=
   ⟨fun ⟨ss, h⟩ z zx =>
       let ⟨t, t1, t2⟩ := h z zx
       (t2 (f z) (image.mk _ _ zx)).symm ▸ (pair_mem_prod.1 (ss t1)).right,
@@ -1103,13 +1102,13 @@ noncomputable def choice : Setₓ :=
 
 include h
 
-theorem choice_mem_aux (y : Setₓ.{u}) (yx : y ∈ x) : (Classical.epsilon fun z : Setₓ.{u} => z ∈ y) ∈ y :=
-  (@Classical.epsilon_spec _ fun z : Setₓ.{u} => z ∈ y)$
-    Classical.by_contradiction$
-      fun n =>
-        h$
-          by 
-            rwa [←(eq_empty y).2$ fun z zx => n ⟨z, zx⟩]
+-- error in SetTheory.Zfc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem choice_mem_aux
+(y : Set.{u})
+(yx : «expr ∈ »(y, x)) : «expr ∈ »(classical.epsilon (λ z : Set.{u}, «expr ∈ »(z, y)), y) :=
+«expr $ »(@classical.epsilon_spec _ (λ
+  z : Set.{u}, «expr ∈ »(z, y)), «expr $ »(classical.by_contradiction, λ
+  n, «expr $ »(h, by rwa ["<-", expr «expr $ »((eq_empty y).2, λ z zx, n ⟨z, zx⟩)] [])))
 
 theorem choice_is_func : is_func x (Union x) (choice x) :=
   (@map_is_func _ (Classical.allDefinable _) _ _).2$ fun y yx => mem_Union.2 ⟨y, yx, choice_mem_aux x h y yx⟩

@@ -80,8 +80,8 @@ class Mvqpf{n : ℕ}(F : Typevec.{u} n → Type _)[Mvfunctor F] where
   p : Mvpfunctor.{u} n 
   abs : ∀ {α}, P.obj α → F α 
   repr : ∀ {α}, F α → P.obj α 
-  abs_repr : ∀ {α} x : F α, abs (reprₓ x) = x 
-  abs_map : ∀ {α β} f : α ⟹ β p : P.obj α, abs (f <$$> p) = f <$$> abs p
+  abs_repr : ∀ {α} (x : F α), abs (reprₓ x) = x 
+  abs_map : ∀ {α β} (f : α ⟹ β) (p : P.obj α), abs (f <$$> p) = f <$$> abs p
 
 namespace Mvqpf
 
@@ -241,16 +241,16 @@ variable(q)
 /-- A qpf is said to be uniform if every polynomial functor
 representing a single value all have the same range. -/
 def is_uniform : Prop :=
-  ∀ ⦃α : Typevec n⦄ a a' : q.P.A f : q.P.B a ⟹ α f' : q.P.B a' ⟹ α,
+  ∀ ⦃α : Typevec n⦄ (a a' : q.P.A) (f : q.P.B a ⟹ α) (f' : q.P.B a' ⟹ α),
     abs ⟨a, f⟩ = abs ⟨a', f'⟩ → ∀ i, f i '' univ = f' i '' univ
 
 /-- does `abs` preserve `liftp`? -/
 def liftp_preservation : Prop :=
-  ∀ ⦃α : Typevec n⦄ p : ∀ ⦃i⦄, α i → Prop x : q.P.obj α, liftp p (abs x) ↔ liftp p x
+  ∀ ⦃α : Typevec n⦄ (p : ∀ ⦃i⦄, α i → Prop) (x : q.P.obj α), liftp p (abs x) ↔ liftp p x
 
 /-- does `abs` preserve `supp`? -/
 def supp_preservation : Prop :=
-  ∀ ⦃α⦄ x : q.P.obj α, supp (abs x) = supp x
+  ∀ ⦃α⦄ (x : q.P.obj α), supp (abs x) = supp x
 
 variable(q)
 
@@ -269,7 +269,7 @@ theorem supp_eq_of_is_uniform (h : q.is_uniform) {α : Typevec n} (a : q.P.A) (f
     apply h'
 
 theorem liftp_iff_of_is_uniform (h : q.is_uniform) {α : Typevec n} (x : F α) (p : ∀ i, α i → Prop) :
-  liftp p x ↔ ∀ i u _ : u ∈ supp x i, p i u :=
+  liftp p x ↔ ∀ i u (_ : u ∈ supp x i), p i u :=
   by 
     rw [liftp_iff, ←abs_repr x]
     cases' reprₓ x with a f 

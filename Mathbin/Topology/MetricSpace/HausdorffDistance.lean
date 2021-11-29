@@ -47,7 +47,7 @@ def inf_edist (x : α) (s : Set α) : ℝ≥0∞ :=
 theorem inf_edist_empty : inf_edist x ∅ = ∞ :=
   infi_emptyset
 
-theorem le_inf_edist {d} : d ≤ inf_edist x s ↔ ∀ y _ : y ∈ s, d ≤ edist x y :=
+theorem le_inf_edist {d} : d ≤ inf_edist x s ↔ ∀ y (_ : y ∈ s), d ≤ edist x y :=
   by 
     simp only [inf_edist, le_infi_iff]
 
@@ -217,16 +217,16 @@ theorem Hausdorff_edist_comm : Hausdorff_edist s t = Hausdorff_edist t s :=
 
 /-- Bounding the Hausdorff edistance by bounding the edistance of any point
 in each set to the other set -/
-theorem Hausdorff_edist_le_of_inf_edist {r : ℝ≥0∞} (H1 : ∀ x _ : x ∈ s, inf_edist x t ≤ r)
-  (H2 : ∀ x _ : x ∈ t, inf_edist x s ≤ r) : Hausdorff_edist s t ≤ r :=
+theorem Hausdorff_edist_le_of_inf_edist {r : ℝ≥0∞} (H1 : ∀ x (_ : x ∈ s), inf_edist x t ≤ r)
+  (H2 : ∀ x (_ : x ∈ t), inf_edist x s ≤ r) : Hausdorff_edist s t ≤ r :=
   by 
     simp only [Hausdorff_edist, sup_le_iff, supr_le_iff]
     exact ⟨H1, H2⟩
 
 /-- Bounding the Hausdorff edistance by exhibiting, for any point in each set,
 another point in the other set at controlled distance -/
-theorem Hausdorff_edist_le_of_mem_edist {r : ℝ≥0∞} (H1 : ∀ x _ : x ∈ s, ∃ (y : _)(_ : y ∈ t), edist x y ≤ r)
-  (H2 : ∀ x _ : x ∈ t, ∃ (y : _)(_ : y ∈ s), edist x y ≤ r) : Hausdorff_edist s t ≤ r :=
+theorem Hausdorff_edist_le_of_mem_edist {r : ℝ≥0∞} (H1 : ∀ x (_ : x ∈ s), ∃ (y : _)(_ : y ∈ t), edist x y ≤ r)
+  (H2 : ∀ x (_ : x ∈ t), ∃ (y : _)(_ : y ∈ s), edist x y ≤ r) : Hausdorff_edist s t ≤ r :=
   by 
     refine' Hausdorff_edist_le_of_inf_edist _ _
     ·
@@ -295,13 +295,13 @@ theorem Hausdorff_edist_triangle : Hausdorff_edist s u ≤ Hausdorff_edist s t+H
     rw [Hausdorff_edist_def]
     simp only [sup_le_iff, supr_le_iff]
     split 
-    show ∀ x _ : x ∈ s, inf_edist x u ≤ Hausdorff_edist s t+Hausdorff_edist t u 
+    show ∀ x (_ : x ∈ s), inf_edist x u ≤ Hausdorff_edist s t+Hausdorff_edist t u 
     exact
       fun x xs =>
         calc inf_edist x u ≤ inf_edist x t+Hausdorff_edist t u := inf_edist_le_inf_edist_add_Hausdorff_edist 
           _ ≤ Hausdorff_edist s t+Hausdorff_edist t u := add_le_add_right (inf_edist_le_Hausdorff_edist_of_mem xs) _ 
           
-    show ∀ x _ : x ∈ u, inf_edist x s ≤ Hausdorff_edist s t+Hausdorff_edist t u 
+    show ∀ x (_ : x ∈ u), inf_edist x s ≤ Hausdorff_edist s t+Hausdorff_edist t u 
     exact
       fun x xu =>
         calc inf_edist x s ≤ inf_edist x t+Hausdorff_edist t s := inf_edist_le_inf_edist_add_Hausdorff_edist 
@@ -673,8 +673,8 @@ end
 
 /-- Bounding the Hausdorff distance by exhibiting, for any point in each set,
 another point in the other set at controlled distance -/
-theorem Hausdorff_dist_le_of_mem_dist {r : ℝ} (hr : 0 ≤ r) (H1 : ∀ x _ : x ∈ s, ∃ (y : _)(_ : y ∈ t), dist x y ≤ r)
-  (H2 : ∀ x _ : x ∈ t, ∃ (y : _)(_ : y ∈ s), dist x y ≤ r) : Hausdorff_dist s t ≤ r :=
+theorem Hausdorff_dist_le_of_mem_dist {r : ℝ} (hr : 0 ≤ r) (H1 : ∀ x (_ : x ∈ s), ∃ (y : _)(_ : y ∈ t), dist x y ≤ r)
+  (H2 : ∀ x (_ : x ∈ t), ∃ (y : _)(_ : y ∈ s), dist x y ≤ r) : Hausdorff_dist s t ≤ r :=
   by 
     apply Hausdorff_dist_le_of_inf_dist hr
     ·

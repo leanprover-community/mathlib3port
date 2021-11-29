@@ -368,9 +368,11 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero {a b : Cardinal.{u}} : (a*b)
     simp only [mul_def, mk_eq_zero_iff, is_empty_prod]
     exact id
 
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The cardinal exponential. `#α ^ #β` is the cardinal of `β → α`. -/
-protected def power (a b : Cardinal.{u}) : Cardinal.{u} :=
-  map₂ (fun α β : Type u => β → α) (fun α β γ δ e₁ e₂ => e₂.arrow_congr e₁) a b
+protected
+def power (a b : cardinal.{u}) : cardinal.{u} :=
+map₂ (λ α β : Type u, β → α) (λ α β γ δ e₁ e₂, e₂.arrow_congr e₁) a b
 
 instance  : Pow Cardinal Cardinal :=
   ⟨Cardinal.power⟩
@@ -507,7 +509,7 @@ section OrderProperties
 
 open Sum
 
-protected theorem zero_le : ∀ a : Cardinal, 0 ≤ a :=
+protected theorem zero_le : ∀ (a : Cardinal), 0 ≤ a :=
   by 
     rintro ⟨α⟩ <;> exact ⟨embedding.of_is_empty⟩
 
@@ -692,18 +694,19 @@ theorem le_sum {ι} (f : ι → Cardinal) i : f i ≤ Sum f :=
 theorem mk_sigma {ι} (f : ι → Type _) : # (Σi, f i) = Sum fun i => # (f i) :=
   mk_congr$ Equiv.sigmaCongrRight$ fun i => out_mk_equiv.symm
 
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem sum_const (ι : Type u) (a : Cardinal.{v}) : (Sum fun i : ι => a) = lift.{v} (# ι)*lift.{u} a :=
-  induction_on a$
-    fun α =>
-      mk_congr$
-        calc (Σi : ι, Quotientₓ.out (# α)) ≃ ι × Quotientₓ.out (# α) := Equiv.sigmaEquivProd _ _ 
-          _ ≃ Ulift ι × Ulift α := Equiv.ulift.symm.prodCongr (out_mk_equiv.trans Equiv.ulift.symm)
-          
+theorem sum_const
+(ι : Type u)
+(a : cardinal.{v}) : «expr = »(sum (λ i : ι, a), «expr * »(lift.{v} («expr#»() ι), lift.{u} a)) :=
+«expr $ »(induction_on a, λ
+ α, «expr $ »(mk_congr, calc
+    «expr ≃ »(«exprΣ , »((i : ι), quotient.out («expr#»() α)), «expr × »(ι, quotient.out («expr#»() α))) : equiv.sigma_equiv_prod _ _
+    «expr ≃ »(..., «expr × »(ulift ι, ulift α)) : equiv.ulift.symm.prod_congr (out_mk_equiv.trans equiv.ulift.symm)))
 
-theorem sum_const' (ι : Type u) (a : Cardinal.{u}) : (Sum fun _ : ι => a) = # ι*a :=
-  by 
-    simp 
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sum_const' (ι : Type u) (a : cardinal.{u}) : «expr = »(sum (λ _ : ι, a), «expr * »(«expr#»() ι, a)) :=
+by simp [] [] [] [] [] []
 
 -- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem sum_le_sum {ι} (f g : ι → cardinal) (H : ∀ i, «expr ≤ »(f i, g i)) : «expr ≤ »(sum f, sum g) :=
@@ -749,12 +752,17 @@ def Prod {ι : Type u} (f : ι → Cardinal) : Cardinal :=
 theorem mk_pi {ι : Type u} (α : ι → Type v) : # (∀ i, α i) = Prod fun i => # (α i) :=
   mk_congr$ Equiv.piCongrRight$ fun i => out_mk_equiv.symm
 
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem prod_const (ι : Type u) (a : Cardinal.{v}) : (Prod fun i : ι => a) = (lift.{u} a^lift.{v} (# ι)) :=
-  induction_on a$ fun α => mk_congr$ Equiv.piCongr Equiv.ulift.symm$ fun i => out_mk_equiv.trans Equiv.ulift.symm
+theorem prod_const
+(ι : Type u)
+(a : cardinal.{v}) : «expr = »(prod (λ i : ι, a), «expr ^ »(lift.{u} a, lift.{v} («expr#»() ι))) :=
+«expr $ »(induction_on a, λ
+ α, «expr $ »(mk_congr, «expr $ »(equiv.Pi_congr equiv.ulift.symm, λ i, out_mk_equiv.trans equiv.ulift.symm)))
 
-theorem prod_const' (ι : Type u) (a : Cardinal.{u}) : (Prod fun _ : ι => a) = (a^# ι) :=
-  induction_on a$ fun α => (mk_pi _).symm
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prod_const' (ι : Type u) (a : cardinal.{u}) : «expr = »(prod (λ _ : ι, a), «expr ^ »(a, «expr#»() ι)) :=
+«expr $ »(induction_on a, λ α, (mk_pi _).symm)
 
 -- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem prod_le_prod {ι} (f g : ι → cardinal) (H : ∀ i, «expr ≤ »(f i, g i)) : «expr ≤ »(prod f, prod g) :=
@@ -834,20 +842,21 @@ protected theorem le_sup_iff {ι : Type v} {f : ι → Cardinal.{max v w}} {c : 
   c ≤ sup f ↔ ∀ b, (∀ i, f i ≤ b) → c ≤ b :=
   ⟨fun h b hb => le_transₓ h (sup_le.mpr hb), fun h => h _$ fun i => le_sup f i⟩
 
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The lift of a supremum is the supremum of the lifts. -/
-theorem lift_sup {ι : Type v} (f : ι → Cardinal.{max v w}) :
-  lift.{u} (sup.{v, w} f) = sup.{v, max u w} fun i : ι => lift.{u} (f i) :=
-  by 
-    apply le_antisymmₓ
-    ·
-      rw [Cardinal.le_sup_iff]
-      intro c hc 
-      byContra h 
-      obtain ⟨d, rfl⟩ := Cardinal.lift_down (not_le.mp h).le 
-      simp only [lift_le, sup_le] at h hc 
-      exact h hc
-    ·
-      simp only [Cardinal.sup_le, lift_le, le_sup, implies_true_iff]
+theorem lift_sup
+{ι : Type v}
+(f : ι → cardinal.{max v w}) : «expr = »(lift.{u} (sup.{v, w} f), sup.{v, max u w} (λ i : ι, lift.{u} (f i))) :=
+begin
+  apply [expr le_antisymm],
+  { rw ["[", expr cardinal.le_sup_iff, "]"] [],
+    intros [ident c, ident hc],
+    by_contra [ident h],
+    obtain ["⟨", ident d, ",", ident rfl, "⟩", ":=", expr cardinal.lift_down (not_le.mp h).le],
+    simp [] [] ["only"] ["[", expr lift_le, ",", expr sup_le, "]"] [] ["at", ident h, ident hc],
+    exact [expr h hc] },
+  { simp [] [] ["only"] ["[", expr cardinal.sup_le, ",", expr lift_le, ",", expr le_sup, ",", expr implies_true_iff, "]"] [] [] }
+end
 
 /-- To prove that the lift of a supremum is bounded by some cardinal `t`,
 it suffices to show that the lift of each cardinal is bounded by `t`. -/
@@ -989,7 +998,7 @@ theorem succ_zero : succ 0 = 1 :=
   by 
     normCast
 
-theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ s : Finset α, s.card ≤ n) : # α ≤ n :=
+theorem card_le_of {α : Type u} {n : ℕ} (H : ∀ (s : Finset α), s.card ≤ n) : # α ≤ n :=
   by 
     refine' lt_succ.1 (lt_of_not_geₓ$ fun hn => _)
     rw [←Cardinal.nat_succ, ←Cardinal.lift_mk_fin n.succ] at hn 
@@ -1038,7 +1047,7 @@ theorem lt_omega {c : cardinal.{u}} : «expr ↔ »(«expr < »(c, exprω()), «
    exact [expr ⟨infinite.nat_embedding S⟩]
  end, λ ⟨n, e⟩, «expr ▸ »(e.symm, nat_lt_omega _)⟩
 
-theorem omega_le {c : Cardinal.{u}} : ω ≤ c ↔ ∀ n : ℕ, (n : Cardinal) ≤ c :=
+theorem omega_le {c : Cardinal.{u}} : ω ≤ c ↔ ∀ (n : ℕ), (n : Cardinal) ≤ c :=
   ⟨fun h n => le_transₓ (le_of_ltₓ (nat_lt_omega _)) h,
     fun h =>
       le_of_not_ltₓ$
@@ -1377,18 +1386,18 @@ theorem two_le_iff : (2 : Cardinal) ≤ # α ↔ ∃ x y : α, x ≠ y :=
       apply h 
       exact Subsingleton.elimₓ _ _
 
-theorem two_le_iff' (x : α) : (2 : Cardinal) ≤ # α ↔ ∃ y : α, x ≠ y :=
-  by 
-    rw [two_le_iff]
-    split 
-    ·
-      rintro ⟨y, z, h⟩
-      refine' Classical.by_cases (fun h' : x = y => _) fun h' => ⟨y, h'⟩
-      rw [←h'] at h 
-      exact ⟨z, h⟩
-    ·
-      rintro ⟨y, h⟩
-      exact ⟨x, y, h⟩
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem two_le_iff' (x : α) : «expr ↔ »(«expr ≤ »((2 : cardinal), «expr#»() α), «expr∃ , »((y : α), «expr ≠ »(x, y))) :=
+begin
+  rw ["[", expr two_le_iff, "]"] [],
+  split,
+  { rintro ["⟨", ident y, ",", ident z, ",", ident h, "⟩"],
+    refine [expr classical.by_cases (λ h' : «expr = »(x, y), _) (λ h', ⟨y, h'⟩)],
+    rw ["[", "<-", expr h', "]"] ["at", ident h],
+    exact [expr ⟨z, h⟩] },
+  { rintro ["⟨", ident y, ",", ident h, "⟩"],
+    exact [expr ⟨x, y, h⟩] }
+end
 
 -- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- **König's theorem** -/
@@ -1442,12 +1451,12 @@ theorem mk_vector (α : Type u) (n : ℕ) : # (Vector α n) = # α ^ℕ n :=
     by 
       simp 
 
-theorem mk_list_eq_sum_pow (α : Type u) : # (List α) = Sum fun n : ℕ => # α ^ℕ n :=
-  calc # (List α) = # (Σn, Vector α n) := mk_congr (Equiv.sigmaPreimageEquiv List.length).symm 
-    _ = Sum fun n : ℕ => # α ^ℕ n :=
-    by 
-      simp 
-    
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mk_list_eq_sum_pow
+(α : Type u) : «expr = »(«expr#»() (list α), sum (λ n : exprℕ(), «expr ^ℕ »(«expr#»() α, n))) :=
+calc
+  «expr = »(«expr#»() (list α), «expr#»() «exprΣ , »((n), vector α n)) : mk_congr (equiv.sigma_preimage_equiv list.length).symm
+  «expr = »(..., sum (λ n : exprℕ(), «expr ^ℕ »(«expr#»() α, n))) : by simp [] [] [] [] [] []
 
 theorem mk_quot_le {α : Type u} {r : α → α → Prop} : # (Quot r) ≤ # α :=
   mk_le_of_surjective Quot.exists_rep
@@ -1520,16 +1529,22 @@ theorem mk_Union_eq_sum_mk {α ι : Type u} {f : ι → Set α} (h : ∀ i j, i 
 theorem mk_Union_le {α ι : Type u} (f : ι → Set α) : # (⋃i, f i) ≤ # ι*Cardinal.sup.{u, u} fun i => # (f i) :=
   le_transₓ mk_Union_le_sum_mk (sum_le_sup _)
 
-theorem mk_sUnion_le {α : Type u} (A : Set (Set α)) : # (⋃₀A) ≤ # A*Cardinal.sup.{u, u} fun s : A => # s :=
-  by 
-    rw [sUnion_eq_Union]
-    apply mk_Union_le
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mk_sUnion_le
+{α : Type u}
+(A : set (set α)) : «expr ≤ »(«expr#»() «expr⋃₀ »(A), «expr * »(«expr#»() A, cardinal.sup.{u, u} (λ
+   s : A, «expr#»() s))) :=
+by { rw ["[", expr sUnion_eq_Union, "]"] [],
+  apply [expr mk_Union_le] }
 
-theorem mk_bUnion_le {ι α : Type u} (A : ι → Set α) (s : Set ι) :
-  # (⋃(x : _)(_ : x ∈ s), A x) ≤ # s*Cardinal.sup.{u, u} fun x : s => # (A x.1) :=
-  by 
-    rw [bUnion_eq_Union]
-    apply mk_Union_le
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mk_bUnion_le
+{ι α : Type u}
+(A : ι → set α)
+(s : set ι) : «expr ≤ »(«expr#»() «expr⋃ , »((x «expr ∈ » s), A x), «expr * »(«expr#»() s, cardinal.sup.{u, u} (λ
+   x : s, «expr#»() (A x.1)))) :=
+by { rw ["[", expr bUnion_eq_Union, "]"] [],
+  apply [expr mk_Union_le] }
 
 theorem finset_card_lt_omega (s : Finset α) : # («expr↑ » s : Set α) < ω :=
   by 
@@ -1662,11 +1677,11 @@ theorem le_mk_iff_exists_subset {c : Cardinal} {α : Type u} {s : Set α} : c �
     rw [mk_image_eq]
     apply Subtype.val_injective
 
+-- error in SetTheory.Cardinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function α^{<β}, defined to be sup_{γ < β} α^γ.
   We index over {s : set β.out // #s < β } instead of {γ // γ < β}, because the latter lives in a
-  higher universe -/
-noncomputable def powerlt (α β : Cardinal.{u}) : Cardinal.{u} :=
-  sup.{u, u} fun s : { s : Set β.out // # s < β } => α^mk.{u} s
+  higher universe -/ noncomputable def powerlt (α β : cardinal.{u}) : cardinal.{u} :=
+sup.{u, u} (λ s : {s : set β.out // «expr < »(«expr#»() s, β)}, «expr ^ »(α, mk.{u} s))
 
 infixl:80 " ^< " => powerlt
 
@@ -1687,7 +1702,7 @@ theorem le_powerlt {c₁ c₂ c₃ : Cardinal} (h : c₂ < c₃) : (c₁^c₂) �
     rcases powerlt_aux h with ⟨s, rfl⟩
     apply le_sup _ s
 
-theorem powerlt_le {c₁ c₂ c₃ : Cardinal} : c₁ ^< c₂ ≤ c₃ ↔ ∀ c₄ _ : c₄ < c₂, (c₁^c₄) ≤ c₃ :=
+theorem powerlt_le {c₁ c₂ c₃ : Cardinal} : c₁ ^< c₂ ≤ c₃ ↔ ∀ c₄ (_ : c₄ < c₂), (c₁^c₄) ≤ c₃ :=
   by 
     rw [powerlt, sup_le]
     split 

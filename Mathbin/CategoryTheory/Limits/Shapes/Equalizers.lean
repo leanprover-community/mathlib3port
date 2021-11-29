@@ -74,7 +74,7 @@ open WalkingParallelPairHom
 
 /-- Composition of morphisms in the indexing diagram for (co)equalizers. -/
 def walking_parallel_pair_hom.comp :
-  ∀ X Y Z : walking_parallel_pair f : walking_parallel_pair_hom X Y g : walking_parallel_pair_hom Y Z,
+  ∀ (X Y Z : walking_parallel_pair) (f : walking_parallel_pair_hom X Y) (g : walking_parallel_pair_hom Y Z),
     walking_parallel_pair_hom X Z
 | _, _, _, id _, h => h
 | _, _, _, left, id one => left
@@ -277,7 +277,7 @@ theorem cofork.condition (t : cofork f g) : f ≫ t.π = g ≫ t.π :=
 /-- To check whether two maps are equalized by both maps of a fork, it suffices to check it for the
     first map -/
 theorem fork.equalizer_ext (s : fork f g) {W : C} {k l : W ⟶ s.X} (h : k ≫ fork.ι s = l ≫ fork.ι s) :
-  ∀ j : walking_parallel_pair, k ≫ s.π.app j = l ≫ s.π.app j
+  ∀ (j : walking_parallel_pair), k ≫ s.π.app j = l ≫ s.π.app j
 | zero => h
 | one =>
   by 
@@ -286,7 +286,7 @@ theorem fork.equalizer_ext (s : fork f g) {W : C} {k l : W ⟶ s.X} (h : k ≫ f
 /-- To check whether two maps are coequalized by both maps of a cofork, it suffices to check it for
     the second map -/
 theorem cofork.coequalizer_ext (s : cofork f g) {W : C} {k l : s.X ⟶ W} (h : cofork.π s ≫ k = cofork.π s ≫ l) :
-  ∀ j : walking_parallel_pair, s.ι.app j ≫ k = s.ι.app j ≫ l
+  ∀ (j : walking_parallel_pair), s.ι.app j ≫ k = s.ι.app j ≫ l
 | zero =>
   by 
     simp only [←cofork.left_app_one, category.assoc, h]
@@ -314,9 +314,9 @@ def cofork.is_colimit.desc' {s : cofork f g} (hs : is_colimit s) {W : C} (k : Y 
 
 /-- This is a slightly more convenient method to verify that a fork is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
-def fork.is_limit.mk (t : fork f g) (lift : ∀ s : fork f g, s.X ⟶ t.X)
-  (fac : ∀ s : fork f g, lift s ≫ fork.ι t = fork.ι s)
-  (uniq : ∀ s : fork f g m : s.X ⟶ t.X w : ∀ j : walking_parallel_pair, m ≫ t.π.app j = s.π.app j, m = lift s) :
+def fork.is_limit.mk (t : fork f g) (lift : ∀ (s : fork f g), s.X ⟶ t.X)
+  (fac : ∀ (s : fork f g), lift s ≫ fork.ι t = fork.ι s)
+  (uniq : ∀ (s : fork f g) (m : s.X ⟶ t.X) (w : ∀ (j : walking_parallel_pair), m ≫ t.π.app j = s.π.app j), m = lift s) :
   is_limit t :=
   { lift,
     fac' :=
@@ -330,14 +330,15 @@ def fork.is_limit.mk (t : fork f g) (lift : ∀ s : fork f g, s.X ⟶ t.X)
     only asks for a proof of facts that carry any mathematical content, and allows access to the
     same `s` for all parts. -/
 def fork.is_limit.mk' {X Y : C} {f g : X ⟶ Y} (t : fork f g)
-  (create : ∀ s : fork f g, { l // l ≫ t.ι = s.ι ∧ ∀ {m}, m ≫ t.ι = s.ι → m = l }) : is_limit t :=
+  (create : ∀ (s : fork f g), { l // l ≫ t.ι = s.ι ∧ ∀ {m}, m ≫ t.ι = s.ι → m = l }) : is_limit t :=
   fork.is_limit.mk t (fun s => (create s).1) (fun s => (create s).2.1) fun s m w => (create s).2.2 (w zero)
 
 /-- This is a slightly more convenient method to verify that a cofork is a colimit cocone. It
     only asks for a proof of facts that carry any mathematical content -/
-def cofork.is_colimit.mk (t : cofork f g) (desc : ∀ s : cofork f g, t.X ⟶ s.X)
-  (fac : ∀ s : cofork f g, cofork.π t ≫ desc s = cofork.π s)
-  (uniq : ∀ s : cofork f g m : t.X ⟶ s.X w : ∀ j : walking_parallel_pair, t.ι.app j ≫ m = s.ι.app j, m = desc s) :
+def cofork.is_colimit.mk (t : cofork f g) (desc : ∀ (s : cofork f g), t.X ⟶ s.X)
+  (fac : ∀ (s : cofork f g), cofork.π t ≫ desc s = cofork.π s)
+  (uniq :
+    ∀ (s : cofork f g) (m : t.X ⟶ s.X) (w : ∀ (j : walking_parallel_pair), t.ι.app j ≫ m = s.ι.app j), m = desc s) :
   is_colimit t :=
   { desc,
     fac' :=
@@ -352,7 +353,7 @@ def cofork.is_colimit.mk (t : cofork f g) (desc : ∀ s : cofork f g, t.X ⟶ s.
     only asks for a proof of facts that carry any mathematical content, and allows access to the
     same `s` for all parts. -/
 def cofork.is_colimit.mk' {X Y : C} {f g : X ⟶ Y} (t : cofork f g)
-  (create : ∀ s : cofork f g, { l : t.X ⟶ s.X // t.π ≫ l = s.π ∧ ∀ {m}, t.π ≫ m = s.π → m = l }) : is_colimit t :=
+  (create : ∀ (s : cofork f g), { l : t.X ⟶ s.X // t.π ≫ l = s.π ∧ ∀ {m}, t.π ≫ m = s.π → m = l }) : is_colimit t :=
   cofork.is_colimit.mk t (fun s => (create s).1) (fun s => (create s).2.1) fun s m w => (create s).2.2 (w one)
 
 /--
@@ -551,6 +552,7 @@ To construct an isomorphism between coforks,
 it suffices to give an isomorphism between the cocone points
 and check that it commutes with the `π` morphisms.
 -/
+@[simps]
 def cofork.ext {s t : cofork f g} (i : s.X ≅ t.X) (w : s.π ≫ i.hom = t.π) : s ≅ t :=
   { Hom := cofork.mk_hom i.hom w,
     inv :=

@@ -140,14 +140,14 @@ unsafe def binder_eq_elim.old_conv (b : binder_eq_elim) : old_conv Unit :=
     b.check x (bd.instantiate_var x)
     b.adapt_rel b.push
 
-theorem exists_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' = a → Prop) :
+theorem exists_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ (a' : α), a' = a → Prop) :
   (∃ (a' : α)(h : a' = a), p a' h) ↔ p a rfl :=
   ⟨fun ⟨a', ⟨h, p_h⟩⟩ =>
       match a', h, p_h with 
       | _, rfl, h => h,
     fun h => ⟨a, rfl, h⟩⟩
 
-theorem exists_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a = a' → Prop) :
+theorem exists_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ (a' : α), a = a' → Prop) :
   (∃ (a' : α)(h : a = a'), p a' h) ↔ p a rfl :=
   ⟨fun ⟨a', ⟨h, p_h⟩⟩ =>
       match a', h, p_h with 
@@ -166,15 +166,15 @@ unsafe def exists_eq_elim : binder_eq_elim :=
 theorem forall_comm.{u, v} {α : Sort u} {β : Sort v} (p : α → β → Prop) : (∀ a b, p a b) ↔ ∀ b a, p a b :=
   ⟨fun h b a => h a b, fun h b a => h a b⟩
 
-theorem forall_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' = a → Prop) :
-  (∀ a' : α h : a' = a, p a' h) ↔ p a rfl :=
+theorem forall_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ (a' : α), a' = a → Prop) :
+  (∀ (a' : α) (h : a' = a), p a' h) ↔ p a rfl :=
   ⟨fun h => h a rfl,
     fun h a' h_eq =>
       match a', h_eq with 
       | _, rfl => h⟩
 
-theorem forall_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a = a' → Prop) :
-  (∀ a' : α h : a = a', p a' h) ↔ p a rfl :=
+theorem forall_elim_eq_right.{u, v} {α : Sort u} (a : α) (p : ∀ (a' : α), a = a' → Prop) :
+  (∀ (a' : α) (h : a = a'), p a' h) ↔ p a rfl :=
   ⟨fun h => h a rfl,
     fun h a' h_eq =>
       match a', h_eq with 

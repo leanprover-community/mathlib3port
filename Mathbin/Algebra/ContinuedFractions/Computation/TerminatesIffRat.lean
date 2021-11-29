@@ -337,18 +337,16 @@ theorem terminates_of_rat (q : ℚ) : (of q).Terminates :=
 
 end TerminatesOfRat
 
+-- error in Algebra.ContinuedFractions.Computation.TerminatesIffRat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The continued fraction `generalized_continued_fraction.of v` terminates if and only if `v ∈ ℚ`.
 -/
-theorem terminates_iff_rat (v : K) : (of v).Terminates ↔ ∃ q : ℚ, v = (q : K) :=
-  Iff.intro
-    (fun terminates_v : (of v).Terminates => show ∃ q : ℚ, v = (q : K) from exists_rat_eq_of_terminates terminates_v)
-    fun exists_q_eq_v : ∃ q : ℚ, v = («expr↑ » q : K) =>
-      Exists.elim exists_q_eq_v
-        fun q =>
-          fun v_eq_q : v = «expr↑ » q =>
-            have  : (of q).Terminates := terminates_of_rat q
-            (of_terminates_iff_of_rat_terminates v_eq_q).elim_right this
+theorem terminates_iff_rat (v : K) : «expr ↔ »((of v).terminates, «expr∃ , »((q : exprℚ()), «expr = »(v, (q : K)))) :=
+iff.intro (assume
+ terminates_v : (of v).terminates, show «expr∃ , »((q : exprℚ()), «expr = »(v, (q : K))), from exists_rat_eq_of_terminates terminates_v) (assume
+ exists_q_eq_v : «expr∃ , »((q : exprℚ()), «expr = »(v, («expr↑ »(q) : K))), exists.elim exists_q_eq_v (assume
+  q, assume v_eq_q : «expr = »(v, «expr↑ »(q)), have (of q).terminates, from terminates_of_rat q,
+  (of_terminates_iff_of_rat_terminates v_eq_q).elim_right this))
 
 end GeneralizedContinuedFraction
 

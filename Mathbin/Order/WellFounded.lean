@@ -19,7 +19,7 @@ namespace WellFounded
 /-- If `r` is a well-founded relation, then any nonempty set has a minimal element
 with respect to `r`. -/
 theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) :
-  s.nonempty → ∃ (a : _)(_ : a ∈ s), ∀ x _ : x ∈ s, ¬r x a
+  s.nonempty → ∃ (a : _)(_ : a ∈ s), ∀ x (_ : x ∈ s), ¬r x a
 | ⟨a, ha⟩ =>
   (Acc.recOnₓ (H.apply a)$ fun x _ IH => not_imp_not.1$ fun hne hx => hne$ ⟨x, hx, fun y hy hyx => hne$ IH y hyx hy⟩) ha
 
@@ -37,7 +37,7 @@ theorem not_lt_min {α} {r : α → α → Prop} (H : WellFounded r) (p : Set α
   h' _ xp
 
 theorem well_founded_iff_has_min {α} {r : α → α → Prop} :
-  WellFounded r ↔ ∀ p : Set α, p.nonempty → ∃ (m : _)(_ : m ∈ p), ∀ x _ : x ∈ p, ¬r x m :=
+  WellFounded r ↔ ∀ (p : Set α), p.nonempty → ∃ (m : _)(_ : m ∈ p), ∀ x (_ : x ∈ p), ¬r x m :=
   by 
     classical 
     split 
@@ -68,23 +68,25 @@ theorem eq_iff_not_lt_of_le {α} [PartialOrderₓ α] {x y : α} : x ≤ y → y
       exact lt_of_le_of_neₓ xle (Ne.symm ngt)
 
 theorem well_founded_iff_has_max' [PartialOrderₓ α] :
-  WellFounded (· > · : α → α → Prop) ↔ ∀ p : Set α, p.nonempty → ∃ (m : _)(_ : m ∈ p), ∀ x _ : x ∈ p, m ≤ x → x = m :=
+  WellFounded (· > · : α → α → Prop) ↔
+    ∀ (p : Set α), p.nonempty → ∃ (m : _)(_ : m ∈ p), ∀ x (_ : x ∈ p), m ≤ x → x = m :=
   by 
     simp only [eq_iff_not_lt_of_le, well_founded_iff_has_min]
 
 theorem well_founded_iff_has_min' [PartialOrderₓ α] :
-  WellFounded (LT.lt : α → α → Prop) ↔ ∀ p : Set α, p.nonempty → ∃ (m : _)(_ : m ∈ p), ∀ x _ : x ∈ p, x ≤ m → x = m :=
+  WellFounded (LT.lt : α → α → Prop) ↔
+    ∀ (p : Set α), p.nonempty → ∃ (m : _)(_ : m ∈ p), ∀ x (_ : x ∈ p), x ≤ m → x = m :=
   @well_founded_iff_has_max' (OrderDual α) _
 
 open Set
 
 /-- The supremum of a bounded, well-founded order -/
 protected noncomputable def sup {α} {r : α → α → Prop} (wf : WellFounded r) (s : Set α) (h : Bounded r s) : α :=
-  wf.min { x | ∀ a _ : a ∈ s, r a x } h
+  wf.min { x | ∀ a (_ : a ∈ s), r a x } h
 
 protected theorem lt_sup {α} {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : Bounded r s) {x} (hx : x ∈ s) :
   r x (wf.sup s h) :=
-  min_mem wf { x | ∀ a _ : a ∈ s, r a x } h x hx
+  min_mem wf { x | ∀ a (_ : a ∈ s), r a x } h x hx
 
 section 
 

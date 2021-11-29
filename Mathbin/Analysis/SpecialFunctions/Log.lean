@@ -239,13 +239,13 @@ theorem continuous_on_log : ContinuousOn log («expr ᶜ» {0}) :=
     conv  in log _ => rw [log_of_ne_zero (show (x : ℝ) ≠ 0 from x.2)]
     exact exp_order_iso.symm.continuous.comp (continuous_subtype_mk _ continuous_subtype_coe.norm)
 
-@[continuity]
-theorem continuous_log : Continuous fun x : { x : ℝ // x ≠ 0 } => log x :=
-  continuous_on_iff_continuous_restrict.1$ continuous_on_log.mono$ fun x hx => hx
+-- error in Analysis.SpecialFunctions.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_log : continuous (λ x : {x : exprℝ() // «expr ≠ »(x, 0)}, log x) :=
+«expr $ »(continuous_on_iff_continuous_restrict.1, «expr $ »(continuous_on_log.mono, λ x hx, hx))
 
-@[continuity]
-theorem continuous_log' : Continuous fun x : { x : ℝ // 0 < x } => log x :=
-  continuous_on_iff_continuous_restrict.1$ continuous_on_log.mono$ fun x hx => ne_of_gtₓ hx
+-- error in Analysis.SpecialFunctions.Log: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_log' : continuous (λ x : {x : exprℝ() // «expr < »(0, x)}, log x) :=
+«expr $ »(continuous_on_iff_continuous_restrict.1, «expr $ »(continuous_on_log.mono, λ x hx, ne_of_gt hx))
 
 theorem continuous_at_log (hx : x ≠ 0) : ContinuousAt log x :=
   (continuous_on_log x hx).ContinuousAt$ IsOpen.mem_nhds is_open_compl_singleton hx
@@ -281,7 +281,8 @@ theorem ContinuousWithinAt.log (hf : ContinuousWithinAt f s a) (h₀ : f a ≠ 0
   ContinuousWithinAt (fun x => log (f x)) s a :=
   hf.log h₀
 
-theorem ContinuousOn.log (hf : ContinuousOn f s) (h₀ : ∀ x _ : x ∈ s, f x ≠ 0) : ContinuousOn (fun x => log (f x)) s :=
+theorem ContinuousOn.log (hf : ContinuousOn f s) (h₀ : ∀ x (_ : x ∈ s), f x ≠ 0) :
+  ContinuousOn (fun x => log (f x)) s :=
   fun x hx => (hf x hx).log (h₀ x hx)
 
 end Continuity

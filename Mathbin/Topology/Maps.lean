@@ -69,7 +69,7 @@ theorem inducing_of_inducing_compose {f : α → β} {g : β → γ} (hf : Conti
         rw [hgf.induced, ←continuous_iff_le_induced]
         apply hg.comp continuous_induced_dom)⟩
 
-theorem Inducing.nhds_eq_comap {f : α → β} (hf : Inducing f) : ∀ a : α, 𝓝 a = comap f (𝓝$ f a) :=
+theorem Inducing.nhds_eq_comap {f : α → β} (hf : Inducing f) : ∀ (a : α), 𝓝 a = comap f (𝓝$ f a) :=
   (induced_iff_nhds_eq f).1 hf.induced
 
 theorem Inducing.map_nhds_eq {f : α → β} (hf : Inducing f) (a : α) : (𝓝 a).map f = 𝓝[range f] f a :=
@@ -177,7 +177,7 @@ def QuotientMap {α : Type _} {β : Type _} [tα : TopologicalSpace α] [tβ : T
   Function.Surjective f ∧ tβ = tα.coinduced f
 
 theorem quotient_map_iff {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
-  QuotientMap f ↔ Function.Surjective f ∧ ∀ s : Set β, IsOpen s ↔ IsOpen (f ⁻¹' s) :=
+  QuotientMap f ↔ Function.Surjective f ∧ ∀ (s : Set β), IsOpen s ↔ IsOpen (f ⁻¹' s) :=
   and_congr Iff.rfl topological_space_eq_iff
 
 namespace QuotientMap
@@ -221,7 +221,7 @@ end QuotientMap
 /-- A map `f : α → β` is said to be an *open map*, if the image of any open `U : set α`
 is open in `β`. -/
 def IsOpenMap [TopologicalSpace α] [TopologicalSpace β] (f : α → β) :=
-  ∀ U : Set α, IsOpen U → IsOpen (f '' U)
+  ∀ (U : Set α), IsOpen U → IsOpen (f '' U)
 
 namespace IsOpenMap
 
@@ -292,7 +292,7 @@ theorem preimage_interior_eq_interior_preimage {s : Set β} (hf₁ : Continuous 
 end IsOpenMap
 
 theorem is_open_map_iff_nhds_le [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
-  IsOpenMap f ↔ ∀ a : α, 𝓝 (f a) ≤ (𝓝 a).map f :=
+  IsOpenMap f ↔ ∀ (a : α), 𝓝 (f a) ≤ (𝓝 a).map f :=
   ⟨fun hf => hf.nhds_le, IsOpenMap.of_nhds_le⟩
 
 theorem is_open_map_iff_interior [TopologicalSpace α] [TopologicalSpace β] {f : α → β} :
@@ -317,7 +317,7 @@ variable[TopologicalSpace α][TopologicalSpace β]
 /-- A map `f : α → β` is said to be a *closed map*, if the image of any closed `U : set α`
 is closed in `β`. -/
 def IsClosedMap (f : α → β) :=
-  ∀ U : Set α, IsClosed U → IsClosed (f '' U)
+  ∀ (U : Set α), IsClosed U → IsClosed (f '' U)
 
 end IsClosedMap
 

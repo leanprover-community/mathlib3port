@@ -52,7 +52,7 @@ another answer, which is constructively more satisfying, could be obtained by sh
 -/
 
 
-variable{ι : Type _}(M : ∀ i : ι, Type _)[∀ i, Monoidₓ (M i)]
+variable{ι : Type _}(M : ∀ (i : ι), Type _)[∀ i, Monoidₓ (M i)]
 
 /-- A relation on the free monoid on alphabet `Σ i, M i`, relating `⟨i, 1⟩` with `1` and
 `⟨i, x⟩ * ⟨i, y⟩` with `⟨i, x * y⟩`. -/
@@ -73,7 +73,7 @@ letters can come from the same summand. -/
 @[ext]
 structure word where 
   toList : List (Σi, M i)
-  ne_one : ∀ l _ : l ∈ to_list, Sigma.snd l ≠ 1
+  ne_one : ∀ l (_ : l ∈ to_list), Sigma.snd l ≠ 1
   chain_ne : to_list.chain' fun l l' => Sigma.fst l ≠ Sigma.fst l'
 
 variable{M}
@@ -98,34 +98,28 @@ theorem ext_hom (f g : FreeProduct M →* N) (h : ∀ i, f.comp (of : M i →* _
         by 
           rw [MonoidHom.comp_apply, MonoidHom.comp_apply, ←of_apply, ←MonoidHom.comp_apply, ←MonoidHom.comp_apply, h]
 
+-- error in GroupTheory.FreeProduct: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A map out of the free product corresponds to a family of maps out of the summands. This is the
 universal property of the free product, charaterizing it as a categorical coproduct. -/
-@[simps symmApply]
-def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N) :=
-  { toFun :=
-      fun fi =>
-        Con.lift _ (FreeMonoid.lift$ fun p : Σi, M i => fi p.fst p.snd)$
-          Con.con_gen_le
-            (by 
-              simpRw [Con.rel_eq_coe, Con.ker_rel]
-              rintro _ _ (i | ⟨i, x, y⟩)
-              ·
-                change FreeMonoid.lift _ (FreeMonoid.of _) = FreeMonoid.lift _ 1
-                simp only [MonoidHom.map_one, FreeMonoid.lift_eval_of]
-              ·
-                change FreeMonoid.lift _ (FreeMonoid.of _*FreeMonoid.of _) = FreeMonoid.lift _ (FreeMonoid.of _)
-                simp only [MonoidHom.map_mul, FreeMonoid.lift_eval_of]),
-    invFun := fun f i => f.comp of,
-    left_inv :=
-      by 
-        intro fi 
-        ext i x 
-        rw [MonoidHom.comp_apply, of_apply, Con.lift_mk', FreeMonoid.lift_eval_of],
-    right_inv :=
-      by 
-        intro f 
-        ext i x 
-        simp only [MonoidHom.comp_apply, of_apply, Con.lift_mk', FreeMonoid.lift_eval_of] }
+@[simps #[ident symm_apply]]
+def lift : «expr ≃ »(∀ i, «expr →* »(M i, N), «expr →* »(free_product M, N)) :=
+{ to_fun := λ
+  fi, «expr $ »(con.lift _ «expr $ »(free_monoid.lift, λ
+    p : «exprΣ , »((i), M i), fi p.fst p.snd), con.con_gen_le (begin
+      simp_rw ["[", expr con.rel_eq_coe, ",", expr con.ker_rel, "]"] [],
+      rintros ["_", "_", "(", ident i, "|", "⟨", ident i, ",", ident x, ",", ident y, "⟩", ")"],
+      { change [expr «expr = »(free_monoid.lift _ (free_monoid.of _), free_monoid.lift _ 1)] [] [],
+        simp [] [] ["only"] ["[", expr monoid_hom.map_one, ",", expr free_monoid.lift_eval_of, "]"] [] [] },
+      { change [expr «expr = »(free_monoid.lift _ «expr * »(free_monoid.of _, free_monoid.of _), free_monoid.lift _ (free_monoid.of _))] [] [],
+        simp [] [] ["only"] ["[", expr monoid_hom.map_mul, ",", expr free_monoid.lift_eval_of, "]"] [] [] }
+    end)),
+  inv_fun := λ f i, f.comp of,
+  left_inv := by { intro [ident fi],
+    ext [] [ident i, ident x] [],
+    rw ["[", expr monoid_hom.comp_apply, ",", expr of_apply, ",", expr con.lift_mk', ",", expr free_monoid.lift_eval_of, "]"] [] },
+  right_inv := by { intro [ident f],
+    ext [] [ident i, ident x] [],
+    simp [] [] ["only"] ["[", expr monoid_hom.comp_apply, ",", expr of_apply, ",", expr con.lift_mk', ",", expr free_monoid.lift_eval_of, "]"] [] [] } }
 
 @[simp]
 theorem lift_of {N} [Monoidₓ N] (fi : ∀ i, M i →* N) {i} (m : M i) : lift fi (of m) = fi i m :=
@@ -133,7 +127,7 @@ theorem lift_of {N} [Monoidₓ N] (fi : ∀ i, M i →* N) {i} (m : M i) : lift 
     convRHS => rw [←lift.symm_apply_apply fi, lift_symm_apply, MonoidHom.comp_apply]
 
 @[elab_as_eliminator]
-theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C 1) (h_of : ∀ i m : M i, C (of m))
+theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C 1) (h_of : ∀ i (m : M i), C (of m))
   (h_mul : ∀ x y, C x → C y → C (x*y)) : C m :=
   by 
     let S : Submonoid (FreeProduct M) := ⟨SetOf C, h_one, h_mul⟩
@@ -206,7 +200,7 @@ then it's `none`. -/
 def fst_idx (w : word M) : Option ι :=
   w.to_list.head'.map Sigma.fst
 
-theorem fst_idx_ne_iff {w : word M} {i} : fst_idx w ≠ some i ↔ ∀ l _ : l ∈ w.to_list.head', i ≠ Sigma.fst l :=
+theorem fst_idx_ne_iff {w : word M} {i} : fst_idx w ≠ some i ↔ ∀ l (_ : l ∈ w.to_list.head'), i ≠ Sigma.fst l :=
   not_iff_not.mp$
     by 
       simp [fst_idx]
@@ -246,8 +240,8 @@ def rcons {i} (p : pair M i) : word M :=
 
 /-- Given a word of the form `⟨l :: ls, h1, h2⟩`, we can form a word of the form `⟨ls, _, _⟩`,
 dropping the first letter. -/
-private def mk_aux {l} (ls : List (Σi, M i)) (h1 : ∀ l' _ : l' ∈ l :: ls, Sigma.snd l' ≠ 1) (h2 : (l :: ls).Chain' _) :
-  word M :=
+private def mk_aux {l} (ls : List (Σi, M i)) (h1 : ∀ l' (_ : l' ∈ l :: ls), Sigma.snd l' ≠ 1)
+  (h2 : (l :: ls).Chain' _) : word M :=
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_memₓ _ hl), h2.tail⟩
 
 theorem cons_eq_rcons {i} {m : M i} {ls h1 h2} :
@@ -291,7 +285,7 @@ end
 variable[DecidableEq ι]
 
 /-- Given `i : ι`, any reduced word can be decomposed into a pair `p` such that `w = rcons p`. -/
-private def equiv_pair_aux i : ∀ w : word M, { p : pair M i // rcons p = w }
+private def equiv_pair_aux i : ∀ (w : word M), { p : pair M i // rcons p = w }
 | w@⟨[], _, _⟩ =>
   ⟨⟨1, w,
       by 
@@ -345,7 +339,7 @@ theorem cons_eq_smul {i} {m : M i} {ls h1 h2} : word.mk (⟨i, m⟩ :: ls) h1 h2
   by 
     rw [cons_eq_rcons, of_smul_def, equiv_pair_eq_of_fst_idx_ne _] <;> simp only [mul_oneₓ]
 
-theorem smul_induction {C : word M → Prop} (h_empty : C Empty) (h_smul : ∀ i m : M i w, C w → C (of m • w))
+theorem smul_induction {C : word M → Prop} (h_empty : C Empty) (h_smul : ∀ i (m : M i) w, C w → C (of m • w))
   (w : word M) : C w :=
   by 
     cases' w with ls h1 h2 
@@ -357,7 +351,7 @@ theorem smul_induction {C : word M → Prop} (h_empty : C Empty) (h_smul : ∀ i
     exact h_smul _ _ _ (ih _ _)
 
 @[simp]
-theorem prod_smul m : ∀ w : word M, Prod (m • w) = m*Prod w :=
+theorem prod_smul m : ∀ (w : word M), Prod (m • w) = m*Prod w :=
   by 
     apply m.induction_on
     ·

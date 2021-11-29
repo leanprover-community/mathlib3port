@@ -55,7 +55,7 @@ theorem general_commutator_def' (H₁ H₂ : Subgroup G) [H₁.normal] [H₂.nor
     rw [←normal_closure_eq_self ⁅H₁,H₂⁆, general_commutator_def, normal_closure_closure_eq_normal_closure]
 
 theorem general_commutator_le (H₁ H₂ : Subgroup G) (K : Subgroup G) :
-  ⁅H₁,H₂⁆ ≤ K ↔ ∀ p _ : p ∈ H₁ q _ : q ∈ H₂, (((p*q)*p⁻¹)*q⁻¹) ∈ K :=
+  ⁅H₁,H₂⁆ ≤ K ↔ ∀ p (_ : p ∈ H₁) q (_ : q ∈ H₂), (((p*q)*p⁻¹)*q⁻¹) ∈ K :=
   by 
     rw [generalCommutator, closure_le]
     split 

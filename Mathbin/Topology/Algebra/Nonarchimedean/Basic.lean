@@ -27,17 +27,17 @@ open_locale Pointwise
 /-- An topological additive group is nonarchimedean if every neighborhood of 0
   contains an open subgroup. -/
 class NonarchimedeanAddGroup(G : Type _)[AddGroupₓ G][TopologicalSpace G] extends TopologicalAddGroup G : Prop where 
-  is_nonarchimedean : ∀ U _ : U ∈ nhds (0 : G), ∃ V : OpenAddSubgroup G, (V : Set G) ⊆ U
+  is_nonarchimedean : ∀ U (_ : U ∈ nhds (0 : G)), ∃ V : OpenAddSubgroup G, (V : Set G) ⊆ U
 
 /-- A topological group is nonarchimedean if every neighborhood of 1 contains an open subgroup. -/
 @[toAdditive]
 class NonarchimedeanGroup(G : Type _)[Groupₓ G][TopologicalSpace G] extends TopologicalGroup G : Prop where 
-  is_nonarchimedean : ∀ U _ : U ∈ nhds (1 : G), ∃ V : OpenSubgroup G, (V : Set G) ⊆ U
+  is_nonarchimedean : ∀ U (_ : U ∈ nhds (1 : G)), ∃ V : OpenSubgroup G, (V : Set G) ⊆ U
 
 /-- An topological ring is nonarchimedean if its underlying topological additive
   group is nonarchimedean. -/
 class NonarchimedeanRing(R : Type _)[Ringₓ R][TopologicalSpace R] extends TopologicalRing R : Prop where 
-  is_nonarchimedean : ∀ U _ : U ∈ nhds (0 : R), ∃ V : OpenAddSubgroup R, (V : Set R) ⊆ U
+  is_nonarchimedean : ∀ U (_ : U ∈ nhds (0 : R)), ∃ V : OpenAddSubgroup R, (V : Set R) ⊆ U
 
 /-- Every nonarchimedean ring is naturally a nonarchimedean additive group. -/
 instance (priority := 100)NonarchimedeanRing.to_nonarchimedean_add_group (R : Type _) [Ringₓ R] [TopologicalSpace R]

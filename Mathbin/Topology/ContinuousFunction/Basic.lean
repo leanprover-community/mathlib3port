@@ -246,9 +246,14 @@ section Sup'
 
 variable[LinearOrderₓ γ][OrderClosedTopology γ]
 
-theorem sup'_apply {ι : Type _} {s : Finset ι} (H : s.nonempty) (f : ι → C(β, γ)) (b : β) :
-  s.sup' H f b = s.sup' H fun a => f a b :=
-  Finset.comp_sup'_eq_sup'_comp H (fun f : C(β, γ) => f b) fun i j => rfl
+-- error in Topology.ContinuousFunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sup'_apply
+{ι : Type*}
+{s : finset ι}
+(H : s.nonempty)
+(f : ι → «exprC( , )»(β, γ))
+(b : β) : «expr = »(s.sup' H f b, s.sup' H (λ a, f a b)) :=
+finset.comp_sup'_eq_sup'_comp H (λ f : «exprC( , )»(β, γ), f b) (λ i j, rfl)
 
 @[simp, normCast]
 theorem sup'_coe {ι : Type _} {s : Finset ι} (H : s.nonempty) (f : ι → C(β, γ)) :
@@ -314,9 +319,10 @@ variable{ι :
     ι →
       Set
         α)(φ :
-    ∀ i : ι,
+    ∀ (i : ι),
       C(S i,
-        β))(hφ : ∀ i j x : α hxi : x ∈ S i hxj : x ∈ S j, φ i ⟨x, hxi⟩ = φ j ⟨x, hxj⟩)(hS : ∀ x : α, ∃ i, S i ∈ nhds x)
+        β))(hφ :
+    ∀ i j (x : α) (hxi : x ∈ S i) (hxj : x ∈ S j), φ i ⟨x, hxi⟩ = φ j ⟨x, hxj⟩)(hS : ∀ (x : α), ∃ i, S i ∈ nhds x)
 
 include hφ hS
 
@@ -354,11 +360,11 @@ variable(A :
     Set
       (Set
         α))(F :
-    ∀ s : Set α hi : s ∈ A,
+    ∀ (s : Set α) (hi : s ∈ A),
       C(s,
         β))(hF :
-    ∀ s hs : s ∈ A t ht : t ∈ A x : α hxi : x ∈ s hxj : x ∈ t,
-      F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)(hA : ∀ x : α, ∃ (i : _)(_ : i ∈ A), i ∈ nhds x)
+    ∀ s (hs : s ∈ A) t (ht : t ∈ A) (x : α) (hxi : x ∈ s) (hxj : x ∈ t),
+      F s hs ⟨x, hxi⟩ = F t ht ⟨x, hxj⟩)(hA : ∀ (x : α), ∃ (i : _)(_ : i ∈ A), i ∈ nhds x)
 
 include hF hA
 
@@ -368,7 +374,7 @@ pairwise on intersections, can be glued to construct a continuous map in `C(α, 
 noncomputable def lift_cover' : C(α, β) :=
   by 
     let S : A → Set α := coeₓ 
-    let F : ∀ i : A, C(i, β) := fun i => F i i.prop 
+    let F : ∀ (i : A), C(i, β) := fun i => F i i.prop 
     refine' lift_cover S F (fun i j => hF i i.prop j j.prop) _ 
     intro x 
     obtain ⟨s, hs, hsx⟩ := hA x 

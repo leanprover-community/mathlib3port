@@ -163,18 +163,21 @@ theorem exists_inv {I : Ideal R} [hI : I.is_maximal] : ∀ {a : I.quotient}, a �
 
 open_locale Classical
 
+-- error in RingTheory.Ideal.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- quotient by maximal ideal is a field. def rather than instance, since users will have
 computable inverses in some applications.
 See note [reducible non-instances]. -/
 @[reducible]
-protected noncomputable def Field (I : Ideal R) [hI : I.is_maximal] : Field I.quotient :=
-  { quotient.comm_ring I, quotient.is_domain I with
-    inv := fun a => if ha : a = 0 then 0 else Classical.some (exists_inv ha),
-    mul_inv_cancel :=
-      fun a ha : a ≠ 0 =>
-        show (a*dite _ _ _) = _ by 
-          rw [dif_neg ha] <;> exact Classical.some_spec (exists_inv ha),
-    inv_zero := dif_pos rfl }
+protected
+noncomputable
+def field (I : ideal R) [hI : I.is_maximal] : field I.quotient :=
+{ inv := λ a, if ha : «expr = »(a, 0) then 0 else classical.some (exists_inv ha),
+  mul_inv_cancel := λ
+  (a)
+  (ha : «expr ≠ »(a, 0)), show «expr = »(«expr * »(a, dite _ _ _), _), by rw [expr dif_neg ha] []; exact [expr classical.some_spec (exists_inv ha)],
+  inv_zero := dif_pos rfl,
+  ..quotient.comm_ring I,
+  ..quotient.is_domain I }
 
 /-- If the quotient by an ideal is a field, then the ideal is maximal. -/
 theorem maximal_of_is_field (I : Ideal R) (hqf : IsField I.quotient) : I.is_maximal :=
@@ -197,21 +200,24 @@ theorem maximal_ideal_iff_is_field_quotient (I : Ideal R) : I.is_maximal ↔ IsF
 
 variable[CommRingₓ S]
 
+-- error in RingTheory.Ideal.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a ring homomorphism `f : R →+* S` sending all elements of an ideal to zero,
 lift it to the quotient by this ideal. -/
-def lift (I : Ideal R) (f : R →+* S) (H : ∀ a : R, a ∈ I → f a = 0) : Quotientₓ I →+* S :=
-  { toFun :=
-      fun x =>
-        Quotientₓ.liftOn' x f$
-          fun a b h : _ ∈ _ =>
-            eq_of_sub_eq_zero$
-              by 
-                rw [←f.map_sub, H _ h],
-    map_one' := f.map_one, map_zero' := f.map_zero, map_add' := fun a₁ a₂ => Quotientₓ.induction_on₂' a₁ a₂ f.map_add,
-    map_mul' := fun a₁ a₂ => Quotientₓ.induction_on₂' a₁ a₂ f.map_mul }
+def lift
+(I : ideal R)
+(f : «expr →+* »(R, S))
+(H : ∀ a : R, «expr ∈ »(a, I) → «expr = »(f a, 0)) : «expr →+* »(quotient I, S) :=
+{ to_fun := λ
+  x, «expr $ »(quotient.lift_on' x f, λ
+   (a b)
+   (h : «expr ∈ »(_, _)), «expr $ »(eq_of_sub_eq_zero, by rw ["[", "<-", expr f.map_sub, ",", expr H _ h, "]"] [])),
+  map_one' := f.map_one,
+  map_zero' := f.map_zero,
+  map_add' := λ a₁ a₂, quotient.induction_on₂' a₁ a₂ f.map_add,
+  map_mul' := λ a₁ a₂, quotient.induction_on₂' a₁ a₂ f.map_mul }
 
 @[simp]
-theorem lift_mk (I : Ideal R) (f : R →+* S) (H : ∀ a : R, a ∈ I → f a = 0) : lift I f H (mk I a) = f a :=
+theorem lift_mk (I : Ideal R) (f : R →+* S) (H : ∀ (a : R), a ∈ I → f a = 0) : lift I f H (mk I a) = f a :=
   rfl
 
 /-- The ring homomorphism from the quotient by a smaller ideal to the quotient by a larger ideal.
@@ -418,15 +424,15 @@ begin
   rw ["[", expr ring_hom.map_mul, ",", expr hφ1, ",", expr mul_one, "]"] []
 end
 
+-- error in RingTheory.Ideal.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The homomorphism from `R/(⋂ i, f i)` to `∏ i, (R / f i)` featured in the Chinese
   Remainder Theorem. It is bijective if the ideals `f i` are comaximal. -/
-def quotient_inf_to_pi_quotient (f : ι → Ideal R) : (⨅i, f i).Quotient →+* ∀ i, (f i).Quotient :=
-  Quotientₓ.lift (⨅i, f i) (Pi.ringHom fun i : ι => (Quotientₓ.mk (f i) : _))$
-    fun r hr =>
-      by 
-        rw [Submodule.mem_infi] at hr 
-        ext i 
-        exact quotient.eq_zero_iff_mem.2 (hr i)
+def quotient_inf_to_pi_quotient (f : ι → ideal R) : «expr →+* »(«expr⨅ , »((i), f i).quotient, ∀ i, (f i).quotient) :=
+«expr $ »(quotient.lift «expr⨅ , »((i), f i) (pi.ring_hom (λ i : ι, (quotient.mk (f i) : _))), λ r hr, begin
+   rw [expr submodule.mem_infi] ["at", ident hr],
+   ext [] [ident i] [],
+   exact [expr quotient.eq_zero_iff_mem.2 (hr i)]
+ end)
 
 theorem quotient_inf_to_pi_quotient_bijective [Fintype ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j → f i⊔f j = ⊤) :
   Function.Bijective (quotient_inf_to_pi_quotient f) :=

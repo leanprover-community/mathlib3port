@@ -128,7 +128,7 @@ instance  [Inhabited R] : Inhabited (Tropical R) :=
 /-- Recursing on a `x' : tropical R` is the same as recursing on an `x : R` reinterpreted
 as a term of `tropical R` via `trop x`. -/
 @[simp]
-def trop_rec {F : ∀ X : Tropical R, Sort v} (h : ∀ X, F (trop X)) : ∀ X, F X :=
+def trop_rec {F : ∀ (X : Tropical R), Sort v} (h : ∀ X, F (trop X)) : ∀ X, F X :=
   fun X => h (untrop X)
 
 section Order
@@ -182,7 +182,7 @@ theorem le_zero [Preorderₓ R] [OrderTop R] (x : Tropical R) : x ≤ 0 :=
   le_top
 
 instance  [PartialOrderₓ R] : OrderTop (Tropical (WithTop R)) :=
-  { Tropical.partialOrder, Tropical.hasTop with le_top := fun a a' h => Option.noConfusion h }
+  { Tropical.hasTop with le_top := fun a a' h => Option.noConfusion h }
 
 variable[LinearOrderₓ R]
 

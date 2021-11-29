@@ -46,7 +46,7 @@ class exponential_ideal : Prop where
 To show `i` is an exponential ideal it suffices to show that `A ⟹ iB` is "in" `D` for any `A` in
 `C` and `B` in `D`.
 -/
-theorem exponential_ideal.mk' (h : ∀ B : D A : C, (A ⟹ i.obj B) ∈ i.ess_image) : exponential_ideal i :=
+theorem exponential_ideal.mk' (h : ∀ (B : D) (A : C), (A ⟹ i.obj B) ∈ i.ess_image) : exponential_ideal i :=
   ⟨fun B hB A =>
       by 
         rcases hB with ⟨B', ⟨iB'⟩⟩
@@ -90,7 +90,7 @@ end
 Given a natural isomorphism `i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A`, we can show `i`
 is an exponential ideal.
 -/
-theorem exponential_ideal.mk_of_iso [reflective i] (h : ∀ A : C, i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A) :
+theorem exponential_ideal.mk_of_iso [reflective i] (h : ∀ (A : C), i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A) :
   exponential_ideal i :=
   by 
     apply exponential_ideal.mk' 

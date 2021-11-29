@@ -115,19 +115,20 @@ theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι �
   (Finsupp.basis b).repr g ix = (b ix.1).repr (g ix.1) ix.2 :=
   rfl
 
+-- error in LinearAlgebra.FinsuppVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
-  «expr⇑ » (Finsupp.basis b) = fun ix : Σi, φ i => single ix.1 (b ix.1 ix.2) :=
-  funext$
-    fun ⟨i, x⟩ =>
-      Basis.apply_eq_iff.mpr$
-        by 
-          ext ⟨j, y⟩
-          byCases' h : i = j
-          ·
-            cases h 
-            simp only [basis_repr, single_eq_same, Basis.repr_self, Basis.Finsupp.single_apply_left sigma_mk_injective]
-          simp only [basis_repr, single_apply, h, false_andₓ, if_false, LinearEquiv.map_zero, zero_apply]
+theorem coe_basis
+{φ : ι → Type*}
+(b : ∀
+ i, basis (φ i) R M) : «expr = »(«expr⇑ »(finsupp.basis b), λ ix : «exprΣ , »((i), φ i), single ix.1 (b ix.1 ix.2)) :=
+«expr $ »(funext, λ
+ ⟨i, x⟩, «expr $ »(basis.apply_eq_iff.mpr, begin
+    ext [] ["⟨", ident j, ",", ident y, "⟩"] [],
+    by_cases [expr h, ":", expr «expr = »(i, j)],
+    { cases [expr h] [],
+      simp [] [] ["only"] ["[", expr basis_repr, ",", expr single_eq_same, ",", expr basis.repr_self, ",", expr basis.finsupp.single_apply_left sigma_mk_injective, "]"] [] [] },
+    simp [] [] ["only"] ["[", expr basis_repr, ",", expr single_apply, ",", expr h, ",", expr false_and, ",", expr if_false, ",", expr linear_equiv.map_zero, ",", expr zero_apply, "]"] [] []
+  end))
 
 /-- The basis on `ι →₀ M` with basis vectors `λ i, single i 1`. -/
 @[simps]
@@ -146,10 +147,13 @@ variable{K : Type u}{V : Type v}{ι : Type v}
 
 variable[Field K][AddCommGroupₓ V][Module K V]
 
-theorem dim_eq : Module.rank K (ι →₀ V) = # ι*Module.rank K V :=
-  by 
-    let bs := Basis.ofVectorSpace K V 
-    rw [←bs.mk_eq_dim'', ←(Finsupp.basis fun a : ι => bs).mk_eq_dim'', Cardinal.mk_sigma, Cardinal.sum_const']
+-- error in LinearAlgebra.FinsuppVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dim_eq : «expr = »(module.rank K «expr →₀ »(ι, V), «expr * »(«expr#»() ι, module.rank K V)) :=
+begin
+  let [ident bs] [] [":=", expr basis.of_vector_space K V],
+  rw ["[", "<-", expr bs.mk_eq_dim'', ",", "<-", expr (finsupp.basis (λ
+     a : ι, bs)).mk_eq_dim'', ",", expr cardinal.mk_sigma, ",", expr cardinal.sum_const', "]"] []
+end
 
 end Dim
 

@@ -48,7 +48,7 @@ namespace Set
 
 
 instance  : HasInfₓ (Set α) :=
-  ⟨fun s => { a | ∀ t _ : t ∈ s, a ∈ t }⟩
+  ⟨fun s => { a | ∀ t (_ : t ∈ s), a ∈ t }⟩
 
 instance  : HasSupₓ (Set α) :=
   ⟨sUnion⟩
@@ -60,7 +60,7 @@ def sInter (S : Set (Set α)) : Set α :=
 prefix:110 "⋂₀" => sInter
 
 @[simp]
-theorem mem_sInter {x : α} {S : Set (Set α)} : x ∈ ⋂₀S ↔ ∀ t _ : t ∈ S, x ∈ t :=
+theorem mem_sInter {x : α} {S : Set (Set α)} : x ∈ ⋂₀S ↔ ∀ t (_ : t ∈ S), x ∈ t :=
   Iff.rfl
 
 /-- Indexed union of a family of sets -/
@@ -95,9 +95,11 @@ theorem infi_eq_Inter (s : ι → Set α) : infi s = Inter s :=
 theorem mem_Union {x : β} {s : ι → Set β} : x ∈ Union s ↔ ∃ i, x ∈ s i :=
   ⟨fun ⟨t, ⟨⟨a, (t_eq : s a = t)⟩, (h : x ∈ t)⟩⟩ => ⟨a, t_eq.symm ▸ h⟩, fun ⟨a, h⟩ => ⟨s a, ⟨⟨a, rfl⟩, h⟩⟩⟩
 
-@[simp]
-theorem mem_Inter {x : β} {s : ι → Set β} : x ∈ Inter s ↔ ∀ i, x ∈ s i :=
-  ⟨fun h : ∀ a _ : a ∈ { a:Set β | ∃ i, s i = a }, x ∈ a a => h (s a) ⟨a, rfl⟩, fun h t ⟨a, (Eq : s a = t)⟩ => Eq ▸ h a⟩
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem mem_Inter {x : β} {s : ι → set β} : «expr ↔ »(«expr ∈ »(x, Inter s), ∀ i, «expr ∈ »(x, s i)) :=
+⟨λ
+ (h : ∀ a «expr ∈ » {a : set β | «expr∃ , »((i), «expr = »(s i, a))}, «expr ∈ »(x, a))
+ (a), h (s a) ⟨a, rfl⟩, λ (h t) ⟨a, (eq : «expr = »(s a, t))⟩, «expr ▸ »(eq, h a)⟩
 
 theorem mem_sUnion {x : α} {S : Set (Set α)} : x ∈ ⋃₀S ↔ ∃ (t : _)(_ : t ∈ S), x ∈ t :=
   Iff.rfl
@@ -144,12 +146,12 @@ protected theorem image_preimage : GaloisConnection (image f) (preimage f) :=
 def kern_image (f : α → β) (s : Set α) : Set β :=
   { y | ∀ ⦃x⦄, f x = y → x ∈ s }
 
-protected theorem preimage_kern_image : GaloisConnection (preimage f) (kern_image f) :=
-  fun a b =>
-    ⟨fun h x hx y hy =>
-        have  : f y ∈ a := hy.symm ▸ hx 
-        h this,
-      fun h x hx : f x ∈ a => h hx rfl⟩
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected theorem preimage_kern_image : galois_connection (preimage f) (kern_image f) :=
+λ
+a
+b, ⟨λ h x hx y hy, have «expr ∈ »(f y, a), from «expr ▸ »(hy.symm, hx),
+ h this, λ (h x) (hx : «expr ∈ »(f x, a)), h hx rfl⟩
 
 end GaloisConnection
 
@@ -225,7 +227,7 @@ theorem subset_Inter {t : Set β} {s : ι → Set β} (h : ∀ i, t ⊆ s i) : t
 theorem subset_Inter_iff {t : Set β} {s : ι → Set β} : (t ⊆ ⋂i, s i) ↔ ∀ i, t ⊆ s i :=
   @le_infi_iff (Set β) _ _ _ _
 
-theorem subset_Union : ∀ s : ι → Set β i : ι, s i ⊆ ⋃i, s i :=
+theorem subset_Union : ∀ (s : ι → Set β) (i : ι), s i ⊆ ⋃i, s i :=
   le_supr
 
 /-- This rather trivial consequence of `subset_Union`is convenient with `apply`, and has `i`
@@ -233,7 +235,7 @@ explicit for this purpose. -/
 theorem subset_subset_Union {A : Set β} {s : ι → Set β} (i : ι) (h : A ⊆ s i) : A ⊆ ⋃i : ι, s i :=
   h.trans (subset_Union s i)
 
-theorem Inter_subset : ∀ s : ι → Set β i : ι, (⋂i, s i) ⊆ s i :=
+theorem Inter_subset : ∀ (s : ι → Set β) (i : ι), (⋂i, s i) ⊆ s i :=
   infi_le
 
 theorem Inter_subset_of_subset {s : ι → Set α} {t : Set α} (i : ι) (h : s i ⊆ t) : (⋂i, s i) ⊆ t :=
@@ -378,24 +380,25 @@ theorem Inter_ite (f g : ι → Set α) :
 
 end 
 
-theorem image_projection_prod {ι : Type _} {α : ι → Type _} {v : ∀ i : ι, Set (α i)} (hv : (pi univ v).Nonempty)
-  (i : ι) : ((fun x : ∀ i : ι, α i => x i) '' ⋂k, (fun x : ∀ j : ι, α j => x k) ⁻¹' v k) = v i :=
-  by 
-    classical 
-    apply subset.antisymm
-    ·
-      simp [Inter_subset]
-    ·
-      intro y y_in 
-      simp only [mem_image, mem_Inter, mem_preimage]
-      rcases hv with ⟨z, hz⟩
-      refine' ⟨Function.update z i y, _, update_same i y z⟩
-      rw [@forall_update_iff ι α _ z i y fun i t => t ∈ v i]
-      exact
-        ⟨y_in,
-          fun j hj =>
-            by 
-              simpa using hz j⟩
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem image_projection_prod
+{ι : Type*}
+{α : ι → Type*}
+{v : ∀ i : ι, set (α i)}
+(hv : (pi univ v).nonempty)
+(i : ι) : «expr = »(«expr '' »(λ
+  x : ∀ i : ι, α i, x i, «expr⋂ , »((k), «expr ⁻¹' »(λ x : ∀ j : ι, α j, x k, v k))), v i) :=
+begin
+  classical,
+  apply [expr subset.antisymm],
+  { simp [] [] [] ["[", expr Inter_subset, "]"] [] [] },
+  { intros [ident y, ident y_in],
+    simp [] [] ["only"] ["[", expr mem_image, ",", expr mem_Inter, ",", expr mem_preimage, "]"] [] [],
+    rcases [expr hv, "with", "⟨", ident z, ",", ident hz, "⟩"],
+    refine [expr ⟨function.update z i y, _, update_same i y z⟩],
+    rw [expr @forall_update_iff ι α _ z i y (λ i t, «expr ∈ »(t, v i))] [],
+    exact [expr ⟨y_in, λ j hj, by simpa [] [] [] [] [] ["using", expr hz j]⟩] }
+end
 
 /-! ### Unions and intersections indexed by `Prop` -/
 
@@ -455,19 +458,19 @@ theorem Union_nonempty_index (s : Set α) (t : s.nonempty → Set β) : (⋃h, t
 end 
 
 @[simp]
-theorem Inter_Inter_eq_left {b : β} {s : ∀ x : β, x = b → Set α} : (⋂(x : _)(h : x = b), s x h) = s b rfl :=
+theorem Inter_Inter_eq_left {b : β} {s : ∀ (x : β), x = b → Set α} : (⋂(x : _)(h : x = b), s x h) = s b rfl :=
   infi_infi_eq_left
 
 @[simp]
-theorem Inter_Inter_eq_right {b : β} {s : ∀ x : β, b = x → Set α} : (⋂(x : _)(h : b = x), s x h) = s b rfl :=
+theorem Inter_Inter_eq_right {b : β} {s : ∀ (x : β), b = x → Set α} : (⋂(x : _)(h : b = x), s x h) = s b rfl :=
   infi_infi_eq_right
 
 @[simp]
-theorem Union_Union_eq_left {b : β} {s : ∀ x : β, x = b → Set α} : (⋃(x : _)(h : x = b), s x h) = s b rfl :=
+theorem Union_Union_eq_left {b : β} {s : ∀ (x : β), x = b → Set α} : (⋃(x : _)(h : x = b), s x h) = s b rfl :=
   supr_supr_eq_left
 
 @[simp]
-theorem Union_Union_eq_right {b : β} {s : ∀ x : β, b = x → Set α} : (⋃(x : _)(h : b = x), s x h) = s b rfl :=
+theorem Union_Union_eq_right {b : β} {s : ∀ (x : β), b = x → Set α} : (⋃(x : _)(h : b = x), s x h) = s b rfl :=
   supr_supr_eq_right
 
 theorem Inter_or {p q : Prop} (s : p ∨ q → Set α) : (⋂h, s h) = (⋂h : p, s (Or.inl h)) ∩ ⋂h : q, s (Or.inr h) :=
@@ -513,13 +516,13 @@ theorem bInter_and' (p : ι' → Prop) (q : ι → ι' → Prop) (s : ∀ x y, p
     simp only [Inter_and, @Inter_comm _ ι]
 
 @[simp]
-theorem Union_Union_eq_or_left {b : β} {p : β → Prop} {s : ∀ x : β, x = b ∨ p x → Set α} :
+theorem Union_Union_eq_or_left {b : β} {p : β → Prop} {s : ∀ (x : β), x = b ∨ p x → Set α} :
   (⋃x h, s x h) = s b (Or.inl rfl) ∪ ⋃(x : _)(h : p x), s x (Or.inr h) :=
   by 
     simp only [Union_or, Union_union_distrib, Union_Union_eq_left]
 
 @[simp]
-theorem Inter_Inter_eq_or_left {b : β} {p : β → Prop} {s : ∀ x : β, x = b ∨ p x → Set α} :
+theorem Inter_Inter_eq_or_left {b : β} {p : β → Prop} {s : ∀ (x : β), x = b ∨ p x → Set α} :
   (⋂x h, s x h) = s b (Or.inl rfl) ∩ ⋂(x : _)(h : p x), s x (Or.inr h) :=
   by 
     simp only [Inter_or, Inter_inter_distrib, Inter_Inter_eq_left]
@@ -536,7 +539,8 @@ theorem mem_bUnion_iff' {p : α → Prop} {t : α → Set β} {y : β} :
   (y ∈ ⋃(i : _)(h : p i), t i) ↔ ∃ (i : _)(h : p i), y ∈ t i :=
   mem_bUnion_iff
 
-theorem mem_bInter_iff {s : Set α} {t : α → Set β} {y : β} : (y ∈ ⋂(x : _)(_ : x ∈ s), t x) ↔ ∀ x _ : x ∈ s, y ∈ t x :=
+theorem mem_bInter_iff {s : Set α} {t : α → Set β} {y : β} :
+  (y ∈ ⋂(x : _)(_ : x ∈ s), t x) ↔ ∀ x (_ : x ∈ s), y ∈ t x :=
   by 
     simp 
 
@@ -544,14 +548,14 @@ theorem mem_bUnion {s : Set α} {t : α → Set β} {x : α} {y : β} (xs : x �
   y ∈ ⋃(x : _)(_ : x ∈ s), t x :=
   mem_bUnion_iff.2 ⟨x, ⟨xs, ytx⟩⟩
 
-theorem mem_bInter {s : Set α} {t : α → Set β} {y : β} (h : ∀ x _ : x ∈ s, y ∈ t x) : y ∈ ⋂(x : _)(_ : x ∈ s), t x :=
+theorem mem_bInter {s : Set α} {t : α → Set β} {y : β} (h : ∀ x (_ : x ∈ s), y ∈ t x) : y ∈ ⋂(x : _)(_ : x ∈ s), t x :=
   mem_bInter_iff.2 h
 
-theorem bUnion_subset {s : Set α} {t : Set β} {u : α → Set β} (h : ∀ x _ : x ∈ s, u x ⊆ t) :
+theorem bUnion_subset {s : Set α} {t : Set β} {u : α → Set β} (h : ∀ x (_ : x ∈ s), u x ⊆ t) :
   (⋃(x : _)(_ : x ∈ s), u x) ⊆ t :=
   Union_subset$ fun x => Union_subset (h x)
 
-theorem subset_bInter {s : Set α} {t : Set β} {u : α → Set β} (h : ∀ x _ : x ∈ s, t ⊆ u x) :
+theorem subset_bInter {s : Set α} {t : Set β} {u : α → Set β} (h : ∀ x (_ : x ∈ s), t ⊆ u x) :
   t ⊆ ⋂(x : _)(_ : x ∈ s), u x :=
   subset_Inter$ fun x => subset_Inter$ h x
 
@@ -570,22 +574,22 @@ theorem bInter_subset_bInter_left {s s' : Set α} {t : α → Set β} (h : s' �
   subset_bInter fun x xs => bInter_subset_of_mem (h xs)
 
 theorem bUnion_subset_bUnion {γ : Type _} {s : Set α} {t : α → Set β} {s' : Set γ} {t' : γ → Set β}
-  (h : ∀ x _ : x ∈ s, ∃ (y : _)(_ : y ∈ s'), t x ⊆ t' y) : (⋃(x : _)(_ : x ∈ s), t x) ⊆ ⋃(y : _)(_ : y ∈ s'), t' y :=
+  (h : ∀ x (_ : x ∈ s), ∃ (y : _)(_ : y ∈ s'), t x ⊆ t' y) : (⋃(x : _)(_ : x ∈ s), t x) ⊆ ⋃(y : _)(_ : y ∈ s'), t' y :=
   by 
     simp only [Union_subset_iff]
     rintro a a_in x ha 
     rcases h a a_in with ⟨c, c_in, hc⟩
     exact mem_bUnion c_in (hc ha)
 
-theorem bInter_mono' {s s' : Set α} {t t' : α → Set β} (hs : s ⊆ s') (h : ∀ x _ : x ∈ s, t x ⊆ t' x) :
+theorem bInter_mono' {s s' : Set α} {t t' : α → Set β} (hs : s ⊆ s') (h : ∀ x (_ : x ∈ s), t x ⊆ t' x) :
   (⋂(x : _)(_ : x ∈ s'), t x) ⊆ ⋂(x : _)(_ : x ∈ s), t' x :=
   (bInter_subset_bInter_left hs).trans$ subset_bInter fun x xs => subset.trans (bInter_subset_of_mem xs) (h x xs)
 
-theorem bInter_mono {s : Set α} {t t' : α → Set β} (h : ∀ x _ : x ∈ s, t x ⊆ t' x) :
+theorem bInter_mono {s : Set α} {t t' : α → Set β} (h : ∀ x (_ : x ∈ s), t x ⊆ t' x) :
   (⋂(x : _)(_ : x ∈ s), t x) ⊆ ⋂(x : _)(_ : x ∈ s), t' x :=
   bInter_mono' (subset.refl s) h
 
-theorem bInter_congr {s : Set α} {t1 t2 : α → Set β} (h : ∀ x _ : x ∈ s, t1 x = t2 x) :
+theorem bInter_congr {s : Set α} {t1 t2 : α → Set β} (h : ∀ x (_ : x ∈ s), t1 x = t2 x) :
   (⋂(x : _)(_ : x ∈ s), t1 x) = ⋂(x : _)(_ : x ∈ s), t2 x :=
   subset.antisymm
     (bInter_mono
@@ -597,11 +601,11 @@ theorem bInter_congr {s : Set α} {t1 t2 : α → Set β} (h : ∀ x _ : x ∈ s
         by 
           rw [h x hx])
 
-theorem bUnion_mono {s : Set α} {t t' : α → Set β} (h : ∀ x _ : x ∈ s, t x ⊆ t' x) :
+theorem bUnion_mono {s : Set α} {t t' : α → Set β} (h : ∀ x (_ : x ∈ s), t x ⊆ t' x) :
   (⋃(x : _)(_ : x ∈ s), t x) ⊆ ⋃(x : _)(_ : x ∈ s), t' x :=
   bUnion_subset_bUnion fun x x_in => ⟨x, x_in, h x x_in⟩
 
-theorem bUnion_congr {s : Set α} {t1 t2 : α → Set β} (h : ∀ x _ : x ∈ s, t1 x = t2 x) :
+theorem bUnion_congr {s : Set α} {t1 t2 : α → Set β} (h : ∀ x (_ : x ∈ s), t1 x = t2 x) :
   (⋃(x : _)(_ : x ∈ s), t1 x) = ⋃(x : _)(_ : x ∈ s), t2 x :=
   subset.antisymm
     (bUnion_mono
@@ -613,10 +617,10 @@ theorem bUnion_congr {s : Set α} {t1 t2 : α → Set β} (h : ∀ x _ : x ∈ s
         by 
           rw [h x hx])
 
-theorem bUnion_eq_Union (s : Set α) (t : ∀ x _ : x ∈ s, Set β) : (⋃(x : _)(_ : x ∈ s), t x ‹_›) = ⋃x : s, t x x.2 :=
+theorem bUnion_eq_Union (s : Set α) (t : ∀ x (_ : x ∈ s), Set β) : (⋃(x : _)(_ : x ∈ s), t x ‹_›) = ⋃x : s, t x x.2 :=
   supr_subtype'
 
-theorem bInter_eq_Inter (s : Set α) (t : ∀ x _ : x ∈ s, Set β) : (⋂(x : _)(_ : x ∈ s), t x ‹_›) = ⋂x : s, t x x.2 :=
+theorem bInter_eq_Inter (s : Set α) (t : ∀ x (_ : x ∈ s), Set β) : (⋂(x : _)(_ : x ∈ s), t x ‹_›) = ⋂x : s, t x x.2 :=
   infi_subtype'
 
 theorem Union_subtype (p : α → Prop) (s : { x // p x } → Set β) :
@@ -747,18 +751,18 @@ theorem subset_sUnion_of_mem {S : Set (Set α)} {t : Set α} (tS : t ∈ S) : t 
 theorem subset_sUnion_of_subset {s : Set α} (t : Set (Set α)) (u : Set α) (h₁ : s ⊆ u) (h₂ : u ∈ t) : s ⊆ ⋃₀t :=
   subset.trans h₁ (subset_sUnion_of_mem h₂)
 
-theorem sUnion_subset {S : Set (Set α)} {t : Set α} (h : ∀ t' _ : t' ∈ S, t' ⊆ t) : ⋃₀S ⊆ t :=
+theorem sUnion_subset {S : Set (Set α)} {t : Set α} (h : ∀ t' (_ : t' ∈ S), t' ⊆ t) : ⋃₀S ⊆ t :=
   Sup_le h
 
 @[simp]
-theorem sUnion_subset_iff {s : Set (Set α)} {t : Set α} : ⋃₀s ⊆ t ↔ ∀ t' _ : t' ∈ s, t' ⊆ t :=
+theorem sUnion_subset_iff {s : Set (Set α)} {t : Set α} : ⋃₀s ⊆ t ↔ ∀ t' (_ : t' ∈ s), t' ⊆ t :=
   @Sup_le_iff (Set α) _ _ _
 
-theorem subset_sInter {S : Set (Set α)} {t : Set α} (h : ∀ t' _ : t' ∈ S, t ⊆ t') : t ⊆ ⋂₀S :=
+theorem subset_sInter {S : Set (Set α)} {t : Set α} (h : ∀ t' (_ : t' ∈ S), t ⊆ t') : t ⊆ ⋂₀S :=
   le_Inf h
 
 @[simp]
-theorem subset_sInter_iff {S : Set (Set α)} {t : Set α} : t ⊆ ⋂₀S ↔ ∀ t' _ : t' ∈ S, t ⊆ t' :=
+theorem subset_sInter_iff {S : Set (Set α)} {t : Set α} : t ⊆ ⋂₀S ↔ ∀ t' (_ : t' ∈ S), t ⊆ t' :=
   @le_Inf_iff (Set α) _ _ _
 
 theorem sUnion_subset_sUnion {S T : Set (Set α)} (h : S ⊆ T) : ⋃₀S ⊆ ⋃₀T :=
@@ -784,11 +788,11 @@ theorem sInter_singleton (s : Set α) : ⋂₀{s} = s :=
   Inf_singleton
 
 @[simp]
-theorem sUnion_eq_empty {S : Set (Set α)} : ⋃₀S = ∅ ↔ ∀ s _ : s ∈ S, s = ∅ :=
+theorem sUnion_eq_empty {S : Set (Set α)} : ⋃₀S = ∅ ↔ ∀ s (_ : s ∈ S), s = ∅ :=
   Sup_eq_bot
 
 @[simp]
-theorem sInter_eq_univ {S : Set (Set α)} : ⋂₀S = univ ↔ ∀ s _ : s ∈ S, s = univ :=
+theorem sInter_eq_univ {S : Set (Set α)} : ⋂₀S = univ ↔ ∀ s (_ : s ∈ S), s = univ :=
   Inf_eq_top
 
 @[simp]
@@ -878,12 +882,12 @@ theorem nonempty_Inter {f : ι → Set α} : (⋂i, f i).Nonempty ↔ ∃ x, ∀
 
 @[simp]
 theorem nonempty_bInter {f : α → Set β} {s : Set α} :
-  (⋂(x : _)(_ : x ∈ s), f x).Nonempty ↔ ∃ y, ∀ x _ : x ∈ s, y ∈ f x :=
+  (⋂(x : _)(_ : x ∈ s), f x).Nonempty ↔ ∃ y, ∀ x (_ : x ∈ s), y ∈ f x :=
   by 
     simp [←ne_empty_iff_nonempty, Inter_eq_empty_iff]
 
 @[simp]
-theorem nonempty_sInter {c : Set (Set α)} : (⋂₀c).Nonempty ↔ ∃ a, ∀ b _ : b ∈ c, a ∈ b :=
+theorem nonempty_sInter {c : Set (Set α)} : (⋂₀c).Nonempty ↔ ∃ a, ∀ b (_ : b ∈ c), a ∈ b :=
   by 
     simp [←ne_empty_iff_nonempty, sInter_eq_empty_iff]
 
@@ -915,9 +919,10 @@ theorem range_sigma_eq_Union_range {γ : α → Type _} (f : Sigma γ → β) : 
     by 
       simp 
 
-theorem Union_eq_range_sigma (s : α → Set β) : (⋃i, s i) = range fun a : Σi, s i => a.2 :=
-  by 
-    simp [Set.ext_iff]
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Union_eq_range_sigma
+(s : α → set β) : «expr = »(«expr⋃ , »((i), s i), range (λ a : «exprΣ , »((i), s i), a.2)) :=
+by simp [] [] [] ["[", expr set.ext_iff, "]"] [] []
 
 theorem Union_image_preimage_sigma_mk_eq_self {ι : Type _} {σ : ι → Type _} (s : Set (Sigma σ)) :
   (⋃i, Sigma.mk i '' (Sigma.mk i ⁻¹' s)) = s :=
@@ -997,7 +1002,7 @@ theorem bUnion_Union (s : ι → Set α) (t : α → Set β) :
 
 /-- If `S` is a set of sets, and each `s ∈ S` can be represented as an intersection
 of sets `T s hs`, then `⋂₀ S` is the intersection of the union of all `T s hs`. -/
-theorem sInter_bUnion {S : Set (Set α)} {T : ∀ s _ : s ∈ S, Set (Set α)} (hT : ∀ s _ : s ∈ S, s = ⋂₀T s ‹s ∈ S›) :
+theorem sInter_bUnion {S : Set (Set α)} {T : ∀ s (_ : s ∈ S), Set (Set α)} (hT : ∀ s (_ : s ∈ S), s = ⋂₀T s ‹s ∈ S›) :
   (⋂₀⋃(s : _)(_ : s ∈ S), T s ‹_›) = ⋂₀S :=
   by 
     ext 
@@ -1016,7 +1021,7 @@ theorem sInter_bUnion {S : Set (Set α)} {T : ∀ s _ : s ∈ S, Set (Set α)} (
 
 /-- If `S` is a set of sets, and each `s ∈ S` can be represented as an union
 of sets `T s hs`, then `⋃₀ S` is the union of the union of all `T s hs`. -/
-theorem sUnion_bUnion {S : Set (Set α)} {T : ∀ s _ : s ∈ S, Set (Set α)} (hT : ∀ s _ : s ∈ S, s = ⋃₀T s ‹_›) :
+theorem sUnion_bUnion {S : Set (Set α)} {T : ∀ s (_ : s ∈ S), Set (Set α)} (hT : ∀ s (_ : s ∈ S), s = ⋃₀T s ‹_›) :
   (⋃₀⋃(s : _)(_ : s ∈ S), T s ‹_›) = ⋃₀S :=
   by 
     ext 
@@ -1033,34 +1038,40 @@ theorem sUnion_bUnion {S : Set (Set α)} {T : ∀ s _ : s ∈ S, Set (Set α)} (
       rcases mem_sUnion.1 xs with ⟨t, tTs, xt⟩
       exact ⟨t, ⟨s, sS, tTs⟩, xt⟩
 
-theorem Union_range_eq_sUnion {α β : Type _} (C : Set (Set α)) {f : ∀ s : C, β → s} (hf : ∀ s : C, surjective (f s)) :
-  (⋃y : β, range fun s : C => (f s y).val) = ⋃₀C :=
-  by 
-    ext x 
-    split 
-    ·
-      rintro ⟨s, ⟨y, rfl⟩, ⟨s, hs⟩, rfl⟩
-      refine' ⟨_, hs, _⟩
-      exact (f ⟨s, hs⟩ y).2
-    ·
-      rintro ⟨s, hs, hx⟩
-      cases' hf ⟨s, hs⟩ ⟨x, hx⟩ with y hy 
-      refine' ⟨_, ⟨y, rfl⟩, ⟨s, hs⟩, _⟩
-      exact congr_argₓ Subtype.val hy
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Union_range_eq_sUnion
+{α β : Type*}
+(C : set (set α))
+{f : ∀ s : C, β → s}
+(hf : ∀ s : C, surjective (f s)) : «expr = »(«expr⋃ , »((y : β), range (λ s : C, (f s y).val)), «expr⋃₀ »(C)) :=
+begin
+  ext [] [ident x] [],
+  split,
+  { rintro ["⟨", ident s, ",", "⟨", ident y, ",", ident rfl, "⟩", ",", "⟨", ident s, ",", ident hs, "⟩", ",", ident rfl, "⟩"],
+    refine [expr ⟨_, hs, _⟩],
+    exact [expr (f ⟨s, hs⟩ y).2] },
+  { rintro ["⟨", ident s, ",", ident hs, ",", ident hx, "⟩"],
+    cases [expr hf ⟨s, hs⟩ ⟨x, hx⟩] ["with", ident y, ident hy],
+    refine [expr ⟨_, ⟨y, rfl⟩, ⟨s, hs⟩, _⟩],
+    exact [expr congr_arg subtype.val hy] }
+end
 
-theorem Union_range_eq_Union {ι α β : Type _} (C : ι → Set α) {f : ∀ x : ι, β → C x} (hf : ∀ x : ι, surjective (f x)) :
-  (⋃y : β, range fun x : ι => (f x y).val) = ⋃x, C x :=
-  by 
-    ext x 
-    rw [mem_Union, mem_Union]
-    split 
-    ·
-      rintro ⟨y, i, rfl⟩
-      exact ⟨i, (f i y).2⟩
-    ·
-      rintro ⟨i, hx⟩
-      cases' hf i ⟨x, hx⟩ with y hy 
-      exact ⟨y, i, congr_argₓ Subtype.val hy⟩
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Union_range_eq_Union
+{ι α β : Type*}
+(C : ι → set α)
+{f : ∀ x : ι, β → C x}
+(hf : ∀ x : ι, surjective (f x)) : «expr = »(«expr⋃ , »((y : β), range (λ x : ι, (f x y).val)), «expr⋃ , »((x), C x)) :=
+begin
+  ext [] [ident x] [],
+  rw ["[", expr mem_Union, ",", expr mem_Union, "]"] [],
+  split,
+  { rintro ["⟨", ident y, ",", ident i, ",", ident rfl, "⟩"],
+    exact [expr ⟨i, (f i y).2⟩] },
+  { rintro ["⟨", ident i, ",", ident hx, "⟩"],
+    cases [expr hf i ⟨x, hx⟩] ["with", ident y, ident hy],
+    exact [expr ⟨y, i, congr_arg subtype.val hy⟩] }
+end
 
 theorem union_distrib_Inter_right {ι : Type _} (s : ι → Set α) (t : Set α) : (⋂i, s i) ∪ t = ⋂i, s i ∪ t :=
   infi_sup_eq _ _
@@ -1083,14 +1094,14 @@ section Function
 /-! ### `maps_to` -/
 
 
-theorem maps_to_sUnion {S : Set (Set α)} {t : Set β} {f : α → β} (H : ∀ s _ : s ∈ S, maps_to f s t) :
+theorem maps_to_sUnion {S : Set (Set α)} {t : Set β} {f : α → β} (H : ∀ s (_ : s ∈ S), maps_to f s t) :
   maps_to f (⋃₀S) t :=
   fun x ⟨s, hs, hx⟩ => H s hs hx
 
 theorem maps_to_Union {s : ι → Set α} {t : Set β} {f : α → β} (H : ∀ i, maps_to f (s i) t) : maps_to f (⋃i, s i) t :=
   maps_to_sUnion$ forall_range_iff.2 H
 
-theorem maps_to_bUnion {p : ι → Prop} {s : ∀ i : ι hi : p i, Set α} {t : Set β} {f : α → β}
+theorem maps_to_bUnion {p : ι → Prop} {s : ∀ (i : ι) (hi : p i), Set α} {t : Set β} {f : α → β}
   (H : ∀ i hi, maps_to f (s i hi) t) : maps_to f (⋃i hi, s i hi) t :=
   maps_to_Union$ fun i => maps_to_Union (H i)
 
@@ -1098,18 +1109,18 @@ theorem maps_to_Union_Union {s : ι → Set α} {t : ι → Set β} {f : α → 
   maps_to f (⋃i, s i) (⋃i, t i) :=
   maps_to_Union$ fun i => (H i).mono (subset.refl _) (subset_Union t i)
 
-theorem maps_to_bUnion_bUnion {p : ι → Prop} {s : ∀ i hi : p i, Set α} {t : ∀ i hi : p i, Set β} {f : α → β}
+theorem maps_to_bUnion_bUnion {p : ι → Prop} {s : ∀ i (hi : p i), Set α} {t : ∀ i (hi : p i), Set β} {f : α → β}
   (H : ∀ i hi, maps_to f (s i hi) (t i hi)) : maps_to f (⋃i hi, s i hi) (⋃i hi, t i hi) :=
   maps_to_Union_Union$ fun i => maps_to_Union_Union (H i)
 
-theorem maps_to_sInter {s : Set α} {T : Set (Set β)} {f : α → β} (H : ∀ t _ : t ∈ T, maps_to f s t) :
+theorem maps_to_sInter {s : Set α} {T : Set (Set β)} {f : α → β} (H : ∀ t (_ : t ∈ T), maps_to f s t) :
   maps_to f s (⋂₀T) :=
   fun x hx t ht => H t ht hx
 
 theorem maps_to_Inter {s : Set α} {t : ι → Set β} {f : α → β} (H : ∀ i, maps_to f s (t i)) : maps_to f s (⋂i, t i) :=
   fun x hx => mem_Inter.2$ fun i => H i hx
 
-theorem maps_to_bInter {p : ι → Prop} {s : Set α} {t : ∀ i hi : p i, Set β} {f : α → β}
+theorem maps_to_bInter {p : ι → Prop} {s : Set α} {t : ∀ i (hi : p i), Set β} {f : α → β}
   (H : ∀ i hi, maps_to f s (t i hi)) : maps_to f s (⋂i hi, t i hi) :=
   maps_to_Inter$ fun i => maps_to_Inter (H i)
 
@@ -1117,14 +1128,14 @@ theorem maps_to_Inter_Inter {s : ι → Set α} {t : ι → Set β} {f : α → 
   maps_to f (⋂i, s i) (⋂i, t i) :=
   maps_to_Inter$ fun i => (H i).mono (Inter_subset s i) (subset.refl _)
 
-theorem maps_to_bInter_bInter {p : ι → Prop} {s : ∀ i hi : p i, Set α} {t : ∀ i hi : p i, Set β} {f : α → β}
+theorem maps_to_bInter_bInter {p : ι → Prop} {s : ∀ i (hi : p i), Set α} {t : ∀ i (hi : p i), Set β} {f : α → β}
   (H : ∀ i hi, maps_to f (s i hi) (t i hi)) : maps_to f (⋂i hi, s i hi) (⋂i hi, t i hi) :=
   maps_to_Inter_Inter$ fun i => maps_to_Inter_Inter (H i)
 
 theorem image_Inter_subset (s : ι → Set α) (f : α → β) : (f '' ⋂i, s i) ⊆ ⋂i, f '' s i :=
   (maps_to_Inter_Inter$ fun i => maps_to_image f (s i)).image_subset
 
-theorem image_bInter_subset {p : ι → Prop} (s : ∀ i hi : p i, Set α) (f : α → β) :
+theorem image_bInter_subset {p : ι → Prop} (s : ∀ i (hi : p i), Set α) (f : α → β) :
   (f '' ⋂i hi, s i hi) ⊆ ⋂i hi, f '' s i hi :=
   (maps_to_bInter_bInter$ fun i hi => maps_to_image f (s i hi)).image_subset
 
@@ -1179,7 +1190,7 @@ theorem inj_on_Union_of_directed {s : ι → Set α} (hs : Directed (· ⊆ ·) 
 /-! ### `surj_on` -/
 
 
-theorem surj_on_sUnion {s : Set α} {T : Set (Set β)} {f : α → β} (H : ∀ t _ : t ∈ T, surj_on f s t) :
+theorem surj_on_sUnion {s : Set α} {T : Set (Set β)} {f : α → β} (H : ∀ t (_ : t ∈ T), surj_on f s t) :
   surj_on f s (⋃₀T) :=
   fun x ⟨t, ht, hx⟩ => H t ht hx
 
@@ -1190,11 +1201,11 @@ theorem surj_on_Union_Union {s : ι → Set α} {t : ι → Set β} {f : α → 
   surj_on f (⋃i, s i) (⋃i, t i) :=
   surj_on_Union$ fun i => (H i).mono (subset_Union _ _) (subset.refl _)
 
-theorem surj_on_bUnion {p : ι → Prop} {s : Set α} {t : ∀ i hi : p i, Set β} {f : α → β}
+theorem surj_on_bUnion {p : ι → Prop} {s : Set α} {t : ∀ i (hi : p i), Set β} {f : α → β}
   (H : ∀ i hi, surj_on f s (t i hi)) : surj_on f s (⋃i hi, t i hi) :=
   surj_on_Union$ fun i => surj_on_Union (H i)
 
-theorem surj_on_bUnion_bUnion {p : ι → Prop} {s : ∀ i hi : p i, Set α} {t : ∀ i hi : p i, Set β} {f : α → β}
+theorem surj_on_bUnion_bUnion {p : ι → Prop} {s : ∀ i (hi : p i), Set α} {t : ∀ i (hi : p i), Set β} {f : α → β}
   (H : ∀ i hi, surj_on f (s i hi) (t i hi)) : surj_on f (⋃i hi, s i hi) (⋃i hi, t i hi) :=
   surj_on_Union_Union$ fun i => surj_on_Union_Union (H i)
 
@@ -1364,9 +1375,11 @@ theorem bUnion_prod_const {ι} {u : Set ι} {s : ι → Set α} {t : Set β} :
   by 
     simpRw [Union_prod_const]
 
-theorem sUnion_prod_const {C : Set (Set α)} {t : Set β} : (⋃₀C).Prod t = ⋃₀((fun s : Set α => s.prod t) '' C) :=
-  by 
-    simp only [sUnion_eq_bUnion, bUnion_prod_const, bUnion_image]
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sUnion_prod_const
+{C : set (set α)}
+{t : set β} : «expr = »(«expr⋃₀ »(C).prod t, «expr⋃₀ »(«expr '' »(λ s : set α, s.prod t, C))) :=
+by { simp [] [] ["only"] ["[", expr sUnion_eq_bUnion, ",", expr bUnion_prod_const, ",", expr bUnion_image, "]"] [] [] }
 
 theorem Union_prod {ι α β} (s : ι → Set α) (t : ι → Set β) :
   (⋃x : ι × ι, (s x.1).Prod (t x.2)) = (⋃i : ι, s i).Prod (⋃i : ι, t i) :=
@@ -1433,7 +1446,7 @@ theorem mem_seq_iff {s : Set (α → β)} {t : Set α} {b : β} :
   Iff.rfl
 
 theorem seq_subset {s : Set (α → β)} {t : Set α} {u : Set β} :
-  seq s t ⊆ u ↔ ∀ f _ : f ∈ s, ∀ a _ : a ∈ t, (f : α → β) a ∈ u :=
+  seq s t ⊆ u ↔ ∀ f (_ : f ∈ s), ∀ a (_ : a ∈ t), (f : α → β) a ∈ u :=
   Iff.intro (fun h f hf a ha => h ⟨f, hf, a, ha, rfl⟩) fun h b ⟨f, hf, a, ha, Eq⟩ => Eq ▸ h f hf a ha
 
 theorem seq_mono {s₀ s₁ : Set (α → β)} {t₀ t₁ : Set α} (hs : s₀ ⊆ s₁) (ht : t₀ ⊆ t₁) : seq s₀ t₀ ⊆ seq s₁ t₁ :=
@@ -1444,10 +1457,9 @@ theorem singleton_seq {f : α → β} {t : Set α} : Set.Seq {f} t = f '' t :=
     by 
       simp 
 
-theorem seq_singleton {s : Set (α → β)} {a : α} : Set.Seq s {a} = (fun f : α → β => f a) '' s :=
-  Set.ext$
-    by 
-      simp 
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem seq_singleton {s : set (α → β)} {a : α} : «expr = »(set.seq s {a}, «expr '' »(λ f : α → β, f a, s)) :=
+«expr $ »(set.ext, by simp [] [] [] [] [] [])
 
 theorem seq_seq {s : Set (β → γ)} {t : Set (α → β)} {u : Set α} : seq s (seq t u) = seq (seq (· ∘ · '' s) t) u :=
   by 
@@ -1489,9 +1501,12 @@ end Seq
 /-! ### `set` as a monad -/
 
 
-instance  : Monadₓ Set :=
-  { pure := fun α : Type u a => {a}, bind := fun α β : Type u s f => ⋃(i : _)(_ : i ∈ s), f i,
-    seq := fun α β : Type u => Set.Seq, map := fun α β : Type u => Set.Image }
+-- error in Data.Set.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : monad set :=
+{ pure := λ (α : Type u) (a), {a},
+  bind := λ (α β : Type u) (s f), «expr⋃ , »((i «expr ∈ » s), f i),
+  seq := λ α β : Type u, set.seq,
+  map := λ α β : Type u, set.image }
 
 section Monadₓ
 
@@ -1617,6 +1632,12 @@ theorem inter_right (u : Set α) (h : Disjoint s t) : Disjoint s (t ∩ u) :=
 theorem inter_right' (u : Set α) (h : Disjoint s t) : Disjoint s (u ∩ t) :=
   inf_right' _ h
 
+theorem subset_left_of_subset_union (h : s ⊆ t ∪ u) (hac : Disjoint s u) : s ⊆ t :=
+  hac.left_le_of_le_sup_right h
+
+theorem subset_right_of_subset_union (h : s ⊆ t ∪ u) (hab : Disjoint s t) : s ⊆ u :=
+  hab.left_le_of_le_sup_left h
+
 theorem preimage {α β} (f : α → β) {s t : Set β} (h : Disjoint s t) : Disjoint (f ⁻¹' s) (f ⁻¹' t) :=
   fun x hx => h hx
 
@@ -1704,7 +1725,7 @@ theorem disjoint_singleton {a b : α} : Disjoint ({a} : Set α) {b} ↔ a ≠ b 
     rw [disjoint_singleton_left, mem_singleton_iff]
 
 theorem disjoint_image_image {f : β → α} {g : γ → α} {s : Set β} {t : Set γ}
-  (h : ∀ b _ : b ∈ s, ∀ c _ : c ∈ t, f b ≠ g c) : Disjoint (f '' s) (g '' t) :=
+  (h : ∀ b (_ : b ∈ s), ∀ c (_ : c ∈ t), f b ≠ g c) : Disjoint (f '' s) (g '' t) :=
   by 
     rintro a ⟨⟨b, hb, eq⟩, c, hc, rfl⟩ <;> exact h b hb c hc Eq
 

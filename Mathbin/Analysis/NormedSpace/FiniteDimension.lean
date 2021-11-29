@@ -405,7 +405,7 @@ theorem Basis.constrL_basis (v : Basis ι 𝕜 E) (f : ι → F) (i : ι) : (v.c
   v.constr_basis 𝕜 _ _
 
 theorem Basis.sup_norm_le_norm (v : Basis ι 𝕜 E) :
-  ∃ (C : _)(_ : C > (0 : ℝ)), ∀ e : E, (∑i, ∥v.equiv_fun e i∥) ≤ C*∥e∥ :=
+  ∃ (C : _)(_ : C > (0 : ℝ)), ∀ (e : E), (∑i, ∥v.equiv_fun e i∥) ≤ C*∥e∥ :=
   by 
     set φ := v.equiv_funL.to_continuous_linear_map 
     set C := ∥φ∥*Fintype.card ι 
@@ -425,7 +425,7 @@ theorem Basis.sup_norm_le_norm (v : Basis ι 𝕜 E) :
 theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) :
   ∃ (C : _)(_ : C > (0 : ℝ)), ∀ {u : E →L[𝕜] F} {M : ℝ}, 0 ≤ M → (∀ i, ∥u (v i)∥ ≤ M) → ∥u∥ ≤ C*M :=
   by 
-    obtain ⟨C, C_pos, hC⟩ : ∃ (C : _)(_ : C > (0 : ℝ)), ∀ e : E, (∑i, ∥v.equiv_fun e i∥) ≤ C*∥e∥
+    obtain ⟨C, C_pos, hC⟩ : ∃ (C : _)(_ : C > (0 : ℝ)), ∀ (e : E), (∑i, ∥v.equiv_fun e i∥) ≤ C*∥e∥
     exact v.sup_norm_le_norm 
     use C, C_pos 
     intro u M hM hu 
@@ -444,7 +444,7 @@ theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) :
       by 
         ring
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 instance [finite_dimensional 𝕜 E] [second_countable_topology F] : second_countable_topology «expr →L[ ] »(E, 𝕜, F) :=
 begin
   set [] [ident d] [] [":="] [expr finite_dimensional.finrank 𝕜 E] [],
@@ -549,7 +549,7 @@ begin
   exact [expr ⟨x, xR, λ y hy, hx' _ (submodule.subset_span hy)⟩]
 end
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In an infinite-dimensional normed space, there exists a sequence of points which are all
 bounded by `R` and at distance at least `1`. For a version not assuming `c` and `R`, see
 `exists_seq_norm_le_one_le_norm_sub`. -/
@@ -647,17 +647,18 @@ theorem ContinuousLinearMap.exists_right_inverse_of_surjective [FiniteDimensiona
   let ⟨g, hg⟩ := (f : E →ₗ[𝕜] F).exists_right_inverse_of_surjective hf
   ⟨g.to_continuous_linear_map, ContinuousLinearMap.ext$ LinearMap.ext_iff.1 hg⟩
 
-theorem closed_embedding_smul_left {c : E} (hc : c ≠ 0) : ClosedEmbedding fun x : 𝕜 => x • c :=
-  LinearEquiv.closed_embedding_of_injective (LinearEquiv.ker_to_span_singleton 𝕜 E hc)
+-- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem closed_embedding_smul_left {c : E} (hc : «expr ≠ »(c, 0)) : closed_embedding (λ x : 𝕜, «expr • »(x, c)) :=
+linear_equiv.closed_embedding_of_injective (linear_equiv.ker_to_span_singleton 𝕜 E hc)
 
-theorem is_closed_map_smul_left (c : E) : IsClosedMap fun x : 𝕜 => x • c :=
-  by 
-    byCases' hc : c = 0
-    ·
-      simpRw [hc, smul_zero]
-      exact is_closed_map_const
-    ·
-      exact (closed_embedding_smul_left hc).IsClosedMap
+-- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_closed_map_smul_left (c : E) : is_closed_map (λ x : 𝕜, «expr • »(x, c)) :=
+begin
+  by_cases [expr hc, ":", expr «expr = »(c, 0)],
+  { simp_rw ["[", expr hc, ",", expr smul_zero, "]"] [],
+    exact [expr is_closed_map_const] },
+  { exact [expr (closed_embedding_smul_left hc).is_closed_map] }
+end
 
 end CompleteField
 
@@ -682,7 +683,7 @@ instance FiniteDimensional.proper_real (E : Type u) [NormedGroup E] [NormedSpace
 
 attribute [instance] FiniteDimensional.proper_real
 
--- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.NormedSpace.FiniteDimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In a finite dimensional vector space over `ℝ`, the series `∑ x, ∥f x∥` is unconditionally
 summable if and only if the series `∑ x, f x` is unconditionally summable. One implication holds in
 any complete normed space, while the other holds only in finite dimensional spaces. -/

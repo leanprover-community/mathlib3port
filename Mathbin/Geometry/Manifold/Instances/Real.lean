@@ -53,7 +53,7 @@ The quadrant in `ℝ^n`, used to model manifolds with corners, made of all vecto
 coordinates.
 -/
 def EuclideanQuadrant (n : ℕ) : Type :=
-  { x : EuclideanSpace ℝ (Finₓ n) // ∀ i : Finₓ n, 0 ≤ x i }
+  { x : EuclideanSpace ℝ (Finₓ n) // ∀ (i : Finₓ n), 0 ≤ x i }
 
 section 
 
@@ -75,43 +75,44 @@ instance  [HasZero (Finₓ n)] : Inhabited (EuclideanHalfSpace n) :=
 instance  : Inhabited (EuclideanQuadrant n) :=
   ⟨⟨0, fun i => le_reflₓ _⟩⟩
 
-theorem range_half_space (n : ℕ) [HasZero (Finₓ n)] : (range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } :=
-  by 
-    simp 
+-- error in Geometry.Manifold.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem range_half_space
+(n : exprℕ())
+[has_zero (fin n)] : «expr = »(range (λ x : euclidean_half_space n, x.val), {y | «expr ≤ »(0, y 0)}) :=
+by simp [] [] [] [] [] []
 
-theorem range_quadrant (n : ℕ) : (range fun x : EuclideanQuadrant n => x.val) = { y | ∀ i : Finₓ n, 0 ≤ y i } :=
-  by 
-    simp 
+-- error in Geometry.Manifold.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem range_quadrant
+(n : exprℕ()) : «expr = »(range (λ x : euclidean_quadrant n, x.val), {y | ∀ i : fin n, «expr ≤ »(0, y i)}) :=
+by simp [] [] [] [] [] []
 
 end 
 
+-- error in Geometry.Manifold.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
 -/
-def modelWithCornersEuclideanHalfSpace (n : ℕ) [HasZero (Finₓ n)] :
-  ModelWithCorners ℝ (EuclideanSpace ℝ (Finₓ n)) (EuclideanHalfSpace n) :=
-  { toFun := Subtype.val,
-    invFun :=
-      fun x =>
-        ⟨update x 0 (max (x 0) 0),
-          by 
-            simp [le_reflₓ]⟩,
-    Source := univ, Target := { x | 0 ≤ x 0 }, map_source' := fun x hx => x.property,
-    map_target' := fun x hx => mem_univ _,
-    left_inv' :=
-      fun ⟨xval, xprop⟩ hx =>
-        by 
-          rw [Subtype.mk_eq_mk, update_eq_iff]
-          exact ⟨max_eq_leftₓ xprop, fun i _ => rfl⟩,
-    right_inv' := fun x hx => update_eq_iff.2 ⟨max_eq_leftₓ hx, fun i _ => rfl⟩, source_eq := rfl,
-    unique_diff' :=
-      have this : UniqueDiffOn ℝ _ :=
-        UniqueDiffOn.pi (Finₓ n) (fun _ => ℝ) _ _ fun i _ : i ∈ ({0} : Set (Finₓ n)) => unique_diff_on_Ici 0 
-      by 
-        simpa only [singleton_pi] using this,
-    continuous_to_fun := continuous_subtype_val,
-    continuous_inv_fun := continuous_subtype_mk _$ continuous_id.update 0$ (continuous_apply 0).max continuous_const }
+def model_with_corners_euclidean_half_space
+(n : exprℕ())
+[has_zero (fin n)] : model_with_corners exprℝ() (euclidean_space exprℝ() (fin n)) (euclidean_half_space n) :=
+{ to_fun := subtype.val,
+  inv_fun := λ x, ⟨update x 0 (max (x 0) 0), by simp [] [] [] ["[", expr le_refl, "]"] [] []⟩,
+  source := univ,
+  target := {x | «expr ≤ »(0, x 0)},
+  map_source' := λ x hx, x.property,
+  map_target' := λ x hx, mem_univ _,
+  left_inv' := λ ⟨xval, xprop⟩ (hx), begin
+    rw ["[", expr subtype.mk_eq_mk, ",", expr update_eq_iff, "]"] [],
+    exact [expr ⟨max_eq_left xprop, λ i _, rfl⟩]
+  end,
+  right_inv' := λ x hx, update_eq_iff.2 ⟨max_eq_left hx, λ i _, rfl⟩,
+  source_eq := rfl,
+  unique_diff' := have this : unique_diff_on exprℝ() _ := unique_diff_on.pi (fin n) (λ
+   _, exprℝ()) _ _ (λ i «expr ∈ » ({0} : set (fin n)), unique_diff_on_Ici 0),
+  by simpa [] [] ["only"] ["[", expr singleton_pi, "]"] [] ["using", expr this],
+  continuous_to_fun := continuous_subtype_val,
+  continuous_inv_fun := «expr $ »(continuous_subtype_mk _, «expr $ »(continuous_id.update 0, (continuous_apply 0).max continuous_const)) }
 
 /--
 Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_quadrant n)`, used as a

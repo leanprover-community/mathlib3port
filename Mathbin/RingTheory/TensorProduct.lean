@@ -116,7 +116,7 @@ def lift (f : M →ₗ[A] N →ₗ[R] P) : M ⊗[R] N →ₗ[A] P :=
     map_smul' :=
       fun c =>
         show
-          ∀ x : M ⊗[R] N,
+          ∀ (x : M ⊗[R] N),
             (lift (f.restrict_scalars R)).comp (lsmul R _ c) x = (lsmul R _ c).comp (lift (f.restrict_scalars R)) x from
           ext_iff.1$
             TensorProduct.ext'$
@@ -359,9 +359,9 @@ theorem mul_apply (a₁ a₂ : A) (b₁ b₂ : B) : mul (a₁ ⊗ₜ[R] b₁) (a
 
 theorem mul_assoc' (mul : A ⊗[R] B →ₗ[R] A ⊗[R] B →ₗ[R] A ⊗[R] B)
   (h :
-    ∀ a₁ a₂ a₃ : A b₁ b₂ b₃ : B,
+    ∀ (a₁ a₂ a₃ : A) (b₁ b₂ b₃ : B),
       mul (mul (a₁ ⊗ₜ[R] b₁) (a₂ ⊗ₜ[R] b₂)) (a₃ ⊗ₜ[R] b₃) = mul (a₁ ⊗ₜ[R] b₁) (mul (a₂ ⊗ₜ[R] b₂) (a₃ ⊗ₜ[R] b₃))) :
-  ∀ x y z : A ⊗[R] B, mul (mul x y) z = mul x (mul y z) :=
+  ∀ (x y z : A ⊗[R] B), mul (mul x y) z = mul x (mul y z) :=
   by 
     intros 
     apply TensorProduct.induction_on x
@@ -650,7 +650,7 @@ Build an algebra morphism from a linear map out of a tensor product,
 and evidence of multiplicativity on pure tensors.
 -/
 def alg_hom_of_linear_map_tensor_product (f : A ⊗[R] B →ₗ[R] C)
-  (w₁ : ∀ a₁ a₂ : A b₁ b₂ : B, f ((a₁*a₂) ⊗ₜ b₁*b₂) = f (a₁ ⊗ₜ b₁)*f (a₂ ⊗ₜ b₂))
+  (w₁ : ∀ (a₁ a₂ : A) (b₁ b₂ : B), f ((a₁*a₂) ⊗ₜ b₁*b₂) = f (a₁ ⊗ₜ b₁)*f (a₂ ⊗ₜ b₂))
   (w₂ : ∀ r, f ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R C) r) : A ⊗[R] B →ₐ[R] C :=
   { f with
     map_one' :=
@@ -698,7 +698,7 @@ Build an algebra equivalence from a linear equivalence out of a tensor product,
 and evidence of multiplicativity on pure tensors.
 -/
 def alg_equiv_of_linear_equiv_tensor_product (f : A ⊗[R] B ≃ₗ[R] C)
-  (w₁ : ∀ a₁ a₂ : A b₁ b₂ : B, f ((a₁*a₂) ⊗ₜ b₁*b₂) = f (a₁ ⊗ₜ b₁)*f (a₂ ⊗ₜ b₂))
+  (w₁ : ∀ (a₁ a₂ : A) (b₁ b₂ : B), f ((a₁*a₂) ⊗ₜ b₁*b₂) = f (a₁ ⊗ₜ b₁)*f (a₂ ⊗ₜ b₂))
   (w₂ : ∀ r, f ((algebraMap R A) r ⊗ₜ[R] 1) = (algebraMap R C) r) : A ⊗[R] B ≃ₐ[R] C :=
   { alg_hom_of_linear_map_tensor_product (f : A ⊗[R] B →ₗ[R] C) w₁ w₂, f with  }
 
@@ -712,7 +712,7 @@ Build an algebra equivalence from a linear equivalence out of a triple tensor pr
 and evidence of multiplicativity on pure tensors.
 -/
 def alg_equiv_of_linear_equiv_triple_tensor_product (f : (A ⊗[R] B) ⊗[R] C ≃ₗ[R] D)
-  (w₁ : ∀ a₁ a₂ : A b₁ b₂ : B c₁ c₂ : C, f (((a₁*a₂) ⊗ₜ b₁*b₂) ⊗ₜ c₁*c₂) = f (a₁ ⊗ₜ b₁ ⊗ₜ c₁)*f (a₂ ⊗ₜ b₂ ⊗ₜ c₂))
+  (w₁ : ∀ (a₁ a₂ : A) (b₁ b₂ : B) (c₁ c₂ : C), f (((a₁*a₂) ⊗ₜ b₁*b₂) ⊗ₜ c₁*c₂) = f (a₁ ⊗ₜ b₁ ⊗ₜ c₁)*f (a₂ ⊗ₜ b₂ ⊗ₜ c₂))
   (w₂ : ∀ r, f (((algebraMap R A) r ⊗ₜ[R] (1 : B)) ⊗ₜ[R] (1 : C)) = (algebraMap R D) r) : (A ⊗[R] B) ⊗[R] C ≃ₐ[R] D :=
   { f with toFun := f,
     map_mul' :=

@@ -470,7 +470,7 @@ functions `f`, such that, for all measurable sets `A`, `∫⁻ x in A, f x ∂μ
 
 This is useful for the Lebesgue decomposition theorem. -/
 def measurable_le (μ ν : Measureₓ α) : Set (α → ℝ≥0∞) :=
-  { f | Measurable f ∧ ∀ A : Set α hA : MeasurableSet A, (∫⁻x in A, f x ∂μ) ≤ ν A }
+  { f | Measurable f ∧ ∀ (A : Set α) (hA : MeasurableSet A), (∫⁻x in A, f x ∂μ) ≤ ν A }
 
 theorem zero_mem_measurable_le : (0 : α → ℝ≥0∞) ∈ measurable_le μ ν :=
   ⟨measurable_zero,
@@ -626,9 +626,10 @@ theorem supr_le_le {α : Type _} (f : ℕ → α → ℝ≥0∞) (n k : ℕ) (hk
 
 end SuprLemmas
 
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `measurable_le_eval μ ν` is the set of `∫⁻ x, f x ∂μ` for all `f ∈ measurable_le μ ν`. -/
-def measurable_le_eval (μ ν : Measureₓ α) : Set ℝ≥0∞ :=
-  (fun f : α → ℝ≥0∞ => ∫⁻x, f x ∂μ) '' measurable_le μ ν
+def measurable_le_eval (μ ν : measure α) : set «exprℝ≥0∞»() :=
+«expr '' »(λ f : α → «exprℝ≥0∞»(), «expr∫⁻ , ∂ »((x), f x, μ), measurable_le μ ν)
 
 end LebesgueDecomposition
 
@@ -742,7 +743,7 @@ instance  {S : μ.finite_spanning_sets_in { s:Set α | MeasurableSet s }} (n : �
       rw [restrict_apply MeasurableSet.univ, Set.univ_inter]
       exact S.finite _⟩
 
--- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- **The Lebesgue decomposition theorem**: Any pair of σ-finite measures `μ` and `ν`
 `have_lebesgue_decomposition`. That is to say, there exist a measure `ξ` and a measurable function
 `f`, such that `ξ` is mutually singular with respect to `ν` and `μ = ξ + ν.with_density f` -/
@@ -998,22 +999,19 @@ theorem singular_part_add_with_density_rn_deriv_eq [s.have_lebesgue_decompositio
         exact (lintegral_rn_deriv_lt_top _ _).Ne|
         measurability
 
-theorem jordan_decomposition_add_with_density_mutually_singular {f : α → ℝ} (hf : Measurable f)
-  (htμ : t ⊥ᵥ μ.to_ennreal_vector_measure) :
-  (t.to_jordan_decomposition.pos_part+μ.with_density fun x : α => Ennreal.ofReal (f x)) ⊥ₘ
-    t.to_jordan_decomposition.neg_part+μ.with_density fun x : α => Ennreal.ofReal (-f x) :=
-  by 
-    rw [mutually_singular_ennreal_iff, total_variation_mutually_singular_iff] at htμ 
-    change
-      _ ⊥ₘ vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ) ∧
-        _ ⊥ₘ vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ) at
-      htμ 
-    rw [vector_measure.equiv_measure.right_inv] at htμ 
-    exact
-      ((jordan_decomposition.mutually_singular _).add_right
-            (htμ.1.mono_ac (refl _) (with_density_absolutely_continuous _ _))).add_left
-        ((htμ.2.symm.mono_ac (with_density_absolutely_continuous _ _) (refl _)).add_right
-          (with_density_of_real_mutually_singular hf))
+-- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem jordan_decomposition_add_with_density_mutually_singular
+{f : α → exprℝ()}
+(hf : measurable f)
+(htμ : «expr ⊥ᵥ »(t, μ.to_ennreal_vector_measure)) : «expr ⊥ₘ »(«expr + »(t.to_jordan_decomposition.pos_part, μ.with_density (λ
+   x : α, ennreal.of_real (f x))), «expr + »(t.to_jordan_decomposition.neg_part, μ.with_density (λ
+   x : α, ennreal.of_real «expr- »(f x)))) :=
+begin
+  rw ["[", expr mutually_singular_ennreal_iff, ",", expr total_variation_mutually_singular_iff, "]"] ["at", ident htμ],
+  change [expr «expr ∧ »(«expr ⊥ₘ »(_, vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ)), «expr ⊥ₘ »(_, vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ)))] [] ["at", ident htμ],
+  rw ["[", expr vector_measure.equiv_measure.right_inv, "]"] ["at", ident htμ],
+  exact [expr ((jordan_decomposition.mutually_singular _).add_right (htμ.1.mono_ac (refl _) (with_density_absolutely_continuous _ _))).add_left ((htμ.2.symm.mono_ac (with_density_absolutely_continuous _ _) (refl _)).add_right (with_density_of_real_mutually_singular hf))]
+end
 
 -- error in MeasureTheory.Decomposition.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem to_jordan_decomposition_eq_of_eq_add_with_density

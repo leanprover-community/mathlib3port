@@ -89,9 +89,9 @@ namespace Measureₓ
 
 
 /-- Obtain a measure by giving a countably additive function that sends `∅` to `0`. -/
-def of_measurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m ∅ MeasurableSet.empty = 0)
+def of_measurable (m : ∀ (s : Set α), MeasurableSet s → ℝ≥0∞) (m0 : m ∅ MeasurableSet.empty = 0)
   (mU :
-    ∀ ⦃f : ℕ → Set α⦄ h : ∀ i, MeasurableSet (f i),
+    ∀ ⦃f : ℕ → Set α⦄ (h : ∀ i, MeasurableSet (f i)),
       Pairwise (Disjoint on f) → m (⋃i, f i) (MeasurableSet.Union h) = ∑'i, m (f i) (h i)) :
   Measureₓ α :=
   { induced_outer_measure m _ m0 with
@@ -109,9 +109,9 @@ def of_measurable (m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞) (m0 : m �
         funext s hs 
         exact induced_outer_measure_eq m0 mU hs }
 
-theorem of_measurable_apply {m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞} {m0 : m ∅ MeasurableSet.empty = 0}
+theorem of_measurable_apply {m : ∀ (s : Set α), MeasurableSet s → ℝ≥0∞} {m0 : m ∅ MeasurableSet.empty = 0}
   {mU :
-    ∀ ⦃f : ℕ → Set α⦄ h : ∀ i, MeasurableSet (f i),
+    ∀ ⦃f : ℕ → Set α⦄ (h : ∀ i, MeasurableSet (f i)),
       Pairwise (Disjoint on f) → m (⋃i, f i) (MeasurableSet.Union h) = ∑'i, m (f i) (h i)}
   (s : Set α) (hs : MeasurableSet s) : of_measurable m m0 mU s = m s hs :=
   induced_outer_measure_eq m0 mU hs
@@ -165,8 +165,9 @@ theorem to_outer_measure_eq_induced_outer_measure :
   μ.to_outer_measure = induced_outer_measure (fun s _ => μ s) MeasurableSet.empty μ.empty :=
   μ.trimmed.symm
 
-theorem measure_eq_extend (hs : MeasurableSet s) : μ s = extend (fun t ht : MeasurableSet t => μ t) s :=
-  (extend_eq _ hs).symm
+-- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measure_eq_extend (hs : measurable_set s) : «expr = »(μ s, extend (λ (t) (ht : measurable_set t), μ t) s) :=
+(extend_eq _ hs).symm
 
 @[simp]
 theorem measure_empty : μ ∅ = 0 :=
@@ -227,7 +228,7 @@ theorem measure_Union_fintype_le [Fintype β] (f : β → Set α) : μ (⋃b, f 
     convert measure_bUnion_finset_le Finset.univ f 
     simp 
 
-theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : finite s) (hfin : ∀ i _ : i ∈ s, μ (f i) ≠ ∞) :
+theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : finite s) (hfin : ∀ i (_ : i ∈ s), μ (f i) ≠ ∞) :
   μ (⋃(i : _)(_ : i ∈ s), f i) < ∞ :=
   by 
     convert (measure_bUnion_finset_le hs.to_finset f).trans_lt _
@@ -240,6 +241,7 @@ theorem measure_bUnion_lt_top {s : Set β} {f : β → Set α} (hs : finite s) (
 theorem measure_Union_null [Encodable β] {s : β → Set α} : (∀ i, μ (s i) = 0) → μ (⋃i, s i) = 0 :=
   μ.to_outer_measure.Union_null
 
+@[simp]
 theorem measure_Union_null_iff [Encodable ι] {s : ι → Set α} : μ (⋃i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
   ⟨fun h i => measure_mono_null (subset_Union _ _) h, measure_Union_null⟩
 
@@ -251,6 +253,10 @@ theorem measure_bUnion_null_iff
 by { haveI [] [] [":=", expr hs.to_encodable],
   rw ["[", expr bUnion_eq_Union, ",", expr measure_Union_null_iff, ",", expr set_coe.forall, "]"] [],
   refl }
+
+theorem measure_sUnion_null_iff {S : Set (Set α)} (hS : countable S) : μ (⋃₀S) = 0 ↔ ∀ s (_ : s ∈ S), μ s = 0 :=
+  by 
+    rw [sUnion_eq_bUnion, measure_bUnion_null_iff hS]
 
 theorem measure_union_le (s₁ s₂ : Set α) : μ (s₁ ∪ s₂) ≤ μ s₁+μ s₂ :=
   μ.to_outer_measure.union _ _
@@ -356,8 +362,8 @@ theorem ae_imp_iff {p : α → Prop} {q : Prop} : (∀ᵐx ∂μ, q → p x) ↔
 theorem ae_all_iff [Encodable ι] {p : α → ι → Prop} : (∀ᵐa ∂μ, ∀ i, p a i) ↔ ∀ i, ∀ᵐa ∂μ, p a i :=
   eventually_countable_forall
 
-theorem ae_ball_iff {S : Set ι} (hS : countable S) {p : ∀ x : α i _ : i ∈ S, Prop} :
-  (∀ᵐx ∂μ, ∀ i _ : i ∈ S, p x i ‹_›) ↔ ∀ i _ : i ∈ S, ∀ᵐx ∂μ, p x i ‹_› :=
+theorem ae_ball_iff {S : Set ι} (hS : countable S) {p : ∀ (x : α) i (_ : i ∈ S), Prop} :
+  (∀ᵐx ∂μ, ∀ i (_ : i ∈ S), p x i ‹_›) ↔ ∀ i (_ : i ∈ S), ∀ᵐx ∂μ, p x i ‹_› :=
   eventually_countable_ball hS
 
 theorem ae_eq_refl (f : α → δ) : f =ᵐ[μ] f :=
@@ -538,9 +544,8 @@ end AeMeasurable
 theorem ae_measurable_congr (h : f =ᵐ[μ] g) : AeMeasurable f μ ↔ AeMeasurable g μ :=
   ⟨fun hf => AeMeasurable.congr hf h, fun hg => AeMeasurable.congr hg h.symm⟩
 
-@[simp]
-theorem ae_measurable_const {b : β} : AeMeasurable (fun a : α => b) μ :=
-  measurable_const.AeMeasurable
+-- error in MeasureTheory.Measure.MeasureSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem ae_measurable_const {b : β} : ae_measurable (λ a : α, b) μ := measurable_const.ae_measurable
 
 theorem ae_measurable_id : AeMeasurable id μ :=
   measurable_id.AeMeasurable

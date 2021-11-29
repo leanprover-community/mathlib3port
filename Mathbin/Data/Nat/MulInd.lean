@@ -65,7 +65,7 @@ def rec_on_prime_pow
 /-- Given `P 0`, `P 1`, and `P (p ^ k)` for positive prime powers, and a way to extend `P a` and
 `P b` to `P (a * b)` when `a, b` are coprime, you can define `P` for all natural numbers. -/
 @[elab_as_eliminator]
-def rec_on_pos_prime_coprime {P : ℕ → Sort _} (hp : ∀ p n : ℕ, Prime p → 0 < n → P (p^n)) (h0 : P 0) (h1 : P 1)
+def rec_on_pos_prime_coprime {P : ℕ → Sort _} (hp : ∀ (p n : ℕ), Prime p → 0 < n → P (p^n)) (h0 : P 0) (h1 : P 1)
   (h : ∀ a b, coprime a b → P a → P b → P (a*b)) : ∀ a, P a :=
   rec_on_prime_pow h0 h1$
     fun a p n hp' hpa ha =>
@@ -75,7 +75,7 @@ def rec_on_pos_prime_coprime {P : ℕ → Sort _} (hp : ∀ p n : ℕ, Prime p �
 /-- Given `P 0`, `P (p ^ k)` for all prime powers, and a way to extend `P a` and `P b` to
 `P (a * b)` when `a, b` are coprime, you can define `P` for all natural numbers. -/
 @[elab_as_eliminator]
-def rec_on_prime_coprime {P : ℕ → Sort _} (h0 : P 0) (hp : ∀ p n : ℕ, Prime p → P (p^n))
+def rec_on_prime_coprime {P : ℕ → Sort _} (h0 : P 0) (hp : ∀ (p n : ℕ), Prime p → P (p^n))
   (h : ∀ a b, coprime a b → P a → P b → P (a*b)) : ∀ a, P a :=
   rec_on_pos_prime_coprime (fun p n h _ => hp p n h) h0 (hp 2 0 prime_two) h
 
@@ -84,7 +84,7 @@ def rec_on_prime_coprime {P : ℕ → Sort _} (h0 : P 0) (hp : ∀ p n : ℕ, Pr
 @[elab_as_eliminator]
 def rec_on_mul {P : ℕ → Sort _} (h0 : P 0) (h1 : P 1) (hp : ∀ p, Prime p → P p) (h : ∀ a b, P a → P b → P (a*b)) :
   ∀ a, P a :=
-  let hp : ∀ p n : ℕ, Prime p → P (p^n) :=
+  let hp : ∀ (p n : ℕ), Prime p → P (p^n) :=
     fun p n hp' =>
       match n with 
       | 0 => h1

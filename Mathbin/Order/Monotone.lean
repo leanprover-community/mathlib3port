@@ -72,11 +72,11 @@ def Antitone (f : α → β) : Prop :=
 
 /-- A function `f` is monotone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f a ≤ f b`. -/
 def MonotoneOn (f : α → β) (s : Set α) : Prop :=
-  ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a ≤ b → f a ≤ f b
+  ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a ≤ b → f a ≤ f b
 
 /-- A function `f` is antitone on `s` if, for all `a, b ∈ s`, `a ≤ b` implies `f b ≤ f a`. -/
 def AntitoneOn (f : α → β) (s : Set α) : Prop :=
-  ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a ≤ b → f b ≤ f a
+  ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a ≤ b → f b ≤ f a
 
 /-- A function `f` is strictly monotone if `a < b` implies `f a < f b`. -/
 def StrictMono (f : α → β) : Prop :=
@@ -89,12 +89,12 @@ def StrictAnti (f : α → β) : Prop :=
 /-- A function `f` is strictly monotone on `s` if, for all `a, b ∈ s`, `a < b` implies
 `f a < f b`. -/
 def StrictMonoOn (f : α → β) (s : Set α) : Prop :=
-  ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f a < f b
+  ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f a < f b
 
 /-- A function `f` is strictly antitone on `s` if, for all `a, b ∈ s`, `a < b` implies
 `f b < f a`. -/
 def StrictAntiOn (f : α → β) (s : Set α) : Prop :=
-  ∀ ⦃a⦄ ha : a ∈ s ⦃b⦄ hb : b ∈ s, a < b → f b < f a
+  ∀ ⦃a⦄ (ha : a ∈ s) ⦃b⦄ (hb : b ∈ s), a < b → f b < f a
 
 end MonotoneDef
 
@@ -299,11 +299,11 @@ theorem monotone_id [Preorderₓ α] : Monotone (id : α → α) :=
 theorem strict_mono_id [Preorderₓ α] : StrictMono (id : α → α) :=
   fun a b => id
 
-theorem monotone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Monotone fun a : α => c :=
-  fun a b _ => le_reflₓ c
+-- error in Order.Monotone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem monotone_const [preorder α] [preorder β] {c : β} : monotone (λ a : α, c) := λ a b _, le_refl c
 
-theorem antitone_const [Preorderₓ α] [Preorderₓ β] {c : β} : Antitone fun a : α => c :=
-  fun a b _ => le_reflₓ c
+-- error in Order.Monotone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem antitone_const [preorder α] [preorder β] {c : β} : antitone (λ a : α, c) := λ a b _, le_refl c
 
 -- error in Order.Monotone: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem strict_mono_of_le_iff_le

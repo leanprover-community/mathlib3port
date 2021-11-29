@@ -98,18 +98,14 @@ theorem involute_eq_id : (involute : CliffordAlgebra (0 : QuadraticForm R Unit) 
     ext 
     simp 
 
+-- error in LinearAlgebra.CliffordAlgebra.Equivs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The clifford algebra over a 0-dimensional vector space is isomorphic to its scalars. -/
-protected def Equiv : CliffordAlgebra (0 : QuadraticForm R Unit) ≃ₐ[R] R :=
-  AlgEquiv.ofAlgHom
-    (CliffordAlgebra.lift (0 : QuadraticForm R Unit)$
-      ⟨0, fun m : Unit => (zero_mul (0 : R)).trans (algebraMap R _).map_zero.symm⟩)
-    (Algebra.ofId R _)
-    (by 
-      ext x 
-      exact AlgHom.commutes _ x)
-    (by 
-      ext : 1
-      rw [ι_eq_zero, LinearMap.comp_zero, LinearMap.comp_zero])
+protected
+def equiv : «expr ≃ₐ[ ] »(clifford_algebra (0 : quadratic_form R unit), R, R) :=
+alg_equiv.of_alg_hom «expr $ »(clifford_algebra.lift (0 : quadratic_form R unit), ⟨0, λ
+  m : unit, (zero_mul (0 : R)).trans (algebra_map R _).map_zero.symm⟩) (algebra.of_id R _) (by { ext [] [ident x] [],
+   exact [expr alg_hom.commutes _ x] }) (by { ext [] [] [":", 1],
+   rw ["[", expr ι_eq_zero, ",", expr linear_map.comp_zero, ",", expr linear_map.comp_zero, "]"] [] })
 
 end CliffordAlgebraRing
 

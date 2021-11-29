@@ -33,26 +33,30 @@ open Function
 section Tuple
 
 /-- There is exactly one tuple of size zero. -/
-example  (α : Finₓ 0 → Sort u) : Unique (∀ i : Finₓ 0, α i) :=
+example  (α : Finₓ 0 → Sort u) : Unique (∀ (i : Finₓ 0), α i) :=
   by 
     infer_instance
 
 @[simp]
-theorem tuple0_le {α : ∀ i : Finₓ 0, Type _} [∀ i, Preorderₓ (α i)] (f g : ∀ i, α i) : f ≤ g :=
+theorem tuple0_le {α : ∀ (i : Finₓ 0), Type _} [∀ i, Preorderₓ (α i)] (f g : ∀ i, α i) : f ≤ g :=
   finZeroElim
 
-variable{α : Finₓ (n+1) → Type u}(x : α 0)(q : ∀ i, α i)(p : ∀ i : Finₓ n, α i.succ)(i : Finₓ n)(y : α i.succ)(z : α 0)
+variable{α :
+    Finₓ (n+1) → Type u}(x : α 0)(q : ∀ i, α i)(p : ∀ (i : Finₓ n), α i.succ)(i : Finₓ n)(y : α i.succ)(z : α 0)
 
 /-- The tail of an `n+1` tuple, i.e., its last `n` entries. -/
-def tail (q : ∀ i, α i) : ∀ i : Finₓ n, α i.succ :=
+def tail (q : ∀ i, α i) : ∀ (i : Finₓ n), α i.succ :=
   fun i => q i.succ
 
-theorem tail_def {n : ℕ} {α : Finₓ (n+1) → Type _} {q : ∀ i, α i} :
-  (tail fun k : Finₓ (n+1) => q k) = fun k : Finₓ n => q k.succ :=
-  rfl
+-- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tail_def
+{n : exprℕ()}
+{α : fin «expr + »(n, 1) → Type*}
+{q : ∀ i, α i} : «expr = »(tail (λ k : fin «expr + »(n, 1), q k), λ k : fin n, q k.succ) :=
+rfl
 
 /-- Adding an element at the beginning of an `n`-tuple, to get an `n+1`-tuple. -/
-def cons (x : α 0) (p : ∀ i : Finₓ n, α i.succ) : ∀ i, α i :=
+def cons (x : α 0) (p : ∀ (i : Finₓ n), α i.succ) : ∀ i, α i :=
   fun j => Finₓ.cases x p j
 
 @[simp]
@@ -159,7 +163,7 @@ theorem comp_tail {α : Type _} {β : Type _} (g : α → β) (q : Finₓ n.succ
     ext j 
     simp [tail]
 
-theorem le_cons [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Finₓ n, α i.succ} :
+theorem le_cons [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ (i : Finₓ n), α i.succ} :
   q ≤ cons x p ↔ q 0 ≤ x ∧ tail q ≤ p :=
   forall_fin_succ.trans$
     and_congr Iff.rfl$
@@ -168,7 +172,7 @@ theorem le_cons [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : �
           by 
             simp [tail]
 
-theorem cons_le [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ i : Finₓ n, α i.succ} :
+theorem cons_le [∀ i, Preorderₓ (α i)] {x : α 0} {q : ∀ i, α i} {p : ∀ (i : Finₓ n), α i.succ} :
   cons x p ≤ q ↔ x ≤ q 0 ∧ p ≤ tail q :=
   @le_cons _ (fun i => OrderDual (α i)) _ x q p
 
@@ -217,19 +221,23 @@ several places. -/
 variable{α :
     Finₓ (n+1) →
       Type
-        u}(x : α (last n))(q : ∀ i, α i)(p : ∀ i : Finₓ n, α i.cast_succ)(i : Finₓ n)(y : α i.cast_succ)(z : α (last n))
+        u}(x :
+    α (last n))(q : ∀ i, α i)(p : ∀ (i : Finₓ n), α i.cast_succ)(i : Finₓ n)(y : α i.cast_succ)(z : α (last n))
 
 /-- The beginning of an `n+1` tuple, i.e., its first `n` entries -/
 def init (q : ∀ i, α i) (i : Finₓ n) : α i.cast_succ :=
   q i.cast_succ
 
-theorem init_def {n : ℕ} {α : Finₓ (n+1) → Type _} {q : ∀ i, α i} :
-  (init fun k : Finₓ (n+1) => q k) = fun k : Finₓ n => q k.cast_succ :=
-  rfl
+-- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem init_def
+{n : exprℕ()}
+{α : fin «expr + »(n, 1) → Type*}
+{q : ∀ i, α i} : «expr = »(init (λ k : fin «expr + »(n, 1), q k), λ k : fin n, q k.cast_succ) :=
+rfl
 
 /-- Adding an element at the end of an `n`-tuple, to get an `n+1`-tuple. The name `snoc` comes from
 `cons` (i.e., adding an element to the left of a tuple) read in reverse order. -/
-def snoc (p : ∀ i : Finₓ n, α i.cast_succ) (x : α (last n)) (i : Finₓ (n+1)) : α i :=
+def snoc (p : ∀ (i : Finₓ n), α i.cast_succ) (x : α (last n)) (i : Finₓ (n+1)) : α i :=
   if h : i.val < n then
     _root_.cast
       (by 
@@ -413,7 +421,7 @@ variable{α : Finₓ (n+1) → Type u}{β : Type v}
 propositions, see also `fin.insert_nth` for a version without an `@[elab_as_eliminator]`
 attribute. -/
 @[elab_as_eliminator]
-def succ_above_cases {α : Finₓ (n+1) → Sort u} (i : Finₓ (n+1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succ_above j))
+def succ_above_cases {α : Finₓ (n+1) → Sort u} (i : Finₓ (n+1)) (x : α i) (p : ∀ (j : Finₓ n), α (i.succ_above j))
   (j : Finₓ (n+1)) : α j :=
   if hj : j = i then Eq.ndrec x hj.symm else
     if hlt : j < i then Eq.recOnₓ (succ_above_cast_lt hlt) (p _) else
@@ -425,7 +433,7 @@ theorem forall_iff_succ_above {p : Finₓ (n+1) → Prop} (i : Finₓ (n+1)) : (
 /-- Insert an element into a tuple at a given position. For `i = 0` see `fin.cons`,
 for `i = fin.last n` see `fin.snoc`. See also `fin.succ_above_cases` for a version elaborated
 as an eliminator. -/
-def insert_nth (i : Finₓ (n+1)) (x : α i) (p : ∀ j : Finₓ n, α (i.succ_above j)) (j : Finₓ (n+1)) : α j :=
+def insert_nth (i : Finₓ (n+1)) (x : α i) (p : ∀ (j : Finₓ n), α (i.succ_above j)) (j : Finₓ (n+1)) : α j :=
   succ_above_cases i x p j
 
 @[simp]
@@ -475,7 +483,7 @@ theorem insert_nth_apply_above {i j : Finₓ (n+1)} (h : i < j) (x : α i) (p : 
   by 
     rw [insert_nth, succ_above_cases, dif_neg h.ne', dif_neg h.not_lt]
 
-theorem insert_nth_zero (x : α 0) (p : ∀ j : Finₓ n, α (succ_above 0 j)) :
+theorem insert_nth_zero (x : α 0) (p : ∀ (j : Finₓ n), α (succ_above 0 j)) :
   insert_nth 0 x p = cons x fun j => _root_.cast (congr_argₓ α (congr_funₓ succ_above_zero j)) (p j) :=
   by 
     refine'
@@ -491,7 +499,7 @@ theorem insert_nth_zero' (x : β) (p : Finₓ n → β) : @insert_nth _ (fun _ =
   by 
     simp [insert_nth_zero]
 
-theorem insert_nth_last (x : α (last n)) (p : ∀ j : Finₓ n, α ((last n).succAbove j)) :
+theorem insert_nth_last (x : α (last n)) (p : ∀ (j : Finₓ n), α ((last n).succAbove j)) :
   insert_nth (last n) x p = snoc (fun j => _root_.cast (congr_argₓ α (succ_above_last_apply j)) (p j)) x :=
   by 
     refine'
@@ -592,7 +600,7 @@ section Find
 
 /-- `find p` returns the first index `n` where `p n` is satisfied, and `none` if it is never
 satisfied. -/
-def find : ∀ {n : ℕ} p : Finₓ n → Prop [DecidablePred p], Option (Finₓ n)
+def find : ∀ {n : ℕ} (p : Finₓ n → Prop) [DecidablePred p], Option (Finₓ n)
 | 0, p, _ => none
 | n+1, p, _ =>
   by 
@@ -601,31 +609,28 @@ def find : ∀ {n : ℕ} p : Finₓ n → Prop [DecidablePred p], Option (Finₓ
         Option.casesOn (@find n (fun i => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2))) _)
           (if h : p (Finₓ.last n) then some (Finₓ.last n) else none) fun i => some (i.cast_lt (Nat.lt_succ_of_ltₓ i.2))
 
+-- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `find p = some i`, then `p i` holds -/
-theorem find_spec :
-  ∀ {n : ℕ} p : Finₓ n → Prop [DecidablePred p] {i : Finₓ n} hi :
-    i ∈
-      by 
-        exact Finₓ.find p,
-    p i
-| 0, p, I, i, hi => Option.noConfusion hi
-| n+1, p, I, i, hi =>
-  by 
-    dsimp [find]  at hi 
-    skip 
-    cases' h : find fun i : Finₓ n => p (i.cast_lt (Nat.lt_succ_of_ltₓ i.2)) with j
-    ·
-      rw [h] at hi 
-      dsimp  at hi 
-      splitIfs  at hi with hl hl
-      ·
-        exact Option.some_inj.1 hi ▸ hl
-      ·
-        exact Option.noConfusion hi
-    ·
-      rw [h] at hi 
-      rw [←Option.some_inj.1 hi]
-      exact find_spec _ h
+theorem find_spec : ∀
+{n : exprℕ()}
+(p : fin n → exprProp())
+[decidable_pred p]
+{i : fin n}
+(hi : «expr ∈ »(i, by exactI [expr fin.find p])), p i
+| 0, p, I, i, hi := option.no_confusion hi
+| «expr + »(n, 1), p, I, i, hi := begin
+  dsimp [] ["[", expr find, "]"] [] ["at", ident hi],
+  resetI,
+  cases [expr h, ":", expr find (λ i : fin n, p (i.cast_lt (nat.lt_succ_of_lt i.2)))] ["with", ident j],
+  { rw [expr h] ["at", ident hi],
+    dsimp [] [] [] ["at", ident hi],
+    split_ifs ["at", ident hi] ["with", ident hl, ident hl],
+    { exact [expr «expr ▸ »(option.some_inj.1 hi, hl)] },
+    { exact [expr option.no_confusion hi] } },
+  { rw [expr h] ["at", ident hi],
+    rw ["[", "<-", expr option.some_inj.1 hi, "]"] [],
+    exact [expr find_spec _ h] }
+end
 
 -- error in Data.Fin.Tuple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `find p` does not return `none` if and only if `p i` holds at some index `i`. -/

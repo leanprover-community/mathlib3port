@@ -127,23 +127,18 @@ theorem coe_copy (S : LieSubmodule R L M) (s : Set M) (hs : s = «expr↑ » S) 
 theorem copy_eq (S : LieSubmodule R L M) (s : Set M) (hs : s = «expr↑ » S) : S.copy s hs = S :=
   coe_submodule_injective (SetLike.coe_injective hs)
 
-instance  : LieRingModule L N :=
-  { bracket := fun x : L m : N => ⟨⁅x,m.val⁆, N.lie_mem m.property⟩,
-    add_lie :=
-      by 
-        intro x y m 
-        apply SetCoe.ext 
-        apply add_lie,
-    lie_add :=
-      by 
-        intro x m n 
-        apply SetCoe.ext 
-        apply lie_add,
-    leibniz_lie :=
-      by 
-        intro x y m 
-        apply SetCoe.ext 
-        apply leibniz_lie }
+-- error in Algebra.Lie.Submodule: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : lie_ring_module L N :=
+{ bracket := λ (x : L) (m : N), ⟨«expr⁅ , ⁆»(x, m.val), N.lie_mem m.property⟩,
+  add_lie := by { intros [ident x, ident y, ident m],
+    apply [expr set_coe.ext],
+    apply [expr add_lie] },
+  lie_add := by { intros [ident x, ident m, ident n],
+    apply [expr set_coe.ext],
+    apply [expr lie_add] },
+  leibniz_lie := by { intros [ident x, ident y, ident m],
+    apply [expr set_coe.ext],
+    apply [expr leibniz_lie] } }
 
 instance  : LieModule R L N :=
   { lie_smul :=
@@ -226,7 +221,7 @@ end LieIdeal
 variable{R M}
 
 theorem Submodule.exists_lie_submodule_coe_eq_iff (p : Submodule R M) :
-  (∃ N : LieSubmodule R L M, «expr↑ » N = p) ↔ ∀ x : L m : M, m ∈ p → ⁅x,m⁆ ∈ p :=
+  (∃ N : LieSubmodule R L M, «expr↑ » N = p) ↔ ∀ (x : L) (m : M), m ∈ p → ⁅x,m⁆ ∈ p :=
   by 
     split 
     ·
@@ -257,14 +252,14 @@ theorem mem_to_lie_submodule {K : LieSubalgebra R L} (x : L) : x ∈ K.to_lie_su
   Iff.rfl
 
 theorem exists_lie_ideal_coe_eq_iff (K : LieSubalgebra R L) :
-  (∃ I : LieIdeal R L, «expr↑ » I = K) ↔ ∀ x y : L, y ∈ K → ⁅x,y⁆ ∈ K :=
+  (∃ I : LieIdeal R L, «expr↑ » I = K) ↔ ∀ (x y : L), y ∈ K → ⁅x,y⁆ ∈ K :=
   by 
     simp only [←coe_to_submodule_eq_iff, LieIdeal.coe_to_lie_subalgebra_to_submodule,
       Submodule.exists_lie_submodule_coe_eq_iff L]
     exact Iff.rfl
 
 theorem exists_nested_lie_ideal_coe_eq_iff {K K' : LieSubalgebra R L} (h : K ≤ K') :
-  (∃ I : LieIdeal R K', «expr↑ » I = of_le h) ↔ ∀ x y : L, x ∈ K' → y ∈ K → ⁅x,y⁆ ∈ K :=
+  (∃ I : LieIdeal R K', «expr↑ » I = of_le h) ↔ ∀ (x y : L), x ∈ K' → y ∈ K → ⁅x,y⁆ ∈ K :=
   by 
     simp only [exists_lie_ideal_coe_eq_iff, coe_bracket, mem_of_le]
     split 
@@ -429,7 +424,7 @@ theorem mem_sup (x : M) : x ∈ N⊔N' ↔ ∃ (y : _)(_ : y ∈ N)(z : _)(_ : z
     rw [←mem_coe_submodule, sup_coe_to_submodule, Submodule.mem_sup]
     exact Iff.rfl
 
-theorem eq_bot_iff : N = ⊥ ↔ ∀ m : M, m ∈ N → m = 0 :=
+theorem eq_bot_iff : N = ⊥ ↔ ∀ (m : M), m ∈ N → m = 0 :=
   by 
     rw [eq_bot_iff]
     exact Iff.rfl
@@ -523,7 +518,7 @@ def lie_span : LieSubmodule R L M :=
 
 variable{R L s}
 
-theorem mem_lie_span {x : M} : x ∈ lie_span R L s ↔ ∀ N : LieSubmodule R L M, s ⊆ N → x ∈ N :=
+theorem mem_lie_span {x : M} : x ∈ lie_span R L s ↔ ∀ (N : LieSubmodule R L M), s ⊆ N → x ∈ N :=
   by 
     change x ∈ (lie_span R L s : Set M) ↔ _ 
     erw [Inf_coe]
@@ -819,7 +814,7 @@ def is_ideal_morphism : Prop :=
 theorem is_ideal_morphism_def : f.is_ideal_morphism ↔ (f.ideal_range : LieSubalgebra R L') = f.range :=
   Iff.rfl
 
-theorem is_ideal_morphism_iff : f.is_ideal_morphism ↔ ∀ x : L' y : L, ∃ z : L, ⁅x,f y⁆ = f z :=
+theorem is_ideal_morphism_iff : f.is_ideal_morphism ↔ ∀ (x : L') (y : L), ∃ z : L, ⁅x,f y⁆ = f z :=
   by 
     simp only [is_ideal_morphism_def, ideal_range_eq_lie_span_range, ←LieSubalgebra.coe_to_submodule_eq_iff,
       ←f.range.coe_to_submodule, LieIdeal.coe_to_lie_subalgebra_to_submodule,

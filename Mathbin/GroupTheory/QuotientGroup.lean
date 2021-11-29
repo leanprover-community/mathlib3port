@@ -137,34 +137,30 @@ theorem coe_pow (a : G) (n : ℕ) : ((a ^ n : G) :  Q ) = a ^ n :=
 theorem coe_zpow (a : G) (n : ℤ) : ((a ^ n : G) :  Q ) = a ^ n :=
   (mk' N).map_zpow a n
 
+-- error in GroupTheory.QuotientGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A group homomorphism `φ : G →* H` with `N ⊆ ker(φ)` descends (i.e. `lift`s) to a
 group homomorphism `G/N →* H`. -/
-@[toAdditive QuotientAddGroup.lift
-      "An `add_group` homomorphism `φ : G →+ H` with `N ⊆ ker(φ)`\ndescends (i.e. `lift`s) to a group homomorphism `G/N →* H`."]
-def lift (φ : G →* H) (HN : ∀ x _ : x ∈ N, φ x = 1) :  Q  →* H :=
-  MonoidHom.mk'
-    (fun q :  Q  =>
-      q.lift_on' φ$
-        fun a b hab : (a⁻¹*b) ∈ N =>
-          calc φ a = φ a*1 := (mul_oneₓ _).symm 
-            _ = φ a*φ (a⁻¹*b) := HN (a⁻¹*b) hab ▸ rfl 
-            _ = φ (a*a⁻¹*b) := (φ.map_mul a (a⁻¹*b)).symm 
-            _ = φ b :=
-            by 
-              rw [mul_inv_cancel_left]
-            )
-    fun q r => Quotientₓ.induction_on₂' q r$ φ.map_mul
+@[to_additive #[ident quotient_add_group.lift,
+   expr "An `add_group` homomorphism `φ : G →+ H` with `N ⊆ ker(φ)`\ndescends (i.e. `lift`s) to a group homomorphism `G/N →* H`."]]
+def lift (φ : «expr →* »(G, H)) (HN : ∀ x «expr ∈ » N, «expr = »(φ x, 1)) : «expr →* »(exprQ(), H) :=
+monoid_hom.mk' (λ
+ q : exprQ(), «expr $ »(q.lift_on' φ, assume (a b) (hab : «expr ∈ »(«expr * »(«expr ⁻¹»(a), b), N)), calc
+    «expr = »(φ a, «expr * »(φ a, 1)) : (mul_one _).symm
+    «expr = »(..., «expr * »(φ a, φ «expr * »(«expr ⁻¹»(a), b))) : «expr ▸ »(HN «expr * »(«expr ⁻¹»(a), b) hab, rfl)
+    «expr = »(..., φ «expr * »(a, «expr * »(«expr ⁻¹»(a), b))) : (φ.map_mul a «expr * »(«expr ⁻¹»(a), b)).symm
+    «expr = »(..., φ b) : by rw [expr mul_inv_cancel_left] [])) (λ
+ q r, «expr $ »(quotient.induction_on₂' q r, φ.map_mul))
 
 @[simp, toAdditive QuotientAddGroup.lift_mk]
-theorem lift_mk {φ : G →* H} (HN : ∀ x _ : x ∈ N, φ x = 1) (g : G) : lift N φ HN (g :  Q ) = φ g :=
+theorem lift_mk {φ : G →* H} (HN : ∀ x (_ : x ∈ N), φ x = 1) (g : G) : lift N φ HN (g :  Q ) = φ g :=
   rfl
 
 @[simp, toAdditive QuotientAddGroup.lift_mk']
-theorem lift_mk' {φ : G →* H} (HN : ∀ x _ : x ∈ N, φ x = 1) (g : G) : lift N φ HN (mk g :  Q ) = φ g :=
+theorem lift_mk' {φ : G →* H} (HN : ∀ x (_ : x ∈ N), φ x = 1) (g : G) : lift N φ HN (mk g :  Q ) = φ g :=
   rfl
 
 @[simp, toAdditive QuotientAddGroup.lift_quot_mk]
-theorem lift_quot_mk {φ : G →* H} (HN : ∀ x _ : x ∈ N, φ x = 1) (g : G) : lift N φ HN (Quot.mk _ g :  Q ) = φ g :=
+theorem lift_quot_mk {φ : G →* H} (HN : ∀ x (_ : x ∈ N), φ x = 1) (g : G) : lift N φ HN (Quot.mk _ g :  Q ) = φ g :=
   rfl
 
 /-- A group homomorphism `f : G →* H` induces a map `G/N →* H/M` if `N ⊆ f⁻¹(M)`. -/
@@ -207,14 +203,13 @@ theorem ker_lift_mk (g : G) : (ker_lift φ) g = φ g :=
 theorem ker_lift_mk' (g : G) : (ker_lift φ) (mk g) = φ g :=
   lift_mk' _ _ _
 
-@[toAdditive QuotientAddGroup.injective_ker_lift]
-theorem ker_lift_injective : injective (ker_lift φ) :=
-  fun a b =>
-    Quotientₓ.induction_on₂' a b$
-      fun a b h : φ a = φ b =>
-        Quotientₓ.sound'$
-          show (a⁻¹*b) ∈ ker φ by 
-            rw [mem_ker, φ.map_mul, ←h, φ.map_inv, inv_mul_selfₓ]
+-- error in GroupTheory.QuotientGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident quotient_add_group.injective_ker_lift]] theorem ker_lift_injective : injective (ker_lift φ) :=
+assume
+a
+b, «expr $ »(quotient.induction_on₂' a b, assume
+ (a b)
+ (h : «expr = »(φ a, φ b)), «expr $ »(quotient.sound', show «expr ∈ »(«expr * »(«expr ⁻¹»(a), b), ker φ), by rw ["[", expr mem_ker, ",", expr φ.map_mul, ",", "<-", expr h, ",", expr φ.map_inv, ",", expr inv_mul_self, "]"] []))
 
 /-- The induced map from the quotient by the kernel to the range. -/
 @[toAdditive QuotientAddGroup.rangeKerLift "The induced map from the quotient by the kernel to\nthe range."]
@@ -225,14 +220,14 @@ def range_ker_lift : Quotientₓ (ker φ) →* φ.range :=
         by 
           rwa [range_restrict_ker]
 
-@[toAdditive QuotientAddGroup.range_ker_lift_injective]
+-- error in GroupTheory.QuotientGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident quotient_add_group.range_ker_lift_injective]]
 theorem range_ker_lift_injective : injective (range_ker_lift φ) :=
-  fun a b =>
-    Quotientₓ.induction_on₂' a b$
-      fun a b h : φ.range_restrict a = φ.range_restrict b =>
-        Quotientₓ.sound'$
-          show (a⁻¹*b) ∈ ker φ by 
-            rw [←range_restrict_ker, mem_ker, φ.range_restrict.map_mul, ←h, φ.range_restrict.map_inv, inv_mul_selfₓ]
+assume
+a
+b, «expr $ »(quotient.induction_on₂' a b, assume
+ (a b)
+ (h : «expr = »(φ.range_restrict a, φ.range_restrict b)), «expr $ »(quotient.sound', show «expr ∈ »(«expr * »(«expr ⁻¹»(a), b), ker φ), by rw ["[", "<-", expr range_restrict_ker, ",", expr mem_ker, ",", expr φ.range_restrict.map_mul, ",", "<-", expr h, ",", expr φ.range_restrict.map_inv, ",", expr inv_mul_self, "]"] []))
 
 @[toAdditive QuotientAddGroup.range_ker_lift_surjective]
 theorem range_ker_lift_surjective : surjective (range_ker_lift φ) :=

@@ -32,12 +32,12 @@ variable{N : Type _}[AddCommGroupₓ N][Module R N]
 
 /-- A module `M` is Hausdorff with respect to an ideal `I` if `⋂ I^n M = 0`. -/
 class IsHausdorff : Prop where 
-  haus' : ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD ((I^n) • ⊤ : Submodule R M)]) → x = 0
+  haus' : ∀ (x : M), (∀ (n : ℕ), x ≡ 0 [SMOD ((I^n) • ⊤ : Submodule R M)]) → x = 0
 
 /-- A module `M` is precomplete with respect to an ideal `I` if every Cauchy sequence converges. -/
 class IsPrecomplete : Prop where 
   prec' :
-  ∀ f : ℕ → M,
+  ∀ (f : ℕ → M),
     (∀ {m n}, m ≤ n → f m ≡ f n [SMOD ((I^m) • ⊤ : Submodule R M)]) →
       ∃ L : M, ∀ n, f n ≡ L [SMOD ((I^n) • ⊤ : Submodule R M)]
 
@@ -46,10 +46,11 @@ class IsAdicComplete extends IsHausdorff I M, IsPrecomplete I M : Prop
 
 variable{I M}
 
-theorem IsHausdorff.haus (h : IsHausdorff I M) : ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD ((I^n) • ⊤ : Submodule R M)]) → x = 0 :=
+theorem IsHausdorff.haus (h : IsHausdorff I M) :
+  ∀ (x : M), (∀ (n : ℕ), x ≡ 0 [SMOD ((I^n) • ⊤ : Submodule R M)]) → x = 0 :=
   IsHausdorff.haus'
 
-theorem is_Hausdorff_iff : IsHausdorff I M ↔ ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD ((I^n) • ⊤ : Submodule R M)]) → x = 0 :=
+theorem is_Hausdorff_iff : IsHausdorff I M ↔ ∀ (x : M), (∀ (n : ℕ), x ≡ 0 [SMOD ((I^n) • ⊤ : Submodule R M)]) → x = 0 :=
   ⟨IsHausdorff.haus, fun h => ⟨h⟩⟩
 
 theorem IsPrecomplete.prec (h : IsPrecomplete I M) {f : ℕ → M} :
@@ -59,7 +60,7 @@ theorem IsPrecomplete.prec (h : IsPrecomplete I M) {f : ℕ → M} :
 
 theorem is_precomplete_iff :
   IsPrecomplete I M ↔
-    ∀ f : ℕ → M,
+    ∀ (f : ℕ → M),
       (∀ {m n}, m ≤ n → f m ≡ f n [SMOD ((I^m) • ⊤ : Submodule R M)]) →
         ∃ L : M, ∀ n, f n ≡ L [SMOD ((I^n) • ⊤ : Submodule R M)] :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
@@ -73,10 +74,10 @@ def Hausdorffification : Type _ :=
 
 /-- The completion of a module with respect to an ideal. This is not necessarily Hausdorff.
 In fact, this is only complete if the ideal is finitely generated. -/
-def adicCompletion : Submodule R (∀ n : ℕ, ((I^n) • ⊤ : Submodule R M).Quotient) :=
+def adicCompletion : Submodule R (∀ (n : ℕ), ((I^n) • ⊤ : Submodule R M).Quotient) :=
   { Carrier :=
       { f |
-        ∀ {m n} h : m ≤ n,
+        ∀ {m n} (h : m ≤ n),
           liftq _ (mkq _)
               (by 
                 rw [ker_mkq]
@@ -121,8 +122,13 @@ instance (priority := 100)of_subsingleton [Subsingleton M] : IsHausdorff I M :=
 
 variable{I M}
 
-theorem infi_pow_smul (h : IsHausdorff I M) : (⨅n : ℕ, (I^n) • ⊤ : Submodule R M) = ⊥ :=
-  eq_bot_iff.2$ fun x hx => (mem_bot _).2$ h.haus x$ fun n => Smodeq.zero.2$ (mem_infi$ fun n : ℕ => (I^n) • ⊤).1 hx n
+-- error in LinearAlgebra.AdicCompletion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem infi_pow_smul
+(h : is_Hausdorff I M) : «expr = »((«expr⨅ , »((n : exprℕ()), «expr • »(«expr ^ »(I, n), «expr⊤»())) : submodule R M), «expr⊥»()) :=
+«expr $ »(eq_bot_iff.2, λ
+ x
+ hx, «expr $ »((mem_bot _).2, «expr $ »(h.haus x, λ
+   n, «expr $ »(smodeq.zero.2, «expr $ »(mem_infi, λ n : exprℕ(), «expr • »(«expr ^ »(I, n), «expr⊤»())).1 hx n))))
 
 end IsHausdorff
 

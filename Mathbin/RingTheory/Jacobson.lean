@@ -41,9 +41,9 @@ variable{R S : Type _}[CommRingₓ R][CommRingₓ S]{I : Ideal R}
  the Jacobson radical of `I` is equal to `I`.
  See `is_jacobson_iff_prime_eq` and `is_jacobson_iff_Inf_maximal` for equivalent definitions. -/
 class is_jacobson(R : Type _)[CommRingₓ R] : Prop where 
-  out' : ∀ I : Ideal R, I.radical = I → I.jacobson = I
+  out' : ∀ (I : Ideal R), I.radical = I → I.jacobson = I
 
-theorem is_jacobson_iff {R} [CommRingₓ R] : is_jacobson R ↔ ∀ I : Ideal R, I.radical = I → I.jacobson = I :=
+theorem is_jacobson_iff {R} [CommRingₓ R] : is_jacobson R ↔ ∀ (I : Ideal R), I.radical = I → I.jacobson = I :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 
 theorem is_jacobson.out {R} [CommRingₓ R] : is_jacobson R → ∀ {I : Ideal R}, I.radical = I → I.jacobson = I :=
@@ -51,7 +51,7 @@ theorem is_jacobson.out {R} [CommRingₓ R] : is_jacobson R → ∀ {I : Ideal R
 
 /--  A ring is a Jacobson ring if and only if for all prime ideals `P`,
  the Jacobson radical of `P` is equal to `P`. -/
-theorem is_jacobson_iff_prime_eq : is_jacobson R ↔ ∀ P : Ideal R, is_prime P → P.jacobson = P :=
+theorem is_jacobson_iff_prime_eq : is_jacobson R ↔ ∀ (P : Ideal R), is_prime P → P.jacobson = P :=
   by 
     refine' is_jacobson_iff.trans ⟨fun h I hI => h I (is_prime.radical hI), _⟩
     refine' fun h I hI => le_antisymmₓ (fun x hx => _) fun x hx => mem_Inf.mpr fun _ hJ => hJ.left hx 
@@ -67,13 +67,13 @@ theorem is_jacobson_iff_prime_eq : is_jacobson R ↔ ∀ P : Ideal R, is_prime P
  Allowing ⊤ in the set `M` of maximal ideals is equivalent, but makes some proofs cleaner. -/
 theorem is_jacobson_iff_Inf_maximal :
   is_jacobson R ↔
-    ∀ {I : Ideal R}, I.is_prime → ∃ M : Set (Ideal R), (∀ J _ : J ∈ M, is_maximal J ∨ J = ⊤) ∧ I = Inf M :=
+    ∀ {I : Ideal R}, I.is_prime → ∃ M : Set (Ideal R), (∀ J (_ : J ∈ M), is_maximal J ∨ J = ⊤) ∧ I = Inf M :=
   ⟨fun H I h => eq_jacobson_iff_Inf_maximal.1 (H.out (is_prime.radical h)),
     fun H => is_jacobson_iff_prime_eq.2 fun P hP => eq_jacobson_iff_Inf_maximal.2 (H hP)⟩
 
 theorem is_jacobson_iff_Inf_maximal' :
   is_jacobson R ↔
-    ∀ {I : Ideal R}, I.is_prime → ∃ M : Set (Ideal R), (∀ J _ : J ∈ M K : Ideal R, J < K → K = ⊤) ∧ I = Inf M :=
+    ∀ {I : Ideal R}, I.is_prime → ∃ M : Set (Ideal R), (∀ J (_ : J ∈ M) (K : Ideal R), J < K → K = ⊤) ∧ I = Inf M :=
   ⟨fun H I h => eq_jacobson_iff_Inf_maximal'.1 (H.out (is_prime.radical h)),
     fun H => is_jacobson_iff_prime_eq.2 fun P hP => eq_jacobson_iff_Inf_maximal'.2 (H hP)⟩
 
@@ -557,7 +557,7 @@ open MvPolynomial RingHom
 namespace MvPolynomial
 
 theorem is_jacobson_mv_polynomial_fin {R : Type _} [CommRingₓ R] [H : is_jacobson R] :
-  ∀ n : ℕ, is_jacobson (MvPolynomial (Finₓ n) R)
+  ∀ (n : ℕ), is_jacobson (MvPolynomial (Finₓ n) R)
 | 0 =>
   (is_jacobson_iso ((rename_equiv R (Equiv.equivPempty (Finₓ 0))).toRingEquiv.trans (is_empty_ring_equiv R Pempty))).mpr
     H

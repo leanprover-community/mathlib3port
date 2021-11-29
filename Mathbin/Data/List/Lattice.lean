@@ -42,7 +42,7 @@ theorem disjoint_left : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₁ → a ∉
 theorem disjoint_right : Disjoint l₁ l₂ ↔ ∀ ⦃a⦄, a ∈ l₂ → a ∉ l₁ :=
   disjoint_comm
 
-theorem disjoint_iff_ne : Disjoint l₁ l₂ ↔ ∀ a _ : a ∈ l₁, ∀ b _ : b ∈ l₂, a ≠ b :=
+theorem disjoint_iff_ne : Disjoint l₁ l₂ ↔ ∀ a (_ : a ∈ l₁), ∀ b (_ : b ∈ l₂), a ≠ b :=
   by 
     simp only [disjoint_left, imp_not_comm, forall_eq']
 
@@ -156,7 +156,7 @@ theorem mem_union_left (h : a ∈ l₁) (l₂ : List α) : a ∈ l₁ ∪ l₂ :
 theorem mem_union_right (l₁ : List α) (h : a ∈ l₂) : a ∈ l₁ ∪ l₂ :=
   mem_union.2 (Or.inr h)
 
-theorem sublist_suffix_of_union : ∀ l₁ l₂ : List α, ∃ t, t <+ l₁ ∧ t ++ l₂ = l₁ ∪ l₂
+theorem sublist_suffix_of_union : ∀ (l₁ l₂ : List α), ∃ t, t <+ l₁ ∧ t ++ l₂ = l₁ ∪ l₂
 | [], l₂ =>
   ⟨[],
     by 
@@ -180,14 +180,14 @@ theorem union_sublist_append (l₁ l₂ : List α) : l₁ ∪ l₂ <+ l₁ ++ l�
   let ⟨t, s, e⟩ := sublist_suffix_of_union l₁ l₂ 
   e ▸ (append_sublist_append_right _).2 s
 
-theorem forall_mem_union : (∀ x _ : x ∈ l₁ ∪ l₂, p x) ↔ (∀ x _ : x ∈ l₁, p x) ∧ ∀ x _ : x ∈ l₂, p x :=
+theorem forall_mem_union : (∀ x (_ : x ∈ l₁ ∪ l₂), p x) ↔ (∀ x (_ : x ∈ l₁), p x) ∧ ∀ x (_ : x ∈ l₂), p x :=
   by 
     simp only [mem_union, or_imp_distrib, forall_and_distrib]
 
-theorem forall_mem_of_forall_mem_union_left (h : ∀ x _ : x ∈ l₁ ∪ l₂, p x) : ∀ x _ : x ∈ l₁, p x :=
+theorem forall_mem_of_forall_mem_union_left (h : ∀ x (_ : x ∈ l₁ ∪ l₂), p x) : ∀ x (_ : x ∈ l₁), p x :=
   (forall_mem_union.1 h).1
 
-theorem forall_mem_of_forall_mem_union_right (h : ∀ x _ : x ∈ l₁ ∪ l₂, p x) : ∀ x _ : x ∈ l₂, p x :=
+theorem forall_mem_of_forall_mem_union_right (h : ∀ x (_ : x ∈ l₁ ∪ l₂), p x) : ∀ x (_ : x ∈ l₂), p x :=
   (forall_mem_union.1 h).2
 
 end Union
@@ -236,10 +236,10 @@ theorem inter_eq_nil_iff_disjoint : l₁ ∩ l₂ = [] ↔ Disjoint l₁ l₂ :=
     simp only [eq_nil_iff_forall_not_mem, mem_inter, not_and]
     rfl
 
-theorem forall_mem_inter_of_forall_left (h : ∀ x _ : x ∈ l₁, p x) (l₂ : List α) : ∀ x, x ∈ l₁ ∩ l₂ → p x :=
+theorem forall_mem_inter_of_forall_left (h : ∀ x (_ : x ∈ l₁), p x) (l₂ : List α) : ∀ x, x ∈ l₁ ∩ l₂ → p x :=
   Ball.imp_left (fun x => mem_of_mem_inter_left) h
 
-theorem forall_mem_inter_of_forall_right (l₁ : List α) (h : ∀ x _ : x ∈ l₂, p x) : ∀ x, x ∈ l₁ ∩ l₂ → p x :=
+theorem forall_mem_inter_of_forall_right (l₁ : List α) (h : ∀ x (_ : x ∈ l₂), p x) : ∀ x, x ∈ l₁ ∩ l₂ → p x :=
   Ball.imp_left (fun x => mem_of_mem_inter_right) h
 
 @[simp]
@@ -332,7 +332,7 @@ theorem count_bag_inter {a : α} : ∀ {l₁ l₂ : List α}, count a (l₁.bag_
         simp only [Ne.symm p₁, Ne.symm p₂, p₄, count_bag_inter, if_true, if_false, mem_cons_iff, false_orₓ,
           eq_self_iff_true, Ne.def, not_false_iff, count_erase_of_ne, count_cons_of_ne]
 
-theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bag_inter l₂ <+ l₁
+theorem bag_inter_sublist_left : ∀ (l₁ l₂ : List α), l₁.bag_inter l₂ <+ l₁
 | [], l₂ =>
   by 
     simp [nil_sublist]
@@ -345,7 +345,7 @@ theorem bag_inter_sublist_left : ∀ l₁ l₂ : List α, l₁.bag_inter l₂ <+
       apply sublist_cons_of_sublist 
       apply bag_inter_sublist_left
 
-theorem bag_inter_nil_iff_inter_nil : ∀ l₁ l₂ : List α, l₁.bag_inter l₂ = [] ↔ l₁ ∩ l₂ = []
+theorem bag_inter_nil_iff_inter_nil : ∀ (l₁ l₂ : List α), l₁.bag_inter l₂ = [] ↔ l₁ ∩ l₂ = []
 | [], l₂ =>
   by 
     simp 

@@ -28,7 +28,7 @@ variable{D : Type w}[category.{max v u} D]
 
 noncomputable theory
 
-variable[∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
+variable[∀ (P : «expr ᵒᵖ» C ⥤ D) (X : C) (S : J.cover X), has_multiequalizer (S.index P)]
 
 variable(P : «expr ᵒᵖ» C ⥤ D)
 
@@ -66,7 +66,7 @@ def diagram_pullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).
           dsimp 
           simpa }
 
-variable[∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
+variable[∀ (X : C), has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
 
 /-- The plus construction, associating a presheaf to any presheaf.
 See `plus` below for a functorial version.
@@ -185,7 +185,7 @@ def to_plus : P ⟶ J.plus_obj P :=
         delta' cover.to_multiequalizer 
         simp only [diagram_pullback_app, colimit.ι_pre, ι_colim_map_assoc, category.assoc]
         dsimp only [functor.op, unop_op]
-        let e : (J.pullback f.unop).obj ⊤ ⟶ ⊤ := hom_of_le (SemilatticeInfTop.le_top _)
+        let e : (J.pullback f.unop).obj ⊤ ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
         rw [←colimit.w _ e.op, ←category.assoc, ←category.assoc, ←category.assoc]
         congr 1 
         ext 
@@ -223,14 +223,14 @@ theorem plus_map_to_plus : J.plus_map (J.to_plus P) = J.to_plus (J.plus_obj P) :
     dsimp 
     delta' cover.to_multiequalizer 
     simp only [ι_colim_map]
-    let e : S.unop ⟶ ⊤ := hom_of_le (SemilatticeInfTop.le_top _)
+    let e : S.unop ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
     simpRw [←colimit.w _ e.op, ←category.assoc]
     congr 1 
     ext I 
     dsimp 
     simp only [diagram_pullback_app, colimit.ι_pre, multiequalizer.lift_ι, ι_colim_map_assoc, category.assoc]
     dsimp only [functor.op]
-    let ee : (J.pullback (I.map e).f).obj S.unop ⟶ ⊤ := hom_of_le (SemilatticeInfTop.le_top _)
+    let ee : (J.pullback (I.map e).f).obj S.unop ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
     simpRw [←colimit.w _ ee.op, ←category.assoc]
     congr 1 
     ext II 

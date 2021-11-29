@@ -307,7 +307,7 @@ duplicate factors, i.e. `U : ι → opens X` may not be injective.
 def pi_opens_to_first_obj : pi_opens F U ⟶ presheaf.first_obj.{v, v, u} (presieve_of_covering U) F :=
   pi.lift fun f => pi.π _ (index_of_hom U f) ≫ F.map (eq_to_hom (index_of_hom_spec U f)).op
 
--- error in Topology.Sheaves.SheafCondition.Sites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Sheaves.SheafCondition.Sites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Even though `first_obj_to_pi_opens` and `pi_opens_to_first_obj` are not inverse to each other,
 applying them both after a fork map `s.ι` does nothing. The intuition here is that a compatible
@@ -440,7 +440,7 @@ def Sheaf_spaces_to_sheaf_sites : sheaf C X ⥤ Sheaf (Opens.grothendieckTopolog
 The equivalence of categories between sheaves on the site `opens X` and sheaves on the space `X`.
 -/
 @[simps]
-def Sheaf_spaces_equivelence_sheaf_sites : Sheaf (Opens.grothendieckTopology X) C ≌ sheaf C X :=
+def Sheaf_spaces_equiv_sheaf_sites : Sheaf (Opens.grothendieckTopology X) C ≌ sheaf C X :=
   by 
     refine' equivalence.mk (Sheaf_sites_to_sheaf_spaces C X) (Sheaf_spaces_to_sheaf_sites C X) _ _ 
     all_goals 
@@ -449,6 +449,24 @@ def Sheaf_spaces_equivelence_sheaf_sites : Sheaf (Opens.grothendieckTopology X) 
       dsimp 
       erw [nat_trans.comp_app, nat_trans.comp_app, eq_to_hom_refl G.1 rfl, eq_to_hom_refl F.1 rfl, nat_trans.id_app G.1,
         category.comp_id, nat_trans.id_app F.1, category.id_comp]
+
+/-- The two forgetful functors are isomorphic via `Sheaf_spaces_equiv_sheaf_sites`. -/
+def Sheaf_spaces_equiv_sheaf_sites_functor_forget :
+  (Sheaf_spaces_equiv_sheaf_sites C X).Functor ⋙ sheaf.forget C X ≅ Sheaf_to_presheaf _ _ :=
+  nat_iso.of_components (fun F => iso.refl F.1)
+    fun F G f =>
+      by 
+        erw [category.comp_id, category.id_comp]
+        rfl
+
+/-- The two forgetful functors are isomorphic via `Sheaf_spaces_equiv_sheaf_sites`. -/
+def Sheaf_spaces_equiv_sheaf_sites_inverse_forget :
+  (Sheaf_spaces_equiv_sheaf_sites C X).inverse ⋙ Sheaf_to_presheaf _ _ ≅ sheaf.forget C X :=
+  nat_iso.of_components (fun F => iso.refl F.1)
+    fun F G f =>
+      by 
+        erw [category.comp_id, category.id_comp]
+        rfl
 
 end Top.Presheaf
 

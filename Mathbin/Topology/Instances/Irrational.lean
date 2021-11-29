@@ -86,11 +86,11 @@ begin
 end
 
 theorem eventually_forall_le_dist_cast_div_of_denom_le (hx : Irrational x) (n : ℕ) :
-  ∀ᶠε : ℝ in 𝓝 0, ∀ k _ : k ≤ n m : ℤ, ε ≤ dist x (m / k) :=
+  ∀ᶠε : ℝ in 𝓝 0, ∀ k (_ : k ≤ n) (m : ℤ), ε ≤ dist x (m / k) :=
   (finite_le_nat n).eventually_all.2$ fun k hk => hx.eventually_forall_le_dist_cast_div k
 
 theorem eventually_forall_le_dist_cast_rat_of_denom_le (hx : Irrational x) (n : ℕ) :
-  ∀ᶠε : ℝ in 𝓝 0, ∀ r : ℚ, r.denom ≤ n → ε ≤ dist x r :=
+  ∀ᶠε : ℝ in 𝓝 0, ∀ (r : ℚ), r.denom ≤ n → ε ≤ dist x r :=
   (hx.eventually_forall_le_dist_cast_div_of_denom_le n).mono$ fun ε H r hr => H r.denom hr r.num
 
 end Irrational

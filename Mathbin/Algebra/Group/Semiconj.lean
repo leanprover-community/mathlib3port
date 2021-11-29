@@ -51,12 +51,13 @@ theorem mul_left (ha : SemiconjBy a y z) (hb : SemiconjBy b x y) : SemiconjBy (a
   by 
     unfold SemiconjBy <;> assocRw [hb.eq, ha.eq, mul_assocₓ]
 
+-- error in Algebra.Group.Semiconj: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The relation “there exists an element that semiconjugates `a` to `b`” on a semigroup
 is transitive. -/
-@[toAdditive
-      "The relation “there exists an element that semiconjugates `a` to `b`” on an additive\nsemigroup is transitive."]
-protected theorem Transitive : Transitive fun a b : S => ∃ c, SemiconjBy c a b :=
-  fun a b c ⟨x, hx⟩ ⟨y, hy⟩ => ⟨y*x, hy.mul_left hx⟩
+@[to_additive #[expr "The relation “there exists an element that semiconjugates `a` to `b`” on an additive\nsemigroup is transitive."]]
+protected
+theorem transitive : transitive (λ a b : S, «expr∃ , »((c), semiconj_by c a b)) :=
+λ (a b c) ⟨x, hx⟩ ⟨y, hy⟩, ⟨«expr * »(y, x), hy.mul_left hx⟩
 
 end Semigroupₓ
 
@@ -75,12 +76,13 @@ theorem one_right (a : M) : SemiconjBy a 1 1 :=
 theorem one_left (x : M) : SemiconjBy 1 x x :=
   Eq.symm$ one_right x
 
+-- error in Algebra.Group.Semiconj: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The relation “there exists an element that semiconjugates `a` to `b`” on a monoid (or, more
 generally, on ` mul_one_class` type) is reflexive. -/
-@[toAdditive
-      "The relation “there exists an element that semiconjugates `a` to `b`” on an additive\nmonoid (or, more generally, on a `add_zero_class` type) is reflexive."]
-protected theorem Reflexive : Reflexive fun a b : M => ∃ c, SemiconjBy c a b :=
-  fun a => ⟨1, one_left a⟩
+@[to_additive #[expr "The relation “there exists an element that semiconjugates `a` to `b`” on an additive\nmonoid (or, more generally, on a `add_zero_class` type) is reflexive."]]
+protected
+theorem reflexive : reflexive (λ a b : M, «expr∃ , »((c), semiconj_by c a b)) :=
+λ a, ⟨1, one_left a⟩
 
 end MulOneClass
 

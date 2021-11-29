@@ -1,7 +1,7 @@
 import Mathbin.Topology.MetricSpace.Basic 
 import Mathbin.Topology.Algebra.UniformGroup 
 import Mathbin.Topology.Algebra.Ring 
-import Mathbin.RingTheory.Subring 
+import Mathbin.RingTheory.Subring.Basic 
 import Mathbin.GroupTheory.Archimedean 
 import Mathbin.Algebra.Periodic
 
@@ -72,12 +72,14 @@ theorem dist_cast_rat (x y : ℤ) : dist (x : ℚ) y = dist x y :=
   by 
     rw [←Int.dist_cast_real, ←Rat.dist_cast] <;> congr 1 <;> normCast
 
-theorem pairwise_one_le_dist : Pairwise fun m n : ℤ => 1 ≤ dist m n :=
-  by 
-    intro m n hne 
-    rw [dist_eq]
-    normCast 
-    rwa [←zero_addₓ (1 : ℤ), Int.add_one_le_iff, abs_pos, sub_ne_zero]
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pairwise_one_le_dist : pairwise (λ m n : exprℤ(), «expr ≤ »(1, dist m n)) :=
+begin
+  intros [ident m, ident n, ident hne],
+  rw [expr dist_eq] [],
+  norm_cast [],
+  rwa ["[", "<-", expr zero_add (1 : exprℤ()), ",", expr int.add_one_le_iff, ",", expr abs_pos, ",", expr sub_ne_zero, "]"] []
+end
 
 theorem uniform_embedding_coe_rat : UniformEmbedding (coeₓ : ℤ → ℚ) :=
   uniform_embedding_bot_of_pairwise_le_dist zero_lt_one$
@@ -133,21 +135,14 @@ instance  : NoncompactSpace ℚ :=
 instance  : NoncompactSpace ℝ :=
   Int.closed_embedding_coe_real.NoncompactSpace
 
-theorem Real.uniform_continuous_add : UniformContinuous fun p : ℝ × ℝ => p.1+p.2 :=
-  Metric.uniform_continuous_iff.2$
-    fun ε ε0 =>
-      let ⟨δ, δ0, Hδ⟩ := rat_add_continuous_lemma abs ε0
-      ⟨δ, δ0,
-        fun a b h =>
-          let ⟨h₁, h₂⟩ := max_lt_iff.1 h 
-          Hδ h₁ h₂⟩
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem real.uniform_continuous_add : uniform_continuous (λ p : «expr × »(exprℝ(), exprℝ()), «expr + »(p.1, p.2)) :=
+«expr $ »(metric.uniform_continuous_iff.2, λ ε ε0, let ⟨δ, δ0, Hδ⟩ := rat_add_continuous_lemma abs ε0 in
+ ⟨δ, δ0, λ a b h, let ⟨h₁, h₂⟩ := max_lt_iff.1 h in Hδ h₁ h₂⟩)
 
-theorem Rat.uniform_continuous_add : UniformContinuous fun p : ℚ × ℚ => p.1+p.2 :=
-  Rat.uniform_embedding_coe_real.to_uniform_inducing.uniform_continuous_iff.2$
-    by 
-      simp only [· ∘ ·, Rat.cast_add] <;>
-        exact
-          real.uniform_continuous_add.comp (rat.uniform_continuous_coe_real.prod_map Rat.uniform_continuous_coe_real)
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem rat.uniform_continuous_add : uniform_continuous (λ p : «expr × »(exprℚ(), exprℚ()), «expr + »(p.1, p.2)) :=
+«expr $ »(rat.uniform_embedding_coe_real.to_uniform_inducing.uniform_continuous_iff.2, by simp [] [] ["only"] ["[", expr («expr ∘ »), ",", expr rat.cast_add, "]"] [] []; exact [expr real.uniform_continuous_add.comp (rat.uniform_continuous_coe_real.prod_map rat.uniform_continuous_coe_real)])
 
 theorem Real.uniform_continuous_neg : UniformContinuous (@Neg.neg ℝ _) :=
   Metric.uniform_continuous_iff.2$
@@ -207,16 +202,18 @@ is_topological_basis_of_open_of_nhds (by simp [] [] [] ["[", expr is_open_Ioo, "
   (a')
   ⟨hqa', ha'p⟩, h ⟨hlq.trans hqa', ha'p.trans hpu⟩⟩)
 
-theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ Closure s ↔ ∀ ε _ : ε > 0, ∃ (y : _)(_ : y ∈ s), |y - x| < ε :=
+theorem Real.mem_closure_iff {s : Set ℝ} {x : ℝ} : x ∈ Closure s ↔ ∀ ε (_ : ε > 0), ∃ (y : _)(_ : y ∈ s), |y - x| < ε :=
   by 
     simp [mem_closure_iff_nhds_basis nhds_basis_ball, Real.dist_eq]
 
-theorem Real.uniform_continuous_inv (s : Set ℝ) {r : ℝ} (r0 : 0 < r) (H : ∀ x _ : x ∈ s, r ≤ |x|) :
-  UniformContinuous fun p : s => p.1⁻¹ :=
-  Metric.uniform_continuous_iff.2$
-    fun ε ε0 =>
-      let ⟨δ, δ0, Hδ⟩ := rat_inv_continuous_lemma abs ε0 r0
-      ⟨δ, δ0, fun a b h => Hδ (H _ a.2) (H _ b.2) h⟩
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem real.uniform_continuous_inv
+(s : set exprℝ())
+{r : exprℝ()}
+(r0 : «expr < »(0, r))
+(H : ∀ x «expr ∈ » s, «expr ≤ »(r, «expr| |»(x))) : uniform_continuous (λ p : s, «expr ⁻¹»(p.1)) :=
+«expr $ »(metric.uniform_continuous_iff.2, λ ε ε0, let ⟨δ, δ0, Hδ⟩ := rat_inv_continuous_lemma abs ε0 r0 in
+ ⟨δ, δ0, λ a b h, Hδ (H _ a.2) (H _ b.2) h⟩)
 
 theorem Real.uniform_continuous_abs : UniformContinuous (abs : ℝ → ℝ) :=
   Metric.uniform_continuous_iff.2$ fun ε ε0 => ⟨ε, ε0, fun a b => lt_of_le_of_ltₓ (abs_abs_sub_abs_le_abs_sub _ _)⟩
@@ -239,9 +236,10 @@ theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : tendsto (fun q => q⁻¹) (�
           (Real.uniform_continuous_inv { x | |r| / 2 < |x| } (half_pos r0) fun x h => le_of_ltₓ h)
           (IsOpen.mem_nhds ((is_open_lt' (|r| / 2)).Preimage continuous_abs) (half_lt_self r0))
 
-theorem Real.continuous_inv : Continuous fun a : { r : ℝ // r ≠ 0 } => a.val⁻¹ :=
-  continuous_iff_continuous_at.mpr$
-    fun ⟨r, hr⟩ => tendsto.comp (Real.tendsto_inv hr) (continuous_iff_continuous_at.mp continuous_subtype_val _)
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem real.continuous_inv : continuous (λ a : {r : exprℝ() // «expr ≠ »(r, 0)}, «expr ⁻¹»(a.val)) :=
+«expr $ »(continuous_iff_continuous_at.mpr, assume
+ ⟨r, hr⟩, tendsto.comp (real.tendsto_inv hr) (continuous_iff_continuous_at.mp continuous_subtype_val _))
 
 theorem Real.Continuous.inv [TopologicalSpace α] {f : α → ℝ} (h : ∀ a, f a ≠ 0) (hf : Continuous f) :
   Continuous fun a => f a⁻¹ :=
@@ -258,32 +256,28 @@ theorem real.uniform_continuous_mul_const {x : exprℝ()} : uniform_continuous (
    exact [expr mul_lt_mul' (le_of_lt xy) h (abs_nonneg _) y0]
  end)
 
-theorem Real.uniform_continuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
-  (H : ∀ x _ : x ∈ s, |(x : ℝ × ℝ).1| < r₁ ∧ |x.2| < r₂) : UniformContinuous fun p : s => p.1.1*p.1.2 :=
-  Metric.uniform_continuous_iff.2$
-    fun ε ε0 =>
-      let ⟨δ, δ0, Hδ⟩ := rat_mul_continuous_lemma abs ε0
-      ⟨δ, δ0,
-        fun a b h =>
-          let ⟨h₁, h₂⟩ := max_lt_iff.1 h 
-          Hδ (H _ a.2).1 (H _ b.2).2 h₁ h₂⟩
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem real.uniform_continuous_mul
+(s : set «expr × »(exprℝ(), exprℝ()))
+{r₁ r₂ : exprℝ()}
+(H : ∀
+ x «expr ∈ » s, «expr ∧ »(«expr < »(«expr| |»((x : «expr × »(exprℝ(), exprℝ())).1), r₁), «expr < »(«expr| |»(x.2), r₂))) : uniform_continuous (λ
+ p : s, «expr * »(p.1.1, p.1.2)) :=
+«expr $ »(metric.uniform_continuous_iff.2, λ ε ε0, let ⟨δ, δ0, Hδ⟩ := rat_mul_continuous_lemma abs ε0 in
+ ⟨δ, δ0, λ a b h, let ⟨h₁, h₂⟩ := max_lt_iff.1 h in Hδ (H _ a.2).1 (H _ b.2).2 h₁ h₂⟩)
 
-protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1*p.2 :=
-  continuous_iff_continuous_at.2$
-    fun ⟨a₁, a₂⟩ =>
-      tendsto_of_uniform_continuous_subtype
-        (Real.uniform_continuous_mul ({ x | |x| < |a₁|+1 }.Prod { x | |x| < |a₂|+1 }) fun x => id)
-        (IsOpen.mem_nhds
-          (((is_open_gt' (|a₁|+1)).Preimage continuous_abs).Prod ((is_open_gt' (|a₂|+1)).Preimage continuous_abs))
-          ⟨lt_add_one |a₁|, lt_add_one |a₂|⟩)
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected theorem real.continuous_mul : continuous (λ p : «expr × »(exprℝ(), exprℝ()), «expr * »(p.1, p.2)) :=
+«expr $ »(continuous_iff_continuous_at.2, λ
+ ⟨a₁, a₂⟩, tendsto_of_uniform_continuous_subtype (real.uniform_continuous_mul ({x | «expr < »(«expr| |»(x), «expr + »(«expr| |»(a₁), 1))}.prod {x | «expr < »(«expr| |»(x), «expr + »(«expr| |»(a₂), 1))}) (λ
+   x, id)) (is_open.mem_nhds (((is_open_gt' «expr + »(«expr| |»(a₁), 1)).preimage continuous_abs).prod ((is_open_gt' «expr + »(«expr| |»(a₂), 1)).preimage continuous_abs)) ⟨lt_add_one «expr| |»(a₁), lt_add_one «expr| |»(a₂)⟩))
 
 instance  : TopologicalRing ℝ :=
   { Real.topological_add_group with continuous_mul := Real.continuous_mul }
 
-theorem Rat.continuous_mul : Continuous fun p : ℚ × ℚ => p.1*p.2 :=
-  Rat.embedding_coe_real.continuous_iff.2$
-    by 
-      simp [· ∘ ·] <;> exact real.continuous_mul.comp (rat.continuous_coe_real.prod_map Rat.continuous_coe_real)
+-- error in Topology.Instances.Real: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem rat.continuous_mul : continuous (λ p : «expr × »(exprℚ(), exprℚ()), «expr * »(p.1, p.2)) :=
+«expr $ »(rat.embedding_coe_real.continuous_iff.2, by simp [] [] [] ["[", expr («expr ∘ »), "]"] [] []; exact [expr real.continuous_mul.comp (rat.continuous_coe_real.prod_map rat.continuous_coe_real)])
 
 instance  : TopologicalRing ℚ :=
   { Rat.topological_add_group with continuous_mul := Rat.continuous_mul }

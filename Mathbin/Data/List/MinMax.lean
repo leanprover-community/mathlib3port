@@ -234,15 +234,17 @@ theorem mem_argmax_iff
  end⟩
 
 theorem argmax_eq_some_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
-  argmax f l = some m ↔ m ∈ l ∧ (∀ a _ : a ∈ l, f a ≤ f m) ∧ ∀ a _ : a ∈ l, f m ≤ f a → l.index_of m ≤ l.index_of a :=
+  argmax f l = some m ↔
+    m ∈ l ∧ (∀ a (_ : a ∈ l), f a ≤ f m) ∧ ∀ a (_ : a ∈ l), f m ≤ f a → l.index_of m ≤ l.index_of a :=
   mem_argmax_iff
 
 theorem mem_argmin_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
-  m ∈ argmin f l ↔ m ∈ l ∧ (∀ a _ : a ∈ l, f m ≤ f a) ∧ ∀ a _ : a ∈ l, f a ≤ f m → l.index_of m ≤ l.index_of a :=
+  m ∈ argmin f l ↔ m ∈ l ∧ (∀ a (_ : a ∈ l), f m ≤ f a) ∧ ∀ a (_ : a ∈ l), f a ≤ f m → l.index_of m ≤ l.index_of a :=
   @mem_argmax_iff _ (OrderDual β) _ _ _ _ _
 
 theorem argmin_eq_some_iff [DecidableEq α] {f : α → β} {m : α} {l : List α} :
-  argmin f l = some m ↔ m ∈ l ∧ (∀ a _ : a ∈ l, f m ≤ f a) ∧ ∀ a _ : a ∈ l, f a ≤ f m → l.index_of m ≤ l.index_of a :=
+  argmin f l = some m ↔
+    m ∈ l ∧ (∀ a (_ : a ∈ l), f m ≤ f a) ∧ ∀ a (_ : a ∈ l), f a ≤ f m → l.index_of m ≤ l.index_of a :=
   mem_argmin_iff
 
 variable[LinearOrderₓ α]
@@ -341,14 +343,14 @@ begin
     rw ["[", expr le_antisymm hma (h.2 a hal), "]"] [] }
 end
 
-theorem minimum_eq_coe_iff {m : α} {l : List α} : minimum l = m ↔ m ∈ l ∧ ∀ a _ : a ∈ l, m ≤ a :=
+theorem minimum_eq_coe_iff {m : α} {l : List α} : minimum l = m ↔ m ∈ l ∧ ∀ a (_ : a ∈ l), m ≤ a :=
   @maximum_eq_coe_iff (OrderDual α) _ _ _
 
 section Fold
 
 variable{M : Type _}[CanonicallyLinearOrderedAddMonoid M]
 
-/-! Note: since there is no typeclass for both `linear_order` and `has_top`, nor a typeclass dual
+/-! Note: since there is no typeclass typeclass dual
 to `canonically_linear_ordered_add_monoid α` we cannot express these lemmas generally for
 `minimum`; instead we are limited to doing so on `order_dual α`. -/
 
@@ -386,10 +388,11 @@ begin
     simpa [] [] [] ["[", expr hy, "]"] [] ["using", expr IH] }
 end
 
-theorem le_min_of_le_forall (l : List (OrderDual M)) (n : OrderDual M) (h : ∀ x _ : x ∈ l, n ≤ x) : n ≤ l.foldr min ⊤ :=
+theorem le_min_of_le_forall (l : List (OrderDual M)) (n : OrderDual M) (h : ∀ x (_ : x ∈ l), n ≤ x) :
+  n ≤ l.foldr min ⊤ :=
   max_le_of_forall_le l n h
 
-theorem max_nat_le_of_forall_le (l : List ℕ) (n : ℕ) (h : ∀ x _ : x ∈ l, x ≤ n) : l.foldr max 0 ≤ n :=
+theorem max_nat_le_of_forall_le (l : List ℕ) (n : ℕ) (h : ∀ x (_ : x ∈ l), x ≤ n) : l.foldr max 0 ≤ n :=
   max_le_of_forall_le l n h
 
 end Fold

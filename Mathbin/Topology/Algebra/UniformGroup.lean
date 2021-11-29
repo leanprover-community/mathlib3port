@@ -23,20 +23,28 @@ open Filter Set
 
 variable{α : Type _}{β : Type _}
 
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A uniform (additive) group is a group in which the addition and negation are
   uniformly continuous. -/
-class UniformAddGroup(α : Type _)[UniformSpace α][AddGroupₓ α] : Prop where 
-  uniform_continuous_sub : UniformContinuous fun p : α × α => p.1 - p.2
+class uniform_add_group
+(α : Type*)
+[uniform_space α]
+[add_group α] : exprProp() := (uniform_continuous_sub : uniform_continuous (λ p : «expr × »(α, α), «expr - »(p.1, p.2)))
 
-theorem UniformAddGroup.mk' {α} [UniformSpace α] [AddGroupₓ α] (h₁ : UniformContinuous fun p : α × α => p.1+p.2)
-  (h₂ : UniformContinuous fun p : α => -p) : UniformAddGroup α :=
-  ⟨by 
-      simpa only [sub_eq_add_neg] using h₁.comp (uniform_continuous_fst.prod_mk (h₂.comp uniform_continuous_snd))⟩
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_add_group.mk'
+{α}
+[uniform_space α]
+[add_group α]
+(h₁ : uniform_continuous (λ p : «expr × »(α, α), «expr + »(p.1, p.2)))
+(h₂ : uniform_continuous (λ p : α, «expr- »(p))) : uniform_add_group α :=
+⟨by simpa [] [] ["only"] ["[", expr sub_eq_add_neg, "]"] [] ["using", expr h₁.comp (uniform_continuous_fst.prod_mk (h₂.comp uniform_continuous_snd))]⟩
 
 variable[UniformSpace α][AddGroupₓ α][UniformAddGroup α]
 
-theorem uniform_continuous_sub : UniformContinuous fun p : α × α => p.1 - p.2 :=
-  UniformAddGroup.uniform_continuous_sub
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_sub : uniform_continuous (λ p : «expr × »(α, α), «expr - »(p.1, p.2)) :=
+uniform_add_group.uniform_continuous_sub
 
 theorem UniformContinuous.sub [UniformSpace β] {f : β → α} {g : β → α} (hf : UniformContinuous f)
   (hg : UniformContinuous g) : UniformContinuous fun x => f x - g x :=
@@ -48,8 +56,8 @@ theorem UniformContinuous.neg [UniformSpace β] {f : β → α} (hf : UniformCon
   by 
     simp_all 
 
-theorem uniform_continuous_neg : UniformContinuous fun x : α => -x :=
-  uniform_continuous_id.neg
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_neg : uniform_continuous (λ x : α, «expr- »(x)) := uniform_continuous_id.neg
 
 theorem UniformContinuous.add [UniformSpace β] {f : β → α} {g : β → α} (hf : UniformContinuous f)
   (hg : UniformContinuous g) : UniformContinuous fun x => f x+g x :=
@@ -57,8 +65,9 @@ theorem UniformContinuous.add [UniformSpace β] {f : β → α} {g : β → α} 
   by 
     simp_all [sub_eq_add_neg]
 
-theorem uniform_continuous_add : UniformContinuous fun p : α × α => p.1+p.2 :=
-  uniform_continuous_fst.add uniform_continuous_snd
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_add : uniform_continuous (λ p : «expr × »(α, α), «expr + »(p.1, p.2)) :=
+uniform_continuous_fst.add uniform_continuous_snd
 
 instance (priority := 10)UniformAddGroup.to_topological_add_group : TopologicalAddGroup α :=
   { continuous_add := uniform_continuous_add.Continuous, continuous_neg := uniform_continuous_neg.Continuous }
@@ -68,14 +77,15 @@ instance  [UniformSpace β] [AddGroupₓ β] [UniformAddGroup β] : UniformAddGr
           (uniform_continuous_fst.comp uniform_continuous_snd)).prod_mk
       ((uniform_continuous_snd.comp uniform_continuous_fst).sub (uniform_continuous_snd.comp uniform_continuous_snd))⟩
 
-theorem uniformity_translate (a : α) : ((𝓤 α).map fun x : α × α => (x.1+a, x.2+a)) = 𝓤 α :=
-  le_antisymmₓ (uniform_continuous_id.add uniform_continuous_const)
-    (calc 𝓤 α = ((𝓤 α).map fun x : α × α => (x.1+-a, x.2+-a)).map fun x : α × α => (x.1+a, x.2+a) :=
-      by 
-        simp [Filter.map_map, · ∘ ·] <;> exact filter.map_id.symm 
-      _ ≤ (𝓤 α).map fun x : α × α => (x.1+a, x.2+a) :=
-      Filter.map_mono (uniform_continuous_id.add uniform_continuous_const)
-      )
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_translate
+(a : α) : «expr = »((expr𝓤() α).map (λ x : «expr × »(α, α), («expr + »(x.1, a), «expr + »(x.2, a))), expr𝓤() α) :=
+le_antisymm (uniform_continuous_id.add uniform_continuous_const) (calc
+   «expr = »(expr𝓤() α, ((expr𝓤() α).map (λ
+      x : «expr × »(α, α), («expr + »(x.1, «expr- »(a)), «expr + »(x.2, «expr- »(a))))).map (λ
+     x : «expr × »(α, α), («expr + »(x.1, a), «expr + »(x.2, a)))) : by simp [] [] [] ["[", expr filter.map_map, ",", expr («expr ∘ »), "]"] [] []; exact [expr filter.map_id.symm]
+   «expr ≤ »(..., (expr𝓤() α).map (λ
+     x : «expr × »(α, α), («expr + »(x.1, a), «expr + »(x.2, a)))) : filter.map_mono (uniform_continuous_id.add uniform_continuous_const))
 
 -- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem uniform_embedding_translate (a : α) : uniform_embedding (λ x : α, «expr + »(x, a)) :=
@@ -90,22 +100,23 @@ section
 
 variable(α)
 
-theorem uniformity_eq_comap_nhds_zero : 𝓤 α = comap (fun x : α × α => x.2 - x.1) (𝓝 (0 : α)) :=
-  by 
-    rw [nhds_eq_comap_uniformity, Filter.comap_comap]
-    refine' le_antisymmₓ (Filter.map_le_iff_le_comap.1 _) _
-    ·
-      intro s hs 
-      rcases mem_uniformity_of_uniform_continuous_invariant uniform_continuous_sub hs with ⟨t, ht, hts⟩
-      refine' mem_map.2 (mem_of_superset ht _)
-      rintro ⟨a, b⟩
-      simpa [subset_def] using hts a b a
-    ·
-      intro s hs 
-      rcases mem_uniformity_of_uniform_continuous_invariant uniform_continuous_add hs with ⟨t, ht, hts⟩
-      refine' ⟨_, ht, _⟩
-      rintro ⟨a, b⟩
-      simpa [subset_def] using hts 0 (b - a) a
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_eq_comap_nhds_zero : «expr = »(expr𝓤() α, comap (λ
+  x : «expr × »(α, α), «expr - »(x.2, x.1)) (expr𝓝() (0 : α))) :=
+begin
+  rw ["[", expr nhds_eq_comap_uniformity, ",", expr filter.comap_comap, "]"] [],
+  refine [expr le_antisymm (filter.map_le_iff_le_comap.1 _) _],
+  { assume [binders (s hs)],
+    rcases [expr mem_uniformity_of_uniform_continuous_invariant uniform_continuous_sub hs, "with", "⟨", ident t, ",", ident ht, ",", ident hts, "⟩"],
+    refine [expr mem_map.2 (mem_of_superset ht _)],
+    rintros ["⟨", ident a, ",", ident b, "⟩"],
+    simpa [] [] [] ["[", expr subset_def, "]"] [] ["using", expr hts a b a] },
+  { assume [binders (s hs)],
+    rcases [expr mem_uniformity_of_uniform_continuous_invariant uniform_continuous_add hs, "with", "⟨", ident t, ",", ident ht, ",", ident hts, "⟩"],
+    refine [expr ⟨_, ht, _⟩],
+    rintros ["⟨", ident a, ",", ident b, "⟩"],
+    simpa [] [] [] ["[", expr subset_def, "]"] [] ["using", expr hts 0 «expr - »(b, a) a] }
+end
 
 end 
 
@@ -160,7 +171,7 @@ variable{G : Type u}[AddCommGroupₓ G][TopologicalSpace G][TopologicalAddGroup 
 
 variable(G)
 
--- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The right uniformity on a topological group. -/ def topological_add_group.to_uniform_space : uniform_space G :=
 { uniformity := comap (λ p : «expr × »(G, G), «expr - »(p.2, p.1)) (expr𝓝() 0),
   refl := by refine [expr map_le_iff_le_comap.1 (le_trans _ (pure_le_nhds 0))]; simp [] [] [] ["[", expr set.subset_def, "]"] [] [] { contextual := tt },
@@ -217,21 +228,24 @@ section
 
 attribute [local instance] TopologicalAddGroup.toUniformSpace
 
-theorem uniformity_eq_comap_nhds_zero' : 𝓤 G = comap (fun p : G × G => p.2 - p.1) (𝓝 (0 : G)) :=
-  rfl
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_eq_comap_nhds_zero' : «expr = »(expr𝓤() G, comap (λ
+  p : «expr × »(G, G), «expr - »(p.2, p.1)) (expr𝓝() (0 : G))) :=
+rfl
 
 variable{G}
 
-theorem topological_add_group_is_uniform : UniformAddGroup G :=
-  have  :
-    tendsto ((fun p : G × G => p.1 - p.2) ∘ fun p : (G × G) × G × G => (p.1.2 - p.1.1, p.2.2 - p.2.1))
-      (comap (fun p : (G × G) × G × G => (p.1.2 - p.1.1, p.2.2 - p.2.1)) ((𝓝 0).Prod (𝓝 0))) (𝓝 (0 - 0)) :=
-    (tendsto_fst.sub tendsto_snd).comp tendsto_comap 
-  by 
-    constructor 
-    rw [UniformContinuous, uniformity_prod_eq_prod, tendsto_map'_iff, uniformity_eq_comap_nhds_zero' G,
-      tendsto_comap_iff, prod_comap_comap_eq]
-    simpa [· ∘ ·, sub_eq_add_neg, add_commₓ, add_left_commₓ] using this
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem topological_add_group_is_uniform : uniform_add_group G :=
+have tendsto «expr ∘ »(λ
+ p : «expr × »(G, G), «expr - »(p.1, p.2), λ
+ p : «expr × »(«expr × »(G, G), «expr × »(G, G)), («expr - »(p.1.2, p.1.1), «expr - »(p.2.2, p.2.1))) (comap (λ
+  p : «expr × »(«expr × »(G, G), «expr × »(G, G)), («expr - »(p.1.2, p.1.1), «expr - »(p.2.2, p.2.1))) ((expr𝓝() 0).prod (expr𝓝() 0))) (expr𝓝() «expr - »(0, 0)) := (tendsto_fst.sub tendsto_snd).comp tendsto_comap,
+begin
+  constructor,
+  rw ["[", expr uniform_continuous, ",", expr uniformity_prod_eq_prod, ",", expr tendsto_map'_iff, ",", expr uniformity_eq_comap_nhds_zero' G, ",", expr tendsto_comap_iff, ",", expr prod_comap_comap_eq, "]"] [],
+  simpa [] [] [] ["[", expr («expr ∘ »), ",", expr sub_eq_add_neg, ",", expr add_comm, ",", expr add_left_comm, "]"] [] ["using", expr this]
+end
 
 attribute [local instance] topological_add_group_is_uniform
 
@@ -342,9 +356,10 @@ variable{f : δ →+ γ}(df : DenseInducing f)
 
 variable{φ : β →+ δ →+ G}
 
-local notation "Φ" => fun p : β × δ => φ p.1 p.2
+-- error in Topology.Algebra.UniformGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+local notation `Φ` := λ p : «expr × »(β, δ), φ p.1 p.2
 
-variable(hφ : Continuous Φ)
+variable(hφ : Continuous (exprΦ))
 
 include de df hφ
 

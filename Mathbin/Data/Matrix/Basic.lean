@@ -428,7 +428,7 @@ variable[DecidableEq m][NonUnitalNonAssocSemiring α](u v w : m → α)
 
 @[simp]
 theorem diagonal_dot_product (i : m) : dot_product (diagonal v i) w = v i*w i :=
-  have  : ∀ j _ : j ≠ i, (diagonal v i j*w j) = 0 :=
+  have  : ∀ j (_ : j ≠ i), (diagonal v i j*w j) = 0 :=
     fun j hij =>
       by 
         simp [diagonal_apply_ne' hij]
@@ -437,7 +437,7 @@ theorem diagonal_dot_product (i : m) : dot_product (diagonal v i) w = v i*w i :=
 
 @[simp]
 theorem dot_product_diagonal (i : m) : dot_product v (diagonal w i) = v i*w i :=
-  have  : ∀ j _ : j ≠ i, (v j*diagonal w i j) = 0 :=
+  have  : ∀ j (_ : j ≠ i), (v j*diagonal w i j) = 0 :=
     fun j hij =>
       by 
         simp [diagonal_apply_ne' hij]
@@ -446,7 +446,7 @@ theorem dot_product_diagonal (i : m) : dot_product v (diagonal w i) = v i*w i :=
 
 @[simp]
 theorem dot_product_diagonal' (i : m) : (dot_product v fun j => diagonal w j i) = v i*w i :=
-  have  : ∀ j _ : j ≠ i, (v j*diagonal w j i) = 0 :=
+  have  : ∀ j (_ : j ≠ i), (v j*diagonal w j i) = 0 :=
     fun j hij =>
       by 
         simp [diagonal_apply_ne hij]
@@ -455,7 +455,7 @@ theorem dot_product_diagonal' (i : m) : (dot_product v fun j => diagonal w j i) 
 
 @[simp]
 theorem single_dot_product (x : α) (i : m) : dot_product (Pi.single i x) v = x*v i :=
-  have  : ∀ j _ : j ≠ i, (Pi.single i x j*v j) = 0 :=
+  have  : ∀ j (_ : j ≠ i), (Pi.single i x j*v j) = 0 :=
     fun j hij =>
       by 
         simp [Pi.single_eq_of_ne hij]
@@ -464,7 +464,7 @@ theorem single_dot_product (x : α) (i : m) : dot_product (Pi.single i x) v = x*
 
 @[simp]
 theorem dot_product_single (x : α) (i : m) : dot_product v (Pi.single i x) = v i*x :=
-  have  : ∀ j _ : j ≠ i, (v j*Pi.single i x j) = 0 :=
+  have  : ∀ j (_ : j ≠ i), (v j*Pi.single i x j) = 0 :=
     fun j hij =>
       by 
         simp [Pi.single_eq_of_ne hij]

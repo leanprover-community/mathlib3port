@@ -387,11 +387,11 @@ theorem to_add_monoid_hom_refl : (RingEquiv.refl R).toAddMonoidHom = AddMonoidHo
   rfl
 
 @[simp]
-theorem to_ring_hom_apply_symm_to_ring_hom_apply (e : R ≃+* S) : ∀ y : S, e.to_ring_hom (e.symm.to_ring_hom y) = y :=
+theorem to_ring_hom_apply_symm_to_ring_hom_apply (e : R ≃+* S) : ∀ (y : S), e.to_ring_hom (e.symm.to_ring_hom y) = y :=
   e.to_equiv.apply_symm_apply
 
 @[simp]
-theorem symm_to_ring_hom_apply_to_ring_hom_apply (e : R ≃+* S) : ∀ x : R, e.symm.to_ring_hom (e.to_ring_hom x) = x :=
+theorem symm_to_ring_hom_apply_to_ring_hom_apply (e : R ≃+* S) : ∀ (x : R), e.symm.to_ring_hom (e.to_ring_hom x) = x :=
   Equiv.symm_apply_apply e.to_equiv
 
 @[simp]
@@ -479,7 +479,7 @@ section GroupPower
 variable[Semiringₓ R][Semiringₓ S]
 
 @[simp]
-theorem map_pow (f : R ≃+* S) a : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
+theorem map_pow (f : R ≃+* S) a : ∀ (n : ℕ), f (a ^ n) = f a ^ n :=
   f.to_ring_hom.map_pow a
 
 end GroupPower
@@ -490,7 +490,7 @@ namespace MulEquiv
 
 /-- Gives a `ring_equiv` from a `mul_equiv` preserving addition.-/
 def to_ring_equiv {R : Type _} {S : Type _} [Add R] [Add S] [Mul R] [Mul S] (h : R ≃* S)
-  (H : ∀ x y : R, h (x+y) = h x+h y) : R ≃+* S :=
+  (H : ∀ (x y : R), h (x+y) = h x+h y) : R ≃+* S :=
   { h.to_equiv, h, AddEquiv.mk' h.to_equiv H with  }
 
 end MulEquiv

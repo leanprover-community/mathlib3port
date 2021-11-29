@@ -43,7 +43,7 @@ variable{𝕜 : Type _}[IsROrC 𝕜]{E : Type _}[InnerProductSpace 𝕜 E]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
--- error in Analysis.InnerProductSpace.PiL2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.InnerProductSpace.PiL2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 instance pi_Lp.inner_product_space
 {ι : Type*}
 [fintype ι]
@@ -91,11 +91,12 @@ theorem PiLp.norm_eq_of_L2 {ι : Type _} [Fintype ι] {f : ι → Type _} [∀ i
   by 
     rw [PiLp.norm_eq_of_nat 2] <;> simp [sqrt_eq_rpow]
 
+-- error in Analysis.InnerProductSpace.PiL2: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The standard real/complex Euclidean space, functions on a finite type. For an `n`-dimensional
 space use `euclidean_space 𝕜 (fin n)`. -/
-@[reducible, nolint unused_arguments]
-def EuclideanSpace (𝕜 : Type _) [IsROrC 𝕜] (n : Type _) [Fintype n] : Type _ :=
-  PiLp 2 fun i : n => 𝕜
+@[reducible, nolint #[ident unused_arguments]]
+def euclidean_space (𝕜 : Type*) [is_R_or_C 𝕜] (n : Type*) [fintype n] : Type* :=
+pi_Lp 2 (λ i : n, 𝕜)
 
 theorem EuclideanSpace.norm_eq {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n] (x : EuclideanSpace 𝕜 n) :
   ∥x∥ = Real.sqrt (∑i : n, ∥x i∥^2) :=
@@ -152,7 +153,7 @@ theorem DirectSum.SubmoduleIsInternal.isometry_L2_of_orthogonal_family_symm_appl
     classical 
     let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i 
     let e₂ := LinearEquiv.ofBijective _ hV.injective hV.surjective 
-    suffices  : ∀ v : ⨁i, V i, e₂ v = ∑i, e₁ v i
+    suffices  : ∀ (v : ⨁i, V i), e₂ v = ∑i, e₁ v i
     ·
       exact this (e₁.symm w)
     intro v 

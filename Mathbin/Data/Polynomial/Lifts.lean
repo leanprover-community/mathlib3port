@@ -62,7 +62,7 @@ theorem lifts_iff_ring_hom_srange (p : Polynomial S) : p ∈ lifts f ↔ p ∈ (
   by 
     simp only [coe_map_ring_hom, lifts, Set.mem_range, RingHom.mem_srange]
 
-theorem lifts_iff_coeff_lifts (p : Polynomial S) : p ∈ lifts f ↔ ∀ n : ℕ, p.coeff n ∈ Set.Range f :=
+theorem lifts_iff_coeff_lifts (p : Polynomial S) : p ∈ lifts f ↔ ∀ (n : ℕ), p.coeff n ∈ Set.Range f :=
   by 
     rw [lifts_iff_ring_hom_srange, mem_map_srange f]
     rfl

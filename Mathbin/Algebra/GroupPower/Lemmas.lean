@@ -22,7 +22,7 @@ section Monoidₓ
 variable[Monoidₓ M][Monoidₓ N][AddMonoidₓ A][AddMonoidₓ B]
 
 @[simp]
-theorem nsmul_one [HasOne A] : ∀ n : ℕ, n • (1 : A) = n :=
+theorem nsmul_one [HasOne A] : ∀ (n : ℕ), n • (1 : A) = n :=
   AddMonoidHom.eq_nat_cast ⟨fun n => n • (1 : A), zero_nsmul _, fun _ _ => add_nsmul _ _ _⟩ (one_nsmul _)
 
 @[simp, normCast, toAdditive]
@@ -54,7 +54,7 @@ theorem is_unit_pow_succ_iff {m : M} {n : ℕ} : IsUnit (m ^ n+1) ↔ IsUnit m :
     rw [pow_succₓ, ((Commute.refl _).pow_right _).is_unit_mul_iff]
     exact And.left
 
-theorem is_unit_pos_pow_iff {m : M} : ∀ {n : ℕ} h : 0 < n, IsUnit (m ^ n) ↔ IsUnit m
+theorem is_unit_pos_pow_iff {m : M} : ∀ {n : ℕ} (h : 0 < n), IsUnit (m ^ n) ↔ IsUnit m
 | n+1, _ => is_unit_pow_succ_iff
 
 /-- If `x ^ n.succ = 1` then `x` has an inverse, `x^n`. -/
@@ -116,7 +116,7 @@ theorem zsmul_one [HasOne A] (n : ℤ) : n • (1 : A) = n :=
     cases n <;> simp 
 
 @[toAdditive add_one_zsmul]
-theorem zpow_add_one (a : G) : ∀ n : ℤ, (a ^ n+1) = (a ^ n)*a
+theorem zpow_add_one (a : G) : ∀ (n : ℤ), (a ^ n+1) = (a ^ n)*a
 | of_nat n =>
   by 
     simp [←Int.coe_nat_succ, pow_succ'ₓ]
@@ -223,25 +223,21 @@ theorem zsmul_pos {a : A} (ha : 0 < a) {k : ℤ} (hk : (0 : ℤ) < k) : 0 < k �
     apply nsmul_pos ha 
     exact (coe_nat_pos.mp hk).ne'
 
-theorem zsmul_strict_mono_left {a : A} (ha : 0 < a) : StrictMono fun n : ℤ => n • a :=
-  fun n m h =>
-    calc n • a = (n • a)+0 := (add_zeroₓ _).symm 
-      _ < (n • a)+(m - n) • a := add_lt_add_left (zsmul_pos ha (sub_pos.mpr h)) _ 
-      _ = m • a :=
-      by 
-        rw [←add_zsmul]
-        simp 
-      
+-- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem zsmul_strict_mono_left {a : A} (ha : «expr < »(0, a)) : strict_mono (λ n : exprℤ(), «expr • »(n, a)) :=
+λ n m h, calc
+  «expr = »(«expr • »(n, a), «expr + »(«expr • »(n, a), 0)) : (add_zero _).symm
+  «expr < »(..., «expr + »(«expr • »(n, a), «expr • »(«expr - »(m, n), a))) : add_lt_add_left (zsmul_pos ha (sub_pos.mpr h)) _
+  «expr = »(..., «expr • »(m, a)) : by { rw ["[", "<-", expr add_zsmul, "]"] [],
+    simp [] [] [] [] [] [] }
 
-theorem zsmul_mono_left {a : A} (ha : 0 ≤ a) : Monotone fun n : ℤ => n • a :=
-  fun n m h =>
-    calc n • a = (n • a)+0 := (add_zeroₓ _).symm 
-      _ ≤ (n • a)+(m - n) • a := add_le_add_left (zsmul_nonneg ha (sub_nonneg.mpr h)) _ 
-      _ = m • a :=
-      by 
-        rw [←add_zsmul]
-        simp 
-      
+-- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem zsmul_mono_left {a : A} (ha : «expr ≤ »(0, a)) : monotone (λ n : exprℤ(), «expr • »(n, a)) :=
+λ n m h, calc
+  «expr = »(«expr • »(n, a), «expr + »(«expr • »(n, a), 0)) : (add_zero _).symm
+  «expr ≤ »(..., «expr + »(«expr • »(n, a), «expr • »(«expr - »(m, n), a))) : add_le_add_left (zsmul_nonneg ha (sub_nonneg.mpr h)) _
+  «expr = »(..., «expr • »(m, a)) : by { rw ["[", "<-", expr add_zsmul, "]"] [],
+    simp [] [] [] [] [] [] }
 
 theorem zsmul_le_zsmul {a : A} {n m : ℤ} (ha : 0 ≤ a) (h : n ≤ m) : n • a ≤ m • a :=
   zsmul_mono_left ha h
@@ -442,7 +438,7 @@ theorem mul_bit1 [Ringₓ R] {n r : R} : (r*bit1 n) = ((2 : ℤ) • r*n)+r :=
     rw [mul_addₓ, mul_bit0, mul_oneₓ]
 
 @[simp]
-theorem zsmul_eq_mul [Ringₓ R] (a : R) : ∀ n : ℤ, n • a = n*a
+theorem zsmul_eq_mul [Ringₓ R] (a : R) : ∀ (n : ℤ), n • a = n*a
 | (n : ℕ) =>
   by 
     rw [coe_nat_zsmul, nsmul_eq_mul]
@@ -490,7 +486,7 @@ variable[OrderedSemiring R]{a : R}
 
 /-- Bernoulli's inequality. This version works for semirings but requires
 additional hypotheses `0 ≤ a * a` and `0 ≤ (1 + a) * (1 + a)`. -/
-theorem one_add_mul_le_pow' (Hsq : 0 ≤ a*a) (Hsq' : 0 ≤ (1+a)*1+a) (H : 0 ≤ 2+a) : ∀ n : ℕ, (1+(n : R)*a) ≤ (1+a) ^ n
+theorem one_add_mul_le_pow' (Hsq : 0 ≤ a*a) (Hsq' : 0 ≤ (1+a)*1+a) (H : 0 ≤ 2+a) : ∀ (n : ℕ), (1+(n : R)*a) ≤ (1+a) ^ n
 | 0 =>
   by 
     simp 
@@ -510,7 +506,7 @@ theorem one_add_mul_le_pow' (Hsq : 0 ≤ a*a) (Hsq' : 0 ≤ (1+a)*1+a) (H : 0 �
       simp only [pow_succₓ, mul_assocₓ]
     
 
-private theorem pow_lt_pow_of_lt_one_aux (h : 0 < a) (ha : a < 1) (i : ℕ) : ∀ k : ℕ, (a ^ (i+k)+1) < a ^ i
+private theorem pow_lt_pow_of_lt_one_aux (h : 0 < a) (ha : a < 1) (i : ℕ) : ∀ (k : ℕ), (a ^ (i+k)+1) < a ^ i
 | 0 =>
   by 
     rw [←one_mulₓ (a ^ i), add_zeroₓ, pow_succₓ]
@@ -526,7 +522,7 @@ private theorem pow_lt_pow_of_lt_one_aux (h : 0 < a) (ha : a < 1) (i : ℕ) : �
       show 0 < a ^ (i+k+1)+0
       apply pow_pos h
 
-private theorem pow_le_pow_of_le_one_aux (h : 0 ≤ a) (ha : a ≤ 1) (i : ℕ) : ∀ k : ℕ, (a ^ i+k) ≤ a ^ i
+private theorem pow_le_pow_of_le_one_aux (h : 0 ≤ a) (ha : a ≤ 1) (i : ℕ) : ∀ (k : ℕ), (a ^ i+k) ≤ a ^ i
 | 0 =>
   by 
     simp 
@@ -652,23 +648,21 @@ theorem Even.pow_abs {p : ℕ} (hp : Even p) (a : R) : |a| ^ p = a ^ p :=
 theorem pow_bit0_abs (a : R) (p : ℕ) : |a| ^ bit0 p = a ^ bit0 p :=
   (even_bit0 _).pow_abs _
 
-theorem strict_mono_pow_bit1 (n : ℕ) : StrictMono fun a : R => a ^ bit1 n :=
-  by 
-    intro a b hab 
-    cases' le_totalₓ a 0 with ha ha
-    ·
-      cases' le_or_ltₓ b 0 with hb hb
-      ·
-        rw [←neg_lt_neg_iff, ←neg_pow_bit1, ←neg_pow_bit1]
-        exact pow_lt_pow_of_lt_left (neg_lt_neg hab) (neg_nonneg.2 hb) (bit1_pos (zero_le n))
-      ·
-        exact (pow_bit1_nonpos_iff.2 ha).trans_lt (pow_bit1_pos_iff.2 hb)
-    ·
-      exact pow_lt_pow_of_lt_left hab ha (bit1_pos (zero_le n))
+-- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem strict_mono_pow_bit1 (n : exprℕ()) : strict_mono (λ a : R, «expr ^ »(a, bit1 n)) :=
+begin
+  intros [ident a, ident b, ident hab],
+  cases [expr le_total a 0] ["with", ident ha, ident ha],
+  { cases [expr le_or_lt b 0] ["with", ident hb, ident hb],
+    { rw ["[", "<-", expr neg_lt_neg_iff, ",", "<-", expr neg_pow_bit1, ",", "<-", expr neg_pow_bit1, "]"] [],
+      exact [expr pow_lt_pow_of_lt_left (neg_lt_neg hab) (neg_nonneg.2 hb) (bit1_pos (zero_le n))] },
+    { exact [expr (pow_bit1_nonpos_iff.2 ha).trans_lt (pow_bit1_pos_iff.2 hb)] } },
+  { exact [expr pow_lt_pow_of_lt_left hab ha (bit1_pos (zero_le n))] }
+end
 
-theorem Odd.strict_mono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n :=
-  by 
-    cases' hn with k hk <;> simpa only [hk, two_mul] using strict_mono_pow_bit1 _
+-- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem odd.strict_mono_pow (hn : odd n) : strict_mono (λ a : R, «expr ^ »(a, n)) :=
+by cases [expr hn] ["with", ident k, ident hk]; simpa [] [] ["only"] ["[", expr hk, ",", expr two_mul, "]"] [] ["using", expr strict_mono_pow_bit1 _]
 
 /-- Bernoulli's inequality for `n : ℕ`, `-2 ≤ a`. -/
 theorem one_add_mul_le_pow (H : -2 ≤ a) (n : ℕ) : (1+(n : R)*a) ≤ (1+a) ^ n :=
@@ -969,7 +963,7 @@ variable[Monoidₓ M][Groupₓ G][Ringₓ R]
 
 @[simp, toAdditive]
 theorem units_zpow_right {a : M} {x y : Units M} (h : SemiconjBy a x y) :
-  ∀ m : ℤ, SemiconjBy a («expr↑ » (x ^ m)) («expr↑ » (y ^ m))
+  ∀ (m : ℤ), SemiconjBy a («expr↑ » (x ^ m)) («expr↑ » (y ^ m))
 | (n : ℕ) =>
   by 
     simp only [zpow_coe_nat, Units.coe_pow, h, pow_right]

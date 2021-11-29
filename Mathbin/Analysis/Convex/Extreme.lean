@@ -49,12 +49,12 @@ variable[OrderedSemiring 𝕜][AddCommMonoidₓ E][HasScalar 𝕜 E]
 /-- A set `B` is an extreme subset of `A` if `B ⊆ A` and all points of `B` only belong to open
 segments whose ends are in `B`. -/
 def IsExtreme (A B : Set E) : Prop :=
-  B ⊆ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, ∀ x _ : x ∈ B, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ ∈ B ∧ x₂ ∈ B
+  B ⊆ A ∧ ∀ x₁ x₂ (_ : x₁ ∈ A) (_ : x₂ ∈ A), ∀ x (_ : x ∈ B), x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ ∈ B ∧ x₂ ∈ B
 
 /-- A point `x` is an extreme point of a set `A` if `x` belongs to no open segment with ends in
 `A`, except for the obvious `open_segment x x`. -/
 def Set.ExtremePoints (A : Set E) : Set E :=
-  { x∈A | ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x }
+  { x∈A | ∀ x₁ x₂ (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x }
 
 @[refl]
 protected theorem IsExtreme.refl (A : Set E) : IsExtreme 𝕜 A A :=
@@ -132,7 +132,7 @@ begin
 end
 
 theorem extreme_points_def :
-  x ∈ A.extreme_points 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
+  x ∈ A.extreme_points 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ OpenSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x :=
   Iff.rfl
 
 /-- x is an extreme point to A iff {x} is an extreme set of A. -/
@@ -187,7 +187,7 @@ variable{𝕜}[LinearOrderedField 𝕜][AddCommGroupₓ E][Module 𝕜 E]{A B : 
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extreme_points_iff_forall_segment [NoZeroSmulDivisors 𝕜 E] :
-  x ∈ A.extreme_points 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ _ : x₁ ∈ A _ : x₂ ∈ A, x ∈ Segment 𝕜 x₁ x₂ → x₁ = x ∨ x₂ = x :=
+  x ∈ A.extreme_points 𝕜 ↔ x ∈ A ∧ ∀ x₁ x₂ (_ : x₁ ∈ A) (_ : x₂ ∈ A), x ∈ Segment 𝕜 x₁ x₂ → x₁ = x ∨ x₂ = x :=
   by 
     split 
     ·

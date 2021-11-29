@@ -308,7 +308,8 @@ theorem trace_eq_sum_embeddings_gen
   σ, σ pb.gen)) :=
 begin
   letI [] [] [":=", expr classical.dec_eq E],
-  rw ["[", expr pb.trace_gen_eq_sum_roots hE, ",", expr fintype.sum_equiv pb.lift_equiv', ",", expr finset.sum_mem_multiset, ",", expr finset.sum_eq_multiset_sum, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr (nodup_roots ((separable_map _).mpr hfx)), ",", expr multiset.map_id, "]"] [],
+  rw ["[", expr pb.trace_gen_eq_sum_roots hE, ",", expr fintype.sum_equiv pb.lift_equiv', ",", expr finset.sum_mem_multiset, ",", expr finset.sum_eq_multiset_sum, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr _, ",", expr multiset.map_id, "]"] [],
+  { exact [expr nodup_roots ((separable_map _).mpr hfx)] },
   { intro [ident x],
     refl },
   { intro [ident σ],

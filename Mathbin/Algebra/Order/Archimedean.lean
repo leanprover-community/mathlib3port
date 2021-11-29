@@ -31,7 +31,7 @@ variable{α : Type _}
 /-- An ordered additive commutative monoid is called `archimedean` if for any two elements `x`, `y`
 such that `0 < y` there exists a natural number `n` such that `x ≤ n • y`. -/
 class Archimedean(α)[OrderedAddCommMonoid α] : Prop where 
-  arch : ∀ x : α {y}, 0 < y → ∃ n : ℕ, x ≤ n • y
+  arch : ∀ (x : α) {y}, 0 < y → ∃ n : ℕ, x ≤ n • y
 
 instance OrderDual.archimedean [OrderedAddCommGroup α] [Archimedean α] : Archimedean (OrderDual α) :=
   ⟨fun x y hy =>
@@ -290,7 +290,7 @@ section LinearOrderedField
 
 variable[LinearOrderedField α]
 
-theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x < n :=
+theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ (x : α), ∃ n : ℕ, x < n :=
   ⟨@exists_nat_gt α _ _,
     fun H =>
       ⟨fun x y y0 =>
@@ -300,7 +300,7 @@ theorem archimedean_iff_nat_lt : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x <
                 by 
                   rwa [div_lt_iff y0, ←nsmul_eq_mul] at h⟩⟩
 
-theorem archimedean_iff_nat_le : Archimedean α ↔ ∀ x : α, ∃ n : ℕ, x ≤ n :=
+theorem archimedean_iff_nat_le : Archimedean α ↔ ∀ (x : α), ∃ n : ℕ, x ≤ n :=
   archimedean_iff_nat_lt.trans
     ⟨fun H x => (H x).imp$ fun _ => le_of_ltₓ,
       fun H x =>
@@ -313,7 +313,7 @@ theorem exists_rat_gt [Archimedean α] (x : α) : ∃ q : ℚ, x < q :=
     by 
       rwa [Rat.cast_coe_nat]⟩
 
-theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x < q :=
+theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ (x : α), ∃ q : ℚ, x < q :=
   ⟨@exists_rat_gt α _,
     fun H =>
       archimedean_iff_nat_lt.2$
@@ -324,7 +324,7 @@ theorem archimedean_iff_rat_lt : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x <
               by 
                 simpa only [Rat.cast_coe_nat] using (@Rat.cast_le α _ _ _).2 (Nat.le_ceil _)⟩⟩
 
-theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ x : α, ∃ q : ℚ, x ≤ q :=
+theorem archimedean_iff_rat_le : Archimedean α ↔ ∀ (x : α), ∃ q : ℚ, x ≤ q :=
   archimedean_iff_rat_lt.trans
     ⟨fun H x => (H x).imp$ fun _ => le_of_ltₓ,
       fun H x =>

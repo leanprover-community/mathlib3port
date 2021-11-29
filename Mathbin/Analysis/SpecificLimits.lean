@@ -28,61 +28,87 @@ theorem summable_of_absolute_convergence_real {f : ℕ → ℝ} :
     exact fun i => norm_nonneg _ 
     simpa only using hr
 
-theorem tendsto_inverse_at_top_nhds_0_nat : tendsto (fun n : ℕ => (n : ℝ)⁻¹) at_top (𝓝 0) :=
-  tendsto_inv_at_top_zero.comp tendsto_coe_nat_at_top_at_top
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_inverse_at_top_nhds_0_nat : tendsto (λ n : exprℕ(), «expr ⁻¹»((n : exprℝ()))) at_top (expr𝓝() 0) :=
+tendsto_inv_at_top_zero.comp tendsto_coe_nat_at_top_at_top
 
-theorem tendsto_const_div_at_top_nhds_0_nat (C : ℝ) : tendsto (fun n : ℕ => C / n) at_top (𝓝 0) :=
-  by 
-    simpa only [mul_zero] using tendsto_const_nhds.mul tendsto_inverse_at_top_nhds_0_nat
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_const_div_at_top_nhds_0_nat
+(C : exprℝ()) : tendsto (λ n : exprℕ(), «expr / »(C, n)) at_top (expr𝓝() 0) :=
+by simpa [] [] ["only"] ["[", expr mul_zero, "]"] [] ["using", expr tendsto_const_nhds.mul tendsto_inverse_at_top_nhds_0_nat]
 
-theorem Nnreal.tendsto_inverse_at_top_nhds_0_nat : tendsto (fun n : ℕ => (n :  ℝ≥0 )⁻¹) at_top (𝓝 0) :=
-  by 
-    rw [←Nnreal.tendsto_coe]
-    convert tendsto_inverse_at_top_nhds_0_nat 
-    simp 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nnreal.tendsto_inverse_at_top_nhds_0_nat : tendsto (λ
+ n : exprℕ(), «expr ⁻¹»((n : «exprℝ≥0»()))) at_top (expr𝓝() 0) :=
+by { rw ["<-", expr nnreal.tendsto_coe] [],
+  convert [] [expr tendsto_inverse_at_top_nhds_0_nat] [],
+  simp [] [] [] [] [] [] }
 
-theorem Nnreal.tendsto_const_div_at_top_nhds_0_nat (C :  ℝ≥0 ) : tendsto (fun n : ℕ => C / n) at_top (𝓝 0) :=
-  by 
-    simpa using tendsto_const_nhds.mul Nnreal.tendsto_inverse_at_top_nhds_0_nat
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nnreal.tendsto_const_div_at_top_nhds_0_nat
+(C : «exprℝ≥0»()) : tendsto (λ n : exprℕ(), «expr / »(C, n)) at_top (expr𝓝() 0) :=
+by simpa [] [] [] [] [] ["using", expr tendsto_const_nhds.mul nnreal.tendsto_inverse_at_top_nhds_0_nat]
 
-theorem tendsto_one_div_add_at_top_nhds_0_nat : tendsto (fun n : ℕ => 1 / (n : ℝ)+1) at_top (𝓝 0) :=
-  suffices tendsto (fun n : ℕ => 1 / («expr↑ » (n+1) : ℝ)) at_top (𝓝 0)by 
-    simpa
-  (tendsto_add_at_top_iff_nat 1).2 (tendsto_const_div_at_top_nhds_0_nat 1)
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_one_div_add_at_top_nhds_0_nat : tendsto (λ
+ n : exprℕ(), «expr / »(1, «expr + »((n : exprℝ()), 1))) at_top (expr𝓝() 0) :=
+suffices tendsto (λ
+ n : exprℕ(), «expr / »(1, («expr↑ »(«expr + »(n, 1)) : exprℝ()))) at_top (expr𝓝() 0), by simpa [] [] [] [] [] [],
+(tendsto_add_at_top_iff_nat 1).2 (tendsto_const_div_at_top_nhds_0_nat 1)
 
 /-! ### Powers -/
 
 
-theorem tendsto_add_one_pow_at_top_at_top_of_pos [LinearOrderedSemiring α] [Archimedean α] {r : α} (h : 0 < r) :
-  tendsto (fun n : ℕ => (r+1) ^ n) at_top at_top :=
-  (tendsto_at_top_at_top_of_monotone' fun n m => pow_le_pow (le_add_of_nonneg_left (le_of_ltₓ h)))$
-    not_bdd_above_iff.2$ fun x => Set.exists_range_iff.2$ add_one_pow_unbounded_of_pos _ h
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_add_one_pow_at_top_at_top_of_pos
+[linear_ordered_semiring α]
+[archimedean α]
+{r : α}
+(h : «expr < »(0, r)) : tendsto (λ n : exprℕ(), «expr ^ »(«expr + »(r, 1), n)) at_top at_top :=
+«expr $ »(tendsto_at_top_at_top_of_monotone' (λ
+  n
+  m, pow_le_pow (le_add_of_nonneg_left (le_of_lt h))), «expr $ »(not_bdd_above_iff.2, λ
+  x, «expr $ »(set.exists_range_iff.2, add_one_pow_unbounded_of_pos _ h)))
 
-theorem tendsto_pow_at_top_at_top_of_one_lt [LinearOrderedRing α] [Archimedean α] {r : α} (h : 1 < r) :
-  tendsto (fun n : ℕ => r ^ n) at_top at_top :=
-  sub_add_cancel r 1 ▸ tendsto_add_one_pow_at_top_at_top_of_pos (sub_pos.2 h)
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_pow_at_top_at_top_of_one_lt
+[linear_ordered_ring α]
+[archimedean α]
+{r : α}
+(h : «expr < »(1, r)) : tendsto (λ n : exprℕ(), «expr ^ »(r, n)) at_top at_top :=
+«expr ▸ »(sub_add_cancel r 1, tendsto_add_one_pow_at_top_at_top_of_pos (sub_pos.2 h))
 
-theorem Nat.tendsto_pow_at_top_at_top_of_one_lt {m : ℕ} (h : 1 < m) : tendsto (fun n : ℕ => m ^ n) at_top at_top :=
-  tsub_add_cancel_of_le (le_of_ltₓ h) ▸ tendsto_add_one_pow_at_top_at_top_of_pos (tsub_pos_of_lt h)
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nat.tendsto_pow_at_top_at_top_of_one_lt
+{m : exprℕ()}
+(h : «expr < »(1, m)) : tendsto (λ n : exprℕ(), «expr ^ »(m, n)) at_top at_top :=
+«expr ▸ »(tsub_add_cancel_of_le (le_of_lt h), tendsto_add_one_pow_at_top_at_top_of_pos (tsub_pos_of_lt h))
 
 theorem tendsto_norm_zero' {𝕜 : Type _} [NormedGroup 𝕜] : tendsto (norm : 𝕜 → ℝ) (𝓝[«expr ᶜ» {0}] 0) (𝓝[Set.Ioi 0] 0) :=
   tendsto_norm_zero.inf$ tendsto_principal_principal.2$ fun x hx => norm_pos_iff.2 hx
 
 namespace NormedField
 
-theorem tendsto_norm_inverse_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜] :
-  tendsto (fun x : 𝕜 => ∥x⁻¹∥) (𝓝[«expr ᶜ» {0}] 0) at_top :=
-  (tendsto_inv_zero_at_top.comp tendsto_norm_zero').congr$ fun x => (NormedField.norm_inv x).symm
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_norm_inverse_nhds_within_0_at_top
+{𝕜 : Type*}
+[normed_field 𝕜] : tendsto (λ x : 𝕜, «expr∥ ∥»(«expr ⁻¹»(x))) «expr𝓝[ ] »(«expr ᶜ»({0}), 0) at_top :=
+«expr $ »((tendsto_inv_zero_at_top.comp tendsto_norm_zero').congr, λ x, (normed_field.norm_inv x).symm)
 
-theorem tendsto_norm_zpow_nhds_within_0_at_top {𝕜 : Type _} [NormedField 𝕜] {m : ℤ} (hm : m < 0) :
-  tendsto (fun x : 𝕜 => ∥x ^ m∥) (𝓝[«expr ᶜ» {0}] 0) at_top :=
-  by 
-    rcases neg_surjective m with ⟨m, rfl⟩
-    rw [neg_lt_zero] at hm 
-    lift m to ℕ using hm.le 
-    rw [Int.coe_nat_pos] at hm 
-    simp only [NormedField.norm_pow, zpow_neg₀, zpow_coe_nat, ←inv_pow₀]
-    exact (tendsto_pow_at_top hm).comp NormedField.tendsto_norm_inverse_nhds_within_0_at_top
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_norm_zpow_nhds_within_0_at_top
+{𝕜 : Type*}
+[normed_field 𝕜]
+{m : exprℤ()}
+(hm : «expr < »(m, 0)) : tendsto (λ x : 𝕜, «expr∥ ∥»(«expr ^ »(x, m))) «expr𝓝[ ] »(«expr ᶜ»({0}), 0) at_top :=
+begin
+  rcases [expr neg_surjective m, "with", "⟨", ident m, ",", ident rfl, "⟩"],
+  rw [expr neg_lt_zero] ["at", ident hm],
+  lift [expr m] ["to", expr exprℕ()] ["using", expr hm.le] [],
+  rw [expr int.coe_nat_pos] ["at", ident hm],
+  simp [] [] ["only"] ["[", expr normed_field.norm_pow, ",", expr zpow_neg₀, ",", expr zpow_coe_nat, ",", "<-", expr inv_pow₀, "]"] [] [],
+  exact [expr (tendsto_pow_at_top hm).comp normed_field.tendsto_norm_inverse_nhds_within_0_at_top]
+end
 
 @[simp]
 theorem continuous_at_zpow {𝕜 : Type _} [NondiscreteNormedField 𝕜] {m : ℤ} {x : 𝕜} :
@@ -102,43 +128,59 @@ theorem continuous_at_inv {𝕜 : Type _} [NondiscreteNormedField 𝕜] {x : �
 
 end NormedField
 
-theorem tendsto_pow_at_top_nhds_0_of_lt_1 {𝕜 : Type _} [LinearOrderedField 𝕜] [Archimedean 𝕜] [TopologicalSpace 𝕜]
-  [OrderTopology 𝕜] {r : 𝕜} (h₁ : 0 ≤ r) (h₂ : r < 1) : tendsto (fun n : ℕ => r ^ n) at_top (𝓝 0) :=
-  h₁.eq_or_lt.elim
-    (fun this : 0 = r =>
-      (tendsto_add_at_top_iff_nat 1).mp$
-        by 
-          simp [pow_succₓ, ←this, tendsto_const_nhds])
-    fun this : 0 < r =>
-      have  : tendsto (fun n => (r⁻¹ ^ n)⁻¹) at_top (𝓝 0) :=
-        tendsto_inv_at_top_zero.comp (tendsto_pow_at_top_at_top_of_one_lt$ one_lt_inv this h₂)
-      this.congr
-        fun n =>
-          by 
-            simp 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_pow_at_top_nhds_0_of_lt_1
+{𝕜 : Type*}
+[linear_ordered_field 𝕜]
+[archimedean 𝕜]
+[topological_space 𝕜]
+[order_topology 𝕜]
+{r : 𝕜}
+(h₁ : «expr ≤ »(0, r))
+(h₂ : «expr < »(r, 1)) : tendsto (λ n : exprℕ(), «expr ^ »(r, n)) at_top (expr𝓝() 0) :=
+h₁.eq_or_lt.elim (assume: «expr = »(0, r), «expr $ »((tendsto_add_at_top_iff_nat 1).mp, by simp [] [] [] ["[", expr pow_succ, ",", "<-", expr this, ",", expr tendsto_const_nhds, "]"] [] [])) (assume: «expr < »(0, r), have tendsto (λ
+  n, «expr ⁻¹»(«expr ^ »(«expr ⁻¹»(r), n))) at_top (expr𝓝() 0), from tendsto_inv_at_top_zero.comp «expr $ »(tendsto_pow_at_top_at_top_of_one_lt, one_lt_inv this h₂),
+ this.congr (λ n, by simp [] [] [] [] [] []))
 
-theorem tendsto_pow_at_top_nhds_within_0_of_lt_1 {𝕜 : Type _} [LinearOrderedField 𝕜] [Archimedean 𝕜]
-  [TopologicalSpace 𝕜] [OrderTopology 𝕜] {r : 𝕜} (h₁ : 0 < r) (h₂ : r < 1) :
-  tendsto (fun n : ℕ => r ^ n) at_top (𝓝[Ioi 0] 0) :=
-  tendsto_inf.2
-    ⟨tendsto_pow_at_top_nhds_0_of_lt_1 h₁.le h₂, tendsto_principal.2$ eventually_of_forall$ fun n => pow_pos h₁ _⟩
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_pow_at_top_nhds_within_0_of_lt_1
+{𝕜 : Type*}
+[linear_ordered_field 𝕜]
+[archimedean 𝕜]
+[topological_space 𝕜]
+[order_topology 𝕜]
+{r : 𝕜}
+(h₁ : «expr < »(0, r))
+(h₂ : «expr < »(r, 1)) : tendsto (λ n : exprℕ(), «expr ^ »(r, n)) at_top «expr𝓝[ ] »(Ioi 0, 0) :=
+tendsto_inf.2 ⟨tendsto_pow_at_top_nhds_0_of_lt_1 h₁.le h₂, «expr $ »(tendsto_principal.2, «expr $ »(eventually_of_forall, λ
+   n, pow_pos h₁ _))⟩
 
-theorem is_o_pow_pow_of_lt_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ < r₂) :
-  is_o (fun n : ℕ => r₁ ^ n) (fun n => r₂ ^ n) at_top :=
-  have H : 0 < r₂ := h₁.trans_lt h₂
-  (is_o_of_tendsto fun n hn => False.elim$ H.ne'$ pow_eq_zero hn)$
-    (tendsto_pow_at_top_nhds_0_of_lt_1 (div_nonneg h₁ (h₁.trans h₂.le)) ((div_lt_one H).2 h₂)).congr
-      fun n => div_pow _ _ _
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_o_pow_pow_of_lt_left
+{r₁ r₂ : exprℝ()}
+(h₁ : «expr ≤ »(0, r₁))
+(h₂ : «expr < »(r₁, r₂)) : is_o (λ n : exprℕ(), «expr ^ »(r₁, n)) (λ n, «expr ^ »(r₂, n)) at_top :=
+have H : «expr < »(0, r₂) := h₁.trans_lt h₂,
+«expr $ »(is_o_of_tendsto (λ
+  n
+  hn, «expr $ »(false.elim, «expr $ »(H.ne', pow_eq_zero hn))), (tendsto_pow_at_top_nhds_0_of_lt_1 (div_nonneg h₁ (h₁.trans h₂.le)) ((div_lt_one H).2 h₂)).congr (λ
+  n, div_pow _ _ _))
 
-theorem is_O_pow_pow_of_le_left {r₁ r₂ : ℝ} (h₁ : 0 ≤ r₁) (h₂ : r₁ ≤ r₂) :
-  is_O (fun n : ℕ => r₁ ^ n) (fun n => r₂ ^ n) at_top :=
-  h₂.eq_or_lt.elim (fun h => h ▸ is_O_refl _ _) fun h => (is_o_pow_pow_of_lt_left h₁ h).IsO
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_O_pow_pow_of_le_left
+{r₁ r₂ : exprℝ()}
+(h₁ : «expr ≤ »(0, r₁))
+(h₂ : «expr ≤ »(r₁, r₂)) : is_O (λ n : exprℕ(), «expr ^ »(r₁, n)) (λ n, «expr ^ »(r₂, n)) at_top :=
+h₂.eq_or_lt.elim (λ h, «expr ▸ »(h, is_O_refl _ _)) (λ h, (is_o_pow_pow_of_lt_left h₁ h).is_O)
 
-theorem is_o_pow_pow_of_abs_lt_left {r₁ r₂ : ℝ} (h : |r₁| < |r₂|) :
-  is_o (fun n : ℕ => r₁ ^ n) (fun n => r₂ ^ n) at_top :=
-  by 
-    refine' (is_o.of_norm_left _).of_norm_right 
-    exact (is_o_pow_pow_of_lt_left (abs_nonneg r₁) h).congr (pow_abs r₁) (pow_abs r₂)
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_o_pow_pow_of_abs_lt_left
+{r₁ r₂ : exprℝ()}
+(h : «expr < »(«expr| |»(r₁), «expr| |»(r₂))) : is_o (λ n : exprℕ(), «expr ^ »(r₁, n)) (λ n, «expr ^ »(r₂, n)) at_top :=
+begin
+  refine [expr (is_o.of_norm_left _).of_norm_right],
+  exact [expr (is_o_pow_pow_of_lt_left (abs_nonneg r₁) h).congr (pow_abs r₁) (pow_abs r₂)]
+end
 
 -- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Various statements equivalent to the fact that `f n` grows exponentially slower than `R ^ n`.
@@ -212,12 +254,18 @@ begin
   tfae_finish
 end
 
-theorem uniformity_basis_dist_pow_of_lt_1 {α : Type _} [PseudoMetricSpace α] {r : ℝ} (h₀ : 0 < r) (h₁ : r < 1) :
-  (𝓤 α).HasBasis (fun k : ℕ => True) fun k => { p:α × α | dist p.1 p.2 < r ^ k } :=
-  (Metric.mk_uniformity_basis fun i _ => pow_pos h₀ _)$
-    fun ε ε0 => (exists_pow_lt_of_lt_one ε0 h₁).imp$ fun k hk => ⟨trivialₓ, hk.le⟩
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_basis_dist_pow_of_lt_1
+{α : Type*}
+[pseudo_metric_space α]
+{r : exprℝ()}
+(h₀ : «expr < »(0, r))
+(h₁ : «expr < »(r, 1)) : (expr𝓤() α).has_basis (λ
+ k : exprℕ(), true) (λ k, {p : «expr × »(α, α) | «expr < »(dist p.1 p.2, «expr ^ »(r, k))}) :=
+«expr $ »(metric.mk_uniformity_basis (λ
+  i _, pow_pos h₀ _), λ ε ε0, «expr $ »((exists_pow_lt_of_lt_one ε0 h₁).imp, λ k hk, ⟨trivial, hk.le⟩))
 
-theorem geom_lt {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n) (h : ∀ k _ : k < n, (c*u k) < u (k+1)) :
+theorem geom_lt {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n) (h : ∀ k (_ : k < n), (c*u k) < u (k+1)) :
   ((c ^ n)*u 0) < u n :=
   by 
     refine' (monotone_mul_left_of_nonneg hc).seq_pos_lt_seq_of_le_of_lt hn _ _ h
@@ -226,11 +274,12 @@ theorem geom_lt {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n
     ·
       simp [pow_succₓ, mul_assocₓ, le_reflₓ]
 
-theorem geom_le {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀ k _ : k < n, (c*u k) ≤ u (k+1)) : ((c ^ n)*u 0) ≤ u n :=
+theorem geom_le {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀ k (_ : k < n), (c*u k) ≤ u (k+1)) :
+  ((c ^ n)*u 0) ≤ u n :=
   by 
     refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ _ h <;> simp [pow_succₓ, mul_assocₓ, le_reflₓ]
 
-theorem lt_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n) (h : ∀ k _ : k < n, u (k+1) < c*u k) :
+theorem lt_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n) (h : ∀ k (_ : k < n), u (k+1) < c*u k) :
   u n < (c ^ n)*u 0 :=
   by 
     refine' (monotone_mul_left_of_nonneg hc).seq_pos_lt_seq_of_lt_of_le hn _ h _
@@ -239,11 +288,11 @@ theorem lt_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) {n : ℕ} (hn : 0 < n
     ·
       simp [pow_succₓ, mul_assocₓ, le_reflₓ]
 
-theorem le_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀ k _ : k < n, u (k+1) ≤ c*u k) : u n ≤ (c ^ n)*u 0 :=
+theorem le_geom {u : ℕ → ℝ} {c : ℝ} (hc : 0 ≤ c) (n : ℕ) (h : ∀ k (_ : k < n), u (k+1) ≤ c*u k) : u n ≤ (c ^ n)*u 0 :=
   by 
     refine' (monotone_mul_left_of_nonneg hc).seq_le_seq n _ h _ <;> simp [pow_succₓ, mul_assocₓ, le_reflₓ]
 
--- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- For any natural `k` and a real `r > 1` we have `n ^ k = o(r ^ n)` as `n → ∞`. -/
 theorem is_o_pow_const_const_pow_of_one_lt
 {R : Type*}
@@ -325,54 +374,74 @@ theorem tendsto_at_top_of_geom_le {v : ℕ → ℝ} {c : ℝ} (h₀ : 0 < v 0) (
   (tendsto_at_top_mono fun n => geom_le (zero_le_one.trans hc.le) n fun k hk => hu k)$
     (tendsto_pow_at_top_at_top_of_one_lt hc).at_top_mul_const h₀
 
-theorem Nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 {r :  ℝ≥0 } (hr : r < 1) : tendsto (fun n : ℕ => r ^ n) at_top (𝓝 0) :=
-  Nnreal.tendsto_coe.1$
-    by 
-      simp only [Nnreal.coe_pow, Nnreal.coe_zero, tendsto_pow_at_top_nhds_0_of_lt_1 r.coe_nonneg hr]
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nnreal.tendsto_pow_at_top_nhds_0_of_lt_1
+{r : «exprℝ≥0»()}
+(hr : «expr < »(r, 1)) : tendsto (λ n : exprℕ(), «expr ^ »(r, n)) at_top (expr𝓝() 0) :=
+«expr $ »(nnreal.tendsto_coe.1, by simp [] [] ["only"] ["[", expr nnreal.coe_pow, ",", expr nnreal.coe_zero, ",", expr tendsto_pow_at_top_nhds_0_of_lt_1 r.coe_nonneg hr, "]"] [] [])
 
-theorem Ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 {r : ℝ≥0∞} (hr : r < 1) : tendsto (fun n : ℕ => r ^ n) at_top (𝓝 0) :=
-  by 
-    rcases Ennreal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
-    rw [←Ennreal.coe_zero]
-    normCast  at *
-    apply Nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 hr
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ennreal.tendsto_pow_at_top_nhds_0_of_lt_1
+{r : «exprℝ≥0∞»()}
+(hr : «expr < »(r, 1)) : tendsto (λ n : exprℕ(), «expr ^ »(r, n)) at_top (expr𝓝() 0) :=
+begin
+  rcases [expr ennreal.lt_iff_exists_coe.1 hr, "with", "⟨", ident r, ",", ident rfl, ",", ident hr', "⟩"],
+  rw ["[", "<-", expr ennreal.coe_zero, "]"] [],
+  norm_cast ["at", "*"],
+  apply [expr nnreal.tendsto_pow_at_top_nhds_0_of_lt_1 hr]
+end
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In a normed ring, the powers of an element x with `∥x∥ < 1` tend to zero. -/
-theorem tendsto_pow_at_top_nhds_0_of_norm_lt_1 {R : Type _} [NormedRing R] {x : R} (h : ∥x∥ < 1) :
-  tendsto (fun n : ℕ => x ^ n) at_top (𝓝 0) :=
-  by 
-    apply squeeze_zero_norm' (eventually_norm_pow_le x)
-    exact tendsto_pow_at_top_nhds_0_of_lt_1 (norm_nonneg _) h
+theorem tendsto_pow_at_top_nhds_0_of_norm_lt_1
+{R : Type*}
+[normed_ring R]
+{x : R}
+(h : «expr < »(«expr∥ ∥»(x), 1)) : tendsto (λ n : exprℕ(), «expr ^ »(x, n)) at_top (expr𝓝() 0) :=
+begin
+  apply [expr squeeze_zero_norm' (eventually_norm_pow_le x)],
+  exact [expr tendsto_pow_at_top_nhds_0_of_lt_1 (norm_nonneg _) h]
+end
 
-theorem tendsto_pow_at_top_nhds_0_of_abs_lt_1 {r : ℝ} (h : |r| < 1) : tendsto (fun n : ℕ => r ^ n) at_top (𝓝 0) :=
-  tendsto_pow_at_top_nhds_0_of_norm_lt_1 h
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_pow_at_top_nhds_0_of_abs_lt_1
+{r : exprℝ()}
+(h : «expr < »(«expr| |»(r), 1)) : tendsto (λ n : exprℕ(), «expr ^ »(r, n)) at_top (expr𝓝() 0) :=
+tendsto_pow_at_top_nhds_0_of_norm_lt_1 h
 
 /-! ### Geometric series-/
 
 
 section Geometric
 
-theorem has_sum_geometric_of_lt_1 {r : ℝ} (h₁ : 0 ≤ r) (h₂ : r < 1) : HasSum (fun n : ℕ => r ^ n) ((1 - r)⁻¹) :=
-  have  : r ≠ 1 := ne_of_ltₓ h₂ 
-  have  : tendsto (fun n => (r ^ n - 1)*(r - 1)⁻¹) at_top (𝓝 ((0 - 1)*(r - 1)⁻¹)) :=
-    ((tendsto_pow_at_top_nhds_0_of_lt_1 h₁ h₂).sub tendsto_const_nhds).mul tendsto_const_nhds 
-  have  : (fun n => ∑i in range n, r ^ i) = fun n => geomSum r n := rfl
-  (has_sum_iff_tendsto_nat_of_nonneg (pow_nonneg h₁) _).mpr$
-    by 
-      simp_all [neg_inv, geom_sum_eq, div_eq_mul_inv]
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_sum_geometric_of_lt_1
+{r : exprℝ()}
+(h₁ : «expr ≤ »(0, r))
+(h₂ : «expr < »(r, 1)) : has_sum (λ n : exprℕ(), «expr ^ »(r, n)) «expr ⁻¹»(«expr - »(1, r)) :=
+have «expr ≠ »(r, 1), from ne_of_lt h₂,
+have tendsto (λ
+ n, «expr * »(«expr - »(«expr ^ »(r, n), 1), «expr ⁻¹»(«expr - »(r, 1)))) at_top (expr𝓝() «expr * »(«expr - »(0, 1), «expr ⁻¹»(«expr - »(r, 1)))), from ((tendsto_pow_at_top_nhds_0_of_lt_1 h₁ h₂).sub tendsto_const_nhds).mul tendsto_const_nhds,
+have «expr = »(λ n, «expr∑ in , »((i), range n, «expr ^ »(r, i)), λ n, geom_sum r n) := rfl,
+«expr $ »((has_sum_iff_tendsto_nat_of_nonneg (pow_nonneg h₁) _).mpr, by simp [] [] [] ["[", expr neg_inv, ",", expr geom_sum_eq, ",", expr div_eq_mul_inv, ",", "*", "]"] [] ["at", "*"])
 
-theorem summable_geometric_of_lt_1 {r : ℝ} (h₁ : 0 ≤ r) (h₂ : r < 1) : Summable fun n : ℕ => r ^ n :=
-  ⟨_, has_sum_geometric_of_lt_1 h₁ h₂⟩
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_geometric_of_lt_1
+{r : exprℝ()}
+(h₁ : «expr ≤ »(0, r))
+(h₂ : «expr < »(r, 1)) : summable (λ n : exprℕ(), «expr ^ »(r, n)) :=
+⟨_, has_sum_geometric_of_lt_1 h₁ h₂⟩
 
 theorem tsum_geometric_of_lt_1 {r : ℝ} (h₁ : 0 ≤ r) (h₂ : r < 1) : (∑'n : ℕ, r ^ n) = (1 - r)⁻¹ :=
   (has_sum_geometric_of_lt_1 h₁ h₂).tsum_eq
 
-theorem has_sum_geometric_two : HasSum (fun n : ℕ => ((1 : ℝ) / 2) ^ n) 2 :=
-  by 
-    convert has_sum_geometric_of_lt_1 _ _ <;> normNum
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_sum_geometric_two : has_sum (λ n : exprℕ(), «expr ^ »(«expr / »((1 : exprℝ()), 2), n)) 2 :=
+by convert [] [expr has_sum_geometric_of_lt_1 _ _] []; norm_num [] []
 
-theorem summable_geometric_two : Summable fun n : ℕ => ((1 : ℝ) / 2) ^ n :=
-  ⟨_, has_sum_geometric_two⟩
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_geometric_two : summable (λ n : exprℕ(), «expr ^ »(«expr / »((1 : exprℝ()), 2), n)) :=
+⟨_, has_sum_geometric_two⟩
 
 theorem tsum_geometric_two : (∑'n : ℕ, ((1 : ℝ) / 2) ^ n) = 2 :=
   has_sum_geometric_two.tsum_eq
@@ -389,32 +458,40 @@ begin
   exact [expr tsum_geometric_two.symm]
 end
 
-theorem has_sum_geometric_two' (a : ℝ) : HasSum (fun n : ℕ => a / 2 / 2 ^ n) a :=
-  by 
-    convert HasSum.mul_left (a / 2) (has_sum_geometric_of_lt_1 (le_of_ltₓ one_half_pos) one_half_lt_one)
-    ·
-      funext n 
-      simp 
-      rfl
-    ·
-      normNum
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_sum_geometric_two' (a : exprℝ()) : has_sum (λ n : exprℕ(), «expr / »(«expr / »(a, 2), «expr ^ »(2, n))) a :=
+begin
+  convert [] [expr has_sum.mul_left «expr / »(a, 2) (has_sum_geometric_of_lt_1 (le_of_lt one_half_pos) one_half_lt_one)] [],
+  { funext [ident n],
+    simp [] [] [] [] [] [],
+    refl },
+  { norm_num [] [] }
+end
 
-theorem summable_geometric_two' (a : ℝ) : Summable fun n : ℕ => a / 2 / 2 ^ n :=
-  ⟨a, has_sum_geometric_two' a⟩
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_geometric_two' (a : exprℝ()) : summable (λ n : exprℕ(), «expr / »(«expr / »(a, 2), «expr ^ »(2, n))) :=
+⟨a, has_sum_geometric_two' a⟩
 
 theorem tsum_geometric_two' (a : ℝ) : (∑'n : ℕ, a / 2 / 2 ^ n) = a :=
   (has_sum_geometric_two' a).tsum_eq
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- **Sum of a Geometric Series** -/
-theorem Nnreal.has_sum_geometric {r :  ℝ≥0 } (hr : r < 1) : HasSum (fun n : ℕ => r ^ n) ((1 - r)⁻¹) :=
-  by 
-    apply Nnreal.has_sum_coe.1
-    pushCast 
-    rw [Nnreal.coe_sub (le_of_ltₓ hr)]
-    exact has_sum_geometric_of_lt_1 r.coe_nonneg hr
+theorem nnreal.has_sum_geometric
+{r : «exprℝ≥0»()}
+(hr : «expr < »(r, 1)) : has_sum (λ n : exprℕ(), «expr ^ »(r, n)) «expr ⁻¹»(«expr - »(1, r)) :=
+begin
+  apply [expr nnreal.has_sum_coe.1],
+  push_cast [] [],
+  rw ["[", expr nnreal.coe_sub (le_of_lt hr), "]"] [],
+  exact [expr has_sum_geometric_of_lt_1 r.coe_nonneg hr]
+end
 
-theorem Nnreal.summable_geometric {r :  ℝ≥0 } (hr : r < 1) : Summable fun n : ℕ => r ^ n :=
-  ⟨_, Nnreal.has_sum_geometric hr⟩
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nnreal.summable_geometric
+{r : «exprℝ≥0»()}
+(hr : «expr < »(r, 1)) : summable (λ n : exprℕ(), «expr ^ »(r, n)) :=
+⟨_, nnreal.has_sum_geometric hr⟩
 
 theorem tsum_geometric_nnreal {r :  ℝ≥0 } (hr : r < 1) : (∑'n : ℕ, r ^ n) = (1 - r)⁻¹ :=
   (Nnreal.has_sum_geometric hr).tsum_eq
@@ -457,44 +534,58 @@ begin
   { simp [] [] [] ["[", expr normed_field.norm_pow, ",", expr summable_geometric_of_lt_1 (norm_nonneg _) h, "]"] [] [] }
 end
 
-theorem summable_geometric_of_norm_lt_1 (h : ∥ξ∥ < 1) : Summable fun n : ℕ => ξ ^ n :=
-  ⟨_, has_sum_geometric_of_norm_lt_1 h⟩
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_geometric_of_norm_lt_1 (h : «expr < »(«expr∥ ∥»(ξ), 1)) : summable (λ n : exprℕ(), «expr ^ »(ξ, n)) :=
+⟨_, has_sum_geometric_of_norm_lt_1 h⟩
 
 theorem tsum_geometric_of_norm_lt_1 (h : ∥ξ∥ < 1) : (∑'n : ℕ, ξ ^ n) = (1 - ξ)⁻¹ :=
   (has_sum_geometric_of_norm_lt_1 h).tsum_eq
 
-theorem has_sum_geometric_of_abs_lt_1 {r : ℝ} (h : |r| < 1) : HasSum (fun n : ℕ => r ^ n) ((1 - r)⁻¹) :=
-  has_sum_geometric_of_norm_lt_1 h
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_sum_geometric_of_abs_lt_1
+{r : exprℝ()}
+(h : «expr < »(«expr| |»(r), 1)) : has_sum (λ n : exprℕ(), «expr ^ »(r, n)) «expr ⁻¹»(«expr - »(1, r)) :=
+has_sum_geometric_of_norm_lt_1 h
 
-theorem summable_geometric_of_abs_lt_1 {r : ℝ} (h : |r| < 1) : Summable fun n : ℕ => r ^ n :=
-  summable_geometric_of_norm_lt_1 h
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_geometric_of_abs_lt_1
+{r : exprℝ()}
+(h : «expr < »(«expr| |»(r), 1)) : summable (λ n : exprℕ(), «expr ^ »(r, n)) :=
+summable_geometric_of_norm_lt_1 h
 
 theorem tsum_geometric_of_abs_lt_1 {r : ℝ} (h : |r| < 1) : (∑'n : ℕ, r ^ n) = (1 - r)⁻¹ :=
   tsum_geometric_of_norm_lt_1 h
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A geometric series in a normed field is summable iff the norm of the common ratio is less than
 one. -/
 @[simp]
-theorem summable_geometric_iff_norm_lt_1 : (Summable fun n : ℕ => ξ ^ n) ↔ ∥ξ∥ < 1 :=
-  by 
-    refine' ⟨fun h => _, summable_geometric_of_norm_lt_1⟩
-    obtain ⟨k : ℕ, hk : dist (ξ ^ k) 0 < 1⟩ :=
-      (h.tendsto_cofinite_zero.eventually (ball_mem_nhds _ zero_lt_one)).exists 
-    simp only [NormedField.norm_pow, dist_zero_right] at hk 
-    rw [←one_pow k] at hk 
-    exact lt_of_pow_lt_pow _ zero_le_one hk
+theorem summable_geometric_iff_norm_lt_1 : «expr ↔ »(summable (λ
+  n : exprℕ(), «expr ^ »(ξ, n)), «expr < »(«expr∥ ∥»(ξ), 1)) :=
+begin
+  refine [expr ⟨λ h, _, summable_geometric_of_norm_lt_1⟩],
+  obtain ["⟨", ident k, ":", expr exprℕ(), ",", ident hk, ":", expr «expr < »(dist «expr ^ »(ξ, k) 0, 1), "⟩", ":=", expr (h.tendsto_cofinite_zero.eventually (ball_mem_nhds _ zero_lt_one)).exists],
+  simp [] [] ["only"] ["[", expr normed_field.norm_pow, ",", expr dist_zero_right, "]"] [] ["at", ident hk],
+  rw ["[", "<-", expr one_pow k, "]"] ["at", ident hk],
+  exact [expr lt_of_pow_lt_pow _ zero_le_one hk]
+end
 
 end Geometric
 
 section MulGeometric
 
-theorem summable_norm_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R] (k : ℕ) {r : R} (hr : ∥r∥ < 1) :
-  Summable fun n : ℕ => ∥((n ^ k)*r ^ n : R)∥ :=
-  by 
-    rcases exists_between hr with ⟨r', hrr', h⟩
-    exact
-      summable_of_is_O_nat (summable_geometric_of_lt_1 ((norm_nonneg _).trans hrr'.le) h)
-        (is_o_pow_const_mul_const_pow_const_pow_of_norm_lt _ hrr').IsO.norm_left
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_norm_pow_mul_geometric_of_norm_lt_1
+{R : Type*}
+[normed_ring R]
+(k : exprℕ())
+{r : R}
+(hr : «expr < »(«expr∥ ∥»(r), 1)) : summable (λ
+ n : exprℕ(), «expr∥ ∥»((«expr * »(«expr ^ »(n, k), «expr ^ »(r, n)) : R))) :=
+begin
+  rcases [expr exists_between hr, "with", "⟨", ident r', ",", ident hrr', ",", ident h, "⟩"],
+  exact [expr summable_of_is_O_nat (summable_geometric_of_lt_1 ((norm_nonneg _).trans hrr'.le) h) (is_o_pow_const_mul_const_pow_const_pow_of_norm_lt _ hrr').is_O.norm_left]
+end
 
 theorem summable_pow_mul_geometric_of_norm_lt_1 {R : Type _} [NormedRing R] [CompleteSpace R] (k : ℕ) {r : R}
   (hr : ∥r∥ < 1) : Summable (fun n => (n ^ k)*r ^ n : ℕ → R) :=
@@ -622,14 +713,16 @@ variable[PseudoMetricSpace α]{r C : ℝ}(hr : r < 1){f : ℕ → α}(hu : ∀ n
 
 include hr hu
 
-theorem aux_has_sum_of_le_geometric : HasSum (fun n : ℕ => C*r ^ n) (C / (1 - r)) :=
-  by 
-    rcases sign_cases_of_C_mul_pow_nonneg fun n => dist_nonneg.trans (hu n) with (rfl | ⟨C₀, r₀⟩)
-    ·
-      simp [has_sum_zero]
-    ·
-      refine' HasSum.mul_left C _ 
-      simpa using has_sum_geometric_of_lt_1 r₀ hr
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem aux_has_sum_of_le_geometric : has_sum (λ
+ n : exprℕ(), «expr * »(C, «expr ^ »(r, n))) «expr / »(C, «expr - »(1, r)) :=
+begin
+  rcases [expr sign_cases_of_C_mul_pow_nonneg (λ
+    n, dist_nonneg.trans (hu n)), "with", ident rfl, "|", "⟨", ident C₀, ",", ident r₀, "⟩"],
+  { simp [] [] [] ["[", expr has_sum_zero, "]"] [] [] },
+  { refine [expr has_sum.mul_left C _],
+    simpa [] [] [] [] [] ["using", expr has_sum_geometric_of_lt_1 r₀ hr] }
+end
 
 variable(r C)
 
@@ -702,12 +795,15 @@ theorem dist_partial_sum_le_of_le_geometric (hf : ∀ n, ∥f n∥ ≤ C*r ^ n) 
     rw [sum_range_succ, dist_eq_norm, ←norm_neg, neg_sub, add_sub_cancel']
     exact hf n
 
+-- error in Analysis.SpecificLimits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `∥f n∥ ≤ C * r ^ n` for all `n : ℕ` and some `r < 1`, then the partial sums of `f` form a
 Cauchy sequence. This lemma does not assume `0 ≤ r` or `0 ≤ C`. -/
-theorem cauchy_seq_finset_of_geometric_bound (hr : r < 1) (hf : ∀ n, ∥f n∥ ≤ C*r ^ n) :
-  CauchySeq fun s : Finset ℕ => ∑x in s, f x :=
-  cauchy_seq_finset_of_norm_bounded _ (aux_has_sum_of_le_geometric hr (dist_partial_sum_le_of_le_geometric hf)).Summable
-    hf
+theorem cauchy_seq_finset_of_geometric_bound
+(hr : «expr < »(r, 1))
+(hf : ∀
+ n, «expr ≤ »(«expr∥ ∥»(f n), «expr * »(C, «expr ^ »(r, n)))) : cauchy_seq (λ
+ s : finset exprℕ(), «expr∑ in , »((x), s, f x)) :=
+cauchy_seq_finset_of_norm_bounded _ (aux_has_sum_of_le_geometric hr (dist_partial_sum_le_of_le_geometric hf)).summable hf
 
 /-- If `∥f n∥ ≤ C * r ^ n` for all `n : ℕ` and some `r < 1`, then the partial sums of `f` are within
 distance `C * r ^ n / (1 - r)` of the sum of the series. This lemma does not assume `0 ≤ r` or
@@ -999,7 +1095,7 @@ begin
 end
 
 theorem Set.Countable.exists_pos_forall_sum_le {ι : Type _} {s : Set ι} (hs : s.countable) {ε : ℝ} (hε : 0 < ε) :
-  ∃ ε' : ι → ℝ, (∀ i, 0 < ε' i) ∧ ∀ t : Finset ι, «expr↑ » t ⊆ s → (∑i in t, ε' i) ≤ ε :=
+  ∃ ε' : ι → ℝ, (∀ i, 0 < ε' i) ∧ ∀ (t : Finset ι), «expr↑ » t ⊆ s → (∑i in t, ε' i) ≤ ε :=
   by 
     rcases hs.exists_pos_has_sum_le hε with ⟨ε', hpos, c, hε'c, hcε⟩
     refine' ⟨ε', hpos, fun t ht => _⟩

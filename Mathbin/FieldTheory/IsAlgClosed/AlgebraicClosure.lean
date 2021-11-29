@@ -48,18 +48,16 @@ indeterminate. -/
 def span_eval : Ideal (MvPolynomial (monic_irreducible k) k) :=
   Ideal.span$ Set.Range$ eval_X_self k
 
+-- error in FieldTheory.IsAlgClosed.AlgebraicClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a finset of monic irreducible polynomials, construct an algebra homomorphism to the
 splitting field of the product of the polynomials sending each indeterminate `x_f` represented by
 the polynomial `f` in the finset to a root of `f`. -/
-def to_splitting_field (s : Finset (monic_irreducible k)) :
-  MvPolynomial (monic_irreducible k) k →ₐ[k] splitting_field (∏x in s, x : Polynomial k) :=
-  MvPolynomial.aeval$
-    fun f =>
-      if hf : f ∈ s then
-        root_of_splits _
-          ((splits_prod_iff _$ fun j : monic_irreducible k _ => j.2.2.ne_zero).1 (splitting_field.splits _) f hf)
-          (mt is_unit_iff_degree_eq_zero.2 f.2.2.not_unit)
-      else 37
+def to_splitting_field
+(s : finset (monic_irreducible k)) : «expr →ₐ[ ] »(mv_polynomial (monic_irreducible k) k, k, splitting_field («expr∏ in , »((x), s, x) : polynomial k)) :=
+«expr $ »(mv_polynomial.aeval, λ
+ f, if hf : «expr ∈ »(f, s) then root_of_splits _ («expr $ »(splits_prod_iff _, λ
+   (j : monic_irreducible k)
+   (_), j.2.2.ne_zero).1 (splitting_field.splits _) f hf) (mt is_unit_iff_degree_eq_zero.2 f.2.2.not_unit) else 37)
 
 theorem to_splitting_field_eval_X_self {s : Finset (monic_irreducible k)} {f} (hf : f ∈ s) :
   to_splitting_field k s (eval_X_self k f) = 0 :=
@@ -198,7 +196,7 @@ instance step.scalar_tower n : IsScalarTower k (step k n) (step k (n+1)) :=
   IsScalarTower.of_algebra_map_eq$
     fun z => @Nat.le_rec_on_succ (step k) 0 n n.zero_le (n+1).zero_le (fun n => to_step_succ k n) z
 
-theorem step.is_integral n : ∀ z : step k n, IsIntegral k z :=
+theorem step.is_integral n : ∀ (z : step k n), IsIntegral k z :=
   (Nat.recOn n fun z => is_integral_algebra_map)$
     fun n ih z => is_integral_trans ih _ (adjoin_monic.is_integral (step k n) z : _)
 

@@ -17,7 +17,7 @@ tfae: The Following (propositions) Are Equivalent.
 The `tfae_have` and `tfae_finish` tactics can be useful in proofs with `tfae` goals.
 -/
 def tfae (l : List Prop) : Prop :=
-  ∀ x _ : x ∈ l, ∀ y _ : y ∈ l, x ↔ y
+  ∀ x (_ : x ∈ l), ∀ y (_ : y ∈ l), x ↔ y
 
 theorem tfae_nil : tfae [] :=
   forall_mem_nil _
@@ -47,7 +47,7 @@ theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : tfae (a :: l) ↔
 theorem tfae_cons_cons {a b} {l : List Prop} : tfae (a :: b :: l) ↔ (a ↔ b) ∧ tfae (b :: l) :=
   tfae_cons_of_mem (Or.inl rfl)
 
-theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀ a _ : a ∈ l, a ↔ b) : tfae l :=
+theorem tfae_of_forall (b : Prop) (l : List Prop) (h : ∀ a (_ : a ∈ l), a ↔ b) : tfae l :=
   fun a₁ h₁ a₂ h₂ => (h _ h₁).trans (h _ h₂).symm
 
 -- error in Data.List.Tfae: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

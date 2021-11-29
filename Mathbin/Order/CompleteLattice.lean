@@ -79,9 +79,10 @@ Note that we rarely use `complete_semilattice_Sup`
 
 Nevertheless it is sometimes a useful intermediate step in constructions.
 -/
+@[ancestor PartialOrderₓ HasSupₓ]
 class CompleteSemilatticeSup(α : Type _) extends PartialOrderₓ α, HasSupₓ α where 
-  le_Sup : ∀ s, ∀ a _ : a ∈ s, a ≤ Sup s 
-  Sup_le : ∀ s a, (∀ b _ : b ∈ s, b ≤ a) → Sup s ≤ a
+  le_Sup : ∀ s, ∀ a (_ : a ∈ s), a ≤ Sup s 
+  Sup_le : ∀ s a, (∀ b (_ : b ∈ s), b ≤ a) → Sup s ≤ a
 
 section 
 
@@ -91,7 +92,7 @@ variable[CompleteSemilatticeSup α]{s t : Set α}{a b : α}
 theorem le_Sup : a ∈ s → a ≤ Sup s :=
   CompleteSemilatticeSup.le_Sup s a
 
-theorem Sup_le : (∀ b _ : b ∈ s, b ≤ a) → Sup s ≤ a :=
+theorem Sup_le : (∀ b (_ : b ∈ s), b ≤ a) → Sup s ≤ a :=
   CompleteSemilatticeSup.Sup_le s a
 
 theorem is_lub_Sup (s : Set α) : IsLub s (Sup s) :=
@@ -107,10 +108,10 @@ theorem Sup_le_Sup (h : s ⊆ t) : Sup s ≤ Sup t :=
   (is_lub_Sup s).mono (is_lub_Sup t) h
 
 @[simp]
-theorem Sup_le_iff : Sup s ≤ a ↔ ∀ b _ : b ∈ s, b ≤ a :=
+theorem Sup_le_iff : Sup s ≤ a ↔ ∀ b (_ : b ∈ s), b ≤ a :=
   is_lub_le_iff (is_lub_Sup s)
 
-theorem le_Sup_iff : a ≤ Sup s ↔ ∀ b, (∀ x _ : x ∈ s, x ≤ b) → a ≤ b :=
+theorem le_Sup_iff : a ≤ Sup s ↔ ∀ b, (∀ x (_ : x ∈ s), x ≤ b) → a ≤ b :=
   ⟨fun h b hb => le_transₓ h (Sup_le hb), fun hb => hb _ fun x => le_Sup⟩
 
 -- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
@@ -134,9 +135,10 @@ Note that we rarely use `complete_semilattice_Inf`
 
 Nevertheless it is sometimes a useful intermediate step in constructions.
 -/
+@[ancestor PartialOrderₓ HasInfₓ]
 class CompleteSemilatticeInf(α : Type _) extends PartialOrderₓ α, HasInfₓ α where 
-  Inf_le : ∀ s, ∀ a _ : a ∈ s, Inf s ≤ a 
-  le_Inf : ∀ s a, (∀ b _ : b ∈ s, a ≤ b) → a ≤ Inf s
+  Inf_le : ∀ s, ∀ a (_ : a ∈ s), Inf s ≤ a 
+  le_Inf : ∀ s a, (∀ b (_ : b ∈ s), a ≤ b) → a ≤ Inf s
 
 section 
 
@@ -146,7 +148,7 @@ variable[CompleteSemilatticeInf α]{s t : Set α}{a b : α}
 theorem Inf_le : a ∈ s → Inf s ≤ a :=
   CompleteSemilatticeInf.Inf_le s a
 
-theorem le_Inf : (∀ b _ : b ∈ s, a ≤ b) → a ≤ Inf s :=
+theorem le_Inf : (∀ b (_ : b ∈ s), a ≤ b) → a ≤ Inf s :=
   CompleteSemilatticeInf.le_Inf s a
 
 theorem is_glb_Inf (s : Set α) : IsGlb s (Inf s) :=
@@ -162,10 +164,10 @@ theorem Inf_le_Inf (h : s ⊆ t) : Inf t ≤ Inf s :=
   (is_glb_Inf s).mono (is_glb_Inf t) h
 
 @[simp]
-theorem le_Inf_iff : a ≤ Inf s ↔ ∀ b _ : b ∈ s, a ≤ b :=
+theorem le_Inf_iff : a ≤ Inf s ↔ ∀ b (_ : b ∈ s), a ≤ b :=
   le_is_glb_iff (is_glb_Inf s)
 
-theorem Inf_le_iff : Inf s ≤ a ↔ ∀ b, (∀ x _ : x ∈ s, b ≤ x) → b ≤ a :=
+theorem Inf_le_iff : Inf s ≤ a ↔ ∀ b, (∀ x (_ : x ∈ s), b ≤ x) → b ≤ a :=
   ⟨fun h b hb => le_transₓ (le_Inf hb) h, fun hb => hb _ fun x => Inf_le⟩
 
 -- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
@@ -185,8 +187,14 @@ end
 
 /-- A complete lattice is a bounded lattice which
   has suprema and infima for every subset. -/
-@[protectProj]
-class CompleteLattice(α : Type _) extends BoundedLattice α, CompleteSemilatticeSup α, CompleteSemilatticeInf α
+@[protectProj, ancestor Lattice CompleteSemilatticeSup CompleteSemilatticeInf HasTop HasBot]
+class CompleteLattice(α : Type _) extends Lattice α, CompleteSemilatticeSup α, CompleteSemilatticeInf α, HasTop α,
+  HasBot α where 
+  le_top : ∀ (x : α), x ≤ ⊤
+  bot_le : ∀ (x : α), ⊥ ≤ x
+
+instance (priority := 100)CompleteLattice.toBoundedOrder [h : CompleteLattice α] : BoundedOrder α :=
+  { h with  }
 
 /-- Create a `complete_lattice` from a `partial_order` and `Inf` function
 that returns the greatest lower bound of a set. Usually this constructor provides
@@ -204,7 +212,7 @@ instance : complete_lattice my_T :=
 ```
 -/
 def completeLatticeOfInf (α : Type _) [H1 : PartialOrderₓ α] [H2 : HasInfₓ α]
-  (is_glb_Inf : ∀ s : Set α, IsGlb s (Inf s)) : CompleteLattice α :=
+  (is_glb_Inf : ∀ (s : Set α), IsGlb s (Inf s)) : CompleteLattice α :=
   { H1, H2 with bot := Inf univ, bot_le := fun x => (is_glb_Inf univ).1 trivialₓ, top := Inf ∅,
     le_top :=
       fun a =>
@@ -255,7 +263,7 @@ instance : complete_lattice my_T :=
 ```
 -/
 def completeLatticeOfSup (α : Type _) [H1 : PartialOrderₓ α] [H2 : HasSupₓ α]
-  (is_lub_Sup : ∀ s : Set α, IsLub s (Sup s)) : CompleteLattice α :=
+  (is_lub_Sup : ∀ (s : Set α), IsLub s (Sup s)) : CompleteLattice α :=
   { H1, H2 with top := Sup univ, le_top := fun x => (is_lub_Sup univ).1 trivialₓ, bot := Sup ∅,
     bot_le :=
       fun x =>
@@ -299,8 +307,8 @@ namespace OrderDual
 variable(α)
 
 instance  [CompleteLattice α] : CompleteLattice (OrderDual α) :=
-  { OrderDual.boundedLattice α, OrderDual.hasSupₓ α, OrderDual.hasInfₓ α with le_Sup := @CompleteLattice.Inf_le α _,
-    Sup_le := @CompleteLattice.le_Inf α _, Inf_le := @CompleteLattice.le_Sup α _,
+  { OrderDual.lattice α, OrderDual.hasSupₓ α, OrderDual.hasInfₓ α, OrderDual.boundedOrder α with
+    le_Sup := @CompleteLattice.Inf_le α _, Sup_le := @CompleteLattice.le_Inf α _, Inf_le := @CompleteLattice.le_Sup α _,
     le_Inf := @CompleteLattice.Sup_le α _ }
 
 instance  [CompleteLinearOrder α] : CompleteLinearOrder (OrderDual α) :=
@@ -365,7 +373,7 @@ theorem Inf_pair {a b : α} : Inf {a, b} = a⊓b :=
   (@is_glb_pair α _ a b).Inf_eq
 
 @[simp]
-theorem Inf_eq_top : Inf s = ⊤ ↔ ∀ a _ : a ∈ s, a = ⊤ :=
+theorem Inf_eq_top : Inf s = ⊤ ↔ ∀ a (_ : a ∈ s), a = ⊤ :=
   Iff.intro (fun h a ha => top_unique$ h ▸ Inf_le ha) fun h => top_unique$ le_Inf$ fun a ha => top_le_iff.2$ h a ha
 
 theorem eq_singleton_top_of_Inf_eq_top_of_nonempty {s : Set α} (h_inf : Inf s = ⊤) (hne : s.nonempty) : s = {⊤} :=
@@ -375,7 +383,7 @@ theorem eq_singleton_top_of_Inf_eq_top_of_nonempty {s : Set α} (h_inf : Inf s =
     exact ⟨hne, h_inf⟩
 
 @[simp]
-theorem Sup_eq_bot : Sup s = ⊥ ↔ ∀ a _ : a ∈ s, a = ⊥ :=
+theorem Sup_eq_bot : Sup s = ⊥ ↔ ∀ a (_ : a ∈ s), a = ⊥ :=
   @Inf_eq_top (OrderDual α) _ _
 
 theorem eq_singleton_bot_of_Sup_eq_bot_of_nonempty {s : Set α} (h_sup : Sup s = ⊥) (hne : s.nonempty) : s = {⊥} :=
@@ -388,9 +396,9 @@ theorem eq_singleton_bot_of_Sup_eq_bot_of_nonempty {s : Set α} (h_sup : Sup s =
 is larger than all elements of `s`, and that this is not the case of any `w<b`.
 See `cSup_eq_of_forall_le_of_forall_lt_exists_gt` for a version in conditionally complete
 lattices. -/
-theorem Sup_eq_of_forall_le_of_forall_lt_exists_gt (_ : ∀ a _ : a ∈ s, a ≤ b)
+theorem Sup_eq_of_forall_le_of_forall_lt_exists_gt (_ : ∀ a (_ : a ∈ s), a ≤ b)
   (H : ∀ w, w < b → ∃ (a : _)(_ : a ∈ s), w < a) : Sup s = b :=
-  have  : Sup s < b ∨ Sup s = b := lt_or_eq_of_leₓ (Sup_le ‹∀ a _ : a ∈ s, a ≤ b›)
+  have  : Sup s < b ∨ Sup s = b := lt_or_eq_of_leₓ (Sup_le ‹∀ a (_ : a ∈ s), a ≤ b›)
   have  : ¬Sup s < b :=
     fun this : Sup s < b =>
       let ⟨a, _, _⟩ := H (Sup s) ‹Sup s < b›
@@ -404,7 +412,7 @@ theorem Sup_eq_of_forall_le_of_forall_lt_exists_gt (_ : ∀ a _ : a ∈ s, a ≤
 is smaller than all elements of `s`, and that this is not the case of any `w>b`.
 See `cInf_eq_of_forall_ge_of_forall_gt_exists_lt` for a version in conditionally complete
 lattices. -/
-theorem Inf_eq_of_forall_ge_of_forall_gt_exists_lt (_ : ∀ a _ : a ∈ s, b ≤ a)
+theorem Inf_eq_of_forall_ge_of_forall_gt_exists_lt (_ : ∀ a (_ : a ∈ s), b ≤ a)
   (H : ∀ w, b < w → ∃ (a : _)(_ : a ∈ s), a < w) : Inf s = b :=
   @Sup_eq_of_forall_le_of_forall_lt_exists_gt (OrderDual α) _ _ ‹_› ‹_› ‹_›
 
@@ -420,19 +428,17 @@ theorem Inf_lt_iff : Inf s < b ↔ ∃ (a : _)(_ : a ∈ s), a < b :=
 theorem lt_Sup_iff : b < Sup s ↔ ∃ (a : _)(_ : a ∈ s), b < a :=
   lt_is_lub_iff (is_lub_Sup s)
 
-theorem Sup_eq_top : Sup s = ⊤ ↔ ∀ b _ : b < ⊤, ∃ (a : _)(_ : a ∈ s), b < a :=
-  Iff.intro
-    (fun h : Sup s = ⊤ b hb =>
-      by 
-        rwa [←h, lt_Sup_iff] at hb)
-    fun h =>
-      top_unique$
-        le_of_not_gtₓ$
-          fun h' =>
-            let ⟨a, ha, h⟩ := h _ h' 
-            lt_irreflₓ a$ lt_of_le_of_ltₓ (le_Sup ha) h
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem Sup_eq_top : «expr ↔ »(«expr = »(Sup s, «expr⊤»()), ∀
+ b «expr < » «expr⊤»(), «expr∃ , »((a «expr ∈ » s), «expr < »(b, a))) :=
+iff.intro (assume
+ (h : «expr = »(Sup s, «expr⊤»()))
+ (b
+  hb), by rwa ["[", "<-", expr h, ",", expr lt_Sup_iff, "]"] ["at", ident hb]) (assume
+ h, «expr $ »(top_unique, «expr $ »(le_of_not_gt, assume h', let ⟨a, ha, h⟩ := h _ h' in
+   «expr $ »(lt_irrefl a, lt_of_le_of_lt (le_Sup ha) h))))
 
-theorem Inf_eq_bot : Inf s = ⊥ ↔ ∀ b _ : b > ⊥, ∃ (a : _)(_ : a ∈ s), a < b :=
+theorem Inf_eq_bot : Inf s = ⊥ ↔ ∀ b (_ : b > ⊥), ∃ (a : _)(_ : a ∈ s), a < b :=
   @Sup_eq_top (OrderDual α) _ _
 
 theorem lt_supr_iff {f : ι → α} : a < supr f ↔ ∃ i, a < f i :=
@@ -469,16 +475,16 @@ theorem IsGlb.infi_eq (h : IsGlb (range s) a) : (⨅j, s j) = a :=
 theorem le_supr_of_le (i : ι) (h : a ≤ s i) : a ≤ supr s :=
   le_transₓ h (le_supr _ i)
 
-theorem le_bsupr {p : ι → Prop} {f : ∀ i h : p i, α} (i : ι) (hi : p i) : f i hi ≤ ⨆i hi, f i hi :=
+theorem le_bsupr {p : ι → Prop} {f : ∀ i (h : p i), α} (i : ι) (hi : p i) : f i hi ≤ ⨆i hi, f i hi :=
   le_supr_of_le i$ le_supr (f i) hi
 
-theorem le_bsupr_of_le {p : ι → Prop} {f : ∀ i h : p i, α} (i : ι) (hi : p i) (h : a ≤ f i hi) : a ≤ ⨆i hi, f i hi :=
+theorem le_bsupr_of_le {p : ι → Prop} {f : ∀ i (h : p i), α} (i : ι) (hi : p i) (h : a ≤ f i hi) : a ≤ ⨆i hi, f i hi :=
   le_transₓ h (le_bsupr i hi)
 
 theorem supr_le (h : ∀ i, s i ≤ a) : supr s ≤ a :=
   Sup_le$ fun b ⟨i, Eq⟩ => Eq ▸ h i
 
-theorem bsupr_le {p : ι → Prop} {f : ∀ i h : p i, α} (h : ∀ i hi, f i hi ≤ a) : (⨆(i : _)(hi : p i), f i hi) ≤ a :=
+theorem bsupr_le {p : ι → Prop} {f : ∀ i (h : p i), α} (h : ∀ i hi, f i hi ≤ a) : (⨆(i : _)(hi : p i), f i hi) ≤ a :=
   supr_le$ fun i => supr_le$ h i
 
 theorem bsupr_le_supr (p : ι → Prop) (f : ι → α) : (⨆(i : _)(H : p i), f i) ≤ ⨆i, f i :=
@@ -490,7 +496,7 @@ theorem supr_le_supr (h : ∀ i, s i ≤ t i) : supr s ≤ supr t :=
 theorem supr_le_supr2 {t : ι₂ → α} (h : ∀ i, ∃ j, s i ≤ t j) : supr s ≤ supr t :=
   supr_le$ fun j => Exists.elim (h j) le_supr_of_le
 
-theorem bsupr_le_bsupr {p : ι → Prop} {f g : ∀ i hi : p i, α} (h : ∀ i hi, f i hi ≤ g i hi) :
+theorem bsupr_le_bsupr {p : ι → Prop} {f g : ∀ i (hi : p i), α} (h : ∀ i hi, f i hi ≤ g i hi) :
   (⨆i hi, f i hi) ≤ ⨆i hi, g i hi :=
   bsupr_le$ fun i hi => le_transₓ (h i hi) (le_bsupr i hi)
 
@@ -589,16 +595,17 @@ theorem infi_le' (s : ι → α) (i : ι) : infi s ≤ s i :=
 theorem infi_le_of_le (i : ι) (h : s i ≤ a) : infi s ≤ a :=
   le_transₓ (infi_le _ i) h
 
-theorem binfi_le {p : ι → Prop} {f : ∀ i hi : p i, α} (i : ι) (hi : p i) : (⨅i hi, f i hi) ≤ f i hi :=
+theorem binfi_le {p : ι → Prop} {f : ∀ i (hi : p i), α} (i : ι) (hi : p i) : (⨅i hi, f i hi) ≤ f i hi :=
   infi_le_of_le i$ infi_le (f i) hi
 
-theorem binfi_le_of_le {p : ι → Prop} {f : ∀ i hi : p i, α} (i : ι) (hi : p i) (h : f i hi ≤ a) : (⨅i hi, f i hi) ≤ a :=
+theorem binfi_le_of_le {p : ι → Prop} {f : ∀ i (hi : p i), α} (i : ι) (hi : p i) (h : f i hi ≤ a) :
+  (⨅i hi, f i hi) ≤ a :=
   le_transₓ (binfi_le i hi) h
 
 theorem le_infi (h : ∀ i, a ≤ s i) : a ≤ infi s :=
   le_Inf$ fun b ⟨i, Eq⟩ => Eq ▸ h i
 
-theorem le_binfi {p : ι → Prop} {f : ∀ i h : p i, α} (h : ∀ i hi, a ≤ f i hi) : a ≤ ⨅i hi, f i hi :=
+theorem le_binfi {p : ι → Prop} {f : ∀ i (h : p i), α} (h : ∀ i hi, a ≤ f i hi) : a ≤ ⨅i hi, f i hi :=
   le_infi$ fun i => le_infi$ h i
 
 theorem infi_le_binfi (p : ι → Prop) (f : ι → α) : (⨅i, f i) ≤ ⨅(i : _)(H : p i), f i :=
@@ -610,7 +617,7 @@ theorem infi_le_infi (h : ∀ i, s i ≤ t i) : infi s ≤ infi t :=
 theorem infi_le_infi2 {t : ι₂ → α} (h : ∀ j, ∃ i, s i ≤ t j) : infi s ≤ infi t :=
   le_infi$ fun j => Exists.elim (h j) infi_le_of_le
 
-theorem binfi_le_binfi {p : ι → Prop} {f g : ∀ i h : p i, α} (h : ∀ i hi, f i hi ≤ g i hi) :
+theorem binfi_le_binfi {p : ι → Prop} {f g : ∀ i (h : p i), α} (h : ∀ i hi, f i hi ≤ g i hi) :
   (⨅i hi, f i hi) ≤ ⨅i hi, g i hi :=
   le_binfi$ fun i hi => le_transₓ (binfi_le i hi) (h i hi)
 
@@ -741,7 +748,7 @@ theorem supr_comm {f : ι → ι₂ → α} : (⨆i, ⨆j, f i j) = ⨆j, ⨆i, 
   @infi_comm (OrderDual α) _ _ _ _
 
 @[simp]
-theorem infi_infi_eq_left {b : β} {f : ∀ x : β, x = b → α} : (⨅x, ⨅h : x = b, f x h) = f b rfl :=
+theorem infi_infi_eq_left {b : β} {f : ∀ (x : β), x = b → α} : (⨅x, ⨅h : x = b, f x h) = f b rfl :=
   le_antisymmₓ (infi_le_of_le b$ infi_le _ rfl)
     (le_infi$
       fun b' =>
@@ -751,7 +758,7 @@ theorem infi_infi_eq_left {b : β} {f : ∀ x : β, x = b → α} : (⨅x, ⨅h 
             | _, rfl => le_reflₓ _)
 
 @[simp]
-theorem infi_infi_eq_right {b : β} {f : ∀ x : β, b = x → α} : (⨅x, ⨅h : b = x, f x h) = f b rfl :=
+theorem infi_infi_eq_right {b : β} {f : ∀ (x : β), b = x → α} : (⨅x, ⨅h : b = x, f x h) = f b rfl :=
   le_antisymmₓ (infi_le_of_le b$ infi_le _ rfl)
     (le_infi$
       fun b' =>
@@ -761,11 +768,11 @@ theorem infi_infi_eq_right {b : β} {f : ∀ x : β, b = x → α} : (⨅x, ⨅h
             | _, rfl => le_reflₓ _)
 
 @[simp]
-theorem supr_supr_eq_left {b : β} {f : ∀ x : β, x = b → α} : (⨆x, ⨆h : x = b, f x h) = f b rfl :=
+theorem supr_supr_eq_left {b : β} {f : ∀ (x : β), x = b → α} : (⨆x, ⨆h : x = b, f x h) = f b rfl :=
   @infi_infi_eq_left (OrderDual α) _ _ _ _
 
 @[simp]
-theorem supr_supr_eq_right {b : β} {f : ∀ x : β, b = x → α} : (⨆x, ⨆h : b = x, f x h) = f b rfl :=
+theorem supr_supr_eq_right {b : β} {f : ∀ (x : β), b = x → α} : (⨆x, ⨆h : b = x, f x h) = f b rfl :=
   @infi_infi_eq_right (OrderDual α) _ _ _ _
 
 attribute [ematch] le_reflₓ
@@ -802,7 +809,7 @@ theorem binfi_inf
 by haveI [] [":", expr nonempty {i // p i}] [":=", expr let ⟨i, hi⟩ := h in
  ⟨⟨i, hi⟩⟩]; rw ["[", expr infi_subtype', ",", expr infi_subtype', ",", expr infi_inf, "]"] []
 
-theorem inf_binfi {p : ι → Prop} {f : ∀ i hi : p i, α} {a : α} (h : ∃ i, p i) :
+theorem inf_binfi {p : ι → Prop} {f : ∀ i (hi : p i), α} {a : α} (h : ∃ i, p i) :
   (a⊓⨅(i : _)(h : p i), f i h) = ⨅(i : _)(h : p i), a⊓f i h :=
   by 
     simpa only [inf_comm] using binfi_inf h
@@ -976,13 +983,19 @@ theorem supr_le_supr_of_subset {f : β → α} {s t : Set β} (h : s ⊆ t) :
   (⨆(x : _)(_ : x ∈ s), f x) ≤ ⨆(x : _)(_ : x ∈ t), f x :=
   @infi_le_infi_of_subset (OrderDual α) _ _ _ _ _ h
 
-theorem infi_insert {f : β → α} {s : Set β} {b : β} :
-  (⨅(x : _)(_ : x ∈ insert b s), f x) = f b⊓⨅(x : _)(_ : x ∈ s), f x :=
-  Eq.trans infi_union$ congr_argₓ (fun x : α => x⊓⨅(x : _)(_ : x ∈ s), f x) infi_infi_eq_left
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem infi_insert
+{f : β → α}
+{s : set β}
+{b : β} : «expr = »(«expr⨅ , »((x «expr ∈ » insert b s), f x), «expr ⊓ »(f b, «expr⨅ , »((x «expr ∈ » s), f x))) :=
+«expr $ »(eq.trans infi_union, congr_arg (λ x : α, «expr ⊓ »(x, «expr⨅ , »((x «expr ∈ » s), f x))) infi_infi_eq_left)
 
-theorem supr_insert {f : β → α} {s : Set β} {b : β} :
-  (⨆(x : _)(_ : x ∈ insert b s), f x) = f b⊔⨆(x : _)(_ : x ∈ s), f x :=
-  Eq.trans supr_union$ congr_argₓ (fun x : α => x⊔⨆(x : _)(_ : x ∈ s), f x) supr_supr_eq_left
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem supr_insert
+{f : β → α}
+{s : set β}
+{b : β} : «expr = »(«expr⨆ , »((x «expr ∈ » insert b s), f x), «expr ⊔ »(f b, «expr⨆ , »((x «expr ∈ » s), f x))) :=
+«expr $ »(eq.trans supr_union, congr_arg (λ x : α, «expr ⊔ »(x, «expr⨆ , »((x «expr ∈ » s), f x))) supr_supr_eq_left)
 
 theorem infi_singleton {f : β → α} {b : β} : (⨅(x : _)(_ : x ∈ (singleton b : Set β)), f x) = f b :=
   by 
@@ -1178,11 +1191,11 @@ section CompleteLinearOrder
 
 variable[CompleteLinearOrder α]
 
-theorem supr_eq_top (f : ι → α) : supr f = ⊤ ↔ ∀ b _ : b < ⊤, ∃ i, b < f i :=
+theorem supr_eq_top (f : ι → α) : supr f = ⊤ ↔ ∀ b (_ : b < ⊤), ∃ i, b < f i :=
   by 
     simp only [←Sup_range, Sup_eq_top, Set.exists_range_iff]
 
-theorem infi_eq_bot (f : ι → α) : infi f = ⊥ ↔ ∀ b _ : b > ⊥, ∃ i, f i < b :=
+theorem infi_eq_bot (f : ι → α) : infi f = ⊥ ↔ ∀ b (_ : b > ⊥), ∃ i, f i < b :=
   by 
     simp only [←Inf_range, Inf_eq_bot, Set.exists_range_iff]
 
@@ -1194,12 +1207,12 @@ end CompleteLinearOrder
 
 
 instance Prop.completeLattice : CompleteLattice Prop :=
-  { Prop.boundedDistribLattice with sup := fun s => ∃ (a : _)(_ : a ∈ s), a, le_Sup := fun s a h p => ⟨a, h, p⟩,
-    Sup_le := fun s a h ⟨b, h', p⟩ => h b h' p, inf := fun s => ∀ a : Prop, a ∈ s → a, Inf_le := fun s a h p => p a h,
-    le_Inf := fun s a h p b hb => h b hb p }
+  { Prop.boundedOrder, Prop.distribLattice with sup := fun s => ∃ (a : _)(_ : a ∈ s), a,
+    le_Sup := fun s a h p => ⟨a, h, p⟩, Sup_le := fun s a h ⟨b, h', p⟩ => h b h' p,
+    inf := fun s => ∀ (a : Prop), a ∈ s → a, Inf_le := fun s a h p => p a h, le_Inf := fun s a h p b hb => h b hb p }
 
 @[simp]
-theorem Inf_Prop_eq {s : Set Prop} : Inf s = ∀ p _ : p ∈ s, p :=
+theorem Inf_Prop_eq {s : Set Prop} : Inf s = ∀ p (_ : p ∈ s), p :=
   rfl
 
 @[simp]
@@ -1220,21 +1233,32 @@ instance Pi.hasSupₓ {α : Type _} {β : α → Type _} [∀ i, HasSupₓ (β i
 instance Pi.hasInfₓ {α : Type _} {β : α → Type _} [∀ i, HasInfₓ (β i)] : HasInfₓ (∀ i, β i) :=
   ⟨fun s i => ⨅f : s, (f : ∀ i, β i) i⟩
 
-instance Pi.completeLattice {α : Type _} {β : α → Type _} [∀ i, CompleteLattice (β i)] : CompleteLattice (∀ i, β i) :=
-  { Pi.boundedLattice with sup := Sup, inf := Inf,
-    le_Sup := fun s f hf i => le_supr (fun f : s => (f : ∀ i, β i) i) ⟨f, hf⟩,
-    Inf_le := fun s f hf i => infi_le (fun f : s => (f : ∀ i, β i) i) ⟨f, hf⟩,
-    Sup_le := fun s f hf i => supr_le$ fun g => hf g g.2 i, le_Inf := fun s f hf i => le_infi$ fun g => hf g g.2 i }
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance pi.complete_lattice {α : Type*} {β : α → Type*} [∀ i, complete_lattice (β i)] : complete_lattice (∀ i, β i) :=
+{ Sup := Sup,
+  Inf := Inf,
+  le_Sup := λ s f hf i, le_supr (λ f : s, (f : ∀ i, β i) i) ⟨f, hf⟩,
+  Inf_le := λ s f hf i, infi_le (λ f : s, (f : ∀ i, β i) i) ⟨f, hf⟩,
+  Sup_le := λ s f hf i, «expr $ »(supr_le, λ g, hf g g.2 i),
+  le_Inf := λ s f hf i, «expr $ »(le_infi, λ g, hf g g.2 i),
+  ..pi.bounded_order,
+  ..pi.lattice }
 
 theorem Inf_apply {α : Type _} {β : α → Type _} [∀ i, HasInfₓ (β i)] {s : Set (∀ a, β a)} {a : α} :
   (Inf s) a = ⨅f : s, (f : ∀ a, β a) a :=
   rfl
 
+-- error in Order.CompleteLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem infi_apply {α : Type _} {β : α → Type _} {ι : Sort _} [∀ i, HasInfₓ (β i)] {f : ι → ∀ a, β a} {a : α} :
-  (⨅i, f i) a = ⨅i, f i a :=
-  by 
-    rw [infi, Inf_apply, infi, infi, ←image_eq_range (fun f : ∀ i, β i => f a) (range f), ←range_comp]
+theorem infi_apply
+{α : Type*}
+{β : α → Type*}
+{ι : Sort*}
+[∀ i, has_Inf (β i)]
+{f : ι → ∀ a, β a}
+{a : α} : «expr = »(«expr⨅ , »((i), f i) a, «expr⨅ , »((i), f i a)) :=
+by rw ["[", expr infi, ",", expr Inf_apply, ",", expr infi, ",", expr infi, ",", "<-", expr image_eq_range (λ
+  f : ∀ i, β i, f a) (range f), ",", "<-", expr range_comp, "]"] []
 
 theorem Sup_apply {α : Type _} {β : α → Type _} [∀ i, HasSupₓ (β i)] {s : Set (∀ a, β a)} {a : α} :
   (Sup s) a = ⨆f : s, (f : ∀ a, β a) a :=
@@ -1260,10 +1284,10 @@ section CompleteLattice
 
 variable[Preorderₓ α][CompleteLattice β]
 
-theorem monotone_Sup_of_monotone {s : Set (α → β)} (m_s : ∀ f _ : f ∈ s, Monotone f) : Monotone (Sup s) :=
+theorem monotone_Sup_of_monotone {s : Set (α → β)} (m_s : ∀ f (_ : f ∈ s), Monotone f) : Monotone (Sup s) :=
   fun x y h => supr_le$ fun f => le_supr_of_le f$ m_s f f.2 h
 
-theorem monotone_Inf_of_monotone {s : Set (α → β)} (m_s : ∀ f _ : f ∈ s, Monotone f) : Monotone (Inf s) :=
+theorem monotone_Inf_of_monotone {s : Set (α → β)} (m_s : ∀ f (_ : f ∈ s), Monotone f) : Monotone (Inf s) :=
   fun x y h => le_infi$ fun f => infi_le_of_le f$ m_s f f.2 h
 
 end CompleteLattice
@@ -1279,7 +1303,7 @@ instance  [HasSupₓ α] [HasSupₓ β] : HasSupₓ (α × β) :=
   ⟨fun s => (Sup (Prod.fst '' s), Sup (Prod.snd '' s))⟩
 
 instance  [CompleteLattice α] [CompleteLattice β] : CompleteLattice (α × β) :=
-  { Prod.boundedLattice α β, Prod.hasSupₓ α β, Prod.hasInfₓ α β with
+  { Prod.lattice α β, Prod.boundedOrder α β, Prod.hasSupₓ α β, Prod.hasInfₓ α β with
     le_Sup := fun s p hab => ⟨le_Sup$ mem_image_of_mem _ hab, le_Sup$ mem_image_of_mem _ hab⟩,
     Sup_le :=
       fun s p h =>
@@ -1374,7 +1398,7 @@ omit hs
   Example: an indexed family of submodules of a module is independent in this sense if
   and only the natural map from the direct sum of the submodules to the module is injective. -/
 def independent {ι : Sort _} {α : Type _} [CompleteLattice α] (t : ι → α) : Prop :=
-  ∀ i : ι, Disjoint (t i) (⨆(j : _)(_ : j ≠ i), t j)
+  ∀ (i : ι), Disjoint (t i) (⨆(j : _)(_ : j ≠ i), t j)
 
 theorem set_independent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
   set_independent s ↔ independent (coeₓ : s → α) :=
@@ -1390,7 +1414,7 @@ theorem set_independent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
 
 variable{t : ι → α}(ht : independent t)
 
-theorem independent_def : independent t ↔ ∀ i : ι, Disjoint (t i) (⨆(j : _)(_ : j ≠ i), t j) :=
+theorem independent_def : independent t ↔ ∀ (i : ι), Disjoint (t i) (⨆(j : _)(_ : j ≠ i), t j) :=
   Iff.rfl
 
 theorem independent_def' {ι : Type _} {t : ι → α} : independent t ↔ ∀ i, Disjoint (t i) (Sup (t '' { j | j ≠ i })) :=

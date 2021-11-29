@@ -23,7 +23,7 @@ theorem forall {p : α × β → Prop} : (∀ x, p x) ↔ ∀ a b, p (a, b) :=
 theorem exists {p : α × β → Prop} : (∃ x, p x) ↔ ∃ a b, p (a, b) :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 
-theorem forall' {p : α → β → Prop} : (∀ x : α × β, p x.1 x.2) ↔ ∀ a b, p a b :=
+theorem forall' {p : α → β → Prop} : (∀ (x : α × β), p x.1 x.2) ↔ ∀ a b, p a b :=
   Prod.forall
 
 theorem exists' {p : α → β → Prop} : (∃ x : α × β, p x.1 x.2) ↔ ∃ a b, p a b :=
@@ -94,11 +94,12 @@ theorem ext_iff {p q : α × β} : p = q ↔ p.1 = q.1 ∧ p.2 = q.2 :=
 theorem ext {α β} {p q : α × β} (h₁ : p.1 = q.1) (h₂ : p.2 = q.2) : p = q :=
   ext_iff.2 ⟨h₁, h₂⟩
 
-theorem map_def {f : α → γ} {g : β → δ} : Prod.mapₓ f g = fun p : α × β => (f p.1, g p.2) :=
-  funext fun p => ext (map_fst f g p) (map_snd f g p)
+-- error in Data.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem map_def {f : α → γ} {g : β → δ} : «expr = »(prod.map f g, λ p : «expr × »(α, β), (f p.1, g p.2)) :=
+funext (λ p, ext (map_fst f g p) (map_snd f g p))
 
-theorem id_prod : (fun p : α × α => (p.1, p.2)) = id :=
-  funext$ fun ⟨a, b⟩ => rfl
+-- error in Data.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem id_prod : «expr = »(λ p : «expr × »(α, α), (p.1, p.2), id) := «expr $ »(funext, λ ⟨a, b⟩, rfl)
 
 theorem fst_surjective [h : Nonempty β] : Function.Surjective (@fst α β) :=
   fun x => h.elim$ fun y => ⟨⟨x, y⟩, rfl⟩
@@ -117,7 +118,7 @@ def swap : α × β → β × α :=
   fun p => (p.2, p.1)
 
 @[simp]
-theorem swap_swap : ∀ x : α × β, swap (swap x) = x
+theorem swap_swap : ∀ (x : α × β), swap (swap x) = x
 | ⟨a, b⟩ => rfl
 
 @[simp]

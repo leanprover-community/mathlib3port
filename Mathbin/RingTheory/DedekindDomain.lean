@@ -51,7 +51,7 @@ open_locale nonZeroDivisors
 
 /-- A ring `R` has Krull dimension at most one if all nonzero prime ideals are maximal. -/
 def Ringₓ.DimensionLeOne : Prop :=
-  ∀ p _ : p ≠ (⊥ : Ideal R), p.is_prime → p.is_maximal
+  ∀ p (_ : p ≠ (⊥ : Ideal R)), p.is_prime → p.is_maximal
 
 open Ideal Ringₓ
 
@@ -121,7 +121,7 @@ TODO: prove the equivalence.
 -/
 structure IsDedekindDomainDvr : Prop where 
   IsNoetherianRing : IsNoetherianRing A 
-  is_dvr_at_nonzero_prime : ∀ P _ : P ≠ (⊥ : Ideal A), P.is_prime → DiscreteValuationRing (Localization.AtPrime P)
+  is_dvr_at_nonzero_prime : ∀ P (_ : P ≠ (⊥ : Ideal A)), P.is_prime → DiscreteValuationRing (Localization.AtPrime P)
 
 section Inverse
 
@@ -151,7 +151,7 @@ theorem coe_inv_of_nonzero {J : FractionalIdeal R₁⁰ K} (h : J ≠ 0) :
 
 variable{K}
 
-theorem mem_inv_iff (hI : I ≠ 0) {x : K} : x ∈ I⁻¹ ↔ ∀ y _ : y ∈ I, (x*y) ∈ (1 : FractionalIdeal R₁⁰ K) :=
+theorem mem_inv_iff (hI : I ≠ 0) {x : K} : x ∈ I⁻¹ ↔ ∀ y (_ : y ∈ I), (x*y) ∈ (1 : FractionalIdeal R₁⁰ K) :=
   FractionalIdeal.mem_div_iff_of_nonzero hI
 
 theorem inv_anti_mono (hI : I ≠ 0) (hJ : J ≠ 0) (hIJ : I ≤ J) : J⁻¹ ≤ I⁻¹ :=
@@ -271,14 +271,14 @@ assuming `is_dedekind_domain A`, which implies `is_dedekind_domain_inv`. For **i
 `is_dedekind_domain`(`_inv`) implies only `ideal.comm_cancel_monoid_with_zero`.
 -/
 def IsDedekindDomainInv : Prop :=
-  ∀ I _ : I ≠ (⊥ : FractionalIdeal A⁰ (FractionRing A)), (I*I⁻¹) = 1
+  ∀ I (_ : I ≠ (⊥ : FractionalIdeal A⁰ (FractionRing A))), (I*I⁻¹) = 1
 
 open FractionalIdeal
 
 variable{R A K}
 
 theorem is_dedekind_domain_inv_iff [Algebra A K] [IsFractionRing A K] :
-  IsDedekindDomainInv A ↔ ∀ I _ : I ≠ (⊥ : FractionalIdeal A⁰ K), (I*I⁻¹) = 1 :=
+  IsDedekindDomainInv A ↔ ∀ I (_ : I ≠ (⊥ : FractionalIdeal A⁰ K)), (I*I⁻¹) = 1 :=
   by 
     set h := FractionRing.algEquiv A K 
     split  <;> rintro hi I hI
@@ -914,7 +914,8 @@ open Multiset UniqueFactorizationMonoid Ideal
 theorem prod_normalized_factors_eq_self {I : Ideal T} (hI : I ≠ ⊥) : (normalized_factors I).Prod = I :=
   associated_iff_eq.1 (normalized_factors_prod hI)
 
-theorem normalized_factors_prod {α : Multiset (Ideal T)} (h : ∀ p _ : p ∈ α, Prime p) : normalized_factors α.prod = α :=
+theorem normalized_factors_prod {α : Multiset (Ideal T)} (h : ∀ p (_ : p ∈ α), Prime p) :
+  normalized_factors α.prod = α :=
   by 
     simpRw [←Multiset.rel_eq, ←associated_eq_eq]
     exact prime_factors_unique prime_of_normalized_factor h (normalized_factors_prod (α.prod_ne_zero_of_prime h))

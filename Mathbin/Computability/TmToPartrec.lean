@@ -210,11 +210,11 @@ def prec (f g : code) : code :=
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map Part.pure_eq_some
 
 theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Finₓ n → Vector ℕ m →. ℕ}
-  (hf : ∃ c : code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v)
-  (hg : ∀ i, ∃ c : code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> g i v) :
-  ∃ c : code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> ((Vector.mOfFnₓ fun i => g i v) >>= f) :=
+  (hf : ∃ c : code, ∀ (v : Vector ℕ n), c.eval v.1 = pure <$> f v)
+  (hg : ∀ i, ∃ c : code, ∀ (v : Vector ℕ m), c.eval v.1 = pure <$> g i v) :
+  ∃ c : code, ∀ (v : Vector ℕ m), c.eval v.1 = pure <$> ((Vector.mOfFnₓ fun i => g i v) >>= f) :=
   by 
-    suffices  : ∃ c : code, ∀ v : Vector ℕ m, c.eval v.1 = Subtype.val <$> Vector.mOfFnₓ fun i => g i v
+    suffices  : ∃ c : code, ∀ (v : Vector ℕ m), c.eval v.1 = Subtype.val <$> Vector.mOfFnₓ fun i => g i v
     ·
       obtain ⟨cf, hf⟩ := hf 
       obtain ⟨cg, hg⟩ := this 
@@ -562,7 +562,7 @@ theorem step_normal.is_ret c k v : ∃ k' v', step_normal c k v = cfg.ret k' v' 
     case fix f IHf => 
       apply IHf
 
--- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Computability.TmToPartrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem cont_eval_fix
 {f k v}
 (fok : code.ok f) : «expr = »(eval step (step_normal f (cont.fix f k) v), «expr >>= »(f.fix.eval v, λ
@@ -1300,20 +1300,20 @@ theorem copy_ok q s a b c d :
     simp 
     exact IH _ _ _
 
-theorem tr_pos_num_nat_end : ∀ n x _ : x ∈ tr_pos_num n, nat_end x = ff
+theorem tr_pos_num_nat_end : ∀ n x (_ : x ∈ tr_pos_num n), nat_end x = ff
 | PosNum.one, _, Or.inl rfl => rfl
 | PosNum.bit0 n, _, Or.inl rfl => rfl
 | PosNum.bit0 n, _, Or.inr h => tr_pos_num_nat_end n _ h
 | PosNum.bit1 n, _, Or.inl rfl => rfl
 | PosNum.bit1 n, _, Or.inr h => tr_pos_num_nat_end n _ h
 
-theorem tr_num_nat_end : ∀ n x _ : x ∈ tr_num n, nat_end x = ff
+theorem tr_num_nat_end : ∀ n x (_ : x ∈ tr_num n), nat_end x = ff
 | Num.pos n, x, h => tr_pos_num_nat_end n x h
 
-theorem tr_nat_nat_end n : ∀ x _ : x ∈ tr_nat n, nat_end x = ff :=
+theorem tr_nat_nat_end n : ∀ x (_ : x ∈ tr_nat n), nat_end x = ff :=
   tr_num_nat_end _
 
-theorem tr_list_ne_Cons : ∀ l x _ : x ∈ tr_list l, x ≠ Γ'.Cons
+theorem tr_list_ne_Cons : ∀ l x (_ : x ∈ tr_list l), x ≠ Γ'.Cons
 | a :: l, x, h =>
   by 
     simp [tr_list] at h 
@@ -1796,7 +1796,7 @@ currently proving a property about. The predicate asserts that every state in `K
 under forward simulation, i.e. stepping forward through evaluation starting from any state in `K`
 stays entirely within `S`. -/
 def supports (K S : Finset Λ') :=
-  ∀ q _ : q ∈ K, TM2.supports_stmt S (tr q)
+  ∀ q (_ : q ∈ K), TM2.supports_stmt S (tr q)
 
 theorem supports_insert {K S q} : supports (insert q K) S ↔ TM2.supports_stmt S (tr q) ∧ supports K S :=
   by 

@@ -198,7 +198,7 @@ begin
     _ _, rfl) (inj_on_of_surj_on_of_card_le _ hmem hsurj (le_refl _)) hsurj]
 end
 
--- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 private
 theorem gauss_lemma_aux₁
 (p : exprℕ())
@@ -235,65 +235,48 @@ calc
   «expr = »(..., «expr * »(«expr ^ »(«expr- »(1), ((Ico 1 «expr / »(p, 2).succ).filter (λ
        x : exprℕ(), «expr¬ »(«expr ≤ »((«expr * »(a, x) : zmod p).val, «expr / »(p, 2))))).card), «expr !»(«expr / »(p, 2)))) : by rw ["[", "<-", expr prod_nat_cast, ",", expr finset.prod_eq_multiset_prod, ",", expr Ico_map_val_min_abs_nat_abs_eq_Ico_map_id p a hap, ",", "<-", expr finset.prod_eq_multiset_prod, ",", expr prod_Ico_id_eq_factorial, "]"] []
 
-private theorem gauss_lemma_aux₂ (p : ℕ) [hp : Fact p.prime] [Fact (p % 2 = 1)] {a : ℕ} (hap : (a : Zmod p) ≠ 0) :
-  (a^p / 2 : Zmod p) = (-1^((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a*x : Zmod p).val).card) :=
-  (mul_left_inj'
-        (show ((p / 2)! : Zmod p) ≠ 0 by 
-          rw [Ne.def, CharP.cast_eq_zero_iff (Zmod p) p, hp.1.dvd_factorial, not_leₓ] <;>
-            exact
-              Nat.div_lt_selfₓ hp.1.Pos
-                (by 
-                  decide))).1$
-    by 
-      simpa using gauss_lemma_aux₁ p hap
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+theorem gauss_lemma_aux₂
+(p : exprℕ())
+[hp : fact p.prime]
+[fact «expr = »(«expr % »(p, 2), 1)]
+{a : exprℕ()}
+(hap : «expr ≠ »((a : zmod p), 0)) : «expr = »((«expr ^ »(a, «expr / »(p, 2)) : zmod p), «expr ^ »(«expr- »(1), ((Ico 1 «expr / »(p, 2).succ).filter (λ
+    x : exprℕ(), «expr < »(«expr / »(p, 2), («expr * »(a, x) : zmod p).val))).card)) :=
+«expr $ »((mul_left_inj' (show «expr ≠ »((«expr !»(«expr / »(p, 2)) : zmod p), 0), by rw ["[", expr ne.def, ",", expr char_p.cast_eq_zero_iff (zmod p) p, ",", expr hp.1.dvd_factorial, ",", expr not_le, "]"] []; exact [expr nat.div_lt_self hp.1.pos exprdec_trivial()])).1, by simpa [] [] [] [] [] ["using", expr gauss_lemma_aux₁ p hap])
 
-private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.prime] [hp2 : Fact (p % 2 = 1)] {a : ℕ} (hap : (a : Zmod p) ≠ 0) :
-  ((∑x in Ico 1 (p / 2).succ, a*x : ℕ) : Zmod 2) =
-    (((Ico 1 (p / 2).succ).filter
-            fun x : ℕ =>
-              p / 2 < (a*x : Zmod p).val).card+∑x in Ico 1 (p / 2).succ, x)+(∑x in Ico 1 (p / 2).succ, (a*x) / p : ℕ) :=
-  have hp2 : (p : Zmod 2) = (1 : ℕ) := (eq_iff_modeq_nat _).2 hp2.1
-  calc
-    ((∑x in Ico 1 (p / 2).succ, a*x : ℕ) : Zmod 2) =
-      ((∑x in Ico 1 (p / 2).succ, ((a*x) % p)+p*(a*x) / p : ℕ) : Zmod 2) :=
-    by 
-      simp only [mod_add_div]
-    _ = (∑x in Ico 1 (p / 2).succ, ((a*x : ℕ) : Zmod p).val : ℕ)+(∑x in Ico 1 (p / 2).succ, (a*x) / p : ℕ) :=
-    by 
-      simp only [val_nat_cast] <;> simp [sum_add_distrib, mul_sum.symm, Nat.cast_add, Nat.cast_mul, Nat.cast_sum, hp2]
-    _ = _ :=
-    congr_arg2 (·+·)
-      (calc
-        ((∑x in Ico 1 (p / 2).succ, ((a*x : ℕ) : Zmod p).val : ℕ) : Zmod 2) =
-          ∑x in Ico 1 (p / 2).succ,
-            (((a*x : Zmod p).valMinAbs+if (a*x : Zmod p).val ≤ p / 2 then 0 else p : ℤ) : Zmod 2) :=
-        by 
-          simp only [(val_eq_ite_val_min_abs _).symm] <;> simp [Nat.cast_sum]
-        _ =
-          ((Ico 1 (p / 2).succ).filter
-                fun x : ℕ =>
-                  p / 2 < (a*x : Zmod p).val).card+(∑x in Ico 1 (p / 2).succ, (a*x : Zmod p).valMinAbs.natAbs : ℕ) :=
-        by 
-          simp [ite_cast, add_commₓ, sum_add_distrib, Finset.sum_ite, hp2, Nat.cast_sum]
-        _ = _ :=
-        by 
-          rw [Finset.sum_eq_multiset_sum, Ico_map_val_min_abs_nat_abs_eq_Ico_map_id p a hap,
-              ←Finset.sum_eq_multiset_sum] <;>
-            simp [Nat.cast_sum]
-        )
-      rfl
-    
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+theorem eisenstein_lemma_aux₁
+(p : exprℕ())
+[fact p.prime]
+[hp2 : fact «expr = »(«expr % »(p, 2), 1)]
+{a : exprℕ()}
+(hap : «expr ≠ »((a : zmod p), 0)) : «expr = »(((«expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, «expr * »(a, x)) : exprℕ()) : zmod 2), «expr + »(«expr + »(((Ico 1 «expr / »(p, 2).succ).filter (λ
+     x : exprℕ(), «expr < »(«expr / »(p, 2), («expr * »(a, x) : zmod p).val))).card, «expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, x)), («expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, «expr / »(«expr * »(a, x), p)) : exprℕ()))) :=
+have hp2 : «expr = »((p : zmod 2), (1 : exprℕ())), from (eq_iff_modeq_nat _).2 hp2.1,
+calc
+  «expr = »(((«expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, «expr * »(a, x)) : exprℕ()) : zmod 2), ((«expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, «expr + »(«expr % »(«expr * »(a, x), p), «expr * »(p, «expr / »(«expr * »(a, x), p)))) : exprℕ()) : zmod 2)) : by simp [] [] ["only"] ["[", expr mod_add_div, "]"] [] []
+  «expr = »(..., «expr + »((«expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, ((«expr * »(a, x) : exprℕ()) : zmod p).val) : exprℕ()), («expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, «expr / »(«expr * »(a, x), p)) : exprℕ()))) : by simp [] [] ["only"] ["[", expr val_nat_cast, "]"] [] []; simp [] [] [] ["[", expr sum_add_distrib, ",", expr mul_sum.symm, ",", expr nat.cast_add, ",", expr nat.cast_mul, ",", expr nat.cast_sum, ",", expr hp2, "]"] [] []
+  «expr = »(..., _) : congr_arg2 ((«expr + »)) (calc
+     «expr = »(((«expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, ((«expr * »(a, x) : exprℕ()) : zmod p).val) : exprℕ()) : zmod 2), «expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, ((«expr + »((«expr * »(a, x) : zmod p).val_min_abs, if «expr ≤ »((«expr * »(a, x) : zmod p).val, «expr / »(p, 2)) then 0 else p) : exprℤ()) : zmod 2))) : by simp [] [] ["only"] ["[", expr (val_eq_ite_val_min_abs _).symm, "]"] [] []; simp [] [] [] ["[", expr nat.cast_sum, "]"] [] []
+     «expr = »(..., «expr + »(((Ico 1 «expr / »(p, 2).succ).filter (λ
+         x : exprℕ(), «expr < »(«expr / »(p, 2), («expr * »(a, x) : zmod p).val))).card, («expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, («expr * »(a, x) : zmod p).val_min_abs.nat_abs) : exprℕ()))) : by { simp [] [] [] ["[", expr ite_cast, ",", expr add_comm, ",", expr sum_add_distrib, ",", expr finset.sum_ite, ",", expr hp2, ",", expr nat.cast_sum, "]"] [] [] }
+     «expr = »(..., _) : by rw ["[", expr finset.sum_eq_multiset_sum, ",", expr Ico_map_val_min_abs_nat_abs_eq_Ico_map_id p a hap, ",", "<-", expr finset.sum_eq_multiset_sum, "]"] []; simp [] [] [] ["[", expr nat.cast_sum, "]"] [] []) rfl
 
-private theorem eisenstein_lemma_aux₂ (p : ℕ) [Fact p.prime] [Fact (p % 2 = 1)] {a : ℕ} (ha2 : a % 2 = 1)
-  (hap : (a : Zmod p) ≠ 0) :
-  ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a*x : Zmod p).val).card ≡ ∑x in Ico 1 (p / 2).succ, (x*a) / p [MOD
-    2] :=
-  have ha2 : (a : Zmod 2) = (1 : ℕ) := (eq_iff_modeq_nat _).2 ha2
-  (eq_iff_modeq_nat 2).1$
-    sub_eq_zero.1$
-      by 
-        simpa [add_left_commₓ, sub_eq_add_neg, finset.mul_sum.symm, mul_commₓ, ha2, Nat.cast_sum,
-          add_neg_eq_iff_eq_add.symm, neg_eq_self_mod_two, add_assocₓ] using Eq.symm (eisenstein_lemma_aux₁ p hap)
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+theorem eisenstein_lemma_aux₂
+(p : exprℕ())
+[fact p.prime]
+[fact «expr = »(«expr % »(p, 2), 1)]
+{a : exprℕ()}
+(ha2 : «expr = »(«expr % »(a, 2), 1))
+(hap : «expr ≠ »((a : zmod p), 0)) : «expr ≡ [MOD ]»(((Ico 1 «expr / »(p, 2).succ).filter (λ
+   x : exprℕ(), «expr < »(«expr / »(p, 2), («expr * »(a, x) : zmod p).val))).card, «expr∑ in , »((x), Ico 1 «expr / »(p, 2).succ, «expr / »(«expr * »(x, a), p)), 2) :=
+have ha2 : «expr = »((a : zmod 2), (1 : exprℕ())), from (eq_iff_modeq_nat _).2 ha2,
+«expr $ »((eq_iff_modeq_nat 2).1, «expr $ »(sub_eq_zero.1, by simpa [] [] [] ["[", expr add_left_comm, ",", expr sub_eq_add_neg, ",", expr finset.mul_sum.symm, ",", expr mul_comm, ",", expr ha2, ",", expr nat.cast_sum, ",", expr add_neg_eq_iff_eq_add.symm, ",", expr neg_eq_self_mod_two, ",", expr add_assoc, "]"] [] ["using", expr eq.symm (eisenstein_lemma_aux₁ p hap)]))
 
 theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
   a / b = ((Ico 1 c.succ).filter fun x => (x*b) ≤ a).card :=
@@ -434,19 +417,20 @@ theorem legendre_sym_eq_zero_iff (a p : ℕ) : legendre_sym a p = 0 ↔ (a : Zmo
       intro ha 
       rw [legendre_sym, if_pos ha]
 
+-- error in NumberTheory.QuadraticReciprocity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Gauss' lemma. The legendre symbol can be computed by considering the number of naturals less
   than `p/2` such that `(a * x) % p > p / 2` -/
-theorem gauss_lemma {a : ℕ} [Fact (p % 2 = 1)] (ha0 : (a : Zmod p) ≠ 0) :
-  legendre_sym a p = (-1^((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a*x : Zmod p).val).card) :=
-  have  :
-    (legendre_sym a p : Zmod p) =
-      ((-1^((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a*x : Zmod p).val).card : ℤ) : Zmod p) :=
-    by 
-      rw [legendre_sym_eq_pow, gauss_lemma_aux₂ p ha0] <;> simp 
-  by 
-    cases legendre_sym_eq_one_or_neg_one a p ha0 <;>
-      cases neg_one_pow_eq_or ℤ ((Ico 1 (p / 2).succ).filter fun x : ℕ => p / 2 < (a*x : Zmod p).val).card <;>
-        simp_all [ne_neg_self p one_ne_zero, (ne_neg_self p one_ne_zero).symm]
+theorem gauss_lemma
+{a : exprℕ()}
+[fact «expr = »(«expr % »(p, 2), 1)]
+(ha0 : «expr ≠ »((a : zmod p), 0)) : «expr = »(legendre_sym a p, «expr ^ »(«expr- »(1), ((Ico 1 «expr / »(p, 2).succ).filter (λ
+    x : exprℕ(), «expr < »(«expr / »(p, 2), («expr * »(a, x) : zmod p).val))).card)) :=
+have «expr = »((legendre_sym a p : zmod p), ((«expr ^ »(«expr- »(1), ((Ico 1 «expr / »(p, 2).succ).filter (λ
+    x : exprℕ(), «expr < »(«expr / »(p, 2), («expr * »(a, x) : zmod p).val))).card) : exprℤ()) : zmod p)), by rw ["[", expr legendre_sym_eq_pow, ",", expr gauss_lemma_aux₂ p ha0, "]"] []; simp [] [] [] [] [] [],
+begin
+  cases [expr legendre_sym_eq_one_or_neg_one a p ha0] []; cases [expr neg_one_pow_eq_or exprℤ() ((Ico 1 «expr / »(p, 2).succ).filter (λ
+     x : exprℕ(), «expr < »(«expr / »(p, 2), («expr * »(a, x) : zmod p).val))).card] []; simp [] [] [] ["[", "*", ",", expr ne_neg_self p one_ne_zero, ",", expr (ne_neg_self p one_ne_zero).symm, "]"] [] ["at", "*"]
+end
 
 theorem legendre_sym_eq_one_iff {a : ℕ} (ha0 : (a : Zmod p) ≠ 0) : legendre_sym a p = 1 ↔ ∃ b : Zmod p, (b^2) = a :=
   by 
@@ -489,7 +473,7 @@ theorem legendre_sym_two [hp1 : Fact (p % 2 = 1)] : legendre_sym 2 p = (-1^(p / 
   have hcard : (Ico 1 (p / 2).succ).card = p / 2 :=
     by 
       simp 
-  have hx2 : ∀ x _ : x ∈ Ico 1 (p / 2).succ, (2*x : Zmod p).val = 2*x :=
+  have hx2 : ∀ x (_ : x ∈ Ico 1 (p / 2).succ), (2*x : Zmod p).val = 2*x :=
     fun x hx =>
       have h2xp : (2*x) < p :=
         calc (2*x) ≤ 2*p / 2 :=

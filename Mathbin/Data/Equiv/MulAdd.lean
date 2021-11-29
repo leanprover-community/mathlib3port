@@ -160,7 +160,7 @@ theorem to_equiv_mk (f : M → N) (g : N → M) h₁ h₂ h₃ : (mk f g h₁ h�
   rfl
 
 @[simp, toAdditive]
-theorem symm_symm : ∀ f : M ≃* N, f.symm.symm = f
+theorem symm_symm : ∀ (f : M ≃* N), f.symm.symm = f
 | ⟨f, g, h₁, h₂, h₃⟩ => rfl
 
 @[toAdditive]

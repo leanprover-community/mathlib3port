@@ -40,7 +40,7 @@ A matching on `G` is a subset of its edges such that no two edges share a vertex
 structure matching where 
   Edges : Set (Sym2 V)
   sub_edges : edges ⊆ G.edge_set 
-  Disjoint : ∀ x y _ : x ∈ edges _ : y ∈ edges v : V, v ∈ x ∧ v ∈ y → x = y
+  Disjoint : ∀ x y (_ : x ∈ edges) (_ : y ∈ edges) (v : V), v ∈ x ∧ v ∈ y → x = y
 
 instance  : Inhabited (matching G) :=
   ⟨⟨∅, Set.empty_subset _, fun _ _ hx => False.elim (Set.not_mem_empty _ hx)⟩⟩
@@ -61,7 +61,7 @@ A perfect matching `M` on graph `G` is a matching such that
 def matching.is_perfect (M : G.matching) : Prop :=
   M.support = Set.Univ
 
-theorem matching.is_perfect_iff (M : G.matching) : M.is_perfect ↔ ∀ v : V, ∃ (e : _)(_ : e ∈ M.edges), v ∈ e :=
+theorem matching.is_perfect_iff (M : G.matching) : M.is_perfect ↔ ∀ (v : V), ∃ (e : _)(_ : e ∈ M.edges), v ∈ e :=
   Set.eq_univ_iff_forall
 
 end SimpleGraph

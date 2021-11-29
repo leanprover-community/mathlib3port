@@ -668,20 +668,15 @@ variable{module_M₃ : Module R M₃}{module_M₄ : Module R M₄}
 
 variable(e₁ : M ≃ₗ[R] M₂)(e₂ : M₃ ≃ₗ[R] M₄)
 
+-- error in LinearAlgebra.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Equivalence given by a block lower diagonal matrix. `e₁` and `e₂` are diagonal square blocks,
   and `f` is a rectangular block below the diagonal. -/
-protected def skew_prod (f : M →ₗ[R] M₄) : (M × M₃) ≃ₗ[R] M₂ × M₄ :=
-  { ((e₁ : M →ₗ[R] M₂).comp (LinearMap.fst R M M₃)).Prod
-      ((e₂ : M₃ →ₗ[R] M₄).comp (LinearMap.snd R M M₃)+f.comp (LinearMap.fst R M M₃)) with
-    invFun := fun p : M₂ × M₄ => (e₁.symm p.1, e₂.symm (p.2 - f (e₁.symm p.1))),
-    left_inv :=
-      fun p =>
-        by 
-          simp ,
-    right_inv :=
-      fun p =>
-        by 
-          simp  }
+protected
+def skew_prod (f : «expr →ₗ[ ] »(M, R, M₄)) : «expr ≃ₗ[ ] »(«expr × »(M, M₃), R, «expr × »(M₂, M₄)) :=
+{ inv_fun := λ p : «expr × »(M₂, M₄), (e₁.symm p.1, e₂.symm «expr - »(p.2, f (e₁.symm p.1))),
+  left_inv := λ p, by simp [] [] [] [] [] [],
+  right_inv := λ p, by simp [] [] [] [] [] [],
+  ..((e₁ : «expr →ₗ[ ] »(M, R, M₂)).comp (linear_map.fst R M M₃)).prod «expr + »((e₂ : «expr →ₗ[ ] »(M₃, R, M₄)).comp (linear_map.snd R M M₃), f.comp (linear_map.fst R M M₃)) }
 
 @[simp]
 theorem skew_prod_apply (f : M →ₗ[R] M₄) x : e₁.skew_prod e₂ f x = (e₁ x.1, e₂ x.2+f x.1) :=

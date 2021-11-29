@@ -26,16 +26,16 @@ Note we don't `extend preadditive C` here, as `abelian C` already extends it,
 and we'll need to have both typeclasses sometimes.
 -/
 class monoidal_preadditive where 
-  tensor_zero' : ∀ {W X Y Z : C} f : W ⟶ X, f ⊗ (0 : Y ⟶ Z) = 0 :=  by 
+  tensor_zero' : ∀ {W X Y Z : C} (f : W ⟶ X), f ⊗ (0 : Y ⟶ Z) = 0 :=  by 
   runTac 
     obviously 
-  zero_tensor' : ∀ {W X Y Z : C} f : Y ⟶ Z, (0 : W ⟶ X) ⊗ f = 0 :=  by 
+  zero_tensor' : ∀ {W X Y Z : C} (f : Y ⟶ Z), (0 : W ⟶ X) ⊗ f = 0 :=  by 
   runTac 
     obviously 
-  tensor_add' : ∀ {W X Y Z : C} f : W ⟶ X g h : Y ⟶ Z, (f ⊗ g+h) = (f ⊗ g)+f ⊗ h :=  by 
+  tensor_add' : ∀ {W X Y Z : C} (f : W ⟶ X) (g h : Y ⟶ Z), (f ⊗ g+h) = (f ⊗ g)+f ⊗ h :=  by 
   runTac 
     obviously 
-  add_tensor' : ∀ {W X Y Z : C} f g : W ⟶ X h : Y ⟶ Z, (f+g) ⊗ h = (f ⊗ h)+g ⊗ h :=  by 
+  add_tensor' : ∀ {W X Y Z : C} (f g : W ⟶ X) (h : Y ⟶ Z), (f+g) ⊗ h = (f ⊗ h)+g ⊗ h :=  by 
   runTac 
     obviously
 

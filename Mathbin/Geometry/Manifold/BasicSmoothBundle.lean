@@ -82,40 +82,41 @@ open TopologicalSpace Set
 
 open_locale Manifold TopologicalSpace
 
+-- error in Geometry.Manifold.BasicSmoothBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Core structure used to create a smooth bundle above `M` (a manifold over the model with
 corner `I`) with fiber the normed vector space `F` over `𝕜`, which is trivial in the chart domains
 of `M`. This structure registers the changes in the fibers when one changes coordinate charts in the
 base. We do not require the change of coordinates of the fibers to be linear, only smooth.
 Therefore, the fibers of the resulting bundle will not inherit a canonical vector space structure
 in general. -/
-structure
-  BasicSmoothBundleCore{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E]{H :
-    Type
-      _}[TopologicalSpace
-      H](I :
-    ModelWithCorners 𝕜 E
-      H)(M :
-    Type
-      _)[TopologicalSpace
-      M][ChartedSpace H M][SmoothManifoldWithCorners I M](F : Type _)[NormedGroup F][NormedSpace 𝕜 F] where
-  
-  coordChange : atlas H M → atlas H M → H → F → F 
-  coord_change_self : ∀ i : atlas H M, ∀ x _ : x ∈ i.1.Target, ∀ v, coord_change i i x v = v 
-  coord_change_comp :
-  ∀ i j k : atlas H M,
-    ∀ x _ : x ∈ ((i.1.symm.trans j.1).trans (j.1.symm.trans k.1)).Source,
-      ∀ v, (coord_change j k ((i.1.symm.trans j.1) x)) (coord_change i j x v) = coord_change i k x v 
-  coord_change_smooth :
-  ∀ i j : atlas H M,
-    TimesContDiffOn 𝕜 ∞ (fun p : E × F => coord_change i j (I.symm p.1) p.2)
-      ((I '' (i.1.symm.trans j.1).Source).Prod (univ : Set F))
+structure basic_smooth_bundle_core
+{𝕜 : Type*}
+[nondiscrete_normed_field 𝕜]
+{E : Type*}
+[normed_group E]
+[normed_space 𝕜 E]
+{H : Type*}
+[topological_space H]
+(I : model_with_corners 𝕜 E H)
+(M : Type*)
+[topological_space M]
+[charted_space H M]
+[smooth_manifold_with_corners I M]
+(F : Type*)
+[normed_group F]
+[normed_space 𝕜 F] :=
+  (coord_change : atlas H M → atlas H M → H → F → F)
+  (coord_change_self : ∀ i : atlas H M, ∀ x «expr ∈ » i.1.target, ∀ v, «expr = »(coord_change i i x v, v))
+  (coord_change_comp : ∀
+   i
+   j
+   k : atlas H M, ∀
+   x «expr ∈ » ((i.1.symm.trans j.1).trans (j.1.symm.trans k.1)).source, ∀
+   v, «expr = »(coord_change j k (i.1.symm.trans j.1 x) (coord_change i j x v), coord_change i k x v))
+  (coord_change_smooth : ∀
+   i
+   j : atlas H M, times_cont_diff_on 𝕜 «expr∞»() (λ
+    p : «expr × »(E, F), coord_change i j (I.symm p.1) p.2) («expr '' »(I, (i.1.symm.trans j.1).source).prod (univ : set F)))
 
 /-- The trivial basic smooth bundle core, in which all the changes of coordinates are the
 identity. -/

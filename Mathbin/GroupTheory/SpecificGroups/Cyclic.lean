@@ -72,7 +72,7 @@ def IsCyclic.commGroup [hg : Groupₓ α] [IsCyclic α] : CommGroupₓ α :=
 
 variable[Groupₓ α]
 
-theorem MonoidHom.map_cyclic {G : Type _} [Groupₓ G] [h : IsCyclic G] (σ : G →* G) : ∃ m : ℤ, ∀ g : G, σ g = g ^ m :=
+theorem MonoidHom.map_cyclic {G : Type _} [Groupₓ G] [h : IsCyclic G] (σ : G →* G) : ∃ m : ℤ, ∀ (g : G), σ g = g ^ m :=
   by 
     obtain ⟨h, hG⟩ := IsCyclic.exists_generator G 
     obtain ⟨m, hm⟩ := hG (σ h)
@@ -174,44 +174,41 @@ section Classical
 
 open_locale Classical
 
-theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] {n : ℕ} (hn0 : 0 < n) :
-  (univ.filter fun a : α => a ^ n = 1).card ≤ n :=
-  let ⟨g, hg⟩ := IsCyclic.exists_generator α 
-  calc
-    (univ.filter fun a : α => a ^ n = 1).card ≤
-      (zpowers (g ^ (Fintype.card α / gcd n (Fintype.card α))) : Set α).toFinset.card :=
-    card_le_of_subset
-      fun x hx =>
-        let ⟨m, hm⟩ := show x ∈ Submonoid.powers g from mem_powers_iff_mem_zpowers.2$ hg x 
-        Set.mem_to_finset.2
-          ⟨(m / (Fintype.card α / gcd n (Fintype.card α)) : ℕ),
-            have hgmn : (g ^ m*gcd n (Fintype.card α)) = 1 :=
-              by 
-                rw [pow_mulₓ, hm, ←pow_gcd_card_eq_one_iff] <;> exact (mem_filter.1 hx).2
-            by 
-              rw [zpow_coe_nat, ←pow_mulₓ, Nat.mul_div_cancel_left', hm]
-              refine' dvd_of_mul_dvd_mul_right (gcd_pos_of_pos_left (Fintype.card α) hn0) _ 
-              conv  => toLHS rw [Nat.div_mul_cancelₓ (gcd_dvd_right _ _), ←order_of_eq_card_of_forall_mem_zpowers hg]
-              exact order_of_dvd_of_pow_eq_one hgmn⟩
-    _ ≤ n :=
-    let ⟨m, hm⟩ := gcd_dvd_right n (Fintype.card α)
-    have hm0 : 0 < m :=
-      Nat.pos_of_ne_zeroₓ$
-        fun hm0 =>
-          by 
-            rw [hm0, mul_zero, Fintype.card_eq_zero_iff] at hm 
-            exact hm.elim' 1
-    by 
-      rw [←Fintype.card_of_finset' _ fun _ => Set.mem_to_finset, ←order_eq_card_zpowers, order_of_pow g,
-        order_of_eq_card_of_forall_mem_zpowers hg]
-      rw [hm]
-      rw [Nat.mul_div_cancel_leftₓ _ (gcd_pos_of_pos_left _ hn0), gcd_mul_left_left, hm, Nat.mul_div_cancelₓ _ hm0]
-      exact le_of_dvd hn0 (gcd_dvd_left _ _)
-    
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_cyclic.card_pow_eq_one_le
+[decidable_eq α]
+[fintype α]
+[is_cyclic α]
+{n : exprℕ()}
+(hn0 : «expr < »(0, n)) : «expr ≤ »((univ.filter (λ a : α, «expr = »(«expr ^ »(a, n), 1))).card, n) :=
+let ⟨g, hg⟩ := is_cyclic.exists_generator α in
+calc
+  «expr ≤ »((univ.filter (λ
+     a : α, «expr = »(«expr ^ »(a, n), 1))).card, (zpowers «expr ^ »(g, «expr / »(fintype.card α, gcd n (fintype.card α))) : set α).to_finset.card) : card_le_of_subset (λ
+   x hx, let ⟨m, hm⟩ := show «expr ∈ »(x, submonoid.powers g), from «expr $ »(mem_powers_iff_mem_zpowers.2, hg x) in
+   set.mem_to_finset.2 ⟨(«expr / »(m, «expr / »(fintype.card α, gcd n (fintype.card α))) : exprℕ()), have hgmn : «expr = »(«expr ^ »(g, «expr * »(m, gcd n (fintype.card α))), 1), by rw ["[", expr pow_mul, ",", expr hm, ",", "<-", expr pow_gcd_card_eq_one_iff, "]"] []; exact [expr (mem_filter.1 hx).2],
+    begin
+      rw ["[", expr zpow_coe_nat, ",", "<-", expr pow_mul, ",", expr nat.mul_div_cancel_left', ",", expr hm, "]"] [],
+      refine [expr dvd_of_mul_dvd_mul_right (gcd_pos_of_pos_left (fintype.card α) hn0) _],
+      conv [] [] { to_lhs,
+        rw ["[", expr nat.div_mul_cancel (gcd_dvd_right _ _), ",", "<-", expr order_of_eq_card_of_forall_mem_zpowers hg, "]"] },
+      exact [expr order_of_dvd_of_pow_eq_one hgmn]
+    end⟩)
+  «expr ≤ »(..., n) : let ⟨m, hm⟩ := gcd_dvd_right n (fintype.card α) in
+  have hm0 : «expr < »(0, m), from «expr $ »(nat.pos_of_ne_zero, λ
+   hm0, by { rw ["[", expr hm0, ",", expr mul_zero, ",", expr fintype.card_eq_zero_iff, "]"] ["at", ident hm],
+     exact [expr hm.elim' 1] }),
+  begin
+    rw ["[", "<-", expr fintype.card_of_finset' _ (λ
+      _, set.mem_to_finset), ",", "<-", expr order_eq_card_zpowers, ",", expr order_of_pow g, ",", expr order_of_eq_card_of_forall_mem_zpowers hg, "]"] [],
+    rw ["[", expr hm, "]"] [] { occs := occurrences.pos «expr[ , ]»([2, 3]) },
+    rw ["[", expr nat.mul_div_cancel_left _ (gcd_pos_of_pos_left _ hn0), ",", expr gcd_mul_left_left, ",", expr hm, ",", expr nat.mul_div_cancel _ hm0, "]"] [],
+    exact [expr le_of_dvd hn0 (gcd_dvd_left _ _)]
+  end
 
 end Classical
 
-theorem IsCyclic.exists_monoid_generator [Fintype α] [IsCyclic α] : ∃ x : α, ∀ y : α, y ∈ Submonoid.powers x :=
+theorem IsCyclic.exists_monoid_generator [Fintype α] [IsCyclic α] : ∃ x : α, ∀ (y : α), y ∈ Submonoid.powers x :=
   by 
     simpRw [mem_powers_iff_mem_zpowers]
     exact IsCyclic.exists_generator α
@@ -220,14 +217,14 @@ section
 
 variable[DecidableEq α][Fintype α]
 
-theorem IsCyclic.image_range_order_of (ha : ∀ x : α, x ∈ zpowers a) :
+theorem IsCyclic.image_range_order_of (ha : ∀ (x : α), x ∈ zpowers a) :
   Finset.image (fun i => a ^ i) (range (orderOf a)) = univ :=
   by 
     simpRw [←SetLike.mem_coe]  at ha 
     simp only [image_range_order_of, set.eq_univ_iff_forall.mpr ha]
     convert Set.to_finset_univ
 
-theorem IsCyclic.image_range_card (ha : ∀ x : α, x ∈ zpowers a) :
+theorem IsCyclic.image_range_card (ha : ∀ (x : α), x ∈ zpowers a) :
   Finset.image (fun i => a ^ i) (range (Fintype.card α)) = univ :=
   by 
     rw [←order_of_eq_card_of_forall_mem_zpowers ha, IsCyclic.image_range_order_of ha]
@@ -236,34 +233,31 @@ end
 
 section Totient
 
-variable[DecidableEq α][Fintype α](hn : ∀ n : ℕ, 0 < n → (univ.filter fun a : α => a ^ n = 1).card ≤ n)
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+variables
+[decidable_eq α]
+[fintype α]
+(hn : ∀ n : exprℕ(), «expr < »(0, n) → «expr ≤ »((univ.filter (λ a : α, «expr = »(«expr ^ »(a, n), 1))).card, n))
 
 include hn
 
-theorem card_pow_eq_one_eq_order_of_aux (a : α) :
-  (Finset.univ.filter fun b : α => b ^ orderOf a = 1).card = orderOf a :=
-  le_antisymmₓ (hn _ (order_of_pos a))
-    (calc orderOf a = @Fintype.card (zpowers a) (id _) := order_eq_card_zpowers 
-      _ ≤
-        @Fintype.card («expr↑ » (univ.filter fun b : α => b ^ orderOf a = 1) : Set α)
-          (Fintype.ofFinset _ fun _ => Iff.rfl) :=
-      @Fintype.card_le_of_injective (zpowers a) («expr↑ » (univ.filter fun b : α => b ^ orderOf a = 1) : Set α) (id _)
-        (id _)
-        (fun b =>
-          ⟨b.1,
-            mem_filter.2
-              ⟨mem_univ _,
-                let ⟨i, hi⟩ := b.2
-                by 
-                  rw [←hi, ←zpow_coe_nat, ←zpow_mul, mul_commₓ, zpow_mul, zpow_coe_nat, pow_order_of_eq_one,
-                    one_zpow]⟩⟩)
-        fun _ _ h => Subtype.eq (Subtype.mk.injₓ h)
-      _ = (univ.filter fun b : α => b ^ orderOf a = 1).card := Fintype.card_of_finset _ _
-      )
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem card_pow_eq_one_eq_order_of_aux
+(a : α) : «expr = »((finset.univ.filter (λ b : α, «expr = »(«expr ^ »(b, order_of a), 1))).card, order_of a) :=
+le_antisymm (hn _ (order_of_pos a)) (calc
+   «expr = »(order_of a, @fintype.card (zpowers a) (id _)) : order_eq_card_zpowers
+   «expr ≤ »(..., @fintype.card («expr↑ »(univ.filter (λ
+      b : α, «expr = »(«expr ^ »(b, order_of a), 1))) : set α) (fintype.of_finset _ (λ
+      _, iff.rfl))) : @fintype.card_le_of_injective (zpowers a) («expr↑ »(univ.filter (λ
+     b : α, «expr = »(«expr ^ »(b, order_of a), 1))) : set α) (id _) (id _) (λ
+    b, ⟨b.1, mem_filter.2 ⟨mem_univ _, let ⟨i, hi⟩ := b.2 in
+      by rw ["[", "<-", expr hi, ",", "<-", expr zpow_coe_nat, ",", "<-", expr zpow_mul, ",", expr mul_comm, ",", expr zpow_mul, ",", expr zpow_coe_nat, ",", expr pow_order_of_eq_one, ",", expr one_zpow, "]"] []⟩⟩) (λ
+    _ _ h, subtype.eq (subtype.mk.inj h))
+   «expr = »(..., (univ.filter (λ b : α, «expr = »(«expr ^ »(b, order_of a), 1))).card) : fintype.card_of_finset _ _)
 
 open_locale Nat
 
--- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 private
 theorem card_order_of_eq_totient_aux₁ : ∀
 {d : exprℕ()}, «expr ∣ »(d, fintype.card α) → «expr < »(0, (univ.filter (λ
@@ -295,72 +289,55 @@ have hinsert₁ : «expr ∉ »(d.succ, (range d.succ).filter ((«expr ∣ » d.
    «expr = »(..., _) : by rw ["[", expr h, ",", "<-", expr sum_insert hinsert₁, "]"] []; exact [expr finset.sum_congr hinsert.symm (λ
      _ _, rfl)])
 
-theorem card_order_of_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
-  (univ.filter fun a : α => orderOf a = d).card = φ d :=
-  by_contradiction$
-    fun h =>
-      have h0 : (univ.filter fun a : α => orderOf a = d).card = 0 :=
-        not_not.1 (mt pos_iff_ne_zero.2 (mt (card_order_of_eq_totient_aux₁ hn hd) h))
-      let c := Fintype.card α 
-      have hc0 : 0 < c := Fintype.card_pos_iff.2 ⟨1⟩
-      lt_irreflₓ c$
-        calc c = (univ.filter fun a : α => a ^ c = 1).card :=
-          congr_argₓ card$
-            by 
-              simp [Finset.ext_iff, c]
-          _ = ∑m in (range c.succ).filter (· ∣ c), (univ.filter fun a : α => orderOf a = m).card :=
-          (sum_card_order_of_eq_card_pow_eq_one hc0).symm 
-          _ = ∑m in ((range c.succ).filter (· ∣ c)).erase d, (univ.filter fun a : α => orderOf a = m).card :=
-          Eq.symm
-            (sum_subset (erase_subset _ _)
-              fun m hm₁ hm₂ =>
-                have  : m = d :=
-                  by 
-                    simp  at * <;> cc 
-                by 
-                  simp_all [Finset.ext_iff] <;> exact h0)
-          _ ≤ ∑m in ((range c.succ).filter (· ∣ c)).erase d, φ m :=
-          sum_le_sum
-            fun m hm =>
-              have hmc : m ∣ c :=
-                by 
-                  simp  at hm <;> tauto
-              (imp_iff_not_or.1 (card_order_of_eq_totient_aux₁ hn hmc)).elim
-                (fun h =>
-                  by 
-                    simp [Nat.le_zero_iff.1 (le_of_not_gtₓ h), Nat.zero_leₓ])
-                fun h =>
-                  by 
-                    rw [h]
-          _ < φ d+∑m in ((range c.succ).filter (· ∣ c)).erase d, φ m :=
-          lt_add_of_pos_left _
-            (totient_pos (Nat.pos_of_ne_zeroₓ fun h => pos_iff_ne_zero.1 hc0 (eq_zero_of_zero_dvd$ h ▸ hd)))
-          _ = ∑m in insert d (((range c.succ).filter (· ∣ c)).erase d), φ m :=
-          Eq.symm
-            (sum_insert
-              (by 
-                simp ))
-          _ = ∑m in (range c.succ).filter (· ∣ c), φ m :=
-          Finset.sum_congr (Finset.insert_erase (mem_filter.2 ⟨mem_range.2 (lt_succ_of_le (le_of_dvd hc0 hd)), hd⟩))
-            fun _ _ => rfl 
-          _ = c := sum_totient _
-          
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem card_order_of_eq_totient_aux₂
+{d : exprℕ()}
+(hd : «expr ∣ »(d, fintype.card α)) : «expr = »((univ.filter (λ a : α, «expr = »(order_of a, d))).card, exprφ() d) :=
+«expr $ »(by_contradiction, λ
+ h, have h0 : «expr = »((univ.filter (λ
+    a : α, «expr = »(order_of a, d))).card, 0) := not_not.1 (mt pos_iff_ne_zero.2 (mt (card_order_of_eq_totient_aux₁ hn hd) h)),
+ let c := fintype.card α in
+ have hc0 : «expr < »(0, c), from fintype.card_pos_iff.2 ⟨1⟩,
+ «expr $ »(lt_irrefl c, calc
+    «expr = »(c, (univ.filter (λ
+       a : α, «expr = »(«expr ^ »(a, c), 1))).card) : «expr $ »(congr_arg card, by simp [] [] [] ["[", expr finset.ext_iff, ",", expr c, "]"] [] [])
+    «expr = »(..., «expr∑ in , »((m), (range c.succ).filter ((«expr ∣ » c)), (univ.filter (λ
+        a : α, «expr = »(order_of a, m))).card)) : (sum_card_order_of_eq_card_pow_eq_one hc0).symm
+    «expr = »(..., «expr∑ in , »((m), ((range c.succ).filter ((«expr ∣ » c))).erase d, (univ.filter (λ
+        a : α, «expr = »(order_of a, m))).card)) : eq.symm (sum_subset (erase_subset _ _) (λ
+      m hm₁ hm₂, have «expr = »(m, d), by simp [] [] [] [] [] ["at", "*"]; cc,
+      by simp [] [] [] ["[", "*", ",", expr finset.ext_iff, "]"] [] ["at", "*"]; exact [expr h0]))
+    «expr ≤ »(..., «expr∑ in , »((m), ((range c.succ).filter ((«expr ∣ » c))).erase d, exprφ() m)) : sum_le_sum (λ
+     m hm, have hmc : «expr ∣ »(m, c), by simp [] [] [] [] [] ["at", ident hm]; tauto [],
+     (imp_iff_not_or.1 (card_order_of_eq_totient_aux₁ hn hmc)).elim (λ
+      h, by simp [] [] [] ["[", expr nat.le_zero_iff.1 (le_of_not_gt h), ",", expr nat.zero_le, "]"] [] []) (λ
+      h, by rw [expr h] []))
+    «expr < »(..., «expr + »(exprφ() d, «expr∑ in , »((m), ((range c.succ).filter ((«expr ∣ » c))).erase d, exprφ() m))) : lt_add_of_pos_left _ (totient_pos (nat.pos_of_ne_zero (λ
+       h, pos_iff_ne_zero.1 hc0 «expr $ »(eq_zero_of_zero_dvd, «expr ▸ »(h, hd)))))
+    «expr = »(..., «expr∑ in , »((m), insert d (((range c.succ).filter ((«expr ∣ » c))).erase d), exprφ() m)) : eq.symm (sum_insert (by simp [] [] [] [] [] []))
+    «expr = »(..., «expr∑ in , »((m), (range c.succ).filter ((«expr ∣ » c)), exprφ() m)) : finset.sum_congr (finset.insert_erase (mem_filter.2 ⟨mem_range.2 (lt_succ_of_le (le_of_dvd hc0 hd)), hd⟩)) (λ
+     _ _, rfl)
+    «expr = »(..., c) : sum_totient _))
 
-theorem is_cyclic_of_card_pow_eq_one_le : IsCyclic α :=
-  have  : (univ.filter fun a : α => orderOf a = Fintype.card α).Nonempty :=
-    card_pos.1$
-      by 
-        rw [card_order_of_eq_totient_aux₂ hn dvd_rfl] <;> exact totient_pos (Fintype.card_pos_iff.2 ⟨1⟩)
-  let ⟨x, hx⟩ := this 
-  is_cyclic_of_order_of_eq_card x (Finset.mem_filter.1 hx).2
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_cyclic_of_card_pow_eq_one_le : is_cyclic α :=
+have (univ.filter (λ
+  a : α, «expr = »(order_of a, fintype.card α))).nonempty, from «expr $ »(card_pos.1, by rw ["[", expr card_order_of_eq_totient_aux₂ hn dvd_rfl, "]"] []; exact [expr totient_pos (fintype.card_pos_iff.2 ⟨1⟩)]),
+let ⟨x, hx⟩ := this in
+is_cyclic_of_order_of_eq_card x (finset.mem_filter.1 hx).2
 
 end Totient
 
-theorem IsCyclic.card_order_of_eq_totient [IsCyclic α] [Fintype α] {d : ℕ} (hd : d ∣ Fintype.card α) :
-  (univ.filter fun a : α => orderOf a = d).card = totient d :=
-  by 
-    classical 
-    apply card_order_of_eq_totient_aux₂ (fun n => IsCyclic.card_pow_eq_one_le) hd
+-- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_cyclic.card_order_of_eq_totient
+[is_cyclic α]
+[fintype α]
+{d : exprℕ()}
+(hd : «expr ∣ »(d, fintype.card α)) : «expr = »((univ.filter (λ a : α, «expr = »(order_of a, d))).card, totient d) :=
+begin
+  classical,
+  apply [expr card_order_of_eq_totient_aux₂ (λ n, is_cyclic.card_pow_eq_one_le) hd]
+end
 
 -- error in GroupTheory.SpecificGroups.Cyclic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A finite group of prime order is simple. -/
@@ -398,7 +375,7 @@ variable{G : Type _}{H : Type _}[Groupₓ G][Groupₓ H]
   Also see `comm_group_of_cycle_center_quotient` for the `comm_group` instance -/
 theorem commutative_of_cyclic_center_quotient [IsCyclic H] (f : G →* H) (hf : f.ker ≤ center G) (a b : G) :
   (a*b) = b*a :=
-  let ⟨⟨x, y, (hxy : f y = x)⟩, (hx : ∀ a : f.range, a ∈ zpowers _)⟩ := IsCyclic.exists_generator f.range 
+  let ⟨⟨x, y, (hxy : f y = x)⟩, (hx : ∀ (a : f.range), a ∈ zpowers _)⟩ := IsCyclic.exists_generator f.range 
   let ⟨m, hm⟩ := hx ⟨f a, a, rfl⟩
   let ⟨n, hn⟩ := hx ⟨f b, b, rfl⟩
   have hm : x ^ m = f a :=

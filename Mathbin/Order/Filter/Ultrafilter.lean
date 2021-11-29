@@ -208,6 +208,9 @@ theorem mem_pure {a : α} {s : Set α} : s ∈ (pure a : Ultrafilter α) ↔ a �
 instance  [Inhabited α] : Inhabited (Ultrafilter α) :=
   ⟨pure (default _)⟩
 
+instance  [Nonempty α] : Nonempty (Ultrafilter α) :=
+  Nonempty.map pure inferInstance
+
 /-- Monadic bind for ultrafilters, coming from the one on filters
 defined in terms of map and join.-/
 def bind (f : Ultrafilter α) (m : α → Ultrafilter β) : Ultrafilter β :=
@@ -275,7 +278,7 @@ theorem of_coe (f : Ultrafilter α) : of («expr↑ » f) = f :=
   coe_inj.1$ f.unique (of_le f)
 
 theorem exists_ultrafilter_of_finite_inter_nonempty (S : Set (Set α))
-  (cond : ∀ T : Finset (Set α), («expr↑ » T : Set (Set α)) ⊆ S → (⋂₀(«expr↑ » T : Set (Set α))).Nonempty) :
+  (cond : ∀ (T : Finset (Set α)), («expr↑ » T : Set (Set α)) ⊆ S → (⋂₀(«expr↑ » T : Set (Set α))).Nonempty) :
   ∃ F : Ultrafilter α, S ⊆ F.sets :=
   by 
     suffices  : ∃ F : Filter α, ne_bot F ∧ S ⊆ F.sets
@@ -314,7 +317,7 @@ begin
   simpa [] [] [] [] [] ["using", expr H ((of g).map coe) (map_le_iff_le_comap.mpr (of_le g))]
 end
 
-theorem le_iff_ultrafilter {f₁ f₂ : Filter α} : f₁ ≤ f₂ ↔ ∀ g : Ultrafilter α, «expr↑ » g ≤ f₁ → «expr↑ » g ≤ f₂ :=
+theorem le_iff_ultrafilter {f₁ f₂ : Filter α} : f₁ ≤ f₂ ↔ ∀ (g : Ultrafilter α), «expr↑ » g ≤ f₁ → «expr↑ » g ≤ f₂ :=
   ⟨fun h g h₁ => h₁.trans h, fun h s hs => mem_iff_ultrafilter.2$ fun g hg => h g hg hs⟩
 
 /-- A filter equals the intersection of all the ultrafilters which contain it. -/
@@ -326,7 +329,7 @@ theorem supr_ultrafilter_le_eq (f : Filter α) : (⨆(g : Ultrafilter α)(hg : �
 
 /-- The `tendsto` relation can be checked on ultrafilters. -/
 theorem tendsto_iff_ultrafilter (f : α → β) (l₁ : Filter α) (l₂ : Filter β) :
-  tendsto f l₁ l₂ ↔ ∀ g : Ultrafilter α, «expr↑ » g ≤ l₁ → tendsto f g l₂ :=
+  tendsto f l₁ l₂ ↔ ∀ (g : Ultrafilter α), «expr↑ » g ≤ l₁ → tendsto f g l₂ :=
   by 
     simpa only [tendsto_iff_comap] using le_iff_ultrafilter
 
@@ -334,7 +337,7 @@ theorem exists_ultrafilter_iff {f : Filter α} : (∃ u : Ultrafilter α, «expr
   ⟨fun ⟨u, uf⟩ => ne_bot_of_le uf, fun h => @exists_ultrafilter_le _ _ h⟩
 
 theorem forall_ne_bot_le_iff {g : Filter α} {p : Filter α → Prop} (hp : Monotone p) :
-  (∀ f : Filter α, ne_bot f → f ≤ g → p f) ↔ ∀ f : Ultrafilter α, «expr↑ » f ≤ g → p f :=
+  (∀ (f : Filter α), ne_bot f → f ≤ g → p f) ↔ ∀ (f : Ultrafilter α), «expr↑ » f ≤ g → p f :=
   by 
     refine' ⟨fun H f hf => H f f.ne_bot hf, _⟩
     intros H f hf hfg 

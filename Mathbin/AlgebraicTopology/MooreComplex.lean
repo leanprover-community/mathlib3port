@@ -48,19 +48,18 @@ open CategoryTheory.Subobject
 
 variable(X : simplicial_object C)
 
+-- error in AlgebraicTopology.MooreComplex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The normalized Moore complex in degree `n`, as a subobject of `X n`.
--/
-@[simp]
-def obj_X : ∀ n : ℕ, subobject (X.obj (op (SimplexCategory.mk n)))
-| 0 => ⊤
-| n+1 => Finset.univ.inf fun k : Finₓ (n+1) => kernel_subobject (X.δ k.succ)
+-/ @[simp] def obj_X : ∀ n : exprℕ(), subobject (X.obj (op (simplex_category.mk n)))
+| 0 := «expr⊤»()
+| «expr + »(n, 1) := finset.univ.inf (λ k : fin «expr + »(n, 1), kernel_subobject (X.δ k.succ))
 
 /--
 The differentials in the normalized Moore complex.
 -/
 @[simp]
-def obj_d : ∀ n : ℕ, (obj_X X (n+1) : C) ⟶ (obj_X X n : C)
+def obj_d : ∀ (n : ℕ), (obj_X X (n+1) : C) ⟶ (obj_X X n : C)
 | 0 => subobject.arrow _ ≫ X.δ (0 : Finₓ 2) ≫ inv (⊤ : subobject _).arrow
 | n+1 =>
   by 

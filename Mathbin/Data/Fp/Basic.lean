@@ -50,7 +50,7 @@ def float.is_finite : float → Bool
 | float.finite s e m f => tt
 | _ => ff
 
-def to_rat : ∀ f : float, f.is_finite → ℚ
+def to_rat : ∀ (f : float), f.is_finite → ℚ
 | float.finite s e m f, _ =>
   let (n, d) := Int.shift2 m 1 e 
   let r := Rat.mkNat n d 

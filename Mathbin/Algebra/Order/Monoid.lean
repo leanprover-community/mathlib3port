@@ -2,7 +2,7 @@ import Mathbin.Algebra.Group.WithOne
 import Mathbin.Algebra.Group.TypeTags 
 import Mathbin.Algebra.Group.Prod 
 import Mathbin.Algebra.Order.MonoidLemmas 
-import Mathbin.Order.BoundedLattice 
+import Mathbin.Order.BoundedOrder 
 import Mathbin.Order.MinMax 
 import Mathbin.Order.RelIso
 
@@ -30,14 +30,14 @@ with a partial order such that `a ≤ b → c * a ≤ c * b` (multiplication is 
 -/
 @[protectProj, ancestor CommMonoidₓ PartialOrderₓ]
 class OrderedCommMonoid(α : Type _) extends CommMonoidₓ α, PartialOrderₓ α where 
-  mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, (c*a) ≤ c*b
+  mul_le_mul_left : ∀ (a b : α), a ≤ b → ∀ (c : α), (c*a) ≤ c*b
 
 /-- An ordered (additive) commutative monoid is a commutative monoid
   with a partial order such that `a ≤ b → c + a ≤ c + b` (addition is monotone)
 -/
 @[protectProj, ancestor AddCommMonoidₓ PartialOrderₓ]
 class OrderedAddCommMonoid(α : Type _) extends AddCommMonoidₓ α, PartialOrderₓ α where 
-  add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, (c+a) ≤ c+b
+  add_le_add_left : ∀ (a b : α), a ≤ b → ∀ (c : α), (c+a) ≤ c+b
 
 attribute [toAdditive] OrderedCommMonoid
 
@@ -89,8 +89,8 @@ class LinearOrderedCommMonoidWithZero(α : Type _) extends LinearOrderedCommMono
   Instances should include number systems with an infinite element adjoined.` -/
 @[protectProj, ancestor LinearOrderedAddCommMonoid HasTop]
 class LinearOrderedAddCommMonoidWithTop(α : Type _) extends LinearOrderedAddCommMonoid α, HasTop α where 
-  le_top : ∀ x : α, x ≤ ⊤
-  top_add' : ∀ x : α, (⊤+x) = ⊤
+  le_top : ∀ (x : α), x ≤ ⊤
+  top_add' : ∀ (x : α), (⊤+x) = ⊤
 
 instance (priority := 100)LinearOrderedAddCommMonoidWithTop.toOrderTop (α : Type u)
   [h : LinearOrderedAddCommMonoidWithTop α] : OrderTop α :=
@@ -212,7 +212,7 @@ instance  [LinearOrderₓ α] : LinearOrderₓ (WithZero α) :=
   WithBot.linearOrder
 
 theorem mul_le_mul_left {α : Type u} [Mul α] [Preorderₓ α] [CovariantClass α α (·*·) (· ≤ ·)] :
-  ∀ a b : WithZero α, a ≤ b → ∀ c : WithZero α, (c*a) ≤ c*b :=
+  ∀ (a b : WithZero α), a ≤ b → ∀ (c : WithZero α), (c*a) ≤ c*b :=
   by 
     rintro (_ | a) (_ | b) h (_ | c) <;>
       try 
@@ -225,7 +225,7 @@ theorem mul_le_mul_left {α : Type u} [Mul α] [Preorderₓ α] [CovariantClass 
       exact CovariantClass.elim _ h
 
 theorem lt_of_mul_lt_mul_left {α : Type u} [Mul α] [PartialOrderₓ α] [ContravariantClass α α (·*·) (· < ·)] :
-  ∀ a b c : WithZero α, ((a*b) < a*c) → b < c :=
+  ∀ (a b c : WithZero α), ((a*b) < a*c) → b < c :=
   by 
     rintro (_ | a) (_ | b) (_ | c) h <;>
       try 
@@ -245,7 +245,7 @@ instance  [OrderedCommMonoid α] : OrderedCommMonoid (WithZero α) :=
 /--
 If `0` is the least element in `α`, then `with_zero α` is an `ordered_add_comm_monoid`.
 -/
-def OrderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : α, 0 ≤ a) : OrderedAddCommMonoid (WithZero α) :=
+def OrderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ (a : α), 0 ≤ a) : OrderedAddCommMonoid (WithZero α) :=
   by 
     suffices 
     refine' { WithZero.partialOrder, WithZero.addCommMonoid with add_le_add_left := this, .. }
@@ -521,8 +521,8 @@ end WithBot
   the integers or other nontrivial `ordered_add_comm_group`s. -/
 @[protectProj, ancestor OrderedAddCommMonoid HasBot]
 class CanonicallyOrderedAddMonoid(α : Type _) extends OrderedAddCommMonoid α, HasBot α where 
-  bot_le : ∀ x : α, ⊥ ≤ x 
-  le_iff_exists_add : ∀ a b : α, a ≤ b ↔ ∃ c, b = a+c
+  bot_le : ∀ (x : α), ⊥ ≤ x 
+  le_iff_exists_add : ∀ (a b : α), a ≤ b ↔ ∃ c, b = a+c
 
 instance (priority := 100)CanonicallyOrderedAddMonoid.toOrderBot (α : Type u) [h : CanonicallyOrderedAddMonoid α] :
   OrderBot α :=
@@ -539,8 +539,8 @@ instance (priority := 100)CanonicallyOrderedAddMonoid.toOrderBot (α : Type u) [
 -/
 @[protectProj, ancestor OrderedCommMonoid HasBot, toAdditive]
 class CanonicallyOrderedMonoid(α : Type _) extends OrderedCommMonoid α, HasBot α where 
-  bot_le : ∀ x : α, ⊥ ≤ x 
-  le_iff_exists_mul : ∀ a b : α, a ≤ b ↔ ∃ c, b = a*c
+  bot_le : ∀ (x : α), ⊥ ≤ x 
+  le_iff_exists_mul : ∀ (a b : α), a ≤ b ↔ ∃ c, b = a*c
 
 @[toAdditive]
 instance (priority := 100)CanonicallyOrderedMonoid.toOrderBot (α : Type u) [h : CanonicallyOrderedMonoid α] :
@@ -721,8 +721,8 @@ section CanonicallyLinearOrderedMonoid
 variable[CanonicallyLinearOrderedMonoid α]
 
 @[toAdditive]
-instance (priority := 100)CanonicallyLinearOrderedMonoid.semilatticeSupBot : SemilatticeSupBot α :=
-  { latticeOfLinearOrder, CanonicallyOrderedMonoid.toOrderBot α with  }
+instance (priority := 100)CanonicallyLinearOrderedMonoid.semilatticeSup : SemilatticeSup α :=
+  { latticeOfLinearOrder with  }
 
 instance WithTop.canonicallyLinearOrderedAddMonoid (α : Type _) [CanonicallyLinearOrderedAddMonoid α] :
   CanonicallyLinearOrderedAddMonoid (WithTop α) :=
@@ -761,23 +761,23 @@ is an additive commutative monoid with a partial order,
 in which addition is cancellative and monotone. -/
 @[protectProj, ancestor AddCancelCommMonoid PartialOrderₓ]
 class OrderedCancelAddCommMonoid(α : Type u) extends AddCancelCommMonoid α, PartialOrderₓ α where 
-  add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, (c+a) ≤ c+b 
-  le_of_add_le_add_left : ∀ a b c : α, ((a+b) ≤ a+c) → b ≤ c
+  add_le_add_left : ∀ (a b : α), a ≤ b → ∀ (c : α), (c+a) ≤ c+b 
+  le_of_add_le_add_left : ∀ (a b c : α), ((a+b) ≤ a+c) → b ≤ c
 
 /-- An ordered cancellative commutative monoid
 is a commutative monoid with a partial order,
 in which multiplication is cancellative and monotone. -/
 @[protectProj, ancestor CancelCommMonoid PartialOrderₓ, toAdditive]
 class OrderedCancelCommMonoid(α : Type u) extends CancelCommMonoid α, PartialOrderₓ α where 
-  mul_le_mul_left : ∀ a b : α, a ≤ b → ∀ c : α, (c*a) ≤ c*b 
-  le_of_mul_le_mul_left : ∀ a b c : α, ((a*b) ≤ a*c) → b ≤ c
+  mul_le_mul_left : ∀ (a b : α), a ≤ b → ∀ (c : α), (c*a) ≤ c*b 
+  le_of_mul_le_mul_left : ∀ (a b c : α), ((a*b) ≤ a*c) → b ≤ c
 
 section OrderedCancelCommMonoid
 
 variable[OrderedCancelCommMonoid α]{a b c d : α}
 
 @[toAdditive]
-theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, ((a*b) < a*c) → b < c :=
+theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ (a b c : α), ((a*b) < a*c) → b < c :=
   fun a b c h =>
     lt_of_le_not_leₓ (OrderedCancelCommMonoid.le_of_mul_le_mul_left a b c h.le)$
       mt (fun h => OrderedCancelCommMonoid.mul_le_mul_left _ _ h _) (not_le_of_gtₓ h)
@@ -796,19 +796,24 @@ instance OrderedCancelCommMonoid.to_contravariant_class_right (M : Type _) [Orde
 instance (priority := 100)OrderedCancelCommMonoid.toOrderedCommMonoid : OrderedCommMonoid α :=
   { ‹OrderedCancelCommMonoid α› with  }
 
+-- error in Algebra.Order.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Pullback an `ordered_cancel_comm_monoid` under an injective map.
 See note [reducible non-instances]. -/
-@[reducible,
-  toAdditive Function.Injective.orderedCancelAddCommMonoid
-      "Pullback an `ordered_cancel_add_comm_monoid` under an injective map."]
-def Function.Injective.orderedCancelCommMonoid {β : Type _} [HasOne β] [Mul β] (f : β → α) (hf : Function.Injective f)
-  (one : f 1 = 1) (mul : ∀ x y, f (x*y) = f x*f y) : OrderedCancelCommMonoid β :=
-  { hf.left_cancel_semigroup f mul, hf.ordered_comm_monoid f one mul with
-    le_of_mul_le_mul_left :=
-      fun a b c bc : f (a*b) ≤ f (a*c) =>
-        (mul_le_mul_iff_left (f a)).mp
-          (by 
-            rwa [←mul, ←mul]) }
+@[reducible, to_additive #[ident function.injective.ordered_cancel_add_comm_monoid,
+   expr "Pullback an `ordered_cancel_add_comm_monoid` under an injective map."]]
+def function.injective.ordered_cancel_comm_monoid
+{β : Type*}
+[has_one β]
+[has_mul β]
+(f : β → α)
+(hf : function.injective f)
+(one : «expr = »(f 1, 1))
+(mul : ∀ x y, «expr = »(f «expr * »(x, y), «expr * »(f x, f y))) : ordered_cancel_comm_monoid β :=
+{ le_of_mul_le_mul_left := λ
+  (a b c)
+  (bc : «expr ≤ »(f «expr * »(a, b), f «expr * »(a, c))), (mul_le_mul_iff_left (f a)).mp (by rwa ["[", "<-", expr mul, ",", "<-", expr mul, "]"] []),
+  ..hf.left_cancel_semigroup f mul,
+  ..hf.ordered_comm_monoid f one mul }
 
 end OrderedCancelCommMonoid
 
@@ -980,10 +985,11 @@ instance ordered_cancel_comm_monoid.to_contravariant_class [OrderedCancelCommMon
   ContravariantClass (OrderDual α) (OrderDual α) Mul.mul LE.le :=
   { elim := fun a b c bc => OrderedCancelCommMonoid.le_of_mul_le_mul_left a c b (dual_le.mp bc) }
 
-@[toAdditive]
-instance  [OrderedCancelCommMonoid α] : OrderedCancelCommMonoid (OrderDual α) :=
-  { OrderDual.orderedCommMonoid, OrderDual.cancelCommMonoid with
-    le_of_mul_le_mul_left := fun a b c : α => le_of_mul_le_mul_left' }
+-- error in Algebra.Order.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] instance [ordered_cancel_comm_monoid α] : ordered_cancel_comm_monoid (order_dual α) :=
+{ le_of_mul_le_mul_left := λ a b c : α, le_of_mul_le_mul_left',
+  ..order_dual.ordered_comm_monoid,
+  ..order_dual.cancel_comm_monoid }
 
 @[toAdditive]
 instance  [LinearOrderedCancelCommMonoid α] : LinearOrderedCancelCommMonoid (OrderDual α) :=

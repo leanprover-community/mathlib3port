@@ -59,9 +59,10 @@ protected def pure (a : α) : Semiquot α :=
 theorem mem_pure' {a b : α} : a ∈ Semiquot.pure b ↔ a = b :=
   Set.mem_singleton_iff
 
+-- error in Data.Semiquot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Replace `s` in a `semiquot` with a superset. -/
-def blur' (q : Semiquot α) {s : Set α} (h : q.s ⊆ s) : Semiquot α :=
-  ⟨s, Trunc.lift (fun a : q.s => Trunc.mk ⟨a.1, h a.2⟩) (fun _ _ => Trunc.eq _ _) q.2⟩
+def blur' (q : semiquot α) {s : set α} (h : «expr ⊆ »(q.s, s)) : semiquot α :=
+⟨s, trunc.lift (λ a : q.s, trunc.mk ⟨a.1, h a.2⟩) (λ _ _, trunc.eq _ _) q.2⟩
 
 /-- Replace `s` in a `q : semiquot α` with a union `s ∪ q.s` -/
 def blur (s : Set α) (q : Semiquot α) : Semiquot α :=
@@ -85,11 +86,11 @@ def to_trunc (q : Semiquot α) : Trunc α :=
 
 /-- If `f` is a constant on `q.s`, then `q.lift_on f` is the value of `f`
 at any point of `q`. -/
-def lift_on (q : Semiquot α) (f : α → β) (h : ∀ a b _ : a ∈ q _ : b ∈ q, f a = f b) : β :=
+def lift_on (q : Semiquot α) (f : α → β) (h : ∀ a b (_ : a ∈ q) (_ : b ∈ q), f a = f b) : β :=
   Trunc.liftOn q.2 (fun x => f x.1) fun x y => h _ _ x.2 y.2
 
-theorem lift_on_of_mem (q : Semiquot α) (f : α → β) (h : ∀ a b _ : a ∈ q _ : b ∈ q, f a = f b) (a : α) (aq : a ∈ q) :
-  lift_on q f h = f a :=
+theorem lift_on_of_mem (q : Semiquot α) (f : α → β) (h : ∀ a b (_ : a ∈ q) (_ : b ∈ q), f a = f b) (a : α)
+  (aq : a ∈ q) : lift_on q f h = f a :=
   by 
     revert h <;> rw [eq_mk_of_mem aq] <;> intro  <;> rfl
 
@@ -173,7 +174,7 @@ theorem pure_le {a : α} {s : Semiquot α} : pure a ≤ s ↔ a ∈ s :=
 
 /-- Assert that a `semiquot` contains only one possible value. -/
 def is_pure (q : Semiquot α) : Prop :=
-  ∀ a b _ : a ∈ q _ : b ∈ q, a = b
+  ∀ a b (_ : a ∈ q) (_ : b ∈ q), a = b
 
 /-- Extract the value from a `is_pure` semiquotient. -/
 def get (q : Semiquot α) (h : q.is_pure) : α :=
@@ -236,9 +237,6 @@ theorem is_pure_univ [Inhabited α] : @is_pure α univ ↔ Subsingleton α :=
 
 instance  [Inhabited α] : OrderTop (Semiquot α) :=
   { top := univ, le_top := fun s => Set.subset_univ _ }
-
-instance  [Inhabited α] : SemilatticeSupTop (Semiquot α) :=
-  { Semiquot.orderTop, Semiquot.semilatticeSup with  }
 
 end Semiquot
 

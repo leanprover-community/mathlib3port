@@ -595,83 +595,65 @@ theorem int_cast {f : arithmetic_function ℤ} [Ringₓ R] (h : f.is_multiplicat
       by 
         simp [cop, h]⟩
 
-theorem mul [CommSemiringₓ R] {f g : arithmetic_function R} (hf : f.is_multiplicative) (hg : g.is_multiplicative) :
-  is_multiplicative (f*g) :=
-  ⟨by 
-      simp [hf, hg],
-    by 
-      simp only [mul_apply]
-      intro m n cop 
-      rw [sum_mul_sum]
-      symm 
-      apply sum_bij fun x : (ℕ × ℕ) × ℕ × ℕ h => (x.1.1*x.2.1, x.1.2*x.2.2)
-      ·
-        rintro ⟨⟨a1, a2⟩, ⟨b1, b2⟩⟩ h 
-        simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h 
-        rcases h with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
-        simp only [mem_divisors_antidiagonal, Nat.mul_eq_zero, Ne.def]
-        split 
-        ·
-          ring 
-        rw [Nat.mul_eq_zero] at *
-        apply not_orₓ ha hb
-      ·
-        rintro ⟨⟨a1, a2⟩, ⟨b1, b2⟩⟩ h 
-        simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h 
-        rcases h with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
-        dsimp only 
-        rw [hf.map_mul_of_coprime cop.coprime_mul_right.coprime_mul_right_right,
-          hg.map_mul_of_coprime cop.coprime_mul_left.coprime_mul_left_right]
-        ring
-      ·
-        rintro ⟨⟨a1, a2⟩, ⟨b1, b2⟩⟩ ⟨⟨c1, c2⟩, ⟨d1, d2⟩⟩ hab hcd h 
-        simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hab 
-        rcases hab with ⟨⟨rfl, ha⟩, ⟨rfl, hb⟩⟩
-        simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at hcd 
-        simp only [Prod.mk.inj_iffₓ] at h 
-        ext <;> dsimp only
-        ·
-          trans Nat.gcdₓ (a1*a2) (a1*b1)
-          ·
-            rw [Nat.gcd_mul_leftₓ, cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_oneₓ]
-          ·
-            rw [←hcd.1.1, ←hcd.2.1] at cop 
-            rw [←hcd.1.1, h.1, Nat.gcd_mul_leftₓ, cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, mul_oneₓ]
-        ·
-          trans Nat.gcdₓ (a1*a2) (a2*b2)
-          ·
-            rw [mul_commₓ, Nat.gcd_mul_leftₓ, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one, mul_oneₓ]
-          ·
-            rw [←hcd.1.1, ←hcd.2.1] at cop 
-            rw [←hcd.1.1, h.2, mul_commₓ, Nat.gcd_mul_leftₓ, cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one,
-              mul_oneₓ]
-        ·
-          trans Nat.gcdₓ (b1*b2) (a1*b1)
-          ·
-            rw [mul_commₓ, Nat.gcd_mul_rightₓ, cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, one_mulₓ]
-          ·
-            rw [←hcd.1.1, ←hcd.2.1] at cop 
-            rw [←hcd.2.1, h.1, mul_commₓ c1 d1, Nat.gcd_mul_leftₓ,
-              cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, mul_oneₓ]
-        ·
-          trans Nat.gcdₓ (b1*b2) (a2*b2)
-          ·
-            rw [Nat.gcd_mul_rightₓ, cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one, one_mulₓ]
-          ·
-            rw [←hcd.1.1, ←hcd.2.1] at cop 
-            rw [←hcd.2.1, h.2, Nat.gcd_mul_rightₓ, cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one,
-              one_mulₓ]
-      ·
-        rintro ⟨b1, b2⟩ h 
-        simp only [mem_divisors_antidiagonal, Ne.def, mem_product] at h 
-        use ((b1.gcd m, b2.gcd m), (b1.gcd n, b2.gcd n))
-        simp only [exists_prop, Prod.mk.inj_iffₓ, Ne.def, mem_product, mem_divisors_antidiagonal]
-        rw [←cop.gcd_mul _, ←cop.gcd_mul _, ←h.1, Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ cop h.1,
-          Nat.gcd_mul_gcd_of_coprime_of_mul_eq_mulₓ cop.symm _]
-        ·
-          rw [Nat.mul_eq_zero, Decidable.not_or_iff_and_not] at h 
-          simp [h.2.1, h.2.2]
-        rw [mul_commₓ n m, h.1]⟩
+-- error in NumberTheory.ArithmeticFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mul
+[comm_semiring R]
+{f g : arithmetic_function R}
+(hf : f.is_multiplicative)
+(hg : g.is_multiplicative) : is_multiplicative «expr * »(f, g) :=
+⟨by { simp [] [] [] ["[", expr hf, ",", expr hg, "]"] [] [] }, begin
+   simp [] [] ["only"] ["[", expr mul_apply, "]"] [] [],
+   intros [ident m, ident n, ident cop],
+   rw [expr sum_mul_sum] [],
+   symmetry,
+   apply [expr sum_bij (λ
+     (x : «expr × »(«expr × »(exprℕ(), exprℕ()), «expr × »(exprℕ(), exprℕ())))
+     (h), («expr * »(x.1.1, x.2.1), «expr * »(x.1.2, x.2.2)))],
+   { rintros ["⟨", "⟨", ident a1, ",", ident a2, "⟩", ",", "⟨", ident b1, ",", ident b2, "⟩", "⟩", ident h],
+     simp [] [] ["only"] ["[", expr mem_divisors_antidiagonal, ",", expr ne.def, ",", expr mem_product, "]"] [] ["at", ident h],
+     rcases [expr h, "with", "⟨", "⟨", ident rfl, ",", ident ha, "⟩", ",", "⟨", ident rfl, ",", ident hb, "⟩", "⟩"],
+     simp [] [] ["only"] ["[", expr mem_divisors_antidiagonal, ",", expr nat.mul_eq_zero, ",", expr ne.def, "]"] [] [],
+     split,
+     { ring [] },
+     rw [expr nat.mul_eq_zero] ["at", "*"],
+     apply [expr not_or ha hb] },
+   { rintros ["⟨", "⟨", ident a1, ",", ident a2, "⟩", ",", "⟨", ident b1, ",", ident b2, "⟩", "⟩", ident h],
+     simp [] [] ["only"] ["[", expr mem_divisors_antidiagonal, ",", expr ne.def, ",", expr mem_product, "]"] [] ["at", ident h],
+     rcases [expr h, "with", "⟨", "⟨", ident rfl, ",", ident ha, "⟩", ",", "⟨", ident rfl, ",", ident hb, "⟩", "⟩"],
+     dsimp ["only"] [] [] [],
+     rw ["[", expr hf.map_mul_of_coprime cop.coprime_mul_right.coprime_mul_right_right, ",", expr hg.map_mul_of_coprime cop.coprime_mul_left.coprime_mul_left_right, "]"] [],
+     ring [] },
+   { rintros ["⟨", "⟨", ident a1, ",", ident a2, "⟩", ",", "⟨", ident b1, ",", ident b2, "⟩", "⟩", "⟨", "⟨", ident c1, ",", ident c2, "⟩", ",", "⟨", ident d1, ",", ident d2, "⟩", "⟩", ident hab, ident hcd, ident h],
+     simp [] [] ["only"] ["[", expr mem_divisors_antidiagonal, ",", expr ne.def, ",", expr mem_product, "]"] [] ["at", ident hab],
+     rcases [expr hab, "with", "⟨", "⟨", ident rfl, ",", ident ha, "⟩", ",", "⟨", ident rfl, ",", ident hb, "⟩", "⟩"],
+     simp [] [] ["only"] ["[", expr mem_divisors_antidiagonal, ",", expr ne.def, ",", expr mem_product, "]"] [] ["at", ident hcd],
+     simp [] [] ["only"] ["[", expr prod.mk.inj_iff, "]"] [] ["at", ident h],
+     ext [] [] []; dsimp ["only"] [] [] [],
+     { transitivity [expr nat.gcd «expr * »(a1, a2) «expr * »(a1, b1)],
+       { rw ["[", expr nat.gcd_mul_left, ",", expr cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, ",", expr mul_one, "]"] [] },
+       { rw ["[", "<-", expr hcd.1.1, ",", "<-", expr hcd.2.1, "]"] ["at", ident cop],
+         rw ["[", "<-", expr hcd.1.1, ",", expr h.1, ",", expr nat.gcd_mul_left, ",", expr cop.coprime_mul_left.coprime_mul_right_right.gcd_eq_one, ",", expr mul_one, "]"] [] } },
+     { transitivity [expr nat.gcd «expr * »(a1, a2) «expr * »(a2, b2)],
+       { rw ["[", expr mul_comm, ",", expr nat.gcd_mul_left, ",", expr cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one, ",", expr mul_one, "]"] [] },
+       { rw ["[", "<-", expr hcd.1.1, ",", "<-", expr hcd.2.1, "]"] ["at", ident cop],
+         rw ["[", "<-", expr hcd.1.1, ",", expr h.2, ",", expr mul_comm, ",", expr nat.gcd_mul_left, ",", expr cop.coprime_mul_right.coprime_mul_left_right.gcd_eq_one, ",", expr mul_one, "]"] [] } },
+     { transitivity [expr nat.gcd «expr * »(b1, b2) «expr * »(a1, b1)],
+       { rw ["[", expr mul_comm, ",", expr nat.gcd_mul_right, ",", expr cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, ",", expr one_mul, "]"] [] },
+       { rw ["[", "<-", expr hcd.1.1, ",", "<-", expr hcd.2.1, "]"] ["at", ident cop],
+         rw ["[", "<-", expr hcd.2.1, ",", expr h.1, ",", expr mul_comm c1 d1, ",", expr nat.gcd_mul_left, ",", expr cop.coprime_mul_right.coprime_mul_left_right.symm.gcd_eq_one, ",", expr mul_one, "]"] [] } },
+     { transitivity [expr nat.gcd «expr * »(b1, b2) «expr * »(a2, b2)],
+       { rw ["[", expr nat.gcd_mul_right, ",", expr cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one, ",", expr one_mul, "]"] [] },
+       { rw ["[", "<-", expr hcd.1.1, ",", "<-", expr hcd.2.1, "]"] ["at", ident cop],
+         rw ["[", "<-", expr hcd.2.1, ",", expr h.2, ",", expr nat.gcd_mul_right, ",", expr cop.coprime_mul_left.coprime_mul_right_right.symm.gcd_eq_one, ",", expr one_mul, "]"] [] } } },
+   { rintros ["⟨", ident b1, ",", ident b2, "⟩", ident h],
+     simp [] [] ["only"] ["[", expr mem_divisors_antidiagonal, ",", expr ne.def, ",", expr mem_product, "]"] [] ["at", ident h],
+     use [expr ((b1.gcd m, b2.gcd m), (b1.gcd n, b2.gcd n))],
+     simp [] [] ["only"] ["[", expr exists_prop, ",", expr prod.mk.inj_iff, ",", expr ne.def, ",", expr mem_product, ",", expr mem_divisors_antidiagonal, "]"] [] [],
+     rw ["[", "<-", expr cop.gcd_mul _, ",", "<-", expr cop.gcd_mul _, ",", "<-", expr h.1, ",", expr nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul cop h.1, ",", expr nat.gcd_mul_gcd_of_coprime_of_mul_eq_mul cop.symm _, "]"] [],
+     { rw ["[", expr nat.mul_eq_zero, ",", expr decidable.not_or_iff_and_not, "]"] ["at", ident h],
+       simp [] [] [] ["[", expr h.2.1, ",", expr h.2.2, "]"] [] [] },
+     rw ["[", expr mul_comm n m, ",", expr h.1, "]"] [] }
+ end⟩
 
 theorem pmul [CommSemiringₓ R] {f g : arithmetic_function R} (hf : f.is_multiplicative) (hg : g.is_multiplicative) :
   is_multiplicative (f.pmul g) :=
@@ -954,8 +936,8 @@ end CommRingₓ
 
 /-- Möbius inversion for functions to an `add_comm_group`. -/
 theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroupₓ R] {f g : ℕ → R} :
-  (∀ n : ℕ, 0 < n → (∑i in n.divisors, f i) = g n) ↔
-    ∀ n : ℕ, 0 < n → (∑x : ℕ × ℕ in n.divisors_antidiagonal, μ x.fst • g x.snd) = f n :=
+  (∀ (n : ℕ), 0 < n → (∑i in n.divisors, f i) = g n) ↔
+    ∀ (n : ℕ), 0 < n → (∑x : ℕ × ℕ in n.divisors_antidiagonal, μ x.fst • g x.snd) = f n :=
   by 
     let f' : arithmetic_function R := ⟨fun x => if x = 0 then 0 else f x, if_pos rfl⟩
     let g' : arithmetic_function R := ⟨fun x => if x = 0 then 0 else g x, if_pos rfl⟩
@@ -991,8 +973,8 @@ theorem sum_eq_iff_sum_smul_moebius_eq [AddCommGroupₓ R] {f g : ℕ → R} :
 
 /-- Möbius inversion for functions to a `comm_ring`. -/
 theorem sum_eq_iff_sum_mul_moebius_eq [CommRingₓ R] {f g : ℕ → R} :
-  (∀ n : ℕ, 0 < n → (∑i in n.divisors, f i) = g n) ↔
-    ∀ n : ℕ, 0 < n → (∑x : ℕ × ℕ in n.divisors_antidiagonal, (μ x.fst : R)*g x.snd) = f n :=
+  (∀ (n : ℕ), 0 < n → (∑i in n.divisors, f i) = g n) ↔
+    ∀ (n : ℕ), 0 < n → (∑x : ℕ × ℕ in n.divisors_antidiagonal, (μ x.fst : R)*g x.snd) = f n :=
   by 
     rw [sum_eq_iff_sum_smul_moebius_eq]
     apply forall_congrₓ 
@@ -1002,15 +984,15 @@ theorem sum_eq_iff_sum_mul_moebius_eq [CommRingₓ R] {f g : ℕ → R} :
 
 /-- Möbius inversion for functions to a `comm_group`. -/
 theorem prod_eq_iff_prod_pow_moebius_eq [CommGroupₓ R] {f g : ℕ → R} :
-  (∀ n : ℕ, 0 < n → (∏i in n.divisors, f i) = g n) ↔
-    ∀ n : ℕ, 0 < n → (∏x : ℕ × ℕ in n.divisors_antidiagonal, g x.snd^μ x.fst) = f n :=
+  (∀ (n : ℕ), 0 < n → (∏i in n.divisors, f i) = g n) ↔
+    ∀ (n : ℕ), 0 < n → (∏x : ℕ × ℕ in n.divisors_antidiagonal, g x.snd^μ x.fst) = f n :=
   @sum_eq_iff_sum_smul_moebius_eq (Additive R) _ _ _
 
 /-- Möbius inversion for functions to a `comm_group_with_zero`. -/
-theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : ℕ → R} (hf : ∀ n : ℕ, 0 < n → f n ≠ 0)
-  (hg : ∀ n : ℕ, 0 < n → g n ≠ 0) :
-  (∀ n : ℕ, 0 < n → (∏i in n.divisors, f i) = g n) ↔
-    ∀ n : ℕ, 0 < n → (∏x : ℕ × ℕ in n.divisors_antidiagonal, g x.snd^μ x.fst) = f n :=
+theorem prod_eq_iff_prod_pow_moebius_eq_of_nonzero [CommGroupWithZero R] {f g : ℕ → R} (hf : ∀ (n : ℕ), 0 < n → f n ≠ 0)
+  (hg : ∀ (n : ℕ), 0 < n → g n ≠ 0) :
+  (∀ (n : ℕ), 0 < n → (∏i in n.divisors, f i) = g n) ↔
+    ∀ (n : ℕ), 0 < n → (∏x : ℕ × ℕ in n.divisors_antidiagonal, g x.snd^μ x.fst) = f n :=
   by 
     refine'
         Iff.trans

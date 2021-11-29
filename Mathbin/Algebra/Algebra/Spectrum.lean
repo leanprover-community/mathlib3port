@@ -58,23 +58,6 @@ variable{R : Type u}{A : Type v}
 
 variable[CommRingₓ R][Ringₓ A][Algebra R A]
 
-theorem IsUnit.smul_iff {G : Type u} [Groupₓ G] [MulAction G A] [SmulCommClass G A A] [IsScalarTower G A A] {r : G}
-  {a : A} : IsUnit (r • a) ↔ IsUnit a :=
-  by 
-    split 
-    swap
-    ·
-      exact fun h => (r • h.unit).IsUnit
-    ·
-      intro h 
-      let a' : Units A :=
-        ⟨a, r • «expr↑ » (h.unit⁻¹),
-          by 
-            rw [mul_smul_comm, ←smul_mul_assoc, IsUnit.mul_coe_inv],
-          by 
-            rw [smul_mul_assoc, ←mul_smul_comm, IsUnit.coe_inv_mul]⟩
-      exact ⟨a', rfl⟩
-
 -- error in Algebra.Algebra.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_unit.smul_sub_iff_sub_inv_smul
 {r : units R}
@@ -83,7 +66,7 @@ begin
   have [ident a_eq] [":", expr «expr = »(a, «expr • »(r, «expr • »(«expr ⁻¹»(r), a)))] [],
   by simp [] [] [] [] [] [],
   nth_rewrite [0] [expr a_eq] [],
-  rw ["[", "<-", expr smul_sub, ",", expr is_unit.smul_iff, "]"] []
+  rw ["[", "<-", expr smul_sub, ",", expr is_unit_smul_iff, "]"] []
 end
 
 namespace Spectrum
@@ -133,7 +116,7 @@ begin
   simp [] [] ["only"] ["[", expr mem_resolvent_iff, ",", expr algebra.algebra_map_eq_smul_one, "]"] [] [],
   have [ident h_eq] [":", expr «expr = »(«expr • »(«expr • »(r, s), (1 : A)), «expr • »(r, «expr • »(s, 1)))] [],
   by simp [] [] [] [] [] [],
-  rw ["[", expr h_eq, ",", "<-", expr smul_sub, ",", expr is_unit.smul_iff, "]"] []
+  rw ["[", expr h_eq, ",", "<-", expr smul_sub, ",", expr is_unit_smul_iff, "]"] []
 end
 
 open_locale Pointwise

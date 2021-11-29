@@ -133,7 +133,7 @@ by haveI [] [] [":=", expr classical.dec_eq γ]; calc
 
 @[toAdditive]
 theorem prod_preimage [CommMonoidₓ β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' «expr↑ » s)) (g : γ → β)
-  (hg : ∀ x _ : x ∈ s, x ∉ Set.Range f → g x = 1) : (∏x in s.preimage f hf, g (f x)) = ∏x in s, g x :=
+  (hg : ∀ x (_ : x ∈ s), x ∉ Set.Range f → g x = 1) : (∏x in s.preimage f hf, g (f x)) = ∏x in s, g x :=
   by 
     classical 
     rw [prod_preimage', prod_filter_of_ne]

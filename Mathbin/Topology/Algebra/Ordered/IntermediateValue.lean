@@ -597,12 +597,18 @@ theorem continuous_on.surj_on_of_tendsto
 (htop : tendsto (λ x : s, f x) at_top at_top) : surj_on f s univ :=
 by haveI [] [] [":=", expr classical.inhabited_of_nonempty hs.to_subtype]; exact [expr «expr $ »(surj_on_iff_surjective.2, (continuous_on_iff_continuous_restrict.1 hf).surjective htop hbot)]
 
+-- error in Topology.Algebra.Ordered.IntermediateValue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a function `f : α → β` is continuous on a nonempty interval `s`, its restriction to `s`
 tends to `at_top : filter β` along `at_bot : filter ↥s` and tends to `at_bot : filter β` along
 `at_top : filter ↥s`, then the restriction of `f` to `s` is surjective. We formulate the
 conclusion as `surj_on f s univ`. -/
-theorem ContinuousOn.surj_on_of_tendsto' {f : α → δ} {s : Set α} [ord_connected s] (hs : s.nonempty)
-  (hf : ContinuousOn f s) (hbot : tendsto (fun x : s => f x) at_bot at_top)
-  (htop : tendsto (fun x : s => f x) at_top at_bot) : surj_on f s univ :=
-  @ContinuousOn.surj_on_of_tendsto α _ _ _ _ (OrderDual δ) _ _ _ _ _ _ hs hf hbot htop
+theorem continuous_on.surj_on_of_tendsto'
+{f : α → δ}
+{s : set α}
+[ord_connected s]
+(hs : s.nonempty)
+(hf : continuous_on f s)
+(hbot : tendsto (λ x : s, f x) at_bot at_top)
+(htop : tendsto (λ x : s, f x) at_top at_bot) : surj_on f s univ :=
+@continuous_on.surj_on_of_tendsto α _ _ _ _ (order_dual δ) _ _ _ _ _ _ hs hf hbot htop
 

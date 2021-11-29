@@ -49,11 +49,10 @@ theorem circulant_injective [AddGroupₓ n] : injective (circulant : (n → α) 
     ext k 
     rw [←circulant_col_zero_eq v, ←circulant_col_zero_eq w, h]
 
-theorem fin.circulant_injective : ∀ n, injective fun v : Finₓ n → α => circulant v
-| 0 =>
-  by 
-    decide
-| n+1 => circulant_injective
+-- error in LinearAlgebra.Matrix.Circulant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem fin.circulant_injective : ∀ n, injective (λ v : fin n → α, circulant v)
+| 0 := exprdec_trivial()
+| «expr + »(n, 1) := circulant_injective
 
 @[simp]
 theorem circulant_inj [AddGroupₓ n] {v w : n → α} : circulant v = circulant w ↔ v = w :=
@@ -72,14 +71,14 @@ theorem conj_transpose_circulant [HasStar α] [AddGroupₓ n] (v : n → α) :
   by 
     ext <;> simp 
 
-theorem fin.transpose_circulant : ∀ {n} v : Finₓ n → α, (circulant v)ᵀ = circulant fun i => v (-i)
+theorem fin.transpose_circulant : ∀ {n} (v : Finₓ n → α), (circulant v)ᵀ = circulant fun i => v (-i)
 | 0 =>
   by 
     decide
 | n+1 => transpose_circulant
 
 theorem fin.conj_transpose_circulant [HasStar α] :
-  ∀ {n} v : Finₓ n → α, (circulant v)ᴴ = circulant (star fun i => v (-i))
+  ∀ {n} (v : Finₓ n → α), (circulant v)ᴴ = circulant (star fun i => v (-i))
 | 0 =>
   by 
     decide
@@ -113,7 +112,7 @@ theorem circulant_mul [Semiringₓ α] [Fintype n] [AddGroupₓ n] (v w : n → 
     simp only [Equiv.sub_right_apply, sub_sub_sub_cancel_right]
 
 theorem fin.circulant_mul [Semiringₓ α] :
-  ∀ {n} v w : Finₓ n → α, circulant v ⬝ circulant w = circulant (mul_vec (circulant v) w)
+  ∀ {n} (v w : Finₓ n → α), circulant v ⬝ circulant w = circulant (mul_vec (circulant v) w)
 | 0 =>
   by 
     decide
@@ -135,7 +134,7 @@ theorem circulant_mul_comm [CommSemigroupₓ α] [AddCommMonoidₓ α] [Fintype 
       abel
 
 theorem fin.circulant_mul_comm [CommSemigroupₓ α] [AddCommMonoidₓ α] :
-  ∀ {n} v w : Finₓ n → α, circulant v ⬝ circulant w = circulant w ⬝ circulant v
+  ∀ {n} (v w : Finₓ n → α), circulant v ⬝ circulant w = circulant w ⬝ circulant v
 | 0 =>
   by 
     decide

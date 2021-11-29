@@ -182,7 +182,7 @@ theorem epsilon_lt_pos (x : ℝ) : 0 < x → ε < x :=
 
 /-- Standard part predicate -/
 def is_st (x : ℝ*) (r : ℝ) :=
-  ∀ δ : ℝ, 0 < δ → (r - δ : ℝ*) < x ∧ x < r+δ
+  ∀ (δ : ℝ), 0 < δ → (r - δ : ℝ*) < x ∧ x < r+δ
 
 /-- Standard part function: like a "round" to ℝ instead of ℤ -/
 noncomputable def st : ℝ* → ℝ :=
@@ -194,11 +194,11 @@ def infinitesimal (x : ℝ*) :=
 
 /-- A hyperreal number is positive infinite if it is larger than all real numbers -/
 def infinite_pos (x : ℝ*) :=
-  ∀ r : ℝ, «expr↑ » r < x
+  ∀ (r : ℝ), «expr↑ » r < x
 
 /-- A hyperreal number is negative infinite if it is smaller than all real numbers -/
 def infinite_neg (x : ℝ*) :=
-  ∀ r : ℝ, x < r
+  ∀ (r : ℝ), x < r
 
 /-- A hyperreal number is infinite if it is infinite positive or infinite negative -/
 def Infinite (x : ℝ*) :=
@@ -251,7 +251,7 @@ theorem is_st_Sup {x : ℝ*} (hni : ¬Infinite x) : is_st x (Sup { y:ℝ | (y : 
         fun δ hδ =>
           ⟨lt_of_not_ge'$
               fun c =>
-                have hc : ∀ y _ : y ∈ S, y ≤ R - δ := fun y hy => coe_le_coe.1$ le_of_ltₓ$ lt_of_lt_of_leₓ hy c 
+                have hc : ∀ y (_ : y ∈ S), y ≤ R - δ := fun y hy => coe_le_coe.1$ le_of_ltₓ$ lt_of_lt_of_leₓ hy c 
                 not_lt_of_le (cSup_le HR₁ hc)$ sub_lt_self R hδ,
             lt_of_not_ge'$
               fun c =>
@@ -353,7 +353,7 @@ theorem is_st_trans_real {r s t : ℝ} : is_st r s → is_st s t → is_st r t :
 theorem is_st_inj_real {r₁ r₂ s : ℝ} (h1 : is_st r₁ s) (h2 : is_st r₂ s) : r₁ = r₂ :=
   Eq.trans (eq_of_is_st_real h1) (eq_of_is_st_real h2).symm
 
-theorem is_st_iff_abs_sub_lt_delta {x : ℝ*} {r : ℝ} : is_st x r ↔ ∀ δ : ℝ, 0 < δ → |x - r| < δ :=
+theorem is_st_iff_abs_sub_lt_delta {x : ℝ*} {r : ℝ} : is_st x r ↔ ∀ (δ : ℝ), 0 < δ → |x - r| < δ :=
   by 
     simp only [abs_sub_lt_iff, sub_lt_iff_lt_add, is_st, and_comm, add_commₓ]
 
@@ -412,11 +412,11 @@ theorem lt_of_st_lt {x y : ℝ*} (hix : ¬Infinite x) (hiy : ¬Infinite y) : st 
 -/
 
 
-theorem infinite_pos_def {x : ℝ*} : infinite_pos x ↔ ∀ r : ℝ, «expr↑ » r < x :=
+theorem infinite_pos_def {x : ℝ*} : infinite_pos x ↔ ∀ (r : ℝ), «expr↑ » r < x :=
   by 
     rw [iff_eq_eq] <;> rfl
 
-theorem infinite_neg_def {x : ℝ*} : infinite_neg x ↔ ∀ r : ℝ, x < r :=
+theorem infinite_neg_def {x : ℝ*} : infinite_neg x ↔ ∀ (r : ℝ), x < r :=
   by 
     rw [iff_eq_eq] <;> rfl
 
@@ -557,7 +557,7 @@ theorem infinite_iff_infinite_abs {x : ℝ*} : Infinite x ↔ Infinite |x| :=
   by 
     rw [←infinite_pos_iff_infinite_of_nonneg (abs_nonneg _), infinite_iff_infinite_pos_abs]
 
-theorem infinite_iff_abs_lt_abs {x : ℝ*} : Infinite x ↔ ∀ r : ℝ, (|r| : ℝ*) < |x| :=
+theorem infinite_iff_abs_lt_abs {x : ℝ*} : Infinite x ↔ ∀ (r : ℝ), (|r| : ℝ*) < |x| :=
   ⟨fun hI r => coe_abs r ▸ infinite_iff_infinite_pos_abs.mp hI |r|,
     fun hR =>
       Or.cases_on (max_choice x (-x)) (fun h => Or.inl$ fun r => lt_of_le_of_ltₓ (le_abs_self _) (h ▸ hR r))
@@ -603,7 +603,7 @@ theorem infinite_pos_of_tendsto_top {f : ℕ → ℝ} (hf : tendsto f at_top at_
     have hf' := tendsto_at_top_at_top.mp hf 
     Exists.cases_on (hf' (r+1))$
       fun i hi =>
-        have hi' : ∀ a : ℕ, (f a < r+1) → a < i :=
+        have hi' : ∀ (a : ℕ), (f a < r+1) → a < i :=
           fun a =>
             by 
               rw [←not_leₓ, ←not_leₓ] <;> exact not_imp_not.mpr (hi a)
@@ -618,7 +618,7 @@ theorem infinite_neg_of_tendsto_bot {f : ℕ → ℝ} (hf : tendsto f at_top at_
     have hf' := tendsto_at_top_at_bot.mp hf 
     Exists.cases_on (hf' (r - 1))$
       fun i hi =>
-        have hi' : ∀ a : ℕ, r - 1 < f a → a < i :=
+        have hi' : ∀ (a : ℕ), r - 1 < f a → a < i :=
           fun a =>
             by 
               rw [←not_leₓ, ←not_leₓ] <;> exact not_imp_not.mpr (hi a)
@@ -662,7 +662,7 @@ theorem not_infinite_real (r : ℝ) : ¬Infinite r :=
   by 
     rw [not_infinite_iff_exist_lt_gt] <;> exact ⟨r - 1, r+1, coe_lt_coe.2$ sub_one_lt r, coe_lt_coe.2$ lt_add_one r⟩
 
-theorem not_real_of_infinite {x : ℝ*} : Infinite x → ∀ r : ℝ, x ≠ r :=
+theorem not_real_of_infinite {x : ℝ*} : Infinite x → ∀ (r : ℝ), x ≠ r :=
   fun hi r hr => not_infinite_real r$ @Eq.subst _ Infinite _ _ hr hi
 
 /-!
@@ -748,7 +748,7 @@ theorem st_mul {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : st (x*y) =
 -/
 
 
-theorem infinitesimal_def {x : ℝ*} : infinitesimal x ↔ ∀ r : ℝ, 0 < r → -(r : ℝ*) < x ∧ x < r :=
+theorem infinitesimal_def {x : ℝ*} : infinitesimal x ↔ ∀ (r : ℝ), 0 < r → -(r : ℝ*) < x ∧ x < r :=
   ⟨fun hi r hr =>
       by 
         convert hi r hr <;> simp ,
@@ -756,18 +756,18 @@ theorem infinitesimal_def {x : ℝ*} : infinitesimal x ↔ ∀ r : ℝ, 0 < r �
       by 
         convert hi d hd <;> simp ⟩
 
-theorem lt_of_pos_of_infinitesimal {x : ℝ*} : infinitesimal x → ∀ r : ℝ, 0 < r → x < r :=
+theorem lt_of_pos_of_infinitesimal {x : ℝ*} : infinitesimal x → ∀ (r : ℝ), 0 < r → x < r :=
   fun hi r hr => ((infinitesimal_def.mp hi) r hr).2
 
-theorem lt_neg_of_pos_of_infinitesimal {x : ℝ*} : infinitesimal x → ∀ r : ℝ, 0 < r → -«expr↑ » r < x :=
+theorem lt_neg_of_pos_of_infinitesimal {x : ℝ*} : infinitesimal x → ∀ (r : ℝ), 0 < r → -«expr↑ » r < x :=
   fun hi r hr => ((infinitesimal_def.mp hi) r hr).1
 
-theorem gt_of_neg_of_infinitesimal {x : ℝ*} : infinitesimal x → ∀ r : ℝ, r < 0 → «expr↑ » r < x :=
+theorem gt_of_neg_of_infinitesimal {x : ℝ*} : infinitesimal x → ∀ (r : ℝ), r < 0 → «expr↑ » r < x :=
   fun hi r hr =>
     by 
       convert ((infinitesimal_def.mp hi) (-r) (neg_pos.mpr hr)).1 <;> exact (neg_negₓ («expr↑ » r)).symm
 
-theorem abs_lt_real_iff_infinitesimal {x : ℝ*} : infinitesimal x ↔ ∀ r : ℝ, r ≠ 0 → |x| < |r| :=
+theorem abs_lt_real_iff_infinitesimal {x : ℝ*} : infinitesimal x ↔ ∀ (r : ℝ), r ≠ 0 → |x| < |r| :=
   ⟨fun hi r hr =>
       abs_lt.mpr
         (by 
@@ -810,7 +810,7 @@ theorem infinitesimal_of_tendsto_zero {f : ℕ → ℝ} : tendsto f at_top (𝓝
 theorem infinitesimal_epsilon : infinitesimal ε :=
   infinitesimal_of_tendsto_zero tendsto_inverse_at_top_nhds_0_nat
 
-theorem not_real_of_infinitesimal_ne_zero (x : ℝ*) : infinitesimal x → x ≠ 0 → ∀ r : ℝ, x ≠ r :=
+theorem not_real_of_infinitesimal_ne_zero (x : ℝ*) : infinitesimal x → x ≠ 0 → ∀ (r : ℝ), x ≠ r :=
   fun hi hx r hr => hx$ hr.trans$ coe_eq_zero.2$ is_st_unique (hr.symm ▸ is_st_refl_real r : is_st x r) hi
 
 theorem infinitesimal_sub_is_st {x : ℝ*} {r : ℝ} (hxr : is_st x r) : infinitesimal (x - r) :=

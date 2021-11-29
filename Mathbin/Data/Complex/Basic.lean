@@ -44,7 +44,7 @@ theorem equiv_real_prod_symm_im (x y : ℝ) : (equiv_real_prod.symm (x, y)).im =
   rfl
 
 @[simp]
-theorem eta : ∀ z : ℂ, Complex.mk z.re z.im = z
+theorem eta : ∀ (z : ℂ), Complex.mk z.re z.im = z
 | ⟨a, b⟩ => rfl
 
 @[ext]
@@ -765,6 +765,14 @@ theorem abs_conj (z : ℂ) : abs (conj z) = abs z :=
 theorem abs_mul (z w : ℂ) : abs (z*w) = abs z*abs w :=
   by 
     rw [abs, norm_sq_mul, Real.sqrt_mul (norm_sq_nonneg _)] <;> rfl
+
+@[simp]
+theorem abs_pow (z : ℂ) (n : ℕ) : abs (z ^ n) = abs z ^ n :=
+  MonoidHom.map_pow ⟨abs, abs_one, abs_mul⟩ z n
+
+@[simp]
+theorem abs_zpow (z : ℂ) (n : ℤ) : abs (z ^ n) = abs z ^ n :=
+  MonoidWithZeroHom.map_zpow ⟨abs, abs_zero, abs_one, abs_mul⟩ z n
 
 theorem abs_re_le_abs (z : ℂ) : |z.re| ≤ abs z :=
   by 

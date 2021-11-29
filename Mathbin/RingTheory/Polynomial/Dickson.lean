@@ -78,7 +78,7 @@ theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) : dickson k a n = (X*dickson k
 
 variable{R S k a}
 
-theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dickson k (f a) n
+theorem map_dickson (f : R →+* S) : ∀ (n : ℕ), map f (dickson k a n) = dickson k (f a) n
 | 0 =>
   by 
     simp only [dickson_zero, map_sub, map_nat_cast, bit1, bit0, map_add, map_one]
@@ -93,7 +93,7 @@ theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dicks
 variable{R}
 
 @[simp]
-theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = (X^n)
+theorem dickson_two_zero : ∀ (n : ℕ), dickson 2 (0 : R) n = (X^n)
 | 0 =>
   by 
     simp only [dickson_zero, pow_zeroₓ]

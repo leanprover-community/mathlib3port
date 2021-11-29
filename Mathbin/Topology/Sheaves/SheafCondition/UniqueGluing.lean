@@ -66,15 +66,15 @@ variable{X : Top.{v}}(F : presheaf C X){ι : Type v}(U : ι → opens X)
 A family of sections `sf` is compatible, if the restrictions of `sf i` and `sf j` to `U i ⊓ U j`
 agree, for all `i` and `j`
 -/
-def is_compatible (sf : ∀ i : ι, F.obj (op (U i))) : Prop :=
-  ∀ i j : ι, F.map (inf_le_left (U i) (U j)).op (sf i) = F.map (inf_le_right (U i) (U j)).op (sf j)
+def is_compatible (sf : ∀ (i : ι), F.obj (op (U i))) : Prop :=
+  ∀ (i j : ι), F.map (inf_le_left (U i) (U j)).op (sf i) = F.map (inf_le_right (U i) (U j)).op (sf j)
 
 /--
 A section `s` is a gluing for a family of sections `sf` if it restricts to `sf i` on `U i`,
 for all `i`
 -/
-def is_gluing (sf : ∀ i : ι, F.obj (op (U i))) (s : F.obj (op (supr U))) : Prop :=
-  ∀ i : ι, F.map (opens.le_supr U i).op s = sf i
+def is_gluing (sf : ∀ (i : ι), F.obj (op (U i))) (s : F.obj (op (supr U))) : Prop :=
+  ∀ (i : ι), F.map (opens.le_supr U i).op s = sf i
 
 /--
 The sheaf condition in terms of unique gluings. A presheaf `F : presheaf C X` satisfies this sheaf
@@ -85,7 +85,7 @@ We prove this to be equivalent to the usual one below in
 `is_sheaf_iff_is_sheaf_unique_gluing`
 -/
 def is_sheaf_unique_gluing : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → opens X sf : ∀ i : ι, F.obj (op (U i)),
+  ∀ ⦃ι : Type v⦄ (U : ι → opens X) (sf : ∀ (i : ι), F.obj (op (U i))),
     is_compatible F U sf → ∃!s : F.obj (op (supr U)), is_gluing F U sf s
 
 end 
@@ -94,56 +94,55 @@ section TypeValued
 
 variable{X : Top.{v}}(F : presheaf (Type v) X){ι : Type v}(U : ι → opens X)
 
+-- error in Topology.Sheaves.SheafCondition.UniqueGluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 For presheaves of types, terms of `pi_opens F U` are just families of sections.
--/
-def pi_opens_iso_sections_family : pi_opens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
-  limits.is_limit.cone_point_unique_up_to_iso (limit.is_limit (discrete.functor fun i : ι => F.obj (op (U i))))
-    (types.product_limit_cone fun i : ι => F.obj (op (U i))).IsLimit
+-/ def pi_opens_iso_sections_family : «expr ≅ »(pi_opens F U, ∀ i : ι, F.obj (op (U i))) :=
+limits.is_limit.cone_point_unique_up_to_iso (limit.is_limit (discrete.functor (λ
+   i : ι, F.obj (op (U i))))) (types.product_limit_cone (λ i : ι, F.obj (op (U i)))).is_limit
 
+-- error in Topology.Sheaves.SheafCondition.UniqueGluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Under the isomorphism `pi_opens_iso_sections_family`, compatibility of sections is the same
 as being equalized by the arrows `left_res` and `right_res` of the equalizer diagram.
 -/
-theorem compatible_iff_left_res_eq_right_res (sf : pi_opens F U) :
-  is_compatible F U ((pi_opens_iso_sections_family F U).Hom sf) ↔ left_res F U sf = right_res F U sf :=
-  by 
-    split  <;> intro h
-    ·
-      ext ⟨i, j⟩
-      rw [left_res, types.limit.lift_π_apply, fan.mk_π_app, right_res, types.limit.lift_π_apply, fan.mk_π_app]
-      exact h i j
-    ·
-      intro i j 
-      convert congr_argₓ (limits.pi.π (fun p : ι × ι => F.obj (op (U p.1⊓U p.2))) (i, j)) h
-      ·
-        rw [left_res, types.pi_lift_π_apply]
-        rfl
-      ·
-        rw [right_res, types.pi_lift_π_apply]
-        rfl
+theorem compatible_iff_left_res_eq_right_res
+(sf : pi_opens F U) : «expr ↔ »(is_compatible F U ((pi_opens_iso_sections_family F U).hom sf), «expr = »(left_res F U sf, right_res F U sf)) :=
+begin
+  split; intros [ident h],
+  { ext [] ["⟨", ident i, ",", ident j, "⟩"] [],
+    rw ["[", expr left_res, ",", expr types.limit.lift_π_apply, ",", expr fan.mk_π_app, ",", expr right_res, ",", expr types.limit.lift_π_apply, ",", expr fan.mk_π_app, "]"] [],
+    exact [expr h i j] },
+  { intros [ident i, ident j],
+    convert [] [expr congr_arg (limits.pi.π (λ p : «expr × »(ι, ι), F.obj (op «expr ⊓ »(U p.1, U p.2))) (i, j)) h] [],
+    { rw ["[", expr left_res, ",", expr types.pi_lift_π_apply, "]"] [],
+      refl },
+    { rw ["[", expr right_res, ",", expr types.pi_lift_π_apply, "]"] [],
+      refl } }
+end
 
+-- error in Topology.Sheaves.SheafCondition.UniqueGluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Under the isomorphism `pi_opens_iso_sections_family`, being a gluing of a family of
 sections `sf` is the same as lying in the preimage of `res` (the leftmost arrow of the
 equalizer diagram).
 -/
 @[simp]
-theorem is_gluing_iff_eq_res (sf : pi_opens F U) (s : F.obj (op (supr U))) :
-  is_gluing F U ((pi_opens_iso_sections_family F U).Hom sf) s ↔ res F U s = sf :=
-  by 
-    split  <;> intro h
-    ·
-      ext i 
-      rw [res, types.limit.lift_π_apply, fan.mk_π_app]
-      exact h i
-    ·
-      intro i 
-      convert congr_argₓ (limits.pi.π (fun i : ι => F.obj (op (U i))) i) h 
-      rw [res, types.pi_lift_π_apply]
-      rfl
+theorem is_gluing_iff_eq_res
+(sf : pi_opens F U)
+(s : F.obj (op (supr U))) : «expr ↔ »(is_gluing F U ((pi_opens_iso_sections_family F U).hom sf) s, «expr = »(res F U s, sf)) :=
+begin
+  split; intros [ident h],
+  { ext [] [ident i] [],
+    rw ["[", expr res, ",", expr types.limit.lift_π_apply, ",", expr fan.mk_π_app, "]"] [],
+    exact [expr h i] },
+  { intro [ident i],
+    convert [] [expr congr_arg (limits.pi.π (λ i : ι, F.obj (op (U i))) i) h] [],
+    rw ["[", expr res, ",", expr types.pi_lift_π_apply, "]"] [],
+    refl }
+end
 
--- error in Topology.Sheaves.SheafCondition.UniqueGluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Sheaves.SheafCondition.UniqueGluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The "equalizer" sheaf condition can be obtained from the sheaf condition
 in terms of unique gluings.
@@ -241,7 +240,7 @@ variable{X : Top.{v}}(F : sheaf C X){ι : Type v}(U : ι → opens X)
 /--
 A more convenient way of obtaining a unique gluing of sections for a sheaf.
 -/
-theorem exists_unique_gluing (sf : ∀ i : ι, F.1.obj (op (U i))) (h : is_compatible F.1 U sf) :
+theorem exists_unique_gluing (sf : ∀ (i : ι), F.1.obj (op (U i))) (h : is_compatible F.1 U sf) :
   ∃!s : F.1.obj (op (supr U)), is_gluing F.1 U sf s :=
   (is_sheaf_iff_is_sheaf_unique_gluing F.1).mp F.property U sf h
 

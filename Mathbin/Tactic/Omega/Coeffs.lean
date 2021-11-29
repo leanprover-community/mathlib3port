@@ -180,7 +180,7 @@ def val_except (k : Nat) (v : Nat → Int) as :=
   val_between v as 0 k+val_between v as (k+1) (as.length - k+1)
 
 theorem val_except_eq_val_except {k : Nat} {is js : List Int} {v w : Nat → Int} :
-  (∀ x _ : x ≠ k, v x = w x) → (∀ x _ : x ≠ k, get x is = get x js) → val_except k v is = val_except k w js :=
+  (∀ x (_ : x ≠ k), v x = w x) → (∀ x (_ : x ≠ k), get x is = get x js) → val_except k v is = val_except k w js :=
   by 
     intro h1 h2 
     unfold val_except 
@@ -271,13 +271,13 @@ theorem val_between_map_mul {i : Int} {as : List Int} {l : Nat} :
           simp  <;>
         apply h1
 
-theorem forall_val_dvd_of_forall_mem_dvd {i : Int} {as : List Int} : (∀ x _ : x ∈ as, i ∣ x) → ∀ n, i ∣ get n as
+theorem forall_val_dvd_of_forall_mem_dvd {i : Int} {as : List Int} : (∀ x (_ : x ∈ as), i ∣ x) → ∀ n, i ∣ get n as
 | h1, n =>
   by 
     apply forall_val_of_forall_mem _ h1 
     apply dvd_zero
 
-theorem dvd_val_between {i} {as : List Int} {l : Nat} : ∀ {m}, (∀ x _ : x ∈ as, i ∣ x) → i ∣ val_between v as l m
+theorem dvd_val_between {i} {as : List Int} {l : Nat} : ∀ {m}, (∀ x (_ : x ∈ as), i ∣ x) → i ∣ val_between v as l m
 | 0, h1 => dvd_zero _
 | m+1, h1 =>
   by 
@@ -292,41 +292,43 @@ theorem dvd_val_between {i} {as : List Int} {l : Nat} : ∀ {m}, (∀ x _ : x �
     apply h1 
     apply mem_get_of_ne_zero h2
 
-theorem dvd_val {as : List Int} {i : Int} : (∀ x _ : x ∈ as, i ∣ x) → i ∣ val v as :=
+theorem dvd_val {as : List Int} {i : Int} : (∀ x (_ : x ∈ as), i ∣ x) → i ∣ val v as :=
   by 
     apply dvd_val_between
 
+-- error in Tactic.Omega.Coeffs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem val_between_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x _ : x ∈ as, i ∣ x) :
-  ∀ {m}, val_between v (List.map (fun x => x / i) as) l m = val_between v as l m / i
-| 0 =>
-  by 
-    simp only [Int.zero_div, val_between, List.map]
-| m+1 =>
-  by 
-    unfold val_between 
-    rw [@val_between_map_div m, Int.add_div_of_dvd_right]
-    apply fun_mono_2 rfl
-    ·
-      apply
-        calc (get (l+m) (List.map (fun x : ℤ => x / i) as)*v (l+m)) = (get (l+m) as / i)*v (l+m) :=
-          by 
-            apply fun_mono_2 _ rfl 
-            rw [get_map']
-            apply Int.zero_div 
-          _ = (get (l+m) as*v (l+m)) / i :=
-          by 
-            repeat' 
-              rw [mul_commₓ _ (v (l+m))]
-            rw [Int.mul_div_assoc]
-            apply forall_val_dvd_of_forall_mem_dvd h1 
-          
-    apply dvd_mul_of_dvd_left 
-    apply forall_val_dvd_of_forall_mem_dvd h1
+theorem val_between_map_div
+{as : list int}
+{i : int}
+{l : nat}
+(h1 : ∀
+ x «expr ∈ » as, «expr ∣ »(i, x)) : ∀
+{m}, «expr = »(val_between v (list.map (λ x, «expr / »(x, i)) as) l m, «expr / »(val_between v as l m, i))
+| 0 := by simp [] [] ["only"] ["[", expr int.zero_div, ",", expr val_between, ",", expr list.map, "]"] [] []
+| «expr + »(m, 1) := begin
+  unfold [ident val_between] [],
+  rw ["[", expr @val_between_map_div m, ",", expr int.add_div_of_dvd_right, "]"] [],
+  apply [expr fun_mono_2 rfl],
+  { apply [expr calc
+       «expr = »(«expr * »(get «expr + »(l, m) (list.map (λ
+           x : exprℤ(), «expr / »(x, i)) as), v «expr + »(l, m)), «expr * »(«expr / »(get «expr + »(l, m) as, i), v «expr + »(l, m))) : begin
+         apply [expr fun_mono_2 _ rfl],
+         rw [expr get_map'] [],
+         apply [expr int.zero_div]
+       end
+       «expr = »(..., «expr / »(«expr * »(get «expr + »(l, m) as, v «expr + »(l, m)), i)) : begin
+         repeat { rw [expr mul_comm _ (v «expr + »(l, m))] [] },
+         rw [expr int.mul_div_assoc] [],
+         apply [expr forall_val_dvd_of_forall_mem_dvd h1]
+       end] },
+  apply [expr dvd_mul_of_dvd_left],
+  apply [expr forall_val_dvd_of_forall_mem_dvd h1]
+end
 
 @[simp]
 theorem val_map_div {as : List Int} {i : Int} :
-  (∀ x _ : x ∈ as, i ∣ x) → val v (List.map (fun x => x / i) as) = val v as / i :=
+  (∀ x (_ : x ∈ as), i ∣ x) → val v (List.map (fun x => x / i) as) = val v as / i :=
   by 
     intro h1 
     simpa only [val, List.length_map] using val_between_map_div h1
@@ -341,7 +343,7 @@ theorem val_between_eq_zero
   simpa [] [] ["only"] ["[", expr val_between, ",", expr h2 «expr + »(l, m), ",", expr zero_mul, ",", expr add_zero, "]"] [] ["using", expr @val_between_eq_zero m h1]
 end
 
-theorem val_eq_zero {is : List Int} : (∀ x : Int, x ∈ is → x = 0) → val v is = 0 :=
+theorem val_eq_zero {is : List Int} : (∀ (x : Int), x ∈ is → x = 0) → val v is = 0 :=
   by 
     apply val_between_eq_zero
 

@@ -59,7 +59,7 @@ structure outer_measure(α : Type _) where
   measureOf : Set α → ℝ≥0∞
   Empty : measure_of ∅ = 0
   mono : ∀ {s₁ s₂}, s₁ ⊆ s₂ → measure_of s₁ ≤ measure_of s₂ 
-  Union_nat : ∀ s : ℕ → Set α, measure_of (⋃i, s i) ≤ ∑'i, measure_of (s i)
+  Union_nat : ∀ (s : ℕ → Set α), measure_of (⋃i, s i) ≤ ∑'i, measure_of (s i)
 
 namespace OuterMeasure
 
@@ -166,13 +166,12 @@ theorem union_null (m : outer_measure α) {s₁ s₂ : Set α} (h₁ : m s₁ = 
   by 
     simpa [h₁, h₂] using m.union s₁ s₂
 
-theorem coe_fn_injective : injective fun μ : outer_measure α s : Set α => μ s :=
-  fun μ₁ μ₂ h =>
-    by 
-      cases μ₁ 
-      cases μ₂ 
-      congr 
-      exact h
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem coe_fn_injective : injective (λ (μ : outer_measure α) (s : set α), μ s) :=
+λ μ₁ μ₂ h, by { cases [expr μ₁] [],
+  cases [expr μ₂] [],
+  congr,
+  exact [expr h] }
 
 @[ext]
 theorem ext {μ₁ μ₂ : outer_measure α} (h : ∀ s, μ₁ s = μ₂ s) : μ₁ = μ₂ :=
@@ -180,7 +179,7 @@ theorem ext {μ₁ μ₂ : outer_measure α} (h : ∀ s, μ₁ s = μ₂ s) : μ
 
 /-- A version of `measure_theory.outer_measure.ext` that assumes `μ₁ s = μ₂ s` on all *nonempty*
 sets `s`, and gets `μ₁ ∅ = μ₂ ∅` from `measure_theory.outer_measure.empty'`. -/
-theorem ext_nonempty {μ₁ μ₂ : outer_measure α} (h : ∀ s : Set α, s.nonempty → μ₁ s = μ₂ s) : μ₁ = μ₂ :=
+theorem ext_nonempty {μ₁ μ₂ : outer_measure α} (h : ∀ (s : Set α), s.nonempty → μ₁ s = μ₂ s) : μ₁ = μ₂ :=
   ext$
     fun s =>
       s.eq_empty_or_nonempty.elim
@@ -609,7 +608,7 @@ theorem of_function_le (s : Set α) : outer_measure.of_function m m_empty s ≤ 
             rintro (_ | i) <;> simp [f, m_empty]
 
 theorem of_function_eq (s : Set α) (m_mono : ∀ ⦃t : Set α⦄, s ⊆ t → m s ≤ m t)
-  (m_subadd : ∀ s : ℕ → Set α, m (⋃i, s i) ≤ ∑'i, m (s i)) : outer_measure.of_function m m_empty s = m s :=
+  (m_subadd : ∀ (s : ℕ → Set α), m (⋃i, s i) ≤ ∑'i, m (s i)) : outer_measure.of_function m m_empty s = m s :=
   le_antisymmₓ (of_function_le s)$ le_infi$ fun f => le_infi$ fun hf => le_transₓ (m_mono hf) (m_subadd f)
 
 theorem le_of_function {μ : outer_measure α} : μ ≤ outer_measure.of_function m m_empty ↔ ∀ s, μ s ≤ m s :=
@@ -759,7 +758,7 @@ theorem bounded_by_apply (s : Set α) :
     simp [bounded_by, of_function_apply]
 
 theorem bounded_by_eq (s : Set α) (m_empty : m ∅ = 0) (m_mono : ∀ ⦃t : Set α⦄, s ⊆ t → m s ≤ m t)
-  (m_subadd : ∀ s : ℕ → Set α, m (⋃i, s i) ≤ ∑'i, m (s i)) : bounded_by m s = m s :=
+  (m_subadd : ∀ (s : ℕ → Set α), m (⋃i, s i) ≤ ∑'i, m (s i)) : bounded_by m s = m s :=
   by 
     rw [bounded_by_eq_of_function m_empty, of_function_eq s m_mono m_subadd]
 
@@ -773,7 +772,7 @@ theorem le_bounded_by {μ : outer_measure α} : μ ≤ bounded_by m ↔ ∀ s, �
     intro s 
     cases' s.eq_empty_or_nonempty with h h <;> simp [h, empty_not_nonempty]
 
-theorem le_bounded_by' {μ : outer_measure α} : μ ≤ bounded_by m ↔ ∀ s : Set α, s.nonempty → μ s ≤ m s :=
+theorem le_bounded_by' {μ : outer_measure α} : μ ≤ bounded_by m ↔ ∀ (s : Set α), s.nonempty → μ s ≤ m s :=
   by 
     rw [le_bounded_by, forall_congrₓ]
     intro s 
@@ -785,7 +784,7 @@ theorem smul_bounded_by {c : ℝ≥0∞} (hc : c ≠ ∞) : c • bounded_by m =
     congr 1 with s : 1
     rcases s.eq_empty_or_nonempty with (rfl | hs) <;> simp 
 
--- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem comap_bounded_by
 {β}
 (f : β → α)
@@ -864,7 +863,7 @@ theorem measure_inter_union (h : s₁ ∩ s₂ ⊆ ∅) (h₁ : is_caratheodory 
     rw [h₁, Set.inter_assoc, Set.union_inter_cancel_left, inter_diff_assoc, union_diff_cancel_left h]
 
 theorem is_caratheodory_Union_lt {s : ℕ → Set α} :
-  ∀ {n : ℕ}, (∀ i _ : i < n, is_caratheodory (s i)) → is_caratheodory (⋃(i : _)(_ : i < n), s i)
+  ∀ {n : ℕ}, (∀ i (_ : i < n), is_caratheodory (s i)) → is_caratheodory (⋃(i : _)(_ : i < n), s i)
 | 0, h =>
   by 
     simp [Nat.not_lt_zeroₓ]
@@ -880,17 +879,23 @@ theorem is_caratheodory_inter (h₁ : is_caratheodory s₁) (h₂ : is_caratheod
     rw [←is_caratheodory_compl_iff, compl_inter]
     exact is_caratheodory_union _ (is_caratheodory_compl _ h₁) (is_caratheodory_compl _ h₂)
 
-theorem is_caratheodory_sum {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i)) (hd : Pairwise (Disjoint on s))
-  {t : Set α} : ∀ {n}, (∑i in Finset.range n, m (t ∩ s i)) = m (t ∩ ⋃(i : _)(_ : i < n), s i)
-| 0 =>
-  by 
-    simp [Nat.not_lt_zeroₓ, m.empty]
-| Nat.succ n =>
-  by 
-    rw [bUnion_lt_succ, Finset.sum_range_succ, Set.union_comm, is_caratheodory_sum, m.measure_inter_union _ (h n),
-      add_commₓ]
-    intro a 
-    simpa using fun h₁ : a ∈ s n i hi : i < n h₂ => hd _ _ (ne_of_gtₓ hi) ⟨h₁, h₂⟩
+-- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_caratheodory_sum
+{s : exprℕ() → set α}
+(h : ∀ i, is_caratheodory (s i))
+(hd : pairwise «expr on »(disjoint, s))
+{t : set α} : ∀
+{n}, «expr = »(«expr∑ in , »((i), finset.range n, m «expr ∩ »(t, s i)), m «expr ∩ »(t, «expr⋃ , »((i «expr < » n), s i)))
+| 0 := by simp [] [] [] ["[", expr nat.not_lt_zero, ",", expr m.empty, "]"] [] []
+| nat.succ n := begin
+  rw ["[", expr bUnion_lt_succ, ",", expr finset.sum_range_succ, ",", expr set.union_comm, ",", expr is_caratheodory_sum, ",", expr m.measure_inter_union _ (h n), ",", expr add_comm, "]"] [],
+  intro [ident a],
+  simpa [] [] [] [] [] ["using", expr λ
+   (h₁ : «expr ∈ »(a, s n))
+   (i)
+   (hi : «expr < »(i, n))
+   (h₂), hd _ _ (ne_of_gt hi) ⟨h₁, h₂⟩]
+end
 
 -- error in MeasureTheory.Measure.OuterMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_caratheodory_Union_nat
@@ -1216,7 +1221,7 @@ section Extend
 
 variable{α : Type _}{P : α → Prop}
 
-variable(m : ∀ s : α, P s → ℝ≥0∞)
+variable(m : ∀ (s : α), P s → ℝ≥0∞)
 
 /-- We can trivially extend a function defined on a subclass of objects (with codomain `ℝ≥0∞`)
   to all objects by defining it to be `∞` on the objects not in the class. -/
@@ -1237,8 +1242,8 @@ theorem le_extend {s : α} (h : P s) : m s h ≤ extend m s :=
     intro 
     rfl'
 
-theorem extend_congr {β : Type _} {Pb : β → Prop} {mb : ∀ s : β, Pb s → ℝ≥0∞} {sa : α} {sb : β} (hP : P sa ↔ Pb sb)
-  (hm : ∀ ha : P sa hb : Pb sb, m sa ha = mb sb hb) : extend m sa = extend mb sb :=
+theorem extend_congr {β : Type _} {Pb : β → Prop} {mb : ∀ (s : β), Pb s → ℝ≥0∞} {sa : α} {sb : β} (hP : P sa ↔ Pb sb)
+  (hm : ∀ (ha : P sa) (hb : Pb sb), m sa ha = mb sb hb) : extend m sa = extend mb sb :=
   infi_congr_Prop hP fun h => hm _ _
 
 end Extend
@@ -1247,17 +1252,18 @@ section ExtendSet
 
 variable{α : Type _}{P : Set α → Prop}
 
-variable{m : ∀ s : Set α, P s → ℝ≥0∞}
+variable{m : ∀ (s : Set α), P s → ℝ≥0∞}
 
 variable(P0 : P ∅)(m0 : m ∅ P0 = 0)
 
-variable(PU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), P (⋃i, f i))
+variable(PU : ∀ ⦃f : ℕ → Set α⦄ (hm : ∀ i, P (f i)), P (⋃i, f i))
 
-variable(mU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), Pairwise (Disjoint on f) → m (⋃i, f i) (PU hm) = ∑'i, m (f i) (hm i))
+variable(mU :
+    ∀ ⦃f : ℕ → Set α⦄ (hm : ∀ i, P (f i)), Pairwise (Disjoint on f) → m (⋃i, f i) (PU hm) = ∑'i, m (f i) (hm i))
 
-variable(msU : ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, P (f i), m (⋃i, f i) (PU hm) ≤ ∑'i, m (f i) (hm i))
+variable(msU : ∀ ⦃f : ℕ → Set α⦄ (hm : ∀ i, P (f i)), m (⋃i, f i) (PU hm) ≤ ∑'i, m (f i) (hm i))
 
-variable(m_mono : ∀ ⦃s₁ s₂ : Set α⦄ hs₁ : P s₁ hs₂ : P s₂, s₁ ⊆ s₂ → m s₁ hs₁ ≤ m s₂ hs₂)
+variable(m_mono : ∀ ⦃s₁ s₂ : Set α⦄ (hs₁ : P s₁) (hs₂ : P s₂), s₁ ⊆ s₂ → m s₁ hs₁ ≤ m s₂ hs₂)
 
 theorem extend_empty : extend m ∅ = 0 :=
   (extend_eq _ P0).trans m0
@@ -1336,7 +1342,7 @@ def induced_outer_measure : outer_measure α :=
 variable{m P0 m0}
 
 theorem le_induced_outer_measure {μ : outer_measure α} :
-  μ ≤ induced_outer_measure m P0 m0 ↔ ∀ s hs : P s, μ s ≤ m s hs :=
+  μ ≤ induced_outer_measure m P0 m0 ↔ ∀ s (hs : P s), μ s ≤ m s hs :=
   le_of_function.trans$ forall_congrₓ$ fun s => le_infi_iff
 
 /-- If `P u` is `false` for any set `u` that has nonempty intersection both with `s` and `t`, then
@@ -1378,8 +1384,8 @@ theorem induced_outer_measure_eq_infi (s : Set α) :
       intro h2f 
       refine' infi_le_of_le _ (infi_le_of_le h2f$ infi_le _ hf)
 
-theorem induced_outer_measure_preimage (f : α ≃ α) (Pm : ∀ s : Set α, P (f ⁻¹' s) ↔ P s)
-  (mm : ∀ s : Set α hs : P s, m (f ⁻¹' s) ((Pm _).mpr hs) = m s hs) {A : Set α} :
+theorem induced_outer_measure_preimage (f : α ≃ α) (Pm : ∀ (s : Set α), P (f ⁻¹' s) ↔ P s)
+  (mm : ∀ (s : Set α) (hs : P s), m (f ⁻¹' s) ((Pm _).mpr hs) = m s hs) {A : Set α} :
   induced_outer_measure m P0 m0 (f ⁻¹' A) = induced_outer_measure m P0 m0 A :=
   by 
     simp only [induced_outer_measure_eq_infi _ msU m_mono]
@@ -1414,7 +1420,7 @@ end
 -/
 theorem induced_outer_measure_caratheodory (s : Set α) :
   (induced_outer_measure m P0 m0).caratheodory.MeasurableSet' s ↔
-    ∀ t : Set α,
+    ∀ (t : Set α),
       P t →
         (induced_outer_measure m P0 m0 (t ∩ s)+induced_outer_measure m P0 m0 (t \ s)) ≤
           induced_outer_measure m P0 m0 t :=
@@ -1446,12 +1452,12 @@ section MeasurableSpace
 
 variable{α : Type _}[MeasurableSpace α]
 
-variable{m : ∀ s : Set α, MeasurableSet s → ℝ≥0∞}
+variable{m : ∀ (s : Set α), MeasurableSet s → ℝ≥0∞}
 
 variable(m0 : m ∅ MeasurableSet.empty = 0)
 
 variable(mU :
-    ∀ ⦃f : ℕ → Set α⦄ hm : ∀ i, MeasurableSet (f i),
+    ∀ ⦃f : ℕ → Set α⦄ (hm : ∀ i, MeasurableSet (f i)),
       Pairwise (Disjoint on f) → m (⋃i, f i) (MeasurableSet.Union hm) = ∑'i, m (f i) (hm i))
 
 include m0 mU

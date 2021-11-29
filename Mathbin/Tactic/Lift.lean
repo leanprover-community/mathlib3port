@@ -17,7 +17,7 @@ lift, tactic
 class CanLift(α β : Sort _) where 
   coe : β → α 
   cond : α → Prop 
-  prf : ∀ x : α, cond x → ∃ y : β, coeₓ y = x
+  prf : ∀ (x : α), cond x → ∃ y : β, coeₓ y = x
 
 open Tactic
 
@@ -44,16 +44,16 @@ instance  : CanLift ℤ ℕ :=
   ⟨coeₓ, fun n => 0 ≤ n, fun n hn => ⟨n.nat_abs, Int.nat_abs_of_nonneg hn⟩⟩
 
 /-- Enable automatic handling of pi types in `can_lift`. -/
-instance Pi.canLift (ι : Type _) (α : ∀ i : ι, Type _) (β : ∀ i : ι, Type _) [∀ i : ι, CanLift (α i) (β i)] :
-  CanLift (∀ i : ι, α i) (∀ i : ι, β i) :=
+instance Pi.canLift (ι : Type _) (α : ∀ (i : ι), Type _) (β : ∀ (i : ι), Type _) [∀ (i : ι), CanLift (α i) (β i)] :
+  CanLift (∀ (i : ι), α i) (∀ (i : ι), β i) :=
   { coe := fun f i => CanLift.coe (f i), cond := fun f => ∀ i, CanLift.Cond (β i) (f i),
     prf :=
       fun f hf =>
         ⟨fun i => Classical.some (CanLift.prf (f i) (hf i)),
           funext$ fun i => Classical.some_spec (CanLift.prf (f i) (hf i))⟩ }
 
-instance PiSubtype.canLift (ι : Type _) (α : ∀ i : ι, Type _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
-  CanLift (∀ i : Subtype p, α i) (∀ i, α i) :=
+instance PiSubtype.canLift (ι : Type _) (α : ∀ (i : ι), Type _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :
+  CanLift (∀ (i : Subtype p), α i) (∀ i, α i) :=
   { coe := fun f i => f i, cond := fun _ => True,
     prf :=
       by 

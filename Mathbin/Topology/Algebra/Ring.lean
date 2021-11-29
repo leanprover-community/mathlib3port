@@ -1,6 +1,6 @@
 import Mathbin.Algebra.Ring.Prod 
 import Mathbin.RingTheory.Ideal.Quotient 
-import Mathbin.RingTheory.Subring 
+import Mathbin.RingTheory.Subring.Basic 
 import Mathbin.Topology.Algebra.Group
 
 /-!
@@ -35,6 +35,10 @@ variable(α : Type _)
 /-- A topological (semi)ring is a (semi)ring `R` where addition and multiplication are continuous.
 If `R` is a ring, then negation is automatically continuous, as it is multiplication with `-1`. -/
 class TopologicalRing[TopologicalSpace α][Semiringₓ α] extends HasContinuousAdd α, HasContinuousMul α : Prop
+
+instance (priority := 50)DiscreteTopology.topological_ring {α} [TopologicalSpace α] [Semiringₓ α] [DiscreteTopology α] :
+  TopologicalRing α :=
+  ⟨⟩
 
 section 
 
@@ -80,7 +84,7 @@ section
 
 variable{R : Type _}[Ringₓ R][TopologicalSpace R]
 
--- error in Topology.Algebra.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Algebra.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem topological_ring.of_add_group_of_nhds_zero
 [topological_add_group R]
 (hmul : «expr $ »(tendsto (uncurry ((«expr * ») : R → R → R)) «expr ×ᶠ »(expr𝓝() 0, expr𝓝() 0), expr𝓝() 0))
@@ -198,19 +202,18 @@ theorem QuotientRing.is_open_map_coe : IsOpenMap (mk N) :=
     rw [quotient_ring_saturate]
     exact is_open_Union fun ⟨n, _⟩ => is_open_map_add_left n s s_op
 
-theorem QuotientRing.quotient_map_coe_coe : QuotientMap fun p : α × α => (mk N p.1, mk N p.2) :=
-  IsOpenMap.to_quotient_map ((QuotientRing.is_open_map_coe N).Prod (QuotientRing.is_open_map_coe N))
-    ((continuous_quot_mk.comp continuous_fst).prod_mk (continuous_quot_mk.comp continuous_snd))
-    (by 
-      rintro ⟨⟨x⟩, ⟨y⟩⟩ <;> exact ⟨(x, y), rfl⟩)
+-- error in Topology.Algebra.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem quotient_ring.quotient_map_coe_coe : quotient_map (λ p : «expr × »(α, α), (mk N p.1, mk N p.2)) :=
+is_open_map.to_quotient_map ((quotient_ring.is_open_map_coe N).prod (quotient_ring.is_open_map_coe N)) ((continuous_quot_mk.comp continuous_fst).prod_mk (continuous_quot_mk.comp continuous_snd)) (by rintro ["⟨", "⟨", ident x, "⟩", ",", "⟨", ident y, "⟩", "⟩"]; exact [expr ⟨(x, y), rfl⟩])
 
-instance topological_ring_quotient : TopologicalRing N.quotient :=
-  { continuous_add :=
-      have cont : Continuous (mk N ∘ fun p : α × α => p.fst+p.snd) := continuous_quot_mk.comp continuous_add
-      (QuotientMap.continuous_iff (QuotientRing.quotient_map_coe_coe N)).mpr cont,
-    continuous_mul :=
-      have cont : Continuous (mk N ∘ fun p : α × α => p.fst*p.snd) := continuous_quot_mk.comp continuous_mul
-      (QuotientMap.continuous_iff (QuotientRing.quotient_map_coe_coe N)).mpr cont }
+-- error in Topology.Algebra.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance topological_ring_quotient : topological_ring N.quotient :=
+{ continuous_add := have cont : continuous «expr ∘ »(mk N, λ
+   p : «expr × »(α, α), «expr + »(p.fst, p.snd)) := continuous_quot_mk.comp continuous_add,
+  (quotient_map.continuous_iff (quotient_ring.quotient_map_coe_coe N)).mpr cont,
+  continuous_mul := have cont : continuous «expr ∘ »(mk N, λ
+   p : «expr × »(α, α), «expr * »(p.fst, p.snd)) := continuous_quot_mk.comp continuous_mul,
+  (quotient_map.continuous_iff (quotient_ring.quotient_map_coe_coe N)).mpr cont }
 
 end TopologicalRing
 

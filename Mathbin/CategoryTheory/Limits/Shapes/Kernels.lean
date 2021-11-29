@@ -134,9 +134,9 @@ def kernel_fork.is_limit.lift' {s : kernel_fork f} (hs : is_limit s) {W : C} (k 
 
 /-- This is a slightly more convenient method to verify that a kernel fork is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
-def is_limit_aux (t : kernel_fork f) (lift : ∀ s : kernel_fork f, s.X ⟶ t.X)
-  (fac : ∀ s : kernel_fork f, lift s ≫ t.ι = s.ι)
-  (uniq : ∀ s : kernel_fork f m : s.X ⟶ t.X w : m ≫ t.ι = s.ι, m = lift s) : is_limit t :=
+def is_limit_aux (t : kernel_fork f) (lift : ∀ (s : kernel_fork f), s.X ⟶ t.X)
+  (fac : ∀ (s : kernel_fork f), lift s ≫ t.ι = s.ι)
+  (uniq : ∀ (s : kernel_fork f) (m : s.X ⟶ t.X) (w : m ≫ t.ι = s.ι), m = lift s) : is_limit t :=
   { lift,
     fac' :=
       fun s j =>
@@ -152,9 +152,9 @@ def is_limit_aux (t : kernel_fork f) (lift : ∀ s : kernel_fork f, s.X ⟶ t.X)
 This is a more convenient formulation to show that a `kernel_fork` constructed using
 `kernel_fork.of_ι` is a limit cone.
 -/
-def is_limit.of_ι {W : C} (g : W ⟶ X) (eq : g ≫ f = 0) (lift : ∀ {W' : C} g' : W' ⟶ X eq' : g' ≫ f = 0, W' ⟶ W)
-  (fac : ∀ {W' : C} g' : W' ⟶ X eq' : g' ≫ f = 0, lift g' eq' ≫ g = g')
-  (uniq : ∀ {W' : C} g' : W' ⟶ X eq' : g' ≫ f = 0 m : W' ⟶ W w : m ≫ g = g', m = lift g' eq') :
+def is_limit.of_ι {W : C} (g : W ⟶ X) (eq : g ≫ f = 0) (lift : ∀ {W' : C} (g' : W' ⟶ X) (eq' : g' ≫ f = 0), W' ⟶ W)
+  (fac : ∀ {W' : C} (g' : W' ⟶ X) (eq' : g' ≫ f = 0), lift g' eq' ≫ g = g')
+  (uniq : ∀ {W' : C} (g' : W' ⟶ X) (eq' : g' ≫ f = 0) (m : W' ⟶ W) (w : m ≫ g = g'), m = lift g' eq') :
   is_limit (kernel_fork.of_ι g Eq) :=
   is_limit_aux _ (fun s => lift s.ι s.condition) (fun s => fac s.ι s.condition) fun s => uniq s.ι s.condition
 
@@ -524,9 +524,9 @@ def cokernel_cofork.is_colimit.desc' {s : cokernel_cofork f} (hs : is_colimit s)
 /--
 This is a slightly more convenient method to verify that a cokernel cofork is a colimit cocone.
 It only asks for a proof of facts that carry any mathematical content -/
-def is_colimit_aux (t : cokernel_cofork f) (desc : ∀ s : cokernel_cofork f, t.X ⟶ s.X)
-  (fac : ∀ s : cokernel_cofork f, t.π ≫ desc s = s.π)
-  (uniq : ∀ s : cokernel_cofork f m : t.X ⟶ s.X w : t.π ≫ m = s.π, m = desc s) : is_colimit t :=
+def is_colimit_aux (t : cokernel_cofork f) (desc : ∀ (s : cokernel_cofork f), t.X ⟶ s.X)
+  (fac : ∀ (s : cokernel_cofork f), t.π ≫ desc s = s.π)
+  (uniq : ∀ (s : cokernel_cofork f) (m : t.X ⟶ s.X) (w : t.π ≫ m = s.π), m = desc s) : is_colimit t :=
   { desc,
     fac' :=
       fun s j =>
@@ -542,9 +542,9 @@ def is_colimit_aux (t : cokernel_cofork f) (desc : ∀ s : cokernel_cofork f, t.
 This is a more convenient formulation to show that a `cokernel_cofork` constructed using
 `cokernel_cofork.of_π` is a limit cone.
 -/
-def is_colimit.of_π {Z : C} (g : Y ⟶ Z) (eq : f ≫ g = 0) (desc : ∀ {Z' : C} g' : Y ⟶ Z' eq' : f ≫ g' = 0, Z ⟶ Z')
-  (fac : ∀ {Z' : C} g' : Y ⟶ Z' eq' : f ≫ g' = 0, g ≫ desc g' eq' = g')
-  (uniq : ∀ {Z' : C} g' : Y ⟶ Z' eq' : f ≫ g' = 0 m : Z ⟶ Z' w : g ≫ m = g', m = desc g' eq') :
+def is_colimit.of_π {Z : C} (g : Y ⟶ Z) (eq : f ≫ g = 0) (desc : ∀ {Z' : C} (g' : Y ⟶ Z') (eq' : f ≫ g' = 0), Z ⟶ Z')
+  (fac : ∀ {Z' : C} (g' : Y ⟶ Z') (eq' : f ≫ g' = 0), g ≫ desc g' eq' = g')
+  (uniq : ∀ {Z' : C} (g' : Y ⟶ Z') (eq' : f ≫ g' = 0) (m : Z ⟶ Z') (w : g ≫ m = g'), m = desc g' eq') :
   is_colimit (cokernel_cofork.of_π g Eq) :=
   is_colimit_aux _ (fun s => desc s.π s.condition) (fun s => fac s.π s.condition) fun s => uniq s.π s.condition
 
@@ -925,13 +925,13 @@ variable[has_zero_morphisms C]
 
 /-- `has_kernels` represents the existence of kernels for every morphism. -/
 class has_kernels : Prop where 
-  HasLimit : ∀ {X Y : C} f : X ⟶ Y, has_kernel f :=  by 
+  HasLimit : ∀ {X Y : C} (f : X ⟶ Y), has_kernel f :=  by 
   runTac 
     tactic.apply_instance
 
 /-- `has_cokernels` represents the existence of cokernels for every morphism. -/
 class has_cokernels : Prop where 
-  HasColimit : ∀ {X Y : C} f : X ⟶ Y, has_cokernel f :=  by 
+  HasColimit : ∀ {X Y : C} (f : X ⟶ Y), has_cokernel f :=  by 
   runTac 
     tactic.apply_instance
 

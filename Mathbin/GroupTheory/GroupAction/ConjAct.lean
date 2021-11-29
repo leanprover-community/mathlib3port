@@ -116,7 +116,7 @@ theorem smul_def (g : ConjAct G) (h : G) : g • h = (of_conj_act g*h)*of_conj_a
   rfl
 
 @[simp]
-theorem forall (p : ConjAct G → Prop) : (∀ x : ConjAct G, p x) ↔ ∀ x : G, p (to_conj_act x) :=
+theorem forall (p : ConjAct G → Prop) : (∀ (x : ConjAct G), p x) ↔ ∀ (x : G), p (to_conj_act x) :=
   Iff.rfl
 
 end DivInvMonoidₓ

@@ -24,7 +24,7 @@ open Equiv Function
 
 /-- A permutation is a derangement if it has no fixed points. -/
 def Derangements (α : Type _) : Set (perm α) :=
-  { f:perm α | ∀ x : α, f x ≠ x }
+  { f:perm α | ∀ (x : α), f x ≠ x }
 
 variable{α β : Type _}
 

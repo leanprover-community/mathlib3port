@@ -196,7 +196,7 @@ theorem eq_comp_inv (α : X ≅ Y) {f : Z ⟶ Y} {g : Z ⟶ X} : g = f ≫ α.in
   (comp_inv_eq α.symm).symm
 
 theorem inv_eq_inv (f g : X ≅ Y) : f.inv = g.inv ↔ f.hom = g.hom :=
-  have  : ∀ {X Y : C} f g : X ≅ Y, f.hom = g.hom → f.inv = g.inv :=
+  have  : ∀ {X Y : C} (f g : X ≅ Y), f.hom = g.hom → f.inv = g.inv :=
     fun X Y f g h =>
       by 
         rw [ext h]

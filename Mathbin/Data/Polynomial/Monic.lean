@@ -68,11 +68,11 @@ theorem monic_mul_C_of_leading_coeff_mul_eq_one [Nontrivial R] {b : R} (hp : (p.
   by 
     rw [monic, leading_coeff_mul' _] <;> simp [leading_coeff_C b, hp]
 
-theorem monic_of_degree_le (n : ℕ) (H1 : degree p ≤ n) (H2 : coeff p n = 1) : monic p :=
-  Decidable.byCases (fun H : degree p < n => eq_of_zero_eq_one (H2 ▸ (coeff_eq_zero_of_degree_lt H).symm) _ _)
-    fun H : ¬degree p < n =>
-      by 
-        rwa [monic, leading_coeff, nat_degree, (lt_or_eq_of_leₓ H1).resolve_left H]
+-- error in Data.Polynomial.Monic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem monic_of_degree_le (n : exprℕ()) (H1 : «expr ≤ »(degree p, n)) (H2 : «expr = »(coeff p n, 1)) : monic p :=
+decidable.by_cases (assume
+ H : «expr < »(degree p, n), eq_of_zero_eq_one «expr ▸ »(H2, (coeff_eq_zero_of_degree_lt H).symm) _ _) (assume
+ H : «expr¬ »(«expr < »(degree p, n)), by rwa ["[", expr monic, ",", expr leading_coeff, ",", expr nat_degree, ",", expr (lt_or_eq_of_le H1).resolve_left H, "]"] [])
 
 theorem monic_X_pow_add {n : ℕ} (H : degree p ≤ n) : monic ((X ^ n+1)+p) :=
   have H1 : degree p < n+1 := lt_of_le_of_ltₓ H (WithBot.coe_lt_coe.2 (Nat.lt_succ_selfₓ n))
@@ -88,7 +88,7 @@ theorem monic_mul (hp : monic p) (hq : monic q) : monic «expr * »(p, q) :=
 if h0 : «expr = »((0 : R), 1) then by haveI [] [] [":=", expr subsingleton_of_zero_eq_one h0]; exact [expr subsingleton.elim _ _] else have «expr ≠ »(«expr * »(leading_coeff p, leading_coeff q), 0), by simp [] [] [] ["[", expr monic.def.1 hp, ",", expr monic.def.1 hq, ",", expr ne.symm h0, "]"] [] [],
 by rw ["[", expr monic.def, ",", expr leading_coeff_mul' this, ",", expr monic.def.1 hp, ",", expr monic.def.1 hq, ",", expr one_mul, "]"] []
 
-theorem monic_pow (hp : monic p) : ∀ n : ℕ, monic (p ^ n)
+theorem monic_pow (hp : monic p) : ∀ (n : ℕ), monic (p ^ n)
 | 0 => monic_one
 | n+1 =>
   by 
@@ -195,7 +195,7 @@ section CommSemiringₓ
 
 variable[CommSemiringₓ R]{p : Polynomial R}
 
-theorem monic_multiset_prod_of_monic (t : Multiset ι) (f : ι → Polynomial R) (ht : ∀ i _ : i ∈ t, monic (f i)) :
+theorem monic_multiset_prod_of_monic (t : Multiset ι) (f : ι → Polynomial R) (ht : ∀ i (_ : i ∈ t), monic (f i)) :
   monic (t.map f).Prod :=
   by 
     revert ht 
@@ -206,7 +206,7 @@ theorem monic_multiset_prod_of_monic (t : Multiset ι) (f : ι → Polynomial R)
     rw [Multiset.map_cons, Multiset.prod_cons]
     exact monic_mul (ht _ (Multiset.mem_cons_self _ _)) (ih fun _ hi => ht _ (Multiset.mem_cons_of_mem hi))
 
-theorem monic_prod_of_monic (s : Finset ι) (f : ι → Polynomial R) (hs : ∀ i _ : i ∈ s, monic (f i)) :
+theorem monic_prod_of_monic (s : Finset ι) (f : ι → Polynomial R) (hs : ∀ i (_ : i ∈ s), monic (f i)) :
   monic (∏i in s, f i) :=
   monic_multiset_prod_of_monic s.1 f hs
 
@@ -247,7 +247,7 @@ theorem eq_one_of_is_unit_of_monic (hm : monic p) (hpu : IsUnit p) : p = 1 :=
     rw [eq_C_of_degree_le_zero this, ←nat_degree_eq_zero_iff_degree_le_zero.2 this, ←leading_coeff, hm.leading_coeff,
       C_1]
 
-theorem monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → Polynomial R) (h : ∀ i _ : i ∈ t, monic (f i)) :
+theorem monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → Polynomial R) (h : ∀ i (_ : i ∈ t), monic (f i)) :
   next_coeff (t.map f).Prod = (t.map fun i => next_coeff (f i)).Sum :=
   by 
     revert h 
@@ -262,7 +262,7 @@ theorem monic.next_coeff_multiset_prod (t : Multiset ι) (f : ι → Polynomial 
       exacts[fun i hi => ht i (Multiset.mem_cons_of_mem hi), ht a (Multiset.mem_cons_self _ _),
         monic_multiset_prod_of_monic _ _ fun b bs => ht _ (Multiset.mem_cons_of_mem bs)]
 
-theorem monic.next_coeff_prod (s : Finset ι) (f : ι → Polynomial R) (h : ∀ i _ : i ∈ s, monic (f i)) :
+theorem monic.next_coeff_prod (s : Finset ι) (f : ι → Polynomial R) (h : ∀ i (_ : i ∈ s), monic (f i)) :
   next_coeff (∏i in s, f i) = ∑i in s, next_coeff (f i) :=
   monic.next_coeff_multiset_prod s.1 f h
 

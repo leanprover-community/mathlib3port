@@ -82,7 +82,7 @@ theorem mem_restrict_total_degree (p : MvPolynomial σ R) : p ∈ restrict_total
     rfl
 
 theorem mem_restrict_degree (p : MvPolynomial σ R) (n : ℕ) :
-  p ∈ restrict_degree σ R n ↔ ∀ s _ : s ∈ p.support, ∀ i, (s : σ →₀ ℕ) i ≤ n :=
+  p ∈ restrict_degree σ R n ↔ ∀ s (_ : s ∈ p.support), ∀ i, (s : σ →₀ ℕ) i ≤ n :=
   by 
     rw [restrict_degree, Finsupp.mem_supported]
     rfl
@@ -103,9 +103,9 @@ def basis_monomials : Basis (σ →₀ ℕ) R (MvPolynomial σ R) :=
 theorem coe_basis_monomials : (basis_monomials σ R : (σ →₀ ℕ) → MvPolynomial σ R) = fun s => monomial s 1 :=
   rfl
 
-theorem linear_independent_X : LinearIndependent R (X : σ → MvPolynomial σ R) :=
-  (basis_monomials σ R).LinearIndependent.comp (fun s : σ => Finsupp.single s 1)
-    (Finsupp.single_left_injective one_ne_zero)
+-- error in RingTheory.MvPolynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem linear_independent_X : linear_independent R (X : σ → mv_polynomial σ R) :=
+(basis_monomials σ R).linear_independent.comp (λ s : σ, finsupp.single s 1) (finsupp.single_left_injective one_ne_zero)
 
 end Degree
 

@@ -100,8 +100,9 @@ theorem coe_to_linear_map : «expr⇑ » f.to_linear_map = f :=
 theorem to_linear_map_injective : injective (to_linear_map : (E →ₛₗᵢ[σ₁₂] E₂) → E →ₛₗ[σ₁₂] E₂)
 | ⟨f, _⟩, ⟨g, _⟩, rfl => rfl
 
-theorem coe_fn_injective : injective fun f : E →ₛₗᵢ[σ₁₂] E₂ x : E => f x :=
-  LinearMap.coe_injective.comp to_linear_map_injective
+-- error in Analysis.NormedSpace.LinearIsometry: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem coe_fn_injective : injective (λ (f : «expr →ₛₗᵢ[ ] »(E, σ₁₂, E₂)) (x : E), f x) :=
+linear_map.coe_injective.comp to_linear_map_injective
 
 @[ext]
 theorem ext {f g : E →ₛₗᵢ[σ₁₂] E₂} (h : ∀ x, f x = g x) : f = g :=
@@ -481,6 +482,14 @@ theorem self_trans_symm : e.trans e.symm = refl R E :=
 @[simp]
 theorem symm_trans_self : e.symm.trans e = refl R₂ E₂ :=
   ext e.apply_symm_apply
+
+@[simp]
+theorem symm_comp_self : (e.symm ∘ e) = id :=
+  funext e.symm_apply_apply
+
+@[simp]
+theorem self_comp_symm : (e ∘ e.symm) = id :=
+  e.symm.symm_comp_self
 
 include σ₁₃ σ₂₁ σ₃₂ σ₃₁
 

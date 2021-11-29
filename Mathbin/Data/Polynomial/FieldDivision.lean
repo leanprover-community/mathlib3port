@@ -114,30 +114,32 @@ theorem degree_mul_leading_coeff_inv (p : Polynomial R) (h : q ≠ 0) : degree (
   by 
     rw [degree_mul, degree_C h₁, add_zeroₓ]
 
-theorem irreducible_of_monic {p : Polynomial R} (hp1 : p.monic) (hp2 : p ≠ 1) :
-  Irreducible p ↔ ∀ f g : Polynomial R, f.monic → g.monic → (f*g) = p → f = 1 ∨ g = 1 :=
-  ⟨fun hp3 f g hf hg hfg =>
-      Or.cases_on (hp3.is_unit_or_is_unit hfg.symm) (fun huf : IsUnit f => Or.inl$ eq_one_of_is_unit_of_monic hf huf)
-        fun hug : IsUnit g => Or.inr$ eq_one_of_is_unit_of_monic hg hug,
-    fun hp3 =>
-      ⟨mt (eq_one_of_is_unit_of_monic hp1) hp2,
-        fun f g hp =>
-          have hf : f ≠ 0 :=
-            fun hf =>
-              by 
-                rw [hp, hf, zero_mul] at hp1 
-                exact not_monic_zero hp1 
-          have hg : g ≠ 0 :=
-            fun hg =>
-              by 
-                rw [hp, hg, mul_zero] at hp1 
-                exact not_monic_zero hp1
-          (Or.imp (fun hf => is_unit_of_mul_eq_one _ _ hf) fun hg => is_unit_of_mul_eq_one _ _ hg)$
-            hp3 (f*C (f.leading_coeff⁻¹)) (g*C (g.leading_coeff⁻¹)) (monic_mul_leading_coeff_inv hf)
-                (monic_mul_leading_coeff_inv hg)$
-              by 
-                rw [mul_assocₓ, mul_left_commₓ _ g, ←mul_assocₓ, ←C_mul, ←mul_inv₀, ←leading_coeff_mul, ←hp,
-                  monic.def.1 hp1, inv_one, C_1, mul_oneₓ]⟩⟩
+-- error in Data.Polynomial.FieldDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem irreducible_of_monic
+{p : polynomial R}
+(hp1 : p.monic)
+(hp2 : «expr ≠ »(p, 1)) : «expr ↔ »(irreducible p, ∀
+ f g : polynomial R, f.monic → g.monic → «expr = »(«expr * »(f, g), p) → «expr ∨ »(«expr = »(f, 1), «expr = »(g, 1))) :=
+⟨λ
+ hp3
+ f
+ g
+ hf
+ hg
+ hfg, or.cases_on (hp3.is_unit_or_is_unit hfg.symm) (assume
+  huf : is_unit f, «expr $ »(or.inl, eq_one_of_is_unit_of_monic hf huf)) (assume
+  hug : is_unit g, «expr $ »(or.inr, eq_one_of_is_unit_of_monic hg hug)), λ
+ hp3, ⟨mt (eq_one_of_is_unit_of_monic hp1) hp2, λ
+  f
+  g
+  hp, have hf : «expr ≠ »(f, 0), from λ
+  hf, by { rw ["[", expr hp, ",", expr hf, ",", expr zero_mul, "]"] ["at", ident hp1],
+    exact [expr not_monic_zero hp1] },
+  have hg : «expr ≠ »(g, 0), from λ hg, by { rw ["[", expr hp, ",", expr hg, ",", expr mul_zero, "]"] ["at", ident hp1],
+    exact [expr not_monic_zero hp1] },
+  «expr $ »(or.imp (λ
+    hf, is_unit_of_mul_eq_one _ _ hf) (λ
+    hg, is_unit_of_mul_eq_one _ _ hg), «expr $ »(hp3 «expr * »(f, C «expr ⁻¹»(f.leading_coeff)) «expr * »(g, C «expr ⁻¹»(g.leading_coeff)) (monic_mul_leading_coeff_inv hf) (monic_mul_leading_coeff_inv hg), by rw ["[", expr mul_assoc, ",", expr mul_left_comm _ g, ",", "<-", expr mul_assoc, ",", "<-", expr C_mul, ",", "<-", expr mul_inv₀, ",", "<-", expr leading_coeff_mul, ",", "<-", expr hp, ",", expr monic.def.1 hp1, ",", expr inv_one, ",", expr C_1, ",", expr mul_one, "]"] []))⟩⟩
 
 /-- Division of polynomials. See polynomial.div_by_monic for more details.-/
 def div (p q : Polynomial R) :=
@@ -499,14 +501,18 @@ theorem degree_pos_of_irreducible (hp : Irreducible p) : 0 < p.degree :=
       have  := eq_C_of_degree_le_zero hp0 
       not_irreducible_C (p.coeff 0)$ this ▸ hp
 
-theorem pairwise_coprime_X_sub {α : Type u} [Field α] {I : Type v} {s : I → α} (H : Function.Injective s) :
-  Pairwise (IsCoprime on fun i : I => Polynomial.x - Polynomial.c (s i)) :=
-  fun i j hij =>
-    have h : s j - s i ≠ 0 := sub_ne_zero_of_ne$ Function.Injective.ne H hij.symm
-    ⟨Polynomial.c ((s j - s i)⁻¹), -Polynomial.c ((s j - s i)⁻¹),
-      by 
-        rw [neg_mul_eq_neg_mul_symm, ←sub_eq_add_neg, ←mul_sub, sub_sub_sub_cancel_left, ←Polynomial.C_sub,
-          ←Polynomial.C_mul, inv_mul_cancel h, Polynomial.C_1]⟩
+-- error in Data.Polynomial.FieldDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pairwise_coprime_X_sub
+{α : Type u}
+[field α]
+{I : Type v}
+{s : I → α}
+(H : function.injective s) : pairwise «expr on »(is_coprime, λ i : I, «expr - »(polynomial.X, polynomial.C (s i))) :=
+λ
+i
+j
+hij, have h : «expr ≠ »(«expr - »(s j, s i), 0), from «expr $ »(sub_ne_zero_of_ne, function.injective.ne H hij.symm),
+⟨polynomial.C «expr ⁻¹»(«expr - »(s j, s i)), «expr- »(polynomial.C «expr ⁻¹»(«expr - »(s j, s i))), by rw ["[", expr neg_mul_eq_neg_mul_symm, ",", "<-", expr sub_eq_add_neg, ",", "<-", expr mul_sub, ",", expr sub_sub_sub_cancel_left, ",", "<-", expr polynomial.C_sub, ",", "<-", expr polynomial.C_mul, ",", expr inv_mul_cancel h, ",", expr polynomial.C_1, "]"] []⟩
 
 -- error in Data.Polynomial.FieldDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `f` is a polynomial over a field, and `a : K` satisfies `f' a ≠ 0`,
@@ -531,11 +537,13 @@ begin
   rw ["[", "<-", expr C_inj, ",", expr this, ",", expr C_0, "]"] []
 end
 
-theorem prod_multiset_root_eq_finset_root {p : Polynomial R} (hzero : p ≠ 0) :
-  (Multiset.map (fun a : R => X - C a) p.roots).Prod =
-    ∏a in Multiset.toFinset p.roots, (fun a : R => (X - C a) ^ root_multiplicity a p) a :=
-  by 
-    simp only [count_roots hzero, Finset.prod_multiset_map_count]
+-- error in Data.Polynomial.FieldDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prod_multiset_root_eq_finset_root
+{p : polynomial R}
+(hzero : «expr ≠ »(p, 0)) : «expr = »((multiset.map (λ
+   a : R, «expr - »(X, C a)) p.roots).prod, «expr∏ in , »((a), multiset.to_finset p.roots, λ
+  a : R, «expr ^ »(«expr - »(X, C a), root_multiplicity a p) a)) :=
+by simp [] [] ["only"] ["[", expr count_roots hzero, ",", expr finset.prod_multiset_map_count, "]"] [] []
 
 -- error in Data.Polynomial.FieldDivision: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The product `∏ (X - a)` for `a` inside the multiset `p.roots` divides `p`. -/

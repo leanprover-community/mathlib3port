@@ -20,9 +20,9 @@ universe u v
 
 section Ultrafilter
 
-/-- Basis for the topology on `ultrafilter α`. -/
-def UltrafilterBasis (α : Type u) : Set (Set (Ultrafilter α)) :=
-  range$ fun s : Set α => { u | s ∈ u }
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Basis for the topology on `ultrafilter α`. -/ def ultrafilter_basis (α : Type u) : set (set (ultrafilter α)) :=
+«expr $ »(range, λ s : set α, {u | «expr ∈ »(s, u)})
 
 variable{α : Type u}
 
@@ -54,7 +54,7 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
   «expr↑ » u ≤ 𝓝 x ↔ x = mjoin u :=
   by 
     rw [eq_comm, ←Ultrafilter.coe_le_coe]
-    change «expr↑ » u ≤ 𝓝 x ↔ ∀ s _ : s ∈ x, { v:Ultrafilter α | s ∈ v } ∈ u 
+    change «expr↑ » u ≤ 𝓝 x ↔ ∀ s (_ : s ∈ x), { v:Ultrafilter α | s ∈ v } ∈ u 
     simp only [TopologicalSpace.nhds_generate_from, le_infi_iff, UltrafilterBasis, le_principal_iff, mem_set_of_eq]
     split 
     ·
@@ -203,10 +203,10 @@ variable(α : Type u)[TopologicalSpace α]
 instance stoneCechSetoid : Setoidₓ (Ultrafilter α) :=
   { R :=
       fun x y =>
-        ∀ γ : Type u [TopologicalSpace γ],
+        ∀ (γ : Type u) [TopologicalSpace γ],
           by 
             exact
-              ∀ [T2Space γ] [CompactSpace γ] f : α → γ hf : Continuous f,
+              ∀ [T2Space γ] [CompactSpace γ] (f : α → γ) (hf : Continuous f),
                 Ultrafilter.extend f x = Ultrafilter.extend f y,
     iseqv :=
       ⟨fun x γ tγ h₁ h₂ f hf => rfl,
@@ -286,7 +286,7 @@ theorem continuous_stone_cech_unit : Continuous (stoneCechUnit : α → StoneCec
       by 
         rwa [show «expr⟦ ⟧» g = «expr⟦ ⟧» (pure x) from Quotientₓ.sound$ convergent_eqv_pure gx] at this
 
--- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.StoneCech: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 instance stone_cech.t2_space : t2_space (stone_cech α) :=
 begin
   rw [expr t2_iff_ultrafilter] [],

@@ -1,7 +1,7 @@
 import Mathbin.Algebra.Ring.Pi 
 import Mathbin.Algebra.Category.CommRing.Basic 
 import Mathbin.Algebra.Category.Group.Limits 
-import Mathbin.RingTheory.Subring
+import Mathbin.RingTheory.Subring.Basic
 
 /-!
 # The category of (commutative) rings has all limits

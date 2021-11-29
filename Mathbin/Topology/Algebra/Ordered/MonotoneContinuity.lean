@@ -140,7 +140,7 @@ The assumption `hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ico b (f a)` is required
 function `f : ℝ → ℝ` given by `f x = if x < 0 then x else x + 1` would be a counter-example at
 `a = 0`. -/
 theorem StrictMonoOn.continuous_at_left_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
-  (hs : s ∈ 𝓝[Iic a] a) (hfs : ∀ b _ : b < f a, ∃ (c : _)(_ : c ∈ s), f c ∈ Ico b (f a)) :
+  (hs : s ∈ 𝓝[Iic a] a) (hfs : ∀ b (_ : b < f a), ∃ (c : _)(_ : c ∈ s), f c ∈ Ico b (f a)) :
   ContinuousWithinAt f (Iic a) a :=
   h_mono.dual.continuous_at_right_of_exists_between hs$
     fun b hb =>
@@ -154,7 +154,7 @@ The assumption `hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ioo b (f a)` cannot be r
 assumption `hfs : ∀ b < f a, ∃ c ∈ s, f c ∈ Ico b (f a)` we use for strictly monotone functions
 because otherwise the function `floor : ℝ → ℤ` would be a counter-example at `a = 0`. -/
 theorem continuous_at_left_of_monotone_on_of_exists_between {f : α → β} {s : Set α} {a : α} (hf : MonotoneOn f s)
-  (hs : s ∈ 𝓝[Iic a] a) (hfs : ∀ b _ : b < f a, ∃ (c : _)(_ : c ∈ s), f c ∈ Ioo b (f a)) :
+  (hs : s ∈ 𝓝[Iic a] a) (hfs : ∀ b (_ : b < f a), ∃ (c : _)(_ : c ∈ s), f c ∈ Ioo b (f a)) :
   ContinuousWithinAt f (Iic a) a :=
   @continuous_at_right_of_monotone_on_of_exists_between (OrderDual α) (OrderDual β) _ _ _ _ _ _ f s a hf.dual hs$
     fun b hb =>
@@ -203,8 +203,8 @@ theorem StrictMonoOn.continuous_at_left_of_surj_on {f : α → β} {s : Set α} 
 neighborhood under `f` meets every interval `[b, f a)`, `b < f a`, and every interval
 `(f a, b]`, `b > f a`, then `f` is continuous at `a`. -/
 theorem StrictMonoOn.continuous_at_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : StrictMonoOn f s)
-  (hs : s ∈ 𝓝 a) (hfs_l : ∀ b _ : b < f a, ∃ (c : _)(_ : c ∈ s), f c ∈ Ico b (f a))
-  (hfs_r : ∀ b _ : b > f a, ∃ (c : _)(_ : c ∈ s), f c ∈ Ioc (f a) b) : ContinuousAt f a :=
+  (hs : s ∈ 𝓝 a) (hfs_l : ∀ b (_ : b < f a), ∃ (c : _)(_ : c ∈ s), f c ∈ Ico b (f a))
+  (hfs_r : ∀ b (_ : b > f a), ∃ (c : _)(_ : c ∈ s), f c ∈ Ioc (f a) b) : ContinuousAt f a :=
   continuous_at_iff_continuous_left_right.2
     ⟨h_mono.continuous_at_left_of_exists_between (mem_nhds_within_of_mem_nhds hs) hfs_l,
       h_mono.continuous_at_right_of_exists_between (mem_nhds_within_of_mem_nhds hs) hfs_r⟩
@@ -230,8 +230,8 @@ theorem StrictMonoOn.continuous_at_of_image_mem_nhds [DenselyOrdered β] {f : α
 `f` meets every interval `(b, f a)`, `b < f a`, and every interval `(f a, b)`, `b > f a`, then `f`
 is continuous at `a`. -/
 theorem continuous_at_of_monotone_on_of_exists_between {f : α → β} {s : Set α} {a : α} (h_mono : MonotoneOn f s)
-  (hs : s ∈ 𝓝 a) (hfs_l : ∀ b _ : b < f a, ∃ (c : _)(_ : c ∈ s), f c ∈ Ioo b (f a))
-  (hfs_r : ∀ b _ : b > f a, ∃ (c : _)(_ : c ∈ s), f c ∈ Ioo (f a) b) : ContinuousAt f a :=
+  (hs : s ∈ 𝓝 a) (hfs_l : ∀ b (_ : b < f a), ∃ (c : _)(_ : c ∈ s), f c ∈ Ioo b (f a))
+  (hfs_r : ∀ b (_ : b > f a), ∃ (c : _)(_ : c ∈ s), f c ∈ Ioo (f a) b) : ContinuousAt f a :=
   continuous_at_iff_continuous_left_right.2
     ⟨continuous_at_left_of_monotone_on_of_exists_between h_mono (mem_nhds_within_of_mem_nhds hs) hfs_l,
       continuous_at_right_of_monotone_on_of_exists_between h_mono (mem_nhds_within_of_mem_nhds hs) hfs_r⟩

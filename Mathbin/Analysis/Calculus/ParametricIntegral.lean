@@ -177,10 +177,10 @@ theorem has_fderiv_at_integral_of_dominated_loc_of_lip {F : H → α → E} {F' 
   (bound_integrable : integrable (bound : α → ℝ) μ) (h_diff : ∀ᵐa ∂μ, HasFderivAt (fun x => F x a) (F' a) x₀) :
   integrable F' μ ∧ HasFderivAt (fun x => ∫a, F x a ∂μ) (∫a, F' a ∂μ) x₀ :=
   by 
-    obtain ⟨δ, δ_pos, hδ⟩ : ∃ (δ : _)(_ : δ > 0), ∀ x _ : x ∈ ball x₀ δ, AeMeasurable (F x) μ ∧ x ∈ ball x₀ ε 
+    obtain ⟨δ, δ_pos, hδ⟩ : ∃ (δ : _)(_ : δ > 0), ∀ x (_ : x ∈ ball x₀ δ), AeMeasurable (F x) μ ∧ x ∈ ball x₀ ε 
     exact eventually_nhds_iff_ball.mp (hF_meas.and (ball_mem_nhds x₀ ε_pos))
     choose hδ_meas hδε using hδ 
-    replace h_lip : ∀ᵐa : α ∂μ, ∀ x _ : x ∈ ball x₀ δ, ∥F x a - F x₀ a∥ ≤ |bound a|*∥x - x₀∥
+    replace h_lip : ∀ᵐa : α ∂μ, ∀ x (_ : x ∈ ball x₀ δ), ∥F x a - F x₀ a∥ ≤ |bound a|*∥x - x₀∥
     exact h_lip.mono fun a lip x hx => lip.norm_sub_le (hδε x hx) (mem_ball_self ε_pos)
     replace bound_integrable := bound_integrable.norm 
     apply has_fderiv_at_integral_of_dominated_loc_of_lip' δ_pos <;> assumption

@@ -96,7 +96,7 @@ spaces.
 To construct a norm from an inner product, see `inner_product_space.of_core`.
 -/
 class InnerProductSpace(𝕜 : Type _)(E : Type _)[IsROrC 𝕜] extends NormedGroup E, NormedSpace 𝕜 E, HasInner 𝕜 E where 
-  norm_sq_eq_inner : ∀ x : E, (∥x∥^2) = re (inner x x)
+  norm_sq_eq_inner : ∀ (x : E), (∥x∥^2) = re (inner x x)
   conj_sym : ∀ x y, conj (inner y x) = inner x y 
   add_left : ∀ x y z, inner (x+y) z = inner x z+inner y z 
   smulLeft : ∀ x y r, inner (r • x) y = conj r*inner x y
@@ -505,19 +505,29 @@ theorem sum_inner {ι : Type _} (s : Finset ι) (f : ι → E) (x : E) : ⟪∑i
 theorem inner_sum {ι : Type _} (s : Finset ι) (f : ι → E) (x : E) : ⟪x, ∑i in s, f i⟫ = ∑i in s, ⟪x, f i⟫ :=
   SesqForm.sum_left sesqFormOfInner _ _ _
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An inner product with a sum on the left, `finsupp` version. -/
-theorem Finsupp.sum_inner {ι : Type _} (l : ι →₀ 𝕜) (v : ι → E) (x : E) :
-  ⟪l.sum fun i : ι a : 𝕜 => a • v i, x⟫ = l.sum fun i : ι a : 𝕜 => conj a • ⟪v i, x⟫ :=
-  by 
-    convert sum_inner l.support (fun a => l a • v a) x 
-    simp [inner_smul_left, Finsupp.sum]
+theorem finsupp.sum_inner
+{ι : Type*}
+(l : «expr →₀ »(ι, 𝕜))
+(v : ι → E)
+(x : E) : «expr = »(«expr⟪ , ⟫»(l.sum (λ
+   (i : ι)
+   (a : 𝕜), «expr • »(a, v i)), x), l.sum (λ (i : ι) (a : 𝕜), «expr • »(exprconj() a, «expr⟪ , ⟫»(v i, x)))) :=
+by { convert [] [expr sum_inner l.support (λ a, «expr • »(l a, v a)) x] [],
+  simp [] [] [] ["[", expr inner_smul_left, ",", expr finsupp.sum, "]"] [] [] }
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An inner product with a sum on the right, `finsupp` version. -/
-theorem Finsupp.inner_sum {ι : Type _} (l : ι →₀ 𝕜) (v : ι → E) (x : E) :
-  ⟪x, l.sum fun i : ι a : 𝕜 => a • v i⟫ = l.sum fun i : ι a : 𝕜 => a • ⟪x, v i⟫ :=
-  by 
-    convert inner_sum l.support (fun a => l a • v a) x 
-    simp [inner_smul_right, Finsupp.sum]
+theorem finsupp.inner_sum
+{ι : Type*}
+(l : «expr →₀ »(ι, 𝕜))
+(v : ι → E)
+(x : E) : «expr = »(«expr⟪ , ⟫»(x, l.sum (λ
+   (i : ι)
+   (a : 𝕜), «expr • »(a, v i))), l.sum (λ (i : ι) (a : 𝕜), «expr • »(a, «expr⟪ , ⟫»(x, v i)))) :=
+by { convert [] [expr inner_sum l.support (λ a, «expr • »(l a, v a)) x] [],
+  simp [] [] [] ["[", expr inner_smul_right, ",", expr finsupp.sum, "]"] [] [] }
 
 @[simp]
 theorem inner_zero_left {x : E} : ⟪0, x⟫ = 0 :=
@@ -809,7 +819,7 @@ end
 /-- `if ... then ... else` characterization of a set of vectors being orthonormal.  (Inner product
 equals Kronecker delta.) -/
 theorem orthonormal_subtype_iff_ite {s : Set E} :
-  Orthonormal 𝕜 (coeₓ : s → E) ↔ ∀ v _ : v ∈ s, ∀ w _ : w ∈ s, ⟪v, w⟫ = if v = w then 1 else 0 :=
+  Orthonormal 𝕜 (coeₓ : s → E) ↔ ∀ v (_ : v ∈ s), ∀ w (_ : w ∈ s), ⟪v, w⟫ = if v = w then 1 else 0 :=
   by 
     rw [orthonormal_iff_ite]
     split 
@@ -912,7 +922,7 @@ begin
 end
 
 theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· ⊆ ·) s)
-  (h : ∀ a _ : a ∈ s, Orthonormal 𝕜 (fun x => x : (a : Set E) → E)) : Orthonormal 𝕜 (fun x => x : ⋃₀s → E) :=
+  (h : ∀ a (_ : a ∈ s), Orthonormal 𝕜 (fun x => x : (a : Set E) → E)) : Orthonormal 𝕜 (fun x => x : ⋃₀s → E) :=
   by 
     rw [Set.sUnion_eq_Union] <;>
       exact
@@ -923,7 +933,7 @@ theorem orthonormal_sUnion_of_directed {s : Set (Set E)} (hs : DirectedOn (· �
 /-- Given an orthonormal set `v` of vectors in `E`, there exists a maximal orthonormal set
 containing it. -/
 theorem exists_maximal_orthonormal {s : Set E} (hs : Orthonormal 𝕜 (coeₓ : s → E)) :
-  ∃ (w : _)(_ : w ⊇ s), Orthonormal 𝕜 (coeₓ : w → E) ∧ ∀ u _ : u ⊇ w, Orthonormal 𝕜 (coeₓ : u → E) → u = w :=
+  ∃ (w : _)(_ : w ⊇ s), Orthonormal 𝕜 (coeₓ : w → E) ∧ ∀ u (_ : u ⊇ w), Orthonormal 𝕜 (coeₓ : u → E) → u = w :=
   by 
     rcases Zorn.zorn_subset_nonempty { b | Orthonormal 𝕜 (coeₓ : b → E) } _ _ hs with ⟨b, bi, sb, h⟩
     ·
@@ -1559,6 +1569,7 @@ theorem inner_right_coe (v : E) : (innerRight v : E → 𝕜) = fun w => ⟪v, w
 theorem inner_right_apply (v w : E) : innerRight v w = ⟪v, w⟫ :=
   rfl
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- When an inner product space `E` over `𝕜` is considered as a real normed space, its inner
 product satisfies `is_bounded_bilinear_map`.
 
@@ -1568,24 +1579,20 @@ instance may be not definitionally equal to some other “natural” instance. S
 `[normed_space ℝ E]` and `[is_scalar_tower ℝ 𝕜 E]`. In both interesting cases `𝕜 = ℝ` and `𝕜 = ℂ`
 we have these instances.
 -/
-theorem is_bounded_bilinear_map_inner [NormedSpace ℝ E] [IsScalarTower ℝ 𝕜 E] :
-  IsBoundedBilinearMap ℝ fun p : E × E => ⟪p.1, p.2⟫ :=
-  { add_left := fun _ _ _ => inner_add_left,
-    smulLeft :=
-      fun r x y =>
-        by 
-          simp only [←algebra_map_smul 𝕜 r x, algebra_map_eq_of_real, inner_smul_real_left],
-    add_right := fun _ _ _ => inner_add_right,
-    smulRight :=
-      fun r x y =>
-        by 
-          simp only [←algebra_map_smul 𝕜 r y, algebra_map_eq_of_real, inner_smul_real_right],
-    bound :=
-      ⟨1, zero_lt_one,
-        fun x y =>
-          by 
-            rw [one_mulₓ]
-            exact norm_inner_le_norm x y⟩ }
+theorem is_bounded_bilinear_map_inner
+[normed_space exprℝ() E]
+[is_scalar_tower exprℝ() 𝕜 E] : is_bounded_bilinear_map exprℝ() (λ p : «expr × »(E, E), «expr⟪ , ⟫»(p.1, p.2)) :=
+{ add_left := λ _ _ _, inner_add_left,
+  smul_left := λ
+  r
+  x
+  y, by simp [] [] ["only"] ["[", "<-", expr algebra_map_smul 𝕜 r x, ",", expr algebra_map_eq_of_real, ",", expr inner_smul_real_left, "]"] [] [],
+  add_right := λ _ _ _, inner_add_right,
+  smul_right := λ
+  r
+  x
+  y, by simp [] [] ["only"] ["[", "<-", expr algebra_map_smul 𝕜 r y, ",", expr algebra_map_eq_of_real, ",", expr inner_smul_real_right, "]"] [] [],
+  bound := ⟨1, zero_lt_one, λ x y, by { rw ["[", expr one_mul, "]"] [], exact [expr norm_inner_le_norm x y] }⟩ }
 
 end Norm
 
@@ -1685,7 +1692,7 @@ open_locale DirectSum
 
 /-- An indexed family of mutually-orthogonal subspaces of an inner product space `E`. -/
 def OrthogonalFamily (V : ι → Submodule 𝕜 E) : Prop :=
-  ∀ ⦃i j⦄, i ≠ j → ∀ {v : E} hv : v ∈ V i {w : E} hw : w ∈ V j, ⟪v, w⟫ = 0
+  ∀ ⦃i j⦄, i ≠ j → ∀ {v : E} (hv : v ∈ V i) {w : E} (hw : w ∈ V j), ⟪v, w⟫ = 0
 
 variable{𝕜}{V : ι → Submodule 𝕜 E}
 
@@ -1910,7 +1917,7 @@ variable(K : Submodule 𝕜 E)
 
 /-- The subspace of vectors orthogonal to a given subspace. -/
 def Submodule.orthogonal : Submodule 𝕜 E :=
-  { Carrier := { v | ∀ u _ : u ∈ K, ⟪u, v⟫ = 0 }, zero_mem' := fun _ _ => inner_zero_right,
+  { Carrier := { v | ∀ u (_ : u ∈ K), ⟪u, v⟫ = 0 }, zero_mem' := fun _ _ => inner_zero_right,
     add_mem' :=
       fun x y hx hy u hu =>
         by 
@@ -1923,12 +1930,12 @@ def Submodule.orthogonal : Submodule 𝕜 E :=
 notation:1200 K "ᗮ" => Submodule.orthogonal K
 
 /-- When a vector is in `Kᗮ`. -/
-theorem Submodule.mem_orthogonal (v : E) : v ∈ Kᗮ ↔ ∀ u _ : u ∈ K, ⟪u, v⟫ = 0 :=
+theorem Submodule.mem_orthogonal (v : E) : v ∈ Kᗮ ↔ ∀ u (_ : u ∈ K), ⟪u, v⟫ = 0 :=
   Iff.rfl
 
 /-- When a vector is in `Kᗮ`, with the inner product the
 other way round. -/
-theorem Submodule.mem_orthogonal' (v : E) : v ∈ Kᗮ ↔ ∀ u _ : u ∈ K, ⟪v, u⟫ = 0 :=
+theorem Submodule.mem_orthogonal' (v : E) : v ∈ Kᗮ ↔ ∀ u (_ : u ∈ K), ⟪v, u⟫ = 0 :=
   by 
     simpRw [Submodule.mem_orthogonal, inner_eq_zero_sym]
 
@@ -1992,12 +1999,14 @@ theorem orthogonal_eq_inter : Kᗮ = ⨅v : K, (innerRight (v : E)).ker :=
       simp only [Submodule.mem_infi] at hv 
       exact hv ⟨w, hw⟩
 
+-- error in Analysis.InnerProductSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The orthogonal complement of any submodule `K` is closed. -/
-theorem Submodule.is_closed_orthogonal : IsClosed (Kᗮ : Set E) :=
-  by 
-    rw [orthogonal_eq_inter K]
-    convert is_closed_Inter fun v : K => (innerRight (v : E)).is_closed_ker 
-    simp 
+theorem submodule.is_closed_orthogonal : is_closed («expr ᗮ»(K) : set E) :=
+begin
+  rw [expr orthogonal_eq_inter K] [],
+  convert [] [expr is_closed_Inter (λ v : K, (inner_right (v : E)).is_closed_ker)] [],
+  simp [] [] [] [] [] []
+end
 
 /-- In a complete space, the orthogonal complement of any submodule `K` is complete. -/
 instance  [CompleteSpace E] : CompleteSpace Kᗮ :=
@@ -2111,7 +2120,7 @@ theorem IsSelfAdjoint.coe_re_apply_inner_self_apply {T : E →L[𝕜] E} (hT : I
 /-- If a self-adjoint operator preserves a submodule, its restriction to that submodule is
 self-adjoint. -/
 theorem IsSelfAdjoint.restrict_invariant {T : E →ₗ[𝕜] E} (hT : IsSelfAdjoint T) {V : Submodule 𝕜 E}
-  (hV : ∀ v _ : v ∈ V, T v ∈ V) : IsSelfAdjoint (T.restrict hV) :=
+  (hV : ∀ v (_ : v ∈ V), T v ∈ V) : IsSelfAdjoint (T.restrict hV) :=
   fun v w => hT v w
 
 end IsSelfAdjoint

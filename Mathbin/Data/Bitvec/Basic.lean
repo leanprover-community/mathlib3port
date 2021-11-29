@@ -33,35 +33,34 @@ theorem to_nat_eq_foldr_reverse {n : ℕ} (v : Bitvec n) : v.to_nat = v.to_list.
   by 
     rw [List.foldr_reverse, flip] <;> rfl
 
-theorem to_nat_lt {n : ℕ} (v : Bitvec n) : v.to_nat < 2 ^ n :=
-  by 
-    suffices  : (v.to_nat+1) ≤ 2 ^ n
-    ·
-      simpa 
-    rw [to_nat_eq_foldr_reverse]
-    cases' v with xs h 
-    dsimp [Bitvec.toNat, bits_to_nat]
-    rw [←List.length_reverse] at h 
-    generalize xs.reverse = ys  at h⊢
-    clear xs 
-    induction ys generalizing n
-    ·
-      simp [←h]
-    ·
-      simp only [←h, pow_addₓ, flip, List.length, List.foldr, pow_oneₓ]
-      rw [add_lsb_eq_twice_add_one]
-      trans (2*List.foldr (fun x : Bool y : ℕ => add_lsb y x) 0 ys_tl)+2*1
-      ·
-        acMono 
-        rw [two_mul]
-        mono 
-        cases ys_hd <;> simp 
-      ·
-        rw [←left_distrib]
-        acMono 
-        normNum 
-        apply ys_ih 
-        rfl
+-- error in Data.Bitvec.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem to_nat_lt {n : exprℕ()} (v : bitvec n) : «expr < »(v.to_nat, «expr ^ »(2, n)) :=
+begin
+  suffices [] [":", expr «expr ≤ »(«expr + »(v.to_nat, 1), «expr ^ »(2, n))],
+  { simpa [] [] [] [] [] [] },
+  rw [expr to_nat_eq_foldr_reverse] [],
+  cases [expr v] ["with", ident xs, ident h],
+  dsimp [] ["[", expr bitvec.to_nat, ",", expr bits_to_nat, "]"] [] [],
+  rw ["<-", expr list.length_reverse] ["at", ident h],
+  generalize_hyp [] [":"] [expr «expr = »(xs.reverse, ys)] ["at", "⊢", ident h],
+  clear [ident xs],
+  induction [expr ys] [] [] ["generalizing", ident n],
+  { simp [] [] [] ["[", "<-", expr h, "]"] [] [] },
+  { simp [] [] ["only"] ["[", "<-", expr h, ",", expr pow_add, ",", expr flip, ",", expr list.length, ",", expr list.foldr, ",", expr pow_one, "]"] [] [],
+    rw ["[", expr add_lsb_eq_twice_add_one, "]"] [],
+    transitivity [expr «expr + »(«expr * »(2, list.foldr (λ
+        (x : bool)
+        (y : exprℕ()), add_lsb y x) 0 ys_tl), «expr * »(2, 1))],
+    { ac_mono [] [],
+      rw [expr two_mul] [],
+      mono [] [] [] [],
+      cases [expr ys_hd] []; simp [] [] [] [] [] [] },
+    { rw ["<-", expr left_distrib] [],
+      ac_mono [] [],
+      norm_num [] [],
+      apply [expr ys_ih],
+      refl } }
+end
 
 theorem add_lsb_div_two {x b} : add_lsb x b / 2 = x :=
   by 

@@ -50,7 +50,7 @@ variable{E : Type _}[SemiNormedGroup E][SemiNormedSpace ℝ E]
 
 /-- Hahn-Banach theorem for continuous linear functions over `ℝ`. -/
 theorem exists_extension_norm_eq (p : Subspace ℝ E) (f : p →L[ℝ] ℝ) :
-  ∃ g : E →L[ℝ] ℝ, (∀ x : p, g x = f x) ∧ ∥g∥ = ∥f∥ :=
+  ∃ g : E →L[ℝ] ℝ, (∀ (x : p), g x = f x) ∧ ∥g∥ = ∥f∥ :=
   by 
     rcases
       exists_extension_of_le_sublinear ⟨p, f⟩ (fun x => ∥f∥*∥x∥)

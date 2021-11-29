@@ -121,7 +121,7 @@ def sqrt_aux (f : CauSeq ℚ abs) : ℕ → ℚ
   let s := sqrt_aux n 
   max 0$ (s+f (n+1) / s) / 2
 
-theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ i : ℕ, 0 ≤ sqrt_aux f i
+theorem sqrt_aux_nonneg (f : CauSeq ℚ abs) : ∀ (i : ℕ), 0 ≤ sqrt_aux f i
 | 0 =>
   by 
     rw [sqrt_aux, Rat.mk_nat_eq, Rat.mk_eq_div] <;> apply div_nonneg <;> exact Int.cast_nonneg.2 (Int.of_nat_nonneg _)

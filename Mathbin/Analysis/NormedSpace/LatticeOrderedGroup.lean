@@ -39,8 +39,8 @@ respect which `α` forms a lattice. Suppose that `α` is *solid*, that is to say
 said to be a normed lattice ordered group.
 -/
 class NormedLatticeAddCommGroup(α : Type _) extends NormedGroup α, Lattice α where 
-  add_le_add_left : ∀ a b : α, a ≤ b → ∀ c : α, (c+a) ≤ c+b 
-  solid : ∀ a b : α, |a| ≤ |b| → ∥a∥ ≤ ∥b∥
+  add_le_add_left : ∀ (a b : α), a ≤ b → ∀ (c : α), (c+a) ≤ c+b 
+  solid : ∀ (a b : α), |a| ≤ |b| → ∥a∥ ≤ ∥b∥
 
 theorem solid {α : Type _} [NormedLatticeAddCommGroup α] {a b : α} (h : |a| ≤ |b|) : ∥a∥ ≤ ∥b∥ :=
   NormedLatticeAddCommGroup.solid a b h

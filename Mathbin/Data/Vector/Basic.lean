@@ -30,7 +30,7 @@ theorem to_list_injective : Function.Injective (@to_list α n) :=
 
 /-- Two `v w : vector α n` are equal iff they are equal at every single index. -/
 @[ext]
-theorem ext : ∀ {v w : Vector α n} h : ∀ m : Finₓ n, Vector.nth v m = Vector.nth w m, v = w
+theorem ext : ∀ {v w : Vector α n} (h : ∀ (m : Finₓ n), Vector.nth v m = Vector.nth w m), v = w
 | ⟨v, hv⟩, ⟨w, hw⟩, h =>
   Subtype.eq
     (List.ext_le
@@ -43,26 +43,26 @@ instance zero_subsingleton : Subsingleton (Vector α 0) :=
   ⟨fun _ _ => Vector.ext fun m => Finₓ.elim0 m⟩
 
 @[simp]
-theorem cons_val (a : α) : ∀ v : Vector α n, (a::ᵥv).val = a :: v.val
+theorem cons_val (a : α) : ∀ (v : Vector α n), (a::ᵥv).val = a :: v.val
 | ⟨_, _⟩ => rfl
 
 @[simp]
-theorem cons_head (a : α) : ∀ v : Vector α n, (a::ᵥv).head = a
+theorem cons_head (a : α) : ∀ (v : Vector α n), (a::ᵥv).head = a
 | ⟨_, _⟩ => rfl
 
 @[simp]
-theorem cons_tail (a : α) : ∀ v : Vector α n, (a::ᵥv).tail = v
+theorem cons_tail (a : α) : ∀ (v : Vector α n), (a::ᵥv).tail = v
 | ⟨_, _⟩ => rfl
 
 @[simp]
-theorem to_list_of_fn : ∀ {n} f : Finₓ n → α, to_list (of_fn f) = List.ofFn f
+theorem to_list_of_fn : ∀ {n} (f : Finₓ n → α), to_list (of_fn f) = List.ofFn f
 | 0, f => rfl
 | n+1, f =>
   by 
     rw [of_fn, List.of_fn_succ, to_list_cons, to_list_of_fn]
 
 @[simp]
-theorem mk_to_list : ∀ v : Vector α n h, (⟨to_list v, h⟩ : Vector α n) = v
+theorem mk_to_list : ∀ (v : Vector α n) h, (⟨to_list v, h⟩ : Vector α n) = v
 | ⟨l, h₁⟩, h₂ => rfl
 
 @[simp]
@@ -75,7 +75,7 @@ theorem to_list_map {β : Type _} (v : Vector α n) (f : α → β) : (v.map f).
     cases v <;> rfl
 
 theorem nth_eq_nth_le :
-  ∀ v : Vector α n i,
+  ∀ (v : Vector α n) i,
     nth v i =
       v.to_list.nth_le i.1
         (by 
@@ -114,13 +114,13 @@ theorem nth_tail (x : Vector α n) i : x.tail.nth i = x.nth ⟨i.1+1, lt_tsub_if
     rcases x with ⟨_ | _, h⟩ <;> rfl
 
 @[simp]
-theorem nth_tail_succ : ∀ v : Vector α n.succ i : Finₓ n, nth (tail v) i = nth v i.succ
+theorem nth_tail_succ : ∀ (v : Vector α n.succ) (i : Finₓ n), nth (tail v) i = nth v i.succ
 | ⟨a :: l, e⟩, ⟨i, h⟩ =>
   by 
     simp [nth_eq_nth_le] <;> rfl
 
 @[simp]
-theorem tail_val : ∀ v : Vector α n.succ, v.tail.val = v.val.tail
+theorem tail_val : ∀ (v : Vector α n.succ), v.tail.val = v.val.tail
 | ⟨a :: l, e⟩ => rfl
 
 /-- The `tail` of a `nil` vector is `nil`. -/
@@ -197,7 +197,7 @@ theorem nth_mem (i : Finₓ n) (v : Vector α n) : v.nth i ∈ v.to_list :=
   by 
     rw [nth_eq_nth_le] <;> exact List.nth_le_mem _ _ _
 
-theorem head'_to_list : ∀ v : Vector α n.succ, (to_list v).head' = some (head v)
+theorem head'_to_list : ∀ (v : Vector α n.succ), (to_list v).head' = some (head v)
 | ⟨a :: l, e⟩ => rfl
 
 /-- Reverse a vector. -/
@@ -218,7 +218,7 @@ theorem reverse_reverse {v : Vector α n} : v.reverse.reverse = v :=
     simp [Vector.reverse]
 
 @[simp]
-theorem nth_zero : ∀ v : Vector α n.succ, nth v 0 = head v
+theorem nth_zero : ∀ (v : Vector α n.succ), nth v 0 = head v
 | ⟨a :: l, e⟩ => rfl
 
 @[simp]
@@ -373,7 +373,7 @@ def m_of_fn {m} [Monadₓ m] {α : Type u} : ∀ {n}, (Finₓ n → m α) → m 
     pure (a::ᵥv)
 
 theorem m_of_fn_pure {m} [Monadₓ m] [IsLawfulMonad m] {α} :
-  ∀ {n} f : Finₓ n → α, (@m_of_fn m _ _ _ fun i => pure (f i)) = pure (of_fn f)
+  ∀ {n} (f : Finₓ n → α), (@m_of_fn m _ _ _ fun i => pure (f i)) = pure (of_fn f)
 | 0, f => rfl
 | n+1, f =>
   by 
@@ -395,7 +395,7 @@ theorem mmap_nil {m} [Monadₓ m] {α β} (f : α → m β) : mmap f nil = pure 
 
 @[simp]
 theorem mmap_cons {m} [Monadₓ m] {α β} (f : α → m β) a :
-  ∀ {n} v : Vector α n,
+  ∀ {n} (v : Vector α n),
     mmap f (a::ᵥv) =
       do 
         let h' ← f a 
@@ -528,7 +528,7 @@ theorem remove_nth_insert_nth' {v : Vector α (n+1)} :
         simpa using h
 
 theorem insert_nth_comm (a b : α) (i j : Finₓ (n+1)) (h : i ≤ j) :
-  ∀ v : Vector α n, (v.insert_nth a i).insertNth b j.succ = (v.insert_nth b j).insertNth a i.cast_succ
+  ∀ (v : Vector α n), (v.insert_nth a i).insertNth b j.succ = (v.insert_nth b j).insertNth a i.cast_succ
 | ⟨l, hl⟩ =>
   by 
     refine' Subtype.eq _ 
@@ -620,7 +620,7 @@ open list(cons)
 
 open Nat
 
-private def traverse_aux {α β : Type u} (f : α → F β) : ∀ x : List α, F (Vector β x.length)
+private def traverse_aux {α β : Type u} (f : α → F β) : ∀ (x : List α), F (Vector β x.length)
 | [] => pure Vector.nil
 | x :: xs => (Vector.cons <$> f x)<*>traverse_aux xs
 
@@ -638,11 +638,11 @@ variable{α β : Type u}
 
 @[simp]
 protected theorem traverse_def (f : α → F β) (x : α) :
-  ∀ xs : Vector α n, (x::ᵥxs).traverse f = (cons <$> f x)<*>xs.traverse f :=
+  ∀ (xs : Vector α n), (x::ᵥxs).traverse f = (cons <$> f x)<*>xs.traverse f :=
   by 
     rintro ⟨xs, rfl⟩ <;> rfl
 
-protected theorem id_traverse : ∀ x : Vector α n, x.traverse id.mk = x :=
+protected theorem id_traverse : ∀ (x : Vector α n), x.traverse id.mk = x :=
   by 
     rintro ⟨x, rfl⟩
     dsimp [Vector.traverse, cast]
@@ -662,21 +662,21 @@ variable{α β γ : Type u}
 
 @[nolint unused_arguments]
 protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
-  ∀ x : Vector α n,
+  ∀ (x : Vector α n),
     Vector.traverse (comp.mk ∘ Functor.map f ∘ g) x = comp.mk (Vector.traverse f <$> Vector.traverse g x) :=
   by 
     rintro ⟨x, rfl⟩ <;>
       dsimp [Vector.traverse, cast] <;>
         induction' x with x xs <;> simp' [cast] with functor_norm <;> [rfl, simp [· ∘ ·]]
 
-protected theorem traverse_eq_map_id {α β} (f : α → β) : ∀ x : Vector α n, x.traverse (id.mk ∘ f) = id.mk (map f x) :=
+protected theorem traverse_eq_map_id {α β} (f : α → β) : ∀ (x : Vector α n), x.traverse (id.mk ∘ f) = id.mk (map f x) :=
   by 
     rintro ⟨x, rfl⟩ <;> simp  <;> induction x <;> simp' with functor_norm <;> rfl
 
 variable(η : ApplicativeTransformation F G)
 
 protected theorem naturality {α β : Type _} (f : α → F β) :
-  ∀ x : Vector α n, η (x.traverse f) = x.traverse (@η _ ∘ f) :=
+  ∀ (x : Vector α n), η (x.traverse f) = x.traverse (@η _ ∘ f) :=
   by 
     rintro ⟨x, rfl⟩ <;> simp [cast] <;> induction' x with x xs IH <;> simp' with functor_norm
 

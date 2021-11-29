@@ -232,7 +232,7 @@ theorem sub_zmod_repr_mem : x - zmod_repr x ∈ maximal_ideal ℤ_[p] :=
 -/
 def to_zmod_hom (v : ℕ) (f : ℤ_[p] → ℕ) (f_spec : ∀ x, x - f x ∈ (Ideal.span {v} : Ideal ℤ_[p]))
   (f_congr :
-    ∀ x : ℤ_[p] a b : ℕ,
+    ∀ (x : ℤ_[p]) (a b : ℕ),
       x - a ∈ (Ideal.span {v} : Ideal ℤ_[p]) → x - b ∈ (Ideal.span {v} : Ideal ℤ_[p]) → (a : Zmod v) = b) :
   ℤ_[p] →+* Zmod v :=
   { toFun := fun x => f x,
@@ -524,7 +524,8 @@ variable{R :
     Type
       _}[CommRingₓ
       R](f :
-    ∀ k : ℕ, R →+* Zmod (p^k))(f_compat : ∀ k1 k2 hk : k1 ≤ k2, (Zmod.castHom (pow_dvd_pow p hk) _).comp (f k2) = f k1)
+    ∀ (k : ℕ),
+      R →+* Zmod (p^k))(f_compat : ∀ k1 k2 (hk : k1 ≤ k2), (Zmod.castHom (pow_dvd_pow p hk) _).comp (f k2) = f k1)
 
 omit hp_prime
 
@@ -645,7 +646,7 @@ def lim_nth_hom (r : R) : ℤ_[p] :=
   of_int_seq (nth_hom f r) (is_cau_seq_nth_hom f_compat r)
 
 theorem lim_nth_hom_spec (r : R) :
-  ∀ ε : ℝ, 0 < ε → ∃ N : ℕ, ∀ n _ : n ≥ N, ∥lim_nth_hom f_compat r - nth_hom f r n∥ < ε :=
+  ∀ (ε : ℝ), 0 < ε → ∃ N : ℕ, ∀ n (_ : n ≥ N), ∥lim_nth_hom f_compat r - nth_hom f r n∥ < ε :=
   by 
     intro ε hε 
     obtain ⟨ε', hε'0, hε'⟩ : ∃ v : ℚ, (0 : ℝ) < v ∧ «expr↑ » v < ε := exists_rat_btwn hε 

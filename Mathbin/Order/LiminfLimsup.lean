@@ -1,4 +1,4 @@
-import Mathbin.Order.Filter.AtTopBot
+import Mathbin.Order.Filter.Cofinite
 
 /-!
 # liminfs and limsups of functions and filters
@@ -69,7 +69,7 @@ theorem is_bounded_top : is_bounded r ⊤ ↔ ∃ t, ∀ x, r x t :=
   by 
     simp [is_bounded, eq_univ_iff_forall]
 
-theorem is_bounded_principal (s : Set α) : is_bounded r (𝓟 s) ↔ ∃ t, ∀ x _ : x ∈ s, r x t :=
+theorem is_bounded_principal (s : Set α) : is_bounded r (𝓟 s) ↔ ∃ t, ∀ x (_ : x ∈ s), r x t :=
   by 
     simp [is_bounded, subset_def]
 
@@ -92,12 +92,12 @@ theorem is_bounded.is_bounded_under {q : β → β → Prop} {u : α → β} (hf
 
 -- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem not_is_bounded_under_of_tendsto_at_top
-[nonempty α]
-[semilattice_sup α]
 [preorder β]
 [no_top_order β]
 {f : α → β}
-(hf : tendsto f at_top at_top) : «expr¬ »(is_bounded_under ((«expr ≤ »)) at_top f) :=
+{l : filter α}
+[l.ne_bot]
+(hf : tendsto f l at_top) : «expr¬ »(is_bounded_under ((«expr ≤ »)) l f) :=
 begin
   rintro ["⟨", ident b, ",", ident hb, "⟩"],
   rw [expr eventually_map] ["at", ident hb],
@@ -105,26 +105,38 @@ begin
   have [ident hb'] [] [":=", expr tendsto_at_top.mp hf b'],
   have [] [":", expr «expr = »(«expr ∩ »({x : α | «expr ≤ »(f x, b)}, {x : α | «expr ≤ »(b', f x)}), «expr∅»())] [":=", expr eq_empty_of_subset_empty (λ
     x hx, not_le_of_lt h (le_trans hx.2 hx.1))],
-  exact [expr at_top.empty_not_mem («expr ▸ »(this, filter.inter_mem hb hb') : «expr ∈ »(«expr∅»(), (at_top : filter α)))]
+  exact [expr (nonempty_of_mem (hb.and hb')).ne_empty this]
 end
 
+theorem not_is_bounded_under_of_tendsto_at_bot [Preorderₓ β] [NoBotOrder β] {f : α → β} {l : Filter α} [l.ne_bot]
+  (hf : tendsto f l at_bot) : ¬is_bounded_under (· ≥ ·) l f :=
+  @not_is_bounded_under_of_tendsto_at_top α (OrderDual β) _ _ _ _ _ hf
+
 -- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem not_is_bounded_under_of_tendsto_at_bot
-[nonempty α]
-[semilattice_sup α]
-[preorder β]
-[no_bot_order β]
+theorem is_bounded_under.bdd_above_range_of_cofinite
+[semilattice_sup β]
 {f : α → β}
-(hf : tendsto f at_top at_bot) : «expr¬ »(is_bounded_under ((«expr ≥ »)) at_top f) :=
+(hf : is_bounded_under ((«expr ≤ »)) cofinite f) : bdd_above (range f) :=
 begin
-  rintro ["⟨", ident b, ",", ident hb, "⟩"],
-  rw [expr eventually_map] ["at", ident hb],
-  obtain ["⟨", ident b', ",", ident h, "⟩", ":=", expr no_bot b],
-  have [ident hb'] [] [":=", expr tendsto_at_bot.mp hf b'],
-  have [] [":", expr «expr = »(«expr ∩ »({x : α | «expr ≤ »(b, f x)}, {x : α | «expr ≤ »(f x, b')}), «expr∅»())] [":=", expr eq_empty_of_subset_empty (λ
-    x hx, not_le_of_lt h (le_trans hx.1 hx.2))],
-  exact [expr at_top.empty_not_mem («expr ▸ »(this, filter.inter_mem hb hb') : «expr ∈ »(«expr∅»(), (at_top : filter α)))]
+  rcases [expr hf, "with", "⟨", ident b, ",", ident hb, "⟩"],
+  haveI [] [":", expr nonempty β] [":=", expr ⟨b⟩],
+  rw ["[", "<-", expr image_univ, ",", "<-", expr union_compl_self {x | «expr ≤ »(f x, b)}, ",", expr image_union, ",", expr bdd_above_union, "]"] [],
+  exact [expr ⟨⟨b, «expr $ »(ball_image_iff.2, λ x, id)⟩, (hb.image f).bdd_above⟩]
 end
+
+theorem is_bounded_under.bdd_below_range_of_cofinite [SemilatticeInf β] {f : α → β}
+  (hf : is_bounded_under (· ≥ ·) cofinite f) : BddBelow (range f) :=
+  @is_bounded_under.bdd_above_range_of_cofinite α (OrderDual β) _ _ hf
+
+theorem is_bounded_under.bdd_above_range [SemilatticeSup β] {f : ℕ → β} (hf : is_bounded_under (· ≤ ·) at_top f) :
+  BddAbove (range f) :=
+  by 
+    rw [←Nat.cofinite_eq_at_top] at hf 
+    exact hf.bdd_above_range_of_cofinite
+
+theorem is_bounded_under.bdd_below_range [SemilatticeInf β] {f : ℕ → β} (hf : is_bounded_under (· ≥ ·) at_top f) :
+  BddBelow (range f) :=
+  @is_bounded_under.bdd_above_range (OrderDual β) _ _ hf
 
 /-- `is_cobounded (≺) f` states that the filter `f` does not tend to infinity w.r.t. `≺`. This is
 also called frequently bounded. Will be usually instantiated with `≤` or `≥`.
@@ -149,7 +161,7 @@ def is_cobounded_under (r : α → α → Prop) (f : Filter β) (u : β → α) 
 which bounds `f` at some point for every admissible set.
 
 This is only an implication, as the other direction is wrong for the trivial filter.-/
-theorem is_cobounded.mk [IsTrans α r] (a : α) (h : ∀ s _ : s ∈ f, ∃ (x : _)(_ : x ∈ s), r a x) : f.is_cobounded r :=
+theorem is_cobounded.mk [IsTrans α r] (a : α) (h : ∀ s (_ : s ∈ f), ∃ (x : _)(_ : x ∈ s), r a x) : f.is_cobounded r :=
   ⟨a,
     fun y s =>
       let ⟨x, h₁, h₂⟩ := h _ s 
@@ -178,7 +190,7 @@ theorem is_cobounded_bot : is_cobounded r ⊥ ↔ ∃ b, ∀ x, r b x :=
 theorem is_cobounded_top : «expr ↔ »(is_cobounded r «expr⊤»(), nonempty α) :=
 by simp [] [] [] ["[", expr is_cobounded, ",", expr eq_univ_iff_forall, ",", expr exists_true_iff_nonempty, "]"] [] [] { contextual := tt }
 
-theorem is_cobounded_principal (s : Set α) : (𝓟 s).IsCobounded r ↔ ∃ b, ∀ a, (∀ x _ : x ∈ s, r x a) → r b a :=
+theorem is_cobounded_principal (s : Set α) : (𝓟 s).IsCobounded r ↔ ∃ b, ∀ a, (∀ x (_ : x ∈ s), r x a) → r b a :=
   by 
     simp [is_cobounded, subset_def]
 
@@ -459,15 +471,18 @@ theorem Liminf_top : (⊤ : Filter α).liminf = ⊥ :=
       by 
         simp [eq_univ_iff_forall] <;> exact fun b hb => bot_unique$ hb _
 
+-- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Same as limsup_const applied to `⊥` but without the `ne_bot f` assumption -/
-theorem limsup_const_bot {f : Filter β} : (limsup f fun x : β => (⊥ : α)) = (⊥ : α) :=
-  by 
-    rw [limsup_eq, eq_bot_iff]
-    exact Inf_le (eventually_of_forall fun x => le_reflₓ _)
+theorem limsup_const_bot {f : filter β} : «expr = »(limsup f (λ x : β, («expr⊥»() : α)), («expr⊥»() : α)) :=
+begin
+  rw ["[", expr limsup_eq, ",", expr eq_bot_iff, "]"] [],
+  exact [expr Inf_le (eventually_of_forall (λ x, le_refl _))]
+end
 
+-- error in Order.LiminfLimsup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Same as limsup_const applied to `⊤` but without the `ne_bot f` assumption -/
-theorem liminf_const_top {f : Filter β} : (liminf f fun x : β => (⊤ : α)) = (⊤ : α) :=
-  @limsup_const_bot (OrderDual α) β _ _
+theorem liminf_const_top {f : filter β} : «expr = »(liminf f (λ x : β, («expr⊤»() : α)), («expr⊤»() : α)) :=
+@limsup_const_bot (order_dual α) β _ _
 
 theorem has_basis.Limsup_eq_infi_Sup {ι} {p : ι → Prop} {s} {f : Filter α} (h : f.has_basis p s) :
   f.Limsup = ⨅(i : _)(hi : p i), Sup (s i) :=

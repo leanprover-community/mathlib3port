@@ -64,13 +64,13 @@ begin
 end
 
 theorem LinearMap.bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)
-  (h : ∀ z _ : z ∈ closed_ball (0 : E) r, ∥f z∥ ≤ c) : ∀ z : E, ∥f z∥ ≤ (c / r)*∥z∥ :=
+  (h : ∀ z (_ : z ∈ closed_ball (0 : E) r), ∥f z∥ ≤ c) : ∀ (z : E), ∥f z∥ ≤ (c / r)*∥z∥ :=
   by 
     apply LinearMap.bound_of_sphere_bound r_pos c f 
     exact fun z hz => h z hz.le
 
 theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →L[𝕜] 𝕜)
-  (h : ∀ z _ : z ∈ closed_ball (0 : E) r, ∥f z∥ ≤ c) : ∥f∥ ≤ c / r :=
+  (h : ∀ z (_ : z ∈ closed_ball (0 : E) r), ∥f z∥ ≤ c) : ∥f∥ ≤ c / r :=
   by 
     apply ContinuousLinearMap.op_norm_le_bound
     ·

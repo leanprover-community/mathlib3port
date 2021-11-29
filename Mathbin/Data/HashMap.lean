@@ -293,7 +293,7 @@ end
 variable(hvnd :
     (v2.map
         Sigma.fst).Nodup)(hal :
-    ∀ a : Σa, β a,
+    ∀ (a : Σa, β a),
       a ∈ v2 →
         mk_idx n (hash_fn a.1) =
           bidx)(djuv :
@@ -562,7 +562,7 @@ begin
 end
 
 /-- Insert a key-value pair into the map. (Modifies `m` in-place when applicable) -/
-def insert : ∀ m : HashMap α β a : α b : β a, HashMap α β
+def insert : ∀ (m : HashMap α β) (a : α) (b : β a), HashMap α β
 | ⟨hash_fn, size, n, buckets, v⟩, a, b =>
   let bkt := buckets.read hash_fn a 
   if hc : contains_aux a bkt then
@@ -581,7 +581,7 @@ def insert : ∀ m : HashMap α β a : α b : β a, HashMap α β
       let buckets'' : BucketArray α β n' := buckets'.foldl (mkArray _ []) (reinsert_aux hash_fn)
       { hashFn, size := size', nbuckets := n', buckets := buckets'', is_valid := insert_lemma _ valid' }
 
--- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.HashMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem mem_insert : ∀
 (m : hash_map α β)
 (a

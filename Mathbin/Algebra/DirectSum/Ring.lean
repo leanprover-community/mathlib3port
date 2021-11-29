@@ -75,10 +75,10 @@ variable(A : ι → Type _)
 
 /-- A graded version of `non_unital_non_assoc_semiring`. -/
 class gnon_unital_non_assoc_semiring[Add ι][∀ i, AddCommMonoidₓ (A i)] extends GradedMonoid.GhasMul A where 
-  mul_zero : ∀ {i j} a : A i, mul a (0 : A j) = 0
-  zero_mul : ∀ {i j} b : A j, mul (0 : A i) b = 0
-  mul_add : ∀ {i j} a : A i b c : A j, mul a (b+c) = mul a b+mul a c 
-  add_mul : ∀ {i j} a b : A i c : A j, mul (a+b) c = mul a c+mul b c
+  mul_zero : ∀ {i j} (a : A i), mul a (0 : A j) = 0
+  zero_mul : ∀ {i j} (b : A j), mul (0 : A i) b = 0
+  mul_add : ∀ {i j} (a : A i) (b c : A j), mul a (b+c) = mul a b+mul a c 
+  add_mul : ∀ {i j} (a b : A i) (c : A j), mul (a+b) c = mul a c+mul b c
 
 end Defs
 
@@ -95,7 +95,7 @@ class gcomm_semiring[AddCommMonoidₓ ι][∀ i, AddCommMonoidₓ (A i)] extends
 
 end Defs
 
-theorem of_eq_of_graded_monoid_eq {A : ι → Type _} [∀ i : ι, AddCommMonoidₓ (A i)] {i j : ι} {a : A i} {b : A j}
+theorem of_eq_of_graded_monoid_eq {A : ι → Type _} [∀ (i : ι), AddCommMonoidₓ (A i)] {i j : ι} {a : A i} {b : A j}
   (h : GradedMonoid.mk i a = GradedMonoid.mk j b) : DirectSum.of A i a = DirectSum.of A j b :=
   Dfinsupp.single_eq_of_sigma_eq h
 
@@ -386,7 +386,7 @@ coercions such as `add_submonoid.subtype (A i)`, and the `[gsemiring A]` structu
 can be discharged by `rfl`. -/
 @[simps]
 def to_semiring (f : ∀ i, A i →+ R) (hone : f _ GradedMonoid.GhasOne.one = 1)
-  (hmul : ∀ {i j} ai : A i aj : A j, f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai*f _ aj) : (⨁i, A i) →+* R :=
+  (hmul : ∀ {i j} (ai : A i) (aj : A j), f _ (GradedMonoid.GhasMul.mul ai aj) = f _ ai*f _ aj) : (⨁i, A i) →+* R :=
   { to_add_monoid f with toFun := to_add_monoid f,
     map_one' :=
       by 
@@ -416,7 +416,7 @@ are isomorphic to `ring_hom`s on `⨁ i, A i`. This is a stronger version of `df
 @[simps]
 def lift_ring_hom :
   { f : ∀ {i}, A i →+ R //
-      f GradedMonoid.GhasOne.one = 1 ∧ ∀ {i j} ai : A i aj : A j, f (GradedMonoid.GhasMul.mul ai aj) = f ai*f aj } ≃
+      f GradedMonoid.GhasOne.one = 1 ∧ ∀ {i j} (ai : A i) (aj : A j), f (GradedMonoid.GhasMul.mul ai aj) = f ai*f aj } ≃
     ((⨁i, A i) →+* R) :=
   { toFun := fun f => to_semiring f.1 f.2.1 f.2.2,
     invFun :=
@@ -462,15 +462,22 @@ section Uniform
 
 variable(ι)
 
+-- error in Algebra.DirectSum.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A direct sum of copies of a `semiring` inherits the multiplication structure. -/
-instance NonUnitalNonAssocSemiring.directSumGnonUnitalNonAssocSemiring {R : Type _} [AddMonoidₓ ι]
-  [NonUnitalNonAssocSemiring R] : DirectSum.GnonUnitalNonAssocSemiring fun i : ι => R :=
-  { Mul.ghasMul ι with mul_zero := fun i j => mul_zero, zero_mul := fun i j => zero_mul, mul_add := fun i j => mul_addₓ,
-    add_mul := fun i j => add_mulₓ }
+instance non_unital_non_assoc_semiring.direct_sum_gnon_unital_non_assoc_semiring
+{R : Type*}
+[add_monoid ι]
+[non_unital_non_assoc_semiring R] : direct_sum.gnon_unital_non_assoc_semiring (λ i : ι, R) :=
+{ mul_zero := λ i j, mul_zero,
+  zero_mul := λ i j, zero_mul,
+  mul_add := λ i j, mul_add,
+  add_mul := λ i j, add_mul,
+  ..has_mul.ghas_mul ι }
 
+-- error in Algebra.DirectSum.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A direct sum of copies of a `semiring` inherits the multiplication structure. -/
-instance Semiringₓ.directSumGsemiring {R : Type _} [AddMonoidₓ ι] [Semiringₓ R] : DirectSum.Gsemiring fun i : ι => R :=
-  { NonUnitalNonAssocSemiring.directSumGnonUnitalNonAssocSemiring ι, Monoidₓ.gmonoid ι with  }
+instance semiring.direct_sum_gsemiring {R : Type*} [add_monoid ι] [semiring R] : direct_sum.gsemiring (λ i : ι, R) :=
+{ ..non_unital_non_assoc_semiring.direct_sum_gnon_unital_non_assoc_semiring ι, ..monoid.gmonoid ι }
 
 open_locale DirectSum
 
@@ -482,11 +489,14 @@ example  {R : Type _} [AddMonoidₓ ι] [Semiringₓ R] (i j : ι) (a b : R) :
   by 
     rw [DirectSum.of_mul_of, Mul.ghas_mul_mul]
 
+-- error in Algebra.DirectSum.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A direct sum of copies of a `comm_semiring` inherits the commutative multiplication structure.
 -/
-instance CommSemiringₓ.directSumGcommSemiring {R : Type _} [AddCommMonoidₓ ι] [CommSemiringₓ R] :
-  DirectSum.GcommSemiring fun i : ι => R :=
-  { CommMonoidₓ.gcommMonoid ι, Semiringₓ.directSumGsemiring ι with  }
+instance comm_semiring.direct_sum_gcomm_semiring
+{R : Type*}
+[add_comm_monoid ι]
+[comm_semiring R] : direct_sum.gcomm_semiring (λ i : ι, R) :=
+{ ..comm_monoid.gcomm_monoid ι, ..semiring.direct_sum_gsemiring ι }
 
 end Uniform
 

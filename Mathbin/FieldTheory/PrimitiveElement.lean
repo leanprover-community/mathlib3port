@@ -81,7 +81,7 @@ section PrimitiveElementInf
 variable{F : Type _}[Field F][Infinite F]{E : Type _}[Field E](ϕ : F →+* E)(α β : E)
 
 theorem primitive_element_inf_aux_exists_c (f g : Polynomial F) :
-  ∃ c : F, ∀ α' _ : α' ∈ (f.map ϕ).roots β' _ : β' ∈ (g.map ϕ).roots, -(α' - α) / (β' - β) ≠ ϕ c :=
+  ∃ c : F, ∀ α' (_ : α' ∈ (f.map ϕ).roots) β' (_ : β' ∈ (g.map ϕ).roots), -(α' - α) / (β' - β) ≠ ϕ c :=
   by 
     let sf := (f.map ϕ).roots 
     let sg := (g.map ϕ).roots 
@@ -154,7 +154,7 @@ begin
     apply [expr (div_eq_iff (sub_ne_zero.mpr a)).mpr],
     simp [] [] ["only"] ["[", expr algebra.smul_def, ",", expr ring_hom.map_add, ",", expr ring_hom.map_mul, ",", expr ring_hom.comp_apply, "]"] [] [],
     ring [] },
-  rw ["<-", expr eq_X_sub_C_of_separable_of_root_eq h_ne_zero h_sep h_root h_splits h_roots] [],
+  rw ["<-", expr eq_X_sub_C_of_separable_of_root_eq h_sep h_root h_splits h_roots] [],
   transitivity [expr euclidean_domain.gcd (_ : polynomial E) (_ : polynomial E)],
   { dsimp ["only"] ["[", expr p, "]"] [] [],
     convert [] [expr (gcd_map (algebra_map «expr ⟮ , ⟯»(F, [γ]) E)).symm] [] },

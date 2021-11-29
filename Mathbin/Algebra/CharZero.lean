@@ -33,7 +33,7 @@ from the natural numbers into it is injective.
 class CharZero(R : Type _)[AddMonoidₓ R][HasOne R] : Prop where 
   cast_injective : Function.Injective (coeₓ : ℕ → R)
 
-theorem char_zero_of_inj_zero {R : Type _} [AddLeftCancelMonoid R] [HasOne R] (H : ∀ n : ℕ, (n : R) = 0 → n = 0) :
+theorem char_zero_of_inj_zero {R : Type _} [AddLeftCancelMonoid R] [HasOne R] (H : ∀ (n : ℕ), (n : R) = 0 → n = 0) :
   CharZero R :=
   ⟨fun m n =>
       by 

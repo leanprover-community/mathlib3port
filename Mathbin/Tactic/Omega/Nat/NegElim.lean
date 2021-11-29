@@ -44,7 +44,7 @@ def is_nnf : preform → Prop
 | p ∧* q => is_nnf p ∧ is_nnf q
 | _ => False
 
-theorem is_nnf_push_neg : ∀ p : preform, is_nnf p → is_nnf (push_neg p) :=
+theorem is_nnf_push_neg : ∀ (p : preform), is_nnf p → is_nnf (push_neg p) :=
   by 
     runTac 
       preform.induce sorry
@@ -70,7 +70,7 @@ theorem is_nnf_push_neg : ∀ p : preform, is_nnf p → is_nnf (push_neg p) :=
             apply ihq] <;>
         assumption
 
-theorem is_nnf_nnf : ∀ p : preform, is_nnf (nnf p) :=
+theorem is_nnf_nnf : ∀ (p : preform), is_nnf (nnf p) :=
   by 
     runTac 
       preform.induce sorry

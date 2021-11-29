@@ -77,8 +77,8 @@ over `R`.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def of_module' [CommSemiringₓ R] [Semiringₓ A] [Module R A] (h₁ : ∀ r : R x : A, ((r • 1)*x) = r • x)
-  (h₂ : ∀ r : R x : A, (x*r • 1) = r • x) : Algebra R A :=
+def of_module' [CommSemiringₓ R] [Semiringₓ A] [Module R A] (h₁ : ∀ (r : R) (x : A), ((r • 1)*x) = r • x)
+  (h₂ : ∀ (r : R) (x : A), (x*r • 1) = r • x) : Algebra R A :=
   { toFun := fun r => r • 1, map_one' := one_smul _ _,
     map_mul' :=
       fun r₁ r₂ =>
@@ -100,8 +100,8 @@ is an `algebra` over `R`.
 
 See note [reducible non-instances]. -/
 @[reducible]
-def of_module [CommSemiringₓ R] [Semiringₓ A] [Module R A] (h₁ : ∀ r : R x y : A, ((r • x)*y) = r • x*y)
-  (h₂ : ∀ r : R x y : A, (x*r • y) = r • x*y) : Algebra R A :=
+def of_module [CommSemiringₓ R] [Semiringₓ A] [Module R A] (h₁ : ∀ (r : R) (x y : A), ((r • x)*y) = r • x*y)
+  (h₂ : ∀ (r : R) (x y : A), (x*r • y) = r • x*y) : Algebra R A :=
   of_module'
     (fun r x =>
       by 
@@ -410,13 +410,16 @@ theorem of_algebra_map_injective [Semiringₓ A] [Algebra R A] [NoZeroDivisors A
 
 variable(R A)
 
-theorem algebra_map_injective [Ringₓ A] [Nontrivial A] [Algebra R A] [NoZeroSmulDivisors R A] :
-  Function.Injective (algebraMap R A) :=
-  suffices Function.Injective fun c : R => c • (1 : A)by 
-    convert this 
-    ext 
-    rw [Algebra.smul_def, mul_oneₓ]
-  smul_left_injective R one_ne_zero
+-- error in Algebra.Algebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem algebra_map_injective
+[ring A]
+[nontrivial A]
+[algebra R A]
+[no_zero_smul_divisors R A] : function.injective (algebra_map R A) :=
+suffices function.injective (λ c : R, «expr • »(c, (1 : A))), by { convert [] [expr this] [],
+  ext [] [] [],
+  rw ["[", expr algebra.smul_def, ",", expr mul_one, "]"] [] },
+smul_left_injective R one_ne_zero
 
 variable{R A}
 
@@ -489,7 +492,7 @@ structure
   AlgHom(R :
     Type u)(A : Type v)(B : Type w)[CommSemiringₓ R][Semiringₓ A][Semiringₓ B][Algebra R A][Algebra R B] extends
   RingHom A B where 
-  commutes' : ∀ r : R, to_fun (algebraMap R A r) = algebraMap R B r
+  commutes' : ∀ (r : R), to_fun (algebraMap R A r) = algebraMap R B r
 
 run_cmd 
   tactic.add_doc_string `alg_hom.to_ring_hom "Reinterpret an `alg_hom` as a `ring_hom`"
@@ -637,7 +640,7 @@ theorem map_bit1 x : φ (bit1 x) = bit1 (φ x) :=
   φ.to_ring_hom.map_bit1 x
 
 /-- If a `ring_hom` is `R`-linear, then it is an `alg_hom`. -/
-def mk' (f : A →+* B) (h : ∀ c : R x, f (c • x) = c • f x) : A →ₐ[R] B :=
+def mk' (f : A →+* B) (h : ∀ (c : R) x, f (c • x) = c • f x) : A →ₐ[R] B :=
   { f with toFun := f,
     commutes' :=
       fun c =>
@@ -645,7 +648,7 @@ def mk' (f : A →+* B) (h : ∀ c : R x, f (c • x) = c • f x) : A →ₐ[R]
           simp only [Algebra.algebra_map_eq_smul_one, h, f.map_one] }
 
 @[simp]
-theorem coe_mk' (f : A →+* B) (h : ∀ c : R x, f (c • x) = c • f x) : «expr⇑ » (mk' f h) = f :=
+theorem coe_mk' (f : A →+* B) (h : ∀ (c : R) x, f (c • x) = c • f x) : «expr⇑ » (mk' f h) = f :=
   rfl
 
 section 
@@ -669,13 +672,11 @@ end
 theorem id_apply (p : A) : AlgHom.id R A p = p :=
   rfl
 
+-- error in Algebra.Algebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Composition of algebra homeomorphisms. -/
-def comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : A →ₐ[R] C :=
-  { φ₁.to_ring_hom.comp («expr↑ » φ₂) with
-    commutes' :=
-      fun r : R =>
-        by 
-          rw [←φ₁.commutes, ←φ₂.commutes] <;> rfl }
+def comp (φ₁ : «expr →ₐ[ ] »(B, R, C)) (φ₂ : «expr →ₐ[ ] »(A, R, B)) : «expr →ₐ[ ] »(A, R, C) :=
+{ commutes' := λ r : R, by rw ["[", "<-", expr φ₁.commutes, ",", "<-", expr φ₂.commutes, "]"] []; refl,
+  ..φ₁.to_ring_hom.comp «expr↑ »(φ₂) }
 
 @[simp]
 theorem coe_comp (φ₁ : B →ₐ[R] C) (φ₂ : A →ₐ[R] B) : «expr⇑ » (φ₁.comp φ₂) = φ₁ ∘ φ₂ :=
@@ -835,7 +836,7 @@ structure
   AlgEquiv(R :
     Type u)(A : Type v)(B : Type w)[CommSemiringₓ R][Semiringₓ A][Semiringₓ B][Algebra R A][Algebra R B] extends
   A ≃ B, A ≃* B, A ≃+ B, A ≃+* B where 
-  commutes' : ∀ r : R, to_fun (algebraMap R A r) = algebraMap R B r
+  commutes' : ∀ (r : R), to_fun (algebraMap R A r) = algebraMap R B r
 
 attribute [nolint doc_blame] AlgEquiv.toRingEquiv
 
@@ -935,7 +936,7 @@ theorem map_one : e 1 = 1 :=
   e.to_mul_equiv.map_one
 
 @[simp]
-theorem commutes : ∀ r : R, e (algebraMap R A₁ r) = algebraMap R A₂ r :=
+theorem commutes : ∀ (r : R), e (algebraMap R A₁ r) = algebraMap R A₂ r :=
   e.commutes'
 
 theorem map_sum {ι : Type _} (f : ι → A₁) (s : Finset ι) : e (∑x in s, f x) = ∑x in s, e (f x) :=
@@ -971,7 +972,7 @@ theorem coe_ring_hom_commutes : ((e : A₁ →ₐ[R] A₂) : A₁ →+* A₂) = 
   rfl
 
 @[simp]
-theorem map_pow : ∀ x : A₁ n : ℕ, e (x ^ n) = e x ^ n :=
+theorem map_pow : ∀ (x : A₁) (n : ℕ), e (x ^ n) = e x ^ n :=
   e.to_alg_hom.map_pow
 
 theorem injective : Function.Injective e :=
@@ -1209,7 +1210,8 @@ theorem trans_to_linear_map (f : A₁ ≃ₐ[R] A₂) (g : A₂ ≃ₐ[R] A₃) 
 section OfLinearEquiv
 
 variable(l :
-    A₁ ≃ₗ[R] A₂)(map_mul : ∀ x y : A₁, l (x*y) = l x*l y)(commutes : ∀ r : R, l (algebraMap R A₁ r) = algebraMap R A₂ r)
+    A₁ ≃ₗ[R]
+      A₂)(map_mul : ∀ (x y : A₁), l (x*y) = l x*l y)(commutes : ∀ (r : R), l (algebraMap R A₁ r) = algebraMap R A₂ r)
 
 /--
 Upgrade a linear equivalence to an algebra equivalence,
@@ -1552,8 +1554,8 @@ variable(x y : ∀ i, f i)(i : I)
 
 variable(I f)
 
-instance Algebra {r : CommSemiringₓ R} [s : ∀ i, Semiringₓ (f i)] [∀ i, Algebra R (f i)] : Algebra R (∀ i : I, f i) :=
-  { (Pi.ringHom fun i => algebraMap R (f i) : R →+* ∀ i : I, f i) with
+instance Algebra {r : CommSemiringₓ R} [s : ∀ i, Semiringₓ (f i)] [∀ i, Algebra R (f i)] : Algebra R (∀ (i : I), f i) :=
+  { (Pi.ringHom fun i => algebraMap R (f i) : R →+* ∀ (i : I), f i) with
     commutes' :=
       fun a f =>
         by 

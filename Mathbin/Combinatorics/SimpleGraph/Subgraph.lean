@@ -20,7 +20,7 @@ sub-relation of the adjacency relation of the simple graph.
 * `subgraph.is_spanning` for whether a subgraph is a spanning subgraph and
   `subgraph.is_induced` for whether a subgraph is an induced subgraph.
 
-* A `bounded_lattice (subgraph G)` instance, under the `subgraph` relation.
+* A `bounded_order (subgraph G)` instance, under the `subgraph` relation.
 
 * `simple_graph.to_subgraph`: If a `simple_graph` is a subgraph of another, then you can turn it
   into a member of the larger graph's `simple_graph.subgraph` type.
@@ -81,7 +81,7 @@ theorem coe_adj_sub (G' : subgraph G) (u v : G'.verts) (h : G'.coe.adj u v) : G.
 
 /-- A subgraph is called a *spanning subgraph* if it contains all the vertices of `G`. --/
 def is_spanning (G' : subgraph G) : Prop :=
-  ∀ v : V, v ∈ G'.verts
+  ∀ (v : V), v ∈ G'.verts
 
 /-- Coercion from `subgraph G` to `simple_graph V`.  If `G'` is a spanning
 subgraph, then `G'.spanning_coe` yields an isomorphic graph.
@@ -225,9 +225,8 @@ instance subgraph_inhabited : Inhabited (subgraph G) :=
 def is_subgraph (x y : subgraph G) : Prop :=
   x.verts ⊆ y.verts ∧ ∀ ⦃v w : V⦄, x.adj v w → y.adj v w
 
-instance  : BoundedLattice (subgraph G) :=
-  { le := is_subgraph, sup := union, inf := inter, top := top, bot := bot,
-    le_refl := fun x => ⟨rfl.Subset, fun _ _ h => h⟩,
+instance  : Lattice (subgraph G) :=
+  { le := is_subgraph, sup := union, inf := inter, le_refl := fun x => ⟨rfl.Subset, fun _ _ h => h⟩,
     le_trans := fun x y z hxy hyz => ⟨hxy.1.trans hyz.1, fun _ _ h => hyz.2 (hxy.2 h)⟩,
     le_antisymm :=
       by 
@@ -236,8 +235,6 @@ instance  : BoundedLattice (subgraph G) :=
         exact Set.Subset.antisymm hxy.1 hyx.1 
         ext v w 
         exact Iff.intro (fun h => hxy.2 h) fun h => hyx.2 h,
-    le_top := fun x => ⟨Set.subset_univ _, fun v w h => x.adj_sub h⟩,
-    bot_le := fun x => ⟨Set.empty_subset _, fun v w h => False.ndrec _ h⟩,
     sup_le :=
       fun x y z hxy hyz => ⟨Set.union_subset hxy.1 hyz.1, fun v w h => h.cases_on (fun h => hxy.2 h) fun h => hyz.2 h⟩,
     le_sup_left := fun x y => ⟨Set.subset_union_left x.verts y.verts, fun v w h => Or.inl h⟩,
@@ -245,6 +242,10 @@ instance  : BoundedLattice (subgraph G) :=
     le_inf := fun x y z hxy hyz => ⟨Set.subset_inter hxy.1 hyz.1, fun v w h => ⟨hxy.2 h, hyz.2 h⟩⟩,
     inf_le_left := fun x y => ⟨Set.inter_subset_left x.verts y.verts, fun v w h => h.1⟩,
     inf_le_right := fun x y => ⟨Set.inter_subset_right x.verts y.verts, fun v w h => h.2⟩ }
+
+instance  : BoundedOrder (subgraph G) :=
+  { top := top, bot := bot, le_top := fun x => ⟨Set.subset_univ _, fun v w h => x.adj_sub h⟩,
+    bot_le := fun x => ⟨Set.empty_subset _, fun v w h => False.ndrec _ h⟩ }
 
 /-- Turn a subgraph of a `simple_graph` into a member of its subgraph type. -/
 @[simps]

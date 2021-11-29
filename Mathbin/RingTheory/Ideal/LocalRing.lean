@@ -28,7 +28,7 @@ universe u v w
 /-- A commutative ring is local if it has a unique maximal ideal. Note that
   `local_ring` is a predicate. -/
 class LocalRing(R : Type u)[CommRingₓ R] extends Nontrivial R : Prop where 
-  is_local : ∀ a : R, IsUnit a ∨ IsUnit (1 - a)
+  is_local : ∀ (a : R), IsUnit a ∨ IsUnit (1 - a)
 
 namespace LocalRing
 
@@ -106,7 +106,7 @@ end LocalRing
 variable{R : Type u}{S : Type v}{T : Type w}
 
 theorem local_of_nonunits_ideal [CommRingₓ R] (hnze : (0 : R) ≠ 1)
-  (h : ∀ x y _ : x ∈ Nonunits R _ : y ∈ Nonunits R, (x+y) ∈ Nonunits R) : LocalRing R :=
+  (h : ∀ x y (_ : x ∈ Nonunits R) (_ : y ∈ Nonunits R), (x+y) ∈ Nonunits R) : LocalRing R :=
   { exists_pair_ne := ⟨0, 1, hnze⟩,
     is_local :=
       fun x =>
@@ -117,17 +117,17 @@ theorem local_of_nonunits_ideal [CommRingₓ R] (hnze : (0 : R) ≠ 1)
               apply h _ _ hx H 
               simp [-sub_eq_add_neg, add_sub_cancel'_right] }
 
-theorem local_of_unique_max_ideal [CommRingₓ R] (h : ∃!I : Ideal R, I.is_maximal) : LocalRing R :=
-  local_of_nonunits_ideal
-      (let ⟨I, Imax, _⟩ := h 
-      fun H : 0 = 1 => Imax.1.1$ I.eq_top_iff_one.2$ H ▸ I.zero_mem)$
-    fun x y hx hy H =>
-      let ⟨I, Imax, Iuniq⟩ := h 
-      let ⟨Ix, Ixmax, Hx⟩ := exists_max_ideal_of_mem_nonunits hx 
-      let ⟨Iy, Iymax, Hy⟩ := exists_max_ideal_of_mem_nonunits hy 
-      have xmemI : x ∈ I := Iuniq Ix Ixmax ▸ Hx 
-      have ymemI : y ∈ I := Iuniq Iy Iymax ▸ Hy 
-      Imax.1.1$ I.eq_top_of_is_unit_mem (I.add_mem xmemI ymemI) H
+-- error in RingTheory.Ideal.LocalRing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem local_of_unique_max_ideal [comm_ring R] (h : «expr∃! , »((I : ideal R), I.is_maximal)) : local_ring R :=
+«expr $ »(local_of_nonunits_ideal (let ⟨I, Imax, _⟩ := h in
+  λ
+  H : «expr = »(0, 1), «expr $ »(Imax.1.1, «expr $ »(I.eq_top_iff_one.2, «expr ▸ »(H, I.zero_mem)))), λ
+ x y hx hy H, let ⟨I, Imax, Iuniq⟩ := h in
+ let ⟨Ix, Ixmax, Hx⟩ := exists_max_ideal_of_mem_nonunits hx in
+ let ⟨Iy, Iymax, Hy⟩ := exists_max_ideal_of_mem_nonunits hy in
+ have xmemI : «expr ∈ »(x, I), from «expr ▸ »(Iuniq Ix Ixmax, Hx),
+ have ymemI : «expr ∈ »(y, I), from «expr ▸ »(Iuniq Iy Iymax, Hy),
+ «expr $ »(Imax.1.1, I.eq_top_of_is_unit_mem (I.add_mem xmemI ymemI) H))
 
 theorem local_of_unique_nonzero_prime (R : Type u) [CommRingₓ R] (h : ∃!P : Ideal R, P ≠ ⊥ ∧ Ideal.IsPrime P) :
   LocalRing R :=

@@ -24,7 +24,7 @@ def Sigma (v : Typevec.{u} n) : Type u :=
 /-- Dependent product of of an `n`-ary functor. The sum can range over
 data types like `ℕ` or over `Type.{u-1}` -/
 def pi (v : Typevec.{u} n) : Type u :=
-  ∀ α : A, F α v
+  ∀ (α : A), F α v
 
 instance Sigma.inhabited {α} [Inhabited A] [Inhabited (F (default A) α)] : Inhabited (Sigma F α) :=
   ⟨⟨default A, default _⟩⟩

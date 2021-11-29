@@ -418,7 +418,7 @@ namespace List
 
 variable{α : Type _}
 
-theorem nth_rotate : ∀ {l : List α} {n m : ℕ} hml : m < l.length, (l.rotate n).nth m = l.nth ((m+n) % l.length)
+theorem nth_rotate : ∀ {l : List α} {n m : ℕ} (hml : m < l.length), (l.rotate n).nth m = l.nth ((m+n) % l.length)
 | [], n, m, hml => (Nat.not_lt_zeroₓ _ hml).elim
 | l, 0, m, hml =>
   by 

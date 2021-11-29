@@ -270,7 +270,7 @@ Additionaly, this is useful when trying to prove that
 a particular ring structure extends to a field. -/
 structure IsField(R : Type u)[Ringₓ R] : Prop where 
   exists_pair_ne : ∃ x y : R, x ≠ y 
-  mul_comm : ∀ x y : R, (x*y) = y*x 
+  mul_comm : ∀ (x y : R), (x*y) = y*x 
   mul_inv_cancel : ∀ {a : R}, a ≠ 0 → ∃ b, (a*b) = 1
 
 /-- Transferring from field to is_field -/
@@ -293,7 +293,7 @@ noncomputable def IsField.toField (R : Type u) [Ringₓ R] (h : IsField R) : Fie
 Since `is_field` doesn't remember the data of an `inv` function and as such,
 a lemma that there is a unique inverse could be useful.
 -/
-theorem uniq_inv_of_is_field (R : Type u) [Ringₓ R] (hf : IsField R) : ∀ x : R, x ≠ 0 → ∃!y : R, (x*y) = 1 :=
+theorem uniq_inv_of_is_field (R : Type u) [Ringₓ R] (hf : IsField R) : ∀ (x : R), x ≠ 0 → ∃!y : R, (x*y) = 1 :=
   by 
     intro x hx 
     apply exists_unique_of_exists_of_unique
@@ -354,11 +354,11 @@ section NoncomputableDefs
 variable{R : Type _}[Nontrivial R]
 
 /-- Constructs a `division_ring` structure on a `ring` consisting only of units and 0. -/
-noncomputable def divisionRingOfIsUnitOrEqZero [hR : Ringₓ R] (h : ∀ a : R, IsUnit a ∨ a = 0) : DivisionRing R :=
+noncomputable def divisionRingOfIsUnitOrEqZero [hR : Ringₓ R] (h : ∀ (a : R), IsUnit a ∨ a = 0) : DivisionRing R :=
   { groupWithZeroOfIsUnitOrEqZero h, hR with  }
 
 /-- Constructs a `field` structure on a `comm_ring` consisting only of units and 0. -/
-noncomputable def fieldOfIsUnitOrEqZero [hR : CommRingₓ R] (h : ∀ a : R, IsUnit a ∨ a = 0) : Field R :=
+noncomputable def fieldOfIsUnitOrEqZero [hR : CommRingₓ R] (h : ∀ (a : R), IsUnit a ∨ a = 0) : Field R :=
   { groupWithZeroOfIsUnitOrEqZero h, hR with  }
 
 end NoncomputableDefs

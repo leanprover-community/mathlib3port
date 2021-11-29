@@ -96,7 +96,7 @@ to keep imports to `logic` to a minimum.
 
 
 instance small_Pi {α} (β : α → Type _) [Small.{w} α] [∀ a, Small.{w} (β a)] : Small.{w} (∀ a, β a) :=
-  ⟨⟨∀ a' : Shrink α, Shrink (β ((equivShrink α).symm a')),
+  ⟨⟨∀ (a' : Shrink α), Shrink (β ((equivShrink α).symm a')),
       ⟨Equiv.piCongr (equivShrink α)
           fun a =>
             by 

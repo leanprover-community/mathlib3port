@@ -102,11 +102,11 @@ theorem coe_injective : @Function.Injective (vector_measure α M) (Set α → M)
       cases w 
       congr
 
-theorem ext_iff' (v w : vector_measure α M) : v = w ↔ ∀ i : Set α, v i = w i :=
+theorem ext_iff' (v w : vector_measure α M) : v = w ↔ ∀ (i : Set α), v i = w i :=
   by 
     rw [←coe_injective.eq_iff, Function.funext_iffₓ]
 
-theorem ext_iff (v w : vector_measure α M) : v = w ↔ ∀ i : Set α, MeasurableSet i → v i = w i :=
+theorem ext_iff (v w : vector_measure α M) : v = w ↔ ∀ (i : Set α), MeasurableSet i → v i = w i :=
   by 
     split 
     ·
@@ -122,7 +122,7 @@ theorem ext_iff (v w : vector_measure α M) : v = w ↔ ∀ i : Set α, Measurab
         simpRw [not_measurable _ hi]
 
 @[ext]
-theorem ext {s t : vector_measure α M} (h : ∀ i : Set α, MeasurableSet i → s i = t i) : s = t :=
+theorem ext {s t : vector_measure α M} (h : ∀ (i : Set α), MeasurableSet i → s i = t i) : s = t :=
   (ext_iff s t).2 h
 
 variable[T2Space M]{v : vector_measure α M}{f : ℕ → Set α}
@@ -409,38 +409,32 @@ namespace Measureₓ
 
 include m
 
+-- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A finite measure coerced into a real function is a signed measure. -/
-@[simps]
-def to_signed_measure (μ : Measureₓ α) [hμ : is_finite_measure μ] : signed_measure α :=
-  { measureOf' := fun i : Set α => if MeasurableSet i then (μ.measure_of i).toReal else 0,
-    empty' :=
-      by 
-        simp [μ.empty],
-    not_measurable' := fun _ hi => if_neg hi,
-    m_Union' :=
-      by 
-        intro _ hf₁ hf₂ 
-        rw [μ.m_Union hf₁ hf₂, Ennreal.tsum_to_real_eq, if_pos (MeasurableSet.Union hf₁), Summable.has_sum_iff]
-        ·
-          congr 
-          ext n 
-          rw [if_pos (hf₁ n)]
-        ·
-          refine' @summable_of_nonneg_of_le _ (Ennreal.toReal ∘ μ ∘ f) _ _ _ _
-          ·
-            intro 
-            splitIfs 
-            exacts[Ennreal.to_real_nonneg, le_reflₓ _]
-          ·
-            intro 
-            splitIfs 
-            exacts[le_reflₓ _, Ennreal.to_real_nonneg]
-          exact summable_measure_to_real hf₁ hf₂
-        ·
-          intro a ha 
-          apply ne_of_ltₓ hμ.measure_univ_lt_top 
-          rw [eq_top_iff, ←ha, outer_measure.measure_of_eq_coe, coe_to_outer_measure]
-          exact measure_mono (Set.subset_univ _) }
+@[simps #[]]
+def to_signed_measure (μ : measure α) [hμ : is_finite_measure μ] : signed_measure α :=
+{ measure_of' := λ i : set α, if measurable_set i then (μ.measure_of i).to_real else 0,
+  empty' := by simp [] [] [] ["[", expr μ.empty, "]"] [] [],
+  not_measurable' := λ _ hi, if_neg hi,
+  m_Union' := begin
+    intros ["_", ident hf₁, ident hf₂],
+    rw ["[", expr μ.m_Union hf₁ hf₂, ",", expr ennreal.tsum_to_real_eq, ",", expr if_pos (measurable_set.Union hf₁), ",", expr summable.has_sum_iff, "]"] [],
+    { congr,
+      ext [] [ident n] [],
+      rw [expr if_pos (hf₁ n)] [] },
+    { refine [expr @summable_of_nonneg_of_le _ «expr ∘ »(ennreal.to_real, «expr ∘ »(μ, f)) _ _ _ _],
+      { intro [],
+        split_ifs [] [],
+        exacts ["[", expr ennreal.to_real_nonneg, ",", expr le_refl _, "]"] },
+      { intro [],
+        split_ifs [] [],
+        exacts ["[", expr le_refl _, ",", expr ennreal.to_real_nonneg, "]"] },
+      exact [expr summable_measure_to_real hf₁ hf₂] },
+    { intros [ident a, ident ha],
+      apply [expr ne_of_lt hμ.measure_univ_lt_top],
+      rw ["[", expr eq_top_iff, ",", "<-", expr ha, ",", expr outer_measure.measure_of_eq_coe, ",", expr coe_to_outer_measure, "]"] [],
+      exact [expr measure_mono (set.subset_univ _)] }
+  end }
 
 theorem to_signed_measure_apply_measurable {μ : Measureₓ α} [is_finite_measure μ] {i : Set α} (hi : MeasurableSet i) :
   μ.to_signed_measure i = (μ i).toReal :=
@@ -492,21 +486,18 @@ theorem to_signed_measure_smul (μ : Measureₓ α) [is_finite_measure μ] (r : 
     rw [to_signed_measure_apply_measurable hi, vector_measure.smul_apply, to_signed_measure_apply_measurable hi,
       coe_nnreal_smul, Pi.smul_apply, Ennreal.to_real_smul]
 
+-- error in MeasureTheory.Measure.VectorMeasure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A measure is a vector measure over `ℝ≥0∞`. -/
-@[simps]
-def to_ennreal_vector_measure (μ : Measureₓ α) : vector_measure α ℝ≥0∞ :=
-  { measureOf' := fun i : Set α => if MeasurableSet i then μ i else 0,
-    empty' :=
-      by 
-        simp [μ.empty],
-    not_measurable' := fun _ hi => if_neg hi,
-    m_Union' :=
-      fun _ hf₁ hf₂ =>
-        by 
-          rw [Summable.has_sum_iff Ennreal.summable]
-          ·
-            rw [if_pos (MeasurableSet.Union hf₁), MeasureTheory.measure_Union hf₂ hf₁]
-            exact tsum_congr fun n => if_pos (hf₁ n) }
+@[simps #[]]
+def to_ennreal_vector_measure (μ : measure α) : vector_measure α «exprℝ≥0∞»() :=
+{ measure_of' := λ i : set α, if measurable_set i then μ i else 0,
+  empty' := by simp [] [] [] ["[", expr μ.empty, "]"] [] [],
+  not_measurable' := λ _ hi, if_neg hi,
+  m_Union' := λ _ hf₁ hf₂, begin
+    rw [expr summable.has_sum_iff ennreal.summable] [],
+    { rw ["[", expr if_pos (measurable_set.Union hf₁), ",", expr measure_theory.measure_Union hf₂ hf₁, "]"] [],
+      exact [expr tsum_congr (λ n, if_pos (hf₁ n))] }
+  end }
 
 theorem to_ennreal_vector_measure_apply_measurable {μ : Measureₓ α} {i : Set α} (hi : MeasurableSet i) :
   μ.to_ennreal_vector_measure i = μ i :=
@@ -1212,7 +1203,7 @@ to use. This is equivalent to the definition which requires measurability. To pr
 `mutually_singular` with the measurability condition, use
 `measure_theory.vector_measure.mutually_singular.mk`. -/
 def mutually_singular (v : vector_measure α M) (w : vector_measure α N) : Prop :=
-  ∃ s : Set α, MeasurableSet s ∧ (∀ t _ : t ⊆ s, v t = 0) ∧ ∀ t _ : t ⊆ «expr ᶜ» s, w t = 0
+  ∃ s : Set α, MeasurableSet s ∧ (∀ t (_ : t ⊆ s), v t = 0) ∧ ∀ t (_ : t ⊆ «expr ᶜ» s), w t = 0
 
 localized [MeasureTheory] infixl:60 " ⊥ᵥ " => MeasureTheory.VectorMeasure.MutuallySingular
 
@@ -1220,8 +1211,8 @@ namespace MutuallySingular
 
 variable{v v₁ v₂ : vector_measure α M}{w w₁ w₂ : vector_measure α N}
 
-theorem mk (s : Set α) (hs : MeasurableSet s) (h₁ : ∀ t _ : t ⊆ s, MeasurableSet t → v t = 0)
-  (h₂ : ∀ t _ : t ⊆ «expr ᶜ» s, MeasurableSet t → w t = 0) : v ⊥ᵥ w :=
+theorem mk (s : Set α) (hs : MeasurableSet s) (h₁ : ∀ t (_ : t ⊆ s), MeasurableSet t → v t = 0)
+  (h₂ : ∀ t (_ : t ⊆ «expr ᶜ» s), MeasurableSet t → w t = 0) : v ⊥ᵥ w :=
   by 
     refine' ⟨s, hs, fun t hst => _, fun t hst => _⟩ <;> byCases' ht : MeasurableSet t
     ·

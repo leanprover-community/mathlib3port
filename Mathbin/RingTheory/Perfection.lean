@@ -5,7 +5,7 @@ import Mathbin.Algebra.Ring.Pi
 import Mathbin.Analysis.SpecialFunctions.Pow 
 import Mathbin.FieldTheory.PerfectClosure 
 import Mathbin.RingTheory.Localization 
-import Mathbin.RingTheory.Subring 
+import Mathbin.RingTheory.Subring.Basic 
 import Mathbin.RingTheory.Valuation.Integers
 
 /-!
@@ -53,7 +53,7 @@ def Ringₓ.perfectionSubring (R : Type u₁) [CommRingₓ R] (p : ℕ) [hp : Fa
 defined to be the projective limit of `R` using the Frobenius maps `R → R`
 indexed by the natural numbers, implemented as `{f : ℕ → R // ∀ n, f (n + 1) ^ p = f n}`. -/
 def Ringₓ.Perfection (R : Type u₁) [CommSemiringₓ R] (p : ℕ) : Type u₁ :=
-  { f // ∀ n : ℕ, ((f : ℕ → R) (n+1)^p) = f n }
+  { f // ∀ (n : ℕ), ((f : ℕ → R) (n+1)^p) = f n }
 
 namespace Perfection
 
@@ -224,7 +224,7 @@ structure
     Type u₁}[CommSemiringₓ R][CharP R p]{P : Type u₂}[CommSemiringₓ P][CharP P p][PerfectRing P p](π : P →+* R) :
   Prop where 
   Injective : ∀ ⦃x y : P⦄, (∀ n, π ((pthRoot P p^[n]) x) = π ((pthRoot P p^[n]) y)) → x = y 
-  Surjective : ∀ f : ℕ → R, (∀ n, (f (n+1)^p) = f n) → ∃ x : P, ∀ n, π ((pthRoot P p^[n]) x) = f n
+  Surjective : ∀ (f : ℕ → R), (∀ n, (f (n+1)^p) = f n) → ∃ x : P, ∀ n, π ((pthRoot P p^[n]) x) = f n
 
 namespace PerfectionMap
 
@@ -456,14 +456,12 @@ theorem v_p_lt_pre_val {x : ModP K v O hv p} : v p < pre_val K v O hv p x ↔ x 
     rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
     exact hp
 
-theorem pre_val_eq_zero {x : ModP K v O hv p} : pre_val K v O hv p x = 0 ↔ x = 0 :=
-  ⟨fun hvx =>
-      Classical.by_contradiction$
-        fun hx0 : x ≠ 0 =>
-          by 
-            rw [←v_p_lt_pre_val, hvx] at hx0 
-            exact not_lt_zero' hx0,
-    fun hx => hx.symm ▸ pre_val_zero⟩
+-- error in RingTheory.Perfection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pre_val_eq_zero {x : mod_p K v O hv p} : «expr ↔ »(«expr = »(pre_val K v O hv p x, 0), «expr = »(x, 0)) :=
+⟨λ
+ hvx, «expr $ »(classical.by_contradiction, λ
+  hx0 : «expr ≠ »(x, 0), by { rw ["[", "<-", expr v_p_lt_pre_val, ",", expr hvx, "]"] ["at", ident hx0],
+    exact [expr not_lt_zero' hx0] }), λ hx, «expr ▸ »(hx.symm, pre_val_zero)⟩
 
 variable(hv hvp)
 

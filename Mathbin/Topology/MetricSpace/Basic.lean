@@ -79,8 +79,8 @@ def uniform_space.core_of_dist
     h, «expr $ »(tendsto_infi' ε, «expr $ »(tendsto_infi' h, «expr $ »(tendsto_principal_principal.2, by simp [] [] [] ["[", expr dist_comm, "]"] [] []))))) }
 
 /-- Construct a uniform structure from a distance function and metric space axioms -/
-def uniformSpaceOfDist (dist : α → α → ℝ) (dist_self : ∀ x : α, dist x x = 0)
-  (dist_comm : ∀ x y : α, dist x y = dist y x) (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y+dist y z) :
+def uniformSpaceOfDist (dist : α → α → ℝ) (dist_self : ∀ (x : α), dist x x = 0)
+  (dist_comm : ∀ (x y : α), dist x y = dist y x) (dist_triangle : ∀ (x y z : α), dist x z ≤ dist x y+dist y z) :
   UniformSpace α :=
   UniformSpace.ofCore (UniformSpace.coreOfDist dist dist_self dist_comm dist_triangle)
 
@@ -92,8 +92,8 @@ class HasDist(α : Type _) where
 export HasDist(dist)
 
 /-- This is an internal lemma used inside the default of `pseudo_metric_space.edist`. -/
-private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → α → ℝ) (dist_self : ∀ x : α, dist x x = 0)
-  (dist_comm : ∀ x y : α, dist x y = dist y x) (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y+dist y z) :
+private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → α → ℝ) (dist_self : ∀ (x : α), dist x x = 0)
+  (dist_comm : ∀ (x y : α), dist x y = dist y x) (dist_triangle : ∀ (x y z : α), dist x z ≤ dist x y+dist y z) :
   0 ≤ dist x y :=
   have  : (2*dist x y) ≥ 0 :=
     calc (2*dist x y) = dist x y+dist y x :=
@@ -119,11 +119,11 @@ filled in by default. In the same way, each metric space induces an emetric spac
 It is included in the structure, but filled in by default.
 -/
 class PseudoMetricSpace(α : Type u) extends HasDist α : Type u where 
-  dist_self : ∀ x : α, dist x x = 0
-  dist_comm : ∀ x y : α, dist x y = dist y x 
-  dist_triangle : ∀ x y z : α, dist x z ≤ dist x y+dist y z 
+  dist_self : ∀ (x : α), dist x x = 0
+  dist_comm : ∀ (x y : α), dist x y = dist y x 
+  dist_triangle : ∀ (x y z : α), dist x z ≤ dist x y+dist y z 
   edist : α → α → ℝ≥0∞ := fun x y => @coeₓ ℝ≥0  _ _ ⟨dist x y, pseudo_metric_space.dist_nonneg' _ ‹_› ‹_› ‹_›⟩
-  edist_dist : ∀ x y : α, edist x y = Ennreal.ofReal (dist x y) :=  by 
+  edist_dist : ∀ (x y : α), edist x y = Ennreal.ofReal (dist x y) :=  by 
   runTac 
     pseudo_metric_space.edist_dist_tac 
   toUniformSpace : UniformSpace α := uniformSpaceOfDist dist dist_self dist_comm dist_triangle 
@@ -139,48 +139,57 @@ instance (priority := 100)MetricSpace.toUniformSpace' : UniformSpace α :=
 instance (priority := 200)PseudoMetricSpace.toHasEdist : HasEdist α :=
   ⟨PseudoMetricSpace.edist⟩
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Construct a pseudo-metric space structure whose underlying topological space structure
 (definitionally) agrees which a pre-existing topology which is compatible with a given distance
 function. -/
-def PseudoMetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : α → α → ℝ)
-  (dist_self : ∀ x : α, dist x x = 0) (dist_comm : ∀ x y : α, dist x y = dist y x)
-  (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y+dist y z)
-  (H : ∀ s : Set α, IsOpen s ↔ ∀ x _ : x ∈ s, ∃ (ε : _)(_ : ε > 0), ∀ y, dist x y < ε → y ∈ s) : PseudoMetricSpace α :=
-  { dist, dist_self, dist_comm, dist_triangle,
-    toUniformSpace :=
-      { UniformSpace.coreOfDist dist dist_self dist_comm dist_triangle with
-        is_open_uniformity :=
-          by 
-            dsimp only [UniformSpace.coreOfDist]
-            intro s 
-            change IsOpen s ↔ _ 
-            rw [H s]
-            apply forall_congrₓ 
-            intro x 
-            apply forall_congrₓ 
-            intro x_in 
-            erw [(has_basis_binfi_principal _ nonempty_Ioi).mem_iff]
-            ·
-              apply exists_congr 
-              intro ε 
-              apply exists_congr 
-              intro ε_pos 
-              simp only [Prod.forall, set_of_subset_set_of]
-              split 
-              ·
-                rintro h _ y H rfl 
-                exact h y H
-              ·
-                intro h y hxy 
-                exact h _ _ hxy rfl
-            ·
-              exact
-                fun r hr : 0 < r p hp : 0 < p =>
-                  ⟨min r p, lt_minₓ hr hp, fun x hx : dist _ _ < _ => lt_of_lt_of_leₓ hx (min_le_leftₓ r p),
-                    fun x hx : dist _ _ < _ => lt_of_lt_of_leₓ hx (min_le_rightₓ r p)⟩
-            ·
-              infer_instance },
-    uniformity_dist := rfl }
+def pseudo_metric_space.of_metrizable
+{α : Type*}
+[topological_space α]
+(dist : α → α → exprℝ())
+(dist_self : ∀ x : α, «expr = »(dist x x, 0))
+(dist_comm : ∀ x y : α, «expr = »(dist x y, dist y x))
+(dist_triangle : ∀ x y z : α, «expr ≤ »(dist x z, «expr + »(dist x y, dist y z)))
+(H : ∀
+ s : set α, «expr ↔ »(is_open s, ∀
+  x «expr ∈ » s, «expr∃ , »((ε «expr > » 0), ∀ y, «expr < »(dist x y, ε) → «expr ∈ »(y, s)))) : pseudo_metric_space α :=
+{ dist := dist,
+  dist_self := dist_self,
+  dist_comm := dist_comm,
+  dist_triangle := dist_triangle,
+  to_uniform_space := { is_open_uniformity := begin
+      dsimp ["only"] ["[", expr uniform_space.core_of_dist, "]"] [] [],
+      intros [ident s],
+      change [expr «expr ↔ »(is_open s, _)] [] [],
+      rw [expr H s] [],
+      apply [expr forall_congr],
+      intro [ident x],
+      apply [expr forall_congr],
+      intro [ident x_in],
+      erw [expr (has_basis_binfi_principal _ nonempty_Ioi).mem_iff] [],
+      { apply [expr exists_congr],
+        intros [ident ε],
+        apply [expr exists_congr],
+        intros [ident ε_pos],
+        simp [] [] ["only"] ["[", expr prod.forall, ",", expr set_of_subset_set_of, "]"] [] [],
+        split,
+        { rintros [ident h, "_", ident y, ident H, ident rfl],
+          exact [expr h y H] },
+        { intros [ident h, ident y, ident hxy],
+          exact [expr h _ _ hxy rfl] } },
+      { exact [expr λ
+         (r)
+         (hr : «expr < »(0, r))
+         (p)
+         (hp : «expr < »(0, p)), ⟨min r p, lt_min hr hp, λ
+          (x)
+          (hx : «expr < »(dist _ _, _)), lt_of_lt_of_le hx (min_le_left r p), λ
+          (x)
+          (hx : «expr < »(dist _ _, _)), lt_of_lt_of_le hx (min_le_right r p)⟩] },
+      { apply_instance }
+    end,
+    ..uniform_space.core_of_dist dist dist_self dist_comm dist_triangle },
+  uniformity_dist := rfl }
 
 @[simp]
 theorem dist_self (x : α) : dist x x = 0 :=
@@ -438,8 +447,8 @@ theorem closed_ball_eq_empty : closed_ball x ε = ∅ ↔ ε < 0 :=
   by 
     rw [←not_nonempty_iff_eq_empty, nonempty_closed_ball, not_leₓ]
 
-theorem ball_subset_closed_ball : ball x ε ⊆ closed_ball x ε :=
-  fun y hy : _ < _ => le_of_ltₓ hy
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ball_subset_closed_ball : «expr ⊆ »(ball x ε, closed_ball x ε) := assume (y) (hy : «expr < »(_, _)), le_of_lt hy
 
 theorem sphere_subset_closed_ball : sphere x ε ⊆ closed_ball x ε :=
   fun y => le_of_eqₓ
@@ -478,8 +487,9 @@ theorem mem_ball_comm : x ∈ ball y ε ↔ y ∈ ball x ε :=
   by 
     simp [dist_comm]
 
-theorem ball_subset_ball (h : ε₁ ≤ ε₂) : ball x ε₁ ⊆ ball x ε₂ :=
-  fun y yx : _ < ε₁ => lt_of_lt_of_leₓ yx h
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ball_subset_ball (h : «expr ≤ »(ε₁, ε₂)) : «expr ⊆ »(ball x ε₁, ball x ε₂) :=
+λ (y) (yx : «expr < »(_, ε₁)), lt_of_lt_of_le yx h
 
 theorem ball_subset_ball' (h : (ε₁+dist x y) ≤ ε₂) : ball x ε₁ ⊆ ball y ε₂ :=
   fun z hz =>
@@ -488,8 +498,9 @@ theorem ball_subset_ball' (h : (ε₁+dist x y) ≤ ε₂) : ball x ε₁ ⊆ ba
       _ ≤ ε₂ := h
       
 
-theorem closed_ball_subset_closed_ball (h : ε₁ ≤ ε₂) : closed_ball x ε₁ ⊆ closed_ball x ε₂ :=
-  fun y yx : _ ≤ ε₁ => le_transₓ yx h
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem closed_ball_subset_closed_ball (h : «expr ≤ »(ε₁, ε₂)) : «expr ⊆ »(closed_ball x ε₁, closed_ball x ε₂) :=
+λ (y) (yx : «expr ≤ »(_, ε₁)), le_trans yx h
 
 theorem closed_ball_subset_closed_ball' (h : (ε₁+dist x y) ≤ ε₂) : closed_ball x ε₁ ⊆ closed_ball y ε₂ :=
   fun z hz =>
@@ -498,8 +509,9 @@ theorem closed_ball_subset_closed_ball' (h : (ε₁+dist x y) ≤ ε₂) : close
       _ ≤ ε₂ := h
       
 
-theorem closed_ball_subset_ball (h : ε₁ < ε₂) : closed_ball x ε₁ ⊆ ball x ε₂ :=
-  fun y yh : dist y x ≤ ε₁ => lt_of_le_of_ltₓ yh h
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem closed_ball_subset_ball (h : «expr < »(ε₁, ε₂)) : «expr ⊆ »(closed_ball x ε₁, ball x ε₂) :=
+λ (y) (yh : «expr ≤ »(dist y x, ε₁)), lt_of_le_of_lt yh h
 
 theorem dist_le_add_of_nonempty_closed_ball_inter_closed_ball (h : (closed_ball x ε₁ ∩ closed_ball y ε₂).Nonempty) :
   dist x y ≤ ε₁+ε₂ :=
@@ -554,87 +566,127 @@ theorem exists_ball_subset_ball (h : y ∈ ball x ε) : ∃ (ε' : _)(_ : ε' > 
       by 
         rw [sub_sub_self]⟩
 
-theorem uniformity_basis_dist : (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p:α × α | dist p.1 p.2 < ε } :=
-  by 
-    rw [←pseudo_metric_space.uniformity_dist.symm]
-    refine' has_basis_binfi_principal _ nonempty_Ioi 
-    exact
-      fun r hr : 0 < r p hp : 0 < p =>
-        ⟨min r p, lt_minₓ hr hp, fun x hx : dist _ _ < _ => lt_of_lt_of_leₓ hx (min_le_leftₓ r p),
-          fun x hx : dist _ _ < _ => lt_of_lt_of_leₓ hx (min_le_rightₓ r p)⟩
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_basis_dist : (expr𝓤() α).has_basis (λ
+ ε : exprℝ(), «expr < »(0, ε)) (λ ε, {p : «expr × »(α, α) | «expr < »(dist p.1 p.2, ε)}) :=
+begin
+  rw ["<-", expr pseudo_metric_space.uniformity_dist.symm] [],
+  refine [expr has_basis_binfi_principal _ nonempty_Ioi],
+  exact [expr λ
+   (r)
+   (hr : «expr < »(0, r))
+   (p)
+   (hp : «expr < »(0, p)), ⟨min r p, lt_min hr hp, λ
+    (x)
+    (hx : «expr < »(dist _ _, _)), lt_of_lt_of_le hx (min_le_left r p), λ
+    (x)
+    (hx : «expr < »(dist _ _, _)), lt_of_lt_of_le hx (min_le_right r p)⟩]
+end
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given `f : β → ℝ`, if `f` sends `{i | p i}` to a set of positive numbers
 accumulating to zero, then `f i`-neighborhoods of the diagonal form a basis of `𝓤 α`.
 
 For specific bases see `uniformity_basis_dist`, `uniformity_basis_dist_inv_nat_succ`,
 and `uniformity_basis_dist_inv_nat_pos`. -/
-protected theorem mk_uniformity_basis {β : Type _} {p : β → Prop} {f : β → ℝ} (hf₀ : ∀ i, p i → 0 < f i)
-  (hf : ∀ ⦃ε⦄, 0 < ε → ∃ (i : _)(hi : p i), f i ≤ ε) : (𝓤 α).HasBasis p fun i => { p:α × α | dist p.1 p.2 < f i } :=
-  by 
-    refine' ⟨fun s => uniformity_basis_dist.mem_iff.trans _⟩
-    split 
-    ·
-      rintro ⟨ε, ε₀, hε⟩
-      obtain ⟨i, hi, H⟩ : ∃ (i : _)(hi : p i), f i ≤ ε 
-      exact hf ε₀ 
-      exact ⟨i, hi, fun x hx : _ < _ => hε$ lt_of_lt_of_leₓ hx H⟩
-    ·
-      exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, H⟩
+protected
+theorem mk_uniformity_basis
+{β : Type*}
+{p : β → exprProp()}
+{f : β → exprℝ()}
+(hf₀ : ∀ i, p i → «expr < »(0, f i))
+(hf : ∀
+ {{ε}}, «expr < »(0, ε) → «expr∃ , »((i)
+  (hi : p i), «expr ≤ »(f i, ε))) : (expr𝓤() α).has_basis p (λ
+ i, {p : «expr × »(α, α) | «expr < »(dist p.1 p.2, f i)}) :=
+begin
+  refine [expr ⟨λ s, uniformity_basis_dist.mem_iff.trans _⟩],
+  split,
+  { rintros ["⟨", ident ε, ",", ident ε₀, ",", ident hε, "⟩"],
+    obtain ["⟨", ident i, ",", ident hi, ",", ident H, "⟩", ":", expr «expr∃ , »((i) (hi : p i), «expr ≤ »(f i, ε))],
+    from [expr hf ε₀],
+    exact [expr ⟨i, hi, λ (x) (hx : «expr < »(_, _)), «expr $ »(hε, lt_of_lt_of_le hx H)⟩] },
+  { exact [expr λ ⟨i, hi, H⟩, ⟨f i, hf₀ i hi, H⟩] }
+end
 
-theorem uniformity_basis_dist_inv_nat_succ :
-  (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p:α × α | dist p.1 p.2 < 1 / «expr↑ » n+1 } :=
-  Metric.mk_uniformity_basis (fun n _ => div_pos zero_lt_one$ Nat.cast_add_one_pos n)
-    fun ε ε0 => (exists_nat_one_div_lt ε0).imp$ fun n hn => ⟨trivialₓ, le_of_ltₓ hn⟩
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_basis_dist_inv_nat_succ : (expr𝓤() α).has_basis (λ
+ _, true) (λ n : exprℕ(), {p : «expr × »(α, α) | «expr < »(dist p.1 p.2, «expr / »(1, «expr + »(«expr↑ »(n), 1)))}) :=
+metric.mk_uniformity_basis (λ
+ n
+ _, «expr $ »(div_pos zero_lt_one, nat.cast_add_one_pos n)) (λ
+ ε ε0, «expr $ »((exists_nat_one_div_lt ε0).imp, λ n hn, ⟨trivial, le_of_lt hn⟩))
 
-theorem uniformity_basis_dist_inv_nat_pos :
-  (𝓤 α).HasBasis (fun n : ℕ => 0 < n) fun n : ℕ => { p:α × α | dist p.1 p.2 < 1 / «expr↑ » n } :=
-  Metric.mk_uniformity_basis (fun n hn => div_pos zero_lt_one$ Nat.cast_pos.2 hn)
-    fun ε ε0 =>
-      let ⟨n, hn⟩ := exists_nat_one_div_lt ε0
-      ⟨n+1, Nat.succ_posₓ n, hn.le⟩
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_basis_dist_inv_nat_pos : (expr𝓤() α).has_basis (λ
+ n : exprℕ(), «expr < »(0, n)) (λ
+ n : exprℕ(), {p : «expr × »(α, α) | «expr < »(dist p.1 p.2, «expr / »(1, «expr↑ »(n)))}) :=
+metric.mk_uniformity_basis (λ
+ n
+ hn, «expr $ »(div_pos zero_lt_one, nat.cast_pos.2 hn)) (λ ε ε0, let ⟨n, hn⟩ := exists_nat_one_div_lt ε0 in
+ ⟨«expr + »(n, 1), nat.succ_pos n, hn.le⟩)
 
-theorem uniformity_basis_dist_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
-  (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => { p:α × α | dist p.1 p.2 < r ^ n } :=
-  Metric.mk_uniformity_basis (fun n hn => pow_pos h0 _)
-    fun ε ε0 =>
-      let ⟨n, hn⟩ := exists_pow_lt_of_lt_one ε0 h1
-      ⟨n, trivialₓ, hn.le⟩
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_basis_dist_pow
+{r : exprℝ()}
+(h0 : «expr < »(0, r))
+(h1 : «expr < »(r, 1)) : (expr𝓤() α).has_basis (λ
+ n : exprℕ(), true) (λ n : exprℕ(), {p : «expr × »(α, α) | «expr < »(dist p.1 p.2, «expr ^ »(r, n))}) :=
+metric.mk_uniformity_basis (λ
+ n hn, pow_pos h0 _) (λ ε ε0, let ⟨n, hn⟩ := exists_pow_lt_of_lt_one ε0 h1 in ⟨n, trivial, hn.le⟩)
 
-theorem uniformity_basis_dist_lt {R : ℝ} (hR : 0 < R) :
-  (𝓤 α).HasBasis (fun r : ℝ => 0 < r ∧ r < R) fun r => { p:α × α | dist p.1 p.2 < r } :=
-  (Metric.mk_uniformity_basis fun r => And.left)$
-    fun r hr => ⟨min r (R / 2), ⟨lt_minₓ hr (half_pos hR), min_lt_iff.2$ Or.inr (half_lt_self hR)⟩, min_le_leftₓ _ _⟩
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_basis_dist_lt
+{R : exprℝ()}
+(hR : «expr < »(0, R)) : (expr𝓤() α).has_basis (λ
+ r : exprℝ(), «expr ∧ »(«expr < »(0, r), «expr < »(r, R))) (λ r, {p : «expr × »(α, α) | «expr < »(dist p.1 p.2, r)}) :=
+«expr $ »(metric.mk_uniformity_basis (λ
+  r, and.left), λ
+ r
+ hr, ⟨min r «expr / »(R, 2), ⟨lt_min hr (half_pos hR), «expr $ »(min_lt_iff.2, or.inr (half_lt_self hR))⟩, min_le_left _ _⟩)
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given `f : β → ℝ`, if `f` sends `{i | p i}` to a set of positive numbers
 accumulating to zero, then closed neighborhoods of the diagonal of sizes `{f i | p i}`
 form a basis of `𝓤 α`.
 
 Currently we have only one specific basis `uniformity_basis_dist_le` based on this constructor.
 More can be easily added if needed in the future. -/
-protected theorem mk_uniformity_basis_le {β : Type _} {p : β → Prop} {f : β → ℝ} (hf₀ : ∀ x, p x → 0 < f x)
-  (hf : ∀ ε, 0 < ε → ∃ (x : _)(hx : p x), f x ≤ ε) : (𝓤 α).HasBasis p fun x => { p:α × α | dist p.1 p.2 ≤ f x } :=
-  by 
-    refine' ⟨fun s => uniformity_basis_dist.mem_iff.trans _⟩
-    split 
-    ·
-      rintro ⟨ε, ε₀, hε⟩
-      rcases exists_between ε₀ with ⟨ε', hε'⟩
-      rcases hf ε' hε'.1 with ⟨i, hi, H⟩
-      exact ⟨i, hi, fun x hx : _ ≤ _ => hε$ lt_of_le_of_ltₓ (le_transₓ hx H) hε'.2⟩
-    ·
-      exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, fun x hx : _ < _ => H (le_of_ltₓ hx)⟩
+protected
+theorem mk_uniformity_basis_le
+{β : Type*}
+{p : β → exprProp()}
+{f : β → exprℝ()}
+(hf₀ : ∀ x, p x → «expr < »(0, f x))
+(hf : ∀
+ ε, «expr < »(0, ε) → «expr∃ , »((x)
+  (hx : p x), «expr ≤ »(f x, ε))) : (expr𝓤() α).has_basis p (λ
+ x, {p : «expr × »(α, α) | «expr ≤ »(dist p.1 p.2, f x)}) :=
+begin
+  refine [expr ⟨λ s, uniformity_basis_dist.mem_iff.trans _⟩],
+  split,
+  { rintros ["⟨", ident ε, ",", ident ε₀, ",", ident hε, "⟩"],
+    rcases [expr exists_between ε₀, "with", "⟨", ident ε', ",", ident hε', "⟩"],
+    rcases [expr hf ε' hε'.1, "with", "⟨", ident i, ",", ident hi, ",", ident H, "⟩"],
+    exact [expr ⟨i, hi, λ (x) (hx : «expr ≤ »(_, _)), «expr $ »(hε, lt_of_le_of_lt (le_trans hx H) hε'.2)⟩] },
+  { exact [expr λ ⟨i, hi, H⟩, ⟨f i, hf₀ i hi, λ (x) (hx : «expr < »(_, _)), H (le_of_lt hx)⟩] }
+end
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Contant size closed neighborhoods of the diagonal form a basis
 of the uniformity filter. -/
-theorem uniformity_basis_dist_le : (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p:α × α | dist p.1 p.2 ≤ ε } :=
-  Metric.mk_uniformity_basis_le (fun _ => id) fun ε ε₀ => ⟨ε, ε₀, le_reflₓ ε⟩
+theorem uniformity_basis_dist_le : (expr𝓤() α).has_basis (λ
+ ε : exprℝ(), «expr < »(0, ε)) (λ ε, {p : «expr × »(α, α) | «expr ≤ »(dist p.1 p.2, ε)}) :=
+metric.mk_uniformity_basis_le (λ _, id) (λ ε ε₀, ⟨ε, ε₀, le_refl ε⟩)
 
-theorem uniformity_basis_dist_le_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
-  (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => { p:α × α | dist p.1 p.2 ≤ r ^ n } :=
-  Metric.mk_uniformity_basis_le (fun n hn => pow_pos h0 _)
-    fun ε ε0 =>
-      let ⟨n, hn⟩ := exists_pow_lt_of_lt_one ε0 h1
-      ⟨n, trivialₓ, hn.le⟩
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_basis_dist_le_pow
+{r : exprℝ()}
+(h0 : «expr < »(0, r))
+(h1 : «expr < »(r, 1)) : (expr𝓤() α).has_basis (λ
+ n : exprℕ(), true) (λ n : exprℕ(), {p : «expr × »(α, α) | «expr ≤ »(dist p.1 p.2, «expr ^ »(r, n))}) :=
+metric.mk_uniformity_basis_le (λ
+ n hn, pow_pos h0 _) (λ ε ε0, let ⟨n, hn⟩ := exists_pow_lt_of_lt_one ε0 h1 in ⟨n, trivial, hn.le⟩)
 
 theorem mem_uniformity_dist {s : Set (α × α)} :
   s ∈ 𝓤 α ↔ ∃ (ε : _)(_ : ε > 0), ∀ {a b : α}, dist a b < ε → (a, b) ∈ s :=
@@ -645,23 +697,23 @@ theorem dist_mem_uniformity {ε : ℝ} (ε0 : 0 < ε) : { p:α × α | dist p.1 
   mem_uniformity_dist.2 ⟨ε, ε0, fun a b => id⟩
 
 theorem uniform_continuous_iff [PseudoMetricSpace β] {f : α → β} :
-  UniformContinuous f ↔ ∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ {a b : α}, dist a b < δ → dist (f a) (f b) < ε :=
+  UniformContinuous f ↔ ∀ ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ {a b : α}, dist a b < δ → dist (f a) (f b) < ε :=
   uniformity_basis_dist.uniform_continuous_iff uniformity_basis_dist
 
 theorem uniform_continuous_on_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
   UniformContinuousOn f s ↔
-    ∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ x y _ : x ∈ s _ : y ∈ s, dist x y < δ → dist (f x) (f y) < ε :=
+    ∀ ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ x y (_ : x ∈ s) (_ : y ∈ s), dist x y < δ → dist (f x) (f y) < ε :=
   Metric.uniformity_basis_dist.uniform_continuous_on_iff Metric.uniformity_basis_dist
 
 theorem uniform_continuous_on_iff_le [PseudoMetricSpace β] {f : α → β} {s : Set α} :
   UniformContinuousOn f s ↔
-    ∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ x y _ : x ∈ s _ : y ∈ s, dist x y ≤ δ → dist (f x) (f y) ≤ ε :=
+    ∀ ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ x y (_ : x ∈ s) (_ : y ∈ s), dist x y ≤ δ → dist (f x) (f y) ≤ ε :=
   Metric.uniformity_basis_dist_le.uniform_continuous_on_iff Metric.uniformity_basis_dist_le
 
 theorem uniform_embedding_iff [PseudoMetricSpace β] {f : α → β} :
   UniformEmbedding f ↔
     Function.Injective f ∧
-      UniformContinuous f ∧ ∀ δ _ : δ > 0, ∃ (ε : _)(_ : ε > 0), ∀ {a b : α}, dist (f a) (f b) < ε → dist a b < δ :=
+      UniformContinuous f ∧ ∀ δ (_ : δ > 0), ∃ (ε : _)(_ : ε > 0), ∀ {a b : α}, dist (f a) (f b) < ε → dist a b < δ :=
   uniform_embedding_def'.trans$
     and_congr Iff.rfl$
       and_congr Iff.rfl
@@ -678,14 +730,14 @@ theorem uniform_embedding_iff [PseudoMetricSpace β] {f : α → β} :
 and `f y` is controlled in terms of the distance between `x` and `y`. -/
 theorem controlled_of_uniform_embedding [PseudoMetricSpace β] {f : α → β} :
   UniformEmbedding f →
-    (∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ {a b : α}, dist a b < δ → dist (f a) (f b) < ε) ∧
-      ∀ δ _ : δ > 0, ∃ (ε : _)(_ : ε > 0), ∀ {a b : α}, dist (f a) (f b) < ε → dist a b < δ :=
+    (∀ ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ {a b : α}, dist a b < δ → dist (f a) (f b) < ε) ∧
+      ∀ δ (_ : δ > 0), ∃ (ε : _)(_ : ε > 0), ∀ {a b : α}, dist (f a) (f b) < ε → dist a b < δ :=
   by 
     intro h 
     exact ⟨uniform_continuous_iff.1 (uniform_embedding_iff.1 h).2.1, (uniform_embedding_iff.1 h).2.2⟩
 
 theorem totally_bounded_iff {s : Set α} :
-  TotallyBounded s ↔ ∀ ε _ : ε > 0, ∃ t : Set α, finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), ball y ε :=
+  TotallyBounded s ↔ ∀ ε (_ : ε > 0), ∃ t : Set α, finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), ball y ε :=
   ⟨fun H ε ε0 => H _ (dist_mem_uniformity ε0),
     fun H r ru =>
       let ⟨ε, ε0, hε⟩ := mem_uniformity_dist.1 ru 
@@ -719,7 +771,7 @@ begin
 end
 
 theorem finite_approx_of_totally_bounded {s : Set α} (hs : TotallyBounded s) :
-  ∀ ε _ : ε > 0, ∃ (t : _)(_ : t ⊆ s), finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), ball y ε :=
+  ∀ ε (_ : ε > 0), ∃ (t : _)(_ : t ⊆ s), finite t ∧ s ⊆ ⋃(y : _)(_ : y ∈ t), ball y ε :=
   by 
     intro ε ε_pos 
     rw [totally_bounded_iff_subset] at hs 
@@ -729,7 +781,7 @@ theorem finite_approx_of_totally_bounded {s : Set α} (hs : TotallyBounded s) :
 theorem tendsto_locally_uniformly_on_iff {ι : Type _} [TopologicalSpace β] {F : ι → β → α} {f : β → α} {p : Filter ι}
   {s : Set β} :
   TendstoLocallyUniformlyOn F f p s ↔
-    ∀ ε _ : ε > 0, ∀ x _ : x ∈ s, ∃ (t : _)(_ : t ∈ 𝓝[s] x), ∀ᶠn in p, ∀ y _ : y ∈ t, dist (f y) (F n y) < ε :=
+    ∀ ε (_ : ε > 0), ∀ x (_ : x ∈ s), ∃ (t : _)(_ : t ∈ 𝓝[s] x), ∀ᶠn in p, ∀ y (_ : y ∈ t), dist (f y) (F n y) < ε :=
   by 
     refine' ⟨fun H ε hε => H _ (dist_mem_uniformity hε), fun H u hu x hx => _⟩
     rcases mem_uniformity_dist.1 hu with ⟨ε, εpos, hε⟩
@@ -738,7 +790,7 @@ theorem tendsto_locally_uniformly_on_iff {ι : Type _} [TopologicalSpace β] {F 
 
 /-- Expressing uniform convergence on a set using `dist`. -/
 theorem tendsto_uniformly_on_iff {ι : Type _} {F : ι → β → α} {f : β → α} {p : Filter ι} {s : Set β} :
-  TendstoUniformlyOn F f p s ↔ ∀ ε _ : ε > 0, ∀ᶠn in p, ∀ x _ : x ∈ s, dist (f x) (F n x) < ε :=
+  TendstoUniformlyOn F f p s ↔ ∀ ε (_ : ε > 0), ∀ᶠn in p, ∀ x (_ : x ∈ s), dist (f x) (F n x) < ε :=
   by 
     refine' ⟨fun H ε hε => H _ (dist_mem_uniformity hε), fun H u hu => _⟩
     rcases mem_uniformity_dist.1 hu with ⟨ε, εpos, hε⟩
@@ -747,24 +799,25 @@ theorem tendsto_uniformly_on_iff {ι : Type _} {F : ι → β → α} {f : β �
 /-- Expressing locally uniform convergence using `dist`. -/
 theorem tendsto_locally_uniformly_iff {ι : Type _} [TopologicalSpace β] {F : ι → β → α} {f : β → α} {p : Filter ι} :
   TendstoLocallyUniformly F f p ↔
-    ∀ ε _ : ε > 0, ∀ x : β, ∃ (t : _)(_ : t ∈ 𝓝 x), ∀ᶠn in p, ∀ y _ : y ∈ t, dist (f y) (F n y) < ε :=
+    ∀ ε (_ : ε > 0), ∀ (x : β), ∃ (t : _)(_ : t ∈ 𝓝 x), ∀ᶠn in p, ∀ y (_ : y ∈ t), dist (f y) (F n y) < ε :=
   by 
     simp only [←tendsto_locally_uniformly_on_univ, tendsto_locally_uniformly_on_iff, nhds_within_univ, mem_univ,
       forall_const, exists_prop]
 
 /-- Expressing uniform convergence using `dist`. -/
 theorem tendsto_uniformly_iff {ι : Type _} {F : ι → β → α} {f : β → α} {p : Filter ι} :
-  TendstoUniformly F f p ↔ ∀ ε _ : ε > 0, ∀ᶠn in p, ∀ x, dist (f x) (F n x) < ε :=
+  TendstoUniformly F f p ↔ ∀ ε (_ : ε > 0), ∀ᶠn in p, ∀ x, dist (f x) (F n x) < ε :=
   by 
     rw [←tendsto_uniformly_on_univ, tendsto_uniformly_on_iff]
     simp 
 
 protected theorem cauchy_iff {f : Filter α} :
-  Cauchy f ↔ ne_bot f ∧ ∀ ε _ : ε > 0, ∃ (t : _)(_ : t ∈ f), ∀ x y _ : x ∈ t _ : y ∈ t, dist x y < ε :=
+  Cauchy f ↔ ne_bot f ∧ ∀ ε (_ : ε > 0), ∃ (t : _)(_ : t ∈ f), ∀ x y (_ : x ∈ t) (_ : y ∈ t), dist x y < ε :=
   uniformity_basis_dist.cauchy_iff
 
-theorem nhds_basis_ball : (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) (ball x) :=
-  nhds_basis_uniformity uniformity_basis_dist
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_ball : (expr𝓝() x).has_basis (λ ε : exprℝ(), «expr < »(0, ε)) (ball x) :=
+nhds_basis_uniformity uniformity_basis_dist
 
 theorem mem_nhds_iff : s ∈ 𝓝 x ↔ ∃ (ε : _)(_ : ε > 0), ball x ε ⊆ s :=
   nhds_basis_ball.mem_iff
@@ -772,27 +825,39 @@ theorem mem_nhds_iff : s ∈ 𝓝 x ↔ ∃ (ε : _)(_ : ε > 0), ball x ε ⊆ 
 theorem eventually_nhds_iff {p : α → Prop} : (∀ᶠy in 𝓝 x, p y) ↔ ∃ (ε : _)(_ : ε > 0), ∀ ⦃y⦄, dist y x < ε → p y :=
   mem_nhds_iff
 
-theorem eventually_nhds_iff_ball {p : α → Prop} : (∀ᶠy in 𝓝 x, p y) ↔ ∃ (ε : _)(_ : ε > 0), ∀ y _ : y ∈ ball x ε, p y :=
+theorem eventually_nhds_iff_ball {p : α → Prop} :
+  (∀ᶠy in 𝓝 x, p y) ↔ ∃ (ε : _)(_ : ε > 0), ∀ y (_ : y ∈ ball x ε), p y :=
   mem_nhds_iff
 
-theorem nhds_basis_closed_ball : (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) (closed_ball x) :=
-  nhds_basis_uniformity uniformity_basis_dist_le
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_closed_ball : (expr𝓝() x).has_basis (λ ε : exprℝ(), «expr < »(0, ε)) (closed_ball x) :=
+nhds_basis_uniformity uniformity_basis_dist_le
 
-theorem nhds_basis_ball_inv_nat_succ : (𝓝 x).HasBasis (fun _ => True) fun n : ℕ => ball x (1 / «expr↑ » n+1) :=
-  nhds_basis_uniformity uniformity_basis_dist_inv_nat_succ
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_ball_inv_nat_succ : (expr𝓝() x).has_basis (λ
+ _, true) (λ n : exprℕ(), ball x «expr / »(1, «expr + »(«expr↑ »(n), 1))) :=
+nhds_basis_uniformity uniformity_basis_dist_inv_nat_succ
 
-theorem nhds_basis_ball_inv_nat_pos : (𝓝 x).HasBasis (fun n => 0 < n) fun n : ℕ => ball x (1 / «expr↑ » n) :=
-  nhds_basis_uniformity uniformity_basis_dist_inv_nat_pos
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_ball_inv_nat_pos : (expr𝓝() x).has_basis (λ
+ n, «expr < »(0, n)) (λ n : exprℕ(), ball x «expr / »(1, «expr↑ »(n))) :=
+nhds_basis_uniformity uniformity_basis_dist_inv_nat_pos
 
-theorem nhds_basis_ball_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
-  (𝓝 x).HasBasis (fun n => True) fun n : ℕ => ball x (r ^ n) :=
-  nhds_basis_uniformity (uniformity_basis_dist_pow h0 h1)
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_ball_pow
+{r : exprℝ()}
+(h0 : «expr < »(0, r))
+(h1 : «expr < »(r, 1)) : (expr𝓝() x).has_basis (λ n, true) (λ n : exprℕ(), ball x «expr ^ »(r, n)) :=
+nhds_basis_uniformity (uniformity_basis_dist_pow h0 h1)
 
-theorem nhds_basis_closed_ball_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
-  (𝓝 x).HasBasis (fun n => True) fun n : ℕ => closed_ball x (r ^ n) :=
-  nhds_basis_uniformity (uniformity_basis_dist_le_pow h0 h1)
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_closed_ball_pow
+{r : exprℝ()}
+(h0 : «expr < »(0, r))
+(h1 : «expr < »(r, 1)) : (expr𝓝() x).has_basis (λ n, true) (λ n : exprℕ(), closed_ball x «expr ^ »(r, n)) :=
+nhds_basis_uniformity (uniformity_basis_dist_le_pow h0 h1)
 
-theorem is_open_iff : IsOpen s ↔ ∀ x _ : x ∈ s, ∃ (ε : _)(_ : ε > 0), ball x ε ⊆ s :=
+theorem is_open_iff : IsOpen s ↔ ∀ x (_ : x ∈ s), ∃ (ε : _)(_ : ε > 0), ball x ε ⊆ s :=
   by 
     simp only [is_open_iff_mem_nhds, mem_nhds_iff]
 
@@ -805,75 +870,78 @@ theorem ball_mem_nhds (x : α) {ε : ℝ} (ε0 : 0 < ε) : ball x ε ∈ 𝓝 x 
 theorem closed_ball_mem_nhds (x : α) {ε : ℝ} (ε0 : 0 < ε) : closed_ball x ε ∈ 𝓝 x :=
   mem_of_superset (ball_mem_nhds x ε0) ball_subset_closed_ball
 
-theorem nhds_within_basis_ball {s : Set α} : (𝓝[s] x).HasBasis (fun ε : ℝ => 0 < ε) fun ε => ball x ε ∩ s :=
-  nhds_within_has_basis nhds_basis_ball s
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_within_basis_ball
+{s : set α} : «expr𝓝[ ] »(s, x).has_basis (λ ε : exprℝ(), «expr < »(0, ε)) (λ ε, «expr ∩ »(ball x ε, s)) :=
+nhds_within_has_basis nhds_basis_ball s
 
 theorem mem_nhds_within_iff {t : Set α} : s ∈ 𝓝[t] x ↔ ∃ (ε : _)(_ : ε > 0), ball x ε ∩ t ⊆ s :=
   nhds_within_basis_ball.mem_iff
 
 theorem tendsto_nhds_within_nhds_within [PseudoMetricSpace β] {t : Set β} {f : α → β} {a b} :
   tendsto f (𝓝[s] a) (𝓝[t] b) ↔
-    ∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ {x : α}, x ∈ s → dist x a < δ → f x ∈ t ∧ dist (f x) b < ε :=
+    ∀ ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ {x : α}, x ∈ s → dist x a < δ → f x ∈ t ∧ dist (f x) b < ε :=
   (nhds_within_basis_ball.tendsto_iff nhds_within_basis_ball).trans$
     by 
       simp only [inter_comm, mem_inter_iff, and_imp, mem_ball]
 
 theorem tendsto_nhds_within_nhds [PseudoMetricSpace β] {f : α → β} {a b} :
-  tendsto f (𝓝[s] a) (𝓝 b) ↔ ∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ {x : α}, x ∈ s → dist x a < δ → dist (f x) b < ε :=
+  tendsto f (𝓝[s] a) (𝓝 b) ↔
+    ∀ ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ {x : α}, x ∈ s → dist x a < δ → dist (f x) b < ε :=
   by 
     rw [←nhds_within_univ b, tendsto_nhds_within_nhds_within]
     simp only [mem_univ, true_andₓ]
 
 theorem tendsto_nhds_nhds [PseudoMetricSpace β] {f : α → β} {a b} :
-  tendsto f (𝓝 a) (𝓝 b) ↔ ∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ {x : α}, dist x a < δ → dist (f x) b < ε :=
+  tendsto f (𝓝 a) (𝓝 b) ↔ ∀ ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ {x : α}, dist x a < δ → dist (f x) b < ε :=
   nhds_basis_ball.tendsto_iff nhds_basis_ball
 
 theorem continuous_at_iff [PseudoMetricSpace β] {f : α → β} {a : α} :
-  ContinuousAt f a ↔ ∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ {x : α}, dist x a < δ → dist (f x) (f a) < ε :=
+  ContinuousAt f a ↔ ∀ ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ {x : α}, dist x a < δ → dist (f x) (f a) < ε :=
   by 
     rw [ContinuousAt, tendsto_nhds_nhds]
 
 theorem continuous_within_at_iff [PseudoMetricSpace β] {f : α → β} {a : α} {s : Set α} :
   ContinuousWithinAt f s a ↔
-    ∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ {x : α}, x ∈ s → dist x a < δ → dist (f x) (f a) < ε :=
+    ∀ ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ {x : α}, x ∈ s → dist x a < δ → dist (f x) (f a) < ε :=
   by 
     rw [ContinuousWithinAt, tendsto_nhds_within_nhds]
 
 theorem continuous_on_iff [PseudoMetricSpace β] {f : α → β} {s : Set α} :
   ContinuousOn f s ↔
-    ∀ b _ : b ∈ s ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ a _ : a ∈ s, dist a b < δ → dist (f a) (f b) < ε :=
+    ∀ b (_ : b ∈ s) ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ a (_ : a ∈ s), dist a b < δ → dist (f a) (f b) < ε :=
   by 
     simp [ContinuousOn, continuous_within_at_iff]
 
 theorem continuous_iff [PseudoMetricSpace β] {f : α → β} :
-  Continuous f ↔ ∀ b ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ a, dist a b < δ → dist (f a) (f b) < ε :=
+  Continuous f ↔ ∀ b ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ a, dist a b < δ → dist (f a) (f b) < ε :=
   continuous_iff_continuous_at.trans$ forall_congrₓ$ fun b => tendsto_nhds_nhds
 
 theorem tendsto_nhds {f : Filter β} {u : β → α} {a : α} :
-  tendsto u f (𝓝 a) ↔ ∀ ε _ : ε > 0, ∀ᶠx in f, dist (u x) a < ε :=
+  tendsto u f (𝓝 a) ↔ ∀ ε (_ : ε > 0), ∀ᶠx in f, dist (u x) a < ε :=
   nhds_basis_ball.tendsto_right_iff
 
 theorem continuous_at_iff' [TopologicalSpace β] {f : β → α} {b : β} :
-  ContinuousAt f b ↔ ∀ ε _ : ε > 0, ∀ᶠx in 𝓝 b, dist (f x) (f b) < ε :=
+  ContinuousAt f b ↔ ∀ ε (_ : ε > 0), ∀ᶠx in 𝓝 b, dist (f x) (f b) < ε :=
   by 
     rw [ContinuousAt, tendsto_nhds]
 
 theorem continuous_within_at_iff' [TopologicalSpace β] {f : β → α} {b : β} {s : Set β} :
-  ContinuousWithinAt f s b ↔ ∀ ε _ : ε > 0, ∀ᶠx in 𝓝[s] b, dist (f x) (f b) < ε :=
+  ContinuousWithinAt f s b ↔ ∀ ε (_ : ε > 0), ∀ᶠx in 𝓝[s] b, dist (f x) (f b) < ε :=
   by 
     rw [ContinuousWithinAt, tendsto_nhds]
 
 theorem continuous_on_iff' [TopologicalSpace β] {f : β → α} {s : Set β} :
-  ContinuousOn f s ↔ ∀ b _ : b ∈ s ε _ : ε > 0, ∀ᶠx in 𝓝[s] b, dist (f x) (f b) < ε :=
+  ContinuousOn f s ↔ ∀ b (_ : b ∈ s) ε (_ : ε > 0), ∀ᶠx in 𝓝[s] b, dist (f x) (f b) < ε :=
   by 
     simp [ContinuousOn, continuous_within_at_iff']
 
 theorem continuous_iff' [TopologicalSpace β] {f : β → α} :
-  Continuous f ↔ ∀ a ε _ : ε > 0, ∀ᶠx in 𝓝 a, dist (f x) (f a) < ε :=
+  Continuous f ↔ ∀ a ε (_ : ε > 0), ∀ᶠx in 𝓝 a, dist (f x) (f a) < ε :=
   continuous_iff_continuous_at.trans$ forall_congrₓ$ fun b => tendsto_nhds
 
 theorem tendsto_at_top [Nonempty β] [SemilatticeSup β] {u : β → α} {a : α} :
-  tendsto u at_top (𝓝 a) ↔ ∀ ε _ : ε > 0, ∃ N, ∀ n _ : n ≥ N, dist (u n) a < ε :=
+  tendsto u at_top (𝓝 a) ↔ ∀ ε (_ : ε > 0), ∃ N, ∀ n (_ : n ≥ N), dist (u n) a < ε :=
   (at_top_basis.tendsto_iff nhds_basis_ball).trans$
     by 
       simp only [exists_prop, true_andₓ]
@@ -884,7 +952,7 @@ A variant of `tendsto_at_top` that
 uses `∃ N, ∀ n > N, ...` rather than `∃ N, ∀ n ≥ N, ...`
 -/
 theorem tendsto_at_top' [Nonempty β] [SemilatticeSup β] [NoTopOrder β] {u : β → α} {a : α} :
-  tendsto u at_top (𝓝 a) ↔ ∀ ε _ : ε > 0, ∃ N, ∀ n _ : n > N, dist (u n) a < ε :=
+  tendsto u at_top (𝓝 a) ↔ ∀ ε (_ : ε > 0), ∃ N, ∀ n (_ : n > N), dist (u n) a < ε :=
   (at_top_basis_Ioi.tendsto_iff nhds_basis_ball).trans$
     by 
       simp only [exists_prop, true_andₓ]
@@ -911,22 +979,23 @@ end Metric
 
 open Metric
 
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Expressing the uniformity in terms of `edist` -/
-protected theorem PseudoMetric.uniformity_basis_edist :
-  (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => { p | edist p.1 p.2 < ε } :=
-  ⟨by 
-      intro t 
-      refine' mem_uniformity_dist.trans ⟨_, _⟩ <;> rintro ⟨ε, ε0, Hε⟩
-      ·
-        use Ennreal.ofReal ε, Ennreal.of_real_pos.2 ε0 
-        rintro ⟨a, b⟩
-        simp only [edist_dist, Ennreal.of_real_lt_of_real_iff ε0]
-        exact Hε
-      ·
-        rcases Ennreal.lt_iff_exists_real_btwn.1 ε0 with ⟨ε', _, ε0', hε⟩
-        rw [Ennreal.of_real_pos] at ε0' 
-        refine' ⟨ε', ε0', fun a b h => Hε (lt_transₓ _ hε)⟩
-        rwa [edist_dist, Ennreal.of_real_lt_of_real_iff ε0']⟩
+protected
+theorem pseudo_metric.uniformity_basis_edist : (expr𝓤() α).has_basis (λ
+ ε : «exprℝ≥0∞»(), «expr < »(0, ε)) (λ ε, {p | «expr < »(edist p.1 p.2, ε)}) :=
+⟨begin
+   intro [ident t],
+   refine [expr mem_uniformity_dist.trans ⟨_, _⟩]; rintro ["⟨", ident ε, ",", ident ε0, ",", ident Hε, "⟩"],
+   { use ["[", expr ennreal.of_real ε, ",", expr ennreal.of_real_pos.2 ε0, "]"],
+     rintros ["⟨", ident a, ",", ident b, "⟩"],
+     simp [] [] ["only"] ["[", expr edist_dist, ",", expr ennreal.of_real_lt_of_real_iff ε0, "]"] [] [],
+     exact [expr Hε] },
+   { rcases [expr ennreal.lt_iff_exists_real_btwn.1 ε0, "with", "⟨", ident ε', ",", "_", ",", ident ε0', ",", ident hε, "⟩"],
+     rw ["[", expr ennreal.of_real_pos, "]"] ["at", ident ε0'],
+     refine [expr ⟨ε', ε0', λ a b h, Hε (lt_trans _ hε)⟩],
+     rwa ["[", expr edist_dist, ",", expr ennreal.of_real_lt_of_real_iff ε0', "]"] [] }
+ end⟩
 
 theorem Metric.uniformity_edist : 𝓤 α = ⨅(ε : _)(_ : ε > 0), 𝓟 { p:α × α | edist p.1 p.2 < ε } :=
   PseudoMetric.uniformity_basis_edist.eq_binfi
@@ -1003,7 +1072,8 @@ uniformity are defeq in the pseudometric space and the pseudoemetric space. In t
 distance is given separately, to be able to prescribe some expression which is not defeq to the
 push-forward of the edistance to reals. -/
 def PseudoEmetricSpace.toPseudoMetricSpaceOfDist {α : Type u} [e : PseudoEmetricSpace α] (dist : α → α → ℝ)
-  (edist_ne_top : ∀ x y : α, edist x y ≠ ⊤) (h : ∀ x y, dist x y = Ennreal.toReal (edist x y)) : PseudoMetricSpace α :=
+  (edist_ne_top : ∀ (x y : α), edist x y ≠ ⊤) (h : ∀ x y, dist x y = Ennreal.toReal (edist x y)) :
+  PseudoMetricSpace α :=
   let m : PseudoMetricSpace α :=
     { dist,
       dist_self :=
@@ -1037,7 +1107,7 @@ def PseudoEmetricSpace.toPseudoMetricSpaceOfDist {α : Type u} [e : PseudoEmetri
 /-- One gets a pseudometric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
 uniformity are defeq in the pseudometric space and the emetric space. -/
-def PseudoEmetricSpace.toPseudoMetricSpace {α : Type u} [e : PseudoEmetricSpace α] (h : ∀ x y : α, edist x y ≠ ⊤) :
+def PseudoEmetricSpace.toPseudoMetricSpace {α : Type u} [e : PseudoEmetricSpace α] (h : ∀ (x y : α), edist x y ≠ ⊤) :
   PseudoMetricSpace α :=
   PseudoEmetricSpace.toPseudoMetricSpaceOfDist (fun x y => Ennreal.toReal (edist x y)) h fun x y => rfl
 
@@ -1047,7 +1117,7 @@ converging. This is often applied for `B N = 2^{-N}`, i.e., with a very fast con
 `0`, which makes it possible to use arguments of converging series, while this is impossible
 to do in general for arbitrary Cauchy sequences. -/
 theorem Metric.complete_of_convergent_controlled_sequences (B : ℕ → Real) (hB : ∀ n, 0 < B n)
-  (H : ∀ u : ℕ → α, (∀ N n m : ℕ, N ≤ n → N ≤ m → dist (u n) (u m) < B N) → ∃ x, tendsto u at_top (𝓝 x)) :
+  (H : ∀ (u : ℕ → α), (∀ (N n m : ℕ), N ≤ n → N ≤ m → dist (u n) (u m) < B N) → ∃ x, tendsto u at_top (𝓝 x)) :
   CompleteSpace α :=
   by 
     apply Emetric.complete_of_convergent_controlled_sequences fun n => Ennreal.ofReal (B n)
@@ -1061,7 +1131,7 @@ theorem Metric.complete_of_convergent_controlled_sequences (B : ℕ → Real) (h
       exact Hu N n m hn hm
 
 theorem Metric.complete_of_cauchy_seq_tendsto :
-  (∀ u : ℕ → α, CauchySeq u → ∃ a, tendsto u at_top (𝓝 a)) → CompleteSpace α :=
+  (∀ (u : ℕ → α), CauchySeq u → ∃ a, tendsto u at_top (𝓝 a)) → CompleteSpace α :=
   Emetric.complete_of_cauchy_seq_tendsto
 
 section Real
@@ -1159,15 +1229,18 @@ theorem squeeze_zero {α} {f g : α → ℝ} {t₀ : Filter α} (hf : ∀ t, 0 �
   (g0 : tendsto g t₀ (𝓝 0)) : tendsto f t₀ (𝓝 0) :=
   squeeze_zero' (eventually_of_forall hf) (eventually_of_forall hft) g0
 
-theorem Metric.uniformity_eq_comap_nhds_zero : 𝓤 α = comap (fun p : α × α => dist p.1 p.2) (𝓝 (0 : ℝ)) :=
-  by 
-    ext s 
-    simp [mem_uniformity_dist, (nhds_basis_ball.comap _).mem_iff, subset_def, Real.dist_0_eq_abs]
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem metric.uniformity_eq_comap_nhds_zero : «expr = »(expr𝓤() α, comap (λ
+  p : «expr × »(α, α), dist p.1 p.2) (expr𝓝() (0 : exprℝ()))) :=
+by { ext [] [ident s] [],
+  simp [] [] [] ["[", expr mem_uniformity_dist, ",", expr (nhds_basis_ball.comap _).mem_iff, ",", expr subset_def, ",", expr real.dist_0_eq_abs, "]"] [] [] }
 
-theorem cauchy_seq_iff_tendsto_dist_at_top_0 [Nonempty β] [SemilatticeSup β] {u : β → α} :
-  CauchySeq u ↔ tendsto (fun n : β × β => dist (u n.1) (u n.2)) at_top (𝓝 0) :=
-  by 
-    rw [cauchy_seq_iff_tendsto, Metric.uniformity_eq_comap_nhds_zero, tendsto_comap_iff, Prod.map_defₓ]
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy_seq_iff_tendsto_dist_at_top_0
+[nonempty β]
+[semilattice_sup β]
+{u : β → α} : «expr ↔ »(cauchy_seq u, tendsto (λ n : «expr × »(β, β), dist (u n.1) (u n.2)) at_top (expr𝓝() 0)) :=
+by rw ["[", expr cauchy_seq_iff_tendsto, ",", expr metric.uniformity_eq_comap_nhds_zero, ",", expr tendsto_comap_iff, ",", expr prod.map_def, "]"] []
 
 theorem tendsto_uniformity_iff_dist_tendsto_zero {ι : Type _} {f : ι → α × α} {p : Filter ι} :
   tendsto f p (𝓤 α) ↔ tendsto (fun x => dist (f x).1 (f x).2) p (𝓝 0) :=
@@ -1194,16 +1267,17 @@ variable[Nonempty β][SemilatticeSup β]
 the distance between its elements is arbitrarily small -/
 @[nolint ge_or_gt]
 theorem Metric.cauchy_seq_iff {u : β → α} :
-  CauchySeq u ↔ ∀ ε _ : ε > 0, ∃ N, ∀ m n _ : m ≥ N _ : n ≥ N, dist (u m) (u n) < ε :=
+  CauchySeq u ↔ ∀ ε (_ : ε > 0), ∃ N, ∀ m n (_ : m ≥ N) (_ : n ≥ N), dist (u m) (u n) < ε :=
   uniformity_basis_dist.cauchy_seq_iff
 
 /-- A variation around the pseudometric characterization of Cauchy sequences -/
-theorem Metric.cauchy_seq_iff' {u : β → α} : CauchySeq u ↔ ∀ ε _ : ε > 0, ∃ N, ∀ n _ : n ≥ N, dist (u n) (u N) < ε :=
+theorem Metric.cauchy_seq_iff' {u : β → α} :
+  CauchySeq u ↔ ∀ ε (_ : ε > 0), ∃ N, ∀ n (_ : n ≥ N), dist (u n) (u N) < ε :=
   uniformity_basis_dist.cauchy_seq_iff'
 
 /-- If the distance between `s n` and `s m`, `n, m ≥ N` is bounded above by `b N`
 and `b` converges to zero, then `s` is a Cauchy sequence.  -/
-theorem cauchy_seq_of_le_tendsto_0 {s : β → α} (b : β → ℝ) (h : ∀ n m N : β, N ≤ n → N ≤ m → dist (s n) (s m) ≤ b N)
+theorem cauchy_seq_of_le_tendsto_0 {s : β → α} (b : β → ℝ) (h : ∀ (n m N : β), N ≤ n → N ≤ m → dist (s n) (s m) ≤ b N)
   (h₀ : tendsto b at_top (nhds 0)) : CauchySeq s :=
   Metric.cauchy_seq_iff.2$
     fun ε ε0 =>
@@ -1404,9 +1478,9 @@ theorem UniformContinuous.dist [UniformSpace β] {f g : β → α} (hf : Uniform
   UniformContinuous fun b => dist (f b) (g b) :=
   uniform_continuous_dist.comp (hf.prod_mk hg)
 
-@[continuity]
-theorem continuous_dist : Continuous fun p : α × α => dist p.1 p.2 :=
-  uniform_continuous_dist.Continuous
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_dist : continuous (λ p : «expr × »(α, α), dist p.1 p.2) :=
+uniform_continuous_dist.continuous
 
 @[continuity]
 theorem Continuous.dist [TopologicalSpace β] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :
@@ -1426,15 +1500,16 @@ theorem tendsto_iff_dist_tendsto_zero {f : β → α} {x : Filter β} {a : α} :
   by 
     rw [←nhds_comap_dist a, tendsto_comap_iff]
 
-theorem uniform_continuous_nndist : UniformContinuous fun p : α × α => nndist p.1 p.2 :=
-  uniform_continuous_subtype_mk uniform_continuous_dist _
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_nndist : uniform_continuous (λ p : «expr × »(α, α), nndist p.1 p.2) :=
+uniform_continuous_subtype_mk uniform_continuous_dist _
 
 theorem UniformContinuous.nndist [UniformSpace β] {f g : β → α} (hf : UniformContinuous f) (hg : UniformContinuous g) :
   UniformContinuous fun b => nndist (f b) (g b) :=
   uniform_continuous_nndist.comp (hf.prod_mk hg)
 
-theorem continuous_nndist : Continuous fun p : α × α => nndist p.1 p.2 :=
-  uniform_continuous_nndist.Continuous
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_nndist : continuous (λ p : «expr × »(α, α), nndist p.1 p.2) := uniform_continuous_nndist.continuous
 
 theorem Continuous.nndist [TopologicalSpace β] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :
   Continuous fun b => nndist (f b) (g b) :=
@@ -1472,24 +1547,24 @@ theorem ball_subset_interior_closed_ball : ball x ε ⊆ Interior (closed_ball x
 
 /-- ε-characterization of the closure in pseudometric spaces-/
 theorem mem_closure_iff {α : Type u} [PseudoMetricSpace α] {s : Set α} {a : α} :
-  a ∈ Closure s ↔ ∀ ε _ : ε > 0, ∃ (b : _)(_ : b ∈ s), dist a b < ε :=
+  a ∈ Closure s ↔ ∀ ε (_ : ε > 0), ∃ (b : _)(_ : b ∈ s), dist a b < ε :=
   (mem_closure_iff_nhds_basis nhds_basis_ball).trans$
     by 
       simp only [mem_ball, dist_comm]
 
 theorem mem_closure_range_iff {α : Type u} [PseudoMetricSpace α] {e : β → α} {a : α} :
-  a ∈ Closure (range e) ↔ ∀ ε _ : ε > 0, ∃ k : β, dist a (e k) < ε :=
+  a ∈ Closure (range e) ↔ ∀ ε (_ : ε > 0), ∃ k : β, dist a (e k) < ε :=
   by 
     simp only [mem_closure_iff, exists_range_iff]
 
 theorem mem_closure_range_iff_nat {α : Type u} [PseudoMetricSpace α] {e : β → α} {a : α} :
-  a ∈ Closure (range e) ↔ ∀ n : ℕ, ∃ k : β, dist a (e k) < 1 / (n : ℝ)+1 :=
+  a ∈ Closure (range e) ↔ ∀ (n : ℕ), ∃ k : β, dist a (e k) < 1 / (n : ℝ)+1 :=
   (mem_closure_iff_nhds_basis nhds_basis_ball_inv_nat_succ).trans$
     by 
       simp only [mem_ball, dist_comm, exists_range_iff, forall_const]
 
 theorem mem_of_closed' {α : Type u} [PseudoMetricSpace α] {s : Set α} (hs : IsClosed s) {a : α} :
-  a ∈ s ↔ ∀ ε _ : ε > 0, ∃ (b : _)(_ : b ∈ s), dist a b < ε :=
+  a ∈ s ↔ ∀ ε (_ : ε > 0), ∃ (b : _)(_ : b ∈ s), dist a b < ε :=
   by 
     simpa only [hs.closure_eq] using @mem_closure_iff _ _ s a
 
@@ -1501,7 +1576,7 @@ open Finset
 
 variable{π : β → Type _}[Fintype β][∀ b, PseudoMetricSpace (π b)]
 
--- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A finite product of pseudometric spaces is a pseudometric space, with the sup distance. -/
 noncomputable
 instance pseudo_metric_space_pi : pseudo_metric_space (∀ b, π b) :=
@@ -1529,14 +1604,13 @@ theorem nndist_pi_def (f g : ∀ b, π b) : nndist f g = sup univ fun b => nndis
 theorem dist_pi_def (f g : ∀ b, π b) : dist f g = (sup univ fun b => nndist (f b) (g b) :  ℝ≥0 ) :=
   rfl
 
-@[simp]
-theorem dist_pi_const [Nonempty β] (a b : α) : (dist (fun x : β => a) fun _ => b) = dist a b :=
-  by 
-    simpa only [dist_edist] using congr_argₓ Ennreal.toReal (edist_pi_const a b)
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem dist_pi_const [nonempty β] (a b : α) : «expr = »(dist (λ x : β, a) (λ _, b), dist a b) :=
+by simpa [] [] ["only"] ["[", expr dist_edist, "]"] [] ["using", expr congr_arg ennreal.to_real (edist_pi_const a b)]
 
-@[simp]
-theorem nndist_pi_const [Nonempty β] (a b : α) : (nndist (fun x : β => a) fun _ => b) = nndist a b :=
-  Nnreal.eq$ dist_pi_const a b
+-- error in Topology.MetricSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem nndist_pi_const [nonempty β] (a b : α) : «expr = »(nndist (λ x : β, a) (λ _, b), nndist a b) :=
+«expr $ »(nnreal.eq, dist_pi_const a b)
 
 theorem dist_pi_lt_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 < r) : dist f g < r ↔ ∀ b, dist (f b) (g b) < r :=
   by 
@@ -1627,7 +1701,7 @@ open Metric
 
 /-- A pseudometric space is proper if all closed balls are compact. -/
 class ProperSpace(α : Type u)[PseudoMetricSpace α] : Prop where 
-  is_compact_closed_ball : ∀ x : α, ∀ r, IsCompact (closed_ball x r)
+  is_compact_closed_ball : ∀ (x : α), ∀ r, IsCompact (closed_ball x r)
 
 /-- In a proper pseudometric space, all spheres are compact. -/
 theorem is_compact_sphere {α : Type _} [PseudoMetricSpace α] [ProperSpace α] (x : α) (r : ℝ) : IsCompact (sphere x r) :=
@@ -1752,7 +1826,7 @@ open TopologicalSpace
 /-- A pseudometric space is second countable if, for every `ε > 0`, there is a countable set which
 is `ε`-dense. -/
 theorem second_countable_of_almost_dense_set
-  (H : ∀ ε _ : ε > (0 : ℝ), ∃ s : Set α, countable s ∧ ∀ x, ∃ (y : _)(_ : y ∈ s), dist x y ≤ ε) :
+  (H : ∀ ε (_ : ε > (0 : ℝ)), ∃ s : Set α, countable s ∧ ∀ x, ∃ (y : _)(_ : y ∈ s), dist x y ≤ ε) :
   second_countable_topology α :=
   by 
     refine' Emetric.second_countable_of_almost_dense_set fun ε ε0 => _ 
@@ -1769,7 +1843,7 @@ end SecondCountable
 end Metric
 
 theorem lebesgue_number_lemma_of_metric {s : Set α} {ι} {c : ι → Set α} (hs : IsCompact s) (hc₁ : ∀ i, IsOpen (c i))
-  (hc₂ : s ⊆ ⋃i, c i) : ∃ (δ : _)(_ : δ > 0), ∀ x _ : x ∈ s, ∃ i, ball x δ ⊆ c i :=
+  (hc₂ : s ⊆ ⋃i, c i) : ∃ (δ : _)(_ : δ > 0), ∀ x (_ : x ∈ s), ∃ i, ball x δ ⊆ c i :=
   let ⟨n, en, hn⟩ := lebesgue_number_lemma hs hc₁ hc₂ 
   let ⟨δ, δ0, hδ⟩ := mem_uniformity_dist.1 en
   ⟨δ, δ0,
@@ -1778,8 +1852,8 @@ theorem lebesgue_number_lemma_of_metric {s : Set α} {ι} {c : ι → Set α} (h
       ⟨i, fun y hy => hi (hδ (mem_ball'.mp hy))⟩⟩
 
 theorem lebesgue_number_lemma_of_metric_sUnion {s : Set α} {c : Set (Set α)} (hs : IsCompact s)
-  (hc₁ : ∀ t _ : t ∈ c, IsOpen t) (hc₂ : s ⊆ ⋃₀c) :
-  ∃ (δ : _)(_ : δ > 0), ∀ x _ : x ∈ s, ∃ (t : _)(_ : t ∈ c), ball x δ ⊆ t :=
+  (hc₁ : ∀ t (_ : t ∈ c), IsOpen t) (hc₂ : s ⊆ ⋃₀c) :
+  ∃ (δ : _)(_ : δ > 0), ∀ x (_ : x ∈ s), ∃ (t : _)(_ : t ∈ c), ball x δ ⊆ t :=
   by 
     rw [sUnion_eq_Union] at hc₂ <;>
       simpa using
@@ -1793,7 +1867,7 @@ namespace Metric
 /-- Boundedness of a subset of a pseudometric space. We formulate the definition to work
 even in the empty space. -/
 def Bounded (s : Set α) : Prop :=
-  ∃ C, ∀ x y _ : x ∈ s _ : y ∈ s, dist x y ≤ C
+  ∃ C, ∀ x y (_ : x ∈ s) (_ : y ∈ s), dist x y ≤ C
 
 section Bounded
 
@@ -1805,7 +1879,7 @@ theorem bounded_empty : Bounded (∅ : Set α) :=
     by 
       simp ⟩
 
-theorem bounded_iff_mem_bounded : Bounded s ↔ ∀ x _ : x ∈ s, Bounded s :=
+theorem bounded_iff_mem_bounded : Bounded s ↔ ∀ x (_ : x ∈ s), Bounded s :=
   ⟨fun h _ _ => h, fun H => s.eq_empty_or_nonempty.elim (fun hs => hs.symm ▸ bounded_empty) fun ⟨x, hx⟩ => H x hx⟩
 
 /-- Subsets of a bounded set are also bounded -/
@@ -1883,7 +1957,7 @@ theorem bounded_union : Bounded (s ∪ t) ↔ Bounded s ∧ Bounded t :=
 
 /-- A finite union of bounded sets is bounded -/
 theorem bounded_bUnion {I : Set β} {s : β → Set α} (H : finite I) :
-  Bounded (⋃(i : _)(_ : i ∈ I), s i) ↔ ∀ i _ : i ∈ I, Bounded (s i) :=
+  Bounded (⋃(i : _)(_ : i ∈ I), s i) ↔ ∀ i (_ : i ∈ I), Bounded (s i) :=
   finite.induction_on H
       (by 
         simp )$
@@ -1917,6 +1991,22 @@ theorem bounded_range_iff {f : β → α} : Bounded (range f) ↔ ∃ C, ∀ x y
       ⟨fun H x y => H _ _ ⟨x, rfl⟩ ⟨y, rfl⟩,
         by 
           rintro H _ _ ⟨x, rfl⟩ ⟨y, rfl⟩ <;> exact H x y⟩
+
+theorem bounded_range_of_tendsto_cofinite_uniformity {f : β → α}
+  (hf : tendsto (Prod.mapₓ f f) (cofinite ×ᶠ cofinite) (𝓤 α)) : Bounded (range f) :=
+  by 
+    rcases(has_basis_cofinite.prod_self.tendsto_iff uniformity_basis_dist).1 hf 1 zero_lt_one with ⟨s, hsf, hs1⟩
+    rw [←image_univ, ←union_compl_self s, image_union, bounded_union]
+    use (hsf.image f).Bounded, 1
+    rintro _ _ ⟨x, hx, rfl⟩ ⟨y, hy, rfl⟩
+    exact le_of_ltₓ (hs1 (x, y) ⟨hx, hy⟩)
+
+theorem bounded_range_of_cauchy_map_cofinite {f : β → α} (hf : Cauchy (map f cofinite)) : Bounded (range f) :=
+  bounded_range_of_tendsto_cofinite_uniformity$ (cauchy_map_iff.1 hf).2
+
+theorem bounded_range_of_tendsto_cofinite {f : β → α} {a : α} (hf : tendsto f cofinite (𝓝 a)) : Bounded (range f) :=
+  bounded_range_of_tendsto_cofinite_uniformity$
+    (hf.prod_map hf).mono_right$ nhds_prod_eq.symm.trans_le (nhds_le_uniformity a)
 
 /-- In a compact space, all sets are bounded -/
 theorem bounded_of_compact_space [CompactSpace α] : Bounded s :=
@@ -2005,19 +2095,19 @@ theorem diam_triple : Metric.diam ({x, y, z} : Set α) = max (max (dist x y) (di
 
 /-- If the distance between any two points in a set is bounded by some constant `C`,
 then `ennreal.of_real C`  bounds the emetric diameter of this set. -/
-theorem ediam_le_of_forall_dist_le {C : ℝ} (h : ∀ x _ : x ∈ s y _ : y ∈ s, dist x y ≤ C) :
+theorem ediam_le_of_forall_dist_le {C : ℝ} (h : ∀ x (_ : x ∈ s) y (_ : y ∈ s), dist x y ≤ C) :
   Emetric.diam s ≤ Ennreal.ofReal C :=
   Emetric.diam_le$ fun x hx y hy => (edist_dist x y).symm ▸ Ennreal.of_real_le_of_real (h x hx y hy)
 
 /-- If the distance between any two points in a set is bounded by some non-negative constant,
 this constant bounds the diameter. -/
-theorem diam_le_of_forall_dist_le {C : ℝ} (h₀ : 0 ≤ C) (h : ∀ x _ : x ∈ s y _ : y ∈ s, dist x y ≤ C) : diam s ≤ C :=
+theorem diam_le_of_forall_dist_le {C : ℝ} (h₀ : 0 ≤ C) (h : ∀ x (_ : x ∈ s) y (_ : y ∈ s), dist x y ≤ C) : diam s ≤ C :=
   Ennreal.to_real_le_of_le_of_real h₀ (ediam_le_of_forall_dist_le h)
 
 /-- If the distance between any two points in a nonempty set is bounded by some constant,
 this constant bounds the diameter. -/
-theorem diam_le_of_forall_dist_le_of_nonempty (hs : s.nonempty) {C : ℝ} (h : ∀ x _ : x ∈ s y _ : y ∈ s, dist x y ≤ C) :
-  diam s ≤ C :=
+theorem diam_le_of_forall_dist_le_of_nonempty (hs : s.nonempty) {C : ℝ}
+  (h : ∀ x (_ : x ∈ s) y (_ : y ∈ s), dist x y ≤ C) : diam s ≤ C :=
   have h₀ : 0 ≤ C :=
     let ⟨x, hx⟩ := hs 
     le_transₓ dist_nonneg (h x hx x hx)
@@ -2151,7 +2241,7 @@ theorem tendsto_coe_cofinite : tendsto (coeₓ : ℤ → ℝ) cofinite (cocompac
   by 
     refine' tendsto_cocompact_of_tendsto_dist_comp_at_top (0 : ℝ) _ 
     simp only [Filter.tendsto_at_top, eventually_cofinite, not_leₓ, ←mem_ball]
-    change ∀ r : ℝ, finite (coeₓ ⁻¹' ball (0 : ℝ) r)
+    change ∀ (r : ℝ), finite (coeₓ ⁻¹' ball (0 : ℝ) r)
     simp [Real.ball_eq, Set.finite_Ioo]
 
 end Int
@@ -2163,10 +2253,10 @@ class MetricSpace(α : Type u) extends PseudoMetricSpace α : Type u where
 /-- Construct a metric space structure whose underlying topological space structure
 (definitionally) agrees which a pre-existing topology which is compatible with a given distance
 function. -/
-def MetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : α → α → ℝ) (dist_self : ∀ x : α, dist x x = 0)
-  (dist_comm : ∀ x y : α, dist x y = dist y x) (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y+dist y z)
-  (H : ∀ s : Set α, IsOpen s ↔ ∀ x _ : x ∈ s, ∃ (ε : _)(_ : ε > 0), ∀ y, dist x y < ε → y ∈ s)
-  (eq_of_dist_eq_zero : ∀ x y : α, dist x y = 0 → x = y) : MetricSpace α :=
+def MetricSpace.ofMetrizable {α : Type _} [TopologicalSpace α] (dist : α → α → ℝ) (dist_self : ∀ (x : α), dist x x = 0)
+  (dist_comm : ∀ (x y : α), dist x y = dist y x) (dist_triangle : ∀ (x y z : α), dist x z ≤ dist x y+dist y z)
+  (H : ∀ (s : Set α), IsOpen s ↔ ∀ x (_ : x ∈ s), ∃ (ε : _)(_ : ε > 0), ∀ y, dist x y < ε → y ∈ s)
+  (eq_of_dist_eq_zero : ∀ (x y : α), dist x y = 0 → x = y) : MetricSpace α :=
   { PseudoMetricSpace.ofMetrizable dist dist_self dist_comm dist_triangle H with eq_of_dist_eq_zero }
 
 variable{γ : Type w}[MetricSpace γ]
@@ -2197,7 +2287,7 @@ theorem dist_pos {x y : γ} : 0 < dist x y ↔ x ≠ y :=
   by 
     simpa only [not_leₓ] using not_congr dist_le_zero
 
-theorem eq_of_forall_dist_le {x y : γ} (h : ∀ ε _ : ε > 0, dist x y ≤ ε) : x = y :=
+theorem eq_of_forall_dist_le {x y : γ} (h : ∀ ε (_ : ε > 0), dist x y ≤ ε) : x = y :=
   eq_of_dist_eq_zero (eq_of_le_of_forall_le_of_dense dist_nonneg h)
 
 /--Deduce the equality of points with the vanishing of the nonnegative distance-/
@@ -2314,7 +2404,7 @@ uniformity are defeq in the metric space and the emetric space. In this definiti
 is given separately, to be able to prescribe some expression which is not defeq to the push-forward
 of the edistance to reals. -/
 def EmetricSpace.toMetricSpaceOfDist {α : Type u} [e : EmetricSpace α] (dist : α → α → ℝ)
-  (edist_ne_top : ∀ x y : α, edist x y ≠ ⊤) (h : ∀ x y, dist x y = Ennreal.toReal (edist x y)) : MetricSpace α :=
+  (edist_ne_top : ∀ (x y : α), edist x y ≠ ⊤) (h : ∀ x y, dist x y = Ennreal.toReal (edist x y)) : MetricSpace α :=
   { PseudoEmetricSpace.toPseudoMetricSpaceOfDist dist edist_ne_top h with dist,
     eq_of_dist_eq_zero :=
       fun x y hxy =>
@@ -2324,7 +2414,7 @@ def EmetricSpace.toMetricSpaceOfDist {α : Type u} [e : EmetricSpace α] (dist :
 /-- One gets a metric space from an emetric space if the edistance
 is everywhere finite, by pushing the edistance to reals. We set it up so that the edist and the
 uniformity are defeq in the metric space and the emetric space. -/
-def EmetricSpace.toMetricSpace {α : Type u} [e : EmetricSpace α] (h : ∀ x y : α, edist x y ≠ ⊤) : MetricSpace α :=
+def EmetricSpace.toMetricSpace {α : Type u} [e : EmetricSpace α] (h : ∀ (x y : α), edist x y ≠ ⊤) : MetricSpace α :=
   EmetricSpace.toMetricSpaceOfDist (fun x y => Ennreal.toReal (edist x y)) h fun x y => rfl
 
 /-- Metric space structure pulled back by an injective function. Injectivity is necessary to

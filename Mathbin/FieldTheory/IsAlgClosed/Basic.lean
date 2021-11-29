@@ -44,7 +44,7 @@ To show `polynomial.splits p f` for an arbitrary ring homomorphism `f`,
 see `is_alg_closed.splits_codomain` and `is_alg_closed.splits_domain`.
 -/
 class IsAlgClosed : Prop where 
-  Splits : ∀ p : Polynomial k, p.splits$ RingHom.id k
+  Splits : ∀ (p : Polynomial k), p.splits$ RingHom.id k
 
 /-- Every polynomial splits in the field extension `f : K →+* k` if `k` is algebraically closed.
 
@@ -111,7 +111,7 @@ theorem exists_aeval_eq_zero {R : Type _} [Field R] [IsAlgClosed k] [Algebra R k
   (hp : p.degree ≠ 0) : ∃ x : k, aeval x p = 0 :=
   exists_eval₂_eq_zero (algebraMap R k) p hp
 
-theorem of_exists_root (H : ∀ p : Polynomial k, p.monic → Irreducible p → ∃ x, p.eval x = 0) : IsAlgClosed k :=
+theorem of_exists_root (H : ∀ (p : Polynomial k), p.monic → Irreducible p → ∃ x, p.eval x = 0) : IsAlgClosed k :=
   ⟨fun p =>
       Or.inr$
         fun q hq hqp =>
@@ -249,7 +249,7 @@ instance  : Preorderₓ (subfield_with_hom K L M hL) :=
 
 open Lattice
 
--- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem maximal_subfield_with_hom_chain_bounded
 (c : set (subfield_with_hom K L M hL))
 (hc : chain ((«expr ≤ »)) c)
@@ -284,7 +284,7 @@ noncomputable def maximal_subfield_with_hom : subfield_with_hom K L M hL :=
   Classical.some (exists_maximal_subfield_with_hom M hL)
 
 theorem maximal_subfield_with_hom_is_maximal :
-  ∀ N : subfield_with_hom K L M hL, maximal_subfield_with_hom M hL ≤ N → N ≤ maximal_subfield_with_hom M hL :=
+  ∀ (N : subfield_with_hom K L M hL), maximal_subfield_with_hom M hL ≤ N → N ≤ maximal_subfield_with_hom M hL :=
   Classical.some_spec (exists_maximal_subfield_with_hom M hL)
 
 -- error in FieldTheory.IsAlgClosed.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

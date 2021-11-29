@@ -75,13 +75,13 @@ section Degrees
 /-! ### `degrees` -/
 
 
+-- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The maximal degrees of each variable in a multi-variable polynomial, expressed as a multiset.
 
 (For example, `degrees (x^2 * y + y^3)` would be `{x, x, y, y, y}`.)
--/
-def degrees (p : MvPolynomial σ R) : Multiset σ :=
-  p.support.sup fun s : σ →₀ ℕ => s.to_multiset
+-/ def degrees (p : mv_polynomial σ R) : multiset σ :=
+p.support.sup (λ s : «expr →₀ »(σ, exprℕ()), s.to_multiset)
 
 -- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem degrees_monomial (s : «expr →₀ »(σ, exprℕ())) (a : R) : «expr ≤ »(degrees (monomial s a), s.to_multiset) :=
@@ -162,7 +162,7 @@ theorem degrees_prod {ι : Type _} (s : Finset ι) (f : ι → MvPolynomial σ R
       rw [Finset.prod_insert his, Finset.sum_insert his]
       exact le_transₓ (degrees_mul _ _) (add_le_add_left ih _)
 
-theorem degrees_pow (p : MvPolynomial σ R) : ∀ n : ℕ, (p ^ n).degrees ≤ n • p.degrees
+theorem degrees_pow (p : MvPolynomial σ R) : ∀ (n : ℕ), (p ^ n).degrees ≤ n • p.degrees
 | 0 =>
   by 
     rw [pow_zeroₓ, degrees_one]
@@ -189,7 +189,7 @@ theorem le_degrees_add {p q : MvPolynomial σ R} (h : p.degrees.disjoint q.degre
     ·
       simp only [h0, zero_le, Finsupp.zero_apply]
     ·
-      refine' @Finset.le_sup _ _ _ (p+q).support _ d _ 
+      refine' @Finset.le_sup _ _ _ _ (p+q).support _ d _ 
       rw [mem_support_iff, coeff_add]
       suffices  : q.coeff d = 0
       ·
@@ -548,7 +548,7 @@ theorem total_degree_pow (a : MvPolynomial σ R) (n : ℕ) : (a ^ n).totalDegree
         rw [add_mulₓ, one_mulₓ, add_commₓ]
 
 theorem total_degree_list_prod :
-  ∀ s : List (MvPolynomial σ R), s.prod.total_degree ≤ (s.map MvPolynomial.totalDegree).Sum
+  ∀ (s : List (MvPolynomial σ R)), s.prod.total_degree ≤ (s.map MvPolynomial.totalDegree).Sum
 | [] =>
   by 
     rw [@List.prod_nil (MvPolynomial σ R) _, total_degree_one] <;> rfl
@@ -624,7 +624,7 @@ section EvalVars
 variable[CommSemiringₓ S]
 
 theorem eval₂_hom_eq_constant_coeff_of_vars (f : R →+* S) {g : σ → S} {p : MvPolynomial σ R}
-  (hp : ∀ i _ : i ∈ p.vars, g i = 0) : eval₂_hom f g p = f (constant_coeff p) :=
+  (hp : ∀ i (_ : i ∈ p.vars), g i = 0) : eval₂_hom f g p = f (constant_coeff p) :=
   by 
     convLHS => rw [p.as_sum]
     simp only [RingHom.map_sum, eval₂_hom_monomial]
@@ -655,7 +655,7 @@ theorem eval₂_hom_eq_constant_coeff_of_vars (f : R →+* S) {g : σ → S} {p 
       contradiction
 
 theorem aeval_eq_constant_coeff_of_vars [Algebra R S] {g : σ → S} {p : MvPolynomial σ R}
-  (hp : ∀ i _ : i ∈ p.vars, g i = 0) : aeval g p = algebraMap _ _ (constant_coeff p) :=
+  (hp : ∀ i (_ : i ∈ p.vars), g i = 0) : aeval g p = algebraMap _ _ (constant_coeff p) :=
   eval₂_hom_eq_constant_coeff_of_vars _ hp
 
 -- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -700,52 +700,52 @@ theorem hom_congr_vars {f₁ f₂ : MvPolynomial σ R →+* S} {p₁ p₂ : MvPo
       _
     
 
-theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ → σ) (hfi : injective f)
-  (hf : «expr↑ » p.vars ⊆ Set.Range f) : ∃ q : MvPolynomial τ R, rename f q = p :=
-  ⟨bind₁ (fun i : σ => Option.elim (partial_inv f i) 0 X) p,
-    by 
-      show (rename f).toRingHom.comp _ p = RingHom.id _ p 
-      refine' hom_congr_vars _ _ _
-      ·
-        ext1 
-        simp [algebra_map_eq]
-      ·
-        intro i hip _ 
-        rcases hf hip with ⟨i, rfl⟩
-        simp [partial_inv_left hfi]
-      ·
-        rfl⟩
+-- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem exists_rename_eq_of_vars_subset_range
+(p : mv_polynomial σ R)
+(f : τ → σ)
+(hfi : injective f)
+(hf : «expr ⊆ »(«expr↑ »(p.vars), set.range f)) : «expr∃ , »((q : mv_polynomial τ R), «expr = »(rename f q, p)) :=
+⟨bind₁ (λ i : σ, option.elim (partial_inv f i) 0 X) p, begin
+   show [expr «expr = »((rename f).to_ring_hom.comp _ p, ring_hom.id _ p)],
+   refine [expr hom_congr_vars _ _ _],
+   { ext1 [] [],
+     simp [] [] [] ["[", expr algebra_map_eq, "]"] [] [] },
+   { intros [ident i, ident hip, "_"],
+     rcases [expr hf hip, "with", "⟨", ident i, ",", ident rfl, "⟩"],
+     simp [] [] [] ["[", expr partial_inv_left hfi, "]"] [] [] },
+   { refl }
+ end⟩
 
-theorem vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-  (bind₁ f φ).vars ⊆ φ.vars.bUnion fun i => (f i).vars :=
-  by 
-    calc (bind₁ f φ).vars = (φ.support.sum fun x : σ →₀ ℕ => (bind₁ f) (monomial x (coeff x φ))).vars :=
-      by 
-        rw [←AlgHom.map_sum,
-          ←φ.as_sum]_ ≤ φ.support.bUnion fun i : σ →₀ ℕ => ((bind₁ f) (monomial i (coeff i φ))).vars :=
-      vars_sum_subset _ _ _ = φ.support.bUnion fun d : σ →₀ ℕ => (C (coeff d φ)*∏i in d.support, f i ^ d i).vars :=
-      by 
-        simp only [bind₁_monomial]_ ≤ φ.support.bUnion fun d : σ →₀ ℕ => d.support.bUnion fun i => (f i).vars :=
-      _ _ ≤ φ.vars.bUnion fun i : σ => (f i).vars := _
-    ·
-      apply Finset.bUnion_mono 
-      intro d hd 
-      calc
-        (C (coeff d φ)*∏i : σ in d.support, f i ^ d i).vars ≤
-          (C (coeff d φ)).vars ∪ (∏i : σ in d.support, f i ^ d i).vars :=
-        vars_mul _ _ _ ≤ (∏i : σ in d.support, f i ^ d i).vars :=
-        by 
-          simp only [Finset.empty_union, vars_C, Finset.le_iff_subset,
-            Finset.Subset.refl]_ ≤ d.support.bUnion fun i : σ => (f i ^ d i).vars :=
-        vars_prod _ _ ≤ d.support.bUnion fun i : σ => (f i).vars := _ 
-      apply Finset.bUnion_mono 
-      intro i hi 
-      apply vars_pow
-    ·
-      intro j 
-      simpRw [Finset.mem_bUnion]
-      rintro ⟨d, hd, ⟨i, hi, hj⟩⟩
-      exact ⟨i, (mem_vars _).mpr ⟨d, hd, hi⟩, hj⟩
+-- error in Data.MvPolynomial.Variables: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem vars_bind₁
+(f : σ → mv_polynomial τ R)
+(φ : mv_polynomial σ R) : «expr ⊆ »((bind₁ f φ).vars, φ.vars.bUnion (λ i, (f i).vars)) :=
+begin
+  calc
+    «expr = »((bind₁ f φ).vars, (φ.support.sum (λ
+       x : «expr →₀ »(σ, exprℕ()), bind₁ f (monomial x (coeff x φ)))).vars) : by { rw ["[", "<-", expr alg_hom.map_sum, ",", "<-", expr φ.as_sum, "]"] [] }
+    «expr ≤ »(..., φ.support.bUnion (λ
+      i : «expr →₀ »(σ, exprℕ()), (bind₁ f (monomial i (coeff i φ))).vars)) : vars_sum_subset _ _
+    «expr = »(..., φ.support.bUnion (λ
+      d : «expr →₀ »(σ, exprℕ()), «expr * »(C (coeff d φ), «expr∏ in , »((i), d.support, «expr ^ »(f i, d i))).vars)) : by simp [] [] ["only"] ["[", expr bind₁_monomial, "]"] [] []
+    «expr ≤ »(..., φ.support.bUnion (λ d : «expr →₀ »(σ, exprℕ()), d.support.bUnion (λ i, (f i).vars))) : _
+    «expr ≤ »(..., φ.vars.bUnion (λ i : σ, (f i).vars)) : _,
+  { apply [expr finset.bUnion_mono],
+    intros [ident d, ident hd],
+    calc
+      «expr ≤ »(«expr * »(C (coeff d φ), «expr∏ in , »((i : σ), d.support, «expr ^ »(f i, d i))).vars, «expr ∪ »((C (coeff d φ)).vars, «expr∏ in , »((i : σ), d.support, «expr ^ »(f i, d i)).vars)) : vars_mul _ _
+      «expr ≤ »(..., «expr∏ in , »((i : σ), d.support, «expr ^ »(f i, d i)).vars) : by simp [] [] ["only"] ["[", expr finset.empty_union, ",", expr vars_C, ",", expr finset.le_iff_subset, ",", expr finset.subset.refl, "]"] [] []
+      «expr ≤ »(..., d.support.bUnion (λ i : σ, «expr ^ »(f i, d i).vars)) : vars_prod _
+      «expr ≤ »(..., d.support.bUnion (λ i : σ, (f i).vars)) : _,
+    apply [expr finset.bUnion_mono],
+    intros [ident i, ident hi],
+    apply [expr vars_pow] },
+  { intro [ident j],
+    simp_rw [expr finset.mem_bUnion] [],
+    rintro ["⟨", ident d, ",", ident hd, ",", "⟨", ident i, ",", ident hi, ",", ident hj, "⟩", "⟩"],
+    exact [expr ⟨i, (mem_vars _).mpr ⟨d, hd, hi⟩, hj⟩] }
+end
 
 theorem mem_vars_bind₁ (f : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) {j : τ} (h : j ∈ (bind₁ f φ).vars) :
   ∃ i : σ, i ∈ φ.vars ∧ j ∈ (f i).vars :=

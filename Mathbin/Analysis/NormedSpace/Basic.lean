@@ -42,12 +42,12 @@ instance (priority := 100)NormedRing.toSemiNormedRing [β : NormedRing α] : Sem
 /-- A seminormed commutative ring is a commutative ring endowed with a seminorm which satisfies
 the inequality `∥x y∥ ≤ ∥x∥ ∥y∥`. -/
 class SemiNormedCommRing(α : Type _) extends SemiNormedRing α where 
-  mul_comm : ∀ x y : α, (x*y) = y*x
+  mul_comm : ∀ (x y : α), (x*y) = y*x
 
 /-- A normed commutative ring is a commutative ring endowed with a norm which satisfies
 the inequality `∥x y∥ ≤ ∥x∥ ∥y∥`. -/
 class NormedCommRing(α : Type _) extends NormedRing α where 
-  mul_comm : ∀ x y : α, (x*y) = y*x
+  mul_comm : ∀ (x y : α), (x*y) = y*x
 
 /-- A normed commutative ring is a seminormed commutative ring. -/
 instance (priority := 100)NormedCommRing.toSemiNormedCommRing [β : NormedCommRing α] : SemiNormedCommRing α :=
@@ -117,7 +117,7 @@ theorem List.norm_prod_le' : ∀ {l : List α}, l ≠ [] → ∥l.prod∥ ≤ (l
     refine' le_transₓ (norm_mul_le _ _) (mul_le_mul_of_nonneg_left _ (norm_nonneg _))
     exact List.norm_prod_le' (List.cons_ne_nil b l)
 
-theorem List.norm_prod_le [NormOneClass α] : ∀ l : List α, ∥l.prod∥ ≤ (l.map norm).Prod
+theorem List.norm_prod_le [NormOneClass α] : ∀ (l : List α), ∥l.prod∥ ≤ (l.map norm).Prod
 | [] =>
   by 
     simp 
@@ -156,7 +156,7 @@ theorem norm_pow_le' (a : α) : ∀ {n : ℕ}, 0 < n → ∥a ^ n∥ ≤ ∥a∥
         (mul_le_mul (le_reflₓ _) (norm_pow_le' (Nat.succ_posₓ _)) (norm_nonneg _) (norm_nonneg _))
 
 /-- If `α` is a seminormed ring with `∥1∥=1`, then `∥a^n∥≤ ∥a∥^n`. See also `norm_pow_le'`. -/
-theorem norm_pow_le [NormOneClass α] (a : α) : ∀ n : ℕ, ∥a ^ n∥ ≤ ∥a∥ ^ n
+theorem norm_pow_le [NormOneClass α] (a : α) : ∀ (n : ℕ), ∥a ^ n∥ ≤ ∥a∥ ^ n
 | 0 =>
   by 
     simp 
@@ -166,11 +166,11 @@ theorem eventually_norm_pow_le (a : α) : ∀ᶠn : ℕ in at_top, ∥a ^ n∥ �
   eventually_at_top.mpr ⟨1, fun b h => norm_pow_le' a (Nat.succ_le_iff.mp h)⟩
 
 /-- In a seminormed ring, the left-multiplication `add_monoid_hom` is bounded. -/
-theorem mul_left_bound (x : α) : ∀ y : α, ∥AddMonoidHom.mulLeft x y∥ ≤ ∥x∥*∥y∥ :=
+theorem mul_left_bound (x : α) : ∀ (y : α), ∥AddMonoidHom.mulLeft x y∥ ≤ ∥x∥*∥y∥ :=
   norm_mul_le x
 
 /-- In a seminormed ring, the right-multiplication `add_monoid_hom` is bounded. -/
-theorem mul_right_bound (x : α) : ∀ y : α, ∥AddMonoidHom.mulRight x y∥ ≤ ∥x∥*∥y∥ :=
+theorem mul_right_bound (x : α) : ∀ (y : α), ∥AddMonoidHom.mulRight x y∥ ≤ ∥x∥*∥y∥ :=
   fun y =>
     by 
       rw [mul_commₓ]
@@ -295,7 +295,7 @@ def nnnorm_hom : MonoidWithZeroHom α ℝ≥0  :=
   ⟨nnnorm, nnnorm_zero, nnnorm_one, nnnorm_mul⟩
 
 @[simp]
-theorem norm_pow (a : α) : ∀ n : ℕ, ∥a ^ n∥ = ∥a∥ ^ n :=
+theorem norm_pow (a : α) : ∀ (n : ℕ), ∥a ^ n∥ = ∥a∥ ^ n :=
   (norm_hom.toMonoidHom : α →* ℝ).map_pow a
 
 @[simp]
@@ -329,11 +329,11 @@ theorem nnnorm_inv (a : α) : ∥a⁻¹∥₊ = ∥a∥₊⁻¹ :=
       simp 
 
 @[simp]
-theorem norm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥ = ∥a∥ ^ n :=
+theorem norm_zpow : ∀ (a : α) (n : ℤ), ∥a ^ n∥ = ∥a∥ ^ n :=
   (norm_hom : MonoidWithZeroHom α ℝ).map_zpow
 
 @[simp]
-theorem nnnorm_zpow : ∀ a : α n : ℤ, ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
+theorem nnnorm_zpow : ∀ (a : α) (n : ℤ), ∥a ^ n∥₊ = ∥a∥₊ ^ n :=
   (nnnorm_hom : MonoidWithZeroHom α ℝ≥0 ).map_zpow
 
 -- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -617,7 +617,7 @@ set_option extends_priority 920
 the equality `∥c • x∥ = ∥c∥ ∥x∥`. We require only `∥c • x∥ ≤ ∥c∥ ∥x∥` in the definition, then prove
 `∥c • x∥ = ∥c∥ ∥x∥` in `norm_smul`. -/
 class SemiNormedSpace(α : Type _)(β : Type _)[NormedField α][SemiNormedGroup β] extends Module α β where 
-  norm_smul_le : ∀ a : α b : β, ∥a • b∥ ≤ ∥a∥*∥b∥
+  norm_smul_le : ∀ (a : α) (b : β), ∥a • b∥ ≤ ∥a∥*∥b∥
 
 set_option extends_priority 920
 
@@ -625,7 +625,7 @@ set_option extends_priority 920
 equality `∥c • x∥ = ∥c∥ ∥x∥`. We require only `∥c • x∥ ≤ ∥c∥ ∥x∥` in the definition, then prove
 `∥c • x∥ = ∥c∥ ∥x∥` in `norm_smul`. -/
 class NormedSpace(α : Type _)(β : Type _)[NormedField α][NormedGroup β] extends Module α β where 
-  norm_smul_le : ∀ a : α b : β, ∥a • b∥ ≤ ∥a∥*∥b∥
+  norm_smul_le : ∀ (a : α) (b : β), ∥a • b∥ ≤ ∥a∥*∥b∥
 
 /-- A normed space is a seminormed space. -/
 instance (priority := 100)NormedSpace.toSemiNormedSpace [NormedField α] [NormedGroup β] [γ : NormedSpace α β] :
@@ -798,17 +798,18 @@ instance Prod.semiNormedSpace : SemiNormedSpace α (E × F) :=
           by 
             simp [Prod.semi_norm_def, norm_smul, mul_max_of_nonneg] }
 
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The product of finitely many seminormed spaces is a seminormed space, with the sup norm. -/
-instance Pi.semiNormedSpace {E : ι → Type _} [Fintype ι] [∀ i, SemiNormedGroup (E i)] [∀ i, SemiNormedSpace α (E i)] :
-  SemiNormedSpace α (∀ i, E i) :=
-  { norm_smul_le :=
-      fun a f =>
-        le_of_eqₓ$
-          show
-            («expr↑ » (Finset.sup Finset.univ fun b : ι => ∥a • f b∥₊) : ℝ) =
-              ∥a∥₊*«expr↑ » (Finset.sup Finset.univ fun b : ι => ∥f b∥₊)by
-            
-            simp only [(Nnreal.coe_mul _ _).symm, Nnreal.mul_finset_sup, nnnorm_smul] }
+instance pi.semi_normed_space
+{E : ι → Type*}
+[fintype ι]
+[∀ i, semi_normed_group (E i)]
+[∀ i, semi_normed_space α (E i)] : semi_normed_space α (∀ i, E i) :=
+{ norm_smul_le := λ
+  a
+  f, «expr $ »(le_of_eq, show «expr = »((«expr↑ »(finset.sup finset.univ (λ
+      b : ι, «expr∥ ∥₊»(«expr • »(a, f b)))) : exprℝ()), «expr * »(«expr∥ ∥₊»(a), «expr↑ »(finset.sup finset.univ (λ
+       b : ι, «expr∥ ∥₊»(f b))))), by simp [] [] ["only"] ["[", expr (nnreal.coe_mul _ _).symm, ",", expr nnreal.mul_finset_sup, ",", expr nnnorm_smul, "]"] [] []) }
 
 /-- A subspace of a seminormed space is also a normed space, with the restriction of the norm. -/
 instance Submodule.semiNormedSpace {𝕜 R : Type _} [HasScalar 𝕜 R] [NormedField 𝕜] [Ringₓ R] {E : Type _}
@@ -920,12 +921,12 @@ section NormedAlgebra
 /-- A seminormed algebra `𝕜'` over `𝕜` is an algebra endowed with a seminorm for which the
 embedding of `𝕜` in `𝕜'` is an isometry. -/
 class SemiNormedAlgebra(𝕜 : Type _)(𝕜' : Type _)[NormedField 𝕜][SemiNormedRing 𝕜'] extends Algebra 𝕜 𝕜' where 
-  norm_algebra_map_eq : ∀ x : 𝕜, ∥algebraMap 𝕜 𝕜' x∥ = ∥x∥
+  norm_algebra_map_eq : ∀ (x : 𝕜), ∥algebraMap 𝕜 𝕜' x∥ = ∥x∥
 
 /-- A normed algebra `𝕜'` over `𝕜` is an algebra endowed with a norm for which the embedding of
 `𝕜` in `𝕜'` is an isometry. -/
 class NormedAlgebra(𝕜 : Type _)(𝕜' : Type _)[NormedField 𝕜][NormedRing 𝕜'] extends Algebra 𝕜 𝕜' where 
-  norm_algebra_map_eq : ∀ x : 𝕜, ∥algebraMap 𝕜 𝕜' x∥ = ∥x∥
+  norm_algebra_map_eq : ∀ (x : 𝕜), ∥algebraMap 𝕜 𝕜' x∥ = ∥x∥
 
 /-- A normed algebra is a seminormed algebra. -/
 instance (priority := 100)NormedAlgebra.toSemiNormedAlgebra (𝕜 : Type _) (𝕜' : Type _) [NormedField 𝕜] [NormedRing 𝕜']
@@ -1102,31 +1103,50 @@ open Finset
 
 open_locale Classical
 
-theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable f) (hg : Summable g) (hf' : 0 ≤ f)
-  (hg' : 0 ≤ g) : Summable fun x : ι × ι' => f x.1*g x.2 :=
-  let ⟨s, hf⟩ := hf 
-  let ⟨t, hg⟩ := hg 
-  suffices this : ∀ u : Finset (ι × ι'), (∑x in u, f x.1*g x.2) ≤ s*t from
-    summable_of_sum_le (fun x => mul_nonneg (hf' _) (hg' _)) this 
-  fun u =>
-    calc (∑x in u, f x.1*g x.2) ≤ ∑x in (u.image Prod.fst).product (u.image Prod.snd), f x.1*g x.2 :=
-      sum_mono_set_of_nonneg (fun x => mul_nonneg (hf' _) (hg' _)) subset_product 
-      _ = ∑x in u.image Prod.fst, ∑y in u.image Prod.snd, f x*g y := sum_product 
-      _ = ∑x in u.image Prod.fst, f x*∑y in u.image Prod.snd, g y := sum_congr rfl fun x _ => mul_sum.symm 
-      _ ≤ ∑x in u.image Prod.fst, f x*t :=
-      sum_le_sum fun x _ => mul_le_mul_of_nonneg_left (sum_le_has_sum _ (fun _ _ => hg' _) hg) (hf' _)
-      _ = (∑x in u.image Prod.fst, f x)*t := sum_mul.symm 
-      _ ≤ s*t := mul_le_mul_of_nonneg_right (sum_le_has_sum _ (fun _ _ => hf' _) hf) (hg.nonneg$ fun _ => hg' _)
-      
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable.mul_of_nonneg
+{f : ι → exprℝ()}
+{g : ι' → exprℝ()}
+(hf : summable f)
+(hg : summable g)
+(hf' : «expr ≤ »(0, f))
+(hg' : «expr ≤ »(0, g)) : summable (λ x : «expr × »(ι, ι'), «expr * »(f x.1, g x.2)) :=
+let ⟨s, hf⟩ := hf in
+let ⟨t, hg⟩ := hg in
+suffices this : ∀
+u : finset «expr × »(ι, ι'), «expr ≤ »(«expr∑ in , »((x), u, «expr * »(f x.1, g x.2)), «expr * »(s, t)), from summable_of_sum_le (λ
+ x, mul_nonneg (hf' _) (hg' _)) this,
+assume u, calc
+  «expr ≤ »(«expr∑ in , »((x), u, «expr * »(f x.1, g x.2)), «expr∑ in , »((x), (u.image prod.fst).product (u.image prod.snd), «expr * »(f x.1, g x.2))) : sum_mono_set_of_nonneg (λ
+   x, mul_nonneg (hf' _) (hg' _)) subset_product
+  «expr = »(..., «expr∑ in , »((x), u.image prod.fst, «expr∑ in , »((y), u.image prod.snd, «expr * »(f x, g y)))) : sum_product
+  «expr = »(..., «expr∑ in , »((x), u.image prod.fst, «expr * »(f x, «expr∑ in , »((y), u.image prod.snd, g y)))) : sum_congr rfl (λ
+   x _, mul_sum.symm)
+  «expr ≤ »(..., «expr∑ in , »((x), u.image prod.fst, «expr * »(f x, t))) : sum_le_sum (λ
+   x _, mul_le_mul_of_nonneg_left (sum_le_has_sum _ (λ _ _, hg' _) hg) (hf' _))
+  «expr = »(..., «expr * »(«expr∑ in , »((x), u.image prod.fst, f x), t)) : sum_mul.symm
+  «expr ≤ »(..., «expr * »(s, t)) : mul_le_mul_of_nonneg_right (sum_le_has_sum _ (λ
+    _ _, hf' _) hf) «expr $ »(hg.nonneg, λ _, hg' _)
 
-theorem Summable.mul_norm {f : ι → α} {g : ι' → α} (hf : Summable fun x => ∥f x∥) (hg : Summable fun x => ∥g x∥) :
-  Summable fun x : ι × ι' => ∥f x.1*g x.2∥ :=
-  summable_of_nonneg_of_le (fun x => norm_nonneg (f x.1*g x.2)) (fun x => norm_mul_le (f x.1) (g x.2))
-    (hf.mul_of_nonneg hg (fun x => norm_nonneg$ f x) fun x => norm_nonneg$ g x : _)
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable.mul_norm
+{f : ι → α}
+{g : ι' → α}
+(hf : summable (λ x, «expr∥ ∥»(f x)))
+(hg : summable (λ x, «expr∥ ∥»(g x))) : summable (λ x : «expr × »(ι, ι'), «expr∥ ∥»(«expr * »(f x.1, g x.2))) :=
+summable_of_nonneg_of_le (λ
+ x, norm_nonneg «expr * »(f x.1, g x.2)) (λ
+ x, norm_mul_le (f x.1) (g x.2)) (hf.mul_of_nonneg hg (λ
+ x, «expr $ »(norm_nonneg, f x)) (λ x, «expr $ »(norm_nonneg, g x)) : _)
 
-theorem summable_mul_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι' → α} (hf : Summable fun x => ∥f x∥)
-  (hg : Summable fun x => ∥g x∥) : Summable fun x : ι × ι' => f x.1*g x.2 :=
-  summable_of_summable_norm (hf.mul_norm hg)
+-- error in Analysis.NormedSpace.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_mul_of_summable_norm
+[complete_space α]
+{f : ι → α}
+{g : ι' → α}
+(hf : summable (λ x, «expr∥ ∥»(f x)))
+(hg : summable (λ x, «expr∥ ∥»(g x))) : summable (λ x : «expr × »(ι, ι'), «expr * »(f x.1, g x.2)) :=
+summable_of_summable_norm (hf.mul_norm hg)
 
 /-- Product of two infinites sums indexed by arbitrary types.
     See also `tsum_mul_tsum` if `f` and `g` are *not* absolutely summable. -/

@@ -63,8 +63,8 @@ begin
 end
 
 /-- A quadratic has no root if its discriminant has no square root. -/
-theorem quadratic_ne_zero_of_discrim_ne_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (h : ∀ s : R, discrim a b c ≠ s*s) (x : R) :
-  ((((a*x)*x)+b*x)+c) ≠ 0 :=
+theorem quadratic_ne_zero_of_discrim_ne_sq (h2 : (2 : R) ≠ 0) (ha : a ≠ 0) (h : ∀ (s : R), discrim a b c ≠ s*s)
+  (x : R) : ((((a*x)*x)+b*x)+c) ≠ 0 :=
   by 
     intro h' 
     rw [quadratic_eq_zero_iff_discrim_eq_sq h2 ha, sq] at h' 

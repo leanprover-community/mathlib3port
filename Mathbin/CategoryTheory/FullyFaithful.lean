@@ -31,8 +31,8 @@ specifying a particular preimage of each `f : F.obj X ⟶ F.obj Y`.
 See https://stacks.math.columbia.edu/tag/001C.
 -/
 class full(F : C ⥤ D) where 
-  Preimage : ∀ {X Y : C} f : F.obj X ⟶ F.obj Y, X ⟶ Y 
-  witness' : ∀ {X Y : C} f : F.obj X ⟶ F.obj Y, F.map (preimage f) = f :=  by 
+  Preimage : ∀ {X Y : C} (f : F.obj X ⟶ F.obj Y), X ⟶ Y 
+  witness' : ∀ {X Y : C} (f : F.obj X ⟶ F.obj Y), F.map (preimage f) = f :=  by 
   runTac 
     obviously
 

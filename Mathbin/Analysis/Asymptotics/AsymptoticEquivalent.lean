@@ -213,7 +213,7 @@ end NormedField
 
 section Smul
 
--- error in Analysis.Asymptotics.AsymptoticEquivalent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Asymptotics.AsymptoticEquivalent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem is_equivalent.smul
 {α E 𝕜 : Type*}
 [normed_field 𝕜]

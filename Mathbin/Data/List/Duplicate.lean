@@ -136,7 +136,7 @@ theorem duplicate_iff_sublist : x ∈+ l ↔ [x, x] <+ l :=
         ·
           contradiction
 
-theorem nodup_iff_forall_not_duplicate : nodup l ↔ ∀ x : α, ¬x ∈+ l :=
+theorem nodup_iff_forall_not_duplicate : nodup l ↔ ∀ (x : α), ¬x ∈+ l :=
   by 
     simpRw [nodup_iff_sublist, duplicate_iff_sublist]
 
@@ -151,7 +151,7 @@ theorem duplicate_iff_two_le_count [DecidableEq α] : x ∈+ l ↔ 2 ≤ count x
   by 
     simp [duplicate_iff_sublist, le_count_iff_repeat_sublist]
 
-instance decidable_duplicate [DecidableEq α] (x : α) : ∀ l : List α, Decidable (x ∈+ l)
+instance decidable_duplicate [DecidableEq α] (x : α) : ∀ (l : List α), Decidable (x ∈+ l)
 | [] => is_false (not_duplicate_nil x)
 | y :: l =>
   match decidable_duplicate l with 

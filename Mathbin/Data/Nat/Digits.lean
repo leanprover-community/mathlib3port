@@ -83,7 +83,7 @@ theorem digits_zero_zero : digits 0 0 = [] :=
 theorem digits_zero_succ (n : ℕ) : digits 0 n.succ = [n+1] :=
   rfl
 
-theorem digits_zero_succ' : ∀ {n : ℕ} w : 0 < n, digits 0 n = [n]
+theorem digits_zero_succ' : ∀ {n : ℕ} (w : 0 < n), digits 0 n = [n]
 | 0, h =>
   absurd h
     (by 
@@ -104,7 +104,7 @@ theorem digits_add_two_add_one (b n : ℕ) : digits (b+2) (n+1) = ((n+1) % b+2) 
     rw [digits, digits_aux_def]
     exact succ_pos n
 
-theorem digits_def' : ∀ {b : ℕ} h : 2 ≤ b {n : ℕ} w : 0 < n, digits b n = n % b :: digits b (n / b)
+theorem digits_def' : ∀ {b : ℕ} (h : 2 ≤ b) {n : ℕ} (w : 0 < n), digits b n = n % b :: digits b (n / b)
 | 0, h =>
   absurd h
     (by 
@@ -176,19 +176,24 @@ theorem of_digits_eq_foldr {α : Type _} [Semiringₓ α] (b : α) (L : List ℕ
       dsimp [of_digits]
       rw [ih]
 
-theorem of_digits_eq_sum_map_with_index_aux (b : ℕ) (l : List ℕ) :
-  ((List.range l.length).zipWith ((fun i a : ℕ => a*b ^ i) ∘ succ) l).Sum =
-    b*((List.range l.length).zipWith (fun i a => a*b ^ i) l).Sum :=
-  by 
-    suffices  :
-      (List.range l.length).zipWith ((fun i a : ℕ => a*b ^ i) ∘ succ) l =
-        (List.range l.length).zipWith (fun i a => b*a*b ^ i) l
-    ·
-      simp [this]
-    congr 
-    ext 
-    simp [pow_succₓ]
-    ring
+-- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of_digits_eq_sum_map_with_index_aux
+(b : exprℕ())
+(l : list exprℕ()) : «expr = »(((list.range l.length).zip_with «expr ∘ »(λ
+   i
+   a : exprℕ(), «expr * »(a, «expr ^ »(b, i)), succ) l).sum, «expr * »(b, ((list.range l.length).zip_with (λ
+    i a, «expr * »(a, «expr ^ »(b, i))) l).sum)) :=
+begin
+  suffices [] [":", expr «expr = »((list.range l.length).zip_with «expr ∘ »(λ
+     i
+     a : exprℕ(), «expr * »(a, «expr ^ »(b, i)), succ) l, (list.range l.length).zip_with (λ
+     i a, «expr * »(b, «expr * »(a, «expr ^ »(b, i)))) l)],
+  { simp [] [] [] ["[", expr this, "]"] [] [] },
+  congr,
+  ext [] [] [],
+  simp [] [] [] ["[", expr pow_succ, "]"] [] [],
+  ring []
+end
 
 theorem of_digits_eq_sum_map_with_index (b : ℕ) (L : List ℕ) :
   of_digits b L = (L.map_with_index fun i a => a*b ^ i).Sum :=
@@ -244,7 +249,7 @@ theorem coe_int_of_digits (b : ℕ) (L : List ℕ) : ((of_digits b L : ℕ) : �
       pushCast 
       rw [ih]
 
-theorem digits_zero_of_eq_zero {b : ℕ} (h : 1 ≤ b) {L : List ℕ} (w : of_digits b L = 0) : ∀ l _ : l ∈ L, l = 0 :=
+theorem digits_zero_of_eq_zero {b : ℕ} (h : 1 ≤ b) {L : List ℕ} (w : of_digits b L = 0) : ∀ l (_ : l ∈ L), l = 0 :=
   by 
     induction' L with d L ih
     ·
@@ -260,8 +265,8 @@ theorem digits_zero_of_eq_zero {b : ℕ} (h : 1 ≤ b) {L : List ℕ} (w : of_di
       ·
         exact ih ((Nat.mul_right_inj h).mp (Nat.eq_zero_of_add_eq_zero_left w)) _ m
 
-theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀ l _ : l ∈ L, l < b)
-  (w₂ : ∀ h : L ≠ [], L.last h ≠ 0) : digits b (of_digits b L) = L :=
+theorem digits_of_digits (b : ℕ) (h : 2 ≤ b) (L : List ℕ) (w₁ : ∀ l (_ : l ∈ L), l < b)
+  (w₂ : ∀ (h : L ≠ []), L.last h ≠ 0) : digits b (of_digits b L) = L :=
   by 
     induction' L with d L ih
     ·
@@ -477,7 +482,7 @@ begin
 end
 
 /-- an n-digit number in base b is less than b^n if b ≥ 2 -/
-theorem of_digits_lt_base_pow_length {b : ℕ} {l : List ℕ} (hb : 2 ≤ b) (hl : ∀ x _ : x ∈ l, x < b) :
+theorem of_digits_lt_base_pow_length {b : ℕ} {l : List ℕ} (hb : 2 ≤ b) (hl : ∀ x (_ : x ∈ l), x < b) :
   of_digits b l < b ^ l.length :=
   by 
     rcases b with (_ | _ | b) <;>
@@ -658,16 +663,16 @@ theorem zmodeq_of_digits_digits (b b' : ℕ) (c : ℤ) (h : b' ≡ c [ZMOD b]) (
     rw [coe_int_of_digits]
     apply of_digits_zmodeq' _ _ _ h
 
-theorem of_digits_neg_one : ∀ L : List ℕ, of_digits (-1 : ℤ) L = (L.map fun n : ℕ => (n : ℤ)).alternatingSum
-| [] => rfl
-| [n] =>
-  by 
-    simp [of_digits, List.alternatingSum]
-| a :: b :: t =>
-  by 
-    simp only [of_digits, List.alternatingSum, List.map_consₓ, of_digits_neg_one t]
-    pushCast 
-    ring
+-- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of_digits_neg_one : ∀
+L : list exprℕ(), «expr = »(of_digits («expr- »(1) : exprℤ()) L, (L.map (λ n : exprℕ(), (n : exprℤ()))).alternating_sum)
+| «expr[ , ]»([]) := rfl
+| «expr[ , ]»([n]) := by simp [] [] [] ["[", expr of_digits, ",", expr list.alternating_sum, "]"] [] []
+| [«expr :: »/«expr :: »/«expr :: »](a, [«expr :: »/«expr :: »/«expr :: »](b, t)) := begin
+  simp [] [] ["only"] ["[", expr of_digits, ",", expr list.alternating_sum, ",", expr list.map_cons, ",", expr of_digits_neg_one t, "]"] [] [],
+  push_cast [] [],
+  ring []
+end
 
 -- error in Data.Nat.Digits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem modeq_eleven_digits_sum

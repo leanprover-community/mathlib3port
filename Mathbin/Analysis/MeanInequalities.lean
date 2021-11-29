@@ -429,8 +429,8 @@ variable{f g}
 /-- Hölder inequality: the scalar product of two functions is bounded by the product of their
 `L^p` and `L^q` norms when `p` and `q` are conjugate exponents. Version for sums over finite sets,
 with real-valued nonnegative functions. -/
-theorem inner_le_Lp_mul_Lq_of_nonneg (hpq : is_conjugate_exponent p q) (hf : ∀ i _ : i ∈ s, 0 ≤ f i)
-  (hg : ∀ i _ : i ∈ s, 0 ≤ g i) : (∑i in s, f i*g i) ≤ ((∑i in s, f i^p)^1 / p)*(∑i in s, g i^q)^1 / q :=
+theorem inner_le_Lp_mul_Lq_of_nonneg (hpq : is_conjugate_exponent p q) (hf : ∀ i (_ : i ∈ s), 0 ≤ f i)
+  (hg : ∀ i (_ : i ∈ s), 0 ≤ g i) : (∑i in s, f i*g i) ≤ ((∑i in s, f i^p)^1 / p)*(∑i in s, g i^q)^1 / q :=
   by 
     convert inner_le_Lp_mul_Lq s f g hpq using 3 <;>
       apply sum_congr rfl <;> intro i hi <;> simp only [abs_of_nonneg, hf i hi, hg i hi]
@@ -438,7 +438,7 @@ theorem inner_le_Lp_mul_Lq_of_nonneg (hpq : is_conjugate_exponent p q) (hf : ∀
 /-- Minkowski inequality: the `L_p` seminorm of the sum of two vectors is less than or equal
 to the sum of the `L_p`-seminorms of the summands. A version for `real`-valued nonnegative
 functions. -/
-theorem Lp_add_le_of_nonneg (hp : 1 ≤ p) (hf : ∀ i _ : i ∈ s, 0 ≤ f i) (hg : ∀ i _ : i ∈ s, 0 ≤ g i) :
+theorem Lp_add_le_of_nonneg (hp : 1 ≤ p) (hf : ∀ i (_ : i ∈ s), 0 ≤ f i) (hg : ∀ i (_ : i ∈ s), 0 ≤ g i) :
   ((∑i in s, (f i+g i)^p)^1 / p) ≤ ((∑i in s, f i^p)^1 / p)+(∑i in s, g i^p)^1 / p :=
   by 
     convert Lp_add_le s f g hp using 2 <;> [skip, congr 1, congr 1] <;>

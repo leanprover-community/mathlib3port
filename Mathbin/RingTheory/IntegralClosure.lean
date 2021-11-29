@@ -41,7 +41,7 @@ def RingHom.IsIntegralElem (f : R →+* A) (x : A) :=
 /-- A ring homomorphism `f : R →+* A` is said to be integral
 if every element `A` is integral with respect to the map `f` -/
 def RingHom.IsIntegral (f : R →+* A) :=
-  ∀ x : A, f.is_integral_elem x
+  ∀ (x : A), f.is_integral_elem x
 
 variable[Algebra R A](R)
 
@@ -198,7 +198,7 @@ begin
   exact [expr lt_of_le_of_lt degree_le_nat_degree (with_bot.coe_lt_coe.2 hk)]
 end
 
-theorem fg_adjoin_of_finite {s : Set A} (hfs : s.finite) (his : ∀ x _ : x ∈ s, IsIntegral R x) :
+theorem fg_adjoin_of_finite {s : Set A} (hfs : s.finite) (his : ∀ x (_ : x ∈ s), IsIntegral R x) :
   (Algebra.adjoin R s).toSubmodule.Fg :=
   Set.Finite.induction_on hfs
     (fun _ =>
@@ -217,7 +217,7 @@ theorem fg_adjoin_of_finite {s : Set A} (hfs : s.finite) (his : ∀ x _ : x ∈ 
               (fg_adjoin_singleton_of_integral _$ his a$ Set.mem_insert a s))
     his
 
-theorem is_noetherian_adjoin_finset [IsNoetherianRing R] (s : Finset A) (hs : ∀ x _ : x ∈ s, IsIntegral R x) :
+theorem is_noetherian_adjoin_finset [IsNoetherianRing R] (s : Finset A) (hs : ∀ x (_ : x ∈ s), IsIntegral R x) :
   IsNoetherian R (Algebra.adjoin R («expr↑ » s : Set A)) :=
   is_noetherian_of_fg_of_noetherian _ (fg_adjoin_of_finite s.finite_to_set hs)
 
@@ -408,14 +408,14 @@ theorem is_integral_of_is_integral_mul_unit {x y : A} {r : R} (hr : (algebraMap 
   (algebraMap R A).is_integral_of_is_integral_mul_unit x y r hr hx
 
 /-- Generalization of `is_integral_of_mem_closure` bootstrapped up from that lemma -/
-theorem is_integral_of_mem_closure' (G : Set A) (hG : ∀ x _ : x ∈ G, IsIntegral R x) :
-  ∀ x _ : x ∈ Subring.closure G, IsIntegral R x :=
+theorem is_integral_of_mem_closure' (G : Set A) (hG : ∀ x (_ : x ∈ G), IsIntegral R x) :
+  ∀ x (_ : x ∈ Subring.closure G), IsIntegral R x :=
   fun x hx =>
     Subring.closure_induction hx hG is_integral_zero is_integral_one (fun _ _ => is_integral_add)
       (fun _ => is_integral_neg) fun _ _ => is_integral_mul
 
 theorem is_integral_of_mem_closure'' {S : Type _} [CommRingₓ S] {f : R →+* S} (G : Set S)
-  (hG : ∀ x _ : x ∈ G, f.is_integral_elem x) : ∀ x _ : x ∈ Subring.closure G, f.is_integral_elem x :=
+  (hG : ∀ x (_ : x ∈ G), f.is_integral_elem x) : ∀ x (_ : x ∈ Subring.closure G), f.is_integral_elem x :=
   fun x hx => @is_integral_of_mem_closure' R S _ _ f.to_algebra G hG x hx
 
 theorem IsIntegral.pow {x : A} (h : IsIntegral R x) (n : ℕ) : IsIntegral R (x^n) :=
@@ -427,17 +427,17 @@ theorem IsIntegral.nsmul {x : A} (h : IsIntegral R x) (n : ℕ) : IsIntegral R (
 theorem IsIntegral.zsmul {x : A} (h : IsIntegral R x) (n : ℤ) : IsIntegral R (n • x) :=
   (integralClosure R A).zsmul_mem h n
 
-theorem IsIntegral.multiset_prod {s : Multiset A} (h : ∀ x _ : x ∈ s, IsIntegral R x) : IsIntegral R s.prod :=
+theorem IsIntegral.multiset_prod {s : Multiset A} (h : ∀ x (_ : x ∈ s), IsIntegral R x) : IsIntegral R s.prod :=
   (integralClosure R A).multiset_prod_mem h
 
-theorem IsIntegral.multiset_sum {s : Multiset A} (h : ∀ x _ : x ∈ s, IsIntegral R x) : IsIntegral R s.sum :=
+theorem IsIntegral.multiset_sum {s : Multiset A} (h : ∀ x (_ : x ∈ s), IsIntegral R x) : IsIntegral R s.sum :=
   (integralClosure R A).multiset_sum_mem h
 
-theorem IsIntegral.prod {α : Type _} {s : Finset α} (f : α → A) (h : ∀ x _ : x ∈ s, IsIntegral R (f x)) :
+theorem IsIntegral.prod {α : Type _} {s : Finset α} (f : α → A) (h : ∀ x (_ : x ∈ s), IsIntegral R (f x)) :
   IsIntegral R (∏x in s, f x) :=
   (integralClosure R A).prod_mem h
 
-theorem IsIntegral.sum {α : Type _} {s : Finset α} (f : α → A) (h : ∀ x _ : x ∈ s, IsIntegral R (f x)) :
+theorem IsIntegral.sum {α : Type _} {s : Finset α} (f : α → A) (h : ∀ x (_ : x ∈ s), IsIntegral R (f x)) :
   IsIntegral R (∑x in s, f x) :=
   (integralClosure R A).sum_mem h
 

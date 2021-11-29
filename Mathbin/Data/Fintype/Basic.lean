@@ -74,7 +74,7 @@ variable{α β γ : Type _}
   together with a proof that everything of type `α` is in the list. -/
 class Fintype(α : Type _) where 
   elems{} : Finset α 
-  complete : ∀ x : α, x ∈ elems
+  complete : ∀ (x : α), x ∈ elems
 
 namespace Finset
 
@@ -120,7 +120,7 @@ instance  : OrderTop (Finset α) :=
   { top := univ, le_top := subset_univ }
 
 instance  [DecidableEq α] : BooleanAlgebra (Finset α) :=
-  { Finset.orderTop, Finset.generalizedBooleanAlgebra with Compl := fun s => univ \ s,
+  { Finset.orderTop, Finset.orderBot, Finset.generalizedBooleanAlgebra with Compl := fun s => univ \ s,
     inf_compl_le_bot :=
       fun s x hx =>
         by 
@@ -186,14 +186,14 @@ theorem inter_univ [DecidableEq α] (s : Finset α) : s ∩ univ = s :=
     rw [inter_comm, univ_inter]
 
 @[simp]
-theorem piecewise_univ [∀ i : α, Decidable (i ∈ (univ : Finset α))] {δ : α → Sort _} (f g : ∀ i, δ i) :
+theorem piecewise_univ [∀ (i : α), Decidable (i ∈ (univ : Finset α))] {δ : α → Sort _} (f g : ∀ i, δ i) :
   univ.piecewise f g = f :=
   by 
     ext i 
     simp [piecewise]
 
-theorem piecewise_compl [DecidableEq α] (s : Finset α) [∀ i : α, Decidable (i ∈ s)]
-  [∀ i : α, Decidable (i ∈ «expr ᶜ» s)] {δ : α → Sort _} (f g : ∀ i, δ i) :
+theorem piecewise_compl [DecidableEq α] (s : Finset α) [∀ (i : α), Decidable (i ∈ s)]
+  [∀ (i : α), Decidable (i ∈ «expr ᶜ» s)] {δ : α → Sort _} (f g : ∀ i, δ i) :
   («expr ᶜ» s).piecewise f g = s.piecewise g f :=
   by 
     ext i 
@@ -245,12 +245,12 @@ namespace Fintype
 
 instance decidable_pi_fintype {α} {β : α → Type _} [∀ a, DecidableEq (β a)] [Fintype α] : DecidableEq (∀ a, β a) :=
   fun f g =>
-    decidableOfIff (∀ a _ : a ∈ Fintype.elems α, f a = g a)
+    decidableOfIff (∀ a (_ : a ∈ Fintype.elems α), f a = g a)
       (by 
         simp [Function.funext_iffₓ, Fintype.complete])
 
 instance decidable_forall_fintype {p : α → Prop} [DecidablePred p] [Fintype α] : Decidable (∀ a, p a) :=
-  decidableOfIff (∀ a _ : a ∈ @univ α _, p a)
+  decidableOfIff (∀ a (_ : a ∈ @univ α _), p a)
     (by 
       simp )
 
@@ -330,13 +330,13 @@ theorem exists_min [Fintype α] [Nonempty α] {β : Type _} [LinearOrderₓ β] 
     simpa using exists_min_image univ f univ_nonempty
 
 /-- Construct a proof of `fintype α` from a universal multiset -/
-def of_multiset [DecidableEq α] (s : Multiset α) (H : ∀ x : α, x ∈ s) : Fintype α :=
+def of_multiset [DecidableEq α] (s : Multiset α) (H : ∀ (x : α), x ∈ s) : Fintype α :=
   ⟨s.to_finset,
     by 
       simpa using H⟩
 
 /-- Construct a proof of `fintype α` from a universal list -/
-def of_list [DecidableEq α] (l : List α) (H : ∀ x : α, x ∈ l) : Fintype α :=
+def of_list [DecidableEq α] (l : List α) (H : ∀ (x : α), x ∈ l) : Fintype α :=
   ⟨l.to_finset,
     by 
       simpa using H⟩
@@ -350,6 +350,7 @@ by have [] [] [":=", expr and.intro univ.2 mem_univ_val]; exact [expr ⟨_, by r
 def card α [Fintype α] : ℕ :=
   (@univ α _).card
 
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- There is (computably) an equivalence between `α` and `fin (card α)`.
 
 Since it is not unique and depends on which permutation
@@ -361,14 +362,12 @@ and `fintype.trunc_equiv_fin_of_card_eq` and `fintype.equiv_fin_of_card_eq`
 for an equiv `α ≃ fin n` given `fintype.card α = n`.
 
 See `fintype.trunc_fin_bijection` for a version without `[decidable_eq α]`.
--/
-def trunc_equiv_fin α [DecidableEq α] [Fintype α] : Trunc (α ≃ Finₓ (card α)) :=
-  by 
-    unfold card Finset.card 
-    exact
-      Quot.recOnSubsingletonₓ (@univ α _).1
-        (fun l h : ∀ x : α, x ∈ l nd : l.nodup => Trunc.mk (nd.nth_le_equiv_of_forall_mem_list _ h).symm) mem_univ_val
-        univ.2
+-/ def trunc_equiv_fin (α) [decidable_eq α] [fintype α] : trunc «expr ≃ »(α, fin (card α)) :=
+by { unfold [ident card, ident finset.card] [],
+  exact [expr quot.rec_on_subsingleton (@univ α _).1 (λ
+    (l)
+    (h : ∀ x : α, «expr ∈ »(x, l))
+    (nd : l.nodup), trunc.mk (nd.nth_le_equiv_of_forall_mem_list _ h).symm) mem_univ_val univ.2] }
 
 -- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- There is (noncomputably) an equivalence between `α` and `fin (card α)`.
@@ -380,6 +379,7 @@ for an equiv `α ≃ fin n` given `fintype.card α = n`.
 by { letI [] [] [":=", expr classical.dec_eq α],
   exact [expr (trunc_equiv_fin α).out] }
 
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- There is (computably) a bijection between `fin (card α)` and `α`.
 
 Since it is not unique and depends on which permutation
@@ -388,14 +388,12 @@ preserve computability.
 
 See `fintype.trunc_equiv_fin` for a version that gives an equivalence
 given `[decidable_eq α]`.
--/
-def trunc_fin_bijection α [Fintype α] : Trunc { f : Finₓ (card α) → α // bijective f } :=
-  by 
-    dunfold card Finset.card 
-    exact
-      Quot.recOnSubsingletonₓ (@univ α _).1
-        (fun l h : ∀ x : α, x ∈ l nd : l.nodup => Trunc.mk (nd.nth_le_bijection_of_forall_mem_list _ h)) mem_univ_val
-        univ.2
+-/ def trunc_fin_bijection (α) [fintype α] : trunc {f : fin (card α) → α // bijective f} :=
+by { dunfold [ident card, ident finset.card] [],
+  exact [expr quot.rec_on_subsingleton (@univ α _).1 (λ
+    (l)
+    (h : ∀ x : α, «expr ∈ »(x, l))
+    (nd : l.nodup), trunc.mk (nd.nth_le_bijection_of_forall_mem_list _ h)) mem_univ_val univ.2] }
 
 instance  (α : Type _) : Subsingleton (Fintype α) :=
   ⟨fun ⟨s₁, h₁⟩ ⟨s₂, h₂⟩ =>
@@ -404,15 +402,15 @@ instance  (α : Type _) : Subsingleton (Fintype α) :=
 
 /-- Given a predicate that can be represented by a finset, the subtype
 associated to the predicate is a fintype. -/
-protected def Subtype {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) : Fintype { x // p x } :=
+protected def Subtype {p : α → Prop} (s : Finset α) (H : ∀ (x : α), x ∈ s ↔ p x) : Fintype { x // p x } :=
   ⟨⟨Multiset.pmap Subtype.mk s.1 fun x => (H x).1, Multiset.nodup_pmap (fun a _ b _ => congr_argₓ Subtype.val) s.2⟩,
     fun ⟨x, px⟩ => Multiset.mem_pmap.2 ⟨x, (H x).2 px, rfl⟩⟩
 
-theorem subtype_card {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) :
+theorem subtype_card {p : α → Prop} (s : Finset α) (H : ∀ (x : α), x ∈ s ↔ p x) :
   @card { x // p x } (Fintype.subtype s H) = s.card :=
   Multiset.card_pmap _ _ _
 
-theorem card_of_subtype {p : α → Prop} (s : Finset α) (H : ∀ x : α, x ∈ s ↔ p x) [Fintype { x // p x }] :
+theorem card_of_subtype {p : α → Prop} (s : Finset α) (H : ∀ (x : α), x ∈ s ↔ p x) [Fintype { x // p x }] :
   card { x // p x } = s.card :=
   by 
     rw [←subtype_card s H]
@@ -1122,7 +1120,7 @@ theorem card_pos [h : Nonempty α] : 0 < card α :=
 theorem card_ne_zero [Nonempty α] : card α ≠ 0 :=
   ne_of_gtₓ card_pos
 
-theorem card_le_one_iff : card α ≤ 1 ↔ ∀ a b : α, a = b :=
+theorem card_le_one_iff : card α ≤ 1 ↔ ∀ (a b : α), a = b :=
   let n := card α 
   have hn : n = card α := rfl 
   match n, hn with 
@@ -1445,10 +1443,17 @@ instance Pi.fintype {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype
     by 
       simp ⟩
 
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem Fintype.pi_finset_univ {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype α] [∀ a, Fintype (β a)] :
-  (Fintype.piFinset fun a : α => (Finset.univ : Finset (β a))) = (Finset.univ : Finset (∀ a, β a)) :=
-  rfl
+theorem fintype.pi_finset_univ
+{α : Type*}
+{β : α → Type*}
+[decidable_eq α]
+[fintype α]
+[∀
+ a, fintype (β a)] : «expr = »(fintype.pi_finset (λ
+  a : α, (finset.univ : finset (β a))), (finset.univ : finset (∀ a, β a))) :=
+rfl
 
 instance DArray.fintype {n : ℕ} {α : Finₓ n → Type _} [∀ n, Fintype (α n)] : Fintype (DArray n α) :=
   Fintype.ofEquiv _ (Equiv.dArrayEquivFin _).symm
@@ -1585,18 +1590,22 @@ instance Set.fintype [Fintype α] : Fintype (Set α) :=
 theorem Fintype.card_set [Fintype α] : Fintype.card (Set α) = 2 ^ Fintype.card α :=
   (Finset.card_map _).trans (Finset.card_powerset _)
 
-instance pfunFintype (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, Fintype (α hp)] : Fintype (∀ hp : p, α hp) :=
+instance pfunFintype (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, Fintype (α hp)] : Fintype (∀ (hp : p), α hp) :=
   if hp : p then Fintype.ofEquiv (α hp) ⟨fun a _ => a, fun f => f hp, fun _ => rfl, fun _ => rfl⟩ else
     ⟨singleton fun h => (hp h).elim,
       by 
         simp [hp, Function.funext_iffₓ]⟩
 
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem Finset.univ_pi_univ {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype α] [∀ a, Fintype (β a)] :
-  (Finset.univ.pi fun a : α => (Finset.univ : Finset (β a))) = Finset.univ :=
-  by 
-    ext 
-    simp 
+theorem finset.univ_pi_univ
+{α : Type*}
+{β : α → Type*}
+[decidable_eq α]
+[fintype α]
+[∀ a, fintype (β a)] : «expr = »(finset.univ.pi (λ a : α, (finset.univ : finset (β a))), finset.univ) :=
+by { ext [] [] [],
+  simp [] [] [] [] [] [] }
 
 theorem mem_image_univ_iff_mem_range {α β : Type _} [Fintype α] [DecidableEq β] {f : α → β} {b : β} :
   b ∈ univ.Image f ↔ b ∈ Set.Range f :=
@@ -1609,9 +1618,9 @@ indices, and a function that for each `i ∈ l` gives a term of the
 corresponding quotient type, then there is a corresponding term in the
 quotient of the product of the setoids indexed by `l`. -/
 def Quotientₓ.finChoiceAux {ι : Type _} [DecidableEq ι] {α : ι → Type _} [S : ∀ i, Setoidₓ (α i)] :
-  ∀ l : List ι,
-    (∀ i _ : i ∈ l, Quotientₓ (S i)) →
-      @Quotientₓ (∀ i _ : i ∈ l, α i)
+  ∀ (l : List ι),
+    (∀ i (_ : i ∈ l), Quotientₓ (S i)) →
+      @Quotientₓ (∀ i (_ : i ∈ l), α i)
         (by 
           infer_instance)
 | [], f => «expr⟦ ⟧» fun i => False.elim
@@ -1637,7 +1646,7 @@ def Quotientₓ.finChoiceAux {ι : Type _} [DecidableEq ι] {α : ι → Type _}
       exact h₂ _ _
 
 theorem Quotientₓ.fin_choice_aux_eq {ι : Type _} [DecidableEq ι] {α : ι → Type _} [S : ∀ i, Setoidₓ (α i)] :
-  ∀ l : List ι f : ∀ i _ : i ∈ l, α i, (Quotientₓ.finChoiceAux l fun i h => «expr⟦ ⟧» (f i h)) = «expr⟦ ⟧» f
+  ∀ (l : List ι) (f : ∀ i (_ : i ∈ l), α i), (Quotientₓ.finChoiceAux l fun i h => «expr⟦ ⟧» (f i h)) = «expr⟦ ⟧» f
 | [], f => Quotientₓ.sound fun i h => h.elim
 | i :: l, f =>
   by 
@@ -1647,7 +1656,7 @@ theorem Quotientₓ.fin_choice_aux_eq {ι : Type _} [DecidableEq ι] {α : ι �
     subst j 
     rfl
 
--- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a collection of setoids indexed by a fintype `ι` and a
 function that for each `i : ι` gives a term of the corresponding
 quotient type, then there is corresponding term in the quotient of the
@@ -1704,7 +1713,7 @@ def permsOfList : List α → List (perm α)
 | [] => [1]
 | a :: l => permsOfList l ++ l.bind fun b => (permsOfList l).map fun f => swap a b*f
 
-theorem length_perms_of_list : ∀ l : List α, length (permsOfList l) = l.length !
+theorem length_perms_of_list : ∀ (l : List α), length (permsOfList l) = l.length !
 | [] => rfl
 | a :: l =>
   by 
@@ -1775,7 +1784,7 @@ theorem mem_of_mem_perms_of_list : ∀ {l : List α} {f : perm α}, f ∈ permsO
 theorem mem_perms_of_list_iff {l : List α} {f : perm α} : f ∈ permsOfList l ↔ ∀ {x}, f x ≠ x → x ∈ l :=
   ⟨mem_of_mem_perms_of_list, mem_perms_of_list_of_mem⟩
 
-theorem nodup_perms_of_list : ∀ {l : List α} hl : l.nodup, (permsOfList l).Nodup
+theorem nodup_perms_of_list : ∀ {l : List α} (hl : l.nodup), (permsOfList l).Nodup
 | [], hl =>
   by 
     simp [permsOfList]
@@ -1834,7 +1843,7 @@ theorem mem_perms_of_finset_iff : ∀ {s : Finset α} {f : perm α}, f ∈ perms
   by 
     rintro ⟨⟨l⟩, hs⟩ f <;> exact mem_perms_of_list_iff
 
-theorem card_perms_of_finset : ∀ s : Finset α, (permsOfFinset s).card = s.card ! :=
+theorem card_perms_of_finset : ∀ (s : Finset α), (permsOfFinset s).card = s.card ! :=
   by 
     rintro ⟨⟨l⟩, hs⟩ <;> exact length_perms_of_list l
 
@@ -1893,16 +1902,19 @@ def choose (hp : ∃!a, p a) : α :=
 theorem choose_spec (hp : ∃!a, p a) : p (choose p hp) :=
   (choose_x p hp).property
 
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem choose_subtype_eq {α : Type _} (p : α → Prop) [Fintype { a : α // p a }] [DecidableEq α] (x : { a : α // p a })
-  (h : ∃!a : { a // p a }, (a : α) = x :=
-    ⟨x, rfl,
-      fun y hy =>
-        by 
-          simpa [Subtype.ext_iff] using hy⟩) :
-  Fintype.choose (fun y : { a : α // p a } => (y : α) = x) h = x :=
-  by 
-    rw [Subtype.ext_iff, Fintype.choose_spec (fun y : { a : α // p a } => (y : α) = x) _]
+theorem choose_subtype_eq
+{α : Type*}
+(p : α → exprProp())
+[fintype {a : α // p a}]
+[decidable_eq α]
+(x : {a : α // p a})
+(h : «expr∃! , »((a : {a // p a}), «expr = »((a : α), x)) := ⟨x, rfl, λ
+  y
+  hy, by simpa [] [] [] ["[", expr subtype.ext_iff, "]"] [] ["using", expr hy]⟩) : «expr = »(fintype.choose (λ
+  y : {a : α // p a}, «expr = »((y : α), x)) h, x) :=
+by rw ["[", expr subtype.ext_iff, ",", expr fintype.choose_spec (λ y : {a : α // p a}, «expr = »((y : α), x)) _, "]"] []
 
 end Choose
 
@@ -2007,7 +2019,7 @@ begin
 end
 
 theorem Finset.exists_maximal {α : Type _} [Preorderₓ α] (s : Finset α) (h : s.nonempty) :
-  ∃ (m : _)(_ : m ∈ s), ∀ x _ : x ∈ s, ¬m < x :=
+  ∃ (m : _)(_ : m ∈ s), ∀ x (_ : x ∈ s), ¬m < x :=
   @Finset.exists_minimal (OrderDual α) _ s h
 
 namespace Infinite
@@ -2069,13 +2081,13 @@ instance prod_of_right [Nonempty α] [Infinite β] : Infinite (α × β) :=
 instance prod_of_left [Infinite α] [Nonempty β] : Infinite (α × β) :=
   of_surjective Prod.fst Prod.fst_surjectiveₓ
 
--- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 private noncomputable def nat_embedding_aux (α : Type*) [infinite α] : exprℕ() → α
 | n := by letI [] [] [":=", expr classical.dec_eq α]; exact [expr classical.some (exists_not_mem_finset ((multiset.range n).pmap (λ
     (m)
     (hm : «expr < »(m, n)), nat_embedding_aux m) (λ _, multiset.mem_range.1)).to_finset)]
 
--- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 private theorem nat_embedding_aux_injective (α : Type*) [infinite α] : function.injective (nat_embedding_aux α) :=
 begin
   rintro [ident m, ident n, ident h],
@@ -2129,7 +2141,7 @@ begin
 end
 
 /-- If every finset in a type has bounded cardinality, that type is finite. -/
-noncomputable def fintypeOfFinsetCardLe {ι : Type _} (n : ℕ) (w : ∀ s : Finset ι, s.card ≤ n) : Fintype ι :=
+noncomputable def fintypeOfFinsetCardLe {ι : Type _} (n : ℕ) (w : ∀ (s : Finset ι), s.card ≤ n) : Fintype ι :=
   by 
     apply fintypeOfNotInfinite 
     intro i 
@@ -2177,7 +2189,7 @@ begin
     apply_instance }
 end
 
--- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The strong pigeonhole principle for infinitely many pigeons in
 finitely many pigeonholes.  If there are infinitely many pigeons in
@@ -2200,11 +2212,10 @@ begin
   exact [expr key.false]
 end
 
-theorem not_surjective_fintype_infinite [Fintype α] [Infinite β] (f : α → β) : ¬surjective f :=
-  fun hf : surjective f =>
-    have H : Infinite α := Infinite.of_surjective f hf 
-    by 
-      exact not_fintype α
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem not_surjective_fintype_infinite [fintype α] [infinite β] (f : α → β) : «expr¬ »(surjective f) :=
+assume hf : surjective f, have H : infinite α := infinite.of_surjective f hf,
+by exactI [expr not_fintype α]
 
 section Trunc
 
@@ -2295,8 +2306,8 @@ end
 /-- An induction principle for finite types, analogous to `nat.rec`. It effectively says
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 @[elab_as_eliminator]
-theorem induction_empty_option' {P : ∀ α : Type u [Fintype α], Prop}
-  (of_equiv : ∀ α β [Fintype β] e : α ≃ β, @P α (@Fintype.ofEquiv α β ‹_› e.symm) → @P β ‹_›) (h_empty : P Pempty)
+theorem induction_empty_option' {P : ∀ (α : Type u) [Fintype α], Prop}
+  (of_equiv : ∀ α β [Fintype β] (e : α ≃ β), @P α (@Fintype.ofEquiv α β ‹_› e.symm) → @P β ‹_›) (h_empty : P Pempty)
   (h_option :
     ∀ α [Fintype α],
       by 
@@ -2326,13 +2337,18 @@ theorem induction_empty_option {P : Type u → Prop} (of_equiv : ∀ {α β}, α
 
 end Fintype
 
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Auxiliary definition to show `exists_seq_of_forall_finset_exists`. -/
-noncomputable def seqOfForallFinsetExistsAux {α : Type _} [DecidableEq α] (P : α → Prop) (r : α → α → Prop)
-  (h : ∀ s : Finset α, ∃ y, (∀ x _ : x ∈ s, P x) → P y ∧ ∀ x _ : x ∈ s, r x y) : ℕ → α
-| n =>
-  Classical.some (h (Finset.image (fun i : Finₓ n => seqOfForallFinsetExistsAux i) (Finset.univ : Finset (Finₓ n))))
+noncomputable
+def seq_of_forall_finset_exists_aux
+{α : Type*}
+[decidable_eq α]
+(P : α → exprProp())
+(r : α → α → exprProp())
+(h : ∀ s : finset α, «expr∃ , »((y), ∀ x «expr ∈ » s, P x → «expr ∧ »(P y, ∀ x «expr ∈ » s, r x y))) : exprℕ() → α
+| n := classical.some (h (finset.image (λ i : fin n, seq_of_forall_finset_exists_aux i) (finset.univ : finset (fin n))))
 
--- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Induction principle to build a sequence, by adding one point at a time satisfying a given
 relation with respect to all the previously chosen points.
 
@@ -2382,7 +2398,7 @@ some relation `r` with respect to all the points in `s`. Then one may construct 
 function `f : ℕ → α` such that `r (f m) (f n)` holds whenever `m ≠ n`.
 We also ensure that all constructed points satisfy a given predicate `P`. -/
 theorem exists_seq_of_forall_finset_exists' {α : Type _} (P : α → Prop) (r : α → α → Prop) [IsSymm α r]
-  (h : ∀ s : Finset α, (∀ x _ : x ∈ s, P x) → ∃ y, P y ∧ ∀ x _ : x ∈ s, r x y) :
+  (h : ∀ (s : Finset α), (∀ x (_ : x ∈ s), P x) → ∃ y, P y ∧ ∀ x (_ : x ∈ s), r x y) :
   ∃ f : ℕ → α, (∀ n, P (f n)) ∧ ∀ m n, m ≠ n → r (f m) (f n) :=
   by 
     rcases exists_seq_of_forall_finset_exists P r h with ⟨f, hf, hf'⟩

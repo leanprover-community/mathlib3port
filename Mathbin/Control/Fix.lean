@@ -41,9 +41,13 @@ def fix.approx : Streamₓ$ ∀ a, Part$ β a
 | 0 => ⊥
 | Nat.succ i => f (fix.approx i)
 
+-- error in Control.Fix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- loop body for finding the fixed point of `f` -/
-def fix_aux {p : ℕ → Prop} (i : Nat.Upto p) (g : ∀ j : Nat.Upto p, i < j → ∀ a, Part$ β a) : ∀ a, Part$ β a :=
-  f$ fun x : α => assert ¬p i.val$ fun h : ¬p i.val => g (i.succ h) (Nat.lt_succ_selfₓ _) x
+def fix_aux
+{p : exprℕ() → exprProp()}
+(i : nat.upto p)
+(g : ∀ j : nat.upto p, «expr < »(i, j) → ∀ a, «expr $ »(part, β a)) : ∀ a, «expr $ »(part, β a) :=
+«expr $ »(f, λ x : α, «expr $ »(assert «expr¬ »(p i.val), λ h : «expr¬ »(p i.val), g (i.succ h) (nat.lt_succ_self _) x))
 
 /-- The least fixed point of `f`.
 

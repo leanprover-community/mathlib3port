@@ -23,7 +23,7 @@ namespace List
 variable{α : Type _}[DecidableEq α]
 
 /-- Return the `z` such that `x :: z :: _` appears in `xs`, or `default` if there is no such `z`. -/
-def next_or : ∀ xs : List α x default : α, α
+def next_or : ∀ (xs : List α) (x default : α), α
 | [], x, default => default
 | [y], x, default => default
 | y :: z :: xs, x, default => if x = y then z else next_or (z :: xs) x default
@@ -93,7 +93,7 @@ theorem next_or_concat {xs : List α} {x : α} (d : α) (h : x ∉ xs) : next_or
 theorem next_or_mem {xs : List α} {x d : α} (hd : d ∈ xs) : next_or xs x d ∈ xs :=
   by 
     revert hd 
-    suffices  : ∀ xs' : List α h : ∀ x _ : x ∈ xs, x ∈ xs' hd : d ∈ xs', next_or xs x d ∈ xs'
+    suffices  : ∀ (xs' : List α) (h : ∀ x (_ : x ∈ xs), x ∈ xs') (hd : d ∈ xs'), next_or xs x d ∈ xs'
     ·
       exact this xs fun _ => id 
     intro xs' hxs' hd 
@@ -136,7 +136,7 @@ so it will match on first hit, ignoring later duplicates.
  * `prev [1, 2, 3, 4, 2] 2 _ = 1`
  * `prev [1, 1, 2] 1 _ = 2`
 -/
-def prev : ∀ l : List α x : α h : x ∈ l, α
+def prev : ∀ (l : List α) (x : α) (h : x ∈ l), α
 | [], _, h =>
   by 
     simpa using h
@@ -484,11 +484,11 @@ theorem mk'_eq_coe (l : List α) : Quotientₓ.mk' l = (l : Cycle α) :=
 instance  : Inhabited (Cycle α) :=
   ⟨(([] : List α) : Cycle α)⟩
 
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 For `x : α`, `s : cycle α`, `x ∈ s` indicates that `x` occurs at least once in `s`.
--/
-def mem (a : α) (s : Cycle α) : Prop :=
-  Quot.liftOn s (fun l => a ∈ l) fun l₁ l₂ e : l₁ ~r l₂ => propext$ e.mem_iff
+-/ def mem (a : α) (s : cycle α) : exprProp() :=
+quot.lift_on s (λ l, «expr ∈ »(a, l)) (λ (l₁ l₂) (e : «expr ~r »(l₁, l₂)), «expr $ »(propext, e.mem_iff))
 
 instance  : HasMem α (Cycle α) :=
   ⟨mem⟩
@@ -503,11 +503,11 @@ instance  [DecidableEq α] : DecidableEq (Cycle α) :=
 instance  [DecidableEq α] (x : α) (s : Cycle α) : Decidable (x ∈ s) :=
   Quotientₓ.recOnSubsingleton' s fun l => List.decidableMemₓ x l
 
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Reverse a `s : cycle α` by reversing the underlying `list`.
--/
-def reverse (s : Cycle α) : Cycle α :=
-  Quot.map reverse (fun l₁ l₂ e : l₁ ~r l₂ => e.reverse) s
+-/ def reverse (s : cycle α) : cycle α :=
+quot.map reverse (λ (l₁ l₂) (e : «expr ~r »(l₁, l₂)), e.reverse) s
 
 @[simp]
 theorem reverse_coe (l : List α) : (l : Cycle α).reverse = l.reverse :=
@@ -524,11 +524,11 @@ theorem reverse_reverse (s : Cycle α) : s.reverse.reverse = s :=
       by 
         simp 
 
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The length of the `s : cycle α`, which is the number of elements, counting duplicates.
--/
-def length (s : Cycle α) : ℕ :=
-  Quot.liftOn s length fun l₁ l₂ e : l₁ ~r l₂ => e.perm.length_eq
+-/ def length (s : cycle α) : exprℕ() :=
+quot.lift_on s length (λ (l₁ l₂) (e : «expr ~r »(l₁, l₂)), e.perm.length_eq)
 
 @[simp]
 theorem length_coe (l : List α) : length (l : Cycle α) = l.length :=
@@ -552,7 +552,7 @@ theorem subsingleton_reverse_iff {s : Cycle α} : s.reverse.subsingleton ↔ s.s
   by 
     simp [length_subsingleton_iff]
 
-theorem subsingleton.congr {s : Cycle α} (h : Subsingleton s) : ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, x = y :=
+theorem subsingleton.congr {s : Cycle α} (h : Subsingleton s) : ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), x = y :=
   by 
     induction' s using Quot.induction_on with l 
     simp only [length_subsingleton_iff, length_coe, mk_eq_coe, le_iff_lt_or_eqₓ, Nat.lt_add_one_iff, length_eq_zero,
@@ -601,11 +601,11 @@ theorem length_nontrivial {s : Cycle α} (h : Nontrivial s) : 2 ≤ length s :=
     ·
       simp [bit0]
 
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The `s : cycle α` contains no duplicates.
--/
-def nodup (s : Cycle α) : Prop :=
-  Quot.liftOn s nodup fun l₁ l₂ e : l₁ ~r l₂ => propext$ e.nodup_iff
+-/ def nodup (s : cycle α) : exprProp() :=
+quot.lift_on s nodup (λ (l₁ l₂) (e : «expr ~r »(l₁, l₂)), «expr $ »(propext, e.nodup_iff))
 
 @[simp]
 theorem nodup_coe_iff {l : List α} : nodup (l : Cycle α) ↔ l.nodup :=
@@ -632,11 +632,11 @@ theorem nodup.nontrivial_iff {s : Cycle α} (h : nodup s) : Nontrivial s ↔ ¬S
     simp only [mk'_eq_coe, nodup_coe_iff] at h 
     simp [h, Nat.succ_le_iff]
 
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The `s : cycle α` as a `multiset α`.
--/
-def to_multiset (s : Cycle α) : Multiset α :=
-  Quotientₓ.liftOn' s (fun l => (l : Multiset α)) fun l₁ l₂ h : l₁ ~r l₂ => Multiset.coe_eq_coe.mpr h.perm
+-/ def to_multiset (s : cycle α) : multiset α :=
+quotient.lift_on' s (λ l, (l : multiset α)) (λ (l₁ l₂) (h : «expr ~r »(l₁, l₂)), multiset.coe_eq_coe.mpr h.perm)
 
 /--
 The lift of `list.map`.
@@ -644,14 +644,14 @@ The lift of `list.map`.
 def map {β : Type _} (f : α → β) : Cycle α → Cycle β :=
   Quotientₓ.map' (List.map f)$ fun l₁ l₂ h => h.map _
 
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The `multiset` of lists that can make the cycle.
--/
-def lists (s : Cycle α) : Multiset (List α) :=
-  (Quotientₓ.liftOn' s fun l => (l.cyclic_permutations : Multiset (List α)))$
-    fun l₁ l₂ h : l₁ ~r l₂ =>
-      by 
-        simpa using h.cyclic_permutations.perm
+-/ def lists (s : cycle α) : multiset (list α) :=
+«expr $ »(quotient.lift_on' s (λ
+  l, (l.cyclic_permutations : multiset (list α))), λ
+ (l₁ l₂)
+ (h : «expr ~r »(l₁, l₂)), by simpa [] [] [] [] [] ["using", expr h.cyclic_permutations.perm])
 
 @[simp]
 theorem mem_lists_iff_coe_eq {s : Cycle α} {l : List α} : l ∈ s.lists ↔ (l : Cycle α) = s :=
@@ -667,7 +667,7 @@ variable[DecidableEq α]
 /--
 Auxiliary decidability algorithm for lists that contain at least two unique elements.
 -/
-def decidable_nontrivial_coe : ∀ l : List α, Decidable (Nontrivial (l : Cycle α))
+def decidable_nontrivial_coe : ∀ (l : List α), Decidable (Nontrivial (l : Cycle α))
 | [] =>
   is_false
     (by 
@@ -693,22 +693,16 @@ def decidable_nontrivial_coe : ∀ l : List α, Decidable (Nontrivial (l : Cycle
 instance  {s : Cycle α} : Decidable (Nontrivial s) :=
   Quot.recOnSubsingletonₓ s decidable_nontrivial_coe
 
-instance  {s : Cycle α} : Decidable (nodup s) :=
-  Quot.recOnSubsingletonₓ s fun l : List α => List.nodupDecidableₓ l
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance {s : cycle α} : decidable (nodup s) := quot.rec_on_subsingleton s (λ l : list α, list.nodup_decidable l)
 
-instance fintype_nodup_cycle [Fintype α] : Fintype { s : Cycle α // s.nodup } :=
-  Fintype.ofSurjective
-    (fun l : { l : List α // l.nodup } =>
-      ⟨l.val,
-        by 
-          simpa using l.prop⟩)
-    fun ⟨s, hs⟩ =>
-      by 
-        induction s using Quotientₓ.induction_on' 
-        exact
-          ⟨⟨s, hs⟩,
-            by 
-              simp ⟩
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance fintype_nodup_cycle [fintype α] : fintype {s : cycle α // s.nodup} :=
+fintype.of_surjective (λ
+ l : {l : list α // l.nodup}, ⟨l.val, by simpa [] [] [] [] [] ["using", expr l.prop]⟩) (λ ⟨s, hs⟩, begin
+   induction [expr s] ["using", ident quotient.induction_on'] [] [],
+   exact [expr ⟨⟨s, hs⟩, by simp [] [] [] [] [] []⟩]
+ end)
 
 instance fintype_nodup_nontrivial_cycle [Fintype α] : Fintype { s : Cycle α // s.nodup ∧ s.nontrivial } :=
   Fintype.subtype
@@ -722,41 +716,47 @@ The `s : cycle α` as a `finset α`.
 def to_finset (s : Cycle α) : Finset α :=
   s.to_multiset.to_finset
 
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a `s : cycle α` such that `nodup s`, retrieve the next element after `x ∈ s`. -/
-def next : ∀ s : Cycle α hs : nodup s x : α hx : x ∈ s, α :=
-  fun s =>
-    Quot.hrecOnₓ s (fun l hn x hx => next l x hx)
-      fun l₁ l₂ h : l₁ ~r l₂ =>
-        Function.hfunext (propext h.nodup_iff)
-          fun h₁ h₂ he =>
-            Function.hfunext rfl
-              fun x y hxy =>
-                Function.hfunext
-                  (propext
-                    (by 
-                      simpa [eq_of_heq hxy] using h.mem_iff))
-                  fun hm hm' he' =>
-                    heq_of_eq
-                      (by 
-                        simpa [eq_of_heq hxy] using is_rotated_next_eq h h₁ _)
+def next : ∀ (s : cycle α) (hs : nodup s) (x : α) (hx : «expr ∈ »(x, s)), α :=
+λ
+s, quot.hrec_on s (λ
+ l
+ hn
+ x
+ hx, next l x hx) (λ
+ (l₁ l₂)
+ (h : «expr ~r »(l₁, l₂)), function.hfunext (propext h.nodup_iff) (λ
+  h₁
+  h₂
+  he, function.hfunext rfl (λ
+   x
+   y
+   hxy, function.hfunext (propext (by simpa [] [] [] ["[", expr eq_of_heq hxy, "]"] [] ["using", expr h.mem_iff])) (λ
+    hm
+    hm'
+    he', heq_of_eq (by simpa [] [] [] ["[", expr eq_of_heq hxy, "]"] [] ["using", expr is_rotated_next_eq h h₁ _])))))
 
+-- error in Data.List.Cycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a `s : cycle α` such that `nodup s`, retrieve the previous element before `x ∈ s`. -/
-def prev : ∀ s : Cycle α hs : nodup s x : α hx : x ∈ s, α :=
-  fun s =>
-    Quot.hrecOnₓ s (fun l hn x hx => prev l x hx)
-      fun l₁ l₂ h : l₁ ~r l₂ =>
-        Function.hfunext (propext h.nodup_iff)
-          fun h₁ h₂ he =>
-            Function.hfunext rfl
-              fun x y hxy =>
-                Function.hfunext
-                  (propext
-                    (by 
-                      simpa [eq_of_heq hxy] using h.mem_iff))
-                  fun hm hm' he' =>
-                    heq_of_eq
-                      (by 
-                        simpa [eq_of_heq hxy] using is_rotated_prev_eq h h₁ _)
+def prev : ∀ (s : cycle α) (hs : nodup s) (x : α) (hx : «expr ∈ »(x, s)), α :=
+λ
+s, quot.hrec_on s (λ
+ l
+ hn
+ x
+ hx, prev l x hx) (λ
+ (l₁ l₂)
+ (h : «expr ~r »(l₁, l₂)), function.hfunext (propext h.nodup_iff) (λ
+  h₁
+  h₂
+  he, function.hfunext rfl (λ
+   x
+   y
+   hxy, function.hfunext (propext (by simpa [] [] [] ["[", expr eq_of_heq hxy, "]"] [] ["using", expr h.mem_iff])) (λ
+    hm
+    hm'
+    he', heq_of_eq (by simpa [] [] [] ["[", expr eq_of_heq hxy, "]"] [] ["using", expr is_rotated_prev_eq h h₁ _])))))
 
 @[simp]
 theorem prev_reverse_eq_next (s : Cycle α) (hs : nodup s) (x : α) (hx : x ∈ s) :

@@ -619,7 +619,7 @@ protected def copair {β} (t₁ : Ordnode α) (t₂ : Ordnode β) : Ordnode (Sum
 that the function is defined on all members of the set.
 
     pmap (fin.mk : ∀ n, n < 4 → fin 4) {1, 2} H = {(1 : fin 4), (2 : fin 4)} -/
-def pmap {P : α → Prop} {β} (f : ∀ a, P a → β) : ∀ t : Ordnode α, all P t → Ordnode β
+def pmap {P : α → Prop} {β} (f : ∀ a, P a → β) : ∀ (t : Ordnode α), all P t → Ordnode β
 | nil, _ => nil
 | node s l x r, ⟨hl, hx, hr⟩ => node s (pmap l hl) (f x hx) (pmap r hr)
 
@@ -760,7 +760,7 @@ def span (p : α → Prop) [DecidablePred p] : Ordnode α → Ordnode α × Ordn
 in the kernel, meaning that you probably can't prove things like
 `of_asc_list [1, 2, 3] = {1, 2, 3}` by `rfl`.
 This implementation is optimized for VM evaluation. -/
-def of_asc_list_aux₁ : ∀ l : List α, ℕ → Ordnode α × { l' : List α // l'.length ≤ l.length }
+def of_asc_list_aux₁ : ∀ (l : List α), ℕ → Ordnode α × { l' : List α // l'.length ≤ l.length }
 | [] => fun s => (nil, ⟨[], le_reflₓ _⟩)
 | x :: xs =>
   fun s =>

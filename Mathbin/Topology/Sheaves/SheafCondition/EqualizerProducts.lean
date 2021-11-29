@@ -39,37 +39,37 @@ namespace Presheaf
 
 namespace SheafConditionEqualizerProducts
 
-/-- The product of the sections of a presheaf over a family of open sets. -/
-def pi_opens : C :=
-  ∏ fun i : ι => F.obj (op (U i))
+-- error in Topology.Sheaves.SheafCondition.EqualizerProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The product of the sections of a presheaf over a family of open sets. -/ def pi_opens : C :=
+«expr∏ »(λ i : ι, F.obj (op (U i)))
 
+-- error in Topology.Sheaves.SheafCondition.EqualizerProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The product of the sections of a presheaf over the pairwise intersections of
 a family of open sets.
--/
-def pi_inters : C :=
-  ∏ fun p : ι × ι => F.obj (op (U p.1⊓U p.2))
+-/ def pi_inters : C :=
+«expr∏ »(λ p : «expr × »(ι, ι), F.obj (op «expr ⊓ »(U p.1, U p.2)))
 
+-- error in Topology.Sheaves.SheafCondition.EqualizerProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The morphism `Π F.obj (U i) ⟶ Π F.obj (U i) ⊓ (U j)` whose components
 are given by the restriction maps from `U i` to `U i ⊓ U j`.
--/
-def left_res : pi_opens F U ⟶ pi_inters F U :=
-  pi.lift fun p : ι × ι => pi.π _ p.1 ≫ F.map (inf_le_left (U p.1) (U p.2)).op
+-/ def left_res : «expr ⟶ »(pi_opens F U, pi_inters F U) :=
+pi.lift (λ p : «expr × »(ι, ι), «expr ≫ »(pi.π _ p.1, F.map (inf_le_left (U p.1) (U p.2)).op))
 
+-- error in Topology.Sheaves.SheafCondition.EqualizerProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The morphism `Π F.obj (U i) ⟶ Π F.obj (U i) ⊓ (U j)` whose components
 are given by the restriction maps from `U j` to `U i ⊓ U j`.
--/
-def right_res : pi_opens F U ⟶ pi_inters F U :=
-  pi.lift fun p : ι × ι => pi.π _ p.2 ≫ F.map (inf_le_right (U p.1) (U p.2)).op
+-/ def right_res : «expr ⟶ »(pi_opens F U, pi_inters F U) :=
+pi.lift (λ p : «expr × »(ι, ι), «expr ≫ »(pi.π _ p.2, F.map (inf_le_right (U p.1) (U p.2)).op))
 
+-- error in Topology.Sheaves.SheafCondition.EqualizerProducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The morphism `F.obj U ⟶ Π F.obj (U i)` whose components
 are given by the restriction maps from `U j` to `U i ⊓ U j`.
--/
-def res : F.obj (op (supr U)) ⟶ pi_opens F U :=
-  pi.lift fun i : ι => F.map (TopologicalSpace.Opens.leSupr U i).op
+-/ def res : «expr ⟶ »(F.obj (op (supr U)), pi_opens F U) :=
+pi.lift (λ i : ι, F.map (topological_space.opens.le_supr U i).op)
 
 @[simp, elementwise]
 theorem res_π (i : ι) : res F U ≫ limit.π _ i = F.map (opens.le_supr U i).op :=

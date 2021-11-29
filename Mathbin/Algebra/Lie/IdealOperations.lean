@@ -94,7 +94,7 @@ theorem lie_mem_lie {x : L} {m : M} (hx : x ∈ I) (hm : m ∈ N) : ⁅x,m⁆ �
 
 theorem lie_comm : ⁅I,J⁆ = ⁅J,I⁆ :=
   by 
-    suffices  : ∀ I J : LieIdeal R L, ⁅I,J⁆ ≤ ⁅J,I⁆
+    suffices  : ∀ (I J : LieIdeal R L), ⁅I,J⁆ ≤ ⁅J,I⁆
     ·
       exact le_antisymmₓ (this I J) (this J I)
     clear I J 

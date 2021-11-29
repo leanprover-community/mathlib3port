@@ -249,10 +249,18 @@ protected theorem compose [Preorderₓ α] [Preorderₓ β] [Preorderₓ γ] {l1
   by 
     intro a b <;> rw [gc2, gc1]
 
-protected theorem dfun {ι : Type u} {α : ι → Type v} {β : ι → Type w} [∀ i, Preorderₓ (α i)] [∀ i, Preorderₓ (β i)]
-  (l : ∀ i, α i → β i) (u : ∀ i, β i → α i) (gc : ∀ i, GaloisConnection (l i) (u i)) :
-  GaloisConnection (fun a : ∀ i, α i i => l i (a i)) fun b i => u i (b i) :=
-  fun a b => forall_congrₓ$ fun i => gc i (a i) (b i)
+-- error in Order.GaloisConnection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem dfun
+{ι : Type u}
+{α : ι → Type v}
+{β : ι → Type w}
+[∀ i, preorder (α i)]
+[∀ i, preorder (β i)]
+(l : ∀ i, α i → β i)
+(u : ∀ i, β i → α i)
+(gc : ∀ i, galois_connection (l i) (u i)) : galois_connection (λ (a : ∀ i, α i) (i), l i (a i)) (λ b i, u i (b i)) :=
+λ a b, «expr $ »(forall_congr, λ i, gc i (a i) (b i))
 
 end Constructions
 
@@ -294,7 +302,7 @@ choice function, to give better definitional equalities when lifting order struc
 to `galois_coinsertion` -/
 @[nolint has_inhabited_instance]
 structure GaloisInsertion{α β : Type _}[Preorderₓ α][Preorderₓ β](l : α → β)(u : β → α) where 
-  choice : ∀ x : α, u (l x) ≤ x → β 
+  choice : ∀ (x : α), u (l x) ≤ x → β 
   gc : GaloisConnection l u 
   le_l_u : ∀ x, x ≤ l (u x)
   choice_eq : ∀ a h, choice a h = l a
@@ -430,12 +438,12 @@ def lift_order_top [Preorderₓ α] [OrderTop α] (gi : GaloisInsertion l u) : O
         simp only [gi.choice_eq] <;> exact fun b => (gi.le_l_u b).trans (gi.gc.monotone_l le_top) }
 
 /-- Lift the top, bottom, suprema, and infima along a Galois insertion -/
-def lift_bounded_lattice [BoundedLattice α] (gi : GaloisInsertion l u) : BoundedLattice β :=
-  { gi.lift_lattice, gi.lift_order_top, gi.gc.lift_order_bot with  }
+def lift_bounded_order [Preorderₓ α] [BoundedOrder α] (gi : GaloisInsertion l u) : BoundedOrder β :=
+  { gi.lift_order_top, gi.gc.lift_order_bot with  }
 
 /-- Lift all suprema and infima along a Galois insertion -/
 def lift_complete_lattice [CompleteLattice α] (gi : GaloisInsertion l u) : CompleteLattice β :=
-  { gi.lift_bounded_lattice with sup := fun s => l (Sup (u '' s)),
+  { gi.lift_bounded_order, gi.lift_lattice with sup := fun s => l (Sup (u '' s)),
     Sup_le := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).2,
     le_Sup := fun s => (gi.is_lub_of_u_image (is_lub_Sup _)).1,
     inf :=
@@ -461,7 +469,7 @@ choice function, to give better definitional equalities when lifting order struc
 `galois_insertion` -/
 @[nolint has_inhabited_instance]
 structure GaloisCoinsertion{α β : Type _}[Preorderₓ α][Preorderₓ β](l : α → β)(u : β → α) where 
-  choice : ∀ x : β, x ≤ l (u x) → α 
+  choice : ∀ (x : β), x ≤ l (u x) → α 
   gc : GaloisConnection l u 
   u_l_le : ∀ x, u (l x) ≤ x 
   choice_eq : ∀ a h, choice a h = u a
@@ -580,21 +588,23 @@ def lift_order_bot [Preorderₓ β] [OrderBot β] (gi : GaloisCoinsertion l u) :
   { @OrderDual.orderBot _ _ gi.dual.lift_order_top with bot := gi.choice ⊥$ bot_le }
 
 /-- Lift the top, bottom, suprema, and infima along a Galois coinsertion -/
-def lift_bounded_lattice [BoundedLattice β] (gi : GaloisCoinsertion l u) : BoundedLattice α :=
-  { gi.lift_lattice, gi.lift_order_bot, gi.gc.lift_order_top with  }
+def lift_bounded_order [Preorderₓ β] [BoundedOrder β] (gi : GaloisCoinsertion l u) : BoundedOrder α :=
+  { gi.lift_order_bot, gi.gc.lift_order_top with  }
 
 /-- Lift all suprema and infima along a Galois coinsertion -/
 def lift_complete_lattice [CompleteLattice β] (gi : GaloisCoinsertion l u) : CompleteLattice α :=
-  { gi.lift_bounded_lattice, @OrderDual.completeLattice _ gi.dual.lift_complete_lattice with
-    inf := fun s => u (Inf (l '' s)), sup := fun s => gi.choice (Sup (l '' s)) _ }
+  { @OrderDual.completeLattice _ gi.dual.lift_complete_lattice with inf := fun s => u (Inf (l '' s)),
+    sup := fun s => gi.choice (Sup (l '' s)) _ }
 
 end lift
 
 end GaloisCoinsertion
 
+-- error in Order.GaloisConnection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `α` is a partial order with bottom element (e.g., `ℕ`, `ℝ≥0`), then
 `λ o : with_bot α, o.get_or_else ⊥` and coercion form a Galois insertion. -/
-def WithBot.giGetOrElseBot [Preorderₓ α] [OrderBot α] : GaloisInsertion (fun o : WithBot α => o.get_or_else ⊥) coeₓ :=
-  { gc := fun a b => WithBot.get_or_else_bot_le_iff, le_l_u := fun a => le_rfl, choice := fun o ho => _,
-    choice_eq := fun _ _ => rfl }
+def with_bot.gi_get_or_else_bot
+[preorder α]
+[order_bot α] : galois_insertion (λ o : with_bot α, o.get_or_else «expr⊥»()) coe :=
+{ gc := λ a b, with_bot.get_or_else_bot_le_iff, le_l_u := λ a, le_rfl, choice := λ o ho, _, choice_eq := λ _ _, rfl }
 

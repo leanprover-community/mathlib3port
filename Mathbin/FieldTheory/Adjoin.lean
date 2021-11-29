@@ -272,7 +272,7 @@ theorem adjoin_map {E' : Type _} [Field E'] [Algebra F E'] (f : E →ₐ[F] E') 
 theorem algebra_adjoin_le_adjoin : Algebra.adjoin F S ≤ (adjoin F S).toSubalgebra :=
   Algebra.adjoin_le (subset_adjoin _ _)
 
-theorem adjoin_eq_algebra_adjoin (inv_mem : ∀ x _ : x ∈ Algebra.adjoin F S, x⁻¹ ∈ Algebra.adjoin F S) :
+theorem adjoin_eq_algebra_adjoin (inv_mem : ∀ x (_ : x ∈ Algebra.adjoin F S), x⁻¹ ∈ Algebra.adjoin F S) :
   (adjoin F S).toSubalgebra = Algebra.adjoin F S :=
   le_antisymmₓ
     (show
@@ -293,7 +293,7 @@ theorem eq_adjoin_of_eq_algebra_adjoin (K : IntermediateField F E) (h : K.to_sub
     rfl
 
 @[elab_as_eliminator]
-theorem adjoin_induction {s : Set E} {p : E → Prop} {x} (h : x ∈ adjoin F s) (Hs : ∀ x _ : x ∈ s, p x)
+theorem adjoin_induction {s : Set E} {p : E → Prop} {x} (h : x ∈ adjoin F s) (Hs : ∀ x (_ : x ∈ s), p x)
   (Hmap : ∀ x, p (algebraMap F E x)) (Hadd : ∀ x y, p x → p y → p (x+y)) (Hneg : ∀ x, p x → p (-x))
   (Hinv : ∀ x, p x → p (x⁻¹)) (Hmul : ∀ x y, p x → p y → p (x*y)) : p x :=
   Subfield.closure_induction h (fun x hx => Or.cases_on hx (fun ⟨x, hx⟩ => hx ▸ Hmap x) (Hs x))
@@ -789,7 +789,7 @@ noncomputable def lifts.upper_bound_alg_hom {c : Set (lifts F E K)} (hc : Zorn.C
 noncomputable def lifts.upper_bound {c : Set (lifts F E K)} (hc : Zorn.Chain (· ≤ ·) c) : lifts F E K :=
   ⟨lifts.upper_bound_intermediate_field hc, lifts.upper_bound_alg_hom hc⟩
 
-theorem lifts.exists_upper_bound (c : Set (lifts F E K)) (hc : Zorn.Chain (· ≤ ·) c) : ∃ ub, ∀ a _ : a ∈ c, a ≤ ub :=
+theorem lifts.exists_upper_bound (c : Set (lifts F E K)) (hc : Zorn.Chain (· ≤ ·) c) : ∃ ub, ∀ a (_ : a ∈ c), a ≤ ub :=
   ⟨lifts.upper_bound hc,
     by 
       intro x hx 
@@ -843,7 +843,7 @@ theorem lifts.exists_lift_of_splits (x : lifts F E K) {s : E} (h1 : IsIntegral F
   (h2 : (minpoly F s).Splits (algebraMap F K)) : ∃ y, x ≤ y ∧ s ∈ y.1 :=
   ⟨x.lift_of_splits h1 h2, x.le_lifts_of_splits h1 h2, x.mem_lifts_of_splits h1 h2⟩
 
-theorem alg_hom_mk_adjoin_splits (hK : ∀ s _ : s ∈ S, IsIntegral F (s : E) ∧ (minpoly F s).Splits (algebraMap F K)) :
+theorem alg_hom_mk_adjoin_splits (hK : ∀ s (_ : s ∈ S), IsIntegral F (s : E) ∧ (minpoly F s).Splits (algebraMap F K)) :
   Nonempty (adjoin F S →ₐ[F] K) :=
   by 
     obtain ⟨x : lifts F E K, hx⟩ := Zorn.zorn_partial_order lifts.exists_upper_bound 
@@ -854,7 +854,7 @@ theorem alg_hom_mk_adjoin_splits (hK : ∀ s _ : s ∈ S, IsIntegral F (s : E) �
     rwa [hx y h1] at h2
 
 theorem alg_hom_mk_adjoin_splits' (hS : adjoin F S = ⊤)
-  (hK : ∀ x _ : x ∈ S, IsIntegral F (x : E) ∧ (minpoly F x).Splits (algebraMap F K)) : Nonempty (E →ₐ[F] K) :=
+  (hK : ∀ x (_ : x ∈ S), IsIntegral F (x : E) ∧ (minpoly F x).Splits (algebraMap F K)) : Nonempty (E →ₐ[F] K) :=
   by 
     cases' alg_hom_mk_adjoin_splits hK with ϕ 
     rw [hS] at ϕ 

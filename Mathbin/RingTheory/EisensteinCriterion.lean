@@ -53,8 +53,8 @@ theorem eval_zero_mem_ideal_of_eq_mul_X_pow {n : ℕ} {P : Ideal R} {q : Polynom
     rw [←coeff_zero_eq_eval_zero, ←eq_zero_iff_mem, ←coeff_map, coeff_zero_eq_eval_zero, hq, eval_mul, eval_pow, eval_X,
       zero_pow hn0, mul_zero]
 
-theorem is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit {p q : Polynomial R} (hu : ∀ x : R, (C x ∣ p*q) → IsUnit x)
-  (hpm : p.nat_degree = 0) : IsUnit p :=
+theorem is_unit_of_nat_degree_eq_zero_of_forall_dvd_is_unit {p q : Polynomial R}
+  (hu : ∀ (x : R), (C x ∣ p*q) → IsUnit x) (hpm : p.nat_degree = 0) : IsUnit p :=
   by 
     rw [eq_C_of_degree_le_zero (nat_degree_eq_zero_iff_degree_le_zero.1 hpm), is_unit_C]
     refine' hu _ _ 

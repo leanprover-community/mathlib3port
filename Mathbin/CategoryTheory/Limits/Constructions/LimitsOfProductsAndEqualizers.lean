@@ -33,20 +33,16 @@ variable{J : Type v}[small_category J]
 
 namespace HasLimitOfHasProductsOfHasEqualizers
 
-variable{F :
-    J ⥤
-      C}{c₁ :
-    fan
-      F.obj}{c₂ :
-    fan
-      fun f : Σp : J × J, p.1 ⟶ p.2 =>
-        F.obj
-          f.1.2}(s t :
-    c₁.X ⟶
-      c₂.X)(hs :
-    ∀ f : Σp : J × J, p.1 ⟶ p.2,
-      s ≫ c₂.π.app f =
-        c₁.π.app f.1.1 ≫ F.map f.2)(ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, t ≫ c₂.π.app f = c₁.π.app f.1.2)(i : fork s t)
+-- error in CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+variables
+{F : «expr ⥤ »(J, C)}
+{c₁ : fan F.obj}
+{c₂ : fan (λ f : «exprΣ , »((p : «expr × »(J, J)), «expr ⟶ »(p.1, p.2)), F.obj f.1.2)}
+(s t : «expr ⟶ »(c₁.X, c₂.X))
+(hs : ∀
+ f : «exprΣ , »((p : «expr × »(J, J)), «expr ⟶ »(p.1, p.2)), «expr = »(«expr ≫ »(s, c₂.π.app f), «expr ≫ »(c₁.π.app f.1.1, F.map f.2)))
+(ht : ∀ f : «exprΣ , »((p : «expr × »(J, J)), «expr ⟶ »(p.1, p.2)), «expr = »(«expr ≫ »(t, c₂.π.app f), c₁.π.app f.1.2))
+(i : fork s t)
 
 include hs ht
 
@@ -94,22 +90,21 @@ end HasLimitOfHasProductsOfHasEqualizers
 
 open HasLimitOfHasProductsOfHasEqualizers
 
+-- error in CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given the existence of the appropriate (possibly finite) products and equalizers, we know a limit of
 `F` exists.
 (This assumes the existence of all equalizers, which is technically stronger than needed.)
 -/
-theorem has_limit_of_equalizer_and_product (F : J ⥤ C) [has_limit (discrete.functor F.obj)]
-  [has_limit (discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.2)] [has_equalizers C] : has_limit F :=
-  has_limit.mk
-    { Cone := _,
-      IsLimit :=
-        build_is_limit (pi.lift fun f => limit.π _ _ ≫ F.map f.2) (pi.lift fun f => limit.π _ f.1.2)
-          (by 
-            simp )
-          (by 
-            simp )
-          (limit.is_limit _) (limit.is_limit _) (limit.is_limit _) }
+theorem has_limit_of_equalizer_and_product
+(F : «expr ⥤ »(J, C))
+[has_limit (discrete.functor F.obj)]
+[has_limit (discrete.functor (λ f : «exprΣ , »((p : «expr × »(J, J)), «expr ⟶ »(p.1, p.2)), F.obj f.1.2))]
+[has_equalizers C] : has_limit F :=
+has_limit.mk { cone := _,
+  is_limit := build_is_limit (pi.lift (λ
+    f, «expr ≫ »(limit.π _ _, F.map f.2))) (pi.lift (λ
+    f, limit.π _ f.1.2)) (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] []) (limit.is_limit _) (limit.is_limit _) (limit.is_limit _) }
 
 /--
 Any category with products and equalizers has all limits.
@@ -150,56 +145,40 @@ variable(G :
       D)[preserves_limits_of_shape walking_parallel_pair
       G][preserves_limits_of_shape (discrete J) G][preserves_limits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) G]
 
+-- error in CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a functor preserves equalizers and the appropriate products, it preserves limits. -/
 def preserves_limit_of_preserves_equalizers_and_product : preserves_limits_of_shape J G :=
-  { PreservesLimit :=
-      fun K =>
-        by 
-          let P := ∏ K.obj 
-          let Q := ∏ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.2
-          let s : P ⟶ Q := pi.lift fun f => limit.π _ _ ≫ K.map f.2
-          let t : P ⟶ Q := pi.lift fun f => limit.π _ f.1.2
-          let I := equalizer s t 
-          let i : I ⟶ P := equalizer.ι s t 
-          apply
-            preserves_limit_of_preserves_limit_cone
-              (build_is_limit s t
-                (by 
-                  simp )
-                (by 
-                  simp )
-                (limit.is_limit _) (limit.is_limit _) (limit.is_limit _))
-          refine' is_limit.of_iso_limit (build_is_limit _ _ _ _ _ _ _) _
-          ·
-            exact fan.mk _ fun j => G.map (pi.π _ j)
-          ·
-            exact fan.mk (G.obj Q) fun f => G.map (pi.π _ f)
-          ·
-            apply G.map s
-          ·
-            apply G.map t
-          ·
-            intro f 
-            dsimp 
-            simp only [←G.map_comp, limit.lift_π, fan.mk_π_app]
-          ·
-            intro f 
-            dsimp 
-            simp only [←G.map_comp, limit.lift_π, fan.mk_π_app]
-          ·
-            apply fork.of_ι (G.map i) _ 
-            simp only [←G.map_comp, equalizer.condition]
-          ·
-            apply is_limit_of_has_product_of_preserves_limit
-          ·
-            apply is_limit_of_has_product_of_preserves_limit
-          ·
-            apply is_limit_fork_map_of_is_limit 
-            apply equalizer_is_equalizer 
-          refine' cones.ext (iso.refl _) _ 
-          intro j 
-          dsimp 
-          simp  }
+{ preserves_limit := λ K, begin
+    let [ident P] [] [":=", expr «expr∏ »(K.obj)],
+    let [ident Q] [] [":=", expr «expr∏ »(λ
+      f : «exprΣ , »((p : «expr × »(J, J)), «expr ⟶ »(p.fst, p.snd)), K.obj f.1.2)],
+    let [ident s] [":", expr «expr ⟶ »(P, Q)] [":=", expr pi.lift (λ f, «expr ≫ »(limit.π _ _, K.map f.2))],
+    let [ident t] [":", expr «expr ⟶ »(P, Q)] [":=", expr pi.lift (λ f, limit.π _ f.1.2)],
+    let [ident I] [] [":=", expr equalizer s t],
+    let [ident i] [":", expr «expr ⟶ »(I, P)] [":=", expr equalizer.ι s t],
+    apply [expr preserves_limit_of_preserves_limit_cone (build_is_limit s t (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] []) (limit.is_limit _) (limit.is_limit _) (limit.is_limit _))],
+    refine [expr is_limit.of_iso_limit (build_is_limit _ _ _ _ _ _ _) _],
+    { exact [expr fan.mk _ (λ j, G.map (pi.π _ j))] },
+    { exact [expr fan.mk (G.obj Q) (λ f, G.map (pi.π _ f))] },
+    { apply [expr G.map s] },
+    { apply [expr G.map t] },
+    { intro [ident f],
+      dsimp [] [] [] [],
+      simp [] [] ["only"] ["[", "<-", expr G.map_comp, ",", expr limit.lift_π, ",", expr fan.mk_π_app, "]"] [] [] },
+    { intro [ident f],
+      dsimp [] [] [] [],
+      simp [] [] ["only"] ["[", "<-", expr G.map_comp, ",", expr limit.lift_π, ",", expr fan.mk_π_app, "]"] [] [] },
+    { apply [expr fork.of_ι (G.map i) _],
+      simp [] [] ["only"] ["[", "<-", expr G.map_comp, ",", expr equalizer.condition, "]"] [] [] },
+    { apply [expr is_limit_of_has_product_of_preserves_limit] },
+    { apply [expr is_limit_of_has_product_of_preserves_limit] },
+    { apply [expr is_limit_fork_map_of_is_limit],
+      apply [expr equalizer_is_equalizer] },
+    refine [expr cones.ext (iso.refl _) _],
+    intro [ident j],
+    dsimp [] [] [] [],
+    simp [] [] [] [] [] []
+  end }
 
 end 
 
@@ -226,20 +205,16 @@ We now dualize the above constructions, resorting to copy-paste.
 
 namespace HasColimitOfHasCoproductsOfHasCoequalizers
 
-variable{F :
-    J ⥤
-      C}{c₁ :
-    cofan
-      fun f : Σp : J × J, p.1 ⟶ p.2 =>
-        F.obj
-          f.1.1}{c₂ :
-    cofan
-      F.obj}(s t :
-    c₁.X ⟶
-      c₂.X)(hs :
-    ∀ f : Σp : J × J, p.1 ⟶ p.2,
-      c₁.ι.app f ≫ s =
-        F.map f.2 ≫ c₂.ι.app f.1.2)(ht : ∀ f : Σp : J × J, p.1 ⟶ p.2, c₁.ι.app f ≫ t = c₂.ι.app f.1.1)(i : cofork s t)
+-- error in CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+variables
+{F : «expr ⥤ »(J, C)}
+{c₁ : cofan (λ f : «exprΣ , »((p : «expr × »(J, J)), «expr ⟶ »(p.1, p.2)), F.obj f.1.1)}
+{c₂ : cofan F.obj}
+(s t : «expr ⟶ »(c₁.X, c₂.X))
+(hs : ∀
+ f : «exprΣ , »((p : «expr × »(J, J)), «expr ⟶ »(p.1, p.2)), «expr = »(«expr ≫ »(c₁.ι.app f, s), «expr ≫ »(F.map f.2, c₂.ι.app f.1.2)))
+(ht : ∀ f : «exprΣ , »((p : «expr × »(J, J)), «expr ⟶ »(p.1, p.2)), «expr = »(«expr ≫ »(c₁.ι.app f, t), c₂.ι.app f.1.1))
+(i : cofork s t)
 
 include hs ht
 
@@ -288,23 +263,21 @@ end HasColimitOfHasCoproductsOfHasCoequalizers
 
 open HasColimitOfHasCoproductsOfHasCoequalizers
 
+-- error in CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given the existence of the appropriate (possibly finite) coproducts and coequalizers,
 we know a colimit of `F` exists.
 (This assumes the existence of all coequalizers, which is technically stronger than needed.)
 -/
-theorem has_colimit_of_coequalizer_and_coproduct (F : J ⥤ C) [has_colimit (discrete.functor F.obj)]
-  [has_colimit (discrete.functor fun f : Σp : J × J, p.1 ⟶ p.2 => F.obj f.1.1)] [has_coequalizers C] : has_colimit F :=
-  has_colimit.mk
-    { Cocone := _,
-      IsColimit :=
-        build_is_colimit (sigma.desc fun f => F.map f.2 ≫ colimit.ι (discrete.functor F.obj) f.1.2)
-          (sigma.desc fun f => colimit.ι (discrete.functor F.obj) f.1.1)
-          (by 
-            simp )
-          (by 
-            simp )
-          (colimit.is_colimit _) (colimit.is_colimit _) (colimit.is_colimit _) }
+theorem has_colimit_of_coequalizer_and_coproduct
+(F : «expr ⥤ »(J, C))
+[has_colimit (discrete.functor F.obj)]
+[has_colimit (discrete.functor (λ f : «exprΣ , »((p : «expr × »(J, J)), «expr ⟶ »(p.1, p.2)), F.obj f.1.1))]
+[has_coequalizers C] : has_colimit F :=
+has_colimit.mk { cocone := _,
+  is_colimit := build_is_colimit (sigma.desc (λ
+    f, «expr ≫ »(F.map f.2, colimit.ι (discrete.functor F.obj) f.1.2))) (sigma.desc (λ
+    f, colimit.ι (discrete.functor F.obj) f.1.1)) (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] []) (colimit.is_colimit _) (colimit.is_colimit _) (colimit.is_colimit _) }
 
 /--
 Any category with coproducts and coequalizers has all colimits.
@@ -344,56 +317,41 @@ variable(G :
       D)[preserves_colimits_of_shape walking_parallel_pair
       G][preserves_colimits_of_shape (discrete J) G][preserves_colimits_of_shape (discrete (Σp : J × J, p.1 ⟶ p.2)) G]
 
+-- error in CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a functor preserves coequalizers and the appropriate coproducts, it preserves colimits. -/
 def preserves_colimit_of_preserves_coequalizers_and_coproduct : preserves_colimits_of_shape J G :=
-  { PreservesColimit :=
-      fun K =>
-        by 
-          let P := ∐ K.obj 
-          let Q := ∐ fun f : Σp : J × J, p.fst ⟶ p.snd => K.obj f.1.1
-          let s : Q ⟶ P := sigma.desc fun f => K.map f.2 ≫ colimit.ι (discrete.functor K.obj) _ 
-          let t : Q ⟶ P := sigma.desc fun f => colimit.ι (discrete.functor K.obj) f.1.1
-          let I := coequalizer s t 
-          let i : P ⟶ I := coequalizer.π s t 
-          apply
-            preserves_colimit_of_preserves_colimit_cocone
-              (build_is_colimit s t
-                (by 
-                  simp )
-                (by 
-                  simp )
-                (colimit.is_colimit _) (colimit.is_colimit _) (colimit.is_colimit _))
-          refine' is_colimit.of_iso_colimit (build_is_colimit _ _ _ _ _ _ _) _
-          ·
-            exact cofan.mk (G.obj Q) fun j => G.map (sigma.ι _ j)
-          ·
-            exact cofan.mk _ fun f => G.map (sigma.ι _ f)
-          ·
-            apply G.map s
-          ·
-            apply G.map t
-          ·
-            intro f 
-            dsimp 
-            simp only [←G.map_comp, colimit.ι_desc, cofan.mk_ι_app]
-          ·
-            intro f 
-            dsimp 
-            simp only [←G.map_comp, colimit.ι_desc, cofan.mk_ι_app]
-          ·
-            apply cofork.of_π (G.map i) _ 
-            simp only [←G.map_comp, coequalizer.condition]
-          ·
-            apply is_colimit_of_has_coproduct_of_preserves_colimit
-          ·
-            apply is_colimit_of_has_coproduct_of_preserves_colimit
-          ·
-            apply is_colimit_cofork_map_of_is_colimit 
-            apply coequalizer_is_coequalizer 
-          refine' cocones.ext (iso.refl _) _ 
-          intro j 
-          dsimp 
-          simp  }
+{ preserves_colimit := λ K, begin
+    let [ident P] [] [":=", expr «expr∐ »(K.obj)],
+    let [ident Q] [] [":=", expr «expr∐ »(λ
+      f : «exprΣ , »((p : «expr × »(J, J)), «expr ⟶ »(p.fst, p.snd)), K.obj f.1.1)],
+    let [ident s] [":", expr «expr ⟶ »(Q, P)] [":=", expr sigma.desc (λ
+      f, «expr ≫ »(K.map f.2, colimit.ι (discrete.functor K.obj) _))],
+    let [ident t] [":", expr «expr ⟶ »(Q, P)] [":=", expr sigma.desc (λ f, colimit.ι (discrete.functor K.obj) f.1.1)],
+    let [ident I] [] [":=", expr coequalizer s t],
+    let [ident i] [":", expr «expr ⟶ »(P, I)] [":=", expr coequalizer.π s t],
+    apply [expr preserves_colimit_of_preserves_colimit_cocone (build_is_colimit s t (by simp [] [] [] [] [] []) (by simp [] [] [] [] [] []) (colimit.is_colimit _) (colimit.is_colimit _) (colimit.is_colimit _))],
+    refine [expr is_colimit.of_iso_colimit (build_is_colimit _ _ _ _ _ _ _) _],
+    { exact [expr cofan.mk (G.obj Q) (λ j, G.map (sigma.ι _ j))] },
+    { exact [expr cofan.mk _ (λ f, G.map (sigma.ι _ f))] },
+    { apply [expr G.map s] },
+    { apply [expr G.map t] },
+    { intro [ident f],
+      dsimp [] [] [] [],
+      simp [] [] ["only"] ["[", "<-", expr G.map_comp, ",", expr colimit.ι_desc, ",", expr cofan.mk_ι_app, "]"] [] [] },
+    { intro [ident f],
+      dsimp [] [] [] [],
+      simp [] [] ["only"] ["[", "<-", expr G.map_comp, ",", expr colimit.ι_desc, ",", expr cofan.mk_ι_app, "]"] [] [] },
+    { apply [expr cofork.of_π (G.map i) _],
+      simp [] [] ["only"] ["[", "<-", expr G.map_comp, ",", expr coequalizer.condition, "]"] [] [] },
+    { apply [expr is_colimit_of_has_coproduct_of_preserves_colimit] },
+    { apply [expr is_colimit_of_has_coproduct_of_preserves_colimit] },
+    { apply [expr is_colimit_cofork_map_of_is_colimit],
+      apply [expr coequalizer_is_coequalizer] },
+    refine [expr cocones.ext (iso.refl _) _],
+    intro [ident j],
+    dsimp [] [] [] [],
+    simp [] [] [] [] [] []
+  end }
 
 end 
 

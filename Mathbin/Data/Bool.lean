@@ -256,12 +256,12 @@ theorem bxor_iff_ne : ∀ {x y : Bool}, bxor x y = tt ↔ x ≠ y :=
 
 
 @[simp]
-theorem bnot_band : ∀ a b : Bool, !(a && b) = (!a || !b) :=
+theorem bnot_band : ∀ (a b : Bool), !(a && b) = (!a || !b) :=
   by 
     decide
 
 @[simp]
-theorem bnot_bor : ∀ a b : Bool, !(a || b) = (!a && !b) :=
+theorem bnot_bor : ∀ (a b : Bool), !(a || b) = (!a && !b) :=
   by 
     decide
 
@@ -320,11 +320,11 @@ theorem le_iff_imp : ∀ {x y : Bool}, x ≤ y ↔ x → y :=
   by 
     decide
 
-theorem band_le_left : ∀ x y : Bool, (x && y) ≤ x :=
+theorem band_le_left : ∀ (x y : Bool), (x && y) ≤ x :=
   by 
     decide
 
-theorem band_le_right : ∀ x y : Bool, (x && y) ≤ y :=
+theorem band_le_right : ∀ (x y : Bool), (x && y) ≤ y :=
   by 
     decide
 
@@ -332,11 +332,11 @@ theorem le_band : ∀ {x y z : Bool}, x ≤ y → x ≤ z → x ≤ (y && z) :=
   by 
     decide
 
-theorem left_le_bor : ∀ x y : Bool, x ≤ (x || y) :=
+theorem left_le_bor : ∀ (x y : Bool), x ≤ (x || y) :=
   by 
     decide
 
-theorem right_le_bor : ∀ x y : Bool, y ≤ (x || y) :=
+theorem right_le_bor : ∀ (x y : Bool), y ≤ (x || y) :=
   by 
     decide
 

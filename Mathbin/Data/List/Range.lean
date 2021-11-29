@@ -24,7 +24,7 @@ namespace List
 variable{α : Type u}
 
 @[simp]
-theorem length_range' : ∀ s n : ℕ, length (range' s n) = n
+theorem length_range' : ∀ (s n : ℕ), length (range' s n) = n
 | s, 0 => rfl
 | s, n+1 => congr_argₓ succ (length_range' _ _)
 
@@ -45,11 +45,11 @@ theorem mem_range' {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧
     by 
       simp only [mem_range', or_and_distrib_left, or_iff_right_of_imp this, l, add_right_commₓ] <;> rfl
 
-theorem map_add_range' a : ∀ s n : ℕ, map ((·+·) a) (range' s n) = range' (a+s) n
+theorem map_add_range' a : ∀ (s n : ℕ), map ((·+·) a) (range' s n) = range' (a+s) n
 | s, 0 => rfl
 | s, n+1 => congr_argₓ (cons _) (map_add_range' (s+1) n)
 
-theorem map_sub_range' a : ∀ s n : ℕ h : a ≤ s, map (fun x => x - a) (range' s n) = range' (s - a) n
+theorem map_sub_range' a : ∀ (s n : ℕ) (h : a ≤ s), map (fun x => x - a) (range' s n) = range' (s - a) n
 | s, 0, _ => rfl
 | s, n+1, h =>
   by 
@@ -57,14 +57,14 @@ theorem map_sub_range' a : ∀ s n : ℕ h : a ≤ s, map (fun x => x - a) (rang
     rw [Nat.succ_subₓ h]
     rfl
 
-theorem chain_succ_range' : ∀ s n : ℕ, chain (fun a b => b = succ a) s (range' (s+1) n)
+theorem chain_succ_range' : ∀ (s n : ℕ), chain (fun a b => b = succ a) s (range' (s+1) n)
 | s, 0 => chain.nil
 | s, n+1 => (chain_succ_range' (s+1) n).cons rfl
 
 theorem chain_lt_range' (s n : ℕ) : chain (· < ·) s (range' (s+1) n) :=
   (chain_succ_range' s n).imp fun a b e => e.symm ▸ lt_succ_self _
 
-theorem pairwise_lt_range' : ∀ s n : ℕ, Pairwise (· < ·) (range' s n)
+theorem pairwise_lt_range' : ∀ (s n : ℕ), Pairwise (· < ·) (range' s n)
 | s, 0 => pairwise.nil
 | s, n+1 =>
   (chain_iff_pairwise
@@ -76,7 +76,7 @@ theorem nodup_range' (s n : ℕ) : nodup (range' s n) :=
   (pairwise_lt_range' s n).imp fun a b => ne_of_ltₓ
 
 @[simp]
-theorem range'_append : ∀ s m n : ℕ, range' s m ++ range' (s+m) n = range' s (n+m)
+theorem range'_append : ∀ (s m n : ℕ), range' s m ++ range' (s+m) n = range' s (n+m)
 | s, 0, n => rfl
 | s, m+1, n =>
   show s :: (range' (s+1) m ++ range' ((s+m)+1) n) = s :: range' (s+1) (n+m)by 
@@ -117,7 +117,7 @@ theorem range'_concat (s n : ℕ) : range' s (n+1) = range' s n ++ [s+n] :=
   by 
     rw [add_commₓ n 1] <;> exact (range'_append s n 1).symm
 
-theorem range_core_range' : ∀ s n : ℕ, range_core s (range' s n) = range' 0 (n+s)
+theorem range_core_range' : ∀ (s n : ℕ), range_core s (range' s n) = range' 0 (n+s)
 | 0, n => rfl
 | s+1, n =>
   by 
@@ -188,7 +188,7 @@ theorem range_succ (n : ℕ) : range (succ n) = range n ++ [n] :=
 theorem range_zero : range 0 = [] :=
   rfl
 
-theorem iota_eq_reverse_range' : ∀ n : ℕ, iota n = reverse (range' 1 n)
+theorem iota_eq_reverse_range' : ∀ (n : ℕ), iota n = reverse (range' 1 n)
 | 0 => rfl
 | n+1 =>
   by 
@@ -211,7 +211,7 @@ theorem mem_iota {m n : ℕ} : m ∈ iota n ↔ 1 ≤ m ∧ m ≤ n :=
   by 
     simp only [iota_eq_reverse_range', mem_reverse, mem_range', add_commₓ, lt_succ_iff]
 
-theorem reverse_range' : ∀ s n : ℕ, reverse (range' s n) = map (fun i => (s+n) - 1 - i) (range n)
+theorem reverse_range' : ∀ (s n : ℕ), reverse (range' s n) = map (fun i => (s+n) - 1 - i) (range n)
 | s, 0 => rfl
 | s, n+1 =>
   by 
@@ -264,7 +264,7 @@ theorem prod_range_succ' {α : Type u} [Monoidₓ α] (f : ℕ → α) (n : ℕ)
         rw [List.prod_range_succ, hd, mul_assocₓ, ←List.prod_range_succ]
 
 @[simp]
-theorem enum_from_map_fst : ∀ n l : List α, map Prod.fst (enum_from n l) = range' n l.length
+theorem enum_from_map_fst : ∀ n (l : List α), map Prod.fst (enum_from n l) = range' n l.length
 | n, [] => rfl
 | n, a :: l => congr_argₓ (cons _) (enum_from_map_fst _ _)
 

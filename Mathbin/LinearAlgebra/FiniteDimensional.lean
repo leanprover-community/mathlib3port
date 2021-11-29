@@ -663,11 +663,12 @@ theorem finrank_eq_zero_of_dim_eq_zero [FiniteDimensional K V] (h : Module.rank 
     rw [h]
     normCast
 
-theorem finrank_eq_zero_of_basis_imp_not_finite (h : ∀ s : Set V, Basis.{v} (s : Set V) K V → ¬s.finite) :
+theorem finrank_eq_zero_of_basis_imp_not_finite (h : ∀ (s : Set V), Basis.{v} (s : Set V) K V → ¬s.finite) :
   finrank K V = 0 :=
   dif_neg fun dim_lt => h _ (Basis.ofVectorSpace K V) ((Basis.ofVectorSpace K V).finite_index_of_dim_lt_omega dim_lt)
 
-theorem finrank_eq_zero_of_basis_imp_false (h : ∀ s : Finset V, Basis.{v} (s : Set V) K V → False) : finrank K V = 0 :=
+theorem finrank_eq_zero_of_basis_imp_false (h : ∀ (s : Finset V), Basis.{v} (s : Set V) K V → False) :
+  finrank K V = 0 :=
   finrank_eq_zero_of_basis_imp_not_finite
     fun s b hs =>
       h hs.to_finset
@@ -1064,7 +1065,7 @@ theorem finrank_top : finrank K (⊤ : Submodule K V) = finrank K V :=
 
 end Top
 
-theorem finrank_zero_iff_forall_zero [FiniteDimensional K V] : finrank K V = 0 ↔ ∀ x : V, x = 0 :=
+theorem finrank_zero_iff_forall_zero [FiniteDimensional K V] : finrank K V = 0 ↔ ∀ (x : V), x = 0 :=
   finrank_zero_iff.trans (subsingleton_iff_forall_eq 0)
 
 -- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -1183,11 +1184,11 @@ end
 
 namespace Submodule
 
-theorem finrank_mono [FiniteDimensional K V] : Monotone fun s : Submodule K V => finrank K s :=
-  fun s t hst =>
-    calc finrank K s = finrank K (comap t.subtype s) := LinearEquiv.finrank_eq (comap_subtype_equiv_of_le hst).symm 
-      _ ≤ finrank K t := Submodule.finrank_le _
-      
+-- error in LinearAlgebra.FiniteDimensional: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem finrank_mono [finite_dimensional K V] : monotone (λ s : submodule K V, finrank K s) :=
+λ s t hst, calc
+  «expr = »(finrank K s, finrank K (comap t.subtype s)) : linear_equiv.finrank_eq (comap_subtype_equiv_of_le hst).symm
+  «expr ≤ »(..., finrank K t) : submodule.finrank_le _
 
 theorem lt_of_le_of_finrank_lt_finrank {s t : Submodule K V} (le : s ≤ t) (lt : finrank K s < finrank K t) : s < t :=
   lt_of_le_of_neₓ le
@@ -1458,7 +1459,7 @@ section finrank_eq_one
 
 /-- If there is a nonzero vector and every other vector is a multiple of it,
 then the module has dimension one. -/
-theorem finrank_eq_one (v : V) (n : v ≠ 0) (h : ∀ w : V, ∃ c : K, c • v = w) : finrank K V = 1 :=
+theorem finrank_eq_one (v : V) (n : v ≠ 0) (h : ∀ (w : V), ∃ c : K, c • v = w) : finrank K V = 1 :=
   by 
     obtain ⟨b⟩ := (Basis.basis_singleton_iff PUnit).mpr ⟨v, n, h⟩
     rw [finrank_eq_card_basis b, Fintype.card_punit]
@@ -1498,7 +1499,7 @@ theorem finrank_eq_one_iff_of_nonzero (v : V) (nz : v ≠ 0) : finrank K V = 1 �
 /--
 A module with a nonzero vector `v` has dimension 1 iff every vector is a multiple of `v`.
 -/
-theorem finrank_eq_one_iff_of_nonzero' (v : V) (nz : v ≠ 0) : finrank K V = 1 ↔ ∀ w : V, ∃ c : K, c • v = w :=
+theorem finrank_eq_one_iff_of_nonzero' (v : V) (nz : v ≠ 0) : finrank K V = 1 ↔ ∀ (w : V), ∃ c : K, c • v = w :=
   by 
     rw [finrank_eq_one_iff_of_nonzero v nz]
     apply span_singleton_eq_top_iff
@@ -1519,7 +1520,7 @@ end
 /--
 A module has dimension 1 iff there is some nonzero `v : V` so every vector is a multiple of `v`.
 -/
-theorem finrank_eq_one_iff' : finrank K V = 1 ↔ ∃ (v : V)(n : v ≠ 0), ∀ w : V, ∃ c : K, c • v = w :=
+theorem finrank_eq_one_iff' : finrank K V = 1 ↔ ∃ (v : V)(n : v ≠ 0), ∀ (w : V), ∃ c : K, c • v = w :=
   by 
     convert finrank_eq_one_iff PUnit 
     simp only [exists_prop, eq_iff_iff, Ne.def]

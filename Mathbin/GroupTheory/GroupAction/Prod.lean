@@ -43,23 +43,15 @@ instance  [HasScalar M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScal
 instance  [SmulCommClass M N α] [SmulCommClass M N β] : SmulCommClass M N (α × β) :=
   { smul_comm := fun r s x => mk.inj_iff.mpr ⟨smul_comm _ _ _, smul_comm _ _ _⟩ }
 
-@[toAdditive has_faithful_vadd_left]
-instance has_faithful_scalar_left [HasFaithfulScalar M α] [Nonempty β] : HasFaithfulScalar M (α × β) :=
-  ⟨fun x y h =>
-      let ⟨b⟩ := ‹Nonempty β›
-      eq_of_smul_eq_smul$
-        fun a : α =>
-          by 
-            injection h (a, b)⟩
+-- error in GroupTheory.GroupAction.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident has_faithful_vadd_left]]
+instance has_faithful_scalar_left [has_faithful_scalar M α] [nonempty β] : has_faithful_scalar M «expr × »(α, β) :=
+⟨λ x y h, let ⟨b⟩ := «expr‹ ›»(nonempty β) in «expr $ »(eq_of_smul_eq_smul, λ a : α, by injection [expr h (a, b)] [])⟩
 
-@[toAdditive has_faithful_vadd_right]
-instance has_faithful_scalar_right [Nonempty α] [HasFaithfulScalar M β] : HasFaithfulScalar M (α × β) :=
-  ⟨fun x y h =>
-      let ⟨a⟩ := ‹Nonempty α›
-      eq_of_smul_eq_smul$
-        fun b : β =>
-          by 
-            injection h (a, b)⟩
+-- error in GroupTheory.GroupAction.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident has_faithful_vadd_right]]
+instance has_faithful_scalar_right [nonempty α] [has_faithful_scalar M β] : has_faithful_scalar M «expr × »(α, β) :=
+⟨λ x y h, let ⟨a⟩ := «expr‹ ›»(nonempty α) in «expr $ »(eq_of_smul_eq_smul, λ b : β, by injection [expr h (a, b)] [])⟩
 
 end 
 

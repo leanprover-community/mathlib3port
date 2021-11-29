@@ -280,11 +280,11 @@ theorem left_dual_iso_id {X Y : C} (p : exact_pairing X Y) : left_dual_iso p p =
 
 /-- A right rigid monoidal category is one in which every object has a right dual. -/
 class right_rigid_category(C : Type u)[category.{v} C][monoidal_category.{v} C] where 
-  [rightDual : ∀ X : C, has_right_dual X]
+  [rightDual : ∀ (X : C), has_right_dual X]
 
 /-- A left rigid monoidal category is one in which every object has a right dual. -/
 class left_rigid_category(C : Type u)[category.{v} C][monoidal_category.{v} C] where 
-  [leftDual : ∀ X : C, has_left_dual X]
+  [leftDual : ∀ (X : C), has_left_dual X]
 
 attribute [instance] right_rigid_category.right_dual
 

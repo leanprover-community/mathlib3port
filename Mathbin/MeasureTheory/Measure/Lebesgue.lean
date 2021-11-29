@@ -408,7 +408,7 @@ begin
   simp [] [] ["only"] ["[", expr B, "]"] [] []
 end
 
--- error in MeasureTheory.Measure.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Measure.Lebesgue: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A transvection preserves Lebesgue measure. -/
 theorem map_transvection_volume_pi
 [decidable_eq ι]
@@ -591,7 +591,7 @@ end
     or equal to the other on that set, then the volume of the region
     between the two functions can be represented as an integral. -/
 theorem volume_region_between_eq_integral [sigma_finite μ] (f_int : integrable_on f s μ) (g_int : integrable_on g s μ)
-  (hs : MeasurableSet s) (hfg : ∀ x _ : x ∈ s, f x ≤ g x) :
+  (hs : MeasurableSet s) (hfg : ∀ x (_ : x ∈ s), f x ≤ g x) :
   μ.prod volume (RegionBetween f g s) = Ennreal.ofReal (∫y in s, (g - f) y ∂μ) :=
   volume_region_between_eq_integral' f_int g_int hs ((ae_restrict_iff' hs).mpr (eventually_of_forall hfg))
 

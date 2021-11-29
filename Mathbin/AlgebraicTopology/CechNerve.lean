@@ -33,18 +33,17 @@ namespace CategoryTheory.Arrow
 
 variable(f : arrow C)
 
-variable[∀ n : ℕ, has_wide_pullback f.right (fun i : Ulift (Finₓ (n+1)) => f.left) fun i => f.hom]
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+variables [∀ n : exprℕ(), has_wide_pullback f.right (λ i : ulift (fin «expr + »(n, 1)), f.left) (λ i, f.hom)]
 
-/-- The Čech nerve associated to an arrow. -/
-@[simps]
-def cech_nerve : simplicial_object C :=
-  { obj := fun n => wide_pullback f.right (fun i : Ulift (Finₓ (n.unop.len+1)) => f.left) fun i => f.hom,
-    map :=
-      fun m n g =>
-        wide_pullback.lift (wide_pullback.base _)
-          (fun i => (wide_pullback.π fun i => f.hom)$ Ulift.up$ g.unop.to_preorder_hom i.down)
-          (by 
-            tidy) }
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The Čech nerve associated to an arrow. -/ @[simps #[]] def cech_nerve : simplicial_object C :=
+{ obj := λ n, wide_pullback f.right (λ i : ulift (fin «expr + »(n.unop.len, 1)), f.left) (λ i, f.hom),
+  map := λ
+  m
+  n
+  g, wide_pullback.lift (wide_pullback.base _) (λ
+   i, «expr $ »(wide_pullback.π (λ i, f.hom), «expr $ »(ulift.up, g.unop.to_preorder_hom i.down))) (by tidy []) }
 
 /-- The augmented Čech nerve associated to an arrow. -/
 @[simps]
@@ -57,7 +56,9 @@ namespace CategoryTheory
 
 namespace SimplicialObject
 
-variable[∀ n : ℕ f : arrow C, has_wide_pullback f.right (fun i : Ulift (Finₓ (n+1)) => f.left) fun i => f.hom]
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+variables
+[∀ (n : exprℕ()) (f : arrow C), has_wide_pullback f.right (λ i : ulift (fin «expr + »(n, 1)), f.left) (λ i, f.hom)]
 
 /-- The Čech nerve construction, as a functor from `arrow C`. -/
 @[simps]
@@ -187,20 +188,22 @@ namespace CategoryTheory.Arrow
 
 variable(f : arrow C)
 
-variable[∀ n : ℕ, has_wide_pushout f.left (fun i : Ulift (Finₓ (n+1)) => f.right) fun i => f.hom]
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+variables [∀ n : exprℕ(), has_wide_pushout f.left (λ i : ulift (fin «expr + »(n, 1)), f.right) (λ i, f.hom)]
 
-/-- The Čech conerve associated to an arrow. -/
-@[simps]
-def cech_conerve : cosimplicial_object C :=
-  { obj := fun n => wide_pushout f.left (fun i : Ulift (Finₓ (n.len+1)) => f.right) fun i => f.hom,
-    map :=
-      fun m n g =>
-        wide_pushout.desc (wide_pushout.head _)
-          (fun i => (wide_pushout.ι fun i => f.hom)$ Ulift.up$ g.to_preorder_hom i.down)
-          (by 
-            rintro ⟨⟨j⟩⟩
-            dsimp 
-            rw [wide_pushout.arrow_ι fun i => f.hom]) }
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The Čech conerve associated to an arrow. -/ @[simps #[]] def cech_conerve : cosimplicial_object C :=
+{ obj := λ n, wide_pushout f.left (λ i : ulift (fin «expr + »(n.len, 1)), f.right) (λ i, f.hom),
+  map := λ
+  m
+  n
+  g, wide_pushout.desc (wide_pushout.head _) (λ
+   i, «expr $ »(wide_pushout.ι (λ
+     i, f.hom), «expr $ »(ulift.up, g.to_preorder_hom i.down))) (begin
+     rintros ["⟨", "⟨", ident j, "⟩", "⟩"],
+     dsimp [] [] [] [],
+     rw ["[", expr wide_pushout.arrow_ι (λ i, f.hom), "]"] []
+   end) }
 
 /-- The augmented Čech conerve associated to an arrow. -/
 @[simps]
@@ -213,7 +216,9 @@ namespace CategoryTheory
 
 namespace CosimplicialObject
 
-variable[∀ n : ℕ f : arrow C, has_wide_pushout f.left (fun i : Ulift (Finₓ (n+1)) => f.right) fun i => f.hom]
+-- error in AlgebraicTopology.CechNerve: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+variables
+[∀ (n : exprℕ()) (f : arrow C), has_wide_pushout f.left (λ i : ulift (fin «expr + »(n, 1)), f.right) (λ i, f.hom)]
 
 /-- The Čech conerve construction, as a functor from `arrow C`. -/
 @[simps]

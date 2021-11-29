@@ -45,8 +45,8 @@ class Qpf(F : Type u → Type u)[Functor F] where
   p : Pfunctor.{u}
   abs : ∀ {α}, P.obj α → F α 
   repr : ∀ {α}, F α → P.obj α 
-  abs_repr : ∀ {α} x : F α, abs (reprₓ x) = x 
-  abs_map : ∀ {α β} f : α → β p : P.obj α, abs (f <$> p) = f <$> abs p
+  abs_repr : ∀ {α} (x : F α), abs (reprₓ x) = x 
+  abs_map : ∀ {α β} (f : α → β) (p : P.obj α), abs (f <$> p) = f <$> abs p
 
 namespace Qpf
 
@@ -70,7 +70,7 @@ theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) (x : F α) 
     rw [←abs_map, ←abs_map, ←abs_map]
     rfl
 
-theorem IsLawfulFunctor (h : ∀ α β : Type u, @Functor.mapConst F _ α _ = Functor.map ∘ Function.const β) :
+theorem IsLawfulFunctor (h : ∀ (α β : Type u), @Functor.mapConst F _ α _ = Functor.map ∘ Function.const β) :
   IsLawfulFunctor F :=
   { map_const_eq := h, id_map := @id_map F _ _, comp_map := @comp_map F _ _ }
 
@@ -279,7 +279,7 @@ theorem fix.ind_aux (a : q.P.A) (f : q.P.B a → q.P.W) : fix.mk (abs ⟨a, fun 
     apply Wrepr_equiv
 
 theorem fix.ind_rec {α : Type u} (g₁ g₂ : fix F → α)
-  (h : ∀ x : F (fix F), g₁ <$> x = g₂ <$> x → g₁ (fix.mk x) = g₂ (fix.mk x)) : ∀ x, g₁ x = g₂ x :=
+  (h : ∀ (x : F (fix F)), g₁ <$> x = g₂ <$> x → g₁ (fix.mk x) = g₂ (fix.mk x)) : ∀ x, g₁ x = g₂ x :=
   by 
     apply Quot.ind 
     intro x 
@@ -318,7 +318,7 @@ theorem fix.dest_mk (x : F (fix F)) : fix.dest (fix.mk x) = x :=
     congr with x 
     apply fix.mk_dest
 
-theorem fix.ind (p : fix F → Prop) (h : ∀ x : F (fix F), liftp p x → p (fix.mk x)) : ∀ x, p x :=
+theorem fix.ind (p : fix F → Prop) (h : ∀ (x : F (fix F)), liftp p x → p (fix.mk x)) : ∀ x, p x :=
   by 
     apply Quot.ind 
     intro x 
@@ -471,22 +471,24 @@ theorem cofix.bisim (r : cofix F → cofix F → Prop) (h : ∀ x y, r x y → l
     apply Quot.sound 
     apply h'
 
-theorem cofix.bisim' {α : Type _} (Q : α → Prop) (u v : α → cofix F)
-  (h :
-    ∀ x,
-      Q x →
-        ∃ a f f',
-          cofix.dest (u x) = abs ⟨a, f⟩ ∧ cofix.dest (v x) = abs ⟨a, f'⟩ ∧ ∀ i, ∃ x', Q x' ∧ f i = u x' ∧ f' i = v x') :
-  ∀ x, Q x → u x = v x :=
-  fun x Qx =>
-    let R := fun w z : cofix F => ∃ x', Q x' ∧ w = u x' ∧ z = v x' 
-    cofix.bisim R
-      (fun x y ⟨x', Qx', xeq, yeq⟩ =>
-        by 
-          rcases h x' Qx' with ⟨a, f, f', ux'eq, vx'eq, h'⟩
-          rw [liftr_iff]
-          refine' ⟨a, f, f', xeq.symm ▸ ux'eq, yeq.symm ▸ vx'eq, h'⟩)
-      _ _ ⟨x, Qx, rfl, rfl⟩
+-- error in Data.Qpf.Univariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cofix.bisim'
+{α : Type*}
+(Q : α → exprProp())
+(u v : α → cofix F)
+(h : ∀
+ x, Q x → «expr∃ , »((a
+   f
+   f'), «expr ∧ »(«expr = »(cofix.dest (u x), abs ⟨a, f⟩), «expr ∧ »(«expr = »(cofix.dest (v x), abs ⟨a, f'⟩), ∀
+    i, «expr∃ , »((x'), «expr ∧ »(Q x', «expr ∧ »(«expr = »(f i, u x'), «expr = »(f' i, v x')))))))) : ∀
+x, Q x → «expr = »(u x, v x) :=
+λ
+x Qx, let R := λ w z : cofix F, «expr∃ , »((x'), «expr ∧ »(Q x', «expr ∧ »(«expr = »(w, u x'), «expr = »(z, v x')))) in
+cofix.bisim R (λ (x y) ⟨x', Qx', xeq, yeq⟩, begin
+   rcases [expr h x' Qx', "with", "⟨", ident a, ",", ident f, ",", ident f', ",", ident ux'eq, ",", ident vx'eq, ",", ident h', "⟩"],
+   rw [expr liftr_iff] [],
+   refine [expr ⟨a, f, f', «expr ▸ »(xeq.symm, ux'eq), «expr ▸ »(yeq.symm, vx'eq), h'⟩]
+ end) _ _ ⟨x, Qx, rfl, rfl⟩
 
 end Qpf
 
@@ -569,8 +571,8 @@ variable{FG_repr : ∀ {α}, G α → F α}
 functor G α, `G` is a qpf. We can consider `G` a quotient on `F` where
 elements `x y : F α` are in the same equivalence class if
 `FG_abs x = FG_abs y`  -/
-def quotient_qpf (FG_abs_repr : ∀ {α} x : G α, FG_abs (FG_repr x) = x)
-  (FG_abs_map : ∀ {α β} f : α → β x : F α, FG_abs (f <$> x) = f <$> FG_abs x) : Qpf G :=
+def quotient_qpf (FG_abs_repr : ∀ {α} (x : G α), FG_abs (FG_repr x) = x)
+  (FG_abs_map : ∀ {α β} (f : α → β) (x : F α), FG_abs (f <$> x) = f <$> FG_abs x) : Qpf G :=
   { p := q.P, abs := fun {α} p => FG_abs (abs p), repr := fun {α} x => reprₓ (FG_repr x),
     abs_repr :=
       fun {α} x =>
@@ -662,15 +664,16 @@ variable(q)
 /-- A qpf is said to be uniform if every polynomial functor
 representing a single value all have the same range. -/
 def is_uniform : Prop :=
-  ∀ ⦃α : Type u⦄ a a' : q.P.A f : q.P.B a → α f' : q.P.B a' → α, abs ⟨a, f⟩ = abs ⟨a', f'⟩ → f '' univ = f' '' univ
+  ∀ ⦃α : Type u⦄ (a a' : q.P.A) (f : q.P.B a → α) (f' : q.P.B a' → α),
+    abs ⟨a, f⟩ = abs ⟨a', f'⟩ → f '' univ = f' '' univ
 
 /-- does `abs` preserve `liftp`? -/
 def liftp_preservation : Prop :=
-  ∀ ⦃α⦄ p : α → Prop x : q.P.obj α, liftp p (abs x) ↔ liftp p x
+  ∀ ⦃α⦄ (p : α → Prop) (x : q.P.obj α), liftp p (abs x) ↔ liftp p x
 
 /-- does `abs` preserve `supp`? -/
 def supp_preservation : Prop :=
-  ∀ ⦃α⦄ x : q.P.obj α, supp (abs x) = supp x
+  ∀ ⦃α⦄ (x : q.P.obj α), supp (abs x) = supp x
 
 variable(q)
 
@@ -688,7 +691,7 @@ theorem supp_eq_of_is_uniform (h : q.is_uniform) {α : Type u} (a : q.P.A) (f : 
     apply h'
 
 theorem liftp_iff_of_is_uniform (h : q.is_uniform) {α : Type u} (x : F α) (p : α → Prop) :
-  liftp p x ↔ ∀ u _ : u ∈ supp x, p u :=
+  liftp p x ↔ ∀ u (_ : u ∈ supp x), p u :=
   by 
     rw [liftp_iff, ←abs_repr x]
     cases' reprₓ x with a f 

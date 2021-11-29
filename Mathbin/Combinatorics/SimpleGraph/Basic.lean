@@ -577,7 +577,7 @@ A graph is locally finite if every vertex has a finite neighbor set.
 -/
 @[reducible]
 def locally_finite :=
-  ∀ v : V, Fintype (G.neighbor_set v)
+  ∀ (v : V), Fintype (G.neighbor_set v)
 
 variable[locally_finite G]
 
@@ -585,7 +585,7 @@ variable[locally_finite G]
 A locally finite simple graph is regular of degree `d` if every vertex has degree `d`.
 -/
 def is_regular_of_degree (d : ℕ) : Prop :=
-  ∀ v : V, G.degree v = d
+  ∀ (v : V), G.degree v = d
 
 theorem is_regular_of_degree_eq {d : ℕ} (h : G.is_regular_of_degree d) (v : V) : G.degree v = d :=
   h v

@@ -79,21 +79,16 @@ variable{R ι G f}
 theorem of_f {i j hij x} : of R ι G f j (f i j hij x) = of R ι G f i x :=
   Eq.symm$ (Submodule.Quotient.eq _).2$ subset_span ⟨i, j, hij, x, rfl⟩
 
+-- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
-theorem exists_of [Nonempty ι] (z : direct_limit G f) : ∃ i x, of R ι G f i x = z :=
-  Nonempty.elimₓ
-      (by 
-        infer_instance)$
-    fun ind : ι =>
-      Quotientₓ.induction_on' z$
-        fun z =>
-          DirectSum.induction_on z ⟨ind, 0, LinearMap.map_zero _⟩ (fun i x => ⟨i, x, rfl⟩)
-            fun p q ⟨i, x, ihx⟩ ⟨j, y, ihy⟩ =>
-              let ⟨k, hik, hjk⟩ := DirectedOrder.directed i j
-              ⟨k, f i k hik x+f j k hjk y,
-                by 
-                  rw [LinearMap.map_add, of_f, of_f, ihx, ihy] <;> rfl⟩
+theorem exists_of [nonempty ι] (z : direct_limit G f) : «expr∃ , »((i x), «expr = »(of R ι G f i x, z)) :=
+«expr $ »(nonempty.elim (by apply_instance), assume
+ ind : ι, «expr $ »(quotient.induction_on' z, λ
+  z, direct_sum.induction_on z ⟨ind, 0, linear_map.map_zero _⟩ (λ
+   i
+   x, ⟨i, x, rfl⟩) (λ (p q) ⟨i, x, ihx⟩ ⟨j, y, ihy⟩, let ⟨k, hik, hjk⟩ := directed_order.directed i j in
+   ⟨k, «expr + »(f i k hik x, f j k hjk y), by rw ["[", expr linear_map.map_add, ",", expr of_f, ",", expr of_f, ",", expr ihx, ",", expr ihy, "]"] []; refl⟩)))
 
 @[elab_as_eliminator]
 protected theorem induction_on [Nonempty ι] {C : direct_limit G f → Prop} (z : direct_limit G f)
@@ -168,7 +163,7 @@ variable[DirectedSystem G f]
 
 open_locale Classical
 
-theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j) (hx : ∀ k _ : k ∈ x.support, k ≤ i) :
+theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j) (hx : ∀ k (_ : k ∈ x.support), k ≤ i) :
   DirectSum.toModule R ι (G j) (fun k => totalize G f k j) x =
     f i j hij (DirectSum.toModule R ι (G i) (fun k => totalize G f k i) x) :=
   by 
@@ -179,49 +174,46 @@ theorem to_module_totalize_of_le {x : DirectSum ι G} {i j : ι} (hij : i ≤ j)
     rw [DirectSum.single_eq_lof R k (x k)]
     simp [totalize_apply, hx k hk, le_transₓ (hx k hk) hij, DirectedSystem.map_map f]
 
-theorem of.zero_exact_aux [Nonempty ι] {x : DirectSum ι G} (H : Submodule.Quotient.mk x = (0 : direct_limit G f)) :
-  ∃ j, (∀ k _ : k ∈ x.support, k ≤ j) ∧ DirectSum.toModule R ι (G j) (fun i => totalize G f i j) x = (0 : G j) :=
-  Nonempty.elimₓ
-      (by 
-        infer_instance)$
-    fun ind : ι =>
-      span_induction ((quotient.mk_eq_zero _).1 H)
-        (fun x ⟨i, j, hij, y, hxy⟩ =>
-          let ⟨k, hik, hjk⟩ := DirectedOrder.directed i j
-          ⟨k,
-            by 
-              clear_ 
-              subst hxy 
-              split 
-              ·
-                intro i0 hi0 
-                rw [Dfinsupp.mem_support_iff, DirectSum.sub_apply, ←DirectSum.single_eq_lof, ←DirectSum.single_eq_lof,
-                  Dfinsupp.single_apply, Dfinsupp.single_apply] at hi0 
-                splitIfs  at hi0 with hi hj hj
-                ·
-                  rwa [hi] at hik
-                ·
-                  rwa [hi] at hik
-                ·
-                  rwa [hj] at hjk 
-                exfalso 
-                apply hi0 
-                rw [sub_zero]
-              simp [LinearMap.map_sub, totalize_apply, hik, hjk, DirectedSystem.map_map f, DirectSum.apply_eq_component,
-                DirectSum.component.of]⟩)
-        ⟨ind, fun _ h => (Finset.not_mem_empty _ h).elim, LinearMap.map_zero _⟩
-        (fun x y ⟨i, hi, hxi⟩ ⟨j, hj, hyj⟩ =>
-          let ⟨k, hik, hjk⟩ := DirectedOrder.directed i j
-          ⟨k,
-            fun l hl =>
-              (Finset.mem_union.1 (Dfinsupp.support_add hl)).elim (fun hl => le_transₓ (hi _ hl) hik)
-                fun hl => le_transₓ (hj _ hl) hjk,
-            by 
-              simp [LinearMap.map_add, hxi, hyj, to_module_totalize_of_le hik hi, to_module_totalize_of_le hjk hj]⟩)
-        fun a x ⟨i, hi, hxi⟩ =>
-          ⟨i, fun k hk => hi k (DirectSum.support_smul _ _ hk),
-            by 
-              simp [LinearMap.map_smul, hxi]⟩
+-- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of.zero_exact_aux
+[nonempty ι]
+{x : direct_sum ι G}
+(H : «expr = »(submodule.quotient.mk x, (0 : direct_limit G f))) : «expr∃ , »((j), «expr ∧ »(∀
+  k «expr ∈ » x.support, «expr ≤ »(k, j), «expr = »(direct_sum.to_module R ι (G j) (λ
+    i, totalize G f i j) x, (0 : G j)))) :=
+«expr $ »(nonempty.elim (by apply_instance), assume
+ ind : ι, span_induction ((quotient.mk_eq_zero _).1 H) (λ
+  (x)
+  ⟨i, j, hij, y, hxy⟩, let ⟨k, hik, hjk⟩ := directed_order.directed i j in
+  ⟨k, begin
+     clear_,
+     subst [expr hxy],
+     split,
+     { intros [ident i0, ident hi0],
+       rw ["[", expr dfinsupp.mem_support_iff, ",", expr direct_sum.sub_apply, ",", "<-", expr direct_sum.single_eq_lof, ",", "<-", expr direct_sum.single_eq_lof, ",", expr dfinsupp.single_apply, ",", expr dfinsupp.single_apply, "]"] ["at", ident hi0],
+       split_ifs ["at", ident hi0] ["with", ident hi, ident hj, ident hj],
+       { rwa [expr hi] ["at", ident hik] },
+       { rwa [expr hi] ["at", ident hik] },
+       { rwa [expr hj] ["at", ident hjk] },
+       exfalso,
+       apply [expr hi0],
+       rw [expr sub_zero] [] },
+     simp [] [] [] ["[", expr linear_map.map_sub, ",", expr totalize_apply, ",", expr hik, ",", expr hjk, ",", expr directed_system.map_map f, ",", expr direct_sum.apply_eq_component, ",", expr direct_sum.component.of, "]"] [] []
+   end⟩) ⟨ind, λ
+  _
+  h, (finset.not_mem_empty _ h).elim, linear_map.map_zero _⟩ (λ
+  (x y)
+  ⟨i, hi, hxi⟩
+  ⟨j, hj, hyj⟩, let ⟨k, hik, hjk⟩ := directed_order.directed i j in
+  ⟨k, λ
+   l
+   hl, (finset.mem_union.1 (dfinsupp.support_add hl)).elim (λ
+    hl, le_trans (hi _ hl) hik) (λ
+    hl, le_trans (hj _ hl) hjk), by simp [] [] [] ["[", expr linear_map.map_add, ",", expr hxi, ",", expr hyj, ",", expr to_module_totalize_of_le hik hi, ",", expr to_module_totalize_of_le hjk hj, "]"] [] []⟩) (λ
+  (a x)
+  ⟨i, hi, hxi⟩, ⟨i, λ
+   k
+   hk, hi k (direct_sum.support_smul _ _ hk), by simp [] [] [] ["[", expr linear_map.map_smul, ",", expr hxi, "]"] [] []⟩))
 
 -- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A component that corresponds to zero in the direct limit is already zero in some
@@ -367,34 +359,22 @@ variable{G f}
 theorem of_f {i j} hij x : of G f j (f i j hij x) = of G f i x :=
   Ideal.Quotient.eq.2$ subset_span$ Or.inl ⟨i, j, hij, x, rfl⟩
 
+-- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Every element of the direct limit corresponds to some element in
 some component of the directed system. -/
-theorem exists_of [Nonempty ι] (z : direct_limit G f) : ∃ i x, of G f i x = z :=
-  Nonempty.elimₓ
-      (by 
-        infer_instance)$
-    fun ind : ι =>
-      Quotientₓ.induction_on' z$
-        fun x =>
-          FreeAbelianGroup.induction_on x ⟨ind, 0, (of _ _ ind).map_zero⟩
-            (fun s =>
-              Multiset.induction_on s ⟨ind, 1, (of _ _ ind).map_one⟩
-                fun a s ih =>
-                  let ⟨i, x⟩ := a 
-                  let ⟨j, y, hs⟩ := ih 
-                  let ⟨k, hik, hjk⟩ := DirectedOrder.directed i j
-                  ⟨k, f i k hik x*f j k hjk y,
-                    by 
-                      rw [(of _ _ _).map_mul, of_f, of_f, hs] <;> rfl⟩)
-            (fun s ⟨i, x, ih⟩ =>
-              ⟨i, -x,
-                by 
-                  rw [(of _ _ _).map_neg, ih] <;> rfl⟩)
-            fun p q ⟨i, x, ihx⟩ ⟨j, y, ihy⟩ =>
-              let ⟨k, hik, hjk⟩ := DirectedOrder.directed i j
-              ⟨k, f i k hik x+f j k hjk y,
-                by 
-                  rw [(of _ _ _).map_add, of_f, of_f, ihx, ihy] <;> rfl⟩
+theorem exists_of [nonempty ι] (z : direct_limit G f) : «expr∃ , »((i x), «expr = »(of G f i x, z)) :=
+«expr $ »(nonempty.elim (by apply_instance), assume
+ ind : ι, «expr $ »(quotient.induction_on' z, λ
+  x, free_abelian_group.induction_on x ⟨ind, 0, (of _ _ ind).map_zero⟩ (λ
+   s, multiset.induction_on s ⟨ind, 1, (of _ _ ind).map_one⟩ (λ
+    a s ih, let ⟨i, x⟩ := a, ⟨j, y, hs⟩ := ih, ⟨k, hik, hjk⟩ := directed_order.directed i j in
+    ⟨k, «expr * »(f i k hik x, f j k hjk y), by rw ["[", expr (of _ _ _).map_mul, ",", expr of_f, ",", expr of_f, ",", expr hs, "]"] []; refl⟩)) (λ
+   (s)
+   ⟨i, x, ih⟩, ⟨i, «expr- »(x), by rw ["[", expr (of _ _ _).map_neg, ",", expr ih, "]"] []; refl⟩) (λ
+   (p q)
+   ⟨i, x, ihx⟩
+   ⟨j, y, ihy⟩, let ⟨k, hik, hjk⟩ := directed_order.directed i j in
+   ⟨k, «expr + »(f i k hik x, f j k hjk y), by rw ["[", expr (of _ _ _).map_add, ",", expr of_f, ",", expr of_f, ",", expr ihx, ",", expr ihy, "]"] []; refl⟩)))
 
 section 
 
@@ -582,23 +562,22 @@ open FreeCommRing
 
 variable(G f)
 
+-- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The universal property of the direct limit: maps from the components to another ring
 that respect the directed system structure (i.e. make some diagram commute) give rise
 to a unique map out of the direct limit.
--/
-def lift : direct_limit G f →+* P :=
-  Ideal.Quotient.lift _ (FreeCommRing.lift$ fun x : Σi, G i => g x.1 x.2)
-    (by 
-      suffices  : Ideal.span _ ≤ Ideal.comap (FreeCommRing.lift fun x : Σi : ι, G i => g x.fst x.snd) ⊥
-      ·
-        intro x hx 
-        exact (mem_bot P).1 (this hx)
-      rw [Ideal.span_le]
-      intro x hx 
-      rw [SetLike.mem_coe, Ideal.mem_comap, mem_bot]
-      rcases hx with (⟨i, j, hij, x, rfl⟩ | ⟨i, rfl⟩ | ⟨i, x, y, rfl⟩ | ⟨i, x, y, rfl⟩) <;>
-        simp only [RingHom.map_sub, lift_of, Hg, RingHom.map_one, RingHom.map_add, RingHom.map_mul, (g i).map_one,
-          (g i).map_add, (g i).map_mul, sub_self])
+-/ def lift : «expr →+* »(direct_limit G f, P) :=
+ideal.quotient.lift _ «expr $ »(free_comm_ring.lift, λ
+ x : «exprΣ , »((i), G i), g x.1 x.2) (begin
+   suffices [] [":", expr «expr ≤ »(ideal.span _, ideal.comap (free_comm_ring.lift (λ
+       x : «exprΣ , »((i : ι), G i), g x.fst x.snd)) «expr⊥»())],
+   { intros [ident x, ident hx],
+     exact [expr (mem_bot P).1 (this hx)] },
+   rw [expr ideal.span_le] [],
+   intros [ident x, ident hx],
+   rw ["[", expr set_like.mem_coe, ",", expr ideal.mem_comap, ",", expr mem_bot, "]"] [],
+   rcases [expr hx, "with", "⟨", ident i, ",", ident j, ",", ident hij, ",", ident x, ",", ident rfl, "⟩", "|", "⟨", ident i, ",", ident rfl, "⟩", "|", "⟨", ident i, ",", ident x, ",", ident y, ",", ident rfl, "⟩", "|", "⟨", ident i, ",", ident x, ",", ident y, ",", ident rfl, "⟩"]; simp [] [] ["only"] ["[", expr ring_hom.map_sub, ",", expr lift_of, ",", expr Hg, ",", expr ring_hom.map_one, ",", expr ring_hom.map_add, ",", expr ring_hom.map_mul, ",", expr (g i).map_one, ",", expr (g i).map_add, ",", expr (g i).map_mul, ",", expr sub_self, "]"] [] []
+ end)
 
 variable{G f}
 
@@ -636,32 +615,24 @@ variable(f' : ∀ i j, i ≤ j → G i →+* G j)
 
 namespace DirectLimit
 
-instance Nontrivial [DirectedSystem G fun i j h => f' i j h] : Nontrivial (Ringₓ.DirectLimit G fun i j h => f' i j h) :=
-  ⟨⟨0, 1,
-      Nonempty.elimₓ
-          (by 
-            infer_instance)$
-        fun i : ι =>
-          by 
-            change (0 : Ringₓ.DirectLimit G fun i j h => f' i j h) ≠ 1
-            rw [←(Ringₓ.DirectLimit.of _ _ _).map_one]
-            intro H 
-            rcases Ringₓ.DirectLimit.of.zero_exact H.symm with ⟨j, hij, hf⟩
-            rw [(f' i j hij).map_one] at hf 
-            exact one_ne_zero hf⟩⟩
+-- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance nontrivial [directed_system G (λ i j h, f' i j h)] : nontrivial (ring.direct_limit G (λ i j h, f' i j h)) :=
+⟨⟨0, 1, «expr $ »(nonempty.elim (by apply_instance), assume i : ι, begin
+     change [expr «expr ≠ »((0 : ring.direct_limit G (λ i j h, f' i j h)), 1)] [] [],
+     rw ["<-", expr (ring.direct_limit.of _ _ _).map_one] [],
+     intros [ident H],
+     rcases [expr ring.direct_limit.of.zero_exact H.symm, "with", "⟨", ident j, ",", ident hij, ",", ident hf, "⟩"],
+     rw [expr (f' i j hij).map_one] ["at", ident hf],
+     exact [expr one_ne_zero hf]
+   end)⟩⟩
 
-theorem exists_inv {p : Ringₓ.DirectLimit G f} : p ≠ 0 → ∃ y, (p*y) = 1 :=
-  Ringₓ.DirectLimit.induction_on p$
-    fun i x H =>
-      ⟨Ringₓ.DirectLimit.of G f i (x⁻¹),
-        by 
-          erw [←(Ringₓ.DirectLimit.of _ _ _).map_mul,
-            mul_inv_cancel
-              fun h : x = 0 =>
-                H$
-                  by 
-                    rw [h, (Ringₓ.DirectLimit.of _ _ _).map_zero],
-            (Ringₓ.DirectLimit.of _ _ _).map_one]⟩
+-- error in Algebra.DirectLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem exists_inv {p : ring.direct_limit G f} : «expr ≠ »(p, 0) → «expr∃ , »((y), «expr = »(«expr * »(p, y), 1)) :=
+«expr $ »(ring.direct_limit.induction_on p, λ
+ i
+ x
+ H, ⟨ring.direct_limit.of G f i «expr ⁻¹»(x), by erw ["[", "<-", expr (ring.direct_limit.of _ _ _).map_mul, ",", expr mul_inv_cancel (assume
+    h : «expr = »(x, 0), «expr $ »(H, by rw ["[", expr h, ",", expr (ring.direct_limit.of _ _ _).map_zero, "]"] [])), ",", expr (ring.direct_limit.of _ _ _).map_one, "]"] []⟩)
 
 section 
 

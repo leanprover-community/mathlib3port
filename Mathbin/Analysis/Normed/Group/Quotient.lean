@@ -88,7 +88,7 @@ variable{M N : Type _}[SemiNormedGroup M][SemiNormedGroup N]
 noncomputable instance normOnQuotient (S : AddSubgroup M) : HasNorm (Quotientₓ S) :=
   { norm := fun x => Inf (norm '' { m | mk' S m = x }) }
 
-theorem image_norm_nonempty {S : AddSubgroup M} : ∀ x : Quotientₓ S, (norm '' { m | mk' S m = x }).Nonempty :=
+theorem image_norm_nonempty {S : AddSubgroup M} : ∀ (x : Quotientₓ S), (norm '' { m | mk' S m = x }).Nonempty :=
   by 
     rintro ⟨m⟩
     rw [Set.nonempty_image_iff]
@@ -166,7 +166,7 @@ theorem quotient_norm_mk_eq (S : AddSubgroup M) (m : M) : ∥mk' S m∥ = Inf ((
       simpa using h
 
 /-- The quotient norm is nonnegative. -/
-theorem quotient_norm_nonneg (S : AddSubgroup M) : ∀ x : Quotientₓ S, 0 ≤ ∥x∥ :=
+theorem quotient_norm_nonneg (S : AddSubgroup M) : ∀ (x : Quotientₓ S), 0 ≤ ∥x∥ :=
   by 
     rintro ⟨m⟩
     change 0 ≤ ∥mk' S m∥
@@ -444,7 +444,7 @@ structure is_quotient(f : NormedGroupHom M N) : Prop where
 /-- Given  `f : normed_group_hom M N` such that `f s = 0` for all `s ∈ S`, where,
 `S : add_subgroup M` is closed, the induced morphism `normed_group_hom (quotient S) N`. -/
 noncomputable def lift {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : NormedGroupHom M N)
-  (hf : ∀ s _ : s ∈ S, f s = 0) : NormedGroupHom (Quotientₓ S) N :=
+  (hf : ∀ s (_ : s ∈ S), f s = 0) : NormedGroupHom (Quotientₓ S) N :=
   { QuotientAddGroup.lift S f.to_add_monoid_hom hf with
     bound' :=
       by 
@@ -457,11 +457,11 @@ noncomputable def lift {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f :
             rw [mul_addₓ, mul_div_cancel' _ hcpos.ne.symm] }
 
 theorem lift_mk {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : NormedGroupHom M N)
-  (hf : ∀ s _ : s ∈ S, f s = 0) (m : M) : lift S f hf (S.normed_mk m) = f m :=
+  (hf : ∀ s (_ : s ∈ S), f s = 0) (m : M) : lift S f hf (S.normed_mk m) = f m :=
   rfl
 
 theorem lift_unique {N : Type _} [SemiNormedGroup N] (S : AddSubgroup M) (f : NormedGroupHom M N)
-  (hf : ∀ s _ : s ∈ S, f s = 0) (g : NormedGroupHom (Quotientₓ S) N) : g.comp S.normed_mk = f → g = lift S f hf :=
+  (hf : ∀ s (_ : s ∈ S), f s = 0) (g : NormedGroupHom (Quotientₓ S) N) : g.comp S.normed_mk = f → g = lift S f hf :=
   by 
     intro h 
     ext 
@@ -476,7 +476,7 @@ theorem is_quotient_quotient (S : AddSubgroup M) : is_quotient S.normed_mk :=
       by 
         simpa [S.ker_normed_mk] using quotient_norm_mk_eq _ m⟩
 
--- error in Analysis.Normed.Group.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Normed.Group.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem is_quotient.norm_lift
 {f : normed_group_hom M N}
 (hquot : is_quotient f)

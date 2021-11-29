@@ -115,7 +115,7 @@ theorem ContinuousAt.inv₀ (hf : ContinuousAt f a) (ha : f a ≠ 0) : Continuou
 theorem Continuous.inv₀ (hf : Continuous f) (h0 : ∀ x, f x ≠ 0) : Continuous fun x => f x⁻¹ :=
   continuous_iff_continuous_at.2$ fun x => (hf.tendsto x).inv₀ (h0 x)
 
-theorem ContinuousOn.inv₀ (hf : ContinuousOn f s) (h0 : ∀ x _ : x ∈ s, f x ≠ 0) : ContinuousOn (fun x => f x⁻¹) s :=
+theorem ContinuousOn.inv₀ (hf : ContinuousOn f s) (h0 : ∀ x (_ : x ∈ s), f x ≠ 0) : ContinuousOn (fun x => f x⁻¹) s :=
   fun x hx => (hf x hx).inv₀ (h0 x hx)
 
 end Inv₀
@@ -143,7 +143,7 @@ theorem ContinuousWithinAt.div (hf : ContinuousWithinAt f s a) (hg : ContinuousW
   ContinuousWithinAt (f / g) s a :=
   hf.div hg h₀
 
-theorem ContinuousOn.div (hf : ContinuousOn f s) (hg : ContinuousOn g s) (h₀ : ∀ x _ : x ∈ s, g x ≠ 0) :
+theorem ContinuousOn.div (hf : ContinuousOn f s) (hg : ContinuousOn g s) (h₀ : ∀ x (_ : x ∈ s), g x ≠ 0) :
   ContinuousOn (f / g) s :=
   fun x hx => (hf x hx).div (hg x hx) (h₀ x hx)
 
@@ -157,8 +157,9 @@ theorem Continuous.div (hf : Continuous f) (hg : Continuous g) (h₀ : ∀ x, g 
   by 
     simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ h₀)
 
-theorem continuous_on_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) { p | p.2 ≠ 0 } :=
-  continuous_on_fst.div continuous_on_snd$ fun _ => id
+-- error in Topology.Algebra.GroupWithZero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_on_div : continuous_on (λ p : «expr × »(G₀, G₀), «expr / »(p.1, p.2)) {p | «expr ≠ »(p.2, 0)} :=
+«expr $ »(continuous_on_fst.div continuous_on_snd, λ _, id)
 
 /-- The function `f x / g x` is discontinuous when `g x = 0`.
 However, under appropriate conditions, `h x (f x / g x)` is still continuous.
@@ -242,8 +243,9 @@ begin
     exact [expr (continuous_at_pow x «expr + »(m, 1)).inv₀ (pow_ne_zero _ hx)] }
 end
 
-theorem continuous_on_zpow (m : ℤ) : ContinuousOn (fun x : G₀ => x ^ m) («expr ᶜ» {0}) :=
-  fun x hx => (continuous_at_zpow _ _ (Or.inl hx)).ContinuousWithinAt
+-- error in Topology.Algebra.GroupWithZero: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_on_zpow (m : exprℤ()) : continuous_on (λ x : G₀, «expr ^ »(x, m)) «expr ᶜ»({0}) :=
+λ x hx, (continuous_at_zpow _ _ (or.inl hx)).continuous_within_at
 
 theorem Filter.Tendsto.zpow {f : α → G₀} {l : Filter α} {a : G₀} (hf : tendsto f l (𝓝 a)) (m : ℤ) (h : a ≠ 0 ∨ 0 ≤ m) :
   tendsto (fun x => f x ^ m) l (𝓝 (a ^ m)) :=
@@ -258,7 +260,7 @@ theorem ContinuousWithinAt.zpow (hf : ContinuousWithinAt f s a) (m : ℤ) (h : f
   ContinuousWithinAt (fun x => f x ^ m) s a :=
   hf.zpow m h
 
-theorem ContinuousOn.zpow (hf : ContinuousOn f s) (m : ℤ) (h : ∀ a _ : a ∈ s, f a ≠ 0 ∨ 0 ≤ m) :
+theorem ContinuousOn.zpow (hf : ContinuousOn f s) (m : ℤ) (h : ∀ a (_ : a ∈ s), f a ≠ 0 ∨ 0 ≤ m) :
   ContinuousOn (fun x => f x ^ m) s :=
   fun a ha => (hf a ha).zpow m (h a ha)
 

@@ -60,18 +60,18 @@ section TopologicalAlgebra
 variable{R A :
     Type _}[CommSemiringₓ R][Semiringₓ A][Algebra R A][TopologicalSpace A][TopologicalRing A](p : Polynomial R)
 
-@[continuity]
-protected theorem continuous_aeval : Continuous fun x : A => aeval x p :=
-  p.continuous_eval₂ _
+-- error in Topology.Algebra.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] protected theorem continuous_aeval : continuous (λ x : A, aeval x p) := p.continuous_eval₂ _
 
-protected theorem continuous_at_aeval {a : A} : ContinuousAt (fun x : A => aeval x p) a :=
-  p.continuous_aeval.continuous_at
+-- error in Topology.Algebra.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected theorem continuous_at_aeval {a : A} : continuous_at (λ x : A, aeval x p) a := p.continuous_aeval.continuous_at
 
-protected theorem continuous_within_at_aeval {s a} : ContinuousWithinAt (fun x : A => aeval x p) s a :=
-  p.continuous_aeval.continuous_within_at
+-- error in Topology.Algebra.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected theorem continuous_within_at_aeval {s a} : continuous_within_at (λ x : A, aeval x p) s a :=
+p.continuous_aeval.continuous_within_at
 
-protected theorem continuous_on_aeval {s} : ContinuousOn (fun x : A => aeval x p) s :=
-  p.continuous_aeval.continuous_on
+-- error in Topology.Algebra.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected theorem continuous_on_aeval {s} : continuous_on (λ x : A, aeval x p) s := p.continuous_aeval.continuous_on
 
 end TopologicalAlgebra
 

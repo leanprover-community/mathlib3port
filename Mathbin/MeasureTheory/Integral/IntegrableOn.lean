@@ -105,6 +105,7 @@ theorem integrable_on_univ : integrable_on f univ μ ↔ integrable f μ :=
 theorem integrable_on_zero : integrable_on (fun _ => (0 : E)) s μ :=
   integrable_zero _ _ _
 
+@[simp]
 theorem integrable_on_const {C : E} : integrable_on (fun _ => C) s μ ↔ C = 0 ∨ μ s < ∞ :=
   integrable_const_iff.trans$
     by 
@@ -165,7 +166,7 @@ end
 
 @[simp]
 theorem integrable_on_finite_Union {s : Set β} (hs : finite s) {t : β → Set α} :
-  integrable_on f (⋃(i : _)(_ : i ∈ s), t i) μ ↔ ∀ i _ : i ∈ s, integrable_on f (t i) μ :=
+  integrable_on f (⋃(i : _)(_ : i ∈ s), t i) μ ↔ ∀ i (_ : i ∈ s), integrable_on f (t i) μ :=
   by 
     apply hs.induction_on
     ·
@@ -176,7 +177,7 @@ theorem integrable_on_finite_Union {s : Set β} (hs : finite s) {t : β → Set 
 
 @[simp]
 theorem integrable_on_finset_Union {s : Finset β} {t : β → Set α} :
-  integrable_on f (⋃(i : _)(_ : i ∈ s), t i) μ ↔ ∀ i _ : i ∈ s, integrable_on f (t i) μ :=
+  integrable_on f (⋃(i : _)(_ : i ∈ s), t i) μ ↔ ∀ i (_ : i ∈ s), integrable_on f (t i) μ :=
   integrable_on_finite_Union s.finite_to_set
 
 @[simp]
@@ -302,7 +303,7 @@ theorem measure.finite_at_filter.integrable_at_filter {l : Filter α} [is_measur
   (hfm : MeasurableAtFilter f l μ) (hμ : μ.finite_at_filter l) (hf : l.is_bounded_under (· ≤ ·) (norm ∘ f)) :
   integrable_at_filter f l μ :=
   by 
-    obtain ⟨C, hC⟩ : ∃ C, ∀ᶠs in l.lift' powerset, ∀ x _ : x ∈ s, ∥f x∥ ≤ C 
+    obtain ⟨C, hC⟩ : ∃ C, ∀ᶠs in l.lift' powerset, ∀ x (_ : x ∈ s), ∥f x∥ ≤ C 
     exact hf.imp fun C hC => eventually_lift'_powerset.2 ⟨_, hC, fun t => id⟩
     rcases(hfm.eventually.and (hμ.eventually.and hC)).exists_measurable_mem_of_lift' with ⟨s, hsl, hsm, hfm, hμ, hC⟩
     refine' ⟨s, hsl, ⟨hfm, has_finite_integral_restrict_of_bounded hμ _⟩⟩
@@ -348,7 +349,7 @@ variable[MeasurableSpace E][NormedGroup E]
 /-- If a function is integrable at `𝓝[s] x` for each point `x` of a compact set `s`, then it is
 integrable on `s`. -/
 theorem IsCompact.integrable_on_of_nhds_within [TopologicalSpace α] {μ : Measureₓ α} {s : Set α} (hs : IsCompact s)
-  {f : α → E} (hf : ∀ x _ : x ∈ s, integrable_at_filter f (𝓝[s] x) μ) : integrable_on f s μ :=
+  {f : α → E} (hf : ∀ x (_ : x ∈ s), integrable_at_filter f (𝓝[s] x) μ) : integrable_on f s μ :=
   IsCompact.induction_on hs integrable_on_empty (fun s t hst ht => ht.mono_set hst) (fun s t hs ht => hs.union ht) hf
 
 -- error in MeasureTheory.Integral.IntegrableOn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

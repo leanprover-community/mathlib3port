@@ -37,9 +37,9 @@ def prj.P : Mvpfunctor.{u} n :=
 def prj.abs ⦃α : Typevec n⦄ : (prj.P i).Obj α → prj i α
 | ⟨x, f⟩ => f _ ⟨⟨rfl⟩⟩
 
-/-- Representation function of the `qpf` instance -/
-def prj.repr ⦃α : Typevec n⦄ : prj i α → (prj.P i).Obj α :=
-  fun x : α i => ⟨⟨⟩, fun j ⟨⟨h⟩⟩ => (h.rec x : α j)⟩
+-- error in Data.Qpf.Multivariate.Constructions.Prj: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Representation function of the `qpf` instance -/ def prj.repr {{α : typevec n}} : prj i α → (prj.P i).obj α :=
+λ x : α i, ⟨⟨⟩, λ (j) ⟨⟨h⟩⟩, (h.rec x : α j)⟩
 
 instance prj.mvqpf : Mvqpf (prj i) :=
   { p := prj.P i, abs := prj.abs i, repr := prj.repr i,

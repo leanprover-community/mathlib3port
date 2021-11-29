@@ -62,7 +62,7 @@ theorem decode_list_succ (v : ℕ) :
     simp [decode_list, e]
     rfl
 
-theorem length_le_encode : ∀ l : List α, length l ≤ encode l
+theorem length_le_encode : ∀ (l : List α), length l ≤ encode l
 | [] => _root_.zero_le _
 | a :: l => succ_le_succ$ (length_le_encode l).trans (right_le_mkpair _ _)
 
@@ -105,9 +105,12 @@ end Finset
 def encodable_of_list [DecidableEq α] (l : List α) (H : ∀ x, x ∈ l) : Encodable α :=
   ⟨fun a => index_of a l, l.nth, fun a => index_of_nth (H _)⟩
 
-def trunc_encodable_of_fintype (α : Type _) [DecidableEq α] [Fintype α] : Trunc (Encodable α) :=
-  @Quot.recOnSubsingletonₓ _ (fun s : Multiset α => (∀ x : α, x ∈ s) → Trunc (Encodable α)) _ Finset.univ.1
-    (fun l H => Trunc.mk$ encodable_of_list l H) Finset.mem_univ
+-- error in Data.Equiv.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+def trunc_encodable_of_fintype (α : Type*) [decidable_eq α] [fintype α] : trunc (encodable α) :=
+@@quot.rec_on_subsingleton _ (λ
+ s : multiset α, ∀
+ x : α, «expr ∈ »(x, s) → trunc (encodable α)) _ finset.univ.1 (λ
+ l H, «expr $ »(trunc.mk, encodable_of_list l H)) finset.mem_univ
 
 /-- A noncomputable way to arbitrarily choose an ordering on a finite type.
   It is not made into a global instance, since it involves an arbitrary choice.
@@ -295,13 +298,13 @@ theorem lower_raise' : ∀ l n, lower' (raise' l n) n = l
   by 
     simp [raise', lower', add_tsub_cancel_right, lower_raise']
 
-theorem raise_lower' : ∀ {l n}, (∀ m _ : m ∈ l, n ≤ m) → List.Sorted (· < ·) l → raise' (lower' l n) n = l
+theorem raise_lower' : ∀ {l n}, (∀ m (_ : m ∈ l), n ≤ m) → List.Sorted (· < ·) l → raise' (lower' l n) n = l
 | [], n, h₁, h₂ => rfl
 | m :: l, n, h₁, h₂ =>
   have  : n ≤ m := h₁ _ (l.mem_cons_self _)
   by 
     simp [raise', lower', tsub_add_cancel_of_le this,
-      raise_lower' (List.rel_of_sorted_cons h₂ : ∀ a _ : a ∈ l, m < a) (List.sorted_of_sorted_cons h₂)]
+      raise_lower' (List.rel_of_sorted_cons h₂ : ∀ a (_ : a ∈ l), m < a) (List.sorted_of_sorted_cons h₂)]
 
 theorem raise'_chain : ∀ l {m n}, m < n → List.Chain (· < ·) m (raise' l n)
 | [], m, n, h => List.Chain.nil
@@ -316,20 +319,16 @@ theorem raise'_sorted : ∀ l n, List.Sorted (· < ·) (raise' l n)
 def raise'_finset (l : List ℕ) (n : ℕ) : Finset ℕ :=
   ⟨raise' l n, (raise'_sorted _ _).imp (@ne_of_ltₓ _ _)⟩
 
+-- error in Data.Equiv.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `α` is denumerable, then so is `finset α`. Warning: this is *not* the same encoding as used
-in `encodable.finset`. -/
-instance Finset : Denumerable (Finset α) :=
-  mk'
-    ⟨fun s : Finset α => encode$ lower' ((s.map (eqv α).toEmbedding).sort (· ≤ ·)) 0,
-      fun n => Finset.map (eqv α).symm.toEmbedding (raise'_finset (of_nat (List ℕ) n) 0),
-      fun s =>
-        Finset.eq_of_veq$
-          by 
-            simp [-Multiset.coe_map, raise'_finset, raise_lower' (fun n _ => zero_le n) (Finset.sort_sorted_lt _)],
-      fun n =>
-        by 
-          simp [-Multiset.coe_map, Finset.map, raise'_finset, Finset.sort,
-            List.merge_sort_eq_self (· ≤ ·) ((raise'_sorted _ _).imp (@le_of_ltₓ _ _)), lower_raise']⟩
+in `encodable.finset`. -/ instance finset : denumerable (finset α) :=
+mk' ⟨λ
+ s : finset α, «expr $ »(encode, lower' ((s.map (eqv α).to_embedding).sort ((«expr ≤ »))) 0), λ
+ n, finset.map (eqv α).symm.to_embedding (raise'_finset (of_nat (list exprℕ()) n) 0), λ
+ s, «expr $ »(finset.eq_of_veq, by simp [] [] [] ["[", "-", ident multiset.coe_map, ",", expr raise'_finset, ",", expr raise_lower' (λ
+    n
+    _, zero_le n) (finset.sort_sorted_lt _), "]"] [] []), λ
+ n, by simp [] [] [] ["[", "-", ident multiset.coe_map, ",", expr finset.map, ",", expr raise'_finset, ",", expr finset.sort, ",", expr list.merge_sort_eq_self ((«expr ≤ »)) ((raise'_sorted _ _).imp (@le_of_lt _ _)), ",", expr lower_raise', "]"] [] []⟩
 
 end Finset
 

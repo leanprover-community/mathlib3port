@@ -80,7 +80,7 @@ theorem ne_zero {a b c : ℤ} (h : Fermat42 a b c) : c ≠ 0 :=
 /-- We say a solution to `a ^ 4 + b ^ 4 = c ^ 2` is minimal if there is no other solution with
 a smaller `c` (in absolute value). -/
 def minimal (a b c : ℤ) : Prop :=
-  Fermat42 a b c ∧ ∀ a1 b1 c1 : ℤ, Fermat42 a1 b1 c1 → Int.natAbs c ≤ Int.natAbs c1
+  Fermat42 a b c ∧ ∀ (a1 b1 c1 : ℤ), Fermat42 a1 b1 c1 → Int.natAbs c ≤ Int.natAbs c1
 
 -- error in NumberTheory.Fermat4: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- if we have a solution to `a ^ 4 + b ^ 4 = c ^ 2` then there must be a minimal one. -/

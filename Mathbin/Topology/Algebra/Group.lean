@@ -94,16 +94,16 @@ theorem is_closed_map_div_right (a : G) : IsClosedMap fun x => x / a :=
   by 
     simpa only [div_eq_mul_inv] using is_closed_map_mul_right (a⁻¹)
 
-@[toAdditive]
-theorem discrete_topology_of_open_singleton_one (h : IsOpen ({1} : Set G)) : DiscreteTopology G :=
-  by 
-    rw [←singletons_open_iff_discrete]
-    intro g 
-    suffices  : {g} = (fun x : G => g⁻¹*x) ⁻¹' {1}
-    ·
-      rw [this]
-      exact (continuous_mul_left (g⁻¹)).is_open_preimage _ h 
-    simp only [mul_oneₓ, Set.preimage_mul_left_singleton, eq_self_iff_true, inv_invₓ, Set.singleton_eq_singleton_iff]
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem discrete_topology_of_open_singleton_one (h : is_open ({1} : set G)) : discrete_topology G :=
+begin
+  rw ["<-", expr singletons_open_iff_discrete] [],
+  intro [ident g],
+  suffices [] [":", expr «expr = »({g}, «expr ⁻¹' »(λ x : G, «expr * »(«expr ⁻¹»(g), x), {1}))],
+  { rw [expr this] [],
+    exact [expr (continuous_mul_left «expr ⁻¹»(g)).is_open_preimage _ h] },
+  simp [] [] ["only"] ["[", expr mul_one, ",", expr set.preimage_mul_left_singleton, ",", expr eq_self_iff_true, ",", expr inv_inv, ",", expr set.singleton_eq_singleton_iff, "]"] [] []
+end
 
 @[toAdditive]
 theorem discrete_topology_iff_open_singleton_one : DiscreteTopology G ↔ IsOpen ({1} : Set G) :=
@@ -122,10 +122,13 @@ that the division operation `λ x y, x * y⁻¹` (resp., subtraction) is continu
 -/
 
 
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A topological (additive) group is a group in which the addition and negation operations are
 continuous. -/
-class TopologicalAddGroup(G : Type u)[TopologicalSpace G][AddGroupₓ G] extends HasContinuousAdd G : Prop where 
-  continuous_neg : Continuous fun a : G => -a
+class topological_add_group
+(G : Type u)
+[topological_space G]
+[add_group G]extends has_continuous_add G : exprProp() := (continuous_neg : continuous (λ a : G, «expr- »(a)))
 
 /-- A topological group is a group in which the multiplication and inversion operations are
 continuous. -/
@@ -257,14 +260,17 @@ protected def Homeomorph.shearMulRight : G × G ≃ₜ G × G :=
   { Equiv.prodShear (Equiv.refl _) Equiv.mulLeft with continuous_to_fun := continuous_fst.prod_mk continuous_mul,
     continuous_inv_fun := continuous_fst.prod_mk$ continuous_fst.inv.mul continuous_snd }
 
-@[simp, toAdditive]
-theorem Homeomorph.shear_mul_right_coe : «expr⇑ » (Homeomorph.shearMulRight G) = fun z : G × G => (z.1, z.1*z.2) :=
-  rfl
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, to_additive #[]]
+theorem homeomorph.shear_mul_right_coe : «expr = »(«expr⇑ »(homeomorph.shear_mul_right G), λ
+ z : «expr × »(G, G), (z.1, «expr * »(z.1, z.2))) :=
+rfl
 
-@[simp, toAdditive]
-theorem Homeomorph.shear_mul_right_symm_coe :
-  «expr⇑ » (Homeomorph.shearMulRight G).symm = fun z : G × G => (z.1, z.1⁻¹*z.2) :=
-  rfl
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, to_additive #[]]
+theorem homeomorph.shear_mul_right_symm_coe : «expr = »(«expr⇑ »((homeomorph.shear_mul_right G).symm), λ
+ z : «expr × »(G, G), (z.1, «expr * »(«expr ⁻¹»(z.1), z.2))) :=
+rfl
 
 variable{G}
 
@@ -287,14 +293,15 @@ def Subgroup.topologicalClosure (s : Subgroup G) : Subgroup G :=
 theorem Subgroup.topological_closure_coe {s : Subgroup G} : (s.topological_closure : Set G) = Closure s :=
   rfl
 
-@[toAdditive]
-instance Subgroup.topological_closure_topological_group (s : Subgroup G) : TopologicalGroup s.topological_closure :=
-  { s.to_submonoid.topological_closure_has_continuous_mul with
-    continuous_inv :=
-      by 
-        apply continuous_induced_rng 
-        change Continuous fun p : s.topological_closure => (p : G)⁻¹
-        continuity }
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+instance subgroup.topological_closure_topological_group (s : subgroup G) : topological_group s.topological_closure :=
+{ continuous_inv := begin
+    apply [expr continuous_induced_rng],
+    change [expr continuous (λ p : s.topological_closure, «expr ⁻¹»((p : G)))] [] [],
+    continuity [] []
+  end,
+  ..s.to_submonoid.topological_closure_has_continuous_mul }
 
 @[toAdditive]
 theorem Subgroup.subgroup_topological_closure (s : Subgroup G) : s ≤ s.topological_closure :=
@@ -319,21 +326,22 @@ theorem DenseRange.topological_closure_map_subgroup [Groupₓ H] [TopologicalSpa
     simp only [Subgroup.topological_closure_coe, Subgroup.coe_top, ←dense_iff_closure_eq] at hs⊢
     exact hf'.dense_image hf hs
 
-@[toAdditive exists_nhds_half_neg]
-theorem exists_nhds_split_inv {s : Set G} (hs : s ∈ 𝓝 (1 : G)) :
-  ∃ (V : _)(_ : V ∈ 𝓝 (1 : G)), ∀ v _ : v ∈ V w _ : w ∈ V, v / w ∈ s :=
-  have  : (fun p : G × G => p.1*p.2⁻¹) ⁻¹' s ∈ 𝓝 ((1, 1) : G × G) :=
-    continuous_at_fst.mul continuous_at_snd.inv
-      (by 
-        simpa)
-  by 
-    simpa only [div_eq_mul_inv, nhds_prod_eq, mem_prod_self_iff, prod_subset_iff, mem_preimage] using this
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident exists_nhds_half_neg]]
+theorem exists_nhds_split_inv
+{s : set G}
+(hs : «expr ∈ »(s, expr𝓝() (1 : G))) : «expr∃ , »((V «expr ∈ » expr𝓝() (1 : G)), ∀
+ (v «expr ∈ » V)
+ (w «expr ∈ » V), «expr ∈ »(«expr / »(v, w), s)) :=
+have «expr ∈ »(«expr ⁻¹' »(λ
+  p : «expr × »(G, G), «expr * »(p.1, «expr ⁻¹»(p.2)), s), expr𝓝() ((1, 1) : «expr × »(G, G))), from continuous_at_fst.mul continuous_at_snd.inv (by simpa [] [] [] [] [] []),
+by simpa [] [] ["only"] ["[", expr div_eq_mul_inv, ",", expr nhds_prod_eq, ",", expr mem_prod_self_iff, ",", expr prod_subset_iff, ",", expr mem_preimage, "]"] [] ["using", expr this]
 
-@[toAdditive]
-theorem nhds_translation_mul_inv (x : G) : comap (fun y : G => y*x⁻¹) (𝓝 1) = 𝓝 x :=
-  ((Homeomorph.mulRight (x⁻¹)).comap_nhds_eq 1).trans$
-    show 𝓝 (1*x⁻¹⁻¹) = 𝓝 x by 
-      simp 
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem nhds_translation_mul_inv
+(x : G) : «expr = »(comap (λ y : G, «expr * »(y, «expr ⁻¹»(x))) (expr𝓝() 1), expr𝓝() x) :=
+«expr $ »(((homeomorph.mul_right «expr ⁻¹»(x)).comap_nhds_eq 1).trans, show «expr = »(expr𝓝() «expr * »(1, «expr ⁻¹»(«expr ⁻¹»(x))), expr𝓝() x), by simp [] [] [] [] [] [])
 
 @[simp, toAdditive]
 theorem map_mul_left_nhds (x y : G) : map ((·*·) x) (𝓝 y) = 𝓝 (x*y) :=
@@ -391,29 +399,32 @@ begin
     «expr = »(..., expr𝓝() «expr ⁻¹»(x₀)) : (hleft _).symm
 end
 
-@[toAdditive]
-theorem TopologicalGroup.of_nhds_one' {G : Type u} [Groupₓ G] [TopologicalSpace G]
-  (hmul : tendsto (uncurry (·*· : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1)) (hinv : tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
-  (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x₀*x) (𝓝 1)) (hright : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x*x₀) (𝓝 1)) :
-  TopologicalGroup G :=
-  by 
-    refine'
-      { continuous_mul := (HasContinuousMul.of_nhds_one hmul hleft hright).continuous_mul,
-        continuous_inv := TopologicalGroup.of_nhds_aux hinv hleft _ }
-    intro x₀ 
-    suffices  : map (fun x : G => (x₀*x)*x₀⁻¹) (𝓝 1) = 𝓝 1
-    ·
-      simp [this, le_reflₓ]
-    rw
-      [show (fun x => (x₀*x)*x₀⁻¹) = ((fun x => x₀*x) ∘ fun x => x*x₀⁻¹)by 
-        ext 
-        simp [mul_assocₓ],
-      ←Filter.map_map, ←hright, hleft (x₀⁻¹), Filter.map_map]
-    convert map_id 
-    ext 
-    simp 
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem topological_group.of_nhds_one'
+{G : Type u}
+[group G]
+[topological_space G]
+(hmul : tendsto (uncurry ((«expr * ») : G → G → G)) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1) (expr𝓝() 1))
+(hinv : tendsto (λ x : G, «expr ⁻¹»(x)) (expr𝓝() 1) (expr𝓝() 1))
+(hleft : ∀ x₀ : G, «expr = »(expr𝓝() x₀, map (λ x, «expr * »(x₀, x)) (expr𝓝() 1)))
+(hright : ∀ x₀ : G, «expr = »(expr𝓝() x₀, map (λ x, «expr * »(x, x₀)) (expr𝓝() 1))) : topological_group G :=
+begin
+  refine [expr { continuous_mul := (has_continuous_mul.of_nhds_one hmul hleft hright).continuous_mul,
+     continuous_inv := topological_group.of_nhds_aux hinv hleft _ }],
+  intros [ident x₀],
+  suffices [] [":", expr «expr = »(map (λ x : G, «expr * »(«expr * »(x₀, x), «expr ⁻¹»(x₀))) (expr𝓝() 1), expr𝓝() 1)],
+  by simp [] [] [] ["[", expr this, ",", expr le_refl, "]"] [] [],
+  rw ["[", expr show «expr = »(λ
+    x, «expr * »(«expr * »(x₀, x), «expr ⁻¹»(x₀)), «expr ∘ »(λ
+     x, «expr * »(x₀, x), λ x, «expr * »(x, «expr ⁻¹»(x₀)))), by { ext [] [] [],
+     simp [] [] [] ["[", expr mul_assoc, "]"] [] [] }, ",", "<-", expr filter.map_map, ",", "<-", expr hright, ",", expr hleft «expr ⁻¹»(x₀), ",", expr filter.map_map, "]"] [],
+  convert [] [expr map_id] [],
+  ext [] [] [],
+  simp [] [] [] [] [] []
+end
 
--- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[to_additive #[]]
 theorem topological_group.of_nhds_one
 {G : Type u}
@@ -456,13 +467,16 @@ theorem topological_group.of_nhds_one
   end,
   continuous_inv := topological_group.of_nhds_aux hinv hleft hconj }
 
-@[toAdditive]
-theorem TopologicalGroup.of_comm_of_nhds_one {G : Type u} [CommGroupₓ G] [TopologicalSpace G]
-  (hmul : tendsto (uncurry (·*· : G → G → G)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1)) (hinv : tendsto (fun x : G => x⁻¹) (𝓝 1) (𝓝 1))
-  (hleft : ∀ x₀ : G, 𝓝 x₀ = map (fun x => x₀*x) (𝓝 1)) : TopologicalGroup G :=
-  TopologicalGroup.of_nhds_one hmul hinv hleft
-    (by 
-      simpa using tendsto_id)
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem topological_group.of_comm_of_nhds_one
+{G : Type u}
+[comm_group G]
+[topological_space G]
+(hmul : tendsto (uncurry ((«expr * ») : G → G → G)) «expr ×ᶠ »(expr𝓝() 1, expr𝓝() 1) (expr𝓝() 1))
+(hinv : tendsto (λ x : G, «expr ⁻¹»(x)) (expr𝓝() 1) (expr𝓝() 1))
+(hleft : ∀ x₀ : G, «expr = »(expr𝓝() x₀, map (λ x, «expr * »(x₀, x)) (expr𝓝() 1))) : topological_group G :=
+topological_group.of_nhds_one hmul hinv hleft (by simpa [] [] [] [] [] ["using", expr tendsto_id])
 
 end TopologicalGroup
 
@@ -504,17 +518,23 @@ theorem QuotientGroup.is_open_map_coe : IsOpenMap (coeₓ : G → Quotientₓ N)
 
 end QuotientTopologicalGroup
 
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A typeclass saying that `λ p : G × G, p.1 - p.2` is a continuous function. This property
 automatically holds for topological additive groups but it also holds, e.g., for `ℝ≥0`. -/
-class HasContinuousSub(G : Type _)[TopologicalSpace G][Sub G] : Prop where 
-  continuous_sub : Continuous fun p : G × G => p.1 - p.2
+class has_continuous_sub
+(G : Type*)
+[topological_space G]
+[has_sub G] : exprProp() := (continuous_sub : continuous (λ p : «expr × »(G, G), «expr - »(p.1, p.2)))
 
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A typeclass saying that `λ p : G × G, p.1 / p.2` is a continuous function. This property
 automatically holds for topological groups. Lemmas using this class have primes.
 The unprimed version is for `group_with_zero`. -/
-@[toAdditive]
-class HasContinuousDiv(G : Type _)[TopologicalSpace G][Div G] : Prop where 
-  continuous_div' : Continuous fun p : G × G => p.1 / p.2
+@[to_additive #[]]
+class has_continuous_div
+(G : Type*)
+[topological_space G]
+[has_div G] : exprProp() := (continuous_div' : continuous (λ p : «expr × »(G, G), «expr / »(p.1, p.2)))
 
 @[toAdditive]
 instance (priority := 100)TopologicalGroup.to_has_continuous_div [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] :
@@ -536,15 +556,25 @@ theorem Filter.Tendsto.div' {f g : α → G} {l : Filter α} {a b : G} (hf : ten
   tendsto (fun x => f x / g x) l (𝓝 (a / b)) :=
   (continuous_div'.Tendsto (a, b)).comp (hf.prod_mk_nhds hg)
 
-@[toAdditive const_sub]
-theorem Filter.Tendsto.const_div' (b : G) {c : G} {f : α → G} {l : Filter α} (h : tendsto f l (𝓝 c)) :
-  tendsto (fun k : α => b / f k) l (𝓝 (b / c)) :=
-  tendsto_const_nhds.div' h
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident const_sub]]
+theorem filter.tendsto.const_div'
+(b : G)
+{c : G}
+{f : α → G}
+{l : filter α}
+(h : tendsto f l (expr𝓝() c)) : tendsto (λ k : α, «expr / »(b, f k)) l (expr𝓝() «expr / »(b, c)) :=
+tendsto_const_nhds.div' h
 
-@[toAdditive sub_const]
-theorem Filter.Tendsto.div_const' (b : G) {c : G} {f : α → G} {l : Filter α} (h : tendsto f l (𝓝 c)) :
-  tendsto (fun k : α => f k / b) l (𝓝 (c / b)) :=
-  h.div' tendsto_const_nhds
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident sub_const]]
+theorem filter.tendsto.div_const'
+(b : G)
+{c : G}
+{f : α → G}
+{l : filter α}
+(h : tendsto f l (expr𝓝() c)) : tendsto (λ k : α, «expr / »(f k, b)) l (expr𝓝() «expr / »(c, b)) :=
+h.div' tendsto_const_nhds
 
 variable[TopologicalSpace α]{f g : α → G}{s : Set α}{x : α}
 
@@ -552,13 +582,15 @@ variable[TopologicalSpace α]{f g : α → G}{s : Set α}{x : α}
 theorem Continuous.div' (hf : Continuous f) (hg : Continuous g) : Continuous fun x => f x / g x :=
   continuous_div'.comp (hf.prod_mk hg : _)
 
-@[toAdditive continuous_sub_left]
-theorem continuous_div_left' (a : G) : Continuous fun b : G => a / b :=
-  continuous_const.div' continuous_id
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident continuous_sub_left]]
+theorem continuous_div_left' (a : G) : continuous (λ b : G, «expr / »(a, b)) :=
+continuous_const.div' continuous_id
 
-@[toAdditive continuous_sub_right]
-theorem continuous_div_right' (a : G) : Continuous fun b : G => b / a :=
-  continuous_id.div' continuous_const
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident continuous_sub_right]]
+theorem continuous_div_right' (a : G) : continuous (λ b : G, «expr / »(b, a)) :=
+continuous_id.div' continuous_const
 
 @[toAdditive sub]
 theorem ContinuousAt.div' {f g : α → G} {x : α} (hf : ContinuousAt f x) (hg : ContinuousAt g x) :
@@ -576,22 +608,27 @@ theorem ContinuousOn.div' (hf : ContinuousOn f s) (hg : ContinuousOn g s) : Cont
 
 end HasContinuousDiv
 
-@[toAdditive]
-theorem nhds_translation_div [TopologicalSpace G] [Groupₓ G] [TopologicalGroup G] (x : G) :
-  comap (fun y : G => y / x) (𝓝 1) = 𝓝 x :=
-  by 
-    simpa only [div_eq_mul_inv] using nhds_translation_mul_inv x
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem nhds_translation_div
+[topological_space G]
+[group G]
+[topological_group G]
+(x : G) : «expr = »(comap (λ y : G, «expr / »(y, x)) (expr𝓝() 1), expr𝓝() x) :=
+by simpa [] [] ["only"] ["[", expr div_eq_mul_inv, "]"] [] ["using", expr nhds_translation_mul_inv x]
 
+-- error in Topology.Algebra.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- additive group with a neighbourhood around 0.
 Only used to construct a topology and uniform space.
 
 This is currently only available for commutative groups, but it can be extended to
 non-commutative groups too.
 -/
-class AddGroupWithZeroNhd(G : Type u) extends AddCommGroupₓ G where 
-  z{} : Filter G 
-  zero_Z : pure 0 ≤ Z 
-  sub_Z : tendsto (fun p : G × G => p.1 - p.2) (Z ×ᶠ Z) Z
+class add_group_with_zero_nhd
+(G : Type u)extends add_comm_group G :=
+  (Z [] : filter G)
+  (zero_Z : «expr ≤ »(pure 0, Z))
+  (sub_Z : tendsto (λ p : «expr × »(G, G), «expr - »(p.1, p.2)) «expr ×ᶠ »(Z, Z) Z)
 
 section FilterMul
 

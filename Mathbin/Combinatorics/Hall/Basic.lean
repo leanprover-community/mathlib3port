@@ -78,19 +78,26 @@ def HallMatchingsOn.restrict {ι : Type u} {α : Type v} (t : ι → Finset α) 
     rintro ⟨i, hi⟩ ⟨j, hj⟩ hh 
     simpa only [Subtype.mk_eq_mk] using hinj hh
 
+-- error in Combinatorics.Hall.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- When the Hall condition is satisfied, the set of matchings on a finite set is nonempty.
 This is where `finset.all_card_le_bUnion_card_iff_exists_injective'` comes into the argument. -/
-theorem HallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t : ι → Finset α)
-  (h : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) (ι' : Finset ι) : Nonempty (HallMatchingsOn t ι') :=
-  by 
-    classical 
-    refine' ⟨Classical.indefiniteDescription _ _⟩
-    apply (all_card_le_bUnion_card_iff_exists_injective' fun i : ι' => t i).mp 
-    intro s' 
-    convert h (s'.image coeₓ) using 1
-    simp only [card_image_of_injective s' Subtype.coe_injective]
-    rw [image_bUnion]
-    congr
+theorem hall_matchings_on.nonempty
+{ι : Type u}
+{α : Type v}
+[decidable_eq α]
+(t : ι → finset α)
+(h : ∀ s : finset ι, «expr ≤ »(s.card, (s.bUnion t).card))
+(ι' : finset ι) : nonempty (hall_matchings_on t ι') :=
+begin
+  classical,
+  refine [expr ⟨classical.indefinite_description _ _⟩],
+  apply [expr (all_card_le_bUnion_card_iff_exists_injective' (λ i : ι', t i)).mp],
+  intro [ident s'],
+  convert [] [expr h (s'.image coe)] ["using", 1],
+  simp [] [] ["only"] ["[", expr card_image_of_injective s' subtype.coe_injective, "]"] [] [],
+  rw [expr image_bUnion] [],
+  congr
+end
 
 /--
 This is the `hall_matchings_on` sets assembled into a directed system.

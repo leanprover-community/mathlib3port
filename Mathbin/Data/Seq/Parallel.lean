@@ -316,7 +316,7 @@ begin
   apply [expr H _ cs _ ac]
 end
 
-theorem parallel_promises {S : Wseq (Computation α)} {a} (H : ∀ s _ : s ∈ S, s ~> a) : parallel S ~> a :=
+theorem parallel_promises {S : Wseq (Computation α)} {a} (H : ∀ s (_ : s ∈ S), s ~> a) : parallel S ~> a :=
   fun a' ma' =>
     let ⟨c, cs, ac⟩ := exists_of_mem_parallel ma' 
     H _ cs ac
@@ -332,7 +332,7 @@ theorem mem_parallel
 by haveI [] [] [":=", expr terminates_of_mem ac]; haveI [] [] [":=", expr terminates_parallel cs]; exact [expr mem_of_promises _ (parallel_promises H)]
 
 theorem parallel_congr_lem {S T : Wseq (Computation α)} {a} (H : S.lift_rel Equiv T) :
-  (∀ s _ : s ∈ S, s ~> a) ↔ ∀ t _ : t ∈ T, t ~> a :=
+  (∀ s (_ : s ∈ S), s ~> a) ↔ ∀ t (_ : t ∈ T), t ~> a :=
   ⟨fun h1 t tT =>
       let ⟨s, sS, se⟩ := Wseq.exists_of_lift_rel_right H tT
       (promises_congr se _).1 (h1 _ sS),
@@ -358,7 +358,7 @@ a', ⟨λ
       aT := (st _).2 as in
   mem_parallel h1 tT aT]⟩
 
-theorem parallel_congr_right {S T : Wseq (Computation α)} {a} (h2 : ∀ t _ : t ∈ T, t ~> a) (H : S.lift_rel Equiv T) :
+theorem parallel_congr_right {S T : Wseq (Computation α)} {a} (h2 : ∀ t (_ : t ∈ T), t ~> a) (H : S.lift_rel Equiv T) :
   parallel S ~ parallel T :=
   parallel_congr_left ((parallel_congr_lem H).2 h2) H
 

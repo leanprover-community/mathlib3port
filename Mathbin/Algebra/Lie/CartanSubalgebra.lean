@@ -30,7 +30,7 @@ namespace LieSubalgebra
 with any element of `H` lies in `H`. It is the Lie algebra equivalent of the group-theoretic
 normalizer (see `subgroup.normalizer`) and is an idealizer in the sense of abstract algebra. -/
 def normalizer : LieSubalgebra R L :=
-  { Carrier := { x:L | ∀ y : L, y ∈ H → ⁅x,y⁆ ∈ H },
+  { Carrier := { x:L | ∀ (y : L), y ∈ H → ⁅x,y⁆ ∈ H },
     zero_mem' :=
       fun y hy =>
         by 
@@ -52,19 +52,20 @@ def normalizer : LieSubalgebra R L :=
           rw [lie_lie]
           exact H.sub_mem (h₁ _ (h₂ y hy)) (h₂ _ (h₁ y hy)) }
 
-theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H → ⁅x,y⁆ ∈ H :=
+theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ (y : L), y ∈ H → ⁅x,y⁆ ∈ H :=
   Iff.rfl
 
 theorem le_normalizer : H ≤ H.normalizer :=
-  fun x hx => show ∀ y : L, y ∈ H → ⁅x,y⁆ ∈ H from fun y => H.lie_mem hx
+  fun x hx => show ∀ (y : L), y ∈ H → ⁅x,y⁆ ∈ H from fun y => H.lie_mem hx
 
 /-- A Lie subalgebra is an ideal of its normalizer. -/
-theorem ideal_in_normalizer : ∀ x y : L, x ∈ H.normalizer → y ∈ H → ⁅x,y⁆ ∈ H :=
+theorem ideal_in_normalizer : ∀ (x y : L), x ∈ H.normalizer → y ∈ H → ⁅x,y⁆ ∈ H :=
   fun x y h => h y
 
 /-- The normalizer of a Lie subalgebra `H` is the maximal Lie subalgebra in which `H` is a Lie
 ideal. -/
-theorem le_normalizer_of_ideal {N : LieSubalgebra R L} (h : ∀ x y : L, x ∈ N → y ∈ H → ⁅x,y⁆ ∈ H) : N ≤ H.normalizer :=
+theorem le_normalizer_of_ideal {N : LieSubalgebra R L} (h : ∀ (x y : L), x ∈ N → y ∈ H → ⁅x,y⁆ ∈ H) :
+  N ≤ H.normalizer :=
   fun x hx y => h x y hx
 
 /-- A Cartan subalgebra is a nilpotent, self-normalizing subalgebra. -/

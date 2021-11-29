@@ -30,7 +30,7 @@ universe u
 
 variable{C : Type u}[small_category C][has_products C]
 
--- error in CategoryTheory.Limits.SmallComplete: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in CategoryTheory.Limits.SmallComplete: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 A small category with products is a thin category.
 

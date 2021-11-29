@@ -88,17 +88,18 @@ theorem ess_sup_le_of_ae_le {f : α → β} (c : β) (hf : f ≤ᵐ[μ] fun _ =>
     ·
       rwa [ess_sup_const]
 
-theorem ess_inf_const (c : β) (hμ : μ ≠ 0) : essInf (fun x : α => c) μ = c :=
-  @ess_sup_const α (OrderDual β) _ _ _ _ hμ
+-- error in MeasureTheory.Function.EssSup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ess_inf_const (c : β) (hμ : «expr ≠ »(μ, 0)) : «expr = »(ess_inf (λ x : α, c) μ, c) :=
+@ess_sup_const α (order_dual β) _ _ _ _ hμ
 
 theorem le_ess_inf_of_ae_le {f : α → β} (c : β) (hf : (fun _ => c) ≤ᵐ[μ] f) : c ≤ essInf f μ :=
   @ess_sup_le_of_ae_le α (OrderDual β) _ _ _ _ c hf
 
-theorem ess_sup_const_bot : essSup (fun x : α => (⊥ : β)) μ = (⊥ : β) :=
-  limsup_const_bot
+-- error in MeasureTheory.Function.EssSup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ess_sup_const_bot : «expr = »(ess_sup (λ x : α, («expr⊥»() : β)) μ, («expr⊥»() : β)) := limsup_const_bot
 
-theorem ess_inf_const_top : essInf (fun x : α => (⊤ : β)) μ = (⊤ : β) :=
-  liminf_const_top
+-- error in MeasureTheory.Function.EssSup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ess_inf_const_top : «expr = »(ess_inf (λ x : α, («expr⊤»() : β)) μ, («expr⊤»() : β)) := liminf_const_top
 
 theorem OrderIso.ess_sup_apply {m : MeasurableSpace α} {γ} [CompleteLattice γ] (f : α → β) (μ : Measureₓ α)
   (g : β ≃o γ) : g (essSup f μ) = essSup (fun x => g (f x)) μ :=
@@ -196,8 +197,10 @@ theorem ae_le_ess_sup (f : α → ℝ≥0∞) : ∀ᵐy ∂μ, f y ≤ essSup f 
 theorem ess_sup_eq_zero_iff : essSup f μ = 0 ↔ f =ᵐ[μ] 0 :=
   limsup_eq_zero_iff
 
-theorem ess_sup_const_mul {a : ℝ≥0∞} : essSup (fun x : α => a*f x) μ = a*essSup f μ :=
-  limsup_const_mul
+-- error in MeasureTheory.Function.EssSup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ess_sup_const_mul
+{a : «exprℝ≥0∞»()} : «expr = »(ess_sup (λ x : α, «expr * »(a, f x)) μ, «expr * »(a, ess_sup f μ)) :=
+limsup_const_mul
 
 theorem ess_sup_add_le (f g : α → ℝ≥0∞) : essSup (f+g) μ ≤ essSup f μ+essSup g μ :=
   limsup_add_le f g

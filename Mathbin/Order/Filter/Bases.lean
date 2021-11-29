@@ -206,7 +206,7 @@ end IsBasis
 /-- We say that a filter `l` has a basis `s : ι → set α` bounded by `p : ι → Prop`,
 if `t ∈ l` if and only if `t` includes `s i` for some `i` such that `p i`. -/
 protected structure has_basis(l : Filter α)(p : ι → Prop)(s : ι → Set α) : Prop where 
-  mem_iff' : ∀ t : Set α, t ∈ l ↔ ∃ (i : _)(hi : p i), s i ⊆ t
+  mem_iff' : ∀ (t : Set α), t ∈ l ↔ ∃ (i : _)(hi : p i), s i ⊆ t
 
 section SameType
 
@@ -299,9 +299,12 @@ theorem of_sets_filter_eq_generate (s : Set (Set α)) : (filter_basis.of_sets s)
   by 
     rw [←(filter_basis.of_sets s).generate, generate_eq_generate_inter s] <;> rfl
 
-protected theorem _root_.filter_basis.has_basis {α : Type _} (B : FilterBasis α) :
-  has_basis B.filter (fun s : Set α => s ∈ B) id :=
-  ⟨fun t => B.mem_filter_iff⟩
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem _root_.filter_basis.has_basis
+{α : Type*}
+(B : filter_basis α) : has_basis B.filter (λ s : set α, «expr ∈ »(s, B)) id :=
+⟨λ t, B.mem_filter_iff⟩
 
 theorem has_basis.to_has_basis' (hl : l.has_basis p s) (h : ∀ i, p i → ∃ i', p' i' ∧ s' i' ⊆ s i)
   (h' : ∀ i', p' i' → s' i' ∈ l) : l.has_basis p' s' :=
@@ -340,7 +343,7 @@ theorem has_basis.exists_iff (hl : l.has_basis p s) {P : Set α → Prop} (mono 
     fun ⟨i, hi, hP⟩ => ⟨s i, hl.mem_of_mem hi, hP⟩⟩
 
 theorem has_basis.forall_iff (hl : l.has_basis p s) {P : Set α → Prop} (mono : ∀ ⦃s t⦄, s ⊆ t → P s → P t) :
-  (∀ s _ : s ∈ l, P s) ↔ ∀ i, p i → P (s i) :=
+  (∀ s (_ : s ∈ l), P s) ↔ ∀ i, p i → P (s i) :=
   ⟨fun H i hi => H (s i)$ hl.mem_of_mem hi,
     fun H s hs =>
       let ⟨i, hi, his⟩ := hl.mem_iff.1 hs 
@@ -356,11 +359,11 @@ theorem has_basis.eq_bot_iff (hl : l.has_basis p s) : l = ⊥ ↔ ∃ i, p i ∧
         by 
           simp only [not_exists, not_and, ←ne_empty_iff_nonempty]
 
-theorem basis_sets (l : Filter α) : l.has_basis (fun s : Set α => s ∈ l) id :=
-  ⟨fun t => exists_mem_subset_iff.symm⟩
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem basis_sets (l : filter α) : l.has_basis (λ s : set α, «expr ∈ »(s, l)) id := ⟨λ t, exists_mem_subset_iff.symm⟩
 
 theorem has_basis_self {l : Filter α} {P : Set α → Prop} :
-  has_basis l (fun s => s ∈ l ∧ P s) id ↔ ∀ t _ : t ∈ l, ∃ (r : _)(_ : r ∈ l), P r ∧ r ⊆ t :=
+  has_basis l (fun s => s ∈ l ∧ P s) id ↔ ∀ t (_ : t ∈ l), ∃ (r : _)(_ : r ∈ l), P r ∧ r ⊆ t :=
   by 
     simp only [has_basis_iff, exists_prop, id, and_assoc]
     exact forall_congrₓ fun s => ⟨fun h => h.1, fun h => ⟨h, fun ⟨t, hl, hP, hts⟩ => mem_of_superset hl hts⟩⟩
@@ -393,7 +396,7 @@ theorem has_basis.ge_iff (hl' : l'.has_basis p' s') : l ≤ l' ↔ ∀ i', p' i'
       let ⟨i', hi', hs⟩ := hl'.mem_iff.1 hs 
       mem_of_superset (h _ hi') hs⟩
 
-theorem has_basis.le_iff (hl : l.has_basis p s) : l ≤ l' ↔ ∀ t _ : t ∈ l', ∃ (i : _)(hi : p i), s i ⊆ t :=
+theorem has_basis.le_iff (hl : l.has_basis p s) : l ≤ l' ↔ ∀ t (_ : t ∈ l'), ∃ (i : _)(hi : p i), s i ⊆ t :=
   by 
     simp only [le_def, hl.mem_iff]
 
@@ -413,53 +416,76 @@ theorem has_basis.ext (hl : l.has_basis p s) (hl' : l'.has_basis p' s') (h : ∀
       rw [hl'.le_basis_iff hl]
       simpa using h
 
-theorem has_basis.inf' (hl : l.has_basis p s) (hl' : l'.has_basis p' s') :
-  (l⊓l').HasBasis (fun i : PProd ι ι' => p i.1 ∧ p' i.2) fun i => s i.1 ∩ s' i.2 :=
-  ⟨by 
-      intro t 
-      split 
-      ·
-        simp only [mem_inf_iff, exists_prop, hl.mem_iff, hl'.mem_iff]
-        rintro ⟨t, ⟨i, hi, ht⟩, t', ⟨i', hi', ht'⟩, rfl⟩
-        use ⟨i, i'⟩, ⟨hi, hi'⟩, inter_subset_inter ht ht'
-      ·
-        rintro ⟨⟨i, i'⟩, ⟨hi, hi'⟩, H⟩
-        exact mem_inf_of_inter (hl.mem_of_mem hi) (hl'.mem_of_mem hi') H⟩
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis.inf'
+(hl : l.has_basis p s)
+(hl' : l'.has_basis p' s') : «expr ⊓ »(l, l').has_basis (λ
+ i : pprod ι ι', «expr ∧ »(p i.1, p' i.2)) (λ i, «expr ∩ »(s i.1, s' i.2)) :=
+⟨begin
+   intro [ident t],
+   split,
+   { simp [] [] ["only"] ["[", expr mem_inf_iff, ",", expr exists_prop, ",", expr hl.mem_iff, ",", expr hl'.mem_iff, "]"] [] [],
+     rintros ["⟨", ident t, ",", "⟨", ident i, ",", ident hi, ",", ident ht, "⟩", ",", ident t', ",", "⟨", ident i', ",", ident hi', ",", ident ht', "⟩", ",", ident rfl, "⟩"],
+     use ["[", expr ⟨i, i'⟩, ",", expr ⟨hi, hi'⟩, ",", expr inter_subset_inter ht ht', "]"] },
+   { rintros ["⟨", "⟨", ident i, ",", ident i', "⟩", ",", "⟨", ident hi, ",", ident hi', "⟩", ",", ident H, "⟩"],
+     exact [expr mem_inf_of_inter (hl.mem_of_mem hi) (hl'.mem_of_mem hi') H] }
+ end⟩
 
-theorem has_basis.inf {ι ι' : Type _} {p : ι → Prop} {s : ι → Set α} {p' : ι' → Prop} {s' : ι' → Set α}
-  (hl : l.has_basis p s) (hl' : l'.has_basis p' s') :
-  (l⊓l').HasBasis (fun i : ι × ι' => p i.1 ∧ p' i.2) fun i => s i.1 ∩ s' i.2 :=
-  (hl.inf' hl').to_has_basis (fun i hi => ⟨⟨i.1, i.2⟩, hi, subset.rfl⟩) fun i hi => ⟨⟨i.1, i.2⟩, hi, subset.rfl⟩
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis.inf
+{ι ι' : Type*}
+{p : ι → exprProp()}
+{s : ι → set α}
+{p' : ι' → exprProp()}
+{s' : ι' → set α}
+(hl : l.has_basis p s)
+(hl' : l'.has_basis p' s') : «expr ⊓ »(l, l').has_basis (λ
+ i : «expr × »(ι, ι'), «expr ∧ »(p i.1, p' i.2)) (λ i, «expr ∩ »(s i.1, s' i.2)) :=
+(hl.inf' hl').to_has_basis (λ i hi, ⟨⟨i.1, i.2⟩, hi, subset.rfl⟩) (λ i hi, ⟨⟨i.1, i.2⟩, hi, subset.rfl⟩)
 
-theorem has_basis_principal (t : Set α) : (𝓟 t).HasBasis (fun i : Unit => True) fun i => t :=
-  ⟨fun U =>
-      by 
-        simp ⟩
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis_principal (t : set α) : (expr𝓟() t).has_basis (λ i : unit, true) (λ i, t) :=
+⟨λ U, by simp [] [] [] [] [] []⟩
 
-theorem has_basis_pure (x : α) : (pure x : Filter α).HasBasis (fun i : Unit => True) fun i => {x} :=
-  by 
-    simp only [←principal_singleton, has_basis_principal]
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis_pure (x : α) : (pure x : filter α).has_basis (λ i : unit, true) (λ i, {x}) :=
+by simp [] [] ["only"] ["[", "<-", expr principal_singleton, ",", expr has_basis_principal, "]"] [] []
 
-theorem has_basis.sup' (hl : l.has_basis p s) (hl' : l'.has_basis p' s') :
-  (l⊔l').HasBasis (fun i : PProd ι ι' => p i.1 ∧ p' i.2) fun i => s i.1 ∪ s' i.2 :=
-  ⟨by 
-      intro t 
-      simp only [mem_sup, hl.mem_iff, hl'.mem_iff, PProd.exists, union_subset_iff, exists_prop, and_assoc,
-        exists_and_distrib_left]
-      simp only [←and_assoc, exists_and_distrib_right, and_comm]⟩
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis.sup'
+(hl : l.has_basis p s)
+(hl' : l'.has_basis p' s') : «expr ⊔ »(l, l').has_basis (λ
+ i : pprod ι ι', «expr ∧ »(p i.1, p' i.2)) (λ i, «expr ∪ »(s i.1, s' i.2)) :=
+⟨begin
+   intros [ident t],
+   simp [] [] ["only"] ["[", expr mem_sup, ",", expr hl.mem_iff, ",", expr hl'.mem_iff, ",", expr pprod.exists, ",", expr union_subset_iff, ",", expr exists_prop, ",", expr and_assoc, ",", expr exists_and_distrib_left, "]"] [] [],
+   simp [] [] ["only"] ["[", "<-", expr and_assoc, ",", expr exists_and_distrib_right, ",", expr and_comm, "]"] [] []
+ end⟩
 
-theorem has_basis.sup {ι ι' : Type _} {p : ι → Prop} {s : ι → Set α} {p' : ι' → Prop} {s' : ι' → Set α}
-  (hl : l.has_basis p s) (hl' : l'.has_basis p' s') :
-  (l⊔l').HasBasis (fun i : ι × ι' => p i.1 ∧ p' i.2) fun i => s i.1 ∪ s' i.2 :=
-  (hl.sup' hl').to_has_basis (fun i hi => ⟨⟨i.1, i.2⟩, hi, subset.rfl⟩) fun i hi => ⟨⟨i.1, i.2⟩, hi, subset.rfl⟩
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis.sup
+{ι ι' : Type*}
+{p : ι → exprProp()}
+{s : ι → set α}
+{p' : ι' → exprProp()}
+{s' : ι' → set α}
+(hl : l.has_basis p s)
+(hl' : l'.has_basis p' s') : «expr ⊔ »(l, l').has_basis (λ
+ i : «expr × »(ι, ι'), «expr ∧ »(p i.1, p' i.2)) (λ i, «expr ∪ »(s i.1, s' i.2)) :=
+(hl.sup' hl').to_has_basis (λ i hi, ⟨⟨i.1, i.2⟩, hi, subset.rfl⟩) (λ i hi, ⟨⟨i.1, i.2⟩, hi, subset.rfl⟩)
 
-theorem has_basis_supr {ι : Sort _} {ι' : ι → Type _} {l : ι → Filter α} {p : ∀ i, ι' i → Prop} {s : ∀ i, ι' i → Set α}
-  (hl : ∀ i, (l i).HasBasis (p i) (s i)) :
-  (⨆i, l i).HasBasis (fun f : ∀ i, ι' i => ∀ i, p i (f i)) fun f : ∀ i, ι' i => ⋃i, s i (f i) :=
-  has_basis_iff.mpr$
-    fun t =>
-      by 
-        simp only [has_basis_iff, (hl _).mem_iff, Classical.skolem, forall_and_distrib, Union_subset_iff, mem_supr]
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis_supr
+{ι : Sort*}
+{ι' : ι → Type*}
+{l : ι → filter α}
+{p : ∀ i, ι' i → exprProp()}
+{s : ∀ i, ι' i → set α}
+(hl : ∀
+ i, (l i).has_basis (p i) (s i)) : «expr⨆ , »((i), l i).has_basis (λ
+ f : ∀ i, ι' i, ∀ i, p i (f i)) (λ f : ∀ i, ι' i, «expr⋃ , »((i), s i (f i))) :=
+«expr $ »(has_basis_iff.mpr, λ
+ t, by simp [] [] ["only"] ["[", expr has_basis_iff, ",", expr (hl _).mem_iff, ",", expr classical.skolem, ",", expr forall_and_distrib, ",", expr Union_subset_iff, ",", expr mem_supr, "]"] [] [])
 
 theorem has_basis.sup_principal (hl : l.has_basis p s) (t : Set α) : (l⊔𝓟 t).HasBasis p fun i => s i ∪ t :=
   ⟨fun u =>
@@ -476,23 +502,23 @@ theorem has_basis.inf_principal (hl : l.has_basis p s) (s' : Set α) : (l⊓𝓟
         simp only [mem_inf_principal, hl.mem_iff, subset_def, mem_set_of_eq, mem_inter_iff, and_imp]⟩
 
 theorem has_basis.inf_basis_ne_bot_iff (hl : l.has_basis p s) (hl' : l'.has_basis p' s') :
-  ne_bot (l⊓l') ↔ ∀ ⦃i⦄ hi : p i ⦃i'⦄ hi' : p' i', (s i ∩ s' i').Nonempty :=
+  ne_bot (l⊓l') ↔ ∀ ⦃i⦄ (hi : p i) ⦃i'⦄ (hi' : p' i'), (s i ∩ s' i').Nonempty :=
   (hl.inf' hl').ne_bot_iff.trans$
     by 
       simp [@forall_swap _ ι']
 
 theorem has_basis.inf_ne_bot_iff (hl : l.has_basis p s) :
-  ne_bot (l⊓l') ↔ ∀ ⦃i⦄ hi : p i ⦃s'⦄ hs' : s' ∈ l', (s i ∩ s').Nonempty :=
+  ne_bot (l⊓l') ↔ ∀ ⦃i⦄ (hi : p i) ⦃s'⦄ (hs' : s' ∈ l'), (s i ∩ s').Nonempty :=
   hl.inf_basis_ne_bot_iff l'.basis_sets
 
 theorem has_basis.inf_principal_ne_bot_iff (hl : l.has_basis p s) {t : Set α} :
-  ne_bot (l⊓𝓟 t) ↔ ∀ ⦃i⦄ hi : p i, (s i ∩ t).Nonempty :=
+  ne_bot (l⊓𝓟 t) ↔ ∀ ⦃i⦄ (hi : p i), (s i ∩ t).Nonempty :=
   (hl.inf_principal t).ne_bot_iff
 
-theorem inf_ne_bot_iff : ne_bot (l⊓l') ↔ ∀ ⦃s : Set α⦄ hs : s ∈ l ⦃s'⦄ hs' : s' ∈ l', (s ∩ s').Nonempty :=
+theorem inf_ne_bot_iff : ne_bot (l⊓l') ↔ ∀ ⦃s : Set α⦄ (hs : s ∈ l) ⦃s'⦄ (hs' : s' ∈ l'), (s ∩ s').Nonempty :=
   l.basis_sets.inf_ne_bot_iff
 
-theorem inf_principal_ne_bot_iff {s : Set α} : ne_bot (l⊓𝓟 s) ↔ ∀ U _ : U ∈ l, (U ∩ s).Nonempty :=
+theorem inf_principal_ne_bot_iff {s : Set α} : ne_bot (l⊓𝓟 s) ↔ ∀ U (_ : U ∈ l), (U ∩ s).Nonempty :=
   l.basis_sets.inf_principal_ne_bot_iff
 
 theorem inf_eq_bot_iff {f g : Filter α} : f⊓g = ⊥ ↔ ∃ (U : _)(_ : U ∈ f)(V : _)(_ : V ∈ g), U ∩ V = ∅ :=
@@ -520,10 +546,11 @@ theorem not_mem_iff_inf_principal_compl {f : Filter α} {s : Set α} : s ∉ f �
 theorem mem_iff_disjoint_principal_compl {f : Filter α} {s : Set α} : s ∈ f ↔ Disjoint f (𝓟 («expr ᶜ» s)) :=
   mem_iff_inf_principal_compl.trans disjoint_iff.symm
 
-theorem le_iff_forall_disjoint_principal_compl {f g : Filter α} : f ≤ g ↔ ∀ V _ : V ∈ g, Disjoint f (𝓟 («expr ᶜ» V)) :=
+theorem le_iff_forall_disjoint_principal_compl {f g : Filter α} :
+  f ≤ g ↔ ∀ V (_ : V ∈ g), Disjoint f (𝓟 («expr ᶜ» V)) :=
   forall_congrₓ$ fun _ => forall_congrₓ$ fun _ => mem_iff_disjoint_principal_compl
 
-theorem le_iff_forall_inf_principal_compl {f g : Filter α} : f ≤ g ↔ ∀ V _ : V ∈ g, f⊓𝓟 («expr ᶜ» V) = ⊥ :=
+theorem le_iff_forall_inf_principal_compl {f g : Filter α} : f ≤ g ↔ ∀ V (_ : V ∈ g), f⊓𝓟 («expr ᶜ» V) = ⊥ :=
   forall_congrₓ$ fun _ => forall_congrₓ$ fun _ => mem_iff_inf_principal_compl
 
 theorem inf_ne_bot_iff_frequently_left {f g : Filter α} :
@@ -557,14 +584,17 @@ theorem has_basis_infi_principal {s : ι → Set α} (h : Directed (· ≥ ·) s
               simp only [exists_prop, true_andₓ, mem_principal]
       exact fun _ _ => principal_mono.2⟩
 
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `s : ι → set α` is an indexed family of sets, then finite intersections of `s i` form a basis
 of `⨅ i, 𝓟 (s i)`.  -/
-theorem has_basis_infi_principal_finite {ι : Type _} (s : ι → Set α) :
-  (⨅i, 𝓟 (s i)).HasBasis (fun t : Set ι => finite t) fun t => ⋂(i : _)(_ : i ∈ t), s i :=
-  by 
-    refine' ⟨fun U => (mem_infi_finite _).trans _⟩
-    simp only [infi_principal_finset, mem_Union, mem_principal, exists_prop, exists_finite_iff_finset,
-      Finset.set_bInter_coe]
+theorem has_basis_infi_principal_finite
+{ι : Type*}
+(s : ι → set α) : «expr⨅ , »((i), expr𝓟() (s i)).has_basis (λ
+ t : set ι, finite t) (λ t, «expr⋂ , »((i «expr ∈ » t), s i)) :=
+begin
+  refine [expr ⟨λ U, (mem_infi_finite _).trans _⟩],
+  simp [] [] ["only"] ["[", expr infi_principal_finset, ",", expr mem_Union, ",", expr mem_principal, ",", expr exists_prop, ",", expr exists_finite_iff_finset, ",", expr finset.set_bInter_coe, "]"] [] []
+end
 
 theorem has_basis_binfi_principal {s : β → Set α} {S : Set β} (h : DirectedOn (s ⁻¹'o (· ≥ ·)) S) (ne : S.nonempty) :
   (⨅(i : _)(_ : i ∈ S), 𝓟 (s i)).HasBasis (fun i => i ∈ S) s :=
@@ -600,8 +630,11 @@ theorem has_basis.comap (f : β → α) (hl : l.has_basis p s) : (l.comap f).Has
         rintro ⟨i, hi, H⟩
         exact ⟨s i, ⟨i, hi, subset.refl _⟩, H⟩⟩
 
-theorem comap_has_basis (f : α → β) (l : Filter β) : has_basis (comap f l) (fun s : Set β => s ∈ l) fun s => f ⁻¹' s :=
-  ⟨fun t => mem_comap⟩
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem comap_has_basis
+(f : α → β)
+(l : filter β) : has_basis (comap f l) (λ s : set β, «expr ∈ »(s, l)) (λ s, «expr ⁻¹' »(f, s)) :=
+⟨λ t, mem_comap⟩
 
 theorem has_basis.prod_self (hl : l.has_basis p s) : (l ×ᶠ l).HasBasis p fun i => (s i).Prod (s i) :=
   ⟨by 
@@ -622,7 +655,7 @@ theorem mem_prod_self_iff {s} : s ∈ l ×ᶠ l ↔ ∃ (t : _)(_ : t ∈ l), Se
 theorem has_basis.sInter_sets (h : has_basis l p s) : ⋂₀l.sets = ⋂(i : _)(hi : p i), s i :=
   by 
     ext x 
-    suffices  : (∀ t _ : t ∈ l, x ∈ t) ↔ ∀ i, p i → x ∈ s i
+    suffices  : (∀ t (_ : t ∈ l), x ∈ t) ↔ ∀ i, p i → x ∈ s i
     ·
       simpa only [mem_Inter, mem_set_of_eq, mem_sInter]
     simpRw [h.mem_iff]
@@ -656,40 +689,50 @@ section TwoTypes
 variable{la : Filter α}{pa : ι → Prop}{sa : ι → Set α}{lb : Filter β}{pb : ι' → Prop}{sb : ι' → Set β}{f : α → β}
 
 theorem has_basis.tendsto_left_iff (hla : la.has_basis pa sa) :
-  tendsto f la lb ↔ ∀ t _ : t ∈ lb, ∃ (i : _)(hi : pa i), maps_to f (sa i) t :=
+  tendsto f la lb ↔ ∀ t (_ : t ∈ lb), ∃ (i : _)(hi : pa i), maps_to f (sa i) t :=
   by 
     simp only [tendsto, (hla.map f).le_iff, image_subset_iff]
     rfl
 
 theorem has_basis.tendsto_right_iff (hlb : lb.has_basis pb sb) :
-  tendsto f la lb ↔ ∀ i hi : pb i, ∀ᶠx in la, f x ∈ sb i :=
+  tendsto f la lb ↔ ∀ i (hi : pb i), ∀ᶠx in la, f x ∈ sb i :=
   by 
     simpa only [tendsto, hlb.ge_iff, mem_map, Filter.Eventually]
 
 theorem has_basis.tendsto_iff (hla : la.has_basis pa sa) (hlb : lb.has_basis pb sb) :
-  tendsto f la lb ↔ ∀ ib hib : pb ib, ∃ (ia : _)(hia : pa ia), ∀ x _ : x ∈ sa ia, f x ∈ sb ib :=
+  tendsto f la lb ↔ ∀ ib (hib : pb ib), ∃ (ia : _)(hia : pa ia), ∀ x (_ : x ∈ sa ia), f x ∈ sb ib :=
   by 
     simp [hlb.tendsto_right_iff, hla.eventually_iff]
 
 theorem tendsto.basis_left (H : tendsto f la lb) (hla : la.has_basis pa sa) :
-  ∀ t _ : t ∈ lb, ∃ (i : _)(hi : pa i), maps_to f (sa i) t :=
+  ∀ t (_ : t ∈ lb), ∃ (i : _)(hi : pa i), maps_to f (sa i) t :=
   hla.tendsto_left_iff.1 H
 
-theorem tendsto.basis_right (H : tendsto f la lb) (hlb : lb.has_basis pb sb) : ∀ i hi : pb i, ∀ᶠx in la, f x ∈ sb i :=
+theorem tendsto.basis_right (H : tendsto f la lb) (hlb : lb.has_basis pb sb) : ∀ i (hi : pb i), ∀ᶠx in la, f x ∈ sb i :=
   hlb.tendsto_right_iff.1 H
 
 theorem tendsto.basis_both (H : tendsto f la lb) (hla : la.has_basis pa sa) (hlb : lb.has_basis pb sb) :
-  ∀ ib hib : pb ib, ∃ (ia : _)(hia : pa ia), ∀ x _ : x ∈ sa ia, f x ∈ sb ib :=
+  ∀ ib (hib : pb ib), ∃ (ia : _)(hia : pa ia), ∀ x (_ : x ∈ sa ia), f x ∈ sb ib :=
   (hla.tendsto_iff hlb).1 H
 
-theorem has_basis.prod'' (hla : la.has_basis pa sa) (hlb : lb.has_basis pb sb) :
-  (la ×ᶠ lb).HasBasis (fun i : PProd ι ι' => pa i.1 ∧ pb i.2) fun i => (sa i.1).Prod (sb i.2) :=
-  (hla.comap Prod.fst).inf' (hlb.comap Prod.snd)
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis.prod''
+(hla : la.has_basis pa sa)
+(hlb : lb.has_basis pb sb) : «expr ×ᶠ »(la, lb).has_basis (λ
+ i : pprod ι ι', «expr ∧ »(pa i.1, pb i.2)) (λ i, (sa i.1).prod (sb i.2)) :=
+(hla.comap prod.fst).inf' (hlb.comap prod.snd)
 
-theorem has_basis.prod {ι ι' : Type _} {pa : ι → Prop} {sa : ι → Set α} {pb : ι' → Prop} {sb : ι' → Set β}
-  (hla : la.has_basis pa sa) (hlb : lb.has_basis pb sb) :
-  (la ×ᶠ lb).HasBasis (fun i : ι × ι' => pa i.1 ∧ pb i.2) fun i => (sa i.1).Prod (sb i.2) :=
-  (hla.comap Prod.fst).inf (hlb.comap Prod.snd)
+-- error in Order.Filter.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis.prod
+{ι ι' : Type*}
+{pa : ι → exprProp()}
+{sa : ι → set α}
+{pb : ι' → exprProp()}
+{sb : ι' → set β}
+(hla : la.has_basis pa sa)
+(hlb : lb.has_basis pb sb) : «expr ×ᶠ »(la, lb).has_basis (λ
+ i : «expr × »(ι, ι'), «expr ∧ »(pa i.1, pb i.2)) (λ i, (sa i.1).prod (sb i.2)) :=
+(hla.comap prod.fst).inf (hlb.comap prod.snd)
 
 theorem has_basis.prod' {la : Filter α} {lb : Filter β} {ι : Type _} {p : ι → Prop} {sa : ι → Set α} {sb : ι → Set β}
   (hla : la.has_basis p sa) (hlb : lb.has_basis p sb)

@@ -53,7 +53,7 @@ structure half_braiding(X : C) where
    by 
   runTac 
     obviously 
-  naturality' : ∀ {U U'} f : U ⟶ U', (𝟙 X ⊗ f) ≫ (β U').Hom = (β U).Hom ≫ (f ⊗ 𝟙 X) :=  by 
+  naturality' : ∀ {U U'} (f : U ⟶ U'), (𝟙 X ⊗ f) ≫ (β U').Hom = (β U).Hom ≫ (f ⊗ 𝟙 X) :=  by 
   runTac 
     obviously
 

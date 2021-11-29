@@ -32,11 +32,11 @@ variable{σ : Type _}
 
 /-- Set of points that are zeroes of all polynomials in an ideal -/
 def zero_locus (I : Ideal (MvPolynomial σ k)) : Set (σ → k) :=
-  { x:σ → k | ∀ p _ : p ∈ I, eval x p = 0 }
+  { x:σ → k | ∀ p (_ : p ∈ I), eval x p = 0 }
 
 @[simp]
 theorem mem_zero_locus_iff {I : Ideal (MvPolynomial σ k)} {x : σ → k} :
-  x ∈ zero_locus I ↔ ∀ p _ : p ∈ I, eval x p = 0 :=
+  x ∈ zero_locus I ↔ ∀ p (_ : p ∈ I), eval x p = 0 :=
   Iff.rfl
 
 theorem zero_locus_anti_mono {I J : Ideal (MvPolynomial σ k)} (h : I ≤ J) : zero_locus J ≤ zero_locus I :=
@@ -50,7 +50,7 @@ theorem zero_locus_top : zero_locus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
 
 /-- Ideal of polynomials with common zeroes at all elements of a set -/
 def vanishing_ideal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) :=
-  { Carrier := { p | ∀ x _ : x ∈ V, eval x p = 0 }, zero_mem' := fun x hx => RingHom.map_zero _,
+  { Carrier := { p | ∀ x (_ : x ∈ V), eval x p = 0 }, zero_mem' := fun x hx => RingHom.map_zero _,
     add_mem' :=
       fun p q hp hq x hx =>
         by 
@@ -62,7 +62,7 @@ def vanishing_ideal (V : Set (σ → k)) : Ideal (MvPolynomial σ k) :=
 
 @[simp]
 theorem mem_vanishing_ideal_iff {V : Set (σ → k)} {p : MvPolynomial σ k} :
-  p ∈ vanishing_ideal V ↔ ∀ x _ : x ∈ V, eval x p = 0 :=
+  p ∈ vanishing_ideal V ↔ ∀ x (_ : x ∈ V), eval x p = 0 :=
   Iff.rfl
 
 theorem vanishing_ideal_anti_mono {A B : Set (σ → k)} (h : A ≤ B) : vanishing_ideal B ≤ vanishing_ideal A :=

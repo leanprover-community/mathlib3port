@@ -17,11 +17,16 @@ variable{𝕜 :
 
 set_option default_priority 100
 
+-- error in Geometry.Manifold.Algebra.Structures: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A smooth (semi)ring is a (semi)ring `R` where addition and multiplication are smooth.
 If `R` is a ring, then negation is automatically smooth, as it is multiplication with `-1`. -/
-class SmoothRing(I : ModelWithCorners 𝕜 E H)(R : Type _)[Semiringₓ R][TopologicalSpace R][ChartedSpace H R] extends
-  HasSmoothAdd I R : Prop where 
-  smooth_mul : Smooth (I.prod I) I fun p : R × R => p.1*p.2
+class smooth_ring
+(I : model_with_corners 𝕜 E H)
+(R : Type*)
+[semiring R]
+[topological_space R]
+[charted_space H R]extends has_smooth_add I R : exprProp() :=
+  (smooth_mul : smooth (I.prod I) I (λ p : «expr × »(R, R), «expr * »(p.1, p.2)))
 
 instance SmoothRing.to_has_smooth_mul (I : ModelWithCorners 𝕜 E H) (R : Type _) [Semiringₓ R] [TopologicalSpace R]
   [ChartedSpace H R] [h : SmoothRing I R] : HasSmoothMul I R :=

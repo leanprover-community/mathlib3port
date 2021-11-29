@@ -36,10 +36,12 @@ begin
   simpa [] [] ["only"] ["[", expr cpow_def_of_ne_zero A, ",", expr div_eq_mul_inv, ",", expr mul_smul, ",", expr add_comm, "]"] [] ["using", expr ((has_strict_fderiv_at_fst.clog hp).mul has_strict_fderiv_at_snd).cexp]
 end
 
-theorem has_strict_fderiv_at_cpow' {x y : ℂ} (hp : 0 < x.re ∨ x.im ≠ 0) :
-  HasStrictFderivAt (fun x : ℂ × ℂ => x.1^x.2)
-    (((y*x^y - 1) • ContinuousLinearMap.fst ℂ ℂ ℂ)+((x^y)*log x) • ContinuousLinearMap.snd ℂ ℂ ℂ) (x, y) :=
-  @has_strict_fderiv_at_cpow (x, y) hp
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_strict_fderiv_at_cpow'
+{x y : exprℂ()}
+(hp : «expr ∨ »(«expr < »(0, x.re), «expr ≠ »(x.im, 0))) : has_strict_fderiv_at (λ
+ x : «expr × »(exprℂ(), exprℂ()), «expr ^ »(x.1, x.2)) «expr + »(«expr • »(«expr * »(y, «expr ^ »(x, «expr - »(y, 1))), continuous_linear_map.fst exprℂ() exprℂ() exprℂ()), «expr • »(«expr * »(«expr ^ »(x, y), log x), continuous_linear_map.snd exprℂ() exprℂ() exprℂ())) (x, y) :=
+@has_strict_fderiv_at_cpow (x, y) hp
 
 theorem has_strict_deriv_at_const_cpow {x y : ℂ} (h : x ≠ 0 ∨ y ≠ 0) :
   HasStrictDerivAt (fun y => x^y) ((x^y)*log x) y :=
@@ -53,10 +55,12 @@ theorem has_strict_deriv_at_const_cpow {x y : ℂ} (h : x ≠ 0 ∨ y ≠ 0) :
     ·
       simpa only [cpow_def_of_ne_zero hx, mul_oneₓ] using ((has_strict_deriv_at_id y).const_mul (log x)).cexp
 
-theorem has_fderiv_at_cpow {p : ℂ × ℂ} (hp : 0 < p.1.re ∨ p.1.im ≠ 0) :
-  HasFderivAt (fun x : ℂ × ℂ => x.1^x.2)
-    (((p.2*p.1^p.2 - 1) • ContinuousLinearMap.fst ℂ ℂ ℂ)+((p.1^p.2)*log p.1) • ContinuousLinearMap.snd ℂ ℂ ℂ) p :=
-  (has_strict_fderiv_at_cpow hp).HasFderivAt
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_fderiv_at_cpow
+{p : «expr × »(exprℂ(), exprℂ())}
+(hp : «expr ∨ »(«expr < »(0, p.1.re), «expr ≠ »(p.1.im, 0))) : has_fderiv_at (λ
+ x : «expr × »(exprℂ(), exprℂ()), «expr ^ »(x.1, x.2)) «expr + »(«expr • »(«expr * »(p.2, «expr ^ »(p.1, «expr - »(p.2, 1))), continuous_linear_map.fst exprℂ() exprℂ() exprℂ()), «expr • »(«expr * »(«expr ^ »(p.1, p.2), log p.1), continuous_linear_map.snd exprℂ() exprℂ() exprℂ())) p :=
+(has_strict_fderiv_at_cpow hp).has_fderiv_at
 
 end Complex
 
@@ -138,10 +142,11 @@ theorem HasStrictDerivAt.const_cpow (hf : HasStrictDerivAt f f' x) (h : c ≠ 0 
   HasStrictDerivAt (fun x => c^f x) (((c^f x)*log c)*f') x :=
   (has_strict_deriv_at_const_cpow h).comp x hf
 
-theorem Complex.has_strict_deriv_at_cpow_const (h : 0 < x.re ∨ x.im ≠ 0) :
-  HasStrictDerivAt (fun z : ℂ => z^c) (c*x^c - 1) x :=
-  by 
-    simpa only [mul_zero, add_zeroₓ, mul_oneₓ] using (has_strict_deriv_at_id x).cpow (has_strict_deriv_at_const x c) h
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem complex.has_strict_deriv_at_cpow_const
+(h : «expr ∨ »(«expr < »(0, x.re), «expr ≠ »(x.im, 0))) : has_strict_deriv_at (λ
+ z : exprℂ(), «expr ^ »(z, c)) «expr * »(c, «expr ^ »(x, «expr - »(c, 1))) x :=
+by simpa [] [] ["only"] ["[", expr mul_zero, ",", expr add_zero, ",", expr mul_one, "]"] [] ["using", expr (has_strict_deriv_at_id x).cpow (has_strict_deriv_at_const x c) h]
 
 theorem HasStrictDerivAt.cpow_const (hf : HasStrictDerivAt f f' x) (h0 : 0 < (f x).re ∨ (f x).im ≠ 0) :
   HasStrictDerivAt (fun x => f x^c) ((c*f x^c - 1)*f') x :=
@@ -213,19 +218,25 @@ begin
   congr' [2] []; ring []
 end
 
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function `λ (x, y), x ^ y` is infinitely smooth at `(x, y)` unless `x = 0`. -/
-theorem times_cont_diff_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) {n : WithTop ℕ} :
-  TimesContDiffAt ℝ n (fun p : ℝ × ℝ => p.1^p.2) p :=
-  by 
-    cases' hp.lt_or_lt with hneg hpos 
-    exacts[(((times_cont_diff_at_fst.log hneg.ne).mul times_cont_diff_at_snd).exp.mul
-            (times_cont_diff_at_snd.mul times_cont_diff_at_const).cos).congr_of_eventually_eq
-        ((continuous_at_fst.eventually (gt_mem_nhds hneg)).mono fun p hp => rpow_def_of_neg hp _),
-      ((times_cont_diff_at_fst.log hpos.ne').mul times_cont_diff_at_snd).exp.congr_of_eventually_eq
-        ((continuous_at_fst.eventually (lt_mem_nhds hpos)).mono fun p hp => rpow_def_of_pos hp _)]
+theorem times_cont_diff_at_rpow_of_ne
+(p : «expr × »(exprℝ(), exprℝ()))
+(hp : «expr ≠ »(p.1, 0))
+{n : with_top exprℕ()} : times_cont_diff_at exprℝ() n (λ p : «expr × »(exprℝ(), exprℝ()), «expr ^ »(p.1, p.2)) p :=
+begin
+  cases [expr hp.lt_or_lt] ["with", ident hneg, ident hpos],
+  exacts ["[", expr (((times_cont_diff_at_fst.log hneg.ne).mul times_cont_diff_at_snd).exp.mul (times_cont_diff_at_snd.mul times_cont_diff_at_const).cos).congr_of_eventually_eq ((continuous_at_fst.eventually (gt_mem_nhds hneg)).mono (λ
+     p
+     hp, rpow_def_of_neg hp _)), ",", expr ((times_cont_diff_at_fst.log hpos.ne').mul times_cont_diff_at_snd).exp.congr_of_eventually_eq ((continuous_at_fst.eventually (lt_mem_nhds hpos)).mono (λ
+     p hp, rpow_def_of_pos hp _)), "]"]
+end
 
-theorem differentiable_at_rpow_of_ne (p : ℝ × ℝ) (hp : p.1 ≠ 0) : DifferentiableAt ℝ (fun p : ℝ × ℝ => p.1^p.2) p :=
-  (times_cont_diff_at_rpow_of_ne p hp).DifferentiableAt le_rfl
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem differentiable_at_rpow_of_ne
+(p : «expr × »(exprℝ(), exprℝ()))
+(hp : «expr ≠ »(p.1, 0)) : differentiable_at exprℝ() (λ p : «expr × »(exprℝ(), exprℝ()), «expr ^ »(p.1, p.2)) p :=
+(times_cont_diff_at_rpow_of_ne p hp).differentiable_at le_rfl
 
 theorem _root_.has_strict_deriv_at.rpow {f g : ℝ → ℝ} {f' g' : ℝ} (hf : HasStrictDerivAt f f' x)
   (hg : HasStrictDerivAt g g' x) (h : 0 < f x) :
@@ -278,14 +289,25 @@ theorem has_deriv_at_rpow_const {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) : HasDeriv
     exacts[continuous_at_id.rpow_const (Or.inr (zero_le_one.trans h)),
       continuous_at_const.mul (continuous_at_id.rpow_const (Or.inr (sub_nonneg.2 h)))]
 
-theorem differentiable_rpow_const {p : ℝ} (hp : 1 ≤ p) : Differentiable ℝ fun x : ℝ => x^p :=
-  fun x => (has_deriv_at_rpow_const (Or.inr hp)).DifferentiableAt
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem differentiable_rpow_const
+{p : exprℝ()}
+(hp : «expr ≤ »(1, p)) : differentiable exprℝ() (λ x : exprℝ(), «expr ^ »(x, p)) :=
+λ x, (has_deriv_at_rpow_const (or.inr hp)).differentiable_at
 
-theorem deriv_rpow_const {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) : deriv (fun x : ℝ => x^p) x = p*x^p - 1 :=
-  (has_deriv_at_rpow_const h).deriv
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem deriv_rpow_const
+{x p : exprℝ()}
+(h : «expr ∨ »(«expr ≠ »(x, 0), «expr ≤ »(1, p))) : «expr = »(deriv (λ
+  x : exprℝ(), «expr ^ »(x, p)) x, «expr * »(p, «expr ^ »(x, «expr - »(p, 1)))) :=
+(has_deriv_at_rpow_const h).deriv
 
-theorem deriv_rpow_const' {p : ℝ} (h : 1 ≤ p) : (deriv fun x : ℝ => x^p) = fun x => p*x^p - 1 :=
-  funext$ fun x => deriv_rpow_const (Or.inr h)
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem deriv_rpow_const'
+{p : exprℝ()}
+(h : «expr ≤ »(1, p)) : «expr = »(deriv (λ
+  x : exprℝ(), «expr ^ »(x, p)), λ x, «expr * »(p, «expr ^ »(x, «expr - »(p, 1)))) :=
+«expr $ »(funext, λ x, deriv_rpow_const (or.inr h))
 
 theorem times_cont_diff_at_rpow_const_of_ne {x p : ℝ} {n : WithTop ℕ} (h : x ≠ 0) :
   TimesContDiffAt ℝ n (fun x => x^p) x :=
@@ -305,13 +327,20 @@ begin
     simpa [] [] [] ["[", expr times_cont_diff_succ_iff_deriv, ",", expr differentiable_rpow_const, ",", expr h1, ",", expr deriv_rpow_const', "]"] [] ["using", expr times_cont_diff_const.mul (ihn h)] }
 end
 
-theorem times_cont_diff_at_rpow_const_of_le {x p : ℝ} {n : ℕ} (h : «expr↑ » n ≤ p) :
-  TimesContDiffAt ℝ n (fun x : ℝ => x^p) x :=
-  (times_cont_diff_rpow_const_of_le h).TimesContDiffAt
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_at_rpow_const_of_le
+{x p : exprℝ()}
+{n : exprℕ()}
+(h : «expr ≤ »(«expr↑ »(n), p)) : times_cont_diff_at exprℝ() n (λ x : exprℝ(), «expr ^ »(x, p)) x :=
+(times_cont_diff_rpow_const_of_le h).times_cont_diff_at
 
-theorem times_cont_diff_at_rpow_const {x p : ℝ} {n : ℕ} (h : x ≠ 0 ∨ «expr↑ » n ≤ p) :
-  TimesContDiffAt ℝ n (fun x : ℝ => x^p) x :=
-  h.elim times_cont_diff_at_rpow_const_of_ne times_cont_diff_at_rpow_const_of_le
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff_at_rpow_const
+{x p : exprℝ()}
+{n : exprℕ()}
+(h : «expr ∨ »(«expr ≠ »(x, 0), «expr ≤ »(«expr↑ »(n), p))) : times_cont_diff_at exprℝ() n (λ
+ x : exprℝ(), «expr ^ »(x, p)) x :=
+h.elim times_cont_diff_at_rpow_const_of_ne times_cont_diff_at_rpow_const_of_le
 
 theorem has_strict_deriv_at_rpow_const {x p : ℝ} (hx : x ≠ 0 ∨ 1 ≤ p) : HasStrictDerivAt (fun x => x^p) (p*x^p - 1) x :=
   TimesContDiffAt.has_strict_deriv_at'
@@ -351,8 +380,8 @@ theorem DifferentiableAt.rpow (hf : DifferentiableAt ℝ f x) (hg : Differentiab
   DifferentiableAt ℝ (fun x => f x^g x) x :=
   (differentiable_at_rpow_of_ne (f x, g x) h).comp x (hf.prod hg)
 
-theorem DifferentiableOn.rpow (hf : DifferentiableOn ℝ f s) (hg : DifferentiableOn ℝ g s) (h : ∀ x _ : x ∈ s, f x ≠ 0) :
-  DifferentiableOn ℝ (fun x => f x^g x) s :=
+theorem DifferentiableOn.rpow (hf : DifferentiableOn ℝ f s) (hg : DifferentiableOn ℝ g s)
+  (h : ∀ x (_ : x ∈ s), f x ≠ 0) : DifferentiableOn ℝ (fun x => f x^g x) s :=
   fun x hx => (hf x hx).rpow (hg x hx) (h x hx)
 
 theorem Differentiable.rpow (hf : Differentiable ℝ f) (hg : Differentiable ℝ g) (h : ∀ x, f x ≠ 0) :
@@ -380,7 +409,7 @@ theorem DifferentiableAt.rpow_const (hf : DifferentiableAt ℝ f x) (h : f x ≠
   DifferentiableAt ℝ (fun x => f x^p) x :=
   (hf.has_fderiv_at.rpow_const h).DifferentiableAt
 
-theorem DifferentiableOn.rpow_const (hf : DifferentiableOn ℝ f s) (h : ∀ x _ : x ∈ s, f x ≠ 0 ∨ 1 ≤ p) :
+theorem DifferentiableOn.rpow_const (hf : DifferentiableOn ℝ f s) (h : ∀ x (_ : x ∈ s), f x ≠ 0 ∨ 1 ≤ p) :
   DifferentiableOn ℝ (fun x => f x^p) s :=
   fun x hx => (hf x hx).rpow_const (h x hx)
 
@@ -409,7 +438,7 @@ theorem TimesContDiffAt.rpow (hf : TimesContDiffAt ℝ n f x) (hg : TimesContDif
   (times_cont_diff_at_rpow_of_ne (f x, g x) h).comp x (hf.prod hg)
 
 theorem TimesContDiffOn.rpow (hf : TimesContDiffOn ℝ n f s) (hg : TimesContDiffOn ℝ n g s)
-  (h : ∀ x _ : x ∈ s, f x ≠ 0) : TimesContDiffOn ℝ n (fun x => f x^g x) s :=
+  (h : ∀ x (_ : x ∈ s), f x ≠ 0) : TimesContDiffOn ℝ n (fun x => f x^g x) s :=
   fun x hx => (hf x hx).rpow (hg x hx) (h x hx)
 
 theorem TimesContDiff.rpow (hf : TimesContDiff ℝ n f) (hg : TimesContDiff ℝ n g) (h : ∀ x, f x ≠ 0) :
@@ -424,7 +453,7 @@ theorem TimesContDiffAt.rpow_const_of_ne (hf : TimesContDiffAt ℝ n f x) (h : f
   TimesContDiffAt ℝ n (fun x => f x^p) x :=
   hf.rpow times_cont_diff_at_const h
 
-theorem TimesContDiffOn.rpow_const_of_ne (hf : TimesContDiffOn ℝ n f s) (h : ∀ x _ : x ∈ s, f x ≠ 0) :
+theorem TimesContDiffOn.rpow_const_of_ne (hf : TimesContDiffOn ℝ n f s) (h : ∀ x (_ : x ∈ s), f x ≠ 0) :
   TimesContDiffOn ℝ n (fun x => f x^p) s :=
   fun x hx => (hf x hx).rpow_const_of_ne (h x hx)
 
@@ -514,11 +543,12 @@ begin
   simp [] [] [] ["[", expr mul_comm x, ",", expr exp_mul, ",", expr exp_log hx', "]"] [] []
 end
 
+-- error in Analysis.SpecialFunctions.PowDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞` for naturals `x`. -/
-theorem tendsto_one_plus_div_pow_exp (t : ℝ) : tendsto (fun x : ℕ => (1+t / (x : ℝ))^x) at_top (𝓝 (Real.exp t)) :=
-  ((tendsto_one_plus_div_rpow_exp t).comp tendsto_coe_nat_at_top_at_top).congr
-    (by 
-      simp )
+theorem tendsto_one_plus_div_pow_exp
+(t : exprℝ()) : tendsto (λ
+ x : exprℕ(), «expr ^ »(«expr + »(1, «expr / »(t, (x : exprℝ()))), x)) at_top (expr𝓝() (real.exp t)) :=
+((tendsto_one_plus_div_rpow_exp t).comp tendsto_coe_nat_at_top_at_top).congr (by simp [] [] [] [] [] [])
 
 end Limits
 

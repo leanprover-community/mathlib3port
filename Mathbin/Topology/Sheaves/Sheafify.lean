@@ -43,7 +43,7 @@ namespace Sheafify
 The prelocal predicate on functions into the stalks, asserting that the function is equal to a germ.
 -/
 def is_germ : prelocal_predicate fun x => F.stalk x :=
-  { pred := fun U f => ∃ g : F.obj (op U), ∀ x : U, f x = F.germ x g,
+  { pred := fun U f => ∃ g : F.obj (op U), ∀ (x : U), f x = F.germ x g,
     res := fun V U i f ⟨g, p⟩ => ⟨F.map i.op g, fun x => (p (i x)).trans (F.germ_res_apply _ _ _).symm⟩ }
 
 /--

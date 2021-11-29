@@ -138,22 +138,17 @@ namespace Int
 
 section NormalizationMonoid
 
-instance  : NormalizationMonoid ℤ :=
-  { normUnit := fun a : ℤ => if 0 ≤ a then 1 else -1, norm_unit_zero := if_pos (le_reflₓ _),
-    norm_unit_mul :=
-      fun a b hna hnb =>
-        by 
-          cases' hna.lt_or_lt with ha ha <;>
-            cases' hnb.lt_or_lt with hb hb <;> simp [mul_nonneg_iff, ha.le, ha.not_le, hb.le, hb.not_le],
-    norm_unit_coe_units :=
-      fun u =>
-        (units_eq_one_or u).elim (fun eq => Eq.symm ▸ if_pos zero_le_one)
-          fun eq =>
-            Eq.symm ▸
-              if_neg
-                (not_le_of_gtₓ$
-                  show (-1 : ℤ) < 0 by 
-                    decide) }
+-- error in RingTheory.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : normalization_monoid exprℤ() :=
+{ norm_unit := λ a : exprℤ(), if «expr ≤ »(0, a) then 1 else «expr- »(1),
+  norm_unit_zero := if_pos (le_refl _),
+  norm_unit_mul := assume a b hna hnb, begin
+    cases [expr hna.lt_or_lt] ["with", ident ha, ident ha]; cases [expr hnb.lt_or_lt] ["with", ident hb, ident hb]; simp [] [] [] ["[", expr mul_nonneg_iff, ",", expr ha.le, ",", expr ha.not_le, ",", expr hb.le, ",", expr hb.not_le, "]"] [] []
+  end,
+  norm_unit_coe_units := assume
+  u, (units_eq_one_or u).elim (assume
+   eq, «expr ▸ »(eq.symm, if_pos zero_le_one)) (assume
+   eq, «expr ▸ »(eq.symm, if_neg «expr $ »(not_le_of_gt, show «expr < »((«expr- »(1) : exprℤ()), 0), by dec_trivial []))) }
 
 theorem normalize_of_nonneg {z : ℤ} (h : 0 ≤ z) : normalize z = z :=
   show (z*«expr↑ » (ite _ _ _)) = z by 
@@ -392,7 +387,7 @@ theorem Nat.factors_eq {n : ℕ} : normalized_factors n = n.factors :=
       rw [Nat.irreducible_iff_prime, ←Nat.prime_iff]
       exact Nat.prime_of_mem_factors hx
 
-theorem Nat.factors_multiset_prod_of_irreducible {s : Multiset ℕ} (h : ∀ x : ℕ, x ∈ s → Irreducible x) :
+theorem Nat.factors_multiset_prod_of_irreducible {s : Multiset ℕ} (h : ∀ (x : ℕ), x ∈ s → Irreducible x) :
   normalized_factors s.prod = s :=
   by 
     rw [←Multiset.rel_eq, ←associated_eq_eq]
@@ -411,15 +406,17 @@ theorem finite_int_iff {a b : ℤ} : finite a b ↔ a.nat_abs ≠ 1 ∧ b ≠ 0 
   by 
     rw [finite_int_iff_nat_abs_finite, finite_nat_iff, pos_iff_ne_zero, Int.nat_abs_ne_zero]
 
-instance decidable_nat : DecidableRel fun a b : ℕ => (multiplicity a b).Dom :=
-  fun a b => decidableOfIff _ finite_nat_iff.symm
+-- error in RingTheory.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance decidable_nat : decidable_rel (λ a b : exprℕ(), (multiplicity a b).dom) :=
+λ a b, decidable_of_iff _ finite_nat_iff.symm
 
-instance decidable_int : DecidableRel fun a b : ℤ => (multiplicity a b).Dom :=
-  fun a b => decidableOfIff _ finite_int_iff.symm
+-- error in RingTheory.Int.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance decidable_int : decidable_rel (λ a b : exprℤ(), (multiplicity a b).dom) :=
+λ a b, decidable_of_iff _ finite_int_iff.symm
 
 end multiplicity
 
-theorem induction_on_primes {P : ℕ → Prop} (h₀ : P 0) (h₁ : P 1) (h : ∀ p a : ℕ, p.prime → P a → P (p*a)) (n : ℕ) :
+theorem induction_on_primes {P : ℕ → Prop} (h₀ : P 0) (h₁ : P 1) (h : ∀ (p a : ℕ), p.prime → P a → P (p*a)) (n : ℕ) :
   P n :=
   by 
     apply UniqueFactorizationMonoid.induction_on_prime 

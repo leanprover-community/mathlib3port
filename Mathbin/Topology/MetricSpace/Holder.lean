@@ -47,7 +47,7 @@ def HolderWith (C r :  ℝ≥0 ) (f : X → Y) : Prop :=
 `C : ℝ≥0` and exponent `r : ℝ≥0` on a set `s : set X`, if `edist (f x) (f y) ≤ C * edist x y ^ r`
 for all `x y ∈ s`. -/
 def HolderOnWith (C r :  ℝ≥0 ) (f : X → Y) (s : Set X) : Prop :=
-  ∀ x _ : x ∈ s y _ : y ∈ s, edist (f x) (f y) ≤ C*edist x y^(r : ℝ)
+  ∀ x (_ : x ∈ s) y (_ : y ∈ s), edist (f x) (f y) ≤ C*edist x y^(r : ℝ)
 
 @[simp]
 theorem holder_on_with_empty (C r :  ℝ≥0 ) (f : X → Y) : HolderOnWith C r f ∅ :=

@@ -187,9 +187,9 @@ def fix {n : ℕ} (F : Typevec (n+1) → Type _) [Mvfunctor F] [q : Mvqpf F] (α
 
 attribute [nolint has_inhabited_instance] fix
 
-/-- `fix F` is a functor -/
-def fix.map {α β : Typevec n} (g : α ⟹ β) : fix F α → fix F β :=
-  Quotientₓ.lift (fun x : q.P.W α => «expr⟦ ⟧» (q.P.W_map g x)) fun a b h => Quot.sound (Wequiv_map _ _ _ h)
+-- error in Data.Qpf.Multivariate.Constructions.Fix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- `fix F` is a functor -/ def fix.map {α β : typevec n} (g : «expr ⟹ »(α, β)) : fix F α → fix F β :=
+quotient.lift (λ x : q.P.W α, «expr⟦ ⟧»(q.P.W_map g x)) (λ a b h, quot.sound (Wequiv_map _ _ _ h))
 
 instance fix.mvfunctor : Mvfunctor (fix F) :=
   { map := @fix.map _ _ _ _ }
@@ -303,7 +303,7 @@ begin
 end
 
 theorem fix.ind {α : Typevec n} (p : fix F α → Prop)
-  (h : ∀ x : F (α.append1 (fix F α)), liftp (pred_last α p) x → p (fix.mk x)) : ∀ x, p x :=
+  (h : ∀ (x : F (α.append1 (fix F α))), liftp (pred_last α p) x → p (fix.mk x)) : ∀ x, p x :=
   by 
     apply Quot.ind 
     intro x 
@@ -339,8 +339,8 @@ instance mvqpf_fix : Mvqpf (fix F) :=
         apply Wequiv.refl }
 
 /-- Dependent recursor for `fix F` -/
-def fix.drec {β : fix F α → Type u} (g : ∀ x : F (α ::: Sigma β), β (fix.mk$ (id ::: Sigma.fst) <$$> x)) (x : fix F α) :
-  β x :=
+def fix.drec {β : fix F α → Type u} (g : ∀ (x : F (α ::: Sigma β)), β (fix.mk$ (id ::: Sigma.fst) <$$> x))
+  (x : fix F α) : β x :=
   let y := @fix.rec _ F _ _ α (Sigma β) (fun i => ⟨_, g i⟩) x 
   have  : x = y.1 :=
     by 

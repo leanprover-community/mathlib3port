@@ -268,7 +268,7 @@ Here we combine the base case and the inductive step into
 a full strong induction proof, thus completing the proof
 of the second direction.
 -/
-theorem hall_hard_inductive {n : ℕ} (hn : Fintype.card ι = n) (ht : ∀ s : Finset ι, s.card ≤ (s.bUnion t).card) :
+theorem hall_hard_inductive {n : ℕ} (hn : Fintype.card ι = n) (ht : ∀ (s : Finset ι), s.card ≤ (s.bUnion t).card) :
   ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
   by 
     runTac 
@@ -297,7 +297,7 @@ where the `fintype ι` constraint is removed.
 -/
 theorem Finset.all_card_le_bUnion_card_iff_exists_injective' {ι α : Type _} [Fintype ι] [DecidableEq α]
   (t : ι → Finset α) :
-  (∀ s : Finset ι, s.card ≤ (s.bUnion t).card) ↔ ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
+  (∀ (s : Finset ι), s.card ≤ (s.bUnion t).card) ↔ ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x :=
   by 
     split 
     ·

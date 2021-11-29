@@ -216,7 +216,7 @@ def SmoothAt (f : M → M') (x : M) :=
 and, for any pair of points, it is `n` times continuously differentiable on this set in the charts
 around these points. -/
 def TimesContMdiffOn (n : WithTop ℕ) (f : M → M') (s : Set M) :=
-  ∀ x _ : x ∈ s, TimesContMdiffWithinAt I I' n f s x
+  ∀ x (_ : x ∈ s), TimesContMdiffWithinAt I I' n f s x
 
 /-- Abbreviation for `times_cont_mdiff_on I I' ⊤ f s`. See also documentation for `smooth`. -/
 @[reducible]
@@ -445,21 +445,21 @@ end
 theorem smooth_on_iff :
   SmoothOn I I' f s ↔
     ContinuousOn f s ∧
-      ∀ x : M y : M',
+      ∀ (x : M) (y : M'),
         TimesContDiffOn 𝕜 ⊤ (extChartAt I' y ∘ f ∘ (extChartAt I x).symm)
           ((extChartAt I x).Target ∩ (extChartAt I x).symm ⁻¹' (s ∩ f ⁻¹' (extChartAt I' y).Source)) :=
   times_cont_mdiff_on_iff
 
 theorem smooth_on_iff_target :
   SmoothOn I I' f s ↔
-    ContinuousOn f s ∧ ∀ y : M', SmoothOn I 𝓘(𝕜, E') (extChartAt I' y ∘ f) (s ∩ f ⁻¹' (extChartAt I' y).Source) :=
+    ContinuousOn f s ∧ ∀ (y : M'), SmoothOn I 𝓘(𝕜, E') (extChartAt I' y ∘ f) (s ∩ f ⁻¹' (extChartAt I' y).Source) :=
   times_cont_mdiff_on_iff_target
 
 /-- One can reformulate smoothness as continuity and smoothness in any extended chart. -/
 theorem times_cont_mdiff_iff :
   TimesContMdiff I I' n f ↔
     Continuous f ∧
-      ∀ x : M y : M',
+      ∀ (x : M) (y : M'),
         TimesContDiffOn 𝕜 n (extChartAt I' y ∘ f ∘ (extChartAt I x).symm)
           ((extChartAt I x).Target ∩ (extChartAt I x).symm ⁻¹' (f ⁻¹' (extChartAt I' y).Source)) :=
   by 
@@ -469,7 +469,7 @@ theorem times_cont_mdiff_iff :
 target. -/
 theorem times_cont_mdiff_iff_target :
   TimesContMdiff I I' n f ↔
-    Continuous f ∧ ∀ y : M', TimesContMdiffOn I 𝓘(𝕜, E') n (extChartAt I' y ∘ f) (f ⁻¹' (extChartAt I' y).Source) :=
+    Continuous f ∧ ∀ (y : M'), TimesContMdiffOn I 𝓘(𝕜, E') n (extChartAt I' y ∘ f) (f ⁻¹' (extChartAt I' y).Source) :=
   by 
     rw [←times_cont_mdiff_on_univ, times_cont_mdiff_on_iff_target]
     simp [continuous_iff_continuous_on_univ]
@@ -477,13 +477,14 @@ theorem times_cont_mdiff_iff_target :
 theorem smooth_iff :
   Smooth I I' f ↔
     Continuous f ∧
-      ∀ x : M y : M',
+      ∀ (x : M) (y : M'),
         TimesContDiffOn 𝕜 ⊤ (extChartAt I' y ∘ f ∘ (extChartAt I x).symm)
           ((extChartAt I x).Target ∩ (extChartAt I x).symm ⁻¹' (f ⁻¹' (extChartAt I' y).Source)) :=
   times_cont_mdiff_iff
 
 theorem smooth_iff_target :
-  Smooth I I' f ↔ Continuous f ∧ ∀ y : M', SmoothOn I 𝓘(𝕜, E') (extChartAt I' y ∘ f) (f ⁻¹' (extChartAt I' y).Source) :=
+  Smooth I I' f ↔
+    Continuous f ∧ ∀ (y : M'), SmoothOn I 𝓘(𝕜, E') (extChartAt I' y ∘ f) (f ⁻¹' (extChartAt I' y).Source) :=
   times_cont_mdiff_iff_target
 
 omit Is I's
@@ -577,21 +578,21 @@ theorem Smooth.mdifferentiable_within_at (hf : Smooth I I' f) : MdifferentiableW
 /-! ### `C^∞` smoothness -/
 
 
-theorem times_cont_mdiff_within_at_top : SmoothWithinAt I I' f s x ↔ ∀ n : ℕ, TimesContMdiffWithinAt I I' n f s x :=
+theorem times_cont_mdiff_within_at_top : SmoothWithinAt I I' f s x ↔ ∀ (n : ℕ), TimesContMdiffWithinAt I I' n f s x :=
   ⟨fun h n => ⟨h.1, times_cont_diff_within_at_top.1 h.2 n⟩,
     fun H => ⟨(H 0).1, times_cont_diff_within_at_top.2 fun n => (H n).2⟩⟩
 
-theorem times_cont_mdiff_at_top : SmoothAt I I' f x ↔ ∀ n : ℕ, TimesContMdiffAt I I' n f x :=
+theorem times_cont_mdiff_at_top : SmoothAt I I' f x ↔ ∀ (n : ℕ), TimesContMdiffAt I I' n f x :=
   times_cont_mdiff_within_at_top
 
-theorem times_cont_mdiff_on_top : SmoothOn I I' f s ↔ ∀ n : ℕ, TimesContMdiffOn I I' n f s :=
+theorem times_cont_mdiff_on_top : SmoothOn I I' f s ↔ ∀ (n : ℕ), TimesContMdiffOn I I' n f s :=
   ⟨fun h n => h.of_le le_top, fun h x hx => times_cont_mdiff_within_at_top.2 fun n => h n x hx⟩
 
-theorem times_cont_mdiff_top : Smooth I I' f ↔ ∀ n : ℕ, TimesContMdiff I I' n f :=
+theorem times_cont_mdiff_top : Smooth I I' f ↔ ∀ (n : ℕ), TimesContMdiff I I' n f :=
   ⟨fun h n => h.of_le le_top, fun h x => times_cont_mdiff_within_at_top.2 fun n => h n x⟩
 
 theorem times_cont_mdiff_within_at_iff_nat :
-  TimesContMdiffWithinAt I I' n f s x ↔ ∀ m : ℕ, (m : WithTop ℕ) ≤ n → TimesContMdiffWithinAt I I' m f s x :=
+  TimesContMdiffWithinAt I I' n f s x ↔ ∀ (m : ℕ), (m : WithTop ℕ) ≤ n → TimesContMdiffWithinAt I I' m f s x :=
   by 
     refine' ⟨fun h m hm => h.of_le hm, fun h => _⟩
     cases n
@@ -726,11 +727,11 @@ omit Is I's
 /-! ### Congruence lemmas -/
 
 
-theorem TimesContMdiffWithinAt.congr (h : TimesContMdiffWithinAt I I' n f s x) (h₁ : ∀ y _ : y ∈ s, f₁ y = f y)
+theorem TimesContMdiffWithinAt.congr (h : TimesContMdiffWithinAt I I' n f s x) (h₁ : ∀ y (_ : y ∈ s), f₁ y = f y)
   (hx : f₁ x = f x) : TimesContMdiffWithinAt I I' n f₁ s x :=
   (times_cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_congr h h₁ hx
 
-theorem times_cont_mdiff_within_at_congr (h₁ : ∀ y _ : y ∈ s, f₁ y = f y) (hx : f₁ x = f x) :
+theorem times_cont_mdiff_within_at_congr (h₁ : ∀ y (_ : y ∈ s), f₁ y = f y) (hx : f₁ x = f x) :
   TimesContMdiffWithinAt I I' n f₁ s x ↔ TimesContMdiffWithinAt I I' n f s x :=
   (times_cont_diff_within_at_local_invariant_prop I I' n).lift_prop_within_at_congr_iff h₁ hx
 
@@ -750,11 +751,11 @@ theorem Filter.EventuallyEq.times_cont_mdiff_at_iff (h₁ : f₁ =ᶠ[𝓝 x] f)
   TimesContMdiffAt I I' n f₁ x ↔ TimesContMdiffAt I I' n f x :=
   (times_cont_diff_within_at_local_invariant_prop I I' n).lift_prop_at_congr_iff_of_eventually_eq h₁
 
-theorem TimesContMdiffOn.congr (h : TimesContMdiffOn I I' n f s) (h₁ : ∀ y _ : y ∈ s, f₁ y = f y) :
+theorem TimesContMdiffOn.congr (h : TimesContMdiffOn I I' n f s) (h₁ : ∀ y (_ : y ∈ s), f₁ y = f y) :
   TimesContMdiffOn I I' n f₁ s :=
   (times_cont_diff_within_at_local_invariant_prop I I' n).lift_prop_on_congr h h₁
 
-theorem times_cont_mdiff_on_congr (h₁ : ∀ y _ : y ∈ s, f₁ y = f y) :
+theorem times_cont_mdiff_on_congr (h₁ : ∀ y (_ : y ∈ s), f₁ y = f y) :
   TimesContMdiffOn I I' n f₁ s ↔ TimesContMdiffOn I I' n f s :=
   (times_cont_diff_within_at_local_invariant_prop I I' n).lift_prop_on_congr_iff h₁
 
@@ -763,7 +764,7 @@ theorem times_cont_mdiff_on_congr (h₁ : ∀ y _ : y ∈ s, f₁ y = f y) :
 
 /-- Being `C^n` is a local property. -/
 theorem times_cont_mdiff_on_of_locally_times_cont_mdiff_on
-  (h : ∀ x _ : x ∈ s, ∃ u, IsOpen u ∧ x ∈ u ∧ TimesContMdiffOn I I' n f (s ∩ u)) : TimesContMdiffOn I I' n f s :=
+  (h : ∀ x (_ : x ∈ s), ∃ u, IsOpen u ∧ x ∈ u ∧ TimesContMdiffOn I I' n f (s ∩ u)) : TimesContMdiffOn I I' n f s :=
   (times_cont_diff_within_at_local_invariant_prop I I' n).lift_prop_on_of_locally_lift_prop_on h
 
 theorem times_cont_mdiff_of_locally_times_cont_mdiff_on (h : ∀ x, ∃ u, IsOpen u ∧ x ∈ u ∧ TimesContMdiffOn I I' n f u) :
@@ -935,63 +936,68 @@ section id
 
 variable{c : M'}
 
-theorem times_cont_mdiff_const : TimesContMdiff I I' n fun x : M => c :=
-  by 
-    intro x 
-    refine' ⟨continuous_within_at_const, _⟩
-    simp only [TimesContDiffWithinAtProp, · ∘ ·]
-    exact times_cont_diff_within_at_const
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_mdiff_const : times_cont_mdiff I I' n (λ x : M, c) :=
+begin
+  assume [binders (x)],
+  refine [expr ⟨continuous_within_at_const, _⟩],
+  simp [] [] ["only"] ["[", expr times_cont_diff_within_at_prop, ",", expr («expr ∘ »), "]"] [] [],
+  exact [expr times_cont_diff_within_at_const]
+end
 
 @[toAdditive]
 theorem times_cont_mdiff_one [HasOne M'] : TimesContMdiff I I' n (1 : M → M') :=
   by 
     simp only [Pi.one_def, times_cont_mdiff_const]
 
-theorem smooth_const : Smooth I I' fun x : M => c :=
-  times_cont_mdiff_const
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem smooth_const : smooth I I' (λ x : M, c) := times_cont_mdiff_const
 
 @[toAdditive]
 theorem smooth_one [HasOne M'] : Smooth I I' (1 : M → M') :=
   by 
     simp only [Pi.one_def, smooth_const]
 
-theorem times_cont_mdiff_on_const : TimesContMdiffOn I I' n (fun x : M => c) s :=
-  times_cont_mdiff_const.TimesContMdiffOn
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_mdiff_on_const : times_cont_mdiff_on I I' n (λ x : M, c) s :=
+times_cont_mdiff_const.times_cont_mdiff_on
 
 @[toAdditive]
 theorem times_cont_mdiff_on_one [HasOne M'] : TimesContMdiffOn I I' n (1 : M → M') s :=
   times_cont_mdiff_one.TimesContMdiffOn
 
-theorem smooth_on_const : SmoothOn I I' (fun x : M => c) s :=
-  times_cont_mdiff_on_const
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem smooth_on_const : smooth_on I I' (λ x : M, c) s := times_cont_mdiff_on_const
 
 @[toAdditive]
 theorem smooth_on_one [HasOne M'] : SmoothOn I I' (1 : M → M') s :=
   times_cont_mdiff_on_one
 
-theorem times_cont_mdiff_at_const : TimesContMdiffAt I I' n (fun x : M => c) x :=
-  times_cont_mdiff_const.TimesContMdiffAt
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_mdiff_at_const : times_cont_mdiff_at I I' n (λ x : M, c) x :=
+times_cont_mdiff_const.times_cont_mdiff_at
 
 @[toAdditive]
 theorem times_cont_mdiff_at_one [HasOne M'] : TimesContMdiffAt I I' n (1 : M → M') x :=
   times_cont_mdiff_one.TimesContMdiffAt
 
-theorem smooth_at_const : SmoothAt I I' (fun x : M => c) x :=
-  times_cont_mdiff_at_const
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem smooth_at_const : smooth_at I I' (λ x : M, c) x := times_cont_mdiff_at_const
 
 @[toAdditive]
 theorem smooth_at_one [HasOne M'] : SmoothAt I I' (1 : M → M') x :=
   times_cont_mdiff_at_one
 
-theorem times_cont_mdiff_within_at_const : TimesContMdiffWithinAt I I' n (fun x : M => c) s x :=
-  times_cont_mdiff_at_const.TimesContMdiffWithinAt
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_mdiff_within_at_const : times_cont_mdiff_within_at I I' n (λ x : M, c) s x :=
+times_cont_mdiff_at_const.times_cont_mdiff_within_at
 
 @[toAdditive]
 theorem times_cont_mdiff_within_at_one [HasOne M'] : TimesContMdiffWithinAt I I' n (1 : M → M') s x :=
   times_cont_mdiff_at_const.TimesContMdiffWithinAt
 
-theorem smooth_within_at_const : SmoothWithinAt I I' (fun x : M => c) s x :=
-  times_cont_mdiff_within_at_const
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem smooth_within_at_const : smooth_within_at I I' (λ x : M, c) s x := times_cont_mdiff_within_at_const
 
 @[toAdditive]
 theorem smooth_within_at_one [HasOne M'] : SmoothWithinAt I I' (1 : M → M') s x :=
@@ -1000,7 +1006,7 @@ theorem smooth_within_at_one [HasOne M'] : SmoothWithinAt I I' (1 : M → M') s 
 end id
 
 theorem times_cont_mdiff_of_support {f : M → F}
-  (hf : ∀ x _ : x ∈ Closure (support f), TimesContMdiffAt I 𝓘(𝕜, F) n f x) : TimesContMdiff I 𝓘(𝕜, F) n f :=
+  (hf : ∀ x (_ : x ∈ Closure (support f)), TimesContMdiffAt I 𝓘(𝕜, F) n f x) : TimesContMdiff I 𝓘(𝕜, F) n f :=
   by 
     intro x 
     byCases' hx : x ∈ Closure (support f)
@@ -1798,9 +1804,11 @@ theorem ContinuousLinearMap.times_cont_mdiff (L : E →L[𝕜] F) : TimesContMdi
 
 variable{V : Type _}[NormedGroup V][NormedSpace 𝕜 V]
 
+-- error in Geometry.Manifold.TimesContMdiff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- On any vector space, multiplication by a scalar is a smooth operation. -/
-theorem smooth_smul : Smooth (𝓘(𝕜).Prod 𝓘(𝕜, V)) 𝓘(𝕜, V) fun p : 𝕜 × V => p.1 • p.2 :=
-  smooth_iff.2 ⟨continuous_smul, fun x y => times_cont_diff_smul.TimesContDiffOn⟩
+theorem smooth_smul : smooth («expr𝓘( )»(𝕜).prod «expr𝓘( , )»(𝕜, V)) «expr𝓘( , )»(𝕜, V) (λ
+ p : «expr × »(𝕜, V), «expr • »(p.1, p.2)) :=
+smooth_iff.2 ⟨continuous_smul, λ x y, times_cont_diff_smul.times_cont_diff_on⟩
 
 theorem Smooth.smul {N : Type _} [TopologicalSpace N] [ChartedSpace H N] {f : N → 𝕜} {g : N → V} (hf : Smooth I 𝓘(𝕜) f)
   (hg : Smooth I 𝓘(𝕜, V) g) : Smooth I 𝓘(𝕜, V) fun p => f p • g p :=

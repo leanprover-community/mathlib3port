@@ -25,22 +25,27 @@ proves that `image_of_Df` is the image of `(zero_locus {f})ᶜ` under the morphi
 def image_of_Df f : Set (PrimeSpectrum R) :=
   { p:PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.as_ideal }
 
-theorem is_open_image_of_Df : IsOpen (image_of_Df f) :=
-  by 
-    rw [image_of_Df, set_of_exists fun i x : PrimeSpectrum R => coeff f i ∉ x.val]
-    exact is_open_Union fun i => is_open_basic_open
+-- error in AlgebraicGeometry.PrimeSpectrum.IsOpenComapC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_open_image_of_Df : is_open (image_of_Df f) :=
+begin
+  rw ["[", expr image_of_Df, ",", expr set_of_exists (λ
+    (i)
+    (x : prime_spectrum R), «expr ∉ »(coeff f i, x.val)), "]"] [],
+  exact [expr is_open_Union (λ i, is_open_basic_open)]
+end
 
 /-- If a point of `Spec R[x]` is not contained in the vanishing set of `f`, then its image in
 `Spec R` is contained in the open set where at least one of the coefficients of `f` is non-zero.
 This lemma is a reformulation of `exists_coeff_not_mem_C_inverse`. -/
 theorem comap_C_mem_image_of_Df {I : PrimeSpectrum (Polynomial R)}
   (H : I ∈ «expr ᶜ» (zero_locus {f} : Set (PrimeSpectrum (Polynomial R)))) :
-  comap (Polynomial.c : R →+* Polynomial R) I ∈ image_of_Df f :=
+  PrimeSpectrum.comap (Polynomial.c : R →+* Polynomial R) I ∈ image_of_Df f :=
   exists_coeff_not_mem_C_inverse (mem_compl_zero_locus_iff_not_mem.mp H)
 
 /-- The open set `image_of_Df f` coincides with the image of `basic_open f` under the
 morphism `C⁺ : Spec R[x] → Spec R`. -/
-theorem image_of_Df_eq_comap_C_compl_zero_locus : image_of_Df f = comap C '' «expr ᶜ» (zero_locus {f}) :=
+theorem image_of_Df_eq_comap_C_compl_zero_locus :
+  image_of_Df f = PrimeSpectrum.comap (C : R →+* Polynomial R) '' «expr ᶜ» (zero_locus {f}) :=
   by 
     refine' ext fun x => ⟨fun hx => ⟨⟨map C x.val, is_prime_map_C_of_is_prime x.property⟩, ⟨_, _⟩⟩, _⟩
     ·
@@ -60,7 +65,7 @@ Stacks Project "Lemma 00FB", first part.
 
 https://stacks.math.columbia.edu/tag/00FB
 -/
-theorem is_open_map_comap_C : IsOpenMap (comap (C : R →+* Polynomial R)) :=
+theorem is_open_map_comap_C : IsOpenMap (PrimeSpectrum.comap (C : R →+* Polynomial R)) :=
   by 
     rintro U ⟨s, z⟩
     rw [←compl_compl U, ←z, ←Union_of_singleton_coe s, zero_locus_Union, compl_Inter, image_Union]

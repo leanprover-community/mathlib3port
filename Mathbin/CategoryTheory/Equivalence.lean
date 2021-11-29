@@ -74,7 +74,7 @@ structure Equivalenceₓ(C : Type u₁)[category.{v₁} C](D : Type u₂)[catego
   unitIso : 𝟭 C ≅ Functor ⋙ inverse 
   counitIso : inverse ⋙ Functor ≅ 𝟭 D 
   functor_unit_iso_comp' :
-  ∀ X : C,
+  ∀ (X : C),
     Functor.map ((unit_iso.hom : 𝟭 C ⟶ Functor ⋙ inverse).app X) ≫ counit_iso.hom.app (functor.obj X) =
       𝟙 (functor.obj X) :=
    by 
@@ -435,7 +435,7 @@ class is_equivalence(F : C ⥤ D) where mk' ::
   unitIso : 𝟭 C ≅ F ⋙ inverse 
   counitIso : inverse ⋙ F ≅ 𝟭 D 
   functor_unit_iso_comp' :
-  ∀ X : C, F.map ((unit_iso.hom : 𝟭 C ⟶ F ⋙ inverse).app X) ≫ counit_iso.hom.app (F.obj X) = 𝟙 (F.obj X) :=  by 
+  ∀ (X : C), F.map ((unit_iso.hom : 𝟭 C ⟶ F ⋙ inverse).app X) ≫ counit_iso.hom.app (F.obj X) = 𝟙 (F.obj X) :=  by 
   runTac 
     obviously
 

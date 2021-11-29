@@ -116,7 +116,7 @@ theorem is_greatest_gfp : IsGreatest (fixed_points f) (gfp f) :=
   f.dual.is_least_lfp
 
 theorem gfp_induction {p : α → Prop} (step : ∀ a, p a → gfp f ≤ a → p (f a))
-  (hInf : ∀ s, (∀ a _ : a ∈ s, p a) → p (Inf s)) : p (gfp f) :=
+  (hInf : ∀ s, (∀ a (_ : a ∈ s), p a) → p (Inf s)) : p (gfp f) :=
   f.dual.lfp_induction step hInf
 
 end Basic

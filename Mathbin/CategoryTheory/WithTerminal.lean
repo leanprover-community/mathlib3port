@@ -59,7 +59,7 @@ def hom : with_terminal C → with_terminal C → Type v
 
 /-- Identity morphisms for `with_terminal C`. -/
 @[simp]
-def id : ∀ X : with_terminal C, hom X X
+def id : ∀ (X : with_terminal C), hom X X
 | of X => 𝟙 _
 | star => PUnit.unit
 
@@ -114,8 +114,8 @@ def star_terminal : limits.is_terminal (star : with_terminal C) :=
 
 /-- Lift a functor `F : C ⥤ D` to `with_term C ⥤ D`. -/
 @[simps]
-def lift {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-  (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) : with_terminal C ⥤ D :=
+def lift {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ (x : C), F.obj x ⟶ Z)
+  (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) : with_terminal C ⥤ D :=
   { obj :=
       fun X =>
         match X with 
@@ -130,18 +130,18 @@ def lift {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x
 
 /-- The isomorphism between `incl ⋙ lift F _ _` with `F`. -/
 @[simps]
-def incl_lift {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-  (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) : incl ⋙ lift F M hM ≅ F :=
+def incl_lift {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ (x : C), F.obj x ⟶ Z)
+  (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) : incl ⋙ lift F M hM ≅ F :=
   { Hom := { app := fun X => 𝟙 _ }, inv := { app := fun X => 𝟙 _ } }
 
 /-- The isomorphism between `(lift F _ _).obj with_terminal.star` with `Z`. -/
 @[simps]
-def lift_star {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-  (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) : (lift F M hM).obj star ≅ Z :=
+def lift_star {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ (x : C), F.obj x ⟶ Z)
+  (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) : (lift F M hM).obj star ≅ Z :=
   eq_to_iso rfl
 
-theorem lift_map_lift_star {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-  (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) (x : C) :
+theorem lift_map_lift_star {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ (x : C), F.obj x ⟶ Z)
+  (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) (x : C) :
   (lift F M hM).map (star_terminal.from (incl.obj x)) ≫ (lift_star F M hM).Hom = (incl_lift F M hM).Hom.app x ≫ M x :=
   by 
     erw [category.id_comp, category.comp_id]
@@ -149,9 +149,9 @@ theorem lift_map_lift_star {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : 
 
 /-- The uniqueness of `lift`. -/
 @[simp]
-def lift_unique {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, F.obj x ⟶ Z)
-  (hM : ∀ x y : C f : x ⟶ y, F.map f ≫ M y = M x) (G : with_terminal C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z)
-  (hh : ∀ x : C, G.map (star_terminal.from (incl.obj x)) ≫ hG.hom = h.hom.app x ≫ M x) : G ≅ lift F M hM :=
+def lift_unique {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ (x : C), F.obj x ⟶ Z)
+  (hM : ∀ (x y : C) (f : x ⟶ y), F.map f ≫ M y = M x) (G : with_terminal C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z)
+  (hh : ∀ (x : C), G.map (star_terminal.from (incl.obj x)) ≫ hG.hom = h.hom.app x ≫ M x) : G ≅ lift F M hM :=
   nat_iso.of_components
     (fun X =>
       match X with 
@@ -214,7 +214,7 @@ def hom : with_initial C → with_initial C → Type v
 
 /-- Identity morphisms for `with_initial C`. -/
 @[simp]
-def id : ∀ X : with_initial C, hom X X
+def id : ∀ (X : with_initial C), hom X X
 | of X => 𝟙 _
 | star => PUnit.unit
 
@@ -269,8 +269,8 @@ def star_initial : limits.is_initial (star : with_initial C) :=
 
 /-- Lift a functor `F : C ⥤ D` to `with_initial C ⥤ D`. -/
 @[simps]
-def lift {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-  (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) : with_initial C ⥤ D :=
+def lift {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ (x : C), Z ⟶ F.obj x)
+  (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) : with_initial C ⥤ D :=
   { obj :=
       fun X =>
         match X with 
@@ -285,18 +285,18 @@ def lift {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F
 
 /-- The isomorphism between `incl ⋙ lift F _ _` with `F`. -/
 @[simps]
-def incl_lift {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-  (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) : incl ⋙ lift F M hM ≅ F :=
+def incl_lift {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ (x : C), Z ⟶ F.obj x)
+  (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) : incl ⋙ lift F M hM ≅ F :=
   { Hom := { app := fun X => 𝟙 _ }, inv := { app := fun X => 𝟙 _ } }
 
 /-- The isomorphism between `(lift F _ _).obj with_term.star` with `Z`. -/
 @[simps]
-def lift_star {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-  (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) : (lift F M hM).obj star ≅ Z :=
+def lift_star {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ (x : C), Z ⟶ F.obj x)
+  (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) : (lift F M hM).obj star ≅ Z :=
   eq_to_iso rfl
 
-theorem lift_star_lift_map {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-  (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) (x : C) :
+theorem lift_star_lift_map {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ (x : C), Z ⟶ F.obj x)
+  (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (x : C) :
   (lift_star F M hM).Hom ≫ (lift F M hM).map (star_initial.to (incl.obj x)) = M x ≫ (incl_lift F M hM).Hom.app x :=
   by 
     erw [category.id_comp, category.comp_id]
@@ -304,9 +304,9 @@ theorem lift_star_lift_map {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : 
 
 /-- The uniqueness of `lift`. -/
 @[simp]
-def lift_unique {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ x : C, Z ⟶ F.obj x)
-  (hM : ∀ x y : C f : x ⟶ y, M x ≫ F.map f = M y) (G : with_initial C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z)
-  (hh : ∀ x : C, hG.symm.hom ≫ G.map (star_initial.to (incl.obj x)) = M x ≫ h.symm.hom.app x) : G ≅ lift F M hM :=
+def lift_unique {D : Type _} [category D] {Z : D} (F : C ⥤ D) (M : ∀ (x : C), Z ⟶ F.obj x)
+  (hM : ∀ (x y : C) (f : x ⟶ y), M x ≫ F.map f = M y) (G : with_initial C ⥤ D) (h : incl ⋙ G ≅ F) (hG : G.obj star ≅ Z)
+  (hh : ∀ (x : C), hG.symm.hom ≫ G.map (star_initial.to (incl.obj x)) = M x ≫ h.symm.hom.app x) : G ≅ lift F M hM :=
   nat_iso.of_components
     (fun X =>
       match X with 

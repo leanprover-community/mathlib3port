@@ -91,13 +91,18 @@ begin
   apply [expr polynomial_comp_attach_bound_mem]
 end
 
-theorem abs_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f : A) : (f : C(X, ℝ)).abs ∈ A.topological_closure :=
-  by 
-    let M := ∥f∥
-    let f' := attach_bound (f : C(X, ℝ))
-    let abs : C(Set.Icc (-∥f∥) ∥f∥, ℝ) := { toFun := fun x : Set.Icc (-∥f∥) ∥f∥ => |(x : ℝ)| }
-    change abs.comp f' ∈ A.topological_closure 
-    apply comp_attach_bound_mem_closure
+-- error in Topology.ContinuousFunction.StoneWeierstrass: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem abs_mem_subalgebra_closure
+(A : subalgebra exprℝ() «exprC( , )»(X, exprℝ()))
+(f : A) : «expr ∈ »((f : «exprC( , )»(X, exprℝ())).abs, A.topological_closure) :=
+begin
+  let [ident M] [] [":=", expr «expr∥ ∥»(f)],
+  let [ident f'] [] [":=", expr attach_bound (f : «exprC( , )»(X, exprℝ()))],
+  let [ident abs] [":", expr «exprC( , )»(set.Icc «expr- »(«expr∥ ∥»(f)) «expr∥ ∥»(f), exprℝ())] [":=", expr { to_fun := λ
+     x : set.Icc «expr- »(«expr∥ ∥»(f)) «expr∥ ∥»(f), «expr| |»((x : exprℝ())) }],
+  change [expr «expr ∈ »(abs.comp f', A.topological_closure)] [] [],
+  apply [expr comp_attach_bound_mem_closure]
+end
 
 theorem inf_mem_subalgebra_closure (A : Subalgebra ℝ C(X, ℝ)) (f g : A) :
   (f : C(X, ℝ))⊓(g : C(X, ℝ)) ∈ A.topological_closure :=

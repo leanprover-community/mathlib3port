@@ -1,7 +1,7 @@
 import Mathbin.Order.GaloisConnection 
 import Mathbin.Order.CompleteLattice 
 import Mathbin.Tactic.Monotonicity.Default 
-import Mathbin.Order.BoundedLattice 
+import Mathbin.Order.BoundedOrder 
 import Mathbin.Logic.Function.Iterate
 
 /-!
@@ -165,10 +165,11 @@ def comp (g : β →ₘ γ) (f : α →ₘ β) : α →ₘ γ :=
 theorem comp_mono ⦃g₁ g₂ : β →ₘ γ⦄ (hg : g₁ ≤ g₂) ⦃f₁ f₂ : α →ₘ β⦄ (hf : f₁ ≤ f₂) : g₁.comp f₁ ≤ g₂.comp f₂ :=
   fun x => (hg _).trans (g₂.mono$ hf _)
 
+-- error in Order.PreorderHom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The composition of two bundled monotone functions, a fully bundled version. -/
-@[simps (config := { fullyApplied := ff })]
-def compₘ : (β →ₘ γ) →ₘ (α →ₘ β) →ₘ α →ₘ γ :=
-  curry ⟨fun f : (β →ₘ γ) × (α →ₘ β) => f.1.comp f.2, fun f₁ f₂ h => comp_mono h.1 h.2⟩
+@[simps #[expr { fully_applied := ff }]]
+def compₘ : «expr →ₘ »(«expr →ₘ »(β, γ), «expr →ₘ »(«expr →ₘ »(α, β), «expr →ₘ »(α, γ))) :=
+curry ⟨λ f : «expr × »(«expr →ₘ »(β, γ), «expr →ₘ »(α, β)), f.1.comp f.2, λ f₁ f₂ h, comp_mono h.1 h.2⟩
 
 @[simp]
 theorem comp_id (f : α →ₘ β) : comp f id = f :=
@@ -208,11 +209,12 @@ theorem prod_mono {f₁ f₂ : α →ₘ β} (hf : f₁ ≤ f₂) {g₁ g₂ : �
 theorem comp_prod_comp_same (f₁ f₂ : β →ₘ γ) (g : α →ₘ β) : (f₁.comp g).Prod (f₂.comp g) = (f₁.prod f₂).comp g :=
   rfl
 
+-- error in Order.PreorderHom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given two bundled monotone maps `f`, `g`, `f.prod g` is the map `x ↦ (f x, g x)` bundled as a
 `preorder_hom`. This is a fully bundled version. -/
-@[simps]
-def prodₘ : (α →ₘ β) →ₘ (α →ₘ γ) →ₘ α →ₘ β × γ :=
-  curry ⟨fun f : (α →ₘ β) × (α →ₘ γ) => f.1.Prod f.2, fun f₁ f₂ h => prod_mono h.1 h.2⟩
+@[simps #[]]
+def prodₘ : «expr →ₘ »(«expr →ₘ »(α, β), «expr →ₘ »(«expr →ₘ »(α, γ), «expr →ₘ »(α, «expr × »(β, γ)))) :=
+curry ⟨λ f : «expr × »(«expr →ₘ »(α, β), «expr →ₘ »(α, γ)), f.1.prod f.2, λ f₁ f₂ h, prod_mono h.1 h.2⟩
 
 /-- Diagonal embedding of `α` into `α × α` as a `preorder_hom`. -/
 @[simps]

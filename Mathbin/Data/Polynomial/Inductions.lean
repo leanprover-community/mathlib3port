@@ -81,33 +81,24 @@ by haveI [] [] [":=", expr nontrivial.of_polynomial_ne hp0]; calc
   by rw ["[", expr degree_add_eq_left_of_degree_lt this, "]"] []; exact [expr degree_lt_degree_mul_X hXp0]
   «expr = »(..., p.degree) : congr_arg _ (div_X_mul_X_add _)
 
+-- error in Data.Polynomial.Inductions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An induction principle for polynomials, valued in Sort* instead of Prop. -/
 @[elab_as_eliminator]
-noncomputable def rec_on_horner {M : Polynomial R → Sort _} :
-  ∀ p : Polynomial R, M 0 → (∀ p a, coeff p 0 = 0 → a ≠ 0 → M p → M (p+C a)) → (∀ p, p ≠ 0 → M p → M (p*X)) → M p
-| p =>
-  fun M0 MC MX =>
-    if hp : p = 0 then Eq.recOnₓ hp.symm M0 else
-      have wf : degree (div_X p) < degree p := degree_div_X_lt hp 
-      by 
-        rw [←div_X_mul_X_add p] at * <;>
-          exact
-            if hcp0 : coeff p 0 = 0 then
-              by 
-                rw [hcp0, C_0, add_zeroₓ] <;>
-                  exact
-                    MX _
-                      (fun h : div_X p = 0 =>
-                        by 
-                          simpa [h, hcp0] using hp)
-                      (rec_on_horner _ M0 MC MX)
-            else
-              MC _ _ (coeff_mul_X_zero _) hcp0
-                (if hpX0 : div_X p = 0 then
-                  show M (div_X p*X)by 
-                    rw [hpX0, zero_mul] <;> exact M0
-                else MX (div_X p) hpX0 (rec_on_horner _ M0 MC MX))
+noncomputable
+def rec_on_horner
+{M : polynomial R → Sort*} : ∀
+p : polynomial R, M 0 → ∀
+p
+a, «expr = »(coeff p 0, 0) → «expr ≠ »(a, 0) → M p → M «expr + »(p, C a) → ∀
+p, «expr ≠ »(p, 0) → M p → M «expr * »(p, X) → M p
+| p := λ
+M0
+MC
+MX, if hp : «expr = »(p, 0) then eq.rec_on hp.symm M0 else have wf : «expr < »(degree (div_X p), degree p), from degree_div_X_lt hp,
+by rw ["[", "<-", expr div_X_mul_X_add p, "]"] ["at", "*"]; exact [expr if hcp0 : «expr = »(coeff p 0, 0) then by rw ["[", expr hcp0, ",", expr C_0, ",", expr add_zero, "]"] []; exact [expr MX _ (λ
+   h : «expr = »(div_X p, 0), by simpa [] [] [] ["[", expr h, ",", expr hcp0, "]"] [] ["using", expr hp]) (rec_on_horner _ M0 MC MX)] else MC _ _ (coeff_mul_X_zero _) hcp0 (if hpX0 : «expr = »(div_X p, 0) then show M «expr * »(div_X p, X), by rw ["[", expr hpX0, ",", expr zero_mul, "]"] []; exact [expr M0] else MX (div_X p) hpX0 (rec_on_horner _ M0 MC MX))]
 
+-- error in Data.Polynomial.Inductions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--  A property holds for all polynomials of positive `degree` with coefficients in a semiring `R`
 if it holds for
 * `a * X`, with `a ∈ R`,
@@ -118,35 +109,28 @@ with appropriate restrictions on each term.
 See `nat_degree_ne_zero_induction_on` for a similar statement involving no explicit multiplication.
  -/
 @[elab_as_eliminator]
-theorem degree_pos_induction_on {P : Polynomial R → Prop} (p : Polynomial R) (h0 : 0 < degree p)
-  (hC : ∀ {a}, a ≠ 0 → P (C a*X)) (hX : ∀ {p}, 0 < degree p → P p → P (p*X))
-  (hadd : ∀ {p} {a}, 0 < degree p → P p → P (p+C a)) : P p :=
-  rec_on_horner p
-    (fun h =>
-      by 
-        rw [degree_zero] at h <;>
-          exact
-            absurd h
-              (by 
-                decide))
-    (fun p a _ _ ih h0 =>
-      have  : 0 < degree p :=
-        lt_of_not_geₓ
-          fun h =>
-            not_lt_of_geₓ degree_C_le$
-              by 
-                rwa [eq_C_of_degree_le_zero h, ←C_add] at h0 
-      hadd this (ih this))
-    (fun p _ ih h0' =>
-      if h0 : 0 < degree p then hX h0 (ih h0) else
-        by 
-          rw [eq_C_of_degree_le_zero (le_of_not_gtₓ h0)] at * <;>
-            exact
-              hC
-                fun h : coeff p 0 = 0 =>
-                  by 
-                    simpa [h, Nat.not_lt_zeroₓ] using h0')
-    h0
+theorem degree_pos_induction_on
+{P : polynomial R → exprProp()}
+(p : polynomial R)
+(h0 : «expr < »(0, degree p))
+(hC : ∀ {a}, «expr ≠ »(a, 0) → P «expr * »(C a, X))
+(hX : ∀ {p}, «expr < »(0, degree p) → P p → P «expr * »(p, X))
+(hadd : ∀ {p} {a}, «expr < »(0, degree p) → P p → P «expr + »(p, C a)) : P p :=
+rec_on_horner p (λ
+ h, by rw [expr degree_zero] ["at", ident h]; exact [expr absurd h exprdec_trivial()]) (λ
+ p
+ a
+ _
+ _
+ ih
+ h0, have «expr < »(0, degree p), from lt_of_not_ge (λ
+  h, «expr $ »(not_lt_of_ge degree_C_le, by rwa ["[", expr eq_C_of_degree_le_zero h, ",", "<-", expr C_add, "]"] ["at", ident h0])),
+ hadd this (ih this)) (λ
+ p
+ _
+ ih
+ h0', if h0 : «expr < »(0, degree p) then hX h0 (ih h0) else by rw ["[", expr eq_C_of_degree_le_zero (le_of_not_gt h0), "]"] ["at", "*"]; exact [expr hC (λ
+   h : «expr = »(coeff p 0, 0), by simpa [] [] [] ["[", expr h, ",", expr nat.not_lt_zero, "]"] [] ["using", expr h0'])]) h0
 
 end Semiringₓ
 

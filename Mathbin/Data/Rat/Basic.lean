@@ -265,7 +265,7 @@ theorem of_int_eq_mk (z : ℤ) : of_int z = z /. 1 :=
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `0 < d` and coprime `n`, `d`. -/
 @[elab_as_eliminator]
-def num_denom_cases_on.{u} {C : ℚ → Sort u} : ∀ a : ℚ H : ∀ n d, 0 < d → (Int.natAbs n).Coprime d → C (n /. d), C a
+def num_denom_cases_on.{u} {C : ℚ → Sort u} : ∀ (a : ℚ) (H : ∀ n d, 0 < d → (Int.natAbs n).Coprime d → C (n /. d)), C a
 | ⟨n, d, h, c⟩, H =>
   by 
     rw [num_denom'] <;> exact H n d h c
@@ -273,7 +273,7 @@ def num_denom_cases_on.{u} {C : ℚ → Sort u} : ∀ a : ℚ H : ∀ n d, 0 < d
 /-- Define a (dependent) function or prove `∀ r : ℚ, p r` by dealing with rational
 numbers of the form `n /. d` with `d ≠ 0`. -/
 @[elab_as_eliminator]
-def num_denom_cases_on'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ n : ℤ d : ℕ, d ≠ 0 → C (n /. d)) : C a :=
+def num_denom_cases_on'.{u} {C : ℚ → Sort u} (a : ℚ) (H : ∀ (n : ℤ) (d : ℕ), d ≠ 0 → C (n /. d)) : C a :=
   num_denom_cases_on a$ fun n d h c => H n d h.ne'
 
 -- error in Data.Rat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -844,7 +844,7 @@ protected theorem add_mk (a b c : ℤ) : (a+b) /. c = (a /. c)+b /. c :=
       rw [add_def h h, mk_eq h (mul_ne_zero h h)]
       simp [add_mulₓ, mul_assocₓ]
 
-theorem coe_int_eq_mk : ∀ z : ℤ, «expr↑ » z = z /. 1
+theorem coe_int_eq_mk : ∀ (z : ℤ), «expr↑ » z = z /. 1
 | (n : ℕ) =>
   show (n : ℚ) = n /. 1by 
     induction' n with n IH n <;> simp [Rat.add_mk]
@@ -1038,7 +1038,7 @@ theorem inv_coe_nat_denom {a : ℕ} (ha0 : 0 < a) : (a : ℚ)⁻¹.denom = a :=
           exactModCast ha0 :
         0 < (a : ℤ))
 
-protected theorem forall {p : ℚ → Prop} : (∀ r, p r) ↔ ∀ a b : ℤ, p (a / b) :=
+protected theorem forall {p : ℚ → Prop} : (∀ r, p r) ↔ ∀ (a b : ℤ), p (a / b) :=
   ⟨fun h _ _ => h _,
     fun h q =>
       (show q = q.num / q.denom from

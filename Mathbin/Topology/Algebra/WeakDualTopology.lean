@@ -96,27 +96,29 @@ instance  [HasContinuousAdd 𝕜] : AddCommMonoidₓ (WeakDual 𝕜 E) :=
 
 namespace WeakDual
 
+-- error in Topology.Algebra.WeakDualTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The weak-* topology instance `weak_dual.topological_space` on the dual of a topological module
 `E` over a topological semiring `𝕜` is defined as the induced topology under the mapping that
 associates to a dual element `x' : weak_dual 𝕜 E` the functional `E → 𝕜`, when the space `E → 𝕜`
 of functionals is equipped with the topology of pointwise convergence (product topology). -/
-instance  : TopologicalSpace (WeakDual 𝕜 E) :=
-  TopologicalSpace.induced (fun x' : WeakDual 𝕜 E => fun z : E => x' z) Pi.topologicalSpace
+instance : topological_space (weak_dual 𝕜 E) :=
+topological_space.induced (λ x' : weak_dual 𝕜 E, λ z : E, x' z) Pi.topological_space
 
-theorem coe_fn_continuous : Continuous fun x' : WeakDual 𝕜 E => fun z : E => x' z :=
-  continuous_induced_dom
+-- error in Topology.Algebra.WeakDualTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem coe_fn_continuous : continuous (λ x' : weak_dual 𝕜 E, λ z : E, x' z) := continuous_induced_dom
 
-theorem eval_continuous (z : E) : Continuous fun x' : WeakDual 𝕜 E => x' z :=
-  (continuous_pi_iff.mp (coe_fn_continuous 𝕜 E)) z
+-- error in Topology.Algebra.WeakDualTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem eval_continuous (z : E) : continuous (λ x' : weak_dual 𝕜 E, x' z) :=
+continuous_pi_iff.mp (coe_fn_continuous 𝕜 E) z
 
 theorem continuous_of_continuous_eval {α : Type u} [TopologicalSpace α] {g : α → WeakDual 𝕜 E}
   (h : ∀ z, Continuous fun a => g a z) : Continuous g :=
   continuous_induced_rng (continuous_pi_iff.mpr h)
 
 theorem tendsto_iff_forall_eval_tendsto {γ : Type u} {F : Filter γ} {ψs : γ → WeakDual 𝕜 E} {ψ : WeakDual 𝕜 E} :
-  tendsto ψs F (𝓝 ψ) ↔ ∀ z : E, tendsto (fun i => ψs i z) F (𝓝 (ψ z)) :=
+  tendsto ψs F (𝓝 ψ) ↔ ∀ (z : E), tendsto (fun i => ψs i z) F (𝓝 (ψ z)) :=
   by 
-    rw [←tendsto_pi]
+    rw [←tendsto_pi_nhds]
     split 
     ·
       intro weak_star_conv 

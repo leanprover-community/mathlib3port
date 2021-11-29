@@ -51,8 +51,12 @@ def ConformalAt (f : X → Y) (x : X) :=
 theorem conformal_at_id (x : X) : ConformalAt id x :=
   ⟨id ℝ X, has_fderiv_at_id _, is_conformal_map_id⟩
 
-theorem conformal_at_const_smul {c : ℝ} (h : c ≠ 0) (x : X) : ConformalAt (fun x' : X => c • x') x :=
-  ⟨c • ContinuousLinearMap.id ℝ X, (has_fderiv_at_id x).const_smul c, is_conformal_map_const_smul h⟩
+-- error in Analysis.Calculus.Conformal.NormedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem conformal_at_const_smul
+{c : exprℝ()}
+(h : «expr ≠ »(c, 0))
+(x : X) : conformal_at (λ x' : X, «expr • »(c, x')) x :=
+⟨«expr • »(c, continuous_linear_map.id exprℝ() X), (has_fderiv_at_id x).const_smul c, is_conformal_map_const_smul h⟩
 
 /-- A function is a conformal map if and only if its differential is a conformal linear map-/
 theorem conformal_at_iff_is_conformal_map_fderiv {f : X → Y} {x : X} :
@@ -83,7 +87,7 @@ theorem DifferentiableAt {f : X → Y} {x : X} (h : ConformalAt f x) : Different
   h₁.differentiable_at
 
 theorem congr {f g : X → Y} {x : X} {u : Set X} (hx : x ∈ u) (hu : IsOpen u) (hf : ConformalAt f x)
-  (h : ∀ x : X, x ∈ u → g x = f x) : ConformalAt g x :=
+  (h : ∀ (x : X), x ∈ u → g x = f x) : ConformalAt g x :=
   let ⟨f', hfderiv, hf'⟩ := hf
   ⟨f', hfderiv.congr_of_eventually_eq ((hu.eventually_mem hx).mono h), hf'⟩
 
@@ -105,13 +109,14 @@ section GlobalConformality
 
 /-- A map `f` is conformal if it's conformal at every point. -/
 def Conformal (f : X → Y) :=
-  ∀ x : X, ConformalAt f x
+  ∀ (x : X), ConformalAt f x
 
 theorem conformal_id : Conformal (id : X → X) :=
   fun x => conformal_at_id x
 
-theorem conformal_const_smul {c : ℝ} (h : c ≠ 0) : Conformal fun x : X => c • x :=
-  fun x => conformal_at_const_smul h x
+-- error in Analysis.Calculus.Conformal.NormedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem conformal_const_smul {c : exprℝ()} (h : «expr ≠ »(c, 0)) : conformal (λ x : X, «expr • »(c, x)) :=
+λ x, conformal_at_const_smul h x
 
 namespace Conformal
 

@@ -67,16 +67,16 @@ section OfFinite
 
 /-- Given a finset `s` and a function `f : α → ℝ≥0` with sum `1` on `s`,
   such that `f x = 0` for `x ∉ s`, we get a `pmf` -/
-def of_finset (f : α →  ℝ≥0 ) (s : Finset α) (h : (∑x in s, f x) = 1) (h' : ∀ x _ : x ∉ s, f x = 0) : Pmf α :=
+def of_finset (f : α →  ℝ≥0 ) (s : Finset α) (h : (∑x in s, f x) = 1) (h' : ∀ x (_ : x ∉ s), f x = 0) : Pmf α :=
   ⟨f, h ▸ has_sum_sum_of_ne_finset_zero h'⟩
 
 @[simp]
-theorem of_finset_apply {f : α →  ℝ≥0 } {s : Finset α} (h : (∑x in s, f x) = 1) (h' : ∀ x _ : x ∉ s, f x = 0) (a : α) :
-  of_finset f s h h' a = f a :=
+theorem of_finset_apply {f : α →  ℝ≥0 } {s : Finset α} (h : (∑x in s, f x) = 1) (h' : ∀ x (_ : x ∉ s), f x = 0)
+  (a : α) : of_finset f s h h' a = f a :=
   rfl
 
-theorem of_finset_apply_of_not_mem {f : α →  ℝ≥0 } {s : Finset α} (h : (∑x in s, f x) = 1) (h' : ∀ x _ : x ∉ s, f x = 0)
-  {a : α} (ha : a ∉ s) : of_finset f s h h' a = 0 :=
+theorem of_finset_apply_of_not_mem {f : α →  ℝ≥0 } {s : Finset α} (h : (∑x in s, f x) = 1)
+  (h' : ∀ x (_ : x ∉ s), f x = 0) {a : α} (ha : a ∉ s) : of_finset f s h h' a = 0 :=
   h' a ha
 
 /-- Given a finite type `α` and a function `f : α → ℝ≥0` with sum 1, we get a `pmf`. -/
@@ -222,18 +222,20 @@ end Bernoulli
 
 section BindOnSupport
 
-protected theorem bind_on_support.summable (p : Pmf α) (f : ∀ a _ : a ∈ p.support, Pmf β) (b : β) :
-  Summable fun a : α => p a*if h : p a = 0 then 0 else f a h b :=
-  by 
-    refine' Nnreal.summable_of_le (fun a => _) p.summable_coe 
-    splitIfs
-    ·
-      refine' (mul_zero (p a)).symm ▸ le_of_eqₓ h.symm
-    ·
-      suffices  : (p a*f a h b) ≤ p a*1
-      ·
-        simpa 
-      exact mul_le_mul_of_nonneg_left ((f a h).coe_le_one _) (p a).2
+-- error in MeasureTheory.ProbabilityMassFunction.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem bind_on_support.summable
+(p : pmf α)
+(f : ∀ a «expr ∈ » p.support, pmf β)
+(b : β) : summable (λ a : α, «expr * »(p a, if h : «expr = »(p a, 0) then 0 else f a h b)) :=
+begin
+  refine [expr nnreal.summable_of_le (assume a, _) p.summable_coe],
+  split_ifs [] [],
+  { refine [expr «expr ▸ »((mul_zero (p a)).symm, le_of_eq h.symm)] },
+  { suffices [] [":", expr «expr ≤ »(«expr * »(p a, f a h b), «expr * »(p a, 1))],
+    { simpa [] [] [] [] [] [] },
+    exact [expr mul_le_mul_of_nonneg_left ((f a h).coe_le_one _) (p a).2] }
+end
 
 -- error in MeasureTheory.ProbabilityMassFunction.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Generalized version of `bind` allowing `f` to only be defined on the support of `p`.
@@ -252,7 +254,7 @@ def bind_on_support (p : pmf α) (f : ∀ a «expr ∈ » p.support, pmf β) : p
   end)⟩
 
 @[simp]
-theorem bind_on_support_apply (p : Pmf α) (f : ∀ a _ : a ∈ p.support, Pmf β) (b : β) :
+theorem bind_on_support_apply (p : Pmf α) (f : ∀ a (_ : a ∈ p.support), Pmf β) (b : β) :
   p.bind_on_support f b = ∑'a, p a*if h : p a = 0 then 0 else f a h b :=
   rfl
 
@@ -265,14 +267,14 @@ theorem bind_on_support_eq_bind (p : Pmf α) (f : α → Pmf β) : (p.bind_on_su
     refine' congr_argₓ _ (funext fun a => _)
     splitIfs with h <;> simp [h]
 
-theorem coe_bind_on_support_apply (p : Pmf α) (f : ∀ a _ : a ∈ p.support, Pmf β) (b : β) :
+theorem coe_bind_on_support_apply (p : Pmf α) (f : ∀ a (_ : a ∈ p.support), Pmf β) (b : β) :
   (p.bind_on_support f b : ℝ≥0∞) = ∑'a, p a*if h : p a = 0 then 0 else f a h b :=
   by 
     simp only [bind_on_support_apply, Ennreal.coe_tsum (bind_on_support.summable p f b), dite_cast, Ennreal.coe_mul,
       Ennreal.coe_zero]
 
 @[simp]
-theorem mem_support_bind_on_support_iff (p : Pmf α) (f : ∀ a _ : a ∈ p.support, Pmf β) (b : β) :
+theorem mem_support_bind_on_support_iff (p : Pmf α) (f : ∀ a (_ : a ∈ p.support), Pmf β) (b : β) :
   b ∈ (p.bind_on_support f).Support ↔ ∃ (a : _)(ha : p a ≠ 0), b ∈ (f a ha).Support :=
   by 
     simp only [mem_support_iff, bind_on_support_apply, tsum_ne_zero_iff (bind_on_support.summable p f b),
@@ -283,15 +285,15 @@ theorem mem_support_bind_on_support_iff (p : Pmf α) (f : ∀ a _ : a ∈ p.supp
         refine' ⟨a, ha, ne_of_eq_of_ne _ haf⟩
         simp [ha]
 
-theorem bind_on_support_eq_zero_iff (p : Pmf α) (f : ∀ a _ : a ∈ p.support, Pmf β) (b : β) :
-  p.bind_on_support f b = 0 ↔ ∀ a ha : p a ≠ 0, f a ha b = 0 :=
+theorem bind_on_support_eq_zero_iff (p : Pmf α) (f : ∀ a (_ : a ∈ p.support), Pmf β) (b : β) :
+  p.bind_on_support f b = 0 ↔ ∀ a (ha : p a ≠ 0), f a ha b = 0 :=
   by 
     simp only [bind_on_support_apply, tsum_eq_zero_iff (bind_on_support.summable p f b), mul_eq_zero,
       or_iff_not_imp_left]
     exact ⟨fun h a ha => trans (dif_neg ha).symm (h a ha), fun h a ha => trans (dif_neg ha) (h a ha)⟩
 
 @[simp]
-theorem pure_bind_on_support (a : α) (f : ∀ a' : α ha : a' ∈ (pure a).Support, Pmf β) :
+theorem pure_bind_on_support (a : α) (f : ∀ (a' : α) (ha : a' ∈ (pure a).Support), Pmf β) :
   (pure a).bindOnSupport f = f a ((mem_support_pure_iff a a).mpr rfl) :=
   by 
     refine' Pmf.ext fun b => _ 
@@ -304,8 +306,8 @@ theorem bind_on_support_pure (p : Pmf α) : (p.bind_on_support fun a _ => pure a
     simp only [Pmf.bind_pure, Pmf.bind_on_support_eq_bind]
 
 @[simp]
-theorem bind_on_support_bind_on_support (p : Pmf α) (f : ∀ a _ : a ∈ p.support, Pmf β)
-  (g : ∀ b _ : b ∈ (p.bind_on_support f).Support, Pmf γ) :
+theorem bind_on_support_bind_on_support (p : Pmf α) (f : ∀ a (_ : a ∈ p.support), Pmf β)
+  (g : ∀ b (_ : b ∈ (p.bind_on_support f).Support), Pmf γ) :
   (p.bind_on_support f).bindOnSupport g =
     p.bind_on_support
       fun a ha => (f a ha).bindOnSupport fun b hb => g b ((p.mem_support_bind_on_support_iff f b).mpr ⟨a, ha, hb⟩) :=
@@ -329,7 +331,7 @@ theorem bind_on_support_bind_on_support (p : Pmf α) (f : ∀ a _ : a ∈ p.supp
       ·
         simp only [h2, Ennreal.coe_zero, mul_zero, zero_mul]
 
-theorem bind_on_support_comm (p : Pmf α) (q : Pmf β) (f : ∀ a _ : a ∈ p.support b _ : b ∈ q.support, Pmf γ) :
+theorem bind_on_support_comm (p : Pmf α) (q : Pmf β) (f : ∀ a (_ : a ∈ p.support) b (_ : b ∈ q.support), Pmf γ) :
   (p.bind_on_support fun a ha => q.bind_on_support (f a ha)) =
     q.bind_on_support fun b hb => p.bind_on_support fun a ha => f a ha b hb :=
   by 

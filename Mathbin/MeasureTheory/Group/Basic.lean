@@ -38,7 +38,7 @@ variable[MeasurableSpace G][Mul G]
 @[toAdditive
       "A measure on a topological group is left invariant\n  if the measure of left translations of a set are equal to the measure of the set itself.\n  To left translate sets we use preimage under left addition,\n  since preimages are nicer to work with than images."]
 def is_mul_left_invariant (μ : Set G → ℝ≥0∞) : Prop :=
-  ∀ g : G {A : Set G} h : MeasurableSet A, μ ((fun h => g*h) ⁻¹' A) = μ A
+  ∀ (g : G) {A : Set G} (h : MeasurableSet A), μ ((fun h => g*h) ⁻¹' A) = μ A
 
 /-- A measure `μ` on a topological group is right invariant
   if the measure of right translations of a set are equal to the measure of the set itself.
@@ -47,7 +47,7 @@ def is_mul_left_invariant (μ : Set G → ℝ≥0∞) : Prop :=
 @[toAdditive
       "A measure on a topological group is right invariant\n  if the measure of right translations of a set are equal to the measure of the set itself.\n  To right translate sets we use preimage under right addition,\n  since preimages are nicer to work with than images."]
 def is_mul_right_invariant (μ : Set G → ℝ≥0∞) : Prop :=
-  ∀ g : G {A : Set G} h : MeasurableSet A, μ ((fun h => h*g) ⁻¹' A) = μ A
+  ∀ (g : G) {A : Set G} (h : MeasurableSet A), μ ((fun h => h*g) ⁻¹' A) = μ A
 
 @[toAdditive MeasureTheory.IsAddLeftInvariant.smul]
 theorem is_mul_left_invariant.smul {μ : Measureₓ G} (h : is_mul_left_invariant μ) (c : ℝ≥0∞) :
@@ -191,22 +191,32 @@ variable[MeasurableSpace G][TopologicalSpace G][BorelSpace G]{μ : Measureₓ G}
 
 variable[Groupₓ G][TopologicalGroup G]
 
+-- error in MeasureTheory.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a left-invariant measure gives positive mass to a compact set, then
 it gives positive mass to any open set. -/
-@[toAdditive]
-theorem is_mul_left_invariant.measure_pos_of_is_open (hμ : is_mul_left_invariant μ) (K : Set G) (hK : IsCompact K)
-  (h : μ K ≠ 0) {U : Set G} (hU : IsOpen U) (h'U : U.nonempty) : 0 < μ U :=
-  by 
-    contrapose! h 
-    rw [←nonpos_iff_eq_zero]
-    rw [nonpos_iff_eq_zero] at h 
-    rw [←hU.interior_eq] at h'U 
-    obtain ⟨t, hKt⟩ : ∃ t : Finset G, K ⊆ ⋃(g : G)(H : g ∈ t), (fun h : G => g*h) ⁻¹' U :=
-      compact_covered_by_mul_left_translates hK h'U 
-    calc μ K ≤ μ (⋃(g : G)(H : g ∈ t), (fun h : G => g*h) ⁻¹' U) :=
-      measure_mono hKt _ ≤ ∑g in t, μ ((fun h : G => g*h) ⁻¹' U) := measure_bUnion_finset_le _ _ _ = 0 :=
-      by 
-        simp [hμ _ hU.measurable_set, h]
+@[to_additive #[]]
+theorem is_mul_left_invariant.measure_pos_of_is_open
+(hμ : is_mul_left_invariant μ)
+(K : set G)
+(hK : is_compact K)
+(h : «expr ≠ »(μ K, 0))
+{U : set G}
+(hU : is_open U)
+(h'U : U.nonempty) : «expr < »(0, μ U) :=
+begin
+  contrapose ["!"] [ident h],
+  rw ["<-", expr nonpos_iff_eq_zero] [],
+  rw [expr nonpos_iff_eq_zero] ["at", ident h],
+  rw ["<-", expr hU.interior_eq] ["at", ident h'U],
+  obtain ["⟨", ident t, ",", ident hKt, "⟩", ":", expr «expr∃ , »((t : finset G), «expr ⊆ »(K, «expr⋃ , »((g : G)
+      (H : «expr ∈ »(g, t)), «expr ⁻¹' »(λ
+       h : G, «expr * »(g, h), U)))), ":=", expr compact_covered_by_mul_left_translates hK h'U],
+  calc
+    «expr ≤ »(μ K, μ «expr⋃ , »((g : G)
+      (H : «expr ∈ »(g, t)), «expr ⁻¹' »(λ h : G, «expr * »(g, h), U))) : measure_mono hKt
+    «expr ≤ »(..., «expr∑ in , »((g), t, μ «expr ⁻¹' »(λ h : G, «expr * »(g, h), U))) : measure_bUnion_finset_le _ _
+    «expr = »(..., 0) : by simp [] [] [] ["[", expr hμ _ hU.measurable_set, ",", expr h, "]"] [] []
+end
 
 /-! A nonzero left-invariant regular measure gives positive mass to any open set. -/
 
@@ -245,21 +255,30 @@ theorem is_mul_left_invariant.measure_pos_iff_nonempty [regular μ] (h2μ : is_m
   {s : Set G} (hs : IsOpen s) : 0 < μ s ↔ s.nonempty :=
   pos_iff_ne_zero.trans$ h2μ.measure_ne_zero_iff_nonempty h3μ hs
 
+-- error in MeasureTheory.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a left-invariant measure gives finite mass to a nonempty open set, then
 it gives finite mass to any compact set. -/
-@[toAdditive]
-theorem is_mul_left_invariant.measure_lt_top_of_is_compact (hμ : is_mul_left_invariant μ) (U : Set G) (hU : IsOpen U)
-  (h'U : U.nonempty) (h : μ U ≠ ∞) {K : Set G} (hK : IsCompact K) : μ K < ∞ :=
-  by 
-    rw [←hU.interior_eq] at h'U 
-    obtain ⟨t, hKt⟩ : ∃ t : Finset G, K ⊆ ⋃(g : G)(H : g ∈ t), (fun h : G => g*h) ⁻¹' U :=
-      compact_covered_by_mul_left_translates hK h'U 
-    calc μ K ≤ μ (⋃(g : G)(H : g ∈ t), (fun h : G => g*h) ⁻¹' U) :=
-      measure_mono hKt _ ≤ ∑g in t, μ ((fun h : G => g*h) ⁻¹' U) :=
-      measure_bUnion_finset_le _ _ _ = Finset.card t*μ U :=
-      by 
-        simp only [hμ _ hU.measurable_set, Finset.sum_const, nsmul_eq_mul]_ < ∞ :=
-      Ennreal.mul_lt_top Ennreal.coe_nat_ne_top h
+@[to_additive #[]]
+theorem is_mul_left_invariant.measure_lt_top_of_is_compact
+(hμ : is_mul_left_invariant μ)
+(U : set G)
+(hU : is_open U)
+(h'U : U.nonempty)
+(h : «expr ≠ »(μ U, «expr∞»()))
+{K : set G}
+(hK : is_compact K) : «expr < »(μ K, «expr∞»()) :=
+begin
+  rw ["<-", expr hU.interior_eq] ["at", ident h'U],
+  obtain ["⟨", ident t, ",", ident hKt, "⟩", ":", expr «expr∃ , »((t : finset G), «expr ⊆ »(K, «expr⋃ , »((g : G)
+      (H : «expr ∈ »(g, t)), «expr ⁻¹' »(λ
+       h : G, «expr * »(g, h), U)))), ":=", expr compact_covered_by_mul_left_translates hK h'U],
+  calc
+    «expr ≤ »(μ K, μ «expr⋃ , »((g : G)
+      (H : «expr ∈ »(g, t)), «expr ⁻¹' »(λ h : G, «expr * »(g, h), U))) : measure_mono hKt
+    «expr ≤ »(..., «expr∑ in , »((g), t, μ «expr ⁻¹' »(λ h : G, «expr * »(g, h), U))) : measure_bUnion_finset_le _ _
+    «expr = »(..., «expr * »(finset.card t, μ U)) : by simp [] [] ["only"] ["[", expr hμ _ hU.measurable_set, ",", expr finset.sum_const, ",", expr nsmul_eq_mul, "]"] [] []
+    «expr < »(..., «expr∞»()) : ennreal.mul_lt_top ennreal.coe_nat_ne_top h
+end
 
 /-- If a left-invariant measure gives finite mass to a set with nonempty interior, then
 it gives finite mass to any compact set. -/
@@ -354,15 +373,15 @@ namespace Measureₓ
 sets and positive mass to open sets. -/
 class is_haar_measure{G : Type _}[Groupₓ G][TopologicalSpace G][MeasurableSpace G](μ : Measureₓ G) : Prop where 
   left_invariant : is_mul_left_invariant μ 
-  compact_lt_top : ∀ K : Set G, IsCompact K → μ K < ∞
-  open_pos : ∀ U : Set G, IsOpen U → U.nonempty → 0 < μ U
+  compact_lt_top : ∀ (K : Set G), IsCompact K → μ K < ∞
+  open_pos : ∀ (U : Set G), IsOpen U → U.nonempty → 0 < μ U
 
 /-- A measure on an additive group is an additive Haar measure if it is left-invariant, and gives
 finite mass to compact sets and positive mass to open sets. -/
 class is_add_haar_measure{G : Type _}[AddGroupₓ G][TopologicalSpace G][MeasurableSpace G](μ : Measureₓ G) : Prop where 
   add_left_invariant : is_add_left_invariant μ 
-  compact_lt_top : ∀ K : Set G, IsCompact K → μ K < ∞
-  open_pos : ∀ U : Set G, IsOpen U → U.nonempty → 0 < μ U
+  compact_lt_top : ∀ (K : Set G), IsCompact K → μ K < ∞
+  open_pos : ∀ (U : Set G), IsOpen U → U.nonempty → 0 < μ U
 
 attribute [toAdditive] is_haar_measure
 

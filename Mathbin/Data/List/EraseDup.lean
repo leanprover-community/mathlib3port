@@ -47,16 +47,16 @@ theorem erase_dup_cons_of_mem {a : α} {l : List α} (h : a ∈ l) : erase_dup (
 theorem erase_dup_cons_of_not_mem {a : α} {l : List α} (h : a ∉ l) : erase_dup (a :: l) = a :: erase_dup l :=
   erase_dup_cons_of_not_mem'$ mt mem_erase_dup.1 h
 
-theorem erase_dup_sublist : ∀ l : List α, erase_dup l <+ l :=
+theorem erase_dup_sublist : ∀ (l : List α), erase_dup l <+ l :=
   pw_filter_sublist
 
-theorem erase_dup_subset : ∀ l : List α, erase_dup l ⊆ l :=
+theorem erase_dup_subset : ∀ (l : List α), erase_dup l ⊆ l :=
   pw_filter_subset
 
 theorem subset_erase_dup (l : List α) : l ⊆ erase_dup l :=
   fun a => mem_erase_dup.2
 
-theorem nodup_erase_dup : ∀ l : List α, nodup (erase_dup l) :=
+theorem nodup_erase_dup : ∀ (l : List α), nodup (erase_dup l) :=
   pairwise_pw_filter
 
 theorem erase_dup_eq_self {l : List α} : erase_dup l = l ↔ nodup l :=

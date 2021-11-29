@@ -1,6 +1,6 @@
 import Mathbin.Deprecated.Subgroup 
 import Mathbin.Deprecated.Group 
-import Mathbin.RingTheory.Subring
+import Mathbin.RingTheory.Subring.Basic
 
 universe u v
 
@@ -40,7 +40,7 @@ theorem IsSubring.inter {S₁ S₂ : Set R} (hS₁ : IsSubring S₁) (hS₂ : Is
   { IsAddSubgroup.inter hS₁.to_is_add_subgroup hS₂.to_is_add_subgroup,
     IsSubmonoid.inter hS₁.to_is_submonoid hS₂.to_is_submonoid with  }
 
-theorem IsSubring.Inter {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) : IsSubring (Set.Interₓ S) :=
+theorem IsSubring.Inter {ι : Sort _} {S : ι → Set R} (h : ∀ (y : ι), IsSubring (S y)) : IsSubring (Set.Interₓ S) :=
   { IsAddSubgroup.Inter fun i => (h i).to_is_add_subgroup, IsSubmonoid.Inter fun i => (h i).to_is_submonoid with  }
 
 theorem is_subring_Union_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set R} (h : ∀ i, IsSubring (s i))
@@ -58,7 +58,7 @@ variable{s : Set R}
 attribute [local reducible] closure
 
 theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
-  ∃ L : List (List R), (∀ l _ : l ∈ L, ∀ x _ : x ∈ l, x ∈ s ∨ x = (-1 : R)) ∧ (L.map List.prod).Sum = a :=
+  ∃ L : List (List R), (∀ l (_ : l ∈ L), ∀ x (_ : x ∈ l), x ∈ s ∨ x = (-1 : R)) ∧ (L.map List.prod).Sum = a :=
   AddGroupₓ.InClosure.rec_on h
     (fun x hx =>
       match x, Monoidₓ.exists_list_of_mem_closure hx with 

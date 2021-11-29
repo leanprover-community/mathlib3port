@@ -77,13 +77,13 @@ instance  : Mul (Submodule R A) :=
 theorem mul_mem_mul (hm : m ∈ M) (hn : n ∈ N) : (m*n) ∈ M*N :=
   (le_supr _ ⟨m, hm⟩ : _ ≤ M*N) ⟨n, hn, rfl⟩
 
-theorem mul_le : (M*N) ≤ P ↔ ∀ m _ : m ∈ M n _ : n ∈ N, (m*n) ∈ P :=
+theorem mul_le : (M*N) ≤ P ↔ ∀ m (_ : m ∈ M) n (_ : n ∈ N), (m*n) ∈ P :=
   ⟨fun H m hm n hn => H$ mul_mem_mul hm hn,
     fun H => supr_le$ fun ⟨m, hm⟩ => map_le_iff_le_comap.2$ fun n hn => H m hm n hn⟩
 
 @[elab_as_eliminator]
-protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M*N) (hm : ∀ m _ : m ∈ M n _ : n ∈ N, C (m*n))
-  (h0 : C 0) (ha : ∀ x y, C x → C y → C (x+y)) (hs : ∀ r : R x, C x → C (r • x)) : C r :=
+protected theorem mul_induction_on {C : A → Prop} {r : A} (hr : r ∈ M*N) (hm : ∀ m (_ : m ∈ M) n (_ : n ∈ N), C (m*n))
+  (h0 : C 0) (ha : ∀ x y, C x → C y → C (x+y)) (hs : ∀ (r : R) x, C x → C (r • x)) : C r :=
   (@mul_le _ _ _ _ _ _ _ ⟨C, h0, ha, hs⟩).2 hm hr
 
 variable(R)
@@ -390,7 +390,7 @@ This is the general form of the ideal quotient, traditionally written $I : J$.
 -/
 instance  : Div (Submodule R A) :=
   ⟨fun I J =>
-      { Carrier := { x | ∀ y _ : y ∈ J, (x*y) ∈ I },
+      { Carrier := { x | ∀ y (_ : y ∈ J), (x*y) ∈ I },
         zero_mem' :=
           fun y hy =>
             by 
@@ -407,7 +407,7 @@ instance  : Div (Submodule R A) :=
               rw [Algebra.smul_mul_assoc]
               exact Submodule.smul_mem _ _ (hx _ hy) }⟩
 
-theorem mem_div_iff_forall_mul_mem {x : A} {I J : Submodule R A} : x ∈ I / J ↔ ∀ y _ : y ∈ J, (x*y) ∈ I :=
+theorem mem_div_iff_forall_mul_mem {x : A} {I J : Submodule R A} : x ∈ I / J ↔ ∀ y (_ : y ∈ J), (x*y) ∈ I :=
   Iff.refl _
 
 theorem mem_div_iff_smul_subset {x : A} {I J : Submodule R A} : x ∈ I / J ↔ x • (J : Set A) ⊆ I :=
@@ -418,7 +418,7 @@ theorem mem_div_iff_smul_subset {x : A} {I J : Submodule R A} : x ∈ I / J ↔ 
         assumption,
     fun h y hy => h (Set.smul_mem_smul_set hy)⟩
 
-theorem le_div_iff {I J K : Submodule R A} : I ≤ J / K ↔ ∀ x _ : x ∈ I z _ : z ∈ K, (x*z) ∈ J :=
+theorem le_div_iff {I J K : Submodule R A} : I ≤ J / K ↔ ∀ x (_ : x ∈ I) z (_ : z ∈ K), (x*z) ∈ J :=
   Iff.refl _
 
 theorem le_div_iff_mul_le {I J K : Submodule R A} : I ≤ J / K ↔ (I*K) ≤ J :=

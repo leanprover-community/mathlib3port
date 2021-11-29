@@ -776,15 +776,14 @@ end
 
 variable(R M)
 
+-- error in RingTheory.Finiteness: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If an additive monoid `M` is finitely generated then `add_monoid_algebra R M` is of finite
-type. -/
-instance finite_type_of_fg [CommRingₓ R] [h : AddMonoidₓ.Fg M] : finite_type R (AddMonoidAlgebra R M) :=
-  by 
-    obtain ⟨S, hS⟩ := h.out 
-    exact
-      (finite_type.mv_polynomial R (S : Set M)).ofSurjective
-        (MvPolynomial.aeval fun s : (S : Set M) => of' R M («expr↑ » s))
-        (mv_polynomial_aeval_of_surjective_of_closure hS)
+type. -/ instance finite_type_of_fg [comm_ring R] [h : add_monoid.fg M] : finite_type R (add_monoid_algebra R M) :=
+begin
+  obtain ["⟨", ident S, ",", ident hS, "⟩", ":=", expr h.out],
+  exact [expr (finite_type.mv_polynomial R (S : set M)).of_surjective (mv_polynomial.aeval (λ
+     s : (S : set M), of' R M «expr↑ »(s))) (mv_polynomial_aeval_of_surjective_of_closure hS)]
+end
 
 variable{R M}
 

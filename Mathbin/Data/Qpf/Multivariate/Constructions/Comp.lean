@@ -22,10 +22,10 @@ variable{n m :
         _)[fF :
     Mvfunctor F][q : Mvqpf F](G : Fin2 n → Typevec.{u} m → Type u)[fG : ∀ i, Mvfunctor$ G i][q' : ∀ i, Mvqpf$ G i]
 
+-- error in Data.Qpf.Multivariate.Constructions.Comp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Composition of an `n`-ary functor with `n` `m`-ary
-functors gives us one `m`-ary functor -/
-def comp (v : Typevec.{u} m) : Type _ :=
-  F$ fun i : Fin2 n => G i v
+functors gives us one `m`-ary functor -/ def comp (v : typevec.{u} m) : Type* :=
+«expr $ »(F, λ i : fin2 n, G i v)
 
 namespace Comp
 
@@ -33,8 +33,8 @@ open Mvfunctor Mvpfunctor
 
 variable{F G}{α β : Typevec.{u} m}(f : α ⟹ β)
 
-instance  [I : Inhabited (F$ fun i : Fin2 n => G i α)] : Inhabited (comp F G α) :=
-  I
+-- error in Data.Qpf.Multivariate.Constructions.Comp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance [I : inhabited «expr $ »(F, λ i : fin2 n, G i α)] : inhabited (comp F G α) := I
 
 /-- Constructor for functor composition -/
 protected def mk (x : F$ fun i => G i α) : (comp F G) α :=
@@ -54,9 +54,11 @@ protected theorem get_mk (x : F$ fun i => G i α) : comp.get (comp.mk x) = x :=
 
 include fG
 
+-- error in Data.Qpf.Multivariate.Constructions.Comp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- map operation defined on a vector of functors -/
-protected def map' : (fun i : Fin2 n => G i α) ⟹ fun i : Fin2 n => G i β :=
-  fun i => map f
+protected
+def map' : «expr ⟹ »(λ i : fin2 n, G i α, λ i : fin2 n, G i β) :=
+λ i, map f
 
 include fF
 
@@ -67,30 +69,34 @@ protected def map : (comp F G) α → (comp F G) β :=
 instance  : Mvfunctor (comp F G) :=
   { map := fun α β => comp.map }
 
-theorem map_mk (x : F$ fun i => G i α) : f <$$> comp.mk x = comp.mk ((fun i x : G i α => f <$$> x) <$$> x) :=
-  rfl
+-- error in Data.Qpf.Multivariate.Constructions.Comp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem map_mk
+(x : «expr $ »(F, λ
+  i, G i α)) : «expr = »(«expr <$$> »(f, comp.mk x), comp.mk «expr <$$> »(λ (i) (x : G i α), «expr <$$> »(f, x), x)) :=
+rfl
 
-theorem get_map (x : comp F G α) : comp.get (f <$$> x) = (fun i x : G i α => f <$$> x) <$$> comp.get x :=
-  rfl
+-- error in Data.Qpf.Multivariate.Constructions.Comp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem get_map
+(x : comp F G α) : «expr = »(comp.get «expr <$$> »(f, x), «expr <$$> »(λ
+  (i)
+  (x : G i α), «expr <$$> »(f, x), comp.get x)) :=
+rfl
 
 include q q'
 
-instance  : Mvqpf (comp F G) :=
-  { p := Mvpfunctor.comp (P F) fun i => P$ G i,
-    abs := fun α => comp.mk ∘ (map fun i => abs) ∘ abs ∘ Mvpfunctor.comp.get,
-    repr :=
-      fun α =>
-        Mvpfunctor.comp.mk ∘ reprₓ ∘ (map fun i => (reprₓ : G i α → (fun i : Fin2 n => obj (P (G i)) α) i)) ∘ comp.get,
-    abs_repr :=
-      by 
-        intros 
-        simp [· ∘ ·, Mvfunctor.map_map, · ⊚ ·, abs_repr],
-    abs_map :=
-      by 
-        intros 
-        simp [· ∘ ·]
-        rw [←abs_map]
-        simp [Mvfunctor.id_map, · ⊚ ·, map_mk, Mvpfunctor.comp.get_map, abs_map, Mvfunctor.map_map, abs_repr] }
+-- error in Data.Qpf.Multivariate.Constructions.Comp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : mvqpf (comp F G) :=
+{ P := mvpfunctor.comp (P F) (λ i, «expr $ »(P, G i)),
+  abs := λ α, «expr ∘ »(comp.mk, «expr ∘ »(map (λ i, abs), «expr ∘ »(abs, mvpfunctor.comp.get))),
+  repr := λ
+  α, «expr ∘ »(mvpfunctor.comp.mk, «expr ∘ »(repr, «expr ∘ »(map (λ
+      i, (repr : G i α → λ i : fin2 n, obj (P (G i)) α i)), comp.get))),
+  abs_repr := by { intros [],
+    simp [] [] [] ["[", expr («expr ∘ »), ",", expr mvfunctor.map_map, ",", expr («expr ⊚ »), ",", expr abs_repr, "]"] [] [] },
+  abs_map := by { intros [],
+    simp [] [] [] ["[", expr («expr ∘ »), "]"] [] [],
+    rw ["[", "<-", expr abs_map, "]"] [],
+    simp [] [] [] ["[", expr mvfunctor.id_map, ",", expr («expr ⊚ »), ",", expr map_mk, ",", expr mvpfunctor.comp.get_map, ",", expr abs_map, ",", expr mvfunctor.map_map, ",", expr abs_repr, "]"] [] [] } }
 
 end Comp
 

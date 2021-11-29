@@ -18,7 +18,7 @@ noncomputable theory
 /-- Two sets in an (extended) metric space are called *metric separated* if the (extended) distance
 between `x ∈ s` and `y ∈ t` is bounded from below by a positive constant. -/
 def IsMetricSeparated {X : Type _} [EmetricSpace X] (s t : Set X) :=
-  ∃ (r : _)(_ : r ≠ 0), ∀ x _ : x ∈ s y _ : y ∈ t, r ≤ edist x y
+  ∃ (r : _)(_ : r ≠ 0), ∀ x (_ : x ∈ s) y (_ : y ∈ t), r ≤ edist x y
 
 namespace IsMetricSeparated
 
@@ -84,7 +84,7 @@ theorem union_right_iff {t'} : IsMetricSeparated s (t ∪ t') ↔ IsMetricSepara
   comm.trans$ union_left_iff.trans$ and_congr comm comm
 
 theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : finite I) {s : ι → Set X} {t : Set X} :
-  IsMetricSeparated (⋃(i : _)(_ : i ∈ I), s i) t ↔ ∀ i _ : i ∈ I, IsMetricSeparated (s i) t :=
+  IsMetricSeparated (⋃(i : _)(_ : i ∈ I), s i) t ↔ ∀ i (_ : i ∈ I), IsMetricSeparated (s i) t :=
   by 
     refine'
       finite.induction_on hI
@@ -96,20 +96,20 @@ theorem finite_Union_left_iff {ι : Type _} {I : Set ι} (hI : finite I) {s : ι
 alias finite_Union_left_iff ↔ _ IsMetricSeparated.finite_Union_left
 
 theorem finite_Union_right_iff {ι : Type _} {I : Set ι} (hI : finite I) {s : Set X} {t : ι → Set X} :
-  IsMetricSeparated s (⋃(i : _)(_ : i ∈ I), t i) ↔ ∀ i _ : i ∈ I, IsMetricSeparated s (t i) :=
+  IsMetricSeparated s (⋃(i : _)(_ : i ∈ I), t i) ↔ ∀ i (_ : i ∈ I), IsMetricSeparated s (t i) :=
   by 
     simpa only [@comm _ _ s] using finite_Union_left_iff hI
 
 @[simp]
 theorem finset_Union_left_iff {ι : Type _} {I : Finset ι} {s : ι → Set X} {t : Set X} :
-  IsMetricSeparated (⋃(i : _)(_ : i ∈ I), s i) t ↔ ∀ i _ : i ∈ I, IsMetricSeparated (s i) t :=
+  IsMetricSeparated (⋃(i : _)(_ : i ∈ I), s i) t ↔ ∀ i (_ : i ∈ I), IsMetricSeparated (s i) t :=
   finite_Union_left_iff I.finite_to_set
 
 alias finset_Union_left_iff ↔ _ IsMetricSeparated.finset_Union_left
 
 @[simp]
 theorem finset_Union_right_iff {ι : Type _} {I : Finset ι} {s : Set X} {t : ι → Set X} :
-  IsMetricSeparated s (⋃(i : _)(_ : i ∈ I), t i) ↔ ∀ i _ : i ∈ I, IsMetricSeparated s (t i) :=
+  IsMetricSeparated s (⋃(i : _)(_ : i ∈ I), t i) ↔ ∀ i (_ : i ∈ I), IsMetricSeparated s (t i) :=
   finite_Union_right_iff I.finite_to_set
 
 alias finset_Union_right_iff ↔ _ IsMetricSeparated.finset_Union_right

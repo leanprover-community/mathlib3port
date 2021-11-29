@@ -99,8 +99,11 @@ instance  : OrderedSemiring Nat :=
   by 
     infer_instance
 
+instance Nat.orderBot : OrderBot ℕ :=
+  { bot := 0, bot_le := Nat.zero_leₓ }
+
 instance  : CanonicallyOrderedCommSemiring ℕ :=
-  { Nat.nontrivial, (inferInstance : OrderedAddCommMonoid ℕ), (inferInstance : LinearOrderedSemiring ℕ),
+  { Nat.nontrivial, Nat.orderBot, (inferInstance : OrderedAddCommMonoid ℕ), (inferInstance : LinearOrderedSemiring ℕ),
     (inferInstance : CommSemiringₓ ℕ) with
     le_iff_exists_add :=
       fun a b =>
@@ -108,15 +111,17 @@ instance  : CanonicallyOrderedCommSemiring ℕ :=
             let ⟨c, hc⟩ := Nat.Le.dest h
             ⟨c, hc.symm⟩,
           fun ⟨c, hc⟩ => hc.symm ▸ Nat.le_add_rightₓ _ _⟩,
-    eq_zero_or_eq_zero_of_mul_eq_zero := fun a b => Nat.eq_zero_of_mul_eq_zero, bot := 0, bot_le := Nat.zero_leₓ }
+    eq_zero_or_eq_zero_of_mul_eq_zero := fun a b => Nat.eq_zero_of_mul_eq_zero }
 
 instance  : CanonicallyLinearOrderedAddMonoid ℕ :=
   { (inferInstance : CanonicallyOrderedAddMonoid ℕ), Nat.linearOrder with  }
 
-instance Nat.Subtype.semilatticeSupBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] : SemilatticeSupBot s :=
-  { Subtype.linearOrder s, latticeOfLinearOrder with
-    bot := ⟨Nat.findₓ (nonempty_subtype.1 h), Nat.find_specₓ (nonempty_subtype.1 h)⟩,
+instance Nat.Subtype.orderBot (s : Set ℕ) [DecidablePred (· ∈ s)] [h : Nonempty s] : OrderBot s :=
+  { bot := ⟨Nat.findₓ (nonempty_subtype.1 h), Nat.find_specₓ (nonempty_subtype.1 h)⟩,
     bot_le := fun x => Nat.find_min'ₓ _ x.2 }
+
+instance Nat.Subtype.semilatticeSup (s : Set ℕ) : SemilatticeSup s :=
+  { Subtype.linearOrder s, latticeOfLinearOrder with  }
 
 theorem Nat.Subtype.coe_bot {s : Set ℕ} [DecidablePred (· ∈ s)] [h : Nonempty s] :
   ((⊥ : s) : ℕ) = Nat.findₓ (nonempty_subtype.1 h) :=
@@ -640,7 +645,7 @@ theorem mul_self_le_mul_self_iff {n m : ℕ} : n ≤ m ↔ (n*n) ≤ m*m :=
 theorem mul_self_lt_mul_self_iff {n m : ℕ} : n < m ↔ (n*n) < m*m :=
   le_iff_le_iff_lt_iff_lt.1 mul_self_le_mul_self_iff
 
-theorem le_mul_self : ∀ n : ℕ, n ≤ n*n
+theorem le_mul_self : ∀ (n : ℕ), n ≤ n*n
 | 0 => le_reflₓ _
 | n+1 =>
   let t := Nat.mul_le_mul_leftₓ (n+1) (succ_pos n)
@@ -744,14 +749,17 @@ theorem rec_add_one {C : ℕ → Sort u} (h0 : C 0) (h : ∀ n, C n → C (n+1))
   (Nat.rec h0 h : ∀ n, C n) (n+1) = h n ((Nat.rec h0 h : ∀ n, C n) n) :=
   rfl
 
+-- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Recursion starting at a non-zero number: given a map `C k → C (k+1)` for each `k`,
 there is a map from `C n` to each `C m`, `n ≤ m`. For a version where the assumption is only made
 when `k ≥ n`, see `le_rec_on'`. -/
 @[elab_as_eliminator]
-def le_rec_on {C : ℕ → Sort u} {n : ℕ} : ∀ {m : ℕ}, n ≤ m → (∀ {k}, C k → C (k+1)) → C n → C m
-| 0, H, next, x => Eq.recOnₓ (Nat.eq_zero_of_le_zeroₓ H) x
-| m+1, H, next, x =>
-  Or.byCases (of_le_succ H) (fun h : n ≤ m => next$ le_rec_on h (@next) x) fun h : n = m+1 => Eq.recOnₓ h x
+def le_rec_on
+{C : exprℕ() → Sort u}
+{n : exprℕ()} : ∀ {m : exprℕ()}, «expr ≤ »(n, m) → ∀ {k}, C k → C «expr + »(k, 1) → C n → C m
+| 0, H, next, x := eq.rec_on (nat.eq_zero_of_le_zero H) x
+| «expr + »(m, 1), H, next, x := or.by_cases (of_le_succ H) (λ
+ h : «expr ≤ »(n, m), «expr $ »(next, le_rec_on h @next x)) (λ h : «expr = »(n, «expr + »(m, 1)), eq.rec_on h x)
 
 theorem le_rec_on_self {C : ℕ → Sort u} {n} {h : n ≤ n} {next} (x : C n) : (le_rec_on h next x : C n) = x :=
   by 
@@ -806,7 +814,7 @@ theorem le_rec_on_surjective {C : ℕ → Sort u} {n m} (hnm : n ≤ m) (next : 
 
 /-- Recursion principle based on `<`. -/
 @[elab_as_eliminator]
-protected def strong_rec' {p : ℕ → Sort u} (H : ∀ n, (∀ m, m < n → p m) → p n) : ∀ n : ℕ, p n
+protected def strong_rec' {p : ℕ → Sort u} (H : ∀ n, (∀ m, m < n → p m) → p n) : ∀ (n : ℕ), p n
 | n => H n fun m hm => strong_rec' m
 
 /-- Recursion principle based on `<` applied to some natural number. -/
@@ -866,18 +874,21 @@ theorem decreasing_induction_succ_left {P : ℕ → Sort _} (h : ∀ n, P (n+1) 
   by 
     rw [Subsingleton.elimₓ mn (le_transₓ (le_succ m) smn), decreasing_induction_trans, decreasing_induction_succ']
 
+-- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Recursion starting at a non-zero number: given a map `C k → C (k+1)` for each `k ≥ n`,
 there is a map from `C n` to each `C m`, `n ≤ m`. -/
 @[elab_as_eliminator]
-def le_rec_on' {C : ℕ → Sort _} {n : ℕ} : ∀ {m : ℕ}, n ≤ m → (∀ ⦃k⦄, n ≤ k → C k → C (k+1)) → C n → C m
-| 0, H, next, x => Eq.recOnₓ (Nat.eq_zero_of_le_zeroₓ H) x
-| m+1, H, next, x =>
-  Or.byCases (of_le_succ H) (fun h : n ≤ m => next h$ le_rec_on' h next x) fun h : n = m+1 => Eq.recOnₓ h x
+def le_rec_on'
+{C : exprℕ() → Sort*}
+{n : exprℕ()} : ∀ {m : exprℕ()}, «expr ≤ »(n, m) → ∀ {{k}}, «expr ≤ »(n, k) → C k → C «expr + »(k, 1) → C n → C m
+| 0, H, next, x := eq.rec_on (nat.eq_zero_of_le_zero H) x
+| «expr + »(m, 1), H, next, x := or.by_cases (of_le_succ H) (λ
+ h : «expr ≤ »(n, m), «expr $ »(next h, le_rec_on' h next x)) (λ h : «expr = »(n, «expr + »(m, 1)), eq.rec_on h x)
 
 /-- Decreasing induction: if `P (k+1)` implies `P k` for all `m ≤ k < n`, then `P n` implies `P m`.
 Also works for functions to `Sort*`. Weakens the assumptions of `decreasing_induction`. -/
 @[elab_as_eliminator]
-def decreasing_induction' {P : ℕ → Sort _} {m n : ℕ} (h : ∀ k _ : k < n, m ≤ k → P (k+1) → P k) (mn : m ≤ n)
+def decreasing_induction' {P : ℕ → Sort _} {m n : ℕ} (h : ∀ k (_ : k < n), m ≤ k → P (k+1) → P k) (mn : m ≤ n)
   (hP : P n) : P m :=
   by 
     refine' le_rec_on' mn _ _ h hP <;> clear h hP mn n
@@ -893,15 +904,15 @@ def decreasing_induction' {P : ℕ → Sort _} {m n : ℕ} (h : ∀ k _ : k < n,
       exact hP
 
 /-- A subset of `ℕ` containing `b : ℕ` and closed under `nat.succ` contains every `n ≥ b`. -/
-theorem set_induction_bounded {b : ℕ} {S : Set ℕ} (hb : b ∈ S) (h_ind : ∀ k : ℕ, k ∈ S → (k+1) ∈ S) {n : ℕ}
+theorem set_induction_bounded {b : ℕ} {S : Set ℕ} (hb : b ∈ S) (h_ind : ∀ (k : ℕ), k ∈ S → (k+1) ∈ S) {n : ℕ}
   (hbn : b ≤ n) : n ∈ S :=
   @le_rec_on (fun n => n ∈ S) b n hbn h_ind hb
 
 /-- A subset of `ℕ` containing zero and closed under `nat.succ` contains all of `ℕ`. -/
-theorem set_induction {S : Set ℕ} (hb : 0 ∈ S) (h_ind : ∀ k : ℕ, k ∈ S → (k+1) ∈ S) (n : ℕ) : n ∈ S :=
+theorem set_induction {S : Set ℕ} (hb : 0 ∈ S) (h_ind : ∀ (k : ℕ), k ∈ S → (k+1) ∈ S) (n : ℕ) : n ∈ S :=
   set_induction_bounded hb h_ind (zero_le n)
 
-theorem set_eq_univ {S : Set ℕ} : S = Set.Univ ↔ 0 ∈ S ∧ ∀ k : ℕ, k ∈ S → (k+1) ∈ S :=
+theorem set_eq_univ {S : Set ℕ} : S = Set.Univ ↔ 0 ∈ S ∧ ∀ (k : ℕ), k ∈ S → (k+1) ∈ S :=
   ⟨by 
       rintro rfl <;> simp ,
     fun ⟨h0, hs⟩ => Set.eq_univ_of_forall (set_induction h0 hs)⟩
@@ -1446,14 +1457,14 @@ begin
 end
 
 /-- Two natural numbers are equal if and only if the have the same multiples. -/
-theorem dvd_right_iff_eq {m n : ℕ} : (∀ a : ℕ, m ∣ a ↔ n ∣ a) ↔ m = n :=
+theorem dvd_right_iff_eq {m n : ℕ} : (∀ (a : ℕ), m ∣ a ↔ n ∣ a) ↔ m = n :=
   ⟨fun h => dvd_antisymm ((h _).mpr dvd_rfl) ((h _).mp dvd_rfl),
     fun h n =>
       by 
         rw [h]⟩
 
 /-- Two natural numbers are equal if and only if the have the same divisors. -/
-theorem dvd_left_iff_eq {m n : ℕ} : (∀ a : ℕ, a ∣ m ↔ a ∣ n) ↔ m = n :=
+theorem dvd_left_iff_eq {m n : ℕ} : (∀ (a : ℕ), a ∣ m ↔ a ∣ n) ↔ m = n :=
   ⟨fun h => dvd_antisymm ((h _).mp dvd_rfl) ((h _).mpr dvd_rfl),
     fun h n =>
       by 
@@ -1470,7 +1481,7 @@ section Find
 
 variable{p q : ℕ → Prop}[DecidablePred p][DecidablePred q]
 
-theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.findₓ h = m ↔ p m ∧ ∀ n _ : n < m, ¬p n :=
+theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.findₓ h = m ↔ p m ∧ ∀ n (_ : n < m), ¬p n :=
   by 
     split 
     ·
@@ -1490,12 +1501,12 @@ theorem find_le_iff (h : ∃ n : ℕ, p n) (n : ℕ) : Nat.findₓ h ≤ n ↔ �
     simp only [exists_prop, ←lt_succ_iff, find_lt_iff]
 
 @[simp]
-theorem le_find_iff (h : ∃ n : ℕ, p n) (n : ℕ) : n ≤ Nat.findₓ h ↔ ∀ m _ : m < n, ¬p m :=
+theorem le_find_iff (h : ∃ n : ℕ, p n) (n : ℕ) : n ≤ Nat.findₓ h ↔ ∀ m (_ : m < n), ¬p m :=
   by 
     simpRw [←not_ltₓ, find_lt_iff, not_exists]
 
 @[simp]
-theorem lt_find_iff (h : ∃ n : ℕ, p n) (n : ℕ) : n < Nat.findₓ h ↔ ∀ m _ : m ≤ n, ¬p m :=
+theorem lt_find_iff (h : ∃ n : ℕ, p n) (n : ℕ) : n < Nat.findₓ h ↔ ∀ m (_ : m ≤ n), ¬p m :=
   by 
     simp only [←succ_le_iff, le_find_iff, succ_le_succ_iff]
 
@@ -1693,7 +1704,7 @@ protected theorem bit0_le {n m : ℕ} (h : n ≤ m) : bit0 n ≤ bit0 m :=
 protected theorem bit1_le {n m : ℕ} (h : n ≤ m) : bit1 n ≤ bit1 m :=
   succ_le_succ (add_le_add h h)
 
-theorem bit_le : ∀ b : Bool {n m : ℕ}, n ≤ m → bit b n ≤ bit b m
+theorem bit_le : ∀ (b : Bool) {n m : ℕ}, n ≤ m → bit b n ≤ bit b m
 | tt, n, m, h => Nat.bit1_le h
 | ff, n, m, h => Nat.bit0_le h
 
@@ -1791,7 +1802,7 @@ def bit_cases {C : ℕ → Sort u} (H : ∀ b n, C (bit b n)) (n : ℕ) : C n :=
 /-! ### decidability of predicates -/
 
 
-instance decidable_ball_lt (n : Nat) (P : ∀ k _ : k < n, Prop) :
+instance decidable_ball_lt (n : Nat) (P : ∀ k (_ : k < n), Prop) :
   ∀ [H : ∀ n h, Decidable (P n h)], Decidable (∀ n h, P n h) :=
   by 
     induction' n with n IH <;> intro  <;> skip
@@ -1821,9 +1832,9 @@ instance decidable_ball_lt (n : Nat) (P : ∀ k _ : k < n, Prop) :
 instance decidable_forall_fin {n : ℕ} (P : Finₓ n → Prop) [H : DecidablePred P] : Decidable (∀ i, P i) :=
   decidableOfIff (∀ k h, P ⟨k, h⟩) ⟨fun a ⟨k, h⟩ => a k h, fun a k h => a ⟨k, h⟩⟩
 
-instance decidable_ball_le (n : ℕ) (P : ∀ k _ : k ≤ n, Prop) [H : ∀ n h, Decidable (P n h)] :
+instance decidable_ball_le (n : ℕ) (P : ∀ k (_ : k ≤ n), Prop) [H : ∀ n h, Decidable (P n h)] :
   Decidable (∀ n h, P n h) :=
-  decidableOfIff (∀ k h : k < succ n, P k (le_of_lt_succ h)) ⟨fun a k h => a k (lt_succ_of_le h), fun a k h => a k _⟩
+  decidableOfIff (∀ k (h : k < succ n), P k (le_of_lt_succ h)) ⟨fun a k h => a k (lt_succ_of_le h), fun a k h => a k _⟩
 
 -- error in Data.Nat.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance decidable_lo_hi

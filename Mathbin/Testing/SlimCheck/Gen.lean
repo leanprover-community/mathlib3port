@@ -1,6 +1,5 @@
-import Mathbin.Control.Uliftable 
-import Leanbin.System.Random 
-import Mathbin.System.Random.Basic
+import Mathbin.Control.Random 
+import Mathbin.Control.Uliftable
 
 /-!
 # `gen` Monad
@@ -69,13 +68,17 @@ open Nat hiding choose
 def choose_nat (x y : ℕ) (p : x ≤ y) : gen (x .. y) :=
   choose x y p
 
+-- error in Testing.SlimCheck.Gen: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Generate a `nat` example between `x` and `y`. -/
-def choose_nat' (x y : ℕ) (p : x < y) : gen (Set.Ico x y) :=
-  have  : ∀ i, x < i → i ≤ y → i.pred < y :=
-    fun i h₀ h₁ =>
-      show i.pred.succ ≤ y by 
-        rwa [succ_pred_eq_of_pos] <;> apply lt_of_le_of_ltₓ (Nat.zero_leₓ _) h₀
-  (Subtype.map pred fun i h : (x+1) ≤ i ∧ i ≤ y => ⟨le_pred_of_lt h.1, this _ h.1 h.2⟩) <$> choose (x+1) y p
+def choose_nat' (x y : exprℕ()) (p : «expr < »(x, y)) : gen (set.Ico x y) :=
+have ∀
+i, «expr < »(x, i) → «expr ≤ »(i, y) → «expr < »(i.pred, y), from λ
+i
+h₀
+h₁, show «expr ≤ »(i.pred.succ, y), by rwa [expr succ_pred_eq_of_pos] []; apply [expr lt_of_le_of_lt (nat.zero_le _) h₀],
+«expr <$> »(subtype.map pred (λ
+  (i)
+  (h : «expr ∧ »(«expr ≤ »(«expr + »(x, 1), i), «expr ≤ »(i, y))), ⟨le_pred_of_lt h.1, this _ h.1 h.2⟩), choose «expr + »(x, 1) y p)
 
 open Nat
 
@@ -101,7 +104,7 @@ def resize (f : ℕ → ℕ) (cmd : gen α) : gen α :=
   ⟨fun ⟨sz⟩ => ReaderTₓ.run cmd ⟨f sz⟩⟩
 
 /-- Create `n` examples using `cmd`. -/
-def vector_of : ∀ n : ℕ cmd : gen α, gen (Vector α n)
+def vector_of : ∀ (n : ℕ) (cmd : gen α), gen (Vector α n)
 | 0, _ => return Vector.nil
 | succ n, cmd => (Vector.cons <$> cmd)<*>vector_of n cmd
 
@@ -142,7 +145,7 @@ If we consider `freq_aux [(1, gena), (3, genb), (5, genc)] 4 _`, we choose a gen
 the interval 1-9 into 1-1, 2-4, 5-9 so that the width of each interval corresponds to one of the
 number in the list of generators. Then, we check which interval 4 falls into: it selects `genb`.
 -/
-def freq_aux : ∀ xs : List (ℕ+ × gen α) i, i < (xs.map (Subtype.val ∘ Prod.fst)).Sum → gen α
+def freq_aux : ∀ (xs : List (ℕ+ × gen α)) i, i < (xs.map (Subtype.val ∘ Prod.fst)).Sum → gen α
 | [], i, h => False.elim (Nat.not_lt_zeroₓ _ h)
 | (i, x) :: xs, j, h =>
   if h' : j < i then x else
@@ -176,7 +179,7 @@ def freq (xs : List (ℕ+ × gen α)) (pos : 0 < xs.length) : gen α :=
           rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁ <;> exact ha)
 
 /-- Generate a random permutation of a given list. -/
-def permutation_of {α : Type u} : ∀ xs : List α, gen (Subtype$ List.Perm xs)
+def permutation_of {α : Type u} : ∀ (xs : List α), gen (Subtype$ List.Perm xs)
 | [] => pure ⟨[], List.Perm.nil⟩
 | x :: xs =>
   do 

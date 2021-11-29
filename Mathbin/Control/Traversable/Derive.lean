@@ -34,39 +34,36 @@ unsafe def map_field (n : Name) (cl f α β e : expr) : tactic expr :=
               pure$ f' e
           else is_def_eq t.app_fn cl >> mk_app `` comp.mk [e] <|> pure e
 
+-- error in Control.Traversable.Derive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- similar to `traverse_constructor` but for `functor` -/
-unsafe def map_constructor (c n : Name) (f α β : expr) (args₀ : List expr) (args₁ : List (Bool × expr))
-  (rec_call : List expr) : tactic expr :=
-  do 
-    let g ← target 
-    let (_, args') ←
-      mmap_accuml
-          (fun x : List expr y : Bool × expr =>
-            if y.1 then pure (x.tail, x.head) else Prod.mk rec_call <$> map_field n g.app_fn f α β y.2)
-          rec_call args₁ 
-    let constr ← mk_const c 
-    let r := constr.mk_app (args₀ ++ args')
-    return r
+meta
+def map_constructor
+(c n : name)
+(f α β : expr)
+(args₀ : list expr)
+(args₁ : list «expr × »(bool, expr))
+(rec_call : list expr) : tactic expr :=
+do {
+g ← target,
+  (_, args') ← mmap_accuml (λ
+   (x : list expr)
+   (y : «expr × »(bool, expr)), if y.1 then pure (x.tail, x.head) else «expr <$> »(prod.mk rec_call, map_field n g.app_fn f α β y.2)) rec_call args₁,
+  constr ← mk_const c,
+  let r := constr.mk_app «expr ++ »(args₀, args'),
+  return r }
 
-/-- derive the `map` definition of a `functor` -/
-unsafe def mk_map (type : Name) :=
-  do 
-    let ls ← local_context 
-    let [α, β, f, x] ← tactic.intro_lst [`α, `β, `f, `x]
-    let et ← infer_type x 
-    let xs ← tactic.induction x 
-    xs.mmap'
-        fun x : Name × List expr × List (Name × expr) =>
-          do 
-            let (c, args, _) := x 
-            let (args, rec_call) ← args.mpartition$ fun e => (bnot ∘ β.occurs) <$> infer_type e 
-            let args₀ ←
-              args.mmap$
-                  fun a =>
-                    do 
-                      let b ← et.occurs <$> infer_type a 
-                      pure (b, a)
-            map_constructor c type f α β (ls ++ [β]) args₀ rec_call >>= tactic.exact
+-- error in Control.Traversable.Derive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- derive the `map` definition of a `functor` -/ meta def mk_map (type : name) :=
+do {
+ls ← local_context,
+  «expr[ , ]»([α, β, f, x]) ← tactic.intro_lst «expr[ , ]»([`α, `β, `f, `x]),
+  et ← infer_type x,
+  xs ← tactic.induction x,
+  xs.mmap' (λ x : «expr × »(name, «expr × »(list expr, list «expr × »(name, expr))), do {
+   let (c, args, _) := x,
+     (args, rec_call) ← «expr $ »(args.mpartition, λ e, «expr <$> »(«expr ∘ »(bnot, β.occurs), infer_type e)),
+     args₀ ← «expr $ »(args.mmap, λ a, do b ← «expr <$> »(et.occurs, infer_type a), pure (b, a)),
+     «expr >>= »(map_constructor c type f α β «expr ++ »(ls, «expr[ , ]»([β])) args₀ rec_call, tactic.exact) }) }
 
 unsafe def mk_mapp_aux' : expr → expr → List expr → tactic expr
 | fn, expr.pi n bi d b, a :: as =>
@@ -176,53 +173,50 @@ unsafe def traverse_field (n : Name) (appl_inst cl f v e : expr) : tactic (Sum e
             pure$ Sum.inr$ f' e
         else is_def_eq t.app_fn cl >> Sum.inr <$> mk_app `` comp.mk [e] <|> pure (Sum.inl e)
 
+-- error in Control.Traversable.Derive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 For a sum type `inductive foo (α : Type) | foo1 : list α → ℕ → foo | ...`
 ``traverse_constructor `foo1 `foo appl_inst f `α `β [`(x : list α), `(y : ℕ)]``
 synthesizes `foo1 <$> traverse f x <*> pure y.` -/
-unsafe def traverse_constructor (c n : Name) (appl_inst f α β : expr) (args₀ : List expr) (args₁ : List (Bool × expr))
-  (rec_call : List expr) : tactic expr :=
-  do 
-    let g ← target 
-    let args' ← mmap (traverse_field n appl_inst g.app_fn f α) args₀ 
-    let (_, args') ←
-      mmap_accuml
-          (fun x : List expr y : Bool × _ =>
-            if y.1 then pure (x.tail, Sum.inr x.head) else Prod.mk x <$> traverse_field n appl_inst g.app_fn f α y.2)
-          rec_call args₁ 
-    let constr ← mk_const c 
-    let v ← mk_mvar 
-    let constr' ← to_expr (pquote.1 (@pure _ (%%ₓappl_inst).toHasPure _ (%%ₓv)))
-    let (vars_intro, r) ← seq_apply_constructor constr' (args₀.map Sum.inl ++ args')
-    let gs ← get_goals 
-    set_goals [v]
-    let vs ← vars_intro.mmap id 
-    tactic.exact (constr.mk_app vs)
-    done 
-    set_goals gs 
-    return r
+meta
+def traverse_constructor
+(c n : name)
+(appl_inst f α β : expr)
+(args₀ : list expr)
+(args₁ : list «expr × »(bool, expr))
+(rec_call : list expr) : tactic expr :=
+do {
+g ← target,
+  args' ← mmap (traverse_field n appl_inst g.app_fn f α) args₀,
+  (_, args') ← mmap_accuml (λ
+   (x : list expr)
+   (y : «expr × »(bool, _)), if y.1 then pure (x.tail, sum.inr x.head) else «expr <$> »(prod.mk x, traverse_field n appl_inst g.app_fn f α y.2)) rec_call args₁,
+  constr ← mk_const c,
+  v ← mk_mvar,
+  constr' ← to_expr (``(@pure _ (%%appl_inst).to_has_pure _ (%%v))),
+  (vars_intro, r) ← seq_apply_constructor constr' «expr ++ »(args₀.map sum.inl, args'),
+  gs ← get_goals,
+  set_goals «expr[ , ]»([v]),
+  vs ← vars_intro.mmap id,
+  tactic.exact (constr.mk_app vs),
+  done,
+  set_goals gs,
+  return r }
 
-/-- derive the `traverse` definition of a `traversable` instance -/
-unsafe def mk_traverse (type : Name) :=
-  do 
-    do 
-        let ls ← local_context 
-        let [m, appl_inst, α, β, f, x] ← tactic.intro_lst [`m, `appl_inst, `α, `β, `f, `x]
-        let et ← infer_type x 
-        reset_instance_cache 
-        let xs ← tactic.induction x 
-        xs.mmap'
-            fun x : Name × List expr × List (Name × expr) =>
-              do 
-                let (c, args, _) := x 
-                let (args, rec_call) ← args.mpartition$ fun e => (bnot ∘ β.occurs) <$> infer_type e 
-                let args₀ ←
-                  args.mmap$
-                      fun a =>
-                        do 
-                          let b ← et.occurs <$> infer_type a 
-                          pure (b, a)
-                traverse_constructor c type appl_inst f α β (ls ++ [β]) args₀ rec_call >>= tactic.exact
+-- error in Control.Traversable.Derive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- derive the `traverse` definition of a `traversable` instance -/ meta def mk_traverse (type : name) :=
+do {
+do {
+  ls ← local_context,
+    «expr[ , ]»([m, appl_inst, α, β, f, x]) ← tactic.intro_lst «expr[ , ]»([`m, `appl_inst, `α, `β, `f, `x]),
+    et ← infer_type x,
+    reset_instance_cache,
+    xs ← tactic.induction x,
+    xs.mmap' (λ x : «expr × »(name, «expr × »(list expr, list «expr × »(name, expr))), do {
+     let (c, args, _) := x,
+       (args, rec_call) ← «expr $ »(args.mpartition, λ e, «expr <$> »(«expr ∘ »(bnot, β.occurs), infer_type e)),
+       args₀ ← «expr $ »(args.mmap, λ a, do b ← «expr <$> »(et.occurs, infer_type a), pure (b, a)),
+       «expr >>= »(traverse_constructor c type appl_inst f α β «expr ++ »(ls, «expr[ , ]»([β])) args₀ rec_call, tactic.exact) }) } }
 
 open Applicativeₓ
 
@@ -360,47 +354,42 @@ unsafe def traversable_law_starter (rs : List simp_arg_type) :=
     dunfold [`` Traversable.traverse, `` Functor.map] (loc.ns [none])
     () <$ tactic.induction vs.ilast; simp_functor rs
 
-unsafe def derive_lawful_traversable (pre : Option Name) : tactic Unit :=
-  do 
-    let quote.1 (@IsLawfulTraversable (%%ₓf) (%%ₓd)) ← target 
-    let n := f.get_app_fn.const_name 
-    let eqns ← get_equations_of (with_prefix pre n <.> "traverse")
-    let eqns' ← get_equations_of (with_prefix pre n <.> "map")
-    let def_eqns := eqns.map simp_arg_type.expr ++ eqns'.map simp_arg_type.expr ++ [simp_arg_type.all_hyps]
-    let comp_def := [simp_arg_type.expr (pquote.1 Function.comp)]
-    let tr_map := List.map simp_arg_type.expr [pquote.1 Traversable.traverse_eq_map_id']
-    let natur := fun η : expr => [simp_arg_type.expr (pquote.1 (Traversable.naturality_pf (%%ₓη)))]
-    let goal := loc.ns [none]
-    constructor;
-          [traversable_law_starter def_eqns; refl,
-            traversable_law_starter def_eqns; refl <|> simp_functor (def_eqns ++ comp_def),
-            traversable_law_starter def_eqns; refl <|> simp none none tt tr_map [] goal,
-            traversable_law_starter def_eqns;
-              refl <|>
-                do 
-                  let η ←
-                    get_local `η <|>
-                        do 
-                          let t ← mk_const `` IsLawfulTraversable.naturality >>= infer_type >>= pp 
-                          fail
-                              f! "expecting an `applicative_transformation` called `η` in
-                                naturality : {t }"
-                  simp none none tt (natur η) [] goal];
-        refl 
-    return ()
+-- error in Control.Traversable.Derive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+meta def derive_lawful_traversable (pre : option name) : tactic unit :=
+do {
+`(@is_lawful_traversable (%%f) (%%d)) ← target,
+  let n := f.get_app_fn.const_name,
+  eqns ← get_equations_of «expr <.> »(with_prefix pre n, "traverse"),
+  eqns' ← get_equations_of «expr <.> »(with_prefix pre n, "map"),
+  let def_eqns := «expr ++ »(«expr ++ »(eqns.map simp_arg_type.expr, eqns'.map simp_arg_type.expr), «expr[ , ]»([simp_arg_type.all_hyps])),
+  let comp_def := «expr[ , ]»([simp_arg_type.expr (``(function.comp))]),
+  let tr_map := list.map simp_arg_type.expr «expr[ , ]»([``(traversable.traverse_eq_map_id')]),
+  let natur := λ η : expr, «expr[ , ]»([simp_arg_type.expr (``(traversable.naturality_pf (%%η)))]),
+  let goal := loc.ns «expr[ , ]»([none]),
+  «expr ; »(«expr ; »(constructor, «expr[ , ]»([«expr ; »(traversable_law_starter def_eqns, refl), «expr ; »(traversable_law_starter def_eqns, «expr <|> »(refl, simp_functor «expr ++ »(def_eqns, comp_def))), «expr ; »(traversable_law_starter def_eqns, «expr <|> »(refl, simp none none tt tr_map «expr[ , ]»([]) goal)), «expr ; »(traversable_law_starter def_eqns, «expr <|> »(refl, do {
+        η ← «expr <|> »(get_local (`η), do
+           t ← «expr >>= »(«expr >>= »(mk_const (``is_lawful_traversable.naturality), infer_type), pp),
+             fail «exprformat! »(format_macro "expecting an `applicative_transformation` called `η` in\nnaturality : {t}" [[expr t]])),
+          simp none none tt (natur η) «expr[ , ]»([]) goal }))])), refl),
+  return () }
 
 open Function
 
 unsafe def guard_class (cls : Name) (hdl : derive_handler) : derive_handler :=
   fun p n => if p.is_constant_of cls then hdl p n else pure ff
 
-unsafe def higher_order_derive_handler (cls : Name) (tac : tactic Unit) (deps : List derive_handler := [])
-  (namesp : Option Name) (mk_inst : Name → expr → tactic expr := fun n arg => mk_app n [arg]) : derive_handler :=
-  fun p n =>
-    do 
-      mmap' (fun f : derive_handler => f p n) deps 
-      mk_one_instance n cls tac namesp mk_inst 
-      pure tt
+-- error in Control.Traversable.Derive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+meta
+def higher_order_derive_handler
+(cls : name)
+(tac : tactic unit)
+(deps : list derive_handler := «expr[ , ]»([]))
+(namesp : option name)
+(mk_inst : name → expr → tactic expr := λ n arg, mk_app n «expr[ , ]»([arg])) : derive_handler :=
+λ p n, do {
+mmap' (λ f : derive_handler, f p n) deps,
+  mk_one_instance n cls tac namesp mk_inst,
+  pure tt }
 
 unsafe def functor_derive_handler' (nspace : Option Name := none) : derive_handler :=
   higher_order_derive_handler `` Functor (derive_functor nspace) [] nspace

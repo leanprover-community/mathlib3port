@@ -324,7 +324,7 @@ def of (p : α → Prop) : ManyOneDegree :=
   Quotientₓ.mk' (ToNat p)
 
 @[elab_as_eliminator]
-protected theorem ind_on {C : ManyOneDegree → Prop} (d : ManyOneDegree) (h : ∀ p : Set ℕ, C (of p)) : C d :=
+protected theorem ind_on {C : ManyOneDegree → Prop} (d : ManyOneDegree) (h : ∀ (p : Set ℕ), C (of p)) : C d :=
   Quotientₓ.induction_on' d h
 
 /--

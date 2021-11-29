@@ -32,8 +32,8 @@ variable{FG_repr : ∀ {α}, G α → F α}
 /-- If `F` is a QPF then `G` is a QPF as well. Can be used to
 construct `mvqpf` instances by transporting them across
 surjective functions -/
-def quotient_qpf (FG_abs_repr : ∀ {α} x : G α, FG_abs (FG_repr x) = x)
-  (FG_abs_map : ∀ {α β} f : α ⟹ β x : F α, FG_abs (f <$$> x) = f <$$> FG_abs x) : Mvqpf G :=
+def quotient_qpf (FG_abs_repr : ∀ {α} (x : G α), FG_abs (FG_repr x) = x)
+  (FG_abs_map : ∀ {α β} (f : α ⟹ β) (x : F α), FG_abs (f <$$> x) = f <$$> FG_abs x) : Mvqpf G :=
   { p := q.P, abs := fun α p => FG_abs (abs p), repr := fun α x => reprₓ (FG_repr x),
     abs_repr :=
       fun α x =>
@@ -59,11 +59,11 @@ instance quot1.inhabited {α : Typevec n} [Inhabited$ F α] : Inhabited (quot1 R
 
 variable[Mvfunctor F][q : Mvqpf F]
 
-variable(Hfunc : ∀ ⦃α β⦄ a b : F α f : α ⟹ β, R a b → R (f <$$> a) (f <$$> b))
+variable(Hfunc : ∀ ⦃α β⦄ (a b : F α) (f : α ⟹ β), R a b → R (f <$$> a) (f <$$> b))
 
-/-- `map` of the `quot1` functor -/
-def quot1.map ⦃α β⦄ (f : α ⟹ β) : quot1.{u} R α → quot1.{u} R β :=
-  (Quot.lift fun x : F α => Quot.mk _ (f <$$> x : F β))$ fun a b h => Quot.sound$ Hfunc a b _ h
+-- error in Data.Qpf.Multivariate.Constructions.Quot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- `map` of the `quot1` functor -/ def quot1.map {{α β}} (f : «expr ⟹ »(α, β)) : quot1.{u} R α → quot1.{u} R β :=
+«expr $ »(quot.lift (λ x : F α, quot.mk _ («expr <$$> »(f, x) : F β)), λ a b h, «expr $ »(quot.sound, Hfunc a b _ h))
 
 /-- `mvfunctor` instance for `quot1` with well-behaved `R` -/
 def quot1.mvfunctor : Mvfunctor (quot1 R) :=

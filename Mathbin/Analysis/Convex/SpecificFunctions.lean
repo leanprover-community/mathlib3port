@@ -47,47 +47,58 @@ theorem strict_convex_on_exp : StrictConvexOn ℝ univ exp :=
 theorem convex_on_exp : ConvexOn ℝ univ exp :=
   strict_convex_on_exp.ConvexOn
 
+-- error in Analysis.Convex.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `x^n`, `n : ℕ` is convex on the whole real line whenever `n` is even -/
-theorem Even.convex_on_pow {n : ℕ} (hn : Even n) : ConvexOn ℝ Set.Univ fun x : ℝ => x^n :=
-  by 
-    apply convex_on_univ_of_deriv2_nonneg differentiable_pow
-    ·
-      simp only [deriv_pow', Differentiable.mul, differentiable_const, differentiable_pow]
-    ·
-      intro x 
-      rcases Nat.Even.sub_even hn (Nat.even_bit0 1) with ⟨k, hk⟩
-      rw [iter_deriv_pow, Finset.prod_range_cast_nat_sub, hk, pow_mul']
-      exact mul_nonneg (Nat.cast_nonneg _) (pow_two_nonneg _)
+theorem even.convex_on_pow {n : exprℕ()} (hn : even n) : convex_on exprℝ() set.univ (λ x : exprℝ(), «expr ^ »(x, n)) :=
+begin
+  apply [expr convex_on_univ_of_deriv2_nonneg differentiable_pow],
+  { simp [] [] ["only"] ["[", expr deriv_pow', ",", expr differentiable.mul, ",", expr differentiable_const, ",", expr differentiable_pow, "]"] [] [] },
+  { intro [ident x],
+    rcases [expr nat.even.sub_even hn (nat.even_bit0 1), "with", "⟨", ident k, ",", ident hk, "⟩"],
+    rw ["[", expr iter_deriv_pow, ",", expr finset.prod_range_cast_nat_sub, ",", expr hk, ",", expr pow_mul', "]"] [],
+    exact [expr mul_nonneg (nat.cast_nonneg _) (pow_two_nonneg _)] }
+end
 
+-- error in Analysis.Convex.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `x^n`, `n : ℕ` is strictly convex on the whole real line whenever `n ≠ 0` is even. -/
-theorem Even.strict_convex_on_pow {n : ℕ} (hn : Even n) (h : n ≠ 0) : StrictConvexOn ℝ Set.Univ fun x : ℝ => x^n :=
-  by 
-    apply StrictMono.strict_convex_on_univ_of_deriv differentiable_pow 
-    rw [deriv_pow']
-    replace h := Nat.pos_of_ne_zeroₓ h 
-    exact StrictMono.const_mul (Odd.strict_mono_pow$ Nat.Even.sub_odd h hn$ Nat.odd_iff.2 rfl) (Nat.cast_pos.2 h)
+theorem even.strict_convex_on_pow
+{n : exprℕ()}
+(hn : even n)
+(h : «expr ≠ »(n, 0)) : strict_convex_on exprℝ() set.univ (λ x : exprℝ(), «expr ^ »(x, n)) :=
+begin
+  apply [expr strict_mono.strict_convex_on_univ_of_deriv differentiable_pow],
+  rw [expr deriv_pow'] [],
+  replace [ident h] [] [":=", expr nat.pos_of_ne_zero h],
+  exact [expr strict_mono.const_mul «expr $ »(odd.strict_mono_pow, «expr $ »(nat.even.sub_odd h hn, nat.odd_iff.2 rfl)) (nat.cast_pos.2 h)]
+end
 
+-- error in Analysis.Convex.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `x^n`, `n : ℕ` is convex on `[0, +∞)` for all `n` -/
-theorem convex_on_pow (n : ℕ) : ConvexOn ℝ (Ici 0) fun x : ℝ => x^n :=
-  by 
-    apply convex_on_of_deriv2_nonneg (convex_Ici _) (continuous_pow n).ContinuousOn differentiable_on_pow
-    ·
-      simp only [deriv_pow']
-      exact (@differentiable_on_pow ℝ _ _ _).const_mul (n : ℝ)
-    ·
-      intro x hx 
-      rw [iter_deriv_pow, Finset.prod_range_cast_nat_sub]
-      exact mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (interior_subset hx) _)
+theorem convex_on_pow (n : exprℕ()) : convex_on exprℝ() (Ici 0) (λ x : exprℝ(), «expr ^ »(x, n)) :=
+begin
+  apply [expr convex_on_of_deriv2_nonneg (convex_Ici _) (continuous_pow n).continuous_on differentiable_on_pow],
+  { simp [] [] ["only"] ["[", expr deriv_pow', "]"] [] [],
+    exact [expr (@differentiable_on_pow exprℝ() _ _ _).const_mul (n : exprℝ())] },
+  { intros [ident x, ident hx],
+    rw ["[", expr iter_deriv_pow, ",", expr finset.prod_range_cast_nat_sub, "]"] [],
+    exact [expr mul_nonneg (nat.cast_nonneg _) (pow_nonneg (interior_subset hx) _)] }
+end
 
+-- error in Analysis.Convex.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `x^n`, `n : ℕ` is strictly convex on `[0, +∞)` for all `n` greater than `2`. -/
-theorem strict_convex_on_pow {n : ℕ} (hn : 2 ≤ n) : StrictConvexOn ℝ (Ici 0) fun x : ℝ => x^n :=
-  by 
-    apply StrictMonoOn.strict_convex_on_of_deriv (convex_Ici _) (continuous_on_pow _) differentiable_on_pow 
-    rw [deriv_pow', interior_Ici]
-    exact
-      fun x hx : 0 < x y hy hxy =>
-        mul_lt_mul_of_pos_left (pow_lt_pow_of_lt_left hxy hx.le$ Nat.sub_pos_of_ltₓ hn)
-          (Nat.cast_pos.2$ zero_lt_two.trans_le hn)
+theorem strict_convex_on_pow
+{n : exprℕ()}
+(hn : «expr ≤ »(2, n)) : strict_convex_on exprℝ() (Ici 0) (λ x : exprℝ(), «expr ^ »(x, n)) :=
+begin
+  apply [expr strict_mono_on.strict_convex_on_of_deriv (convex_Ici _) (continuous_on_pow _) differentiable_on_pow],
+  rw ["[", expr deriv_pow', ",", expr interior_Ici, "]"] [],
+  exact [expr λ
+   (x)
+   (hx : «expr < »(0, x))
+   (y
+    hy
+    hxy), mul_lt_mul_of_pos_left «expr $ »(pow_lt_pow_of_lt_left hxy hx.le, nat.sub_pos_of_lt hn) «expr $ »(nat.cast_pos.2, zero_lt_two.trans_le hn)]
+end
 
 theorem Finset.prod_nonneg_of_card_nonpos_even {α β : Type _} [LinearOrderedCommRing β] {f : α → β}
   [DecidablePred fun x => f x ≤ 0] {s : Finset α} (h0 : Even (s.filter fun x => f x ≤ 0).card) : 0 ≤ ∏x in s, f x :=
@@ -219,7 +230,7 @@ begin
   exact [expr mul_pos (zero_lt_one.trans hp) (mul_pos (sub_pos_of_lt hp) (rpow_pos_of_pos hx _))]
 end
 
--- error in Analysis.Convex.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Convex.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem strict_concave_on_log_Ioi : strict_concave_on exprℝ() (Ioi 0) log :=
 begin
   have [ident h₁] [":", expr «expr ⊆ »(Ioi 0, «expr ᶜ»(({0} : set exprℝ())))] [],
@@ -233,7 +244,7 @@ begin
   exact [expr neg_neg_of_pos «expr $ »(inv_pos.2, sq_pos_of_ne_zero _ hx.ne')]
 end
 
--- error in Analysis.Convex.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Convex.SpecificFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem strict_concave_on_log_Iio : strict_concave_on exprℝ() (Iio 0) log :=
 begin
   have [ident h₁] [":", expr «expr ⊆ »(Iio 0, «expr ᶜ»(({0} : set exprℝ())))] [],

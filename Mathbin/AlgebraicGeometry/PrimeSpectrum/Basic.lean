@@ -142,7 +142,7 @@ def vanishing_ideal (t : Set (PrimeSpectrum R)) : Ideal R :=
   ⨅(x : PrimeSpectrum R)(h : x ∈ t), x.as_ideal
 
 theorem coe_vanishing_ideal (t : Set (PrimeSpectrum R)) :
-  (vanishing_ideal t : Set R) = { f:R | ∀ x : PrimeSpectrum R, x ∈ t → f ∈ x.as_ideal } :=
+  (vanishing_ideal t : Set R) = { f:R | ∀ (x : PrimeSpectrum R), x ∈ t → f ∈ x.as_ideal } :=
   by 
     ext f 
     rw [vanishing_ideal, SetLike.mem_coe, Submodule.mem_infi]
@@ -151,7 +151,7 @@ theorem coe_vanishing_ideal (t : Set (PrimeSpectrum R)) :
     rw [Submodule.mem_infi]
 
 theorem mem_vanishing_ideal (t : Set (PrimeSpectrum R)) (f : R) :
-  f ∈ vanishing_ideal t ↔ ∀ x : PrimeSpectrum R, x ∈ t → f ∈ x.as_ideal :=
+  f ∈ vanishing_ideal t ↔ ∀ (x : PrimeSpectrum R), x ∈ t → f ∈ x.as_ideal :=
   by 
     rw [←SetLike.mem_coe, coe_vanishing_ideal, Set.mem_set_of_eq]
 
@@ -444,10 +444,23 @@ section Comap
 
 variable{S : Type v}[CommRingₓ S]{S' : Type _}[CommRingₓ S']
 
+theorem preimage_comap_zero_locus_aux (f : R →+* S) (s : Set R) :
+  (fun y => ⟨Ideal.comap f y.as_ideal, inferInstance⟩ : PrimeSpectrum S → PrimeSpectrum R) ⁻¹' zero_locus s =
+    zero_locus (f '' s) :=
+  by 
+    ext x 
+    simp only [mem_zero_locus, Set.image_subset_iff]
+    rfl
+
 /-- The function between prime spectra of commutative rings induced by a ring homomorphism.
 This function is continuous. -/
-def comap (f : R →+* S) : PrimeSpectrum S → PrimeSpectrum R :=
-  fun y => ⟨Ideal.comap f y.as_ideal, inferInstance⟩
+def comap (f : R →+* S) : C(PrimeSpectrum S, PrimeSpectrum R) :=
+  { toFun := fun y => ⟨Ideal.comap f y.as_ideal, inferInstance⟩,
+    continuous_to_fun :=
+      by 
+        simp only [continuous_iff_is_closed, is_closed_iff_zero_locus]
+        rintro _ ⟨s, rfl⟩
+        exact ⟨_, preimage_comap_zero_locus_aux f s⟩ }
 
 variable(f : R →+* S)
 
@@ -456,32 +469,24 @@ theorem comap_as_ideal (y : PrimeSpectrum S) : (comap f y).asIdeal = Ideal.comap
   rfl
 
 @[simp]
-theorem comap_id : comap (RingHom.id R) = id :=
-  funext$ fun _ => Subtype.ext$ Ideal.ext$ fun _ => Iff.rfl
+theorem comap_id : comap (RingHom.id R) = ContinuousMap.id :=
+  by 
+    ext 
+    rfl
 
 @[simp]
-theorem comap_comp (f : R →+* S) (g : S →+* S') : comap (g.comp f) = (comap f ∘ comap g) :=
-  funext$ fun _ => Subtype.ext$ Ideal.ext$ fun _ => Iff.rfl
+theorem comap_comp (f : R →+* S) (g : S →+* S') : comap (g.comp f) = (comap f).comp (comap g) :=
+  rfl
 
 @[simp]
 theorem preimage_comap_zero_locus (s : Set R) : comap f ⁻¹' zero_locus s = zero_locus (f '' s) :=
-  by 
-    ext x 
-    simp only [mem_zero_locus, Set.mem_preimage, comap_as_ideal, Set.image_subset_iff]
-    rfl
+  preimage_comap_zero_locus_aux f s
 
 theorem comap_injective_of_surjective (f : R →+* S) (hf : Function.Surjective f) : Function.Injective (comap f) :=
   fun x y h =>
     PrimeSpectrum.ext.2
       (Ideal.comap_injective_of_surjective f hf
         (congr_argₓ PrimeSpectrum.asIdeal h : (comap f x).asIdeal = (comap f y).asIdeal))
-
-theorem comap_continuous (f : R →+* S) : Continuous (comap f) :=
-  by 
-    rw [continuous_iff_is_closed]
-    simp only [is_closed_iff_zero_locus]
-    rintro _ ⟨s, rfl⟩
-    exact ⟨_, preimage_comap_zero_locus f s⟩
 
 -- error in AlgebraicGeometry.PrimeSpectrum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem comap_singleton_is_closed_of_surjective
@@ -561,20 +566,20 @@ theorem basic_open_pow (f : R) (n : ℕ) (hn : 0 < n) : basic_open (f^n) = basic
     by 
       simpa using zero_locus_singleton_pow f n hn
 
-theorem is_topological_basis_basic_opens :
-  TopologicalSpace.IsTopologicalBasis (Set.Range fun r : R => (basic_open r : Set (PrimeSpectrum R))) :=
-  by 
-    apply TopologicalSpace.is_topological_basis_of_open_of_nhds
-    ·
-      rintro _ ⟨r, rfl⟩
-      exact is_open_basic_open
-    ·
-      rintro p U hp ⟨s, hs⟩
-      rw [←compl_compl U, Set.mem_compl_eq, ←hs, mem_zero_locus, Set.not_subset] at hp 
-      obtain ⟨f, hfs, hfp⟩ := hp 
-      refine' ⟨basic_open f, ⟨f, rfl⟩, hfp, _⟩
-      rw [←Set.compl_subset_compl, ←hs, basic_open_eq_zero_locus_compl, compl_compl]
-      exact zero_locus_anti_mono (set.singleton_subset_iff.mpr hfs)
+-- error in AlgebraicGeometry.PrimeSpectrum.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_topological_basis_basic_opens : topological_space.is_topological_basis (set.range (λ
+  r : R, (basic_open r : set (prime_spectrum R)))) :=
+begin
+  apply [expr topological_space.is_topological_basis_of_open_of_nhds],
+  { rintros ["_", "⟨", ident r, ",", ident rfl, "⟩"],
+    exact [expr is_open_basic_open] },
+  { rintros [ident p, ident U, ident hp, "⟨", ident s, ",", ident hs, "⟩"],
+    rw ["[", "<-", expr compl_compl U, ",", expr set.mem_compl_eq, ",", "<-", expr hs, ",", expr mem_zero_locus, ",", expr set.not_subset, "]"] ["at", ident hp],
+    obtain ["⟨", ident f, ",", ident hfs, ",", ident hfp, "⟩", ":=", expr hp],
+    refine [expr ⟨basic_open f, ⟨f, rfl⟩, hfp, _⟩],
+    rw ["[", "<-", expr set.compl_subset_compl, ",", "<-", expr hs, ",", expr basic_open_eq_zero_locus_compl, ",", expr compl_compl, "]"] [],
+    exact [expr zero_locus_anti_mono (set.singleton_subset_iff.mpr hfs)] }
+end
 
 theorem is_basis_basic_opens : TopologicalSpace.Opens.IsBasis (Set.Range (@basic_open R _)) :=
   by 
@@ -658,7 +663,7 @@ def closed_point : PrimeSpectrum R :=
 variable{R}
 
 theorem local_hom_iff_comap_closed_point {S : Type v} [CommRingₓ S] [LocalRing S] {f : R →+* S} :
-  IsLocalRingHom f ↔ (closed_point S).comap f = closed_point R :=
+  IsLocalRingHom f ↔ PrimeSpectrum.comap f (closed_point S) = closed_point R :=
   by 
     rw [(local_hom_tfae f).out 0 4, Subtype.ext_iff]
     rfl

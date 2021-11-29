@@ -505,7 +505,7 @@ noncomputable instance DecidableEq (a b : ℝ) : Decidable (a = b) :=
 open Rat
 
 @[simp]
-theorem of_rat_eq_cast : ∀ x : ℚ, of_rat x = x :=
+theorem of_rat_eq_cast : ∀ (x : ℚ), of_rat x = x :=
   of_rat.eq_rat_cast
 
 -- error in Data.Real.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -526,7 +526,7 @@ begin
   rwa ["[", "<-", expr sub_eq_add_neg, ",", expr sub_self_div_two, ",", expr sub_apply, ",", expr sub_add_sub_cancel, "]"] ["at", ident this]
 end
 
-theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀ j _ : j ≥ i, (f j : ℝ) ≤ x) : mk f ≤ x :=
+theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀ j (_ : j ≥ i), (f j : ℝ) ≤ x) : mk f ≤ x :=
   by 
     cases' h with i H 
     rw [←neg_le_neg_iff, ←mk_neg]
@@ -537,7 +537,7 @@ theorem mk_le_of_forall_le {f : CauSeq ℚ abs} {x : ℝ} (h : ∃ i, ∀ j _ : 
             by 
               simp [H _ ij]⟩
 
-theorem mk_near_of_forall_near {f : CauSeq ℚ abs} {x : ℝ} {ε : ℝ} (H : ∃ i, ∀ j _ : j ≥ i, |(f j : ℝ) - x| ≤ ε) :
+theorem mk_near_of_forall_near {f : CauSeq ℚ abs} {x : ℝ} {ε : ℝ} (H : ∃ i, ∀ j (_ : j ≥ i), |(f j : ℝ) - x| ≤ ε) :
   |mk f - x| ≤ ε :=
   abs_sub_le_iff.2
     ⟨sub_le_iff_le_add'.2$ mk_le_of_forall_le$ H.imp$ fun i h j ij => sub_le_iff_le_add'.1 (abs_sub_le_iff.1$ h j ij).1,
@@ -570,7 +570,7 @@ theorem is_cau_seq_iff_lift {f : ℕ → ℚ} : IsCauSeq abs f ↔ IsCauSeq abs 
             by 
               simpa using hi _ ij⟩
 
-theorem of_near (f : ℕ → ℚ) (x : ℝ) (h : ∀ ε _ : ε > 0, ∃ i, ∀ j _ : j ≥ i, |(f j : ℝ) - x| < ε) :
+theorem of_near (f : ℕ → ℚ) (x : ℝ) (h : ∀ ε (_ : ε > 0), ∃ i, ∀ j (_ : j ≥ i), |(f j : ℝ) - x| < ε) :
   ∃ h', Real.mk ⟨f, h'⟩ = x :=
   ⟨is_cau_seq_iff_lift.2 (of_near _ (const abs x) h),
     sub_eq_zero.1$
@@ -578,7 +578,7 @@ theorem of_near (f : ℕ → ℚ) (x : ℝ) (h : ∀ ε _ : ε > 0, ∃ i, ∀ j
         eq_of_le_of_forall_le_of_dense (abs_nonneg _)$
           fun ε ε0 => mk_near_of_forall_near$ (h _ ε0).imp fun i h j ij => le_of_ltₓ (h j ij)⟩
 
-theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ, (z : ℝ) ≤ x → z ≤ ub :=
+theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ (z : ℤ), (z : ℝ) ≤ x → z ≤ ub :=
   Int.exists_greatest_of_bdd
     (let ⟨n, hn⟩ := exists_int_gt x
     ⟨n, fun z h' => Int.cast_le.1$ le_transₓ h'$ le_of_ltₓ hn⟩)
@@ -721,7 +721,7 @@ theorem Inf_of_not_bdd_below {s : Set ℝ} (hs : ¬BddBelow s) : Inf s = 0 :=
 As `0` is the default value for `real.Sup` of the empty set or sets which are not bounded above, it
 suffices to show that `S` is bounded below by `0` to show that `0 ≤ Inf S`.
 -/
-theorem Sup_nonneg (S : Set ℝ) (hS : ∀ x _ : x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ Sup S :=
+theorem Sup_nonneg (S : Set ℝ) (hS : ∀ x (_ : x ∈ S), (0 : ℝ) ≤ x) : 0 ≤ Sup S :=
   by 
     rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
     ·
@@ -733,7 +733,7 @@ theorem Sup_nonneg (S : Set ℝ) (hS : ∀ x _ : x ∈ S, (0 : ℝ) ≤ x) : 0 �
 As `0` is the default value for `real.Sup` of the empty set, it suffices to show that `S` is
 bounded above by `0` to show that `Sup S ≤ 0`.
 -/
-theorem Sup_nonpos (S : Set ℝ) (hS : ∀ x _ : x ∈ S, x ≤ (0 : ℝ)) : Sup S ≤ 0 :=
+theorem Sup_nonpos (S : Set ℝ) (hS : ∀ x (_ : x ∈ S), x ≤ (0 : ℝ)) : Sup S ≤ 0 :=
   by 
     rcases S.eq_empty_or_nonempty with (rfl | hS₂)
     exacts[Sup_empty.le, cSup_le hS₂ hS]
@@ -742,7 +742,7 @@ theorem Sup_nonpos (S : Set ℝ) (hS : ∀ x _ : x ∈ S, x ≤ (0 : ℝ)) : Sup
 As `0` is the default value for `real.Inf` of the empty set, it suffices to show that `S` is
 bounded below by `0` to show that `0 ≤ Inf S`.
 -/
-theorem Inf_nonneg (S : Set ℝ) (hS : ∀ x _ : x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ Inf S :=
+theorem Inf_nonneg (S : Set ℝ) (hS : ∀ x (_ : x ∈ S), (0 : ℝ) ≤ x) : 0 ≤ Inf S :=
   by 
     rcases S.eq_empty_or_nonempty with (rfl | hS₂)
     exacts[Inf_empty.ge, le_cInf hS₂ hS]
@@ -751,7 +751,7 @@ theorem Inf_nonneg (S : Set ℝ) (hS : ∀ x _ : x ∈ S, (0 : ℝ) ≤ x) : 0 �
 As `0` is the default value for `real.Inf` of the empty set or sets which are not bounded below, it
 suffices to show that `S` is bounded above by `0` to show that `Inf S ≤ 0`.
 -/
-theorem Inf_nonpos (S : Set ℝ) (hS : ∀ x _ : x ∈ S, x ≤ (0 : ℝ)) : Inf S ≤ 0 :=
+theorem Inf_nonpos (S : Set ℝ) (hS : ∀ x (_ : x ∈ S), x ≤ (0 : ℝ)) : Inf S ≤ 0 :=
   by 
     rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
     ·

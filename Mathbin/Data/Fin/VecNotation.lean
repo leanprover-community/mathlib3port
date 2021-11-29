@@ -84,9 +84,8 @@ theorem empty_eq (v : fin 0 → α) : «expr = »(v, «expr![ , ]»([])) := subs
 
 section Val
 
-@[simp]
-theorem head_fin_const (a : α) : (vec_head fun i : Finₓ (n+1) => a) = a :=
-  rfl
+-- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem head_fin_const (a : α) : «expr = »(vec_head (λ i : fin «expr + »(n, 1), a), a) := rfl
 
 @[simp]
 theorem cons_val_zero (x : α) (u : Finₓ m → α) : vec_cons x u 0 = x :=
@@ -136,9 +135,9 @@ theorem range_cons (x : α) (u : Finₓ n → α) : Set.Range (vec_cons x u) = {
 theorem range_empty (u : Finₓ 0 → α) : Set.Range u = ∅ :=
   Set.range_eq_empty _
 
-@[simp]
-theorem vec_cons_const (a : α) : (vec_cons a fun k : Finₓ n => a) = fun _ => a :=
-  funext$ Finₓ.forall_fin_succ.2 ⟨rfl, cons_val_succ _ _⟩
+-- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem vec_cons_const (a : α) : «expr = »(vec_cons a (λ k : fin n, a), λ _, a) :=
+«expr $ »(funext, fin.forall_fin_succ.2 ⟨rfl, cons_val_succ _ _⟩)
 
 -- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:558:61: unsupported notation `«expr![ , ]»
 theorem vec_single_eq_const (a : α) : «expr = »(«expr![ , ]»([a]), λ _, a) := «expr $ »(funext, unique.forall_iff.2 rfl)

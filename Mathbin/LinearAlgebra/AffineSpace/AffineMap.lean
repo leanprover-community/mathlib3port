@@ -60,7 +60,7 @@ structure
   
   toFun : P1 → P2 
   linear : V1 →ₗ[k] V2 
-  map_vadd' : ∀ p : P1 v : V1, to_fun (v +ᵥ p) = linear v +ᵥ to_fun p
+  map_vadd' : ∀ (p : P1) (v : V1), to_fun (v +ᵥ p) = linear v +ᵥ to_fun p
 
 notation:25 P1 " →ᵃ[" k:25 "] " P2:0 => AffineMap k P1 P2
 
@@ -212,7 +212,7 @@ instance Nonempty : Nonempty (P1 →ᵃ[k] P2) :=
 /-- Construct an affine map by verifying the relation between the map and its linear part at one
 base point. Namely, this function takes a map `f : P₁ → P₂`, a linear map `f' : V₁ →ₗ[k] V₂`, and
 a point `p` such that for any other point `p'` we have `f p' = f' (p' -ᵥ p) +ᵥ f p`. -/
-def mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p : P1) (h : ∀ p' : P1, f p' = f' (p' -ᵥ p) +ᵥ f p) : P1 →ᵃ[k] P2 :=
+def mk' (f : P1 → P2) (f' : V1 →ₗ[k] V2) (p : P1) (h : ∀ (p' : P1), f p' = f' (p' -ᵥ p) +ᵥ f p) : P1 →ᵃ[k] P2 :=
   { toFun := f, linear := f',
     map_vadd' :=
       fun p' v =>
@@ -571,16 +571,16 @@ theorem line_map_vsub_line_map
 (c : k) : «expr = »(«expr -ᵥ »(line_map p₁ p₂ c, line_map p₃ p₄ c), line_map «expr -ᵥ »(p₁, p₃) «expr -ᵥ »(p₂, p₄) c) :=
 by letI [] [":", expr expraffine_space() «expr × »(V1, V1) «expr × »(P1, P1)] [":=", expr prod.add_torsor]; exact [expr «expr -ᵥ »((fst : «expr →ᵃ[ ] »(«expr × »(P1, P1), k, P1)), (snd : «expr →ᵃ[ ] »(«expr × »(P1, P1), k, P1))).apply_line_map (_, _) (_, _) c]
 
+-- error in LinearAlgebra.AffineSpace.AffineMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Decomposition of an affine map in the special case when the point space and vector space
 are the same. -/
-theorem decomp (f : V1 →ᵃ[k] V2) : (f : V1 → V2) = f.linear+fun z => f 0 :=
-  by 
-    ext x 
-    calc f x = f.linear x +ᵥ f 0 :=
-      by 
-        simp [←f.map_vadd]_ = (f.linear.to_fun+fun z : V1 => f 0) x :=
-      by 
-        simp 
+theorem decomp (f : «expr →ᵃ[ ] »(V1, k, V2)) : «expr = »((f : V1 → V2), «expr + »(f.linear, λ z, f 0)) :=
+begin
+  ext [] [ident x] [],
+  calc
+    «expr = »(f x, «expr +ᵥ »(f.linear x, f 0)) : by simp [] [] [] ["[", "<-", expr f.map_vadd, "]"] [] []
+    «expr = »(..., «expr + »(f.linear.to_fun, λ z : V1, f 0) x) : by simp [] [] [] [] [] []
+end
 
 /-- Decomposition of an affine map in the special case when the point space and vector space
 are the same. -/
@@ -612,12 +612,12 @@ section
 variable{ι :
     Type
       _}{V :
-    ∀ i : ι, Type _}{P : ∀ i : ι, Type _}[∀ i, AddCommGroupₓ (V i)][∀ i, Module k (V i)][∀ i, AddTorsor (V i) (P i)]
+    ∀ (i : ι), Type _}{P : ∀ (i : ι), Type _}[∀ i, AddCommGroupₓ (V i)][∀ i, Module k (V i)][∀ i, AddTorsor (V i) (P i)]
 
 include V
 
 /-- Evaluation at a point as an affine map. -/
-def proj (i : ι) : (∀ i : ι, P i) →ᵃ[k] P i :=
+def proj (i : ι) : (∀ (i : ι), P i) →ᵃ[k] P i :=
   { toFun := fun f => f i, linear := @LinearMap.proj k ι _ V _ _ i, map_vadd' := fun p v => rfl }
 
 @[simp]

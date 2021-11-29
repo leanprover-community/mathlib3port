@@ -74,6 +74,11 @@ theorem restrict_image_emb {f : α → β} (hf : measure_preserving f μa μb) (
   by 
     simpa only [preimage_image_eq _ h₂.injective] using hf.restrict_preimage_emb h₂ (f '' s)
 
+theorem ae_measurable_comp_iff {f : α → β} (hf : measure_preserving f μa μb) (h₂ : MeasurableEmbedding f) {g : β → γ} :
+  AeMeasurable (g ∘ f) μa ↔ AeMeasurable g μb :=
+  by 
+    rw [←hf.map_eq, h₂.ae_measurable_map_iff]
+
 protected theorem quasi_measure_preserving {f : α → β} (hf : measure_preserving f μa μb) :
   quasi_measure_preserving f μa μb :=
   ⟨hf.1, hf.2.AbsolutelyContinuous⟩
@@ -93,6 +98,11 @@ theorem measure_preimage {f : α → β} (hf : measure_preserving f μa μb) {s 
   μa (f ⁻¹' s) = μb s :=
   by 
     rw [←hf.map_eq, map_apply hf.1 hs]
+
+theorem measure_preimage_emb {f : α → β} (hf : measure_preserving f μa μb) (hfe : MeasurableEmbedding f) (s : Set β) :
+  μa (f ⁻¹' s) = μb s :=
+  by 
+    rw [←hf.map_eq, hfe.map_apply]
 
 protected theorem iterate {f : α → α} (hf : measure_preserving f μa μa) : ∀ n, measure_preserving (f^[n]) μa μa
 | 0 => measure_preserving.id μa

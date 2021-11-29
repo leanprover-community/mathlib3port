@@ -155,17 +155,18 @@ We use primes in the structure names as we will reformulate them below (without 
 composition and inverse. They appear in the definition of the smoothness class of a manifold. -/
 structure StructureGroupoid(H : Type u)[TopologicalSpace H] where 
   Members : Set (LocalHomeomorph H H)
-  trans' : ∀ e e' : LocalHomeomorph H H, e ∈ members → e' ∈ members → e ≫ₕ e' ∈ members 
-  symm' : ∀ e : LocalHomeomorph H H, e ∈ members → e.symm ∈ members 
+  trans' : ∀ (e e' : LocalHomeomorph H H), e ∈ members → e' ∈ members → e ≫ₕ e' ∈ members 
+  symm' : ∀ (e : LocalHomeomorph H H), e ∈ members → e.symm ∈ members 
   id_mem' : LocalHomeomorph.refl H ∈ members 
   locality' :
-  ∀ e : LocalHomeomorph H H, (∀ x _ : x ∈ e.source, ∃ s, IsOpen s ∧ x ∈ s ∧ e.restr s ∈ members) → e ∈ members 
-  eq_on_source' : ∀ e e' : LocalHomeomorph H H, e ∈ members → e' ≈ e → e' ∈ members
+  ∀ (e : LocalHomeomorph H H), (∀ x (_ : x ∈ e.source), ∃ s, IsOpen s ∧ x ∈ s ∧ e.restr s ∈ members) → e ∈ members 
+  eq_on_source' : ∀ (e e' : LocalHomeomorph H H), e ∈ members → e' ≈ e → e' ∈ members
 
 variable[TopologicalSpace H]
 
-instance  : HasMem (LocalHomeomorph H H) (StructureGroupoid H) :=
-  ⟨fun e : LocalHomeomorph H H G : StructureGroupoid H => e ∈ G.members⟩
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_mem (local_homeomorph H H) (structure_groupoid H) :=
+⟨λ (e : local_homeomorph H H) (G : structure_groupoid H), «expr ∈ »(e, G.members)⟩
 
 theorem StructureGroupoid.trans (G : StructureGroupoid H) {e e' : LocalHomeomorph H H} (he : e ∈ G) (he' : e' ∈ G) :
   e ≫ₕ e' ∈ G :=
@@ -178,7 +179,7 @@ theorem StructureGroupoid.id_mem (G : StructureGroupoid H) : LocalHomeomorph.ref
   G.id_mem'
 
 theorem StructureGroupoid.locality (G : StructureGroupoid H) {e : LocalHomeomorph H H}
-  (h : ∀ x _ : x ∈ e.source, ∃ s, IsOpen s ∧ x ∈ s ∧ e.restr s ∈ G) : e ∈ G :=
+  (h : ∀ x (_ : x ∈ e.source), ∃ s, IsOpen s ∧ x ∈ s ∧ e.restr s ∈ G) : e ∈ G :=
   G.locality' e h
 
 theorem StructureGroupoid.eq_on_source (G : StructureGroupoid H) {e e' : LocalHomeomorph H H} (he : e ∈ G)
@@ -286,8 +287,8 @@ structure Pregroupoid(H : Type _)[TopologicalSpace H] where
   comp :
   ∀ {f g u v}, property f u → property g v → IsOpen u → IsOpen v → IsOpen (u ∩ f ⁻¹' v) → property (g ∘ f) (u ∩ f ⁻¹' v)
   id_mem : property id univ 
-  locality : ∀ {f u}, IsOpen u → (∀ x _ : x ∈ u, ∃ v, IsOpen v ∧ x ∈ v ∧ property f (u ∩ v)) → property f u 
-  congr : ∀ {f g : H → H} {u}, IsOpen u → (∀ x _ : x ∈ u, g x = f x) → property f u → property g u
+  locality : ∀ {f u}, IsOpen u → (∀ x (_ : x ∈ u), ∃ v, IsOpen v ∧ x ∈ v ∧ property f (u ∩ v)) → property f u 
+  congr : ∀ {f g : H → H} {u}, IsOpen u → (∀ x (_ : x ∈ u), g x = f x) → property f u → property g u
 
 -- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct a groupoid of local homeos for which the map and its inverse have some property,
@@ -375,7 +376,7 @@ instance  : OrderTop (StructureGroupoid H) :=
 /-- A groupoid is closed under restriction if it contains all restrictions of its element local
 homeomorphisms to open subsets of the source. -/
 class ClosedUnderRestriction(G : StructureGroupoid H) : Prop where 
-  ClosedUnderRestriction : ∀ {e : LocalHomeomorph H H}, e ∈ G → ∀ s : Set H, IsOpen s → e.restr s ∈ G
+  ClosedUnderRestriction : ∀ {e : LocalHomeomorph H H}, e ∈ G → ∀ (s : Set H), IsOpen s → e.restr s ∈ G
 
 theorem closed_under_restriction' {G : StructureGroupoid H} [ClosedUnderRestriction G] {e : LocalHomeomorph H H}
   (he : e ∈ G) {s : Set H} (hs : IsOpen s) : e.restr s ∈ G :=
@@ -531,7 +532,7 @@ end
 
 open TopologicalSpace
 
--- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem charted_space.second_countable_of_countable_cover
 [second_countable_topology H]
 {s : set M}
@@ -546,13 +547,16 @@ begin
   exact [expr second_countable_topology_of_countable_cover (λ x : s, (chart_at H (x : M)).open_source) hs]
 end
 
-theorem ChartedSpace.second_countable_of_sigma_compact [second_countable_topology H] [SigmaCompactSpace M] :
-  second_countable_topology M :=
-  by 
-    obtain ⟨s, hsc, hsU⟩ : ∃ s, countable s ∧ (⋃(x : _)(hx : x ∈ s), (chart_at H x).Source) = univ :=
-      countable_cover_nhds_of_sigma_compact
-        fun x : M => IsOpen.mem_nhds (chart_at H x).open_source (mem_chart_source H x)
-    exact ChartedSpace.second_countable_of_countable_cover H hsU hsc
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem charted_space.second_countable_of_sigma_compact
+[second_countable_topology H]
+[sigma_compact_space M] : second_countable_topology M :=
+begin
+  obtain ["⟨", ident s, ",", ident hsc, ",", ident hsU, "⟩", ":", expr «expr∃ , »((s), «expr ∧ »(countable s, «expr = »(«expr⋃ , »((x)
+       (hx : «expr ∈ »(x, s)), (chart_at H x).source), univ))), ":=", expr countable_cover_nhds_of_sigma_compact (λ
+    x : M, is_open.mem_nhds (chart_at H x).open_source (mem_chart_source H x))],
+  exact [expr charted_space.second_countable_of_countable_cover H hsU hsc]
+end
 
 end 
 
@@ -592,11 +596,14 @@ instance modelProdInhabited [Inhabited H] [Inhabited H'] : Inhabited (ModelProd 
 instance  (H : Type _) [TopologicalSpace H] (H' : Type _) [TopologicalSpace H'] : TopologicalSpace (ModelProd H H') :=
   Prod.topologicalSpace
 
-@[simp, mfld_simps]
-theorem model_prod_range_prod_id {H : Type _} {H' : Type _} {α : Type _} (f : H → α) :
-  (range fun p : ModelProd H H' => (f p.1, p.2)) = Set.Prod (range f) univ :=
-  by 
-    rw [prod_range_univ_eq]
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, mfld_simps #[]]
+theorem model_prod_range_prod_id
+{H : Type*}
+{H' : Type*}
+{α : Type*}
+(f : H → α) : «expr = »(range (λ p : model_prod H H', (f p.1, p.2)), set.prod (range f) univ) :=
+by rw [expr prod_range_univ_eq] []
 
 end 
 
@@ -612,15 +619,24 @@ instance  [∀ i, TopologicalSpace (Hi i)] : TopologicalSpace (ModelPi Hi) :=
 
 end 
 
+-- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The product of two charted spaces is naturally a charted space, with the canonical
 construction of the atlas of product maps. -/
-instance prodChartedSpace (H : Type _) [TopologicalSpace H] (M : Type _) [TopologicalSpace M] [ChartedSpace H M]
-  (H' : Type _) [TopologicalSpace H'] (M' : Type _) [TopologicalSpace M'] [ChartedSpace H' M'] :
-  ChartedSpace (ModelProd H H') (M × M') :=
-  { Atlas := image2 LocalHomeomorph.prod (atlas H M) (atlas H' M'),
-    chartAt := fun x : M × M' => (chart_at H x.1).Prod (chart_at H' x.2),
-    mem_chart_source := fun x => ⟨mem_chart_source _ _, mem_chart_source _ _⟩,
-    chart_mem_atlas := fun x => mem_image2_of_mem (chart_mem_atlas _ _) (chart_mem_atlas _ _) }
+instance prod_charted_space
+(H : Type*)
+[topological_space H]
+(M : Type*)
+[topological_space M]
+[charted_space H M]
+(H' : Type*)
+[topological_space H']
+(M' : Type*)
+[topological_space M']
+[charted_space H' M'] : charted_space (model_prod H H') «expr × »(M, M') :=
+{ atlas := image2 local_homeomorph.prod (atlas H M) (atlas H' M'),
+  chart_at := λ x : «expr × »(M, M'), (chart_at H x.1).prod (chart_at H' x.2),
+  mem_chart_source := λ x, ⟨mem_chart_source _ _, mem_chart_source _ _⟩,
+  chart_mem_atlas := λ x, mem_image2_of_mem (chart_mem_atlas _ _) (chart_mem_atlas _ _) }
 
 section prodChartedSpace
 
@@ -663,9 +679,9 @@ structure ChartedSpaceCore(H : Type _)[TopologicalSpace H](M : Type _) where
   chartAt : M → LocalEquiv M H 
   mem_chart_source : ∀ x, x ∈ (chart_at x).Source 
   chart_mem_atlas : ∀ x, chart_at x ∈ atlas 
-  open_source : ∀ e e' : LocalEquiv M H, e ∈ atlas → e' ∈ atlas → IsOpen (e.symm.trans e').Source 
+  open_source : ∀ (e e' : LocalEquiv M H), e ∈ atlas → e' ∈ atlas → IsOpen (e.symm.trans e').Source 
   continuous_to_fun :
-  ∀ e e' : LocalEquiv M H, e ∈ atlas → e' ∈ atlas → ContinuousOn (e.symm.trans e') (e.symm.trans e').Source
+  ∀ (e e' : LocalEquiv M H), e ∈ atlas → e' ∈ atlas → ContinuousOn (e.symm.trans e') (e.symm.trans e').Source
 
 namespace ChartedSpaceCore
 
@@ -799,7 +815,7 @@ variable(M)(G : StructureGroupoid H)
 structure groupoid is the set of all local charts that are compatible with the atlas, i.e., such
 that changing coordinates with an atlas member gives an element of the groupoid. -/
 def StructureGroupoid.MaximalAtlas : Set (LocalHomeomorph M H) :=
-  { e | ∀ e' _ : e' ∈ atlas H M, e.symm ≫ₕ e' ∈ G ∧ e'.symm ≫ₕ e ∈ G }
+  { e | ∀ e' (_ : e' ∈ atlas H M), e.symm ≫ₕ e' ∈ G ∧ e'.symm ≫ₕ e ∈ G }
 
 variable{M}
 
@@ -814,7 +830,7 @@ theorem StructureGroupoid.chart_mem_maximal_atlas [HasGroupoid M G] (x : M) : ch
 variable{G}
 
 theorem mem_maximal_atlas_iff {e : LocalHomeomorph M H} :
-  e ∈ G.maximal_atlas M ↔ ∀ e' _ : e' ∈ atlas H M, e.symm ≫ₕ e' ∈ G ∧ e'.symm ≫ₕ e ∈ G :=
+  e ∈ G.maximal_atlas M ↔ ∀ e' (_ : e' ∈ atlas H M), e.symm ≫ₕ e' ∈ G ∧ e'.symm ≫ₕ e ∈ G :=
   Iff.rfl
 
 -- error in Geometry.Manifold.ChartedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -990,8 +1006,9 @@ structure
       H)(M : Type _)(M' : Type _)[TopologicalSpace M][TopologicalSpace M'][ChartedSpace H M][ChartedSpace H M'] extends
   Homeomorph M M' where 
   mem_groupoid :
-  ∀ c : LocalHomeomorph M H,
-    ∀ c' : LocalHomeomorph M' H, c ∈ atlas H M → c' ∈ atlas H M' → c.symm ≫ₕ to_homeomorph.to_local_homeomorph ≫ₕ c' ∈ G
+  ∀ (c : LocalHomeomorph M H),
+    ∀ (c' : LocalHomeomorph M' H),
+      c ∈ atlas H M → c' ∈ atlas H M' → c.symm ≫ₕ to_homeomorph.to_local_homeomorph ≫ₕ c' ∈ G
 
 variable[TopologicalSpace M'][TopologicalSpace M'']{G : StructureGroupoid H}[ChartedSpace H M'][ChartedSpace H M'']
 

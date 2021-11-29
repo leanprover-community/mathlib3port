@@ -96,7 +96,7 @@ instance (priority := 100)trivial_is_nilpotent [is_trivial L M] : IsNilpotent R 
       simp ⟩
 
 theorem nilpotent_endo_of_nilpotent_module [hM : IsNilpotent R L M] :
-  ∃ k : ℕ, ∀ x : L, (to_endomorphism R L M x^k) = 0 :=
+  ∃ k : ℕ, ∀ (x : L), (to_endomorphism R L M x^k) = 0 :=
   by 
     (
       obtain ⟨k, hM⟩ := hM)
@@ -145,7 +145,7 @@ abbrev LieAlgebra.IsNilpotent (R : Type u) (L : Type v) [CommRingₓ R] [LieRing
 
 open LieAlgebra
 
-theorem LieAlgebra.nilpotent_ad_of_nilpotent_algebra [IsNilpotent R L] : ∃ k : ℕ, ∀ x : L, (ad R L x^k) = 0 :=
+theorem LieAlgebra.nilpotent_ad_of_nilpotent_algebra [IsNilpotent R L] : ∃ k : ℕ, ∀ (x : L), (ad R L x^k) = 0 :=
   LieModule.nilpotent_endo_of_nilpotent_module R L L
 
 /-- See also `lie_algebra.zero_root_space_eq_top_of_nilpotent`. -/

@@ -42,12 +42,12 @@ notation "∥" e "∥" => norm e
 /-- A seminormed group is an additive group endowed with a norm for which `dist x y = ∥x - y∥`
 defines a pseudometric space structure. -/
 class SemiNormedGroup(E : Type _) extends HasNorm E, AddCommGroupₓ E, PseudoMetricSpace E where 
-  dist_eq : ∀ x y : E, dist x y = norm (x - y)
+  dist_eq : ∀ (x y : E), dist x y = norm (x - y)
 
 /-- A normed group is an additive group endowed with a norm for which `dist x y = ∥x - y∥` defines
 a metric space structure. -/
 class NormedGroup(E : Type _) extends HasNorm E, AddCommGroupₓ E, MetricSpace E where 
-  dist_eq : ∀ x y : E, dist x y = norm (x - y)
+  dist_eq : ∀ (x y : E), dist x y = norm (x - y)
 
 /-- A normed group is a seminormed group. -/
 instance (priority := 100)NormedGroup.toSemiNormedGroup [h : NormedGroup E] : SemiNormedGroup E :=
@@ -91,8 +91,8 @@ def semi_normed_group.of_add_dist'
 formalised in this structure. -/
 structure SemiNormedGroup.Core(E : Type _)[AddCommGroupₓ E][HasNorm E] : Prop where 
   norm_zero : ∥(0 : E)∥ = 0
-  triangle : ∀ x y : E, ∥x+y∥ ≤ ∥x∥+∥y∥
-  norm_neg : ∀ x : E, ∥-x∥ = ∥x∥
+  triangle : ∀ (x y : E), ∥x+y∥ ≤ ∥x∥+∥y∥
+  norm_neg : ∀ (x : E), ∥-x∥ = ∥x∥
 
 /-- Constructing a seminormed group from core properties of a seminorm, i.e., registering the
 pseudodistance and the pseudometric space structure from the seminorm properties. Note that in most
@@ -247,11 +247,11 @@ theorem norm_of_subsingleton [Subsingleton E] (x : E) : ∥x∥ = 0 :=
 theorem norm_sum_le (s : Finset ι) (f : ι → E) : ∥∑i in s, f i∥ ≤ ∑i in s, ∥f i∥ :=
   s.le_sum_of_subadditive norm norm_zero norm_add_le f
 
-theorem norm_sum_le_of_le (s : Finset ι) {f : ι → E} {n : ι → ℝ} (h : ∀ b _ : b ∈ s, ∥f b∥ ≤ n b) :
+theorem norm_sum_le_of_le (s : Finset ι) {f : ι → E} {n : ι → ℝ} (h : ∀ b (_ : b ∈ s), ∥f b∥ ≤ n b) :
   ∥∑b in s, f b∥ ≤ ∑b in s, n b :=
   le_transₓ (norm_sum_le s f) (Finset.sum_le_sum h)
 
-theorem dist_sum_sum_le_of_le (s : Finset ι) {f g : ι → E} {d : ι → ℝ} (h : ∀ b _ : b ∈ s, dist (f b) (g b) ≤ d b) :
+theorem dist_sum_sum_le_of_le (s : Finset ι) {f g : ι → E} {d : ι → ℝ} (h : ∀ b (_ : b ∈ s), dist (f b) (g b) ≤ d b) :
   dist (∑b in s, f b) (∑b in s, g b) ≤ ∑b in s, d b :=
   by 
     simp only [dist_eq_norm, ←Finset.sum_sub_distrib] at *
@@ -366,7 +366,7 @@ theorem norm_lt_of_mem_ball {g h : E} {r : ℝ} (H : h ∈ ball g r) : ∥h∥ <
 theorem norm_lt_norm_add_const_of_dist_lt {a b : E} {c : ℝ} (h : dist a b < c) : ∥a∥ < ∥b∥+c :=
   norm_lt_of_mem_ball h
 
-theorem bounded_iff_forall_norm_le {s : Set E} : Bounded s ↔ ∃ C, ∀ x _ : x ∈ s, ∥x∥ ≤ C :=
+theorem bounded_iff_forall_norm_le {s : Set E} : Bounded s ↔ ∃ C, ∀ x (_ : x ∈ s), ∥x∥ ≤ C :=
   by 
     simpa only [Set.subset_def, mem_closed_ball_iff_norm, sub_zero] using bounded_iff_subset_ball (0 : E)
 
@@ -491,18 +491,18 @@ theorem coe_neg : «expr⇑ » (Isometric.neg E) = Neg.neg :=
 end Isometric
 
 theorem NormedGroup.tendsto_nhds_zero {f : α → E} {l : Filter α} :
-  tendsto f l (𝓝 0) ↔ ∀ ε _ : ε > 0, ∀ᶠx in l, ∥f x∥ < ε :=
+  tendsto f l (𝓝 0) ↔ ∀ ε (_ : ε > 0), ∀ᶠx in l, ∥f x∥ < ε :=
   Metric.tendsto_nhds.trans$
     by 
       simp only [dist_zero_right]
 
 theorem NormedGroup.tendsto_nhds_nhds {f : E → F} {x : E} {y : F} :
-  tendsto f (𝓝 x) (𝓝 y) ↔ ∀ ε _ : ε > 0, ∃ (δ : _)(_ : δ > 0), ∀ x', ∥x' - x∥ < δ → ∥f x' - y∥ < ε :=
+  tendsto f (𝓝 x) (𝓝 y) ↔ ∀ ε (_ : ε > 0), ∃ (δ : _)(_ : δ > 0), ∀ x', ∥x' - x∥ < δ → ∥f x' - y∥ < ε :=
   by 
     simpRw [Metric.tendsto_nhds_nhds, dist_eq_norm]
 
 theorem NormedGroup.cauchy_seq_iff [Nonempty α] [SemilatticeSup α] {u : α → E} :
-  CauchySeq u ↔ ∀ ε _ : ε > 0, ∃ N, ∀ m n, N ≤ m → N ≤ n → ∥u m - u n∥ < ε :=
+  CauchySeq u ↔ ∀ ε (_ : ε > 0), ∃ N, ∀ m n, N ≤ m → N ≤ n → ∥u m - u n∥ < ε :=
   by 
     simp [Metric.cauchy_seq_iff, dist_eq_norm]
 
@@ -519,7 +519,7 @@ theorem AddMonoidHom.lipschitz_of_bound (f : E →+ F) (C : ℝ) (h : ∀ x, ∥
         simpa only [dist_eq_norm, f.map_sub] using h (x - y)
 
 theorem lipschitz_on_with_iff_norm_sub_le {f : E → F} {C :  ℝ≥0 } {s : Set E} :
-  LipschitzOnWith C f s ↔ ∀ x _ : x ∈ s y _ : y ∈ s, ∥f x - f y∥ ≤ C*∥x - y∥ :=
+  LipschitzOnWith C f s ↔ ∀ x (_ : x ∈ s) y (_ : y ∈ s), ∥f x - f y∥ ≤ C*∥x - y∥ :=
   by 
     simp only [lipschitz_on_with_iff_dist_le_mul, dist_eq_norm]
 
@@ -615,11 +615,12 @@ end
 theorem controlled_sum_of_mem_closure_range {j : E →+ F} {h : F} (Hh : h ∈ (Closure$ (j.range : Set F))) {b : ℕ → ℝ}
   (b_pos : ∀ n, 0 < b n) :
   ∃ g : ℕ → E,
-    tendsto (fun n => ∑i in range (n+1), j (g i)) at_top (𝓝 h) ∧ ∥j (g 0) - h∥ < b 0 ∧ ∀ n _ : n > 0, ∥j (g n)∥ < b n :=
+    tendsto (fun n => ∑i in range (n+1), j (g i)) at_top (𝓝 h) ∧
+      ∥j (g 0) - h∥ < b 0 ∧ ∀ n (_ : n > 0), ∥j (g n)∥ < b n :=
   by 
     rcases controlled_sum_of_mem_closure Hh b_pos with ⟨v, sum_v, v_in, hv₀, hv_pos⟩
     choose g hg using v_in 
-    change ∀ n : ℕ, j (g n) = v n at hg 
+    change ∀ (n : ℕ), j (g n) = v n at hg 
     refine'
       ⟨g,
         by 
@@ -791,13 +792,14 @@ theorem Submodule.norm_mk {𝕜 : Type _} {_ : Ringₓ 𝕜} {E : Type _} [SemiN
   {s : Submodule 𝕜 E} (x : E) (hx : x ∈ s) : ∥(⟨x, hx⟩ : s)∥ = ∥x∥ :=
   rfl
 
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- seminormed group instance on the product of two seminormed groups, using the sup norm. -/
-noncomputable instance Prod.semiNormedGroup : SemiNormedGroup (E × F) :=
-  { norm := fun x => max ∥x.1∥ ∥x.2∥,
-    dist_eq :=
-      fun x y : E × F =>
-        show max (dist x.1 y.1) (dist x.2 y.2) = max ∥(x - y).1∥ ∥(x - y).2∥by 
-          simp [dist_eq_norm] }
+noncomputable
+instance prod.semi_normed_group : semi_normed_group «expr × »(E, F) :=
+{ norm := λ x, max «expr∥ ∥»(x.1) «expr∥ ∥»(x.2),
+  dist_eq := assume
+  x
+  y : «expr × »(E, F), show «expr = »(max (dist x.1 y.1) (dist x.2 y.2), max «expr∥ ∥»(«expr - »(x, y).1) «expr∥ ∥»(«expr - »(x, y).2)), by simp [] [] [] ["[", expr dist_eq_norm, "]"] [] [] }
 
 theorem Prod.semi_norm_def (x : E × F) : ∥x∥ = max ∥x.1∥ ∥x.2∥ :=
   rfl
@@ -846,14 +848,14 @@ theorem semi_norm_le_pi_norm {π : ι → Type _} [Fintype ι] [∀ i, SemiNorme
   ∥x i∥ ≤ ∥x∥ :=
   (pi_semi_norm_le_iff (norm_nonneg x)).1 (le_reflₓ _) i
 
-@[simp]
-theorem pi_semi_norm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥ = ∥a∥ :=
-  by 
-    simpa only [←dist_zero_right] using dist_pi_const a 0
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem pi_semi_norm_const [nonempty ι] [fintype ι] (a : E) : «expr = »(«expr∥ ∥»(λ i : ι, a), «expr∥ ∥»(a)) :=
+by simpa [] [] ["only"] ["[", "<-", expr dist_zero_right, "]"] [] ["using", expr dist_pi_const a 0]
 
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem pi_nnsemi_norm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥₊ = ∥a∥₊ :=
-  Nnreal.eq$ pi_semi_norm_const a
+theorem pi_nnsemi_norm_const [nonempty ι] [fintype ι] (a : E) : «expr = »(«expr∥ ∥₊»(λ i : ι, a), «expr∥ ∥₊»(a)) :=
+«expr $ »(nnreal.eq, pi_semi_norm_const a)
 
 theorem tendsto_iff_norm_tendsto_zero {f : α → E} {a : Filter α} {b : E} :
   tendsto f a (𝓝 b) ↔ tendsto (fun e => ∥f e - b∥) a (𝓝 0) :=
@@ -890,26 +892,26 @@ theorem squeeze_zero_norm {f : α → E} {g : α → ℝ} {t₀ : Filter α} (h 
   tendsto f t₀ (𝓝 0) :=
   squeeze_zero_norm' (eventually_of_forall h) h'
 
-theorem tendsto_norm_sub_self (x : E) : tendsto (fun g : E => ∥g - x∥) (𝓝 x) (𝓝 0) :=
-  by 
-    simpa [dist_eq_norm] using tendsto_id.dist (tendsto_const_nhds : tendsto (fun g => (x : E)) (𝓝 x) _)
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_norm_sub_self (x : E) : tendsto (λ g : E, «expr∥ ∥»(«expr - »(g, x))) (expr𝓝() x) (expr𝓝() 0) :=
+by simpa [] [] [] ["[", expr dist_eq_norm, "]"] [] ["using", expr tendsto_id.dist (tendsto_const_nhds : tendsto (λ
+  g, (x : E)) (expr𝓝() x) _)]
 
-theorem tendsto_norm {x : E} : tendsto (fun g : E => ∥g∥) (𝓝 x) (𝓝 ∥x∥) :=
-  by 
-    simpa using tendsto_id.dist (tendsto_const_nhds : tendsto (fun g => (0 : E)) _ _)
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_norm {x : E} : tendsto (λ g : E, «expr∥ ∥»(g)) (expr𝓝() x) (expr𝓝() «expr∥ ∥»(x)) :=
+by simpa [] [] [] [] [] ["using", expr tendsto_id.dist (tendsto_const_nhds : tendsto (λ g, (0 : E)) _ _)]
 
-theorem tendsto_norm_zero : tendsto (fun g : E => ∥g∥) (𝓝 0) (𝓝 0) :=
-  by 
-    simpa using tendsto_norm_sub_self (0 : E)
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_norm_zero : tendsto (λ g : E, «expr∥ ∥»(g)) (expr𝓝() 0) (expr𝓝() 0) :=
+by simpa [] [] [] [] [] ["using", expr tendsto_norm_sub_self (0 : E)]
 
-@[continuity]
-theorem continuous_norm : Continuous fun g : E => ∥g∥ :=
-  by 
-    simpa using continuous_id.dist (continuous_const : Continuous fun g => (0 : E))
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_norm : continuous (λ g : E, «expr∥ ∥»(g)) :=
+by simpa [] [] [] [] [] ["using", expr continuous_id.dist (continuous_const : continuous (λ g, (0 : E)))]
 
-@[continuity]
-theorem continuous_nnnorm : Continuous fun a : E => ∥a∥₊ :=
-  continuous_subtype_mk _ continuous_norm
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_nnnorm : continuous (λ a : E, «expr∥ ∥₊»(a)) :=
+continuous_subtype_mk _ continuous_norm
 
 theorem lipschitz_with_one_norm : LipschitzWith 1 (norm : E → ℝ) :=
   by 
@@ -918,8 +920,9 @@ theorem lipschitz_with_one_norm : LipschitzWith 1 (norm : E → ℝ) :=
 theorem uniform_continuous_norm : UniformContinuous (norm : E → ℝ) :=
   lipschitz_with_one_norm.UniformContinuous
 
-theorem uniform_continuous_nnnorm : UniformContinuous fun a : E => ∥a∥₊ :=
-  uniform_continuous_subtype_mk uniform_continuous_norm _
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_nnnorm : uniform_continuous (λ a : E, «expr∥ ∥₊»(a)) :=
+uniform_continuous_subtype_mk uniform_continuous_norm _
 
 section 
 
@@ -989,7 +992,7 @@ instance (priority := 100)normed_top_group : TopologicalAddGroup E :=
   by 
     infer_instance
 
-theorem Nat.norm_cast_le [HasOne E] : ∀ n : ℕ, ∥(n : E)∥ ≤ n*∥(1 : E)∥
+theorem Nat.norm_cast_le [HasOne E] : ∀ (n : ℕ), ∥(n : E)∥ ≤ n*∥(1 : E)∥
 | 0 =>
   by 
     simp 
@@ -999,7 +1002,7 @@ theorem Nat.norm_cast_le [HasOne E] : ∀ n : ℕ, ∥(n : E)∥ ≤ n*∥(1 : E
     exact norm_add_le_of_le (Nat.norm_cast_le n) le_rfl
 
 theorem SemiNormedGroup.mem_closure_iff {s : Set E} {x : E} :
-  x ∈ Closure s ↔ ∀ ε _ : ε > 0, ∃ (y : _)(_ : y ∈ s), ∥x - y∥ < ε :=
+  x ∈ Closure s ↔ ∀ ε (_ : ε > 0), ∃ (y : _)(_ : y ∈ s), ∥x - y∥ < ε :=
   by 
     simp [Metric.mem_closure_iff, dist_eq_norm]
 
@@ -1067,9 +1070,9 @@ def normed_group.of_add_dist
 /-- A normed group can be built from a norm that satisfies algebraic properties. This is
 formalised in this structure. -/
 structure NormedGroup.Core(E : Type _)[AddCommGroupₓ E][HasNorm E] : Prop where 
-  norm_eq_zero_iff : ∀ x : E, ∥x∥ = 0 ↔ x = 0
-  triangle : ∀ x y : E, ∥x+y∥ ≤ ∥x∥+∥y∥
-  norm_neg : ∀ x : E, ∥-x∥ = ∥x∥
+  norm_eq_zero_iff : ∀ (x : E), ∥x∥ = 0 ↔ x = 0
+  triangle : ∀ (x y : E), ∥x+y∥ ≤ ∥x∥+∥y∥
+  norm_neg : ∀ (x : E), ∥-x∥ = ∥x∥
 
 /-- The `semi_normed_group.core` induced by a `normed_group.core`. -/
 theorem NormedGroup.Core.ToSemiNormedGroup.core {E : Type _} [AddCommGroupₓ E] [HasNorm E] (C : NormedGroup.Core E) :
@@ -1178,14 +1181,13 @@ theorem pi_norm_lt_iff {π : ι → Type _} [Fintype ι] [∀ i, NormedGroup (π
 theorem norm_le_pi_norm {π : ι → Type _} [Fintype ι] [∀ i, NormedGroup (π i)] (x : ∀ i, π i) (i : ι) : ∥x i∥ ≤ ∥x∥ :=
   (pi_norm_le_iff (norm_nonneg x)).1 (le_reflₓ _) i
 
-@[simp]
-theorem pi_norm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥ = ∥a∥ :=
-  by 
-    simpa only [←dist_zero_right] using dist_pi_const a 0
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem pi_norm_const [nonempty ι] [fintype ι] (a : E) : «expr = »(«expr∥ ∥»(λ i : ι, a), «expr∥ ∥»(a)) :=
+by simpa [] [] ["only"] ["[", "<-", expr dist_zero_right, "]"] [] ["using", expr dist_pi_const a 0]
 
-@[simp]
-theorem pi_nnnorm_const [Nonempty ι] [Fintype ι] (a : E) : ∥fun i : ι => a∥₊ = ∥a∥₊ :=
-  Nnreal.eq$ pi_norm_const a
+-- error in Analysis.Normed.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem pi_nnnorm_const [nonempty ι] [fintype ι] (a : E) : «expr = »(«expr∥ ∥₊»(λ i : ι, a), «expr∥ ∥₊»(a)) :=
+«expr $ »(nnreal.eq, pi_norm_const a)
 
 theorem tendsto_norm_nhds_within_zero : tendsto (norm : E → ℝ) (𝓝[«expr ᶜ» {0}] 0) (𝓝[Set.Ioi 0] 0) :=
   (continuous_norm.tendsto' (0 : E) 0 norm_zero).inf$ tendsto_principal_principal.2$ fun x => norm_pos_iff.2

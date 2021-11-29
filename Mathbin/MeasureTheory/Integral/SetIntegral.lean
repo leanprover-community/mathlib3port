@@ -96,8 +96,8 @@ theorem integral_diff (hs : MeasurableSet s) (ht : MeasurableSet t) (hfs : integ
     rw [eq_sub_iff_add_eq, ←integral_union, diff_union_of_subset hts]
     exacts[disjoint_diff.symm, hs.diff ht, ht, hfs.mono_set (diff_subset _ _), hft]
 
-theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α} (hs : ∀ i _ : i ∈ t, MeasurableSet (s i))
-  (h's : Set.Pairwise («expr↑ » t) (Disjoint on s)) (hf : ∀ i _ : i ∈ t, integrable_on f (s i) μ) :
+theorem integral_finset_bUnion {ι : Type _} (t : Finset ι) {s : ι → Set α} (hs : ∀ i (_ : i ∈ t), MeasurableSet (s i))
+  (h's : Set.Pairwise («expr↑ » t) (Disjoint on s)) (hf : ∀ i (_ : i ∈ t), integrable_on f (s i) μ) :
   (∫x in ⋃(i : _)(_ : i ∈ t), s i, f x ∂μ) = ∑i in t, ∫x in s i, f x ∂μ :=
   by 
     induction' t using Finset.induction_on with a t hat IH hs h's
@@ -238,7 +238,7 @@ theorem integral_Union_of_null_inter {ι : Type _} [Encodable ι] {s : ι → Se
   (∫a in ⋃n, s n, f a ∂μ) = ∑'n, ∫a in s n, f a ∂μ :=
   (HasSum.tsum_eq (has_sum_integral_Union_of_null_inter hm hd hfi)).symm
 
-theorem set_integral_eq_zero_of_forall_eq_zero {f : α → E} (hf : Measurable f) (ht_eq : ∀ x _ : x ∈ t, f x = 0) :
+theorem set_integral_eq_zero_of_forall_eq_zero {f : α → E} (hf : Measurable f) (ht_eq : ∀ x (_ : x ∈ t), f x = 0) :
   (∫x in t, f x ∂μ) = 0 :=
   by 
     refine' integral_eq_zero_of_ae _ 
@@ -248,14 +248,14 @@ theorem set_integral_eq_zero_of_forall_eq_zero {f : α → E} (hf : Measurable f
     exact ht_eq x hx
 
 private theorem set_integral_union_eq_left_of_disjoint {f : α → E} (hf : Measurable f) (hfi : integrable f μ)
-  (hs : MeasurableSet s) (ht : MeasurableSet t) (ht_eq : ∀ x _ : x ∈ t, f x = 0) (hs_disj : Disjoint s t) :
+  (hs : MeasurableSet s) (ht : MeasurableSet t) (ht_eq : ∀ x (_ : x ∈ t), f x = 0) (hs_disj : Disjoint s t) :
   (∫x in s ∪ t, f x ∂μ) = ∫x in s, f x ∂μ :=
   by 
     rw [integral_union hs_disj hs ht hfi.integrable_on hfi.integrable_on,
       set_integral_eq_zero_of_forall_eq_zero hf ht_eq, add_zeroₓ]
 
 theorem set_integral_union_eq_left {f : α → E} (hf : Measurable f) (hfi : integrable f μ) (hs : MeasurableSet s)
-  (ht : MeasurableSet t) (ht_eq : ∀ x _ : x ∈ t, f x = 0) : (∫x in s ∪ t, f x ∂μ) = ∫x in s, f x ∂μ :=
+  (ht : MeasurableSet t) (ht_eq : ∀ x (_ : x ∈ t), f x = 0) : (∫x in s ∪ t, f x ∂μ) = ∫x in s, f x ∂μ :=
   by 
     rw [←Set.union_diff_self, integral_union,
       set_integral_eq_zero_of_forall_eq_zero _ fun x hx => ht_eq x (diff_subset _ _ hx), add_zeroₓ]
@@ -312,11 +312,14 @@ theorem set_integral_const (c : E) : (∫x in s, c ∂μ) = (μ s).toReal • c 
   by 
     rw [integral_const, measure.restrict_apply_univ]
 
+-- error in MeasureTheory.Integral.SetIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem integral_indicator_const (e : E) ⦃s : Set α⦄ (s_meas : MeasurableSet s) :
-  (∫a : α, s.indicator (fun x : α => e) a ∂μ) = (μ s).toReal • e :=
-  by 
-    rw [integral_indicator s_meas, ←set_integral_const]
+theorem integral_indicator_const
+(e : E)
+{{s : set α}}
+(s_meas : measurable_set s) : «expr = »(«expr∫ , ∂ »((a : α), s.indicator (λ
+   x : α, e) a, μ), «expr • »((μ s).to_real, e)) :=
+by rw ["[", expr integral_indicator s_meas, ",", "<-", expr set_integral_const, "]"] []
 
 theorem set_integral_indicator_const_Lp {p : ℝ≥0∞} (hs : MeasurableSet s) (ht : MeasurableSet t) (hμt : μ t ≠ ∞)
   (x : E) : (∫a in s, indicator_const_Lp p ht hμt x a ∂μ) = (μ (t ∩ s)).toReal • x :=
@@ -406,12 +409,12 @@ theorem norm_set_integral_le_of_norm_le_const_ae'' {C : ℝ} (hs : μ s < ∞) (
     by 
       rwa [ae_restrict_eq hsm, eventually_inf_principal]
 
-theorem norm_set_integral_le_of_norm_le_const {C : ℝ} (hs : μ s < ∞) (hC : ∀ x _ : x ∈ s, ∥f x∥ ≤ C)
+theorem norm_set_integral_le_of_norm_le_const {C : ℝ} (hs : μ s < ∞) (hC : ∀ x (_ : x ∈ s), ∥f x∥ ≤ C)
   (hfm : AeMeasurable f (μ.restrict s)) : ∥∫x in s, f x ∂μ∥ ≤ C*(μ s).toReal :=
   norm_set_integral_le_of_norm_le_const_ae' hs (eventually_of_forall hC) hfm
 
 theorem norm_set_integral_le_of_norm_le_const' {C : ℝ} (hs : μ s < ∞) (hsm : MeasurableSet s)
-  (hC : ∀ x _ : x ∈ s, ∥f x∥ ≤ C) : ∥∫x in s, f x ∂μ∥ ≤ C*(μ s).toReal :=
+  (hC : ∀ x (_ : x ∈ s), ∥f x∥ ≤ C) : ∥∫x in s, f x ∂μ∥ ≤ C*(μ s).toReal :=
   norm_set_integral_le_of_norm_le_const_ae'' hs hsm$ eventually_of_forall hC
 
 theorem set_integral_eq_zero_iff_of_nonneg_ae {f : α → ℝ} (hf : 0 ≤ᵐ[μ.restrict s] f) (hfi : integrable_on f s μ) :
@@ -443,7 +446,7 @@ theorem set_integral_mono_ae_restrict (h : f ≤ᵐ[μ.restrict s] g) : (∫a in
 theorem set_integral_mono_ae (h : f ≤ᵐ[μ] g) : (∫a in s, f a ∂μ) ≤ ∫a in s, g a ∂μ :=
   set_integral_mono_ae_restrict hf hg (ae_restrict_of_ae h)
 
-theorem set_integral_mono_on (hs : MeasurableSet s) (h : ∀ x _ : x ∈ s, f x ≤ g x) :
+theorem set_integral_mono_on (hs : MeasurableSet s) (h : ∀ x (_ : x ∈ s), f x ≤ g x) :
   (∫a in s, f a ∂μ) ≤ ∫a in s, g a ∂μ :=
   set_integral_mono_ae_restrict hf hg
     (by 
@@ -574,7 +577,6 @@ variable[NormedGroup
       E]{𝕜 :
     Type
       _}[IsROrC
-      𝕜][MeasurableSpace
       𝕜][NormedGroup
       F][MeasurableSpace F][second_countable_topology F][BorelSpace F][NormedSpace 𝕜 F]{p : ℝ≥0∞}{μ : Measureₓ α}
 
@@ -595,7 +597,7 @@ theorem Lp_to_Lp_restrict_add (f g : Lp E p μ) (s : Set α) :
 
 /-- For `f : Lp E p μ`, we can define an element of `Lp E p (μ.restrict s)` by
 `(Lp.mem_ℒp f).restrict s).to_Lp f`. This map commutes with scalar multiplication. -/
-theorem Lp_to_Lp_restrict_smul [OpensMeasurableSpace 𝕜] (c : 𝕜) (f : Lp F p μ) (s : Set α) :
+theorem Lp_to_Lp_restrict_smul (c : 𝕜) (f : Lp F p μ) (s : Set α) :
   ((Lp.mem_ℒp (c • f)).restrict s).toLp («expr⇑ » (c • f)) = c • ((Lp.mem_ℒp f).restrict s).toLp f :=
   by 
     ext1 
@@ -619,7 +621,7 @@ variable(α F 𝕜)
 
 /-- Continuous linear map sending a function of `Lp F p μ` to the same function in
 `Lp F p (μ.restrict s)`. -/
-def Lp_to_Lp_restrict_clm [BorelSpace 𝕜] (μ : Measureₓ α) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] (s : Set α) :
+def Lp_to_Lp_restrict_clm (μ : Measureₓ α) (p : ℝ≥0∞) [hp : Fact (1 ≤ p)] (s : Set α) :
   Lp F p μ →L[𝕜] Lp F p (μ.restrict s) :=
   @LinearMap.mkContinuous 𝕜 𝕜 (Lp F p μ) (Lp F p (μ.restrict s)) _ _ _ _ _ _ (RingHom.id 𝕜)
     ⟨fun f => mem_ℒp.to_Lp f ((Lp.mem_ℒp f).restrict s), fun f g => Lp_to_Lp_restrict_add f g s,
@@ -634,7 +636,7 @@ variable{α F 𝕜}
 
 variable(𝕜)
 
-theorem Lp_to_Lp_restrict_clm_coe_fn [BorelSpace 𝕜] [hp : Fact (1 ≤ p)] (s : Set α) (f : Lp F p μ) :
+theorem Lp_to_Lp_restrict_clm_coe_fn [hp : Fact (1 ≤ p)] (s : Set α) (f : Lp F p μ) :
   Lp_to_Lp_restrict_clm α F 𝕜 μ p s f =ᵐ[μ.restrict s] f :=
   mem_ℒp.coe_fn_to_Lp ((Lp.mem_ℒp f).restrict s)
 
@@ -766,12 +768,12 @@ theorem ContinuousAt.integral_sub_linear_is_o_ae [TopologicalSpace α] [OpensMea
   all `x ∈ s`. -/
 theorem ContinuousOn.measurable_at_filter [TopologicalSpace α] [OpensMeasurableSpace α] [MeasurableSpace β]
   [TopologicalSpace β] [BorelSpace β] {f : α → β} {s : Set α} {μ : Measureₓ α} (hs : IsOpen s) (hf : ContinuousOn f s) :
-  ∀ x _ : x ∈ s, MeasurableAtFilter f (𝓝 x) μ :=
+  ∀ x (_ : x ∈ s), MeasurableAtFilter f (𝓝 x) μ :=
   fun x hx => ⟨s, IsOpen.mem_nhds hs hx, hf.ae_measurable hs.measurable_set⟩
 
 theorem ContinuousAt.measurable_at_filter [TopologicalSpace α] [OpensMeasurableSpace α] [BorelSpace E] {f : α → E}
-  {s : Set α} {μ : Measureₓ α} (hs : IsOpen s) (hf : ∀ x _ : x ∈ s, ContinuousAt f x) :
-  ∀ x _ : x ∈ s, MeasurableAtFilter f (𝓝 x) μ :=
+  {s : Set α} {μ : Measureₓ α} (hs : IsOpen s) (hf : ∀ x (_ : x ∈ s), ContinuousAt f x) :
+  ∀ x (_ : x ∈ s), MeasurableAtFilter f (𝓝 x) μ :=
   ContinuousOn.measurable_at_filter hs$ ContinuousAt.continuous_on hf
 
 theorem Continuous.measurable_at_filter [TopologicalSpace α] [OpensMeasurableSpace α] [MeasurableSpace β]
@@ -835,14 +837,13 @@ theorem set_integral_comp_Lp (L : E →L[𝕜] F) (φ : Lp E p μ) {s : Set α} 
   (∫a in s, (L.comp_Lp φ) a ∂μ) = ∫a in s, L (φ a) ∂μ :=
   set_integral_congr_ae hs ((L.coe_fn_comp_Lp φ).mono fun x hx hx2 => hx)
 
-theorem continuous_integral_comp_L1 [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] (L : E →L[𝕜] F) :
-  Continuous fun φ : α →₁[μ] E => ∫a : α, L (φ a) ∂μ :=
-  by 
-    rw [←funext L.integral_comp_Lp]
-    exact continuous_integral.comp (L.comp_LpL 1 μ).Continuous
+-- error in MeasureTheory.Integral.SetIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_integral_comp_L1
+(L : «expr →L[ ] »(E, 𝕜, F)) : continuous (λ φ : «expr →₁[ ] »(α, μ, E), «expr∫ , ∂ »((a : α), L (φ a), μ)) :=
+by { rw ["<-", expr funext L.integral_comp_Lp] [],
+  exact [expr continuous_integral.comp (L.comp_LpL 1 μ).continuous] }
 
-variable[CompleteSpace
-      E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜][NormedSpace ℝ E][IsScalarTower ℝ 𝕜 E][IsScalarTower ℝ 𝕜 F]
+variable[CompleteSpace E][NormedSpace ℝ E][IsScalarTower ℝ 𝕜 E][IsScalarTower ℝ 𝕜 F]
 
 theorem integral_comp_comm (L : E →L[𝕜] F) {φ : α → E} (φ_int : integrable φ μ) : (∫a, L (φ a) ∂μ) = L (∫a, φ a ∂μ) :=
   by 
@@ -901,9 +902,7 @@ variable[MeasurableSpace
       F][CompleteSpace
       F][NormedSpace ℝ
       F][IsScalarTower ℝ 𝕜
-      F][BorelSpace
-      E][second_countable_topology
-      E][CompleteSpace E][NormedSpace ℝ E][IsScalarTower ℝ 𝕜 E][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]
+      F][BorelSpace E][second_countable_topology E][CompleteSpace E][NormedSpace ℝ E][IsScalarTower ℝ 𝕜 E]
 
 theorem integral_comp_comm (L : E →ₗᵢ[𝕜] F) (φ : α → E) : (∫a, L (φ a) ∂μ) = L (∫a, φ a ∂μ) :=
   L.to_continuous_linear_map.integral_comp_comm' L.antilipschitz _
@@ -914,8 +913,7 @@ variable[BorelSpace
       E][second_countable_topology
       E][CompleteSpace
       E][NormedSpace ℝ
-      E][MeasurableSpace
-      F][BorelSpace F][second_countable_topology F][CompleteSpace F][NormedSpace ℝ F][MeasurableSpace 𝕜][BorelSpace 𝕜]
+      E][MeasurableSpace F][BorelSpace F][second_countable_topology F][CompleteSpace F][NormedSpace ℝ F]
 
 @[normCast]
 theorem integral_of_real {f : α → ℝ} : (∫a, (f a : 𝕜) ∂μ) = «expr↑ » (∫a, f a ∂μ) :=
@@ -963,11 +961,12 @@ theorem integral_pair {f : α → E} {g : α → F} (hf : integrable f μ) (hg :
   have  := hf.prod_mk hg 
   Prod.extₓ (fst_integral this) (snd_integral this)
 
-theorem integral_smul_const (f : α → ℝ) (c : E) : (∫x, f x • c ∂μ) = (∫x, f x ∂μ) • c :=
+theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] [IsScalarTower ℝ 𝕜 E] [MeasurableSpace 𝕜]
+  [BorelSpace 𝕜] (f : α → 𝕜) (c : E) : (∫x, f x • c ∂μ) = (∫x, f x ∂μ) • c :=
   by 
     byCases' hf : integrable f μ
     ·
-      exact ((ContinuousLinearMap.id ℝ ℝ).smulRight c).integral_comp_comm hf
+      exact ((1 : 𝕜 →L[𝕜] 𝕜).smulRight c).integral_comp_comm hf
     ·
       byCases' hc : c = 0
       ·
@@ -989,7 +988,7 @@ theorem integral_inner {f : α → E'} (hf : integrable f μ) (c : E') : (∫x, 
   ((@innerRight 𝕜 E' _ _ c).restrictScalars ℝ).integral_comp_comm hf
 
 theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E') (hf : integrable f μ)
-  (hf_int : ∀ c : E', (∫x, ⟪c, f x⟫ ∂μ) = 0) : (∫x, f x ∂μ) = 0 :=
+  (hf_int : ∀ (c : E'), (∫x, ⟪c, f x⟫ ∂μ) = 0) : (∫x, f x ∂μ) = 0 :=
   by 
     specialize hf_int (∫x, f x ∂μ)
     rwa [integral_inner hf, inner_self_eq_zero] at hf_int

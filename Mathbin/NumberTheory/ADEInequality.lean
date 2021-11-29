@@ -215,7 +215,7 @@ begin
 end
 
 theorem admissible_of_one_lt_sum_inv_aux :
-  ∀ {pqr : List ℕ+} hs : pqr.sorted (· ≤ ·) hl : pqr.length = 3 H : 1 < sum_inv pqr, admissible pqr
+  ∀ {pqr : List ℕ+} (hs : pqr.sorted (· ≤ ·)) (hl : pqr.length = 3) (H : 1 < sum_inv pqr), admissible pqr
 | [p, q, r], hs, hl, H =>
   by 
     obtain ⟨⟨hpq, -⟩, hqr⟩ : (p ≤ q ∧ p ≤ r) ∧ q ≤ r 

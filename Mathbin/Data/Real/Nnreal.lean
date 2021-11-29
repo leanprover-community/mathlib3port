@@ -47,11 +47,11 @@ open_locale Classical BigOperators
 
 -- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler ordered_semiring
 /-- Nonnegative real numbers. -/
-@[derive #["[", expr ordered_semiring, ",", expr comm_monoid_with_zero, ",", expr semilattice_inf_bot, ",",
-   expr densely_ordered, ",", expr canonically_linear_ordered_add_monoid, ",", expr linear_ordered_comm_group_with_zero,
-   ",", expr archimedean, ",", expr linear_ordered_semiring, ",", expr ordered_comm_semiring, ",",
-   expr canonically_ordered_comm_semiring, ",", expr has_sub, ",", expr has_ordered_sub, ",", expr has_div, ",",
-   expr inhabited, "]"]]
+@[derive #["[", expr ordered_semiring, ",", expr comm_monoid_with_zero, ",", expr semilattice_inf, ",",
+   expr densely_ordered, ",", expr order_bot, ",", expr canonically_linear_ordered_add_monoid, ",",
+   expr linear_ordered_comm_group_with_zero, ",", expr archimedean, ",", expr linear_ordered_semiring, ",",
+   expr ordered_comm_semiring, ",", expr canonically_ordered_comm_semiring, ",", expr has_sub, ",",
+   expr has_ordered_sub, ",", expr has_div, ",", expr inhabited, "]"]]
 def nnreal :=
 {r : exprℝ() // «expr ≤ »(0, r)}
 
@@ -395,11 +395,11 @@ noncomputable example  : DistribLattice ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : SemilatticeInfBot ℝ≥0  :=
+noncomputable example  : SemilatticeInf ℝ≥0  :=
   by 
     infer_instance
 
-noncomputable example  : SemilatticeSupBot ℝ≥0  :=
+noncomputable example  : SemilatticeSup ℝ≥0  :=
   by 
     infer_instance
 
@@ -457,6 +457,15 @@ example  : Archimedean ℝ≥0  :=
   by 
     infer_instance
 
+instance covariant_add : CovariantClass ℝ≥0  ℝ≥0  (·+·) (· ≤ ·) :=
+  OrderedAddCommMonoid.to_covariant_class_left ℝ≥0 
+
+instance contravariant_add : ContravariantClass ℝ≥0  ℝ≥0  (·+·) (· < ·) :=
+  OrderedCancelAddCommMonoid.to_contravariant_class_left ℝ≥0 
+
+instance covariant_mul : CovariantClass ℝ≥0  ℝ≥0  (·*·) (· ≤ ·) :=
+  OrderedCommMonoid.to_covariant_class_left ℝ≥0 
+
 theorem le_of_forall_pos_le_add {a b :  ℝ≥0 } (h : ∀ ε, 0 < ε → a ≤ b+ε) : a ≤ b :=
   le_of_forall_le_of_dense$
     fun x hxb =>
@@ -474,15 +483,15 @@ theorem le_of_add_le_right {a b c :  ℝ≥0 } (h : (a+b) ≤ c) : b ≤ c :=
     refine' le_transₓ _ h 
     exact (le_add_iff_nonneg_left _).mpr zero_le'
 
-theorem lt_iff_exists_rat_btwn (a b :  ℝ≥0 ) : a < b ↔ ∃ q : ℚ, 0 ≤ q ∧ a < Real.toNnreal q ∧ Real.toNnreal q < b :=
-  Iff.intro
-    (fun h : («expr↑ » a : ℝ) < («expr↑ » b : ℝ) =>
-      let ⟨q, haq, hqb⟩ := exists_rat_btwn h 
-      have  : 0 ≤ (q : ℝ) := le_transₓ a.2$ le_of_ltₓ haq
-      ⟨q, Rat.cast_nonneg.1 this,
-        by 
-          simp [Real.coe_to_nnreal _ this, nnreal.coe_lt_coe.symm, haq, hqb]⟩)
-    fun ⟨q, _, haq, hqb⟩ => lt_transₓ haq hqb
+-- error in Data.Real.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lt_iff_exists_rat_btwn
+(a
+ b : «exprℝ≥0»()) : «expr ↔ »(«expr < »(a, b), «expr∃ , »((q : exprℚ()), «expr ∧ »(«expr ≤ »(0, q), «expr ∧ »(«expr < »(a, real.to_nnreal q), «expr < »(real.to_nnreal q, b))))) :=
+iff.intro (assume
+ h : «expr < »((«expr↑ »(a) : exprℝ()), («expr↑ »(b) : exprℝ())), let ⟨q, haq, hqb⟩ := exists_rat_btwn h in
+ have «expr ≤ »(0, (q : exprℝ())), from «expr $ »(le_trans a.2, le_of_lt haq),
+ ⟨q, rat.cast_nonneg.1 this, by simp [] [] [] ["[", expr real.coe_to_nnreal _ this, ",", expr nnreal.coe_lt_coe.symm, ",", expr haq, ",", expr hqb, "]"] [] []⟩) (assume
+ ⟨q, _, haq, hqb⟩, lt_trans haq hqb)
 
 theorem bot_eq_zero : (⊥ :  ℝ≥0 ) = 0 :=
   rfl
@@ -825,7 +834,7 @@ theorem div_le_div_left {a b c :  ℝ≥0 } (a0 : 0 < a) (b0 : 0 < b) (c0 : 0 < 
   by 
     rw [Nnreal.div_le_iff b0.ne.symm, div_mul_eq_mul_div, Nnreal.le_div_iff_mul_le c0.ne.symm, mul_le_mul_left a0]
 
-theorem le_of_forall_lt_one_mul_le {x y :  ℝ≥0 } (h : ∀ a _ : a < 1, (a*x) ≤ y) : x ≤ y :=
+theorem le_of_forall_lt_one_mul_le {x y :  ℝ≥0 } (h : ∀ a (_ : a < 1), (a*x) ≤ y) : x ≤ y :=
   le_of_forall_ge_of_dense$
     fun a ha =>
       have hx : x ≠ 0 := pos_iff_ne_zero.1 (lt_of_le_of_ltₓ (zero_le _) ha)

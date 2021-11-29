@@ -239,7 +239,7 @@ into classes, where all remainders in a class are close together. -/
 theorem exists_partition_polynomial (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : Polynomial Fq} (hb : b ≠ 0)
   (A : Finₓ n → Polynomial Fq) :
   ∃ t : Finₓ n → Finₓ (Fintype.card Fq^⌈-log ε / log (Fintype.card Fq)⌉₊),
-    ∀ i₀ i₁ : Finₓ n, t i₀ = t i₁ → (card_pow_degree (A i₁ % b - A i₀ % b) : ℝ) < card_pow_degree b • ε :=
+    ∀ (i₀ i₁ : Finₓ n), t i₀ = t i₁ → (card_pow_degree (A i₁ % b - A i₀ % b) : ℝ) < card_pow_degree b • ε :=
   by 
     obtain ⟨t, ht⟩ := exists_partition_polynomial_aux n hε hb A 
     exact ⟨t, fun i₀ i₁ hi => (ht i₀ i₁).mp hi⟩

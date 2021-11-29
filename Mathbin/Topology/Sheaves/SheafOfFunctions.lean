@@ -40,6 +40,7 @@ open Top
 
 namespace Top.Presheaf
 
+-- error in Topology.Sheaves.SheafOfFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 We show that the presheaf of functions to a type `T`
 (no continuity assumptions, just plain functions)
@@ -47,26 +48,22 @@ form a sheaf.
 
 In fact, the proof is identical when we do this for dependent functions to a type family `T`,
 so we do the more general case.
--/
-theorem to_Types_is_sheaf (T : X → Type u) : (presheaf_to_Types X T).IsSheaf :=
-  is_sheaf_of_is_sheaf_unique_gluing_types _$
-    fun ι U sf hsf =>
-      by 
-        choose index index_spec using fun x : supr U => opens.mem_supr.mp x.2
-        let s : ∀ x : supr U, T x := fun x => sf (index x) ⟨x.1, index_spec x⟩
-        refine' ⟨s, _, _⟩
-        ·
-          intro i 
-          ext x 
-          convert congr_funₓ (hsf (index ⟨x, _⟩) i) ⟨x, ⟨index_spec ⟨x.1, _⟩, x.2⟩⟩
-          ext 
-          rfl
-        ·
-          intro t ht 
-          ext x 
-          convert congr_funₓ (ht (index x)) ⟨x.1, index_spec x⟩
-          ext 
-          rfl
+-/ theorem to_Types_is_sheaf (T : X → Type u) : (presheaf_to_Types X T).is_sheaf :=
+«expr $ »(is_sheaf_of_is_sheaf_unique_gluing_types _, λ ι U sf hsf, begin
+   choose [] [ident index] [ident index_spec] ["using", expr λ x : supr U, opens.mem_supr.mp x.2],
+   let [ident s] [":", expr ∀ x : supr U, T x] [":=", expr λ x, sf (index x) ⟨x.1, index_spec x⟩],
+   refine [expr ⟨s, _, _⟩],
+   { intro [ident i],
+     ext [] [ident x] [],
+     convert [] [expr congr_fun (hsf (index ⟨x, _⟩) i) ⟨x, ⟨index_spec ⟨x.1, _⟩, x.2⟩⟩] [],
+     ext [] [] [],
+     refl },
+   { intros [ident t, ident ht],
+     ext [] [ident x] [],
+     convert [] [expr congr_fun (ht (index x)) ⟨x.1, index_spec x⟩] [],
+     ext [] [] [],
+     refl }
+ end)
 
 /--
 The presheaf of not-necessarily-continuous functions to

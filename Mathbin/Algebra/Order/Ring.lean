@@ -97,8 +97,8 @@ addition is monotone and multiplication by a positive number is strictly monoton
 @[protectProj]
 class OrderedSemiring(α : Type u) extends Semiringₓ α, OrderedCancelAddCommMonoid α where 
   zero_le_one : 0 ≤ (1 : α)
-  mul_lt_mul_of_pos_left : ∀ a b c : α, a < b → 0 < c → (c*a) < c*b 
-  mul_lt_mul_of_pos_right : ∀ a b c : α, a < b → 0 < c → (a*c) < b*c
+  mul_lt_mul_of_pos_left : ∀ (a b c : α), a < b → 0 < c → (c*a) < c*b 
+  mul_lt_mul_of_pos_right : ∀ (a b c : α), a < b → 0 < c → (a*c) < b*c
 
 section OrderedSemiring
 
@@ -270,12 +270,15 @@ protected theorem Decidable.mul_self_lt_mul_self [@DecidableRel α (· ≤ ·)] 
 theorem mul_self_lt_mul_self (h1 : 0 ≤ a) (h2 : a < b) : (a*a) < b*b :=
   mul_lt_mul' h2.le h2 h1$ h1.trans_lt h2
 
-protected theorem Decidable.strict_mono_on_mul_self [@DecidableRel α (· ≤ ·)] :
-  StrictMonoOn (fun x : α => x*x) (Set.Ici 0) :=
-  fun x hx y hy hxy => Decidable.mul_self_lt_mul_self hx hxy
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem decidable.strict_mono_on_mul_self
+[@decidable_rel α ((«expr ≤ »))] : strict_mono_on (λ x : α, «expr * »(x, x)) (set.Ici 0) :=
+λ x hx y hy hxy, decidable.mul_self_lt_mul_self hx hxy
 
-theorem strict_mono_on_mul_self : StrictMonoOn (fun x : α => x*x) (Set.Ici 0) :=
-  fun x hx y hy hxy => mul_self_lt_mul_self hx hxy
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem strict_mono_on_mul_self : strict_mono_on (λ x : α, «expr * »(x, x)) (set.Ici 0) :=
+λ x hx y hy hxy, mul_self_lt_mul_self hx hxy
 
 protected theorem Decidable.mul_self_le_mul_self [@DecidableRel α (· ≤ ·)] (h1 : 0 ≤ a) (h2 : a ≤ b) : (a*a) ≤ b*b :=
   Decidable.mul_le_mul h2 h2 h1$ h1.trans h2
@@ -513,7 +516,7 @@ variable[LinearOrderedSemiring α]{a b c d : α}
 theorem zero_lt_one' : 0 < (1 : α) :=
   zero_lt_one
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem lt_of_mul_lt_mul_left
 (h : «expr < »(«expr * »(c, a), «expr * »(c, b)))
 (hc : «expr ≤ »(0, c)) : «expr < »(a, b) :=
@@ -521,7 +524,7 @@ by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_n
   h1 : «expr ≤ »(b, a), have h2 : «expr ≤ »(«expr * »(c, b), «expr * »(c, a)), from decidable.mul_le_mul_of_nonneg_left h1 hc,
   h2.not_lt h)]
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem lt_of_mul_lt_mul_right
 (h : «expr < »(«expr * »(a, c), «expr * »(b, c)))
 (hc : «expr ≤ »(0, c)) : «expr < »(a, b) :=
@@ -529,17 +532,21 @@ by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_n
   h1 : «expr ≤ »(b, a), have h2 : «expr ≤ »(«expr * »(b, c), «expr * »(a, c)), from decidable.mul_le_mul_of_nonneg_right h1 hc,
   h2.not_lt h)]
 
-theorem le_of_mul_le_mul_left (h : (c*a) ≤ c*b) (hc : 0 < c) : a ≤ b :=
-  le_of_not_gtₓ
-    fun h1 : b < a =>
-      have h2 : (c*b) < c*a := mul_lt_mul_of_pos_left h1 hc 
-      h2.not_le h
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem le_of_mul_le_mul_left
+(h : «expr ≤ »(«expr * »(c, a), «expr * »(c, b)))
+(hc : «expr < »(0, c)) : «expr ≤ »(a, b) :=
+le_of_not_gt (assume
+ h1 : «expr < »(b, a), have h2 : «expr < »(«expr * »(c, b), «expr * »(c, a)), from mul_lt_mul_of_pos_left h1 hc,
+ h2.not_le h)
 
-theorem le_of_mul_le_mul_right (h : (a*c) ≤ b*c) (hc : 0 < c) : a ≤ b :=
-  le_of_not_gtₓ
-    fun h1 : b < a =>
-      have h2 : (b*c) < a*c := mul_lt_mul_of_pos_right h1 hc 
-      h2.not_le h
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem le_of_mul_le_mul_right
+(h : «expr ≤ »(«expr * »(a, c), «expr * »(b, c)))
+(hc : «expr < »(0, c)) : «expr ≤ »(a, b) :=
+le_of_not_gt (assume
+ h1 : «expr < »(b, a), have h2 : «expr < »(«expr * »(b, c), «expr * »(a, c)), from mul_lt_mul_of_pos_right h1 hc,
+ h2.not_le h)
 
 -- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem pos_and_pos_or_neg_and_neg_of_mul_pos
@@ -587,11 +594,13 @@ theorem inv_of_nonpos [Invertible a] : ⅟ a ≤ 0 ↔ a ≤ 0 :=
   by 
     simp only [←not_ltₓ, inv_of_pos]
 
-theorem nonneg_of_mul_nonneg_left (h : 0 ≤ a*b) (h1 : 0 < a) : 0 ≤ b :=
-  le_of_not_gtₓ fun h2 : b < 0 => (mul_neg_of_pos_of_neg h1 h2).not_le h
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nonneg_of_mul_nonneg_left (h : «expr ≤ »(0, «expr * »(a, b))) (h1 : «expr < »(0, a)) : «expr ≤ »(0, b) :=
+le_of_not_gt (assume h2 : «expr < »(b, 0), (mul_neg_of_pos_of_neg h1 h2).not_le h)
 
-theorem nonneg_of_mul_nonneg_right (h : 0 ≤ a*b) (h1 : 0 < b) : 0 ≤ a :=
-  le_of_not_gtₓ fun h2 : a < 0 => (mul_neg_of_neg_of_pos h2 h1).not_le h
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nonneg_of_mul_nonneg_right (h : «expr ≤ »(0, «expr * »(a, b))) (h1 : «expr < »(0, b)) : «expr ≤ »(0, a) :=
+le_of_not_gt (assume h2 : «expr < »(a, 0), (mul_neg_of_neg_of_pos h2 h1).not_le h)
 
 -- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp] theorem inv_of_nonneg [invertible a] : «expr ↔ »(«expr ≤ »(0, «expr⅟»() a), «expr ≤ »(0, a)) :=
@@ -610,21 +619,23 @@ theorem inv_of_lt_zero [Invertible a] : ⅟ a < 0 ↔ a < 0 :=
 @[simp] theorem inv_of_le_one [invertible a] (h : «expr ≤ »(1, a)) : «expr ≤ »(«expr⅟»() a, 1) :=
 by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr «expr ▸ »(mul_inv_of_self a, decidable.le_mul_of_one_le_left «expr $ »(inv_of_nonneg.2, zero_le_one.trans h) h)]
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem neg_of_mul_neg_left (h : «expr < »(«expr * »(a, b), 0)) (h1 : «expr ≤ »(0, a)) : «expr < »(b, 0) :=
 by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (assume
   h2 : «expr ≥ »(b, 0), (decidable.mul_nonneg h1 h2).not_lt h)]
 
--- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem neg_of_mul_neg_right (h : «expr < »(«expr * »(a, b), 0)) (h1 : «expr ≤ »(0, b)) : «expr < »(a, 0) :=
 by haveI [] [] [":=", expr @linear_order.decidable_le α _]; exact [expr lt_of_not_ge (assume
   h2 : «expr ≥ »(a, 0), (decidable.mul_nonneg h2 h1).not_lt h)]
 
-theorem nonpos_of_mul_nonpos_left (h : (a*b) ≤ 0) (h1 : 0 < a) : b ≤ 0 :=
-  le_of_not_gtₓ fun h2 : b > 0 => (mul_pos h1 h2).not_le h
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nonpos_of_mul_nonpos_left (h : «expr ≤ »(«expr * »(a, b), 0)) (h1 : «expr < »(0, a)) : «expr ≤ »(b, 0) :=
+le_of_not_gt (assume h2 : «expr > »(b, 0), (mul_pos h1 h2).not_le h)
 
-theorem nonpos_of_mul_nonpos_right (h : (a*b) ≤ 0) (h1 : 0 < b) : a ≤ 0 :=
-  le_of_not_gtₓ fun h2 : a > 0 => (mul_pos h2 h1).not_le h
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nonpos_of_mul_nonpos_right (h : «expr ≤ »(«expr * »(a, b), 0)) (h1 : «expr < »(0, b)) : «expr ≤ »(a, 0) :=
+le_of_not_gt (assume h2 : «expr > »(a, 0), (mul_pos h2 h1).not_le h)
 
 -- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[simp]
@@ -920,7 +931,7 @@ addition is monotone and multiplication by a positive number is strictly monoton
 @[protectProj]
 class OrderedRing(α : Type u) extends Ringₓ α, OrderedAddCommGroup α where 
   zero_le_one : 0 ≤ (1 : α)
-  mul_pos : ∀ a b : α, 0 < a → 0 < b → 0 < a*b
+  mul_pos : ∀ (a b : α), 0 < a → 0 < b → 0 < a*b
 
 section OrderedRing
 
@@ -1534,7 +1545,7 @@ in which `a ≤ b` iff there exists `c` with `b = a + c`. This is satisfied by t
 natural numbers, for example, but not the integers or other ordered groups. -/
 @[protectProj]
 class CanonicallyOrderedCommSemiring(α : Type _) extends CanonicallyOrderedAddMonoid α, CommSemiringₓ α where 
-  eq_zero_or_eq_zero_of_mul_eq_zero : ∀ a b : α, (a*b) = 0 → a = 0 ∨ b = 0
+  eq_zero_or_eq_zero_of_mul_eq_zero : ∀ (a b : α), (a*b) = 0 → a = 0 ∨ b = 0
 
 namespace CanonicallyOrderedCommSemiring
 
@@ -1659,11 +1670,12 @@ theorem coe_mul {a b : α} : («expr↑ » (a*b) : WithTop α) = a*b :=
             simp [mul_def]
             rfl
 
-theorem mul_coe {b : α} (hb : b ≠ 0) : ∀ {a : WithTop α}, (a*b) = a.bind fun a : α => «expr↑ » (a*b)
-| none =>
-  show (if (⊤ : WithTop α) = 0 ∨ (b : WithTop α) = 0 then 0 else ⊤ : WithTop α) = ⊤by 
-    simp [hb]
-| some a => show («expr↑ » a*«expr↑ » b) = «expr↑ » (a*b) from coe_mul.symm
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mul_coe
+{b : α}
+(hb : «expr ≠ »(b, 0)) : ∀ {a : with_top α}, «expr = »(«expr * »(a, b), a.bind (λ a : α, «expr↑ »(«expr * »(a, b))))
+| none := show «expr = »((if «expr ∨ »(«expr = »((«expr⊤»() : with_top α), 0), «expr = »((b : with_top α), 0)) then 0 else «expr⊤»() : with_top α), «expr⊤»()), by simp [] [] [] ["[", expr hb, "]"] [] []
+| some a := show «expr = »(«expr * »(«expr↑ »(a), «expr↑ »(b)), «expr↑ »(«expr * »(a, b))), from coe_mul.symm
 
 @[simp]
 theorem mul_eq_top_iff {a b : WithTop α} : (a*b) = ⊤ ↔ a ≠ 0 ∧ b = ⊤ ∨ a = ⊤ ∧ b ≠ 0 :=
@@ -1838,8 +1850,12 @@ theorem coe_mul {a b : α} : («expr↑ » (a*b) : WithBot α) = a*b :=
             simp [mul_def]
             rfl
 
-theorem mul_coe {b : α} (hb : b ≠ 0) {a : WithBot α} : (a*b) = a.bind fun a : α => «expr↑ » (a*b) :=
-  WithTop.mul_coe hb
+-- error in Algebra.Order.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mul_coe
+{b : α}
+(hb : «expr ≠ »(b, 0))
+{a : with_bot α} : «expr = »(«expr * »(a, b), a.bind (λ a : α, «expr↑ »(«expr * »(a, b)))) :=
+with_top.mul_coe hb
 
 @[simp]
 theorem mul_eq_bot_iff {a b : WithBot α} : (a*b) = ⊥ ↔ a ≠ 0 ∧ b = ⊥ ∨ a = ⊥ ∧ b ≠ 0 :=

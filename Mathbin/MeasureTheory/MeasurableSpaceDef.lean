@@ -47,7 +47,7 @@ structure MeasurableSpace(α : Type _) where
   MeasurableSet' : Set α → Prop 
   measurable_set_empty : measurable_set' ∅
   measurable_set_compl : ∀ s, measurable_set' s → measurable_set' («expr ᶜ» s)
-  measurable_set_Union : ∀ f : ℕ → Set α, (∀ i, measurable_set' (f i)) → measurable_set' (⋃i, f i)
+  measurable_set_Union : ∀ (f : ℕ → Set α), (∀ i, measurable_set' (f i)) → measurable_set' (⋃i, f i)
 
 attribute [class] MeasurableSpace
 
@@ -113,20 +113,20 @@ begin
 end
 
 theorem Set.Finite.measurable_set_bUnion {f : β → Set α} {s : Set β} (hs : finite s)
-  (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃(b : _)(_ : b ∈ s), f b) :=
+  (h : ∀ b (_ : b ∈ s), MeasurableSet (f b)) : MeasurableSet (⋃(b : _)(_ : b ∈ s), f b) :=
   MeasurableSet.bUnion hs.countable h
 
-theorem Finset.measurable_set_bUnion {f : β → Set α} (s : Finset β) (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) :
+theorem Finset.measurable_set_bUnion {f : β → Set α} (s : Finset β) (h : ∀ b (_ : b ∈ s), MeasurableSet (f b)) :
   MeasurableSet (⋃(b : _)(_ : b ∈ s), f b) :=
   s.finite_to_set.measurable_set_bUnion h
 
-theorem MeasurableSet.sUnion {s : Set (Set α)} (hs : countable s) (h : ∀ t _ : t ∈ s, MeasurableSet t) :
+theorem MeasurableSet.sUnion {s : Set (Set α)} (hs : countable s) (h : ∀ t (_ : t ∈ s), MeasurableSet t) :
   MeasurableSet (⋃₀s) :=
   by 
     rw [sUnion_eq_bUnion]
     exact MeasurableSet.bUnion hs h
 
-theorem Set.Finite.measurable_set_sUnion {s : Set (Set α)} (hs : finite s) (h : ∀ t _ : t ∈ s, MeasurableSet t) :
+theorem Set.Finite.measurable_set_sUnion {s : Set (Set α)} (hs : finite s) (h : ∀ t (_ : t ∈ s), MeasurableSet t) :
   MeasurableSet (⋃₀s) :=
   MeasurableSet.sUnion hs.countable h
 
@@ -154,7 +154,7 @@ theorem MeasurableSet.Inter_fintype [Fintype β] {f : β → Set α} (h : ∀ b,
 
 end Fintype
 
-theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : countable s) (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) :
+theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : countable s) (h : ∀ b (_ : b ∈ s), MeasurableSet (f b)) :
   MeasurableSet (⋂(b : _)(_ : b ∈ s), f b) :=
   MeasurableSet.compl_iff.1$
     by 
@@ -162,20 +162,20 @@ theorem MeasurableSet.bInter {f : β → Set α} {s : Set β} (hs : countable s)
       exact MeasurableSet.bUnion hs fun b hb => (h b hb).Compl
 
 theorem Set.Finite.measurable_set_bInter {f : β → Set α} {s : Set β} (hs : finite s)
-  (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋂(b : _)(_ : b ∈ s), f b) :=
+  (h : ∀ b (_ : b ∈ s), MeasurableSet (f b)) : MeasurableSet (⋂(b : _)(_ : b ∈ s), f b) :=
   MeasurableSet.bInter hs.countable h
 
-theorem Finset.measurable_set_bInter {f : β → Set α} (s : Finset β) (h : ∀ b _ : b ∈ s, MeasurableSet (f b)) :
+theorem Finset.measurable_set_bInter {f : β → Set α} (s : Finset β) (h : ∀ b (_ : b ∈ s), MeasurableSet (f b)) :
   MeasurableSet (⋂(b : _)(_ : b ∈ s), f b) :=
   s.finite_to_set.measurable_set_bInter h
 
-theorem MeasurableSet.sInter {s : Set (Set α)} (hs : countable s) (h : ∀ t _ : t ∈ s, MeasurableSet t) :
+theorem MeasurableSet.sInter {s : Set (Set α)} (hs : countable s) (h : ∀ t (_ : t ∈ s), MeasurableSet t) :
   MeasurableSet (⋂₀s) :=
   by 
     rw [sInter_eq_bInter]
     exact MeasurableSet.bInter hs h
 
-theorem Set.Finite.measurable_set_sInter {s : Set (Set α)} (hs : finite s) (h : ∀ t _ : t ∈ s, MeasurableSet t) :
+theorem Set.Finite.measurable_set_sInter {s : Set (Set α)} (hs : finite s) (h : ∀ t (_ : t ∈ s), MeasurableSet t) :
   MeasurableSet (⋂₀s) :=
   MeasurableSet.sInter hs.countable h
 
@@ -233,7 +233,7 @@ end
 
 @[ext]
 theorem MeasurableSpace.ext :
-  ∀ {m₁ m₂ : MeasurableSpace α}, (∀ s : Set α, m₁.measurable_set' s ↔ m₂.measurable_set' s) → m₁ = m₂
+  ∀ {m₁ m₂ : MeasurableSpace α}, (∀ (s : Set α), m₁.measurable_set' s ↔ m₂.measurable_set' s) → m₁ = m₂
 | ⟨s₁, _, _, _⟩, ⟨s₂, _, _, _⟩, h =>
   have  : s₁ = s₂ := funext$ fun x => propext$ h x 
   by 
@@ -241,7 +241,7 @@ theorem MeasurableSpace.ext :
 
 @[ext]
 theorem MeasurableSpace.ext_iff {m₁ m₂ : MeasurableSpace α} :
-  m₁ = m₂ ↔ ∀ s : Set α, m₁.measurable_set' s ↔ m₂.measurable_set' s :=
+  m₁ = m₂ ↔ ∀ (s : Set α), m₁.measurable_set' s ↔ m₂.measurable_set' s :=
   ⟨by 
       (
         rintro rfl)
@@ -296,16 +296,23 @@ namespace MeasurableSpace
 
 section CompleteLattice
 
+instance  : LE (MeasurableSpace α) :=
+  { le := fun m₁ m₂ => m₁.measurable_set' ≤ m₂.measurable_set' }
+
+theorem le_def {α} {a b : MeasurableSpace α} : a ≤ b ↔ a.measurable_set' ≤ b.measurable_set' :=
+  Iff.rfl
+
 instance  : PartialOrderₓ (MeasurableSpace α) :=
-  { le := fun m₁ m₂ => m₁.measurable_set' ≤ m₂.measurable_set', le_refl := fun a b => le_reflₓ _,
-    le_trans := fun a b c => le_transₓ, le_antisymm := fun a b h₁ h₂ => MeasurableSpace.ext$ fun s => ⟨h₁ s, h₂ s⟩ }
+  { MeasurableSpace.hasLe with le_refl := fun a b => le_reflₓ _,
+    le_trans := fun a b c hab hbc => le_def.mpr (le_transₓ hab hbc),
+    le_antisymm := fun a b h₁ h₂ => MeasurableSpace.ext$ fun s => ⟨h₁ s, h₂ s⟩ }
 
 /-- The smallest σ-algebra containing a collection `s` of basic sets -/
 inductive generate_measurable (s : Set (Set α)) : Set α → Prop
-  | basic : ∀ u _ : u ∈ s, generate_measurable u
+  | basic : ∀ u (_ : u ∈ s), generate_measurable u
   | Empty : generate_measurable ∅
   | compl : ∀ s, generate_measurable s → generate_measurable («expr ᶜ» s)
-  | union : ∀ f : ℕ → Set α, (∀ n, generate_measurable (f n)) → generate_measurable (⋃i, f i)
+  | union : ∀ (f : ℕ → Set α), (∀ n, generate_measurable (f n)) → generate_measurable (⋃i, f i)
 
 /-- Construct the smallest measure space containing a collection of basic sets -/
 def generate_from (s : Set (Set α)) : MeasurableSpace α :=
@@ -315,11 +322,15 @@ def generate_from (s : Set (Set α)) : MeasurableSpace α :=
 theorem measurable_set_generate_from {s : Set (Set α)} {t : Set α} (ht : t ∈ s) : (generate_from s).MeasurableSet' t :=
   generate_measurable.basic t ht
 
-theorem generate_from_le {s : Set (Set α)} {m : MeasurableSpace α} (h : ∀ t _ : t ∈ s, m.measurable_set' t) :
-  generate_from s ≤ m :=
-  fun t ht : generate_measurable s t =>
-    ht.rec_on h (measurable_set_empty m) (fun s _ hs => measurable_set_compl m s hs)
-      fun f _ hf => measurable_set_Union m f hf
+-- error in MeasureTheory.MeasurableSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem generate_from_le
+{s : set (set α)}
+{m : measurable_space α}
+(h : ∀ t «expr ∈ » s, m.measurable_set' t) : «expr ≤ »(generate_from s, m) :=
+assume
+(t)
+(ht : generate_measurable s t), ht.rec_on h (measurable_set_empty m) (assume
+ s _ hs, measurable_set_compl m s hs) (assume f _ hf, measurable_set_Union m f hf)
 
 theorem generate_from_le_iff {s : Set (Set α)} (m : MeasurableSpace α) :
   generate_from s ≤ m ↔ s ⊆ { t | m.measurable_set' t } :=
@@ -387,7 +398,7 @@ theorem measurable_set_inf {m₁ m₂ : MeasurableSpace α} {s : Set α} :
 
 @[simp]
 theorem measurable_set_Inf {ms : Set (MeasurableSpace α)} {s : Set α} :
-  @MeasurableSet _ (Inf ms) s ↔ ∀ m _ : m ∈ ms, @MeasurableSet _ m s :=
+  @MeasurableSet _ (Inf ms) s ↔ ∀ m (_ : m ∈ ms), @MeasurableSet _ m s :=
   show s ∈ ⋂₀_ ↔ _ by 
     simp 
 
@@ -432,15 +443,14 @@ variable[MeasurableSpace α][MeasurableSpace β][MeasurableSpace γ]
 theorem measurable_id : Measurable (@id α) :=
   fun t => id
 
-theorem measurable_id' : Measurable fun a : α => a :=
-  measurable_id
+-- error in MeasureTheory.MeasurableSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_id' : measurable (λ a : α, a) := measurable_id
 
 theorem Measurable.comp {g : β → γ} {f : α → β} (hg : Measurable g) (hf : Measurable f) : Measurable (g ∘ f) :=
   fun t ht => hf (hg ht)
 
-@[simp]
-theorem measurable_const {a : α} : Measurable fun b : β => a :=
-  fun s hs => MeasurableSet.const (a ∈ s)
+-- error in MeasureTheory.MeasurableSpaceDef: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem measurable_const {a : α} : measurable (λ b : β, a) := assume s hs, measurable_set.const «expr ∈ »(a, s)
 
 end MeasurableFunctions
 

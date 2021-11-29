@@ -86,7 +86,7 @@ end
 
 theorem map_Union_fin_meas_set_eq_sum {β} [AddCommMonoidₓ β] (T : Set α → β) (T_empty : T ∅ = 0)
   (h_add : fin_meas_additive μ T) {ι} (S : ι → Set α) (sι : Finset ι) (hS_meas : ∀ i, MeasurableSet (S i))
-  (hSp : ∀ i _ : i ∈ sι, μ (S i) ≠ ∞) (h_disj : ∀ i j _ : i ∈ sι _ : j ∈ sι, i ≠ j → Disjoint (S i) (S j)) :
+  (hSp : ∀ i (_ : i ∈ sι), μ (S i) ≠ ∞) (h_disj : ∀ i j (_ : i ∈ sι) (_ : j ∈ sι), i ≠ j → Disjoint (S i) (S j)) :
   T (⋃(i : _)(_ : i ∈ sι), S i) = ∑i in sι, T (S i) :=
   by 
     revert hSp h_disj 
@@ -259,22 +259,27 @@ theorem set_to_simple_func_add_left {m : MeasurableSpace α} (T T' : Set α → 
     pushCast 
     simpRw [Pi.add_apply, sum_add_distrib]
 
-theorem set_to_simple_func_add_left' (T T' T'' : Set α → E →L[ℝ] F)
-  (h_add : ∀ s, MeasurableSet s → μ s ≠ ∞ → T'' s = T s+T' s) {f : α →ₛ E} (hf : integrable f μ) :
-  set_to_simple_func T'' f = set_to_simple_func T f+set_to_simple_func T' f :=
-  by 
-    simpRw [set_to_simple_func_eq_sum_filter]
-    suffices  : ∀ x _ : x ∈ Filter (fun x : E => x ≠ 0) f.range, T'' (f ⁻¹' {x}) = T (f ⁻¹' {x})+T' (f ⁻¹' {x})
-    ·
-      rw [←sum_add_distrib]
-      refine' Finset.sum_congr rfl fun x hx => _ 
-      rw [this x hx]
-      pushCast 
-      rw [Pi.add_apply]
-    intro x hx 
-    refine' h_add (f ⁻¹' {x}) (measurable_set_preimage _ _) (measure_preimage_lt_top_of_integrable _ hf _).Ne 
-    rw [mem_filter] at hx 
-    exact hx.2
+-- error in MeasureTheory.Integral.SetToL1: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem set_to_simple_func_add_left'
+(T T' T'' : set α → «expr →L[ ] »(E, exprℝ(), F))
+(h_add : ∀ s, measurable_set s → «expr ≠ »(μ s, «expr∞»()) → «expr = »(T'' s, «expr + »(T s, T' s)))
+{f : «expr →ₛ »(α, E)}
+(hf : integrable f μ) : «expr = »(set_to_simple_func T'' f, «expr + »(set_to_simple_func T f, set_to_simple_func T' f)) :=
+begin
+  simp_rw ["[", expr set_to_simple_func_eq_sum_filter, "]"] [],
+  suffices [] [":", expr ∀
+   x «expr ∈ » filter (λ
+    x : E, «expr ≠ »(x, 0)) f.range, «expr = »(T'' «expr ⁻¹' »(f, {x}), «expr + »(T «expr ⁻¹' »(f, {x}), T' «expr ⁻¹' »(f, {x})))],
+  { rw ["<-", expr sum_add_distrib] [],
+    refine [expr finset.sum_congr rfl (λ x hx, _)],
+    rw [expr this x hx] [],
+    push_cast [] [],
+    rw [expr pi.add_apply] [] },
+  intros [ident x, ident hx],
+  refine [expr h_add «expr ⁻¹' »(f, {x}) (measurable_set_preimage _ _) (measure_preimage_lt_top_of_integrable _ hf _).ne],
+  rw [expr mem_filter] ["at", ident hx],
+  exact [expr hx.2]
+end
 
 theorem set_to_simple_func_add (T : Set α → E →L[ℝ] F) (h_add : fin_meas_additive μ T) {f g : α →ₛ E}
   (hf : integrable f μ) (hg : integrable g μ) :
@@ -333,7 +338,7 @@ theorem set_to_simple_func_smul_real (T : Set α → E →L[ℝ] F) (h_add : fin
 
 theorem set_to_simple_func_smul {E} [MeasurableSpace E] [NormedGroup E] [NormedField 𝕜] [NormedSpace 𝕜 E]
   [NormedSpace ℝ E] [NormedSpace 𝕜 F] (T : Set α → E →L[ℝ] F) (h_add : fin_meas_additive μ T)
-  (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) {f : α →ₛ E} (hf : integrable f μ) :
+  (h_smul : ∀ (c : 𝕜), ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) {f : α →ₛ E} (hf : integrable f μ) :
   set_to_simple_func T (c • f) = c • set_to_simple_func T f :=
   calc set_to_simple_func T (c • f) = ∑x in f.range, T (f ⁻¹' {x}) (c • x) :=
     by 
@@ -490,7 +495,7 @@ theorem set_to_L1s_smul_real (T : Set α → E →L[ℝ] F) (h_zero : ∀ s, Mea
 theorem set_to_L1s_smul {E} [NormedGroup E] [MeasurableSpace E] [NormedSpace ℝ E] [NormedSpace 𝕜 E]
   [second_countable_topology E] [BorelSpace E] [NormedSpace 𝕜 F] [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜]
   (T : Set α → E →L[ℝ] F) (h_zero : ∀ s, MeasurableSet s → μ s = 0 → T s = 0) (h_add : fin_meas_additive μ T)
-  (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) (f : α →₁ₛ[μ] E) :
+  (h_smul : ∀ (c : 𝕜), ∀ s x, T s (c • x) = c • T s x) (c : 𝕜) (f : α →₁ₛ[μ] E) :
   set_to_L1s T (c • f) = c • set_to_L1s T f :=
   by 
     simpRw [set_to_L1s]
@@ -532,8 +537,8 @@ variable(α E μ 𝕜)
 
 /-- Extend `set α → E →L[ℝ] F` to `(α →₁ₛ[μ] E) →L[𝕜] F`. -/
 def set_to_L1s_clm' {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : dominated_fin_meas_additive μ T C)
-  (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) : (α →₁ₛ[μ] E) →L[𝕜] F :=
-  have h_zero : ∀ s hs : MeasurableSet s hs_zero : μ s = 0, T s = 0 :=
+  (h_smul : ∀ (c : 𝕜), ∀ s x, T s (c • x) = c • T s x) : (α →₁ₛ[μ] E) →L[𝕜] F :=
+  have h_zero : ∀ s (hs : MeasurableSet s) (hs_zero : μ s = 0), T s = 0 :=
     by 
       refine' fun s hs hs0 => norm_eq_zero.mp _ 
       refine' le_antisymmₓ ((hT.2 s).trans (le_of_eqₓ _)) (norm_nonneg _)
@@ -543,7 +548,7 @@ def set_to_L1s_clm' {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : dominated_fin
 
 /-- Extend `set α → E →L[ℝ] F` to `(α →₁ₛ[μ] E) →L[ℝ] F`. -/
 def set_to_L1s_clm {T : Set α → E →L[ℝ] F} {C : ℝ} (hT : dominated_fin_meas_additive μ T C) : (α →₁ₛ[μ] E) →L[ℝ] F :=
-  have h_zero : ∀ s hs : MeasurableSet s hs_zero : μ s = 0, T s = 0 :=
+  have h_zero : ∀ s (hs : MeasurableSet s) (hs_zero : μ s = 0), T s = 0 :=
     by 
       refine' fun s hs hs0 => norm_eq_zero.mp _ 
       refine' le_antisymmₓ ((hT.2 s).trans (le_of_eqₓ _)) (norm_nonneg _)
@@ -580,7 +585,7 @@ variable(𝕜)[NondiscreteNormedField
       E][BorelSpace E][NormedSpace 𝕜 E][NormedSpace 𝕜 F][CompleteSpace F]{T : Set α → E →L[ℝ] F}{C : ℝ}
 
 /-- Extend `set α → (E →L[ℝ] F)` to `(α →₁[μ] E) →L[𝕜] F`. -/
-def set_to_L1' (hT : dominated_fin_meas_additive μ T C) (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) :
+def set_to_L1' (hT : dominated_fin_meas_additive μ T C) (h_smul : ∀ (c : 𝕜), ∀ s x, T s (c • x) = c • T s x) :
   (α →₁[μ] E) →L[𝕜] F :=
   (set_to_L1s_clm' α E 𝕜 μ hT h_smul).extend (coe_to_Lp α E 𝕜) (simple_func.dense_range one_ne_top)
     simple_func.uniform_inducing
@@ -597,10 +602,10 @@ theorem set_to_L1_eq_set_to_L1s_clm (hT : dominated_fin_meas_additive μ T C) (f
     (set_to_L1s_clm α E μ hT).UniformContinuous _
 
 theorem set_to_L1_eq_set_to_L1' (hT : dominated_fin_meas_additive μ T C)
-  (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x) (f : α →₁[μ] E) : set_to_L1 hT f = set_to_L1' 𝕜 hT h_smul f :=
+  (h_smul : ∀ (c : 𝕜), ∀ s x, T s (c • x) = c • T s x) (f : α →₁[μ] E) : set_to_L1 hT f = set_to_L1' 𝕜 hT h_smul f :=
   rfl
 
-theorem set_to_L1_smul (hT : dominated_fin_meas_additive μ T C) (h_smul : ∀ c : 𝕜, ∀ s x, T s (c • x) = c • T s x)
+theorem set_to_L1_smul (hT : dominated_fin_meas_additive μ T C) (h_smul : ∀ (c : 𝕜), ∀ s x, T s (c • x) = c • T s x)
   (c : 𝕜) (f : α →₁[μ] E) : set_to_L1 hT (c • f) = c • set_to_L1 hT f :=
   by 
     rw [set_to_L1_eq_set_to_L1' hT h_smul, set_to_L1_eq_set_to_L1' hT h_smul]
@@ -759,12 +764,12 @@ theorem set_to_fun_indicator_const (hT : dominated_fin_meas_additive μ T C) {s 
     rw [L1.set_to_fun_eq_set_to_L1 hT]
     exact L1.set_to_L1_indicator_const_Lp hT hs hμs x
 
-@[continuity]
-theorem continuous_set_to_fun (hT : dominated_fin_meas_additive μ T C) :
-  Continuous fun f : α →₁[μ] E => set_to_fun hT f :=
-  by 
-    simpRw [L1.set_to_fun_eq_set_to_L1 hT]
-    exact ContinuousLinearMap.continuous _
+-- error in MeasureTheory.Integral.SetToL1: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]]
+theorem continuous_set_to_fun
+(hT : dominated_fin_meas_additive μ T C) : continuous (λ f : «expr →₁[ ] »(α, μ, E), set_to_fun hT f) :=
+by { simp_rw [expr L1.set_to_fun_eq_set_to_L1 hT] [],
+  exact [expr continuous_linear_map.continuous _] }
 
 theorem norm_set_to_fun_le_mul_norm (hT : dominated_fin_meas_additive μ T C) (f : α →₁[μ] E) (hC : 0 ≤ C) :
   ∥set_to_fun hT f∥ ≤ C*∥f∥ :=

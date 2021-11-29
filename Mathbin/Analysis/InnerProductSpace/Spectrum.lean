@@ -88,8 +88,9 @@ begin
   simpa [] [] [] ["[", expr inner_smul_left, ",", expr inner_smul_right, ",", expr hv, ",", expr hw, ",", expr H, "]"] [] ["using", expr (hT v w).symm]
 end
 
-theorem orthogonal_family_eigenspaces' : OrthogonalFamily 𝕜 fun μ : eigenvalues T => eigenspace T μ :=
-  hT.orthogonal_family_eigenspaces.comp Subtype.coe_injective
+-- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem orthogonal_family_eigenspaces' : orthogonal_family 𝕜 (λ μ : eigenvalues T, eigenspace T μ) :=
+hT.orthogonal_family_eigenspaces.comp subtype.coe_injective
 
 /-- The mutual orthogonal complement of the eigenspaces of a self-adjoint operator on an inner
 product space is an invariant subspace of the operator. -/
@@ -131,22 +132,26 @@ theorem orthogonal_supr_eigenspaces_eq_bot' : (⨆μ : eigenvalues T, eigenspace
 
 include dec_𝕜
 
+-- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The eigenspaces of a self-adjoint operator on a finite-dimensional inner product space `E` give
 an internal direct sum decomposition of `E`. -/
-theorem direct_sum_submodule_is_internal : DirectSum.SubmoduleIsInternal fun μ : eigenvalues T => eigenspace T μ :=
-  hT.orthogonal_family_eigenspaces'.submodule_is_internal_iff.mpr hT.orthogonal_supr_eigenspaces_eq_bot'
+theorem direct_sum_submodule_is_internal : direct_sum.submodule_is_internal (λ μ : eigenvalues T, eigenspace T μ) :=
+hT.orthogonal_family_eigenspaces'.submodule_is_internal_iff.mpr hT.orthogonal_supr_eigenspaces_eq_bot'
 
 section Version1
 
+-- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Isometry from an inner product space `E` to the direct sum of the eigenspaces of some
 self-adjoint operator `T` on `E`. -/
-noncomputable def diagonalization : E ≃ₗᵢ[𝕜] PiLp 2 fun μ : eigenvalues T => eigenspace T μ :=
-  hT.direct_sum_submodule_is_internal.isometry_L2_of_orthogonal_family hT.orthogonal_family_eigenspaces'
+noncomputable
+def diagonalization : «expr ≃ₗᵢ[ ] »(E, 𝕜, pi_Lp 2 (λ μ : eigenvalues T, eigenspace T μ)) :=
+hT.direct_sum_submodule_is_internal.isometry_L2_of_orthogonal_family hT.orthogonal_family_eigenspaces'
 
+-- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem diagonalization_symm_apply (w : PiLp 2 fun μ : eigenvalues T => eigenspace T μ) :
-  hT.diagonalization.symm w = ∑μ, w μ :=
-  hT.direct_sum_submodule_is_internal.isometry_L2_of_orthogonal_family_symm_apply hT.orthogonal_family_eigenspaces' w
+theorem diagonalization_symm_apply
+(w : pi_Lp 2 (λ μ : eigenvalues T, eigenspace T μ)) : «expr = »(hT.diagonalization.symm w, «expr∑ , »((μ), w μ)) :=
+hT.direct_sum_submodule_is_internal.isometry_L2_of_orthogonal_family_symm_apply hT.orthogonal_family_eigenspaces' w
 
 -- error in Analysis.InnerProductSpace.Spectrum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- *Diagonalization theorem*, *spectral theorem*; version 1: A self-adjoint operator `T` on a
@@ -236,7 +241,7 @@ theorem diagonalization_basis_apply_self_apply (v : E) (i : Finₓ n) :
   hT.diagonalization_basis hn (T v) i = hT.eigenvalues hn i*hT.diagonalization_basis hn v i :=
   by 
     suffices  :
-      ∀ w : EuclideanSpace 𝕜 (Finₓ n),
+      ∀ (w : EuclideanSpace 𝕜 (Finₓ n)),
         T ((hT.diagonalization_basis hn).symm w) = (hT.diagonalization_basis hn).symm fun i => hT.eigenvalues hn i*w i
     ·
       simpa [-diagonalization_basis_symm_apply] using

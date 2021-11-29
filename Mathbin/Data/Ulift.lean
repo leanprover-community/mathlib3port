@@ -28,7 +28,7 @@ instance  [IsEmpty α] : IsEmpty (Plift α) :=
   Equiv.plift.isEmpty
 
 @[simp]
-theorem forall {p : Plift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (Plift.up x) :=
+theorem forall {p : Plift α → Prop} : (∀ x, p x) ↔ ∀ (x : α), p (Plift.up x) :=
   Equiv.plift.forall_congr_left'
 
 @[simp]
@@ -54,7 +54,7 @@ instance  [IsEmpty α] : IsEmpty (Ulift α) :=
   Equiv.ulift.isEmpty
 
 @[simp]
-theorem forall {p : Ulift α → Prop} : (∀ x, p x) ↔ ∀ x : α, p (Ulift.up x) :=
+theorem forall {p : Ulift α → Prop} : (∀ x, p x) ↔ ∀ (x : α), p (Ulift.up x) :=
   Equiv.ulift.forall_congr_left'
 
 @[simp]

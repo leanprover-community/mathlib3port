@@ -61,7 +61,7 @@ theorem cof_le (r : α → α → Prop) [IsRefl α r] {S : Set α} (h : ∀ a, �
   le_transₓ (Cardinal.min_le _ ⟨S, h⟩) (le_reflₓ _)
 
 theorem le_cof {r : α → α → Prop} [IsRefl α r] (c : Cardinal) :
-  c ≤ Order.cof r ↔ ∀ {S : Set α} h : ∀ a, ∃ (b : _)(_ : b ∈ S), r a b, c ≤ # S :=
+  c ≤ Order.cof r ↔ ∀ {S : Set α} (h : ∀ a, ∃ (b : _)(_ : b ∈ S), r a b), c ≤ # S :=
   by 
     rw [Order.cof, Cardinal.le_min]
     exact ⟨fun H S h => H ⟨S, h⟩, fun H ⟨S, h⟩ => H h⟩
@@ -122,7 +122,7 @@ theorem cof_type (r : α → α → Prop) [IsWellOrder α r] : (type r).cof = St
   rfl
 
 theorem le_cof_type [IsWellOrder α r] {c} :
-  c ≤ cof (type r) ↔ ∀ S : Set α, (∀ a, ∃ (b : _)(_ : b ∈ S), ¬r b a) → c ≤ # S :=
+  c ≤ cof (type r) ↔ ∀ (S : Set α), (∀ a, ∃ (b : _)(_ : b ∈ S), ¬r b a) → c ≤ # S :=
   by 
     dsimp [cof, StrictOrder.cof, Order.cof, type, Quotientₓ.mk, Quot.liftOn] <;>
       rw [Cardinal.le_min, Subtype.forall] <;> rfl
@@ -130,7 +130,7 @@ theorem le_cof_type [IsWellOrder α r] {c} :
 theorem cof_type_le [IsWellOrder α r] (S : Set α) (h : ∀ a, ∃ (b : _)(_ : b ∈ S), ¬r b a) : cof (type r) ≤ # S :=
   le_cof_type.1 (le_reflₓ _) S h
 
-theorem lt_cof_type [IsWellOrder α r] (S : Set α) (hl : # S < cof (type r)) : ∃ a, ∀ b _ : b ∈ S, r b a :=
+theorem lt_cof_type [IsWellOrder α r] (S : Set α) (hl : # S < cof (type r)) : ∃ a, ∀ b (_ : b ∈ S), r b a :=
   not_forall_not.1$ fun h => not_le_of_lt hl$ cof_type_le S fun a => not_ball.1 (h a)
 
 -- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -437,14 +437,14 @@ theorem cof_sup_le {ι} (f : ι → Ordinal) (H : ∀ i, f i < sup.{u, u} f) : c
     simpa using cof_sup_le_lift.{u, u} f H
 
 theorem cof_bsup_le_lift {o : Ordinal} :
-  ∀ f : ∀ a _ : a < o, Ordinal, (∀ i h, f i h < bsup o f) → cof (bsup o f) ≤ o.card.lift :=
+  ∀ (f : ∀ a (_ : a < o), Ordinal), (∀ i h, f i h < bsup o f) → cof (bsup o f) ≤ o.card.lift :=
   induction_on o$
     fun α r _ f H =>
       by 
         rw [bsup_type] <;> refine' cof_sup_le_lift _ _ <;> rw [←bsup_type] <;> intro a <;> apply H
 
 theorem cof_bsup_le {o : Ordinal} :
-  ∀ f : ∀ a _ : a < o, Ordinal, (∀ i h, f i h < bsup.{u, u} o f) → cof (bsup.{u, u} o f) ≤ o.card :=
+  ∀ (f : ∀ a (_ : a < o), Ordinal), (∀ i h, f i h < bsup.{u, u} o f) → cof (bsup.{u, u} o f) ≤ o.card :=
   induction_on o$
     fun α r _ f H =>
       by 
@@ -570,7 +570,7 @@ theorem infinite_pigeonhole_card {β α : Type u} (f : β → α) (θ : Cardinal
     apply mk_preimage_of_injective _ _ Subtype.val_injective
 
 theorem infinite_pigeonhole_set {β α : Type u} {s : Set β} (f : s → α) (θ : Cardinal) (hθ : θ ≤ # s) (h₁ : ω ≤ θ)
-  (h₂ : # α < θ.ord.cof) : ∃ (a : α)(t : Set β)(h : t ⊆ s), θ ≤ # t ∧ ∀ ⦃x⦄ hx : x ∈ t, f ⟨x, h hx⟩ = a :=
+  (h₂ : # α < θ.ord.cof) : ∃ (a : α)(t : Set β)(h : t ⊆ s), θ ≤ # t ∧ ∀ ⦃x⦄ (hx : x ∈ t), f ⟨x, h hx⟩ = a :=
   by 
     cases' infinite_pigeonhole_card f θ hθ h₁ h₂ with a ha 
     refine' ⟨a, { x | ∃ h : x ∈ s, f ⟨x, h⟩ = a }, _, _, _⟩
@@ -598,12 +598,12 @@ local infixr:0 "^" => @pow Cardinal.{u} Cardinal Cardinal.hasPow
 /-- A cardinal is a limit if it is not zero or a successor
   cardinal. Note that `ω` is a limit cardinal by this definition. -/
 def is_limit (c : Cardinal) : Prop :=
-  c ≠ 0 ∧ ∀ x _ : x < c, succ x < c
+  c ≠ 0 ∧ ∀ x (_ : x < c), succ x < c
 
 /-- A cardinal is a strong limit if it is not zero and it is
   closed under powersets. Note that `ω` is a strong limit by this definition. -/
 def is_strong_limit (c : Cardinal) : Prop :=
-  c ≠ 0 ∧ ∀ x _ : x < c, (2^x) < c
+  c ≠ 0 ∧ ∀ x (_ : x < c), (2^x) < c
 
 theorem is_strong_limit.is_limit {c} (H : is_strong_limit c) : is_limit c :=
   ⟨H.1, fun x h => lt_of_le_of_ltₓ (succ_le.2$ cantor _) (H.2 _ h)⟩
@@ -628,7 +628,7 @@ theorem omega_is_regular : IsRegular ω :=
     by 
       simp ⟩
 
--- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in SetTheory.Cofinality: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem succ_is_regular {c : cardinal.{u}} (h : «expr ≤ »(exprω(), c)) : is_regular (succ c) :=
 ⟨le_trans h «expr $ »(le_of_lt, lt_succ_self _), begin
    refine [expr le_antisymm (cof_ord_le _) (succ_le.2 _)],
@@ -730,7 +730,8 @@ theorem sum_lt_of_is_regular {ι} (f : ι → Cardinal) {c} (hc : IsRegular c) (
 def is_inaccessible (c : Cardinal) :=
   ω < c ∧ IsRegular c ∧ is_strong_limit c
 
-theorem is_inaccessible.mk {c} (h₁ : ω < c) (h₂ : c ≤ c.ord.cof) (h₃ : ∀ x _ : x < c, (2^x) < c) : is_inaccessible c :=
+theorem is_inaccessible.mk {c} (h₁ : ω < c) (h₂ : c ≤ c.ord.cof) (h₃ : ∀ x (_ : x < c), (2^x) < c) :
+  is_inaccessible c :=
   ⟨h₁, ⟨le_of_ltₓ h₁, le_antisymmₓ (cof_ord_le _) h₂⟩, ne_of_gtₓ (lt_transₓ omega_pos h₁), h₃⟩
 
 theorem univ_inaccessible : is_inaccessible univ.{u, v} :=

@@ -33,7 +33,7 @@ def annihilator (N : Submodule R M) : Ideal R :=
 
 variable{I J : Ideal R}{N P : Submodule R M}
 
-theorem mem_annihilator {r} : r ∈ N.annihilator ↔ ∀ n _ : n ∈ N, r • n = (0 : M) :=
+theorem mem_annihilator {r} : r ∈ N.annihilator ↔ ∀ n (_ : n ∈ N), r • n = (0 : M) :=
   ⟨fun hr n hn => congr_argₓ Subtype.val (LinearMap.ext_iff.1 (LinearMap.mem_ker.1 hr) ⟨n, hn⟩),
     fun h => LinearMap.mem_ker.2$ LinearMap.ext$ fun n => Subtype.eq$ h n.1 n.2⟩
 
@@ -43,10 +43,13 @@ theorem mem_annihilator' {r} : r ∈ N.annihilator ↔ N ≤ comap (r • Linear
 theorem annihilator_bot : (⊥ : Submodule R M).annihilator = ⊤ :=
   (Ideal.eq_top_iff_one _).2$ mem_annihilator'.2 bot_le
 
-theorem annihilator_eq_top_iff : N.annihilator = ⊤ ↔ N = ⊥ :=
-  ⟨fun H =>
-      eq_bot_iff.2$ fun n : M hn => (mem_bot R).2$ one_smul R n ▸ mem_annihilator.1 ((Ideal.eq_top_iff_one _).1 H) n hn,
-    fun H => H.symm ▸ annihilator_bot⟩
+-- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem annihilator_eq_top_iff : «expr ↔ »(«expr = »(N.annihilator, «expr⊤»()), «expr = »(N, «expr⊥»())) :=
+⟨λ
+ H, «expr $ »(eq_bot_iff.2, λ
+  (n : M)
+  (hn), «expr $ »((mem_bot R).2, «expr ▸ »(one_smul R n, mem_annihilator.1 ((ideal.eq_top_iff_one _).1 H) n hn))), λ
+ H, «expr ▸ »(H.symm, annihilator_bot)⟩
 
 theorem annihilator_mono (h : N ≤ P) : P.annihilator ≤ N.annihilator :=
   fun r hrp => mem_annihilator.2$ fun n hn => mem_annihilator.1 hrp n$ h hn
@@ -63,13 +66,13 @@ theorem annihilator_supr (ι : Sort w) (f : ι → Submodule R M) : annihilator 
 theorem smul_mem_smul {r} {n} (hr : r ∈ I) (hn : n ∈ N) : r • n ∈ I • N :=
   (le_supr _ ⟨r, hr⟩ : _ ≤ I • N) ⟨n, hn, rfl⟩
 
-theorem smul_le {P : Submodule R M} : I • N ≤ P ↔ ∀ r _ : r ∈ I n _ : n ∈ N, r • n ∈ P :=
+theorem smul_le {P : Submodule R M} : I • N ≤ P ↔ ∀ r (_ : r ∈ I) n (_ : n ∈ N), r • n ∈ P :=
   ⟨fun H r hr n hn => H$ smul_mem_smul hr hn,
     fun H => supr_le$ fun r => map_le_iff_le_comap.2$ fun n hn => H r.1 r.2 n hn⟩
 
 @[elab_as_eliminator]
-theorem smul_induction_on {p : M → Prop} {x} (H : x ∈ I • N) (Hb : ∀ r _ : r ∈ I n _ : n ∈ N, p (r • n)) (H0 : p 0)
-  (H1 : ∀ x y, p x → p y → p (x+y)) (H2 : ∀ c : R n, p n → p (c • n)) : p x :=
+theorem smul_induction_on {p : M → Prop} {x} (H : x ∈ I • N) (Hb : ∀ r (_ : r ∈ I) n (_ : n ∈ N), p (r • n)) (H0 : p 0)
+  (H1 : ∀ x y, p x → p y → p (x+y)) (H2 : ∀ (c : R) n, p n → p (c • n)) : p x :=
   (@smul_le _ _ _ _ _ _ _ ⟨p, H0, H1, H2⟩).2 Hb H
 
 theorem mem_smul_span_singleton {I : Ideal R} {m : M} {x : M} :
@@ -210,7 +213,7 @@ variable{N N₁ N₂ P P₁ P₂ : Submodule R M}
 def colon (N P : Submodule R M) : Ideal R :=
   annihilator (P.map N.mkq)
 
-theorem mem_colon {r} : r ∈ N.colon P ↔ ∀ p _ : p ∈ P, r • p ∈ N :=
+theorem mem_colon {r} : r ∈ N.colon P ↔ ∀ p (_ : p ∈ P), r • p ∈ N :=
   mem_annihilator.trans
     ⟨fun H p hp => (quotient.mk_eq_zero N).1 (H (Quotientₓ.mk p) (mem_map_of_mem hp)),
       fun H m ⟨p, hp, hpm⟩ => hpm ▸ N.mkq.map_smul r p ▸ (quotient.mk_eq_zero N).2$ H p hp⟩
@@ -278,7 +281,7 @@ theorem pow_mem_pow {x : R} (hx : x ∈ I) (n : ℕ) : x ^ n ∈ I ^ n :=
       simp only [pow_zeroₓ, Ideal.one_eq_top]
     simpa only [pow_succₓ] using mul_mem_mul hx ih
 
-theorem mul_le : (I*J) ≤ K ↔ ∀ r _ : r ∈ I s _ : s ∈ J, (r*s) ∈ K :=
+theorem mul_le : (I*J) ≤ K ↔ ∀ r (_ : r ∈ I) s (_ : s ∈ J), (r*s) ∈ K :=
   Submodule.smul_le
 
 theorem mul_le_left : (I*J) ≤ J :=
@@ -342,11 +345,11 @@ theorem mem_span_singleton_mul {x y : R} {I : Ideal R} : (x ∈ span {y}*I) ↔ 
     simp only [mul_commₓ, mem_mul_span_singleton]
 
 theorem le_span_singleton_mul_iff {x : R} {I J : Ideal R} :
-  (I ≤ span {x}*J) ↔ ∀ zI _ : zI ∈ I, ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI :=
-  show (∀ {zI} hzI : zI ∈ I, zI ∈ span {x}*J) ↔ ∀ zI _ : zI ∈ I, ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI by 
+  (I ≤ span {x}*J) ↔ ∀ zI (_ : zI ∈ I), ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI :=
+  show (∀ {zI} (hzI : zI ∈ I), zI ∈ span {x}*J) ↔ ∀ zI (_ : zI ∈ I), ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI by 
     simp only [mem_span_singleton_mul]
 
-theorem span_singleton_mul_le_iff {x : R} {I J : Ideal R} : (span {x}*I) ≤ J ↔ ∀ z _ : z ∈ I, (x*z) ∈ J :=
+theorem span_singleton_mul_le_iff {x : R} {I J : Ideal R} : (span {x}*I) ≤ J ↔ ∀ z (_ : z ∈ I), (x*z) ∈ J :=
   by 
     simp only [mul_le, mem_span_singleton_mul, mem_span_singleton]
     split 
@@ -359,18 +362,19 @@ theorem span_singleton_mul_le_iff {x : R} {I J : Ideal R} : (span {x}*I) ≤ J �
       exact J.mul_mem_left _ (h zI hzI)
 
 theorem span_singleton_mul_le_span_singleton_mul {x y : R} {I J : Ideal R} :
-  ((span {x}*I) ≤ span {y}*J) ↔ ∀ zI _ : zI ∈ I, ∃ (zJ : _)(_ : zJ ∈ J), (x*zI) = y*zJ :=
+  ((span {x}*I) ≤ span {y}*J) ↔ ∀ zI (_ : zI ∈ I), ∃ (zJ : _)(_ : zJ ∈ J), (x*zI) = y*zJ :=
   by 
     simp only [span_singleton_mul_le_iff, mem_span_singleton_mul, eq_comm]
 
 theorem eq_span_singleton_mul {x : R} (I J : Ideal R) :
-  (I = span {x}*J) ↔ (∀ zI _ : zI ∈ I, ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI) ∧ ∀ z _ : z ∈ J, (x*z) ∈ I :=
+  (I = span {x}*J) ↔ (∀ zI (_ : zI ∈ I), ∃ (zJ : _)(_ : zJ ∈ J), (x*zJ) = zI) ∧ ∀ z (_ : z ∈ J), (x*z) ∈ I :=
   by 
     simp only [le_antisymm_iffₓ, le_span_singleton_mul_iff, span_singleton_mul_le_iff]
 
 theorem span_singleton_mul_eq_span_singleton_mul {x y : R} (I J : Ideal R) :
   ((span {x}*I) = span {y}*J) ↔
-    (∀ zI _ : zI ∈ I, ∃ (zJ : _)(_ : zJ ∈ J), (x*zI) = y*zJ) ∧ ∀ zJ _ : zJ ∈ J, ∃ (zI : _)(_ : zI ∈ I), (x*zI) = y*zJ :=
+    (∀ zI (_ : zI ∈ I), ∃ (zJ : _)(_ : zJ ∈ J), (x*zI) = y*zJ) ∧
+      ∀ zJ (_ : zJ ∈ J), ∃ (zI : _)(_ : zI ∈ I), (x*zI) = y*zJ :=
   by 
     simp only [le_antisymm_iffₓ, span_singleton_mul_le_span_singleton_mul, eq_comm]
 
@@ -390,7 +394,7 @@ theorem finset_inf_span_singleton {ι : Type _} (s : Finset ι) (I : ι → R)
     simp only [Submodule.mem_finset_inf, Ideal.mem_span_singleton]
     exact ⟨Finset.prod_dvd_of_coprime hI, fun h i hi => (Finset.dvd_prod_of_mem _ hi).trans h⟩
 
-theorem infi_span_singleton {ι : Type _} [Fintype ι] (I : ι → R) (hI : ∀ i j hij : i ≠ j, IsCoprime (I i) (I j)) :
+theorem infi_span_singleton {ι : Type _} [Fintype ι] (I : ι → R) (hI : ∀ i j (hij : i ≠ j), IsCoprime (I i) (I j)) :
   (⨅i, Ideal.span ({I i} : Set R)) = Ideal.span {∏i, I i} :=
   by 
     rw [←Finset.inf_univ_eq_infi, finset_inf_span_singleton]
@@ -491,7 +495,7 @@ def radical (I : Ideal R) : Ideal R :=
       fun x y ⟨m, hxmi⟩ ⟨n, hyni⟩ =>
         ⟨m+n,
           (add_pow x y (m+n)).symm ▸ I.sum_mem$
-            show ∀ c _ : c ∈ Finset.range (Nat.succ (m+n)), (((x ^ c)*y ^ ((m+n) - c))*Nat.choose (m+n) c) ∈ I from
+            show ∀ c (_ : c ∈ Finset.range (Nat.succ (m+n))), (((x ^ c)*y ^ ((m+n) - c))*Nat.choose (m+n) c) ∈ I from
               fun c hc =>
                 Or.cases_on (le_totalₓ c m)
                   (fun hcm =>
@@ -575,7 +579,7 @@ theorem radical_eq_Inf (I : Ideal R) : radical I = Inf { J:Ideal R | I ≤ J ∧
                     hc hyc ⟨n, hrny⟩,
                   fun z => le_Sup⟩)
               I hri 
-          have  : ∀ x _ : x ∉ m, r ∈ radical (m⊔span {x}) :=
+          have  : ∀ x (_ : x ∉ m), r ∈ radical (m⊔span {x}) :=
             fun x hxm =>
               Classical.by_contradiction$
                 fun hrmx =>
@@ -1431,14 +1435,14 @@ def ker_lift (f : R →+* S) : f.ker.quotient →+* S :=
 theorem ker_lift_mk (f : R →+* S) (r : R) : ker_lift f (Ideal.Quotient.mk f.ker r) = f r :=
   Ideal.Quotient.lift_mk _ _ _
 
+-- error in RingTheory.Ideal.Operations: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The induced map from the quotient by the kernel is injective. -/
-theorem ker_lift_injective (f : R →+* S) : Function.Injective (ker_lift f) :=
-  fun a b =>
-    Quotientₓ.induction_on₂' a b$
-      fun a b h : f a = f b =>
-        Quotientₓ.sound'$
-          show a - b ∈ ker f by 
-            rw [mem_ker, map_sub, h, sub_self]
+theorem ker_lift_injective (f : «expr →+* »(R, S)) : function.injective (ker_lift f) :=
+assume
+a
+b, «expr $ »(quotient.induction_on₂' a b, assume
+ (a b)
+ (h : «expr = »(f a, f b)), «expr $ »(quotient.sound', show «expr ∈ »(«expr - »(a, b), ker f), by rw ["[", expr mem_ker, ",", expr map_sub, ",", expr h, ",", expr sub_self, "]"] []))
 
 variable{f}
 

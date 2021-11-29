@@ -50,7 +50,9 @@ open_locale nonZeroDivisors
 
 universe u v
 
-variable(K : Type u)[Field K]
+variable(K : Type u)[hring : CommRingₓ K][hdomain : IsDomain K]
+
+include hring
 
 /-- `ratfunc K` is `K(x)`, the field of rational functions over `K`.
 
@@ -75,6 +77,8 @@ theorem of_fraction_ring_injective : Function.Injective (of_fraction_ring : _ �
 
 theorem to_fraction_ring_injective : Function.Injective (to_fraction_ring : _ → FractionRing (Polynomial K))
 | ⟨x⟩, ⟨y⟩, rfl => rfl
+
+include hdomain
 
 /-- `ratfunc.mk (p q : polynomial K)` is `p / q` as a rational function.
 
@@ -132,16 +136,16 @@ The value of `f p 0` for any `p` is never used and in principle this may be anyt
 although many usages of `lift_on` assume `f p 0 = f 0 1`.
 -/
 @[irreducible]
-protected def lift_on {P : Sort v} (x : Ratfunc K) (f : ∀ p q : Polynomial K, P)
-  (H : ∀ {p q p' q'} hq : q ≠ 0 hq' : q' ≠ 0, ((p*q') = p'*q) → f p q = f p' q') : P :=
+protected def lift_on {P : Sort v} (x : Ratfunc K) (f : ∀ (p q : Polynomial K), P)
+  (H : ∀ {p q p' q'} (hq : q ≠ 0) (hq' : q' ≠ 0), ((p*q') = p'*q) → f p q = f p' q') : P :=
   Localization.liftOn (to_fraction_ring x) (fun p q => f p q)
     fun p p' q q' h =>
       H (mem_non_zero_divisors_iff_ne_zero.mp q.2) (mem_non_zero_divisors_iff_ne_zero.mp q'.2)
         (let ⟨⟨c, hc⟩, mul_eq⟩ := Localization.r_iff_exists.mp h
         (mul_eq_mul_right_iff.mp mul_eq).resolve_right (mem_non_zero_divisors_iff_ne_zero.mp hc))
 
-theorem lift_on_mk {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K, P) (f0 : ∀ p, f p 0 = f 0 1)
-  (H : ∀ {p q p' q'} hq : q ≠ 0 hq' : q' ≠ 0, ((p*q') = p'*q) → f p q = f p' q') :
+theorem lift_on_mk {P : Sort v} (p q : Polynomial K) (f : ∀ (p q : Polynomial K), P) (f0 : ∀ p, f p 0 = f 0 1)
+  (H : ∀ {p q p' q'} (hq : q ≠ 0) (hq' : q' ≠ 0), ((p*q') = p'*q) → f p q = f p' q') :
   (Ratfunc.mk p q).liftOn f @H = f p q :=
   by 
     unfold Ratfunc.liftOn 
@@ -188,8 +192,8 @@ x.lift_on f (λ p q p' q' hq hq' h, begin
      «expr = »(..., f p' q') : H hq' hp
  end)
 
-theorem lift_on'_mk {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K, P) (f0 : ∀ p, f p 0 = f 0 1)
-  (H : ∀ {p q a} hq : q ≠ 0 ha : a ≠ 0, f (a*p) (a*q) = f p q) : (Ratfunc.mk p q).liftOn' f @H = f p q :=
+theorem lift_on'_mk {P : Sort v} (p q : Polynomial K) (f : ∀ (p q : Polynomial K), P) (f0 : ∀ p, f p 0 = f 0 1)
+  (H : ∀ {p q a} (hq : q ≠ 0) (ha : a ≠ 0), f (a*p) (a*q) = f p q) : (Ratfunc.mk p q).liftOn' f @H = f p q :=
   by 
     rw [Ratfunc.liftOn', Ratfunc.lift_on_mk _ _ _ f0]
 
@@ -200,7 +204,7 @@ See also `induction_on`, which is a recursion principle defined in terms of `alg
 -/
 @[irreducible]
 protected theorem induction_on' {P : Ratfunc K → Prop} :
-  ∀ x : Ratfunc K f : ∀ p q : Polynomial K hq : q ≠ 0, P (Ratfunc.mk p q), P x
+  ∀ (x : Ratfunc K) (f : ∀ (p q : Polynomial K) (hq : q ≠ 0), P (Ratfunc.mk p q)), P x
 | ⟨x⟩, f =>
   Localization.induction_on x
     fun ⟨p, q⟩ =>
@@ -289,6 +293,8 @@ theorem of_fraction_ring_mul (p q : FractionRing (Polynomial K)) :
   by 
     unfold Mul.mul Ratfunc.mul
 
+include hdomain
+
 /-- Division of rational functions. -/
 @[irreducible]
 protected def div : Ratfunc K → Ratfunc K → Ratfunc K
@@ -314,7 +320,7 @@ theorem of_fraction_ring_inv (p : FractionRing (Polynomial K)) : of_fraction_rin
   by 
     unfold HasInv.inv Ratfunc.inv
 
-theorem mul_inv_cancel : ∀ {p : Ratfunc K} hp : p ≠ 0, (p*p⁻¹) = 1
+theorem mul_inv_cancel : ∀ {p : Ratfunc K} (hp : p ≠ 0), (p*p⁻¹) = 1
 | ⟨p⟩, h =>
   have  : p ≠ 0 :=
     fun hp =>
@@ -328,7 +334,9 @@ section HasScalar
 
 variable{R : Type _}[Monoidₓ R][DistribMulAction R (Polynomial K)]
 
-variable[IsScalarTower R (Polynomial K) (Polynomial K)]
+variable[htower : IsScalarTower R (Polynomial K) (Polynomial K)]
+
+include htower
 
 instance  : HasScalar R (Ratfunc K) :=
   ⟨fun c p =>
@@ -358,14 +366,18 @@ end HasScalar
 
 variable(K)
 
+omit hdomain
+
 instance  : Inhabited (Ratfunc K) :=
   ⟨0⟩
 
-instance  : Nontrivial (Ratfunc K) :=
+instance  [IsDomain K] : Nontrivial (Ratfunc K) :=
   ⟨⟨0, 1,
       mt (congr_argₓ to_fraction_ring)$
         by 
           simpa only [←of_fraction_ring_zero, ←of_fraction_ring_one] using zero_ne_one⟩⟩
+
+omit hring
 
 /-- Solve equations for `ratfunc K` by working in `fraction_ring (polynomial K)`. -/
 unsafe def frac_tac : tactic Unit :=
@@ -374,6 +386,8 @@ unsafe def frac_tac : tactic Unit :=
 /-- Solve equations for `ratfunc K` by applying `ratfunc.induction_on`. -/
 unsafe def smul_tac : tactic Unit :=
   sorry
+
+include hring hdomain
 
 instance  : Field (Ratfunc K) :=
   { Ratfunc.nontrivial K with add := ·+·,
@@ -471,6 +485,8 @@ section IsFractionRing
 /-! ### `ratfunc` as field of fractions of `polynomial` -/
 
 
+include hdomain
+
 instance  (R : Type _) [CommSemiringₓ R] [Algebra R (Polynomial K)] : Algebra R (Ratfunc K) :=
   { toFun := fun x => Ratfunc.mk (algebraMap _ _ x) 1,
     map_add' :=
@@ -537,6 +553,8 @@ theorem algebra_map_ne_zero {x : Polynomial K} (hx : x ≠ 0) : algebraMap (Poly
 
 variable(K)
 
+omit hdomain
+
 /-- `ratfunc K` is isomorphic to the field of fractions of `polynomial K`, as rings.
 
 This is an auxiliary definition; `simp`-normal form is `is_localization.alg_equiv`.
@@ -544,6 +562,8 @@ This is an auxiliary definition; `simp`-normal form is `is_localization.alg_equi
 def aux_equiv : FractionRing (Polynomial K) ≃+* Ratfunc K :=
   { toFun := of_fraction_ring, invFun := to_fraction_ring, left_inv := fun x => rfl, right_inv := fun ⟨x⟩ => rfl,
     map_add' := of_fraction_ring_add, map_mul' := of_fraction_ring_mul }
+
+include hdomain
 
 /-- `ratfunc K` is the field of fractions of the polynomials over `K`. -/
 instance  : IsFractionRing (Polynomial K) (Ratfunc K) :=
@@ -567,14 +587,14 @@ instance  : IsFractionRing (Polynomial K) (Ratfunc K) :=
 variable{K}
 
 @[simp]
-theorem lift_on_div {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K, P) (f0 : ∀ p, f p 0 = f 0 1)
-  (H : ∀ {p q p' q'} hq : q ≠ 0 hq' : q' ≠ 0, ((p*q') = p'*q) → f p q = f p' q') :
+theorem lift_on_div {P : Sort v} (p q : Polynomial K) (f : ∀ (p q : Polynomial K), P) (f0 : ∀ p, f p 0 = f 0 1)
+  (H : ∀ {p q p' q'} (hq : q ≠ 0) (hq' : q' ≠ 0), ((p*q') = p'*q) → f p q = f p' q') :
   (algebraMap _ (Ratfunc K) p / algebraMap _ _ q).liftOn f @H = f p q :=
   by 
     rw [←mk_eq_div, lift_on_mk _ _ f f0 @H]
 
 @[simp]
-theorem lift_on'_div {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial K, P) (f0 : ∀ p, f p 0 = f 0 1) H :
+theorem lift_on'_div {P : Sort v} (p q : Polynomial K) (f : ∀ (p q : Polynomial K), P) (f0 : ∀ p, f p 0 = f 0 1) H :
   (algebraMap _ (Ratfunc K) p / algebraMap _ _ q).liftOn' f @H = f p q :=
   by 
     rw [Ratfunc.liftOn', lift_on_div]
@@ -586,7 +606,7 @@ then `P` holds on all elements of `ratfunc K`.
 See also `induction_on'`, which is a recursion principle defined in terms of `ratfunc.mk`.
 -/
 protected theorem induction_on {P : Ratfunc K → Prop} (x : Ratfunc K)
-  (f : ∀ p q : Polynomial K hq : q ≠ 0, P (algebraMap _ (Ratfunc K) p / algebraMap _ _ q)) : P x :=
+  (f : ∀ (p q : Polynomial K) (hq : q ≠ 0), P (algebraMap _ (Ratfunc K) p / algebraMap _ _ q)) : P x :=
   x.induction_on'
     fun p q hq =>
       by 
@@ -636,8 +656,14 @@ section NumDenom
 
 open GcdMonoid Polynomial
 
+omit hring
+
+variable[hfield : Field K]
+
+include hfield
+
 -- error in FieldTheory.Ratfunc: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- `ratfunc.num_denom` are numerator and denominator of a rational function,
+/-- `ratfunc.num_denom` are numerator and denominator of a rational function over a field,
 normalized such that the denominator is monic. -/
 def num_denom (x : ratfunc K) : «expr × »(polynomial K, polynomial K) :=
 x.lift_on' (λ p q, if «expr = »(q, 0) then ⟨0, 1⟩ else let r := gcd p q in
@@ -868,6 +894,8 @@ section Eval
 /-! ### Polynomial structure: `C`, `X`, `eval` -/
 
 
+include hdomain
+
 /-- `ratfunc.C a` is the constant rational function `a`. -/
 def C : K →+* Ratfunc K :=
   algebraMap _ _
@@ -884,14 +912,6 @@ theorem algebra_map_C (a : K) : algebraMap (Polynomial K) (Ratfunc K) (Polynomia
 theorem algebra_map_comp_C : (algebraMap (Polynomial K) (Ratfunc K)).comp Polynomial.c = C :=
   rfl
 
-@[simp]
-theorem num_C (c : K) : Num (C c) = Polynomial.c c :=
-  num_algebra_map _
-
-@[simp]
-theorem denom_C (c : K) : denom (C c) = 1 :=
-  denom_algebra_map _
-
 /-- `ratfunc.X` is the polynomial variable (aka indeterminate). -/
 def X : Ratfunc K :=
   algebraMap (Polynomial K) (Ratfunc K) Polynomial.x
@@ -899,6 +919,20 @@ def X : Ratfunc K :=
 @[simp]
 theorem algebra_map_X : algebraMap (Polynomial K) (Ratfunc K) Polynomial.x = X :=
   rfl
+
+omit hring hdomain
+
+variable[hfield : Field K]
+
+include hfield
+
+@[simp]
+theorem num_C (c : K) : Num (C c) = Polynomial.c c :=
+  num_algebra_map _
+
+@[simp]
+theorem denom_C (c : K) : denom (C c) = 1 :=
+  denom_algebra_map _
 
 @[simp]
 theorem num_X : Num (X : Ratfunc K) = Polynomial.x :=

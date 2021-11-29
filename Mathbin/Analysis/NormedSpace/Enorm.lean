@@ -37,8 +37,8 @@ open_locale Ennreal
 structure Enorm(𝕜 : Type _)(V : Type _)[NormedField 𝕜][AddCommGroupₓ V][Module 𝕜 V] where 
   toFun : V → ℝ≥0∞
   eq_zero' : ∀ x, to_fun x = 0 → x = 0
-  map_add_le' : ∀ x y : V, to_fun (x+y) ≤ to_fun x+to_fun y 
-  map_smul_le' : ∀ c : 𝕜 x : V, to_fun (c • x) ≤ nnnorm c*to_fun x
+  map_add_le' : ∀ (x y : V), to_fun (x+y) ≤ to_fun x+to_fun y 
+  map_smul_le' : ∀ (c : 𝕜) (x : V), to_fun (c • x) ≤ nnnorm c*to_fun x
 
 namespace Enorm
 
@@ -158,8 +158,8 @@ noncomputable instance  : OrderTop (Enorm 𝕜 V) :=
           by 
             simp [top_map h] }
 
-noncomputable instance  : SemilatticeSupTop (Enorm 𝕜 V) :=
-  { Enorm.orderTop, Enorm.partialOrder with le := · ≤ ·, lt := · < ·,
+noncomputable instance  : SemilatticeSup (Enorm 𝕜 V) :=
+  { Enorm.partialOrder with le := · ≤ ·, lt := · < ·,
     sup :=
       fun e₁ e₂ =>
         { toFun := fun x => max (e₁ x) (e₂ x), eq_zero' := fun x h => e₁.eq_zero_iff.1 (Ennreal.max_eq_zero_iff.1 h).1,
@@ -203,18 +203,14 @@ def EmetricSpace : EmetricSpace V :=
           _ ≤ e (x - y)+e (y - z) := e.map_add_le (x - y) (y - z)
            }
 
-/-- The subspace of vectors with finite enorm. -/
-def finite_subspace : Subspace 𝕜 V :=
-  { Carrier := { x | e x < ⊤ },
-    zero_mem' :=
-      by 
-        simp ,
-    add_mem' := fun x y hx hy => lt_of_le_of_ltₓ (e.map_add_le x y) (Ennreal.add_lt_top.2 ⟨hx, hy⟩),
-    smul_mem' :=
-      fun c x hx : _ < _ =>
-        calc e (c • x) = nnnorm c*e x := e.map_smul c x 
-          _ < ⊤ := Ennreal.mul_lt_top Ennreal.coe_ne_top hx.ne
-           }
+-- error in Analysis.NormedSpace.Enorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The subspace of vectors with finite enorm. -/ def finite_subspace : subspace 𝕜 V :=
+{ carrier := {x | «expr < »(e x, «expr⊤»())},
+  zero_mem' := by simp [] [] [] [] [] [],
+  add_mem' := λ x y hx hy, lt_of_le_of_lt (e.map_add_le x y) (ennreal.add_lt_top.2 ⟨hx, hy⟩),
+  smul_mem' := λ (c x) (hx : «expr < »(_, _)), calc
+    «expr = »(e «expr • »(c, x), «expr * »(nnnorm c, e x)) : e.map_smul c x
+    «expr < »(..., «expr⊤»()) : ennreal.mul_lt_top ennreal.coe_ne_top hx.ne }
 
 -- error in Analysis.NormedSpace.Enorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Metric space structure on `e.finite_subspace`. We use `emetric_space.to_metric_space_of_dist`

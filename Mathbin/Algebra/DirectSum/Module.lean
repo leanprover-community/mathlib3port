@@ -52,11 +52,11 @@ include dec_ι
 variable(R ι M)
 
 /-- Create the direct sum given a family `M` of `R` modules indexed over `ι`. -/
-def lmk : ∀ s : Finset ι, (∀ i : («expr↑ » s : Set ι), M i.val) →ₗ[R] ⨁i, M i :=
+def lmk : ∀ (s : Finset ι), (∀ (i : («expr↑ » s : Set ι)), M i.val) →ₗ[R] ⨁i, M i :=
   Dfinsupp.lmk
 
 /-- Inclusion of each component into the direct sum. -/
-def lof : ∀ i : ι, M i →ₗ[R] ⨁i, M i :=
+def lof : ∀ (i : ι), M i →ₗ[R] ⨁i, M i :=
   Dfinsupp.lsingle
 
 theorem lof_eq_of (i : ι) (b : M i) : lof R ι M i b = of M i b :=
@@ -77,7 +77,7 @@ theorem of_smul (i : ι) (c : R) x : of M i (c • x) = c • of M i x :=
 
 variable{R}
 
-theorem support_smul [∀ i : ι x : M i, Decidable (x ≠ 0)] (c : R) (v : ⨁i, M i) : (c • v).support ⊆ v.support :=
+theorem support_smul [∀ (i : ι) (x : M i), Decidable (x ≠ 0)] (c : R) (v : ⨁i, M i) : (c • v).support ⊆ v.support :=
   Dfinsupp.support_smul _ _
 
 variable{N : Type u₁}[AddCommMonoidₓ N][Module R N]
@@ -120,12 +120,15 @@ See note [partially-applied ext lemmas]. -/
 theorem linear_map_ext ⦃ψ ψ' : (⨁i, M i) →ₗ[R] N⦄ (H : ∀ i, ψ.comp (lof R ι M i) = ψ'.comp (lof R ι M i)) : ψ = ψ' :=
   Dfinsupp.lhom_ext' H
 
+-- error in Algebra.DirectSum.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The inclusion of a subset of the direct summands
 into a larger subset of the direct summands, as a linear map.
 -/
-def lset_to_set (S T : Set ι) (H : S ⊆ T) : (⨁i : S, M i) →ₗ[R] ⨁i : T, M i :=
-  to_module R _ _$ fun i => lof R T (fun i : Subtype T => M i) ⟨i, H i.prop⟩
+def lset_to_set
+(S T : set ι)
+(H : «expr ⊆ »(S, T)) : «expr →ₗ[ ] »(«expr⨁ , »((i : S), M i), R, «expr⨁ , »((i : T), M i)) :=
+«expr $ »(to_module R _ _, λ i, lof R T (λ i : subtype T, M i) ⟨i, H i.prop⟩)
 
 omit dec_ι
 
@@ -270,17 +273,18 @@ noncomputable def submodule_is_internal.collected_basis (h : submodule_is_intern
           Dfinsupp.mapRange.linearEquiv fun i => (v i).repr) ≪≫ₗ
         (sigmaFinsuppLequivDfinsupp R).symm }
 
+-- error in Algebra.DirectSum.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem submodule_is_internal.collected_basis_coe (h : submodule_is_internal A) {α : ι → Type _}
-  (v : ∀ i, Basis (α i) R (A i)) : «expr⇑ » (h.collected_basis v) = fun a : Σi, α i => «expr↑ » (v a.1 a.2) :=
-  by 
-    funext a 
-    simp only [submodule_is_internal.collected_basis, to_module, submodule_coe, AddEquiv.to_fun_eq_coe,
-      Basis.coe_of_repr, Basis.repr_symm_apply, Dfinsupp.lsum_apply_apply, Dfinsupp.mapRange.linear_equiv_apply,
-      Dfinsupp.mapRange.linear_equiv_symm, Dfinsupp.map_range_single, Finsupp.total_single,
-      LinearEquiv.of_bijective_apply, LinearEquiv.symm_symm, LinearEquiv.symm_trans_apply, one_smul,
-      sigma_finsupp_add_equiv_dfinsupp_apply, sigma_finsupp_equiv_dfinsupp_single, sigma_finsupp_lequiv_dfinsupp_apply]
-    convert Dfinsupp.sum_add_hom_single (fun i => (A i).Subtype.toAddMonoidHom) a.1 (v a.1 a.2)
+theorem submodule_is_internal.collected_basis_coe
+(h : submodule_is_internal A)
+{α : ι → Type*}
+(v : ∀
+ i, basis (α i) R (A i)) : «expr = »(«expr⇑ »(h.collected_basis v), λ a : «exprΣ , »((i), α i), «expr↑ »(v a.1 a.2)) :=
+begin
+  funext [ident a],
+  simp [] [] ["only"] ["[", expr submodule_is_internal.collected_basis, ",", expr to_module, ",", expr submodule_coe, ",", expr add_equiv.to_fun_eq_coe, ",", expr basis.coe_of_repr, ",", expr basis.repr_symm_apply, ",", expr dfinsupp.lsum_apply_apply, ",", expr dfinsupp.map_range.linear_equiv_apply, ",", expr dfinsupp.map_range.linear_equiv_symm, ",", expr dfinsupp.map_range_single, ",", expr finsupp.total_single, ",", expr linear_equiv.of_bijective_apply, ",", expr linear_equiv.symm_symm, ",", expr linear_equiv.symm_trans_apply, ",", expr one_smul, ",", expr sigma_finsupp_add_equiv_dfinsupp_apply, ",", expr sigma_finsupp_equiv_dfinsupp_single, ",", expr sigma_finsupp_lequiv_dfinsupp_apply, "]"] [] [],
+  convert [] [expr dfinsupp.sum_add_hom_single (λ i, (A i).subtype.to_add_monoid_hom) a.1 (v a.1 a.2)] []
+end
 
 theorem submodule_is_internal.collected_basis_mem (h : submodule_is_internal A) {α : ι → Type _}
   (v : ∀ i, Basis (α i) R (A i)) (a : Σi, α i) : h.collected_basis v a ∈ A a.1 :=

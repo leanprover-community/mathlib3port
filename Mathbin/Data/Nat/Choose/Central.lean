@@ -103,7 +103,7 @@ An exponential lower bound on the central binomial coefficient.
 This bound is weaker than `four_pow_n_lt_n_mul_central_binom`, but it is of historical interest
 because it appears in Erdős's proof of Bertrand's postulate.
 -/
-theorem four_pow_le_two_mul_self_mul_central_binom : ∀ n : ℕ n_pos : 0 < n, 4 ^ n ≤ (2*n)*central_binom n
+theorem four_pow_le_two_mul_self_mul_central_binom : ∀ (n : ℕ) (n_pos : 0 < n), 4 ^ n ≤ (2*n)*central_binom n
 | 0, pr => (Nat.not_lt_zeroₓ _ pr).elim
 | 1, pr =>
   by 

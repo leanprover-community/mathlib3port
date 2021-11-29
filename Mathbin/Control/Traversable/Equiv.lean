@@ -151,12 +151,12 @@ protected def IsLawfulTraversable : @IsLawfulTraversable t' (Equiv.traversable e
 carrying the traversable functor structure from `t` over the
 equivalences, then the fact that `t` is a lawful traversable functor
 carries over as well. -/
-protected def is_lawful_traversable' [_i : Traversable t'] (h₀ : ∀ {α β} f : α → β, map f = Equiv.map eqv f)
-  (h₁ : ∀ {α β} f : β, map_const f = (Equiv.map eqv ∘ Function.const α) f)
+protected def is_lawful_traversable' [_i : Traversable t'] (h₀ : ∀ {α β} (f : α → β), map f = Equiv.map eqv f)
+  (h₁ : ∀ {α β} (f : β), map_const f = (Equiv.map eqv ∘ Function.const α) f)
   (h₂ :
     ∀ {F : Type u → Type u} [Applicativeₓ F],
       by 
-        exact ∀ [IsLawfulApplicative F] {α β} f : α → F β, traverse f = Equiv.traverse eqv f) :
+        exact ∀ [IsLawfulApplicative F] {α β} (f : α → F β), traverse f = Equiv.traverse eqv f) :
   _root_.is_lawful_traversable t' :=
   by 
     refine' { to_is_lawful_functor := Equiv.is_lawful_functor' eqv @h₀ @h₁, .. } <;> intros 

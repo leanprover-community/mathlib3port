@@ -123,14 +123,13 @@ theorem const_smul [HasScalar 𝕜 β] [HasMeasurableSmul 𝕜 β] (c : 𝕜) (h
     refine' ⟨c • f', @Measurable.const_smul _ _ _ _ _ _ m _ f' h_f'_meas c, _⟩
     exact eventually_eq.fun_comp hff' fun x => c • x
 
-theorem const_inner [IsROrC 𝕜] [BorelSpace 𝕜] [InnerProductSpace 𝕜 β] [second_countable_topology β]
-  [OpensMeasurableSpace β] {f : α → β} (hfm : ae_measurable' m f μ) (c : β) :
-  ae_measurable' m (fun x => (inner c (f x) : 𝕜)) μ :=
+theorem const_inner {𝕜} [IsROrC 𝕜] [InnerProductSpace 𝕜 β] [second_countable_topology β] [OpensMeasurableSpace β]
+  {f : α → β} (hfm : ae_measurable' m f μ) (c : β) : ae_measurable' m (fun x => (inner c (f x) : 𝕜)) μ :=
   by 
     rcases hfm with ⟨f', hf'_meas, hf_ae⟩
     refine'
-      ⟨fun x => (inner c (f' x) : 𝕜),
-        @Measurable.inner _ _ _ _ _ m _ _ _ _ _ _ _ (@measurable_const _ _ _ m _) hf'_meas, hf_ae.mono fun x hx => _⟩
+      ⟨fun x => (inner c (f' x) : 𝕜), @Measurable.inner _ _ _ _ _ m _ _ _ _ _ (@measurable_const _ _ _ m _) hf'_meas,
+        hf_ae.mono fun x hx => _⟩
     dsimp only 
     rw [hx]
 
@@ -174,7 +173,6 @@ variable{α β γ E E' F F' G G' H 𝕜 :
     Type
       _}{p :
     ℝ≥0∞}[IsROrC
-      𝕜][MeasurableSpace
       𝕜][MeasurableSpace
       β][InnerProductSpace 𝕜
       E][MeasurableSpace
@@ -261,10 +259,17 @@ theorem Lp_meas_subgroup_coe {m m0 : MeasurableSpace α} {μ : Measureₓ α} {f
 theorem Lp_meas_coe {m m0 : MeasurableSpace α} {μ : Measureₓ α} {f : Lp_meas F 𝕜 m p μ} : «expr⇑ » f = (f : Lp F p μ) :=
   coe_fn_coe_base f
 
-theorem mem_Lp_meas_indicator_const_Lp {m m0 : MeasurableSpace α} (hm : m ≤ m0) {μ : Measureₓ α} {s : Set α}
-  (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) {c : F} : indicator_const_Lp p (hm s hs) hμs c ∈ Lp_meas F 𝕜 m p μ :=
-  ⟨s.indicator fun x : α => c, @Measurable.indicator α _ m _ _ s (fun x => c) (@measurable_const _ α _ m _) hs,
-    indicator_const_Lp_coe_fn⟩
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_Lp_meas_indicator_const_Lp
+{m m0 : measurable_space α}
+(hm : «expr ≤ »(m, m0))
+{μ : measure α}
+{s : set α}
+(hs : «exprmeasurable_set[ ]»(m) s)
+(hμs : «expr ≠ »(μ s, «expr∞»()))
+{c : F} : «expr ∈ »(indicator_const_Lp p (hm s hs) hμs c, Lp_meas F 𝕜 m p μ) :=
+⟨s.indicator (λ
+  x : α, c), @measurable.indicator α _ m _ _ s (λ x, c) (@measurable_const _ α _ m _) hs, indicator_const_Lp_coe_fn⟩
 
 section CompleteSubspace
 
@@ -521,7 +526,7 @@ section UniquenessOfConditionalExpectation
 /-! ## Uniqueness of the conditional expectation -/
 
 
-variable{m m0 : MeasurableSpace α}{μ : Measureₓ α}[BorelSpace 𝕜]
+variable{m m0 : MeasurableSpace α}{μ : Measureₓ α}
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem Lp_meas.ae_eq_zero_of_forall_set_integral_eq_zero
@@ -715,7 +720,7 @@ section CondexpL2
 
 attribute [local instance] fact_one_le_two_ennreal
 
-variable[CompleteSpace E][BorelSpace 𝕜]{m m0 : MeasurableSpace α}{μ : Measureₓ α}{s t : Set α}
+variable[CompleteSpace E]{m m0 : MeasurableSpace α}{μ : Measureₓ α}{s t : Set α}
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
@@ -744,12 +749,12 @@ theorem integrable_condexp_L2_of_is_finite_measure (hm : m ≤ m0) [is_finite_me
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem norm_condexp_L2_le_one
-(hm : «expr ≤ »(m, m0)) : «expr ≤ »(«expr∥ ∥»(@condexp_L2 α E 𝕜 _ _ _ _ _ _ _ _ _ _ μ hm), 1) :=
+(hm : «expr ≤ »(m, m0)) : «expr ≤ »(«expr∥ ∥»(@condexp_L2 α E 𝕜 _ _ _ _ _ _ _ _ μ hm), 1) :=
 by { haveI [] [":", expr fact «expr ≤ »(m, m0)] [":=", expr ⟨hm⟩],
   exact [expr orthogonal_projection_norm_le _] }
 
 theorem norm_condexp_L2_le (hm : m ≤ m0) (f : α →₂[μ] E) : ∥condexp_L2 𝕜 hm f∥ ≤ ∥f∥ :=
-  ((@condexp_L2 _ E 𝕜 _ _ _ _ _ _ _ _ _ _ μ hm).le_op_norm f).trans
+  ((@condexp_L2 _ E 𝕜 _ _ _ _ _ _ _ _ μ hm).le_op_norm f).trans
     (mul_le_of_le_one_left (norm_nonneg _) (norm_condexp_L2_le_one hm))
 
 theorem snorm_condexp_L2_le (hm : m ≤ m0) (f : α →₂[μ] E) : snorm (condexp_L2 𝕜 hm f) 2 μ ≤ snorm f 2 μ :=
@@ -948,8 +953,6 @@ end
 variable{E'' 𝕜' :
     Type
       _}[IsROrC
-      𝕜'][MeasurableSpace
-      𝕜'][BorelSpace
       𝕜'][MeasurableSpace
       E''][InnerProductSpace 𝕜'
       E''][BorelSpace
@@ -1164,12 +1167,10 @@ theorem set_integral_condexp_ind_smul (hs : measurable_set[m] s) (ht : Measurabl
     (∫a in s, (condexp_ind_smul hm ht hμt x) a ∂μ) =
       ∫a in s, condexp_L2 ℝ hm (indicator_const_Lp 2 ht hμt (1 : ℝ)) a • x ∂μ :=
     set_integral_congr_ae (hm s hs) ((condexp_ind_smul_ae_eq_smul hm ht hμt x).mono fun x hx hxs => hx)
-    _ = (∫a in s, condexp_L2 ℝ hm (indicator_const_Lp 2 ht hμt (1 : ℝ)) a ∂μ) • x :=
-    by 
-      rw [integral_smul_const _ x]
+    _ = (∫a in s, condexp_L2 ℝ hm (indicator_const_Lp 2 ht hμt (1 : ℝ)) a ∂μ) • x := integral_smul_const _ x 
     _ = (∫a in s, indicator_const_Lp 2 ht hμt (1 : ℝ) a ∂μ) • x :=
     by 
-      rw [@integral_condexp_L2_eq α _ ℝ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hm (indicator_const_Lp 2 ht hμt (1 : ℝ)) hs hμs]
+      rw [@integral_condexp_L2_eq α _ ℝ _ _ _ _ _ _ _ _ _ _ _ _ hm (indicator_const_Lp 2 ht hμt (1 : ℝ)) hs hμs]
     _ = (μ (t ∩ s)).toReal • x :=
     by 
       rw [set_integral_indicator_const_Lp (hm s hs), smul_assoc, one_smul]
@@ -1192,7 +1193,7 @@ seen as an element of `α →₁[μ] G`.
 
 attribute [local instance] fact_one_le_two_ennreal
 
-variable{m m0 : MeasurableSpace α}{μ : Measureₓ α}[BorelSpace 𝕜][IsScalarTower ℝ 𝕜 E']{s t : Set α}[NormedSpace ℝ G]
+variable{m m0 : MeasurableSpace α}{μ : Measureₓ α}[IsScalarTower ℝ 𝕜 E']{s t : Set α}[NormedSpace ℝ G]
 
 section CondexpIndL1Fin
 
@@ -1377,8 +1378,9 @@ theorem norm_condexp_ind_L1_le (x : G) : ∥condexp_ind_L1 hm μ s x∥ ≤ (μ 
       rw [condexp_ind_L1_of_measurable_set_of_measure_ne_top hs hμs x]
       exact norm_condexp_ind_L1_fin_le hs hμs x
 
-theorem continuous_condexp_ind_L1 : Continuous fun x : G => condexp_ind_L1 hm μ s x :=
-  continuous_of_linear_of_bound condexp_ind_L1_add condexp_ind_L1_smul norm_condexp_ind_L1_le
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_condexp_ind_L1 : continuous (λ x : G, condexp_ind_L1 hm μ s x) :=
+continuous_of_linear_of_bound condexp_ind_L1_add condexp_ind_L1_smul norm_condexp_ind_L1_le
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem condexp_ind_L1_disjoint_union
@@ -1489,8 +1491,7 @@ attribute [local instance] fact_one_le_one_ennreal
 
 variable{m m0 :
     MeasurableSpace
-      α}{μ :
-    Measureₓ α}[BorelSpace 𝕜][IsScalarTower ℝ 𝕜 F']{hm : m ≤ m0}[sigma_finite (μ.trim hm)]{f g : α → F'}{s : Set α}
+      α}{μ : Measureₓ α}[IsScalarTower ℝ 𝕜 F']{hm : m ≤ m0}[sigma_finite (μ.trim hm)]{f g : α → F'}{s : Set α}
 
 /-- Conditional expectation of a function as a linear map from `α →₁[μ] F'` to itself. -/
 def condexp_L1_clm (hm : m ≤ m0) (μ : Measureₓ α) [sigma_finite (μ.trim hm)] : (α →₁[μ] F') →L[ℝ] α →₁[μ] F' :=
@@ -1509,33 +1510,30 @@ theorem condexp_L1_clm_indicator_const (hs : MeasurableSet s) (hμs : μ s ≠ �
     rw [Lp.simple_func.coe_indicator_const]
     exact condexp_L1_clm_indicator_const_Lp hs hμs x
 
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Auxiliary lemma used in the proof of `set_integral_condexp_L1_clm`. -/
-theorem set_integral_condexp_L1_clm_of_measure_ne_top (f : α →₁[μ] F') (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) :
-  (∫x in s, condexp_L1_clm hm μ f x ∂μ) = ∫x in s, f x ∂μ :=
-  by 
-    refine'
-      Lp.induction Ennreal.one_ne_top (fun f : α →₁[μ] F' => (∫x in s, condexp_L1_clm hm μ f x ∂μ) = ∫x in s, f x ∂μ) _
-        _ (is_closed_eq _ _) f
-    ·
-      intro x t ht hμt 
-      simpRw [condexp_L1_clm_indicator_const ht hμt.ne x]
-      rw [Lp.simple_func.coe_indicator_const, set_integral_indicator_const_Lp (hm _ hs)]
-      exact set_integral_condexp_ind hs ht hμs hμt.ne x
-    ·
-      intro f g hf_Lp hg_Lp hfg_disj hf hg 
-      simpRw [(condexp_L1_clm hm μ).map_add]
-      rw
-        [set_integral_congr_ae (hm s hs)
-          ((Lp.coe_fn_add (condexp_L1_clm hm μ (hf_Lp.to_Lp f)) (condexp_L1_clm hm μ (hg_Lp.to_Lp g))).mono
-            fun x hx hxs => hx)]
-      rw [set_integral_congr_ae (hm s hs) ((Lp.coe_fn_add (hf_Lp.to_Lp f) (hg_Lp.to_Lp g)).mono fun x hx hxs => hx)]
-      simpRw [Pi.add_apply]
-      rw [integral_add (L1.integrable_coe_fn _).IntegrableOn (L1.integrable_coe_fn _).IntegrableOn,
-        integral_add (L1.integrable_coe_fn _).IntegrableOn (L1.integrable_coe_fn _).IntegrableOn, hf, hg]
-    ·
-      exact (continuous_set_integral s).comp (condexp_L1_clm hm μ).Continuous
-    ·
-      exact continuous_set_integral s
+theorem set_integral_condexp_L1_clm_of_measure_ne_top
+(f : «expr →₁[ ] »(α, μ, F'))
+(hs : «exprmeasurable_set[ ]»(m) s)
+(hμs : «expr ≠ »(μ s, «expr∞»())) : «expr = »(«expr∫ in , ∂ »((x), s, condexp_L1_clm hm μ f x, μ), «expr∫ in , ∂ »((x), s, f x, μ)) :=
+begin
+  refine [expr Lp.induction ennreal.one_ne_top (λ
+    f : «expr →₁[ ] »(α, μ, F'), «expr = »(«expr∫ in , ∂ »((x), s, condexp_L1_clm hm μ f x, μ), «expr∫ in , ∂ »((x), s, f x, μ))) _ _ (is_closed_eq _ _) f],
+  { intros [ident x, ident t, ident ht, ident hμt],
+    simp_rw [expr condexp_L1_clm_indicator_const ht hμt.ne x] [],
+    rw ["[", expr Lp.simple_func.coe_indicator_const, ",", expr set_integral_indicator_const_Lp (hm _ hs), "]"] [],
+    exact [expr set_integral_condexp_ind hs ht hμs hμt.ne x] },
+  { intros [ident f, ident g, ident hf_Lp, ident hg_Lp, ident hfg_disj, ident hf, ident hg],
+    simp_rw [expr (condexp_L1_clm hm μ).map_add] [],
+    rw [expr set_integral_congr_ae (hm s hs) ((Lp.coe_fn_add (condexp_L1_clm hm μ (hf_Lp.to_Lp f)) (condexp_L1_clm hm μ (hg_Lp.to_Lp g))).mono (λ
+       x hx hxs, hx))] [],
+    rw [expr set_integral_congr_ae (hm s hs) ((Lp.coe_fn_add (hf_Lp.to_Lp f) (hg_Lp.to_Lp g)).mono (λ
+       x hx hxs, hx))] [],
+    simp_rw [expr pi.add_apply] [],
+    rw ["[", expr integral_add (L1.integrable_coe_fn _).integrable_on (L1.integrable_coe_fn _).integrable_on, ",", expr integral_add (L1.integrable_coe_fn _).integrable_on (L1.integrable_coe_fn _).integrable_on, ",", expr hf, ",", expr hg, "]"] [] },
+  { exact [expr (continuous_set_integral s).comp (condexp_L1_clm hm μ).continuous] },
+  { exact [expr continuous_set_integral s] }
+end
 
 -- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The integral of the conditional expectation `condexp_L1_clm` over an `m`-measurable set is equal
@@ -1609,7 +1607,7 @@ theorem Lp_meas_to_Lp_trim_lie_symm_indicator [NormedSpace ℝ F] {μ : Measure�
     refine' (Lp_trim_to_Lp_meas_ae_eq hm _).trans _ 
     exact (ae_eq_of_ae_eq_trim indicator_const_Lp_coe_fn).trans indicator_const_Lp_coe_fn.symm
 
--- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem condexp_L1_clm_Lp_meas
 (f : Lp_meas F' exprℝ() m 1 μ) : «expr = »(condexp_L1_clm hm μ (f : «expr →₁[ ] »(α, μ, F')), «expr↑ »(f)) :=
 begin
@@ -1745,8 +1743,7 @@ attribute [local instance] fact_one_le_one_ennreal
 
 variable{𝕜}{m m0 :
     MeasurableSpace
-      α}{μ :
-    Measureₓ α}[BorelSpace 𝕜][IsScalarTower ℝ 𝕜 F']{hm : m ≤ m0}[sigma_finite (μ.trim hm)]{f g : α → F'}{s : Set α}
+      α}{μ : Measureₓ α}[IsScalarTower ℝ 𝕜 F']{hm : m ≤ m0}[sigma_finite (μ.trim hm)]{f g : α → F'}{s : Set α}
 
 /-- Conditional expectation of a function. Its value is 0 if the function is not integrable. -/
 @[irreducible]
@@ -1759,8 +1756,9 @@ theorem condexp_of_measurable {f : α → F'} (hf : measurable[m] f) (hfi : inte
   by 
     rw [condexp, if_pos (⟨hf, hfi⟩ : measurable[m] f ∧ integrable f μ)]
 
-theorem condexp_const (c : F') [is_finite_measure μ] : μ[fun x : α => c|hm] = fun _ => c :=
-  condexp_of_measurable (@measurable_const _ _ _ m _) (integrable_const c)
+-- error in MeasureTheory.Function.ConditionalExpectation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem condexp_const (c : F') [is_finite_measure μ] : «expr = »(«expr [ | ]»(μ, λ x : α, c, hm), λ _, c) :=
+condexp_of_measurable (@measurable_const _ _ _ m _) (integrable_const c)
 
 theorem condexp_ae_eq_condexp_L1 (f : α → F') : μ[f|hm] =ᵐ[μ] condexp_L1 hm μ f :=
   by 
@@ -1830,7 +1828,7 @@ If a function is a.e. `m`-measurable, verifies an integrability condition and ha
 as `f` on all `m`-measurable sets, then it is a.e. equal to `μ[f|hm]`. -/
 theorem ae_eq_condexp_of_forall_set_integral_eq (hm : m ≤ m0) [sigma_finite (μ.trim hm)] {f g : α → F'}
   (hf : integrable f μ) (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → integrable_on g s μ)
-  (hg_eq : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫x in s, g x ∂μ) = ∫x in s, f x ∂μ)
+  (hg_eq : ∀ (s : Set α), measurable_set[m] s → μ s < ∞ → (∫x in s, g x ∂μ) = ∫x in s, f x ∂μ)
   (hgm : ae_measurable' m g μ) : g =ᵐ[μ] μ[f|hm] :=
   by 
     refine'

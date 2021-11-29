@@ -418,5 +418,13 @@ theorem det_smul_inv_mul_vec_eq_cramer (A : Matrix n n α) (b : n → α) (h : I
   by 
     rw [cramer_eq_adjugate_mul_vec, A.nonsing_inv_apply h, ←smul_mul_vec_assoc, smul_smul, h.mul_coe_inv, one_smul]
 
+/-- One form of **Cramer's rule**. See `matrix.mul_vec_cramer` for a stronger form. -/
+@[simp]
+theorem det_smul_inv_vec_mul_eq_cramer_transpose (A : Matrix n n α) (b : n → α) (h : IsUnit A.det) :
+  A.det • A⁻¹.vecMul b = cramer (A)ᵀ b :=
+  by 
+    rw [←A⁻¹.transpose_transpose, vec_mul_transpose, transpose_nonsing_inv, ←det_transpose,
+      (A)ᵀ.det_smul_inv_mul_vec_eq_cramer _ (is_unit_det_transpose A h)]
+
 end Matrix
 

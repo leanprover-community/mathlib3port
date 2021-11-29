@@ -53,7 +53,7 @@ So `equ : @eq.{u} lhs_type lhs rhs` or `equ : @heq.{u} lhs_type lhs rhs_type rhs
 -/
 @[reducible]
 unsafe def unification_step : Type :=
-  ∀ equ lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf : expr u : level, tactic unification_step_result
+  ∀ (equ lhs_type rhs_type lhs rhs lhs_whnf rhs_whnf : expr) (u : level), tactic unification_step_result
 
 /--
 For `equ : t == u` with `t : T` and `u : U`, if `T` and `U` are defeq,

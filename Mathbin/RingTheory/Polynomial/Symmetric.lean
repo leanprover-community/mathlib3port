@@ -51,7 +51,7 @@ variable{τ : Type _}{S : Type _}
 /-- A `mv_polynomial φ` is symmetric if it is invariant under
 permutations of its variables by the  `rename` operation -/
 def is_symmetric [CommSemiringₓ R] (φ : MvPolynomial σ R) : Prop :=
-  ∀ e : perm σ, rename e φ = φ
+  ∀ (e : perm σ), rename e φ = φ
 
 variable(σ R)
 
@@ -137,7 +137,7 @@ def esymm (n : ℕ) : MvPolynomial σ R :=
 theorem esymm_eq_sum_subtype (n : ℕ) : esymm σ R n = ∑t : { s : Finset σ // s.card = n }, ∏i in (t : Finset σ), X i :=
   by 
     rw [esymm]
-    let i : ∀ a : Finset σ, a ∈ powerset_len n univ → { s : Finset σ // s.card = n } :=
+    let i : ∀ (a : Finset σ), a ∈ powerset_len n univ → { s : Finset σ // s.card = n } :=
       fun a ha => ⟨_, (mem_powerset_len.mp ha).2⟩
     refine' sum_bij i (fun a ha => mem_univ (i a ha)) _ (fun _ _ _ _ hi => subtype.ext_iff_val.mp hi) _
     ·

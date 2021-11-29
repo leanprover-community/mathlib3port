@@ -58,7 +58,7 @@ the whole space.  The main role of this property is to ensure that the different
 unique, hence this name. The uniqueness it asserts is proved in `unique_diff_on.eq` in
 `fderiv.lean`. -/
 def UniqueDiffOn (s : Set E) : Prop :=
-  ∀ x _ : x ∈ s, UniqueDiffWithinAt 𝕜 s x
+  ∀ x (_ : x ∈ s), UniqueDiffWithinAt 𝕜 s x
 
 end TangentCone
 
@@ -213,7 +213,7 @@ begin
     exact [expr ⟨«expr - »(z, x j), by simpa [] [] [] [] [] ["using", expr hzs], by simpa [] [] [] [] [] ["using", expr hz]⟩] },
   choose ["!"] [ident d'] [ident hd's, ident hcd'] [],
   refine [expr ⟨c, λ
-    n, function.update (d' n) i (d n), hd.mono (λ n hn j hj', _), hc, «expr $ »(tendsto_pi.2, λ j, _)⟩],
+    n, function.update (d' n) i (d n), hd.mono (λ n hn j hj', _), hc, «expr $ »(tendsto_pi_nhds.2, λ j, _)⟩],
   { rcases [expr em «expr = »(j, i), "with", ident rfl, "|", ident hj]; simp [] [] [] ["*"] [] [] },
   { rcases [expr em «expr = »(j, i), "with", ident rfl, "|", ident hj],
     { simp [] [] [] ["[", expr hy, "]"] [] [] },
@@ -354,7 +354,7 @@ theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Fintype ι] (E : ι → Type _
 
 theorem UniqueDiffWithinAt.pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedGroup (E i)]
   [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i) (I : Set ι)
-  (h : ∀ i _ : i ∈ I, UniqueDiffWithinAt 𝕜 (s i) (x i)) : UniqueDiffWithinAt 𝕜 (Set.Pi I s) x :=
+  (h : ∀ i (_ : i ∈ I), UniqueDiffWithinAt 𝕜 (s i) (x i)) : UniqueDiffWithinAt 𝕜 (Set.Pi I s) x :=
   by 
     classical 
     rw [←Set.univ_pi_piecewise]
@@ -368,7 +368,7 @@ theorem UniqueDiffOn.prod {t : Set F} (hs : UniqueDiffOn 𝕜 s) (ht : UniqueDif
 /-- The finite product of a family of sets of unique differentiability is a set of unique
 differentiability. -/
 theorem UniqueDiffOn.pi (ι : Type _) [Fintype ι] (E : ι → Type _) [∀ i, NormedGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)]
-  (s : ∀ i, Set (E i)) (I : Set ι) (h : ∀ i _ : i ∈ I, UniqueDiffOn 𝕜 (s i)) : UniqueDiffOn 𝕜 (Set.Pi I s) :=
+  (s : ∀ i, Set (E i)) (I : Set ι) (h : ∀ i (_ : i ∈ I), UniqueDiffOn 𝕜 (s i)) : UniqueDiffOn 𝕜 (Set.Pi I s) :=
   fun x hx => UniqueDiffWithinAt.pi _ _ _ _ _$ fun i hi => h i hi (x i) (hx i hi)
 
 /-- The finite product of a family of sets of unique differentiability is a set of unique

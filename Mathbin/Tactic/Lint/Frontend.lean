@@ -70,6 +70,7 @@ unsafe def get_checks (slow : Bool) (extra : List Name) (use_only : Bool) : tact
     let default := if slow then default else default.filter fun l => l.2.is_fast 
     List.append default <$> get_linters extra
 
+-- error in Tactic.Lint.Frontend: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 `lint_core all_decls non_auto_decls checks` applies the linters `checks` to the list of
 declarations.
@@ -78,31 +79,25 @@ If `auto_decls` is true, then it is applied to `all_decls`.
 The resulting list has one element for each linter, containing the linter as
 well as a map from declaration name to warning.
 -/
-unsafe def lint_core (all_decls non_auto_decls : List declaration) (checks : List (Name × linter)) :
-  tactic (List (Name × linter × rb_map Name Stringₓ)) :=
-  do 
-    checks.mmap$
-        fun ⟨linter_name, linter⟩ =>
-          do 
-            let test_decls := if linter.auto_decls then all_decls else non_auto_decls 
-            let test_decls ← test_decls.mfilter fun decl => should_be_linted linter_name decl.to_name 
-            let s ← read 
-            let results :=
-              test_decls.map_async_chunked$
-                fun decl =>
-                  Prod.mk decl.to_name$
-                    match linter.test decl s with 
-                    | result.success w _ => w
-                    | result.exception msg _ _ =>
-                      some$ "LINTER FAILED:\n" ++ msg.elim "(no message)" fun msg => toString$ msg ()
-            let results :=
-              results.foldl
-                (fun results : rb_map Name Stringₓ warning =>
-                  match warning with 
-                  | (decl_name, some w) => results.insert decl_name w
-                  | (_, none) => results)
-                mk_rb_map 
-            pure (linter_name, linter, results)
+meta
+def lint_core
+(all_decls non_auto_decls : list declaration)
+(checks : list «expr × »(name, linter)) : tactic (list «expr × »(name, «expr × »(linter, rb_map name string))) :=
+do {
+«expr $ »(checks.mmap, λ ⟨linter_name, linter⟩, do {
+   let test_decls := if linter.auto_decls then all_decls else non_auto_decls,
+     test_decls ← test_decls.mfilter (λ decl, should_be_linted linter_name decl.to_name),
+     s ← read,
+     let results := «expr $ »(test_decls.map_async_chunked, λ
+      decl, «expr $ »(prod.mk decl.to_name, match linter.test decl s with
+       | result.success w _ := w
+       | result.exception msg _ _ := «expr $ »(some, «expr ++ »("LINTER FAILED:\n", msg.elim "(no message)" (λ
+          msg, «expr $ »(to_string, msg ()))))
+       end)),
+     let results := results.foldl (λ (results : rb_map name string) (warning), match warning with
+      | (decl_name, some w) := results.insert decl_name w
+      | (_, none) := results end) mk_rb_map,
+     pure (linter_name, linter, results) }) }
 
 /-- Sorts a map with declaration keys as names by line number. -/
 unsafe def sort_results {α} (e : environment) (results : rb_map Name α) : List (Name × α) :=

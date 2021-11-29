@@ -84,13 +84,13 @@ variable(J C)
 
 /-- `C` has limits of shape `J` if there exists a limit for every functor `F : J ⥤ C`. -/
 class has_limits_of_shape : Prop where 
-  HasLimit : ∀ F : J ⥤ C, has_limit F :=  by 
+  HasLimit : ∀ (F : J ⥤ C), has_limit F :=  by 
   runTac 
     tactic.apply_instance
 
 /-- `C` has all (small) limits if it has limits of every shape. -/
 class has_limits : Prop where 
-  HasLimitsOfShape : ∀ J : Type v [𝒥 : small_category J], has_limits_of_shape J C :=  by 
+  HasLimitsOfShape : ∀ (J : Type v) [𝒥 : small_category J], has_limits_of_shape J C :=  by 
   runTac 
     tactic.apply_instance
 
@@ -238,7 +238,7 @@ morphisms from a specified object `W` to the limit object,
 and an explicit componentwise description of cones with cone point `W`.
 -/
 def limit.hom_iso' (F : J ⥤ C) [has_limit F] (W : C) :
-  (W ⟶ limit F : Type v) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j' : J} f : j ⟶ j', p j ≫ F.map f = p j' } :=
+  (W ⟶ limit F : Type v) ≅ { p : ∀ j, W ⟶ F.obj j // ∀ {j j' : J} (f : j ⟶ j'), p j ≫ F.map f = p j' } :=
   (limit.is_limit F).homIso' W
 
 theorem limit.lift_extend {F : J ⥤ C} [has_limit F] (c : cone F) {X : C} (f : X ⟶ c.X) :
@@ -520,13 +520,13 @@ variable(J C)
 
 /-- `C` has colimits of shape `J` if there exists a colimit for every functor `F : J ⥤ C`. -/
 class has_colimits_of_shape : Prop where 
-  HasColimit : ∀ F : J ⥤ C, has_colimit F :=  by 
+  HasColimit : ∀ (F : J ⥤ C), has_colimit F :=  by 
   runTac 
     tactic.apply_instance
 
 /-- `C` has all (small) colimits if it has colimits of every shape. -/
 class has_colimits : Prop where 
-  HasColimitsOfShape : ∀ J : Type v [𝒥 : small_category J], has_colimits_of_shape J C :=  by 
+  HasColimitsOfShape : ∀ (J : Type v) [𝒥 : small_category J], has_colimits_of_shape J C :=  by 
   runTac 
     tactic.apply_instance
 
@@ -679,7 +679,7 @@ morphisms from the colimit object to a specified object `W`,
 and an explicit componentwise description of cocones with cone point `W`.
 -/
 def colimit.hom_iso' (F : J ⥤ C) [has_colimit F] (W : C) :
-  (colimit F ⟶ W : Type v) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j'} f : j ⟶ j', F.map f ≫ p j' = p j } :=
+  (colimit F ⟶ W : Type v) ≅ { p : ∀ j, F.obj j ⟶ W // ∀ {j j'} (f : j ⟶ j'), F.map f ≫ p j' = p j } :=
   (colimit.is_colimit F).homIso' W
 
 theorem colimit.desc_extend (F : J ⥤ C) [has_colimit F] (c : cocone F) {X : C} (f : c.X ⟶ X) :

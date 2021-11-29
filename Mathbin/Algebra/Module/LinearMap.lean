@@ -72,7 +72,7 @@ structure
     Type v}{M₂ : Type w}[Semiringₓ R][AddCommMonoidₓ M][AddCommMonoidₓ M₂][Module R M][Module R M₂](f : M → M₂) :
   Prop where 
   map_add : ∀ x y, f (x+y) = f x+f y 
-  map_smul : ∀ c : R x, f (c • x) = c • f x
+  map_smul : ∀ (c : R) x, f (c • x) = c • f x
 
 section 
 
@@ -91,7 +91,7 @@ structure
       R][Semiringₓ
       S](σ : R →+* S)(M : Type _)(M₂ : Type _)[AddCommMonoidₓ M][AddCommMonoidₓ M₂][Module R M][Module S M₂] extends
   AddHom M M₂ where 
-  map_smul' : ∀ r : R x : M, to_fun (r • x) = σ r • to_fun x
+  map_smul' : ∀ (r : R) (x : M), to_fun (r • x) = σ r • to_fun x
 
 end 
 
@@ -235,7 +235,7 @@ we can also add an instance for `add_comm_group.int_module`, allowing `z •` to
 `R` does not support negation.
 -/
 class compatible_smul(R S : Type _)[Semiringₓ S][HasScalar R M][Module S M][HasScalar R M₂][Module S M₂] where 
-  map_smul : ∀ fₗ : M →ₗ[S] M₂ c : R x : M, fₗ (c • x) = c • fₗ x
+  map_smul : ∀ (fₗ : M →ₗ[S] M₂) (c : R) (x : M), fₗ (c • x) = c • fₗ x
 
 variable{M M₂}
 
@@ -473,16 +473,27 @@ def mk' (f : M → M₂) (H : IsLinearMap R f) : M →ₗ[R] M₂ :=
 theorem mk'_apply {f : M → M₂} (H : IsLinearMap R f) (x : M) : mk' f H x = f x :=
   rfl
 
-theorem is_linear_map_smul {R M : Type _} [CommSemiringₓ R] [AddCommMonoidₓ M] [Module R M] (c : R) :
-  IsLinearMap R fun z : M => c • z :=
-  by 
-    refine' IsLinearMap.mk (smul_add c) _ 
-    intro _ _ 
-    simp only [smul_smul, mul_commₓ]
+-- error in Algebra.Module.LinearMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_linear_map_smul
+{R M : Type*}
+[comm_semiring R]
+[add_comm_monoid M]
+[module R M]
+(c : R) : is_linear_map R (λ z : M, «expr • »(c, z)) :=
+begin
+  refine [expr is_linear_map.mk (smul_add c) _],
+  intros ["_", "_"],
+  simp [] [] ["only"] ["[", expr smul_smul, ",", expr mul_comm, "]"] [] []
+end
 
-theorem is_linear_map_smul' {R M : Type _} [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] (a : M) :
-  IsLinearMap R fun c : R => c • a :=
-  IsLinearMap.mk (fun x y => add_smul x y a) fun x y => mul_smul x y a
+-- error in Algebra.Module.LinearMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_linear_map_smul'
+{R M : Type*}
+[semiring R]
+[add_comm_monoid M]
+[module R M]
+(a : M) : is_linear_map R (λ c : R, «expr • »(c, a)) :=
+is_linear_map.mk (λ x y, add_smul x y a) (λ x y, mul_smul x y a)
 
 variable{f : M → M₂}(lin : IsLinearMap R f)
 
@@ -501,8 +512,9 @@ variable[Module R M][Module R M₂]
 
 include R
 
-theorem is_linear_map_neg : IsLinearMap R fun z : M => -z :=
-  IsLinearMap.mk neg_add fun x y => (smul_neg x y).symm
+-- error in Algebra.Module.LinearMap: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_linear_map_neg : is_linear_map R (λ z : M, «expr- »(z)) :=
+is_linear_map.mk neg_add (λ x y, (smul_neg x y).symm)
 
 variable{f : M → M₂}(lin : IsLinearMap R f)
 

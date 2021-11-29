@@ -18,14 +18,14 @@ open_locale RealInnerProductSpace
 /-- A real differentiable map `f` is conformal at point `x` if and only if its
     differential `fderiv ℝ f x` at that point scales every inner product by a positive scalar. -/
 theorem conformal_at_iff' {f : E → F} {x : E} :
-  ConformalAt f x ↔ ∃ c : ℝ, 0 < c ∧ ∀ u v : E, ⟪fderiv ℝ f x u, fderiv ℝ f x v⟫ = c*⟪u, v⟫ :=
+  ConformalAt f x ↔ ∃ c : ℝ, 0 < c ∧ ∀ (u v : E), ⟪fderiv ℝ f x u, fderiv ℝ f x v⟫ = c*⟪u, v⟫ :=
   by 
     rw [conformal_at_iff_is_conformal_map_fderiv, is_conformal_map_iff]
 
 /-- A real differentiable map `f` is conformal at point `x` if and only if its
     differential `f'` at that point scales every inner product by a positive scalar. -/
 theorem conformal_at_iff {f : E → F} {x : E} {f' : E →L[ℝ] F} (h : HasFderivAt f f' x) :
-  ConformalAt f x ↔ ∃ c : ℝ, 0 < c ∧ ∀ u v : E, ⟪f' u, f' v⟫ = c*⟪u, v⟫ :=
+  ConformalAt f x ↔ ∃ c : ℝ, 0 < c ∧ ∀ (u v : E), ⟪f' u, f' v⟫ = c*⟪u, v⟫ :=
   by 
     simp only [conformal_at_iff', h.fderiv]
 

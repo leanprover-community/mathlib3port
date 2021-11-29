@@ -84,7 +84,7 @@ theorem T_of_two_le (n : ℕ) (h : 2 ≤ n) : T R n = ((2*X)*T R (n - 1)) - T R 
 
 variable{R S}
 
-theorem map_T (f : R →+* S) : ∀ n : ℕ, map f (T R n) = T S n
+theorem map_T (f : R →+* S) : ∀ (n : ℕ), map f (T R n) = T S n
 | 0 =>
   by 
     simp only [T_zero, map_one]
@@ -128,7 +128,7 @@ theorem U_of_two_le (n : ℕ) (h : 2 ≤ n) : U R n = ((2*X)*U R (n - 1)) - U R 
     rw [add_commₓ]
     exact U_add_two R n
 
-theorem U_eq_X_mul_U_add_T : ∀ n : ℕ, U R (n+1) = (X*U R n)+T R (n+1)
+theorem U_eq_X_mul_U_add_T : ∀ (n : ℕ), U R (n+1) = (X*U R n)+T R (n+1)
 | 0 =>
   by 
     simp only [U_zero, U_one, T_one]
@@ -153,7 +153,7 @@ theorem T_eq_U_sub_X_mul_U (n : ℕ) : T R (n+1) = U R (n+1) - X*U R n :=
   by 
     rw [U_eq_X_mul_U_add_T, add_commₓ (X*U R n), add_sub_cancel]
 
-theorem T_eq_X_mul_T_sub_pol_U : ∀ n : ℕ, T R (n+2) = (X*T R (n+1)) - (1 - X ^ 2)*U R n
+theorem T_eq_X_mul_T_sub_pol_U : ∀ (n : ℕ), T R (n+2) = (X*T R (n+1)) - (1 - X ^ 2)*U R n
 | 0 =>
   by 
     simp only [T_one, T_two, U_zero]
@@ -182,7 +182,7 @@ theorem one_sub_X_sq_mul_U_eq_pol_in_T (n : ℕ) : ((1 - X ^ 2)*U R n) = (X*T R 
 variable{R S}
 
 @[simp]
-theorem map_U (f : R →+* S) : ∀ n : ℕ, map f (U R n) = U S n
+theorem map_U (f : R →+* S) : ∀ (n : ℕ), map f (U R n) = U S n
 | 0 =>
   by 
     simp only [U_zero, map_one]
@@ -196,7 +196,7 @@ theorem map_U (f : R →+* S) : ∀ n : ℕ, map f (U R n) = U S n
     simp only [U_add_two, map_mul, map_sub, map_X, bit0, map_add, map_one]
     rw [map_U (n+1), map_U n]
 
-theorem T_derivative_eq_U : ∀ n : ℕ, derivative (T R (n+1)) = (n+1)*U R n
+theorem T_derivative_eq_U : ∀ (n : ℕ), derivative (T R (n+1)) = (n+1)*U R n
 | 0 =>
   by 
     simp only [T_one, U_zero, derivative_X, Nat.cast_zero, zero_addₓ, mul_oneₓ]

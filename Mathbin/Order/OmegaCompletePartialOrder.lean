@@ -97,8 +97,8 @@ instance  : CoeFun (chain α) fun _ => ℕ → α :=
 instance  [Inhabited α] : Inhabited (chain α) :=
   ⟨⟨fun _ => default _, fun _ _ _ => le_reflₓ _⟩⟩
 
-instance  : HasMem α (chain α) :=
-  ⟨fun a c : ℕ →ₘ α => ∃ i, a = c i⟩
+-- error in Order.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_mem α (chain α) := ⟨λ (a) (c : «expr →ₘ »(exprℕ(), α)), «expr∃ , »((i), «expr = »(a, c i))⟩
 
 variable(c c' : chain α)
 
@@ -166,8 +166,8 @@ semi-lattices as only ω-sized totally ordered sets have a supremum.
 See the definition on page 114 of [gunter1992]. -/
 class OmegaCompletePartialOrder(α : Type _) extends PartialOrderₓ α where 
   ωSup : chain α → α 
-  le_ωSup : ∀ c : chain α, ∀ i, c i ≤ ωSup c 
-  ωSup_le : ∀ c : chain α x, (∀ i, c i ≤ x) → ωSup c ≤ x
+  le_ωSup : ∀ (c : chain α), ∀ i, c i ≤ ωSup c 
+  ωSup_le : ∀ (c : chain α) x, (∀ i, c i ≤ x) → ωSup c ≤ x
 
 end Prio
 
@@ -224,7 +224,7 @@ theorem ωSup_le_iff (c : chain α) (x : α) : ωSup c ≤ x ↔ ∀ i, c i ≤ 
 /-- A subset `p : α → Prop` of the type closed under `ωSup` induces an
 `omega_complete_partial_order` on the subtype `{a : α // p a}`. -/
 def Subtype {α : Type _} [OmegaCompletePartialOrder α] (p : α → Prop)
-  (hp : ∀ c : chain α, (∀ i _ : i ∈ c, p i) → p (ωSup c)) : OmegaCompletePartialOrder (Subtype p) :=
+  (hp : ∀ (c : chain α), (∀ i (_ : i ∈ c), p i) → p (ωSup c)) : OmegaCompletePartialOrder (Subtype p) :=
   OmegaCompletePartialOrder.lift (PreorderHom.Subtype.val p)
     (fun c => ⟨ωSup _, hp (c.map (PreorderHom.Subtype.val p)) fun i ⟨n, q⟩ => q.symm ▸ (c n).2⟩) (fun x y h => h)
     fun c => rfl
@@ -244,7 +244,7 @@ In order to distinguish it from the (more commonly used) continuity from topolog
 "Scott-continuity" (referring to Dana Scott). It corresponds to continuity
 in Scott topological spaces (not defined here). -/
 def continuous (f : α →ₘ β) : Prop :=
-  ∀ c : chain α, f (ωSup c) = ωSup (c.map f)
+  ∀ (c : chain α), f (ωSup c) = ωSup (c.map f)
 
 /-- `continuous' f` asserts that `f` is both monotone and continuous. -/
 def continuous' (f : α → β) : Prop :=
@@ -412,7 +412,7 @@ variable[∀ x, OmegaCompletePartialOrder$ β x]
 
 variable[OmegaCompletePartialOrder γ]
 
-theorem flip₁_continuous' (f : ∀ x : α, γ → β x) (a : α) (hf : continuous' fun x y => f y x) : continuous' (f a) :=
+theorem flip₁_continuous' (f : ∀ (x : α), γ → β x) (a : α) (hf : continuous' fun x y => f y x) : continuous' (f a) :=
   continuous.of_bundled _ (fun x y h => hf.to_monotone h a) fun c => congr_funₓ (hf.to_bundled _ c) a
 
 theorem flip₂_continuous' (f : γ → ∀ x, β x) (hf : ∀ x, continuous' fun g => f g x) : continuous' f :=
@@ -489,12 +489,12 @@ begin
     { apply [expr le_max_right] } }
 end
 
-theorem Sup_continuous (s : Set$ α →ₘ β) (hs : ∀ f _ : f ∈ s, continuous f) : continuous (Sup s) :=
+theorem Sup_continuous (s : Set$ α →ₘ β) (hs : ∀ f (_ : f ∈ s), continuous f) : continuous (Sup s) :=
   by 
     intro c 
     apply eq_of_forall_ge_iff 
     intro z 
-    suffices  : (∀ f _ : f ∈ s n, (f : _) (c n) ≤ z) ↔ ∀ n f _ : f ∈ s, (f : _) (c n) ≤ z
+    suffices  : (∀ f (_ : f ∈ s) n, (f : _) (c n) ≤ z) ↔ ∀ n f (_ : f ∈ s), (f : _) (c n) ≤ z
     ·
       simpa (config := { contextual := Bool.true.0 }) [ωSup_le_iff, hs _ _ _]
     exact ⟨fun H n f hf => H f hf n, fun H f hf n => H n f hf⟩
@@ -502,7 +502,7 @@ theorem Sup_continuous (s : Set$ α →ₘ β) (hs : ∀ f _ : f ∈ s, continuo
 theorem supr_continuous {ι : Sort _} {f : ι → α →ₘ β} (h : ∀ i, continuous (f i)) : continuous (⨆i, f i) :=
   Sup_continuous _$ Set.forall_range_iff.2 h
 
-theorem Sup_continuous' (s : Set (α → β)) (hc : ∀ f _ : f ∈ s, continuous' f) : continuous' (Sup s) :=
+theorem Sup_continuous' (s : Set (α → β)) (hc : ∀ f (_ : f ∈ s), continuous' f) : continuous' (Sup s) :=
   by 
     lift s to Set (α →ₘ β) using fun f hf => (hc f hf).to_monotone 
     simp only [Set.ball_image_iff, continuous'_coe] at hc 
@@ -591,11 +591,13 @@ end
 
 namespace ContinuousHom
 
-theorem congr_funₓ {f g : α →𝒄 β} (h : f = g) (x : α) : f x = g x :=
-  congr_argₓ (fun h : α →𝒄 β => h x) h
+-- error in Order.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem congr_fun {f g : «expr →𝒄 »(α, β)} (h : «expr = »(f, g)) (x : α) : «expr = »(f x, g x) :=
+congr_arg (λ h : «expr →𝒄 »(α, β), h x) h
 
-theorem congr_argₓ (f : α →𝒄 β) {x y : α} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : α => f x) h
+-- error in Order.OmegaCompletePartialOrder: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem congr_arg (f : «expr →𝒄 »(α, β)) {x y : α} (h : «expr = »(x, y)) : «expr = »(f x, f y) :=
+congr_arg (λ x : α, f x) h
 
 protected theorem Monotone (f : α →𝒄 β) : Monotone f :=
   f.monotone'
@@ -673,7 +675,7 @@ def of_fun (f : α → β) (g : α →𝒄 β) (h : f = g) : α →𝒄 β :=
 
 /-- Construct a continuous function from a monotone function with a proof of continuity. -/
 @[simps, reducible]
-def of_mono (f : α →ₘ β) (h : ∀ c : chain α, f (ωSup c) = ωSup (c.map f)) : α →𝒄 β :=
+def of_mono (f : α →ₘ β) (h : ∀ (c : chain α), f (ωSup c) = ωSup (c.map f)) : α →𝒄 β :=
   { toFun := f, monotone' := f.monotone, cont := h }
 
 /-- The identity as a continuous function. -/
@@ -771,7 +773,7 @@ end
 
 @[simp]
 theorem forall_forall_merge' (c₀ : chain (α →𝒄 β)) (c₁ : chain α) (z : β) :
-  (∀ j i : ℕ, (c₀ i) (c₁ j) ≤ z) ↔ ∀ i : ℕ, (c₀ i) (c₁ i) ≤ z :=
+  (∀ (j i : ℕ), (c₀ i) (c₁ j) ≤ z) ↔ ∀ (i : ℕ), (c₀ i) (c₁ i) ≤ z :=
   by 
     rw [forall_swap, forall_forall_merge]
 

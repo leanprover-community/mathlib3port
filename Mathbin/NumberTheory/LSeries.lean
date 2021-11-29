@@ -96,7 +96,7 @@ begin
 end
 
 theorem l_series_summable_of_bounded_of_one_lt_re {f : arithmetic_function ℂ} {m : ℝ}
-  (h : ∀ n : ℕ, Complex.abs (f n) ≤ m) {z : ℂ} (hz : 1 < z.re) : f.l_series_summable z :=
+  (h : ∀ (n : ℕ), Complex.abs (f n) ≤ m) {z : ℂ} (hz : 1 < z.re) : f.l_series_summable z :=
   by 
     rw [←l_series_summable_iff_of_re_eq_re (Complex.of_real_re z.re)]
     apply l_series_summable_of_bounded_of_one_lt_real h 

@@ -88,8 +88,8 @@ instance (priority := 100)NoZeroSmulDivisors [NoZeroDivisors R] : NoZeroSmulDivi
   b.no_zero_smul_divisors
 
 /-- The product of finitely many free modules is free. -/
-instance pi {ι : Type _} [Fintype ι] {M : ι → Type _} [∀ i : ι, AddCommGroupₓ (M i)] [∀ i : ι, Module R (M i)]
-  [∀ i : ι, Module.Free R (M i)] : Module.Free R (∀ i, M i) :=
+instance pi {ι : Type _} [Fintype ι] {M : ι → Type _} [∀ (i : ι), AddCommGroupₓ (M i)] [∀ (i : ι), Module R (M i)]
+  [∀ (i : ι), Module.Free R (M i)] : Module.Free R (∀ i, M i) :=
   of_basis$ Pi.basis$ fun i => choose_basis R (M i)
 
 /-- The module of finite matrices is free. -/
@@ -124,12 +124,12 @@ instance self : Module.Free R R :=
 instance (priority := 100)of_subsingleton [Subsingleton N] : Module.Free R N :=
   of_basis (Basis.empty N : Basis Pempty R N)
 
-instance Dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
-  [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀i, M i) :=
+instance Dfinsupp {ι : Type _} (M : ι → Type _) [∀ (i : ι), AddCommMonoidₓ (M i)] [∀ (i : ι), Module R (M i)]
+  [∀ (i : ι), Module.Free R (M i)] : Module.Free R (Π₀i, M i) :=
   of_basis$ Dfinsupp.basis$ fun i => choose_basis R (M i)
 
-instance DirectSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoidₓ (M i)] [∀ i : ι, Module R (M i)]
-  [∀ i : ι, Module.Free R (M i)] : Module.Free R (⨁i, M i) :=
+instance DirectSum {ι : Type _} (M : ι → Type _) [∀ (i : ι), AddCommMonoidₓ (M i)] [∀ (i : ι), Module R (M i)]
+  [∀ (i : ι), Module.Free R (M i)] : Module.Free R (⨁i, M i) :=
   Module.Free.dfinsupp R M
 
 end Semiringₓ

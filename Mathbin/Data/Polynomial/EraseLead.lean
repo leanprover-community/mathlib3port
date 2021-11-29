@@ -177,9 +177,9 @@ required to be at least as big as the `nat_degree` of the polynomial.  This is u
 results where you want to change each term in a polynomial to something else depending on the
 `nat_degree` of the polynomial itself and not on the specific `nat_degree` of each term. -/
 theorem induction_with_nat_degree_le {R : Type _} [Semiringₓ R] {P : Polynomial R → Prop} (N : ℕ) (P_0 : P 0)
-  (P_C_mul_pow : ∀ n : ℕ, ∀ r : R, r ≠ 0 → n ≤ N → P (C r*X ^ n))
-  (P_C_add : ∀ f g : Polynomial R, f.nat_degree ≤ N → g.nat_degree ≤ N → P f → P g → P (f+g)) :
-  ∀ f : Polynomial R, f.nat_degree ≤ N → P f :=
+  (P_C_mul_pow : ∀ (n : ℕ), ∀ (r : R), r ≠ 0 → n ≤ N → P (C r*X ^ n))
+  (P_C_add : ∀ (f g : Polynomial R), f.nat_degree ≤ N → g.nat_degree ≤ N → P f → P g → P (f+g)) :
+  ∀ (f : Polynomial R), f.nat_degree ≤ N → P f :=
   by 
     intro f df 
     generalize hd : card f.support = c 

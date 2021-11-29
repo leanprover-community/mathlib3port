@@ -243,7 +243,7 @@ def pi (I : Set ι) (p : ∀ i, Submodule R (φ i)) : Submodule R (∀ i, φ i) 
 variable{I : Set ι}{p : ∀ i, Submodule R (φ i)}{x : ∀ i, φ i}
 
 @[simp]
-theorem mem_pi : x ∈ pi I p ↔ ∀ i _ : i ∈ I, x i ∈ p i :=
+theorem mem_pi : x ∈ pi I p ↔ ∀ i (_ : i ∈ I), x i ∈ p i :=
   Iff.rfl
 
 @[simp, normCast]
@@ -326,7 +326,7 @@ def Pi_congr_left (e : ι' ≃ ι) : (∀ i', φ (e i')) ≃ₗ[R] ∀ i, φ i :
 
 /-- This is `equiv.pi_option_equiv_prod` as a `linear_equiv` -/
 def pi_option_equiv_prod {ι : Type _} {M : Option ι → Type _} [∀ i, AddCommGroupₓ (M i)] [∀ i, Module R (M i)] :
-  (∀ i : Option ι, M i) ≃ₗ[R] M none × ∀ i : ι, M (some i) :=
+  (∀ (i : Option ι), M i) ≃ₗ[R] M none × ∀ (i : ι), M (some i) :=
   { Equiv.piOptionEquivProd with
     map_add' :=
       by 
@@ -338,15 +338,15 @@ def pi_option_equiv_prod {ι : Type _} {M : Option ι → Type _} [∀ i, AddCom
 variable(ι R
     M)(S : Type _)[Fintype ι][DecidableEq ι][Semiringₓ S][AddCommMonoidₓ M][Module R M][Module S M][SmulCommClass R S M]
 
+-- error in LinearAlgebra.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Linear equivalence between linear functions `Rⁿ → M` and `Mⁿ`. The spaces `Rⁿ` and `Mⁿ`
 are represented as `ι → R` and `ι → M`, respectively, where `ι` is a finite type.
 
 This as an `S`-linear equivalence, under the assumption that `S` acts on `M` commuting with `R`.
 When `R` is commutative, we can take this to be the usual action with `S = R`.
 Otherwise, `S = ℕ` shows that the equivalence is additive.
-See note [bundled maps over different rings]. -/
-def pi_ring : ((ι → R) →ₗ[R] M) ≃ₗ[S] ι → M :=
-  (LinearMap.lsum R (fun i : ι => R) S).symm.trans (Pi_congr_right$ fun i => LinearMap.ringLmapEquivSelf R S M)
+See note [bundled maps over different rings]. -/ def pi_ring : «expr ≃ₗ[ ] »(«expr →ₗ[ ] »(ι → R, R, M), S, ι → M) :=
+(linear_map.lsum R (λ i : ι, R) S).symm.trans «expr $ »(Pi_congr_right, λ i, linear_map.ring_lmap_equiv_self R S M)
 
 variable{ι R M}
 

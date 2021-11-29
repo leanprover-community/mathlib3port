@@ -51,6 +51,7 @@ open CategoryTheory.Limits.Types
 
 namespace Top
 
+-- error in Topology.Sheaves.LocalPredicate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given a topological space `X : Top` and a type family `T : X → Type`,
 a `P : prelocal_predicate T` consists of:
@@ -58,26 +59,26 @@ a `P : prelocal_predicate T` consists of:
 * a proof that if `f : Π x : V, T x` satisfies the predicate on `V : opens X`, then
   the restriction of `f` to any open subset `U` also satisfies the predicate.
 -/
-structure prelocal_predicate where 
-  pred : ∀ {U : opens X}, (∀ x : U, T x) → Prop 
-  res : ∀ {U V : opens X} i : U ⟶ V f : ∀ x : V, T x h : pred f, pred fun x : U => f (i x)
+structure prelocal_predicate :=
+  (pred : ∀ {U : opens X}, ∀ x : U, T x → exprProp())
+  (res : ∀ {U V : opens X} (i : «expr ⟶ »(U, V)) (f : ∀ x : V, T x) (h : pred f), pred (λ x : U, f (i x)))
 
 variable(X)
 
+-- error in Topology.Sheaves.LocalPredicate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Continuity is a "prelocal" predicate on functions to a fixed topological space `T`.
--/
-@[simps]
-def continuous_prelocal (T : Top.{v}) : prelocal_predicate fun x : X => T :=
-  { pred := fun U f => Continuous f,
-    res := fun U V i f h => Continuous.comp h (opens.open_embedding_of_le i.le).Continuous }
+-/ @[simps #[]] def continuous_prelocal (T : Top.{v}) : prelocal_predicate (λ x : X, T) :=
+{ pred := λ U f, continuous f, res := λ U V i f h, continuous.comp h (opens.open_embedding_of_le i.le).continuous }
 
+-- error in Topology.Sheaves.LocalPredicate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Satisfying the inhabited linter. -/
-instance inhabited_prelocal_predicate (T : Top.{v}) : Inhabited (prelocal_predicate fun x : X => T) :=
-  ⟨continuous_prelocal X T⟩
+instance inhabited_prelocal_predicate (T : Top.{v}) : inhabited (prelocal_predicate (λ x : X, T)) :=
+⟨continuous_prelocal X T⟩
 
 variable{X}
 
+-- error in Topology.Sheaves.LocalPredicate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given a topological space `X : Top` and a type family `T : X → Type`,
 a `P : local_predicate T` consists of:
@@ -89,29 +90,32 @@ a `P : local_predicate T` consists of:
   so that the restriction of `f` to `V` satisfies the predicate,
   then `f` itself satisfies the predicate.
 -/
-structure local_predicate extends prelocal_predicate T where 
-  locality :
-  ∀ {U : opens X} f : ∀ x : U, T x w : ∀ x : U, ∃ (V : opens X)(m : x.1 ∈ V)(i : V ⟶ U), pred fun x : V => f (i x : U),
-    pred f
+structure local_predicateextends prelocal_predicate T :=
+  (locality : ∀
+   {U : opens X}
+   (f : ∀ x : U, T x)
+   (w : ∀
+    x : U, «expr∃ , »((V : opens X)
+     (m : «expr ∈ »(x.1, V))
+     (i : «expr ⟶ »(V, U)), pred (λ x : V, f (i x : U)))), pred f)
 
 variable(X)
 
+-- error in Topology.Sheaves.LocalPredicate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Continuity is a "local" predicate on functions to a fixed topological space `T`.
--/
-def continuous_local (T : Top.{v}) : local_predicate fun x : X => T :=
-  { continuous_prelocal X T with
-    locality :=
-      fun U f w =>
-        by 
-          apply continuous_iff_continuous_at.2
-          intro x 
-          specialize w x 
-          rcases w with ⟨V, m, i, w⟩
-          dsimp  at w 
-          rw [continuous_iff_continuous_at] at w 
-          specialize w ⟨x, m⟩
-          simpa using (opens.open_embedding_of_le i.le).continuous_at_iff.1 w }
+-/ def continuous_local (T : Top.{v}) : local_predicate (λ x : X, T) :=
+{ locality := λ U f w, begin
+    apply [expr continuous_iff_continuous_at.2],
+    intro [ident x],
+    specialize [expr w x],
+    rcases [expr w, "with", "⟨", ident V, ",", ident m, ",", ident i, ",", ident w, "⟩"],
+    dsimp [] [] [] ["at", ident w],
+    rw [expr continuous_iff_continuous_at] ["at", ident w],
+    specialize [expr w ⟨x, m⟩],
+    simpa [] [] [] [] [] ["using", expr (opens.open_embedding_of_le i.le).continuous_at_iff.1 w]
+  end,
+  ..continuous_prelocal X T }
 
 /-- Satisfying the inhabited linter. -/
 instance inhabited_local_predicate (T : Top.{v}) : Inhabited (local_predicate _) :=
@@ -119,29 +123,28 @@ instance inhabited_local_predicate (T : Top.{v}) : Inhabited (local_predicate _)
 
 variable{X T}
 
+-- error in Topology.Sheaves.LocalPredicate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given a `P : prelocal_predicate`, we can always construct a `local_predicate`
 by asking that the condition from `P` holds locally near every point.
--/
-def prelocal_predicate.sheafify {T : X → Type v} (P : prelocal_predicate T) : local_predicate T :=
-  { pred := fun U f => ∀ x : U, ∃ (V : opens X)(m : x.1 ∈ V)(i : V ⟶ U), P.pred fun x : V => f (i x : U),
-    res :=
-      fun V U i f w x =>
-        by 
-          specialize w (i x)
-          rcases w with ⟨V', m', i', p⟩
-          refine' ⟨V⊓V', ⟨x.2, m'⟩, opens.inf_le_left _ _, _⟩
-          convert P.res (opens.inf_le_right V V') _ p,
-    locality :=
-      fun U f w x =>
-        by 
-          specialize w x 
-          rcases w with ⟨V, m, i, p⟩
-          specialize p ⟨x.1, m⟩
-          rcases p with ⟨V', m', i', p'⟩
-          exact ⟨V', m', i' ≫ i, p'⟩ }
+-/ def prelocal_predicate.sheafify {T : X → Type v} (P : prelocal_predicate T) : local_predicate T :=
+{ pred := λ
+  U f, ∀ x : U, «expr∃ , »((V : opens X) (m : «expr ∈ »(x.1, V)) (i : «expr ⟶ »(V, U)), P.pred (λ x : V, f (i x : U))),
+  res := λ V U i f w x, begin
+    specialize [expr w (i x)],
+    rcases [expr w, "with", "⟨", ident V', ",", ident m', ",", ident i', ",", ident p, "⟩"],
+    refine [expr ⟨«expr ⊓ »(V, V'), ⟨x.2, m'⟩, opens.inf_le_left _ _, _⟩],
+    convert [] [expr P.res (opens.inf_le_right V V') _ p] []
+  end,
+  locality := λ U f w x, begin
+    specialize [expr w x],
+    rcases [expr w, "with", "⟨", ident V, ",", ident m, ",", ident i, ",", ident p, "⟩"],
+    specialize [expr p ⟨x.1, m⟩],
+    rcases [expr p, "with", "⟨", ident V', ",", ident m', ",", ident i', ",", ident p', "⟩"],
+    exact [expr ⟨V', m', «expr ≫ »(i', i), p'⟩]
+  end }
 
-theorem prelocal_predicate.sheafify_of {T : X → Type v} {P : prelocal_predicate T} {U : opens X} {f : ∀ x : U, T x}
+theorem prelocal_predicate.sheafify_of {T : X → Type v} {P : prelocal_predicate T} {U : opens X} {f : ∀ (x : U), T x}
   (h : P.pred f) : P.sheafify.pred f :=
   fun x =>
     ⟨U, x.2, 𝟙 _,
@@ -155,7 +158,7 @@ The subpresheaf of dependent functions on `X` satisfying the "pre-local" predica
 -/
 @[simps]
 def subpresheaf_to_Types (P : prelocal_predicate T) : presheaf (Type v) X :=
-  { obj := fun U => { f : ∀ x : unop U, T x // P.pred f },
+  { obj := fun U => { f : ∀ (x : unop U), T x // P.pred f },
     map := fun U V i f => ⟨fun x => f.1 (i.unop x), P.res i.unop f.1 f.2⟩ }
 
 namespace SubpresheafToTypes
@@ -229,7 +232,7 @@ The `stalk_to_fiber` map is surjective at `x` if
 every point in the fiber `T x` has an allowed section passing through it.
 -/
 theorem stalk_to_fiber_surjective (P : local_predicate T) (x : X)
-  (w : ∀ t : T x, ∃ (U : open_nhds x)(f : ∀ y : U.1, T y)(h : P.pred f), f ⟨x, U.2⟩ = t) :
+  (w : ∀ (t : T x), ∃ (U : open_nhds x)(f : ∀ (y : U.1), T y)(h : P.pred f), f ⟨x, U.2⟩ = t) :
   Function.Surjective (stalk_to_fiber P x) :=
   fun t =>
     by 
@@ -246,14 +249,14 @@ agree on some neighborhood of `x`.
 -/
 theorem stalk_to_fiber_injective (P : local_predicate T) (x : X)
   (w :
-    ∀ U V : open_nhds x fU : ∀ y : U.1, T y hU : P.pred fU fV : ∀ y : V.1, T y hV : P.pred fV e :
-      fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩,
-      ∃ (W : open_nhds x)(iU : W ⟶ U)(iV : W ⟶ V), ∀ w : W.1, fU (iU w : U.1) = fV (iV w : V.1)) :
+    ∀ (U V : open_nhds x) (fU : ∀ (y : U.1), T y) (hU : P.pred fU) (fV : ∀ (y : V.1), T y) (hV : P.pred fV)
+      (e : fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩),
+      ∃ (W : open_nhds x)(iU : W ⟶ U)(iV : W ⟶ V), ∀ (w : W.1), fU (iU w : U.1) = fV (iV w : V.1)) :
   Function.Injective (stalk_to_fiber P x) :=
   fun tU tV h =>
     by 
       let Q :
-        ∃ (W : «expr ᵒᵖ» (open_nhds x))(s : ∀ w : (unop W).1, T w)(hW : P.pred s),
+        ∃ (W : «expr ᵒᵖ» (open_nhds x))(s : ∀ (w : (unop W).1), T w)(hW : P.pred s),
           tU = (subsheaf_to_Types P).1.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ ∧
             tV = (subsheaf_to_Types P).1.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ :=
         _

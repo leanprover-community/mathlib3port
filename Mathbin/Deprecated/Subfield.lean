@@ -27,14 +27,16 @@ theorem Univ.is_subfield : IsSubfield (@Set.Univ F) :=
       by 
         intros  <;> trivial }
 
-theorem Preimage.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set K} (hs : IsSubfield s) :
-  IsSubfield (f ⁻¹' s) :=
-  { f.is_subring_preimage hs.to_is_subring with
-    inv_mem :=
-      fun a ha : f a ∈ s =>
-        show f (a⁻¹) ∈ s by 
-          rw [f.map_inv]
-          exact hs.inv_mem ha }
+-- error in Deprecated.Subfield: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem preimage.is_subfield
+{K : Type*}
+[field K]
+(f : «expr →+* »(F, K))
+{s : set K}
+(hs : is_subfield s) : is_subfield «expr ⁻¹' »(f, s) :=
+{ inv_mem := λ (a) (ha : «expr ∈ »(f a, s)), show «expr ∈ »(f «expr ⁻¹»(a), s), by { rw ["[", expr f.map_inv, "]"] [],
+    exact [expr hs.inv_mem ha] },
+  ..f.is_subring_preimage hs.to_is_subring }
 
 theorem Image.is_subfield {K : Type _} [Field K] (f : F →+* K) {s : Set F} (hs : IsSubfield s) : IsSubfield (f '' s) :=
   { f.is_subring_image hs.to_is_subring with
@@ -132,7 +134,7 @@ theorem IsSubfield.inter {S₁ S₂ : Set F} (hS₁ : IsSubfield S₁) (hS₂ : 
   { IsSubring.inter hS₁.to_is_subring hS₂.to_is_subring with
     inv_mem := fun x hx => ⟨hS₁.inv_mem hx.1, hS₂.inv_mem hx.2⟩ }
 
-theorem IsSubfield.Inter {ι : Sort _} {S : ι → Set F} (h : ∀ y : ι, IsSubfield (S y)) : IsSubfield (Set.Interₓ S) :=
+theorem IsSubfield.Inter {ι : Sort _} {S : ι → Set F} (h : ∀ (y : ι), IsSubfield (S y)) : IsSubfield (Set.Interₓ S) :=
   { IsSubring.Inter fun y => (h y).to_is_subring with
     inv_mem := fun x hx => Set.mem_Inter.2$ fun y => (h y).inv_mem$ Set.mem_Inter.1 hx y }
 

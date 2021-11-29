@@ -26,26 +26,20 @@ section
 
 variable[Semiringₓ R][TopologicalSpace R][TopologicalRing R]
 
+-- error in Topology.ContinuousFunction.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Every polynomial with coefficients in a topological semiring gives a (bundled) continuous function.
--/
-@[simps]
-def to_continuous_map (p : Polynomial R) : C(R, R) :=
-  ⟨fun x : R => p.eval x,
-    by 
-      continuity⟩
+-/ @[simps #[]] def to_continuous_map (p : polynomial R) : «exprC( , )»(R, R) :=
+⟨λ x : R, p.eval x, by continuity [] []⟩
 
+-- error in Topology.ContinuousFunction.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 A polynomial as a continuous function,
 with domain restricted to some subset of the semiring of coefficients.
 
 (This is particularly useful when restricting to compact sets, e.g. `[0,1]`.)
--/
-@[simps]
-def to_continuous_map_on (p : Polynomial R) (X : Set R) : C(X, R) :=
-  ⟨fun x : X => p.to_continuous_map x,
-    by 
-      continuity⟩
+-/ @[simps #[]] def to_continuous_map_on (p : polynomial R) (X : set R) : «exprC( , )»(X, R) :=
+⟨λ x : X, p.to_continuous_map x, by continuity [] []⟩
 
 end 
 

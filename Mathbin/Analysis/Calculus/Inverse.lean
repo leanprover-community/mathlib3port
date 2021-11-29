@@ -108,7 +108,7 @@ This predicate is defined to facilitate the splitting of the inverse function th
 lemmas. Some of these lemmas can be useful, e.g., to prove that the inverse function is defined
 on a specific set. -/
 def ApproximatesLinearOn (f : E → F) (f' : E →L[𝕜] F) (s : Set E) (c :  ℝ≥0 ) : Prop :=
-  ∀ x _ : x ∈ s y _ : y ∈ s, ∥f x - f y - f' (x - y)∥ ≤ c*∥x - y∥
+  ∀ x (_ : x ∈ s) y (_ : y ∈ s), ∥f x - f y - f' (x - y)∥ ≤ c*∥x - y∥
 
 namespace ApproximatesLinearOn
 
@@ -128,13 +128,15 @@ theorem mono_num (hc : c ≤ c') (hf : ApproximatesLinearOn f f' s c) : Approxim
 theorem mono_set (hst : s ⊆ t) (hf : ApproximatesLinearOn f f' t c) : ApproximatesLinearOn f f' s c :=
   fun x hx y hy => hf x (hst hx) y (hst hy)
 
-theorem lipschitz_sub (hf : ApproximatesLinearOn f f' s c) : LipschitzWith c fun x : s => f x - f' x :=
-  by 
-    refine' LipschitzWith.of_dist_le_mul fun x y => _ 
-    rw [dist_eq_norm, Subtype.dist_eq, dist_eq_norm]
-    convert hf x x.2 y y.2 using 2
-    rw [f'.map_sub]
-    abel
+-- error in Analysis.Calculus.Inverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lipschitz_sub (hf : approximates_linear_on f f' s c) : lipschitz_with c (λ x : s, «expr - »(f x, f' x)) :=
+begin
+  refine [expr lipschitz_with.of_dist_le_mul (λ x y, _)],
+  rw ["[", expr dist_eq_norm, ",", expr subtype.dist_eq, ",", expr dist_eq_norm, "]"] [],
+  convert [] [expr hf x x.2 y y.2] ["using", 2],
+  rw ["[", expr f'.map_sub, "]"] [],
+  abel [] [] []
+end
 
 protected theorem lipschitz (hf : ApproximatesLinearOn f f' s c) : LipschitzWith (nnnorm f'+c) (s.restrict f) :=
   by 

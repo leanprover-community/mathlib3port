@@ -27,9 +27,9 @@ section Rfind
 parameter (p : ℕ →. Bool)
 
 private def lbp (m n : ℕ) : Prop :=
-  (m = n+1) ∧ ∀ k _ : k ≤ n, ff ∈ p k
+  (m = n+1) ∧ ∀ k (_ : k ≤ n), ff ∈ p k
 
-parameter (H : ∃ n, tt ∈ p n ∧ ∀ k _ : k < n, (p k).Dom)
+parameter (H : ∃ n, tt ∈ p n ∧ ∀ k (_ : k < n), (p k).Dom)
 
 private def wf_lbp : WellFounded lbp :=
   ⟨let ⟨n, pn⟩ := H 
@@ -164,25 +164,19 @@ theorem rfind_opt_mono
    simp [] [] [] ["[", expr this, ",", expr get_mem, "]"] [] []
  end⟩
 
-inductive Partrec : (ℕ →. ℕ) → Prop
-  | zero : Partrec (pure 0)
-  | succ : Partrec succ
-  | left : Partrec («expr↑ » fun n : ℕ => n.unpair.1)
-  | right : Partrec («expr↑ » fun n : ℕ => n.unpair.2)
-  | pair {f g} : Partrec f → Partrec g → Partrec fun n => (mkpair <$> f n)<*>g n
-  | comp {f g} : Partrec f → Partrec g → Partrec fun n => g n >>= f
-  | prec {f g} :
-  Partrec f →
-    Partrec g →
-      Partrec
-        (unpaired
-          fun a n =>
-            n.elim (f a)
-              fun y IH =>
-                do 
-                  let i ← IH 
-                  g (mkpair a (mkpair y i)))
-  | rfind {f} : Partrec f → Partrec fun a => rfind fun n => (fun m => m = 0) <$> f (mkpair a n)
+-- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+inductive partrec : «expr →. »(exprℕ(), exprℕ()) → exprProp()
+| zero : partrec (pure 0)
+| succ : partrec succ
+| left : partrec «expr↑ »(λ n : exprℕ(), n.unpair.1)
+| right : partrec «expr↑ »(λ n : exprℕ(), n.unpair.2)
+| pair {f g} : partrec f → partrec g → partrec (λ n, «expr <*> »(«expr <$> »(mkpair, f n), g n))
+| comp {f g} : partrec f → partrec g → partrec (λ n, «expr >>= »(g n, f))
+| prec
+{f
+ g} : partrec f → partrec g → partrec (unpaired (λ
+  a n, n.elim (f a) (λ y IH, do { i ← IH, g (mkpair a (mkpair y i)) })))
+| rfind {f} : partrec f → partrec (λ a, rfind (λ n, «expr <$> »(λ m, «expr = »(m, 0), f (mkpair a n))))
 
 namespace Partrec
 
@@ -284,14 +278,16 @@ end Nat
 def Partrec {α σ} [Primcodable α] [Primcodable σ] (f : α →. σ) :=
   Nat.Partrec fun n => Part.bind (decode α n) fun a => (f a).map encode
 
-def Partrec₂ {α β σ} [Primcodable α] [Primcodable β] [Primcodable σ] (f : α → β →. σ) :=
-  Partrec fun p : α × β => f p.1 p.2
+-- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+def partrec₂ {α β σ} [primcodable α] [primcodable β] [primcodable σ] (f : α → «expr →. »(β, σ)) :=
+partrec (λ p : «expr × »(α, β), f p.1 p.2)
 
 def Computable {α σ} [Primcodable α] [Primcodable σ] (f : α → σ) :=
   Partrec (f : α →. σ)
 
-def Computable₂ {α β σ} [Primcodable α] [Primcodable β] [Primcodable σ] (f : α → β → σ) :=
-  Computable fun p : α × β => f p.1 p.2
+-- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+def computable₂ {α β σ} [primcodable α] [primcodable β] [primcodable σ] (f : α → β → σ) :=
+computable (λ p : «expr × »(α, β), f p.1 p.2)
 
 theorem Primrec.to_comp {α σ} [Primcodable α] [Primcodable σ] {f : α → σ} (hf : Primrec f) : Computable f :=
   (Nat.Partrec.ppred.comp (Nat.Partrec.of_primrec hf)).of_eq$
@@ -320,8 +316,8 @@ variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable σ]
 theorem of_eq {f g : α → σ} (hf : Computable f) (H : ∀ n, f n = g n) : Computable g :=
   (funext H : f = g) ▸ hf
 
-theorem const (s : σ) : Computable fun a : α => s :=
-  (Primrec.const _).to_comp
+-- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem const (s : σ) : computable (λ a : α, s) := (primrec.const _).to_comp
 
 theorem of_option {f : α → Option β} (hf : Computable f) : Partrec fun a => (f a : Part β) :=
   (Nat.Partrec.ppred.comp hf).of_eq$
@@ -381,8 +377,8 @@ theorem list_nth : Computable₂ (@List.nth α) :=
 theorem list_append : Computable₂ (· ++ · : List α → List α → List α) :=
   Primrec.list_append.to_comp
 
-theorem list_concat : Computable₂ fun l a : α => l ++ [a] :=
-  Primrec.list_concat.to_comp
+-- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem list_concat : computable₂ (λ (l) (a : α), «expr ++ »(l, «expr[ , ]»([a]))) := primrec.list_concat.to_comp
 
 theorem list_length : Computable (@List.length α) :=
   Primrec.list_length.to_comp
@@ -445,17 +441,16 @@ theorem of_eq {f g : α →. σ} (hf : Partrec f) (H : ∀ n, f n = g n) : Partr
 theorem of_eq_tot {f : α →. σ} {g : α → σ} (hf : Partrec f) (H : ∀ n, g n ∈ f n) : Computable g :=
   hf.of_eq fun a => eq_some_iff.2 (H a)
 
-theorem none : Partrec fun a : α => @Part.none σ :=
-  Nat.Partrec.none.of_eq$
-    fun n =>
-      by 
-        cases decode α n <;> simp 
+-- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem none : partrec (λ a : α, @part.none σ) :=
+«expr $ »(nat.partrec.none.of_eq, λ n, by cases [expr decode α n] []; simp [] [] [] [] [] [])
 
 protected theorem some : Partrec (@Part.some α) :=
   Computable.id
 
-theorem _root_.decidable.partrec.const' (s : Part σ) [Decidable s.dom] : Partrec fun a : α => s :=
-  (of_option (const (to_option s))).of_eq fun a => of_to_option s
+-- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem _root_.decidable.partrec.const' (s : part σ) [decidable s.dom] : partrec (λ a : α, s) :=
+(of_option (const (to_option s))).of_eq (λ a, of_to_option s)
 
 -- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem const' (s : part σ) : partrec (λ a : α, s) :=
@@ -607,22 +602,19 @@ theorem bind_decode₂_iff {f : α →. σ} :
         by 
           simpa [encodek₂] using (nat_iff.2 h).comp (@Computable.encode α _)⟩
 
-theorem vector_m_of_fn :
-  ∀ {n} {f : Finₓ n → α →. σ}, (∀ i, Partrec (f i)) → Partrec fun a : α => Vector.mOfFnₓ fun i => f i a
-| 0, f, hf => const _
-| n+1, f, hf =>
-  by 
-    simp [Vector.mOfFnₓ] <;>
-      exact
-        (hf 0).bind
-          (Partrec.bind ((vector_m_of_fn fun i => hf i.succ).comp fst)
-            (primrec.vector_cons.to_comp.comp (snd.comp fst) snd))
+-- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem vector_m_of_fn : ∀
+{n}
+{f : fin n → «expr →. »(α, σ)}, ∀ i, partrec (f i) → partrec (λ a : α, vector.m_of_fn (λ i, f i a))
+| 0, f, hf := const _
+| «expr + »(n, 1), f, hf := by simp [] [] [] ["[", expr vector.m_of_fn, "]"] [] []; exact [expr (hf 0).bind (partrec.bind ((vector_m_of_fn (λ
+     i, hf i.succ)).comp fst) (primrec.vector_cons.to_comp.comp (snd.comp fst) snd))]
 
 end Partrec
 
 @[simp]
 theorem Vector.m_of_fn_part_some {α n} :
-  ∀ f : Finₓ n → α, (Vector.mOfFnₓ fun i => Part.some (f i)) = Part.some (Vector.ofFn f) :=
+  ∀ (f : Finₓ n → α), (Vector.mOfFnₓ fun i => Part.some (f i)) = Part.some (Vector.ofFn f) :=
   Vector.m_of_fn_pure
 
 namespace Computable
@@ -761,15 +753,18 @@ theorem option_some_iff {f : α →. σ} : (Partrec fun a => (f a).map Option.so
             simp [Part.bind_assoc, bind_some_eq_map],
     fun hf => hf.map (option_some.comp snd).to₂⟩
 
-theorem option_cases_right {o : α → Option β} {f : α → σ} {g : α → β →. σ} (ho : Computable o) (hf : Computable f)
-  (hg : Partrec₂ g) : @Partrec _ σ _ _ fun a => Option.casesOn (o a) (some (f a)) (g a) :=
-  have  : Partrec fun a : α => Nat.cases (Part.some (f a)) (fun n => Part.bind (decode β n) (g a)) (encode (o a)) :=
-    nat_cases_right (encode_iff.2 ho) hf.partrec$
-      ((@Computable.decode β _).comp snd).ofOption.bind (hg.comp (fst.comp fst) snd).to₂ 
-  this.of_eq$
-    fun a =>
-      by 
-        cases' o a with b <;> simp [encodek]
+-- error in Computability.Partrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem option_cases_right
+{o : α → option β}
+{f : α → σ}
+{g : α → «expr →. »(β, σ)}
+(ho : computable o)
+(hf : computable f)
+(hg : partrec₂ g) : @partrec _ σ _ _ (λ a, option.cases_on (o a) (some (f a)) (g a)) :=
+have partrec (λ
+ a : α, nat.cases (part.some (f a)) (λ
+  n, part.bind (decode β n) (g a)) (encode (o a))) := «expr $ »(nat_cases_right (encode_iff.2 ho) hf.partrec, ((@computable.decode β _).comp snd).of_option.bind (hg.comp (fst.comp fst) snd).to₂),
+«expr $ »(this.of_eq, λ a, by cases [expr o a] ["with", ident b]; simp [] [] [] ["[", expr encodek, "]"] [] [])
 
 theorem sum_cases_right {f : α → Sum β γ} {g : α → β → σ} {h : α → γ →. σ} (hf : Computable f) (hg : Computable₂ g)
   (hh : Partrec₂ h) : @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (fun b => some (g a b)) (h a) :=

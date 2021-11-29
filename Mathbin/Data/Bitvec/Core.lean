@@ -31,7 +31,7 @@ protected def zero (n : ℕ) : Bitvec n :=
 
 /-- Create a bitvector of length `n` whose `n-1`st entry is 1 and other entries are 0. -/
 @[reducible]
-protected def one : ∀ n : ℕ, Bitvec n
+protected def one : ∀ (n : ℕ), Bitvec n
 | 0 => nil
 | succ n => repeat ff n++ₜtt::ᵥnil
 
@@ -234,12 +234,12 @@ section Conversion
 variable{α : Type}
 
 /-- Create a bitvector from a `nat` -/
-protected def of_nat : ∀ n : ℕ, Nat → Bitvec n
+protected def of_nat : ∀ (n : ℕ), Nat → Bitvec n
 | 0, x => nil
 | succ n, x => of_nat n (x / 2)++ₜto_bool (x % 2 = 1)::ᵥnil
 
 /-- Create a bitvector in the two's complement representation from an `int` -/
-protected def of_int : ∀ n : ℕ, Int → Bitvec (succ n)
+protected def of_int : ∀ (n : ℕ), Int → Bitvec (succ n)
 | n, Int.ofNat m => ff::ᵥBitvec.ofNat n m
 | n, Int.negSucc m => tt::ᵥNot (Bitvec.ofNat n m)
 
@@ -312,8 +312,9 @@ end Conversion
 /-! ### Miscellaneous instances -/
 
 
-private def reprₓ {n : Nat} : Bitvec n → Stringₓ
-| ⟨bs, p⟩ => "0b" ++ (bs.map fun b : Bool => if b then '1' else '0').asString
+-- error in Data.Bitvec.Core: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private def repr {n : nat} : bitvec n → string
+| ⟨bs, p⟩ := «expr ++ »("0b", (bs.map (λ b : bool, if b then '1' else '0')).as_string)
 
 instance  (n : Nat) : HasRepr (Bitvec n) :=
   ⟨reprₓ⟩

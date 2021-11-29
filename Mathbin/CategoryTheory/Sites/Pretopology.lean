@@ -55,21 +55,31 @@ a basis for a topology.
 -/
 @[ext]
 structure pretopology where 
-  Coverings : ∀ X : C, Set (presieve X)
-  has_isos : ∀ ⦃X Y⦄ f : Y ⟶ X [is_iso f], presieve.singleton f ∈ coverings X 
-  pullbacks : ∀ ⦃X Y⦄ f : Y ⟶ X S, S ∈ coverings X → pullback_arrows f S ∈ coverings Y 
+  Coverings : ∀ (X : C), Set (presieve X)
+  has_isos : ∀ ⦃X Y⦄ (f : Y ⟶ X) [is_iso f], presieve.singleton f ∈ coverings X 
+  pullbacks : ∀ ⦃X Y⦄ (f : Y ⟶ X) S, S ∈ coverings X → pullback_arrows f S ∈ coverings Y 
   Transitive :
-  ∀ ⦃X : C⦄ S : presieve X Ti : ∀ ⦃Y⦄ f : Y ⟶ X, S f → presieve Y,
-    S ∈ coverings X → (∀ ⦃Y⦄ f H : S f, Ti f H ∈ coverings Y) → S.bind Ti ∈ coverings X
+  ∀ ⦃X : C⦄ (S : presieve X) (Ti : ∀ ⦃Y⦄ (f : Y ⟶ X), S f → presieve Y),
+    S ∈ coverings X → (∀ ⦃Y⦄ f (H : S f), Ti f H ∈ coverings Y) → S.bind Ti ∈ coverings X
 
 namespace Pretopology
 
-instance  : CoeFun (pretopology C) fun _ => ∀ X : C, Set (presieve X) :=
+instance  : CoeFun (pretopology C) fun _ => ∀ (X : C), Set (presieve X) :=
   ⟨coverings⟩
 
+variable{C}
+
+instance  : LE (pretopology C) :=
+  { le := fun K₁ K₂ => (K₁ : ∀ (X : C), Set (presieve X)) ≤ K₂ }
+
+theorem le_def {K₁ K₂ : pretopology C} : K₁ ≤ K₂ ↔ (K₁ : ∀ (X : C), Set (presieve X)) ≤ K₂ :=
+  Iff.rfl
+
+variable(C)
+
 instance  : PartialOrderₓ (pretopology C) :=
-  { le := fun K₁ K₂ => (K₁ : ∀ X : C, Set _) ≤ K₂, le_refl := fun K => le_reflₓ _,
-    le_trans := fun K₁ K₂ K₃ h₁₂ h₂₃ => le_transₓ h₁₂ h₂₃,
+  { pretopology.has_le with le_refl := fun K => le_def.mpr (le_reflₓ _),
+    le_trans := fun K₁ K₂ K₃ h₁₂ h₂₃ => le_def.mpr (le_transₓ h₁₂ h₂₃),
     le_antisymm := fun K₁ K₂ h₁₂ h₂₁ => pretopology.ext _ _ (le_antisymmₓ h₁₂ h₂₁) }
 
 instance  : OrderTop (pretopology C) :=

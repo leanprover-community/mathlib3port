@@ -65,16 +65,12 @@ theorem not_is_cycle_one : ¬(1 : perm β).IsCycle :=
 theorem is_cycle.two_le_card_support {f : perm α} (h : is_cycle f) : 2 ≤ f.support.card :=
   two_le_card_support_of_ne_one h.ne_one
 
-theorem is_cycle_swap {α : Type _} [DecidableEq α] {x y : α} (hxy : x ≠ y) : is_cycle (swap x y) :=
-  ⟨y,
-    by 
-      rwa [swap_apply_right],
-    fun a ha : ite (a = x) y (ite (a = y) x a) ≠ a =>
-      if hya : y = a then ⟨0, hya⟩ else
-        ⟨1,
-          by 
-            rw [zpow_one, swap_apply_def]
-            splitIfs  at * <;> cc⟩⟩
+-- error in GroupTheory.Perm.Cycles: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_cycle_swap {α : Type*} [decidable_eq α] {x y : α} (hxy : «expr ≠ »(x, y)) : is_cycle (swap x y) :=
+⟨y, by rwa [expr swap_apply_right] [], λ
+ (a)
+ (ha : «expr ≠ »(ite «expr = »(a, x) y (ite «expr = »(a, y) x a), a)), if hya : «expr = »(y, a) then ⟨0, hya⟩ else ⟨1, by { rw ["[", expr zpow_one, ",", expr swap_apply_def, "]"] [],
+    split_ifs ["at", "*"] []; cc }⟩⟩
 
 theorem is_swap.is_cycle {α : Type _} [DecidableEq α] {f : perm α} (hf : is_swap f) : is_cycle f :=
   by 
@@ -200,7 +196,7 @@ theorem order_of_is_cycle {σ : perm α} (hσ : is_cycle σ) : orderOf σ = σ.s
     convert Fintype.card_congr (is_cycle.zpowers_equiv_support hσ)
 
 theorem is_cycle_swap_mul_aux₁ {α : Type _} [DecidableEq α] :
-  ∀ n : ℕ {b x : α} {f : perm α} hb : (swap x (f x)*f) b ≠ b h : (f ^ n) (f x) = b,
+  ∀ (n : ℕ) {b x : α} {f : perm α} (hb : (swap x (f x)*f) b ≠ b) (h : (f ^ n) (f x) = b),
     ∃ i : ℤ, ((swap x (f x)*f) ^ i) (f x) = b
 | 0 => fun b x f hb h => ⟨0, h⟩
 | (n+1 : ℕ) =>
@@ -224,7 +220,7 @@ theorem is_cycle_swap_mul_aux₁ {α : Type _} [DecidableEq α] :
             swap_apply_of_ne_of_ne (ne_and_ne_of_swap_mul_apply_ne_self hb).2 (Ne.symm hfbx)]⟩
 
 theorem is_cycle_swap_mul_aux₂ {α : Type _} [DecidableEq α] :
-  ∀ n : ℤ {b x : α} {f : perm α} hb : (swap x (f x)*f) b ≠ b h : (f ^ n) (f x) = b,
+  ∀ (n : ℤ) {b x : α} {f : perm α} (hb : (swap x (f x)*f) b ≠ b) (h : (f ^ n) (f x) = b),
     ∃ i : ℤ, ((swap x (f x)*f) ^ i) (f x) = b
 | (n : ℕ) => fun b x f => is_cycle_swap_mul_aux₁ n
 | -[1+ n] =>
@@ -300,7 +296,7 @@ theorem is_cycle.swap_mul {α : Type _} [DecidableEq α] {f : perm α} (hf : is_
           
       is_cycle_swap_mul_aux₂ (i - 1) hy hi⟩
 
-theorem is_cycle.sign : ∀ {f : perm α} hf : is_cycle f, sign f = -(-1 ^ f.support.card)
+theorem is_cycle.sign : ∀ {f : perm α} (hf : is_cycle f), sign f = -(-1 ^ f.support.card)
 | f =>
   fun hf =>
     let ⟨x, hx⟩ := hf 
@@ -390,7 +386,7 @@ begin
   { exact [expr (hb (extend_domain_apply_not_subtype _ _ pb)).elim] }
 end
 
-theorem nodup_of_pairwise_disjoint_cycles {l : List (perm β)} (h1 : ∀ f _ : f ∈ l, is_cycle f)
+theorem nodup_of_pairwise_disjoint_cycles {l : List (perm β)} (h1 : ∀ f (_ : f ∈ l), is_cycle f)
   (h2 : l.pairwise Disjoint) : l.nodup :=
   nodup_of_pairwise_disjoint (fun h => (h1 1 h).ne_one rfl) h2
 
@@ -730,7 +726,7 @@ theorem cycle_of_inv [Fintype α] (f : perm α) (x : α) : cycle_of f x⁻¹ = c
         splitIfs <;> simp_all [same_cycle_inv, same_cycle_inv_apply]
 
 @[simp]
-theorem cycle_of_pow_apply_self [Fintype α] (f : perm α) (x : α) : ∀ n : ℕ, (cycle_of f x ^ n) x = (f ^ n) x
+theorem cycle_of_pow_apply_self [Fintype α] (f : perm α) (x : α) : ∀ (n : ℕ), (cycle_of f x ^ n) x = (f ^ n) x
 | 0 => rfl
 | n+1 =>
   by 
@@ -738,7 +734,7 @@ theorem cycle_of_pow_apply_self [Fintype α] (f : perm α) (x : α) : ∀ n : �
     exact ⟨n, rfl⟩
 
 @[simp]
-theorem cycle_of_zpow_apply_self [Fintype α] (f : perm α) (x : α) : ∀ n : ℤ, (cycle_of f x ^ n) x = (f ^ n) x
+theorem cycle_of_zpow_apply_self [Fintype α] (f : perm α) (x : α) : ∀ (n : ℤ), (cycle_of f x ^ n) x = (f ^ n) x
 | (n : ℕ) => cycle_of_pow_apply_self f x n
 | -[1+ n] =>
   by 
@@ -954,66 +950,45 @@ theorem pow_mod_card_support_cycle_of_self_apply [Fintype α] (f : perm α) (n :
 -/
 
 
+-- error in GroupTheory.Perm.Cycles: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a list `l : list α` and a permutation `f : perm α` whose nonfixed points are all in `l`,
   recursively factors `f` into cycles. -/
-def cycle_factors_aux [Fintype α] :
-  ∀ l : List α f : perm α,
-    (∀ {x}, f x ≠ x → x ∈ l) → { l : List (perm α) // l.prod = f ∧ (∀ g _ : g ∈ l, is_cycle g) ∧ l.pairwise Disjoint }
-| [], f, h =>
-  ⟨[],
-    by 
-      simp only [imp_false, List.Pairwise.nil, List.not_mem_nil, forall_const, and_trueₓ, forall_prop_of_false, not_not,
-        not_false_iff, List.prod_nil] at *
-      ext 
-      simp ⟩
-| x :: l, f, h =>
-  if hx : f x = x then
-    cycle_factors_aux l f
-      fun y hy =>
-        List.mem_of_ne_of_memₓ
-          (fun h =>
-            hy
-              (by 
-                rwa [h]))
-          (h hy)
-  else
-    let ⟨m, hm₁, hm₂, hm₃⟩ :=
-      cycle_factors_aux l (cycle_of f x⁻¹*f)
-        fun y hy =>
-          List.mem_of_ne_of_memₓ
-            (fun h : y = x =>
-              by 
-                rw [h, mul_apply, Ne.def, inv_eq_iff_eq, cycle_of_apply_self] at hy 
-                exact hy rfl)
-            (h
-              fun h : f y = y =>
-                by 
-                  rw [mul_apply, h, Ne.def, inv_eq_iff_eq, cycle_of_apply] at hy 
-                  splitIfs  at hy <;> cc)
-    ⟨cycle_of f x :: m,
-      by 
-        rw [List.prod_cons, hm₁]
-        simp ,
-      fun g hg => ((List.mem_cons_iffₓ _ _ _).1 hg).elim (fun hg => hg.symm ▸ is_cycle_cycle_of _ hx) (hm₂ g),
-      List.pairwise_consₓ.2
-        ⟨fun g hg y =>
-            or_iff_not_imp_left.2
-              fun hfy =>
-                have hxy : same_cycle f x y := not_not.1 (mt cycle_of_apply_of_not_same_cycle hfy)
-                have hgm : g :: m.erase g ~ m := List.cons_perm_iff_perm_erase.2 ⟨hg, List.Perm.refl _⟩
-                have  : ∀ h _ : h ∈ m.erase g, Disjoint g h :=
-                  (List.pairwise_consₓ.1 ((hgm.pairwise_iff fun a b h : Disjoint a b => h.symm).2 hm₃)).1
-                Classical.by_cases id$
-                  fun hgy : g y ≠ y =>
-                    (disjoint_prod_right _ this y).resolve_right$
-                      have hsc : same_cycle (f⁻¹) x (f y) :=
-                        by 
-                          rwa [same_cycle_inv, same_cycle_apply]
-                      by 
-                        rw [disjoint_prod_perm hm₃ hgm.symm, List.prod_cons, ←eq_inv_mul_iff_mul_eq] at hm₁ 
-                        rwa [hm₁, mul_apply, mul_apply, cycle_of_inv, hsc.cycle_of_apply, inv_apply_self, inv_eq_iff_eq,
-                          eq_comm],
-          hm₃⟩⟩
+def cycle_factors_aux
+[fintype α] : ∀
+(l : list α)
+(f : perm α), ∀
+{x}, «expr ≠ »(f x, x) → «expr ∈ »(x, l) → {l : list (perm α) // «expr ∧ »(«expr = »(l.prod, f), «expr ∧ »(∀
+  g «expr ∈ » l, is_cycle g, l.pairwise disjoint))}
+| «expr[ , ]»([]), f, h := ⟨«expr[ , ]»([]), by { simp [] [] ["only"] ["[", expr imp_false, ",", expr list.pairwise.nil, ",", expr list.not_mem_nil, ",", expr forall_const, ",", expr and_true, ",", expr forall_prop_of_false, ",", expr not_not, ",", expr not_false_iff, ",", expr list.prod_nil, "]"] [] ["at", "*"],
+   ext [] [] [],
+   simp [] [] [] ["*"] [] [] }⟩
+| [«expr :: »/«expr :: »/«expr :: »](x, l), f, h := if hx : «expr = »(f x, x) then cycle_factors_aux l f (λ
+ y
+ hy, list.mem_of_ne_of_mem (λ
+  h, hy (by rwa [expr h] [])) (h hy)) else let ⟨m, hm₁, hm₂, hm₃⟩ := cycle_factors_aux l «expr * »(«expr ⁻¹»(cycle_of f x), f) (λ
+     y
+     hy, list.mem_of_ne_of_mem (λ
+      h : «expr = »(y, x), by { rw ["[", expr h, ",", expr mul_apply, ",", expr ne.def, ",", expr inv_eq_iff_eq, ",", expr cycle_of_apply_self, "]"] ["at", ident hy],
+        exact [expr hy rfl] }) (h (λ
+       h : «expr = »(f y, y), by { rw ["[", expr mul_apply, ",", expr h, ",", expr ne.def, ",", expr inv_eq_iff_eq, ",", expr cycle_of_apply, "]"] ["at", ident hy],
+         split_ifs ["at", ident hy] []; cc }))) in
+⟨[«expr :: »/«expr :: »/«expr :: »](cycle_of f x, m), by { rw ["[", expr list.prod_cons, ",", expr hm₁, "]"] [],
+   simp [] [] [] [] [] [] }, λ
+ g
+ hg, ((list.mem_cons_iff _ _ _).1 hg).elim (λ
+  hg, «expr ▸ »(hg.symm, is_cycle_cycle_of _ hx)) (hm₂ g), list.pairwise_cons.2 ⟨λ
+  g
+  hg
+  y, or_iff_not_imp_left.2 (λ hfy, have hxy : same_cycle f x y := not_not.1 (mt cycle_of_apply_of_not_same_cycle hfy),
+   have hgm : «expr ~ »([«expr :: »/«expr :: »/«expr :: »](g, m.erase g), m) := list.cons_perm_iff_perm_erase.2 ⟨hg, list.perm.refl _⟩,
+   have ∀
+   h «expr ∈ » m.erase g, disjoint g h, from (list.pairwise_cons.1 ((hgm.pairwise_iff (λ
+       (a b)
+       (h : disjoint a b), h.symm)).2 hm₃)).1,
+   «expr $ »(classical.by_cases id, λ
+    hgy : «expr ≠ »(g y, y), «expr $ »((disjoint_prod_right _ this y).resolve_right, have hsc : same_cycle «expr ⁻¹»(f) x (f y), by rwa ["[", expr same_cycle_inv, ",", expr same_cycle_apply, "]"] [],
+     by { rw ["[", expr disjoint_prod_perm hm₃ hgm.symm, ",", expr list.prod_cons, ",", "<-", expr eq_inv_mul_iff_mul_eq, "]"] ["at", ident hm₁],
+       rwa ["[", expr hm₁, ",", expr mul_apply, ",", expr mul_apply, ",", expr cycle_of_inv, ",", expr hsc.cycle_of_apply, ",", expr inv_apply_self, ",", expr inv_eq_iff_eq, ",", expr eq_comm, "]"] [] }))), hm₃⟩⟩
 
 -- error in GroupTheory.Perm.Cycles: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mem_list_cycles_iff
@@ -1054,8 +1029,8 @@ begin
 end
 
 theorem list_cycles_perm_list_cycles {α : Type _} [Fintype α] {l₁ l₂ : List (perm α)} (h₀ : l₁.prod = l₂.prod)
-  (h₁l₁ : ∀ σ : perm α, σ ∈ l₁ → σ.is_cycle) (h₁l₂ : ∀ σ : perm α, σ ∈ l₂ → σ.is_cycle) (h₂l₁ : l₁.pairwise Disjoint)
-  (h₂l₂ : l₂.pairwise Disjoint) : l₁ ~ l₂ :=
+  (h₁l₁ : ∀ (σ : perm α), σ ∈ l₁ → σ.is_cycle) (h₁l₂ : ∀ (σ : perm α), σ ∈ l₂ → σ.is_cycle)
+  (h₂l₁ : l₁.pairwise Disjoint) (h₂l₂ : l₂.pairwise Disjoint) : l₁ ~ l₂ :=
   by 
     classical 
     refine'
@@ -1070,13 +1045,13 @@ theorem list_cycles_perm_list_cycles {α : Type _} [Fintype α] {l₁ l₂ : Lis
 
 /-- Factors a permutation `f` into a list of disjoint cyclic permutations that multiply to `f`. -/
 def cycle_factors [Fintype α] [LinearOrderₓ α] (f : perm α) :
-  { l : List (perm α) // l.prod = f ∧ (∀ g _ : g ∈ l, is_cycle g) ∧ l.pairwise Disjoint } :=
+  { l : List (perm α) // l.prod = f ∧ (∀ g (_ : g ∈ l), is_cycle g) ∧ l.pairwise Disjoint } :=
   cycle_factors_aux (univ.sort (· ≤ ·)) f fun _ _ => (mem_sort _).2 (mem_univ _)
 
 /-- Factors a permutation `f` into a list of disjoint cyclic permutations that multiply to `f`,
   without a linear order. -/
 def trunc_cycle_factors [Fintype α] (f : perm α) :
-  Trunc { l : List (perm α) // l.prod = f ∧ (∀ g _ : g ∈ l, is_cycle g) ∧ l.pairwise Disjoint } :=
+  Trunc { l : List (perm α) // l.prod = f ∧ (∀ g (_ : g ∈ l), is_cycle g) ∧ l.pairwise Disjoint } :=
   Quotientₓ.recOnSubsingleton (@univ α _).1 (fun l h => Trunc.mk (cycle_factors_aux l f h))
     (show ∀ x, f x ≠ x → x ∈ (@univ α _).1 from fun _ _ => mem_univ _)
 
@@ -1084,15 +1059,14 @@ section CycleFactorsFinset
 
 variable[Fintype α](f : perm α)
 
+-- error in GroupTheory.Perm.Cycles: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Factors a permutation `f` into a `finset` of disjoint cyclic permutations that multiply to `f`.
--/
-def cycle_factors_finset : Finset (perm α) :=
-  (trunc_cycle_factors f).lift
-    (fun l : { l : List (perm α) // l.prod = f ∧ (∀ g _ : g ∈ l, is_cycle g) ∧ l.pairwise Disjoint } => l.val.to_finset)
-    fun ⟨l, hl⟩ ⟨l', hl'⟩ =>
-      List.to_finset_eq_of_perm _ _
-        (list_cycles_perm_list_cycles (hl'.left.symm ▸ hl.left) hl.right.left hl'.right.left hl.right.right
-          hl'.right.right)
+-/ def cycle_factors_finset : finset (perm α) :=
+(trunc_cycle_factors f).lift (λ
+ l : {l : list (perm α) // «expr ∧ »(«expr = »(l.prod, f), «expr ∧ »(∀
+   g «expr ∈ » l, is_cycle g, l.pairwise disjoint))}, l.val.to_finset) (λ
+ ⟨l, hl⟩
+ ⟨l', hl'⟩, list.to_finset_eq_of_perm _ _ (list_cycles_perm_list_cycles «expr ▸ »(hl'.left.symm, hl.left) hl.right.left hl'.right.left hl.right.right hl'.right.right))
 
 -- error in GroupTheory.Perm.Cycles: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem cycle_factors_finset_eq_list_to_finset
@@ -1123,8 +1097,8 @@ end
 
 theorem cycle_factors_finset_eq_finset {σ : perm α} {s : Finset (perm α)} :
   σ.cycle_factors_finset = s ↔
-    (∀ f : perm α, f ∈ s → f.is_cycle) ∧
-      ∃ h : ∀ a _ : a ∈ s b _ : b ∈ s, a ≠ b → Disjoint a b,
+    (∀ (f : perm α), f ∈ s → f.is_cycle) ∧
+      ∃ h : ∀ a (_ : a ∈ s) b (_ : b ∈ s), a ≠ b → Disjoint a b,
         (s.noncomm_prod id
             fun a ha b hb =>
               (em (a = b)).byCases (fun h => h ▸ Commute.refl a)
@@ -1173,7 +1147,7 @@ begin
 end
 
 theorem mem_cycle_factors_finset_iff {f p : perm α} :
-  p ∈ cycle_factors_finset f ↔ p.is_cycle ∧ ∀ a _ : a ∈ p.support, p a = f a :=
+  p ∈ cycle_factors_finset f ↔ p.is_cycle ∧ ∀ a (_ : a ∈ p.support), p a = f a :=
   by 
     obtain ⟨l, hl, hl'⟩ := f.cycle_factors_finset.exists_list_nodup_eq 
     rw [←hl']
@@ -1293,10 +1267,10 @@ end CycleFactorsFinset
 
 @[elab_as_eliminator]
 theorem cycle_induction_on [Fintype β] (P : perm β → Prop) (σ : perm β) (base_one : P 1)
-  (base_cycles : ∀ σ : perm β, σ.is_cycle → P σ)
-  (induction_disjoint : ∀ σ τ : perm β, Disjoint σ τ → is_cycle σ → P σ → P τ → P (σ*τ)) : P σ :=
+  (base_cycles : ∀ (σ : perm β), σ.is_cycle → P σ)
+  (induction_disjoint : ∀ (σ τ : perm β), Disjoint σ τ → is_cycle σ → P σ → P τ → P (σ*τ)) : P σ :=
   by 
-    suffices  : ∀ l : List (perm β), (∀ τ : perm β, τ ∈ l → τ.is_cycle) → l.pairwise Disjoint → P l.prod
+    suffices  : ∀ (l : List (perm β)), (∀ (τ : perm β), τ ∈ l → τ.is_cycle) → l.pairwise Disjoint → P l.prod
     ·
       classical 
       let x := σ.trunc_cycle_factors.out 
@@ -1560,7 +1534,7 @@ variable[Fintype α]{σ τ : perm α}
 noncomputable theory
 
 theorem is_conj_of_support_equiv (f : { x // x ∈ (σ.support : Set α) } ≃ { x // x ∈ (τ.support : Set α) })
-  (hf : ∀ x : α hx : x ∈ (σ.support : Set α), (f ⟨σ x, apply_mem_support.2 hx⟩ : α) = τ («expr↑ » (f ⟨x, hx⟩))) :
+  (hf : ∀ (x : α) (hx : x ∈ (σ.support : Set α)), (f ⟨σ x, apply_mem_support.2 hx⟩ : α) = τ («expr↑ » (f ⟨x, hx⟩))) :
   IsConj σ τ :=
   by 
     refine' is_conj_iff.2 ⟨Equiv.extendSubtype f, _⟩

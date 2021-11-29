@@ -434,17 +434,18 @@ instance  : Mul (FreeGroup α) :=
 theorem mul_mk : (mk L₁*mk L₂) = mk (L₁ ++ L₂) :=
   rfl
 
-instance  : HasInv (FreeGroup α) :=
-  ⟨fun x =>
-      Quot.liftOn x (fun L => mk (L.map$ fun x : α × Bool => (x.1, bnot x.2)).reverse)
-        fun a b h =>
-          Quot.sound$
-            by 
-              cases h <;> simp ⟩
+-- error in GroupTheory.FreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_inv (free_group α) :=
+⟨λ
+ x, quot.lift_on x (λ
+  L, mk «expr $ »(L.map, λ
+   x : «expr × »(α, bool), (x.1, bnot x.2)).reverse) (assume
+  a b h, «expr $ »(quot.sound, by cases [expr h] []; simp [] [] [] [] [] []))⟩
 
+-- error in GroupTheory.FreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem inv_mk : mk L⁻¹ = mk (L.map$ fun x : α × Bool => (x.1, bnot x.2)).reverse :=
-  rfl
+theorem inv_mk : «expr = »(«expr ⁻¹»(mk L), mk «expr $ »(L.map, λ x : «expr × »(α, bool), (x.1, bnot x.2)).reverse) :=
+rfl
 
 instance  : Groupₓ (FreeGroup α) :=
   { mul := ·*·, one := 1, inv := HasInv.inv,
@@ -614,11 +615,10 @@ variable{f}
 theorem map.mk : map f (mk L) = mk (L.map fun x => (f x.1, x.2)) :=
   rfl
 
-@[simp]
-theorem map.id : map id x = x :=
-  have H1 : (fun x : α × Bool => x) = id := rfl 
-  by 
-    rcases x with ⟨L⟩ <;> simp [H1]
+-- error in GroupTheory.FreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem map.id : «expr = »(map id x, x) :=
+have H1 : «expr = »(λ x : «expr × »(α, bool), x, id) := rfl,
+by rcases [expr x, "with", "⟨", ident L, "⟩"]; simp [] [] [] ["[", expr H1, "]"] [] []
 
 @[simp]
 theorem map.id' : map (fun z => z) x = x :=
@@ -632,17 +632,14 @@ theorem map.comp {γ : Type w} {f : α → β} {g : β → γ} {x} : map g (map 
 theorem map.of {x} : map f (of x) = of (f x) :=
   rfl
 
-theorem map.unique (g : FreeGroup α →* FreeGroup β) (hg : ∀ x, g (of x) = of (f x)) : ∀ {x}, g x = map f x :=
-  by 
-    rintro ⟨L⟩ <;>
-      exact
-        List.recOn L g.map_one
-          fun ⟨x, b⟩ t ih : g (mk t) = map f (mk t) =>
-            Bool.recOn b
-              (show g (of x⁻¹*mk t) = map f (of x⁻¹*mk t)by 
-                simp [g.map_mul, g.map_inv, hg, ih])
-              (show g (of x*mk t) = map f (of x*mk t)by 
-                simp [g.map_mul, hg, ih])
+-- error in GroupTheory.FreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem map.unique
+(g : «expr →* »(free_group α, free_group β))
+(hg : ∀ x, «expr = »(g (of x), of (f x))) : ∀ {x}, «expr = »(g x, map f x) :=
+by rintros ["⟨", ident L, "⟩"]; exact [expr list.rec_on L g.map_one (λ
+  ⟨x, b⟩
+  (t)
+  (ih : «expr = »(g (mk t), map f (mk t))), bool.rec_on b (show «expr = »(g «expr * »(«expr ⁻¹»(of x), mk t), map f «expr * »(«expr ⁻¹»(of x), mk t)), by simp [] [] [] ["[", expr g.map_mul, ",", expr g.map_inv, ",", expr hg, ",", expr ih, "]"] [] []) (show «expr = »(g «expr * »(of x, mk t), map f «expr * »(of x, mk t)), by simp [] [] [] ["[", expr g.map_mul, ",", expr hg, ",", expr ih, "]"] [] []))]
 
 /-- Equivalent types give rise to equivalent free groups. -/
 def free_group_congr {α β} (e : α ≃ β) : FreeGroup α ≃ FreeGroup β :=
@@ -1005,7 +1002,7 @@ theorem to_word.mk : ∀ {x : FreeGroup α}, mk (to_word x) = x :=
   by 
     rintro ⟨L⟩ <;> exact reduce.self
 
-theorem to_word.inj : ∀ x y : FreeGroup α, to_word x = to_word y → x = y :=
+theorem to_word.inj : ∀ (x y : FreeGroup α), to_word x = to_word y → x = y :=
   by 
     rintro ⟨L₁⟩ ⟨L₂⟩ <;> exact reduce.exact
 

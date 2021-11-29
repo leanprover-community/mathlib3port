@@ -87,7 +87,7 @@ theorem unpair_zero : unpair 0 = 0 :=
     rw [unpair]
     simp 
 
-theorem unpair_left_le : ∀ n : ℕ, (unpair n).1 ≤ n
+theorem unpair_left_le : ∀ (n : ℕ), (unpair n).1 ≤ n
 | 0 =>
   by 
     simp 

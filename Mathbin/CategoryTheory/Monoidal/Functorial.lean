@@ -42,21 +42,21 @@ variable{C : Type u₁}[category.{v₁} C][monoidal_category.{v₁} C]{D : Type 
 /-- An unbundled description of lax monoidal functors. -/
 class lax_monoidal(F : C → D)[functorial.{v₁, v₂} F] where 
   ε{} : 𝟙_ D ⟶ F (𝟙_ C)
-  μ{} : ∀ X Y : C, F X ⊗ F Y ⟶ F (X ⊗ Y)
-  μ_natural' : ∀ {X Y X' Y' : C} f : X ⟶ Y g : X' ⟶ Y', (map F f ⊗ map F g) ≫ μ Y Y' = μ X X' ≫ map F (f ⊗ g) :=  by 
+  μ{} : ∀ (X Y : C), F X ⊗ F Y ⟶ F (X ⊗ Y)
+  μ_natural' : ∀ {X Y X' Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y'), (map F f ⊗ map F g) ≫ μ Y Y' = μ X X' ≫ map F (f ⊗ g) :=  by 
   runTac 
     obviously 
   associativity' :
-  ∀ X Y Z : C,
+  ∀ (X Y Z : C),
     (μ X Y ⊗ 𝟙 (F Z)) ≫ μ (X ⊗ Y) Z ≫ map F (α_ X Y Z).Hom =
       (α_ (F X) (F Y) (F Z)).Hom ≫ (𝟙 (F X) ⊗ μ Y Z) ≫ μ X (Y ⊗ Z) :=
    by 
   runTac 
     obviously 
-  left_unitality' : ∀ X : C, (λ_ (F X)).Hom = (ε ⊗ 𝟙 (F X)) ≫ μ (𝟙_ C) X ≫ map F (λ_ X).Hom :=  by 
+  left_unitality' : ∀ (X : C), (λ_ (F X)).Hom = (ε ⊗ 𝟙 (F X)) ≫ μ (𝟙_ C) X ≫ map F (λ_ X).Hom :=  by 
   runTac 
     obviously 
-  right_unitality' : ∀ X : C, (ρ_ (F X)).Hom = (𝟙 (F X) ⊗ ε) ≫ μ X (𝟙_ C) ≫ map F (ρ_ X).Hom :=  by 
+  right_unitality' : ∀ (X : C), (ρ_ (F X)).Hom = (𝟙 (F X) ⊗ ε) ≫ μ X (𝟙_ C) ≫ map F (ρ_ X).Hom :=  by 
   runTac 
     obviously
 

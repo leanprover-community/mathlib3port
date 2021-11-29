@@ -60,9 +60,9 @@ variable{G : Type w}[TopologicalSpace G]
 from which one can define a measure. -/
 structure content(G : Type w)[TopologicalSpace G] where 
   toFun : compacts G →  ℝ≥0 
-  mono' : ∀ K₁ K₂ : compacts G, K₁.1 ⊆ K₂.1 → to_fun K₁ ≤ to_fun K₂ 
-  sup_disjoint' : ∀ K₁ K₂ : compacts G, Disjoint K₁.1 K₂.1 → to_fun (K₁⊔K₂) = to_fun K₁+to_fun K₂ 
-  sup_le' : ∀ K₁ K₂ : compacts G, to_fun (K₁⊔K₂) ≤ to_fun K₁+to_fun K₂
+  mono' : ∀ (K₁ K₂ : compacts G), K₁.1 ⊆ K₂.1 → to_fun K₁ ≤ to_fun K₂ 
+  sup_disjoint' : ∀ (K₁ K₂ : compacts G), Disjoint K₁.1 K₂.1 → to_fun (K₁⊔K₂) = to_fun K₁+to_fun K₂ 
+  sup_le' : ∀ (K₁ K₂ : compacts G), to_fun (K₁⊔K₂) ≤ to_fun K₁+to_fun K₂
 
 instance  : Inhabited (content G) :=
   ⟨{ toFun := fun K => 0,
@@ -215,7 +215,7 @@ by { have [] [] [":=", expr μ.inner_content_Sup_nat (λ i, ⟨U i, hU i⟩)],
   rwa ["[", expr opens.supr_def, "]"] ["at", ident this] }
 
 theorem inner_content_comap (f : G ≃ₜ G) (h : ∀ ⦃K : compacts G⦄, μ (K.map f f.continuous) = μ K) (U : opens G) :
-  μ.inner_content (U.comap f.continuous) = μ.inner_content U :=
+  μ.inner_content (opens.comap f.to_continuous_map U) = μ.inner_content U :=
   by 
     refine' supr_congr _ (compacts.equiv f).Surjective _ 
     intro K 
@@ -226,8 +226,8 @@ theorem inner_content_comap (f : G ≃ₜ G) (h : ∀ ⦃K : compacts G⦄, μ (
 
 @[toAdditive]
 theorem is_mul_left_invariant_inner_content [Groupₓ G] [TopologicalGroup G]
-  (h : ∀ g : G {K : compacts G}, μ (K.map _$ continuous_mul_left g) = μ K) (g : G) (U : opens G) :
-  μ.inner_content (U.comap$ continuous_mul_left g) = μ.inner_content U :=
+  (h : ∀ (g : G) {K : compacts G}, μ (K.map _$ continuous_mul_left g) = μ K) (g : G) (U : opens G) :
+  μ.inner_content (opens.comap (Homeomorph.mulLeft g).toContinuousMap U) = μ.inner_content U :=
   by 
     convert μ.inner_content_comap (Homeomorph.mulLeft g) (fun K => h g) U
 
@@ -248,7 +248,7 @@ begin
   rcases [expr compact_covered_by_mul_left_translates K.2 this, "with", "⟨", ident s, ",", ident hs, "⟩"],
   suffices [] [":", expr «expr ≤ »(μ K, «expr * »(s.card, μ.inner_content U))],
   { exact [expr «expr $ »(ennreal.mul_pos_iff.mp, hK.bot_lt.trans_le this).2] },
-  have [] [":", expr «expr ⊆ »(K.1, «expr↑ »(«expr⨆ , »((g «expr ∈ » s), «expr $ »(U.comap, continuous_mul_left g))))] [],
+  have [] [":", expr «expr ⊆ »(K.1, «expr↑ »(«expr⨆ , »((g «expr ∈ » s), opens.comap (homeomorph.mul_left g).to_continuous_map U)))] [],
   { simpa [] [] ["only"] ["[", expr opens.supr_def, ",", expr opens.coe_comap, ",", expr subtype.coe_mk, "]"] [] [] },
   refine [expr (μ.le_inner_content _ _ this).trans _],
   refine [expr (rel_supr_sum μ.inner_content μ.inner_content_empty ((«expr ≤ »)) μ.inner_content_Sup_nat _ _).trans _],
@@ -326,14 +326,14 @@ theorem outer_measure_lt_top_of_is_compact [LocallyCompactSpace G] {K : Set G} (
 
 @[toAdditive]
 theorem is_mul_left_invariant_outer_measure [Groupₓ G] [TopologicalGroup G]
-  (h : ∀ g : G {K : compacts G}, μ (K.map _$ continuous_mul_left g) = μ K) (g : G) (A : Set G) :
+  (h : ∀ (g : G) {K : compacts G}, μ (K.map _$ continuous_mul_left g) = μ K) (g : G) (A : Set G) :
   μ.outer_measure ((fun h => g*h) ⁻¹' A) = μ.outer_measure A :=
   by 
     convert μ.outer_measure_preimage (Homeomorph.mulLeft g) (fun K => h g) A
 
 theorem outer_measure_caratheodory (A : Set G) :
   μ.outer_measure.caratheodory.measurable_set' A ↔
-    ∀ U : opens G, (μ.outer_measure (U ∩ A)+μ.outer_measure (U \ A)) ≤ μ.outer_measure U :=
+    ∀ (U : opens G), (μ.outer_measure (U ∩ A)+μ.outer_measure (U \ A)) ≤ μ.outer_measure U :=
   by 
     dsimp [opens]
     rw [Subtype.forall]
@@ -343,8 +343,8 @@ theorem outer_measure_caratheodory (A : Set G) :
 
 @[toAdditive]
 theorem outer_measure_pos_of_is_mul_left_invariant [Groupₓ G] [TopologicalGroup G]
-  (h3 : ∀ g : G {K : compacts G}, μ (K.map _$ continuous_mul_left g) = μ K) (K : compacts G) (hK : μ K ≠ 0) {U : Set G}
-  (h1U : IsOpen U) (h2U : U.nonempty) : 0 < μ.outer_measure U :=
+  (h3 : ∀ (g : G) {K : compacts G}, μ (K.map _$ continuous_mul_left g) = μ K) (K : compacts G) (hK : μ K ≠ 0)
+  {U : Set G} (h1U : IsOpen U) (h2U : U.nonempty) : 0 < μ.outer_measure U :=
   by 
     convert μ.inner_content_pos_of_is_mul_left_invariant h3 K hK ⟨U, h1U⟩ h2U 
     exact μ.outer_measure_opens ⟨U, h1U⟩
@@ -394,7 +394,7 @@ protected def Measureₓ : Measureₓ G :=
 theorem measure_apply {s : Set G} (hs : MeasurableSet s) : μ.measure s = μ.outer_measure s :=
   to_measure_apply _ _ hs
 
--- error in MeasureTheory.Measure.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Measure.Content: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In a locally compact space, any measure constructed from a content is regular. -/
 instance regular [locally_compact_space G] : μ.measure.regular :=
 begin

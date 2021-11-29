@@ -22,7 +22,7 @@ section Identities
 `(x + y)^n` can be expressed as `x^n + n*x^(n-1)*y + k * y^2` for some `k` in the ring.
 -/
 def pow_add_expansion {R : Type _} [CommSemiringₓ R] (x y : R) :
-  ∀ n : ℕ, { k // (x+y) ^ n = ((x ^ n)+(n*x ^ (n - 1))*y)+k*y ^ 2 }
+  ∀ (n : ℕ), { k // (x+y) ^ n = ((x ^ n)+(n*x ^ (n - 1))*y)+k*y ^ 2 }
 | 0 =>
   ⟨0,
     by 
@@ -91,7 +91,7 @@ def binom_expansion (f : Polynomial R) (x y : R) :
 /--
 `x^n - y^n` can be expressed as `z * (x - y)` for some `z` in the ring.
 -/
-def pow_sub_pow_factor (x y : R) : ∀ i : ℕ, { z : R // x ^ i - y ^ i = z*x - y }
+def pow_sub_pow_factor (x y : R) : ∀ (i : ℕ), { z : R // x ^ i - y ^ i = z*x - y }
 | 0 =>
   ⟨0,
     by 

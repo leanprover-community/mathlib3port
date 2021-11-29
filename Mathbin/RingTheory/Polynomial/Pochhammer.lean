@@ -185,7 +185,7 @@ theorem factorial_mul_pochhammer (S : Type _) [Semiringₓ S] (r n : ℕ) :
   by 
     rwModCast [pochhammer_nat_eq_asc_factorial, Nat.factorial_mul_asc_factorial]
 
-theorem pochhammer_nat_eval_succ (r : ℕ) : ∀ n : ℕ, (n*(pochhammer ℕ r).eval (n+1)) = (n+r)*(pochhammer ℕ r).eval n
+theorem pochhammer_nat_eval_succ (r : ℕ) : ∀ (n : ℕ), (n*(pochhammer ℕ r).eval (n+1)) = (n+r)*(pochhammer ℕ r).eval n
 | 0 =>
   by 
     byCases' h : r = 0

@@ -453,6 +453,7 @@ def sections : List (List α) → List (List α)
 
 section Permutations
 
+-- error in Data.List.Defs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An auxiliary function for defining `permutations`. `permutations_aux2 t ts r ys f` is equal to
 `(ys ++ ts, (insert_left ys t ts).map f ++ r)`, where `insert_left ys t ts` (not explicitly
 defined) is the list of lists of the form `insert_nth n t (ys ++ ts)` for `0 ≤ n < length ys`.
@@ -462,11 +463,10 @@ defined) is the list of lists of the form `insert_nth n t (ys ++ ts)` for `0 ≤
        [[10, 1, 2, 3, 4, 5, 6],
         [1, 10, 2, 3, 4, 5, 6],
         [1, 2, 10, 3, 4, 5, 6]]) -/
-def permutations_aux2 (t : α) (ts : List α) (r : List β) : List α → (List α → β) → List α × List β
-| [], f => (ts, r)
-| y :: ys, f =>
-  let (us, zs) := permutations_aux2 ys fun x : List α => f (y :: x)
-  (y :: us, f (t :: y :: us) :: zs)
+def permutations_aux2 (t : α) (ts : list α) (r : list β) : list α → (list α → β) → «expr × »(list α, list β)
+| «expr[ , ]»([]), f := (ts, r)
+| «expr :: »(y, ys), f := let (us, zs) := permutations_aux2 ys (λ x : list α, f «expr :: »(y, x)) in
+(«expr :: »(y, us), «expr :: »(f «expr :: »(t, «expr :: »(y, us)), zs))
 
 private def meas : (Σ'_ : List α, List α) → ℕ × ℕ
 | ⟨l, i⟩ => (length l+length i, length l)
@@ -598,12 +598,12 @@ variable(R : α → α → Prop)
   and if `R = (<)` then it asserts that `l` is (strictly) sorted. -/
 inductive pairwise : List α → Prop
   | nil : pairwise []
-  | cons : ∀ {a : α} {l : List α}, (∀ a' _ : a' ∈ l, R a a') → pairwise l → pairwise (a :: l)
+  | cons : ∀ {a : α} {l : List α}, (∀ a' (_ : a' ∈ l), R a a') → pairwise l → pairwise (a :: l)
 
 variable{R}
 
 @[simp]
-theorem pairwise_cons {a : α} {l : List α} : pairwise R (a :: l) ↔ (∀ a' _ : a' ∈ l, R a a') ∧ pairwise R l :=
+theorem pairwise_cons {a : α} {l : List α} : pairwise R (a :: l) ↔ (∀ a' (_ : a' ∈ l), R a a') ∧ pairwise R l :=
   ⟨fun p =>
       by 
         cases' p with a l n p <;> exact ⟨n, p⟩,
@@ -626,7 +626,7 @@ def pw_filter (R : α → α → Prop) [DecidableRel R] : List α → List α
 | [] => []
 | x :: xs =>
   let IH := pw_filter xs 
-  if ∀ y _ : y ∈ IH, R x y then x :: IH else IH
+  if ∀ y (_ : y ∈ IH), R x y then x :: IH else IH
 
 section Chain
 
@@ -672,7 +672,7 @@ end Chain
 def nodup : List α → Prop :=
   pairwise (· ≠ ·)
 
-instance nodup_decidable [DecidableEq α] : ∀ l : List α, Decidable (nodup l) :=
+instance nodup_decidable [DecidableEq α] : ∀ (l : List α), Decidable (nodup l) :=
   List.decidablePairwiseₓ
 
 /-- `erase_dup l` removes duplicates from `l` (taking only the first occurrence).
@@ -728,7 +728,7 @@ variable(p : α → Prop)[DecidablePred p](l : List α)
 /-- Given a decidable predicate `p` and a proof of existence of `a ∈ l` such that `p a`,
 choose the first element with this property. This version returns both `a` and proofs
 of `a ∈ l` and `p a`. -/
-def choose_x : ∀ l : List α, ∀ hp : ∃ a, a ∈ l ∧ p a, { a // a ∈ l ∧ p a }
+def choose_x : ∀ (l : List α), ∀ (hp : ∃ a, a ∈ l ∧ p a), { a // a ∈ l ∧ p a }
 | [], hp => False.elim (Exists.elim hp fun a h => not_mem_nil a h.left)
 | l :: ls, hp =>
   if pl : p l then ⟨l, ⟨Or.inl rfl, pl⟩⟩ else

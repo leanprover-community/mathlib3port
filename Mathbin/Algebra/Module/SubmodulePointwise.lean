@@ -36,26 +36,21 @@ section
 
 variable[Monoidₓ α][DistribMulAction α M][SmulCommClass α R M]
 
+-- error in Algebra.Module.SubmodulePointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The action on a submodule corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-protected def pointwise_distrib_mul_action : DistribMulAction α (Submodule R M) :=
-  { smul := fun a S => S.map (DistribMulAction.toLinearMap _ _ a),
-    one_smul :=
-      fun S =>
-        (congr_argₓ (fun f => S.map f)
-              (LinearMap.ext$
-                by 
-                  exact one_smul α)).trans
-          S.map_id,
-    mul_smul :=
-      fun a₁ a₂ S =>
-        (congr_argₓ (fun f : M →ₗ[R] M => S.map f)
-              (LinearMap.ext$
-                by 
-                  exact mul_smul _ _)).trans
-          (S.map_comp _ _),
-    smul_zero := fun a => map_bot _, smul_add := fun a S₁ S₂ => map_sup _ _ _ }
+protected
+def pointwise_distrib_mul_action : distrib_mul_action α (submodule R M) :=
+{ smul := λ a S, S.map (distrib_mul_action.to_linear_map _ _ a),
+  one_smul := λ S, (congr_arg (λ f, S.map f) «expr $ »(linear_map.ext, by exact [expr one_smul α])).trans S.map_id,
+  mul_smul := λ
+  a₁
+  a₂
+  S, (congr_arg (λ
+    f : «expr →ₗ[ ] »(M, R, M), S.map f) «expr $ »(linear_map.ext, by exact [expr mul_smul _ _])).trans (S.map_comp _ _),
+  smul_zero := λ a, map_bot _,
+  smul_add := λ a S₁ S₂, map_sup _ _ _ }
 
 localized [Pointwise] attribute [instance] Submodule.pointwiseDistribMulAction
 
@@ -90,21 +85,19 @@ section
 
 variable[Semiringₓ α][Module α M][SmulCommClass α R M]
 
+-- error in Algebra.Module.SubmodulePointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The action on a submodule corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale.
 
 This is a stronger version of `submodule.pointwise_distrib_mul_action`. Note that `add_smul` does
 not hold so this cannot be stated as a `module`. -/
-protected def pointwise_mul_action_with_zero : MulActionWithZero α (Submodule R M) :=
-  { Submodule.pointwiseDistribMulAction with
-    zero_smul :=
-      fun S =>
-        (congr_argₓ (fun f : M →ₗ[R] M => S.map f)
-              (LinearMap.ext$
-                by 
-                  exact zero_smul α)).trans
-          S.map_zero }
+protected
+def pointwise_mul_action_with_zero : mul_action_with_zero α (submodule R M) :=
+{ zero_smul := λ
+  S, (congr_arg (λ
+    f : «expr →ₗ[ ] »(M, R, M), S.map f) «expr $ »(linear_map.ext, by exact [expr zero_smul α])).trans S.map_zero,
+  ..submodule.pointwise_distrib_mul_action }
 
 localized [Pointwise] attribute [instance] Submodule.pointwiseMulActionWithZero
 

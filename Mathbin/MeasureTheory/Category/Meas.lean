@@ -87,17 +87,15 @@ def Giry : CategoryTheory.Monad Meas :=
     left_unit' := fun α => Subtype.eq$ funext$ fun μ => @measure.join_dirac _ _ _,
     right_unit' := fun α => Subtype.eq$ funext$ fun μ => @measure.join_map_dirac _ _ _ }
 
+-- error in MeasureTheory.Category.Meas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An example for an algebra on `Measure`: the nonnegative Lebesgue integral is a hom, behaving
-nicely under the monad operations. -/
-def Integral : Giry.Algebra :=
-  { A := Meas.of ℝ≥0∞, a := ⟨fun m : Measureₓ ℝ≥0∞ => ∫⁻x, x ∂m, measure.measurable_lintegral measurable_id⟩,
-    unit' := Subtype.eq$ funext$ fun r : ℝ≥0∞ => lintegral_dirac' _ measurable_id,
-    assoc' :=
-      Subtype.eq$
-        funext$
-          fun μ : Measureₓ (Measureₓ ℝ≥0∞) =>
-            show (∫⁻x, x ∂μ.join) = ∫⁻x, x ∂measure.map (fun m : Measureₓ ℝ≥0∞ => ∫⁻x, x ∂m) μ by 
-              rw [measure.lintegral_join, lintegral_map] <;> applyRules [measurable_id, measure.measurable_lintegral] }
+nicely under the monad operations. -/ def Integral : Giry.algebra :=
+{ A := Meas.of «exprℝ≥0∞»(),
+  a := ⟨λ m : measure «exprℝ≥0∞»(), «expr∫⁻ , ∂ »((x), x, m), measure.measurable_lintegral measurable_id⟩,
+  unit' := «expr $ »(subtype.eq, «expr $ »(funext, assume r : «exprℝ≥0∞»(), lintegral_dirac' _ measurable_id)),
+  assoc' := «expr $ »(subtype.eq, «expr $ »(funext, assume
+    μ : measure (measure «exprℝ≥0∞»()), show «expr = »(«expr∫⁻ , ∂ »((x), x, μ.join), «expr∫⁻ , ∂ »((x), x, measure.map (λ
+       m : measure «exprℝ≥0∞»(), «expr∫⁻ , ∂ »((x), x, m)) μ)), by rw ["[", expr measure.lintegral_join, ",", expr lintegral_map, "]"] []; apply_rules ["[", expr measurable_id, ",", expr measure.measurable_lintegral, "]"])) }
 
 end Meas
 

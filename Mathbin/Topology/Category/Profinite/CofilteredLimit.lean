@@ -30,7 +30,7 @@ variable{J : Type u}[small_category J][is_cofiltered J]{F : J ⥤ Profinite.{u}}
 
 include hC
 
--- error in Topology.Category.Profinite.CofilteredLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Category.Profinite.CofilteredLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If `X` is a cofiltered limit of profinite sets, then any clopen subset of `X` arises from
 a clopen set in one of the terms in the limit.

@@ -398,11 +398,11 @@ instance  (α : Type _) [h : Nonempty α] : Nonempty (OrderDual α) :=
 instance  (α : Type _) [h : Subsingleton α] : Subsingleton (OrderDual α) :=
   h
 
-instance  (α : Type _) [LE α] : LE (OrderDual α) :=
-  ⟨fun x y : α => y ≤ x⟩
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance (α : Type*) [has_le α] : has_le (order_dual α) := ⟨λ x y : α, «expr ≤ »(y, x)⟩
 
-instance  (α : Type _) [LT α] : LT (OrderDual α) :=
-  ⟨fun x y : α => y < x⟩
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance (α : Type*) [has_lt α] : has_lt (order_dual α) := ⟨λ x y : α, «expr < »(y, x)⟩
 
 instance  (α : Type _) [HasZero α] : HasZero (OrderDual α) :=
   ⟨(0 : α)⟩
@@ -420,11 +420,16 @@ instance  (α : Type _) [Preorderₓ α] : Preorderₓ (OrderDual α) :=
 instance  (α : Type _) [PartialOrderₓ α] : PartialOrderₓ (OrderDual α) :=
   { OrderDual.preorder α with le_antisymm := fun a b hab hba => @le_antisymmₓ α _ a b hba hab }
 
-instance  (α : Type _) [LinearOrderₓ α] : LinearOrderₓ (OrderDual α) :=
-  { OrderDual.partialOrder α with le_total := fun a b : α => le_totalₓ b a,
-    decidableLe := (inferInstance : DecidableRel fun a b : α => b ≤ a),
-    decidableLt := (inferInstance : DecidableRel fun a b : α => b < a), min := @max α _, max := @min α _,
-    min_def := @LinearOrderₓ.max_def α _, max_def := @LinearOrderₓ.min_def α _ }
+-- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance (α : Type*) [linear_order α] : linear_order (order_dual α) :=
+{ le_total := λ a b : α, le_total b a,
+  decidable_le := (infer_instance : decidable_rel (λ a b : α, «expr ≤ »(b, a))),
+  decidable_lt := (infer_instance : decidable_rel (λ a b : α, «expr < »(b, a))),
+  min := @max α _,
+  max := @min α _,
+  min_def := @linear_order.max_def α _,
+  max_def := @linear_order.min_def α _,
+  ..order_dual.partial_order α }
 
 instance  : ∀ [Inhabited α], Inhabited (OrderDual α) :=
   id
@@ -443,12 +448,14 @@ end OrderDual
 /-! ### Order instances on the function space -/
 
 
-instance Pi.preorder {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] : Preorderₓ (∀ i, α i) :=
-  { le := fun x y => ∀ i, x i ≤ y i, le_refl := fun a i => le_reflₓ (a i),
-    le_trans := fun a b c h₁ h₂ i => le_transₓ (h₁ i) (h₂ i) }
+instance Pi.hasLe {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] : LE (∀ i, α i) :=
+  { le := fun x y => ∀ i, x i ≤ y i }
 
-theorem Pi.le_def {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] {x y : ∀ i, α i} : x ≤ y ↔ ∀ i, x i ≤ y i :=
+theorem Pi.le_def {ι : Type u} {α : ι → Type v} [∀ i, LE (α i)] {x y : ∀ i, α i} : x ≤ y ↔ ∀ i, x i ≤ y i :=
   Iff.rfl
+
+instance Pi.preorder {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] : Preorderₓ (∀ i, α i) :=
+  { Pi.hasLe with le_refl := fun a i => le_reflₓ (a i), le_trans := fun a b c h₁ h₂ i => le_transₓ (h₁ i) (h₂ i) }
 
 -- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem pi.lt_def
@@ -459,11 +466,11 @@ theorem pi.lt_def
 by simp [] [] [] ["[", expr lt_iff_le_not_le, ",", expr pi.le_def, "]"] [] [] { contextual := tt }
 
 theorem le_update_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
-  {a : α i} : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
+  {a : α i} : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ j (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 
 theorem update_le_iff {ι : Type u} {α : ι → Type v} [∀ i, Preorderₓ (α i)] [DecidableEq ι] {x y : ∀ i, α i} {i : ι}
-  {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ j _ : j ≠ i, x j ≤ y j :=
+  {a : α i} : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ j (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 
 -- error in Order.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -567,9 +574,9 @@ end Prod
 
 /-- Order without a maximal element. Sometimes called cofinal. -/
 class NoTopOrder(α : Type u)[Preorderₓ α] : Prop where 
-  no_top : ∀ a : α, ∃ a', a < a'
+  no_top : ∀ (a : α), ∃ a', a < a'
 
-theorem no_top [Preorderₓ α] [NoTopOrder α] : ∀ a : α, ∃ a', a < a' :=
+theorem no_top [Preorderₓ α] [NoTopOrder α] : ∀ (a : α), ∃ a', a < a' :=
   NoTopOrder.no_top
 
 instance nonempty_gt {α : Type u} [Preorderₓ α] [NoTopOrder α] (a : α) : Nonempty { x // a < x } :=
@@ -592,9 +599,9 @@ theorem IsTop.unique {α : Type u} [PartialOrderₓ α] {a b : α} (ha : IsTop a
 
 /-- Order without a minimal element. Sometimes called coinitial or dense. -/
 class NoBotOrder(α : Type u)[Preorderₓ α] : Prop where 
-  no_bot : ∀ a : α, ∃ a', a' < a
+  no_bot : ∀ (a : α), ∃ a', a' < a
 
-theorem no_bot [Preorderₓ α] [NoBotOrder α] : ∀ a : α, ∃ a', a' < a :=
+theorem no_bot [Preorderₓ α] [NoBotOrder α] : ∀ (a : α), ∃ a', a' < a :=
   NoBotOrder.no_bot
 
 /-- `a : α` is a bottom element of `α` if it is less than or equal to any other element of `α`.
@@ -623,7 +630,7 @@ instance nonempty_lt {α : Type u} [Preorderₓ α] [NoBotOrder α] (a : α) : N
 
 /-- An order is dense if there is an element between any pair of distinct elements. -/
 class DenselyOrdered(α : Type u)[Preorderₓ α] : Prop where 
-  dense : ∀ a₁ a₂ : α, a₁ < a₂ → ∃ a, a₁ < a ∧ a < a₂
+  dense : ∀ (a₁ a₂ : α), a₁ < a₂ → ∃ a, a₁ < a ∧ a < a₂
 
 theorem exists_between [Preorderₓ α] [DenselyOrdered α] : ∀ {a₁ a₂ : α}, a₁ < a₂ → ∃ a, a₁ < a ∧ a < a₂ :=
   DenselyOrdered.dense
@@ -641,7 +648,7 @@ theorem eq_of_le_of_forall_le_of_dense [LinearOrderₓ α] [DenselyOrdered α] {
   (h₂ : ∀ a, a₂ < a → a₁ ≤ a) : a₁ = a₂ :=
   le_antisymmₓ (le_of_forall_le_of_dense h₂) h₁
 
-theorem le_of_forall_ge_of_dense [LinearOrderₓ α] [DenselyOrdered α] {a₁ a₂ : α} (h : ∀ a₃ _ : a₃ < a₁, a₃ ≤ a₂) :
+theorem le_of_forall_ge_of_dense [LinearOrderₓ α] [DenselyOrdered α] {a₁ a₂ : α} (h : ∀ a₃ (_ : a₃ < a₁), a₃ ≤ a₂) :
   a₁ ≤ a₂ :=
   le_of_not_gtₓ$
     fun ha =>
@@ -649,11 +656,11 @@ theorem le_of_forall_ge_of_dense [LinearOrderₓ α] [DenselyOrdered α] {a₁ a
       lt_irreflₓ a$ lt_of_le_of_ltₓ (h _ ‹a < a₁›) ‹a₂ < a›
 
 theorem eq_of_le_of_forall_ge_of_dense [LinearOrderₓ α] [DenselyOrdered α] {a₁ a₂ : α} (h₁ : a₂ ≤ a₁)
-  (h₂ : ∀ a₃ _ : a₃ < a₁, a₃ ≤ a₂) : a₁ = a₂ :=
+  (h₂ : ∀ a₃ (_ : a₃ < a₁), a₃ ≤ a₂) : a₁ = a₂ :=
   (le_of_forall_ge_of_dense h₂).antisymm h₁
 
 theorem dense_or_discrete [LinearOrderₓ α] (a₁ a₂ : α) :
-  (∃ a, a₁ < a ∧ a < a₂) ∨ (∀ a, a₁ < a → a₂ ≤ a) ∧ ∀ a _ : a < a₂, a ≤ a₁ :=
+  (∃ a, a₁ < a ∧ a < a₂) ∨ (∀ a, a₁ < a → a₂ ≤ a) ∧ ∀ a (_ : a < a₂), a ≤ a₁ :=
   or_iff_not_imp_left.2$
     fun h =>
       ⟨fun a ha₁ => le_of_not_gtₓ$ fun ha₂ => h ⟨a, ha₁, ha₂⟩, fun a ha₂ => le_of_not_gtₓ$ fun ha₁ => h ⟨a, ha₁, ha₂⟩⟩

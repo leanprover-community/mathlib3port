@@ -14,12 +14,12 @@ universe u
 
 @[simp]
 theorem RingHom.map_zpow {K L : Type _} [DivisionRing K] [DivisionRing L] (f : K →+* L) :
-  ∀ a : K n : ℤ, f (a ^ n) = f a ^ n :=
+  ∀ (a : K) (n : ℤ), f (a ^ n) = f a ^ n :=
   f.to_monoid_with_zero_hom.map_zpow
 
 @[simp]
 theorem RingEquiv.map_zpow {K L : Type _} [DivisionRing K] [DivisionRing L] (f : K ≃+* L) :
-  ∀ a : K n : ℤ, f (a ^ n) = f a ^ n :=
+  ∀ (a : K) (n : ℤ), f (a ^ n) = f a ^ n :=
   f.to_ring_hom.map_zpow
 
 @[simp]
@@ -49,7 +49,7 @@ theorem zpow_eq_zero_iff (hn : 0 < n) : a ^ n = 0 ↔ a = 0 :=
     rintro rfl 
     exact zero_zpow _ hn.ne'
 
-theorem zpow_nonneg {a : K} (ha : 0 ≤ a) : ∀ z : ℤ, 0 ≤ a ^ z
+theorem zpow_nonneg {a : K} (ha : 0 ≤ a) : ∀ (z : ℤ), 0 ≤ a ^ z
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat]
@@ -59,7 +59,7 @@ theorem zpow_nonneg {a : K} (ha : 0 ≤ a) : ∀ z : ℤ, 0 ≤ a ^ z
     rw [zpow_neg_succ_of_nat]
     exact inv_nonneg.2 (pow_nonneg ha _)
 
-theorem zpow_pos_of_pos {a : K} (ha : 0 < a) : ∀ z : ℤ, 0 < a ^ z
+theorem zpow_pos_of_pos {a : K} (ha : 0 < a) : ∀ (z : ℤ), 0 < a ^ z
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat]
@@ -222,7 +222,7 @@ theorem abs_zpow_bit0 (a : K) (p : ℤ) : |a ^ bit0 p| = a ^ bit0 p :=
 
 end OrderedFieldPower
 
-theorem one_lt_zpow {K} [LinearOrderedField K] {p : K} (hp : 1 < p) : ∀ z : ℤ, 0 < z → 1 < p ^ z
+theorem one_lt_zpow {K} [LinearOrderedField K] {p : K} (hp : 1 < p) : ∀ (z : ℤ), 0 < z → 1 < p ^ z
 | (n : ℕ), h => (zpow_coe_nat p n).symm.subst (one_lt_pow hp$ Int.coe_nat_ne_zero.mp h.ne')
 | -[1+ n], h => ((Int.neg_succ_not_pos _).mp h).elim
 

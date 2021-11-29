@@ -311,6 +311,7 @@ theorem affine_combination_map (e : ι₂ ↪ ι) (w : ι → k) (p : ι → P) 
 
 variable{V}
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Suppose an indexed family of points is given, along with a subset
 of the index type.  A vector can be expressed as
 `weighted_vsub_of_point` using a `finset` lying within that subset and
@@ -318,38 +319,51 @@ with a given sum of weights if and only if it can be expressed as
 `weighted_vsub_of_point` with that sum of weights for the
 corresponding indexed family whose index type is the subtype
 corresponding to that subset. -/
-theorem eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype {v : V} {x : k} {s : Set ι} {p : ι → P}
-  {b : P} :
-  (∃ (fs : Finset ι)(hfs : «expr↑ » fs ⊆ s)(w : ι → k)(hw : (∑i in fs, w i) = x), v = fs.weighted_vsub_of_point p b w) ↔
-    ∃ (fs : Finset s)(w : s → k)(hw : (∑i in fs, w i) = x), v = fs.weighted_vsub_of_point (fun i : s => p i) b w :=
-  by 
-    simpRw [weighted_vsub_of_point_apply]
-    split 
-    ·
-      rintro ⟨fs, hfs, w, rfl, rfl⟩
-      use fs.subtype s, fun i => w i, sum_subtype_of_mem _ hfs, (sum_subtype_of_mem _ hfs).symm
-    ·
-      rintro ⟨fs, w, rfl, rfl⟩
-      refine'
-          ⟨fs.map (Function.Embedding.subtype _), map_subtype_subset _, fun i => if h : i ∈ s then w ⟨i, h⟩ else 0, _,
-            _⟩ <;>
-        simp 
+theorem eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype
+{v : V}
+{x : k}
+{s : set ι}
+{p : ι → P}
+{b : P} : «expr ↔ »(«expr∃ , »((fs : finset ι)
+  (hfs : «expr ⊆ »(«expr↑ »(fs), s))
+  (w : ι → k)
+  (hw : «expr = »(«expr∑ in , »((i), fs, w i), x)), «expr = »(v, fs.weighted_vsub_of_point p b w)), «expr∃ , »((fs : finset s)
+  (w : s → k)
+  (hw : «expr = »(«expr∑ in , »((i), fs, w i), x)), «expr = »(v, fs.weighted_vsub_of_point (λ i : s, p i) b w))) :=
+begin
+  simp_rw [expr weighted_vsub_of_point_apply] [],
+  split,
+  { rintros ["⟨", ident fs, ",", ident hfs, ",", ident w, ",", ident rfl, ",", ident rfl, "⟩"],
+    use ["[", expr fs.subtype s, ",", expr λ
+     i, w i, ",", expr sum_subtype_of_mem _ hfs, ",", expr (sum_subtype_of_mem _ hfs).symm, "]"] },
+  { rintros ["⟨", ident fs, ",", ident w, ",", ident rfl, ",", ident rfl, "⟩"],
+    refine [expr ⟨fs.map (function.embedding.subtype _), map_subtype_subset _, λ
+      i, if h : «expr ∈ »(i, s) then w ⟨i, h⟩ else 0, _, _⟩]; simp [] [] [] [] [] [] }
+end
 
 variable(k)
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Suppose an indexed family of points is given, along with a subset
 of the index type.  A vector can be expressed as `weighted_vsub` using
 a `finset` lying within that subset and with sum of weights 0 if and
 only if it can be expressed as `weighted_vsub` with sum of weights 0
 for the corresponding indexed family whose index type is the subtype
 corresponding to that subset. -/
-theorem eq_weighted_vsub_subset_iff_eq_weighted_vsub_subtype {v : V} {s : Set ι} {p : ι → P} :
-  (∃ (fs : Finset ι)(hfs : «expr↑ » fs ⊆ s)(w : ι → k)(hw : (∑i in fs, w i) = 0), v = fs.weighted_vsub p w) ↔
-    ∃ (fs : Finset s)(w : s → k)(hw : (∑i in fs, w i) = 0), v = fs.weighted_vsub (fun i : s => p i) w :=
-  eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype
+theorem eq_weighted_vsub_subset_iff_eq_weighted_vsub_subtype
+{v : V}
+{s : set ι}
+{p : ι → P} : «expr ↔ »(«expr∃ , »((fs : finset ι)
+  (hfs : «expr ⊆ »(«expr↑ »(fs), s))
+  (w : ι → k)
+  (hw : «expr = »(«expr∑ in , »((i), fs, w i), 0)), «expr = »(v, fs.weighted_vsub p w)), «expr∃ , »((fs : finset s)
+  (w : s → k)
+  (hw : «expr = »(«expr∑ in , »((i), fs, w i), 0)), «expr = »(v, fs.weighted_vsub (λ i : s, p i) w))) :=
+eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype
 
 variable(V)
 
+-- error in LinearAlgebra.AffineSpace.Combination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Suppose an indexed family of points is given, along with a subset
 of the index type.  A point can be expressed as an
 `affine_combination` using a `finset` lying within that subset and
@@ -357,12 +371,19 @@ with sum of weights 1 if and only if it can be expressed an
 `affine_combination` with sum of weights 1 for the corresponding
 indexed family whose index type is the subtype corresponding to that
 subset. -/
-theorem eq_affine_combination_subset_iff_eq_affine_combination_subtype {p0 : P} {s : Set ι} {p : ι → P} :
-  (∃ (fs : Finset ι)(hfs : «expr↑ » fs ⊆ s)(w : ι → k)(hw : (∑i in fs, w i) = 1), p0 = fs.affine_combination p w) ↔
-    ∃ (fs : Finset s)(w : s → k)(hw : (∑i in fs, w i) = 1), p0 = fs.affine_combination (fun i : s => p i) w :=
-  by 
-    simpRw [affine_combination_apply, eq_vadd_iff_vsub_eq]
-    exact eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype
+theorem eq_affine_combination_subset_iff_eq_affine_combination_subtype
+{p0 : P}
+{s : set ι}
+{p : ι → P} : «expr ↔ »(«expr∃ , »((fs : finset ι)
+  (hfs : «expr ⊆ »(«expr↑ »(fs), s))
+  (w : ι → k)
+  (hw : «expr = »(«expr∑ in , »((i), fs, w i), 1)), «expr = »(p0, fs.affine_combination p w)), «expr∃ , »((fs : finset s)
+  (w : s → k)
+  (hw : «expr = »(«expr∑ in , »((i), fs, w i), 1)), «expr = »(p0, fs.affine_combination (λ i : s, p i) w))) :=
+begin
+  simp_rw ["[", expr affine_combination_apply, ",", expr eq_vadd_iff_vsub_eq, "]"] [],
+  exact [expr eq_weighted_vsub_of_point_subset_iff_eq_weighted_vsub_of_point_subtype]
+end
 
 variable{k V}
 
@@ -589,9 +610,9 @@ end
 /-- Two indexed families of points that are injective on the given
 `finset`s and with the same points in the image of those `finset`s
 have the same centroid. -/
-theorem centroid_eq_of_inj_on_of_image_eq {p : ι → P} (hi : ∀ i j _ : i ∈ s _ : j ∈ s, p i = p j → i = j) {p₂ : ι₂ → P}
-  (hi₂ : ∀ i j _ : i ∈ s₂ _ : j ∈ s₂, p₂ i = p₂ j → i = j) (he : p '' «expr↑ » s = p₂ '' «expr↑ » s₂) :
-  s.centroid k p = s₂.centroid k p₂ :=
+theorem centroid_eq_of_inj_on_of_image_eq {p : ι → P} (hi : ∀ i j (_ : i ∈ s) (_ : j ∈ s), p i = p j → i = j)
+  {p₂ : ι₂ → P} (hi₂ : ∀ i j (_ : i ∈ s₂) (_ : j ∈ s₂), p₂ i = p₂ j → i = j)
+  (he : p '' «expr↑ » s = p₂ '' «expr↑ » s₂) : s.centroid k p = s₂.centroid k p₂ :=
   by 
     rw [s.centroid_eq_centroid_image_of_inj_on k hi rfl, s₂.centroid_eq_centroid_image_of_inj_on k hi₂ he]
 

@@ -106,7 +106,7 @@ begin
   refine [expr (summable.add _ _).mul_left _]; simp [] [] ["only"] ["[", expr nnreal.summable_rpow, "]"] [] []; linarith [] [] []
 end
 
-theorem ae_not_liouville_with : ∀ᵐx, ∀ p _ : p > (2 : ℝ), ¬LiouvilleWith p x :=
+theorem ae_not_liouville_with : ∀ᵐx, ∀ p (_ : p > (2 : ℝ)), ¬LiouvilleWith p x :=
   by 
     simpa only [ae_iff, not_forall, not_not, set_of_exists] using volume_Union_set_of_liouville_with
 

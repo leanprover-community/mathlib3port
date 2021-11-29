@@ -106,8 +106,8 @@ structure Besicovitch.SatelliteConfig(α : Type _)[MetricSpace α](N : ℕ)(τ :
   R : Finₓ N.succ → ℝ 
   rpos : ∀ i, 0 < r i 
   h : ∀ i j, i ≠ j → (r i ≤ dist (c i) (c j) ∧ r j ≤ τ*r i) ∨ r j ≤ dist (c j) (c i) ∧ r i ≤ τ*r j 
-  hlast : ∀ i _ : i < last N, r i ≤ dist (c i) (c (last N)) ∧ r (last N) ≤ τ*r i 
-  inter : ∀ i _ : i < last N, dist (c i) (c (last N)) ≤ r i+r (last N)
+  hlast : ∀ i (_ : i < last N), r i ≤ dist (c i) (c (last N)) ∧ r (last N) ≤ τ*r i 
+  inter : ∀ i (_ : i < last N), dist (c i) (c (last N)) ≤ r i+r (last N)
 
 /-- A metric space has the Besicovitch covering property if there exist `N` and `τ > 1` such that
 there are no satellite configuration of parameter `τ` with `N+1` points. This is the condition that
@@ -196,13 +196,12 @@ variable[Nonempty β](p : tau_package β α)
 
 include p
 
+-- error in MeasureTheory.Covering.Besicovitch: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Choose inductively large balls with centers that are not contained in the union of already
-chosen balls. This is a transfinite induction. -/
-noncomputable def index : Ordinal.{u} → β
-| i =>
-  let Z := ⋃j : { j // j < i }, ball (p.c (index j)) (p.r (index j))
-  let R := supr fun b : { b : β // p.c b ∉ Z } => p.r b 
-  Classical.epsilon fun b : β => p.c b ∉ Z ∧ R ≤ p.τ*p.r b
+chosen balls. This is a transfinite induction. -/ noncomputable def index : ordinal.{u} → β
+| i := let Z := «expr⋃ , »((j : {j // «expr < »(j, i)}), ball (p.c (index j)) (p.r (index j))),
+    R := supr (λ b : {b : β // «expr ∉ »(p.c b, Z)}, p.r b) in
+classical.epsilon (λ b : β, «expr ∧ »(«expr ∉ »(p.c b, Z), «expr ≤ »(R, «expr * »(p.τ, p.r b))))
 
 /-- The set of points that are covered by the union of balls selected at steps `< i`. -/
 def Union_up_to (i : Ordinal.{u}) : Set α :=
@@ -216,9 +215,10 @@ theorem monotone_Union_up_to : Monotone p.Union_up_to :=
     intro r 
     exact ⟨⟨r, r.2.trans_le hij⟩, subset.refl _⟩
 
+-- error in MeasureTheory.Covering.Besicovitch: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Supremum of the radii of balls whose centers are not yet covered at step `i`. -/
-def R (i : Ordinal.{u}) : ℝ :=
-  supr fun b : { b : β // p.c b ∉ p.Union_up_to i } => p.r b
+def R (i : ordinal.{u}) : exprℝ() :=
+supr (λ b : {b : β // «expr ∉ »(p.c b, p.Union_up_to i)}, p.r b)
 
 /-- Group the balls into disjoint families, by assigning to a ball the smallest color for which
 it does not intersect any already chosen ball of this color. -/
@@ -772,11 +772,11 @@ For a version giving the conclusion in a nicer form, see `exists_disjoint_closed
 -/
 theorem exists_disjoint_closed_ball_covering_ae_aux [second_countable_topology α] [HasBesicovitchCovering α]
   [MeasurableSpace α] [OpensMeasurableSpace α] (μ : Measureₓ α) [sigma_finite μ] (f : α → Set ℝ) (s : Set α)
-  (hf : ∀ x _ : x ∈ s, (f x).Nonempty) (hf' : ∀ x _ : x ∈ s, f x ⊆ Ioi 0) (hf'' : ∀ x _ : x ∈ s, Inf (f x) ≤ 0) :
+  (hf : ∀ x (_ : x ∈ s), (f x).Nonempty) (hf' : ∀ x (_ : x ∈ s), f x ⊆ Ioi 0) (hf'' : ∀ x (_ : x ∈ s), Inf (f x) ≤ 0) :
   ∃ t : Set (α × ℝ),
     countable t ∧
-      (∀ p : α × ℝ, p ∈ t → p.1 ∈ s) ∧
-        (∀ p : α × ℝ, p ∈ t → p.2 ∈ f p.1) ∧
+      (∀ (p : α × ℝ), p ∈ t → p.1 ∈ s) ∧
+        (∀ (p : α × ℝ), p ∈ t → p.2 ∈ f p.1) ∧
           μ (s \ ⋃(p : α × ℝ)(hp : p ∈ t), closed_ball p.1 p.2) = 0 ∧
             t.pairwise_disjoint fun p => closed_ball p.1 p.2 :=
   by 

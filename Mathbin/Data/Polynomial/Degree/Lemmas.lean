@@ -62,7 +62,7 @@ theorem degree_pos_of_root {p : polynomial R} (hp : «expr ≠ »(p, 0)) (h : is
    exact [expr hp this]
  end)
 
-theorem nat_degree_le_iff_coeff_eq_zero : p.nat_degree ≤ n ↔ ∀ N : ℕ, n < N → p.coeff N = 0 :=
+theorem nat_degree_le_iff_coeff_eq_zero : p.nat_degree ≤ n ↔ ∀ (N : ℕ), n < N → p.coeff N = 0 :=
   by 
     simpRw [nat_degree_le_iff_degree_le, degree_le_iff_coeff_zero, WithBot.coe_lt_coe]
 
@@ -155,7 +155,7 @@ theorem nat_degree_pos_of_eval₂_root
  end)
 
 theorem degree_pos_of_eval₂_root {p : Polynomial R} (hp : p ≠ 0) (f : R →+* S) {z : S} (hz : eval₂ f z p = 0)
-  (inj : ∀ x : R, f x = 0 → x = 0) : 0 < degree p :=
+  (inj : ∀ (x : R), f x = 0 → x = 0) : 0 < degree p :=
   nat_degree_pos_iff_degree_pos.mp (nat_degree_pos_of_eval₂_root hp f hz inj)
 
 @[simp]

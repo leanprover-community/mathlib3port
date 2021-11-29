@@ -97,7 +97,7 @@ end
 
 /-- A local maximum of a concave function is a global maximum, restricted to a set `s`. -/
 theorem IsMaxOn.of_is_local_max_on_of_concave_on {f : E → β} {a : E} (a_in_s : a ∈ s) (h_localmax : IsLocalMaxOn f s a)
-  (h_conc : ConcaveOn ℝ s f) : ∀ x _ : x ∈ s, f x ≤ f a :=
+  (h_conc : ConcaveOn ℝ s f) : ∀ x (_ : x ∈ s), f x ≤ f a :=
   @IsMinOn.of_is_local_min_on_of_convex_on _ (OrderDual β) _ _ _ _ _ _ _ _ s f a a_in_s h_localmax h_conc
 
 /-- A local minimum of a convex function is a global minimum. -/

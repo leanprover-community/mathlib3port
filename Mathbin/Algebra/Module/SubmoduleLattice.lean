@@ -67,7 +67,7 @@ instance unique_bot : Unique (⊥ : Submodule R M) :=
 instance : order_bot (submodule R M) :=
 { bot := «expr⊥»(), bot_le := λ p x, by simp [] [] [] [] [] [] { contextual := tt } }
 
-protected theorem eq_bot_iff (p : Submodule R M) : p = ⊥ ↔ ∀ x _ : x ∈ p, x = (0 : M) :=
+protected theorem eq_bot_iff (p : Submodule R M) : p = ⊥ ↔ ∀ x (_ : x ∈ p), x = (0 : M) :=
   ⟨fun h => h.symm ▸ fun x hx => (mem_bot R).mp hx, fun h => eq_bot_iff.mpr fun x hx => (mem_bot R).mpr (h x hx)⟩
 
 @[ext]
@@ -191,7 +191,7 @@ instance : has_Inf (submodule R M) :=
 private theorem Inf_le' {S : Set (Submodule R M)} {p} : p ∈ S → Inf S ≤ p :=
   Set.bInter_subset_of_mem
 
-private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀ q _ : q ∈ S, p ≤ q) → p ≤ Inf S :=
+private theorem le_Inf' {S : Set (Submodule R M)} {p} : (∀ q (_ : q ∈ S), p ≤ q) → p ≤ Inf S :=
   Set.subset_bInter
 
 -- error in Algebra.Module.SubmoduleLattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -208,7 +208,7 @@ instance  : CompleteLattice (Submodule R M) :=
     le_sup_left := fun a b => le_Inf'$ fun x ⟨ha, hb⟩ => ha, le_sup_right := fun a b => le_Inf'$ fun x ⟨ha, hb⟩ => hb,
     sup_le := fun a b c h₁ h₂ => Inf_le' ⟨h₁, h₂⟩, inf := ·⊓·, le_inf := fun a b c => Set.subset_inter,
     inf_le_left := fun a b => Set.inter_subset_left _ _, inf_le_right := fun a b => Set.inter_subset_right _ _,
-    sup := fun tt => Inf { t | ∀ t' _ : t' ∈ tt, t' ≤ t }, le_Sup := fun s p hs => le_Inf'$ fun q hq => hq _ hs,
+    sup := fun tt => Inf { t | ∀ t' (_ : t' ∈ tt), t' ≤ t }, le_Sup := fun s p hs => le_Inf'$ fun q hq => hq _ hs,
     Sup_le := fun s p hs => Inf_le' hs, inf := Inf, le_Inf := fun s a => le_Inf', Inf_le := fun s a => Inf_le' }
 
 @[simp]
@@ -243,7 +243,7 @@ theorem infi_coe {ι} (p : ι → Submodule R M) : («expr↑ » (⨅i, p i) : S
     rw [infi, Inf_coe] <;> ext a <;> simp  <;> exact ⟨fun h i => h _ i rfl, fun h i x e => e ▸ h _⟩
 
 @[simp]
-theorem mem_Inf {S : Set (Submodule R M)} {x : M} : x ∈ Inf S ↔ ∀ p _ : p ∈ S, x ∈ p :=
+theorem mem_Inf {S : Set (Submodule R M)} {x : M} : x ∈ Inf S ↔ ∀ p (_ : p ∈ S), x ∈ p :=
   Set.mem_bInter_iff
 
 @[simp]
@@ -252,7 +252,7 @@ theorem mem_infi {ι} (p : ι → Submodule R M) {x} : (x ∈ ⨅i, p i) ↔ ∀
     rw [←SetLike.mem_coe, infi_coe, Set.mem_Inter] <;> rfl
 
 @[simp]
-theorem mem_finset_inf {ι} {s : Finset ι} {p : ι → Submodule R M} {x : M} : x ∈ s.inf p ↔ ∀ i _ : i ∈ s, x ∈ p i :=
+theorem mem_finset_inf {ι} {s : Finset ι} {p : ι → Submodule R M} {x : M} : x ∈ s.inf p ↔ ∀ i (_ : i ∈ s), x ∈ p i :=
   by 
     simp only [←SetLike.mem_coe, finset_inf_coe, Set.mem_Inter]
 
@@ -275,7 +275,7 @@ theorem sum_mem_supr {ι : Type _} [Fintype ι] {f : ι → M} {p : ι → Submo
   (∑i, f i) ∈ ⨆i, p i :=
   sum_mem _$ fun i hi => mem_supr_of_mem i (h i)
 
-theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M} (h : ∀ i _ : i ∈ s, f i ∈ p i) :
+theorem sum_mem_bsupr {ι : Type _} {s : Finset ι} {f : ι → M} {p : ι → Submodule R M} (h : ∀ i (_ : i ∈ s), f i ∈ p i) :
   (∑i in s, f i) ∈ ⨆(i : _)(_ : i ∈ s), p i :=
   sum_mem _$ fun i hi => mem_supr_of_mem i$ mem_supr_of_mem hi (h i hi)
 

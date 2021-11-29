@@ -61,7 +61,7 @@ theorem val_mul {v : Nat → Int} {i : Int} {t : term} : val v (mul i t) = i*val
     simp only [mul, mul_addₓ, add_mulₓ, List.length_map, coeffs.val, coeffs.val_between_map_mul, val, List.map]
 
 theorem val_div {v : Nat → Int} {i b : Int} {as : List Int} :
-  i ∣ b → (∀ x _ : x ∈ as, i ∣ x) → (div i (b, as)).val v = val v (b, as) / i :=
+  i ∣ b → (∀ x (_ : x ∈ as), i ∣ x) → (div i (b, as)).val v = val v (b, as) / i :=
   by 
     intro h1 h2 
     simp only [val, div, List.map]

@@ -53,11 +53,11 @@ unsafe def find_scalars_core : Nat → List (List Nat × term) → tactic (List 
     let new ← elim_var m neg Pos 
     find_scalars_core m (new ++ zero)
 
+-- error in Tactic.Omega.FindScalars: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Perform Fourier–Motzkin elimination to find a contradictory
-    linear combination of input constraints. -/
-unsafe def find_scalars (ts : List term) : tactic (List Nat) :=
-  find_scalars_core (ts.map fun t : term => t.snd.length).maximum.iget
-    (ts.map_with_index fun m t => (List.Func.set 1 [] m, t))
+    linear combination of input constraints. -/ meta def find_scalars (ts : list term) : tactic (list nat) :=
+find_scalars_core (ts.map (λ
+  t : term, t.snd.length)).maximum.iget (ts.map_with_index (λ m t, (list.func.set 1 «expr[ , ]»([]) m, t)))
 
 end Omega
 

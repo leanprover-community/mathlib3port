@@ -274,7 +274,7 @@ let z1 : «exprℤ_[ ]»(p) := ⟨_, h1⟩, z' : «exprℤ_[ ]»(p) := «expr - 
 
 set_option eqn_compiler.zeta false
 
-private noncomputable def newton_seq_aux : ∀ n : ℕ, { z : ℤ_[p] // ih n z }
+private noncomputable def newton_seq_aux : ∀ (n : ℕ), { z : ℤ_[p] // ih n z }
 | 0 => ⟨a, ih_0⟩
 | k+1 => ih_n (newton_seq_aux k).2
 
@@ -337,7 +337,7 @@ private theorem newton_seq_succ_dist_weak (n : ℕ) :
       apply deriv_norm_ne_zero <;> assumption
     
 
-private theorem newton_seq_dist_aux (n : ℕ) : ∀ k : ℕ, ∥newton_seq (n+k) - newton_seq n∥ ≤ ∥F.derivative.eval a∥*T^2^n
+private theorem newton_seq_dist_aux (n : ℕ) : ∀ (k : ℕ), ∥newton_seq (n+k) - newton_seq n∥ ≤ ∥F.derivative.eval a∥*T^2^n
 | 0 =>
   by 
     simp [T_pow_nonneg hnorm, mul_nonneg]
@@ -367,7 +367,7 @@ private theorem newton_seq_dist {n k : ℕ} (hnk : n ≤ k) : ∥newton_seq k - 
   by 
     rw [hex'] <;> apply newton_seq_dist_aux <;> assumption
 
-private theorem newton_seq_dist_to_a : ∀ n : ℕ, 0 < n → ∥newton_seq n - a∥ = ∥F.eval a∥ / ∥F.derivative.eval a∥
+private theorem newton_seq_dist_to_a : ∀ (n : ℕ), 0 < n → ∥newton_seq n - a∥ = ∥F.eval a∥ / ∥F.derivative.eval a∥
 | 1, h =>
   by 
     simp [sub_eq_add_neg, add_assocₓ, newton_seq, newton_seq_aux, ih_n]
@@ -384,15 +384,14 @@ private theorem newton_seq_dist_to_a : ∀ n : ℕ, 0 < n → ∥newton_seq n - 
     _ = ∥Polynomial.eval a F∥ / ∥Polynomial.eval a (Polynomial.derivative F)∥ := newton_seq_dist_to_a (k+1) (succ_pos _)
     
 
-private theorem bound' : tendsto (fun n : ℕ => ∥F.derivative.eval a∥*T^2^n) at_top (𝓝 0) :=
-  by 
-    rw [←mul_zero ∥F.derivative.eval a∥]
-    exact
-      tendsto_const_nhds.mul
-        (tendsto.comp (tendsto_pow_at_top_nhds_0_of_lt_1 (norm_nonneg _) (T_lt_one hnorm))
-          (Nat.tendsto_pow_at_top_at_top_of_one_lt
-            (by 
-              normNum)))
+-- error in NumberTheory.Padics.Hensel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+theorem bound' : tendsto (λ
+ n : exprℕ(), «expr * »(«expr∥ ∥»(F.derivative.eval a), «expr ^ »(T, «expr ^ »(2, n)))) at_top (expr𝓝() 0) :=
+begin
+  rw ["<-", expr mul_zero «expr∥ ∥»(F.derivative.eval a)] [],
+  exact [expr tendsto_const_nhds.mul (tendsto.comp (tendsto_pow_at_top_nhds_0_of_lt_1 (norm_nonneg _) (T_lt_one hnorm)) (nat.tendsto_pow_at_top_at_top_of_one_lt (by norm_num [] [])))]
+end
 
 -- error in NumberTheory.Padics.Hensel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 private
@@ -412,16 +411,18 @@ begin
   simpa [] [] [] ["[", expr normed_field.norm_mul, ",", expr real.norm_eq_abs, ",", expr abs_of_nonneg (mtn n), "]"] [] ["using", expr hN _ hn]
 end
 
-private theorem bound'_sq : tendsto (fun n : ℕ => (∥F.derivative.eval a∥^2)*T^2^n) at_top (𝓝 0) :=
-  by 
-    rw [←mul_zero ∥F.derivative.eval a∥, sq]
-    simp only [mul_assocₓ]
-    apply tendsto.mul
-    ·
-      apply tendsto_const_nhds
-    ·
-      apply bound' 
-      assumption
+-- error in NumberTheory.Padics.Hensel: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+theorem bound'_sq : tendsto (λ
+ n : exprℕ(), «expr * »(«expr ^ »(«expr∥ ∥»(F.derivative.eval a), 2), «expr ^ »(T, «expr ^ »(2, n)))) at_top (expr𝓝() 0) :=
+begin
+  rw ["[", "<-", expr mul_zero «expr∥ ∥»(F.derivative.eval a), ",", expr sq, "]"] [],
+  simp [] [] ["only"] ["[", expr mul_assoc, "]"] [] [],
+  apply [expr tendsto.mul],
+  { apply [expr tendsto_const_nhds] },
+  { apply [expr bound'],
+    assumption }
+end
 
 private theorem newton_seq_is_cauchy : IsCauSeq norm newton_seq :=
   by 

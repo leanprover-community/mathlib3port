@@ -1,5 +1,5 @@
-import Mathbin.AlgebraicGeometry.PresheafedSpace 
-import Mathbin.Topology.Sheaves.Sheaf
+import Mathbin.AlgebraicGeometry.PresheafedSpace.HasColimits 
+import Mathbin.Topology.Sheaves.Functors
 
 /-!
 # Sheafed spaces
@@ -161,6 +161,19 @@ theorem Γ_map {X Y : «expr ᵒᵖ» (SheafedSpace C)} (f : X ⟶ Y) : Γ.map f
 
 theorem Γ_map_op {X Y : SheafedSpace C} (f : X ⟶ Y) : Γ.map f.op = f.c.app (op ⊤) :=
   rfl
+
+noncomputable instance  [has_limits C] : creates_colimits (forget_to_PresheafedSpace : SheafedSpace C ⥤ _) :=
+  ⟨fun J hJ =>
+      by 
+        exact
+          ⟨fun K =>
+              creates_colimit_of_fully_faithful_of_iso
+                ⟨(PresheafedSpace.colimit_cocone (K ⋙ forget_to_PresheafedSpace)).x,
+                  limit_is_sheaf _ fun j => sheaf.pushforward_sheaf_of_sheaf _ (K.obj (unop j)).2⟩
+                (colimit.iso_colimit_cocone ⟨_, PresheafedSpace.colimit_cocone_is_colimit _⟩).symm⟩⟩
+
+instance  [has_limits C] : has_colimits (SheafedSpace C) :=
+  has_colimits_of_has_colimits_creates_colimits forget_to_PresheafedSpace
 
 end SheafedSpace
 

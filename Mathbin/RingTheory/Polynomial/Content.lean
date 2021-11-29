@@ -31,9 +31,9 @@ variable{R : Type _}[CommSemiringₓ R]
 
 /-- A polynomial is primitive when the only constant polynomials dividing it are units -/
 def is_primitive (p : Polynomial R) : Prop :=
-  ∀ r : R, C r ∣ p → IsUnit r
+  ∀ (r : R), C r ∣ p → IsUnit r
 
-theorem is_primitive_iff_is_unit_of_C_dvd {p : Polynomial R} : p.is_primitive ↔ ∀ r : R, C r ∣ p → IsUnit r :=
+theorem is_primitive_iff_is_unit_of_C_dvd {p : Polynomial R} : p.is_primitive ↔ ∀ (r : R), C r ∣ p → IsUnit r :=
   Iff.rfl
 
 @[simp]
@@ -328,7 +328,7 @@ theorem content_mul_aux {p q : Polynomial R} :
 theorem content_mul {p q : Polynomial R} : (p*q).content = p.content*q.content :=
   by 
     classical 
-    suffices h : ∀ n : ℕ p q : Polynomial R, (p*q).degree < n → (p*q).content = p.content*q.content
+    suffices h : ∀ (n : ℕ) (p q : Polynomial R), (p*q).degree < n → (p*q).content = p.content*q.content
     ·
       apply h 
       apply lt_of_le_of_ltₓ degree_le_nat_degree (WithBot.coe_lt_coe.2 (Nat.lt_succ_selfₓ _))

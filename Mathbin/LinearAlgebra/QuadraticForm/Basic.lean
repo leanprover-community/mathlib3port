@@ -92,11 +92,11 @@ open QuadraticForm
 /-- A quadratic form over a module. -/
 structure QuadraticForm(R : Type u)(M : Type v)[Ringₓ R][AddCommGroupₓ M][Module R M] where 
   toFun : M → R 
-  to_fun_smul : ∀ a : R x : M, to_fun (a • x) = (a*a)*to_fun x 
-  polar_add_left' : ∀ x x' y : M, polar to_fun (x+x') y = polar to_fun x y+polar to_fun x' y 
-  polar_smul_left' : ∀ a : R x y : M, polar to_fun (a • x) y = a • polar to_fun x y 
-  polar_add_right' : ∀ x y y' : M, polar to_fun x (y+y') = polar to_fun x y+polar to_fun x y' 
-  polar_smul_right' : ∀ a : R x y : M, polar to_fun x (a • y) = a • polar to_fun x y
+  to_fun_smul : ∀ (a : R) (x : M), to_fun (a • x) = (a*a)*to_fun x 
+  polar_add_left' : ∀ (x x' y : M), polar to_fun (x+x') y = polar to_fun x y+polar to_fun x' y 
+  polar_smul_left' : ∀ (a : R) (x y : M), polar to_fun (a • x) y = a • polar to_fun x y 
+  polar_add_right' : ∀ (x y y' : M), polar to_fun x (y+y') = polar to_fun x y+polar to_fun x y' 
+  polar_smul_right' : ∀ (a : R) (x y : M), polar to_fun x (a • y) = a • polar to_fun x y
 
 namespace QuadraticForm
 
@@ -203,7 +203,7 @@ end OfTower
 variable{Q' : QuadraticForm R M}
 
 @[ext]
-theorem ext (H : ∀ x : M, Q x = Q' x) : Q = Q' :=
+theorem ext (H : ∀ (x : M), Q x = Q' x) : Q = Q' :=
   by 
     cases Q 
     cases Q' 
@@ -776,7 +776,7 @@ variable{R₂ : Type u}[OrderedRing R₂][Module R₂ M]{Q₂ : QuadraticForm R�
 
 /-- A positive definite quadratic form is positive on nonzero vectors. -/
 def pos_def (Q₂ : QuadraticForm R₂ M) : Prop :=
-  ∀ x _ : x ≠ 0, 0 < Q₂ x
+  ∀ x (_ : x ≠ 0), 0 < Q₂ x
 
 theorem pos_def.smul {R} [LinearOrderedCommRing R] [Module R M] {Q : QuadraticForm R M} (h : pos_def Q) {a : R}
   (a_pos : 0 < a) : pos_def (a • Q) :=

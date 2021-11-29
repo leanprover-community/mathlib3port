@@ -54,7 +54,7 @@ theorem DenomsClearable.add {N : ℕ} {f g : Polynomial R} :
         refine' @inv_unique K _ (i b) bg bf _ _ <;> rwa [mul_commₓ]⟩
 
 theorem denoms_clearable_of_nat_degree_le (N : ℕ) (a : R) (bu : (bi*i b) = 1) :
-  ∀ f : Polynomial R, f.nat_degree ≤ N → DenomsClearable a b N f i :=
+  ∀ (f : Polynomial R), f.nat_degree ≤ N → DenomsClearable a b N f i :=
   induction_with_nat_degree_le N (denoms_clearable_zero N a bu) (fun N_1 r r0 => denoms_clearable_C_mul_X_pow a bu r)
     fun f g fN gN df dg => df.add dg
 

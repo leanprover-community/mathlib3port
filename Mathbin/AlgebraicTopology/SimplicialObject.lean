@@ -249,7 +249,7 @@ open_locale Simplicial
 /-- Aaugment a simplicial object with an object. -/
 @[simps]
 def augment (X : simplicial_object C) (X₀ : C) (f : X _[0] ⟶ X₀)
-  (w : ∀ i : SimplexCategory g₁ g₂ : [0] ⟶ i, X.map g₁.op ≫ f = X.map g₂.op ≫ f) : simplicial_object.augmented C :=
+  (w : ∀ (i : SimplexCategory) (g₁ g₂ : [0] ⟶ i), X.map g₁.op ≫ f = X.map g₂.op ≫ f) : simplicial_object.augmented C :=
   { left := X, right := X₀,
     Hom :=
       { app := fun i => X.map (SimplexCategory.const i.unop 0).op ≫ f,
@@ -491,7 +491,7 @@ open_locale Simplicial
 /-- Augment a cosimplicial object with an object. -/
 @[simps]
 def augment (X : cosimplicial_object C) (X₀ : C) (f : X₀ ⟶ X.obj [0])
-  (w : ∀ i : SimplexCategory g₁ g₂ : [0] ⟶ i, f ≫ X.map g₁ = f ≫ X.map g₂) : cosimplicial_object.augmented C :=
+  (w : ∀ (i : SimplexCategory) (g₁ g₂ : [0] ⟶ i), f ≫ X.map g₁ = f ≫ X.map g₂) : cosimplicial_object.augmented C :=
   { left := X₀, right := X,
     Hom :=
       { app := fun i => f ≫ X.map (SimplexCategory.const i 0),

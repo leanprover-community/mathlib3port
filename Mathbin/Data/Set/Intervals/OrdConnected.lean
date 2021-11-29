@@ -27,14 +27,14 @@ the `order_topology`, then this condition is equivalent to `is_preconnected s`. 
 class ord_connected(s : Set α) : Prop where 
   out' ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s) : Icc x y ⊆ s
 
-theorem ord_connected.out (h : ord_connected s) : ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, Icc x y ⊆ s :=
+theorem ord_connected.out (h : ord_connected s) : ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), Icc x y ⊆ s :=
   h.1
 
-theorem ord_connected_def : ord_connected s ↔ ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, Icc x y ⊆ s :=
+theorem ord_connected_def : ord_connected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), Icc x y ⊆ s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 
 /-- It suffices to prove `[x, y] ⊆ s` for `x y ∈ s`, `x ≤ y`. -/
-theorem ord_connected_iff : ord_connected s ↔ ∀ x _ : x ∈ s y _ : y ∈ s, x ≤ y → Icc x y ⊆ s :=
+theorem ord_connected_iff : ord_connected s ↔ ∀ x (_ : x ∈ s) y (_ : y ∈ s), x ≤ y → Icc x y ⊆ s :=
   ord_connected_def.trans
     ⟨fun hs x hx y hy hxy => hs hx hy, fun H x hx y hy z hz => H x hx y hy (le_transₓ hz.1 hz.2) hz⟩
 
@@ -72,7 +72,7 @@ theorem ord_connected_dual {s : Set α} : ord_connected (OrderDual.ofDual ⁻¹'
         simpa only [ord_connected_def] using h.dual,
     fun h => h.dual⟩
 
-theorem ord_connected_sInter {S : Set (Set α)} (hS : ∀ s _ : s ∈ S, ord_connected s) : ord_connected (⋂₀S) :=
+theorem ord_connected_sInter {S : Set (Set α)} (hS : ∀ s (_ : s ∈ S), ord_connected s) : ord_connected (⋂₀S) :=
   ⟨fun x hx y hy => subset_sInter$ fun s hs => (hS s hs).out (hx s hs) (hy s hs)⟩
 
 theorem ord_connected_Inter {ι : Sort _} {s : ι → Set α} (hs : ∀ i, ord_connected (s i)) : ord_connected (⋂i, s i) :=
@@ -81,12 +81,12 @@ theorem ord_connected_Inter {ι : Sort _} {s : ι → Set α} (hs : ∀ i, ord_c
 instance ord_connected_Inter' {ι : Sort _} {s : ι → Set α} [∀ i, ord_connected (s i)] : ord_connected (⋂i, s i) :=
   ord_connected_Inter ‹_›
 
-theorem ord_connected_bInter {ι : Sort _} {p : ι → Prop} {s : ∀ i : ι hi : p i, Set α}
+theorem ord_connected_bInter {ι : Sort _} {p : ι → Prop} {s : ∀ (i : ι) (hi : p i), Set α}
   (hs : ∀ i hi, ord_connected (s i hi)) : ord_connected (⋂i hi, s i hi) :=
   ord_connected_Inter$ fun i => ord_connected_Inter$ hs i
 
 theorem ord_connected_pi {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] {s : Set ι} {t : ∀ i, Set (α i)}
-  (h : ∀ i _ : i ∈ s, ord_connected (t i)) : ord_connected (s.pi t) :=
+  (h : ∀ i (_ : i ∈ s), ord_connected (t i)) : ord_connected (s.pi t) :=
   ⟨fun x hx y hy z hz i hi => (h i hi).out (hx i hi) (hy i hi) ⟨hz.1 i, hz.2 i⟩⟩
 
 instance ord_connected_pi' {ι : Type _} {α : ι → Type _} [∀ i, Preorderₓ (α i)] {s : Set ι} {t : ∀ i, Set (α i)}
@@ -162,7 +162,7 @@ theorem ord_connected.interval_subset {s : Set β} (hs : ord_connected s) ⦃x�
     cases le_totalₓ x y <;> simp only [interval_of_le, interval_of_ge] <;> apply hs.out <;> assumption
 
 theorem ord_connected_iff_interval_subset {s : Set β} :
-  ord_connected s ↔ ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, interval x y ⊆ s :=
+  ord_connected s ↔ ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), interval x y ⊆ s :=
   ⟨fun h => h.interval_subset,
     fun h =>
       ord_connected_iff.2$

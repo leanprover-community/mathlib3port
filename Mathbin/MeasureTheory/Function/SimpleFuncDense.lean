@@ -88,7 +88,7 @@ theorem nearest_pt_zero (e : ℕ → α) : nearest_pt e 0 = const α (e 0) :=
   rfl
 
 theorem nearest_pt_ind_succ (e : ℕ → α) (N : ℕ) (x : α) :
-  nearest_pt_ind e (N+1) x = if ∀ k _ : k ≤ N, edist (e (N+1)) x < edist (e k) x then N+1 else nearest_pt_ind e N x :=
+  nearest_pt_ind e (N+1) x = if ∀ k (_ : k ≤ N), edist (e (N+1)) x < edist (e k) x then N+1 else nearest_pt_ind e N x :=
   by 
     simp only [nearest_pt_ind, coe_piecewise, Set.piecewise]
     congr 
@@ -455,13 +455,16 @@ theorem mem_ℒp_top (f : α →ₛ E) (μ : Measureₓ α) : mem_ℒp f ∞ μ 
   let ⟨C, hfC⟩ := f.exists_forall_norm_le 
   mem_ℒp_top_of_bound f.ae_measurable C$ eventually_of_forall hfC
 
-protected theorem snorm'_eq {p : ℝ} (f : α →ₛ F) (μ : Measureₓ α) :
-  snorm' f p μ = ((∑y in f.range, ((nnnorm y : ℝ≥0∞)^p)*μ (f ⁻¹' {y}))^1 / p) :=
-  have h_map : (fun a => (nnnorm (f a) : ℝ≥0∞)^p) = f.map fun a : F => (nnnorm a : ℝ≥0∞)^p :=
-    by 
-      simp 
-  by 
-    rw [snorm', h_map, lintegral_eq_lintegral, map_lintegral]
+-- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem snorm'_eq
+{p : exprℝ()}
+(f : «expr →ₛ »(α, F))
+(μ : measure α) : «expr = »(snorm' f p μ, «expr ^ »(«expr∑ in , »((y), f.range, «expr * »(«expr ^ »((nnnorm y : «exprℝ≥0∞»()), p), μ «expr ⁻¹' »(f, {y}))), «expr / »(1, p))) :=
+have h_map : «expr = »(λ
+ a, «expr ^ »((nnnorm (f a) : «exprℝ≥0∞»()), p), f.map (λ
+  a : F, «expr ^ »((nnnorm a : «exprℝ≥0∞»()), p))), by simp [] [] [] [] [] [],
+by rw ["[", expr snorm', ",", expr h_map, ",", expr lintegral_eq_lintegral, ",", expr map_lintegral, "]"] []
 
 -- error in MeasureTheory.Function.SimpleFuncDense: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem measure_preimage_lt_top_of_mem_ℒp
@@ -496,7 +499,7 @@ begin
   { simp [] [] [] ["[", expr hf_snorm, "]"] [] [] }
 end
 
-theorem mem_ℒp_of_finite_measure_preimage (p : ℝ≥0∞) {f : α →ₛ E} (hf : ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞) :
+theorem mem_ℒp_of_finite_measure_preimage (p : ℝ≥0∞) {f : α →ₛ E} (hf : ∀ y (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞) :
   mem_ℒp f p μ :=
   by 
     byCases' hp0 : p = 0
@@ -522,10 +525,10 @@ theorem mem_ℒp_of_finite_measure_preimage (p : ℝ≥0∞) {f : α →ₛ E} (
       exact (Ennreal.rpow_lt_top_of_nonneg Ennreal.to_real_nonneg Ennreal.coe_ne_top).Ne
 
 theorem mem_ℒp_iff {f : α →ₛ E} (hp_pos : 0 < p) (hp_ne_top : p ≠ ∞) :
-  mem_ℒp f p μ ↔ ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞ :=
+  mem_ℒp f p μ ↔ ∀ y (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ :=
   ⟨fun h => measure_preimage_lt_top_of_mem_ℒp hp_pos hp_ne_top f h, fun h => mem_ℒp_of_finite_measure_preimage p h⟩
 
-theorem integrable_iff {f : α →ₛ E} : integrable f μ ↔ ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞ :=
+theorem integrable_iff {f : α →ₛ E} : integrable f μ ↔ ∀ y (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞ :=
   mem_ℒp_one_iff_integrable.symm.trans$ mem_ℒp_iff Ennreal.zero_lt_one Ennreal.coe_ne_top
 
 theorem mem_ℒp_iff_integrable {f : α →ₛ E} (hp_pos : 0 < p) (hp_ne_top : p ≠ ∞) : mem_ℒp f p μ ↔ integrable f μ :=
@@ -556,7 +559,7 @@ theorem measure_preimage_lt_top_of_integrable (f : α →ₛ E) (hf : integrable
   μ (f ⁻¹' {x}) < ∞ :=
   integrable_iff.mp hf x hx
 
-theorem measure_support_lt_top [HasZero β] (f : α →ₛ β) (hf : ∀ y _ : y ≠ 0, μ (f ⁻¹' {y}) < ∞) : μ (support f) < ∞ :=
+theorem measure_support_lt_top [HasZero β] (f : α →ₛ β) (hf : ∀ y (_ : y ≠ 0), μ (f ⁻¹' {y}) < ∞) : μ (support f) < ∞ :=
   by 
     rw [support_eq]
     refine' (measure_bUnion_finset_le _ _).trans_lt (ennreal.sum_lt_top_iff.mpr fun y hy => _)
@@ -865,17 +868,18 @@ that the property holds for (multiples of) characteristic functions of finite-me
 sets and is closed under addition (of functions with disjoint support). -/
 @[elab_as_eliminator]
 protected theorem induction (hp_pos : 0 < p) (hp_ne_top : p ≠ ∞) {P : Lp.simple_func E p μ → Prop}
-  (h_ind : ∀ c : E {s : Set α} hs : MeasurableSet s hμs : μ s < ∞, P (Lp.simple_func.indicator_const p hs hμs.ne c))
+  (h_ind :
+    ∀ (c : E) {s : Set α} (hs : MeasurableSet s) (hμs : μ s < ∞), P (Lp.simple_func.indicator_const p hs hμs.ne c))
   (h_add :
     ∀ ⦃f g : α →ₛ E⦄,
-      ∀ hf : mem_ℒp f p μ,
-        ∀ hg : mem_ℒp g p μ,
+      ∀ (hf : mem_ℒp f p μ),
+        ∀ (hg : mem_ℒp g p μ),
           Disjoint (support f) (support g) →
             P (Lp.simple_func.to_Lp f hf) →
               P (Lp.simple_func.to_Lp g hg) → P (Lp.simple_func.to_Lp f hf+Lp.simple_func.to_Lp g hg))
   (f : Lp.simple_func E p μ) : P f :=
   by 
-    suffices  : ∀ f : α →ₛ E, ∀ hf : mem_ℒp f p μ, P (to_Lp f hf)
+    suffices  : ∀ (f : α →ₛ E), ∀ (hf : mem_ℒp f p μ), P (to_Lp f hf)
     ·
       rw [←to_Lp_to_simple_func f]
       apply this 
@@ -966,13 +970,14 @@ suffices to show that
 -/
 @[elab_as_eliminator]
 theorem Lp.induction [_i : Fact (1 ≤ p)] (hp_ne_top : p ≠ ∞) (P : Lp E p μ → Prop)
-  (h_ind : ∀ c : E {s : Set α} hs : MeasurableSet s hμs : μ s < ∞, P (Lp.simple_func.indicator_const p hs hμs.ne c))
+  (h_ind :
+    ∀ (c : E) {s : Set α} (hs : MeasurableSet s) (hμs : μ s < ∞), P (Lp.simple_func.indicator_const p hs hμs.ne c))
   (h_add :
     ∀ ⦃f g⦄,
-      ∀ hf : mem_ℒp f p μ,
-        ∀ hg : mem_ℒp g p μ,
+      ∀ (hf : mem_ℒp f p μ),
+        ∀ (hg : mem_ℒp g p μ),
           Disjoint (support f) (support g) → P (hf.to_Lp f) → P (hg.to_Lp g) → P (hf.to_Lp f+hg.to_Lp g))
-  (h_closed : IsClosed { f:Lp E p μ | P f }) : ∀ f : Lp E p μ, P f :=
+  (h_closed : IsClosed { f:Lp E p μ | P f }) : ∀ (f : Lp E p μ), P f :=
   by 
     refine' fun f => (Lp.simple_func.dense_range hp_ne_top).induction_on f h_closed _ 
     refine' Lp.simple_func.induction (lt_of_lt_of_leₓ Ennreal.zero_lt_one _i.elim) hp_ne_top _ _
@@ -1055,10 +1060,10 @@ of their images is a subset of `{0}`).
 -/
 @[elab_as_eliminator]
 theorem integrable.induction (P : (α → E) → Prop)
-  (h_ind : ∀ c : E ⦃s⦄, MeasurableSet s → μ s < ∞ → P (s.indicator fun _ => c))
+  (h_ind : ∀ (c : E) ⦃s⦄, MeasurableSet s → μ s < ∞ → P (s.indicator fun _ => c))
   (h_add : ∀ ⦃f g : α → E⦄, Disjoint (support f) (support g) → integrable f μ → integrable g μ → P f → P g → P (f+g))
   (h_closed : IsClosed { f:α →₁[μ] E | P f }) (h_ae : ∀ ⦃f g⦄, f =ᵐ[μ] g → integrable f μ → P f → P g) :
-  ∀ ⦃f : α → E⦄ hf : integrable f μ, P f :=
+  ∀ ⦃f : α → E⦄ (hf : integrable f μ), P f :=
   by 
     simp only [←mem_ℒp_one_iff_integrable] at *
     exact mem_ℒp.induction one_ne_top P h_ind h_add h_closed h_ae

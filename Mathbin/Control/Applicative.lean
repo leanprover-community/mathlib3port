@@ -102,10 +102,9 @@ theorem map_pure (f : α → β) (x : α) : (f <$> pure x : comp F G β) = pure 
     by 
       simp 
 
-theorem seq_pure (f : comp F G (α → β)) (x : α) : f <*> pure x = (fun g : α → β => g x) <$> f :=
-  comp.ext$
-    by 
-      simp' [· ∘ ·] with functor_norm
+-- error in Control.Applicative: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem seq_pure (f : comp F G (α → β)) (x : α) : «expr = »(«expr <*> »(f, pure x), «expr <$> »(λ g : α → β, g x, f)) :=
+«expr $ »(comp.ext, by simp [] [] [] ["[", expr («expr ∘ »), "]"] ["with", ident functor_norm] [])
 
 theorem seq_assoc (x : comp F G α) (f : comp F G (α → β)) (g : comp F G (β → γ)) :
   g <*> (f <*> x) = @Function.comp α β γ <$> g <*> f <*> x :=

@@ -37,7 +37,7 @@ variable[has_zero_morphisms C]
 
 /-- An object is simple if monomorphisms into it are (exclusively) either isomorphisms or zero. -/
 class simple(X : C) : Prop where 
-  mono_is_iso_iff_nonzero : ∀ {Y : C} f : Y ⟶ X [mono f], is_iso f ↔ f ≠ 0
+  mono_is_iso_iff_nonzero : ∀ {Y : C} (f : Y ⟶ X) [mono f], is_iso f ↔ f ≠ 0
 
 /-- A nonzero monomorphism to a simple object is an isomorphism. -/
 theorem is_iso_of_mono_of_nonzero {X Y : C} [simple Y] {f : X ⟶ Y} [mono f] (w : f ≠ 0) : is_iso f :=

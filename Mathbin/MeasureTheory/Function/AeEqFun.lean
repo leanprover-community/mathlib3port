@@ -305,10 +305,10 @@ end Order
 
 variable(α)
 
+-- error in MeasureTheory.Function.AeEqFun: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The equivalence class of a constant function: `[λa:α, b]`, based on the equivalence relation of
-    being almost everywhere equal -/
-def const (b : β) : α →ₘ[μ] β :=
-  mk (fun a : α => b) ae_measurable_const
+    being almost everywhere equal -/ def const (b : β) : «expr →ₘ[ ] »(α, μ, β) :=
+mk (λ a : α, b) ae_measurable_const
 
 theorem coe_fn_const (b : β) : (const α b : α →ₘ[μ] β) =ᵐ[μ] Function.const α b :=
   coe_fn_mk _ _
@@ -322,9 +322,10 @@ instance  [Inhabited β] : Inhabited (α →ₘ[μ] β) :=
 instance  [HasOne β] : HasOne (α →ₘ[μ] β) :=
   ⟨const α 1⟩
 
-@[toAdditive]
-theorem one_def [HasOne β] : (1 : α →ₘ[μ] β) = mk (fun a : α => 1) ae_measurable_const :=
-  rfl
+-- error in MeasureTheory.Function.AeEqFun: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem one_def [has_one β] : «expr = »((1 : «expr →ₘ[ ] »(α, μ, β)), mk (λ a : α, 1) ae_measurable_const) :=
+rfl
 
 @[toAdditive]
 theorem coe_fn_one [HasOne β] : «expr⇑ » (1 : α →ₘ[μ] β) =ᵐ[μ] 1 :=

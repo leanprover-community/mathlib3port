@@ -97,7 +97,7 @@ theorem lift_on_to_finmap {γ} (s : Alist β) (f : Alist β → γ) H : lift_on 
 /-- Lift a permutation-respecting function on 2 `alist`s to 2 `finmap`s. -/
 @[elab_as_eliminator]
 def lift_on₂ {γ} (s₁ s₂ : Finmap β) (f : Alist β → Alist β → γ)
-  (H : ∀ a₁ b₁ a₂ b₂ : Alist β, a₁.entries ~ a₂.entries → b₁.entries ~ b₂.entries → f a₁ b₁ = f a₂ b₂) : γ :=
+  (H : ∀ (a₁ b₁ a₂ b₂ : Alist β), a₁.entries ~ a₂.entries → b₁.entries ~ b₂.entries → f a₁ b₁ = f a₂ b₂) : γ :=
   lift_on s₁ (fun l₁ => lift_on s₂ (f l₁) fun b₁ b₂ p => H _ _ _ _ (perm.refl _) p)
     fun a₁ a₂ p =>
       have H' : f a₁ = f a₂ := funext fun _ => H _ _ _ _ p (perm.refl _)
@@ -114,18 +114,18 @@ theorem lift_on₂_to_finmap {γ} (s₁ s₂ : Alist β) (f : Alist β → Alist
 
 
 @[elab_as_eliminator]
-theorem induction_on {C : Finmap β → Prop} (s : Finmap β) (H : ∀ a : Alist β, C («expr⟦ ⟧» a)) : C s :=
+theorem induction_on {C : Finmap β → Prop} (s : Finmap β) (H : ∀ (a : Alist β), C («expr⟦ ⟧» a)) : C s :=
   by 
     rcases s with ⟨⟨a⟩, h⟩ <;> exact H ⟨a, h⟩
 
 @[elab_as_eliminator]
 theorem induction_on₂ {C : Finmap β → Finmap β → Prop} (s₁ s₂ : Finmap β)
-  (H : ∀ a₁ a₂ : Alist β, C («expr⟦ ⟧» a₁) («expr⟦ ⟧» a₂)) : C s₁ s₂ :=
+  (H : ∀ (a₁ a₂ : Alist β), C («expr⟦ ⟧» a₁) («expr⟦ ⟧» a₂)) : C s₁ s₂ :=
   induction_on s₁$ fun l₁ => induction_on s₂$ fun l₂ => H l₁ l₂
 
 @[elab_as_eliminator]
 theorem induction_on₃ {C : Finmap β → Finmap β → Finmap β → Prop} (s₁ s₂ s₃ : Finmap β)
-  (H : ∀ a₁ a₂ a₃ : Alist β, C («expr⟦ ⟧» a₁) («expr⟦ ⟧» a₂) («expr⟦ ⟧» a₃)) : C s₁ s₂ s₃ :=
+  (H : ∀ (a₁ a₂ a₃ : Alist β), C («expr⟦ ⟧» a₁) («expr⟦ ⟧» a₂) («expr⟦ ⟧» a₃)) : C s₁ s₂ s₃ :=
   induction_on₂ s₁ s₂$ fun l₁ l₂ => induction_on s₃$ fun l₃ => H l₁ l₂ l₃
 
 /-! ### extensionality -/
@@ -577,7 +577,7 @@ end
 
 /-- `disjoint s₁ s₂` holds if `s₁` and `s₂` have no keys in common. -/
 def Disjoint (s₁ s₂ : Finmap β) : Prop :=
-  ∀ x _ : x ∈ s₁, ¬x ∈ s₂
+  ∀ x (_ : x ∈ s₁), ¬x ∈ s₂
 
 theorem disjoint_empty (x : Finmap β) : Disjoint ∅ x :=
   fun.

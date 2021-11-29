@@ -34,8 +34,8 @@ variable(R M)
 of `R` on a Type `M` with `0`, such that the equality `r • m = 0` holds if at least one among `r`
 or `m` equals `0`. -/
 class SmulWithZero[HasZero R][HasZero M] extends HasScalar R M where 
-  smul_zero : ∀ r : R, r • (0 : M) = 0
-  zero_smul : ∀ m : M, (0 : R) • m = 0
+  smul_zero : ∀ (r : R), r • (0 : M) = 0
+  zero_smul : ∀ (m : M), (0 : R) • m = 0
 
 instance MulZeroClass.toSmulWithZero [MulZeroClass R] : SmulWithZero R R :=
   { smul := ·*·, smul_zero := mul_zero, zero_smul := zero_mul }
@@ -66,7 +66,7 @@ variable{R M}[HasZero R'][HasZero M'][HasScalar R M']
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
-  (smul : ∀ a : R b, f (a • b) = a • f b) : SmulWithZero R M' :=
+  (smul : ∀ (a : R) b, f (a • b) = a • f b) : SmulWithZero R M' :=
   { smul := · • ·,
     zero_smul :=
       fun a =>
@@ -83,7 +83,7 @@ protected def Function.Injective.smulWithZero (f : ZeroHom M' M) (hf : Function.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.smulWithZero (f : ZeroHom M M') (hf : Function.Surjective f)
-  (smul : ∀ a : R b, f (a • b) = a • f b) : SmulWithZero R M' :=
+  (smul : ∀ (a : R) b, f (a • b) = a • f b) : SmulWithZero R M' :=
   { smul := · • ·,
     zero_smul :=
       fun m =>
@@ -121,8 +121,8 @@ variable(R M)
 is compatible with `0` (both in `R` and in `M`), with `1 ∈ R`, and with associativity of
 multiplication on the monoid `M`. -/
 class MulActionWithZero extends MulAction R M where 
-  smul_zero : ∀ r : R, r • (0 : M) = 0
-  zero_smul : ∀ m : M, (0 : R) • m = 0
+  smul_zero : ∀ (r : R), r • (0 : M) = 0
+  zero_smul : ∀ (m : M), (0 : R) • m = 0
 
 instance (priority := 100)MulActionWithZero.toSmulWithZero [m : MulActionWithZero R M] : SmulWithZero R M :=
   { m with  }
@@ -142,14 +142,14 @@ variable{R M}[MulActionWithZero R M][HasZero M'][HasScalar R M']
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.mulActionWithZero (f : ZeroHom M' M) (hf : Function.Injective f)
-  (smul : ∀ a : R b, f (a • b) = a • f b) : MulActionWithZero R M' :=
+  (smul : ∀ (a : R) b, f (a • b) = a • f b) : MulActionWithZero R M' :=
   { hf.mul_action f smul, hf.smul_with_zero f smul with  }
 
 /-- Pushforward a `mul_action_with_zero` structure along a surjective zero-preserving homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.mulActionWithZero (f : ZeroHom M M') (hf : Function.Surjective f)
-  (smul : ∀ a : R b, f (a • b) = a • f b) : MulActionWithZero R M' :=
+  (smul : ∀ (a : R) b, f (a • b) = a • f b) : MulActionWithZero R M' :=
   { hf.mul_action f smul, hf.smul_with_zero f smul with  }
 
 variable(M)

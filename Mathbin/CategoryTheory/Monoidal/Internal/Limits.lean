@@ -97,16 +97,12 @@ instance has_limits : has_limits (Mon_ C) :=
         by 
           exact { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
 
+-- error in CategoryTheory.Monoidal.Internal.Limits: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 instance forget_preserves_limits : preserves_limits (Mon_.forget C) :=
-  { PreservesLimitsOfShape :=
-      fun J 𝒥 =>
-        by 
-          exact
-            { PreservesLimit :=
-                fun F : J ⥤ Mon_ C =>
-                  preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F)
-                    (is_limit.of_iso_limit (limit.is_limit (F ⋙ Mon_.forget C))
-                      (forget_map_cone_limit_cone_iso F).symm) } }
+{ preserves_limits_of_shape := λ
+  J
+  𝒥, by exactI [expr { preserves_limit := λ
+     F : «expr ⥤ »(J, Mon_ C), preserves_limit_of_preserves_limit_cone (limit_cone_is_limit F) (is_limit.of_iso_limit (limit.is_limit «expr ⋙ »(F, Mon_.forget C)) (forget_map_cone_limit_cone_iso F).symm) }] }
 
 end Mon_
 

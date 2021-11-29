@@ -33,8 +33,8 @@ class State(S : Type u) where
   turnBound : S → ℕ 
   l : S → Finset S 
   r : S → Finset S 
-  left_bound : ∀ {s t : S} m : t ∈ L s, turn_bound t < turn_bound s 
-  right_bound : ∀ {s t : S} m : t ∈ R s, turn_bound t < turn_bound s
+  left_bound : ∀ {s t : S} (m : t ∈ L s), turn_bound t < turn_bound s 
+  right_bound : ∀ {s t : S} (m : t ∈ R s), turn_bound t < turn_bound s
 
 open State
 
@@ -68,7 +68,7 @@ theorem turn_bound_of_right {s t : S} (m : t ∈ R s) (n : ℕ) (h : turn_bound 
 Construct a `pgame` from a state and a (not necessarily optimal) bound on the number of
 turns remaining.
 -/
-def of_aux : ∀ n : ℕ s : S h : turn_bound s ≤ n, Pgame
+def of_aux : ∀ (n : ℕ) (s : S) (h : turn_bound s ≤ n), Pgame
 | 0, s, h =>
   Pgame.mk { t // t ∈ L s } { t // t ∈ R s }
     (fun t =>
@@ -85,7 +85,7 @@ def of_aux : ∀ n : ℕ s : S h : turn_bound s ≤ n, Pgame
 
 /-- Two different (valid) turn bounds give equivalent games. -/
 def of_aux_relabelling :
-  ∀ s : S n m : ℕ hn : turn_bound s ≤ n hm : turn_bound s ≤ m, relabelling (of_aux n s hn) (of_aux m s hm)
+  ∀ (s : S) (n m : ℕ) (hn : turn_bound s ≤ n) (hm : turn_bound s ≤ m), relabelling (of_aux n s hn) (of_aux m s hm)
 | s, 0, 0, hn, hm =>
   by 
     dsimp [Pgame.ofAux]

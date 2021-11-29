@@ -76,9 +76,10 @@ def boundary (n : ℕ) : SSet :=
 
 localized [Simplicial] notation "∂Δ[" n "]" => SSet.boundary n
 
+-- error in AlgebraicTopology.SimplicialSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The inclusion of the boundary of the `n`-th standard simplex into that standard simplex. -/
-def boundary_inclusion (n : ℕ) : ∂Δ[n] ⟶ Δ[n] :=
-  { app := fun m α : { α : Δ[n].obj m // _ } => α }
+def boundary_inclusion (n : exprℕ()) : «expr ⟶ »(«expr∂Δ[ ]»(n), «exprΔ[ ]»(n)) :=
+{ app := λ (m) (α : {α : «exprΔ[ ]»(n).obj m // _}), α }
 
 /-- `horn n i` (or `Λ[n, i]`) is the `i`-th horn of the `n`-th standard simplex, where `i : n`.
 It consists of all `m`-simplices `α` of `Δ[n]`
@@ -100,9 +101,10 @@ def horn (n : ℕ) (i : Finₓ (n+1)) : SSet :=
 
 localized [Simplicial] notation "Λ[" n ", " i "]" => SSet.horn (n : ℕ) i
 
+-- error in AlgebraicTopology.SimplicialSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The inclusion of the `i`-th horn of the `n`-th standard simplex into that standard simplex. -/
-def horn_inclusion (n : ℕ) (i : Finₓ (n+1)) : Λ[n, i] ⟶ Δ[n] :=
-  { app := fun m α : { α : Δ[n].obj m // _ } => α }
+def horn_inclusion (n : exprℕ()) (i : fin «expr + »(n, 1)) : «expr ⟶ »(«exprΛ[ , ]»(n, i), «exprΔ[ ]»(n)) :=
+{ app := λ (m) (α : {α : «exprΔ[ ]»(n).obj m // _}), α }
 
 section Examples
 

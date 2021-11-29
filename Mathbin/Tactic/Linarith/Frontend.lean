@@ -178,6 +178,7 @@ prove `false` by calling `linarith` on each list in succession. It will stop at 
 unsafe def try_linarith_on_lists (cfg : linarith_config) (ls : List (List expr)) : tactic expr :=
   first$ ls.map$ prove_false_by_linarith cfg <|> fail "linarith failed to find a contradiction"
 
+-- error in Tactic.Linarith.Frontend: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given a list `hyps` of proofs of comparisons, `run_linarith_on_pfs cfg hyps pref_type`
 preprocesses `hyps` according to the list of preprocessors in `cfg`.
@@ -187,28 +188,19 @@ each of which must succeed in order to close the goal.
 In each branch, we partition the  list of hypotheses by type, and run `linarith` on each class
 in the partition; one of these must succeed in order for `linarith` to succeed on this branch.
 If `pref_type` is given, it will first use the class of proofs of comparisons over that type.
--/
-unsafe def run_linarith_on_pfs (cfg : linarith_config) (hyps : List expr) (pref_type : Option expr) : tactic Unit :=
-  let single_process :=
-    fun hyps : List expr =>
-      do 
-        linarith_trace_proofs ("after preprocessing, linarith has " ++ toString hyps.length ++ " facts:") hyps 
-        let hyp_set ← partition_by_type hyps 
-        linarith_trace f! "hypotheses appear in {hyp_set.size } different types"
-        match pref_type with 
-          | some t =>
-            prove_false_by_linarith cfg (hyp_set.ifind t) <|>
-              try_linarith_on_lists cfg (rb_map.values (hyp_set.erase t))
-          | none => try_linarith_on_lists cfg (rb_map.values hyp_set)
-  let preprocessors := cfg.preprocessors.get_or_else default_preprocessors 
-  let preprocessors := if cfg.split_ne then linarith.remove_ne :: preprocessors else preprocessors 
-  do 
-    let hyps ← preprocess preprocessors hyps 
-    hyps.mmap'$
-        fun hs =>
-          do 
-            set_goals [hs.1]
-            single_process hs.2 >>= exact
+-/ meta def run_linarith_on_pfs (cfg : linarith_config) (hyps : list expr) (pref_type : option expr) : tactic unit :=
+let single_process := λ hyps : list expr, do {
+    linarith_trace_proofs «expr ++ »(«expr ++ »("after preprocessing, linarith has ", to_string hyps.length), " facts:") hyps,
+      hyp_set ← partition_by_type hyps,
+      linarith_trace «exprformat! »(format_macro "hypotheses appear in {hyp_set.size} different types" [[expr hyp_set.size]]),
+      match pref_type with
+      | some t := «expr <|> »(prove_false_by_linarith cfg (hyp_set.ifind t), try_linarith_on_lists cfg (rb_map.values (hyp_set.erase t)))
+      | none := try_linarith_on_lists cfg (rb_map.values hyp_set) end } in
+let preprocessors := cfg.preprocessors.get_or_else default_preprocessors,
+    preprocessors := if cfg.split_ne then [«expr :: »/«expr :: »/«expr :: »](linarith.remove_ne, preprocessors) else preprocessors in
+do {
+hyps ← preprocess preprocessors hyps,
+  «expr $ »(hyps.mmap', λ hs, do { set_goals «expr[ , ]»([hs.1]), «expr >>= »(single_process hs.2, exact) }) }
 
 /--
 `filter_hyps_to_type restr_type hyps` takes a list of proofs of comparisons `hyps`, and filters it

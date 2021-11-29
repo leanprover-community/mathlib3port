@@ -50,7 +50,7 @@ def is_nnf : preform → Prop
 | p ∧* q => is_nnf p ∧ is_nnf q
 | _ => False
 
-theorem is_nnf_push_neg : ∀ p : preform, is_nnf p → is_nnf (push_neg p) :=
+theorem is_nnf_push_neg : ∀ (p : preform), is_nnf p → is_nnf (push_neg p) :=
   by 
     runTac 
       preform.induce sorry
@@ -84,7 +84,7 @@ def neg_free : preform → Prop
 | p ∧* q => neg_free p ∧ neg_free q
 | _ => False
 
-theorem is_nnf_nnf : ∀ p : preform, is_nnf (nnf p) :=
+theorem is_nnf_nnf : ∀ (p : preform), is_nnf (nnf p) :=
   by 
     runTac 
       preform.induce sorry
@@ -117,7 +117,7 @@ def neg_elim : preform → preform
 | p ∧* q => neg_elim p ∧* neg_elim q
 | p => p
 
-theorem neg_free_neg_elim : ∀ p : preform, is_nnf p → neg_free (neg_elim p) :=
+theorem neg_free_neg_elim : ∀ (p : preform), is_nnf p → neg_free (neg_elim p) :=
   by 
     runTac 
       preform.induce sorry

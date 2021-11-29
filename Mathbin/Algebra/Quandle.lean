@@ -281,7 +281,7 @@ def self_apply_equiv (R : Type _) [Rack R] : R ≃ R :=
 An involutory rack is one for which `rack.op R x` is an involution for every x.
 -/
 def is_involutory (R : Type _) [Rack R] : Prop :=
-  ∀ x : R, Function.Involutive (Shelf.act x)
+  ∀ (x : R), Function.Involutive (Shelf.act x)
 
 theorem involutory_inv_act_eq_act {R : Type _} [Rack R] (h : is_involutory R) (x y : R) : x ◃⁻¹ y = x ◃ y :=
   by 
@@ -292,7 +292,7 @@ theorem involutory_inv_act_eq_act {R : Type _} [Rack R] (h : is_involutory R) (x
 An abelian rack is one for which the mediality axiom holds.
 -/
 def is_abelian (R : Type _) [Rack R] : Prop :=
-  ∀ x y z w : R, (x ◃ y) ◃ z ◃ w = (x ◃ z) ◃ y ◃ w
+  ∀ (x y z w : R), (x ◃ y) ◃ z ◃ w = (x ◃ z) ◃ y ◃ w
 
 /--
 Associative racks are uninteresting.

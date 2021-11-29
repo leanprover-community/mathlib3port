@@ -124,19 +124,19 @@ theorem val_eq_coe (z : ℤ_[p]) : z.val = z :=
   rfl
 
 @[simp, normCast]
-theorem coe_add : ∀ z1 z2 : ℤ_[p], ((z1+z2 : ℤ_[p]) : ℚ_[p]) = z1+z2
+theorem coe_add : ∀ (z1 z2 : ℤ_[p]), ((z1+z2 : ℤ_[p]) : ℚ_[p]) = z1+z2
 | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
 @[simp, normCast]
-theorem coe_mul : ∀ z1 z2 : ℤ_[p], ((z1*z2 : ℤ_[p]) : ℚ_[p]) = z1*z2
+theorem coe_mul : ∀ (z1 z2 : ℤ_[p]), ((z1*z2 : ℤ_[p]) : ℚ_[p]) = z1*z2
 | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
 @[simp, normCast]
-theorem coe_neg : ∀ z1 : ℤ_[p], ((-z1 : ℤ_[p]) : ℚ_[p]) = -z1
+theorem coe_neg : ∀ (z1 : ℤ_[p]), ((-z1 : ℤ_[p]) : ℚ_[p]) = -z1
 | ⟨_, _⟩ => rfl
 
 @[simp, normCast]
-theorem coe_sub : ∀ z1 z2 : ℤ_[p], ((z1 - z2 : ℤ_[p]) : ℚ_[p]) = z1 - z2
+theorem coe_sub : ∀ (z1 z2 : ℤ_[p]), ((z1 - z2 : ℤ_[p]) : ℚ_[p]) = z1 - z2
 | ⟨_, _⟩, ⟨_, _⟩ => rfl
 
 @[simp, normCast]
@@ -144,14 +144,14 @@ theorem coe_one : ((1 : ℤ_[p]) : ℚ_[p]) = 1 :=
   rfl
 
 @[simp, normCast]
-theorem coe_coe : ∀ n : ℕ, ((n : ℤ_[p]) : ℚ_[p]) = n
+theorem coe_coe : ∀ (n : ℕ), ((n : ℤ_[p]) : ℚ_[p]) = n
 | 0 => rfl
 | k+1 =>
   by 
     simp [coe_coe]
 
 @[simp, normCast]
-theorem coe_coe_int : ∀ z : ℤ, ((z : ℤ_[p]) : ℚ_[p]) = z
+theorem coe_coe_int : ∀ (z : ℤ), ((z : ℤ_[p]) : ℚ_[p]) = z
 | Int.ofNat n =>
   by 
     simp 
@@ -183,7 +183,7 @@ theorem coe_pow (x : ℤ_[p]) (n : ℕ) : («expr↑ » (x^n) : ℚ_[p]) = ((«e
   coe.ring_hom.map_pow x n
 
 @[simp]
-theorem mk_coe : ∀ k : ℤ_[p], (⟨k, k.2⟩ : ℤ_[p]) = k
+theorem mk_coe : ∀ (k : ℤ_[p]), (⟨k, k.2⟩ : ℤ_[p]) = k
 | ⟨_, _⟩ => rfl
 
 /-- The inverse of a p-adic integer with norm equal to 1 is also a p-adic integer. Otherwise, the
@@ -257,7 +257,7 @@ instance  : HasNorm ℤ_[p] :=
 
 variable{p}
 
-protected theorem mul_commₓ : ∀ z1 z2 : ℤ_[p], (z1*z2) = z2*z1
+protected theorem mul_commₓ : ∀ (z1 z2 : ℤ_[p]), (z1*z2) = z2*z1
 | ⟨q1, h1⟩, ⟨q2, h2⟩ =>
   show (⟨q1*q2, _⟩ : ℤ_[p]) = ⟨q2*q1, _⟩by 
     simp [_root_.mul_comm]
@@ -265,19 +265,15 @@ protected theorem mul_commₓ : ∀ z1 z2 : ℤ_[p], (z1*z2) = z2*z1
 protected theorem zero_ne_one : (0 : ℤ_[p]) ≠ 1 :=
   show (⟨(0 : ℚ_[p]), _⟩ : ℤ_[p]) ≠ ⟨(1 : ℚ_[p]), _⟩ from mt Subtype.ext_iff_val.1 zero_ne_one
 
-protected theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ a b : ℤ_[p], (a*b) = 0 → a = 0 ∨ b = 0
-| ⟨a, ha⟩, ⟨b, hb⟩ =>
-  fun h : (⟨a*b, _⟩ : ℤ_[p]) = ⟨0, _⟩ =>
-    have  : (a*b) = 0 := Subtype.ext_iff_val.1 h
-    (mul_eq_zero.1 this).elim
-      (fun h1 =>
-        Or.inl
-          (by 
-            simp [h1] <;> rfl))
-      fun h2 =>
-        Or.inr
-          (by 
-            simp [h2] <;> rfl)
+-- error in NumberTheory.Padics.PadicIntegers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀
+a b : «exprℤ_[ ]»(p), «expr = »(«expr * »(a, b), 0) → «expr ∨ »(«expr = »(a, 0), «expr = »(b, 0))
+| ⟨a, ha⟩, ⟨b, hb⟩ := λ
+h : «expr = »((⟨«expr * »(a, b), _⟩ : «exprℤ_[ ]»(p)), ⟨0, _⟩), have «expr = »(«expr * »(a, b), 0), from subtype.ext_iff_val.1 h,
+(mul_eq_zero.1 this).elim (λ
+ h1, or.inl (by simp [] [] [] ["[", expr h1, "]"] [] []; refl)) (λ
+ h2, or.inr (by simp [] [] [] ["[", expr h2, "]"] [] []; refl))
 
 theorem norm_def {z : ℤ_[p]} : ∥z∥ = ∥(z : ℚ_[p])∥ :=
   rfl
@@ -291,17 +287,13 @@ instance  : NormedCommRing ℤ_[p] :=
 instance  : NormOneClass ℤ_[p] :=
   ⟨norm_def.trans norm_one⟩
 
-instance IsAbsoluteValue : IsAbsoluteValue fun z : ℤ_[p] => ∥z∥ :=
-  { abv_nonneg := norm_nonneg,
-    abv_eq_zero :=
-      fun ⟨_, _⟩ =>
-        by 
-          simp [norm_eq_zero],
-    abv_add := fun ⟨_, _⟩ ⟨_, _⟩ => norm_add_le _ _,
-    abv_mul :=
-      fun _ _ =>
-        by 
-          simp only [norm_def, padicNormE.mul, PadicInt.coe_mul] }
+-- error in NumberTheory.Padics.PadicIntegers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance is_absolute_value : is_absolute_value (λ z : «exprℤ_[ ]»(p), «expr∥ ∥»(z)) :=
+{ abv_nonneg := norm_nonneg,
+  abv_eq_zero := λ ⟨_, _⟩, by simp [] [] [] ["[", expr norm_eq_zero, "]"] [] [],
+  abv_add := λ ⟨_, _⟩ ⟨_, _⟩, norm_add_le _ _,
+  abv_mul := λ
+  _ _, by simp [] [] ["only"] ["[", expr norm_def, ",", expr padic_norm_e.mul, ",", expr padic_int.coe_mul, "]"] [] [] }
 
 variable{p}
 
@@ -319,7 +311,7 @@ namespace PadicInt
 
 variable{p : ℕ}[Fact p.prime]
 
-theorem norm_le_one : ∀ z : ℤ_[p], ∥z∥ ≤ 1
+theorem norm_le_one : ∀ (z : ℤ_[p]), ∥z∥ ≤ 1
 | ⟨_, h⟩ => h
 
 @[simp]
@@ -328,7 +320,7 @@ theorem norm_mul (z1 z2 : ℤ_[p]) : ∥z1*z2∥ = ∥z1∥*∥z2∥ :=
     simp [norm_def]
 
 @[simp]
-theorem norm_pow (z : ℤ_[p]) : ∀ n : ℕ, ∥z^n∥ = (∥z∥^n)
+theorem norm_pow (z : ℤ_[p]) : ∀ (n : ℕ), ∥z^n∥ = (∥z∥^n)
 | 0 =>
   by 
     simp 
@@ -338,7 +330,7 @@ theorem norm_pow (z : ℤ_[p]) : ∀ n : ℕ, ∥z^n∥ = (∥z∥^n)
     congr 
     apply norm_pow
 
-theorem nonarchimedean : ∀ q r : ℤ_[p], ∥q+r∥ ≤ max ∥q∥ ∥r∥
+theorem nonarchimedean : ∀ (q r : ℤ_[p]), ∥q+r∥ ≤ max ∥q∥ ∥r∥
 | ⟨_, _⟩, ⟨_, _⟩ => padicNormE.nonarchimedean _ _
 
 theorem norm_add_eq_max_of_ne : ∀ {q r : ℤ_[p]}, ∥q∥ ≠ ∥r∥ → ∥q+r∥ = max ∥q∥ ∥r∥

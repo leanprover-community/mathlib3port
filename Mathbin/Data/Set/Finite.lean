@@ -79,7 +79,7 @@ theorem finite_to_finset_eq_empty_iff {s : Set α} {h : finite s} : h.to_finset 
   by 
     simp [←Finset.coe_inj]
 
-theorem finite.exists_finset {s : Set α} : finite s → ∃ s' : Finset α, ∀ a : α, a ∈ s' ↔ a ∈ s
+theorem finite.exists_finset {s : Set α} : finite s → ∃ s' : Finset α, ∀ (a : α), a ∈ s' ↔ a ∈ s
 | ⟨h⟩ =>
   by 
     exact ⟨to_finset s, fun _ => mem_to_finset⟩
@@ -240,9 +240,9 @@ theorem finite.induction_on {C : Set α → Prop} {s : Set α} (h : finite s) (H
             exact m
 
 @[elab_as_eliminator]
-theorem finite.dinduction_on {C : ∀ s : Set α, finite s → Prop} {s : Set α} (h : finite s) (H0 : C ∅ finite_empty)
-  (H1 : ∀ {a s}, a ∉ s → ∀ h : finite s, C s h → C (insert a s) (h.insert a)) : C s h :=
-  have  : ∀ h : finite s, C s h := finite.induction_on h (fun h => H0) fun a s has hs ih h => H1 has hs (ih _)
+theorem finite.dinduction_on {C : ∀ (s : Set α), finite s → Prop} {s : Set α} (h : finite s) (H0 : C ∅ finite_empty)
+  (H1 : ∀ {a s}, a ∉ s → ∀ (h : finite s), C s h → C (insert a s) (h.insert a)) : C s h :=
+  have  : ∀ (h : finite s), C s h := finite.induction_on h (fun h => H0) fun a s has hs ih h => H1 has hs (ih _)
   this h
 
 instance fintype_singleton (a : α) : Fintype ({a} : Set α) :=
@@ -265,7 +265,7 @@ theorem finite_is_top (α : Type _) [PartialOrderₓ α] : finite { x:α | IsTop
 theorem finite_is_bot (α : Type _) [PartialOrderₓ α] : finite { x:α | IsBot x } :=
   (subsingleton_is_bot α).Finite
 
-instance fintype_pure : ∀ a : α, Fintype (pure a : Set α) :=
+instance fintype_pure : ∀ (a : α), Fintype (pure a : Set α) :=
   Set.fintypeSingleton
 
 theorem finite_pure (a : α) : finite (pure a : Set α) :=
@@ -405,7 +405,7 @@ theorem finite.image {s : Set α} (f : α → β) : finite s → finite (f '' s)
 theorem infinite_of_infinite_image (f : α → β) {s : Set α} (hs : (f '' s).Infinite) : s.infinite :=
   mt (finite.image f) hs
 
--- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem finite.dependent_image
 {s : set α}
 (hs : finite s)
@@ -419,10 +419,10 @@ end
 theorem finite.of_preimage {f : α → β} {s : Set β} (h : finite (f ⁻¹' s)) (hf : surjective f) : finite s :=
   hf.image_preimage s ▸ h.image _
 
-instance fintype_map {α β} [DecidableEq β] : ∀ s : Set α f : α → β [Fintype s], Fintype (f <$> s) :=
+instance fintype_map {α β} [DecidableEq β] : ∀ (s : Set α) (f : α → β) [Fintype s], Fintype (f <$> s) :=
   Set.fintypeImage
 
-theorem finite.map {α β} {s : Set α} : ∀ f : α → β, finite s → finite (f <$> s) :=
+theorem finite.map {α β} {s : Set α} : ∀ (f : α → β), finite s → finite (f <$> s) :=
   finite.image
 
 /-- If a function `f` has a partial inverse and sends a set `s` to a set with `[fintype]` instance,
@@ -441,10 +441,11 @@ def fintype_of_fintype_image (s : Set α) {f : α → β} {g} (I : is_partial_in
           simpa [And.comm, And.left_comm, And.assoc]
         simp [I _, (injective_of_partial_inv I).eq_iff]
 
-theorem finite_of_finite_image {s : Set α} {f : α → β} (hi : Set.InjOn f s) : finite (f '' s) → finite s
-| ⟨h⟩ =>
-  ⟨(@Fintype.ofInjective _ _ h fun a : s => ⟨f a.1, mem_image_of_mem f a.2⟩)$
-      fun a b eq => Subtype.eq$ hi a.2 b.2$ Subtype.ext_iff_val.1 Eq⟩
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem finite_of_finite_image {s : set α} {f : α → β} (hi : set.inj_on f s) : finite «expr '' »(f, s) → finite s
+| ⟨h⟩ := ⟨«expr $ »(@fintype.of_injective _ _ h (λ
+   a : s, ⟨f a.1, mem_image_of_mem f a.2⟩), λ
+  a b eq, «expr $ »(subtype.eq, «expr $ »(hi a.2 b.2, subtype.ext_iff_val.1 eq)))⟩
 
 theorem finite_image_iff {s : Set α} {f : α → β} (hi : inj_on f s) : finite (f '' s) ↔ finite s :=
   ⟨finite_of_finite_image hi, finite.image _⟩
@@ -473,7 +474,7 @@ theorem infinite_range_of_injective [_root_.infinite α] {f : α → β} (hi : i
     exact infinite_univ
 
 theorem infinite_of_injective_forall_mem [_root_.infinite α] {s : Set β} {f : α → β} (hi : injective f)
-  (hf : ∀ x : α, f x ∈ s) : Infinite s :=
+  (hf : ∀ (x : α), f x ∈ s) : Infinite s :=
   by 
     rw [←range_subset_iff] at hf 
     exact (infinite_range_of_injective hi).mono hf
@@ -490,10 +491,13 @@ theorem finite_option {s : Set (Option α)} : finite s ↔ finite { x:α | some 
       ((h.image some).insert none).Subset$
         fun x => Option.casesOn x (fun _ => Or.inl rfl) fun x hx => Or.inr$ mem_image_of_mem _ hx⟩
 
-instance fintype_Union [DecidableEq α] [Fintype (Plift ι)] (f : ι → Set α) [∀ i, Fintype (f i)] : Fintype (⋃i, f i) :=
-  Fintype.ofFinset (Finset.univ.bUnion fun i : Plift ι => (f i.down).toFinset)$
-    by 
-      simp 
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance fintype_Union
+[decidable_eq α]
+[fintype (plift ι)]
+(f : ι → set α)
+[∀ i, fintype (f i)] : fintype «expr⋃ , »((i), f i) :=
+«expr $ »(fintype.of_finset (finset.univ.bUnion (λ i : plift ι, (f i.down).to_finset)), by simp [] [] [] [] [] [])
 
 theorem finite_Union [Fintype (Plift ι)] {f : ι → Set α} (H : ∀ i, finite (f i)) : finite (⋃i, f i) :=
   ⟨@Set.fintypeUnionₓ _ _ (Classical.decEq α) _ _ fun i => finite.fintype (H i)⟩
@@ -501,7 +505,7 @@ theorem finite_Union [Fintype (Plift ι)] {f : ι → Set α} (H : ∀ i, finite
 /-- A union of sets with `fintype` structure over a set with `fintype` structure has a `fintype`
 structure. -/
 def fintype_bUnion [DecidableEq α] {ι : Type _} {s : Set ι} [Fintype s] (f : ι → Set α)
-  (H : ∀ i _ : i ∈ s, Fintype (f i)) : Fintype (⋃(i : _)(_ : i ∈ s), f i) :=
+  (H : ∀ i (_ : i ∈ s), Fintype (f i)) : Fintype (⋃(i : _)(_ : i ∈ s), f i) :=
   by 
     rw [bUnion_eq_Union] <;>
       exact
@@ -517,8 +521,8 @@ instance fintype_bUnion' [DecidableEq α] {ι : Type _} {s : Set ι} [Fintype s]
 theorem finite.sUnion {s : set (set α)} (h : finite s) (H : ∀ t «expr ∈ » s, finite t) : finite «expr⋃₀ »(s) :=
 by rw [expr sUnion_eq_Union] []; haveI [] [] [":=", expr finite.fintype h]; apply [expr finite_Union]; simpa [] [] [] [] [] ["using", expr H]
 
-theorem finite.bUnion {α} {ι : Type _} {s : Set ι} {f : ∀ i _ : i ∈ s, Set α} :
-  finite s → (∀ i _ : i ∈ s, finite (f i ‹_›)) → finite (⋃(i : _)(_ : i ∈ s), f i ‹_›)
+theorem finite.bUnion {α} {ι : Type _} {s : Set ι} {f : ∀ i (_ : i ∈ s), Set α} :
+  finite s → (∀ i (_ : i ∈ s), finite (f i ‹_›)) → finite (⋃(i : _)(_ : i ∈ s), f i ‹_›)
 | ⟨hs⟩, h =>
   by 
     rw [bUnion_eq_Union] <;> exact finite_Union fun i => h _ _
@@ -568,7 +572,7 @@ theorem finite.image2 (f : α → β → γ) {s : Set α} {t : Set β} (hs : fin
 
 /-- If `s : set α` is a set with `fintype` instance and `f : α → set β` is a function such that
 each `f a`, `a ∈ s`, has a `fintype` structure, then `s >>= f` has a `fintype` structure. -/
-def fintype_bind {α β} [DecidableEq β] (s : Set α) [Fintype s] (f : α → Set β) (H : ∀ a _ : a ∈ s, Fintype (f a)) :
+def fintype_bind {α β} [DecidableEq β] (s : Set α) [Fintype s] (f : α → Set β) (H : ∀ a (_ : a ∈ s), Fintype (f a)) :
   Fintype (s >>= f) :=
   Set.fintypeBUnion _ H
 
@@ -576,7 +580,7 @@ instance fintype_bind' {α β} [DecidableEq β] (s : Set α) [Fintype s] (f : α
   Fintype (s >>= f) :=
   fintype_bind _ _ fun i _ => H i
 
-theorem finite.bind {α β} {s : Set α} {f : α → Set β} (h : finite s) (hf : ∀ a _ : a ∈ s, finite (f a)) :
+theorem finite.bind {α β} {s : Set α} {f : α → Set β} (h : finite s) (hf : ∀ a (_ : a ∈ s), finite (f a)) :
   finite (s >>= f) :=
   h.bUnion hf
 
@@ -605,19 +609,19 @@ theorem finite.finite_subsets {α : Type u} {a : Set α} (h : finite a) : finite
           simpa [←@exists_finite_iff_finset α fun t => t ⊆ a ∧ t = s, subset_to_finset_iff, ←And.assoc] using h.subset⟩
 
 theorem exists_min_image [LinearOrderₓ β] (s : Set α) (f : α → β) (h1 : finite s) :
-  s.nonempty → ∃ (a : _)(_ : a ∈ s), ∀ b _ : b ∈ s, f a ≤ f b
+  s.nonempty → ∃ (a : _)(_ : a ∈ s), ∀ b (_ : b ∈ s), f a ≤ f b
 | ⟨x, hx⟩ =>
   by 
     simpa only [exists_prop, finite.mem_to_finset] using h1.to_finset.exists_min_image f ⟨x, h1.mem_to_finset.2 hx⟩
 
 theorem exists_max_image [LinearOrderₓ β] (s : Set α) (f : α → β) (h1 : finite s) :
-  s.nonempty → ∃ (a : _)(_ : a ∈ s), ∀ b _ : b ∈ s, f b ≤ f a
+  s.nonempty → ∃ (a : _)(_ : a ∈ s), ∀ b (_ : b ∈ s), f b ≤ f a
 | ⟨x, hx⟩ =>
   by 
     simpa only [exists_prop, finite.mem_to_finset] using h1.to_finset.exists_max_image f ⟨x, h1.mem_to_finset.2 hx⟩
 
 theorem exists_lower_bound_image [hα : Nonempty α] [LinearOrderₓ β] (s : Set α) (f : α → β) (h : s.finite) :
-  ∃ a : α, ∀ b _ : b ∈ s, f a ≤ f b :=
+  ∃ a : α, ∀ b (_ : b ∈ s), f a ≤ f b :=
   by 
     byCases' hs : Set.Nonempty s
     ·
@@ -628,7 +632,7 @@ theorem exists_lower_bound_image [hα : Nonempty α] [LinearOrderₓ β] (s : Se
       exact Nonempty.elimₓ hα fun a => ⟨a, fun x hx => absurd (Set.nonempty_of_mem hx) hs⟩
 
 theorem exists_upper_bound_image [hα : Nonempty α] [LinearOrderₓ β] (s : Set α) (f : α → β) (h : s.finite) :
-  ∃ a : α, ∀ b _ : b ∈ s, f b ≤ f a :=
+  ∃ a : α, ∀ b (_ : b ∈ s), f b ≤ f a :=
   by 
     byCases' hs : Set.Nonempty s
     ·
@@ -685,7 +689,7 @@ theorem finite_subset_Union {s : Set α} (hs : finite s) {ι} {t : ι → Set α
   by 
     cases' hs 
     choose f hf using
-      show ∀ x : s, ∃ i, x.1 ∈ t i by 
+      show ∀ (x : s), ∃ i, x.1 ∈ t i by 
         simpa [subset_def] using h 
     refine' ⟨range f, finite_range f, fun x hx => _⟩
     rw [bUnion_range, mem_Union]
@@ -727,6 +731,7 @@ instance nat.fintype_Iio (n : ℕ) : Fintype (Iio n) :=
     by 
       simp 
 
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If `P` is some relation between terms of `γ` and sets in `γ`,
 such that every finite set `t : set γ` has some `c : γ` related to it,
@@ -736,32 +741,31 @@ so `u n` is related to the image of `{0, 1, ..., n-1}` under `u`.
 (We use this later to show sequentially compact sets
 are totally bounded.)
 -/
-theorem seq_of_forall_finite_exists {γ : Type _} {P : γ → Set γ → Prop} (h : ∀ t, finite t → ∃ c, P c t) :
-  ∃ u : ℕ → γ, ∀ n, P (u n) (u '' Iio n) :=
-  ⟨fun n =>
-      @Nat.strongRecOn' (fun _ => γ) n$
-        fun n ih => Classical.some$ h (range$ fun m : Iio n => ih m.1 m.2) (finite_range _),
-    fun n =>
-      by 
-        classical 
-        refine' Nat.strongRecOn' n fun n ih => _ 
-        rw [Nat.strong_rec_on_beta']
-        convert Classical.some_spec (h _ _)
-        ext x 
-        split 
-        ·
-          rintro ⟨m, hmn, rfl⟩
-          exact ⟨⟨m, hmn⟩, rfl⟩
-        ·
-          rintro ⟨⟨m, hmn⟩, rfl⟩
-          exact ⟨m, hmn, rfl⟩⟩
+theorem seq_of_forall_finite_exists
+{γ : Type*}
+{P : γ → set γ → exprProp()}
+(h : ∀ t, finite t → «expr∃ , »((c), P c t)) : «expr∃ , »((u : exprℕ() → γ), ∀ n, P (u n) «expr '' »(u, Iio n)) :=
+⟨λ
+ n, «expr $ »(@nat.strong_rec_on' (λ
+   _, γ) n, λ n ih, «expr $ »(classical.some, h «expr $ »(range, λ m : Iio n, ih m.1 m.2) (finite_range _))), λ n, begin
+   classical,
+   refine [expr nat.strong_rec_on' n (λ n ih, _)],
+   rw [expr nat.strong_rec_on_beta'] [],
+   convert [] [expr classical.some_spec (h _ _)] [],
+   ext [] [ident x] [],
+   split,
+   { rintros ["⟨", ident m, ",", ident hmn, ",", ident rfl, "⟩"],
+     exact [expr ⟨⟨m, hmn⟩, rfl⟩] },
+   { rintros ["⟨", "⟨", ident m, ",", ident hmn, "⟩", ",", ident rfl, "⟩"],
+     exact [expr ⟨m, hmn, rfl⟩] }
+ end⟩
 
 theorem finite_range_ite {p : α → Prop} [DecidablePred p] {f g : α → β} (hf : finite (range f))
   (hg : finite (range g)) : finite (range fun x => if p x then f x else g x) :=
   (hf.union hg).Subset range_ite_subset
 
-theorem finite_range_const {c : β} : finite (range fun x : α => c) :=
-  (finite_singleton c).Subset range_const_subset
+-- error in Data.Set.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem finite_range_const {c : β} : finite (range (λ x : α, c)) := (finite_singleton c).subset range_const_subset
 
 theorem range_find_greatest_subset {P : α → ℕ → Prop} [∀ x, DecidablePred (P x)] {b : ℕ} :
   (range fun x => Nat.findGreatest (P x) b) ⊆ «expr↑ » (Finset.range (b+1)) :=
@@ -814,7 +818,7 @@ theorem card_range_of_injective [Fintype α] {f : α → β} (hf : injective f) 
   Eq.symm$ Fintype.card_congr$ Equiv.ofInjective f hf
 
 theorem finite.exists_maximal_wrt [PartialOrderₓ β] (f : α → β) (s : Set α) (h : Set.Finite s) :
-  s.nonempty → ∃ (a : _)(_ : a ∈ s), ∀ a' _ : a' ∈ s, f a ≤ f a' → f a = f a' :=
+  s.nonempty → ∃ (a : _)(_ : a ∈ s), ∀ a' (_ : a' ∈ s), f a ≤ f a' → f a = f a' :=
   by 
     classical 
     refine' h.induction_on _ _
@@ -897,7 +901,7 @@ protected theorem finite.bdd_above (hs : finite s) : BddAbove s :=
 
 /--A finite union of sets which are all bounded above is still bounded above.-/
 theorem finite.bdd_above_bUnion {I : Set β} {S : β → Set α} (H : finite I) :
-  BddAbove (⋃(i : _)(_ : i ∈ I), S i) ↔ ∀ i _ : i ∈ I, BddAbove (S i) :=
+  BddAbove (⋃(i : _)(_ : i ∈ I), S i) ↔ ∀ i (_ : i ∈ I), BddAbove (S i) :=
   finite.induction_on H
     (by 
       simp only [bUnion_empty, bdd_above_empty, ball_empty_iff])
@@ -917,7 +921,7 @@ protected theorem finite.bdd_below (hs : finite s) : BddBelow s :=
 
 /--A finite union of sets which are all bounded below is still bounded below.-/
 theorem finite.bdd_below_bUnion {I : Set β} {S : β → Set α} (H : finite I) :
-  BddBelow (⋃(i : _)(_ : i ∈ I), S i) ↔ ∀ i _ : i ∈ I, BddBelow (S i) :=
+  BddBelow (⋃(i : _)(_ : i ∈ I), S i) ↔ ∀ i (_ : i ∈ I), BddBelow (S i) :=
   @finite.bdd_above_bUnion (OrderDual α) _ _ _ _ _ H
 
 end 

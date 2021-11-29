@@ -50,7 +50,7 @@ namespace CategoryTheory
 A possibly empty category for which every functor to a discrete category is constant.
 -/
 class is_preconnected(J : Type u₁)[category.{v₁} J] : Prop where 
-  iso_constant : ∀ {α : Type u₁} F : J ⥤ discrete α j : J, Nonempty (F ≅ (Functor.Const J).obj (F.obj j))
+  iso_constant : ∀ {α : Type u₁} (F : J ⥤ discrete α) (j : J), Nonempty (F ≅ (Functor.Const J).obj (F.obj j))
 
 /--
 We define a connected category as a _nonempty_ category for which every
@@ -93,7 +93,7 @@ If any functor to a discrete category is constant on objects, J is connected.
 The converse of `any_functor_const_on_obj`.
 -/
 theorem is_connected.of_any_functor_const_on_obj [Nonempty J]
-  (h : ∀ {α : Type u₁} F : J ⥤ discrete α, ∀ j j' : J, F.obj j = F.obj j') : is_connected J :=
+  (h : ∀ {α : Type u₁} (F : J ⥤ discrete α), ∀ (j j' : J), F.obj j = F.obj j') : is_connected J :=
   { iso_constant :=
       fun α F j' => ⟨nat_iso.of_components (fun j => eq_to_iso (h F j j')) fun _ _ _ => Subsingleton.elimₓ _ _⟩ }
 
@@ -105,7 +105,7 @@ This can be thought of as a local-to-global property.
 The converse is shown in `is_connected.of_constant_of_preserves_morphisms`
 -/
 theorem constant_of_preserves_morphisms [is_preconnected J] {α : Type u₁} (F : J → α)
-  (h : ∀ j₁ j₂ : J f : j₁ ⟶ j₂, F j₁ = F j₂) (j j' : J) : F j = F j' :=
+  (h : ∀ (j₁ j₂ : J) (f : j₁ ⟶ j₂), F j₁ = F j₂) (j j' : J) : F j = F j' :=
   any_functor_const_on_obj { obj := F, map := fun _ _ f => eq_to_hom (h _ _ f) } j j'
 
 /--
@@ -116,7 +116,8 @@ This can be thought of as a local-to-global property.
 The converse of `constant_of_preserves_morphisms`.
 -/
 theorem is_connected.of_constant_of_preserves_morphisms [Nonempty J]
-  (h : ∀ {α : Type u₁} F : J → α, (∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, F j₁ = F j₂) → ∀ j j' : J, F j = F j') : is_connected J :=
+  (h : ∀ {α : Type u₁} (F : J → α), (∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), F j₁ = F j₂) → ∀ (j j' : J), F j = F j') :
+  is_connected J :=
   is_connected.of_any_functor_const_on_obj fun _ F => h F.obj fun _ _ f => (F.map f).down.1
 
 /--
@@ -127,7 +128,7 @@ then `p` contains all of `J`.
 The converse is given in `is_connected.of_induct`.
 -/
 theorem induct_on_objects [is_preconnected J] (p : Set J) {j₀ : J} (h0 : j₀ ∈ p)
-  (h1 : ∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, j₁ ∈ p ↔ j₂ ∈ p) (j : J) : j ∈ p :=
+  (h1 : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), j₁ ∈ p ↔ j₂ ∈ p) (j : J) : j ∈ p :=
   by 
     injection constant_of_preserves_morphisms (fun k => Ulift.up (k ∈ p)) (fun j₁ j₂ f => _) j j₀ with i 
     rwa [i]
@@ -161,8 +162,8 @@ given a type family `Z : J → Sort*` and
 a rule for transporting in *both* directions along a morphism in `J`,
 we can transport an `x : Z j₀` to a point in `Z j` for any `j`.
 -/
-theorem is_preconnected_induction [is_preconnected J] (Z : J → Sort _) (h₁ : ∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, Z j₁ → Z j₂)
-  (h₂ : ∀ {j₁ j₂ : J} f : j₁ ⟶ j₂, Z j₂ → Z j₁) {j₀ : J} (x : Z j₀) (j : J) : Nonempty (Z j) :=
+theorem is_preconnected_induction [is_preconnected J] (Z : J → Sort _) (h₁ : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), Z j₁ → Z j₂)
+  (h₂ : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), Z j₂ → Z j₁) {j₀ : J} (x : Z j₀) (j : J) : Nonempty (Z j) :=
   (induct_on_objects { j | Nonempty (Z j) } ⟨x⟩
     (fun j₁ j₂ f =>
       ⟨by 
@@ -306,7 +307,7 @@ morphisms, then J is connected.
 The converse of `exists_zigzag'`.
 -/
 theorem is_connected_of_zigzag [Nonempty J]
-  (h : ∀ j₁ j₂ : J, ∃ l, List.Chain zag j₁ l ∧ List.last (j₁ :: l) (List.cons_ne_nil _ _) = j₂) : is_connected J :=
+  (h : ∀ (j₁ j₂ : J), ∃ l, List.Chain zag j₁ l ∧ List.last (j₁ :: l) (List.cons_ne_nil _ _) = j₂) : is_connected J :=
   by 
     apply zigzag_is_connected 
     intro j₁ j₂ 
@@ -348,7 +349,7 @@ instance  [is_connected J] : full (Functor.Const J : C ⥤ J ⥤ C) :=
           ext j 
           apply nat_trans_from_is_connected f (Classical.arbitrary J) j }
 
-instance nonempty_hom_of_connected_groupoid {G} [groupoid G] [is_connected G] : ∀ x y : G, Nonempty (x ⟶ y) :=
+instance nonempty_hom_of_connected_groupoid {G} [groupoid G] [is_connected G] : ∀ (x y : G), Nonempty (x ⟶ y) :=
   by 
     refine' equiv_relation _ _ fun j₁ j₂ => Nonempty.intro 
     exact ⟨fun j => ⟨𝟙 _⟩, fun j₁ j₂ => Nonempty.map fun f => inv f, fun _ _ _ => Nonempty.map2 (· ≫ ·)⟩

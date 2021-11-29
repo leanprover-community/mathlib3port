@@ -180,7 +180,7 @@ theorem is_iso.of_epi_section {X Y : C} {f : X ⟶ Y} [split_epi f] [epi$ sectio
           simp ⟩⟩⟩
 
 /-- A category where every morphism has a `trunc` retraction is computably a groupoid. -/
-noncomputable def groupoid.of_trunc_split_mono (all_split_mono : ∀ {X Y : C} f : X ⟶ Y, Trunc (split_mono f)) :
+noncomputable def groupoid.of_trunc_split_mono (all_split_mono : ∀ {X Y : C} (f : X ⟶ Y), Trunc (split_mono f)) :
   groupoid.{v₁} C :=
   by 
     apply groupoid.of_is_iso 

@@ -70,26 +70,29 @@ theorem naturality_app {F G : C ⥤ D ⥤ E} (T : F ⟶ G) (Z : D) {X Y : C} (f 
   congr_funₓ (congr_argₓ app (T.naturality f)) Z
 
 /-- A natural transformation is a monomorphism if each component is. -/
-theorem mono_app_of_mono (α : F ⟶ G) [∀ X : C, mono (α.app X)] : mono α :=
+theorem mono_app_of_mono (α : F ⟶ G) [∀ (X : C), mono (α.app X)] : mono α :=
   ⟨fun H g h eq =>
       by 
         ext X 
         rw [←cancel_mono (α.app X), ←comp_app, Eq, comp_app]⟩
 
 /-- A natural transformation is an epimorphism if each component is. -/
-theorem epi_app_of_epi (α : F ⟶ G) [∀ X : C, epi (α.app X)] : epi α :=
+theorem epi_app_of_epi (α : F ⟶ G) [∀ (X : C), epi (α.app X)] : epi α :=
   ⟨fun H g h eq =>
       by 
         ext X 
         rw [←cancel_epi (α.app X), ←comp_app, Eq, comp_app]⟩
 
+-- error in CategoryTheory.FunctorCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `hcomp α β` is the horizontal composition of natural transformations. -/
-def hcomp {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) : F ⋙ H ⟶ G ⋙ I :=
-  { app := fun X : C => β.app (F.obj X) ≫ I.map (α.app X),
-    naturality' :=
-      fun X Y f =>
-        by 
-          rw [functor.comp_map, functor.comp_map, ←assoc, naturality, assoc, ←map_comp I, naturality, map_comp, assoc] }
+def hcomp
+{H I : «expr ⥤ »(D, E)}
+(α : «expr ⟶ »(F, G))
+(β : «expr ⟶ »(H, I)) : «expr ⟶ »(«expr ⋙ »(F, H), «expr ⋙ »(G, I)) :=
+{ app := λ X : C, «expr ≫ »(β.app (F.obj X), I.map (α.app X)),
+  naturality' := λ X Y f, begin
+    rw ["[", expr functor.comp_map, ",", expr functor.comp_map, ",", "<-", expr assoc, ",", expr naturality, ",", expr assoc, ",", "<-", expr map_comp I, ",", expr naturality, ",", expr map_comp, ",", expr assoc, "]"] []
+  end }
 
 infixl:80 " ◫ " => hcomp
 

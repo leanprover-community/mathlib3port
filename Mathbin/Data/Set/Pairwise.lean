@@ -34,7 +34,7 @@ theorem pairwise_on_bool (hr : Symmetric r) {a b : α} : Pairwise (r on fun c =>
   by 
     simpa [Pairwise, Function.onFun] using @hr a b
 
-theorem pairwise_disjoint_on_bool [SemilatticeInfBot α] {a b : α} :
+theorem pairwise_disjoint_on_bool [SemilatticeInf α] [OrderBot α] {a b : α} :
   Pairwise (Disjoint on fun c => cond c a b) ↔ Disjoint a b :=
   pairwise_on_bool Disjoint.symm
 
@@ -49,7 +49,7 @@ theorem Symmetric.pairwise_on [LinearOrderₓ ι] (hr : Symmetric r) (f : ι →
         ·
           exact hr (h _ _ hmn')⟩
 
-theorem pairwise_disjoint_on [SemilatticeInfBot α] [LinearOrderₓ ι] (f : ι → α) :
+theorem pairwise_disjoint_on [SemilatticeInf α] [OrderBot α] [LinearOrderₓ ι] (f : ι → α) :
   Pairwise (Disjoint on f) ↔ ∀ m n, m < n → Disjoint (f m) (f n) :=
   Symmetric.pairwise_on Disjoint.symm f
 
@@ -57,7 +57,7 @@ namespace Set
 
 /-- The relation `r` holds pairwise on the set `s` if `r x y` for all *distinct* `x y ∈ s`. -/
 protected def Pairwise (s : Set α) (r : α → α → Prop) :=
-  ∀ x _ : x ∈ s, ∀ y _ : y ∈ s, x ≠ y → r x y
+  ∀ x (_ : x ∈ s), ∀ y (_ : y ∈ s), x ≠ y → r x y
 
 theorem pairwise_of_forall (s : Set α) (r : α → α → Prop) (h : ∀ a b, r a b) : s.pairwise r :=
   fun a _ b _ _ => h a b
@@ -89,7 +89,7 @@ theorem pairwise_singleton (a : α) (r : α → α → Prop) : Set.Pairwise {a} 
   subsingleton_singleton.Pairwise r
 
 theorem nonempty.pairwise_iff_exists_forall [IsEquiv α r] {s : Set ι} (hs : s.nonempty) :
-  s.pairwise (r on f) ↔ ∃ z, ∀ x _ : x ∈ s, r (f x) z :=
+  s.pairwise (r on f) ↔ ∃ z, ∀ x (_ : x ∈ s), r (f x) z :=
   by 
     fsplit
     ·
@@ -109,11 +109,11 @@ for some `z` in the codomain, `f` takes value `z` on all `x ∈ s`. See also
 `set.pairwise_eq_iff_exists_eq` for a version that assumes `[nonempty ι]` instead of
 `set.nonempty s`. -/
 theorem nonempty.pairwise_eq_iff_exists_eq {s : Set α} (hs : s.nonempty) {f : α → ι} :
-  (s.pairwise fun x y => f x = f y) ↔ ∃ z, ∀ x _ : x ∈ s, f x = z :=
+  (s.pairwise fun x y => f x = f y) ↔ ∃ z, ∀ x (_ : x ∈ s), f x = z :=
   hs.pairwise_iff_exists_forall
 
 theorem pairwise_iff_exists_forall [Nonempty ι] (s : Set α) (f : α → ι) {r : ι → ι → Prop} [IsEquiv ι r] :
-  s.pairwise (r on f) ↔ ∃ z, ∀ x _ : x ∈ s, r (f x) z :=
+  s.pairwise (r on f) ↔ ∃ z, ∀ x (_ : x ∈ s), r (f x) z :=
   by 
     rcases s.eq_empty_or_nonempty with (rfl | hne)
     ·
@@ -126,11 +126,11 @@ only if for some `z` in the codomain, `f` takes value `z` on all `x ∈ s`. See 
 `set.nonempty.pairwise_eq_iff_exists_eq` for a version that assumes `set.nonempty s` instead of
 `[nonempty ι]`. -/
 theorem pairwise_eq_iff_exists_eq [Nonempty ι] (s : Set α) (f : α → ι) :
-  (s.pairwise fun x y => f x = f y) ↔ ∃ z, ∀ x _ : x ∈ s, f x = z :=
+  (s.pairwise fun x y => f x = f y) ↔ ∃ z, ∀ x (_ : x ∈ s), f x = z :=
   pairwise_iff_exists_forall s f
 
 theorem pairwise_union :
-  (s ∪ t).Pairwise r ↔ s.pairwise r ∧ t.pairwise r ∧ ∀ a _ : a ∈ s b _ : b ∈ t, a ≠ b → r a b ∧ r b a :=
+  (s ∪ t).Pairwise r ↔ s.pairwise r ∧ t.pairwise r ∧ ∀ a (_ : a ∈ s) b (_ : b ∈ t), a ≠ b → r a b ∧ r b a :=
   by 
     simp only [Set.Pairwise, mem_union_eq, or_imp_distrib, forall_and_distrib]
     exact
@@ -138,17 +138,17 @@ theorem pairwise_union :
         fun H => ⟨⟨H.1, fun x hx y hy hne => H.2.2.2 y hy x hx hne.symm⟩, H.2.2.1, H.2.1⟩⟩
 
 theorem pairwise_union_of_symmetric (hr : Symmetric r) :
-  (s ∪ t).Pairwise r ↔ s.pairwise r ∧ t.pairwise r ∧ ∀ a _ : a ∈ s b _ : b ∈ t, a ≠ b → r a b :=
+  (s ∪ t).Pairwise r ↔ s.pairwise r ∧ t.pairwise r ∧ ∀ a (_ : a ∈ s) b (_ : b ∈ t), a ≠ b → r a b :=
   pairwise_union.trans$
     by 
       simp only [hr.iff, and_selfₓ]
 
-theorem pairwise_insert : (insert a s).Pairwise r ↔ s.pairwise r ∧ ∀ b _ : b ∈ s, a ≠ b → r a b ∧ r b a :=
+theorem pairwise_insert : (insert a s).Pairwise r ↔ s.pairwise r ∧ ∀ b (_ : b ∈ s), a ≠ b → r a b ∧ r b a :=
   by 
     simp only [insert_eq, pairwise_union, pairwise_singleton, true_andₓ, mem_singleton_iff, forall_eq]
 
 theorem pairwise_insert_of_symmetric (hr : Symmetric r) :
-  (insert a s).Pairwise r ↔ s.pairwise r ∧ ∀ b _ : b ∈ s, a ≠ b → r a b :=
+  (insert a s).Pairwise r ↔ s.pairwise r ∧ ∀ b (_ : b ∈ s), a ≠ b → r a b :=
   by 
     simp only [pairwise_insert, hr.iff a, and_selfₓ]
 
@@ -188,7 +188,7 @@ theorem pairwise_Union {f : ι → Set α} (h : Directed (· ⊆ ·) f) : (⋃n,
       exact H p i (mp hm) j (np hn) hij
 
 theorem pairwise_sUnion {r : α → α → Prop} {s : Set (Set α)} (h : DirectedOn (· ⊆ ·) s) :
-  (⋃₀s).Pairwise r ↔ ∀ a _ : a ∈ s, Set.Pairwise a r :=
+  (⋃₀s).Pairwise r ↔ ∀ a (_ : a ∈ s), Set.Pairwise a r :=
   by 
     rw [sUnion_eq_Union, pairwise_Union h.directed_coe, SetCoe.forall]
     rfl
@@ -200,20 +200,19 @@ theorem Pairwise.set_pairwise (h : Pairwise r) (s : Set α) : s.pairwise r :=
 
 end Pairwise
 
-theorem pairwise_subtype_iff_pairwise_set {α : Type _} (s : Set α) (r : α → α → Prop) :
-  (Pairwise fun x : s y : s => r x y) ↔ s.pairwise r :=
-  by 
-    split 
-    ·
-      intro h x hx y hy hxy 
-      exact
-        h ⟨x, hx⟩ ⟨y, hy⟩
-          (by 
-            simpa only [Subtype.mk_eq_mk, Ne.def])
-    ·
-      rintro h ⟨x, hx⟩ ⟨y, hy⟩ hxy 
-      simp only [Subtype.mk_eq_mk, Ne.def] at hxy 
-      exact h x hx y hy hxy
+-- error in Data.Set.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pairwise_subtype_iff_pairwise_set
+{α : Type*}
+(s : set α)
+(r : α → α → exprProp()) : «expr ↔ »(pairwise (λ (x : s) (y : s), r x y), s.pairwise r) :=
+begin
+  split,
+  { assume [binders (h x hx y hy hxy)],
+    exact [expr h ⟨x, hx⟩ ⟨y, hy⟩ (by simpa [] [] ["only"] ["[", expr subtype.mk_eq_mk, ",", expr ne.def, "]"] [] [])] },
+  { rintros [ident h, "⟨", ident x, ",", ident hx, "⟩", "⟨", ident y, ",", ident hy, "⟩", ident hxy],
+    simp [] [] ["only"] ["[", expr subtype.mk_eq_mk, ",", expr ne.def, "]"] [] ["at", ident hxy],
+    exact [expr h x hx y hy hxy] }
+end
 
 alias pairwise_subtype_iff_pairwise_set ↔ Pairwise.set_of_subtype Set.Pairwise.subtype
 
@@ -221,7 +220,7 @@ namespace Set
 
 section SemilatticeInfBot
 
-variable[SemilatticeInfBot α]{s t : Set ι}{f g : ι → α}
+variable[SemilatticeInf α][OrderBot α]{s t : Set ι}{f g : ι → α}
 
 /-- A set is `pairwise_disjoint` under `f`, if the images of any distinct two elements under `f`
 are disjoint. -/
@@ -246,11 +245,11 @@ theorem pairwise_disjoint_singleton (i : ι) (f : ι → α) : pairwise_disjoint
   pairwise_singleton i _
 
 theorem pairwise_disjoint_insert {i : ι} :
-  (insert i s).PairwiseDisjoint f ↔ s.pairwise_disjoint f ∧ ∀ j _ : j ∈ s, i ≠ j → Disjoint (f i) (f j) :=
+  (insert i s).PairwiseDisjoint f ↔ s.pairwise_disjoint f ∧ ∀ j (_ : j ∈ s), i ≠ j → Disjoint (f i) (f j) :=
   Set.pairwise_insert_of_symmetric$ symmetric_disjoint.comap f
 
 theorem pairwise_disjoint.insert (hs : s.pairwise_disjoint f) {i : ι}
-  (h : ∀ j _ : j ∈ s, i ≠ j → Disjoint (f i) (f j)) : (insert i s).PairwiseDisjoint f :=
+  (h : ∀ j (_ : j ∈ s), i ≠ j → Disjoint (f i) (f j)) : (insert i s).PairwiseDisjoint f :=
   Set.pairwise_disjoint_insert.2 ⟨hs, h⟩
 
 theorem pairwise_disjoint.image_of_le (hs : s.pairwise_disjoint f) {g : ι → ι} (hg : f ∘ g ≤ f) :
@@ -263,7 +262,7 @@ theorem inj_on.pairwise_disjoint_image {g : ι' → ι} {s : Set ι'} (h : s.inj
   (g '' s).PairwiseDisjoint f ↔ s.pairwise_disjoint (f ∘ g) :=
   h.pairwise_image
 
-theorem pairwise_disjoint.range (g : s → ι) (hg : ∀ i : s, f (g i) ≤ f i) (ht : s.pairwise_disjoint f) :
+theorem pairwise_disjoint.range (g : s → ι) (hg : ∀ (i : s), f (g i) ≤ f i) (ht : s.pairwise_disjoint f) :
   (range g).PairwiseDisjoint f :=
   by 
     rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy 
@@ -300,21 +299,24 @@ section CompleteLattice
 
 variable[CompleteLattice α]
 
+-- error in Data.Set.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Bind operation for `set.pairwise_disjoint`. If you want to only consider finsets of indices, you
 can use `set.pairwise_disjoint.bUnion_finset`. -/
-theorem pairwise_disjoint.bUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → α}
-  (hs : s.pairwise_disjoint fun i' : ι' => ⨆(i : _)(_ : i ∈ g i'), f i) (hg : ∀ i _ : i ∈ s, (g i).PairwiseDisjoint f) :
-  (⋃(i : _)(_ : i ∈ s), g i).PairwiseDisjoint f :=
-  by 
-    rintro a ha b hb hab 
-    simpRw [Set.mem_Union]  at ha hb 
-    obtain ⟨c, hc, ha⟩ := ha 
-    obtain ⟨d, hd, hb⟩ := hb 
-    obtain hcd | hcd := eq_or_ne (g c) (g d)
-    ·
-      exact hg d hd a (hcd ▸ ha) b hb hab
-    ·
-      exact (hs _ hc _ hd (ne_of_apply_ne _ hcd)).mono (le_bsupr a ha) (le_bsupr b hb)
+theorem pairwise_disjoint.bUnion
+{s : set ι'}
+{g : ι' → set ι}
+{f : ι → α}
+(hs : s.pairwise_disjoint (λ i' : ι', «expr⨆ , »((i «expr ∈ » g i'), f i)))
+(hg : ∀ i «expr ∈ » s, (g i).pairwise_disjoint f) : «expr⋃ , »((i «expr ∈ » s), g i).pairwise_disjoint f :=
+begin
+  rintro [ident a, ident ha, ident b, ident hb, ident hab],
+  simp_rw [expr set.mem_Union] ["at", ident ha, ident hb],
+  obtain ["⟨", ident c, ",", ident hc, ",", ident ha, "⟩", ":=", expr ha],
+  obtain ["⟨", ident d, ",", ident hd, ",", ident hb, "⟩", ":=", expr hb],
+  obtain [ident hcd, "|", ident hcd, ":=", expr eq_or_ne (g c) (g d)],
+  { exact [expr hg d hd a «expr ▸ »(hcd, ha) b hb hab] },
+  { exact [expr (hs _ hc _ hd (ne_of_apply_ne _ hcd)).mono (le_bsupr a ha) (le_bsupr b hb)] }
+end
 
 end CompleteLattice
 
@@ -351,6 +353,7 @@ noncomputable def bUnion_eq_sigma_of_disjoint {s : Set ι} {f : ι → Set α} (
 
 end Set
 
-theorem pairwise_disjoint_fiber (f : ι → α) : Pairwise (Disjoint on fun a : α => f ⁻¹' {a}) :=
-  Set.pairwise_univ.1$ Set.pairwise_disjoint_fiber f univ
+-- error in Data.Set.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pairwise_disjoint_fiber (f : ι → α) : pairwise «expr on »(disjoint, λ a : α, «expr ⁻¹' »(f, {a})) :=
+«expr $ »(set.pairwise_univ.1, set.pairwise_disjoint_fiber f univ)
 

@@ -88,7 +88,7 @@ theorem to_dual_lt [LT α] {a : α} {b : OrderDual α} : to_dual a < b ↔ of_du
 
 /-- Recursor for `order_dual α`. -/
 @[elab_as_eliminator]
-protected def rec {C : OrderDual α → Sort _} (h₂ : ∀ a : α, C (to_dual a)) : ∀ a : OrderDual α, C a :=
+protected def rec {C : OrderDual α → Sort _} (h₂ : ∀ (a : α), C (to_dual a)) : ∀ (a : OrderDual α), C a :=
   h₂
 
 @[simp]

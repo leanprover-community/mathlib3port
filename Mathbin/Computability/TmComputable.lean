@@ -233,11 +233,12 @@ instance inhabited_tm2_outputs :
       (some (List.map (Equiv.cast rfl).invFun [ff]))) :=
   ⟨tm2_outputs_in_time.to_tm2_outputs Turing.inhabitedTm2OutputsInTime.default⟩
 
-instance inhabited_evals_to_in_time : Inhabited (evals_to_in_time (fun _ : Unit => some ⟨⟩) ⟨⟩ (some ⟨⟩) 0) :=
-  ⟨evals_to_in_time.refl _ _⟩
+-- error in Computability.TmComputable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance inhabited_evals_to_in_time : inhabited (evals_to_in_time (λ _ : unit, some ⟨⟩) ⟨⟩ (some ⟨⟩) 0) :=
+⟨evals_to_in_time.refl _ _⟩
 
-instance inhabited_tm2_evals_to : Inhabited (evals_to (fun _ : Unit => some ⟨⟩) ⟨⟩ (some ⟨⟩)) :=
-  ⟨evals_to.refl _ _⟩
+-- error in Computability.TmComputable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance inhabited_tm2_evals_to : inhabited (evals_to (λ _ : unit, some ⟨⟩) ⟨⟩ (some ⟨⟩)) := ⟨evals_to.refl _ _⟩
 
 /-- A proof that the identity map on α is computable in time. -/
 def id_computable_in_time {α : Type} (ea : fin_encoding α) : @tm2_computable_in_time α α ea ea id :=

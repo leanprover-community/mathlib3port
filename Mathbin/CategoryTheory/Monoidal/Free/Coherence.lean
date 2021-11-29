@@ -161,7 +161,7 @@ theorem tensor_func_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
 /-- Auxiliary definition for `normalize_iso`. Here we construct the isomorphism between
     `n ⊗ X` and `normalize X n`. -/
 @[simp]
-def normalize_iso_app : ∀ X : F C n : N C, ((tensor_func C).obj X).obj n ≅ ((normalize' C).obj X).obj n
+def normalize_iso_app : ∀ (X : F C) (n : N C), ((tensor_func C).obj X).obj n ≅ ((normalize' C).obj X).obj n
 | of X, n => iso.refl _
 | Unit, n => ρ_ _
 | tensor X Y, n => (α_ _ _ _).symm ≪≫ tensor_iso (normalize_iso_app X n) (iso.refl _) ≪≫ normalize_iso_app _ _

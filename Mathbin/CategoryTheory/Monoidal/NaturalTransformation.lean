@@ -116,8 +116,8 @@ variable{F G : lax_monoidal_functor C D}
 Construct a monoidal natural isomorphism from object level isomorphisms,
 and the monoidal naturality in the forward direction.
 -/
-def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
-  (naturality : ∀ {X Y : C} f : X ⟶ Y, F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f)
+def of_components (app : ∀ (X : C), F.obj X ≅ G.obj X)
+  (naturality : ∀ {X Y : C} (f : X ⟶ Y), F.map f ≫ (app Y).Hom = (app X).Hom ≫ G.map f)
   (unit : F.ε ≫ (app (𝟙_ C)).Hom = G.ε)
   (tensor : ∀ X Y, F.μ X Y ≫ (app (X ⊗ Y)).Hom = ((app X).Hom ⊗ (app Y).Hom) ≫ G.μ X Y) : F ≅ G :=
   { Hom := { app := fun X => (app X).Hom },
@@ -135,17 +135,17 @@ def of_components (app : ∀ X : C, F.obj X ≅ G.obj X)
                 id_comp] } }
 
 @[simp]
-theorem of_components.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality unit tensor X :
+theorem of_components.hom_app (app : ∀ (X : C), F.obj X ≅ G.obj X) naturality unit tensor X :
   (of_components app naturality Unit tensor).Hom.app X = (app X).Hom :=
   rfl
 
 @[simp]
-theorem of_components.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality unit tensor X :
+theorem of_components.inv_app (app : ∀ (X : C), F.obj X ≅ G.obj X) naturality unit tensor X :
   (of_components app naturality Unit tensor).inv.app X = (app X).inv :=
   by 
     simp [of_components]
 
-instance is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, is_iso (α.app X)] : is_iso α :=
+instance is_iso_of_is_iso_app (α : F ⟶ G) [∀ (X : C), is_iso (α.app X)] : is_iso α :=
   ⟨(is_iso.of_iso
         (of_components (fun X => as_iso (α.app X)) (fun X Y f => α.to_nat_trans.naturality f) α.unit α.tensor)).1⟩
 

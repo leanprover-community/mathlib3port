@@ -774,7 +774,7 @@ theorem rat_cast_bit1 {α} [DivisionRing α] [CharZero α] (a : ℚ) (a' : α) (
 /-- Given `a' : α` a natural numeral, returns `(a : ℕ, ⊢ ↑a = a')`.
 (Note that the returned value is on the left of the equality.) -/
 unsafe def prove_nat_uncast (ic nc : instance_cache) :
-  ∀ a' : expr, tactic (instance_cache × instance_cache × expr × expr)
+  ∀ (a' : expr), tactic (instance_cache × instance_cache × expr × expr)
 | a' =>
   match match_numeral a' with 
   | match_numeral_result.zero =>
@@ -804,7 +804,7 @@ unsafe def prove_nat_uncast (ic nc : instance_cache) :
 /-- Given `a' : α` a natural numeral, returns `(a : ℤ, ⊢ ↑a = a')`.
 (Note that the returned value is on the left of the equality.) -/
 unsafe def prove_int_uncast_nat (ic zc : instance_cache) :
-  ∀ a' : expr, tactic (instance_cache × instance_cache × expr × expr)
+  ∀ (a' : expr), tactic (instance_cache × instance_cache × expr × expr)
 | a' =>
   match match_numeral a' with 
   | match_numeral_result.zero =>
@@ -834,7 +834,7 @@ unsafe def prove_int_uncast_nat (ic zc : instance_cache) :
 /-- Given `a' : α` a natural numeral, returns `(a : ℚ, ⊢ ↑a = a')`.
 (Note that the returned value is on the left of the equality.) -/
 unsafe def prove_rat_uncast_nat (ic qc : instance_cache) (cz_inst : expr) :
-  ∀ a' : expr, tactic (instance_cache × instance_cache × expr × expr)
+  ∀ (a' : expr), tactic (instance_cache × instance_cache × expr × expr)
 | a' =>
   match match_numeral a' with 
   | match_numeral_result.zero =>
@@ -1700,6 +1700,7 @@ unsafe def eval_cast : expr → tactic (expr × expr)
 unsafe def derive.step (e : expr) : tactic (expr × expr) :=
   eval_field e <|> eval_pow e <|> eval_ineq e <|> eval_cast e <|> eval_nat_int_ext e
 
+-- error in Tactic.NormNum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An attribute for adding additional extensions to `norm_num`. To use this attribute, put
 `@[norm_num]` on a tactic of type `expr → tactic (expr × expr)`; the tactic will be called on
 subterms by `norm_num`, and it is responsible for identifying that the expression is a numerical
@@ -1716,23 +1717,15 @@ are numerals or of the appropriate form, followed by proof construction, which s
 Propositions are treated like any other term. The normal form for propositions is `true` or
 `false`, so it should produce a proof of the form `p = true` or `p = false`. `eq_true_intro` can be
 used to help here.
--/
-@[user_attribute]
-protected unsafe def attr : user_attribute (expr → tactic (expr × expr)) Unit :=
-  { Name := `norm_num, descr := "Add norm_num derivers",
-    cache_cfg :=
-      { mk_cache :=
-          fun ns =>
-            do 
-              let t ←
-                ns.mfoldl
-                    (fun t : expr → tactic (expr × expr) n =>
-                      do 
-                        let t' ← eval_expr (expr → tactic (expr × expr)) (expr.const n [])
-                        pure fun e => t' e <|> t e)
-                    fun _ => failed 
-              pure fun e => derive.step e <|> t e,
-        dependencies := [] } }
+-/ @[user_attribute] protected meta def attr : user_attribute (expr → tactic «expr × »(expr, expr)) unit :=
+{ name := `norm_num,
+  descr := "Add norm_num derivers",
+  cache_cfg := { mk_cache := λ ns, do
+    t ← ns.mfoldl (λ (t : expr → tactic «expr × »(expr, expr)) (n), do {
+       t' ← eval_expr (expr → tactic «expr × »(expr, expr)) (expr.const n «expr[ , ]»([])),
+         pure (λ e, «expr <|> »(t' e, t e)) }) (λ _, failed),
+      pure (λ e, «expr <|> »(derive.step e, t e)),
+    dependencies := «expr[ , ]»([]) } }
 
 add_tactic_doc
   { Name := "norm_num", category := DocCategory.attr, declNames := [`norm_num.attr],

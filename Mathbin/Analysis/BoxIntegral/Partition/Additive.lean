@@ -41,7 +41,7 @@ space.  -/
 structure box_additive_map(ι M : Type _)[AddCommMonoidₓ M](I : WithTop (box ι)) where 
   toFun : box ι → M 
   sum_partition_boxes' :
-  ∀ J : box ι, «expr↑ » J ≤ I → ∀ π : prepartition J, π.is_partition → (∑Ji in π.boxes, to_fun Ji) = to_fun J
+  ∀ (J : box ι), «expr↑ » J ≤ I → ∀ (π : prepartition J), π.is_partition → (∑Ji in π.boxes, to_fun Ji) = to_fun J
 
 localized [BoxIntegral] notation:25 ι " →ᵇᵃ " M => BoxIntegral.BoxAdditiveMap ι M ⊤
 
@@ -66,10 +66,10 @@ theorem to_fun_eq_coe (f : ι →ᵇᵃ[I₀] M) : f.to_fun = f :=
 theorem coe_mk f h : «expr⇑ » (mk f h : ι →ᵇᵃ[I₀] M) = f :=
   rfl
 
-theorem coe_injective : injective fun f : ι →ᵇᵃ[I₀] M x => f x :=
-  by 
-    rintro ⟨f, hf⟩ ⟨g, hg⟩ (rfl : f = g)
-    rfl
+-- error in Analysis.BoxIntegral.Partition.Additive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem coe_injective : injective (λ (f : «expr →ᵇᵃ[ ] »(ι, I₀, M)) (x), f x) :=
+by { rintro ["⟨", ident f, ",", ident hf, "⟩", "⟨", ident g, ",", ident hg, "⟩", "(", ident rfl, ":", expr «expr = »(f, g), ")"],
+  refl }
 
 @[simp]
 theorem coe_inj {f g : ι →ᵇᵃ[I₀] M} : (f : box ι → M) = g ↔ f = g :=

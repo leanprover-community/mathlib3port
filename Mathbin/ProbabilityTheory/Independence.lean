@@ -76,7 +76,7 @@ def Indep_sets {α ι} [MeasurableSpace α] (π : ι → Set (Set α))
     runTac 
       volume_tac) :
   Prop :=
-  ∀ s : Finset ι {f : ι → Set α} H : ∀ i, i ∈ s → f i ∈ π i, μ (⋂(i : _)(_ : i ∈ s), f i) = ∏i in s, μ (f i)
+  ∀ (s : Finset ι) {f : ι → Set α} (H : ∀ i, i ∈ s → f i ∈ π i), μ (⋂(i : _)(_ : i ∈ s), f i) = ∏i in s, μ (f i)
 
 /-- Two sets of sets `s₁, s₂` are independent with respect to a measure `μ` if for any sets
 `t₁ ∈ p₁, t₂ ∈ s₂`, then `μ (t₁ ∩ t₂) = μ (t₁) * μ (t₂)` -/
@@ -85,7 +85,7 @@ def indep_sets {α} [MeasurableSpace α] (s1 s2 : Set (Set α))
     runTac 
       volume_tac) :
   Prop :=
-  ∀ t1 t2 : Set α, t1 ∈ s1 → t2 ∈ s2 → μ (t1 ∩ t2) = μ t1*μ t2
+  ∀ (t1 t2 : Set α), t1 ∈ s1 → t2 ∈ s2 → μ (t1 ∩ t2) = μ t1*μ t2
 
 /-- A family of measurable space structures (i.e. of σ-algebras) is independent with respect to a
 measure `μ` (typically defined on a finer σ-algebra) if the family of sets of measurable sets they
@@ -131,7 +131,7 @@ def indep_set {α} [MeasurableSpace α] (s t : Set α)
 spaces, each with a measurable space structure, is independent if the family of measurable space
 structures they generate on `α` is independent. For a function `g` with codomain having measurable
 space structure `m`, the generated measurable space structure is `measurable_space.comap g m`. -/
-def Indep_fun {α ι} [MeasurableSpace α] {β : ι → Type _} (m : ∀ x : ι, MeasurableSpace (β x)) (f : ∀ x : ι, α → β x)
+def Indep_fun {α ι} [MeasurableSpace α] {β : ι → Type _} (m : ∀ (x : ι), MeasurableSpace (β x)) (f : ∀ (x : ι), α → β x)
   (μ : Measureₓ α :=  by 
     runTac 
       volume_tac) :

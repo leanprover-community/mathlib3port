@@ -159,7 +159,7 @@ by { haveI [] [] [":=", expr classical.dec],
   exact [expr not_imp_not.1 (λ
     h, by simpa [] [] ["only"] ["[", expr one_mul, "]"] [] ["using", expr mul_left_not_lt 1 h])] }
 
-theorem val_dvd_le : ∀ a b : R, b ∣ a → a ≠ 0 → ¬a ≺ b
+theorem val_dvd_le : ∀ (a b : R), b ∣ a → a ≠ 0 → ¬a ≺ b
 | _, b, ⟨d, rfl⟩, ha =>
   mul_left_not_lt b
     (mt
@@ -180,12 +180,11 @@ theorem zero_mod (b : R) : 0 % b = 0 :=
 theorem div_zero (a : R) : a / 0 = 0 :=
   EuclideanDomain.quotient_zero a
 
-@[simp]
-theorem zero_div {a : R} : 0 / a = 0 :=
-  Classical.by_cases (fun a0 : a = 0 => a0.symm ▸ div_zero 0)
-    fun a0 =>
-      by 
-        simpa only [zero_mul] using mul_div_cancel 0 a0
+-- error in Algebra.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, priority 900] theorem zero_div {a : R} : «expr = »(«expr / »(0, a), 0) :=
+classical.by_cases (λ
+ a0 : «expr = »(a, 0), «expr ▸ »(a0.symm, div_zero 0)) (λ
+ a0, by simpa [] [] ["only"] ["[", expr zero_mul, "]"] [] ["using", expr mul_div_cancel 0 a0])
 
 @[simp]
 theorem div_self {a : R} (a0 : a ≠ 0) : a / a = 1 :=
@@ -229,7 +228,7 @@ section
 open_locale Classical
 
 @[elab_as_eliminator]
-theorem gcd.induction {P : R → R → Prop} : ∀ a b : R, (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
+theorem gcd.induction {P : R → R → Prop} : ∀ (a b : R), (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
 | a =>
   fun b H0 H1 =>
     if a0 : a = 0 then a0.symm ▸ H0 _ else
@@ -438,33 +437,19 @@ variable[DecidableEq R]
 def lcm (x y : R) : R :=
   (x*y) / gcd x y
 
-theorem dvd_lcm_left (x y : R) : x ∣ lcm x y :=
-  Classical.by_cases
-    (fun hxy : gcd x y = 0 =>
-      by 
-        rw [lcm, hxy, div_zero]
-        exact dvd_zero _)
-    fun hxy =>
-      let ⟨z, hz⟩ := (gcd_dvd x y).2
-      ⟨z,
-        Eq.symm$
-          eq_div_of_mul_eq_left hxy$
-            by 
-              rw [mul_right_commₓ, mul_assocₓ, ←hz]⟩
+-- error in Algebra.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dvd_lcm_left (x y : R) : «expr ∣ »(x, lcm x y) :=
+classical.by_cases (assume
+ hxy : «expr = »(gcd x y, 0), by { rw ["[", expr lcm, ",", expr hxy, ",", expr div_zero, "]"] [],
+   exact [expr dvd_zero _] }) (λ hxy, let ⟨z, hz⟩ := (gcd_dvd x y).2 in
+ ⟨z, «expr $ »(eq.symm, «expr $ »(eq_div_of_mul_eq_left hxy, by rw ["[", expr mul_right_comm, ",", expr mul_assoc, ",", "<-", expr hz, "]"] []))⟩)
 
-theorem dvd_lcm_right (x y : R) : y ∣ lcm x y :=
-  Classical.by_cases
-    (fun hxy : gcd x y = 0 =>
-      by 
-        rw [lcm, hxy, div_zero]
-        exact dvd_zero _)
-    fun hxy =>
-      let ⟨z, hz⟩ := (gcd_dvd x y).1
-      ⟨z,
-        Eq.symm$
-          eq_div_of_mul_eq_right hxy$
-            by 
-              rw [←mul_assocₓ, mul_right_commₓ, ←hz]⟩
+-- error in Algebra.EuclideanDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dvd_lcm_right (x y : R) : «expr ∣ »(y, lcm x y) :=
+classical.by_cases (assume
+ hxy : «expr = »(gcd x y, 0), by { rw ["[", expr lcm, ",", expr hxy, ",", expr div_zero, "]"] [],
+   exact [expr dvd_zero _] }) (λ hxy, let ⟨z, hz⟩ := (gcd_dvd x y).1 in
+ ⟨z, «expr $ »(eq.symm, «expr $ »(eq_div_of_mul_eq_right hxy, by rw ["[", "<-", expr mul_assoc, ",", expr mul_right_comm, ",", "<-", expr hz, "]"] []))⟩)
 
 theorem lcm_dvd {x y z : R} (hxz : x ∣ z) (hyz : y ∣ z) : lcm x y ∣ z :=
   by 

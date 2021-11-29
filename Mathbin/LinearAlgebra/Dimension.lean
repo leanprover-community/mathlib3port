@@ -90,6 +90,7 @@ include K
 
 variable(K V)
 
+-- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The rank of a module, defined as a term of type `cardinal`.
 
 We define this as the supremum of the cardinalities of linearly independent subsets.
@@ -102,9 +103,8 @@ In particular this agrees with the usual notion of the dimension of a vector spa
 
 The definition is marked as protected to avoid conflicts with `_root_.rank`,
 the rank of a linear map.
--/
-protected def Module.rank : Cardinal :=
-  Cardinal.sup.{v, v} fun ι : { s : Set V // LinearIndependent K (coeₓ : s → V) } => # ι.1
+-/ protected def module.rank : cardinal :=
+cardinal.sup.{v, v} (λ ι : {s : set V // linear_independent K (coe : s → V)}, «expr#»() ι.1)
 
 end 
 
@@ -136,12 +136,15 @@ theorem LinearMap.lift_dim_le_of_injective (f : M →ₗ[R] M') (i : injective f
 theorem LinearMap.dim_le_of_injective (f : M →ₗ[R] M₁) (i : injective f) : Module.rank R M ≤ Module.rank R M₁ :=
   Cardinal.lift_le.1 (f.lift_dim_le_of_injective i)
 
-theorem dim_le {n : ℕ} (H : ∀ s : Finset M, (LinearIndependent R fun i : s => (i : M)) → s.card ≤ n) :
-  Module.rank R M ≤ n :=
-  by 
-    apply cardinal.sup_le.mpr 
-    rintro ⟨s, li⟩
-    exact linear_independent_bounded_of_finset_linear_independent_bounded H _ li
+-- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dim_le
+{n : exprℕ()}
+(H : ∀ s : finset M, linear_independent R (λ i : s, (i : M)) → «expr ≤ »(s.card, n)) : «expr ≤ »(module.rank R M, n) :=
+begin
+  apply [expr cardinal.sup_le.mpr],
+  rintro ["⟨", ident s, ",", ident li, "⟩"],
+  exact [expr linear_independent_bounded_of_finset_linear_independent_bounded H _ li]
+end
 
 theorem lift_dim_range_le (f : M →ₗ[R] M') :
   Cardinal.lift.{v} (Module.rank R f.range) ≤ Cardinal.lift.{v'} (Module.rank R M) :=
@@ -882,8 +885,8 @@ theorem dim_span_set {s : Set M} (hs : LinearIndependent R (fun x => x : s → M
 do induction on adjoining a linear independent element to a submodule. -/
 def Submodule.inductionOnRank [IsDomain R] [Fintype ι] (b : Basis ι R M) (P : Submodule R M → Sort _)
   (ih :
-    ∀ N : Submodule R M,
-      (∀ N' _ : N' ≤ N x _ : x ∈ N, (∀ c : R y _ : y ∈ N', ((c • x)+y) = (0 : M) → c = 0) → P N') → P N)
+    ∀ (N : Submodule R M),
+      (∀ N' (_ : N' ≤ N) x (_ : x ∈ N), (∀ (c : R) y (_ : y ∈ N'), ((c • x)+y) = (0 : M) → c = 0) → P N') → P N)
   (N : Submodule R M) : P N :=
   Submodule.inductionOnRankAux b P ih (Fintype.card ι) N
     fun s hs hli =>
@@ -1056,7 +1059,7 @@ theorem dim_quotient_add_dim (p : Submodule K V) : (Module.rank K p.quotient+Mod
         let ⟨f⟩ := quotient_prod_linear_equiv p 
         dim_prod.symm.trans f.dim_eq
 
--- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- rank-nullity theorem -/
 theorem dim_range_add_dim_ker
 (f : «expr →ₗ[ ] »(V, K, V₁)) : «expr = »(«expr + »(module.rank K f.range, module.rank K f.ker), module.rank K V) :=
@@ -1264,18 +1267,19 @@ begin
     exact [expr inj_on_iff_injective.2 this.injective] }
 end
 
-theorem le_rank_iff_exists_linear_independent_finset {n : ℕ} {f : V →ₗ[K] V'} :
-  «expr↑ » n ≤ rank f ↔ ∃ s : Finset V, s.card = n ∧ LinearIndependent K fun x : (s : Set V) => f x :=
-  by 
-    simp only [le_rank_iff_exists_linear_independent, Cardinal.lift_nat_cast, Cardinal.lift_eq_nat_iff,
-      Cardinal.mk_eq_nat_iff_finset]
-    split 
-    ·
-      rintro ⟨s, ⟨t, rfl, rfl⟩, si⟩
-      exact ⟨t, rfl, si⟩
-    ·
-      rintro ⟨s, rfl, si⟩
-      exact ⟨s, ⟨s, rfl, rfl⟩, si⟩
+-- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem le_rank_iff_exists_linear_independent_finset
+{n : exprℕ()}
+{f : «expr →ₗ[ ] »(V, K, V')} : «expr ↔ »(«expr ≤ »(«expr↑ »(n), rank f), «expr∃ , »((s : finset V), «expr ∧ »(«expr = »(s.card, n), linear_independent K (λ
+    x : (s : set V), f x)))) :=
+begin
+  simp [] [] ["only"] ["[", expr le_rank_iff_exists_linear_independent, ",", expr cardinal.lift_nat_cast, ",", expr cardinal.lift_eq_nat_iff, ",", expr cardinal.mk_eq_nat_iff_finset, "]"] [] [],
+  split,
+  { rintro ["⟨", ident s, ",", "⟨", ident t, ",", ident rfl, ",", ident rfl, "⟩", ",", ident si, "⟩"],
+    exact [expr ⟨t, rfl, si⟩] },
+  { rintro ["⟨", ident s, ",", ident rfl, ",", ident si, "⟩"],
+    exact [expr ⟨s, ⟨s, rfl, rfl⟩, si⟩] }
+end
 
 -- error in LinearAlgebra.Dimension: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A vector space has dimension at most `1` if and only if there is a

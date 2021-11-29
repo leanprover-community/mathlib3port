@@ -19,7 +19,7 @@ the multiplicity of `p` in this factors multiset being the p-adic valuation of `
  gives an equivalence between this set and ℕ+, as we will formalize
  below. -/
 @[derive #["[", expr inhabited, ",", expr has_repr, ",", expr canonically_ordered_add_monoid, ",", expr distrib_lattice,
-   ",", expr semilattice_sup_bot, ",", expr has_sub, ",", expr has_ordered_sub, "]"]]
+   ",", expr semilattice_sup, ",", expr order_bot, ",", expr has_sub, ",", expr has_ordered_sub, "]"]]
 def prime_multiset :=
 multiset nat.primes
 
@@ -121,7 +121,7 @@ theorem prod_of_prime (p : Nat.Primes) : (of_prime p).Prod = (p : ℕ+) :=
   Multiset.prod_singleton _
 
 /-- If a `multiset ℕ` consists only of primes, it can be recast as a `prime_multiset`. -/
-def of_nat_multiset (v : Multiset ℕ) (h : ∀ p : ℕ, p ∈ v → p.prime) : PrimeMultiset :=
+def of_nat_multiset (v : Multiset ℕ) (h : ∀ (p : ℕ), p ∈ v → p.prime) : PrimeMultiset :=
   @Multiset.pmap ℕ Nat.Primes Nat.Prime (fun p hp => ⟨p, hp⟩) v h
 
 -- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -140,7 +140,7 @@ theorem prod_of_nat_multiset (v : Multiset ℕ) h : ((of_nat_multiset v h).Prod 
     rw [coe_prod, to_of_nat_multiset]
 
 /-- If a `multiset ℕ+` consists only of primes, it can be recast as a `prime_multiset`. -/
-def of_pnat_multiset (v : Multiset ℕ+) (h : ∀ p : ℕ+, p ∈ v → p.prime) : PrimeMultiset :=
+def of_pnat_multiset (v : Multiset ℕ+) (h : ∀ (p : ℕ+), p ∈ v → p.prime) : PrimeMultiset :=
   @Multiset.pmap ℕ+ Nat.Primes Pnat.Prime (fun p hp => ⟨(p : ℕ), hp⟩) v h
 
 -- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -164,7 +164,7 @@ theorem prod_of_pnat_multiset (v : Multiset ℕ+) h : ((of_pnat_multiset v h).Pr
 
 /-- Lists can be coerced to multisets; here we have some results
 about how this interacts with our constructions on multisets. -/
-def of_nat_list (l : List ℕ) (h : ∀ p : ℕ, p ∈ l → p.prime) : PrimeMultiset :=
+def of_nat_list (l : List ℕ) (h : ∀ (p : ℕ), p ∈ l → p.prime) : PrimeMultiset :=
   of_nat_multiset (l : Multiset ℕ) h
 
 -- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -175,7 +175,7 @@ by { have [] [] [":=", expr prod_of_nat_multiset (l : multiset exprℕ()) h],
 
 /-- If a `list ℕ+` consists only of primes, it can be recast as a `prime_multiset` with
 the coercion from lists to multisets. -/
-def of_pnat_list (l : List ℕ+) (h : ∀ p : ℕ+, p ∈ l → p.prime) : PrimeMultiset :=
+def of_pnat_list (l : List ℕ+) (h : ∀ (p : ℕ+), p ∈ l → p.prime) : PrimeMultiset :=
   of_pnat_multiset (l : Multiset ℕ+) h
 
 -- error in Data.Pnat.Factors: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

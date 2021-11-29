@@ -34,7 +34,7 @@ variable{C : Type u}[category.{v} C]
 An object `P` is called projective if every morphism out of `P` factors through every epimorphism.
 -/
 class projective(P : C) : Prop where 
-  Factors : ∀ {E X : C} f : P ⟶ X e : E ⟶ X [epi e], ∃ f', f' ≫ e = f
+  Factors : ∀ {E X : C} (f : P ⟶ X) (e : E ⟶ X) [epi e], ∃ f', f' ≫ e = f
 
 section 
 
@@ -58,7 +58,7 @@ variable(C)
 /-- A category "has enough projectives" if for every object `X` there is a projective object `P` and
     an epimorphism `P ↠ X`. -/
 class enough_projectives : Prop where 
-  presentation : ∀ X : C, Nonempty (projective_presentation X)
+  presentation : ∀ (X : C), Nonempty (projective_presentation X)
 
 end 
 

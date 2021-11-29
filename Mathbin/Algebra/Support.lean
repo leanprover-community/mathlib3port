@@ -54,7 +54,7 @@ theorem mul_support_subset_iff {f : α → M} {s : Set α} : mul_support f ⊆ s
   Iff.rfl
 
 @[toAdditive]
-theorem mul_support_subset_iff' {f : α → M} {s : Set α} : mul_support f ⊆ s ↔ ∀ x _ : x ∉ s, f x = 1 :=
+theorem mul_support_subset_iff' {f : α → M} {s : Set α} : mul_support f ⊆ s ↔ ∀ x (_ : x ∉ s), f x = 1 :=
   forall_congrₓ$ fun x => not_imp_comm
 
 @[simp, toAdditive]
@@ -67,28 +67,28 @@ theorem mul_support_eq_empty_iff {f : α → M} : mul_support f = ∅ ↔ f = 1 
 theorem mul_support_one' : mul_support (1 : α → M) = ∅ :=
   mul_support_eq_empty_iff.2 rfl
 
-@[simp, toAdditive]
-theorem mul_support_one : (mul_support fun x : α => (1 : M)) = ∅ :=
-  mul_support_one'
+-- error in Algebra.Support: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, to_additive #[]] theorem mul_support_one : «expr = »(mul_support (λ x : α, (1 : M)), «expr∅»()) :=
+mul_support_one'
 
-@[toAdditive]
-theorem mul_support_const {c : M} (hc : c ≠ 1) : (mul_support fun x : α => c) = Set.Univ :=
-  by 
-    ext x 
-    simp [hc]
+-- error in Algebra.Support: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem mul_support_const {c : M} (hc : «expr ≠ »(c, 1)) : «expr = »(mul_support (λ x : α, c), set.univ) :=
+by { ext [] [ident x] [],
+  simp [] [] [] ["[", expr hc, "]"] [] [] }
 
-@[toAdditive]
-theorem mul_support_binop_subset (op : M → N → P) (op1 : op 1 1 = 1) (f : α → M) (g : α → N) :
-  (mul_support fun x => op (f x) (g x)) ⊆ mul_support f ∪ mul_support g :=
-  fun x hx =>
-    Classical.by_cases
-      (fun hf : f x = 1 =>
-        Or.inr$
-          fun hg =>
-            hx$
-              by 
-                simp only [hf, hg, op1])
-      Or.inl
+-- error in Algebra.Support: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem mul_support_binop_subset
+(op : M → N → P)
+(op1 : «expr = »(op 1 1, 1))
+(f : α → M)
+(g : α → N) : «expr ⊆ »(mul_support (λ x, op (f x) (g x)), «expr ∪ »(mul_support f, mul_support g)) :=
+λ
+x
+hx, classical.by_cases (λ
+ hf : «expr = »(f x, 1), «expr $ »(or.inr, λ
+  hg, «expr $ »(hx, by simp [] [] ["only"] ["[", expr hf, ",", expr hg, ",", expr op1, "]"] [] []))) or.inl
 
 @[toAdditive]
 theorem mul_support_sup [SemilatticeSup M] (f g : α → M) :

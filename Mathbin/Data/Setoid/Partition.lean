@@ -30,7 +30,7 @@ theorem eq_of_mem_eqv_class {c : Set (Set α)} (H : ∀ a, ∃!(b : _)(_ : b ∈
 
 /-- Makes an equivalence relation from a set of sets partitioning α. -/
 def mk_classes (c : Set (Set α)) (H : ∀ a, ∃!(b : _)(_ : b ∈ c), a ∈ b) : Setoidₓ α :=
-  ⟨fun x y => ∀ s _ : s ∈ c, x ∈ s → y ∈ s,
+  ⟨fun x y => ∀ s (_ : s ∈ c), x ∈ s → y ∈ s,
     ⟨fun _ _ _ hx => hx,
       fun x y h s hs hy =>
         (H x).elim2$
@@ -265,10 +265,14 @@ open Set
 
 variable{ι α : Type _}{s : ι → Set α}(hs : IndexedPartition s)
 
+-- error in Data.Setoid.Partition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- On a unique index set there is the obvious trivial partition -/
-instance  [Unique ι] [Inhabited α] : Inhabited (IndexedPartition fun i : ι => (Set.Univ : Set α)) :=
-  ⟨{ eq_of_mem := fun x i j hi hj => Subsingleton.elimₓ _ _, some := fun i => default α, some_mem := Set.mem_univ,
-      index := fun a => default ι, mem_index := Set.mem_univ }⟩
+instance [unique ι] [inhabited α] : inhabited (indexed_partition (λ i : ι, (set.univ : set α))) :=
+⟨{ eq_of_mem := λ x i j hi hj, subsingleton.elim _ _,
+   some := λ i, default α,
+   some_mem := set.mem_univ,
+   index := λ a, default ι,
+   mem_index := set.mem_univ }⟩
 
 attribute [simp] some_mem mem_index
 

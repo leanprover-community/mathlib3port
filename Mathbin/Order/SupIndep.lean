@@ -11,11 +11,6 @@ In distributive lattices, this is equivalent to being pairwise disjoint.
 
 ## TODO
 
-As we don't have `lattice_bot`, we're forced to pick between `bounded_lattice` (which assumes `top`
-unnecessarily) and `distrib_lattice_bot` (which assumes distributivity unnecessarily). For now we
-pick `distrib_lattice_bot` for it to apply to `finset α`, although this use is redundant with
-`set.pairwise_disjoint`.
-
 `complete_lattice.independent` and `complete_lattice.set_independent` should live in this file.
 -/
 
@@ -24,7 +19,7 @@ variable{α β ι ι' : Type _}
 
 namespace Finset
 
-variable[DistribLatticeBot α][DecidableEq ι][DecidableEq ι']
+variable[Lattice α][OrderBot α][DecidableEq ι][DecidableEq ι']
 
 /-- Supremum independence of finite sets. -/
 def sup_indep (s : Finset ι) (f : ι → α) : Prop :=
@@ -51,8 +46,8 @@ theorem sup_indep.attach (hs : s.sup_indep f) : s.attach.sup_indep (f ∘ Subtyp
       exact hs i.2
 
 /-- Bind operation for `sup_indep`. -/
-theorem sup_indep.sup {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α} (hs : s.sup_indep fun i => (g i).sup f)
-  (hg : ∀ i' _ : i' ∈ s, (g i').SupIndep f) : (s.sup g).SupIndep f :=
+theorem sup_indep.sup {α} [DistribLattice α] [OrderBot α] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
+  (hs : s.sup_indep fun i => (g i).sup f) (hg : ∀ i' (_ : i' ∈ s), (g i').SupIndep f) : (s.sup g).SupIndep f :=
   by 
     rintro i hi 
     rw [disjoint_sup_right]
@@ -68,8 +63,8 @@ theorem sup_indep.sup {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α} (
       exact (hs hi').mono (le_sup hi) ((le_sup hj).trans$ le_sup$ mem_erase.2 ⟨hij', hj'⟩)
 
 /-- Bind operation for `sup_indep`. -/
-theorem sup_indep.bUnion {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α} (hs : s.sup_indep fun i => (g i).sup f)
-  (hg : ∀ i' _ : i' ∈ s, (g i').SupIndep f) : (s.bUnion g).SupIndep f :=
+theorem sup_indep.bUnion {α} [DistribLattice α] [OrderBot α] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
+  (hs : s.sup_indep fun i => (g i).sup f) (hg : ∀ i' (_ : i' ∈ s), (g i').SupIndep f) : (s.bUnion g).SupIndep f :=
   by 
     rw [←sup_eq_bUnion]
     exact hs.sup hg
@@ -77,7 +72,8 @@ theorem sup_indep.bUnion {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α
 theorem sup_indep.pairwise_disjoint (hs : s.sup_indep f) : (s : Set ι).PairwiseDisjoint f :=
   fun a ha b hb hab => (hs ha).mono_right$ le_sup$ mem_erase.2 ⟨hab.symm, hb⟩
 
-theorem sup_indep_iff_pairwise_disjoint : s.sup_indep f ↔ (s : Set ι).PairwiseDisjoint f :=
+theorem sup_indep_iff_pairwise_disjoint {α} [DistribLattice α] [OrderBot α] {f : ι → α} :
+  s.sup_indep f ↔ (s : Set ι).PairwiseDisjoint f :=
   by 
     refine' ⟨fun hs a ha b hb hab => (hs ha).mono_right$ le_sup$ mem_erase.2 ⟨hab.symm, hb⟩, fun hs a ha => _⟩
     rw [disjoint_sup_right]

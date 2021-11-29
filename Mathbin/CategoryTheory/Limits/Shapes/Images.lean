@@ -144,8 +144,8 @@ variable{f}
 
 /-- Data exhibiting that a given factorisation through a mono is initial. -/
 structure is_image(F : mono_factorisation f) where 
-  lift : ∀ F' : mono_factorisation f, F.I ⟶ F'.I 
-  lift_fac' : ∀ F' : mono_factorisation f, lift F' ≫ F'.m = F.m :=  by 
+  lift : ∀ (F' : mono_factorisation f), F.I ⟶ F'.I 
+  lift_fac' : ∀ (F' : mono_factorisation f), lift F' ≫ F'.m = F.m :=  by 
   runTac 
     obviously
 
@@ -335,7 +335,7 @@ variable(C)
 
 /-- `has_images` represents a choice of image for every morphism -/
 class has_images where 
-  HasImage : ∀ {X Y : C} f : X ⟶ Y, has_image f
+  HasImage : ∀ {X Y : C} (f : X ⟶ Y), has_image f
 
 attribute [instance] has_images.has_image
 
@@ -386,7 +386,7 @@ begin
     «expr = »(..., h) : by rw ["[", expr category.id_comp, "]"] []
 end
 
-instance  [∀ {Z : C} g h : image f ⟶ Z, has_limit (parallel_pair g h)] : epi (factor_thru_image f) :=
+instance  [∀ {Z : C} (g h : image f ⟶ Z), has_limit (parallel_pair g h)] : epi (factor_thru_image f) :=
   ⟨fun Z g h w => image.ext f w⟩
 
 theorem epi_image_of_epi {X Y : C} (f : X ⟶ Y) [has_image f] [E : epi f] : epi (image.ι f) :=
@@ -693,7 +693,7 @@ variable(C)[has_images C]
 
 /-- If a category `has_image_maps`, then all commutative squares induce morphisms on images. -/
 class has_image_maps where 
-  HasImageMap : ∀ {f g : arrow C} st : f ⟶ g, has_image_map st
+  HasImageMap : ∀ {f g : arrow C} (st : f ⟶ g), has_image_map st
 
 attribute [instance] has_image_maps.has_image_map
 
@@ -743,11 +743,11 @@ variable(C)
 /-- A category has strong epi-mono factorisations if every morphism admits a strong epi-mono
     factorisation. -/
 class has_strong_epi_mono_factorisations : Prop where mk' :: 
-  has_fac : ∀ {X Y : C} f : X ⟶ Y, Nonempty (strong_epi_mono_factorisation f)
+  has_fac : ∀ {X Y : C} (f : X ⟶ Y), Nonempty (strong_epi_mono_factorisation f)
 
 variable{C}
 
-theorem has_strong_epi_mono_factorisations.mk (d : ∀ {X Y : C} f : X ⟶ Y, strong_epi_mono_factorisation f) :
+theorem has_strong_epi_mono_factorisations.mk (d : ∀ {X Y : C} (f : X ⟶ Y), strong_epi_mono_factorisation f) :
   has_strong_epi_mono_factorisations C :=
   ⟨fun X Y f => Nonempty.intro$ d f⟩
 
@@ -767,7 +767,7 @@ variable(C)[has_images C]
 /-- A category has strong epi images if it has all images and `factor_thru_image f` is a strong
     epimorphism for all `f`. -/
 class has_strong_epi_images : Prop where 
-  strong_factor_thru_image : ∀ {X Y : C} f : X ⟶ Y, strong_epi (factor_thru_image f)
+  strong_factor_thru_image : ∀ {X Y : C} (f : X ⟶ Y), strong_epi (factor_thru_image f)
 
 attribute [instance] has_strong_epi_images.strong_factor_thru_image
 

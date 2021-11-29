@@ -101,18 +101,15 @@ include hv
 
 namespace Integers
 
-theorem dvd_of_le {x y : O} (h : v (algebraMap O F x) ≤ v (algebraMap O F y)) : y ∣ x :=
-  (Classical.by_cases
-      fun hy : algebraMap O F y = 0 =>
-        have hx : x = 0 := hv.1$ (algebraMap O F).map_zero.symm ▸ (v.zero_iff.1$ le_zero_iff.1 (v.map_zero ▸ hy ▸ h))
-        hx.symm ▸ dvd_zero y)$
-    fun hy : algebraMap O F y ≠ 0 =>
-      have  : v (algebraMap O F y⁻¹*algebraMap O F x) ≤ 1 :=
-        by 
-          rw [←v.map_one, ←inv_mul_cancel hy, v.map_mul, v.map_mul]
-          exact mul_le_mul_left' h _ 
-      let ⟨z, hz⟩ := hv.3 this
-      ⟨z, hv.1$ ((algebraMap O F).map_mul y z).symm ▸ hz.symm ▸ (mul_inv_cancel_left₀ hy _).symm⟩
+-- error in RingTheory.Valuation.Integers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dvd_of_le {x y : O} (h : «expr ≤ »(v (algebra_map O F x), v (algebra_map O F y))) : «expr ∣ »(y, x) :=
+«expr $ »(classical.by_cases (λ
+  hy : «expr = »(algebra_map O F y, 0), have hx : «expr = »(x, 0), from «expr $ »(hv.1, «expr ▸ »((algebra_map O F).map_zero.symm, «expr $ »(v.zero_iff.1, le_zero_iff.1 «expr ▸ »(v.map_zero, «expr ▸ »(hy, h))))),
+  «expr ▸ »(hx.symm, dvd_zero y)), λ
+ hy : «expr ≠ »(algebra_map O F y, 0), have «expr ≤ »(v «expr * »(«expr ⁻¹»(algebra_map O F y), algebra_map O F x), 1), by { rw ["[", "<-", expr v.map_one, ",", "<-", expr inv_mul_cancel hy, ",", expr v.map_mul, ",", expr v.map_mul, "]"] [],
+   exact [expr mul_le_mul_left' h _] },
+ let ⟨z, hz⟩ := hv.3 this in
+ ⟨z, «expr $ »(hv.1, «expr ▸ »(((algebra_map O F).map_mul y z).symm, «expr ▸ »(hz.symm, (mul_inv_cancel_left₀ hy _).symm)))⟩)
 
 theorem dvd_iff_le {x y : O} : x ∣ y ↔ v (algebraMap O F y) ≤ v (algebraMap O F x) :=
   ⟨hv.le_of_dvd, hv.dvd_of_le⟩

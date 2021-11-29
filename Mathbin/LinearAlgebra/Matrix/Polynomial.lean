@@ -29,38 +29,31 @@ open Polynomial Matrix Equiv.Perm
 
 namespace Polynomial
 
-theorem nat_degree_det_X_add_C_le (A B : Matrix n n α) :
-  nat_degree (det (((X : Polynomial α) • A.map C)+B.map C)) ≤ Fintype.card n :=
-  by 
-    rw [det_apply]
-    refine' (nat_degree_sum_le _ _).trans _ 
-    refine' Multiset.max_nat_le_of_forall_le _ _ _ 
-    simp only [forall_apply_eq_imp_iff', true_andₓ, Function.comp_app, Multiset.map_map, Multiset.mem_map,
-      exists_imp_distrib, Finset.mem_univ_val]
-    intro g 
-    calc
-      nat_degree (sign g • ∏i : n, ((X • A.map C)+B.map C) (g i) i) ≤
-        nat_degree (∏i : n, ((X • A.map C)+B.map C) (g i) i) :=
-      by 
-        cases' Int.units_eq_one_or (sign g) with sg sg
-        ·
-          rw [sg, one_smul]
-        ·
-          rw [sg, Units.neg_smul, one_smul,
-            nat_degree_neg]_ ≤ ∑i : n, nat_degree ((((X : Polynomial α) • A.map C)+B.map C) (g i) i) :=
-      nat_degree_prod_le (Finset.univ : Finset n)
-        fun i : n => ((X • A.map C)+B.map C) (g i) i _ ≤ finset.univ.card • 1 :=
-      Finset.sum_le_of_forall_le _ _ 1 fun i : n _ => _ _ ≤ Fintype.card n :=
-      by 
-        simpa 
-    calc
-      nat_degree ((((X : Polynomial α) • A.map C)+B.map C) (g i) i) =
-        nat_degree (((X : Polynomial α)*C (A (g i) i))+C (B (g i) i)) :=
-      by 
-        simp _ ≤ max (nat_degree ((X : Polynomial α)*C (A (g i) i))) (nat_degree (C (B (g i) i))) :=
-      nat_degree_add_le _ _ _ = nat_degree ((X : Polynomial α)*C (A (g i) i)) :=
-      max_eq_leftₓ ((nat_degree_C _).le.trans (zero_le _))_ ≤ nat_degree (X : Polynomial α) :=
-      nat_degree_mul_C_le _ _ _ ≤ 1 := nat_degree_X_le
+-- error in LinearAlgebra.Matrix.Polynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nat_degree_det_X_add_C_le
+(A
+ B : matrix n n α) : «expr ≤ »(nat_degree (det «expr + »(«expr • »((X : polynomial α), A.map C), B.map C)), fintype.card n) :=
+begin
+  rw [expr det_apply] [],
+  refine [expr (nat_degree_sum_le _ _).trans _],
+  refine [expr multiset.max_nat_le_of_forall_le _ _ _],
+  simp [] [] ["only"] ["[", expr forall_apply_eq_imp_iff', ",", expr true_and, ",", expr function.comp_app, ",", expr multiset.map_map, ",", expr multiset.mem_map, ",", expr exists_imp_distrib, ",", expr finset.mem_univ_val, "]"] [] [],
+  intro [ident g],
+  calc
+    «expr ≤ »(nat_degree «expr • »(sign g, «expr∏ , »((i : n), «expr + »(«expr • »(X, A.map C), B.map C) (g i) i)), nat_degree «expr∏ , »((i : n), «expr + »(«expr • »(X, A.map C), B.map C) (g i) i)) : by { cases [expr int.units_eq_one_or (sign g)] ["with", ident sg, ident sg],
+      { rw ["[", expr sg, ",", expr one_smul, "]"] [] },
+      { rw ["[", expr sg, ",", expr units.neg_smul, ",", expr one_smul, ",", expr nat_degree_neg, "]"] [] } }
+    «expr ≤ »(..., «expr∑ , »((i : n), nat_degree («expr + »(«expr • »((X : polynomial α), A.map C), B.map C) (g i) i))) : nat_degree_prod_le (finset.univ : finset n) (λ
+     i : n, «expr + »(«expr • »(X, A.map C), B.map C) (g i) i)
+    «expr ≤ »(..., «expr • »(finset.univ.card, 1)) : finset.sum_le_of_forall_le _ _ 1 (λ (i : n) (_), _)
+    «expr ≤ »(..., fintype.card n) : by simpa [] [] [] [] [] [],
+  calc
+    «expr = »(nat_degree («expr + »(«expr • »((X : polynomial α), A.map C), B.map C) (g i) i), nat_degree «expr + »(«expr * »((X : polynomial α), C (A (g i) i)), C (B (g i) i))) : by simp [] [] [] [] [] []
+    «expr ≤ »(..., max (nat_degree «expr * »((X : polynomial α), C (A (g i) i))) (nat_degree (C (B (g i) i)))) : nat_degree_add_le _ _
+    «expr = »(..., nat_degree «expr * »((X : polynomial α), C (A (g i) i))) : max_eq_left ((nat_degree_C _).le.trans (zero_le _))
+    «expr ≤ »(..., nat_degree (X : polynomial α)) : nat_degree_mul_C_le _ _
+    «expr ≤ »(..., 1) : nat_degree_X_le
+end
 
 theorem coeff_det_X_add_C_zero (A B : Matrix n n α) : coeff (det (((X : Polynomial α) • A.map C)+B.map C)) 0 = det B :=
   by 

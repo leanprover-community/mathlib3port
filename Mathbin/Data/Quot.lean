@@ -49,10 +49,10 @@ protected def hrec_on₂ (qa : Quot ra) (qb : Quot rb) (f : ∀ a b, φ («expr�
               simp [heq_self_iff_true]
             
 
+-- error in Data.Quot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Map a function `f : α → β` such that `ra x y` implies `rb (f x) (f y)`
-to a map `quot ra → quot rb`. -/
-protected def map (f : α → β) (h : (ra⇒rb) f f) : Quot ra → Quot rb :=
-  (Quot.lift fun x => «expr⟦ ⟧» (f x))$ fun x y h₁ : ra x y => Quot.sound$ h h₁
+to a map `quot ra → quot rb`. -/ protected def map (f : α → β) (h : «expr ⇒ »(ra, rb) f f) : quot ra → quot rb :=
+«expr $ »(quot.lift (λ x, «expr⟦ ⟧»(f x)), assume (x y) (h₁ : ra x y), «expr $ »(quot.sound, h h₁))
 
 /-- If `ra` is a subrelation of `ra'`, then we have a natural map `quot ra → quot ra'`. -/
 protected def map_right {ra' : α → α → Prop} (h : ∀ a₁ a₂, ra a₁ a₂ → ra' a₁ a₂) : Quot ra → Quot ra' :=
@@ -173,28 +173,28 @@ theorem Quotientₓ.eq [r : Setoidₓ α] {x y : α} : «expr⟦ ⟧» x = «exp
   ⟨Quotientₓ.exact, Quotientₓ.sound⟩
 
 theorem forall_quotient_iff {α : Type _} [r : Setoidₓ α] {p : Quotientₓ r → Prop} :
-  (∀ a : Quotientₓ r, p a) ↔ ∀ a : α, p («expr⟦ ⟧» a) :=
+  (∀ (a : Quotientₓ r), p a) ↔ ∀ (a : α), p («expr⟦ ⟧» a) :=
   ⟨fun h x => h _, fun h a => a.induction_on h⟩
 
 @[simp]
-theorem Quotientₓ.lift_mk [s : Setoidₓ α] (f : α → β) (h : ∀ a b : α, a ≈ b → f a = f b) (x : α) :
+theorem Quotientₓ.lift_mk [s : Setoidₓ α] (f : α → β) (h : ∀ (a b : α), a ≈ b → f a = f b) (x : α) :
   Quotientₓ.lift f h (Quotientₓ.mk x) = f x :=
   rfl
 
 @[simp]
 theorem Quotientₓ.lift₂_mk {α : Sort _} {β : Sort _} {γ : Sort _} [Setoidₓ α] [Setoidₓ β] (f : α → β → γ)
-  (h : ∀ a₁ : α a₂ : β b₁ : α b₂ : β, a₁ ≈ b₁ → a₂ ≈ b₂ → f a₁ a₂ = f b₁ b₂) (a : α) (b : β) :
+  (h : ∀ (a₁ : α) (a₂ : β) (b₁ : α) (b₂ : β), a₁ ≈ b₁ → a₂ ≈ b₂ → f a₁ a₂ = f b₁ b₂) (a : α) (b : β) :
   Quotientₓ.lift₂ f h (Quotientₓ.mk a) (Quotientₓ.mk b) = f a b :=
   rfl
 
 @[simp]
-theorem Quotientₓ.lift_on_mk [s : Setoidₓ α] (f : α → β) (h : ∀ a b : α, a ≈ b → f a = f b) (x : α) :
+theorem Quotientₓ.lift_on_mk [s : Setoidₓ α] (f : α → β) (h : ∀ (a b : α), a ≈ b → f a = f b) (x : α) :
   Quotientₓ.liftOn (Quotientₓ.mk x) f h = f x :=
   rfl
 
 @[simp]
 theorem Quotientₓ.lift_on₂_mk {α : Sort _} {β : Sort _} [Setoidₓ α] (f : α → α → β)
-  (h : ∀ a₁ a₂ b₁ b₂ : α, a₁ ≈ b₁ → a₂ ≈ b₂ → f a₁ a₂ = f b₁ b₂) (x y : α) :
+  (h : ∀ (a₁ a₂ b₁ b₂ : α), a₁ ≈ b₁ → a₂ ≈ b₂ → f a₁ a₂ = f b₁ b₂) (x y : α) :
   Quotientₓ.liftOn₂ (Quotientₓ.mk x) (Quotientₓ.mk y) f h = f x y :=
   rfl
 
@@ -292,10 +292,10 @@ instance  [Inhabited α] : Inhabited (Trunc α) :=
   ⟨mk (default _)⟩
 
 /-- Any constant function lifts to a function out of the truncation -/
-def lift (f : α → β) (c : ∀ a b : α, f a = f b) : Trunc α → β :=
+def lift (f : α → β) (c : ∀ (a b : α), f a = f b) : Trunc α → β :=
   Quot.lift f fun a b _ => c a b
 
-theorem ind {β : Trunc α → Prop} : (∀ a : α, β (mk a)) → ∀ q : Trunc α, β q :=
+theorem ind {β : Trunc α → Prop} : (∀ (a : α), β (mk a)) → ∀ (q : Trunc α), β q :=
   Quot.ind
 
 protected theorem lift_mk (f : α → β) c (a : α) : lift f c (mk a) = f a :=
@@ -303,7 +303,7 @@ protected theorem lift_mk (f : α → β) c (a : α) : lift f c (mk a) = f a :=
 
 /-- Lift a constant function on `q : trunc α`. -/
 @[reducible, elab_as_eliminator]
-protected def lift_on (q : Trunc α) (f : α → β) (c : ∀ a b : α, f a = f b) : β :=
+protected def lift_on (q : Trunc α) (f : α → β) (c : ∀ (a b : α), f a = f b) : β :=
   lift f c q
 
 @[elab_as_eliminator]
@@ -342,14 +342,14 @@ variable{C : Trunc α → Sort _}
 
 /-- Recursion/induction principle for `trunc`. -/
 @[reducible, elab_as_eliminator]
-protected def rec (f : ∀ a, C (mk a)) (h : ∀ a b : α, (Eq.ndrec (f a) (Trunc.eq (mk a) (mk b)) : C (mk b)) = f b)
+protected def rec (f : ∀ a, C (mk a)) (h : ∀ (a b : α), (Eq.ndrec (f a) (Trunc.eq (mk a) (mk b)) : C (mk b)) = f b)
   (q : Trunc α) : C q :=
   Quot.recₓ f (fun a b _ => h a b) q
 
 /-- A version of `trunc.rec` taking `q : trunc α` as the first argument. -/
 @[reducible, elab_as_eliminator]
 protected def rec_on (q : Trunc α) (f : ∀ a, C (mk a))
-  (h : ∀ a b : α, (Eq.ndrec (f a) (Trunc.eq (mk a) (mk b)) : C (mk b)) = f b) : C q :=
+  (h : ∀ (a b : α), (Eq.ndrec (f a) (Trunc.eq (mk a) (mk b)) : C (mk b)) = f b) : C q :=
   Trunc.rec f h q
 
 /-- A version of `trunc.rec_on` assuming the codomain is a `subsingleton`. -/

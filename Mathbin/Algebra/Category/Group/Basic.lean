@@ -179,9 +179,9 @@ theorem ext (G H : CommGroupₓₓ) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f
 instance has_forget_to_Group : has_forget₂ CommGroupₓₓ Groupₓₓ :=
   bundled_hom.forget₂ _ _
 
-@[toAdditive has_forget_to_AddCommMon]
-instance has_forget_to_CommMon : has_forget₂ CommGroupₓₓ CommMon :=
-  induced_category.has_forget₂ fun G : CommGroupₓₓ => CommMon.of G
+-- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident has_forget_to_AddCommMon]] instance has_forget_to_CommMon : has_forget₂ CommGroup CommMon :=
+induced_category.has_forget₂ (λ G : CommGroup, CommMon.of G)
 
 end CommGroupₓₓ
 
@@ -201,10 +201,13 @@ def as_hom {G : AddCommGroupₓₓ.{0}} (g : G) : AddCommGroupₓₓ.of ℤ ⟶ 
 theorem as_hom_apply {G : AddCommGroupₓₓ.{0}} (g : G) (i : ℤ) : (as_hom g) i = i • g :=
   rfl
 
-theorem as_hom_injective {G : AddCommGroupₓₓ.{0}} : Function.Injective (@as_hom G) :=
-  fun h k w =>
-    by 
-      convert congr_argₓ (fun k : AddCommGroupₓₓ.of ℤ ⟶ G => (k : ℤ → G) (1 : ℤ)) w <;> simp 
+-- error in Algebra.Category.Group.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem as_hom_injective {G : AddCommGroup.{0}} : function.injective (@as_hom G) :=
+λ
+h
+k
+w, by convert [] [expr congr_arg (λ
+  k : «expr ⟶ »(AddCommGroup.of exprℤ(), G), (k : exprℤ() → G) (1 : exprℤ())) w] []; simp [] [] [] [] [] []
 
 @[ext]
 theorem int_hom_ext {G : AddCommGroupₓₓ.{0}} (f g : AddCommGroupₓₓ.of ℤ ⟶ G) (w : f (1 : ℤ) = g (1 : ℤ)) : f = g :=

@@ -351,9 +351,9 @@ variable[CommRingₓ R][AddCommGroupₓ M][Module R M][DecidableEq ι]
 /-- `e` and `ε` have characteristic properties of a basis and its dual -/
 @[nolint has_inhabited_instance]
 structure DualPair(e : ι → M)(ε : ι → dual R M) where 
-  eval : ∀ i j : ι, ε i (e j) = if i = j then 1 else 0
+  eval : ∀ (i j : ι), ε i (e j) = if i = j then 1 else 0
   Total : ∀ {m : M}, (∀ i, ε i m = 0) → m = 0
-  [Finite : ∀ m : M, Fintype { i | ε i m ≠ 0 }]
+  [Finite : ∀ (m : M), Fintype { i | ε i m ≠ 0 }]
 
 end DualPair
 
@@ -381,10 +381,10 @@ def coeffs [decidable_eq ι] (h : dual_pair e ε) (m : M) : «expr →₀ »(ι,
 theorem coeffs_apply [DecidableEq ι] (h : DualPair e ε) (m : M) (i : ι) : h.coeffs m i = ε i m :=
   rfl
 
+-- error in LinearAlgebra.Dual: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- linear combinations of elements of `e`.
-This is a convenient abbreviation for `finsupp.total _ M R e l` -/
-def lc {ι} (e : ι → M) (l : ι →₀ R) : M :=
-  l.sum fun i : ι a : R => a • e i
+This is a convenient abbreviation for `finsupp.total _ M R e l` -/ def lc {ι} (e : ι → M) (l : «expr →₀ »(ι, R)) : M :=
+l.sum (λ (i : ι) (a : R), «expr • »(a, e i))
 
 theorem lc_def (e : ι → M) (l : ι →₀ R) : lc e l = Finsupp.total _ _ _ e l :=
   rfl
@@ -446,7 +446,7 @@ theorem coe_basis : «expr⇑ » h.basis = e :=
     rw [h.basis_repr_apply, coeffs_apply, h.eval, Finsupp.single_apply]
     convert if_congr eq_comm rfl rfl
 
-theorem mem_of_mem_span {H : Set ι} {x : M} (hmem : x ∈ Submodule.span R (e '' H)) : ∀ i : ι, ε i x ≠ 0 → i ∈ H :=
+theorem mem_of_mem_span {H : Set ι} {x : M} (hmem : x ∈ Submodule.span R (e '' H)) : ∀ (i : ι), ε i x ≠ 0 → i ∈ H :=
   by 
     intro i hi 
     rcases(Finsupp.mem_span_image_iff_total _).mp hmem with ⟨l, supp_l, rfl⟩
@@ -488,7 +488,7 @@ def dual_annihilator {R : Type u} {M : Type v} [CommRingₓ R] [AddCommGroupₓ 
   W.dual_restrict.ker
 
 @[simp]
-theorem mem_dual_annihilator (φ : Module.Dual R M) : φ ∈ W.dual_annihilator ↔ ∀ w _ : w ∈ W, φ w = 0 :=
+theorem mem_dual_annihilator (φ : Module.Dual R M) : φ ∈ W.dual_annihilator ↔ ∀ w (_ : w ∈ W), φ w = 0 :=
   by 
     refine' linear_map.mem_ker.trans _ 
     simpRw [LinearMap.ext_iff, dual_restrict_apply]
@@ -517,7 +517,7 @@ def dual_annihilator_comap (Φ : Submodule R (Module.Dual R M)) : Submodule R M 
   Φ.dual_annihilator.comap (Module.Dual.eval R M)
 
 theorem mem_dual_annihilator_comap_iff {Φ : Submodule R (Module.Dual R M)} (x : M) :
-  x ∈ Φ.dual_annihilator_comap ↔ ∀ φ _ : φ ∈ Φ, (φ x : R) = 0 :=
+  x ∈ Φ.dual_annihilator_comap ↔ ∀ φ (_ : φ ∈ Φ), (φ x : R) = 0 :=
   by 
     simpRw [dual_annihilator_comap, mem_comap, mem_dual_annihilator, Module.Dual.eval_apply]
 

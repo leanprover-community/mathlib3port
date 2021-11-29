@@ -27,8 +27,8 @@ theorem eval_apply {β : α → Sort _} (x : α) (f : ∀ x, β x) : eval x f = 
 theorem comp_apply {α : Sort u} {β : Sort v} {φ : Sort w} (f : β → φ) (g : α → β) (a : α) : (f ∘ g) a = f (g a) :=
   rfl
 
-theorem const_def {y : β} : (fun x : α => y) = const α y :=
-  rfl
+-- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem const_def {y : β} : «expr = »(λ x : α, y, const α y) := rfl
 
 @[simp]
 theorem const_apply {y : β} {x : α} : const α y x = y :=
@@ -68,7 +68,7 @@ begin
   exact [expr eq_of_heq (this a)]
 end
 
-theorem funext_iff {β : α → Sort _} {f₁ f₂ : ∀ x : α, β x} : f₁ = f₂ ↔ ∀ a, f₁ a = f₂ a :=
+theorem funext_iff {β : α → Sort _} {f₁ f₂ : ∀ (x : α), β x} : f₁ = f₂ ↔ ∀ a, f₁ a = f₂ a :=
   Iff.intro (fun h a => h ▸ rfl) funext
 
 protected theorem bijective.injective {f : α → β} (hf : bijective f) : injective f :=
@@ -109,6 +109,11 @@ theorem injective.of_comp_iff' (f : α → β) {g : γ → α} (hg : bijective g
       let ⟨y', hy⟩ := hg.surjective y 
       hx ▸ hy ▸ fun hf => h hf ▸ rfl,
     fun h => h.comp hg.injective⟩
+
+/-- Composition by an injective function on the left is itself injective. -/
+theorem injective.comp_left {g : β → γ} (hg : Function.Injective g) :
+  Function.Injective ((· ∘ ·) g : (α → β) → α → γ) :=
+  fun f₁ f₂ hgf => funext$ fun i => hg$ (congr_funₓ hgf i : _)
 
 theorem injective_of_subsingleton [Subsingleton α] (f : α → β) : injective f :=
   fun a b ab => Subsingleton.elimₓ _ _
@@ -179,7 +184,7 @@ protected theorem surjective.exists₃ {f : α → β} (hf : surjective f) {p : 
   (∃ y₁ y₂ y₃, p y₁ y₂ y₃) ↔ ∃ x₁ x₂ x₃, p (f x₁) (f x₂) (f x₃) :=
   hf.exists.trans$ exists_congr$ fun x => hf.exists₂
 
-theorem bijective_iff_exists_unique (f : α → β) : bijective f ↔ ∀ b : β, ∃!a : α, f a = b :=
+theorem bijective_iff_exists_unique (f : α → β) : bijective f ↔ ∀ (b : β), ∃!a : α, f a = b :=
   ⟨fun hf b =>
       let ⟨a, ha⟩ := hf.surjective b
       ⟨a, ha, fun a' ha' => hf.injective (ha'.trans ha.symm)⟩,
@@ -189,21 +194,17 @@ theorem bijective_iff_exists_unique (f : α → β) : bijective f ↔ ∀ b : β
 protected theorem bijective.exists_unique {f : α → β} (hf : bijective f) (b : β) : ∃!a : α, f a = b :=
   (bijective_iff_exists_unique f).mp hf b
 
-theorem bijective.exists_unique_iff {f : α → β} (hf : bijective f) {p : β → Prop} : (∃!y, p y) ↔ ∃!x, p (f x) :=
-  ⟨fun ⟨y, hpy, hy⟩ =>
-      let ⟨x, hx⟩ := hf.surjective y
-      ⟨x,
-        by 
-          rwa [hx],
-        fun z hz : p (f z) => hf.injective$ hx.symm ▸ hy _ hz⟩,
-    fun ⟨x, hpx, hx⟩ =>
-      ⟨f x, hpx,
-        fun y hy =>
-          let ⟨z, hz⟩ := hf.surjective y 
-          hz ▸ congr_argₓ f$
-            hx _$
-              by 
-                rwa [hz]⟩⟩
+-- error in Logic.Function.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem bijective.exists_unique_iff
+{f : α → β}
+(hf : bijective f)
+{p : β → exprProp()} : «expr ↔ »(«expr∃! , »((y), p y), «expr∃! , »((x), p (f x))) :=
+⟨λ ⟨y, hpy, hy⟩, let ⟨x, hx⟩ := hf.surjective y in
+ ⟨x, by rwa [expr hx] [], λ
+  (z)
+  (hz : p (f z)), «expr $ »(hf.injective, «expr ▸ »(hx.symm, hy _ hz))⟩, λ
+ ⟨x, hpx, hx⟩, ⟨f x, hpx, λ y hy, let ⟨z, hz⟩ := hf.surjective y in
+  «expr $ »(«expr ▸ »(hz, congr_arg f), «expr $ »(hx _, by rwa [expr hz] []))⟩⟩
 
 theorem bijective.of_comp_iff (f : α → β) {g : γ → α} (hg : bijective g) : bijective (f ∘ g) ↔ bijective f :=
   and_congr (injective.of_comp_iff' _ hg) (surjective.of_comp_iff _ hg.surjective)
@@ -348,7 +349,7 @@ theorem inv_fun_on_mem (h : ∃ (a : _)(_ : a ∈ s), f a = b) : inv_fun_on f s 
 theorem inv_fun_on_eq (h : ∃ (a : _)(_ : a ∈ s), f a = b) : f (inv_fun_on f s b) = b :=
   (inv_fun_on_pos h).right
 
-theorem inv_fun_on_eq' (h : ∀ x _ : x ∈ s y _ : y ∈ s, f x = f y → x = y) (ha : a ∈ s) : inv_fun_on f s (f a) = a :=
+theorem inv_fun_on_eq' (h : ∀ x (_ : x ∈ s) y (_ : y ∈ s), f x = f y → x = y) (ha : a ∈ s) : inv_fun_on f s (f a) = a :=
   have  : ∃ (a' : _)(_ : a' ∈ s), f a' = f a := ⟨a, ha, rfl⟩
   h _ (inv_fun_on_mem this) _ ha (inv_fun_on_eq this)
 
@@ -409,7 +410,7 @@ end InvFun
 
 section SurjInv
 
-variable{α : Sort u}{β : Sort v}{f : α → β}
+variable{α : Sort u}{β : Sort v}{γ : Sort w}{f : α → β}
 
 /-- The inverse of a surjective function. (Unlike `inv_fun`, this does not require
   `α` to be inhabited.) -/
@@ -442,6 +443,16 @@ theorem surjective_to_subsingleton [na : Nonempty α] [Subsingleton β] (f : α 
   fun y =>
     let ⟨a⟩ := na
     ⟨a, Subsingleton.elimₓ _ _⟩
+
+/-- Composition by an surjective function on the left is itself surjective. -/
+theorem surjective.comp_left {g : β → γ} (hg : Function.Surjective g) :
+  Function.Surjective ((· ∘ ·) g : (α → β) → α → γ) :=
+  fun f => ⟨surj_inv hg ∘ f, funext$ fun x => right_inverse_surj_inv _ _⟩
+
+/-- Composition by an bijective function on the left is itself bijective. -/
+theorem bijective.comp_left {g : β → γ} (hg : Function.Bijective g) :
+  Function.Bijective ((· ∘ ·) g : (α → β) → α → γ) :=
+  ⟨hg.injective.comp_left, hg.surjective.comp_left⟩
 
 end SurjInv
 
@@ -494,10 +505,10 @@ theorem exists_update_iff (f : ∀ a, β a) {a : α} {b : β a} (p : ∀ a, β a
     rw [←not_forall_not, forall_update_iff f fun a b => ¬p a b]
     simp [not_and_distrib]
 
-theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} : update f a b = g ↔ b = g a ∧ ∀ x _ : x ≠ a, f x = g x :=
+theorem update_eq_iff {a : α} {b : β a} {f g : ∀ a, β a} : update f a b = g ↔ b = g a ∧ ∀ x (_ : x ≠ a), f x = g x :=
   funext_iff.trans$ forall_update_iff _ fun x y => y = g x
 
-theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} : g = update f a b ↔ g a = b ∧ ∀ x _ : x ≠ a, g x = f x :=
+theorem eq_update_iff {a : α} {b : β a} {f g : ∀ a, β a} : g = update f a b ↔ g a = b ∧ ∀ x (_ : x ≠ a), g x = f x :=
   funext_iff.trans$ forall_update_iff _ fun x y => g x = y
 
 @[simp]
@@ -771,7 +782,7 @@ def Set.piecewise {α : Type u} {β : α → Sort v} (s : Set α) (f g : ∀ i, 
 
 
 theorem eq_rec_on_bijective {α : Sort _} {C : α → Sort _} :
-  ∀ {a a' : α} h : a = a', Function.Bijective (@Eq.recOnₓ _ _ C _ h)
+  ∀ {a a' : α} (h : a = a'), Function.Bijective (@Eq.recOnₓ _ _ C _ h)
 | _, _, rfl => ⟨fun x y => id, fun x => ⟨x, rfl⟩⟩
 
 theorem eq_mp_bijective {α β : Sort _} (h : α = β) : Function.Bijective (Eq.mp h) :=

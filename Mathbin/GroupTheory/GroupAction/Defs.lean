@@ -50,12 +50,12 @@ open Function
 
 /-- Typeclass for faithful actions. -/
 class HasFaithfulVadd(G : Type _)(P : Type _)[HasVadd G P] : Prop where 
-  eq_of_vadd_eq_vadd : ∀ {g₁ g₂ : G}, (∀ p : P, g₁ +ᵥ p = g₂ +ᵥ p) → g₁ = g₂
+  eq_of_vadd_eq_vadd : ∀ {g₁ g₂ : G}, (∀ (p : P), g₁ +ᵥ p = g₂ +ᵥ p) → g₁ = g₂
 
 /-- Typeclass for faithful actions. -/
 @[toAdditive HasFaithfulVadd]
 class HasFaithfulScalar(M : Type _)(α : Type _)[HasScalar M α] : Prop where 
-  eq_of_smul_eq_smul : ∀ {m₁ m₂ : M}, (∀ a : α, m₁ • a = m₂ • a) → m₁ = m₂
+  eq_of_smul_eq_smul : ∀ {m₁ m₂ : M}, (∀ (a : α), m₁ • a = m₂ • a) → m₁ = m₂
 
 export HasFaithfulScalar(eq_of_smul_eq_smul)
 
@@ -77,14 +77,14 @@ theorem smul_eq_mul (α : Type _) [Mul α] {a a' : α} : a • a' = a*a' :=
 /-- Type class for additive monoid actions. -/
 @[protectProj]
 class AddAction(G : Type _)(P : Type _)[AddMonoidₓ G] extends HasVadd G P where 
-  zero_vadd : ∀ p : P, (0 : G) +ᵥ p = p 
-  add_vadd : ∀ g₁ g₂ : G p : P, (g₁+g₂) +ᵥ p = g₁ +ᵥ (g₂ +ᵥ p)
+  zero_vadd : ∀ (p : P), (0 : G) +ᵥ p = p 
+  add_vadd : ∀ (g₁ g₂ : G) (p : P), (g₁+g₂) +ᵥ p = g₁ +ᵥ (g₂ +ᵥ p)
 
 /-- Typeclass for multiplicative actions by monoids. This generalizes group actions. -/
 @[protectProj, toAdditive]
 class MulAction(α : Type _)(β : Type _)[Monoidₓ α] extends HasScalar α β where 
-  one_smul : ∀ b : β, (1 : α) • b = b 
-  mul_smul : ∀ x y : α b : β, (x*y) • b = x • y • b
+  one_smul : ∀ (b : β), (1 : α) • b = b 
+  mul_smul : ∀ (x y : α) (b : β), (x*y) • b = x • y • b
 
 /-!
 ### (Pre)transitive action
@@ -102,13 +102,13 @@ property. We do not provide typeclasses `*_action.is_transitive`; users should a
 /-- `M` acts pretransitively on `α` if for any `x y` there is `g` such that `g +ᵥ x = y`.
   A transitive action should furthermore have `α` nonempty. -/
 class AddAction.IsPretransitive(M α : Type _)[HasVadd M α] : Prop where 
-  exists_vadd_eq : ∀ x y : α, ∃ g : M, g +ᵥ x = y
+  exists_vadd_eq : ∀ (x y : α), ∃ g : M, g +ᵥ x = y
 
 /-- `M` acts pretransitively on `α` if for any `x y` there is `g` such that `g • x = y`.
   A transitive action should furthermore have `α` nonempty. -/
 @[toAdditive]
 class MulAction.IsPretransitive(M α : Type _)[HasScalar M α] : Prop where 
-  exists_smul_eq : ∀ x y : α, ∃ g : M, g • x = y
+  exists_smul_eq : ∀ (x y : α), ∃ g : M, g • x = y
 
 namespace MulAction
 
@@ -118,9 +118,8 @@ variable(M){α}[HasScalar M α][is_pretransitive M α]
 theorem exists_smul_eq (x y : α) : ∃ m : M, m • x = y :=
   is_pretransitive.exists_smul_eq x y
 
-@[toAdditive]
-theorem surjective_smul (x : α) : surjective fun c : M => c • x :=
-  exists_smul_eq M x
+-- error in GroupTheory.GroupAction.Defs: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem surjective_smul (x : α) : surjective (λ c : M, «expr • »(c, x)) := exists_smul_eq M x
 
 /-- The regular action of a group on itself is transitive. -/
 @[toAdditive]
@@ -136,12 +135,12 @@ end MulAction
 
 /-- A typeclass mixin saying that two additive actions on the same space commute. -/
 class VaddCommClass(M N α : Type _)[HasVadd M α][HasVadd N α] : Prop where 
-  vadd_comm : ∀ m : M n : N a : α, m +ᵥ (n +ᵥ a) = n +ᵥ (m +ᵥ a)
+  vadd_comm : ∀ (m : M) (n : N) (a : α), m +ᵥ (n +ᵥ a) = n +ᵥ (m +ᵥ a)
 
 /-- A typeclass mixin saying that two multiplicative actions on the same space commute. -/
 @[toAdditive]
 class SmulCommClass(M N α : Type _)[HasScalar M α][HasScalar N α] : Prop where 
-  smul_comm : ∀ m : M n : N a : α, m • n • a = n • m • a
+  smul_comm : ∀ (m : M) (n : N) (a : α), m • n • a = n • m • a
 
 export MulAction(mul_smul)
 
@@ -190,7 +189,7 @@ instance smul_comm_class_self (M α : Type _) [CommMonoidₓ M] [MulAction M α]
 action of `M` on `α` is determined by the multiplicative actions of `M` on `N`
 and `N` on `α`. -/
 class IsScalarTower(M N α : Type _)[HasScalar M N][HasScalar N α][HasScalar M α] : Prop where 
-  smul_assoc : ∀ x : M y : N z : α, (x • y) • z = x • y • z
+  smul_assoc : ∀ (x : M) (y : N) (z : α), (x • y) • z = x • y • z
 
 @[simp]
 theorem smul_assoc {M N} [HasScalar M N] [HasScalar N α] [HasScalar M α] [IsScalarTower M N α] (x : M) (y : N) (z : α) :
@@ -293,7 +292,7 @@ variable{M}
 See note [reducible non-instances]. -/
 @[reducible, toAdditive "Pullback an additive action along an injective map respecting `+ᵥ`."]
 protected def Function.Injective.mulAction [HasScalar M β] (f : β → α) (hf : injective f)
-  (smul : ∀ c : M x, f (c • x) = c • f x) : MulAction M β :=
+  (smul : ∀ (c : M) x, f (c • x) = c • f x) : MulAction M β :=
   { smul := · • ·, one_smul := fun x => hf$ (smul _ _).trans$ one_smul _ (f x),
     mul_smul :=
       fun c₁ c₂ x =>
@@ -305,7 +304,7 @@ protected def Function.Injective.mulAction [HasScalar M β] (f : β → α) (hf 
 See note [reducible non-instances]. -/
 @[reducible, toAdditive "Pushforward an additive action along a surjective map respecting `+ᵥ`."]
 protected def Function.Surjective.mulAction [HasScalar M β] (f : α → β) (hf : surjective f)
-  (smul : ∀ c : M x, f (c • x) = c • f x) : MulAction M β :=
+  (smul : ∀ (c : M) x, f (c • x) = c • f x) : MulAction M β :=
   { smul := · • ·,
     one_smul :=
       fun y =>
@@ -425,15 +424,15 @@ theorem mul_smul_one {M N} [Monoidₓ N] [HasScalar M N] [SmulCommClass M N N] (
   by 
     rw [←smul_eq_mul, ←smul_comm, smul_eq_mul, mul_oneₓ]
 
-theorem IsScalarTower.of_smul_one_mul {M N} [Monoidₓ N] [HasScalar M N] (h : ∀ x : M y : N, ((x • (1 : N))*y) = x • y) :
-  IsScalarTower M N N :=
+theorem IsScalarTower.of_smul_one_mul {M N} [Monoidₓ N] [HasScalar M N]
+  (h : ∀ (x : M) (y : N), ((x • (1 : N))*y) = x • y) : IsScalarTower M N N :=
   ⟨fun x y z =>
       by 
         rw [←h, smul_eq_mul, mul_assocₓ, h, smul_eq_mul]⟩
 
 @[toAdditive]
-theorem SmulCommClass.of_mul_smul_one {M N} [Monoidₓ N] [HasScalar M N] (H : ∀ x : M y : N, (y*x • (1 : N)) = x • y) :
-  SmulCommClass M N N :=
+theorem SmulCommClass.of_mul_smul_one {M N} [Monoidₓ N] [HasScalar M N]
+  (H : ∀ (x : M) (y : N), (y*x • (1 : N)) = x • y) : SmulCommClass M N N :=
   ⟨fun x y z =>
       by 
         rw [←H x z, smul_eq_mul, ←H, smul_eq_mul, mul_assocₓ]⟩
@@ -442,8 +441,8 @@ end CompatibleScalar
 
 /-- Typeclass for multiplicative actions on additive structures. This generalizes group modules. -/
 class DistribMulAction(M : Type _)(A : Type _)[Monoidₓ M][AddMonoidₓ A] extends MulAction M A where 
-  smul_add : ∀ r : M x y : A, (r • x+y) = (r • x)+r • y 
-  smul_zero : ∀ r : M, r • (0 : A) = 0
+  smul_add : ∀ (r : M) (x y : A), (r • x+y) = (r • x)+r • y 
+  smul_zero : ∀ (r : M), r • (0 : A) = 0
 
 section 
 
@@ -461,7 +460,7 @@ homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.distribMulAction [AddMonoidₓ B] [HasScalar M B] (f : B →+ A) (hf : injective f)
-  (smul : ∀ c : M x, f (c • x) = c • f x) : DistribMulAction M B :=
+  (smul : ∀ (c : M) x, f (c • x) = c • f x) : DistribMulAction M B :=
   { hf.mul_action f smul with smul := · • ·,
     smul_add :=
       fun c x y =>
@@ -479,7 +478,7 @@ homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.distribMulAction [AddMonoidₓ B] [HasScalar M B] (f : A →+ B) (hf : surjective f)
-  (smul : ∀ c : M x, f (c • x) = c • f x) : DistribMulAction M B :=
+  (smul : ∀ (c : M) x, f (c • x) = c • f x) : DistribMulAction M B :=
   { hf.mul_action f smul with smul := · • ·,
     smul_add :=
       fun c x y =>
@@ -535,8 +534,8 @@ end
 /-- Typeclass for multiplicative actions on multiplicative structures. This generalizes
 conjugation actions. -/
 class MulDistribMulAction(M : Type _)(A : Type _)[Monoidₓ M][Monoidₓ A] extends MulAction M A where 
-  smul_mul : ∀ r : M x y : A, (r • x*y) = (r • x)*r • y 
-  smul_one : ∀ r : M, r • (1 : A) = 1
+  smul_mul : ∀ (r : M) (x y : A), (r • x*y) = (r • x)*r • y 
+  smul_one : ∀ (r : M), r • (1 : A) = 1
 
 export MulDistribMulAction(smul_one)
 
@@ -552,7 +551,7 @@ homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Injective.mulDistribMulAction [Monoidₓ B] [HasScalar M B] (f : B →* A) (hf : injective f)
-  (smul : ∀ c : M x, f (c • x) = c • f x) : MulDistribMulAction M B :=
+  (smul : ∀ (c : M) x, f (c • x) = c • f x) : MulDistribMulAction M B :=
   { hf.mul_action f smul with smul := · • ·,
     smul_mul :=
       fun c x y =>
@@ -570,7 +569,7 @@ homomorphism.
 See note [reducible non-instances]. -/
 @[reducible]
 protected def Function.Surjective.mulDistribMulAction [Monoidₓ B] [HasScalar M B] (f : A →* B) (hf : surjective f)
-  (smul : ∀ c : M x, f (c • x) = c • f x) : MulDistribMulAction M B :=
+  (smul : ∀ (c : M) x, f (c • x) = c • f x) : MulDistribMulAction M B :=
   { hf.mul_action f smul with smul := · • ·,
     smul_mul :=
       fun c x y =>

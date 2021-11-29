@@ -38,7 +38,7 @@ For each of the following structures we prove that if `β` has this structure, t
 * one-operation algebraic structures up to `comm_group`;
 * `mul_zero_class`, `distrib`, `semiring`, `comm_semiring`, `ring`, `comm_ring`;
 * `mul_action`, `distrib_mul_action`, `module`;
-* `preorder`, `partial_order`, and `lattice` structures up to `bounded_lattice`;
+* `preorder`, `partial_order`, and `lattice` structures up to `bounded_order`;
 * `ordered_cancel_comm_monoid` and `ordered_cancel_add_comm_monoid`.
 
 ## Tags
@@ -75,8 +75,8 @@ namespace Germ
 instance  : CoeTₓ (α → β) (germ l β) :=
   ⟨Quotientₓ.mk'⟩
 
-instance  : HasLiftT β (germ l β) :=
-  ⟨fun c => «expr↑ » fun x : α => c⟩
+-- error in Order.Filter.Germ: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_lift_t β (germ l β) := ⟨λ c, «expr↑ »(λ x : α, c)⟩
 
 @[simp]
 theorem quot_mk_eq_coe (l : Filter α) (f : α → β) : Quot.mk _ f = (f : germ l β) :=
@@ -87,17 +87,17 @@ theorem mk'_eq_coe (l : Filter α) (f : α → β) : Quotientₓ.mk' f = (f : ge
   rfl
 
 @[elab_as_eliminator]
-theorem induction_on (f : germ l β) {p : germ l β → Prop} (h : ∀ f : α → β, p f) : p f :=
+theorem induction_on (f : germ l β) {p : germ l β → Prop} (h : ∀ (f : α → β), p f) : p f :=
   Quotientₓ.induction_on' f h
 
 @[elab_as_eliminator]
 theorem induction_on₂ (f : germ l β) (g : germ l γ) {p : germ l β → germ l γ → Prop}
-  (h : ∀ f : α → β g : α → γ, p f g) : p f g :=
+  (h : ∀ (f : α → β) (g : α → γ), p f g) : p f g :=
   Quotientₓ.induction_on₂' f g h
 
 @[elab_as_eliminator]
 theorem induction_on₃ (f : germ l β) (g : germ l γ) (h : germ l δ) {p : germ l β → germ l γ → germ l δ → Prop}
-  (H : ∀ f : α → β g : α → γ h : α → δ, p f g h) : p f g h :=
+  (H : ∀ (f : α → β) (g : α → γ) (h : α → δ), p f g h) : p f g h :=
   Quotientₓ.induction_on₃' f g h H
 
 /-- Given a map `F : (α → β) → (γ → δ)` that sends functions eventually equal at `l` to functions
@@ -616,23 +616,11 @@ instance  [SemilatticeInf β] : SemilatticeInf (germ l β) :=
     inf_le_right := fun f g => induction_on₂ f g$ fun f g => eventually_of_forall$ fun x => inf_le_right,
     le_inf := fun f₁ f₂ g => induction_on₃ f₁ f₂ g$ fun f₁ f₂ g h₁ h₂ => h₂.mp$ h₁.mono$ fun x => le_inf }
 
-instance  [SemilatticeInfBot β] : SemilatticeInfBot (germ l β) :=
-  { germ.semilattice_inf, germ.order_bot with  }
-
-instance  [SemilatticeSupBot β] : SemilatticeSupBot (germ l β) :=
-  { germ.semilattice_sup, germ.order_bot with  }
-
-instance  [SemilatticeInfTop β] : SemilatticeInfTop (germ l β) :=
-  { germ.semilattice_inf, germ.order_top with  }
-
-instance  [SemilatticeSupTop β] : SemilatticeSupTop (germ l β) :=
-  { germ.semilattice_sup, germ.order_top with  }
-
 instance  [Lattice β] : Lattice (germ l β) :=
   { germ.semilattice_sup, germ.semilattice_inf with  }
 
-instance  [BoundedLattice β] : BoundedLattice (germ l β) :=
-  { germ.lattice, germ.order_bot, germ.order_top with  }
+instance  [LE β] [BoundedOrder β] : BoundedOrder (germ l β) :=
+  { germ.order_bot, germ.order_top with  }
 
 @[toAdditive]
 instance  [OrderedCancelCommMonoid β] : OrderedCancelCommMonoid (germ l β) :=

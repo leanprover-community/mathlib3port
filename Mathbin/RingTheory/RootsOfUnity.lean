@@ -108,7 +108,7 @@ variable[CommRingₓ S]
 
 /-- Restrict a ring homomorphism between integral domains to the nth roots of unity -/
 def RingHom.restrictRootsOfUnity (σ : R →+* S) (n : ℕ+) : rootsOfUnity n R →* rootsOfUnity n S :=
-  let h : ∀ ξ : rootsOfUnity n R, (σ ξ^(n : ℕ)) = 1 :=
+  let h : ∀ (ξ : rootsOfUnity n R), (σ ξ^(n : ℕ)) = 1 :=
     fun ξ =>
       by 
         change (σ (ξ : Units R)^(n : ℕ)) = 1
@@ -241,7 +241,7 @@ end rootsOfUnity
 and if `l` satisfies `ζ ^ l = 1` then `k ∣ l`. -/
 structure IsPrimitiveRoot(ζ : M)(k : ℕ) : Prop where 
   pow_eq_one : (ζ^(k : ℕ)) = 1
-  dvd_of_pow_eq_one : ∀ l : ℕ, (ζ^l) = 1 → k ∣ l
+  dvd_of_pow_eq_one : ∀ (l : ℕ), (ζ^l) = 1 → k ∣ l
 
 section primitiveRoots
 
@@ -266,10 +266,11 @@ namespace IsPrimitiveRoot
 
 variable{k l : ℕ}
 
-theorem iff_def (ζ : M) (k : ℕ) : IsPrimitiveRoot ζ k ↔ (ζ^k) = 1 ∧ ∀ l : ℕ, (ζ^l) = 1 → k ∣ l :=
+theorem iff_def (ζ : M) (k : ℕ) : IsPrimitiveRoot ζ k ↔ (ζ^k) = 1 ∧ ∀ (l : ℕ), (ζ^l) = 1 → k ∣ l :=
   ⟨fun ⟨h1, h2⟩ => ⟨h1, h2⟩, fun ⟨h1, h2⟩ => ⟨h1, h2⟩⟩
 
-theorem mk_of_lt (ζ : M) (hk : 0 < k) (h1 : (ζ^k) = 1) (h : ∀ l : ℕ, 0 < l → l < k → (ζ^l) ≠ 1) : IsPrimitiveRoot ζ k :=
+theorem mk_of_lt (ζ : M) (hk : 0 < k) (h1 : (ζ^k) = 1) (h : ∀ (l : ℕ), 0 < l → l < k → (ζ^l) ≠ 1) :
+  IsPrimitiveRoot ζ k :=
   by 
     refine' ⟨h1, _⟩
     intro l hl 
@@ -389,7 +390,7 @@ theorem Unique {ζ : M} (hk : IsPrimitiveRoot ζ k) (hl : IsPrimitiveRoot ζ l) 
 theorem eq_order_of : k = orderOf ζ :=
   h.unique (IsPrimitiveRoot.order_of ζ)
 
-protected theorem Iff (hk : 0 < k) : IsPrimitiveRoot ζ k ↔ (ζ^k) = 1 ∧ ∀ l : ℕ, 0 < l → l < k → (ζ^l) ≠ 1 :=
+protected theorem Iff (hk : 0 < k) : IsPrimitiveRoot ζ k ↔ (ζ^k) = 1 ∧ ∀ (l : ℕ), 0 < l → l < k → (ζ^l) ≠ 1 :=
   by 
     refine' ⟨fun h => ⟨h.pow_eq_one, fun l hl' hl => _⟩, fun ⟨hζ, hl⟩ => IsPrimitiveRoot.mk_of_lt ζ hk hζ hl⟩
     rw [h.eq_order_of] at hl 
@@ -1077,9 +1078,8 @@ begin
   { use [expr R] },
   replace [ident habs] [] [":=", expr lt_of_lt_of_le (enat.coe_lt_coe.2 one_lt_two) (multiplicity.le_multiplicity_of_pow_dvd (dvd_trans habs prod))],
   have [ident hfree] [":", expr squarefree («expr - »(«expr ^ »(X, n), 1) : polynomial (zmod p))] [],
-  { refine [expr squarefree_X_pow_sub_C 1 _ one_ne_zero],
-    by_contra [ident hzero],
-    exact [expr hdiv ((zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 hzero)] },
+  { exact [expr (separable_X_pow_sub_C 1 (λ
+       h, «expr $ »(hdiv, (zmod.nat_coe_zmod_eq_zero_iff_dvd n p).1 h)) one_ne_zero).squarefree] },
   cases [expr (multiplicity.squarefree_iff_multiplicity_le_one «expr - »(«expr ^ »(X, n), 1)).1 hfree (map (int.cast_ring_hom (zmod p)) P)] ["with", ident hle, ident hunit],
   { rw [expr nat.cast_one] ["at", ident habs],
     exact [expr hle.not_lt habs] },

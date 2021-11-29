@@ -166,15 +166,21 @@ end IsMonoidHom
 
 namespace IsAddMonoidHom
 
+-- error in Deprecated.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Left multiplication in a ring is an additive monoid morphism. -/
-theorem is_add_monoid_hom_mul_left {γ : Type _} [NonUnitalNonAssocSemiring γ] (x : γ) :
-  IsAddMonoidHom fun y : γ => x*y :=
-  { map_zero := mul_zero x, map_add := fun y z => mul_addₓ x y z }
+theorem is_add_monoid_hom_mul_left
+{γ : Type*}
+[non_unital_non_assoc_semiring γ]
+(x : γ) : is_add_monoid_hom (λ y : γ, «expr * »(x, y)) :=
+{ map_zero := mul_zero x, map_add := λ y z, mul_add x y z }
 
+-- error in Deprecated.Group: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Right multiplication in a ring is an additive monoid morphism. -/
-theorem is_add_monoid_hom_mul_right {γ : Type _} [NonUnitalNonAssocSemiring γ] (x : γ) :
-  IsAddMonoidHom fun y : γ => y*x :=
-  { map_zero := zero_mul x, map_add := fun y z => add_mulₓ y z x }
+theorem is_add_monoid_hom_mul_right
+{γ : Type*}
+[non_unital_non_assoc_semiring γ]
+(x : γ) : is_add_monoid_hom (λ y : γ, «expr * »(y, x)) :=
+{ map_zero := zero_mul x, map_add := λ y z, add_mul y z x }
 
 end IsAddMonoidHom
 

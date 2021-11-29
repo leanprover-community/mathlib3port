@@ -75,7 +75,7 @@ end Prefunctor
 
     NB: this does not work for `Prop`-valued quivers. It requires `G : quiver.{v+1} V`. -/
 def WideSubquiver V [Quiver.{v + 1} V] :=
-  ∀ a b : V, Set (a ⟶ b)
+  ∀ (a b : V), Set (a ⟶ b)
 
 /-- A type synonym for `V`, when thought of as a quiver having only the arrows from
 some `wide_subquiver`. -/
@@ -137,8 +137,9 @@ attribute [irreducible] Quiver.opposite
 def symmetrify V : Type u :=
   V
 
-instance symmetrify_quiver (V : Type u) [Quiver V] : Quiver (symmetrify V) :=
-  ⟨fun a b : V => Sum (a ⟶ b) (b ⟶ a)⟩
+-- error in Combinatorics.Quiver: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance symmetrify_quiver (V : Type u) [quiver V] : quiver (symmetrify V) :=
+⟨λ a b : V, «expr ⊕ »(«expr ⟶ »(a, b), «expr ⟶ »(b, a))⟩
 
 /-- `total V` is the type of _all_ arrows of `V`. -/
 @[ext, nolint has_inhabited_instance]
@@ -203,14 +204,15 @@ theorem comp_nil {a b : V} (p : path a b) : p.comp path.nil = p :=
   rfl
 
 @[simp]
-theorem nil_comp {a : V} : ∀ {b} p : path a b, path.nil.comp p = p
+theorem nil_comp {a : V} : ∀ {b} (p : path a b), path.nil.comp p = p
 | a, path.nil => rfl
 | b, path.cons p e =>
   by 
     rw [comp_cons, nil_comp]
 
 @[simp]
-theorem comp_assoc {a b c : V} : ∀ {d} p : path a b q : path b c r : path c d, (p.comp q).comp r = p.comp (q.comp r)
+theorem comp_assoc {a b c : V} :
+  ∀ {d} (p : path a b) (q : path b c) (r : path c d), (p.comp q).comp r = p.comp (q.comp r)
 | c, p, q, path.nil => rfl
 | d, p, q, path.cons r e =>
   by 
@@ -242,7 +244,7 @@ theorem map_path_cons {a b c : V} (p : path a b) (e : b ⟶ c) :
 
 @[simp]
 theorem map_path_comp {a b : V} (p : path a b) :
-  ∀ {c : V} q : path b c, F.map_path (p.comp q) = (F.map_path p).comp (F.map_path q)
+  ∀ {c : V} (q : path b c), F.map_path (p.comp q) = (F.map_path p).comp (F.map_path q)
 | _, path.nil => rfl
 | _, path.cons p e =>
   by 
@@ -257,7 +259,7 @@ namespace Quiver
     to every other vertex. -/
 class arborescence(V : Type u)[Quiver.{v} V] : Type max u v where 
   root : V 
-  uniquePath : ∀ b : V, Unique (path root b)
+  uniquePath : ∀ (b : V), Unique (path root b)
 
 /-- The root of an arborescence. -/
 def root (V : Type u) [Quiver V] [arborescence V] : V :=
@@ -321,7 +323,7 @@ def arborescence_mk
 
 /-- `rooted_connected r` means that there is a path from `r` to any other vertex. -/
 class rooted_connected{V : Type u}[Quiver V](r : V) : Prop where 
-  nonempty_path : ∀ b : V, Nonempty (path r b)
+  nonempty_path : ∀ (b : V), Nonempty (path r b)
 
 attribute [instance] rooted_connected.nonempty_path
 

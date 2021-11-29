@@ -47,6 +47,7 @@ theorem has_basis.mem_lift_iff {ι} {p : ι → Prop} {s : ι → Set α} {f : F
       simp only [←(hg _).mem_iff]
       exact hf.exists_iff fun t₁ t₂ ht H => gm ht H
 
+-- error in Order.Filter.Lift: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `(p : ι → Prop, s : ι → set α)` is a basis of a filter `f`, `g` is a monotone function
 `set α → filter γ`, and for each `i`, `(pg : β i → Prop, sg : β i → set α)` is a basis
 of the filter `g (s i)`, then `(λ (i : ι) (x : β i), p i ∧ pg i x, λ (i : ι) (x : β i), sg i x)`
@@ -55,12 +56,23 @@ is a basis of the filter `f.lift g`.
 This basis is parametrized by `i : ι` and `x : β i`, so in order to formulate this fact using
 `has_basis` one has to use `Σ i, β i` as the index type. See also `filter.has_basis.mem_lift_iff`
 for the corresponding `mem_iff` statement formulated without using a sigma type. -/
-theorem has_basis.lift {ι} {p : ι → Prop} {s : ι → Set α} {f : Filter α} (hf : f.has_basis p s) {β : ι → Type _}
-  {pg : ∀ i, β i → Prop} {sg : ∀ i, β i → Set γ} {g : Set α → Filter γ} (hg : ∀ i, (g$ s i).HasBasis (pg i) (sg i))
-  (gm : Monotone g) : (f.lift g).HasBasis (fun i : Σi, β i => p i.1 ∧ pg i.1 i.2) fun i : Σi, β i => sg i.1 i.2 :=
-  by 
-    refine' ⟨fun t => (hf.mem_lift_iff hg gm).trans _⟩
-    simp [Sigma.exists, and_assoc, exists_and_distrib_left]
+theorem has_basis.lift
+{ι}
+{p : ι → exprProp()}
+{s : ι → set α}
+{f : filter α}
+(hf : f.has_basis p s)
+{β : ι → Type*}
+{pg : ∀ i, β i → exprProp()}
+{sg : ∀ i, β i → set γ}
+{g : set α → filter γ}
+(hg : ∀ i, «expr $ »(g, s i).has_basis (pg i) (sg i))
+(gm : monotone g) : (f.lift g).has_basis (λ
+ i : «exprΣ , »((i), β i), «expr ∧ »(p i.1, pg i.1 i.2)) (λ i : «exprΣ , »((i), β i), sg i.1 i.2) :=
+begin
+  refine [expr ⟨λ t, (hf.mem_lift_iff hg gm).trans _⟩],
+  simp [] [] [] ["[", expr sigma.exists, ",", expr and_assoc, ",", expr exists_and_distrib_left, "]"] [] []
+end
 
 theorem mem_lift_sets (hg : Monotone g) {s : Set β} : s ∈ f.lift g ↔ ∃ (t : _)(_ : t ∈ f), s ∈ g t :=
   (f.basis_sets.mem_lift_iff (fun s => (g s).basis_sets) hg).trans$
@@ -74,16 +86,16 @@ theorem lift_le {f : Filter α} {g : Set α → Filter β} {h : Filter β} {s : 
   f.lift g ≤ h :=
   infi_le_of_le s$ infi_le_of_le hs$ hg
 
-theorem le_lift {f : Filter α} {g : Set α → Filter β} {h : Filter β} (hh : ∀ s _ : s ∈ f, h ≤ g s) : h ≤ f.lift g :=
+theorem le_lift {f : Filter α} {g : Set α → Filter β} {h : Filter β} (hh : ∀ s (_ : s ∈ f), h ≤ g s) : h ≤ f.lift g :=
   le_infi$ fun s => le_infi$ fun hs => hh s hs
 
 theorem lift_mono (hf : f₁ ≤ f₂) (hg : g₁ ≤ g₂) : f₁.lift g₁ ≤ f₂.lift g₂ :=
   infi_le_infi$ fun s => infi_le_infi2$ fun hs => ⟨hf hs, hg s⟩
 
-theorem lift_mono' (hg : ∀ s _ : s ∈ f, g₁ s ≤ g₂ s) : f.lift g₁ ≤ f.lift g₂ :=
+theorem lift_mono' (hg : ∀ s (_ : s ∈ f), g₁ s ≤ g₂ s) : f.lift g₁ ≤ f.lift g₂ :=
   infi_le_infi$ fun s => infi_le_infi$ fun hs => hg s hs
 
-theorem tendsto_lift {m : γ → β} {l : Filter γ} : tendsto m l (f.lift g) ↔ ∀ s _ : s ∈ f, tendsto m l (g s) :=
+theorem tendsto_lift {m : γ → β} {l : Filter γ} : tendsto m l (f.lift g) ↔ ∀ s (_ : s ∈ f), tendsto m l (g s) :=
   by 
     simp only [Filter.lift, tendsto_infi]
 
@@ -107,22 +119,19 @@ theorem comap_lift_eq2 {m : β → α} {g : Set β → Filter γ} (hg : Monotone
     (le_infi$
       fun s => le_infi$ fun ⟨s', hs', (h_sub : preimage m s' ⊆ s)⟩ => infi_le_of_le s'$ infi_le_of_le hs'$ hg h_sub)
 
-theorem map_lift_eq2 {g : Set β → Filter γ} {m : α → β} (hg : Monotone g) : (map m f).lift g = f.lift (g ∘ image m) :=
-  le_antisymmₓ
-    (infi_le_infi2$
-      fun s =>
-        ⟨image m s, infi_le_infi2$ fun hs => ⟨f.sets_of_superset hs$ fun a h => mem_image_of_mem _ h, le_reflₓ _⟩⟩)
-    (infi_le_infi2$
-      fun t =>
-        ⟨preimage m t,
-          infi_le_infi2$
-            fun ht =>
-              ⟨ht,
-                hg$
-                  fun x =>
-                    fun h : x ∈ m '' preimage m t =>
-                      let ⟨y, hy, h_eq⟩ := h 
-                      show x ∈ t from h_eq ▸ hy⟩⟩)
+-- error in Order.Filter.Lift: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem map_lift_eq2
+{g : set β → filter γ}
+{m : α → β}
+(hg : monotone g) : «expr = »((map m f).lift g, f.lift «expr ∘ »(g, image m)) :=
+le_antisymm «expr $ »(infi_le_infi2, assume
+ s, ⟨image m s, «expr $ »(infi_le_infi2, assume
+   hs, ⟨«expr $ »(f.sets_of_superset hs, assume
+     a
+     h, mem_image_of_mem _ h), le_refl _⟩)⟩) «expr $ »(infi_le_infi2, assume
+ t, ⟨preimage m t, «expr $ »(infi_le_infi2, assume
+   ht, ⟨ht, «expr $ »(hg, assume x, assume h : «expr ∈ »(x, «expr '' »(m, preimage m t)), let ⟨y, hy, h_eq⟩ := h in
+     show «expr ∈ »(x, t), from «expr ▸ »(h_eq, hy))⟩)⟩)
 
 theorem lift_comm {g : Filter β} {h : Set α → Set β → Filter γ} :
   (f.lift fun s => g.lift (h s)) = g.lift fun t => f.lift fun s => h s t :=
@@ -179,7 +188,7 @@ theorem monotone_lift [Preorderₓ γ] {f : γ → Filter α} {g : γ → Set α
   Monotone fun c => (f c).lift (g c) :=
   fun a b h => lift_mono (hf h) (hg h)
 
-theorem lift_ne_bot_iff (hm : Monotone g) : (ne_bot$ f.lift g) ↔ ∀ s _ : s ∈ f, ne_bot (g s) :=
+theorem lift_ne_bot_iff (hm : Monotone g) : (ne_bot$ f.lift g) ↔ ∀ s (_ : s ∈ f), ne_bot (g s) :=
   by 
     rw [Filter.lift, infi_subtype', infi_ne_bot_iff_of_directed', Subtype.forall']
     ·
@@ -210,7 +219,7 @@ theorem lift_infi {f : ι → Filter α} {g : Set α → Filter β} [hι : Nonem
   le_antisymmₓ (le_infi$ fun i => lift_mono (infi_le _ _) (le_reflₓ _))
     fun s =>
       have g_mono : Monotone g := fun s t h => le_of_inf_eq$ Eq.trans hg$ congr_argₓ g$ inter_eq_self_of_subset_left h 
-      have  : ∀ t _ : t ∈ infi f, (⨅i : ι, Filter.lift (f i) g) ≤ g t :=
+      have  : ∀ t (_ : t ∈ infi f), (⨅i : ι, Filter.lift (f i) g) ≤ g t :=
         fun t ht =>
           infi_sets_induct ht
             (let ⟨i⟩ := hι 
@@ -238,23 +247,29 @@ theorem lift'_top (h : Set α → Set β) : (⊤ : Filter α).lift' h = 𝓟 (h 
 theorem mem_lift' {t : Set α} (ht : t ∈ f) : h t ∈ f.lift' h :=
   le_principal_iff.mp$ show f.lift' h ≤ 𝓟 (h t) from infi_le_of_le t$ infi_le_of_le ht$ le_reflₓ _
 
-theorem tendsto_lift' {m : γ → β} {l : Filter γ} : tendsto m l (f.lift' h) ↔ ∀ s _ : s ∈ f, ∀ᶠa in l, m a ∈ h s :=
+theorem tendsto_lift' {m : γ → β} {l : Filter γ} : tendsto m l (f.lift' h) ↔ ∀ s (_ : s ∈ f), ∀ᶠa in l, m a ∈ h s :=
   by 
     simp only [Filter.lift', tendsto_lift, tendsto_principal]
 
-theorem has_basis.lift' {ι} {p : ι → Prop} {s} (hf : f.has_basis p s) (hh : Monotone h) :
-  (f.lift' h).HasBasis p (h ∘ s) :=
-  by 
-    refine' ⟨fun t => (hf.mem_lift_iff _ (monotone_principal.comp hh)).trans _⟩
-    show ∀ i, (𝓟 (h (s i))).HasBasis (fun j : Unit => True) fun j : Unit => h (s i)
-    exact fun i => has_basis_principal _ 
-    simp only [exists_const]
+-- error in Order.Filter.Lift: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis.lift'
+{ι}
+{p : ι → exprProp()}
+{s}
+(hf : f.has_basis p s)
+(hh : monotone h) : (f.lift' h).has_basis p «expr ∘ »(h, s) :=
+begin
+  refine [expr ⟨λ t, (hf.mem_lift_iff _ (monotone_principal.comp hh)).trans _⟩],
+  show [expr ∀ i, (expr𝓟() (h (s i))).has_basis (λ j : unit, true) (λ j : unit, h (s i))],
+  from [expr λ i, has_basis_principal _],
+  simp [] [] ["only"] ["[", expr exists_const, "]"] [] []
+end
 
 theorem mem_lift'_sets (hh : Monotone h) {s : Set β} : s ∈ f.lift' h ↔ ∃ (t : _)(_ : t ∈ f), h t ⊆ s :=
   mem_lift_sets$ monotone_principal.comp hh
 
 theorem eventually_lift'_iff (hh : Monotone h) {p : β → Prop} :
-  (∀ᶠy in f.lift' h, p y) ↔ ∃ (t : _)(_ : t ∈ f), ∀ y _ : y ∈ h t, p y :=
+  (∀ᶠy in f.lift' h, p y) ↔ ∃ (t : _)(_ : t ∈ f), ∀ y (_ : y ∈ h t), p y :=
   mem_lift'_sets hh
 
 theorem lift'_le {f : Filter α} {g : Set α → Set β} {h : Filter β} {s : Set α} (hs : s ∈ f) (hg : 𝓟 (g s) ≤ h) :
@@ -264,10 +279,10 @@ theorem lift'_le {f : Filter α} {g : Set α → Set β} {h : Filter β} {s : Se
 theorem lift'_mono (hf : f₁ ≤ f₂) (hh : h₁ ≤ h₂) : f₁.lift' h₁ ≤ f₂.lift' h₂ :=
   lift_mono hf$ fun s => principal_mono.mpr$ hh s
 
-theorem lift'_mono' (hh : ∀ s _ : s ∈ f, h₁ s ⊆ h₂ s) : f.lift' h₁ ≤ f.lift' h₂ :=
+theorem lift'_mono' (hh : ∀ s (_ : s ∈ f), h₁ s ⊆ h₂ s) : f.lift' h₁ ≤ f.lift' h₂ :=
   infi_le_infi$ fun s => infi_le_infi$ fun hs => principal_mono.mpr$ hh s hs
 
-theorem lift'_cong (hh : ∀ s _ : s ∈ f, h₁ s = h₂ s) : f.lift' h₁ = f.lift' h₂ :=
+theorem lift'_cong (hh : ∀ s (_ : s ∈ f), h₁ s = h₂ s) : f.lift' h₁ = f.lift' h₂ :=
   le_antisymmₓ (lift'_mono'$ fun s hs => le_of_eqₓ$ hh s hs) (lift'_mono'$ fun s hs => le_of_eqₓ$ (hh s hs).symm)
 
 theorem map_lift'_eq {m : β → γ} (hh : Monotone h) : map m (f.lift' h) = f.lift' (image m ∘ h) :=
@@ -302,7 +317,7 @@ theorem lift'_bot (hh : Monotone h) : (⊥ : Filter α).lift' h = 𝓟 (h ∅) :
   by 
     rw [←principal_empty, lift'_principal hh]
 
-theorem principal_le_lift' {t : Set β} (hh : ∀ s _ : s ∈ f, t ⊆ h s) : 𝓟 t ≤ f.lift' h :=
+theorem principal_le_lift' {t : Set β} (hh : ∀ s (_ : s ∈ f), t ⊆ h s) : 𝓟 t ≤ f.lift' h :=
   le_infi$ fun s => le_infi$ fun hs => principal_mono.mpr (hh s hs)
 
 theorem monotone_lift' [Preorderₓ γ] {f : γ → Filter α} {g : γ → Set α → Set β} (hf : Monotone f) (hg : Monotone g) :
@@ -337,9 +352,9 @@ theorem lift'_inf_principal_eq {h : Set α → Set β} {s : Set β} : f.lift' h�
   by 
     simp only [Filter.lift', Filter.lift, · ∘ ·, ←inf_principal, infi_subtype', ←infi_inf]
 
-theorem lift'_ne_bot_iff (hh : Monotone h) : ne_bot (f.lift' h) ↔ ∀ s _ : s ∈ f, (h s).Nonempty :=
-  calc ne_bot (f.lift' h) ↔ ∀ s _ : s ∈ f, ne_bot (𝓟 (h s)) := lift_ne_bot_iff (monotone_principal.comp hh)
-    _ ↔ ∀ s _ : s ∈ f, (h s).Nonempty :=
+theorem lift'_ne_bot_iff (hh : Monotone h) : ne_bot (f.lift' h) ↔ ∀ s (_ : s ∈ f), (h s).Nonempty :=
+  calc ne_bot (f.lift' h) ↔ ∀ s (_ : s ∈ f), ne_bot (𝓟 (h s)) := lift_ne_bot_iff (monotone_principal.comp hh)
+    _ ↔ ∀ s (_ : s ∈ f), (h s).Nonempty :=
     by 
       simp only [principal_ne_bot_iff]
     
@@ -348,7 +363,7 @@ theorem lift'_ne_bot_iff (hh : Monotone h) : ne_bot (f.lift' h) ↔ ∀ s _ : s 
 theorem lift'_id {f : Filter α} : f.lift' id = f :=
   lift_principal2
 
-theorem le_lift' {f : Filter α} {h : Set α → Set β} {g : Filter β} (h_le : ∀ s _ : s ∈ f, h s ∈ g) : g ≤ f.lift' h :=
+theorem le_lift' {f : Filter α} {h : Set α → Set β} {g : Filter β} (h_le : ∀ s (_ : s ∈ f), h s ∈ g) : g ≤ f.lift' h :=
   le_infi$
     fun s =>
       le_infi$
@@ -393,7 +408,7 @@ theorem lift'_inf_powerset (f g : Filter α) : (f⊓g).lift' powerset = f.lift' 
   lift'_inf f g$ fun _ _ => (powerset_inter _ _).symm
 
 theorem eventually_lift'_powerset {f : Filter α} {p : Set α → Prop} :
-  (∀ᶠs in f.lift' powerset, p s) ↔ ∃ (s : _)(_ : s ∈ f), ∀ t _ : t ⊆ s, p t :=
+  (∀ᶠs in f.lift' powerset, p s) ↔ ∃ (s : _)(_ : s ∈ f), ∀ t (_ : t ⊆ s), p t :=
   eventually_lift'_iff monotone_powerset
 
 theorem eventually_lift'_powerset' {f : Filter α} {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t → p t → p s) :
@@ -412,7 +427,7 @@ theorem tendsto_lift'_powerset_mono {la : Filter α} {lb : Filter β} {s t : α 
 
 @[simp]
 theorem eventually_lift'_powerset_forall {f : Filter α} {p : α → Prop} :
-  (∀ᶠs in f.lift' powerset, ∀ x _ : x ∈ s, p x) ↔ ∀ᶠx in f, p x :=
+  (∀ᶠs in f.lift' powerset, ∀ x (_ : x ∈ s), p x) ↔ ∀ᶠx in f, p x :=
   Iff.trans (eventually_lift'_powerset'$ fun s t hst ht x hx => ht x (hst hx)) exists_mem_subset_iff
 
 alias eventually_lift'_powerset_forall ↔ Filter.Eventually.of_lift'_powerset Filter.Eventually.lift'_powerset
@@ -438,7 +453,7 @@ section Prod
 variable{f : Filter α}
 
 theorem prod_def {f : Filter α} {g : Filter β} : f ×ᶠ g = (f.lift$ fun s => g.lift'$ Set.Prod s) :=
-  have  : ∀ s : Set α t : Set β, 𝓟 (Set.Prod s t) = (𝓟 s).comap Prod.fst⊓(𝓟 t).comap Prod.snd :=
+  have  : ∀ (s : Set α) (t : Set β), 𝓟 (Set.Prod s t) = (𝓟 s).comap Prod.fst⊓(𝓟 t).comap Prod.snd :=
     by 
       simp only [principal_eq_iff_eq, comap_principal, inf_principal] <;> intros  <;> rfl 
   by 
@@ -458,7 +473,7 @@ theorem mem_prod_same_iff {s : Set (α × α)} : s ∈ f ×ᶠ f ↔ ∃ (t : _)
     rw [prod_same_eq, mem_lift'_sets] <;> exact Set.monotone_prod monotone_id monotone_id
 
 theorem tendsto_prod_self_iff {f : α × α → β} {x : Filter α} {y : Filter β} :
-  Filter.Tendsto f (x ×ᶠ x) y ↔ ∀ W _ : W ∈ y, ∃ (U : _)(_ : U ∈ x), ∀ x x' : α, x ∈ U → x' ∈ U → f (x, x') ∈ W :=
+  Filter.Tendsto f (x ×ᶠ x) y ↔ ∀ W (_ : W ∈ y), ∃ (U : _)(_ : U ∈ x), ∀ (x x' : α), x ∈ U → x' ∈ U → f (x, x') ∈ W :=
   by 
     simp only [tendsto_def, mem_prod_same_iff, prod_sub_preimage_iff, exists_prop, iff_selfₓ]
 

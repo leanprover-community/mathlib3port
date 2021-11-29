@@ -35,41 +35,41 @@ noncomputable theory
 
 open_locale Manifold
 
+-- error in Geometry.Manifold.Algebra.LieGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A Lie (additive) group is a group and a smooth manifold at the same time in which
 the addition and negation operations are smooth. -/
-@[ancestor HasSmoothAdd]
-class
-  LieAddGroup{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E](I : ModelWithCorners 𝕜 E H)(G : Type _)[AddGroupₓ G][TopologicalSpace G][ChartedSpace H G] extends
-  HasSmoothAdd I G : Prop where 
-  smooth_neg : Smooth I I fun a : G => -a
+@[ancestor #[ident has_smooth_add]]
+class lie_add_group
+{𝕜 : Type*}
+[nondiscrete_normed_field 𝕜]
+{H : Type*}
+[topological_space H]
+{E : Type*}
+[normed_group E]
+[normed_space 𝕜 E]
+(I : model_with_corners 𝕜 E H)
+(G : Type*)
+[add_group G]
+[topological_space G]
+[charted_space H G]extends has_smooth_add I G : exprProp() := (smooth_neg : smooth I I (λ a : G, «expr- »(a)))
 
+-- error in Geometry.Manifold.Algebra.LieGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A Lie group is a group and a smooth manifold at the same time in which
 the multiplication and inverse operations are smooth. -/
-@[ancestor HasSmoothMul, toAdditive]
-class
-  LieGroup{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜
-      E](I : ModelWithCorners 𝕜 E H)(G : Type _)[Groupₓ G][TopologicalSpace G][ChartedSpace H G] extends
-  HasSmoothMul I G : Prop where 
-  smooth_inv : Smooth I I fun a : G => a⁻¹
+@[ancestor #[ident has_smooth_mul], to_additive #[]]
+class lie_group
+{𝕜 : Type*}
+[nondiscrete_normed_field 𝕜]
+{H : Type*}
+[topological_space H]
+{E : Type*}
+[normed_group E]
+[normed_space 𝕜 E]
+(I : model_with_corners 𝕜 E H)
+(G : Type*)
+[group G]
+[topological_space G]
+[charted_space H G]extends has_smooth_mul I G : exprProp() := (smooth_inv : smooth I I (λ a : G, «expr ⁻¹»(a)))
 
 section LieGroup
 
@@ -122,9 +122,8 @@ section
 
 variable(I)
 
-@[toAdditive]
-theorem smooth_inv : Smooth I I fun x : G => x⁻¹ :=
-  LieGroup.smooth_inv
+-- error in Geometry.Manifold.Algebra.LieGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem smooth_inv : smooth I I (λ x : G, «expr ⁻¹»(x)) := lie_group.smooth_inv
 
 /-- A Lie group is a topological group. This is not an instance for technical reasons,
 see note [Design choices about smooth algebraic structures]. -/

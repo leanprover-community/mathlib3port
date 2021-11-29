@@ -48,7 +48,7 @@ namespace Tprod
 open List
 
 /-- Turning a function `f : Π i, α i` into an element of the iterated product `tprod α l`. -/
-protected def mk : ∀ l : List ι f : ∀ i, α i, tprod α l
+protected def mk : ∀ (l : List ι) (f : ∀ i, α i), tprod α l
 | [] => fun f => PUnit.unit
 | i :: is => fun f => (f i, mk is f)
 
@@ -67,7 +67,7 @@ variable[DecidableEq ι]
 
 /-- Given an element of the iterated product `l.prod α`, take a projection into direction `i`.
   If `i` appears multiple times in `l`, this chooses the first component in direction `i`. -/
-protected def elim : ∀ {l : List ι} v : tprod α l {i : ι} hi : i ∈ l, α i
+protected def elim : ∀ {l : List ι} (v : tprod α l) {i : ι} (hi : i ∈ l), α i
 | i :: is, v, j, hj =>
   if hji : j = i then
     by 
@@ -94,7 +94,7 @@ theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : tprod α (i :: l))
     rintro rfl 
     exact not_mem_of_nodup_cons hl hj
 
-theorem elim_mk : ∀ l : List ι f : ∀ i, α i {i : ι} hi : i ∈ l, (tprod.mk l f).elim hi = f i
+theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (tprod.mk l f).elim hi = f i
 | i :: is, f, j, hj =>
   by 
     byCases' hji : j = i
@@ -105,7 +105,7 @@ theorem elim_mk : ∀ l : List ι f : ∀ i, α i {i : ι} hi : i ∈ l, (tprod.
       rw [elim_of_ne _ hji, snd_mk, elim_mk]
 
 @[ext]
-theorem ext : ∀ {l : List ι} hl : l.nodup {v w : tprod α l} hvw : ∀ i hi : i ∈ l, v.elim hi = w.elim hi, v = w
+theorem ext : ∀ {l : List ι} (hl : l.nodup) {v w : tprod α l} (hvw : ∀ i (hi : i ∈ l), v.elim hi = w.elim hi), v = w
 | [], hl, v, w, hvw => PUnit.extₓ
 | i :: is, hl, v, w, hvw =>
   by 
@@ -140,7 +140,7 @@ open List
 
 /-- A product of sets in `tprod α l`. -/
 @[simp]
-protected def tprod : ∀ l : List ι t : ∀ i, Set (α i), Set (tprod α l)
+protected def tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (tprod α l)
 | [], t => univ
 | i :: is, t => (t i).Prod (tprod is t)
 

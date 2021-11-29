@@ -90,16 +90,18 @@ variable(lt : α → α → Prop)
 
 @[elab_as_eliminator]
 theorem ins.induction [DecidableRel lt] {p : Rbnode α → Prop} t x (is_leaf : p leaf)
-  (is_red_lt : ∀ a y b hc : cmpUsing lt x y = Ordering.lt ih : p a, p (red_node a y b))
-  (is_red_eq : ∀ a y b hc : cmpUsing lt x y = Ordering.eq, p (red_node a y b))
-  (is_red_gt : ∀ a y b hc : cmpUsing lt x y = Ordering.gt ih : p b, p (red_node a y b))
-  (is_black_lt_red : ∀ a y b hc : cmpUsing lt x y = Ordering.lt hr : get_color a = red ih : p a, p (black_node a y b))
+  (is_red_lt : ∀ a y b (hc : cmpUsing lt x y = Ordering.lt) (ih : p a), p (red_node a y b))
+  (is_red_eq : ∀ a y b (hc : cmpUsing lt x y = Ordering.eq), p (red_node a y b))
+  (is_red_gt : ∀ a y b (hc : cmpUsing lt x y = Ordering.gt) (ih : p b), p (red_node a y b))
+  (is_black_lt_red :
+    ∀ a y b (hc : cmpUsing lt x y = Ordering.lt) (hr : get_color a = red) (ih : p a), p (black_node a y b))
   (is_black_lt_not_red :
-    ∀ a y b hc : cmpUsing lt x y = Ordering.lt hnr : get_color a ≠ red ih : p a, p (black_node a y b))
-  (is_black_eq : ∀ a y b hc : cmpUsing lt x y = Ordering.eq, p (black_node a y b))
-  (is_black_gt_red : ∀ a y b hc : cmpUsing lt x y = Ordering.gt hr : get_color b = red ih : p b, p (black_node a y b))
+    ∀ a y b (hc : cmpUsing lt x y = Ordering.lt) (hnr : get_color a ≠ red) (ih : p a), p (black_node a y b))
+  (is_black_eq : ∀ a y b (hc : cmpUsing lt x y = Ordering.eq), p (black_node a y b))
+  (is_black_gt_red :
+    ∀ a y b (hc : cmpUsing lt x y = Ordering.gt) (hr : get_color b = red) (ih : p b), p (black_node a y b))
   (is_black_gt_not_red :
-    ∀ a y b hc : cmpUsing lt x y = Ordering.gt hnr : get_color b ≠ red ih : p b, p (black_node a y b)) :
+    ∀ a y b (hc : cmpUsing lt x y = Ordering.gt) (hnr : get_color b ≠ red) (ih : p b), p (black_node a y b)) :
   p t :=
   by 
     induction t 
@@ -397,7 +399,7 @@ theorem mem_of_mem_mk_insert_result {a t c} : mem lt a (mk_insert_result c t) �
   by 
     cases t <;> cases c <;> simp [mk_insert_result, mem] <;> intros  <;> assumption
 
-theorem mem_insert_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} : ∀ h : ¬lt x y ∧ ¬lt y x, x∈t.insert lt y :=
+theorem mem_insert_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} : ∀ (h : ¬lt x y ∧ ¬lt y x), x∈t.insert lt y :=
   by 
     intros  <;> unfold insert <;> apply mem_mk_insert_result <;> apply mem_ins_of_incomp <;> assumption
 
@@ -450,7 +452,7 @@ begin
 end
 
 theorem equiv_or_mem_of_mem_insert [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} {x z} :
-  ∀ h : x∈t.insert lt z, x ≈[lt]z ∨ (x∈t) :=
+  ∀ (h : x∈t.insert lt z), x ≈[lt]z ∨ (x∈t) :=
   by 
     simp [insert]
     intros 
@@ -584,8 +586,8 @@ theorem find_insert_of_eqv [DecidableRel lt] [IsStrictWeakOrder α lt] {x y : α
     simp [insert, find_mk_insert_result]
     apply find_ins_of_eqv lt he hs <;> simp 
 
-theorem weak_trichotomous x y {p : Prop} (is_lt : ∀ h : lt x y, p) (is_eqv : ∀ h : ¬lt x y ∧ ¬lt y x, p)
-  (is_gt : ∀ h : lt y x, p) : p :=
+theorem weak_trichotomous x y {p : Prop} (is_lt : ∀ (h : lt x y), p) (is_eqv : ∀ (h : ¬lt x y ∧ ¬lt y x), p)
+  (is_gt : ∀ (h : lt y x), p) : p :=
   by 
     byCases' lt x y <;> byCases' lt y x 
     any_goals 

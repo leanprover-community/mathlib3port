@@ -65,7 +65,7 @@ theorem det_to_square_block' (M : Matrix m m R) (b : m → ℕ) (k : ℕ) :
     simp 
 
 theorem two_block_triangular_det (M : Matrix m m R) (p : m → Prop) [DecidablePred p]
-  (h : ∀ i h1 : ¬p i j h2 : p j, M i j = 0) :
+  (h : ∀ i (h1 : ¬p i) j (h2 : p j), M i j = 0) :
   M.det = (to_square_block_prop M p).det*(to_square_block_prop M fun i => ¬p i).det :=
   by 
     rw [det_to_block M p]
@@ -248,19 +248,22 @@ begin
     exact [expr ⟨finset.mem_univ a, hba⟩] }
 end
 
-theorem det_of_block_triangular_matrix' (M : Matrix m m R) {n : ℕ} (b : m → Finₓ n) (h : block_triangular_matrix' M b) :
-  M.det = ∏k : Finₓ n, (to_square_block M b k).det :=
-  by 
-    let b2 : m → ℕ := fun i => «expr↑ » (b i)
-    simpRw [to_square_block_det'']
-    rw [Finₓ.prod_univ_eq_prod_range (fun k : ℕ => (M.to_square_block' b2 k).det) n]
-    apply det_of_block_triangular_matrix
-    ·
-      intro i j hij 
-      exact h i j (fin.coe_fin_lt.mp hij)
-    ·
-      intro i 
-      exact Finₓ.is_lt (b i)
+-- error in LinearAlgebra.Matrix.Block: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem det_of_block_triangular_matrix'
+(M : matrix m m R)
+{n : exprℕ()}
+(b : m → fin n)
+(h : block_triangular_matrix' M b) : «expr = »(M.det, «expr∏ , »((k : fin n), (to_square_block M b k).det)) :=
+begin
+  let [ident b2] [":", expr m → exprℕ()] [":=", expr λ i, «expr↑ »(b i)],
+  simp_rw [expr to_square_block_det''] [],
+  rw [expr fin.prod_univ_eq_prod_range (λ k : exprℕ(), (M.to_square_block' b2 k).det) n] [],
+  apply [expr det_of_block_triangular_matrix],
+  { intros [ident i, ident j, ident hij],
+    exact [expr h i j (fin.coe_fin_lt.mp hij)] },
+  { intro [ident i],
+    exact [expr fin.is_lt (b i)] }
+end
 
 -- error in LinearAlgebra.Matrix.Block: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem det_of_upper_triangular
@@ -277,11 +280,15 @@ begin
   simp [] [] [] ["[", expr h2 (default {a // «expr = »(id a, i)}), "]"] [] []
 end
 
-theorem det_of_lower_triangular {n : ℕ} (M : Matrix (Finₓ n) (Finₓ n) R) (h : ∀ i j : Finₓ n, i < j → M i j = 0) :
-  M.det = ∏i : Finₓ n, M i i :=
-  by 
-    rw [←det_transpose]
-    exact det_of_upper_triangular _ fun i j : Finₓ n hji : j < i => h j i hji
+-- error in LinearAlgebra.Matrix.Block: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem det_of_lower_triangular
+{n : exprℕ()}
+(M : matrix (fin n) (fin n) R)
+(h : ∀ i j : fin n, «expr < »(i, j) → «expr = »(M i j, 0)) : «expr = »(M.det, «expr∏ , »((i : fin n), M i i)) :=
+begin
+  rw ["<-", expr det_transpose] [],
+  exact [expr det_of_upper_triangular _ (λ (i j : fin n) (hji : «expr < »(j, i)), h j i hji)]
+end
 
 end Matrix
 

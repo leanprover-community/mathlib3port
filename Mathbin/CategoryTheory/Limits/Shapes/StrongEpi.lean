@@ -37,7 +37,8 @@ variable{P Q : C}
     top and a monomorphism at the bottom has a lift. -/
 class strong_epi(f : P ⟶ Q) : Prop where 
   Epi : epi f 
-  HasLift : ∀ {X Y : C} {u : P ⟶ X} {v : Q ⟶ Y} {z : X ⟶ Y} [mono z] h : u ≫ z = f ≫ v, arrow.has_lift$ arrow.hom_mk' h
+  HasLift :
+  ∀ {X Y : C} {u : P ⟶ X} {v : Q ⟶ Y} {z : X ⟶ Y} [mono z] (h : u ≫ z = f ≫ v), arrow.has_lift$ arrow.hom_mk' h
 
 attribute [instance] strong_epi.has_lift
 

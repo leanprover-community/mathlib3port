@@ -66,8 +66,8 @@ class non_preadditive_abelian where
   [HasCokernels : has_cokernels C]
   [HasFiniteProducts : has_finite_products C]
   [HasFiniteCoproducts : has_finite_coproducts C]
-  NormalMono : ∀ {X Y : C} f : X ⟶ Y [mono f], normal_mono f 
-  NormalEpi : ∀ {X Y : C} f : X ⟶ Y [epi f], normal_epi f
+  NormalMono : ∀ {X Y : C} (f : X ⟶ Y) [mono f], normal_mono f 
+  NormalEpi : ∀ {X Y : C} (f : X ⟶ Y) [epi f], normal_epi f
 
 set_option default_priority 100
 
@@ -476,7 +476,7 @@ theorem epi_of_zero_cokernel
 open_locale ZeroObject
 
 /-- If `g ≫ f = 0` implies `g = 0` for all `g`, then `0 : 0 ⟶ X` is a kernel of `f`. -/
-def zero_kernel_of_cancel_zero {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Z ⟶ X hgf : g ≫ f = 0, g = 0) :
+def zero_kernel_of_cancel_zero {X Y : C} (f : X ⟶ Y) (hf : ∀ (Z : C) (g : Z ⟶ X) (hgf : g ≫ f = 0), g = 0) :
   is_limit
     (kernel_fork.of_ι (0 : 0 ⟶ X)
       (show 0 ≫ f = 0 by 
@@ -490,7 +490,7 @@ def zero_kernel_of_cancel_zero {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Z ⟶
         ext
 
 /-- If `f ≫ g = 0` implies `g = 0` for all `g`, then `0 : Y ⟶ 0` is a cokernel of `f`. -/
-def zero_cokernel_of_zero_cancel {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Y ⟶ Z hgf : f ≫ g = 0, g = 0) :
+def zero_cokernel_of_zero_cancel {X Y : C} (f : X ⟶ Y) (hf : ∀ (Z : C) (g : Y ⟶ Z) (hgf : f ≫ g = 0), g = 0) :
   is_colimit
     (cokernel_cofork.of_π (0 : Y ⟶ 0)
       (show f ≫ 0 = 0 by 
@@ -504,11 +504,11 @@ def zero_cokernel_of_zero_cancel {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Y �
         ext
 
 /-- If `g ≫ f = 0` implies `g = 0` for all `g`, then `f` is a monomorphism. -/
-theorem mono_of_cancel_zero {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Z ⟶ X hgf : g ≫ f = 0, g = 0) : mono f :=
+theorem mono_of_cancel_zero {X Y : C} (f : X ⟶ Y) (hf : ∀ (Z : C) (g : Z ⟶ X) (hgf : g ≫ f = 0), g = 0) : mono f :=
   mono_of_zero_kernel f 0$ zero_kernel_of_cancel_zero f hf
 
 /-- If `f ≫ g = 0` implies `g = 0` for all `g`, then `g` is a monomorphism. -/
-theorem epi_of_zero_cancel {X Y : C} (f : X ⟶ Y) (hf : ∀ Z : C g : Y ⟶ Z hgf : f ≫ g = 0, g = 0) : epi f :=
+theorem epi_of_zero_cancel {X Y : C} (f : X ⟶ Y) (hf : ∀ (Z : C) (g : Y ⟶ Z) (hgf : f ≫ g = 0), g = 0) : epi f :=
   epi_of_zero_cokernel f 0$ zero_cokernel_of_zero_cancel f hf
 
 end 

@@ -207,10 +207,11 @@ end Part
 
 namespace Part
 
+-- error in Control.LawfulFix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `to_unit` as a monotone function -/
-@[simps]
-def to_unit_mono (f : Part α →ₘ Part α) : (Unit → Part α) →ₘ Unit → Part α :=
-  { toFun := fun x u => f (x u), monotone' := fun x y h : x ≤ y u => f.monotone$ h u }
+@[simps #[]]
+def to_unit_mono (f : «expr →ₘ »(part α, part α)) : «expr →ₘ »(unit → part α, unit → part α) :=
+{ to_fun := λ x u, f (x u), monotone' := λ (x y) (h : «expr ≤ »(x, y)) (u), «expr $ »(f.monotone, h u) }
 
 theorem to_unit_cont (f : Part α →ₘ Part α) (hc : continuous f) : continuous (to_unit_mono f)
 | c =>
@@ -234,7 +235,7 @@ namespace Pi
 noncomputable instance  {β} : LawfulFix (α → Part β) :=
   ⟨fun f => Part.fix_eq⟩
 
-variable{γ : ∀ a : α, β a → Type _}
+variable{γ : ∀ (a : α), β a → Type _}
 
 section Monotone
 
@@ -242,12 +243,12 @@ variable(α β γ)
 
 /-- `sigma.curry` as a monotone function. -/
 @[simps]
-def monotone_curry [∀ x y, Preorderₓ$ γ x y] : (∀ x : Σa, β a, γ x.1 x.2) →ₘ ∀ a b : β a, γ a b :=
+def monotone_curry [∀ x y, Preorderₓ$ γ x y] : (∀ (x : Σa, β a), γ x.1 x.2) →ₘ ∀ a (b : β a), γ a b :=
   { toFun := curry, monotone' := fun x y h a b => h ⟨a, b⟩ }
 
 /-- `sigma.uncurry` as a monotone function. -/
 @[simps]
-def monotone_uncurry [∀ x y, Preorderₓ$ γ x y] : (∀ a b : β a, γ a b) →ₘ ∀ x : Σa, β a, γ x.1 x.2 :=
+def monotone_uncurry [∀ x y, Preorderₓ$ γ x y] : (∀ a (b : β a), γ a b) →ₘ ∀ (x : Σa, β a), γ x.1 x.2 :=
   { toFun := uncurry, monotone' := fun x y h a => h a.1 a.2 }
 
 variable[∀ x y, OmegaCompletePartialOrder$ γ x y]
@@ -274,14 +275,14 @@ end Monotone
 
 open HasFix
 
-instance  [HasFix$ ∀ x : Sigma β, γ x.1 x.2] : HasFix (∀ x y : β x, γ x y) :=
+instance  [HasFix$ ∀ (x : Sigma β), γ x.1 x.2] : HasFix (∀ x (y : β x), γ x y) :=
   ⟨fun f => curry (fix$ uncurry ∘ f ∘ curry)⟩
 
 variable[∀ x y, OmegaCompletePartialOrder$ γ x y]
 
 section Curry
 
-variable{f : (∀ x y : β x, γ x y) →ₘ ∀ x y : β x, γ x y}
+variable{f : (∀ x (y : β x), γ x y) →ₘ ∀ x (y : β x), γ x y}
 
 variable(hc : continuous f)
 
@@ -290,7 +291,7 @@ theorem uncurry_curry_continuous : continuous$ (monotone_uncurry α β γ).comp$
 
 end Curry
 
-instance pi.lawful_fix' [LawfulFix$ ∀ x : Sigma β, γ x.1 x.2] : LawfulFix (∀ x y, γ x y) :=
+instance pi.lawful_fix' [LawfulFix$ ∀ (x : Sigma β), γ x.1 x.2] : LawfulFix (∀ x y, γ x y) :=
   { fix_eq :=
       fun f hc =>
         by 

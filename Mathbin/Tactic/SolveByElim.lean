@@ -22,6 +22,7 @@ namespace Tactic
 
 namespace SolveByElim
 
+-- error in Tactic.SolveByElim: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 `mk_assumption_set` builds a collection of lemmas for use in
 the backtracking search in `solve_by_elim`.
@@ -64,35 +65,25 @@ See https://github.com/leanprover-community/mathlib/issues/2269
 As an optimisation, after we build the list of `tactic expr`s, we actually run them, and replace any
 that do not in fact produce metavariables with a simple `return` tactic.
 -/
-unsafe def mk_assumption_set (no_dflt : Bool) (hs : List simp_arg_type) (attr : List Name) :
-  tactic (List (tactic expr) × tactic (List expr)) :=
-  lock_tactic_state$
-    do 
-      let (hs, gex, hex, all_hyps) ← decode_simp_arg_list hs 
-      let hs := hs.map fun h => i_to_expr_for_apply h 
-      let l ← attr.mmap$ fun a => attribute.get_instances a 
-      let l := l.join 
-      let m := l.map fun h => mk_const h 
-      let hs ←
-        (hs ++ m).mfilter$
-            fun h =>
-              do 
-                let h ← h 
-                return$ expr.const_name h ∉ gex 
-      let hs := if no_dflt then hs else ([`rfl, `trivial, `congr_fun, `congr_arg].map fun n => mk_const n) ++ hs 
-      let locals : tactic (List expr) :=
-        if ¬no_dflt ∨ all_hyps then
-          do 
-            let ctx ← local_context 
-            return$ ctx.filter fun h : expr => h.local_uniq_name ∉ hex
-        else return []
-      let hs ←
-        hs.mmap
-            fun h : tactic expr =>
-              do 
-                let e ← h 
-                if e.has_meta_var then return h else return (return e)
-      return (hs, locals)
+meta
+def mk_assumption_set
+(no_dflt : bool)
+(hs : list simp_arg_type)
+(attr : list name) : tactic «expr × »(list (tactic expr), tactic (list expr)) :=
+«expr $ »(lock_tactic_state, do {
+ (hs, gex, hex, all_hyps) ← decode_simp_arg_list hs,
+   let hs := hs.map (λ h, i_to_expr_for_apply h),
+   l ← «expr $ »(attr.mmap, λ a, attribute.get_instances a),
+   let l := l.join,
+   let m := l.map (λ h, mk_const h),
+   hs ← «expr $ »(«expr ++ »(hs, m).mfilter, λ h, do { h ← h, «expr $ »(return, «expr ∉ »(expr.const_name h, gex)) }),
+   let hs := if no_dflt then hs else «expr ++ »(«expr[ , ]»([`rfl, `trivial, `congr_fun, `congr_arg]).map (λ
+     n, mk_const n), hs),
+   let locals : tactic (list expr) := if «expr ∨ »(«expr¬ »(no_dflt), all_hyps) then do {
+   ctx ← local_context,
+     «expr $ »(return, ctx.filter (λ h : expr, «expr ∉ »(h.local_uniq_name, hex))) } else return «expr[ , ]»([]),
+   hs ← hs.mmap (λ h : tactic expr, do { e ← h, if e.has_meta_var then return h else return (return e) }),
+   return (hs, locals) })
 
 /--
 Configuration options for `solve_by_elim`.

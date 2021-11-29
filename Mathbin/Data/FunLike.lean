@@ -118,7 +118,7 @@ This typeclass is used in the definition of the homomorphism typeclasses,
 such as `zero_hom_class`, `mul_hom_class`, `monoid_hom_class`, ....
 -/
 class FunLike(F : Sort _)(α : outParam (Sort _))(β : outParam$ α → Sort _) where 
-  coe : F → ∀ a : α, β a 
+  coe : F → ∀ (a : α), β a 
   coe_injective' : Function.Injective coeₓ
 
 section Dependent
@@ -135,26 +135,26 @@ variable{F α β}[i : FunLike F α β]
 include i
 
 @[nolint dangerous_instance]
-instance (priority := 100) : CoeFun F fun _ => ∀ a : α, β a :=
+instance (priority := 100) : CoeFun F fun _ => ∀ (a : α), β a :=
   { coe := FunLike.coe }
 
-theorem coe_injective : Function.Injective (coeFn : F → ∀ a : α, β a) :=
+theorem coe_injective : Function.Injective (coeFn : F → ∀ (a : α), β a) :=
   FunLike.coe_injective'
 
 @[simp, normCast]
-theorem coe_fn_eq {f g : F} : (f : ∀ a : α, β a) = (g : ∀ a : α, β a) ↔ f = g :=
+theorem coe_fn_eq {f g : F} : (f : ∀ (a : α), β a) = (g : ∀ (a : α), β a) ↔ f = g :=
   ⟨fun h => @coe_injective _ _ _ i _ _ h,
     fun h =>
       by 
         cases h <;> rfl⟩
 
-theorem ext' {f g : F} (h : (f : ∀ a : α, β a) = (g : ∀ a : α, β a)) : f = g :=
+theorem ext' {f g : F} (h : (f : ∀ (a : α), β a) = (g : ∀ (a : α), β a)) : f = g :=
   coe_injective h
 
-theorem ext'_iff {f g : F} : f = g ↔ (f : ∀ a : α, β a) = (g : ∀ a : α, β a) :=
+theorem ext'_iff {f g : F} : f = g ↔ (f : ∀ (a : α), β a) = (g : ∀ (a : α), β a) :=
   coe_fn_eq.symm
 
-theorem ext (f g : F) (h : ∀ x : α, f x = g x) : f = g :=
+theorem ext (f g : F) (h : ∀ (x : α), f x = g x) : f = g :=
   coe_injective (funext h)
 
 theorem ext_iff {f g : F} : f = g ↔ ∀ x, f x = g x :=

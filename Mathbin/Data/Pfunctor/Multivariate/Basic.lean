@@ -49,10 +49,10 @@ theorem map_eq {α β : Typevec n} (g : α ⟹ β) (a : P.A) (f : P.B a ⟹ α) 
   @Mvfunctor.map _ P.obj _ _ _ g ⟨a, f⟩ = ⟨a, g ⊚ f⟩ :=
   rfl
 
-theorem id_map {α : Typevec n} : ∀ x : P.obj α, Typevec.id <$$> x = x
+theorem id_map {α : Typevec n} : ∀ (x : P.obj α), Typevec.id <$$> x = x
 | ⟨a, g⟩ => rfl
 
-theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) : ∀ x : P.obj α, (g ⊚ f) <$$> x = g <$$> f <$$> x
+theorem comp_map {α β γ : Typevec n} (f : α ⟹ β) (g : β ⟹ γ) : ∀ (x : P.obj α), (g ⊚ f) <$$> x = g <$$> f <$$> x
 | ⟨a, h⟩ => rfl
 
 instance  : IsLawfulMvfunctor P.obj :=
@@ -106,15 +106,18 @@ variable{P}{Q : Fin2 n → Mvpfunctor.{u} m}{α β : Typevec.{u} m}
 def comp.mk (x : P.obj fun i => (Q i).Obj α) : (comp P Q).Obj α :=
   ⟨⟨x.1, fun i a => (x.2 _ a).1⟩, fun i a => (x.snd a.fst a.snd.fst).snd i a.snd.snd⟩
 
-/-- Destructor for functor composition -/
-def comp.get (x : (comp P Q).Obj α) : P.obj fun i => (Q i).Obj α :=
-  ⟨x.1.1, fun i a => ⟨x.fst.snd i a, fun j : Fin2 m b : (Q i).B _ j => x.snd j ⟨i, ⟨a, b⟩⟩⟩⟩
+-- error in Data.Pfunctor.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Destructor for functor composition -/ def comp.get (x : (comp P Q).obj α) : P.obj (λ i, (Q i).obj α) :=
+⟨x.1.1, λ i a, ⟨x.fst.snd i a, λ (j : fin2 m) (b : (Q i).B _ j), x.snd j ⟨i, ⟨a, b⟩⟩⟩⟩
 
-theorem comp.get_map (f : α ⟹ β) (x : (comp P Q).Obj α) :
-  comp.get (f <$$> x) = (fun i x : (Q i).Obj α => f <$$> x) <$$> comp.get x :=
-  by 
-    cases x 
-    rfl
+-- error in Data.Pfunctor.Multivariate.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem comp.get_map
+(f : «expr ⟹ »(α, β))
+(x : (comp P Q).obj α) : «expr = »(comp.get «expr <$$> »(f, x), «expr <$$> »(λ
+  (i)
+  (x : (Q i).obj α), «expr <$$> »(f, x), comp.get x)) :=
+by { cases [expr x] [],
+  refl }
 
 @[simp]
 theorem comp.get_mk (x : P.obj fun i => (Q i).Obj α) : comp.get (comp.mk x) = x :=

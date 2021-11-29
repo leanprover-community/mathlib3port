@@ -32,9 +32,9 @@ export Bifunctor(bimap)
 
 /-- Bifunctor. This typeclass asserts that a lawless `bifunctor` is lawful. -/
 class IsLawfulBifunctor(F : Type u₀ → Type u₁ → Type u₂)[Bifunctor F] where 
-  id_bimap : ∀ {α β} x : F α β, bimap id id x = x 
+  id_bimap : ∀ {α β} (x : F α β), bimap id id x = x 
   bimap_bimap :
-  ∀ {α₀ α₁ α₂ β₀ β₁ β₂} f : α₀ → α₁ f' : α₁ → α₂ g : β₀ → β₁ g' : β₁ → β₂ x : F α₀ β₀,
+  ∀ {α₀ α₁ α₂ β₀ β₁ β₂} (f : α₀ → α₁) (f' : α₁ → α₂) (g : β₀ → β₁) (g' : β₁ → β₂) (x : F α₀ β₀),
     bimap f' g' (bimap f g x) = bimap (f' ∘ f) (g' ∘ g) x
 
 export IsLawfulBifunctor(id_bimap bimap_bimap)
@@ -62,11 +62,11 @@ def snd {α β β'} (f : β → β') : F α β → F α β' :=
 variable[IsLawfulBifunctor F]
 
 @[higherOrder fst_id]
-theorem id_fst : ∀ {α β} x : F α β, fst id x = x :=
+theorem id_fst : ∀ {α β} (x : F α β), fst id x = x :=
   @id_bimap _ _ _
 
 @[higherOrder snd_id]
-theorem id_snd : ∀ {α β} x : F α β, snd id x = x :=
+theorem id_snd : ∀ {α β} (x : F α β), snd id x = x :=
   @id_bimap _ _ _
 
 @[higherOrder fst_comp_fst]

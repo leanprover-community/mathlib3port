@@ -57,8 +57,11 @@ theorem bi_total.rel_exists (h : bi_total R) : ((R⇒Iff)⇒Iff) (fun p => ∃ i
     ⟨fun ⟨a, pa⟩ => (h.left a).imp$ fun b Rab => (Hrel Rab).1 pa,
       fun ⟨b, qb⟩ => (h.right b).imp$ fun a Rab => (Hrel Rab).2 qb⟩
 
-theorem left_unique_of_rel_eq {eq' : β → β → Prop} (he : (R⇒R⇒Iff) Eq eq') : left_unique R :=
-  fun a b c ac : R a c bc : R b c => (he ac bc).mpr ((he bc bc).mp rfl)
+-- error in Logic.Relator: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem left_unique_of_rel_eq
+{eq' : β → β → exprProp()}
+(he : «expr ⇒ »(R, «expr ⇒ »(R, iff)) eq eq') : left_unique R :=
+λ (a b c) (ac : R a c) (bc : R b c), (he ac bc).mpr ((he bc bc).mp rfl)
 
 end 
 

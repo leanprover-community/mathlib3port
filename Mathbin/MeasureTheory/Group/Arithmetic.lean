@@ -52,13 +52,16 @@ open MeasureTheory
 /-- We say that a type `has_measurable_add` if `((+) c)` and `(+ c)` are measurable functions.
 For a typeclass assuming measurability of `uncurry (+)` see `has_measurable_add₂`. -/
 class HasMeasurableAdd(M : Type _)[MeasurableSpace M][Add M] : Prop where 
-  measurable_const_add : ∀ c : M, Measurable ((·+·) c)
-  measurable_add_const : ∀ c : M, Measurable (·+c)
+  measurable_const_add : ∀ (c : M), Measurable ((·+·) c)
+  measurable_add_const : ∀ (c : M), Measurable (·+c)
 
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- We say that a type `has_measurable_add` if `uncurry (+)` is a measurable functions.
 For a typeclass assuming measurability of `((+) c)` and `(+ c)` see `has_measurable_add`. -/
-class HasMeasurableAdd₂(M : Type _)[MeasurableSpace M][Add M] : Prop where 
-  measurable_add : Measurable fun p : M × M => p.1+p.2
+class has_measurable_add₂
+(M : Type*)
+[measurable_space M]
+[has_add M] : exprProp() := (measurable_add : measurable (λ p : «expr × »(M, M), «expr + »(p.1, p.2)))
 
 export HasMeasurableAdd₂(measurable_add)
 
@@ -68,14 +71,17 @@ export HasMeasurableAdd(measurable_const_add measurable_add_const)
 For a typeclass assuming measurability of `uncurry (*)` see `has_measurable_mul₂`. -/
 @[toAdditive]
 class HasMeasurableMul(M : Type _)[MeasurableSpace M][Mul M] : Prop where 
-  measurable_const_mul : ∀ c : M, Measurable ((·*·) c)
-  measurable_mul_const : ∀ c : M, Measurable (·*c)
+  measurable_const_mul : ∀ (c : M), Measurable ((·*·) c)
+  measurable_mul_const : ∀ (c : M), Measurable (·*c)
 
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- We say that a type `has_measurable_mul` if `uncurry (*)` is a measurable functions.
 For a typeclass assuming measurability of `((*) c)` and `(* c)` see `has_measurable_mul`. -/
-@[toAdditive HasMeasurableAdd₂]
-class HasMeasurableMul₂(M : Type _)[MeasurableSpace M][Mul M] : Prop where 
-  measurable_mul : Measurable fun p : M × M => p.1*p.2
+@[to_additive #[ident has_measurable_add₂]]
+class has_measurable_mul₂
+(M : Type*)
+[measurable_space M]
+[has_mul M] : exprProp() := (measurable_mul : measurable (λ p : «expr × »(M, M), «expr * »(p.1, p.2)))
 
 export HasMeasurableMul₂(measurable_mul)
 
@@ -132,9 +138,13 @@ attribute [measurability] Measurable.add' Measurable.add AeMeasurable.add AeMeas
 
 end Mul
 
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- This class assumes that the map `β × γ → β` given by `(x, y) ↦ x ^ y` is measurable. -/
-class HasMeasurablePow(β γ : Type _)[MeasurableSpace β][MeasurableSpace γ][Pow β γ] where 
-  measurable_pow : Measurable fun p : β × γ => p.1 ^ p.2
+class has_measurable_pow
+(β γ : Type*)
+[measurable_space β]
+[measurable_space γ]
+[has_pow β γ] := (measurable_pow : measurable (λ p : «expr × »(β, γ), «expr ^ »(p.1, p.2)))
 
 export HasMeasurablePow(measurable_pow)
 
@@ -190,13 +200,16 @@ end Pow
 /-- We say that a type `has_measurable_sub` if `(λ x, c - x)` and `(λ x, x - c)` are measurable
 functions. For a typeclass assuming measurability of `uncurry (-)` see `has_measurable_sub₂`. -/
 class HasMeasurableSub(G : Type _)[MeasurableSpace G][Sub G] : Prop where 
-  measurable_const_sub : ∀ c : G, Measurable fun x => c - x 
-  measurable_sub_const : ∀ c : G, Measurable fun x => x - c
+  measurable_const_sub : ∀ (c : G), Measurable fun x => c - x 
+  measurable_sub_const : ∀ (c : G), Measurable fun x => x - c
 
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- We say that a type `has_measurable_sub` if `uncurry (-)` is a measurable functions.
 For a typeclass assuming measurability of `((-) c)` and `(- c)` see `has_measurable_sub`. -/
-class HasMeasurableSub₂(G : Type _)[MeasurableSpace G][Sub G] : Prop where 
-  measurable_sub : Measurable fun p : G × G => p.1 - p.2
+class has_measurable_sub₂
+(G : Type*)
+[measurable_space G]
+[has_sub G] : exprProp() := (measurable_sub : measurable (λ p : «expr × »(G, G), «expr - »(p.1, p.2)))
 
 export HasMeasurableSub₂(measurable_sub)
 
@@ -204,14 +217,17 @@ export HasMeasurableSub₂(measurable_sub)
 For a typeclass assuming measurability of `uncurry (/)` see `has_measurable_div₂`. -/
 @[toAdditive]
 class HasMeasurableDiv(G₀ : Type _)[MeasurableSpace G₀][Div G₀] : Prop where 
-  measurable_const_div : ∀ c : G₀, Measurable ((· / ·) c)
-  measurable_div_const : ∀ c : G₀, Measurable (· / c)
+  measurable_const_div : ∀ (c : G₀), Measurable ((· / ·) c)
+  measurable_div_const : ∀ (c : G₀), Measurable (· / c)
 
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- We say that a type `has_measurable_div` if `uncurry (/)` is a measurable functions.
 For a typeclass assuming measurability of `((/) c)` and `(/ c)` see `has_measurable_div`. -/
-@[toAdditive HasMeasurableSub₂]
-class HasMeasurableDiv₂(G₀ : Type _)[MeasurableSpace G₀][Div G₀] : Prop where 
-  measurable_div : Measurable fun p : G₀ × G₀ => p.1 / p.2
+@[to_additive #[ident has_measurable_sub₂]]
+class has_measurable_div₂
+(G₀ : Type*)
+[measurable_space G₀]
+[has_div G₀] : exprProp() := (measurable_div : measurable (λ p : «expr × »(G₀, G₀), «expr / »(p.1, p.2)))
 
 export HasMeasurableDiv₂(measurable_div)
 
@@ -367,11 +383,19 @@ theorem ae_measurable_inv_iff₀ {G₀ : Type _} [GroupWithZeroₓ G₀] [Measur
 
 end Inv
 
-private theorem has_measurable_zpow_aux (G : Type u) [DivInvMonoidₓ G] [MeasurableSpace G] [HasMeasurableMul₂ G]
-  [HasMeasurableInv G] (k : ℕ) : Measurable fun x : G => x ^ -[1+ k] :=
-  by 
-    simpRw [zpow_neg_succ_of_nat]
-    exact (measurable_id.pow_const (k+1)).inv
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+theorem has_measurable_zpow_aux
+(G : Type u)
+[div_inv_monoid G]
+[measurable_space G]
+[has_measurable_mul₂ G]
+[has_measurable_inv G]
+(k : exprℕ()) : measurable (λ x : G, «expr ^ »(x, «expr-[1+ ]»(k))) :=
+begin
+  simp_rw ["[", expr zpow_neg_succ_of_nat, "]"] [],
+  exact [expr (measurable_id.pow_const «expr + »(k, 1)).inv]
+end
 
 -- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance has_measurable_zpow
@@ -397,18 +421,28 @@ instance (priority := 100)has_measurable_div₂_of_mul_inv (G : Type _) [Measura
       simp only [div_eq_mul_inv]
       exact measurable_fst.mul measurable_snd.inv⟩
 
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- We say that the action of `M` on `α` `has_measurable_vadd` if for each `c` the map `x ↦ c +ᵥ x`
 is a measurable function and for each `x` the map `c ↦ c +ᵥ x` is a measurable function. -/
-class HasMeasurableVadd(M α : Type _)[HasVadd M α][MeasurableSpace M][MeasurableSpace α] : Prop where 
-  measurable_const_vadd : ∀ c : M, Measurable ((· +ᵥ ·) c : α → α)
-  measurable_vadd_const : ∀ x : α, Measurable fun c : M => c +ᵥ x
+class has_measurable_vadd
+(M α : Type*)
+[has_vadd M α]
+[measurable_space M]
+[measurable_space α] : exprProp() :=
+  (measurable_const_vadd : ∀ c : M, measurable (((«expr +ᵥ »)) c : α → α))
+  (measurable_vadd_const : ∀ x : α, measurable (λ c : M, «expr +ᵥ »(c, x)))
 
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- We say that the action of `M` on `α` `has_measurable_smul` if for each `c` the map `x ↦ c • x`
 is a measurable function and for each `x` the map `c ↦ c • x` is a measurable function. -/
-@[toAdditive]
-class HasMeasurableSmul(M α : Type _)[HasScalar M α][MeasurableSpace M][MeasurableSpace α] : Prop where 
-  measurable_const_smul : ∀ c : M, Measurable ((· • ·) c : α → α)
-  measurable_smul_const : ∀ x : α, Measurable fun c : M => c • x
+@[to_additive #[]]
+class has_measurable_smul
+(M α : Type*)
+[has_scalar M α]
+[measurable_space M]
+[measurable_space α] : exprProp() :=
+  (measurable_const_smul : ∀ c : M, measurable (((«expr • »)) c : α → α))
+  (measurable_smul_const : ∀ x : α, measurable (λ c : M, «expr • »(c, x)))
 
 /-- We say that the action of `M` on `α` `has_measurable_vadd₂` if the map
 `(c, x) ↦ c +ᵥ x` is a measurable function. -/
@@ -513,11 +547,11 @@ theorem ae_measurable_const_smul_iff (c : G) : AeMeasurable (fun x => c • f x)
 instance  : MeasurableSpace (Units M) :=
   MeasurableSpace.comap (coeₓ : Units M → M) ‹_›
 
-@[toAdditive]
-instance Units.has_measurable_smul : HasMeasurableSmul (Units M) β :=
-  { measurable_const_smul := fun c => (measurable_const_smul (c : M) : _),
-    measurable_smul_const :=
-      fun x => (measurable_smul_const x : Measurable fun c : M => c • x).comp MeasurableSpace.le_map_comap }
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] instance units.has_measurable_smul : has_measurable_smul (units M) β :=
+{ measurable_const_smul := λ c, (measurable_const_smul (c : M) : _),
+  measurable_smul_const := λ
+  x, (measurable_smul_const x : measurable (λ c : M, «expr • »(c, x))).comp measurable_space.le_map_comap }
 
 @[toAdditive]
 theorem IsUnit.measurable_const_smul_iff {c : M} (hc : IsUnit c) : (Measurable fun x => c • f x) ↔ Measurable f :=
@@ -584,7 +618,7 @@ section Monoidₓ
 variable{M α : Type _}[Monoidₓ M][MeasurableSpace M][HasMeasurableMul₂ M][MeasurableSpace α]
 
 @[toAdditive, measurability]
-theorem List.measurable_prod' (l : List (α → M)) (hl : ∀ f _ : f ∈ l, Measurable f) : Measurable l.prod :=
+theorem List.measurable_prod' (l : List (α → M)) (hl : ∀ f (_ : f ∈ l), Measurable f) : Measurable l.prod :=
   by 
     induction' l with f l ihl
     ·
@@ -594,7 +628,7 @@ theorem List.measurable_prod' (l : List (α → M)) (hl : ∀ f _ : f ∈ l, Mea
     exact hl.1.mul (ihl hl.2)
 
 @[toAdditive, measurability]
-theorem List.ae_measurable_prod' {μ : Measureₓ α} (l : List (α → M)) (hl : ∀ f _ : f ∈ l, AeMeasurable f μ) :
+theorem List.ae_measurable_prod' {μ : Measureₓ α} (l : List (α → M)) (hl : ∀ f (_ : f ∈ l), AeMeasurable f μ) :
   AeMeasurable l.prod μ :=
   by 
     induction' l with f l ihl
@@ -604,17 +638,20 @@ theorem List.ae_measurable_prod' {μ : Measureₓ α} (l : List (α → M)) (hl 
     rw [List.prod_cons]
     exact hl.1.mul (ihl hl.2)
 
-@[toAdditive, measurability]
-theorem List.measurable_prod (l : List (α → M)) (hl : ∀ f _ : f ∈ l, Measurable f) :
-  Measurable fun x => (l.map fun f : α → M => f x).Prod :=
-  by 
-    simpa only [←Pi.list_prod_apply] using l.measurable_prod' hl
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[], measurability #[]]
+theorem list.measurable_prod
+(l : list (α → M))
+(hl : ∀ f «expr ∈ » l, measurable f) : measurable (λ x, (l.map (λ f : α → M, f x)).prod) :=
+by simpa [] [] ["only"] ["[", "<-", expr pi.list_prod_apply, "]"] [] ["using", expr l.measurable_prod' hl]
 
-@[toAdditive, measurability]
-theorem List.ae_measurable_prod {μ : Measureₓ α} (l : List (α → M)) (hl : ∀ f _ : f ∈ l, AeMeasurable f μ) :
-  AeMeasurable (fun x => (l.map fun f : α → M => f x).Prod) μ :=
-  by 
-    simpa only [←Pi.list_prod_apply] using l.ae_measurable_prod' hl
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[], measurability #[]]
+theorem list.ae_measurable_prod
+{μ : measure α}
+(l : list (α → M))
+(hl : ∀ f «expr ∈ » l, ae_measurable f μ) : ae_measurable (λ x, (l.map (λ f : α → M, f x)).prod) μ :=
+by simpa [] [] ["only"] ["[", "<-", expr pi.list_prod_apply, "]"] [] ["using", expr l.ae_measurable_prod' hl]
 
 end Monoidₓ
 
@@ -623,7 +660,7 @@ section CommMonoidₓ
 variable{M ι α : Type _}[CommMonoidₓ M][MeasurableSpace M][HasMeasurableMul₂ M][MeasurableSpace α]
 
 @[toAdditive, measurability]
-theorem Multiset.measurable_prod' (l : Multiset (α → M)) (hl : ∀ f _ : f ∈ l, Measurable f) : Measurable l.prod :=
+theorem Multiset.measurable_prod' (l : Multiset (α → M)) (hl : ∀ f (_ : f ∈ l), Measurable f) : Measurable l.prod :=
   by 
     rcases l with ⟨l⟩
     simpa using
@@ -632,7 +669,7 @@ theorem Multiset.measurable_prod' (l : Multiset (α → M)) (hl : ∀ f _ : f �
           simpa using hl)
 
 @[toAdditive, measurability]
-theorem Multiset.ae_measurable_prod' {μ : Measureₓ α} (l : Multiset (α → M)) (hl : ∀ f _ : f ∈ l, AeMeasurable f μ) :
+theorem Multiset.ae_measurable_prod' {μ : Measureₓ α} (l : Multiset (α → M)) (hl : ∀ f (_ : f ∈ l), AeMeasurable f μ) :
   AeMeasurable l.prod μ :=
   by 
     rcases l with ⟨l⟩
@@ -641,32 +678,35 @@ theorem Multiset.ae_measurable_prod' {μ : Measureₓ α} (l : Multiset (α → 
         (by 
           simpa using hl)
 
-@[toAdditive, measurability]
-theorem Multiset.measurable_prod (s : Multiset (α → M)) (hs : ∀ f _ : f ∈ s, Measurable f) :
-  Measurable fun x => (s.map fun f : α → M => f x).Prod :=
-  by 
-    simpa only [←Pi.multiset_prod_apply] using s.measurable_prod' hs
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[], measurability #[]]
+theorem multiset.measurable_prod
+(s : multiset (α → M))
+(hs : ∀ f «expr ∈ » s, measurable f) : measurable (λ x, (s.map (λ f : α → M, f x)).prod) :=
+by simpa [] [] ["only"] ["[", "<-", expr pi.multiset_prod_apply, "]"] [] ["using", expr s.measurable_prod' hs]
+
+-- error in MeasureTheory.Group.Arithmetic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[], measurability #[]]
+theorem multiset.ae_measurable_prod
+{μ : measure α}
+(s : multiset (α → M))
+(hs : ∀ f «expr ∈ » s, ae_measurable f μ) : ae_measurable (λ x, (s.map (λ f : α → M, f x)).prod) μ :=
+by simpa [] [] ["only"] ["[", "<-", expr pi.multiset_prod_apply, "]"] [] ["using", expr s.ae_measurable_prod' hs]
 
 @[toAdditive, measurability]
-theorem Multiset.ae_measurable_prod {μ : Measureₓ α} (s : Multiset (α → M)) (hs : ∀ f _ : f ∈ s, AeMeasurable f μ) :
-  AeMeasurable (fun x => (s.map fun f : α → M => f x).Prod) μ :=
-  by 
-    simpa only [←Pi.multiset_prod_apply] using s.ae_measurable_prod' hs
-
-@[toAdditive, measurability]
-theorem Finset.measurable_prod' {f : ι → α → M} (s : Finset ι) (hf : ∀ i _ : i ∈ s, Measurable (f i)) :
+theorem Finset.measurable_prod' {f : ι → α → M} (s : Finset ι) (hf : ∀ i (_ : i ∈ s), Measurable (f i)) :
   Measurable (∏i in s, f i) :=
   Finset.prod_induction _ _ (fun _ _ => Measurable.mul) (@measurable_one M _ _ _ _) hf
 
 @[toAdditive, measurability]
-theorem Finset.measurable_prod {f : ι → α → M} (s : Finset ι) (hf : ∀ i _ : i ∈ s, Measurable (f i)) :
+theorem Finset.measurable_prod {f : ι → α → M} (s : Finset ι) (hf : ∀ i (_ : i ∈ s), Measurable (f i)) :
   Measurable fun a => ∏i in s, f i a :=
   by 
     simpa only [←Finset.prod_apply] using s.measurable_prod' hf
 
 @[toAdditive, measurability]
 theorem Finset.ae_measurable_prod' {μ : Measureₓ α} {f : ι → α → M} (s : Finset ι)
-  (hf : ∀ i _ : i ∈ s, AeMeasurable (f i) μ) : AeMeasurable (∏i in s, f i) μ :=
+  (hf : ∀ i (_ : i ∈ s), AeMeasurable (f i) μ) : AeMeasurable (∏i in s, f i) μ :=
   Multiset.ae_measurable_prod' _$
     fun g hg =>
       let ⟨i, hi, hg⟩ := Multiset.mem_map.1 hg 
@@ -674,7 +714,7 @@ theorem Finset.ae_measurable_prod' {μ : Measureₓ α} {f : ι → α → M} (s
 
 @[toAdditive, measurability]
 theorem Finset.ae_measurable_prod {f : ι → α → M} {μ : Measureₓ α} (s : Finset ι)
-  (hf : ∀ i _ : i ∈ s, AeMeasurable (f i) μ) : AeMeasurable (fun a => ∏i in s, f i a) μ :=
+  (hf : ∀ i (_ : i ∈ s), AeMeasurable (f i) μ) : AeMeasurable (fun a => ∏i in s, f i a) μ :=
   by 
     simpa only [←Finset.prod_apply] using s.ae_measurable_prod' hf
 

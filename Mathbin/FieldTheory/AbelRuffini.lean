@@ -10,12 +10,12 @@ by radicals, then its minimal polynomial has solvable Galois group.
 
 ## Main definitions
 
-* `SBF F E` : the intermediate field of solvable-by-radicals elements
+* `solvable_by_rad F E` : the intermediate field of solvable-by-radicals elements
 
 ## Main results
 
-* `solvable_gal_of_solvable_by_rad` : the minimal polynomial of an element of `SBF F E` has
-solvable Galois group
+* the Abel-Ruffini Theorem `solvable_by_rad.is_solvable'` : An irreducible polynomial with a root
+that is solvable by radicals has a solvable Galois group.
 -/
 
 
@@ -57,7 +57,7 @@ theorem gal_mul_is_solvable {p q : Polynomial F} (hp : IsSolvable p.gal) (hq : I
   IsSolvable (p*q).Gal :=
   solvable_of_solvable_injective (gal.restrict_prod_injective p q)
 
-theorem gal_prod_is_solvable {s : Multiset (Polynomial F)} (hs : ∀ p _ : p ∈ s, IsSolvable (gal p)) :
+theorem gal_prod_is_solvable {s : Multiset (Polynomial F)} (hs : ∀ p (_ : p ∈ s), IsSolvable (gal p)) :
   IsSolvable s.prod.gal :=
   by 
     apply Multiset.induction_on' s
@@ -258,13 +258,13 @@ namespace solvableByRad
 
 variable{F}{E}{α : E}
 
-theorem induction (P : solvableByRad F E → Prop) (base : ∀ α : F, P (algebraMap F (solvableByRad F E) α))
-  (add : ∀ α β : solvableByRad F E, P α → P β → P (α+β)) (neg : ∀ α : solvableByRad F E, P α → P (-α))
-  (mul : ∀ α β : solvableByRad F E, P α → P β → P (α*β)) (inv : ∀ α : solvableByRad F E, P α → P (α⁻¹))
-  (rad : ∀ α : solvableByRad F E, ∀ n : ℕ, n ≠ 0 → P (α^n) → P α) (α : solvableByRad F E) : P α :=
+theorem induction (P : solvableByRad F E → Prop) (base : ∀ (α : F), P (algebraMap F (solvableByRad F E) α))
+  (add : ∀ (α β : solvableByRad F E), P α → P β → P (α+β)) (neg : ∀ (α : solvableByRad F E), P α → P (-α))
+  (mul : ∀ (α β : solvableByRad F E), P α → P β → P (α*β)) (inv : ∀ (α : solvableByRad F E), P α → P (α⁻¹))
+  (rad : ∀ (α : solvableByRad F E), ∀ (n : ℕ), n ≠ 0 → P (α^n) → P α) (α : solvableByRad F E) : P α :=
   by 
     revert α 
-    suffices  : ∀ α : E, IsSolvableByRad F α → ∃ β : solvableByRad F E, «expr↑ » β = α ∧ P β
+    suffices  : ∀ (α : E), IsSolvableByRad F α → ∃ β : solvableByRad F E, «expr↑ » β = α ∧ P β
     ·
       intro α 
       obtain ⟨α₀, hα₀, Pα⟩ := this α (Subtype.mem α)

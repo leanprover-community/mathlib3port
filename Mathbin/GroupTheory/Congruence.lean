@@ -242,12 +242,13 @@ protected def lift_on₂ {β} {c : Con M} (q r : c.quotient) (f : M → M → β
 /-- A version of `quotient.hrec_on₂'` for quotients by `con`. -/
 @[toAdditive "A version of `quotient.hrec_on₂'` for quotients by `add_con`."]
 protected def hrec_on₂ {cM : Con M} {cN : Con N} {φ : cM.quotient → cN.quotient → Sort _} (a : cM.quotient)
-  (b : cN.quotient) (f : ∀ x : M y : N, φ x y) (h : ∀ x y x' y', cM x x' → cN y y' → HEq (f x y) (f x' y')) : φ a b :=
+  (b : cN.quotient) (f : ∀ (x : M) (y : N), φ x y) (h : ∀ x y x' y', cM x x' → cN y y' → HEq (f x y) (f x' y')) :
+  φ a b :=
   Quotientₓ.hrecOn₂' a b f h
 
 @[simp, toAdditive]
 theorem hrec_on₂_coe {cM : Con M} {cN : Con N} {φ : cM.quotient → cN.quotient → Sort _} (a : M) (b : N)
-  (f : ∀ x : M y : N, φ x y) (h : ∀ x y x' y', cM x x' → cN y y' → HEq (f x y) (f x' y')) :
+  (f : ∀ (x : M) (y : N), φ x y) (h : ∀ x y x' y', cM x x' → cN y y' → HEq (f x y) (f x' y')) :
   Con.hrecOn₂ («expr↑ » a) («expr↑ » b) f h = f a b :=
   rfl
 
@@ -258,13 +259,13 @@ variable{c}
 @[elab_as_eliminator,
   toAdditive
       "The inductive principle used to prove propositions about\nthe elements of a quotient by an additive congruence relation."]
-protected theorem induction_on {C : c.quotient → Prop} (q : c.quotient) (H : ∀ x : M, C x) : C q :=
+protected theorem induction_on {C : c.quotient → Prop} (q : c.quotient) (H : ∀ (x : M), C x) : C q :=
   Quotientₓ.induction_on' q H
 
 /-- A version of `con.induction_on` for predicates which take two arguments. -/
 @[elab_as_eliminator, toAdditive "A version of `add_con.induction_on` for predicates which take\ntwo arguments."]
 protected theorem induction_on₂ {d : Con N} {C : c.quotient → d.quotient → Prop} (p : c.quotient) (q : d.quotient)
-  (H : ∀ x : M y : N, C x y) : C p q :=
+  (H : ∀ (x : M) (y : N), C x y) : C p q :=
   Quotientₓ.induction_on₂' p q H
 
 variable(c)
@@ -335,7 +336,7 @@ theorem le_def {c d : Con M} : c ≤ d ↔ ∀ {x y}, c x y → d x y :=
 @[toAdditive "The infimum of a set of additive congruence relations on a given type with\nan addition."]
 instance  : HasInfₓ (Con M) :=
   ⟨fun S =>
-      ⟨⟨fun x y => ∀ c : Con M, c ∈ S → c x y,
+      ⟨⟨fun x y => ∀ (c : Con M), c ∈ S → c x y,
           ⟨fun x c hc => c.refl x, fun _ _ h c hc => c.symm$ h c hc,
             fun _ _ _ h1 h2 c hc => c.trans (h1 c hc)$ h2 c hc⟩⟩,
         fun _ _ _ _ h1 h2 c hc => c.mul (h1 c hc)$ h2 c hc⟩⟩
@@ -372,7 +373,7 @@ instance  : PartialOrderₓ (Con M) :=
 @[toAdditive "The complete lattice of additive congruence relations on a given type with\nan addition."]
 instance  : CompleteLattice (Con M) :=
   { completeLatticeOfInf (Con M)$
-      fun s => ⟨fun r hr x y h => (h : ∀ r _ : r ∈ s, (r : Con M) x y) r hr, fun r hr x y h r' hr' => hr hr' h⟩ with
+      fun s => ⟨fun r hr x y h => (h : ∀ r (_ : r ∈ s), (r : Con M) x y) r hr, fun r hr x y h r' hr' => hr hr' h⟩ with
     inf := fun c d => ⟨c.to_setoid⊓d.to_setoid, fun _ _ _ _ h1 h2 => ⟨c.mul h1.1 h2.1, d.mul h1.2 h2.2⟩⟩,
     inf_le_left := fun _ _ _ _ h => h.1, inf_le_right := fun _ _ _ _ h => h.2,
     le_inf := fun _ _ _ hb hc _ _ h => ⟨hb h, hc h⟩,
@@ -775,7 +776,7 @@ theorem lift_apply_mk' (f : c.quotient →* P) :
     are equal on elements that are coercions from the monoid. -/
 @[toAdditive
       "Homomorphisms on the quotient of an `add_monoid` by an additive congruence relation\nare equal if they are equal on elements that are coercions from the `add_monoid`."]
-theorem lift_funext (f g : c.quotient →* P) (h : ∀ a : M, f a = g a) : f = g :=
+theorem lift_funext (f g : c.quotient →* P) (h : ∀ (a : M), f a = g a) : f = g :=
   by 
     rw [←lift_apply_mk' f, ←lift_apply_mk' g]
     congr 1 
@@ -976,27 +977,32 @@ section Units
 
 variable{α : Type _}[Monoidₓ M]{c : Con M}
 
+-- error in GroupTheory.Congruence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In order to define a function `units (con.quotient c) → α` on the units of `con.quotient c`,
 where `c : con M` is a multiplicative congruence on a monoid, it suffices to define a function `f`
 that takes elements `x y : M` with proofs of `c (x * y) 1` and `c (y * x) 1`, and returns an element
 of `α` provided that `f x y _ _ = f x' y' _ _` whenever `c x x'` and `c y y'`. -/
-@[toAdditive lift_on_add_units]
-def lift_on_units (u : Units c.quotient) (f : ∀ x y : M, c (x*y) 1 → c (y*x) 1 → α)
-  (Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → f x y hxy hyx = f x' y' hxy' hyx') : α :=
-  by 
-    refine'
-      @Con.hrecOn₂ M M _ _ c c (fun x y => (x*y) = 1 → (y*x) = 1 → α) (u : c.quotient) («expr↑ » (u⁻¹) : c.quotient)
-        (fun x y : M hxy : (x*y : c.quotient) = 1 hyx : (y*x : c.quotient) = 1 => f x y (c.eq.1 hxy) (c.eq.1 hyx))
-        (fun x y x' y' hx hy => _) u.3 u.4 
-    ext1
-    ·
-      rw [c.eq.2 hx, c.eq.2 hy]
-    rintro Hxy Hxy' -
-    ext1
-    ·
-      rw [c.eq.2 hx, c.eq.2 hy]
-    rintro Hyx Hyx' -
-    exact heq_of_eq (Hf _ _ _ _ _ _ _ _ hx hy)
+@[to_additive #[ident lift_on_add_units]]
+def lift_on_units
+(u : units c.quotient)
+(f : ∀ x y : M, c «expr * »(x, y) 1 → c «expr * »(y, x) 1 → α)
+(Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → «expr = »(f x y hxy hyx, f x' y' hxy' hyx')) : α :=
+begin
+  refine [expr @con.hrec_on₂ M M _ _ c c (λ
+    x
+    y, «expr = »(«expr * »(x, y), 1) → «expr = »(«expr * »(y, x), 1) → α) (u : c.quotient) («expr↑ »(«expr ⁻¹»(u)) : c.quotient) (λ
+    (x y : M)
+    (hxy : «expr = »((«expr * »(x, y) : c.quotient), 1))
+    (hyx : «expr = »((«expr * »(y, x) : c.quotient), 1)), f x y (c.eq.1 hxy) (c.eq.1 hyx)) (λ
+    x y x' y' hx hy, _) u.3 u.4],
+  ext1 [] [],
+  { rw ["[", expr c.eq.2 hx, ",", expr c.eq.2 hy, "]"] [] },
+  rintro [ident Hxy, ident Hxy', "-"],
+  ext1 [] [],
+  { rw ["[", expr c.eq.2 hx, ",", expr c.eq.2 hy, "]"] [] },
+  rintro [ident Hyx, ident Hyx', "-"],
+  exact [expr heq_of_eq (Hf _ _ _ _ _ _ _ _ hx hy)]
+end
 
 /-- In order to define a function `units (con.quotient c) → α` on the units of `con.quotient c`,
 where `c : con M` is a multiplicative congruence on a monoid, it suffices to define a function `f`
@@ -1005,14 +1011,14 @@ of `α` provided that `f x y _ _ = f x' y' _ _` whenever `c x x'` and `c y y'`. 
 add_decl_doc AddCon.liftOnAddUnits
 
 @[simp, toAdditive]
-theorem lift_on_units_mk (f : ∀ x y : M, c (x*y) 1 → c (y*x) 1 → α)
+theorem lift_on_units_mk (f : ∀ (x y : M), c (x*y) 1 → c (y*x) 1 → α)
   (Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → f x y hxy hyx = f x' y' hxy' hyx') (x y : M) hxy hyx :
   lift_on_units ⟨(x : c.quotient), y, hxy, hyx⟩ f Hf = f x y (c.eq.1 hxy) (c.eq.1 hyx) :=
   rfl
 
 @[elab_as_eliminator, toAdditive induction_on_add_units]
 theorem induction_on_units {p : Units c.quotient → Prop} (u : Units c.quotient)
-  (H : ∀ x y : M hxy : c (x*y) 1 hyx : c (y*x) 1, p ⟨x, y, c.eq.2 hxy, c.eq.2 hyx⟩) : p u :=
+  (H : ∀ (x y : M) (hxy : c (x*y) 1) (hyx : c (y*x) 1), p ⟨x, y, c.eq.2 hxy, c.eq.2 hyx⟩) : p u :=
   by 
     rcases u with ⟨⟨x⟩, ⟨y⟩, h₁, h₂⟩
     exact H x y (c.eq.1 h₁) (c.eq.1 h₂)

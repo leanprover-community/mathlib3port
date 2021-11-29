@@ -68,7 +68,7 @@ theorem gcd_is_unit_iff {α} [EuclideanDomain α] {x y : α} : IsUnit (gcd x y) 
       is_unit_iff_dvd_one.2$ h ▸ dvd_add ((gcd_dvd_left x y).mul_left _) ((gcd_dvd_right x y).mul_left _)⟩
 
 theorem is_coprime_of_dvd {α} [EuclideanDomain α] {x y : α} (z : ¬(x = 0 ∧ y = 0))
-  (H : ∀ z _ : z ∈ Nonunits α, z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
+  (H : ∀ z (_ : z ∈ Nonunits α), z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
   by 
     rw [←gcd_is_unit_iff]
     byContra h 

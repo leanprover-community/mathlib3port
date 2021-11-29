@@ -63,7 +63,7 @@ section Semiringₓ
 
 variable[Semiringₓ R]{p q : Polynomial R}
 
-theorem forall_iff_forall_finsupp (P : Polynomial R → Prop) : (∀ p, P p) ↔ ∀ q : AddMonoidAlgebra R ℕ, P ⟨q⟩ :=
+theorem forall_iff_forall_finsupp (P : Polynomial R → Prop) : (∀ p, P p) ↔ ∀ (q : AddMonoidAlgebra R ℕ), P ⟨q⟩ :=
   ⟨fun h q => h ⟨q⟩, fun h ⟨p⟩ => h p⟩
 
 theorem exists_iff_exists_finsupp (P : Polynomial R → Prop) : (∃ p, P p) ↔ ∃ q : AddMonoidAlgebra R ℕ, P ⟨q⟩ :=
@@ -167,8 +167,10 @@ instance  {S} [Monoidₓ S] [DistribMulAction S R] : DistribMulAction S (Polynom
         rintro _ 
         simp [←zero_to_finsupp, smul_to_finsupp] }
 
-instance  {S} [Monoidₓ S] [DistribMulAction S R] [HasFaithfulScalar S R] : HasFaithfulScalar S (Polynomial R) :=
-  { eq_of_smul_eq_smul := fun s₁ s₂ h => eq_of_smul_eq_smul$ fun a : ℕ →₀ R => congr_argₓ to_finsupp (h ⟨a⟩) }
+-- error in Data.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance {S} [monoid S] [distrib_mul_action S R] [has_faithful_scalar S R] : has_faithful_scalar S (polynomial R) :=
+{ eq_of_smul_eq_smul := λ
+  s₁ s₂ h, «expr $ »(eq_of_smul_eq_smul, λ a : «expr →₀ »(exprℕ(), R), congr_arg to_finsupp (h ⟨a⟩)) }
 
 instance  {S} [Semiringₓ S] [Module S R] : Module S (Polynomial R) :=
   { Polynomial.distribMulAction with smul := · • ·,
@@ -504,12 +506,10 @@ theorem coeff_C_ne_zero (h : n ≠ 0) : (C a).coeff n = 0 :=
   by 
     rw [coeff_C, if_neg h]
 
-theorem nontrivial.of_polynomial_ne (h : p ≠ q) : Nontrivial R :=
-  ⟨⟨0, 1,
-      fun h01 : 0 = 1 =>
-        h$
-          by 
-            rw [←mul_oneₓ p, ←mul_oneₓ q, ←C_1, ←h01, C_0, mul_zero, mul_zero]⟩⟩
+-- error in Data.Polynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nontrivial.of_polynomial_ne (h : «expr ≠ »(p, q)) : nontrivial R :=
+⟨⟨0, 1, λ
+  h01 : «expr = »(0, 1), «expr $ »(h, by rw ["[", "<-", expr mul_one p, ",", "<-", expr mul_one q, ",", "<-", expr C_1, ",", "<-", expr h01, ",", expr C_0, ",", expr mul_zero, ",", expr mul_zero, "]"] [])⟩⟩
 
 theorem monomial_eq_C_mul_X : ∀ {n}, monomial n a = C a*X ^ n
 | 0 => (mul_oneₓ _).symm

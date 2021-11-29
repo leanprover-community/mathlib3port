@@ -93,7 +93,7 @@ and lemmas about these functions. -/
 theorem exists_fixed_point (hf : ContractingWith K f) (x : α) (hx : edist x (f x) ≠ ∞) :
   ∃ y,
     is_fixed_pt f y ∧
-      tendsto (fun n => (f^[n]) x) at_top (𝓝 y) ∧ ∀ n : ℕ, edist ((f^[n]) x) y ≤ (edist x (f x)*K ^ n) / (1 - K) :=
+      tendsto (fun n => (f^[n]) x) at_top (𝓝 y) ∧ ∀ (n : ℕ), edist ((f^[n]) x) y ≤ (edist x (f x)*K ^ n) / (1 - K) :=
   have  : CauchySeq fun n => (f^[n]) x :=
     cauchy_seq_of_edist_le_geometric K (edist x (f x)) (Ennreal.coe_lt_one_iff.2 hf.1) hx
       (hf.to_lipschitz_with.edist_iterate_succ_le_geometric x)
@@ -341,7 +341,7 @@ begin
   rw ["[", "<-", expr iterate_succ_apply, ",", expr iterate_succ_apply', ",", expr hx, "]"] ["at", ident this],
   contrapose ["!"] [ident this],
   have [] [] [":=", expr dist_pos.2 (ne.symm this)],
-  simpa [] [] ["only"] ["[", expr nnreal.coe_one, ",", expr one_mul, "]"] [] ["using", expr (mul_lt_mul_right this).2 hf.1]
+  simpa [] [] ["only"] ["[", expr nnreal.coe_one, ",", expr one_mul, ",", expr nnreal.val_eq_coe, "]"] [] ["using", expr (mul_lt_mul_right this).mpr hf.left]
 end
 
 end ContractingWith

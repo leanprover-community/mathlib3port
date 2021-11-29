@@ -191,7 +191,7 @@ theorem eq_Icc_of_connected_compact {s : Set α} (h₁ : IsConnected s) (h₂ : 
 
 /-- The **extreme value theorem**: a continuous function realizes its minimum on a compact set. -/
 theorem IsCompact.exists_forall_le {s : Set β} (hs : IsCompact s) (ne_s : s.nonempty) {f : β → α}
-  (hf : ContinuousOn f s) : ∃ (x : _)(_ : x ∈ s), ∀ y _ : y ∈ s, f x ≤ f y :=
+  (hf : ContinuousOn f s) : ∃ (x : _)(_ : x ∈ s), ∀ y (_ : y ∈ s), f x ≤ f y :=
   by 
     rcases(hs.image_of_continuous_on hf).exists_is_least (ne_s.image f) with ⟨_, ⟨x, hxs, rfl⟩, hx⟩
     exact ⟨x, hxs, ball_image_iff.1 hx⟩
@@ -199,7 +199,7 @@ theorem IsCompact.exists_forall_le {s : Set β} (hs : IsCompact s) (ne_s : s.non
 /-- The **extreme value theorem**: a continuous function realizes its maximum on a compact set. -/
 theorem IsCompact.exists_forall_ge :
   ∀ {s : Set β},
-    IsCompact s → s.nonempty → ∀ {f : β → α}, ContinuousOn f s → ∃ (x : _)(_ : x ∈ s), ∀ y _ : y ∈ s, f y ≤ f x :=
+    IsCompact s → s.nonempty → ∀ {f : β → α}, ContinuousOn f s → ∃ (x : _)(_ : x ∈ s), ∀ y (_ : y ∈ s), f y ≤ f x :=
   @IsCompact.exists_forall_le (OrderDual α) _ _ _ _ _
 
 /-- The **extreme value theorem**: if a continuous function `f` tends to infinity away from compact
@@ -208,9 +208,9 @@ theorem Continuous.exists_forall_le [Nonempty β] {f : β → α} (hf : Continuo
   (hlim : tendsto f (cocompact β) at_top) : ∃ x, ∀ y, f x ≤ f y :=
   by 
     inhabit β 
-    obtain ⟨s : Set β, hsc : IsCompact s, hsf : ∀ x _ : x ∉ s, f (default β) ≤ f x⟩ :=
+    obtain ⟨s : Set β, hsc : IsCompact s, hsf : ∀ x (_ : x ∉ s), f (default β) ≤ f x⟩ :=
       (has_basis_cocompact.tendsto_iff at_top_basis).1 hlim (f$ default β) trivialₓ 
-    obtain ⟨x, -, hx⟩ : ∃ (x : _)(_ : x ∈ insert (default β) s), ∀ y _ : y ∈ insert (default β) s, f x ≤ f y :=
+    obtain ⟨x, -, hx⟩ : ∃ (x : _)(_ : x ∈ insert (default β) s), ∀ y (_ : y ∈ insert (default β) s), f x ≤ f y :=
       (hsc.insert (default β)).exists_forall_le (nonempty_insert _ _) hf.continuous_on 
     refine' ⟨x, fun y => _⟩
     byCases' hy : y ∈ s 

@@ -47,9 +47,10 @@ unsafe structure entry : Type where
   thm : thm 
   deps : List Nat
 
-unsafe def pad_right (l : List Stringₓ) : List Stringₓ :=
-  let n := l.foldl (fun r s : Stringₓ => max r s.length) 0
-  l.map$ fun s => Nat.iterate (fun s => s.push ' ') (n - s.length) s
+-- error in Tactic.Explode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+meta def pad_right (l : list string) : list string :=
+let n := l.foldl (λ (r) (s : string), max r s.length) 0 in
+«expr $ »(l.map, λ s, nat.iterate (λ s, s.push ' ') «expr - »(n, s.length) s)
 
 -- error in Tactic.Explode: ././Mathport/Syntax/Translate/Basic.lean:704:9: unsupported derive handler inhabited
 @[derive #[expr inhabited]] meta structure entries : Type := mk' :: (s : expr_map entry) (l : list entry)
@@ -84,12 +85,13 @@ unsafe def format_aux : List Stringₓ → List Stringₓ → List Stringₓ →
     (· ++ fmt) <$> format_aux lines deps thms es
 | _, _, _, _ => return format.nil
 
-unsafe instance  : has_to_tactic_format entries :=
-  ⟨fun es : entries =>
-      let lines := pad_right$ es.l.map fun en => toString en.line 
-      let deps := pad_right$ es.l.map fun en => Stringₓ.intercalate "," (en.deps.map toString)
-      let thms := pad_right$ es.l.map fun en => (entry.thm en).toString 
-      format_aux lines deps thms es.l⟩
+-- error in Tactic.Explode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+meta instance : has_to_tactic_format entries :=
+⟨λ
+ es : entries, let lines := «expr $ »(pad_right, es.l.map (λ en, to_string en.line)),
+     deps := «expr $ »(pad_right, es.l.map (λ en, string.intercalate "," (en.deps.map to_string))),
+     thms := «expr $ »(pad_right, es.l.map (λ en, (entry.thm en).to_string)) in
+ format_aux lines deps thms es.l⟩
 
 unsafe def append_dep (filter : expr → tactic Unit) (es : entries) (e : expr) (deps : List Nat) : tactic (List Nat) :=
   (do 

@@ -198,7 +198,7 @@ theorem is_pell_one : is_pell ⟨a, 1⟩ :=
   show ((az*az) - (d*1)*1) = 1by 
     simp [dz_val] <;> ring
 
-theorem is_pell_pell_zd : ∀ n : ℕ, is_pell (pell_zd n)
+theorem is_pell_pell_zd : ∀ (n : ℕ), is_pell (pell_zd n)
 | 0 => rfl
 | n+1 =>
   let o := is_pell_one 
@@ -242,7 +242,7 @@ instance dnsq : Zsqrtd.Nonsquare d :=
         by 
           rwa [Nat.eq_zero_of_le_zeroₓ ((Nat.le_add_leftₓ _ _).trans this)] at h⟩
 
-theorem xn_ge_a_pow : ∀ n : ℕ, a ^ n ≤ xn n
+theorem xn_ge_a_pow : ∀ (n : ℕ), a ^ n ≤ xn n
 | 0 => le_reflₓ 1
 | n+1 =>
   by 
@@ -674,7 +674,7 @@ theorem eq_of_xn_modeq_lem2 {n} (h : (2*xn n) = xn (n+1)) : a = 2 ∧ n = 0 :=
         by 
           cases this <;> simp  at h <;> exact ⟨h.symm, rfl⟩
 
--- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem eq_of_xn_modeq_lem3
 {i n}
 (npos : «expr < »(0, n)) : ∀
@@ -755,81 +755,53 @@ theorem eq_of_xn_modeq {i j n} (npos : 0 < n) (i2n : i ≤ 2*n) (j2n : j ≤ 2*n
   (le_totalₓ i j).elim (fun ij => eq_of_xn_modeq_le npos ij j2n h$ fun ⟨a2, n1, i0, j2⟩ => (ntriv a2 n1).left i0 j2)
     fun ij => (eq_of_xn_modeq_le npos ij i2n h.symm$ fun ⟨a2, n1, j0, i2⟩ => (ntriv a2 n1).right i2 j0).symm
 
-theorem eq_of_xn_modeq' {i j n} (ipos : 0 < i) (hin : i ≤ n) (j4n : j ≤ 4*n) (h : xn j ≡ xn i [MOD xn n]) :
-  j = i ∨ (j+i) = 4*n :=
-  have i2n : i ≤ 2*n :=
-    by 
-      apply le_transₓ hin <;> rw [two_mul] <;> apply Nat.le_add_leftₓ 
-  have npos : 0 < n := lt_of_lt_of_leₓ ipos hin
-  (le_or_gtₓ j (2*n)).imp
-    (fun j2n : j ≤ 2*n =>
-      eq_of_xn_modeq npos j2n i2n h$
-        fun a2 n1 =>
-          ⟨fun j0 i2 =>
-              by 
-                rw [n1, i2] at hin <;>
-                  exact
-                    absurd hin
-                      (by 
-                        decide),
-            fun j2 i0 => ne_of_gtₓ ipos i0⟩)
-    fun j2n : (2*n) < j =>
-      suffices i = (4*n) - j by 
-        rw [this, add_tsub_cancel_of_le j4n]
-      have j42n : (4*n) - j ≤ 2*n :=
-        @Nat.le_of_add_le_add_rightₓ j _ _$
-          by 
-            rw [tsub_add_cancel_of_le j4n, show (4*n) = (2*n)+2*n from right_distrib 2 2 n] <;>
-              exact Nat.add_le_add_leftₓ (le_of_ltₓ j2n) _ 
-      eq_of_xn_modeq npos i2n j42n
-        (h.symm.trans$
-          let t := xn_modeq_x4n_sub j42n 
-          by 
-            rwa [tsub_tsub_cancel_of_le j4n] at t)
-        fun a2 n1 =>
-          ⟨fun i0 => absurd i0 (ne_of_gtₓ ipos),
-            fun i2 =>
-              by 
-                rw [n1, i2] at hin 
-                exact
-                  absurd hin
-                    (by 
-                      decide)⟩
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem eq_of_xn_modeq'
+{i j n}
+(ipos : «expr < »(0, i))
+(hin : «expr ≤ »(i, n))
+(j4n : «expr ≤ »(j, «expr * »(4, n)))
+(h : «expr ≡ [MOD ]»(xn j, xn i, xn n)) : «expr ∨ »(«expr = »(j, i), «expr = »(«expr + »(j, i), «expr * »(4, n))) :=
+have i2n : «expr ≤ »(i, «expr * »(2, n)), by apply [expr le_trans hin]; rw [expr two_mul] []; apply [expr nat.le_add_left],
+have npos : «expr < »(0, n), from lt_of_lt_of_le ipos hin,
+(le_or_gt j «expr * »(2, n)).imp (λ
+ j2n : «expr ≤ »(j, «expr * »(2, n)), «expr $ »(eq_of_xn_modeq npos j2n i2n h, λ
+  a2
+  n1, ⟨λ
+   j0
+   i2, by rw ["[", expr n1, ",", expr i2, "]"] ["at", ident hin]; exact [expr absurd hin exprdec_trivial()], λ
+   j2
+   i0, ne_of_gt ipos i0⟩)) (λ
+ j2n : «expr < »(«expr * »(2, n), j), suffices «expr = »(i, «expr - »(«expr * »(4, n), j)), by rw ["[", expr this, ",", expr add_tsub_cancel_of_le j4n, "]"] [],
+ have j42n : «expr ≤ »(«expr - »(«expr * »(4, n), j), «expr * »(2, n)), from «expr $ »(@nat.le_of_add_le_add_right j _ _, by rw ["[", expr tsub_add_cancel_of_le j4n, ",", expr show «expr = »(«expr * »(4, n), «expr + »(«expr * »(2, n), «expr * »(2, n))), from right_distrib 2 2 n, "]"] []; exact [expr nat.add_le_add_left (le_of_lt j2n) _]),
+ eq_of_xn_modeq npos i2n j42n «expr $ »(h.symm.trans, let t := xn_modeq_x4n_sub j42n in
+  by rwa ["[", expr tsub_tsub_cancel_of_le j4n, "]"] ["at", ident t]) (λ
+  a2
+  n1, ⟨λ i0, absurd i0 (ne_of_gt ipos), λ i2, by { rw ["[", expr n1, ",", expr i2, "]"] ["at", ident hin],
+     exact [expr absurd hin exprdec_trivial()] }⟩))
 
-theorem modeq_of_xn_modeq {i j n} (ipos : 0 < i) (hin : i ≤ n) (h : xn j ≡ xn i [MOD xn n]) :
-  j ≡ i [MOD 4*n] ∨ (j+i) ≡ 0 [MOD 4*n] :=
-  let j' := j % 4*n 
-  have n4 : 0 < 4*n :=
-    mul_pos
-      (by 
-        decide)
-      (ipos.trans_le hin)
-  have jl : j' < 4*n := Nat.mod_ltₓ _ n4 
-  have jj : j ≡ j' [MOD 4*n] :=
-    by 
-      delta' modeq <;> rw [Nat.mod_eq_of_ltₓ jl]
-  have  : ∀ j q, xn (j+(4*n)*q) ≡ xn j [MOD xn n] :=
-    by 
-      intro j q 
-      induction' q with q IH
-      ·
-        simp 
-      rw [Nat.mul_succ, ←add_assocₓ, add_commₓ]
-      exact (xn_modeq_x4n_add _ _ _).trans IH 
-  Or.imp
-    (fun ji : j' = i =>
-      by 
-        rwa [←ji])
-    (fun ji : (j'+i) = 4*n =>
-      (jj.add_right _).trans$
-        by 
-          rw [ji]
-          exact dvd_rfl.modeq_zero_nat)
-    (eq_of_xn_modeq' ipos hin jl.le$
-      (h.symm.trans$
-          by 
-            rw [←Nat.mod_add_divₓ j (4*n)]
-            exact this j' _).symm)
+-- error in NumberTheory.Pell: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem modeq_of_xn_modeq
+{i j n}
+(ipos : «expr < »(0, i))
+(hin : «expr ≤ »(i, n))
+(h : «expr ≡ [MOD ]»(xn j, xn i, xn n)) : «expr ∨ »(«expr ≡ [MOD ]»(j, i, «expr * »(4, n)), «expr ≡ [MOD ]»(«expr + »(j, i), 0, «expr * »(4, n))) :=
+let j' := «expr % »(j, «expr * »(4, n)) in
+have n4 : «expr < »(0, «expr * »(4, n)), from mul_pos exprdec_trivial() (ipos.trans_le hin),
+have jl : «expr < »(j', «expr * »(4, n)), from nat.mod_lt _ n4,
+have jj : «expr ≡ [MOD ]»(j, j', «expr * »(4, n)), by delta [ident modeq] []; rw [expr nat.mod_eq_of_lt jl] [],
+have ∀ j q, «expr ≡ [MOD ]»(xn «expr + »(j, «expr * »(«expr * »(4, n), q)), xn j, xn n), begin
+  intros [ident j, ident q],
+  induction [expr q] [] ["with", ident q, ident IH] [],
+  { simp [] [] [] [] [] [] },
+  rw ["[", expr nat.mul_succ, ",", "<-", expr add_assoc, ",", expr add_comm, "]"] [],
+  exact [expr (xn_modeq_x4n_add _ _ _).trans IH]
+end,
+or.imp (λ
+ ji : «expr = »(j', i), by rwa ["<-", expr ji] []) (λ
+ ji : «expr = »(«expr + »(j', i), «expr * »(4, n)), «expr $ »((jj.add_right _).trans, by { rw [expr ji] [],
+    exact [expr dvd_rfl.modeq_zero_nat] })) «expr $ »(eq_of_xn_modeq' ipos hin jl.le, «expr $ »(h.symm.trans, by { rw ["<-", expr nat.mod_add_div j «expr * »(4, n)] [],
+    exact [expr this j' _] }).symm)
 
 end 
 

@@ -182,17 +182,18 @@ end
 /-- A module is Artinian iff every nonempty set of submodules has a minimal submodule among them.
 -/
 theorem set_has_minimal_iff_artinian :
-  (∀ a : Set$ Submodule R M, a.nonempty → ∃ (M' : _)(_ : M' ∈ a), ∀ I _ : I ∈ a, I ≤ M' → I = M') ↔ IsArtinian R M :=
+  (∀ (a : Set$ Submodule R M), a.nonempty → ∃ (M' : _)(_ : M' ∈ a), ∀ I (_ : I ∈ a), I ≤ M' → I = M') ↔
+    IsArtinian R M :=
   by 
     rw [is_artinian_iff_well_founded, WellFounded.well_founded_iff_has_min']
 
 theorem IsArtinian.set_has_minimal [IsArtinian R M] (a : Set$ Submodule R M) (ha : a.nonempty) :
-  ∃ (M' : _)(_ : M' ∈ a), ∀ I _ : I ∈ a, I ≤ M' → I = M' :=
+  ∃ (M' : _)(_ : M' ∈ a), ∀ I (_ : I ∈ a), I ≤ M' → I = M' :=
   set_has_minimal_iff_artinian.mpr ‹_› a ha
 
 /-- A module is Artinian iff every decreasing chain of submodules stabilizes. -/
 theorem monotone_stabilizes_iff_artinian :
-  (∀ f : ℕ →ₘ OrderDual (Submodule R M), ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsArtinian R M :=
+  (∀ (f : ℕ →ₘ OrderDual (Submodule R M)), ∃ n, ∀ m, n ≤ m → f n = f m) ↔ IsArtinian R M :=
   by 
     rw [is_artinian_iff_well_founded] <;> exact (WellFounded.monotone_chain_condition (OrderDual (Submodule R M))).symm
 
@@ -201,7 +202,7 @@ theorem IsArtinian.monotone_stabilizes [IsArtinian R M] (f : ℕ →ₘ OrderDua
   monotone_stabilizes_iff_artinian.mpr ‹_› f
 
 /-- If `∀ I > J, P I` implies `P J`, then `P` holds for all submodules. -/
-theorem IsArtinian.induction [IsArtinian R M] {P : Submodule R M → Prop} (hgt : ∀ I, (∀ J _ : J < I, P J) → P I)
+theorem IsArtinian.induction [IsArtinian R M] {P : Submodule R M → Prop} (hgt : ∀ I, (∀ J (_ : J < I), P J) → P I)
   (I : Submodule R M) : P I :=
   WellFounded.recursionₓ (well_founded_submodule_lt R M) I hgt
 

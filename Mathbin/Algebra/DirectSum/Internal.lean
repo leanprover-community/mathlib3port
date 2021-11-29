@@ -140,18 +140,17 @@ theorem set_like.coe_galgebra_to_fun [AddMonoidₓ ι] [CommSemiringₓ S] [Semi
   «expr↑ » (@DirectSum.Galgebra.toFun _ S (fun i => A i) _ _ _ _ _ _ _ s) = (algebraMap S R s : R) :=
   rfl
 
+-- error in Algebra.DirectSum.Internal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A direct sum of powers of a submodule of an algebra has a multiplicative structure. -/
-instance nat_power_graded_monoid [CommSemiringₓ S] [Semiringₓ R] [Algebra S R] (p : Submodule S R) :
-  SetLike.GradedMonoid fun i : ℕ => p^i :=
-  { one_mem :=
-      by 
-        rw [←one_le, pow_zeroₓ]
-        exact le_rfl,
-    mul_mem :=
-      fun i j p q hp hq =>
-        by 
-          rw [pow_addₓ]
-          exact Submodule.mul_mem_mul hp hq }
+instance nat_power_graded_monoid
+[comm_semiring S]
+[semiring R]
+[algebra S R]
+(p : submodule S R) : set_like.graded_monoid (λ i : exprℕ(), «expr ^ »(p, i)) :=
+{ one_mem := by { rw ["[", "<-", expr one_le, ",", expr pow_zero, "]"] [],
+    exact [expr le_rfl] },
+  mul_mem := λ i j p q hp hq, by { rw [expr pow_add] [],
+    exact [expr submodule.mul_mem_mul hp hq] } }
 
 end Submodule
 

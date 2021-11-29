@@ -68,9 +68,9 @@ structure
       _)[NormedField
       𝕜]{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]{F : Type _}[NormedGroup F][NormedSpace 𝕜 F](f : E → F) extends
   IsLinearMap 𝕜 f : Prop where 
-  bound : ∃ M, 0 < M ∧ ∀ x : E, ∥f x∥ ≤ M*∥x∥
+  bound : ∃ M, 0 < M ∧ ∀ (x : E), ∥f x∥ ≤ M*∥x∥
 
-theorem IsLinearMap.with_bound {f : E → F} (hf : IsLinearMap 𝕜 f) (M : ℝ) (h : ∀ x : E, ∥f x∥ ≤ M*∥x∥) :
+theorem IsLinearMap.with_bound {f : E → F} (hf : IsLinearMap 𝕜 f) (M : ℝ) (h : ∀ (x : E), ∥f x∥ ≤ M*∥x∥) :
   IsBoundedLinearMap 𝕜 f :=
   ⟨hf,
     Classical.by_cases
@@ -95,27 +95,29 @@ def to_continuous_linear_map {f : E → F} (hf : IsBoundedLinearMap 𝕜 f) : E 
       let ⟨C, Cpos, hC⟩ := hf.bound 
       LinearMap.continuous_of_bound _ C hC }
 
-theorem zero : IsBoundedLinearMap 𝕜 fun x : E => (0 : F) :=
-  (0 : E →ₗ[𝕜] F).is_linear.with_bound 0$
-    by 
-      simp [le_reflₓ]
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem zero : is_bounded_linear_map 𝕜 (λ x : E, (0 : F)) :=
+«expr $ »((0 : «expr →ₗ[ ] »(E, 𝕜, F)).is_linear.with_bound 0, by simp [] [] [] ["[", expr le_refl, "]"] [] [])
 
-theorem id : IsBoundedLinearMap 𝕜 fun x : E => x :=
-  LinearMap.id.is_linear.with_bound 1$
-    by 
-      simp [le_reflₓ]
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem id : is_bounded_linear_map 𝕜 (λ x : E, x) :=
+«expr $ »(linear_map.id.is_linear.with_bound 1, by simp [] [] [] ["[", expr le_refl, "]"] [] [])
 
-theorem fst : IsBoundedLinearMap 𝕜 fun x : E × F => x.1 :=
-  by 
-    refine' (LinearMap.fst 𝕜 E F).is_linear.with_bound 1 fun x => _ 
-    rw [one_mulₓ]
-    exact le_max_leftₓ _ _
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem fst : is_bounded_linear_map 𝕜 (λ x : «expr × »(E, F), x.1) :=
+begin
+  refine [expr (linear_map.fst 𝕜 E F).is_linear.with_bound 1 (λ x, _)],
+  rw [expr one_mul] [],
+  exact [expr le_max_left _ _]
+end
 
-theorem snd : IsBoundedLinearMap 𝕜 fun x : E × F => x.2 :=
-  by 
-    refine' (LinearMap.snd 𝕜 E F).is_linear.with_bound 1 fun x => _ 
-    rw [one_mulₓ]
-    exact le_max_rightₓ _ _
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem snd : is_bounded_linear_map 𝕜 (λ x : «expr × »(E, F), x.2) :=
+begin
+  refine [expr (linear_map.snd 𝕜 E F).is_linear.with_bound 1 (λ x, _)],
+  rw [expr one_mul] [],
+  exact [expr le_max_right _ _]
+end
 
 variable{f g : E → F}
 
@@ -154,19 +156,15 @@ theorem sub (hf : IsBoundedLinearMap 𝕜 f) (hg : IsBoundedLinearMap 𝕜 g) : 
 theorem comp {g : F → G} (hg : IsBoundedLinearMap 𝕜 g) (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap 𝕜 (g ∘ f) :=
   (hg.to_continuous_linear_map.comp hf.to_continuous_linear_map).IsBoundedLinearMap
 
-protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : tendsto f (𝓝 x) (𝓝 (f x)) :=
-  let ⟨hf, M, hMp, hM⟩ := hf 
-  tendsto_iff_norm_tendsto_zero.2$
-    squeeze_zero (fun e => norm_nonneg _)
-      (fun e =>
-        calc ∥f e - f x∥ = ∥hf.mk' f (e - x)∥ :=
-          by 
-            rw [(hf.mk' _).map_sub e x] <;> rfl 
-          _ ≤ M*∥e - x∥ := hM (e - x)
-          )
-      (suffices tendsto (fun e : E => M*∥e - x∥) (𝓝 x) (𝓝 (M*0))by 
-        simpa 
-      tendsto_const_nhds.mul (tendsto_norm_sub_self _))
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected theorem tendsto (x : E) (hf : is_bounded_linear_map 𝕜 f) : tendsto f (expr𝓝() x) (expr𝓝() (f x)) :=
+let ⟨hf, M, hMp, hM⟩ := hf in
+«expr $ »(tendsto_iff_norm_tendsto_zero.2, squeeze_zero (λ
+  e, norm_nonneg _) (λ e, calc
+    «expr = »(«expr∥ ∥»(«expr - »(f e, f x)), «expr∥ ∥»(hf.mk' f «expr - »(e, x))) : by rw [expr (hf.mk' _).map_sub e x] []; refl
+    «expr ≤ »(..., «expr * »(M, «expr∥ ∥»(«expr - »(e, x)))) : hM «expr - »(e, x)) (suffices tendsto (λ
+   e : E, «expr * »(M, «expr∥ ∥»(«expr - »(e, x)))) (expr𝓝() x) (expr𝓝() «expr * »(M, 0)), by simpa [] [] [] [] [] [],
+  tendsto_const_nhds.mul (tendsto_norm_sub_self _)))
 
 theorem Continuous (hf : IsBoundedLinearMap 𝕜 f) : Continuous f :=
   continuous_iff_continuous_at.2$ fun _ => hf.tendsto _
@@ -198,66 +196,51 @@ section
 
 variable{ι : Type _}[DecidableEq ι][Fintype ι]
 
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Taking the cartesian product of two continuous multilinear maps
 is a bounded linear operation. -/
-theorem is_bounded_linear_map_prod_multilinear {E : ι → Type _} [∀ i, NormedGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] :
-  IsBoundedLinearMap 𝕜 fun p : ContinuousMultilinearMap 𝕜 E F × ContinuousMultilinearMap 𝕜 E G => p.1.Prod p.2 :=
-  { map_add :=
-      fun p₁ p₂ =>
-        by 
-          ext1 m 
-          rfl,
-    map_smul :=
-      fun c p =>
-        by 
-          ext1 m 
-          rfl,
-    bound :=
-      ⟨1, zero_lt_one,
-        fun p =>
-          by 
-            rw [one_mulₓ]
-            apply ContinuousMultilinearMap.op_norm_le_bound _ (norm_nonneg _) fun m => _ 
-            rw [ContinuousMultilinearMap.prod_apply, norm_prod_le_iff]
-            split 
-            ·
-              exact
-                (p.1.le_op_norm m).trans
-                  (mul_le_mul_of_nonneg_right (norm_fst_le p) (Finset.prod_nonneg fun i hi => norm_nonneg _))
-            ·
-              exact
-                (p.2.le_op_norm m).trans
-                  (mul_le_mul_of_nonneg_right (norm_snd_le p) (Finset.prod_nonneg fun i hi => norm_nonneg _))⟩ }
+theorem is_bounded_linear_map_prod_multilinear
+{E : ι → Type*}
+[∀ i, normed_group (E i)]
+[∀
+ i, normed_space 𝕜 (E i)] : is_bounded_linear_map 𝕜 (λ
+ p : «expr × »(continuous_multilinear_map 𝕜 E F, continuous_multilinear_map 𝕜 E G), p.1.prod p.2) :=
+{ map_add := λ p₁ p₂, by { ext1 [] [ident m],
+    refl },
+  map_smul := λ c p, by { ext1 [] [ident m],
+    refl },
+  bound := ⟨1, zero_lt_one, λ p, begin
+     rw [expr one_mul] [],
+     apply [expr continuous_multilinear_map.op_norm_le_bound _ (norm_nonneg _) (λ m, _)],
+     rw ["[", expr continuous_multilinear_map.prod_apply, ",", expr norm_prod_le_iff, "]"] [],
+     split,
+     { exact [expr (p.1.le_op_norm m).trans (mul_le_mul_of_nonneg_right (norm_fst_le p) (finset.prod_nonneg (λ
+           i hi, norm_nonneg _)))] },
+     { exact [expr (p.2.le_op_norm m).trans (mul_le_mul_of_nonneg_right (norm_snd_le p) (finset.prod_nonneg (λ
+           i hi, norm_nonneg _)))] }
+   end⟩ }
 
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a fixed continuous linear map `g`, associating to a continuous multilinear map `f` the
 continuous multilinear map `f (g m₁, ..., g mₙ)` is a bounded linear operation. -/
-theorem is_bounded_linear_map_continuous_multilinear_map_comp_linear (g : G →L[𝕜] E) :
-  IsBoundedLinearMap 𝕜
-    fun f : ContinuousMultilinearMap 𝕜 (fun i : ι => E) F => f.comp_continuous_linear_map fun _ => g :=
-  by 
-    refine'
-      IsLinearMap.with_bound
-        ⟨fun f₁ f₂ =>
-            by 
-              ext m 
-              rfl,
-          fun c f =>
-            by 
-              ext m 
-              rfl⟩
-        (∥g∥ ^ Fintype.card ι) fun f => _ 
-    apply ContinuousMultilinearMap.op_norm_le_bound _ _ fun m => _
-    ·
-      applyRules [mul_nonneg, pow_nonneg, norm_nonneg]
-    calc ∥f (g ∘ m)∥ ≤ ∥f∥*∏i, ∥g (m i)∥ := f.le_op_norm _ _ ≤ ∥f∥*∏i, ∥g∥*∥m i∥ :=
-      by 
-        apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-        exact
-          Finset.prod_le_prod (fun i hi => norm_nonneg _)
-            fun i hi => g.le_op_norm _ _ = ((∥g∥ ^ Fintype.card ι)*∥f∥)*∏i, ∥m i∥ :=
-      by 
-        simp [Finset.prod_mul_distrib, Finset.card_univ]
-        ring
+theorem is_bounded_linear_map_continuous_multilinear_map_comp_linear
+(g : «expr →L[ ] »(G, 𝕜, E)) : is_bounded_linear_map 𝕜 (λ
+ f : continuous_multilinear_map 𝕜 (λ i : ι, E) F, f.comp_continuous_linear_map (λ _, g)) :=
+begin
+  refine [expr is_linear_map.with_bound ⟨λ f₁ f₂, by { ext [] [ident m] [],
+      refl }, λ c f, by { ext [] [ident m] [],
+      refl }⟩ «expr ^ »(«expr∥ ∥»(g), fintype.card ι) (λ f, _)],
+  apply [expr continuous_multilinear_map.op_norm_le_bound _ _ (λ m, _)],
+  { apply_rules ["[", expr mul_nonneg, ",", expr pow_nonneg, ",", expr norm_nonneg, "]"] },
+  calc
+    «expr ≤ »(«expr∥ ∥»(f «expr ∘ »(g, m)), «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(g (m i))))) : f.le_op_norm _
+    «expr ≤ »(..., «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr * »(«expr∥ ∥»(g), «expr∥ ∥»(m i))))) : begin
+      apply [expr mul_le_mul_of_nonneg_left _ (norm_nonneg _)],
+      exact [expr finset.prod_le_prod (λ i hi, norm_nonneg _) (λ i hi, g.le_op_norm _)]
+    end
+    «expr = »(..., «expr * »(«expr * »(«expr ^ »(«expr∥ ∥»(g), fintype.card ι), «expr∥ ∥»(f)), «expr∏ , »((i), «expr∥ ∥»(m i)))) : by { simp [] [] [] ["[", expr finset.prod_mul_distrib, ",", expr finset.card_univ, "]"] [] [],
+      ring [] }
+end
 
 end 
 
@@ -268,50 +251,46 @@ variable(𝕜)
 /-- A map `f : E × F → G` satisfies `is_bounded_bilinear_map 𝕜 f` if it is bilinear and
 continuous. -/
 structure IsBoundedBilinearMap(f : E × F → G) : Prop where 
-  add_left : ∀ x₁ x₂ : E y : F, f (x₁+x₂, y) = f (x₁, y)+f (x₂, y)
-  smul_left : ∀ c : 𝕜 x : E y : F, f (c • x, y) = c • f (x, y)
-  add_right : ∀ x : E y₁ y₂ : F, f (x, y₁+y₂) = f (x, y₁)+f (x, y₂)
-  smulRight : ∀ c : 𝕜 x : E y : F, f (x, c • y) = c • f (x, y)
-  bound : ∃ (C : _)(_ : C > 0), ∀ x : E y : F, ∥f (x, y)∥ ≤ (C*∥x∥)*∥y∥
+  add_left : ∀ (x₁ x₂ : E) (y : F), f (x₁+x₂, y) = f (x₁, y)+f (x₂, y)
+  smul_left : ∀ (c : 𝕜) (x : E) (y : F), f (c • x, y) = c • f (x, y)
+  add_right : ∀ (x : E) (y₁ y₂ : F), f (x, y₁+y₂) = f (x, y₁)+f (x, y₂)
+  smulRight : ∀ (c : 𝕜) (x : E) (y : F), f (x, c • y) = c • f (x, y)
+  bound : ∃ (C : _)(_ : C > 0), ∀ (x : E) (y : F), ∥f (x, y)∥ ≤ (C*∥x∥)*∥y∥
 
 variable{𝕜}
 
 variable{f : E × F → G}
 
-theorem ContinuousLinearMap.is_bounded_bilinear_map (f : E →L[𝕜] F →L[𝕜] G) :
-  IsBoundedBilinearMap 𝕜 fun x : E × F => f x.1 x.2 :=
-  { add_left :=
-      fun x₁ x₂ y =>
-        by 
-          rw [f.map_add, ContinuousLinearMap.add_apply],
-    smul_left :=
-      fun c x y =>
-        by 
-          rw [f.map_smul _, ContinuousLinearMap.smul_apply],
-    add_right := fun x => (f x).map_add, smulRight := fun c x y => (f x).map_smul c y,
-    bound :=
-      ⟨max ∥f∥ 1, zero_lt_one.trans_le (le_max_rightₓ _ _),
-        fun x y =>
-          (f.le_op_norm₂ x y).trans$
-            by 
-              applyRules [mul_le_mul_of_nonneg_right, norm_nonneg, le_max_leftₓ]⟩ }
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_linear_map.is_bounded_bilinear_map
+(f : «expr →L[ ] »(E, 𝕜, «expr →L[ ] »(F, 𝕜, G))) : is_bounded_bilinear_map 𝕜 (λ x : «expr × »(E, F), f x.1 x.2) :=
+{ add_left := λ x₁ x₂ y, by rw ["[", expr f.map_add, ",", expr continuous_linear_map.add_apply, "]"] [],
+  smul_left := λ c x y, by rw ["[", expr f.map_smul _, ",", expr continuous_linear_map.smul_apply, "]"] [],
+  add_right := λ x, (f x).map_add,
+  smul_right := λ c x y, (f x).map_smul c y,
+  bound := ⟨max «expr∥ ∥»(f) 1, zero_lt_one.trans_le (le_max_right _ _), λ
+   x
+   y, «expr $ »((f.le_op_norm₂ x y).trans, by apply_rules ["[", expr mul_le_mul_of_nonneg_right, ",", expr norm_nonneg, ",", expr le_max_left, "]"])⟩ }
 
-protected theorem IsBoundedBilinearMap.is_O (h : IsBoundedBilinearMap 𝕜 f) :
-  Asymptotics.IsO f (fun p : E × F => ∥p.1∥*∥p.2∥) ⊤ :=
-  let ⟨C, Cpos, hC⟩ := h.bound 
-  Asymptotics.IsO.of_bound _$
-    Filter.eventually_of_forall$
-      fun ⟨x, y⟩ =>
-        by 
-          simpa [mul_assocₓ] using hC x y
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem is_bounded_bilinear_map.is_O
+(h : is_bounded_bilinear_map 𝕜 f) : asymptotics.is_O f (λ
+ p : «expr × »(E, F), «expr * »(«expr∥ ∥»(p.1), «expr∥ ∥»(p.2))) «expr⊤»() :=
+let ⟨C, Cpos, hC⟩ := h.bound in
+«expr $ »(asymptotics.is_O.of_bound _, «expr $ »(filter.eventually_of_forall, λ
+  ⟨x, y⟩, by simpa [] [] [] ["[", expr mul_assoc, "]"] [] ["using", expr hC x y]))
 
 theorem IsBoundedBilinearMap.is_O_comp {α : Type _} (H : IsBoundedBilinearMap 𝕜 f) {g : α → E} {h : α → F}
   {l : Filter α} : Asymptotics.IsO (fun x => f (g x, h x)) (fun x => ∥g x∥*∥h x∥) l :=
   H.is_O.comp_tendsto le_top
 
-protected theorem IsBoundedBilinearMap.is_O' (h : IsBoundedBilinearMap 𝕜 f) :
-  Asymptotics.IsO f (fun p : E × F => ∥p∥*∥p∥) ⊤ :=
-  h.is_O.trans (Asymptotics.is_O_fst_prod'.norm_norm.mul Asymptotics.is_O_snd_prod'.norm_norm)
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem is_bounded_bilinear_map.is_O'
+(h : is_bounded_bilinear_map 𝕜 f) : asymptotics.is_O f (λ
+ p : «expr × »(E, F), «expr * »(«expr∥ ∥»(p), «expr∥ ∥»(p))) «expr⊤»() :=
+h.is_O.trans (asymptotics.is_O_fst_prod'.norm_norm.mul asymptotics.is_O_snd_prod'.norm_norm)
 
 theorem IsBoundedBilinearMap.map_sub_left (h : IsBoundedBilinearMap 𝕜 f) {x y : E} {z : F} :
   f (x - y, z) = f (x, z) - f (y, z) :=
@@ -417,76 +396,63 @@ theorem is_bounded_bilinear_map.is_bounded_linear_map_right
       «expr ≤ »(..., «expr * »(«expr * »(C, «expr + »(«expr∥ ∥»(x), 1)), «expr∥ ∥»(y))) : by apply_rules ["[", expr mul_le_mul_of_nonneg_right, ",", expr norm_nonneg, ",", expr mul_le_mul_of_nonneg_left, ",", expr le_of_lt C_pos, "]"]
   end }
 
-theorem is_bounded_bilinear_map_smul {𝕜' : Type _} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] {E : Type _} [NormedGroup E]
-  [NormedSpace 𝕜 E] [NormedSpace 𝕜' E] [IsScalarTower 𝕜 𝕜' E] : IsBoundedBilinearMap 𝕜 fun p : 𝕜' × E => p.1 • p.2 :=
-  { add_left := add_smul,
-    smul_left :=
-      fun c x y =>
-        by 
-          simp [smul_assoc],
-    add_right := smul_add,
-    smulRight :=
-      fun c x y =>
-        by 
-          simp [smul_assoc, smul_algebra_smul_comm],
-    bound :=
-      ⟨1, zero_lt_one,
-        fun x y =>
-          by 
-            simp [norm_smul]⟩ }
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_bounded_bilinear_map_smul
+{𝕜' : Type*}
+[normed_field 𝕜']
+[normed_algebra 𝕜 𝕜']
+{E : Type*}
+[normed_group E]
+[normed_space 𝕜 E]
+[normed_space 𝕜' E]
+[is_scalar_tower 𝕜 𝕜' E] : is_bounded_bilinear_map 𝕜 (λ p : «expr × »(𝕜', E), «expr • »(p.1, p.2)) :=
+{ add_left := add_smul,
+  smul_left := λ c x y, by simp [] [] [] ["[", expr smul_assoc, "]"] [] [],
+  add_right := smul_add,
+  smul_right := λ c x y, by simp [] [] [] ["[", expr smul_assoc, ",", expr smul_algebra_smul_comm, "]"] [] [],
+  bound := ⟨1, zero_lt_one, λ x y, by simp [] [] [] ["[", expr norm_smul, "]"] [] []⟩ }
 
-theorem is_bounded_bilinear_map_mul : IsBoundedBilinearMap 𝕜 fun p : 𝕜 × 𝕜 => p.1*p.2 :=
-  by 
-    simpRw [←smul_eq_mul] <;> exact is_bounded_bilinear_map_smul
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_bounded_bilinear_map_mul : is_bounded_bilinear_map 𝕜 (λ p : «expr × »(𝕜, 𝕜), «expr * »(p.1, p.2)) :=
+by simp_rw ["<-", expr smul_eq_mul] []; exact [expr is_bounded_bilinear_map_smul]
 
-theorem is_bounded_bilinear_map_comp : IsBoundedBilinearMap 𝕜 fun p : (E →L[𝕜] F) × (F →L[𝕜] G) => p.2.comp p.1 :=
-  { add_left :=
-      fun x₁ x₂ y =>
-        by 
-          ext z 
-          change y (x₁ z+x₂ z) = y (x₁ z)+y (x₂ z)
-          rw [y.map_add],
-    smul_left :=
-      fun c x y =>
-        by 
-          ext z 
-          change y (c • x z) = c • y (x z)
-          rw [ContinuousLinearMap.map_smul],
-    add_right := fun x y₁ y₂ => rfl, smulRight := fun c x y => rfl,
-    bound :=
-      ⟨1, zero_lt_one,
-        fun x y =>
-          calc ∥ContinuousLinearMap.comp (x, y).snd (x, y).fst∥ ≤ ∥y∥*∥x∥ := ContinuousLinearMap.op_norm_comp_le _ _ 
-            _ = (1*∥x∥)*∥y∥ :=
-            by 
-              ring
-            ⟩ }
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_bounded_bilinear_map_comp : is_bounded_bilinear_map 𝕜 (λ
+ p : «expr × »(«expr →L[ ] »(E, 𝕜, F), «expr →L[ ] »(F, 𝕜, G)), p.2.comp p.1) :=
+{ add_left := λ x₁ x₂ y, begin
+    ext [] [ident z] [],
+    change [expr «expr = »(y «expr + »(x₁ z, x₂ z), «expr + »(y (x₁ z), y (x₂ z)))] [] [],
+    rw [expr y.map_add] []
+  end,
+  smul_left := λ c x y, begin
+    ext [] [ident z] [],
+    change [expr «expr = »(y «expr • »(c, x z), «expr • »(c, y (x z)))] [] [],
+    rw [expr continuous_linear_map.map_smul] []
+  end,
+  add_right := λ x y₁ y₂, rfl,
+  smul_right := λ c x y, rfl,
+  bound := ⟨1, zero_lt_one, λ x y, calc
+     «expr ≤ »(«expr∥ ∥»(continuous_linear_map.comp (x, y).snd (x, y).fst), «expr * »(«expr∥ ∥»(y), «expr∥ ∥»(x))) : continuous_linear_map.op_norm_comp_le _ _
+     «expr = »(..., «expr * »(«expr * »(1, «expr∥ ∥»(x)), «expr∥ ∥»(y))) : by ring []⟩ }
 
-theorem ContinuousLinearMap.is_bounded_linear_map_comp_left (g : F →L[𝕜] G) :
-  IsBoundedLinearMap 𝕜 fun f : E →L[𝕜] F => ContinuousLinearMap.comp g f :=
-  is_bounded_bilinear_map_comp.is_bounded_linear_map_left _
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_linear_map.is_bounded_linear_map_comp_left
+(g : «expr →L[ ] »(F, 𝕜, G)) : is_bounded_linear_map 𝕜 (λ f : «expr →L[ ] »(E, 𝕜, F), continuous_linear_map.comp g f) :=
+is_bounded_bilinear_map_comp.is_bounded_linear_map_left _
 
-theorem ContinuousLinearMap.is_bounded_linear_map_comp_right (f : E →L[𝕜] F) :
-  IsBoundedLinearMap 𝕜 fun g : F →L[𝕜] G => ContinuousLinearMap.comp g f :=
-  is_bounded_bilinear_map_comp.is_bounded_linear_map_right _
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_linear_map.is_bounded_linear_map_comp_right
+(f : «expr →L[ ] »(E, 𝕜, F)) : is_bounded_linear_map 𝕜 (λ g : «expr →L[ ] »(F, 𝕜, G), continuous_linear_map.comp g f) :=
+is_bounded_bilinear_map_comp.is_bounded_linear_map_right _
 
-theorem is_bounded_bilinear_map_apply : IsBoundedBilinearMap 𝕜 fun p : (E →L[𝕜] F) × E => p.1 p.2 :=
-  { add_left :=
-      by 
-        simp ,
-    smul_left :=
-      by 
-        simp ,
-    add_right :=
-      by 
-        simp ,
-    smulRight :=
-      by 
-        simp ,
-    bound :=
-      ⟨1, zero_lt_one,
-        by 
-          simp [ContinuousLinearMap.le_op_norm]⟩ }
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_bounded_bilinear_map_apply : is_bounded_bilinear_map 𝕜 (λ
+ p : «expr × »(«expr →L[ ] »(E, 𝕜, F), E), p.1 p.2) :=
+{ add_left := by simp [] [] [] [] [] [],
+  smul_left := by simp [] [] [] [] [] [],
+  add_right := by simp [] [] [] [] [] [],
+  smul_right := by simp [] [] [] [] [] [],
+  bound := ⟨1, zero_lt_one, by simp [] [] [] ["[", expr continuous_linear_map.le_op_norm, "]"] [] []⟩ }
 
 /-- The function `continuous_linear_map.smul_right`, associating to a continuous linear map
 `f : E → 𝕜` and a scalar `c : F` the tensor product `f ⊗ c` as a continuous linear map from `E` to
@@ -519,42 +485,34 @@ theorem is_bounded_bilinear_map_smul_right :
           by 
             simp ⟩ }
 
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The composition of a continuous linear map with a continuous multilinear map is a bounded
 bilinear operation. -/
-theorem is_bounded_bilinear_map_comp_multilinear {ι : Type _} {E : ι → Type _} [DecidableEq ι] [Fintype ι]
-  [∀ i, NormedGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] :
-  IsBoundedBilinearMap 𝕜 fun p : (F →L[𝕜] G) × ContinuousMultilinearMap 𝕜 E F => p.1.compContinuousMultilinearMap p.2 :=
-  { add_left :=
-      fun g₁ g₂ f =>
-        by 
-          ext m 
-          rfl,
-    smul_left :=
-      fun c g f =>
-        by 
-          ext m 
-          rfl,
-    add_right :=
-      fun g f₁ f₂ =>
-        by 
-          ext m 
-          simp ,
-    smulRight :=
-      fun c g f =>
-        by 
-          ext m 
-          simp ,
-    bound :=
-      ⟨1, zero_lt_one,
-        fun g f =>
-          by 
-            apply ContinuousMultilinearMap.op_norm_le_bound _ _ fun m => _
-            ·
-              applyRules [mul_nonneg, zero_le_one, norm_nonneg]
-            calc ∥g (f m)∥ ≤ ∥g∥*∥f m∥ := g.le_op_norm _ _ ≤ ∥g∥*∥f∥*∏i, ∥m i∥ :=
-              mul_le_mul_of_nonneg_left (f.le_op_norm _) (norm_nonneg _)_ = ((1*∥g∥)*∥f∥)*∏i, ∥m i∥ :=
-              by 
-                ring⟩ }
+theorem is_bounded_bilinear_map_comp_multilinear
+{ι : Type*}
+{E : ι → Type*}
+[decidable_eq ι]
+[fintype ι]
+[∀ i, normed_group (E i)]
+[∀
+ i, normed_space 𝕜 (E i)] : is_bounded_bilinear_map 𝕜 (λ
+ p : «expr × »(«expr →L[ ] »(F, 𝕜, G), continuous_multilinear_map 𝕜 E F), p.1.comp_continuous_multilinear_map p.2) :=
+{ add_left := λ g₁ g₂ f, by { ext [] [ident m] [],
+    refl },
+  smul_left := λ c g f, by { ext [] [ident m] [],
+    refl },
+  add_right := λ g f₁ f₂, by { ext [] [ident m] [],
+    simp [] [] [] [] [] [] },
+  smul_right := λ c g f, by { ext [] [ident m] [],
+    simp [] [] [] [] [] [] },
+  bound := ⟨1, zero_lt_one, λ g f, begin
+     apply [expr continuous_multilinear_map.op_norm_le_bound _ _ (λ m, _)],
+     { apply_rules ["[", expr mul_nonneg, ",", expr zero_le_one, ",", expr norm_nonneg, "]"] },
+     calc
+       «expr ≤ »(«expr∥ ∥»(g (f m)), «expr * »(«expr∥ ∥»(g), «expr∥ ∥»(f m))) : g.le_op_norm _
+       «expr ≤ »(..., «expr * »(«expr∥ ∥»(g), «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(m i))))) : mul_le_mul_of_nonneg_left (f.le_op_norm _) (norm_nonneg _)
+       «expr = »(..., «expr * »(«expr * »(«expr * »(1, «expr∥ ∥»(g)), «expr∥ ∥»(f)), «expr∏ , »((i), «expr∥ ∥»(m i)))) : by ring []
+   end⟩ }
 
 /-- Definition of the derivative of a bilinear map `f`, given at a point `p` by
 `q ↦ f(p.1, q.2) + f(q.1, p.2)` as in the standard formula for the derivative of a product.
@@ -600,34 +558,34 @@ theorem is_bounded_bilinear_map_deriv_coe (h : IsBoundedBilinearMap 𝕜 f) (p q
 
 variable(𝕜)
 
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The function `lmul_left_right : 𝕜' × 𝕜' → (𝕜' →L[𝕜] 𝕜')` is a bounded bilinear map. -/
-theorem ContinuousLinearMap.lmul_left_right_is_bounded_bilinear (𝕜' : Type _) [NormedRing 𝕜'] [NormedAlgebra 𝕜 𝕜'] :
-  IsBoundedBilinearMap 𝕜 fun p : 𝕜' × 𝕜' => ContinuousLinearMap.lmulLeftRight 𝕜 𝕜' p.1 p.2 :=
-  (ContinuousLinearMap.lmulLeftRight 𝕜 𝕜').IsBoundedBilinearMap
+theorem continuous_linear_map.lmul_left_right_is_bounded_bilinear
+(𝕜' : Type*)
+[normed_ring 𝕜']
+[normed_algebra 𝕜 𝕜'] : is_bounded_bilinear_map 𝕜 (λ
+ p : «expr × »(𝕜', 𝕜'), continuous_linear_map.lmul_left_right 𝕜 𝕜' p.1 p.2) :=
+(continuous_linear_map.lmul_left_right 𝕜 𝕜').is_bounded_bilinear_map
 
 variable{𝕜}
 
+-- error in Analysis.NormedSpace.BoundedLinearMaps: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a bounded bilinear map `f`, the map associating to a point `p` the derivative of `f` at
 `p` is itself a bounded linear map. -/
-theorem IsBoundedBilinearMap.is_bounded_linear_map_deriv (h : IsBoundedBilinearMap 𝕜 f) :
-  IsBoundedLinearMap 𝕜 fun p : E × F => h.deriv p :=
-  by 
-    rcases h.bound with ⟨C, Cpos : 0 < C, hC⟩
-    refine' IsLinearMap.with_bound ⟨fun p₁ p₂ => _, fun c p => _⟩ (C+C) fun p => _
-    ·
-      ext <;> simp [h.add_left, h.add_right] <;> abel
-    ·
-      ext <;> simp [h.smul_left, h.smul_right, smul_add]
-    ·
-      refine'
-        ContinuousLinearMap.op_norm_le_bound _ (mul_nonneg (add_nonneg Cpos.le Cpos.le) (norm_nonneg _)) fun q => _ 
-      calc ∥f (p.1, q.2)+f (q.1, p.2)∥ ≤ ((C*∥p.1∥)*∥q.2∥)+(C*∥q.1∥)*∥p.2∥ :=
-        norm_add_le_of_le (hC _ _) (hC _ _)_ ≤ ((C*∥p∥)*∥q∥)+(C*∥q∥)*∥p∥ :=
-        by 
-          applyRules [add_le_add, mul_le_mul, norm_nonneg, Cpos.le, le_reflₓ, le_max_leftₓ, le_max_rightₓ,
-            mul_nonneg]_ = ((C+C)*∥p∥)*∥q∥ :=
-        by 
-          ring
+theorem is_bounded_bilinear_map.is_bounded_linear_map_deriv
+(h : is_bounded_bilinear_map 𝕜 f) : is_bounded_linear_map 𝕜 (λ p : «expr × »(E, F), h.deriv p) :=
+begin
+  rcases [expr h.bound, "with", "⟨", ident C, ",", ident Cpos, ":", expr «expr < »(0, C), ",", ident hC, "⟩"],
+  refine [expr is_linear_map.with_bound ⟨λ p₁ p₂, _, λ c p, _⟩ «expr + »(C, C) (λ p, _)],
+  { ext [] [] []; simp [] [] [] ["[", expr h.add_left, ",", expr h.add_right, "]"] [] []; abel [] [] [] },
+  { ext [] [] []; simp [] [] [] ["[", expr h.smul_left, ",", expr h.smul_right, ",", expr smul_add, "]"] [] [] },
+  { refine [expr continuous_linear_map.op_norm_le_bound _ (mul_nonneg (add_nonneg Cpos.le Cpos.le) (norm_nonneg _)) (λ
+      q, _)],
+    calc
+      «expr ≤ »(«expr∥ ∥»(«expr + »(f (p.1, q.2), f (q.1, p.2))), «expr + »(«expr * »(«expr * »(C, «expr∥ ∥»(p.1)), «expr∥ ∥»(q.2)), «expr * »(«expr * »(C, «expr∥ ∥»(q.1)), «expr∥ ∥»(p.2)))) : norm_add_le_of_le (hC _ _) (hC _ _)
+      «expr ≤ »(..., «expr + »(«expr * »(«expr * »(C, «expr∥ ∥»(p)), «expr∥ ∥»(q)), «expr * »(«expr * »(C, «expr∥ ∥»(q)), «expr∥ ∥»(p)))) : by apply_rules ["[", expr add_le_add, ",", expr mul_le_mul, ",", expr norm_nonneg, ",", expr Cpos.le, ",", expr le_refl, ",", expr le_max_left, ",", expr le_max_right, ",", expr mul_nonneg, "]"]
+      «expr = »(..., «expr * »(«expr * »(«expr + »(C, C), «expr∥ ∥»(p)), «expr∥ ∥»(q))) : by ring [] }
+end
 
 end BilinearMap
 

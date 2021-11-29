@@ -180,28 +180,27 @@ variable(C : Type u)[category.{v} C]
 
 variable[has_coproducts C]
 
+-- error in CategoryTheory.GradedObject: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The total object of a graded object is the coproduct of the graded components.
--/
-noncomputable def Total : graded_object β C ⥤ C :=
-  { obj := fun X => ∐ fun i : Ulift.{v} β => X i.down, map := fun X Y f => limits.sigma.map fun i => f i.down }
+-/ noncomputable def total : «expr ⥤ »(graded_object β C, C) :=
+{ obj := λ X, «expr∐ »(λ i : ulift.{v} β, X i.down), map := λ X Y f, limits.sigma.map (λ i, f i.down) }
 
 variable[has_zero_morphisms C]
 
+-- error in CategoryTheory.GradedObject: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The `total` functor taking a graded object to the coproduct of its graded components is faithful.
 To prove this, we need to know that the coprojections into the coproduct are monomorphisms,
 which follows from the fact we have zero morphisms and decidable equality for the grading.
--/
-instance  : faithful (Total β C) :=
-  { map_injective' :=
-      fun X Y f g w =>
-        by 
-          classical 
-          ext i 
-          replace w := sigma.ι (fun i : Ulift β => X i.down) ⟨i⟩ ≫= w 
-          erw [colimit.ι_map, colimit.ι_map] at w 
-          exact mono.right_cancellation _ _ w }
+-/ instance : faithful (total β C) :=
+{ map_injective' := λ X Y f g w, begin
+    classical,
+    ext [] [ident i] [],
+    replace [ident w] [] [":=", expr «expr ≫= »(sigma.ι (λ i : ulift β, X i.down) ⟨i⟩, w)],
+    erw ["[", expr colimit.ι_map, ",", expr colimit.ι_map, "]"] ["at", ident w],
+    exact [expr mono.right_cancellation _ _ w]
+  end }
 
 end GradedObject
 

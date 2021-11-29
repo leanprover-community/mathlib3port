@@ -36,7 +36,7 @@ variable{p}
 
 open Submodule
 
-theorem ker_id_sub_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : ker (id - p.subtype.comp f) = p :=
+theorem ker_id_sub_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ (x : p), f x = x) : ker (id - p.subtype.comp f) = p :=
   by 
     ext x 
     simp only [comp_apply, mem_ker, subtype_apply, sub_apply, id_apply, sub_eq_zero]
@@ -46,10 +46,10 @@ theorem ker_id_sub_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : ke
           by 
             erw [hf ⟨x, hx⟩, Subtype.coe_mk]⟩
 
-theorem range_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : range f = ⊤ :=
+theorem range_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ (x : p), f x = x) : range f = ⊤ :=
   range_eq_top.2$ fun x => ⟨x, hf x⟩
 
-theorem is_compl_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : IsCompl p f.ker :=
+theorem is_compl_of_proj {f : E →ₗ[R] p} (hf : ∀ (x : p), f x = x) : IsCompl p f.ker :=
   by 
     split 
     ·
@@ -190,7 +190,7 @@ theorem exists_unique_add_of_is_compl_prod (hc : IsCompl p q) (x : E) : ∃!u : 
   (prod_equiv_of_is_compl _ _ hc).toEquiv.Bijective.ExistsUnique _
 
 theorem exists_unique_add_of_is_compl (hc : IsCompl p q) (x : E) :
-  ∃ (u : p)(v : q), ((u : E)+v) = x ∧ ∀ r : p s : q, ((r : E)+s) = x → r = u ∧ s = v :=
+  ∃ (u : p)(v : q), ((u : E)+v) = x ∧ ∀ (r : p) (s : q), ((r : E)+s) = x → r = u ∧ s = v :=
   let ⟨u, hu₁, hu₂⟩ := exists_unique_add_of_is_compl_prod hc x
   ⟨u.1, u.2, hu₁, fun r s hrs => Prod.eq_iff_fst_eq_snd_eq.1 (hu₂ ⟨r, s⟩ hrs)⟩
 
@@ -337,7 +337,7 @@ open LinearMap
 
 /-- Equivalence between submodules `q` such that `is_compl p q` and linear maps `f : E →ₗ[R] p`
 such that `∀ x : p, f x = x`. -/
-def is_compl_equiv_proj : { q // IsCompl p q } ≃ { f : E →ₗ[R] p // ∀ x : p, f x = x } :=
+def is_compl_equiv_proj : { q // IsCompl p q } ≃ { f : E →ₗ[R] p // ∀ (x : p), f x = x } :=
   { toFun := fun q => ⟨linear_proj_of_is_compl p q q.2, linear_proj_of_is_compl_apply_left q.2⟩,
     invFun := fun f => ⟨(f : E →ₗ[R] p).ker, is_compl_of_proj f.2⟩,
     left_inv :=
@@ -352,7 +352,7 @@ theorem coe_is_compl_equiv_proj_apply (q : { q // IsCompl p q }) :
   rfl
 
 @[simp]
-theorem coe_is_compl_equiv_proj_symm_apply (f : { f : E →ₗ[R] p // ∀ x : p, f x = x }) :
+theorem coe_is_compl_equiv_proj_symm_apply (f : { f : E →ₗ[R] p // ∀ (x : p), f x = x }) :
   (p.is_compl_equiv_proj.symm f : Submodule R E) = (f : E →ₗ[R] p).ker :=
   rfl
 

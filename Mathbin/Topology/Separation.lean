@@ -93,12 +93,15 @@ variable{α : Type u}{β : Type v}[TopologicalSpace α]
 
 section Separation
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 `separated` is a predicate on pairs of sub`set`s of a topological space.  It holds if the two
 sub`set`s are contained in disjoint open sets.
--/
-def Separated : Set α → Set α → Prop :=
-  fun s t : Set α => ∃ U V : Set α, IsOpen U ∧ IsOpen V ∧ s ⊆ U ∧ t ⊆ V ∧ Disjoint U V
+-/ def separated : set α → set α → exprProp() :=
+λ
+s
+t : set α, «expr∃ , »((U
+  V : set α), «expr ∧ »(is_open U, «expr ∧ »(is_open V, «expr ∧ »(«expr ⊆ »(s, U), «expr ∧ »(«expr ⊆ »(t, V), disjoint U V)))))
 
 namespace Separated
 
@@ -356,8 +359,8 @@ theorem Dense.diff_singleton [T1Space α] {s : Set α} (hs : Dense s) (x : α) [
 
 /-- Removing a finset from a dense set in a space without isolated points, one still
 obtains a dense set. -/
-theorem Dense.diff_finset [T1Space α] [∀ x : α, ne_bot (𝓝[«expr ᶜ» {x}] x)] {s : Set α} (hs : Dense s) (t : Finset α) :
-  Dense (s \ t) :=
+theorem Dense.diff_finset [T1Space α] [∀ (x : α), ne_bot (𝓝[«expr ᶜ» {x}] x)] {s : Set α} (hs : Dense s)
+  (t : Finset α) : Dense (s \ t) :=
   by 
     induction' t using Finset.induction_on with x s hxs ih hd
     ·
@@ -368,21 +371,26 @@ theorem Dense.diff_finset [T1Space α] [∀ x : α, ne_bot (𝓝[«expr ᶜ» {x
 
 /-- Removing a finite set from a dense set in a space without isolated points, one still
 obtains a dense set. -/
-theorem Dense.diff_finite [T1Space α] [∀ x : α, ne_bot (𝓝[«expr ᶜ» {x}] x)] {s : Set α} (hs : Dense s) {t : Set α}
+theorem Dense.diff_finite [T1Space α] [∀ (x : α), ne_bot (𝓝[«expr ᶜ» {x}] x)] {s : Set α} (hs : Dense s) {t : Set α}
   (ht : finite t) : Dense (s \ t) :=
   by 
     convert hs.diff_finset ht.to_finset 
     exact (finite.coe_to_finset _).symm
 
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a function to a `t1_space` tends to some limit `b` at some point `a`, then necessarily
 `b = f a`. -/
-theorem eq_of_tendsto_nhds [TopologicalSpace β] [T1Space β] {f : α → β} {a : α} {b : β} (h : tendsto f (𝓝 a) (𝓝 b)) :
-  f a = b :=
-  by_contra$
-    fun hfa : f a ≠ b =>
-      have fact₁ : «expr ᶜ» {f a} ∈ 𝓝 b := compl_singleton_mem_nhds hfa.symm 
-      have fact₂ : tendsto f (pure a) (𝓝 b) := h.comp (tendsto_id'$ pure_le_nhds a)
-      fact₂ fact₁ (Eq.refl$ f a)
+theorem eq_of_tendsto_nhds
+[topological_space β]
+[t1_space β]
+{f : α → β}
+{a : α}
+{b : β}
+(h : tendsto f (expr𝓝() a) (expr𝓝() b)) : «expr = »(f a, b) :=
+«expr $ »(by_contra, assume
+ hfa : «expr ≠ »(f a, b), have fact₁ : «expr ∈ »(«expr ᶜ»({f a}), expr𝓝() b) := compl_singleton_mem_nhds hfa.symm,
+ have fact₂ : tendsto f (pure a) (expr𝓝() b) := h.comp «expr $ »(tendsto_id', pure_le_nhds a),
+ fact₂ fact₁ «expr $ »(eq.refl, f a))
 
 /-- To prove a function to a `t1_space` is continuous at some point `a`, it suffices to prove that
 `f` admits *some* limit at `a`. -/
@@ -561,7 +569,7 @@ theorem t2_iff_nhds : T2Space α ↔ ∀ {x y : α}, ne_bot (𝓝 x⊓𝓝 y) �
               rw [←subset_empty_iff, u'v']
               exact inter_subset_inter uu' vv'⟩⟩⟩
 
-theorem t2_iff_ultrafilter : T2Space α ↔ ∀ {x y : α} f : Ultrafilter α, «expr↑ » f ≤ 𝓝 x → «expr↑ » f ≤ 𝓝 y → x = y :=
+theorem t2_iff_ultrafilter : T2Space α ↔ ∀ {x y : α} (f : Ultrafilter α), «expr↑ » f ≤ 𝓝 x → «expr↑ » f ≤ 𝓝 y → x = y :=
   t2_iff_nhds.trans$
     by 
       simp only [←exists_ultrafilter_iff, and_imp, le_inf_iff, exists_imp_distrib]
@@ -606,7 +614,7 @@ section Separated
 
 open Separated Finset
 
-theorem finset_disjoint_finset_opens_of_t2 [T2Space α] : ∀ s t : Finset α, Disjoint s t → Separated (s : Set α) t :=
+theorem finset_disjoint_finset_opens_of_t2 [T2Space α] : ∀ (s t : Finset α), Disjoint s t → Separated (s : Set α) t :=
   by 
     refine' induction_on_union _ (fun a b hi d => (hi d.symm).symm) (fun a d => empty_right a) (fun a b ab => _) _
     ·
@@ -658,7 +666,7 @@ theorem tendsto_const_nhds_iff [T2Space α] {l : Filter α} [ne_bot l] {c d : α
   where for every pair `x ≠ y`, there are two open sets, with the intersection of closures
   empty, one containing `x` and the other `y` . -/
 class T25Space(α : Type u)[TopologicalSpace α] : Prop where 
-  t2_5 : ∀ x y h : x ≠ y, ∃ U V : Set α, IsOpen U ∧ IsOpen V ∧ Closure U ∩ Closure V = ∅ ∧ x ∈ U ∧ y ∈ V
+  t2_5 : ∀ x y (h : x ≠ y), ∃ U V : Set α, IsOpen U ∧ IsOpen V ∧ Closure U ∩ Closure V = ∅ ∧ x ∈ U ∧ y ∈ V
 
 instance (priority := 100)T25Space.t2_space [T25Space α] : T2Space α :=
   ⟨fun x y hxy =>
@@ -687,7 +695,7 @@ theorem Lim_eq_iff [ne_bot f] (h : ∃ a : α, f ≤ nhds a) {a} : @lim _ _ ⟨a
 theorem Ultrafilter.Lim_eq_iff_le_nhds [CompactSpace α] {x : α} {F : Ultrafilter α} : F.Lim = x ↔ «expr↑ » F ≤ 𝓝 x :=
   ⟨fun h => h ▸ F.le_nhds_Lim, Lim_eq⟩
 
-theorem is_open_iff_ultrafilter' [CompactSpace α] (U : Set α) : IsOpen U ↔ ∀ F : Ultrafilter α, F.Lim ∈ U → U ∈ F.1 :=
+theorem is_open_iff_ultrafilter' [CompactSpace α] (U : Set α) : IsOpen U ↔ ∀ (F : Ultrafilter α), F.Lim ∈ U → U ∈ F.1 :=
   by 
     rw [is_open_iff_ultrafilter]
     refine' ⟨fun h F hF => h F.Lim hF F F.le_nhds_Lim, _⟩
@@ -889,7 +897,7 @@ theorem Filter.coclosed_compact_eq_cocompact [T2Space α] : coclosed_compact α 
 don't need to assume each `V i` closed because it follows from compactness since `α` is
 assumed to be Hausdorff. -/
 theorem exists_subset_nhd_of_compact [T2Space α] {ι : Type _} [Nonempty ι] {V : ι → Set α} (hV : Directed (· ⊇ ·) V)
-  (hV_cpct : ∀ i, IsCompact (V i)) {U : Set α} (hU : ∀ x _ : x ∈ ⋂i, V i, U ∈ 𝓝 x) : ∃ i, V i ⊆ U :=
+  (hV_cpct : ∀ i, IsCompact (V i)) {U : Set α} (hU : ∀ x (_ : x ∈ ⋂i, V i), U ∈ 𝓝 x) : ∃ i, V i ⊆ U :=
   exists_subset_nhd_of_compact' hV hV_cpct (fun i => (hV_cpct i).IsClosed) hU
 
 theorem CompactExhaustion.is_closed [T2Space α] (K : CompactExhaustion α) (n : ℕ) : IsClosed (K n) :=
@@ -974,7 +982,8 @@ end
 
 end 
 
-theorem locally_compact_of_compact_nhds [T2Space α] (h : ∀ x : α, ∃ s, s ∈ 𝓝 x ∧ IsCompact s) : LocallyCompactSpace α :=
+theorem locally_compact_of_compact_nhds [T2Space α] (h : ∀ (x : α), ∃ s, s ∈ 𝓝 x ∧ IsCompact s) :
+  LocallyCompactSpace α :=
   ⟨fun x n hn =>
       let ⟨u, un, uo, xu⟩ := mem_nhds_iff.mp hn 
       let ⟨k, kx, kc⟩ := h x 
@@ -1032,12 +1041,13 @@ theorem nhds_is_closed [RegularSpace α] {a : α} {s : Set α} (h : s ∈ 𝓝 a
         rwa [compl_compl],
     subset.trans (compl_subset_comm.1 ht₂) h₁, is_closed_compl_iff.mpr ht₁⟩
 
-theorem closed_nhds_basis [RegularSpace α] (a : α) : (𝓝 a).HasBasis (fun s : Set α => s ∈ 𝓝 a ∧ IsClosed s) id :=
-  ⟨fun t =>
-      ⟨fun t_in =>
-          let ⟨s, s_in, h_st, h⟩ := nhds_is_closed t_in
-          ⟨s, ⟨s_in, h⟩, h_st⟩,
-        fun ⟨s, ⟨s_in, hs⟩, hst⟩ => mem_of_superset s_in hst⟩⟩
+-- error in Topology.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem closed_nhds_basis
+[regular_space α]
+(a : α) : (expr𝓝() a).has_basis (λ s : set α, «expr ∧ »(«expr ∈ »(s, expr𝓝() a), is_closed s)) id :=
+⟨λ
+ t, ⟨λ t_in, let ⟨s, s_in, h_st, h⟩ := nhds_is_closed t_in in
+  ⟨s, ⟨s_in, h⟩, h_st⟩, λ ⟨s, ⟨s_in, hs⟩, hst⟩, mem_of_superset s_in hst⟩⟩
 
 instance Subtype.regular_space [RegularSpace α] {p : α → Prop} : RegularSpace (Subtype p) :=
   ⟨by 
@@ -1100,7 +1110,7 @@ section Normality
   there exist disjoint open sets containing `C` and `D` respectively. -/
 class NormalSpace(α : Type u)[TopologicalSpace α] extends T1Space α : Prop where 
   normal :
-  ∀ s t : Set α, IsClosed s → IsClosed t → Disjoint s t → ∃ u v, IsOpen u ∧ IsOpen v ∧ s ⊆ u ∧ t ⊆ v ∧ Disjoint u v
+  ∀ (s t : Set α), IsClosed s → IsClosed t → Disjoint s t → ∃ u v, IsOpen u ∧ IsOpen v ∧ s ⊆ u ∧ t ⊆ v ∧ Disjoint u v
 
 theorem normal_separation [NormalSpace α] {s t : Set α} (H1 : IsClosed s) (H2 : IsClosed t) (H3 : Disjoint s t) :
   ∃ u v, IsOpen u ∧ IsOpen v ∧ s ⊆ u ∧ t ⊆ v ∧ Disjoint u v :=

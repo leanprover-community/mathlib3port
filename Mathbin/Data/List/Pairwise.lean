@@ -38,7 +38,7 @@ theorem rel_of_pairwise_cons {a : α} {l : List α} (p : Pairwise R (a :: l)) : 
 theorem pairwise_of_pairwise_cons {a : α} {l : List α} (p : Pairwise R (a :: l)) : Pairwise R l :=
   (pairwise_cons.1 p).2
 
-theorem pairwise.tail : ∀ {l : List α} p : Pairwise R l, Pairwise R l.tail
+theorem pairwise.tail : ∀ {l : List α} (p : Pairwise R l), Pairwise R l.tail
 | [], h => h
 | a :: l, h => pairwise_of_pairwise_cons h
 
@@ -99,8 +99,8 @@ theorem pairwise_of_sublist : ∀ {l₁ l₂ : List α}, l₁ <+ l₂ → Pairwi
 | _, _, sublist.cons l₁ l₂ a s, pairwise.cons i n => pairwise_of_sublist s n
 | _, _, sublist.cons2 l₁ l₂ a s, pairwise.cons i n => (pairwise_of_sublist s n).cons (Ball.imp_left s.subset i)
 
-theorem forall_of_forall_of_pairwise (H : Symmetric R) {l : List α} (H₁ : ∀ x _ : x ∈ l, R x x) (H₂ : Pairwise R l) :
-  ∀ x _ : x ∈ l y _ : y ∈ l, R x y :=
+theorem forall_of_forall_of_pairwise (H : Symmetric R) {l : List α} (H₁ : ∀ x (_ : x ∈ l), R x x) (H₂ : Pairwise R l) :
+  ∀ x (_ : x ∈ l) y (_ : y ∈ l), R x y :=
   by 
     induction' l with a l IH
     ·
@@ -111,7 +111,7 @@ theorem forall_of_forall_of_pairwise (H : Symmetric R) {l : List α} (H₁ : ∀
     exacts[H₁₁, H₂₁ _ hy, H (H₂₁ _ hx), IH H₁₂ H₂₂ _ hx _ hy]
 
 theorem forall_of_pairwise (H : Symmetric R) {l : List α} (hl : Pairwise R l) :
-  ∀ a _ : a ∈ l, ∀ b _ : b ∈ l, a ≠ b → R a b :=
+  ∀ a (_ : a ∈ l), ∀ b (_ : b ∈ l), a ≠ b → R a b :=
   forall_of_forall_of_pairwise (fun a b h hne => H (h hne.symm)) (fun _ _ h => (h rfl).elim)
     (pairwise.imp (fun _ _ h _ => h) hl)
 
@@ -126,7 +126,7 @@ theorem pairwise_pair {a b : α} : Pairwise R [a, b] ↔ R a b :=
       pairwise.nil, and_trueₓ]
 
 theorem pairwise_append {l₁ l₂ : List α} :
-  Pairwise R (l₁ ++ l₂) ↔ Pairwise R l₁ ∧ Pairwise R l₂ ∧ ∀ x _ : x ∈ l₁, ∀ y _ : y ∈ l₂, R x y :=
+  Pairwise R (l₁ ++ l₂) ↔ Pairwise R l₁ ∧ Pairwise R l₂ ∧ ∀ x (_ : x ∈ l₁), ∀ y (_ : y ∈ l₂), R x y :=
   by 
     induction' l₁ with x l₁ IH <;>
       [simp only [List.Pairwise.nil, forall_prop_of_false (not_mem_nil _), forall_true_iff, and_trueₓ, true_andₓ,
@@ -135,7 +135,9 @@ theorem pairwise_append {l₁ l₂ : List α} :
         And.left_comm]]
 
 theorem pairwise_append_comm (s : Symmetric R) {l₁ l₂ : List α} : Pairwise R (l₁ ++ l₂) ↔ Pairwise R (l₂ ++ l₁) :=
-  have  : ∀ l₁ l₂ : List α, (∀ x : α, x ∈ l₁ → ∀ y : α, y ∈ l₂ → R x y) → ∀ x : α, x ∈ l₂ → ∀ y : α, y ∈ l₁ → R x y :=
+  have  :
+    ∀ (l₁ l₂ : List α),
+      (∀ (x : α), x ∈ l₁ → ∀ (y : α), y ∈ l₂ → R x y) → ∀ (x : α), x ∈ l₂ → ∀ (y : α), y ∈ l₁ → R x y :=
     fun l₁ l₂ a x xm y ym => s (a y ym x xm)
   by 
     simp only [pairwise_append, And.left_comm] <;> rw [Iff.intro (this l₁ l₂) (this l₂ l₁)]
@@ -146,50 +148,49 @@ theorem pairwise_middle (s : Symmetric R) {a : α} {l₁ l₂ : List α} :
     rw [←append_assoc, pairwise_append, @pairwise_append _ _ ([a] ++ l₁), pairwise_append_comm s] <;>
       simp only [mem_append, or_comm]
 
-theorem pairwise_map (f : β → α) : ∀ {l : List β}, Pairwise R (map f l) ↔ Pairwise (fun a b : β => R (f a) (f b)) l
-| [] =>
-  by 
-    simp only [map, pairwise.nil]
-| b :: l =>
-  have  : (∀ a b', b' ∈ l → f b' = a → R (f b) a) ↔ ∀ b' : β, b' ∈ l → R (f b) (f b') :=
-    forall_swap.trans$
-      forall_congrₓ$
-        fun a =>
-          forall_swap.trans$
-            by 
-              simp only [forall_eq']
-  by 
-    simp only [map, pairwise_cons, mem_map, exists_imp_distrib, and_imp, this, pairwise_map]
+-- error in Data.List.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pairwise_map
+(f : β → α) : ∀ {l : list β}, «expr ↔ »(pairwise R (map f l), pairwise (λ a b : β, R (f a) (f b)) l)
+| «expr[ , ]»([]) := by simp [] [] ["only"] ["[", expr map, ",", expr pairwise.nil, "]"] [] []
+| «expr :: »(b, l) := have «expr ↔ »(∀
+ a
+ b', «expr ∈ »(b', l) → «expr = »(f b', a) → R (f b) a, ∀
+ b' : β, «expr ∈ »(b', l) → R (f b) (f b')), from «expr $ »(forall_swap.trans, «expr $ »(forall_congr, λ
+  a, «expr $ »(forall_swap.trans, by simp [] [] ["only"] ["[", expr forall_eq', "]"] [] []))),
+by simp [] [] ["only"] ["[", expr map, ",", expr pairwise_cons, ",", expr mem_map, ",", expr exists_imp_distrib, ",", expr and_imp, ",", expr this, ",", expr pairwise_map, "]"] [] []
 
-theorem pairwise_of_pairwise_map {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, S (f a) (f b) → R a b) {l : List α}
+theorem pairwise_of_pairwise_map {S : β → β → Prop} (f : α → β) (H : ∀ (a b : α), S (f a) (f b) → R a b) {l : List α}
   (p : Pairwise S (map f l)) : Pairwise R l :=
   ((pairwise_map f).1 p).imp H
 
-theorem pairwise_map_of_pairwise {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b)) {l : List α}
+theorem pairwise_map_of_pairwise {S : β → β → Prop} (f : α → β) (H : ∀ (a b : α), R a b → S (f a) (f b)) {l : List α}
   (p : Pairwise R l) : Pairwise S (map f l) :=
   (pairwise_map f).2$ p.imp H
 
-theorem pairwise_filter_map (f : β → Option α) {l : List β} :
-  Pairwise R (filter_map f l) ↔ Pairwise (fun a a' : β => ∀ b _ : b ∈ f a b' _ : b' ∈ f a', R b b') l :=
-  let S (a a' : β) := ∀ b _ : b ∈ f a b' _ : b' ∈ f a', R b b' 
-  by 
-    simp only [Option.mem_def]
-    induction' l with a l IH
-    ·
-      simp only [filter_map, pairwise.nil]
-    cases' e : f a with b
-    ·
-      rw [filter_map_cons_none _ _ e, IH, pairwise_cons]
-      simp only [e, forall_prop_of_false not_false, forall_3_true_iff, true_andₓ]
-    rw [filter_map_cons_some _ _ _ e]
-    simp only [pairwise_cons, mem_filter_map, exists_imp_distrib, and_imp, IH, e, forall_eq']
-    show
-      (∀ a' : α x : β, x ∈ l → f x = some a' → R b a') ∧ Pairwise S l ↔
-        (∀ a' : β, a' ∈ l → ∀ b' : α, f a' = some b' → R b b') ∧ Pairwise S l 
-    exact and_congr ⟨fun h b mb a ma => h a b mb ma, fun h a b mb ma => h b mb a ma⟩ Iff.rfl
+-- error in Data.List.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pairwise_filter_map
+(f : β → option α)
+{l : list β} : «expr ↔ »(pairwise R (filter_map f l), pairwise (λ
+  a a' : β, ∀ (b «expr ∈ » f a) (b' «expr ∈ » f a'), R b b') l) :=
+let S (a a' : β) := ∀ (b «expr ∈ » f a) (b' «expr ∈ » f a'), R b b' in
+begin
+  simp [] [] ["only"] ["[", expr option.mem_def, "]"] [] [],
+  induction [expr l] [] ["with", ident a, ident l, ident IH] [],
+  { simp [] [] ["only"] ["[", expr filter_map, ",", expr pairwise.nil, "]"] [] [] },
+  cases [expr e, ":", expr f a] ["with", ident b],
+  { rw ["[", expr filter_map_cons_none _ _ e, ",", expr IH, ",", expr pairwise_cons, "]"] [],
+    simp [] [] ["only"] ["[", expr e, ",", expr forall_prop_of_false not_false, ",", expr forall_3_true_iff, ",", expr true_and, "]"] [] [] },
+  rw ["[", expr filter_map_cons_some _ _ _ e, "]"] [],
+  simp [] [] ["only"] ["[", expr pairwise_cons, ",", expr mem_filter_map, ",", expr exists_imp_distrib, ",", expr and_imp, ",", expr IH, ",", expr e, ",", expr forall_eq', "]"] [] [],
+  show [expr «expr ↔ »(«expr ∧ »(∀
+     (a' : α)
+     (x : β), «expr ∈ »(x, l) → «expr = »(f x, some a') → R b a', pairwise S l), «expr ∧ »(∀
+     a' : β, «expr ∈ »(a', l) → ∀ b' : α, «expr = »(f a', some b') → R b b', pairwise S l))],
+  from [expr and_congr ⟨λ h b mb a ma, h a b mb ma, λ h a b mb ma, h b mb a ma⟩ iff.rfl]
+end
 
 theorem pairwise_filter_map_of_pairwise {S : β → β → Prop} (f : α → Option β)
-  (H : ∀ a a' : α, R a a' → ∀ b _ : b ∈ f a b' _ : b' ∈ f a', S b b') {l : List α} (p : Pairwise R l) :
+  (H : ∀ (a a' : α), R a a' → ∀ b (_ : b ∈ f a) b' (_ : b' ∈ f a'), S b b') {l : List α} (p : Pairwise R l) :
   Pairwise S (filter_map f l) :=
   (pairwise_filter_map _).2$ p.imp H
 
@@ -205,8 +206,8 @@ theorem pairwise_filter_of_pairwise (p : α → Prop) [DecidablePred p] {l : Lis
   Pairwise R l → Pairwise R (filter p l) :=
   pairwise_of_sublist (filter_sublist _)
 
-theorem pairwise_pmap {p : β → Prop} {f : ∀ b, p b → α} {l : List β} (h : ∀ x _ : x ∈ l, p x) :
-  Pairwise R (l.pmap f h) ↔ Pairwise (fun b₁ b₂ => ∀ h₁ : p b₁ h₂ : p b₂, R (f b₁ h₁) (f b₂ h₂)) l :=
+theorem pairwise_pmap {p : β → Prop} {f : ∀ b, p b → α} {l : List β} (h : ∀ x (_ : x ∈ l), p x) :
+  Pairwise R (l.pmap f h) ↔ Pairwise (fun b₁ b₂ => ∀ (h₁ : p b₁) (h₂ : p b₂), R (f b₁ h₁) (f b₂ h₂)) l :=
   by 
     induction' l with a l ihl
     ·
@@ -219,8 +220,8 @@ theorem pairwise_pmap {p : β → Prop} {f : ∀ b, p b → α} {l : List β} (h
     rintro H _ b hb rfl 
     exact H b hb _ _
 
-theorem pairwise.pmap {l : List α} (hl : Pairwise R l) {p : α → Prop} {f : ∀ a, p a → β} (h : ∀ x _ : x ∈ l, p x)
-  {S : β → β → Prop} (hS : ∀ ⦃x⦄ hx : p x ⦃y⦄ hy : p y, R x y → S (f x hx) (f y hy)) : Pairwise S (l.pmap f h) :=
+theorem pairwise.pmap {l : List α} (hl : Pairwise R l) {p : α → Prop} {f : ∀ a, p a → β} (h : ∀ x (_ : x ∈ l), p x)
+  {S : β → β → Prop} (hS : ∀ ⦃x⦄ (hx : p x) ⦃y⦄ (hy : p y), R x y → S (f x hx) (f y hy)) : Pairwise S (l.pmap f h) :=
   by 
     refine' (pairwise_pmap h).2 (pairwise.imp_of_mem _ hl)
     intros 
@@ -274,7 +275,7 @@ theorem Pairwise.set_pairwise {l : List α} (h : Pairwise R l) (hr : Symmetric R
         exact IH x hx y hy hxy
 
 theorem pairwise_of_reflexive_on_dupl_of_forall_ne [DecidableEq α] {l : List α} {r : α → α → Prop}
-  (hr : ∀ a, 1 < count a l → r a a) (h : ∀ a _ : a ∈ l b _ : b ∈ l, a ≠ b → r a b) : l.pairwise r :=
+  (hr : ∀ a, 1 < count a l → r a a) (h : ∀ a (_ : a ∈ l) b (_ : b ∈ l), a ≠ b → r a b) : l.pairwise r :=
   by 
     induction' l with hd tl IH
     ·
@@ -307,14 +308,15 @@ theorem pairwise_of_reflexive_on_dupl_of_forall_ne [DecidableEq α] {l : List α
           exact h x (mem_cons_of_mem _ hx) y (mem_cons_of_mem _ hy)
 
 theorem pairwise_of_reflexive_of_forall_ne {l : List α} {r : α → α → Prop} (hr : Reflexive r)
-  (h : ∀ a _ : a ∈ l b _ : b ∈ l, a ≠ b → r a b) : l.pairwise r :=
+  (h : ∀ a (_ : a ∈ l) b (_ : b ∈ l), a ≠ b → r a b) : l.pairwise r :=
   by 
     classical 
     refine' pairwise_of_reflexive_on_dupl_of_forall_ne _ h 
     exact fun _ _ => hr _
 
 theorem pairwise_iff_nth_le {R} :
-  ∀ {l : List α}, Pairwise R l ↔ ∀ i j h₁ : j < length l h₂ : i < j, R (nth_le l i (lt_transₓ h₂ h₁)) (nth_le l j h₁)
+  ∀ {l : List α},
+    Pairwise R l ↔ ∀ i j (h₁ : j < length l) (h₂ : i < j), R (nth_le l i (lt_transₓ h₂ h₁)) (nth_le l j h₁)
 | [] =>
   by 
     simp only [pairwise.nil, true_iffₓ] <;> exact fun i j h => (Nat.not_lt_zeroₓ j).elim h
@@ -366,44 +368,40 @@ theorem pw_filter_nil : pw_filter R [] = [] :=
   rfl
 
 @[simp]
-theorem pw_filter_cons_of_pos {a : α} {l : List α} (h : ∀ b _ : b ∈ pw_filter R l, R a b) :
+theorem pw_filter_cons_of_pos {a : α} {l : List α} (h : ∀ b (_ : b ∈ pw_filter R l), R a b) :
   pw_filter R (a :: l) = a :: pw_filter R l :=
   if_pos h
 
 @[simp]
-theorem pw_filter_cons_of_neg {a : α} {l : List α} (h : ¬∀ b _ : b ∈ pw_filter R l, R a b) :
+theorem pw_filter_cons_of_neg {a : α} {l : List α} (h : ¬∀ b (_ : b ∈ pw_filter R l), R a b) :
   pw_filter R (a :: l) = pw_filter R l :=
   if_neg h
 
-theorem pw_filter_map (f : β → α) : ∀ l : List β, pw_filter R (map f l) = map f (pw_filter (fun x y => R (f x) (f y)) l)
-| [] => rfl
-| x :: xs =>
-  if h : ∀ b _ : b ∈ pw_filter R (map f xs), R (f x) b then
-    have h' : ∀ b : β, b ∈ pw_filter (fun x y : β => R (f x) (f y)) xs → R (f x) (f b) :=
-      fun b hb =>
-        h _
-          (by 
-            rw [pw_filter_map] <;> apply mem_map_of_mem _ hb)
-    by 
-      rw [map, pw_filter_cons_of_pos h, pw_filter_cons_of_pos h', pw_filter_map, map]
-  else
-    have h' : ¬∀ b : β, b ∈ pw_filter (fun x y : β => R (f x) (f y)) xs → R (f x) (f b) :=
-      fun hh =>
-        h$
-          fun a ha =>
-            by 
-              rw [pw_filter_map, mem_map] at ha 
-              rcases ha with ⟨b, hb₀, hb₁⟩
-              subst a 
-              exact hh _ hb₀ 
-    by 
-      rw [map, pw_filter_cons_of_neg h, pw_filter_cons_of_neg h', pw_filter_map]
+-- error in Data.List.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pw_filter_map
+(f : β → α) : ∀ l : list β, «expr = »(pw_filter R (map f l), map f (pw_filter (λ x y, R (f x) (f y)) l))
+| «expr[ , ]»([]) := rfl
+| «expr :: »(x, xs) := if h : ∀
+b «expr ∈ » pw_filter R (map f xs), R (f x) b then have h' : ∀
+b : β, «expr ∈ »(b, pw_filter (λ
+  x
+  y : β, R (f x) (f y)) xs) → R (f x) (f b), from λ
+b hb, h _ (by rw ["[", expr pw_filter_map, "]"] []; apply [expr mem_map_of_mem _ hb]),
+by rw ["[", expr map, ",", expr pw_filter_cons_of_pos h, ",", expr pw_filter_cons_of_pos h', ",", expr pw_filter_map, ",", expr map, "]"] [] else have h' : «expr¬ »(∀
+ b : β, «expr ∈ »(b, pw_filter (λ
+   x
+   y : β, R (f x) (f y)) xs) → R (f x) (f b)), from λ
+hh, «expr $ »(h, λ a ha, by { rw ["[", expr pw_filter_map, ",", expr mem_map, "]"] ["at", ident ha],
+   rcases [expr ha, "with", "⟨", ident b, ",", ident hb₀, ",", ident hb₁, "⟩"],
+   subst [expr a],
+   exact [expr hh _ hb₀] }),
+by rw ["[", expr map, ",", expr pw_filter_cons_of_neg h, ",", expr pw_filter_cons_of_neg h', ",", expr pw_filter_map, "]"] []
 
-theorem pw_filter_sublist : ∀ l : List α, pw_filter R l <+ l
+theorem pw_filter_sublist : ∀ (l : List α), pw_filter R l <+ l
 | [] => nil_sublist _
 | x :: l =>
   by 
-    byCases' ∀ y _ : y ∈ pw_filter R l, R x y
+    byCases' ∀ y (_ : y ∈ pw_filter R l), R x y
     ·
       rw [pw_filter_cons_of_pos h]
       exact (pw_filter_sublist l).cons_cons _
@@ -414,11 +412,11 @@ theorem pw_filter_sublist : ∀ l : List α, pw_filter R l <+ l
 theorem pw_filter_subset (l : List α) : pw_filter R l ⊆ l :=
   (pw_filter_sublist _).Subset
 
-theorem pairwise_pw_filter : ∀ l : List α, Pairwise R (pw_filter R l)
+theorem pairwise_pw_filter : ∀ (l : List α), Pairwise R (pw_filter R l)
 | [] => pairwise.nil
 | x :: l =>
   by 
-    byCases' ∀ y _ : y ∈ pw_filter R l, R x y
+    byCases' ∀ y (_ : y ∈ pw_filter R l), R x y
     ·
       rw [pw_filter_cons_of_pos h]
       exact pairwise_cons.2 ⟨h, pairwise_pw_filter l⟩

@@ -90,8 +90,10 @@ theorem gcd_pos_of_pos_left {m : ℕ} (n : ℕ) (mpos : 0 < m) : 0 < gcd m n :=
 theorem gcd_pos_of_pos_right (m : ℕ) {n : ℕ} (npos : 0 < n) : 0 < gcd m n :=
   pos_of_dvd_of_pos (gcd_dvd_right m n) npos
 
-theorem eq_zero_of_gcd_eq_zero_left {m n : ℕ} (H : gcd m n = 0) : m = 0 :=
-  Or.elim (Nat.eq_zero_or_posₓ m) id fun H1 : 0 < m => absurd (Eq.symm H) (ne_of_ltₓ (gcd_pos_of_pos_left _ H1))
+-- error in Data.Nat.Gcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem eq_zero_of_gcd_eq_zero_left {m n : exprℕ()} (H : «expr = »(gcd m n, 0)) : «expr = »(m, 0) :=
+or.elim (nat.eq_zero_or_pos m) id (assume
+ H1 : «expr < »(0, m), absurd (eq.symm H) (ne_of_lt (gcd_pos_of_pos_left _ H1)))
 
 theorem eq_zero_of_gcd_eq_zero_right {m n : ℕ} (H : gcd m n = 0) : n = 0 :=
   by 

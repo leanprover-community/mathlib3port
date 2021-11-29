@@ -33,7 +33,7 @@ We show in `well_powered_of_mono_over_essentially_small` and `mono_over_essentia
 that this is the case if and only if `mono_over X` is `v`-essentially small for every `X`.
 -/
 class well_powered : Prop where 
-  subobject_small : ∀ X : C, Small.{v} (subobject X) :=  by 
+  subobject_small : ∀ (X : C), Small.{v} (subobject X) :=  by 
   runTac 
     tactic.apply_instance
 
@@ -49,7 +49,7 @@ theorem essentially_small_mono_over_iff_small_subobject (X : C) :
   essentially_small.{v} (mono_over X) ↔ Small.{v} (subobject X) :=
   essentially_small_iff_of_thin
 
-theorem well_powered_of_essentially_small_mono_over (h : ∀ X : C, essentially_small.{v} (mono_over X)) :
+theorem well_powered_of_essentially_small_mono_over (h : ∀ (X : C), essentially_small.{v} (mono_over X)) :
   well_powered C :=
   { subobject_small := fun X => (essentially_small_mono_over_iff_small_subobject X).mp (h X) }
 

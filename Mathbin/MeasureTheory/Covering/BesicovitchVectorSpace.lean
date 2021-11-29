@@ -117,7 +117,9 @@ end SatelliteConfig
 /-- The maximum cardinality of a `1`-separated set in the ball of radius `2`. This is also the
 optimal number of families in the Besicovitch covering theorem. -/
 def multiplicity (E : Type _) [NormedGroup E] :=
-  Sup { N | ∃ s : Finset E, s.card = N ∧ (∀ c _ : c ∈ s, ∥c∥ ≤ 2) ∧ ∀ c _ : c ∈ s, ∀ d _ : d ∈ s, c ≠ d → 1 ≤ ∥c - d∥ }
+  Sup
+    { N |
+      ∃ s : Finset E, s.card = N ∧ (∀ c (_ : c ∈ s), ∥c∥ ≤ 2) ∧ ∀ c (_ : c ∈ s), ∀ d (_ : d ∈ s), c ≠ d → 1 ≤ ∥c - d∥ }
 
 section 
 
@@ -182,8 +184,8 @@ theorem multiplicity_le : multiplicity E ≤ (5^finrank ℝ E) :=
       rintro _ ⟨s, ⟨rfl, h⟩⟩
       exact Besicovitch.card_le_of_separated s h.1 h.2
 
-theorem card_le_multiplicity {s : Finset E} (hs : ∀ c _ : c ∈ s, ∥c∥ ≤ 2)
-  (h's : ∀ c _ : c ∈ s d _ : d ∈ s, c ≠ d → 1 ≤ ∥c - d∥) : s.card ≤ multiplicity E :=
+theorem card_le_multiplicity {s : Finset E} (hs : ∀ c (_ : c ∈ s), ∥c∥ ≤ 2)
+  (h's : ∀ c (_ : c ∈ s) d (_ : d ∈ s), c ≠ d → 1 ≤ ∥c - d∥) : s.card ≤ multiplicity E :=
   by 
     apply le_cSup
     ·
@@ -298,8 +300,8 @@ theorem one_lt_good_τ : 1 < good_τ E :=
 
 variable{E}
 
-theorem card_le_multiplicity_of_δ {s : Finset E} (hs : ∀ c _ : c ∈ s, ∥c∥ ≤ 2)
-  (h's : ∀ c _ : c ∈ s d _ : d ∈ s, c ≠ d → 1 - good_δ E ≤ ∥c - d∥) : s.card ≤ multiplicity E :=
+theorem card_le_multiplicity_of_δ {s : Finset E} (hs : ∀ c (_ : c ∈ s), ∥c∥ ≤ 2)
+  (h's : ∀ c (_ : c ∈ s) d (_ : d ∈ s), c ≠ d → 1 - good_δ E ≤ ∥c - d∥) : s.card ≤ multiplicity E :=
   (Classical.some_spec (exists_good_δ E)).2.2 s hs h's
 
 -- error in MeasureTheory.Covering.BesicovitchVectorSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

@@ -37,12 +37,12 @@ namespace Fin2
 /-- Define a dependent function on `fin2 (succ n)` by giving its value at
 zero (`H1`) and by giving a dependent function on the rest (`H2`). -/
 @[elab_as_eliminator]
-protected def cases' {n} {C : Fin2 (succ n) → Sort u} (H1 : C fz) (H2 : ∀ n, C (fs n)) : ∀ i : Fin2 (succ n), C i
+protected def cases' {n} {C : Fin2 (succ n) → Sort u} (H1 : C fz) (H2 : ∀ n, C (fs n)) : ∀ (i : Fin2 (succ n)), C i
 | fz => H1
 | fs n => H2 n
 
 /-- Ex falso. The dependent eliminator for the empty `fin2 0` type. -/
-def elim0 {C : Fin2 0 → Sort u} : ∀ i : Fin2 0, C i :=
+def elim0 {C : Fin2 0 → Sort u} : ∀ (i : Fin2 0), C i :=
   fun.
 
 /-- Converts a `fin2` into a natural. -/
@@ -51,7 +51,7 @@ def to_nat : ∀ {n}, Fin2 n → ℕ
 | _, @fs n i => succ (to_nat i)
 
 /-- Converts a natural into a `fin2` if it is in range -/
-def opt_of_nat : ∀ {n} k : ℕ, Option (Fin2 n)
+def opt_of_nat : ∀ {n} (k : ℕ), Option (Fin2 n)
 | 0, _ => none
 | succ n, 0 => some fz
 | succ n, succ k => fs <$> @opt_of_nat n k

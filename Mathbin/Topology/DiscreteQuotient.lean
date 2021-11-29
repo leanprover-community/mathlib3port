@@ -21,12 +21,12 @@ quotients as setoids whose equivalence classes are clopen.
   endowed with a `fintype` instance.
 
 ## Order structure
-The type `discrete_quotient X` is endowed with an instance of a `semilattice_inf_top`.
+The type `discrete_quotient X` is endowed with an instance of a `semilattice_inf` with `order_top`.
 The partial ordering `A ≤ B` mathematically means that `B.proj` factors through `A.proj`.
 The top element `⊤` is the trivial quotient, meaning that every element of `X` is collapsed
 to a point. Given `h : A ≤ B`, the map `A → B` is `discrete_quotient.of_le h`.
 Whenever `X` is discrete, the type `discrete_quotient X` is also endowed with an instance of a
-`semilattice_inf_bot`, where the bot element `⊥` is `X` itself.
+`semilattice_inf` with `order_bot`, where the bot element `⊥` is `X` itself.
 
 Given `f : X → Y` and `h : continuous f`, we define a predicate `le_comap h A B` for
 `A : discrete_quotient X` and `B : discrete_quotient Y`, asserting that `f` descends to `A → B`.
@@ -93,13 +93,13 @@ def of_clopen {A : Set X} (h : IsClopen A) : DiscreteQuotient X :=
             ext 
             exact ⟨fun i => i.2, fun i => ⟨hx, i⟩⟩ }
 
-theorem refl : ∀ x : X, S.rel x x :=
+theorem refl : ∀ (x : X), S.rel x x :=
   S.equiv.1
 
-theorem symm : ∀ x y : X, S.rel x y → S.rel y x :=
+theorem symm : ∀ (x y : X), S.rel x y → S.rel y x :=
   S.equiv.2.1
 
-theorem trans : ∀ x y z : X, S.rel x y → S.rel y z → S.rel x z :=
+theorem trans : ∀ (x y z : X), S.rel x y → S.rel y z → S.rel x z :=
   S.equiv.2.2
 
 /-- The setoid whose quotient yields the discrete quotient. -/
@@ -146,7 +146,7 @@ theorem fiber_clopen (A : Set S) : IsClopen (S.proj ⁻¹' A) :=
   ⟨fiber_open _ _, fiber_closed _ _⟩
 
 instance  : PartialOrderₓ (DiscreteQuotient X) :=
-  { le := fun A B => ∀ x y : X, A.rel x y → B.rel x y,
+  { le := fun A B => ∀ (x y : X), A.rel x y → B.rel x y,
     le_refl :=
       fun a =>
         by 
@@ -176,8 +176,8 @@ instance  : OrderTop (DiscreteQuotient X) :=
         by 
           tauto }
 
-instance  : SemilatticeInfTop (DiscreteQuotient X) :=
-  { DiscreteQuotient.orderTop, DiscreteQuotient.partialOrder with
+instance  : SemilatticeInf (DiscreteQuotient X) :=
+  { DiscreteQuotient.partialOrder with
     inf :=
       fun A B =>
         { Rel := fun x y => A.rel x y ∧ B.rel x y,
@@ -276,11 +276,10 @@ theorem of_le_proj_apply {A B : DiscreteQuotient X} (h : A ≤ B) (x : X) : of_l
 end OfLe
 
 /--
-When X is discrete, there is a `semilattice_inf_bot` instance on `discrete_quotient X`
+When X is discrete, there is a `order_bot` instance on `discrete_quotient X`
 -/
-instance  [DiscreteTopology X] : SemilatticeInfBot (DiscreteQuotient X) :=
-  { (inferInstance : SemilatticeInf _) with
-    bot := { Rel := · = ·, Equiv := eq_equivalence, clopen := fun x => is_clopen_discrete _ },
+instance  [DiscreteTopology X] : OrderBot (DiscreteQuotient X) :=
+  { bot := { Rel := · = ·, Equiv := eq_equivalence, clopen := fun x => is_clopen_discrete _ },
     bot_le :=
       by 
         rintro S a b (h : a = b)
@@ -377,7 +376,7 @@ theorem map_of_le_apply {C : DiscreteQuotient Y} (cond : le_comap cont A B) (h :
 end Map
 
 theorem eq_of_proj_eq [T2Space X] [CompactSpace X] [disc : TotallyDisconnectedSpace X] {x y : X} :
-  (∀ Q : DiscreteQuotient X, Q.proj x = Q.proj y) → x = y :=
+  (∀ (Q : DiscreteQuotient X), Q.proj x = Q.proj y) → x = y :=
   by 
     intro h 
     change x ∈ ({y} : Set X)
@@ -393,37 +392,38 @@ theorem fiber_le_of_le {A B : DiscreteQuotient X} (h : A ≤ B) (a : A) : A.proj
     erw [fiber_eq, fiber_eq]
     tidy
 
-theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
-  (compat : ∀ A B : DiscreteQuotient X h : A ≤ B, of_le h (Qs _) = Qs _) :
-  ∃ x : X, ∀ Q : DiscreteQuotient X, Q.proj x = Qs _ :=
-  by 
-    obtain ⟨x, hx⟩ :=
-      IsCompact.nonempty_Inter_of_directed_nonempty_compact_closed (fun Q : DiscreteQuotient X => Q.proj ⁻¹' {Qs _})
-        (fun A B => _) (fun i => _) (fun i => (fiber_closed _ _).IsCompact) fun i => fiber_closed _ _
-    ·
-      refine' ⟨x, fun Q => _⟩
-      specialize hx _ ⟨Q, rfl⟩
-      dsimp  at hx 
-      rcases proj_surjective _ (Qs Q) with ⟨y, hy⟩
-      rw [←hy] at *
-      rw [fiber_eq] at hx 
-      exact Quotientₓ.sound' (Q.symm y x hx)
-    ·
-      refine' ⟨A⊓B, fun a ha => _, fun a ha => _⟩
-      ·
-        dsimp only 
-        erw [←compat (A⊓B) A inf_le_left]
-        exact fiber_le_of_le _ _ ha
-      ·
-        dsimp only 
-        erw [←compat (A⊓B) B inf_le_right]
-        exact fiber_le_of_le _ _ ha
-    ·
-      obtain ⟨x, hx⟩ := i.proj_surjective (Qs i)
-      refine' ⟨x, _⟩
-      dsimp only 
-      rw [←hx, fiber_eq]
-      apply i.refl
+-- error in Topology.DiscreteQuotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem exists_of_compat
+[compact_space X]
+(Qs : ∀ Q : discrete_quotient X, Q)
+(compat : ∀
+ (A B : discrete_quotient X)
+ (h : «expr ≤ »(A, B)), «expr = »(of_le h (Qs _), Qs _)) : «expr∃ , »((x : X), ∀
+ Q : discrete_quotient X, «expr = »(Q.proj x, Qs _)) :=
+begin
+  obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr is_compact.nonempty_Inter_of_directed_nonempty_compact_closed (λ
+    Q : discrete_quotient X, «expr ⁻¹' »(Q.proj, {Qs _})) (λ
+    A B, _) (λ i, _) (λ i, (fiber_closed _ _).is_compact) (λ i, fiber_closed _ _)],
+  { refine [expr ⟨x, λ Q, _⟩],
+    specialize [expr hx _ ⟨Q, rfl⟩],
+    dsimp [] [] [] ["at", ident hx],
+    rcases [expr proj_surjective _ (Qs Q), "with", "⟨", ident y, ",", ident hy, "⟩"],
+    rw ["<-", expr hy] ["at", "*"],
+    rw [expr fiber_eq] ["at", ident hx],
+    exact [expr quotient.sound' (Q.symm y x hx)] },
+  { refine [expr ⟨«expr ⊓ »(A, B), λ a ha, _, λ a ha, _⟩],
+    { dsimp ["only"] [] [] [],
+      erw ["<-", expr compat «expr ⊓ »(A, B) A inf_le_left] [],
+      exact [expr fiber_le_of_le _ _ ha] },
+    { dsimp ["only"] [] [] [],
+      erw ["<-", expr compat «expr ⊓ »(A, B) B inf_le_right] [],
+      exact [expr fiber_le_of_le _ _ ha] } },
+  { obtain ["⟨", ident x, ",", ident hx, "⟩", ":=", expr i.proj_surjective (Qs i)],
+    refine [expr ⟨x, _⟩],
+    dsimp ["only"] [] [] [],
+    rw ["[", "<-", expr hx, ",", expr fiber_eq, "]"] [],
+    apply [expr i.refl] }
+end
 
 -- error in Topology.DiscreteQuotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 noncomputable instance [compact_space X] : fintype S :=

@@ -48,13 +48,13 @@ structure IsSubmonoid(s : Set M) : Prop where
   one_mem : (1 : M) ∈ s 
   mul_mem {a b} : a ∈ s → b ∈ s → (a*b) ∈ s
 
-theorem Additive.is_add_submonoid {s : Set M} : ∀ is : IsSubmonoid s, @IsAddSubmonoid (Additive M) _ s
+theorem Additive.is_add_submonoid {s : Set M} : ∀ (is : IsSubmonoid s), @IsAddSubmonoid (Additive M) _ s
 | ⟨h₁, h₂⟩ => ⟨h₁, @h₂⟩
 
 theorem Additive.is_add_submonoid_iff {s : Set M} : @IsAddSubmonoid (Additive M) _ s ↔ IsSubmonoid s :=
   ⟨fun ⟨h₁, h₂⟩ => ⟨h₁, @h₂⟩, Additive.is_add_submonoid⟩
 
-theorem Multiplicative.is_submonoid {s : Set A} : ∀ is : IsAddSubmonoid s, @IsSubmonoid (Multiplicative A) _ s
+theorem Multiplicative.is_submonoid {s : Set A} : ∀ (is : IsAddSubmonoid s), @IsSubmonoid (Multiplicative A) _ s
 | ⟨h₁, h₂⟩ => ⟨h₁, @h₂⟩
 
 theorem Multiplicative.is_submonoid_iff {s : Set A} : @IsSubmonoid (Multiplicative A) _ s ↔ IsAddSubmonoid s :=
@@ -68,7 +68,8 @@ theorem IsSubmonoid.inter {s₁ s₂ : Set M} (is₁ : IsSubmonoid s₁) (is₂ 
 /-- The intersection of an indexed set of submonoids of a monoid `M` is a submonoid of `M`. -/
 @[toAdditive
       "The intersection of an indexed set of `add_submonoid`s of an `add_monoid` `M` is\nan `add_submonoid` of `M`."]
-theorem IsSubmonoid.Inter {ι : Sort _} {s : ι → Set M} (h : ∀ y : ι, IsSubmonoid (s y)) : IsSubmonoid (Set.Interₓ s) :=
+theorem IsSubmonoid.Inter {ι : Sort _} {s : ι → Set M} (h : ∀ (y : ι), IsSubmonoid (s y)) :
+  IsSubmonoid (Set.Interₓ s) :=
   { one_mem := Set.mem_Inter.2$ fun y => (h y).one_mem,
     mul_mem :=
       fun x₁ x₂ h₁ h₂ => Set.mem_Inter.2$ fun y => (h y).mul_mem (Set.mem_Inter.1 h₁ y) (Set.mem_Inter.1 h₂ y) }
@@ -125,17 +126,21 @@ theorem Univ.is_submonoid : IsSubmonoid (@Set.Univ M) :=
   by 
     split  <;> simp 
 
+-- error in Deprecated.Submonoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The preimage of a submonoid under a monoid hom is a submonoid of the domain. -/
-@[toAdditive "The preimage of an `add_submonoid` under an `add_monoid` hom is\nan `add_submonoid` of the domain."]
-theorem IsSubmonoid.preimage {N : Type _} [Monoidₓ N] {f : M → N} (hf : IsMonoidHom f) {s : Set N}
-  (hs : IsSubmonoid s) : IsSubmonoid (f ⁻¹' s) :=
-  { one_mem :=
-      show f 1 ∈ s by 
-        rw [IsMonoidHom.map_one hf] <;> exact hs.one_mem,
-    mul_mem :=
-      fun a b ha : f a ∈ s hb : f b ∈ s =>
-        show f (a*b) ∈ s by 
-          rw [IsMonoidHom.map_mul hf] <;> exact hs.mul_mem ha hb }
+@[to_additive #[expr "The preimage of an `add_submonoid` under an `add_monoid` hom is\nan `add_submonoid` of the domain."]]
+theorem is_submonoid.preimage
+{N : Type*}
+[monoid N]
+{f : M → N}
+(hf : is_monoid_hom f)
+{s : set N}
+(hs : is_submonoid s) : is_submonoid «expr ⁻¹' »(f, s) :=
+{ one_mem := show «expr ∈ »(f 1, s), by rw [expr is_monoid_hom.map_one hf] []; exact [expr hs.one_mem],
+  mul_mem := λ
+  (a b)
+  (ha : «expr ∈ »(f a, s))
+  (hb : «expr ∈ »(f b, s)), show «expr ∈ »(f «expr * »(a, b), s), by rw [expr is_monoid_hom.map_mul hf] []; exact [expr hs.mul_mem ha hb] }
 
 /-- The image of a submonoid under a monoid hom is a submonoid of the codomain. -/
 @[toAdditive "The image of an `add_submonoid` under an `add_monoid`\nhom is an `add_submonoid` of the codomain."]
@@ -179,12 +184,12 @@ namespace IsSubmonoid
 
 /-- The product of a list of elements of a submonoid is an element of the submonoid. -/
 @[toAdditive "The sum of a list of elements of an `add_submonoid` is an element of the\n`add_submonoid`."]
-theorem list_prod_mem (hs : IsSubmonoid s) : ∀ {l : List M}, (∀ x _ : x ∈ l, x ∈ s) → l.prod ∈ s
+theorem list_prod_mem (hs : IsSubmonoid s) : ∀ {l : List M}, (∀ x (_ : x ∈ l), x ∈ s) → l.prod ∈ s
 | [], h => hs.one_mem
 | a :: l, h =>
   suffices (a*l.prod) ∈ s by 
     simpa 
-  have  : a ∈ s ∧ ∀ x _ : x ∈ l, x ∈ s :=
+  have  : a ∈ s ∧ ∀ x (_ : x ∈ l), x ∈ s :=
     by 
       simpa using h 
   hs.mul_mem this.1 (list_prod_mem this.2)
@@ -194,7 +199,7 @@ the submonoid. -/
 @[toAdditive
       "The sum of a multiset of elements of an `add_submonoid` of an `add_comm_monoid`\nis an element of the `add_submonoid`. "]
 theorem multiset_prod_mem {M} [CommMonoidₓ M] {s : Set M} (hs : IsSubmonoid s) (m : Multiset M) :
-  (∀ a _ : a ∈ m, a ∈ s) → m.prod ∈ s :=
+  (∀ a (_ : a ∈ m), a ∈ s) → m.prod ∈ s :=
   by 
     refine' Quotientₓ.induction_on m fun l hl => _ 
     rw [Multiset.quot_mk_to_coe, Multiset.coe_prod]
@@ -205,7 +210,7 @@ of the submonoid. -/
 @[toAdditive
       "The sum of elements of an `add_submonoid` of an `add_comm_monoid` indexed by\na `finset` is an element of the `add_submonoid`."]
 theorem finset_prod_mem {M A} [CommMonoidₓ M] {s : Set M} (hs : IsSubmonoid s) (f : A → M) :
-  ∀ t : Finset A, (∀ b _ : b ∈ t, f b ∈ s) → (∏b in t, f b) ∈ s
+  ∀ (t : Finset A), (∀ b (_ : b ∈ t), f b ∈ s) → (∏b in t, f b) ∈ s
 | ⟨m, hm⟩, _ =>
   multiset_prod_mem hs _
     (by 
@@ -295,7 +300,7 @@ a list of elements of `s` whose product is `a`. -/
 @[toAdditive
       "Given an element `a` of the `add_submonoid` of an `add_monoid M` generated by\na set `s`, there exists a list of elements of `s` whose sum is `a`."]
 theorem exists_list_of_mem_closure {s : Set M} {a : M} (h : a ∈ closure s) :
-  ∃ l : List M, (∀ x _ : x ∈ l, x ∈ s) ∧ l.prod = a :=
+  ∃ l : List M, (∀ x (_ : x ∈ l), x ∈ s) ∧ l.prod = a :=
   by 
     induction h 
     case in_closure.basic a ha => 

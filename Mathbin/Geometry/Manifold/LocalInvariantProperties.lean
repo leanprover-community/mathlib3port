@@ -64,7 +64,7 @@ structure local_invariant_prop(P : (H → H') → Set H → H → Prop) : Prop w
   is_local : ∀ {s x u} {f : H → H'}, IsOpen u → x ∈ u → (P f s x ↔ P f (s ∩ u) x)
   right_invariance :
   ∀ {s x f} {e : LocalHomeomorph H H}, e ∈ G → x ∈ e.source → P f s x → P (f ∘ e.symm) (e.target ∩ e.symm ⁻¹' s) (e x)
-  congr : ∀ {s x} {f g : H → H'}, (∀ y _ : y ∈ s, f y = g y) → f x = g x → P f s x → P g s x 
+  congr : ∀ {s x} {f g : H → H'}, (∀ y (_ : y ∈ s), f y = g y) → f x = g x → P f s x → P g s x 
   left_invariance :
   ∀ {s x f} {e' : LocalHomeomorph H' H'}, e' ∈ G' → s ⊆ f ⁻¹' e'.source → f x ∈ e'.source → P f s x → P (e' ∘ f) s x
 
@@ -85,7 +85,7 @@ def ChartedSpace.LiftPropWithinAt (P : (H → H') → Set H → H → Prop) (f :
 a corresponding property of functions on sets in a charted space, by requiring that it holds
 around each point of the set, in the preferred charts. -/
 def ChartedSpace.LiftPropOn (P : (H → H') → Set H → H → Prop) (f : M → M') (s : Set M) :=
-  ∀ x _ : x ∈ s, ChartedSpace.LiftPropWithinAt P f s x
+  ∀ x (_ : x ∈ s), ChartedSpace.LiftPropWithinAt P f s x
 
 /-- Given a property of germs of functions and sets in the model space, then one defines
 a corresponding property of a function at a point in a charted space, by requiring that it holds
@@ -348,7 +348,7 @@ begin
   { simp [] [] ["only"] ["[", expr hx, "]"] ["with", ident mfld_simps] [] }
 end
 
-theorem lift_prop_within_at_congr_iff (h₁ : ∀ y _ : y ∈ s, g' y = g y) (hx : g' x = g x) :
+theorem lift_prop_within_at_congr_iff (h₁ : ∀ y (_ : y ∈ s), g' y = g y) (hx : g' x = g x) :
   lift_prop_within_at P g' s x ↔ lift_prop_within_at P g s x :=
   ⟨fun h => hG.lift_prop_within_at_congr h (fun y hy => (h₁ y hy).symm) hx.symm,
     fun h => hG.lift_prop_within_at_congr h h₁ hx⟩
@@ -374,10 +374,10 @@ theorem lift_prop_at_congr_of_eventually_eq (h : lift_prop_at P g x) (h₁ : g' 
 theorem lift_prop_at_congr_iff_of_eventually_eq (h₁ : g' =ᶠ[𝓝 x] g) : lift_prop_at P g' x ↔ lift_prop_at P g x :=
   ⟨fun h => hG.lift_prop_at_congr_of_eventually_eq h h₁.symm, fun h => hG.lift_prop_at_congr_of_eventually_eq h h₁⟩
 
-theorem lift_prop_on_congr (h : lift_prop_on P g s) (h₁ : ∀ y _ : y ∈ s, g' y = g y) : lift_prop_on P g' s :=
+theorem lift_prop_on_congr (h : lift_prop_on P g s) (h₁ : ∀ y (_ : y ∈ s), g' y = g y) : lift_prop_on P g' s :=
   fun x hx => hG.lift_prop_within_at_congr (h x hx) h₁ (h₁ x hx)
 
-theorem lift_prop_on_congr_iff (h₁ : ∀ y _ : y ∈ s, g' y = g y) : lift_prop_on P g' s ↔ lift_prop_on P g s :=
+theorem lift_prop_on_congr_iff (h₁ : ∀ y (_ : y ∈ s), g' y = g y) : lift_prop_on P g' s ↔ lift_prop_on P g s :=
   ⟨fun h => hG.lift_prop_on_congr h fun y hy => (h₁ y hy).symm, fun h => hG.lift_prop_on_congr h h₁⟩
 
 omit hG

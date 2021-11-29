@@ -431,10 +431,11 @@ variable{α :
       _}[TopologicalSpace
       α]{R : Type _}[CommSemiringₓ R]{A : Type _}[TopologicalSpace A][Semiringₓ A][Algebra R A][TopologicalRing A]
 
-/-- The `R`-subalgebra of continuous maps `α → A`. -/
-def continuousSubalgebra : Subalgebra R (α → A) :=
-  { continuousSubsemiring α A with Carrier := { f:α → A | Continuous f },
-    algebra_map_mem' := fun r => (continuous_const : Continuous$ fun x : α => algebraMap R A r) }
+-- error in Topology.ContinuousFunction.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The `R`-subalgebra of continuous maps `α → A`. -/ def continuous_subalgebra : subalgebra R (α → A) :=
+{ carrier := {f : α → A | continuous f},
+  algebra_map_mem' := λ r, (continuous_const : «expr $ »(continuous, λ x : α, algebra_map R A r)),
+  ..continuous_subsemiring α A }
 
 end Subtype
 
@@ -453,23 +454,13 @@ variable{α :
       A][Algebra R
       A][TopologicalRing A]{A₂ : Type _}[TopologicalSpace A₂][Semiringₓ A₂][Algebra R A₂][TopologicalRing A₂]
 
-/-- Continuous constant functions as a `ring_hom`. -/
-def ContinuousMap.c : R →+* C(α, A) :=
-  { toFun := fun c : R => ⟨fun x : α => (algebraMap R A) c, continuous_const⟩,
-    map_one' :=
-      by 
-        ext x <;> exact (algebraMap R A).map_one,
-    map_mul' :=
-      fun c₁ c₂ =>
-        by 
-          ext x <;> exact (algebraMap R A).map_mul _ _,
-    map_zero' :=
-      by 
-        ext x <;> exact (algebraMap R A).map_zero,
-    map_add' :=
-      fun c₁ c₂ =>
-        by 
-          ext x <;> exact (algebraMap R A).map_add _ _ }
+-- error in Topology.ContinuousFunction.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Continuous constant functions as a `ring_hom`. -/ def continuous_map.C : «expr →+* »(R, «exprC( , )»(α, A)) :=
+{ to_fun := λ c : R, ⟨λ x : α, algebra_map R A c, continuous_const⟩,
+  map_one' := by ext [] [ident x] []; exact [expr (algebra_map R A).map_one],
+  map_mul' := λ c₁ c₂, by ext [] [ident x] []; exact [expr (algebra_map R A).map_mul _ _],
+  map_zero' := by ext [] [ident x] []; exact [expr (algebra_map R A).map_zero],
+  map_add' := λ c₁ c₂, by ext [] [ident x] []; exact [expr (algebra_map R A).map_add _ _] }
 
 @[simp]
 theorem ContinuousMap.C_apply (r : R) (a : α) : ContinuousMap.c r a = algebraMap R A r :=
@@ -512,19 +503,20 @@ instance  : IsScalarTower R A C(α, A) :=
 
 variable{R}
 
+-- error in Topology.ContinuousFunction.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 A version of `separates_points` for subalgebras of the continuous functions,
 used for stating the Stone-Weierstrass theorem.
--/
-abbrev Subalgebra.SeparatesPoints (s : Subalgebra R C(α, A)) : Prop :=
-  Set.SeparatesPoints ((fun f : C(α, A) => (f : α → A)) '' (s : Set C(α, A)))
+-/ abbreviation subalgebra.separates_points (s : subalgebra R «exprC( , )»(α, A)) : exprProp() :=
+set.separates_points «expr '' »(λ f : «exprC( , )»(α, A), (f : α → A), (s : set «exprC( , )»(α, A)))
 
-theorem Subalgebra.separates_points_monotone : Monotone fun s : Subalgebra R C(α, A) => s.separates_points :=
-  fun s s' r h x y n =>
-    by 
-      obtain ⟨f, m, w⟩ := h n 
-      rcases m with ⟨f, ⟨m, rfl⟩⟩
-      exact ⟨_, ⟨f, ⟨r m, rfl⟩⟩, w⟩
+-- error in Topology.ContinuousFunction.Algebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem subalgebra.separates_points_monotone : monotone (λ s : subalgebra R «exprC( , )»(α, A), s.separates_points) :=
+λ s s' r h x y n, begin
+  obtain ["⟨", ident f, ",", ident m, ",", ident w, "⟩", ":=", expr h n],
+  rcases [expr m, "with", "⟨", ident f, ",", "⟨", ident m, ",", ident rfl, "⟩", "⟩"],
+  exact [expr ⟨_, ⟨f, ⟨r m, rfl⟩⟩, w⟩]
+end
 
 @[simp]
 theorem algebra_map_apply (k : R) (a : α) : algebraMap R C(α, A) k a = k • 1 :=
@@ -548,7 +540,7 @@ writing it this way avoids having to deal with casts inside the set.
 where the functions would be continuous functions vanishing at infinity.)
 -/
 def Set.SeparatesPointsStrongly (s : Set C(α, 𝕜)) : Prop :=
-  ∀ v : α → 𝕜 x y : α, ∃ f : s, (f x : 𝕜) = v x ∧ f y = v y
+  ∀ (v : α → 𝕜) (x y : α), ∃ f : s, (f x : 𝕜) = v x ∧ f y = v y
 
 variable[Field 𝕜][TopologicalRing 𝕜]
 

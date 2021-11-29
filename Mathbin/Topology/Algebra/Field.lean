@@ -61,10 +61,11 @@ end TopologicalRing
 
 variable(K : Type _)[DivisionRing K][TopologicalSpace K]
 
+-- error in Topology.Algebra.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A topological division ring is a division ring with a topology where all operations are
     continuous, including inversion. -/
-class TopologicalDivisionRing extends TopologicalRing K : Prop where 
-  continuous_inv : ∀ x : K, x ≠ 0 → ContinuousAt (fun x : K => x⁻¹ : K → K) x
+class topological_division_ringextends topological_ring K : exprProp() :=
+  (continuous_inv : ∀ x : K, «expr ≠ »(x, 0) → continuous_at (λ x : K, «expr ⁻¹»(x) : K → K) x)
 
 namespace TopologicalDivisionRing
 
@@ -106,8 +107,9 @@ theorem units_top_group : topological_group (units K) :=
 
 attribute [local instance] units_top_group
 
-theorem continuous_units_inv : Continuous fun x : Units K => («expr↑ » (x⁻¹) : K) :=
-  (TopologicalRing.InducedUnits.continuous_coe K).comp TopologicalGroup.continuous_inv
+-- error in Topology.Algebra.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_units_inv : continuous (λ x : units K, («expr↑ »(«expr ⁻¹»(x)) : K)) :=
+(topological_ring.induced_units.continuous_coe K).comp topological_group.continuous_inv
 
 end TopologicalDivisionRing
 

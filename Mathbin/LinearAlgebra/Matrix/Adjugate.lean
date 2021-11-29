@@ -95,6 +95,10 @@ def cramer (A : Matrix n n α) : (n → α) →ₗ[α] n → α :=
 theorem cramer_apply (i : n) : cramer A b i = (A.update_column i b).det :=
   rfl
 
+theorem cramer_transpose_apply (i : n) : cramer (A)ᵀ b i = (A.update_row i b).det :=
+  by 
+    rw [cramer_apply, update_column_transpose, det_transpose]
+
 theorem cramer_transpose_row_self (i : n) : (A)ᵀ.cramer (A i) = Pi.single i A.det :=
   by 
     ext j 
@@ -145,16 +149,21 @@ theorem cramer_zero [Nontrivial n] : cramer (0 : Matrix n n α) = 0 :=
 theorem sum_cramer {β} (s : Finset β) (f : β → n → α) : (∑x in s, cramer A (f x)) = cramer A (∑x in s, f x) :=
   (LinearMap.map_sum (cramer A)).symm
 
+-- error in LinearAlgebra.Matrix.Adjugate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Use linearity of `cramer` and vector evaluation to take `cramer A _ i` out of a summation. -/
-theorem sum_cramer_apply {β} (s : Finset β) (f : n → β → α) (i : n) :
-  (∑x in s, cramer A (fun j => f j x) i) = cramer A (fun j : n => ∑x in s, f j x) i :=
-  calc (∑x in s, cramer A (fun j => f j x) i) = (∑x in s, cramer A fun j => f j x) i := (Finset.sum_apply i s _).symm 
-    _ = cramer A (fun j : n => ∑x in s, f j x) i :=
-    by 
-      rw [sum_cramer, cramer_apply]
-      congr with j 
-      apply Finset.sum_apply
-    
+theorem sum_cramer_apply
+{β}
+(s : finset β)
+(f : n → β → α)
+(i : n) : «expr = »(«expr∑ in , »((x), s, cramer A (λ
+   j, f j x) i), cramer A (λ j : n, «expr∑ in , »((x), s, f j x)) i) :=
+calc
+  «expr = »(«expr∑ in , »((x), s, cramer A (λ
+     j, f j x) i), «expr∑ in , »((x), s, cramer A (λ j, f j x)) i) : (finset.sum_apply i s _).symm
+  «expr = »(..., cramer A (λ
+    j : n, «expr∑ in , »((x), s, f j x)) i) : by { rw ["[", expr sum_cramer, ",", expr cramer_apply, "]"] [],
+    congr' [] ["with", ident j],
+    apply [expr finset.sum_apply] }
 
 end Cramer
 

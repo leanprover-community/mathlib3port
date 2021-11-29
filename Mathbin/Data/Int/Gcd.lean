@@ -174,7 +174,7 @@ def gcd_b : ℤ → ℤ → ℤ
 | m, -[1+ n] => -m.nat_abs.gcd_b n.succ
 
 /-- **Bézout's lemma** -/
-theorem gcd_eq_gcd_ab : ∀ x y : ℤ, (gcd x y : ℤ) = (x*gcd_a x y)+y*gcd_b x y
+theorem gcd_eq_gcd_ab : ∀ (x y : ℤ), (gcd x y : ℤ) = (x*gcd_a x y)+y*gcd_b x y
 | (m : ℕ), (n : ℕ) => Nat.gcd_eq_gcd_ab _ _
 | (m : ℕ), -[1+ n] =>
   show (_ : ℤ) = _+(-n+1)*-_ by 
@@ -205,9 +205,11 @@ theorem nat_abs_div (a b : ℤ) (H : b ∣ a) : nat_abs (a / b) = nat_abs a / na
       by 
         rw [Int.div_mul_cancel H]
 
-theorem nat_abs_dvd_abs_iff {i j : ℤ} : i.nat_abs ∣ j.nat_abs ↔ i ∣ j :=
-  ⟨fun H : i.nat_abs ∣ j.nat_abs => dvd_nat_abs.mp (nat_abs_dvd.mp (coe_nat_dvd.mpr H)),
-    fun H : i ∣ j => coe_nat_dvd.mp (dvd_nat_abs.mpr (nat_abs_dvd.mpr H))⟩
+-- error in Data.Int.Gcd: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nat_abs_dvd_abs_iff {i j : exprℤ()} : «expr ↔ »(«expr ∣ »(i.nat_abs, j.nat_abs), «expr ∣ »(i, j)) :=
+⟨assume
+ H : «expr ∣ »(i.nat_abs, j.nat_abs), dvd_nat_abs.mp (nat_abs_dvd.mp (coe_nat_dvd.mpr H)), assume
+ H : «expr ∣ »(i, j), coe_nat_dvd.mp (dvd_nat_abs.mpr (nat_abs_dvd.mpr H))⟩
 
 theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Nat.Prime p) {m n : ℤ} {k l : ℕ}
   (hpm : «expr↑ » (p ^ k) ∣ m) (hpn : «expr↑ » (p ^ l) ∣ n) (hpmn : «expr↑ » (p ^ (k+l)+1) ∣ m*n) :

@@ -68,18 +68,15 @@ protected unsafe def of_int (α : expr) : ℤ → tactic expr
     let e ← expr.of_nat α (n+1)
     tactic.mk_app `` Neg.neg [e]
 
+-- error in Tactic.Core: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Generates an expression of the form `∃(args), inner`. `args` is assumed to be a list of local
 constants. When possible, `p ∧ q` is used instead of `∃(_ : p), q`. -/
-unsafe def mk_exists_lst (args : List expr) (inner : expr) : tactic expr :=
-  args.mfoldr
-    (fun arg i : expr =>
-      do 
-        let t ← infer_type arg 
-        let sort l ← infer_type t 
-        return$
-            if arg.occurs i ∨ l ≠ level.zero then (const `Exists [l] : expr) t (i.lambdas [arg]) else
-              (const `and [] : expr) t i)
-    inner
+meta
+def mk_exists_lst (args : list expr) (inner : expr) : tactic expr :=
+args.mfoldr (λ arg i : expr, do {
+ t ← infer_type arg,
+   sort l ← infer_type t,
+   «expr $ »(return, if «expr ∨ »(arg.occurs i, «expr ≠ »(l, level.zero)) then (const (`Exists) «expr[ , ]»([l]) : expr) t (i.lambdas «expr[ , ]»([arg])) else (const (`and) «expr[ , ]»([]) : expr) t i) }) inner
 
 /-- `traverse f e` applies the monadic function `f` to the direct descendants of `e`. -/
 unsafe def traverse {m : Type → Type u} [Applicativeₓ m] {elab elab' : Bool} (f : expr elab → m (expr elab')) :
@@ -1265,44 +1262,31 @@ end Interactive
 unsafe def successes (tactics : List (tactic α)) : tactic (List α) :=
   List.filterMap id <$> Monadₓ.sequence (tactics.map fun t => try_core t)
 
+-- error in Tactic.Core: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Try all the tactics in a list, each time starting at the original `tactic_state`,
 returning the list of successful results,
 and reverting to the original `tactic_state`.
--/
-unsafe def try_all {α : Type} (tactics : List (tactic α)) : tactic (List α) :=
-  fun s =>
-    result.success
-      (tactics.map$
-          fun t : tactic α =>
-            match t s with 
-            | result.success a s' => [a]
-            | _ => []).join
-      s
+-/ meta def try_all {α : Type} (tactics : list (tactic α)) : tactic (list α) :=
+λ s, result.success «expr $ »(tactics.map, λ t : tactic α, match t s with
+ | result.success a s' := «expr[ , ]»([a])
+ | _ := «expr[ , ]»([]) end).join s
 
+-- error in Tactic.Core: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Try all the tactics in a list, each time starting at the original `tactic_state`,
 returning the list of successful results sorted by
 the value produced by a subsequent execution of the `sort_by` tactic,
 and reverting to the original `tactic_state`.
 -/
-unsafe def try_all_sorted {α : Type} (tactics : List (tactic α)) (sort_by : tactic ℕ := num_goals) :
-  tactic (List (α × ℕ)) :=
-  fun s =>
-    result.success
-      ((tactics.map$
-              fun t : tactic α =>
-                match
-                  (do 
-                      let a ← t 
-                      let n ← sort_by 
-                      return (a, n))
-                    s with
-                  
-                | result.success a s' => [a]
-                | _ => []).join.qsort
-        fun p q : α × ℕ => p.2 < q.2)
-      s
+meta
+def try_all_sorted
+{α : Type}
+(tactics : list (tactic α))
+(sort_by : tactic exprℕ() := num_goals) : tactic (list «expr × »(α, exprℕ())) :=
+λ s, result.success («expr $ »(tactics.map, λ t : tactic α, match (do { a ← t, n ← sort_by, return (a, n) }) s with
+  | result.success a s' := «expr[ , ]»([a])
+  | _ := «expr[ , ]»([]) end).join.qsort (λ p q : «expr × »(α, exprℕ()), «expr < »(p.2, q.2))) s
 
 /-- Return target after instantiating metavars and whnf. -/
 private unsafe def target' : tactic expr :=

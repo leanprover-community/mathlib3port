@@ -29,19 +29,21 @@ open Finset Filter Metric
 
 variable{ι α E F : Type _}[SemiNormedGroup E][SemiNormedGroup F]
 
-theorem cauchy_seq_finset_iff_vanishing_norm {f : ι → E} :
-  (CauchySeq fun s : Finset ι => ∑i in s, f i) ↔
-    ∀ ε _ : ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ∥∑i in t, f i∥ < ε :=
-  by 
-    rw [cauchy_seq_finset_iff_vanishing, nhds_basis_ball.forall_iff]
-    ·
-      simp only [ball_zero_eq, Set.mem_set_of_eq]
-    ·
-      rintro s t hst ⟨s', hs'⟩
-      exact ⟨s', fun t' ht' => hst$ hs' _ ht'⟩
+-- error in Analysis.Normed.Group.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy_seq_finset_iff_vanishing_norm
+{f : ι → E} : «expr ↔ »(cauchy_seq (λ
+  s : finset ι, «expr∑ in , »((i), s, f i)), ∀
+ ε «expr > » (0 : exprℝ()), «expr∃ , »((s : finset ι), ∀
+  t, disjoint t s → «expr < »(«expr∥ ∥»(«expr∑ in , »((i), t, f i)), ε))) :=
+begin
+  rw ["[", expr cauchy_seq_finset_iff_vanishing, ",", expr nhds_basis_ball.forall_iff, "]"] [],
+  { simp [] [] ["only"] ["[", expr ball_zero_eq, ",", expr set.mem_set_of_eq, "]"] [] [] },
+  { rintros [ident s, ident t, ident hst, "⟨", ident s', ",", ident hs', "⟩"],
+    exact [expr ⟨s', λ t' ht', «expr $ »(hst, hs' _ ht')⟩] }
+end
 
 theorem summable_iff_vanishing_norm [CompleteSpace E] {f : ι → E} :
-  Summable f ↔ ∀ ε _ : ε > (0 : ℝ), ∃ s : Finset ι, ∀ t, Disjoint t s → ∥∑i in t, f i∥ < ε :=
+  Summable f ↔ ∀ ε (_ : ε > (0 : ℝ)), ∃ s : Finset ι, ∀ t, Disjoint t s → ∥∑i in t, f i∥ < ε :=
   by 
     rw [summable_iff_cauchy_seq_finset, cauchy_seq_finset_iff_vanishing_norm]
 
@@ -65,13 +67,19 @@ begin
     «expr < »(..., ε) : hs _ (ht.mono_right le_sup_left)
 end
 
-theorem cauchy_seq_finset_of_norm_bounded {f : ι → E} (g : ι → ℝ) (hg : Summable g) (h : ∀ i, ∥f i∥ ≤ g i) :
-  CauchySeq fun s : Finset ι => ∑i in s, f i :=
-  cauchy_seq_finset_of_norm_bounded_eventually hg$ eventually_of_forall h
+-- error in Analysis.Normed.Group.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy_seq_finset_of_norm_bounded
+{f : ι → E}
+(g : ι → exprℝ())
+(hg : summable g)
+(h : ∀ i, «expr ≤ »(«expr∥ ∥»(f i), g i)) : cauchy_seq (λ s : finset ι, «expr∑ in , »((i), s, f i)) :=
+«expr $ »(cauchy_seq_finset_of_norm_bounded_eventually hg, eventually_of_forall h)
 
-theorem cauchy_seq_finset_of_summable_norm {f : ι → E} (hf : Summable fun a => ∥f a∥) :
-  CauchySeq fun s : Finset ι => ∑a in s, f a :=
-  cauchy_seq_finset_of_norm_bounded _ hf fun i => le_reflₓ _
+-- error in Analysis.Normed.Group.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy_seq_finset_of_summable_norm
+{f : ι → E}
+(hf : summable (λ a, «expr∥ ∥»(f a))) : cauchy_seq (λ s : finset ι, «expr∑ in , »((a), s, f a)) :=
+cauchy_seq_finset_of_norm_bounded _ hf (assume i, le_refl _)
 
 /-- If a function `f` is summable in norm, and along some sequence of finsets exhausting the space
 its sum is converging to a limit `a`, then this holds along all finsets, i.e., `f` is summable
@@ -80,9 +88,14 @@ theorem has_sum_of_subseq_of_summable {f : ι → E} (hf : Summable fun a => ∥
   [ne_bot p] (hs : tendsto s p at_top) {a : E} (ha : tendsto (fun b => ∑i in s b, f i) p (𝓝 a)) : HasSum f a :=
   tendsto_nhds_of_cauchy_seq_of_subseq (cauchy_seq_finset_of_summable_norm hf) hs ha
 
-theorem has_sum_iff_tendsto_nat_of_summable_norm {f : ℕ → E} {a : E} (hf : Summable fun i => ∥f i∥) :
-  HasSum f a ↔ tendsto (fun n : ℕ => ∑i in range n, f i) at_top (𝓝 a) :=
-  ⟨fun h => h.tendsto_sum_nat, fun h => has_sum_of_subseq_of_summable hf tendsto_finset_range h⟩
+-- error in Analysis.Normed.Group.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_sum_iff_tendsto_nat_of_summable_norm
+{f : exprℕ() → E}
+{a : E}
+(hf : summable (λ
+  i, «expr∥ ∥»(f i))) : «expr ↔ »(has_sum f a, tendsto (λ
+  n : exprℕ(), «expr∑ in , »((i), range n, f i)) at_top (expr𝓝() a)) :=
+⟨λ h, h.tendsto_sum_nat, λ h, has_sum_of_subseq_of_summable hf tendsto_finset_range h⟩
 
 /-- The direct comparison test for series:  if the norm of `f` is bounded by a real function `g`
 which is summable, then `f` is summable. -/

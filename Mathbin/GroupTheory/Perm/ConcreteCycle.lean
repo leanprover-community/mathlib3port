@@ -130,21 +130,20 @@ namespace Cycle
 
 variable{α : Type _}[DecidableEq α](s s' : Cycle α)
 
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 A cycle `s : cycle α` , given `nodup s` can be interpreted as a `equiv.perm α`
 where each element in the list is permuted to the next one, defined as `form_perm`.
--/
-def form_perm : ∀ s : Cycle α h : nodup s, Equiv.Perm α :=
-  fun s =>
-    Quot.hrecOnₓ s (fun l h => form_perm l)
-      fun l₁ l₂ h : l₁ ~r l₂ =>
-        by 
-          ext
-          ·
-            exact h.nodup_iff
-          ·
-            intro h₁ h₂ _ 
-            exact heq_of_eq (form_perm_eq_of_is_rotated h₁ h)
+-/ def form_perm : ∀ (s : cycle α) (h : nodup s), equiv.perm α :=
+λ
+s, quot.hrec_on s (λ
+ l
+ h, form_perm l) (λ (l₁ l₂) (h : «expr ~r »(l₁, l₂)), begin
+   ext [] [] [],
+   { exact [expr h.nodup_iff] },
+   { intros [ident h₁, ident h₂, "_"],
+     exact [expr heq_of_eq (form_perm_eq_of_is_rotated h₁ h)] }
+ end)
 
 @[simp]
 theorem form_perm_coe (l : List α) (hl : l.nodup) : form_perm (l : Cycle α) hl = l.form_perm :=
@@ -513,37 +512,33 @@ The forward direction is implemented by `equiv.perm.to_cycle`.
       { rintro ["_", ident rfl],
         simpa [] [] [] ["[", expr nat.succ_le_succ_iff, "]"] [] ["using", expr hl] } } } }
 
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Any cyclic `f : perm α` is isomorphic to the nontrivial `cycle α`
 that corresponds to repeated application of `f`.
 The forward direction is implemented by finding this `cycle α` using `fintype.choose`.
--/
-def iso_cycle' : { f : perm α // is_cycle f } ≃ { s : Cycle α // s.nodup ∧ s.nontrivial } :=
-  { toFun := fun f => Fintype.choose _ f.prop.exists_unique_cycle_nontrivial_subtype,
-    invFun := fun s => ⟨(s : Cycle α).formPerm s.prop.left, (s : Cycle α).is_cycle_form_perm _ s.prop.right⟩,
-    left_inv :=
-      fun f =>
-        by 
-          simpa [Subtype.ext_iff] using Fintype.choose_spec _ f.prop.exists_unique_cycle_nontrivial_subtype,
-    right_inv :=
-      fun ⟨s, hs, ht⟩ =>
-        by 
-          simp [Subtype.coe_mk]
-          convert Fintype.choose_subtype_eq (fun s' : Cycle α => s'.nodup ∧ s'.nontrivial) _ 
-          ext ⟨s', hs', ht'⟩
-          simp [Cycle.form_perm_eq_form_perm_iff, iff_not_comm.mp hs.nontrivial_iff, iff_not_comm.mp hs'.nontrivial_iff,
-            ht] }
+-/ def iso_cycle' : «expr ≃ »({f : perm α // is_cycle f}, {s : cycle α // «expr ∧ »(s.nodup, s.nontrivial)}) :=
+{ to_fun := λ f, fintype.choose _ f.prop.exists_unique_cycle_nontrivial_subtype,
+  inv_fun := λ s, ⟨(s : cycle α).form_perm s.prop.left, (s : cycle α).is_cycle_form_perm _ s.prop.right⟩,
+  left_inv := λ
+  f, by simpa [] [] [] ["[", expr subtype.ext_iff, "]"] [] ["using", expr fintype.choose_spec _ f.prop.exists_unique_cycle_nontrivial_subtype],
+  right_inv := λ ⟨s, hs, ht⟩, by { simp [] [] [] ["[", expr subtype.coe_mk, "]"] [] [],
+    convert [] [expr fintype.choose_subtype_eq (λ s' : cycle α, «expr ∧ »(s'.nodup, s'.nontrivial)) _] [],
+    ext [] ["⟨", ident s', ",", ident hs', ",", ident ht', "⟩"] [],
+    simp [] [] [] ["[", expr cycle.form_perm_eq_form_perm_iff, ",", expr iff_not_comm.mp hs.nontrivial_iff, ",", expr iff_not_comm.mp hs'.nontrivial_iff, ",", expr ht, "]"] [] [] } }
 
 -- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:1096:9: unsupported: advanced notation (l:(foldr `, ` (h t, list.cons h t) list.nil `]`))
 notation
 `c[`
 l:(foldr `, ` (h t, list.cons h t) list.nil `]`) := cycle.form_perm «expr↑ »(l) (cycle.nodup_coe_iff.mpr exprdec_trivial())
 
-instance repr_perm [HasRepr α] : HasRepr (perm α) :=
-  ⟨fun f =>
-      reprₓ
-        (Multiset.pmap (fun g : perm α hg : g.is_cycle => iso_cycle ⟨g, hg⟩) (perm.cycle_factors_finset f).val
-          fun g hg => (mem_cycle_factors_finset_iff.mp (Finset.mem_def.mpr hg)).left)⟩
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance repr_perm [has_repr α] : has_repr (perm α) :=
+⟨λ
+ f, repr (multiset.pmap (λ
+   (g : perm α)
+   (hg : g.is_cycle), iso_cycle ⟨g, hg⟩) (perm.cycle_factors_finset f).val (λ
+   g hg, (mem_cycle_factors_finset_iff.mp (finset.mem_def.mpr hg)).left))⟩
 
 end Equiv.Perm
 

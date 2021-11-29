@@ -62,7 +62,7 @@ attribute [irreducible] MulOpposite
 
 /-- A recursor for `opposite`. Use as `induction x using mul_opposite.rec`. -/
 @[simp]
-protected def rec {F : ∀ X : «expr ᵐᵒᵖ» α, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X :=
+protected def rec {F : ∀ (X : «expr ᵐᵒᵖ» α), Sort v} (h : ∀ X, F (op X)) : ∀ X, F X :=
   fun X => h (unop X)
 
 /-- The canonical bijection between `αᵐᵒᵖ` and `α`. -/
@@ -352,11 +352,12 @@ instance  [Ringₓ α] : Ringₓ («expr ᵐᵒᵖ» α) :=
 instance  [CommRingₓ α] : CommRingₓ («expr ᵐᵒᵖ» α) :=
   { MulOpposite.ring α, MulOpposite.commSemiring α with  }
 
-instance  [HasZero α] [Mul α] [NoZeroDivisors α] : NoZeroDivisors («expr ᵐᵒᵖ» α) :=
-  { eq_zero_or_eq_zero_of_mul_eq_zero :=
-      fun x y H : op (_*_) = op (0 : α) =>
-        Or.cases_on (eq_zero_or_eq_zero_of_mul_eq_zero$ op_injective H) (fun hy => Or.inr$ unop_injective$ hy)
-          fun hx => Or.inl$ unop_injective$ hx }
+-- error in Algebra.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance [has_zero α] [has_mul α] [no_zero_divisors α] : no_zero_divisors «expr ᵐᵒᵖ»(α) :=
+{ eq_zero_or_eq_zero_of_mul_eq_zero := λ
+  (x y)
+  (H : «expr = »(op «expr * »(_, _), op (0 : α))), or.cases_on «expr $ »(eq_zero_or_eq_zero_of_mul_eq_zero, op_injective H) (λ
+   hy, «expr $ »(or.inr, «expr $ »(unop_injective, hy))) (λ hx, «expr $ »(or.inl, «expr $ »(unop_injective, hx))) }
 
 instance  [Ringₓ α] [IsDomain α] : IsDomain («expr ᵐᵒᵖ» α) :=
   { MulOpposite.no_zero_divisors α, MulOpposite.ring α, MulOpposite.nontrivial α with  }

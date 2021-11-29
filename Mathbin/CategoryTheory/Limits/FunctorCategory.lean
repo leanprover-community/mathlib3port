@@ -42,7 +42,7 @@ it suffices to show that each evaluation cone is a limit. In other words, to pro
 limiting you can show it's pointwise limiting.
 -/
 def evaluation_jointly_reflects_limits {F : J ⥤ K ⥤ C} (c : cone F)
-  (t : ∀ k : K, is_limit (((evaluation K C).obj k).mapCone c)) : is_limit c :=
+  (t : ∀ (k : K), is_limit (((evaluation K C).obj k).mapCone c)) : is_limit c :=
   { lift :=
       fun s =>
         { app := fun k => (t k).lift ⟨s.X.obj k, whisker_right s.π ((evaluation K C).obj k)⟩,
@@ -70,7 +70,7 @@ them together to give a cone for the diagram `F`.
 (essentially) made up of the original cones.
 -/
 @[simps]
-def combine_cones (F : J ⥤ K ⥤ C) (c : ∀ k : K, limit_cone (F.flip.obj k)) : cone F :=
+def combine_cones (F : J ⥤ K ⥤ C) (c : ∀ (k : K), limit_cone (F.flip.obj k)) : cone F :=
   { x :=
       { obj := fun k => (c k).Cone.x, map := fun k₁ k₂ f => (c k₂).IsLimit.lift ⟨_, (c k₁).Cone.π ≫ F.flip.map f⟩,
         map_id' :=
@@ -91,14 +91,14 @@ def combine_cones (F : J ⥤ K ⥤ C) (c : ∀ k : K, limit_cone (F.flip.obj k))
         naturality' := fun j₁ j₂ g => nat_trans.ext _ _$ funext$ fun k => (c k).Cone.π.naturality g } }
 
 /-- The stitched together cones each project down to the original given cones (up to iso). -/
-def evaluate_combined_cones (F : J ⥤ K ⥤ C) (c : ∀ k : K, limit_cone (F.flip.obj k)) (k : K) :
+def evaluate_combined_cones (F : J ⥤ K ⥤ C) (c : ∀ (k : K), limit_cone (F.flip.obj k)) (k : K) :
   ((evaluation K C).obj k).mapCone (combine_cones F c) ≅ (c k).Cone :=
   cones.ext (iso.refl _)
     (by 
       tidy)
 
 /-- Stitching together limiting cones gives a limiting cone. -/
-def combined_is_limit (F : J ⥤ K ⥤ C) (c : ∀ k : K, limit_cone (F.flip.obj k)) : is_limit (combine_cones F c) :=
+def combined_is_limit (F : J ⥤ K ⥤ C) (c : ∀ (k : K), limit_cone (F.flip.obj k)) : is_limit (combine_cones F c) :=
   evaluation_jointly_reflects_limits _ fun k => (c k).IsLimit.ofIsoLimit (evaluate_combined_cones F c k).symm
 
 /--
@@ -107,7 +107,7 @@ it suffices to show that each evaluation cocone is a colimit. In other words, to
 colimiting you can show it's pointwise colimiting.
 -/
 def evaluation_jointly_reflects_colimits {F : J ⥤ K ⥤ C} (c : cocone F)
-  (t : ∀ k : K, is_colimit (((evaluation K C).obj k).mapCocone c)) : is_colimit c :=
+  (t : ∀ (k : K), is_colimit (((evaluation K C).obj k).mapCocone c)) : is_colimit c :=
   { desc :=
       fun s =>
         { app := fun k => (t k).desc ⟨s.X.obj k, whisker_right s.ι ((evaluation K C).obj k)⟩,
@@ -138,7 +138,7 @@ them together to give a cocone for the diagram `F`.
 (essentially) made up of the original cocones.
 -/
 @[simps]
-def combine_cocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, colimit_cocone (F.flip.obj k)) : cocone F :=
+def combine_cocones (F : J ⥤ K ⥤ C) (c : ∀ (k : K), colimit_cocone (F.flip.obj k)) : cocone F :=
   { x :=
       { obj := fun k => (c k).Cocone.x, map := fun k₁ k₂ f => (c k₁).IsColimit.desc ⟨_, F.flip.map f ≫ (c k₂).Cocone.ι⟩,
         map_id' :=
@@ -159,14 +159,14 @@ def combine_cocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, colimit_cocone (F.flip.o
         naturality' := fun j₁ j₂ g => nat_trans.ext _ _$ funext$ fun k => (c k).Cocone.ι.naturality g } }
 
 /-- The stitched together cocones each project down to the original given cocones (up to iso). -/
-def evaluate_combined_cocones (F : J ⥤ K ⥤ C) (c : ∀ k : K, colimit_cocone (F.flip.obj k)) (k : K) :
+def evaluate_combined_cocones (F : J ⥤ K ⥤ C) (c : ∀ (k : K), colimit_cocone (F.flip.obj k)) (k : K) :
   ((evaluation K C).obj k).mapCocone (combine_cocones F c) ≅ (c k).Cocone :=
   cocones.ext (iso.refl _)
     (by 
       tidy)
 
 /-- Stitching together colimiting cocones gives a colimiting cocone. -/
-def combined_is_colimit (F : J ⥤ K ⥤ C) (c : ∀ k : K, colimit_cocone (F.flip.obj k)) :
+def combined_is_colimit (F : J ⥤ K ⥤ C) (c : ∀ (k : K), colimit_cocone (F.flip.obj k)) :
   is_colimit (combine_cocones F c) :=
   evaluation_jointly_reflects_colimits _ fun k => (c k).IsColimit.ofIsoColimit (evaluate_combined_cocones F c k).symm
 
@@ -288,11 +288,11 @@ def preserves_limit_of_evaluation
 
 /-- `F : D ⥤ K ⥤ C` preserves limits of shape `J` if it does for each `k : K`. -/
 def preserves_limits_of_shape_of_evaluation (F : D ⥤ K ⥤ C) (J : Type v) [small_category J]
-  (H : ∀ k : K, preserves_limits_of_shape J (F ⋙ (evaluation K C).obj k)) : preserves_limits_of_shape J F :=
+  (H : ∀ (k : K), preserves_limits_of_shape J (F ⋙ (evaluation K C).obj k)) : preserves_limits_of_shape J F :=
   ⟨fun G => preserves_limit_of_evaluation F G fun k => preserves_limits_of_shape.preserves_limit⟩
 
 /-- `F : D ⥤ K ⥤ C` preserves all limits if it does for each `k : K`. -/
-def preserves_limits_of_evaluation (F : D ⥤ K ⥤ C) (H : ∀ k : K, preserves_limits (F ⋙ (evaluation K C).obj k)) :
+def preserves_limits_of_evaluation (F : D ⥤ K ⥤ C) (H : ∀ (k : K), preserves_limits (F ⋙ (evaluation K C).obj k)) :
   preserves_limits F :=
   ⟨fun L hL =>
       by 
@@ -320,11 +320,11 @@ def preserves_colimit_of_evaluation
 
 /-- `F : D ⥤ K ⥤ C` preserves all colimits of shape `J` if it does for each `k : K`. -/
 def preserves_colimits_of_shape_of_evaluation (F : D ⥤ K ⥤ C) (J : Type v) [small_category J]
-  (H : ∀ k : K, preserves_colimits_of_shape J (F ⋙ (evaluation K C).obj k)) : preserves_colimits_of_shape J F :=
+  (H : ∀ (k : K), preserves_colimits_of_shape J (F ⋙ (evaluation K C).obj k)) : preserves_colimits_of_shape J F :=
   ⟨fun G => preserves_colimit_of_evaluation F G fun k => preserves_colimits_of_shape.preserves_colimit⟩
 
 /-- `F : D ⥤ K ⥤ C` preserves all colimits if it does for each `k : K`. -/
-def preserves_colimits_of_evaluation (F : D ⥤ K ⥤ C) (H : ∀ k : K, preserves_colimits (F ⋙ (evaluation K C).obj k)) :
+def preserves_colimits_of_evaluation (F : D ⥤ K ⥤ C) (H : ∀ (k : K), preserves_colimits (F ⋙ (evaluation K C).obj k)) :
   preserves_colimits F :=
   ⟨fun L hL =>
       by 

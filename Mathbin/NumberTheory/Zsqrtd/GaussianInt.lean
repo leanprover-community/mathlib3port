@@ -358,7 +358,7 @@ theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.prime] (h
     Classical.by_contradiction$
       fun hpi =>
         let ⟨a, b, hab⟩ := sq_add_sq_of_nat_prime_of_not_irreducible p hpi 
-        have  : ∀ a b : Zmod 4, ((a^2)+b^2) ≠ p :=
+        have  : ∀ (a b : Zmod 4), ((a^2)+b^2) ≠ p :=
           by 
             erw [←Zmod.nat_cast_mod 4 p, hp3] <;>
               exact

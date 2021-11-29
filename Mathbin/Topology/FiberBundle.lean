@@ -169,7 +169,7 @@ structure TopologicalFiberBundle.Pretrivialization(proj : Z → B) extends Local
   open_base_set : IsOpen base_set 
   source_eq : source = proj ⁻¹' base_set 
   target_eq : target = Set.Prod base_set univ 
-  proj_to_fun : ∀ p _ : p ∈ source, (to_fun p).1 = proj p
+  proj_to_fun : ∀ p (_ : p ∈ source), (to_fun p).1 = proj p
 
 open TopologicalFiberBundle
 
@@ -275,7 +275,7 @@ structure TopologicalFiberBundle.Trivialization(proj : Z → B) extends LocalHom
   open_base_set : IsOpen base_set 
   source_eq : source = proj ⁻¹' base_set 
   target_eq : target = Set.Prod base_set univ 
-  proj_to_fun : ∀ p _ : p ∈ source, (to_local_homeomorph p).1 = proj p
+  proj_to_fun : ∀ p (_ : p ∈ source), (to_local_homeomorph p).1 = proj p
 
 open TopologicalFiberBundle
 
@@ -386,7 +386,7 @@ end TopologicalFiberBundle.Trivialization
 for which the fibers are all homeomorphic to `F`, such that the local situation around each point
 is a direct product. -/
 def IsTopologicalFiberBundle (proj : Z → B) : Prop :=
-  ∀ x : B, ∃ e : trivialization F proj, x ∈ e.base_set
+  ∀ (x : B), ∃ e : trivialization F proj, x ∈ e.base_set
 
 /-- A trivial topological fiber bundle with fiber `F` over a base `B` is a space `Z`
 projecting on `B` for which there exists a homeomorphism to `B × F` that sends `proj`
@@ -549,7 +549,7 @@ open_locale Classical
 
 variable{B' : Type _}[TopologicalSpace B']
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a bundle trivialization of `proj : Z → B` and a continuous map `f : B' → B`,
 construct a bundle trivialization of `φ : {p : B' × Z | f p.1 = proj p.2} → B'`
 given by `φ x = (x : B' × Z).1`. -/
@@ -600,14 +600,17 @@ def topological_fiber_bundle.trivialization.comap
   open_base_set := e.open_base_set.preimage hf,
   proj_to_fun := λ _ _, rfl }
 
+-- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `proj : Z → B` is a topological fiber bundle with fiber `F` and `f : B' → B` is a continuous
 map, then the pullback bundle (a.k.a. induced bundle) is the topological bundle with the total space
 `{(x, y) : B' × Z | f x = proj y}` given by `λ ⟨(x, y), h⟩, x`. -/
-theorem IsTopologicalFiberBundle.comap (h : IsTopologicalFiberBundle F proj) {f : B' → B} (hf : Continuous f) :
-  IsTopologicalFiberBundle F fun x : { p:B' × Z | f p.1 = proj p.2 } => (x : B' × Z).1 :=
-  fun x =>
-    let ⟨e, he⟩ := h (f x)
-    ⟨e.comap f hf x he, he⟩
+theorem is_topological_fiber_bundle.comap
+(h : is_topological_fiber_bundle F proj)
+{f : B' → B}
+(hf : continuous f) : is_topological_fiber_bundle F (λ
+ x : {p : «expr × »(B', Z) | «expr = »(f p.1, proj p.2)}, (x : «expr × »(B', Z)).1) :=
+λ x, let ⟨e, he⟩ := h (f x) in
+⟨e.comap f hf x he, he⟩
 
 end Comap
 
@@ -798,7 +801,7 @@ variable(E : B → Type _)
 
 attribute [mfld_simps] proj total_space_mk coe_fst coe_snd_map_apply coe_snd_map_smul
 
-instance  [I : TopologicalSpace F] : ∀ x : B, TopologicalSpace (trivialₓ B F x) :=
+instance  [I : TopologicalSpace F] : ∀ (x : B), TopologicalSpace (trivialₓ B F x) :=
   fun x => I
 
 instance  [t₁ : TopologicalSpace B] [t₂ : TopologicalSpace F] : TopologicalSpace (total_space (trivialₓ B F)) :=
@@ -806,6 +809,7 @@ instance  [t₁ : TopologicalSpace B] [t₂ : TopologicalSpace F] : TopologicalS
 
 end Bundle
 
+-- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Core data defining a locally trivial topological bundle with fiber `F` over a topological
 space `B`. Note that "bundle" is used in its mathematical sense. This is the (computer science)
 bundled version, i.e., all the relevant data is contained in the following structure. A family of
@@ -814,20 +818,28 @@ Trivialization changes from `i` to `j` are given by continuous maps `coord_chang
 `base_set i ∩ base_set j` to the set of homeomorphisms of `F`, but we express them as maps
 `B → F → F` and require continuity on `(base_set i ∩ base_set j) × F` to avoid the topology on the
 space of continuous maps on `F`. -/
-@[nolint has_inhabited_instance]
-structure TopologicalFiberBundleCore(ι : Type _)(B : Type _)[TopologicalSpace B](F : Type _)[TopologicalSpace F] where 
-  BaseSet : ι → Set B 
-  is_open_base_set : ∀ i, IsOpen (base_set i)
-  indexAt : B → ι 
-  mem_base_set_at : ∀ x, x ∈ base_set (index_at x)
-  coordChange : ι → ι → B → F → F 
-  coord_change_self : ∀ i, ∀ x _ : x ∈ base_set i, ∀ v, coord_change i i x v = v 
-  coord_change_continuous :
-  ∀ i j, ContinuousOn (fun p : B × F => coord_change i j p.1 p.2) (Set.Prod (base_set i ∩ base_set j) univ)
-  coord_change_comp :
-  ∀ i j k,
-    ∀ x _ : x ∈ base_set i ∩ base_set j ∩ base_set k,
-      ∀ v, (coord_change j k x) (coord_change i j x v) = coord_change i k x v
+@[nolint #[ident has_inhabited_instance]]
+structure topological_fiber_bundle_core
+(ι : Type*)
+(B : Type*)
+[topological_space B]
+(F : Type*)
+[topological_space F] :=
+  (base_set : ι → set B)
+  (is_open_base_set : ∀ i, is_open (base_set i))
+  (index_at : B → ι)
+  (mem_base_set_at : ∀ x, «expr ∈ »(x, base_set (index_at x)))
+  (coord_change : ι → ι → B → F → F)
+  (coord_change_self : ∀ i, ∀ x «expr ∈ » base_set i, ∀ v, «expr = »(coord_change i i x v, v))
+  (coord_change_continuous : ∀
+   i
+   j, continuous_on (λ p : «expr × »(B, F), coord_change i j p.1 p.2) (set.prod «expr ∩ »(base_set i, base_set j) univ))
+  (coord_change_comp : ∀
+   i
+   j
+   k, ∀
+   x «expr ∈ » «expr ∩ »(«expr ∩ »(base_set i, base_set j), base_set k), ∀
+   v, «expr = »(coord_change j k x (coord_change i j x v), coord_change i k x v))
 
 namespace TopologicalFiberBundleCore
 
@@ -1191,9 +1203,9 @@ are also local homeomorphism and hence local trivializations. -/
 @[nolint has_inhabited_instance]
 structure TopologicalFiberPrebundle(proj : Z → B) where 
   pretrivializationAt : B → pretrivialization F proj 
-  mem_base_pretrivialization_at : ∀ x : B, x ∈ (pretrivialization_at x).BaseSet 
+  mem_base_pretrivialization_at : ∀ (x : B), x ∈ (pretrivialization_at x).BaseSet 
   continuous_triv_change :
-  ∀ x y : B,
+  ∀ (x y : B),
     ContinuousOn (pretrivialization_at x ∘ (pretrivialization_at y).toLocalEquiv.symm)
       ((pretrivialization_at y).Target ∩ (pretrivialization_at y).toLocalEquiv.symm ⁻¹' (pretrivialization_at x).Source)
 
@@ -1237,7 +1249,7 @@ begin
   exact [expr hu1.inter (a.pretrivialization_at y).open_target]
 end
 
--- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.FiberBundle: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Promotion from a `pretrivialization` to a `trivialization`. -/
 def trivialization_at
 (a : topological_fiber_prebundle F proj)

@@ -93,40 +93,34 @@ theorem monic_scale_roots_iff {p : Polynomial R} (s : R) : monic (scaleRoots p s
   by 
     simp only [monic, leading_coeff, nat_degree_scale_roots, coeff_scale_roots_nat_degree]
 
-theorem scale_roots_eval₂_eq_zero {p : Polynomial S} (f : S →+* R) {r : R} {s : S} (hr : eval₂ f r p = 0) :
-  eval₂ f (f s*r) (scaleRoots p s) = 0 :=
-  calc
-    eval₂ f (f s*r) (scaleRoots p s) =
-      (scaleRoots p s).support.Sum fun i => f (coeff p i*s ^ (p.nat_degree - i))*(f s*r) ^ i :=
-    by 
-      simp [eval₂_eq_sum, sum_def]
-    _ = p.support.sum fun i => f (coeff p i*s ^ (p.nat_degree - i))*(f s*r) ^ i :=
-    Finset.sum_subset (support_scale_roots_le p s)
-      fun i hi hi' =>
-        let this : (coeff p i*s ^ (p.nat_degree - i)) = 0 :=
-          by 
-            simpa using hi' 
-        by 
-          simp [this]
-    _ = p.support.sum fun i : ℕ => (f (p.coeff i)*f s ^ (p.nat_degree - i)+i)*r ^ i :=
-    Finset.sum_congr rfl
-      fun i hi =>
-        by 
-          simpRw [f.map_mul, f.map_pow, pow_addₓ, mul_powₓ, mul_assocₓ]
-    _ = p.support.sum fun i : ℕ => (f s ^ p.nat_degree)*f (p.coeff i)*r ^ i :=
-    Finset.sum_congr rfl
-      fun i hi =>
-        by 
-          rw [mul_assocₓ, mul_left_commₓ, tsub_add_cancel_of_le]
-          exact le_nat_degree_of_ne_zero (polynomial.mem_support_iff.mp hi)
-    _ = (f s ^ p.nat_degree)*p.support.sum fun i : ℕ => f (p.coeff i)*r ^ i := Finset.mul_sum.symm 
-    _ = (f s ^ p.nat_degree)*eval₂ f r p :=
-    by 
-      simp [eval₂_eq_sum, sum_def]
-    _ = 0 :=
-    by 
-      rw [hr, _root_.mul_zero]
-    
+-- error in RingTheory.Polynomial.ScaleRoots: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem scale_roots_eval₂_eq_zero
+{p : polynomial S}
+(f : «expr →+* »(S, R))
+{r : R}
+{s : S}
+(hr : «expr = »(eval₂ f r p, 0)) : «expr = »(eval₂ f «expr * »(f s, r) (scale_roots p s), 0) :=
+calc
+  «expr = »(eval₂ f «expr * »(f s, r) (scale_roots p s), (scale_roots p s).support.sum (λ
+    i, «expr * »(f «expr * »(coeff p i, «expr ^ »(s, «expr - »(p.nat_degree, i))), «expr ^ »(«expr * »(f s, r), i)))) : by simp [] [] [] ["[", expr eval₂_eq_sum, ",", expr sum_def, "]"] [] []
+  «expr = »(..., p.support.sum (λ
+    i, «expr * »(f «expr * »(coeff p i, «expr ^ »(s, «expr - »(p.nat_degree, i))), «expr ^ »(«expr * »(f s, r), i)))) : finset.sum_subset (support_scale_roots_le p s) (λ
+   i
+   hi
+   hi', let this : «expr = »(«expr * »(coeff p i, «expr ^ »(s, «expr - »(p.nat_degree, i))), 0) := by simpa [] [] [] [] [] ["using", expr hi'] in
+   by simp [] [] [] ["[", expr this, "]"] [] [])
+  «expr = »(..., p.support.sum (λ
+    i : exprℕ(), «expr * »(«expr * »(f (p.coeff i), «expr ^ »(f s, «expr + »(«expr - »(p.nat_degree, i), i))), «expr ^ »(r, i)))) : finset.sum_congr rfl (λ
+   i
+   hi, by simp_rw ["[", expr f.map_mul, ",", expr f.map_pow, ",", expr pow_add, ",", expr mul_pow, ",", expr mul_assoc, "]"] [])
+  «expr = »(..., p.support.sum (λ
+    i : exprℕ(), «expr * »(«expr ^ »(f s, p.nat_degree), «expr * »(f (p.coeff i), «expr ^ »(r, i))))) : finset.sum_congr rfl (λ
+   i hi, by { rw ["[", expr mul_assoc, ",", expr mul_left_comm, ",", expr tsub_add_cancel_of_le, "]"] [],
+     exact [expr le_nat_degree_of_ne_zero (polynomial.mem_support_iff.mp hi)] })
+  «expr = »(..., «expr * »(«expr ^ »(f s, p.nat_degree), p.support.sum (λ
+     i : exprℕ(), «expr * »(f (p.coeff i), «expr ^ »(r, i))))) : finset.mul_sum.symm
+  «expr = »(..., «expr * »(«expr ^ »(f s, p.nat_degree), eval₂ f r p)) : by { simp [] [] [] ["[", expr eval₂_eq_sum, ",", expr sum_def, "]"] [] [] }
+  «expr = »(..., 0) : by rw ["[", expr hr, ",", expr _root_.mul_zero, "]"] []
 
 theorem scale_roots_aeval_eq_zero [Algebra S R] {p : Polynomial S} {r : R} {s : S} (hr : aeval r p = 0) :
   aeval (algebraMap S R s*r) (scaleRoots p s) = 0 :=

@@ -49,13 +49,13 @@ theorem lcm_empty : (∅ : Finset β).lcm f = 1 :=
   fold_empty
 
 @[simp]
-theorem lcm_dvd_iff {a : α} : s.lcm f ∣ a ↔ ∀ b _ : b ∈ s, f b ∣ a :=
+theorem lcm_dvd_iff {a : α} : s.lcm f ∣ a ↔ ∀ b (_ : b ∈ s), f b ∣ a :=
   by 
     apply Iff.trans Multiset.lcm_dvd 
     simp only [Multiset.mem_map, and_imp, exists_imp_distrib]
     exact ⟨fun k b hb => k _ _ hb rfl, fun k a' b hb h => h ▸ k _ hb⟩
 
-theorem lcm_dvd {a : α} : (∀ b _ : b ∈ s, f b ∣ a) → s.lcm f ∣ a :=
+theorem lcm_dvd {a : α} : (∀ b (_ : b ∈ s), f b ∣ a) → s.lcm f ∣ a :=
   lcm_dvd_iff.2
 
 theorem dvd_lcm {b : β} (hb : b ∈ s) : f b ∣ s.lcm f :=
@@ -86,16 +86,20 @@ theorem lcm_union [DecidableEq β] : (s₁ ∪ s₂).lcm f = GcdMonoid.lcm (s₁
       by 
         rw [insert_union, lcm_insert, lcm_insert, ih, lcm_assoc]
 
-theorem lcm_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a _ : a ∈ s₂, f a = g a) : s₁.lcm f = s₂.lcm g :=
+theorem lcm_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a (_ : a ∈ s₂), f a = g a) : s₁.lcm f = s₂.lcm g :=
   by 
     subst hs 
     exact Finset.fold_congr hfg
 
-theorem lcm_mono_fun {g : β → α} (h : ∀ b _ : b ∈ s, f b ∣ g b) : s.lcm f ∣ s.lcm g :=
+theorem lcm_mono_fun {g : β → α} (h : ∀ b (_ : b ∈ s), f b ∣ g b) : s.lcm f ∣ s.lcm g :=
   lcm_dvd fun b hb => (h b hb).trans (dvd_lcm hb)
 
 theorem lcm_mono (h : s₁ ⊆ s₂) : s₁.lcm f ∣ s₂.lcm f :=
   lcm_dvd$ fun b hb => dvd_lcm (h hb)
+
+theorem lcm_eq_zero_iff [Nontrivial α] : s.lcm f = 0 ↔ 0 ∈ f '' s :=
+  by 
+    simp only [Multiset.mem_map, lcm_def, Multiset.lcm_eq_zero_iff, Set.mem_image, mem_coe, ←Finset.mem_def]
 
 end Lcm
 
@@ -117,7 +121,7 @@ theorem gcd_def : s.gcd f = (s.1.map f).gcd :=
 theorem gcd_empty : (∅ : Finset β).gcd f = 0 :=
   fold_empty
 
-theorem dvd_gcd_iff {a : α} : a ∣ s.gcd f ↔ ∀ b _ : b ∈ s, a ∣ f b :=
+theorem dvd_gcd_iff {a : α} : a ∣ s.gcd f ↔ ∀ b (_ : b ∈ s), a ∣ f b :=
   by 
     apply Iff.trans Multiset.dvd_gcd 
     simp only [Multiset.mem_map, and_imp, exists_imp_distrib]
@@ -126,7 +130,7 @@ theorem dvd_gcd_iff {a : α} : a ∣ s.gcd f ↔ ∀ b _ : b ∈ s, a ∣ f b :=
 theorem gcd_dvd {b : β} (hb : b ∈ s) : s.gcd f ∣ f b :=
   dvd_gcd_iff.1 dvd_rfl _ hb
 
-theorem dvd_gcd {a : α} : (∀ b _ : b ∈ s, a ∣ f b) → a ∣ s.gcd f :=
+theorem dvd_gcd {a : α} : (∀ b (_ : b ∈ s), a ∣ f b) → a ∣ s.gcd f :=
   dvd_gcd_iff.2
 
 @[simp]
@@ -154,18 +158,18 @@ theorem gcd_union [DecidableEq β] : (s₁ ∪ s₂).gcd f = GcdMonoid.gcd (s₁
       by 
         rw [insert_union, gcd_insert, gcd_insert, ih, gcd_assoc]
 
-theorem gcd_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a _ : a ∈ s₂, f a = g a) : s₁.gcd f = s₂.gcd g :=
+theorem gcd_congr {f g : β → α} (hs : s₁ = s₂) (hfg : ∀ a (_ : a ∈ s₂), f a = g a) : s₁.gcd f = s₂.gcd g :=
   by 
     subst hs 
     exact Finset.fold_congr hfg
 
-theorem gcd_mono_fun {g : β → α} (h : ∀ b _ : b ∈ s, f b ∣ g b) : s.gcd f ∣ s.gcd g :=
+theorem gcd_mono_fun {g : β → α} (h : ∀ b (_ : b ∈ s), f b ∣ g b) : s.gcd f ∣ s.gcd g :=
   dvd_gcd fun b hb => (gcd_dvd hb).trans (h b hb)
 
 theorem gcd_mono (h : s₁ ⊆ s₂) : s₂.gcd f ∣ s₁.gcd f :=
   dvd_gcd$ fun b hb => gcd_dvd (h hb)
 
-theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 :=
+theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ (x : β), x ∈ s → f x = 0 :=
   by 
     rw [gcd_def, Multiset.gcd_eq_zero_iff]
     split  <;> intro h
@@ -181,23 +185,23 @@ theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 :=
       rcases as with ⟨b, ⟨bs, rfl⟩⟩
       apply h b (mem_def.1 bs)
 
-theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β => f x = 0] : s.gcd f = (s.filter fun x => f x ≠ 0).gcd f :=
-  by 
-    classical 
-    trans ((s.filter fun x => f x = 0) ∪ s.filter fun x => f x ≠ 0).gcd f
-    ·
-      rw [filter_union_filter_neg_eq]
-    rw [gcd_union]
-    trans GcdMonoid.gcd (0 : α) _
-    ·
-      refine' congr (congr rfl _) rfl 
-      apply s.induction_on
-      ·
-        simp 
-      intro a s has h 
-      rw [filter_insert]
-      splitIfs with h1 <;> simp [h, h1]
-    simp [gcd_zero_left, normalize_gcd]
+-- error in Algebra.GcdMonoid.Finset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem gcd_eq_gcd_filter_ne_zero
+[decidable_pred (λ x : β, «expr = »(f x, 0))] : «expr = »(s.gcd f, (s.filter (λ x, «expr ≠ »(f x, 0))).gcd f) :=
+begin
+  classical,
+  transitivity [expr «expr ∪ »(s.filter (λ x, «expr = »(f x, 0)), s.filter (λ x, «expr ≠ »(f x, 0))).gcd f],
+  { rw [expr filter_union_filter_neg_eq] [] },
+  rw [expr gcd_union] [],
+  transitivity [expr gcd_monoid.gcd (0 : α) _],
+  { refine [expr congr (congr rfl _) rfl],
+    apply [expr s.induction_on],
+    { simp [] [] [] [] [] [] },
+    intros [ident a, ident s, ident has, ident h],
+    rw [expr filter_insert] [],
+    split_ifs [] ["with", ident h1]; simp [] [] [] ["[", expr h, ",", expr h1, "]"] [] [] },
+  simp [] [] [] ["[", expr gcd_zero_left, ",", expr normalize_gcd, "]"] [] []
+end
 
 theorem gcd_mul_left {a : α} : (s.gcd fun x => a*f x) = normalize a*s.gcd f :=
   by 
@@ -229,7 +233,7 @@ section IsDomain
 
 variable[CommRingₓ α][IsDomain α][NormalizedGcdMonoid α]
 
-theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α} (h : ∀ x : β, x ∈ s → a ∣ f x - g x) :
+theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α} (h : ∀ (x : β), x ∈ s → a ∣ f x - g x) :
   GcdMonoid.gcd a (s.gcd f) = GcdMonoid.gcd a (s.gcd g) :=
   by 
     classical 

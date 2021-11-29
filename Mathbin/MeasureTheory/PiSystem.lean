@@ -53,7 +53,7 @@ open_locale Classical
   non-disjoint sets. Usually it is also required that the collection is nonempty, but we don't do
   that here. -/
 def IsPiSystem {α} (C : Set (Set α)) : Prop :=
-  ∀ s t _ : s ∈ C _ : t ∈ C, (s ∩ t : Set α).Nonempty → s ∩ t ∈ C
+  ∀ s t (_ : s ∈ C) (_ : t ∈ C), (s ∩ t : Set α).Nonempty → s ∩ t ∈ C
 
 namespace MeasurableSpace
 
@@ -168,7 +168,7 @@ theorem generate_pi_system_mono {α} {S T : Set (Set α)} (hST : S ⊆ T) : Gene
       exact is_pi_system_generate_pi_system T _ _ h_s h_u h_nonempty
 
 theorem generate_pi_system_measurable_set {α} [M : MeasurableSpace α] {S : Set (Set α)}
-  (h_meas_S : ∀ s _ : s ∈ S, MeasurableSet s) (t : Set α) (h_in_pi : t ∈ GeneratePiSystem S) : MeasurableSet t :=
+  (h_meas_S : ∀ s (_ : s ∈ S), MeasurableSet s) (t : Set α) (h_in_pi : t ∈ GeneratePiSystem S) : MeasurableSet t :=
   by 
     induction' h_in_pi with s h_s s u h_gen_s h_gen_u h_nonempty h_s h_u
     ·
@@ -190,47 +190,38 @@ theorem generate_from_generate_pi_system_eq {α} {g : Set (Set α)} :
     ·
       exact fun t h_t => measurable_set_generate_from (GeneratePiSystem.base h_t)
 
-theorem mem_generate_pi_system_Union_elim {α β} {g : β → Set (Set α)} (h_pi : ∀ b, IsPiSystem (g b)) (t : Set α)
-  (h_t : t ∈ GeneratePiSystem (⋃b, g b)) :
-  ∃ (T : Finset β)(f : β → Set α), (t = ⋂(b : _)(_ : b ∈ T), f b) ∧ ∀ b _ : b ∈ T, f b ∈ g b :=
-  by 
-    induction' h_t with s h_s s t' h_gen_s h_gen_t' h_nonempty h_s h_t'
-    ·
-      rcases h_s with ⟨t', ⟨⟨b, rfl⟩, h_s_in_t'⟩⟩
-      refine' ⟨{b}, fun _ => s, _⟩
-      simpa using h_s_in_t'
-    ·
-      rcases h_t' with ⟨T_t', ⟨f_t', ⟨rfl, h_t'⟩⟩⟩
-      rcases h_s with ⟨T_s, ⟨f_s, ⟨rfl, h_s⟩⟩⟩
-      use T_s ∪ T_t',
-        fun b : β =>
-          if b ∈ T_s then if b ∈ T_t' then f_s b ∩ f_t' b else f_s b else if b ∈ T_t' then f_t' b else (∅ : Set α)
-      split 
-      ·
-        ext a 
-        simpRw [Set.mem_inter_iff, Set.mem_Inter, Finset.mem_union, or_imp_distrib]
-        rw [←forall_and_distrib]
-        split  <;>
-          intro h1 b <;>
-            byCases' hbs : b ∈ T_s <;>
-              byCases' hbt : b ∈ T_t' <;>
-                specialize h1 b <;>
-                  simp only [hbs, hbt, if_true, if_false, true_implies_iff, and_selfₓ, false_implies_iff, and_trueₓ,
-                    true_andₓ] at h1⊢
-        all_goals 
-          exact h1 
-      intro b h_b 
-      splitIfs with hbs hbt hbt
-      ·
-        refine' h_pi b (f_s b) (f_t' b) (h_s b hbs) (h_t' b hbt) (Set.Nonempty.mono _ h_nonempty)
-        exact Set.inter_subset_inter (Set.bInter_subset_of_mem hbs) (Set.bInter_subset_of_mem hbt)
-      ·
-        exact h_s b hbs
-      ·
-        exact h_t' b hbt
-      ·
-        rw [Finset.mem_union] at h_b 
-        apply False.elim (h_b.elim hbs hbt)
+-- error in MeasureTheory.PiSystem: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_generate_pi_system_Union_elim
+{α β}
+{g : β → set (set α)}
+(h_pi : ∀ b, is_pi_system (g b))
+(t : set α)
+(h_t : «expr ∈ »(t, generate_pi_system «expr⋃ , »((b), g b))) : «expr∃ , »((T : finset β)
+ (f : β → set α), «expr ∧ »(«expr = »(t, «expr⋂ , »((b «expr ∈ » T), f b)), ∀ b «expr ∈ » T, «expr ∈ »(f b, g b))) :=
+begin
+  induction [expr h_t] [] ["with", ident s, ident h_s, ident s, ident t', ident h_gen_s, ident h_gen_t', ident h_nonempty, ident h_s, ident h_t'] [],
+  { rcases [expr h_s, "with", "⟨", ident t', ",", "⟨", "⟨", ident b, ",", ident rfl, "⟩", ",", ident h_s_in_t', "⟩", "⟩"],
+    refine [expr ⟨{b}, λ _, s, _⟩],
+    simpa [] [] [] [] [] ["using", expr h_s_in_t'] },
+  { rcases [expr h_t', "with", "⟨", ident T_t', ",", "⟨", ident f_t', ",", "⟨", ident rfl, ",", ident h_t', "⟩", "⟩", "⟩"],
+    rcases [expr h_s, "with", "⟨", ident T_s, ",", "⟨", ident f_s, ",", "⟨", ident rfl, ",", ident h_s, "⟩", "⟩", "⟩"],
+    use ["[", expr «expr ∪ »(T_s, T_t'), ",", expr λ
+     b : β, if «expr ∈ »(b, T_s) then if «expr ∈ »(b, T_t') then «expr ∩ »(f_s b, f_t' b) else f_s b else if «expr ∈ »(b, T_t') then f_t' b else («expr∅»() : set α), "]"],
+    split,
+    { ext [] [ident a] [],
+      simp_rw ["[", expr set.mem_inter_iff, ",", expr set.mem_Inter, ",", expr finset.mem_union, ",", expr or_imp_distrib, "]"] [],
+      rw ["<-", expr forall_and_distrib] [],
+      split; intros [ident h1, ident b]; by_cases [expr hbs, ":", expr «expr ∈ »(b, T_s)]; by_cases [expr hbt, ":", expr «expr ∈ »(b, T_t')]; specialize [expr h1 b]; simp [] [] ["only"] ["[", expr hbs, ",", expr hbt, ",", expr if_true, ",", expr if_false, ",", expr true_implies_iff, ",", expr and_self, ",", expr false_implies_iff, ",", expr and_true, ",", expr true_and, "]"] [] ["at", ident h1, "⊢"],
+      all_goals { exact [expr h1] } },
+    intros [ident b, ident h_b],
+    split_ifs [] ["with", ident hbs, ident hbt, ident hbt],
+    { refine [expr h_pi b (f_s b) (f_t' b) (h_s b hbs) (h_t' b hbt) (set.nonempty.mono _ h_nonempty)],
+      exact [expr set.inter_subset_inter (set.bInter_subset_of_mem hbs) (set.bInter_subset_of_mem hbt)] },
+    { exact [expr h_s b hbs] },
+    { exact [expr h_t' b hbt] },
+    { rw [expr finset.mem_union] ["at", ident h_b],
+      apply [expr false.elim (h_b.elim hbs hbt)] } }
+end
 
 -- error in MeasureTheory.PiSystem: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mem_generate_pi_system_Union_elim'
@@ -292,7 +283,7 @@ structure dynkin_system(α : Type _) where
 namespace DynkinSystem
 
 @[ext]
-theorem ext : ∀ {d₁ d₂ : dynkin_system α}, (∀ s : Set α, d₁.has s ↔ d₂.has s) → d₁ = d₂
+theorem ext : ∀ {d₁ d₂ : dynkin_system α}, (∀ (s : Set α), d₁.has s ↔ d₂.has s) → d₁ = d₂
 | ⟨s₁, _, _, _⟩, ⟨s₂, _, _, _⟩, h =>
   have  : s₁ = s₂ := funext$ fun x => propext$ h x 
   by 
@@ -327,8 +318,15 @@ theorem has_diff {s₁ s₂ : Set α} (h₁ : d.has s₁) (h₂ : d.has s₂) (h
     simp [diff_eq, compl_inter]
     exact d.has_union (d.has_compl h₁) h₂ fun x ⟨h₁, h₂⟩ => h₁ (h h₂)
 
+instance  : LE (dynkin_system α) :=
+  { le := fun m₁ m₂ => m₁.has ≤ m₂.has }
+
+theorem le_def {α} {a b : dynkin_system α} : a ≤ b ↔ a.has ≤ b.has :=
+  Iff.rfl
+
 instance  : PartialOrderₓ (dynkin_system α) :=
-  { le := fun m₁ m₂ => m₁.has ≤ m₂.has, le_refl := fun a b => le_reflₓ _, le_trans := fun a b c => le_transₓ,
+  { dynkin_system.has_le with le_refl := fun a b => le_reflₓ _,
+    le_trans := fun a b c hab hbc => le_def.mpr (le_transₓ hab hbc),
     le_antisymm := fun a b h₁ h₂ => ext$ fun s => ⟨h₁ s, h₂ s⟩ }
 
 /-- Every measurable space (σ-algebra) forms a Dynkin system -/
@@ -343,7 +341,7 @@ theorem of_measurable_space_le_of_measurable_space_iff {m₁ m₂ : MeasurableSp
 /-- The least Dynkin system containing a collection of basic sets.
   This inductive type gives the underlying collection of sets. -/
 inductive generate_has (s : Set (Set α)) : Set α → Prop
-  | basic : ∀ t _ : t ∈ s, generate_has t
+  | basic : ∀ t (_ : t ∈ s), generate_has t
   | Empty : generate_has ∅
   | compl : ∀ {a}, generate_has a → generate_has («expr ᶜ» a)
   | Union : ∀ {f : ℕ → Set α}, Pairwise (Disjoint on f) → (∀ i, generate_has (f i)) → generate_has (⋃i, f i)
@@ -407,7 +405,7 @@ def restrict_on {s : Set α} (h : d.has s) : dynkin_system α :=
           ·
             simpa [inter_comm] using hf }
 
-theorem generate_le {s : Set (Set α)} (h : ∀ t _ : t ∈ s, d.has t) : generate s ≤ d :=
+theorem generate_le {s : Set (Set α)} (h : ∀ t (_ : t ∈ s), d.has t) : generate s ≤ d :=
   fun t ht => ht.rec_on h d.has_empty (fun a _ h => d.has_compl h) fun f hd _ hf => d.has_Union hd hf
 
 theorem generate_has_subset_generate_measurable {C : Set (Set α)} {s : Set α} (hs : (generate C).Has s) :
@@ -450,9 +448,9 @@ theorem generate_from_eq {s : Set (Set α)} (hs : IsPiSystem s) :
 end DynkinSystem
 
 theorem induction_on_inter {C : Set α → Prop} {s : Set (Set α)} [m : MeasurableSpace α] (h_eq : m = generate_from s)
-  (h_inter : IsPiSystem s) (h_empty : C ∅) (h_basic : ∀ t _ : t ∈ s, C t)
+  (h_inter : IsPiSystem s) (h_empty : C ∅) (h_basic : ∀ t (_ : t ∈ s), C t)
   (h_compl : ∀ t, MeasurableSet t → C t → C («expr ᶜ» t))
-  (h_union : ∀ f : ℕ → Set α, Pairwise (Disjoint on f) → (∀ i, MeasurableSet (f i)) → (∀ i, C (f i)) → C (⋃i, f i)) :
+  (h_union : ∀ (f : ℕ → Set α), Pairwise (Disjoint on f) → (∀ i, MeasurableSet (f i)) → (∀ i, C (f i)) → C (⋃i, f i)) :
   ∀ ⦃t⦄, MeasurableSet t → C t :=
   have eq : MeasurableSet = dynkin_system.generate_has s :=
     by 

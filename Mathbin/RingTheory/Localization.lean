@@ -103,8 +103,8 @@ open_locale BigOperators
 /-- The typeclass `is_localization (M : submodule R) S` where `S` is an `R`-algebra
 expresses that `S` is isomorphic to the localization of `R` at `M`. -/
 class IsLocalization : Prop where 
-  map_units{} : ∀ y : M, IsUnit (algebraMap R S y)
-  surj{} : ∀ z : S, ∃ x : R × M, (z*algebraMap R S x.2) = algebraMap R S x.1 
+  map_units{} : ∀ (y : M), IsUnit (algebraMap R S y)
+  surj{} : ∀ (z : S), ∃ x : R × M, (z*algebraMap R S x.2) = algebraMap R S x.1 
   eq_iff_exists{} : ∀ {x y}, algebraMap R S x = algebraMap R S y ↔ ∃ c : M, (x*c) = y*c
 
 variable{M S}
@@ -229,7 +229,7 @@ theorem exist_integer_multiples_of_fintype {ι : Type _} [Fintype ι] (f : ι �
     exact ⟨b, fun i => hb i (Finset.mem_univ _)⟩
 
 /-- We can clear the denominators of a finite set of fractions. -/
-theorem exist_integer_multiples_of_finset (s : Finset S) : ∃ b : M, ∀ a _ : a ∈ s, is_integer R ((b : R) • a) :=
+theorem exist_integer_multiples_of_finset (s : Finset S) : ∃ b : M, ∀ a (_ : a ∈ s), is_integer R ((b : R) • a) :=
   exist_integer_multiples M s id
 
 variable{R M}
@@ -375,7 +375,7 @@ end
 
 /-- Given a localization map `f : R →+* S` for a submonoid `M ⊆ R` and a map of `comm_ring`s
 `g : R →+* P` such that `g(M) ⊆ units P`, `f x = f y → g x = g y` for all `x y : R`. -/
-theorem eq_of_eq {g : R →+* P} (hg : ∀ y : M, IsUnit (g y)) {x y} (h : (algebraMap R S) x = (algebraMap R S) y) :
+theorem eq_of_eq {g : R →+* P} (hg : ∀ (y : M), IsUnit (g y)) {x y} (h : (algebraMap R S) x = (algebraMap R S) y) :
   g x = g y :=
   @Submonoid.LocalizationMap.eq_of_eq _ _ _ _ _ _ _ (to_localization_map M S) g.to_monoid_hom hg _ _ h
 
@@ -393,7 +393,7 @@ theorem mk'_add (x₁ x₂ : R) (y₁ y₂ : M) : mk' S ((x₁*y₂)+x₂*y₁) 
 `g : R →+* P` such that `g y` is invertible for all `y : M`, the homomorphism induced from
 `S` to `P` sending `z : S` to `g x * (g y)⁻¹`, where `(x, y) : R × M` are such that
 `z = f x * (f y)⁻¹`. -/
-noncomputable def lift {g : R →+* P} (hg : ∀ y : M, IsUnit (g y)) : S →+* P :=
+noncomputable def lift {g : R →+* P} (hg : ∀ (y : M), IsUnit (g y)) : S →+* P :=
   RingHom.mk' (@Submonoid.LocalizationMap.lift _ _ _ _ _ _ _ (to_localization_map M S) g.to_monoid_hom hg)$
     by 
       intro x y 
@@ -408,7 +408,7 @@ noncomputable def lift {g : R →+* P} (hg : ∀ y : M, IsUnit (g y)) : S →+* 
       ring 
       assumption
 
-variable{g : R →+* P}(hg : ∀ y : M, IsUnit (g y))
+variable{g : R →+* P}(hg : ∀ (y : M), IsUnit (g y))
 
 /-- Given a localization map `f : R →+* S` for a submonoid `M ⊆ R` and a map of `comm_ring`s
 `g : R →* P` such that `g y` is invertible for all `y : M`, the homomorphism induced from
@@ -459,10 +459,10 @@ theorem lift_unique {j : S →+* P} (hj : ∀ x, j ((algebraMap R S) x) = g x) :
         hj
 
 @[simp]
-theorem lift_id x : lift (map_units S : ∀ y : M, IsUnit _) x = x :=
+theorem lift_id x : lift (map_units S : ∀ (y : M), IsUnit _) x = x :=
   (to_localization_map M S).lift_id _
 
-theorem lift_surjective_iff : surjective (lift hg : S → P) ↔ ∀ v : P, ∃ x : R × M, (v*g x.2) = g x.1 :=
+theorem lift_surjective_iff : surjective (lift hg : S → P) ↔ ∀ (v : P), ∃ x : R × M, (v*g x.2) = g x.1 :=
   (to_localization_map M S).lift_surjective_iff hg
 
 theorem lift_injective_iff : injective (lift hg : S → P) ↔ ∀ x y, algebraMap R S x = algebraMap R S y ↔ g x = g y :=
@@ -504,7 +504,7 @@ theorem map_mk' x (y : M) : map Q g hy (mk' S x y) = mk' Q (g x) ⟨g y, hy y.2�
 theorem map_id (z : S) (h : M ≤ M.comap (RingHom.id R) := le_reflₓ M) : map S (RingHom.id _) h z = z :=
   lift_id _
 
-theorem map_unique (j : S →+* Q) (hj : ∀ x : R, j (algebraMap R S x) = algebraMap P Q (g x)) : map Q g hy = j :=
+theorem map_unique (j : S →+* Q) (hj : ∀ (x : R), j (algebraMap R S x) = algebraMap P Q (g x)) : map Q g hy = j :=
   lift_unique (fun y => map_units _ ⟨g y, hy y.2⟩) hj
 
 /-- If `comm_ring` homs `g : R →+* P, l : P →+* A` induce maps of localizations, the composition
@@ -642,16 +642,17 @@ noncomputable def inv_self : S :=
 
 variable{g : R →+* P}
 
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given `x : R`, a localization map `F : R →+* S` away from `x`, and a map of `comm_ring`s
 `g : R →+* P` such that `g x` is invertible, the homomorphism induced from `S` to `P` sending
 `z : S` to `g y * (g x)⁻ⁿ`, where `y : R, n : ℕ` are such that `z = F y * (F x)⁻ⁿ`. -/
-noncomputable def lift (hg : IsUnit (g x)) : S →+* P :=
-  IsLocalization.lift$
-    fun y : Submonoid.powers x =>
-      show IsUnit (g y.1)by 
-        obtain ⟨n, hn⟩ := y.2
-        rw [←hn, g.map_pow]
-        exact IsUnit.map (powMonoidHom n) hg
+noncomputable
+def lift (hg : is_unit (g x)) : «expr →+* »(S, P) :=
+«expr $ »(is_localization.lift, λ y : submonoid.powers x, show is_unit (g y.1), begin
+   obtain ["⟨", ident n, ",", ident hn, "⟩", ":=", expr y.2],
+   rw ["[", "<-", expr hn, ",", expr g.map_pow, "]"] [],
+   exact [expr is_unit.map (pow_monoid_hom n) hg]
+ end)
 
 @[simp]
 theorem away_map.lift_eq (hg : IsUnit (g x)) (a : R) : lift x hg ((algebraMap R S) a) = g a :=
@@ -1201,7 +1202,7 @@ section AtUnits
 variable(R)(S)(M)
 
 /-- The localization at a module of units is isomorphic to the ring -/
-noncomputable def at_units (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S :=
+noncomputable def at_units (H : ∀ (x : M), IsUnit (x : R)) : R ≃ₐ[R] S :=
   by 
     refine' AlgEquiv.ofBijective (Algebra.ofId R S) ⟨_, _⟩
     ·
@@ -1596,8 +1597,8 @@ instance is_local_ring_hom_local_ring_hom (J : Ideal P) [hJ : J.is_prime] (f : R
         exact fun hr => hx ((set_like.ext_iff.mp hIJ r).mp hr)
 
 theorem local_ring_hom_unique (J : Ideal P) [hJ : J.is_prime] (f : R →+* P) (hIJ : I = J.comap f)
-  {j : Localization.AtPrime I →+* Localization.AtPrime J} (hj : ∀ x : R, j (algebraMap _ _ x) = algebraMap _ _ (f x)) :
-  local_ring_hom I J f hIJ = j :=
+  {j : Localization.AtPrime I →+* Localization.AtPrime J}
+  (hj : ∀ (x : R), j (algebraMap _ _ x) = algebraMap _ _ (f x)) : local_ring_hom I J f hIJ = j :=
   map_unique _ _ hj
 
 @[simp]
@@ -1767,12 +1768,12 @@ theorem div_surjective (z : K) : ∃ (x y : A)(hy : y ∈ nonZeroDivisors A), al
 theorem is_unit_map_of_injective (hg : Function.Injective g) (y : nonZeroDivisors A) : IsUnit (g y) :=
   IsUnit.mk0 (g y)$ show g.to_monoid_with_zero_hom y ≠ 0 from g.map_ne_zero_of_mem_non_zero_divisors hg y.2
 
+-- error in RingTheory.Localization: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given an integral domain `A` with field of fractions `K`,
 and an injective ring hom `g : A →+* L` where `L` is a field, we get a
 field hom sending `z : K` to `g x * (g y)⁻¹`, where `(x, y) : A × (non_zero_divisors A)` are
-such that `z = f x * (f y)⁻¹`. -/
-noncomputable def lift (hg : injective g) : K →+* L :=
-  lift$ fun y : nonZeroDivisors A => is_unit_map_of_injective hg y
+such that `z = f x * (f y)⁻¹`. -/ noncomputable def lift (hg : injective g) : «expr →+* »(K, L) :=
+«expr $ »(lift, λ y : non_zero_divisors A, is_unit_map_of_injective hg y)
 
 /-- Given an integral domain `A` with field of fractions `K`,
 and an injective ring hom `g : A →+* L` where `L` is a field,

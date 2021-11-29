@@ -116,11 +116,10 @@ theorem prime.ne_one {p : ℕ+} : p.prime → p ≠ 1 :=
 theorem not_prime_one : ¬(1 : ℕ+).Prime :=
   Nat.not_prime_one
 
-theorem prime.not_dvd_one {p : ℕ+} : p.prime → ¬p ∣ 1 :=
-  fun pp : p.prime =>
-    by 
-      rw [dvd_iff]
-      apply Nat.Prime.not_dvd_one pp
+-- error in Data.Pnat.Prime: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prime.not_dvd_one {p : «exprℕ+»()} : p.prime → «expr¬ »(«expr ∣ »(p, 1)) :=
+λ pp : p.prime, by { rw [expr dvd_iff] [],
+  apply [expr nat.prime.not_dvd_one pp] }
 
 theorem exists_prime_and_dvd {n : ℕ+} : 2 ≤ n → ∃ p : ℕ+, p.prime ∧ p ∣ n :=
   by 

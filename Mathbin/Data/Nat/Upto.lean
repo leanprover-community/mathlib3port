@@ -26,7 +26,7 @@ We will be particularly interested in the case where there exists a value
 satisfying `p`, because in this case the `>` relation is well-founded.  -/
 @[reducible]
 def upto (p : ℕ → Prop) : Type :=
-  { i : ℕ // ∀ j _ : j < i, ¬p j }
+  { i : ℕ // ∀ j (_ : j < i), ¬p j }
 
 namespace Upto
 
@@ -39,19 +39,18 @@ protected def Gt p (x y : upto p) : Prop :=
 instance  : LT (upto p) :=
   ⟨fun x y => x.1 < y.1⟩
 
+-- error in Data.Nat.Upto: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The "greater than" relation on `upto p` is well founded if (and only if) there exists a value
-satisfying `p`. -/
-protected theorem wf : (∃ x, p x) → WellFounded (upto.gt p)
-| ⟨x, h⟩ =>
-  by 
-    suffices  : upto.gt p = Measureₓ fun y : Nat.Upto p => x - y.val
-    ·
-      rw [this]
-      apply measure_wf 
-    ext ⟨a, ha⟩ ⟨b, _⟩
-    dsimp [Measureₓ, InvImage, upto.gt]
-    rw [tsub_lt_tsub_iff_left_of_le]
-    exact le_of_not_ltₓ fun h' => ha _ h' h
+satisfying `p`. -/ protected theorem wf : «expr∃ , »((x), p x) → well_founded (upto.gt p)
+| ⟨x, h⟩ := begin
+  suffices [] [":", expr «expr = »(upto.gt p, measure (λ y : nat.upto p, «expr - »(x, y.val)))],
+  { rw [expr this] [],
+    apply [expr measure_wf] },
+  ext [] ["⟨", ident a, ",", ident ha, "⟩", "⟨", ident b, ",", "_", "⟩"] [],
+  dsimp [] ["[", expr measure, ",", expr inv_image, ",", expr upto.gt, "]"] [] [],
+  rw [expr tsub_lt_tsub_iff_left_of_le] [],
+  exact [expr le_of_not_lt (λ h', ha _ h' h)]
+end
 
 /-- Zero is always a member of `nat.upto p` because it has no predecessors. -/
 def zero : Nat.Upto p :=

@@ -15,7 +15,7 @@ open Function
 
 /-- Given `δ : α → Type*`, `pi.empty δ` is the trivial dependent function out of the empty
 multiset. -/
-def pi.empty (δ : α → Type _) : ∀ a _ : a ∈ (0 : Multiset α), δ a :=
+def pi.empty (δ : α → Type _) : ∀ a (_ : a ∈ (0 : Multiset α)), δ a :=
   fun.
 
 variable[DecidableEq α]{δ : α → Type _}
@@ -23,18 +23,18 @@ variable[DecidableEq α]{δ : α → Type _}
 /-- Given `δ : α → Type*`, a multiset `m` and a term `a`, as well as a term `b : δ a` and a
 function `f` such that `f a' : δ a'` for all `a'` in `m`, `pi.cons m a b f` is a function `g` such
 that `g a'' : δ a''` for all `a''` in `a ::ₘ m`. -/
-def pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀ a _ : a ∈ m, δ a) : ∀ a' _ : a' ∈ a ::ₘ m, δ a' :=
+def pi.cons (m : Multiset α) (a : α) (b : δ a) (f : ∀ a (_ : a ∈ m), δ a) : ∀ a' (_ : a' ∈ a ::ₘ m), δ a' :=
   fun a' ha' => if h : a' = a then Eq.ndrec b h.symm else f a'$ (mem_cons.1 ha').resolve_left h
 
-theorem pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀ a _ : a ∈ m, δ a} (h : a ∈ a ::ₘ m) :
+theorem pi.cons_same {m : Multiset α} {a : α} {b : δ a} {f : ∀ a (_ : a ∈ m), δ a} (h : a ∈ a ::ₘ m) :
   pi.cons m a b f a h = b :=
   dif_pos rfl
 
-theorem pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀ a _ : a ∈ m, δ a} (h' : a' ∈ a ::ₘ m) (h : a' ≠ a) :
+theorem pi.cons_ne {m : Multiset α} {a a' : α} {b : δ a} {f : ∀ a (_ : a ∈ m), δ a} (h' : a' ∈ a ::ₘ m) (h : a' ≠ a) :
   pi.cons m a b f a' h' = f a' ((mem_cons.1 h').resolve_left h) :=
   dif_neg h
 
-theorem pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀ a _ : a ∈ m, δ a} (h : a ≠ a') :
+theorem pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : ∀ a (_ : a ∈ m), δ a} (h : a ≠ a') :
   HEq (pi.cons (a' ::ₘ m) a b (pi.cons m a' b' f)) (pi.cons (a ::ₘ m) a' b' (pi.cons m a b f)) :=
   by 
     apply hfunext
@@ -54,29 +54,29 @@ theorem pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
       subst h₂ 
       rw [pi.cons_same, pi.cons_same]
 
+-- error in Data.Multiset.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/
-def pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) : Multiset (∀ a _ : a ∈ m, δ a) :=
-  m.rec_on {pi.empty δ} (fun a m p : Multiset (∀ a _ : a ∈ m, δ a) => (t a).bind$ fun b => p.map$ pi.cons m a b)
-    (by 
-      intro a a' m n 
-      byCases' eq : a = a'
-      ·
-        subst eq
-      ·
-        simp [map_bind, bind_bind (t a') (t a)]
-        apply bind_hcongr
-        ·
-          rw [cons_swap a a']
-        intro b hb 
-        apply bind_hcongr
-        ·
-          rw [cons_swap a a']
-        intro b' hb' 
-        apply map_hcongr
-        ·
-          rw [cons_swap a a']
-        intro f hf 
-        exact pi.cons_swap Eq)
+def pi (m : multiset α) (t : ∀ a, multiset (δ a)) : multiset (∀ a «expr ∈ » m, δ a) :=
+m.rec_on {pi.empty δ} (λ
+ (a m)
+ (p : multiset (∀
+   a «expr ∈ » m, δ a)), «expr $ »((t a).bind, λ
+  b, «expr $ »(p.map, pi.cons m a b))) (begin
+   intros [ident a, ident a', ident m, ident n],
+   by_cases [expr eq, ":", expr «expr = »(a, a')],
+   { subst [expr eq] },
+   { simp [] [] [] ["[", expr map_bind, ",", expr bind_bind (t a') (t a), "]"] [] [],
+     apply [expr bind_hcongr],
+     { rw ["[", expr cons_swap a a', "]"] [] },
+     intros [ident b, ident hb],
+     apply [expr bind_hcongr],
+     { rw ["[", expr cons_swap a a', "]"] [] },
+     intros [ident b', ident hb'],
+     apply [expr map_hcongr],
+     { rw ["[", expr cons_swap a a', "]"] [] },
+     intros [ident f, ident hf],
+     exact [expr pi.cons_swap eq] }
+ end)
 
 @[simp]
 theorem pi_zero (t : ∀ a, Multiset (δ a)) : pi 0 t = {pi.empty δ} :=
@@ -143,7 +143,7 @@ multiset.induction_on s (assume
  end)
 
 theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (δ a)) :
-  ∀ f : ∀ a _ : a ∈ m, δ a, f ∈ pi m t ↔ ∀ a h : a ∈ m, f a h ∈ t a :=
+  ∀ (f : ∀ a (_ : a ∈ m), δ a), f ∈ pi m t ↔ ∀ a (h : a ∈ m), f a h ∈ t a :=
   by 
     refine' Multiset.induction_on m (fun f => _) fun a m ih f => _
     ·

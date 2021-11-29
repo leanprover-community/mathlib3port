@@ -79,30 +79,25 @@ def ι : M →ₗ[R] TensorAlgebra R M :=
 theorem ring_quot_mk_alg_hom_free_algebra_ι_eq_ι (m : M) : RingQuot.mkAlgHom R (rel R M) (FreeAlgebra.ι R m) = ι R m :=
   rfl
 
+-- error in LinearAlgebra.TensorAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given a linear map `f : M → A` where `A` is an `R`-algebra, `lift R f` is the unique lift
 of `f` to a morphism of `R`-algebras `tensor_algebra R M → A`.
 -/
-@[simps symmApply]
-def lift {A : Type _} [Semiringₓ A] [Algebra R A] : (M →ₗ[R] A) ≃ (TensorAlgebra R M →ₐ[R] A) :=
-  { toFun :=
-      RingQuot.liftAlgHom R ∘
-        fun f =>
-          ⟨FreeAlgebra.lift R («expr⇑ » f),
-            fun x y h : rel R M x y =>
-              by 
-                induction h <;> simp [Algebra.smul_def]⟩,
-    invFun := fun F => F.to_linear_map.comp (ι R),
-    left_inv :=
-      fun f =>
-        by 
-          ext 
-          simp [ι],
-    right_inv :=
-      fun F =>
-        by 
-          ext 
-          simp [ι] }
+@[simps #[ident symm_apply]]
+def lift
+{A : Type*}
+[semiring A]
+[algebra R A] : «expr ≃ »(«expr →ₗ[ ] »(M, R, A), «expr →ₐ[ ] »(tensor_algebra R M, R, A)) :=
+{ to_fun := «expr ∘ »(ring_quot.lift_alg_hom R, λ
+   f, ⟨free_algebra.lift R «expr⇑ »(f), λ
+    (x y)
+    (h : rel R M x y), by induction [expr h] [] [] []; simp [] [] [] ["[", expr algebra.smul_def, "]"] [] []⟩),
+  inv_fun := λ F, F.to_linear_map.comp (ι R),
+  left_inv := λ f, by { ext [] [] [],
+    simp [] [] [] ["[", expr ι, "]"] [] [] },
+  right_inv := λ F, by { ext [] [] [],
+    simp [] [] [] ["[", expr ι, "]"] [] [] } }
 
 variable{R}
 

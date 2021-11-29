@@ -120,7 +120,7 @@ def comparison_left_adjoint_hom_equiv (A : adj.toMonad.Algebra) (B : D)
 /--
 Construct the adjunction to the comparison functor.
 -/
-def left_adjoint_comparison [∀ A : adj.toMonad.Algebra, has_coequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
+def left_adjoint_comparison [∀ (A : adj.toMonad.Algebra), has_coequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
   adj.toMonad.Algebra ⥤ D :=
   by 
     refine'
@@ -138,12 +138,12 @@ def left_adjoint_comparison [∀ A : adj.toMonad.Algebra, has_coequalizer (F.map
 Provided we have the appropriate coequalizers, we have an adjunction to the comparison functor.
 -/
 @[simps counit]
-def comparison_adjunction [∀ A : adj.toMonad.Algebra, has_coequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
+def comparison_adjunction [∀ (A : adj.toMonad.Algebra), has_coequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] :
   left_adjoint_comparison ⊣ comparison adj :=
   adjunction.adjunction_of_equiv_left _ _
 
 theorem comparison_adjunction_unit_f_aux
-  [∀ A : adj.toMonad.Algebra, has_coequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] (A : adj.toMonad.Algebra) :
+  [∀ (A : adj.toMonad.Algebra), has_coequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] (A : adj.toMonad.Algebra) :
   (comparison_adjunction.unit.app A).f = adj.homEquiv A.A _ (coequalizer.π (F.map A.a) (adj.counit.app (F.obj A.A))) :=
   congr_argₓ (adj.homEquiv _ _) (category.comp_id _)
 
@@ -160,7 +160,7 @@ def unit_cofork (A : adj.toMonad.Algebra) [has_coequalizer (F.map A.a) (adj.coun
       rw [←G.map_comp, coequalizer.condition, G.map_comp])
 
 theorem comparison_adjunction_unit_f
-  [∀ A : adj.toMonad.Algebra, has_coequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] (A : adj.toMonad.Algebra) :
+  [∀ (A : adj.toMonad.Algebra), has_coequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] (A : adj.toMonad.Algebra) :
   (comparison_adjunction.unit.app A).f = (beck_coequalizer A).desc (unit_cofork A) :=
   by 
     apply limits.cofork.is_colimit.hom_ext (beck_coequalizer A)
@@ -191,7 +191,7 @@ def counit_coequalizer_of_reflects_coequalizer (B : D)
   is_colimit_of_is_colimit_cofork_map G _ (beck_coequalizer ((comparison adj).obj B))
 
 theorem comparison_adjunction_counit_app
-  [∀ A : adj.toMonad.Algebra, has_coequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] (B : D) :
+  [∀ (A : adj.toMonad.Algebra), has_coequalizer (F.map A.a) (adj.counit.app (F.obj A.A))] (B : D) :
   comparison_adjunction.counit.app B = colimit.desc _ (counit_cofork B) :=
   by 
     apply coequalizer.hom_ext 
@@ -306,8 +306,8 @@ An alternate version of Beck's monadicity theorem. If `G` reflects isomorphisms,
 coequalizers of `G`-split pairs and `C` has coequalizers of `G`-split pairs, then it is monadic.
 -/
 def monadic_of_has_preserves_G_split_coequalizers_of_reflects_isomorphisms [reflects_isomorphisms G]
-  [∀ ⦃A B⦄ f g : A ⟶ B [G.is_split_pair f g], has_coequalizer f g]
-  [∀ ⦃A B⦄ f g : A ⟶ B [G.is_split_pair f g], preserves_colimit (parallel_pair f g) G] : monadic_right_adjoint G :=
+  [∀ ⦃A B⦄ (f g : A ⟶ B) [G.is_split_pair f g], has_coequalizer f g]
+  [∀ ⦃A B⦄ (f g : A ⟶ B) [G.is_split_pair f g], preserves_colimit (parallel_pair f g) G] : monadic_right_adjoint G :=
   by 
     apply monadic_of_has_preserves_reflects_G_split_coequalizers _
     ·
@@ -326,7 +326,7 @@ section ReflexiveMonadicity
 
 variable[has_reflexive_coequalizers D][reflects_isomorphisms G]
 
-variable[∀ ⦃A B⦄ f g : A ⟶ B [is_reflexive_pair f g], preserves_colimit (parallel_pair f g) G]
+variable[∀ ⦃A B⦄ (f g : A ⟶ B) [is_reflexive_pair f g], preserves_colimit (parallel_pair f g) G]
 
 -- error in CategoryTheory.Monad.Monadicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /--

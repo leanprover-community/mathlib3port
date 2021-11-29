@@ -27,7 +27,7 @@ section RevList
 variable{n : ℕ}{α : Type u}{a : Arrayₓ n α}
 
 theorem rev_list_reverse_aux :
-  ∀ i h : i ≤ n t : List α,
+  ∀ i (h : i ≤ n) (t : List α),
     (a.iterate_aux (fun _ => · :: ·) i h []).reverseCore t = a.rev_iterate_aux (fun _ => · :: ·) i h t
 | 0, h, t => rfl
 | i+1, h, t => rev_list_reverse_aux i _ _
@@ -86,7 +86,7 @@ section Foldr
 variable{n : ℕ}{α : Type u}{β : Type w}{b : β}{f : α → β → β}{a : Arrayₓ n α}
 
 theorem rev_list_foldr_aux :
-  ∀ {i} h : i ≤ n, (DArray.iterateAux a (fun _ => · :: ·) i h []).foldr f b = DArray.iterateAux a (fun _ => f) i h b
+  ∀ {i} (h : i ≤ n), (DArray.iterateAux a (fun _ => · :: ·) i h []).foldr f b = DArray.iterateAux a (fun _ => f) i h b
 | 0, h => rfl
 | j+1, h => congr_argₓ (f (read a ⟨j, h⟩)) (rev_list_foldr_aux _)
 
@@ -199,15 +199,15 @@ section ToArray
 
 variable{n : ℕ}{α : Type u}
 
-@[simp]
-theorem to_list_to_array (a : Arrayₓ n α) : HEq a.to_list.to_array a :=
-  heq_of_heq_of_eq
-      (@Eq.drecOn
-        (fun m e : a.to_list.length = m =>
-          HEq (DArray.mk fun v => a.to_list.nth_le v.1 v.2)
-            ((@DArray.mk m fun _ => α)$ fun v => a.to_list.nth_le v.1$ e.symm ▸ v.2))
-        a.to_list_length HEq.rfl)$
-    DArray.ext$ fun ⟨i, h⟩ => to_list_nth_le i h _
+-- error in Data.Array.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem to_list_to_array (a : array n α) : «expr == »(a.to_list.to_array, a) :=
+«expr $ »(heq_of_heq_of_eq (@@eq.drec_on (λ
+   (m)
+   (e : «expr = »(a.to_list.length, m)), «expr == »(d_array.mk (λ
+     v, a.to_list.nth_le v.1 v.2), «expr $ »(@d_array.mk m (λ
+      _, α), λ
+     v, «expr $ »(a.to_list.nth_le v.1, «expr ▸ »(e.symm, v.2))))) a.to_list_length heq.rfl), «expr $ »(d_array.ext, λ
+  ⟨i, h⟩, to_list_nth_le i h _))
 
 @[simp]
 theorem to_array_to_list (l : List α) : l.to_array.to_list = l :=

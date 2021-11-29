@@ -109,7 +109,7 @@ def sub_elim (t s : preterm) (p : preform) : preform :=
   sub_elim_core t s (sub_fresh_index t s p) p
 
 theorem sub_subst_equiv {k : Nat} {x y : preterm} {v : Nat → Nat} :
-  ∀ p : preform, p.fresh_index ≤ k → ((preform.sub_subst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.holds v)
+  ∀ (p : preform), p.fresh_index ≤ k → ((preform.sub_subst x y k p).Holds (update k (x.val v - y.val v) v) ↔ p.holds v)
 | t =* s, h1 =>
   by 
     simp only [preform.holds, preform.sub_subst]

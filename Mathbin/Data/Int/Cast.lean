@@ -90,22 +90,17 @@ theorem cast_neg_of_nat [AddGroupₓ α] [HasOne α] : ∀ n, ((neg_of_nat n : �
 | 0 => neg_zero.symm
 | n+1 => rfl
 
-@[simp, normCast]
-theorem cast_add [AddGroupₓ α] [HasOne α] : ∀ m n, ((m+n : ℤ) : α) = m+n
-| (m : ℕ), (n : ℕ) => Nat.cast_add _ _
-| (m : ℕ), -[1+ n] =>
-  by 
-    simpa only [sub_eq_add_neg] using cast_sub_nat_nat _ _
-| -[1+ m], (n : ℕ) =>
-  (cast_sub_nat_nat _ _).trans$
-    sub_eq_of_eq_add$
-      show (n : α) = ((-m+1)+n)+m+1by 
-        rw [add_assocₓ, ←cast_succ, ←Nat.cast_add, add_commₓ, Nat.cast_add, cast_succ, neg_add_cancel_leftₓ]
-| -[1+ m], -[1+ n] =>
-  show -((((m+n)+1)+1 : ℕ) : α) = (-m+1)+-n+1by 
-    rw [←neg_add_rev, ←Nat.cast_add_one, ←Nat.cast_add_one, ←Nat.cast_add]
-    apply congr_argₓ fun x : ℕ => -(x : α)
-    acRfl
+-- error in Data.Int.Cast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, norm_cast #[]]
+theorem cast_add [add_group α] [has_one α] : ∀ m n, «expr = »(((«expr + »(m, n) : exprℤ()) : α), «expr + »(m, n))
+| (m : exprℕ()), (n : exprℕ()) := nat.cast_add _ _
+| (m : exprℕ()), «expr-[1+ ]»(n) := by simpa [] [] ["only"] ["[", expr sub_eq_add_neg, "]"] [] ["using", expr cast_sub_nat_nat _ _]
+| «expr-[1+ ]»(m), (n : exprℕ()) := «expr $ »((cast_sub_nat_nat _ _).trans, «expr $ »(sub_eq_of_eq_add, show «expr = »((n : α), «expr + »(«expr + »(«expr- »(«expr + »(m, 1)), n), «expr + »(m, 1))), by rw ["[", expr add_assoc, ",", "<-", expr cast_succ, ",", "<-", expr nat.cast_add, ",", expr add_comm, ",", expr nat.cast_add, ",", expr cast_succ, ",", expr neg_add_cancel_left, "]"] []))
+| «expr-[1+ ]»(m), «expr-[1+ ]»(n) := show «expr = »(«expr- »(((«expr + »(«expr + »(«expr + »(m, n), 1), 1) : exprℕ()) : α)), «expr + »(«expr- »(«expr + »(m, 1)), «expr- »(«expr + »(n, 1)))), begin
+  rw ["[", "<-", expr neg_add_rev, ",", "<-", expr nat.cast_add_one, ",", "<-", expr nat.cast_add_one, ",", "<-", expr nat.cast_add, "]"] [],
+  apply [expr congr_arg (λ x : exprℕ(), «expr- »((x : α)))],
+  ac_refl
+end
 
 @[simp, normCast]
 theorem cast_neg [AddGroupₓ α] [HasOne α] : ∀ n, ((-n : ℤ) : α) = -n
@@ -245,7 +240,7 @@ theorem cast_abs [LinearOrderedRing α] {q : ℤ} : ((|q| : ℤ) : α) = |q| :=
   by 
     simp [abs_eq_max_neg]
 
-theorem cast_nat_abs {R : Type _} [LinearOrderedRing R] : ∀ n : ℤ, (n.nat_abs : R) = |n|
+theorem cast_nat_abs {R : Type _} [LinearOrderedRing R] : ∀ (n : ℤ), (n.nat_abs : R) = |n|
 | (n : ℕ) =>
   by 
     simp only [Int.nat_abs_of_nat, Int.cast_coe_nat, Nat.abs_cast]
@@ -287,7 +282,7 @@ if `f 1 = g 1`. -/
 @[ext]
 theorem ext_int [AddMonoidₓ A] {f g : ℤ →+ A} (h1 : f 1 = g 1) : f = g :=
   have  : f.comp (Int.ofNatHom : ℕ →+ ℤ) = g.comp (Int.ofNatHom : ℕ →+ ℤ) := ext_nat h1 
-  have  : ∀ n : ℕ, f n = g n := ext_iff.1 this 
+  have  : ∀ (n : ℕ), f n = g n := ext_iff.1 this 
   ext$ fun n => Int.casesOn n this$ fun n => eq_on_neg (this$ n+1)
 
 variable[AddGroupₓ A][HasOne A]
@@ -297,7 +292,7 @@ theorem eq_int_cast_hom (f : ℤ →+ A) (h1 : f 1 = 1) : f = Int.castAddHom A :
     by 
       simp [h1]
 
-theorem eq_int_cast (f : ℤ →+ A) (h1 : f 1 = 1) : ∀ n : ℤ, f n = n :=
+theorem eq_int_cast (f : ℤ →+ A) (h1 : f 1 = 1) : ∀ (n : ℤ), f n = n :=
   ext_iff.1 (f.eq_int_cast_hom h1)
 
 end AddMonoidHom
@@ -339,7 +334,7 @@ theorem ext_int {f g : MonoidWithZeroHom ℤ M} (h_neg_one : f (-1) = g (-1))
 
 /-- If two `monoid_with_zero_hom`s agree on `-1` and the _positive_ naturals then they are equal. -/
 theorem ext_int' {φ₁ φ₂ : MonoidWithZeroHom ℤ M} (h_neg_one : φ₁ (-1) = φ₂ (-1))
-  (h_pos : ∀ n : ℕ, 0 < n → φ₁ n = φ₂ n) : φ₁ = φ₂ :=
+  (h_pos : ∀ (n : ℕ), 0 < n → φ₁ n = φ₂ n) : φ₁ = φ₂ :=
   ext_int h_neg_one$ ext_nat h_pos
 
 end MonoidWithZeroHom
@@ -375,7 +370,7 @@ namespace Pi
 
 variable{α β : Type _}
 
-theorem int_apply [HasZero β] [HasOne β] [Add β] [Neg β] : ∀ n : ℤ a : α, (n : α → β) a = n
+theorem int_apply [HasZero β] [HasOne β] [Add β] [Neg β] : ∀ (n : ℤ) (a : α), (n : α → β) a = n
 | (n : ℕ), a => Pi.nat_apply n a
 | -[1+ n], a =>
   by 

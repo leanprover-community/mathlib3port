@@ -114,7 +114,7 @@ theorem chain.directed_on [IsRefl α r] {c} (H : chain c) : DirectedOn (· ≺ �
     | Or.inl h => ⟨y, hy, h, refl _⟩
     | Or.inr h => ⟨x, hx, refl _, h⟩
 
-theorem chain_insert {c : Set α} {a : α} (hc : chain c) (ha : ∀ b _ : b ∈ c, b ≠ a → a ≺ b ∨ b ≺ a) :
+theorem chain_insert {c : Set α} {a : α} (hc : chain c) (ha : ∀ b (_ : b ∈ c), b ≠ a → a ≺ b ∨ b ≺ a) :
   chain (insert a c) :=
   forall_insert_of_forall (fun x hx => forall_insert_of_forall (hc x hx) fun hneq => (ha x hx hneq).symm)
     (forall_insert_of_forall (fun x hx hneq => ha x hx$ fun h' => hneq h'.symm) fun h => (h rfl).rec _)
@@ -160,7 +160,7 @@ theorem succ_increasing {c : Set α} : c ⊆ succ_chain c :=
 /-- Set of sets reachable from `∅` using `succ_chain` and `⋃₀`. -/
 inductive chain_closure : Set (Set α)
   | succ : ∀ {s}, chain_closure s → chain_closure (succ_chain s)
-  | union : ∀ {s}, (∀ a _ : a ∈ s, chain_closure a) → chain_closure (⋃₀s)
+  | union : ∀ {s}, (∀ a (_ : a ∈ s), chain_closure a) → chain_closure (⋃₀s)
 
 theorem chain_closure_empty : ∅ ∈ chain_closure :=
   have  : chain_closure (⋃₀∅) := chain_closure.union$ fun a h => h.rec _ 
@@ -278,26 +278,31 @@ theorem max_chain_spec : is_max_chain max_chain :=
         obtain ⟨h₂, h₃⟩ := ssubset_iff_subset_ne.1 H 
         exact h₃ ((chain_closure_succ_fixpoint_iff chain_closure_closure).mpr rfl).symm
 
+-- error in Order.Zorn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Zorn's lemma
 
 If every chain has an upper bound, then there exists a maximal element. -/
-theorem exists_maximal_of_chains_bounded (h : ∀ c, chain c → ∃ ub, ∀ a _ : a ∈ c, a ≺ ub)
-  (trans : ∀ {a b c}, a ≺ b → b ≺ c → a ≺ c) : ∃ m, ∀ a, m ≺ a → a ≺ m :=
-  have  : ∃ ub, ∀ a _ : a ∈ max_chain, a ≺ ub := h _$ max_chain_spec.left 
-  let ⟨ub, (hub : ∀ a _ : a ∈ max_chain, a ≺ ub)⟩ := this
-  ⟨ub,
-    fun a ha =>
-      have  : chain (insert a max_chain) := chain_insert max_chain_spec.left$ fun b hb _ => Or.inr$ trans (hub b hb) ha 
-      have  : a ∈ max_chain :=
-        Classical.by_contradiction$
-          fun h : a ∉ max_chain => max_chain_spec.right$ ⟨insert a max_chain, this, ssubset_insert h⟩
-      hub a this⟩
+theorem exists_maximal_of_chains_bounded
+(h : ∀ c, chain c → «expr∃ , »((ub), ∀ a «expr ∈ » c, «expr ≺ »(a, ub)))
+(trans : ∀
+ {a
+  b
+  c}, «expr ≺ »(a, b) → «expr ≺ »(b, c) → «expr ≺ »(a, c)) : «expr∃ , »((m), ∀ a, «expr ≺ »(m, a) → «expr ≺ »(a, m)) :=
+have «expr∃ , »((ub), ∀ a «expr ∈ » max_chain, «expr ≺ »(a, ub)), from «expr $ »(h _, max_chain_spec.left),
+let ⟨ub, (hub : ∀ a «expr ∈ » max_chain, «expr ≺ »(a, ub))⟩ := this in
+⟨ub, λ
+ a
+ ha, have chain (insert a max_chain), from «expr $ »(chain_insert max_chain_spec.left, λ
+  b hb _, «expr $ »(or.inr, trans (hub b hb) ha)),
+ have «expr ∈ »(a, max_chain), from «expr $ »(classical.by_contradiction, λ
+  h : «expr ∉ »(a, max_chain), «expr $ »(max_chain_spec.right, ⟨insert a max_chain, this, ssubset_insert h⟩)),
+ hub a this⟩
 
 /-- A variant of Zorn's lemma. If every nonempty chain of a nonempty type has an upper bound, then
 there is a maximal element.
 -/
 theorem exists_maximal_of_nonempty_chains_bounded [Nonempty α]
-  (h : ∀ c, chain c → c.nonempty → ∃ ub, ∀ a _ : a ∈ c, a ≺ ub) (trans : ∀ {a b c}, a ≺ b → b ≺ c → a ≺ c) :
+  (h : ∀ c, chain c → c.nonempty → ∃ ub, ∀ a (_ : a ∈ c), a ≺ ub) (trans : ∀ {a b c}, a ≺ b → b ≺ c → a ≺ c) :
   ∃ m, ∀ a, m ≺ a → a ≺ m :=
   exists_maximal_of_chains_bounded
     (fun c hc =>
@@ -312,18 +317,18 @@ theorem chain.symm {α : Type u} {s : Set α} {q : α → α → Prop} (h : chai
   h.mono' fun _ _ => Or.symm
 
 theorem zorn_partial_order {α : Type u} [PartialOrderₓ α]
-  (h : ∀ c : Set α, chain (· ≤ ·) c → ∃ ub, ∀ a _ : a ∈ c, a ≤ ub) : ∃ m : α, ∀ a, m ≤ a → a = m :=
+  (h : ∀ (c : Set α), chain (· ≤ ·) c → ∃ ub, ∀ a (_ : a ∈ c), a ≤ ub) : ∃ m : α, ∀ a, m ≤ a → a = m :=
   let ⟨m, hm⟩ := @exists_maximal_of_chains_bounded α (· ≤ ·) h fun a b c => le_transₓ
   ⟨m, fun a ha => le_antisymmₓ (hm a ha) ha⟩
 
 theorem zorn_nonempty_partial_order {α : Type u} [PartialOrderₓ α] [Nonempty α]
-  (h : ∀ c : Set α, chain (· ≤ ·) c → c.nonempty → ∃ ub, ∀ a _ : a ∈ c, a ≤ ub) : ∃ m : α, ∀ a, m ≤ a → a = m :=
+  (h : ∀ (c : Set α), chain (· ≤ ·) c → c.nonempty → ∃ ub, ∀ a (_ : a ∈ c), a ≤ ub) : ∃ m : α, ∀ a, m ≤ a → a = m :=
   let ⟨m, hm⟩ := @exists_maximal_of_nonempty_chains_bounded α (· ≤ ·) _ h fun a b c => le_transₓ
   ⟨m, fun a ha => le_antisymmₓ (hm a ha) ha⟩
 
 theorem zorn_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : Set α)
-  (ih : ∀ c _ : c ⊆ s, chain (· ≤ ·) c → ∃ (ub : _)(_ : ub ∈ s), ∀ z _ : z ∈ c, z ≤ ub) :
-  ∃ (m : _)(_ : m ∈ s), ∀ z _ : z ∈ s, m ≤ z → z = m :=
+  (ih : ∀ c (_ : c ⊆ s), chain (· ≤ ·) c → ∃ (ub : _)(_ : ub ∈ s), ∀ z (_ : z ∈ c), z ≤ ub) :
+  ∃ (m : _)(_ : m ∈ s), ∀ z (_ : z ∈ s), m ≤ z → z = m :=
   let ⟨⟨m, hms⟩, h⟩ :=
     @zorn_partial_order { m // m ∈ s } _
       fun c hc =>
@@ -335,8 +340,8 @@ theorem zorn_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : Set α)
   ⟨m, hms, fun z hzs hmz => congr_argₓ Subtype.val (h ⟨z, hzs⟩ hmz)⟩
 
 theorem zorn_nonempty_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : Set α)
-  (ih : ∀ c _ : c ⊆ s, chain (· ≤ ·) c → ∀ y _ : y ∈ c, ∃ (ub : _)(_ : ub ∈ s), ∀ z _ : z ∈ c, z ≤ ub) (x : α)
-  (hxs : x ∈ s) : ∃ (m : _)(_ : m ∈ s), x ≤ m ∧ ∀ z _ : z ∈ s, m ≤ z → z = m :=
+  (ih : ∀ c (_ : c ⊆ s), chain (· ≤ ·) c → ∀ y (_ : y ∈ c), ∃ (ub : _)(_ : ub ∈ s), ∀ z (_ : z ∈ c), z ≤ ub) (x : α)
+  (hxs : x ∈ s) : ∃ (m : _)(_ : m ∈ s), x ≤ m ∧ ∀ z (_ : z ∈ s), m ≤ z → z = m :=
   let ⟨⟨m, hms, hxm⟩, h⟩ :=
     @zorn_partial_order { m // m ∈ s ∧ x ≤ m } _
       fun c hc =>
@@ -357,23 +362,23 @@ theorem zorn_nonempty_partial_order₀ {α : Type u} [PartialOrderₓ α] (s : S
   ⟨m, hms, hxm, fun z hzs hmz => congr_argₓ Subtype.val$ h ⟨z, hzs, le_transₓ hxm hmz⟩ hmz⟩
 
 theorem zorn_subset {α : Type u} (S : Set (Set α))
-  (h : ∀ c _ : c ⊆ S, chain (· ⊆ ·) c → ∃ (ub : _)(_ : ub ∈ S), ∀ s _ : s ∈ c, s ⊆ ub) :
-  ∃ (m : _)(_ : m ∈ S), ∀ a _ : a ∈ S, m ⊆ a → a = m :=
+  (h : ∀ c (_ : c ⊆ S), chain (· ⊆ ·) c → ∃ (ub : _)(_ : ub ∈ S), ∀ s (_ : s ∈ c), s ⊆ ub) :
+  ∃ (m : _)(_ : m ∈ S), ∀ a (_ : a ∈ S), m ⊆ a → a = m :=
   zorn_partial_order₀ S h
 
 theorem zorn_subset_nonempty {α : Type u} (S : Set (Set α))
-  (H : ∀ c _ : c ⊆ S, chain (· ⊆ ·) c → c.nonempty → ∃ (ub : _)(_ : ub ∈ S), ∀ s _ : s ∈ c, s ⊆ ub) x (hx : x ∈ S) :
-  ∃ (m : _)(_ : m ∈ S), x ⊆ m ∧ ∀ a _ : a ∈ S, m ⊆ a → a = m :=
+  (H : ∀ c (_ : c ⊆ S), chain (· ⊆ ·) c → c.nonempty → ∃ (ub : _)(_ : ub ∈ S), ∀ s (_ : s ∈ c), s ⊆ ub) x (hx : x ∈ S) :
+  ∃ (m : _)(_ : m ∈ S), x ⊆ m ∧ ∀ a (_ : a ∈ S), m ⊆ a → a = m :=
   zorn_nonempty_partial_order₀ _ (fun c cS hc y yc => H _ cS hc ⟨y, yc⟩) _ hx
 
 theorem zorn_superset {α : Type u} (S : Set (Set α))
-  (h : ∀ c _ : c ⊆ S, chain (· ⊆ ·) c → ∃ (lb : _)(_ : lb ∈ S), ∀ s _ : s ∈ c, lb ⊆ s) :
-  ∃ (m : _)(_ : m ∈ S), ∀ a _ : a ∈ S, a ⊆ m → a = m :=
+  (h : ∀ c (_ : c ⊆ S), chain (· ⊆ ·) c → ∃ (lb : _)(_ : lb ∈ S), ∀ s (_ : s ∈ c), lb ⊆ s) :
+  ∃ (m : _)(_ : m ∈ S), ∀ a (_ : a ∈ S), a ⊆ m → a = m :=
   @zorn_partial_order₀ (OrderDual (Set α)) _ S$ fun c cS hc => h c cS hc.symm
 
 theorem zorn_superset_nonempty {α : Type u} (S : Set (Set α))
-  (H : ∀ c _ : c ⊆ S, chain (· ⊆ ·) c → c.nonempty → ∃ (lb : _)(_ : lb ∈ S), ∀ s _ : s ∈ c, lb ⊆ s) x (hx : x ∈ S) :
-  ∃ (m : _)(_ : m ∈ S), m ⊆ x ∧ ∀ a _ : a ∈ S, a ⊆ m → a = m :=
+  (H : ∀ c (_ : c ⊆ S), chain (· ⊆ ·) c → c.nonempty → ∃ (lb : _)(_ : lb ∈ S), ∀ s (_ : s ∈ c), lb ⊆ s) x (hx : x ∈ S) :
+  ∃ (m : _)(_ : m ∈ S), m ⊆ x ∧ ∀ a (_ : a ∈ S), a ⊆ m → a = m :=
   @zorn_nonempty_partial_order₀ (OrderDual (Set α)) _ S (fun c cS hc y yc => H _ cS hc.symm ⟨y, yc⟩) _ hx
 
 theorem chain.total {α : Type u} [Preorderₓ α] {c : Set α} (H : chain (· ≤ ·) c) :
@@ -387,14 +392,16 @@ theorem chain.image {α β : Type _} (r : α → α → Prop) (s : β → β →
 
 end Zorn
 
-theorem directed_of_chain {α β r} [IsRefl β r] {f : α → β} {c : Set α} (h : Zorn.Chain (f ⁻¹'o r) c) :
-  Directed r fun x : { a : α // a ∈ c } => f x :=
-  fun ⟨a, ha⟩ ⟨b, hb⟩ =>
-    Classical.by_cases
-      (fun hab : a = b =>
-        by 
-          simp only [hab, exists_prop, and_selfₓ, Subtype.exists] <;> exact ⟨b, hb, refl _⟩)
-      fun hab =>
-        (h a ha b hb hab).elim (fun h : r (f a) (f b) => ⟨⟨b, hb⟩, h, refl _⟩)
-          fun h : r (f b) (f a) => ⟨⟨a, ha⟩, refl _, h⟩
+-- error in Order.Zorn: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem directed_of_chain
+{α β r}
+[is_refl β r]
+{f : α → β}
+{c : set α}
+(h : zorn.chain «expr ⁻¹'o »(f, r) c) : directed r (λ x : {a : α // «expr ∈ »(a, c)}, f x) :=
+λ
+⟨a, ha⟩
+⟨b, hb⟩, classical.by_cases (λ
+ hab : «expr = »(a, b), by simp [] [] ["only"] ["[", expr hab, ",", expr exists_prop, ",", expr and_self, ",", expr subtype.exists, "]"] [] []; exact [expr ⟨b, hb, refl _⟩]) (λ
+ hab, (h a ha b hb hab).elim (λ h : r (f a) (f b), ⟨⟨b, hb⟩, h, refl _⟩) (λ h : r (f b) (f a), ⟨⟨a, ha⟩, refl _, h⟩))
 

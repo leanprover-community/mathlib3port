@@ -74,7 +74,7 @@ theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (Ico x₁ x�
 
 @[simp]
 theorem Union_Ico_eq_Iio_self_iff {ι : Sort _} {f : ι → α} {a : α} :
-  (⋃i, Ico (f i) a) = Iio a ↔ ∀ x _ : x < a, ∃ i, f i ≤ x :=
+  (⋃i, Ico (f i) a) = Iio a ↔ ∀ x (_ : x < a), ∃ i, f i ≤ x :=
   by 
     simp [←Ici_inter_Iio, ←Union_inter, subset_def]
 
@@ -86,7 +86,7 @@ theorem Union_Ioc_eq_Ioi_self_iff {ι : Sort _} {f : ι → α} {a : α} :
 
 @[simp]
 theorem bUnion_Ico_eq_Iio_self_iff {ι : Sort _} {p : ι → Prop} {f : ∀ i, p i → α} {a : α} :
-  (⋃(i : _)(hi : p i), Ico (f i hi) a) = Iio a ↔ ∀ x _ : x < a, ∃ i hi, f i hi ≤ x :=
+  (⋃(i : _)(hi : p i), Ico (f i hi) a) = Iio a ↔ ∀ x (_ : x < a), ∃ i hi, f i hi ≤ x :=
   by 
     simp [←Ici_inter_Iio, ←Union_inter, subset_def]
 

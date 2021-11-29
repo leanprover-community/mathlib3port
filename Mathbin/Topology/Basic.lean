@@ -60,14 +60,14 @@ structure TopologicalSpace(α : Type u) where
   IsOpen : Set α → Prop 
   is_open_univ : IsOpen univ 
   is_open_inter : ∀ s t, IsOpen s → IsOpen t → IsOpen (s ∩ t)
-  is_open_sUnion : ∀ s, (∀ t _ : t ∈ s, IsOpen t) → IsOpen (⋃₀s)
+  is_open_sUnion : ∀ s, (∀ t (_ : t ∈ s), IsOpen t) → IsOpen (⋃₀s)
 
 attribute [class] TopologicalSpace
 
 /-- A constructor for topologies by specifying the closed sets,
 and showing that they satisfy the appropriate conditions. -/
-def TopologicalSpace.ofClosed {α : Type u} (T : Set (Set α)) (empty_mem : ∅ ∈ T) (sInter_mem : ∀ A _ : A ⊆ T, ⋂₀A ∈ T)
-  (union_mem : ∀ A B _ : A ∈ T _ : B ∈ T, A ∪ B ∈ T) : TopologicalSpace α :=
+def TopologicalSpace.ofClosed {α : Type u} (T : Set (Set α)) (empty_mem : ∅ ∈ T) (sInter_mem : ∀ A (_ : A ⊆ T), ⋂₀A ∈ T)
+  (union_mem : ∀ A B (_ : A ∈ T) (_ : B ∈ T), A ∪ B ∈ T) : TopologicalSpace α :=
   { IsOpen := fun X => «expr ᶜ» X ∈ T,
     is_open_univ :=
       by 
@@ -111,7 +111,7 @@ theorem is_open_univ : IsOpen (univ : Set α) :=
 theorem IsOpen.inter (h₁ : IsOpen s₁) (h₂ : IsOpen s₂) : IsOpen (s₁ ∩ s₂) :=
   TopologicalSpace.is_open_inter t s₁ s₂ h₁ h₂
 
-theorem is_open_sUnion {s : Set (Set α)} (h : ∀ t _ : t ∈ s, IsOpen t) : IsOpen (⋃₀s) :=
+theorem is_open_sUnion {s : Set (Set α)} (h : ∀ t (_ : t ∈ s), IsOpen t) : IsOpen (⋃₀s) :=
   TopologicalSpace.is_open_sUnion t s h
 
 end 
@@ -133,7 +133,7 @@ theorem is_open_Union {f : ι → Set α} (h : ∀ i, IsOpen (f i)) : IsOpen (�
     by 
       rintro _ ⟨i, rfl⟩ <;> exact h i
 
-theorem is_open_bUnion {s : Set β} {f : β → Set α} (h : ∀ i _ : i ∈ s, IsOpen (f i)) :
+theorem is_open_bUnion {s : Set β} {f : β → Set α} (h : ∀ i (_ : i ∈ s), IsOpen (f i)) :
   IsOpen (⋃(i : _)(_ : i ∈ s), f i) :=
   is_open_Union$ fun i => is_open_Union$ fun hi => h i hi
 
@@ -146,7 +146,7 @@ theorem is_open_empty : IsOpen (∅ : Set α) :=
   by 
     rw [←sUnion_empty] <;> exact is_open_sUnion fun a => False.elim
 
-theorem is_open_sInter {s : Set (Set α)} (hs : finite s) : (∀ t _ : t ∈ s, IsOpen t) → IsOpen (⋂₀s) :=
+theorem is_open_sInter {s : Set (Set α)} (hs : finite s) : (∀ t (_ : t ∈ s), IsOpen t) → IsOpen (⋂₀s) :=
   (finite.induction_on hs
       fun _ =>
         by 
@@ -156,7 +156,7 @@ theorem is_open_sInter {s : Set (Set α)} (hs : finite s) : (∀ t _ : t ∈ s, 
         rw [sInter_insert] <;> exact IsOpen.inter (h _$ mem_insert _ _) (ih$ fun t => h t ∘ mem_insert_of_mem _)
 
 theorem is_open_bInter {s : Set β} {f : β → Set α} (hs : finite s) :
-  (∀ i _ : i ∈ s, IsOpen (f i)) → IsOpen (⋂(i : _)(_ : i ∈ s), f i) :=
+  (∀ i (_ : i ∈ s), IsOpen (f i)) → IsOpen (⋂(i : _)(_ : i ∈ s), f i) :=
   finite.induction_on hs
     (fun _ =>
       by 
@@ -170,7 +170,7 @@ theorem is_open_Inter [Fintype β] {s : β → Set α} (h : ∀ i, IsOpen (s i))
     simpa 
   is_open_bInter finite_univ fun i _ => h i
 
-theorem is_open_Inter_prop {p : Prop} {s : p → Set α} (h : ∀ h : p, IsOpen (s h)) : IsOpen (Inter s) :=
+theorem is_open_Inter_prop {p : Prop} {s : p → Set α} (h : ∀ (h : p), IsOpen (s h)) : IsOpen (Inter s) :=
   by 
     byCases' p <;> simp 
 
@@ -213,14 +213,14 @@ theorem IsClosed.union : IsClosed s₁ → IsClosed s₂ → IsClosed (s₁ ∪ 
       rw [compl_union]
       exact IsOpen.inter h₁ h₂
 
-theorem is_closed_sInter {s : Set (Set α)} : (∀ t _ : t ∈ s, IsClosed t) → IsClosed (⋂₀s) :=
+theorem is_closed_sInter {s : Set (Set α)} : (∀ t (_ : t ∈ s), IsClosed t) → IsClosed (⋂₀s) :=
   by 
     simpa only [←is_open_compl_iff, compl_sInter, sUnion_image] using is_open_bUnion
 
 theorem is_closed_Inter {f : ι → Set α} (h : ∀ i, IsClosed (f i)) : IsClosed (⋂i, f i) :=
   is_closed_sInter$ fun t ⟨i, (HEq : f i = t)⟩ => HEq ▸ h i
 
-theorem is_closed_bInter {s : Set β} {f : β → Set α} (h : ∀ i _ : i ∈ s, IsClosed (f i)) :
+theorem is_closed_bInter {s : Set β} {f : β → Set α} (h : ∀ i (_ : i ∈ s), IsClosed (f i)) :
   IsClosed (⋂(i : _)(_ : i ∈ s), f i) :=
   is_closed_Inter$ fun i => is_closed_Inter$ h i
 
@@ -245,7 +245,7 @@ theorem IsClosed.sdiff {s t : Set α} (h₁ : IsClosed s) (h₂ : IsOpen t) : Is
   IsClosed.inter h₁ (is_closed_compl_iff.mpr h₂)
 
 theorem is_closed_bUnion {s : Set β} {f : β → Set α} (hs : finite s) :
-  (∀ i _ : i ∈ s, IsClosed (f i)) → IsClosed (⋃(i : _)(_ : i ∈ s), f i) :=
+  (∀ i (_ : i ∈ s), IsClosed (f i)) → IsClosed (⋃(i : _)(_ : i ∈ s), f i) :=
   finite.induction_on hs
     (fun _ =>
       by 
@@ -259,7 +259,7 @@ theorem is_closed_Union [Fintype β] {s : β → Set α} (h : ∀ i, IsClosed (s
     convert this <;> simp [Set.ext_iff]
   is_closed_bUnion finite_univ fun i _ => h i
 
-theorem is_closed_Union_prop {p : Prop} {s : p → Set α} (h : ∀ h : p, IsClosed (s h)) : IsClosed (Union s) :=
+theorem is_closed_Union_prop {p : Prop} {s : p → Set α} (h : ∀ (h : p), IsClosed (s h)) : IsClosed (Union s) :=
   by 
     byCases' p <;> simp 
 
@@ -348,23 +348,21 @@ theorem interior_Inter_of_fintype {ι : Type _} [Fintype ι] (f : ι → Set α)
   by 
     convert finset.univ.interior_Inter f <;> simp 
 
-theorem interior_union_is_closed_of_interior_empty {s t : Set α} (h₁ : IsClosed s) (h₂ : Interior t = ∅) :
-  Interior (s ∪ t) = Interior s :=
-  have  : Interior (s ∪ t) ⊆ s :=
-    fun x ⟨u, ⟨(hu₁ : IsOpen u), (hu₂ : u ⊆ s ∪ t)⟩, (hx₁ : x ∈ u)⟩ =>
-      Classical.by_contradiction$
-        fun hx₂ : x ∉ s =>
-          have  : u \ s ⊆ t := fun x ⟨h₁, h₂⟩ => Or.resolve_left (hu₂ h₁) h₂ 
-          have  : u \ s ⊆ Interior t :=
-            by 
-              rwa [subset_interior_iff_subset_of_open (IsOpen.sdiff hu₁ h₁)]
-          have  : u \ s ⊆ ∅ :=
-            by 
-              rwa [h₂] at this 
-          this ⟨hx₁, hx₂⟩
-  subset.antisymm (interior_maximal this is_open_interior) (interior_mono$ subset_union_left _ _)
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem interior_union_is_closed_of_interior_empty
+{s t : set α}
+(h₁ : is_closed s)
+(h₂ : «expr = »(interior t, «expr∅»())) : «expr = »(interior «expr ∪ »(s, t), interior s) :=
+have «expr ⊆ »(interior «expr ∪ »(s, t), s), from assume
+(x)
+⟨u, ⟨(hu₁ : is_open u), (hu₂ : «expr ⊆ »(u, «expr ∪ »(s, t)))⟩, (hx₁ : «expr ∈ »(x, u))⟩, «expr $ »(classical.by_contradiction, assume
+ hx₂ : «expr ∉ »(x, s), have «expr ⊆ »(«expr \ »(u, s), t), from assume (x) ⟨h₁, h₂⟩, or.resolve_left (hu₂ h₁) h₂,
+ have «expr ⊆ »(«expr \ »(u, s), interior t), by rwa [expr subset_interior_iff_subset_of_open (is_open.sdiff hu₁ h₁)] [],
+ have «expr ⊆ »(«expr \ »(u, s), «expr∅»()), by rwa [expr h₂] ["at", ident this],
+ this ⟨hx₁, hx₂⟩),
+subset.antisymm (interior_maximal this is_open_interior) «expr $ »(interior_mono, subset_union_left _ _)
 
-theorem is_open_iff_forall_mem_open : IsOpen s ↔ ∀ x _ : x ∈ s, ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t :=
+theorem is_open_iff_forall_mem_open : IsOpen s ↔ ∀ x (_ : x ∈ s), ∃ (t : _)(_ : t ⊆ s), IsOpen t ∧ x ∈ t :=
   by 
     rw [←subset_interior_iff_open] <;> simp only [subset_def, mem_interior]
 
@@ -720,19 +718,22 @@ theorem nhds_def (a : α) : 𝓝 a = ⨅(s : _)(_ : s ∈ { s:Set α | a ∈ s �
   by 
     rw [nhds]
 
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The open sets containing `a` are a basis for the neighborhood filter. See `nhds_basis_opens'`
 for a variant using open neighborhoods instead. -/
-theorem nhds_basis_opens (a : α) : (𝓝 a).HasBasis (fun s : Set α => a ∈ s ∧ IsOpen s) fun x => x :=
-  by 
-    rw [nhds_def]
-    exact
-      has_basis_binfi_principal
-        (fun s ⟨has, hs⟩ t ⟨hat, ht⟩ =>
-          ⟨s ∩ t, ⟨⟨has, hat⟩, IsOpen.inter hs ht⟩, ⟨inter_subset_left _ _, inter_subset_right _ _⟩⟩)
-        ⟨univ, ⟨mem_univ a, is_open_univ⟩⟩
+theorem nhds_basis_opens
+(a : α) : (expr𝓝() a).has_basis (λ s : set α, «expr ∧ »(«expr ∈ »(a, s), is_open s)) (λ x, x) :=
+begin
+  rw [expr nhds_def] [],
+  exact [expr has_basis_binfi_principal (λ
+    (s)
+    ⟨has, hs⟩
+    (t)
+    ⟨hat, ht⟩, ⟨«expr ∩ »(s, t), ⟨⟨has, hat⟩, is_open.inter hs ht⟩, ⟨inter_subset_left _ _, inter_subset_right _ _⟩⟩) ⟨univ, ⟨mem_univ a, is_open_univ⟩⟩]
+end
 
 /-- A filter lies below the neighborhood filter at `a` iff it contains every open set around `a`. -/
-theorem le_nhds_iff {f a} : f ≤ 𝓝 a ↔ ∀ s : Set α, a ∈ s → IsOpen s → s ∈ f :=
+theorem le_nhds_iff {f a} : f ≤ 𝓝 a ↔ ∀ (s : Set α), a ∈ s → IsOpen s → s ∈ f :=
   by 
     simp [nhds_def]
 
@@ -749,7 +750,7 @@ theorem mem_nhds_iff {a : α} {s : Set α} : s ∈ 𝓝 a ↔ ∃ (t : _)(_ : t 
 /-- A predicate is true in a neighborhood of `a` iff it is true for all the points in an open set
 containing `a`. -/
 theorem eventually_nhds_iff {a : α} {p : α → Prop} :
-  (∀ᶠx in 𝓝 a, p x) ↔ ∃ t : Set α, (∀ x _ : x ∈ t, p x) ∧ IsOpen t ∧ a ∈ t :=
+  (∀ᶠx in 𝓝 a, p x) ↔ ∃ t : Set α, (∀ x (_ : x ∈ t), p x) ∧ IsOpen t ∧ a ∈ t :=
   mem_nhds_iff.trans$
     by 
       simp only [subset_def, exists_prop, mem_set_of_eq]
@@ -775,19 +776,20 @@ theorem IsClosed.compl_mem_nhds {a : α} {s : Set α} (hs : IsClosed s) (ha : a 
 theorem IsOpen.eventually_mem {a : α} {s : Set α} (hs : IsOpen s) (ha : a ∈ s) : ∀ᶠx in 𝓝 a, x ∈ s :=
   IsOpen.mem_nhds hs ha
 
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The open neighborhoods of `a` are a basis for the neighborhood filter. See `nhds_basis_opens`
 for a variant using open sets around `a` instead. -/
-theorem nhds_basis_opens' (a : α) : (𝓝 a).HasBasis (fun s : Set α => s ∈ 𝓝 a ∧ IsOpen s) fun x => x :=
-  by 
-    convert nhds_basis_opens a 
-    ext s 
-    split 
-    ·
-      rintro ⟨s_in, s_op⟩
-      exact ⟨mem_of_mem_nhds s_in, s_op⟩
-    ·
-      rintro ⟨a_in, s_op⟩
-      exact ⟨IsOpen.mem_nhds s_op a_in, s_op⟩
+theorem nhds_basis_opens'
+(a : α) : (expr𝓝() a).has_basis (λ s : set α, «expr ∧ »(«expr ∈ »(s, expr𝓝() a), is_open s)) (λ x, x) :=
+begin
+  convert [] [expr nhds_basis_opens a] [],
+  ext [] [ident s] [],
+  split,
+  { rintros ["⟨", ident s_in, ",", ident s_op, "⟩"],
+    exact [expr ⟨mem_of_mem_nhds s_in, s_op⟩] },
+  { rintros ["⟨", ident a_in, ",", ident s_op, "⟩"],
+    exact [expr ⟨is_open.mem_nhds s_op a_in, s_op⟩] }
+end
 
 -- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If `U` is a neighborhood of each point of a set `s` then it is a neighborhood of `s`:
@@ -854,13 +856,13 @@ theorem Filter.EventuallyLe.eventually_le_nhds [LE β] {f g : α → β} {a : α
   h.eventually_nhds
 
 theorem all_mem_nhds (x : α) (P : Set α → Prop) (hP : ∀ s t, s ⊆ t → P s → P t) :
-  (∀ s _ : s ∈ 𝓝 x, P s) ↔ ∀ s, IsOpen s → x ∈ s → P s :=
+  (∀ s (_ : s ∈ 𝓝 x), P s) ↔ ∀ s, IsOpen s → x ∈ s → P s :=
   ((nhds_basis_opens x).forall_iff hP).trans$
     by 
       simp only [and_comm (x ∈ _), and_imp]
 
 theorem all_mem_nhds_filter (x : α) (f : Set α → Set β) (hf : ∀ s t, s ⊆ t → f s ⊆ f t) (l : Filter β) :
-  (∀ s _ : s ∈ 𝓝 x, f s ∈ l) ↔ ∀ s, IsOpen s → x ∈ s → f s ∈ l :=
+  (∀ s (_ : s ∈ 𝓝 x), f s ∈ l) ↔ ∀ s, IsOpen s → x ∈ s → f s ∈ l :=
   all_mem_nhds _ _ fun s t ssubt h => mem_of_superset h (hf s t ssubt)
 
 theorem rtendsto_nhds {r : Rel β α} {l : Filter β} {a : α} :
@@ -884,15 +886,16 @@ theorem ptendsto'_nhds {f : β →. α} {l : Filter β} {a : α} :
 theorem tendsto_nhds {f : β → α} {l : Filter β} {a : α} : tendsto f l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → f ⁻¹' s ∈ l :=
   all_mem_nhds_filter _ _ (fun s t h => preimage_mono h) _
 
-theorem tendsto_const_nhds {a : α} {f : Filter β} : tendsto (fun b : β => a) f (𝓝 a) :=
-  tendsto_nhds.mpr$ fun s hs ha => univ_mem'$ fun _ => ha
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_const_nhds {a : α} {f : filter β} : tendsto (λ b : β, a) f (expr𝓝() a) :=
+«expr $ »(tendsto_nhds.mpr, assume s hs ha, «expr $ »(univ_mem', assume _, ha))
 
 theorem tendsto_at_top_of_eventually_const {ι : Type _} [SemilatticeSup ι] [Nonempty ι] {x : α} {u : ι → α} {i₀ : ι}
-  (h : ∀ i _ : i ≥ i₀, u i = x) : tendsto u at_top (𝓝 x) :=
+  (h : ∀ i (_ : i ≥ i₀), u i = x) : tendsto u at_top (𝓝 x) :=
   tendsto.congr' (eventually_eq.symm (eventually_at_top.mpr ⟨i₀, h⟩)) tendsto_const_nhds
 
 theorem tendsto_at_bot_of_eventually_const {ι : Type _} [SemilatticeInf ι] [Nonempty ι] {x : α} {u : ι → α} {i₀ : ι}
-  (h : ∀ i _ : i ≤ i₀, u i = x) : tendsto u at_bot (𝓝 x) :=
+  (h : ∀ i (_ : i ≤ i₀), u i = x) : tendsto u at_bot (𝓝 x) :=
   tendsto.congr' (eventually_eq.symm (eventually_at_bot.mpr ⟨i₀, h⟩)) tendsto_const_nhds
 
 theorem pure_le_nhds : pure ≤ (𝓝 : α → Filter α) :=
@@ -927,16 +930,16 @@ theorem ClusterPt.ne_bot {x : α} {F : Filter α} (h : ClusterPt x F) : ne_bot (
 
 theorem Filter.HasBasis.cluster_pt_iff {ιa ιF} {pa : ιa → Prop} {sa : ιa → Set α} {pF : ιF → Prop} {sF : ιF → Set α}
   {F : Filter α} (ha : (𝓝 a).HasBasis pa sa) (hF : F.has_basis pF sF) :
-  ClusterPt a F ↔ ∀ ⦃i⦄ hi : pa i ⦃j⦄ hj : pF j, (sa i ∩ sF j).Nonempty :=
+  ClusterPt a F ↔ ∀ ⦃i⦄ (hi : pa i) ⦃j⦄ (hj : pF j), (sa i ∩ sF j).Nonempty :=
   ha.inf_basis_ne_bot_iff hF
 
 theorem cluster_pt_iff {x : α} {F : Filter α} :
-  ClusterPt x F ↔ ∀ ⦃U : Set α⦄ hU : U ∈ 𝓝 x ⦃V⦄ hV : V ∈ F, (U ∩ V).Nonempty :=
+  ClusterPt x F ↔ ∀ ⦃U : Set α⦄ (hU : U ∈ 𝓝 x) ⦃V⦄ (hV : V ∈ F), (U ∩ V).Nonempty :=
   inf_ne_bot_iff
 
 /-- `x` is a cluster point of a set `s` if every neighbourhood of `x` meets `s` on a nonempty
 set. -/
-theorem cluster_pt_principal_iff {x : α} {s : Set α} : ClusterPt x (𝓟 s) ↔ ∀ U _ : U ∈ 𝓝 x, (U ∩ s).Nonempty :=
+theorem cluster_pt_principal_iff {x : α} {s : Set α} : ClusterPt x (𝓟 s) ↔ ∀ U (_ : U ∈ 𝓝 x), (U ∩ s).Nonempty :=
   inf_principal_ne_bot_iff
 
 theorem cluster_pt_principal_iff_frequently {x : α} {s : Set α} : ClusterPt x (𝓟 s) ↔ ∃ᶠy in 𝓝 x, y ∈ s :=
@@ -972,7 +975,7 @@ def MapClusterPt {ι : Type _} (x : α) (F : Filter ι) (u : ι → α) : Prop :
   ClusterPt x (map u F)
 
 theorem map_cluster_pt_iff {ι : Type _} (x : α) (F : Filter ι) (u : ι → α) :
-  MapClusterPt x F u ↔ ∀ s _ : s ∈ 𝓝 x, ∃ᶠa in F, u a ∈ s :=
+  MapClusterPt x F u ↔ ∀ s (_ : s ∈ 𝓝 x), ∃ᶠa in F, u a ∈ s :=
   by 
     simpRw [MapClusterPt, ClusterPt, inf_ne_bot_iff_frequently_left, frequently_map]
     rfl
@@ -1029,21 +1032,22 @@ theorem is_open_set_of_eventually_nhds {p : α → Prop} : IsOpen { x | ∀ᶠy 
   by 
     simp only [←interior_set_of_eq, is_open_interior]
 
-theorem subset_interior_iff_nhds {s V : Set α} : s ⊆ Interior V ↔ ∀ x _ : x ∈ s, V ∈ 𝓝 x :=
+theorem subset_interior_iff_nhds {s V : Set α} : s ⊆ Interior V ↔ ∀ x (_ : x ∈ s), V ∈ 𝓝 x :=
   show (∀ x, x ∈ s → x ∈ _) ↔ _ by 
     simpRw [mem_interior_iff_mem_nhds]
 
-theorem is_open_iff_nhds {s : Set α} : IsOpen s ↔ ∀ a _ : a ∈ s, 𝓝 a ≤ 𝓟 s :=
+theorem is_open_iff_nhds {s : Set α} : IsOpen s ↔ ∀ a (_ : a ∈ s), 𝓝 a ≤ 𝓟 s :=
   calc IsOpen s ↔ s ⊆ Interior s := subset_interior_iff_open.symm 
-    _ ↔ ∀ a _ : a ∈ s, 𝓝 a ≤ 𝓟 s :=
+    _ ↔ ∀ a (_ : a ∈ s), 𝓝 a ≤ 𝓟 s :=
     by 
       rw [interior_eq_nhds] <;> rfl
     
 
-theorem is_open_iff_mem_nhds {s : Set α} : IsOpen s ↔ ∀ a _ : a ∈ s, s ∈ 𝓝 a :=
+theorem is_open_iff_mem_nhds {s : Set α} : IsOpen s ↔ ∀ a (_ : a ∈ s), s ∈ 𝓝 a :=
   is_open_iff_nhds.trans$ forall_congrₓ$ fun _ => imp_congr_right$ fun _ => le_principal_iff
 
-theorem is_open_iff_ultrafilter {s : Set α} : IsOpen s ↔ ∀ x _ : x ∈ s l : Ultrafilter α, «expr↑ » l ≤ 𝓝 x → s ∈ l :=
+theorem is_open_iff_ultrafilter {s : Set α} :
+  IsOpen s ↔ ∀ x (_ : x ∈ s) (l : Ultrafilter α), «expr↑ » l ≤ 𝓝 x → s ∈ l :=
   by 
     simpRw [is_open_iff_mem_nhds, ←mem_iff_ultrafilter]
 
@@ -1096,10 +1100,10 @@ theorem interior_singleton (x : α) [ne_bot (𝓝[«expr ᶜ» {x}] x)] : Interi
 theorem closure_eq_cluster_pts {s : Set α} : Closure s = { a | ClusterPt a (𝓟 s) } :=
   Set.ext$ fun x => mem_closure_iff_cluster_pt
 
-theorem mem_closure_iff_nhds {s : Set α} {a : α} : a ∈ Closure s ↔ ∀ t _ : t ∈ 𝓝 a, (t ∩ s).Nonempty :=
+theorem mem_closure_iff_nhds {s : Set α} {a : α} : a ∈ Closure s ↔ ∀ t (_ : t ∈ 𝓝 a), (t ∩ s).Nonempty :=
   mem_closure_iff_cluster_pt.trans cluster_pt_principal_iff
 
-theorem mem_closure_iff_nhds' {s : Set α} {a : α} : a ∈ Closure s ↔ ∀ t _ : t ∈ 𝓝 a, ∃ y : s, «expr↑ » y ∈ t :=
+theorem mem_closure_iff_nhds' {s : Set α} {a : α} : a ∈ Closure s ↔ ∀ t (_ : t ∈ 𝓝 a), ∃ y : s, «expr↑ » y ∈ t :=
   by 
     simp only [mem_closure_iff_nhds, Set.nonempty_inter_iff_exists_right]
 
@@ -1134,7 +1138,7 @@ theorem is_closed_iff_cluster_pt {s : Set α} : IsClosed s ↔ ∀ a, ClusterPt 
       simp only [subset_def, mem_closure_iff_cluster_pt]
     
 
-theorem is_closed_iff_nhds {s : Set α} : IsClosed s ↔ ∀ x, (∀ U _ : U ∈ 𝓝 x, (U ∩ s).Nonempty) → x ∈ s :=
+theorem is_closed_iff_nhds {s : Set α} : IsClosed s ↔ ∀ x, (∀ U (_ : U ∈ 𝓝 x), (U ∩ s).Nonempty) → x ∈ s :=
   by 
     simpRw [is_closed_iff_cluster_pt, ClusterPt, inf_principal_ne_bot_iff]
 
@@ -1295,7 +1299,7 @@ section LocallyFinite
 /-- A family of sets in `set α` is locally finite if at every point `x:α`,
   there is a neighborhood of `x` which meets only finitely many sets in the family -/
 def LocallyFinite (f : β → Set α) :=
-  ∀ x : α, ∃ (t : _)(_ : t ∈ 𝓝 x), finite { i | (f i ∩ t).Nonempty }
+  ∀ (x : α), ∃ (t : _)(_ : t ∈ 𝓝 x), finite { i | (f i ∩ t).Nonempty }
 
 theorem LocallyFinite.point_finite {f : β → Set α} (hf : LocallyFinite f) (x : α) : finite { b | x ∈ f b } :=
   let ⟨t, hxt, ht⟩ := hf x 
@@ -1433,20 +1437,22 @@ theorem Continuous.tendsto' {f : α → β} (hf : Continuous f) (x : α) (y : β
 theorem Continuous.continuous_at {f : α → β} {x : α} (h : Continuous f) : ContinuousAt f x :=
   h.tendsto x
 
-theorem continuous_iff_continuous_at {f : α → β} : Continuous f ↔ ∀ x, ContinuousAt f x :=
-  ⟨Continuous.tendsto,
-    fun hf : ∀ x, tendsto f (𝓝 x) (𝓝 (f x)) =>
-      continuous_def.2$
-        fun s =>
-          fun hs : IsOpen s =>
-            have  : ∀ a, f a ∈ s → s ∈ 𝓝 (f a) := fun a ha => IsOpen.mem_nhds hs ha 
-            show IsOpen (f ⁻¹' s) from is_open_iff_nhds.2$ fun a ha => le_principal_iff.2$ hf _ (this a ha)⟩
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_iff_continuous_at {f : α → β} : «expr ↔ »(continuous f, ∀ x, continuous_at f x) :=
+⟨continuous.tendsto, assume
+ hf : ∀
+ x, tendsto f (expr𝓝() x) (expr𝓝() (f x)), «expr $ »(continuous_def.2, assume
+  s, assume
+  hs : is_open s, have ∀ a, «expr ∈ »(f a, s) → «expr ∈ »(s, expr𝓝() (f a)), from λ a ha, is_open.mem_nhds hs ha,
+  show is_open «expr ⁻¹' »(f, s), from «expr $ »(is_open_iff_nhds.2, λ
+   a ha, «expr $ »(le_principal_iff.2, hf _ (this a ha))))⟩
 
-theorem continuous_at_const {x : α} {b : β} : ContinuousAt (fun a : α => b) x :=
-  tendsto_const_nhds
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_const {x : α} {b : β} : continuous_at (λ a : α, b) x := tendsto_const_nhds
 
-theorem continuous_const {b : β} : Continuous fun a : α => b :=
-  continuous_iff_continuous_at.mpr$ fun a => continuous_at_const
+-- error in Topology.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_const {b : β} : continuous (λ a : α, b) :=
+«expr $ »(continuous_iff_continuous_at.mpr, assume a, continuous_at_const)
 
 theorem Filter.EventuallyEq.continuous_at {x : α} {f : α → β} {y : β} (h : f =ᶠ[𝓝 x] fun _ => y) : ContinuousAt f x :=
   (continuous_at_congr h).2 tendsto_const_nhds
@@ -1493,11 +1499,11 @@ begin
 end
 
 theorem continuous_at_iff_ultrafilter {f : α → β} {x} :
-  ContinuousAt f x ↔ ∀ g : Ultrafilter α, «expr↑ » g ≤ 𝓝 x → tendsto f g (𝓝 (f x)) :=
+  ContinuousAt f x ↔ ∀ (g : Ultrafilter α), «expr↑ » g ≤ 𝓝 x → tendsto f g (𝓝 (f x)) :=
   tendsto_iff_ultrafilter f (𝓝 x) (𝓝 (f x))
 
 theorem continuous_iff_ultrafilter {f : α → β} :
-  Continuous f ↔ ∀ x g : Ultrafilter α, «expr↑ » g ≤ 𝓝 x → tendsto f g (𝓝 (f x)) :=
+  Continuous f ↔ ∀ x (g : Ultrafilter α), «expr↑ » g ≤ 𝓝 x → tendsto f g (𝓝 (f x)) :=
   by 
     simp only [continuous_iff_continuous_at, continuous_at_iff_ultrafilter]
 
@@ -1569,7 +1575,7 @@ theorem closure_subset_preimage_closure_image {f : α → β} {s : Set α} (h : 
     exact image_closure_subset_closure_image h
 
 theorem map_mem_closure {s : Set α} {t : Set β} {f : α → β} {a : α} (hf : Continuous f) (ha : a ∈ Closure s)
-  (ht : ∀ a _ : a ∈ s, f a ∈ t) : f a ∈ Closure t :=
+  (ht : ∀ a (_ : a ∈ s), f a ∈ t) : f a ∈ Closure t :=
   Set.MapsTo.closure ht hf ha
 
 /-!

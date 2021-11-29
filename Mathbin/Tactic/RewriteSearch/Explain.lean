@@ -67,12 +67,14 @@ private unsafe def explain_using_location (rs : List (expr × Bool)) (s : side) 
     let rule ← pp_rule$ nth_rule rs h.rule_index 
     return$ some ("nth_rewrite_" ++ s.to_xhs ++ " " ++ toString h.location ++ " " ++ rule)
 
+-- error in Tactic.RewriteSearch.Explain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Explain a list of rewrites using `nth_rewrite`. -/
-private unsafe def using_location.explain_rewrites (rs : List (expr × Bool)) (s : side) (steps : List how) :
-  tactic Stringₓ :=
-  do 
-    let rules ← steps.mmap$ fun h : how => Option.toList <$> explain_using_location rs s h 
-    return$ Stringₓ.intercalate ",\n  " rules.join
+private
+meta
+def using_location.explain_rewrites (rs : list «expr × »(expr, bool)) (s : side) (steps : list how) : tactic string :=
+do {
+rules ← «expr $ »(steps.mmap, λ h : how, «expr <$> »(option.to_list, explain_using_location rs s h)),
+  «expr $ »(return, string.intercalate ",\n  " rules.join) }
 
 namespace UsingConv
 

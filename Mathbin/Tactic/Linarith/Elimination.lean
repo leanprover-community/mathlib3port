@@ -248,13 +248,15 @@ unsafe def get_max_var : linarith_monad ℕ :=
 unsafe def get_comps : linarith_monad (rb_set pcomp) :=
   linarith_structure.comps <$> get
 
+-- error in Tactic.Linarith.Elimination: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Throws an exception if a contradictory `pcomp` is contained in the current state. -/
-unsafe def validate : linarith_monad Unit :=
-  do 
-    let ⟨_, comps⟩ ← get 
-    match comps.to_list.find fun p : pcomp => p.is_contr with 
-      | none => return ()
-      | some c => throw c
+meta
+def validate : linarith_monad unit :=
+do {
+⟨_, comps⟩ ← get,
+  match comps.to_list.find (λ p : pcomp, p.is_contr) with
+  | none := return ()
+  | some c := throw c end }
 
 /--
 Updates the current state with a new max variable and comparisons,

@@ -49,6 +49,7 @@ theorem eq_to_hom_trans {X Y Z : C} (p : X = Y) (q : Y = Z) : eq_to_hom p ≫ eq
     cases q 
     simp 
 
+-- error in CategoryTheory.EqToHom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If we (perhaps unintentionally) perform equational rewriting on
 the source object of a morphism,
@@ -58,12 +59,14 @@ It may be advisable to introduce any necessary `eq_to_hom` morphisms manually,
 rather than relying on this lemma firing.
 -/
 @[simp]
-theorem congr_arg_mpr_hom_left {X Y Z : C} (p : X = Y) (q : Y ⟶ Z) :
-  (congr_argₓ (fun W : C => W ⟶ Z) p).mpr q = eq_to_hom p ≫ q :=
-  by 
-    cases p 
-    simp 
+theorem congr_arg_mpr_hom_left
+{X Y Z : C}
+(p : «expr = »(X, Y))
+(q : «expr ⟶ »(Y, Z)) : «expr = »((congr_arg (λ W : C, «expr ⟶ »(W, Z)) p).mpr q, «expr ≫ »(eq_to_hom p, q)) :=
+by { cases [expr p] [],
+  simp [] [] [] [] [] [] }
 
+-- error in CategoryTheory.EqToHom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If we (perhaps unintentionally) perform equational rewriting on
 the target object of a morphism,
@@ -73,11 +76,12 @@ It may be advisable to introduce any necessary `eq_to_hom` morphisms manually,
 rather than relying on this lemma firing.
 -/
 @[simp]
-theorem congr_arg_mpr_hom_right {X Y Z : C} (p : X ⟶ Y) (q : Z = Y) :
-  (congr_argₓ (fun W : C => X ⟶ W) q).mpr p = p ≫ eq_to_hom q.symm :=
-  by 
-    cases q 
-    simp 
+theorem congr_arg_mpr_hom_right
+{X Y Z : C}
+(p : «expr ⟶ »(X, Y))
+(q : «expr = »(Z, Y)) : «expr = »((congr_arg (λ W : C, «expr ⟶ »(X, W)) q).mpr p, «expr ≫ »(p, eq_to_hom q.symm)) :=
+by { cases [expr q] [],
+  simp [] [] [] [] [] [] }
 
 /--
 An equality `X = Y` gives us an isomorphism `X ≅ Y`.

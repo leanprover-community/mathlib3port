@@ -206,10 +206,16 @@ theorem C_inj {σ : Type _} (R : Type _) [CommSemiringₓ R] (r s : R) : (C r : 
 instance infinite_of_infinite (σ : Type _) (R : Type _) [CommSemiringₓ R] [Infinite R] : Infinite (MvPolynomial σ R) :=
   Infinite.of_injective C (C_injective _ _)
 
-instance infinite_of_nonempty (σ : Type _) (R : Type _) [Nonempty σ] [CommSemiringₓ R] [Nontrivial R] :
-  Infinite (MvPolynomial σ R) :=
-  Infinite.of_injective ((fun s : σ →₀ ℕ => monomial s 1) ∘ single (Classical.arbitrary σ))$
-    Function.Injective.comp (fun m n => (Finsupp.single_left_inj one_ne_zero).mp) (Finsupp.single_injective _)
+-- error in Data.MvPolynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance infinite_of_nonempty
+(σ : Type*)
+(R : Type*)
+[nonempty σ]
+[comm_semiring R]
+[nontrivial R] : infinite (mv_polynomial σ R) :=
+«expr $ »(infinite.of_injective «expr ∘ »(λ
+  s : «expr →₀ »(σ, exprℕ()), monomial s 1, single (classical.arbitrary σ)), function.injective.comp (λ
+  m n, (finsupp.single_left_inj one_ne_zero).mp) (finsupp.single_injective _))
 
 theorem C_eq_coe_nat (n : ℕ) : (C («expr↑ » n) : MvPolynomial σ R) = n :=
   by 
@@ -319,8 +325,8 @@ finsupp.induction p (by have [] [":", expr M (C 0)] [":=", expr h_C 0]; rwa ["["
  s a p hsp ha hp, h_add _ _ (this s a) hp)
 
 @[elab_as_eliminator]
-theorem induction_on' {P : MvPolynomial σ R → Prop} (p : MvPolynomial σ R) (h1 : ∀ u : σ →₀ ℕ a : R, P (monomial u a))
-  (h2 : ∀ p q : MvPolynomial σ R, P p → P q → P (p+q)) : P p :=
+theorem induction_on' {P : MvPolynomial σ R → Prop} (p : MvPolynomial σ R)
+  (h1 : ∀ (u : σ →₀ ℕ) (a : R), P (monomial u a)) (h2 : ∀ (p q : MvPolynomial σ R), P p → P q → P (p+q)) : P p :=
   Finsupp.induction p
     (suffices P (monomial 0 0)by 
       rwa [monomial_zero] at this 
@@ -340,10 +346,10 @@ theorem ring_hom_ext' {A : Type _} [Semiringₓ A] {f g : MvPolynomial σ R →+
   ring_hom_ext (RingHom.ext_iff.1 hC) hX
 
 theorem hom_eq_hom [Semiringₓ S₂] (f g : MvPolynomial σ R →+* S₂) (hC : f.comp C = g.comp C)
-  (hX : ∀ n : σ, f (X n) = g (X n)) (p : MvPolynomial σ R) : f p = g p :=
+  (hX : ∀ (n : σ), f (X n) = g (X n)) (p : MvPolynomial σ R) : f p = g p :=
   RingHom.congr_fun (ring_hom_ext' hC hX) p
 
-theorem is_id (f : MvPolynomial σ R →+* MvPolynomial σ R) (hC : f.comp C = C) (hX : ∀ n : σ, f (X n) = X n)
+theorem is_id (f : MvPolynomial σ R →+* MvPolynomial σ R) (hC : f.comp C = C) (hX : ∀ (n : σ), f (X n) = X n)
   (p : MvPolynomial σ R) : f p = p :=
   hom_eq_hom f (RingHom.id _) hC hX p
 
@@ -354,10 +360,15 @@ theorem alg_hom_ext' {A B : Type _} [CommSemiringₓ A] [CommSemiringₓ B] [Alg
   (h₂ : ∀ i, f (X i) = g (X i)) : f = g :=
   AlgHom.coe_ring_hom_injective (MvPolynomial.ring_hom_ext' (congr_argₓ AlgHom.toRingHom h₁) h₂)
 
-@[ext]
-theorem alg_hom_ext {A : Type _} [CommSemiringₓ A] [Algebra R A] {f g : MvPolynomial σ R →ₐ[R] A}
-  (hf : ∀ i : σ, f (X i) = g (X i)) : f = g :=
-  AddMonoidAlgebra.alg_hom_ext' (mul_hom_ext' fun x : σ => MonoidHom.ext_mnat (hf x))
+-- error in Data.MvPolynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[ext #[]]
+theorem alg_hom_ext
+{A : Type*}
+[comm_semiring A]
+[algebra R A]
+{f g : «expr →ₐ[ ] »(mv_polynomial σ R, R, A)}
+(hf : ∀ i : σ, «expr = »(f (X i), g (X i))) : «expr = »(f, g) :=
+add_monoid_algebra.alg_hom_ext' (mul_hom_ext' (λ x : σ, monoid_hom.ext_mnat (hf x)))
 
 @[simp]
 theorem alg_hom_C (f : MvPolynomial σ R →ₐ[R] MvPolynomial σ R) (r : R) : f (C r) = C r :=
@@ -515,8 +526,20 @@ theorem coeff_mul (p q : MvPolynomial σ R) (n : σ →₀ ℕ) :
   AddMonoidAlgebra.mul_apply_antidiagonal p q _ _$ fun p => mem_antidiagonal
 
 @[simp]
+theorem coeff_mul_monomial m (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) : coeff (m+s) (p*monomial s r) = coeff m p*r :=
+  AddMonoidAlgebra.mul_single_apply_aux p _ _ _ _ fun a => add_left_injₓ _
+
+@[simp]
+theorem coeff_monomial_mul m (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) : coeff (s+m) (monomial s r*p) = r*coeff m p :=
+  AddMonoidAlgebra.single_mul_apply_aux p _ _ _ _ fun a => add_right_injₓ _
+
+@[simp]
 theorem coeff_mul_X m (s : σ) (p : MvPolynomial σ R) : coeff (m+single s 1) (p*X s) = coeff m p :=
-  (AddMonoidAlgebra.mul_single_apply_aux p _ _ _ _ fun a => add_left_injₓ _).trans (mul_oneₓ _)
+  (coeff_mul_monomial _ _ _ _).trans (mul_oneₓ _)
+
+@[simp]
+theorem coeff_X_mul m (s : σ) (p : MvPolynomial σ R) : coeff (single s 1+m) (X s*p) = coeff m p :=
+  (coeff_monomial_mul _ _ _ _).trans (one_mulₓ _)
 
 @[simp]
 theorem support_mul_X (s : σ) (p : MvPolynomial σ R) :
@@ -526,38 +549,60 @@ theorem support_mul_X (s : σ) (p : MvPolynomial σ R) :
       simp )
     _
 
+@[simp]
+theorem support_X_mul (s : σ) (p : MvPolynomial σ R) :
+  (X s*p).support = p.support.map (addLeftEmbedding (single s 1)) :=
+  AddMonoidAlgebra.support_single_mul p _
+    (by 
+      simp )
+    _
+
 -- error in Data.MvPolynomial.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem coeff_mul_X'
-[decidable_eq σ]
+theorem coeff_mul_monomial'
 (m)
-(s : σ)
-(p : mv_polynomial σ R) : «expr = »(coeff m «expr * »(p, X s), if «expr ∈ »(s, m.support) then coeff «expr - »(m, single s 1) p else 0) :=
+(s : «expr →₀ »(σ, exprℕ()))
+(r : R)
+(p : mv_polynomial σ R) : «expr = »(coeff m «expr * »(p, monomial s r), if «expr ≤ »(s, m) then «expr * »(coeff «expr - »(m, s) p, r) else 0) :=
 begin
-  nontriviality [expr R] [],
+  obtain [ident rfl, "|", ident hr, ":=", expr eq_or_ne r 0],
+  { simp [] [] ["only"] ["[", expr monomial_zero, ",", expr coeff_zero, ",", expr mul_zero, ",", expr if_t_t, "]"] [] [] },
+  haveI [] [":", expr nontrivial R] [":=", expr nontrivial_of_ne _ _ hr],
   split_ifs [] ["with", ident h, ident h],
-  { conv_rhs [] [] { rw ["<-", expr coeff_mul_X _ s] },
+  { conv_rhs [] [] { rw ["<-", expr coeff_mul_monomial _ s] },
     congr' [] ["with", ident t],
-    by_cases [expr hj, ":", expr «expr = »(s, t)],
-    { subst [expr t],
-      simp [] [] ["only"] ["[", expr tsub_apply, ",", expr add_apply, ",", expr single_eq_same, "]"] [] [],
-      refine [expr (tsub_add_cancel_of_le (nat.pos_of_ne_zero _).nat_succ_le).symm],
-      rwa [expr finsupp.mem_support_iff] ["at", ident h] },
-    { simp [] [] [] ["[", expr single_eq_of_ne hj, "]"] [] [] } },
+    rw [expr tsub_add_cancel_of_le h] [] },
   { rw ["<-", expr not_mem_support_iff] [],
     intro [ident hm],
     apply [expr h],
     have [ident H] [] [":=", expr support_mul _ _ hm],
     simp [] [] ["only"] ["[", expr finset.mem_bUnion, "]"] [] ["at", ident H],
     rcases [expr H, "with", "⟨", ident j, ",", ident hj, ",", ident i', ",", ident hi', ",", ident H, "⟩"],
-    rw ["[", expr support_X, ",", expr finset.mem_singleton, "]"] ["at", ident hi'],
+    rw ["[", expr support_monomial, ",", expr if_neg hr, ",", expr finset.mem_singleton, "]"] ["at", ident hi'],
     subst [expr i'],
     rw [expr finset.mem_singleton] ["at", ident H],
     subst [expr m],
-    rw ["[", expr finsupp.mem_support_iff, ",", expr add_apply, ",", expr single_apply, ",", expr if_pos rfl, "]"] [],
-    intro [ident H],
-    rw ["[", expr _root_.add_eq_zero_iff, "]"] ["at", ident H],
-    exact [expr one_ne_zero H.2] }
+    exact [expr le_add_left le_rfl] }
 end
+
+theorem coeff_monomial_mul' m (s : σ →₀ ℕ) (r : R) (p : MvPolynomial σ R) :
+  coeff m (monomial s r*p) = if s ≤ m then r*coeff (m - s) p else 0 :=
+  by 
+    rw [mul_commₓ, mul_commₓ r]
+    exact coeff_mul_monomial' _ _ _ _
+
+theorem coeff_mul_X' [DecidableEq σ] m (s : σ) (p : MvPolynomial σ R) :
+  coeff m (p*X s) = if s ∈ m.support then coeff (m - single s 1) p else 0 :=
+  by 
+    refine' (coeff_mul_monomial' _ _ _ _).trans _ 
+    simpRw [Finsupp.single_le_iff, Finsupp.mem_support_iff, Nat.succ_le_iff, pos_iff_ne_zero, mul_oneₓ]
+    congr
+
+theorem coeff_X_mul' [DecidableEq σ] m (s : σ) (p : MvPolynomial σ R) :
+  coeff m (X s*p) = if s ∈ m.support then coeff (m - single s 1) p else 0 :=
+  by 
+    refine' (coeff_monomial_mul' _ _ _ _).trans _ 
+    simpRw [Finsupp.single_le_iff, Finsupp.mem_support_iff, Nat.succ_le_iff, pos_iff_ne_zero, one_mulₓ]
+    congr
 
 theorem eq_zero_iff {p : MvPolynomial σ R} : p = 0 ↔ ∀ d, coeff d p = 0 :=
   by 
@@ -917,14 +962,14 @@ theorem map_monomial (s : σ →₀ ℕ) (a : R) : map f (monomial s a) = monomi
   (eval₂_monomial _ _).trans monomial_eq.symm
 
 @[simp]
-theorem map_C : ∀ a : R, map f (C a : MvPolynomial σ R) = C (f a) :=
+theorem map_C : ∀ (a : R), map f (C a : MvPolynomial σ R) = C (f a) :=
   map_monomial _ _
 
 @[simp]
-theorem map_X : ∀ n : σ, map f (X n : MvPolynomial σ R) = X n :=
+theorem map_X : ∀ (n : σ), map f (X n : MvPolynomial σ R) = X n :=
   eval₂_X _ _
 
-theorem map_id : ∀ p : MvPolynomial σ R, map (RingHom.id R) p = p :=
+theorem map_id : ∀ (p : MvPolynomial σ R), map (RingHom.id R) p = p :=
   eval₂_eta
 
 theorem map_map [CommSemiringₓ S₂] (g : S₁ →+* S₂) (p : MvPolynomial σ R) : map g (map f p) = map (g.comp f) p :=
@@ -981,7 +1026,7 @@ theorem map_eval₂ (f : R →+* S₁) (g : S₂ → MvPolynomial S₃ R) (p : M
       intro p s hp 
       rw [eval₂_mul, (map f).map_mul, hp, (map f).map_mul, map_X, eval₂_mul, eval₂_X, eval₂_X]
 
-theorem coeff_map (p : MvPolynomial σ R) : ∀ m : σ →₀ ℕ, coeff m (map f p) = f (coeff m p) :=
+theorem coeff_map (p : MvPolynomial σ R) : ∀ (m : σ →₀ ℕ), coeff m (map f p) = f (coeff m p) :=
   by 
     apply MvPolynomial.induction_on p <;> clear p
     ·
@@ -1091,7 +1136,7 @@ theorem support_map_of_injective (p : MvPolynomial σ R) {f : R →+* S₁} (hf 
     rw [coeff_map, ←f.map_zero] at hx 
     exact hf hx
 
-theorem C_dvd_iff_map_hom_eq_zero (q : R →+* S₁) (r : R) (hr : ∀ r' : R, q r' = 0 ↔ r ∣ r') (φ : MvPolynomial σ R) :
+theorem C_dvd_iff_map_hom_eq_zero (q : R →+* S₁) (r : R) (hr : ∀ (r' : R), q r' = 0 ↔ r ∣ r') (φ : MvPolynomial σ R) :
   C r ∣ φ ↔ map q φ = 0 :=
   by 
     rw [C_dvd_iff_dvd_coeff, MvPolynomial.ext_iff]

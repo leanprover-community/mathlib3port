@@ -22,7 +22,7 @@ namespace RelEmbedding
 variable{α : Type _}{r : α → α → Prop}[IsStrictOrder α r]
 
 /-- If `f` is a strictly `r`-increasing sequence, then this returns `f` as an order embedding. -/
-def nat_lt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n+1))) : (· < · : ℕ → ℕ → Prop) ↪r r :=
+def nat_lt (f : ℕ → α) (H : ∀ (n : ℕ), r (f n) (f (n+1))) : (· < · : ℕ → ℕ → Prop) ↪r r :=
   of_monotone f$
     fun a b h =>
       by 
@@ -37,7 +37,7 @@ def nat_lt (f : ℕ → α) (H : ∀ n : ℕ, r (f n) (f (n+1))) : (· < · : �
           apply H
 
 @[simp]
-theorem nat_lt_apply {f : ℕ → α} {H : ∀ n : ℕ, r (f n) (f (n+1))} {n : ℕ} : nat_lt f H n = f n :=
+theorem nat_lt_apply {f : ℕ → α} {H : ∀ (n : ℕ), r (f n) (f (n+1))} {n : ℕ} : nat_lt f H n = f n :=
   rfl
 
 -- error in Order.OrderIsoNat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -63,7 +63,7 @@ theorem well_founded_iff_no_descending_seq : WellFounded r ↔ IsEmpty ((· > ·
             fun na =>
               let ⟨f, h⟩ :=
                 Classical.axiom_of_choice$
-                  show ∀ x : { a // ¬Acc r a }, ∃ y : { a // ¬Acc r a }, r y.1 x.1 from
+                  show ∀ (x : { a // ¬Acc r a }), ∃ y : { a // ¬Acc r a }, r y.1 x.1 from
                     fun ⟨x, h⟩ =>
                       Classical.by_contradiction$
                         fun hn => h$ ⟨_, fun y h => Classical.by_contradiction$ fun na => hn ⟨⟨y, na⟩, h⟩⟩
@@ -164,7 +164,7 @@ begin
 end
 
 theorem exists_increasing_or_nonincreasing_subseq {α : Type _} (r : α → α → Prop) [IsTrans α r] (f : ℕ → α) :
-  ∃ g : ℕ ↪o ℕ, (∀ m n : ℕ, m < n → r (f (g m)) (f (g n))) ∨ ∀ m n : ℕ, m < n → ¬r (f (g m)) (f (g n)) :=
+  ∃ g : ℕ ↪o ℕ, (∀ (m n : ℕ), m < n → r (f (g m)) (f (g n))) ∨ ∀ (m n : ℕ), m < n → ¬r (f (g m)) (f (g n)) :=
   by 
     obtain ⟨g, hr | hnr⟩ := exists_increasing_or_nonincreasing_subseq' r f
     ·

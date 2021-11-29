@@ -51,8 +51,8 @@ def to_RingedSpace : RingedSpace :=
 def to_Top : Top :=
   X.1.Carrier
 
-instance  : CoeSort LocallyRingedSpace (Type u) :=
-  ⟨fun X : LocallyRingedSpace => (X.to_Top : Type u)⟩
+-- error in AlgebraicGeometry.LocallyRingedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_coe_to_sort LocallyRingedSpace (Type u) := ⟨λ X : LocallyRingedSpace, (X.to_Top : Type u)⟩
 
 /-- The structure sheaf of a locally ringed space. -/
 def 𝒪 : sheaf CommRingₓₓ X.to_Top :=

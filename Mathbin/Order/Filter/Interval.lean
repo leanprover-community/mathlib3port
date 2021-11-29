@@ -48,6 +48,7 @@ section Preorderₓ
 
 variable[Preorderₓ α]
 
+-- error in Order.Filter.Interval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A pair of filters `l₁`, `l₂` has `tendsto_Ixx_class Ixx` property if `Ixx a b` tends to
 `l₂.lift' powerset` as `a` and `b` tend to `l₁`. In all instances `Ixx` is one of `Icc`, `Ico`,
 `Ioc`, or `Ioo`. The instances provide the best `l₂` for a given `l₁`. In many cases `l₁ = l₂` but
@@ -57,8 +58,11 @@ n) (u₂ n)` is eventually included in `Iio a`.
 
 We mark `l₂` as an `out_param` so that Lean can automatically find an appropriate `l₂` based on
 `Ixx` and `l₁`. This way, e.g., `tendsto.Ico h₁ h₂` works without specifying explicitly `l₂`. -/
-class tendsto_Ixx_class(Ixx : α → α → Set α)(l₁ : Filter α)(l₂ : outParam$ Filter α) : Prop where 
-  tendsto_Ixx : tendsto (fun p : α × α => Ixx p.1 p.2) (l₁ ×ᶠ l₁) (l₂.lift' powerset)
+class tendsto_Ixx_class
+(Ixx : α → α → set α)
+(l₁ : filter α)
+(l₂ : «expr $ »(out_param, filter α)) : exprProp() :=
+  (tendsto_Ixx : tendsto (λ p : «expr × »(α, α), Ixx p.1 p.2) «expr ×ᶠ »(l₁, l₁) (l₂.lift' powerset))
 
 theorem tendsto.Icc {l₁ l₂ : Filter α} [tendsto_Ixx_class Icc l₁ l₂] {lb : Filter β} {u₁ u₂ : β → α}
   (h₁ : tendsto u₁ lb l₁) (h₂ : tendsto u₂ lb l₁) : tendsto (fun x => Icc (u₁ x) (u₂ x)) lb (l₂.lift' powerset) :=
@@ -77,7 +81,7 @@ theorem tendsto.Ioo {l₁ l₂ : Filter α} [tendsto_Ixx_class Ioo l₁ l₂] {l
   tendsto_Ixx_class.tendsto_Ixx.comp$ h₁.prod_mk h₂
 
 theorem tendsto_Ixx_class_principal {s t : Set α} {Ixx : α → α → Set α} :
-  tendsto_Ixx_class Ixx (𝓟 s) (𝓟 t) ↔ ∀ x _ : x ∈ s y _ : y ∈ s, Ixx x y ⊆ t :=
+  tendsto_Ixx_class Ixx (𝓟 s) (𝓟 t) ↔ ∀ x (_ : x ∈ s) y (_ : y ∈ s), Ixx x y ⊆ t :=
   by 
     refine' Iff.trans ⟨fun h => h.1, fun h => ⟨h⟩⟩ _ 
     simp [lift'_principal monotone_powerset, -mem_prod, -Prod.forall, forall_prod_set]
@@ -92,7 +96,7 @@ theorem tendsto_Ixx_class_of_subset {l₁ l₂ : Filter α} {Ixx Ixx' : α → �
   ⟨tendsto_lift'_powerset_mono h'.1$ eventually_of_forall$ Prod.forall.2 h⟩
 
 theorem has_basis.tendsto_Ixx_class {ι : Type _} {p : ι → Prop} {s} {l : Filter α} (hl : l.has_basis p s)
-  {Ixx : α → α → Set α} (H : ∀ i, p i → ∀ x _ : x ∈ s i y _ : y ∈ s i, Ixx x y ⊆ s i) : tendsto_Ixx_class Ixx l l :=
+  {Ixx : α → α → Set α} (H : ∀ i, p i → ∀ x (_ : x ∈ s i) y (_ : y ∈ s i), Ixx x y ⊆ s i) : tendsto_Ixx_class Ixx l l :=
   ⟨(hl.prod_self.tendsto_iff (hl.lift' monotone_powerset)).2$ fun i hi => ⟨i, hi, fun x hx => H i hi _ hx.1 _ hx.2⟩⟩
 
 instance tendsto_Icc_at_top_at_top : tendsto_Ixx_class Icc (at_top : Filter α) at_top :=

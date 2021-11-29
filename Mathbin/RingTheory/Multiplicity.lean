@@ -62,7 +62,7 @@ theorem int.coe_nat_multiplicity (a b : ℕ) : multiplicity (a : ℤ) (b : ℤ) 
           normCast 
           simp 
 
-theorem not_finite_iff_forall {a b : α} : ¬finite a b ↔ ∀ n : ℕ, a ^ n ∣ b :=
+theorem not_finite_iff_forall {a b : α} : ¬finite a b ↔ ∀ (n : ℕ), a ^ n ∣ b :=
   ⟨fun h n =>
       Nat.casesOn n
         (by 
@@ -153,7 +153,7 @@ theorem eq_coe_iff {a b : α} {n : ℕ} : multiplicity a b = (n : Enat) ↔ a ^ 
                   exact ⟨h₁, lt_succ_self _⟩)⟩,
         fun h => eq_some_iff.2 ⟨⟨n, h.2⟩, Eq.symm$ unique' h.1 h.2⟩⟩
 
-theorem eq_top_iff {a b : α} : multiplicity a b = ⊤ ↔ ∀ n : ℕ, a ^ n ∣ b :=
+theorem eq_top_iff {a b : α} : multiplicity a b = ⊤ ↔ ∀ (n : ℕ), a ^ n ∣ b :=
   (Enat.find_eq_top_iff _).trans$
     by 
       simp only [not_not]
@@ -217,14 +217,14 @@ theorem lt_top_iff_finite {a b : α} : multiplicity a b < ⊤ ↔ finite a b :=
 open_locale Classical
 
 theorem multiplicity_le_multiplicity_iff {a b c d : α} :
-  multiplicity a b ≤ multiplicity c d ↔ ∀ n : ℕ, a ^ n ∣ b → c ^ n ∣ d :=
+  multiplicity a b ≤ multiplicity c d ↔ ∀ (n : ℕ), a ^ n ∣ b → c ^ n ∣ d :=
   ⟨fun h n hab => pow_dvd_of_le_multiplicity (le_transₓ (le_multiplicity_of_pow_dvd hab) h),
     fun h =>
       if hab : finite a b then
         by 
           rw [←Enat.coe_get (finite_iff_dom.1 hab)] <;> exact le_multiplicity_of_pow_dvd (h _ (pow_multiplicity_dvd _))
       else
-        have  : ∀ n : ℕ, c ^ n ∣ d := fun n => h n (not_finite_iff_forall.1 hab _)
+        have  : ∀ (n : ℕ), c ^ n ∣ d := fun n => h n (not_finite_iff_forall.1 hab _)
         by 
           rw [eq_top_iff_not_finite.2 hab, eq_top_iff_not_finite.2 (not_finite_iff_forall.2 this)]⟩
 
@@ -257,30 +257,20 @@ theorem dvd_iff_multiplicity_pos {a b : α} : (0 : Enat) < multiplicity a b ↔ 
             (by 
               rwa [pow_oneₓ a])⟩
 
-theorem finite_nat_iff {a b : ℕ} : finite a b ↔ a ≠ 1 ∧ 0 < b :=
-  by 
-    rw [←not_iff_not, not_finite_iff_forall, not_and_distrib, Ne.def, not_not, not_ltₓ, Nat.le_zero_iff]
-    exact
-      ⟨fun h =>
-          or_iff_not_imp_right.2
-            fun hb =>
-              have ha : a ≠ 0 :=
-                fun ha =>
-                  by 
-                    simpa [ha] using h 1
-              by_contradiction
-                fun ha1 : a ≠ 1 =>
-                  have ha_gt_one : 1 < a :=
-                    lt_of_not_geₓ
-                      fun ha' =>
-                        by 
-                          clear h 
-                          revert ha ha1 
-                          decide! 
-                  not_lt_of_geₓ (le_of_dvd (Nat.pos_of_ne_zeroₓ hb) (h b)) (lt_pow_self ha_gt_one b),
-        fun h =>
-          by 
-            cases h <;> simp ⟩
+-- error in RingTheory.Multiplicity: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem finite_nat_iff {a b : exprℕ()} : «expr ↔ »(finite a b, «expr ∧ »(«expr ≠ »(a, 1), «expr < »(0, b))) :=
+begin
+  rw ["[", "<-", expr not_iff_not, ",", expr not_finite_iff_forall, ",", expr not_and_distrib, ",", expr ne.def, ",", expr not_not, ",", expr not_lt, ",", expr nat.le_zero_iff, "]"] [],
+  exact [expr ⟨λ
+    h, or_iff_not_imp_right.2 (λ
+     hb, have ha : «expr ≠ »(a, 0), from λ ha, by simpa [] [] [] ["[", expr ha, "]"] [] ["using", expr h 1],
+     by_contradiction (λ
+      ha1 : «expr ≠ »(a, 1), have ha_gt_one : «expr < »(1, a), from lt_of_not_ge (λ ha', by { clear [ident h],
+         revert [ident ha, ident ha1],
+         dec_trivial ["!"] }),
+      not_lt_of_ge (le_of_dvd (nat.pos_of_ne_zero hb) (h b)) (lt_pow_self ha_gt_one b))), λ
+    h, by cases [expr h] []; simp [] [] [] ["*"] [] []⟩]
+end
 
 end CommMonoidₓ
 
@@ -458,7 +448,7 @@ theorem finite_mul {p a b : α} (hp : Prime p) : finite p a → finite p b → f
 theorem finite_mul_iff {p a b : α} (hp : Prime p) : finite p (a*b) ↔ finite p a ∧ finite p b :=
   ⟨fun h => ⟨finite_of_finite_mul_right h, finite_of_finite_mul_left h⟩, fun h => finite_mul hp h.1 h.2⟩
 
-theorem finite_pow {p a : α} (hp : Prime p) : ∀ {k : ℕ} ha : finite p a, finite p (a ^ k)
+theorem finite_pow {p a : α} (hp : Prime p) : ∀ {k : ℕ} (ha : finite p a), finite p (a ^ k)
 | 0, ha =>
   ⟨0,
     by 

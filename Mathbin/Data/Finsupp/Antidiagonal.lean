@@ -40,7 +40,7 @@ theorem swap_mem_antidiagonal {n : α →₀ ℕ} {f : (α →₀ ℕ) × (α �
   by 
     simp only [mem_antidiagonal, add_commₓ, Prod.swap]
 
-theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ) [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.1 = g)] :
+theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ) [D : ∀ (p : (α →₀ ℕ) × (α →₀ ℕ)), Decidable (p.1 = g)] :
   ((antidiagonal f).filter fun p => p.1 = g) = if g ≤ f then {(g, f - g)} else ∅ :=
   by 
     ext ⟨a, b⟩
@@ -57,7 +57,7 @@ theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ) [D : ∀ p : (α →₀
       rintro ⟨h, rfl⟩
       exact add_tsub_cancel_of_le h
 
-theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ) [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.2 = g)] :
+theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ) [D : ∀ (p : (α →₀ ℕ) × (α →₀ ℕ)), Decidable (p.2 = g)] :
   ((antidiagonal f).filter fun p => p.2 = g) = if g ≤ f then {(f - g, g)} else ∅ :=
   by 
     ext ⟨a, b⟩

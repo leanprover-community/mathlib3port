@@ -45,7 +45,7 @@ work to convert to this version: namely, the natural isomorphism
 `(evaluation C D).obj k ⋙ prod.functor.obj (F.obj k) ≅ prod.functor.obj F ⋙ (evaluation C D).obj k`
 -/
 def functor_category.prod_preserves_colimits [has_binary_products D] [has_colimits D]
-  [∀ X : D, preserves_colimits (prod.functor.obj X)] (F : C ⥤ D) : preserves_colimits (prod.functor.obj F) :=
+  [∀ (X : D), preserves_colimits (prod.functor.obj X)] (F : C ⥤ D) : preserves_colimits (prod.functor.obj F) :=
   { PreservesColimitsOfShape :=
       fun J 𝒥 =>
         by 

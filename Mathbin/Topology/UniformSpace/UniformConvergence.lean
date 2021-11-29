@@ -66,35 +66,46 @@ We define uniform convergence and locally uniform convergence, on a set or in th
 respect to the filter `p` if, for any entourage of the diagonal `u`, one has `p`-eventually
 `(f x, Fₙ x) ∈ u` for all `x ∈ s`. -/
 def TendstoUniformlyOn (F : ι → α → β) (f : α → β) (p : Filter ι) (s : Set α) :=
-  ∀ u _ : u ∈ 𝓤 β, ∀ᶠn in p, ∀ x _ : x ∈ s, (f x, F n x) ∈ u
+  ∀ u (_ : u ∈ 𝓤 β), ∀ᶠn in p, ∀ x (_ : x ∈ s), (f x, F n x) ∈ u
 
+-- error in Topology.UniformSpace.UniformConvergence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 A sequence of functions `Fₙ` converges uniformly on a set `s` to a limiting function `f` w.r.t.
 filter `p` iff the function `(n, x) ↦ (f x, Fₙ x)` converges along `p ×ᶠ 𝓟 s` to the uniformity.
 In other words: one knows nothing about the behavior of `x` in this limit besides it being in `s`.
 -/
-theorem tendsto_uniformly_on_iff_tendsto {F : ι → α → β} {f : α → β} {p : Filter ι} {s : Set α} :
-  TendstoUniformlyOn F f p s ↔ tendsto (fun q : ι × α => (f q.2, F q.1 q.2)) (p ×ᶠ 𝓟 s) (𝓤 β) :=
-  by 
-    refine' forall_congrₓ fun u => forall_congrₓ$ fun u_in => _ 
-    simp [mem_map, Filter.Eventually, mem_prod_principal]
+theorem tendsto_uniformly_on_iff_tendsto
+{F : ι → α → β}
+{f : α → β}
+{p : filter ι}
+{s : set α} : «expr ↔ »(tendsto_uniformly_on F f p s, tendsto (λ
+  q : «expr × »(ι, α), (f q.2, F q.1 q.2)) «expr ×ᶠ »(p, expr𝓟() s) (expr𝓤() β)) :=
+begin
+  refine [expr forall_congr (λ u, «expr $ »(forall_congr, λ u_in, _))],
+  simp [] [] [] ["[", expr mem_map, ",", expr filter.eventually, ",", expr mem_prod_principal, "]"] [] []
+end
 
 /-- A sequence of functions `Fₙ` converges uniformly to a limiting function `f` with respect to a
 filter `p` if, for any entourage of the diagonal `u`, one has `p`-eventually
 `(f x, Fₙ x) ∈ u` for all `x`. -/
 def TendstoUniformly (F : ι → α → β) (f : α → β) (p : Filter ι) :=
-  ∀ u _ : u ∈ 𝓤 β, ∀ᶠn in p, ∀ x, (f x, F n x) ∈ u
+  ∀ u (_ : u ∈ 𝓤 β), ∀ᶠn in p, ∀ x, (f x, F n x) ∈ u
 
+-- error in Topology.UniformSpace.UniformConvergence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 A sequence of functions `Fₙ` converges uniformly to a limiting function `f` w.r.t.
 filter `p` iff the function `(n, x) ↦ (f x, Fₙ x)` converges along `p ×ᶠ ⊤` to the uniformity.
 In other words: one knows nothing about the behavior of `x` in this limit.
 -/
-theorem tendsto_uniformly_iff_tendsto {F : ι → α → β} {f : α → β} {p : Filter ι} :
-  TendstoUniformly F f p ↔ tendsto (fun q : ι × α => (f q.2, F q.1 q.2)) (p ×ᶠ ⊤) (𝓤 β) :=
-  by 
-    refine' forall_congrₓ fun u => forall_congrₓ$ fun u_in => _ 
-    simp [mem_map, Filter.Eventually, mem_prod_top]
+theorem tendsto_uniformly_iff_tendsto
+{F : ι → α → β}
+{f : α → β}
+{p : filter ι} : «expr ↔ »(tendsto_uniformly F f p, tendsto (λ
+  q : «expr × »(ι, α), (f q.2, F q.1 q.2)) «expr ×ᶠ »(p, «expr⊤»()) (expr𝓤() β)) :=
+begin
+  refine [expr forall_congr (λ u, «expr $ »(forall_congr, λ u_in, _))],
+  simp [] [] [] ["[", expr mem_map, ",", expr filter.eventually, ",", expr mem_prod_top, "]"] [] []
+end
 
 theorem tendsto_uniformly_on_univ : TendstoUniformlyOn F f p univ ↔ TendstoUniformly F f p :=
   by 
@@ -104,7 +115,7 @@ theorem TendstoUniformlyOn.mono {s' : Set α} (h : TendstoUniformlyOn F f p s) (
   TendstoUniformlyOn F f p s' :=
   fun u hu => (h u hu).mono fun n hn x hx => hn x (h' hx)
 
-theorem TendstoUniformly.tendsto_uniformly_on (h : TendstoUniformly F f p) : TendstoUniformlyOn F f p s :=
+protected theorem TendstoUniformly.tendsto_uniformly_on (h : TendstoUniformly F f p) : TendstoUniformlyOn F f p s :=
   (tendsto_uniformly_on_univ.2 h).mono (subset_univ s)
 
 /-- Composing on the right by a function preserves uniform convergence on a set -/
@@ -134,33 +145,38 @@ theorem tendsto_prod_top_iff {c : β} : tendsto («expr↿ » F) (p ×ᶠ ⊤) (
     _ ↔ map (j ∘ «expr↿ » F) (p ×ᶠ ⊤) ≤ 𝓤 β :=
     by 
       rw [map_map]
-    _ ↔ ∀ V _ : V ∈ 𝓤 β, { x | (c, («expr↿ » F) x) ∈ V } ∈ p ×ᶠ (⊤ : Filter α) := Iff.rfl 
-    _ ↔ ∀ V _ : V ∈ 𝓤 β, { i | ∀ a, (c, F i a) ∈ V } ∈ p :=
+    _ ↔ ∀ V (_ : V ∈ 𝓤 β), { x | (c, («expr↿ » F) x) ∈ V } ∈ p ×ᶠ (⊤ : Filter α) := Iff.rfl 
+    _ ↔ ∀ V (_ : V ∈ 𝓤 β), { i | ∀ a, (c, F i a) ∈ V } ∈ p :=
     by 
       simpa [mem_prod_top]
     
 
-theorem UniformContinuousOn.tendsto_uniformly [UniformSpace α] [UniformSpace γ] {x : α} {U : Set α} (hU : U ∈ 𝓝 x)
-  {F : α → β → γ} (hF : UniformContinuousOn («expr↿ » F) (U.prod univ)) : TendstoUniformly F (F x) (𝓝 x) :=
-  by 
-    let φ := fun q : α × β => ((x, q.2), q)
-    rw [tendsto_uniformly_iff_tendsto,
-      show (fun q : α × β => (F x q.2, F q.1 q.2)) = (Prod.mapₓ («expr↿ » F) («expr↿ » F) ∘ φ)by 
-        ext <;> simpa]
-    apply hF.comp (tendsto_inf.mpr ⟨_, _⟩)
-    ·
-      rw [uniformity_prod, tendsto_inf, tendsto_comap_iff, tendsto_comap_iff,
-        show ((fun p : (α × β) × α × β => (p.1.1, p.2.1)) ∘ φ) = ((fun a => (x, a)) ∘ Prod.fst)by 
-          ext 
-          simp ,
-        show ((fun p : (α × β) × α × β => (p.1.2, p.2.2)) ∘ φ) = ((fun b => (b, b)) ∘ Prod.snd)by 
-          ext 
-          simp ]
-      exact ⟨tendsto_left_nhds_uniformity.comp tendsto_fst, (tendsto_diag_uniformity id ⊤).comp tendsto_top⟩
-    ·
-      rw [tendsto_principal]
-      apply mem_of_superset (prod_mem_prod hU (mem_top.mpr rfl)) fun q h => _ 
-      simp [h.1, mem_of_mem_nhds hU]
+-- error in Topology.UniformSpace.UniformConvergence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_on.tendsto_uniformly
+[uniform_space α]
+[uniform_space γ]
+{x : α}
+{U : set α}
+(hU : «expr ∈ »(U, expr𝓝() x))
+{F : α → β → γ}
+(hF : uniform_continuous_on «expr↿ »(F) (U.prod univ)) : tendsto_uniformly F (F x) (expr𝓝() x) :=
+begin
+  let [ident φ] [] [":=", expr λ q : «expr × »(α, β), ((x, q.2), q)],
+  rw ["[", expr tendsto_uniformly_iff_tendsto, ",", expr show «expr = »(λ
+    q : «expr × »(α, β), (F x q.2, F q.1 q.2), «expr ∘ »(prod.map «expr↿ »(F) «expr↿ »(F), φ)), by { ext [] [] []; simpa [] [] [] [] [] [] }, "]"] [],
+  apply [expr hF.comp (tendsto_inf.mpr ⟨_, _⟩)],
+  { rw ["[", expr uniformity_prod, ",", expr tendsto_inf, ",", expr tendsto_comap_iff, ",", expr tendsto_comap_iff, ",", expr show «expr = »(«expr ∘ »(λ
+       p : «expr × »(«expr × »(α, β), «expr × »(α, β)), (p.1.1, p.2.1), φ), «expr ∘ »(λ
+       a, (x, a), prod.fst)), by { ext [] [] [],
+       simp [] [] [] [] [] [] }, ",", expr show «expr = »(«expr ∘ »(λ
+       p : «expr × »(«expr × »(α, β), «expr × »(α, β)), (p.1.2, p.2.2), φ), «expr ∘ »(λ
+       b, (b, b), prod.snd)), by { ext [] [] [],
+       simp [] [] [] [] [] [] }, "]"] [],
+    exact [expr ⟨tendsto_left_nhds_uniformity.comp tendsto_fst, (tendsto_diag_uniformity id «expr⊤»()).comp tendsto_top⟩] },
+  { rw [expr tendsto_principal] [],
+    apply [expr mem_of_superset (prod_mem_prod hU (mem_top.mpr rfl)) (λ q h, _)],
+    simp [] [] [] ["[", expr h.1, ",", expr mem_of_mem_nhds hU, "]"] [] [] }
+end
 
 theorem UniformContinuous₂.tendsto_uniformly [UniformSpace α] [UniformSpace γ] {f : α → β → γ}
   (h : UniformContinuous₂ f) {x : α} : TendstoUniformly f (f x) (𝓝 x) :=
@@ -174,19 +190,20 @@ variable[TopologicalSpace α]
 `f` with respect to a filter `p` if, for any entourage of the diagonal `u`, for any `x ∈ s`, one
 has `p`-eventually `(f x, Fₙ x) ∈ u` for all `y` in a neighborhood of `x` in `s`. -/
 def TendstoLocallyUniformlyOn (F : ι → α → β) (f : α → β) (p : Filter ι) (s : Set α) :=
-  ∀ u _ : u ∈ 𝓤 β, ∀ x _ : x ∈ s, ∃ (t : _)(_ : t ∈ 𝓝[s] x), ∀ᶠn in p, ∀ y _ : y ∈ t, (f y, F n y) ∈ u
+  ∀ u (_ : u ∈ 𝓤 β), ∀ x (_ : x ∈ s), ∃ (t : _)(_ : t ∈ 𝓝[s] x), ∀ᶠn in p, ∀ y (_ : y ∈ t), (f y, F n y) ∈ u
 
 /-- A sequence of functions `Fₙ` converges locally uniformly to a limiting function `f` with respect
 to a filter `p` if, for any entourage of the diagonal `u`, for any `x`, one has `p`-eventually
 `(f x, Fₙ x) ∈ u` for all `y` in a neighborhood of `x`. -/
 def TendstoLocallyUniformly (F : ι → α → β) (f : α → β) (p : Filter ι) :=
-  ∀ u _ : u ∈ 𝓤 β, ∀ x : α, ∃ (t : _)(_ : t ∈ 𝓝 x), ∀ᶠn in p, ∀ y _ : y ∈ t, (f y, F n y) ∈ u
+  ∀ u (_ : u ∈ 𝓤 β), ∀ (x : α), ∃ (t : _)(_ : t ∈ 𝓝 x), ∀ᶠn in p, ∀ y (_ : y ∈ t), (f y, F n y) ∈ u
 
-theorem TendstoUniformlyOn.tendsto_locally_uniformly_on (h : TendstoUniformlyOn F f p s) :
+protected theorem TendstoUniformlyOn.tendsto_locally_uniformly_on (h : TendstoUniformlyOn F f p s) :
   TendstoLocallyUniformlyOn F f p s :=
   fun u hu x hx => ⟨s, self_mem_nhds_within, h u hu⟩
 
-theorem TendstoUniformly.tendsto_locally_uniformly (h : TendstoUniformly F f p) : TendstoLocallyUniformly F f p :=
+protected theorem TendstoUniformly.tendsto_locally_uniformly (h : TendstoUniformly F f p) :
+  TendstoLocallyUniformly F f p :=
   fun u hu x =>
     ⟨univ, univ_mem,
       by 
@@ -202,6 +219,10 @@ theorem TendstoLocallyUniformlyOn.mono (h : TendstoLocallyUniformlyOn F f p s) (
 theorem tendsto_locally_uniformly_on_univ : TendstoLocallyUniformlyOn F f p univ ↔ TendstoLocallyUniformly F f p :=
   by 
     simp [TendstoLocallyUniformlyOn, TendstoLocallyUniformly, nhds_within_univ]
+
+protected theorem TendstoLocallyUniformly.tendsto_locally_uniformly_on (h : TendstoLocallyUniformly F f p) :
+  TendstoLocallyUniformlyOn F f p s :=
+  (tendsto_locally_uniformly_on_univ.mpr h).mono (subset_univ _)
 
 -- error in Topology.UniformSpace.UniformConvergence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem tendsto_locally_uniformly_on.comp
@@ -241,9 +262,9 @@ within a set at a point is continuous within this set at this point. -/
 theorem continuous_within_at_of_locally_uniform_approx_of_continuous_within_at
 (hx : «expr ∈ »(x, s))
 (L : ∀
- u «expr ∈ » expr𝓤() β, «expr∃ , »((t «expr ∈ » «expr𝓝[ ] »(s, x)), «expr∃ , »((n), ∀
-   y «expr ∈ » t, «expr ∈ »((f y, F n y), u))))
-(C : ∀ n, continuous_within_at (F n) s x) : continuous_within_at f s x :=
+ u «expr ∈ » expr𝓤() β, «expr∃ , »((t «expr ∈ » «expr𝓝[ ] »(s, x))
+  (F : α → β), «expr ∧ »(continuous_within_at F s x, ∀
+   y «expr ∈ » t, «expr ∈ »((f y, F y), u)))) : continuous_within_at f s x :=
 begin
   apply [expr uniform.continuous_within_at_iff'_left.2 (λ u₀ hu₀, _)],
   obtain ["⟨", ident u₁, ",", ident h₁, ",", ident u₁₀, "⟩", ":", expr «expr∃ , »((u : set «expr × »(β, β))
@@ -252,55 +273,54 @@ begin
     (H : «expr ∈ »(u, expr𝓤() β)), «expr ∧ »(∀
      {a
       b}, «expr ∈ »((a, b), u) → «expr ∈ »((b, a), u), «expr ⊆ »(comp_rel u u, u₁))), ":=", expr comp_symm_of_uniformity h₁],
-  rcases [expr L u₂ h₂, "with", "⟨", ident t, ",", ident tx, ",", ident n, ",", ident ht, "⟩"],
-  have [ident A] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(s, x), «expr ∈ »((f y, F n y), u₂))] [":=", expr eventually.mono tx ht],
-  have [ident B] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(s, x), «expr ∈ »((F n y, F n x), u₂))] [":=", expr uniform.continuous_within_at_iff'_left.1 (C n) h₂],
-  have [ident C] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(s, x), «expr ∈ »((f y, F n x), u₁))] [":=", expr (A.and B).mono (λ
+  rcases [expr L u₂ h₂, "with", "⟨", ident t, ",", ident tx, ",", ident F, ",", ident hFc, ",", ident hF, "⟩"],
+  have [ident A] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(s, x), «expr ∈ »((f y, F y), u₂))] [":=", expr eventually.mono tx hF],
+  have [ident B] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(s, x), «expr ∈ »((F y, F x), u₂))] [":=", expr uniform.continuous_within_at_iff'_left.1 hFc h₂],
+  have [ident C] [":", expr «expr∀ᶠ in , »((y), «expr𝓝[ ] »(s, x), «expr ∈ »((f y, F x), u₁))] [":=", expr (A.and B).mono (λ
     y hy, u₂₁ (prod_mk_mem_comp_rel hy.1 hy.2))],
-  have [] [":", expr «expr ∈ »((F n x, f x), u₁)] [":=", expr u₂₁ (prod_mk_mem_comp_rel (refl_mem_uniformity h₂) (hsymm (A.self_of_nhds_within hx)))],
+  have [] [":", expr «expr ∈ »((F x, f x), u₁)] [":=", expr u₂₁ (prod_mk_mem_comp_rel (refl_mem_uniformity h₂) (hsymm (A.self_of_nhds_within hx)))],
   exact [expr C.mono (λ y hy, u₁₀ (prod_mk_mem_comp_rel hy this))]
 end
 
 /-- A function which can be locally uniformly approximated by functions which are continuous at
 a point is continuous at this point. -/
 theorem continuous_at_of_locally_uniform_approx_of_continuous_at
-  (L : ∀ u _ : u ∈ 𝓤 β, ∃ (t : _)(_ : t ∈ 𝓝 x), ∃ n, ∀ y _ : y ∈ t, (f y, F n y) ∈ u) (C : ∀ n, ContinuousAt (F n) x) :
+  (L : ∀ u (_ : u ∈ 𝓤 β), ∃ (t : _)(_ : t ∈ 𝓝 x)(F : _), ContinuousAt F x ∧ ∀ y (_ : y ∈ t), (f y, F y) ∈ u) :
   ContinuousAt f x :=
   by 
-    simp only [←continuous_within_at_univ] at C⊢
-    apply continuous_within_at_of_locally_uniform_approx_of_continuous_within_at (mem_univ _) _ C 
-    simpa [nhds_within_univ] using L
+    rw [←continuous_within_at_univ]
+    apply continuous_within_at_of_locally_uniform_approx_of_continuous_within_at (mem_univ _) _ 
+    simpa only [exists_prop, nhds_within_univ, continuous_within_at_univ] using L
 
 /-- A function which can be locally uniformly approximated by functions which are continuous
 on a set is continuous on this set. -/
-theorem continuous_on_of_locally_uniform_approx_of_continuous_on
-  (L : ∀ x _ : x ∈ s u _ : u ∈ 𝓤 β, ∃ (t : _)(_ : t ∈ 𝓝[s] x), ∃ n, ∀ y _ : y ∈ t, (f y, F n y) ∈ u)
-  (C : ∀ n, ContinuousOn (F n) s) : ContinuousOn f s :=
-  fun x hx => continuous_within_at_of_locally_uniform_approx_of_continuous_within_at hx (L x hx) fun n => C n x hx
+theorem continuous_on_of_locally_uniform_approx_of_continuous_within_at
+  (L :
+    ∀ x (_ : x ∈ s) u (_ : u ∈ 𝓤 β),
+      ∃ (t : _)(_ : t ∈ 𝓝[s] x)(F : _), ContinuousWithinAt F s x ∧ ∀ y (_ : y ∈ t), (f y, F y) ∈ u) :
+  ContinuousOn f s :=
+  fun x hx => continuous_within_at_of_locally_uniform_approx_of_continuous_within_at hx (L x hx)
 
 /-- A function which can be uniformly approximated by functions which are continuous on a set
 is continuous on this set. -/
-theorem continuous_on_of_uniform_approx_of_continuous_on (L : ∀ u _ : u ∈ 𝓤 β, ∃ n, ∀ y _ : y ∈ s, (f y, F n y) ∈ u) :
-  (∀ n, ContinuousOn (F n) s) → ContinuousOn f s :=
-  continuous_on_of_locally_uniform_approx_of_continuous_on fun x hx u hu => ⟨s, self_mem_nhds_within, L u hu⟩
+theorem continuous_on_of_uniform_approx_of_continuous_on
+  (L : ∀ u (_ : u ∈ 𝓤 β), ∃ F, ContinuousOn F s ∧ ∀ y (_ : y ∈ s), (f y, F y) ∈ u) : ContinuousOn f s :=
+  continuous_on_of_locally_uniform_approx_of_continuous_within_at$
+    fun x hx u hu => ⟨s, self_mem_nhds_within, (L u hu).imp$ fun F hF => ⟨hF.1.ContinuousWithinAt hx, hF.2⟩⟩
 
 /-- A function which can be locally uniformly approximated by continuous functions is continuous. -/
-theorem continuous_of_locally_uniform_approx_of_continuous
-  (L : ∀ x : α, ∀ u _ : u ∈ 𝓤 β, ∃ (t : _)(_ : t ∈ 𝓝 x), ∃ n, ∀ y _ : y ∈ t, (f y, F n y) ∈ u)
-  (C : ∀ n, Continuous (F n)) : Continuous f :=
-  by 
-    simp only [continuous_iff_continuous_on_univ] at C⊢
-    apply continuous_on_of_locally_uniform_approx_of_continuous_on _ C 
-    simpa [nhds_within_univ] using L
+theorem continuous_of_locally_uniform_approx_of_continuous_at
+  (L : ∀ (x : α), ∀ u (_ : u ∈ 𝓤 β), ∃ (t : _)(_ : t ∈ 𝓝 x), ∃ F, ContinuousAt F x ∧ ∀ y (_ : y ∈ t), (f y, F y) ∈ u) :
+  Continuous f :=
+  continuous_iff_continuous_at.2$ fun x => continuous_at_of_locally_uniform_approx_of_continuous_at (L x)
 
 /-- A function which can be uniformly approximated by continuous functions is continuous. -/
-theorem continuous_of_uniform_approx_of_continuous (L : ∀ u _ : u ∈ 𝓤 β, ∃ N, ∀ y, (f y, F N y) ∈ u) :
-  (∀ n, Continuous (F n)) → Continuous f :=
-  continuous_of_locally_uniform_approx_of_continuous$
-    fun x u hu =>
-      ⟨univ,
-        by 
-          simpa [Filter.univ_mem] using L u hu⟩
+theorem continuous_of_uniform_approx_of_continuous (L : ∀ u (_ : u ∈ 𝓤 β), ∃ F, Continuous F ∧ ∀ y, (f y, F y) ∈ u) :
+  Continuous f :=
+  continuous_iff_continuous_on_univ.mpr$
+    continuous_on_of_uniform_approx_of_continuous_on$
+      by 
+        simpa [continuous_iff_continuous_on_univ] using L
 
 /-!
 ### Uniform limits
@@ -312,30 +332,29 @@ limits.
 
 /-- A locally uniform limit on a set of functions which are continuous on this set is itself
 continuous on this set. -/
-theorem TendstoLocallyUniformlyOn.continuous_on (h : TendstoLocallyUniformlyOn F f p s) (hc : ∀ n, ContinuousOn (F n) s)
-  [ne_bot p] : ContinuousOn f s :=
+protected theorem TendstoLocallyUniformlyOn.continuous_on (h : TendstoLocallyUniformlyOn F f p s)
+  (hc : ∀ᶠn in p, ContinuousOn (F n) s) [ne_bot p] : ContinuousOn f s :=
   by 
-    apply continuous_on_of_locally_uniform_approx_of_continuous_on (fun x hx u hu => _) hc 
+    apply continuous_on_of_locally_uniform_approx_of_continuous_within_at fun x hx u hu => _ 
     rcases h u hu x hx with ⟨t, ht, H⟩
-    exact ⟨t, ht, H.exists⟩
+    rcases(hc.and H).exists with ⟨n, hFc, hF⟩
+    exact ⟨t, ht, ⟨F n, hFc.continuous_within_at hx, hF⟩⟩
 
 /-- A uniform limit on a set of functions which are continuous on this set is itself continuous
 on this set. -/
-theorem TendstoUniformlyOn.continuous_on (h : TendstoUniformlyOn F f p s) (hc : ∀ n, ContinuousOn (F n) s) [ne_bot p] :
-  ContinuousOn f s :=
+protected theorem TendstoUniformlyOn.continuous_on (h : TendstoUniformlyOn F f p s)
+  (hc : ∀ᶠn in p, ContinuousOn (F n) s) [ne_bot p] : ContinuousOn f s :=
   h.tendsto_locally_uniformly_on.continuous_on hc
 
 /-- A locally uniform limit of continuous functions is continuous. -/
-theorem TendstoLocallyUniformly.continuous (h : TendstoLocallyUniformly F f p) (hc : ∀ n, Continuous (F n)) [ne_bot p] :
-  Continuous f :=
-  by 
-    apply continuous_of_locally_uniform_approx_of_continuous (fun x u hu => _) hc 
-    rcases h u hu x with ⟨t, ht, H⟩
-    exact ⟨t, ht, H.exists⟩
+protected theorem TendstoLocallyUniformly.continuous (h : TendstoLocallyUniformly F f p)
+  (hc : ∀ᶠn in p, Continuous (F n)) [ne_bot p] : Continuous f :=
+  continuous_iff_continuous_on_univ.mpr$
+    h.tendsto_locally_uniformly_on.continuous_on$ hc.mono$ fun n hn => hn.continuous_on
 
 /-- A uniform limit of continuous functions is continuous. -/
-theorem TendstoUniformly.continuous (h : TendstoUniformly F f p) (hc : ∀ n, Continuous (F n)) [ne_bot p] :
-  Continuous f :=
+protected theorem TendstoUniformly.continuous (h : TendstoUniformly F f p) (hc : ∀ᶠn in p, Continuous (F n))
+  [ne_bot p] : Continuous f :=
   h.tendsto_locally_uniformly.continuous hc
 
 /-!
@@ -372,7 +391,7 @@ end
 /-- If `Fₙ` converges locally uniformly on a neighborhood of `x` to a function `f` which is
 continuous at `x`, and `gₙ` tends to `x`, then `Fₙ (gₙ)` tends to `f x`. -/
 theorem tendsto_comp_of_locally_uniform_limit (h : ContinuousAt f x) (hg : tendsto g p (𝓝 x))
-  (hunif : ∀ u _ : u ∈ 𝓤 β, ∃ (t : _)(_ : t ∈ 𝓝 x), ∀ᶠn in p, ∀ y _ : y ∈ t, (f y, F n y) ∈ u) :
+  (hunif : ∀ u (_ : u ∈ 𝓤 β), ∃ (t : _)(_ : t ∈ 𝓝 x), ∀ᶠn in p, ∀ y (_ : y ∈ t), (f y, F n y) ∈ u) :
   tendsto (fun n => F n (g n)) p (𝓝 (f x)) :=
   by 
     rw [←continuous_within_at_univ] at h 

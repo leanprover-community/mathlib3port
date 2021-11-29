@@ -58,7 +58,7 @@ variable(G : Type _)[Groupₓ G](H : Subgroup G)
 @[nolint has_inhabited_instance]
 structure MulActionHom where 
   toFun : X → Y 
-  map_smul' : ∀ m : M' x : X, to_fun (m • x) = m • to_fun x
+  map_smul' : ∀ (m : M') (x : X), to_fun (m • x) = m • to_fun x
 
 notation:25 X " →[" M:25 "] " Y:0 => MulActionHom M X Y
 

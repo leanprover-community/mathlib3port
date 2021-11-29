@@ -88,7 +88,7 @@ theorem div_wf_lemma (h : degree q ≤ degree p ∧ p ≠ 0) (hq : monic q) :
         rw [leading_coeff_mul_monic hq, leading_coeff_mul_X_pow, leading_coeff_C])
 
 /-- See `div_by_monic`. -/
-noncomputable def div_mod_by_monic_aux : ∀ p : Polynomial R {q : Polynomial R}, monic q → Polynomial R × Polynomial R
+noncomputable def div_mod_by_monic_aux : ∀ (p : Polynomial R) {q : Polynomial R}, monic q → Polynomial R × Polynomial R
 | p =>
   fun q hq =>
     if h : degree q ≤ degree p ∧ p ≠ 0 then
@@ -111,7 +111,7 @@ infixl:70 " /ₘ " => div_by_monic
 infixl:70 " %ₘ " => mod_by_monic
 
 theorem degree_mod_by_monic_lt [Nontrivial R] :
-  ∀ p : Polynomial R {q : Polynomial R} hq : monic q, degree (p %ₘ q) < degree q
+  ∀ (p : Polynomial R) {q : Polynomial R} (hq : monic q), degree (p %ₘ q) < degree q
 | p =>
   fun q hq =>
     if h : degree q ≤ degree p ∧ p ≠ 0 then
@@ -192,7 +192,7 @@ section CommRingₓ
 
 variable[CommRingₓ R]{p q : Polynomial R}
 
-theorem mod_by_monic_eq_sub_mul_div : ∀ p : Polynomial R {q : Polynomial R} hq : monic q, p %ₘ q = p - q*p /ₘ q
+theorem mod_by_monic_eq_sub_mul_div : ∀ (p : Polynomial R) {q : Polynomial R} (hq : monic q), p %ₘ q = p - q*p /ₘ q
 | p =>
   fun q hq =>
     if h : degree q ≤ degree p ∧ p ≠ 0 then
@@ -395,14 +395,12 @@ begin
   rw ["[", expr eq_C_of_degree_le_zero this, ",", expr h, "]"] []
 end
 
-theorem mul_div_by_monic_eq_iff_is_root : ((X - C a)*p /ₘ (X - C a)) = p ↔ is_root p a :=
-  ⟨fun h =>
-      by 
-        rw [←h, is_root.def, eval_mul, eval_sub, eval_X, eval_C, sub_self, zero_mul],
-    fun h : p.eval a = 0 =>
-      by 
-        conv  => toRHS rw [←mod_by_monic_add_div p (monic_X_sub_C a)] <;>
-          rw [mod_by_monic_X_sub_C_eq_C_eval, h, C_0, zero_addₓ]⟩
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mul_div_by_monic_eq_iff_is_root : «expr ↔ »(«expr = »(«expr * »(«expr - »(X, C a), «expr /ₘ »(p, «expr - »(X, C a))), p), is_root p a) :=
+⟨λ
+ h, by rw ["[", "<-", expr h, ",", expr is_root.def, ",", expr eval_mul, ",", expr eval_sub, ",", expr eval_X, ",", expr eval_C, ",", expr sub_self, ",", expr zero_mul, "]"] [], λ
+ h : «expr = »(p.eval a, 0), by conv [] [] { to_rhs,
+   rw ["<-", expr mod_by_monic_add_div p (monic_X_sub_C a)] }; rw ["[", expr mod_by_monic_X_sub_C_eq_C_eval, ",", expr h, ",", expr C_0, ",", expr zero_add, "]"] []⟩
 
 theorem dvd_iff_is_root : X - C a ∣ p ↔ is_root p a :=
   ⟨fun h =>
@@ -465,14 +463,14 @@ multiplicity_finite_of_degree_pos_of_monic (have «expr ≠ »((0 : R), 1), from
  h, by haveI [] [] [":=", expr subsingleton_of_zero_eq_one h]; exact [expr h0 (subsingleton.elim _ _)],
  by haveI [] [":", expr nontrivial R] [":=", expr ⟨⟨0, 1, this⟩⟩]; rw [expr degree_X_sub_C] []; exact [expr exprdec_trivial()]) (monic_X_sub_C _) h0
 
+-- error in Data.Polynomial.Div: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The largest power of `X - C a` which divides `p`.
 This is computable via the divisibility algorithm `decidable_dvd_monic`. -/
-def root_multiplicity (a : R) (p : Polynomial R) : ℕ :=
-  if h0 : p = 0 then 0 else
-    let I : DecidablePred fun n : ℕ => ¬((X - C a) ^ n+1) ∣ p :=
-      fun n => @Not.decidable _ (decidable_dvd_monic p (monic_pow (monic_X_sub_C a) (n+1)))
-    by 
-      exact Nat.findₓ (multiplicity_X_sub_C_finite a h0)
+def root_multiplicity (a : R) (p : polynomial R) : exprℕ() :=
+if h0 : «expr = »(p, 0) then 0 else let I : decidable_pred (λ
+     n : exprℕ(), «expr¬ »(«expr ∣ »(«expr ^ »(«expr - »(X, C a), «expr + »(n, 1)), p))) := λ
+    n, @not.decidable _ (decidable_dvd_monic p (monic_pow (monic_X_sub_C a) «expr + »(n, 1))) in
+by exactI [expr nat.find (multiplicity_X_sub_C_finite a h0)]
 
 theorem root_multiplicity_eq_multiplicity (p : Polynomial R) (a : R) :
   root_multiplicity a p = if h0 : p = 0 then 0 else (multiplicity (X - C a) p).get (multiplicity_X_sub_C_finite a h0) :=

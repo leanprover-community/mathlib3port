@@ -28,8 +28,8 @@ elements of `α` and the children of a node labeled `a` are indexed by elements 
 inductive WType {α : Type _} (β : α → Type _)
   | mk (a : α) (f : β a → WType) : WType
 
-instance  : Inhabited (WType fun _ : Unit => Empty) :=
-  ⟨WType.mk Unit.star Empty.elimₓ⟩
+-- error in Data.W.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : inhabited (W_type (λ _ : unit, empty)) := ⟨W_type.mk unit.star empty.elim⟩
 
 namespace WType
 
@@ -46,11 +46,11 @@ def of_sigma : (Σa : α, β a → WType β) → WType β
 | ⟨a, f⟩ => WType.mk a f
 
 @[simp]
-theorem of_sigma_to_sigma : ∀ w : WType β, of_sigma (to_sigma w) = w
+theorem of_sigma_to_sigma : ∀ (w : WType β), of_sigma (to_sigma w) = w
 | ⟨a, f⟩ => rfl
 
 @[simp]
-theorem to_sigma_of_sigma : ∀ s : Σa : α, β a → WType β, to_sigma (of_sigma s) = s
+theorem to_sigma_of_sigma : ∀ (s : Σa : α, β a → WType β), to_sigma (of_sigma s) = s
 | ⟨a, f⟩ => rfl
 
 variable(β)
@@ -78,7 +78,7 @@ theorem elim_injective (γ : Type _) (fγ : (Σa : α, β a → γ) → γ) (fγ
 instance  [hα : IsEmpty α] : IsEmpty (WType β) :=
   ⟨fun w => WType.recOn w (IsEmpty.elim hα)⟩
 
--- error in Data.W.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.W.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : nonempty (β a)] [he : is_empty (β b)] : infinite (W_type β) :=
 ⟨begin
    introsI [ident hf],
@@ -95,7 +95,7 @@ theorem infinite_of_nonempty_of_is_empty (a b : α) [ha : nonempty (β a)] [he :
        simp [] [] [] ["[", expr function.funext_iff, ",", "*", "]"] [] ["at", "*"] } }
  end⟩
 
-variable[∀ a : α, Fintype (β a)]
+variable[∀ (a : α), Fintype (β a)]
 
 /-- The depth of a finitely branching tree. -/
 def depth : WType β → ℕ
@@ -114,10 +114,10 @@ end WType
 namespace Encodable
 
 @[reducible]
-private def W_type' {α : Type _} (β : α → Type _) [∀ a : α, Fintype (β a)] [∀ a : α, Encodable (β a)] (n : ℕ) :=
+private def W_type' {α : Type _} (β : α → Type _) [∀ (a : α), Fintype (β a)] [∀ (a : α), Encodable (β a)] (n : ℕ) :=
   { t : WType β // t.depth ≤ n }
 
-variable{α : Type _}{β : α → Type _}[∀ a : α, Fintype (β a)][∀ a : α, Encodable (β a)]
+variable{α : Type _}{β : α → Type _}[∀ (a : α), Fintype (β a)][∀ (a : α), Encodable (β a)]
 
 private def encodable_zero : Encodable (W_type' β 0) :=
   let f : W_type' β 0 → Empty := fun ⟨x, h⟩ => False.elim$ not_lt_of_geₓ h (WType.depth_pos _)
@@ -128,7 +128,7 @@ private def encodable_zero : Encodable (W_type' β 0) :=
   have  : ∀ x, finv (f x) = x := fun ⟨x, h⟩ => False.elim$ not_lt_of_geₓ h (WType.depth_pos _)
   Encodable.ofLeftInverse f finv this
 
--- error in Data.W.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.W.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 private def f (n : exprℕ()) : W_type' β «expr + »(n, 1) → «exprΣ , »((a : α), β a → W_type' β n)
 | ⟨t, h⟩ := begin
   cases [expr t] ["with", ident a, ident f],
@@ -137,11 +137,11 @@ private def f (n : exprℕ()) : W_type' β «expr + »(n, 1) → «exprΣ , »((
   exact [expr ⟨a, λ i : β a, ⟨f i, h₀ i⟩⟩]
 end
 
-private def finv (n : ℕ) : (Σa : α, β a → W_type' β n) → W_type' β (n+1)
-| ⟨a, f⟩ =>
-  let f' := fun i : β a => (f i).val 
-  have  : WType.depth ⟨a, f'⟩ ≤ n+1 := add_le_add_right (Finset.sup_le fun b h => (f b).2) 1
-  ⟨⟨a, f'⟩, this⟩
+-- error in Data.W.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private def finv (n : exprℕ()) : «exprΣ , »((a : α), β a → W_type' β n) → W_type' β «expr + »(n, 1)
+| ⟨a, f⟩ := let f' := λ i : β a, (f i).val in
+have «expr ≤ »(W_type.depth ⟨a, f'⟩, «expr + »(n, 1)), from add_le_add_right (finset.sup_le (λ b h, (f b).2)) 1,
+⟨⟨a, f'⟩, this⟩
 
 variable[Encodable α]
 

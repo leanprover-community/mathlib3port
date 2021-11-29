@@ -238,13 +238,13 @@ theorem list_blank.cons_mk {Γ} [Inhabited Γ] (a : Γ) (l : List Γ) :
   rfl
 
 @[simp]
-theorem list_blank.head_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ l : list_blank Γ, (l.cons a).head = a :=
+theorem list_blank.head_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ (l : list_blank Γ), (l.cons a).head = a :=
   Quotientₓ.ind'$
     by 
       exact fun l => rfl
 
 @[simp]
-theorem list_blank.tail_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ l : list_blank Γ, (l.cons a).tail = l :=
+theorem list_blank.tail_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ (l : list_blank Γ), (l.cons a).tail = l :=
   Quotientₓ.ind'$
     by 
       exact fun l => rfl
@@ -252,7 +252,7 @@ theorem list_blank.tail_cons {Γ} [Inhabited Γ] (a : Γ) : ∀ l : list_blank �
 /-- The `cons` and `head`/`tail` functions are mutually inverse, unlike in the case of `list` where
 this only holds for nonempty lists. -/
 @[simp]
-theorem list_blank.cons_head_tail {Γ} [Inhabited Γ] : ∀ l : list_blank Γ, l.tail.cons l.head = l :=
+theorem list_blank.cons_head_tail {Γ} [Inhabited Γ] : ∀ (l : list_blank Γ), l.tail.cons l.head = l :=
   Quotientₓ.ind'
     (by 
       refine' fun l => Quotientₓ.sound' (Or.inr _)
@@ -595,7 +595,7 @@ theorem tape.mk'_nth_nat {Γ} [Inhabited Γ] (L R : list_blank Γ) (n : ℕ) : (
     rw [←tape.right₀_nth, tape.mk'_right₀]
 
 @[simp]
-theorem tape.move_left_nth {Γ} [Inhabited Γ] : ∀ T : tape Γ i : ℤ, (T.move dir.left).nth i = T.nth (i - 1)
+theorem tape.move_left_nth {Γ} [Inhabited Γ] : ∀ (T : tape Γ) (i : ℤ), (T.move dir.left).nth i = T.nth (i - 1)
 | ⟨a, L, R⟩, -[1+ n] => (list_blank.nth_succ _ _).symm
 | ⟨a, L, R⟩, 0 => (list_blank.nth_zero _).symm
 | ⟨a, L, R⟩, 1 => (list_blank.nth_zero _).trans (list_blank.head_cons _ _)
@@ -620,13 +620,13 @@ def tape.write {Γ} [Inhabited Γ] (b : Γ) (T : tape Γ) : tape Γ :=
   { T with head := b }
 
 @[simp]
-theorem tape.write_self {Γ} [Inhabited Γ] : ∀ T : tape Γ, T.write T.1 = T :=
+theorem tape.write_self {Γ} [Inhabited Γ] : ∀ (T : tape Γ), T.write T.1 = T :=
   by 
     rintro ⟨⟩ <;> rfl
 
 @[simp]
 theorem tape.write_nth {Γ} [Inhabited Γ] (b : Γ) :
-  ∀ T : tape Γ {i : ℤ}, (T.write b).nth i = if i = 0 then b else T.nth i
+  ∀ (T : tape Γ) {i : ℤ}, (T.write b).nth i = if i = 0 then b else T.nth i
 | ⟨a, L, R⟩, 0 => rfl
 | ⟨a, L, R⟩, (n+1 : ℕ) => rfl
 | ⟨a, L, R⟩, -[1+ n] => rfl
@@ -642,13 +642,13 @@ def tape.map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : pointed_map Γ Γ') (T
   ⟨f T.1, T.2.map f, T.3.map f⟩
 
 @[simp]
-theorem tape.map_fst {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : pointed_map Γ Γ') : ∀ T : tape Γ, (T.map f).1 = f T.1 :=
+theorem tape.map_fst {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : pointed_map Γ Γ') : ∀ (T : tape Γ), (T.map f).1 = f T.1 :=
   by 
     rintro ⟨⟩ <;> rfl
 
 @[simp]
 theorem tape.map_write {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : pointed_map Γ Γ') (b : Γ) :
-  ∀ T : tape Γ, (T.write b).map f = (T.map f).write (f b) :=
+  ∀ (T : tape Γ), (T.write b).map f = (T.map f).write (f b) :=
   by 
     rintro ⟨⟩ <;> rfl
 
@@ -1129,8 +1129,8 @@ in both directions, essentially an `equiv` without the laws. -/
 def machine.map : machine Γ' Λ'
 | q, l => (M (g₂ q) (f₂ l)).map (Prod.mapₓ g₁ (stmt.map f₁))
 
-theorem machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀ q _ : q ∈ S, g₂ (g₁ q) = q) :
-  ∀ c : cfg Γ Λ, c.q ∈ S → (step M c).map (cfg.map f₁ g₁) = step (M.map f₁ f₂ g₁ g₂) (cfg.map f₁ g₁ c)
+theorem machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀ q (_ : q ∈ S), g₂ (g₁ q) = q) :
+  ∀ (c : cfg Γ Λ), c.q ∈ S → (step M c).map (cfg.map f₁ g₁) = step (M.map f₁ f₂ g₁ g₂) (cfg.map f₁ g₁ c)
 | ⟨q, T⟩, h =>
   by 
     unfold step machine.map cfg.map 
@@ -1149,7 +1149,7 @@ theorem map_init (g₁ : pointed_map Λ Λ') (l : List Γ) : (init l).map f₁ g
   congr (congr_argₓ cfg.mk g₁.map_pt) (tape.map_mk₁ _ _)
 
 theorem machine.map_respects (g₁ : pointed_map Λ Λ') (g₂ : Λ' → Λ) {S} (ss : supports M S)
-  (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀ q _ : q ∈ S, g₂ (g₁ q) = q) :
+  (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀ q (_ : q ∈ S), g₂ (g₁ q) = q) :
   respects (step M) (step (M.map f₁ f₂ g₁ g₂)) fun a b => a.q ∈ S ∧ cfg.map f₁ g₁ a = b
 | c, _, ⟨cs, rfl⟩ =>
   by 
@@ -1341,7 +1341,7 @@ variable[Inhabited Λ]
   statements in the functions in `S` refer only to other functions
   in `S`. -/
 def supports (M : Λ → stmt) (S : Finset Λ) :=
-  default Λ ∈ S ∧ ∀ q _ : q ∈ S, supports_stmt S (M q)
+  default Λ ∈ S ∧ ∀ q (_ : q ∈ S), supports_stmt S (M q)
 
 theorem stmts_supports_stmt {M : Λ → stmt} {S q} (ss : supports M S) : some q ∈ stmts M S → supports_stmt S q :=
   by 
@@ -1683,7 +1683,7 @@ theorem supports_stmt_write {S l q} : supports_stmt S (write l q) = supports_stm
     induction' l with a l IH <;> simp only [write, supports_stmt]
 
 theorem supports_stmt_read {S} : ∀ {f : Γ → stmt'}, (∀ a, supports_stmt S (f a)) → supports_stmt S (read f) :=
-  suffices ∀ i f : Vector Bool i → stmt', (∀ v, supports_stmt S (f v)) → supports_stmt S (read_aux i f) from
+  suffices ∀ i (f : Vector Bool i → stmt'), (∀ v, supports_stmt S (f v)) → supports_stmt S (read_aux i f) from
     fun f hf =>
       this n _
         (by 
@@ -1739,7 +1739,7 @@ theorem tr_tape'_move_left L R : (tape.move dir.left^[n]) (tr_tape' L R) = tr_ta
     obtain ⟨a, L, rfl⟩ := L.exists_cons 
     simp only [tr_tape', list_blank.cons_bind, list_blank.head_cons, list_blank.tail_cons]
     suffices  :
-      ∀ {L' R' l₁ l₂} e : Vector.toList (enc a) = List.reverseCore l₁ l₂,
+      ∀ {L' R' l₁ l₂} (e : Vector.toList (enc a) = List.reverseCore l₁ l₂),
         (tape.move dir.left^[l₁.length]) (tape.mk' (list_blank.append l₁ L') (list_blank.append l₂ R')) =
           tape.mk' L' (list_blank.append (Vector.toList (enc a)) R')
     ·
@@ -1771,7 +1771,7 @@ theorem step_aux_write q v a b L R :
   by 
     simp only [tr_tape', List.cons_bind, List.append_assoc]
     suffices  :
-      ∀ {L' R'} l₁ l₂ l₂' : List Bool e : l₂'.length = l₂.length,
+      ∀ {L' R'} (l₁ l₂ l₂' : List Bool) (e : l₂'.length = l₂.length),
         step_aux (write l₂ q) v (tape.mk' (list_blank.append l₁ L') (list_blank.append l₂' R')) =
           step_aux q v (tape.mk' (L'.append (List.reverseCore l₂ l₁)) R')
     ·
@@ -2193,7 +2193,7 @@ variable[Inhabited Λ]
 /-- Given a TM2 machine `M` and a set `S` of states, `supports M S` means that all states in
 `S` jump only to other states in `S`. -/
 def supports (M : Λ → stmt) (S : Finset Λ) :=
-  default Λ ∈ S ∧ ∀ q _ : q ∈ S, supports_stmt S (M q)
+  default Λ ∈ S ∧ ∀ q (_ : q ∈ S), supports_stmt S (M q)
 
 theorem stmts_supports_stmt {M : Λ → stmt} {S q} (ss : supports M S) : some q ∈ stmts M S → supports_stmt S q :=
   by 
@@ -2382,8 +2382,8 @@ def st_write {k : K} (v : σ) (l : List (Γ k)) : st_act k → List (Γ k)
 of the stack, and all other actions, which do not. This is a modified recursor which lumps the
 stack actions into one. -/
 @[elab_as_eliminator]
-def stmt_st_rec.{l} {C : stmt₂ → Sort l} (H₁ : ∀ k s : st_act k q IH : C q, C (st_run s q))
-  (H₂ : ∀ a q IH : C q, C (TM2.stmt.load a q)) (H₃ : ∀ p q₁ q₂ IH₁ : C q₁ IH₂ : C q₂, C (TM2.stmt.branch p q₁ q₂))
+def stmt_st_rec.{l} {C : stmt₂ → Sort l} (H₁ : ∀ k (s : st_act k) q (IH : C q), C (st_run s q))
+  (H₂ : ∀ a q (IH : C q), C (TM2.stmt.load a q)) (H₃ : ∀ p q₁ q₂ (IH₁ : C q₁) (IH₂ : C q₂), C (TM2.stmt.branch p q₁ q₂))
   (H₄ : ∀ l, C (TM2.stmt.goto l)) (H₅ : C TM2.stmt.halt) : ∀ n, C n
 | TM2.stmt.push k f q => H₁ _ (push f) _ (stmt_st_rec q)
 | TM2.stmt.peek k f q => H₁ _ (peek f) _ (stmt_st_rec q)
@@ -2434,7 +2434,7 @@ def tr_init k (L : List (Γ k)) : List Γ' :=
   (tt, L'.head.2) :: L'.tail
 
 theorem step_run {k : K} q v S :
-  ∀ s : st_act k, TM2.step_aux (st_run s q) v S = TM2.step_aux q (st_var v (S k) s) (update S k (st_write v (S k) s))
+  ∀ (s : st_act k), TM2.step_aux (st_run s q) v S = TM2.step_aux q (st_var v (S k) s) (update S k (st_write v (S k) s))
 | st_act.push f => rfl
 | st_act.peek f =>
   by 
@@ -2472,7 +2472,7 @@ theorem tr_stmts₁_run {k s q} : tr_stmts₁ (st_run s q) = {go k s q, ret q} �
   by 
     rcases s with (_ | _ | _) <;> unfold tr_stmts₁ st_run
 
--- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Computability.TuringMachine: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem tr_respects_aux₂
 {k q v}
 {S : ∀ k, list (Γ k)}

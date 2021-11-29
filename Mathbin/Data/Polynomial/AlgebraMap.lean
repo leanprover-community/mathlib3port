@@ -354,7 +354,7 @@ section CommRingₓ
 variable[CommRingₓ S]{f : R →+* S}
 
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : Polynomial S} (i : ℕ) (dvd_eval : p ∣ f.eval z)
-  (dvd_terms : ∀ j _ : j ≠ i, p ∣ f.coeff j*z ^ j) : p ∣ f.coeff i*z ^ i :=
+  (dvd_terms : ∀ j (_ : j ≠ i), p ∣ f.coeff j*z ^ j) : p ∣ f.coeff i*z ^ i :=
   by 
     byCases' hf : f = 0
     ·
@@ -373,7 +373,7 @@ theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : Polynomial S} (i : ℕ)
       simp [hi]
 
 theorem dvd_term_of_is_root_of_dvd_terms {r p : S} {f : Polynomial S} (i : ℕ) (hr : f.is_root r)
-  (h : ∀ j _ : j ≠ i, p ∣ f.coeff j*r ^ j) : p ∣ f.coeff i*r ^ i :=
+  (h : ∀ j (_ : j ≠ i), p ∣ f.coeff j*r ^ j) : p ∣ f.coeff i*r ^ i :=
   dvd_term_of_dvd_eval_of_dvd_terms i (Eq.symm hr ▸ dvd_zero p) h
 
 end CommRingₓ
@@ -409,7 +409,7 @@ begin
   simp [] [] [] ["[", expr sum_range_sub', ",", expr coeff_monomial, "]"] [] []
 end
 
-theorem not_is_unit_X_sub_C [Nontrivial R] {r : R} : ¬IsUnit (X - C r) :=
+theorem not_is_unit_X_sub_C [Nontrivial R] (r : R) : ¬IsUnit (X - C r) :=
   fun ⟨⟨_, g, hfg, hgf⟩, rfl⟩ =>
     @zero_ne_one R _ _$
       by 

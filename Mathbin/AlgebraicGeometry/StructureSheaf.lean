@@ -3,7 +3,7 @@ import Mathbin.Algebra.Category.CommRing.Colimits
 import Mathbin.Algebra.Category.CommRing.Limits 
 import Mathbin.Topology.Sheaves.LocalPredicate 
 import Mathbin.RingTheory.Localization 
-import Mathbin.RingTheory.Subring
+import Mathbin.RingTheory.Subring.Basic
 
 /-!
 # The structure sheaf on `prime_spectrum R`.
@@ -86,12 +86,12 @@ variable{R}
 The predicate saying that a dependent function on an open `U` is realised as a fixed fraction
 `r / s` in each of the stalks (which are localizations at various prime ideals).
 -/
-def is_fraction {U : opens (prime_spectrum.Top R)} (f : ∀ x : U, localizations R x) : Prop :=
-  ∃ r s : R, ∀ x : U, ¬s ∈ x.1.asIdeal ∧ (f x*algebraMap _ _ s) = algebraMap _ _ r
+def is_fraction {U : opens (prime_spectrum.Top R)} (f : ∀ (x : U), localizations R x) : Prop :=
+  ∃ r s : R, ∀ (x : U), ¬s ∈ x.1.asIdeal ∧ (f x*algebraMap _ _ s) = algebraMap _ _ r
 
-theorem is_fraction.eq_mk' {U : opens (prime_spectrum.Top R)} {f : ∀ x : U, localizations R x} (hf : is_fraction f) :
+theorem is_fraction.eq_mk' {U : opens (prime_spectrum.Top R)} {f : ∀ (x : U), localizations R x} (hf : is_fraction f) :
   ∃ r s : R,
-    ∀ x : U,
+    ∀ (x : U),
       ∃ hs : s ∉ x.1.asIdeal,
         f x = IsLocalization.mk' (Localization.AtPrime _) r (⟨s, hs⟩ : (x : prime_spectrum.Top R).asIdeal.primeCompl) :=
   by 
@@ -135,17 +135,17 @@ def is_locally_fraction : local_predicate (localizations R) :=
   (is_fraction_prelocal R).sheafify
 
 @[simp]
-theorem is_locally_fraction_pred {U : opens (prime_spectrum.Top R)} (f : ∀ x : U, localizations R x) :
+theorem is_locally_fraction_pred {U : opens (prime_spectrum.Top R)} (f : ∀ (x : U), localizations R x) :
   (is_locally_fraction R).pred f =
-    ∀ x : U,
+    ∀ (x : U),
       ∃ (V : _)(m : x.1 ∈ V)(i : V ⟶ U),
-        ∃ r s : R, ∀ y : V, ¬s ∈ y.1.asIdeal ∧ (f (i y : U)*algebraMap _ _ s) = algebraMap _ _ r :=
+        ∃ r s : R, ∀ (y : V), ¬s ∈ y.1.asIdeal ∧ (f (i y : U)*algebraMap _ _ s) = algebraMap _ _ r :=
   rfl
 
 /--
 The functions satisfying `is_locally_fraction` form a subring.
 -/
-def sections_subring (U : «expr ᵒᵖ» (opens (prime_spectrum.Top R))) : Subring (∀ x : unop U, localizations R x) :=
+def sections_subring (U : «expr ᵒᵖ» (opens (prime_spectrum.Top R))) : Subring (∀ (x : unop U), localizations R x) :=
   { Carrier := { f | (is_locally_fraction R).pred f },
     zero_mem' :=
       by 
@@ -277,18 +277,18 @@ theorem res_apply (U V : opens (prime_spectrum.Top R)) (i : V ⟶ U) (s : (struc
 /-- The section of `structure_sheaf R` on an open `U` sending each `x ∈ U` to the element
 `f/g` in the localization of `R` at `x`. -/
 def const (f g : R) (U : opens (prime_spectrum.Top R))
-  (hu : ∀ x _ : x ∈ U, g ∈ (x : prime_spectrum.Top R).asIdeal.primeCompl) : (structure_sheaf R).1.obj (op U) :=
+  (hu : ∀ x (_ : x ∈ U), g ∈ (x : prime_spectrum.Top R).asIdeal.primeCompl) : (structure_sheaf R).1.obj (op U) :=
   ⟨fun x => IsLocalization.mk' _ f ⟨g, hu x x.2⟩,
     fun x => ⟨U, x.2, 𝟙 _, f, g, fun y => ⟨hu y y.2, IsLocalization.mk'_spec _ _ _⟩⟩⟩
 
 @[simp]
 theorem const_apply (f g : R) (U : opens (prime_spectrum.Top R))
-  (hu : ∀ x _ : x ∈ U, g ∈ (x : prime_spectrum.Top R).asIdeal.primeCompl) (x : U) :
+  (hu : ∀ x (_ : x ∈ U), g ∈ (x : prime_spectrum.Top R).asIdeal.primeCompl) (x : U) :
   (const R f g U hu).1 x = IsLocalization.mk' _ f ⟨g, hu x x.2⟩ :=
   rfl
 
 theorem const_apply' (f g : R) (U : opens (prime_spectrum.Top R))
-  (hu : ∀ x _ : x ∈ U, g ∈ (x : prime_spectrum.Top R).asIdeal.primeCompl) (x : U)
+  (hu : ∀ x (_ : x ∈ U), g ∈ (x : prime_spectrum.Top R).asIdeal.primeCompl) (x : U)
   (hx : g ∈ (as_ideal (x : prime_spectrum.Top R)).primeCompl) :
   (const R f g U hu).1 x = IsLocalization.mk' _ f ⟨g, hx⟩ :=
   rfl
@@ -793,17 +793,17 @@ we prove the predicate `is_locally_fraction` is preserved by this map, hence it 
 a morphism between the structure sheaves of `R` and `S`.
 -/
 def comap_fun (f : R →+* S) (U : opens (prime_spectrum.Top R)) (V : opens (prime_spectrum.Top S))
-  (hUV : V.1 ⊆ PrimeSpectrum.comap f ⁻¹' U.1) (s : ∀ x : U, localizations R x) (y : V) : localizations S y :=
+  (hUV : V.1 ⊆ PrimeSpectrum.comap f ⁻¹' U.1) (s : ∀ (x : U), localizations R x) (y : V) : localizations S y :=
   Localization.localRingHom (PrimeSpectrum.comap f y.1).asIdeal _ f rfl (s ⟨PrimeSpectrum.comap f y.1, hUV y.2⟩ : _)
 
 theorem comap_fun_is_locally_fraction (f : R →+* S) (U : opens (prime_spectrum.Top R))
-  (V : opens (prime_spectrum.Top S)) (hUV : V.1 ⊆ PrimeSpectrum.comap f ⁻¹' U.1) (s : ∀ x : U, localizations R x)
+  (V : opens (prime_spectrum.Top S)) (hUV : V.1 ⊆ PrimeSpectrum.comap f ⁻¹' U.1) (s : ∀ (x : U), localizations R x)
   (hs : (is_locally_fraction R).toPrelocalPredicate.pred s) :
   (is_locally_fraction S).toPrelocalPredicate.pred (comap_fun f U V hUV s) :=
   by 
     rintro ⟨p, hpV⟩
     rcases hs ⟨PrimeSpectrum.comap f p, hUV hpV⟩ with ⟨W, m, iWU, a, b, h_frac⟩
-    refine' ⟨opens.comap (comap_continuous f) W⊓V, ⟨m, hpV⟩, opens.inf_le_right _ _, f a, f b, _⟩
+    refine' ⟨opens.comap (comap f) W⊓V, ⟨m, hpV⟩, opens.inf_le_right _ _, f a, f b, _⟩
     rintro ⟨q, ⟨hqW, hqV⟩⟩
     specialize h_frac ⟨PrimeSpectrum.comap f q, hqW⟩
     refine' ⟨h_frac.1, _⟩
@@ -868,7 +868,7 @@ theorem comap_apply (f : R →+* S) (U : opens (prime_spectrum.Top R)) (V : open
 
 theorem comap_const (f : R →+* S) (U : opens (prime_spectrum.Top R)) (V : opens (prime_spectrum.Top S))
   (hUV : V.1 ⊆ PrimeSpectrum.comap f ⁻¹' U.1) (a b : R)
-  (hb : ∀ x : PrimeSpectrum R, x ∈ U → b ∈ x.as_ideal.prime_compl) :
+  (hb : ∀ (x : PrimeSpectrum R), x ∈ U → b ∈ x.as_ideal.prime_compl) :
   comap f U V hUV (const R a b U hb) = const S (f a) (f b) V fun p hpV => hb (PrimeSpectrum.comap f p) (hUV hpV) :=
   Subtype.eq$
     funext$
@@ -938,8 +938,8 @@ theorem comap_id' (U : opens (prime_spectrum.Top R)) :
     rfl
 
 theorem comap_comp (f : R →+* S) (g : S →+* P) (U : opens (prime_spectrum.Top R)) (V : opens (prime_spectrum.Top S))
-  (W : opens (prime_spectrum.Top P)) (hUV : ∀ p _ : p ∈ V, PrimeSpectrum.comap f p ∈ U)
-  (hVW : ∀ p _ : p ∈ W, PrimeSpectrum.comap g p ∈ V) :
+  (W : opens (prime_spectrum.Top P)) (hUV : ∀ p (_ : p ∈ V), PrimeSpectrum.comap f p ∈ U)
+  (hVW : ∀ p (_ : p ∈ W), PrimeSpectrum.comap g p ∈ V) :
   (comap (g.comp f) U W fun p hpW => hUV (PrimeSpectrum.comap g p) (hVW p hpW)) =
     (comap g V W hVW).comp (comap f U V hUV) :=
   RingHom.ext$
@@ -954,7 +954,7 @@ theorem comap_comp (f : R →+* S) (g : S →+* P) (U : opens (prime_spectrum.To
 
 @[elementwise, reassoc]
 theorem to_open_comp_comap (f : R →+* S) (U : opens (prime_spectrum.Top R)) :
-  (to_open R U ≫ comap f U (opens.comap (comap_continuous f) U) fun _ => id) = CommRingₓₓ.ofHom f ≫ to_open S _ :=
+  (to_open R U ≫ comap f U (opens.comap (PrimeSpectrum.comap f) U) fun _ => id) = CommRingₓₓ.ofHom f ≫ to_open S _ :=
   RingHom.ext$
     fun s =>
       Subtype.eq$

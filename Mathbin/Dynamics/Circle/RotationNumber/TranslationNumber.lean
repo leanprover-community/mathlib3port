@@ -261,7 +261,7 @@ theorem is_unit_iff_bijective {f : CircleDeg1Lift} : IsUnit f ↔ bijective f :=
           val_inv := ext$ Equiv.of_bijective_apply_symm_apply f h,
           inv_val := ext$ Equiv.of_bijective_symm_apply_apply f h }⟩
 
-theorem coe_pow : ∀ n : ℕ, «expr⇑ » (f ^ n) = f^[n]
+theorem coe_pow : ∀ (n : ℕ), «expr⇑ » (f ^ n) = f^[n]
 | 0 => rfl
 | n+1 =>
   by 
@@ -337,7 +337,7 @@ theorem commute_sub_nat (n : ℕ) : Function.Commute f fun x => x - n :=
     simpa only [sub_eq_add_neg] using
       (f.commute_add_nat n).inverses_right (Equiv.addRight _).right_inv (Equiv.addRight _).left_inv
 
-theorem commute_add_int : ∀ n : ℤ, Function.Commute f fun x => x+n
+theorem commute_add_int : ∀ (n : ℤ), Function.Commute f fun x => x+n
 | (n : ℕ) => f.commute_add_nat n
 | -[1+ n] =>
   by 
@@ -422,8 +422,9 @@ theorem sup_apply (x : ℝ) : (f⊔g) x = max (f x) (g x) :=
 theorem inf_apply (x : ℝ) : (f⊓g) x = min (f x) (g x) :=
   rfl
 
-theorem iterate_monotone (n : ℕ) : Monotone fun f : CircleDeg1Lift => f^[n] :=
-  fun f g h => f.monotone.iterate_le_of_le h _
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem iterate_monotone (n : exprℕ()) : monotone (λ f : circle_deg1_lift, «expr ^[ ]»(f, n)) :=
+λ f g h, f.monotone.iterate_le_of_le h _
 
 theorem iterate_mono {f g : CircleDeg1Lift} (h : f ≤ g) (n : ℕ) : f^[n] ≤ g^[n] :=
   iterate_monotone n h
@@ -433,8 +434,8 @@ theorem pow_mono {f g : CircleDeg1Lift} (h : f ≤ g) (n : ℕ) : f ^ n ≤ g ^ 
     by 
       simp only [coe_pow, iterate_mono h n x]
 
-theorem pow_monotone (n : ℕ) : Monotone fun f : CircleDeg1Lift => f ^ n :=
-  fun f g h => pow_mono h n
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pow_monotone (n : exprℕ()) : monotone (λ f : circle_deg1_lift, «expr ^ »(f, n)) := λ f g h, pow_mono h n
 
 /-!
 ### Estimates on `(f * g) 0`
@@ -605,21 +606,26 @@ def translation_number : ℝ :=
 
 local notation "τ" => translation_number
 
-theorem transnum_aux_seq_def : f.transnum_aux_seq = fun n : ℕ => (f ^ 2 ^ n) 0 / 2 ^ n :=
-  rfl
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem transnum_aux_seq_def : «expr = »(f.transnum_aux_seq, λ
+ n : exprℕ(), «expr / »(«expr ^ »(f, «expr ^ »(2, n)) 0, «expr ^ »(2, n))) :=
+rfl
 
 theorem translation_number_eq_of_tendsto_aux {τ' : ℝ} (h : tendsto f.transnum_aux_seq at_top (𝓝 τ')) : τ f = τ' :=
   h.lim_eq
 
-theorem translation_number_eq_of_tendsto₀ {τ' : ℝ} (h : tendsto (fun n : ℕ => (f^[n]) 0 / n) at_top (𝓝 τ')) :
-  τ f = τ' :=
-  f.translation_number_eq_of_tendsto_aux$
-    by 
-      simpa [· ∘ ·, transnum_aux_seq_def, coe_pow] using h.comp (Nat.tendsto_pow_at_top_at_top_of_one_lt one_lt_two)
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem translation_number_eq_of_tendsto₀
+{τ' : exprℝ()}
+(h : tendsto (λ n : exprℕ(), «expr / »(«expr ^[ ]»(f, n) 0, n)) at_top (expr𝓝() τ')) : «expr = »(exprτ() f, τ') :=
+«expr $ »(f.translation_number_eq_of_tendsto_aux, by simpa [] [] [] ["[", expr («expr ∘ »), ",", expr transnum_aux_seq_def, ",", expr coe_pow, "]"] [] ["using", expr h.comp (nat.tendsto_pow_at_top_at_top_of_one_lt one_lt_two)])
 
-theorem translation_number_eq_of_tendsto₀' {τ' : ℝ} (h : tendsto (fun n : ℕ => (f^[n+1]) 0 / n+1) at_top (𝓝 τ')) :
-  τ f = τ' :=
-  f.translation_number_eq_of_tendsto₀$ (tendsto_add_at_top_iff_nat 1).1 h
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem translation_number_eq_of_tendsto₀'
+{τ' : exprℝ()}
+(h : tendsto (λ
+  n : exprℕ(), «expr / »(«expr ^[ ]»(f, «expr + »(n, 1)) 0, «expr + »(n, 1))) at_top (expr𝓝() τ')) : «expr = »(exprτ() f, τ') :=
+«expr $ »(f.translation_number_eq_of_tendsto₀, (tendsto_add_at_top_iff_nat 1).1 h)
 
 theorem transnum_aux_seq_zero : f.transnum_aux_seq 0 = f 0 :=
   by 
@@ -663,7 +669,7 @@ begin
 end
 
 theorem translation_number_eq_of_dist_bounded {f g : CircleDeg1Lift} (C : ℝ)
-  (H : ∀ n : ℕ, dist ((f ^ n) 0) ((g ^ n) 0) ≤ C) : τ f = τ g :=
+  (H : ∀ (n : ℕ), dist ((f ^ n) 0) ((g ^ n) 0) ≤ C) : τ f = τ g :=
   Eq.symm$ g.translation_number_eq_of_tendsto_aux$ f.tendsto_translation_number_of_dist_bounded_aux _ C H
 
 @[simp]
@@ -699,7 +705,7 @@ theorem translation_number_units_inv (f : Units CircleDeg1Lift) : τ («expr↑ 
       simp [←translation_number_mul_of_commute (Commute.refl _).units_inv_left]
 
 @[simp]
-theorem translation_number_pow : ∀ n : ℕ, τ (f ^ n) = n*τ f
+theorem translation_number_pow : ∀ (n : ℕ), τ (f ^ n) = n*τ f
 | 0 =>
   by 
     simp 
@@ -709,7 +715,7 @@ theorem translation_number_pow : ∀ n : ℕ, τ (f ^ n) = n*τ f
       Nat.cast_add_one, add_mulₓ, one_mulₓ]
 
 @[simp]
-theorem translation_number_zpow (f : Units CircleDeg1Lift) : ∀ n : ℤ, τ (f ^ n : Units _) = n*τ f
+theorem translation_number_zpow (f : Units CircleDeg1Lift) : ∀ (n : ℤ), τ (f ^ n : Units _) = n*τ f
 | (n : ℕ) =>
   by 
     simp [translation_number_pow f n]
@@ -742,20 +748,29 @@ begin
   apply [expr dist_pow_map_zero_mul_translation_number_le]
 end
 
-theorem tendsto_translation_number₀ : tendsto (fun n : ℕ => (f ^ n) 0 / n) at_top (𝓝$ τ f) :=
-  (tendsto_add_at_top_iff_nat 1).1 f.tendsto_translation_number₀'
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_translation_number₀ : tendsto (λ
+ n : exprℕ(), «expr / »(«expr ^ »(f, n) 0, n)) at_top «expr $ »(expr𝓝(), exprτ() f) :=
+(tendsto_add_at_top_iff_nat 1).1 f.tendsto_translation_number₀'
 
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- For any `x : ℝ` the sequence $\frac{f^n(x)-x}{n}$ tends to the translation number of `f`.
 In particular, this limit does not depend on `x`. -/
-theorem tendsto_translation_number (x : ℝ) : tendsto (fun n : ℕ => ((f ^ n) x - x) / n) at_top (𝓝$ τ f) :=
-  by 
-    rw [←translation_number_conj_eq' (translate$ Multiplicative.ofAdd x)]
-    convert tendsto_translation_number₀ _ 
-    ext n 
-    simp [sub_eq_neg_add, Units.conj_pow']
+theorem tendsto_translation_number
+(x : exprℝ()) : tendsto (λ
+ n : exprℕ(), «expr / »(«expr - »(«expr ^ »(f, n) x, x), n)) at_top «expr $ »(expr𝓝(), exprτ() f) :=
+begin
+  rw ["[", "<-", expr translation_number_conj_eq' «expr $ »(translate, multiplicative.of_add x), "]"] [],
+  convert [] [expr tendsto_translation_number₀ _] [],
+  ext [] [ident n] [],
+  simp [] [] [] ["[", expr sub_eq_neg_add, ",", expr units.conj_pow', "]"] [] []
+end
 
-theorem tendsto_translation_number' (x : ℝ) : tendsto (fun n : ℕ => ((f ^ n+1) x - x) / n+1) at_top (𝓝$ τ f) :=
-  (tendsto_add_at_top_iff_nat 1).2 (f.tendsto_translation_number x)
+-- error in Dynamics.Circle.RotationNumber.TranslationNumber: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_translation_number'
+(x : exprℝ()) : tendsto (λ
+ n : exprℕ(), «expr / »(«expr - »(«expr ^ »(f, «expr + »(n, 1)) x, x), «expr + »(n, 1))) at_top «expr $ »(expr𝓝(), exprτ() f) :=
+(tendsto_add_at_top_iff_nat 1).2 (f.tendsto_translation_number x)
 
 theorem translation_number_mono : Monotone τ :=
   fun f g h =>
@@ -851,12 +866,12 @@ end
 
 /-- If a predicate depends only on `f x - x` and holds for all `0 ≤ x ≤ 1`,
 then it holds for all `x`. -/
-theorem forall_map_sub_of_Icc (P : ℝ → Prop) (h : ∀ x _ : x ∈ Icc (0 : ℝ) 1, P (f x - x)) (x : ℝ) : P (f x - x) :=
+theorem forall_map_sub_of_Icc (P : ℝ → Prop) (h : ∀ x (_ : x ∈ Icc (0 : ℝ) 1), P (f x - x)) (x : ℝ) : P (f x - x) :=
   f.map_fract_sub_fract_eq x ▸ h _ ⟨fract_nonneg _, le_of_ltₓ (fract_lt_one _)⟩
 
 theorem translation_number_lt_of_forall_lt_add (hf : Continuous f) {z : ℝ} (hz : ∀ x, f x < x+z) : τ f < z :=
   by 
-    obtain ⟨x, xmem, hx⟩ : ∃ (x : _)(_ : x ∈ Icc (0 : ℝ) 1), ∀ y _ : y ∈ Icc (0 : ℝ) 1, f y - y ≤ f x - x 
+    obtain ⟨x, xmem, hx⟩ : ∃ (x : _)(_ : x ∈ Icc (0 : ℝ) 1), ∀ y (_ : y ∈ Icc (0 : ℝ) 1), f y - y ≤ f x - x 
     exact is_compact_Icc.exists_forall_ge (nonempty_Icc.2 zero_le_one) (hf.sub continuous_id).ContinuousOn 
     refine' lt_of_le_of_ltₓ _ (sub_lt_iff_lt_add'.2$ hz x)
     apply translation_number_le_of_le_add 
@@ -865,7 +880,7 @@ theorem translation_number_lt_of_forall_lt_add (hf : Continuous f) {z : ℝ} (hz
 
 theorem lt_translation_number_of_forall_add_lt (hf : Continuous f) {z : ℝ} (hz : ∀ x, (x+z) < f x) : z < τ f :=
   by 
-    obtain ⟨x, xmem, hx⟩ : ∃ (x : _)(_ : x ∈ Icc (0 : ℝ) 1), ∀ y _ : y ∈ Icc (0 : ℝ) 1, f x - x ≤ f y - y 
+    obtain ⟨x, xmem, hx⟩ : ∃ (x : _)(_ : x ∈ Icc (0 : ℝ) 1), ∀ y (_ : y ∈ Icc (0 : ℝ) 1), f x - x ≤ f y - y 
     exact is_compact_Icc.exists_forall_le (nonempty_Icc.2 zero_le_one) (hf.sub continuous_id).ContinuousOn 
     refine' lt_of_lt_of_leₓ (lt_sub_iff_add_lt'.2$ hz x) _ 
     apply le_translation_number_of_add_le 

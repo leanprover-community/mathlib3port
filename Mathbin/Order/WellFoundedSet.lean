@@ -46,9 +46,10 @@ variable{α : Type _}
 
 namespace Set
 
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `s.well_founded_on r` indicates that the relation `r` is well-founded when restricted to `s`. -/
-def well_founded_on (s : Set α) (r : α → α → Prop) : Prop :=
-  WellFounded fun a : s b : s => r a b
+def well_founded_on (s : set α) (r : α → α → exprProp()) : exprProp() :=
+well_founded (λ (a : s) (b : s), r a b)
 
 -- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem well_founded_on_iff
@@ -74,7 +75,7 @@ begin
 end
 
 theorem well_founded_on.induction {s : Set α} {r : α → α → Prop} (hs : s.well_founded_on r) {x : α} (hx : x ∈ s)
-  {P : α → Prop} (hP : ∀ y _ : y ∈ s, (∀ z _ : z ∈ s, r z y → P z) → P y) : P x :=
+  {P : α → Prop} (hP : ∀ y (_ : y ∈ s), (∀ z (_ : z ∈ s), r z y → P z) → P y) : P x :=
   by 
     let Q : s → Prop := fun y => P y 
     change Q ⟨x, hx⟩
@@ -82,10 +83,13 @@ theorem well_founded_on.induction {s : Set α} {r : α → α → Prop} (hs : s.
     rintro ⟨y, ys⟩ ih 
     exact hP _ ys fun z zs zy => ih ⟨z, zs⟩ zy
 
-instance is_strict_order.subset {s : Set α} {r : α → α → Prop} [IsStrictOrder α r] :
-  IsStrictOrder α fun a b : α => r a b ∧ a ∈ s ∧ b ∈ s :=
-  { to_is_irrefl := ⟨fun a con => irrefl_of r a con.1⟩,
-    to_is_trans := ⟨fun a b c ab bc => ⟨trans_of r ab.1 bc.1, ab.2.1, bc.2.2⟩⟩ }
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance is_strict_order.subset
+{s : set α}
+{r : α → α → exprProp()}
+[is_strict_order α r] : is_strict_order α (λ a b : α, «expr ∧ »(r a b, «expr ∧ »(«expr ∈ »(a, s), «expr ∈ »(b, s)))) :=
+{ to_is_irrefl := ⟨λ a con, irrefl_of r a con.1⟩,
+  to_is_trans := ⟨λ a b c ab bc, ⟨trans_of r ab.1 bc.1, ab.2.1, bc.2.2⟩⟩ }
 
 -- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem well_founded_on_iff_no_descending_seq
@@ -186,7 +190,7 @@ namespace Set
 /-- A subset is partially well-ordered by a relation `r` when any infinite sequence contains
   two elements where the first is related to the second by `r`. -/
 def partially_well_ordered_on s (r : α → α → Prop) : Prop :=
-  ∀ f : ℕ → α, range f ⊆ s → ∃ m n : ℕ, m < n ∧ r (f m) (f n)
+  ∀ (f : ℕ → α), range f ⊆ s → ∃ m n : ℕ, m < n ∧ r (f m) (f n)
 
 /-- A subset of a preorder is partially well-ordered when any infinite sequence contains
   a monotone subsequence of length 2 (or equivalently, an infinite monotone subsequence). -/
@@ -197,7 +201,7 @@ theorem partially_well_ordered_on.mono {s t : Set α} {r : α → α → Prop} (
   (hsub : s ⊆ t) : s.partially_well_ordered_on r :=
   fun f hf => ht f (Set.Subset.trans hf hsub)
 
--- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem partially_well_ordered_on.image_of_monotone_on
 {s : set α}
 {r : α → α → exprProp()}
@@ -223,7 +227,7 @@ section PartialOrderₓ
 variable{s : Set α}{t : Set α}{r : α → α → Prop}
 
 theorem partially_well_ordered_on.exists_monotone_subseq [IsRefl α r] [IsTrans α r] (h : s.partially_well_ordered_on r)
-  (f : ℕ → α) (hf : range f ⊆ s) : ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) :=
+  (f : ℕ → α) (hf : range f ⊆ s) : ∃ g : ℕ ↪o ℕ, ∀ (m n : ℕ), m ≤ n → r (f (g m)) (f (g n)) :=
   by 
     obtain ⟨g, h1 | h2⟩ := exists_increasing_or_nonincreasing_subseq r f
     ·
@@ -240,7 +244,8 @@ theorem partially_well_ordered_on.exists_monotone_subseq [IsRefl α r] [IsTrans 
       exact h2 m n hlt hle
 
 theorem partially_well_ordered_on_iff_exists_monotone_subseq [IsRefl α r] [IsTrans α r] :
-  s.partially_well_ordered_on r ↔ ∀ f : ℕ → α, range f ⊆ s → ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) :=
+  s.partially_well_ordered_on r ↔
+    ∀ (f : ℕ → α), range f ⊆ s → ∃ g : ℕ ↪o ℕ, ∀ (m n : ℕ), m ≤ n → r (f (g m)) (f (g n)) :=
   by 
     classical 
     split  <;> intro h f hf
@@ -277,7 +282,7 @@ theorem is_pwo.is_wf (h : s.is_pwo) : s.is_wf :=
 theorem is_pwo.exists_monotone_subseq (h : s.is_pwo) (f : ℕ → α) (hf : range f ⊆ s) : ∃ g : ℕ ↪o ℕ, Monotone (f ∘ g) :=
   h.exists_monotone_subseq f hf
 
-theorem is_pwo_iff_exists_monotone_subseq : s.is_pwo ↔ ∀ f : ℕ → α, range f ⊆ s → ∃ g : ℕ ↪o ℕ, Monotone (f ∘ g) :=
+theorem is_pwo_iff_exists_monotone_subseq : s.is_pwo ↔ ∀ (f : ℕ → α), range f ⊆ s → ∃ g : ℕ ↪o ℕ, Monotone (f ∘ g) :=
   partially_well_ordered_on_iff_exists_monotone_subseq
 
 theorem is_pwo.prod (hs : s.is_pwo) (ht : t.is_pwo) : (s.prod t).IsPwo :=
@@ -442,7 +447,7 @@ end Set
 
 @[simp]
 theorem Finset.is_wf_sup {ι : Type _} [PartialOrderₓ α] (f : Finset ι) (g : ι → Set α)
-  (hf : ∀ i : ι, i ∈ f → (g i).IsWf) : (f.sup g).IsWf :=
+  (hf : ∀ (i : ι), i ∈ f → (g i).IsWf) : (f.sup g).IsWf :=
   by 
     classical 
     revert hf 
@@ -457,7 +462,7 @@ theorem Finset.is_wf_sup {ι : Type _} [PartialOrderₓ α] (f : Finset ι) (g :
 
 @[simp]
 theorem Finset.is_pwo_sup {ι : Type _} [PartialOrderₓ α] (f : Finset ι) (g : ι → Set α)
-  (hf : ∀ i : ι, i ∈ f → (g i).IsPwo) : (f.sup g).IsPwo :=
+  (hf : ∀ (i : ι), i ∈ f → (g i).IsPwo) : (f.sup g).IsPwo :=
   by 
     classical 
     revert hf 
@@ -534,7 +539,7 @@ namespace PartiallyWellOrderedOn
   whose range is contained in a particular set `s`. One exists if and only if `s` is not
   partially well-ordered. -/
 def is_bad_seq (r : α → α → Prop) (s : Set α) (f : ℕ → α) : Prop :=
-  Set.Range f ⊆ s ∧ ∀ m n : ℕ, m < n → ¬r (f m) (f n)
+  Set.Range f ⊆ s ∧ ∀ (m n : ℕ), m < n → ¬r (f m) (f n)
 
 theorem iff_forall_not_is_bad_seq (r : α → α → Prop) (s : Set α) :
   s.partially_well_ordered_on r ↔ ∀ f, ¬is_bad_seq r s f :=
@@ -546,7 +551,7 @@ theorem iff_forall_not_is_bad_seq (r : α → α → Prop) (s : Set α) :
 /-- This indicates that every bad sequence `g` that agrees with `f` on the first `n`
   terms has `rk (f n) ≤ rk (g n)`. -/
 def is_min_bad_seq (r : α → α → Prop) (rk : α → ℕ) (s : Set α) (n : ℕ) (f : ℕ → α) : Prop :=
-  ∀ g : ℕ → α, (∀ m : ℕ, m < n → f m = g m) → rk (g n) < rk (f n) → ¬is_bad_seq r s g
+  ∀ (g : ℕ → α), (∀ (m : ℕ), m < n → f m = g m) → rk (g n) < rk (f n) → ¬is_bad_seq r s g
 
 -- error in Order.WellFoundedSet: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Given a bad sequence `f`, this constructs a bad sequence that agrees with `f` on the first `n`

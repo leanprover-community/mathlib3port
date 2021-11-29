@@ -68,10 +68,10 @@ def IsLub (s : Set α) : α → Prop :=
 def IsGlb (s : Set α) : α → Prop :=
   IsGreatest (LowerBounds s)
 
-theorem mem_upper_bounds : a ∈ UpperBounds s ↔ ∀ x _ : x ∈ s, x ≤ a :=
+theorem mem_upper_bounds : a ∈ UpperBounds s ↔ ∀ x (_ : x ∈ s), x ≤ a :=
   Iff.rfl
 
-theorem mem_lower_bounds : a ∈ LowerBounds s ↔ ∀ x _ : x ∈ s, a ≤ x :=
+theorem mem_lower_bounds : a ∈ LowerBounds s ↔ ∀ x (_ : x ∈ s), a ≤ x :=
   Iff.rfl
 
 /-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` such that `x`

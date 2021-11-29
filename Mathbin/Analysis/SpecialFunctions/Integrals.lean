@@ -104,34 +104,20 @@ theorem interval_integrable_sin : IntervalIntegrable sin μ a b :=
 theorem interval_integrable_cos : IntervalIntegrable cos μ a b :=
   continuous_cos.IntervalIntegrable a b
 
-theorem interval_integrable_one_div_one_add_sq : IntervalIntegrable (fun x : ℝ => 1 / 1+x^2) μ a b :=
-  by 
-    refine' (continuous_const.div _ fun x => _).IntervalIntegrable a b
-    ·
-      continuity
-    ·
-      nlinarith
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem interval_integrable_one_div_one_add_sq : interval_integrable (λ
+ x : exprℝ(), «expr / »(1, «expr + »(1, «expr ^ »(x, 2)))) μ a b :=
+begin
+  refine [expr (continuous_const.div _ (λ x, _)).interval_integrable a b],
+  { continuity [] [] },
+  { nlinarith [] [] [] }
+end
 
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem interval_integrable_inv_one_add_sq : IntervalIntegrable (fun x : ℝ => (1+x^2)⁻¹) μ a b :=
-  by 
-    simpa only [one_div] using interval_integrable_one_div_one_add_sq
-
-/-! ### Integral of a function scaled by a constant -/
-
-
-@[simp]
-theorem integral_const_mul : (∫x in a..b, c*f x) = c*∫x in a..b, f x :=
-  integral_smul c f
-
-@[simp]
-theorem integral_mul_const : (∫x in a..b, f x*c) = (∫x in a..b, f x)*c :=
-  by 
-    simp only [mul_commₓ, integral_const_mul]
-
-@[simp]
-theorem integral_div : (∫x in a..b, f x / c) = (∫x in a..b, f x) / c :=
-  integral_mul_const (c⁻¹)
+theorem interval_integrable_inv_one_add_sq : interval_integrable (λ
+ x : exprℝ(), «expr ⁻¹»(«expr + »(1, «expr ^ »(x, 2)))) μ a b :=
+by simpa [] [] ["only"] ["[", expr one_div, "]"] [] ["using", expr interval_integrable_one_div_one_add_sq]
 
 /-! ### Integrals of the form `c * ∫ x in a..b, f (c * x + d)` -/
 
@@ -408,8 +394,9 @@ theorem integral_sin_pow_succ_le : (∫x in 0 ..π, sin x^n+1) ≤ ∫x in 0 ..�
   by 
     refine' integral_mono_on pi_pos.le _ _ H <;> exact (continuous_sin.pow _).IntervalIntegrable 0 π
 
-theorem integral_sin_pow_antitone : Antitone fun n : ℕ => ∫x in 0 ..π, sin x^n :=
-  antitone_nat_of_succ_le integral_sin_pow_succ_le
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem integral_sin_pow_antitone : antitone (λ n : exprℕ(), «expr∫ in .. , »((x), 0, exprπ(), «expr ^ »(sin x, n))) :=
+antitone_nat_of_succ_le integral_sin_pow_succ_le
 
 /-! ### Integral of `cos x ^ n` -/
 
@@ -458,18 +445,17 @@ theorem integral_cos_sq : (∫x in a..b, cos x^2) = ((((cos b*sin b) - cos a*sin
 /-! ### Integral of `sin x ^ m * cos x ^ n` -/
 
 
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Simplification of the integral of `sin x ^ m * cos x ^ n`, case `n` is odd. -/
-theorem integral_sin_pow_mul_cos_pow_odd (m n : ℕ) :
-  (∫x in a..b, (sin x^m)*cos x^(2*n)+1) = ∫u in sin a..sin b, (u^m)*1 - (u^2)^n :=
-  have hc : Continuous fun u : ℝ => (u^m)*1 - (u^2)^n :=
-    by 
-      continuity 
-  calc (∫x in a..b, (sin x^m)*cos x^(2*n)+1) = ∫x in a..b, ((sin x^m)*1 - (sin x^2)^n)*cos x :=
-    by 
-      simp only [pow_succ'ₓ, ←mul_assocₓ, pow_mulₓ, cos_sq']
-    _ = ∫u in sin a..sin b, (u^m)*1 - (u^2)^n :=
-    integral_comp_mul_deriv (fun x hx => has_deriv_at_sin x) continuous_on_cos hc
-    
+theorem integral_sin_pow_mul_cos_pow_odd
+(m
+ n : exprℕ()) : «expr = »(«expr∫ in .. , »((x), a, b, «expr * »(«expr ^ »(sin x, m), «expr ^ »(cos x, «expr + »(«expr * »(2, n), 1)))), «expr∫ in .. , »((u), sin a, sin b, «expr * »(«expr ^ »(u, m), «expr ^ »(«expr - »(1, «expr ^ »(u, 2)), n)))) :=
+have hc : continuous (λ
+ u : exprℝ(), «expr * »(«expr ^ »(u, m), «expr ^ »(«expr - »(1, «expr ^ »(u, 2)), n))), by continuity [] [],
+calc
+  «expr = »(«expr∫ in .. , »((x), a, b, «expr * »(«expr ^ »(sin x, m), «expr ^ »(cos x, «expr + »(«expr * »(2, n), 1)))), «expr∫ in .. , »((x), a, b, «expr * »(«expr * »(«expr ^ »(sin x, m), «expr ^ »(«expr - »(1, «expr ^ »(sin x, 2)), n)), cos x))) : by simp [] [] ["only"] ["[", expr pow_succ', ",", "<-", expr mul_assoc, ",", expr pow_mul, ",", expr cos_sq', "]"] [] []
+  «expr = »(..., «expr∫ in .. , »((u), sin a, sin b, «expr * »(«expr ^ »(u, m), «expr ^ »(«expr - »(1, «expr ^ »(u, 2)), n)))) : integral_comp_mul_deriv (λ
+   x hx, has_deriv_at_sin x) continuous_on_cos hc
 
 /-- The integral of `sin x * cos x`, given in terms of sin².
   See `integral_sin_mul_cos₂` below for the integral given in terms of cos². -/
@@ -488,26 +474,21 @@ theorem integral_cos_pow_three : (∫x in a..b, cos x^3) = sin b - sin a - ((sin
   by 
     simpa using integral_sin_pow_mul_cos_pow_odd 0 1
 
+-- error in Analysis.SpecialFunctions.Integrals: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Simplification of the integral of `sin x ^ m * cos x ^ n`, case `m` is odd. -/
-theorem integral_sin_pow_odd_mul_cos_pow (m n : ℕ) :
-  (∫x in a..b, (sin x^(2*m)+1)*cos x^n) = ∫u in cos b..cos a, (u^n)*1 - (u^2)^m :=
-  have hc : Continuous fun u : ℝ => (u^n)*1 - (u^2)^m :=
-    by 
-      continuity 
-  calc (∫x in a..b, (sin x^(2*m)+1)*cos x^n) = -∫x in b..a, (sin x^(2*m)+1)*cos x^n :=
-    by 
-      rw [integral_symm]
-    _ = ∫x in b..a, ((1 - (cos x^2)^m)*-sin x)*cos x^n :=
-    by 
-      simp [pow_succ'ₓ, pow_mulₓ, sin_sq]
-    _ = ∫x in b..a, ((cos x^n)*1 - (cos x^2)^m)*-sin x :=
-    by 
-      congr 
-      ext 
-      ring 
-    _ = ∫u in cos b..cos a, (u^n)*1 - (u^2)^m :=
-    integral_comp_mul_deriv (fun x hx => has_deriv_at_cos x) continuous_on_sin.neg hc
-    
+theorem integral_sin_pow_odd_mul_cos_pow
+(m
+ n : exprℕ()) : «expr = »(«expr∫ in .. , »((x), a, b, «expr * »(«expr ^ »(sin x, «expr + »(«expr * »(2, m), 1)), «expr ^ »(cos x, n))), «expr∫ in .. , »((u), cos b, cos a, «expr * »(«expr ^ »(u, n), «expr ^ »(«expr - »(1, «expr ^ »(u, 2)), m)))) :=
+have hc : continuous (λ
+ u : exprℝ(), «expr * »(«expr ^ »(u, n), «expr ^ »(«expr - »(1, «expr ^ »(u, 2)), m))), by continuity [] [],
+calc
+  «expr = »(«expr∫ in .. , »((x), a, b, «expr * »(«expr ^ »(sin x, «expr + »(«expr * »(2, m), 1)), «expr ^ »(cos x, n))), «expr- »(«expr∫ in .. , »((x), b, a, «expr * »(«expr ^ »(sin x, «expr + »(«expr * »(2, m), 1)), «expr ^ »(cos x, n))))) : by rw [expr integral_symm] []
+  «expr = »(..., «expr∫ in .. , »((x), b, a, «expr * »(«expr * »(«expr ^ »(«expr - »(1, «expr ^ »(cos x, 2)), m), «expr- »(sin x)), «expr ^ »(cos x, n)))) : by simp [] [] [] ["[", expr pow_succ', ",", expr pow_mul, ",", expr sin_sq, "]"] [] []
+  «expr = »(..., «expr∫ in .. , »((x), b, a, «expr * »(«expr * »(«expr ^ »(cos x, n), «expr ^ »(«expr - »(1, «expr ^ »(cos x, 2)), m)), «expr- »(sin x)))) : by { congr,
+    ext [] [] [],
+    ring [] }
+  «expr = »(..., «expr∫ in .. , »((u), cos b, cos a, «expr * »(«expr ^ »(u, n), «expr ^ »(«expr - »(1, «expr ^ »(u, 2)), m)))) : integral_comp_mul_deriv (λ
+   x hx, has_deriv_at_cos x) continuous_on_sin.neg hc
 
 /-- The integral of `sin x * cos x`, given in terms of cos².
 See `integral_sin_mul_cos₁` above for the integral given in terms of sin². -/

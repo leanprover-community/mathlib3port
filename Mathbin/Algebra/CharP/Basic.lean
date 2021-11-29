@@ -15,7 +15,7 @@ variable(R : Type u)
 
 /-- The generator of the kernel of the unique homomorphism ℕ → R for a semiring R -/
 class CharP[AddMonoidₓ R][HasOne R](p : ℕ) : Prop where 
-  cast_eq_zero_iff{} : ∀ x : ℕ, (x : R) = 0 ↔ p ∣ x
+  cast_eq_zero_iff{} : ∀ (x : ℕ), (x : R) = 0 ↔ p ∣ x
 
 theorem CharP.cast_eq_zero [AddMonoidₓ R] [HasOne R] (p : ℕ) [CharP R p] : (p : R) = 0 :=
   (CharP.cast_eq_zero_iff R p p).2 (dvd_refl p)
@@ -52,7 +52,7 @@ instance CharP.of_char_zero [AddMonoidₓ R] [HasOne R] [CharZero R] : CharP R 0
       by 
         rw [zero_dvd_iff, ←Nat.cast_zero, Nat.cast_inj]⟩
 
--- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem char_p.exists [non_assoc_semiring R] : «expr∃ , »((p), char_p R p) :=
 by letI [] [] [":=", expr classical.dec_eq R]; exact [expr classical.by_cases (assume
   H : ∀
@@ -321,10 +321,10 @@ theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
       simp [cast_eq_zero]
     
 
-theorem char_ne_zero_of_fintype (p : ℕ) [hc : CharP R p] [Fintype R] : p ≠ 0 :=
-  fun h : p = 0 =>
-    have  : CharZero R := @char_p_to_char_zero R _ (h ▸ hc)
-    absurd (@Nat.cast_injective R _ _ this) (not_injective_infinite_fintype coeₓ)
+-- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem char_ne_zero_of_fintype (p : exprℕ()) [hc : char_p R p] [fintype R] : «expr ≠ »(p, 0) :=
+assume h : «expr = »(p, 0), have char_zero R := @char_p_to_char_zero R _ «expr ▸ »(h, hc),
+absurd (@nat.cast_injective R _ _ this) (not_injective_infinite_fintype coe)
 
 end 
 
@@ -334,36 +334,31 @@ open Nat
 
 variable[NonAssocSemiring R]
 
-theorem char_ne_one [Nontrivial R] (p : ℕ) [hc : CharP R p] : p ≠ 1 :=
-  fun hp : p = 1 =>
-    have  : (1 : R) = 0 :=
-      by 
-        simpa using (cast_eq_zero_iff R p 1).mpr (hp ▸ dvd_refl p)
-    absurd this one_ne_zero
+-- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem char_ne_one [nontrivial R] (p : exprℕ()) [hc : char_p R p] : «expr ≠ »(p, 1) :=
+assume
+hp : «expr = »(p, 1), have «expr = »((1 : R), 0), by simpa [] [] [] [] [] ["using", expr (cast_eq_zero_iff R p 1).mpr «expr ▸ »(hp, dvd_refl p)],
+absurd this one_ne_zero
 
 section NoZeroDivisors
 
 variable[NoZeroDivisors R]
 
-theorem char_is_prime_of_two_le (p : ℕ) [hc : CharP R p] (hp : 2 ≤ p) : Nat.Prime p :=
-  suffices ∀ d _ : d ∣ p, d = 1 ∨ d = p from ⟨hp, this⟩
-  fun d : ℕ hdvd : ∃ e, p = d*e =>
-    let ⟨e, hmul⟩ := hdvd 
-    have  : (p : R) = 0 := (cast_eq_zero_iff R p p).mpr (dvd_refl p)
-    have  : ((d : R)*e) = 0 := @cast_mul R _ d e ▸ hmul ▸ this 
-    Or.elim (eq_zero_or_eq_zero_of_mul_eq_zero this)
-      (fun hd : (d : R) = 0 =>
-        have  : p ∣ d := (cast_eq_zero_iff R p d).mp hd 
-        show d = 1 ∨ d = p from Or.inr (dvd_antisymm ⟨e, hmul⟩ this))
-      fun he : (e : R) = 0 =>
-        have  : p ∣ e := (cast_eq_zero_iff R p e).mp he 
-        have  : e ∣ p := dvd_of_mul_left_eq d (Eq.symm hmul)
-        have  : e = p := dvd_antisymm ‹e ∣ p› ‹p ∣ e›
-        have h₀ : p > 0 := gt_of_ge_of_gtₓ hp (Nat.zero_lt_succₓ 1)
-        have  : (d*p) = 1*p :=
-          by 
-            rw [‹e = p›] at hmul <;> rw [one_mulₓ] <;> exact Eq.symm hmul 
-        show d = 1 ∨ d = p from Or.inl (eq_of_mul_eq_mul_right h₀ this)
+-- error in Algebra.CharP.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem char_is_prime_of_two_le (p : exprℕ()) [hc : char_p R p] (hp : «expr ≤ »(2, p)) : nat.prime p :=
+suffices ∀ d «expr ∣ » p, «expr ∨ »(«expr = »(d, 1), «expr = »(d, p)), from ⟨hp, this⟩,
+assume (d : exprℕ()) (hdvd : «expr∃ , »((e), «expr = »(p, «expr * »(d, e)))), let ⟨e, hmul⟩ := hdvd in
+have «expr = »((p : R), 0), from (cast_eq_zero_iff R p p).mpr (dvd_refl p),
+have «expr = »(«expr * »((d : R), e), 0), from «expr ▸ »(@cast_mul R _ d e, «expr ▸ »(hmul, this)),
+or.elim (eq_zero_or_eq_zero_of_mul_eq_zero this) (assume
+ hd : «expr = »((d : R), 0), have «expr ∣ »(p, d), from (cast_eq_zero_iff R p d).mp hd,
+ show «expr ∨ »(«expr = »(d, 1), «expr = »(d, p)), from or.inr (dvd_antisymm ⟨e, hmul⟩ this)) (assume
+ he : «expr = »((e : R), 0), have «expr ∣ »(p, e), from (cast_eq_zero_iff R p e).mp he,
+ have «expr ∣ »(e, p), from dvd_of_mul_left_eq d (eq.symm hmul),
+ have «expr = »(e, p), from dvd_antisymm «expr‹ ›»(«expr ∣ »(e, p)) «expr‹ ›»(«expr ∣ »(p, e)),
+ have h₀ : «expr > »(p, 0), from gt_of_ge_of_gt hp (nat.zero_lt_succ 1),
+ have «expr = »(«expr * »(d, p), «expr * »(1, p)), by rw [expr «expr‹ ›»(«expr = »(e, p))] ["at", ident hmul]; rw ["[", expr one_mul, "]"] []; exact [expr eq.symm hmul],
+ show «expr ∨ »(«expr = »(d, 1), «expr = »(d, p)), from or.inl (eq_of_mul_eq_mul_right h₀ this))
 
 section Nontrivial
 
@@ -399,7 +394,7 @@ variable{R}[NonAssocSemiring R]
 
 instance (priority := 100) [CharP R 1] : Subsingleton R :=
   Subsingleton.intro$
-    suffices ∀ r : R, r = 0 from
+    suffices ∀ (r : R), r = 0 from
       fun a b =>
         show a = b by 
           rw [this a, this b]

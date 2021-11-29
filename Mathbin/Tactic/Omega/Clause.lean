@@ -13,7 +13,7 @@ namespace Clause
 
 /-- holds v c := clause c holds under valuation v -/
 def holds (v : Nat → Int) : clause → Prop
-| (eqs, les) => (∀ t : term, t ∈ eqs → 0 = term.val v t) ∧ ∀ t : term, t ∈ les → 0 ≤ term.val v t
+| (eqs, les) => (∀ (t : term), t ∈ eqs → 0 = term.val v t) ∧ ∀ (t : term), t ∈ les → 0 ≤ term.val v t
 
 /-- sat c := there exists a valuation v under which c holds -/
 def sat (c : clause) : Prop :=

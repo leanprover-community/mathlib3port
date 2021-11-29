@@ -176,15 +176,15 @@ theorem to_GH_space_eq_to_GH_space_iff_isometric
    exact [expr ⟨h'⟩]
  end⟩
 
+-- error in Topology.MetricSpace.GromovHausdorff: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Distance on `GH_space`: the distance between two nonempty compact spaces is the infimum
 Hausdorff distance between isometric copies of the two spaces in a metric space. For the definition,
 we only consider embeddings in `ℓ^∞(ℝ)`, but we will prove below that it works for all spaces. -/
-instance  : HasDist GH_space :=
-  { dist :=
-      fun x y =>
-        Inf$
-          (fun p : nonempty_compacts ℓInftyℝ × nonempty_compacts ℓInftyℝ => Hausdorff_dist p.1.val p.2.val) ''
-            Set.Prod { a | «expr⟦ ⟧» a = x } { b | «expr⟦ ⟧» b = y } }
+instance : has_dist GH_space :=
+{ dist := λ
+  x
+  y, «expr $ »(Inf, «expr '' »(λ
+    p : «expr × »(nonempty_compacts ℓ_infty_ℝ, nonempty_compacts ℓ_infty_ℝ), Hausdorff_dist p.1.val p.2.val, set.prod {a | «expr = »(«expr⟦ ⟧»(a), x)} {b | «expr = »(«expr⟦ ⟧»(b), y)})) }
 
 /-- The Gromov-Hausdorff distance between two nonempty compact metric spaces, equal by definition to
 the distance of the equivalence classes of these spaces in the Gromov-Hausdorff space. -/

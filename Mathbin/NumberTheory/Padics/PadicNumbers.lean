@@ -157,11 +157,12 @@ theorem norm_eq_norm_app_of_nonzero {f : PadicSeq p} (hf : ¬f ≈ 0) : ∃ k, f
 theorem not_lim_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬lim_zero (const (padicNorm p) q) :=
   fun h' => hq$ const_lim_zero.1 h'
 
-theorem not_equiv_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬const (padicNorm p) q ≈ 0 :=
-  fun h : lim_zero (const (padicNorm p) q - 0) =>
-    not_lim_zero_const_of_nonzero hq$
-      by 
-        simpa using h
+-- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem not_equiv_zero_const_of_nonzero
+{q : exprℚ()}
+(hq : «expr ≠ »(q, 0)) : «expr¬ »(«expr ≈ »(const (padic_norm p) q, 0)) :=
+λ
+h : lim_zero «expr - »(const (padic_norm p) q, 0), «expr $ »(not_lim_zero_const_of_nonzero hq, by simpa [] [] [] [] [] ["using", expr h])
 
 theorem norm_nonneg (f : PadicSeq p) : 0 ≤ f.norm :=
   if hf : f ≈ 0 then
@@ -576,23 +577,23 @@ def of_rat : ℚ → ℚ_[p] :=
   CauSeq.Completion.ofRat
 
 @[simp]
-theorem of_rat_add : ∀ x y : ℚ, of_rat p (x+y) = of_rat p x+of_rat p y :=
+theorem of_rat_add : ∀ (x y : ℚ), of_rat p (x+y) = of_rat p x+of_rat p y :=
   CauSeq.Completion.of_rat_add
 
 @[simp]
-theorem of_rat_neg : ∀ x : ℚ, of_rat p (-x) = -of_rat p x :=
+theorem of_rat_neg : ∀ (x : ℚ), of_rat p (-x) = -of_rat p x :=
   CauSeq.Completion.of_rat_neg
 
 @[simp]
-theorem of_rat_mul : ∀ x y : ℚ, of_rat p (x*y) = of_rat p x*of_rat p y :=
+theorem of_rat_mul : ∀ (x y : ℚ), of_rat p (x*y) = of_rat p x*of_rat p y :=
   CauSeq.Completion.of_rat_mul
 
 @[simp]
-theorem of_rat_sub : ∀ x y : ℚ, of_rat p (x - y) = of_rat p x - of_rat p y :=
+theorem of_rat_sub : ∀ (x y : ℚ), of_rat p (x - y) = of_rat p x - of_rat p y :=
   CauSeq.Completion.of_rat_sub
 
 @[simp]
-theorem of_rat_div : ∀ x y : ℚ, of_rat p (x / y) = of_rat p x / of_rat p y :=
+theorem of_rat_div : ∀ (x y : ℚ), of_rat p (x / y) = of_rat p x / of_rat p y :=
   CauSeq.Completion.of_rat_div
 
 @[simp]
@@ -615,7 +616,7 @@ theorem cast_eq_of_rat_of_int (n : ℤ) : «expr↑ » n = of_rat p n :=
   by 
     induction n <;> simp [cast_eq_of_rat_of_nat]
 
-theorem cast_eq_of_rat : ∀ q : ℚ, («expr↑ » q : ℚ_[p]) = of_rat p q
+theorem cast_eq_of_rat : ∀ (q : ℚ), («expr↑ » q : ℚ_[p]) = of_rat p q
 | ⟨n, d, h1, h2⟩ =>
   show «expr↑ » n / «expr↑ » d = _ from
     have  : (⟨n, d, h1, h2⟩ : ℚ) = Rat.mk n d := Rat.num_denom' 
@@ -656,11 +657,12 @@ theorem coe_one : («expr↑ » 1 : ℚ_[p]) = 1 :=
 theorem coe_zero : («expr↑ » 0 : ℚ_[p]) = 0 :=
   rfl
 
-theorem const_equiv {q r : ℚ} : const (padicNorm p) q ≈ const (padicNorm p) r ↔ q = r :=
-  ⟨fun heq : lim_zero (const (padicNorm p) (q - r)) => eq_of_sub_eq_zero$ const_lim_zero.1 HEq,
-    fun heq =>
-      by 
-        rw [HEq] <;> apply Setoidₓ.refl _⟩
+-- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem const_equiv
+{q r : exprℚ()} : «expr ↔ »(«expr ≈ »(const (padic_norm p) q, const (padic_norm p) r), «expr = »(q, r)) :=
+⟨λ
+ heq : lim_zero (const (padic_norm p) «expr - »(q, r)), «expr $ »(eq_of_sub_eq_zero, const_lim_zero.1 heq), λ
+ heq, by rw [expr heq] []; apply [expr setoid.refl _]⟩
 
 theorem of_rat_eq {q r : ℚ} : of_rat p q = of_rat p r ↔ q = r :=
   ⟨(const_equiv p).1 ∘ Quotientₓ.eq.1,
@@ -968,11 +970,12 @@ instance  : NormedField ℚ_[p] :=
       by 
         simp [HasNorm.norm, padicNormE.mul'] }
 
-instance IsAbsoluteValue : IsAbsoluteValue fun a : ℚ_[p] => ∥a∥ :=
-  { abv_nonneg := norm_nonneg, abv_eq_zero := fun _ => norm_eq_zero, abv_add := norm_add_le,
-    abv_mul :=
-      by 
-        simp [HasNorm.norm, padicNormE.mul'] }
+-- error in NumberTheory.Padics.PadicNumbers: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance is_absolute_value : is_absolute_value (λ a : «exprℚ_[ ]»(p), «expr∥ ∥»(a)) :=
+{ abv_nonneg := norm_nonneg,
+  abv_eq_zero := λ _, norm_eq_zero,
+  abv_add := norm_add_le,
+  abv_mul := by simp [] [] [] ["[", expr has_norm.norm, ",", expr padic_norm_e.mul', "]"] [] [] }
 
 theorem rat_dense {p : ℕ} {hp : Fact p.prime} (q : ℚ_[p]) {ε : ℝ} (hε : 0 < ε) : ∃ r : ℚ, ∥q - r∥ < ε :=
   let ⟨ε', hε'l, hε'r⟩ := exists_rat_btwn hε 

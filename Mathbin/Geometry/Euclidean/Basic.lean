@@ -1198,11 +1198,11 @@ omit V
 point.  In two dimensions, this is the same thing as being
 concyclic. -/
 def cospherical (ps : Set P) : Prop :=
-  ∃ (center : P)(radius : ℝ), ∀ p _ : p ∈ ps, dist p center = radius
+  ∃ (center : P)(radius : ℝ), ∀ p (_ : p ∈ ps), dist p center = radius
 
 /-- The definition of `cospherical`. -/
 theorem cospherical_def (ps : Set P) :
-  cospherical ps ↔ ∃ (center : P)(radius : ℝ), ∀ p _ : p ∈ ps, dist p center = radius :=
+  cospherical ps ↔ ∃ (center : P)(radius : ℝ), ∀ p (_ : p ∈ ps), dist p center = radius :=
   Iff.rfl
 
 /-- A subset of a cospherical set is cospherical. -/

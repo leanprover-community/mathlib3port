@@ -116,7 +116,7 @@ def haar_product (K₀ : Set G) : Set (compacts G → ℝ) :=
 
 @[simp, toAdditive]
 theorem mem_prehaar_empty {K₀ : Set G} {f : compacts G → ℝ} :
-  f ∈ haar_product K₀ ↔ ∀ K : compacts G, f K ∈ Icc (0 : ℝ) (index K.1 K₀) :=
+  f ∈ haar_product K₀ ↔ ∀ (K : compacts G), f K ∈ Icc (0 : ℝ) (index K.1 K₀) :=
   by 
     simp only [haar_product, pi, forall_prop_of_true, mem_univ, mem_set_of_eq]
 

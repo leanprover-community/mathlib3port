@@ -90,11 +90,11 @@ def radius (p : FormalMultilinearSeries 𝕜 E F) : ℝ≥0∞ :=
   ⨆(r :  ℝ≥0 )(C : ℝ)(hr : ∀ n, (∥p n∥*r ^ n) ≤ C), (r : ℝ≥0∞)
 
 /-- If `∥pₙ∥ rⁿ` is bounded in `n`, then the radius of `p` is at least `r`. -/
-theorem le_radius_of_bound (C : ℝ) {r :  ℝ≥0 } (h : ∀ n : ℕ, (∥p n∥*r ^ n) ≤ C) : (r : ℝ≥0∞) ≤ p.radius :=
+theorem le_radius_of_bound (C : ℝ) {r :  ℝ≥0 } (h : ∀ (n : ℕ), (∥p n∥*r ^ n) ≤ C) : (r : ℝ≥0∞) ≤ p.radius :=
   le_supr_of_le r$ le_supr_of_le C$ le_supr (fun _ => (r : ℝ≥0∞)) h
 
 /-- If `∥pₙ∥ rⁿ` is bounded in `n`, then the radius of `p` is at least `r`. -/
-theorem le_radius_of_bound_nnreal (C :  ℝ≥0 ) {r :  ℝ≥0 } (h : ∀ n : ℕ, (∥p n∥₊*r ^ n) ≤ C) : (r : ℝ≥0∞) ≤ p.radius :=
+theorem le_radius_of_bound_nnreal (C :  ℝ≥0 ) {r :  ℝ≥0 } (h : ∀ (n : ℕ), (∥p n∥₊*r ^ n) ≤ C) : (r : ℝ≥0∞) ≤ p.radius :=
   p.le_radius_of_bound C$
     fun n =>
       by 
@@ -121,7 +121,7 @@ theorem le_radius_of_summable (h : Summable fun n => ∥p n∥*r ^ n) : «expr�
       simp only [←coe_nnnorm] at h 
       exactModCast h
 
-theorem radius_eq_top_of_forall_nnreal_is_O (h : ∀ r :  ℝ≥0 , is_O (fun n => ∥p n∥*r ^ n) (fun n => (1 : ℝ)) at_top) :
+theorem radius_eq_top_of_forall_nnreal_is_O (h : ∀ (r :  ℝ≥0 ), is_O (fun n => ∥p n∥*r ^ n) (fun n => (1 : ℝ)) at_top) :
   p.radius = ∞ :=
   Ennreal.eq_top_of_forall_nnreal_le$ fun r => p.le_radius_of_is_O (h r)
 
@@ -223,40 +223,53 @@ theorem not_summable_norm_of_radius_lt_nnnorm (p : FormalMultilinearSeries 𝕜 
   ¬Summable fun n => ∥p n∥*∥x∥ ^ n :=
   fun hs => not_le_of_lt h (p.le_radius_of_summable_norm hs)
 
-theorem summable_norm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 } (h : «expr↑ » r < p.radius) :
-  Summable fun n : ℕ => ∥p n∥*r ^ n :=
-  by 
-    obtain ⟨a, ha : a ∈ Ioo (0 : ℝ) 1, C, hC : 0 < C, hp⟩ := p.norm_mul_pow_le_mul_pow_of_lt_radius h 
-    exact
-      summable_of_nonneg_of_le (fun n => mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg _)) hp
-        ((summable_geometric_of_lt_1 ha.1.le ha.2).mul_left _)
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_norm_mul_pow
+(p : formal_multilinear_series 𝕜 E F)
+{r : «exprℝ≥0»()}
+(h : «expr < »(«expr↑ »(r), p.radius)) : summable (λ n : exprℕ(), «expr * »(«expr∥ ∥»(p n), «expr ^ »(r, n))) :=
+begin
+  obtain ["⟨", ident a, ",", ident ha, ":", expr «expr ∈ »(a, Ioo (0 : exprℝ()) 1), ",", ident C, ",", ident hC, ":", expr «expr < »(0, C), ",", ident hp, "⟩", ":=", expr p.norm_mul_pow_le_mul_pow_of_lt_radius h],
+  exact [expr summable_of_nonneg_of_le (λ
+    n, mul_nonneg (norm_nonneg _) (pow_nonneg r.coe_nonneg _)) hp ((summable_geometric_of_lt_1 ha.1.le ha.2).mul_left _)]
+end
 
-theorem summable_norm_apply (p : FormalMultilinearSeries 𝕜 E F) {x : E} (hx : x ∈ Emetric.Ball (0 : E) p.radius) :
-  Summable fun n : ℕ => ∥p n fun _ => x∥ :=
-  by 
-    rw [mem_emetric_ball_zero_iff] at hx 
-    refine'
-      summable_of_nonneg_of_le (fun _ => norm_nonneg _) (fun n => ((p n).le_op_norm _).trans_eq _)
-        (p.summable_norm_mul_pow hx)
-    simp 
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_norm_apply
+(p : formal_multilinear_series 𝕜 E F)
+{x : E}
+(hx : «expr ∈ »(x, emetric.ball (0 : E) p.radius)) : summable (λ n : exprℕ(), «expr∥ ∥»(p n (λ _, x))) :=
+begin
+  rw [expr mem_emetric_ball_zero_iff] ["at", ident hx],
+  refine [expr summable_of_nonneg_of_le (λ
+    _, norm_nonneg _) (λ n, ((p n).le_op_norm _).trans_eq _) (p.summable_norm_mul_pow hx)],
+  simp [] [] [] [] [] []
+end
 
-theorem summable_nnnorm_mul_pow (p : FormalMultilinearSeries 𝕜 E F) {r :  ℝ≥0 } (h : «expr↑ » r < p.radius) :
-  Summable fun n : ℕ => ∥p n∥₊*r ^ n :=
-  by 
-    rw [←Nnreal.summable_coe]
-    pushCast 
-    exact p.summable_norm_mul_pow h
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_nnnorm_mul_pow
+(p : formal_multilinear_series 𝕜 E F)
+{r : «exprℝ≥0»()}
+(h : «expr < »(«expr↑ »(r), p.radius)) : summable (λ n : exprℕ(), «expr * »(«expr∥ ∥₊»(p n), «expr ^ »(r, n))) :=
+by { rw ["<-", expr nnreal.summable_coe] [],
+  push_cast [] [],
+  exact [expr p.summable_norm_mul_pow h] }
 
-protected theorem Summable [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x : E}
-  (hx : x ∈ Emetric.Ball (0 : E) p.radius) : Summable fun n : ℕ => p n fun _ => x :=
-  summable_of_summable_norm (p.summable_norm_apply hx)
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem summable
+[complete_space F]
+(p : formal_multilinear_series 𝕜 E F)
+{x : E}
+(hx : «expr ∈ »(x, emetric.ball (0 : E) p.radius)) : summable (λ n : exprℕ(), p n (λ _, x)) :=
+summable_of_summable_norm (p.summable_norm_apply hx)
 
 theorem radius_eq_top_of_summable_norm (p : FormalMultilinearSeries 𝕜 E F)
-  (hs : ∀ r :  ℝ≥0 , Summable fun n => ∥p n∥*r ^ n) : p.radius = ∞ :=
+  (hs : ∀ (r :  ℝ≥0 ), Summable fun n => ∥p n∥*r ^ n) : p.radius = ∞ :=
   Ennreal.eq_top_of_forall_nnreal_le fun r => p.le_radius_of_summable_norm (hs r)
 
 theorem radius_eq_top_iff_summable_norm (p : FormalMultilinearSeries 𝕜 E F) :
-  p.radius = ∞ ↔ ∀ r :  ℝ≥0 , Summable fun n => ∥p n∥*r ^ n :=
+  p.radius = ∞ ↔ ∀ (r :  ℝ≥0 ), Summable fun n => ∥p n∥*r ^ n :=
   by 
     split 
     ·
@@ -311,14 +324,19 @@ priori, it only behaves well when `∥x∥ < p.radius`. -/
 protected def Sum (p : FormalMultilinearSeries 𝕜 E F) (x : E) : F :=
   ∑'n : ℕ, p n fun i => x
 
-protected theorem HasSum [CompleteSpace F] (p : FormalMultilinearSeries 𝕜 E F) {x : E}
-  (hx : x ∈ Emetric.Ball (0 : E) p.radius) : HasSum (fun n : ℕ => p n fun _ => x) (p.sum x) :=
-  (p.summable hx).HasSum
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem has_sum
+[complete_space F]
+(p : formal_multilinear_series 𝕜 E F)
+{x : E}
+(hx : «expr ∈ »(x, emetric.ball (0 : E) p.radius)) : has_sum (λ n : exprℕ(), p n (λ _, x)) (p.sum x) :=
+(p.summable hx).has_sum
 
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a formal multilinear series `p` and a vector `x`, then `p.partial_sum n x` is the sum
-`Σ pₖ xᵏ` for `k ∈ {0,..., n-1}`. -/
-def partial_sum (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) (x : E) : F :=
-  ∑k in Finset.range n, p k fun i : Finₓ k => x
+`Σ pₖ xᵏ` for `k ∈ {0,..., n-1}`. -/ def partial_sum (p : formal_multilinear_series 𝕜 E F) (n : exprℕ()) (x : E) : F :=
+«expr∑ in , »((k), finset.range n, p k (λ i : fin k, x))
 
 /-- The partial sums of a formal multilinear series are continuous. -/
 theorem partial_sum_continuous (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) : Continuous (p.partial_sum n) :=
@@ -334,13 +352,19 @@ section
 
 variable{f g : E → F}{p pf pg : FormalMultilinearSeries 𝕜 E F}{x : E}{r r' : ℝ≥0∞}
 
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a function `f : E → F` and a formal multilinear series `p`, we say that `f` has `p` as
 a power series on the ball of radius `r > 0` around `x` if `f (x + y) = ∑' pₙ yⁿ` for all `∥y∥ < r`.
 -/
-structure HasFpowerSeriesOnBall(f : E → F)(p : FormalMultilinearSeries 𝕜 E F)(x : E)(r : ℝ≥0∞) : Prop where 
-  r_le : r ≤ p.radius 
-  r_pos : 0 < r 
-  HasSum : ∀ {y}, y ∈ Emetric.Ball (0 : E) r → HasSum (fun n : ℕ => p n fun i : Finₓ n => y) (f (x+y))
+structure has_fpower_series_on_ball
+(f : E → F)
+(p : formal_multilinear_series 𝕜 E F)
+(x : E)
+(r : «exprℝ≥0∞»()) : exprProp() :=
+  (r_le : «expr ≤ »(r, p.radius))
+  (r_pos : «expr < »(0, r))
+  (has_sum : ∀
+   {y}, «expr ∈ »(y, emetric.ball (0 : E) r) → has_sum (λ n : exprℕ(), p n (λ i : fin n, y)) (f «expr + »(x, y)))
 
 /-- Given a function `f : E → F` and a formal multilinear series `p`, we say that `f` has `p` as
 a power series around `x` if `f (x + y) = ∑' pₙ yⁿ` for all `y` in a neighborhood of `0`. -/
@@ -365,13 +389,13 @@ theorem HasFpowerSeriesAt.analytic_at (hf : HasFpowerSeriesAt f p x) : AnalyticA
 theorem HasFpowerSeriesOnBall.analytic_at (hf : HasFpowerSeriesOnBall f p x r) : AnalyticAt 𝕜 f x :=
   hf.has_fpower_series_at.analytic_at
 
-theorem HasFpowerSeriesOnBall.has_sum_sub (hf : HasFpowerSeriesOnBall f p x r) {y : E} (hy : y ∈ Emetric.Ball x r) :
-  HasSum (fun n : ℕ => p n fun i => y - x) (f y) :=
-  have  : y - x ∈ Emetric.Ball (0 : E) r :=
-    by 
-      simpa [edist_eq_coe_nnnorm_sub] using hy 
-  by 
-    simpa only [add_sub_cancel'_right] using hf.has_sum this
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_fpower_series_on_ball.has_sum_sub
+(hf : has_fpower_series_on_ball f p x r)
+{y : E}
+(hy : «expr ∈ »(y, emetric.ball x r)) : has_sum (λ n : exprℕ(), p n (λ i, «expr - »(y, x))) (f y) :=
+have «expr ∈ »(«expr - »(y, x), emetric.ball (0 : E) r), by simpa [] [] [] ["[", expr edist_eq_coe_nnnorm_sub, "]"] [] ["using", expr hy],
+by simpa [] [] ["only"] ["[", expr add_sub_cancel'_right, "]"] [] ["using", expr hf.has_sum this]
 
 theorem HasFpowerSeriesOnBall.radius_pos (hf : HasFpowerSeriesOnBall f p x r) : 0 < p.radius :=
   lt_of_lt_of_leₓ hf.r_pos hf.r_le
@@ -454,7 +478,7 @@ theorem HasFpowerSeriesAt.coeff_zero (hf : HasFpowerSeriesAt f pf x) (v : Finₓ
   let ⟨rf, hrf⟩ := hf 
   hrf.coeff_zero v
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a function admits a power series expansion, then it is exponentially close to the partial
 sums of this power series on strict subdisks of the disk of convergence.
 
@@ -519,23 +543,27 @@ begin
   exacts ["[", expr mul_nonneg ha.1.le (div_nonneg (norm_nonneg y) r'.coe_nonneg), ",", expr mul_le_of_le_one_right ha.1.le (div_le_one_of_le yr'.le r'.coe_nonneg), "]"]
 end
 
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Taylor formula for an analytic function, `is_O` version. -/
-theorem HasFpowerSeriesAt.is_O_sub_partial_sum_pow (hf : HasFpowerSeriesAt f p x) (n : ℕ) :
-  is_O (fun y : E => f (x+y) - p.partial_sum n y) (fun y => ∥y∥ ^ n) (𝓝 0) :=
-  by 
-    rcases hf with ⟨r, hf⟩
-    rcases Ennreal.lt_iff_exists_nnreal_btwn.1 hf.r_pos with ⟨r', r'0, h⟩
-    obtain ⟨a, ha, C, hC, hp⟩ :
-      ∃ (a : _)(_ : a ∈ Ioo (0 : ℝ) 1)(C : _)(_ : C > 0),
-        ∀ y _ : y ∈ Metric.Ball (0 : E) r', ∀ n, ∥f (x+y) - p.partial_sum n y∥ ≤ C*(a*∥y∥ / r') ^ n 
-    exact hf.uniform_geometric_approx' h 
-    refine' is_O_iff.2 ⟨C*(a / r') ^ n, _⟩
-    replace r'0 : 0 < (r' : ℝ)
-    ·
-      exactModCast r'0 
-    filterUpwards [Metric.ball_mem_nhds (0 : E) r'0]
-    intro y hy 
-    simpa [mul_powₓ, mul_div_assoc, mul_assocₓ, div_mul_eq_mul_div] using hp y hy n
+theorem has_fpower_series_at.is_O_sub_partial_sum_pow
+(hf : has_fpower_series_at f p x)
+(n : exprℕ()) : is_O (λ
+ y : E, «expr - »(f «expr + »(x, y), p.partial_sum n y)) (λ y, «expr ^ »(«expr∥ ∥»(y), n)) (expr𝓝() 0) :=
+begin
+  rcases [expr hf, "with", "⟨", ident r, ",", ident hf, "⟩"],
+  rcases [expr ennreal.lt_iff_exists_nnreal_btwn.1 hf.r_pos, "with", "⟨", ident r', ",", ident r'0, ",", ident h, "⟩"],
+  obtain ["⟨", ident a, ",", ident ha, ",", ident C, ",", ident hC, ",", ident hp, "⟩", ":", expr «expr∃ , »((a «expr ∈ » Ioo (0 : exprℝ()) 1)
+    (C «expr > » 0), ∀
+    y «expr ∈ » metric.ball (0 : E) r', ∀
+    n, «expr ≤ »(«expr∥ ∥»(«expr - »(f «expr + »(x, y), p.partial_sum n y)), «expr * »(C, «expr ^ »(«expr * »(a, «expr / »(«expr∥ ∥»(y), r')), n))))],
+  from [expr hf.uniform_geometric_approx' h],
+  refine [expr is_O_iff.2 ⟨«expr * »(C, «expr ^ »(«expr / »(a, r'), n)), _⟩],
+  replace [ident r'0] [":", expr «expr < »(0, (r' : exprℝ()))] [],
+  by exact_mod_cast [expr r'0],
+  filter_upwards ["[", expr metric.ball_mem_nhds (0 : E) r'0, "]"] [],
+  intros [ident y, ident hy],
+  simpa [] [] [] ["[", expr mul_pow, ",", expr mul_div_assoc, ",", expr mul_assoc, ",", expr div_mul_eq_mul_div, "]"] [] ["using", expr hp y hy n]
+end
 
 attribute [-instance] Unique.subsingleton Pi.subsingleton
 
@@ -607,22 +635,27 @@ ball, the norm of the difference `f y - f z - p 1 (λ _, y - z)` is bounded abov
 `C * (max ∥y - x∥ ∥z - x∥) * ∥y - z∥`. -/
 theorem HasFpowerSeriesOnBall.image_sub_sub_deriv_le (hf : HasFpowerSeriesOnBall f p x r) (hr : r' < r) :
   ∃ C,
-    ∀ y z _ : y ∈ Emetric.Ball x r' _ : z ∈ Emetric.Ball x r',
+    ∀ y z (_ : y ∈ Emetric.Ball x r') (_ : z ∈ Emetric.Ball x r'),
       ∥f y - f z - p 1 fun _ => y - z∥ ≤ (C*max ∥y - x∥ ∥z - x∥)*∥y - z∥ :=
   by 
     simpa only [is_O_principal, mul_assocₓ, NormedField.norm_mul, norm_norm, Prod.forall, Emetric.mem_ball,
       Prod.edist_eq, max_lt_iff, and_imp] using hf.is_O_image_sub_image_sub_deriv_principal hr
 
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `f` has formal power series `∑ n, pₙ` at `x`, then
 `f y - f z - p 1 (λ _, y - z) = O(∥(y, z) - (x, x)∥ * ∥y - z∥)` as `(y, z) → (x, x)`.
 In particular, `f` is strictly differentiable at `x`. -/
-theorem HasFpowerSeriesAt.is_O_image_sub_norm_mul_norm_sub (hf : HasFpowerSeriesAt f p x) :
-  is_O (fun y : E × E => f y.1 - f y.2 - p 1 fun _ => y.1 - y.2) (fun y => ∥y - (x, x)∥*∥y.1 - y.2∥) (𝓝 (x, x)) :=
-  by 
-    rcases hf with ⟨r, hf⟩
-    rcases Ennreal.lt_iff_exists_nnreal_btwn.1 hf.r_pos with ⟨r', r'0, h⟩
-    refine' (hf.is_O_image_sub_image_sub_deriv_principal h).mono _ 
-    exact le_principal_iff.2 (Emetric.ball_mem_nhds _ r'0)
+theorem has_fpower_series_at.is_O_image_sub_norm_mul_norm_sub
+(hf : has_fpower_series_at f p x) : is_O (λ
+ y : «expr × »(E, E), «expr - »(«expr - »(f y.1, f y.2), p 1 (λ
+   _, «expr - »(y.1, y.2)))) (λ
+ y, «expr * »(«expr∥ ∥»(«expr - »(y, (x, x))), «expr∥ ∥»(«expr - »(y.1, y.2)))) (expr𝓝() (x, x)) :=
+begin
+  rcases [expr hf, "with", "⟨", ident r, ",", ident hf, "⟩"],
+  rcases [expr ennreal.lt_iff_exists_nnreal_btwn.1 hf.r_pos, "with", "⟨", ident r', ",", ident r'0, ",", ident h, "⟩"],
+  refine [expr (hf.is_O_image_sub_image_sub_deriv_principal h).mono _],
+  exact [expr le_principal_iff.2 (emetric.ball_mem_nhds _ r'0)]
+end
 
 -- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If a function admits a power series expansion at `x`, then it is the uniform limit of the
@@ -676,7 +709,7 @@ theorem HasFpowerSeriesOnBall.tendsto_uniformly_on' {r' :  ℝ≥0 } (hf : HasFp
       ext z 
       simp [dist_eq_norm]
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a function admits a power series expansion at `x`, then it is the locally uniform limit of
 the  partial sums of this power series on the disk of convergence, i.e., `f y`
 is the locally uniform limit of `p.partial_sum n (y - x)` there. -/
@@ -694,15 +727,16 @@ begin
 end
 
 /-- If a function admits a power series expansion on a disk, then it is continuous there. -/
-theorem HasFpowerSeriesOnBall.continuous_on (hf : HasFpowerSeriesOnBall f p x r) : ContinuousOn f (Emetric.Ball x r) :=
+protected theorem HasFpowerSeriesOnBall.continuous_on (hf : HasFpowerSeriesOnBall f p x r) :
+  ContinuousOn f (Emetric.Ball x r) :=
   hf.tendsto_locally_uniformly_on'.continuous_on$
-    fun n => ((p.partial_sum_continuous n).comp (continuous_id.sub continuous_const)).ContinuousOn
+    eventually_of_forall$ fun n => ((p.partial_sum_continuous n).comp (continuous_id.sub continuous_const)).ContinuousOn
 
-theorem HasFpowerSeriesAt.continuous_at (hf : HasFpowerSeriesAt f p x) : ContinuousAt f x :=
+protected theorem HasFpowerSeriesAt.continuous_at (hf : HasFpowerSeriesAt f p x) : ContinuousAt f x :=
   let ⟨r, hr⟩ := hf 
   hr.continuous_on.continuous_at (Emetric.ball_mem_nhds x hr.r_pos)
 
-theorem AnalyticAt.continuous_at (hf : AnalyticAt 𝕜 f x) : ContinuousAt f x :=
+protected theorem AnalyticAt.continuous_at (hf : AnalyticAt 𝕜 f x) : ContinuousAt f x :=
   let ⟨p, hp⟩ := hf 
   hp.continuous_at
 
@@ -768,7 +802,8 @@ Given a formal multilinear series `p` and a point `x` in its ball of convergence
 is itself an analytic function of `x` given by the series `p.change_origin_series`. Each term in
 `change_origin_series` is the sum of `change_origin_series_term`'s over all `s` of cardinality `l`.
 -/
-def change_origin_series_term (k l : ℕ) (s : Finset (Finₓ (k+l))) (hs : s.card = l) : E[×l]→L[𝕜] E[×k]→L[𝕜] F :=
+def change_origin_series_term (k l : ℕ) (s : Finset (Finₓ (k+l))) (hs : s.card = l) :
+  «expr [× ]→L[ ] » E l 𝕜 («expr [× ]→L[ ] » E k 𝕜 F) :=
   ContinuousMultilinearMap.curryFinFinset 𝕜 E F hs
     (by 
       erw [Finset.card_compl, Fintype.card_fin, hs, add_tsub_cancel_right])
@@ -802,7 +837,7 @@ theorem nnnorm_change_origin_series_term_apply_le (k l : ℕ) (s : Finset (Fin�
 Given a formal multilinear series `p` and a point `x` in its ball of convergence,
 `p.change_origin x` is a formal multilinear series such that
 `p.sum (x+y) = (p.change_origin x).sum y` when this makes sense. -/
-def change_origin_series (k : ℕ) : FormalMultilinearSeries 𝕜 E (E[×k]→L[𝕜] F) :=
+def change_origin_series (k : ℕ) : FormalMultilinearSeries 𝕜 E («expr [× ]→L[ ] » E k 𝕜 F) :=
   fun l => ∑s : { s : Finset (Finₓ (k+l)) // Finset.card s = l }, p.change_origin_series_term k l s s.2
 
 theorem nnnorm_change_origin_series_le_tsum (k l : ℕ) :
@@ -848,7 +883,7 @@ def change_origin_index_equiv : (Σk l : ℕ, { s : Finset (Finₓ (k+l)) // s.c
           ∀ k' l',
             k' = k →
               l' = l →
-                ∀ hkl : (k+l) = k'+l' hs',
+                ∀ (hkl : (k+l) = k'+l') hs',
                   (⟨k', l', ⟨Finset.map (Finₓ.cast hkl).toEquiv.toEmbedding s, hs'⟩⟩ :
                     Σk l : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l }) =
                     ⟨k, l, ⟨s, hs⟩⟩
@@ -862,7 +897,7 @@ def change_origin_index_equiv : (Σk l : ℕ, { s : Finset (Finₓ (k+l)) // s.c
         rintro ⟨n, s⟩
         simp [tsub_add_cancel_of_le (card_finset_fin_le s), Finₓ.cast_to_equiv] }
 
--- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem change_origin_series_summable_aux₁
 {r r' : «exprℝ≥0»()}
 (hr : «expr < »((«expr + »(r, r') : «exprℝ≥0∞»()), p.radius)) : summable (λ
@@ -886,19 +921,27 @@ begin
   exact [expr p.summable_nnnorm_mul_pow hr]
 end
 
-theorem change_origin_series_summable_aux₂ (hr : (r : ℝ≥0∞) < p.radius) (k : ℕ) :
-  Summable fun s : Σl : ℕ, { s : Finset (Finₓ (k+l)) // s.card = l } => ∥p (k+s.1)∥₊*r ^ s.1 :=
-  by 
-    rcases Ennreal.lt_iff_exists_add_pos_lt.1 hr with ⟨r', h0, hr'⟩
-    simpa only [mul_inv_cancel_right₀ (pow_pos h0 _).ne'] using
-      ((Nnreal.summable_sigma.1 (p.change_origin_series_summable_aux₁ hr')).1 k).mul_right ((r' ^ k)⁻¹)
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem change_origin_series_summable_aux₂
+(hr : «expr < »((r : «exprℝ≥0∞»()), p.radius))
+(k : exprℕ()) : summable (λ
+ s : «exprΣ , »((l : exprℕ()), {s : finset (fin «expr + »(k, l)) // «expr = »(s.card, l)}), «expr * »(«expr∥ ∥₊»(p «expr + »(k, s.1)), «expr ^ »(r, s.1))) :=
+begin
+  rcases [expr ennreal.lt_iff_exists_add_pos_lt.1 hr, "with", "⟨", ident r', ",", ident h0, ",", ident hr', "⟩"],
+  simpa [] [] ["only"] ["[", expr mul_inv_cancel_right₀ (pow_pos h0 _).ne', "]"] [] ["using", expr ((nnreal.summable_sigma.1 (p.change_origin_series_summable_aux₁ hr')).1 k).mul_right «expr ⁻¹»(«expr ^ »(r', k))]
+end
 
-theorem change_origin_series_summable_aux₃ {r :  ℝ≥0 } (hr : «expr↑ » r < p.radius) (k : ℕ) :
-  Summable fun l : ℕ => ∥p.change_origin_series k l∥₊*r ^ l :=
-  by 
-    refine' Nnreal.summable_of_le (fun n => _) (Nnreal.summable_sigma.1$ p.change_origin_series_summable_aux₂ hr k).2
-    simp only [Nnreal.tsum_mul_right]
-    exact mul_le_mul' (p.nnnorm_change_origin_series_le_tsum _ _) le_rfl
+-- error in Analysis.Analytic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem change_origin_series_summable_aux₃
+{r : «exprℝ≥0»()}
+(hr : «expr < »(«expr↑ »(r), p.radius))
+(k : exprℕ()) : summable (λ l : exprℕ(), «expr * »(«expr∥ ∥₊»(p.change_origin_series k l), «expr ^ »(r, l))) :=
+begin
+  refine [expr nnreal.summable_of_le (λ
+    n, _) «expr $ »(nnreal.summable_sigma.1, p.change_origin_series_summable_aux₂ hr k).2],
+  simp [] [] ["only"] ["[", expr nnreal.tsum_mul_right, "]"] [] [],
+  exact [expr mul_le_mul' (p.nnnorm_change_origin_series_le_tsum _ _) le_rfl]
+end
 
 theorem le_change_origin_series_radius (k : ℕ) : p.radius ≤ (p.change_origin_series k).radius :=
   Ennreal.le_of_forall_nnreal_lt$ fun r hr => le_radius_of_summable_nnnorm _ (p.change_origin_series_summable_aux₃ hr k)

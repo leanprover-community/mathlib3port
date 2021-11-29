@@ -94,7 +94,7 @@ theorem IsSubgroup.inter {s₁ s₂ : Set G} (hs₁ : IsSubgroup s₁) (hs₂ : 
     inv_mem := fun x hx => ⟨hs₁.inv_mem hx.1, hs₂.inv_mem hx.2⟩ }
 
 @[toAdditive]
-theorem IsSubgroup.Inter {ι : Sort _} {s : ι → Set G} (hs : ∀ y : ι, IsSubgroup (s y)) : IsSubgroup (Set.Interₓ s) :=
+theorem IsSubgroup.Inter {ι : Sort _} {s : ι → Set G} (hs : ∀ (y : ι), IsSubgroup (s y)) : IsSubgroup (Set.Interₓ s) :=
   { IsSubmonoid.Inter fun y => (hs y).to_is_submonoid with
     inv_mem := fun x h => Set.mem_Inter.2$ fun y => IsSubgroup.inv_mem (hs _) (Set.mem_Inter.1 h y) }
 
@@ -144,14 +144,14 @@ end IsSubgroup
 of the additive group `A`. Important: the preferred way to say this in Lean is via bundled
 subgroups `S : add_subgroup A` and `hs : S.normal`, and not via this structure. -/
 structure IsNormalAddSubgroup[AddGroupₓ A](s : Set A) extends IsAddSubgroup s : Prop where 
-  Normal : ∀ n _ : n ∈ s, ∀ g : A, ((g+n)+-g) ∈ s
+  Normal : ∀ n (_ : n ∈ s), ∀ (g : A), ((g+n)+-g) ∈ s
 
 /-- `is_normal_subgroup (s : set G)` expresses the fact that `s` is a normal subgroup
 of the group `G`. Important: the preferred way to say this in Lean is via bundled
 subgroups `S : subgroup G` and not via this structure. -/
 @[toAdditive]
 structure IsNormalSubgroup[Groupₓ G](s : Set G) extends IsSubgroup s : Prop where 
-  Normal : ∀ n _ : n ∈ s, ∀ g : G, ((g*n)*g⁻¹) ∈ s
+  Normal : ∀ n (_ : n ∈ s), ∀ (g : G), ((g*n)*g⁻¹) ∈ s
 
 @[toAdditive]
 theorem is_normal_subgroup_of_comm_group [CommGroupₓ G] {s : Set G} (hs : IsSubgroup s) : IsNormalSubgroup s :=
@@ -214,7 +214,7 @@ theorem mem_trivial {g : G} : g ∈ trivialₓ G ↔ g = 1 :=
 by refine [expr { .. }]; simp [] [] [] ["[", expr trivial, "]"] [] [] { contextual := tt }
 
 @[toAdditive]
-theorem eq_trivial_iff {s : Set G} (hs : IsSubgroup s) : s = trivialₓ G ↔ ∀ x _ : x ∈ s, x = (1 : G) :=
+theorem eq_trivial_iff {s : Set G} (hs : IsSubgroup s) : s = trivialₓ G ↔ ∀ x (_ : x ∈ s), x = (1 : G) :=
   by 
     simp only [Set.ext_iff, IsSubgroup.mem_trivial] <;>
       exact ⟨fun h x => (h x).1, fun h x => ⟨h x, fun hx => hx.symm ▸ hs.to_is_submonoid.one_mem⟩⟩
@@ -271,19 +271,18 @@ theorem center_normal : IsNormalSubgroup (center G) :=
 def normalizer (s : Set G) : Set G :=
   { g:G | ∀ n, n ∈ s ↔ ((g*n)*g⁻¹) ∈ s }
 
-@[toAdditive]
-theorem normalizer_is_subgroup (s : Set G) : IsSubgroup (normalizer s) :=
-  { one_mem :=
-      by 
-        simp [normalizer],
-    mul_mem :=
-      fun a b ha : ∀ n, n ∈ s ↔ ((a*n)*a⁻¹) ∈ s hb : ∀ n, n ∈ s ↔ ((b*n)*b⁻¹) ∈ s n =>
-        by 
-          rw [mul_inv_rev, ←mul_assocₓ, mul_assocₓ a, mul_assocₓ a, ←ha, ←hb],
-    inv_mem :=
-      fun a ha : ∀ n, n ∈ s ↔ ((a*n)*a⁻¹) ∈ s n =>
-        by 
-          rw [ha ((a⁻¹*n)*a⁻¹⁻¹)] <;> simp [mul_assocₓ] }
+-- error in Deprecated.Subgroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem normalizer_is_subgroup (s : set G) : is_subgroup (normalizer s) :=
+{ one_mem := by simp [] [] [] ["[", expr normalizer, "]"] [] [],
+  mul_mem := λ
+  (a b)
+  (ha : ∀ n, «expr ↔ »(«expr ∈ »(n, s), «expr ∈ »(«expr * »(«expr * »(a, n), «expr ⁻¹»(a)), s)))
+  (hb : ∀ n, «expr ↔ »(«expr ∈ »(n, s), «expr ∈ »(«expr * »(«expr * »(b, n), «expr ⁻¹»(b)), s)))
+  (n), by rw ["[", expr mul_inv_rev, ",", "<-", expr mul_assoc, ",", expr mul_assoc a, ",", expr mul_assoc a, ",", "<-", expr ha, ",", "<-", expr hb, "]"] [],
+  inv_mem := λ
+  (a)
+  (ha : ∀ n, «expr ↔ »(«expr ∈ »(n, s), «expr ∈ »(«expr * »(«expr * »(a, n), «expr ⁻¹»(a)), s)))
+  (n), by rw ["[", expr ha «expr * »(«expr * »(«expr ⁻¹»(a), n), «expr ⁻¹»(«expr ⁻¹»(a))), "]"] []; simp [] [] [] ["[", expr mul_assoc, "]"] [] [] }
 
 @[toAdditive subset_add_normalizer]
 theorem subset_normalizer {s : Set G} (hs : IsSubgroup s) : s ⊆ normalizer s :=
@@ -509,7 +508,7 @@ theorem closure_subgroup {s : Set G} (hs : IsSubgroup s) : closure s = s :=
 
 @[toAdditive]
 theorem exists_list_of_mem_closure {s : Set G} {a : G} (h : a ∈ closure s) :
-  ∃ l : List G, (∀ x _ : x ∈ l, x ∈ s ∨ x⁻¹ ∈ s) ∧ l.prod = a :=
+  ∃ l : List G, (∀ x (_ : x ∈ l), x ∈ s ∨ x⁻¹ ∈ s) ∧ l.prod = a :=
   in_closure.rec_on h (fun x hxs => ⟨[x], List.forall_mem_singleton.2$ Or.inl hxs, one_mulₓ _⟩)
     ⟨[], List.forall_mem_nil _, rfl⟩
     (fun x _ ⟨L, HL1, HL2⟩ =>

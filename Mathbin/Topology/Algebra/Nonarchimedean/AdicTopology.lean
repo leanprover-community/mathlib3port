@@ -44,32 +44,36 @@ open_locale TopologicalSpace Pointwise
 
 namespace Ideal
 
-theorem adic_basis (I : Ideal R) : SubmodulesRingBasis fun n : ℕ => (I ^ n • ⊤ : Ideal R) :=
-  { inter :=
-      by 
-        suffices  : ∀ i j : ℕ, ∃ k, I ^ k ≤ I ^ i ∧ I ^ k ≤ I ^ j
-        ·
-          simpa 
-        intro i j 
-        exact ⟨max i j, pow_le_pow (le_max_leftₓ i j), pow_le_pow (le_max_rightₓ i j)⟩,
-    leftMul :=
-      by 
-        suffices  : ∀ a : R i : ℕ, ∃ j : ℕ, a • I ^ j ≤ I ^ i
-        ·
-          simpa 
-        intro r n 
-        use n 
-        rintro a ⟨x, hx, rfl⟩
-        exact (I ^ n).smul_mem r hx,
-    mul :=
-      by 
-        suffices  : ∀ i : ℕ, ∃ j : ℕ, («expr↑ » (I ^ j)*«expr↑ » (I ^ j)) ⊆ «expr↑ » (I ^ i)
-        ·
-          simpa 
-        intro n 
-        use n 
-        rintro a ⟨x, b, hx, hb, rfl⟩
-        exact (I ^ n).smul_mem x hb }
+-- error in Topology.Algebra.Nonarchimedean.AdicTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem adic_basis
+(I : ideal R) : submodules_ring_basis (λ n : exprℕ(), («expr • »(«expr ^ »(I, n), «expr⊤»()) : ideal R)) :=
+{ inter := begin
+    suffices [] [":", expr ∀
+     i
+     j : exprℕ(), «expr∃ , »((k), «expr ∧ »(«expr ≤ »(«expr ^ »(I, k), «expr ^ »(I, i)), «expr ≤ »(«expr ^ »(I, k), «expr ^ »(I, j))))],
+    by simpa [] [] [] [] [] [],
+    intros [ident i, ident j],
+    exact [expr ⟨max i j, pow_le_pow (le_max_left i j), pow_le_pow (le_max_right i j)⟩]
+  end,
+  left_mul := begin
+    suffices [] [":", expr ∀
+     (a : R)
+     (i : exprℕ()), «expr∃ , »((j : exprℕ()), «expr ≤ »(«expr • »(a, «expr ^ »(I, j)), «expr ^ »(I, i)))],
+    by simpa [] [] [] [] [] [],
+    intros [ident r, ident n],
+    use [expr n],
+    rintro [ident a, "⟨", ident x, ",", ident hx, ",", ident rfl, "⟩"],
+    exact [expr «expr ^ »(I, n).smul_mem r hx]
+  end,
+  mul := begin
+    suffices [] [":", expr ∀
+     i : exprℕ(), «expr∃ , »((j : exprℕ()), «expr ⊆ »(«expr * »(«expr↑ »(«expr ^ »(I, j)), «expr↑ »(«expr ^ »(I, j))), «expr↑ »(«expr ^ »(I, i))))],
+    by simpa [] [] [] [] [] [],
+    intro [ident n],
+    use [expr n],
+    rintro [ident a, "⟨", ident x, ",", ident b, ",", ident hx, ",", ident hb, ",", ident rfl, "⟩"],
+    exact [expr «expr ^ »(I, n).smul_mem x hb]
+  end }
 
 /-- The adic ring filter basis associated to an ideal `I` is made of powers of `I`. -/
 def RingFilterBasis (I : Ideal R) :=
@@ -83,27 +87,21 @@ def adic_topology (I : Ideal R) : TopologicalSpace R :=
 theorem nonarchimedean (I : Ideal R) : @NonarchimedeanRing R _ I.adic_topology :=
   I.adic_basis.to_ring_subgroups_basis.nonarchimedean
 
+-- error in Topology.Algebra.Nonarchimedean.AdicTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- For the `I`-adic topology, the neighborhoods of zero has basis given by the powers of `I`. -/
-theorem has_basis_nhds_zero_adic (I : Ideal R) :
-  has_basis (@nhds R I.adic_topology (0 : R)) (fun n : ℕ => True) fun n => ((I ^ n : Ideal R) : Set R) :=
-  ⟨by 
-      intro U 
-      rw [I.ring_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff]
-      split 
-      ·
-        rintro ⟨-, ⟨i, rfl⟩, h⟩
-        replace h : «expr↑ » (I ^ i) ⊆ U :=
-          by 
-            simpa using h 
-        use i, trivialₓ, h
-      ·
-        rintro ⟨i, -, h⟩
-        exact
-          ⟨(I ^ i : Ideal R),
-            ⟨i,
-              by 
-                simp ⟩,
-            h⟩⟩
+theorem has_basis_nhds_zero_adic
+(I : ideal R) : has_basis (@nhds R I.adic_topology (0 : R)) (λ
+ n : exprℕ(), true) (λ n, ((«expr ^ »(I, n) : ideal R) : set R)) :=
+⟨begin
+   intros [ident U],
+   rw [expr I.ring_filter_basis.to_add_group_filter_basis.nhds_zero_has_basis.mem_iff] [],
+   split,
+   { rintros ["⟨", "-", ",", "⟨", ident i, ",", ident rfl, "⟩", ",", ident h, "⟩"],
+     replace [ident h] [":", expr «expr ⊆ »(«expr↑ »(«expr ^ »(I, i)), U)] [":=", expr by simpa [] [] [] [] [] ["using", expr h]],
+     use ["[", expr i, ",", expr trivial, ",", expr h, "]"] },
+   { rintros ["⟨", ident i, ",", "-", ",", ident h, "⟩"],
+     exact [expr ⟨(«expr ^ »(I, i) : ideal R), ⟨i, by simp [] [] [] [] [] []⟩, h⟩] }
+ end⟩
 
 -- error in Topology.Algebra.Nonarchimedean.AdicTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem has_basis_nhds_adic
@@ -118,21 +116,18 @@ end
 
 variable(I : Ideal R)(M : Type _)[AddCommGroupₓ M][Module R M]
 
-theorem adic_module_basis : I.ring_filter_basis.submodules_basis fun n : ℕ => I ^ n • (⊤ : Submodule R M) :=
-  { inter :=
-      fun i j =>
-        ⟨max i j,
-          le_inf_iff.mpr
-            ⟨smul_mono_left$ pow_le_pow (le_max_leftₓ i j), smul_mono_left$ pow_le_pow (le_max_rightₓ i j)⟩⟩,
-    smul :=
-      fun m i =>
-        ⟨(I ^ i • ⊤ : Ideal R), ⟨i, rfl⟩,
-          fun a a_in =>
-            by 
-              replace a_in : a ∈ I ^ i :=
-                by 
-                  simpa [(I ^ i).mul_top] using a_in 
-              exact smul_mem_smul a_in mem_top⟩ }
+-- error in Topology.Algebra.Nonarchimedean.AdicTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem adic_module_basis : I.ring_filter_basis.submodules_basis (λ
+ n : exprℕ(), «expr • »(«expr ^ »(I, n), («expr⊤»() : submodule R M))) :=
+{ inter := λ
+  i
+  j, ⟨max i j, le_inf_iff.mpr ⟨«expr $ »(smul_mono_left, pow_le_pow (le_max_left i j)), «expr $ »(smul_mono_left, pow_le_pow (le_max_right i j))⟩⟩,
+  smul := λ
+  m
+  i, ⟨(«expr • »(«expr ^ »(I, i), «expr⊤»()) : ideal R), ⟨i, rfl⟩, λ
+   a
+   a_in, by { replace [ident a_in] [":", expr «expr ∈ »(a, «expr ^ »(I, i))] [":=", expr by simpa [] [] [] ["[", expr «expr ^ »(I, i).mul_top, "]"] [] ["using", expr a_in]],
+     exact [expr smul_mem_smul a_in mem_top] }⟩ }
 
 /-- The topology on a `R`-module `M` associated to an ideal `M`. Submodules $I^n M$,
 written `I^n • ⊤` form a basis of neighborhoods of zero. -/

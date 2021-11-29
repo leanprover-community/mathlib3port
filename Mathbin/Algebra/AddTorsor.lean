@@ -51,8 +51,8 @@ by the `+ᵥ` operation and a corresponding subtraction given by the
 space. -/
 class AddTorsor(G : outParam (Type _))(P : Type _)[outParam$ AddGroupₓ G] extends AddAction G P, HasVsub G P where 
   [Nonempty : Nonempty P]
-  vsub_vadd' : ∀ p1 p2 : P, (p1 -ᵥ p2 : G) +ᵥ p2 = p1 
-  vadd_vsub' : ∀ g : G p : P, g +ᵥ p -ᵥ p = g
+  vsub_vadd' : ∀ (p1 p2 : P), (p1 -ᵥ p2 : G) +ᵥ p2 = p1 
+  vadd_vsub' : ∀ (g : G) (p : P), g +ᵥ p -ᵥ p = g
 
 attribute [instance, nolint dangerous_instance] AddTorsor.nonempty
 
@@ -217,7 +217,7 @@ theorem vsub_subset_vsub {s' t' : Set P} (hs : s ⊆ s') (ht : t ⊆ t') : s -�
 theorem vsub_self_mono (h : s ⊆ t) : s -ᵥ s ⊆ t -ᵥ t :=
   vsub_subset_vsub h h
 
-theorem vsub_subset_iff {u : Set G} : s -ᵥ t ⊆ u ↔ ∀ x _ : x ∈ s y _ : y ∈ t, x -ᵥ y ∈ u :=
+theorem vsub_subset_iff {u : Set G} : s -ᵥ t ⊆ u ↔ ∀ x (_ : x ∈ s) y (_ : y ∈ t), x -ᵥ y ∈ u :=
   image2_subset_iff
 
 end Vsub
@@ -503,12 +503,16 @@ theorem point_reflection_fixed_iff_of_injective_bit0 {x y : P} (h : injective (b
 
 omit G
 
-theorem injective_point_reflection_left_of_injective_bit0 {G P : Type _} [AddCommGroupₓ G] [AddTorsor G P]
-  (h : injective (bit0 : G → G)) (y : P) : injective fun x : P => point_reflection x y :=
-  fun x₁ x₂ hy : point_reflection x₁ y = point_reflection x₂ y =>
-    by 
-      rwa [point_reflection_apply, point_reflection_apply, vadd_eq_vadd_iff_sub_eq_vsub, vsub_sub_vsub_cancel_right,
-        ←neg_vsub_eq_vsub_rev, neg_eq_iff_add_eq_zero, ←bit0, ←bit0_zero, h.eq_iff, vsub_eq_zero_iff_eq] at hy
+-- error in Algebra.AddTorsor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem injective_point_reflection_left_of_injective_bit0
+{G P : Type*}
+[add_comm_group G]
+[add_torsor G P]
+(h : injective (bit0 : G → G))
+(y : P) : injective (λ x : P, point_reflection x y) :=
+λ
+(x₁ x₂)
+(hy : «expr = »(point_reflection x₁ y, point_reflection x₂ y)), by rwa ["[", expr point_reflection_apply, ",", expr point_reflection_apply, ",", expr vadd_eq_vadd_iff_sub_eq_vsub, ",", expr vsub_sub_vsub_cancel_right, ",", "<-", expr neg_vsub_eq_vsub_rev, ",", expr neg_eq_iff_add_eq_zero, ",", "<-", expr bit0, ",", "<-", expr bit0_zero, ",", expr h.eq_iff, ",", expr vsub_eq_zero_iff_eq, "]"] ["at", ident hy]
 
 end Equiv
 

@@ -198,7 +198,7 @@ theorem eval₂_mul_C' (h : Commute (f a) x) : eval₂ f x (p*C a) = eval₂ f x
     ·
       simp only [coeff_C_ne_zero hk, RingHom.map_zero, Commute.zero_left]
 
-theorem eval₂_list_prod_noncomm (ps : List (Polynomial R)) (hf : ∀ p _ : p ∈ ps k, Commute (f$ coeff p k) x) :
+theorem eval₂_list_prod_noncomm (ps : List (Polynomial R)) (hf : ∀ p (_ : p ∈ ps) k, Commute (f$ coeff p k) x) :
   eval₂ f x ps.prod = (ps.map (Polynomial.eval₂ f x)).Prod :=
   by 
     induction' ps using List.reverseRecOn with ps p ihp
@@ -549,13 +549,22 @@ theorem nat_cast_mul_comp {n : ℕ} : ((n : Polynomial R)*p).comp r = n*p.comp r
 theorem mul_comp {R : Type _} [CommSemiringₓ R] (p q r : Polynomial R) : (p*q).comp r = p.comp r*q.comp r :=
   eval₂_mul _ _
 
-theorem prod_comp {R : Type _} [CommSemiringₓ R] (s : Multiset (Polynomial R)) (p : Polynomial R) :
-  s.prod.comp p = (s.map fun q : Polynomial R => q.comp p).Prod :=
-  (s.prod_hom (MonoidHom.mk (fun q : Polynomial R => q.comp p) one_comp fun q r => mul_comp q r p)).symm
+-- error in Data.Polynomial.Eval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prod_comp
+{R : Type*}
+[comm_semiring R]
+(s : multiset (polynomial R))
+(p : polynomial R) : «expr = »(s.prod.comp p, (s.map (λ q : polynomial R, q.comp p)).prod) :=
+(s.prod_hom (monoid_hom.mk (λ q : polynomial R, q.comp p) one_comp (λ q r, mul_comp q r p))).symm
 
+-- error in Data.Polynomial.Eval: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem pow_comp {R : Type _} [CommSemiringₓ R] (p q : Polynomial R) (n : ℕ) : (p ^ n).comp q = p.comp q ^ n :=
-  ((MonoidHom.mk fun r : Polynomial R => r.comp q) one_comp fun r s => mul_comp r s q).map_pow p n
+theorem pow_comp
+{R : Type*}
+[comm_semiring R]
+(p q : polynomial R)
+(n : exprℕ()) : «expr = »(«expr ^ »(p, n).comp q, «expr ^ »(p.comp q, n)) :=
+(monoid_hom.mk (λ r : polynomial R, r.comp q) one_comp (λ r s, mul_comp r s q)).map_pow p n
 
 @[simp]
 theorem bit0_comp : comp (bit0 p : Polynomial R) q = bit0 (p.comp q) :=

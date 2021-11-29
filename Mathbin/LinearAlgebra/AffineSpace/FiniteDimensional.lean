@@ -349,7 +349,7 @@ end
 expressed as multiples of the same vector, added to the same base
 point. -/
 theorem collinear_iff_exists_forall_eq_smul_vadd (s : Set P) :
-  Collinear k s ↔ ∃ (p₀ : P)(v : V), ∀ p _ : p ∈ s, ∃ r : k, p = r • v +ᵥ p₀ :=
+  Collinear k s ↔ ∃ (p₀ : P)(v : V), ∀ p (_ : p ∈ s), ∃ r : k, p = r • v +ᵥ p₀ :=
   by 
     rcases Set.eq_empty_or_nonempty s with (rfl | ⟨⟨p₁, hp₁⟩⟩)
     ·

@@ -58,7 +58,7 @@ variable[CompleteSpace E](I : box (Finₓ (n+1))){i : Finₓ (n+1)}
 
 open MeasureTheory
 
--- error in Analysis.BoxIntegral.DivergenceTheorem: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.BoxIntegral.DivergenceTheorem: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Auxiliary lemma for the divergence theorem. -/
 theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le
 {f : «exprℝⁿ⁺¹»() → E}
@@ -240,8 +240,8 @@ the sum of integrals of `f` over the faces of `I` taken with appropriate signs.
 More precisely, we use a non-standard generalization of the Henstock-Kurzweil integral and
 we allow `f` to be non-differentiable (but still continuous) at a countable set of points. -/
 theorem has_integral_bot_divergence_of_forall_has_deriv_within_at (f : ℝⁿ⁺¹ → Eⁿ⁺¹) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹)
-  (s : Set ℝⁿ⁺¹) (hs : countable s) (Hs : ∀ x _ : x ∈ s, ContinuousWithinAt f I.Icc x)
-  (Hd : ∀ x _ : x ∈ I.Icc \ s, HasFderivWithinAt f (f' x) I.Icc x) :
+  (s : Set ℝⁿ⁺¹) (hs : countable s) (Hs : ∀ x (_ : x ∈ s), ContinuousWithinAt f I.Icc x)
+  (Hd : ∀ x (_ : x ∈ I.Icc \ s), HasFderivWithinAt f (f' x) I.Icc x) :
   has_integral.{0, u, u} I ⊥ (fun x => ∑i, f' x (Pi.single i 1) i) box_additive_map.volume
     (∑i,
       integral.{0, u, u} (I.face i) ⊥ (fun x => f (i.insert_nth (I.upper i) x) i) box_additive_map.volume -

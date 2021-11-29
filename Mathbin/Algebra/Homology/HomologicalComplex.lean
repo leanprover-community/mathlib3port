@@ -194,9 +194,8 @@ theorem id_f (C : HomologicalComplex V c) (i : ι) : hom.f (𝟙 C) i = 𝟙 (C.
 theorem comp_f {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) : (f ≫ g).f i = f.f i ≫ g.f i :=
   rfl
 
-theorem hom_f_injective {C₁ C₂ : HomologicalComplex V c} : Function.Injective fun f : hom C₁ C₂ => f.f :=
-  by 
-    tidy
+-- error in Algebra.Homology.HomologicalComplex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem hom_f_injective {C₁ C₂ : homological_complex V c} : function.injective (λ f : hom C₁ C₂, f.f) := by tidy []
 
 instance  : has_zero_morphisms (HomologicalComplex V c) :=
   { HasZero := fun C D => ⟨{ f := fun i => 0 }⟩ }
@@ -684,7 +683,8 @@ A constructor for chain maps between `α`-indexed chain complexes built using `c
 from a dependently typed collection of morphisms.
 -/
 @[simps]
-def of_hom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f (i+1) ≫ d_Y i = d_X i ≫ f i) : of X d_X sq_X ⟶ of Y d_Y sq_Y :=
+def of_hom (f : ∀ (i : α), X i ⟶ Y i) (comm : ∀ (i : α), f (i+1) ≫ d_Y i = d_X i ≫ f i) :
+  of X d_X sq_X ⟶ of Y d_Y sq_Y :=
   { f,
     comm' :=
       fun n m =>
@@ -727,11 +727,11 @@ variable(X₀ X₁ X₂ :
       X₁)(s :
     d₁ ≫ d₀ =
       0)(succ :
-    ∀ t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0,
+    ∀ (t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₁ ⟶ X₀)(d₁ : X₂ ⟶ X₁), d₁ ≫ d₀ = 0),
       Σ'(X₃ : V)(d₂ : X₃ ⟶ t.2.2.1), d₂ ≫ t.2.2.2.2.1 = 0)
 
 /-- Auxiliary definition for `mk`. -/
-def mk_aux : ∀ n : ℕ, mk_struct V
+def mk_aux : ∀ (n : ℕ), mk_struct V
 | 0 => ⟨X₀, X₁, X₂, d₀, d₁, s⟩
 | n+1 =>
   let p := mk_aux n
@@ -781,12 +781,12 @@ You provide explicitly the first differential,
 then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
-def mk' (X₀ X₁ : V) (d : X₁ ⟶ X₀) (succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0) :
+def mk' (X₀ X₁ : V) (d : X₁ ⟶ X₀) (succ' : ∀ (t : ΣX₀ X₁ : V, X₁ ⟶ X₀), Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0) :
   ChainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2
     fun t => succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 
-variable(succ' : ∀ t : ΣX₀ X₁ : V, X₁ ⟶ X₀, Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
+variable(succ' : ∀ (t : ΣX₀ X₁ : V, X₁ ⟶ X₀), Σ'(X₂ : V)(d : X₂ ⟶ t.2.1), d ≫ t.2.2 = 0)
 
 @[simp]
 theorem mk'_X_0 : (mk' X₀ X₁ d₀ succ').x 0 = X₀ :=
@@ -818,7 +818,7 @@ variable{V}(P Q :
     one ≫ Q.d 1 0 =
       P.d 1 0 ≫
         zero)(succ :
-    ∀ n : ℕ p : Σ'(f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f' ≫ Q.d (n+1) n = P.d (n+1) n ≫ f,
+    ∀ (n : ℕ) (p : Σ'(f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f' ≫ Q.d (n+1) n = P.d (n+1) n ≫ f),
       Σ'f'' : P.X (n+2) ⟶ Q.X (n+2), f'' ≫ Q.d (n+2) (n+1) = P.d (n+2) (n+1) ≫ p.2.1)
 
 /--
@@ -944,7 +944,8 @@ A constructor for chain maps between `α`-indexed cochain complexes built using 
 from a dependently typed collection of morphisms.
 -/
 @[simps]
-def of_hom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f i ≫ d_Y i = d_X i ≫ f (i+1)) : of X d_X sq_X ⟶ of Y d_Y sq_Y :=
+def of_hom (f : ∀ (i : α), X i ⟶ Y i) (comm : ∀ (i : α), f i ≫ d_Y i = d_X i ≫ f (i+1)) :
+  of X d_X sq_X ⟶ of Y d_Y sq_Y :=
   { f,
     comm' :=
       fun n m =>
@@ -987,11 +988,11 @@ variable(X₀ X₁ X₂ :
       X₂)(s :
     d₀ ≫ d₁ =
       0)(succ :
-    ∀ t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0,
+    ∀ (t : Σ'(X₀ X₁ X₂ : V)(d₀ : X₀ ⟶ X₁)(d₁ : X₁ ⟶ X₂), d₀ ≫ d₁ = 0),
       Σ'(X₃ : V)(d₂ : t.2.2.1 ⟶ X₃), t.2.2.2.2.1 ≫ d₂ = 0)
 
 /-- Auxiliary definition for `mk`. -/
-def mk_aux : ∀ n : ℕ, mk_struct V
+def mk_aux : ∀ (n : ℕ), mk_struct V
 | 0 => ⟨X₀, X₁, X₂, d₀, d₁, s⟩
 | n+1 =>
   let p := mk_aux n
@@ -1041,12 +1042,12 @@ You provide explicitly the first differential,
 then a function which takes a differential,
 and returns the next object, its differential, and the fact it composes appropriately to zero.
 -/
-def mk' (X₀ X₁ : V) (d : X₀ ⟶ X₁) (succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0) :
+def mk' (X₀ X₁ : V) (d : X₀ ⟶ X₁) (succ' : ∀ (t : ΣX₀ X₁ : V, X₀ ⟶ X₁), Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0) :
   CochainComplex V ℕ :=
   mk X₀ X₁ (succ' ⟨X₀, X₁, d⟩).1 d (succ' ⟨X₀, X₁, d⟩).2.1 (succ' ⟨X₀, X₁, d⟩).2.2
     fun t => succ' ⟨t.2.1, t.2.2.1, t.2.2.2.2.1⟩
 
-variable(succ' : ∀ t : ΣX₀ X₁ : V, X₀ ⟶ X₁, Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
+variable(succ' : ∀ (t : ΣX₀ X₁ : V, X₀ ⟶ X₁), Σ'(X₂ : V)(d : t.2.1 ⟶ X₂), t.2.2 ≫ d = 0)
 
 @[simp]
 theorem mk'_X_0 : (mk' X₀ X₁ d₀ succ').x 0 = X₀ :=
@@ -1078,7 +1079,7 @@ variable{V}(P Q :
     zero ≫ Q.d 0 1 =
       P.d 0 1 ≫
         one)(succ :
-    ∀ n : ℕ p : Σ'(f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f ≫ Q.d n (n+1) = P.d n (n+1) ≫ f',
+    ∀ (n : ℕ) (p : Σ'(f : P.X n ⟶ Q.X n)(f' : P.X (n+1) ⟶ Q.X (n+1)), f ≫ Q.d n (n+1) = P.d n (n+1) ≫ f'),
       Σ'f'' : P.X (n+2) ⟶ Q.X (n+2), p.2.1 ≫ Q.d (n+1) (n+2) = P.d (n+1) (n+2) ≫ f'')
 
 /--

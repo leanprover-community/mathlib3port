@@ -52,7 +52,8 @@ begin
 end
 
 theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
-  ∀ {lo hi hi'} hc : ¬lt hi' hi ∧ ¬lt hi hi' hs : is_searchable lt t lo (some hi), is_searchable lt t lo (some hi') :=
+  ∀ {lo hi hi'} (hc : ¬lt hi' hi ∧ ¬lt hi hi') (hs : is_searchable lt t lo (some hi)),
+    is_searchable lt t lo (some hi') :=
   by 
     classical 
     induction t <;>
@@ -68,7 +69,8 @@ theorem is_searchable_of_is_searchable_of_incomp [IsStrictWeakOrder α lt] {t} :
       apply t_ih_rchild hc hs_hs₂
 
 theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
-  ∀ {lo lo' hi} hc : ¬lt lo' lo ∧ ¬lt lo lo' hs : is_searchable lt t (some lo) hi, is_searchable lt t (some lo') hi :=
+  ∀ {lo lo' hi} (hc : ¬lt lo' lo ∧ ¬lt lo lo') (hs : is_searchable lt t (some lo) hi),
+    is_searchable lt t (some lo') hi :=
   by 
     classical 
     induction t <;>
@@ -84,7 +86,7 @@ theorem is_searchable_of_incomp_of_is_searchable [IsStrictWeakOrder α lt] {t} :
       apply t_ih_lchild hc hs_hs₁
 
 theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
-  ∀ {lo hi lo'} hlt : lt lo' lo hs : is_searchable lt t (some lo) hi, is_searchable lt t (some lo') hi :=
+  ∀ {lo hi lo'} (hlt : lt lo' lo) (hs : is_searchable lt t (some lo) hi), is_searchable lt t (some lo') hi :=
   by 
     induction t <;>
       intros  <;>
@@ -98,7 +100,7 @@ theorem is_searchable_some_low_of_is_searchable_of_lt {t} [IsTrans α lt] :
       apply t_ih_lchild hlt hs_hs₁
 
 theorem is_searchable_none_low_of_is_searchable_some_low {t} :
-  ∀ {y hi} hlt : is_searchable lt t (some y) hi, is_searchable lt t none hi :=
+  ∀ {y hi} (hlt : is_searchable lt t (some y) hi), is_searchable lt t none hi :=
   by 
     induction t <;>
       intros  <;>
@@ -110,7 +112,7 @@ theorem is_searchable_none_low_of_is_searchable_some_low {t} :
       apply t_ih_lchild hlt_hs₁
 
 theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
-  ∀ {lo hi hi'} hlt : lt hi hi' hs : is_searchable lt t lo (some hi), is_searchable lt t lo (some hi') :=
+  ∀ {lo hi hi'} (hlt : lt hi hi') (hs : is_searchable lt t lo (some hi)), is_searchable lt t lo (some hi') :=
   by 
     induction t <;>
       intros  <;>
@@ -125,7 +127,7 @@ theorem is_searchable_some_high_of_is_searchable_of_lt {t} [IsTrans α lt] :
       apply t_ih_rchild hlt hs_hs₂
 
 theorem is_searchable_none_high_of_is_searchable_some_high {t} :
-  ∀ {lo y} hlt : is_searchable lt t lo (some y), is_searchable lt t lo none :=
+  ∀ {lo y} (hlt : is_searchable lt t lo (some y)), is_searchable lt t lo none :=
   by 
     induction t <;>
       intros  <;>

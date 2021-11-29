@@ -177,7 +177,7 @@ section Ennreal
 
 open_locale TopologicalSpace
 
--- error in MeasureTheory.Function.AeEqOfIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Function.AeEqOfIntegral: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem ae_le_of_forall_set_lintegral_le_of_sigma_finite
 [sigma_finite μ]
 {f g : α → «exprℝ≥0∞»()}
@@ -401,7 +401,7 @@ end Real
 
 theorem ae_eq_zero_restrict_of_forall_set_integral_eq_zero {f : α → E}
   (hf_int_finite : ∀ s, MeasurableSet s → μ s < ∞ → integrable_on f s μ)
-  (hf_zero : ∀ s : Set α, MeasurableSet s → μ s < ∞ → (∫x in s, f x ∂μ) = 0) {t : Set α} (ht : MeasurableSet t)
+  (hf_zero : ∀ (s : Set α), MeasurableSet s → μ s < ∞ → (∫x in s, f x ∂μ) = 0) {t : Set α} (ht : MeasurableSet t)
   (hμt : μ t ≠ ∞) : f =ᵐ[μ.restrict t] 0 :=
   by 
     refine' ae_eq_zero_of_forall_dual ℝ fun c => _ 
@@ -522,14 +522,14 @@ end
 
 theorem Lp.ae_eq_zero_of_forall_set_integral_eq_zero (f : Lp E p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
   (hf_int_finite : ∀ s, MeasurableSet s → μ s < ∞ → integrable_on f s μ)
-  (hf_zero : ∀ s : Set α, MeasurableSet s → μ s < ∞ → (∫x in s, f x ∂μ) = 0) : f =ᵐ[μ] 0 :=
+  (hf_zero : ∀ (s : Set α), MeasurableSet s → μ s < ∞ → (∫x in s, f x ∂μ) = 0) : f =ᵐ[μ] 0 :=
   ae_fin_strongly_measurable.ae_eq_zero_of_forall_set_integral_eq_zero hf_int_finite hf_zero
     (Lp.fin_strongly_measurable _ hp_ne_zero hp_ne_top).AeFinStronglyMeasurable
 
 theorem Lp.ae_eq_of_forall_set_integral_eq (f g : Lp E p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
   (hf_int_finite : ∀ s, MeasurableSet s → μ s < ∞ → integrable_on f s μ)
   (hg_int_finite : ∀ s, MeasurableSet s → μ s < ∞ → integrable_on g s μ)
-  (hfg : ∀ s : Set α, MeasurableSet s → μ s < ∞ → (∫x in s, f x ∂μ) = ∫x in s, g x ∂μ) : f =ᵐ[μ] g :=
+  (hfg : ∀ (s : Set α), MeasurableSet s → μ s < ∞ → (∫x in s, f x ∂μ) = ∫x in s, g x ∂μ) : f =ᵐ[μ] g :=
   ae_fin_strongly_measurable.ae_eq_of_forall_set_integral_eq hf_int_finite hg_int_finite hfg
     (Lp.fin_strongly_measurable _ hp_ne_zero hp_ne_top).AeFinStronglyMeasurable
     (Lp.fin_strongly_measurable _ hp_ne_zero hp_ne_top).AeFinStronglyMeasurable

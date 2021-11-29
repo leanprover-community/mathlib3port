@@ -86,7 +86,7 @@ unsafe def sf.flatten : sf → sf
 
 private unsafe def elim_part_apps : sf → Expr.Address → sf
 | sf.tag_expr ea e m, Acc =>
-  if ∀ c _ : c ∈ ea, c = Expr.Coord.app_fn then elim_part_apps m (Acc ++ ea) else
+  if ∀ c (_ : c ∈ ea), c = Expr.Coord.app_fn then elim_part_apps m (Acc ++ ea) else
     sf.tag_expr (Acc ++ ea) e (elim_part_apps m [])
 | sf.compose a b, Acc => (elim_part_apps a Acc).compose (elim_part_apps b Acc)
 | sf.of_string s, _ => sf.of_string s
@@ -220,35 +220,33 @@ unsafe def view {γ} (tooltip_component : Tc subexpr (action γ)) (click_address
     let inner ← view ca a 
     pure [h "span" attrs inner]
 
-/-- Make an interactive expression. -/
-unsafe def mk {γ} (tooltip : Tc subexpr γ) : Tc expr γ :=
-  let tooltip_comp :=
-    (component.with_should_update fun x y : tactic_state × expr × Expr.Address => x.2.2 ≠ y.2.2)$
-      component.map_action action.on_tooltip_action tooltip
-  (component.filter_map_action fun _ a : Sum γ widget.effect => Sum.casesOn a some fun _ => none)$
-    (component.with_effects
-        fun _ a : Sum γ widget.effect =>
-          match a with 
-          | Sum.inl g => []
-          | Sum.inr s => [s])$
-      tc.mk_simple (action γ) (Option subexpr × Option subexpr) (fun e => pure$ (none, none))
-        (fun e ⟨ca, sa⟩ act =>
-          pure$
-            match act with 
-            | action.on_mouse_enter ⟨e, ea⟩ => ((ca, some (e, ea)), none)
-            | action.on_mouse_leave_all => ((ca, none), none)
-            | action.on_click ⟨e, ea⟩ => if some (e, ea) = ca then ((none, sa), none) else ((some (e, ea), sa), none)
-            | action.on_tooltip_action g => ((none, sa), some$ Sum.inl g)
-            | action.on_close_tooltip => ((none, sa), none)
-            | action.effect e => ((ca, sa), some$ Sum.inr$ e))
-        fun e ⟨ca, sa⟩ =>
-          do 
-            let m ← sf.of_eformat <$> tactic.pp_tagged e 
-            let m := m.elim_part_apps 
-            let m := m.flatten 
-            let m := m.tag_expr [] e 
-            let v ← view tooltip_comp (Prod.snd <$> ca) (Prod.snd <$> sa) ⟨e, []⟩ m 
-            pure$ [h "span" [className "expr", key e.hash, on_mouse_leave fun _ => action.on_mouse_leave_all]$ v]
+-- error in Tactic.InteractiveExpr: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Make an interactive expression. -/ meta def mk {γ} (tooltip : tc subexpr γ) : tc expr γ :=
+let tooltip_comp := «expr $ »(component.with_should_update (λ
+      x
+      y : «expr × »(tactic_state, «expr × »(expr, expr.address)), «expr ≠ »(x.2.2, y.2.2)), component.map_action action.on_tooltip_action tooltip) in
+«expr $ »(component.filter_map_action (λ
+  (_)
+  (a : «expr ⊕ »(γ, widget.effect)), sum.cases_on a some (λ
+   _, none)), «expr $ »(component.with_effects (λ (_) (a : «expr ⊕ »(γ, widget.effect)), match a with
+   | sum.inl g := «expr[ , ]»([])
+   | sum.inr s := «expr[ , ]»([s])
+   end), tc.mk_simple (action γ) «expr × »(option subexpr, option subexpr) (λ
+   e, «expr $ »(pure, (none, none))) (λ (e) ⟨ca, sa⟩ (act), «expr $ »(pure, match act with
+    | action.on_mouse_enter ⟨e, ea⟩ := ((ca, some (e, ea)), none)
+    | action.on_mouse_leave_all := ((ca, none), none)
+    | action.on_click ⟨e, ea⟩ := if «expr = »(some (e, ea), ca) then ((none, sa), none) else ((some (e, ea), sa), none)
+    | action.on_tooltip_action g := ((none, sa), «expr $ »(some, sum.inl g))
+    | action.on_close_tooltip := ((none, sa), none)
+    | action.effect e := ((ca, sa), «expr $ »(some, «expr $ »(sum.inr, e)))
+    end)) (λ (e) ⟨ca, sa⟩, do {
+   m ← «expr <$> »(sf.of_eformat, tactic.pp_tagged e),
+     let m := m.elim_part_apps,
+     let m := m.flatten,
+     let m := m.tag_expr «expr[ , ]»([]) e,
+     v ← view tooltip_comp «expr <$> »(prod.snd, ca) «expr <$> »(prod.snd, sa) ⟨e, «expr[ , ]»([])⟩ m,
+     «expr $ »(pure, «expr[ , ]»([«expr $ »(h "span" «expr[ , ]»([className "expr", key e.hash, on_mouse_leave (λ
+            _, action.on_mouse_leave_all)]), v)])) })))
 
 /-- Render the implicit arguments for an expression in fancy, little pills. -/
 unsafe def implicit_arg_list (tooltip : Tc subexpr Empty) (e : expr) : tactic$ html Empty :=

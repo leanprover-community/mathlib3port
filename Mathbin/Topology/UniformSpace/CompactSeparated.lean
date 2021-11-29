@@ -88,7 +88,7 @@ begin
   rw ["[", expr compact_space_uniformity, ",", expr compact_space_uniformity, ",", expr h, ",", expr h', "]"] []
 end
 
--- error in Topology.UniformSpace.CompactSeparated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.UniformSpace.CompactSeparated: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The unique uniform structure inducing a given compact Hausdorff topological structure. -/
 def uniform_space_of_compact_t2 [topological_space γ] [compact_space γ] [t2_space γ] : uniform_space γ :=
 { uniformity := «expr⨆ , »((x), expr𝓝() (x, x)),

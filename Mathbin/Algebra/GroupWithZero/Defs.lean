@@ -24,8 +24,8 @@ section
 `0 * a = 0` and `a * 0 = 0` for all `a : M₀`. -/
 @[protectProj, ancestor Mul HasZero]
 class MulZeroClass(M₀ : Type _) extends Mul M₀, HasZero M₀ where 
-  zero_mul : ∀ a : M₀, (0*a) = 0
-  mul_zero : ∀ a : M₀, (a*0) = 0
+  zero_mul : ∀ (a : M₀), (0*a) = 0
+  mul_zero : ∀ (a : M₀), (a*0) = 0
 
 section MulZeroClass
 
@@ -110,7 +110,7 @@ Examples include division rings and the ordered monoids that are the
 target of valuations in general valuation theory.-/
 class GroupWithZeroₓ(G₀ : Type u) extends MonoidWithZeroₓ G₀, DivInvMonoidₓ G₀, Nontrivial G₀ where 
   inv_zero : (0 : G₀)⁻¹ = 0
-  mul_inv_cancel : ∀ a : G₀, a ≠ 0 → (a*a⁻¹) = 1
+  mul_inv_cancel : ∀ (a : G₀), a ≠ 0 → (a*a⁻¹) = 1
 
 section GroupWithZeroₓ
 

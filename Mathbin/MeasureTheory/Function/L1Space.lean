@@ -146,12 +146,14 @@ theorem has_finite_integral.congr {f g : α → β} (hf : has_finite_integral f 
 theorem has_finite_integral_congr {f g : α → β} (h : f =ᵐ[μ] g) : has_finite_integral f μ ↔ has_finite_integral g μ :=
   has_finite_integral_congr'$ h.fun_comp norm
 
-theorem has_finite_integral_const_iff {c : β} : has_finite_integral (fun x : α => c) μ ↔ c = 0 ∨ μ univ < ∞ :=
-  by 
-    simp [has_finite_integral, lintegral_const, lt_top_iff_ne_top, or_iff_not_imp_left]
+-- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_finite_integral_const_iff
+{c : β} : «expr ↔ »(has_finite_integral (λ x : α, c) μ, «expr ∨ »(«expr = »(c, 0), «expr < »(μ univ, «expr∞»()))) :=
+by simp [] [] [] ["[", expr has_finite_integral, ",", expr lintegral_const, ",", expr lt_top_iff_ne_top, ",", expr or_iff_not_imp_left, "]"] [] []
 
-theorem has_finite_integral_const [is_finite_measure μ] (c : β) : has_finite_integral (fun x : α => c) μ :=
-  has_finite_integral_const_iff.2 (Or.inr$ measure_lt_top _ _)
+-- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_finite_integral_const [is_finite_measure μ] (c : β) : has_finite_integral (λ x : α, c) μ :=
+has_finite_integral_const_iff.2 «expr $ »(or.inr, measure_lt_top _ _)
 
 theorem has_finite_integral_of_bounded [is_finite_measure μ] {f : α → β} {C : ℝ} (hC : ∀ᵐa ∂μ, ∥f a∥ ≤ C) :
   has_finite_integral f μ :=
@@ -193,10 +195,9 @@ theorem has_finite_integral_zero_measure {m : MeasurableSpace α} (f : α → β
 
 variable(α β μ)
 
-@[simp]
-theorem has_finite_integral_zero : has_finite_integral (fun a : α => (0 : β)) μ :=
-  by 
-    simp [has_finite_integral]
+-- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem has_finite_integral_zero : has_finite_integral (λ a : α, (0 : β)) μ :=
+by simp [] [] [] ["[", expr has_finite_integral, "]"] [] []
 
 variable{α β μ}
 
@@ -439,8 +440,9 @@ begin
   rw ["[", expr integrable, ",", expr and_iff_right this, ",", expr has_finite_integral_const_iff, "]"] []
 end
 
-theorem integrable_const [is_finite_measure μ] (c : β) : integrable (fun x : α => c) μ :=
-  integrable_const_iff.2$ Or.inr$ measure_lt_top _ _
+-- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem integrable_const [is_finite_measure μ] (c : β) : integrable (λ x : α, c) μ :=
+«expr $ »(integrable_const_iff.2, «expr $ »(or.inr, measure_lt_top _ _))
 
 theorem integrable.mono_measure {f : α → β} (h : integrable f ν) (hμ : μ ≤ ν) : integrable f μ :=
   ⟨h.ae_measurable.mono_measure hμ, h.has_finite_integral.mono_measure hμ⟩
@@ -519,15 +521,10 @@ theorem integrable.add [BorelSpace β] [second_countable_topology β] {f g : α 
   ⟨hf.ae_measurable.add hg.ae_measurable, hf.add' hg⟩
 
 theorem integrable_finset_sum {ι} [BorelSpace β] [second_countable_topology β] (s : Finset ι) {f : ι → α → β}
-  (hf : ∀ i, integrable (f i) μ) : integrable (fun a => ∑i in s, f i a) μ :=
+  (hf : ∀ i (_ : i ∈ s), integrable (f i) μ) : integrable (fun a => ∑i in s, f i a) μ :=
   by 
-    refine' Finset.induction_on s _ _
-    ·
-      simp only [Finset.sum_empty, integrable_zero]
-    ·
-      intro i s his ih 
-      simp only [his, Finset.sum_insert, not_false_iff]
-      exact (hf _).add ih
+    simp only [←Finset.sum_apply]
+    exact Finset.sum_induction f (fun g => integrable g μ) (fun _ _ => integrable.add) (integrable_zero _ _ _) hf
 
 theorem integrable.neg [BorelSpace β] {f : α → β} (hf : integrable f μ) : integrable (-f) μ :=
   ⟨hf.ae_measurable.neg, hf.has_finite_integral.neg⟩
@@ -719,20 +716,18 @@ end NormedSpaceOverCompleteField
 
 section IsROrC
 
-variable{𝕜 : Type _}[IsROrC 𝕜][MeasurableSpace 𝕜]{f : α → 𝕜}
+variable{𝕜 : Type _}[IsROrC 𝕜]{f : α → 𝕜}
 
-theorem integrable.of_real [BorelSpace 𝕜] {f : α → ℝ} (hf : integrable f μ) : integrable (fun x => (f x : 𝕜)) μ :=
+theorem integrable.of_real {f : α → ℝ} (hf : integrable f μ) : integrable (fun x => (f x : 𝕜)) μ :=
   by 
     rw [←mem_ℒp_one_iff_integrable] at hf⊢
     exact hf.of_real
 
-theorem integrable.re_im_iff [BorelSpace 𝕜] :
+theorem integrable.re_im_iff :
   integrable (fun x => IsROrC.re (f x)) μ ∧ integrable (fun x => IsROrC.im (f x)) μ ↔ integrable f μ :=
   by 
     simpRw [←mem_ℒp_one_iff_integrable]
     exact mem_ℒp_re_im_iff
-
-variable[OpensMeasurableSpace 𝕜]
 
 theorem integrable.re (hf : integrable f μ) : integrable (fun x => IsROrC.re (f x)) μ :=
   by 
@@ -751,8 +746,6 @@ section InnerProduct
 variable{𝕜 E :
     Type
       _}[IsROrC
-      𝕜][MeasurableSpace
-      𝕜][BorelSpace
       𝕜][InnerProductSpace 𝕜 E][MeasurableSpace E][OpensMeasurableSpace E][second_countable_topology E]{f : α → E}
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
@@ -805,9 +798,9 @@ theorem integrable_of_forall_fin_meas_le' {μ : Measureₓ α} (hm : m ≤ m0) [
   ⟨hf_meas, (lintegral_le_of_forall_fin_meas_le' hm C hf_meas.nnnorm.coe_nnreal_ennreal hf).trans_lt hC⟩
 
 theorem integrable_of_forall_fin_meas_le [sigma_finite μ] (C : ℝ≥0∞) (hC : C < ∞) {f : α → E}
-  (hf_meas : AeMeasurable f μ) (hf : ∀ s : Set α, MeasurableSet s → μ s ≠ ∞ → (∫⁻x in s, nnnorm (f x) ∂μ) ≤ C) :
+  (hf_meas : AeMeasurable f μ) (hf : ∀ (s : Set α), MeasurableSet s → μ s ≠ ∞ → (∫⁻x in s, nnnorm (f x) ∂μ) ≤ C) :
   integrable f μ :=
-  @integrable_of_forall_fin_meas_le' _ _ _ _ _ _ _ _ le_rfl
+  @integrable_of_forall_fin_meas_le' _ _ _ _ _ _ _ _ _
     (by 
       rwa [trim_eq_self])
     C hC _ hf_meas hf
@@ -1043,8 +1036,11 @@ theorem MeasureTheory.Integrable.apply_continuous_linear_map {φ : α → H →L
 
 variable[MeasurableSpace H][OpensMeasurableSpace H]
 
-theorem ContinuousLinearMap.integrable_comp {φ : α → H} (L : H →L[𝕜] E) (φ_int : integrable φ μ) :
-  integrable (fun a : α => L (φ a)) μ :=
-  ((integrable.norm φ_int).const_mul ∥L∥).mono' (L.measurable.comp_ae_measurable φ_int.ae_measurable)
-    (eventually_of_forall$ fun a => L.le_op_norm (φ a))
+-- error in MeasureTheory.Function.L1Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_linear_map.integrable_comp
+{φ : α → H}
+(L : «expr →L[ ] »(H, 𝕜, E))
+(φ_int : integrable φ μ) : integrable (λ a : α, L (φ a)) μ :=
+((integrable.norm φ_int).const_mul «expr∥ ∥»(L)).mono' (L.measurable.comp_ae_measurable φ_int.ae_measurable) «expr $ »(eventually_of_forall, λ
+ a, L.le_op_norm (φ a))
 

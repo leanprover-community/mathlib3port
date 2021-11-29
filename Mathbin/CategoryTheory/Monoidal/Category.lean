@@ -445,13 +445,18 @@ section
 
 variable(C : Type u)[category.{v} C][monoidal_category.{v} C]
 
-/-- The tensor product expressed as a functor. -/
-def tensor : C × C ⥤ C :=
-  { obj := fun X => X.1 ⊗ X.2, map := fun {X Y : C × C} f : X ⟶ Y => f.1 ⊗ f.2 }
+-- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The tensor product expressed as a functor. -/ def tensor : «expr ⥤ »(«expr × »(C, C), C) :=
+{ obj := λ X, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](X.1, X.2),
+  map := λ {X Y : «expr × »(C, C)} (f : «expr ⟶ »(X, Y)), [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](f.1, f.2) }
 
+-- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The left-associated triple tensor product as a functor. -/
-def left_assoc_tensor : C × C × C ⥤ C :=
-  { obj := fun X => (X.1 ⊗ X.2.1) ⊗ X.2.2, map := fun {X Y : C × C × C} f : X ⟶ Y => (f.1 ⊗ f.2.1) ⊗ f.2.2 }
+def left_assoc_tensor : «expr ⥤ »(«expr × »(C, «expr × »(C, C)), C) :=
+{ obj := λ X, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »]([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](X.1, X.2.1), X.2.2),
+  map := λ
+  {X Y : «expr × »(C, «expr × »(C, C))}
+  (f : «expr ⟶ »(X, Y)), [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »]([«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](f.1, f.2.1), f.2.2) }
 
 @[simp]
 theorem left_assoc_tensor_obj X : (left_assoc_tensor C).obj X = (X.1 ⊗ X.2.1) ⊗ X.2.2 :=
@@ -461,9 +466,13 @@ theorem left_assoc_tensor_obj X : (left_assoc_tensor C).obj X = (X.1 ⊗ X.2.1) 
 theorem left_assoc_tensor_map {X Y} (f : X ⟶ Y) : (left_assoc_tensor C).map f = (f.1 ⊗ f.2.1) ⊗ f.2.2 :=
   rfl
 
+-- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The right-associated triple tensor product as a functor. -/
-def right_assoc_tensor : C × C × C ⥤ C :=
-  { obj := fun X => X.1 ⊗ X.2.1 ⊗ X.2.2, map := fun {X Y : C × C × C} f : X ⟶ Y => f.1 ⊗ f.2.1 ⊗ f.2.2 }
+def right_assoc_tensor : «expr ⥤ »(«expr × »(C, «expr × »(C, C)), C) :=
+{ obj := λ X, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](X.1, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](X.2.1, X.2.2)),
+  map := λ
+  {X Y : «expr × »(C, «expr × »(C, C))}
+  (f : «expr ⟶ »(X, Y)), [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](f.1, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](f.2.1, f.2.2)) }
 
 @[simp]
 theorem right_assoc_tensor_obj X : (right_assoc_tensor C).obj X = X.1 ⊗ X.2.1 ⊗ X.2.2 :=
@@ -473,13 +482,15 @@ theorem right_assoc_tensor_obj X : (right_assoc_tensor C).obj X = X.1 ⊗ X.2.1 
 theorem right_assoc_tensor_map {X Y} (f : X ⟶ Y) : (right_assoc_tensor C).map f = f.1 ⊗ f.2.1 ⊗ f.2.2 :=
   rfl
 
-/-- The functor `λ X, 𝟙_ C ⊗ X`. -/
-def tensor_unit_left : C ⥤ C :=
-  { obj := fun X => 𝟙_ C ⊗ X, map := fun {X Y : C} f : X ⟶ Y => 𝟙 (𝟙_ C) ⊗ f }
+-- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The functor `λ X, 𝟙_ C ⊗ X`. -/ def tensor_unit_left : «expr ⥤ »(C, C) :=
+{ obj := λ X, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](«expr𝟙_»() C, X),
+  map := λ {X Y : C} (f : «expr ⟶ »(X, Y)), [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](«expr𝟙»() («expr𝟙_»() C), f) }
 
-/-- The functor `λ X, X ⊗ 𝟙_ C`. -/
-def tensor_unit_right : C ⥤ C :=
-  { obj := fun X => X ⊗ 𝟙_ C, map := fun {X Y : C} f : X ⟶ Y => f ⊗ 𝟙 (𝟙_ C) }
+-- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The functor `λ X, X ⊗ 𝟙_ C`. -/ def tensor_unit_right : «expr ⥤ »(C, C) :=
+{ obj := λ X, [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](X, «expr𝟙_»() C),
+  map := λ {X Y : C} (f : «expr ⟶ »(X, Y)), [«expr ⊗ »/«expr ⊗ »/«expr ⊗ »](f, «expr𝟙»() («expr𝟙_»() C)) }
 
 /-- The associator as a natural isomorphism. -/
 @[simps]

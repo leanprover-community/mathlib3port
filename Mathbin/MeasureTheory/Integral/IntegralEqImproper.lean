@@ -169,23 +169,29 @@ section AeCoverUnionInterEncodable
 
 variable{α ι : Type _}[Encodable ι][MeasurableSpace α]{μ : Measureₓ α}
 
-theorem ae_cover.bUnion_Iic_ae_cover [Preorderₓ ι] {φ : ι → Set α} (hφ : ae_cover μ at_top φ) :
-  ae_cover μ at_top fun n : ι => ⋃(k : _)(h : k ∈ Iic n), φ k :=
-  { ae_eventually_mem := hφ.ae_eventually_mem.mono fun x h => h.mono fun i hi => mem_bUnion right_mem_Iic hi,
-    Measurable := fun i => MeasurableSet.bUnion (countable_encodable _) fun n _ => hφ.measurable n }
+-- error in MeasureTheory.Integral.IntegralEqImproper: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ae_cover.bUnion_Iic_ae_cover
+[preorder ι]
+{φ : ι → set α}
+(hφ : ae_cover μ at_top φ) : ae_cover μ at_top (λ n : ι, «expr⋃ , »((k) (h : «expr ∈ »(k, Iic n)), φ k)) :=
+{ ae_eventually_mem := hφ.ae_eventually_mem.mono (λ x h, h.mono (λ i hi, mem_bUnion right_mem_Iic hi)),
+  measurable := λ i, measurable_set.bUnion (countable_encodable _) (λ n _, hφ.measurable n) }
 
-theorem ae_cover.bInter_Ici_ae_cover [SemilatticeSup ι] [Nonempty ι] {φ : ι → Set α} (hφ : ae_cover μ at_top φ) :
-  ae_cover μ at_top fun n : ι => ⋂(k : _)(h : k ∈ Ici n), φ k :=
-  { ae_eventually_mem :=
-      hφ.ae_eventually_mem.mono
-        (by 
-          intro x h 
-          rw [eventually_at_top] at *
-          rcases h with ⟨i, hi⟩
-          use i 
-          intro j hj 
-          exact mem_bInter fun k hk => hi k (le_transₓ hj hk)),
-    Measurable := fun i => MeasurableSet.bInter (countable_encodable _) fun n _ => hφ.measurable n }
+-- error in MeasureTheory.Integral.IntegralEqImproper: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ae_cover.bInter_Ici_ae_cover
+[semilattice_sup ι]
+[nonempty ι]
+{φ : ι → set α}
+(hφ : ae_cover μ at_top φ) : ae_cover μ at_top (λ n : ι, «expr⋂ , »((k) (h : «expr ∈ »(k, Ici n)), φ k)) :=
+{ ae_eventually_mem := hφ.ae_eventually_mem.mono (begin
+     intros [ident x, ident h],
+     rw [expr eventually_at_top] ["at", "*"],
+     rcases [expr h, "with", "⟨", ident i, ",", ident hi, "⟩"],
+     use [expr i],
+     intros [ident j, ident hj],
+     exact [expr mem_bInter (λ k hk, hi k (le_trans hj hk))]
+   end),
+  measurable := λ i, measurable_set.bInter (countable_encodable _) (λ n _, hφ.measurable n) }
 
 end AeCoverUnionInterEncodable
 

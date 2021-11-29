@@ -282,31 +282,27 @@ theorem mul_indicator_mul (s : Set α) (f g : α → M) :
       rfl 
     rw [mul_oneₓ]
 
-@[simp, toAdditive]
-theorem mul_indicator_compl_mul_self_apply (s : Set α) (f : α → M) (a : α) :
-  (mul_indicator («expr ᶜ» s) f a*mul_indicator s f a) = f a :=
-  Classical.by_cases
-    (fun ha : a ∈ s =>
-      by 
-        simp [ha])
-    fun ha =>
-      by 
-        simp [ha]
+-- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, to_additive #[]]
+theorem mul_indicator_compl_mul_self_apply
+(s : set α)
+(f : α → M)
+(a : α) : «expr = »(«expr * »(mul_indicator «expr ᶜ»(s) f a, mul_indicator s f a), f a) :=
+classical.by_cases (λ
+ ha : «expr ∈ »(a, s), by simp [] [] [] ["[", expr ha, "]"] [] []) (λ ha, by simp [] [] [] ["[", expr ha, "]"] [] [])
 
 @[simp, toAdditive]
 theorem mul_indicator_compl_mul_self (s : Set α) (f : α → M) : (mul_indicator («expr ᶜ» s) f*mul_indicator s f) = f :=
   funext$ mul_indicator_compl_mul_self_apply s f
 
-@[simp, toAdditive]
-theorem mul_indicator_self_mul_compl_apply (s : Set α) (f : α → M) (a : α) :
-  (mul_indicator s f a*mul_indicator («expr ᶜ» s) f a) = f a :=
-  Classical.by_cases
-    (fun ha : a ∈ s =>
-      by 
-        simp [ha])
-    fun ha =>
-      by 
-        simp [ha]
+-- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, to_additive #[]]
+theorem mul_indicator_self_mul_compl_apply
+(s : set α)
+(f : α → M)
+(a : α) : «expr = »(«expr * »(mul_indicator s f a, mul_indicator «expr ᶜ»(s) f a), f a) :=
+classical.by_cases (λ
+ ha : «expr ∈ »(a, s), by simp [] [] [] ["[", expr ha, "]"] [] []) (λ ha, by simp [] [] [] ["[", expr ha, "]"] [] [])
 
 @[simp, toAdditive]
 theorem mul_indicator_self_mul_compl (s : Set α) (f : α → M) : (mul_indicator s f*mul_indicator («expr ᶜ» s) f) = f :=
@@ -354,9 +350,12 @@ theorem indicator_smul_apply (s : Set α) (r : M) (f : α → A) (x : α) :
     splitIfs 
     exacts[rfl, (smul_zero r).symm]
 
-theorem indicator_smul (s : Set α) (r : M) (f : α → A) :
-  (indicator s fun x : α => r • f x) = fun x : α => r • indicator s f x :=
-  funext$ indicator_smul_apply s r f
+-- error in Algebra.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem indicator_smul
+(s : set α)
+(r : M)
+(f : α → A) : «expr = »(indicator s (λ x : α, «expr • »(r, f x)), λ x : α, «expr • »(r, indicator s f x)) :=
+«expr $ »(funext, indicator_smul_apply s r f)
 
 end DistribMulAction
 
@@ -459,7 +458,7 @@ theorem mul_indicator_finset_prod (I : Finset ι) (s : Set α) (f : ι → α �
 
 @[toAdditive]
 theorem mul_indicator_finset_bUnion {ι} (I : Finset ι) (s : ι → Set α) {f : α → M} :
-  (∀ i _ : i ∈ I j _ : j ∈ I, i ≠ j → Disjoint (s i) (s j)) →
+  (∀ i (_ : i ∈ I) j (_ : j ∈ I), i ≠ j → Disjoint (s i) (s j)) →
     mul_indicator (⋃(i : _)(_ : i ∈ I), s i) f = fun a => ∏i in I, mul_indicator (s i) f a :=
   by 
     refine' Finset.induction_on I _ _
@@ -543,7 +542,7 @@ theorem mul_indicator_apply_le' (hfg : a ∈ s → f a ≤ y) (hg : a ∉ s → 
       simpa [ha] using hg ha
 
 @[toAdditive]
-theorem mul_indicator_le' (hfg : ∀ a _ : a ∈ s, f a ≤ g a) (hg : ∀ a _ : a ∉ s, 1 ≤ g a) : mul_indicator s f ≤ g :=
+theorem mul_indicator_le' (hfg : ∀ a (_ : a ∈ s), f a ≤ g a) (hg : ∀ a (_ : a ∉ s), 1 ≤ g a) : mul_indicator s f ≤ g :=
   fun a => mul_indicator_apply_le' (hfg _) (hg _)
 
 @[toAdditive]
@@ -551,7 +550,7 @@ theorem le_mul_indicator_apply {y} (hfg : a ∈ s → y ≤ g a) (hf : a ∉ s �
   @mul_indicator_apply_le' α (OrderDual M) ‹_› _ _ _ _ _ hfg hf
 
 @[toAdditive]
-theorem le_mul_indicator (hfg : ∀ a _ : a ∈ s, f a ≤ g a) (hf : ∀ a _ : a ∉ s, f a ≤ 1) : f ≤ mul_indicator s g :=
+theorem le_mul_indicator (hfg : ∀ a (_ : a ∈ s), f a ≤ g a) (hf : ∀ a (_ : a ∉ s), f a ≤ 1) : f ≤ mul_indicator s g :=
   fun a => le_mul_indicator_apply (hfg _) (hf _)
 
 @[toAdditive indicator_apply_nonneg]
@@ -559,7 +558,7 @@ theorem one_le_mul_indicator_apply (h : a ∈ s → 1 ≤ f a) : 1 ≤ mul_indic
   le_mul_indicator_apply h fun _ => le_rfl
 
 @[toAdditive indicator_nonneg]
-theorem one_le_mul_indicator (h : ∀ a _ : a ∈ s, 1 ≤ f a) (a : α) : 1 ≤ mul_indicator s f a :=
+theorem one_le_mul_indicator (h : ∀ a (_ : a ∈ s), 1 ≤ f a) (a : α) : 1 ≤ mul_indicator s f a :=
   one_le_mul_indicator_apply (h a)
 
 @[toAdditive]
@@ -567,7 +566,7 @@ theorem mul_indicator_apply_le_one (h : a ∈ s → f a ≤ 1) : mul_indicator s
   mul_indicator_apply_le' h fun _ => le_rfl
 
 @[toAdditive]
-theorem mul_indicator_le_one (h : ∀ a _ : a ∈ s, f a ≤ 1) (a : α) : mul_indicator s f a ≤ 1 :=
+theorem mul_indicator_le_one (h : ∀ a (_ : a ∈ s), f a ≤ 1) (a : α) : mul_indicator s f a ≤ 1 :=
   mul_indicator_apply_le_one (h a)
 
 @[toAdditive]
@@ -583,7 +582,7 @@ theorem mul_indicator_le_mul_indicator_of_subset (h : s ⊆ t) (hf : ∀ a, 1 �
     fun ha => one_le_mul_indicator_apply fun _ => hf _
 
 @[toAdditive]
-theorem mul_indicator_le_self' (hf : ∀ x _ : x ∉ s, 1 ≤ f x) : mul_indicator s f ≤ f :=
+theorem mul_indicator_le_self' (hf : ∀ x (_ : x ∉ s), 1 ≤ f x) : mul_indicator s f ≤ f :=
   mul_indicator_le' (fun _ _ => le_reflₓ _) hf
 
 @[toAdditive]
@@ -618,7 +617,7 @@ theorem mul_indicator_apply_le {a : α} {s : Set α} {f g : α → M} (hfg : a �
   mul_indicator_apply_le' hfg$ fun _ => one_le _
 
 @[toAdditive]
-theorem mul_indicator_le {s : Set α} {f g : α → M} (hfg : ∀ a _ : a ∈ s, f a ≤ g a) : mul_indicator s f ≤ g :=
+theorem mul_indicator_le {s : Set α} {f g : α → M} (hfg : ∀ a (_ : a ∈ s), f a ≤ g a) : mul_indicator s f ≤ g :=
   mul_indicator_le' hfg$ fun _ _ => one_le _
 
 end CanonicallyOrderedMonoid

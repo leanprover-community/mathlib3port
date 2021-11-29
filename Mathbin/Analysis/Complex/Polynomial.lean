@@ -45,7 +45,7 @@ theorem exists_root {f : Polynomial ℂ} (hf : 0 < degree f) : ∃ z : ℂ, is_r
               (by 
                 normNum))
             (half_pos hfg0)
-        have hδ : ∀ z : ℂ, abs (z - z₀) = δ → abs (g.eval z - g.eval z₀) < (g.eval z₀).abs :=
+        have hδ : ∀ (z : ℂ), abs (z - z₀) = δ → abs (g.eval z - g.eval z₀) < (g.eval z₀).abs :=
           fun z hz =>
             hδ'₂ z
               (by 

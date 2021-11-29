@@ -21,7 +21,7 @@ boxes of `π` actually cover the whole `I`. We also define some operations on pr
 * `box_integral.partition.bUnion`: split each box of a partition into smaller boxes;
 * `box_integral.partition.restrict`: restrict a partition to a smaller box.
 
-We also define a `semilattice_inf_top` structure on `box_integral.partition I` for all
+We also define a `semilattice_inf` structure on `box_integral.partition I` for all
 `I : box_integral.box ι`.
 
 ## Tags
@@ -44,7 +44,7 @@ variable{ι : Type _}
 `I`. -/
 structure prepartition(I : box ι) where 
   boxes : Finset (box ι)
-  le_of_mem' : ∀ J _ : J ∈ boxes, J ≤ I 
+  le_of_mem' : ∀ J (_ : J ∈ boxes), J ≤ I 
   PairwiseDisjoint : Set.Pairwise («expr↑ » boxes) (Disjoint on (coeₓ : box ι → Set (ι → ℝ)))
 
 namespace Prepartition
@@ -144,7 +144,7 @@ instance  : OrderBot (prepartition I) :=
 instance  : Inhabited (prepartition I) :=
   ⟨⊤⟩
 
-theorem le_def : π₁ ≤ π₂ ↔ ∀ J _ : J ∈ π₁, ∃ (J' : _)(_ : J' ∈ π₂), J ≤ J' :=
+theorem le_def : π₁ ≤ π₂ ↔ ∀ J (_ : J ∈ π₁), ∃ (J' : _)(_ : J' ∈ π₂), J ≤ J' :=
   Iff.rfl
 
 @[simp]
@@ -190,14 +190,18 @@ begin
     exact [expr ⟨x i, ⟨hi₁, hx₁.2 i⟩, ⟨hi₂, hx₂.2 i⟩⟩] }
 end
 
+-- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The set of boxes of a prepartition that contain `x` in their closures has cardinality
 at most `2 ^ fintype.card ι`. -/
-theorem card_filter_mem_Icc_le [Fintype ι] (x : ι → ℝ) :
-  (π.boxes.filter fun J : box ι => x ∈ J.Icc).card ≤ 2 ^ Fintype.card ι :=
-  by 
-    rw [←Fintype.card_set]
-    refine' Finset.card_le_card_of_inj_on (fun J : box ι => { i | J.lower i = x i }) (fun _ _ => Finset.mem_univ _) _ 
-    simpa only [Finset.mem_filter] using π.inj_on_set_of_mem_Icc_set_of_lower_eq x
+theorem card_filter_mem_Icc_le
+[fintype ι]
+(x : ι → exprℝ()) : «expr ≤ »((π.boxes.filter (λ J : box ι, «expr ∈ »(x, J.Icc))).card, «expr ^ »(2, fintype.card ι)) :=
+begin
+  rw ["[", "<-", expr fintype.card_set, "]"] [],
+  refine [expr finset.card_le_card_of_inj_on (λ
+    J : box ι, {i | «expr = »(J.lower i, x i)}) (λ _ _, finset.mem_univ _) _],
+  simpa [] [] ["only"] ["[", expr finset.mem_filter, "]"] [] ["using", expr π.inj_on_set_of_mem_Icc_set_of_lower_eq x]
+end
 
 /-- Given a prepartition `π : box_integral.prepartition I`, `π.Union` is the part of `I` covered by
 the boxes of `π`. -/
@@ -250,7 +254,7 @@ theorem disjoint_boxes_of_disjoint_Union (h : Disjoint π₁.Union π₂.Union) 
   Finset.disjoint_left.2$ fun J h₁ h₂ => h.mono (π₁.subset_Union h₁) (π₂.subset_Union h₂) ⟨J.upper_mem, J.upper_mem⟩
 
 theorem le_iff_nonempty_imp_le_and_Union_subset :
-  π₁ ≤ π₂ ↔ (∀ J _ : J ∈ π₁ J' _ : J' ∈ π₂, (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J') ∧ π₁.Union ⊆ π₂.Union :=
+  π₁ ≤ π₂ ↔ (∀ J (_ : J ∈ π₁) J' (_ : J' ∈ π₂), (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J') ∧ π₁.Union ⊆ π₂.Union :=
   by 
     fsplit
     ·
@@ -275,7 +279,7 @@ theorem eq_of_boxes_subset_Union_superset (h₁ : π₁.boxes ⊆ π₂.boxes) (
 Though we only use the values of `πi` on the boxes of `π`, we require `πi` to be a globally defined
 function. -/
 @[simps]
-def bUnion (πi : ∀ J : box ι, prepartition J) : prepartition I :=
+def bUnion (πi : ∀ (J : box ι), prepartition J) : prepartition I :=
   { boxes := π.boxes.bUnion$ fun J => (πi J).boxes,
     le_of_mem' :=
       fun J hJ =>
@@ -292,7 +296,7 @@ def bUnion (πi : ∀ J : box ι, prepartition J) : prepartition I :=
         exact π.eq_of_mem_of_mem hJ₁ hJ₂ ((πi J₁).le_of_mem hJ₁' hx₁) ((πi J₂).le_of_mem hJ₂' hx₂)
         exact (πi J₁).eq_of_mem_of_mem hJ₁' hJ₂' hx₁ hx₂ }
 
-variable{πi πi₁ πi₂ : ∀ J : box ι, prepartition J}
+variable{πi πi₁ πi₂ : ∀ (J : box ι), prepartition J}
 
 @[simp]
 theorem mem_bUnion : J ∈ π.bUnion πi ↔ ∃ (J' : _)(_ : J' ∈ π), J ∈ πi J' :=
@@ -319,11 +323,11 @@ by { subst [expr π₂],
   ext [] [ident J] [],
   simp [] [] [] ["[", expr hi, "]"] [] [] { contextual := tt } }
 
-theorem bUnion_congr_of_le (h : π₁ = π₂) (hi : ∀ J _ : J ≤ I, πi₁ J = πi₂ J) : π₁.bUnion πi₁ = π₂.bUnion πi₂ :=
+theorem bUnion_congr_of_le (h : π₁ = π₂) (hi : ∀ J (_ : J ≤ I), πi₁ J = πi₂ J) : π₁.bUnion πi₁ = π₂.bUnion πi₂ :=
   bUnion_congr h$ fun J hJ => hi J (π₁.le_of_mem hJ)
 
 @[simp]
-theorem Union_bUnion (πi : ∀ J : box ι, prepartition J) : (π.bUnion πi).Union = ⋃(J : _)(_ : J ∈ π), (πi J).Union :=
+theorem Union_bUnion (πi : ∀ (J : box ι), prepartition J) : (π.bUnion πi).Union = ⋃(J : _)(_ : J ∈ π), (πi J).Union :=
   by 
     simp [prepartition.Union]
 
@@ -365,7 +369,7 @@ theorem bUnion_index_of_mem (hJ : J ∈ π) {J'} (hJ' : J' ∈ πi J) : π.bUnio
   have  : J' ∈ π.bUnion πi := π.mem_bUnion.2 ⟨J, hJ, hJ'⟩
   π.eq_of_le_of_le (π.bUnion_index_mem this) hJ (π.le_bUnion_index this) (le_of_mem _ hJ')
 
-theorem bUnion_assoc (πi : ∀ J, prepartition J) (πi' : box ι → ∀ J : box ι, prepartition J) :
+theorem bUnion_assoc (πi : ∀ J, prepartition J) (πi' : box ι → ∀ (J : box ι), prepartition J) :
   (π.bUnion fun J => (πi J).bUnion (πi' J)) = (π.bUnion πi).bUnion fun J => πi' (π.bUnion_index πi J) J :=
   by 
     ext J 
@@ -382,7 +386,7 @@ theorem bUnion_assoc (πi : ∀ J, prepartition J) (πi' : box ι → ∀ J : bo
 
 /-- Create a `box_integral.prepartition` from a collection of possibly empty boxes by filtering out
 the empty one if it exists. -/
-def of_with_bot (boxes : Finset (WithBot (box ι))) (le_of_mem : ∀ J _ : J ∈ boxes, (J : WithBot (box ι)) ≤ I)
+def of_with_bot (boxes : Finset (WithBot (box ι))) (le_of_mem : ∀ J (_ : J ∈ boxes), (J : WithBot (box ι)) ≤ I)
   (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (box ι))) Disjoint) : prepartition I :=
   { boxes := boxes.erase_none,
     le_of_mem' :=
@@ -402,7 +406,8 @@ theorem mem_of_with_bot {boxes : Finset (WithBot (box ι))} {h₁ h₂} :
   mem_erase_none
 
 @[simp]
-theorem Union_of_with_bot (boxes : Finset (WithBot (box ι))) (le_of_mem : ∀ J _ : J ∈ boxes, (J : WithBot (box ι)) ≤ I)
+theorem Union_of_with_bot (boxes : Finset (WithBot (box ι)))
+  (le_of_mem : ∀ J (_ : J ∈ boxes), (J : WithBot (box ι)) ≤ I)
   (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (box ι))) Disjoint) :
   (of_with_bot boxes le_of_mem pairwise_disjoint).Union = ⋃(J : _)(_ : J ∈ boxes), «expr↑ » J :=
   by 
@@ -411,20 +416,20 @@ theorem Union_of_with_bot (boxes : Finset (WithBot (box ι))) (le_of_mem : ∀ J
       simpa [of_with_bot, prepartition.Union]
     simp only [←box.bUnion_coe_eq_coe, @Union_comm _ _ (box ι), @Union_comm _ _ (@Eq _ _ _), Union_Union_eq_right]
 
-theorem of_with_bot_le {boxes : Finset (WithBot (box ι))} {le_of_mem : ∀ J _ : J ∈ boxes, (J : WithBot (box ι)) ≤ I}
+theorem of_with_bot_le {boxes : Finset (WithBot (box ι))} {le_of_mem : ∀ J (_ : J ∈ boxes), (J : WithBot (box ι)) ≤ I}
   {pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (box ι))) Disjoint}
-  (H : ∀ J _ : J ∈ boxes, J ≠ ⊥ → ∃ (J' : _)(_ : J' ∈ π), J ≤ «expr↑ » J') :
+  (H : ∀ J (_ : J ∈ boxes), J ≠ ⊥ → ∃ (J' : _)(_ : J' ∈ π), J ≤ «expr↑ » J') :
   of_with_bot boxes le_of_mem pairwise_disjoint ≤ π :=
-  have  : ∀ J : box ι, «expr↑ » J ∈ boxes → ∃ (J' : _)(_ : J' ∈ π), J ≤ J' :=
+  have  : ∀ (J : box ι), «expr↑ » J ∈ boxes → ∃ (J' : _)(_ : J' ∈ π), J ≤ J' :=
     fun J hJ =>
       by 
         simpa only [WithBot.coe_le_coe] using H J hJ (WithBot.coe_ne_bot J)
   by 
     simpa [of_with_bot, le_def]
 
-theorem le_of_with_bot {boxes : Finset (WithBot (box ι))} {le_of_mem : ∀ J _ : J ∈ boxes, (J : WithBot (box ι)) ≤ I}
+theorem le_of_with_bot {boxes : Finset (WithBot (box ι))} {le_of_mem : ∀ J (_ : J ∈ boxes), (J : WithBot (box ι)) ≤ I}
   {pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (box ι))) Disjoint}
-  (H : ∀ J _ : J ∈ π, ∃ (J' : _)(_ : J' ∈ boxes), «expr↑ » J ≤ J') :
+  (H : ∀ J (_ : J ∈ π), ∃ (J' : _)(_ : J' ∈ boxes), «expr↑ » J ≤ J') :
   π ≤ of_with_bot boxes le_of_mem pairwise_disjoint :=
   by 
     intro J hJ 
@@ -433,16 +438,16 @@ theorem le_of_with_bot {boxes : Finset (WithBot (box ι))} {le_of_mem : ∀ J _ 
     exact ⟨J', mem_of_with_bot.2 J'mem, WithBot.coe_le_coe.1 hle⟩
 
 theorem of_with_bot_mono {boxes₁ : Finset (WithBot (box ι))}
-  {le_of_mem₁ : ∀ J _ : J ∈ boxes₁, (J : WithBot (box ι)) ≤ I}
+  {le_of_mem₁ : ∀ J (_ : J ∈ boxes₁), (J : WithBot (box ι)) ≤ I}
   {pairwise_disjoint₁ : Set.Pairwise (boxes₁ : Set (WithBot (box ι))) Disjoint} {boxes₂ : Finset (WithBot (box ι))}
-  {le_of_mem₂ : ∀ J _ : J ∈ boxes₂, (J : WithBot (box ι)) ≤ I}
+  {le_of_mem₂ : ∀ J (_ : J ∈ boxes₂), (J : WithBot (box ι)) ≤ I}
   {pairwise_disjoint₂ : Set.Pairwise (boxes₂ : Set (WithBot (box ι))) Disjoint}
-  (H : ∀ J _ : J ∈ boxes₁, J ≠ ⊥ → ∃ (J' : _)(_ : J' ∈ boxes₂), J ≤ J') :
+  (H : ∀ J (_ : J ∈ boxes₁), J ≠ ⊥ → ∃ (J' : _)(_ : J' ∈ boxes₂), J ≤ J') :
   of_with_bot boxes₁ le_of_mem₁ pairwise_disjoint₁ ≤ of_with_bot boxes₂ le_of_mem₂ pairwise_disjoint₂ :=
   le_of_with_bot _$ fun J hJ => H J (mem_of_with_bot.1 hJ) (WithBot.coe_ne_bot _)
 
 theorem sum_of_with_bot {M : Type _} [AddCommMonoidₓ M] (boxes : Finset (WithBot (box ι)))
-  (le_of_mem : ∀ J _ : J ∈ boxes, (J : WithBot (box ι)) ≤ I)
+  (le_of_mem : ∀ J (_ : J ∈ boxes), (J : WithBot (box ι)) ≤ I)
   (pairwise_disjoint : Set.Pairwise (boxes : Set (WithBot (box ι))) Disjoint) (f : box ι → M) :
   (∑J in (of_with_bot boxes le_of_mem pairwise_disjoint).boxes, f J) = ∑J in boxes, Option.elim J 0 f :=
   Finset.sum_erase_none _ _
@@ -479,8 +484,8 @@ theorem restrict_mono {π₁ π₂ : prepartition I} (Hle : π₁ ≤ π₂) : �
     rcases Hle hJ₁ with ⟨J₂, hJ₂, hle⟩
     exact ⟨_, Finset.mem_image_of_mem _ hJ₂, inf_le_inf_left _$ WithBot.coe_le_coe.2 hle⟩
 
-theorem monotone_restrict : Monotone fun π : prepartition I => restrict π J :=
-  fun π₁ π₂ => restrict_mono
+-- error in Analysis.BoxIntegral.Partition.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem monotone_restrict : monotone (λ π : prepartition I, restrict π J) := λ π₁ π₂, restrict_mono
 
 /-- Restricting to a larger box does not change the set of boxes. We cannot claim equality
 of prepartitions because they have different types. -/
@@ -517,7 +522,7 @@ theorem restrict_bUnion (πi : ∀ J, prepartition J) (hJ : J ∈ π) : (π.bUni
       exact hx
 
 theorem bUnion_le_iff {πi : ∀ J, prepartition J} {π' : prepartition I} :
-  π.bUnion πi ≤ π' ↔ ∀ J _ : J ∈ π, πi J ≤ π'.restrict J :=
+  π.bUnion πi ≤ π' ↔ ∀ J (_ : J ∈ π), πi J ≤ π'.restrict J :=
   by 
     fsplit <;> intro H J hJ
     ·
@@ -564,13 +569,10 @@ theorem Union_inf (π₁ π₂ : prepartition I) : (π₁⊓π₂).Union = π₁
   by 
     simp only [inf_def, Union_bUnion, Union_restrict, ←Union_inter, ←Union_def]
 
-instance  : SemilatticeInfTop (prepartition I) :=
-  { prepartition.partial_order, prepartition.order_top, prepartition.has_inf with
-    inf_le_left := fun π₁ π₂ => π₁.bUnion_le _, inf_le_right := fun π₁ π₂ => (bUnion_le_iff _).2 fun J hJ => le_rfl,
+instance  : SemilatticeInf (prepartition I) :=
+  { prepartition.has_inf, prepartition.partial_order with inf_le_left := fun π₁ π₂ => π₁.bUnion_le _,
+    inf_le_right := fun π₁ π₂ => (bUnion_le_iff _).2 fun J hJ => le_rfl,
     le_inf := fun π π₁ π₂ h₁ h₂ => π₁.le_bUnion_iff.2 ⟨h₁, fun J hJ => restrict_mono h₂⟩ }
-
-instance  : SemilatticeInfBot (prepartition I) :=
-  { prepartition.order_bot, prepartition.semilattice_inf_top with  }
 
 /-- The prepartition with boxes `{J ∈ π | p J}`. -/
 @[simps]
@@ -587,7 +589,7 @@ theorem filter_le (π : prepartition I) (p : box ι → Prop) : π.filter p ≤ 
     let ⟨hπ, hp⟩ := π.mem_filter.1 hJ
     ⟨J, hπ, le_rfl⟩
 
-theorem filter_of_true {p : box ι → Prop} (hp : ∀ J _ : J ∈ π, p J) : π.filter p = π :=
+theorem filter_of_true {p : box ι → Prop} (hp : ∀ J (_ : J ∈ π), p J) : π.filter p = π :=
   by 
     ext J 
     simpa using hp J
@@ -620,7 +622,7 @@ theorem sum_fiberwise {α M} [AddCommMonoidₓ M] (π : prepartition I) (f : box
 def disj_union (π₁ π₂ : prepartition I) (h : Disjoint π₁.Union π₂.Union) : prepartition I :=
   { boxes := π₁.boxes ∪ π₂.boxes, le_of_mem' := fun J hJ => (Finset.mem_union.1 hJ).elim π₁.le_of_mem π₂.le_of_mem,
     PairwiseDisjoint :=
-      suffices ∀ J₁ _ : J₁ ∈ π₁ J₂ _ : J₂ ∈ π₂, J₁ ≠ J₂ → Disjoint (J₁ : Set (ι → ℝ)) J₂ by 
+      suffices ∀ J₁ (_ : J₁ ∈ π₁) J₂ (_ : J₂ ∈ π₂), J₁ ≠ J₂ → Disjoint (J₁ : Set (ι → ℝ)) J₂ by 
         simpa [pairwise_union_of_symmetric (symmetric_disjoint.comap _), pairwise_disjoint]
       fun J₁ h₁ J₂ h₂ _ => h.mono (π₁.subset_Union h₁) (π₂.subset_Union h₂) }
 
@@ -650,7 +652,7 @@ def distortion :  ℝ≥0  :=
 theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 
-theorem distortion_le_iff {c :  ℝ≥0 } : π.distortion ≤ c ↔ ∀ J _ : J ∈ π, box.distortion J ≤ c :=
+theorem distortion_le_iff {c :  ℝ≥0 } : π.distortion ≤ c ↔ ∀ J (_ : J ∈ π), box.distortion J ≤ c :=
   sup_le_iff
 
 theorem distortion_bUnion (π : prepartition I) (πi : ∀ J, prepartition J) :
@@ -662,7 +664,8 @@ theorem distortion_disj_union (h : Disjoint π₁.Union π₂.Union) :
   (π₁.disj_union π₂ h).distortion = max π₁.distortion π₂.distortion :=
   sup_union
 
-theorem distortion_of_const {c} (h₁ : π.boxes.nonempty) (h₂ : ∀ J _ : J ∈ π, box.distortion J = c) : π.distortion = c :=
+theorem distortion_of_const {c} (h₁ : π.boxes.nonempty) (h₂ : ∀ J (_ : J ∈ π), box.distortion J = c) :
+  π.distortion = c :=
   (sup_congr rfl h₂).trans (sup_const h₁ _)
 
 @[simp]
@@ -677,7 +680,7 @@ end Distortion
 
 /-- A prepartition `π` of `I` is a partition if the boxes of `π` cover the whole `I`. -/
 def is_partition (π : prepartition I) :=
-  ∀ x _ : x ∈ I, ∃ (J : _)(_ : J ∈ π), x ∈ J
+  ∀ x (_ : x ∈ I), ∃ (J : _)(_ : J ∈ π), x ∈ J
 
 theorem is_partition_iff_Union_eq {π : prepartition I} : π.is_partition ↔ π.Union = I :=
   by 
@@ -714,10 +717,11 @@ theorem eq_of_boxes_subset (h₁ : π₁.is_partition) (h₂ : π₁.boxes ⊆ �
   eq_of_boxes_subset_Union_superset h₂$ h₁.Union_subset _
 
 theorem le_iff (h : π₂.is_partition) :
-  π₁ ≤ π₂ ↔ ∀ J _ : J ∈ π₁ J' _ : J' ∈ π₂, (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J' :=
+  π₁ ≤ π₂ ↔ ∀ J (_ : J ∈ π₁) J' (_ : J' ∈ π₂), (J ∩ J' : Set (ι → ℝ)).Nonempty → J ≤ J' :=
   le_iff_nonempty_imp_le_and_Union_subset.trans$ and_iff_left$ h.Union_subset _
 
-protected theorem bUnion (h : is_partition π) (hi : ∀ J _ : J ∈ π, is_partition (πi J)) : is_partition (π.bUnion πi) :=
+protected theorem bUnion (h : is_partition π) (hi : ∀ J (_ : J ∈ π), is_partition (πi J)) :
+  is_partition (π.bUnion πi) :=
   fun x hx =>
     let ⟨J, hJ, hxi⟩ := h x hx 
     let ⟨Ji, hJi, hx⟩ := hi J hJ x hxi
@@ -735,7 +739,7 @@ protected theorem inf (h₁ : is_partition π₁) (h₂ : is_partition π₂) : 
 
 end IsPartition
 
-theorem Union_bUnion_partition (h : ∀ J _ : J ∈ π, (πi J).IsPartition) : (π.bUnion πi).Union = π.Union :=
+theorem Union_bUnion_partition (h : ∀ J (_ : J ∈ π), (πi J).IsPartition) : (π.bUnion πi).Union = π.Union :=
   (Union_bUnion _ _).trans$
     Union_congr id surjective_id$ fun J => Union_congr id surjective_id$ fun hJ => (h J hJ).Union_eq
 

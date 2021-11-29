@@ -101,7 +101,7 @@ You will rarely use this typeclass directly: it is implied by the combination
 By itself it's enough to set up the basic theory of derived functors.
 -/
 class has_projective_resolutions : Prop where 
-  out : ∀ Z : C, has_projective_resolution Z
+  out : ∀ (Z : C), has_projective_resolution Z
 
 attribute [instance] has_projective_resolutions.out
 

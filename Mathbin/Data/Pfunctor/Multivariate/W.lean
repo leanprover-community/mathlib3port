@@ -59,7 +59,7 @@ instance W_path.inhabited (x : P.last.W) {i} [I : Inhabited (P.drop.B x.head i)]
 
 /-- Specialized destructor on `W_path` -/
 def W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
-  (g : ∀ j : P.last.B a, P.W_path (f j) ⟹ α) : P.W_path ⟨a, f⟩ ⟹ α :=
+  (g : ∀ (j : P.last.B a), P.W_path (f j) ⟹ α) : P.W_path ⟨a, f⟩ ⟹ α :=
   by 
     intro i x 
     cases x 
@@ -74,15 +74,15 @@ def W_path_dest_left {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h
 
 /-- Specialized destructor on `W_path` -/
 def W_path_dest_right {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.W_path ⟨a, f⟩ ⟹ α) :
-  ∀ j : P.last.B a, P.W_path (f j) ⟹ α :=
+  ∀ (j : P.last.B a), P.W_path (f j) ⟹ α :=
   fun j i c => h i (W_path.child a f i j c)
 
 theorem W_path_dest_left_W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
-  (g : ∀ j : P.last.B a, P.W_path (f j) ⟹ α) : P.W_path_dest_left (P.W_path_cases_on g' g) = g' :=
+  (g : ∀ (j : P.last.B a), P.W_path (f j) ⟹ α) : P.W_path_dest_left (P.W_path_cases_on g' g) = g' :=
   rfl
 
 theorem W_path_dest_right_W_path_cases_on {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
-  (g : ∀ j : P.last.B a, P.W_path (f j) ⟹ α) : P.W_path_dest_right (P.W_path_cases_on g' g) = g :=
+  (g : ∀ (j : P.last.B a), P.W_path (f j) ⟹ α) : P.W_path_dest_right (P.W_path_cases_on g' g) = g :=
   rfl
 
 theorem W_path_cases_on_eta {α : Typevec n} {a : P.A} {f : P.last.B a → P.last.W} (h : P.W_path ⟨a, f⟩ ⟹ α) :
@@ -91,7 +91,7 @@ theorem W_path_cases_on_eta {α : Typevec n} {a : P.A} {f : P.last.B a → P.las
     ext i x <;> cases x <;> rfl
 
 theorem comp_W_path_cases_on {α β : Typevec n} (h : α ⟹ β) {a : P.A} {f : P.last.B a → P.last.W} (g' : P.drop.B a ⟹ α)
-  (g : ∀ j : P.last.B a, P.W_path (f j) ⟹ α) :
+  (g : ∀ (j : P.last.B a), P.W_path (f j) ⟹ α) :
   h ⊚ P.W_path_cases_on g' g = P.W_path_cases_on (h ⊚ g') fun i => h ⊚ g i :=
   by 
     ext i x <;> cases x <;> rfl
@@ -123,21 +123,21 @@ def Wp_mk {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (f' : P.W_pat
 
 /-- Recursor for `Wp` -/
 def Wp_rec {α : Typevec n} {C : Type _}
-  (g : ∀ a : P.A f : P.last.B a → P.last.W, P.W_path ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) :
-  ∀ x : P.last.W f' : P.W_path x ⟹ α, C
+  (g : ∀ (a : P.A) (f : P.last.B a → P.last.W), P.W_path ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) :
+  ∀ (x : P.last.W) (f' : P.W_path x ⟹ α), C
 | ⟨a, f⟩, f' => g a f f' fun i => Wp_rec (f i) (P.W_path_dest_right f' i)
 
 theorem Wp_rec_eq {α : Typevec n} {C : Type _}
-  (g : ∀ a : P.A f : P.last.B a → P.last.W, P.W_path ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) (a : P.A)
+  (g : ∀ (a : P.A) (f : P.last.B a → P.last.W), P.W_path ⟨a, f⟩ ⟹ α → (P.last.B a → C) → C) (a : P.A)
   (f : P.last.B a → P.last.W) (f' : P.W_path ⟨a, f⟩ ⟹ α) :
   P.Wp_rec g ⟨a, f⟩ f' = g a f f' fun i => P.Wp_rec g (f i) (P.W_path_dest_right f' i) :=
   rfl
 
-theorem Wp_ind {α : Typevec n} {C : ∀ x : P.last.W, P.W_path x ⟹ α → Prop}
+theorem Wp_ind {α : Typevec n} {C : ∀ (x : P.last.W), P.W_path x ⟹ α → Prop}
   (ih :
-    ∀ a : P.A f : P.last.B a → P.last.W f' : P.W_path ⟨a, f⟩ ⟹ α,
-      (∀ i : P.last.B a, C (f i) (P.W_path_dest_right f' i)) → C ⟨a, f⟩ f') :
-  ∀ x : P.last.W f' : P.W_path x ⟹ α, C x f'
+    ∀ (a : P.A) (f : P.last.B a → P.last.W) (f' : P.W_path ⟨a, f⟩ ⟹ α),
+      (∀ (i : P.last.B a), C (f i) (P.W_path_dest_right f' i)) → C ⟨a, f⟩ f') :
+  ∀ (x : P.last.W) (f' : P.W_path x ⟹ α), C x f'
 | ⟨a, f⟩, f' => ih a f f' fun i => Wp_ind _ _
 
 /-!
@@ -155,7 +155,7 @@ def W_mk {α : Typevec n} (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a →
   ⟨⟨a, g⟩, g'⟩
 
 /-- Recursor for `W` -/
-def W_rec {α : Typevec n} {C : Type _} (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) :
+def W_rec {α : Typevec n} {C : Type _} (g : ∀ (a : P.A), P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) :
   P.W α → C
 | ⟨a, f'⟩ =>
   let g' (a : P.A) (f : P.last.B a → P.last.W) (h : P.W_path ⟨a, f⟩ ⟹ α) (h' : P.last.B a → C) : C :=
@@ -164,7 +164,7 @@ def W_rec {α : Typevec n} {C : Type _} (g : ∀ a : P.A, P.drop.B a ⟹ α → 
 
 /-- Defining equation for the recursor of `W` -/
 theorem W_rec_eq {α : Typevec n} {C : Type _}
-  (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) (a : P.A) (f' : P.drop.B a ⟹ α)
+  (g : ∀ (a : P.A), P.drop.B a ⟹ α → (P.last.B a → P.W α) → (P.last.B a → C) → C) (a : P.A) (f' : P.drop.B a ⟹ α)
   (f : P.last.B a → P.W α) : P.W_rec g (P.W_mk a f' f) = g a f' f fun i => P.W_rec g (f i) :=
   by 
     rw [W_mk, W_rec]
@@ -175,7 +175,7 @@ theorem W_rec_eq {α : Typevec n} {C : Type _}
 
 /-- Induction principle for `W` -/
 theorem W_ind {α : Typevec n} {C : P.W α → Prop}
-  (ih : ∀ a : P.A f' : P.drop.B a ⟹ α f : P.last.B a → P.W α, (∀ i, C (f i)) → C (P.W_mk a f' f)) : ∀ x, C x :=
+  (ih : ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α), (∀ i, C (f i)) → C (P.W_mk a f' f)) : ∀ x, C x :=
   by 
     intro x 
     cases' x with a f 
@@ -190,7 +190,7 @@ theorem W_ind {α : Typevec n} {C : P.W α → Prop}
     apply ih'
 
 theorem W_cases {α : Typevec n} {C : P.W α → Prop}
-  (ih : ∀ a : P.A f' : P.drop.B a ⟹ α f : P.last.B a → P.W α, C (P.W_mk a f' f)) : ∀ x, C x :=
+  (ih : ∀ (a : P.A) (f' : P.drop.B a ⟹ α) (f : P.last.B a → P.W α), C (P.W_mk a f' f)) : ∀ x, C x :=
   P.W_ind fun a f' f ih' => ih a f' f
 
 /-- W-types are functorial -/
@@ -198,7 +198,7 @@ def W_map {α β : Typevec n} (g : α ⟹ β) : P.W α → P.W β :=
   fun x => g <$$> x
 
 theorem W_mk_eq {α : Typevec n} (a : P.A) (f : P.last.B a → P.last.W) (g' : P.drop.B a ⟹ α)
-  (g : ∀ j : P.last.B a, P.W_path (f j) ⟹ α) : (P.W_mk a g' fun i => ⟨f i, g i⟩) = ⟨⟨a, f⟩, P.W_path_cases_on g' g⟩ :=
+  (g : ∀ (j : P.last.B a), P.W_path (f j) ⟹ α) : (P.W_mk a g' fun i => ⟨f i, g i⟩) = ⟨⟨a, f⟩, P.W_path_cases_on g' g⟩ :=
   rfl
 
 -- error in Data.Pfunctor.Multivariate.W: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

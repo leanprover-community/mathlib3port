@@ -113,10 +113,10 @@ variable{f s a l}{t : Set α}{l' : Filter α}
 theorem IsExtrOn.elim {p : Prop} : IsExtrOn f s a → (IsMinOn f s a → p) → (IsMaxOn f s a → p) → p :=
   Or.elim
 
-theorem is_min_on_iff : IsMinOn f s a ↔ ∀ x _ : x ∈ s, f a ≤ f x :=
+theorem is_min_on_iff : IsMinOn f s a ↔ ∀ x (_ : x ∈ s), f a ≤ f x :=
   Iff.rfl
 
-theorem is_max_on_iff : IsMaxOn f s a ↔ ∀ x _ : x ∈ s, f x ≤ f a :=
+theorem is_max_on_iff : IsMaxOn f s a ↔ ∀ x (_ : x ∈ s), f x ≤ f a :=
   Iff.rfl
 
 theorem is_min_on_univ_iff : IsMinOn f univ a ↔ ∀ x, f a ≤ f x :=

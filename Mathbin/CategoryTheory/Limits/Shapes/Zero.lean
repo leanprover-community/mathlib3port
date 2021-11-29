@@ -34,11 +34,11 @@ variable(C : Type u)[category.{v} C]
 /-- A category "has zero morphisms" if there is a designated "zero morphism" in each morphism space,
 and compositions of zero morphisms with anything give the zero morphism. -/
 class has_zero_morphisms where 
-  [HasZero : ∀ X Y : C, HasZero (X ⟶ Y)]
-  comp_zero' : ∀ {X Y : C} f : X ⟶ Y Z : C, f ≫ (0 : Y ⟶ Z) = (0 : X ⟶ Z) :=  by 
+  [HasZero : ∀ (X Y : C), HasZero (X ⟶ Y)]
+  comp_zero' : ∀ {X Y : C} (f : X ⟶ Y) (Z : C), f ≫ (0 : Y ⟶ Z) = (0 : X ⟶ Z) :=  by 
   runTac 
     obviously 
-  zero_comp' : ∀ X : C {Y Z : C} f : Y ⟶ Z, (0 : X ⟶ Y) ≫ f = (0 : X ⟶ Z) :=  by 
+  zero_comp' : ∀ (X : C) {Y Z : C} (f : Y ⟶ Z), (0 : X ⟶ Y) ≫ f = (0 : X ⟶ Z) :=  by 
   runTac 
     obviously
 
@@ -74,7 +74,7 @@ variable{C}
 
 /-- This lemma will be immediately superseded by `ext`, below. -/
 private theorem ext_aux (I J : has_zero_morphisms C)
-  (w : ∀ X Y : C, (@has_zero_morphisms.has_zero _ _ I X Y).zero = (@has_zero_morphisms.has_zero _ _ J X Y).zero) :
+  (w : ∀ (X Y : C), (@has_zero_morphisms.has_zero _ _ I X Y).zero = (@has_zero_morphisms.has_zero _ _ J X Y).zero) :
   I = J :=
   by 
     cases' I 
@@ -179,8 +179,8 @@ variable(C)
 /-- A category "has a zero object" if it has an object which is both initial and terminal. -/
 class has_zero_object where 
   zero : C 
-  uniqueTo : ∀ X : C, Unique (zero ⟶ X)
-  uniqueFrom : ∀ X : C, Unique (X ⟶ zero)
+  uniqueTo : ∀ (X : C), Unique (zero ⟶ X)
+  uniqueFrom : ∀ (X : C), Unique (X ⟶ zero)
 
 instance has_zero_object_punit : has_zero_object (discrete PUnit) :=
   { zero := PUnit.unit,

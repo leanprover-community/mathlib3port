@@ -93,7 +93,7 @@ such that `F.map f (u j) = u j` for every morphism `f : j ⟶ j'`.
 We later use these to define limits in `Type` and in many concrete categories.
 -/
 def sections (F : J ⥤ Type w) : Set (∀ j, F.obj j) :=
-  { u | ∀ {j j'} f : j ⟶ j', F.map f (u j) = u j' }
+  { u | ∀ {j j'} (f : j ⟶ j'), F.map f (u j) = u j' }
 
 end Functor
 
@@ -152,12 +152,12 @@ def ulift_trivial (V : Type u) : Ulift.{u} V ≅ V :=
   by 
     tidy
 
+-- error in CategoryTheory.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The functor embedding `Type u` into `Type (max u v)`.
 Write this as `ulift_functor.{5 2}` to get `Type 2 ⥤ Type 5`.
--/
-def ulift_functor : Type u ⥤ Type max u v :=
-  { obj := fun X => Ulift.{v} X, map := fun X Y f => fun x : Ulift.{v} X => Ulift.up (f x.down) }
+-/ def ulift_functor : «expr ⥤ »(Type u, Type max u v) :=
+{ obj := λ X, ulift.{v} X, map := λ X Y f, λ x : ulift.{v} X, ulift.up (f x.down) }
 
 @[simp]
 theorem ulift_functor_map {X Y : Type u} (f : X ⟶ Y) (x : Ulift.{v} X) : ulift_functor.map f x = Ulift.up (f x.down) :=

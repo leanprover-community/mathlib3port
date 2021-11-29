@@ -82,19 +82,22 @@ theorem integral_sum_bUnion_tagged (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L
     refine' (π.sum_bUnion_boxes _ _).trans (sum_congr rfl$ fun J hJ => sum_congr rfl$ fun J' hJ' => _)
     rw [π.tag_bUnion_tagged hJ hJ']
 
-theorem integral_sum_bUnion_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : tagged_prepartition I)
-  (πi : ∀ J, prepartition J) (hπi : ∀ J _ : J ∈ π, (πi J).IsPartition) :
-  integral_sum f vol (π.bUnion_prepartition πi) = integral_sum f vol π :=
-  by 
-    refine' (π.to_prepartition.sum_bUnion_boxes _ _).trans (sum_congr rfl$ fun J hJ => _)
-    calc
-      (∑J' in (πi J).boxes, vol J' (f (π.tag$ π.to_prepartition.bUnion_index πi J'))) =
-        ∑J' in (πi J).boxes, vol J' (f (π.tag J)) :=
-      sum_congr rfl
-        fun J' hJ' =>
-          by 
-            rw [prepartition.bUnion_index_of_mem _ hJ hJ']_ = vol J (f (π.tag J)) :=
-      (vol.map ⟨fun g : E →L[ℝ] F => g (f (π.tag J)), rfl, fun _ _ => rfl⟩).sum_partition_boxes le_top (hπi J hJ)
+-- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem integral_sum_bUnion_partition
+(f : «exprℝⁿ»() → E)
+(vol : «expr →ᵇᵃ »(ι, «expr →L[ ] »(E, exprℝ(), F)))
+(π : tagged_prepartition I)
+(πi : ∀ J, prepartition J)
+(hπi : ∀
+ J «expr ∈ » π, (πi J).is_partition) : «expr = »(integral_sum f vol (π.bUnion_prepartition πi), integral_sum f vol π) :=
+begin
+  refine [expr (π.to_prepartition.sum_bUnion_boxes _ _).trans «expr $ »(sum_congr rfl, λ J hJ, _)],
+  calc
+    «expr = »(«expr∑ in , »((J'), (πi J).boxes, vol J' (f «expr $ »(π.tag, π.to_prepartition.bUnion_index πi J'))), «expr∑ in , »((J'), (πi J).boxes, vol J' (f (π.tag J)))) : sum_congr rfl (λ
+     J' hJ', by rw ["[", expr prepartition.bUnion_index_of_mem _ hJ hJ', "]"] [])
+    «expr = »(..., vol J (f (π.tag J))) : (vol.map ⟨λ
+      g : «expr →L[ ] »(E, exprℝ(), F), g (f (π.tag J)), rfl, λ _ _, rfl⟩).sum_partition_boxes le_top (hπi J hJ)
+end
 
 theorem integral_sum_inf_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F) (π : tagged_prepartition I)
   {π' : prepartition I} (h : π'.is_partition) : integral_sum f vol (π.inf_prepartition π') = integral_sum f vol π :=
@@ -180,7 +183,7 @@ theorem has_integral.tendsto (h : has_integral I l f vol y) :
 /-- The `ε`-`δ` definition of `box_integral.has_integral`. -/
 theorem has_integral_iff :
   has_integral I l f vol y ↔
-    ∀ ε _ : ε > (0 : ℝ),
+    ∀ ε (_ : ε > (0 : ℝ)),
       ∃ r :  ℝ≥0  → ℝⁿ → Ioi (0 : ℝ),
         (∀ c, l.r_cond (r c)) ∧
           ∀ c π, l.mem_base_set I c (r c) π → is_partition π → dist (integral_sum f vol π) y ≤ ε :=
@@ -192,7 +195,7 @@ theorem has_integral_iff :
 `box_integral.has_integral_iff`, so we provide this auxiliary lemma.  -/
 theorem has_integral_of_mul (a : ℝ)
   (h :
-    ∀ ε : ℝ,
+    ∀ (ε : ℝ),
       0 < ε →
         ∃ r :  ℝ≥0  → ℝⁿ → Ioi (0 : ℝ),
           (∀ c, l.r_cond (r c)) ∧
@@ -212,7 +215,7 @@ theorem integrable_iff_cauchy [CompleteSpace F] :
 net. Here we restate this fact in terms of `∀ ε > 0, ∃ r, ...`. -/
 theorem integrable_iff_cauchy_basis [CompleteSpace F] :
   integrable I l f vol ↔
-    ∀ ε _ : ε > (0 : ℝ),
+    ∀ ε (_ : ε > (0 : ℝ)),
       ∃ r :  ℝ≥0  → ℝⁿ → Ioi (0 : ℝ),
         (∀ c, l.r_cond (r c)) ∧
           ∀ c₁ c₂ π₁ π₂,
@@ -296,10 +299,10 @@ theorem integral_sub (hf : integrable I l f vol) (hg : integrable I l g vol) :
   integral I l (f - g) vol = integral I l f vol - integral I l g vol :=
   (hf.has_integral.sub hg.has_integral).integral_eq
 
-theorem has_integral_const (c : E) : has_integral I l (fun _ => c) vol (vol I c) :=
-  tendsto_const_nhds.congr'$
-    (l.eventually_is_partition I).mono$
-      fun π hπ => ((vol.map ⟨fun g : E →L[ℝ] F => g c, rfl, fun _ _ => rfl⟩).sum_partition_boxes le_top hπ).symm
+-- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_integral_const (c : E) : has_integral I l (λ _, c) vol (vol I c) :=
+«expr $ »(tendsto_const_nhds.congr', «expr $ »((l.eventually_is_partition I).mono, λ
+  π hπ, ((vol.map ⟨λ g : «expr →L[ ] »(E, exprℝ(), F), g c, rfl, λ _ _, rfl⟩).sum_partition_boxes le_top hπ).symm))
 
 @[simp]
 theorem integral_const (c : E) : integral I l (fun _ => c) vol = vol I c :=
@@ -319,7 +322,7 @@ theorem integral_zero : integral I l (fun _ => (0 : E)) vol = 0 :=
   has_integral_zero.integral_eq
 
 theorem has_integral_sum {α : Type _} {s : Finset α} {f : α → ℝⁿ → E} {g : α → F}
-  (h : ∀ i _ : i ∈ s, has_integral I l (f i) vol (g i)) :
+  (h : ∀ i (_ : i ∈ s), has_integral I l (f i) vol (g i)) :
   has_integral I l (fun x => ∑i in s, f i x) vol (∑i in s, g i) :=
   by 
     induction' s using Finset.induction_on with a s ha ihs
@@ -360,8 +363,8 @@ open MeasureTheory
 
 /-- The integral of a nonnegative function w.r.t. a volume generated by a locally-finite measure is
 nonnegative. -/
-theorem integral_nonneg {g : ℝⁿ → ℝ} (hg : ∀ x _ : x ∈ I.Icc, 0 ≤ g x) (μ : Measureₓ ℝⁿ) [is_locally_finite_measure μ] :
-  0 ≤ integral I l g μ.to_box_additive.to_smul :=
+theorem integral_nonneg {g : ℝⁿ → ℝ} (hg : ∀ x (_ : x ∈ I.Icc), 0 ≤ g x) (μ : Measureₓ ℝⁿ)
+  [is_locally_finite_measure μ] : 0 ≤ integral I l g μ.to_box_additive.to_smul :=
   by 
     byCases' hgi : integrable I l g μ.to_box_additive.to_smul
     ·
@@ -372,7 +375,7 @@ theorem integral_nonneg {g : ℝⁿ → ℝ} (hg : ∀ x _ : x ∈ I.Icc, 0 ≤ 
 
 /-- If `∥f x∥ ≤ g x` on `[l, u]` and `g` is integrable, then the norm of the integral of `f` is less
 than or equal to the integral of `g`. -/
-theorem norm_integral_le_of_norm_le {g : ℝⁿ → ℝ} (hle : ∀ x _ : x ∈ I.Icc, ∥f x∥ ≤ g x) (μ : Measureₓ ℝⁿ)
+theorem norm_integral_le_of_norm_le {g : ℝⁿ → ℝ} (hle : ∀ x (_ : x ∈ I.Icc), ∥f x∥ ≤ g x) (μ : Measureₓ ℝⁿ)
   [is_locally_finite_measure μ] (hg : integrable I l g μ.to_box_additive.to_smul) :
   ∥(integral I l f μ.to_box_additive.to_smul : E)∥ ≤ integral I l g μ.to_box_additive.to_smul :=
   by 
@@ -387,7 +390,7 @@ theorem norm_integral_le_of_norm_le {g : ℝⁿ → ℝ} (hle : ∀ x _ : x ∈ 
       rw [integral, dif_neg hfi, norm_zero]
       exact integral_nonneg (fun x hx => (norm_nonneg _).trans (hle x hx)) μ
 
-theorem norm_integral_le_of_le_const {c : ℝ} (hc : ∀ x _ : x ∈ I.Icc, ∥f x∥ ≤ c) (μ : Measureₓ ℝⁿ)
+theorem norm_integral_le_of_le_const {c : ℝ} (hc : ∀ x (_ : x ∈ I.Icc), ∥f x∥ ≤ c) (μ : Measureₓ ℝⁿ)
   [is_locally_finite_measure μ] : ∥(integral I l f μ.to_box_additive.to_smul : E)∥ ≤ (μ I).toReal*c :=
   by 
     simpa only [integral_const] using norm_integral_le_of_norm_le hc μ (integrable_const c)
@@ -488,20 +491,22 @@ begin
   simpa [] [] [] ["[", expr union_compl_to_subordinate, "]"] [] ["using", expr (dist_triangle_right _ _ _).trans (add_le_add H₁ H₂)]
 end
 
+-- error in Analysis.BoxIntegral.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `f` is integrable on `I` along `l`, then for two sufficiently fine tagged prepartitions
 (in the sense of the filter `box_integral.integration_params.to_filter l I`) such that they cover
 the same part of `I`, the integral sums of `f` over `π₁` and `π₂` are very close to each other.  -/
-theorem tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity (h : integrable I l f vol) :
-  tendsto (fun π : tagged_prepartition I × tagged_prepartition I => (integral_sum f vol π.1, integral_sum f vol π.2))
-    ((l.to_filter I ×ᶠ l.to_filter I)⊓𝓟 { π | π.1.Union = π.2.Union }) (𝓤 F) :=
-  by 
-    refine'
-      (((l.has_basis_to_filter I).prod_self.inf_principal _).tendsto_iff uniformity_basis_dist_le).2 fun ε ε0 => _ 
-    replace ε0 := half_pos ε0 
-    use h.convergence_r (ε / 2), h.convergence_r_cond (ε / 2)
-    rintro ⟨π₁, π₂⟩ ⟨⟨h₁, h₂⟩, hU⟩
-    rw [←add_halves ε]
-    exact h.dist_integral_sum_le_of_mem_base_set ε0 ε0 h₁.some_spec h₂.some_spec hU
+theorem tendsto_integral_sum_to_filter_prod_self_inf_Union_eq_uniformity
+(h : integrable I l f vol) : tendsto (λ
+ π : «expr × »(tagged_prepartition I, tagged_prepartition I), (integral_sum f vol π.1, integral_sum f vol π.2)) «expr ⊓ »(«expr ×ᶠ »(l.to_filter I, l.to_filter I), expr𝓟() {π | «expr = »(π.1.Union, π.2.Union)}) (expr𝓤() F) :=
+begin
+  refine [expr (((l.has_basis_to_filter I).prod_self.inf_principal _).tendsto_iff uniformity_basis_dist_le).2 (λ
+    ε ε0, _)],
+  replace [ident ε0] [] [":=", expr half_pos ε0],
+  use ["[", expr h.convergence_r «expr / »(ε, 2), ",", expr h.convergence_r_cond «expr / »(ε, 2), "]"],
+  rintro ["⟨", ident π₁, ",", ident π₂, "⟩", "⟨", "⟨", ident h₁, ",", ident h₂, "⟩", ",", ident hU, "⟩"],
+  rw ["<-", expr add_halves ε] [],
+  exact [expr h.dist_integral_sum_le_of_mem_base_set ε0 ε0 h₁.some_spec h₂.some_spec hU]
+end
 
 /-- If `f` is integrable on a box `I` along `l`, then for any fixed subset `s` of `I` that can be
 represented as a finite union of boxes, the integral sums of `f` over tagged prepartitions that
@@ -809,14 +814,14 @@ Then `f` is integrable on `I along `l` with integral `g I`. -/
 theorem has_integral_of_le_Henstock_of_forall_is_o (hl : l ≤ Henstock) (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J)
   (g : ι →ᵇᵃ[I] F) (s : Set ℝⁿ) (hs : s.countable)
   (H₁ :
-    ∀ c :  ℝ≥0  x _ : x ∈ I.Icc ∩ s ε _ : ε > (0 : ℝ),
+    ∀ (c :  ℝ≥0 ) x (_ : x ∈ I.Icc ∩ s) ε (_ : ε > (0 : ℝ)),
       ∃ (δ : _)(_ : δ > 0),
-        ∀ J _ : J ≤ I,
+        ∀ J (_ : J ≤ I),
           J.Icc ⊆ Metric.ClosedBall x δ → x ∈ J.Icc → (l.bDistortion → J.distortion ≤ c) → dist (vol J (f x)) (g J) ≤ ε)
   (H₂ :
-    ∀ c :  ℝ≥0  x _ : x ∈ I.Icc \ s ε _ : ε > (0 : ℝ),
+    ∀ (c :  ℝ≥0 ) x (_ : x ∈ I.Icc \ s) ε (_ : ε > (0 : ℝ)),
       ∃ (δ : _)(_ : δ > 0),
-        ∀ J _ : J ≤ I,
+        ∀ J (_ : J ≤ I),
           J.Icc ⊆ Metric.ClosedBall x δ →
             x ∈ J.Icc → (l.bDistortion → J.distortion ≤ c) → dist (vol J (f x)) (g J) ≤ ε*B J) :
   has_integral I l f vol (g I) :=
@@ -846,8 +851,8 @@ less than or equal to `ε * B J`.
 Then `f` is McShane integrable on `I` with integral `g I`. -/
 theorem has_integral_McShane_of_forall_is_o (B : ι →ᵇᵃ[I] ℝ) (hB0 : ∀ J, 0 ≤ B J) (g : ι →ᵇᵃ[I] F)
   (H :
-    ∀ c :  ℝ≥0  x _ : x ∈ I.Icc ε _ : ε > (0 : ℝ),
-      ∃ (δ : _)(_ : δ > 0), ∀ J _ : J ≤ I, J.Icc ⊆ Metric.ClosedBall x δ → dist (vol J (f x)) (g J) ≤ ε*B J) :
+    ∀ (c :  ℝ≥0 ) x (_ : x ∈ I.Icc) ε (_ : ε > (0 : ℝ)),
+      ∃ (δ : _)(_ : δ > 0), ∀ J (_ : J ≤ I), J.Icc ⊆ Metric.ClosedBall x δ → dist (vol J (f x)) (g J) ≤ ε*B J) :
   has_integral I McShane f vol (g I) :=
   (has_integral_of_bRiemann_eq_ff_of_forall_is_o rfl B hB0 g ∅ countable_empty (fun ⟨x, hx⟩ => hx.elim)
       fun c x hx => hx.2.elim)$

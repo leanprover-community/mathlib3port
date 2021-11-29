@@ -66,11 +66,11 @@ open Streamₓ
 
 /-- `bounded_random α` gives us machinery to generate values of type `α` between certain bounds -/
 class BoundedRandom(α : Type u)[Preorderₓ α] where 
-  randomR : ∀ g [RandomGen g] x y : α, x ≤ y → RandG g (x .. y)
+  randomR : ∀ g [RandomGen g] (x y : α), x ≤ y → RandG g (x .. y)
 
 /-- `random α` gives us machinery to generate values of type `α` -/
 class Random(α : Type u) where 
-  Random{} : ∀ g : Type [RandomGen g], RandG g α
+  Random{} : ∀ (g : Type) [RandomGen g], RandG g α
 
 /-- shift_31_left = 2^31; multiplying by it shifts the binary
 representation of a number left by 31 bits, dividing by it shifts it
@@ -272,20 +272,19 @@ instance intBoundedRandom : BoundedRandom ℤ :=
 instance finRandom (n : ℕ) [Fact (0 < n)] : Random (Finₓ n) :=
   { Random := fun g inst => @Finₓ.random g inst _ _ }
 
-instance finBoundedRandom (n : ℕ) : BoundedRandom (Finₓ n) :=
-  { randomR :=
-      fun g inst x y : Finₓ n p =>
-        do 
-          let ⟨r, h, h'⟩ ← @Rand.randomR ℕ g inst _ _ x.val y.val p 
-          pure ⟨⟨r, lt_of_le_of_ltₓ h' y.is_lt⟩, h, h'⟩ }
+-- error in Control.Random: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance fin_bounded_random (n : exprℕ()) : bounded_random (fin n) :=
+{ random_r := λ (g inst) (x y : fin n) (p), do {
+  ⟨r, h, h'⟩ ← @rand.random_r exprℕ() g inst _ _ x.val y.val p,
+    pure ⟨⟨r, lt_of_le_of_lt h' y.is_lt⟩, h, h'⟩ } }
 
 /-- A shortcut for creating a `random (fin n)` instance from
 a proof that `0 < n` rather than on matching on `fin (succ n)`  -/
-def randomFinOfPos : ∀ {n : ℕ} h : 0 < n, Random (Finₓ n)
+def randomFinOfPos : ∀ {n : ℕ} (h : 0 < n), Random (Finₓ n)
 | succ n, _ => finRandom _
 | 0, h => False.elim (Nat.not_lt_zeroₓ _ h)
 
--- error in System.Random.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Control.Random: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem bool_of_nat_mem_Icc_of_mem_Icc_to_nat
 (x y : bool)
 (n : exprℕ()) : «expr ∈ »(n, «expr .. »(x.to_nat, y.to_nat)) → «expr ∈ »(bool.of_nat n, «expr .. »(x, y)) :=
@@ -312,7 +311,7 @@ def Bitvec.random (n : ℕ) : RandG g (Bitvec n) :=
 
 /-- generate a random bit vector of length `n` -/
 def Bitvec.randomR {n : ℕ} (x y : Bitvec n) (h : x ≤ y) : RandG g (x .. y) :=
-  have h' : ∀ a : Finₓ (2 ^ n), a ∈ (x.to_fin .. y.to_fin) → Bitvec.ofFin a ∈ (x .. y) :=
+  have h' : ∀ (a : Finₓ (2 ^ n)), a ∈ (x.to_fin .. y.to_fin) → Bitvec.ofFin a ∈ (x .. y) :=
     by 
       simp only [and_imp, Set.mem_Icc]
       intro z h₀ h₁ 

@@ -264,7 +264,7 @@ variable{N₁ : Type _}{G₁ : Type _}[Groupₓ N₁][Groupₓ G₁]{φ₁ : G�
 
 /-- Define a map from `N ⋊[φ] G` to `N₁ ⋊[φ₁] G₁` given maps `N →* N₁` and `G →* G₁` that
   satisfy a commutativity condition `∀ n g, f₁ (φ g n) = φ₁ (f₂ g) (f₁ n)`.  -/
-def map (f₁ : N →* N₁) (f₂ : G →* G₁) (h : ∀ g : G, f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁) :
+def map (f₁ : N →* N₁) (f₂ : G →* G₁) (h : ∀ (g : G), f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁) :
   N ⋊[φ] G →* N₁ ⋊[φ₁] G₁ :=
   { toFun := fun x => ⟨f₁ x.1, f₂ x.2⟩,
     map_one' :=
@@ -276,7 +276,7 @@ def map (f₁ : N →* N₁) (f₂ : G →* G₁) (h : ∀ g : G, f₁.comp (φ 
           replace h := MonoidHom.ext_iff.1 (h x.right) y.left 
           ext <;> simp_all  }
 
-variable(f₁ : N →* N₁)(f₂ : G →* G₁)(h : ∀ g : G, f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁)
+variable(f₁ : N →* N₁)(f₂ : G →* G₁)(h : ∀ (g : G), f₁.comp (φ g).toMonoidHom = (φ₁ (f₂ g)).toMonoidHom.comp f₁)
 
 @[simp]
 theorem map_left (g : N ⋊[φ] G) : (map f₁ f₂ h g).left = f₁ g.left :=

@@ -44,7 +44,7 @@ theorem coeff_zero_mem_comap_of_root_mem {r : S} (hr : r ∈ I) {p : Polynomial 
 
 theorem exists_coeff_ne_zero_mem_comap_of_non_zero_divisor_root_mem {r : S}
   (r_non_zero_divisor : ∀ {x}, (x*r) = 0 → x = 0) (hr : r ∈ I) {p : Polynomial R} :
-  ∀ p_ne_zero : p ≠ 0 hp : p.eval₂ f r = 0, ∃ i, p.coeff i ≠ 0 ∧ p.coeff i ∈ I.comap f :=
+  ∀ (p_ne_zero : p ≠ 0) (hp : p.eval₂ f r = 0), ∃ i, p.coeff i ≠ 0 ∧ p.coeff i ∈ I.comap f :=
   by 
     refine' p.rec_on_horner _ _ _
     ·
@@ -101,7 +101,7 @@ This technical lemma asserts the existence of a polynomial `p` in an ideal `P �
 that is non-zero in the quotient `R / (P ∩ R) [x]`.  The assumptions are equivalent to
 `P ≠ 0` and `P ∩ R = (0)`.
 -/
-theorem exists_nonzero_mem_of_ne_bot {P : Ideal (Polynomial R)} (Pb : P ≠ ⊥) (hP : ∀ x : R, C x ∈ P → x = 0) :
+theorem exists_nonzero_mem_of_ne_bot {P : Ideal (Polynomial R)} (Pb : P ≠ ⊥) (hP : ∀ (x : R), C x ∈ P → x = 0) :
   ∃ p : Polynomial R, p ∈ P ∧ Polynomial.map (Quotientₓ.mk (P.comap C)) p ≠ 0 :=
   by 
     obtain ⟨m, hm⟩ := Submodule.nonzero_mem_of_bot_lt (bot_lt_iff_ne_bot.mpr Pb)
@@ -168,7 +168,7 @@ section IsDomain
 variable{S : Type _}[CommRingₓ S]{f : R →+* S}{I J : Ideal S}
 
 theorem exists_coeff_ne_zero_mem_comap_of_root_mem [IsDomain S] {r : S} (r_ne_zero : r ≠ 0) (hr : r ∈ I)
-  {p : Polynomial R} : ∀ p_ne_zero : p ≠ 0 hp : p.eval₂ f r = 0, ∃ i, p.coeff i ≠ 0 ∧ p.coeff i ∈ I.comap f :=
+  {p : Polynomial R} : ∀ (p_ne_zero : p ≠ 0) (hp : p.eval₂ f r = 0), ∃ i, p.coeff i ≠ 0 ∧ p.coeff i ∈ I.comap f :=
   exists_coeff_ne_zero_mem_comap_of_non_zero_divisor_root_mem (fun _ h => Or.resolve_right (mul_eq_zero.mp h) r_ne_zero)
     hr
 

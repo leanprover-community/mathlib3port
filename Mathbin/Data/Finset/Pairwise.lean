@@ -23,30 +23,34 @@ theorem pairwise_disjoint.elim_finset [DecidableEq α] {s : Set ι} {f : ι → 
   {i j : ι} (hi : i ∈ s) (hj : j ∈ s) (a : α) (hai : a ∈ f i) (haj : a ∈ f j) : i = j :=
   hs.elim hi hj (Finset.not_disjoint_iff.2 ⟨a, hai, haj⟩)
 
-theorem pairwise_disjoint.image_finset_of_le [DecidableEq ι] [SemilatticeInfBot α] {s : Finset ι} {f : ι → α}
+theorem pairwise_disjoint.image_finset_of_le [DecidableEq ι] [SemilatticeInf α] [OrderBot α] {s : Finset ι} {f : ι → α}
   (hs : (s : Set ι).PairwiseDisjoint f) {g : ι → ι} (hf : ∀ a, f (g a) ≤ f a) :
   (s.image g : Set ι).PairwiseDisjoint f :=
   by 
     rw [coe_image]
     exact hs.image_of_le hf
 
-variable[DistribLatticeBot α]
+variable[Lattice α][OrderBot α]
 
+-- error in Data.Finset.Pairwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Bind operation for `set.pairwise_disjoint`. In a complete lattice, you can use
 `set.pairwise_disjoint.bUnion`. -/
-theorem pairwise_disjoint.bUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f : ι → α}
-  (hs : s.pairwise_disjoint fun i' : ι' => (g i').sup f) (hg : ∀ i _ : i ∈ s, (g i : Set ι).PairwiseDisjoint f) :
-  (⋃(i : _)(_ : i ∈ s), «expr↑ » (g i)).PairwiseDisjoint f :=
-  by 
-    rintro a ha b hb hab 
-    simpRw [Set.mem_Union]  at ha hb 
-    obtain ⟨c, hc, ha⟩ := ha 
-    obtain ⟨d, hd, hb⟩ := hb 
-    obtain hcd | hcd := eq_or_ne (g c) (g d)
-    ·
-      exact hg d hd a (hcd ▸ ha) b hb hab
-    ·
-      exact (hs _ hc _ hd (ne_of_apply_ne _ hcd)).mono (Finset.le_sup ha) (Finset.le_sup hb)
+theorem pairwise_disjoint.bUnion_finset
+{s : set ι'}
+{g : ι' → finset ι}
+{f : ι → α}
+(hs : s.pairwise_disjoint (λ i' : ι', (g i').sup f))
+(hg : ∀
+ i «expr ∈ » s, (g i : set ι).pairwise_disjoint f) : «expr⋃ , »((i «expr ∈ » s), «expr↑ »(g i)).pairwise_disjoint f :=
+begin
+  rintro [ident a, ident ha, ident b, ident hb, ident hab],
+  simp_rw [expr set.mem_Union] ["at", ident ha, ident hb],
+  obtain ["⟨", ident c, ",", ident hc, ",", ident ha, "⟩", ":=", expr ha],
+  obtain ["⟨", ident d, ",", ident hd, ",", ident hb, "⟩", ":=", expr hb],
+  obtain [ident hcd, "|", ident hcd, ":=", expr eq_or_ne (g c) (g d)],
+  { exact [expr hg d hd a «expr ▸ »(hcd, ha) b hb hab] },
+  { exact [expr (hs _ hc _ hd (ne_of_apply_ne _ hcd)).mono (finset.le_sup ha) (finset.le_sup hb)] }
+end
 
 end Set
 

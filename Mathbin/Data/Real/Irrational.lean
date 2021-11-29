@@ -22,7 +22,7 @@ open Rat Real multiplicity
 def Irrational (x : ℝ) :=
   x ∉ Set.Range (coeₓ : ℚ → ℝ)
 
-theorem irrational_iff_ne_rational (x : ℝ) : Irrational x ↔ ∀ a b : ℤ, x ≠ a / b :=
+theorem irrational_iff_ne_rational (x : ℝ) : Irrational x ↔ ∀ (a b : ℤ), x ≠ a / b :=
   by 
     simp only [Irrational, Rat.forall, cast_mk, not_exists, Set.mem_range, cast_coe_int, cast_div, eq_comm]
 
@@ -452,7 +452,7 @@ theorem of_one_div (h : Irrational (1 / x)) : Irrational x :=
 theorem of_mul_self (h : Irrational (x*x)) : Irrational x :=
   h.mul_cases.elim id id
 
-theorem of_pow : ∀ n : ℕ, Irrational (x^n) → Irrational x
+theorem of_pow : ∀ (n : ℕ), Irrational (x^n) → Irrational x
 | 0 =>
   fun h =>
     by 
@@ -464,7 +464,7 @@ theorem of_pow : ∀ n : ℕ, Irrational (x^n) → Irrational x
       rw [pow_succₓ] at h 
       exact h.mul_cases.elim id (of_pow n)
 
-theorem of_zpow : ∀ m : ℤ, Irrational (x^m) → Irrational x
+theorem of_zpow : ∀ (m : ℤ), Irrational (x^m) → Irrational x
 | (n : ℕ) => of_pow n
 | -[1+ n] =>
   fun h =>

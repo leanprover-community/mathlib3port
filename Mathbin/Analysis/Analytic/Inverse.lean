@@ -88,7 +88,7 @@ theorem left_inv_remove_zero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[
     dsimp 
     simp [IH _ hc]
 
--- error in Analysis.Analytic.Inverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Analytic.Inverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The left inverse to a formal multilinear series is indeed a left inverse, provided its linear
 term is invertible. -/
 theorem left_inv_comp
@@ -380,7 +380,7 @@ remains bounded.
 -/
 
 
--- error in Analysis.Analytic.Inverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Analytic.Inverse: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- First technical lemma to control the growth of coefficients of the inverse. Bound the explicit
 expression for `∑_{k<n+1} aᵏ Qₖ` in terms of a sum of powers of the same sum one step before,
 in a general abstract setup. -/

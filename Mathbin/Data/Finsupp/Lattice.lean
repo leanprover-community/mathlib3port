@@ -18,12 +18,6 @@ variable{γ : Type _}[CanonicallyLinearOrderedAddMonoid γ]
 
 namespace Finsupp
 
-instance  : OrderBot (α →₀ μ) :=
-  { bot := 0,
-    bot_le :=
-      by 
-        simp [Finsupp.le_def, ←bot_eq_zero] }
-
 instance  [SemilatticeInf β] : SemilatticeInf (α →₀ β) :=
   { Finsupp.partialOrder with inf := zip_with (·⊓·) inf_idem, inf_le_left := fun a b c => inf_le_left,
     inf_le_right := fun a b c => inf_le_right, le_inf := fun a b c h1 h2 s => le_inf (h1 s) (h2 s) }
@@ -58,9 +52,6 @@ theorem support_sup {f g : α →₀ γ} : (f⊔g).Support = f.support ∪ g.sup
 instance Lattice [Lattice β] : Lattice (α →₀ β) :=
   { Finsupp.semilatticeInf, Finsupp.semilatticeSup with  }
 
-instance SemilatticeInfBot : SemilatticeInfBot (α →₀ γ) :=
-  { Finsupp.orderBot, Finsupp.lattice with  }
-
 theorem bot_eq_zero : (⊥ : α →₀ γ) = 0 :=
   rfl
 
@@ -74,16 +65,13 @@ theorem disjoint_iff {x y : α →₀ γ} : Disjoint x y ↔ Disjoint x.support 
 
 variable[PartialOrderₓ β]
 
+-- error in Data.Finsupp.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The order on `finsupp`s over a partial order embeds into the order on functions -/
-def order_embedding_to_fun : (α →₀ β) ↪o (α → β) :=
-  ⟨⟨fun f : α →₀ β a : α => f a,
-      fun f g h =>
-        Finsupp.ext
-          fun a =>
-            by 
-              dsimp  at h 
-              rw [h]⟩,
-    fun a b => (@le_def _ _ _ _ a b).symm⟩
+def order_embedding_to_fun : «expr ↪o »(«expr →₀ »(α, β), α → β) :=
+⟨⟨λ
+  (f : «expr →₀ »(α, β))
+  (a : α), f a, λ
+  f g h, finsupp.ext (λ a, by { dsimp [] [] [] ["at", ident h], rw [expr h] [] })⟩, λ a b, (@le_def _ _ _ _ a b).symm⟩
 
 @[simp]
 theorem order_embedding_to_fun_apply {f : α →₀ β} {a : α} : order_embedding_to_fun f a = f a :=

@@ -107,7 +107,7 @@ namespace DeriveFintype
 We will set `enum` to the discriminant of the inductive type, so a `finset_above`
 represents a finset that enumerates all elements in a tail of the constructor list. -/
 def finset_above α (enum : α → ℕ) (n : ℕ) :=
-  { s : Finset α // ∀ x _ : x ∈ s, n ≤ enum x }
+  { s : Finset α // ∀ x (_ : x ∈ s), n ≤ enum x }
 
 /-- Construct a fintype instance from a completed `finset_above`. -/
 def mk_fintype {α} (enum : α → ℕ) (s : finset_above α enum 0) (H : ∀ x, x ∈ s.1) : Fintype α :=
@@ -155,7 +155,7 @@ The property `P` here is `λ a, enum a = n` where `n` is the discriminant for th
 variant. -/
 @[nolint has_inhabited_instance]
 def finset_in {α} (P : α → Prop) :=
-  { s : Finset α // ∀ x _ : x ∈ s, P x }
+  { s : Finset α // ∀ x (_ : x ∈ s), P x }
 
 /-- To construct the finset, we use an injective map from the type `Γ`, which will be the
 sigma over all constructor arguments. We use sigma instances and existing fintype instances

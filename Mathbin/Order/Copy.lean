@@ -13,14 +13,26 @@ universe u
 
 variable{α : Type u}
 
-/-- A function to create a provable equal copy of a bounded lattice
+/-- A function to create a provable equal copy of a bounded order
 with possibly different definitional equalities. -/
-def BoundedLattice.copy (c : BoundedLattice α) (le : α → α → Prop) (eq_le : le = @BoundedLattice.Le α c) (top : α)
-  (eq_top : top = @BoundedLattice.top α c) (bot : α) (eq_bot : bot = @BoundedLattice.bot α c) (sup : α → α → α)
-  (eq_sup : sup = @BoundedLattice.sup α c) (inf : α → α → α) (eq_inf : inf = @BoundedLattice.inf α c) :
-  BoundedLattice α :=
+def BoundedOrder.copy {h : LE α} {h' : LE α} (c : @BoundedOrder α h') (top : α) (eq_top : top = @BoundedOrder.top α _ c)
+  (bot : α) (eq_bot : bot = @BoundedOrder.bot α _ c) (le_eq : ∀ (x y : α), (@LE.le α h) x y ↔ x ≤ y) :
+  @BoundedOrder α h :=
   by 
-    refine' { le, top, bot, sup, inf, .. }
+    refine' { top, bot, .. }
+    all_goals 
+      abstract 
+        substVars 
+        cases' c 
+        simpRw [le_eq]
+        assumption
+
+/-- A function to create a provable equal copy of a lattice
+with possibly different definitional equalities. -/
+def Lattice.copy (c : Lattice α) (le : α → α → Prop) (eq_le : le = @Lattice.Le α c) (sup : α → α → α)
+  (eq_sup : sup = @Lattice.sup α c) (inf : α → α → α) (eq_inf : inf = @Lattice.inf α c) : Lattice α :=
+  by 
+    refine' { le, sup, inf, .. }
     all_goals 
       abstract 
         substVars 
@@ -49,9 +61,8 @@ def CompleteLattice.copy (c : CompleteLattice α) (le : α → α → Prop) (eq_
   (eq_Inf : Inf = @CompleteLattice.infₓ α c) : CompleteLattice α :=
   by 
     refine'
-      { BoundedLattice.copy (@CompleteLattice.toBoundedLattice α c) le eq_le top eq_top bot eq_bot sup eq_sup inf
-          eq_inf with
-        le, top, bot, sup, inf, sup, inf, .. }
+      { Lattice.copy (@CompleteLattice.toLattice α c) le eq_le sup eq_sup inf eq_inf with le, top, bot, sup, inf, sup,
+        inf, .. }
     all_goals 
       abstract 
         substVars 

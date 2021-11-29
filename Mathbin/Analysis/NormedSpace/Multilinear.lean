@@ -307,19 +307,27 @@ def mk_continuous (C : ℝ) (H : ∀ m, ∥f m∥ ≤ C*∏i, ∥m i∥) : Conti
 theorem coe_mk_continuous (C : ℝ) (H : ∀ m, ∥f m∥ ≤ C*∏i, ∥m i∥) : «expr⇑ » (f.mk_continuous C H) = f :=
   rfl
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a multilinear map in `n` variables, if one restricts it to `k` variables putting `z` on
 the other coordinates, then the resulting restricted function satisfies an inequality
 `∥f.restr v∥ ≤ C * ∥z∥^(n-k) * Π ∥v i∥` if the original function satisfies `∥f v∥ ≤ C * Π ∥v i∥`. -/
-theorem restr_norm_le {k n : ℕ} (f : (MultilinearMap 𝕜 (fun i : Finₓ n => G) G' : _)) (s : Finset (Finₓ n))
-  (hk : s.card = k) (z : G) {C : ℝ} (H : ∀ m, ∥f m∥ ≤ C*∏i, ∥m i∥) (v : Finₓ k → G) :
-  ∥f.restr s hk z v∥ ≤ (C*∥z∥ ^ (n - k))*∏i, ∥v i∥ :=
-  by 
-    rw [mul_right_commₓ, mul_assocₓ]
-    convert H _ using 2
-    simp only [apply_dite norm, Fintype.prod_dite, prod_const ∥z∥, Finset.card_univ,
-      Fintype.card_of_subtype («expr ᶜ» s) fun x => mem_compl, card_compl, Fintype.card_fin, hk, mk_coe,
-      ←(s.order_iso_of_fin hk).symm.Bijective.prod_comp fun x => ∥v x∥]
-    rfl
+theorem restr_norm_le
+{k n : exprℕ()}
+(f : (multilinear_map 𝕜 (λ i : fin n, G) G' : _))
+(s : finset (fin n))
+(hk : «expr = »(s.card, k))
+(z : G)
+{C : exprℝ()}
+(H : ∀ m, «expr ≤ »(«expr∥ ∥»(f m), «expr * »(C, «expr∏ , »((i), «expr∥ ∥»(m i)))))
+(v : fin k → G) : «expr ≤ »(«expr∥ ∥»(f.restr s hk z v), «expr * »(«expr * »(C, «expr ^ »(«expr∥ ∥»(z), «expr - »(n, k))), «expr∏ , »((i), «expr∥ ∥»(v i)))) :=
+begin
+  rw ["[", expr mul_right_comm, ",", expr mul_assoc, "]"] [],
+  convert [] [expr H _] ["using", 2],
+  simp [] [] ["only"] ["[", expr apply_dite norm, ",", expr fintype.prod_dite, ",", expr prod_const «expr∥ ∥»(z), ",", expr finset.card_univ, ",", expr fintype.card_of_subtype «expr ᶜ»(s) (λ
+    x, mem_compl), ",", expr card_compl, ",", expr fintype.card_fin, ",", expr hk, ",", expr mk_coe, ",", "<-", expr (s.order_iso_of_fin hk).symm.bijective.prod_comp (λ
+    x, «expr∥ ∥»(v x)), "]"] [] [],
+  refl
+end
 
 end MultilinearMap
 
@@ -596,8 +604,9 @@ begin
       ring [] }
 end
 
-theorem continuous_eval_left (m : ∀ i, E i) : Continuous fun p : ContinuousMultilinearMap 𝕜 E G => p m :=
-  continuous_eval.comp (continuous_id.prod_mk continuous_const)
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_eval_left (m : ∀ i, E i) : continuous (λ p : continuous_multilinear_map 𝕜 E G, p m) :=
+continuous_eval.comp (continuous_id.prod_mk continuous_const)
 
 theorem has_sum_eval {α : Type _} {p : α → ContinuousMultilinearMap 𝕜 E G} {q : ContinuousMultilinearMap 𝕜 E G}
   (h : HasSum p q) (m : ∀ i, E i) : HasSum (fun a => p a m) (q m) :=
@@ -708,11 +717,12 @@ namespace ContinuousMultilinearMap
 these variables, and fixing the other ones equal to a given value `z`. It is denoted by
 `f.restr s hk z`, where `hk` is a proof that the cardinality of `s` is `k`. The implicit
 identification between `fin k` and `s` that we use is the canonical (increasing) bijection. -/
-def restr {k n : ℕ} (f : (G[×n]→L[𝕜] G' : _)) (s : Finset (Finₓ n)) (hk : s.card = k) (z : G) : G[×k]→L[𝕜] G' :=
+def restr {k n : ℕ} (f : («expr [× ]→L[ ] » G n 𝕜 G' : _)) (s : Finset (Finₓ n)) (hk : s.card = k) (z : G) :
+  «expr [× ]→L[ ] » G k 𝕜 G' :=
   (f.to_multilinear_map.restr s hk z).mkContinuous (∥f∥*∥z∥ ^ (n - k))$
     fun v => MultilinearMap.restr_norm_le _ _ _ _ f.le_op_norm _
 
-theorem norm_restr {k n : ℕ} (f : G[×n]→L[𝕜] G') (s : Finset (Finₓ n)) (hk : s.card = k) (z : G) :
+theorem norm_restr {k n : ℕ} (f : «expr [× ]→L[ ] » G n 𝕜 G') (s : Finset (Finₓ n)) (hk : s.card = k) (z : G) :
   ∥f.restr s hk z∥ ≤ ∥f∥*∥z∥ ^ (n - k) :=
   by 
     apply MultilinearMap.mk_continuous_norm_le 
@@ -722,19 +732,19 @@ section
 
 variable(𝕜 ι)(A : Type _)[NormedCommRing A][NormedAlgebra 𝕜 A]
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The continuous multilinear map on `A^ι`, where `A` is a normed commutative algebra
 over `𝕜`, associating to `m` the product of all the `m i`.
 
 See also `continuous_multilinear_map.mk_pi_algebra_fin`. -/
-protected def mk_pi_algebra : ContinuousMultilinearMap 𝕜 (fun i : ι => A) A :=
-  MultilinearMap.mkContinuous (MultilinearMap.mkPiAlgebra 𝕜 ι A) (if Nonempty ι then 1 else ∥(1 : A)∥)$
-    by 
-      intro m 
-      cases' is_empty_or_nonempty ι with hι hι
-      ·
-        simp [eq_empty_of_is_empty univ, not_nonempty_iff.2 hι]
-      ·
-        simp [norm_prod_le' univ univ_nonempty, hι]
+protected
+def mk_pi_algebra : continuous_multilinear_map 𝕜 (λ i : ι, A) A :=
+«expr $ »(multilinear_map.mk_continuous (multilinear_map.mk_pi_algebra 𝕜 ι A) (if nonempty ι then 1 else «expr∥ ∥»((1 : A))), begin
+   intro [ident m],
+   casesI [expr is_empty_or_nonempty ι] ["with", ident hι, ident hι],
+   { simp [] [] [] ["[", expr eq_empty_of_is_empty univ, ",", expr not_nonempty_iff.2 hι, "]"] [] [] },
+   { simp [] [] [] ["[", expr norm_prod_le' univ univ_nonempty, ",", expr hι, "]"] [] [] }
+ end)
 
 variable{A 𝕜 ι}
 
@@ -830,13 +840,13 @@ end
 
 variable(𝕜 ι)
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The canonical continuous multilinear map on `𝕜^ι`, associating to `m` the product of all the
 `m i` (multiplied by a fixed reference element `z` in the target module) -/
-protected def mk_pi_field (z : G) : ContinuousMultilinearMap 𝕜 (fun i : ι => 𝕜) G :=
-  MultilinearMap.mkContinuous (MultilinearMap.mkPiRing 𝕜 ι z) ∥z∥
-    fun m =>
-      by 
-        simp only [MultilinearMap.mk_pi_ring_apply, norm_smul, NormedField.norm_prod, mul_commₓ]
+protected
+def mk_pi_field (z : G) : continuous_multilinear_map 𝕜 (λ i : ι, 𝕜) G :=
+multilinear_map.mk_continuous (multilinear_map.mk_pi_ring 𝕜 ι z) «expr∥ ∥»(z) (λ
+ m, by simp [] [] ["only"] ["[", expr multilinear_map.mk_pi_ring_apply, ",", expr norm_smul, ",", expr normed_field.norm_prod, ",", expr mul_comm, "]"] [] [])
 
 variable{𝕜 ι}
 
@@ -845,56 +855,36 @@ theorem mk_pi_field_apply (z : G) (m : ι → 𝕜) :
   (ContinuousMultilinearMap.mkPiField 𝕜 ι z : (ι → 𝕜) → G) m = (∏i, m i) • z :=
   rfl
 
-theorem mk_pi_field_apply_one_eq_self (f : ContinuousMultilinearMap 𝕜 (fun i : ι => 𝕜) G) :
-  ContinuousMultilinearMap.mkPiField 𝕜 ι (f fun i => 1) = f :=
-  to_multilinear_map_inj f.to_multilinear_map.mk_pi_ring_apply_one_eq_self
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mk_pi_field_apply_one_eq_self
+(f : continuous_multilinear_map 𝕜 (λ
+  i : ι, 𝕜) G) : «expr = »(continuous_multilinear_map.mk_pi_field 𝕜 ι (f (λ i, 1)), f) :=
+to_multilinear_map_inj f.to_multilinear_map.mk_pi_ring_apply_one_eq_self
+
+@[simp]
+theorem norm_mk_pi_field (z : G) : ∥ContinuousMultilinearMap.mkPiField 𝕜 ι z∥ = ∥z∥ :=
+  (MultilinearMap.mk_continuous_norm_le _ (norm_nonneg z) _).antisymm$
+    by 
+      simpa using (ContinuousMultilinearMap.mkPiField 𝕜 ι z).le_op_norm fun _ => 1
 
 variable(𝕜 ι G)
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Continuous multilinear maps on `𝕜^n` with values in `G` are in bijection with `G`, as such a
 continuous multilinear map is completely determined by its value on the constant vector made of
-ones. We register this bijection as a linear equivalence in
-`continuous_multilinear_map.pi_field_equiv_aux`. The continuous linear equivalence is
+ones. We register this bijection as a linear isometry in
 `continuous_multilinear_map.pi_field_equiv`. -/
-protected def pi_field_equiv_aux : G ≃ₗ[𝕜] ContinuousMultilinearMap 𝕜 (fun i : ι => 𝕜) G :=
-  { toFun := fun z => ContinuousMultilinearMap.mkPiField 𝕜 ι z, invFun := fun f => f fun i => 1,
-    map_add' :=
-      fun z z' =>
-        by 
-          ext m 
-          simp [smul_add],
-    map_smul' :=
-      fun c z =>
-        by 
-          ext m 
-          simp [smul_smul, mul_commₓ],
-    left_inv :=
-      fun z =>
-        by 
-          simp ,
-    right_inv := fun f => f.mk_pi_field_apply_one_eq_self }
-
-/-- Continuous multilinear maps on `𝕜^n` with values in `G` are in bijection with `G`, as such a
-continuous multilinear map is completely determined by its value on the constant vector made of
-ones. We register this bijection as a continuous linear equivalence in
-`continuous_multilinear_map.pi_field_equiv`. -/
-protected def pi_field_equiv : G ≃L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : ι => 𝕜) G :=
-  { ContinuousMultilinearMap.piFieldEquivAux 𝕜 ι G with
-    continuous_to_fun :=
-      by 
-        refine' (ContinuousMultilinearMap.piFieldEquivAux 𝕜 ι G).toLinearMap.continuous_of_bound (1 : ℝ) fun z => _ 
-        rw [one_mulₓ]
-        change ∥ContinuousMultilinearMap.mkPiField 𝕜 ι z∥ ≤ ∥z∥
-        exact MultilinearMap.mk_continuous_norm_le _ (norm_nonneg _) _,
-    continuous_inv_fun :=
-      by 
-        refine'
-          (ContinuousMultilinearMap.piFieldEquivAux 𝕜 ι G).symm.toLinearMap.continuous_of_bound (1 : ℝ) fun f => _ 
-        rw [one_mulₓ]
-        change ∥f fun i => 1∥ ≤ ∥f∥
-        apply @ContinuousMultilinearMap.unit_le_op_norm 𝕜 ι (fun i : ι => 𝕜) G _ _ _ _ _ _ _ f 
-        simp only [pi_norm_le_iff zero_le_one, norm_one]
-        exact fun _ => le_rfl }
+protected
+def pi_field_equiv : «expr ≃ₗᵢ[ ] »(G, 𝕜, continuous_multilinear_map 𝕜 (λ i : ι, 𝕜) G) :=
+{ to_fun := λ z, continuous_multilinear_map.mk_pi_field 𝕜 ι z,
+  inv_fun := λ f, f (λ i, 1),
+  map_add' := λ z z', by { ext [] [ident m] [],
+    simp [] [] [] ["[", expr smul_add, "]"] [] [] },
+  map_smul' := λ c z, by { ext [] [ident m] [],
+    simp [] [] [] ["[", expr smul_smul, ",", expr mul_comm, "]"] [] [] },
+  left_inv := λ z, by simp [] [] [] [] [] [],
+  right_inv := λ f, f.mk_pi_field_apply_one_eq_self,
+  norm_map' := norm_mk_pi_field }
 
 end ContinuousMultilinearMap
 
@@ -1106,34 +1096,32 @@ We also register continuous linear equiv versions of these correspondences, in
 
 open Finₓ Function
 
-theorem ContinuousLinearMap.norm_map_tail_le (f : Ei 0 →L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.succ) G)
-  (m : ∀ i, Ei i) : ∥f (m 0) (tail m)∥ ≤ ∥f∥*∏i, ∥m i∥ :=
-  calc ∥f (m 0) (tail m)∥ ≤ ∥f (m 0)∥*∏i, ∥(tail m) i∥ := (f (m 0)).le_op_norm _ 
-    _ ≤ (∥f∥*∥m 0∥)*∏i, ∥(tail m) i∥ :=
-    mul_le_mul_of_nonneg_right (f.le_op_norm _) (prod_nonneg fun i hi => norm_nonneg _)
-    _ = ∥f∥*∥m 0∥*∏i, ∥(tail m) i∥ :=
-    by 
-      ring 
-    _ = ∥f∥*∏i, ∥m i∥ :=
-    by 
-      rw [prod_univ_succ]
-      rfl
-    
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_linear_map.norm_map_tail_le
+(f : «expr →L[ ] »(Ei 0, 𝕜, continuous_multilinear_map 𝕜 (λ i : fin n, Ei i.succ) G))
+(m : ∀ i, Ei i) : «expr ≤ »(«expr∥ ∥»(f (m 0) (tail m)), «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(m i)))) :=
+calc
+  «expr ≤ »(«expr∥ ∥»(f (m 0) (tail m)), «expr * »(«expr∥ ∥»(f (m 0)), «expr∏ , »((i), «expr∥ ∥»(tail m i)))) : (f (m 0)).le_op_norm _
+  «expr ≤ »(..., «expr * »(«expr * »(«expr∥ ∥»(f), «expr∥ ∥»(m 0)), «expr∏ , »((i), «expr∥ ∥»(tail m i)))) : mul_le_mul_of_nonneg_right (f.le_op_norm _) (prod_nonneg (λ
+    i hi, norm_nonneg _))
+  «expr = »(..., «expr * »(«expr∥ ∥»(f), «expr * »(«expr∥ ∥»(m 0), «expr∏ , »((i), «expr∥ ∥»(tail m i))))) : by ring []
+  «expr = »(..., «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(m i)))) : by { rw [expr prod_univ_succ] [],
+    refl }
 
-theorem ContinuousMultilinearMap.norm_map_init_le
-  (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.cast_succ) (Ei (last n) →L[𝕜] G)) (m : ∀ i, Ei i) :
-  ∥f (init m) (m (last n))∥ ≤ ∥f∥*∏i, ∥m i∥ :=
-  calc ∥f (init m) (m (last n))∥ ≤ ∥f (init m)∥*∥m (last n)∥ := (f (init m)).le_op_norm _ 
-    _ ≤ (∥f∥*∏i, ∥(init m) i∥)*∥m (last n)∥ := mul_le_mul_of_nonneg_right (f.le_op_norm _) (norm_nonneg _)
-    _ = ∥f∥*(∏i, ∥(init m) i∥)*∥m (last n)∥ := mul_assocₓ _ _ _ 
-    _ = ∥f∥*∏i, ∥m i∥ :=
-    by 
-      rw [prod_univ_cast_succ]
-      rfl
-    
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_multilinear_map.norm_map_init_le
+(f : continuous_multilinear_map 𝕜 (λ i : fin n, Ei i.cast_succ) «expr →L[ ] »(Ei (last n), 𝕜, G))
+(m : ∀
+ i, Ei i) : «expr ≤ »(«expr∥ ∥»(f (init m) (m (last n))), «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(m i)))) :=
+calc
+  «expr ≤ »(«expr∥ ∥»(f (init m) (m (last n))), «expr * »(«expr∥ ∥»(f (init m)), «expr∥ ∥»(m (last n)))) : (f (init m)).le_op_norm _
+  «expr ≤ »(..., «expr * »(«expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(init m i))), «expr∥ ∥»(m (last n)))) : mul_le_mul_of_nonneg_right (f.le_op_norm _) (norm_nonneg _)
+  «expr = »(..., «expr * »(«expr∥ ∥»(f), «expr * »(«expr∏ , »((i), «expr∥ ∥»(init m i)), «expr∥ ∥»(m (last n))))) : mul_assoc _ _ _
+  «expr = »(..., «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(m i)))) : by { rw [expr prod_univ_cast_succ] [],
+    refl }
 
 theorem ContinuousMultilinearMap.norm_map_cons_le (f : ContinuousMultilinearMap 𝕜 Ei G) (x : Ei 0)
-  (m : ∀ i : Finₓ n, Ei i.succ) : ∥f (cons x m)∥ ≤ (∥f∥*∥x∥)*∏i, ∥m i∥ :=
+  (m : ∀ (i : Finₓ n), Ei i.succ) : ∥f (cons x m)∥ ≤ (∥f∥*∥x∥)*∏i, ∥m i∥ :=
   calc ∥f (cons x m)∥ ≤ ∥f∥*∏i, ∥cons x m i∥ := f.le_op_norm _ 
     _ = (∥f∥*∥x∥)*∏i, ∥m i∥ :=
     by 
@@ -1142,7 +1130,7 @@ theorem ContinuousMultilinearMap.norm_map_cons_le (f : ContinuousMultilinearMap 
     
 
 theorem ContinuousMultilinearMap.norm_map_snoc_le (f : ContinuousMultilinearMap 𝕜 Ei G)
-  (m : ∀ i : Finₓ n, Ei i.cast_succ) (x : Ei (last n)) : ∥f (snoc m x)∥ ≤ (∥f∥*∏i, ∥m i∥)*∥x∥ :=
+  (m : ∀ (i : Finₓ n), Ei i.cast_succ) (x : Ei (last n)) : ∥f (snoc m x)∥ ≤ (∥f∥*∏i, ∥m i∥)*∥x∥ :=
   calc ∥f (snoc m x)∥ ≤ ∥f∥*∏i, ∥snoc m x i∥ := f.le_op_norm _ 
     _ = (∥f∥*∏i, ∥m i∥)*∥x∥ :=
     by 
@@ -1153,52 +1141,53 @@ theorem ContinuousMultilinearMap.norm_map_snoc_le (f : ContinuousMultilinearMap 
 /-! #### Left currying -/
 
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a continuous linear map `f` from `E 0` to continuous multilinear maps on `n` variables,
 construct the corresponding continuous multilinear map on `n+1` variables obtained by concatenating
 the variables, given by `m ↦ f (m 0) (tail m)`-/
-def ContinuousLinearMap.uncurryLeft (f : Ei 0 →L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.succ) G) :
-  ContinuousMultilinearMap 𝕜 Ei G :=
-  (@LinearMap.uncurryLeft 𝕜 n Ei G _ _ _ _ _
-        (ContinuousMultilinearMap.toMultilinearMapLinear.comp f.to_linear_map)).mkContinuous
-    ∥f∥ fun m => ContinuousLinearMap.norm_map_tail_le f m
+def continuous_linear_map.uncurry_left
+(f : «expr →L[ ] »(Ei 0, 𝕜, continuous_multilinear_map 𝕜 (λ
+   i : fin n, Ei i.succ) G)) : continuous_multilinear_map 𝕜 Ei G :=
+(@linear_map.uncurry_left 𝕜 n Ei G _ _ _ _ _ (continuous_multilinear_map.to_multilinear_map_linear.comp f.to_linear_map)).mk_continuous «expr∥ ∥»(f) (λ
+ m, continuous_linear_map.norm_map_tail_le f m)
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem ContinuousLinearMap.uncurry_left_apply
-  (f : Ei 0 →L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.succ) G) (m : ∀ i, Ei i) :
-  f.uncurry_left m = f (m 0) (tail m) :=
-  rfl
+theorem continuous_linear_map.uncurry_left_apply
+(f : «expr →L[ ] »(Ei 0, 𝕜, continuous_multilinear_map 𝕜 (λ i : fin n, Ei i.succ) G))
+(m : ∀ i, Ei i) : «expr = »(f.uncurry_left m, f (m 0) (tail m)) :=
+rfl
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a continuous multilinear map `f` in `n+1` variables, split the first variable to obtain
 a continuous linear map into continuous multilinear maps in `n` variables, given by
 `x ↦ (m ↦ f (cons x m))`. -/
-def ContinuousMultilinearMap.curryLeft (f : ContinuousMultilinearMap 𝕜 Ei G) :
-  Ei 0 →L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.succ) G :=
-  LinearMap.mkContinuous
-    { toFun := fun x => (f.to_multilinear_map.curry_left x).mkContinuous (∥f∥*∥x∥) (f.norm_map_cons_le x),
-      map_add' :=
-        fun x y =>
-          by 
-            ext m 
-            exact f.cons_add m x y,
-      map_smul' :=
-        fun c x =>
-          by 
-            ext m 
-            exact f.cons_smul m c x }
-    ∥f∥ fun x => MultilinearMap.mk_continuous_norm_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _
+def continuous_multilinear_map.curry_left
+(f : continuous_multilinear_map 𝕜 Ei G) : «expr →L[ ] »(Ei 0, 𝕜, continuous_multilinear_map 𝕜 (λ
+  i : fin n, Ei i.succ) G) :=
+linear_map.mk_continuous { to_fun := λ
+  x, (f.to_multilinear_map.curry_left x).mk_continuous «expr * »(«expr∥ ∥»(f), «expr∥ ∥»(x)) (f.norm_map_cons_le x),
+  map_add' := λ x y, by { ext [] [ident m] [],
+    exact [expr f.cons_add m x y] },
+  map_smul' := λ c x, by { ext [] [ident m] [],
+    exact [expr f.cons_smul m c x] } } «expr∥ ∥»(f) (λ
+ x, multilinear_map.mk_continuous_norm_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _)) _)
 
 @[simp]
 theorem ContinuousMultilinearMap.curry_left_apply (f : ContinuousMultilinearMap 𝕜 Ei G) (x : Ei 0)
-  (m : ∀ i : Finₓ n, Ei i.succ) : f.curry_left x m = f (cons x m) :=
+  (m : ∀ (i : Finₓ n), Ei i.succ) : f.curry_left x m = f (cons x m) :=
   rfl
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem ContinuousLinearMap.curry_uncurry_left
-  (f : Ei 0 →L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.succ) G) : f.uncurry_left.curry_left = f :=
-  by 
-    ext m x 
-    simp only [tail_cons, ContinuousLinearMap.uncurry_left_apply, ContinuousMultilinearMap.curry_left_apply]
-    rw [cons_zero]
+theorem continuous_linear_map.curry_uncurry_left
+(f : «expr →L[ ] »(Ei 0, 𝕜, continuous_multilinear_map 𝕜 (λ
+   i : fin n, Ei i.succ) G)) : «expr = »(f.uncurry_left.curry_left, f) :=
+begin
+  ext [] [ident m, ident x] [],
+  simp [] [] ["only"] ["[", expr tail_cons, ",", expr continuous_linear_map.uncurry_left_apply, ",", expr continuous_multilinear_map.curry_left_apply, "]"] [] [],
+  rw [expr cons_zero] []
+end
 
 @[simp]
 theorem ContinuousMultilinearMap.uncurry_curry_left (f : ContinuousMultilinearMap 𝕜 Ei G) :
@@ -1207,6 +1196,7 @@ theorem ContinuousMultilinearMap.uncurry_curry_left (f : ContinuousMultilinearMa
 
 variable(𝕜 Ei G)
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The space of continuous multilinear maps on `Π(i : fin (n+1)), E i` is canonically isomorphic to
 the space of continuous linear maps from `E 0` to the space of continuous multilinear maps on
 `Π(i : fin n), E i.succ `, by separating the first variable. We register this isomorphism in
@@ -1215,108 +1205,100 @@ in `multilinear_curry_left_equiv 𝕜 E E₂`.
 
 The direct and inverse maps are given by `f.uncurry_left` and `f.curry_left`. Use these
 unless you need the full framework of linear isometric equivs. -/
-def continuousMultilinearCurryLeftEquiv :
-  (Ei 0 →L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.succ) G) ≃ₗᵢ[𝕜] ContinuousMultilinearMap 𝕜 Ei G :=
-  LinearIsometryEquiv.ofBounds
-    { toFun := ContinuousLinearMap.uncurryLeft,
-      map_add' :=
-        fun f₁ f₂ =>
-          by 
-            ext m 
-            rfl,
-      map_smul' :=
-        fun c f =>
-          by 
-            ext m 
-            rfl,
-      invFun := ContinuousMultilinearMap.curryLeft, left_inv := ContinuousLinearMap.curry_uncurry_left,
-      right_inv := ContinuousMultilinearMap.uncurry_curry_left }
-    (fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _)
-    fun f => LinearMap.mk_continuous_norm_le _ (norm_nonneg f) _
+def continuous_multilinear_curry_left_equiv : «expr ≃ₗᵢ[ ] »(«expr →L[ ] »(Ei 0, 𝕜, continuous_multilinear_map 𝕜 (λ
+   i : fin n, Ei i.succ) G), 𝕜, continuous_multilinear_map 𝕜 Ei G) :=
+linear_isometry_equiv.of_bounds { to_fun := continuous_linear_map.uncurry_left,
+  map_add' := λ f₁ f₂, by { ext [] [ident m] [],
+    refl },
+  map_smul' := λ c f, by { ext [] [ident m] [],
+    refl },
+  inv_fun := continuous_multilinear_map.curry_left,
+  left_inv := continuous_linear_map.curry_uncurry_left,
+  right_inv := continuous_multilinear_map.uncurry_curry_left } (λ
+ f, multilinear_map.mk_continuous_norm_le _ (norm_nonneg f) _) (λ
+ f, linear_map.mk_continuous_norm_le _ (norm_nonneg f) _)
 
 variable{𝕜 Ei G}
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
 theorem continuous_multilinear_curry_left_equiv_apply
-  (f : Ei 0 →L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.succ) G) (v : ∀ i, Ei i) :
-  continuousMultilinearCurryLeftEquiv 𝕜 Ei G f v = f (v 0) (tail v) :=
-  rfl
+(f : «expr →L[ ] »(Ei 0, 𝕜, continuous_multilinear_map 𝕜 (λ i : fin n, Ei i.succ) G))
+(v : ∀ i, Ei i) : «expr = »(continuous_multilinear_curry_left_equiv 𝕜 Ei G f v, f (v 0) (tail v)) :=
+rfl
 
 @[simp]
 theorem continuous_multilinear_curry_left_equiv_symm_apply (f : ContinuousMultilinearMap 𝕜 Ei G) (x : Ei 0)
-  (v : ∀ i : Finₓ n, Ei i.succ) : (continuousMultilinearCurryLeftEquiv 𝕜 Ei G).symm f x v = f (cons x v) :=
+  (v : ∀ (i : Finₓ n), Ei i.succ) : (continuousMultilinearCurryLeftEquiv 𝕜 Ei G).symm f x v = f (cons x v) :=
   rfl
 
 @[simp]
 theorem ContinuousMultilinearMap.curry_left_norm (f : ContinuousMultilinearMap 𝕜 Ei G) : ∥f.curry_left∥ = ∥f∥ :=
   (continuousMultilinearCurryLeftEquiv 𝕜 Ei G).symm.norm_map f
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem ContinuousLinearMap.uncurry_left_norm
-  (f : Ei 0 →L[𝕜] ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.succ) G) : ∥f.uncurry_left∥ = ∥f∥ :=
-  (continuousMultilinearCurryLeftEquiv 𝕜 Ei G).norm_map f
+theorem continuous_linear_map.uncurry_left_norm
+(f : «expr →L[ ] »(Ei 0, 𝕜, continuous_multilinear_map 𝕜 (λ
+   i : fin n, Ei i.succ) G)) : «expr = »(«expr∥ ∥»(f.uncurry_left), «expr∥ ∥»(f)) :=
+(continuous_multilinear_curry_left_equiv 𝕜 Ei G).norm_map f
 
 /-! #### Right currying -/
 
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a continuous linear map `f` from continuous multilinear maps on `n` variables to
 continuous linear maps on `E 0`, construct the corresponding continuous multilinear map on `n+1`
 variables obtained by concatenating the variables, given by `m ↦ f (init m) (m (last n))`. -/
-def ContinuousMultilinearMap.uncurryRight
-  (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.cast_succ) (Ei (last n) →L[𝕜] G)) :
-  ContinuousMultilinearMap 𝕜 Ei G :=
-  let f' : MultilinearMap 𝕜 (fun i : Finₓ n => Ei i.cast_succ) (Ei (last n) →ₗ[𝕜] G) :=
-    { toFun := fun m => (f m).toLinearMap,
-      map_add' :=
-        fun m i x y =>
-          by 
-            simp ,
-      map_smul' :=
-        fun m i c x =>
-          by 
-            simp  }
-  (@MultilinearMap.uncurryRight 𝕜 n Ei G _ _ _ _ _ f').mkContinuous ∥f∥ fun m => f.norm_map_init_le m
+def continuous_multilinear_map.uncurry_right
+(f : continuous_multilinear_map 𝕜 (λ
+  i : fin n, Ei i.cast_succ) «expr →L[ ] »(Ei (last n), 𝕜, G)) : continuous_multilinear_map 𝕜 Ei G :=
+let f' : multilinear_map 𝕜 (λ
+     i : fin n, Ei i.cast_succ) «expr →ₗ[ ] »(Ei (last n), 𝕜, G) := { to_fun := λ m, (f m).to_linear_map,
+      map_add' := λ m i x y, by simp [] [] [] [] [] [],
+      map_smul' := λ m i c x, by simp [] [] [] [] [] [] } in
+(@multilinear_map.uncurry_right 𝕜 n Ei G _ _ _ _ _ f').mk_continuous «expr∥ ∥»(f) (λ m, f.norm_map_init_le m)
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem ContinuousMultilinearMap.uncurry_right_apply
-  (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.cast_succ) (Ei (last n) →L[𝕜] G)) (m : ∀ i, Ei i) :
-  f.uncurry_right m = f (init m) (m (last n)) :=
-  rfl
+theorem continuous_multilinear_map.uncurry_right_apply
+(f : continuous_multilinear_map 𝕜 (λ i : fin n, Ei i.cast_succ) «expr →L[ ] »(Ei (last n), 𝕜, G))
+(m : ∀ i, Ei i) : «expr = »(f.uncurry_right m, f (init m) (m (last n))) :=
+rfl
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a continuous multilinear map `f` in `n+1` variables, split the last variable to obtain
 a continuous multilinear map in `n` variables into continuous linear maps, given by
 `m ↦ (x ↦ f (snoc m x))`. -/
-def ContinuousMultilinearMap.curryRight (f : ContinuousMultilinearMap 𝕜 Ei G) :
-  ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.cast_succ) (Ei (last n) →L[𝕜] G) :=
-  let f' : MultilinearMap 𝕜 (fun i : Finₓ n => Ei i.cast_succ) (Ei (last n) →L[𝕜] G) :=
-    { toFun :=
-        fun m => (f.to_multilinear_map.curry_right m).mkContinuous (∥f∥*∏i, ∥m i∥)$ fun x => f.norm_map_snoc_le m x,
-      map_add' :=
-        fun m i x y =>
-          by 
-            simp 
-            rfl,
-      map_smul' :=
-        fun m i c x =>
-          by 
-            simp 
-            rfl }
-  f'.mk_continuous ∥f∥
-    fun m => LinearMap.mk_continuous_norm_le _ (mul_nonneg (norm_nonneg _) (prod_nonneg fun j hj => norm_nonneg _)) _
+def continuous_multilinear_map.curry_right
+(f : continuous_multilinear_map 𝕜 Ei G) : continuous_multilinear_map 𝕜 (λ
+ i : fin n, Ei i.cast_succ) «expr →L[ ] »(Ei (last n), 𝕜, G) :=
+let f' : multilinear_map 𝕜 (λ
+     i : fin n, Ei i.cast_succ) «expr →L[ ] »(Ei (last n), 𝕜, G) := { to_fun := λ
+      m, «expr $ »((f.to_multilinear_map.curry_right m).mk_continuous «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(m i))), λ
+       x, f.norm_map_snoc_le m x),
+      map_add' := λ m i x y, by { simp [] [] [] [] [] [],
+        refl },
+      map_smul' := λ m i c x, by { simp [] [] [] [] [] [],
+        refl } } in
+f'.mk_continuous «expr∥ ∥»(f) (λ
+ m, linear_map.mk_continuous_norm_le _ (mul_nonneg (norm_nonneg _) (prod_nonneg (λ j hj, norm_nonneg _))) _)
 
 @[simp]
 theorem ContinuousMultilinearMap.curry_right_apply (f : ContinuousMultilinearMap 𝕜 Ei G)
-  (m : ∀ i : Finₓ n, Ei i.cast_succ) (x : Ei (last n)) : f.curry_right m x = f (snoc m x) :=
+  (m : ∀ (i : Finₓ n), Ei i.cast_succ) (x : Ei (last n)) : f.curry_right m x = f (snoc m x) :=
   rfl
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem ContinuousMultilinearMap.curry_uncurry_right
-  (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.cast_succ) (Ei (last n) →L[𝕜] G)) :
-  f.uncurry_right.curry_right = f :=
-  by 
-    ext m x 
-    simp only [snoc_last, ContinuousMultilinearMap.curry_right_apply, ContinuousMultilinearMap.uncurry_right_apply]
-    rw [init_snoc]
+theorem continuous_multilinear_map.curry_uncurry_right
+(f : continuous_multilinear_map 𝕜 (λ
+  i : fin n, Ei i.cast_succ) «expr →L[ ] »(Ei (last n), 𝕜, G)) : «expr = »(f.uncurry_right.curry_right, f) :=
+begin
+  ext [] [ident m, ident x] [],
+  simp [] [] ["only"] ["[", expr snoc_last, ",", expr continuous_multilinear_map.curry_right_apply, ",", expr continuous_multilinear_map.uncurry_right_apply, "]"] [] [],
+  rw [expr init_snoc] []
+end
 
 @[simp]
 theorem ContinuousMultilinearMap.uncurry_curry_right (f : ContinuousMultilinearMap 𝕜 Ei G) :
@@ -1327,6 +1309,7 @@ theorem ContinuousMultilinearMap.uncurry_curry_right (f : ContinuousMultilinearM
 
 variable(𝕜 Ei G)
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The space of continuous multilinear maps on `Π(i : fin (n+1)), Ei i` is canonically isomorphic to
 the space of continuous multilinear maps on `Π(i : fin n), Ei i.cast_succ` with values in the space
@@ -1337,28 +1320,22 @@ The algebraic version (without topology) is given in `multilinear_curry_right_eq
 The direct and inverse maps are given by `f.uncurry_right` and `f.curry_right`. Use these
 unless you need the full framework of linear isometric equivs.
 -/
-def continuousMultilinearCurryRightEquiv :
-  ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.cast_succ) (Ei (last n) →L[𝕜] G) ≃ₗᵢ[𝕜]
-    ContinuousMultilinearMap 𝕜 Ei G :=
-  LinearIsometryEquiv.ofBounds
-    { toFun := ContinuousMultilinearMap.uncurryRight,
-      map_add' :=
-        fun f₁ f₂ =>
-          by 
-            ext m 
-            rfl,
-      map_smul' :=
-        fun c f =>
-          by 
-            ext m 
-            rfl,
-      invFun := ContinuousMultilinearMap.curryRight, left_inv := ContinuousMultilinearMap.curry_uncurry_right,
-      right_inv := ContinuousMultilinearMap.uncurry_curry_right }
-    (fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _)
-    fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _
+def continuous_multilinear_curry_right_equiv : «expr ≃ₗᵢ[ ] »(continuous_multilinear_map 𝕜 (λ
+  i : fin n, Ei i.cast_succ) «expr →L[ ] »(Ei (last n), 𝕜, G), 𝕜, continuous_multilinear_map 𝕜 Ei G) :=
+linear_isometry_equiv.of_bounds { to_fun := continuous_multilinear_map.uncurry_right,
+  map_add' := λ f₁ f₂, by { ext [] [ident m] [],
+    refl },
+  map_smul' := λ c f, by { ext [] [ident m] [],
+    refl },
+  inv_fun := continuous_multilinear_map.curry_right,
+  left_inv := continuous_multilinear_map.curry_uncurry_right,
+  right_inv := continuous_multilinear_map.uncurry_curry_right } (λ
+ f, multilinear_map.mk_continuous_norm_le _ (norm_nonneg f) _) (λ
+ f, multilinear_map.mk_continuous_norm_le _ (norm_nonneg f) _)
 
 variable(n G')
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The space of continuous multilinear maps on `Π(i : fin (n+1)), G` is canonically isomorphic to
 the space of continuous multilinear maps on `Π(i : fin n), G` with values in the space
 of continuous linear maps on `G`, by separating the last variable. We register this
@@ -1368,41 +1345,44 @@ are no dependent types, use the primed version as it helps Lean a lot for unific
 
 The direct and inverse maps are given by `f.uncurry_right` and `f.curry_right`. Use these
 unless you need the full framework of linear isometric equivs. -/
-def continuousMultilinearCurryRightEquiv' : (G[×n]→L[𝕜] G →L[𝕜] G') ≃ₗᵢ[𝕜] G[×n.succ]→L[𝕜] G' :=
-  continuousMultilinearCurryRightEquiv 𝕜 (fun i : Finₓ n.succ => G) G'
+def continuous_multilinear_curry_right_equiv' : «expr ≃ₗᵢ[ ] »(«expr [× ]→L[ ] »(G, n, 𝕜, «expr →L[ ] »(G, 𝕜, G')), 𝕜, «expr [× ]→L[ ] »(G, n.succ, 𝕜, G')) :=
+continuous_multilinear_curry_right_equiv 𝕜 (λ i : fin n.succ, G) G'
 
 variable{n 𝕜 G Ei G'}
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
 theorem continuous_multilinear_curry_right_equiv_apply
-  (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.cast_succ) (Ei (last n) →L[𝕜] G)) (v : ∀ i, Ei i) :
-  (continuousMultilinearCurryRightEquiv 𝕜 Ei G) f v = f (init v) (v (last n)) :=
-  rfl
+(f : continuous_multilinear_map 𝕜 (λ i : fin n, Ei i.cast_succ) «expr →L[ ] »(Ei (last n), 𝕜, G))
+(v : ∀ i, Ei i) : «expr = »(continuous_multilinear_curry_right_equiv 𝕜 Ei G f v, f (init v) (v (last n))) :=
+rfl
 
 @[simp]
 theorem continuous_multilinear_curry_right_equiv_symm_apply (f : ContinuousMultilinearMap 𝕜 Ei G)
-  (v : ∀ i : Finₓ n, Ei i.cast_succ) (x : Ei (last n)) :
+  (v : ∀ (i : Finₓ n), Ei i.cast_succ) (x : Ei (last n)) :
   (continuousMultilinearCurryRightEquiv 𝕜 Ei G).symm f v x = f (snoc v x) :=
   rfl
 
 @[simp]
-theorem continuous_multilinear_curry_right_equiv_apply' (f : G[×n]→L[𝕜] G →L[𝕜] G') (v : ∀ i : Finₓ n.succ, G) :
-  continuousMultilinearCurryRightEquiv' 𝕜 n G G' f v = f (init v) (v (last n)) :=
+theorem continuous_multilinear_curry_right_equiv_apply' (f : «expr [× ]→L[ ] » G n 𝕜 (G →L[𝕜] G'))
+  (v : ∀ (i : Finₓ n.succ), G) : continuousMultilinearCurryRightEquiv' 𝕜 n G G' f v = f (init v) (v (last n)) :=
   rfl
 
 @[simp]
-theorem continuous_multilinear_curry_right_equiv_symm_apply' (f : G[×n.succ]→L[𝕜] G') (v : ∀ i : Finₓ n, G) (x : G) :
-  (continuousMultilinearCurryRightEquiv' 𝕜 n G G').symm f v x = f (snoc v x) :=
+theorem continuous_multilinear_curry_right_equiv_symm_apply' (f : «expr [× ]→L[ ] » G n.succ 𝕜 G')
+  (v : ∀ (i : Finₓ n), G) (x : G) : (continuousMultilinearCurryRightEquiv' 𝕜 n G G').symm f v x = f (snoc v x) :=
   rfl
 
 @[simp]
 theorem ContinuousMultilinearMap.curry_right_norm (f : ContinuousMultilinearMap 𝕜 Ei G) : ∥f.curry_right∥ = ∥f∥ :=
   (continuousMultilinearCurryRightEquiv 𝕜 Ei G).symm.norm_map f
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem ContinuousMultilinearMap.uncurry_right_norm
-  (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => Ei i.cast_succ) (Ei (last n) →L[𝕜] G)) : ∥f.uncurry_right∥ = ∥f∥ :=
-  (continuousMultilinearCurryRightEquiv 𝕜 Ei G).norm_map f
+theorem continuous_multilinear_map.uncurry_right_norm
+(f : continuous_multilinear_map 𝕜 (λ
+  i : fin n, Ei i.cast_succ) «expr →L[ ] »(Ei (last n), 𝕜, G)) : «expr = »(«expr∥ ∥»(f.uncurry_right), «expr∥ ∥»(f)) :=
+(continuous_multilinear_curry_right_equiv 𝕜 Ei G).norm_map f
 
 /-!
 #### Currying with `0` variables
@@ -1420,15 +1400,16 @@ attribute [local instance] Unique.subsingleton
 
 variable{𝕜 G G'}
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Associating to a continuous multilinear map in `0` variables the unique value it takes. -/
-def ContinuousMultilinearMap.uncurry0 (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ 0 => G) G') : G' :=
-  f 0
+def continuous_multilinear_map.uncurry0 (f : continuous_multilinear_map 𝕜 (λ i : fin 0, G) G') : G' :=
+f 0
 
 variable(𝕜 G)
 
 /-- Associating to an element `x` of a vector space `E₂` the continuous multilinear map in `0`
 variables taking the (unique) value `x` -/
-def ContinuousMultilinearMap.curry0 (x : G') : G[×0]→L[𝕜] G' :=
+def ContinuousMultilinearMap.curry0 (x : G') : «expr [× ]→L[ ] » G 0 𝕜 G' :=
   { toFun := fun m => x, map_add' := fun m i => Finₓ.elim0 i, map_smul' := fun m i => Finₓ.elim0 i,
     cont := continuous_const }
 
@@ -1441,17 +1422,17 @@ theorem ContinuousMultilinearMap.curry0_apply (x : G') (m : Finₓ 0 → G) : Co
 variable{𝕜}
 
 @[simp]
-theorem ContinuousMultilinearMap.uncurry0_apply (f : G[×0]→L[𝕜] G') : f.uncurry0 = f 0 :=
+theorem ContinuousMultilinearMap.uncurry0_apply (f : «expr [× ]→L[ ] » G 0 𝕜 G') : f.uncurry0 = f 0 :=
   rfl
 
 @[simp]
-theorem ContinuousMultilinearMap.apply_zero_curry0 (f : G[×0]→L[𝕜] G') {x : Finₓ 0 → G} :
+theorem ContinuousMultilinearMap.apply_zero_curry0 (f : «expr [× ]→L[ ] » G 0 𝕜 G') {x : Finₓ 0 → G} :
   ContinuousMultilinearMap.curry0 𝕜 G (f x) = f :=
   by 
     ext m 
     simp [(Subsingleton.elimₓ _ _ : x = m)]
 
-theorem ContinuousMultilinearMap.uncurry0_curry0 (f : G[×0]→L[𝕜] G') :
+theorem ContinuousMultilinearMap.uncurry0_curry0 (f : «expr [× ]→L[ ] » G 0 𝕜 G') :
   ContinuousMultilinearMap.curry0 𝕜 G f.uncurry0 = f :=
   by 
     simp 
@@ -1491,7 +1472,7 @@ begin
   simpa [] [] [] [] [] []
 end
 
-theorem ContinuousMultilinearMap.uncurry0_norm (f : G[×0]→L[𝕜] G') : ∥f.uncurry0∥ = ∥f∥ :=
+theorem ContinuousMultilinearMap.uncurry0_norm (f : «expr [× ]→L[ ] » G 0 𝕜 G') : ∥f.uncurry0∥ = ∥f∥ :=
   by 
     simp 
 
@@ -1502,7 +1483,7 @@ maps in `0` variables with values in this normed space.
 
 The direct and inverse maps are `uncurry0` and `curry0`. Use these unless you need the full
 framework of linear isometric equivs. -/
-def continuousMultilinearCurryFin0 : (G[×0]→L[𝕜] G') ≃ₗᵢ[𝕜] G' :=
+def continuousMultilinearCurryFin0 : «expr [× ]→L[ ] » G 0 𝕜 G' ≃ₗᵢ[𝕜] G' :=
   { toFun := fun f => ContinuousMultilinearMap.uncurry0 f, invFun := fun f => ContinuousMultilinearMap.curry0 𝕜 G f,
     map_add' := fun f g => rfl, map_smul' := fun c f => rfl, left_inv := ContinuousMultilinearMap.uncurry0_curry0,
     right_inv := ContinuousMultilinearMap.curry0_uncurry0 𝕜 G, norm_map' := ContinuousMultilinearMap.uncurry0_norm }
@@ -1510,7 +1491,8 @@ def continuousMultilinearCurryFin0 : (G[×0]→L[𝕜] G') ≃ₗᵢ[𝕜] G' :=
 variable{𝕜 G G'}
 
 @[simp]
-theorem continuous_multilinear_curry_fin0_apply (f : G[×0]→L[𝕜] G') : continuousMultilinearCurryFin0 𝕜 G G' f = f 0 :=
+theorem continuous_multilinear_curry_fin0_apply (f : «expr [× ]→L[ ] » G 0 𝕜 G') :
+  continuousMultilinearCurryFin0 𝕜 G G' f = f 0 :=
   rfl
 
 @[simp]
@@ -1525,16 +1507,17 @@ end
 
 variable(𝕜 G G')
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Continuous multilinear maps from `G^1` to `G'` are isomorphic with continuous linear maps from
 `G` to `G'`. -/
-def continuousMultilinearCurryFin1 : (G[×1]→L[𝕜] G') ≃ₗᵢ[𝕜] G →L[𝕜] G' :=
-  (continuousMultilinearCurryRightEquiv 𝕜 (fun i : Finₓ 1 => G) G').symm.trans
-    (continuousMultilinearCurryFin0 𝕜 G (G →L[𝕜] G'))
+def continuous_multilinear_curry_fin1 : «expr ≃ₗᵢ[ ] »(«expr [× ]→L[ ] »(G, 1, 𝕜, G'), 𝕜, «expr →L[ ] »(G, 𝕜, G')) :=
+(continuous_multilinear_curry_right_equiv 𝕜 (λ
+  i : fin 1, G) G').symm.trans (continuous_multilinear_curry_fin0 𝕜 G «expr →L[ ] »(G, 𝕜, G'))
 
 variable{𝕜 G G'}
 
 @[simp]
-theorem continuous_multilinear_curry_fin1_apply (f : G[×1]→L[𝕜] G') (x : G) :
+theorem continuous_multilinear_curry_fin1_apply (f : «expr [× ]→L[ ] » G 1 𝕜 G') (x : G) :
   continuousMultilinearCurryFin1 𝕜 G G' f x = f (Finₓ.snoc 0 x) :=
   rfl
 
@@ -1547,42 +1530,28 @@ namespace ContinuousMultilinearMap
 
 variable(𝕜 G G')
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An equivalence of the index set defines a linear isometric equivalence between the spaces
 of multilinear maps. -/
-def dom_dom_congr (σ : ι ≃ ι') :
-  ContinuousMultilinearMap 𝕜 (fun _ : ι => G) G' ≃ₗᵢ[𝕜] ContinuousMultilinearMap 𝕜 (fun _ : ι' => G) G' :=
-  LinearIsometryEquiv.ofBounds
-    { toFun :=
-        fun f =>
-          (MultilinearMap.domDomCongr σ f.to_multilinear_map).mkContinuous ∥f∥$
-            fun m =>
-              (f.le_op_norm fun i => m (σ i)).trans_eq$
-                by 
-                  rw [←σ.prod_comp],
-      invFun :=
-        fun f =>
-          (MultilinearMap.domDomCongr σ.symm f.to_multilinear_map).mkContinuous ∥f∥$
-            fun m =>
-              (f.le_op_norm fun i => m (σ.symm i)).trans_eq$
-                by 
-                  rw [←σ.symm.prod_comp],
-      left_inv :=
-        fun f =>
-          ext$
-            fun m =>
-              congr_argₓ f$
-                by 
-                  simp only [σ.symm_apply_apply],
-      right_inv :=
-        fun f =>
-          ext$
-            fun m =>
-              congr_argₓ f$
-                by 
-                  simp only [σ.apply_symm_apply],
-      map_add' := fun f g => rfl, map_smul' := fun c f => rfl }
-    (fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _)
-    fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _
+def dom_dom_congr
+(σ : «expr ≃ »(ι, ι')) : «expr ≃ₗᵢ[ ] »(continuous_multilinear_map 𝕜 (λ
+  _ : ι, G) G', 𝕜, continuous_multilinear_map 𝕜 (λ _ : ι', G) G') :=
+linear_isometry_equiv.of_bounds { to_fun := λ
+  f, «expr $ »((multilinear_map.dom_dom_congr σ f.to_multilinear_map).mk_continuous «expr∥ ∥»(f), λ
+   m, «expr $ »((f.le_op_norm (λ i, m (σ i))).trans_eq, by rw ["[", "<-", expr σ.prod_comp, "]"] [])),
+  inv_fun := λ
+  f, «expr $ »((multilinear_map.dom_dom_congr σ.symm f.to_multilinear_map).mk_continuous «expr∥ ∥»(f), λ
+   m, «expr $ »((f.le_op_norm (λ i, m (σ.symm i))).trans_eq, by rw ["[", "<-", expr σ.symm.prod_comp, "]"] [])),
+  left_inv := λ
+  f, «expr $ »(ext, λ m, «expr $ »(congr_arg f, by simp [] [] ["only"] ["[", expr σ.symm_apply_apply, "]"] [] [])),
+  right_inv := λ
+  f, «expr $ »(ext, λ m, «expr $ »(congr_arg f, by simp [] [] ["only"] ["[", expr σ.apply_symm_apply, "]"] [] [])),
+  map_add' := λ f g, rfl,
+  map_smul' := λ
+  c
+  f, rfl } (λ
+ f, multilinear_map.mk_continuous_norm_le _ (norm_nonneg f) _) (λ
+ f, multilinear_map.mk_continuous_norm_le _ (norm_nonneg f) _)
 
 variable{𝕜 G G'}
 
@@ -1590,40 +1559,47 @@ section
 
 variable[DecidableEq (Sum ι ι')]
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A continuous multilinear map with variables indexed by `ι ⊕ ι'` defines a continuous multilinear
 map with variables indexed by `ι` taking values in the space of continuous multilinear maps with
 variables indexed by `ι'`. -/
-def curry_sum (f : ContinuousMultilinearMap 𝕜 (fun x : Sum ι ι' => G) G') :
-  ContinuousMultilinearMap 𝕜 (fun x : ι => G) (ContinuousMultilinearMap 𝕜 (fun x : ι' => G) G') :=
-  MultilinearMap.mkContinuousMultilinear (MultilinearMap.currySum f.to_multilinear_map) ∥f∥$
-    fun m m' =>
-      by 
-        simpa [Fintype.prod_sum_type, mul_assocₓ] using f.le_op_norm (Sum.elim m m')
+def curry_sum
+(f : continuous_multilinear_map 𝕜 (λ
+  x : «expr ⊕ »(ι, ι'), G) G') : continuous_multilinear_map 𝕜 (λ
+ x : ι, G) (continuous_multilinear_map 𝕜 (λ x : ι', G) G') :=
+«expr $ »(multilinear_map.mk_continuous_multilinear (multilinear_map.curry_sum f.to_multilinear_map) «expr∥ ∥»(f), λ
+ m
+ m', by simpa [] [] [] ["[", expr fintype.prod_sum_type, ",", expr mul_assoc, "]"] [] ["using", expr f.le_op_norm (sum.elim m m')])
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem curry_sum_apply (f : ContinuousMultilinearMap 𝕜 (fun x : Sum ι ι' => G) G') (m : ι → G) (m' : ι' → G) :
-  f.curry_sum m m' = f (Sum.elim m m') :=
-  rfl
+theorem curry_sum_apply
+(f : continuous_multilinear_map 𝕜 (λ x : «expr ⊕ »(ι, ι'), G) G')
+(m : ι → G)
+(m' : ι' → G) : «expr = »(f.curry_sum m m', f (sum.elim m m')) :=
+rfl
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A continuous multilinear map with variables indexed by `ι` taking values in the space of
 continuous multilinear maps with variables indexed by `ι'` defines a continuous multilinear map with
 variables indexed by `ι ⊕ ι'`. -/
-def uncurry_sum (f : ContinuousMultilinearMap 𝕜 (fun x : ι => G) (ContinuousMultilinearMap 𝕜 (fun x : ι' => G) G')) :
-  ContinuousMultilinearMap 𝕜 (fun x : Sum ι ι' => G) G' :=
-  MultilinearMap.mkContinuous (to_multilinear_map_linear.compMultilinearMap f.to_multilinear_map).uncurrySum ∥f∥$
-    fun m =>
-      by 
-        simpa [Fintype.prod_sum_type, mul_assocₓ] using
-          (f (m ∘ Sum.inl)).le_of_op_norm_le (m ∘ Sum.inr) (f.le_op_norm _)
+def uncurry_sum
+(f : continuous_multilinear_map 𝕜 (λ
+  x : ι, G) (continuous_multilinear_map 𝕜 (λ
+   x : ι', G) G')) : continuous_multilinear_map 𝕜 (λ x : «expr ⊕ »(ι, ι'), G) G' :=
+«expr $ »(multilinear_map.mk_continuous (to_multilinear_map_linear.comp_multilinear_map f.to_multilinear_map).uncurry_sum «expr∥ ∥»(f), λ
+ m, by simpa [] [] [] ["[", expr fintype.prod_sum_type, ",", expr mul_assoc, "]"] [] ["using", expr (f «expr ∘ »(m, sum.inl)).le_of_op_norm_le «expr ∘ »(m, sum.inr) (f.le_op_norm _)])
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
 theorem uncurry_sum_apply
-  (f : ContinuousMultilinearMap 𝕜 (fun x : ι => G) (ContinuousMultilinearMap 𝕜 (fun x : ι' => G) G'))
-  (m : Sum ι ι' → G) : f.uncurry_sum m = f (m ∘ Sum.inl) (m ∘ Sum.inr) :=
-  rfl
+(f : continuous_multilinear_map 𝕜 (λ x : ι, G) (continuous_multilinear_map 𝕜 (λ x : ι', G) G'))
+(m : «expr ⊕ »(ι, ι') → G) : «expr = »(f.uncurry_sum m, f «expr ∘ »(m, sum.inl) «expr ∘ »(m, sum.inr)) :=
+rfl
 
 variable(𝕜 ι ι' G G')
 
+-- error in Analysis.NormedSpace.Multilinear: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Linear isometric equivalence between the space of continuous multilinear maps with variables
 indexed by `ι ⊕ ι'` and the space of continuous multilinear maps with variables indexed by `ι`
 taking values in the space of continuous multilinear maps with variables indexed by `ι'`.
@@ -1631,34 +1607,22 @@ taking values in the space of continuous multilinear maps with variables indexed
 The forward and inverse functions are `continuous_multilinear_map.curry_sum`
 and `continuous_multilinear_map.uncurry_sum`. Use this definition only if you need
 some properties of `linear_isometry_equiv`. -/
-def curry_sum_equiv :
-  ContinuousMultilinearMap 𝕜 (fun x : Sum ι ι' => G) G' ≃ₗᵢ[𝕜]
-    ContinuousMultilinearMap 𝕜 (fun x : ι => G) (ContinuousMultilinearMap 𝕜 (fun x : ι' => G) G') :=
-  LinearIsometryEquiv.ofBounds
-    { toFun := curry_sum, invFun := uncurry_sum,
-      map_add' :=
-        fun f g =>
-          by 
-            ext 
-            rfl,
-      map_smul' :=
-        fun c f =>
-          by 
-            ext 
-            rfl,
-      left_inv :=
-        fun f =>
-          by 
-            ext m 
-            exact congr_argₓ f (Sum.elim_comp_inl_inr m),
-      right_inv :=
-        fun f =>
-          by 
-            ext m₁ m₂ 
-            change f _ _ = f _ _ 
-            rw [Sum.elim_comp_inl, Sum.elim_comp_inr] }
-    (fun f => MultilinearMap.mk_continuous_multilinear_norm_le _ (norm_nonneg f) _)
-    fun f => MultilinearMap.mk_continuous_norm_le _ (norm_nonneg f) _
+def curry_sum_equiv : «expr ≃ₗᵢ[ ] »(continuous_multilinear_map 𝕜 (λ
+  x : «expr ⊕ »(ι, ι'), G) G', 𝕜, continuous_multilinear_map 𝕜 (λ
+  x : ι, G) (continuous_multilinear_map 𝕜 (λ x : ι', G) G')) :=
+linear_isometry_equiv.of_bounds { to_fun := curry_sum,
+  inv_fun := uncurry_sum,
+  map_add' := λ f g, by { ext [] [] [],
+    refl },
+  map_smul' := λ c f, by { ext [] [] [],
+    refl },
+  left_inv := λ f, by { ext [] [ident m] [],
+    exact [expr congr_arg f (sum.elim_comp_inl_inr m)] },
+  right_inv := λ f, by { ext [] [ident m₁, ident m₂] [],
+    change [expr «expr = »(f _ _, f _ _)] [] [],
+    rw ["[", expr sum.elim_comp_inl, ",", expr sum.elim_comp_inr, "]"] [] } } (λ
+ f, multilinear_map.mk_continuous_multilinear_norm_le _ (norm_nonneg f) _) (λ
+ f, multilinear_map.mk_continuous_norm_le _ (norm_nonneg f) _)
 
 end 
 
@@ -1671,38 +1635,39 @@ variable(𝕜 G G'){k l : ℕ}{s : Finset (Finₓ n)}
 to the space of continuous multilinear maps `G [×k]→L[𝕜] G [×l]→L[𝕜] G'` of `k` variables taking
 values in the space of continuous multilinear maps of `l` variables. -/
 def curry_fin_finset {k l n : ℕ} {s : Finset (Finₓ n)} (hk : s.card = k) (hl : («expr ᶜ» s).card = l) :
-  (G[×n]→L[𝕜] G') ≃ₗᵢ[𝕜] G[×k]→L[𝕜] G[×l]→L[𝕜] G' :=
+  «expr [× ]→L[ ] » G n 𝕜 G' ≃ₗᵢ[𝕜] «expr [× ]→L[ ] » G k 𝕜 («expr [× ]→L[ ] » G l 𝕜 G') :=
   (dom_dom_congr 𝕜 G G' (finSumEquivOfFinset hk hl).symm).trans (curry_sum_equiv 𝕜 (Finₓ k) (Finₓ l) G G')
 
 variable{𝕜 G G'}
 
 @[simp]
-theorem curry_fin_finset_apply (hk : s.card = k) (hl : («expr ᶜ» s).card = l) (f : G[×n]→L[𝕜] G') (mk : Finₓ k → G)
-  (ml : Finₓ l → G) :
+theorem curry_fin_finset_apply (hk : s.card = k) (hl : («expr ᶜ» s).card = l) (f : «expr [× ]→L[ ] » G n 𝕜 G')
+  (mk : Finₓ k → G) (ml : Finₓ l → G) :
   curry_fin_finset 𝕜 G G' hk hl f mk ml = f fun i => Sum.elim mk ml ((finSumEquivOfFinset hk hl).symm i) :=
   rfl
 
 @[simp]
-theorem curry_fin_finset_symm_apply (hk : s.card = k) (hl : («expr ᶜ» s).card = l) (f : G[×k]→L[𝕜] G[×l]→L[𝕜] G')
-  (m : Finₓ n → G) :
+theorem curry_fin_finset_symm_apply (hk : s.card = k) (hl : («expr ᶜ» s).card = l)
+  (f : «expr [× ]→L[ ] » G k 𝕜 («expr [× ]→L[ ] » G l 𝕜 G')) (m : Finₓ n → G) :
   (curry_fin_finset 𝕜 G G' hk hl).symm f m =
     f (fun i => m$ finSumEquivOfFinset hk hl (Sum.inl i)) fun i => m$ finSumEquivOfFinset hk hl (Sum.inr i) :=
   rfl
 
 @[simp]
 theorem curry_fin_finset_symm_apply_piecewise_const (hk : s.card = k) (hl : («expr ᶜ» s).card = l)
-  (f : G[×k]→L[𝕜] G[×l]→L[𝕜] G') (x y : G) :
+  (f : «expr [× ]→L[ ] » G k 𝕜 («expr [× ]→L[ ] » G l 𝕜 G')) (x y : G) :
   (curry_fin_finset 𝕜 G G' hk hl).symm f (s.piecewise (fun _ => x) fun _ => y) = f (fun _ => x) fun _ => y :=
   MultilinearMap.curry_fin_finset_symm_apply_piecewise_const hk hl _ x y
 
 @[simp]
-theorem curry_fin_finset_symm_apply_const (hk : s.card = k) (hl : («expr ᶜ» s).card = l) (f : G[×k]→L[𝕜] G[×l]→L[𝕜] G')
-  (x : G) : ((curry_fin_finset 𝕜 G G' hk hl).symm f fun _ => x) = f (fun _ => x) fun _ => x :=
+theorem curry_fin_finset_symm_apply_const (hk : s.card = k) (hl : («expr ᶜ» s).card = l)
+  (f : «expr [× ]→L[ ] » G k 𝕜 («expr [× ]→L[ ] » G l 𝕜 G')) (x : G) :
+  ((curry_fin_finset 𝕜 G G' hk hl).symm f fun _ => x) = f (fun _ => x) fun _ => x :=
   rfl
 
 @[simp]
-theorem curry_fin_finset_apply_const (hk : s.card = k) (hl : («expr ᶜ» s).card = l) (f : G[×n]→L[𝕜] G') (x y : G) :
-  (curry_fin_finset 𝕜 G G' hk hl f (fun _ => x) fun _ => y) = f (s.piecewise (fun _ => x) fun _ => y) :=
+theorem curry_fin_finset_apply_const (hk : s.card = k) (hl : («expr ᶜ» s).card = l) (f : «expr [× ]→L[ ] » G n 𝕜 G')
+  (x y : G) : (curry_fin_finset 𝕜 G G' hk hl f (fun _ => x) fun _ => y) = f (s.piecewise (fun _ => x) fun _ => y) :=
   by 
     refine' (curry_fin_finset_symm_apply_piecewise_const hk hl _ _ _).symm.trans _ 
     rw [LinearIsometryEquiv.symm_apply_apply]

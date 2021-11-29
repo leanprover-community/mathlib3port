@@ -25,62 +25,80 @@ variable{ι α X M N : Type _}[TopologicalSpace X]
 theorem continuous_one [TopologicalSpace M] [HasOne M] : Continuous (1 : X → M) :=
   @continuous_const _ _ _ _ 1
 
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Basic hypothesis to talk about a topological additive monoid or a topological additive
 semigroup. A topological additive monoid over `M`, for example, is obtained by requiring both the
 instances `add_monoid M` and `has_continuous_add M`. -/
-class HasContinuousAdd(M : Type u)[TopologicalSpace M][Add M] : Prop where 
-  continuous_add : Continuous fun p : M × M => p.1+p.2
+class has_continuous_add
+(M : Type u)
+[topological_space M]
+[has_add M] : exprProp() := (continuous_add : continuous (λ p : «expr × »(M, M), «expr + »(p.1, p.2)))
 
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Basic hypothesis to talk about a topological monoid or a topological semigroup.
 A topological monoid over `M`, for example, is obtained by requiring both the instances `monoid M`
 and `has_continuous_mul M`. -/
-@[toAdditive]
-class HasContinuousMul(M : Type u)[TopologicalSpace M][Mul M] : Prop where 
-  continuous_mul : Continuous fun p : M × M => p.1*p.2
+@[to_additive #[]]
+class has_continuous_mul
+(M : Type u)
+[topological_space M]
+[has_mul M] : exprProp() := (continuous_mul : continuous (λ p : «expr × »(M, M), «expr * »(p.1, p.2)))
 
 section HasContinuousMul
 
 variable[TopologicalSpace M][Mul M][HasContinuousMul M]
 
-@[toAdditive]
-theorem continuous_mul : Continuous fun p : M × M => p.1*p.2 :=
-  HasContinuousMul.continuous_mul
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem continuous_mul : continuous (λ p : «expr × »(M, M), «expr * »(p.1, p.2)) :=
+has_continuous_mul.continuous_mul
 
 @[continuity, toAdditive]
 theorem Continuous.mul {f g : X → M} (hf : Continuous f) (hg : Continuous g) : Continuous fun x => f x*g x :=
   continuous_mul.comp (hf.prod_mk hg : _)
 
-@[toAdditive]
-theorem continuous_mul_left (a : M) : Continuous fun b : M => a*b :=
-  continuous_const.mul continuous_id
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem continuous_mul_left (a : M) : continuous (λ b : M, «expr * »(a, b)) :=
+continuous_const.mul continuous_id
 
-@[toAdditive]
-theorem continuous_mul_right (a : M) : Continuous fun b : M => b*a :=
-  continuous_id.mul continuous_const
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem continuous_mul_right (a : M) : continuous (λ b : M, «expr * »(b, a)) :=
+continuous_id.mul continuous_const
 
 @[toAdditive]
 theorem ContinuousOn.mul {f g : X → M} {s : Set X} (hf : ContinuousOn f s) (hg : ContinuousOn g s) :
   ContinuousOn (fun x => f x*g x) s :=
   (continuous_mul.comp_continuous_on (hf.prod hg) : _)
 
-@[toAdditive]
-theorem tendsto_mul {a b : M} : tendsto (fun p : M × M => p.fst*p.snd) (𝓝 (a, b)) (𝓝 (a*b)) :=
-  continuous_iff_continuous_at.mp HasContinuousMul.continuous_mul (a, b)
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem tendsto_mul
+{a b : M} : tendsto (λ p : «expr × »(M, M), «expr * »(p.fst, p.snd)) (expr𝓝() (a, b)) (expr𝓝() «expr * »(a, b)) :=
+continuous_iff_continuous_at.mp has_continuous_mul.continuous_mul (a, b)
 
 @[toAdditive]
 theorem Filter.Tendsto.mul {f g : α → M} {x : Filter α} {a b : M} (hf : tendsto f x (𝓝 a)) (hg : tendsto g x (𝓝 b)) :
   tendsto (fun x => f x*g x) x (𝓝 (a*b)) :=
   tendsto_mul.comp (hf.prod_mk_nhds hg)
 
-@[toAdditive]
-theorem Filter.Tendsto.const_mul (b : M) {c : M} {f : α → M} {l : Filter α} (h : tendsto (fun k : α => f k) l (𝓝 c)) :
-  tendsto (fun k : α => b*f k) l (𝓝 (b*c)) :=
-  tendsto_const_nhds.mul h
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem filter.tendsto.const_mul
+(b : M)
+{c : M}
+{f : α → M}
+{l : filter α}
+(h : tendsto (λ k : α, f k) l (expr𝓝() c)) : tendsto (λ k : α, «expr * »(b, f k)) l (expr𝓝() «expr * »(b, c)) :=
+tendsto_const_nhds.mul h
 
-@[toAdditive]
-theorem Filter.Tendsto.mul_const (b : M) {c : M} {f : α → M} {l : Filter α} (h : tendsto (fun k : α => f k) l (𝓝 c)) :
-  tendsto (fun k : α => f k*b) l (𝓝 (c*b)) :=
-  h.mul tendsto_const_nhds
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem filter.tendsto.mul_const
+(b : M)
+{c : M}
+{f : α → M}
+{l : filter α}
+(h : tendsto (λ k : α, f k) l (expr𝓝() c)) : tendsto (λ k : α, «expr * »(f k, b)) l (expr𝓝() «expr * »(c, b)) :=
+h.mul tendsto_const_nhds
 
 @[toAdditive]
 theorem ContinuousAt.mul {f g : X → M} {x : X} (hf : ContinuousAt f x) (hg : ContinuousAt g x) :
@@ -120,7 +138,7 @@ open_locale Filter
 
 open Function
 
--- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[to_additive #[]]
 theorem has_continuous_mul.of_nhds_one
 {M : Type u}
@@ -154,8 +172,8 @@ theorem has_continuous_mul.of_nhds_one
 
 @[toAdditive]
 theorem has_continuous_mul_of_comm_of_nhds_one (M : Type u) [CommMonoidₓ M] [TopologicalSpace M]
-  (hmul : tendsto (uncurry (·*· : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1)) (hleft : ∀ x₀ : M, 𝓝 x₀ = map (fun x => x₀*x) (𝓝 1)) :
-  HasContinuousMul M :=
+  (hmul : tendsto (uncurry (·*· : M → M → M)) (𝓝 1 ×ᶠ 𝓝 1) (𝓝 1))
+  (hleft : ∀ (x₀ : M), 𝓝 x₀ = map (fun x => x₀*x) (𝓝 1)) : HasContinuousMul M :=
   by 
     apply HasContinuousMul.of_nhds_one hmul hleft 
     intro x₀ 
@@ -167,17 +185,16 @@ section HasContinuousMul
 
 variable[TopologicalSpace M][Monoidₓ M][HasContinuousMul M]
 
-@[toAdditive]
-theorem Submonoid.top_closure_mul_self_subset (s : Submonoid M) :
-  (Closure (s : Set M)*Closure (s : Set M)) ⊆ Closure (s : Set M) :=
-  calc (Closure (s : Set M)*Closure (s : Set M)) = (fun p : M × M => p.1*p.2) '' Closure ((s : Set M).Prod s) :=
-    by 
-      simp [closure_prod_eq]
-    _ ⊆ Closure ((fun p : M × M => p.1*p.2) '' (s : Set M).Prod s) := image_closure_subset_closure_image continuous_mul 
-    _ = Closure s :=
-    by 
-      simp [s.coe_mul_self_eq]
-    
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem submonoid.top_closure_mul_self_subset
+(s : submonoid M) : «expr ⊆ »(«expr * »(closure (s : set M), closure (s : set M)), closure (s : set M)) :=
+calc
+  «expr = »(«expr * »(closure (s : set M), closure (s : set M)), «expr '' »(λ
+    p : «expr × »(M, M), «expr * »(p.1, p.2), closure ((s : set M).prod s))) : by simp [] [] [] ["[", expr closure_prod_eq, "]"] [] []
+  «expr ⊆ »(..., closure «expr '' »(λ
+    p : «expr × »(M, M), «expr * »(p.1, p.2), (s : set M).prod s)) : image_closure_subset_closure_image continuous_mul
+  «expr = »(..., closure s) : by simp [] [] [] ["[", expr s.coe_mul_self_eq, "]"] [] []
 
 @[toAdditive]
 theorem Submonoid.top_closure_mul_self_eq (s : Submonoid M) :
@@ -192,13 +209,16 @@ def Submonoid.topologicalClosure (s : Submonoid M) : Submonoid M :=
   { Carrier := Closure (s : Set M), one_mem' := subset_closure s.one_mem,
     mul_mem' := fun a b ha hb => s.top_closure_mul_self_subset ⟨a, b, ha, hb, rfl⟩ }
 
-@[toAdditive]
-instance Submonoid.topological_closure_has_continuous_mul (s : Submonoid M) : HasContinuousMul s.topological_closure :=
-  { continuous_mul :=
-      by 
-        apply continuous_induced_rng 
-        change Continuous fun p : s.topological_closure × s.topological_closure => (p.1 : M)*(p.2 : M)
-        continuity }
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+instance submonoid.topological_closure_has_continuous_mul
+(s : submonoid M) : has_continuous_mul s.topological_closure :=
+{ continuous_mul := begin
+    apply [expr continuous_induced_rng],
+    change [expr continuous (λ
+      p : «expr × »(s.topological_closure, s.topological_closure), «expr * »((p.1 : M), (p.2 : M)))] [] [],
+    continuity [] []
+  end }
 
 theorem Submonoid.submonoid_topological_closure (s : Submonoid M) : s ≤ s.topological_closure :=
   subset_closure
@@ -211,19 +231,20 @@ theorem Submonoid.topological_closure_minimal (s : Submonoid M) {t : Submonoid M
   (ht : IsClosed (t : Set M)) : s.topological_closure ≤ t :=
   closure_minimal h ht
 
-@[toAdditive exists_open_nhds_zero_half]
-theorem exists_open_nhds_one_split {s : Set M} (hs : s ∈ 𝓝 (1 : M)) :
-  ∃ V : Set M, IsOpen V ∧ (1 : M) ∈ V ∧ ∀ v _ : v ∈ V w _ : w ∈ V, (v*w) ∈ s :=
-  have  : (fun a : M × M => a.1*a.2) ⁻¹' s ∈ 𝓝 ((1, 1) : M × M) :=
-    tendsto_mul
-      (by 
-        simpa only [one_mulₓ] using hs)
-  by 
-    simpa only [prod_subset_iff] using exists_nhds_square this
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident exists_open_nhds_zero_half]]
+theorem exists_open_nhds_one_split
+{s : set M}
+(hs : «expr ∈ »(s, expr𝓝() (1 : M))) : «expr∃ , »((V : set M), «expr ∧ »(is_open V, «expr ∧ »(«expr ∈ »((1 : M), V), ∀
+   (v «expr ∈ » V)
+   (w «expr ∈ » V), «expr ∈ »(«expr * »(v, w), s)))) :=
+have «expr ∈ »(«expr ⁻¹' »(λ
+  a : «expr × »(M, M), «expr * »(a.1, a.2), s), expr𝓝() ((1, 1) : «expr × »(M, M))), from tendsto_mul (by simpa [] [] ["only"] ["[", expr one_mul, "]"] [] ["using", expr hs]),
+by simpa [] [] ["only"] ["[", expr prod_subset_iff, "]"] [] ["using", expr exists_nhds_square this]
 
 @[toAdditive exists_nhds_zero_half]
 theorem exists_nhds_one_split {s : Set M} (hs : s ∈ 𝓝 (1 : M)) :
-  ∃ (V : _)(_ : V ∈ 𝓝 (1 : M)), ∀ v _ : v ∈ V w _ : w ∈ V, (v*w) ∈ s :=
+  ∃ (V : _)(_ : V ∈ 𝓝 (1 : M)), ∀ v (_ : v ∈ V) w (_ : w ∈ V), (v*w) ∈ s :=
   let ⟨V, Vo, V1, hV⟩ := exists_open_nhds_one_split hs
   ⟨V, IsOpen.mem_nhds Vo V1, hV⟩
 
@@ -250,8 +271,8 @@ theorem exists_open_nhds_one_mul_subset {U : Set M} (hU : U ∈ 𝓝 (1 : M)) :
 
 @[toAdditive]
 theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
-  ∀ l : List ι,
-    (∀ i _ : i ∈ l, tendsto (f i) x (𝓝 (a i))) → tendsto (fun b => (l.map fun c => f c b).Prod) x (𝓝 (l.map a).Prod)
+  ∀ (l : List ι),
+    (∀ i (_ : i ∈ l), tendsto (f i) x (𝓝 (a i))) → tendsto (fun b => (l.map fun c => f c b).Prod) x (𝓝 (l.map a).Prod)
 | [], _ =>
   by 
     simp [tendsto_const_nhds]
@@ -261,19 +282,15 @@ theorem tendsto_list_prod {f : ι → α → M} {x : Filter α} {a : ι → M} :
     exact (h f (List.mem_cons_selfₓ _ _)).mul (tendsto_list_prod l fun c hc => h c (List.mem_cons_of_memₓ _ hc))
 
 @[toAdditive]
-theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀ i _ : i ∈ l, Continuous (f i)) :
+theorem continuous_list_prod {f : ι → X → M} (l : List ι) (h : ∀ i (_ : i ∈ l), Continuous (f i)) :
   Continuous fun a => (l.map fun i => f i a).Prod :=
   continuous_iff_continuous_at.2$ fun x => tendsto_list_prod l$ fun c hc => continuous_iff_continuous_at.1 (h c hc) x
 
-@[continuity]
-theorem continuous_pow : ∀ n : ℕ, Continuous fun a : M => a ^ n
-| 0 =>
-  by 
-    simpa using continuous_const
-| k+1 =>
-  by 
-    simp only [pow_succₓ]
-    exact continuous_id.mul (continuous_pow _)
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_pow : ∀ n : exprℕ(), continuous (λ a : M, «expr ^ »(a, n))
+| 0 := by simpa [] [] [] [] [] ["using", expr continuous_const]
+| «expr + »(k, 1) := by { simp [] [] ["only"] ["[", expr pow_succ, "]"] [] [],
+  exact [expr continuous_id.mul (continuous_pow _)] }
 
 @[continuity]
 theorem Continuous.pow {f : X → M} (h : Continuous f) (n : ℕ) : Continuous fun b => f b ^ n :=
@@ -319,11 +336,12 @@ theorem continuous_op : Continuous (op : α → «expr ᵐᵒᵖ» α) :=
 
 variable[Monoidₓ α][HasContinuousMul α]
 
+-- error in Topology.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If multiplication is continuous in the monoid `α`, then it also is in the monoid `αᵐᵒᵖ`. -/
-instance  : HasContinuousMul («expr ᵐᵒᵖ» α) :=
-  ⟨let h₁ := @continuous_mul α _ _ _ 
-    let h₂ : Continuous fun p : α × α => _ := continuous_snd.prod_mk continuous_fst 
-    continuous_induced_rng$ (h₁.comp h₂).comp (continuous_unop.prod_map continuous_unop)⟩
+instance : has_continuous_mul «expr ᵐᵒᵖ»(α) :=
+⟨let h₁ := @continuous_mul α _ _ _ in
+ let h₂ : continuous (λ p : «expr × »(α, α), _) := continuous_snd.prod_mk continuous_fst in
+ «expr $ »(continuous_induced_rng, (h₁.comp h₂).comp (continuous_unop.prod_map continuous_unop))⟩
 
 end Op
 
@@ -371,26 +389,26 @@ variable[HasContinuousMul M]
 
 @[toAdditive]
 theorem tendsto_multiset_prod {f : ι → α → M} {x : Filter α} {a : ι → M} (s : Multiset ι) :
-  (∀ i _ : i ∈ s, tendsto (f i) x (𝓝 (a i))) → tendsto (fun b => (s.map fun c => f c b).Prod) x (𝓝 (s.map a).Prod) :=
+  (∀ i (_ : i ∈ s), tendsto (f i) x (𝓝 (a i))) → tendsto (fun b => (s.map fun c => f c b).Prod) x (𝓝 (s.map a).Prod) :=
   by 
     rcases s with ⟨l⟩
     simpa using tendsto_list_prod l
 
 @[toAdditive]
 theorem tendsto_finset_prod {f : ι → α → M} {x : Filter α} {a : ι → M} (s : Finset ι) :
-  (∀ i _ : i ∈ s, tendsto (f i) x (𝓝 (a i))) → tendsto (fun b => ∏c in s, f c b) x (𝓝 (∏c in s, a c)) :=
+  (∀ i (_ : i ∈ s), tendsto (f i) x (𝓝 (a i))) → tendsto (fun b => ∏c in s, f c b) x (𝓝 (∏c in s, a c)) :=
   tendsto_multiset_prod _
 
 @[continuity, toAdditive]
 theorem continuous_multiset_prod {f : ι → X → M} (s : Multiset ι) :
-  (∀ i _ : i ∈ s, Continuous (f i)) → Continuous fun a => (s.map fun i => f i a).Prod :=
+  (∀ i (_ : i ∈ s), Continuous (f i)) → Continuous fun a => (s.map fun i => f i a).Prod :=
   by 
     rcases s with ⟨l⟩
     simpa using continuous_list_prod l
 
 @[continuity, toAdditive]
 theorem continuous_finset_prod {f : ι → X → M} (s : Finset ι) :
-  (∀ i _ : i ∈ s, Continuous (f i)) → Continuous fun a => ∏i in s, f i a :=
+  (∀ i (_ : i ∈ s), Continuous (f i)) → Continuous fun a => ∏i in s, f i a :=
   continuous_multiset_prod _
 
 open Function

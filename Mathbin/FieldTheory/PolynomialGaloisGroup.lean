@@ -54,7 +54,7 @@ instance  : CoeFun p.gal fun _ => p.splitting_field → p.splitting_field :=
   AlgEquiv.hasCoeToFun
 
 @[ext]
-theorem ext {σ τ : p.gal} (h : ∀ x _ : x ∈ p.root_set p.splitting_field, σ x = τ x) : σ = τ :=
+theorem ext {σ τ : p.gal} (h : ∀ x (_ : x ∈ p.root_set p.splitting_field), σ x = τ x) : σ = τ :=
   by 
     refine'
       AlgEquiv.ext

@@ -305,22 +305,16 @@ See note [partially-applied ext lemmas]. -/
 theorem linear_map_qext ⦃f g : p.quotient →ₛₗ[τ₁₂] M₂⦄ (h : f.comp p.mkq = g.comp p.mkq) : f = g :=
   LinearMap.ext$ fun x => Quotientₓ.induction_on' x$ (LinearMap.congr_fun h : _)
 
+-- error in LinearAlgebra.Quotient: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The map from the quotient of `M` by a submodule `p` to `M₂` induced by a linear map `f : M → M₂`
 vanishing on `p`, as a linear map. -/
-def liftq (f : M →ₛₗ[τ₁₂] M₂) (h : p ≤ f.ker) : p.quotient →ₛₗ[τ₁₂] M₂ :=
-  { toFun :=
-      fun x =>
-        _root_.quotient.lift_on' x f$
-          fun a b ab : a - b ∈ p =>
-            eq_of_sub_eq_zero$
-              by 
-                simpa using h ab,
-    map_add' :=
-      by 
-        rintro ⟨x⟩ ⟨y⟩ <;> exact f.map_add x y,
-    map_smul' :=
-      by 
-        rintro a ⟨x⟩ <;> exact f.map_smulₛₗ a x }
+def liftq (f : «expr →ₛₗ[ ] »(M, τ₁₂, M₂)) (h : «expr ≤ »(p, f.ker)) : «expr →ₛₗ[ ] »(p.quotient, τ₁₂, M₂) :=
+{ to_fun := λ
+  x, «expr $ »(_root_.quotient.lift_on' x f, λ
+   (a b)
+   (ab : «expr ∈ »(«expr - »(a, b), p)), «expr $ »(eq_of_sub_eq_zero, by simpa [] [] [] [] [] ["using", expr h ab])),
+  map_add' := by rintro ["⟨", ident x, "⟩", "⟨", ident y, "⟩"]; exact [expr f.map_add x y],
+  map_smul' := by rintro [ident a, "⟨", ident x, "⟩"]; exact [expr f.map_smulₛₗ a x] }
 
 @[simp]
 theorem liftq_apply (f : M →ₛₗ[τ₁₂] M₂) {h} (x : M) : p.liftq f h (Quotientₓ.mk x) = f x :=

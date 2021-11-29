@@ -488,7 +488,7 @@ section NoncomputableDefs
 variable{M : Type _}
 
 /-- Constructs a `group` structure on a `monoid` consisting only of units. -/
-noncomputable def groupOfIsUnit [hM : Monoidₓ M] (h : ∀ a : M, IsUnit a) : Groupₓ M :=
+noncomputable def groupOfIsUnit [hM : Monoidₓ M] (h : ∀ (a : M), IsUnit a) : Groupₓ M :=
   { hM with inv := fun a => «expr↑ » ((h a).Unit⁻¹),
     mul_left_inv :=
       fun a =>
@@ -497,7 +497,7 @@ noncomputable def groupOfIsUnit [hM : Monoidₓ M] (h : ∀ a : M, IsUnit a) : G
           rw [Units.inv_mul_eq_iff_eq_mul, (h a).unit_spec, mul_oneₓ] }
 
 /-- Constructs a `comm_group` structure on a `comm_monoid` consisting only of units. -/
-noncomputable def commGroupOfIsUnit [hM : CommMonoidₓ M] (h : ∀ a : M, IsUnit a) : CommGroupₓ M :=
+noncomputable def commGroupOfIsUnit [hM : CommMonoidₓ M] (h : ∀ (a : M), IsUnit a) : CommGroupₓ M :=
   { hM with inv := fun a => «expr↑ » ((h a).Unit⁻¹),
     mul_left_inv :=
       fun a =>

@@ -132,7 +132,7 @@ See note [reducible non-instances]. -/
   toAdditive add_monoid_smul
       "A type endowed with `0` and `+` is an additive monoid,\nif it admits an injective map that preserves `0` and `+` to an additive monoid.\nThis version takes a custom `nsmul` as a `[has_scalar ℕ M₁]` argument."]
 protected def monoid_pow [Pow M₁ ℕ] [Monoidₓ M₂] (f : M₁ → M₂) (hf : injective f) (one : f 1 = 1)
-  (mul : ∀ x y, f (x*y) = f x*f y) (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) : Monoidₓ M₁ :=
+  (mul : ∀ x y, f (x*y) = f x*f y) (npow : ∀ x (n : ℕ), f (x ^ n) = f x ^ n) : Monoidₓ M₁ :=
   { hf.monoid f one mul with npow := fun n x => x ^ n,
     npow_zero' :=
       fun x =>
@@ -222,7 +222,7 @@ See note [reducible non-instances]. -/
       "A type endowed with `0`, `+`, unary `-`, and binary `-` is a `sub_neg_monoid`\nif it admits an injective map that preserves `0`, `+`, unary `-`, and binary `-` to\na `sub_neg_monoid`.\nThis version takes custom `nsmul` and `zsmul` as `[has_scalar ℕ M₁]` and\n`[has_scalar ℤ M₁]` arguments."]
 protected def div_inv_monoid_pow [Pow M₁ ℕ] [Pow M₁ ℤ] [DivInvMonoidₓ M₂] (f : M₁ → M₂) (hf : injective f)
   (one : f 1 = 1) (mul : ∀ x y, f (x*y) = f x*f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
-  (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : DivInvMonoidₓ M₁ :=
+  (npow : ∀ x (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ x (n : ℤ), f (x ^ n) = f x ^ n) : DivInvMonoidₓ M₁ :=
   { hf.monoid_pow f one mul npow, hf.div_inv_monoid f one mul inv div with zpow := fun n x => x ^ n,
     zpow_zero' :=
       fun x =>
@@ -264,7 +264,7 @@ See note [reducible non-instances]. -/
       "A type endowed with `0` and `+` is an additive group,\nif it admits an injective map that preserves `0` and `+` to an additive group.\nThis version takes custom `nsmul` and `zsmul` as `[has_scalar ℕ M₁]` and\n`[has_scalar ℤ M₁]` arguments."]
 protected def group_pow [Pow M₁ ℕ] [Pow M₁ ℤ] [Groupₓ M₂] (f : M₁ → M₂) (hf : injective f) (one : f 1 = 1)
   (mul : ∀ x y, f (x*y) = f x*f y) (inv : ∀ x, f (x⁻¹) = f x⁻¹) (div : ∀ x y, f (x / y) = f x / f y)
-  (npow : ∀ x n : ℕ, f (x ^ n) = f x ^ n) (zpow : ∀ x n : ℤ, f (x ^ n) = f x ^ n) : Groupₓ M₁ :=
+  (npow : ∀ x (n : ℕ), f (x ^ n) = f x ^ n) (zpow : ∀ x (n : ℤ), f (x ^ n) = f x ^ n) : Groupₓ M₁ :=
   { hf.div_inv_monoid_pow f one mul inv div npow zpow, hf.group f one mul inv div with  }
 
 /-- A type endowed with `1`, `*` and `⁻¹` is a commutative group,

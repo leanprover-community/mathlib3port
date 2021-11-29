@@ -67,11 +67,14 @@ variable{α}
 
 namespace Compacts
 
-instance  : SemilatticeSupBot (compacts α) :=
-  Subtype.semilatticeSupBot is_compact_empty fun K₁ K₂ => IsCompact.union
+instance  : SemilatticeSup (compacts α) :=
+  Subtype.semilatticeSup fun K₁ K₂ => IsCompact.union
 
-instance  [T2Space α] : SemilatticeInfBot (compacts α) :=
-  Subtype.semilatticeInfBot is_compact_empty fun K₁ K₂ => IsCompact.inter
+instance  : OrderBot (compacts α) :=
+  Subtype.orderBot is_compact_empty
+
+instance  [T2Space α] : SemilatticeInf (compacts α) :=
+  Subtype.semilatticeInf fun K₁ K₂ => IsCompact.inter
 
 instance  [T2Space α] : Lattice (compacts α) :=
   Subtype.lattice (fun K₁ K₂ => IsCompact.union) fun K₁ K₂ => IsCompact.inter

@@ -47,13 +47,13 @@ which does not have a cluster point at 0 is a Cauchy filter
 a field.
 -/
 class CompletableTopField extends SeparatedSpace K : Prop where 
-  nice : ∀ F : Filter K, Cauchy F → 𝓝 0⊓F = ⊥ → Cauchy (map (fun x => x⁻¹) F)
+  nice : ∀ (F : Filter K), Cauchy F → 𝓝 0⊓F = ⊥ → Cauchy (map (fun x => x⁻¹) F)
 
 variable{K}
 
-/-- extension of inversion to the completion of a field. -/
-def hatInv : hat K → hat K :=
-  dense_inducing_coe.extend fun x : K => (coeₓ (x⁻¹) : hat K)
+-- error in Topology.Algebra.UniformField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- extension of inversion to the completion of a field. -/ def hat_inv : exprhat() K → exprhat() K :=
+dense_inducing_coe.extend (λ x : K, (coe «expr ⁻¹»(x) : exprhat() K))
 
 -- error in Topology.Algebra.UniformField: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_hat_inv

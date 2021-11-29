@@ -68,7 +68,7 @@ namespace Primrec
 theorem of_eq {f g : ℕ → ℕ} (hf : Primrec f) (H : ∀ n, f n = g n) : Primrec g :=
   (funext H : f = g) ▸ hf
 
-theorem const : ∀ n : ℕ, Primrec fun _ => n
+theorem const : ∀ (n : ℕ), Primrec fun _ => n
 | 0 => zero
 | n+1 => succ.comp (const n)
 
@@ -250,11 +250,10 @@ theorem option_some : Primrec (@some α) :=
 theorem of_eq {f g : α → σ} (hf : Primrec f) (H : ∀ n, f n = g n) : Primrec g :=
   (funext H : f = g) ▸ hf
 
-theorem const (x : σ) : Primrec fun a : α => x :=
-  ((cases1 0 (const (encode x).succ)).comp (Primcodable.prim α)).of_eq$
-    fun n =>
-      by 
-        cases decode α n <;> rfl
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem const (x : σ) : primrec (λ a : α, x) :=
+«expr $ »(((cases1 0 (const (encode x).succ)).comp (primcodable.prim α)).of_eq, λ
+ n, by cases [expr decode α n] []; refl)
 
 protected theorem id : Primrec (@id α) :=
   (Primcodable.prim α).of_eq$
@@ -381,7 +380,7 @@ theorem unpair : Primrec Nat.unpair :=
       by 
         simp 
 
-theorem list_nth₁ : ∀ l : List α, Primrec l.nth
+theorem list_nth₁ : ∀ (l : List α), Primrec l.nth
 | [] => dom_denumerable.2 zero
 | a :: l =>
   dom_denumerable.2$
@@ -392,12 +391,13 @@ theorem list_nth₁ : ∀ l : List α, Primrec l.nth
 
 end Primrec
 
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `primrec₂ f` means `f` is a binary primitive recursive function.
   This is technically unnecessary since we can always curry all
   the arguments together, but there are enough natural two-arg
   functions that it is convenient to express this directly. -/
-def Primrec₂ {α β σ} [Primcodable α] [Primcodable β] [Primcodable σ] (f : α → β → σ) :=
-  Primrec fun p : α × β => f p.1 p.2
+def primrec₂ {α β σ} [primcodable α] [primcodable β] [primcodable σ] (f : α → β → σ) :=
+primrec (λ p : «expr × »(α, β), f p.1 p.2)
 
 /-- `primrec_pred p` means `p : α → Prop` is a (decidable)
   primitive recursive predicate, which is to say that
@@ -423,17 +423,17 @@ theorem of_eq {f g : α → β → σ} (hg : Primrec₂ f) (H : ∀ a b, f a b =
     f = g) ▸
     hg
 
-theorem const (x : σ) : Primrec₂ fun a : α b : β => x :=
-  Primrec.const _
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem const (x : σ) : primrec₂ (λ (a : α) (b : β), x) := primrec.const _
 
 protected theorem pair : Primrec₂ (@Prod.mk α β) :=
   Primrec.pair Primrec.fst Primrec.snd
 
-theorem left : Primrec₂ fun a : α b : β => a :=
-  Primrec.fst
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem left : primrec₂ (λ (a : α) (b : β), a) := primrec.fst
 
-theorem right : Primrec₂ fun a : α b : β => b :=
-  Primrec.snd
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem right : primrec₂ (λ (a : α) (b : β), b) := primrec.snd
 
 theorem mkpair : Primrec₂ Nat.mkpair :=
   by 
@@ -454,16 +454,19 @@ theorem encode_iff {f : α → β → σ} : (Primrec₂ fun a b => encode (f a b
 theorem option_some_iff {f : α → β → σ} : (Primrec₂ fun a b => some (f a b)) ↔ Primrec₂ f :=
   Primrec.option_some_iff
 
-theorem of_nat_iff {α β σ} [Denumerable α] [Denumerable β] [Primcodable σ] {f : α → β → σ} :
-  Primrec₂ f ↔ Primrec₂ fun m n : ℕ => f (of_nat α m) (of_nat β n) :=
-  (Primrec.of_nat_iff.trans$
-        by 
-          simp ).trans
-    unpaired
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of_nat_iff
+{α β σ}
+[denumerable α]
+[denumerable β]
+[primcodable σ]
+{f : α → β → σ} : «expr ↔ »(primrec₂ f, primrec₂ (λ m n : exprℕ(), f (of_nat α m) (of_nat β n))) :=
+«expr $ »(primrec.of_nat_iff.trans, by simp [] [] [] [] [] []).trans unpaired
 
-theorem uncurry {f : α → β → σ} : Primrec (Function.uncurry f) ↔ Primrec₂ f :=
-  by 
-    rw [show Function.uncurry f = fun p : α × β => f p.1 p.2 from funext$ fun ⟨a, b⟩ => rfl] <;> rfl
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uncurry {f : α → β → σ} : «expr ↔ »(primrec (function.uncurry f), primrec₂ f) :=
+by rw ["[", expr show «expr = »(function.uncurry f, λ
+  p : «expr × »(α, β), f p.1 p.2), from «expr $ »(funext, λ ⟨a, b⟩, rfl), "]"] []; refl
 
 theorem curry {f : α × β → σ} : Primrec₂ (Function.curry f) ↔ Primrec f :=
   by 
@@ -521,23 +524,23 @@ open Nat.Primrec
 theorem swap {f : α → β → σ} (h : Primrec₂ f) : Primrec₂ (swap f) :=
   h.comp₂ Primrec₂.right Primrec₂.left
 
-theorem nat_iff {f : α → β → σ} :
-  Primrec₂ f ↔ Nat.Primrec (Nat.unpaired$ fun m n : ℕ => encode$ (decode α m).bind$ fun a => (decode β n).map (f a)) :=
-  have  :
-    ∀ a : Option α b : Option β,
-      Option.map (fun p : α × β => f p.1 p.2) (Option.bind a fun a : α => Option.map (Prod.mk a) b) =
-        Option.bind a fun a => Option.map (f a) b :=
-    by 
-      intros  <;>
-        cases a <;> [rfl,
-          ·
-            cases b <;> rfl]
-  by 
-    simp [Primrec₂, Primrec, this]
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nat_iff
+{f : α → β → σ} : «expr ↔ »(primrec₂ f, nat.primrec «expr $ »(nat.unpaired, λ
+  m n : exprℕ(), «expr $ »(encode, «expr $ »((decode α m).bind, λ a, (decode β n).map (f a))))) :=
+have ∀
+(a : option α)
+(b : option β), «expr = »(option.map (λ
+  p : «expr × »(α, β), f p.1 p.2) (option.bind a (λ
+   a : α, option.map (prod.mk a) b)), option.bind a (λ
+  a, option.map (f a) b)), by intros []; cases [expr a] []; [refl, { cases [expr b] []; refl }],
+by simp [] [] [] ["[", expr primrec₂, ",", expr primrec, ",", expr this, "]"] [] []
 
-theorem nat_iff' {f : α → β → σ} :
-  Primrec₂ f ↔ Primrec₂ fun m n : ℕ => Option.bind (decode α m) fun a => Option.map (f a) (decode β n) :=
-  nat_iff.trans$ unpaired'.trans encode_iff
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nat_iff'
+{f : α → β → σ} : «expr ↔ »(primrec₂ f, primrec₂ (λ
+  m n : exprℕ(), option.bind (decode α m) (λ a, option.map (f a) (decode β n)))) :=
+«expr $ »(nat_iff.trans, unpaired'.trans encode_iff)
 
 end Primrec₂
 
@@ -550,26 +553,21 @@ variable[Primcodable α][Primcodable β][Primcodable γ][Primcodable δ][Primcod
 theorem to₂ {f : α × β → σ} (hf : Primrec f) : Primrec₂ fun a b => f (a, b) :=
   hf.of_eq$ fun ⟨a, b⟩ => rfl
 
-theorem nat_elim {f : α → β} {g : α → ℕ × β → β} (hf : Primrec f) (hg : Primrec₂ g) :
-  Primrec₂ fun a n : ℕ => n.elim (f a) fun n IH => g a (n, IH) :=
-  Primrec₂.nat_iff.2$
-    ((Nat.Primrec.cases Nat.Primrec.zero$
-              (Nat.Primrec.prec hf$
-                    Nat.Primrec.comp hg$
-                      Nat.Primrec.left.pair$
-                        (Nat.Primrec.left.comp Nat.Primrec.right).pair$
-                          Nat.Primrec.pred.comp$ Nat.Primrec.right.comp Nat.Primrec.right).comp$
-                Nat.Primrec.right.pair$ Nat.Primrec.right.comp Nat.Primrec.left).comp$
-          Nat.Primrec.id.pair$ (Primcodable.prim α).comp Nat.Primrec.left).of_eq$
-      fun n =>
-        by 
-          simp 
-          cases' decode α n.unpair.1 with a
-          ·
-            rfl 
-          simp [encodek]
-          induction' n.unpair.2 with m <;> simp [encodek]
-          simp [ih, encodek]
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nat_elim
+{f : α → β}
+{g : α → «expr × »(exprℕ(), β) → β}
+(hf : primrec f)
+(hg : primrec₂ g) : primrec₂ (λ (a) (n : exprℕ()), n.elim (f a) (λ n IH, g a (n, IH))) :=
+«expr $ »(primrec₂.nat_iff.2, «expr $ »(«expr $ »(«expr $ »(nat.primrec.cases nat.primrec.zero, «expr $ »(«expr $ »(nat.primrec.prec hf, «expr $ »(nat.primrec.comp hg, «expr $ »(nat.primrec.left.pair, «expr $ »((nat.primrec.left.comp nat.primrec.right).pair, «expr $ »(nat.primrec.pred.comp, nat.primrec.right.comp nat.primrec.right))))).comp, «expr $ »(nat.primrec.right.pair, nat.primrec.right.comp nat.primrec.left))).comp, «expr $ »(nat.primrec.id.pair, (primcodable.prim α).comp nat.primrec.left)).of_eq, λ
+  n, begin
+    simp [] [] [] [] [] [],
+    cases [expr decode α n.unpair.1] ["with", ident a],
+    { refl },
+    simp [] [] [] ["[", expr encodek, "]"] [] [],
+    induction [expr n.unpair.2] [] ["with", ident m] []; simp [] [] [] ["[", expr encodek, "]"] [] [],
+    simp [] [] [] ["[", expr ih, ",", expr encodek, "]"] [] []
+  end))
 
 theorem nat_elim' {f : α → ℕ} {g : α → β} {h : α → ℕ × β → β} (hf : Primrec f) (hg : Primrec g) (hh : Primrec₂ h) :
   Primrec fun a => (f a).elim (g a) fun n IH => h a (n, IH) :=
@@ -730,14 +728,14 @@ protected theorem Or {p q : α → Prop} [DecidablePred p] [DecidablePred q] (hp
       by 
         simp 
 
-protected theorem Eq [DecidableEq α] : PrimrecRel (@Eq α) :=
-  have  : PrimrecRel fun a b : ℕ => a = b :=
-    (Primrec.and nat_le nat_le.swap).of_eq$
-      fun a =>
-        by 
-          simp [le_antisymm_iffₓ]
-  (this.comp₂ (Primrec.encode.comp₂ Primrec₂.left) (Primrec.encode.comp₂ Primrec₂.right)).of_eq$
-    fun a b => encode_injective.eq_iff
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected theorem eq [decidable_eq α] : primrec_rel (@eq α) :=
+have primrec_rel (λ
+ a
+ b : exprℕ(), «expr = »(a, b)), from «expr $ »((primrec.and nat_le nat_le.swap).of_eq, λ
+ a, by simp [] [] [] ["[", expr le_antisymm_iff, "]"] [] []),
+«expr $ »((this.comp₂ (primrec.encode.comp₂ primrec₂.left) (primrec.encode.comp₂ primrec₂.right)).of_eq, λ
+ a b, encode_injective.eq_iff)
 
 theorem nat_lt : PrimrecRel (· < · : ℕ → ℕ → Prop) :=
   (nat_le.comp snd fst).Not.of_eq$
@@ -760,7 +758,7 @@ protected theorem decode₂ : Primrec (decode₂ α) :=
     option_guard ((@Primrec.eq _ _ Nat.decidableEq).comp (encode_iff.2 snd) (fst.comp fst)) snd
 
 theorem list_find_index₁ {p : α → β → Prop} [∀ a b, Decidable (p a b)] (hp : PrimrecRel p) :
-  ∀ l : List β, Primrec fun a => l.find_index (p a)
+  ∀ (l : List β), Primrec fun a => l.find_index (p a)
 | [] => const 0
 | a :: l => ite (hp.comp Primrec.id (const a)) (const 0) (succ.comp (list_find_index₁ l))
 
@@ -911,7 +909,7 @@ by letI [] [] [":=", expr prim H]; exact [expr let G
 private theorem list_cons' : by haveI [] [] [":=", expr prim H]; exact [expr primrec₂ (@list.cons β)] :=
 by letI [] [] [":=", expr prim H]; exact [expr encode_iff.1 «expr $ »(succ.comp, primrec₂.mkpair.comp (encode_iff.2 fst) (encode_iff.2 snd))]
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 private theorem list_reverse' : by haveI [] [] [":=", expr prim H]; exact [expr primrec (@list.reverse β)] :=
 by letI [] [] [":=", expr prim H]; exact [expr «expr $ »(list_foldl' H primrec.id (const «expr[ , ]»([])), «expr $ »(to₂, ((list_cons' H).comp snd fst).comp snd)).of_eq (suffices ∀
   l
@@ -946,7 +944,7 @@ instance Sum : Primcodable (Sum α β) :=
             ·
               cases decode β n.div2 <;> rfl⟩
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 instance list : primcodable (list α) :=
 ⟨by letI [ident H] [] [":=", expr primcodable.prim (list exprℕ())]; exact [expr have primrec₂ (λ
    (a : α)
@@ -1034,48 +1032,50 @@ theorem list_tail : Primrec (@List.tail α) :=
       by 
         cases l <;> rfl
 
-theorem list_rec {f : α → List β} {g : α → σ} {h : α → β × List β × σ → σ} (hf : Primrec f) (hg : Primrec g)
-  (hh : Primrec₂ h) : @Primrec _ σ _ _ fun a => List.recOn (f a) (g a) fun b l IH => h a (b, l, IH) :=
-  let F (a : α) := (f a).foldr (fun b : β s : List β × σ => (b :: s.1, h a (b, s))) ([], g a)
-  have  : Primrec F := list_foldr hf (pair (const []) hg)$ to₂$ pair ((list_cons.comp fst (fst.comp snd)).comp snd) hh
-  (snd.comp this).of_eq$
-    fun a =>
-      by 
-        suffices  : F a = (f a, List.recOn (f a) (g a) fun b l IH => h a (b, l, IH))
-        ·
-          rw [this]
-        simp [F]
-        induction' f a with b l IH <;> simp 
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem list_rec
+{f : α → list β}
+{g : α → σ}
+{h : α → «expr × »(β, «expr × »(list β, σ)) → σ}
+(hf : primrec f)
+(hg : primrec g)
+(hh : primrec₂ h) : @primrec _ σ _ _ (λ a, list.rec_on (f a) (g a) (λ b l IH, h a (b, l, IH))) :=
+let F
+    (a : α) := (f a).foldr (λ
+     (b : β)
+     (s : «expr × »(list β, σ)), ([«expr :: »/«expr :: »/«expr :: »](b, s.1), h a (b, s))) («expr[ , ]»([]), g a) in
+have primrec F, from «expr $ »(list_foldr hf (pair (const «expr[ , ]»([])) hg), «expr $ »(to₂, pair ((list_cons.comp fst (fst.comp snd)).comp snd) hh)),
+«expr $ »((snd.comp this).of_eq, λ a, begin
+   suffices [] [":", expr «expr = »(F a, (f a, list.rec_on (f a) (g a) (λ b l IH, h a (b, l, IH))))],
+   { rw [expr this] [] },
+   simp [] [] [] ["[", expr F, "]"] [] [],
+   induction [expr f a] [] ["with", ident b, ident l, ident IH] []; simp [] [] [] ["*"] [] []
+ end)
 
-theorem list_nth : Primrec₂ (@List.nth α) :=
-  let F (l : List α) (n : ℕ) :=
-    l.foldl (fun s : Sum ℕ α a : α => Sum.casesOn s (@Nat.cases (Sum ℕ α) (Sum.inr a) Sum.inl) Sum.inr) (Sum.inl n)
-  have hF : Primrec₂ F :=
-    list_foldl fst (sum_inl.comp snd)
-      ((sum_cases fst (nat_cases snd (sum_inr.comp$ snd.comp fst) (sum_inl.comp snd).to₂).to₂
-              (sum_inr.comp snd).to₂).comp
-          snd).to₂
-        
-  have  : @Primrec _ (Option α) _ _ fun p : List α × ℕ => Sum.casesOn (F p.1 p.2) (fun _ => none) some :=
-    sum_cases hF (const none).to₂ (option_some.comp snd).to₂ 
-  this.to₂.of_eq$
-    fun l n =>
-      by 
-        dsimp 
-        symm 
-        induction' l with a l IH generalizing n
-        ·
-          rfl 
-        cases' n with n
-        ·
-          rw [(_ : F (a :: l) 0 = Sum.inr a)]
-          ·
-            rfl 
-          clear IH 
-          dsimp [F]
-          induction' l with b l IH <;> simp 
-        ·
-          apply IH
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem list_nth : primrec₂ (@list.nth α) :=
+let F
+    (l : list α)
+    (n : exprℕ()) := l.foldl (λ
+     (s : «expr ⊕ »(exprℕ(), α))
+     (a : α), sum.cases_on s (@nat.cases «expr ⊕ »(exprℕ(), α) (sum.inr a) sum.inl) sum.inr) (sum.inl n) in
+have hF : primrec₂ F, from list_foldl fst (sum_inl.comp snd) ((sum_cases fst (nat_cases snd «expr $ »(sum_inr.comp, snd.comp fst) (sum_inl.comp snd).to₂).to₂ (sum_inr.comp snd).to₂).comp snd).to₂,
+have @primrec _ (option α) _ _ (λ
+ p : «expr × »(list α, exprℕ()), sum.cases_on (F p.1 p.2) (λ
+  _, none) some), from sum_cases hF (const none).to₂ (option_some.comp snd).to₂,
+«expr $ »(this.to₂.of_eq, λ l n, begin
+   dsimp [] [] [] [],
+   symmetry,
+   induction [expr l] [] ["with", ident a, ident l, ident IH] ["generalizing", ident n],
+   { refl },
+   cases [expr n] ["with", ident n],
+   { rw ["[", expr (_ : «expr = »(F [«expr :: »/«expr :: »/«expr :: »](a, l) 0, sum.inr a)), "]"] [],
+     { refl },
+     clear [ident IH],
+     dsimp [] ["[", expr F, "]"] [] [],
+     induction [expr l] [] ["with", ident b, ident l, ident IH] []; simp [] [] [] ["*"] [] [] },
+   { apply [expr IH] }
+ end)
 
 theorem list_inth [Inhabited α] : Primrec₂ (@List.inth α _) :=
   option_iget.comp₂ list_nth
@@ -1086,8 +1086,9 @@ theorem list_append : Primrec₂ (· ++ · : List α → List α → List α) :=
       by 
         induction l₁ <;> simp 
 
-theorem list_concat : Primrec₂ fun l a : α => l ++ [a] :=
-  list_append.comp fst (list_cons.comp snd (const []))
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem list_concat : primrec₂ (λ (l) (a : α), «expr ++ »(l, «expr[ , ]»([a]))) :=
+list_append.comp fst (list_cons.comp snd (const «expr[ , ]»([])))
 
 theorem list_map {f : α → List β} {g : α → β → σ} (hf : Primrec f) (hg : Primrec₂ g) :
   Primrec fun a => (f a).map (g a) :=
@@ -1356,20 +1357,23 @@ namespace Nat
 
 open Vector
 
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An alternative inductive definition of `primrec` which
   does not use the pairing function on ℕ, and so has to
   work with n-ary functions on ℕ instead of unary functions.
   We prove that this is equivalent to the regular notion
-  in `to_prim` and `of_prim`. -/
-inductive primrec' : ∀ {n}, (Vector ℕ n → ℕ) → Prop
-  | zero : @primrec' 0 fun _ => 0
-  | succ : @primrec' 1 fun v => succ v.head
-  | nth {n} (i : Finₓ n) : primrec' fun v => v.nth i
-  | comp {m n f} (g : Finₓ n → Vector ℕ m → ℕ) :
-  primrec' f → (∀ i, primrec' (g i)) → primrec' fun a => f (of_fn fun i => g i a)
-  | prec {n f g} :
-  @primrec' n f →
-    @primrec' (n+2) g → primrec' fun v : Vector ℕ (n+1) => v.head.elim (f v.tail) fun y IH => g (y::ᵥIH::ᵥv.tail)
+  in `to_prim` and `of_prim`. -/ inductive primrec' : ∀ {n}, (vector exprℕ() n → exprℕ()) → exprProp()
+| zero : @primrec' 0 (λ _, 0)
+| succ : @primrec' 1 (λ v, succ v.head)
+| nth {n} (i : fin n) : primrec' (λ v, v.nth i)
+| comp
+{m n f}
+(g : fin n → vector exprℕ() m → exprℕ()) : primrec' f → ∀ i, primrec' (g i) → primrec' (λ a, f (of_fn (λ i, g i a)))
+| prec
+{n
+ f
+ g} : @primrec' n f → @primrec' «expr + »(n, 2) g → primrec' (λ
+ v : vector exprℕ() «expr + »(n, 1), v.head.elim (f v.tail) (λ y IH, g «expr ::ᵥ »(y, «expr ::ᵥ »(IH, v.tail))))
 
 end Nat
 
@@ -1453,10 +1457,14 @@ theorem comp₂ (f : ℕ → ℕ → ℕ) (hf : @primrec' 2 fun v => f v.head v.
   by 
     simpa using hf.comp' (hg.cons$ hh.cons primrec'.nil)
 
-theorem prec' {n f g h} (hf : @primrec' n f) (hg : @primrec' n g) (hh : @primrec' (n+2) h) :
-  @primrec' n fun v => (f v).elim (g v) fun y IH : ℕ => h (y::ᵥIH::ᵥv) :=
-  by 
-    simpa using comp' (prec hg hh) (hf.cons idv)
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem prec'
+{n f g h}
+(hf : @primrec' n f)
+(hg : @primrec' n g)
+(hh : @primrec' «expr + »(n, 2) h) : @primrec' n (λ
+ v, (f v).elim (g v) (λ y IH : exprℕ(), h «expr ::ᵥ »(y, «expr ::ᵥ »(IH, v)))) :=
+by simpa [] [] [] [] [] ["using", expr comp' (prec hg hh) (hf.cons idv)]
 
 theorem pred : @primrec' 1 fun v => v.head.pred :=
   (prec' head (const 0) head).of_eq$

@@ -24,11 +24,11 @@ variable{C : Type v₂}[category.{v₁} C]
 
 section CartesianClosed
 
-instance  (X : Type v₁) : is_left_adjoint (types.binary_product_functor.obj X) :=
-  { right := { obj := fun Y => X ⟶ Y, map := fun Y₁ Y₂ f g => g ≫ f },
-    adj :=
-      adjunction.mk_of_unit_counit
-        { Unit := { app := fun Z z : Z x => ⟨x, z⟩ }, counit := { app := fun Z xf => xf.2 xf.1 } } }
+-- error in CategoryTheory.Closed.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance (X : Type v₁) : is_left_adjoint (types.binary_product_functor.obj X) :=
+{ right := { obj := λ Y, «expr ⟶ »(X, Y), map := λ Y₁ Y₂ f g, «expr ≫ »(g, f) },
+  adj := adjunction.mk_of_unit_counit { unit := { app := λ (Z) (z : Z) (x), ⟨x, z⟩ },
+    counit := { app := λ Z xf, xf.2 xf.1 } } }
 
 instance  : has_finite_products (Type v₁) :=
   has_finite_products_of_has_products _

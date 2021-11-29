@@ -70,20 +70,27 @@ class IsFreeGroupoid(G)[groupoid.{v} G] where
   quiverGenerators : Quiver.{v + 1} (IsFreeGroupoid.Generators G)
   of : ∀ {a b : IsFreeGroupoid.Generators G}, (a ⟶ b) → ((show G from a) ⟶ b)
   unique_lift :
-  ∀ {X : Type v} [Groupₓ X] f : labelling (IsFreeGroupoid.Generators G) X,
-    ∃!F : G ⥤ single_obj X, ∀ a b g : a ⟶ b, F.map (of g) = f g
+  ∀ {X : Type v} [Groupₓ X] (f : labelling (IsFreeGroupoid.Generators G) X),
+    ∃!F : G ⥤ single_obj X, ∀ a b (g : a ⟶ b), F.map (of g) = f g
 
 namespace IsFreeGroupoid
 
 attribute [instance] quiver_generators
 
+-- error in GroupTheory.NielsenSchreier: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Two functors from a free groupoid to a group are equal when they agree on the generating
 quiver. -/
-@[ext]
-theorem ext_functor {G} [groupoid.{v} G] [IsFreeGroupoid G] {X : Type v} [Groupₓ X] (f g : G ⥤ single_obj X)
-  (h : ∀ a b e : a ⟶ b, f.map (of e) = g.map (of e)) : f = g :=
-  let ⟨_, _, u⟩ := @unique_lift G _ _ X _ fun a b : generators G e : a ⟶ b => g.map (of e)
-  trans (u _ h) (u _ fun _ _ _ => rfl).symm
+@[ext #[]]
+theorem ext_functor
+{G}
+[groupoid.{v} G]
+[is_free_groupoid G]
+{X : Type v}
+[group X]
+(f g : «expr ⥤ »(G, single_obj X))
+(h : ∀ (a b) (e : «expr ⟶ »(a, b)), «expr = »(f.map (of e), g.map (of e))) : «expr = »(f, g) :=
+let ⟨_, _, u⟩ := @unique_lift G _ _ X _ (λ (a b : generators G) (e : «expr ⟶ »(a, b)), g.map (of e)) in
+trans (u _ h) (u _ (λ _ _ _, rfl)).symm
 
 -- error in GroupTheory.NielsenSchreier: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- An action groupoid over a free froup is free. More generally, one could show that the groupoid
@@ -203,13 +210,13 @@ def End_is_free : IsFreeGroup (End (root' T)) :=
         rcases unique_lift f' with ⟨F', hF', uF'⟩
         refine' ⟨F'.map_End _, _, _⟩
         ·
-          suffices  : ∀ {x y} q : x ⟶ y, F'.map (loop_of_hom T q) = (F'.map q : X)
+          suffices  : ∀ {x y} (q : x ⟶ y), F'.map (loop_of_hom T q) = (F'.map q : X)
           ·
             rintro ⟨⟨a, b, e⟩, h⟩
             rw [functor.map_End_apply, this, hF']
             exact dif_neg h 
           intros 
-          suffices  : ∀ {a} p : path (root' T) a, F'.map (hom_of_path T p) = 1
+          suffices  : ∀ {a} (p : path (root' T) a), F'.map (hom_of_path T p) = 1
           ·
             simp only [this, tree_hom, comp_as_mul, inv_as_inv, loop_of_hom, one_inv, mul_oneₓ, one_mulₓ,
               functor.map_inv, functor.map_comp]

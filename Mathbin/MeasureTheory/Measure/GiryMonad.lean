@@ -41,11 +41,12 @@ variable[MeasurableSpace α][MeasurableSpace β]
 instance  : MeasurableSpace (Measureₓ α) :=
   ⨆(s : Set α)(hs : MeasurableSet s), (borel ℝ≥0∞).comap fun μ => μ s
 
-theorem measurable_coe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ : Measureₓ α => μ s :=
-  Measurable.of_comap_le$ le_supr_of_le s$ le_supr_of_le hs$ le_reflₓ _
+-- error in MeasureTheory.Measure.GiryMonad: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_coe {s : set α} (hs : measurable_set s) : measurable (λ μ : measure α, μ s) :=
+«expr $ »(measurable.of_comap_le, «expr $ »(le_supr_of_le s, «expr $ »(le_supr_of_le hs, le_refl _)))
 
 theorem measurable_of_measurable_coe (f : β → Measureₓ α)
-  (h : ∀ s : Set α hs : MeasurableSet s, Measurable fun b => f b s) : Measurable f :=
+  (h : ∀ (s : Set α) (hs : MeasurableSet s), Measurable fun b => f b s) : Measurable f :=
   Measurable.of_le_map$
     bsupr_le$
       fun s hs =>
@@ -54,15 +55,16 @@ theorem measurable_of_measurable_coe (f : β → Measureₓ α)
             rw [MeasurableSpace.map_comp] <;> exact h s hs
 
 theorem measurable_measure {μ : α → Measureₓ β} :
-  Measurable μ ↔ ∀ s : Set β hs : MeasurableSet s, Measurable fun b => μ b s :=
+  Measurable μ ↔ ∀ (s : Set β) (hs : MeasurableSet s), Measurable fun b => μ b s :=
   ⟨fun hμ s hs => (measurable_coe hs).comp hμ, measurable_of_measurable_coe μ⟩
 
-theorem measurable_map (f : α → β) (hf : Measurable f) : Measurable fun μ : Measureₓ α => map f μ :=
-  measurable_of_measurable_coe _$
-    fun s hs =>
-      suffices Measurable fun μ : Measureₓ α => μ (f ⁻¹' s)by 
-        simpa [map_apply, hs, hf]
-      measurable_coe (hf hs)
+-- error in MeasureTheory.Measure.GiryMonad: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_map (f : α → β) (hf : measurable f) : measurable (λ μ : measure α, map f μ) :=
+«expr $ »(measurable_of_measurable_coe _, assume
+ s
+ hs, suffices measurable (λ
+  μ : measure α, μ «expr ⁻¹' »(f, s)), by simpa [] [] [] ["[", expr map_apply, ",", expr hs, ",", expr hf, "]"] [] [],
+ measurable_coe (hf hs))
 
 theorem measurable_dirac : Measurable (measure.dirac : α → Measureₓ α) :=
   measurable_of_measurable_coe _$
@@ -71,12 +73,16 @@ theorem measurable_dirac : Measurable (measure.dirac : α → Measureₓ α) :=
         simp only [dirac_apply', hs]
         exact measurable_one.indicator hs
 
-theorem measurable_lintegral {f : α → ℝ≥0∞} (hf : Measurable f) : Measurable fun μ : Measureₓ α => ∫⁻x, f x ∂μ :=
-  by 
-    simp only [lintegral_eq_supr_eapprox_lintegral, hf, simple_func.lintegral]
-    refine' measurable_supr fun n => Finset.measurable_sum _ fun i _ => _ 
-    refine' Measurable.const_mul _ _ 
-    exact measurable_coe ((simple_func.eapprox f n).measurable_set_preimage _)
+-- error in MeasureTheory.Measure.GiryMonad: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_lintegral
+{f : α → «exprℝ≥0∞»()}
+(hf : measurable f) : measurable (λ μ : measure α, «expr∫⁻ , ∂ »((x), f x, μ)) :=
+begin
+  simp [] [] ["only"] ["[", expr lintegral_eq_supr_eapprox_lintegral, ",", expr hf, ",", expr simple_func.lintegral, "]"] [] [],
+  refine [expr measurable_supr (λ n, finset.measurable_sum _ (λ i _, _))],
+  refine [expr measurable.const_mul _ _],
+  exact [expr measurable_coe ((simple_func.eapprox f n).measurable_set_preimage _)]
+end
 
 /-- Monadic join on `measure` in the category of measurable spaces and measurable
 functions. -/
@@ -107,7 +113,7 @@ theorem measurable_join : Measurable (join : Measureₓ (Measureₓ α) → Meas
       by 
         simp only [join_apply hs] <;> exact measurable_lintegral (measurable_coe hs)
 
--- error in MeasureTheory.Measure.GiryMonad: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in MeasureTheory.Measure.GiryMonad: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem lintegral_join
 {m : measure (measure α)}
 {f : α → «exprℝ≥0∞»()}

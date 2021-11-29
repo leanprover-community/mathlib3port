@@ -34,10 +34,10 @@ universe u v w
 /-- A sesquilinear form over a module  -/
 structure SesqForm(R : Type u)(M : Type v)[Ringₓ R](I : R ≃+* «expr ᵐᵒᵖ» R)[AddCommGroupₓ M][Module R M] where 
   sesq : M → M → R 
-  sesq_add_left : ∀ x y z : M, sesq (x+y) z = sesq x z+sesq y z 
-  sesq_smul_left : ∀ a : R x y : M, sesq (a • x) y = a*sesq x y 
-  sesq_add_right : ∀ x y z : M, sesq x (y+z) = sesq x y+sesq x z 
-  sesq_smul_right : ∀ a : R x y : M, sesq x (a • y) = (I a).unop*sesq x y
+  sesq_add_left : ∀ (x y z : M), sesq (x+y) z = sesq x z+sesq y z 
+  sesq_smul_left : ∀ (a : R) (x y : M), sesq (a • x) y = a*sesq x y 
+  sesq_add_right : ∀ (x y z : M), sesq x (y+z) = sesq x y+sesq x z 
+  sesq_smul_right : ∀ (a : R) (x y : M), sesq x (a • y) = (I a).unop*sesq x y
 
 namespace SesqForm
 
@@ -91,7 +91,7 @@ theorem sub_right (x y z : M) : S x (y - z) = S x y - S x z :=
 variable{D : SesqForm R M I}
 
 @[ext]
-theorem ext (H : ∀ x y : M, S x y = D x y) : S = D :=
+theorem ext (H : ∀ (x y : M), S x y = D x y) : S = D :=
   by 
     cases S 
     cases D 
@@ -390,7 +390,7 @@ variable{I : R ≃+* «expr ᵐᵒᵖ» R}{S : SesqForm R M I}
 
 /-- The proposition that a sesquilinear form is reflexive -/
 def IsRefl (S : SesqForm R M I) : Prop :=
-  ∀ x y : M, S x y = 0 → S y x = 0
+  ∀ (x y : M), S x y = 0 → S y x = 0
 
 namespace IsRefl
 
@@ -406,7 +406,7 @@ end IsRefl
 
 /-- The proposition that a sesquilinear form is symmetric -/
 def IsSymm (S : SesqForm R M I) : Prop :=
-  ∀ x y : M, (I (S x y)).unop = S y x
+  ∀ (x y : M), (I (S x y)).unop = S y x
 
 namespace IsSymm
 
@@ -430,7 +430,7 @@ end IsSymm
 
 /-- The proposition that a sesquilinear form is alternating -/
 def is_alt (S : SesqForm R M I) : Prop :=
-  ∀ x : M, S x x = 0
+  ∀ (x : M), S x x = 0
 
 namespace IsAlt
 

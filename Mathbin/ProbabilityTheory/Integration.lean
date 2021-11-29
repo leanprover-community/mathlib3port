@@ -79,7 +79,7 @@ begin
     { exact [expr λ m n h_le a, ennreal.mul_le_mul (h_mono_f h_le a) le_rfl] } }
 end
 
--- error in ProbabilityTheory.Integration: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in ProbabilityTheory.Integration: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- This (roughly) proves that if `f` and `g` are independent random variables,
    then `E[f * g] = E[f] * E[g]`. However, instead of directly using the independence
    of the random variables, it uses the independence of measurable spaces for the

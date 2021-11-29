@@ -72,19 +72,18 @@ instance (priority := 500)Nontrivial.to_nonempty [Nontrivial α] : Nonempty α :
 
 attribute [instance] nonempty_of_inhabited
 
+-- error in Logic.Nontrivial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- An inhabited type is either nontrivial, or has a unique element. -/
-noncomputable def nontrivialPsumUnique (α : Type _) [Inhabited α] : Psum (Nontrivial α) (Unique α) :=
-  if h : Nontrivial α then Psum.inl h else
-    Psum.inr
-      { default := default α,
-        uniq :=
-          fun x : α =>
-            by 
-              change x = default α 
-              contrapose! h 
-              use x, default α }
+noncomputable
+def nontrivial_psum_unique (α : Type*) [inhabited α] : psum (nontrivial α) (unique α) :=
+if h : nontrivial α then psum.inl h else psum.inr { default := default α,
+  uniq := λ x : α, begin
+    change [expr «expr = »(x, default α)] [] [],
+    contrapose ["!"] [ident h],
+    use ["[", expr x, ",", expr default α, "]"]
+  end }
 
-theorem subsingleton_iff : Subsingleton α ↔ ∀ x y : α, x = y :=
+theorem subsingleton_iff : Subsingleton α ↔ ∀ (x y : α), x = y :=
   ⟨by 
       intros h 
       exact Subsingleton.elimₓ,
@@ -157,7 +156,7 @@ namespace Pi
 variable{I : Type _}{f : I → Type _}
 
 /-- A pi type is nontrivial if it's nonempty everywhere and nontrivial somewhere. -/
-theorem nontrivial_at (i' : I) [inst : ∀ i, Nonempty (f i)] [Nontrivial (f i')] : Nontrivial (∀ i : I, f i) :=
+theorem nontrivial_at (i' : I) [inst : ∀ i, Nonempty (f i)] [Nontrivial (f i')] : Nontrivial (∀ (i : I), f i) :=
   by 
     classical <;> exact (Function.update_injective (fun i => Classical.choice (inst i)) i').Nontrivial
 
@@ -167,7 +166,7 @@ As a convenience, provide an instance automatically if `(f (default I))` is nont
 If a different index has the non-trivial type, then use `haveI := nontrivial_at that_index`.
 -/
 instance Nontrivial [Inhabited I] [inst : ∀ i, Nonempty (f i)] [Nontrivial (f (default I))] :
-  Nontrivial (∀ i : I, f i) :=
+  Nontrivial (∀ (i : I), f i) :=
   nontrivial_at (default I)
 
 end Pi

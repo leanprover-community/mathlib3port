@@ -47,12 +47,12 @@ variable(F : J ⥤ K ⥤ C)
 A structure carrying a diagram of cones over the functors `F.obj j`.
 -/
 structure diagram_of_cones where 
-  obj : ∀ j : J, cone (F.obj j)
-  map : ∀ {j j' : J} f : j ⟶ j', (cones.postcompose (F.map f)).obj (obj j) ⟶ obj j' 
-  id : ∀ j : J, (map (𝟙 j)).Hom = 𝟙 _ :=  by 
+  obj : ∀ (j : J), cone (F.obj j)
+  map : ∀ {j j' : J} (f : j ⟶ j'), (cones.postcompose (F.map f)).obj (obj j) ⟶ obj j' 
+  id : ∀ (j : J), (map (𝟙 j)).Hom = 𝟙 _ :=  by 
   runTac 
     obviously 
-  comp : ∀ {j₁ j₂ j₃ : J} f : j₁ ⟶ j₂ g : j₂ ⟶ j₃, (map (f ≫ g)).Hom = (map f).Hom ≫ (map g).Hom :=  by 
+  comp : ∀ {j₁ j₂ j₃ : J} (f : j₁ ⟶ j₂) (g : j₂ ⟶ j₃), (map (f ≫ g)).Hom = (map f).Hom ≫ (map g).Hom :=  by 
   runTac 
     obviously
 

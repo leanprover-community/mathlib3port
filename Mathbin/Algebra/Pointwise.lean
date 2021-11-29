@@ -100,9 +100,11 @@ theorem mem_mul [Mul α] : (a ∈ s*t) ↔ ∃ x y, x ∈ s ∧ y ∈ t ∧ (x*y
 theorem mul_mem_mul [Mul α] (ha : a ∈ s) (hb : b ∈ t) : (a*b) ∈ s*t :=
   mem_image2_of_mem ha hb
 
-@[toAdditive add_image_prod]
-theorem image_mul_prod [Mul α] : (fun x : α × α => x.fst*x.snd) '' s.prod t = s*t :=
-  image_prod _
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident add_image_prod]]
+theorem image_mul_prod
+[has_mul α] : «expr = »(«expr '' »(λ x : «expr × »(α, α), «expr * »(x.fst, x.snd), s.prod t), «expr * »(s, t)) :=
+image_prod _
 
 @[simp, toAdditive]
 theorem image_mul_left [Groupₓ α] : (fun b => a*b) '' t = (fun b => a⁻¹*b) ⁻¹' t :=
@@ -369,7 +371,7 @@ theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
 
 /-- The n-ary version of `set.mul_mem_mul`. -/
 @[toAdditive " The n-ary version of `set.add_mem_add`. "]
-theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i _ : i ∈ t, g i ∈ f i) :
+theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i (_ : i ∈ t), g i ∈ f i) :
   (∏i in t, g i) ∈ ∏i in t, f i :=
   by 
     rw [mem_finset_prod]
@@ -563,19 +565,24 @@ theorem mem_smul [HasScalar α β] {t : Set β} : x ∈ s • t ↔ ∃ a y, a �
 theorem mem_smul_of_mem [HasScalar α β] {t : Set β} {a} {b} (ha : a ∈ s) (hb : b ∈ t) : a • b ∈ s • t :=
   ⟨a, b, ha, hb, rfl⟩
 
-@[toAdditive]
-theorem image_smul_prod [HasScalar α β] {t : Set β} : (fun x : α × β => x.fst • x.snd) '' s.prod t = s • t :=
-  image_prod _
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem image_smul_prod
+[has_scalar α β]
+{t : set β} : «expr = »(«expr '' »(λ x : «expr × »(α, β), «expr • »(x.fst, x.snd), s.prod t), «expr • »(s, t)) :=
+image_prod _
 
-@[toAdditive]
-theorem range_smul_range [HasScalar α β] {ι κ : Type _} (b : ι → α) (c : κ → β) :
-  range b • range c = range fun p : ι × κ => b p.1 • c p.2 :=
-  ext$
-    fun x =>
-      ⟨fun hx =>
-          let ⟨p, q, ⟨i, hi⟩, ⟨j, hj⟩, hpq⟩ := Set.mem_smul.1 hx
-          ⟨(i, j), hpq ▸ hi ▸ hj ▸ rfl⟩,
-        fun ⟨⟨i, j⟩, h⟩ => Set.mem_smul.2 ⟨b i, c j, ⟨i, rfl⟩, ⟨j, rfl⟩, h⟩⟩
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem range_smul_range
+[has_scalar α β]
+{ι κ : Type*}
+(b : ι → α)
+(c : κ → β) : «expr = »(«expr • »(range b, range c), range (λ p : «expr × »(ι, κ), «expr • »(b p.1, c p.2))) :=
+«expr $ »(ext, λ
+ x, ⟨λ hx, let ⟨p, q, ⟨i, hi⟩, ⟨j, hj⟩, hpq⟩ := set.mem_smul.1 hx in
+  ⟨(i, j), «expr ▸ »(hpq, «expr ▸ »(hi, «expr ▸ »(hj, rfl)))⟩, λ
+  ⟨⟨i, j⟩, h⟩, set.mem_smul.2 ⟨b i, c j, ⟨i, rfl⟩, ⟨j, rfl⟩, h⟩⟩)
 
 @[simp, toAdditive]
 theorem singleton_smul [HasScalar α β] {t : Set β} : ({a} : Set α) • t = a • t :=
@@ -820,17 +827,22 @@ namespace Finset
 
 variable{α : Type _}[DecidableEq α]
 
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The pointwise product of two finite sets `s` and `t`:
 `st = s ⬝ t = s * t = { x * y | x ∈ s, y ∈ t }`. -/
-@[toAdditive "The pointwise sum of two finite sets `s` and `t`:\n`s + t = { x + y | x ∈ s, y ∈ t }`. "]
-protected def Mul [Mul α] : Mul (Finset α) :=
-  ⟨fun s t => (s.product t).Image fun p : α × α => p.1*p.2⟩
+@[to_additive #[expr "The pointwise sum of two finite sets `s` and `t`:\n`s + t = { x + y | x ∈ s, y ∈ t }`. "]]
+protected
+def has_mul [has_mul α] : has_mul (finset α) :=
+⟨λ s t, (s.product t).image (λ p : «expr × »(α, α), «expr * »(p.1, p.2))⟩
 
 localized [Pointwise] attribute [instance] Finset.hasMul Finset.hasAdd
 
-@[toAdditive]
-theorem mul_def [Mul α] {s t : Finset α} : (s*t) = (s.product t).Image fun p : α × α => p.1*p.2 :=
-  rfl
+-- error in Algebra.Pointwise: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem mul_def
+[has_mul α]
+{s t : finset α} : «expr = »(«expr * »(s, t), (s.product t).image (λ p : «expr × »(α, α), «expr * »(p.1, p.2))) :=
+rfl
 
 @[toAdditive]
 theorem mem_mul [Mul α] {s t : Finset α} {x : α} : (x ∈ s*t) ↔ ∃ y z, y ∈ s ∧ z ∈ t ∧ (y*z) = x :=

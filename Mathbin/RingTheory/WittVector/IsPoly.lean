@@ -205,7 +205,7 @@ For the most part, users are not expected to treat `is_poly` as a class.
 class is_poly(f : ∀ ⦃R⦄ [CommRingₓ R], WittVector p R → 𝕎 R) : Prop where mk' :: 
   poly :
   ∃ φ : ℕ → MvPolynomial ℕ ℤ,
-    ∀ ⦃R⦄ [CommRingₓ R] x : 𝕎 R,
+    ∀ ⦃R⦄ [CommRingₓ R] (x : 𝕎 R),
       by 
         exact (f x).coeff = fun n => aeval x.coeff (φ n)
 
@@ -230,10 +230,10 @@ include hp
 
 theorem ext {f g} (hf : is_poly p f) (hg : is_poly p g)
   (h :
-    ∀ R : Type u [_Rcr : CommRingₓ R] x : 𝕎 R n : ℕ,
+    ∀ (R : Type u) [_Rcr : CommRingₓ R] (x : 𝕎 R) (n : ℕ),
       by 
         exact ghost_component n (f x) = ghost_component n (g x)) :
-  ∀ R : Type u [_Rcr : CommRingₓ R] x : 𝕎 R,
+  ∀ (R : Type u) [_Rcr : CommRingₓ R] (x : 𝕎 R),
     by 
       exact f x = g x :=
   by 
@@ -614,10 +614,10 @@ include hp
 
 theorem ext {f g} (hf : is_poly₂ p f) (hg : is_poly₂ p g)
   (h :
-    ∀ R : Type u [_Rcr : CommRingₓ R] x y : 𝕎 R n : ℕ,
+    ∀ (R : Type u) [_Rcr : CommRingₓ R] (x y : 𝕎 R) (n : ℕ),
       by 
         exact ghost_component n (f x y) = ghost_component n (g x y)) :
-  ∀ R [_Rcr : CommRingₓ R] x y : 𝕎 R,
+  ∀ R [_Rcr : CommRingₓ R] (x y : 𝕎 R),
     by 
       exact f x y = g x y :=
   by 

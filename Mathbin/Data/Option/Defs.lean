@@ -44,14 +44,14 @@ Try to use `o.is_none` or `o.is_some` instead.
 def decidable_eq_none {o : Option α} : Decidable (o = none) :=
   decidableOfDecidableOfIff (Bool.decidableEq _ _) is_none_iff_eq_none
 
-instance decidable_forall_mem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∀ a _ : a ∈ o, p a)
+instance decidable_forall_mem {p : α → Prop} [DecidablePred p] : ∀ (o : Option α), Decidable (∀ a (_ : a ∈ o), p a)
 | none =>
   is_true
     (by 
       simp [false_implies_iff])
 | some a => if h : p a then is_true$ fun o e => some_inj.1 e ▸ h else is_false$ mt (fun H => H _ rfl) h
 
-instance decidable_exists_mem {p : α → Prop} [DecidablePred p] : ∀ o : Option α, Decidable (∃ (a : _)(_ : a ∈ o), p a)
+instance decidable_exists_mem {p : α → Prop} [DecidablePred p] : ∀ (o : Option α), Decidable (∃ (a : _)(_ : a ∈ o), p a)
 | none =>
   is_false
     fun ⟨a, ⟨h, _⟩⟩ =>
@@ -134,7 +134,7 @@ none : rel none none
   then `pbind x f h` is essentially the same as `bind x f`
   but is defined only when all `x = some a`, using the proof to apply `f`. -/
 @[simp]
-def pbind : ∀ x : Option α, (∀ a : α, a ∈ x → Option β) → Option β
+def pbind : ∀ (x : Option α), (∀ (a : α), a ∈ x → Option β) → Option β
 | none, _ => none
 | some a, f => f a rfl
 
@@ -142,7 +142,7 @@ def pbind : ∀ x : Option α, (∀ a : α, a ∈ x → Option β) → Option β
 then `pmap f x h` is essentially the same as `map f x` but is defined only when all members of `x`
 satisfy `p`, using the proof to apply `f`. -/
 @[simp]
-def pmap {p : α → Prop} (f : ∀ a : α, p a → β) : ∀ x : Option α, (∀ a _ : a ∈ x, p a) → Option β
+def pmap {p : α → Prop} (f : ∀ (a : α), p a → β) : ∀ (x : Option α), (∀ a (_ : a ∈ x), p a) → Option β
 | none, _ => none
 | some a, H => some (f a (H a (mem_def.mpr rfl)))
 

@@ -50,7 +50,7 @@ theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} : Sigma.mk
     simp 
 
 @[simp]
-theorem eta : ∀ x : Σa, β a, Sigma.mk x.1 x.2 = x
+theorem eta : ∀ (x : Σa, β a), Sigma.mk x.1 x.2 = x
 | ⟨i, x⟩ => rfl
 
 @[ext]
@@ -124,22 +124,22 @@ theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β
 /-- Interpret a function on `Σ x : α, β x` as a dependent function with two arguments.
 
 This also exists as an `equiv` as `equiv.Pi_curry γ`. -/
-def Sigma.curry {γ : ∀ a, β a → Type _} (f : ∀ x : Sigma β, γ x.1 x.2) (x : α) (y : β x) : γ x y :=
+def Sigma.curry {γ : ∀ a, β a → Type _} (f : ∀ (x : Sigma β), γ x.1 x.2) (x : α) (y : β x) : γ x y :=
   f ⟨x, y⟩
 
 /-- Interpret a dependent function with two arguments as a function on `Σ x : α, β x`.
 
 This also exists as an `equiv` as `(equiv.Pi_curry γ).symm`. -/
-def Sigma.uncurry {γ : ∀ a, β a → Type _} (f : ∀ x y : β x, γ x y) (x : Sigma β) : γ x.1 x.2 :=
+def Sigma.uncurry {γ : ∀ a, β a → Type _} (f : ∀ x (y : β x), γ x y) (x : Sigma β) : γ x.1 x.2 :=
   f x.1 x.2
 
 @[simp]
-theorem Sigma.uncurry_curry {γ : ∀ a, β a → Type _} (f : ∀ x : Sigma β, γ x.1 x.2) :
+theorem Sigma.uncurry_curry {γ : ∀ a, β a → Type _} (f : ∀ (x : Sigma β), γ x.1 x.2) :
   Sigma.uncurry (Sigma.curry f) = f :=
   funext$ fun ⟨i, j⟩ => rfl
 
 @[simp]
-theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ x y : β x, γ x y) : Sigma.curry (Sigma.uncurry f) = f :=
+theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ x (y : β x), γ x y) : Sigma.curry (Sigma.uncurry f) = f :=
   rfl
 
 /-- Convert a product type to a Σ-type. -/

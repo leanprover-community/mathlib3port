@@ -73,9 +73,11 @@ begin
   exact [expr C.comp z (B.comp z A)]
 end
 
-theorem TimesContDiff.real_of_complex {n : WithTop ℕ} (h : TimesContDiff ℂ n e) :
-  TimesContDiff ℝ n fun x : ℝ => (e x).re :=
-  times_cont_diff_iff_times_cont_diff_at.2$ fun x => h.times_cont_diff_at.real_of_complex
+-- error in Analysis.Complex.RealDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem times_cont_diff.real_of_complex
+{n : with_top exprℕ()}
+(h : times_cont_diff exprℂ() n e) : times_cont_diff exprℝ() n (λ x : exprℝ(), (e x).re) :=
+«expr $ »(times_cont_diff_iff_times_cont_diff_at.2, λ x, h.times_cont_diff_at.real_of_complex)
 
 variable{E : Type _}[NormedGroup E][NormedSpace ℂ E]
 

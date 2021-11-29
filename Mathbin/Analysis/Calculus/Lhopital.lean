@@ -93,9 +93,9 @@ begin
     linarith [] [] ["[", expr this, "]"] }
 end
 
-theorem lhopital_zero_right_on_Ico (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x)
-  (hgg' : ∀ x _ : x ∈ Ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ico a b)) (hcg : ContinuousOn g (Ico a b))
-  (hg' : ∀ x _ : x ∈ Ioo a b, g' x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
+theorem lhopital_zero_right_on_Ico (hff' : ∀ x (_ : x ∈ Ioo a b), HasDerivAt f (f' x) x)
+  (hgg' : ∀ x (_ : x ∈ Ioo a b), HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ico a b))
+  (hcg : ContinuousOn g (Ico a b)) (hg' : ∀ x (_ : x ∈ Ioo a b), g' x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
   (hdiv : tendsto (fun x => f' x / g' x) (nhdsWithin a (Ioi a)) l) :
   tendsto (fun x => f x / g x) (nhdsWithin a (Ioi a)) l :=
   by 
@@ -134,9 +134,9 @@ begin
   simpa [] [] ["only"] ["[", expr neg_neg, "]"] [] []
 end
 
-theorem lhopital_zero_left_on_Ioc (hff' : ∀ x _ : x ∈ Ioo a b, HasDerivAt f (f' x) x)
-  (hgg' : ∀ x _ : x ∈ Ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ioc a b)) (hcg : ContinuousOn g (Ioc a b))
-  (hg' : ∀ x _ : x ∈ Ioo a b, g' x ≠ 0) (hfb : f b = 0) (hgb : g b = 0)
+theorem lhopital_zero_left_on_Ioc (hff' : ∀ x (_ : x ∈ Ioo a b), HasDerivAt f (f' x) x)
+  (hgg' : ∀ x (_ : x ∈ Ioo a b), HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ioc a b))
+  (hcg : ContinuousOn g (Ioc a b)) (hg' : ∀ x (_ : x ∈ Ioo a b), g' x ≠ 0) (hfb : f b = 0) (hgb : g b = 0)
   (hdiv : tendsto (fun x => f' x / g' x) (nhdsWithin b (Iio b)) l) :
   tendsto (fun x => f x / g x) (nhdsWithin b (Iio b)) l :=
   by 
@@ -235,7 +235,7 @@ begin
 end
 
 theorem lhopital_zero_right_on_Ico (hdf : DifferentiableOn ℝ f (Ioo a b)) (hcf : ContinuousOn f (Ico a b))
-  (hcg : ContinuousOn g (Ico a b)) (hg' : ∀ x _ : x ∈ Ioo a b, (deriv g) x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
+  (hcg : ContinuousOn g (Ico a b)) (hg' : ∀ x (_ : x ∈ Ioo a b), (deriv g) x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
   (hdiv : tendsto (fun x => (deriv f) x / (deriv g) x) (nhdsWithin a (Ioi a)) l) :
   tendsto (fun x => f x / g x) (nhdsWithin a (Ioi a)) l :=
   by 

@@ -185,23 +185,18 @@ section Classical
 
 open_locale Classical
 
-theorem exists_succ (x : s) : ∃ n, ((«expr↑ » x+n)+1) ∈ s :=
-  Classical.by_contradiction$
-    fun h =>
-      have  : ∀ a : ℕ ha : a ∈ s, a < succ x :=
-        fun a ha =>
-          lt_of_not_geₓ
-            fun hax =>
-              h
-                ⟨a - x+1,
-                  by 
-                    rwa [add_right_commₓ, add_tsub_cancel_of_le hax]⟩
-      Fintype.false
-        ⟨(((Multiset.range (succ x)).filter (· ∈ s)).pmap (fun y : ℕ hy : y ∈ s => Subtype.mk y hy)
-              (by 
-                simp [-Multiset.range_succ])).toFinset,
-          by 
-            simpa [Subtype.ext_iff_val, Multiset.mem_filter, -Multiset.range_succ]⟩
+-- error in Data.Equiv.Denumerable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem exists_succ (x : s) : «expr∃ , »((n), «expr ∈ »(«expr + »(«expr + »(«expr↑ »(x), n), 1), s)) :=
+«expr $ »(classical.by_contradiction, λ
+ h, have ∀
+ (a : exprℕ())
+ (ha : «expr ∈ »(a, s)), «expr < »(a, succ x), from λ
+ a
+ ha, lt_of_not_ge (λ
+  hax, h ⟨«expr - »(a, «expr + »(x, 1)), by rwa ["[", expr add_right_comm, ",", expr add_tsub_cancel_of_le hax, "]"] []⟩),
+ fintype.false ⟨(((multiset.range (succ x)).filter ((«expr ∈ » s))).pmap (λ
+    (y : exprℕ())
+    (hy : «expr ∈ »(y, s)), subtype.mk y hy) (by simp [] [] [] ["[", "-", ident multiset.range_succ, "]"] [] [])).to_finset, by simpa [] [] [] ["[", expr subtype.ext_iff_val, ",", expr multiset.mem_filter, ",", "-", ident multiset.range_succ, "]"] [] []⟩)
 
 end Classical
 
@@ -219,7 +214,7 @@ theorem succ_le_of_lt {x y : s} (h : y < x) : succ y ≤ x :=
   show (((y : ℕ)+Nat.findₓ hx)+1) ≤ x by 
     rw [hk] <;> exact add_le_add_right (add_le_add_left this _) _
 
-theorem le_succ_of_forall_lt_le {x y : s} (h : ∀ z _ : z < x, z ≤ y) : x ≤ succ y :=
+theorem le_succ_of_forall_lt_le {x y : s} (h : ∀ z (_ : z < x), z ≤ y) : x ≤ succ y :=
   have hx : ∃ m, ((«expr↑ » y+m)+1) ∈ s := exists_succ _ 
   show «expr↑ » x ≤ («expr↑ » y+Nat.findₓ hx)+1 from
     le_of_not_gtₓ$
@@ -242,48 +237,24 @@ def of_nat (s : Set ℕ) [DecidablePred (· ∈ s)] [Infinite s] : ℕ → s
 | 0 => ⊥
 | n+1 => succ (of_nat n)
 
-theorem of_nat_surjective_aux : ∀ {x : ℕ} hx : x ∈ s, ∃ n, of_nat s n = ⟨x, hx⟩
-| x =>
-  fun hx =>
-    let t : List s :=
-      ((List.range x).filter fun y => y ∈ s).pmap (fun y : ℕ hy : y ∈ s => ⟨y, hy⟩)
-        (by 
-          simp )
-    have hmt : ∀ {y : s}, y ∈ t ↔ y < ⟨x, hx⟩ :=
-      by 
-        simp [List.mem_filterₓ, Subtype.ext_iff_val, t] <;> intros  <;> rfl 
-    have wf : ∀ m : s, List.maximum t = m → «expr↑ » m < x :=
-      fun m hmax =>
-        by 
-          simpa [hmt] using List.maximum_mem hmax 
-    by 
-      cases' hmax : List.maximum t with m
-      ·
-        exact
-          ⟨0,
-            le_antisymmₓ bot_le
-              (le_of_not_gtₓ
-                fun h =>
-                  List.not_mem_nil (⊥ : s)$
-                    by 
-                      rw [←List.maximum_eq_none.1 hmax, hmt] <;> exact h)⟩
-      cases' of_nat_surjective_aux m.2 with a ha 
-      exact
-        ⟨a+1,
-          le_antisymmₓ
-              (by 
-                rw [of_nat] <;>
-                  exact
-                    succ_le_of_lt
-                      (by 
-                        rw [ha] <;> exact wf _ hmax))$
-            by 
-              rw [of_nat] <;>
-                exact
-                  le_succ_of_forall_lt_le
-                    fun z hz =>
-                      by 
-                        rw [ha] <;> cases m <;> exact List.le_maximum_of_mem (hmt.2 hz) hmax⟩
+-- error in Data.Equiv.Denumerable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of_nat_surjective_aux : ∀ {x : exprℕ()} (hx : «expr ∈ »(x, s)), «expr∃ , »((n), «expr = »(of_nat s n, ⟨x, hx⟩))
+| x := λ
+hx, let t : list s := ((list.range x).filter (λ
+      y, «expr ∈ »(y, s))).pmap (λ (y : exprℕ()) (hy : «expr ∈ »(y, s)), ⟨y, hy⟩) (by simp [] [] [] [] [] []) in
+have hmt : ∀
+{y : s}, «expr ↔ »(«expr ∈ »(y, t), «expr < »(y, ⟨x, hx⟩)), by simp [] [] [] ["[", expr list.mem_filter, ",", expr subtype.ext_iff_val, ",", expr t, "]"] [] []; intros []; refl,
+have wf : ∀
+m : s, «expr = »(list.maximum t, m) → «expr < »(«expr↑ »(m), x), from λ
+m hmax, by simpa [] [] [] ["[", expr hmt, "]"] [] ["using", expr list.maximum_mem hmax],
+begin
+  cases [expr hmax, ":", expr list.maximum t] ["with", ident m],
+  { exact [expr ⟨0, le_antisymm bot_le (le_of_not_gt (λ
+        h, «expr $ »(list.not_mem_nil («expr⊥»() : s), by rw ["[", "<-", expr list.maximum_eq_none.1 hmax, ",", expr hmt, "]"] []; exact [expr h])))⟩] },
+  cases [expr of_nat_surjective_aux m.2] ["with", ident a, ident ha],
+  exact [expr ⟨«expr + »(a, 1), «expr $ »(le_antisymm (by rw [expr of_nat] []; exact [expr succ_le_of_lt (by rw [expr ha] []; exact [expr wf _ hmax])]), by rw [expr of_nat] []; exact [expr le_succ_of_forall_lt_le (λ
+       z hz, by rw [expr ha] []; cases [expr m] []; exact [expr list.le_maximum_of_mem (hmt.2 hz) hmax])])⟩]
+end
 
 theorem of_nat_surjective : surjective (of_nat s) :=
   fun ⟨x, hx⟩ => of_nat_surjective_aux hx

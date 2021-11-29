@@ -53,7 +53,8 @@ private unsafe def try_apply_opt_auto_param_instance_for_apply (cfg : apply_cfg)
                 when cfg.auto_param (try apply_auto_param)
       set_goals gs
 
-private unsafe def retry_apply_aux : ∀ e : expr cfg : apply_cfg, List (Bool × Name × expr) → tactic (List (Name × expr))
+private unsafe def retry_apply_aux :
+  ∀ (e : expr) (cfg : apply_cfg), List (Bool × Name × expr) → tactic (List (Name × expr))
 | e, cfg, gs =>
   (focus1
       do 

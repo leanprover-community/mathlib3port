@@ -36,11 +36,15 @@ variable{α β γ : Typevec.{u} n}{F : Typevec.{u} n → Type v}[Mvfunctor F]
 def liftp {α : Typevec n} (p : ∀ i, α i → Prop) (x : F α) : Prop :=
   ∃ u : F fun i => Subtype (p i), (fun i => @Subtype.val _ (p i)) <$$> u = x
 
+-- error in Control.Functor.Multivariate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- relational lifting over multivariate functors -/
-def liftr {α : Typevec n} (r : ∀ {i}, α i → α i → Prop) (x y : F α) : Prop :=
-  ∃ u : F fun i => { p : α i × α i // r p.fst p.snd },
-    (fun i t : { p : α i × α i // r p.fst p.snd } => t.val.fst) <$$> u = x ∧
-      (fun i t : { p : α i × α i // r p.fst p.snd } => t.val.snd) <$$> u = y
+def liftr {α : typevec n} (r : ∀ {i}, α i → α i → exprProp()) (x y : F α) : exprProp() :=
+«expr∃ , »((u : F (λ
+   i, {p : «expr × »(α i, α i) // r p.fst p.snd})), «expr ∧ »(«expr = »(«expr <$$> »(λ
+    (i)
+    (t : {p : «expr × »(α i, α i) // r p.fst p.snd}), t.val.fst, u), x), «expr = »(«expr <$$> »(λ
+    (i)
+    (t : {p : «expr × »(α i, α i) // r p.fst p.snd}), t.val.snd, u), y)))
 
 /-- given `x : F α` and a projection `i` of type vector `α`, `supp x i` is the set
 of `α.i` contained in `x` -/
@@ -48,15 +52,15 @@ def supp {α : Typevec n} (x : F α) (i : Fin2 n) : Set (α i) :=
   { y:α i | ∀ ⦃p⦄, liftp p x → p i y }
 
 theorem of_mem_supp {α : Typevec n} {x : F α} {p : ∀ ⦃i⦄, α i → Prop} (h : liftp p x) (i : Fin2 n) :
-  ∀ y _ : y ∈ supp x i, p y :=
+  ∀ y (_ : y ∈ supp x i), p y :=
   fun y hy => hy h
 
 end Mvfunctor
 
 /-- laws for `mvfunctor` -/
 class IsLawfulMvfunctor{n : ℕ}(F : Typevec n → Type _)[Mvfunctor F] : Prop where 
-  id_map : ∀ {α : Typevec n} x : F α, Typevec.id <$$> x = x 
-  comp_map : ∀ {α β γ : Typevec n} g : α ⟹ β h : β ⟹ γ x : F α, (h ⊚ g) <$$> x = h <$$> g <$$> x
+  id_map : ∀ {α : Typevec n} (x : F α), Typevec.id <$$> x = x 
+  comp_map : ∀ {α β γ : Typevec n} (g : α ⟹ β) (h : β ⟹ γ) (x : F α), (h ⊚ g) <$$> x = h <$$> g <$$> x
 
 open Nat Typevec
 
@@ -98,7 +102,7 @@ section Liftp'
 variable(F)
 
 theorem exists_iff_exists_of_mono {p : F α → Prop} {q : F β → Prop} (f : α ⟹ β) (g : β ⟹ α) (h₀ : f ⊚ g = id)
-  (h₁ : ∀ u : F α, p u ↔ q (f <$$> u)) : (∃ u : F α, p u) ↔ ∃ u : F β, q u :=
+  (h₁ : ∀ (u : F α), p u ↔ q (f <$$> u)) : (∃ u : F α, p u) ↔ ∃ u : F β, q u :=
   by 
     split  <;> rintro ⟨u, h₂⟩ <;> [use f <$$> u, use g <$$> u]
     ·
@@ -144,29 +148,25 @@ variable{β : Type u}
 
 variable(pp : β → Prop)
 
-private def f :
-  ∀ n α,
-    (fun i : Fin2 (n+1) => { p_1 // of_repeat (pred_last' α pp i p_1) }) ⟹
-      fun i : Fin2 (n+1) => { p_1 : (α ::: β) i // pred_last α pp p_1 }
-| _, α, Fin2.fs i, x =>
-  ⟨x.val,
-    cast
-      (by 
-        simp only [pred_last] <;> erw [const_iff_true])
-      x.property⟩
-| _, α, Fin2.fz, x => ⟨x.val, x.property⟩
+-- error in Control.Functor.Multivariate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+def f : ∀
+n
+α, «expr ⟹ »(λ
+ i : fin2 «expr + »(n, 1), {p_1 // of_repeat (pred_last' α pp i p_1)}, λ
+ i : fin2 «expr + »(n, 1), {p_1 : [«expr ::: »/«expr ::: »](α, β) i // pred_last α pp p_1})
+| _, α, fin2.fs i, x := ⟨x.val, cast (by simp [] [] ["only"] ["[", expr pred_last, "]"] [] []; erw [expr const_iff_true] []) x.property⟩
+| _, α, fin2.fz, x := ⟨x.val, x.property⟩
 
-private def g :
-  ∀ n α,
-    (fun i : Fin2 (n+1) => { p_1 : (α ::: β) i // pred_last α pp p_1 }) ⟹
-      fun i : Fin2 (n+1) => { p_1 // of_repeat (pred_last' α pp i p_1) }
-| _, α, Fin2.fs i, x =>
-  ⟨x.val,
-    cast
-      (by 
-        simp only [pred_last] <;> erw [const_iff_true])
-      x.property⟩
-| _, α, Fin2.fz, x => ⟨x.val, x.property⟩
+-- error in Control.Functor.Multivariate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+def g : ∀
+n
+α, «expr ⟹ »(λ
+ i : fin2 «expr + »(n, 1), {p_1 : [«expr ::: »/«expr ::: »](α, β) i // pred_last α pp p_1}, λ
+ i : fin2 «expr + »(n, 1), {p_1 // of_repeat (pred_last' α pp i p_1)})
+| _, α, fin2.fs i, x := ⟨x.val, cast (by simp [] [] ["only"] ["[", expr pred_last, "]"] [] []; erw [expr const_iff_true] []) x.property⟩
+| _, α, fin2.fz, x := ⟨x.val, x.property⟩
 
 theorem liftp_last_pred_iff {β} (p : β → Prop) (x : F (α ::: β)) :
   liftp' (pred_last' _ p) x ↔ liftp (pred_last _ p) x :=
@@ -186,29 +186,25 @@ open Function
 
 variable(rr : β → β → Prop)
 
-private def f :
-  ∀ n α,
-    (fun i : Fin2 (n+1) => { p_1 : _ × _ // of_repeat (rel_last' α rr i (Typevec.Prod.mk _ p_1.fst p_1.snd)) }) ⟹
-      fun i : Fin2 (n+1) => { p_1 : (α ::: β) i × _ // rel_last α rr p_1.fst p_1.snd }
-| _, α, Fin2.fs i, x =>
-  ⟨x.val,
-    cast
-      (by 
-        simp only [rel_last] <;> erw [repeat_eq_iff_eq])
-      x.property⟩
-| _, α, Fin2.fz, x => ⟨x.val, x.property⟩
+-- error in Control.Functor.Multivariate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+def f : ∀
+n
+α, «expr ⟹ »(λ
+ i : fin2 «expr + »(n, 1), {p_1 : «expr × »(_, _) // of_repeat (rel_last' α rr i (typevec.prod.mk _ p_1.fst p_1.snd))}, λ
+ i : fin2 «expr + »(n, 1), {p_1 : «expr × »([«expr ::: »/«expr ::: »](α, β) i, _) // rel_last α rr p_1.fst p_1.snd})
+| _, α, fin2.fs i, x := ⟨x.val, cast (by simp [] [] ["only"] ["[", expr rel_last, "]"] [] []; erw [expr repeat_eq_iff_eq] []) x.property⟩
+| _, α, fin2.fz, x := ⟨x.val, x.property⟩
 
-private def g :
-  ∀ n α,
-    (fun i : Fin2 (n+1) => { p_1 : (α ::: β) i × _ // rel_last α rr p_1.fst p_1.snd }) ⟹
-      fun i : Fin2 (n+1) => { p_1 : _ × _ // of_repeat (rel_last' α rr i (Typevec.Prod.mk _ p_1.1 p_1.2)) }
-| _, α, Fin2.fs i, x =>
-  ⟨x.val,
-    cast
-      (by 
-        simp only [rel_last] <;> erw [repeat_eq_iff_eq])
-      x.property⟩
-| _, α, Fin2.fz, x => ⟨x.val, x.property⟩
+-- error in Control.Functor.Multivariate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+def g : ∀
+n
+α, «expr ⟹ »(λ
+ i : fin2 «expr + »(n, 1), {p_1 : «expr × »([«expr ::: »/«expr ::: »](α, β) i, _) // rel_last α rr p_1.fst p_1.snd}, λ
+ i : fin2 «expr + »(n, 1), {p_1 : «expr × »(_, _) // of_repeat (rel_last' α rr i (typevec.prod.mk _ p_1.1 p_1.2))})
+| _, α, fin2.fs i, x := ⟨x.val, cast (by simp [] [] ["only"] ["[", expr rel_last, "]"] [] []; erw [expr repeat_eq_iff_eq] []) x.property⟩
+| _, α, fin2.fz, x := ⟨x.val, x.property⟩
 
 theorem liftr_last_rel_iff (x y : F (α ::: β)) : liftr' (rel_last' _ rr) x y ↔ liftr (rel_last _ rr) x y :=
   by 

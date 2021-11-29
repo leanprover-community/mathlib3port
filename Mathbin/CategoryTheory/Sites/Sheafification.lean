@@ -33,7 +33,7 @@ attribute [local instance] concrete_category.has_coe_to_sort concrete_category.h
 /-- A concrete version of the multiequalizer, to be used below. -/
 @[nolint has_inhabited_instance]
 def meq {X : C} (P : «expr ᵒᵖ» C ⥤ D) (S : J.cover X) :=
-  { x : ∀ I : S.arrow, P.obj (op I.Y) // ∀ I : S.relation, P.map I.g₁.op (x I.fst) = P.map I.g₂.op (x I.snd) }
+  { x : ∀ (I : S.arrow), P.obj (op I.Y) // ∀ (I : S.relation), P.map I.g₁.op (x I.fst) = P.map I.g₂.op (x I.snd) }
 
 end 
 
@@ -43,11 +43,11 @@ variable[concrete_category.{max v u} D]
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-instance  {X} (P : «expr ᵒᵖ» C ⥤ D) (S : J.cover X) : CoeFun (meq P S) fun x => ∀ I : S.arrow, P.obj (op I.Y) :=
+instance  {X} (P : «expr ᵒᵖ» C ⥤ D) (S : J.cover X) : CoeFun (meq P S) fun x => ∀ (I : S.arrow), P.obj (op I.Y) :=
   ⟨fun x => x.1⟩
 
 @[ext]
-theorem ext {X} {P : «expr ᵒᵖ» C ⥤ D} {S : J.cover X} (x y : meq P S) (h : ∀ I : S.arrow, x I = y I) : x = y :=
+theorem ext {X} {P : «expr ᵒᵖ» C ⥤ D} {S : J.cover X} (x y : meq P S) (h : ∀ (I : S.arrow), x I = y I) : x = y :=
   Subtype.ext$ funext$ h
 
 theorem condition {X} {P : «expr ᵒᵖ» C ⥤ D} {S : J.cover X} (x : meq P S) (I : S.relation) :
@@ -127,9 +127,9 @@ attribute [local instance] concrete_category.has_coe_to_sort concrete_category.h
 
 variable[preserves_limits (forget D)]
 
-variable[∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
+variable[∀ (X : C), has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
 
-variable[∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X, has_multiequalizer (S.index P)]
+variable[∀ (P : «expr ᵒᵖ» C ⥤ D) (X : C) (S : J.cover X), has_multiequalizer (S.index P)]
 
 noncomputable theory
 
@@ -156,7 +156,7 @@ theorem to_plus_mk {X : C} {P : «expr ᵒᵖ» C ⥤ D} (S : J.cover X) (x : P.
   (J.to_plus P).app _ x = mk (meq.mk S x) :=
   by 
     dsimp [mk]
-    let e : S ⟶ ⊤ := hom_of_le (SemilatticeInfTop.le_top _)
+    let e : S ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
     rw [←colimit.w _ e.op]
     delta' cover.to_multiequalizer 
     simp only [comp_apply]
@@ -175,7 +175,7 @@ theorem to_plus_apply {X : C} {P : «expr ᵒᵖ» C ⥤ D} (S : J.cover X) (x :
     simp only [←comp_apply, colimit.ι_pre, ι_colim_map_assoc]
     simp only [comp_apply]
     dsimp only [functor.op]
-    let e : (J.pullback I.f).obj (unop (op S)) ⟶ ⊤ := hom_of_le (SemilatticeInfTop.le_top _)
+    let e : (J.pullback I.f).obj (unop (op S)) ⟶ ⊤ := hom_of_le (OrderTop.le_top _)
     rw [←colimit.w _ e.op]
     simp only [comp_apply]
     congr 1
@@ -201,7 +201,7 @@ theorem to_plus_eq_mk {X : C} {P : «expr ᵒᵖ» C ⥤ D} (x : P.obj (op X)) :
     ext i 
     simpa
 
-variable[∀ X : C, preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)]
+variable[∀ (X : C), preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)]
 
 theorem exists_rep {X : C} {P : «expr ᵒᵖ» C ⥤ D} (x : (J.plus_obj P).obj (op X)) :
   ∃ (S : J.cover X)(y : meq P S), x = mk y :=
@@ -286,8 +286,8 @@ begin
 end
 
 theorem inj_of_sep (P : «expr ᵒᵖ» C ⥤ D)
-  (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) (X : C) :
-  Function.Injective ((J.to_plus P).app (op X)) :=
+  (hsep : ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)), (∀ (I : S.arrow), P.map I.f.op x = P.map I.f.op y) → x = y)
+  (X : C) : Function.Injective ((J.to_plus P).app (op X)) :=
   by 
     intro x y h 
     simp only [to_plus_eq_mk] at h 
@@ -304,9 +304,9 @@ theorem inj_of_sep (P : «expr ᵒᵖ» C ⥤ D)
   associated to the representatives.
   The separatedness condition is used to prove compatibility among these local sections of `P`. -/
 def meq_of_sep (P : «expr ᵒᵖ» C ⥤ D)
-  (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) (X : C)
-  (S : J.cover X) (s : meq (J.plus_obj P) S) (T : ∀ I : S.arrow, J.cover I.Y) (t : ∀ I : S.arrow, meq P (T I))
-  (ht : ∀ I : S.arrow, s I = mk (t I)) : meq P (S.bind T) :=
+  (hsep : ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)), (∀ (I : S.arrow), P.map I.f.op x = P.map I.f.op y) → x = y)
+  (X : C) (S : J.cover X) (s : meq (J.plus_obj P) S) (T : ∀ (I : S.arrow), J.cover I.Y)
+  (t : ∀ (I : S.arrow), meq P (T I)) (ht : ∀ (I : S.arrow), s I = mk (t I)) : meq P (S.bind T) :=
   { val := fun I => t I.from_middle I.to_middle,
     property :=
       by 
@@ -326,7 +326,7 @@ def meq_of_sep (P : «expr ᵒᵖ» C ⥤ D)
           apply II.w 
         exact s.condition IR }
 
--- error in CategoryTheory.Sites.Sheafification: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in CategoryTheory.Sites.Sheafification: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem exists_of_sep
 (P : «expr ⥤ »(«expr ᵒᵖ»(C), D))
 (hsep : ∀
@@ -381,7 +381,7 @@ variable[reflects_isomorphisms (forget D)]
 
 /-- If `P` is separated, then `P⁺` is a sheaf. -/
 theorem is_sheaf_of_sep (P : «expr ᵒᵖ» C ⥤ D)
-  (hsep : ∀ X : C S : J.cover X x y : P.obj (op X), (∀ I : S.arrow, P.map I.f.op x = P.map I.f.op y) → x = y) :
+  (hsep : ∀ (X : C) (S : J.cover X) (x y : P.obj (op X)), (∀ (I : S.arrow), P.map I.f.op x = P.map I.f.op y) → x = y) :
   presheaf.is_sheaf J (J.plus_obj P) :=
   by 
     rw [presheaf.is_sheaf_iff_multiequalizer]
@@ -427,8 +427,8 @@ end Plus
 
 variable(J)
 
-variable[∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X,
-      has_multiequalizer (S.index P)][∀ X : C, has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
+variable[∀ (P : «expr ᵒᵖ» C ⥤ D) (X : C) (S : J.cover X),
+      has_multiequalizer (S.index P)][∀ (X : C), has_colimits_of_shape («expr ᵒᵖ» (J.cover X)) D]
 
 /-- The sheafification of a presheaf `P`.
 *NOTE:* Additional hypotheses are needed to obtain a proof that this is a sheaf! -/
@@ -513,12 +513,12 @@ variable(J D)
 variable[concrete_category.{max v u}
       D][preserves_limits
       (forget
-        D)][∀ P : «expr ᵒᵖ» C ⥤ D X : C S : J.cover X,
+        D)][∀ (P : «expr ᵒᵖ» C ⥤ D) (X : C) (S : J.cover X),
       has_multiequalizer
         (S.index
-          P)][∀ X : C,
+          P)][∀ (X : C),
       has_colimits_of_shape («expr ᵒᵖ» (J.cover X))
-        D][∀ X : C, preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)][reflects_isomorphisms (forget D)]
+        D][∀ (X : C), preserves_colimits_of_shape («expr ᵒᵖ» (J.cover X)) (forget D)][reflects_isomorphisms (forget D)]
 
 /-- The sheafification functor, as a functor taking values in `Sheaf`. -/
 @[simps obj map]

@@ -208,18 +208,18 @@ theorem subtype_comp_cod_restrict (p : Submodule R₂ M₂) (h : ∀ b, f b ∈ 
   ext$ fun b => rfl
 
 /-- Restrict domain and codomain of an endomorphism. -/
-def restrict (f : M →ₗ[R] M) {p : Submodule R M} (hf : ∀ x _ : x ∈ p, f x ∈ p) : p →ₗ[R] p :=
+def restrict (f : M →ₗ[R] M) {p : Submodule R M} (hf : ∀ x (_ : x ∈ p), f x ∈ p) : p →ₗ[R] p :=
   (f.dom_restrict p).codRestrict p$ SetLike.forall.2 hf
 
-theorem restrict_apply {f : M →ₗ[R] M} {p : Submodule R M} (hf : ∀ x _ : x ∈ p, f x ∈ p) (x : p) :
+theorem restrict_apply {f : M →ₗ[R] M} {p : Submodule R M} (hf : ∀ x (_ : x ∈ p), f x ∈ p) (x : p) :
   f.restrict hf x = ⟨f x, hf x.1 x.2⟩ :=
   rfl
 
-theorem subtype_comp_restrict {f : M →ₗ[R] M} {p : Submodule R M} (hf : ∀ x _ : x ∈ p, f x ∈ p) :
+theorem subtype_comp_restrict {f : M →ₗ[R] M} {p : Submodule R M} (hf : ∀ x (_ : x ∈ p), f x ∈ p) :
   p.subtype.comp (f.restrict hf) = f.dom_restrict p :=
   rfl
 
-theorem restrict_eq_cod_restrict_dom_restrict {f : M →ₗ[R] M} {p : Submodule R M} (hf : ∀ x _ : x ∈ p, f x ∈ p) :
+theorem restrict_eq_cod_restrict_dom_restrict {f : M →ₗ[R] M} {p : Submodule R M} (hf : ∀ x (_ : x ∈ p), f x ∈ p) :
   f.restrict hf = (f.dom_restrict p).codRestrict p fun x => hf x.1 x.2 :=
   rfl
 
@@ -348,21 +348,21 @@ theorem iterate_succ (n : ℕ) : (f' ^ n+1) = comp (f' ^ n) f' :=
   by 
     rw [pow_succ'ₓ, mul_eq_comp]
 
-theorem iterate_surjective (h : surjective f') : ∀ n : ℕ, surjective («expr⇑ » (f' ^ n))
+theorem iterate_surjective (h : surjective f') : ∀ (n : ℕ), surjective («expr⇑ » (f' ^ n))
 | 0 => surjective_id
 | n+1 =>
   by 
     rw [iterate_succ]
     exact surjective.comp (iterate_surjective n) h
 
-theorem iterate_injective (h : injective f') : ∀ n : ℕ, injective («expr⇑ » (f' ^ n))
+theorem iterate_injective (h : injective f') : ∀ (n : ℕ), injective («expr⇑ » (f' ^ n))
 | 0 => injective_id
 | n+1 =>
   by 
     rw [iterate_succ]
     exact injective.comp (iterate_injective n) h
 
-theorem iterate_bijective (h : bijective f') : ∀ n : ℕ, bijective («expr⇑ » (f' ^ n))
+theorem iterate_bijective (h : bijective f') : ∀ (n : ℕ), bijective («expr⇑ » (f' ^ n))
 | 0 => bijective_id
 | n+1 =>
   by 
@@ -670,11 +670,11 @@ by haveI [] [] [":=", expr module.subsingleton R M]; apply_instance
 instance  [Nontrivial M] : Nontrivial (Submodule R M) :=
   (nontrivial_iff R).mpr ‹_›
 
-theorem disjoint_def {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x _ : x ∈ p, x ∈ p' → x = (0 : M) :=
+theorem disjoint_def {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x (_ : x ∈ p), x ∈ p' → x = (0 : M) :=
   show (∀ x, x ∈ p ∧ x ∈ p' → x ∈ ({0} : Set M)) ↔ _ by 
     simp 
 
-theorem disjoint_def' {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x _ : x ∈ p y _ : y ∈ p', x = y → x = (0 : M) :=
+theorem disjoint_def' {p p' : Submodule R M} : Disjoint p p' ↔ ∀ x (_ : x ∈ p) y (_ : y ∈ p'), x = y → x = (0 : M) :=
   disjoint_def.trans ⟨fun h x hx y hy hxy => h x hx$ hxy.symm ▸ hy, fun h x hx hx' => h _ hx x hx' rfl⟩
 
 theorem mem_right_iff_eq_zero_of_disjoint {p p' : Submodule R M} (h : Disjoint p p') {x : p} : (x : M) ∈ p' ↔ x = 0 :=
@@ -947,7 +947,7 @@ theorem map_comap_subtype : map p.subtype (comap p.subtype p') = p⊓p' :=
           rintro ⟨⟨_, h₁⟩, h₂, rfl⟩ <;> exact ⟨h₁, h₂⟩,
         fun ⟨h₁, h₂⟩ => ⟨⟨_, h₁⟩, h₂, rfl⟩⟩
 
-theorem eq_zero_of_bot_submodule : ∀ b : (⊥ : Submodule R M), b = 0
+theorem eq_zero_of_bot_submodule : ∀ (b : (⊥ : Submodule R M)), b = 0
 | ⟨b', hb⟩ => Subtype.eq$ show b' = 0 from (mem_bot R).1 hb
 
 -- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -981,7 +981,7 @@ end
 
 variable{s t : Set M}
 
-theorem mem_span : x ∈ span R s ↔ ∀ p : Submodule R M, s ⊆ p → x ∈ p :=
+theorem mem_span : x ∈ span R s ↔ ∀ (p : Submodule R M), s ⊆ p → x ∈ p :=
   mem_bInter_iff
 
 theorem subset_span : s ⊆ span R s :=
@@ -1013,7 +1013,7 @@ theorem map_span [RingHomSurjective σ₁₂] (f : M →ₛₗ[σ₁₂] M₂) (
 alias Submodule.map_span ← LinearMap.map_span
 
 theorem map_span_le [RingHomSurjective σ₁₂] (f : M →ₛₗ[σ₁₂] M₂) (s : Set M) (N : Submodule R₂ M₂) :
-  map f (span R s) ≤ N ↔ ∀ m _ : m ∈ s, f m ∈ N :=
+  map f (span R s) ≤ N ↔ ∀ m (_ : m ∈ s), f m ∈ N :=
   by 
     rw [f.map_span, span_le, Set.image_subset_iff]
     exact Iff.rfl
@@ -1041,9 +1041,48 @@ alias Submodule.span_preimage_le ← LinearMap.span_preimage_le
 preserved under addition and scalar multiplication, then `p` holds for all elements of the span of
 `s`. -/
 @[elab_as_eliminator]
-theorem span_induction {p : M → Prop} (h : x ∈ span R s) (Hs : ∀ x _ : x ∈ s, p x) (H0 : p 0)
-  (H1 : ∀ x y, p x → p y → p (x+y)) (H2 : ∀ a : R x, p x → p (a • x)) : p x :=
+theorem span_induction {p : M → Prop} (h : x ∈ span R s) (Hs : ∀ x (_ : x ∈ s), p x) (H0 : p 0)
+  (H1 : ∀ x y, p x → p y → p (x+y)) (H2 : ∀ (a : R) x, p x → p (a • x)) : p x :=
   (@span_le _ _ _ _ _ _ ⟨p, H0, H1, H2⟩).2 Hs h
+
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The difference with `submodule.span_induction` is that this acts on the subtype. -/
+theorem span_induction'
+{p : span R s → exprProp()}
+(Hs : ∀ (x) (h : «expr ∈ »(x, s)), p ⟨x, subset_span h⟩)
+(H0 : p 0)
+(H1 : ∀ x y, p x → p y → p «expr + »(x, y))
+(H2 : ∀ (a : R) (x), p x → p «expr • »(a, x))
+(x : span R s) : p x :=
+«expr $ »(subtype.rec_on x, λ x hx, begin
+   refine [expr exists.elim _ (λ (hx : «expr ∈ »(x, span R s)) (hc : p ⟨x, hx⟩), hc)],
+   refine [expr span_induction hx (λ
+     m
+     hm, ⟨subset_span hm, Hs m hm⟩) ⟨zero_mem _, H0⟩ (λ
+     x
+     y
+     hx
+     hy, «expr $ »(exists.elim hx, λ
+      hx'
+      hx, «expr $ »(exists.elim hy, λ
+       hy'
+       hy, ⟨add_mem _ hx' hy', H1 _ _ hx hy⟩))) (λ
+     r x hx, «expr $ »(exists.elim hx, λ hx' hx, ⟨smul_mem _ _ hx', H2 r _ hx⟩))]
+ end)
+
+@[simp]
+theorem span_span_coe_preimage : span R ((coeₓ : span R s → M) ⁻¹' s) = ⊤ :=
+  by 
+    refine' eq_top_iff.2 fun x hx => span_induction' (fun x hx => _) _ _ (fun r x hx => _) x
+    ·
+      exact subset_span hx
+    ·
+      exact Submodule.zero_mem _
+    ·
+      intro x y hx hy 
+      exact Submodule.add_mem _ hx hy
+    ·
+      exact Submodule.smul_mem _ _ hx
 
 theorem span_nat_eq_add_submonoid_closure (s : Set M) : (span ℕ s).toAddSubmonoid = AddSubmonoid.closure s :=
   by 
@@ -1257,7 +1296,7 @@ theorem mem_span_singleton {y : M} : (x ∈ R∙y) ↔ ∃ a : R, a • y = x :=
               by 
                 simp )⟩
 
-theorem le_span_singleton_iff {s : Submodule R M} {v₀ : M} : (s ≤ R∙v₀) ↔ ∀ v _ : v ∈ s, ∃ r : R, r • v₀ = v :=
+theorem le_span_singleton_iff {s : Submodule R M} {v₀ : M} : (s ≤ R∙v₀) ↔ ∀ v (_ : v ∈ s), ∃ r : R, r • v₀ = v :=
   by 
     simpRw [SetLike.le_def, mem_span_singleton]
 
@@ -1342,7 +1381,7 @@ theorem span_span_of_tower [Semiringₓ S] [HasScalar R S] [Module S M] [IsScala
 
 variable{R S s}
 
-theorem span_eq_bot : span R (s : Set M) = ⊥ ↔ ∀ x _ : x ∈ s, (x : M) = 0 :=
+theorem span_eq_bot : span R (s : Set M) = ⊥ ↔ ∀ x (_ : x ∈ s), (x : M) = 0 :=
   eq_bot_iff.trans ⟨fun H x h => (mem_bot R).1$ H$ subset_span h, fun H => span_le.2 fun x h => (mem_bot R).2$ H x h⟩
 
 @[simp]
@@ -1671,7 +1710,7 @@ variable{γ : ι → Type _}[DecidableEq ι]
 
 section Sum
 
-variable[∀ i, HasZero (γ i)][∀ i x : γ i, Decidable (x ≠ 0)]
+variable[∀ i, HasZero (γ i)][∀ i (x : γ i), Decidable (x ≠ 0)]
 
 @[simp]
 theorem map_dfinsupp_sum (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀i, γ i} {g : ∀ i, γ i → M} :
@@ -1850,7 +1889,7 @@ theorem ker_le_ker_comp (f : M →ₛₗ[τ₁₂] M₂) (g : M₂ →ₛₗ[τ�
   by 
     rw [ker_comp] <;> exact comap_mono bot_le
 
-theorem disjoint_ker {f : M →ₛₗ[τ₁₂] M₂} {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x _ : x ∈ p, f x = 0 → x = 0 :=
+theorem disjoint_ker {f : M →ₛₗ[τ₁₂] M₂} {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x (_ : x ∈ p), f x = 0 → x = 0 :=
   by 
     simp [disjoint_def]
 
@@ -1879,7 +1918,7 @@ theorem range_cod_restrict {τ₂₁ : R₂ →+* R} [RingHomSurjective τ₂₁
   by 
     simpa only [range_eq_map] using map_cod_restrict _ _ _ _
 
-theorem ker_restrict {p : Submodule R M} {f : M →ₗ[R] M} (hf : ∀ x : M, x ∈ p → f x ∈ p) :
+theorem ker_restrict {p : Submodule R M} {f : M →ₗ[R] M} (hf : ∀ (x : M), x ∈ p → f x ∈ p) :
   ker (f.restrict hf) = (f.dom_restrict p).ker :=
   by 
     rw [restrict_eq_cod_restrict_dom_restrict, ker_cod_restrict]
@@ -2037,7 +2076,7 @@ theorem sub_mem_ker_iff {x y} : x - y ∈ f.ker ↔ f x = f y :=
   by 
     rw [mem_ker, map_sub, sub_eq_zero]
 
-theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x y _ : x ∈ p _ : y ∈ p, f x = f y → x = y :=
+theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x y (_ : x ∈ p) (_ : y ∈ p), f x = f y → x = y :=
   disjoint_ker.trans
     ⟨fun H x y hx hy h =>
         eq_of_sub_eq_zero$
@@ -2050,7 +2089,7 @@ theorem disjoint_ker' {p : Submodule R M} : Disjoint p (ker f) ↔ ∀ x y _ : x
             simpa using h₂)⟩
 
 theorem inj_of_disjoint_ker {p : Submodule R M} {s : Set M} (h : s ⊆ p) (hd : Disjoint p (ker f)) :
-  ∀ x y _ : x ∈ s _ : y ∈ s, f x = f y → x = y :=
+  ∀ x y (_ : x ∈ s) (_ : y ∈ s), f x = f y → x = y :=
   fun x y hx hy => disjoint_ker'.1 hd _ _ (h hx) (h hy)
 
 theorem ker_eq_bot : ker f = ⊥ ↔ injective f :=
@@ -2125,27 +2164,33 @@ end LinearMap
 
 namespace IsLinearMap
 
-theorem is_linear_map_add [Semiringₓ R] [AddCommMonoidₓ M] [Module R M] : IsLinearMap R fun x : M × M => x.1+x.2 :=
-  by 
-    apply IsLinearMap.mk
-    ·
-      intro x y 
-      simp 
-      cc
-    ·
-      intro x y 
-      simp [smul_add]
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_linear_map_add
+[semiring R]
+[add_comm_monoid M]
+[module R M] : is_linear_map R (λ x : «expr × »(M, M), «expr + »(x.1, x.2)) :=
+begin
+  apply [expr is_linear_map.mk],
+  { intros [ident x, ident y],
+    simp [] [] [] [] [] [],
+    cc },
+  { intros [ident x, ident y],
+    simp [] [] [] ["[", expr smul_add, "]"] [] [] }
+end
 
-theorem is_linear_map_sub {R M : Type _} [Semiringₓ R] [AddCommGroupₓ M] [Module R M] :
-  IsLinearMap R fun x : M × M => x.1 - x.2 :=
-  by 
-    apply IsLinearMap.mk
-    ·
-      intro x y 
-      simp [add_commₓ, add_left_commₓ, sub_eq_add_neg]
-    ·
-      intro x y 
-      simp [smul_sub]
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_linear_map_sub
+{R M : Type*}
+[semiring R]
+[add_comm_group M]
+[module R M] : is_linear_map R (λ x : «expr × »(M, M), «expr - »(x.1, x.2)) :=
+begin
+  apply [expr is_linear_map.mk],
+  { intros [ident x, ident y],
+    simp [] [] [] ["[", expr add_comm, ",", expr add_left_comm, ",", expr sub_eq_add_neg, "]"] [] [] },
+  { intros [ident x, ident y],
+    simp [] [] [] ["[", expr smul_sub, "]"] [] [] }
+end
 
 end IsLinearMap
 
@@ -2488,7 +2533,7 @@ variable{γ : ι → Type _}[DecidableEq ι]
 include τ₂₁
 
 @[simp]
-theorem map_dfinsupp_sum [∀ i, HasZero (γ i)] [∀ i x : γ i, Decidable (x ≠ 0)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀i, γ i)
+theorem map_dfinsupp_sum [∀ i, HasZero (γ i)] [∀ i (x : γ i), Decidable (x ≠ 0)] (f : M ≃ₛₗ[τ₁₂] M₂) (t : Π₀i, γ i)
   (g : ∀ i, γ i → M) : f (t.sum g) = t.sum fun i d => f (g i d) :=
   f.map_sum _
 
@@ -2819,33 +2864,33 @@ def smul_of_unit (a : Units R) : M ≃ₗ[R] M :=
     (by 
       rw [smul_comp, comp_smul, smul_smul, Units.inv_mul, one_smul] <;> rfl)
 
+-- error in LinearAlgebra.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A linear isomorphism between the domains and codomains of two spaces of linear maps gives a
 linear isomorphism between the two function spaces. -/
-def arrow_congr {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiringₓ R] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
-  [AddCommMonoidₓ M₂₁] [AddCommMonoidₓ M₂₂] [Module R M₁] [Module R M₂] [Module R M₂₁] [Module R M₂₂] (e₁ : M₁ ≃ₗ[R] M₂)
-  (e₂ : M₂₁ ≃ₗ[R] M₂₂) : (M₁ →ₗ[R] M₂₁) ≃ₗ[R] M₂ →ₗ[R] M₂₂ :=
-  { toFun := fun f : M₁ →ₗ[R] M₂₁ => (e₂ : M₂₁ →ₗ[R] M₂₂).comp$ f.comp (e₁.symm : M₂ →ₗ[R] M₁),
-    invFun := fun f => (e₂.symm : M₂₂ →ₗ[R] M₂₁).comp$ f.comp (e₁ : M₁ →ₗ[R] M₂),
-    left_inv :=
-      fun f =>
-        by 
-          ext x 
-          simp only [symm_apply_apply, comp_app, coe_comp, coe_coe],
-    right_inv :=
-      fun f =>
-        by 
-          ext x 
-          simp only [comp_app, apply_symm_apply, coe_comp, coe_coe],
-    map_add' :=
-      fun f g =>
-        by 
-          ext x 
-          simp only [map_add, add_apply, comp_app, coe_comp, coe_coe],
-    map_smul' :=
-      fun c f =>
-        by 
-          ext x 
-          simp only [smul_apply, comp_app, coe_comp, map_smulₛₗ, coe_coe] }
+def arrow_congr
+{R M₁ M₂ M₂₁ M₂₂ : Sort*}
+[comm_semiring R]
+[add_comm_monoid M₁]
+[add_comm_monoid M₂]
+[add_comm_monoid M₂₁]
+[add_comm_monoid M₂₂]
+[module R M₁]
+[module R M₂]
+[module R M₂₁]
+[module R M₂₂]
+(e₁ : «expr ≃ₗ[ ] »(M₁, R, M₂))
+(e₂ : «expr ≃ₗ[ ] »(M₂₁, R, M₂₂)) : «expr ≃ₗ[ ] »(«expr →ₗ[ ] »(M₁, R, M₂₁), R, «expr →ₗ[ ] »(M₂, R, M₂₂)) :=
+{ to_fun := λ
+  f : «expr →ₗ[ ] »(M₁, R, M₂₁), «expr $ »((e₂ : «expr →ₗ[ ] »(M₂₁, R, M₂₂)).comp, f.comp (e₁.symm : «expr →ₗ[ ] »(M₂, R, M₁))),
+  inv_fun := λ f, «expr $ »((e₂.symm : «expr →ₗ[ ] »(M₂₂, R, M₂₁)).comp, f.comp (e₁ : «expr →ₗ[ ] »(M₁, R, M₂))),
+  left_inv := λ f, by { ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr symm_apply_apply, ",", expr comp_app, ",", expr coe_comp, ",", expr coe_coe, "]"] [] [] },
+  right_inv := λ f, by { ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr comp_app, ",", expr apply_symm_apply, ",", expr coe_comp, ",", expr coe_coe, "]"] [] [] },
+  map_add' := λ f g, by { ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr map_add, ",", expr add_apply, ",", expr comp_app, ",", expr coe_comp, ",", expr coe_coe, "]"] [] [] },
+  map_smul' := λ c f, by { ext [] [ident x] [],
+    simp [] [] ["only"] ["[", expr smul_apply, ",", expr comp_app, ",", expr coe_comp, ",", expr map_smulₛₗ, ",", expr coe_coe, "]"] [] [] } }
 
 @[simp]
 theorem arrow_congr_apply {R M₁ M₂ M₂₁ M₂₂ : Sort _} [CommSemiringₓ R] [AddCommMonoidₓ M₁] [AddCommMonoidₓ M₂]
@@ -3125,15 +3170,15 @@ namespace AddEquiv
 variable[Semiringₓ R][AddCommMonoidₓ M][Module R M][AddCommMonoidₓ M₂][Module R M₂]
 
 /-- An additive equivalence whose underlying function preserves `smul` is a linear equivalence. -/
-def to_linear_equiv (e : M ≃+ M₂) (h : ∀ c : R x, e (c • x) = c • e x) : M ≃ₗ[R] M₂ :=
+def to_linear_equiv (e : M ≃+ M₂) (h : ∀ (c : R) x, e (c • x) = c • e x) : M ≃ₗ[R] M₂ :=
   { e with map_smul' := h }
 
 @[simp]
-theorem coe_to_linear_equiv (e : M ≃+ M₂) (h : ∀ c : R x, e (c • x) = c • e x) : «expr⇑ » (e.to_linear_equiv h) = e :=
+theorem coe_to_linear_equiv (e : M ≃+ M₂) (h : ∀ (c : R) x, e (c • x) = c • e x) : «expr⇑ » (e.to_linear_equiv h) = e :=
   rfl
 
 @[simp]
-theorem coe_to_linear_equiv_symm (e : M ≃+ M₂) (h : ∀ c : R x, e (c • x) = c • e x) :
+theorem coe_to_linear_equiv_symm (e : M ≃+ M₂) (h : ∀ (c : R) x, e (c • x) = c • e x) :
   «expr⇑ » (e.to_linear_equiv h).symm = e.symm :=
   rfl
 

@@ -78,7 +78,7 @@ theorem norm_eq_matrix_det [DecidableEq ι] (b : Basis ι R S) (s : S) :
   by 
     rw [norm_apply, ←LinearMap.det_to_matrix b, to_matrix_lmul_eq]
 
--- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.Norm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `x` is in the base field `K`, then the norm is `x ^ [L : K]`. -/
 theorem norm_algebra_map_of_basis
 (b : basis ι R S)
@@ -201,7 +201,8 @@ theorem norm_eq_prod_embeddings_gen
   σ, σ pb.gen)) :=
 begin
   letI [] [] [":=", expr classical.dec_eq E],
-  rw ["[", expr norm_gen_eq_prod_roots pb hE, ",", expr fintype.prod_equiv pb.lift_equiv', ",", expr finset.prod_mem_multiset, ",", expr finset.prod_eq_multiset_prod, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr (nodup_roots ((separable_map _).mpr hfx)), ",", expr multiset.map_id, "]"] [],
+  rw ["[", expr norm_gen_eq_prod_roots pb hE, ",", expr fintype.prod_equiv pb.lift_equiv', ",", expr finset.prod_mem_multiset, ",", expr finset.prod_eq_multiset_prod, ",", expr multiset.to_finset_val, ",", expr multiset.erase_dup_eq_self.mpr, ",", expr multiset.map_id, "]"] [],
+  { exact [expr nodup_roots ((separable_map _).mpr hfx)] },
   { intro [ident x],
     refl },
   { intro [ident σ],

@@ -28,7 +28,7 @@ inductive sigma_hom : (Σi, C i) → (Σi, C i) → Type max w₁ v₁ u₁
 namespace SigmaHom
 
 /-- The identity morphism on an object. -/
-def id : ∀ X : Σi, C i, sigma_hom X X
+def id : ∀ (X : Σi, C i), sigma_hom X X
 | ⟨i, X⟩ => mk (𝟙 _)
 
 instance  (X : Σi, C i) : Inhabited (sigma_hom X X) :=
@@ -45,13 +45,13 @@ instance  : category_struct (Σi, C i) :=
 theorem comp_def (i : I) (X Y Z : C i) (f : X ⟶ Y) (g : Y ⟶ Z) : comp (mk f) (mk g) = mk (f ≫ g) :=
   rfl
 
-theorem assoc : ∀ X Y Z W : Σi, C i f : X ⟶ Y g : Y ⟶ Z h : Z ⟶ W, (f ≫ g) ≫ h = f ≫ g ≫ h
+theorem assoc : ∀ (X Y Z W : Σi, C i) (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ W), (f ≫ g) ≫ h = f ≫ g ≫ h
 | _, _, _, _, mk f, mk g, mk h => congr_argₓ mk (category.assoc _ _ _)
 
-theorem id_comp : ∀ X Y : Σi, C i f : X ⟶ Y, 𝟙 X ≫ f = f
+theorem id_comp : ∀ (X Y : Σi, C i) (f : X ⟶ Y), 𝟙 X ≫ f = f
 | _, _, mk f => congr_argₓ mk (category.id_comp _)
 
-theorem comp_id : ∀ X Y : Σi, C i f : X ⟶ Y, f ≫ 𝟙 Y = f
+theorem comp_id : ∀ (X Y : Σi, C i) (f : X ⟶ Y), f ≫ 𝟙 Y = f
 | _, _, mk f => congr_argₓ mk (category.comp_id _)
 
 end SigmaHom
@@ -82,7 +82,7 @@ variable{D : Type u₂}[category.{v₂} D](F : ∀ i, C i ⥤ D)
 To build a natural transformation over the sigma category, it suffices to specify it restricted to
 each subcategory.
 -/
-def nat_trans {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) : F ⟶ G :=
+def nat_trans {F G : (Σi, C i) ⥤ D} (h : ∀ (i : I), incl i ⋙ F ⟶ incl i ⋙ G) : F ⟶ G :=
   { app := fun ⟨j, X⟩ => (h j).app X,
     naturality' :=
       by 
@@ -90,12 +90,12 @@ def nat_trans {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i �
         apply (h j).naturality }
 
 @[simp]
-theorem nat_trans_app {F G : (Σi, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) (i : I) (X : C i) :
+theorem nat_trans_app {F G : (Σi, C i) ⥤ D} (h : ∀ (i : I), incl i ⋙ F ⟶ incl i ⋙ G) (i : I) (X : C i) :
   (nat_trans h).app ⟨i, X⟩ = (h i).app X :=
   rfl
 
 /-- (Implementation). An auxiliary definition to build the functor `desc`. -/
-def desc_map : ∀ X Y : Σi, C i, (X ⟶ Y) → ((F X.1).obj X.2 ⟶ (F Y.1).obj Y.2)
+def desc_map : ∀ (X Y : Σi, C i), (X ⟶ Y) → ((F X.1).obj X.2 ⟶ (F Y.1).obj Y.2)
 | _, _, sigma_hom.mk g => (F _).map g
 
 /--

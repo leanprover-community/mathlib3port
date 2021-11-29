@@ -49,25 +49,25 @@ open Function
 Jacobi identity. -/
 @[protectProj]
 class LieRing(L : Type v) extends AddCommGroupₓ L, HasBracket L L where 
-  add_lie : ∀ x y z : L, ⁅x+y,z⁆ = ⁅x,z⁆+⁅y,z⁆
-  lie_add : ∀ x y z : L, ⁅x,y+z⁆ = ⁅x,y⁆+⁅x,z⁆
-  lie_self : ∀ x : L, ⁅x,x⁆ = 0
-  leibniz_lie : ∀ x y z : L, ⁅x,⁅y,z⁆⁆ = ⁅⁅x,y⁆,z⁆+⁅y,⁅x,z⁆⁆
+  add_lie : ∀ (x y z : L), ⁅x+y,z⁆ = ⁅x,z⁆+⁅y,z⁆
+  lie_add : ∀ (x y z : L), ⁅x,y+z⁆ = ⁅x,y⁆+⁅x,z⁆
+  lie_self : ∀ (x : L), ⁅x,x⁆ = 0
+  leibniz_lie : ∀ (x y z : L), ⁅x,⁅y,z⁆⁆ = ⁅⁅x,y⁆,z⁆+⁅y,⁅x,z⁆⁆
 
 /-- A Lie algebra is a module with compatible product, known as the bracket, satisfying the Jacobi
 identity. Forgetting the scalar multiplication, every Lie algebra is a Lie ring. -/
 @[protectProj]
 class LieAlgebra(R : Type u)(L : Type v)[CommRingₓ R][LieRing L] extends Module R L where 
-  lie_smul : ∀ t : R x y : L, ⁅x,t • y⁆ = t • ⁅x,y⁆
+  lie_smul : ∀ (t : R) (x y : L), ⁅x,t • y⁆ = t • ⁅x,y⁆
 
 /-- A Lie ring module is an additive group, together with an additive action of a
 Lie ring on this group, such that the Lie bracket acts as the commutator of endomorphisms.
 (For representations of Lie *algebras* see `lie_module`.) -/
 @[protectProj]
 class LieRingModule(L : Type v)(M : Type w)[LieRing L][AddCommGroupₓ M] extends HasBracket L M where 
-  add_lie : ∀ x y : L m : M, ⁅x+y,m⁆ = ⁅x,m⁆+⁅y,m⁆
-  lie_add : ∀ x : L m n : M, ⁅x,m+n⁆ = ⁅x,m⁆+⁅x,n⁆
-  leibniz_lie : ∀ x y : L m : M, ⁅x,⁅y,m⁆⁆ = ⁅⁅x,y⁆,m⁆+⁅y,⁅x,m⁆⁆
+  add_lie : ∀ (x y : L) (m : M), ⁅x+y,m⁆ = ⁅x,m⁆+⁅y,m⁆
+  lie_add : ∀ (x : L) (m n : M), ⁅x,m+n⁆ = ⁅x,m⁆+⁅x,n⁆
+  leibniz_lie : ∀ (x y : L) (m : M), ⁅x,⁅y,m⁆⁆ = ⁅⁅x,y⁆,m⁆+⁅y,⁅x,m⁆⁆
 
 /-- A Lie module is a module over a commutative ring, together with a linear action of a Lie
 algebra on this module, such that the Lie bracket acts as the commutator of endomorphisms. -/
@@ -78,8 +78,8 @@ class
       u)(L :
     Type v)(M : Type w)[CommRingₓ R][LieRing L][LieAlgebra R L][AddCommGroupₓ M][Module R M][LieRingModule L M] where
   
-  smul_lie : ∀ t : R x : L m : M, ⁅t • x,m⁆ = t • ⁅x,m⁆
-  lie_smul : ∀ t : R x : L m : M, ⁅x,t • m⁆ = t • ⁅x,m⁆
+  smul_lie : ∀ (t : R) (x : L) (m : M), ⁅t • x,m⁆ = t • ⁅x,m⁆
+  lie_smul : ∀ (t : R) (x : L) (m : M), ⁅x,t • m⁆ = t • ⁅x,m⁆
 
 section BasicProperties
 
@@ -116,9 +116,9 @@ theorem leibniz_lie : ⁅x,⁅y,m⁆⁆ = ⁅⁅x,y⁆,m⁆+⁅y,⁅x,m⁆⁆ :=
 theorem lie_zero : ⁅x,0⁆ = (0 : M) :=
   (AddMonoidHom.mk' _ (lie_add x)).map_zero
 
-@[simp]
-theorem zero_lie : ⁅(0 : L),m⁆ = 0 :=
-  (AddMonoidHom.mk' (fun x : L => ⁅x,m⁆) fun x y => add_lie x y m).map_zero
+-- error in Algebra.Lie.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem zero_lie : «expr = »(«expr⁅ , ⁆»((0 : L), m), 0) :=
+(add_monoid_hom.mk' (λ x : L, «expr⁅ , ⁆»(x, m)) (λ x y, add_lie x y m)).map_zero
 
 @[simp]
 theorem lie_self : ⁅x,x⁆ = 0 :=
@@ -168,21 +168,21 @@ theorem lie_sub : ⁅x,m - n⁆ = ⁅x,m⁆ - ⁅x,n⁆ :=
   by 
     simp [sub_eq_add_neg]
 
-@[simp]
-theorem nsmul_lie (n : ℕ) : ⁅n • x,m⁆ = n • ⁅x,m⁆ :=
-  AddMonoidHom.map_nsmul ⟨fun x : L => ⁅x,m⁆, zero_lie m, fun _ _ => add_lie _ _ _⟩ _ _
+-- error in Algebra.Lie.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem nsmul_lie (n : exprℕ()) : «expr = »(«expr⁅ , ⁆»(«expr • »(n, x), m), «expr • »(n, «expr⁅ , ⁆»(x, m))) :=
+add_monoid_hom.map_nsmul ⟨λ x : L, «expr⁅ , ⁆»(x, m), zero_lie m, λ _ _, add_lie _ _ _⟩ _ _
 
-@[simp]
-theorem lie_nsmul (n : ℕ) : ⁅x,n • m⁆ = n • ⁅x,m⁆ :=
-  AddMonoidHom.map_nsmul ⟨fun m : M => ⁅x,m⁆, lie_zero x, fun _ _ => lie_add _ _ _⟩ _ _
+-- error in Algebra.Lie.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem lie_nsmul (n : exprℕ()) : «expr = »(«expr⁅ , ⁆»(x, «expr • »(n, m)), «expr • »(n, «expr⁅ , ⁆»(x, m))) :=
+add_monoid_hom.map_nsmul ⟨λ m : M, «expr⁅ , ⁆»(x, m), lie_zero x, λ _ _, lie_add _ _ _⟩ _ _
 
-@[simp]
-theorem zsmul_lie (a : ℤ) : ⁅a • x,m⁆ = a • ⁅x,m⁆ :=
-  AddMonoidHom.map_zsmul ⟨fun x : L => ⁅x,m⁆, zero_lie m, fun _ _ => add_lie _ _ _⟩ _ _
+-- error in Algebra.Lie.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem zsmul_lie (a : exprℤ()) : «expr = »(«expr⁅ , ⁆»(«expr • »(a, x), m), «expr • »(a, «expr⁅ , ⁆»(x, m))) :=
+add_monoid_hom.map_zsmul ⟨λ x : L, «expr⁅ , ⁆»(x, m), zero_lie m, λ _ _, add_lie _ _ _⟩ _ _
 
-@[simp]
-theorem lie_zsmul (a : ℤ) : ⁅x,a • m⁆ = a • ⁅x,m⁆ :=
-  AddMonoidHom.map_zsmul ⟨fun m : M => ⁅x,m⁆, lie_zero x, fun _ _ => lie_add _ _ _⟩ _ _
+-- error in Algebra.Lie.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem lie_zsmul (a : exprℤ()) : «expr = »(«expr⁅ , ⁆»(x, «expr • »(a, m)), «expr • »(a, «expr⁅ , ⁆»(x, m))) :=
+add_monoid_hom.map_zsmul ⟨λ m : M, «expr⁅ , ⁆»(x, m), lie_zero x, λ _ _, lie_add _ _ _⟩ _ _
 
 @[simp]
 theorem lie_lie : ⁅⁅x,y⁆,m⁆ = ⁅x,⁅y,m⁆⁆ - ⁅y,⁅x,m⁆⁆ :=

@@ -74,11 +74,11 @@ def ListAll {α} (p : α → Prop) : List α → Prop
 | x :: l => p x ∧ ListAll l
 
 @[simp]
-theorem list_all_cons {α} (p : α → Prop) (x : α) : ∀ l : List α, ListAll p (x :: l) ↔ p x ∧ ListAll p l
+theorem list_all_cons {α} (p : α → Prop) (x : α) : ∀ (l : List α), ListAll p (x :: l) ↔ p x ∧ ListAll p l
 | [] => (and_trueₓ _).symm
 | x :: l => Iff.rfl
 
-theorem list_all_iff_forall {α} (p : α → Prop) : ∀ l : List α, ListAll p l ↔ ∀ x _ : x ∈ l, p x
+theorem list_all_iff_forall {α} (p : α → Prop) : ∀ (l : List α), ListAll p l ↔ ∀ x (_ : x ∈ l), p x
 | [] => (iff_true_intro$ List.ball_nil _).symm
 | x :: l =>
   by 
@@ -104,15 +104,15 @@ instance decidableListAll {α} (p : α → Prop) [DecidablePred p] (l : List α)
       infer_instance)
     (list_all_iff_forall _ _).symm
 
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A predicate asserting that a function is a multivariate integer polynomial.
   (We are being a bit lazy here by allowing many representations for multiplication,
   rather than only allowing monomials and addition, but the definition is equivalent
-  and this is easier to use.) -/
-inductive IsPoly {α} : ((α → ℕ) → ℤ) → Prop
-  | proj : ∀ i, IsPoly fun x : α → ℕ => x i
-  | const : ∀ n : ℤ, IsPoly fun x : α → ℕ => n
-  | sub : ∀ {f g : (α → ℕ) → ℤ}, IsPoly f → IsPoly g → IsPoly fun x => f x - g x
-  | mul : ∀ {f g : (α → ℕ) → ℤ}, IsPoly f → IsPoly g → IsPoly fun x => f x*g x
+  and this is easier to use.) -/ inductive is_poly {α} : ((α → exprℕ()) → exprℤ()) → exprProp()
+| proj : ∀ i, is_poly (λ x : α → exprℕ(), x i)
+| const : ∀ n : exprℤ(), is_poly (λ x : α → exprℕ(), n)
+| sub : ∀ {f g : (α → exprℕ()) → exprℤ()}, is_poly f → is_poly g → is_poly (λ x, «expr - »(f x, g x))
+| mul : ∀ {f g : (α → exprℕ()) → exprℤ()}, is_poly f → is_poly g → is_poly (λ x, «expr * »(f x, g x))
 
 /-- The type of multivariate integer polynomials -/
 def Poly (α : Type u) :=
@@ -334,7 +334,7 @@ end Option
 /-- A set `S ⊆ ℕ^α` is Diophantine if there exists a polynomial on
   `α ⊕ β` such that `v ∈ S` iff there exists `t : ℕ^β` with `p (v, t) = 0`. -/
 def Dioph {α : Type u} (S : Set (α → ℕ)) : Prop :=
-  ∃ (β : Type u)(p : Poly (Sum α β)), ∀ v : α → ℕ, S v ↔ ∃ t, p (v ⊗ t) = 0
+  ∃ (β : Type u)(p : Poly (Sum α β)), ∀ (v : α → ℕ), S v ↔ ∃ t, p (v ⊗ t) = 0
 
 namespace Dioph
 
@@ -345,17 +345,17 @@ variable{α β γ : Type u}
 theorem ext {S S' : Set (α → ℕ)} (d : Dioph S) (H : ∀ v, S v ↔ S' v) : Dioph S' :=
   Eq.ndrec d$ show S = S' from Set.ext H
 
-theorem of_no_dummies (S : Set (α → ℕ)) (p : Poly α) (h : ∀ v : α → ℕ, S v ↔ p v = 0) : Dioph S :=
-  ⟨Ulift Empty, p.remap inl,
-    fun v =>
-      (h v).trans
-        ⟨fun h =>
-            ⟨fun t => Empty.rec _ t.down,
-              by 
-                simp  <;> rw [show ((v ⊗ fun t : Ulift Empty => Empty.rec _ t.down) ∘ inl) = v from rfl, h]⟩,
-          fun ⟨t, ht⟩ =>
-            by 
-              simp  at ht <;> rwa [show (v ⊗ t ∘ inl) = v from rfl] at ht⟩⟩
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of_no_dummies
+(S : set (α → exprℕ()))
+(p : poly α)
+(h : ∀ v : α → exprℕ(), «expr ↔ »(S v, «expr = »(p v, 0))) : dioph S :=
+⟨ulift empty, p.remap inl, λ
+ v, (h v).trans ⟨λ
+  h, ⟨λ
+   t, empty.rec _ t.down, by simp [] [] [] [] [] []; rw ["[", expr show «expr = »(«expr ∘ »(«expr ⊗ »(v, λ
+       t : ulift empty, empty.rec _ t.down), inl), v), from rfl, ",", expr h, "]"] []⟩, λ
+  ⟨t, ht⟩, by simp [] [] [] [] [] ["at", ident ht]; rwa ["[", expr show «expr = »(«expr ∘ »(«expr ⊗ »(v, t), inl), v), from rfl, "]"] ["at", ident ht]⟩⟩
 
 -- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem inject_dummies_lem
@@ -376,11 +376,11 @@ begin
 end
 
 theorem inject_dummies {S : Set (α → ℕ)} (f : β → γ) (g : γ → Option β) (inv : ∀ x, g (f x) = some x)
-  (p : Poly (Sum α β)) (h : ∀ v : α → ℕ, S v ↔ ∃ t, p (v ⊗ t) = 0) :
-  ∃ q : Poly (Sum α γ), ∀ v : α → ℕ, S v ↔ ∃ t, q (v ⊗ t) = 0 :=
+  (p : Poly (Sum α β)) (h : ∀ (v : α → ℕ), S v ↔ ∃ t, p (v ⊗ t) = 0) :
+  ∃ q : Poly (Sum α γ), ∀ (v : α → ℕ), S v ↔ ∃ t, q (v ⊗ t) = 0 :=
   ⟨p.remap (inl ⊗ (inr ∘ f)), fun v => (h v).trans$ inject_dummies_lem f g inv _ _⟩
 
-theorem reindex_dioph {S : Set (α → ℕ)} : ∀ d : Dioph S f : α → β, Dioph fun v => S (v ∘ f)
+theorem reindex_dioph {S : Set (α → ℕ)} : ∀ (d : Dioph S) (f : α → β), Dioph fun v => S (v ∘ f)
 | ⟨γ, p, pe⟩, f =>
   ⟨γ, p.remap ((inl ∘ f) ⊗ inr),
     fun v =>
@@ -394,76 +394,45 @@ theorem reindex_dioph {S : Set (α → ℕ)} : ∀ d : Dioph S f : α → β, Di
                 by 
                   cases' s with a b <;> rfl⟩
 
-theorem dioph_list_all l (d : ListAll Dioph l) : Dioph fun v => ListAll (fun S : Set (α → ℕ) => S v) l :=
-  suffices
-    ∃ (β : _)(pl : List (Poly (Sum α β))),
-      ∀ v, ListAll (fun S : Set _ => S v) l ↔ ∃ t, ListAll (fun p : Poly (Sum α β) => p (v ⊗ t) = 0) pl from
-    let ⟨β, pl, h⟩ := this
-    ⟨β, Poly.sumsq pl, fun v => (h v).trans$ exists_congr$ fun t => (Poly.sumsq_eq_zero _ _).symm⟩
-  by 
-    induction' l with S l IH 
-    exact
-      ⟨Ulift Empty, [],
-        fun v =>
-          by 
-            simp  <;> exact ⟨fun ⟨t⟩ => Empty.rec _ t, trivialₓ⟩⟩
-    simp  at d 
-    exact
-      let ⟨⟨β, p, pe⟩, dl⟩ := d 
-      let ⟨γ, pl, ple⟩ := IH dl
-      ⟨Sum β γ, p.remap (inl ⊗ (inr ∘ inl)) :: pl.map fun q => q.remap (inl ⊗ (inr ∘ inr)),
-        fun v =>
-          by 
-            simp  <;>
-              exact
-                Iff.trans (and_congr (pe v) (ple v))
-                  ⟨fun ⟨⟨m, hm⟩, ⟨n, hn⟩⟩ =>
-                      ⟨m ⊗ n,
-                        by 
-                          rw
-                              [show (v ⊗ m ⊗ n ∘ inl ⊗ (inr ∘ inl)) = v ⊗ m from
-                                funext$
-                                  fun s =>
-                                    by 
-                                      cases' s with a b <;> rfl] <;>
-                            exact hm,
-                        by 
-                          refine' ListAll.imp (fun q hq => _) hn 
-                          dsimp [· ∘ ·]
-                          rw
-                              [show (fun x : Sum α γ => (v ⊗ m ⊗ n) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ n from
-                                funext$
-                                  fun s =>
-                                    by 
-                                      cases' s with a b <;> rfl] <;>
-                            exact hq⟩,
-                    fun ⟨t, hl, hr⟩ =>
-                      ⟨⟨t ∘ inl,
-                          by 
-                            rwa
-                              [show (v ⊗ t ∘ inl ⊗ (inr ∘ inl)) = v ⊗ (t ∘ inl) from
-                                funext$
-                                  fun s =>
-                                    by 
-                                      cases' s with a b <;> rfl] at
-                              hl⟩,
-                        ⟨t ∘ inr,
-                          by 
-                            refine' ListAll.imp (fun q hq => _) hr 
-                            dsimp [· ∘ ·]  at hq 
-                            rwa
-                              [show
-                                (fun x : Sum α γ => (v ⊗ t) ((inl ⊗ fun x : γ => inr (inr x)) x)) = v ⊗ (t ∘ inr) from
-                                funext$
-                                  fun s =>
-                                    by 
-                                      cases' s with a b <;> rfl] at
-                              hq⟩⟩⟩⟩
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dioph_list_all (l) (d : list_all dioph l) : dioph (λ v, list_all (λ S : set (α → exprℕ()), S v) l) :=
+suffices «expr∃ , »((β)
+ (pl : list (poly «expr ⊕ »(α, β))), ∀
+ v, «expr ↔ »(list_all (λ
+   S : set _, S v) l, «expr∃ , »((t), list_all (λ
+    p : poly «expr ⊕ »(α, β), «expr = »(p «expr ⊗ »(v, t), 0)) pl))), from let ⟨β, pl, h⟩ := this in
+⟨β, poly.sumsq pl, λ v, «expr $ »((h v).trans, «expr $ »(exists_congr, λ t, (poly.sumsq_eq_zero _ _).symm))⟩,
+begin
+  induction [expr l] [] ["with", ident S, ident l, ident IH] [],
+  exact [expr ⟨ulift empty, «expr[ , ]»([]), λ
+    v, by simp [] [] [] [] [] []; exact [expr ⟨λ ⟨t⟩, empty.rec _ t, trivial⟩]⟩],
+  simp [] [] [] [] [] ["at", ident d],
+  exact [expr let ⟨⟨β, p, pe⟩, dl⟩ := d, ⟨γ, pl, ple⟩ := IH dl in
+   ⟨«expr ⊕ »(β, γ), [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](p.remap «expr ⊗ »(inl, «expr ∘ »(inr, inl)), pl.map (λ
+      q, q.remap «expr ⊗ »(inl, «expr ∘ »(inr, inr)))), λ
+    v, by simp [] [] [] [] [] []; exact [expr iff.trans (and_congr (pe v) (ple v)) ⟨λ
+      ⟨⟨m, hm⟩, ⟨n, hn⟩⟩, ⟨«expr ⊗ »(m, n), by rw ["[", expr show «expr = »(«expr ∘ »(«expr ⊗ »(v, «expr ⊗ »(m, n)), «expr ⊗ »(inl, «expr ∘ »(inr, inl))), «expr ⊗ »(v, m)), from «expr $ »(funext, λ
+         s, by cases [expr s] ["with", ident a, ident b]; refl), "]"] []; exact [expr hm], by { refine [expr list_all.imp (λ
+           q hq, _) hn],
+         dsimp [] ["[", expr («expr ∘ »), "]"] [] [],
+         rw ["[", expr show «expr = »(λ
+           x : «expr ⊕ »(α, γ), «expr ⊗ »(v, «expr ⊗ »(m, n)) («expr ⊗ »(inl, λ
+             x : γ, inr (inr x)) x), «expr ⊗ »(v, n)), from «expr $ »(funext, λ
+           s, by cases [expr s] ["with", ident a, ident b]; refl), "]"] []; exact [expr hq] }⟩, λ
+      ⟨t, hl, hr⟩, ⟨⟨«expr ∘ »(t, inl), by rwa ["[", expr show «expr = »(«expr ∘ »(«expr ⊗ »(v, t), «expr ⊗ »(inl, «expr ∘ »(inr, inl))), «expr ⊗ »(v, «expr ∘ »(t, inl))), from «expr $ »(funext, λ
+          s, by cases [expr s] ["with", ident a, ident b]; refl), "]"] ["at", ident hl]⟩, ⟨«expr ∘ »(t, inr), by { refine [expr list_all.imp (λ
+            q hq, _) hr],
+          dsimp [] ["[", expr («expr ∘ »), "]"] [] ["at", ident hq],
+          rwa ["[", expr show «expr = »(λ
+            x : «expr ⊕ »(α, γ), «expr ⊗ »(v, t) («expr ⊗ »(inl, λ
+              x : γ, inr (inr x)) x), «expr ⊗ »(v, «expr ∘ »(t, inr))), from «expr $ »(funext, λ
+            s, by cases [expr s] ["with", ident a, ident b]; refl), "]"] ["at", ident hq] }⟩⟩⟩]⟩]
+end
 
 theorem and_dioph {S S' : Set (α → ℕ)} (d : Dioph S) (d' : Dioph S') : Dioph fun v => S v ∧ S' v :=
   dioph_list_all [S, S'] ⟨d, d'⟩
 
-theorem or_dioph {S S' : Set (α → ℕ)} : ∀ d : Dioph S d' : Dioph S', Dioph fun v => S v ∨ S' v
+theorem or_dioph {S S' : Set (α → ℕ)} : ∀ (d : Dioph S) (d' : Dioph S'), Dioph fun v => S v ∨ S' v
 | ⟨β, p, pe⟩, ⟨γ, q, qe⟩ =>
   ⟨Sum β γ, p.remap (inl ⊗ (inr ∘ inl))*q.remap (inl ⊗ (inr ∘ inr)),
     fun v =>
@@ -476,13 +445,14 @@ theorem or_dioph {S S' : Set (α → ℕ)} : ∀ d : Dioph S d' : Dioph S', Diop
         exact inject_dummies_lem _ (some ⊗ fun _ => none) (fun x => rfl) _ _ 
         exact inject_dummies_lem _ ((fun _ => none) ⊗ some) (fun x => rfl) _ _⟩
 
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A partial function is Diophantine if its graph is Diophantine. -/
-def dioph_pfun (f : (α → ℕ) →. ℕ) :=
-  Dioph fun v : Option α → ℕ => f.graph (v ∘ some, v none)
+def dioph_pfun (f : «expr →. »(α → exprℕ(), exprℕ())) :=
+dioph (λ v : option α → exprℕ(), f.graph («expr ∘ »(v, some), v none))
 
-/-- A function is Diophantine if its graph is Diophantine. -/
-def dioph_fn (f : (α → ℕ) → ℕ) :=
-  Dioph fun v : Option α → ℕ => f (v ∘ some) = v none
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- A function is Diophantine if its graph is Diophantine. -/ def dioph_fn (f : (α → exprℕ()) → exprℕ()) :=
+dioph (λ v : option α → exprℕ(), «expr = »(f «expr ∘ »(v, some), v none))
 
 theorem reindex_dioph_fn {f : (α → ℕ) → ℕ} (d : dioph_fn f) (g : α → β) : dioph_fn fun v => f (v ∘ g) :=
   reindex_dioph d (Functor.map g)
@@ -574,22 +544,27 @@ theorem abs_poly_dioph (p : Poly α) : dioph_fn fun v => (p v).natAbs :=
 theorem proj_dioph (i : α) : dioph_fn fun v => v i :=
   abs_poly_dioph (Poly.proj i)
 
-theorem dioph_pfun_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f} (df : dioph_pfun f) :
-  Dioph fun v : α → ℕ => ∃ h : f.dom v, S (f.fn v h :: v) :=
-  ext (ex1_dioph (and_dioph d df))$
-    fun v =>
-      ⟨fun ⟨x, hS, (h : Exists _)⟩ =>
-          by 
-            rw [show (x :: v ∘ some) = v from funext$ fun s => rfl] at h <;>
-              cases' h with hf h <;> refine' ⟨hf, _⟩ <;> rw [Pfun.fn, h] <;> exact hS,
-        fun ⟨x, hS⟩ =>
-          ⟨f.fn v x, hS,
-            show Exists _ by 
-              rw [show (f.fn v x :: v ∘ some) = v from funext$ fun s => rfl] <;> exact ⟨x, rfl⟩⟩⟩
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dioph_pfun_comp1
+{S : set (option α → exprℕ())}
+(d : dioph S)
+{f}
+(df : dioph_pfun f) : dioph (λ
+ v : α → exprℕ(), «expr∃ , »((h : f.dom v), S [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](f.fn v h, v))) :=
+«expr $ »(ext (ex1_dioph (and_dioph d df)), λ
+ v, ⟨λ
+  ⟨x, hS, (h : Exists _)⟩, by rw ["[", expr show «expr = »(«expr ∘ »([«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](x, v), some), v), from «expr $ »(funext, λ
+    s, rfl), "]"] ["at", ident h]; cases [expr h] ["with", ident hf, ident h]; refine [expr ⟨hf, _⟩]; rw ["[", expr pfun.fn, ",", expr h, "]"] []; exact [expr hS], λ
+  ⟨x, hS⟩, ⟨f.fn v x, hS, show Exists _, by rw ["[", expr show «expr = »(«expr ∘ »([«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](f.fn v x, v), some), v), from «expr $ »(funext, λ
+     s, rfl), "]"] []; exact [expr ⟨x, rfl⟩]⟩⟩)
 
-theorem dioph_fn_comp1 {S : Set (Option α → ℕ)} (d : Dioph S) {f : (α → ℕ) → ℕ} (df : dioph_fn f) :
-  Dioph fun v : α → ℕ => S (f v :: v) :=
-  ext (dioph_pfun_comp1 d (cast (dioph_fn_iff_pfun f) df))$ fun v => ⟨fun ⟨_, h⟩ => h, fun h => ⟨trivialₓ, h⟩⟩
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dioph_fn_comp1
+{S : set (option α → exprℕ())}
+(d : dioph S)
+{f : (α → exprℕ()) → exprℕ()}
+(df : dioph_fn f) : dioph (λ v : α → exprℕ(), S [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](f v, v)) :=
+«expr $ »(ext (dioph_pfun_comp1 d (cast (dioph_fn_iff_pfun f) df)), λ v, ⟨λ ⟨_, h⟩, h, λ h, ⟨trivial, h⟩⟩)
 
 end 
 
@@ -601,76 +576,79 @@ open Vector3
 
 open_locale Vector3
 
-theorem dioph_fn_vec_comp1 {n} {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) {f : Vector3 ℕ n → ℕ} (df : dioph_fn f) :
-  Dioph fun v : Vector3 ℕ n => S (cons (f v) v) :=
-  ext (dioph_fn_comp1 (reindex_dioph d (none :: some)) df)$
-    fun v =>
-      by 
-        rw
-          [show (Option.cons (f v) v ∘ cons none some) = f v :: v from
-            funext$
-              fun s =>
-                by 
-                  cases' s with a b <;> rfl]
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dioph_fn_vec_comp1
+{n}
+{S : set (vector3 exprℕ() (succ n))}
+(d : dioph S)
+{f : vector3 exprℕ() n → exprℕ()}
+(df : dioph_fn f) : dioph (λ v : vector3 exprℕ() n, S (cons (f v) v)) :=
+«expr $ »(ext (dioph_fn_comp1 (reindex_dioph d [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](none, some)) df), λ
+ v, by rw ["[", expr show «expr = »(«expr ∘ »(option.cons (f v) v, cons none some), [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](f v, v)), from «expr $ »(funext, λ
+   s, by cases [expr s] ["with", ident a, ident b]; refl), "]"] [])
 
-theorem vec_ex1_dioph n {S : Set (Vector3 ℕ (succ n))} (d : Dioph S) : Dioph fun v : Vector3 ℕ n => ∃ x, S (x :: v) :=
-  ext (ex1_dioph$ reindex_dioph d (none :: some))$
-    fun v =>
-      exists_congr$
-        fun x =>
-          by 
-            rw
-              [show (Option.cons x v ∘ cons none some) = x :: v from
-                funext$
-                  fun s =>
-                    by 
-                      cases' s with a b <;> rfl]
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem vec_ex1_dioph
+(n)
+{S : set (vector3 exprℕ() (succ n))}
+(d : dioph S) : dioph (λ
+ v : vector3 exprℕ() n, «expr∃ , »((x), S [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](x, v))) :=
+«expr $ »(ext «expr $ »(ex1_dioph, reindex_dioph d [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](none, some)), λ
+ v, «expr $ »(exists_congr, λ
+  x, by rw ["[", expr show «expr = »(«expr ∘ »(option.cons x v, cons none some), [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](x, v)), from «expr $ »(funext, λ
+    s, by cases [expr s] ["with", ident a, ident b]; refl), "]"] []))
 
-theorem dioph_fn_vec {n} (f : Vector3 ℕ n → ℕ) : dioph_fn f ↔ Dioph fun v : Vector3 ℕ (succ n) => f (v ∘ fs) = v fz :=
-  ⟨fun h => reindex_dioph h (fz :: fs), fun h => reindex_dioph h (none :: some)⟩
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dioph_fn_vec
+{n}
+(f : vector3 exprℕ() n → exprℕ()) : «expr ↔ »(dioph_fn f, dioph (λ
+  v : vector3 exprℕ() (succ n), «expr = »(f «expr ∘ »(v, fs), v fz))) :=
+⟨λ
+ h, reindex_dioph h [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](fz, fs), λ
+ h, reindex_dioph h [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](none, some)⟩
 
-theorem dioph_pfun_vec {n} (f : Vector3 ℕ n →. ℕ) :
-  dioph_pfun f ↔ Dioph fun v : Vector3 ℕ (succ n) => f.graph (v ∘ fs, v fz) :=
-  ⟨fun h => reindex_dioph h (fz :: fs), fun h => reindex_dioph h (none :: some)⟩
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dioph_pfun_vec
+{n}
+(f : «expr →. »(vector3 exprℕ() n, exprℕ())) : «expr ↔ »(dioph_pfun f, dioph (λ
+  v : vector3 exprℕ() (succ n), f.graph («expr ∘ »(v, fs), v fz))) :=
+⟨λ
+ h, reindex_dioph h [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](fz, fs), λ
+ h, reindex_dioph h [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](none, some)⟩
 
-theorem dioph_fn_compn {α : Type} :
-  ∀ {n} {S : Set (Sum α (Fin2 n) → ℕ)} d : Dioph S {f : Vector3 ((α → ℕ) → ℕ) n} df : VectorAllp dioph_fn f,
-    Dioph fun v : α → ℕ => S (v ⊗ fun i => f i v)
-| 0, S, d, f =>
-  fun df =>
-    ext (reindex_dioph d (id ⊗ Fin2.elim0))$
-      fun v =>
-        by 
-          refine' Eq.to_iff (congr_argₓ S$ funext$ fun s => _) <;>
-            ·
-              cases' s with a b 
-              rfl 
-              cases b
-| succ n, S, d, f =>
-  f.cons_elim$
-    fun f fl =>
-      by 
-        simp  <;>
-          exact
-            fun df dfl =>
-              have  : Dioph fun v => S ((v ∘ inl) ⊗ f (v ∘ inl) :: (v ∘ inr)) :=
-                ext (dioph_fn_comp1 (reindex_dioph d ((some ∘ inl) ⊗ none :: (some ∘ inr))) (reindex_dioph_fn df inl))$
-                  fun v =>
-                    by 
-                      refine' Eq.to_iff (congr_argₓ S$ funext$ fun s => _) <;> cases' s with a b 
-                      rfl 
-                      cases b <;> rfl 
-              have  : Dioph fun v => S (v ⊗ f v :: fun i : Fin2 n => fl i v) :=
-                @dioph_fn_compn n (fun v => S ((v ∘ inl) ⊗ f (v ∘ inl) :: (v ∘ inr))) this _ dfl 
-              ext this$
-                fun v =>
-                  by 
-                    rw
-                      [show (cons (f v) fun i : Fin2 n => fl i v) = fun i : Fin2 (succ n) => (f :: fl) i v from
-                        funext$
-                          fun s =>
-                            by 
-                              cases' s with a b <;> rfl]
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dioph_fn_compn
+{α : Type} : ∀
+{n}
+{S : set («expr ⊕ »(α, fin2 n) → exprℕ())}
+(d : dioph S)
+{f : vector3 ((α → exprℕ()) → exprℕ()) n}
+(df : vector_allp dioph_fn f), dioph (λ v : α → exprℕ(), S «expr ⊗ »(v, λ i, f i v))
+| 0, S, d, f := λ
+df, «expr $ »(ext (reindex_dioph d «expr ⊗ »(id, fin2.elim0)), λ
+ v, by refine [expr eq.to_iff «expr $ »(congr_arg S, «expr $ »(funext, λ
+    s, _))]; { cases [expr s] ["with", ident a, ident b],
+   refl,
+   cases [expr b] [] })
+| succ n, S, d, f := «expr $ »(f.cons_elim, λ
+ f
+ fl, by simp [] [] [] [] [] []; exact [expr λ
+  df
+  dfl, have dioph (λ
+   v, S «expr ⊗ »(«expr ∘ »(v, inl), [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](f «expr ∘ »(v, inl), «expr ∘ »(v, inr)))), from «expr $ »(ext (dioph_fn_comp1 (reindex_dioph d «expr ⊗ »(«expr ∘ »(some, inl), [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](none, «expr ∘ »(some, inr)))) (reindex_dioph_fn df inl)), λ
+   v, by { refine [expr eq.to_iff «expr $ »(congr_arg S, «expr $ »(funext, λ
+        s, _))]; cases [expr s] ["with", ident a, ident b],
+     refl,
+     cases [expr b] []; refl }),
+  have dioph (λ
+   v, S «expr ⊗ »(v, [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](f v, λ
+     i : fin2 n, fl i v))), from @dioph_fn_compn n (λ
+   v, S «expr ⊗ »(«expr ∘ »(v, inl), [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](f «expr ∘ »(v, inl), «expr ∘ »(v, inr)))) this _ dfl,
+  «expr $ »(ext this, λ
+   v, by rw ["[", expr show «expr = »(cons (f v) (λ
+      i : fin2 n, fl i v), λ
+     i : fin2 (succ n), [«expr :: »/«expr :: »/«expr :: »/«expr :: »/«expr :: »](f, fl) i v), from «expr $ »(funext, λ
+     s, by cases [expr s] ["with", ident a, ident b]; refl), "]"] [])])
 
 theorem dioph_comp {n} {S : Set (Vector3 ℕ n)} (d : Dioph S) (f : Vector3 ((α → ℕ) → ℕ) n)
   (df : VectorAllp dioph_fn f) : Dioph fun v => S fun i => f i v :=
@@ -694,8 +672,9 @@ localized [Dioph] notation:30 "D∃" => Dioph.vec_ex1_dioph
 -- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:1266:43: in localized: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 localized [expr "prefix `&`:max := of_nat'", [command <some 4>], "in", ident dioph]
 
-theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [is_lt m n] : dioph_fn fun v : Vector3 ℕ n => v («expr& » m) :=
-  proj_dioph («expr& » m)
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem proj_dioph_of_nat {n : exprℕ()} (m : exprℕ()) [is_lt m n] : dioph_fn (λ v : vector3 exprℕ() n, v «expr& »(m)) :=
+proj_dioph «expr& »(m)
 
 localized [Dioph] prefix:100 "D&" => Dioph.proj_dioph_of_nat
 
@@ -708,17 +687,17 @@ variable{f g : (α → ℕ) → ℕ}(df : dioph_fn f)(dg : dioph_fn g)
 
 include df dg
 
-theorem dioph_comp2 {S : ℕ → ℕ → Prop} (d : Dioph fun v : Vector3 ℕ 2 => S (v («expr& » 0)) (v («expr& » 1))) :
-  Dioph fun v => S (f v) (g v) :=
-  dioph_comp d [f, g]
-    (by 
-      exact ⟨df, dg⟩)
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dioph_comp2
+{S : exprℕ() → exprℕ() → exprProp()}
+(d : dioph (λ v : vector3 exprℕ() 2, S (v «expr& »(0)) (v «expr& »(1)))) : dioph (λ v, S (f v) (g v)) :=
+dioph_comp d «expr[ , ]»([f, g]) (by exact [expr ⟨df, dg⟩])
 
-theorem dioph_fn_comp2 {h : ℕ → ℕ → ℕ} (d : dioph_fn fun v : Vector3 ℕ 2 => h (v («expr& » 0)) (v («expr& » 1))) :
-  dioph_fn fun v => h (f v) (g v) :=
-  dioph_fn_comp d [f, g]
-    (by 
-      exact ⟨df, dg⟩)
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dioph_fn_comp2
+{h : exprℕ() → exprℕ() → exprℕ()}
+(d : dioph_fn (λ v : vector3 exprℕ() 2, h (v «expr& »(0)) (v «expr& »(1)))) : dioph_fn (λ v, h (f v) (g v)) :=
+dioph_fn_comp d «expr[ , ]»([f, g]) (by exact [expr ⟨df, dg⟩])
 
 theorem eq_dioph : Dioph fun v => f v = g v :=
   dioph_comp2 df dg$
@@ -786,28 +765,21 @@ theorem dvd_dioph : Dioph fun v => f v ∣ g v :=
 
 localized [Dioph] infixl:50 " D∣ " => Dioph.dvd_dioph
 
-theorem mod_dioph : dioph_fn fun v => f v % g v :=
-  have  :
-    Dioph
-      fun v : Vector3 ℕ 3 =>
-        (v («expr& » 2) = 0 ∨ v («expr& » 0) < v («expr& » 2)) ∧
-          ∃ x : ℕ, (v («expr& » 0)+v («expr& » 2)*x) = v («expr& » 1) :=
-    (D&2 D= D.0 D∨ D&0 D< D&2) D∧ (D∃) 3$ D&1 D+ D&3 D* D&0 D= D&2
-  dioph_fn_comp2 df dg$
-    (dioph_fn_vec _).2$
-      ext this$
-        (vector_all_iff_forall _).1$
-          fun z x y =>
-            show ((y = 0 ∨ z < y) ∧ ∃ c, (z+y*c) = x) ↔ x % y = z from
-              ⟨fun ⟨h, c, hc⟩ =>
-                  by 
-                    rw [←hc] <;> simp  <;> cases' h with x0 hl 
-                    rw [x0, mod_zero]
-                    exact mod_eq_of_lt hl,
-                fun e =>
-                  by 
-                    rw [←e] <;>
-                      exact ⟨or_iff_not_imp_left.2$ fun h => mod_lt _ (Nat.pos_of_ne_zeroₓ h), x / y, mod_add_div _ _⟩⟩
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mod_dioph : dioph_fn (λ v, «expr % »(f v, g v)) :=
+have dioph (λ
+ v : vector3 exprℕ() 3, «expr ∧ »(«expr ∨ »(«expr = »(v «expr& »(2), 0), «expr < »(v «expr& »(0), v «expr& »(2))), «expr∃ , »((x : exprℕ()), «expr = »(«expr + »(v «expr& »(0), «expr * »(v «expr& »(2), x)), v «expr& »(1))))), from «expr D∧ »(«expr D∨ »(«expr D= »(«exprD& »(2), «exprD. »(0)), «expr D< »(«exprD& »(0), «exprD& »(2))), «expr $ »(«exprD∃»() 3, «expr D= »(«expr D+ »(«exprD& »(1), «expr D* »(«exprD& »(3), «exprD& »(0))), «exprD& »(2)))),
+«expr $ »(dioph_fn_comp2 df dg, «expr $ »((dioph_fn_vec _).2, «expr $ »(ext this, «expr $ »((vector_all_iff_forall _).1, λ
+    z
+    x
+    y, show «expr ↔ »(«expr ∧ »(«expr ∨ »(«expr = »(y, 0), «expr < »(z, y)), «expr∃ , »((c), «expr = »(«expr + »(z, «expr * »(y, c)), x))), «expr = »(«expr % »(x, y), z)), from ⟨λ
+     ⟨h, c, hc⟩, begin
+       rw ["<-", expr hc] []; simp [] [] [] [] [] []; cases [expr h] ["with", ident x0, ident hl],
+       rw ["[", expr x0, ",", expr mod_zero, "]"] [],
+       exact [expr mod_eq_of_lt hl]
+     end, λ
+     e, by rw ["<-", expr e] []; exact [expr ⟨«expr $ »(or_iff_not_imp_left.2, λ
+        h, mod_lt _ (nat.pos_of_ne_zero h)), «expr / »(x, y), mod_add_div _ _⟩]⟩))))
 
 localized [Dioph] infixl:80 " D% " => Dioph.mod_dioph
 
@@ -816,33 +788,21 @@ theorem modeq_dioph {h : (α → ℕ) → ℕ} (dh : dioph_fn h) : Dioph fun v =
 
 localized [Dioph] notation "D≡" => Dioph.modeq_dioph
 
-theorem div_dioph : dioph_fn fun v => f v / g v :=
-  have  :
-    Dioph
-      fun v : Vector3 ℕ 3 =>
-        v («expr& » 2) = 0 ∧ v («expr& » 0) = 0 ∨
-          (v («expr& » 0)*v («expr& » 2)) ≤ v («expr& » 1) ∧ v («expr& » 1) < (v («expr& » 0)+1)*v («expr& » 2) :=
-    (D&2 D= D.0 D∧ D&0 D= D.0) D∨ D&0 D* D&2 D≤ D&1 D∧ D&1 D< (D&0 D+ D.1) D* D&2
-  dioph_fn_comp2 df dg$
-    (dioph_fn_vec _).2$
-      ext this$
-        (vector_all_iff_forall _).1$
-          fun z x y =>
-            show (y = 0 ∧ z = 0 ∨ (z*y) ≤ x ∧ x < (z+1)*y) ↔ x / y = z by 
-              refine' Iff.trans _ eq_comm <;>
-                exact
-                  y.eq_zero_or_pos.elim
-                    (fun y0 =>
-                      by 
-                        rw [y0, Nat.div_zeroₓ] <;>
-                          exact
-                            ⟨fun o => (o.resolve_right$ fun ⟨_, h2⟩ => Nat.not_lt_zeroₓ _ h2).right,
-                              fun z0 => Or.inl ⟨rfl, z0⟩⟩)
-                    fun ypos =>
-                      Iff.trans ⟨fun o => o.resolve_left$ fun ⟨h1, _⟩ => ne_of_gtₓ ypos h1, Or.inr⟩
-                        (le_antisymm_iff.trans$
-                            and_congr (Nat.le_div_iff_mul_leₓ _ _ ypos)$
-                              Iff.trans ⟨lt_succ_of_le, le_of_lt_succ⟩ (div_lt_iff_lt_mul _ _ ypos)).symm
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem div_dioph : dioph_fn (λ v, «expr / »(f v, g v)) :=
+have dioph (λ
+ v : vector3 exprℕ() 3, «expr ∨ »(«expr ∧ »(«expr = »(v «expr& »(2), 0), «expr = »(v «expr& »(0), 0)), «expr ∧ »(«expr ≤ »(«expr * »(v «expr& »(0), v «expr& »(2)), v «expr& »(1)), «expr < »(v «expr& »(1), «expr * »(«expr + »(v «expr& »(0), 1), v «expr& »(2)))))), from «expr D∨ »(«expr D∧ »(«expr D= »(«exprD& »(2), «exprD. »(0)), «expr D= »(«exprD& »(0), «exprD. »(0))), «expr D∧ »(«expr D≤ »(«expr D* »(«exprD& »(0), «exprD& »(2)), «exprD& »(1)), «expr D< »(«exprD& »(1), «expr D* »(«expr D+ »(«exprD& »(0), «exprD. »(1)), «exprD& »(2))))),
+«expr $ »(dioph_fn_comp2 df dg, «expr $ »((dioph_fn_vec _).2, «expr $ »(ext this, «expr $ »((vector_all_iff_forall _).1, λ
+    z
+    x
+    y, show «expr ↔ »(«expr ∨ »(«expr ∧ »(«expr = »(y, 0), «expr = »(z, 0)), «expr ∧ »(«expr ≤ »(«expr * »(z, y), x), «expr < »(x, «expr * »(«expr + »(z, 1), y)))), «expr = »(«expr / »(x, y), z)), by refine [expr iff.trans _ eq_comm]; exact [expr y.eq_zero_or_pos.elim (λ
+      y0, by rw ["[", expr y0, ",", expr nat.div_zero, "]"] []; exact [expr ⟨λ
+        o, «expr $ »(o.resolve_right, λ
+         ⟨_, h2⟩, nat.not_lt_zero _ h2).right, λ
+        z0, or.inl ⟨rfl, z0⟩⟩]) (λ
+      ypos, iff.trans ⟨λ
+       o, «expr $ »(o.resolve_left, λ
+        ⟨h1, _⟩, ne_of_gt ypos h1), or.inr⟩ «expr $ »(le_antisymm_iff.trans, «expr $ »(and_congr (nat.le_div_iff_mul_le _ _ ypos), iff.trans ⟨lt_succ_of_le, le_of_lt_succ⟩ (div_lt_iff_lt_mul _ _ ypos))).symm)]))))
 
 localized [Dioph] infixl:80 " D/ " => Dioph.div_dioph
 
@@ -850,53 +810,22 @@ omit df dg
 
 open Pell
 
-theorem pell_dioph :
-  Dioph
-    fun v : Vector3 ℕ 4 =>
-      ∃ h : 1 < v («expr& » 0), xn h (v («expr& » 1)) = v («expr& » 2) ∧ yn h (v («expr& » 1)) = v («expr& » 3) :=
-  have  :
-    Dioph
-      { v:Vector3 ℕ 4 |
-        1 < v («expr& » 0) ∧
-          v («expr& » 1) ≤ v («expr& » 3) ∧
-            (v («expr& » 2) = 1 ∧ v («expr& » 3) = 0 ∨
-              ∃ u w s t b : ℕ,
-                ((v («expr& » 2)*v («expr& » 2)) -
-                      (((v («expr& » 0)*v («expr& » 0)) - 1)*v («expr& » 3))*v («expr& » 3)) =
-                    1 ∧
-                  ((u*u) - (((v («expr& » 0)*v («expr& » 0)) - 1)*w)*w) = 1 ∧
-                    ((s*s) - (((b*b) - 1)*t)*t) = 1 ∧
-                      1 < b ∧
-                        b ≡ 1 [MOD 4*v («expr& » 3)] ∧
-                          b ≡ v («expr& » 0) [MOD u] ∧
-                            0 < w ∧
-                              (v («expr& » 3)*v («expr& » 3)) ∣ w ∧
-                                s ≡ v («expr& » 2) [MOD u] ∧ t ≡ v («expr& » 1) [MOD 4*v («expr& » 3)]) } :=
-    D.1 D< D&0 D∧
-      D&1 D≤ D&3 D∧
-        (D&2 D= D.1 D∧ D&3 D= D.0) D∨
-          (D∃) 4$
-            (D∃) 5$
-              (D∃) 6$
-                (D∃) 7$
-                  (D∃) 8$
-                    D&7 D* D&7 D- (D&5 D* D&5 D- D.1) D* D&8 D* D&8 D= D.1 D∧
-                      D&4 D* D&4 D- (D&5 D* D&5 D- D.1) D* D&3 D* D&3 D= D.1 D∧
-                        D&2 D* D&2 D- (D&0 D* D&0 D- D.1) D* D&1 D* D&1 D= D.1 D∧
-                          D.1 D< D&0 D∧
-                            D≡ (D&0) (D.1) (D.4 D* D&8) D∧
-                              D≡ (D&0) (D&5) (D&4) D∧
-                                D.0 D< D&3 D∧ D&8 D* D&8 D∣ D&3 D∧ D≡ (D&2) (D&7) (D&4) D∧ D≡ (D&1) (D&6) (D.4 D* D&8)
-  Dioph.ext this$ fun v => matiyasevic.symm
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pell_dioph : dioph (λ
+ v : vector3 exprℕ() 4, «expr∃ , »((h : «expr < »(1, v «expr& »(0))), «expr ∧ »(«expr = »(xn h (v «expr& »(1)), v «expr& »(2)), «expr = »(yn h (v «expr& »(1)), v «expr& »(3))))) :=
+have dioph {v : vector3 exprℕ() 4 | «expr ∧ »(«expr < »(1, v «expr& »(0)), «expr ∧ »(«expr ≤ »(v «expr& »(1), v «expr& »(3)), «expr ∨ »(«expr ∧ »(«expr = »(v «expr& »(2), 1), «expr = »(v «expr& »(3), 0)), «expr∃ , »((u
+     w
+     s
+     t
+     b : exprℕ()), «expr ∧ »(«expr = »(«expr - »(«expr * »(v «expr& »(2), v «expr& »(2)), «expr * »(«expr * »(«expr - »(«expr * »(v «expr& »(0), v «expr& »(0)), 1), v «expr& »(3)), v «expr& »(3))), 1), «expr ∧ »(«expr = »(«expr - »(«expr * »(u, u), «expr * »(«expr * »(«expr - »(«expr * »(v «expr& »(0), v «expr& »(0)), 1), w), w)), 1), «expr ∧ »(«expr = »(«expr - »(«expr * »(s, s), «expr * »(«expr * »(«expr - »(«expr * »(b, b), 1), t), t)), 1), «expr ∧ »(«expr < »(1, b), «expr ∧ »(«expr ≡ [MOD ]»(b, 1, «expr * »(4, v «expr& »(3))), «expr ∧ »(«expr ≡ [MOD ]»(b, v «expr& »(0), u), «expr ∧ »(«expr < »(0, w), «expr ∧ »(«expr ∣ »(«expr * »(v «expr& »(3), v «expr& »(3)), w), «expr ∧ »(«expr ≡ [MOD ]»(s, v «expr& »(2), u), «expr ≡ [MOD ]»(t, v «expr& »(1), «expr * »(4, v «expr& »(3))))))))))))))))}, from «expr D∧ »(«expr D< »(«exprD. »(1), «exprD& »(0)), «expr D∧ »(«expr D≤ »(«exprD& »(1), «exprD& »(3)), «expr D∨ »(«expr D∧ »(«expr D= »(«exprD& »(2), «exprD. »(1)), «expr D= »(«exprD& »(3), «exprD. »(0))), «expr $ »(«exprD∃»() 4, «expr $ »(«exprD∃»() 5, «expr $ »(«exprD∃»() 6, «expr $ »(«exprD∃»() 7, «expr $ »(«exprD∃»() 8, «expr D∧ »(«expr D= »(«expr D- »(«expr D* »(«exprD& »(7), «exprD& »(7)), «expr D* »(«expr D* »(«expr D- »(«expr D* »(«exprD& »(5), «exprD& »(5)), «exprD. »(1)), «exprD& »(8)), «exprD& »(8))), «exprD. »(1)), «expr D∧ »(«expr D= »(«expr D- »(«expr D* »(«exprD& »(4), «exprD& »(4)), «expr D* »(«expr D* »(«expr D- »(«expr D* »(«exprD& »(5), «exprD& »(5)), «exprD. »(1)), «exprD& »(3)), «exprD& »(3))), «exprD. »(1)), «expr D∧ »(«expr D= »(«expr D- »(«expr D* »(«exprD& »(2), «exprD& »(2)), «expr D* »(«expr D* »(«expr D- »(«expr D* »(«exprD& »(0), «exprD& »(0)), «exprD. »(1)), «exprD& »(1)), «exprD& »(1))), «exprD. »(1)), «expr D∧ »(«expr D< »(«exprD. »(1), «exprD& »(0)), «expr D∧ »(«exprD≡»() «exprD& »(0) «exprD. »(1) «expr D* »(«exprD. »(4), «exprD& »(8)), «expr D∧ »(«exprD≡»() «exprD& »(0) «exprD& »(5) «exprD& »(4), «expr D∧ »(«expr D< »(«exprD. »(0), «exprD& »(3)), «expr D∧ »(«expr D∣ »(«expr D* »(«exprD& »(8), «exprD& »(8)), «exprD& »(3)), «expr D∧ »(«exprD≡»() «exprD& »(2) «exprD& »(7) «exprD& »(4), «exprD≡»() «exprD& »(1) «exprD& »(6) «expr D* »(«exprD. »(4), «exprD& »(8))))))))))))))))))),
+«expr $ »(dioph.ext this, λ v, matiyasevic.symm)
 
-theorem xn_dioph : dioph_pfun fun v : Vector3 ℕ 2 => ⟨1 < v («expr& » 0), fun h => xn h (v («expr& » 1))⟩ :=
-  have  :
-    Dioph
-      fun v : Vector3 ℕ 3 =>
-        ∃ y, ∃ h : 1 < v («expr& » 1), xn h (v («expr& » 2)) = v («expr& » 0) ∧ yn h (v («expr& » 2)) = y :=
-    let D_pell := @reindex_dioph _ (Fin2 4) _ pell_dioph [«expr& » 2, «expr& » 3, «expr& » 1, «expr& » 0]
-    (D∃) 3 D_pell
-  (dioph_pfun_vec _).2$ Dioph.ext this$ fun v => ⟨fun ⟨y, h, xe, ye⟩ => ⟨h, xe⟩, fun ⟨h, xe⟩ => ⟨_, h, xe, rfl⟩⟩
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem xn_dioph : dioph_pfun (λ v : vector3 exprℕ() 2, ⟨«expr < »(1, v «expr& »(0)), λ h, xn h (v «expr& »(1))⟩) :=
+have dioph (λ
+ v : vector3 exprℕ() 3, «expr∃ , »((y), «expr∃ , »((h : «expr < »(1, v «expr& »(1))), «expr ∧ »(«expr = »(xn h (v «expr& »(2)), v «expr& »(0)), «expr = »(yn h (v «expr& »(2)), y))))), from let D_pell := @reindex_dioph _ (fin2 4) _ pell_dioph «expr[ , ]»([«expr& »(2), «expr& »(3), «expr& »(1), «expr& »(0)]) in
+«exprD∃»() 3 D_pell,
+«expr $ »((dioph_pfun_vec _).2, «expr $ »(dioph.ext this, λ v, ⟨λ ⟨y, h, xe, ye⟩, ⟨h, xe⟩, λ ⟨h, xe⟩, ⟨_, h, xe, rfl⟩⟩))
 
 include df dg
 

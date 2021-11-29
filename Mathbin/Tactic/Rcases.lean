@@ -209,7 +209,7 @@ meta instance has_reflect : has_reflect rcases_patt
 /-- Formats an `rcases` pattern. If the `bracket` argument is true, then it will be
 printed at high precedence, i.e. it will have parentheses around it if it is not already a tuple
 or atomic name. -/
-protected unsafe def format : ∀ bracket : Bool, rcases_patt → tactic _root_.format
+protected unsafe def format : ∀ (bracket : Bool), rcases_patt → tactic _root_.format
 | _, one n => pure$ to_fmt n
 | _, clear => pure "-"
 | _, tuple [] => pure "⟨⟩"
@@ -292,82 +292,61 @@ private unsafe def get_local_and_type (e : expr) : tactic (expr × expr) :=
       let t ← infer_type e 
       pure (t, e)
 
-mutual 
-  /--
-  * `rcases_core p e` will match a pattern `p` against a local hypothesis `e`.
-    It returns the list of subgoals that were produced.
-  * `rcases.continue pes` will match a (conjunctive) list of `(p, e)` pairs which refer to
-    patterns and local hypotheses to match against, and applies all of them. Note that this can
-    involve matching later arguments multiple times given earlier arguments, for example
-    `⟨a | b, ⟨c, d⟩⟩` performs the `⟨c, d⟩` match twice, once on the `a` branch and once on `b`.
-  -/
-  unsafe def rcases_core : rcases_patt → expr → tactic (List uncleared_goal)
-  | rcases_patt.one `rfl, e =>
-    do 
-      let (t, e) ← get_local_and_type e 
-      subst' e 
-      List.map (Prod.mk []) <$> get_goals
-  | rcases_patt.one _, _ => List.map (Prod.mk []) <$> get_goals
-  | rcases_patt.clear, e =>
-    do 
-      let m ← try_core (get_local_and_type e)
-      List.map (Prod.mk$ m.elim [] fun ⟨_, e⟩ => [e]) <$> get_goals
-  | rcases_patt.typed p ty, e =>
-    do 
-      let (t, e) ← get_local_and_type e 
-      let ty ← i_to_expr_no_subgoals (pquote.1 (%%ₓty : Sort _))
-      unify t ty 
-      let t ← instantiate_mvars t 
-      let ty ← instantiate_mvars ty 
-      let e ← if t =ₐ ty then pure e else change_core ty (some e) >> get_local e.local_pp_name 
-      rcases_core p e
-  | rcases_patt.alts [p], e => rcases_core p e
-  | pat, e =>
-    do 
-      let (t, e) ← get_local_and_type e 
-      let t ← whnf t 
-      let env ← get_env 
-      let I := t.get_app_fn.const_name 
-      let pat := pat.as_alts 
-      let (ids, r, l) ←
-        if I ≠ `quot then
-            do 
-              when ¬env.is_inductive I$ fail f! "rcases tactic failed: {e } : {I } is not an inductive datatype"
-              let params := env.inductive_num_params I 
-              let c := env.constructors_of I 
-              let (ids, r) ← rcases.process_constructors params c pat 
-              let l ← cases_core e ids.to_list 
-              pure (ids, r, l)
-          else
-            do 
-              let (ids, r) ← rcases.process_constructors 2 [`quot.mk] pat 
-              let [(_, d)] ← induction e ids.to_list `quot.induction_on |
-                fail f! "quotient induction on {e } failed. Maybe goal is not in Prop?"
-              pure (ids, r, [(`quot.mk, d)])
-      let gs ← get_goals 
-      let ls := align (fun a : Name × _ b : _ × Name × _ => a.1 = b.2.1) r (gs.zip l)
-      List.join <$> ls.mmap fun ⟨⟨_, ps⟩, g, _, hs, _⟩ => set_goals [g] >> rcases.continue (ps.zip hs)
-  /--
-  * `rcases_core p e` will match a pattern `p` against a local hypothesis `e`.
-    It returns the list of subgoals that were produced.
-  * `rcases.continue pes` will match a (conjunctive) list of `(p, e)` pairs which refer to
-    patterns and local hypotheses to match against, and applies all of them. Note that this can
-    involve matching later arguments multiple times given earlier arguments, for example
-    `⟨a | b, ⟨c, d⟩⟩` performs the `⟨c, d⟩` match twice, once on the `a` branch and once on `b`.
-  -/
-  unsafe def rcases.continue : listΠ (rcases_patt × expr) → tactic (List uncleared_goal)
-  | [] => List.map (Prod.mk []) <$> get_goals
-  | (pat, e) :: pes =>
-    do 
-      let gs ← rcases_core pat e 
-      List.join <$>
-          gs.mmap
-            fun ⟨cs, g⟩ =>
-              do 
-                set_goals [g]
-                let ugs ← rcases.continue pes 
-                pure$ ugs.map$ fun ⟨cs', gs⟩ => (cs ++ cs', gs)
-end
+-- error in Tactic.Rcases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/--
+* `rcases_core p e` will match a pattern `p` against a local hypothesis `e`.
+  It returns the list of subgoals that were produced.
+* `rcases.continue pes` will match a (conjunctive) list of `(p, e)` pairs which refer to
+  patterns and local hypotheses to match against, and applies all of them. Note that this can
+  involve matching later arguments multiple times given earlier arguments, for example
+  `⟨a | b, ⟨c, d⟩⟩` performs the `⟨c, d⟩` match twice, once on the `a` branch and once on `b`.
+-/ meta mutual def rcases_core, rcases.continuewith [] rcases_core : rcases_patt → expr → tactic (list uncleared_goal)
+| rcases_patt.one (`rfl), e := do {
+(t, e) ← get_local_and_type e,
+  subst' e,
+  «expr <$> »(list.map (prod.mk «expr[ , ]»([])), get_goals) }
+| rcases_patt.one _, _ := «expr <$> »(list.map (prod.mk «expr[ , ]»([])), get_goals)
+| rcases_patt.clear, e := do {
+m ← try_core (get_local_and_type e),
+  «expr <$> »(list.map «expr $ »(prod.mk, m.elim «expr[ , ]»([]) (λ ⟨_, e⟩, «expr[ , ]»([e]))), get_goals) }
+| rcases_patt.typed p ty, e := do {
+(t, e) ← get_local_and_type e,
+  ty ← i_to_expr_no_subgoals (``(%%ty : Sort*)),
+  unify t ty,
+  t ← instantiate_mvars t,
+  ty ← instantiate_mvars ty,
+  e ← if «expr =ₐ »(t, ty) then pure e else «expr >> »(change_core ty (some e), get_local e.local_pp_name),
+  rcases_core p e }
+| rcases_patt.alts «expr[ , ]»([p]), e := rcases_core p e
+| pat, e := do {
+(t, e) ← get_local_and_type e,
+  t ← whnf t,
+  env ← get_env,
+  let I := t.get_app_fn.const_name,
+  let pat := pat.as_alts,
+  (ids, r, l) ← if «expr ≠ »(I, `quot) then do {
+  «expr $ »(when «expr¬ »(env.is_inductive I), fail «exprformat! »(format_macro "rcases tactic failed: {e} : {I} is not an inductive datatype" [[expr e], [expr I]])),
+    let params := env.inductive_num_params I,
+    let c := env.constructors_of I,
+    (ids, r) ← rcases.process_constructors params c pat,
+    l ← cases_core e ids.to_list,
+    pure (ids, r, l) } else do {
+  (ids, r) ← rcases.process_constructors 2 «expr[ , ]»([`quot.mk]) pat,
+    «expr[ , ]»([(_, d)]) ← induction e ids.to_list (`quot.induction_on) | fail «exprformat! »(format_macro "quotient induction on {e} failed. Maybe goal is not in Prop?" [[expr e]]),
+    pure (ids, r, «expr[ , ]»([(`quot.mk, d)])) },
+  gs ← get_goals,
+  let ls := align (λ
+   (a : «expr × »(name, _))
+   (b : «expr × »(_, «expr × »(name, _))), «expr = »(a.1, b.2.1)) r (gs.zip l),
+  «expr <$> »(list.join, ls.mmap (λ
+    ⟨⟨_, ps⟩, g, _, hs, _⟩, «expr >> »(set_goals «expr[ , ]»([g]), rcases.continue (ps.zip hs)))) }with [] rcases.continue : «exprlistΠ»() «expr × »(rcases_patt, expr) → tactic (list uncleared_goal)
+| «expr[ , ]»([]) := «expr <$> »(list.map (prod.mk «expr[ , ]»([])), get_goals)
+| «expr :: »((pat, e), pes) := do {
+gs ← rcases_core pat e,
+  «expr <$> »(list.join, gs.mmap (λ ⟨cs, g⟩, do {
+    set_goals «expr[ , ]»([g]),
+      ugs ← rcases.continue pes,
+      «expr $ »(pure, «expr $ »(ugs.map, λ ⟨cs', gs⟩, («expr ++ »(cs, cs'), gs))) })) }
 
 /-- Given a list of `uncleared_goal`s, each of which is a goal metavariable and
 a list of variables to clear, actually perform the clear and set the goals with the result. -/
@@ -488,105 +467,58 @@ unsafe def rcases_patt.merge : rcases_patt → rcases_patt → rcases_patt
 | p, rcases_patt.clear => p
 | rcases_patt.one n, _ => rcases_patt.one n
 
-mutual 
-  /--
-  * `rcases_hint_core depth e` does the same as `rcases p e`, except the pattern `p` is an output
-    instead of an input, controlled only by the case depth argument `depth`. We use `cases` to depth
-    `depth` and then reconstruct an `rcases` pattern `p` that would, if passed to `rcases`, perform
-    the same thing as the case tree we just constructed (or at least, the nearest expressible
-    approximation to this.)
-  * `rcases_hint.process_constructors depth cs l` takes a list of constructor names `cs` and a
-    matching list `l` of elements `(g, c', hs, _)` where  `c'` is a constructor name (used for
-    alignment with `cs`), `g` is the subgoal, and `hs` is the list of local hypotheses created by
-    `cases` in that subgoal. It matches on all of them, and then produces a `ΣΠ`-list of `rcases`
-    patterns describing the result, and the list of generated subgoals.
-  * `rcases_hint.continue depth es` does the same as `rcases.continue (ps.zip es)`, except the
-    patterns `ps` are an output instead of an input, created by matching on everything to depth
-    `depth` and recording the successful cases. It returns `ps`, and the list of generated subgoals.
-  -/
-  unsafe def rcases_hint_core : ℕ → expr → tactic (rcases_patt × List expr)
-  | depth, e =>
-    do 
-      let (t, e) ← get_local_and_type e 
-      let t ← whnf t 
-      let env ← get_env 
-      let I := t.get_app_fn.const_name
-      (do 
-            guardₓ (I = `` Eq)
-            subst' e 
-            Prod.mk (rcases_patt.one `rfl) <$> get_goals) <|>
-          do 
-            let c := env.constructors_of I 
-            let some l ← try_core (guardₓ (depth ≠ 0) >> cases_core e) |
-              let n :=
-                  match e.local_pp_name with 
-                  | Name.anonymous => `_
-                  | n => n 
-                Prod.mk (rcases_patt.one n) <$> get_goals 
-            let gs ← get_goals 
-            if gs.empty then pure (rcases_patt.tuple [], []) else
-                do 
-                  let (ps, gs') ← rcases_hint.process_constructors (depth - 1) c (gs.zip l)
-                  pure (rcases_patt.alts₁ ps, gs')
-  /--
-  * `rcases_hint_core depth e` does the same as `rcases p e`, except the pattern `p` is an output
-    instead of an input, controlled only by the case depth argument `depth`. We use `cases` to depth
-    `depth` and then reconstruct an `rcases` pattern `p` that would, if passed to `rcases`, perform
-    the same thing as the case tree we just constructed (or at least, the nearest expressible
-    approximation to this.)
-  * `rcases_hint.process_constructors depth cs l` takes a list of constructor names `cs` and a
-    matching list `l` of elements `(g, c', hs, _)` where  `c'` is a constructor name (used for
-    alignment with `cs`), `g` is the subgoal, and `hs` is the list of local hypotheses created by
-    `cases` in that subgoal. It matches on all of them, and then produces a `ΣΠ`-list of `rcases`
-    patterns describing the result, and the list of generated subgoals.
-  * `rcases_hint.continue depth es` does the same as `rcases.continue (ps.zip es)`, except the
-    patterns `ps` are an output instead of an input, created by matching on everything to depth
-    `depth` and recording the successful cases. It returns `ps`, and the list of generated subgoals.
-  -/
-  unsafe def rcases_hint.process_constructors :
-    ℕ →
-      listΣ Name → List (expr × Name × listΠ expr × List (Name × expr)) → tactic (listΣ (listΠ rcases_patt) × List expr)
-  | depth, [], _ => pure ([], [])
-  | depth, cs, [] => pure (cs.map fun _ => [], [])
-  | depth, c :: cs, ls@((g, c', hs, _) :: l) =>
-    if c ≠ c' then
-      do 
-        let (ps, gs) ← rcases_hint.process_constructors depth cs ls 
-        pure ([] :: ps, gs)
-    else
-      do 
-        let (p, gs) ← set_goals [g] >> rcases_hint.continue depth hs 
-        let (ps, gs') ← rcases_hint.process_constructors depth cs l 
-        pure (p :: ps, gs ++ gs')
-  /--
-  * `rcases_hint_core depth e` does the same as `rcases p e`, except the pattern `p` is an output
-    instead of an input, controlled only by the case depth argument `depth`. We use `cases` to depth
-    `depth` and then reconstruct an `rcases` pattern `p` that would, if passed to `rcases`, perform
-    the same thing as the case tree we just constructed (or at least, the nearest expressible
-    approximation to this.)
-  * `rcases_hint.process_constructors depth cs l` takes a list of constructor names `cs` and a
-    matching list `l` of elements `(g, c', hs, _)` where  `c'` is a constructor name (used for
-    alignment with `cs`), `g` is the subgoal, and `hs` is the list of local hypotheses created by
-    `cases` in that subgoal. It matches on all of them, and then produces a `ΣΠ`-list of `rcases`
-    patterns describing the result, and the list of generated subgoals.
-  * `rcases_hint.continue depth es` does the same as `rcases.continue (ps.zip es)`, except the
-    patterns `ps` are an output instead of an input, created by matching on everything to depth
-    `depth` and recording the successful cases. It returns `ps`, and the list of generated subgoals.
-  -/
-  unsafe def rcases_hint.continue : ℕ → listΠ expr → tactic (listΠ rcases_patt × List expr)
-  | depth, [] => Prod.mk [] <$> get_goals
-  | depth, e :: es =>
-    do 
-      let (p, gs) ← rcases_hint_core depth e 
-      let (ps, gs') ←
-        gs.mfoldl
-            (fun r : listΠ rcases_patt × List expr g =>
-              do 
-                let (ps, gs') ← set_goals [g] >> rcases_hint.continue depth es 
-                pure (merge_list rcases_patt.merge r.1 ps, r.2 ++ gs'))
-            ([], [])
-      pure (p :: ps, gs')
-end
+-- error in Tactic.Rcases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/--
+* `rcases_hint_core depth e` does the same as `rcases p e`, except the pattern `p` is an output
+  instead of an input, controlled only by the case depth argument `depth`. We use `cases` to depth
+  `depth` and then reconstruct an `rcases` pattern `p` that would, if passed to `rcases`, perform
+  the same thing as the case tree we just constructed (or at least, the nearest expressible
+  approximation to this.)
+* `rcases_hint.process_constructors depth cs l` takes a list of constructor names `cs` and a
+  matching list `l` of elements `(g, c', hs, _)` where  `c'` is a constructor name (used for
+  alignment with `cs`), `g` is the subgoal, and `hs` is the list of local hypotheses created by
+  `cases` in that subgoal. It matches on all of them, and then produces a `ΣΠ`-list of `rcases`
+  patterns describing the result, and the list of generated subgoals.
+* `rcases_hint.continue depth es` does the same as `rcases.continue (ps.zip es)`, except the
+  patterns `ps` are an output instead of an input, created by matching on everything to depth
+  `depth` and recording the successful cases. It returns `ps`, and the list of generated subgoals.
+-/
+meta
+mutual
+def rcases_hint_core, rcases_hint.process_constructors, rcases_hint.continuewith [] rcases_hint_core : exprℕ() → expr → tactic «expr × »(rcases_patt, list expr)
+| depth, e := do {
+(t, e) ← get_local_and_type e,
+  t ← whnf t,
+  env ← get_env,
+  let I := t.get_app_fn.const_name,
+  «expr <|> »(do {
+   guard «expr = »(I, ``eq),
+     subst' e,
+     «expr <$> »(prod.mk (rcases_patt.one (`rfl)), get_goals) }, do {
+   let c := env.constructors_of I,
+     some l ← try_core «expr >> »(guard «expr ≠ »(depth, 0), cases_core e) | let n := match e.local_pp_name with
+         | name.anonymous := `_
+         | n := n end in
+     «expr <$> »(prod.mk (rcases_patt.one n), get_goals),
+     gs ← get_goals,
+     if gs.empty then pure (rcases_patt.tuple «expr[ , ]»([]), «expr[ , ]»([])) else do {
+     (ps, gs') ← rcases_hint.process_constructors «expr - »(depth, 1) c (gs.zip l),
+       pure (rcases_patt.alts₁ ps, gs') } }) }with [] rcases_hint.process_constructors : exprℕ() → «exprlistΣ»() name → list «expr × »(expr, «expr × »(name, «expr × »(«exprlistΠ»() expr, list «expr × »(name, expr)))) → tactic «expr × »(«exprlistΣ»() («exprlistΠ»() rcases_patt), list expr)
+| depth, «expr[ , ]»([]), _ := pure («expr[ , ]»([]), «expr[ , ]»([]))
+| depth, cs, «expr[ , ]»([]) := pure (cs.map (λ _, «expr[ , ]»([])), «expr[ , ]»([]))
+| depth, «expr :: »(c, cs), ls@«expr :: »((g, c', hs, _), l) := if «expr ≠ »(c, c') then do {
+(ps, gs) ← rcases_hint.process_constructors depth cs ls,
+  pure («expr :: »(«expr[ , ]»([]), ps), gs) } else do {
+(p, gs) ← «expr >> »(set_goals «expr[ , ]»([g]), rcases_hint.continue depth hs),
+  (ps, gs') ← rcases_hint.process_constructors depth cs l,
+  pure («expr :: »(p, ps), «expr ++ »(gs, gs')) }with [] rcases_hint.continue : exprℕ() → «exprlistΠ»() expr → tactic «expr × »(«exprlistΠ»() rcases_patt, list expr)
+| depth, «expr[ , ]»([]) := «expr <$> »(prod.mk «expr[ , ]»([]), get_goals)
+| depth, «expr :: »(e, es) := do {
+(p, gs) ← rcases_hint_core depth e,
+  (ps, gs') ← gs.mfoldl (λ (r : «expr × »(«exprlistΠ»() rcases_patt, list expr)) (g), do {
+   (ps, gs') ← «expr >> »(set_goals «expr[ , ]»([g]), rcases_hint.continue depth es),
+     pure (merge_list rcases_patt.merge r.1 ps, «expr ++ »(r.2, gs')) }) («expr[ , ]»([]), «expr[ , ]»([])),
+  pure («expr :: »(p, ps), gs') }
 
 /--
 * `rcases? e` is like `rcases e with ...`, except it generates `...` by matching on everything it

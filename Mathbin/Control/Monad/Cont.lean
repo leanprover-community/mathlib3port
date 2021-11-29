@@ -14,12 +14,22 @@ class MonadCont(m : Type u → Type v) where
 
 open MonadCont
 
-class IsLawfulMonadCont(m : Type u → Type v)[Monadₓ m][MonadCont m] extends IsLawfulMonad m where 
-  call_cc_bind_right {α ω γ} (cmd : m α) (next : label ω m γ → α → m ω) :
-  (call_cc fun f => cmd >>= next f) = cmd >>= fun x => call_cc fun f => next f x 
-  call_cc_bind_left {α} β (x : α) (dead : label α m β → β → m α) :
-  (call_cc fun f : label α m β => goto f x >>= dead f) = pure x 
-  call_cc_dummy {α β} (dummy : m α) : (call_cc fun f : label α m β => dummy) = dummy
+-- error in Control.Monad.Cont: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+class is_lawful_monad_cont
+(m : Type u → Type v)
+[monad m]
+[monad_cont m]extends is_lawful_monad m :=
+  (call_cc_bind_right
+   {α ω γ}
+   (cmd : m α)
+   (next : label ω m γ → α → m ω) : «expr = »(call_cc (λ
+     f, «expr >>= »(cmd, next f)), «expr >>= »(cmd, λ x, call_cc (λ f, next f x))))
+  (call_cc_bind_left
+   {α}
+   (β)
+   (x : α)
+   (dead : label α m β → β → m α) : «expr = »(call_cc (λ f : label α m β, «expr >>= »(goto f x, dead f)), pure x))
+  (call_cc_dummy {α β} (dummy : m α) : «expr = »(call_cc (λ f : label α m β, dummy), dummy))
 
 export IsLawfulMonadCont()
 
@@ -119,8 +129,13 @@ theorem ExceptTₓ.goto_mk_label {α β ε : Type _} (x : label (Except.{u, u} �
   by 
     cases x <;> rfl
 
-def ExceptTₓ.callCc {ε} [MonadCont m] {α β : Type _} (f : label α (ExceptTₓ ε m) β → ExceptTₓ ε m α) : ExceptTₓ ε m α :=
-  ExceptTₓ.mk (call_cc$ fun x : label _ m β => ExceptTₓ.run$ f (ExceptTₓ.mkLabel x) : m (Except ε α))
+-- error in Control.Monad.Cont: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+def except_t.call_cc
+{ε}
+[monad_cont m]
+{α β : Type*}
+(f : label α (except_t ε m) β → except_t ε m α) : except_t ε m α :=
+except_t.mk («expr $ »(call_cc, λ x : label _ m β, «expr $ »(except_t.run, f (except_t.mk_label x))) : m (except ε α))
 
 instance  {ε} [MonadCont m] : MonadCont (ExceptTₓ ε m) :=
   { callCc := fun α β => ExceptTₓ.callCc }
@@ -155,8 +170,9 @@ theorem OptionTₓ.goto_mk_label {α β : Type _} (x : label (Option.{u} α) m �
   by 
     cases x <;> rfl
 
-def OptionTₓ.callCc [MonadCont m] {α β : Type _} (f : label α (OptionTₓ m) β → OptionTₓ m α) : OptionTₓ m α :=
-  OptionTₓ.mk (call_cc$ fun x : label _ m β => OptionTₓ.run$ f (OptionTₓ.mkLabel x) : m (Option α))
+-- error in Control.Monad.Cont: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+def option_t.call_cc [monad_cont m] {α β : Type*} (f : label α (option_t m) β → option_t m α) : option_t m α :=
+option_t.mk («expr $ »(call_cc, λ x : label _ m β, «expr $ »(option_t.run, f (option_t.mk_label x))) : m (option α))
 
 instance  [MonadCont m] : MonadCont (OptionTₓ m) :=
   { callCc := fun α β => OptionTₓ.callCc }

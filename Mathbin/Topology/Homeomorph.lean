@@ -257,6 +257,9 @@ protected theorem IsOpenMap (h : α ≃ₜ β) : IsOpenMap h :=
 protected theorem IsClosedMap (h : α ≃ₜ β) : IsClosedMap h :=
   fun s => h.is_closed_image.2
 
+protected theorem OpenEmbedding (h : α ≃ₜ β) : OpenEmbedding h :=
+  open_embedding_of_embedding_open h.embedding h.is_open_map
+
 protected theorem ClosedEmbedding (h : α ≃ₜ β) : ClosedEmbedding h :=
   closed_embedding_of_embedding_closed h.embedding h.is_closed_map
 

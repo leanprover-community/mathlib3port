@@ -144,14 +144,14 @@ theorem TimesContDiffWithinAt.log {n} (hf : TimesContDiffWithinAt ℝ n f s x) (
   TimesContDiffWithinAt ℝ n (fun x => log (f x)) s x :=
   (times_cont_diff_at_log.2 hx).comp_times_cont_diff_within_at x hf
 
-theorem TimesContDiffOn.log {n} (hf : TimesContDiffOn ℝ n f s) (hs : ∀ x _ : x ∈ s, f x ≠ 0) :
+theorem TimesContDiffOn.log {n} (hf : TimesContDiffOn ℝ n f s) (hs : ∀ x (_ : x ∈ s), f x ≠ 0) :
   TimesContDiffOn ℝ n (fun x => log (f x)) s :=
   fun x hx => (hf x hx).log (hs x hx)
 
 theorem TimesContDiff.log {n} (hf : TimesContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : TimesContDiff ℝ n fun x => log (f x) :=
   times_cont_diff_iff_times_cont_diff_at.2$ fun x => hf.times_cont_diff_at.log (h x)
 
-theorem DifferentiableOn.log (hf : DifferentiableOn ℝ f s) (hx : ∀ x _ : x ∈ s, f x ≠ 0) :
+theorem DifferentiableOn.log (hf : DifferentiableOn ℝ f s) (hx : ∀ x (_ : x ∈ s), f x ≠ 0) :
   DifferentiableOn ℝ (fun x => log (f x)) s :=
   fun x h => (hf x h).log (hx x h)
 

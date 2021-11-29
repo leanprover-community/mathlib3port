@@ -33,10 +33,10 @@ end
 /-- `unsat_lin_comb ns ts` asserts that the linear combination
     `lin_comb ns ts` is unsatisfiable  -/
 def unsat_lin_comb (ns : List Nat) (ts : List term) : Prop :=
-  (lin_comb ns ts).fst < 0 ∧ ∀ x _ : x ∈ (lin_comb ns ts).snd, x = (0 : Int)
+  (lin_comb ns ts).fst < 0 ∧ ∀ x (_ : x ∈ (lin_comb ns ts).snd), x = (0 : Int)
 
 theorem unsat_lin_comb_of (ns : List Nat) (ts : List term) :
-  (lin_comb ns ts).fst < 0 → (∀ x _ : x ∈ (lin_comb ns ts).snd, x = (0 : Int)) → unsat_lin_comb ns ts :=
+  (lin_comb ns ts).fst < 0 → (∀ x (_ : x ∈ (lin_comb ns ts).snd), x = (0 : Int)) → unsat_lin_comb ns ts :=
   by 
     intro h1 h2 
     exact ⟨h1, h2⟩

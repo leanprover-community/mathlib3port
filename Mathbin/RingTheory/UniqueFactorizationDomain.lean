@@ -104,7 +104,7 @@ by haveI [] [] [":=", expr classical.dec]; exact [expr well_founded.fix wf_dvd_m
   have hb0 : «expr ≠ »(b, 0), from λ hb0, by simp [] [] [] ["*"] [] ["at", "*"],
   «expr ▸ »(hb.symm, hi _ _ hb0 hii (ih _ ⟨hb0, i, hii.1, by rw ["[", expr hb, ",", expr mul_comm, "]"] []⟩))) a]
 
-theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Irreducible b) ∧ Associated f.prod a :=
+theorem exists_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀ b (_ : b ∈ f), Irreducible b) ∧ Associated f.prod a :=
   WfDvdMonoid.induction_on_irreducible a (fun h => (h rfl).elim)
     (fun u hu _ =>
       ⟨0,
@@ -183,19 +183,19 @@ namespace UniqueFactorizationMonoid
 
 variable[CommCancelMonoidWithZero α][UniqueFactorizationMonoid α]
 
-theorem exists_prime_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Prime b) ∧ f.prod ~ᵤ a :=
+theorem exists_prime_factors (a : α) : a ≠ 0 → ∃ f : Multiset α, (∀ b (_ : b ∈ f), Prime b) ∧ f.prod ~ᵤ a :=
   by 
     simpRw [←UniqueFactorizationMonoid.irreducible_iff_prime]
     apply WfDvdMonoid.exists_factors a
 
 @[elab_as_eliminator]
-theorem induction_on_prime {P : α → Prop} (a : α) (h₁ : P 0) (h₂ : ∀ x : α, IsUnit x → P x)
-  (h₃ : ∀ a p : α, a ≠ 0 → Prime p → P a → P (p*a)) : P a :=
+theorem induction_on_prime {P : α → Prop} (a : α) (h₁ : P 0) (h₂ : ∀ (x : α), IsUnit x → P x)
+  (h₃ : ∀ (a p : α), a ≠ 0 → Prime p → P a → P (p*a)) : P a :=
   by 
     simpRw [←UniqueFactorizationMonoid.irreducible_iff_prime]  at h₃ 
     exact WfDvdMonoid.induction_on_irreducible a h₁ h₂ h₃
 
--- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem factors_unique : ∀
 {f
  g : multiset α}, ∀
@@ -229,7 +229,7 @@ by haveI [] [] [":=", expr classical.dec_eq α]; exact [expr λ
 
 end UniqueFactorizationMonoid
 
--- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem prime_factors_unique
 [comm_cancel_monoid_with_zero α] : ∀
 {f
@@ -294,7 +294,7 @@ section ExistsPrimeFactors
 
 variable[CommCancelMonoidWithZero α]
 
-variable(pf : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Prime b) ∧ f.prod ~ᵤ a)
+variable(pf : ∀ (a : α), a ≠ 0 → ∃ f : Multiset α, (∀ b (_ : b ∈ f), Prime b) ∧ f.prod ~ᵤ a)
 
 include pf
 
@@ -350,7 +350,7 @@ theorem UniqueFactorizationMonoid.of_exists_prime_factors : UniqueFactorizationM
 end ExistsPrimeFactors
 
 theorem UniqueFactorizationMonoid.iff_exists_prime_factors [CommCancelMonoidWithZero α] :
-  UniqueFactorizationMonoid α ↔ ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Prime b) ∧ f.prod ~ᵤ a :=
+  UniqueFactorizationMonoid α ↔ ∀ (a : α), a ≠ 0 → ∃ f : Multiset α, (∀ b (_ : b ∈ f), Prime b) ∧ f.prod ~ᵤ a :=
   ⟨fun h => @UniqueFactorizationMonoid.exists_prime_factors _ _ h, UniqueFactorizationMonoid.of_exists_prime_factors⟩
 
 -- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -393,11 +393,11 @@ theorem irreducible_iff_prime_of_exists_unique_irreducible_factors
    end⟩], prime.irreducible⟩
 
 theorem UniqueFactorizationMonoid.of_exists_unique_irreducible_factors [CommCancelMonoidWithZero α]
-  (eif : ∀ a : α, a ≠ 0 → ∃ f : Multiset α, (∀ b _ : b ∈ f, Irreducible b) ∧ f.prod ~ᵤ a)
+  (eif : ∀ (a : α), a ≠ 0 → ∃ f : Multiset α, (∀ b (_ : b ∈ f), Irreducible b) ∧ f.prod ~ᵤ a)
   (uif :
-    ∀ f g : Multiset α,
-      (∀ x _ : x ∈ f, Irreducible x) →
-        (∀ x _ : x ∈ g, Irreducible x) → f.prod ~ᵤ g.prod → Multiset.Rel Associated f g) :
+    ∀ (f g : Multiset α),
+      (∀ x (_ : x ∈ f), Irreducible x) →
+        (∀ x (_ : x ∈ g), Irreducible x) → f.prod ~ᵤ g.prod → Multiset.Rel Associated f g) :
   UniqueFactorizationMonoid α :=
   UniqueFactorizationMonoid.of_exists_prime_factors
     (by 
@@ -419,7 +419,7 @@ theorem factors_prod {a : α} (ane0 : a ≠ 0) : Associated (factors a).Prod a :
     rw [factors, dif_neg ane0]
     exact (Classical.some_spec (exists_prime_factors a ane0)).2
 
-theorem prime_of_factor {a : α} : ∀ x : α, x ∈ factors a → Prime x :=
+theorem prime_of_factor {a : α} : ∀ (x : α), x ∈ factors a → Prime x :=
   by 
     rw [factors]
     splitIfs with ane0
@@ -428,7 +428,7 @@ theorem prime_of_factor {a : α} : ∀ x : α, x ∈ factors a → Prime x :=
     intro x hx 
     exact (Classical.some_spec (UniqueFactorizationMonoid.exists_prime_factors a ane0)).1 x hx
 
-theorem irreducible_of_factor {a : α} : ∀ x : α, x ∈ factors a → Irreducible x :=
+theorem irreducible_of_factor {a : α} : ∀ (x : α), x ∈ factors a → Irreducible x :=
   fun x h => (prime_of_factor x h).Irreducible
 
 theorem exists_mem_factors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p) :
@@ -473,7 +473,7 @@ theorem normalized_factors_prod {a : α} (ane0 : a ≠ 0) : Associated (normaliz
     ext 
     rw [Function.comp_apply, Associates.mk_normalize]
 
-theorem prime_of_normalized_factor {a : α} : ∀ x : α, x ∈ normalized_factors a → Prime x :=
+theorem prime_of_normalized_factor {a : α} : ∀ (x : α), x ∈ normalized_factors a → Prime x :=
   by 
     rw [normalized_factors, factors]
     splitIfs with ane0
@@ -484,10 +484,10 @@ theorem prime_of_normalized_factor {a : α} : ∀ x : α, x ∈ normalized_facto
     rw [(normalize_associated _).prime_iff]
     exact (Classical.some_spec (UniqueFactorizationMonoid.exists_prime_factors a ane0)).1 y hy
 
-theorem irreducible_of_normalized_factor {a : α} : ∀ x : α, x ∈ normalized_factors a → Irreducible x :=
+theorem irreducible_of_normalized_factor {a : α} : ∀ (x : α), x ∈ normalized_factors a → Irreducible x :=
   fun x h => (prime_of_normalized_factor x h).Irreducible
 
-theorem normalize_normalized_factor {a : α} : ∀ x : α, x ∈ normalized_factors a → normalize x = x :=
+theorem normalize_normalized_factor {a : α} : ∀ (x : α), x ∈ normalized_factors a → normalize x = x :=
   by 
     rw [normalized_factors, factors]
     splitIfs with h
@@ -800,7 +800,7 @@ theorem factor_set.coe_add {a b : Multiset { a : Associates α // Irreducible a 
   by 
     normCast
 
-theorem factor_set.sup_add_inf_eq_add [DecidableEq (Associates α)] : ∀ a b : factor_set α, ((a⊔b)+a⊓b) = a+b
+theorem factor_set.sup_add_inf_eq_add [DecidableEq (Associates α)] : ∀ (a b : factor_set α), ((a⊔b)+a⊓b) = a+b
 | none, b =>
   show ((⊤⊔b)+⊤⊓b) = ⊤+b by 
     simp 
@@ -828,7 +828,7 @@ theorem prod_coe {s : Multiset { a : Associates α // Irreducible a }} : (s : fa
   rfl
 
 @[simp]
-theorem prod_add : ∀ a b : factor_set α, (a+b).Prod = a.prod*b.prod
+theorem prod_add : ∀ (a b : factor_set α), (a+b).Prod = a.prod*b.prod
 | none, b =>
   show (⊤+b).Prod = (⊤ : factor_set α).Prod*b.prod by 
     simp 
@@ -865,7 +865,7 @@ def bcount [DecidableEq (Associates α)] (p : { a : Associates α // Irreducible
 | none => 0
 | some s => s.count p
 
-variable[dec_irr : ∀ p : Associates α, Decidable (Irreducible p)]
+variable[dec_irr : ∀ (p : Associates α), Decidable (Irreducible p)]
 
 include dec_irr
 
@@ -932,17 +932,20 @@ theorem mem_factor_set_some {p : Associates α} {hp : Irreducible p}
     splitIfs 
     rfl
 
-theorem reducible_not_mem_factor_set {p : Associates α} (hp : ¬Irreducible p) (s : factor_set α) : ¬p ∈ s :=
-  fun h : if hp : Irreducible p then bfactor_set_mem ⟨p, hp⟩ s else False =>
-    by 
-      rwa [dif_neg hp] at h
+-- error in RingTheory.UniqueFactorizationDomain: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem reducible_not_mem_factor_set
+{p : associates α}
+(hp : «expr¬ »(irreducible p))
+(s : factor_set α) : «expr¬ »(«expr ∈ »(p, s)) :=
+λ
+h : if hp : irreducible p then bfactor_set_mem ⟨p, hp⟩ s else false, by rwa ["[", expr dif_neg hp, "]"] ["at", ident h]
 
 omit dec_irr
 
 variable[UniqueFactorizationMonoid α]
 
 theorem unique' {p q : Multiset (Associates α)} :
-  (∀ a _ : a ∈ p, Irreducible a) → (∀ a _ : a ∈ q, Irreducible a) → p.prod = q.prod → p = q :=
+  (∀ a (_ : a ∈ p), Irreducible a) → (∀ a (_ : a ∈ q), Irreducible a) → p.prod = q.prod → p = q :=
   by 
     apply Multiset.induction_on_multiset_quot p 
     apply Multiset.induction_on_multiset_quot q 
@@ -972,8 +975,8 @@ theorem factor_set.unique [Nontrivial α] {p q : factor_set α} (h : p.prod = q.
           obtain ⟨⟨a', irred⟩, -, rfl⟩ := multiset.mem_map.mp ha 
           rwa [Subtype.coe_mk]
 
-theorem prod_le_prod_iff_le [Nontrivial α] {p q : Multiset (Associates α)} (hp : ∀ a _ : a ∈ p, Irreducible a)
-  (hq : ∀ a _ : a ∈ q, Irreducible a) : p.prod ≤ q.prod ↔ p ≤ q :=
+theorem prod_le_prod_iff_le [Nontrivial α] {p q : Multiset (Associates α)} (hp : ∀ a (_ : a ∈ p), Irreducible a)
+  (hq : ∀ a (_ : a ∈ q), Irreducible a) : p.prod ≤ q.prod ↔ p ≤ q :=
   Iff.intro
     (by 
       classical 
@@ -1127,8 +1130,8 @@ noncomputable instance  : HasSup (Associates α) :=
 noncomputable instance  : HasInf (Associates α) :=
   ⟨fun a b => (a.factors⊓b.factors).Prod⟩
 
-noncomputable instance  [Nontrivial α] : BoundedLattice (Associates α) :=
-  { Associates.partialOrder, Associates.orderTop, Associates.orderBot with sup := ·⊔·, inf := ·⊓·,
+noncomputable instance  [Nontrivial α] : Lattice (Associates α) :=
+  { Associates.partialOrder with sup := ·⊔·, inf := ·⊓·,
     sup_le := fun a b c hac hbc => factors_prod c ▸ prod_mono (sup_le (factors_mono hac) (factors_mono hbc)),
     le_sup_left := fun a b => le_transₓ (le_of_eqₓ (factors_prod a).symm)$ prod_mono$ le_sup_left,
     le_sup_right := fun a b => le_transₓ (le_of_eqₓ (factors_prod b).symm)$ prod_mono$ le_sup_right,

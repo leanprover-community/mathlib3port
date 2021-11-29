@@ -318,7 +318,7 @@ theorem reduce_b {u : xgcd_type} (h : u.r ≠ 0) : u.reduce = u.step.reduce.flip
     simp only 
     rw [if_neg h, step]
 
-theorem reduce_reduced : ∀ u : xgcd_type, u.reduce.is_reduced
+theorem reduce_reduced : ∀ (u : xgcd_type), u.reduce.is_reduced
 | u =>
   dite (u.r = 0)
     (fun h =>
@@ -334,7 +334,7 @@ theorem reduce_reduced : ∀ u : xgcd_type, u.reduce.is_reduced
 theorem reduce_reduced' (u : xgcd_type) : u.reduce.is_reduced' :=
   (is_reduced_iff _).mp u.reduce_reduced
 
-theorem reduce_special : ∀ u : xgcd_type, u.is_special → u.reduce.is_special
+theorem reduce_special : ∀ (u : xgcd_type), u.is_special → u.reduce.is_special
 | u =>
   dite (u.r = 0)
     (fun h hs =>
@@ -350,7 +350,7 @@ theorem reduce_special : ∀ u : xgcd_type, u.is_special → u.reduce.is_special
 theorem reduce_special' (u : xgcd_type) (hs : u.is_special) : u.reduce.is_special' :=
   (is_special_iff _).mp (u.reduce_special hs)
 
-theorem reduce_v : ∀ u : xgcd_type, u.reduce.v = u.v
+theorem reduce_v : ∀ (u : xgcd_type), u.reduce.v = u.v
 | u =>
   dite (u.r = 0)
     (fun h =>

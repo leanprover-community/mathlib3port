@@ -144,8 +144,8 @@ end
 
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here with
 an index set which is a countable set in any type. -/
-theorem dense_bInter_of_open {S : Set β} {f : β → Set α} (ho : ∀ s _ : s ∈ S, IsOpen (f s)) (hS : countable S)
-  (hd : ∀ s _ : s ∈ S, Dense (f s)) : Dense (⋂(s : _)(_ : s ∈ S), f s) :=
+theorem dense_bInter_of_open {S : Set β} {f : β → Set α} (ho : ∀ s (_ : s ∈ S), IsOpen (f s)) (hS : countable S)
+  (hd : ∀ s (_ : s ∈ S), Dense (f s)) : Dense (⋂(s : _)(_ : s ∈ S), f s) :=
   by 
     rw [←sInter_image]
     apply dense_sInter_of_open
@@ -225,7 +225,7 @@ theorem Dense.inter_of_Gδ {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) (hsc : D
 
 /-- A property holds on a residual (comeagre) set if and only if it holds on some dense `Gδ` set. -/
 theorem eventually_residual {p : α → Prop} :
-  (∀ᶠx in residual α, p x) ↔ ∃ t : Set α, IsGδ t ∧ Dense t ∧ ∀ x _ : x ∈ t, p x :=
+  (∀ᶠx in residual α, p x) ↔ ∃ t : Set α, IsGδ t ∧ Dense t ∧ ∀ x (_ : x ∈ t), p x :=
   calc (∀ᶠx in residual α, p x) ↔ ∀ᶠx in ⨅(t : Set α)(ht : IsGδ t ∧ Dense t), 𝓟 t, p x :=
     by 
       simp only [residual, infi_and]
@@ -301,7 +301,7 @@ end
 
 /-- Baire theorem: if countably many closed sets cover the whole space, then their interiors
 are dense. Formulated here with `⋃₀`. -/
-theorem dense_sUnion_interior_of_closed {S : Set (Set α)} (hc : ∀ s _ : s ∈ S, IsClosed s) (hS : countable S)
+theorem dense_sUnion_interior_of_closed {S : Set (Set α)} (hc : ∀ s (_ : s ∈ S), IsClosed s) (hS : countable S)
   (hU : ⋃₀S = univ) : Dense (⋃(s : _)(_ : s ∈ S), Interior s) :=
   by 
     rw [sUnion_eq_bUnion] at hU <;> exact dense_bUnion_interior_of_closed hc hS hU

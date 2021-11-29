@@ -35,7 +35,7 @@ theorem Nat.is_coprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.C
         by 
           rw [mul_commₓ _ (m : ℤ), mul_commₓ _ (n : ℤ), ←Nat.gcd_eq_gcd_ab, show _ = _ from H, Int.coe_nat_one]⟩⟩
 
-theorem IsCoprime.prod_left : (∀ i _ : i ∈ t, IsCoprime (s i) x) → IsCoprime (∏i in t, s i) x :=
+theorem IsCoprime.prod_left : (∀ i (_ : i ∈ t), IsCoprime (s i) x) → IsCoprime (∏i in t, s i) x :=
   (Finset.induction_on t fun _ => is_coprime_one_left)$
     fun b t hbt ih H =>
       by 
@@ -43,17 +43,17 @@ theorem IsCoprime.prod_left : (∀ i _ : i ∈ t, IsCoprime (s i) x) → IsCopri
         rw [Finset.forall_mem_insert] at H 
         exact H.1.mul_left (ih H.2)
 
-theorem IsCoprime.prod_right : (∀ i _ : i ∈ t, IsCoprime x (s i)) → IsCoprime x (∏i in t, s i) :=
+theorem IsCoprime.prod_right : (∀ i (_ : i ∈ t), IsCoprime x (s i)) → IsCoprime x (∏i in t, s i) :=
   by 
     simpa only [is_coprime_comm] using IsCoprime.prod_left
 
-theorem IsCoprime.prod_left_iff : IsCoprime (∏i in t, s i) x ↔ ∀ i _ : i ∈ t, IsCoprime (s i) x :=
+theorem IsCoprime.prod_left_iff : IsCoprime (∏i in t, s i) x ↔ ∀ i (_ : i ∈ t), IsCoprime (s i) x :=
   Finset.induction_on t (iff_of_true is_coprime_one_left$ fun _ => False.elim)$
     fun b t hbt ih =>
       by 
         rw [Finset.prod_insert hbt, IsCoprime.mul_left_iff, ih, Finset.forall_mem_insert]
 
-theorem IsCoprime.prod_right_iff : IsCoprime x (∏i in t, s i) ↔ ∀ i _ : i ∈ t, IsCoprime x (s i) :=
+theorem IsCoprime.prod_right_iff : IsCoprime x (∏i in t, s i) ↔ ∀ i (_ : i ∈ t), IsCoprime x (s i) :=
   by 
     simpa only [is_coprime_comm] using IsCoprime.prod_left_iff
 

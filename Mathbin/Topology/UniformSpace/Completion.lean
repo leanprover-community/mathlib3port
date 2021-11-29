@@ -69,7 +69,7 @@ def gen (s : Set (α × α)) : Set (Cauchyₓ α × Cauchyₓ α) :=
 theorem monotone_gen : Monotone gen :=
   monotone_set_of$ fun p => @monotone_mem (α × α) (p.1.val ×ᶠ p.2.val)
 
--- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 private theorem symm_gen : «expr ≤ »(map prod.swap ((expr𝓤() α).lift' gen), (expr𝓤() α).lift' gen) :=
 calc
   «expr = »(map prod.swap ((expr𝓤() α).lift' gen), (expr𝓤() α).lift' (λ
@@ -95,61 +95,63 @@ private theorem comp_rel_gen_gen_subset_gen_comp_rel {s t : Set (α × α)} :
       fun ⟨a, b⟩ ⟨(ha : a ∈ t₁), (hb : b ∈ t₄)⟩ =>
         ⟨x, h₁ (show (a, x) ∈ Set.Prod t₁ t₂ from ⟨ha, xt₂⟩), h₂ (show (x, b) ∈ Set.Prod t₃ t₄ from ⟨xt₃, hb⟩)⟩
 
-private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => CompRel s s) ≤ (𝓤 α).lift' gen :=
-  calc (((𝓤 α).lift' gen).lift' fun s => CompRel s s) = (𝓤 α).lift' fun s => CompRel (gen s) (gen s) :=
-    by 
-      rw [lift'_lift'_assoc]
-      exact monotone_gen 
-      exact monotone_comp_rel monotone_id monotone_id 
-    _ ≤ (𝓤 α).lift' fun s => gen$ CompRel s s := lift'_mono'$ fun s hs => comp_rel_gen_gen_subset_gen_comp_rel 
-    _ = ((𝓤 α).lift'$ fun s : Set (α × α) => CompRel s s).lift' gen :=
-    by 
-      rw [lift'_lift'_assoc]
-      exact monotone_comp_rel monotone_id monotone_id 
-      exact monotone_gen 
-    _ ≤ (𝓤 α).lift' gen := lift'_mono comp_le_uniformity (le_reflₓ _)
-    
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private theorem comp_gen : «expr ≤ »(((expr𝓤() α).lift' gen).lift' (λ s, comp_rel s s), (expr𝓤() α).lift' gen) :=
+calc
+  «expr = »(((expr𝓤() α).lift' gen).lift' (λ
+    s, comp_rel s s), (expr𝓤() α).lift' (λ s, comp_rel (gen s) (gen s))) : begin
+    rw ["[", expr lift'_lift'_assoc, "]"] [],
+    exact [expr monotone_gen],
+    exact [expr monotone_comp_rel monotone_id monotone_id]
+  end
+  «expr ≤ »(..., (expr𝓤() α).lift' (λ
+    s, «expr $ »(gen, comp_rel s s))) : «expr $ »(lift'_mono', assume s hs, comp_rel_gen_gen_subset_gen_comp_rel)
+  «expr = »(..., «expr $ »((expr𝓤() α).lift', λ s : set «expr × »(α, α), comp_rel s s).lift' gen) : begin
+    rw ["[", expr lift'_lift'_assoc, "]"] [],
+    exact [expr monotone_comp_rel monotone_id monotone_id],
+    exact [expr monotone_gen]
+  end
+  «expr ≤ »(..., (expr𝓤() α).lift' gen) : lift'_mono comp_le_uniformity (le_refl _)
 
-instance  : UniformSpace (Cauchyₓ α) :=
-  UniformSpace.ofCore
-    { uniformity := (𝓤 α).lift' gen,
-      refl := principal_le_lift'$ fun s hs ⟨a, b⟩ a_eq_b : a = b => a_eq_b ▸ a.property.right hs, symm := symm_gen,
-      comp := comp_gen }
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : uniform_space (Cauchy α) :=
+uniform_space.of_core { uniformity := (expr𝓤() α).lift' gen,
+  refl := «expr $ »(principal_le_lift', assume
+   (s hs)
+   ⟨a, b⟩
+   (a_eq_b : «expr = »(a, b)), «expr ▸ »(a_eq_b, a.property.right hs)),
+  symm := symm_gen,
+  comp := comp_gen }
 
 theorem mem_uniformity {s : Set (Cauchyₓ α × Cauchyₓ α)} : s ∈ 𝓤 (Cauchyₓ α) ↔ ∃ (t : _)(_ : t ∈ 𝓤 α), gen t ⊆ s :=
   mem_lift'_sets monotone_gen
 
 theorem mem_uniformity' {s : Set (Cauchyₓ α × Cauchyₓ α)} :
-  s ∈ 𝓤 (Cauchyₓ α) ↔ ∃ (t : _)(_ : t ∈ 𝓤 α), ∀ f g : Cauchyₓ α, t ∈ f.1 ×ᶠ g.1 → (f, g) ∈ s :=
+  s ∈ 𝓤 (Cauchyₓ α) ↔ ∃ (t : _)(_ : t ∈ 𝓤 α), ∀ (f g : Cauchyₓ α), t ∈ f.1 ×ᶠ g.1 → (f, g) ∈ s :=
   mem_uniformity.trans$ bex_congr$ fun t h => Prod.forall
 
 /-- Embedding of `α` into its completion `Cauchy α` -/
 def pure_cauchy (a : α) : Cauchyₓ α :=
   ⟨pure a, cauchy_pure⟩
 
-theorem uniform_inducing_pure_cauchy : UniformInducing (pure_cauchy : α → Cauchyₓ α) :=
-  ⟨have  : ((preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen) = id :=
-      funext$
-        fun s =>
-          Set.ext$
-            fun ⟨a₁, a₂⟩ =>
-              by 
-                simp [preimage, gen, pure_cauchy, prod_principal_principal]
-    calc
-      comap (fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ((𝓤 α).lift' gen) =
-        (𝓤 α).lift' ((preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen) :=
-      comap_lift'_eq monotone_gen 
-      _ = 𝓤 α :=
-      by 
-        simp [this]
-      ⟩
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_inducing_pure_cauchy : uniform_inducing (pure_cauchy : α → Cauchy α) :=
+⟨have «expr = »(«expr ∘ »(preimage (λ
+    x : «expr × »(α, α), (pure_cauchy x.fst, pure_cauchy x.snd)), gen), id), from «expr $ »(funext, assume
+  s, «expr $ »(set.ext, assume
+   ⟨a₁, a₂⟩, by simp [] [] [] ["[", expr preimage, ",", expr gen, ",", expr pure_cauchy, ",", expr prod_principal_principal, "]"] [] [])),
+ calc
+   «expr = »(comap (λ
+     x : «expr × »(α, α), (pure_cauchy x.fst, pure_cauchy x.snd)) ((expr𝓤() α).lift' gen), (expr𝓤() α).lift' «expr ∘ »(preimage (λ
+      x : «expr × »(α, α), (pure_cauchy x.fst, pure_cauchy x.snd)), gen)) : comap_lift'_eq monotone_gen
+   «expr = »(..., expr𝓤() α) : by simp [] [] [] ["[", expr this, "]"] [] []⟩
 
 theorem uniform_embedding_pure_cauchy : UniformEmbedding (pure_cauchy : α → Cauchyₓ α) :=
   { uniform_inducing_pure_cauchy with inj := fun a₁ a₂ h => pure_injective$ Subtype.ext_iff_val.1 h }
 
 theorem dense_range_pure_cauchy : DenseRange pure_cauchy :=
   fun f =>
-    have h_ex : ∀ s _ : s ∈ 𝓤 (Cauchyₓ α), ∃ y : α, (f, pure_cauchy y) ∈ s :=
+    have h_ex : ∀ s (_ : s ∈ 𝓤 (Cauchyₓ α)), ∃ y : α, (f, pure_cauchy y) ∈ s :=
       fun s hs =>
         let ⟨t'', ht''₁, (ht''₂ : gen t'' ⊆ s)⟩ := (mem_lift'_sets monotone_gen).mp hs 
         let ⟨t', ht'₁, ht'₂⟩ := comp_mem_uniformity_sets ht''₁ 
@@ -289,16 +291,16 @@ section
 
 attribute [local instance] UniformSpace.separationSetoid
 
-theorem separated_pure_cauchy_injective {α : Type _} [UniformSpace α] [s : SeparatedSpace α] :
-  Function.Injective fun a : α => «expr⟦ ⟧» (pure_cauchy a)
-| a, b, h =>
-  separated_def.1 s _ _$
-    fun s hs =>
-      let ⟨t, ht, hts⟩ :=
-        by 
-          rw [←(@uniform_embedding_pure_cauchy α _).comap_uniformity, Filter.mem_comap] at hs <;> exact hs 
-      have  : (pure_cauchy a, pure_cauchy b) ∈ t := Quotientₓ.exact h t ht
-      @hts (a, b) this
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem separated_pure_cauchy_injective
+{α : Type*}
+[uniform_space α]
+[s : separated_space α] : function.injective (λ a : α, «expr⟦ ⟧»(pure_cauchy a))
+| a, b, h := «expr $ »(separated_def.1 s _ _, assume
+ s
+ hs, let ⟨t, ht, hts⟩ := by rw ["[", "<-", expr (@uniform_embedding_pure_cauchy α _).comap_uniformity, ",", expr filter.mem_comap, "]"] ["at", ident hs]; exact [expr hs] in
+ have «expr ∈ »((pure_cauchy a, pure_cauchy b), t), from quotient.exact h t ht,
+ @hts (a, b) this)
 
 end 
 
@@ -316,17 +318,14 @@ variable{β : Type _}[UniformSpace β]
 
 variable{γ : Type _}[UniformSpace γ]
 
-instance complete_space_separation [h : CompleteSpace α] : CompleteSpace (Quotientₓ (separation_setoid α)) :=
-  ⟨fun f =>
-      fun hf : Cauchy f =>
-        have  : Cauchy (f.comap fun x => «expr⟦ ⟧» x) :=
-          hf.comap' comap_quotient_le_uniformity$ hf.left.comap_of_surj (surjective_quotient_mk _)
-        let ⟨x, (hx : (f.comap fun x => «expr⟦ ⟧» x) ≤ 𝓝 x)⟩ := CompleteSpace.complete this
-        ⟨«expr⟦ ⟧» x,
-          (comap_le_comap_iff$
-                by 
-                  simp ).1
-            (hx.trans$ map_le_iff_le_comap.1 continuous_quotient_mk.ContinuousAt)⟩⟩
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance complete_space_separation [h : complete_space α] : complete_space (quotient (separation_setoid α)) :=
+⟨assume
+ f, assume
+ hf : cauchy f, have cauchy (f.comap (λ
+   x, «expr⟦ ⟧»(x))), from «expr $ »(hf.comap' comap_quotient_le_uniformity, hf.left.comap_of_surj (surjective_quotient_mk _)),
+ let ⟨x, (hx : «expr ≤ »(f.comap (λ x, «expr⟦ ⟧»(x)), expr𝓝() x))⟩ := complete_space.complete this in
+ ⟨«expr⟦ ⟧»(x), «expr $ »(comap_le_comap_iff, by simp [] [] [] [] [] []).1 «expr $ »(hx.trans, map_le_iff_le_comap.1 continuous_quotient_mk.continuous_at)⟩⟩
 
 /-- Hausdorff completion of `α` -/
 def completion :=
@@ -427,33 +426,36 @@ instance separable_space_completion [separable_space α] : separable_space (comp
 theorem dense_embedding_coe [SeparatedSpace α] : DenseEmbedding (coeₓ : α → completion α) :=
   { dense_inducing_coe with inj := separated_pure_cauchy_injective }
 
-theorem dense_range_coe₂ : DenseRange fun x : α × β => ((x.1 : completion α), (x.2 : completion β)) :=
-  dense_range_coe.prod_map dense_range_coe
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dense_range_coe₂ : dense_range (λ x : «expr × »(α, β), ((x.1 : completion α), (x.2 : completion β))) :=
+dense_range_coe.prod_map dense_range_coe
 
-theorem dense_range_coe₃ :
-  DenseRange fun x : α × β × γ => ((x.1 : completion α), ((x.2.1 : completion β), (x.2.2 : completion γ))) :=
-  dense_range_coe.prod_map dense_range_coe₂
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dense_range_coe₃ : dense_range (λ
+ x : «expr × »(α, «expr × »(β, γ)), ((x.1 : completion α), ((x.2.1 : completion β), (x.2.2 : completion γ)))) :=
+dense_range_coe.prod_map dense_range_coe₂
 
 @[elab_as_eliminator]
-theorem induction_on {p : completion α → Prop} (a : completion α) (hp : IsClosed { a | p a }) (ih : ∀ a : α, p a) :
+theorem induction_on {p : completion α → Prop} (a : completion α) (hp : IsClosed { a | p a }) (ih : ∀ (a : α), p a) :
   p a :=
   is_closed_property dense_range_coe hp ih a
 
 @[elab_as_eliminator]
 theorem induction_on₂ {p : completion α → completion β → Prop} (a : completion α) (b : completion β)
-  (hp : IsClosed { x:completion α × completion β | p x.1 x.2 }) (ih : ∀ a : α b : β, p a b) : p a b :=
-  have  : ∀ x : completion α × completion β, p x.1 x.2 := is_closed_property dense_range_coe₂ hp$ fun ⟨a, b⟩ => ih a b 
+  (hp : IsClosed { x:completion α × completion β | p x.1 x.2 }) (ih : ∀ (a : α) (b : β), p a b) : p a b :=
+  have  : ∀ (x : completion α × completion β), p x.1 x.2 :=
+    is_closed_property dense_range_coe₂ hp$ fun ⟨a, b⟩ => ih a b 
   this (a, b)
 
 @[elab_as_eliminator]
 theorem induction_on₃ {p : completion α → completion β → completion γ → Prop} (a : completion α) (b : completion β)
   (c : completion γ) (hp : IsClosed { x:completion α × completion β × completion γ | p x.1 x.2.1 x.2.2 })
-  (ih : ∀ a : α b : β c : γ, p a b c) : p a b c :=
-  have  : ∀ x : completion α × completion β × completion γ, p x.1 x.2.1 x.2.2 :=
+  (ih : ∀ (a : α) (b : β) (c : γ), p a b c) : p a b c :=
+  have  : ∀ (x : completion α × completion β × completion γ), p x.1 x.2.1 x.2.2 :=
     is_closed_property dense_range_coe₃ hp$ fun ⟨a, b, c⟩ => ih a b c 
   this (a, b, c)
 
-theorem ext [T2Space β] {f g : completion α → β} (hf : Continuous f) (hg : Continuous g) (h : ∀ a : α, f a = g a) :
+theorem ext [T2Space β] {f g : completion α → β} (hf : Continuous f) (hg : Continuous g) (h : ∀ (a : α), f a = g a) :
   f = g :=
   cpkg.funext hf hg h
 
@@ -481,7 +483,7 @@ theorem continuous_extension : Continuous (completion.extension f) :=
   cpkg.continuous_extend
 
 theorem extension_unique (hf : UniformContinuous f) {g : completion α → β} (hg : UniformContinuous g)
-  (h : ∀ a : α, f a = g (a : completion α)) : completion.extension f = g :=
+  (h : ∀ (a : α), f a = g (a : completion α)) : completion.extension f = g :=
   cpkg.extend_unique hf hg h
 
 @[simp]
@@ -509,7 +511,7 @@ theorem map_coe (hf : UniformContinuous f) (a : α) : (completion.map f) a = f a
   cpkg.map_coe cpkg hf a
 
 theorem map_unique {f : α → β} {g : completion α → completion β} (hg : UniformContinuous g)
-  (h : ∀ a : α, «expr↑ » (f a) = g a) : completion.map f = g :=
+  (h : ∀ (a : α), «expr↑ » (f a) = g a) : completion.map f = g :=
   cpkg.map_unique cpkg hg h
 
 @[simp]
@@ -595,9 +597,16 @@ protected def map₂ (f : α → β → γ) : completion α → completion β �
 theorem uniform_continuous_map₂ (f : α → β → γ) : UniformContinuous₂ (completion.map₂ f) :=
   cpkg.uniform_continuous_map₂ cpkg cpkg f
 
-theorem continuous_map₂ {δ} [TopologicalSpace δ] {f : α → β → γ} {a : δ → completion α} {b : δ → completion β}
-  (ha : Continuous a) (hb : Continuous b) : Continuous fun d : δ => completion.map₂ f (a d) (b d) :=
-  cpkg.continuous_map₂ cpkg cpkg ha hb
+-- error in Topology.UniformSpace.Completion: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_map₂
+{δ}
+[topological_space δ]
+{f : α → β → γ}
+{a : δ → completion α}
+{b : δ → completion β}
+(ha : continuous a)
+(hb : continuous b) : continuous (λ d : δ, completion.map₂ f (a d) (b d)) :=
+cpkg.continuous_map₂ cpkg cpkg ha hb
 
 theorem map₂_coe_coe (a : α) (b : β) (f : α → β → γ) (hf : UniformContinuous₂ f) :
   completion.map₂ f (a : completion α) (b : completion β) = f a b :=

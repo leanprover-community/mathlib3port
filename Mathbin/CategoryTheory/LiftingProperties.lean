@@ -39,7 +39,7 @@ variable{X Y Z : C}
 This can be interpreted as the right lifting property of `i` with respect to `p`,
 or the left lifting property of `p` with respect to `i`. -/
 class has_lifting_property(i p : arrow C) : Prop where 
-  sq_has_lift : ∀ sq : i ⟶ p, arrow.has_lift sq
+  sq_has_lift : ∀ (sq : i ⟶ p), arrow.has_lift sq
 
 instance (priority := 100)has_lifting_property' {i p : arrow C} [has_lifting_property i p] (sq : i ⟶ p) :
   arrow.has_lift sq :=
@@ -103,12 +103,13 @@ def right_lifting_subcat.X {R : Type u} (x : right_lifting_subcat R) : R :=
   x
 
 theorem id_has_right_lifting_property' {F : D → arrow C} (X : C) :
-  ∀ i : D, has_lifting_property (F i) (arrow.mk (𝟙 X)) :=
+  ∀ (i : D), has_lifting_property (F i) (arrow.mk (𝟙 X)) :=
   fun i => id_has_right_lifting_property (F i)
 
 theorem has_right_lifting_property_comp' {F : D → arrow C} {f : X ⟶ Y}
-  (hf : ∀ i : D, has_lifting_property (F i) (arrow.mk f)) {g : Y ⟶ Z}
-  (hg : ∀ i : D, has_lifting_property (F i) (arrow.mk g)) : ∀ i : D, has_lifting_property (F i) (arrow.mk (f ≫ g)) :=
+  (hf : ∀ (i : D), has_lifting_property (F i) (arrow.mk f)) {g : Y ⟶ Z}
+  (hg : ∀ (i : D), has_lifting_property (F i) (arrow.mk g)) :
+  ∀ (i : D), has_lifting_property (F i) (arrow.mk (f ≫ g)) :=
   fun i => has_right_lifting_property_comp (hf i) (hg i)
 
 /-- Given a set of arrows in C, indexed by `F : D → arrow C`,

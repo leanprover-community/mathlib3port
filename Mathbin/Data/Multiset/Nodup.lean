@@ -32,7 +32,7 @@ theorem nodup_cons {a : α} {s : Multiset α} : nodup (a ::ₘ s) ↔ a ∉ s �
 theorem nodup_cons_of_nodup {a : α} {s : Multiset α} (m : a ∉ s) (n : nodup s) : nodup (a ::ₘ s) :=
   nodup_cons.2 ⟨m, n⟩
 
-theorem nodup_singleton : ∀ a : α, nodup ({a} : Multiset α) :=
+theorem nodup_singleton : ∀ (a : α), nodup ({a} : Multiset α) :=
   nodup_singleton
 
 theorem nodup_of_nodup_cons {a : α} {s : Multiset α} (h : nodup (a ::ₘ s)) : nodup s :=
@@ -44,10 +44,10 @@ theorem not_mem_of_nodup_cons {a : α} {s : Multiset α} (h : nodup (a ::ₘ s))
 theorem nodup_of_le {s t : Multiset α} (h : s ≤ t) : nodup t → nodup s :=
   le_induction_on h$ fun l₁ l₂ => nodup_of_sublist
 
-theorem not_nodup_pair : ∀ a : α, ¬nodup (a ::ₘ a ::ₘ 0) :=
+theorem not_nodup_pair : ∀ (a : α), ¬nodup (a ::ₘ a ::ₘ 0) :=
   not_nodup_pair
 
-theorem nodup_iff_le {s : Multiset α} : nodup s ↔ ∀ a : α, ¬a ::ₘ a ::ₘ 0 ≤ s :=
+theorem nodup_iff_le {s : Multiset α} : nodup s ↔ ∀ (a : α), ¬a ::ₘ a ::ₘ 0 ≤ s :=
   Quot.induction_on s$ fun l => nodup_iff_sublist.trans$ forall_congrₓ$ fun a => not_congr (@repeat_le_coe _ a 2 _).symm
 
 theorem nodup_iff_ne_cons_cons {s : Multiset α} : s.nodup ↔ ∀ a t, s ≠ a ::ₘ a ::ₘ t :=
@@ -74,11 +74,11 @@ theorem nodup_iff_pairwise {α} {s : Multiset α} : nodup s ↔ Pairwise (· ≠
             exact fun a b => Ne.symm)).symm
 
 theorem pairwise_of_nodup {r : α → α → Prop} {s : Multiset α} :
-  (∀ a _ : a ∈ s, ∀ b _ : b ∈ s, a ≠ b → r a b) → nodup s → Pairwise r s :=
+  (∀ a (_ : a ∈ s), ∀ b (_ : b ∈ s), a ≠ b → r a b) → nodup s → Pairwise r s :=
   Quotientₓ.induction_on s$ fun l h hl => ⟨l, rfl, hl.imp_of_mem$ fun a b ha hb => h a ha b hb⟩
 
 theorem forall_of_pairwise {r : α → α → Prop} (H : Symmetric r) {s : Multiset α} (hs : Pairwise r s) :
-  ∀ a _ : a ∈ s, ∀ b _ : b ∈ s, a ≠ b → r a b :=
+  ∀ a (_ : a ∈ s), ∀ b (_ : b ∈ s), a ≠ b → r a b :=
   let ⟨l, hl₁, hl₂⟩ := hs 
   hl₁.symm ▸ List.forall_of_pairwise H hl₂
 
@@ -96,18 +96,18 @@ theorem nodup_of_nodup_map (f : α → β) {s : Multiset α} : nodup (map f s) �
   Quot.induction_on s$ fun l => nodup_of_nodup_map f
 
 theorem nodup_map_on {f : α → β} {s : Multiset α} :
-  (∀ x _ : x ∈ s, ∀ y _ : y ∈ s, f x = f y → x = y) → nodup s → nodup (map f s) :=
+  (∀ x (_ : x ∈ s), ∀ y (_ : y ∈ s), f x = f y → x = y) → nodup s → nodup (map f s) :=
   Quot.induction_on s$ fun l => nodup_map_on
 
 theorem nodup_map {f : α → β} {s : Multiset α} (hf : Function.Injective f) : nodup s → nodup (map f s) :=
   nodup_map_on fun x _ y _ h => hf h
 
 theorem inj_on_of_nodup_map {f : α → β} {s : Multiset α} :
-  nodup (map f s) → ∀ x _ : x ∈ s y _ : y ∈ s, f x = f y → x = y :=
+  nodup (map f s) → ∀ x (_ : x ∈ s) y (_ : y ∈ s), f x = f y → x = y :=
   Quot.induction_on s$ fun l => inj_on_of_nodup_map
 
 theorem nodup_map_iff_inj_on {f : α → β} {s : Multiset α} (d : nodup s) :
-  nodup (map f s) ↔ ∀ x _ : x ∈ s y _ : y ∈ s, f x = f y → x = y :=
+  nodup (map f s) ↔ ∀ x (_ : x ∈ s) y (_ : y ∈ s), f x = f y → x = y :=
   ⟨inj_on_of_nodup_map, fun h => nodup_map_on h d⟩
 
 theorem nodup_filter (p : α → Prop) [DecidablePred p] {s} : nodup s → nodup (filter p s) :=
@@ -153,7 +153,7 @@ theorem nodup_sigma {σ : α → Type _} {s : Multiset α} {t : ∀ a, Multiset 
         rw [show t = fun a => f a from Eq.symm$ funext$ fun a => hf a]
         simpa using nodup_sigma
 
-theorem nodup_filter_map (f : α → Option β) {s : Multiset α} (H : ∀ a a' : α b : β, b ∈ f a → b ∈ f a' → a = a') :
+theorem nodup_filter_map (f : α → Option β) {s : Multiset α} (H : ∀ (a a' : α) (b : β), b ∈ f a → b ∈ f a' → a = a') :
   nodup s → nodup (filter_map f s) :=
   Quot.induction_on s$ fun l => nodup_filter_map H
 
@@ -190,7 +190,7 @@ theorem nodup_powerset_len {n : ℕ} {s : Multiset α} (h : nodup s) : nodup (po
 
 @[simp]
 theorem nodup_bind {s : Multiset α} {t : α → Multiset β} :
-  nodup (bind s t) ↔ (∀ a _ : a ∈ s, nodup (t a)) ∧ s.pairwise fun a b => Disjoint (t a) (t b) :=
+  nodup (bind s t) ↔ (∀ a (_ : a ∈ s), nodup (t a)) ∧ s.pairwise fun a b => Disjoint (t a) (t b) :=
   have h₁ : ∀ a, ∃ l : List β, t a = l := fun a => Quot.induction_on (t a)$ fun l => ⟨l, rfl⟩
   let ⟨t', h'⟩ := Classical.axiom_of_choice h₁ 
   have  : t = fun a => t' a := funext h' 
@@ -218,30 +218,32 @@ theorem mem_sub_of_nodup [DecidableEq α] {a : α} {s t : Multiset α} (d : nodu
                 exact le_transₓ (nodup_iff_count_le_one.1 d _) (count_pos.2 h')⟩,
     fun ⟨h₁, h₂⟩ => Or.resolve_right (mem_add.1$ mem_of_le le_tsub_add h₁) h₂⟩
 
-theorem map_eq_map_of_bij_of_nodup (f : α → γ) (g : β → γ) {s : Multiset α} {t : Multiset β} (hs : s.nodup)
-  (ht : t.nodup) (i : ∀ a _ : a ∈ s, β) (hi : ∀ a ha, i a ha ∈ t) (h : ∀ a ha, f a = g (i a ha))
-  (i_inj : ∀ a₁ a₂ ha₁ ha₂, i a₁ ha₁ = i a₂ ha₂ → a₁ = a₂) (i_surj : ∀ b _ : b ∈ t, ∃ a ha, b = i a ha) :
-  s.map f = t.map g :=
-  have  : t = s.attach.map fun x => i x.1 x.2 :=
-    (nodup_ext ht
-          (nodup_map
-            (show Function.Injective fun x : { x // x ∈ s } => i x.1 x.2 from
-              fun x y hxy => Subtype.eq (i_inj x.1 y.1 x.2 y.2 hxy))
-            (nodup_attach.2 hs))).2
-      fun x =>
-        by 
-          simp only [mem_map, true_andₓ, Subtype.exists, eq_comm, mem_attach] <;>
-            exact ⟨i_surj _, fun ⟨y, hy⟩ => hy.snd.symm ▸ hi _ _⟩
-  calc s.map f = s.pmap (fun x _ => f x) fun _ => id :=
-    by 
-      rw [pmap_eq_map]
-    _ = s.attach.map fun x => f x.1 :=
-    by 
-      rw [pmap_eq_map_attach]
-    _ = t.map g :=
-    by 
-      rw [this, Multiset.map_map] <;> exact map_congr fun x _ => h _ _
-    
+-- error in Data.Multiset.Nodup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem map_eq_map_of_bij_of_nodup
+(f : α → γ)
+(g : β → γ)
+{s : multiset α}
+{t : multiset β}
+(hs : s.nodup)
+(ht : t.nodup)
+(i : ∀ a «expr ∈ » s, β)
+(hi : ∀ a ha, «expr ∈ »(i a ha, t))
+(h : ∀ a ha, «expr = »(f a, g (i a ha)))
+(i_inj : ∀ a₁ a₂ ha₁ ha₂, «expr = »(i a₁ ha₁, i a₂ ha₂) → «expr = »(a₁, a₂))
+(i_surj : ∀ b «expr ∈ » t, «expr∃ , »((a ha), «expr = »(b, i a ha))) : «expr = »(s.map f, t.map g) :=
+have «expr = »(t, s.attach.map (λ
+  x, i x.1 x.2)), from (nodup_ext ht (nodup_map (show function.injective (λ
+    x : {x // «expr ∈ »(x, s)}, i x.1 x.2), from λ
+   x
+   y
+   hxy, subtype.eq (i_inj x.1 y.1 x.2 y.2 hxy)) (nodup_attach.2 hs))).2 (λ
+ x, by simp [] [] ["only"] ["[", expr mem_map, ",", expr true_and, ",", expr subtype.exists, ",", expr eq_comm, ",", expr mem_attach, "]"] [] []; exact [expr ⟨i_surj _, λ
+   ⟨y, hy⟩, «expr ▸ »(hy.snd.symm, hi _ _)⟩]),
+calc
+  «expr = »(s.map f, s.pmap (λ x _, f x) (λ _, id)) : by rw ["[", expr pmap_eq_map, "]"] []
+  «expr = »(..., s.attach.map (λ x, f x.1)) : by rw ["[", expr pmap_eq_map_attach, "]"] []
+  «expr = »(..., t.map g) : by rw ["[", expr this, ",", expr multiset.map_map, "]"] []; exact [expr map_congr (λ
+    x _, h _ _)]
 
 end Multiset
 

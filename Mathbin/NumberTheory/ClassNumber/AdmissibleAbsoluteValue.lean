@@ -38,7 +38,7 @@ elements whose remainders are pointwise close together. -/
 structure is_admissible extends is_euclidean abv where 
   card : ℝ → ℕ 
   exists_partition' :
-  ∀ n : ℕ {ε : ℝ} hε : 0 < ε {b : R} hb : b ≠ 0 A : Finₓ n → R,
+  ∀ (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0) (A : Finₓ n → R),
     ∃ t : Finₓ n → Finₓ (card ε), ∀ i₀ i₁, t i₀ = t i₁ → (abv (A i₁ % b - A i₀ % b) : ℝ) < abv b • ε
 
 attribute [protected] is_admissible.card

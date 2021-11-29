@@ -58,7 +58,7 @@ theorem prod_congr (f g : α → M) (h : ∀ a, f a = g a) : (∏a, f a) = ∏a,
   Finset.prod_congr rfl$ fun a ha => h a
 
 @[toAdditive]
-theorem prod_eq_single {f : α → M} (a : α) (h : ∀ x _ : x ≠ a, f x = 1) : (∏x, f x) = f a :=
+theorem prod_eq_single {f : α → M} (a : α) (h : ∀ x (_ : x ≠ a), f x = 1) : (∏x, f x) = f a :=
   (Finset.prod_eq_single a fun x _ hx => h x hx)$ fun ha => (ha (Finset.mem_univ a)).elim
 
 @[toAdditive]
@@ -70,7 +70,7 @@ theorem prod_eq_mul {f : α → M} (a b : α) (h₁ : a ≠ b) (h₂ : ∀ x, x 
 value, so do the terms in that product. -/
 @[toAdditive "If a sum of a `finset` of a subsingleton type has a given\nvalue, so do the terms in that sum."]
 theorem eq_of_subsingleton_of_prod_eq {ι : Type _} [Subsingleton ι] {s : Finset ι} {f : ι → M} {b : M}
-  (h : (∏i in s, f i) = b) : ∀ i _ : i ∈ s, f i = b :=
+  (h : (∏i in s, f i) = b) : ∀ i (_ : i ∈ s), f i = b :=
   Finset.eq_of_card_le_one_of_prod_eq (Finset.card_le_one_of_subsingleton s) h
 
 end 
@@ -223,7 +223,7 @@ prod_bij (λ
   `fintype.pi_finset`. `finset.prod_sum` is an alternative statement when the product is not
   over `univ` -/
 theorem Finset.prod_univ_sum [DecidableEq α] [Fintype α] [CommSemiringₓ β] {δ : α → Type u_1}
-  [∀ a : α, DecidableEq (δ a)] {t : ∀ a : α, Finset (δ a)} {f : ∀ a : α, δ a → β} :
+  [∀ (a : α), DecidableEq (δ a)] {t : ∀ (a : α), Finset (δ a)} {f : ∀ (a : α), δ a → β} :
   (∏a, ∑b in t a, f a b) = ∑p in Fintype.piFinset t, ∏x, f x (p x) :=
   by 
     simp only [Finset.prod_attach_univ, prod_sum, Finset.sum_univ_pi]
@@ -295,18 +295,24 @@ theorem Fintype.prod_fiberwise [Fintype α] [DecidableEq β] [Fintype β] [CommM
     rw [←(Equiv.sigmaPreimageEquiv f).prod_comp, ←univ_sigma_univ, prod_sigma]
     rfl
 
-theorem Fintype.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p] [CommMonoidₓ β] (f : ∀ a : α ha : p a, β)
-  (g : ∀ a : α ha : ¬p a, β) :
-  (∏a, dite (p a) (f a) (g a)) = (∏a : { a // p a }, f a a.2)*∏a : { a // ¬p a }, g a a.2 :=
-  by 
-    simp only [prod_dite, attach_eq_univ]
-    congr 1
-    ·
-      convert (Equiv.subtypeEquivRight _).prod_comp fun x : { x // p x } => f x x.2
-      simp 
-    ·
-      convert (Equiv.subtypeEquivRight _).prod_comp fun x : { x // ¬p x } => g x x.2
-      simp 
+-- error in Data.Fintype.Card: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem fintype.prod_dite
+[fintype α]
+{p : α → exprProp()}
+[decidable_pred p]
+[comm_monoid β]
+(f : ∀ (a : α) (ha : p a), β)
+(g : ∀
+ (a : α)
+ (ha : «expr¬ »(p a)), β) : «expr = »(«expr∏ , »((a), dite (p a) (f a) (g a)), «expr * »(«expr∏ , »((a : {a // p a}), f a a.2), «expr∏ , »((a : {a // «expr¬ »(p a)}), g a a.2))) :=
+begin
+  simp [] [] ["only"] ["[", expr prod_dite, ",", expr attach_eq_univ, "]"] [] [],
+  congr' [1] [],
+  { convert [] [expr (equiv.subtype_equiv_right _).prod_comp (λ x : {x // p x}, f x x.2)] [],
+    simp [] [] [] [] [] [] },
+  { convert [] [expr (equiv.subtype_equiv_right _).prod_comp (λ x : {x // «expr¬ »(p x)}, g x x.2)] [],
+    simp [] [] [] [] [] [] }
+end
 
 section 
 
@@ -377,7 +383,7 @@ begin
 end
 
 theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
-  ∀ L : List G, alternating_sum L = ∑i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nth_le i i.is_lt
+  ∀ (L : List G), alternating_sum L = ∑i : Finₓ L.length, (-1 : ℤ) ^ (i : ℕ) • L.nth_le i i.is_lt
 | [] =>
   by 
     rw [alternating_sum, Finset.sum_eq_zero]
@@ -400,7 +406,7 @@ theorem alternating_sum_eq_finset_sum {G : Type _} [AddCommGroupₓ G] :
 
 @[toAdditive]
 theorem alternating_prod_eq_finset_prod {G : Type _} [CommGroupₓ G] :
-  ∀ L : List G, alternating_prod L = ∏i : Finₓ L.length, L.nth_le i i.2 ^ (-1 : ℤ) ^ (i : ℕ)
+  ∀ (L : List G), alternating_prod L = ∏i : Finₓ L.length, L.nth_le i i.2 ^ (-1 : ℤ) ^ (i : ℕ)
 | [] =>
   by 
     rw [alternating_prod, Finset.prod_eq_one]

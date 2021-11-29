@@ -34,6 +34,7 @@ section HasSum
 
 variable[AddCommMonoidₓ α][TopologicalSpace α]
 
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Infinite sum on a topological monoid
 
 The `at_top` filter on `finset β` is the limit of all finite sets towards the entire type. So we sum
@@ -46,9 +47,8 @@ This is based on Mario Carneiro's
 
 For the definition or many statements, `α` does not need to be a topological monoid. We only add
 this assumption later, for the lemmas where it is relevant.
--/
-def HasSum (f : β → α) (a : α) : Prop :=
-  tendsto (fun s : Finset β => ∑b in s, f b) at_top (𝓝 a)
+-/ def has_sum (f : β → α) (a : α) : exprProp() :=
+tendsto (λ s : finset β, «expr∑ in , »((b), s, f b)) at_top (expr𝓝() a)
 
 /-- `summable f` means that `f` has some (infinite) sum. Use `tsum` to get the value. -/
 def Summable (f : β → α) : Prop :=
@@ -96,22 +96,22 @@ theorem Summable.congr (hf : Summable f) (hfg : ∀ b, f b = g b) : Summable g :
   (summable_congr hfg).mp hf
 
 theorem HasSum.has_sum_of_sum_eq {g : γ → α}
-  (h_eq : ∀ u : Finset γ, ∃ v : Finset β, ∀ v', v ⊆ v' → ∃ u', u ⊆ u' ∧ (∑x in u', g x) = ∑b in v', f b)
+  (h_eq : ∀ (u : Finset γ), ∃ v : Finset β, ∀ v', v ⊆ v' → ∃ u', u ⊆ u' ∧ (∑x in u', g x) = ∑b in v', f b)
   (hf : HasSum g a) : HasSum f a :=
   le_transₓ (map_at_top_finset_sum_le_of_sum_eq h_eq) hf
 
 theorem has_sum_iff_has_sum {g : γ → α}
-  (h₁ : ∀ u : Finset γ, ∃ v : Finset β, ∀ v', v ⊆ v' → ∃ u', u ⊆ u' ∧ (∑x in u', g x) = ∑b in v', f b)
-  (h₂ : ∀ v : Finset β, ∃ u : Finset γ, ∀ u', u ⊆ u' → ∃ v', v ⊆ v' ∧ (∑b in v', f b) = ∑x in u', g x) :
+  (h₁ : ∀ (u : Finset γ), ∃ v : Finset β, ∀ v', v ⊆ v' → ∃ u', u ⊆ u' ∧ (∑x in u', g x) = ∑b in v', f b)
+  (h₂ : ∀ (v : Finset β), ∃ u : Finset γ, ∀ u', u ⊆ u' → ∃ v', v ⊆ v' ∧ (∑b in v', f b) = ∑x in u', g x) :
   HasSum f a ↔ HasSum g a :=
   ⟨HasSum.has_sum_of_sum_eq h₂, HasSum.has_sum_of_sum_eq h₁⟩
 
-theorem Function.Injective.has_sum_iff {g : γ → β} (hg : injective g) (hf : ∀ x _ : x ∉ Set.Range g, f x = 0) :
+theorem Function.Injective.has_sum_iff {g : γ → β} (hg : injective g) (hf : ∀ x (_ : x ∉ Set.Range g), f x = 0) :
   HasSum (f ∘ g) a ↔ HasSum f a :=
   by 
     simp only [HasSum, tendsto, hg.map_at_top_finset_sum_eq hf]
 
-theorem Function.Injective.summable_iff {g : γ → β} (hg : injective g) (hf : ∀ x _ : x ∉ Set.Range g, f x = 0) :
+theorem Function.Injective.summable_iff {g : γ → β} (hg : injective g) (hf : ∀ x (_ : x ∉ Set.Range g), f x = 0) :
   Summable (f ∘ g) ↔ Summable f :=
   exists_congr$ fun _ => hg.has_sum_iff hf
 
@@ -147,13 +147,13 @@ protected theorem Set.Finite.summable {s : Set β} (hs : s.finite) (f : β → �
     convert hs.to_finset.summable f <;> simp only [hs.coe_to_finset]
 
 /-- If a function `f` vanishes outside of a finite set `s`, then it `has_sum` `∑ b in s, f b`. -/
-theorem has_sum_sum_of_ne_finset_zero (hf : ∀ b _ : b ∉ s, f b = 0) : HasSum f (∑b in s, f b) :=
+theorem has_sum_sum_of_ne_finset_zero (hf : ∀ b (_ : b ∉ s), f b = 0) : HasSum f (∑b in s, f b) :=
   (has_sum_subtype_iff_of_support_subset$ support_subset_iff'.2 hf).1$ s.has_sum f
 
-theorem summable_of_ne_finset_zero (hf : ∀ b _ : b ∉ s, f b = 0) : Summable f :=
+theorem summable_of_ne_finset_zero (hf : ∀ b (_ : b ∉ s), f b = 0) : Summable f :=
   (has_sum_sum_of_ne_finset_zero hf).Summable
 
-theorem has_sum_single {f : β → α} (b : β) (hf : ∀ b' _ : b' ≠ b, f b' = 0) : HasSum f (f b) :=
+theorem has_sum_single {f : β → α} (b : β) (hf : ∀ b' (_ : b' ≠ b), f b' = 0) : HasSum f (f b) :=
   suffices HasSum f (∑b' in {b}, f b')by 
     simpa using this 
   has_sum_sum_of_ne_finset_zero$
@@ -173,17 +173,20 @@ theorem Equiv.has_sum_iff (e : γ ≃ β) : HasSum (f ∘ e) a ↔ HasSum f a :=
     by 
       simp 
 
-theorem Function.Injective.has_sum_range_iff {g : γ → β} (hg : injective g) :
-  HasSum (fun x : Set.Range g => f x) a ↔ HasSum (f ∘ g) a :=
-  (Equiv.ofInjective g hg).has_sum_iff.symm
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem function.injective.has_sum_range_iff
+{g : γ → β}
+(hg : injective g) : «expr ↔ »(has_sum (λ x : set.range g, f x) a, has_sum «expr ∘ »(f, g) a) :=
+(equiv.of_injective g hg).has_sum_iff.symm
 
 theorem Equiv.summable_iff (e : γ ≃ β) : Summable (f ∘ e) ↔ Summable f :=
   exists_congr$ fun a => e.has_sum_iff
 
-theorem Summable.prod_symm {f : β × γ → α} (hf : Summable f) : Summable fun p : γ × β => f p.swap :=
-  (Equiv.prodComm γ β).summable_iff.2 hf
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable.prod_symm {f : «expr × »(β, γ) → α} (hf : summable f) : summable (λ p : «expr × »(γ, β), f p.swap) :=
+(equiv.prod_comm γ β).summable_iff.2 hf
 
-theorem Equiv.has_sum_iff_of_support {g : γ → α} (e : support f ≃ support g) (he : ∀ x : support f, g (e x) = f x) :
+theorem Equiv.has_sum_iff_of_support {g : γ → α} (e : support f ≃ support g) (he : ∀ (x : support f), g (e x) = f x) :
   HasSum f a ↔ HasSum g a :=
   have  : ((g ∘ coeₓ) ∘ e) = (f ∘ coeₓ) := funext he 
   by 
@@ -197,32 +200,50 @@ theorem has_sum_iff_has_sum_of_ne_zero_bij {g : γ → α} (i : support g → β
         ⟨fun x y h => Subtype.ext$ hi$ Subtype.ext_iff.1 h, fun y => (hf y.coe_prop).imp$ fun x hx => Subtype.ext hx⟩)
       hfg
 
-theorem Equiv.summable_iff_of_support {g : γ → α} (e : support f ≃ support g) (he : ∀ x : support f, g (e x) = f x) :
+theorem Equiv.summable_iff_of_support {g : γ → α} (e : support f ≃ support g) (he : ∀ (x : support f), g (e x) = f x) :
   Summable f ↔ Summable g :=
   exists_congr$ fun _ => e.has_sum_iff_of_support he
 
-protected theorem HasSum.map [AddCommMonoidₓ γ] [TopologicalSpace γ] (hf : HasSum f a) (g : α →+ γ)
-  (hg : Continuous g) : HasSum (g ∘ f) (g a) :=
-  have  : (g ∘ fun s : Finset β => ∑b in s, f b) = fun s : Finset β => ∑b in s, g (f b) := funext$ g.map_sum _ 
-  show tendsto (fun s : Finset β => ∑b in s, g (f b)) at_top (𝓝 (g a)) from this ▸ (hg.tendsto a).comp hf
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem has_sum.map
+[add_comm_monoid γ]
+[topological_space γ]
+(hf : has_sum f a)
+(g : «expr →+ »(α, γ))
+(hg : continuous g) : has_sum «expr ∘ »(g, f) (g a) :=
+have «expr = »(«expr ∘ »(g, λ
+  s : finset β, «expr∑ in , »((b), s, f b)), λ
+ s : finset β, «expr∑ in , »((b), s, g (f b))), from «expr $ »(funext, g.map_sum _),
+show tendsto (λ
+ s : finset β, «expr∑ in , »((b), s, g (f b))) at_top (expr𝓝() (g a)), from «expr ▸ »(this, (hg.tendsto a).comp hf)
 
 protected theorem Summable.map [AddCommMonoidₓ γ] [TopologicalSpace γ] (hf : Summable f) (g : α →+ γ)
   (hg : Continuous g) : Summable (g ∘ f) :=
   (hf.has_sum.map g hg).Summable
 
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `f : ℕ → α` has sum `a`, then the partial sums `∑_{i=0}^{n-1} f i` converge to `a`. -/
-theorem HasSum.tendsto_sum_nat {f : ℕ → α} (h : HasSum f a) : tendsto (fun n : ℕ => ∑i in range n, f i) at_top (𝓝 a) :=
-  h.comp tendsto_finset_range
+theorem has_sum.tendsto_sum_nat
+{f : exprℕ() → α}
+(h : has_sum f a) : tendsto (λ n : exprℕ(), «expr∑ in , »((i), range n, f i)) at_top (expr𝓝() a) :=
+h.comp tendsto_finset_range
 
 theorem HasSum.unique {a₁ a₂ : α} [T2Space α] : HasSum f a₁ → HasSum f a₂ → a₁ = a₂ :=
   tendsto_nhds_unique
 
-theorem Summable.has_sum_iff_tendsto_nat [T2Space α] {f : ℕ → α} {a : α} (hf : Summable f) :
-  HasSum f a ↔ tendsto (fun n : ℕ => ∑i in range n, f i) at_top (𝓝 a) :=
-  by 
-    refine' ⟨fun h => h.tendsto_sum_nat, fun h => _⟩
-    rw [tendsto_nhds_unique h hf.has_sum.tendsto_sum_nat]
-    exact hf.has_sum
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable.has_sum_iff_tendsto_nat
+[t2_space α]
+{f : exprℕ() → α}
+{a : α}
+(hf : summable f) : «expr ↔ »(has_sum f a, tendsto (λ
+  n : exprℕ(), «expr∑ in , »((i), range n, f i)) at_top (expr𝓝() a)) :=
+begin
+  refine [expr ⟨λ h, h.tendsto_sum_nat, λ h, _⟩],
+  rw [expr tendsto_nhds_unique h hf.has_sum.tendsto_sum_nat] [],
+  exact [expr hf.has_sum]
+end
 
 theorem Equiv.summable_iff_of_has_sum_iff {α' : Type _} [AddCommMonoidₓ α'] [TopologicalSpace α'] (e : α' ≃ α)
   {f : β → α} {g : γ → α'} (he : ∀ {a}, HasSum f (e a) ↔ HasSum g a) : Summable f ↔ Summable g :=
@@ -250,7 +271,7 @@ theorem has_sum_sum
 i «expr ∈ » s, has_sum (f i) (a i) → has_sum (λ b, «expr∑ in , »((i), s, f i b)) «expr∑ in , »((i), s, a i) :=
 finset.induction_on s (by simp [] [] ["only"] ["[", expr has_sum_zero, ",", expr sum_empty, ",", expr forall_true_iff, "]"] [] []) (by simp [] [] ["only"] ["[", expr has_sum.add, ",", expr sum_insert, ",", expr mem_insert, ",", expr forall_eq_or_imp, ",", expr forall_2_true_iff, ",", expr not_false_iff, ",", expr forall_true_iff, "]"] [] [] { contextual := tt })
 
-theorem summable_sum {f : γ → β → α} {s : Finset γ} (hf : ∀ i _ : i ∈ s, Summable (f i)) :
+theorem summable_sum {f : γ → β → α} {s : Finset γ} (hf : ∀ i (_ : i ∈ s), Summable (f i)) :
   Summable fun b => ∑i in s, f i b :=
   (has_sum_sum$ fun i hi => (hf i hi).HasSum).Summable
 
@@ -364,7 +385,7 @@ theorem tsum_zero : (∑'b : β, (0 : α)) = 0 :=
 theorem tsum_empty [IsEmpty β] : (∑'b, f b) = 0 :=
   has_sum_empty.tsum_eq
 
-theorem tsum_eq_sum {f : β → α} {s : Finset β} (hf : ∀ b _ : b ∉ s, f b = 0) : (∑'b, f b) = ∑b in s, f b :=
+theorem tsum_eq_sum {f : β → α} {s : Finset β} (hf : ∀ b (_ : b ∉ s), f b = 0) : (∑'b, f b) = ∑b in s, f b :=
   (has_sum_sum_of_ne_finset_zero hf).tsum_eq
 
 theorem tsum_congr {α β : Type _} [AddCommMonoidₓ α] [TopologicalSpace α] {f g : β → α} (hfg : ∀ b, f b = g b) :
@@ -386,7 +407,7 @@ theorem Finset.tsum_subtype (s : Finset β) (f : β → α) : (∑'x : { x // x 
 theorem Finset.tsum_subtype' (s : Finset β) (f : β → α) : (∑'x : (s : Set β), f x) = ∑x in s, f x :=
   s.tsum_subtype f
 
-theorem tsum_eq_single {f : β → α} (b : β) (hf : ∀ b' _ : b' ≠ b, f b' = 0) : (∑'b, f b) = f b :=
+theorem tsum_eq_single {f : β → α} (b : β) (hf : ∀ b' (_ : b' ≠ b), f b' = 0) : (∑'b, f b) = f b :=
   (has_sum_single b hf).tsum_eq
 
 @[simp]
@@ -403,13 +424,19 @@ theorem tsum_dite_left (P : Prop) [Decidable P] (x : β → P → α) :
   by 
     byCases' hP : P <;> simp [hP]
 
-theorem Equiv.tsum_eq_tsum_of_has_sum_iff_has_sum {α' : Type _} [AddCommMonoidₓ α'] [TopologicalSpace α'] (e : α' ≃ α)
-  (h0 : e 0 = 0) {f : β → α} {g : γ → α'} (h : ∀ {a}, HasSum f (e a) ↔ HasSum g a) : (∑'b, f b) = e (∑'c, g c) :=
-  by_cases (fun this : Summable g => (h.mpr this.has_sum).tsum_eq)
-    fun hg : ¬Summable g =>
-      have hf : ¬Summable f := mt (e.summable_iff_of_has_sum_iff @h).1 hg 
-      by 
-        simp [tsum, hf, hg, h0]
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem equiv.tsum_eq_tsum_of_has_sum_iff_has_sum
+{α' : Type*}
+[add_comm_monoid α']
+[topological_space α']
+(e : «expr ≃ »(α', α))
+(h0 : «expr = »(e 0, 0))
+{f : β → α}
+{g : γ → α'}
+(h : ∀ {a}, «expr ↔ »(has_sum f (e a), has_sum g a)) : «expr = »(«expr∑' , »((b), f b), e «expr∑' , »((c), g c)) :=
+by_cases (assume: summable g, (h.mpr this.has_sum).tsum_eq) (assume
+ hg : «expr¬ »(summable g), have hf : «expr¬ »(summable f), from mt (e.summable_iff_of_has_sum_iff @h).1 hg,
+ by simp [] [] [] ["[", expr tsum, ",", expr hf, ",", expr hg, ",", expr h0, "]"] [] [])
 
 theorem tsum_eq_tsum_of_has_sum_iff_has_sum {f : β → α} {g : γ → α} (h : ∀ {a}, HasSum f a ↔ HasSum g a) :
   (∑'b, f b) = ∑'c, g c :=
@@ -436,7 +463,7 @@ variable[HasContinuousAdd α]
 theorem tsum_add (hf : Summable f) (hg : Summable g) : (∑'b, f b+g b) = (∑'b, f b)+∑'b, g b :=
   (hf.has_sum.add hg.has_sum).tsum_eq
 
-theorem tsum_sum {f : γ → β → α} {s : Finset γ} (hf : ∀ i _ : i ∈ s, Summable (f i)) :
+theorem tsum_sum {f : γ → β → α} {s : Finset γ} (hf : ∀ i (_ : i ∈ s), Summable (f i)) :
   (∑'b, ∑i in s, f i b) = ∑i in s, ∑'b, f i b :=
   (has_sum_sum$ fun i hi => (hf i hi).HasSum).tsum_eq
 
@@ -511,14 +538,14 @@ theorem tsum_Union_decode₂ (m : Set β → α) (m0 : m ∅ = 0) (s : γ → Se
 
 /-- If a function is countably sub-additive then it is sub-additive on encodable types -/
 theorem rel_supr_tsum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
-  (m_supr : ∀ s : ℕ → β, R (m (⨆i, s i)) (∑'i, m (s i))) (s : γ → β) : R (m (⨆b : γ, s b)) (∑'b : γ, m (s b)) :=
+  (m_supr : ∀ (s : ℕ → β), R (m (⨆i, s i)) (∑'i, m (s i))) (s : γ → β) : R (m (⨆b : γ, s b)) (∑'b : γ, m (s b)) :=
   by 
     rw [←supr_decode₂, ←tsum_supr_decode₂ _ m0 s]
     exact m_supr _
 
 /-- If a function is countably sub-additive then it is sub-additive on finite sets -/
 theorem rel_supr_sum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
-  (m_supr : ∀ s : ℕ → β, R (m (⨆i, s i)) (∑'i, m (s i))) (s : δ → β) (t : Finset δ) :
+  (m_supr : ∀ (s : ℕ → β), R (m (⨆i, s i)) (∑'i, m (s i))) (s : δ → β) (t : Finset δ) :
   R (m (⨆(d : _)(_ : d ∈ t), s d)) (∑d in t, m (s d)) :=
   by 
     cases t.nonempty_encodable 
@@ -529,7 +556,7 @@ theorem rel_supr_sum [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : 
 
 /-- If a function is countably sub-additive then it is binary sub-additive -/
 theorem rel_sup_add [CompleteLattice β] (m : β → α) (m0 : m ⊥ = 0) (R : α → α → Prop)
-  (m_supr : ∀ s : ℕ → β, R (m (⨆i, s i)) (∑'i, m (s i))) (s₁ s₂ : β) : R (m (s₁⊔s₂)) (m s₁+m s₂) :=
+  (m_supr : ∀ (s : ℕ → β), R (m (⨆i, s i)) (∑'i, m (s i))) (s₁ s₂ : β) : R (m (s₁⊔s₂)) (m s₁+m s₂) :=
   by 
     convert rel_supr_tsum m m0 R m_supr fun b => cond b s₁ s₂
     ·
@@ -572,7 +599,7 @@ variable{ι : Type _}{π : α → Type _}[∀ x, AddCommMonoidₓ (π x)][∀ x,
 
 theorem Pi.has_sum {f : ι → ∀ x, π x} {g : ∀ x, π x} : HasSum f g ↔ ∀ x, HasSum (fun i => f i x) (g x) :=
   by 
-    simp only [HasSum, tendsto_pi, sum_apply]
+    simp only [HasSum, tendsto_pi_nhds, sum_apply]
 
 theorem Pi.summable {f : ι → ∀ x, π x} : Summable f ↔ ∀ x, Summable fun i => f i x :=
   by 
@@ -655,18 +682,25 @@ theorem Summable.summable_compl_iff {s : Set β} (hf : Summable (f ∘ coeₓ : 
   ⟨fun ⟨a, ha⟩ => (hf.has_sum.has_sum_compl_iff.1 ha).Summable,
     fun ⟨a, ha⟩ => (hf.has_sum.has_sum_iff_compl.1 ha).Summable⟩
 
-protected theorem Finset.has_sum_compl_iff (s : Finset β) :
-  HasSum (fun x : { x // x ∉ s } => f x) a ↔ HasSum f (a+∑i in s, f i) :=
-  (s.has_sum f).has_sum_compl_iff.trans$
-    by 
-      rw [add_commₓ]
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem finset.has_sum_compl_iff
+(s : finset β) : «expr ↔ »(has_sum (λ
+  x : {x // «expr ∉ »(x, s)}, f x) a, has_sum f «expr + »(a, «expr∑ in , »((i), s, f i))) :=
+«expr $ »((s.has_sum f).has_sum_compl_iff.trans, by rw ["[", expr add_comm, "]"] [])
 
-protected theorem Finset.has_sum_iff_compl (s : Finset β) :
-  HasSum f a ↔ HasSum (fun x : { x // x ∉ s } => f x) (a - ∑i in s, f i) :=
-  (s.has_sum f).has_sum_iff_compl
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem finset.has_sum_iff_compl
+(s : finset β) : «expr ↔ »(has_sum f a, has_sum (λ
+  x : {x // «expr ∉ »(x, s)}, f x) «expr - »(a, «expr∑ in , »((i), s, f i))) :=
+(s.has_sum f).has_sum_iff_compl
 
-protected theorem Finset.summable_compl_iff (s : Finset β) : (Summable fun x : { x // x ∉ s } => f x) ↔ Summable f :=
-  (s.summable f).summable_compl_iff
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem finset.summable_compl_iff
+(s : finset β) : «expr ↔ »(summable (λ x : {x // «expr ∉ »(x, s)}, f x), summable f) :=
+(s.summable f).summable_compl_iff
 
 theorem Set.Finite.summable_compl_iff {s : Set β} (hs : s.finite) : Summable (f ∘ coeₓ : «expr ᶜ» s → α) ↔ Summable f :=
   (hs.summable f).summable_compl_iff
@@ -908,10 +942,10 @@ theorem has_sum_le (h : ∀ b, f b ≤ g b) (hf : HasSum f a₁) (hg : HasSum g 
 theorem has_sum_mono (hf : HasSum f a₁) (hg : HasSum g a₂) (h : f ≤ g) : a₁ ≤ a₂ :=
   has_sum_le h hf hg
 
-theorem has_sum_le_of_sum_le (hf : HasSum f a) (h : ∀ s : Finset β, (∑b in s, f b) ≤ a₂) : a ≤ a₂ :=
+theorem has_sum_le_of_sum_le (hf : HasSum f a) (h : ∀ (s : Finset β), (∑b in s, f b) ≤ a₂) : a ≤ a₂ :=
   le_of_tendsto' hf h
 
-theorem le_has_sum_of_le_sum (hf : HasSum f a) (h : ∀ s : Finset β, a₂ ≤ ∑b in s, f b) : a₂ ≤ a :=
+theorem le_has_sum_of_le_sum (hf : HasSum f a) (h : ∀ (s : Finset β), a₂ ≤ ∑b in s, f b) : a₂ ≤ a :=
   ge_of_tendsto' hf h
 
 -- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -946,17 +980,20 @@ begin
     exact [expr hs _ h] }
 end
 
-theorem tsum_le_tsum_of_inj {g : γ → α} (i : β → γ) (hi : injective i) (hs : ∀ c _ : c ∉ Set.Range i, 0 ≤ g c)
+theorem tsum_le_tsum_of_inj {g : γ → α} (i : β → γ) (hi : injective i) (hs : ∀ c (_ : c ∉ Set.Range i), 0 ≤ g c)
   (h : ∀ b, f b ≤ g (i b)) (hf : Summable f) (hg : Summable g) : tsum f ≤ tsum g :=
   has_sum_le_inj i hi hs h hf.has_sum hg.has_sum
 
-theorem sum_le_has_sum (s : Finset β) (hs : ∀ b _ : b ∉ s, 0 ≤ f b) (hf : HasSum f a) : (∑b in s, f b) ≤ a :=
+theorem sum_le_has_sum (s : Finset β) (hs : ∀ b (_ : b ∉ s), 0 ≤ f b) (hf : HasSum f a) : (∑b in s, f b) ≤ a :=
   ge_of_tendsto hf (eventually_at_top.2 ⟨s, fun t hst => sum_le_sum_of_subset_of_nonneg hst$ fun b hbt hbs => hs b hbs⟩)
 
-theorem is_lub_has_sum (h : ∀ b, 0 ≤ f b) (hf : HasSum f a) : IsLub (Set.Range fun s : Finset β => ∑b in s, f b) a :=
-  is_lub_of_tendsto (Finset.sum_mono_set_of_nonneg h) hf
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_lub_has_sum
+(h : ∀ b, «expr ≤ »(0, f b))
+(hf : has_sum f a) : is_lub (set.range (λ s : finset β, «expr∑ in , »((b), s, f b))) a :=
+is_lub_of_tendsto (finset.sum_mono_set_of_nonneg h) hf
 
-theorem le_has_sum (hf : HasSum f a) (b : β) (hb : ∀ b' _ : b' ≠ b, 0 ≤ f b') : f b ≤ a :=
+theorem le_has_sum (hf : HasSum f a) (b : β) (hb : ∀ b' (_ : b' ≠ b), 0 ≤ f b') : f b ≤ a :=
   calc f b = ∑b in {b}, f b := Finset.sum_singleton.symm 
     _ ≤ a :=
     sum_le_has_sum _
@@ -966,11 +1003,11 @@ theorem le_has_sum (hf : HasSum f a) (b : β) (hb : ∀ b' _ : b' ≠ b, 0 ≤ f
       hf
     
 
-theorem sum_le_tsum {f : β → α} (s : Finset β) (hs : ∀ b _ : b ∉ s, 0 ≤ f b) (hf : Summable f) :
+theorem sum_le_tsum {f : β → α} (s : Finset β) (hs : ∀ b (_ : b ∉ s), 0 ≤ f b) (hf : Summable f) :
   (∑b in s, f b) ≤ ∑'b, f b :=
   sum_le_has_sum s hs hf.has_sum
 
-theorem le_tsum (hf : Summable f) (b : β) (hb : ∀ b' _ : b' ≠ b, 0 ≤ f b') : f b ≤ ∑'b, f b :=
+theorem le_tsum (hf : Summable f) (b : β) (hb : ∀ b' (_ : b' ≠ b), 0 ≤ f b') : f b ≤ ∑'b, f b :=
   le_has_sum (Summable.has_sum hf) b hb
 
 theorem tsum_le_tsum (h : ∀ b, f b ≤ g b) (hf : Summable f) (hg : Summable g) : (∑'b, f b) ≤ ∑'b, g b :=
@@ -980,10 +1017,10 @@ theorem tsum_le_tsum (h : ∀ b, f b ≤ g b) (hf : Summable f) (hg : Summable g
 theorem tsum_mono (hf : Summable f) (hg : Summable g) (h : f ≤ g) : (∑'n, f n) ≤ ∑'n, g n :=
   tsum_le_tsum h hf hg
 
-theorem tsum_le_of_sum_le (hf : Summable f) (h : ∀ s : Finset β, (∑b in s, f b) ≤ a₂) : (∑'b, f b) ≤ a₂ :=
+theorem tsum_le_of_sum_le (hf : Summable f) (h : ∀ (s : Finset β), (∑b in s, f b) ≤ a₂) : (∑'b, f b) ≤ a₂ :=
   has_sum_le_of_sum_le hf.has_sum h
 
-theorem tsum_le_of_sum_le' (ha₂ : 0 ≤ a₂) (h : ∀ s : Finset β, (∑b in s, f b) ≤ a₂) : (∑'b, f b) ≤ a₂ :=
+theorem tsum_le_of_sum_le' (ha₂ : 0 ≤ a₂) (h : ∀ (s : Finset β), (∑b in s, f b) ≤ a₂) : (∑'b, f b) ≤ a₂ :=
   by 
     byCases' hf : Summable f
     ·
@@ -1021,7 +1058,8 @@ section OrderedTopologicalGroup
 variable[OrderedAddCommGroup
       α][TopologicalSpace α][TopologicalAddGroup α][OrderClosedTopology α]{f g : β → α}{a₁ a₂ : α}
 
-theorem has_sum_lt {i : β} (h : ∀ b : β, f b ≤ g b) (hi : f i < g i) (hf : HasSum f a₁) (hg : HasSum g a₂) : a₁ < a₂ :=
+theorem has_sum_lt {i : β} (h : ∀ (b : β), f b ≤ g b) (hi : f i < g i) (hf : HasSum f a₁) (hg : HasSum g a₂) :
+  a₁ < a₂ :=
   have  : update f i 0 ≤ update g i 0 := update_le_update_iff.mpr ⟨rfl.le, fun i _ => h i⟩
   have  : ((0 - f i)+a₁) ≤ (0 - g i)+a₂ := has_sum_le this (hf.update i 0) (hg.update i 0)
   by 
@@ -1032,7 +1070,7 @@ theorem has_sum_strict_mono (hf : HasSum f a₁) (hg : HasSum g a₂) (h : f < g
   let ⟨hle, i, hi⟩ := Pi.lt_def.mp h 
   has_sum_lt hle hi hf hg
 
-theorem tsum_lt_tsum {i : β} (h : ∀ b : β, f b ≤ g b) (hi : f i < g i) (hf : Summable f) (hg : Summable g) :
+theorem tsum_lt_tsum {i : β} (h : ∀ (b : β), f b ≤ g b) (hi : f i < g i) (hf : Summable f) (hg : Summable g) :
   (∑'n, f n) < ∑'n, g n :=
   has_sum_lt h hi hf.has_sum hg.has_sum
 
@@ -1078,8 +1116,9 @@ theorem tsum_ne_zero_iff (hf : Summable f) : (∑'i, f i) ≠ 0 ↔ ∃ x, f x �
   by 
     rw [Ne.def, tsum_eq_zero_iff hf, not_forall]
 
-theorem is_lub_has_sum' (hf : HasSum f a) : IsLub (Set.Range fun s : Finset β => ∑b in s, f b) a :=
-  is_lub_of_tendsto (Finset.sum_mono_set f) hf
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_lub_has_sum' (hf : has_sum f a) : is_lub (set.range (λ s : finset β, «expr∑ in , »((b), s, f b))) a :=
+is_lub_of_tendsto (finset.sum_mono_set f) hf
 
 end CanonicallyOrdered
 
@@ -1087,9 +1126,11 @@ section UniformGroup
 
 variable[AddCommGroupₓ α][UniformSpace α]
 
-theorem summable_iff_cauchy_seq_finset [CompleteSpace α] {f : β → α} :
-  Summable f ↔ CauchySeq fun s : Finset β => ∑b in s, f b :=
-  cauchy_map_iff_exists_tendsto.symm
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_iff_cauchy_seq_finset
+[complete_space α]
+{f : β → α} : «expr ↔ »(summable f, cauchy_seq (λ s : finset β, «expr∑ in , »((b), s, f b))) :=
+cauchy_map_iff_exists_tendsto.symm
 
 variable[UniformAddGroup α]{f g : β → α}{a a₁ a₂ : α}
 
@@ -1154,7 +1195,7 @@ end
 variable[CompleteSpace α]
 
 theorem summable_iff_vanishing :
-  Summable f ↔ ∀ e _ : e ∈ 𝓝 (0 : α), ∃ s : Finset β, ∀ t, Disjoint t s → (∑b in t, f b) ∈ e :=
+  Summable f ↔ ∀ e (_ : e ∈ 𝓝 (0 : α)), ∃ s : Finset β, ∀ t, Disjoint t s → (∑b in t, f b) ∈ e :=
   by 
     rw [summable_iff_cauchy_seq_finset, cauchy_seq_finset_iff_vanishing]
 
@@ -1187,9 +1228,10 @@ theorem Summable.comp_injective {i : γ → β} (hf : Summable f) (hi : injectiv
 theorem Summable.subtype (hf : Summable f) (s : Set β) : Summable (f ∘ coeₓ : s → α) :=
   hf.comp_injective Subtype.coe_injective
 
-theorem summable_subtype_and_compl {s : Set β} :
-  ((Summable fun x : s => f x) ∧ Summable fun x : «expr ᶜ» s => f x) ↔ Summable f :=
-  ⟨and_imp.2 Summable.add_compl, fun h => ⟨h.subtype s, h.subtype («expr ᶜ» s)⟩⟩
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_subtype_and_compl
+{s : set β} : «expr ↔ »(«expr ∧ »(summable (λ x : s, f x), summable (λ x : «expr ᶜ»(s), f x)), summable f) :=
+⟨and_imp.2 summable.add_compl, λ h, ⟨h.subtype s, h.subtype «expr ᶜ»(s)⟩⟩
 
 theorem Summable.sigma_factor {γ : β → Type _} {f : (Σb : β, γ b) → α} (ha : Summable f) (b : β) :
   Summable fun c => f ⟨b, c⟩ :=
@@ -1282,21 +1324,25 @@ theorem has_sum_of_is_lub [CanonicallyLinearOrderedAddMonoid β] [TopologicalSpa
   (b : β) (hf : IsLub (Set.Range fun s => ∑a in s, f a) b) : HasSum f b :=
   tendsto_at_top_is_lub (Finset.sum_mono_set f) hf
 
-theorem summable_abs_iff [LinearOrderedAddCommGroup β] [UniformSpace β] [UniformAddGroup β] [CompleteSpace β]
-  {f : α → β} : (Summable fun x => |f x|) ↔ Summable f :=
-  have h1 : ∀ x : { x | 0 ≤ f x }, |f x| = f x := fun x => abs_of_nonneg x.2
-  have h2 : ∀ x : «expr ᶜ» { x | 0 ≤ f x }, |f x| = -f x := fun x => abs_of_neg (not_leₓ.1 x.2)
-  calc
-    (Summable fun x => |f x|) ↔
-      (Summable fun x : { x | 0 ≤ f x } => |f x|) ∧ Summable fun x : «expr ᶜ» { x | 0 ≤ f x } => |f x| :=
-    summable_subtype_and_compl.symm 
-    _ ↔ (Summable fun x : { x | 0 ≤ f x } => f x) ∧ Summable fun x : «expr ᶜ» { x | 0 ≤ f x } => -f x :=
-    by 
-      simp only [h1, h2]
-    _ ↔ _ :=
-    by 
-      simp only [summable_neg_iff, summable_subtype_and_compl]
-    
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_abs_iff
+[linear_ordered_add_comm_group β]
+[uniform_space β]
+[uniform_add_group β]
+[complete_space β]
+{f : α → β} : «expr ↔ »(summable (λ x, «expr| |»(f x)), summable f) :=
+have h1 : ∀ x : {x | «expr ≤ »(0, f x)}, «expr = »(«expr| |»(f x), f x) := λ x, abs_of_nonneg x.2,
+have h2 : ∀
+x : «expr ᶜ»({x | «expr ≤ »(0, f x)}), «expr = »(«expr| |»(f x), «expr- »(f x)) := λ x, abs_of_neg (not_le.1 x.2),
+calc
+  «expr ↔ »(summable (λ
+    x, «expr| |»(f x)), «expr ∧ »(summable (λ
+     x : {x | «expr ≤ »(0, f x)}, «expr| |»(f x)), summable (λ
+     x : «expr ᶜ»({x | «expr ≤ »(0, f x)}), «expr| |»(f x)))) : summable_subtype_and_compl.symm
+  «expr ↔ »(..., «expr ∧ »(summable (λ
+     x : {x | «expr ≤ »(0, f x)}, f x), summable (λ
+     x : «expr ᶜ»({x | «expr ≤ »(0, f x)}), «expr- »(f x)))) : by simp [] [] ["only"] ["[", expr h1, ",", expr h2, "]"] [] []
+  «expr ↔ »(..., _) : by simp [] [] ["only"] ["[", expr summable_neg_iff, ",", expr summable_subtype_and_compl, "]"] [] []
 
 alias summable_abs_iff ↔ Summable.of_abs Summable.abs
 
@@ -1403,22 +1449,35 @@ section tsum_mul_tsum
 
 variable[TopologicalSpace α][RegularSpace α][Semiringₓ α][TopologicalRing α]{f : β → α}{g : γ → α}{s t u : α}
 
-theorem HasSum.mul_eq (hf : HasSum f s) (hg : HasSum g t) (hfg : HasSum (fun x : β × γ => f x.1*g x.2) u) : (s*t) = u :=
-  have key₁ : HasSum (fun b => f b*t) (s*t) := hf.mul_right t 
-  have this : ∀ b : β, HasSum (fun c : γ => f b*g c) (f b*t) := fun b => hg.mul_left (f b)
-  have key₂ : HasSum (fun b => f b*t) u := HasSum.prod_fiberwise hfg this 
-  key₁.unique key₂
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_sum.mul_eq
+(hf : has_sum f s)
+(hg : has_sum g t)
+(hfg : has_sum (λ x : «expr × »(β, γ), «expr * »(f x.1, g x.2)) u) : «expr = »(«expr * »(s, t), u) :=
+have key₁ : has_sum (λ b, «expr * »(f b, t)) «expr * »(s, t), from hf.mul_right t,
+have this : ∀ b : β, has_sum (λ c : γ, «expr * »(f b, g c)) «expr * »(f b, t), from λ b, hg.mul_left (f b),
+have key₂ : has_sum (λ b, «expr * »(f b, t)) u, from has_sum.prod_fiberwise hfg this,
+key₁.unique key₂
 
-theorem HasSum.mul (hf : HasSum f s) (hg : HasSum g t) (hfg : Summable fun x : β × γ => f x.1*g x.2) :
-  HasSum (fun x : β × γ => f x.1*g x.2) (s*t) :=
-  let ⟨u, hu⟩ := hfg
-  (hf.mul_eq hg hu).symm ▸ hu
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_sum.mul
+(hf : has_sum f s)
+(hg : has_sum g t)
+(hfg : summable (λ
+  x : «expr × »(β, γ), «expr * »(f x.1, g x.2))) : has_sum (λ
+ x : «expr × »(β, γ), «expr * »(f x.1, g x.2)) «expr * »(s, t) :=
+let ⟨u, hu⟩ := hfg in
+«expr ▸ »((hf.mul_eq hg hu).symm, hu)
 
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Product of two infinites sums indexed by arbitrary types.
     See also `tsum_mul_tsum_of_summable_norm` if `f` and `g` are abolutely summable. -/
-theorem tsum_mul_tsum (hf : Summable f) (hg : Summable g) (hfg : Summable fun x : β × γ => f x.1*g x.2) :
-  ((∑'x, f x)*∑'y, g y) = ∑'z : β × γ, f z.1*g z.2 :=
-  hf.has_sum.mul_eq hg.has_sum hfg.has_sum
+theorem tsum_mul_tsum
+(hf : summable f)
+(hg : summable g)
+(hfg : summable (λ
+  x : «expr × »(β, γ), «expr * »(f x.1, g x.2))) : «expr = »(«expr * »(«expr∑' , »((x), f x), «expr∑' , »((y), g y)), «expr∑' , »((z : «expr × »(β, γ)), «expr * »(f z.1, g z.2))) :=
+hf.has_sum.mul_eq hg.has_sum hfg.has_sum
 
 end tsum_mul_tsum
 
@@ -1440,48 +1499,74 @@ open Finset
 
 variable[TopologicalSpace α][Semiringₓ α]
 
-theorem summable_mul_prod_iff_summable_mul_sigma_antidiagonal {f g : ℕ → α} :
-  (Summable fun x : ℕ × ℕ => f x.1*g x.2) ↔
-    Summable fun x : Σn : ℕ, nat.antidiagonal n => f (x.2 : ℕ × ℕ).1*g (x.2 : ℕ × ℕ).2 :=
-  nat.sigma_antidiagonal_equiv_prod.summable_iff.symm
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_mul_prod_iff_summable_mul_sigma_antidiagonal
+{f
+ g : exprℕ() → α} : «expr ↔ »(summable (λ
+  x : «expr × »(exprℕ(), exprℕ()), «expr * »(f x.1, g x.2)), summable (λ
+  x : «exprΣ , »((n : exprℕ()), nat.antidiagonal n), «expr * »(f (x.2 : «expr × »(exprℕ(), exprℕ())).1, g (x.2 : «expr × »(exprℕ(), exprℕ())).2))) :=
+nat.sigma_antidiagonal_equiv_prod.summable_iff.symm
 
 variable[RegularSpace α][TopologicalRing α]
 
-theorem summable_sum_mul_antidiagonal_of_summable_mul {f g : ℕ → α} (h : Summable fun x : ℕ × ℕ => f x.1*g x.2) :
-  Summable fun n => ∑kl in nat.antidiagonal n, f kl.1*g kl.2 :=
-  by 
-    rw [summable_mul_prod_iff_summable_mul_sigma_antidiagonal] at h 
-    conv  => congr ext rw [←Finset.sum_finset_coe, ←tsum_fintype]
-    exact h.sigma' fun n => (has_sum_fintype _).Summable
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_sum_mul_antidiagonal_of_summable_mul
+{f g : exprℕ() → α}
+(h : summable (λ
+  x : «expr × »(exprℕ(), exprℕ()), «expr * »(f x.1, g x.2))) : summable (λ
+ n, «expr∑ in , »((kl), nat.antidiagonal n, «expr * »(f kl.1, g kl.2))) :=
+begin
+  rw [expr summable_mul_prod_iff_summable_mul_sigma_antidiagonal] ["at", ident h],
+  conv [] [] { congr,
+    funext,
+    rw ["[", "<-", expr finset.sum_finset_coe, ",", "<-", expr tsum_fintype, "]"] },
+  exact [expr h.sigma' (λ n, (has_sum_fintype _).summable)]
+end
 
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The Cauchy product formula for the product of two infinites sums indexed by `ℕ`,
     expressed by summing on `finset.nat.antidiagonal`.
     See also `tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm`
     if `f` and `g` are absolutely summable. -/
-theorem tsum_mul_tsum_eq_tsum_sum_antidiagonal (hf : Summable f) (hg : Summable g)
-  (hfg : Summable fun x : ℕ × ℕ => f x.1*g x.2) :
-  ((∑'n, f n)*∑'n, g n) = ∑'n, ∑kl in nat.antidiagonal n, f kl.1*g kl.2 :=
-  by 
-    convRHS => congr ext rw [←Finset.sum_finset_coe, ←tsum_fintype]
-    rw [tsum_mul_tsum hf hg hfg, ←nat.sigma_antidiagonal_equiv_prod.tsum_eq (_ : ℕ × ℕ → α)]
-    exact
-      tsum_sigma' (fun n => (has_sum_fintype _).Summable) (summable_mul_prod_iff_summable_mul_sigma_antidiagonal.mp hfg)
+theorem tsum_mul_tsum_eq_tsum_sum_antidiagonal
+(hf : summable f)
+(hg : summable g)
+(hfg : summable (λ
+  x : «expr × »(exprℕ(), exprℕ()), «expr * »(f x.1, g x.2))) : «expr = »(«expr * »(«expr∑' , »((n), f n), «expr∑' , »((n), g n)), «expr∑' , »((n), «expr∑ in , »((kl), nat.antidiagonal n, «expr * »(f kl.1, g kl.2)))) :=
+begin
+  conv_rhs [] [] { congr,
+    funext,
+    rw ["[", "<-", expr finset.sum_finset_coe, ",", "<-", expr tsum_fintype, "]"] },
+  rw ["[", expr tsum_mul_tsum hf hg hfg, ",", "<-", expr nat.sigma_antidiagonal_equiv_prod.tsum_eq (_ : «expr × »(exprℕ(), exprℕ()) → α), "]"] [],
+  exact [expr tsum_sigma' (λ
+    n, (has_sum_fintype _).summable) (summable_mul_prod_iff_summable_mul_sigma_antidiagonal.mp hfg)]
+end
 
-theorem summable_sum_mul_range_of_summable_mul {f g : ℕ → α} (h : Summable fun x : ℕ × ℕ => f x.1*g x.2) :
-  Summable fun n => ∑k in range (n+1), f k*g (n - k) :=
-  by 
-    simpRw [←nat.sum_antidiagonal_eq_sum_range_succ fun k l => f k*g l]
-    exact summable_sum_mul_antidiagonal_of_summable_mul h
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem summable_sum_mul_range_of_summable_mul
+{f g : exprℕ() → α}
+(h : summable (λ
+  x : «expr × »(exprℕ(), exprℕ()), «expr * »(f x.1, g x.2))) : summable (λ
+ n, «expr∑ in , »((k), range «expr + »(n, 1), «expr * »(f k, g «expr - »(n, k)))) :=
+begin
+  simp_rw ["<-", expr nat.sum_antidiagonal_eq_sum_range_succ (λ k l, «expr * »(f k, g l))] [],
+  exact [expr summable_sum_mul_antidiagonal_of_summable_mul h]
+end
 
+-- error in Topology.Algebra.InfiniteSum: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The Cauchy product formula for the product of two infinites sums indexed by `ℕ`,
     expressed by summing on `finset.range`.
     See also `tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm`
     if `f` and `g` are absolutely summable. -/
-theorem tsum_mul_tsum_eq_tsum_sum_range (hf : Summable f) (hg : Summable g)
-  (hfg : Summable fun x : ℕ × ℕ => f x.1*g x.2) : ((∑'n, f n)*∑'n, g n) = ∑'n, ∑k in range (n+1), f k*g (n - k) :=
-  by 
-    simpRw [←nat.sum_antidiagonal_eq_sum_range_succ fun k l => f k*g l]
-    exact tsum_mul_tsum_eq_tsum_sum_antidiagonal hf hg hfg
+theorem tsum_mul_tsum_eq_tsum_sum_range
+(hf : summable f)
+(hg : summable g)
+(hfg : summable (λ
+  x : «expr × »(exprℕ(), exprℕ()), «expr * »(f x.1, g x.2))) : «expr = »(«expr * »(«expr∑' , »((n), f n), «expr∑' , »((n), g n)), «expr∑' , »((n), «expr∑ in , »((k), range «expr + »(n, 1), «expr * »(f k, g «expr - »(n, k))))) :=
+begin
+  simp_rw ["<-", expr nat.sum_antidiagonal_eq_sum_range_succ (λ k l, «expr * »(f k, g l))] [],
+  exact [expr tsum_mul_tsum_eq_tsum_sum_antidiagonal hf hg hfg]
+end
 
 end CauchyProduct
 

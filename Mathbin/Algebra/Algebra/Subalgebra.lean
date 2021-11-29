@@ -1,5 +1,6 @@
 import Mathbin.Algebra.Algebra.Operations 
-import Mathbin.Data.Set.UnionLift
+import Mathbin.Data.Set.UnionLift 
+import Mathbin.RingTheory.Subring.Pointwise
 
 /-!
 # Subalgebras over Commutative Semiring
@@ -45,7 +46,7 @@ theorem mem_carrier {s : Subalgebra R A} {x : A} : x ∈ s.carrier ↔ x ∈ s :
   Iff.rfl
 
 @[ext]
-theorem ext {S T : Subalgebra R A} (h : ∀ x : A, x ∈ S ↔ x ∈ T) : S = T :=
+theorem ext {S T : Subalgebra R A} (h : ∀ (x : A), x ∈ S ↔ x ∈ T) : S = T :=
   SetLike.ext h
 
 @[simp]
@@ -114,7 +115,7 @@ theorem nsmul_mem {x : A} (hx : x ∈ S) (n : ℕ) : n • x ∈ S :=
   S.to_subsemiring.nsmul_mem hx n
 
 theorem zsmul_mem {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algebra R A] (S : Subalgebra R A) {x : A}
-  (hx : x ∈ S) : ∀ n : ℤ, n • x ∈ S
+  (hx : x ∈ S) : ∀ (n : ℤ), n • x ∈ S
 | (n : ℕ) =>
   by 
     rw [coe_nat_zsmul]
@@ -131,24 +132,24 @@ theorem coe_int_mem {R : Type u} {A : Type v} [CommRingₓ R] [Ringₓ A] [Algeb
   (n : A) ∈ S :=
   Int.casesOn n (fun i => S.coe_nat_mem i) fun i => S.neg_mem$ S.coe_nat_mem$ i+1
 
-theorem list_prod_mem {L : List A} (h : ∀ x _ : x ∈ L, x ∈ S) : L.prod ∈ S :=
+theorem list_prod_mem {L : List A} (h : ∀ x (_ : x ∈ L), x ∈ S) : L.prod ∈ S :=
   S.to_subsemiring.list_prod_mem h
 
-theorem list_sum_mem {L : List A} (h : ∀ x _ : x ∈ L, x ∈ S) : L.sum ∈ S :=
+theorem list_sum_mem {L : List A} (h : ∀ x (_ : x ∈ L), x ∈ S) : L.sum ∈ S :=
   S.to_subsemiring.list_sum_mem h
 
 theorem multiset_prod_mem {R : Type u} {A : Type v} [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A]
-  (S : Subalgebra R A) {m : Multiset A} (h : ∀ x _ : x ∈ m, x ∈ S) : m.prod ∈ S :=
+  (S : Subalgebra R A) {m : Multiset A} (h : ∀ x (_ : x ∈ m), x ∈ S) : m.prod ∈ S :=
   S.to_subsemiring.multiset_prod_mem m h
 
-theorem multiset_sum_mem {m : Multiset A} (h : ∀ x _ : x ∈ m, x ∈ S) : m.sum ∈ S :=
+theorem multiset_sum_mem {m : Multiset A} (h : ∀ x (_ : x ∈ m), x ∈ S) : m.sum ∈ S :=
   S.to_subsemiring.multiset_sum_mem m h
 
 theorem prod_mem {R : Type u} {A : Type v} [CommSemiringₓ R] [CommSemiringₓ A] [Algebra R A] (S : Subalgebra R A)
-  {ι : Type w} {t : Finset ι} {f : ι → A} (h : ∀ x _ : x ∈ t, f x ∈ S) : (∏x in t, f x) ∈ S :=
+  {ι : Type w} {t : Finset ι} {f : ι → A} (h : ∀ x (_ : x ∈ t), f x ∈ S) : (∏x in t, f x) ∈ S :=
   S.to_subsemiring.prod_mem h
 
-theorem sum_mem {ι : Type w} {t : Finset ι} {f : ι → A} (h : ∀ x _ : x ∈ t, f x ∈ S) : (∑x in t, f x) ∈ S :=
+theorem sum_mem {ι : Type w} {t : Finset ι} {f : ι → A} (h : ∀ x (_ : x ∈ t), f x ∈ S) : (∑x in t, f x) ∈ S :=
   S.to_subsemiring.sum_mem h
 
 /-- The projection from a subalgebra of `A` to an additive submonoid of `A`. -/
@@ -623,7 +624,7 @@ theorem inf_to_subsemiring (S T : Subalgebra R A) : (S⊓T).toSubsemiring = S.to
 theorem coe_Inf (S : Set (Subalgebra R A)) : («expr↑ » (Inf S) : Set A) = ⋂(s : _)(_ : s ∈ S), «expr↑ » s :=
   Inf_image
 
-theorem mem_Inf {S : Set (Subalgebra R A)} {x : A} : x ∈ Inf S ↔ ∀ p _ : p ∈ S, x ∈ p :=
+theorem mem_Inf {S : Set (Subalgebra R A)} {x : A} : x ∈ Inf S ↔ ∀ p (_ : p ∈ S), x ∈ p :=
   by 
     simp only [←SetLike.mem_coe, coe_Inf, Set.mem_bInter_iff]
 
@@ -673,7 +674,7 @@ theorem coe_bot : ((⊥ : Subalgebra R A) : Set A) = Set.Range (algebraMap R A) 
   by 
     simp [Set.ext_iff, Algebra.mem_bot]
 
-theorem eq_top_iff {S : Subalgebra R A} : S = ⊤ ↔ ∀ x : A, x ∈ S :=
+theorem eq_top_iff {S : Subalgebra R A} : S = ⊤ ↔ ∀ (x : A), x ∈ S :=
   ⟨fun h x =>
       by 
         rw [h] <;> exact mem_top,
@@ -917,7 +918,7 @@ theorem coe_supr_of_directed [Nonempty ι] {S : ι → Subalgebra R A} (dir : Di
 /-- Define an algebra homomorphism on a directed supremum of subalgebras by defining
 it on each subalgebra, and proving that it agrees on the intersection of subalgebras. -/
 noncomputable def supr_lift [Nonempty ι] (K : ι → Subalgebra R A) (dir : Directed (· ≤ ·) K) (f : ∀ i, K i →ₐ[R] B)
-  (hf : ∀ i j : ι h : K i ≤ K j, f i = (f j).comp (inclusion h)) (T : Subalgebra R A) (hT : T = supr K) :
+  (hf : ∀ (i j : ι) (h : K i ≤ K j), f i = (f j).comp (inclusion h)) (T : Subalgebra R A) (hT : T = supr K) :
   «expr↥ » T →ₐ[R] B :=
   by 
     subst hT <;>
@@ -962,7 +963,9 @@ variable[Nonempty
         A}{dir :
     Directed (· ≤ ·)
       K}{f :
-    ∀ i, K i →ₐ[R] B}{hf : ∀ i j : ι h : K i ≤ K j, f i = (f j).comp (inclusion h)}{T : Subalgebra R A}{hT : T = supr K}
+    ∀ i,
+      K i →ₐ[R]
+        B}{hf : ∀ (i j : ι) (h : K i ≤ K j), f i = (f j).comp (inclusion h)}{T : Subalgebra R A}{hT : T = supr K}
 
 @[simp]
 theorem supr_lift_inclusion {i : ι} (x : K i) (h : K i ≤ T) : supr_lift K dir f hf T hT (inclusion h x) = f i x :=

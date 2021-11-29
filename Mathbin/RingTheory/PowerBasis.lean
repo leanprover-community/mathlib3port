@@ -61,9 +61,11 @@ structure PowerBasis(R S : Type _)[CommRingₓ R][Ringₓ S][Algebra R S] where
 
 namespace PowerBasis
 
+-- error in RingTheory.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem coe_basis (pb : PowerBasis R S) : «expr⇑ » pb.basis = fun i : Finₓ pb.dim => pb.gen^(i : ℕ) :=
-  funext pb.basis_eq_pow
+theorem coe_basis
+(pb : power_basis R S) : «expr = »(«expr⇑ »(pb.basis), λ i : fin pb.dim, «expr ^ »(pb.gen, (i : exprℕ()))) :=
+funext pb.basis_eq_pow
 
 /-- Cannot be an instance because `power_basis` cannot be a class. -/
 theorem FiniteDimensional [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional K S :=
@@ -89,21 +91,21 @@ begin
   exact [expr iff.rfl]
 end
 
-theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
-  y ∈ Submodule.span R (Set.Range fun i : Finₓ d => x^(i : ℕ)) ↔ ∃ f : Polynomial R, f.nat_degree < d ∧ y = aeval x f :=
-  by 
-    rw [mem_span_pow']
-    split  <;>
-      ·
-        rintro ⟨f, h, hy⟩
-        refine' ⟨f, _, hy⟩
-        byCases' hf : f = 0
-        ·
-          simp only [hf, nat_degree_zero, degree_zero] at h⊢
-          first |
-            exact lt_of_le_of_neₓ (Nat.zero_leₓ d) hd.symm|
-            exact WithBot.bot_lt_coe d 
-        simpa only [degree_eq_nat_degree hf, WithBot.coe_lt_coe] using h
+-- error in RingTheory.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_span_pow
+{x y : S}
+{d : exprℕ()}
+(hd : «expr ≠ »(d, 0)) : «expr ↔ »(«expr ∈ »(y, submodule.span R (set.range (λ
+    i : fin d, «expr ^ »(x, (i : exprℕ()))))), «expr∃ , »((f : polynomial R), «expr ∧ »(«expr < »(f.nat_degree, d), «expr = »(y, aeval x f)))) :=
+begin
+  rw [expr mem_span_pow'] [],
+  split; { rintros ["⟨", ident f, ",", ident h, ",", ident hy, "⟩"],
+    refine [expr ⟨f, _, hy⟩],
+    by_cases [expr hf, ":", expr «expr = »(f, 0)],
+    { simp [] [] ["only"] ["[", expr hf, ",", expr nat_degree_zero, ",", expr degree_zero, "]"] [] ["at", ident h, "⊢"],
+      exact [expr lt_of_le_of_ne (nat.zero_le d) hd.symm] <|> exact [expr with_bot.bot_lt_coe d] },
+    simpa [] [] ["only"] ["[", expr degree_eq_nat_degree hf, ",", expr with_bot.coe_lt_coe, "]"] [] ["using", expr h] }
+end
 
 theorem dim_ne_zero [h : Nontrivial S] (pb : PowerBasis R S) : pb.dim ≠ 0 :=
   fun h => not_nonempty_iff.mpr (h.symm ▸ Finₓ.is_empty : IsEmpty (Finₓ pb.dim)) pb.basis.index_nonempty
@@ -240,7 +242,7 @@ end
 
 variable[IsDomain A]
 
--- error in RingTheory.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.PowerBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem constr_pow_aeval
 (pb : power_basis A S)
 {y : S'}

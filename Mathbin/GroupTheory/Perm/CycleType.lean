@@ -42,8 +42,8 @@ def cycle_type (σ : perm α) : Multiset ℕ :=
 theorem cycle_type_def (σ : perm α) : σ.cycle_type = σ.cycle_factors_finset.1.map (Finset.card ∘ support) :=
   rfl
 
-theorem cycle_type_eq' {σ : perm α} (s : Finset (perm α)) (h1 : ∀ f : perm α, f ∈ s → f.is_cycle)
-  (h2 : ∀ a _ : a ∈ s b _ : b ∈ s, a ≠ b → Disjoint a b)
+theorem cycle_type_eq' {σ : perm α} (s : Finset (perm α)) (h1 : ∀ (f : perm α), f ∈ s → f.is_cycle)
+  (h2 : ∀ a (_ : a ∈ s) b (_ : b ∈ s), a ≠ b → Disjoint a b)
   (h0 :
     (s.noncomm_prod id
         fun a ha b hb =>
@@ -118,18 +118,21 @@ theorem disjoint.cycle_type {σ τ : perm α} (h : Disjoint σ τ) : (σ*τ).cyc
     rw [←Finset.disjoint_val]
     exact h.disjoint_cycle_factors_finset
 
-theorem cycle_type_inv (σ : perm α) : σ⁻¹.cycleType = σ.cycle_type :=
-  cycle_induction_on (fun τ : perm α => τ⁻¹.cycleType = τ.cycle_type) σ rfl
-    (fun σ hσ =>
-      by 
-        rw [hσ.cycle_type, hσ.inv.cycle_type, support_inv])
-    fun σ τ hστ hc hσ hτ =>
-      by 
-        rw [mul_inv_rev, hστ.cycle_type, ←hσ, ←hτ, add_commₓ,
-          disjoint.cycle_type
-            fun x =>
-              Or.imp (fun h : τ x = x => inv_eq_iff_eq.mpr h.symm) (fun h : σ x = x => inv_eq_iff_eq.mpr h.symm)
-                (hστ x).symm]
+-- error in GroupTheory.Perm.CycleType: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cycle_type_inv (σ : perm α) : «expr = »(«expr ⁻¹»(σ).cycle_type, σ.cycle_type) :=
+cycle_induction_on (λ
+ τ : perm α, «expr = »(«expr ⁻¹»(τ).cycle_type, τ.cycle_type)) σ rfl (λ
+ σ
+ hσ, by rw ["[", expr hσ.cycle_type, ",", expr hσ.inv.cycle_type, ",", expr support_inv, "]"] []) (λ
+ σ
+ τ
+ hστ
+ hc
+ hσ
+ hτ, by rw ["[", expr mul_inv_rev, ",", expr hστ.cycle_type, ",", "<-", expr hσ, ",", "<-", expr hτ, ",", expr add_comm, ",", expr disjoint.cycle_type (λ
+   x, or.imp (λ
+    h : «expr = »(τ x, x), inv_eq_iff_eq.mpr h.symm) (λ
+    h : «expr = »(σ x, x), inv_eq_iff_eq.mpr h.symm) (hστ x).symm), "]"] [])
 
 theorem cycle_type_conj {σ τ : perm α} : ((τ*σ)*τ⁻¹).cycleType = σ.cycle_type :=
   by 
@@ -150,38 +153,47 @@ theorem cycle_type_conj {σ τ : perm α} : ((τ*σ)*τ⁻¹).cycleType = σ.cyc
           intro h 
           rw [perm.mul_apply, perm.mul_apply, h, apply_inv_self]
 
-theorem sum_cycle_type (σ : perm α) : σ.cycle_type.sum = σ.support.card :=
-  cycle_induction_on (fun τ : perm α => τ.cycle_type.sum = τ.support.card) σ
-    (by 
-      rw [cycle_type_one, sum_zero, support_one, Finset.card_empty])
-    (fun σ hσ =>
-      by 
-        rw [hσ.cycle_type, coe_sum, List.sum_singleton])
-    fun σ τ hστ hc hσ hτ =>
-      by 
-        rw [hστ.cycle_type, sum_add, hσ, hτ, hστ.card_support_mul]
+-- error in GroupTheory.Perm.CycleType: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sum_cycle_type (σ : perm α) : «expr = »(σ.cycle_type.sum, σ.support.card) :=
+cycle_induction_on (λ
+ τ : perm α, «expr = »(τ.cycle_type.sum, τ.support.card)) σ (by rw ["[", expr cycle_type_one, ",", expr sum_zero, ",", expr support_one, ",", expr finset.card_empty, "]"] []) (λ
+ σ
+ hσ, by rw ["[", expr hσ.cycle_type, ",", expr coe_sum, ",", expr list.sum_singleton, "]"] []) (λ
+ σ
+ τ
+ hστ
+ hc
+ hσ
+ hτ, by rw ["[", expr hστ.cycle_type, ",", expr sum_add, ",", expr hσ, ",", expr hτ, ",", expr hστ.card_support_mul, "]"] [])
 
-theorem sign_of_cycle_type (σ : perm α) : sign σ = (σ.cycle_type.map fun n => -((-1 : Units ℤ)^n)).Prod :=
-  cycle_induction_on (fun τ : perm α => sign τ = (τ.cycle_type.map fun n => -((-1 : Units ℤ)^n)).Prod) σ
-    (by 
-      rw [sign_one, cycle_type_one, map_zero, prod_zero])
-    (fun σ hσ =>
-      by 
-        rw [hσ.sign, hσ.cycle_type, coe_map, coe_prod, List.map_singleton, List.prod_singleton])
-    fun σ τ hστ hc hσ hτ =>
-      by 
-        rw [sign_mul, hσ, hτ, hστ.cycle_type, map_add, prod_add]
+-- error in GroupTheory.Perm.CycleType: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sign_of_cycle_type
+(σ : perm α) : «expr = »(sign σ, (σ.cycle_type.map (λ
+   n, «expr- »(«expr ^ »((«expr- »(1) : units exprℤ()), n)))).prod) :=
+cycle_induction_on (λ
+ τ : perm α, «expr = »(sign τ, (τ.cycle_type.map (λ
+    n, «expr- »(«expr ^ »((«expr- »(1) : units exprℤ()), n)))).prod)) σ (by rw ["[", expr sign_one, ",", expr cycle_type_one, ",", expr map_zero, ",", expr prod_zero, "]"] []) (λ
+ σ
+ hσ, by rw ["[", expr hσ.sign, ",", expr hσ.cycle_type, ",", expr coe_map, ",", expr coe_prod, ",", expr list.map_singleton, ",", expr list.prod_singleton, "]"] []) (λ
+ σ
+ τ
+ hστ
+ hc
+ hσ
+ hτ, by rw ["[", expr sign_mul, ",", expr hσ, ",", expr hτ, ",", expr hστ.cycle_type, ",", expr map_add, ",", expr prod_add, "]"] [])
 
-theorem lcm_cycle_type (σ : perm α) : σ.cycle_type.lcm = orderOf σ :=
-  cycle_induction_on (fun τ : perm α => τ.cycle_type.lcm = orderOf τ) σ
-    (by 
-      rw [cycle_type_one, lcm_zero, order_of_one])
-    (fun σ hσ =>
-      by 
-        rw [hσ.cycle_type, ←singleton_coe, ←singleton_eq_cons, lcm_singleton, order_of_is_cycle hσ, normalize_eq])
-    fun σ τ hστ hc hσ hτ =>
-      by 
-        rw [hστ.cycle_type, lcm_add, lcm_eq_nat_lcm, hστ.order_of, hσ, hτ]
+-- error in GroupTheory.Perm.CycleType: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lcm_cycle_type (σ : perm α) : «expr = »(σ.cycle_type.lcm, order_of σ) :=
+cycle_induction_on (λ
+ τ : perm α, «expr = »(τ.cycle_type.lcm, order_of τ)) σ (by rw ["[", expr cycle_type_one, ",", expr lcm_zero, ",", expr order_of_one, "]"] []) (λ
+ σ
+ hσ, by rw ["[", expr hσ.cycle_type, ",", "<-", expr singleton_coe, ",", "<-", expr singleton_eq_cons, ",", expr lcm_singleton, ",", expr order_of_is_cycle hσ, ",", expr normalize_eq, "]"] []) (λ
+ σ
+ τ
+ hστ
+ hc
+ hσ
+ hτ, by rw ["[", expr hστ.cycle_type, ",", expr lcm_add, ",", expr lcm_eq_nat_lcm, ",", expr hστ.order_of, ",", expr hσ, ",", expr hτ, "]"] [])
 
 theorem dvd_of_mem_cycle_type {σ : perm α} {n : ℕ} (h : n ∈ σ.cycle_type) : n ∣ orderOf σ :=
   by 

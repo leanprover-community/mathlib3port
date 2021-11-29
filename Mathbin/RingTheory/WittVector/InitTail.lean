@@ -105,7 +105,7 @@ theorem select_is_poly (P : ℕ → Prop) :
 
 include hp
 
-theorem select_add_select_not : ∀ x : 𝕎 R, (select P x+select (fun i => ¬P i) x) = x :=
+theorem select_add_select_not : ∀ (x : 𝕎 R), (select P x+select (fun i => ¬P i) x) = x :=
   by 
     ghostCalc _ 
     intro n 

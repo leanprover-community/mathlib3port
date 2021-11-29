@@ -95,7 +95,8 @@ theorem count_cons_self (a : α) (l : List α) : count a (a :: l) = succ (count 
 theorem count_cons_of_ne {a b : α} (h : a ≠ b) (l : List α) : count a (b :: l) = count a l :=
   if_neg h
 
-theorem count_tail : ∀ l : List α a : α h : 0 < l.length, l.tail.count a = l.count a - ite (a = List.nthLe l 0 h) 1 0
+theorem count_tail :
+  ∀ (l : List α) (a : α) (h : 0 < l.length), l.tail.count a = l.count a - ite (a = List.nthLe l 0 h) 1 0
 | _ :: _, a, h =>
   by 
     rw [count_cons]
@@ -181,24 +182,21 @@ theorem count_map_map {α β} [DecidableEq α] [DecidableEq β] (l : List α) (f
       ·
         simpa [h, hf.ne h] using IH _
 
-@[simp]
-theorem count_erase_self (a : α) : ∀ s : List α, count a (List.eraseₓ s a) = pred (count a s)
-| [] =>
-  by 
-    simp 
-| h :: t =>
-  by 
-    rw [erase_cons]
-    byCases' p : h = a
-    ·
-      rw [if_pos p, count_cons', if_pos p.symm]
-      simp 
-    ·
-      rw [if_neg p, count_cons', count_cons', if_neg fun x : a = h => p x.symm, count_erase_self]
-      simp 
+-- error in Data.List.Count: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem count_erase_self (a : α) : ∀ s : list α, «expr = »(count a (list.erase s a), pred (count a s))
+| «expr[ , ]»([]) := by simp [] [] [] [] [] []
+| «expr :: »(h, t) := begin
+  rw [expr erase_cons] [],
+  by_cases [expr p, ":", expr «expr = »(h, a)],
+  { rw ["[", expr if_pos p, ",", expr count_cons', ",", expr if_pos p.symm, "]"] [],
+    simp [] [] [] [] [] [] },
+  { rw ["[", expr if_neg p, ",", expr count_cons', ",", expr count_cons', ",", expr if_neg (λ
+      x : «expr = »(a, h), p x.symm), ",", expr count_erase_self, "]"] [],
+    simp [] [] [] [] [] [] }
+end
 
 @[simp]
-theorem count_erase_of_ne {a b : α} (ab : a ≠ b) : ∀ s : List α, count a (List.eraseₓ s b) = count a s
+theorem count_erase_of_ne {a b : α} (ab : a ≠ b) : ∀ (s : List α), count a (List.eraseₓ s b) = count a s
 | [] =>
   by 
     simp 

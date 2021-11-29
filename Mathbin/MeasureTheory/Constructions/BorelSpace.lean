@@ -62,33 +62,24 @@ theorem borel_eq_top_of_encodable [TopologicalSpace α] [T1Space α] [Encodable 
     apply generate_measurable.basic 
     exact is_closed_singleton.is_open_compl
 
-theorem borel_eq_generate_from_of_subbasis {s : Set (Set α)} [t : TopologicalSpace α] [second_countable_topology α]
-  (hs : t = generate_from s) : borel α = generate_from s :=
-  le_antisymmₓ
-    (generate_from_le$
-      fun u hu : t.is_open u =>
-        by 
-          rw [hs] at hu 
-          induction hu 
-          case generate_open.basic u hu => 
-            exact generate_measurable.basic u hu 
-          case generate_open.univ => 
-            exact @MeasurableSet.univ α (generate_from s)
-          case generate_open.inter s₁ s₂ _ _ hs₁ hs₂ => 
-            exact @MeasurableSet.inter α (generate_from s) _ _ hs₁ hs₂ 
-          case generate_open.sUnion f hf ih => 
-            rcases
-              is_open_sUnion_countable f
-                (by 
-                  rwa [hs]) with
-              ⟨v, hv, vf, vu⟩
-            rw [←vu]
-            exact @MeasurableSet.sUnion α (generate_from s) _ hv fun x xv => ih _ (vf xv))
-    (generate_from_le$
-      fun u hu =>
-        generate_measurable.basic _$
-          show t.is_open u by 
-            rw [hs] <;> exact generate_open.basic _ hu)
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem borel_eq_generate_from_of_subbasis
+{s : set (set α)}
+[t : topological_space α]
+[second_countable_topology α]
+(hs : «expr = »(t, generate_from s)) : «expr = »(borel α, generate_from s) :=
+le_antisymm «expr $ »(generate_from_le, assume (u) (hu : t.is_open u), begin
+   rw ["[", expr hs, "]"] ["at", ident hu],
+   induction [expr hu] [] [] [],
+   case [ident generate_open.basic, ":", ident u, ident hu] { exact [expr generate_measurable.basic u hu] },
+   case [ident generate_open.univ] { exact [expr @measurable_set.univ α (generate_from s)] },
+   case [ident generate_open.inter, ":", ident s₁, ident s₂, "_", "_", ident hs₁, ident hs₂] { exact [expr @measurable_set.inter α (generate_from s) _ _ hs₁ hs₂] },
+   case [ident generate_open.sUnion, ":", ident f, ident hf, ident ih] { rcases [expr is_open_sUnion_countable f (by rwa [expr hs] []), "with", "⟨", ident v, ",", ident hv, ",", ident vf, ",", ident vu, "⟩"],
+     rw ["<-", expr vu] [],
+     exact [expr @measurable_set.sUnion α (generate_from s) _ hv (λ x xv, ih _ (vf xv))] }
+ end) «expr $ »(generate_from_le, assume
+ u
+ hu, «expr $ »(generate_measurable.basic _, show t.is_open u, by rw ["[", expr hs, "]"] []; exact [expr generate_open.basic _ hu]))
 
 theorem TopologicalSpace.IsTopologicalBasis.borel_eq_generate_from [TopologicalSpace α] [second_countable_topology α]
   {s : Set (Set α)} (hs : is_topological_basis s) : borel α = generate_from s :=
@@ -191,7 +182,7 @@ instance Subtype.opens_measurable_space {α : Type _} [TopologicalSpace α] [Mea
 
 theorem _root_.measurable_set.induction_on_open [TopologicalSpace α] [MeasurableSpace α] [BorelSpace α]
   {C : Set α → Prop} (h_open : ∀ U, IsOpen U → C U) (h_compl : ∀ t, MeasurableSet t → C t → C («expr ᶜ» t))
-  (h_union : ∀ f : ℕ → Set α, Pairwise (Disjoint on f) → (∀ i, MeasurableSet (f i)) → (∀ i, C (f i)) → C (⋃i, f i)) :
+  (h_union : ∀ (f : ℕ → Set α), Pairwise (Disjoint on f) → (∀ i, MeasurableSet (f i)) → (∀ i, C (f i)) → C (⋃i, f i)) :
   ∀ ⦃t⦄, MeasurableSet t → C t :=
   MeasurableSpace.induction_on_inter BorelSpace.measurable_eq is_pi_system_is_open (h_open _ is_open_empty) h_open
     h_compl h_union
@@ -367,8 +358,9 @@ instance at_bot_is_measurably_generated : (Filter.atBot : Filter α).IsMeasurabl
   @Filter.infi_is_measurably_generated _ _ _ _$
     fun a => (measurable_set_Iic : MeasurableSet (Iic a)).principal_is_measurably_generated
 
-theorem bsupr_measure_Iic {μ : Measureₓ α} {s : Set α} (hsc : countable s) (hst : ∀ x : α, ∃ (y : _)(_ : y ∈ s), x ≤ y)
-  (hdir : DirectedOn (· ≤ ·) s) : (⨆(x : _)(_ : x ∈ s), μ (Iic x)) = μ univ :=
+theorem bsupr_measure_Iic {μ : Measureₓ α} {s : Set α} (hsc : countable s)
+  (hst : ∀ (x : α), ∃ (y : _)(_ : y ∈ s), x ≤ y) (hdir : DirectedOn (· ≤ ·) s) :
+  (⨆(x : _)(_ : x ∈ s), μ (Iic x)) = μ univ :=
   by 
     rw [←measure_bUnion_eq_supr hsc]
     ·
@@ -547,7 +539,7 @@ theorem borel_eq_generate_from_Ico (α : Type _) [TopologicalSpace α] [second_c
 
 theorem Dense.borel_eq_generate_from_Ioc_mem_aux {α : Type _} [TopologicalSpace α] [LinearOrderₓ α] [OrderTopology α]
   [second_countable_topology α] {s : Set α} (hd : Dense s) (hbot : ∀ x, IsTop x → x ∈ s)
-  (hIoo : ∀ x y : α, x < y → Ioo x y = ∅ → x ∈ s) :
+  (hIoo : ∀ (x y : α), x < y → Ioo x y = ∅ → x ∈ s) :
   borel α = generate_from { S:Set α | ∃ (l : _)(_ : l ∈ s)(u : _)(_ : u ∈ s)(h : l < u), Ioc l u = S } :=
   by 
     convert hd.order_dual.borel_eq_generate_from_Ico_mem_aux hbot fun x y hlt he => hIoo y x hlt _
@@ -705,6 +697,10 @@ variable[LinearOrderₓ α][OrderClosedTopology α]
 theorem measurable_set_interval {a b : α} : MeasurableSet (interval a b) :=
   measurable_set_Icc
 
+@[measurability]
+theorem measurable_set_interval_oc {a b : α} : MeasurableSet (interval_oc a b) :=
+  measurable_set_Ioc
+
 variable[second_countable_topology α]
 
 @[measurability]
@@ -790,15 +786,30 @@ theorem measurable_of_continuous_on_compl_singleton [T1Space α] {f : α → γ}
   (hf : ContinuousOn f («expr ᶜ» {a})) : Measurable f :=
   measurable_of_measurable_on_compl_singleton a (continuous_on_iff_continuous_restrict.1 hf).Measurable
 
-theorem Continuous.measurable2 [second_countable_topology α] [second_countable_topology β] {f : δ → α} {g : δ → β}
-  {c : α → β → γ} (h : Continuous fun p : α × β => c p.1 p.2) (hf : Measurable f) (hg : Measurable g) :
-  Measurable fun a => c (f a) (g a) :=
-  h.measurable.comp (hf.prod_mk hg)
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous.measurable2
+[second_countable_topology α]
+[second_countable_topology β]
+{f : δ → α}
+{g : δ → β}
+{c : α → β → γ}
+(h : continuous (λ p : «expr × »(α, β), c p.1 p.2))
+(hf : measurable f)
+(hg : measurable g) : measurable (λ a, c (f a) (g a)) :=
+h.measurable.comp (hf.prod_mk hg)
 
-theorem Continuous.ae_measurable2 [second_countable_topology α] [second_countable_topology β] {f : δ → α} {g : δ → β}
-  {c : α → β → γ} {μ : Measureₓ δ} (h : Continuous fun p : α × β => c p.1 p.2) (hf : AeMeasurable f μ)
-  (hg : AeMeasurable g μ) : AeMeasurable (fun a => c (f a) (g a)) μ :=
-  h.measurable.comp_ae_measurable (hf.prod_mk hg)
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous.ae_measurable2
+[second_countable_topology α]
+[second_countable_topology β]
+{f : δ → α}
+{g : δ → β}
+{c : α → β → γ}
+{μ : measure δ}
+(h : continuous (λ p : «expr × »(α, β), c p.1 p.2))
+(hf : ae_measurable f μ)
+(hg : ae_measurable g μ) : ae_measurable (λ a, c (f a) (g a)) μ :=
+h.measurable.comp_ae_measurable (hf.prod_mk hg)
 
 instance (priority := 100)HasContinuousInv₀.has_measurable_inv [GroupWithZeroₓ γ] [T1Space γ] [HasContinuousInv₀ γ] :
   HasMeasurableInv γ :=
@@ -1063,10 +1074,17 @@ protected theorem Monotone.measurable [LinearOrderₓ β] [OrderClosedTopology �
   suffices h : ∀ x, ord_connected (f ⁻¹' Ioi x) from measurable_of_Ioi fun x => (h x).MeasurableSet 
   fun x => ord_connected_def.mpr fun a ha b hb c hc => lt_of_lt_of_leₓ ha (hf hc.1)
 
-theorem ae_measurable_restrict_of_monotone_on [LinearOrderₓ β] [OrderClosedTopology β] {μ : Measureₓ β} {s : Set β}
-  (hs : MeasurableSet s) {f : β → α} (hf : MonotoneOn f s) : AeMeasurable f (μ.restrict s) :=
-  have this : Monotone (f ∘ coeₓ : s → α) := fun ⟨x, hx⟩ ⟨y, hy⟩ hxy : x ≤ y => hf hx hy hxy 
-  ae_measurable_restrict_of_measurable_subtype hs this.measurable
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ae_measurable_restrict_of_monotone_on
+[linear_order β]
+[order_closed_topology β]
+{μ : measure β}
+{s : set β}
+(hs : measurable_set s)
+{f : β → α}
+(hf : monotone_on f s) : ae_measurable f (μ.restrict s) :=
+have this : monotone («expr ∘ »(f, coe) : s → α), from λ ⟨x, hx⟩ ⟨y, hy⟩ (hxy : «expr ≤ »(x, y)), hf hx hy hxy,
+ae_measurable_restrict_of_measurable_subtype hs this.measurable
 
 protected theorem Antitone.measurable [LinearOrderₓ β] [OrderClosedTopology β] {f : β → α} (hf : Antitone f) :
   Measurable f :=
@@ -1078,35 +1096,35 @@ theorem ae_measurable_restrict_of_antitone_on [LinearOrderₓ β] [OrderClosedTo
 
 end LinearOrderₓ
 
-@[measurability]
-theorem Measurable.supr_Prop {α} [MeasurableSpace α] [CompleteLattice α] (p : Prop) {f : δ → α} (hf : Measurable f) :
-  Measurable fun b => ⨆h : p, f b :=
-  Classical.by_cases
-    (fun h : p =>
-      by 
-        convert hf 
-        funext 
-        exact supr_pos h)
-    fun h : ¬p =>
-      by 
-        convert measurable_const 
-        funext 
-        exact supr_neg h
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]]
+theorem measurable.supr_Prop
+{α}
+[measurable_space α]
+[complete_lattice α]
+(p : exprProp())
+{f : δ → α}
+(hf : measurable f) : measurable (λ b, «expr⨆ , »((h : p), f b)) :=
+classical.by_cases (assume h : p, begin
+   convert [] [expr hf] [],
+   funext [],
+   exact [expr supr_pos h]
+ end) (assume h : «expr¬ »(p), begin convert [] [expr measurable_const] [], funext [], exact [expr supr_neg h] end)
 
-@[measurability]
-theorem Measurable.infi_Prop {α} [MeasurableSpace α] [CompleteLattice α] (p : Prop) {f : δ → α} (hf : Measurable f) :
-  Measurable fun b => ⨅h : p, f b :=
-  Classical.by_cases
-    (fun h : p =>
-      by 
-        convert hf 
-        funext 
-        exact infi_pos h)
-    fun h : ¬p =>
-      by 
-        convert measurable_const 
-        funext 
-        exact infi_neg h
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]]
+theorem measurable.infi_Prop
+{α}
+[measurable_space α]
+[complete_lattice α]
+(p : exprProp())
+{f : δ → α}
+(hf : measurable f) : measurable (λ b, «expr⨅ , »((h : p), f b)) :=
+classical.by_cases (assume h : p, begin
+   convert [] [expr hf] [],
+   funext [],
+   exact [expr infi_pos h]
+ end) (assume h : «expr¬ »(p), begin convert [] [expr measurable_const] [], funext [], exact [expr infi_neg h] end)
 
 section CompleteLinearOrder
 
@@ -1261,6 +1279,12 @@ instance Int.borel_space : BorelSpace ℤ :=
 instance Rat.borel_space : BorelSpace ℚ :=
   ⟨borel_eq_top_of_encodable.symm⟩
 
+instance (priority := 900)IsROrC.measurableSpace {𝕜 : Type _} [IsROrC 𝕜] : MeasurableSpace 𝕜 :=
+  borel 𝕜
+
+instance (priority := 900)IsROrC.borel_space {𝕜 : Type _} [IsROrC 𝕜] : BorelSpace 𝕜 :=
+  ⟨rfl⟩
+
 instance Real.measurableSpace : MeasurableSpace ℝ :=
   borel ℝ
 
@@ -1386,17 +1410,17 @@ theorem Measurable.inf_nndist {f : β → α} (hf : Measurable f) {s : Set α} :
 
 variable[second_countable_topology α]
 
-@[measurability]
-theorem measurable_dist : Measurable fun p : α × α => dist p.1 p.2 :=
-  continuous_dist.Measurable
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]] theorem measurable_dist : measurable (λ p : «expr × »(α, α), dist p.1 p.2) :=
+continuous_dist.measurable
 
 @[measurability]
 theorem Measurable.dist {f g : β → α} (hf : Measurable f) (hg : Measurable g) : Measurable fun b => dist (f b) (g b) :=
   (@continuous_dist α _).measurable2 hf hg
 
-@[measurability]
-theorem measurable_nndist : Measurable fun p : α × α => nndist p.1 p.2 :=
-  continuous_nndist.Measurable
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]] theorem measurable_nndist : measurable (λ p : «expr × »(α, α), nndist p.1 p.2) :=
+continuous_nndist.measurable
 
 @[measurability]
 theorem Measurable.nndist {f g : β → α} (hf : Measurable f) (hg : Measurable g) :
@@ -1435,9 +1459,9 @@ theorem Measurable.inf_edist {f : β → α} (hf : Measurable f) {s : Set α} : 
 
 variable[second_countable_topology α]
 
-@[measurability]
-theorem measurable_edist : Measurable fun p : α × α => edist p.1 p.2 :=
-  continuous_edist.Measurable
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]] theorem measurable_edist : measurable (λ p : «expr × »(α, α), edist p.1 p.2) :=
+continuous_edist.measurable
 
 @[measurability]
 theorem Measurable.edist {f g : β → α} (hf : Measurable f) (hg : Measurable g) :
@@ -1486,7 +1510,7 @@ def finite_spanning_sets_in_Ioo_rat (μ : Measureₓ ℝ) [is_locally_finite_mea
             (le_abs_self x).trans_lt (Nat.lt_floor_add_one _)⟩ }
 
 theorem measure_ext_Ioo_rat {μ ν : Measureₓ ℝ} [is_locally_finite_measure μ]
-  (h : ∀ a b : ℚ, μ (Ioo a b) = ν (Ioo a b)) : μ = ν :=
+  (h : ∀ (a b : ℚ), μ (Ioo a b) = ν (Ioo a b)) : μ = ν :=
   (finite_spanning_sets_in_Ioo_rat μ).ext borel_eq_generate_from_Ioo_rat is_pi_system_Ioo_rat$
     by 
       simp only [mem_Union, mem_singleton_iff]
@@ -1497,7 +1521,7 @@ theorem measure_ext_Ioo_rat {μ ν : Measureₓ ℝ} [is_locally_finite_measure 
 theorem borel_eq_generate_from_Iio_rat : «expr = »(borel exprℝ(), generate_from «expr⋃ , »((a : exprℚ()), {Iio a})) :=
 begin
   let [ident g] [":", expr measurable_space exprℝ()] [":=", expr generate_from «expr⋃ , »((a : exprℚ()), {Iio a})],
-  apply [expr le_antisymm _ (measurable_space.generate_from_le (λ t, _))],
+  refine [expr le_antisymm _ _],
   { rw [expr borel_eq_generate_from_Ioo_rat] [],
     refine [expr generate_from_le (λ t, _)],
     simp [] [] ["only"] ["[", expr mem_Union, ",", expr mem_singleton_iff, "]"] [] [],
@@ -1515,7 +1539,8 @@ begin
       refine [expr λ _, ⟨λ h, _, λ ⟨i, hai, hix⟩, (rat.cast_lt.2 hai).trans_le hix⟩],
       rcases [expr exists_rat_btwn h, "with", "⟨", ident c, ",", ident ac, ",", ident cx, "⟩"],
       exact [expr ⟨c, rat.cast_lt.1 ac, cx.le⟩] } },
-  { simp [] [] ["only"] ["[", expr mem_Union, ",", expr mem_singleton_iff, "]"] [] [],
+  { refine [expr measurable_space.generate_from_le (λ _, _)],
+    simp [] [] ["only"] ["[", expr mem_Union, ",", expr mem_singleton_iff, "]"] [] [],
     rintro ["⟨", ident r, ",", ident rfl, "⟩"],
     exact [expr measurable_set_Iio] }
 end
@@ -1573,8 +1598,11 @@ def MeasurableEquiv.ennrealEquivNnreal : { r:ℝ≥0∞ | r ≠ ∞ } ≃ᵐ  �
 
 namespace Ennreal
 
-theorem measurable_of_measurable_nnreal {f : ℝ≥0∞ → α} (h : Measurable fun p :  ℝ≥0  => f p) : Measurable f :=
-  measurable_of_measurable_on_compl_singleton ∞ (MeasurableEquiv.ennrealEquivNnreal.symm.measurable_comp_iff.1 h)
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_of_measurable_nnreal
+{f : «exprℝ≥0∞»() → α}
+(h : measurable (λ p : «exprℝ≥0»(), f p)) : measurable f :=
+measurable_of_measurable_on_compl_singleton «expr∞»() (measurable_equiv.ennreal_equiv_nnreal.symm.measurable_comp_iff.1 h)
 
 /-- `ℝ≥0∞` is `measurable_equiv` to `ℝ≥0 ⊕ unit`. -/
 def ennreal_equiv_sum : ℝ≥0∞ ≃ᵐ Sum ℝ≥0  Unit :=
@@ -1583,18 +1611,24 @@ def ennreal_equiv_sum : ℝ≥0∞ ≃ᵐ Sum ℝ≥0  Unit :=
 
 open function(uncurry)
 
-theorem measurable_of_measurable_nnreal_prod [MeasurableSpace β] [MeasurableSpace γ] {f : ℝ≥0∞ × β → γ}
-  (H₁ : Measurable fun p :  ℝ≥0  × β => f (p.1, p.2)) (H₂ : Measurable fun x => f (∞, x)) : Measurable f :=
-  let e : ℝ≥0∞ × β ≃ᵐ Sum ( ℝ≥0  × β) (Unit × β) :=
-    (ennreal_equiv_sum.prodCongr (MeasurableEquiv.refl β)).trans (MeasurableEquiv.sumProdDistrib _ _ _)
-  e.symm.measurable_comp_iff.1$ measurable_sum H₁ (H₂.comp measurable_id.snd)
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_of_measurable_nnreal_prod
+[measurable_space β]
+[measurable_space γ]
+{f : «expr × »(«exprℝ≥0∞»(), β) → γ}
+(H₁ : measurable (λ p : «expr × »(«exprℝ≥0»(), β), f (p.1, p.2)))
+(H₂ : measurable (λ x, f («expr∞»(), x))) : measurable f :=
+let e : «expr ≃ᵐ »(«expr × »(«exprℝ≥0∞»(), β), «expr ⊕ »(«expr × »(«exprℝ≥0»(), β), «expr × »(unit, β))) := (ennreal_equiv_sum.prod_congr (measurable_equiv.refl β)).trans (measurable_equiv.sum_prod_distrib _ _ _) in
+«expr $ »(e.symm.measurable_comp_iff.1, measurable_sum H₁ (H₂.comp measurable_id.snd))
 
-theorem measurable_of_measurable_nnreal_nnreal [MeasurableSpace β] {f : ℝ≥0∞ × ℝ≥0∞ → β}
-  (h₁ : Measurable fun p :  ℝ≥0  ×  ℝ≥0  => f (p.1, p.2)) (h₂ : Measurable fun r :  ℝ≥0  => f (∞, r))
-  (h₃ : Measurable fun r :  ℝ≥0  => f (r, ∞)) : Measurable f :=
-  measurable_of_measurable_nnreal_prod
-    (measurable_swap_iff.1$ measurable_of_measurable_nnreal_prod (h₁.comp measurable_swap) h₃)
-    (measurable_of_measurable_nnreal h₂)
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_of_measurable_nnreal_nnreal
+[measurable_space β]
+{f : «expr × »(«exprℝ≥0∞»(), «exprℝ≥0∞»()) → β}
+(h₁ : measurable (λ p : «expr × »(«exprℝ≥0»(), «exprℝ≥0»()), f (p.1, p.2)))
+(h₂ : measurable (λ r : «exprℝ≥0»(), f («expr∞»(), r)))
+(h₃ : measurable (λ r : «exprℝ≥0»(), f (r, «expr∞»()))) : measurable f :=
+measurable_of_measurable_nnreal_prod «expr $ »(measurable_swap_iff.1, measurable_of_measurable_nnreal_prod (h₁.comp measurable_swap) h₃) (measurable_of_measurable_nnreal h₂)
 
 @[measurability]
 theorem measurable_of_real : Measurable Ennreal.ofReal :=
@@ -1700,11 +1734,9 @@ theorem AeMeasurable.coe_real_ereal {f : α → ℝ} {μ : Measureₓ α} (hf : 
 def MeasurableEquiv.erealEquivReal : ({⊥, ⊤} : Set Ereal).Compl ≃ᵐ ℝ :=
   Ereal.neBotTopHomeomorphReal.toMeasurableEquiv
 
-theorem Ereal.measurable_of_measurable_real {f : Ereal → α} (h : Measurable fun p : ℝ => f p) : Measurable f :=
-  measurable_of_measurable_on_compl_finite {⊥, ⊤}
-    (by 
-      simp )
-    (MeasurableEquiv.erealEquivReal.symm.measurable_comp_iff.1 h)
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ereal.measurable_of_measurable_real {f : ereal → α} (h : measurable (λ p : exprℝ(), f p)) : measurable f :=
+measurable_of_measurable_on_compl_finite {«expr⊥»(), «expr⊤»()} (by simp [] [] [] [] [] []) (measurable_equiv.ereal_equiv_real.symm.measurable_comp_iff.1 h)
 
 @[measurability]
 theorem measurable_ereal_to_real : Measurable Ereal.toReal :=
@@ -1763,9 +1795,9 @@ theorem AeMeasurable.nnnorm {f : β → α} {μ : Measureₓ β} (hf : AeMeasura
   AeMeasurable (fun a => nnnorm (f a)) μ :=
   measurable_nnnorm.comp_ae_measurable hf
 
-@[measurability]
-theorem measurable_ennnorm : Measurable fun x : α => (nnnorm x : ℝ≥0∞) :=
-  measurable_nnnorm.coe_nnreal_ennreal
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]] theorem measurable_ennnorm : measurable (λ x : α, (nnnorm x : «exprℝ≥0∞»())) :=
+measurable_nnnorm.coe_nnreal_ennreal
 
 @[measurability]
 theorem Measurable.ennnorm {f : β → α} (hf : Measurable f) : Measurable fun a => (nnnorm (f a) : ℝ≥0∞) :=
@@ -1797,7 +1829,7 @@ theorem measurable_of_tendsto_nnreal'
 (lim : tendsto f u (expr𝓝() g)) : measurable g :=
 begin
   rcases [expr u.exists_seq_tendsto, "with", "⟨", ident x, ",", ident hx, "⟩"],
-  rw ["[", expr tendsto_pi, "]"] ["at", ident lim],
+  rw ["[", expr tendsto_pi_nhds, "]"] ["at", ident lim],
   rw ["[", "<-", expr measurable_coe_nnreal_ennreal_iff, "]"] [],
   have [] [":", expr ∀
    y, «expr = »(liminf at_top (λ
@@ -1832,7 +1864,7 @@ begin
   have [] [":", expr measurable (λ x, inf_nndist (g x) s)] [],
   { suffices [] [":", expr tendsto (λ i x, inf_nndist (f i x) s) u (expr𝓝() (λ x, inf_nndist (g x) s))],
     from [expr measurable_of_tendsto_nnreal' u (λ i, (hf i).inf_nndist) this],
-    rw ["[", expr tendsto_pi, "]"] ["at", ident lim, "⊢"],
+    rw ["[", expr tendsto_pi_nhds, "]"] ["at", ident lim, "⊢"],
     intro [ident x],
     exact [expr ((continuous_inf_nndist_pt s).tendsto (g x)).comp (lim x)] },
   have [ident h4s] [":", expr «expr = »(«expr ⁻¹' »(g, s), «expr ⁻¹' »(λ x, inf_nndist (g x) s, {0}))] [],
@@ -1859,7 +1891,7 @@ theorem ae_measurable_of_tendsto_metric_ae {μ : Measureₓ α} {f : ℕ → α 
         (ite_ae_eq_of_measure_compl_zero g (fun x => (⟨f 0 x⟩ : Nonempty β).some) (AeSeqSet hf p)
             (aeSeq.measure_compl_ae_seq_set_eq_zero hf hp)).symm⟩
     refine' measurable_of_tendsto_metric (@aeSeq.measurable α β _ _ _ f μ hf p) _ 
-    refine' tendsto_pi.mpr fun x => _ 
+    refine' tendsto_pi_nhds.mpr fun x => _ 
     simpRw [aeSeq, ae_seq_lim]
     splitIfs with hx
     ·
@@ -1907,7 +1939,7 @@ begin
   { refine [expr le_antisymm (le_of_eq (measure_mono_null _ hμ_compl)) (zero_le _)],
     exact [expr set.compl_subset_compl.mpr (λ x hx, hf_lim_conv x hx)] },
   have [ident h_f_lim_meas] [":", expr measurable f_lim] [],
-  from [expr measurable_of_tendsto_metric (ae_seq.measurable hf p) (tendsto_pi.mpr (λ x, hf_lim x))],
+  from [expr measurable_of_tendsto_metric (ae_seq.measurable hf p) (tendsto_pi_nhds.mpr (λ x, hf_lim x))],
   exact [expr ⟨f_lim, h_f_lim_meas, h_ae_tendsto_f_lim⟩]
 end
 
@@ -1927,8 +1959,12 @@ variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F][MeasurableSpace F][Borel
 protected theorem Measurable (L : E →L[𝕜] F) : Measurable L :=
   L.continuous.measurable
 
-theorem measurable_comp (L : E →L[𝕜] F) {φ : α → E} (φ_meas : Measurable φ) : Measurable fun a : α => L (φ a) :=
-  L.measurable.comp φ_meas
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_comp
+(L : «expr →L[ ] »(E, 𝕜, F))
+{φ : α → E}
+(φ_meas : measurable φ) : measurable (λ a : α, L (φ a)) :=
+L.measurable.comp φ_meas
 
 end ContinuousLinearMap
 
@@ -1944,18 +1980,29 @@ instance  : MeasurableSpace (E →L[𝕜] F) :=
 instance  : BorelSpace (E →L[𝕜] F) :=
   ⟨rfl⟩
 
-@[measurability]
-theorem measurable_apply [MeasurableSpace F] [BorelSpace F] (x : E) : Measurable fun f : E →L[𝕜] F => f x :=
-  (apply 𝕜 F x).Continuous.Measurable
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]]
+theorem measurable_apply
+[measurable_space F]
+[borel_space F]
+(x : E) : measurable (λ f : «expr →L[ ] »(E, 𝕜, F), f x) :=
+(apply 𝕜 F x).continuous.measurable
 
-@[measurability]
-theorem measurable_apply' [MeasurableSpace E] [OpensMeasurableSpace E] [MeasurableSpace F] [BorelSpace F] :
-  Measurable fun x : E f : E →L[𝕜] F => f x :=
-  measurable_pi_lambda _$ fun f => f.measurable
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]]
+theorem measurable_apply'
+[measurable_space E]
+[opens_measurable_space E]
+[measurable_space F]
+[borel_space F] : measurable (λ (x : E) (f : «expr →L[ ] »(E, 𝕜, F)), f x) :=
+«expr $ »(measurable_pi_lambda _, λ f, f.measurable)
 
-@[measurability]
-theorem measurable_coe [MeasurableSpace F] [BorelSpace F] : Measurable fun f : E →L[𝕜] F x : E => f x :=
-  measurable_pi_lambda _ measurable_apply
+-- error in MeasureTheory.Constructions.BorelSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[measurability #[]]
+theorem measurable_coe
+[measurable_space F]
+[borel_space F] : measurable (λ (f : «expr →L[ ] »(E, 𝕜, F)) (x : E), f x) :=
+measurable_pi_lambda _ measurable_apply
 
 end ContinuousLinearMap
 

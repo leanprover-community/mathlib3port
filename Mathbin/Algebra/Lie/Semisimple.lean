@@ -33,7 +33,7 @@ class
       v)(M :
     Type w)[CommRingₓ R][LieRing L][LieAlgebra R L][AddCommGroupₓ M][Module R M][LieRingModule L M][LieModule R L M] :
   Prop where 
-  Irreducible : ∀ N : LieSubmodule R L M, N ≠ ⊥ → N = ⊤
+  Irreducible : ∀ (N : LieSubmodule R L M), N ≠ ⊥ → N = ⊤
 
 namespace LieAlgebra
 
@@ -56,7 +56,7 @@ zero. -/
 class is_semisimple : Prop where 
   semisimple : radical R L = ⊥
 
-theorem is_semisimple_iff_no_solvable_ideals : is_semisimple R L ↔ ∀ I : LieIdeal R L, is_solvable R I → I = ⊥ :=
+theorem is_semisimple_iff_no_solvable_ideals : is_semisimple R L ↔ ∀ (I : LieIdeal R L), is_solvable R I → I = ⊥ :=
   ⟨fun h => Sup_eq_bot.mp h.semisimple, fun h => ⟨Sup_eq_bot.mpr h⟩⟩
 
 -- error in Algebra.Lie.Semisimple: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -110,7 +110,7 @@ to be reductive.
 Note that there is absolutely [no agreement](https://mathoverflow.net/questions/284713/) on what
 the label 'reductive' should mean when the coefficients are not a field of characteristic zero. -/
 theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
-  IsLieAbelian (radical R L) ↔ ∀ I : LieIdeal R L, is_solvable R I → IsLieAbelian I :=
+  IsLieAbelian (radical R L) ↔ ∀ (I : LieIdeal R L), is_solvable R I → IsLieAbelian I :=
   by 
     split 
     ·

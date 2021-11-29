@@ -47,7 +47,7 @@ attribute [local instance] is_isomorphic_setoid
 variable{C D}
 
 /-- If `C` is thin and skeletal, then any naturally isomorphic functors to `C` are equal. -/
-theorem functor.eq_of_iso {F₁ F₂ : D ⥤ C} [∀ X Y : C, Subsingleton (X ⟶ Y)] (hC : skeletal C) (hF : F₁ ≅ F₂) :
+theorem functor.eq_of_iso {F₁ F₂ : D ⥤ C} [∀ (X Y : C), Subsingleton (X ⟶ Y)] (hC : skeletal C) (hF : F₁ ≅ F₂) :
   F₁ = F₂ :=
   Functor.ext (fun X => hC ⟨hF.app X⟩) fun _ _ _ => Subsingleton.elimₓ _ _
 
@@ -55,7 +55,7 @@ theorem functor.eq_of_iso {F₁ F₂ : D ⥤ C} [∀ X Y : C, Subsingleton (X �
 If `C` is thin and skeletal, `D ⥤ C` is skeletal.
 `category_theory.functor_thin` shows it is thin also.
 -/
-theorem functor_skeletal [∀ X Y : C, Subsingleton (X ⟶ Y)] (hC : skeletal C) : skeletal (D ⥤ C) :=
+theorem functor_skeletal [∀ (X Y : C), Subsingleton (X ⟶ Y)] (hC : skeletal C) : skeletal (D ⥤ C) :=
   fun F₁ F₂ h => h.elim (functor.eq_of_iso hC)
 
 variable(C D)
@@ -197,7 +197,7 @@ variable(C)
 
 section 
 
-variable[∀ X Y : C, Subsingleton (X ⟶ Y)]
+variable[∀ (X Y : C), Subsingleton (X ⟶ Y)]
 
 instance to_thin_skeleton_faithful : faithful (to_thin_skeleton C) :=
   {  }
@@ -299,7 +299,7 @@ variable{C}{α : Type _}[PartialOrderₓ α]
 When `e : C ≌ α` is a categorical equivalence from a thin category `C` to some partial order `α`,
 the `thin_skeleton C` is order isomorphic to `α`.
 -/
-noncomputable def equivalence.thin_skeleton_order_iso [∀ X Y : C, Subsingleton (X ⟶ Y)] (e : C ≌ α) :
+noncomputable def equivalence.thin_skeleton_order_iso [∀ (X Y : C), Subsingleton (X ⟶ Y)] (e : C ≌ α) :
   thin_skeleton C ≃o α :=
   ((thin_skeleton.equivalence C).trans e).toOrderIso
 

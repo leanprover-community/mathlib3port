@@ -105,8 +105,9 @@ theorem Dvd.intro_left (c : α) (h : (c*a) = b) : a ∣ b :=
 
 alias Dvd.intro_left ← dvd_of_mul_left_eq
 
-theorem exists_eq_mul_left_of_dvd (h : a ∣ b) : ∃ c, b = c*a :=
-  Dvd.elim h fun c => fun H1 : b = a*c => Exists.introₓ c (Eq.trans H1 (mul_commₓ a c))
+-- error in Algebra.Divisibility: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem exists_eq_mul_left_of_dvd (h : «expr ∣ »(a, b)) : «expr∃ , »((c), «expr = »(b, «expr * »(c, a))) :=
+dvd.elim h (assume c, assume H1 : «expr = »(b, «expr * »(a, c)), exists.intro c (eq.trans H1 (mul_comm a c)))
 
 theorem dvd_iff_exists_eq_mul_left : a ∣ b ↔ ∃ c, b = c*a :=
   ⟨exists_eq_mul_left_of_dvd,
@@ -114,8 +115,9 @@ theorem dvd_iff_exists_eq_mul_left : a ∣ b ↔ ∃ c, b = c*a :=
       rintro ⟨c, rfl⟩
       exact ⟨c, mul_commₓ _ _⟩⟩
 
-theorem Dvd.elim_left {P : Prop} (h₁ : a ∣ b) (h₂ : ∀ c, (b = c*a) → P) : P :=
-  Exists.elim (exists_eq_mul_left_of_dvd h₁) fun c => fun h₃ : b = c*a => h₂ c h₃
+-- error in Algebra.Divisibility: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem dvd.elim_left {P : exprProp()} (h₁ : «expr ∣ »(a, b)) (h₂ : ∀ c, «expr = »(b, «expr * »(c, a)) → P) : P :=
+exists.elim (exists_eq_mul_left_of_dvd h₁) (assume c, assume h₃ : «expr = »(b, «expr * »(c, a)), h₂ c h₃)
 
 @[simp]
 theorem dvd_mul_left (a b : α) : a ∣ b*a :=
@@ -155,8 +157,9 @@ section MonoidWithZeroₓ
 
 variable[MonoidWithZeroₓ α]{a : α}
 
-theorem eq_zero_of_zero_dvd (h : 0 ∣ a) : a = 0 :=
-  Dvd.elim h fun c => fun H' : a = 0*c => Eq.trans H' (zero_mul c)
+-- error in Algebra.Divisibility: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem eq_zero_of_zero_dvd (h : «expr ∣ »(0, a)) : «expr = »(a, 0) :=
+dvd.elim h (assume c, assume H' : «expr = »(a, «expr * »(0, c)), eq.trans H' (zero_mul c))
 
 /-- Given an element `a` of a commutative monoid with zero, there exists another element whose
     product with zero equals `a` iff `a` equals zero. -/

@@ -285,20 +285,20 @@ private unsafe def proceed_fields_aux (src tgt : Name) (prio : ℕ) (f : Name �
     (src_fields.zip tgt_fields).mmap'$
         fun names => guardₓ (names.fst = names.snd) <|> aux_attr (src.append names.fst) (tgt.append names.snd) tt prio
 
+-- error in Algebra.Group.ToAdditive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Add the `aux_attr` attribute to the structure fields of `src`
 so that future uses of `to_additive` will map them to the corresponding `tgt` fields. -/
-unsafe def proceed_fields (env : environment) (src tgt : Name) (prio : ℕ) : exprcommand :=
-  let aux := proceed_fields_aux src tgt prio 
-  do 
-    ((aux fun n => pure$ List.map Name.toString$ (env.structure_fields n).getOrElse []) >>
-          aux fun n => (List.map fun x : Name => "to_" ++ x.to_string) <$> get_tagged_ancestors n) >>
-        aux
-          fun n =>
-            (env.constructors_of n).mmap$
-              fun cs =>
-                match cs with 
-                | Name.mk_string s pre => (guardₓ (pre = n) <|> fail "Bad constructor name") >> pure s
-                | _ => fail "Bad constructor name"
+meta
+def proceed_fields (env : environment) (src tgt : name) (prio : exprℕ()) : exprcommand() :=
+let aux := proceed_fields_aux src tgt prio in
+do {
+«expr >> »(«expr >> »(aux (λ
+     n, «expr $ »(pure, «expr $ »(list.map name.to_string, (env.structure_fields n).get_or_else «expr[ , ]»([])))), aux (λ
+     n, «expr <$> »(list.map (λ
+       x : name, «expr ++ »("to_", x.to_string)), get_tagged_ancestors n))), aux (λ
+    n, «expr $ »((env.constructors_of n).mmap, λ cs, match cs with
+     | name.mk_string s pre := «expr >> »(«expr <|> »(guard «expr = »(pre, n), fail "Bad constructor name"), pure s)
+     | _ := fail "Bad constructor name" end))) }
 
 /--
 The attribute `to_additive` can be used to automatically transport theorems

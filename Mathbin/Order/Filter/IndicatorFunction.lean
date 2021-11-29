@@ -21,17 +21,16 @@ section HasZero
 
 variable[HasZero M]{s t : Set α}{f g : α → M}{a : α}{l : Filter α}
 
-theorem indicator_eventually_eq (hf : f =ᶠ[l⊓𝓟 s] g) (hs : s =ᶠ[l] t) : indicator s f =ᶠ[l] indicator t g :=
-  (eventually_inf_principal.1 hf).mp$
-    hs.mem_iff.mono$
-      fun x hst hfg =>
-        by_cases
-          (fun hxs : x ∈ s =>
-            by 
-              simp only [hst.1 hxs, indicator_of_mem])
-          fun hxs =>
-            by 
-              simp only [indicator_of_not_mem hxs, indicator_of_not_mem (mt hst.2 hxs)]
+-- error in Order.Filter.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem indicator_eventually_eq
+(hf : «expr =ᶠ[ ] »(f, «expr ⊓ »(l, expr𝓟() s), g))
+(hs : «expr =ᶠ[ ] »(s, l, t)) : «expr =ᶠ[ ] »(indicator s f, l, indicator t g) :=
+«expr $ »((eventually_inf_principal.1 hf).mp, «expr $ »(hs.mem_iff.mono, λ
+  x
+  hst
+  hfg, by_cases (λ
+   hxs : «expr ∈ »(x, s), by simp [] [] ["only"] ["[", "*", ",", expr hst.1 hxs, ",", expr indicator_of_mem, "]"] [] []) (λ
+   hxs, by simp [] [] ["only"] ["[", expr indicator_of_not_mem hxs, ",", expr indicator_of_not_mem (mt hst.2 hxs), "]"] [] [])))
 
 end HasZero
 
@@ -92,10 +91,17 @@ begin
     simp [] [] ["only"] ["[", expr indicator_of_mem, ",", expr h, ",", expr mem_Inter.2 h, ",", expr tendsto_const_pure, "]"] [] [] }
 end
 
-theorem tendsto_indicator_bUnion_finset {ι} [HasZero β] (s : ι → Set α) (f : α → β) (a : α) :
-  tendsto (fun n : Finset ι => indicator (⋃(i : _)(_ : i ∈ n), s i) f a) at_top (pure$ indicator (Union s) f a) :=
-  by 
-    rw [Union_eq_Union_finset s]
-    refine' Monotone.tendsto_indicator (fun n : Finset ι => ⋃(i : _)(_ : i ∈ n), s i) _ f a 
-    exact fun t₁ t₂ => bUnion_subset_bUnion_left
+-- error in Order.Filter.IndicatorFunction: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem tendsto_indicator_bUnion_finset
+{ι}
+[has_zero β]
+(s : ι → set α)
+(f : α → β)
+(a : α) : tendsto (λ
+ n : finset ι, indicator «expr⋃ , »((i «expr ∈ » n), s i) f a) at_top «expr $ »(pure, indicator (Union s) f a) :=
+begin
+  rw [expr Union_eq_Union_finset s] [],
+  refine [expr monotone.tendsto_indicator (λ n : finset ι, «expr⋃ , »((i «expr ∈ » n), s i)) _ f a],
+  exact [expr λ t₁ t₂, bUnion_subset_bUnion_left]
+end
 

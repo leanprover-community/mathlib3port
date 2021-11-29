@@ -4,7 +4,8 @@ import Mathbin.Data.Polynomial.Lifts
 import Mathbin.FieldTheory.Separable 
 import Mathbin.FieldTheory.SplittingField 
 import Mathbin.NumberTheory.ArithmeticFunction 
-import Mathbin.RingTheory.RootsOfUnity
+import Mathbin.RingTheory.RootsOfUnity 
+import Mathbin.FieldTheory.Ratfunc
 
 /-!
 # Cyclotomic polynomials.
@@ -105,20 +106,22 @@ theorem cyclotomic'.monic (n : ℕ) (R : Type _) [CommRingₓ R] [IsDomain R] : 
 theorem cyclotomic'_ne_zero (n : ℕ) (R : Type _) [CommRingₓ R] [IsDomain R] : cyclotomic' n R ≠ 0 :=
   (cyclotomic'.monic n R).ne_zero
 
+-- error in RingTheory.Polynomial.Cyclotomic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The natural degree of `cyclotomic' n R` is `totient n` if there is a primitive root of
 unity in `R`. -/
-theorem nat_degree_cyclotomic' {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
-  (cyclotomic' n R).natDegree = Nat.totient n :=
-  by 
-    cases' Nat.eq_zero_or_posₓ n with hzero hpos
-    ·
-      simp only [hzero, cyclotomic'_zero, Nat.totient_zero, nat_degree_one]
-    rw [cyclotomic']
-    rw [nat_degree_prod (primitiveRoots n R) fun z : R => X - C z]
-    simp only [IsPrimitiveRoot.card_primitive_roots h hpos, mul_oneₓ, nat_degree_X_sub_C, Nat.cast_id, Finset.sum_const,
-      nsmul_eq_mul]
-    intro z hz 
-    exact X_sub_C_ne_zero z
+theorem nat_degree_cyclotomic'
+{ζ : R}
+{n : exprℕ()}
+(h : is_primitive_root ζ n) : «expr = »((cyclotomic' n R).nat_degree, nat.totient n) :=
+begin
+  cases [expr nat.eq_zero_or_pos n] ["with", ident hzero, ident hpos],
+  { simp [] [] ["only"] ["[", expr hzero, ",", expr cyclotomic'_zero, ",", expr nat.totient_zero, ",", expr nat_degree_one, "]"] [] [] },
+  rw ["[", expr cyclotomic', "]"] [],
+  rw [expr nat_degree_prod (primitive_roots n R) (λ z : R, «expr - »(X, C z))] [],
+  simp [] [] ["only"] ["[", expr is_primitive_root.card_primitive_roots h hpos, ",", expr mul_one, ",", expr nat_degree_X_sub_C, ",", expr nat.cast_id, ",", expr finset.sum_const, ",", expr nsmul_eq_mul, "]"] [] [],
+  intros [ident z, ident hz],
+  exact [expr X_sub_C_ne_zero z]
+end
 
 /-- The degree of `cyclotomic' n R` is `totient n` if there is a primitive root of unity in `R`. -/
 theorem degree_cyclotomic' {ζ : R} {n : ℕ} (h : IsPrimitiveRoot ζ n) : (cyclotomic' n R).degree = Nat.totient n :=
@@ -433,17 +436,14 @@ open_locale ArithmeticFunction
   using Möbius inversion. -/
 theorem cyclotomic_eq_prod_X_pow_sub_one_pow_moebius
 {n : exprℕ()}
-(hpos : «expr < »(0, n))
 (R : Type*)
 [comm_ring R]
-[nontrivial R]
-{K : Type*}
-[field K]
-[algebra (polynomial R) K]
-[is_fraction_ring (polynomial R) K] : «expr = »(algebra_map _ K (cyclotomic n R), «expr∏ in , »((i), n.divisors_antidiagonal, «expr ^ »(algebra_map (polynomial R) K «expr - »(«expr ^ »(X, i.snd), 1), exprμ() i.fst))) :=
+[is_domain R] : «expr = »(algebra_map _ (ratfunc R) (cyclotomic n R), «expr∏ in , »((i), n.divisors_antidiagonal, «expr ^ »(algebra_map (polynomial R) _ «expr - »(«expr ^ »(X, i.snd), 1), exprμ() i.fst))) :=
 begin
+  rcases [expr n.eq_zero_or_pos, "with", ident rfl, "|", ident hpos],
+  { simp [] [] [] [] [] [] },
   have [ident h] [":", expr ∀
-   n : exprℕ(), «expr < »(0, n) → «expr = »(«expr∏ in , »((i), nat.divisors n, algebra_map _ K (cyclotomic i R)), algebra_map _ _ «expr - »(«expr ^ »(X, n), 1))] [],
+   n : exprℕ(), «expr < »(0, n) → «expr = »(«expr∏ in , »((i), nat.divisors n, algebra_map _ (ratfunc R) (cyclotomic i R)), algebra_map _ _ «expr - »(«expr ^ »(X, n), 1))] [],
   { intros [ident n, ident hn],
     rw ["[", "<-", expr prod_cyclotomic_eq_X_pow_sub_one hn R, ",", expr ring_hom.map_prod, "]"] [] },
   rw [expr (prod_eq_iff_prod_pow_moebius_eq_of_nonzero (λ
@@ -684,7 +684,7 @@ begin
   { intro [ident ha],
     exact [expr hn (int.coe_nat_dvd.1 ((zmod.int_coe_zmod_eq_zero_iff_dvd n p).1 ha))] },
   rw ["[", expr sq, "]"] ["at", ident habs],
-  replace [ident habs] [] [":=", expr squarefree_X_pow_sub_C (1 : zmod p) hnzero one_ne_zero (map (int.cast_ring_hom (zmod p)) «expr - »(X, a)) habs],
+  replace [ident habs] [] [":=", expr (separable_X_pow_sub_C (1 : zmod p) hnzero one_ne_zero).squarefree (map (int.cast_ring_hom (zmod p)) «expr - »(X, a)) habs],
   simp [] [] ["only"] ["[", expr map_nat_cast, ",", expr map_X, ",", expr map_sub, "]"] [] ["at", ident habs],
   replace [ident habs] [] [":=", expr degree_eq_zero_of_is_unit habs],
   rw ["[", "<-", expr C_eq_nat_cast, ",", expr degree_X_sub_C, "]"] ["at", ident habs],

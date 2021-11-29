@@ -233,9 +233,10 @@ theorem UniqueDiffWithinAt.eq_deriv (s : Set 𝕜) (H : UniqueDiffWithinAt 𝕜 
   (h₁ : HasDerivWithinAt f f₁' s x) : f' = f₁' :=
   smul_right_one_eq_iff.mp$ UniqueDiffWithinAt.eq H h h₁
 
-theorem has_deriv_at_filter_iff_tendsto :
-  HasDerivAtFilter f f' x L ↔ tendsto (fun x' : 𝕜 => ∥x' - x∥⁻¹*∥f x' - f x - (x' - x) • f'∥) L (𝓝 0) :=
-  has_fderiv_at_filter_iff_tendsto
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_deriv_at_filter_iff_tendsto : «expr ↔ »(has_deriv_at_filter f f' x L, tendsto (λ
+  x' : 𝕜, «expr * »(«expr ⁻¹»(«expr∥ ∥»(«expr - »(x', x))), «expr∥ ∥»(«expr - »(«expr - »(f x', f x), «expr • »(«expr - »(x', x), f'))))) L (expr𝓝() 0)) :=
+has_fderiv_at_filter_iff_tendsto
 
 theorem has_deriv_within_at_iff_tendsto :
   HasDerivWithinAt f f' s x ↔ tendsto (fun x' => ∥x' - x∥⁻¹*∥f x' - f x - (x' - x) • f'∥) (𝓝[s] x) (𝓝 0) :=
@@ -443,11 +444,11 @@ theorem HasDerivAtFilter.congr_of_eventually_eq (h : HasDerivAtFilter f f' x L) 
   by 
     rwa [hL.has_deriv_at_filter_iff hx rfl]
 
-theorem HasDerivWithinAt.congr_mono (h : HasDerivWithinAt f f' s x) (ht : ∀ x _ : x ∈ t, f₁ x = f x) (hx : f₁ x = f x)
+theorem HasDerivWithinAt.congr_mono (h : HasDerivWithinAt f f' s x) (ht : ∀ x (_ : x ∈ t), f₁ x = f x) (hx : f₁ x = f x)
   (h₁ : t ⊆ s) : HasDerivWithinAt f₁ f' t x :=
   HasFderivWithinAt.congr_mono h ht hx h₁
 
-theorem HasDerivWithinAt.congr (h : HasDerivWithinAt f f' s x) (hs : ∀ x _ : x ∈ s, f₁ x = f x) (hx : f₁ x = f x) :
+theorem HasDerivWithinAt.congr (h : HasDerivWithinAt f f' s x) (hs : ∀ x (_ : x ∈ s), f₁ x = f x) (hx : f₁ x = f x) :
   HasDerivWithinAt f₁ f' s x :=
   h.congr_mono hs hx (subset.refl _)
 
@@ -468,7 +469,7 @@ theorem Filter.EventuallyEq.deriv_within_eq (hs : UniqueDiffWithinAt 𝕜 s x) (
     unfold derivWithin 
     rw [hL.fderiv_within_eq hs hx]
 
-theorem deriv_within_congr (hs : UniqueDiffWithinAt 𝕜 s x) (hL : ∀ y _ : y ∈ s, f₁ y = f y) (hx : f₁ x = f x) :
+theorem deriv_within_congr (hs : UniqueDiffWithinAt 𝕜 s x) (hL : ∀ y (_ : y ∈ s), f₁ y = f y) (hx : f₁ x = f x) :
   derivWithin f₁ s x = derivWithin f s x :=
   by 
     unfold derivWithin 
@@ -500,8 +501,8 @@ theorem has_deriv_within_at_id : HasDerivWithinAt id 1 s x :=
 theorem has_deriv_at_id : HasDerivAt id 1 x :=
   has_deriv_at_filter_id _ _
 
-theorem has_deriv_at_id' : HasDerivAt (fun x : 𝕜 => x) 1 x :=
-  has_deriv_at_filter_id _ _
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_deriv_at_id' : has_deriv_at (λ x : 𝕜, x) 1 x := has_deriv_at_filter_id _ _
 
 theorem has_strict_deriv_at_id : HasStrictDerivAt id 1 x :=
   (has_strict_fderiv_at_id x).HasStrictDerivAt
@@ -513,9 +514,8 @@ theorem deriv_id : deriv id x = 1 :=
 theorem deriv_id' : deriv (@id 𝕜) = fun _ => 1 :=
   funext deriv_id
 
-@[simp]
-theorem deriv_id'' : (deriv fun x : 𝕜 => x) = fun _ => 1 :=
-  deriv_id'
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem deriv_id'' : «expr = »(deriv (λ x : 𝕜, x), λ _, 1) := deriv_id'
 
 theorem deriv_within_id (hxs : UniqueDiffWithinAt 𝕜 s x) : derivWithin id s x = 1 :=
   (has_deriv_within_at_id x s).derivWithin hxs
@@ -544,9 +544,8 @@ theorem has_deriv_at_const : HasDerivAt (fun x => c) 0 x :=
 theorem deriv_const : deriv (fun x => c) x = 0 :=
   HasDerivAt.deriv (has_deriv_at_const x c)
 
-@[simp]
-theorem deriv_const' : (deriv fun x : 𝕜 => c) = fun x => 0 :=
-  funext fun x => deriv_const x c
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem deriv_const' : «expr = »(deriv (λ x : 𝕜, c), λ x, 0) := funext (λ x, deriv_const x c)
 
 theorem deriv_within_const (hxs : UniqueDiffWithinAt 𝕜 s x) : derivWithin (fun x => c) s x = 0 :=
   (has_deriv_within_at_const _ _ _).derivWithin hxs
@@ -699,30 +698,30 @@ open_locale BigOperators
 
 variable{ι : Type _}{u : Finset ι}{A : ι → 𝕜 → F}{A' : ι → F}
 
-theorem HasDerivAtFilter.sum (h : ∀ i _ : i ∈ u, HasDerivAtFilter (A i) (A' i) x L) :
+theorem HasDerivAtFilter.sum (h : ∀ i (_ : i ∈ u), HasDerivAtFilter (A i) (A' i) x L) :
   HasDerivAtFilter (fun y => ∑i in u, A i y) (∑i in u, A' i) x L :=
   by 
     simpa [ContinuousLinearMap.sum_apply] using (HasFderivAtFilter.sum h).HasDerivAtFilter
 
-theorem HasStrictDerivAt.sum (h : ∀ i _ : i ∈ u, HasStrictDerivAt (A i) (A' i) x) :
+theorem HasStrictDerivAt.sum (h : ∀ i (_ : i ∈ u), HasStrictDerivAt (A i) (A' i) x) :
   HasStrictDerivAt (fun y => ∑i in u, A i y) (∑i in u, A' i) x :=
   by 
     simpa [ContinuousLinearMap.sum_apply] using (HasStrictFderivAt.sum h).HasStrictDerivAt
 
-theorem HasDerivWithinAt.sum (h : ∀ i _ : i ∈ u, HasDerivWithinAt (A i) (A' i) s x) :
+theorem HasDerivWithinAt.sum (h : ∀ i (_ : i ∈ u), HasDerivWithinAt (A i) (A' i) s x) :
   HasDerivWithinAt (fun y => ∑i in u, A i y) (∑i in u, A' i) s x :=
   HasDerivAtFilter.sum h
 
-theorem HasDerivAt.sum (h : ∀ i _ : i ∈ u, HasDerivAt (A i) (A' i) x) :
+theorem HasDerivAt.sum (h : ∀ i (_ : i ∈ u), HasDerivAt (A i) (A' i) x) :
   HasDerivAt (fun y => ∑i in u, A i y) (∑i in u, A' i) x :=
   HasDerivAtFilter.sum h
 
-theorem deriv_within_sum (hxs : UniqueDiffWithinAt 𝕜 s x) (h : ∀ i _ : i ∈ u, DifferentiableWithinAt 𝕜 (A i) s x) :
+theorem deriv_within_sum (hxs : UniqueDiffWithinAt 𝕜 s x) (h : ∀ i (_ : i ∈ u), DifferentiableWithinAt 𝕜 (A i) s x) :
   derivWithin (fun y => ∑i in u, A i y) s x = ∑i in u, derivWithin (A i) s x :=
   (HasDerivWithinAt.sum fun i hi => (h i hi).HasDerivWithinAt).derivWithin hxs
 
 @[simp]
-theorem deriv_sum (h : ∀ i _ : i ∈ u, DifferentiableAt 𝕜 (A i) x) :
+theorem deriv_sum (h : ∀ i (_ : i ∈ u), DifferentiableAt 𝕜 (A i) x) :
   deriv (fun y => ∑i in u, A i y) x = ∑i in u, deriv (A i) x :=
   (HasDerivAt.sum fun i hi => (h i hi).HasDerivAt).deriv
 
@@ -909,9 +908,8 @@ theorem deriv_neg : deriv Neg.neg x = -1 :=
 theorem deriv_neg' : deriv (Neg.neg : 𝕜 → 𝕜) = fun _ => -1 :=
   funext deriv_neg
 
-@[simp]
-theorem deriv_neg'' : deriv (fun x : 𝕜 => -x) x = -1 :=
-  deriv_neg x
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem deriv_neg'' : «expr = »(deriv (λ x : 𝕜, «expr- »(x)) x, «expr- »(1)) := deriv_neg x
 
 theorem deriv_within_neg (hxs : UniqueDiffWithinAt 𝕜 s x) : derivWithin Neg.neg s x = -1 :=
   (has_deriv_within_at_neg x s).derivWithin hxs
@@ -1023,7 +1021,7 @@ theorem HasDerivWithinAt.continuous_within_at (h : HasDerivWithinAt f f' s x) : 
 theorem HasDerivAt.continuous_at (h : HasDerivAt f f' x) : ContinuousAt f x :=
   HasDerivAtFilter.tendsto_nhds (le_reflₓ _) h
 
-protected theorem HasDerivAt.continuous_on {f f' : 𝕜 → F} (hderiv : ∀ x _ : x ∈ s, HasDerivAt f (f' x) x) :
+protected theorem HasDerivAt.continuous_on {f f' : 𝕜 → F} (hderiv : ∀ x (_ : x ∈ s), HasDerivAt f (f' x) x) :
   ContinuousOn f s :=
   fun x hx => (hderiv x hx).ContinuousAt.ContinuousWithinAt
 
@@ -1418,19 +1416,23 @@ section Inverse
 /-! ### Derivative of `x ↦ x⁻¹` -/
 
 
-theorem has_strict_deriv_at_inv (hx : x ≠ 0) : HasStrictDerivAt HasInv.inv (-(x ^ 2)⁻¹) x :=
-  by 
-    suffices  : is_o (fun p : 𝕜 × 𝕜 => (p.1 - p.2)*(x*x)⁻¹ - (p.1*p.2)⁻¹) (fun p : 𝕜 × 𝕜 => (p.1 - p.2)*1) (𝓝 (x, x))
-    ·
-      refine' this.congr' _ (eventually_of_forall$ fun _ => mul_oneₓ _)
-      refine' eventually.mono (IsOpen.mem_nhds (is_open_ne.prod is_open_ne) ⟨hx, hx⟩) _ 
-      rintro ⟨y, z⟩ ⟨hy, hz⟩
-      simp only [mem_set_of_eq] at hy hz 
-      fieldSimp [hx, hy, hz]
-      ring 
-    refine' (is_O_refl (fun p : 𝕜 × 𝕜 => p.1 - p.2) _).mul_is_o ((is_o_one_iff _).2 _)
-    rw [←sub_self ((x*x)⁻¹)]
-    exact tendsto_const_nhds.sub ((continuous_mul.tendsto (x, x)).inv₀$ mul_ne_zero hx hx)
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_strict_deriv_at_inv
+(hx : «expr ≠ »(x, 0)) : has_strict_deriv_at has_inv.inv «expr- »(«expr ⁻¹»(«expr ^ »(x, 2))) x :=
+begin
+  suffices [] [":", expr is_o (λ
+    p : «expr × »(𝕜, 𝕜), «expr * »(«expr - »(p.1, p.2), «expr - »(«expr ⁻¹»(«expr * »(x, x)), «expr ⁻¹»(«expr * »(p.1, p.2))))) (λ
+    p : «expr × »(𝕜, 𝕜), «expr * »(«expr - »(p.1, p.2), 1)) (expr𝓝() (x, x))],
+  { refine [expr this.congr' _ «expr $ »(eventually_of_forall, λ _, mul_one _)],
+    refine [expr eventually.mono (is_open.mem_nhds (is_open_ne.prod is_open_ne) ⟨hx, hx⟩) _],
+    rintro ["⟨", ident y, ",", ident z, "⟩", "⟨", ident hy, ",", ident hz, "⟩"],
+    simp [] [] ["only"] ["[", expr mem_set_of_eq, "]"] [] ["at", ident hy, ident hz],
+    field_simp [] ["[", expr hx, ",", expr hy, ",", expr hz, "]"] [] [],
+    ring [] },
+  refine [expr (is_O_refl (λ p : «expr × »(𝕜, 𝕜), «expr - »(p.1, p.2)) _).mul_is_o ((is_o_one_iff _).2 _)],
+  rw ["[", "<-", expr sub_self «expr ⁻¹»(«expr * »(x, x)), "]"] [],
+  exact [expr tendsto_const_nhds.sub «expr $ »((continuous_mul.tendsto (x, x)).inv₀, mul_ne_zero hx hx)]
+end
 
 theorem has_deriv_at_inv (x_ne_zero : x ≠ 0) : HasDerivAt (fun y => y⁻¹) (-(x ^ 2)⁻¹) x :=
   (has_strict_deriv_at_inv x_ne_zero).HasDerivAt
@@ -1444,8 +1446,9 @@ theorem differentiable_at_inv : DifferentiableAt 𝕜 (fun x => x⁻¹) x ↔ x 
 theorem differentiable_within_at_inv (x_ne_zero : x ≠ 0) : DifferentiableWithinAt 𝕜 (fun x => x⁻¹) s x :=
   (differentiable_at_inv.2 x_ne_zero).DifferentiableWithinAt
 
-theorem differentiable_on_inv : DifferentiableOn 𝕜 (fun x : 𝕜 => x⁻¹) { x | x ≠ 0 } :=
-  fun x hx => differentiable_within_at_inv hx
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem differentiable_on_inv : differentiable_on 𝕜 (λ x : 𝕜, «expr ⁻¹»(x)) {x | «expr ≠ »(x, 0)} :=
+λ x hx, differentiable_within_at_inv hx
 
 theorem deriv_inv : deriv (fun x => x⁻¹) x = -(x ^ 2)⁻¹ :=
   by 
@@ -1455,9 +1458,9 @@ theorem deriv_inv : deriv (fun x => x⁻¹) x = -(x ^ 2)⁻¹ :=
     ·
       exact (has_deriv_at_inv hne).deriv
 
-@[simp]
-theorem deriv_inv' : (deriv fun x : 𝕜 => x⁻¹) = fun x => -(x ^ 2)⁻¹ :=
-  funext fun x => deriv_inv
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem deriv_inv' : «expr = »(deriv (λ x : 𝕜, «expr ⁻¹»(x)), λ x, «expr- »(«expr ⁻¹»(«expr ^ »(x, 2)))) :=
+funext (λ x, deriv_inv)
 
 theorem deriv_within_inv (x_ne_zero : x ≠ 0) (hxs : UniqueDiffWithinAt 𝕜 s x) :
   derivWithin (fun x => x⁻¹) s x = -(x ^ 2)⁻¹ :=
@@ -1504,7 +1507,7 @@ theorem DifferentiableWithinAt.inv (hc : DifferentiableWithinAt 𝕜 c s x) (hx 
 theorem DifferentiableAt.inv (hc : DifferentiableAt 𝕜 c x) (hx : c x ≠ 0) : DifferentiableAt 𝕜 (fun x => c x⁻¹) x :=
   (hc.has_deriv_at.inv hx).DifferentiableAt
 
-theorem DifferentiableOn.inv (hc : DifferentiableOn 𝕜 c s) (hx : ∀ x _ : x ∈ s, c x ≠ 0) :
+theorem DifferentiableOn.inv (hc : DifferentiableOn 𝕜 c s) (hx : ∀ x (_ : x ∈ s), c x ≠ 0) :
   DifferentiableOn 𝕜 (fun x => c x⁻¹) s :=
   fun x h => (hc x h).inv (hx x h)
 
@@ -1564,8 +1567,8 @@ theorem DifferentiableAt.div (hc : DifferentiableAt 𝕜 c x) (hd : Differentiab
   DifferentiableAt 𝕜 (fun x => c x / d x) x :=
   (hc.has_deriv_at.div hd.has_deriv_at hx).DifferentiableAt
 
-theorem DifferentiableOn.div (hc : DifferentiableOn 𝕜 c s) (hd : DifferentiableOn 𝕜 d s) (hx : ∀ x _ : x ∈ s, d x ≠ 0) :
-  DifferentiableOn 𝕜 (fun x => c x / d x) s :=
+theorem DifferentiableOn.div (hc : DifferentiableOn 𝕜 c s) (hd : DifferentiableOn 𝕜 d s)
+  (hx : ∀ x (_ : x ∈ s), d x ≠ 0) : DifferentiableOn 𝕜 (fun x => c x / d x) s :=
   fun x h => (hc x h).div (hd x h) (hx x h)
 
 @[simp]
@@ -1889,8 +1892,8 @@ theorem differentiable_at_pow : DifferentiableAt 𝕜 (fun x => x ^ n) x :=
 theorem differentiable_within_at_pow : DifferentiableWithinAt 𝕜 (fun x => x ^ n) s x :=
   differentiable_at_pow.DifferentiableWithinAt
 
-theorem differentiable_pow : Differentiable 𝕜 fun x : 𝕜 => x ^ n :=
-  fun x => differentiable_at_pow
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem differentiable_pow : differentiable 𝕜 (λ x : 𝕜, «expr ^ »(x, n)) := λ x, differentiable_at_pow
 
 theorem differentiable_on_pow : DifferentiableOn 𝕜 (fun x => x ^ n) s :=
   differentiable_pow.DifferentiableOn
@@ -2004,24 +2007,28 @@ theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m*x ^ (m - 
       rcases H with ⟨rfl, hm⟩
       rw [zero_zpow _ ((sub_one_lt _).trans hm).Ne, mul_zero]
 
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem deriv_zpow' (m : ℤ) : (deriv fun x : 𝕜 => x ^ m) = fun x => m*x ^ (m - 1) :=
-  funext$ deriv_zpow m
+theorem deriv_zpow'
+(m : exprℤ()) : «expr = »(deriv (λ x : 𝕜, «expr ^ »(x, m)), λ x, «expr * »(m, «expr ^ »(x, «expr - »(m, 1)))) :=
+«expr $ »(funext, deriv_zpow m)
 
 theorem deriv_within_zpow (hxs : UniqueDiffWithinAt 𝕜 s x) (h : x ≠ 0 ∨ 0 ≤ m) :
   derivWithin (fun x => x ^ m) s x = (m : 𝕜)*x ^ (m - 1) :=
   (has_deriv_within_at_zpow m x h s).derivWithin hxs
 
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem iter_deriv_zpow' (m : ℤ) (k : ℕ) :
-  ((deriv^[k]) fun x : 𝕜 => x ^ m) = fun x => (∏i in Finset.range k, m - i)*x ^ (m - k) :=
-  by 
-    induction' k with k ihk
-    ·
-      simp only [one_mulₓ, Int.coe_nat_zero, id, sub_zero, Finset.prod_range_zero, Function.iterate_zero]
-    ·
-      simp only [Function.iterate_succ_apply', ihk, deriv_const_mul_field', deriv_zpow', Finset.prod_range_succ,
-        Int.coe_nat_succ, ←sub_sub, Int.cast_sub, Int.cast_coe_nat, mul_assocₓ]
+theorem iter_deriv_zpow'
+(m : exprℤ())
+(k : exprℕ()) : «expr = »(«expr ^[ ]»(deriv, k) (λ
+  x : 𝕜, «expr ^ »(x, m)), λ
+ x, «expr * »(«expr∏ in , »((i), finset.range k, «expr - »(m, i)), «expr ^ »(x, «expr - »(m, k)))) :=
+begin
+  induction [expr k] [] ["with", ident k, ident ihk] [],
+  { simp [] [] ["only"] ["[", expr one_mul, ",", expr int.coe_nat_zero, ",", expr id, ",", expr sub_zero, ",", expr finset.prod_range_zero, ",", expr function.iterate_zero, "]"] [] [] },
+  { simp [] [] ["only"] ["[", expr function.iterate_succ_apply', ",", expr ihk, ",", expr deriv_const_mul_field', ",", expr deriv_zpow', ",", expr finset.prod_range_succ, ",", expr int.coe_nat_succ, ",", "<-", expr sub_sub, ",", expr int.cast_sub, ",", expr int.cast_coe_nat, ",", expr mul_assoc, "]"] [] [] }
+end
 
 theorem iter_deriv_zpow (m : ℤ) (x : 𝕜) (k : ℕ) :
   (deriv^[k]) (fun y => y ^ m) x = (∏i in Finset.range k, m - i)*x ^ (m - k) :=
@@ -2042,19 +2049,25 @@ begin
     simp [] [] ["only"] ["[", expr this, ",", expr zero_mul, "]"] [] [] }
 end
 
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem iter_deriv_pow' (n k : ℕ) :
-  ((deriv^[k]) fun x : 𝕜 => x ^ n) = fun x => (∏i in Finset.range k, n - i)*x ^ (n - k) :=
-  funext$ fun x => iter_deriv_pow n x k
+theorem iter_deriv_pow'
+(n
+ k : exprℕ()) : «expr = »(«expr ^[ ]»(deriv, k) (λ
+  x : 𝕜, «expr ^ »(x, n)), λ
+ x, «expr * »(«expr∏ in , »((i), finset.range k, «expr - »(n, i)), «expr ^ »(x, «expr - »(n, k)))) :=
+«expr $ »(funext, λ x, iter_deriv_pow n x k)
 
 theorem iter_deriv_inv (k : ℕ) (x : 𝕜) : (deriv^[k]) HasInv.inv x = (∏i in Finset.range k, -1 - i)*x ^ (-1 - k : ℤ) :=
   by 
     simpa only [zpow_neg_one₀, Int.cast_neg, Int.cast_one] using iter_deriv_zpow (-1) x k
 
+-- error in Analysis.Calculus.Deriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem iter_deriv_inv' (k : ℕ) :
-  (deriv^[k]) HasInv.inv = fun x : 𝕜 => (∏i in Finset.range k, -1 - i)*x ^ (-1 - k : ℤ) :=
-  funext (iter_deriv_inv k)
+theorem iter_deriv_inv'
+(k : exprℕ()) : «expr = »(«expr ^[ ]»(deriv, k) has_inv.inv, λ
+ x : 𝕜, «expr * »(«expr∏ in , »((i), finset.range k, «expr - »(«expr- »(1), i)), «expr ^ »(x, («expr - »(«expr- »(1), k) : exprℤ())))) :=
+funext (iter_deriv_inv k)
 
 end Zpow
 

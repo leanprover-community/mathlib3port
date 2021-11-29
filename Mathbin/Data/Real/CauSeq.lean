@@ -27,7 +27,7 @@ open_locale BigOperators
 open IsAbsoluteValue
 
 theorem exists_forall_ge_and {α} [LinearOrderₓ α] {P Q : α → Prop} :
-  (∃ i, ∀ j _ : j ≥ i, P j) → (∃ i, ∀ j _ : j ≥ i, Q j) → ∃ i, ∀ j _ : j ≥ i, P j ∧ Q j
+  (∃ i, ∀ j (_ : j ≥ i), P j) → (∃ i, ∀ j (_ : j ≥ i), Q j) → ∃ i, ∀ j (_ : j ≥ i), P j ∧ Q j
 | ⟨a, h₁⟩, ⟨b, h₂⟩ =>
   let ⟨c, ac, bc⟩ := exists_ge_of_linear a b
   ⟨c, fun j hj => ⟨h₁ _ (le_transₓ ac hj), h₂ _ (le_transₓ bc hj)⟩⟩
@@ -88,14 +88,14 @@ end
 
 /-- A sequence is Cauchy if the distance between its entries tends to zero. -/
 def IsCauSeq {α : Type _} [LinearOrderedField α] {β : Type _} [Ringₓ β] (abv : β → α) (f : ℕ → β) : Prop :=
-  ∀ ε _ : ε > 0, ∃ i, ∀ j _ : j ≥ i, abv (f j - f i) < ε
+  ∀ ε (_ : ε > 0), ∃ i, ∀ j (_ : j ≥ i), abv (f j - f i) < ε
 
 namespace IsCauSeq
 
 variable{α : Type _}[LinearOrderedField α]{β : Type _}[Ringₓ β]{abv : β → α}[IsAbsoluteValue abv]{f : ℕ → β}
 
 @[nolint ge_or_gt]
-theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε :=
+theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j k (_ : j ≥ i) (_ : k ≥ i), abv (f j - f k) < ε :=
   by 
     refine' (hf _ (half_pos ε0)).imp fun i hi j k ij ik => _ 
     rw [←add_halves ε]
@@ -103,7 +103,8 @@ theorem cauchy₂ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j 
     rw [abv_sub abv]
     exact hi _ ik
 
-theorem cauchy₃ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) : ∃ i, ∀ j _ : j ≥ i, ∀ k _ : k ≥ j, abv (f k - f j) < ε :=
+theorem cauchy₃ (hf : IsCauSeq abv f) {ε : α} (ε0 : 0 < ε) :
+  ∃ i, ∀ j (_ : j ≥ i), ∀ k (_ : k ≥ j), abv (f k - f j) < ε :=
   let ⟨i, H⟩ := hf.cauchy₂ ε0
   ⟨i, fun j ij k jk => H _ _ (le_transₓ ij jk) ij⟩
 
@@ -135,7 +136,7 @@ theorem ext {f g : CauSeq β abv} (h : ∀ i, f i = g i) : f = g :=
 theorem is_cau (f : CauSeq β abv) : IsCauSeq abv f :=
   f.2
 
-theorem cauchy (f : CauSeq β abv) : ∀ {ε}, 0 < ε → ∃ i, ∀ j _ : j ≥ i, abv (f j - f i) < ε :=
+theorem cauchy (f : CauSeq β abv) : ∀ {ε}, 0 < ε → ∃ i, ∀ j (_ : j ≥ i), abv (f j - f i) < ε :=
   f.2
 
 /-- Given a Cauchy sequence `f`, create a Cauchy sequence from a sequence `g` with
@@ -149,10 +150,10 @@ def of_eq (f : CauSeq β abv) (g : ℕ → β) (e : ∀ i, f i = g i) : CauSeq �
 variable[IsAbsoluteValue abv]
 
 @[nolint ge_or_gt]
-theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j k _ : j ≥ i _ : k ≥ i, abv (f j - f k) < ε :=
+theorem cauchy₂ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j k (_ : j ≥ i) (_ : k ≥ i), abv (f j - f k) < ε :=
   f.2.cauchy₂
 
-theorem cauchy₃ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j _ : j ≥ i, ∀ k _ : k ≥ j, abv (f k - f j) < ε :=
+theorem cauchy₃ (f : CauSeq β abv) {ε} : 0 < ε → ∃ i, ∀ j (_ : j ≥ i), ∀ k (_ : k ≥ j), abv (f k - f j) < ε :=
   f.2.cauchy₃
 
 -- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -213,8 +214,9 @@ local notation "const" => const abv
 theorem const_apply (x : β) (i : ℕ) : (const x : ℕ → β) i = x :=
   rfl
 
-theorem const_inj {x y : β} : (const x : CauSeq β abv) = const y ↔ x = y :=
-  ⟨fun h => congr_argₓ (fun f : CauSeq β abv => (f : ℕ → β) 0) h, congr_argₓ _⟩
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem const_inj {x y : β} : «expr ↔ »(«expr = »((exprconst() x : cau_seq β abv), exprconst() y), «expr = »(x, y)) :=
+⟨λ h, congr_arg (λ f : cau_seq β abv, (f : exprℕ() → β) 0) h, congr_arg _⟩
 
 instance  : HasZero (CauSeq β abv) :=
   ⟨const 0⟩
@@ -307,7 +309,7 @@ instance  {β : Type _} [CommRingₓ β] {abv : β → α} [IsAbsoluteValue abv]
 
 /-- `lim_zero f` holds when `f` approaches 0. -/
 def lim_zero {abv : β → α} (f : CauSeq β abv) : Prop :=
-  ∀ ε _ : ε > 0, ∃ i, ∀ j _ : j ≥ i, abv (f j) < ε
+  ∀ ε (_ : ε > 0), ∃ i, ∀ j (_ : j ≥ i), abv (f j) < ε
 
 theorem add_lim_zero {f g : CauSeq β abv} (hf : lim_zero f) (hg : lim_zero g) : lim_zero (f+g)
 | ε, ε0 =>
@@ -504,21 +506,16 @@ section IsDomain
 
 variable{β : Type _}[Ringₓ β][IsDomain β](abv : β → α)[IsAbsoluteValue abv]
 
-theorem one_not_equiv_zero : ¬const abv 1 ≈ const abv 0 :=
-  fun h =>
-    have  : ∀ ε _ : ε > 0, ∃ i, ∀ k, i ≤ k → abv (1 - 0) < ε := h 
-    have h1 : abv 1 ≤ 0 :=
-      le_of_not_gtₓ$
-        fun h2 : 0 < abv 1 =>
-          Exists.elim (this _ h2)$
-            fun i hi =>
-              lt_irreflₓ (abv 1)$
-                by 
-                  simpa using hi _ (le_reflₓ _)
-    have h2 : 0 ≤ abv 1 := IsAbsoluteValue.abv_nonneg _ _ 
-    have  : abv 1 = 0 := le_antisymmₓ h1 h2 
-    have  : (1 : β) = 0 := (IsAbsoluteValue.abv_eq_zero abv).1 this 
-    absurd this one_ne_zero
+-- error in Data.Real.CauSeq: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem one_not_equiv_zero : «expr¬ »(«expr ≈ »(const abv 1, const abv 0)) :=
+assume h, have ∀ ε «expr > » 0, «expr∃ , »((i), ∀ k, «expr ≤ »(i, k) → «expr < »(abv «expr - »(1, 0), ε)), from h,
+have h1 : «expr ≤ »(abv 1, 0), from «expr $ »(le_of_not_gt, assume
+ h2 : «expr < »(0, abv 1), «expr $ »(exists.elim (this _ h2), λ
+  i hi, «expr $ »(lt_irrefl (abv 1), by simpa [] [] [] [] [] ["using", expr hi _ (le_refl _)]))),
+have h2 : «expr ≤ »(0, abv 1), from is_absolute_value.abv_nonneg _ _,
+have «expr = »(abv 1, 0), from le_antisymm h1 h2,
+have «expr = »((1 : β), 0), from (is_absolute_value.abv_eq_zero abv).1 this,
+absurd this one_ne_zero
 
 end IsDomain
 
@@ -526,7 +523,7 @@ section Field
 
 variable{β : Type _}[Field β]{abv : β → α}[IsAbsoluteValue abv]
 
-theorem inv_aux {f : CauSeq β abv} (hf : ¬lim_zero f) : ∀ ε _ : ε > 0, ∃ i, ∀ j _ : j ≥ i, abv (f j⁻¹ - f i⁻¹) < ε
+theorem inv_aux {f : CauSeq β abv} (hf : ¬lim_zero f) : ∀ ε (_ : ε > 0), ∃ i, ∀ j (_ : j ≥ i), abv (f j⁻¹ - f i⁻¹) < ε
 | ε, ε0 =>
   let ⟨K, K0, HK⟩ := abv_pos_of_not_lim_zero hf 
   let ⟨δ, δ0, Hδ⟩ := rat_inv_continuous_lemma abv ε0 K0 
@@ -571,7 +568,7 @@ local notation "const" => const abs
 
 /-- The entries of a positive Cauchy sequence eventually have a positive lower bound. -/
 def Pos (f : CauSeq α abs) : Prop :=
-  ∃ (K : _)(_ : K > 0), ∃ i, ∀ j _ : j ≥ i, K ≤ f j
+  ∃ (K : _)(_ : K > 0), ∃ i, ∀ j (_ : j ≥ i), K ≤ f j
 
 theorem not_lim_zero_of_pos {f : CauSeq α abs} : Pos f → ¬lim_zero f
 | ⟨F, F0, hF⟩, H =>
@@ -691,7 +688,7 @@ theorem const_le {x y : α} : const x ≤ const y ↔ x ≤ y :=
   by 
     rw [le_iff_lt_or_eqₓ] <;> exact or_congr const_lt const_equiv
 
-theorem le_of_exists {f g : CauSeq α abs} (h : ∃ i, ∀ j _ : j ≥ i, f j ≤ g j) : f ≤ g :=
+theorem le_of_exists {f g : CauSeq α abs} (h : ∃ i, ∀ j (_ : j ≥ i), f j ≤ g j) : f ≤ g :=
   let ⟨i, hi⟩ := h
   (Or.assoc.2 (CauSeq.lt_total f g)).elim id
     fun hgf =>

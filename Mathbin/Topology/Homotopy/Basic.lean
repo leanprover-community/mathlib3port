@@ -475,7 +475,7 @@ end HomotopicWith
 A `homotopy_rel f₀ f₁ S` is a homotopy between `f₀` and `f₁` which is fixed on the points in `S`.
 -/
 abbrev homotopy_rel (f₀ f₁ : C(X, Y)) (S : Set X) :=
-  homotopy_with f₀ f₁ fun f => ∀ x _ : x ∈ S, f x = f₀ x ∧ f x = f₁ x
+  homotopy_with f₀ f₁ fun f => ∀ x (_ : x ∈ S), f x = f₀ x ∧ f x = f₁ x
 
 namespace HomotopyRel
 
@@ -583,8 +583,8 @@ theorem symm ⦃f g : C(X, Y)⦄ (h : homotopic_rel f g S) : homotopic_rel g f S
 theorem trans ⦃f g h : C(X, Y)⦄ (h₀ : homotopic_rel f g S) (h₁ : homotopic_rel g h S) : homotopic_rel f h S :=
   h₀.map2 homotopy_rel.trans h₁
 
-theorem Equivalenceₓ : Equivalenceₓ fun f g : C(X, Y) => homotopic_rel f g S :=
-  ⟨refl, symm, trans⟩
+-- error in Topology.Homotopy.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem equivalence : equivalence (λ f g : «exprC( , )»(X, Y), homotopic_rel f g S) := ⟨refl, symm, trans⟩
 
 end HomotopicRel
 

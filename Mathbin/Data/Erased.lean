@@ -52,7 +52,7 @@ begin
 end
 
 @[simp]
-theorem mk_out {α} : ∀ a : Erased α, mk (out a) = a
+theorem mk_out {α} : ∀ (a : Erased α), mk (out a) = a
 | ⟨s, h⟩ =>
   by 
     simp [mk] <;> congr <;> exact Classical.some_spec h

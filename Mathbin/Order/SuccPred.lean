@@ -1,7 +1,7 @@
 import Mathbin.Order.CompleteLattice 
 import Mathbin.Order.Iterate 
 import Mathbin.Tactic.Monotonicity.Default 
-import Mathbin.Order.BoundedLattice
+import Mathbin.Order.BoundedOrder
 
 /-!
 # Successor and predecessor
@@ -156,18 +156,19 @@ instance  : Subsingleton (SuccOrder α) :=
 
 variable[SuccOrder α]
 
-theorem le_le_succ_iff {a b : α} : a ≤ b ∧ b ≤ succ a ↔ b = a ∨ b = succ a :=
-  by 
-    split 
-    ·
-      rintro h 
-      rw [or_iff_not_imp_left]
-      exact fun hba : b ≠ a => h.2.antisymm (succ_le_of_lt$ h.1.lt_of_ne$ hba.symm)
-    rintro (rfl | rfl)
-    ·
-      exact ⟨le_rfl, le_succ b⟩
-    ·
-      exact ⟨le_succ a, le_rfl⟩
+-- error in Order.SuccPred: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem le_le_succ_iff
+{a
+ b : α} : «expr ↔ »(«expr ∧ »(«expr ≤ »(a, b), «expr ≤ »(b, succ a)), «expr ∨ »(«expr = »(b, a), «expr = »(b, succ a))) :=
+begin
+  split,
+  { rintro [ident h],
+    rw [expr or_iff_not_imp_left] [],
+    exact [expr λ hba : «expr ≠ »(b, a), h.2.antisymm «expr $ »(succ_le_of_lt, «expr $ »(h.1.lt_of_ne, hba.symm))] },
+  rintro ["(", ident rfl, "|", ident rfl, ")"],
+  { exact [expr ⟨le_rfl, le_succ b⟩] },
+  { exact [expr ⟨le_succ a, le_rfl⟩] }
+end
 
 section NoTopOrder
 

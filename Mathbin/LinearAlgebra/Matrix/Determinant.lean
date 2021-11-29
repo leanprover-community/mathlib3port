@@ -439,7 +439,7 @@ theorem det_update_column_add_smul_self (A : Matrix n n R) {i j : n} (hij : i �
     rw [←det_transpose, ←update_row_transpose, ←det_transpose A]
     exact det_update_row_add_smul_self (A)ᵀ hij c
 
--- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem det_eq_of_forall_row_eq_smul_add_const_aux
 {A B : matrix n n R}
 {s : finset n} : ∀
@@ -478,14 +478,18 @@ begin
         h : «expr = »(k, i), «expr $ »(hk, «expr ▸ »(h, finset.mem_insert_self k s))), "]"] [] } }
 end
 
+-- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If you add multiples of row `B k` to other rows, the determinant doesn't change. -/
-theorem det_eq_of_forall_row_eq_smul_add_const {A B : Matrix n n R} (c : n → R) (k : n) (hk : c k = 0)
-  (A_eq : ∀ i j, A i j = B i j+c i*B k j) : det A = det B :=
-  det_eq_of_forall_row_eq_smul_add_const_aux c
-    (fun i =>
-      not_imp_comm.mp$
-        fun hi => Finset.mem_erase.mpr ⟨mt (fun h : i = k => show c i = 0 from h.symm ▸ hk) hi, Finset.mem_univ i⟩)
-    k (Finset.not_mem_erase k Finset.univ) A_eq
+theorem det_eq_of_forall_row_eq_smul_add_const
+{A B : matrix n n R}
+(c : n → R)
+(k : n)
+(hk : «expr = »(c k, 0))
+(A_eq : ∀ i j, «expr = »(A i j, «expr + »(B i j, «expr * »(c i, B k j)))) : «expr = »(det A, det B) :=
+det_eq_of_forall_row_eq_smul_add_const_aux c (λ
+ i, «expr $ »(not_imp_comm.mp, λ
+  hi, finset.mem_erase.mpr ⟨mt (λ
+    h : «expr = »(i, k), show «expr = »(c i, 0), from «expr ▸ »(h.symm, hk)) hi, finset.mem_univ i⟩)) k (finset.not_mem_erase k finset.univ) A_eq
 
 -- error in LinearAlgebra.Matrix.Determinant: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem det_eq_of_forall_row_eq_smul_add_pred_aux
@@ -534,14 +538,14 @@ end
 
 /-- If you add multiples of previous rows to the next row, the determinant doesn't change. -/
 theorem det_eq_of_forall_row_eq_smul_add_pred {n : ℕ} {A B : Matrix (Finₓ (n+1)) (Finₓ (n+1)) R} (c : Finₓ n → R)
-  (A_zero : ∀ j, A 0 j = B 0 j) (A_succ : ∀ i : Finₓ n j, A i.succ j = B i.succ j+c i*A i.cast_succ j) :
+  (A_zero : ∀ j, A 0 j = B 0 j) (A_succ : ∀ (i : Finₓ n) j, A i.succ j = B i.succ j+c i*A i.cast_succ j) :
   det A = det B :=
   det_eq_of_forall_row_eq_smul_add_pred_aux (Finₓ.last _) c (fun i hi => absurd hi (not_lt_of_geₓ (Finₓ.le_last _)))
     A_zero A_succ
 
 /-- If you add multiples of previous columns to the next columns, the determinant doesn't change. -/
 theorem det_eq_of_forall_col_eq_smul_add_pred {n : ℕ} {A B : Matrix (Finₓ (n+1)) (Finₓ (n+1)) R} (c : Finₓ n → R)
-  (A_zero : ∀ i, A i 0 = B i 0) (A_succ : ∀ i j : Finₓ n, A i j.succ = B i j.succ+c j*A i j.cast_succ) :
+  (A_zero : ∀ i, A i 0 = B i 0) (A_succ : ∀ i (j : Finₓ n), A i j.succ = B i j.succ+c j*A i j.cast_succ) :
   det A = det B :=
   by 
     rw [←det_transpose A, ←det_transpose B]

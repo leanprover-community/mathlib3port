@@ -211,7 +211,7 @@ end
 
 @[toAdditive add_order_of_eq_add_order_of_iff]
 theorem order_of_eq_order_of_iff {H : Type _} [Monoidₓ H] {y : H} :
-  orderOf x = orderOf y ↔ ∀ n : ℕ, x ^ n = 1 ↔ y ^ n = 1 :=
+  orderOf x = orderOf y ↔ ∀ (n : ℕ), x ^ n = 1 ↔ y ^ n = 1 :=
   by 
     simpRw [←is_periodic_pt_mul_iff_pow_eq_one, ←minimal_period_eq_minimal_period_iff, orderOf]
 
@@ -288,24 +288,22 @@ variable[LeftCancelMonoid G](x)
 
 variable[AddLeftCancelMonoid A](a)
 
-@[toAdditive nsmul_injective_aux]
-theorem pow_injective_aux (h : n ≤ m) (hm : m < orderOf x) (eq : x ^ n = x ^ m) : n = m :=
-  by_contradiction$
-    fun ne : n ≠ m =>
-      have h₁ : m - n > 0 :=
-        Nat.pos_of_ne_zeroₓ
-          (by 
-            simp [tsub_eq_iff_eq_add_of_le h, Ne.symm])
-      have h₂ : m = n+m - n := (add_tsub_cancel_of_le h).symm 
-      have h₃ : x ^ (m - n) = 1 :=
-        by 
-          rw [h₂, pow_addₓ] at eq 
-          apply mul_left_cancelₓ 
-          convert Eq.symm 
-          exact mul_oneₓ (x ^ n)
-      have le : orderOf x ≤ m - n := order_of_le_of_pow_eq_one h₁ h₃ 
-      have lt : m - n < orderOf x := (tsub_lt_iff_left h).mpr$ Nat.lt_add_left _ _ _ hm 
-      lt_irreflₓ _ (le.trans_lt lt)
+-- error in GroupTheory.OrderOfElement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident nsmul_injective_aux]]
+theorem pow_injective_aux
+(h : «expr ≤ »(n, m))
+(hm : «expr < »(m, order_of x))
+(eq : «expr = »(«expr ^ »(x, n), «expr ^ »(x, m))) : «expr = »(n, m) :=
+«expr $ »(by_contradiction, assume
+ ne : «expr ≠ »(n, m), have h₁ : «expr > »(«expr - »(m, n), 0), from nat.pos_of_ne_zero (by simp [] [] [] ["[", expr tsub_eq_iff_eq_add_of_le h, ",", expr ne.symm, "]"] [] []),
+ have h₂ : «expr = »(m, «expr + »(n, «expr - »(m, n))) := (add_tsub_cancel_of_le h).symm,
+ have h₃ : «expr = »(«expr ^ »(x, «expr - »(m, n)), 1), by { rw ["[", expr h₂, ",", expr pow_add, "]"] ["at", ident eq],
+   apply [expr mul_left_cancel],
+   convert [] [expr eq.symm] [],
+   exact [expr mul_one «expr ^ »(x, n)] },
+ have le : «expr ≤ »(order_of x, «expr - »(m, n)), from order_of_le_of_pow_eq_one h₁ h₃,
+ have lt : «expr < »(«expr - »(m, n), order_of x), from «expr $ »((tsub_lt_iff_left h).mpr, nat.lt_add_left _ _ _ hm),
+ lt_irrefl _ (le.trans_lt lt))
 
 @[toAdditive nsmul_injective_of_lt_add_order_of]
 theorem pow_injective_of_lt_order_of (hn : n < orderOf x) (hm : m < orderOf x) (eq : x ^ n = x ^ m) : n = m :=
@@ -386,32 +384,25 @@ variable[Monoidₓ G][AddMonoidₓ A]
 
 open_locale BigOperators
 
-@[toAdditive sum_card_add_order_of_eq_card_nsmul_eq_zero]
-theorem sum_card_order_of_eq_card_pow_eq_one [DecidableEq G] (hn : 0 < n) :
-  (∑m in (Finset.range n.succ).filter (· ∣ n), (Finset.univ.filter fun x : G => orderOf x = m).card) =
-    (Finset.univ.filter fun x : G => x ^ n = 1).card :=
-  calc (∑m in (Finset.range n.succ).filter (· ∣ n), (Finset.univ.filter fun x : G => orderOf x = m).card) = _ :=
-    (Finset.card_bUnion
-        (by 
-          intros 
-          apply Finset.disjoint_filter.2
-          cc)).symm
-      
-    _ = _ :=
-    congr_argₓ Finset.card
-      (Finset.ext
-        (by 
-          intro x 
-          suffices  : orderOf x ≤ n ∧ orderOf x ∣ n ↔ x ^ n = 1
-          ·
-            simpa [Nat.lt_succ_iff]
-          exact
-            ⟨fun h =>
-                let ⟨m, hm⟩ := h.2
-                by 
-                  rw [hm, pow_mulₓ, pow_order_of_eq_one, one_pow],
-              fun h => ⟨order_of_le_of_pow_eq_one hn h, order_of_dvd_of_pow_eq_one h⟩⟩))
-    
+-- error in GroupTheory.OrderOfElement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident sum_card_add_order_of_eq_card_nsmul_eq_zero]]
+theorem sum_card_order_of_eq_card_pow_eq_one
+[decidable_eq G]
+(hn : «expr < »(0, n)) : «expr = »(«expr∑ in , »((m), (finset.range n.succ).filter ((«expr ∣ » n)), (finset.univ.filter (λ
+    x : G, «expr = »(order_of x, m))).card), (finset.univ.filter (λ x : G, «expr = »(«expr ^ »(x, n), 1))).card) :=
+calc
+  «expr = »(«expr∑ in , »((m), (finset.range n.succ).filter ((«expr ∣ » n)), (finset.univ.filter (λ
+      x : G, «expr = »(order_of x, m))).card), _) : (finset.card_bUnion (by { intros [],
+      apply [expr finset.disjoint_filter.2],
+      cc })).symm
+  «expr = »(..., _) : congr_arg finset.card (finset.ext (begin
+      assume [binders (x)],
+      suffices [] [":", expr «expr ↔ »(«expr ∧ »(«expr ≤ »(order_of x, n), «expr ∣ »(order_of x, n)), «expr = »(«expr ^ »(x, n), 1))],
+      { simpa [] [] [] ["[", expr nat.lt_succ_iff, "]"] [] [] },
+      exact [expr ⟨λ h, let ⟨m, hm⟩ := h.2 in
+        by rw ["[", expr hm, ",", expr pow_mul, ",", expr pow_order_of_eq_one, ",", expr one_pow, "]"] [], λ
+        h, ⟨order_of_le_of_pow_eq_one hn h, order_of_dvd_of_pow_eq_one h⟩⟩]
+    end))
 
 end FiniteMonoid
 
@@ -419,16 +410,17 @@ section FiniteCancelMonoid
 
 variable[LeftCancelMonoid G][AddLeftCancelMonoid A]
 
-@[toAdditive exists_nsmul_eq_zero]
-theorem exists_pow_eq_one (x : G) : IsOfFinOrder x :=
-  by 
-    refine' (is_of_fin_order_iff_pow_eq_one _).mpr _ 
-    obtain ⟨i, j, a_eq, ne⟩ : ∃ i j : ℕ, x ^ i = x ^ j ∧ i ≠ j :=
-      by 
-        simpa only [not_forall, exists_prop, injective] using not_injective_infinite_fintype fun i : ℕ => x ^ i 
-    wlog h'' : j ≤ i 
-    refine' ⟨i - j, tsub_pos_of_lt (lt_of_le_of_neₓ h'' Ne.symm), mul_right_injective (x ^ j) _⟩
-    rw [mul_oneₓ, ←pow_addₓ, ←a_eq, add_tsub_cancel_of_le h'']
+-- error in GroupTheory.OrderOfElement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident exists_nsmul_eq_zero]] theorem exists_pow_eq_one (x : G) : is_of_fin_order x :=
+begin
+  refine [expr (is_of_fin_order_iff_pow_eq_one _).mpr _],
+  obtain ["⟨", ident i, ",", ident j, ",", ident a_eq, ",", ident ne, "⟩", ":", expr «expr∃ , »((i
+     j : exprℕ()), «expr ∧ »(«expr = »(«expr ^ »(x, i), «expr ^ »(x, j)), «expr ≠ »(i, j))), ":=", expr by simpa [] [] ["only"] ["[", expr not_forall, ",", expr exists_prop, ",", expr injective, "]"] [] ["using", expr not_injective_infinite_fintype (λ
+     i : exprℕ(), «expr ^ »(x, i))]],
+  wlog [ident h''] [":", expr «expr ≤ »(j, i)] [] [],
+  refine [expr ⟨«expr - »(i, j), tsub_pos_of_lt (lt_of_le_of_ne h'' ne.symm), mul_right_injective «expr ^ »(x, j) _⟩],
+  rw ["[", expr mul_one, ",", "<-", expr pow_add, ",", "<-", expr a_eq, ",", expr add_tsub_cancel_of_le h'', "]"] []
+end
 
 @[toAdditive add_order_of_le_card_univ]
 theorem order_of_le_card_univ : orderOf x ≤ Fintype.card G :=
@@ -624,7 +616,7 @@ theorem zpow_eq_mod_card (n : ℤ) : x ^ n = x ^ (n % Fintype.card G) :=
   by 
     rw [zpow_eq_mod_order_of, ←Int.mod_mod_of_dvd n (Int.coe_nat_dvd.2 order_of_dvd_card_univ), ←zpow_eq_mod_order_of]
 
--- error in GroupTheory.OrderOfElement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in GroupTheory.OrderOfElement: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `gcd(|G|,n)=1` then the `n`th power map is a bijection -/
 @[simps #[]]
 def pow_coprime (h : nat.coprime (fintype.card G) n) : «expr ≃ »(G, G) :=
@@ -690,7 +682,7 @@ section PowIsSubgroup
 /-- A nonempty idempotent subset of a finite cancellative monoid is a submonoid -/
 def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set M) (hS1 : S.nonempty)
   (hS2 : (S*S) = S) : Submonoid M :=
-  have pow_mem : ∀ a : M, a ∈ S → ∀ n : ℕ, (a ^ n+1) ∈ S :=
+  have pow_mem : ∀ (a : M), a ∈ S → ∀ (n : ℕ), (a ^ n+1) ∈ S :=
     fun a ha =>
       Nat.rec
         (by 

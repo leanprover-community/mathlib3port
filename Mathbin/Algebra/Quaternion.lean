@@ -57,7 +57,7 @@ localized [Quaternion] notation "ℍ[" R "," a "," b "]" => QuaternionAlgebra R 
 namespace QuaternionAlgebra
 
 @[simp]
-theorem mk.eta {R : Type _} {c₁ c₂} : ∀ a : ℍ[R,c₁,c₂], mk a.1 a.2 a.3 a.4 = a
+theorem mk.eta {R : Type _} {c₁ c₂} : ∀ (a : ℍ[R,c₁,c₂]), mk a.1 a.2 a.3 a.4 = a
 | ⟨a₁, a₂, a₃, a₄⟩ => rfl
 
 variable{R : Type _}[CommRingₓ R]{c₁ c₂ : R}(r x y z : R)(a b c : ℍ[R,c₁,c₂])

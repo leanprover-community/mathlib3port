@@ -83,7 +83,7 @@ variable(𝕜 : Type v)[IsROrC 𝕜]{E : Type u}[NormedGroup E][NormedSpace 𝕜
 
 /-- If one controls the norm of every `f x`, then one controls the norm of `x`.
     Compare `continuous_linear_map.op_norm_le_bound`. -/
-theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : dual 𝕜 E, ∥f x∥ ≤ M*∥f∥) : ∥x∥ ≤ M :=
+theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ (f : dual 𝕜 E), ∥f x∥ ≤ M*∥f∥) : ∥x∥ ≤ M :=
   by 
     classical 
     byCases' h : x = 0
@@ -98,7 +98,7 @@ theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : dual 
         by 
           rw [hf.1, mul_oneₓ]
 
-theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ f : dual 𝕜 E, f x = (0 : 𝕜)) : x = 0 :=
+theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ (f : dual 𝕜 E), f x = (0 : 𝕜)) : x = 0 :=
   norm_eq_zero.mp
     (le_antisymmₓ
       (norm_le_dual_bound 𝕜 x le_rfl
@@ -107,13 +107,13 @@ theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ f : dual 𝕜 E, f x = (
             simp [h f])
       (norm_nonneg _))
 
-theorem eq_zero_iff_forall_dual_eq_zero (x : E) : x = 0 ↔ ∀ g : dual 𝕜 E, g x = 0 :=
+theorem eq_zero_iff_forall_dual_eq_zero (x : E) : x = 0 ↔ ∀ (g : dual 𝕜 E), g x = 0 :=
   ⟨fun hx =>
       by 
         simp [hx],
     fun h => eq_zero_of_forall_dual_eq_zero 𝕜 h⟩
 
-theorem eq_iff_forall_dual_eq {x y : E} : x = y ↔ ∀ g : dual 𝕜 E, g x = g y :=
+theorem eq_iff_forall_dual_eq {x y : E} : x = y ↔ ∀ (g : dual 𝕜 E), g x = g y :=
   by 
     rw [←sub_eq_zero, eq_zero_iff_forall_dual_eq_zero 𝕜 (x - y)]
     simp [sub_eq_zero]

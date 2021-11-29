@@ -48,7 +48,7 @@ instance  {ι : Type _} {Z : ι → Type _} [∀ i, CanonicallyOrderedMonoid (Z 
             exact fun i => le_mul_right (le_reflₓ _) }
 
 @[toAdditive]
-instance OrderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid$ f i] : OrderedCancelCommMonoid (∀ i : I, f i) :=
+instance OrderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid$ f i] : OrderedCancelCommMonoid (∀ (i : I), f i) :=
   by 
     refineStruct
         { Pi.partialOrder, Pi.monoid with mul := ·*·, one := (1 : ∀ i, f i), le := · ≤ ·, lt := · < ·,
@@ -57,7 +57,7 @@ instance OrderedCancelCommMonoid [∀ i, OrderedCancelCommMonoid$ f i] : Ordered
         tactic.pi_instance_derive_field
 
 @[toAdditive]
-instance OrderedCommGroup [∀ i, OrderedCommGroup$ f i] : OrderedCommGroup (∀ i : I, f i) :=
+instance OrderedCommGroup [∀ i, OrderedCommGroup$ f i] : OrderedCommGroup (∀ (i : I), f i) :=
   { Pi.commGroup, Pi.orderedCommMonoid with mul := ·*·, one := (1 : ∀ i, f i), le := · ≤ ·, lt := · < ·,
     npow := Monoidₓ.npow }
 

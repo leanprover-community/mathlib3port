@@ -13,15 +13,25 @@ open_locale BigOperators
 
 namespace Pi
 
-@[toAdditive]
-theorem list_prod_apply {α : Type _} {β : α → Type _} [∀ a, Monoidₓ (β a)] (a : α) (l : List (∀ a, β a)) :
-  l.prod a = (l.map fun f : ∀ a, β a => f a).Prod :=
-  (eval_monoid_hom β a).map_list_prod _
+-- error in Algebra.BigOperators.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem list_prod_apply
+{α : Type*}
+{β : α → Type*}
+[∀ a, monoid (β a)]
+(a : α)
+(l : list (∀ a, β a)) : «expr = »(l.prod a, (l.map (λ f : ∀ a, β a, f a)).prod) :=
+(eval_monoid_hom β a).map_list_prod _
 
-@[toAdditive]
-theorem multiset_prod_apply {α : Type _} {β : α → Type _} [∀ a, CommMonoidₓ (β a)] (a : α) (s : Multiset (∀ a, β a)) :
-  s.prod a = (s.map fun f : ∀ a, β a => f a).Prod :=
-  (eval_monoid_hom β a).map_multiset_prod _
+-- error in Algebra.BigOperators.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem multiset_prod_apply
+{α : Type*}
+{β : α → Type*}
+[∀ a, comm_monoid (β a)]
+(a : α)
+(s : multiset (∀ a, β a)) : «expr = »(s.prod a, (s.map (λ f : ∀ a, β a, f a)).prod) :=
+(eval_monoid_hom β a).map_multiset_prod _
 
 end Pi
 
@@ -64,7 +74,7 @@ theorem Finset.univ_sum_single [Fintype I] (f : ∀ i, Z i) : (∑i, Pi.single i
     simp 
 
 theorem AddMonoidHom.functions_ext [Fintype I] (G : Type _) [AddCommMonoidₓ G] (g h : (∀ i, Z i) →+ G)
-  (w : ∀ i : I x : Z i, g (Pi.single i x) = h (Pi.single i x)) : g = h :=
+  (w : ∀ (i : I) (x : Z i), g (Pi.single i x) = h (Pi.single i x)) : g = h :=
   by 
     ext k 
     rw [←Finset.univ_sum_single k, g.map_sum, h.map_sum]
@@ -90,7 +100,7 @@ variable[∀ i, Semiringₓ (f i)]
 
 @[ext]
 theorem RingHom.functions_ext [Fintype I] (G : Type _) [Semiringₓ G] (g h : (∀ i, f i) →+* G)
-  (w : ∀ i : I x : f i, g (single i x) = h (single i x)) : g = h :=
+  (w : ∀ (i : I) (x : f i), g (single i x) = h (single i x)) : g = h :=
   RingHom.coe_add_monoid_hom_injective$ AddMonoidHom.functions_ext G (g : (∀ i, f i) →+ G) h w
 
 end RingHom

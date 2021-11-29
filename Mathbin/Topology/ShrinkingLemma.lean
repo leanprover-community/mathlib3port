@@ -49,8 +49,8 @@ structure partial_refinement(u : ι → Set X)(s : Set X) where
   Carrier : Set ι 
   is_open' : ∀ i, IsOpen (to_fun i)
   subset_Union' : s ⊆ ⋃i, to_fun i 
-  closure_subset' : ∀ i _ : i ∈ carrier, Closure (to_fun i) ⊆ u i 
-  apply_eq' : ∀ i _ : i ∉ carrier, to_fun i = u i
+  closure_subset' : ∀ i (_ : i ∈ carrier), Closure (to_fun i) ⊆ u i 
+  apply_eq' : ∀ i (_ : i ∉ carrier), to_fun i = u i
 
 namespace PartialRefinement
 
@@ -77,7 +77,7 @@ protected theorem subset (v : partial_refinement u s) (i : ι) : v i ⊆ u i :=
 attribute [ext] partial_refinement
 
 instance  : PartialOrderₓ (partial_refinement u s) :=
-  { le := fun v₁ v₂ => v₁.carrier ⊆ v₂.carrier ∧ ∀ i _ : i ∈ v₁.carrier, v₁ i = v₂ i,
+  { le := fun v₁ v₂ => v₁.carrier ⊆ v₂.carrier ∧ ∀ i (_ : i ∈ v₁.carrier), v₁ i = v₂ i,
     le_refl := fun v => ⟨subset.refl _, fun _ _ => rfl⟩,
     le_trans := fun v₁ v₂ v₃ h₁₂ h₂₃ => ⟨subset.trans h₁₂.1 h₂₃.1, fun i hi => (h₁₂.2 i hi).trans (h₂₃.2 i$ h₁₂.1 hi)⟩,
     le_antisymm :=
@@ -167,7 +167,8 @@ end
 
 /-- `chain_Sup hu c hc ne hfin hU` is an upper bound of the chain `c`. -/
 theorem le_chain_Sup {c : Set (partial_refinement u s)} (hc : chain (· ≤ ·) c) (ne : c.nonempty)
-  (hfin : ∀ x _ : x ∈ s, finite { i | x ∈ u i }) (hU : s ⊆ ⋃i, u i) {v} (hv : v ∈ c) : v ≤ chain_Sup c hc Ne hfin hU :=
+  (hfin : ∀ x (_ : x ∈ s), finite { i | x ∈ u i }) (hU : s ⊆ ⋃i, u i) {v} (hv : v ∈ c) :
+  v ≤ chain_Sup c hc Ne hfin hU :=
   ⟨fun i hi => mem_bUnion hv hi, fun i hi => (find_apply_of_mem hc _ hv hi).symm⟩
 
 -- error in Topology.ShrinkingLemma: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -250,7 +251,7 @@ end
 to a new closed cover so that each new closed set is contained in the corresponding original open
 set. See also `exists_subset_Union_closure_subset` for a stronger statement. -/
 theorem exists_subset_Union_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOpen (u i))
-  (uf : ∀ x _ : x ∈ s, finite { i | x ∈ u i }) (us : s ⊆ ⋃i, u i) :
+  (uf : ∀ x (_ : x ∈ s), finite { i | x ∈ u i }) (us : s ⊆ ⋃i, u i) :
   ∃ v : ι → Set X, s ⊆ Union v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
   let ⟨v, hsv, hvo, hv⟩ := exists_subset_Union_closure_subset hs uo uf us
   ⟨fun i => Closure (v i), subset.trans hsv (Union_subset_Union$ fun i => subset_closure), fun i => is_closed_closure,

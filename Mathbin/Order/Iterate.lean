@@ -33,8 +33,8 @@ lemmas in this section formalize this fact for different inequalities made stric
 -/
 
 
-theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀ k _ : k < n, x (k+1) ≤ f (x k))
-  (hy : ∀ k _ : k < n, f (y k) ≤ y (k+1)) : x n ≤ y n :=
+theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀ k (_ : k < n), x (k+1) ≤ f (x k))
+  (hy : ∀ k (_ : k < n), f (y k) ≤ y (k+1)) : x n ≤ y n :=
   by 
     induction' n with n ihn
     ·
@@ -45,7 +45,7 @@ theorem seq_le_seq (hf : Monotone f) (n : ℕ) (h₀ : x 0 ≤ y 0) (hx : ∀ k 
       exact fun k hk => hy _ (hk.trans n.lt_succ_self)
 
 theorem seq_pos_lt_seq_of_lt_of_le (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
-  (hx : ∀ k _ : k < n, x (k+1) < f (x k)) (hy : ∀ k _ : k < n, f (y k) ≤ y (k+1)) : x n < y n :=
+  (hx : ∀ k (_ : k < n), x (k+1) < f (x k)) (hy : ∀ k (_ : k < n), f (y k) ≤ y (k+1)) : x n < y n :=
   by 
     induction' n with n ihn
     ·
@@ -58,17 +58,17 @@ theorem seq_pos_lt_seq_of_lt_of_le (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h�
     refine' (ihn n.zero_lt_succ (fun k hk => hx _ _) fun k hk => hy _ _).le <;> exact hk.trans n.succ.lt_succ_self
 
 theorem seq_pos_lt_seq_of_le_of_lt (hf : Monotone f) {n : ℕ} (hn : 0 < n) (h₀ : x 0 ≤ y 0)
-  (hx : ∀ k _ : k < n, x (k+1) ≤ f (x k)) (hy : ∀ k _ : k < n, f (y k) < y (k+1)) : x n < y n :=
+  (hx : ∀ k (_ : k < n), x (k+1) ≤ f (x k)) (hy : ∀ k (_ : k < n), f (y k) < y (k+1)) : x n < y n :=
   hf.dual.seq_pos_lt_seq_of_lt_of_le hn h₀ hy hx
 
-theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀ k _ : k < n, x (k+1) < f (x k))
-  (hy : ∀ k _ : k < n, f (y k) ≤ y (k+1)) : x n < y n :=
+theorem seq_lt_seq_of_lt_of_le (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀ k (_ : k < n), x (k+1) < f (x k))
+  (hy : ∀ k (_ : k < n), f (y k) ≤ y (k+1)) : x n < y n :=
   by 
     cases n 
     exacts[h₀, hf.seq_pos_lt_seq_of_lt_of_le n.zero_lt_succ h₀.le hx hy]
 
-theorem seq_lt_seq_of_le_of_lt (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀ k _ : k < n, x (k+1) ≤ f (x k))
-  (hy : ∀ k _ : k < n, f (y k) < y (k+1)) : x n < y n :=
+theorem seq_lt_seq_of_le_of_lt (hf : Monotone f) (n : ℕ) (h₀ : x 0 < y 0) (hx : ∀ k (_ : k < n), x (k+1) ≤ f (x k))
+  (hy : ∀ k (_ : k < n), f (y k) < y (k+1)) : x n < y n :=
   hf.dual.seq_lt_seq_of_lt_of_le n h₀ hy hx
 
 /-!

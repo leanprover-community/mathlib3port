@@ -55,7 +55,7 @@ instance  (n : ℕ) : CommSemigroupₓ (Finₓ (n+1)) :=
           (show ((a*b) % n+1) = (b*a) % n+1by 
             rw [mul_commₓ]) }
 
-private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Finₓ (n+1), (a*b+c) = (a*b)+a*c :=
+private theorem left_distrib_aux (n : ℕ) : ∀ (a b c : Finₓ (n+1)), (a*b+c) = (a*b)+a*c :=
   fun ⟨a, ha⟩ ⟨b, hb⟩ ⟨c, hc⟩ =>
     Finₓ.eq_of_veq
       (calc (a*(b+c) % n+1) ≡ a*b+c [MOD n+1] := (Nat.mod_modeq _ _).mul_left _ 
@@ -83,7 +83,7 @@ def Zmod : ℕ → Type
 
 namespace Zmod
 
-instance Fintype : ∀ n : ℕ [Fact (0 < n)], Fintype (Zmod n)
+instance Fintype : ∀ (n : ℕ) [Fact (0 < n)], Fintype (Zmod n)
 | 0, h => False.elim$ Nat.not_lt_zeroₓ 0 h.1
 | n+1, _ => Finₓ.fintype (n+1)
 
@@ -97,15 +97,15 @@ theorem card (n : ℕ) [Fact (0 < n)] : Fintype.card (Zmod n) = n :=
     ·
       exact Fintype.card_fin (n+1)
 
-instance DecidableEq : ∀ n : ℕ, DecidableEq (Zmod n)
+instance DecidableEq : ∀ (n : ℕ), DecidableEq (Zmod n)
 | 0 => Int.decidableEq
 | n+1 => Finₓ.decidableEq _
 
-instance HasRepr : ∀ n : ℕ, HasRepr (Zmod n)
+instance HasRepr : ∀ (n : ℕ), HasRepr (Zmod n)
 | 0 => Int.hasRepr
 | n+1 => Finₓ.hasRepr _
 
-instance CommRingₓ : ∀ n : ℕ, CommRingₓ (Zmod n)
+instance CommRingₓ : ∀ (n : ℕ), CommRingₓ (Zmod n)
 | 0 => Int.commRing
 | n+1 => Finₓ.commRing n
 
@@ -252,7 +252,7 @@ theorem int_cast_surjective : Function.Surjective (coeₓ : ℤ → Zmod n) :=
   int_cast_right_inverse.Surjective
 
 @[normCast]
-theorem cast_id : ∀ n i : Zmod n, «expr↑ » i = i
+theorem cast_id : ∀ n (i : Zmod n), «expr↑ » i = i
 | 0, i => Int.cast_id i
 | n+1, i => nat_cast_zmod_val i
 
@@ -495,7 +495,7 @@ theorem ker_int_cast_ring_hom (n : ℕ) : (Int.castRingHom (Zmod n)).ker = Ideal
 attribute [local semireducible] Int.Nonneg
 
 @[simp]
-theorem nat_cast_to_nat (p : ℕ) : ∀ {z : ℤ} h : 0 ≤ z, (z.to_nat : Zmod p) = z
+theorem nat_cast_to_nat (p : ℕ) : ∀ {z : ℤ} (h : 0 ≤ z), (z.to_nat : Zmod p) = z
 | (n : ℕ), h =>
   by 
     simp only [Int.cast_coe_nat, Int.to_nat_coe_nat]
@@ -552,14 +552,14 @@ instance Nontrivial (n : ℕ) [Fact (1 < n)] : Nontrivial (Zmod n) :=
 /-- The inversion on `zmod n`.
 It is setup in such a way that `a * a⁻¹` is equal to `gcd a.val n`.
 In particular, if `a` is coprime to `n`, and hence a unit, `a * a⁻¹ = 1`. -/
-def inv : ∀ n : ℕ, Zmod n → Zmod n
+def inv : ∀ (n : ℕ), Zmod n → Zmod n
 | 0, i => Int.sign i
 | n+1, i => Nat.gcdA i.val (n+1)
 
 instance  (n : ℕ) : HasInv (Zmod n) :=
   ⟨inv n⟩
 
-theorem inv_zero : ∀ n : ℕ, (0 : Zmod n)⁻¹ = 0
+theorem inv_zero : ∀ (n : ℕ), (0 : Zmod n)⁻¹ = 0
 | 0 => Int.sign_zero
 | n+1 =>
   show (Nat.gcdA _ (n+1) : Zmod (n+1)) = 0 by 
@@ -760,7 +760,7 @@ theorem nat_abs_mod_two (a : ℤ) : (a.nat_abs : Zmod 2) = a :=
       simp only [neg_eq_self_mod_two, Nat.cast_succ, Int.natAbs, Int.cast_neg_succ_of_nat]
 
 @[simp]
-theorem val_eq_zero : ∀ {n : ℕ} a : Zmod n, a.val = 0 ↔ a = 0
+theorem val_eq_zero : ∀ {n : ℕ} (a : Zmod n), a.val = 0 ↔ a = 0
 | 0, a => Int.nat_abs_eq_zero
 | n+1, a =>
   by 
@@ -814,7 +814,7 @@ theorem val_min_abs_def_pos {n : ℕ} [Fact (0 < n)] (x : Zmod n) :
       rfl
 
 @[simp]
-theorem coe_val_min_abs : ∀ {n : ℕ} x : Zmod n, (x.val_min_abs : Zmod n) = x
+theorem coe_val_min_abs : ∀ {n : ℕ} (x : Zmod n), (x.val_min_abs : Zmod n) = x
 | 0, x => Int.cast_id x
 | k@(n+1), x =>
   by 

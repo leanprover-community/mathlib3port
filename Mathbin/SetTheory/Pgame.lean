@@ -110,7 +110,7 @@ universe u
   in Type u. The resulting type `pgame.{u}` lives in `Type (u+1)`,
   reflecting that it is a proper class in ZFC. -/
 inductive Pgame : Type (u + 1)
-  | mk : ∀ α β : Type u, (α → Pgame) → (β → Pgame) → Pgame
+  | mk : ∀ (α β : Type u), (α → Pgame) → (β → Pgame) → Pgame
 
 namespace Pgame
 
@@ -129,11 +129,11 @@ def right_moves : Pgame → Type u
 | mk _ r _ _ => r
 
 /-- The new game after Left makes an allowed move. -/
-def move_left : ∀ g : Pgame, left_moves g → Pgame
+def move_left : ∀ (g : Pgame), left_moves g → Pgame
 | mk l _ L _, i => L i
 
 /-- The new game after Right makes an allowed move. -/
-def move_right : ∀ g : Pgame, right_moves g → Pgame
+def move_right : ∀ (g : Pgame), right_moves g → Pgame
 | mk _ r _ R, j => R j
 
 @[simp]
@@ -155,9 +155,9 @@ theorem move_right_mk {xl xr xL xR j} : (⟨xl, xr, xL, xR⟩ : Pgame).moveRight
 /-- `subsequent p q` says that `p` can be obtained by playing
   some nonempty sequence of moves from `q`. -/
 inductive subsequent : Pgame → Pgame → Prop
-  | left : ∀ x : Pgame i : x.left_moves, subsequent (x.move_left i) x
-  | right : ∀ x : Pgame j : x.right_moves, subsequent (x.move_right j) x
-  | trans : ∀ x y z : Pgame, subsequent x y → subsequent y z → subsequent x z
+  | left : ∀ (x : Pgame) (i : x.left_moves), subsequent (x.move_left i) x
+  | right : ∀ (x : Pgame) (j : x.right_moves), subsequent (x.move_right j) x
+  | trans : ∀ (x y z : Pgame), subsequent x y → subsequent y z → subsequent x z
 
 theorem wf_subsequent : WellFounded subsequent :=
   ⟨fun x =>
@@ -228,9 +228,9 @@ theorem one_right_moves : (1 : Pgame).RightMoves = Pempty :=
   This is a tricky induction because it only decreases one side at
   a time, and it also swaps the arguments in the definition of `<`.
   The solution is to define `x < y` and `x <= y` simultaneously. -/
-def le_lt : ∀ x y : Pgame, Prop × Prop
+def le_lt : ∀ (x y : Pgame), Prop × Prop
 | mk xl xr xL xR, mk yl yr yL yR =>
-  ((∀ i : xl, (le_lt (xL i) ⟨yl, yr, yL, yR⟩).2) ∧ ∀ j : yr, (le_lt ⟨xl, xr, xL, xR⟩ (yR j)).2,
+  ((∀ (i : xl), (le_lt (xL i) ⟨yl, yr, yL, yR⟩).2) ∧ ∀ (j : yr), (le_lt ⟨xl, xr, xL, xR⟩ (yR j)).2,
   (∃ i : yl, (le_lt ⟨xl, xr, xL, xR⟩ (yL i)).1) ∨ ∃ j : xr, (le_lt (xR j) ⟨yl, yr, yL, yR⟩).1)
 
 instance  : LE Pgame :=
@@ -250,7 +250,7 @@ theorem mk_le_mk {xl xr xL xR yl yr yL yR} :
 
 /-- Definition of `x ≤ y` on pre-games, in terms of `<` -/
 theorem le_def_lt {x y : Pgame} :
-  x ≤ y ↔ (∀ i : x.left_moves, x.move_left i < y) ∧ ∀ j : y.right_moves, x < y.move_right j :=
+  x ≤ y ↔ (∀ (i : x.left_moves), x.move_left i < y) ∧ ∀ (j : y.right_moves), x < y.move_right j :=
   by 
     cases x 
     cases y 
@@ -278,10 +278,10 @@ theorem lt_def_le {x y : Pgame} :
 /-- The definition of `x ≤ y` on pre-games, in terms of `≤` two moves later. -/
 theorem le_def {x y : Pgame} :
   x ≤ y ↔
-    (∀ i : x.left_moves,
+    (∀ (i : x.left_moves),
         (∃ i' : y.left_moves, x.move_left i ≤ y.move_left i') ∨
           ∃ j : (x.move_left i).RightMoves, (x.move_left i).moveRight j ≤ y) ∧
-      ∀ j : y.right_moves,
+      ∀ (j : y.right_moves),
         (∃ i : (y.move_right j).LeftMoves, x ≤ (y.move_right j).moveLeft i) ∨
           ∃ j' : x.right_moves, x.move_right j' ≤ y.move_right j :=
   by 
@@ -292,18 +292,18 @@ theorem le_def {x y : Pgame} :
 theorem lt_def {x y : Pgame} :
   x < y ↔
     (∃ i : y.left_moves,
-        (∀ i' : x.left_moves, x.move_left i' < y.move_left i) ∧
-          ∀ j : (y.move_left i).RightMoves, x < (y.move_left i).moveRight j) ∨
+        (∀ (i' : x.left_moves), x.move_left i' < y.move_left i) ∧
+          ∀ (j : (y.move_left i).RightMoves), x < (y.move_left i).moveRight j) ∨
       ∃ j : x.right_moves,
-        (∀ i : (x.move_right j).LeftMoves, (x.move_right j).moveLeft i < y) ∧
-          ∀ j' : y.right_moves, x.move_right j < y.move_right j' :=
+        (∀ (i : (x.move_right j).LeftMoves), (x.move_right j).moveLeft i < y) ∧
+          ∀ (j' : y.right_moves), x.move_right j < y.move_right j' :=
   by 
     rw [lt_def_le]
     conv  => toLHS simp only [le_def_lt]
 
 /-- The definition of `x ≤ 0` on pre-games, in terms of `≤ 0` two moves later. -/
 theorem le_zero {x : Pgame} :
-  x ≤ 0 ↔ ∀ i : x.left_moves, ∃ j : (x.move_left i).RightMoves, (x.move_left i).moveRight j ≤ 0 :=
+  x ≤ 0 ↔ ∀ (i : x.left_moves), ∃ j : (x.move_left i).RightMoves, (x.move_left i).moveRight j ≤ 0 :=
   by 
     rw [le_def]
     dsimp 
@@ -311,7 +311,7 @@ theorem le_zero {x : Pgame} :
 
 /-- The definition of `0 ≤ x` on pre-games, in terms of `0 ≤` two moves later. -/
 theorem zero_le {x : Pgame} :
-  0 ≤ x ↔ ∀ j : x.right_moves, ∃ i : (x.move_right j).LeftMoves, 0 ≤ (x.move_right j).moveLeft i :=
+  0 ≤ x ↔ ∀ (j : x.right_moves), ∃ i : (x.move_right j).LeftMoves, 0 ≤ (x.move_right j).moveLeft i :=
   by 
     rw [le_def]
     dsimp 
@@ -319,7 +319,7 @@ theorem zero_le {x : Pgame} :
 
 /-- The definition of `x < 0` on pre-games, in terms of `< 0` two moves later. -/
 theorem lt_zero {x : Pgame} :
-  x < 0 ↔ ∃ j : x.right_moves, ∀ i : (x.move_right j).LeftMoves, (x.move_right j).moveLeft i < 0 :=
+  x < 0 ↔ ∃ j : x.right_moves, ∀ (i : (x.move_right j).LeftMoves), (x.move_right j).moveLeft i < 0 :=
   by 
     rw [lt_def]
     dsimp 
@@ -327,7 +327,7 @@ theorem lt_zero {x : Pgame} :
 
 /-- The definition of `0 < x` on pre-games, in terms of `< x` two moves later. -/
 theorem zero_lt {x : Pgame} :
-  0 < x ↔ ∃ i : x.left_moves, ∀ j : (x.move_left i).RightMoves, 0 < (x.move_left i).moveRight j :=
+  0 < x ↔ ∃ i : x.left_moves, ∀ (j : (x.move_left i).RightMoves), 0 < (x.move_left i).moveRight j :=
   by 
     rw [lt_def]
     dsimp 
@@ -392,7 +392,7 @@ theorem not_ltₓ {x y : Pgame} : ¬x < y ↔ y ≤ x :=
   not_le_lt.2
 
 @[refl]
-protected theorem le_reflₓ : ∀ x : Pgame, x ≤ x
+protected theorem le_reflₓ : ∀ (x : Pgame), x ≤ x
 | ⟨l, r, L, R⟩ =>
   by 
     rw [mk_le_mk] <;> exact ⟨fun i => lt_mk_of_le (le_reflₓ _), fun i => mk_lt_of_le (le_reflₓ _)⟩
@@ -489,8 +489,8 @@ theorem equiv_congr_right {x₁ x₂} : (x₁ ≈ x₂) ↔ ∀ y₁, (x₁ ≈ 
   ⟨fun h y₁ => ⟨fun h' => equiv_trans (equiv_symm h) h', fun h' => equiv_trans h h'⟩, fun h => (h x₂).2$ equiv_refl _⟩
 
 theorem equiv_of_mk_equiv {x y : Pgame} (L : x.left_moves ≃ y.left_moves) (R : x.right_moves ≃ y.right_moves)
-  (hl : ∀ i : x.left_moves, x.move_left i ≈ y.move_left (L i))
-  (hr : ∀ j : y.right_moves, x.move_right (R.symm j) ≈ y.move_right j) : x ≈ y :=
+  (hl : ∀ (i : x.left_moves), x.move_left i ≈ y.move_left (L i))
+  (hr : ∀ (j : y.right_moves), x.move_right (R.symm j) ≈ y.move_right j) : x ≈ y :=
   by 
     fsplit <;> rw [le_def]
     ·
@@ -514,16 +514,16 @@ theorem equiv_of_mk_equiv {x y : Pgame} (L : x.left_moves ≃ y.left_moves) (R :
      and Right always has no more moves in `y` than in `x` -/
 inductive restricted : Pgame.{u} → Pgame.{u} → Type (u + 1)
   | mk :
-  ∀ {x y : Pgame} L : x.left_moves → y.left_moves R : y.right_moves → x.right_moves,
-    (∀ i : x.left_moves, restricted (x.move_left i) (y.move_left (L i))) →
-      (∀ j : y.right_moves, restricted (x.move_right (R j)) (y.move_right j)) → restricted x y
+  ∀ {x y : Pgame} (L : x.left_moves → y.left_moves) (R : y.right_moves → x.right_moves),
+    (∀ (i : x.left_moves), restricted (x.move_left i) (y.move_left (L i))) →
+      (∀ (j : y.right_moves), restricted (x.move_right (R j)) (y.move_right j)) → restricted x y
 
 /-- The identity restriction. -/
 @[refl]
-def restricted.refl : ∀ x : Pgame, restricted x x
+def restricted.refl : ∀ (x : Pgame), restricted x x
 | mk xl xr xL xR => restricted.mk id id (fun i => restricted.refl _) fun j => restricted.refl _
 
-theorem restricted.le : ∀ {x y : Pgame} r : restricted x y, x ≤ y
+theorem restricted.le : ∀ {x y : Pgame} (r : restricted x y), x ≤ y
 | mk xl xr xL xR, mk yl yr yL yR, restricted.mk L_embedding R_embedding L_restriction R_restriction =>
   by 
     rw [le_def]
@@ -536,20 +536,20 @@ for Right, and under these bijections we inductively have `relabelling`s for the
 -/
 inductive relabelling : Pgame.{u} → Pgame.{u} → Type (u + 1)
   | mk :
-  ∀ {x y : Pgame} L : x.left_moves ≃ y.left_moves R : x.right_moves ≃ y.right_moves,
-    (∀ i : x.left_moves, relabelling (x.move_left i) (y.move_left (L i))) →
-      (∀ j : y.right_moves, relabelling (x.move_right (R.symm j)) (y.move_right j)) → relabelling x y
+  ∀ {x y : Pgame} (L : x.left_moves ≃ y.left_moves) (R : x.right_moves ≃ y.right_moves),
+    (∀ (i : x.left_moves), relabelling (x.move_left i) (y.move_left (L i))) →
+      (∀ (j : y.right_moves), relabelling (x.move_right (R.symm j)) (y.move_right j)) → relabelling x y
 
 /-- If `x` is a relabelling of `y`, then Left and Right have the same moves in either game,
     so `x` is a restriction of `y`. -/
-def relabelling.restricted : ∀ {x y : Pgame} r : relabelling x y, restricted x y
+def relabelling.restricted : ∀ {x y : Pgame} (r : relabelling x y), restricted x y
 | mk xl xr xL xR, mk yl yr yL yR, relabelling.mk L_equiv R_equiv L_relabelling R_relabelling =>
   restricted.mk L_equiv.to_embedding R_equiv.symm.to_embedding (fun i => (L_relabelling i).Restricted)
     fun j => (R_relabelling j).Restricted
 
 /-- The identity relabelling. -/
 @[refl]
-def relabelling.refl : ∀ x : Pgame, relabelling x x
+def relabelling.refl : ∀ (x : Pgame), relabelling x x
 | mk xl xr xL xR =>
   relabelling.mk (Equiv.refl _) (Equiv.refl _) (fun i => relabelling.refl _) fun j => relabelling.refl _
 
@@ -805,7 +805,7 @@ instance  : Add Pgame :=
   ⟨add⟩
 
 /-- `x + 0` has exactly the same moves as `x`. -/
-def add_zero_relabelling : ∀ x : Pgame.{u}, relabelling (x+0) x
+def add_zero_relabelling : ∀ (x : Pgame.{u}), relabelling (x+0) x
 | mk xl xr xL xR =>
   by 
     refine' ⟨Equiv.sumEmpty xl Pempty, Equiv.sumEmpty xr Pempty, _, _⟩
@@ -821,7 +821,7 @@ theorem add_zero_equiv (x : Pgame.{u}) : (x+0) ≈ x :=
   (add_zero_relabelling x).Equiv
 
 /-- `0 + x` has exactly the same moves as `x`. -/
-def zero_add_relabelling : ∀ x : Pgame.{u}, relabelling (0+x) x
+def zero_add_relabelling : ∀ (x : Pgame.{u}), relabelling (0+x) x
 | mk xl xr xL xR =>
   by 
     refine' ⟨Equiv.emptySum Pempty xl, Equiv.emptySum Pempty xr, _, _⟩
@@ -934,7 +934,7 @@ def relabelling.sub_congr {w x y z : Pgame} (h₁ : w.relabelling x) (h₂ : y.r
   h₁.add_congr h₂.neg_congr
 
 /-- `-(x+y)` has exactly the same moves as `-x + -y`. -/
-def neg_add_relabelling : ∀ x y : Pgame, relabelling (-x+y) ((-x)+-y)
+def neg_add_relabelling : ∀ (x y : Pgame), relabelling (-x+y) ((-x)+-y)
 | mk xl xr xL xR, mk yl yr yL yR =>
   ⟨Equiv.refl _, Equiv.refl _,
     fun j =>
@@ -948,7 +948,7 @@ theorem neg_add_le {x y : Pgame} : (-x+y) ≤ (-x)+-y :=
   (neg_add_relabelling x y).le
 
 /-- `x+y` has exactly the same moves as `y+x`. -/
-def add_comm_relabelling : ∀ x y : Pgame.{u}, relabelling (x+y) (y+x)
+def add_comm_relabelling : ∀ (x y : Pgame.{u}), relabelling (x+y) (y+x)
 | mk xl xr xL xR, mk yl yr yL yR =>
   by 
     refine' ⟨Equiv.sumComm _ _, Equiv.sumComm _ _, _, _⟩ <;>
@@ -964,7 +964,7 @@ theorem add_comm_equiv {x y : Pgame} : (x+y) ≈ y+x :=
   (add_comm_relabelling x y).Equiv
 
 /-- `(x + y) + z` has exactly the same moves as `x + (y + z)`. -/
-def add_assoc_relabelling : ∀ x y z : Pgame.{u}, relabelling ((x+y)+z) (x+y+z)
+def add_assoc_relabelling : ∀ (x y z : Pgame.{u}), relabelling ((x+y)+z) (x+y+z)
 | mk xl xr xL xR, mk yl yr yL yR, mk zl zr zL zR =>
   by 
     refine' ⟨Equiv.sumAssoc _ _ _, Equiv.sumAssoc _ _ _, _, _⟩

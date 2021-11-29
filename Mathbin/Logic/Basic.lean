@@ -163,7 +163,7 @@ theorem not_nonempty_pempty : ¬Nonempty Pempty :=
   fun ⟨h⟩ => h.elim
 
 @[simp]
-theorem forall_pempty {P : Pempty → Prop} : (∀ x : Pempty, P x) ↔ True :=
+theorem forall_pempty {P : Pempty → Prop} : (∀ (x : Pempty), P x) ↔ True :=
   ⟨fun h => trivialₓ,
     fun h x =>
       by 
@@ -180,7 +180,7 @@ theorem exists_pempty {P : Pempty → Prop} : (∃ x : Pempty, P x) ↔ False :=
 theorem congr_arg_heq {α} {β : α → Sort _} (f : ∀ a, β a) : ∀ {a₁ a₂ : α}, a₁ = a₂ → HEq (f a₁) (f a₂)
 | a, _, rfl => HEq.rfl
 
-theorem Plift.down_inj {α : Sort _} : ∀ a b : Plift α, a.down = b.down → a = b
+theorem Plift.down_inj {α : Sort _} : ∀ (a b : Plift α), a.down = b.down → a = b
 | ⟨a⟩, ⟨b⟩, rfl => rfl
 
 attribute [symm] Ne.symm
@@ -692,8 +692,8 @@ protected theorem Decidable.not_imp [Decidable a] : ¬(a → b) ↔ a ∧ ¬b :=
 theorem not_imp : ¬(a → b) ↔ a ∧ ¬b :=
   Decidable.not_imp
 
-theorem imp_imp_imp (h₀ : c → a) (h₁ : b → d) : (a → b) → c → d :=
-  fun h₂ : a → b => h₁ ∘ h₂ ∘ h₀
+-- error in Logic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem imp_imp_imp (h₀ : c → a) (h₁ : b → d) : (a → b) → c → d := assume h₂ : a → b, «expr ∘ »(h₁, «expr ∘ »(h₂, h₀))
 
 protected theorem Decidable.peirce (a b : Prop) [Decidable a] : ((a → b) → a) → a :=
   if ha : a then fun h => ha else fun h => h ha.elim
@@ -701,7 +701,7 @@ protected theorem Decidable.peirce (a b : Prop) [Decidable a] : ((a → b) → a
 theorem peirce (a b : Prop) : ((a → b) → a) → a :=
   Decidable.peirce _ _
 
-theorem peirce' {a : Prop} (H : ∀ b : Prop, (a → b) → a) : a :=
+theorem peirce' {a : Prop} (H : ∀ (b : Prop), (a → b) → a) : a :=
   H _ id
 
 protected theorem Decidable.not_iff_not [Decidable a] [Decidable b] : (¬a ↔ ¬b) ↔ (a ↔ b) :=
@@ -780,7 +780,7 @@ def decidableOfIff' (b : Prop) (h : a ↔ b) [D : Decidable b] : Decidable a :=
 
 /-- Prove that `a` is decidable by constructing a boolean `b` and a proof that `b ↔ a`.
 (This is sometimes taken as an alternate definition of decidability.) -/
-def decidableOfBool : ∀ b : Bool h : b ↔ a, Decidable a
+def decidableOfBool : ∀ (b : Bool) (h : b ↔ a), Decidable a
 | tt, h => is_true (h.1 rfl)
 | ff, h => is_false (mt h.2 Bool.ff_ne_tt)
 
@@ -848,8 +848,9 @@ theorem proof_irrel_heq {p q : Prop} (hp : p) (hq : q) : HEq hp hq :=
 theorem ne_of_mem_of_not_mem {α β} [HasMem α β] {s : β} {a b : α} (h : a ∈ s) : b ∉ s → a ≠ b :=
   mt$ fun e => e ▸ h
 
-theorem ne_of_apply_ne {α β : Sort _} (f : α → β) {x y : α} (h : f x ≠ f y) : x ≠ y :=
-  fun w : x = y => h (congr_argₓ f w)
+-- error in Logic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ne_of_apply_ne {α β : Sort*} (f : α → β) {x y : α} (h : «expr ≠ »(f x, f y)) : «expr ≠ »(x, y) :=
+λ w : «expr = »(x, y), h (congr_arg f w)
 
 theorem eq_equivalence : Equivalenceₓ (@Eq α) :=
   ⟨Eq.refl, @Eq.symm _, @Eq.trans _⟩
@@ -871,7 +872,7 @@ theorem eq_mpr_eq_cast {α β : Sort _} (h : α = β) : Eq.mpr h = cast h.symm :
   rfl
 
 @[simp]
-theorem cast_cast : ∀ {α β γ : Sort _} ha : α = β hb : β = γ a : α, cast hb (cast ha a) = cast (ha.trans hb) a
+theorem cast_cast : ∀ {α β γ : Sort _} (ha : α = β) (hb : β = γ) (a : α), cast hb (cast ha a) = cast (ha.trans hb) a
 | _, _, _, rfl, rfl, a => rfl
 
 @[simp]
@@ -895,7 +896,7 @@ theorem congr_fun_congr_arg {α β γ : Sort _} (f : α → β → γ) {a a' : �
   congr_funₓ (congr_argₓ f p) b = congr_argₓ (fun a => f a b) p :=
   rfl
 
-theorem heq_of_cast_eq : ∀ {α β : Sort _} {a : α} {a' : β} e : α = β h₂ : cast e a = a', HEq a a'
+theorem heq_of_cast_eq : ∀ {α β : Sort _} {a : α} {a' : β} (e : α = β) (h₂ : cast e a = a'), HEq a a'
 | α, _, a, a', rfl, h => Eq.recOnₓ h (HEq.refl _)
 
 theorem cast_eq_iff_heq {α β : Sort _} {a : α} {a' : β} {e : α = β} : cast e a = a' ↔ HEq a a' :=
@@ -981,7 +982,7 @@ theorem exists_swap {p : α → β → Prop} : (∃ x y, p x y) ↔ ∃ y x, p x
   ⟨fun ⟨x, y, h⟩ => ⟨y, x, h⟩, fun ⟨y, x, h⟩ => ⟨x, y, h⟩⟩
 
 @[simp]
-theorem forall_exists_index {q : (∃ x, p x) → Prop} : (∀ h, q h) ↔ ∀ x h : p x, q ⟨x, h⟩ :=
+theorem forall_exists_index {q : (∃ x, p x) → Prop} : (∀ h, q h) ↔ ∀ x (h : p x), q ⟨x, h⟩ :=
   ⟨fun h x hpx => h ⟨x, hpx⟩, fun h ⟨x, hpx⟩ => h x hpx⟩
 
 theorem exists_imp_distrib : (∃ x, p x) → b ↔ ∀ x, p x → b :=
@@ -1032,12 +1033,14 @@ protected theorem Decidable.not_exists_not [∀ x, Decidable (p x)] : (¬∃ x, 
 theorem not_exists_not : (¬∃ x, ¬p x) ↔ ∀ x, p x :=
   Decidable.not_exists_not
 
-theorem forall_imp_iff_exists_imp [ha : Nonempty α] : (∀ x, p x) → b ↔ ∃ x, p x → b :=
-  let ⟨a⟩ := ha
-  ⟨fun h =>
-      not_forall_not.1$
-        fun h' => Classical.by_cases (fun hb : b => h' a$ fun _ => hb) fun hb => hb$ h$ fun x => (not_imp.1 (h' x)).1,
-    fun ⟨x, hx⟩ h => hx (h x)⟩
+-- error in Logic.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem forall_imp_iff_exists_imp [ha : nonempty α] : «expr ↔ »(∀ x, p x → b, «expr∃ , »((x), p x → b)) :=
+let ⟨a⟩ := ha in
+⟨λ
+ h, «expr $ »(not_forall_not.1, λ
+  h', classical.by_cases (λ
+   hb : b, «expr $ »(h' a, λ
+    _, hb)) (λ hb, «expr $ »(hb, «expr $ »(h, λ x, (not_imp.1 (h' x)).1)))), λ ⟨x, hx⟩ (h), hx (h x)⟩
 
 theorem forall_true_iff : α → True ↔ True :=
   implies_true_iff α
@@ -1050,7 +1053,7 @@ theorem forall_2_true_iff {β : α → Sort _} : (∀ a, β a → True) ↔ True
   forall_true_iff'$ fun _ => forall_true_iff
 
 @[simp]
-theorem forall_3_true_iff {β : α → Sort _} {γ : ∀ a, β a → Sort _} : (∀ a b : β a, γ a b → True) ↔ True :=
+theorem forall_3_true_iff {β : α → Sort _} {γ : ∀ a, β a → Sort _} : (∀ a (b : β a), γ a b → True) ↔ True :=
   forall_true_iff'$ fun _ => forall_2_true_iff
 
 theorem ExistsUnique.exists {α : Sort _} {p : α → Prop} (h : ∃!x, p x) : ∃ x, p x :=
@@ -1097,7 +1100,7 @@ theorem forall_eq' {a' : α} : (∀ a, a' = a → p a) ↔ p a' :=
   by 
     simp [@eq_comm _ a']
 
-theorem and_forall_ne (a : α) : (p a ∧ ∀ b _ : b ≠ a, p b) ↔ ∀ b, p b :=
+theorem and_forall_ne (a : α) : (p a ∧ ∀ b (_ : b ≠ a), p b) ↔ ∀ b, p b :=
   by 
     simp only [←@forall_eq _ p a, ←forall_and_distrib, ←or_imp_distrib, Classical.em, forall_const]
 
@@ -1263,10 +1266,10 @@ theorem exists_unique_false : ¬∃!a : α, False :=
 theorem Exists.fst {p : b → Prop} : Exists p → b
 | ⟨h, _⟩ => h
 
-theorem Exists.snd {p : b → Prop} : ∀ h : Exists p, p h.fst
+theorem Exists.snd {p : b → Prop} : ∀ (h : Exists p), p h.fst
 | ⟨_, h⟩ => h
 
-theorem forall_prop_of_true {p : Prop} {q : p → Prop} (h : p) : (∀ h' : p, q h') ↔ q h :=
+theorem forall_prop_of_true {p : Prop} {q : p → Prop} (h : p) : (∀ (h' : p), q h') ↔ q h :=
   @forall_const (q h) p ⟨h⟩
 
 theorem exists_prop_of_true {p : Prop} {q : p → Prop} (h : p) : (∃ h' : p, q h') ↔ q h :=
@@ -1275,7 +1278,7 @@ theorem exists_prop_of_true {p : Prop} {q : p → Prop} (h : p) : (∃ h' : p, q
 theorem exists_unique_prop_of_true {p : Prop} {q : p → Prop} (h : p) : (∃!h' : p, q h') ↔ q h :=
   @exists_unique_const (q h) p ⟨h⟩ _
 
-theorem forall_prop_of_false {p : Prop} {q : p → Prop} (hn : ¬p) : (∀ h' : p, q h') ↔ True :=
+theorem forall_prop_of_false {p : Prop} {q : p → Prop} (hn : ¬p) : (∀ (h' : p), q h') ↔ True :=
   iff_true_intro$ fun h => hn.elim h
 
 theorem exists_prop_of_false {p : Prop} {q : p → Prop} : ¬p → ¬∃ h' : p, q h' :=
@@ -1305,12 +1308,12 @@ theorem ExistsUnique.unique {α : Sort _} {p : α → Prop} (h : ∃!x, p x) {y�
 
 @[congr]
 theorem forall_prop_congr {p p' : Prop} {q q' : p → Prop} (hq : ∀ h, q h ↔ q' h) (hp : p ↔ p') :
-  (∀ h, q h) ↔ ∀ h : p', q' (hp.2 h) :=
+  (∀ h, q h) ↔ ∀ (h : p'), q' (hp.2 h) :=
   ⟨fun h1 h2 => (hq _).1 (h1 (hp.2 _)), fun h1 h2 => (hq _).2 (h1 (hp.1 h2))⟩
 
 @[congr]
 theorem forall_prop_congr' {p p' : Prop} {q q' : p → Prop} (hq : ∀ h, q h ↔ q' h) (hp : p ↔ p') :
-  (∀ h, q h) = ∀ h : p', q' (hp.2 h) :=
+  (∀ h, q h) = ∀ (h : p'), q' (hp.2 h) :=
   propext (forall_prop_congr hq _)
 
 @[simp]
@@ -1321,24 +1324,24 @@ theorem forall_true_left (p : True → Prop) : (∀ x, p x) ↔ p True.intro :=
 theorem forall_false_left (p : False → Prop) : (∀ x, p x) ↔ True :=
   forall_prop_of_false not_false
 
-theorem ExistsUnique.elim2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ x h : p x, Prop} {b : Prop}
-  (h₂ : ∃!(x : _)(h : p x), q x h) (h₁ : ∀ x h : p x, q x h → (∀ y hy : p y, q y hy → y = x) → b) : b :=
+theorem ExistsUnique.elim2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ x (h : p x), Prop} {b : Prop}
+  (h₂ : ∃!(x : _)(h : p x), q x h) (h₁ : ∀ x (h : p x), q x h → (∀ y (hy : p y), q y hy → y = x) → b) : b :=
   by 
     simp only [exists_unique_iff_exists] at h₂ 
     apply h₂.elim 
     exact fun x ⟨hxp, hxq⟩ H => h₁ x hxp hxq fun y hyp hyq => H y ⟨hyp, hyq⟩
 
-theorem ExistsUnique.intro2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ x : α h : p x, Prop} (w : α)
-  (hp : p w) (hq : q w hp) (H : ∀ y hy : p y, q y hy → y = w) : ∃!(x : _)(hx : p x), q x hx :=
+theorem ExistsUnique.intro2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ (x : α) (h : p x), Prop}
+  (w : α) (hp : p w) (hq : q w hp) (H : ∀ y (hy : p y), q y hy → y = w) : ∃!(x : _)(hx : p x), q x hx :=
   by 
     simp only [exists_unique_iff_exists]
     exact ExistsUnique.intro w ⟨hp, hq⟩ fun y ⟨hyp, hyq⟩ => H y hyp hyq
 
-theorem ExistsUnique.exists2 {α : Sort _} {p : α → Sort _} {q : ∀ x : α h : p x, Prop}
+theorem ExistsUnique.exists2 {α : Sort _} {p : α → Sort _} {q : ∀ (x : α) (h : p x), Prop}
   (h : ∃!(x : _)(hx : p x), q x hx) : ∃ (x : _)(hx : p x), q x hx :=
   h.exists.imp fun x hx => hx.exists
 
-theorem ExistsUnique.unique2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ x : α hx : p x, Prop}
+theorem ExistsUnique.unique2 {α : Sort _} {p : α → Sort _} [∀ x, Subsingleton (p x)] {q : ∀ (x : α) (hx : p x), Prop}
   (h : ∃!(x : _)(hx : p x), q x hx) {y₁ y₂ : α} (hpy₁ : p y₁) (hqy₁ : q y₁ hpy₁) (hpy₂ : p y₂) (hqy₂ : q y₂ hpy₂) :
   y₁ = y₂ :=
   by 
@@ -1497,7 +1500,7 @@ namespace Classical
 
 attribute [local instance] prop_decidable
 
-theorem not_ball {α : Sort _} {p : α → Prop} {P : ∀ x : α, p x → Prop} : (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
+theorem not_ball {α : Sort _} {p : α → Prop} {P : ∀ (x : α), p x → Prop} : (¬∀ x h, P x h) ↔ ∃ x h, ¬P x h :=
   _root_.not_ball
 
 end Classical
@@ -1601,14 +1604,14 @@ theorem nonempty_plift {α} : Nonempty (Plift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
 
 @[simp]
-theorem Nonempty.forall {α} {p : Nonempty α → Prop} : (∀ h : Nonempty α, p h) ↔ ∀ a, p ⟨a⟩ :=
+theorem Nonempty.forall {α} {p : Nonempty α → Prop} : (∀ (h : Nonempty α), p h) ↔ ∀ a, p ⟨a⟩ :=
   Iff.intro (fun h a => h _) fun h ⟨a⟩ => h _
 
 @[simp]
 theorem Nonempty.exists {α} {p : Nonempty α → Prop} : (∃ h : Nonempty α, p h) ↔ ∃ a, p ⟨a⟩ :=
   Iff.intro (fun ⟨⟨a⟩, h⟩ => ⟨a, h⟩) fun ⟨a, h⟩ => ⟨⟨a⟩, h⟩
 
-theorem Classical.nonempty_pi {α} {β : α → Sort _} : Nonempty (∀ a : α, β a) ↔ ∀ a : α, Nonempty (β a) :=
+theorem Classical.nonempty_pi {α} {β : α → Sort _} : Nonempty (∀ (a : α), β a) ↔ ∀ (a : α), Nonempty (β a) :=
   Iff.intro (fun ⟨f⟩ a => ⟨f a⟩) fun f => ⟨fun a => Classical.choice$ f a⟩
 
 /-- Using `classical.choice`, lifts a (`Prop`-valued) `nonempty` instance to a (`Type`-valued)

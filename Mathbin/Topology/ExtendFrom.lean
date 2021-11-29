@@ -53,7 +53,7 @@ begin
 end
 
 theorem extend_from_extends [T2Space Y] {f : X → Y} {A : Set X} (hf : ContinuousOn f A) :
-  ∀ x _ : x ∈ A, extendFrom A f x = f x :=
+  ∀ x (_ : x ∈ A), extendFrom A f x = f x :=
   fun x x_in => extend_from_eq (subset_closure x_in) (hf x x_in)
 
 -- error in Topology.ExtendFrom: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

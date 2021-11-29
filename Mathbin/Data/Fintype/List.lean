@@ -26,17 +26,17 @@ open List
 
 namespace Multiset
 
+-- error in Data.Fintype.List: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The `finset` of `l : list α` that, given `m : multiset α`, have the property `⟦l⟧ = m`.
--/
-def lists : Multiset α → Finset (List α) :=
-  fun s =>
-    Quotientₓ.liftOn s (fun l => l.permutations.to_finset)
-      fun l l' h : l ~ l' =>
-        by 
-          ext sl 
-          simp only [mem_permutations, List.mem_to_finset]
-          exact ⟨fun hs => hs.trans h, fun hs => hs.trans h.symm⟩
+-/ def lists : multiset α → finset (list α) :=
+λ
+s, quotient.lift_on s (λ
+ l, l.permutations.to_finset) (λ (l l') (h : «expr ~ »(l, l')), begin
+   ext [] [ident sl] [],
+   simp [] [] ["only"] ["[", expr mem_permutations, ",", expr list.mem_to_finset, "]"] [] [],
+   exact [expr ⟨λ hs, hs.trans h, λ hs, hs.trans h.symm⟩]
+ end)
 
 @[simp]
 theorem lists_coe (l : List α) : lists (l : Multiset α) = l.permutations.to_finset :=

@@ -112,7 +112,7 @@ instance  : AddCommMonoidₓ Enat :=
     add_assoc := fun x y z => Part.ext' And.assoc fun _ _ => add_assocₓ _ _ _ }
 
 instance  : LE Enat :=
-  ⟨fun x y => ∃ h : y.dom → x.dom, ∀ hy : y.dom, x.get (h hy) ≤ y.get hy⟩
+  ⟨fun x y => ∃ h : y.dom → x.dom, ∀ (hy : y.dom), x.get (h hy) ≤ y.get hy⟩
 
 instance  : HasTop Enat :=
   ⟨none⟩
@@ -123,15 +123,15 @@ instance  : HasBot Enat :=
 instance  : HasSup Enat :=
   ⟨fun x y => ⟨x.dom ∧ y.dom, fun h => x.get h.1⊔y.get h.2⟩⟩
 
-theorem le_def (x y : Enat) : x ≤ y ↔ ∃ h : y.dom → x.dom, ∀ hy : y.dom, x.get (h hy) ≤ y.get hy :=
+theorem le_def (x y : Enat) : x ≤ y ↔ ∃ h : y.dom → x.dom, ∀ (hy : y.dom), x.get (h hy) ≤ y.get hy :=
   Iff.rfl
 
 @[elab_as_eliminator]
-protected theorem cases_on' {P : Enat → Prop} : ∀ a : Enat, P ⊤ → (∀ n : ℕ, P (some n)) → P a :=
+protected theorem cases_on' {P : Enat → Prop} : ∀ (a : Enat), P ⊤ → (∀ (n : ℕ), P (some n)) → P a :=
   Part.induction_on
 
 @[elab_as_eliminator]
-protected theorem cases_on {P : Enat → Prop} : ∀ a : Enat, P ⊤ → (∀ n : ℕ, P n) → P a :=
+protected theorem cases_on {P : Enat → Prop} : ∀ (a : Enat), P ⊤ → (∀ (n : ℕ), P n) → P a :=
   by 
     simp only [←some_eq_coe]
     exact Enat.cases_on'
@@ -197,7 +197,7 @@ theorem dom_of_le_coe {x : Enat} {y : ℕ} (h : x ≤ y) : x.dom :=
 instance decidable_le (x y : Enat) [Decidable x.dom] [Decidable y.dom] : Decidable (x ≤ y) :=
   if hx : x.dom then
     decidableOfDecidableOfIff
-        (show Decidable (∀ hy : (y : Enat).Dom, x.get hx ≤ (y : Enat).get hy) from forallPropDecidable _)$
+        (show Decidable (∀ (hy : (y : Enat).Dom), x.get hx ≤ (y : Enat).get hy) from forallPropDecidable _)$
       by 
         dsimp [· ≤ ·]
         simp only [hx, exists_prop_of_true, forall_true_iff]
@@ -219,7 +219,7 @@ instance  : PartialOrderₓ Enat :=
     le_antisymm :=
       fun x y ⟨hxy₁, hxy₂⟩ ⟨hyx₁, hyx₂⟩ => Part.ext' ⟨hyx₁, hxy₁⟩ fun _ _ => le_antisymmₓ (hxy₂ _) (hyx₂ _) }
 
-theorem lt_def (x y : Enat) : x < y ↔ ∃ hx : x.dom, ∀ hy : y.dom, x.get hx < y.get hy :=
+theorem lt_def (x y : Enat) : x < y ↔ ∃ hx : x.dom, ∀ (hy : y.dom), x.get hx < y.get hy :=
   by 
     rw [lt_iff_le_not_leₓ, le_def, le_def, not_exists]
     split 
@@ -276,13 +276,13 @@ theorem lt_coe_iff (x : Enat) (n : ℕ) : x < n ↔ ∃ h : x.dom, x.get h < n :
   by 
     simp only [lt_def, forall_prop_of_true, get_coe', dom_coe]
 
-theorem coe_le_iff (n : ℕ) (x : Enat) : (n : Enat) ≤ x ↔ ∀ h : x.dom, n ≤ x.get h :=
+theorem coe_le_iff (n : ℕ) (x : Enat) : (n : Enat) ≤ x ↔ ∀ (h : x.dom), n ≤ x.get h :=
   by 
     rw [←some_eq_coe]
     simp only [le_def, exists_prop_of_true, dom_some, forall_true_iff]
     rfl
 
-theorem coe_lt_iff (n : ℕ) (x : Enat) : (n : Enat) < x ↔ ∀ h : x.dom, n < x.get h :=
+theorem coe_lt_iff (n : ℕ) (x : Enat) : (n : Enat) < x ↔ ∀ (h : x.dom), n < x.get h :=
   by 
     rw [←some_eq_coe]
     simp only [lt_def, exists_prop_of_true, dom_some, forall_true_iff]
@@ -293,13 +293,13 @@ protected theorem zero_lt_one : (0 : Enat) < 1 :=
     normCast 
     normNum
 
-instance OrderBot : OrderBot Enat :=
-  { bot := ⊥, bot_le := fun _ => ⟨fun _ => trivialₓ, fun _ => Nat.zero_leₓ _⟩ }
-
-instance SemilatticeSupBot : SemilatticeSupBot Enat :=
-  { Enat.orderBot, Enat.partialOrder with sup := ·⊔·, le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩,
+instance SemilatticeSup : SemilatticeSup Enat :=
+  { Enat.partialOrder with sup := ·⊔·, le_sup_left := fun _ _ => ⟨And.left, fun _ => le_sup_left⟩,
     le_sup_right := fun _ _ => ⟨And.right, fun _ => le_sup_right⟩,
     sup_le := fun x y z ⟨hx₁, hx₂⟩ ⟨hy₁, hy₂⟩ => ⟨fun hz => ⟨hx₁ hz, hy₁ hz⟩, fun _ => sup_le (hx₂ _) (hy₂ _)⟩ }
+
+instance OrderBot : OrderBot Enat :=
+  { bot := ⊥, bot_le := fun _ => ⟨fun _ => trivialₓ, fun _ => Nat.zero_leₓ _⟩ }
 
 instance OrderTop : OrderTop Enat :=
   { top := ⊤, le_top := fun x => ⟨fun h => False.elim h, fun hy => False.elim hy⟩ }
@@ -333,7 +333,7 @@ theorem ne_top_iff_dom {x : Enat} : x ≠ ⊤ ↔ x.dom :=
 theorem ne_top_of_lt {x y : Enat} (h : x < y) : x ≠ ⊤ :=
   ne_of_ltₓ$ lt_of_lt_of_leₓ h le_top
 
-theorem eq_top_iff_forall_lt (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) < x :=
+theorem eq_top_iff_forall_lt (x : Enat) : x = ⊤ ↔ ∀ (n : ℕ), (n : Enat) < x :=
   by 
     split 
     ·
@@ -345,7 +345,7 @@ theorem eq_top_iff_forall_lt (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) < 
       rintro ⟨n, rfl⟩
       exact ⟨n, irrefl _⟩
 
-theorem eq_top_iff_forall_le (x : Enat) : x = ⊤ ↔ ∀ n : ℕ, (n : Enat) ≤ x :=
+theorem eq_top_iff_forall_le (x : Enat) : x = ⊤ ↔ ∀ (n : ℕ), (n : Enat) ≤ x :=
   (eq_top_iff_forall_lt x).trans
     ⟨fun h n => (h n).le, fun h n => lt_of_lt_of_leₓ (coe_lt_coe.mpr n.lt_succ_self) (h (n+1))⟩
 
@@ -367,8 +367,11 @@ noncomputable instance  : LinearOrderₓ Enat :=
             fun x y => (le_totalₓ x y).elim (Or.inr ∘ coe_le_coe.2) (Or.inl ∘ coe_le_coe.2)),
     decidableLe := Classical.decRel _ }
 
-noncomputable instance  : BoundedLattice Enat :=
-  { Enat.orderTop, Enat.semilatticeSupBot with inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ,
+instance  : BoundedOrder Enat :=
+  { Enat.orderTop, Enat.orderBot with  }
+
+noncomputable instance  : Lattice Enat :=
+  { Enat.semilatticeSup with inf := min, inf_le_left := min_le_leftₓ, inf_le_right := min_le_rightₓ,
     le_inf := fun _ _ _ => le_minₓ }
 
 theorem sup_eq_max {a b : Enat} : a⊔b = max a b :=
@@ -390,35 +393,22 @@ instance  : OrderedAddCommMonoid Enat :=
                 by 
                   simpa only [coe_add_get] using add_le_add_left (h₂ _) c⟩ }
 
-instance  : CanonicallyOrderedAddMonoid Enat :=
-  { Enat.semilatticeSupBot, Enat.orderedAddCommMonoid with
-    le_iff_exists_add :=
-      fun a b =>
-        Enat.cases_on b (iff_of_true le_top ⟨⊤, (add_top _).symm⟩)
-          fun b =>
-            Enat.cases_on a
-              (iff_of_false (not_le_of_gtₓ (coe_lt_top _))
-                (not_exists.2
-                  fun x =>
-                    ne_of_ltₓ
-                      (by 
-                        rw [top_add] <;> exact coe_lt_top _)))
-              fun a =>
-                ⟨fun h =>
-                    ⟨(b - a : ℕ),
-                      by 
-                        rw [←Nat.cast_add, coe_inj, add_commₓ, tsub_add_cancel_of_le (coe_le_coe.1 h)]⟩,
-                  fun ⟨c, hc⟩ =>
-                    Enat.cases_on c
-                      (fun hc =>
-                        hc.symm ▸
-                          show (a : Enat) ≤ a+⊤by 
-                            rw [add_top] <;> exact le_top)
-                      (fun c hc : (b : Enat) = a+c =>
-                        coe_le_coe.2
-                          (by 
-                            rw [←Nat.cast_add, coe_inj] at hc <;> rw [hc] <;> exact Nat.le_add_rightₓ _ _))
-                      hc⟩ }
+-- error in Data.Nat.Enat: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : canonically_ordered_add_monoid enat :=
+{ le_iff_exists_add := λ
+  a
+  b, enat.cases_on b (iff_of_true le_top ⟨«expr⊤»(), (add_top _).symm⟩) (λ
+   b, enat.cases_on a (iff_of_false (not_le_of_gt (coe_lt_top _)) (not_exists.2 (λ
+      x, ne_of_lt (by rw ["[", expr top_add, "]"] []; exact [expr coe_lt_top _])))) (λ
+    a, ⟨λ
+     h, ⟨(«expr - »(b, a) : exprℕ()), by rw ["[", "<-", expr nat.cast_add, ",", expr coe_inj, ",", expr add_comm, ",", expr tsub_add_cancel_of_le (coe_le_coe.1 h), "]"] []⟩, λ
+     ⟨c, hc⟩, enat.cases_on c (λ
+      hc, «expr ▸ »(hc.symm, show «expr ≤ »((a : enat), «expr + »(a, «expr⊤»())), by rw ["[", expr add_top, "]"] []; exact [expr le_top])) (λ
+      (c)
+      (hc : «expr = »((b : enat), «expr + »(a, c))), coe_le_coe.2 (by rw ["[", "<-", expr nat.cast_add, ",", expr coe_inj, "]"] ["at", ident hc]; rw [expr hc] []; exact [expr nat.le_add_right _ _])) hc⟩)),
+  ..enat.semilattice_sup,
+  ..enat.order_bot,
+  ..enat.ordered_add_comm_monoid }
 
 protected theorem add_lt_add_right {x y z : Enat} (h : x < y) (hz : z ≠ ⊤) : (x+z) < y+z :=
   by 
@@ -691,7 +681,7 @@ begin
   exact [expr h _ this]
 end
 
-theorem lt_find_iff (n : ℕ) : (n : Enat) < find P ↔ ∀ m _ : m ≤ n, ¬P m :=
+theorem lt_find_iff (n : ℕ) : (n : Enat) < find P ↔ ∀ m (_ : m ≤ n), ¬P m :=
   by 
     refine' ⟨_, lt_find P n⟩
     intro h m hm 

@@ -45,20 +45,20 @@ variable{ι : Type u}(s : Finset ι)
 
 namespace Real
 
-theorem pow_arith_mean_le_arith_mean_pow (w z : ι → ℝ) (hw : ∀ i _ : i ∈ s, 0 ≤ w i) (hw' : (∑i in s, w i) = 1)
-  (hz : ∀ i _ : i ∈ s, 0 ≤ z i) (n : ℕ) : ((∑i in s, w i*z i)^n) ≤ ∑i in s, w i*z i^n :=
+theorem pow_arith_mean_le_arith_mean_pow (w z : ι → ℝ) (hw : ∀ i (_ : i ∈ s), 0 ≤ w i) (hw' : (∑i in s, w i) = 1)
+  (hz : ∀ i (_ : i ∈ s), 0 ≤ z i) (n : ℕ) : ((∑i in s, w i*z i)^n) ≤ ∑i in s, w i*z i^n :=
   (convex_on_pow n).map_sum_le hw hw' hz
 
-theorem pow_arith_mean_le_arith_mean_pow_of_even (w z : ι → ℝ) (hw : ∀ i _ : i ∈ s, 0 ≤ w i) (hw' : (∑i in s, w i) = 1)
-  {n : ℕ} (hn : Even n) : ((∑i in s, w i*z i)^n) ≤ ∑i in s, w i*z i^n :=
+theorem pow_arith_mean_le_arith_mean_pow_of_even (w z : ι → ℝ) (hw : ∀ i (_ : i ∈ s), 0 ≤ w i)
+  (hw' : (∑i in s, w i) = 1) {n : ℕ} (hn : Even n) : ((∑i in s, w i*z i)^n) ≤ ∑i in s, w i*z i^n :=
   hn.convex_on_pow.map_sum_le hw hw' fun _ _ => trivialₓ
 
-theorem zpow_arith_mean_le_arith_mean_zpow (w z : ι → ℝ) (hw : ∀ i _ : i ∈ s, 0 ≤ w i) (hw' : (∑i in s, w i) = 1)
-  (hz : ∀ i _ : i ∈ s, 0 < z i) (m : ℤ) : ((∑i in s, w i*z i)^m) ≤ ∑i in s, w i*z i^m :=
+theorem zpow_arith_mean_le_arith_mean_zpow (w z : ι → ℝ) (hw : ∀ i (_ : i ∈ s), 0 ≤ w i) (hw' : (∑i in s, w i) = 1)
+  (hz : ∀ i (_ : i ∈ s), 0 < z i) (m : ℤ) : ((∑i in s, w i*z i)^m) ≤ ∑i in s, w i*z i^m :=
   (convex_on_zpow m).map_sum_le hw hw' hz
 
-theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ) (hw : ∀ i _ : i ∈ s, 0 ≤ w i) (hw' : (∑i in s, w i) = 1)
-  (hz : ∀ i _ : i ∈ s, 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) : ((∑i in s, w i*z i)^p) ≤ ∑i in s, w i*z i^p :=
+theorem rpow_arith_mean_le_arith_mean_rpow (w z : ι → ℝ) (hw : ∀ i (_ : i ∈ s), 0 ≤ w i) (hw' : (∑i in s, w i) = 1)
+  (hz : ∀ i (_ : i ∈ s), 0 ≤ z i) {p : ℝ} (hp : 1 ≤ p) : ((∑i in s, w i*z i)^p) ≤ ∑i in s, w i*z i^p :=
   (convex_on_rpow hp).map_sum_le hw hw' hz
 
 -- error in Analysis.MeanInequalitiesPow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

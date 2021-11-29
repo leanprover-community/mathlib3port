@@ -38,7 +38,7 @@ variable[TopologicalSpace α][TopologicalSpace β]
 
 variable{i : α → β}(di : DenseInducing i)
 
-theorem nhds_eq_comap (di : DenseInducing i) : ∀ a : α, 𝓝 a = comap i (𝓝$ i a) :=
+theorem nhds_eq_comap (di : DenseInducing i) : ∀ (a : α), 𝓝 a = comap i (𝓝$ i a) :=
   di.to_inducing.nhds_eq_comap
 
 protected theorem Continuous (di : DenseInducing i) : Continuous i :=
@@ -64,10 +64,17 @@ theorem dense_image (di : DenseInducing i) {s : Set α} : Dense (i '' s) ↔ Den
     rw [di.to_inducing.closure_eq_preimage_closure_image, H.closure_eq, preimage_univ]
     trivial
 
+-- error in Topology.DenseEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The product of two dense inducings is a dense inducing -/
-protected theorem Prod [TopologicalSpace γ] [TopologicalSpace δ] {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseInducing e₁)
-  (de₂ : DenseInducing e₂) : DenseInducing fun p : α × γ => (e₁ p.1, e₂ p.2) :=
-  { induced := (de₁.to_inducing.prod_mk de₂.to_inducing).induced, dense := de₁.dense.prod_map de₂.dense }
+protected
+theorem prod
+[topological_space γ]
+[topological_space δ]
+{e₁ : α → β}
+{e₂ : γ → δ}
+(de₁ : dense_inducing e₁)
+(de₂ : dense_inducing e₂) : dense_inducing (λ p : «expr × »(α, γ), (e₁ p.1, e₂ p.2)) :=
+{ induced := (de₁.to_inducing.prod_mk de₂.to_inducing).induced, dense := de₁.dense.prod_map de₂.dense }
 
 open TopologicalSpace
 
@@ -196,13 +203,13 @@ theorem continuous_extend [RegularSpace γ] {f : α → γ} (di : DenseInducing 
   continuous_iff_continuous_at.mpr$ fun b => di.continuous_at_extend$ univ_mem' hf
 
 theorem mk' (i : α → β) (c : Continuous i) (dense : ∀ x, x ∈ Closure (range i))
-  (H : ∀ a : α s _ : s ∈ 𝓝 a, ∃ (t : _)(_ : t ∈ 𝓝 (i a)), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
+  (H : ∀ (a : α) s (_ : s ∈ 𝓝 a), ∃ (t : _)(_ : t ∈ 𝓝 (i a)), ∀ b, i b ∈ t → b ∈ s) : DenseInducing i :=
   { induced :=
       (induced_iff_nhds_eq i).2$
         fun a =>
           le_antisymmₓ (tendsto_iff_comap.1$ c.tendsto _)
             (by 
-              simpa [le_def] using H a),
+              simpa [Filter.le_def] using H a),
     dense }
 
 end DenseInducing
@@ -213,7 +220,7 @@ structure DenseEmbedding[TopologicalSpace α][TopologicalSpace β](e : α → β
 
 theorem DenseEmbedding.mk' [TopologicalSpace α] [TopologicalSpace β] (e : α → β) (c : Continuous e)
   (dense : DenseRange e) (inj : Function.Injective e)
-  (H : ∀ a : α s _ : s ∈ 𝓝 a, ∃ (t : _)(_ : t ∈ 𝓝 (e a)), ∀ b, e b ∈ t → b ∈ s) : DenseEmbedding e :=
+  (H : ∀ (a : α) s (_ : s ∈ 𝓝 a), ∃ (t : _)(_ : t ∈ 𝓝 (e a)), ∀ b, e b ∈ t → b ∈ s) : DenseEmbedding e :=
   { DenseInducing.mk' e c Dense H with inj }
 
 namespace DenseEmbedding
@@ -234,14 +241,16 @@ theorem to_embedding : Embedding e :=
 protected theorem separable_space [separable_space α] : separable_space β :=
   de.to_dense_inducing.separable_space
 
+-- error in Topology.DenseEmbedding: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The product of two dense embeddings is a dense embedding. -/
-protected theorem Prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbedding e₁) (de₂ : DenseEmbedding e₂) :
-  DenseEmbedding fun p : α × γ => (e₁ p.1, e₂ p.2) :=
-  { DenseInducing.prod de₁.to_dense_inducing de₂.to_dense_inducing with
-    inj :=
-      fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ =>
-        by 
-          simp  <;> exact fun h₁ h₂ => ⟨de₁.inj h₁, de₂.inj h₂⟩ }
+protected
+theorem prod
+{e₁ : α → β}
+{e₂ : γ → δ}
+(de₁ : dense_embedding e₁)
+(de₂ : dense_embedding e₂) : dense_embedding (λ p : «expr × »(α, γ), (e₁ p.1, e₂ p.2)) :=
+{ inj := assume ⟨x₁, x₂⟩ ⟨y₁, y₂⟩, by simp [] [] [] [] [] []; exact [expr assume h₁ h₂, ⟨de₁.inj h₁, de₂.inj h₂⟩],
+  ..dense_inducing.prod de₁.to_dense_inducing de₂.to_dense_inducing }
 
 /-- The dense embedding of a subtype inside its closure. -/
 @[simps]
@@ -281,18 +290,18 @@ theorem is_closed_property [TopologicalSpace β] {e : α → β} {p : β → Pro
 
 theorem is_closed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
   (hp : IsClosed { q:β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
-  have  : ∀ q : β × β, p q.1 q.2 := is_closed_property (he.prod_map he) hp$ fun _ => h _ _ 
+  have  : ∀ (q : β × β), p q.1 q.2 := is_closed_property (he.prod_map he) hp$ fun _ => h _ _ 
   fun b₁ b₂ => this ⟨b₁, b₂⟩
 
 theorem is_closed_property3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop} (he : DenseRange e)
   (hp : IsClosed { q:β × β × β | p q.1 q.2.1 q.2.2 }) (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) :
   ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
-  have  : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 := is_closed_property (he.prod_map$ he.prod_map he) hp$ fun _ => h _ _ _ 
+  have  : ∀ (q : β × β × β), p q.1 q.2.1 q.2.2 := is_closed_property (he.prod_map$ he.prod_map he) hp$ fun _ => h _ _ _ 
   fun b₁ b₂ b₃ => this ⟨b₁, b₂, b₃⟩
 
 @[elab_as_eliminator]
 theorem DenseRange.induction_on [TopologicalSpace β] {e : α → β} (he : DenseRange e) {p : β → Prop} (b₀ : β)
-  (hp : IsClosed { b | p b }) (ih : ∀ a : α, p$ e a) : p b₀ :=
+  (hp : IsClosed { b | p b }) (ih : ∀ (a : α), p$ e a) : p b₀ :=
   is_closed_property he hp ih b₀
 
 @[elab_as_eliminator]

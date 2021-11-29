@@ -76,7 +76,7 @@ We define the conjugate of `π` by `g`, as a `k`-linear map.
 def conjugate (g : G) : W →ₗ[k] V :=
   ((group_smul.linear_map k V (g⁻¹)).comp π).comp (group_smul.linear_map k W g)
 
-variable(i : V →ₗ[MonoidAlgebra k G] W)(h : ∀ v : V, π (i v) = v)
+variable(i : V →ₗ[MonoidAlgebra k G] W)(h : ∀ (v : V), π (i v) = v)
 
 section 
 

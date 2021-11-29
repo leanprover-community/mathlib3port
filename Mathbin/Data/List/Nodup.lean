@@ -19,7 +19,7 @@ variable{α : Type u}{β : Type v}
 namespace List
 
 @[simp]
-theorem forall_mem_ne {a : α} {l : List α} : (∀ a' : α, a' ∈ l → ¬a = a') ↔ a ∉ l :=
+theorem forall_mem_ne {a : α} {l : List α} : (∀ (a' : α), a' ∈ l → ¬a = a') ↔ a ∉ l :=
   ⟨fun h m => h _ m rfl, fun h a' m e => h (e.symm ▸ m)⟩
 
 @[simp]
@@ -170,7 +170,7 @@ theorem nodup_middle {a : α} {l₁ l₂ : List α} : nodup (l₁ ++ a :: l₂) 
 theorem nodup_of_nodup_map (f : α → β) {l : List α} : nodup (map f l) → nodup l :=
   pairwise_of_pairwise_map f$ fun a b => mt$ congr_argₓ f
 
-theorem nodup_map_on {f : α → β} {l : List α} (H : ∀ x _ : x ∈ l, ∀ y _ : y ∈ l, f x = f y → x = y) (d : nodup l) :
+theorem nodup_map_on {f : α → β} {l : List α} (H : ∀ x (_ : x ∈ l), ∀ y (_ : y ∈ l), f x = f y → x = y) (d : nodup l) :
   nodup (map f l) :=
   pairwise_map_of_pairwise _
     (by 
@@ -196,7 +196,7 @@ theorem inj_on_of_nodup_map {f : α → β} {l : List α} (d : nodup (map f l)) 
         apply ih d.2 h₁ h₂ h₃
 
 theorem nodup_map_iff_inj_on {f : α → β} {l : List α} (d : nodup l) :
-  nodup (map f l) ↔ ∀ x _ : x ∈ l y _ : y ∈ l, f x = f y → x = y :=
+  nodup (map f l) ↔ ∀ x (_ : x ∈ l) y (_ : y ∈ l), f x = f y → x = y :=
   ⟨inj_on_of_nodup_map, fun h => nodup_map_on h d⟩
 
 theorem nodup_map {f : α → β} {l : List α} (hf : injective f) : nodup l → nodup (map f l) :=
@@ -250,7 +250,7 @@ theorem nodup_erase_eq_filter [DecidableEq α] (a : α) {l} (d : nodup l) : l.er
 theorem nodup_erase_of_nodup [DecidableEq α] (a : α) {l} : nodup l → nodup (l.erase a) :=
   nodup_of_sublist (erase_sublist _ _)
 
-theorem nodup_diff [DecidableEq α] : ∀ {l₁ l₂ : List α} h : l₁.nodup, (l₁.diff l₂).Nodup
+theorem nodup_diff [DecidableEq α] : ∀ {l₁ l₂ : List α} (h : l₁.nodup), (l₁.diff l₂).Nodup
 | l₁, [], h => h
 | l₁, a :: l₂, h =>
   by 
@@ -263,17 +263,20 @@ theorem mem_erase_iff_of_nodup [DecidableEq α] {a b : α} {l} (d : nodup l) : a
 theorem mem_erase_of_nodup [DecidableEq α] {a : α} {l} (h : nodup l) : a ∉ l.erase a :=
   fun H => ((mem_erase_iff_of_nodup h).1 H).1 rfl
 
-theorem nodup_join {L : List (List α)} : nodup (join L) ↔ (∀ l _ : l ∈ L, nodup l) ∧ Pairwise Disjoint L :=
+theorem nodup_join {L : List (List α)} : nodup (join L) ↔ (∀ l (_ : l ∈ L), nodup l) ∧ Pairwise Disjoint L :=
   by 
     simp only [nodup, pairwise_join, disjoint_left.symm, forall_mem_ne]
 
-theorem nodup_bind {l₁ : List α} {f : α → List β} :
-  nodup (l₁.bind f) ↔ (∀ x _ : x ∈ l₁, nodup (f x)) ∧ Pairwise (fun a b : α => Disjoint (f a) (f b)) l₁ :=
-  by 
-    simp only [List.bind, nodup_join, pairwise_map, and_comm, And.left_comm, mem_map, exists_imp_distrib, and_imp] <;>
-      rw
-        [show (∀ l : List β x : α, f x = l → x ∈ l₁ → nodup l) ↔ ∀ x : α, x ∈ l₁ → nodup (f x) from
-          forall_swap.trans$ forall_congrₓ$ fun _ => forall_eq']
+-- error in Data.List.Nodup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nodup_bind
+{l₁ : list α}
+{f : α → list β} : «expr ↔ »(nodup (l₁.bind f), «expr ∧ »(∀
+  x «expr ∈ » l₁, nodup (f x), pairwise (λ a b : α, disjoint (f a) (f b)) l₁)) :=
+by simp [] [] ["only"] ["[", expr list.bind, ",", expr nodup_join, ",", expr pairwise_map, ",", expr and_comm, ",", expr and.left_comm, ",", expr mem_map, ",", expr exists_imp_distrib, ",", expr and_imp, "]"] [] []; rw ["[", expr show «expr ↔ »(∀
+  (l : list β)
+  (x : α), «expr = »(f x, l) → «expr ∈ »(x, l₁) → nodup l, ∀
+  x : α, «expr ∈ »(x, l₁) → nodup (f x)), from «expr $ »(forall_swap.trans, «expr $ »(forall_congr, λ
+   _, forall_eq')), "]"] []
 
 theorem nodup_product {l₁ : List α} {l₂ : List β} (d₁ : nodup l₁) (d₂ : nodup l₂) : nodup (product l₁ l₂) :=
   nodup_bind.2
@@ -301,7 +304,7 @@ theorem nodup_sigma {σ : α → Type _} {l₁ : List α} {l₂ : ∀ a, List (�
             rcases mem_map.1 h₂ with ⟨b₂, mb₂, ⟨⟩⟩
             exact n rfl⟩
 
-theorem nodup_filter_map {f : α → Option β} {l : List α} (H : ∀ a a' : α b : β, b ∈ f a → b ∈ f a' → a = a') :
+theorem nodup_filter_map {f : α → Option β} {l : List α} (H : ∀ (a a' : α) (b : β), b ∈ f a → b ∈ f a' → a = a') :
   nodup l → nodup (filter_map f l) :=
   pairwise_filter_map_of_pairwise f$ fun a a' n b bm b' bm' e => n$ H a a' b' (e ▸ bm) bm'
 
@@ -341,7 +344,7 @@ theorem nodup_sublists' {l : List α} : nodup (sublists' l) ↔ nodup l :=
 theorem nodup_sublists_len {α : Type _} n {l : List α} (nd : nodup l) : (sublists_len n l).Nodup :=
   nodup_of_sublist (sublists_len_sublist_sublists' _ _) (nodup_sublists'.2 nd)
 
-theorem diff_eq_filter_of_nodup [DecidableEq α] : ∀ {l₁ l₂ : List α} hl₁ : l₁.nodup, l₁.diff l₂ = l₁.filter (· ∉ l₂)
+theorem diff_eq_filter_of_nodup [DecidableEq α] : ∀ {l₁ l₂ : List α} (hl₁ : l₁.nodup), l₁.diff l₂ = l₁.filter (· ∉ l₂)
 | l₁, [], hl₁ =>
   by 
     simp 
@@ -356,7 +359,7 @@ theorem mem_diff_iff_of_nodup [DecidableEq α] {l₁ l₂ : List α} (hl₁ : l�
   by 
     rw [diff_eq_filter_of_nodup hl₁, mem_filter]
 
-theorem nodup_update_nth : ∀ {l : List α} {n : ℕ} {a : α} hl : l.nodup ha : a ∉ l, (l.update_nth n a).Nodup
+theorem nodup_update_nth : ∀ {l : List α} {n : ℕ} {a : α} (hl : l.nodup) (ha : a ∉ l), (l.update_nth n a).Nodup
 | [], n, a, hl, ha => nodup_nil
 | b :: l, 0, a, hl, ha => nodup_cons.2 ⟨mt (mem_cons_of_mem _) ha, (nodup_cons.1 hl).2⟩
 | b :: l, n+1, a, hl, ha =>
@@ -380,7 +383,7 @@ theorem nodup.map_update [DecidableEq α] {l : List α} (hl : l.nodup) (f : α �
       simp [Ne.symm H, H, update_nth, ←apply_ite (cons (f hd))]
 
 theorem nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.nodup)
-  (h : ∀ a _ : a ∈ l b _ : b ∈ l, a ≠ b → r a b) : l.pairwise r :=
+  (h : ∀ a (_ : a ∈ l) b (_ : b ∈ l), a ≠ b → r a b) : l.pairwise r :=
   by 
     classical 
     refine' pairwise_of_reflexive_on_dupl_of_forall_ne _ h 
@@ -394,7 +397,7 @@ theorem nodup.pairwise_of_set_pairwise {l : List α} {r : α → α → Prop} (h
 
 end List
 
-theorem Option.to_list_nodup {α} : ∀ o : Option α, o.to_list.nodup
+theorem Option.to_list_nodup {α} : ∀ (o : Option α), o.to_list.nodup
 | none => List.nodup_nil
 | some x => List.nodup_singleton x
 

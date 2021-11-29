@@ -203,16 +203,15 @@ section Domain
 
 variable{Γ' : Type _}[PartialOrderₓ Γ']
 
+-- error in RingTheory.HahnSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Extends the domain of a `hahn_series` by an `order_embedding`. -/
-def emb_domain (f : Γ ↪o Γ') : HahnSeries Γ R → HahnSeries Γ' R :=
-  fun x =>
-    { coeff := fun b : Γ' => if h : b ∈ f '' x.support then x.coeff (Classical.some h) else 0,
-      is_pwo_support' :=
-        (x.is_pwo_support.image_of_monotone f.monotone).mono
-          fun b hb =>
-            by 
-              contrapose! hb 
-              rw [Function.mem_support, dif_neg hb, not_not] }
+def emb_domain (f : «expr ↪o »(Γ, Γ')) : hahn_series Γ R → hahn_series Γ' R :=
+λ
+x, { coeff := λ b : Γ', if h : «expr ∈ »(b, «expr '' »(f, x.support)) then x.coeff (classical.some h) else 0,
+  is_pwo_support' := (x.is_pwo_support.image_of_monotone f.monotone).mono (λ b hb, begin
+     contrapose ["!"] [ident hb],
+     rw ["[", expr function.mem_support, ",", expr dif_neg hb, ",", expr not_not, "]"] []
+   end) }
 
 @[simp]
 theorem emb_domain_coeff {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {a : Γ} : (emb_domain f x).coeff (f a) = x.coeff a :=
@@ -230,7 +229,7 @@ theorem emb_domain_coeff {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {a : Γ} : (emb
       rwa [f.injective hb2] at hb1
 
 @[simp]
-theorem emb_domain_mk_coeff {f : Γ → Γ'} (hfi : Function.Injective f) (hf : ∀ g g' : Γ, f g ≤ f g' ↔ g ≤ g')
+theorem emb_domain_mk_coeff {f : Γ → Γ'} (hfi : Function.Injective f) (hf : ∀ (g g' : Γ), f g ≤ f g' ↔ g ≤ g')
   {x : HahnSeries Γ R} {a : Γ} : (emb_domain ⟨⟨f, hfi⟩, hf⟩ x).coeff (f a) = x.coeff a :=
   emb_domain_coeff
 
@@ -991,12 +990,12 @@ theorem emb_domain_one [NonAssocSemiring R] (f : Γ ↪o Γ') (hf : f 0 = 0) :
 /-- Extending the domain of Hahn series is a ring homomorphism. -/
 @[simps]
 def emb_domain_ring_hom [NonAssocSemiring R] (f : Γ →+ Γ') (hfi : Function.Injective f)
-  (hf : ∀ g g' : Γ, f g ≤ f g' ↔ g ≤ g') : HahnSeries Γ R →+* HahnSeries Γ' R :=
+  (hf : ∀ (g g' : Γ), f g ≤ f g' ↔ g ≤ g') : HahnSeries Γ R →+* HahnSeries Γ' R :=
   { toFun := emb_domain ⟨⟨f, hfi⟩, hf⟩, map_one' := emb_domain_one _ f.map_zero, map_mul' := emb_domain_mul _ f.map_add,
     map_zero' := emb_domain_zero, map_add' := emb_domain_add _ }
 
 theorem emb_domain_ring_hom_C [NonAssocSemiring R] {f : Γ →+ Γ'} {hfi : Function.Injective f}
-  {hf : ∀ g g' : Γ, f g ≤ f g' ↔ g ≤ g'} {r : R} : emb_domain_ring_hom f hfi hf (C r) = C r :=
+  {hf : ∀ (g g' : Γ), f g ≤ f g' ↔ g ≤ g'} {r : R} : emb_domain_ring_hom f hfi hf (C r) = C r :=
   emb_domain_single.trans
     (by 
       simp )
@@ -1047,7 +1046,7 @@ variable{Γ' : Type _}[OrderedCancelAddCommMonoid Γ']
 
 /-- Extending the domain of Hahn series is an algebra homomorphism. -/
 @[simps]
-def emb_domain_alg_hom (f : Γ →+ Γ') (hfi : Function.Injective f) (hf : ∀ g g' : Γ, f g ≤ f g' ↔ g ≤ g') :
+def emb_domain_alg_hom (f : Γ →+ Γ') (hfi : Function.Injective f) (hf : ∀ (g g' : Γ), f g ≤ f g' ↔ g ≤ g') :
   HahnSeries Γ A →ₐ[R] HahnSeries Γ' A :=
   { emb_domain_ring_hom f hfi hf with commutes' := fun r => emb_domain_ring_hom_C }
 
@@ -1259,7 +1258,7 @@ variable(Γ)(R)[PartialOrderₓ Γ][AddCommMonoidₓ R]
 structure summable_family(α : Type _) where 
   toFun : α → HahnSeries Γ R 
   is_pwo_Union_support' : Set.IsPwo (⋃a : α, (to_fun a).Support)
-  finite_co_support' : ∀ g : Γ, { a | (to_fun a).coeff g ≠ 0 }.Finite
+  finite_co_support' : ∀ (g : Γ), { a | (to_fun a).coeff g ≠ 0 }.Finite
 
 end 
 
@@ -1285,7 +1284,7 @@ theorem coe_injective : @Function.Injective (summable_family Γ R α) (α → Ha
     subst h
 
 @[ext]
-theorem ext {s t : summable_family Γ R α} (h : ∀ a : α, s a = t a) : s = t :=
+theorem ext {s t : summable_family Γ R α} (h : ∀ (a : α), s a = t a) : s = t :=
   coe_injective$ funext h
 
 instance  : Add (summable_family Γ R α) :=

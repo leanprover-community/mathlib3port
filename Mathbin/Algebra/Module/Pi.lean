@@ -20,7 +20,7 @@ variable(x y : ∀ i, f i)(i : I)
 namespace Pi
 
 @[toAdditive Pi.hasVadd]
-instance HasScalar {α : Type _} [∀ i, HasScalar α$ f i] : HasScalar α (∀ i : I, f i) :=
+instance HasScalar {α : Type _} [∀ i, HasScalar α$ f i] : HasScalar α (∀ (i : I), f i) :=
   ⟨fun s x => fun i => s • x i⟩
 
 @[toAdditive]
@@ -32,7 +32,7 @@ theorem smul_apply {α : Type _} [∀ i, HasScalar α$ f i] (s : α) : (s • x)
   rfl
 
 @[toAdditive Pi.hasVadd']
-instance has_scalar' {g : I → Type _} [∀ i, HasScalar (f i) (g i)] : HasScalar (∀ i, f i) (∀ i : I, g i) :=
+instance has_scalar' {g : I → Type _} [∀ i, HasScalar (f i) (g i)] : HasScalar (∀ i, f i) (∀ (i : I), g i) :=
   ⟨fun s x => fun i => s i • x i⟩
 
 @[simp, toAdditive]
@@ -45,11 +45,11 @@ theorem _root_.is_smul_regular.pi {α : Type _} [∀ i, HasScalar α$ f i] {k : 
   fun _ _ h => funext$ fun i => hk i (congr_funₓ h i : _)
 
 instance IsScalarTower {α β : Type _} [HasScalar α β] [∀ i, HasScalar β$ f i] [∀ i, HasScalar α$ f i]
-  [∀ i, IsScalarTower α β (f i)] : IsScalarTower α β (∀ i : I, f i) :=
+  [∀ i, IsScalarTower α β (f i)] : IsScalarTower α β (∀ (i : I), f i) :=
   ⟨fun x y z => funext$ fun i => smul_assoc x y (z i)⟩
 
 instance is_scalar_tower' {g : I → Type _} {α : Type _} [∀ i, HasScalar α$ f i] [∀ i, HasScalar (f i) (g i)]
-  [∀ i, HasScalar α$ g i] [∀ i, IsScalarTower α (f i) (g i)] : IsScalarTower α (∀ i : I, f i) (∀ i : I, g i) :=
+  [∀ i, HasScalar α$ g i] [∀ i, IsScalarTower α (f i) (g i)] : IsScalarTower α (∀ (i : I), f i) (∀ (i : I), g i) :=
   ⟨fun x y z => funext$ fun i => smul_assoc x (y i) (z i)⟩
 
 instance is_scalar_tower'' {g : I → Type _} {h : I → Type _} [∀ i, HasScalar (f i) (g i)] [∀ i, HasScalar (g i) (h i)]
@@ -59,12 +59,12 @@ instance is_scalar_tower'' {g : I → Type _} {h : I → Type _} [∀ i, HasScal
 
 @[toAdditive]
 instance SmulCommClass {α β : Type _} [∀ i, HasScalar α$ f i] [∀ i, HasScalar β$ f i] [∀ i, SmulCommClass α β (f i)] :
-  SmulCommClass α β (∀ i : I, f i) :=
+  SmulCommClass α β (∀ (i : I), f i) :=
   ⟨fun x y z => funext$ fun i => smul_comm x y (z i)⟩
 
 @[toAdditive]
 instance smul_comm_class' {g : I → Type _} {α : Type _} [∀ i, HasScalar α$ g i] [∀ i, HasScalar (f i) (g i)]
-  [∀ i, SmulCommClass α (f i) (g i)] : SmulCommClass α (∀ i : I, f i) (∀ i : I, g i) :=
+  [∀ i, SmulCommClass α (f i) (g i)] : SmulCommClass α (∀ (i : I), f i) (∀ (i : I), g i) :=
   ⟨fun x y z => funext$ fun i => smul_comm x (y i) (z i)⟩
 
 @[toAdditive]
@@ -108,13 +108,13 @@ instance smul_with_zero' {g : I → Type _} [∀ i, HasZero (g i)] [∀ i, HasZe
     zero_smul := fun _ => funext$ fun _ => zero_smul _ _ }
 
 @[toAdditive]
-instance MulAction α {m : Monoidₓ α} [∀ i, MulAction α$ f i] : @MulAction α (∀ i : I, f i) m :=
+instance MulAction α {m : Monoidₓ α} [∀ i, MulAction α$ f i] : @MulAction α (∀ (i : I), f i) m :=
   { smul := · • ·, mul_smul := fun r s f => funext$ fun i => mul_smul _ _ _,
     one_smul := fun f => funext$ fun i => one_smul α _ }
 
 @[toAdditive]
 instance mul_action' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} [∀ i, MulAction (f i) (g i)] :
-  @MulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) :=
+  @MulAction (∀ i, f i) (∀ (i : I), g i) (@Pi.monoid I f m) :=
   { smul := · • ·, mul_smul := fun r s f => funext$ fun i => mul_smul _ _ _,
     one_smul := fun f => funext$ fun i => one_smul _ _ }
 
@@ -127,13 +127,13 @@ instance mul_action_with_zero' {g : I → Type _} [∀ i, MonoidWithZeroₓ (g i
   { Pi.mulAction', Pi.smulWithZero' with  }
 
 instance DistribMulAction α {m : Monoidₓ α} {n : ∀ i, AddMonoidₓ$ f i} [∀ i, DistribMulAction α$ f i] :
-  @DistribMulAction α (∀ i : I, f i) m (@Pi.addMonoid I f n) :=
+  @DistribMulAction α (∀ (i : I), f i) m (@Pi.addMonoid I f n) :=
   { Pi.mulAction _ with smul_zero := fun c => funext$ fun i => smul_zero _,
     smul_add := fun c f g => funext$ fun i => smul_add _ _ _ }
 
 instance distrib_mul_action' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} {n : ∀ i, AddMonoidₓ$ g i}
   [∀ i, DistribMulAction (f i) (g i)] :
-  @DistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.addMonoid I g n) :=
+  @DistribMulAction (∀ i, f i) (∀ (i : I), g i) (@Pi.monoid I f m) (@Pi.addMonoid I g n) :=
   { smul_add :=
       by 
         intros 
@@ -145,9 +145,17 @@ instance distrib_mul_action' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} {n 
         ext x 
         apply smul_zero }
 
-theorem single_smul {α} [Monoidₓ α] [∀ i, AddMonoidₓ$ f i] [∀ i, DistribMulAction α$ f i] [DecidableEq I] (i : I)
-  (r : α) (x : f i) : single i (r • x) = r • single i x :=
-  single_op (fun i : I => ((· • ·) r : f i → f i)) (fun j => smul_zero _) _ _
+-- error in Algebra.Module.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem single_smul
+{α}
+[monoid α]
+[∀ i, «expr $ »(add_monoid, f i)]
+[∀ i, «expr $ »(distrib_mul_action α, f i)]
+[decidable_eq I]
+(i : I)
+(r : α)
+(x : f i) : «expr = »(single i «expr • »(r, x), «expr • »(r, single i x)) :=
+single_op (λ i : I, (((«expr • »)) r : f i → f i)) (λ j, smul_zero _) _ _
 
 /-- A version of `pi.single_smul` for non-dependent functions. It is useful in cases Lean fails
 to apply `pi.single_smul`. -/
@@ -155,19 +163,26 @@ theorem single_smul' {α β} [Monoidₓ α] [AddMonoidₓ β] [DistribMulAction 
   single i (r • x) = r • single i x :=
   single_smul i r x
 
-theorem single_smul₀ {g : I → Type _} [∀ i, MonoidWithZeroₓ (f i)] [∀ i, AddMonoidₓ (g i)]
-  [∀ i, DistribMulAction (f i) (g i)] [DecidableEq I] (i : I) (r : f i) (x : g i) :
-  single i (r • x) = single i r • single i x :=
-  single_op₂ (fun i : I => (· • · : f i → g i → g i)) (fun j => smul_zero _) _ _ _
+-- error in Algebra.Module.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem single_smul₀
+{g : I → Type*}
+[∀ i, monoid_with_zero (f i)]
+[∀ i, add_monoid (g i)]
+[∀ i, distrib_mul_action (f i) (g i)]
+[decidable_eq I]
+(i : I)
+(r : f i)
+(x : g i) : «expr = »(single i «expr • »(r, x), «expr • »(single i r, single i x)) :=
+single_op₂ (λ i : I, ((«expr • ») : f i → g i → g i)) (λ j, smul_zero _) _ _ _
 
 instance MulDistribMulAction α {m : Monoidₓ α} {n : ∀ i, Monoidₓ$ f i} [∀ i, MulDistribMulAction α$ f i] :
-  @MulDistribMulAction α (∀ i : I, f i) m (@Pi.monoid I f n) :=
+  @MulDistribMulAction α (∀ (i : I), f i) m (@Pi.monoid I f n) :=
   { Pi.mulAction _ with smul_one := fun c => funext$ fun i => smul_one _,
     smul_mul := fun c f g => funext$ fun i => smul_mul' _ _ _ }
 
 instance mul_distrib_mul_action' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)} {n : ∀ i, Monoidₓ$ g i}
   [∀ i, MulDistribMulAction (f i) (g i)] :
-  @MulDistribMulAction (∀ i, f i) (∀ i : I, g i) (@Pi.monoid I f m) (@Pi.monoid I g n) :=
+  @MulDistribMulAction (∀ i, f i) (∀ (i : I), g i) (@Pi.monoid I f m) (@Pi.monoid I g n) :=
   { smul_mul :=
       by 
         intros 
@@ -182,7 +197,7 @@ instance mul_distrib_mul_action' {g : I → Type _} {m : ∀ i, Monoidₓ (f i)}
 variable(I f)
 
 instance Module α {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ$ f i} [∀ i, Module α$ f i] :
-  @Module α (∀ i : I, f i) r (@Pi.addCommMonoid I f m) :=
+  @Module α (∀ (i : I), f i) r (@Pi.addCommMonoid I f m) :=
   { Pi.distribMulAction _ with add_smul := fun c f g => funext$ fun i => add_smul _ _ _,
     zero_smul := fun f => funext$ fun i => zero_smul α _ }
 
@@ -202,7 +217,7 @@ instance module' {g : I → Type _} {r : ∀ i, Semiringₓ (f i)} {m : ∀ i, A
         apply zero_smul }
 
 instance  α {r : Semiringₓ α} {m : ∀ i, AddCommMonoidₓ$ f i} [∀ i, Module α$ f i] [∀ i, NoZeroSmulDivisors α$ f i] :
-  NoZeroSmulDivisors α (∀ i : I, f i) :=
+  NoZeroSmulDivisors α (∀ (i : I), f i) :=
   ⟨fun c x h => or_iff_not_imp_left.mpr fun hc => funext fun i => (smul_eq_zero.mp (congr_funₓ h i)).resolve_left hc⟩
 
 end Pi

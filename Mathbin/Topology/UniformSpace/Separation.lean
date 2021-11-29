@@ -89,15 +89,23 @@ protected def SeparationRel (α : Type u) [u : UniformSpace α] :=
 
 localized [uniformity] notation "𝓢" => SeparationRel
 
-theorem separated_equiv : Equivalenceₓ fun x y => (x, y) ∈ 𝓢 α :=
-  ⟨fun x => fun s => refl_mem_uniformity,
-    fun x y =>
-      fun h s : Set (α × α) hs =>
-        have  : preimage Prod.swap s ∈ 𝓤 α := symm_le_uniformity hs 
-        h _ this,
-    fun x y z hxy : (x, y) ∈ 𝓢 α hyz : (y, z) ∈ 𝓢 α s hs : s ∈ 𝓤 α =>
-      let ⟨t, ht, (h_ts : CompRel t t ⊆ s)⟩ := comp_mem_uniformity_sets hs 
-      h_ts$ show (x, z) ∈ CompRel t t from ⟨y, hxy t ht, hyz t ht⟩⟩
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem separated_equiv : equivalence (λ x y, «expr ∈ »((x, y), expr𝓢() α)) :=
+⟨assume
+ x, assume
+ s, refl_mem_uniformity, assume
+ x
+ y, assume
+ (h)
+ (s : set «expr × »(α, α))
+ (hs), have «expr ∈ »(preimage prod.swap s, expr𝓤() α), from symm_le_uniformity hs,
+ h _ this, assume
+ (x y z)
+ (hxy : «expr ∈ »((x, y), expr𝓢() α))
+ (hyz : «expr ∈ »((y, z), expr𝓢() α))
+ (s)
+ (hs : «expr ∈ »(s, expr𝓤() α)), let ⟨t, ht, (h_ts : «expr ⊆ »(comp_rel t t, s))⟩ := comp_mem_uniformity_sets hs in
+ «expr $ »(h_ts, show «expr ∈ »((x, z), comp_rel t t), from ⟨y, hxy t ht, hyz t ht⟩)⟩
 
 /-- A uniform space is separated if its separation relation is trivial (each point
 is related only to itself). -/
@@ -107,7 +115,8 @@ class SeparatedSpace(α : Type u)[UniformSpace α] : Prop where
 theorem separated_space_iff {α : Type u} [UniformSpace α] : SeparatedSpace α ↔ 𝓢 α = IdRel :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 
-theorem separated_def {α : Type u} [UniformSpace α] : SeparatedSpace α ↔ ∀ x y, (∀ r _ : r ∈ 𝓤 α, (x, y) ∈ r) → x = y :=
+theorem separated_def {α : Type u} [UniformSpace α] :
+  SeparatedSpace α ↔ ∀ x y, (∀ r (_ : r ∈ 𝓤 α), (x, y) ∈ r) → x = y :=
   by 
     simp [separated_space_iff, id_rel_subset.2 separated_equiv.1, subset.antisymm_iff] <;>
       simp [subset_def, SeparationRel]
@@ -144,7 +153,7 @@ theorem id_rel_sub_separation_relation (α : Type _) [UniformSpace α] : IdRel �
     unfold SeparationRel 
     rw [id_rel_subset]
     intro x 
-    suffices  : ∀ t _ : t ∈ 𝓤 α, (x, x) ∈ t
+    suffices  : ∀ t (_ : t ∈ 𝓤 α), (x, x) ∈ t
     ·
       simpa only [refl_mem_uniformity]
     exact fun t => refl_mem_uniformity
@@ -247,9 +256,9 @@ theorem is_closed_range_of_spaced_out {ι} [SeparatedSpace α] {V₀ : Set (α �
 /-- A set `s` in a uniform space `α` is separated if the separation relation `𝓢 α`
 induces the trivial relation on `s`. -/
 def IsSeparated (s : Set α) : Prop :=
-  ∀ x y _ : x ∈ s _ : y ∈ s, (x, y) ∈ 𝓢 α → x = y
+  ∀ x y (_ : x ∈ s) (_ : y ∈ s), (x, y) ∈ 𝓢 α → x = y
 
-theorem is_separated_def (s : Set α) : IsSeparated s ↔ ∀ x y _ : x ∈ s _ : y ∈ s, (x, y) ∈ 𝓢 α → x = y :=
+theorem is_separated_def (s : Set α) : IsSeparated s ↔ ∀ x y (_ : x ∈ s) (_ : y ∈ s), (x, y) ∈ 𝓢 α → x = y :=
   Iff.rfl
 
 theorem is_separated_def' (s : Set α) : IsSeparated s ↔ s.prod s ∩ 𝓢 α ⊆ IdRel :=
@@ -395,9 +404,10 @@ instance separation_setoid.uniform_space
     exact [expr ⟨λ h a ha, «expr $ »((this a ha).mp, h a ha), λ h a ha, «expr $ »((this a ha).mpr, h a ha)⟩]
   end }
 
-theorem uniformity_quotient :
-  𝓤 (Quotientₓ (separation_setoid α)) = (𝓤 α).map fun p : α × α => («expr⟦ ⟧» p.1, «expr⟦ ⟧» p.2) :=
-  rfl
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniformity_quotient : «expr = »(expr𝓤() (quotient (separation_setoid α)), (expr𝓤() α).map (λ
+  p : «expr × »(α, α), («expr⟦ ⟧»(p.1), «expr⟦ ⟧»(p.2)))) :=
+rfl
 
 theorem uniform_continuous_quotient_mk : UniformContinuous (Quotientₓ.mk : α → Quotientₓ (separation_setoid α)) :=
   le_reflₓ _
@@ -410,49 +420,52 @@ theorem uniform_continuous_quotient_lift {f : α → β} {h : ∀ a b, (a, b) �
   UniformContinuous fun a => Quotientₓ.lift f h a :=
   uniform_continuous_quotient hf
 
-theorem uniform_continuous_quotient_lift₂ {f : α → β → γ} {h : ∀ a c b d, (a, b) ∈ 𝓢 α → (c, d) ∈ 𝓢 β → f a c = f b d}
-  (hf : UniformContinuous fun p : α × β => f p.1 p.2) :
-  UniformContinuous fun p : _ × _ => Quotientₓ.lift₂ f h p.1 p.2 :=
-  by 
-    rw [UniformContinuous, uniformity_prod_eq_prod, uniformity_quotient, uniformity_quotient, Filter.prod_map_map_eq,
-      Filter.tendsto_map'_iff, Filter.tendsto_map'_iff]
-    rwa [UniformContinuous, uniformity_prod_eq_prod, Filter.tendsto_map'_iff] at hf
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem uniform_continuous_quotient_lift₂
+{f : α → β → γ}
+{h : ∀ a c b d, «expr ∈ »((a, b), expr𝓢() α) → «expr ∈ »((c, d), expr𝓢() β) → «expr = »(f a c, f b d)}
+(hf : uniform_continuous (λ
+  p : «expr × »(α, β), f p.1 p.2)) : uniform_continuous (λ p : «expr × »(_, _), quotient.lift₂ f h p.1 p.2) :=
+begin
+  rw ["[", expr uniform_continuous, ",", expr uniformity_prod_eq_prod, ",", expr uniformity_quotient, ",", expr uniformity_quotient, ",", expr filter.prod_map_map_eq, ",", expr filter.tendsto_map'_iff, ",", expr filter.tendsto_map'_iff, "]"] [],
+  rwa ["[", expr uniform_continuous, ",", expr uniformity_prod_eq_prod, ",", expr filter.tendsto_map'_iff, "]"] ["at", ident hf]
+end
 
-theorem comap_quotient_le_uniformity :
-  ((𝓤$ Quotientₓ$ separation_setoid α).comap fun p : α × α => («expr⟦ ⟧» p.fst, «expr⟦ ⟧» p.snd)) ≤ 𝓤 α :=
-  fun t' ht' =>
-    let ⟨t, ht, tt_t'⟩ := comp_mem_uniformity_sets ht' 
-    let ⟨s, hs, ss_t⟩ := comp_mem_uniformity_sets ht
-    ⟨(fun p : α × α => («expr⟦ ⟧» p.1, «expr⟦ ⟧» p.2)) '' s, (𝓤 α).sets_of_superset hs$ fun x hx => ⟨x, hx, rfl⟩,
-      fun ⟨a₁, a₂⟩ ⟨⟨b₁, b₂⟩, hb, ab_eq⟩ =>
-        have  : «expr⟦ ⟧» b₁ = «expr⟦ ⟧» a₁ ∧ «expr⟦ ⟧» b₂ = «expr⟦ ⟧» a₂ := Prod.mk.inj ab_eq 
-        have  : b₁ ≈ a₁ ∧ b₂ ≈ a₂ := And.imp Quotientₓ.exact Quotientₓ.exact this 
-        have ab₁ : (a₁, b₁) ∈ t := (Setoidₓ.symm this.left) t ht 
-        have ba₂ : (b₂, a₂) ∈ s := this.right s hs 
-        tt_t' ⟨b₁, show ((a₁, a₂).1, b₁) ∈ t from ab₁, ss_t ⟨b₂, show ((b₁, a₂).1, b₂) ∈ s from hb, ba₂⟩⟩⟩
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem comap_quotient_le_uniformity : «expr ≤ »(«expr $ »(expr𝓤(), «expr $ »(quotient, separation_setoid α)).comap (λ
+  p : «expr × »(α, α), («expr⟦ ⟧»(p.fst), «expr⟦ ⟧»(p.snd))), expr𝓤() α) :=
+assume t' ht', let ⟨t, ht, tt_t'⟩ := comp_mem_uniformity_sets ht' in
+let ⟨s, hs, ss_t⟩ := comp_mem_uniformity_sets ht in
+⟨«expr '' »(λ
+  p : «expr × »(α, α), («expr⟦ ⟧»(p.1), «expr⟦ ⟧»(p.2)), s), «expr $ »((expr𝓤() α).sets_of_superset hs, assume
+  x
+  hx, ⟨x, hx, rfl⟩), assume
+ ⟨a₁, a₂⟩
+ ⟨⟨b₁, b₂⟩, hb, ab_eq⟩, have «expr ∧ »(«expr = »(«expr⟦ ⟧»(b₁), «expr⟦ ⟧»(a₁)), «expr = »(«expr⟦ ⟧»(b₂), «expr⟦ ⟧»(a₂))), from prod.mk.inj ab_eq,
+ have «expr ∧ »(«expr ≈ »(b₁, a₁), «expr ≈ »(b₂, a₂)), from and.imp quotient.exact quotient.exact this,
+ have ab₁ : «expr ∈ »((a₁, b₁), t), from setoid.symm this.left t ht,
+ have ba₂ : «expr ∈ »((b₂, a₂), s), from this.right s hs,
+ tt_t' ⟨b₁, show «expr ∈ »(((a₁, a₂).1, b₁), t), from ab₁, ss_t ⟨b₂, show «expr ∈ »(((b₁, a₂).1, b₂), s), from hb, ba₂⟩⟩⟩
 
-theorem comap_quotient_eq_uniformity :
-  ((𝓤$ Quotientₓ$ separation_setoid α).comap fun p : α × α => («expr⟦ ⟧» p.fst, «expr⟦ ⟧» p.snd)) = 𝓤 α :=
-  le_antisymmₓ comap_quotient_le_uniformity le_comap_map
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem comap_quotient_eq_uniformity : «expr = »(«expr $ »(expr𝓤(), «expr $ »(quotient, separation_setoid α)).comap (λ
+  p : «expr × »(α, α), («expr⟦ ⟧»(p.fst), «expr⟦ ⟧»(p.snd))), expr𝓤() α) :=
+le_antisymm comap_quotient_le_uniformity le_comap_map
 
-instance separated_separation : SeparatedSpace (Quotientₓ (separation_setoid α)) :=
-  ⟨Set.ext$
-      fun ⟨a, b⟩ =>
-        Quotientₓ.induction_on₂ a b$
-          fun a b =>
-            ⟨fun h =>
-                have  : a ≈ b :=
-                  fun s hs =>
-                    have  :
-                      s ∈ (𝓤$ Quotientₓ$ separation_setoid α).comap fun p : α × α => («expr⟦ ⟧» p.1, «expr⟦ ⟧» p.2) :=
-                      comap_quotient_le_uniformity hs 
-                    let ⟨t, ht, hts⟩ := this 
-                    hts
-                      (by 
-                        dsimp [preimage]
-                        exact h t ht)
-                show «expr⟦ ⟧» a = «expr⟦ ⟧» b from Quotientₓ.sound this,
-              fun heq : «expr⟦ ⟧» a = «expr⟦ ⟧» b => fun h hs => HEq ▸ refl_mem_uniformity hs⟩⟩
+-- error in Topology.UniformSpace.Separation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance separated_separation : separated_space (quotient (separation_setoid α)) :=
+⟨«expr $ »(set.ext, assume
+  ⟨a, b⟩, «expr $ »(quotient.induction_on₂ a b, assume
+   a
+   b, ⟨assume
+    h, have «expr ≈ »(a, b), from assume
+    s
+    hs, have «expr ∈ »(s, «expr $ »(expr𝓤(), «expr $ »(quotient, separation_setoid α)).comap (λ
+      p : «expr × »(α, α), («expr⟦ ⟧»(p.1), «expr⟦ ⟧»(p.2)))), from comap_quotient_le_uniformity hs,
+    let ⟨t, ht, hts⟩ := this in
+    hts (begin dsimp [] ["[", expr preimage, "]"] [] [], exact [expr h t ht] end),
+    show «expr = »(«expr⟦ ⟧»(a), «expr⟦ ⟧»(b)), from quotient.sound this, assume
+    heq : «expr = »(«expr⟦ ⟧»(a), «expr⟦ ⟧»(b)), assume h hs, «expr ▸ »(heq, refl_mem_uniformity hs)⟩))⟩
 
 theorem separated_of_uniform_continuous {f : α → β} {x y : α} (H : UniformContinuous f) (h : x ≈ y) : f x ≈ f y :=
   fun _ h' => h _ (H h')

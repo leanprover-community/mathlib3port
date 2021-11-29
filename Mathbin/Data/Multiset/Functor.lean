@@ -81,7 +81,7 @@ open Functor
 open Traversable IsLawfulTraversable
 
 @[simp]
-theorem lift_coe {α β : Type _} (x : List α) (f : List α → β) (h : ∀ a b : List α, a ≈ b → f a = f b) :
+theorem lift_coe {α β : Type _} (x : List α) (f : List α → β) (h : ∀ (a b : List α), a ≈ b → f a = f b) :
   Quotientₓ.lift f h (x : Multiset α) = f x :=
   Quotientₓ.lift_mk _ _ _
 

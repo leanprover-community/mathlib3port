@@ -34,20 +34,20 @@ which is natural in both arguments,
 and also satisfies the two hexagon identities.
 -/
 class braided_category(C : Type u)[category.{v} C][monoidal_category.{v} C] where 
-  braiding : ∀ X Y : C, X ⊗ Y ≅ Y ⊗ X 
+  braiding : ∀ (X Y : C), X ⊗ Y ≅ Y ⊗ X 
   braiding_naturality' :
-  ∀ {X X' Y Y' : C} f : X ⟶ Y g : X' ⟶ Y', (f ⊗ g) ≫ (braiding Y Y').Hom = (braiding X X').Hom ≫ (g ⊗ f) :=  by 
+  ∀ {X X' Y Y' : C} (f : X ⟶ Y) (g : X' ⟶ Y'), (f ⊗ g) ≫ (braiding Y Y').Hom = (braiding X X').Hom ≫ (g ⊗ f) :=  by 
   runTac 
     obviously 
   hexagon_forward' :
-  ∀ X Y Z : C,
+  ∀ (X Y Z : C),
     (α_ X Y Z).Hom ≫ (braiding X (Y ⊗ Z)).Hom ≫ (α_ Y Z X).Hom =
       ((braiding X Y).Hom ⊗ 𝟙 Z) ≫ (α_ Y X Z).Hom ≫ (𝟙 Y ⊗ (braiding X Z).Hom) :=
    by 
   runTac 
     obviously 
   hexagon_reverse' :
-  ∀ X Y Z : C,
+  ∀ (X Y Z : C),
     (α_ X Y Z).inv ≫ (braiding (X ⊗ Y) Z).Hom ≫ (α_ Z X Y).inv =
       (𝟙 X ⊗ (braiding Y Z).Hom) ≫ (α_ X Z Y).inv ≫ ((braiding X Z).Hom ⊗ 𝟙 Y) :=
    by 
@@ -188,7 +188,7 @@ A symmetric monoidal category is a braided monoidal category for which the braid
 See https://stacks.math.columbia.edu/tag/0FFW.
 -/
 class symmetric_category(C : Type u)[category.{v} C][monoidal_category.{v} C] extends braided_category.{v} C where 
-  symmetry' : ∀ X Y : C, (β_ X Y).Hom ≫ (β_ Y X).Hom = 𝟙 (X ⊗ Y) :=  by 
+  symmetry' : ∀ (X Y : C), (β_ X Y).Hom ≫ (β_ Y X).Hom = 𝟙 (X ⊗ Y) :=  by 
   runTac 
     obviously
 
@@ -207,7 +207,7 @@ A lax braided functor between braided monoidal categories is a lax monoidal func
 which preserves the braiding.
 -/
 structure lax_braided_functor extends lax_monoidal_functor C D where 
-  braided' : ∀ X Y : C, μ X Y ≫ map (β_ X Y).Hom = (β_ (obj X) (obj Y)).Hom ≫ μ Y X :=  by 
+  braided' : ∀ (X Y : C), μ X Y ≫ map (β_ X Y).Hom = (β_ (obj X) (obj Y)).Hom ≫ μ Y X :=  by 
   runTac 
     obviously
 
@@ -260,7 +260,7 @@ A braided functor between braided monoidal categories is a monoidal functor
 which preserves the braiding.
 -/
 structure braided_functor extends monoidal_functor C D where 
-  braided' : ∀ X Y : C, map (β_ X Y).Hom = inv (μ X Y) ≫ (β_ (obj X) (obj Y)).Hom ≫ μ Y X :=  by 
+  braided' : ∀ (X Y : C), map (β_ X Y).Hom = inv (μ X Y) ≫ (β_ (obj X) (obj Y)).Hom ≫ μ Y X :=  by 
   runTac 
     obviously
 

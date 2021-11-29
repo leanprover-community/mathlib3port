@@ -398,22 +398,26 @@ unsafe def side_conditions (e : expr) : tactic format :=
 
 open Monadₓ
 
+-- error in Tactic.Monotonicity.Interactive: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- tactic-facing function, similar to `interactive.tactic.generalize` with the
 exception that meta variables -/
-private unsafe def monotonicity.generalize' (h : Name) (v : expr) (x : Name) : tactic (expr × expr) :=
-  do 
-    let tgt ← target 
-    let t ← infer_type v 
-    let tgt' ←
-      (do 
-            let ⟨tgt', _⟩ ← solve_aux tgt (tactic.generalize v x >> target)
-            to_expr (pquote.1 fun y : %%ₓt => ∀ x, y = x → %%ₓtgt'.binding_body.lift_vars 0 1)) <|>
-          to_expr (pquote.1 fun y : %%ₓt => ∀ x, (%%ₓv) = x → %%ₓtgt)
-    let t ← head_beta (tgt' v) >>= assert h 
-    swap 
-    let r ← mk_eq_refl v 
-    solve1$ tactic.exact (t v r)
-    Prod.mk <$> tactic.intro x <*> tactic.intro h
+private
+meta
+def monotonicity.generalize' (h : name) (v : expr) (x : name) : tactic «expr × »(expr, expr) :=
+do {
+tgt ← target,
+  t ← infer_type v,
+  tgt' ← «expr <|> »(do
+   ⟨tgt', _⟩ ← solve_aux tgt «expr >> »(tactic.generalize v x, target),
+     to_expr (``(λ
+      y : %%t, ∀
+      x, «expr = »(y, x) → %%tgt'.binding_body.lift_vars 0 1)), to_expr (``(λ
+    y : %%t, ∀ x, «expr = »(%%v, x) → %%tgt))),
+  t ← «expr >>= »(head_beta (tgt' v), assert h),
+  swap,
+  r ← mk_eq_refl v,
+  «expr $ »(solve1, tactic.exact (t v r)),
+  «expr <*> »(«expr <$> »(prod.mk, tactic.intro x), tactic.intro h) }
 
 private unsafe def hide_meta_vars (tac : List expr → tactic Unit) : tactic Unit :=
   focus1$

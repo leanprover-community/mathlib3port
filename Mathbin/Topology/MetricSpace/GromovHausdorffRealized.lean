@@ -71,7 +71,7 @@ private theorem one_le_max_var : 1 ≤ max_var X Y :=
 minimum of the Hausdorff distances between `X` and `Y` in a coupling -/
 def candidates : Set (prod_space_fun X Y) :=
   { f |
-    (((((∀ x y : X, f (Sum.inl x, Sum.inl y) = dist x y) ∧ ∀ x y : Y, f (Sum.inr x, Sum.inr y) = dist x y) ∧
+    (((((∀ (x y : X), f (Sum.inl x, Sum.inl y) = dist x y) ∧ ∀ (x y : Y), f (Sum.inr x, Sum.inr y) = dist x y) ∧
             ∀ x y, f (x, y) = f (y, x)) ∧
           ∀ x y z, f (x, z) ≤ f (x, y)+f (y, z)) ∧
         ∀ x, f (x, x) = 0) ∧
@@ -228,20 +228,16 @@ theorem candidates_b_of_candidates_mem (f : prod_space_fun X Y) (fA : f ∈ cand
   candidates_b_of_candidates f fA ∈ candidates_b X Y :=
   fA
 
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The distance on `X ⊕ Y` is a candidate -/
-private theorem dist_mem_candidates : (fun p : Sum X Y × Sum X Y => dist p.1 p.2) ∈ candidates X Y :=
-  by 
-    simp only [candidates, dist_comm, forall_const, and_trueₓ, add_commₓ, eq_self_iff_true, and_selfₓ, Sum.forall,
-      Set.mem_set_of_eq, dist_self]
-    repeat' 
-      first |
-        split |
-        exact fun a y z => dist_triangle_left _ _ _|
-        exact
-          fun x y =>
-            by 
-              rfl|
-        exact fun x y => max_var_bound
+private
+theorem dist_mem_candidates : «expr ∈ »(λ
+ p : «expr × »(«expr ⊕ »(X, Y), «expr ⊕ »(X, Y)), dist p.1 p.2, candidates X Y) :=
+begin
+  simp [] [] ["only"] ["[", expr candidates, ",", expr dist_comm, ",", expr forall_const, ",", expr and_true, ",", expr add_comm, ",", expr eq_self_iff_true, ",", expr and_self, ",", expr sum.forall, ",", expr set.mem_set_of_eq, ",", expr dist_self, "]"] [] [],
+  repeat { split <|> exact [expr λ
+     a y z, dist_triangle_left _ _ _] <|> exact [expr λ x y, by refl] <|> exact [expr λ x y, max_var_bound] }
+end
 
 /-- The distance on `X ⊕ Y` as a candidate -/
 def candidates_b_dist (X : Type u) (Y : Type v) [MetricSpace X] [CompactSpace X] [Inhabited X] [MetricSpace Y]
@@ -320,27 +316,47 @@ called HD, and prove its basic properties. -/
 def HD (f : Cb X Y) :=
   max (⨆x, ⨅y, f (inl x, inr y)) (⨆y, ⨅x, f (inl x, inr y))
 
-theorem HD_below_aux1 {f : Cb X Y} (C : ℝ) {x : X} : BddBelow (range fun y : Y => f (inl x, inr y)+C) :=
-  let ⟨cf, hcf⟩ := (Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1
-  ⟨cf+C, forall_range_iff.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem HD_below_aux1
+{f : Cb X Y}
+(C : exprℝ())
+{x : X} : bdd_below (range (λ y : Y, «expr + »(f (inl x, inr y), C))) :=
+let ⟨cf, hcf⟩ := (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1 in
+⟨«expr + »(cf, C), forall_range_iff.2 (λ i, add_le_add_right (λ x, hcf (mem_range_self x) _) _)⟩
 
-private theorem HD_bound_aux1 (f : Cb X Y) (C : ℝ) : BddAbove (range fun x : X => ⨅y, f (inl x, inr y)+C) :=
-  by 
-    rcases(Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).2 with ⟨Cf, hCf⟩
-    refine' ⟨Cf+C, forall_range_iff.2 fun x => _⟩
-    calc (⨅y, f (inl x, inr y)+C) ≤ f (inl x, inr (default Y))+C := cinfi_le (HD_below_aux1 C) (default Y)_ ≤ Cf+C :=
-      add_le_add ((fun x => hCf (mem_range_self x)) _) (le_reflₓ _)
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+theorem HD_bound_aux1
+(f : Cb X Y)
+(C : exprℝ()) : bdd_above (range (λ x : X, «expr⨅ , »((y), «expr + »(f (inl x, inr y), C)))) :=
+begin
+  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).2, "with", "⟨", ident Cf, ",", ident hCf, "⟩"],
+  refine [expr ⟨«expr + »(Cf, C), forall_range_iff.2 (λ x, _)⟩],
+  calc
+    «expr ≤ »(«expr⨅ , »((y), «expr + »(f (inl x, inr y), C)), «expr + »(f (inl x, inr (default Y)), C)) : cinfi_le (HD_below_aux1 C) (default Y)
+    «expr ≤ »(..., «expr + »(Cf, C)) : add_le_add (λ x, hCf (mem_range_self x) _) (le_refl _)
+end
 
-theorem HD_below_aux2 {f : Cb X Y} (C : ℝ) {y : Y} : BddBelow (range fun x : X => f (inl x, inr y)+C) :=
-  let ⟨cf, hcf⟩ := (Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1
-  ⟨cf+C, forall_range_iff.2 fun i => add_le_add_right ((fun x => hcf (mem_range_self x)) _) _⟩
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem HD_below_aux2
+{f : Cb X Y}
+(C : exprℝ())
+{y : Y} : bdd_below (range (λ x : X, «expr + »(f (inl x, inr y), C))) :=
+let ⟨cf, hcf⟩ := (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).1 in
+⟨«expr + »(cf, C), forall_range_iff.2 (λ i, add_le_add_right (λ x, hcf (mem_range_self x) _) _)⟩
 
-private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) : BddAbove (range fun y : Y => ⨅x, f (inl x, inr y)+C) :=
-  by 
-    rcases(Real.bounded_iff_bdd_below_bdd_above.1 bounded_range).2 with ⟨Cf, hCf⟩
-    refine' ⟨Cf+C, forall_range_iff.2 fun y => _⟩
-    calc (⨅x, f (inl x, inr y)+C) ≤ f (inl (default X), inr y)+C := cinfi_le (HD_below_aux2 C) (default X)_ ≤ Cf+C :=
-      add_le_add ((fun x => hCf (mem_range_self x)) _) (le_reflₓ _)
+-- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private
+theorem HD_bound_aux2
+(f : Cb X Y)
+(C : exprℝ()) : bdd_above (range (λ y : Y, «expr⨅ , »((x), «expr + »(f (inl x, inr y), C)))) :=
+begin
+  rcases [expr (real.bounded_iff_bdd_below_bdd_above.1 bounded_range).2, "with", "⟨", ident Cf, ",", ident hCf, "⟩"],
+  refine [expr ⟨«expr + »(Cf, C), forall_range_iff.2 (λ y, _)⟩],
+  calc
+    «expr ≤ »(«expr⨅ , »((x), «expr + »(f (inl x, inr y), C)), «expr + »(f (inl (default X), inr y), C)) : cinfi_le (HD_below_aux2 C) (default X)
+    «expr ≤ »(..., «expr + »(Cf, C)) : add_le_add (λ x, hCf (mem_range_self x) _) (le_refl _)
+end
 
 -- error in Topology.MetricSpace.GromovHausdorffRealized: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Explicit bound on `HD (dist)`. This means that when looking for minimizers it will
@@ -442,7 +458,7 @@ section Consequences
 
 variable(X : Type u)(Y : Type v)[MetricSpace X][CompactSpace X][Nonempty X][MetricSpace Y][CompactSpace Y][Nonempty Y]
 
-private theorem exists_minimizer : ∃ (f : _)(_ : f ∈ candidates_b X Y), ∀ g _ : g ∈ candidates_b X Y, HD f ≤ HD g :=
+private theorem exists_minimizer : ∃ (f : _)(_ : f ∈ candidates_b X Y), ∀ g (_ : g ∈ candidates_b X Y), HD f ≤ HD g :=
   compact_candidates_b.exists_forall_le candidates_b_nonempty HD_continuous.ContinuousOn
 
 private def optimal_GH_dist : Cb X Y :=

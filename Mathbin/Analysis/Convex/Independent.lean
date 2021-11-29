@@ -48,7 +48,7 @@ variable(𝕜)[OrderedSemiring 𝕜][AddCommGroupₓ E][Module 𝕜 E]{s t : Set
 /-- An indexed family is said to be convex independent if every point only belongs to convex hulls
 of sets containing it. -/
 def ConvexIndependent (p : ι → E) : Prop :=
-  ∀ s : Set ι x : ι, p x ∈ convexHull 𝕜 (p '' s) → x ∈ s
+  ∀ (s : Set ι) (x : ι), p x ∈ convexHull 𝕜 (p '' s) → x ∈ s
 
 variable{𝕜}
 
@@ -80,11 +80,15 @@ theorem ConvexIndependent.comp_embedding {ι' : Type _} (f : ι' ↪ ι) {p : ι
         (by 
           rwa [Set.image_image])
 
+-- error in Analysis.Convex.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a family is convex independent, so is any subfamily indexed by a subtype of the index type.
 -/
-protected theorem ConvexIndependent.subtype {p : ι → E} (hc : ConvexIndependent 𝕜 p) (s : Set ι) :
-  ConvexIndependent 𝕜 fun i : s => p i :=
-  hc.comp_embedding (embedding.subtype _)
+protected
+theorem convex_independent.subtype
+{p : ι → E}
+(hc : convex_independent 𝕜 p)
+(s : set ι) : convex_independent 𝕜 (λ i : s, p i) :=
+hc.comp_embedding (embedding.subtype _)
 
 -- error in Analysis.Convex.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If an indexed family of points is convex independent, so is the corresponding set of points. -/
@@ -154,7 +158,7 @@ theorem convex_independent_set_iff_inter_convex_hull_subset {s : Set E} :
 /-- If a set is convex independent, a point in the set is not in the convex hull of the other
 points. See `convex_independent_iff_not_mem_convex_hull_diff` for the indexed family version.  -/
 theorem convex_independent_set_iff_not_mem_convex_hull_diff {s : Set E} :
-  ConvexIndependent 𝕜 (fun x => x : s → E) ↔ ∀ x _ : x ∈ s, x ∉ convexHull 𝕜 (s \ {x}) :=
+  ConvexIndependent 𝕜 (fun x => x : s → E) ↔ ∀ x (_ : x ∈ s), x ∉ convexHull 𝕜 (s \ {x}) :=
   by 
     rw [convex_independent_set_iff_inter_convex_hull_subset]
     split 

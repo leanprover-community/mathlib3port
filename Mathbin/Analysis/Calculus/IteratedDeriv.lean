@@ -48,14 +48,15 @@ variable{F : Type _}[NormedGroup F][NormedSpace 𝕜 F]
 
 variable{E : Type _}[NormedGroup E][NormedSpace 𝕜 E]
 
+-- error in Analysis.Calculus.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The `n`-th iterated derivative of a function from `𝕜` to `F`, as a function from `𝕜` to `F`. -/
-def iteratedDeriv (n : ℕ) (f : 𝕜 → F) (x : 𝕜) : F :=
-  (iteratedFderiv 𝕜 n f x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1
+def iterated_deriv (n : exprℕ()) (f : 𝕜 → F) (x : 𝕜) : F :=
+(iterated_fderiv 𝕜 n f x : (fin n → 𝕜) → F) (λ i : fin n, 1)
 
+-- error in Analysis.Calculus.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The `n`-th iterated derivative of a function from `𝕜` to `F` within a set `s`, as a function
-from `𝕜` to `F`. -/
-def iteratedDerivWithin (n : ℕ) (f : 𝕜 → F) (s : Set 𝕜) (x : 𝕜) : F :=
-  (iteratedFderivWithin 𝕜 n f s x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1
+from `𝕜` to `F`. -/ def iterated_deriv_within (n : exprℕ()) (f : 𝕜 → F) (s : set 𝕜) (x : 𝕜) : F :=
+(iterated_fderiv_within 𝕜 n f s x : (fin n → 𝕜) → F) (λ i : fin n, 1)
 
 variable{n : ℕ}{f : 𝕜 → F}{s : Set 𝕜}{x : 𝕜}
 
@@ -67,9 +68,10 @@ theorem iterated_deriv_within_univ : iteratedDerivWithin n f univ = iteratedDeri
 /-! ### Properties of the iterated derivative within a set -/
 
 
-theorem iterated_deriv_within_eq_iterated_fderiv_within :
-  iteratedDerivWithin n f s x = (iteratedFderivWithin 𝕜 n f s x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1 :=
-  rfl
+-- error in Analysis.Calculus.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem iterated_deriv_within_eq_iterated_fderiv_within : «expr = »(iterated_deriv_within n f s x, (iterated_fderiv_within 𝕜 n f s x : (fin n → 𝕜) → F) (λ
+  i : fin n, 1)) :=
+rfl
 
 /-- Write the iterated derivative as the composition of a continuous linear equiv and the iterated
 Fréchet derivative -/
@@ -85,8 +87,7 @@ iterated derivative. -/
 theorem iterated_fderiv_within_eq_equiv_comp :
   iteratedFderivWithin 𝕜 n f s = (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F ∘ iteratedDerivWithin n f s) :=
   by 
-    rw [iterated_deriv_within_eq_equiv_comp, ←Function.comp.assoc, ContinuousLinearEquiv.self_comp_symm]
-    rfl
+    rw [iterated_deriv_within_eq_equiv_comp, ←Function.comp.assoc, LinearIsometryEquiv.self_comp_symm, Function.left_id]
 
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
 multiplied by the product of the `m i`s. -/
@@ -114,15 +115,15 @@ derivatives are differentiable, then the function is `C^n`. This is not an equiv
 but this is an equivalence when the set has unique derivatives, see
 `times_cont_diff_on_iff_continuous_on_differentiable_on_deriv`. -/
 theorem times_cont_diff_on_of_continuous_on_differentiable_on_deriv {n : WithTop ℕ}
-  (Hcont : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContinuousOn (fun x => iteratedDerivWithin m f s x) s)
-  (Hdiff : ∀ m : ℕ, (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (fun x => iteratedDerivWithin m f s x) s) :
+  (Hcont : ∀ (m : ℕ), (m : WithTop ℕ) ≤ n → ContinuousOn (fun x => iteratedDerivWithin m f s x) s)
+  (Hdiff : ∀ (m : ℕ), (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (fun x => iteratedDerivWithin m f s x) s) :
   TimesContDiffOn 𝕜 n f s :=
   by 
     apply times_cont_diff_on_of_continuous_on_differentiable_on
     ·
-      simpa [iterated_fderiv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_continuous_on_iff]
+      simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff]
     ·
-      simpa [iterated_fderiv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_differentiable_on_iff]
+      simpa [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
 
 /-- To check that a function is `n` times continuously differentiable, it suffices to check that its
 first `n` derivatives are differentiable. This is slightly too strong as the condition we
@@ -130,62 +131,63 @@ require on the `n`-th derivative is differentiability instead of continuity, but
 advantage of avoiding the discussion of continuity in the proof (and for `n = ∞` this is optimal).
 -/
 theorem times_cont_diff_on_of_differentiable_on_deriv {n : WithTop ℕ}
-  (h : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s) : TimesContDiffOn 𝕜 n f s :=
+  (h : ∀ (m : ℕ), (m : WithTop ℕ) ≤ n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s) : TimesContDiffOn 𝕜 n f s :=
   by 
     apply times_cont_diff_on_of_differentiable_on 
-    simpa [iterated_fderiv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_differentiable_on_iff, -coe_fn_coe_base]
+    simpa only [iterated_fderiv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff]
 
 /-- On a set with unique derivatives, a `C^n` function has derivatives up to `n` which are
 continuous. -/
 theorem TimesContDiffOn.continuous_on_iterated_deriv_within {n : WithTop ℕ} {m : ℕ} (h : TimesContDiffOn 𝕜 n f s)
   (hmn : (m : WithTop ℕ) ≤ n) (hs : UniqueDiffOn 𝕜 s) : ContinuousOn (iteratedDerivWithin m f s) s :=
   by 
-    simp [iterated_deriv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_continuous_on_iff, -coe_fn_coe_base]
-    exact h.continuous_on_iterated_fderiv_within hmn hs
+    simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_continuous_on_iff] using
+      h.continuous_on_iterated_fderiv_within hmn hs
 
 /-- On a set with unique derivatives, a `C^n` function has derivatives less than `n` which are
 differentiable. -/
 theorem TimesContDiffOn.differentiable_on_iterated_deriv_within {n : WithTop ℕ} {m : ℕ} (h : TimesContDiffOn 𝕜 n f s)
   (hmn : (m : WithTop ℕ) < n) (hs : UniqueDiffOn 𝕜 s) : DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s :=
   by 
-    simp [iterated_deriv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_differentiable_on_iff, -coe_fn_coe_base]
-    exact h.differentiable_on_iterated_fderiv_within hmn hs
+    simpa only [iterated_deriv_within_eq_equiv_comp, LinearIsometryEquiv.comp_differentiable_on_iff] using
+      h.differentiable_on_iterated_fderiv_within hmn hs
 
 /-- The property of being `C^n`, initially defined in terms of the Fréchet derivative, can be
 reformulated in terms of the one-dimensional derivative on sets with unique derivatives. -/
 theorem times_cont_diff_on_iff_continuous_on_differentiable_on_deriv {n : WithTop ℕ} (hs : UniqueDiffOn 𝕜 s) :
   TimesContDiffOn 𝕜 n f s ↔
-    (∀ m : ℕ, (m : WithTop ℕ) ≤ n → ContinuousOn (iteratedDerivWithin m f s) s) ∧
-      ∀ m : ℕ, (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s :=
+    (∀ (m : ℕ), (m : WithTop ℕ) ≤ n → ContinuousOn (iteratedDerivWithin m f s) s) ∧
+      ∀ (m : ℕ), (m : WithTop ℕ) < n → DifferentiableOn 𝕜 (iteratedDerivWithin m f s) s :=
   by 
     simp only [times_cont_diff_on_iff_continuous_on_differentiable_on hs, iterated_fderiv_within_eq_equiv_comp,
-      ContinuousLinearEquiv.comp_continuous_on_iff, ContinuousLinearEquiv.comp_differentiable_on_iff]
+      LinearIsometryEquiv.comp_continuous_on_iff, LinearIsometryEquiv.comp_differentiable_on_iff]
 
+-- error in Analysis.Calculus.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
 differentiating the `n`-th iterated derivative. -/
-theorem iterated_deriv_within_succ {x : 𝕜} (hxs : UniqueDiffWithinAt 𝕜 s x) :
-  iteratedDerivWithin (n+1) f s x = derivWithin (iteratedDerivWithin n f s) s x :=
-  by 
-    rw [iterated_deriv_within_eq_iterated_fderiv_within, iterated_fderiv_within_succ_apply_left,
-      iterated_fderiv_within_eq_equiv_comp, ContinuousLinearEquiv.comp_fderiv_within _ hxs, derivWithin]
-    change
-      ((ContinuousMultilinearMap.mkPiField 𝕜 (Finₓ n) ((fderivWithin 𝕜 (iteratedDerivWithin n f s) s x : 𝕜 → F) 1) :
-          (Finₓ n → 𝕜) → F)
-          fun i : Finₓ n => 1) =
-        (fderivWithin 𝕜 (iteratedDerivWithin n f s) s x : 𝕜 → F) 1
-    simp 
+theorem iterated_deriv_within_succ
+{x : 𝕜}
+(hxs : unique_diff_within_at 𝕜 s x) : «expr = »(iterated_deriv_within «expr + »(n, 1) f s x, deriv_within (iterated_deriv_within n f s) s x) :=
+begin
+  rw ["[", expr iterated_deriv_within_eq_iterated_fderiv_within, ",", expr iterated_fderiv_within_succ_apply_left, ",", expr iterated_fderiv_within_eq_equiv_comp, ",", expr linear_isometry_equiv.comp_fderiv_within _ hxs, ",", expr deriv_within, "]"] [],
+  change [expr «expr = »((continuous_multilinear_map.mk_pi_field 𝕜 (fin n) ((fderiv_within 𝕜 (iterated_deriv_within n f s) s x : 𝕜 → F) 1) : (fin n → 𝕜) → F) (λ
+     i : fin n, 1), (fderiv_within 𝕜 (iterated_deriv_within n f s) s x : 𝕜 → F) 1)] [] [],
+  simp [] [] [] [] [] []
+end
 
+-- error in Analysis.Calculus.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The `n`-th iterated derivative within a set with unique derivatives can be obtained by
 iterating `n` times the differentiation operation. -/
-theorem iterated_deriv_within_eq_iterate {x : 𝕜} (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
-  iteratedDerivWithin n f s x = ((fun g : 𝕜 → F => derivWithin g s)^[n]) f x :=
-  by 
-    induction' n with n IH generalizing x
-    ·
-      simp 
-    ·
-      rw [iterated_deriv_within_succ (hs x hx), Function.iterate_succ']
-      exact deriv_within_congr (hs x hx) (fun y hy => IH hy) (IH hx)
+theorem iterated_deriv_within_eq_iterate
+{x : 𝕜}
+(hs : unique_diff_on 𝕜 s)
+(hx : «expr ∈ »(x, s)) : «expr = »(iterated_deriv_within n f s x, «expr ^[ ]»(λ g : 𝕜 → F, deriv_within g s, n) f x) :=
+begin
+  induction [expr n] [] ["with", ident n, ident IH] ["generalizing", ident x],
+  { simp [] [] [] [] [] [] },
+  { rw ["[", expr iterated_deriv_within_succ (hs x hx), ",", expr function.iterate_succ', "]"] [],
+    exact [expr deriv_within_congr (hs x hx) (λ y hy, IH hy) (IH hx)] }
+end
 
 /-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
 taking the `n`-th derivative of the derivative. -/
@@ -198,9 +200,10 @@ theorem iterated_deriv_within_succ' {x : 𝕜} (hxs : UniqueDiffOn 𝕜 s) (hx :
 /-! ### Properties of the iterated derivative on the whole space -/
 
 
-theorem iterated_deriv_eq_iterated_fderiv :
-  iteratedDeriv n f x = (iteratedFderiv 𝕜 n f x : (Finₓ n → 𝕜) → F) fun i : Finₓ n => 1 :=
-  rfl
+-- error in Analysis.Calculus.IteratedDeriv: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem iterated_deriv_eq_iterated_fderiv : «expr = »(iterated_deriv n f x, (iterated_fderiv 𝕜 n f x : (fin n → 𝕜) → F) (λ
+  i : fin n, 1)) :=
+rfl
 
 /-- Write the iterated derivative as the composition of a continuous linear equiv and the iterated
 Fréchet derivative -/
@@ -215,8 +218,7 @@ iterated derivative. -/
 theorem iterated_fderiv_eq_equiv_comp :
   iteratedFderiv 𝕜 n f = (ContinuousMultilinearMap.piFieldEquiv 𝕜 (Finₓ n) F ∘ iteratedDeriv n f) :=
   by 
-    rw [iterated_deriv_eq_equiv_comp, ←Function.comp.assoc, ContinuousLinearEquiv.self_comp_symm]
-    rfl
+    rw [iterated_deriv_eq_equiv_comp, ←Function.comp.assoc, LinearIsometryEquiv.self_comp_symm, Function.left_id]
 
 /-- The `n`-th Fréchet derivative applied to a vector `(m 0, ..., m (n-1))` is the derivative
 multiplied by the product of the `m i`s. -/
@@ -243,11 +245,11 @@ theorem iterated_deriv_one : iteratedDeriv 1 f = deriv f :=
 reformulated in terms of the one-dimensional derivative. -/
 theorem times_cont_diff_iff_iterated_deriv {n : WithTop ℕ} :
   TimesContDiff 𝕜 n f ↔
-    (∀ m : ℕ, (m : WithTop ℕ) ≤ n → Continuous (iteratedDeriv m f)) ∧
-      ∀ m : ℕ, (m : WithTop ℕ) < n → Differentiable 𝕜 (iteratedDeriv m f) :=
+    (∀ (m : ℕ), (m : WithTop ℕ) ≤ n → Continuous (iteratedDeriv m f)) ∧
+      ∀ (m : ℕ), (m : WithTop ℕ) < n → Differentiable 𝕜 (iteratedDeriv m f) :=
   by 
     simp only [times_cont_diff_iff_continuous_differentiable, iterated_fderiv_eq_equiv_comp,
-      ContinuousLinearEquiv.comp_continuous_iff, ContinuousLinearEquiv.comp_differentiable_iff]
+      LinearIsometryEquiv.comp_continuous_iff, LinearIsometryEquiv.comp_differentiable_iff]
 
 /-- To check that a function is `n` times continuously differentiable, it suffices to check that its
 first `n` derivatives are differentiable. This is slightly too strong as the condition we
@@ -255,7 +257,7 @@ require on the `n`-th derivative is differentiability instead of continuity, but
 advantage of avoiding the discussion of continuity in the proof (and for `n = ∞` this is optimal).
 -/
 theorem times_cont_diff_of_differentiable_iterated_deriv {n : WithTop ℕ}
-  (h : ∀ m : ℕ, (m : WithTop ℕ) ≤ n → Differentiable 𝕜 (iteratedDeriv m f)) : TimesContDiff 𝕜 n f :=
+  (h : ∀ (m : ℕ), (m : WithTop ℕ) ≤ n → Differentiable 𝕜 (iteratedDeriv m f)) : TimesContDiff 𝕜 n f :=
   times_cont_diff_iff_iterated_deriv.2 ⟨fun m hm => (h m hm).Continuous, fun m hm => h m (le_of_ltₓ hm)⟩
 
 theorem TimesContDiff.continuous_iterated_deriv {n : WithTop ℕ} (m : ℕ) (h : TimesContDiff 𝕜 n f)

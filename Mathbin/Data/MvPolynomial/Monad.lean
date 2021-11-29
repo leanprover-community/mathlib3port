@@ -252,11 +252,13 @@ theorem hom_bind₁ (f : MvPolynomial τ R →+* S) (g : σ → MvPolynomial τ 
   by 
     rw [bind₁, map_aeval, algebra_map_eq]
 
-theorem map_bind₁ (f : R →+* S) (g : σ → MvPolynomial τ R) (φ : MvPolynomial σ R) :
-  map f (bind₁ g φ) = bind₁ (fun i : σ => (map f) (g i)) (map f φ) :=
-  by 
-    rw [hom_bind₁, map_comp_C, ←eval₂_hom_map_hom]
-    rfl
+-- error in Data.MvPolynomial.Monad: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem map_bind₁
+(f : «expr →+* »(R, S))
+(g : σ → mv_polynomial τ R)
+(φ : mv_polynomial σ R) : «expr = »(map f (bind₁ g φ), bind₁ (λ i : σ, map f (g i)) (map f φ)) :=
+by { rw ["[", expr hom_bind₁, ",", expr map_comp_C, ",", "<-", expr eval₂_hom_map_hom, "]"] [],
+  refl }
 
 @[simp]
 theorem eval₂_hom_comp_C (f : R →+* S) (g : σ → S) : (eval₂_hom f g).comp C = f :=

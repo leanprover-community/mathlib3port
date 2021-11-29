@@ -62,7 +62,7 @@ def to_option (o : Part α) [Decidable o.dom] : Option α :=
   if h : dom o then some (o.get h) else none
 
 /-- `part` extensionality -/
-theorem ext' : ∀ {o p : Part α} H1 : o.dom ↔ p.dom H2 : ∀ h₁ h₂, o.get h₁ = p.get h₂, o = p
+theorem ext' : ∀ {o p : Part α} (H1 : o.dom ↔ p.dom) (H2 : ∀ h₁ h₂, o.get h₁ = p.get h₂), o = p
 | ⟨od, o⟩, ⟨pd, p⟩, H1, H2 =>
   have t : od = pd := propext H1 
   by 
@@ -70,7 +70,7 @@ theorem ext' : ∀ {o p : Part α} H1 : o.dom ↔ p.dom H2 : ∀ h₁ h₂, o.ge
 
 /-- `part` eta expansion -/
 @[simp]
-theorem eta : ∀ o : Part α, (⟨o.dom, fun h => o.get h⟩ : Part α) = o
+theorem eta : ∀ (o : Part α), (⟨o.dom, fun h => o.get h⟩ : Part α) = o
 | ⟨h, f⟩ => rfl
 
 /-- `a ∈ o` means that `o` is defined and equal to `a` -/
@@ -246,7 +246,7 @@ theorem mem_of_option {a : α} : ∀ {o : Option α}, a ∈ of_option o ↔ a �
 | Option.some b => ⟨fun h => congr_argₓ Option.some h.snd, fun h => ⟨trivialₓ, Option.some.injₓ h⟩⟩
 
 @[simp]
-theorem of_option_dom {α} : ∀ o : Option α, (of_option o).Dom ↔ o.is_some
+theorem of_option_dom {α} : ∀ (o : Option α), (of_option o).Dom ↔ o.is_some
 | Option.none =>
   by 
     simp [of_option, none]
@@ -276,10 +276,11 @@ theorem coe_some (a : α) : (Option.some a : Part α) = some a :=
   rfl
 
 @[elab_as_eliminator]
-protected theorem induction_on {P : Part α → Prop} (a : Part α) (hnone : P none) (hsome : ∀ a : α, P (some a)) : P a :=
+protected theorem induction_on {P : Part α → Prop} (a : Part α) (hnone : P none) (hsome : ∀ (a : α), P (some a)) :
+  P a :=
   (Classical.em a.dom).elim (fun h => Part.some_get h ▸ hsome _) fun h => (eq_none_iff'.2 h).symm ▸ hnone
 
-instance of_option_decidable : ∀ o : Option α, Decidable (of_option o).Dom
+instance of_option_decidable : ∀ (o : Option α), Decidable (of_option o).Dom
 | Option.none => Part.noneDecidable
 | Option.some a => Part.someDecidable a
 
@@ -307,10 +308,6 @@ instance  : PartialOrderₓ (Part α) :=
 -- error in Data.Part: ././Mathport/Syntax/Translate/Basic.lean:179:15: failed to format: format: uncaught backtrack exception
 instance : order_bot (part α) :=
 { bot := none, bot_le := by { introv [ident x], rintro ["⟨", "⟨", "_", "⟩", ",", "_", "⟩"] } }
-
-instance  : Preorderₓ (Part α) :=
-  by 
-    infer_instance
 
 theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) : x ≤ y ∨ y ≤ x :=
   by 
@@ -363,7 +360,7 @@ theorem map_none (f : α → β) : map f none = none :=
 theorem map_some (f : α → β) (a : α) : map f (some a) = some (f a) :=
   eq_some_iff.2$ mem_map f$ mem_some _
 
-theorem mem_assert {p : Prop} {f : p → Part α} : ∀ {a} h : p, a ∈ f h → a ∈ assert p f
+theorem mem_assert {p : Prop} {f : p → Part α} : ∀ {a} (h : p), a ∈ f h → a ∈ assert p f
 | _, x, ⟨h, rfl⟩ => ⟨⟨x, h⟩, rfl⟩
 
 @[simp]
@@ -458,7 +455,7 @@ instance  : IsLawfulMonad Part :=
           cases f <;> rfl,
     pure_bind := @bind_some, bind_assoc := @bind_assoc }
 
-theorem map_id' {f : α → α} (H : ∀ x : α, f x = x) o : map f o = o :=
+theorem map_id' {f : α → α} (H : ∀ (x : α), f x = x) o : map f o = o :=
   by 
     rw [show f = id from funext H] <;> exact id_map o
 
@@ -520,10 +517,10 @@ theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.dom) (a : α) : a ∈
 unsafe def unwrap (o : Part α) : α :=
   o.get undefined
 
-theorem assert_defined {p : Prop} {f : p → Part α} : ∀ h : p, (f h).Dom → (assert p f).Dom :=
+theorem assert_defined {p : Prop} {f : p → Part α} : ∀ (h : p), (f h).Dom → (assert p f).Dom :=
   Exists.introₓ
 
-theorem bind_defined {f : Part α} {g : α → Part β} : ∀ h : f.dom, (g (f.get h)).Dom → (f.bind g).Dom :=
+theorem bind_defined {f : Part α} {g : α → Part β} : ∀ (h : f.dom), (g (f.get h)).Dom → (f.bind g).Dom :=
   assert_defined
 
 @[simp]

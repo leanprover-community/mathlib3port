@@ -78,8 +78,6 @@ section InnerProductSpace
 
 open_locale ComplexConjugate
 
-variable[MeasurableSpace 𝕜][BorelSpace 𝕜]
-
 include 𝕜
 
 instance  : HasInner 𝕜 (α →₂[μ] E) :=
@@ -127,9 +125,10 @@ theorem mem_L1_inner (f g : α →₂[μ] E) :
     simpRw [mem_Lp_iff_snorm_lt_top, snorm_ae_eq_fun]
     exact snorm_inner_lt_top f g
 
-theorem integrable_inner (f g : α →₂[μ] E) : integrable (fun x : α => ⟪f x, g x⟫) μ :=
-  (integrable_congr (ae_eq_fun.coe_fn_mk (fun x => ⟪f x, g x⟫) ((Lp.ae_measurable f).inner (Lp.ae_measurable g)))).mp
-    (ae_eq_fun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
+-- error in MeasureTheory.Function.L2Space: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem integrable_inner (f g : «expr →₂[ ] »(α, μ, E)) : integrable (λ x : α, «expr⟪ , ⟫»(f x, g x)) μ :=
+(integrable_congr (ae_eq_fun.coe_fn_mk (λ
+   x, «expr⟪ , ⟫»(f x, g x)) ((Lp.ae_measurable f).inner (Lp.ae_measurable g)))).mp (ae_eq_fun.integrable_iff_mem_L1.mpr (mem_L1_inner f g))
 
 private theorem add_left' (f f' g : α →₂[μ] E) : (inner (f+f') g : 𝕜) = inner f g+inner f' g :=
   by 
@@ -158,7 +157,7 @@ end InnerProductSpace
 
 section IndicatorConstLp
 
-variable[MeasurableSpace 𝕜][BorelSpace 𝕜]{s : Set α}
+variable{s : Set α}
 
 variable(𝕜)
 
@@ -220,8 +219,7 @@ end L2
 
 section InnerContinuous
 
-variable{α :
-    Type _}[TopologicalSpace α][measure_space α][BorelSpace α]{𝕜 : Type _}[IsROrC 𝕜][MeasurableSpace 𝕜][BorelSpace 𝕜]
+variable{α : Type _}[TopologicalSpace α][measure_space α][BorelSpace α]{𝕜 : Type _}[IsROrC 𝕜]
 
 variable(μ : Measureₓ α)[is_finite_measure μ]
 

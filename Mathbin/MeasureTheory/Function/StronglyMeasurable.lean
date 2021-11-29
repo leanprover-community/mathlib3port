@@ -182,7 +182,7 @@ protected theorem fin_strongly_measurable [TopologicalSpace β] [HasZero β] {m0
 /-- A strongly measurable function is measurable. -/
 protected theorem Measurable [MeasurableSpace α] [MetricSpace β] [MeasurableSpace β] [BorelSpace β]
   (hf : strongly_measurable f) : Measurable f :=
-  measurable_of_tendsto_metric (fun n => (hf.approx n).Measurable) (tendsto_pi.mpr hf.tendsto_approx)
+  measurable_of_tendsto_metric (fun n => (hf.approx n).Measurable) (tendsto_pi_nhds.mpr hf.tendsto_approx)
 
 section Arithmetic
 
@@ -292,7 +292,7 @@ end
 /-- A finitely strongly measurable function is measurable. -/
 protected theorem Measurable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] (hf : fin_strongly_measurable f μ) :
   Measurable f :=
-  measurable_of_tendsto_metric (fun n => (hf.some n).Measurable) (tendsto_pi.mpr hf.some_spec.2)
+  measurable_of_tendsto_metric (fun n => (hf.some n).Measurable) (tendsto_pi_nhds.mpr hf.some_spec.2)
 
 protected theorem add {β} [TopologicalSpace β] [AddMonoidₓ β] [HasContinuousAdd β] {f g : α → β}
   (hf : fin_strongly_measurable f μ) (hg : fin_strongly_measurable g μ) : fin_strongly_measurable (f+g) μ :=
@@ -325,7 +325,7 @@ end FinStronglyMeasurable
 theorem fin_strongly_measurable_iff_strongly_measurable_and_exists_set_sigma_finite {α β} {f : α → β}
   [TopologicalSpace β] [T2Space β] [HasZero β] {m : MeasurableSpace α} {μ : Measureₓ α} :
   fin_strongly_measurable f μ ↔
-    strongly_measurable f ∧ ∃ t, MeasurableSet t ∧ (∀ x _ : x ∈ «expr ᶜ» t, f x = 0) ∧ sigma_finite (μ.restrict t) :=
+    strongly_measurable f ∧ ∃ t, MeasurableSet t ∧ (∀ x (_ : x ∈ «expr ᶜ» t), f x = 0) ∧ sigma_finite (μ.restrict t) :=
   ⟨fun hf => ⟨hf.strongly_measurable, hf.exists_set_sigma_finite⟩,
     fun hf => hf.1.fin_strongly_measurable_of_set_sigma_finite hf.2.some_spec.1 hf.2.some_spec.2.1 hf.2.some_spec.2.2⟩
 

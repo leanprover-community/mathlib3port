@@ -267,7 +267,7 @@ def circumcenter_circumradius {n : ℕ} (s : simplex ℝ P n) : P × ℝ :=
 theorem circumcenter_circumradius_unique_dist_eq {n : ℕ} (s : simplex ℝ P n) :
   (s.circumcenter_circumradius.fst ∈ affineSpan ℝ (Set.Range s.points) ∧
       ∀ i, dist (s.points i) s.circumcenter_circumradius.fst = s.circumcenter_circumradius.snd) ∧
-    ∀ cccr : P × ℝ,
+    ∀ (cccr : P × ℝ),
       (cccr.fst ∈ affineSpan ℝ (Set.Range s.points) ∧ ∀ i, dist (s.points i) cccr.fst = cccr.snd) →
         cccr = s.circumcenter_circumradius :=
   s.independent.exists_unique_dist_eq.some_spec
@@ -666,7 +666,7 @@ that contains a set of points, those points are cospherical if and
 only if they are equidistant from some point in that subspace. -/
 theorem cospherical_iff_exists_mem_of_complete {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s) [Nonempty s]
   [CompleteSpace s.direction] :
-  cospherical ps ↔ ∃ (center : _)(_ : center ∈ s)(radius : ℝ), ∀ p _ : p ∈ ps, dist p center = radius :=
+  cospherical ps ↔ ∃ (center : _)(_ : center ∈ s)(radius : ℝ), ∀ p (_ : p ∈ ps), dist p center = radius :=
   by 
     split 
     ·
@@ -682,7 +682,7 @@ cospherical if and only if they are equidistant from some point in
 that subspace. -/
 theorem cospherical_iff_exists_mem_of_finite_dimensional {s : AffineSubspace ℝ P} {ps : Set P} (h : ps ⊆ s) [Nonempty s]
   [FiniteDimensional ℝ s.direction] :
-  cospherical ps ↔ ∃ (center : _)(_ : center ∈ s)(radius : ℝ), ∀ p _ : p ∈ ps, dist p center = radius :=
+  cospherical ps ↔ ∃ (center : _)(_ : center ∈ s)(radius : ℝ), ∀ p (_ : p ∈ ps), dist p center = radius :=
   cospherical_iff_exists_mem_of_complete h
 
 -- error in Geometry.Euclidean.Circumcenter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

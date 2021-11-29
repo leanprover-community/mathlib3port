@@ -29,7 +29,7 @@ def Directed (f : ι → α) :=
 /-- A subset of α is directed if there is an element of the set `≼`-above any
   pair of elements in the set. -/
 def DirectedOn (s : Set α) :=
-  ∀ x _ : x ∈ s y _ : y ∈ s, ∃ (z : _)(_ : z ∈ s), x ≼ z ∧ y ≼ z
+  ∀ x (_ : x ∈ s) y (_ : y ∈ s), ∃ (z : _)(_ : z ∈ s), x ≼ z ∧ y ≼ z
 
 variable{r}
 
@@ -82,7 +82,7 @@ theorem directed_of_inf [SemilatticeInf α] {r : β → β → Prop} {f : α →
 /-- A `preorder` is a `directed_order` if for any two elements `i`, `j`
 there is an element `k` such that `i ≤ k` and `j ≤ k`. -/
 class DirectedOrder(α : Type u) extends Preorderₓ α where 
-  Directed : ∀ i j : α, ∃ k, i ≤ k ∧ j ≤ k
+  Directed : ∀ (i j : α), ∃ k, i ≤ k ∧ j ≤ k
 
 instance (priority := 100)LinearOrderₓ.toDirectedOrder α [LinearOrderₓ α] : DirectedOrder α :=
   ⟨fun i j => Or.cases_on (le_totalₓ i j) (fun hij => ⟨j, hij, le_reflₓ j⟩) fun hji => ⟨i, le_reflₓ i, hji⟩⟩

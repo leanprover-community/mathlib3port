@@ -76,7 +76,7 @@ cofix F a b = F a b (cofix F a b)
 def cofix (F : Typevec (n+1) → Type u) [Mvfunctor F] [q : Mvqpf F] (α : Typevec n) :=
   Quot (@Mcongr _ F _ q α)
 
-instance  {α : Typevec n} [Inhabited q.P.A] [∀ i : Fin2 n, Inhabited (α i)] : Inhabited (cofix F α) :=
+instance  {α : Typevec n} [Inhabited q.P.A] [∀ (i : Fin2 n), Inhabited (α i)] : Inhabited (cofix F α) :=
   ⟨Quot.mk _ (default _)⟩
 
 /-- maps every element of the W type to a canonical representative -/
@@ -167,9 +167,9 @@ theorem cofix.dest_corec {α : Typevec n} {β : Type u} (g : β → F (α.append
     rw [corecF_eq, abs_map, abs_repr, ←comp_map, ←append_fun_comp]
     rfl
 
-/-- constructor for `cofix F` -/
-def cofix.mk {α : Typevec n} : F (α.append1$ cofix F α) → cofix F α :=
-  cofix.corec fun x => (append_fun id fun i : cofix F α => cofix.dest.{u} i) <$$> x
+-- error in Data.Qpf.Multivariate.Constructions.Cofix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- constructor for `cofix F` -/ def cofix.mk {α : typevec n} : F «expr $ »(α.append1, cofix F α) → cofix F α :=
+cofix.corec (λ x, «expr <$$> »(append_fun id (λ i : cofix F α, cofix.dest.{u} i), x))
 
 /-!
 ## Bisimulation principles for `cofix F`
@@ -290,46 +290,54 @@ theorem cofix.bisim₂ {α : Typevec n} (r : cofix F α → cofix F α → Prop)
     by 
       intros  <;> rw [←liftr_last_rel_iff] <;> apply h <;> assumption
 
+-- error in Data.Qpf.Multivariate.Constructions.Cofix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Bisimulation principle the values `⟨a,f⟩` of the polynomial functor representing
 `cofix F α` as well as an invariant `Q : β → Prop` and a state `β` generating the
 left-hand side and right-hand side of the equality through functions `u v : β → cofix F α` -/
-theorem cofix.bisim' {α : Typevec n} {β : Type _} (Q : β → Prop) (u v : β → cofix F α)
-  (h :
-    ∀ x,
-      Q x →
-        ∃ a f' f₀ f₁,
-          cofix.dest (u x) = abs ⟨a, q.P.append_contents f' f₀⟩ ∧
-            cofix.dest (v x) = abs ⟨a, q.P.append_contents f' f₁⟩ ∧ ∀ i, ∃ x', Q x' ∧ f₀ i = u x' ∧ f₁ i = v x') :
-  ∀ x, Q x → u x = v x :=
-  fun x Qx =>
-    let R := fun w z : cofix F α => ∃ x', Q x' ∧ w = u x' ∧ z = v x' 
-    cofix.bisim R
-      (fun x y ⟨x', Qx', xeq, yeq⟩ =>
-        by 
-          rcases h x' Qx' with ⟨a, f', f₀, f₁, ux'eq, vx'eq, h'⟩
-          rw [liftr_iff]
-          refine' ⟨a, q.P.append_contents f' f₀, q.P.append_contents f' f₁, xeq.symm ▸ ux'eq, yeq.symm ▸ vx'eq, _⟩
-          intro i 
-          cases i
-          ·
-            apply h'
-          ·
-            intro j 
-            apply Eq.refl)
-      _ _ ⟨x, Qx, rfl, rfl⟩
+theorem cofix.bisim'
+{α : typevec n}
+{β : Type*}
+(Q : β → exprProp())
+(u v : β → cofix F α)
+(h : ∀
+ x, Q x → «expr∃ , »((a
+   f'
+   f₀
+   f₁), «expr ∧ »(«expr = »(cofix.dest (u x), abs ⟨a, q.P.append_contents f' f₀⟩), «expr ∧ »(«expr = »(cofix.dest (v x), abs ⟨a, q.P.append_contents f' f₁⟩), ∀
+    i, «expr∃ , »((x'), «expr ∧ »(Q x', «expr ∧ »(«expr = »(f₀ i, u x'), «expr = »(f₁ i, v x')))))))) : ∀
+x, Q x → «expr = »(u x, v x) :=
+λ
+x
+Qx, let R := λ w z : cofix F α, «expr∃ , »((x'), «expr ∧ »(Q x', «expr ∧ »(«expr = »(w, u x'), «expr = »(z, v x')))) in
+cofix.bisim R (λ (x y) ⟨x', Qx', xeq, yeq⟩, begin
+   rcases [expr h x' Qx', "with", "⟨", ident a, ",", ident f', ",", ident f₀, ",", ident f₁, ",", ident ux'eq, ",", ident vx'eq, ",", ident h', "⟩"],
+   rw [expr liftr_iff] [],
+   refine [expr ⟨a, q.P.append_contents f' f₀, q.P.append_contents f' f₁, «expr ▸ »(xeq.symm, ux'eq), «expr ▸ »(yeq.symm, vx'eq), _⟩],
+   intro [ident i],
+   cases [expr i] [],
+   { apply [expr h'] },
+   { intro [ident j],
+     apply [expr eq.refl] }
+ end) _ _ ⟨x, Qx, rfl, rfl⟩
 
-theorem cofix.mk_dest {α : Typevec n} (x : cofix F α) : cofix.mk (cofix.dest x) = x :=
-  by 
-    apply cofix.bisim_rel (fun x y : cofix F α => x = cofix.mk (cofix.dest y)) _ _ _ rfl 
-    dsimp 
-    intro x y h 
-    rw [h]
-    conv  => toLHS congr skip rw [cofix.mk]rw [cofix.dest_corec]
-    rw [←comp_map, ←append_fun_comp, id_comp]
-    rw [←comp_map, ←append_fun_comp, id_comp, ←cofix.mk]
-    congr 2 with u 
-    apply Quot.sound 
-    rfl
+-- error in Data.Qpf.Multivariate.Constructions.Cofix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cofix.mk_dest {α : typevec n} (x : cofix F α) : «expr = »(cofix.mk (cofix.dest x), x) :=
+begin
+  apply [expr cofix.bisim_rel (λ x y : cofix F α, «expr = »(x, cofix.mk (cofix.dest y))) _ _ _ rfl],
+  dsimp [] [] [] [],
+  intros [ident x, ident y, ident h],
+  rw [expr h] [],
+  conv [] [] { to_lhs,
+    congr,
+    skip,
+    rw ["[", expr cofix.mk, "]"],
+    rw [expr cofix.dest_corec] },
+  rw ["[", "<-", expr comp_map, ",", "<-", expr append_fun_comp, ",", expr id_comp, "]"] [],
+  rw ["[", "<-", expr comp_map, ",", "<-", expr append_fun_comp, ",", expr id_comp, ",", "<-", expr cofix.mk, "]"] [],
+  congr' [2] ["with", ident u],
+  apply [expr quot.sound],
+  refl
+end
 
 -- error in Data.Qpf.Multivariate.Constructions.Cofix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem cofix.dest_mk {α : typevec n} (x : F «expr $ »(α.append1, cofix F α)) : «expr = »(cofix.dest (cofix.mk x), x) :=
@@ -369,33 +377,35 @@ theorem liftr_map {α β : Typevec n} {F' : Typevec n → Type u} [Mvfunctor F']
 
 open Function
 
-theorem liftr_map_last [IsLawfulMvfunctor F] {α : Typevec n} {ι ι'} (R : ι' → ι' → Prop) (x : F (α ::: ι))
-  (f g : ι → ι') (hh : ∀ x : ι, R (f x) (g x)) : liftr' (rel_last' _ R) ((id ::: f) <$$> x) ((id ::: g) <$$> x) :=
-  let h : ι → { x : ι' × ι' // uncurry R x } := fun x => ⟨(f x, g x), hh x⟩
-  let b : (α ::: ι) ⟹ _ := @diag_sub n α ::: h 
-  let c :
-    (subtype_ α.repeat_eq ::: { x // uncurry R x }) ⟹
-      ((fun i : Fin2 n => { x // of_repeat (α.rel_last' R i.fs x) }) ::: Subtype (uncurry R)) :=
-    of_subtype _ ::: id 
-  have hh : subtype_val _ ⊚ to_subtype _ ⊚ from_append1_drop_last ⊚ c ⊚ b = ((id ::: f) ⊗' (id ::: g)) ⊚ prod.diag :=
-    by 
-      dsimp [c, b]
-      apply eq_of_drop_last_eq
-      ·
-        dsimp 
-        simp only [prod_map_id, drop_fun_prod, drop_fun_append_fun, drop_fun_diag, id_comp, drop_fun_to_subtype]
-        erw [to_subtype_of_subtype_assoc, id_comp]
-        clear * - 
-        ext i x : 2
-        induction i 
-        rfl 
-        apply i_ih 
-      simp only [h, last_fun_from_append1_drop_last, last_fun_to_subtype, last_fun_append_fun, last_fun_subtype_val,
-        comp.left_id, last_fun_comp, last_fun_prod]
-      dsimp 
-      ext1 
-      rfl 
-  liftr_map _ _ _ _ (to_subtype _ ⊚ from_append1_drop_last ⊚ c ⊚ b) hh
+-- error in Data.Qpf.Multivariate.Constructions.Cofix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem liftr_map_last
+[is_lawful_mvfunctor F]
+{α : typevec n}
+{ι ι'}
+(R : ι' → ι' → exprProp())
+(x : F [«expr ::: »/«expr ::: »](α, ι))
+(f g : ι → ι')
+(hh : ∀
+ x : ι, R (f x) (g x)) : liftr' (rel_last' _ R) «expr <$$> »([«expr ::: »/«expr ::: »](id, f), x) «expr <$$> »([«expr ::: »/«expr ::: »](id, g), x) :=
+let h : ι → {x : «expr × »(ι', ι') // uncurry R x} := λ x, ⟨(f x, g x), hh x⟩ in
+let b : «expr ⟹ »([«expr ::: »/«expr ::: »](α, ι), _) := [«expr ::: »/«expr ::: »](@diag_sub n α, h),
+    c : «expr ⟹ »([«expr ::: »/«expr ::: »](subtype_ α.repeat_eq, {x // uncurry R x}), [«expr ::: »/«expr ::: »](λ
+      i : fin2 n, {x // of_repeat (α.rel_last' R i.fs x)}, subtype (uncurry R))) := [«expr ::: »/«expr ::: »](of_subtype _, id) in
+have hh : «expr = »(«expr ⊚ »(subtype_val _, «expr ⊚ »(to_subtype _, «expr ⊚ »(from_append1_drop_last, «expr ⊚ »(c, b)))), «expr ⊚ »(«expr ⊗' »([«expr ::: »/«expr ::: »](id, f), [«expr ::: »/«expr ::: »](id, g)), prod.diag)), by { dsimp [] ["[", expr c, ",", expr b, "]"] [] [],
+  apply [expr eq_of_drop_last_eq],
+  { dsimp [] [] [] [],
+    simp [] [] ["only"] ["[", expr prod_map_id, ",", expr drop_fun_prod, ",", expr drop_fun_append_fun, ",", expr drop_fun_diag, ",", expr id_comp, ",", expr drop_fun_to_subtype, "]"] [] [],
+    erw ["[", expr to_subtype_of_subtype_assoc, ",", expr id_comp, "]"] [],
+    clear_except [],
+    ext [] [ident i, ident x] [":", 2],
+    induction [expr i] [] [] [],
+    refl,
+    apply [expr i_ih] },
+  simp [] [] ["only"] ["[", expr h, ",", expr last_fun_from_append1_drop_last, ",", expr last_fun_to_subtype, ",", expr last_fun_append_fun, ",", expr last_fun_subtype_val, ",", expr comp.left_id, ",", expr last_fun_comp, ",", expr last_fun_prod, "]"] [] [],
+  dsimp [] [] [] [],
+  ext1 [] [],
+  refl },
+liftr_map _ _ _ _ «expr ⊚ »(to_subtype _, «expr ⊚ »(from_append1_drop_last, «expr ⊚ »(c, b))) hh
 
 -- error in Data.Qpf.Multivariate.Constructions.Cofix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem liftr_map_last'
@@ -413,37 +423,38 @@ end
 
 end LiftrMap
 
-theorem cofix.abs_repr {α} (x : cofix F α) : Quot.mk _ (cofix.repr x) = x :=
-  by 
-    let R := fun x y : cofix F α => cofix.abs (cofix.repr y) = x 
-    refine' cofix.bisim₂ R _ _ _ rfl 
-    clear x 
-    rintro x y h 
-    dsimp [R]  at h 
-    subst h 
-    dsimp [cofix.dest, cofix.abs]
-    induction y using Quot.ind 
-    simp only [cofix.repr, M.dest_corec, abs_map, abs_repr]
-    conv  => congr skip rw [cofix.dest]
-    dsimp 
-    rw [Mvfunctor.map_map, Mvfunctor.map_map, ←append_fun_comp_id, ←append_fun_comp_id]
-    let f : (α ::: (P F).M α) ⟹ subtype_ (α.rel_last' R) :=
-      split_fun diag_sub fun x => ⟨(cofix.abs (cofix.abs x).repr, cofix.abs x), _⟩
-    refine' liftr_map _ _ _ _ f _
-    ·
-      simp only [←append_prod_append_fun, prod_map_id]
-      apply eq_of_drop_last_eq
-      ·
-        dsimp 
-        simp only [drop_fun_diag]
-        erw [subtype_val_diag_sub]
-      ext1 
-      simp only [cofix.abs, Prod.mk.inj_iffₓ, prod_mapₓ, Function.comp_app, last_fun_append_fun, last_fun_subtype_val,
-        last_fun_comp, last_fun_split_fun]
-      dsimp [drop_fun_rel_last, last_fun, prod.diag]
-      split  <;> rfl 
-    dsimp [rel_last', split_fun, Function.uncurry, R]
-    rfl
+-- error in Data.Qpf.Multivariate.Constructions.Cofix: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cofix.abs_repr {α} (x : cofix F α) : «expr = »(quot.mk _ (cofix.repr x), x) :=
+begin
+  let [ident R] [] [":=", expr λ x y : cofix F α, «expr = »(cofix.abs (cofix.repr y), x)],
+  refine [expr cofix.bisim₂ R _ _ _ rfl],
+  clear [ident x],
+  rintros [ident x, ident y, ident h],
+  dsimp [] ["[", expr R, "]"] [] ["at", ident h],
+  subst [expr h],
+  dsimp [] ["[", expr cofix.dest, ",", expr cofix.abs, "]"] [] [],
+  induction [expr y] ["using", ident quot.ind] [] [],
+  simp [] [] ["only"] ["[", expr cofix.repr, ",", expr M.dest_corec, ",", expr abs_map, ",", expr abs_repr, "]"] [] [],
+  conv [] [] { congr,
+    skip,
+    rw [expr cofix.dest] },
+  dsimp [] [] [] [],
+  rw ["[", expr mvfunctor.map_map, ",", expr mvfunctor.map_map, ",", "<-", expr append_fun_comp_id, ",", "<-", expr append_fun_comp_id, "]"] [],
+  let [ident f] [":", expr «expr ⟹ »([«expr ::: »/«expr ::: »](α, (P F).M α), subtype_ (α.rel_last' R))] [":=", expr split_fun diag_sub (λ
+    x, ⟨(cofix.abs (cofix.abs x).repr, cofix.abs x), _⟩)],
+  refine [expr liftr_map _ _ _ _ f _],
+  { simp [] [] ["only"] ["[", "<-", expr append_prod_append_fun, ",", expr prod_map_id, "]"] [] [],
+    apply [expr eq_of_drop_last_eq],
+    { dsimp [] [] [] [],
+      simp [] [] ["only"] ["[", expr drop_fun_diag, "]"] [] [],
+      erw [expr subtype_val_diag_sub] [] },
+    ext1 [] [],
+    simp [] [] ["only"] ["[", expr cofix.abs, ",", expr prod.mk.inj_iff, ",", expr prod_map, ",", expr function.comp_app, ",", expr last_fun_append_fun, ",", expr last_fun_subtype_val, ",", expr last_fun_comp, ",", expr last_fun_split_fun, "]"] [] [],
+    dsimp [] ["[", expr drop_fun_rel_last, ",", expr last_fun, ",", expr prod.diag, "]"] [] [],
+    split; refl },
+  dsimp [] ["[", expr rel_last', ",", expr split_fun, ",", expr function.uncurry, ",", expr R, "]"] [] [],
+  refl
+end
 
 section Tactic
 
@@ -519,7 +530,7 @@ theorem cofix.dest_corec' {α : Typevec n} {β : Type u} (g : β → F (α.appen
       simp [Mvfunctor.id_map]
 
 theorem cofix.dest_corec₁ {α : Typevec n} {β : Type u} (g : ∀ {X}, (cofix F α → X) → (β → X) → β → F (α.append1 X))
-  (x : β) (h : ∀ X Y f : cofix F α → X f' : β → X k : X → Y, g (k ∘ f) (k ∘ f') x = (id ::: k) <$$> g f f' x) :
+  (x : β) (h : ∀ X Y (f : cofix F α → X) (f' : β → X) (k : X → Y), g (k ∘ f) (k ∘ f') x = (id ::: k) <$$> g f f' x) :
   cofix.dest (cofix.corec₁ (@g) x) = g id (cofix.corec₁ @g) x :=
   by 
     rw [cofix.corec₁, cofix.dest_corec', ←h] <;> rfl

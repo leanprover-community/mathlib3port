@@ -20,10 +20,10 @@ namespace Pgame
 /-- A short game is a game with a finite set of moves at every turn. -/
 inductive short : Pgame.{u} → Type (u + 1)
   | mk :
-  ∀ {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} sL : ∀ i : α, short (L i) sR : ∀ j : β, short (R j)
+  ∀ {α β : Type u} {L : α → Pgame.{u}} {R : β → Pgame.{u}} (sL : ∀ (i : α), short (L i)) (sR : ∀ (j : β), short (R j))
     [Fintype α] [Fintype β], short ⟨α, β, L, R⟩
 
-instance subsingleton_short : ∀ x : Pgame, Subsingleton (short x)
+instance subsingleton_short : ∀ (x : Pgame), Subsingleton (short x)
 | mk xl xr xL xR =>
   ⟨fun a b =>
       by 
@@ -39,7 +39,7 @@ instance subsingleton_short : ∀ x : Pgame, Subsingleton (short x)
 
 /-- A synonym for `short.mk` that specifies the pgame in an implicit argument. -/
 def short.mk' {x : Pgame} [Fintype x.left_moves] [Fintype x.right_moves]
-  (sL : ∀ i : x.left_moves, short (x.move_left i)) (sR : ∀ j : x.right_moves, short (x.move_right j)) : short x :=
+  (sL : ∀ (i : x.left_moves), short (x.move_left i)) (sR : ∀ (j : x.right_moves), short (x.move_right j)) : short x :=
   by 
     (
         cases x 
@@ -141,14 +141,14 @@ instance short_1 : short 1 :=
 /-- Evidence that every `pgame` in a list is `short`. -/
 inductive list_short : List Pgame.{u} → Type (u + 1)
   | nil : list_short []
-  | cons : ∀ hd : Pgame.{u} [short hd] tl : List Pgame.{u} [list_short tl], list_short (hd :: tl)
+  | cons : ∀ (hd : Pgame.{u}) [short hd] (tl : List Pgame.{u}) [list_short tl], list_short (hd :: tl)
 
 attribute [class] list_short
 
 attribute [instance] list_short.nil list_short.cons
 
 instance list_short_nth_le :
-  ∀ L : List Pgame.{u} [list_short L] i : Finₓ (List.length L), short (List.nthLe L i i.is_lt)
+  ∀ (L : List Pgame.{u}) [list_short L] (i : Finₓ (List.length L)), short (List.nthLe L i i.is_lt)
 | [], _, n =>
   by 
     exfalso 
@@ -156,7 +156,7 @@ instance list_short_nth_le :
 | hd :: tl, @list_short.cons _ S _ _, ⟨0, _⟩ => S
 | hd :: tl, @list_short.cons _ _ _ S, ⟨n+1, h⟩ => @list_short_nth_le tl S ⟨n, (add_lt_add_iff_right 1).mp h⟩
 
-instance short_of_lists : ∀ L R : List Pgame [list_short L] [list_short R], short (Pgame.ofLists L R)
+instance short_of_lists : ∀ (L R : List Pgame) [list_short L] [list_short R], short (Pgame.ofLists L R)
 | L, R, _, _ =>
   by 
     skip 
@@ -184,7 +184,7 @@ end
 def short_of_equiv_empty {x : Pgame.{u}} (el : x.left_moves ≃ Pempty) (er : x.right_moves ≃ Pempty) : short x :=
   short_of_relabelling (relabel_relabelling el er).symm short.of_pempty
 
-instance short_neg : ∀ x : Pgame.{u} [short x], short (-x)
+instance short_neg : ∀ (x : Pgame.{u}) [short x], short (-x)
 | mk xl xr xL xR, _ =>
   by 
     skip 
@@ -198,7 +198,7 @@ instance short_neg : ∀ x : Pgame.{u} [short x], short (-x)
       apply short_neg _ 
       infer_instance
 
-instance short_add : ∀ x y : Pgame.{u} [short x] [short y], short (x+y)
+instance short_add : ∀ (x y : Pgame.{u}) [short x] [short y], short (x+y)
 | mk xl xr xL xR, mk yl yr yL yR, _, _ =>
   by 
     skip 
@@ -218,7 +218,7 @@ instance short_add : ∀ x y : Pgame.{u} [short x] [short y], short (x+y)
         change short (mk xl xr xL xR+yR j)
         apply short_add
 
-instance short_nat : ∀ n : ℕ, short n
+instance short_nat : ∀ (n : ℕ), short n
 | 0 => Pgame.short0
 | n+1 => @Pgame.shortAdd _ _ (short_nat n) Pgame.short1
 
@@ -237,7 +237,7 @@ Auxiliary construction of decidability instances.
 We build `decidable (x ≤ y)` and `decidable (x < y)` in a simultaneous induction.
 Instances for the two projections separately are provided below.
 -/
-def le_lt_decidable : ∀ x y : Pgame.{u} [short x] [short y], Decidable (x ≤ y) × Decidable (x < y)
+def le_lt_decidable : ∀ (x y : Pgame.{u}) [short x] [short y], Decidable (x ≤ y) × Decidable (x < y)
 | mk xl xr xL xR, mk yl yr yL yR, shortx, shorty =>
   by 
     skip 

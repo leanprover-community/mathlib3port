@@ -66,7 +66,7 @@ variable(adj₁ : F ⊣ U)(adj₂ : F' ⊣ R ⋙ U)
 To show that `ε_X` is a coequalizer for `(FUε_X, ε_FUX)`, it suffices to assume it's always a
 coequalizer of something (i.e. a regular epi).
 -/
-def counit_coequalises [∀ X : B, regular_epi (adj₁.counit.app X)] (X : B) :
+def counit_coequalises [∀ (X : B), regular_epi (adj₁.counit.app X)] (X : B) :
   is_colimit (cofork.of_π (adj₁.counit.app X) (adj₁.counit_naturality _)) :=
   cofork.is_colimit.mk' _$
     fun s =>
@@ -125,7 +125,7 @@ noncomputable def construct_left_adjoint_obj (Y : B) : A :=
 
 /-- The homset equivalence which helps show that `R` is a right adjoint. -/
 @[simps (config := { rhsMd := semireducible })]
-noncomputable def construct_left_adjoint_equiv [∀ X : B, regular_epi (adj₁.counit.app X)] (Y : A) (X : B) :
+noncomputable def construct_left_adjoint_equiv [∀ (X : B), regular_epi (adj₁.counit.app X)] (Y : A) (X : B) :
   (construct_left_adjoint_obj _ _ adj₁ adj₂ X ⟶ Y) ≃ (X ⟶ R.obj Y) :=
   calc
     (construct_left_adjoint_obj _ _ adj₁ adj₂ X ⟶ Y) ≃
@@ -152,7 +152,7 @@ noncomputable def construct_left_adjoint_equiv [∀ X : B, regular_epi (adj₁.c
     
 
 /-- Construct the left adjoint to `R`, with object map `construct_left_adjoint_obj`. -/
-noncomputable def construct_left_adjoint [∀ X : B, regular_epi (adj₁.counit.app X)] : B ⥤ A :=
+noncomputable def construct_left_adjoint [∀ (X : B), regular_epi (adj₁.counit.app X)] : B ⥤ A :=
   by 
     refine' adjunction.left_adjoint_of_equiv (fun X Y => construct_left_adjoint_equiv R _ adj₁ adj₂ Y X) _ 
     intro X Y Y' g h 
@@ -174,7 +174,7 @@ Note the converse is true (with weaker assumptions), by `adjunction.comp`.
 See https://ncatlab.org/nlab/show/adjoint+triangle+theorem
 -/
 noncomputable def adjoint_triangle_lift {U : B ⥤ C} {F : C ⥤ B} (R : A ⥤ B) (adj₁ : F ⊣ U)
-  [∀ X : B, regular_epi (adj₁.counit.app X)] [has_reflexive_coequalizers A] [is_right_adjoint (R ⋙ U)] :
+  [∀ (X : B), regular_epi (adj₁.counit.app X)] [has_reflexive_coequalizers A] [is_right_adjoint (R ⋙ U)] :
   is_right_adjoint R :=
   { left := lift_adjoint.construct_left_adjoint R _ adj₁ (adjunction.of_right_adjoint _),
     adj := adjunction.adjunction_of_equiv_left _ _ }

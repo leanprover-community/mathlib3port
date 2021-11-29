@@ -107,10 +107,11 @@ theorem tendsto_of_real {f : Filter α} {m : α → ℝ} {x : ℝ} (h : tendsto 
 theorem nhds_zero : 𝓝 (0 :  ℝ≥0 ) = ⨅(a : _)(_ : a ≠ 0), 𝓟 (Iio a) :=
   nhds_bot_order.trans$
     by 
-      simp [bot_lt_iff_ne_bot, Set.Iio]
+      simp [bot_lt_iff_ne_bot]
 
-theorem nhds_zero_basis : (𝓝 (0 :  ℝ≥0 )).HasBasis (fun a :  ℝ≥0  => 0 < a) fun a => Iio a :=
-  nhds_bot_basis
+-- error in Topology.Instances.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_zero_basis : (expr𝓝() (0 : «exprℝ≥0»())).has_basis (λ a : «exprℝ≥0»(), «expr < »(0, a)) (λ a, Iio a) :=
+nhds_bot_basis
 
 instance  : HasContinuousSub ℝ≥0  :=
   ⟨continuous_subtype_mk _$
@@ -225,13 +226,16 @@ theorem tendsto_at_top_zero_of_summable {f : ℕ →  ℝ≥0 } (hf : Summable f
     rw [←Nat.cofinite_eq_at_top]
     exact tendsto_cofinite_zero_of_summable hf
 
+-- error in Topology.Instances.Nnreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The sum over the complement of a finset tends to `0` when the finset grows to cover the whole
 space. This does not need a summability assumption, as otherwise all sums are zero. -/
-theorem tendsto_tsum_compl_at_top_zero {α : Type _} (f : α →  ℝ≥0 ) :
-  tendsto (fun s : Finset α => ∑'b : { x // x ∉ s }, f b) at_top (𝓝 0) :=
-  by 
-    simpRw [←tendsto_coe, coe_tsum, Nnreal.coe_zero]
-    exact tendsto_tsum_compl_at_top_zero fun a : α => (f a : ℝ)
+theorem tendsto_tsum_compl_at_top_zero
+{α : Type*}
+(f : α → «exprℝ≥0»()) : tendsto (λ s : finset α, «expr∑' , »((b : {x // «expr ∉ »(x, s)}), f b)) at_top (expr𝓝() 0) :=
+begin
+  simp_rw ["[", "<-", expr tendsto_coe, ",", expr coe_tsum, ",", expr nnreal.coe_zero, "]"] [],
+  exact [expr tendsto_tsum_compl_at_top_zero (λ a : α, (f a : exprℝ()))]
+end
 
 end Nnreal
 

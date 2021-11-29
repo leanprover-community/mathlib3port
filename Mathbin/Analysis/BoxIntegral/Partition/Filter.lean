@@ -18,7 +18,7 @@ assumptions.
 Finally, for each set of parameters `l : box_integral.integration_params` and a rectangular box
 `I : box_integral.box ι`, we define several `filter`s that will be used either in the definition of
 the corresponding integral, or in the proofs of its properties. We equip
-`box_integral.integration_params` with a `bounded_lattice` structure such that larger
+`box_integral.integration_params` with a `bounded_order` structure such that larger
 `integration_params` produce larger filters.
 
 ## Main definitions
@@ -200,12 +200,12 @@ def equiv_prod : integration_params ≃ Bool × OrderDual Bool × OrderDual Bool
 instance  : PartialOrderₓ integration_params :=
   PartialOrderₓ.lift equiv_prod equiv_prod.Injective
 
-/-- Auxiliary `order_iso` with a product type used to lift a `bounded_lattice` structure. -/
+/-- Auxiliary `order_iso` with a product type used to lift a `bounded_order` structure. -/
 def iso_prod : integration_params ≃o Bool × OrderDual Bool × OrderDual Bool :=
   ⟨equiv_prod, fun ⟨x, y, z⟩ => Iff.rfl⟩
 
-instance  : BoundedLattice integration_params :=
-  iso_prod.symm.toGaloisInsertion.liftBoundedLattice
+instance  : BoundedOrder integration_params :=
+  iso_prod.symm.toGaloisInsertion.liftBoundedOrder
 
 /-- The value `⊥` (`bRiemann = ff`, `bHenstock = tt`, `bDistortion = tt`) corresponds to a
 generalization of the Henstock integral such that the Divergence theorem holds true without
@@ -309,13 +309,13 @@ theorem to_filter_inf_Union_eq (l : integration_params) (I : box ι) (π₀ : pr
   (supr_inf_principal _ _).symm
 
 theorem mem_base_set.mono' (I : box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : tagged_prepartition I}
-  (hr : ∀ J _ : J ∈ π, r₁ (π.tag J) ≤ r₂ (π.tag J)) (hπ : l₁.mem_base_set I c₁ r₁ π) : l₂.mem_base_set I c₂ r₂ π :=
+  (hr : ∀ J (_ : J ∈ π), r₁ (π.tag J) ≤ r₂ (π.tag J)) (hπ : l₁.mem_base_set I c₁ r₁ π) : l₂.mem_base_set I c₂ r₂ π :=
   ⟨hπ.1.mono' hr, fun h₂ => hπ.2 (le_iff_imp.1 h.2.1 h₂), fun hD => (hπ.3 (le_iff_imp.1 h.2.2 hD)).trans hc,
     fun hD => (hπ.4 (le_iff_imp.1 h.2.2 hD)).imp$ fun π hπ => ⟨hπ.1, hπ.2.trans hc⟩⟩
 
 @[mono]
 theorem mem_base_set.mono (I : box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) {π : tagged_prepartition I}
-  (hr : ∀ x _ : x ∈ I.Icc, r₁ x ≤ r₂ x) (hπ : l₁.mem_base_set I c₁ r₁ π) : l₂.mem_base_set I c₂ r₂ π :=
+  (hr : ∀ x (_ : x ∈ I.Icc), r₁ x ≤ r₂ x) (hπ : l₁.mem_base_set I c₁ r₁ π) : l₂.mem_base_set I c₂ r₂ π :=
   hπ.mono' I h hc$ fun J hJ => hr _$ π.tag_mem_Icc J
 
 theorem mem_base_set.exists_common_compl (h₁ : l.mem_base_set I c₁ r₁ π₁) (h₂ : l.mem_base_set I c₂ r₂ π₂)
@@ -336,7 +336,7 @@ theorem mem_base_set.exists_common_compl (h₁ : l.mem_base_set I c₁ r₁ π�
       simpa [hU, and_comm] using this h₂ h₁ hU.symm
 
 protected theorem mem_base_set.union_compl_to_subordinate (hπ₁ : l.mem_base_set I c r₁ π₁)
-  (hle : ∀ x _ : x ∈ I.Icc, r₂ x ≤ r₁ x) {π₂ : prepartition I} (hU : π₂.Union = I \ π₁.Union)
+  (hle : ∀ x (_ : x ∈ I.Icc), r₂ x ≤ r₁ x) {π₂ : prepartition I} (hU : π₂.Union = I \ π₁.Union)
   (hc : l.bDistortion → π₂.distortion ≤ c) : l.mem_base_set I c r₁ (π₁.union_compl_to_subordinate π₂ hU r₂) :=
   ⟨hπ₁.1.disjUnion ((π₂.is_subordinate_to_subordinate r₂).mono hle) _,
     fun h => (hπ₁.2 h).disjUnion (π₂.is_Henstock_to_subordinate _) _,
@@ -378,7 +378,7 @@ begin
 end
 
 theorem bUnion_tagged_mem_base_set {π : prepartition I} {πi : ∀ J, tagged_prepartition J}
-  (h : ∀ J _ : J ∈ π, l.mem_base_set J c r (πi J)) (hp : ∀ J _ : J ∈ π, (πi J).IsPartition)
+  (h : ∀ J (_ : J ∈ π), l.mem_base_set J c r (πi J)) (hp : ∀ J (_ : J ∈ π), (πi J).IsPartition)
   (hc : l.bDistortion → π.compl.distortion ≤ c) : l.mem_base_set I c r (π.bUnion_tagged πi) :=
   by 
     refine'
@@ -433,25 +433,31 @@ theorem has_basis_to_filter_distortion_Union (l : integration_params) (I : box �
     fun r => { π | l.mem_base_set I c r π ∧ π.Union = π₀.Union } :=
   (l.has_basis_to_filter_distortion I c).inf_principal _
 
-theorem has_basis_to_filter_Union (l : integration_params) (I : box ι) (π₀ : prepartition I) :
-  (l.to_filter_Union I π₀).HasBasis (fun r :  ℝ≥0  → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.r_cond (r c))
-    fun r => { π | ∃ c, l.mem_base_set I c (r c) π ∧ π.Union = π₀.Union } :=
-  have  := fun c => l.has_basis_to_filter_distortion_Union I c π₀ 
-  by 
-    simpa only [set_of_and, set_of_exists] using has_basis_supr this
+-- error in Analysis.BoxIntegral.Partition.Filter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis_to_filter_Union
+(l : integration_params)
+(I : box ι)
+(π₀ : prepartition I) : (l.to_filter_Union I π₀).has_basis (λ
+ r : «exprℝ≥0»() → (ι → exprℝ()) → Ioi (0 : exprℝ()), ∀
+ c, l.r_cond (r c)) (λ r, {π | «expr∃ , »((c), «expr ∧ »(l.mem_base_set I c (r c) π, «expr = »(π.Union, π₀.Union)))}) :=
+have _ := λ c, l.has_basis_to_filter_distortion_Union I c π₀,
+by simpa [] [] ["only"] ["[", expr set_of_and, ",", expr set_of_exists, "]"] [] ["using", expr has_basis_supr this]
 
-theorem has_basis_to_filter_Union_top (l : integration_params) (I : box ι) :
-  (l.to_filter_Union I ⊤).HasBasis (fun r :  ℝ≥0  → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.r_cond (r c))
-    fun r => { π | ∃ c, l.mem_base_set I c (r c) π ∧ π.is_partition } :=
-  by 
-    simpa only [tagged_prepartition.is_partition_iff_Union_eq, prepartition.Union_top] using
-      l.has_basis_to_filter_Union I ⊤
+-- error in Analysis.BoxIntegral.Partition.Filter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis_to_filter_Union_top
+(l : integration_params)
+(I : box ι) : (l.to_filter_Union I «expr⊤»()).has_basis (λ
+ r : «exprℝ≥0»() → (ι → exprℝ()) → Ioi (0 : exprℝ()), ∀
+ c, l.r_cond (r c)) (λ r, {π | «expr∃ , »((c), «expr ∧ »(l.mem_base_set I c (r c) π, π.is_partition))}) :=
+by simpa [] [] ["only"] ["[", expr tagged_prepartition.is_partition_iff_Union_eq, ",", expr prepartition.Union_top, "]"] [] ["using", expr l.has_basis_to_filter_Union I «expr⊤»()]
 
-theorem has_basis_to_filter (l : integration_params) (I : box ι) :
-  (l.to_filter I).HasBasis (fun r :  ℝ≥0  → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.r_cond (r c))
-    fun r => { π | ∃ c, l.mem_base_set I c (r c) π } :=
-  by 
-    simpa only [set_of_exists] using has_basis_supr (l.has_basis_to_filter_distortion I)
+-- error in Analysis.BoxIntegral.Partition.Filter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis_to_filter
+(l : integration_params)
+(I : box ι) : (l.to_filter I).has_basis (λ
+ r : «exprℝ≥0»() → (ι → exprℝ()) → Ioi (0 : exprℝ()), ∀
+ c, l.r_cond (r c)) (λ r, {π | «expr∃ , »((c), l.mem_base_set I c (r c) π)}) :=
+by simpa [] [] ["only"] ["[", expr set_of_exists, "]"] [] ["using", expr has_basis_supr (l.has_basis_to_filter_distortion I)]
 
 theorem tendsto_embed_box_to_filter_Union_top (l : integration_params) (h : I ≤ J) :
   tendsto (tagged_prepartition.embed_box I J h) (l.to_filter_Union I ⊤)

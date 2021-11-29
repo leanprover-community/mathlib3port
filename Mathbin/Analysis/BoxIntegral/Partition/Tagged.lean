@@ -135,8 +135,8 @@ theorem Union_bUnion_tagged (π : prepartition I) (πi : ∀ J, tagged_prepartit
   Union_bUnion _ _
 
 theorem forall_bUnion_tagged (p : (ι → ℝ) → box ι → Prop) (π : prepartition I) (πi : ∀ J, tagged_prepartition J) :
-  (∀ J _ : J ∈ π.bUnion_tagged πi, p ((π.bUnion_tagged πi).Tag J) J) ↔
-    ∀ J _ : J ∈ π J' _ : J' ∈ πi J, p ((πi J).Tag J') J' :=
+  (∀ J (_ : J ∈ π.bUnion_tagged πi), p ((π.bUnion_tagged πi).Tag J) J) ↔
+    ∀ J (_ : J ∈ π) J' (_ : J' ∈ πi J), p ((πi J).Tag J') J' :=
   by 
     simp only [bex_imp_distrib, mem_bUnion_tagged]
     refine' ⟨fun H J hJ J' hJ' => _, fun H J' J hJ hJ' => _⟩
@@ -148,7 +148,7 @@ theorem forall_bUnion_tagged (p : (ι → ℝ) → box ι → Prop) (π : prepar
       exact H J hJ J' hJ'
 
 theorem is_partition.bUnion_tagged {π : prepartition I} (h : is_partition π) {πi : ∀ J, tagged_prepartition J}
-  (hi : ∀ J _ : J ∈ π, (πi J).IsPartition) : (π.bUnion_tagged πi).IsPartition :=
+  (hi : ∀ J (_ : J ∈ π), (πi J).IsPartition) : (π.bUnion_tagged πi).IsPartition :=
   h.bUnion hi
 
 end Prepartition
@@ -168,7 +168,7 @@ def bUnion_prepartition (π : tagged_prepartition I) (πi : ∀ J, prepartition 
     tag_mem_Icc := fun J => π.tag_mem_Icc _ }
 
 theorem is_partition.bUnion_prepartition {π : tagged_prepartition I} (h : is_partition π) {πi : ∀ J, prepartition J}
-  (hi : ∀ J _ : J ∈ π, (πi J).IsPartition) : (π.bUnion_prepartition πi).IsPartition :=
+  (hi : ∀ J (_ : J ∈ π), (πi J).IsPartition) : (π.bUnion_prepartition πi).IsPartition :=
   h.bUnion hi
 
 /-- Given two partitions `π₁` and `π₁`, one of them tagged and the other is not, returns the tagged
@@ -197,35 +197,39 @@ open Metric
 /-- A tagged partition is said to be a Henstock partition if for each `J ∈ π`, the tag of `J`
 belongs to `J.Icc`. -/
 def is_Henstock (π : tagged_prepartition I) : Prop :=
-  ∀ J _ : J ∈ π, π.tag J ∈ J.Icc
+  ∀ J (_ : J ∈ π), π.tag J ∈ J.Icc
 
 @[simp]
 theorem is_Henstock_bUnion_tagged {π : prepartition I} {πi : ∀ J, tagged_prepartition J} :
-  is_Henstock (π.bUnion_tagged πi) ↔ ∀ J _ : J ∈ π, (πi J).IsHenstock :=
+  is_Henstock (π.bUnion_tagged πi) ↔ ∀ J (_ : J ∈ π), (πi J).IsHenstock :=
   π.forall_bUnion_tagged (fun x J => x ∈ J.Icc) πi
 
+-- error in Analysis.BoxIntegral.Partition.Tagged: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In a Henstock prepartition, there are at most `2 ^ fintype.card ι` boxes with a given tag. -/
-theorem is_Henstock.card_filter_tag_eq_le [Fintype ι] (h : π.is_Henstock) (x : ι → ℝ) :
-  (π.boxes.filter fun J => π.tag J = x).card ≤ 2 ^ Fintype.card ι :=
-  calc (π.boxes.filter fun J => π.tag J = x).card ≤ (π.boxes.filter fun J : box ι => x ∈ J.Icc).card :=
-    by 
-      refine' Finset.card_le_of_subset fun J hJ => _ 
-      rw [Finset.mem_filter] at hJ⊢
-      rcases hJ with ⟨hJ, rfl⟩
-      exact ⟨hJ, h J hJ⟩
-    _ ≤ 2 ^ Fintype.card ι := π.to_prepartition.card_filter_mem_Icc_le x
-    
+theorem is_Henstock.card_filter_tag_eq_le
+[fintype ι]
+(h : π.is_Henstock)
+(x : ι → exprℝ()) : «expr ≤ »((π.boxes.filter (λ J, «expr = »(π.tag J, x))).card, «expr ^ »(2, fintype.card ι)) :=
+calc
+  «expr ≤ »((π.boxes.filter (λ
+     J, «expr = »(π.tag J, x))).card, (π.boxes.filter (λ J : box ι, «expr ∈ »(x, J.Icc))).card) : begin
+    refine [expr finset.card_le_of_subset (λ J hJ, _)],
+    rw [expr finset.mem_filter] ["at", ident hJ, "⊢"],
+    rcases [expr hJ, "with", "⟨", ident hJ, ",", ident rfl, "⟩"],
+    exact [expr ⟨hJ, h J hJ⟩]
+  end
+  «expr ≤ »(..., «expr ^ »(2, fintype.card ι)) : π.to_prepartition.card_filter_mem_Icc_le x
 
 /-- A tagged partition `π` is subordinate to `r : (ι → ℝ) → ℝ` if each box `J ∈ π` is included in
 the closed ball with center `π.tag J` and radius `r (π.tag J)`. -/
 def is_subordinate [Fintype ι] (π : tagged_prepartition I) (r : (ι → ℝ) → Ioi (0 : ℝ)) : Prop :=
-  ∀ J _ : J ∈ π, (J : _).Icc ⊆ closed_ball (π.tag J) (r$ π.tag J)
+  ∀ J (_ : J ∈ π), (J : _).Icc ⊆ closed_ball (π.tag J) (r$ π.tag J)
 
 variable{r r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)}
 
 @[simp]
 theorem is_subordinate_bUnion_tagged [Fintype ι] {π : prepartition I} {πi : ∀ J, tagged_prepartition J} :
-  is_subordinate (π.bUnion_tagged πi) r ↔ ∀ J _ : J ∈ π, (πi J).IsSubordinate r :=
+  is_subordinate (π.bUnion_tagged πi) r ↔ ∀ J (_ : J ∈ π), (πi J).IsSubordinate r :=
   π.forall_bUnion_tagged (fun x J => J.Icc ⊆ closed_ball x (r x)) πi
 
 theorem is_subordinate.bUnion_prepartition [Fintype ι] (h : is_subordinate π r) (πi : ∀ J, prepartition J) :
@@ -238,11 +242,11 @@ theorem is_subordinate.inf_prepartition [Fintype ι] (h : is_subordinate π r) (
   h.bUnion_prepartition _
 
 theorem is_subordinate.mono' [Fintype ι] {π : tagged_prepartition I} (hr₁ : π.is_subordinate r₁)
-  (h : ∀ J _ : J ∈ π, r₁ (π.tag J) ≤ r₂ (π.tag J)) : π.is_subordinate r₂ :=
+  (h : ∀ J (_ : J ∈ π), r₁ (π.tag J) ≤ r₂ (π.tag J)) : π.is_subordinate r₂ :=
   fun J hJ x hx => closed_ball_subset_closed_ball (h _ hJ) (hr₁ _ hJ hx)
 
 theorem is_subordinate.mono [Fintype ι] {π : tagged_prepartition I} (hr₁ : π.is_subordinate r₁)
-  (h : ∀ x _ : x ∈ I.Icc, r₁ x ≤ r₂ x) : π.is_subordinate r₂ :=
+  (h : ∀ x (_ : x ∈ I.Icc), r₁ x ≤ r₂ x) : π.is_subordinate r₂ :=
   hr₁.mono'$ fun J _ => h _$ π.tag_mem_Icc J
 
 theorem is_subordinate.diam_le [Fintype ι] {π : tagged_prepartition I} (h : π.is_subordinate r) (hJ : J ∈ π.boxes) :
@@ -270,7 +274,7 @@ theorem is_partition_single (h : x ∈ I.Icc) : (single I I le_rfl x h).IsPartit
   prepartition.is_partition_top I
 
 theorem forall_mem_single (p : (ι → ℝ) → box ι → Prop) (hJ : J ≤ I) (h : x ∈ I.Icc) :
-  (∀ J' _ : J' ∈ single I J hJ x h, p ((single I J hJ x h).Tag J') J') ↔ p x J :=
+  (∀ J' (_ : J' ∈ single I J hJ x h), p ((single I J hJ x h).Tag J') J') ↔ p x J :=
   by 
     simp 
 
@@ -367,7 +371,7 @@ def distortion :  ℝ≥0  :=
 theorem distortion_le_of_mem (h : J ∈ π) : J.distortion ≤ π.distortion :=
   le_sup h
 
-theorem distortion_le_iff {c :  ℝ≥0 } : π.distortion ≤ c ↔ ∀ J _ : J ∈ π, box.distortion J ≤ c :=
+theorem distortion_le_iff {c :  ℝ≥0 } : π.distortion ≤ c ↔ ∀ J (_ : J ∈ π), box.distortion J ≤ c :=
   sup_le_iff
 
 @[simp]
@@ -385,7 +389,8 @@ theorem distortion_disj_union (h : Disjoint π₁.Union π₂.Union) :
   (π₁.disj_union π₂ h).distortion = max π₁.distortion π₂.distortion :=
   sup_union
 
-theorem distortion_of_const {c} (h₁ : π.boxes.nonempty) (h₂ : ∀ J _ : J ∈ π, box.distortion J = c) : π.distortion = c :=
+theorem distortion_of_const {c} (h₁ : π.boxes.nonempty) (h₂ : ∀ J (_ : J ∈ π), box.distortion J = c) :
+  π.distortion = c :=
   (sup_congr rfl h₂).trans (sup_const h₁ _)
 
 @[simp]

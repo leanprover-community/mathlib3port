@@ -41,8 +41,8 @@ variable(K L : Type _)[Field K][Field L][Algebra K L]
 /-- `S : intermediate_field K L` is a subset of `L` such that there is a field
 tower `L / S / K`. -/
 structure IntermediateField extends Subalgebra K L where 
-  neg_mem' : ∀ x _ : x ∈ carrier, -x ∈ carrier 
-  inv_mem' : ∀ x _ : x ∈ carrier, x⁻¹ ∈ carrier
+  neg_mem' : ∀ x (_ : x ∈ carrier), -x ∈ carrier 
+  inv_mem' : ∀ x (_ : x ∈ carrier), x⁻¹ ∈ carrier
 
 /-- Reinterpret an `intermediate_field` as a `subalgebra`. -/
 add_decl_doc IntermediateField.toSubalgebra
@@ -132,32 +132,32 @@ theorem div_mem {x y : L} (hx : x ∈ S) (hy : y ∈ S) : x / y ∈ S :=
   S.to_subfield.div_mem hx hy
 
 /-- Product of a list of elements in an intermediate_field is in the intermediate_field. -/
-theorem list_prod_mem {l : List L} : (∀ x _ : x ∈ l, x ∈ S) → l.prod ∈ S :=
+theorem list_prod_mem {l : List L} : (∀ x (_ : x ∈ l), x ∈ S) → l.prod ∈ S :=
   S.to_subfield.list_prod_mem
 
 /-- Sum of a list of elements in an intermediate field is in the intermediate_field. -/
-theorem list_sum_mem {l : List L} : (∀ x _ : x ∈ l, x ∈ S) → l.sum ∈ S :=
+theorem list_sum_mem {l : List L} : (∀ x (_ : x ∈ l), x ∈ S) → l.sum ∈ S :=
   S.to_subfield.list_sum_mem
 
 /-- Product of a multiset of elements in an intermediate field is in the intermediate_field. -/
-theorem multiset_prod_mem (m : Multiset L) : (∀ a _ : a ∈ m, a ∈ S) → m.prod ∈ S :=
+theorem multiset_prod_mem (m : Multiset L) : (∀ a (_ : a ∈ m), a ∈ S) → m.prod ∈ S :=
   S.to_subfield.multiset_prod_mem m
 
 /-- Sum of a multiset of elements in a `intermediate_field` is in the `intermediate_field`. -/
-theorem multiset_sum_mem (m : Multiset L) : (∀ a _ : a ∈ m, a ∈ S) → m.sum ∈ S :=
+theorem multiset_sum_mem (m : Multiset L) : (∀ a (_ : a ∈ m), a ∈ S) → m.sum ∈ S :=
   S.to_subfield.multiset_sum_mem m
 
 /-- Product of elements of an intermediate field indexed by a `finset` is in the intermediate_field.
 -/
-theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c _ : c ∈ t, f c ∈ S) : (∏i in t, f i) ∈ S :=
+theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c (_ : c ∈ t), f c ∈ S) : (∏i in t, f i) ∈ S :=
   S.to_subfield.prod_mem h
 
 /-- Sum of elements in a `intermediate_field` indexed by a `finset` is in the `intermediate_field`.
 -/
-theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c _ : c ∈ t, f c ∈ S) : (∑i in t, f i) ∈ S :=
+theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → L} (h : ∀ c (_ : c ∈ t), f c ∈ S) : (∑i in t, f i) ∈ S :=
   S.to_subfield.sum_mem h
 
-theorem pow_mem {x : L} (hx : x ∈ S) : ∀ n : ℤ, (x^n) ∈ S
+theorem pow_mem {x : L} (hx : x ∈ S) : ∀ (n : ℤ), (x^n) ∈ S
 | (n : ℕ) =>
   by 
     rw [zpow_coe_nat]
@@ -177,11 +177,11 @@ theorem coe_int_mem (n : ℤ) : (n : L) ∈ S :=
 end IntermediateField
 
 /-- Turn a subalgebra closed under inverses into an intermediate field -/
-def Subalgebra.toIntermediateField (S : Subalgebra K L) (inv_mem : ∀ x _ : x ∈ S, x⁻¹ ∈ S) : IntermediateField K L :=
+def Subalgebra.toIntermediateField (S : Subalgebra K L) (inv_mem : ∀ x (_ : x ∈ S), x⁻¹ ∈ S) : IntermediateField K L :=
   { S with neg_mem' := fun x => S.neg_mem, inv_mem' := inv_mem }
 
 @[simp]
-theorem to_subalgebra_to_intermediate_field (S : Subalgebra K L) (inv_mem : ∀ x _ : x ∈ S, x⁻¹ ∈ S) :
+theorem to_subalgebra_to_intermediate_field (S : Subalgebra K L) (inv_mem : ∀ x (_ : x ∈ S), x⁻¹ ∈ S) :
   (S.to_intermediate_field inv_mem).toSubalgebra = S :=
   by 
     ext 
@@ -189,7 +189,7 @@ theorem to_subalgebra_to_intermediate_field (S : Subalgebra K L) (inv_mem : ∀ 
 
 @[simp]
 theorem to_intermediate_field_to_subalgebra (S : IntermediateField K L)
-  (inv_mem : ∀ x _ : x ∈ S.to_subalgebra, x⁻¹ ∈ S) : S.to_subalgebra.to_intermediate_field inv_mem = S :=
+  (inv_mem : ∀ x (_ : x ∈ S.to_subalgebra), x⁻¹ ∈ S) : S.to_subalgebra.to_intermediate_field inv_mem = S :=
   by 
     ext 
     rfl

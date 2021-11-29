@@ -59,7 +59,7 @@ include t
   finite intersections as well). -/
 structure is_topological_basis(s : Set (Set α)) : Prop where 
   exists_subset_inter :
-  ∀ t₁ _ : t₁ ∈ s, ∀ t₂ _ : t₂ ∈ s, ∀ x _ : x ∈ t₁ ∩ t₂, ∃ (t₃ : _)(_ : t₃ ∈ s), x ∈ t₃ ∧ t₃ ⊆ t₁ ∩ t₂ 
+  ∀ t₁ (_ : t₁ ∈ s), ∀ t₂ (_ : t₂ ∈ s), ∀ x (_ : x ∈ t₁ ∩ t₂), ∃ (t₃ : _)(_ : t₃ ∈ s), x ∈ t₃ ∧ t₃ ⊆ t₁ ∩ t₂ 
   sUnion_eq : ⋃₀s = univ 
   eq_generate_from : t = generate_from s
 
@@ -94,8 +94,8 @@ end
 
 /-- If a family of open sets `s` is such that every open neighbourhood contains some
 member of `s`, then `s` is a topological basis. -/
-theorem is_topological_basis_of_open_of_nhds {s : Set (Set α)} (h_open : ∀ u _ : u ∈ s, IsOpen u)
-  (h_nhds : ∀ a : α u : Set α, a ∈ u → IsOpen u → ∃ (v : _)(_ : v ∈ s), a ∈ v ∧ v ⊆ u) : is_topological_basis s :=
+theorem is_topological_basis_of_open_of_nhds {s : Set (Set α)} (h_open : ∀ u (_ : u ∈ s), IsOpen u)
+  (h_nhds : ∀ (a : α) (u : Set α), a ∈ u → IsOpen u → ∃ (v : _)(_ : v ∈ s), a ∈ v ∧ v ⊆ u) : is_topological_basis s :=
   by 
     refine' ⟨fun t₁ ht₁ t₂ ht₂ x hx => h_nhds _ _ hx (IsOpen.inter (h_open _ ht₁) (h_open _ ht₂)), _, _⟩
     ·
@@ -130,12 +130,12 @@ theorem is_topological_basis.mem_nhds_iff {a : α} {s : Set α} {b : Set (Set α
       rcases eq_univ_iff_forall.1 hb.sUnion_eq a with ⟨i, h1, h2⟩
       exact ⟨i, h2, h1⟩
 
-theorem is_topological_basis.nhds_has_basis {b : Set (Set α)} (hb : is_topological_basis b) {a : α} :
-  (𝓝 a).HasBasis (fun t : Set α => t ∈ b ∧ a ∈ t) fun t => t :=
-  ⟨fun s =>
-      hb.mem_nhds_iff.trans$
-        by 
-          simp only [exists_prop, and_assoc]⟩
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_topological_basis.nhds_has_basis
+{b : set (set α)}
+(hb : is_topological_basis b)
+{a : α} : (expr𝓝() a).has_basis (λ t : set α, «expr ∧ »(«expr ∈ »(t, b), «expr ∈ »(a, t))) (λ t, t) :=
+⟨λ s, «expr $ »(hb.mem_nhds_iff.trans, by simp [] [] ["only"] ["[", expr exists_prop, ",", expr and_assoc, "]"] [] [])⟩
 
 protected theorem is_topological_basis.is_open {s : Set α} {b : Set (Set α)} (hb : is_topological_basis b)
   (hs : s ∈ b) : IsOpen s :=
@@ -171,20 +171,20 @@ theorem is_topological_basis.open_eq_Union {B : Set (Set α)} (hB : is_topologic
 
 /-- A point `a` is in the closure of `s` iff all basis sets containing `a` intersect `s`. -/
 theorem is_topological_basis.mem_closure_iff {b : Set (Set α)} (hb : is_topological_basis b) {s : Set α} {a : α} :
-  a ∈ Closure s ↔ ∀ o _ : o ∈ b, a ∈ o → (o ∩ s).Nonempty :=
+  a ∈ Closure s ↔ ∀ o (_ : o ∈ b), a ∈ o → (o ∩ s).Nonempty :=
   (mem_closure_iff_nhds_basis' hb.nhds_has_basis).trans$
     by 
       simp only [and_imp]
 
 /-- A set is dense iff it has non-trivial intersection with all basis sets. -/
 theorem is_topological_basis.dense_iff {b : Set (Set α)} (hb : is_topological_basis b) {s : Set α} :
-  Dense s ↔ ∀ o _ : o ∈ b, Set.Nonempty o → (o ∩ s).Nonempty :=
+  Dense s ↔ ∀ o (_ : o ∈ b), Set.Nonempty o → (o ∩ s).Nonempty :=
   by 
     simp only [Dense, hb.mem_closure_iff]
     exact ⟨fun h o hb ⟨a, ha⟩ => h a o hb ha, fun h a o hb ha => h o hb ⟨a, ha⟩⟩
 
 theorem is_topological_basis.is_open_map_iff {β} [TopologicalSpace β] {B : Set (Set α)} (hB : is_topological_basis B)
-  {f : α → β} : IsOpenMap f ↔ ∀ s _ : s ∈ B, IsOpen (f '' s) :=
+  {f : α → β} : IsOpenMap f ↔ ∀ s (_ : s ∈ B), IsOpen (f '' s) :=
   by 
     refine' ⟨fun H o ho => H _ (hB.is_open ho), fun hf o ho => _⟩
     rw [hB.open_eq_sUnion' ho, sUnion_eq_Union, image_Union]
@@ -255,7 +255,7 @@ theorem is_topological_basis_of_cover {ι} {U : ι → Set α} (Uo : ∀ i, IsOp
       exact ⟨coeₓ '' v, mem_Union.2 ⟨i, mem_image_of_mem _ hvb⟩, mem_image_of_mem _ hav, image_subset_iff.2 hvu⟩
 
 protected theorem is_topological_basis.continuous {β : Type _} [TopologicalSpace β] {B : Set (Set β)}
-  (hB : is_topological_basis B) (f : α → β) (hf : ∀ s _ : s ∈ B, IsOpen (f ⁻¹' s)) : Continuous f :=
+  (hB : is_topological_basis B) (f : α → β) (hf : ∀ s (_ : s ∈ B), IsOpen (f ⁻¹' s)) : Continuous f :=
   by 
     rw [hB.eq_generate_from]
     exact continuous_generated_from hf
@@ -340,7 +340,7 @@ end
 
 /-- In a separable space, a family of disjoint sets with nonempty interiors is countable. -/
 theorem _root_.set.pairwise_disjoint.countable_of_nonempty_interior [separable_space α] {ι : Type _} {s : ι → Set α}
-  {a : Set ι} (h : a.pairwise_disjoint s) (ha : ∀ i _ : i ∈ a, (Interior (s i)).Nonempty) : countable a :=
+  {a : Set ι} (h : a.pairwise_disjoint s) (ha : ∀ i (_ : i ∈ a), (Interior (s i)).Nonempty) : countable a :=
   (h.mono$ fun i => interior_subset).countable_of_is_open (fun i hi => is_open_interior) ha
 
 end TopologicalSpace
@@ -358,45 +358,21 @@ theorem is_topological_basis_pi
  i, X i) | «expr∃ , »((U : ∀ i, set (X i))
  (F : finset ι), «expr ∧ »(∀ i, «expr ∈ »(i, F) → «expr ∈ »(U i, T i), «expr = »(S, (F : set ι).pi U)))} :=
 begin
-  classical,
   refine [expr is_topological_basis_of_open_of_nhds _ _],
   { rintro ["_", "⟨", ident U, ",", ident F, ",", ident h1, ",", ident rfl, "⟩"],
     apply [expr is_open_set_pi F.finite_to_set],
     intros [ident i, ident hi],
-    exact [expr is_topological_basis.is_open (cond i) (h1 i hi)] },
+    exact [expr (cond i).is_open (h1 i hi)] },
   { intros [ident a, ident U, ident ha, ident hU],
-    have [] [":", expr «expr ∈ »(U, nhds a)] [":=", expr is_open.mem_nhds hU ha],
-    rw ["[", expr nhds_pi, ",", expr filter.mem_infi, "]"] ["at", ident this],
-    obtain ["⟨", ident F, ",", ident hF, ",", ident V, ",", ident hV1, ",", ident rfl, "⟩", ":=", expr this],
-    choose [] [ident U'] [ident hU'] ["using", expr hV1],
-    obtain ["⟨", ident hU1, ",", ident hU2, "⟩", ":=", "⟨", expr λ i, (hU' i).1, ",", expr λ i, (hU' i).2, "⟩"],
+    obtain ["⟨", ident I, ",", ident t, ",", ident hta, ",", ident htU, "⟩", ":", expr «expr∃ , »((I : finset ι)
+      (t : ∀ i : ι, set (X i)), «expr ∧ »(∀ i, «expr ∈ »(t i, expr𝓝() (a i)), «expr ⊆ »(set.pi «expr↑ »(I) t, U)))],
+    { rw ["[", "<-", expr filter.mem_pi', ",", "<-", expr nhds_pi, "]"] [],
+      exact [expr hU.mem_nhds ha] },
     have [] [":", expr ∀
-     j : F, «expr∃ , »((T' : set (X j))
-      (hT : «expr ∈ »(T', T j)), «expr ∧ »(«expr ∈ »(a j, T'), «expr ⊆ »(T', U' j)))] [],
-    { intros [ident i],
-      specialize [expr hU1 i],
-      rwa [expr (cond i).mem_nhds_iff] ["at", ident hU1] },
-    choose [] [ident U''] [ident hU''] ["using", expr this],
-    let [ident U] [":", expr ∀
-     i : ι, set (X i)] [":=", expr λ i, if hi : «expr ∈ »(i, F) then U'' ⟨i, hi⟩ else set.univ],
-    refine [expr ⟨F.pi U, ⟨U, hF.to_finset, λ i hi, _, by simp [] [] [] [] [] []⟩, _, _⟩],
-    { dsimp ["only"] ["[", expr U, "]"] [] [],
-      rw ["[", expr dif_pos, "]"] [],
-      swap,
-      { simpa [] [] [] [] [] ["using", expr hi] },
-      exact [expr (hU'' _).1] },
-    { rw [expr set.mem_pi] [],
-      intros [ident i, ident hi],
-      dsimp ["only"] ["[", expr U, "]"] [] [],
-      rw [expr dif_pos hi] [],
-      exact [expr (hU'' _).2.1] },
-    { intros [ident x, ident hx],
-      rintros ["-", "⟨", ident i, ",", ident rfl, "⟩"],
-      refine [expr hU2 i ((hU'' i).2.2 _)],
-      convert [] [expr hx i i.2] [],
-      rcases [expr i, "with", "⟨", ident i, ",", ident p, "⟩"],
-      dsimp [] ["[", expr U, "]"] [] [],
-      rw [expr dif_pos p] [] } }
+     i, «expr∃ , »((V «expr ∈ » T i), «expr ∧ »(«expr ∈ »(a i, V), «expr ⊆ »(V, t i)))] [":=", expr λ
+     i, (cond i).mem_nhds_iff.1 (hta i)],
+    choose [] [ident V] [ident hVT, ident haV, ident hVt] [],
+    exact [expr ⟨_, ⟨V, I, λ i hi, hVT i, rfl⟩, λ i hi, haV i, «expr $ »(pi_mono, λ i hi, hVt i).trans htU⟩] }
 end
 
 -- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -492,7 +468,7 @@ include t
 /-- A first-countable space is one in which every point has a
   countable neighborhood basis. -/
 class first_countable_topology : Prop where 
-  nhds_generated_countable : ∀ a : α, (𝓝 a).IsCountablyGenerated
+  nhds_generated_countable : ∀ (a : α), (𝓝 a).IsCountablyGenerated
 
 attribute [instance] first_countable_topology.nhds_generated_countable
 
@@ -640,13 +616,14 @@ instance second_countable_topology_fintype
 by { letI [] [] [":=", expr fintype.encodable ι],
   exact [expr topological_space.second_countable_topology_encodable] }
 
-instance (priority := 100)second_countable_topology.to_separable_space [second_countable_topology α] :
-  separable_space α :=
-  by 
-    choose p hp using fun s : countable_basis α => nonempty_of_mem_countable_basis s.2 
-    exact
-      ⟨⟨range p, countable_range _,
-          (is_basis_countable_basis α).dense_iff.2$ fun o ho _ => ⟨p ⟨o, ho⟩, hp _, mem_range_self _⟩⟩⟩
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[priority 100]
+instance second_countable_topology.to_separable_space [second_countable_topology α] : separable_space α :=
+begin
+  choose [] [ident p] [ident hp] ["using", expr λ s : countable_basis α, nonempty_of_mem_countable_basis s.2],
+  exact [expr ⟨⟨range p, countable_range _, «expr $ »((is_basis_countable_basis α).dense_iff.2, λ
+      o ho _, ⟨p ⟨o, ho⟩, hp _, mem_range_self _⟩)⟩⟩]
+end
 
 variable{α}
 
@@ -685,12 +662,16 @@ begin
   exact [expr ⟨_, ⟨_, rfl⟩, _, ⟨⟨⟨_, hb, _, bs⟩, rfl⟩, rfl⟩, hf _ (by exact [expr xb])⟩]
 end
 
-theorem is_open_sUnion_countable [second_countable_topology α] (S : Set (Set α)) (H : ∀ s _ : s ∈ S, IsOpen s) :
-  ∃ T : Set (Set α), countable T ∧ T ⊆ S ∧ ⋃₀T = ⋃₀S :=
-  let ⟨T, cT, hT⟩ := is_open_Union_countable (fun s : S => s.1) fun s => H s.1 s.2
-  ⟨Subtype.val '' T, cT.image _, image_subset_iff.2$ fun ⟨x, xs⟩ xt => xs,
-    by 
-      rwa [sUnion_image, sUnion_eq_Union]⟩
+-- error in Topology.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_open_sUnion_countable
+[second_countable_topology α]
+(S : set (set α))
+(H : ∀
+ s «expr ∈ » S, is_open s) : «expr∃ , »((T : set (set α)), «expr ∧ »(countable T, «expr ∧ »(«expr ⊆ »(T, S), «expr = »(«expr⋃₀ »(T), «expr⋃₀ »(S))))) :=
+let ⟨T, cT, hT⟩ := is_open_Union_countable (λ s : S, s.1) (λ s, H s.1 s.2) in
+⟨«expr '' »(subtype.val, T), cT.image _, «expr $ »(image_subset_iff.2, λ
+  ⟨x, xs⟩
+  (xt), xs), by rwa ["[", expr sUnion_image, ",", expr sUnion_eq_Union, "]"] []⟩
 
 /-- In a topological space with second countable topology, if `f` is a function that sends each
 point `x` to a neighborhood of `x`, then for some countable set `s`, the neighborhoods `f x`,

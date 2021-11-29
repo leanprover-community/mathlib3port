@@ -127,12 +127,16 @@ theorem split_upper_def [DecidableEq ι] {i x} (h : x ∈ Ioo (I.lower i) (I.upp
     refine' ⟨_, rfl⟩
     congr
 
-theorem disjoint_split_lower_split_upper (I : box ι) (i : ι) (x : ℝ) :
-  Disjoint (I.split_lower i x) (I.split_upper i x) :=
-  by 
-    rw [←disjoint_with_bot_coe, coe_split_lower, coe_split_upper]
-    refine' (Disjoint.inf_left' _ _).inf_right' _ 
-    exact fun y hy : y i ≤ x ∧ x < y i => not_lt_of_le hy.1 hy.2
+-- error in Analysis.BoxIntegral.Partition.Split: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem disjoint_split_lower_split_upper
+(I : box ι)
+(i : ι)
+(x : exprℝ()) : disjoint (I.split_lower i x) (I.split_upper i x) :=
+begin
+  rw ["[", "<-", expr disjoint_with_bot_coe, ",", expr coe_split_lower, ",", expr coe_split_upper, "]"] [],
+  refine [expr (disjoint.inf_left' _ _).inf_right' _],
+  exact [expr λ (y) (hy : «expr ∧ »(«expr ≤ »(y i, x), «expr < »(x, y i))), not_lt_of_le hy.1 hy.2]
+end
 
 theorem split_lower_ne_split_upper (I : box ι) (i : ι) (x : ℝ) : I.split_lower i x ≠ I.split_upper i x :=
   by 
@@ -307,7 +311,7 @@ Let `J'` be one of them, and let `J` be one of the boxes in `s`. If these boxes 
 intersection, then `J' ≤ J`. -/
 theorem eventually_not_disjoint_imp_le_of_mem_split_many (s : Finset (box ι)) :
   ∀ᶠt : Finset (ι × ℝ) in at_top,
-    ∀ I : box ι J _ : J ∈ s J' _ : J' ∈ split_many I t, ¬Disjoint (J : WithBot (box ι)) J' → J' ≤ J :=
+    ∀ (I : box ι) J (_ : J ∈ s) J' (_ : J' ∈ split_many I t), ¬Disjoint (J : WithBot (box ι)) J' → J' ≤ J :=
   by 
     refine'
       eventually_at_top.2
@@ -332,7 +336,7 @@ theorem eventually_split_many_inf_eq_filter (π : prepartition I) :
       refine' ⟨J', hJ', ht I _ hJ' _ hJ.1$ box.not_disjoint_coe_iff_nonempty_inter.2 _⟩
       exact ⟨J.upper, hmem, J.upper_mem⟩
 
--- error in Analysis.BoxIntegral.Partition.Split: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.BoxIntegral.Partition.Split: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem exists_split_many_inf_eq_filter_of_finite
 (s : set (prepartition I))
 (hs : s.finite) : «expr∃ , »((t : finset «expr × »(ι, exprℝ())), ∀

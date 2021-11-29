@@ -19,7 +19,7 @@ theorem join_nil : [([] : List α)].join = [] :=
   rfl
 
 @[simp]
-theorem join_eq_nil : ∀ {L : List (List α)}, join L = [] ↔ ∀ l _ : l ∈ L, l = []
+theorem join_eq_nil : ∀ {L : List (List α)}, join L = [] ↔ ∀ l (_ : l ∈ L), l = []
 | [] => iff_of_true rfl (forall_mem_nil _)
 | l :: L =>
   by 
@@ -30,22 +30,22 @@ theorem join_append (L₁ L₂ : List (List α)) : join (L₁ ++ L₂) = join L�
   by 
     induction L₁ <;> [rfl, simp only [join, cons_append, append_assoc]]
 
+-- error in Data.List.Join: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem join_filter_empty_eq_ff [DecidablePred fun l : List α => l.empty = ff] :
-  ∀ {L : List (List α)}, join (L.filter fun l => l.empty = ff) = L.join
-| [] => rfl
-| [] :: L =>
-  by 
-    simp [@join_filter_empty_eq_ff L]
-| (a :: l) :: L =>
-  by 
-    simp [@join_filter_empty_eq_ff L]
+theorem join_filter_empty_eq_ff
+[decidable_pred (λ
+  l : list α, «expr = »(l.empty, ff))] : ∀
+{L : list (list α)}, «expr = »(join (L.filter (λ l, «expr = »(l.empty, ff))), L.join)
+| «expr[ , ]»([]) := rfl
+| «expr :: »(«expr[ , ]»([]), L) := by simp [] [] [] ["[", expr @join_filter_empty_eq_ff L, "]"] [] []
+| «expr :: »(«expr :: »(a, l), L) := by simp [] [] [] ["[", expr @join_filter_empty_eq_ff L, "]"] [] []
 
+-- error in Data.List.Join: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem join_filter_ne_nil [DecidablePred fun l : List α => l ≠ []] {L : List (List α)} :
-  join (L.filter fun l => l ≠ []) = L.join :=
-  by 
-    simp [join_filter_empty_eq_ff, ←empty_iff_eq_nil]
+theorem join_filter_ne_nil
+[decidable_pred (λ l : list α, «expr ≠ »(l, «expr[ , ]»([])))]
+{L : list (list α)} : «expr = »(join (L.filter (λ l, «expr ≠ »(l, «expr[ , ]»([])))), L.join) :=
+by simp [] [] [] ["[", expr join_filter_empty_eq_ff, ",", "<-", expr empty_iff_eq_nil, "]"] [] []
 
 theorem join_join (l : List (List (List α))) : l.join.join = (l.map join).join :=
   by 

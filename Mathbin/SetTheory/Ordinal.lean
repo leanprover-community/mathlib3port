@@ -205,14 +205,11 @@ theorem eq_or_principal [IsWellOrder β s] (f : r ≼i s) : surjective f ∨ ∃
                             exact
                               (trichotomous _ _).resolve_right (not_orₓ (hn a) fun hl => not_exists.2 hn (f.init' hl))⟩⟩
 
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Restrict the codomain of an initial segment -/
-def cod_restrict (p : Set β) (f : r ≼i s) (H : ∀ a, f a ∈ p) : r ≼i Subrel s p :=
-  ⟨RelEmbedding.codRestrict p f H,
-    fun a ⟨b, m⟩ h : s b (f a) =>
-      let ⟨a', e⟩ := f.init' h
-      ⟨a',
-        by 
-          clear _let_match <;> subst e <;> rfl⟩⟩
+def cod_restrict (p : set β) (f : «expr ≼i »(r, s)) (H : ∀ a, «expr ∈ »(f a, p)) : «expr ≼i »(r, subrel s p) :=
+⟨rel_embedding.cod_restrict p f H, λ (a) ⟨b, m⟩ (h : s b (f a)), let ⟨a', e⟩ := f.init' h in
+ ⟨a', by clear [ident _let_match]; subst [expr e]; refl⟩⟩
 
 @[simp]
 theorem cod_restrict_apply p (f : r ≼i s) H a : cod_restrict p f H a = ⟨f a, H a⟩ :=
@@ -465,17 +462,17 @@ def collapse_F [is_well_order β s] (f : «expr ↪r »(r, s)) : ∀ a, {b // «
 
 theorem collapse_F.lt [IsWellOrder β s] (f : r ↪r s) {a : α} :
   ∀ {a'}, r a' a → s (collapse_F f a').1 (collapse_F f a).1 :=
-  show (collapse_F f a).1 ∈ { b | ∀ a' h : r a' a, s (collapse_F f a').1 b }by 
+  show (collapse_F f a).1 ∈ { b | ∀ a' (h : r a' a), s (collapse_F f a').1 b }by 
     unfold collapse_F 
     rw [WellFounded.fix_eq]
     apply WellFounded.min_mem _ _
 
-theorem collapse_F.not_lt [IsWellOrder β s] (f : r ↪r s) (a : α) {b} (h : ∀ a' h : r a' a, s (collapse_F f a').1 b) :
+theorem collapse_F.not_lt [IsWellOrder β s] (f : r ↪r s) (a : α) {b} (h : ∀ a' (h : r a' a), s (collapse_F f a').1 b) :
   ¬s b (collapse_F f a).1 :=
   by 
     unfold collapse_F 
     rw [WellFounded.fix_eq]
-    exact WellFounded.not_lt_min _ _ _ (show b ∈ { b | ∀ a' h : r a' a, s (collapse_F f a').1 b } from h)
+    exact WellFounded.not_lt_min _ _ _ (show b ∈ { b | ∀ a' (h : r a' a), s (collapse_F f a').1 b } from h)
 
 -- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Construct an initial segment from an order embedding into a well order, by collapsing it
@@ -813,7 +810,7 @@ theorem enum_lt {r : α → α → Prop} [IsWellOrder α r] {o₁ o₂ : Ordinal
     rw [←typein_lt_typein r, typein_enum, typein_enum]
 
 theorem rel_iso_enum' {α β : Type u} {r : α → α → Prop} {s : β → β → Prop} [IsWellOrder α r] [IsWellOrder β s]
-  (f : r ≃r s) (o : Ordinal) : ∀ hr : o < type r hs : o < type s, f (enum r o hr) = enum s o hs :=
+  (f : r ≃r s) (o : Ordinal) : ∀ (hr : o < type r) (hs : o < type s), f (enum r o hr) = enum s o hs :=
   by 
     refine' induction_on o _ 
     rintro γ t wo ⟨g⟩ ⟨h⟩
@@ -1385,7 +1382,7 @@ theorem omin_mem S H : omin S H ∈ S :=
   let ⟨⟨i, h⟩, e⟩ := @min_eq S _ _
   (show omin S H = i from e).symm ▸ h
 
-theorem le_omin {S H a} : a ≤ omin S H ↔ ∀ i _ : i ∈ S, a ≤ i :=
+theorem le_omin {S H a} : a ≤ omin S H ↔ ∀ i (_ : i ∈ S), a ≤ i :=
   le_minₓ.trans SetCoe.forall
 
 theorem omin_le {S H i} (h : i ∈ S) : omin S H ≤ i :=
@@ -1430,7 +1427,7 @@ namespace Cardinal
 
 open Ordinal
 
--- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The ordinal corresponding to a cardinal `c` is the least ordinal
   whose cardinal is `c`. For the order-embedding version, see `ord.order_embedding`. -/
 def ord (c : cardinal) : ordinal :=
@@ -1458,21 +1455,17 @@ theorem ord_eq_min (α : Type u) :
       fun i => «expr⟦ ⟧» ⟨α, i.1, i.2⟩ :=
   rfl
 
-theorem ord_eq α : ∃ (r : α → α → Prop)(wo : IsWellOrder α r), ord (# α) = @type α r wo :=
-  let ⟨⟨r, wo⟩, h⟩ :=
-    @Ordinal.min_eq { r // IsWellOrder α r }
-      ⟨⟨WellOrderingRel,
-          by 
-            infer_instance⟩⟩
-      fun i : { r // IsWellOrder α r } => «expr⟦ ⟧» ⟨α, i.1, i.2⟩
-  ⟨r, wo, h⟩
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ord_eq
+(α) : «expr∃ , »((r : α → α → exprProp()) [wo : is_well_order α r], «expr = »(ord («expr#»() α), @type α r wo)) :=
+let ⟨⟨r, wo⟩, h⟩ := @ordinal.min_eq {r // is_well_order α r} ⟨⟨well_ordering_rel, by apply_instance⟩⟩ (λ
+     i : {r // is_well_order α r}, «expr⟦ ⟧»(⟨α, i.1, i.2⟩)) in
+⟨r, wo, h⟩
 
-theorem ord_le_type (r : α → α → Prop) [IsWellOrder α r] : ord (# α) ≤ Ordinal.type r :=
-  @Ordinal.min_le { r // IsWellOrder α r }
-    ⟨⟨WellOrderingRel,
-        by 
-          infer_instance⟩⟩
-    (fun i : { r // IsWellOrder α r } => «expr⟦ ⟧» ⟨α, i.1, i.2⟩) ⟨r, _⟩
+-- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ord_le_type (r : α → α → exprProp()) [is_well_order α r] : «expr ≤ »(ord («expr#»() α), ordinal.type r) :=
+@ordinal.min_le {r // is_well_order α r} ⟨⟨well_ordering_rel, by apply_instance⟩⟩ (λ
+ i : {r // is_well_order α r}, «expr⟦ ⟧»(⟨α, i.1, i.2⟩)) ⟨r, _⟩
 
 -- error in SetTheory.Ordinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem ord_le {c o} : «expr ↔ »(«expr ≤ »(ord c, o), «expr ≤ »(c, o.card)) :=

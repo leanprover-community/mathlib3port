@@ -26,29 +26,42 @@ open Set Filter Function Lattice AddGroupWithZeroNhd
 
 open_locale TopologicalSpace Filter Pointwise
 
+-- error in Topology.Algebra.Nonarchimedean.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A family of additive subgroups on a ring `A` is a subgroups basis if it satisfies some
 axioms ensuring there is a topology on `A` which is compatible with the ring structure and
 admits this family as a basis of neighborhoods of zero. -/
-structure RingSubgroupsBasis{A ι : Type _}[Ringₓ A](B : ι → AddSubgroup A) : Prop where 
-  inter : ∀ i j, ∃ k, B k ≤ B i⊓B j 
-  mul : ∀ i, ∃ j, ((B j : Set A)*B j) ⊆ B i 
-  leftMul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => x*y) ⁻¹' B i 
-  rightMul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => y*x) ⁻¹' B i
+structure ring_subgroups_basis
+{A ι : Type*}
+[ring A]
+(B : ι → add_subgroup A) : exprProp() :=
+  (inter : ∀ i j, «expr∃ , »((k), «expr ≤ »(B k, «expr ⊓ »(B i, B j))))
+  (mul : ∀ i, «expr∃ , »((j), «expr ⊆ »(«expr * »((B j : set A), B j), B i)))
+  (left_mul : ∀ x : A, ∀ i, «expr∃ , »((j), «expr ⊆ »((B j : set A), «expr ⁻¹' »(λ y : A, «expr * »(x, y), B i))))
+  (right_mul : ∀ x : A, ∀ i, «expr∃ , »((j), «expr ⊆ »((B j : set A), «expr ⁻¹' »(λ y : A, «expr * »(y, x), B i))))
 
 namespace RingSubgroupsBasis
 
 variable{A ι : Type _}[Ringₓ A]
 
-theorem of_comm {A ι : Type _} [CommRingₓ A] (B : ι → AddSubgroup A) (inter : ∀ i j, ∃ k, B k ≤ B i⊓B j)
-  (mul : ∀ i, ∃ j, ((B j : Set A)*B j) ⊆ B i)
-  (left_mul : ∀ x : A, ∀ i, ∃ j, (B j : Set A) ⊆ (fun y : A => x*y) ⁻¹' B i) : RingSubgroupsBasis B :=
-  { inter, mul, leftMul,
-    rightMul :=
-      by 
-        intro x i 
-        cases' leftMul x i with j hj 
-        use j 
-        simpa [mul_commₓ] using hj }
+-- error in Topology.Algebra.Nonarchimedean.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of_comm
+{A ι : Type*}
+[comm_ring A]
+(B : ι → add_subgroup A)
+(inter : ∀ i j, «expr∃ , »((k), «expr ≤ »(B k, «expr ⊓ »(B i, B j))))
+(mul : ∀ i, «expr∃ , »((j), «expr ⊆ »(«expr * »((B j : set A), B j), B i)))
+(left_mul : ∀
+ x : A, ∀
+ i, «expr∃ , »((j), «expr ⊆ »((B j : set A), «expr ⁻¹' »(λ y : A, «expr * »(x, y), B i)))) : ring_subgroups_basis B :=
+{ inter := inter,
+  mul := mul,
+  left_mul := left_mul,
+  right_mul := begin
+    intros [ident x, ident i],
+    cases [expr left_mul x i] ["with", ident j, ident hj],
+    use [expr j],
+    simpa [] [] [] ["[", expr mul_comm, "]"] [] ["using", expr hj]
+  end }
 
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
 def to_ring_filter_basis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) : RingFilterBasis A :=
@@ -185,7 +198,7 @@ some axioms ensuring there is a topology on `A` which is compatible with the rin
 admits this family as a basis of neighborhoods of zero. -/
 structure SubmodulesRingBasis(B : ι → Submodule R A) : Prop where 
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j 
-  leftMul : ∀ a : A i, ∃ j, a • B j ≤ B i 
+  leftMul : ∀ (a : A) i, ∃ j, a • B j ≤ B i 
   mul : ∀ i, ∃ j, ((B j : Set A)*B j) ⊆ B i
 
 namespace SubmodulesRingBasis
@@ -214,7 +227,7 @@ some axioms ensuring there is a topology on `M` which is compatible with the mod
 admits this family as a basis of neighborhoods of zero. -/
 structure SubmodulesBasis[TopologicalSpace R](B : ι → Submodule R M) : Prop where 
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j 
-  smul : ∀ m : M i : ι, ∀ᶠa in 𝓝 (0 : R), a • m ∈ B i
+  smul : ∀ (m : M) (i : ι), ∀ᶠa in 𝓝 (0 : R), a • m ∈ B i
 
 namespace SubmodulesBasis
 
@@ -311,7 +324,7 @@ end SubmodulesBasis
 section 
 
 variable[TopologicalSpace
-      R]{B : ι → Submodule R A}(hB : SubmodulesRingBasis B)(hsmul : ∀ m : A i : ι, ∀ᶠa : R in 𝓝 0, a • m ∈ B i)
+      R]{B : ι → Submodule R A}(hB : SubmodulesRingBasis B)(hsmul : ∀ (m : A) (i : ι), ∀ᶠa : R in 𝓝 0, a • m ∈ B i)
 
 theorem SubmodulesRingBasis.to_submodules_basis : SubmodulesBasis B :=
   { inter := hB.inter, smul := hsmul }
@@ -326,7 +339,7 @@ on a family of submodules of a `R`-module `M`. This compatibility condition allo
 a topological module structure. -/
 structure RingFilterBasis.SubmodulesBasis(BR : RingFilterBasis R)(B : ι → Submodule R M) : Prop where 
   inter : ∀ i j, ∃ k, B k ≤ B i⊓B j 
-  smul : ∀ m : M i : ι, ∃ (U : _)(_ : U ∈ BR), U ⊆ (fun a => a • m) ⁻¹' B i
+  smul : ∀ (m : M) (i : ι), ∃ (U : _)(_ : U ∈ BR), U ⊆ (fun a => a • m) ⁻¹' B i
 
 -- error in Topology.Algebra.Nonarchimedean.Bases: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem ring_filter_basis.submodules_basis_is_basis

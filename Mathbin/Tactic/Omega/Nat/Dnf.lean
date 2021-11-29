@@ -101,7 +101,7 @@ def dnf (p : preform) : List clause :=
   (dnf_core p).map nonnegate
 
 theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
-  ∀ m bs, ∀ t _ : t ∈ nonneg_consts_core m bs, 0 ≤ term.val v t
+  ∀ m bs, ∀ t (_ : t ∈ nonneg_consts_core m bs), 0 ≤ term.val v t
 | _, [] =>
   fun _ h2 =>
     by 
@@ -119,7 +119,7 @@ theorem holds_nonneg_consts_core {v : Nat → Int} (h1 : ∀ x, 0 ≤ v x) :
       apply holds_nonneg_consts_core (k+1) bs
 
 theorem holds_nonneg_consts {v : Nat → Int} {bs : List Bool} :
-  (∀ x, 0 ≤ v x) → ∀ t _ : t ∈ nonneg_consts bs, 0 ≤ term.val v t
+  (∀ x, 0 ≤ v x) → ∀ t (_ : t ∈ nonneg_consts bs), 0 ≤ term.val v t
 | h1 =>
   by 
     apply holds_nonneg_consts_core h1

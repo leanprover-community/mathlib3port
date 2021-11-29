@@ -71,9 +71,9 @@ attribute [toAdditive] GroupFilterBasis.toFilterBasis
 /-- `group_filter_basis` constructor in the commutative group case. -/
 @[toAdditive "`add_group_filter_basis` constructor in the commutative group case."]
 def groupFilterBasisOfComm {G : Type _} [CommGroupₓ G] (sets : Set (Set G)) (nonempty : sets.nonempty)
-  (inter_sets : ∀ x y, x ∈ sets → y ∈ sets → ∃ (z : _)(_ : z ∈ sets), z ⊆ x ∩ y) (one : ∀ U _ : U ∈ sets, (1 : G) ∈ U)
-  (mul : ∀ U _ : U ∈ sets, ∃ (V : _)(_ : V ∈ sets), (V*V) ⊆ U)
-  (inv : ∀ U _ : U ∈ sets, ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x⁻¹) ⁻¹' U) : GroupFilterBasis G :=
+  (inter_sets : ∀ x y, x ∈ sets → y ∈ sets → ∃ (z : _)(_ : z ∈ sets), z ⊆ x ∩ y) (one : ∀ U (_ : U ∈ sets), (1 : G) ∈ U)
+  (mul : ∀ U (_ : U ∈ sets), ∃ (V : _)(_ : V ∈ sets), (V*V) ⊆ U)
+  (inv : ∀ U (_ : U ∈ sets), ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x⁻¹) ⁻¹' U) : GroupFilterBasis G :=
   { Sets, Nonempty, inter_sets, one' := one, mul' := mul, inv' := inv,
     conj' :=
       fun x U U_in =>
@@ -146,10 +146,13 @@ theorem N_one (B : GroupFilterBasis G) : B.N 1 = B.to_filter_basis.filter :=
   by 
     simp only [N, one_mulₓ, map_id']
 
-@[toAdditive]
-protected theorem has_basis (B : GroupFilterBasis G) (x : G) :
-  has_basis (B.N x) (fun V : Set G => V ∈ B) fun V => (fun y => x*y) '' V :=
-  has_basis.map (fun y => x*y) to_filter_basis.HasBasis
+-- error in Topology.Algebra.FilterBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+protected
+theorem has_basis
+(B : group_filter_basis G)
+(x : G) : has_basis (B.N x) (λ V : set G, «expr ∈ »(V, B)) (λ V, «expr '' »(λ y, «expr * »(x, y), V)) :=
+has_basis.map (λ y, «expr * »(x, y)) to_filter_basis.has_basis
 
 /-- The topological space structure coming from a group filter basis. -/
 @[toAdditive "The topological space structure coming from an additive group filter basis."]
@@ -194,18 +197,21 @@ theorem nhds_one_eq (B : GroupFilterBasis G) : @nhds G B.topology (1 : G) = B.to
     simp only [N, one_mulₓ]
     exact map_id
 
-@[toAdditive]
-theorem nhds_has_basis (B : GroupFilterBasis G) (x₀ : G) :
-  has_basis (@nhds G B.topology x₀) (fun V : Set G => V ∈ B) fun V => (fun y => x₀*y) '' V :=
-  by 
-    rw [B.nhds_eq]
-    apply B.has_basis
+-- error in Topology.Algebra.FilterBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem nhds_has_basis
+(B : group_filter_basis G)
+(x₀ : G) : has_basis (@nhds G B.topology x₀) (λ
+ V : set G, «expr ∈ »(V, B)) (λ V, «expr '' »(λ y, «expr * »(x₀, y), V)) :=
+by { rw [expr B.nhds_eq] [],
+  apply [expr B.has_basis] }
 
-@[toAdditive]
-theorem nhds_one_has_basis (B : GroupFilterBasis G) : has_basis (@nhds G B.topology 1) (fun V : Set G => V ∈ B) id :=
-  by 
-    rw [B.nhds_one_eq]
-    exact B.to_filter_basis.has_basis
+-- error in Topology.Algebra.FilterBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem nhds_one_has_basis
+(B : group_filter_basis G) : has_basis (@nhds G B.topology 1) (λ V : set G, «expr ∈ »(V, B)) id :=
+by { rw [expr B.nhds_one_eq] [],
+  exact [expr B.to_filter_basis.has_basis] }
 
 @[toAdditive]
 theorem mem_nhds_one (B : GroupFilterBasis G) {U : Set G} (hU : U ∈ B) : U ∈ @nhds G B.topology 1 :=
@@ -254,8 +260,8 @@ end GroupFilterBasis
   topology on `R` which is compatible with the ring structure.  -/
 class RingFilterBasis(R : Type u)[Ringₓ R] extends AddGroupFilterBasis R where 
   mul' : ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), (V*V) ⊆ U 
-  mul_left' : ∀ x₀ : R {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x₀*x) ⁻¹' U 
-  mul_right' : ∀ x₀ : R {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x*x₀) ⁻¹' U
+  mul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x₀*x) ⁻¹' U 
+  mul_right' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x*x₀) ⁻¹' U
 
 namespace RingFilterBasis
 
@@ -320,8 +326,8 @@ end RingFilterBasis
 structure ModuleFilterBasis(R M : Type _)[CommRingₓ R][TopologicalSpace R][AddCommGroupₓ M][Module R M] extends
   AddGroupFilterBasis M where 
   smul' : ∀ {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ 𝓝 (0 : R))(W : _)(_ : W ∈ sets), V • W ⊆ U 
-  smul_left' : ∀ x₀ : R {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x₀ • x) ⁻¹' U 
-  smul_right' : ∀ m₀ : M {U}, U ∈ sets → ∀ᶠx in 𝓝 (0 : R), x • m₀ ∈ U
+  smul_left' : ∀ (x₀ : R) {U}, U ∈ sets → ∃ (V : _)(_ : V ∈ sets), V ⊆ (fun x => x₀ • x) ⁻¹' U 
+  smul_right' : ∀ (m₀ : M) {U}, U ∈ sets → ∀ᶠx in 𝓝 (0 : R), x • m₀ ∈ U
 
 namespace ModuleFilterBasis
 
@@ -405,8 +411,8 @@ end
 /-- Build a module filter basis from compatible ring and additive group filter bases. -/
 def of_bases {R M : Type _} [CommRingₓ R] [AddCommGroupₓ M] [Module R M] (BR : RingFilterBasis R)
   (BM : AddGroupFilterBasis M) (smul : ∀ {U}, U ∈ BM → ∃ (V : _)(_ : V ∈ BR)(W : _)(_ : W ∈ BM), V • W ⊆ U)
-  (smul_left : ∀ x₀ : R {U}, U ∈ BM → ∃ (V : _)(_ : V ∈ BM), V ⊆ (fun x => x₀ • x) ⁻¹' U)
-  (smul_right : ∀ m₀ : M {U}, U ∈ BM → ∃ (V : _)(_ : V ∈ BR), V ⊆ (fun x => x • m₀) ⁻¹' U) :
+  (smul_left : ∀ (x₀ : R) {U}, U ∈ BM → ∃ (V : _)(_ : V ∈ BM), V ⊆ (fun x => x₀ • x) ⁻¹' U)
+  (smul_right : ∀ (m₀ : M) {U}, U ∈ BM → ∃ (V : _)(_ : V ∈ BR), V ⊆ (fun x => x • m₀) ⁻¹' U) :
   @ModuleFilterBasis R M _ BR.topology _ _ :=
   { BM with
     smul' :=

@@ -101,8 +101,8 @@ class abelian extends preadditive C where
   [HasFiniteProducts : has_finite_products C]
   [HasKernels : has_kernels C]
   [HasCokernels : has_cokernels C]
-  NormalMono : ∀ {X Y : C} f : X ⟶ Y [mono f], normal_mono f 
-  NormalEpi : ∀ {X Y : C} f : X ⟶ Y [epi f], normal_epi f
+  NormalMono : ∀ {X Y : C} (f : X ⟶ Y) [mono f], normal_mono f 
+  NormalEpi : ∀ {X Y : C} (f : X ⟶ Y) [epi f], normal_epi f
 
 attribute [instance] abelian.has_finite_products
 

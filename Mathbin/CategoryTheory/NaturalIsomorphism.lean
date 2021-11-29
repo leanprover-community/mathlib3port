@@ -187,18 +187,18 @@ def of_components
     end } }
 
 @[simp]
-theorem of_components.app (app' : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
+theorem of_components.app (app' : ∀ (X : C), F.obj X ≅ G.obj X) naturality X :
   (of_components app' naturality).app X = app' X :=
   by 
     tidy
 
 @[simp]
-theorem of_components.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
+theorem of_components.hom_app (app : ∀ (X : C), F.obj X ≅ G.obj X) naturality X :
   (of_components app naturality).Hom.app X = (app X).Hom :=
   rfl
 
 @[simp]
-theorem of_components.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality X :
+theorem of_components.inv_app (app : ∀ (X : C), F.obj X ≅ G.obj X) naturality X :
   (of_components app naturality).inv.app X = (app X).inv :=
   by 
     simp [of_components]
@@ -206,7 +206,7 @@ theorem of_components.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) naturality 
 /--
 A natural transformation is an isomorphism if all its components are isomorphisms.
 -/
-theorem is_iso_of_is_iso_app (α : F ⟶ G) [∀ X : C, is_iso (α.app X)] : is_iso α :=
+theorem is_iso_of_is_iso_app (α : F ⟶ G) [∀ (X : C), is_iso (α.app X)] : is_iso α :=
   ⟨(is_iso.of_iso
         (of_components (fun X => as_iso (α.app X))
           (by 

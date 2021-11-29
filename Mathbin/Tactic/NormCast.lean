@@ -228,13 +228,13 @@ unsafe def add_lemma (attr : norm_cast_attr_ty) (cache : norm_cast_cache) (decl 
       | move => add_move cache e
       | squash => add_squash cache e
 
-private theorem ge_from_le {α} [LE α] : ∀ x y : α, x ≥ y ↔ y ≤ x :=
+private theorem ge_from_le {α} [LE α] : ∀ (x y : α), x ≥ y ↔ y ≤ x :=
   fun _ _ => Iff.rfl
 
-private theorem gt_from_lt {α} [LT α] : ∀ x y : α, x > y ↔ y < x :=
+private theorem gt_from_lt {α} [LT α] : ∀ (x y : α), x > y ↔ y < x :=
   fun _ _ => Iff.rfl
 
-private theorem ne_from_not_eq {α} : ∀ x y : α, x ≠ y ↔ ¬x = y :=
+private theorem ne_from_not_eq {α} : ∀ (x y : α), x ≠ y ↔ ¬x = y :=
   fun _ _ => Iff.rfl
 
 /--
@@ -584,24 +584,20 @@ unsafe def norm_cast (loc : parse location) : tactic Unit :=
     when loc.include_goal$ try tactic.triv 
     when ¬ns.empty$ try tactic.contradiction
 
+-- error in Tactic.NormCast: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Rewrite with the given rules and normalize casts between steps.
--/
-unsafe def rw_mod_cast (rs : parse rw_rules) (loc : parse location) : tactic Unit :=
-  decorate_error "rw_mod_cast failed:"$
-    do 
-      let cfg_norm : simp_config := {  }
-      let cfg_rw : rewrite_cfg := {  }
-      let ns ← loc.get_locals 
-      Monadₓ.mapm'
-          (fun r : rw_rule =>
-            do 
-              save_info r.pos 
-              replace_at derive ns loc.include_goal 
-              rw ⟨[r], none⟩ loc {  })
-          rs.rules 
-      replace_at derive ns loc.include_goal 
-      skip
+-/ meta def rw_mod_cast (rs : parse rw_rules) (loc : parse location) : tactic unit :=
+«expr $ »(decorate_error "rw_mod_cast failed:", do {
+ let cfg_norm : simp_config := {},
+   let cfg_rw : rewrite_cfg := {},
+   ns ← loc.get_locals,
+   monad.mapm' (λ r : rw_rule, do {
+    save_info r.pos,
+      replace_at derive ns loc.include_goal,
+      rw ⟨«expr[ , ]»([r]), none⟩ loc {} }) rs.rules,
+   replace_at derive ns loc.include_goal,
+   skip })
 
 /--
 Normalize the goal and the given expression, then close the goal with exact.

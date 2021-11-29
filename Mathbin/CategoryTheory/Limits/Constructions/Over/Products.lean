@@ -35,24 +35,23 @@ in `C`.
 def wide_pullback_diagram_of_diagram_over (B : C) {J : Type v} (F : discrete J ⥤ over B) : wide_pullback_shape J ⥤ C :=
   wide_pullback_shape.wide_cospan B (fun j => (F.obj j).left) fun j => (F.obj j).Hom
 
+-- error in CategoryTheory.Limits.Constructions.Over.Products: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- (Impl) A preliminary definition to avoid timeouts. -/
-@[simps]
-def cones_equiv_inverse_obj (B : C) {J : Type v} (F : discrete J ⥤ over B) (c : cone F) :
-  cone (wide_pullback_diagram_of_diagram_over B F) :=
-  { x := c.X.left,
-    π :=
-      { app := fun X => Option.casesOn X c.X.hom fun j : J => (c.π.app j).left,
-        naturality' :=
-          fun X Y f =>
-            by 
-              dsimp 
-              cases X <;> cases Y <;> cases f
-              ·
-                rw [category.id_comp, category.comp_id]
-              ·
-                rw [over.w, category.id_comp]
-              ·
-                rw [category.id_comp, category.comp_id] } }
+@[simps #[]]
+def cones_equiv_inverse_obj
+(B : C)
+{J : Type v}
+(F : «expr ⥤ »(discrete J, over B))
+(c : cone F) : cone (wide_pullback_diagram_of_diagram_over B F) :=
+{ X := c.X.left,
+  π := { app := λ X, option.cases_on X c.X.hom (λ j : J, (c.π.app j).left),
+    naturality' := λ X Y f, begin
+      dsimp [] [] [] [],
+      cases [expr X] []; cases [expr Y] []; cases [expr f] [],
+      { rw ["[", expr category.id_comp, ",", expr category.comp_id, "]"] [] },
+      { rw ["[", expr over.w, ",", expr category.id_comp, "]"] [] },
+      { rw ["[", expr category.id_comp, ",", expr category.comp_id, "]"] [] }
+    end } }
 
 /-- (Impl) A preliminary definition to avoid timeouts. -/
 @[simps]

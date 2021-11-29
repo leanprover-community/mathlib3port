@@ -75,16 +75,16 @@ variable(𝕜)[NormedField 𝕜][AddCommGroupₓ E][Module 𝕜 E]
 /-- A set `A` absorbs another set `B` if `B` is contained in all scalings of
 `A` by elements of sufficiently large norms. -/
 def Absorbs (A B : Set E) :=
-  ∃ r, 0 < r ∧ ∀ a : 𝕜, r ≤ ∥a∥ → B ⊆ a • A
+  ∃ r, 0 < r ∧ ∀ (a : 𝕜), r ≤ ∥a∥ → B ⊆ a • A
 
 /-- A set is absorbent if it absorbs every singleton. -/
 def Absorbent (A : Set E) :=
-  ∀ x, ∃ r, 0 < r ∧ ∀ a : 𝕜, r ≤ ∥a∥ → x ∈ a • A
+  ∀ x, ∃ r, 0 < r ∧ ∀ (a : 𝕜), r ≤ ∥a∥ → x ∈ a • A
 
 /-- A set `A` is balanced if `a • A` is contained in `A` whenever `a`
 has norm less than or equal to one. -/
 def Balanced (A : Set E) :=
-  ∀ a : 𝕜, ∥a∥ ≤ 1 → a • A ⊆ A
+  ∀ (a : 𝕜), ∥a∥ ≤ 1 → a • A ⊆ A
 
 variable{𝕜}(a : 𝕜){A B : Set E}
 
@@ -158,7 +158,7 @@ theorem absorbent_iff_forall_absorbs_singleton : Absorbent 𝕜 A ↔ ∀ x, Abs
   by 
     simp [Absorbs, Absorbent]
 
-theorem absorbent_iff_nonneg_lt : Absorbent 𝕜 A ↔ ∀ x, ∃ r, 0 ≤ r ∧ ∀ a : 𝕜, r < ∥a∥ → x ∈ a • A :=
+theorem absorbent_iff_nonneg_lt : Absorbent 𝕜 A ↔ ∀ x, ∃ r, 0 ≤ r ∧ ∀ (a : 𝕜), r < ∥a∥ → x ∈ a • A :=
   by 
     split 
     ·
@@ -247,8 +247,8 @@ the reals that is positive semidefinite, positive homogeneous, and
 subadditive. -/
 structure Seminorm(𝕜 : Type _)(E : Type _)[NormedField 𝕜][AddCommGroupₓ E][Module 𝕜 E] where 
   toFun : E → ℝ 
-  smul' : ∀ a : 𝕜 x : E, to_fun (a • x) = ∥a∥*to_fun x 
-  triangle' : ∀ x y : E, to_fun (x+y) ≤ to_fun x+to_fun y
+  smul' : ∀ (a : 𝕜) (x : E), to_fun (a • x) = ∥a∥*to_fun x 
+  triangle' : ∀ (x y : E), to_fun (x+y) ≤ to_fun x+to_fun y
 
 namespace Seminorm
 
@@ -571,11 +571,15 @@ theorem gauge_le_one_of_mem {x : E} (hx : x ∈ s) : gauge s x ≤ 1 :=
 theorem self_subset_gauge_le_one : s ⊆ { x | gauge s x ≤ 1 } :=
   fun x => gauge_le_one_of_mem
 
-theorem Convex.gauge_le_one (hs : Convex ℝ s) (h₀ : (0 : E) ∈ s) (absorbs : Absorbent ℝ s) :
-  Convex ℝ { x | gauge s x ≤ 1 } :=
-  by 
-    rw [gauge_le_one_eq hs h₀ Absorbs]
-    exact convex_Inter fun i => convex_Inter fun hi : _ < _ => hs.smul _
+-- error in Analysis.Seminorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem convex.gauge_le_one
+(hs : convex exprℝ() s)
+(h₀ : «expr ∈ »((0 : E), s))
+(absorbs : absorbent exprℝ() s) : convex exprℝ() {x | «expr ≤ »(gauge s x, 1)} :=
+begin
+  rw [expr gauge_le_one_eq hs h₀ absorbs] [],
+  exact [expr convex_Inter (λ i, convex_Inter (λ hi : «expr < »(_, _), hs.smul _))]
+end
 
 section TopologicalSpace
 
@@ -662,7 +666,7 @@ begin
 end
 
 /-- In textbooks, this is the homogeneity of the Minkowksi functional. -/
-theorem gauge_smul [Module α E] [IsScalarTower α ℝ (Set E)] {s : Set E} (symmetric : ∀ x _ : x ∈ s, -x ∈ s) (r : α)
+theorem gauge_smul [Module α E] [IsScalarTower α ℝ (Set E)] {s : Set E} (symmetric : ∀ x (_ : x ∈ s), -x ∈ s) (r : α)
   (x : E) : gauge s (r • x) = abs r • gauge s x :=
   by 
     rw [←gauge_smul_of_nonneg (abs_nonneg r)]
@@ -695,7 +699,7 @@ end
 
 /-- `gauge s` as a seminorm when `s` is symmetric, convex and absorbent. -/
 @[simps]
-def gaugeSeminorm (symmetric : ∀ x _ : x ∈ s, -x ∈ s) (hs : Convex ℝ s) (hs' : Absorbent ℝ s) : Seminorm ℝ E :=
+def gaugeSeminorm (symmetric : ∀ x (_ : x ∈ s), -x ∈ s) (hs : Convex ℝ s) (hs' : Absorbent ℝ s) : Seminorm ℝ E :=
   { toFun := gauge s,
     smul' :=
       fun r x =>

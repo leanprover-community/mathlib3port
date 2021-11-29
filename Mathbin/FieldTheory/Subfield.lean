@@ -63,7 +63,7 @@ variable{K : Type u}{L : Type v}{M : Type w}[Field K][Field L][Field M]
   multiplicative submonoid and an additive subgroup. Note in particular that it shares the
   same 0 and 1 as R. -/
 structure Subfield(K : Type u)[Field K] extends Subring K where 
-  inv_mem' : ∀ x _ : x ∈ carrier, x⁻¹ ∈ carrier
+  inv_mem' : ∀ x (_ : x ∈ carrier), x⁻¹ ∈ carrier
 
 /-- Reinterpret a `subfield` as a `subring`. -/
 add_decl_doc Subfield.toSubring
@@ -129,7 +129,7 @@ theorem mem_to_subring (s : Subfield K) (x : K) : x ∈ s.to_subring ↔ x ∈ s
 end Subfield
 
 /-- A `subring` containing inverses is a `subfield`. -/
-def Subring.toSubfield (s : Subring K) (hinv : ∀ x _ : x ∈ s, x⁻¹ ∈ s) : Subfield K :=
+def Subring.toSubfield (s : Subring K) (hinv : ∀ x (_ : x ∈ s), x⁻¹ ∈ s) : Subfield K :=
   { s with inv_mem' := hinv }
 
 namespace Subfield
@@ -171,27 +171,27 @@ theorem div_mem {x y : K} (hx : x ∈ s) (hy : y ∈ s) : x / y ∈ s :=
     exact s.mul_mem hx (s.inv_mem hy)
 
 /-- Product of a list of elements in a subfield is in the subfield. -/
-theorem list_prod_mem {l : List K} : (∀ x _ : x ∈ l, x ∈ s) → l.prod ∈ s :=
+theorem list_prod_mem {l : List K} : (∀ x (_ : x ∈ l), x ∈ s) → l.prod ∈ s :=
   s.to_submonoid.list_prod_mem
 
 /-- Sum of a list of elements in a subfield is in the subfield. -/
-theorem list_sum_mem {l : List K} : (∀ x _ : x ∈ l, x ∈ s) → l.sum ∈ s :=
+theorem list_sum_mem {l : List K} : (∀ x (_ : x ∈ l), x ∈ s) → l.sum ∈ s :=
   s.to_add_subgroup.list_sum_mem
 
 /-- Product of a multiset of elements in a subfield is in the subfield. -/
-theorem multiset_prod_mem (m : Multiset K) : (∀ a _ : a ∈ m, a ∈ s) → m.prod ∈ s :=
+theorem multiset_prod_mem (m : Multiset K) : (∀ a (_ : a ∈ m), a ∈ s) → m.prod ∈ s :=
   s.to_submonoid.multiset_prod_mem m
 
 /-- Sum of a multiset of elements in a `subfield` is in the `subfield`. -/
-theorem multiset_sum_mem (m : Multiset K) : (∀ a _ : a ∈ m, a ∈ s) → m.sum ∈ s :=
+theorem multiset_sum_mem (m : Multiset K) : (∀ a (_ : a ∈ m), a ∈ s) → m.sum ∈ s :=
   s.to_add_subgroup.multiset_sum_mem m
 
 /-- Product of elements of a subfield indexed by a `finset` is in the subfield. -/
-theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c _ : c ∈ t, f c ∈ s) : (∏i in t, f i) ∈ s :=
+theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c (_ : c ∈ t), f c ∈ s) : (∏i in t, f i) ∈ s :=
   s.to_submonoid.prod_mem h
 
 /-- Sum of elements in a `subfield` indexed by a `finset` is in the `subfield`. -/
-theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c _ : c ∈ t, f c ∈ s) : (∑i in t, f i) ∈ s :=
+theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c (_ : c ∈ t), f c ∈ s) : (∑i in t, f i) ∈ s :=
   s.to_add_subgroup.sum_mem h
 
 theorem pow_mem {x : K} (hx : x ∈ s) (n : ℕ) : x ^ n ∈ s :=
@@ -442,7 +442,7 @@ theorem coe_Inf (S : Set (Subfield K)) : ((Inf S : Subfield K) : Set K) = ⋂(s 
               by 
                 simp [←s_eq, ←s'_eq]⟩⟩
 
-theorem mem_Inf {S : Set (Subfield K)} {x : K} : x ∈ Inf S ↔ ∀ p _ : p ∈ S, x ∈ p :=
+theorem mem_Inf {S : Set (Subfield K)} {x : K} : x ∈ Inf S ↔ ∀ p (_ : p ∈ S), x ∈ p :=
   Subring.mem_Inf.trans ⟨fun h p hp => h p.to_subring ⟨p, hp, rfl⟩, fun h p ⟨p', hp', p_eq⟩ => p_eq ▸ h p' hp'⟩
 
 @[simp]
@@ -519,7 +519,7 @@ theorem subset_closure {s : Set K} : s ⊆ closure s :=
 theorem not_mem_of_not_mem_closure {s : Set K} {P : K} (hP : P ∉ closure s) : P ∉ s :=
   fun h => hP (subset_closure h)
 
-theorem mem_closure {x : K} {s : Set K} : x ∈ closure s ↔ ∀ S : Subfield K, s ⊆ S → x ∈ S :=
+theorem mem_closure {x : K} {s : Set K} : x ∈ closure s ↔ ∀ (S : Subfield K), s ⊆ S → x ∈ S :=
   ⟨fun ⟨y, hy, z, hz, x_eq⟩ t le =>
       x_eq ▸ t.div_mem (Subring.mem_closure.mp hy t.to_subring le) (Subring.mem_closure.mp hz t.to_subring le),
     fun h => h (closure s) subset_closure⟩
@@ -541,7 +541,7 @@ theorem closure_eq_of_le {s : Set K} {t : Subfield K} (h₁ : s ⊆ t) (h₂ : t
 of `s`, and is preserved under addition, negation, and multiplication, then `p` holds for all
 elements of the closure of `s`. -/
 @[elab_as_eliminator]
-theorem closure_induction {s : Set K} {p : K → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x _ : x ∈ s, p x) (H1 : p 1)
+theorem closure_induction {s : Set K} {p : K → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x (_ : x ∈ s), p x) (H1 : p 1)
   (Hadd : ∀ x y, p x → p y → p (x+y)) (Hneg : ∀ x, p x → p (-x)) (Hinv : ∀ x, p x → p (x⁻¹))
   (Hmul : ∀ x y, p x → p y → p (x*y)) : p x :=
   (@closure_le _ _ _ ⟨p, H1, Hmul, @add_neg_selfₓ K _ 1 ▸ Hadd _ _ H1 (Hneg _ H1), Hadd, Hneg, Hinv⟩).2 Hs h
@@ -678,15 +678,14 @@ def range_restrict_field (f : K →+* L) : K →+* f.field_range :=
 theorem coe_range_restrict_field (f : K →+* L) (x : K) : (f.range_restrict_field x : L) = f x :=
   rfl
 
+-- error in FieldTheory.Subfield: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The subfield of elements `x : R` such that `f x = g x`, i.e.,
-the equalizer of f and g as a subfield of R -/
-def eq_locus_field (f g : K →+* L) : Subfield K :=
-  { (f : K →+* L).eqLocus g with
-    inv_mem' :=
-      fun x hx : f x = g x =>
-        show f (x⁻¹) = g (x⁻¹)by 
-          rw [f.map_inv, g.map_inv, hx],
-    Carrier := { x | f x = g x } }
+the equalizer of f and g as a subfield of R -/ def eq_locus_field (f g : «expr →+* »(K, L)) : subfield K :=
+{ inv_mem' := λ
+  (x)
+  (hx : «expr = »(f x, g x)), show «expr = »(f «expr ⁻¹»(x), g «expr ⁻¹»(x)), by rw ["[", expr f.map_inv, ",", expr g.map_inv, ",", expr hx, "]"] [],
+  carrier := {x | «expr = »(f x, g x)},
+  ..(f : «expr →+* »(K, L)).eq_locus g }
 
 /-- If two ring homomorphisms are equal on a set, then they are equal on its subfield closure. -/
 theorem eq_on_field_closure {f g : K →+* L} {s : Set K} (h : Set.EqOn f g s) : Set.EqOn f g (closure s) :=

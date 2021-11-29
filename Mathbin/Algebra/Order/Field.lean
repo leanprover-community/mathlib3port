@@ -48,7 +48,7 @@ end
 
 @[simp]
 theorem inv_pos : 0 < a⁻¹ ↔ 0 < a :=
-  suffices ∀ a : α, 0 < a → 0 < a⁻¹ from ⟨fun h => inv_inv₀ a ▸ this _ h, this a⟩
+  suffices ∀ (a : α), 0 < a → 0 < a⁻¹ from ⟨fun h => inv_inv₀ a ▸ this _ h, this a⟩
   fun a ha =>
     flip lt_of_mul_lt_mul_left ha.le$
       by 
@@ -760,7 +760,7 @@ begin
   exact [expr lt_max_iff.2 «expr $ »(or.inl, lt_add_one _)]
 end
 
-theorem le_of_forall_sub_le (h : ∀ ε _ : ε > 0, b - ε ≤ a) : b ≤ a :=
+theorem le_of_forall_sub_le (h : ∀ ε (_ : ε > 0), b - ε ≤ a) : b ≤ a :=
   by 
     contrapose! h 
     simpa only [and_comm ((0 : α) < _), lt_sub_iff_add_lt, gt_iff_lt] using exists_add_lt_and_pos_of_lt h
@@ -816,8 +816,9 @@ theorem abs_one_div (a : α) : |1 / a| = 1 / |a| :=
 theorem abs_inv (a : α) : |a⁻¹| = |a|⁻¹ :=
   (absHom : MonoidWithZeroHom α α).map_inv a
 
-theorem one_div_strict_anti_on : StrictAntiOn (fun x : α => 1 / x) (Set.Ioi 0) :=
-  fun x x1 y y1 xy => (one_div_lt_one_div (Set.mem_Ioi.mp y1) (Set.mem_Ioi.mp x1)).mpr xy
+-- error in Algebra.Order.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem one_div_strict_anti_on : strict_anti_on (λ x : α, «expr / »(1, x)) (set.Ioi 0) :=
+λ x x1 y y1 xy, (one_div_lt_one_div (set.mem_Ioi.mp y1) (set.mem_Ioi.mp x1)).mpr xy
 
 theorem one_div_pow_le_one_div_pow_of_le (a1 : 1 ≤ a) {m n : ℕ} (mn : m ≤ n) : 1 / a ^ n ≤ 1 / a ^ m :=
   by 
@@ -827,11 +828,15 @@ theorem one_div_pow_lt_one_div_pow_of_lt (a1 : 1 < a) {m n : ℕ} (mn : m < n) :
   by 
     refine' (one_div_lt_one_div _ _).mpr (pow_lt_pow a1 mn) <;> exact pow_pos (trans zero_lt_one a1) _
 
-theorem one_div_pow_mono (a1 : 1 ≤ a) : Monotone fun n : ℕ => OrderDual.toDual 1 / a ^ n :=
-  fun m n => one_div_pow_le_one_div_pow_of_le a1
+-- error in Algebra.Order.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem one_div_pow_mono
+(a1 : «expr ≤ »(1, a)) : monotone (λ n : exprℕ(), «expr / »(order_dual.to_dual 1, «expr ^ »(a, n))) :=
+λ m n, one_div_pow_le_one_div_pow_of_le a1
 
-theorem one_div_pow_strict_mono (a1 : 1 < a) : StrictMono fun n : ℕ => OrderDual.toDual 1 / a ^ n :=
-  fun m n => one_div_pow_lt_one_div_pow_of_lt a1
+-- error in Algebra.Order.Field: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem one_div_pow_strict_mono
+(a1 : «expr < »(1, a)) : strict_mono (λ n : exprℕ(), «expr / »(order_dual.to_dual 1, «expr ^ »(a, n))) :=
+λ m n, one_div_pow_lt_one_div_pow_of_lt a1
 
 end LinearOrderedField
 

@@ -105,7 +105,7 @@ Every real-valued function `ℝ → ℝ` which is continuous on `[a,b]`
 can be approximated to within any `ε > 0` on `[a,b]` by some polynomial.
 -/
 theorem exists_polynomial_near_of_continuous_on (a b : ℝ) (f : ℝ → ℝ) (c : ContinuousOn f (Set.Icc a b)) (ε : ℝ)
-  (pos : 0 < ε) : ∃ p : Polynomial ℝ, ∀ x _ : x ∈ Set.Icc a b, |p.eval x - f x| < ε :=
+  (pos : 0 < ε) : ∃ p : Polynomial ℝ, ∀ x (_ : x ∈ Set.Icc a b), |p.eval x - f x| < ε :=
   by 
     let f' : C(Set.Icc a b, ℝ) := ⟨fun x => f x, continuous_on_iff_continuous_restrict.mp c⟩
     obtain ⟨p, b⟩ := exists_polynomial_near_continuous_map a b f' ε Pos 

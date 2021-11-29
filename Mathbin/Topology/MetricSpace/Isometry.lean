@@ -25,7 +25,7 @@ open_locale TopologicalSpace
 /-- An isometry (also known as isometric embedding) is a map preserving the edistance
 between pseudoemetric spaces, or equivalently the distance between pseudometric space.  -/
 def Isometry [PseudoEmetricSpace α] [PseudoEmetricSpace β] (f : α → β) : Prop :=
-  ∀ x1 x2 : α, edist (f x1) (f x2) = edist x1 x2
+  ∀ (x1 x2 : α), edist (f x1) (f x2) = edist x1 x2
 
 /-- On pseudometric spaces, a map is an isometry if and only if it preserves distances. -/
 theorem isometry_emetric_iff_metric [PseudoMetricSpace α] [PseudoMetricSpace β] {f : α → β} :

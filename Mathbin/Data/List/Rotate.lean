@@ -54,7 +54,7 @@ theorem rotate'_cons_succ (l : List α) (a : α) (n : ℕ) : (a :: l : List α).
     simp [rotate']
 
 @[simp]
-theorem length_rotate' : ∀ l : List α n : ℕ, (l.rotate' n).length = l.length
+theorem length_rotate' : ∀ (l : List α) (n : ℕ), (l.rotate' n).length = l.length
 | [], n => rfl
 | a :: l, 0 => rfl
 | a :: l, n+1 =>
@@ -78,7 +78,7 @@ theorem rotate'_eq_drop_append_take : ∀ {l : List α} {n : ℕ}, n ≤ l.lengt
         take_append_of_le_length hnl] <;>
       simp 
 
-theorem rotate'_rotate' : ∀ l : List α n m : ℕ, (l.rotate' n).rotate' m = l.rotate' (n+m)
+theorem rotate'_rotate' : ∀ (l : List α) (n m : ℕ), (l.rotate' n).rotate' m = l.rotate' (n+m)
 | a :: l, 0, m =>
   by 
     simp 
@@ -95,7 +95,7 @@ theorem rotate'_length (l : List α) : rotate' l l.length = l :=
     rw [rotate'_eq_drop_append_take (le_reflₓ _)] <;> simp 
 
 @[simp]
-theorem rotate'_length_mul (l : List α) : ∀ n : ℕ, l.rotate' (l.length*n) = l
+theorem rotate'_length_mul (l : List α) : ∀ (n : ℕ), l.rotate' (l.length*n) = l
 | 0 =>
   by 
     simp 
@@ -183,7 +183,7 @@ theorem rotate_length_mul (l : List α) (n : ℕ) : l.rotate (l.length*n) = l :=
   by 
     rw [rotate_eq_rotate', rotate'_length_mul]
 
-theorem prod_rotate_eq_one_of_prod_eq_one [Groupₓ α] : ∀ {l : List α} hl : l.prod = 1 n : ℕ, (l.rotate n).Prod = 1
+theorem prod_rotate_eq_one_of_prod_eq_one [Groupₓ α] : ∀ {l : List α} (hl : l.prod = 1) (n : ℕ), (l.rotate n).Prod = 1
 | [], _, _ =>
   by 
     simp 

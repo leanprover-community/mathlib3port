@@ -34,8 +34,8 @@ instance  : Inhabited (εNFA α σ) :=
 /-- The `ε_closure` of a set is the set of states which can be reached by taking a finite string of
   ε-transitions from an element of the set -/
 inductive ε_closure : Set σ → Set σ
-  | base : ∀ S s _ : s ∈ S, ε_closure S s
-  | step : ∀ S s t _ : t ∈ M.step s none, ε_closure S s → ε_closure S t
+  | base : ∀ S s (_ : s ∈ S), ε_closure S s
+  | step : ∀ S s t (_ : t ∈ M.step s none), ε_closure S s → ε_closure S t
 
 /-- `M.step_set S a` is the union of the ε-closure of `M.step s a` for all `s ∈ S`. -/
 def step_set : Set σ → α → Set σ :=

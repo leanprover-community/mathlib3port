@@ -78,13 +78,13 @@ theorem coe_inj {a b : α} : (a : WithOne α) = b ↔ a = b :=
   Option.some_inj
 
 @[elab_as_eliminator, toAdditive]
-protected theorem cases_on {P : WithOne α → Prop} : ∀ x : WithOne α, P 1 → (∀ a : α, P a) → P x :=
+protected theorem cases_on {P : WithOne α → Prop} : ∀ (x : WithOne α), P 1 → (∀ (a : α), P a) → P x :=
   Option.casesOn
 
 @[toAdditive]
 instance  [Mul α] : MulOneClass (WithOne α) :=
-  { mul := ·*·, one := 1, one_mul := show ∀ x : WithOne α, (1*x) = x from (Option.lift_or_get_is_left_id _).1,
-    mul_one := show ∀ x : WithOne α, (x*1) = x from (Option.lift_or_get_is_right_id _).1 }
+  { mul := ·*·, one := 1, one_mul := show ∀ (x : WithOne α), (1*x) = x from (Option.lift_or_get_is_left_id _).1,
+    mul_one := show ∀ (x : WithOne α), (x*1) = x from (Option.lift_or_get_is_right_id _).1 }
 
 @[toAdditive]
 instance  [Semigroupₓ α] : Monoidₓ (WithOne α) :=

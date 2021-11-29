@@ -24,7 +24,7 @@ theorem is_unit_iff_forall_dvd [CommMonoidₓ α] {x : α} : IsUnit x ↔ ∀ y,
 theorem is_unit_of_dvd_unit {α} [CommMonoidₓ α] {x y : α} (xy : x ∣ y) (hu : IsUnit y) : IsUnit x :=
   is_unit_iff_dvd_one.2$ xy.trans$ is_unit_iff_dvd_one.1 hu
 
-theorem is_unit_of_dvd_one [CommMonoidₓ α] : ∀ a _ : a ∣ 1, IsUnit (a : α)
+theorem is_unit_of_dvd_one [CommMonoidₓ α] : ∀ a (_ : a ∣ 1), IsUnit (a : α)
 | a, ⟨b, Eq⟩ => ⟨Units.mkOfMulEqOne a b Eq.symm, rfl⟩
 
 theorem dvd_and_not_dvd_iff [CommCancelMonoidWithZero α] {x y : α} : x ∣ y ∧ ¬y ∣ x ↔ DvdNotUnit x y :=
@@ -409,7 +409,7 @@ theorem dvd_dvd_iff_associated [CancelMonoidWithZero α] {a b : α} : a ∣ b �
   ⟨fun ⟨h1, h2⟩ => associated_of_dvd_dvd h1 h2, Associated.dvd_dvd⟩
 
 theorem exists_associated_mem_of_dvd_prod [CommCancelMonoidWithZero α] {p : α} (hp : Prime p) {s : Multiset α} :
-  (∀ r _ : r ∈ s, Prime r) → p ∣ s.prod → ∃ (q : _)(_ : q ∈ s), p ~ᵤ q :=
+  (∀ r (_ : r ∈ s), Prime r) → p ∣ s.prod → ∃ (q : _)(_ : q ∈ s), p ~ᵤ q :=
   Multiset.induction_on s
     (by 
       simp [mt is_unit_iff_dvd_one.2 hp.not_unit])
@@ -787,6 +787,9 @@ instance  : CommMonoidWithZero (Associates α) :=
 instance  : OrderTop (Associates α) :=
   { top := 0, le_top := fun a => ⟨0, (mul_zero a).symm⟩ }
 
+instance  : BoundedOrder (Associates α) :=
+  { Associates.orderTop, Associates.orderBot with  }
+
 instance  [Nontrivial α] : Nontrivial (Associates α) :=
   ⟨⟨0, 1,
       fun h =>
@@ -954,7 +957,7 @@ begin
   exact [expr quotient.sound' ⟨u, mul_left_cancel₀ (mk_ne_zero.1 ha) hu⟩]
 end
 
-theorem eq_of_mul_eq_mul_right : ∀ a b c : Associates α, b ≠ 0 → ((a*b) = c*b) → a = c :=
+theorem eq_of_mul_eq_mul_right : ∀ (a b c : Associates α), b ≠ 0 → ((a*b) = c*b) → a = c :=
   fun a b c bne0 => mul_commₓ b a ▸ mul_commₓ b c ▸ eq_of_mul_eq_mul_left b a c bne0
 
 theorem le_of_mul_le_mul_left (a b c : Associates α) (ha : a ≠ 0) : ((a*b) ≤ a*c) → b ≤ c
@@ -964,7 +967,7 @@ theorem le_of_mul_le_mul_left (a b c : Associates α) (ha : a ≠ 0) : ((a*b) �
       by 
         rwa [←mul_assocₓ]⟩
 
-theorem one_or_eq_of_le_of_prime : ∀ p m : Associates α, Prime p → m ≤ p → m = 1 ∨ m = p
+theorem one_or_eq_of_le_of_prime : ∀ (p m : Associates α), Prime p → m ≤ p → m = 1 ∨ m = p
 | _, m, ⟨hp0, hp1, h⟩, ⟨d, rfl⟩ =>
   match h m d dvd_rfl with 
   | Or.inl h =>
@@ -1005,7 +1008,7 @@ end Associates
 namespace Multiset
 
 theorem prod_ne_zero_of_prime [CommCancelMonoidWithZero α] [Nontrivial α] (s : Multiset α)
-  (h : ∀ x _ : x ∈ s, Prime x) : s.prod ≠ 0 :=
+  (h : ∀ x (_ : x ∈ s), Prime x) : s.prod ≠ 0 :=
   Multiset.prod_ne_zero fun h0 => Prime.ne_zero (h 0 h0) rfl
 
 end Multiset

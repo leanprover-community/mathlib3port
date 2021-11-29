@@ -35,7 +35,7 @@ variable[TopologicalSpace α][TopologicalSpace β]
 /-- A sequence converges in the sence of topological spaces iff the associated statement for filter
 holds. -/
 theorem TopologicalSpace.seq_tendsto_iff {x : ℕ → α} {limit : α} :
-  tendsto x at_top (𝓝 limit) ↔ ∀ U : Set α, limit ∈ U → IsOpen U → ∃ N, ∀ n _ : n ≥ N, x n ∈ U :=
+  tendsto x at_top (𝓝 limit) ↔ ∀ (U : Set α), limit ∈ U → IsOpen U → ∃ N, ∀ n (_ : n ≥ N), x n ∈ U :=
   (at_top_basis.tendsto_iff (nhds_basis_opens limit)).trans$
     by 
       simp only [and_imp, exists_prop, true_andₓ, Set.mem_Ici, ge_iff_le, id]
@@ -43,10 +43,14 @@ theorem TopologicalSpace.seq_tendsto_iff {x : ℕ → α} {limit : α} :
 /-- The sequential closure of a subset M ⊆ α of a topological space α is
 the set of all p ∈ α which arise as limit of sequences in M. -/
 def SequentialClosure (M : Set α) : Set α :=
-  { p | ∃ x : ℕ → α, (∀ n : ℕ, x n ∈ M) ∧ x ⟶ p }
+  { p | ∃ x : ℕ → α, (∀ (n : ℕ), x n ∈ M) ∧ x ⟶ p }
 
-theorem subset_sequential_closure (M : Set α) : M ⊆ SequentialClosure M :=
-  fun p _ : p ∈ M => show p ∈ SequentialClosure M from ⟨fun n => p, fun n => ‹p ∈ M›, tendsto_const_nhds⟩
+-- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem subset_sequential_closure (M : set α) : «expr ⊆ »(M, sequential_closure M) :=
+assume
+(p)
+(_ : «expr ∈ »(p, M)), show «expr ∈ »(p, sequential_closure M), from ⟨λ
+ n, p, assume n, «expr‹ ›»(«expr ∈ »(p, M)), tendsto_const_nhds⟩
 
 /-- A set `s` is sequentially closed if for any converging sequence `x n` of elements of `s`,
 the limit belongs to `s` as well. -/
@@ -54,12 +58,12 @@ def IsSeqClosed (s : Set α) : Prop :=
   s = SequentialClosure s
 
 /-- A convenience lemma for showing that a set is sequentially closed. -/
-theorem is_seq_closed_of_def {A : Set α} (h : ∀ x : ℕ → α p : α, (∀ n : ℕ, x n ∈ A) → (x ⟶ p) → p ∈ A) :
+theorem is_seq_closed_of_def {A : Set α} (h : ∀ (x : ℕ → α) (p : α), (∀ (n : ℕ), x n ∈ A) → (x ⟶ p) → p ∈ A) :
   IsSeqClosed A :=
   show A = SequentialClosure A from
     subset.antisymm (subset_sequential_closure A)
       (show ∀ p, p ∈ SequentialClosure A → p ∈ A from
-        fun p ⟨x, _, _⟩ => show p ∈ A from h x p ‹∀ n : ℕ, x n ∈ A› ‹x ⟶ p›)
+        fun p ⟨x, _, _⟩ => show p ∈ A from h x p ‹∀ (n : ℕ), x n ∈ A› ‹x ⟶ p›)
 
 /-- The sequential closure of a set is contained in the closure of that set.
 The converse is not true. -/
@@ -77,7 +81,7 @@ theorem is_seq_closed_of_is_closed (M : Set α) (_ : IsClosed M) : IsSeqClosed M
 theorem mem_of_is_seq_closed {A : Set α} (_ : IsSeqClosed A) {x : ℕ → α} (_ : ∀ n, x n ∈ A) {limit : α}
   (_ : x ⟶ limit) : limit ∈ A :=
   have  : limit ∈ SequentialClosure A :=
-    show ∃ x : ℕ → α, (∀ n : ℕ, x n ∈ A) ∧ x ⟶ limit from ⟨x, ‹∀ n, x n ∈ A›, ‹x ⟶ limit›⟩
+    show ∃ x : ℕ → α, (∀ (n : ℕ), x n ∈ A) ∧ x ⟶ limit from ⟨x, ‹∀ n, x n ∈ A›, ‹x ⟶ limit›⟩
   Eq.subst (Eq.symm ‹IsSeqClosed A›) ‹limit ∈ SequentialClosure A›
 
 /-- The limit of a convergent sequence in a closed set is in that set.-/
@@ -90,7 +94,7 @@ theorem mem_of_is_closed_sequential {A : Set α} (_ : IsClosed A) {x : ℕ → �
  statements show that other topological properties can be deduced from sequences in sequential
  spaces. -/
 class SequentialSpace(α : Type _)[TopologicalSpace α] : Prop where 
-  sequential_closure_eq_closure : ∀ M : Set α, SequentialClosure M = Closure M
+  sequential_closure_eq_closure : ∀ (M : Set α), SequentialClosure M = Closure M
 
 /-- In a sequential space, a set is closed iff it's sequentially closed. -/
 theorem is_seq_closed_iff_is_closed [SequentialSpace α] {M : Set α} : IsSeqClosed M ↔ IsClosed M :=
@@ -108,7 +112,7 @@ theorem is_seq_closed_iff_is_closed [SequentialSpace α] {M : Set α} : IsSeqClo
 /-- In a sequential space, a point belongs to the closure of a set iff it is a limit of a sequence
 taking values in this set. -/
 theorem mem_closure_iff_seq_limit [SequentialSpace α] {s : Set α} {a : α} :
-  a ∈ Closure s ↔ ∃ x : ℕ → α, (∀ n : ℕ, x n ∈ s) ∧ x ⟶ a :=
+  a ∈ Closure s ↔ ∃ x : ℕ → α, (∀ (n : ℕ), x n ∈ s) ∧ x ⟶ a :=
   by 
     rw [←SequentialSpace.sequential_closure_eq_closure]
     exact Iff.rfl
@@ -116,26 +120,33 @@ theorem mem_closure_iff_seq_limit [SequentialSpace α] {s : Set α} {a : α} :
 /-- A function between topological spaces is sequentially continuous if it commutes with limit of
  convergent sequences. -/
 def SequentiallyContinuous (f : α → β) : Prop :=
-  ∀ x : ℕ → α, ∀ {limit : α}, (x ⟶ limit) → (f ∘ x) ⟶ f limit
+  ∀ (x : ℕ → α), ∀ {limit : α}, (x ⟶ limit) → (f ∘ x) ⟶ f limit
 
-theorem Continuous.to_sequentially_continuous {f : α → β} (_ : Continuous f) : SequentiallyContinuous f :=
-  fun x limit _ : x ⟶ limit =>
-    have  : tendsto f (𝓝 limit) (𝓝 (f limit)) := Continuous.tendsto ‹Continuous f› limit 
-    show (f ∘ x) ⟶ f limit from tendsto.comp this ‹x ⟶ limit›
+-- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous.to_sequentially_continuous {f : α → β} (_ : continuous f) : sequentially_continuous f :=
+assume
+(x limit)
+(_ : «expr ⟶ »(x, limit)), have tendsto f (expr𝓝() limit) (expr𝓝() (f limit)), from continuous.tendsto «expr‹ ›»(continuous f) limit,
+show «expr ⟶ »(«expr ∘ »(f, x), f limit), from tendsto.comp this «expr‹ ›»(«expr ⟶ »(x, limit))
 
+-- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- In a sequential space, continuity and sequential continuity coincide. -/
-theorem continuous_iff_sequentially_continuous {f : α → β} [SequentialSpace α] :
-  Continuous f ↔ SequentiallyContinuous f :=
-  Iff.intro (fun _ => ‹Continuous f›.to_sequentially_continuous)
-    fun this : SequentiallyContinuous f =>
-      show Continuous f from
-        suffices h : ∀ {A : Set β}, IsClosed A → IsSeqClosed (f ⁻¹' A) from
-          continuous_iff_is_closed.mpr fun A _ => is_seq_closed_iff_is_closed.mp$ h ‹IsClosed A›
-        fun A _ : IsClosed A =>
-          is_seq_closed_of_def$
-            fun x : ℕ → α p _ : ∀ n, f (x n) ∈ A _ : x ⟶ p =>
-              have  : (f ∘ x) ⟶ f p := ‹SequentiallyContinuous f› x ‹x ⟶ p›
-              show f p ∈ A from mem_of_is_closed_sequential ‹IsClosed A› ‹∀ n, f (x n) ∈ A› ‹(f ∘ x) ⟶ f p›
+theorem continuous_iff_sequentially_continuous
+{f : α → β}
+[sequential_space α] : «expr ↔ »(continuous f, sequentially_continuous f) :=
+iff.intro (assume
+ _, «expr‹ ›»(continuous f).to_sequentially_continuous) (assume: sequentially_continuous f, show continuous f, from suffices h : ∀
+ {A : set β}, is_closed A → is_seq_closed «expr ⁻¹' »(f, A), from continuous_iff_is_closed.mpr (assume
+  A _, «expr $ »(is_seq_closed_iff_is_closed.mp, h «expr‹ ›»(is_closed A))),
+ assume
+ (A)
+ (_ : is_closed A), «expr $ »(is_seq_closed_of_def, assume
+  (x : exprℕ() → α)
+  (p)
+  (_ : ∀ n, «expr ∈ »(f (x n), A))
+  (_ : «expr ⟶ »(x, p)), have «expr ⟶ »(«expr ∘ »(f, x), f p), from «expr‹ ›»(sequentially_continuous f) x «expr‹ ›»(«expr ⟶ »(x, p)),
+  show «expr ∈ »(f p, A), from mem_of_is_closed_sequential «expr‹ ›»(is_closed A) «expr‹ ›»(∀
+   n, «expr ∈ »(f (x n), A)) «expr‹ ›»(«expr ⟶ »(«expr ∘ »(f, x), f p))))
 
 end TopologicalSpace
 
@@ -145,21 +156,20 @@ namespace FirstCountableTopology
 
 variable[TopologicalSpace α][first_countable_topology α]
 
-/-- Every first-countable space is sequential. -/
-instance (priority := 100) : SequentialSpace α :=
-  ⟨show ∀ M, SequentialClosure M = Closure M from
-      fun M =>
-        suffices Closure M ⊆ SequentialClosure M from Set.Subset.antisymm (sequential_closure_subset_closure M) this 
-        fun p : α hp : p ∈ Closure M =>
-          let ⟨U, hU⟩ := (𝓝 p).exists_antitone_basis 
-          have hp : ∀ i : ℕ, ∃ y : α, y ∈ M ∧ y ∈ U i :=
-            by 
-              simpa using (mem_closure_iff_nhds_basis hU.1).mp hp 
-          by 
-            choose u hu using hp 
-            rw [forall_and_distrib] at hu 
-            use u, hu.1
-            apply hU.tendsto hu.2⟩
+-- error in Topology.Sequences: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Every first-countable space is sequential. -/ @[priority 100] instance : sequential_space α :=
+⟨show ∀
+ M, «expr = »(sequential_closure M, closure M), from assume
+ M, suffices «expr ⊆ »(closure M, sequential_closure M), from set.subset.antisymm (sequential_closure_subset_closure M) this,
+ assume (p : α) (hp : «expr ∈ »(p, closure M)), let ⟨U, hU⟩ := (expr𝓝() p).exists_antitone_basis in
+ have hp : ∀
+ i : exprℕ(), «expr∃ , »((y : α), «expr ∧ »(«expr ∈ »(y, M), «expr ∈ »(y, U i))), by simpa [] [] [] [] [] ["using", expr (mem_closure_iff_nhds_basis hU.1).mp hp],
+ begin
+   choose [] [ident u] [ident hu] ["using", expr hp],
+   rw [expr forall_and_distrib] ["at", ident hu],
+   use ["[", expr u, ",", expr hu.1, "]"],
+   apply [expr hU.tendsto hu.2]
+ end⟩
 
 end FirstCountableTopology
 

@@ -91,12 +91,12 @@ def LinearMap.mkContinuousOfExistsBound (h : ∃ C, ∀ x, ∥f x∥ ≤ C*∥x�
     LinearMap.continuous_of_bound f C hC⟩
 
 theorem continuous_of_linear_of_boundₛₗ {f : E → F} (h_add : ∀ x y, f (x+y) = f x+f y)
-  (h_smul : ∀ c : 𝕜 x, f (c • x) = σ c • f x) {C : ℝ} (h_bound : ∀ x, ∥f x∥ ≤ C*∥x∥) : Continuous f :=
+  (h_smul : ∀ (c : 𝕜) x, f (c • x) = σ c • f x) {C : ℝ} (h_bound : ∀ x, ∥f x∥ ≤ C*∥x∥) : Continuous f :=
   let φ : E →ₛₗ[σ] F := { toFun := f, map_add' := h_add, map_smul' := h_smul }
   φ.continuous_of_bound C h_bound
 
 theorem continuous_of_linear_of_bound {f : E → G} (h_add : ∀ x y, f (x+y) = f x+f y)
-  (h_smul : ∀ c : 𝕜 x, f (c • x) = c • f x) {C : ℝ} (h_bound : ∀ x, ∥f x∥ ≤ C*∥x∥) : Continuous f :=
+  (h_smul : ∀ (c : 𝕜) x, f (c • x) = c • f x) {C : ℝ} (h_bound : ∀ x, ∥f x∥ ≤ C*∥x∥) : Continuous f :=
   let φ : E →ₗ[𝕜] G := { toFun := f, map_add' := h_add, map_smul' := h_smul }
   φ.continuous_of_bound C h_bound
 
@@ -177,7 +177,7 @@ end
 
 namespace ContinuousLinearMap
 
-theorem bound : ∃ C, 0 < C ∧ ∀ x : E, ∥f x∥ ≤ C*∥x∥ :=
+theorem bound : ∃ C, 0 < C ∧ ∀ (x : E), ∥f x∥ ≤ C*∥x∥ :=
   f.to_linear_map.bound_of_continuous f.2
 
 section 
@@ -296,7 +296,7 @@ theorem op_norm_le_of_shell {f : E →L[𝕜] F} {ε C : ℝ} (ε_pos : 0 < ε) 
     exact LinearMap.bound_of_shell_semi_normed f ε_pos hc hf hx
 
 theorem op_norm_le_of_ball {f : E →L[𝕜] F} {ε : ℝ} {C : ℝ} (ε_pos : 0 < ε) (hC : 0 ≤ C)
-  (hf : ∀ x _ : x ∈ ball (0 : E) ε, ∥f x∥ ≤ C*∥x∥) : ∥f∥ ≤ C :=
+  (hf : ∀ x (_ : x ∈ ball (0 : E) ε), ∥f x∥ ≤ C*∥x∥) : ∥f∥ ≤ C :=
   by 
     rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
     refine' op_norm_le_of_shell ε_pos hC hc fun x _ hx => hf x _ 
@@ -322,7 +322,7 @@ theorem op_norm_le_of_shell' {f : E →L[𝕜] F} {ε C : ℝ} (ε_pos : 0 < ε)
       rwa [NormedField.norm_inv, div_eq_mul_inv, inv_inv₀]
 
 theorem op_norm_eq_of_bounds {φ : E →L[𝕜] F} {M : ℝ} (M_nonneg : 0 ≤ M) (h_above : ∀ x, ∥φ x∥ ≤ M*∥x∥)
-  (h_below : ∀ N _ : N ≥ 0, (∀ x, ∥φ x∥ ≤ N*∥x∥) → M ≤ N) : ∥φ∥ = M :=
+  (h_below : ∀ N (_ : N ≥ 0), (∀ x, ∥φ x∥ ≤ N*∥x∥) → M ≤ N) : ∥φ∥ = M :=
   le_antisymmₓ (φ.op_norm_le_bound M_nonneg h_above)
     ((le_cInf_iff ContinuousLinearMap.bounds_bdd_below ⟨M, M_nonneg, h_above⟩).mpr$
       fun N ⟨N_nonneg, hN⟩ => h_below N N_nonneg hN)
@@ -819,17 +819,25 @@ variable{ι R M M₂ :
 
 omit 𝕜
 
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Applying a continuous linear map commutes with taking an (infinite) sum. -/
-protected theorem ContinuousLinearMap.has_sum {f : ι → M} (φ : M →L[R] M₂) {x : M} (hf : HasSum f x) :
-  HasSum (fun b : ι => φ (f b)) (φ x) :=
-  by 
-    simpa only using hf.map φ.to_linear_map.to_add_monoid_hom φ.continuous
+protected
+theorem continuous_linear_map.has_sum
+{f : ι → M}
+(φ : «expr →L[ ] »(M, R, M₂))
+{x : M}
+(hf : has_sum f x) : has_sum (λ b : ι, φ (f b)) (φ x) :=
+by simpa [] [] ["only"] [] [] ["using", expr hf.map φ.to_linear_map.to_add_monoid_hom φ.continuous]
 
 alias ContinuousLinearMap.has_sum ← HasSum.mapL
 
-protected theorem ContinuousLinearMap.summable {f : ι → M} (φ : M →L[R] M₂) (hf : Summable f) :
-  Summable fun b : ι => φ (f b) :=
-  (hf.has_sum.mapL φ).Summable
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem continuous_linear_map.summable
+{f : ι → M}
+(φ : «expr →L[ ] »(M, R, M₂))
+(hf : summable f) : summable (λ b : ι, φ (f b)) :=
+(hf.has_sum.mapL φ).summable
 
 alias ContinuousLinearMap.summable ← Summable.mapL
 
@@ -837,19 +845,23 @@ protected theorem ContinuousLinearMap.map_tsum [T2Space M₂] {f : ι → M} (φ
   φ (∑'z, f z) = ∑'z, φ (f z) :=
   (hf.has_sum.mapL φ).tsum_eq.symm
 
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Applying a continuous linear map commutes with taking an (infinite) sum. -/
-protected theorem ContinuousLinearEquiv.has_sum {f : ι → M} (e : M ≃L[R] M₂) {y : M₂} :
-  HasSum (fun b : ι => e (f b)) y ↔ HasSum f (e.symm y) :=
-  ⟨fun h =>
-      by 
-        simpa only [e.symm.coe_coe, e.symm_apply_apply] using h.mapL (e.symm : M₂ →L[R] M),
-    fun h =>
-      by 
-        simpa only [e.coe_coe, e.apply_symm_apply] using (e : M →L[R] M₂).HasSum h⟩
+protected
+theorem continuous_linear_equiv.has_sum
+{f : ι → M}
+(e : «expr ≃L[ ] »(M, R, M₂))
+{y : M₂} : «expr ↔ »(has_sum (λ b : ι, e (f b)) y, has_sum f (e.symm y)) :=
+⟨λ
+ h, by simpa [] [] ["only"] ["[", expr e.symm.coe_coe, ",", expr e.symm_apply_apply, "]"] [] ["using", expr h.mapL (e.symm : «expr →L[ ] »(M₂, R, M))], λ
+ h, by simpa [] [] ["only"] ["[", expr e.coe_coe, ",", expr e.apply_symm_apply, "]"] [] ["using", expr (e : «expr →L[ ] »(M, R, M₂)).has_sum h]⟩
 
-protected theorem ContinuousLinearEquiv.summable {f : ι → M} (e : M ≃L[R] M₂) :
-  (Summable fun b : ι => e (f b)) ↔ Summable f :=
-  ⟨fun hf => (e.has_sum.1 hf.has_sum).Summable, (e : M →L[R] M₂).Summable⟩
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem continuous_linear_equiv.summable
+{f : ι → M}
+(e : «expr ≃L[ ] »(M, R, M₂)) : «expr ↔ »(summable (λ b : ι, e (f b)), summable f) :=
+⟨λ hf, (e.has_sum.1 hf.has_sum).summable, (e : «expr →L[ ] »(M, R, M₂)).summable⟩
 
 -- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_linear_equiv.tsum_eq_iff
@@ -897,7 +909,7 @@ theorem is_O_sub_rev (l : Filter E) (x : E) : Asymptotics.IsO (fun x' => x' - x)
   e.is_O_comp_rev _ _
 
 theorem homothety_inverse (a : ℝ) (ha : 0 < a) (f : E ≃ₗ[𝕜] F) :
-  (∀ x : E, ∥f x∥ = a*∥x∥) → ∀ y : F, ∥f.symm y∥ = a⁻¹*∥y∥ :=
+  (∀ (x : E), ∥f x∥ = a*∥x∥) → ∀ (y : F), ∥f.symm y∥ = a⁻¹*∥y∥ :=
   by 
     intro hf y 
     calc ∥f.symm y∥ = a⁻¹*a*∥f.symm y∥ := _ _ = a⁻¹*∥f (f.symm y)∥ :=
@@ -924,7 +936,7 @@ end ContinuousLinearEquiv
 /-- Construct a continuous linear equivalence from a linear equivalence together with
 bounds in both directions. -/
 def LinearEquiv.toContinuousLinearEquivOfBounds (e : E ≃ₗ[𝕜] F) (C_to C_inv : ℝ) (h_to : ∀ x, ∥e x∥ ≤ C_to*∥x∥)
-  (h_inv : ∀ x : F, ∥e.symm x∥ ≤ C_inv*∥x∥) : E ≃L[𝕜] F :=
+  (h_inv : ∀ (x : F), ∥e.symm x∥ ≤ C_inv*∥x∥) : E ≃L[𝕜] F :=
   { toLinearEquiv := e, continuous_to_fun := e.to_linear_map.continuous_of_bound C_to h_to,
     continuous_inv_fun := e.symm.to_linear_map.continuous_of_bound C_inv h_inv }
 
@@ -952,9 +964,12 @@ at point `p : E × F` evaluated at `q : E × F`, as a continuous bilinear map. -
 def deriv₂ (f : E →L[𝕜] F →L[𝕜] G) : E × F →L[𝕜] E × F →L[𝕜] G :=
   f.bilinear_comp (fst _ _ _) (snd _ _ _)+f.flip.bilinear_comp (snd _ _ _) (fst _ _ _)
 
+-- error in Analysis.NormedSpace.OperatorNorm: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem coe_deriv₂ (f : E →L[𝕜] F →L[𝕜] G) (p : E × F) : «expr⇑ » (f.deriv₂ p) = fun q : E × F => f p.1 q.2+f q.1 p.2 :=
-  rfl
+theorem coe_deriv₂
+(f : «expr →L[ ] »(E, 𝕜, «expr →L[ ] »(F, 𝕜, G)))
+(p : «expr × »(E, F)) : «expr = »(«expr⇑ »(f.deriv₂ p), λ q : «expr × »(E, F), «expr + »(f p.1 q.2, f q.1 p.2)) :=
+rfl
 
 theorem map_add₂ (f : E →L[𝕜] F →L[𝕜] G) (x x' : E) (y y' : F) :
   f (x+x') (y+y') = (f x y+f.deriv₂ (x, y) (x', y'))+f x' y' :=

@@ -143,7 +143,7 @@ begin
   have [ident A] [":", expr tendsto (λ
     x : exprℝ(), «expr + »(x, 1)) at_top at_top] [":=", expr tendsto_at_top_add_const_right at_top 1 tendsto_id],
   have [ident B] [":", expr «expr∀ᶠ in , »((x), at_top, «expr ≤ »(«expr + »(x, 1), exp x))] [":=", expr eventually_at_top.2 ⟨0, λ
-    x hx, add_one_le_exp_of_nonneg hx⟩],
+    x hx, add_one_le_exp x⟩],
   exact [expr tendsto_at_top_mono' at_top B A]
 end
 

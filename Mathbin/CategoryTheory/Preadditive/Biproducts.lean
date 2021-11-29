@@ -46,7 +46,7 @@ section
 
 variable[has_zero_morphisms.{v} C][has_binary_biproducts.{v} C]
 
--- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in CategoryTheory.Preadditive.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If
 ```

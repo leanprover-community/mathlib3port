@@ -59,9 +59,9 @@ theorem mul_def (l m : Language α) : (l*m) = Set.Image2 (· ++ ·) l m :=
 /-- The star of a language `L` is the set of all strings which can be written by concatenating
   strings from `L`. -/
 def star (l : Language α) : Language α :=
-  { x | ∃ S : List (List α), x = S.join ∧ ∀ y _ : y ∈ S, y ∈ l }
+  { x | ∃ S : List (List α), x = S.join ∧ ∀ y (_ : y ∈ S), y ∈ l }
 
-theorem star_def (l : Language α) : l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y _ : y ∈ S, y ∈ l } :=
+theorem star_def (l : Language α) : l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y (_ : y ∈ S), y ∈ l } :=
   rfl
 
 @[simp]
@@ -78,7 +78,8 @@ theorem mem_mul (l m : Language α) (x : List α) : (x ∈ l*m) ↔ ∃ a b, a �
   by 
     simp [mul_def]
 
-theorem mem_star (l : Language α) (x : List α) : x ∈ l.star ↔ ∃ S : List (List α), x = S.join ∧ ∀ y _ : y ∈ S, y ∈ l :=
+theorem mem_star (l : Language α) (x : List α) :
+  x ∈ l.star ↔ ∃ S : List (List α), x = S.join ∧ ∀ y (_ : y ∈ S), y ∈ l :=
   Iff.rfl
 
 instance  : Semiringₓ (Language α) :=
@@ -117,7 +118,7 @@ theorem add_self (l : Language α) : (l+l) = l :=
   sup_idem
 
 theorem star_def_nonempty (l : Language α) :
-  l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y _ : y ∈ S, y ∈ l ∧ y ≠ [] } :=
+  l.star = { x | ∃ S : List (List α), x = S.join ∧ ∀ y (_ : y ∈ S), y ∈ l ∧ y ≠ [] } :=
   by 
     ext x 
     split 
@@ -162,7 +163,7 @@ theorem add_supr {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Langu
   sup_supr
 
 theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
-  x ∈ l ^ n ↔ ∃ S : List (List α), x = S.join ∧ S.length = n ∧ ∀ y _ : y ∈ S, y ∈ l :=
+  x ∈ l ^ n ↔ ∃ S : List (List α), x = S.join ∧ S.length = n ∧ ∀ y (_ : y ∈ S), y ∈ l :=
   by 
     induction' n with n ihn generalizing x
     ·

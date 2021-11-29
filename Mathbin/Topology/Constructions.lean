@@ -1,4 +1,5 @@
 import Mathbin.Topology.Maps 
+import Mathbin.Order.Filter.Pi 
 import Mathbin.Data.Fin.Tuple
 
 /-!
@@ -115,11 +116,16 @@ theorem continuous_fst : Continuous (@Prod.fst α β) :=
 theorem continuous_at_fst {p : α × β} : ContinuousAt Prod.fst p :=
   continuous_fst.ContinuousAt
 
-theorem Continuous.fst {f : α → β × γ} (hf : Continuous f) : Continuous fun a : α => (f a).1 :=
-  continuous_fst.comp hf
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous.fst {f : α → «expr × »(β, γ)} (hf : continuous f) : continuous (λ a : α, (f a).1) :=
+continuous_fst.comp hf
 
-theorem ContinuousAt.fst {f : α → β × γ} {x : α} (hf : ContinuousAt f x) : ContinuousAt (fun a : α => (f a).1) x :=
-  continuous_at_fst.comp hf
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at.fst
+{f : α → «expr × »(β, γ)}
+{x : α}
+(hf : continuous_at f x) : continuous_at (λ a : α, (f a).1) x :=
+continuous_at_fst.comp hf
 
 @[continuity]
 theorem continuous_snd : Continuous (@Prod.snd α β) :=
@@ -128,11 +134,16 @@ theorem continuous_snd : Continuous (@Prod.snd α β) :=
 theorem continuous_at_snd {p : α × β} : ContinuousAt Prod.snd p :=
   continuous_snd.ContinuousAt
 
-theorem Continuous.snd {f : α → β × γ} (hf : Continuous f) : Continuous fun a : α => (f a).2 :=
-  continuous_snd.comp hf
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous.snd {f : α → «expr × »(β, γ)} (hf : continuous f) : continuous (λ a : α, (f a).2) :=
+continuous_snd.comp hf
 
-theorem ContinuousAt.snd {f : α → β × γ} {x : α} (hf : ContinuousAt f x) : ContinuousAt (fun a : α => (f a).2) x :=
-  continuous_at_snd.comp hf
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at.snd
+{f : α → «expr × »(β, γ)}
+{x : α}
+(hf : continuous_at f x) : continuous_at (λ a : α, (f a).2) x :=
+continuous_at_snd.comp hf
 
 @[continuity]
 theorem Continuous.prod_mk {f : γ → α} {g : γ → β} (hf : Continuous f) (hg : Continuous g) :
@@ -143,9 +154,13 @@ theorem Continuous.prod_mk {f : γ → α} {g : γ → β} (hf : Continuous f) (
 theorem Continuous.Prod.mk (a : α) : Continuous (Prod.mk a : β → α × β) :=
   continuous_const.prod_mk continuous_id'
 
-theorem Continuous.prod_map {f : γ → α} {g : δ → β} (hf : Continuous f) (hg : Continuous g) :
-  Continuous fun x : γ × δ => (f x.1, g x.2) :=
-  (hf.comp continuous_fst).prod_mk (hg.comp continuous_snd)
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous.prod_map
+{f : γ → α}
+{g : δ → β}
+(hf : continuous f)
+(hg : continuous g) : continuous (λ x : «expr × »(γ, δ), (f x.1, g x.2)) :=
+(hf.comp continuous_fst).prod_mk (hg.comp continuous_snd)
 
 theorem Filter.Eventually.prod_inl_nhds {p : α → Prop} {a : α} (h : ∀ᶠx in 𝓝 a, p x) (b : β) :
   ∀ᶠx in 𝓝 (a, b), p (x : α × β).1 :=
@@ -207,19 +222,34 @@ theorem mem_nhds_prod_iff' {a : α} {b : β} {s : Set (α × β)} :
       rintro ⟨u, v, u_open, au, v_open, bv, huv⟩
       exact ⟨u, u_open.mem_nhds au, v, v_open.mem_nhds bv, huv⟩
 
-theorem Filter.HasBasis.prod_nhds {ιa ιb : Type _} {pa : ιa → Prop} {pb : ιb → Prop} {sa : ιa → Set α} {sb : ιb → Set β}
-  {a : α} {b : β} (ha : (𝓝 a).HasBasis pa sa) (hb : (𝓝 b).HasBasis pb sb) :
-  (𝓝 (a, b)).HasBasis (fun i : ιa × ιb => pa i.1 ∧ pb i.2) fun i => (sa i.1).Prod (sb i.2) :=
-  by 
-    rw [nhds_prod_eq]
-    exact ha.prod hb
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem filter.has_basis.prod_nhds
+{ιa ιb : Type*}
+{pa : ιa → exprProp()}
+{pb : ιb → exprProp()}
+{sa : ιa → set α}
+{sb : ιb → set β}
+{a : α}
+{b : β}
+(ha : (expr𝓝() a).has_basis pa sa)
+(hb : (expr𝓝() b).has_basis pb sb) : (expr𝓝() (a, b)).has_basis (λ
+ i : «expr × »(ιa, ιb), «expr ∧ »(pa i.1, pb i.2)) (λ i, (sa i.1).prod (sb i.2)) :=
+by { rw [expr nhds_prod_eq] [],
+  exact [expr ha.prod hb] }
 
-theorem Filter.HasBasis.prod_nhds' {ιa ιb : Type _} {pa : ιa → Prop} {pb : ιb → Prop} {sa : ιa → Set α}
-  {sb : ιb → Set β} {ab : α × β} (ha : (𝓝 ab.1).HasBasis pa sa) (hb : (𝓝 ab.2).HasBasis pb sb) :
-  (𝓝 ab).HasBasis (fun i : ιa × ιb => pa i.1 ∧ pb i.2) fun i => (sa i.1).Prod (sb i.2) :=
-  by 
-    cases ab 
-    exact ha.prod_nhds hb
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem filter.has_basis.prod_nhds'
+{ιa ιb : Type*}
+{pa : ιa → exprProp()}
+{pb : ιb → exprProp()}
+{sa : ιa → set α}
+{sb : ιb → set β}
+{ab : «expr × »(α, β)}
+(ha : (expr𝓝() ab.1).has_basis pa sa)
+(hb : (expr𝓝() ab.2).has_basis pb sb) : (expr𝓝() ab).has_basis (λ
+ i : «expr × »(ιa, ιb), «expr ∧ »(pa i.1, pb i.2)) (λ i, (sa i.1).prod (sb i.2)) :=
+by { cases [expr ab] [],
+  exact [expr ha.prod_nhds hb] }
 
 instance  [DiscreteTopology α] [DiscreteTopology β] : DiscreteTopology (α × β) :=
   ⟨eq_of_nhds_eq_nhds$
@@ -254,15 +284,26 @@ theorem ContinuousAt.prod {f : α → β} {g : α → γ} {x : α} (hf : Continu
   ContinuousAt (fun x => (f x, g x)) x :=
   hf.prod_mk_nhds hg
 
-theorem ContinuousAt.prod_map {f : α → γ} {g : β → δ} {p : α × β} (hf : ContinuousAt f p.fst)
-  (hg : ContinuousAt g p.snd) : ContinuousAt (fun p : α × β => (f p.1, g p.2)) p :=
-  (hf.comp continuous_at_fst).Prod (hg.comp continuous_at_snd)
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at.prod_map
+{f : α → γ}
+{g : β → δ}
+{p : «expr × »(α, β)}
+(hf : continuous_at f p.fst)
+(hg : continuous_at g p.snd) : continuous_at (λ p : «expr × »(α, β), (f p.1, g p.2)) p :=
+(hf.comp continuous_at_fst).prod (hg.comp continuous_at_snd)
 
-theorem ContinuousAt.prod_map' {f : α → γ} {g : β → δ} {x : α} {y : β} (hf : ContinuousAt f x) (hg : ContinuousAt g y) :
-  ContinuousAt (fun p : α × β => (f p.1, g p.2)) (x, y) :=
-  have hf : ContinuousAt f (x, y).fst := hf 
-  have hg : ContinuousAt g (x, y).snd := hg 
-  hf.prod_map hg
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at.prod_map'
+{f : α → γ}
+{g : β → δ}
+{x : α}
+{y : β}
+(hf : continuous_at f x)
+(hg : continuous_at g y) : continuous_at (λ p : «expr × »(α, β), (f p.1, g p.2)) (x, y) :=
+have hf : continuous_at f (x, y).fst, from hf,
+have hg : continuous_at g (x, y).snd, from hg,
+hf.prod_map hg
 
 -- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem prod_generate_from_generate_from_eq
@@ -443,13 +484,23 @@ theorem frontier_univ_prod_eq (s : Set β) : Frontier ((univ : Set α).Prod s) =
   by 
     simp [frontier_prod_eq]
 
-theorem map_mem_closure2 {s : Set α} {t : Set β} {u : Set γ} {f : α → β → γ} {a : α} {b : β}
-  (hf : Continuous fun p : α × β => f p.1 p.2) (ha : a ∈ Closure s) (hb : b ∈ Closure t)
-  (hu : ∀ a b, a ∈ s → b ∈ t → f a b ∈ u) : f a b ∈ Closure u :=
-  have  : (a, b) ∈ Closure (Set.Prod s t) :=
-    by 
-      rw [closure_prod_eq] <;> exact ⟨ha, hb⟩
-  show (fun p : α × β => f p.1 p.2) (a, b) ∈ Closure u from map_mem_closure hf this$ fun ⟨a, b⟩ ⟨ha, hb⟩ => hu a b ha hb
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem map_mem_closure2
+{s : set α}
+{t : set β}
+{u : set γ}
+{f : α → β → γ}
+{a : α}
+{b : β}
+(hf : continuous (λ p : «expr × »(α, β), f p.1 p.2))
+(ha : «expr ∈ »(a, closure s))
+(hb : «expr ∈ »(b, closure t))
+(hu : ∀ a b, «expr ∈ »(a, s) → «expr ∈ »(b, t) → «expr ∈ »(f a b, u)) : «expr ∈ »(f a b, closure u) :=
+have «expr ∈ »((a, b), closure (set.prod s t)), by rw ["[", expr closure_prod_eq, "]"] []; from [expr ⟨ha, hb⟩],
+show «expr ∈ »(λ
+ p : «expr × »(α, β), f p.1 p.2 (a, b), closure u), from «expr $ »(map_mem_closure hf this, assume
+ ⟨a, b⟩
+ ⟨ha, hb⟩, hu a b ha hb)
 
 theorem IsClosed.prod {s₁ : Set α} {s₂ : Set β} (h₁ : IsClosed s₁) (h₂ : IsClosed s₂) : IsClosed (Set.Prod s₁ s₂) :=
   closure_eq_iff_is_closed.mp$
@@ -469,31 +520,45 @@ theorem DenseRange.prod_map {ι : Type _} {κ : Type _} {f : ι → β} {g : κ 
   by 
     simpa only [DenseRange, prod_range_range_eq] using hf.prod hg
 
-theorem Inducing.prod_mk {f : α → β} {g : γ → δ} (hf : Inducing f) (hg : Inducing g) :
-  Inducing fun x : α × γ => (f x.1, g x.2) :=
-  ⟨by 
-      rw [Prod.topologicalSpace, Prod.topologicalSpace, hf.induced, hg.induced, induced_compose, induced_compose,
-        induced_inf, induced_compose, induced_compose]⟩
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem inducing.prod_mk
+{f : α → β}
+{g : γ → δ}
+(hf : inducing f)
+(hg : inducing g) : inducing (λ x : «expr × »(α, γ), (f x.1, g x.2)) :=
+⟨by rw ["[", expr prod.topological_space, ",", expr prod.topological_space, ",", expr hf.induced, ",", expr hg.induced, ",", expr induced_compose, ",", expr induced_compose, ",", expr induced_inf, ",", expr induced_compose, ",", expr induced_compose, "]"] []⟩
 
-theorem Embedding.prod_mk {f : α → β} {g : γ → δ} (hf : Embedding f) (hg : Embedding g) :
-  Embedding fun x : α × γ => (f x.1, g x.2) :=
-  { hf.to_inducing.prod_mk hg.to_inducing with
-    inj :=
-      fun ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ =>
-        by 
-          simp  <;> exact fun h₁ h₂ => ⟨hf.inj h₁, hg.inj h₂⟩ }
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem embedding.prod_mk
+{f : α → β}
+{g : γ → δ}
+(hf : embedding f)
+(hg : embedding g) : embedding (λ x : «expr × »(α, γ), (f x.1, g x.2)) :=
+{ inj := assume ⟨x₁, x₂⟩ ⟨y₁, y₂⟩, by simp [] [] [] [] [] []; exact [expr assume h₁ h₂, ⟨hf.inj h₁, hg.inj h₂⟩],
+  ..hf.to_inducing.prod_mk hg.to_inducing }
 
-protected theorem IsOpenMap.prod {f : α → β} {g : γ → δ} (hf : IsOpenMap f) (hg : IsOpenMap g) :
-  IsOpenMap fun p : α × γ => (f p.1, g p.2) :=
-  by 
-    rw [is_open_map_iff_nhds_le]
-    rintro ⟨a, b⟩
-    rw [nhds_prod_eq, nhds_prod_eq, ←Filter.prod_map_map_eq]
-    exact Filter.prod_mono (is_open_map_iff_nhds_le.1 hf a) (is_open_map_iff_nhds_le.1 hg b)
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem is_open_map.prod
+{f : α → β}
+{g : γ → δ}
+(hf : is_open_map f)
+(hg : is_open_map g) : is_open_map (λ p : «expr × »(α, γ), (f p.1, g p.2)) :=
+begin
+  rw ["[", expr is_open_map_iff_nhds_le, "]"] [],
+  rintros ["⟨", ident a, ",", ident b, "⟩"],
+  rw ["[", expr nhds_prod_eq, ",", expr nhds_prod_eq, ",", "<-", expr filter.prod_map_map_eq, "]"] [],
+  exact [expr filter.prod_mono (is_open_map_iff_nhds_le.1 hf a) (is_open_map_iff_nhds_le.1 hg b)]
+end
 
-protected theorem OpenEmbedding.prod {f : α → β} {g : γ → δ} (hf : OpenEmbedding f) (hg : OpenEmbedding g) :
-  OpenEmbedding fun x : α × γ => (f x.1, g x.2) :=
-  open_embedding_of_embedding_open (hf.1.prod_mk hg.1) (hf.is_open_map.prod hg.is_open_map)
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected
+theorem open_embedding.prod
+{f : α → β}
+{g : γ → δ}
+(hf : open_embedding f)
+(hg : open_embedding g) : open_embedding (λ x : «expr × »(α, γ), (f x.1, g x.2)) :=
+open_embedding_of_embedding_open (hf.1.prod_mk hg.1) (hf.is_open_map.prod hg.is_open_map)
 
 theorem embedding_graph {f : α → β} (hf : Continuous f) : Embedding fun x => (x, f x) :=
   embedding_of_embedding_compose (continuous_id.prod_mk hf) continuous_fst embedding_id
@@ -656,17 +721,20 @@ theorem tendsto_subtype_rng {β : Type _} {p : α → Prop} {b : Filter β} {f :
   by 
     rw [nhds_subtype_eq_comap, tendsto_comap_iff, Subtype.coe_mk]
 
-theorem continuous_subtype_nhds_cover {ι : Sort _} {f : α → β} {c : ι → α → Prop}
-  (c_cover : ∀ x : α, ∃ i, { x | c i x } ∈ 𝓝 x) (f_cont : ∀ i, Continuous fun x : Subtype (c i) => f x) :
-  Continuous f :=
-  continuous_iff_continuous_at.mpr$
-    fun x =>
-      let ⟨i, (c_sets : { x | c i x } ∈ 𝓝 x)⟩ := c_cover x 
-      let x' : Subtype (c i) := ⟨x, mem_of_mem_nhds c_sets⟩
-      calc map f (𝓝 x) = map f (map coeₓ (𝓝 x')) := congr_argₓ (map f) (map_nhds_subtype_coe_eq _$ c_sets).symm 
-        _ = map (fun x : Subtype (c i) => f x) (𝓝 x') := rfl 
-        _ ≤ 𝓝 (f x) := continuous_iff_continuous_at.mp (f_cont i) x'
-        
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_subtype_nhds_cover
+{ι : Sort*}
+{f : α → β}
+{c : ι → α → exprProp()}
+(c_cover : ∀ x : α, «expr∃ , »((i), «expr ∈ »({x | c i x}, expr𝓝() x)))
+(f_cont : ∀ i, continuous (λ x : subtype (c i), f x)) : continuous f :=
+«expr $ »(continuous_iff_continuous_at.mpr, assume
+ x, let ⟨i, (c_sets : «expr ∈ »({x | c i x}, expr𝓝() x))⟩ := c_cover x in
+ let x' : subtype (c i) := ⟨x, mem_of_mem_nhds c_sets⟩ in
+ calc
+   «expr = »(map f (expr𝓝() x), map f (map coe (expr𝓝() x'))) : congr_arg (map f) «expr $ »(map_nhds_subtype_coe_eq _, c_sets).symm
+   «expr = »(..., map (λ x : subtype (c i), f x) (expr𝓝() x')) : rfl
+   «expr ≤ »(..., expr𝓝() (f x)) : continuous_iff_continuous_at.mp (f_cont i) x')
 
 -- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem continuous_subtype_is_closed_cover
@@ -735,17 +803,20 @@ section Pi
 variable{ι : Type _}{π : ι → Type _}
 
 @[continuity]
-theorem continuous_pi [TopologicalSpace α] [∀ i, TopologicalSpace (π i)] {f : α → ∀ i : ι, π i}
+theorem continuous_pi [TopologicalSpace α] [∀ i, TopologicalSpace (π i)] {f : α → ∀ (i : ι), π i}
   (h : ∀ i, Continuous fun a => f a i) : Continuous f :=
   continuous_infi_rng$ fun i => continuous_induced_rng$ h i
 
-@[continuity]
-theorem continuous_apply [∀ i, TopologicalSpace (π i)] (i : ι) : Continuous fun p : ∀ i, π i => p i :=
-  continuous_infi_dom continuous_induced_dom
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_apply [∀ i, topological_space (π i)] (i : ι) : continuous (λ p : ∀ i, π i, p i) :=
+continuous_infi_dom continuous_induced_dom
 
-theorem continuous_at_apply [∀ i, TopologicalSpace (π i)] (i : ι) (x : ∀ i, π i) :
-  ContinuousAt (fun p : ∀ i, π i => p i) x :=
-  (continuous_apply i).ContinuousAt
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_at_apply
+[∀ i, topological_space (π i)]
+(i : ι)
+(x : ∀ i, π i) : continuous_at (λ p : ∀ i, π i, p i) x :=
+(continuous_apply i).continuous_at
 
 theorem Filter.Tendsto.apply [∀ i, TopologicalSpace (π i)] {l : Filter α} {f : α → ∀ i, π i} {x : ∀ i, π i}
   (h : tendsto f l (𝓝 x)) (i : ι) : tendsto (fun a => f a i) l (𝓝$ x i) :=
@@ -755,26 +826,27 @@ theorem continuous_pi_iff [TopologicalSpace α] [∀ i, TopologicalSpace (π i)]
   Continuous f ↔ ∀ i, Continuous fun y => f y i :=
   Iff.intro (fun h i => (continuous_apply i).comp h) continuous_pi
 
-theorem nhds_pi [t : ∀ i, TopologicalSpace (π i)] {a : ∀ i, π i} : 𝓝 a = ⨅i, comap (fun x => x i) (𝓝 (a i)) :=
-  calc 𝓝 a = ⨅i, @nhds _ (@TopologicalSpace.induced _ _ (fun x : ∀ i, π i => x i) (t i)) a := nhds_infi 
-    _ = ⨅i, comap (fun x => x i) (𝓝 (a i)) :=
-    by 
-      simp [nhds_induced]
-    
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_pi [t : ∀ i, topological_space (π i)] {a : ∀ i, π i} : «expr = »(expr𝓝() a, pi (λ i, expr𝓝() (a i))) :=
+calc
+  «expr = »(expr𝓝() a, «expr⨅ , »((i), @nhds _ (@topological_space.induced _ _ (λ
+      x : ∀ i, π i, x i) (t i)) a)) : nhds_infi
+  «expr = »(..., «expr⨅ , »((i), comap (λ
+     x, x i) (expr𝓝() (a i)))) : by simp [] [] [] ["[", expr nhds_induced, "]"] [] []
 
-theorem tendsto_pi [t : ∀ i, TopologicalSpace (π i)] {f : α → ∀ i, π i} {g : ∀ i, π i} {u : Filter α} :
+theorem tendsto_pi_nhds [t : ∀ i, TopologicalSpace (π i)] {f : α → ∀ i, π i} {g : ∀ i, π i} {u : Filter α} :
   tendsto f u (𝓝 g) ↔ ∀ x, tendsto (fun i => f i x) u (𝓝 (g x)) :=
   by 
-    simp [nhds_pi, Filter.tendsto_comap_iff]
+    rw [nhds_pi, Filter.tendsto_pi]
 
 theorem continuous_at_pi [∀ i, TopologicalSpace (π i)] [TopologicalSpace α] {f : α → ∀ i, π i} {x : α} :
   ContinuousAt f x ↔ ∀ i, ContinuousAt (fun y => f y i) x :=
-  tendsto_pi
+  tendsto_pi_nhds
 
 theorem Filter.Tendsto.update [∀ i, TopologicalSpace (π i)] [DecidableEq ι] {l : Filter α} {f : α → ∀ i, π i}
   {x : ∀ i, π i} (hf : tendsto f l (𝓝 x)) (i : ι) {g : α → π i} {xi : π i} (hg : tendsto g l (𝓝 xi)) :
   tendsto (fun a => Function.update (f a) i (g a)) l (𝓝$ Function.update x i xi) :=
-  tendsto_pi.2$
+  tendsto_pi_nhds.2$
     fun j =>
       by 
         rcases em (j = i) with (rfl | hj) <;> simp [hf.apply]
@@ -788,105 +860,84 @@ theorem Continuous.update [∀ i, TopologicalSpace (π i)] [TopologicalSpace α]
   (hf : Continuous f) (i : ι) {g : α → π i} (hg : Continuous g) : Continuous fun a => Function.update (f a) i (g a) :=
   continuous_iff_continuous_at.2$ fun x => hf.continuous_at.update i hg.continuous_at
 
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `function.update f i x` is continuous in `(f, x)`. -/
-@[continuity]
-theorem continuous_update [∀ i, TopologicalSpace (π i)] [DecidableEq ι] (i : ι) :
-  Continuous fun f : (∀ j, π j) × π i => Function.update f.1 i f.2 :=
-  continuous_fst.update i continuous_snd
+@[continuity #[]]
+theorem continuous_update
+[∀ i, topological_space (π i)]
+[decidable_eq ι]
+(i : ι) : continuous (λ f : «expr × »(∀ j, π j, π i), function.update f.1 i f.2) :=
+continuous_fst.update i continuous_snd
 
 theorem Filter.Tendsto.fin_insert_nth {n} {π : Finₓ (n+1) → Type _} [∀ i, TopologicalSpace (π i)] (i : Finₓ (n+1))
-  {f : α → π i} {l : Filter α} {x : π i} (hf : tendsto f l (𝓝 x)) {g : α → ∀ j : Finₓ n, π (i.succ_above j)}
+  {f : α → π i} {l : Filter α} {x : π i} (hf : tendsto f l (𝓝 x)) {g : α → ∀ (j : Finₓ n), π (i.succ_above j)}
   {y : ∀ j, π (i.succ_above j)} (hg : tendsto g l (𝓝 y)) :
   tendsto (fun a => i.insert_nth (f a) (g a)) l (𝓝$ i.insert_nth x y) :=
-  tendsto_pi.2
+  tendsto_pi_nhds.2
     fun j =>
       Finₓ.succAboveCases i
         (by 
           simpa)
         (by 
-          simpa using tendsto_pi.1 hg)
+          simpa using tendsto_pi_nhds.1 hg)
         j
 
 theorem ContinuousAt.fin_insert_nth {n} {π : Finₓ (n+1) → Type _} [∀ i, TopologicalSpace (π i)] [TopologicalSpace α]
-  (i : Finₓ (n+1)) {f : α → π i} {a : α} (hf : ContinuousAt f a) {g : α → ∀ j : Finₓ n, π (i.succ_above j)}
+  (i : Finₓ (n+1)) {f : α → π i} {a : α} (hf : ContinuousAt f a) {g : α → ∀ (j : Finₓ n), π (i.succ_above j)}
   (hg : ContinuousAt g a) : ContinuousAt (fun a => i.insert_nth (f a) (g a)) a :=
   hf.fin_insert_nth i hg
 
 theorem Continuous.fin_insert_nth {n} {π : Finₓ (n+1) → Type _} [∀ i, TopologicalSpace (π i)] [TopologicalSpace α]
-  (i : Finₓ (n+1)) {f : α → π i} (hf : Continuous f) {g : α → ∀ j : Finₓ n, π (i.succ_above j)} (hg : Continuous g) :
+  (i : Finₓ (n+1)) {f : α → π i} (hf : Continuous f) {g : α → ∀ (j : Finₓ n), π (i.succ_above j)} (hg : Continuous g) :
   Continuous fun a => i.insert_nth (f a) (g a) :=
   continuous_iff_continuous_at.2$ fun a => hf.continuous_at.fin_insert_nth i hg.continuous_at
 
 theorem is_open_set_pi [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)} (hi : finite i)
-  (hs : ∀ a _ : a ∈ i, IsOpen (s a)) : IsOpen (pi i s) :=
+  (hs : ∀ a (_ : a ∈ i), IsOpen (s a)) : IsOpen (pi i s) :=
   by 
     rw [pi_def] <;> exact is_open_bInter hi$ fun a ha => (hs _ ha).Preimage (continuous_apply _)
 
 theorem is_closed_set_pi [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)}
-  (hs : ∀ a _ : a ∈ i, IsClosed (s a)) : IsClosed (pi i s) :=
+  (hs : ∀ a (_ : a ∈ i), IsClosed (s a)) : IsClosed (pi i s) :=
   by 
     rw [pi_def] <;> exact is_closed_Inter$ fun a => is_closed_Inter$ fun ha => (hs _ ha).Preimage (continuous_apply _)
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem mem_nhds_pi
-{ι : Type*}
-{α : ι → Type*}
-[∀ i : ι, topological_space (α i)]
-{I : set ι}
-{s : ∀ i, set (α i)}
-(a : ∀ i, α i)
-(hs : «expr ∈ »(I.pi s, expr𝓝() a))
-{i : ι}
-(hi : «expr ∈ »(i, I)) : «expr ∈ »(s i, expr𝓝() (a i)) :=
-begin
-  set [] [ident p] [] [":="] [expr λ i, λ x : ∀ i : ι, α i, x i] [],
-  rw ["[", expr nhds_pi, ",", expr pi_def, "]"] ["at", ident hs],
-  obtain ["⟨", ident t, ":", expr ι → set (∀
-    i, α i), ",", ident ht, ":", expr ∀
-   i, «expr ∈ »(t i, comap (p i) (expr𝓝() (a i))), ",", ident ht', ":", expr «expr = »(«expr⋂ , »((i «expr ∈ » I), «expr ⁻¹' »(p i, s i)), «expr⋂ , »((i : ι), t i)), "⟩", ":=", expr exists_Inter_of_mem_infi hs],
-  simp [] [] ["only"] ["[", expr exists_prop, ",", expr mem_comap, "]"] [] ["at", ident ht],
-  choose [] [ident v] [ident hv, ident hv'] ["using", expr ht],
-  apply [expr mem_of_superset (hv i)],
-  have [] [] [":=", expr calc
-     «expr ⊆ »(«expr⋂ , »((i), «expr ⁻¹' »(p i, v i)), «expr⋂ , »((i), t i)) : Inter_subset_Inter hv'
-     «expr = »(..., «expr⋂ , »((i «expr ∈ » I), «expr ⁻¹' »(p i, s i))) : by simp_rw [expr ht'] []
-     «expr ⊆ »(..., «expr ⁻¹' »(p i, s i)) : bInter_subset_of_mem hi],
-  rwa ["[", "<-", expr image_subset_iff, ",", expr image_projection_prod, "]"] ["at", ident this],
-  use [expr a],
-  rw ["[", expr mem_univ_pi, "]"] [],
-  exact [expr λ j, mem_of_mem_nhds (hv j)]
-end
+theorem mem_nhds_of_pi_mem_nhds {ι : Type _} {α : ι → Type _} [∀ (i : ι), TopologicalSpace (α i)] {I : Set ι}
+  {s : ∀ i, Set (α i)} (a : ∀ i, α i) (hs : I.pi s ∈ 𝓝 a) {i : ι} (hi : i ∈ I) : s i ∈ 𝓝 (a i) :=
+  by 
+    rw [nhds_pi] at hs 
+    exact mem_of_pi_mem_pi hs hi
 
 theorem set_pi_mem_nhds [∀ a, TopologicalSpace (π a)] {i : Set ι} {s : ∀ a, Set (π a)} {x : ∀ a, π a} (hi : finite i)
-  (hs : ∀ a _ : a ∈ i, s a ∈ 𝓝 (x a)) : pi i s ∈ 𝓝 x :=
+  (hs : ∀ a (_ : a ∈ i), s a ∈ 𝓝 (x a)) : pi i s ∈ 𝓝 x :=
   by 
     rw [pi_def, bInter_mem hi]
     exact fun a ha => (continuous_apply a).ContinuousAt (hs a ha)
 
-theorem set_pi_mem_nhds_iff [Fintype ι] {α : ι → Type _} [∀ i : ι, TopologicalSpace (α i)] {I : Set ι}
-  {s : ∀ i, Set (α i)} (a : ∀ i, α i) : I.pi s ∈ 𝓝 a ↔ ∀ i : ι, i ∈ I → s i ∈ 𝓝 (a i) :=
-  ⟨by 
-      apply mem_nhds_pi,
-    set_pi_mem_nhds$ finite.of_fintype I⟩
+theorem set_pi_mem_nhds_iff {α : ι → Type _} [∀ (i : ι), TopologicalSpace (α i)] {I : Set ι} (hI : I.finite)
+  {s : ∀ i, Set (α i)} (a : ∀ i, α i) : I.pi s ∈ 𝓝 a ↔ ∀ (i : ι), i ∈ I → s i ∈ 𝓝 (a i) :=
+  by 
+    rw [nhds_pi, pi_mem_pi_iff hI]
+    infer_instance
 
-theorem interior_pi_set [Fintype ι] {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} {s : ∀ i, Set (α i)} :
-  Interior (pi I s) = I.pi fun i => Interior (s i) :=
+theorem interior_pi_set {α : ι → Type _} [∀ i, TopologicalSpace (α i)] {I : Set ι} (hI : I.finite)
+  {s : ∀ i, Set (α i)} : Interior (pi I s) = I.pi fun i => Interior (s i) :=
   by 
     ext a 
-    simp only [mem_pi, mem_interior_iff_mem_nhds, set_pi_mem_nhds_iff]
+    simp only [Set.mem_pi, mem_interior_iff_mem_nhds, set_pi_mem_nhds_iff hI]
 
 theorem exists_finset_piecewise_mem_of_mem_nhds [DecidableEq ι] [∀ i, TopologicalSpace (π i)] {s : Set (∀ a, π a)}
   {x : ∀ a, π a} (hs : s ∈ 𝓝 x) (y : ∀ a, π a) : ∃ I : Finset ι, I.piecewise x y ∈ s :=
   by 
-    simp only [nhds_pi, mem_infi', mem_comap] at hs 
-    rcases hs with ⟨I, hI, V, hV, hV_univ, rfl, -⟩
-    choose t ht htV using hV 
-    refine' ⟨hI.to_finset, mem_bInter$ fun i hi => htV i _⟩
-    simpa [hI.mem_to_finset.2 hi] using mem_of_mem_nhds (ht i)
+    simp only [nhds_pi, Filter.mem_pi'] at hs 
+    rcases hs with ⟨I, t, htx, hts⟩
+    refine' ⟨I, hts$ fun i hi => _⟩
+    simpa [Finset.mem_coe.1 hi] using mem_of_mem_nhds (htx i)
 
 theorem pi_eq_generate_from [∀ a, TopologicalSpace (π a)] :
   Pi.topologicalSpace =
-    generate_from { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a _ : a ∈ i, IsOpen (s a)) ∧ g = pi («expr↑ » i) s } :=
+    generate_from
+      { g | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a (_ : a ∈ i), IsOpen (s a)) ∧ g = pi («expr↑ » i) s } :=
   le_antisymmₓ (le_generate_from$ fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ is_open_set_pi (Finset.finite_to_set _) hi)
     (le_infi$
       fun a s ⟨t, ht, s_eq⟩ =>
@@ -894,30 +945,31 @@ theorem pi_eq_generate_from [∀ a, TopologicalSpace (π a)] :
           ⟨Function.update (fun a => univ) a t, {a},
             by 
               simpa using ht,
-            by 
-              ext f <;> simp [s_eq.symm, pi]⟩)
-
-theorem pi_generate_from_eq {g : ∀ a, Set (Set (π a))} :
-  (@Pi.topologicalSpace ι π fun a => generate_from (g a)) =
-    generate_from { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a _ : a ∈ i, s a ∈ g a) ∧ t = pi («expr↑ » i) s } :=
-  let G := { t | ∃ (s : ∀ a, Set (π a))(i : Finset ι), (∀ a _ : a ∈ i, s a ∈ g a) ∧ t = pi («expr↑ » i) s }
-  by 
-    rw [pi_eq_generate_from]
-    refine' le_antisymmₓ (generate_from_mono _) (le_generate_from _)
-    exact fun s ⟨t, i, ht, Eq⟩ => ⟨t, i, fun a ha => generate_open.basic _ (ht a ha), Eq⟩
-    ·
-      rintro s ⟨t, i, hi, rfl⟩
-      rw [pi_def]
-      apply is_open_bInter (Finset.finite_to_set _)
-      intro a ha 
-      show ((generate_from G).coinduced fun f : ∀ a, π a => f a).IsOpen (t a)
-      refine' le_generate_from _ _ (hi a ha)
-      exact
-        fun s hs =>
-          generate_open.basic _
-            ⟨Function.update (fun a => univ) a s, {a},
+            s_eq ▸
               by 
-                simp [hs]⟩
+                ext f <;> simp [Set.Pi]⟩)
+
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pi_generate_from_eq
+{g : ∀
+ a, set (set (π a))} : «expr = »(@Pi.topological_space ι π (λ
+  a, generate_from (g a)), generate_from {t | «expr∃ , »((s : ∀ a, set (π a))
+  (i : finset ι), «expr ∧ »(∀ a «expr ∈ » i, «expr ∈ »(s a, g a), «expr = »(t, pi «expr↑ »(i) s)))}) :=
+let G := {t | «expr∃ , »((s : ∀ a, set (π a))
+     (i : finset ι), «expr ∧ »(∀ a «expr ∈ » i, «expr ∈ »(s a, g a), «expr = »(t, pi «expr↑ »(i) s)))} in
+begin
+  rw ["[", expr pi_eq_generate_from, "]"] [],
+  refine [expr le_antisymm (generate_from_mono _) (le_generate_from _)],
+  exact [expr assume (s) ⟨t, i, ht, eq⟩, ⟨t, i, assume a ha, generate_open.basic _ (ht a ha), eq⟩],
+  { rintros [ident s, "⟨", ident t, ",", ident i, ",", ident hi, ",", ident rfl, "⟩"],
+    rw ["[", expr pi_def, "]"] [],
+    apply [expr is_open_bInter (finset.finite_to_set _)],
+    assume [binders (a ha)],
+    show [expr ((generate_from G).coinduced (λ f : ∀ a, π a, f a)).is_open (t a)],
+    refine [expr le_generate_from _ _ (hi a ha)],
+    exact [expr assume
+     s hs, generate_open.basic _ ⟨function.update (λ a, univ) a s, {a}, by simp [] [] [] ["[", expr hs, "]"] [] []⟩] }
+end
 
 -- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem pi_generate_from_eq_fintype
@@ -943,9 +995,9 @@ begin
     refine [expr ⟨pi univ (λ a, if «expr ∈ »(a, i) then t a else (c : ∀ a, set (π a)) a), _, _, _⟩],
     { simp [] [] [] ["[", expr pi_if, "]"] [] [] },
     { refine [expr generate_open.basic _ ⟨_, assume a, _, rfl⟩],
-      by_cases [expr «expr ∈ »(a, i)]; simp [] [] [] ["[", "*", ",", expr pi, "]"] [] ["at", "*"] },
+      by_cases [expr «expr ∈ »(a, i)]; simp [] [] [] ["[", "*", ",", expr set.pi, "]"] [] ["at", "*"] },
     { have [] [":", expr «expr ∈ »(f, pi {a | «expr ∉ »(a, i)} c)] [],
-      { simp [] [] [] ["[", "*", ",", expr pi, "]"] [] ["at", "*"] },
+      { simp [] [] [] ["[", "*", ",", expr set.pi, "]"] [] ["at", "*"] },
       simpa [] [] [] ["[", expr pi_if, ",", expr hf, "]"] [] [] } }
 end
 
@@ -992,7 +1044,7 @@ theorem is_open_sigma_iff {s : Set (Sigma σ)} : IsOpen s ↔ ∀ i, IsOpen (Sig
 
 theorem is_closed_sigma_iff {s : Set (Sigma σ)} : IsClosed s ↔ ∀ i, IsClosed (Sigma.mk i ⁻¹' s) :=
   by 
-    simp [←is_open_compl_iff, is_open_sigma_iff]
+    simp only [←is_open_compl_iff, is_open_sigma_iff, preimage_compl]
 
 -- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_open_map_sigma_mk {i : ι} : is_open_map (@sigma.mk ι σ i) :=
@@ -1000,11 +1052,8 @@ begin
   intros [ident s, ident hs],
   rw [expr is_open_sigma_iff] [],
   intro [ident j],
-  classical,
-  by_cases [expr h, ":", expr «expr = »(i, j)],
-  { subst [expr j],
-    convert [] [expr hs] [],
-    exact [expr set.preimage_image_eq _ sigma_mk_injective] },
+  rcases [expr eq_or_ne i j, "with", "(", ident rfl, "|", ident hne, ")"],
+  { rwa [expr set.preimage_image_eq _ sigma_mk_injective] [] },
   { convert [] [expr is_open_empty] [],
     apply [expr set.eq_empty_of_subset_empty],
     rintro [ident x, "⟨", ident y, ",", "_", ",", ident hy, "⟩"],
@@ -1014,9 +1063,7 @@ begin
 end
 
 theorem is_open_range_sigma_mk {i : ι} : IsOpen (Set.Range (@Sigma.mk ι σ i)) :=
-  by 
-    rw [←Set.image_univ]
-    exact is_open_map_sigma_mk _ is_open_univ
+  is_open_map_sigma_mk.is_open_range
 
 -- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem is_closed_map_sigma_mk {i : ι} : is_closed_map (@sigma.mk ι σ i) :=
@@ -1024,11 +1071,8 @@ begin
   intros [ident s, ident hs],
   rw [expr is_closed_sigma_iff] [],
   intro [ident j],
-  classical,
-  by_cases [expr h, ":", expr «expr = »(i, j)],
-  { subst [expr j],
-    convert [] [expr hs] [],
-    exact [expr set.preimage_image_eq _ sigma_mk_injective] },
+  rcases [expr eq_or_ne i j, "with", "(", ident rfl, "|", ident hne, ")"],
+  { rwa [expr set.preimage_image_eq _ sigma_mk_injective] [] },
   { convert [] [expr is_closed_empty] [],
     apply [expr set.eq_empty_of_subset_empty],
     rintro [ident x, "⟨", ident y, ",", "_", ",", ident hy, "⟩"],
@@ -1062,23 +1106,15 @@ theorem continuous_sigma_map {κ : Type _} {τ : κ → Type _} [∀ k, Topologi
   {f₂ : ∀ i, σ i → τ (f₁ i)} (hf : ∀ i, Continuous (f₂ i)) : Continuous (Sigma.map f₁ f₂) :=
   continuous_sigma$ fun i => show Continuous fun a => Sigma.mk (f₁ i) (f₂ i a) from continuous_sigma_mk.comp (hf i)
 
--- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem is_open_map_sigma
-[topological_space β]
-{f : sigma σ → β}
-(h : ∀ i, is_open_map (λ a, f ⟨i, a⟩)) : is_open_map f :=
-begin
-  intros [ident s, ident hs],
-  rw [expr is_open_sigma_iff] ["at", ident hs],
-  have [] [":", expr «expr = »(s, «expr⋃ , »((i), «expr '' »(sigma.mk i, «expr ⁻¹' »(sigma.mk i, s))))] [],
-  { rw [expr Union_image_preimage_sigma_mk_eq_self] [] },
-  rw [expr this] [],
-  rw ["[", expr image_Union, "]"] [],
-  apply [expr is_open_Union],
-  intro [ident i],
-  rw ["[", expr image_image, "]"] [],
-  exact [expr h i _ (hs i)]
-end
+theorem is_open_map_sigma [TopologicalSpace β] {f : Sigma σ → β} (h : ∀ i, IsOpenMap fun a => f ⟨i, a⟩) : IsOpenMap f :=
+  by 
+    intro s hs 
+    rw [is_open_sigma_iff] at hs 
+    rw [←Union_image_preimage_sigma_mk_eq_self s, image_Union]
+    apply is_open_Union 
+    intro i 
+    rw [image_image]
+    exact h i _ (hs i)
 
 -- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The sum of embeddings is an embedding. -/
@@ -1139,13 +1175,22 @@ theorem mem_closure_of_continuous [TopologicalSpace α] [TopologicalSpace β] {f
     _ ⊆ Closure t := closure_minimal h.image_subset is_closed_closure
     
 
-theorem mem_closure_of_continuous2 [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ] {f : α → β → γ}
-  {a : α} {b : β} {s : Set α} {t : Set β} {u : Set γ} (hf : Continuous fun p : α × β => f p.1 p.2) (ha : a ∈ Closure s)
-  (hb : b ∈ Closure t) (h : ∀ a _ : a ∈ s, ∀ b _ : b ∈ t, f a b ∈ Closure u) : f a b ∈ Closure u :=
-  have  : (a, b) ∈ Closure (Set.Prod s t) :=
-    by 
-      simp [closure_prod_eq, ha, hb]
-  show f (a, b).1 (a, b).2 ∈ Closure u from
-    @mem_closure_of_continuous (α × β) _ _ _ (fun p : α × β => f p.1 p.2) (a, b) _ u hf this$
-      fun ⟨p₁, p₂⟩ ⟨h₁, h₂⟩ => h p₁ h₁ p₂ h₂
+-- error in Topology.Constructions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_closure_of_continuous2
+[topological_space α]
+[topological_space β]
+[topological_space γ]
+{f : α → β → γ}
+{a : α}
+{b : β}
+{s : set α}
+{t : set β}
+{u : set γ}
+(hf : continuous (λ p : «expr × »(α, β), f p.1 p.2))
+(ha : «expr ∈ »(a, closure s))
+(hb : «expr ∈ »(b, closure t))
+(h : ∀ a «expr ∈ » s, ∀ b «expr ∈ » t, «expr ∈ »(f a b, closure u)) : «expr ∈ »(f a b, closure u) :=
+have «expr ∈ »((a, b), closure (set.prod s t)), by simp [] [] [] ["[", expr closure_prod_eq, ",", expr ha, ",", expr hb, "]"] [] [],
+show «expr ∈ »(f (a, b).1 (a, b).2, closure u), from «expr $ »(@mem_closure_of_continuous «expr × »(α, β) _ _ _ (λ
+  p : «expr × »(α, β), f p.1 p.2) (a, b) _ u hf this, assume ⟨p₁, p₂⟩ ⟨h₁, h₂⟩, h p₁ h₁ p₂ h₂)
 

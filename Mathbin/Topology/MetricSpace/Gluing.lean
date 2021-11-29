@@ -277,14 +277,10 @@ def sum.dist : Sum X Y → Sum X Y → ℝ
 | inl a, inr b => (dist a (default X)+1)+dist (default Y) b
 | inr b, inl a => (dist b (default Y)+1)+dist (default X) a
 
-theorem sum.dist_eq_glue_dist {p q : Sum X Y} :
-  sum.dist p q = glue_dist (fun _ : Unit => default X) (fun _ : Unit => default Y) 1 p q :=
-  by 
-    cases p <;>
-      cases q <;>
-        first |
-          rfl|
-          simp [sum.dist, glue_dist, dist_comm, add_commₓ, add_left_commₓ]
+-- error in Topology.MetricSpace.Gluing: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sum.dist_eq_glue_dist
+{p q : «expr ⊕ »(X, Y)} : «expr = »(sum.dist p q, glue_dist (λ _ : unit, default X) (λ _ : unit, default Y) 1 p q) :=
+by cases [expr p] []; cases [expr q] []; refl <|> simp [] [] [] ["[", expr sum.dist, ",", expr glue_dist, ",", expr dist_comm, ",", expr add_comm, ",", expr add_left_comm, "]"] [] []
 
 private theorem sum.dist_comm (x y : Sum X Y) : sum.dist x y = sum.dist y x :=
   by 

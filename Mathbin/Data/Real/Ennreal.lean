@@ -86,6 +86,12 @@ localized [Ennreal] notation "∞" => (⊤ : Ennreal)
 noncomputable instance  : LinearOrderedAddCommMonoid ℝ≥0∞ :=
   { Ennreal.canonicallyOrderedCommSemiring, Ennreal.completeLinearOrder with  }
 
+instance covariant_class_mul : CovariantClass ℝ≥0∞ ℝ≥0∞ (·*·) (· ≤ ·) :=
+  CanonicallyOrderedCommSemiring.to_covariant_mul_le
+
+instance covariant_class_add : CovariantClass ℝ≥0∞ ℝ≥0∞ (·+·) (· ≤ ·) :=
+  OrderedAddCommMonoid.to_covariant_class_left ℝ≥0∞
+
 namespace Ennreal
 
 variable{a b c d : ℝ≥0∞}{r p q :  ℝ≥0 }
@@ -220,14 +226,14 @@ theorem of_real_one : Ennreal.ofReal (1 : ℝ) = (1 : ℝ≥0∞) :=
 theorem of_real_to_real_le {a : ℝ≥0∞} : Ennreal.ofReal a.to_real ≤ a :=
   if ha : a = ∞ then ha.symm ▸ le_top else le_of_eqₓ (of_real_to_real ha)
 
-theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r :  ℝ≥0 , p r) ∧ p ∞ :=
+theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ (r :  ℝ≥0 ), p r) ∧ p ∞ :=
   ⟨fun h => ⟨fun r => h _, h _⟩,
     fun ⟨h₁, h₂⟩ a =>
       match a with 
       | some r => h₁ _
       | none => h₂⟩
 
-theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ a _ : a ≠ ∞, p a) ↔ ∀ r :  ℝ≥0 , p r :=
+theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ a (_ : a ≠ ∞), p a) ↔ ∀ (r :  ℝ≥0 ), p r :=
   Option.ball_ne_none
 
 theorem exists_ne_top {p : ℝ≥0∞ → Prop} : (∃ (a : _)(_ : a ≠ ∞), p a) ↔ ∃ r :  ℝ≥0 , p r :=
@@ -586,7 +592,7 @@ theorem pow_eq_top (n : ℕ) (h : a ^ n = ∞) : a = ∞ :=
 theorem pow_ne_top (h : a ≠ ∞) {n : ℕ} : a ^ n ≠ ∞ :=
   mt (pow_eq_top n) h
 
-theorem pow_lt_top : a < ∞ → ∀ n : ℕ, a ^ n < ∞ :=
+theorem pow_lt_top : a < ∞ → ∀ (n : ℕ), a ^ n < ∞ :=
   by 
     simpa only [lt_top_iff_ne_top] using pow_ne_top
 
@@ -662,7 +668,7 @@ theorem to_real_nat (n : ℕ) : (n : ℝ≥0∞).toReal = n :=
 theorem le_coe_iff : a ≤ «expr↑ » r ↔ ∃ p :  ℝ≥0 , a = p ∧ p ≤ r :=
   WithTop.le_coe_iff
 
-theorem coe_le_iff : «expr↑ » r ≤ a ↔ ∀ p :  ℝ≥0 , a = p → r ≤ p :=
+theorem coe_le_iff : «expr↑ » r ≤ a ↔ ∀ (p :  ℝ≥0 ), a = p → r ≤ p :=
   WithTop.coe_le_iff
 
 theorem lt_iff_exists_coe : a < b ↔ ∃ p :  ℝ≥0 , a = p ∧ «expr↑ » p < b :=
@@ -720,10 +726,10 @@ theorem max_zero_right : max a 0 = a :=
 theorem sup_eq_max : a⊔b = max a b :=
   rfl
 
-protected theorem pow_pos : 0 < a → ∀ n : ℕ, 0 < a ^ n :=
+protected theorem pow_pos : 0 < a → ∀ (n : ℕ), 0 < a ^ n :=
   CanonicallyOrderedCommSemiring.pow_pos
 
-protected theorem pow_ne_zero : a ≠ 0 → ∀ n : ℕ, a ^ n ≠ 0 :=
+protected theorem pow_ne_zero : a ≠ 0 → ∀ (n : ℕ), a ^ n ≠ 0 :=
   by 
     simpa only [pos_iff_ne_zero] using Ennreal.pow_pos
 
@@ -751,7 +757,7 @@ theorem lt_add_right (ha : a ≠ ∞) (hb : b ≠ 0) : a < a+b :=
   by 
     rwa [←pos_iff_ne_zero, ←add_lt_add_iff_left ha, add_zeroₓ] at hb
 
-theorem le_of_forall_pos_le_add : ∀ {a b : ℝ≥0∞}, (∀ ε :  ℝ≥0 , 0 < ε → b < ∞ → a ≤ b+ε) → a ≤ b
+theorem le_of_forall_pos_le_add : ∀ {a b : ℝ≥0∞}, (∀ (ε :  ℝ≥0 ), 0 < ε → b < ∞ → a ≤ b+ε) → a ≤ b
 | a, none, h => le_top
 | none, some a, h =>
   have  : ∞ ≤ «expr↑ » a+«expr↑ » (1 :  ℝ≥0 ) := h 1 zero_lt_one coe_lt_top 
@@ -924,15 +930,15 @@ theorem mul_left_mono : Monotone ((·*·) a) :=
 theorem mul_right_mono : Monotone fun x => x*a :=
   fun b c h => mul_le_mul h (le_reflₓ a)
 
-theorem pow_strict_mono {n : ℕ} (hn : n ≠ 0) : StrictMono fun x : ℝ≥0∞ => x ^ n :=
-  by 
-    intro x y hxy 
-    obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn 
-    induction' n with n IH
-    ·
-      simp only [hxy, pow_oneₓ]
-    ·
-      simp only [pow_succₓ _ n.succ, mul_lt_mul hxy (IH (Nat.succ_posₓ _).ne')]
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pow_strict_mono {n : exprℕ()} (hn : «expr ≠ »(n, 0)) : strict_mono (λ x : «exprℝ≥0∞»(), «expr ^ »(x, n)) :=
+begin
+  assume [binders (x y hxy)],
+  obtain ["⟨", ident n, ",", ident rfl, "⟩", ":=", expr nat.exists_eq_succ_of_ne_zero hn],
+  induction [expr n] [] ["with", ident n, ident IH] [],
+  { simp [] [] ["only"] ["[", expr hxy, ",", expr pow_one, "]"] [] [] },
+  { simp [] [] ["only"] ["[", expr pow_succ _ n.succ, ",", expr mul_lt_mul hxy (IH (nat.succ_pos _).ne'), "]"] [] [] }
+end
 
 theorem max_mul : (max a b*c) = max (a*c) (b*c) :=
   mul_right_mono.map_max
@@ -1101,15 +1107,15 @@ section Sum
 open Finset
 
 /-- A product of finite numbers is still finite -/
-theorem prod_lt_top {s : Finset α} {f : α → ℝ≥0∞} (h : ∀ a _ : a ∈ s, f a ≠ ∞) : (∏a in s, f a) < ∞ :=
+theorem prod_lt_top {s : Finset α} {f : α → ℝ≥0∞} (h : ∀ a (_ : a ∈ s), f a ≠ ∞) : (∏a in s, f a) < ∞ :=
   WithTop.prod_lt_top h
 
 /-- A sum of finite numbers is still finite -/
-theorem sum_lt_top {s : Finset α} {f : α → ℝ≥0∞} (h : ∀ a _ : a ∈ s, f a ≠ ∞) : (∑a in s, f a) < ∞ :=
+theorem sum_lt_top {s : Finset α} {f : α → ℝ≥0∞} (h : ∀ a (_ : a ∈ s), f a ≠ ∞) : (∑a in s, f a) < ∞ :=
   WithTop.sum_lt_top h
 
 /-- A sum of finite numbers is still finite -/
-theorem sum_lt_top_iff {s : Finset α} {f : α → ℝ≥0∞} : (∑a in s, f a) < ∞ ↔ ∀ a _ : a ∈ s, f a < ∞ :=
+theorem sum_lt_top_iff {s : Finset α} {f : α → ℝ≥0∞} : (∑a in s, f a) < ∞ ↔ ∀ a (_ : a ∈ s), f a < ∞ :=
   WithTop.sum_lt_top_iff
 
 /-- A sum of numbers is infinite iff one of them is infinite -/
@@ -1121,7 +1127,7 @@ theorem lt_top_of_sum_ne_top {s : Finset α} {f : α → ℝ≥0∞} (h : (∑x 
 
 /-- seeing `ℝ≥0∞` as `ℝ≥0` does not change their sum, unless one of the `ℝ≥0∞` is
 infinity -/
-theorem to_nnreal_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a _ : a ∈ s, f a ≠ ∞) :
+theorem to_nnreal_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a (_ : a ∈ s), f a ≠ ∞) :
   Ennreal.toNnreal (∑a in s, f a) = ∑a in s, Ennreal.toNnreal (f a) :=
   by 
     rw [←coe_eq_coe, coe_to_nnreal, coe_finset_sum, sum_congr rfl]
@@ -1132,7 +1138,7 @@ theorem to_nnreal_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a _ : a 
       exact (sum_lt_top hf).Ne
 
 /-- seeing `ℝ≥0∞` as `real` does not change their sum, unless one of the `ℝ≥0∞` is infinity -/
-theorem to_real_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a _ : a ∈ s, f a ≠ ∞) :
+theorem to_real_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a (_ : a ∈ s), f a ≠ ∞) :
   Ennreal.toReal (∑a in s, f a) = ∑a in s, Ennreal.toReal (f a) :=
   by 
     rw [Ennreal.toReal, to_nnreal_sum hf, Nnreal.coe_sum]
@@ -1144,7 +1150,7 @@ theorem of_real_sum_of_nonneg {s : Finset α} {f : α → ℝ} (hf : ∀ i, i �
     simpRw [Ennreal.ofReal, ←coe_finset_sum, coe_eq_coe]
     exact Real.to_nnreal_sum_of_nonneg hf
 
-theorem sum_lt_sum_of_nonempty {s : Finset α} (hs : s.nonempty) {f g : α → ℝ≥0∞} (Hlt : ∀ i _ : i ∈ s, f i < g i) :
+theorem sum_lt_sum_of_nonempty {s : Finset α} (hs : s.nonempty) {f g : α → ℝ≥0∞} (Hlt : ∀ i (_ : i ∈ s), f i < g i) :
   (∑i in s, f i) < ∑i in s, g i :=
   by 
     classical 
@@ -1250,26 +1256,18 @@ theorem inv_zero : (0 : ℝ≥0∞)⁻¹ = ∞ :=
   show Inf { b:ℝ≥0∞ | 1 ≤ 0*b } = ∞by 
     simp  <;> rfl
 
-@[simp]
-theorem inv_top : ∞⁻¹ = 0 :=
-  bot_unique$
-    le_of_forall_le_of_dense$
-      fun a h : a > 0 =>
-        Inf_le$
-          by 
-            simp [ne_of_gtₓ h, top_mul]
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem inv_top : «expr = »(«expr ⁻¹»(«expr∞»()), 0) :=
+«expr $ »(bot_unique, «expr $ »(le_of_forall_le_of_dense, λ
+  (a)
+  (h : «expr > »(a, 0)), «expr $ »(Inf_le, by simp [] [] [] ["[", "*", ",", expr ne_of_gt h, ",", expr top_mul, "]"] [] [])))
 
-@[simp, normCast]
-theorem coe_inv (hr : r ≠ 0) : («expr↑ » (r⁻¹) : ℝ≥0∞) = «expr↑ » r⁻¹ :=
-  le_antisymmₓ
-    (le_Inf$
-      fun b hb : 1 ≤ «expr↑ » r*b =>
-        coe_le_iff.2$
-          by 
-            rintro b rfl <;> rwa [←coe_mul, ←coe_one, coe_le_coe, ←Nnreal.inv_le hr] at hb)
-    (Inf_le$
-      by 
-        simp  <;> rw [←coe_mul, mul_inv_cancel hr] <;> exact le_reflₓ 1)
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp, norm_cast #[]]
+theorem coe_inv (hr : «expr ≠ »(r, 0)) : «expr = »((«expr↑ »(«expr ⁻¹»(r)) : «exprℝ≥0∞»()), «expr ⁻¹»(«expr↑ »(r))) :=
+le_antisymm «expr $ »(le_Inf, assume
+ (b)
+ (hb : «expr ≤ »(1, «expr * »(«expr↑ »(r), b))), «expr $ »(coe_le_iff.2, by rintros [ident b, ident rfl]; rwa ["[", "<-", expr coe_mul, ",", "<-", expr coe_one, ",", expr coe_le_coe, ",", "<-", expr nnreal.inv_le hr, "]"] ["at", ident hb])) «expr $ »(Inf_le, by simp [] [] [] [] [] []; rw ["[", "<-", expr coe_mul, ",", expr mul_inv_cancel hr, "]"] []; exact [expr le_refl 1])
 
 theorem coe_inv_le : («expr↑ » (r⁻¹) : ℝ≥0∞) ≤ «expr↑ » r⁻¹ :=
   if hr : r = 0 then
@@ -1313,11 +1311,11 @@ theorem inv_invₓ : a⁻¹⁻¹ = a :=
   by 
     byCases' a = 0 <;> cases a <;> simp_all [none_eq_top, some_eq_coe, -coe_inv, (coe_inv _).symm]
 
-theorem inv_involutive : Function.Involutive fun a : ℝ≥0∞ => a⁻¹ :=
-  fun a => Ennreal.inv_inv
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem inv_involutive : function.involutive (λ a : «exprℝ≥0∞»(), «expr ⁻¹»(a)) := λ a, ennreal.inv_inv
 
-theorem inv_bijective : Function.Bijective fun a : ℝ≥0∞ => a⁻¹ :=
-  Ennreal.inv_involutive.Bijective
+-- error in Data.Real.Ennreal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem inv_bijective : function.bijective (λ a : «exprℝ≥0∞»(), «expr ⁻¹»(a)) := ennreal.inv_involutive.bijective
 
 @[simp]
 theorem inv_eq_inv : a⁻¹ = b⁻¹ ↔ a = b :=
@@ -1575,16 +1573,16 @@ theorem mul_le_iff_le_inv {a b r : ℝ≥0∞} (hr₀ : r ≠ 0) (hr₁ : r ≠ 
   by 
     rw [←@Ennreal.mul_le_mul_left _ a _ hr₀ hr₁, ←mul_assocₓ, mul_inv_cancel hr₀ hr₁, one_mulₓ]
 
-theorem le_of_forall_nnreal_lt {x y : ℝ≥0∞} (h : ∀ r :  ℝ≥0 , «expr↑ » r < x → «expr↑ » r ≤ y) : x ≤ y :=
+theorem le_of_forall_nnreal_lt {x y : ℝ≥0∞} (h : ∀ (r :  ℝ≥0 ), «expr↑ » r < x → «expr↑ » r ≤ y) : x ≤ y :=
   by 
     refine' le_of_forall_ge_of_dense fun r hr => _ 
     lift r to  ℝ≥0  using ne_top_of_lt hr 
     exact h r hr
 
-theorem le_of_forall_pos_nnreal_lt {x y : ℝ≥0∞} (h : ∀ r :  ℝ≥0 , 0 < r → «expr↑ » r < x → «expr↑ » r ≤ y) : x ≤ y :=
+theorem le_of_forall_pos_nnreal_lt {x y : ℝ≥0∞} (h : ∀ (r :  ℝ≥0 ), 0 < r → «expr↑ » r < x → «expr↑ » r ≤ y) : x ≤ y :=
   le_of_forall_nnreal_lt$ fun r hr => (zero_le r).eq_or_lt.elim (fun h => h ▸ zero_le _) fun h0 => h r h0 hr
 
-theorem eq_top_of_forall_nnreal_le {x : ℝ≥0∞} (h : ∀ r :  ℝ≥0 , «expr↑ » r ≤ x) : x = ∞ :=
+theorem eq_top_of_forall_nnreal_le {x : ℝ≥0∞} (h : ∀ (r :  ℝ≥0 ), «expr↑ » r ≤ x) : x = ∞ :=
   top_unique$ le_of_forall_nnreal_lt$ fun r hr => h r
 
 theorem add_div {a b c : ℝ≥0∞} : (a+b) / c = (a / c)+b / c :=
@@ -2224,13 +2222,13 @@ theorem infi_add_infi (h : ∀ i j, ∃ k, (f k+g k) ≤ f i+g j) : (infi f+infi
     
 
 theorem infi_sum {f : ι → α → ℝ≥0∞} {s : Finset α} [Nonempty ι]
-  (h : ∀ t : Finset α i j : ι, ∃ k, ∀ a _ : a ∈ t, f k a ≤ f i a ∧ f k a ≤ f j a) :
+  (h : ∀ (t : Finset α) (i j : ι), ∃ k, ∀ a (_ : a ∈ t), f k a ≤ f i a ∧ f k a ≤ f j a) :
   (⨅i, ∑a in s, f i a) = ∑a in s, ⨅i, f i a :=
   Finset.induction_on s
       (by 
         simp )$
     fun a s ha ih =>
-      have  : ∀ i j : ι, ∃ k : ι, (f k a+∑b in s, f k b) ≤ f i a+∑b in s, f j b :=
+      have  : ∀ (i j : ι), ∃ k : ι, (f k a+∑b in s, f k b) ≤ f i a+∑b in s, f j b :=
         fun i j =>
           let ⟨k, hk⟩ := h (insert a s) i j
           ⟨k,

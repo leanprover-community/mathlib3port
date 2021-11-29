@@ -112,8 +112,9 @@ theorem continuous_ev [LocallyCompactSpace α] : Continuous (ev α β) :=
             by 
               assumption⟩
 
-theorem continuous_ev₁ [LocallyCompactSpace α] (a : α) : Continuous fun f : C(α, β) => f a :=
-  continuous_ev.comp (continuous_id.prod_mk continuous_const)
+-- error in Topology.CompactOpen: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_ev₁ [locally_compact_space α] (a : α) : continuous (λ f : «exprC( , )»(α, β), f a) :=
+continuous_ev.comp (continuous_id.prod_mk continuous_const)
 
 instance  [T2Space β] [LocallyCompactSpace α] : T2Space C(α, β) :=
   ⟨by 
@@ -158,12 +159,12 @@ theorem compact_open_eq_Inf_induced :
     rw [image_comp f (coeₓ : s → α)]
     simp 
 
+-- error in Topology.CompactOpen: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- For any subset `s` of `α`, the restriction of continuous functions to `s` is continuous as a
 function from `C(α, β)` to `C(s, β)` with their respective compact-open topologies. -/
-theorem continuous_restrict (s : Set α) : Continuous fun F : C(α, β) => F.restrict s :=
-  by 
-    rw [continuous_iff_le_induced]
-    exact compact_open_le_induced s
+theorem continuous_restrict (s : set α) : continuous (λ F : «exprC( , )»(α, β), F.restrict s) :=
+by { rw [expr continuous_iff_le_induced] [],
+  exact [expr compact_open_le_induced s] }
 
 theorem nhds_compact_open_eq_Inf_nhds_induced (f : C(α, β)) :
   𝓝 f = ⨅(s : _)(hs : IsCompact s), (𝓝 (f.restrict s)).comap (ContinuousMap.restrict s) :=
@@ -176,7 +177,7 @@ theorem tendsto_compact_open_restrict {ι : Type _} {l : Filter ι} {F : ι → 
   (continuous_restrict s).ContinuousAt.Tendsto.comp hFf
 
 theorem tendsto_compact_open_iff_forall {ι : Type _} {l : Filter ι} (F : ι → C(α, β)) (f : C(α, β)) :
-  Filter.Tendsto F l (𝓝 f) ↔ ∀ s hs : IsCompact s, Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 (f.restrict s)) :=
+  Filter.Tendsto F l (𝓝 f) ↔ ∀ s (hs : IsCompact s), Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 (f.restrict s)) :=
   by 
     rw [compact_open_eq_Inf_induced]
     simp [nhds_infi, nhds_induced, Filter.tendsto_comap_iff]

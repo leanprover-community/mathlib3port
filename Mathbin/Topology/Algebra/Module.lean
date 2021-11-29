@@ -29,7 +29,7 @@ section
 
 variable{R : Type _}{M : Type _}[Ringₓ R][TopologicalSpace R][TopologicalSpace M][AddCommGroupₓ M][Module R M]
 
--- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem has_continuous_smul.of_nhds_zero
 [topological_ring R]
 [topological_add_group M]
@@ -108,6 +108,7 @@ end
 
 variable(R M)
 
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Let `R` be a topological ring such that zero is not an isolated point (e.g., a nondiscrete
 normed field, see `normed_field.punctured_nhds_ne_bot`). Let `M` be a nontrivial module over `R`
 such that `c • x = 0` implies `c = 0 ∨ x = 0`. Then `M` has no isolated points. We formulate this
@@ -117,19 +118,22 @@ This lemma is not an instance because Lean would need to find `[has_continuous_s
 unknown `?m_1`. We register this as an instance for `R = ℝ` in `real.punctured_nhds_module_ne_bot`.
 One can also use `haveI := module.punctured_nhds_ne_bot R M` in a proof.
 -/
-theorem Module.punctured_nhds_ne_bot [Nontrivial M] [ne_bot (𝓝[«expr ᶜ» {0}] (0 : R))] [NoZeroSmulDivisors R M]
-  (x : M) : ne_bot (𝓝[«expr ᶜ» {x}] x) :=
-  by 
-    rcases exists_ne (0 : M) with ⟨y, hy⟩
-    suffices  : tendsto (fun c : R => x+c • y) (𝓝[«expr ᶜ» {0}] 0) (𝓝[«expr ᶜ» {x}] x)
-    exact this.ne_bot 
-    refine' tendsto.inf _ (tendsto_principal_principal.2$ _)
-    ·
-      convert tendsto_const_nhds.add ((@tendsto_id R _).smul_const y)
-      rw [zero_smul, add_zeroₓ]
-    ·
-      intro c hc 
-      simpa [hy] using hc
+theorem module.punctured_nhds_ne_bot
+[nontrivial M]
+[ne_bot «expr𝓝[ ] »(«expr ᶜ»({0}), (0 : R))]
+[no_zero_smul_divisors R M]
+(x : M) : ne_bot «expr𝓝[ ] »(«expr ᶜ»({x}), x) :=
+begin
+  rcases [expr exists_ne (0 : M), "with", "⟨", ident y, ",", ident hy, "⟩"],
+  suffices [] [":", expr tendsto (λ
+    c : R, «expr + »(x, «expr • »(c, y))) «expr𝓝[ ] »(«expr ᶜ»({0}), 0) «expr𝓝[ ] »(«expr ᶜ»({x}), x)],
+  from [expr this.ne_bot],
+  refine [expr tendsto.inf _ «expr $ »(tendsto_principal_principal.2, _)],
+  { convert [] [expr tendsto_const_nhds.add ((@tendsto_id R _).smul_const y)] [],
+    rw ["[", expr zero_smul, ",", expr add_zero, "]"] [] },
+  { intros [ident c, ident hc],
+    simpa [] [] [] ["[", expr hy, "]"] [] ["using", expr hc] }
+end
 
 end 
 
@@ -140,27 +144,29 @@ variable{R :
       u}{M :
     Type v}[Semiringₓ R][TopologicalSpace R][TopologicalSpace M][AddCommMonoidₓ M][Module R M][HasContinuousSmul R M]
 
-theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
-  (fun p : R × M => p.1 • p.2) '' (Set.Univ : Set R).Prod (Closure (s : Set M)) ⊆ Closure (s : Set M) :=
-  calc
-    (fun p : R × M => p.1 • p.2) '' (Set.Univ : Set R).Prod (Closure (s : Set M)) =
-      (fun p : R × M => p.1 • p.2) '' Closure ((Set.Univ : Set R).Prod s) :=
-    by 
-      simp [closure_prod_eq]
-    _ ⊆ Closure ((fun p : R × M => p.1 • p.2) '' (Set.Univ : Set R).Prod s) :=
-    image_closure_subset_closure_image continuous_smul 
-    _ = Closure s :=
-    by 
-      congr 
-      ext x 
-      refine' ⟨_, fun hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩⟩
-      rintro ⟨⟨c, y⟩, ⟨hc, hy⟩, rfl⟩
-      simp [s.smul_mem c hy]
-    
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem submodule.closure_smul_self_subset
+(s : submodule R M) : «expr ⊆ »(«expr '' »(λ
+  p : «expr × »(R, M), «expr • »(p.1, p.2), (set.univ : set R).prod (closure (s : set M))), closure (s : set M)) :=
+calc
+  «expr = »(«expr '' »(λ
+    p : «expr × »(R, M), «expr • »(p.1, p.2), (set.univ : set R).prod (closure (s : set M))), «expr '' »(λ
+    p : «expr × »(R, M), «expr • »(p.1, p.2), closure ((set.univ : set R).prod s))) : by simp [] [] [] ["[", expr closure_prod_eq, "]"] [] []
+  «expr ⊆ »(..., closure «expr '' »(λ
+    p : «expr × »(R, M), «expr • »(p.1, p.2), (set.univ : set R).prod s)) : image_closure_subset_closure_image continuous_smul
+  «expr = »(..., closure s) : begin
+    congr,
+    ext [] [ident x] [],
+    refine [expr ⟨_, λ hx, ⟨⟨1, x⟩, ⟨set.mem_univ _, hx⟩, one_smul R _⟩⟩],
+    rintros ["⟨", "⟨", ident c, ",", ident y, "⟩", ",", "⟨", ident hc, ",", ident hy, "⟩", ",", ident rfl, "⟩"],
+    simp [] [] [] ["[", expr s.smul_mem c hy, "]"] [] []
+  end
 
-theorem Submodule.closure_smul_self_eq (s : Submodule R M) :
-  (fun p : R × M => p.1 • p.2) '' (Set.Univ : Set R).Prod (Closure (s : Set M)) = Closure (s : Set M) :=
-  Set.Subset.antisymm s.closure_smul_self_subset fun x hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem submodule.closure_smul_self_eq
+(s : submodule R M) : «expr = »(«expr '' »(λ
+  p : «expr × »(R, M), «expr • »(p.1, p.2), (set.univ : set R).prod (closure (s : set M))), closure (s : set M)) :=
+set.subset.antisymm s.closure_smul_self_subset (λ x hx, ⟨⟨1, x⟩, ⟨set.mem_univ _, hx⟩, one_smul R _⟩)
 
 variable[HasContinuousAdd M]
 
@@ -174,14 +180,15 @@ def Submodule.topologicalClosure (s : Submodule R M) : Submodule R M :=
 theorem Submodule.topological_closure_coe (s : Submodule R M) : (s.topological_closure : Set M) = Closure (s : Set M) :=
   rfl
 
-instance Submodule.topological_closure_has_continuous_smul (s : Submodule R M) :
-  HasContinuousSmul R s.topological_closure :=
-  { s.to_add_submonoid.topological_closure_has_continuous_add with
-    continuous_smul :=
-      by 
-        apply continuous_induced_rng 
-        change Continuous fun p : R × s.topological_closure => p.1 • (p.2 : M)
-        continuity }
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance submodule.topological_closure_has_continuous_smul
+(s : submodule R M) : has_continuous_smul R s.topological_closure :=
+{ continuous_smul := begin
+    apply [expr continuous_induced_rng],
+    change [expr continuous (λ p : «expr × »(R, s.topological_closure), «expr • »(p.1, (p.2 : M)))] [] [],
+    continuity [] []
+  end,
+  ..s.to_add_submonoid.topological_closure_has_continuous_add }
 
 theorem Submodule.submodule_topological_closure (s : Submodule R M) : s ≤ s.topological_closure :=
   subset_closure
@@ -500,19 +507,24 @@ variable[HasContinuousAdd M₂]
 instance  : Add (M₁ →SL[σ₁₂] M₂) :=
   ⟨fun f g => ⟨f+g, f.2.add g.2⟩⟩
 
-theorem continuous_nsmul (n : ℕ) : Continuous fun x : M₂ => n • x :=
-  by 
-    induction' n with n ih
-    ·
-      simp [continuous_const]
-    ·
-      simp [Nat.succ_eq_add_one, add_smul]
-      exact ih.add continuous_id
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_nsmul (n : exprℕ()) : continuous (λ x : M₂, «expr • »(n, x)) :=
+begin
+  induction [expr n] [] ["with", ident n, ident ih] [],
+  { simp [] [] [] ["[", expr continuous_const, "]"] [] [] },
+  { simp [] [] [] ["[", expr nat.succ_eq_add_one, ",", expr add_smul, "]"] [] [],
+    exact [expr ih.add continuous_id] }
+end
 
-@[continuity]
-theorem continuous.nsmul {α : Type _} [TopologicalSpace α] {n : ℕ} {f : α → M₂} (hf : Continuous f) :
-  Continuous fun x : α => n • f x :=
-  (continuous_nsmul n).comp hf
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]]
+theorem continuous.nsmul
+{α : Type*}
+[topological_space α]
+{n : exprℕ()}
+{f : α → M₂}
+(hf : continuous f) : continuous (λ x : α, «expr • »(n, f x)) :=
+(continuous_nsmul n).comp hf
 
 @[simp]
 theorem add_apply : (f+g) x = f x+g x :=
@@ -1063,20 +1075,22 @@ theorem coe_neg' : ((-f : M →SL[σ₁₂] M₂) : M → M₂) = -(f : M → M�
 instance  : Sub (M →SL[σ₁₂] M₂) :=
   ⟨fun f g => ⟨f - g, f.2.sub g.2⟩⟩
 
-theorem continuous_zsmul : ∀ n : ℤ, Continuous fun x : M₂ => n • x
-| (n : ℕ) =>
-  by 
-    simp only [coe_nat_zsmul]
-    exact continuous_nsmul _
-| -[1+ n] =>
-  by 
-    simp only [zsmul_neg_succ_of_nat]
-    exact (continuous_nsmul _).neg
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_zsmul : ∀ n : exprℤ(), continuous (λ x : M₂, «expr • »(n, x))
+| (n : exprℕ()) := by { simp [] [] ["only"] ["[", expr coe_nat_zsmul, "]"] [] [],
+  exact [expr continuous_nsmul _] }
+| «expr-[1+ ]»(n) := by { simp [] [] ["only"] ["[", expr zsmul_neg_succ_of_nat, "]"] [] [],
+  exact [expr (continuous_nsmul _).neg] }
 
-@[continuity]
-theorem continuous.zsmul {α : Type _} [TopologicalSpace α] {n : ℤ} {f : α → M₂} (hf : Continuous f) :
-  Continuous fun x : α => n • f x :=
-  (continuous_zsmul n).comp hf
+-- error in Topology.Algebra.Module: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]]
+theorem continuous.zsmul
+{α : Type*}
+[topological_space α]
+{n : exprℤ()}
+{f : α → M₂}
+(hf : continuous f) : continuous (λ x : α, «expr • »(n, f x)) :=
+(continuous_zsmul n).comp hf
 
 instance  : AddCommGroupₓ (M →SL[σ₁₂] M₂) :=
   by 
@@ -2282,7 +2296,7 @@ open ContinuousLinearMap
 
 /-- A submodule `p` is called *complemented* if there exists a continuous projection `M →ₗ[R] p`. -/
 def closed_complemented (p : Submodule R M) : Prop :=
-  ∃ f : M →L[R] p, ∀ x : p, f x = x
+  ∃ f : M →L[R] p, ∀ (x : p), f x = x
 
 theorem closed_complemented.has_closed_complement {p : Submodule R M} [T1Space p] (h : closed_complemented p) :
   ∃ (q : Submodule R M)(hq : IsClosed (q : Set M)), IsCompl p q :=

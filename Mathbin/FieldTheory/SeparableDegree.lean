@@ -14,7 +14,7 @@ This file contains basics about the separable degree of a polynomial.
 - `has_separable_contraction`: the condition of having a separable contraction
 - `has_separable_contraction.degree`: the separable degree, defined as the degree of some
   separable contraction
-- `irreducible_has_separable_contraction`: any nonzero irreducible polynomial can be contracted
+- `irreducible_has_separable_contraction`: any irreducible polynomial can be contracted
   to a separable polynomial
 - `has_separable_contraction.dvd_degree'`: the degree of a separable contraction divides the degree,
   in function of the exponential characteristic of the field
@@ -89,23 +89,21 @@ variable{F : Type}[Field F]
 
 variable(q : ℕ){f : Polynomial F}(hf : has_separable_contraction q f)
 
--- error in FieldTheory.SeparableDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Every irreducible polynomial can be contracted to a separable polynomial.
 https://stacks.math.columbia.edu/tag/09H0 -/
-theorem irreducible_has_separable_contraction
-(q : exprℕ())
-[hF : exp_char F q]
-(f : polynomial F)
-[irred : irreducible f]
-(fn : «expr ≠ »(f, 0)) : has_separable_contraction q f :=
-begin
-  casesI [expr hF] [],
-  { use [expr f],
-    exact [expr ⟨irreducible.separable irred, ⟨0, by rw ["[", expr pow_zero, ",", expr expand_one, "]"] []⟩⟩] },
-  { haveI [ident qp] [":", expr fact (nat.prime q)] [":=", expr ⟨hF_hprime⟩],
-    rcases [expr exists_separable_of_irreducible q irred fn, "with", "⟨", ident n, ",", ident g, ",", ident hgs, ",", ident hge, "⟩"],
-    exact [expr ⟨g, hgs, n, hge⟩] }
-end
+theorem irreducible_has_separable_contraction (q : ℕ) [hF : ExpChar F q] (f : Polynomial F) [irred : Irreducible f] :
+  has_separable_contraction q f :=
+  by 
+    cases' hF
+    ·
+      exact
+        ⟨f, irred.separable,
+          ⟨0,
+            by 
+              rw [pow_zeroₓ, expand_one]⟩⟩
+    ·
+      rcases exists_separable_of_irreducible q irred ‹q.prime›.ne_zero with ⟨n, g, hgs, hge⟩
+      exact ⟨g, hgs, n, hge⟩
 
 -- error in FieldTheory.SeparableDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- A helper lemma: if two expansions (along the positive characteristic) of two polynomials `g` and
@@ -123,7 +121,7 @@ begin
   rw ["[", expr add_assoc, ",", expr pow_add, ",", expr expand_mul, "]"] ["at", ident h_expand],
   let [ident aux] [] [":=", expr expand_injective (pow_pos hq.1.pos m) h_expand],
   rw [expr aux] ["at", ident hg],
-  have [] [] [":=", expr (is_unit_or_eq_zero_of_separable_expand q «expr + »(s, 1) hg).resolve_right s.succ_ne_zero],
+  have [] [] [":=", expr (is_unit_or_eq_zero_of_separable_expand q «expr + »(s, 1) hq.out.pos hg).resolve_right s.succ_ne_zero],
   rw ["[", expr aux, ",", expr nat_degree_expand, ",", expr nat_degree_eq_of_degree_eq_some (degree_eq_zero_of_is_unit this), ",", expr zero_mul, "]"] []
 end
 

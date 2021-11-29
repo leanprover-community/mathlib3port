@@ -182,75 +182,93 @@ namespace ContinuousMultilinearMap
 
 open FormalMultilinearSeries
 
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a formal multilinear series `p`, a composition `c` of `n` and a continuous multilinear
 map `f` in `c.length` variables, one may form a multilinear map in `n` variables by applying
 the right coefficient of `p` to each block of the composition, and then applying `f` to the
 resulting vector. It is called `f.comp_along_composition_aux p c`.
 This function admits a version as a continuous multilinear map, called
 `f.comp_along_composition p c` below. -/
-def comp_along_composition_aux {n : ℕ} (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n)
-  (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ c.length => F) G) : MultilinearMap 𝕜 (fun i : Finₓ n => E) G :=
-  { toFun := fun v => f (p.apply_composition c v),
-    map_add' :=
-      fun v i x y =>
-        by 
-          simp only [apply_composition_update, ContinuousMultilinearMap.map_add],
-    map_smul' :=
-      fun v i c x =>
-        by 
-          simp only [apply_composition_update, ContinuousMultilinearMap.map_smul] }
+def comp_along_composition_aux
+{n : exprℕ()}
+(p : formal_multilinear_series 𝕜 E F)
+(c : composition n)
+(f : continuous_multilinear_map 𝕜 (λ i : fin c.length, F) G) : multilinear_map 𝕜 (λ i : fin n, E) G :=
+{ to_fun := λ v, f (p.apply_composition c v),
+  map_add' := λ
+  v
+  i
+  x
+  y, by simp [] [] ["only"] ["[", expr apply_composition_update, ",", expr continuous_multilinear_map.map_add, "]"] [] [],
+  map_smul' := λ
+  v
+  i
+  c
+  x, by simp [] [] ["only"] ["[", expr apply_composition_update, ",", expr continuous_multilinear_map.map_smul, "]"] [] [] }
 
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The norm of `f.comp_along_composition_aux p c` is controlled by the product of
 the norms of the relevant bits of `f` and `p`. -/
-theorem comp_along_composition_aux_bound {n : ℕ} (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n)
-  (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ c.length => F) G) (v : Finₓ n → E) :
-  ∥f.comp_along_composition_aux p c v∥ ≤ (∥f∥*∏i, ∥p (c.blocks_fun i)∥)*∏i : Finₓ n, ∥v i∥ :=
-  calc ∥f.comp_along_composition_aux p c v∥ = ∥f (p.apply_composition c v)∥ := rfl 
-    _ ≤ ∥f∥*∏i, ∥p.apply_composition c v i∥ := ContinuousMultilinearMap.le_op_norm _ _ 
-    _ ≤ ∥f∥*∏i, ∥p (c.blocks_fun i)∥*∏j : Finₓ (c.blocks_fun i), ∥(v ∘ c.embedding i) j∥ :=
-    by 
-      apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-      refine' Finset.prod_le_prod (fun i hi => norm_nonneg _) fun i hi => _ 
-      apply ContinuousMultilinearMap.le_op_norm 
-    _ = (∥f∥*∏i, ∥p (c.blocks_fun i)∥)*∏(i : _)(j : Finₓ (c.blocks_fun i)), ∥(v ∘ c.embedding i) j∥ :=
-    by 
-      rw [Finset.prod_mul_distrib, mul_assocₓ]
-    _ = (∥f∥*∏i, ∥p (c.blocks_fun i)∥)*∏i : Finₓ n, ∥v i∥ :=
-    by 
-      rw [←c.blocks_fin_equiv.prod_comp, ←Finset.univ_sigma_univ, Finset.prod_sigma]
-      congr
-    
+theorem comp_along_composition_aux_bound
+{n : exprℕ()}
+(p : formal_multilinear_series 𝕜 E F)
+(c : composition n)
+(f : continuous_multilinear_map 𝕜 (λ i : fin c.length, F) G)
+(v : fin n → E) : «expr ≤ »(«expr∥ ∥»(f.comp_along_composition_aux p c v), «expr * »(«expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(p (c.blocks_fun i)))), «expr∏ , »((i : fin n), «expr∥ ∥»(v i)))) :=
+calc
+  «expr = »(«expr∥ ∥»(f.comp_along_composition_aux p c v), «expr∥ ∥»(f (p.apply_composition c v))) : rfl
+  «expr ≤ »(..., «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(p.apply_composition c v i)))) : continuous_multilinear_map.le_op_norm _ _
+  «expr ≤ »(..., «expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr * »(«expr∥ ∥»(p (c.blocks_fun i)), «expr∏ , »((j : fin (c.blocks_fun i)), «expr∥ ∥»(«expr ∘ »(v, c.embedding i) j)))))) : begin
+    apply [expr mul_le_mul_of_nonneg_left _ (norm_nonneg _)],
+    refine [expr finset.prod_le_prod (λ i hi, norm_nonneg _) (λ i hi, _)],
+    apply [expr continuous_multilinear_map.le_op_norm]
+  end
+  «expr = »(..., «expr * »(«expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(p (c.blocks_fun i)))), «expr∏ , »((i)
+     (j : fin (c.blocks_fun i)), «expr∥ ∥»(«expr ∘ »(v, c.embedding i) j)))) : by rw ["[", expr finset.prod_mul_distrib, ",", expr mul_assoc, "]"] []
+  «expr = »(..., «expr * »(«expr * »(«expr∥ ∥»(f), «expr∏ , »((i), «expr∥ ∥»(p (c.blocks_fun i)))), «expr∏ , »((i : fin n), «expr∥ ∥»(v i)))) : by { rw ["[", "<-", expr c.blocks_fin_equiv.prod_comp, ",", "<-", expr finset.univ_sigma_univ, ",", expr finset.prod_sigma, "]"] [],
+    congr }
 
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given a formal multilinear series `p`, a composition `c` of `n` and a continuous multilinear
 map `f` in `c.length` variables, one may form a continuous multilinear map in `n` variables by
 applying the right coefficient of `p` to each block of the composition, and then applying `f` to
 the resulting vector. It is called `f.comp_along_composition p c`. It is constructed from the
 analogous multilinear function `f.comp_along_composition_aux p c`, together with a norm
 control to get the continuity. -/
-def comp_along_composition {n : ℕ} (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n)
-  (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ c.length => F) G) :
-  ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => E) G :=
-  (f.comp_along_composition_aux p c).mkContinuous _ (f.comp_along_composition_aux_bound p c)
+def comp_along_composition
+{n : exprℕ()}
+(p : formal_multilinear_series 𝕜 E F)
+(c : composition n)
+(f : continuous_multilinear_map 𝕜 (λ i : fin c.length, F) G) : continuous_multilinear_map 𝕜 (λ i : fin n, E) G :=
+(f.comp_along_composition_aux p c).mk_continuous _ (f.comp_along_composition_aux_bound p c)
 
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem comp_along_composition_apply {n : ℕ} (p : FormalMultilinearSeries 𝕜 E F) (c : Composition n)
-  (f : ContinuousMultilinearMap 𝕜 (fun i : Finₓ c.length => F) G) (v : Finₓ n → E) :
-  (f.comp_along_composition p c) v = f (p.apply_composition c v) :=
-  rfl
+theorem comp_along_composition_apply
+{n : exprℕ()}
+(p : formal_multilinear_series 𝕜 E F)
+(c : composition n)
+(f : continuous_multilinear_map 𝕜 (λ i : fin c.length, F) G)
+(v : fin n → E) : «expr = »(f.comp_along_composition p c v, f (p.apply_composition c v)) :=
+rfl
 
 end ContinuousMultilinearMap
 
 namespace FormalMultilinearSeries
 
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Given two formal multilinear series `q` and `p` and a composition `c` of `n`, one may
 form a continuous multilinear map in `n` variables by applying the right coefficient of `p` to each
 block of the composition, and then applying `q c.length` to the resulting vector. It is
 called `q.comp_along_composition p c`. It is constructed from the analogous multilinear
 function `q.comp_along_composition_aux p c`, together with a norm control to get
 the continuity. -/
-def comp_along_composition {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F)
-  (c : Composition n) : ContinuousMultilinearMap 𝕜 (fun i : Finₓ n => E) G :=
-  (q c.length).compAlongComposition p c
+def comp_along_composition
+{n : exprℕ()}
+(q : formal_multilinear_series 𝕜 F G)
+(p : formal_multilinear_series 𝕜 E F)
+(c : composition n) : continuous_multilinear_map 𝕜 (λ i : fin n, E) G :=
+(q c.length).comp_along_composition p c
 
 @[simp]
 theorem comp_along_composition_apply {n : ℕ} (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F)
@@ -460,7 +478,7 @@ section
 
 attribute [-instance] Unique.subsingleton
 
--- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If two formal multilinear series have positive radius of convergence, then the terms appearing
 in the definition of their composition are also summable (when multiplied by a suitable positive
 geometric term). -/
@@ -525,24 +543,25 @@ end
 
 end 
 
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Bounding below the radius of the composition of two formal multilinear series assuming
 summability over all compositions. -/
-theorem le_comp_radius_of_summable (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F) (r :  ℝ≥0 )
-  (hr : Summable fun i : Σn, Composition n => nnnorm (q.comp_along_composition p i.2)*r ^ i.1) :
-  (r : ℝ≥0∞) ≤ (q.comp p).radius :=
-  by 
-    refine'
-      le_radius_of_bound_nnreal _ (∑'i : Σn, Composition n, nnnorm (comp_along_composition q p i.snd)*r ^ i.fst)
-        fun n => _ 
-    calc
-      (nnnorm (FormalMultilinearSeries.comp q p n)*r ^ n) ≤
-        ∑'c : Composition n, nnnorm (comp_along_composition q p c)*r ^ n :=
-      by 
-        rw [tsum_fintype, ←Finset.sum_mul]
-        exact
-          mul_le_mul' (nnnorm_sum_le _ _)
-            le_rfl _ ≤ ∑'i : Σn : ℕ, Composition n, nnnorm (comp_along_composition q p i.snd)*r ^ i.fst :=
-      Nnreal.tsum_comp_le_tsum_of_inj hr sigma_mk_injective
+theorem le_comp_radius_of_summable
+(q : formal_multilinear_series 𝕜 F G)
+(p : formal_multilinear_series 𝕜 E F)
+(r : «exprℝ≥0»())
+(hr : summable (λ
+  i : «exprΣ , »((n), composition n), «expr * »(nnnorm (q.comp_along_composition p i.2), «expr ^ »(r, i.1)))) : «expr ≤ »((r : «exprℝ≥0∞»()), (q.comp p).radius) :=
+begin
+  refine [expr le_radius_of_bound_nnreal _ «expr∑' , »((i : «exprΣ , »((n), composition n)), «expr * »(nnnorm (comp_along_composition q p i.snd), «expr ^ »(r, i.fst))) (λ
+    n, _)],
+  calc
+    «expr ≤ »(«expr * »(nnnorm (formal_multilinear_series.comp q p n), «expr ^ »(r, n)), «expr∑' , »((c : composition n), «expr * »(nnnorm (comp_along_composition q p c), «expr ^ »(r, n)))) : begin
+      rw ["[", expr tsum_fintype, ",", "<-", expr finset.sum_mul, "]"] [],
+      exact [expr mul_le_mul' (nnnorm_sum_le _ _) le_rfl]
+    end
+    «expr ≤ »(..., «expr∑' , »((i : «exprΣ , »((n : exprℕ()), composition n)), «expr * »(nnnorm (comp_along_composition q p i.snd), «expr ^ »(r, i.fst)))) : nnreal.tsum_comp_le_tsum_of_inj hr sigma_mk_injective
+end
 
 /-!
 ### Composing analytic functions
@@ -558,15 +577,16 @@ the source of the change of variables (`comp_partial_source`), its target
 giving the main statement in `comp_partial_sum`. -/
 
 
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Source set in the change of variables to compute the composition of partial sums of formal
 power series.
 See also `comp_partial_sum`. -/
-def comp_partial_sum_source (m M N : ℕ) : Finset (Σn, Finₓ n → ℕ) :=
-  Finset.sigma (Finset.ico m M) (fun n : ℕ => Fintype.piFinset fun i : Finₓ n => Finset.ico 1 N : _)
+def comp_partial_sum_source (m M N : exprℕ()) : finset «exprΣ , »((n), fin n → exprℕ()) :=
+finset.sigma (finset.Ico m M) (λ n : exprℕ(), fintype.pi_finset (λ i : fin n, finset.Ico 1 N) : _)
 
 @[simp]
 theorem mem_comp_partial_sum_source_iff (m M N : ℕ) (i : Σn, Finₓ n → ℕ) :
-  i ∈ comp_partial_sum_source m M N ↔ (m ≤ i.1 ∧ i.1 < M) ∧ ∀ a : Finₓ i.1, 1 ≤ i.2 a ∧ i.2 a < N :=
+  i ∈ comp_partial_sum_source m M N ↔ (m ≤ i.1 ∧ i.1 < M) ∧ ∀ (a : Finₓ i.1), 1 ≤ i.2 a ∧ i.2 a < N :=
   by 
     simp only [comp_partial_sum_source, Finset.mem_Ico, Fintype.mem_pi_finset, Finset.mem_sigma, iff_selfₓ]
 
@@ -608,7 +628,7 @@ theorem comp_change_of_variables_blocks_fun (m M N : ℕ) {i : Σn, Finₓ n →
 /-- Target set in the change of variables to compute the composition of partial sums of formal
 power series, here given a a set. -/
 def comp_partial_sum_target_set (m M N : ℕ) : Set (Σn, Composition n) :=
-  { i | m ≤ i.2.length ∧ i.2.length < M ∧ ∀ j : Finₓ i.2.length, i.2.blocksFun j < N }
+  { i | m ≤ i.2.length ∧ i.2.length < M ∧ ∀ (j : Finₓ i.2.length), i.2.blocksFun j < N }
 
 theorem comp_partial_sum_target_subset_image_comp_partial_sum_source (m M N : ℕ) (i : Σn, Composition n)
   (hi : i ∈ comp_partial_sum_target_set m M N) :
@@ -636,7 +656,7 @@ def comp_partial_sum_target (m M N : ℕ) : Finset (Σn, Composition n) :=
 
 @[simp]
 theorem mem_comp_partial_sum_target_iff {m M N : ℕ} {a : Σn, Composition n} :
-  a ∈ comp_partial_sum_target m M N ↔ m ≤ a.2.length ∧ a.2.length < M ∧ ∀ j : Finₓ a.2.length, a.2.blocksFun j < N :=
+  a ∈ comp_partial_sum_target m M N ↔ m ≤ a.2.length ∧ a.2.length < M ∧ ∀ (j : Finₓ a.2.length), a.2.blocksFun j < N :=
   by 
     simp [comp_partial_sum_target, comp_partial_sum_target_set]
 
@@ -682,7 +702,7 @@ begin
     simpa [] [] [] ["[", expr comp_partial_sum_target, "]"] [] ["using", expr hi] }
 end
 
--- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The auxiliary set corresponding to the composition of partial sums asymptotically contains
 all possible compositions. -/
 theorem comp_partial_sum_target_tendsto_at_top : tendsto (λ N, comp_partial_sum_target 0 N N) at_top at_top :=
@@ -701,26 +721,30 @@ begin
     simp [] [] ["only"] ["[", expr finset.mem_image_of_mem, ",", expr finset.mem_coe, ",", expr finset.mem_univ, "]"] [] [] }
 end
 
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Composing the partial sums of two multilinear series coincides with the sum over all
 compositions in `comp_partial_sum_target 0 N N`. This is precisely the motivation for the
 definition of `comp_partial_sum_target`. -/
-theorem comp_partial_sum (q : FormalMultilinearSeries 𝕜 F G) (p : FormalMultilinearSeries 𝕜 E F) (N : ℕ) (z : E) :
-  q.partial_sum N (∑i in Finset.ico 1 N, p i fun j => z) =
-    ∑i in comp_partial_sum_target 0 N N, q.comp_along_composition p i.2 fun j => z :=
-  by 
-    suffices H :
-      (∑n in Finset.range N,
-          ∑r in Fintype.piFinset fun i : Finₓ n => Finset.ico 1 N, q n fun i : Finₓ n => p (r i) fun j => z) =
-        ∑i in comp_partial_sum_target 0 N N, q.comp_along_composition p i.2 fun j => z
-    ·
-      simpa only [FormalMultilinearSeries.partialSum, ContinuousMultilinearMap.map_sum_finset] using H 
-    rw [Finset.range_eq_Ico, Finset.sum_sigma']
-    apply comp_change_of_variables_sum 0 N N 
-    rintro ⟨k, blocks_fun⟩ H 
-    apply congr _ (comp_change_of_variables_length 0 N N H).symm 
-    intros 
-    rw [←comp_change_of_variables_blocks_fun 0 N N H]
-    rfl
+theorem comp_partial_sum
+(q : formal_multilinear_series 𝕜 F G)
+(p : formal_multilinear_series 𝕜 E F)
+(N : exprℕ())
+(z : E) : «expr = »(q.partial_sum N «expr∑ in , »((i), finset.Ico 1 N, p i (λ
+   j, z)), «expr∑ in , »((i), comp_partial_sum_target 0 N N, q.comp_along_composition p i.2 (λ j, z))) :=
+begin
+  suffices [ident H] [":", expr «expr = »(«expr∑ in , »((n), finset.range N, «expr∑ in , »((r), fintype.pi_finset (λ
+       i : fin n, finset.Ico 1 N), q n (λ
+       i : fin n, p (r i) (λ
+        j, z)))), «expr∑ in , »((i), comp_partial_sum_target 0 N N, q.comp_along_composition p i.2 (λ j, z)))],
+  by simpa [] [] ["only"] ["[", expr formal_multilinear_series.partial_sum, ",", expr continuous_multilinear_map.map_sum_finset, "]"] [] ["using", expr H],
+  rw ["[", expr finset.range_eq_Ico, ",", expr finset.sum_sigma', "]"] [],
+  apply [expr comp_change_of_variables_sum 0 N N],
+  rintros ["⟨", ident k, ",", ident blocks_fun, "⟩", ident H],
+  apply [expr congr _ (comp_change_of_variables_length 0 N N H).symm],
+  intros [],
+  rw ["<-", expr comp_change_of_variables_blocks_fun 0 N N H] [],
+  refl
+end
 
 end FormalMultilinearSeries
 
@@ -947,7 +971,7 @@ def gather (a : Composition n) (b : Composition a.length) : Composition n :=
       by 
         rw [forall_mem_map_iff]
         intro j hj 
-        suffices H : ∀ i _ : i ∈ j, 1 ≤ i 
+        suffices H : ∀ i (_ : i ∈ j), 1 ≤ i 
         exact
           calc 0 < j.length := length_pos_of_mem_split_wrt_composition hj 
             _ ≤ j.sum := length_le_sum_of_one_le _ H 
@@ -1125,32 +1149,35 @@ namespace FormalMultilinearSeries
 
 open Composition
 
-theorem comp_assoc (r : FormalMultilinearSeries 𝕜 G H) (q : FormalMultilinearSeries 𝕜 F G)
-  (p : FormalMultilinearSeries 𝕜 E F) : (r.comp q).comp p = r.comp (q.comp p) :=
-  by 
-    ext n v 
-    let f : (Σa : Composition n, Composition a.length) → H :=
-      fun c => r c.2.length (apply_composition q c.2 (apply_composition p c.1 v))
-    let g : (Σc : Composition n, ∀ i : Finₓ c.length, Composition (c.blocks_fun i)) → H :=
-      fun c =>
-        r c.1.length fun i : Finₓ c.1.length => q (c.2 i).length (apply_composition p (c.2 i) (v ∘ c.1.Embedding i))
-    suffices  : (∑c, f c) = ∑c, g c
-    ·
-      simpa only [FormalMultilinearSeries.comp, ContinuousMultilinearMap.sum_apply, comp_along_composition_apply,
-        ContinuousMultilinearMap.map_sum, Finset.sum_sigma', apply_composition]
-    rw [←(sigma_equiv_sigma_pi n).sum_comp]
-    apply Finset.sum_congr rfl 
-    rintro ⟨a, b⟩ _ 
-    dsimp [f, g, sigma_equiv_sigma_pi]
-    apply r.congr (Composition.length_gather a b).symm 
-    intro i hi1 hi2 
-    apply q.congr (length_sigma_composition_aux a b _).symm 
-    intro j hj1 hj2 
-    apply p.congr (blocks_fun_sigma_composition_aux a b _ _).symm 
-    intro k hk1 hk2 
-    refine' congr_argₓ v (Finₓ.eq_of_veq _)
-    dsimp [Composition.embedding]
-    rw [size_up_to_size_up_to_add _ _ hi1 hj1, add_assocₓ]
+-- error in Analysis.Analytic.Composition: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem comp_assoc
+(r : formal_multilinear_series 𝕜 G H)
+(q : formal_multilinear_series 𝕜 F G)
+(p : formal_multilinear_series 𝕜 E F) : «expr = »((r.comp q).comp p, r.comp (q.comp p)) :=
+begin
+  ext [] [ident n, ident v] [],
+  let [ident f] [":", expr «exprΣ , »((a : composition n), composition a.length) → H] [":=", expr λ
+   c, r c.2.length (apply_composition q c.2 (apply_composition p c.1 v))],
+  let [ident g] [":", expr «exprΣ , »((c : composition n), ∀
+    i : fin c.length, composition (c.blocks_fun i)) → H] [":=", expr λ
+   c, r c.1.length (λ
+    i : fin c.1.length, q (c.2 i).length (apply_composition p (c.2 i) «expr ∘ »(v, c.1.embedding i)))],
+  suffices [] [":", expr «expr = »(«expr∑ , »((c), f c), «expr∑ , »((c), g c))],
+  by simpa [] [] ["only"] ["[", expr formal_multilinear_series.comp, ",", expr continuous_multilinear_map.sum_apply, ",", expr comp_along_composition_apply, ",", expr continuous_multilinear_map.map_sum, ",", expr finset.sum_sigma', ",", expr apply_composition, "]"] [] [],
+  rw ["<-", expr (sigma_equiv_sigma_pi n).sum_comp] [],
+  apply [expr finset.sum_congr rfl],
+  rintros ["⟨", ident a, ",", ident b, "⟩", "_"],
+  dsimp [] ["[", expr f, ",", expr g, ",", expr sigma_equiv_sigma_pi, "]"] [] [],
+  apply [expr r.congr (composition.length_gather a b).symm],
+  intros [ident i, ident hi1, ident hi2],
+  apply [expr q.congr (length_sigma_composition_aux a b _).symm],
+  intros [ident j, ident hj1, ident hj2],
+  apply [expr p.congr (blocks_fun_sigma_composition_aux a b _ _).symm],
+  intros [ident k, ident hk1, ident hk2],
+  refine [expr congr_arg v (fin.eq_of_veq _)],
+  dsimp [] ["[", expr composition.embedding, "]"] [] [],
+  rw ["[", expr size_up_to_size_up_to_add _ _ hi1 hj1, ",", expr add_assoc, "]"] []
+end
 
 end FormalMultilinearSeries
 

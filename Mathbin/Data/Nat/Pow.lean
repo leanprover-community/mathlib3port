@@ -11,7 +11,7 @@ namespace Nat
 /-! ### `pow` -/
 
 
-protected theorem pow_le_pow_of_le_left {x y : ℕ} (H : x ≤ y) : ∀ i : ℕ, x ^ i ≤ y ^ i :=
+protected theorem pow_le_pow_of_le_left {x y : ℕ} (H : x ≤ y) : ∀ (i : ℕ), x ^ i ≤ y ^ i :=
   pow_le_pow_of_le_left' H
 
 theorem pow_le_pow_of_le_right {x : ℕ} (H : 0 < x) {i j : ℕ} (h : i ≤ j) : x ^ i ≤ x ^ j :=
@@ -26,7 +26,7 @@ theorem pow_lt_pow_of_lt_right {x : ℕ} (H : 1 < x) {i j : ℕ} (h : i < j) : x
 theorem pow_lt_pow_succ {p : ℕ} (h : 1 < p) (n : ℕ) : p ^ n < p ^ n+1 :=
   pow_lt_pow_of_lt_right h n.lt_succ_self
 
-theorem lt_pow_self {p : ℕ} (h : 1 < p) : ∀ n : ℕ, n < p ^ n
+theorem lt_pow_self {p : ℕ} (h : 1 < p) : ∀ (n : ℕ), n < p ^ n
 | 0 =>
   by 
     simp [zero_lt_one]
@@ -90,8 +90,9 @@ theorem one_lt_two_pow' (n : ℕ) : 1 < 2 ^ n+1 :=
     (by 
       decide)
 
-theorem pow_right_strict_mono {x : ℕ} (k : 2 ≤ x) : StrictMono fun n : ℕ => x ^ n :=
-  fun _ _ => pow_lt_pow_of_lt_right k
+-- error in Data.Nat.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pow_right_strict_mono {x : exprℕ()} (k : «expr ≤ »(2, x)) : strict_mono (λ n : exprℕ(), «expr ^ »(x, n)) :=
+λ _ _, pow_lt_pow_of_lt_right k
 
 theorem pow_le_iff_le_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m ≤ x ^ n ↔ m ≤ n :=
   StrictMono.le_iff_le (pow_right_strict_mono k)
@@ -99,11 +100,13 @@ theorem pow_le_iff_le_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m ≤ x ^ n ↔ m 
 theorem pow_lt_iff_lt_right {x m n : ℕ} (k : 2 ≤ x) : x ^ m < x ^ n ↔ m < n :=
   StrictMono.lt_iff_lt (pow_right_strict_mono k)
 
-theorem pow_right_injective {x : ℕ} (k : 2 ≤ x) : Function.Injective fun n : ℕ => x ^ n :=
-  StrictMono.injective (pow_right_strict_mono k)
+-- error in Data.Nat.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pow_right_injective {x : exprℕ()} (k : «expr ≤ »(2, x)) : function.injective (λ n : exprℕ(), «expr ^ »(x, n)) :=
+strict_mono.injective (pow_right_strict_mono k)
 
-theorem pow_left_strict_mono {m : ℕ} (k : 1 ≤ m) : StrictMono fun x : ℕ => x ^ m :=
-  fun _ _ h => pow_lt_pow_of_lt_left h k
+-- error in Data.Nat.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pow_left_strict_mono {m : exprℕ()} (k : «expr ≤ »(1, m)) : strict_mono (λ x : exprℕ(), «expr ^ »(x, m)) :=
+λ _ _ h, pow_lt_pow_of_lt_left h k
 
 theorem mul_lt_mul_pow_succ {n a q : ℕ} (a0 : 0 < a) (q1 : 1 < q) : (n*q) < a*q ^ n+1 :=
   by 
@@ -123,8 +126,9 @@ theorem pow_le_iff_le_left {m x y : ℕ} (k : 1 ≤ m) : x ^ m ≤ y ^ m ↔ x �
 theorem pow_lt_iff_lt_left {m x y : ℕ} (k : 1 ≤ m) : x ^ m < y ^ m ↔ x < y :=
   StrictMono.lt_iff_lt (pow_left_strict_mono k)
 
-theorem pow_left_injective {m : ℕ} (k : 1 ≤ m) : Function.Injective fun x : ℕ => x ^ m :=
-  StrictMono.injective (pow_left_strict_mono k)
+-- error in Data.Nat.Pow: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem pow_left_injective {m : exprℕ()} (k : «expr ≤ »(1, m)) : function.injective (λ x : exprℕ(), «expr ^ »(x, m)) :=
+strict_mono.injective (pow_left_strict_mono k)
 
 theorem sq_sub_sq (a b : ℕ) : a ^ 2 - b ^ 2 = (a+b)*a - b :=
   by 
@@ -190,7 +194,7 @@ theorem pow_dvd_pow_iff_le_right {x k l : ℕ} (w : 1 < x) : x ^ k ∣ x ^ l ↔
 theorem pow_dvd_pow_iff_le_right' {b k l : ℕ} : (b+2) ^ k ∣ (b+2) ^ l ↔ k ≤ l :=
   pow_dvd_pow_iff_le_right (Nat.lt_of_sub_eq_succₓ rfl)
 
-theorem not_pos_pow_dvd : ∀ {p k : ℕ} hp : 1 < p hk : 1 < k, ¬p ^ k ∣ p
+theorem not_pos_pow_dvd : ∀ {p k : ℕ} (hp : 1 < p) (hk : 1 < k), ¬p ^ k ∣ p
 | succ p, succ k, hp, hk, h =>
   have  : (succ p*succ p ^ k) ∣ succ p*1 :=
     by 
@@ -262,7 +266,7 @@ theorem shiftl'_ne_zero_left b {m} (h : m ≠ 0) n : shiftl' b m n ≠ 0 :=
   by 
     induction n <;> simp [shiftl', bit_ne_zero]
 
-theorem shiftl'_tt_ne_zero m : ∀ {n} h : n ≠ 0, shiftl' tt m n ≠ 0
+theorem shiftl'_tt_ne_zero m : ∀ {n} (h : n ≠ 0), shiftl' tt m n ≠ 0
 | 0, h => absurd rfl h
 | succ n, _ => Nat.bit1_ne_zero _
 

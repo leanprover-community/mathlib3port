@@ -29,5 +29,10 @@ theorem length_take {α} (s : Streamₓ α) (n : ℕ) : (take s n).length = n :=
 def corec_state {σ α} (cmd : State σ α) (s : σ) : Streamₓ α :=
   Streamₓ.corec Prod.fst (cmd.run ∘ Prod.snd) (cmd.run s)
 
+@[simp]
+theorem head_drop {α} (a : Streamₓ α) (n : ℕ) : (a.drop n).head = a.nth n :=
+  by 
+    simp only [Streamₓ.drop, Streamₓ.head, zero_addₓ]
+
 end Streamₓ
 

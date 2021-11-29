@@ -466,22 +466,17 @@ end
 
 end 
 
-def eval : code → ℕ →. ℕ
-| zero => pure 0
-| succ => Nat.succ
-| left => «expr↑ » fun n : ℕ => n.unpair.1
-| right => «expr↑ » fun n : ℕ => n.unpair.2
-| pair cf cg => fun n => (mkpair <$> eval cf n)<*>eval cg n
-| comp cf cg => fun n => eval cg n >>= eval cf
-| prec cf cg =>
-  Nat.unpaired
-    fun a n =>
-      n.elim (eval cf a)
-        fun y IH =>
-          do 
-            let i ← IH 
-            eval cg (mkpair a (mkpair y i))
-| rfind' cf => Nat.unpaired fun a m => (Nat.rfind fun n => (fun m => m = 0) <$> eval cf (mkpair a (n+m))).map (·+m)
+-- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+def eval : code → «expr →. »(exprℕ(), exprℕ())
+| zero := pure 0
+| succ := nat.succ
+| left := «expr↑ »(λ n : exprℕ(), n.unpair.1)
+| right := «expr↑ »(λ n : exprℕ(), n.unpair.2)
+| pair cf cg := λ n, «expr <*> »(«expr <$> »(mkpair, eval cf n), eval cg n)
+| comp cf cg := λ n, «expr >>= »(eval cg n, eval cf)
+| prec cf cg := nat.unpaired (λ a n, n.elim (eval cf a) (λ y IH, do { i ← IH, eval cg (mkpair a (mkpair y i)) }))
+| rfind' cf := nat.unpaired (λ
+ a m, (nat.rfind (λ n, «expr <$> »(λ m, «expr = »(m, 0), eval cf (mkpair a «expr + »(n, m))))).map ((«expr + » m)))
 
 instance  : HasMem (ℕ →. ℕ) code :=
   ⟨fun f c => eval c = f⟩
@@ -573,7 +568,7 @@ theorem exists_code {f : ℕ →. ℕ} : Nat.Partrec f ↔ ∃ c : code, eval c 
         case nat.partrec.code.rfind' cf pf => 
           exact pf.rfind'⟩
 
-def evaln : ∀ k : ℕ, code → ℕ → Option ℕ
+def evaln : ∀ (k : ℕ), code → ℕ → Option ℕ
 | 0, _ => fun m => none
 | k+1, zero => fun n => guardₓ (n ≤ k) >> pure 0
 | k+1, succ => fun n => guardₓ (n ≤ k) >> pure (Nat.succ n)
@@ -774,9 +769,9 @@ private def lup (L : List (List (Option ℕ))) (p : ℕ × code) (n : ℕ) :=
     let o ← l.nth n 
     o
 
-private theorem hlup : Primrec fun p : _ × (_ × _) × _ => lup p.1 p.2.1 p.2.2 :=
-  option_bind (list_nth.comp fst (Primrec.encode.comp$ fst.comp snd))
-    (option_bind (list_nth.comp snd$ snd.comp$ snd.comp fst) snd)
+-- error in Computability.PartrecCode: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+private theorem hlup : primrec (λ p : «expr × »(_, «expr × »(«expr × »(_, _), _)), lup p.1 p.2.1 p.2.2) :=
+option_bind (list_nth.comp fst «expr $ »(primrec.encode.comp, fst.comp snd)) (option_bind «expr $ »(list_nth.comp snd, «expr $ »(snd.comp, snd.comp fst)) snd)
 
 private def G (L : List (List (Option ℕ))) : Option (List (Option ℕ)) :=
   Option.some$

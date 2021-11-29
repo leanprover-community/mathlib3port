@@ -59,16 +59,16 @@ differentiations of measure that apply in both contexts.
 -/
 @[nolint has_inhabited_instance]
 structure VitaliFamily{m : MeasurableSpace α}(μ : Measureₓ α) where 
-  SetsAt : ∀ x : α, Set (Set α)
-  MeasurableSet' : ∀ x : α, ∀ a : Set α, a ∈ sets_at x → MeasurableSet a 
-  nonempty_interior : ∀ x : α, ∀ y : Set α, y ∈ sets_at x → (Interior y).Nonempty 
-  Nontrivial : ∀ x : α ε _ : ε > (0 : ℝ), ∃ (y : _)(_ : y ∈ sets_at x), y ⊆ closed_ball x ε 
+  SetsAt : ∀ (x : α), Set (Set α)
+  MeasurableSet' : ∀ (x : α), ∀ (a : Set α), a ∈ sets_at x → MeasurableSet a 
+  nonempty_interior : ∀ (x : α), ∀ (y : Set α), y ∈ sets_at x → (Interior y).Nonempty 
+  Nontrivial : ∀ (x : α) ε (_ : ε > (0 : ℝ)), ∃ (y : _)(_ : y ∈ sets_at x), y ⊆ closed_ball x ε 
   covering :
-  ∀ s : Set α f : ∀ x : α, Set (Set α),
-    (∀ x _ : x ∈ s, f x ⊆ sets_at x) →
-      (∀ x _ : x ∈ s ε _ : ε > (0 : ℝ), ∃ (a : _)(_ : a ∈ f x), a ⊆ closed_ball x ε) →
+  ∀ (s : Set α) (f : ∀ (x : α), Set (Set α)),
+    (∀ x (_ : x ∈ s), f x ⊆ sets_at x) →
+      (∀ x (_ : x ∈ s) ε (_ : ε > (0 : ℝ)), ∃ (a : _)(_ : a ∈ f x), a ⊆ closed_ball x ε) →
         ∃ (t : Set α)(u : α → Set α),
-          t ⊆ s ∧ t.pairwise_disjoint u ∧ (∀ x _ : x ∈ t, u x ∈ f x) ∧ μ (s \ ⋃(x : _)(_ : x ∈ t), u x) = 0
+          t ⊆ s ∧ t.pairwise_disjoint u ∧ (∀ x (_ : x ∈ t), u x ∈ f x) ∧ μ (s \ ⋃(x : _)(_ : x ∈ t), u x) = 0
 
 namespace VitaliFamily
 
@@ -92,7 +92,7 @@ every point `x` in `s` belongs to arbitrarily small sets in `v.sets_at x ∩ f x
 the subfamilies for which the Vitali family definition ensures that one can extract a disjoint
 covering of almost all `s`. -/
 def fine_subfamily_on (v : VitaliFamily μ) (f : α → Set (Set α)) (s : Set α) : Prop :=
-  ∀ x _ : x ∈ s, ∀ ε _ : ε > 0, ∃ (a : _)(_ : a ∈ v.sets_at x ∩ f x), a ⊆ closed_ball x ε
+  ∀ x (_ : x ∈ s), ∀ ε (_ : ε > 0), ∃ (a : _)(_ : a ∈ v.sets_at x ∩ f x), a ⊆ closed_ball x ε
 
 namespace FineSubfamilyOn
 
@@ -102,7 +102,7 @@ include h
 
 theorem exists_disjoint_covering_ae :
   ∃ (t : Set α)(u : α → Set α),
-    t ⊆ s ∧ t.pairwise_disjoint u ∧ (∀ x _ : x ∈ t, u x ∈ v.sets_at x ∩ f x) ∧ μ (s \ ⋃(x : _)(_ : x ∈ t), u x) = 0 :=
+    t ⊆ s ∧ t.pairwise_disjoint u ∧ (∀ x (_ : x ∈ t), u x ∈ v.sets_at x ∩ f x) ∧ μ (s \ ⋃(x : _)(_ : x ∈ t), u x) = 0 :=
   v.covering s (fun x => v.sets_at x ∩ f x) (fun x hx => inter_subset_left _ _) h
 
 /-- Given `h : v.fine_subfamily_on f s`, then `h.index` is a subset of `s` parametrizing a disjoint
@@ -121,8 +121,9 @@ theorem index_subset : h.index ⊆ s :=
 theorem covering_disjoint : h.index.pairwise_disjoint h.covering :=
   h.exists_disjoint_covering_ae.some_spec.some_spec.2.1
 
-theorem covering_disjoint_subtype : Pairwise (Disjoint on fun x : h.index => h.covering x) :=
-  (pairwise_subtype_iff_pairwise_set _ _).2 h.covering_disjoint
+-- error in MeasureTheory.Covering.VitaliFamily: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem covering_disjoint_subtype : pairwise «expr on »(disjoint, λ x : h.index, h.covering x) :=
+(pairwise_subtype_iff_pairwise_set _ _).2 h.covering_disjoint
 
 theorem covering_mem {x : α} (hx : x ∈ h.index) : h.covering x ∈ f x :=
   (h.exists_disjoint_covering_ae.some_spec.some_spec.2.2.1 x hx).2
@@ -169,7 +170,7 @@ def filter_at (x : α) : Filter (Set α) :=
   ⨅(ε : _)(_ : ε ∈ Ioi (0 : ℝ)), 𝓟 { a∈v.sets_at x | a ⊆ closed_ball x ε }
 
 theorem mem_filter_at_iff {x : α} {s : Set (Set α)} :
-  s ∈ v.filter_at x ↔ ∃ (ε : _)(_ : ε > (0 : ℝ)), ∀ a _ : a ∈ v.sets_at x, a ⊆ closed_ball x ε → a ∈ s :=
+  s ∈ v.filter_at x ↔ ∃ (ε : _)(_ : ε > (0 : ℝ)), ∀ a (_ : a ∈ v.sets_at x), a ⊆ closed_ball x ε → a ∈ s :=
   by 
     simp only [filter_at, exists_prop, gt_iff_lt]
     rw [mem_binfi_of_directed]
@@ -193,7 +194,7 @@ instance filter_at_ne_bot (x : α) : (v.filter_at x).ne_bot :=
     exact ⟨w, w_sets, hw⟩
 
 theorem eventually_filter_at_iff {x : α} {P : Set α → Prop} :
-  (∀ᶠa in v.filter_at x, P a) ↔ ∃ (ε : _)(_ : ε > (0 : ℝ)), ∀ a _ : a ∈ v.sets_at x, a ⊆ closed_ball x ε → P a :=
+  (∀ᶠa in v.filter_at x, P a) ↔ ∃ (ε : _)(_ : ε > (0 : ℝ)), ∀ a (_ : a ∈ v.sets_at x), a ⊆ closed_ball x ε → P a :=
   v.mem_filter_at_iff
 
 -- error in MeasureTheory.Covering.VitaliFamily: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
@@ -204,7 +205,7 @@ begin
 end
 
 theorem frequently_filter_at_iff {x : α} {P : Set α → Prop} :
-  (∃ᶠa in v.filter_at x, P a) ↔ ∀ ε _ : ε > (0 : ℝ), ∃ (a : _)(_ : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ P a :=
+  (∃ᶠa in v.filter_at x, P a) ↔ ∀ ε (_ : ε > (0 : ℝ)), ∃ (a : _)(_ : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ P a :=
   by 
     simp only [Filter.Frequently, eventually_filter_at_iff, not_exists, exists_prop, not_and, not_not, not_forall]
 
@@ -215,7 +216,7 @@ theorem eventually_filter_at_subset_of_nhds {x : α} {o : Set α} (hx : o ∈ �
     exact ⟨ε / 2, half_pos εpos, fun a av ha => ha.trans ((closed_ball_subset_ball (half_lt_self εpos)).trans hε)⟩
 
 theorem fine_subfamily_on_of_frequently (v : VitaliFamily μ) (f : α → Set (Set α)) (s : Set α)
-  (h : ∀ x _ : x ∈ s, ∃ᶠa in v.filter_at x, a ∈ f x) : v.fine_subfamily_on f s :=
+  (h : ∀ x (_ : x ∈ s), ∃ᶠa in v.filter_at x, a ∈ f x) : v.fine_subfamily_on f s :=
   by 
     intro x hx ε εpos 
     obtain ⟨a, av, ha, af⟩ : ∃ (a : Set α)(H : a ∈ v.sets_at x), a ⊆ closed_ball x ε ∧ a ∈ f x :=

@@ -35,8 +35,8 @@ universe u
 def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : positive_compacts (ι → ℝ) :=
   ⟨Set.Pi Set.Univ fun i => Icc 0 1, is_compact_univ_pi fun i => is_compact_Icc,
     by 
-      rw [interior_pi_set]
-      simp only [interior_Icc, univ_pi_nonempty_iff, nonempty_Ioo, implies_true_iff, zero_lt_one]⟩
+      simp only [interior_pi_set, finite.of_fintype, interior_Icc, univ_pi_nonempty_iff, nonempty_Ioo, implies_true_iff,
+        zero_lt_one]⟩
 
 namespace MeasureTheory
 

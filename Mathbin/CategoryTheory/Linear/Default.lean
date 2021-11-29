@@ -36,13 +36,13 @@ namespace CategoryTheory
 /-- A category is called `R`-linear if `P ⟶ Q` is an `R`-module such that composition is
     `R`-linear in both variables. -/
 class linear(R : Type w)[Semiringₓ R](C : Type u)[category.{v} C][preadditive C] where 
-  homModule : ∀ X Y : C, Module R (X ⟶ Y) :=  by 
+  homModule : ∀ (X Y : C), Module R (X ⟶ Y) :=  by 
   runTac 
     tactic.apply_instance 
-  smul_comp' : ∀ X Y Z : C r : R f : X ⟶ Y g : Y ⟶ Z, (r • f) ≫ g = r • f ≫ g :=  by 
+  smul_comp' : ∀ (X Y Z : C) (r : R) (f : X ⟶ Y) (g : Y ⟶ Z), (r • f) ≫ g = r • f ≫ g :=  by 
   runTac 
     obviously 
-  comp_smul' : ∀ X Y Z : C f : X ⟶ Y r : R g : Y ⟶ Z, f ≫ (r • g) = r • f ≫ g :=  by 
+  comp_smul' : ∀ (X Y Z : C) (f : X ⟶ Y) (r : R) (g : Y ⟶ Z), f ≫ (r • g) = r • f ≫ g :=  by 
   runTac 
     obviously
 

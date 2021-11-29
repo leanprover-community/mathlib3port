@@ -145,9 +145,10 @@ theorem to_equiv_injective : injective (Diffeomorph.toEquiv : (M ≃ₘ^n⟮I,I'
 theorem to_equiv_inj {h h' : M ≃ₘ^n⟮I,I'⟯ M'} : h.to_equiv = h'.to_equiv ↔ h = h' :=
   to_equiv_injective.eq_iff
 
+-- error in Geometry.Manifold.Diffeomorph: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Coercion to function `λ h : M ≃ₘ^n⟮I, I'⟯ M', (h : M → M')` is injective. -/
-theorem coe_fn_injective : injective fun h : M ≃ₘ^n⟮I,I'⟯ M' x : M => h x :=
-  Equiv.coe_fn_injective.comp to_equiv_injective
+theorem coe_fn_injective : injective (λ (h : «expr ≃ₘ^ ⟮ , ⟯ »(M, n, I, I', M')) (x : M), h x) :=
+equiv.coe_fn_injective.comp to_equiv_injective
 
 @[ext]
 theorem ext {h h' : M ≃ₘ^n⟮I,I'⟯ M'} (Heq : ∀ x, h x = h' x) : h = h' :=

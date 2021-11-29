@@ -119,7 +119,7 @@ theorem map_add_le {x y g} (hx : v x ≤ g) (hy : v y ≤ g) : v (x+y) ≤ g :=
 theorem map_add_lt {x y g} (hx : v x < g) (hy : v y < g) : v (x+y) < g :=
   lt_of_le_of_ltₓ (v.map_add x y)$ max_ltₓ hx hy
 
-theorem map_sum_le {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf : ∀ i _ : i ∈ s, v (f i) ≤ g) :
+theorem map_sum_le {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf : ∀ i (_ : i ∈ s), v (f i) ≤ g) :
   v (∑i in s, f i) ≤ g :=
   by 
     refine' Finset.induction_on s (fun _ => trans_rel_right (· ≤ ·) v.map_zero zero_le') (fun a s has ih hf => _) hf 
@@ -127,7 +127,7 @@ theorem map_sum_le {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf 
     rw [Finset.sum_insert has]
     exact v.map_add_le hf.1 (ih hf.2)
 
-theorem map_sum_lt {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g ≠ 0) (hf : ∀ i _ : i ∈ s, v (f i) < g) :
+theorem map_sum_lt {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g ≠ 0) (hf : ∀ i (_ : i ∈ s), v (f i) < g) :
   v (∑i in s, f i) < g :=
   by 
     refine'
@@ -137,12 +137,12 @@ theorem map_sum_lt {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg 
     rw [Finset.sum_insert has]
     exact v.map_add_lt hf.1 (ih hf.2)
 
-theorem map_sum_lt' {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : 0 < g) (hf : ∀ i _ : i ∈ s, v (f i) < g) :
+theorem map_sum_lt' {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : 0 < g) (hf : ∀ i (_ : i ∈ s), v (f i) < g) :
   v (∑i in s, f i) < g :=
   v.map_sum_lt (ne_of_gtₓ hg) hf
 
 @[simp]
-theorem map_pow : ∀ x n : ℕ, v (x ^ n) = v x ^ n :=
+theorem map_pow : ∀ x (n : ℕ), v (x ^ n) = v x ^ n :=
   v.to_monoid_with_zero_hom.to_monoid_hom.map_pow
 
 @[ext]
@@ -396,23 +396,19 @@ def supp : Ideal R :=
 theorem mem_supp_iff (x : R) : x ∈ supp v ↔ v x = 0 :=
   Iff.rfl
 
+-- error in RingTheory.Valuation.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The support of a valuation is a prime ideal. -/
-instance  [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
-  ⟨fun h : v.supp = ⊤ =>
-      one_ne_zero$
-        show (1 : Γ₀) = 0 from
-          calc 1 = v 1 := v.map_one.symm 
-            _ = 0 :=
-            show (1 : R) ∈ supp v by 
-              rw [h]
-              trivial
-            ,
-    fun x y hxy =>
-      by 
-        show v x = 0 ∨ v y = 0
-        change v (x*y) = 0 at hxy 
-        rw [v.map_mul x y] at hxy 
-        exact eq_zero_or_eq_zero_of_mul_eq_zero hxy⟩
+instance [nontrivial Γ₀] [no_zero_divisors Γ₀] : ideal.is_prime (supp v) :=
+⟨λ
+ h : «expr = »(v.supp, «expr⊤»()), «expr $ »(one_ne_zero, show «expr = »((1 : Γ₀), 0), from calc
+    «expr = »(1, v 1) : v.map_one.symm
+    «expr = »(..., 0) : show «expr ∈ »((1 : R), supp v), by { rw [expr h] [],
+      trivial }), λ x y hxy, begin
+   show [expr «expr ∨ »(«expr = »(v x, 0), «expr = »(v y, 0))],
+   change [expr «expr = »(v «expr * »(x, y), 0)] [] ["at", ident hxy],
+   rw ["[", expr v.map_mul x y, "]"] ["at", ident hxy],
+   exact [expr eq_zero_or_eq_zero_of_mul_eq_zero hxy]
+ end⟩
 
 -- error in RingTheory.Valuation.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem map_add_supp (a : R) {s : R} (h : «expr ∈ »(s, supp v)) : «expr = »(v «expr + »(a, s), v a) :=
@@ -568,20 +564,20 @@ theorem map_le_add {x y g} (hx : g ≤ v x) (hy : g ≤ v y) : g ≤ v (x+y) :=
 theorem map_lt_add {x y g} (hx : g < v x) (hy : g < v y) : g < v (x+y) :=
   v.map_add_lt hx hy
 
-theorem map_le_sum {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf : ∀ i _ : i ∈ s, g ≤ v (f i)) :
+theorem map_le_sum {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hf : ∀ i (_ : i ∈ s), g ≤ v (f i)) :
   g ≤ v (∑i in s, f i) :=
   v.map_sum_le hf
 
-theorem map_lt_sum {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g ≠ ⊤) (hf : ∀ i _ : i ∈ s, g < v (f i)) :
+theorem map_lt_sum {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g ≠ ⊤) (hf : ∀ i (_ : i ∈ s), g < v (f i)) :
   g < v (∑i in s, f i) :=
   v.map_sum_lt hg hf
 
-theorem map_lt_sum' {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g < ⊤) (hf : ∀ i _ : i ∈ s, g < v (f i)) :
+theorem map_lt_sum' {ι : Type _} {s : Finset ι} {f : ι → R} {g : Γ₀} (hg : g < ⊤) (hf : ∀ i (_ : i ∈ s), g < v (f i)) :
   g < v (∑i in s, f i) :=
   v.map_sum_lt' hg hf
 
 @[simp]
-theorem map_pow : ∀ x n : ℕ, v (x ^ n) = n • v x :=
+theorem map_pow : ∀ x (n : ℕ), v (x ^ n) = n • v x :=
   v.map_pow
 
 @[ext]

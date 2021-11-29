@@ -176,7 +176,7 @@ theorem interpolate_sub f g : interpolate s (f - g) = interpolate s f - interpol
 theorem interpolate_smul (c : F) f : interpolate s (c • f) = c • interpolate s f :=
   (linterpolate s).map_smul c f
 
-theorem eq_zero_of_eval_eq_zero {f : Polynomial F'} (hf1 : f.degree < s'.card) (hf2 : ∀ x _ : x ∈ s', f.eval x = 0) :
+theorem eq_zero_of_eval_eq_zero {f : Polynomial F'} (hf1 : f.degree < s'.card) (hf2 : ∀ x (_ : x ∈ s'), f.eval x = 0) :
   f = 0 :=
   by_contradiction$
     fun hf3 =>
@@ -189,7 +189,7 @@ theorem eq_zero_of_eval_eq_zero {f : Polynomial F'} (hf1 : f.degree < s'.card) (
           
 
 theorem eq_of_eval_eq {f g : Polynomial F'} (hf : f.degree < s'.card) (hg : g.degree < s'.card)
-  (hfg : ∀ x _ : x ∈ s', f.eval x = g.eval x) : f = g :=
+  (hfg : ∀ x (_ : x ∈ s'), f.eval x = g.eval x) : f = g :=
   eq_of_sub_eq_zero$
     eq_zero_of_eval_eq_zero s' (lt_of_le_of_ltₓ (degree_sub_le f g)$ max_ltₓ hf hg)
       fun x hx =>
@@ -199,21 +199,21 @@ theorem eq_of_eval_eq {f g : Polynomial F'} (hf : f.degree < s'.card) (hg : g.de
 theorem eq_interpolate (f : Polynomial F) (hf : f.degree < s.card) : (interpolate s fun x => f.eval x) = f :=
   eq_of_eval_eq s (degree_interpolate_lt s _) hf$ fun x hx => eval_interpolate s _ x hx
 
+-- error in LinearAlgebra.Lagrange: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Lagrange interpolation induces isomorphism between functions from `s` and polynomials
-of degree less than `s.card`. -/
-def fun_equiv_degree_lt : degree_lt F s.card ≃ₗ[F] s → F :=
-  { toFun := fun f x => f.1.eval x, map_add' := fun f g => funext$ fun x => eval_add,
-    map_smul' :=
-      fun c f =>
-        funext$
-          fun x =>
-            by 
-              change eval («expr↑ » x) (c • f).val = (c • fun x : s => eval («expr↑ » x) f.val) x 
-              rw [Pi.smul_apply, smul_eq_mul, ←@eval_C F c _ x, ←eval_mul, eval_C, C_mul']
-              rfl,
-    invFun := fun f => ⟨interpolate s f, mem_degree_lt.2$ degree_interpolate_lt s f⟩,
-    left_inv := fun f => Subtype.eq$ eq_interpolate s f$ mem_degree_lt.1 f.2,
-    right_inv := fun f => funext$ fun ⟨x, hx⟩ => eval_interpolate s f x hx }
+of degree less than `s.card`. -/ def fun_equiv_degree_lt : «expr ≃ₗ[ ] »(degree_lt F s.card, F, s → F) :=
+{ to_fun := λ f x, f.1.eval x,
+  map_add' := λ f g, «expr $ »(funext, λ x, eval_add),
+  map_smul' := λ
+  c
+  f, «expr $ »(funext, λ
+   x, by { change [expr «expr = »(eval «expr↑ »(x) «expr • »(c, f).val, «expr • »(c, λ
+        x : s, eval «expr↑ »(x) f.val) x)] [] [],
+     rw ["[", expr pi.smul_apply, ",", expr smul_eq_mul, ",", "<-", expr @eval_C F c _ x, ",", "<-", expr eval_mul, ",", expr eval_C, ",", expr C_mul', "]"] [],
+     refl }),
+  inv_fun := λ f, ⟨interpolate s f, «expr $ »(mem_degree_lt.2, degree_interpolate_lt s f)⟩,
+  left_inv := λ f, «expr $ »(subtype.eq, «expr $ »(eq_interpolate s f, mem_degree_lt.1 f.2)),
+  right_inv := λ f, «expr $ »(funext, λ ⟨x, hx⟩, eval_interpolate s f x hx) }
 
 end Lagrange
 

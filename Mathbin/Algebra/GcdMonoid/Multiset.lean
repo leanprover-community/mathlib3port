@@ -70,6 +70,15 @@ theorem normalize_lcm (s : Multiset α) : normalize s.lcm = s.lcm :=
       by 
         simp 
 
+@[simp]
+theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : α) ∈ s :=
+  by 
+    induction' s using Multiset.induction_on with a s ihs
+    ·
+      simp only [lcm_zero, one_ne_zero, not_mem_zero]
+    ·
+      simp only [mem_cons, lcm_cons, lcm_eq_zero_iff, ihs, @eq_comm _ a]
+
 variable[DecidableEq α]
 
 @[simp]
@@ -151,7 +160,7 @@ theorem normalize_gcd (s : Multiset α) : normalize s.gcd = s.gcd :=
       by 
         simp 
 
-theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s → x = 0 :=
+theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ (x : α), x ∈ s → x = 0 :=
   by 
     split 
     ·

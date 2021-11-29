@@ -114,30 +114,45 @@ end Ennreal
 
 namespace Nnreal
 
+-- error in Analysis.PSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Cauchy condensation test for a series of `nnreal` version. -/
-theorem summable_condensed_iff {f : ℕ →  ℝ≥0 } (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
-  (Summable fun k : ℕ => (2^k)*f (2^k)) ↔ Summable f :=
-  by 
-    simp only [←Ennreal.tsum_coe_ne_top_iff_summable, Ne.def, not_iff_not, Ennreal.coe_mul, Ennreal.coe_pow,
-      Ennreal.coe_two]
-    split  <;> intro h
-    ·
-      replace hf : ∀ m n, 1 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m :=
-        fun m n hm hmn => Ennreal.coe_le_coe.2 (hf (zero_lt_one.trans hm) hmn)
-      simpa [h, Ennreal.add_eq_top] using Ennreal.tsum_condensed_le hf
-    ·
-      replace hf : ∀ m n, 0 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn => Ennreal.coe_le_coe.2 (hf hm hmn)
-      simpa [h, Ennreal.add_eq_top] using Ennreal.le_tsum_condensed hf
+theorem summable_condensed_iff
+{f : exprℕ() → «exprℝ≥0»()}
+(hf : ∀
+ {{m
+   n}}, «expr < »(0, m) → «expr ≤ »(m, n) → «expr ≤ »(f n, f m)) : «expr ↔ »(summable (λ
+  k : exprℕ(), «expr * »(«expr ^ »(2, k), f «expr ^ »(2, k))), summable f) :=
+begin
+  simp [] [] ["only"] ["[", "<-", expr ennreal.tsum_coe_ne_top_iff_summable, ",", expr ne.def, ",", expr not_iff_not, ",", expr ennreal.coe_mul, ",", expr ennreal.coe_pow, ",", expr ennreal.coe_two, "]"] [] [],
+  split; intro [ident h],
+  { replace [ident hf] [":", expr ∀
+     m
+     n, «expr < »(1, m) → «expr ≤ »(m, n) → «expr ≤ »((f n : «exprℝ≥0∞»()), f m)] [":=", expr λ
+     m n hm hmn, ennreal.coe_le_coe.2 (hf (zero_lt_one.trans hm) hmn)],
+    simpa [] [] [] ["[", expr h, ",", expr ennreal.add_eq_top, "]"] [] ["using", expr ennreal.tsum_condensed_le hf] },
+  { replace [ident hf] [":", expr ∀
+     m
+     n, «expr < »(0, m) → «expr ≤ »(m, n) → «expr ≤ »((f n : «exprℝ≥0∞»()), f m)] [":=", expr λ
+     m n hm hmn, ennreal.coe_le_coe.2 (hf hm hmn)],
+    simpa [] [] [] ["[", expr h, ",", expr ennreal.add_eq_top, "]"] [] ["using", expr ennreal.le_tsum_condensed hf] }
+end
 
 end Nnreal
 
+-- error in Analysis.PSeries: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Cauchy condensation test for series of nonnegative real numbers. -/
-theorem summable_condensed_iff_of_nonneg {f : ℕ → ℝ} (h_nonneg : ∀ n, 0 ≤ f n)
-  (h_mono : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) : (Summable fun k : ℕ => (2^k)*f (2^k)) ↔ Summable f :=
-  by 
-    lift f to ℕ →  ℝ≥0  using h_nonneg 
-    simp only [Nnreal.coe_le_coe] at *
-    exactModCast Nnreal.summable_condensed_iff h_mono
+theorem summable_condensed_iff_of_nonneg
+{f : exprℕ() → exprℝ()}
+(h_nonneg : ∀ n, «expr ≤ »(0, f n))
+(h_mono : ∀
+ {{m
+   n}}, «expr < »(0, m) → «expr ≤ »(m, n) → «expr ≤ »(f n, f m)) : «expr ↔ »(summable (λ
+  k : exprℕ(), «expr * »(«expr ^ »(2, k), f «expr ^ »(2, k))), summable f) :=
+begin
+  lift [expr f] ["to", expr exprℕ() → «exprℝ≥0»()] ["using", expr h_nonneg] [],
+  simp [] [] ["only"] ["[", expr nnreal.coe_le_coe, "]"] [] ["at", "*"],
+  exact_mod_cast [expr nnreal.summable_condensed_iff h_mono]
+end
 
 open Real
 

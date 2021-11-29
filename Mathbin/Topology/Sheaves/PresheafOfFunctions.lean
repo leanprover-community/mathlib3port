@@ -33,16 +33,16 @@ namespace Top
 
 variable(X : Top.{v})
 
+-- error in Topology.Sheaves.PresheafOfFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The presheaf of dependently typed functions on `X`, with fibres given by a type family `T`.
 There is no requirement that the functions are continuous, here.
--/
-def presheaf_to_Types (T : X → Type v) : X.presheaf (Type v) :=
-  { obj := fun U => ∀ x : unop U, T x, map := fun U V i g => fun x : unop V => g (i.unop x) }
+-/ def presheaf_to_Types (T : X → Type v) : X.presheaf (Type v) :=
+{ obj := λ U, ∀ x : unop U, T x, map := λ U V i g, λ x : unop V, g (i.unop x) }
 
 @[simp]
 theorem presheaf_to_Types_obj {T : X → Type v} {U : «expr ᵒᵖ» (opens X)} :
-  (presheaf_to_Types X T).obj U = ∀ x : unop U, T x :=
+  (presheaf_to_Types X T).obj U = ∀ (x : unop U), T x :=
   rfl
 
 @[simp]

@@ -26,7 +26,7 @@ theorem Quotientₓ (R : Type u) [CommRingₓ R] (p : ℕ) [hp1 : Fact p.prime] 
 /-- If an ideal does not contain any coercions of natural numbers other than zero, then its quotient
 inherits the characteristic of the underlying ring. -/
 theorem quotient' {R : Type _} [CommRingₓ R] (p : ℕ) [CharP R p] (I : Ideal R)
-  (h : ∀ x : ℕ, (x : R) ∈ I → (x : R) = 0) : CharP I.quotient p :=
+  (h : ∀ (x : ℕ), (x : R) ∈ I → (x : R) = 0) : CharP I.quotient p :=
   ⟨fun x =>
       by 
         rw [←cast_eq_zero_iff R p x, ←(Ideal.Quotient.mk I).map_nat_cast]

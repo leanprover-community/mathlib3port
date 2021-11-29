@@ -58,23 +58,27 @@ section
 
 variable[has_product f]
 
+-- error in CategoryTheory.Limits.Preserves.Shapes.Products: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If `G` preserves products and `C` has them, then the fan constructed of the mapped projection of a
 product is a limit.
 -/
-def is_limit_of_has_product_of_preserves_limit [preserves_limit (discrete.functor f) G] :
-  is_limit (fan.mk _ fun j : J => G.map (pi.π f j) : fan fun j => G.obj (f j)) :=
-  is_limit_fan_mk_obj_of_is_limit G f _ (product_is_product _)
+def is_limit_of_has_product_of_preserves_limit
+[preserves_limit (discrete.functor f) G] : is_limit (fan.mk _ (λ j : J, G.map (pi.π f j)) : fan (λ j, G.obj (f j))) :=
+is_limit_fan_mk_obj_of_is_limit G f _ (product_is_product _)
 
-variable[has_product fun j : J => G.obj (f j)]
+-- error in CategoryTheory.Limits.Preserves.Shapes.Products: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+variables [has_product (λ j : J, G.obj (f j))]
 
+-- error in CategoryTheory.Limits.Preserves.Shapes.Products: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `pi_comparison G f` is an isomorphism, then `G` preserves the limit of `f`. -/
 def preserves_product.of_iso_comparison [i : is_iso (pi_comparison G f)] : preserves_limit (discrete.functor f) G :=
-  by 
-    apply preserves_limit_of_preserves_limit_cone (product_is_product f)
-    apply (is_limit_map_cone_fan_mk_equiv _ _ _).symm _ 
-    apply is_limit.of_point_iso (limit.is_limit (discrete.functor fun j : J => G.obj (f j)))
-    apply i
+begin
+  apply [expr preserves_limit_of_preserves_limit_cone (product_is_product f)],
+  apply [expr (is_limit_map_cone_fan_mk_equiv _ _ _).symm _],
+  apply [expr is_limit.of_point_iso (limit.is_limit (discrete.functor (λ j : J, G.obj (f j))))],
+  apply [expr i]
+end
 
 variable[preserves_limit (discrete.functor f) G]
 
@@ -127,24 +131,29 @@ section
 
 variable[has_coproduct f]
 
+-- error in CategoryTheory.Limits.Preserves.Shapes.Products: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If `G` preserves coproducts and `C` has them,
 then the cofan constructed of the mapped inclusion of a coproduct is a colimit.
 -/
-def is_colimit_of_has_coproduct_of_preserves_colimit [preserves_colimit (discrete.functor f) G] :
-  is_colimit (cofan.mk _ fun j : J => G.map (sigma.ι f j) : cofan fun j => G.obj (f j)) :=
-  is_colimit_cofan_mk_obj_of_is_colimit G f _ (coproduct_is_coproduct _)
+def is_colimit_of_has_coproduct_of_preserves_colimit
+[preserves_colimit (discrete.functor f) G] : is_colimit (cofan.mk _ (λ
+ j : J, G.map (sigma.ι f j)) : cofan (λ j, G.obj (f j))) :=
+is_colimit_cofan_mk_obj_of_is_colimit G f _ (coproduct_is_coproduct _)
 
-variable[has_coproduct fun j : J => G.obj (f j)]
+-- error in CategoryTheory.Limits.Preserves.Shapes.Products: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+variables [has_coproduct (λ j : J, G.obj (f j))]
 
+-- error in CategoryTheory.Limits.Preserves.Shapes.Products: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `sigma_comparison G f` is an isomorphism, then `G` preserves the colimit of `f`. -/
-def preserves_coproduct.of_iso_comparison [i : is_iso (sigma_comparison G f)] :
-  preserves_colimit (discrete.functor f) G :=
-  by 
-    apply preserves_colimit_of_preserves_colimit_cocone (coproduct_is_coproduct f)
-    apply (is_colimit_map_cocone_cofan_mk_equiv _ _ _).symm _ 
-    apply is_colimit.of_point_iso (colimit.is_colimit (discrete.functor fun j : J => G.obj (f j)))
-    apply i
+def preserves_coproduct.of_iso_comparison
+[i : is_iso (sigma_comparison G f)] : preserves_colimit (discrete.functor f) G :=
+begin
+  apply [expr preserves_colimit_of_preserves_colimit_cocone (coproduct_is_coproduct f)],
+  apply [expr (is_colimit_map_cocone_cofan_mk_equiv _ _ _).symm _],
+  apply [expr is_colimit.of_point_iso (colimit.is_colimit (discrete.functor (λ j : J, G.obj (f j))))],
+  apply [expr i]
+end
 
 variable[preserves_colimit (discrete.functor f) G]
 

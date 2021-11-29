@@ -113,7 +113,7 @@ def min_fac : Num → PosNum
 | Pos n => n.min_fac
 
 @[simp]
-theorem min_fac_to_nat : ∀ n : Num, (min_fac n : ℕ) = Nat.minFac n
+theorem min_fac_to_nat : ∀ (n : Num), (min_fac n : ℕ) = Nat.minFac n
 | 0 => rfl
 | Pos n => PosNum.min_fac_to_nat _
 

@@ -151,11 +151,10 @@ theorem coe_of (R : Type u) [CommSemiringₓ R] : (CommSemiRing.of R : Type u) =
 instance has_forget_to_SemiRing : has_forget₂ CommSemiRing SemiRing :=
   bundled_hom.forget₂ _ _
 
+-- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
 instance has_forget_to_CommMon : has_forget₂ CommSemiRing CommMon :=
-  has_forget₂.mk' (fun R : CommSemiRing => CommMon.of R) (fun R => rfl) (fun R₁ R₂ f => f.to_monoid_hom)
-    (by 
-      tidy)
+has_forget₂.mk' (λ R : CommSemiRing, CommMon.of R) (λ R, rfl) (λ R₁ R₂ f, f.to_monoid_hom) (by tidy [])
 
 end CommSemiRing
 
@@ -195,11 +194,10 @@ theorem coe_of (R : Type u) [CommRingₓ R] : (CommRingₓₓ.of R : Type u) = R
 instance has_forget_to_Ring : has_forget₂ CommRingₓₓ Ringₓₓ :=
   bundled_hom.forget₂ _ _
 
+-- error in Algebra.Category.CommRing.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
-instance has_forget_to_CommSemiRing : has_forget₂ CommRingₓₓ CommSemiRing :=
-  has_forget₂.mk' (fun R : CommRingₓₓ => CommSemiRing.of R) (fun R => rfl) (fun R₁ R₂ f => f)
-    (by 
-      tidy)
+instance has_forget_to_CommSemiRing : has_forget₂ CommRing CommSemiRing :=
+has_forget₂.mk' (λ R : CommRing, CommSemiRing.of R) (λ R, rfl) (λ R₁ R₂ f, f) (by tidy [])
 
 instance  : full (forget₂ CommRingₓₓ CommSemiRing) :=
   { Preimage := fun X Y f => f }

@@ -27,7 +27,7 @@ We define the following operations on boxes:
 * coercion to `set (ι → ℝ)` and `has_mem (ι → ℝ) (box_integral.box ι)` as described above;
 * `partial_order` and `semilattice_sup` instances such that `I ≤ J` is equivalent to
   `(I : set (ι → ℝ)) ⊆ J`;
-* `lattice` and `semilattice_inf_bot` instances on `with_bot (box_integral.box ι)`;
+* `lattice` instances on `with_bot (box_integral.box ι)`;
 * `box_integral.box.Icc`: the closed box `set.Icc I.lower I.upper`; defined as a bundled monotone
   map from `box ι` to `set (ι → ℝ)`;
 * `box_integral.box.face I i : box (fin n)`: a hyperface of `I : box_integral.box (fin (n + 1))`;
@@ -120,7 +120,7 @@ theorem empty_ne_coe : ∅ ≠ (I : Set (ι → ℝ)) :=
 instance  : LE (box ι) :=
   ⟨fun I J => ∀ ⦃x⦄, x ∈ I → x ∈ J⟩
 
-theorem le_def : I ≤ J ↔ ∀ x _ : x ∈ I, x ∈ J :=
+theorem le_def : I ≤ J ↔ ∀ x (_ : x ∈ I), x ∈ J :=
   Iff.rfl
 
 theorem le_tfae :
@@ -170,9 +170,9 @@ theorem ne_of_disjoint_coe (h : Disjoint (I : Set (ι → ℝ)) J) : I ≠ J :=
 instance  : PartialOrderₓ (box ι) :=
   { PartialOrderₓ.lift (coeₓ : box ι → Set (ι → ℝ)) injective_coe with le := · ≤ · }
 
-/-- Closed box corresponding to `I : box_integral.box ι`. -/
-protected def Icc : box ι ↪o Set (ι → ℝ) :=
-  OrderEmbedding.ofMapLeIff (fun I : box ι => Icc I.lower I.upper) fun I J => (le_tfae I J).out 2 0
+-- error in Analysis.BoxIntegral.Box.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Closed box corresponding to `I : box_integral.box ι`. -/ protected def Icc : «expr ↪o »(box ι, set (ι → exprℝ())) :=
+order_embedding.of_map_le_iff (λ I : box ι, Icc I.lower I.upper) (λ I J, (le_tfae I J).out 2 0)
 
 theorem Icc_def : I.Icc = Icc I.lower I.upper :=
   rfl
@@ -194,11 +194,11 @@ theorem Icc_eq_pi : I.Icc = pi univ fun i => Icc (I.lower i) (I.upper i) :=
 theorem le_iff_Icc : I ≤ J ↔ I.Icc ⊆ J.Icc :=
   (le_tfae I J).out 0 2
 
-theorem antitone_lower : Antitone fun I : box ι => I.lower :=
-  fun I J H => (le_iff_bounds.1 H).1
+-- error in Analysis.BoxIntegral.Box.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem antitone_lower : antitone (λ I : box ι, I.lower) := λ I J H, (le_iff_bounds.1 H).1
 
-theorem monotone_upper : Monotone fun I : box ι => I.upper :=
-  fun I J H => (le_iff_bounds.1 H).2
+-- error in Analysis.BoxIntegral.Box.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem monotone_upper : monotone (λ I : box ι, I.upper) := λ I J H, (le_iff_bounds.1 H).2
 
 theorem coe_subset_Icc : «expr↑ » I ⊆ I.Icc :=
   fun x hx => ⟨fun i => (hx i).1.le, fun i => (hx i).2⟩
@@ -347,9 +347,6 @@ instance  : Lattice (WithBot (box ι)) :=
           simp only [←with_bot_coe_subset_iff, coe_inf] at *
           exact subset_inter h₁ h₂ }
 
-instance  : SemilatticeInfBot (WithBot (box ι)) :=
-  { box.with_bot.lattice, WithBot.semilatticeSup with  }
-
 @[simp, normCast]
 theorem disjoint_with_bot_coe {I J : WithBot (box ι)} : Disjoint (I : Set (ι → ℝ)) J ↔ Disjoint I J :=
   by 
@@ -403,11 +400,11 @@ section Distortion
 
 variable[Fintype ι]
 
+-- error in Analysis.BoxIntegral.Box.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The distortion of a box `I` is the maximum of the ratios of the lengths of its edges.
 It is defined as the maximum of the ratios
-`nndist I.lower I.upper / nndist (I.lower i) (I.upper i)`. -/
-def distortion (I : box ι) :  ℝ≥0  :=
-  Finset.univ.sup$ fun i : ι => nndist I.lower I.upper / nndist (I.lower i) (I.upper i)
+`nndist I.lower I.upper / nndist (I.lower i) (I.upper i)`. -/ def distortion (I : box ι) : «exprℝ≥0»() :=
+«expr $ »(finset.univ.sup, λ i : ι, «expr / »(nndist I.lower I.upper, nndist (I.lower i) (I.upper i)))
 
 -- error in Analysis.BoxIntegral.Box.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem distortion_eq_of_sub_eq_div

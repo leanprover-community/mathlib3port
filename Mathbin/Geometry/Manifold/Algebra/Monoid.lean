@@ -32,41 +32,45 @@ we formulate the definitions and lemmas for any model.
 `[has_continuous_mul G]` as an assumption (worse) or use `haveI` in the proof (better). -/
 library_note "Design choices about smooth algebraic structures"
 
+-- error in Geometry.Manifold.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Basic hypothesis to talk about a smooth (Lie) additive monoid or a smooth additive
 semigroup. A smooth additive monoid over `α`, for example, is obtained by requiring both the
 instances `add_monoid α` and `has_smooth_add α`. -/
-@[ancestor SmoothManifoldWithCorners]
-class
-  HasSmoothAdd{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E](I : ModelWithCorners 𝕜 E H)(G : Type _)[Add G][TopologicalSpace G][ChartedSpace H G] extends
-  SmoothManifoldWithCorners I G : Prop where 
-  smooth_add : Smooth (I.prod I) I fun p : G × G => p.1+p.2
+@[ancestor #[ident smooth_manifold_with_corners]]
+class has_smooth_add
+{𝕜 : Type*}
+[nondiscrete_normed_field 𝕜]
+{H : Type*}
+[topological_space H]
+{E : Type*}
+[normed_group E]
+[normed_space 𝕜 E]
+(I : model_with_corners 𝕜 E H)
+(G : Type*)
+[has_add G]
+[topological_space G]
+[charted_space H G]extends smooth_manifold_with_corners I G : exprProp() :=
+  (smooth_add : smooth (I.prod I) I (λ p : «expr × »(G, G), «expr + »(p.1, p.2)))
 
+-- error in Geometry.Manifold.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Basic hypothesis to talk about a smooth (Lie) monoid or a smooth semigroup.
 A smooth monoid over `G`, for example, is obtained by requiring both the instances `monoid G`
 and `has_smooth_mul I G`. -/
-@[ancestor SmoothManifoldWithCorners, toAdditive]
-class
-  HasSmoothMul{𝕜 :
-    Type
-      _}[NondiscreteNormedField
-      𝕜]{H :
-    Type
-      _}[TopologicalSpace
-      H]{E :
-    Type
-      _}[NormedGroup
-      E][NormedSpace 𝕜 E](I : ModelWithCorners 𝕜 E H)(G : Type _)[Mul G][TopologicalSpace G][ChartedSpace H G] extends
-  SmoothManifoldWithCorners I G : Prop where 
-  smooth_mul : Smooth (I.prod I) I fun p : G × G => p.1*p.2
+@[ancestor #[ident smooth_manifold_with_corners], to_additive #[]]
+class has_smooth_mul
+{𝕜 : Type*}
+[nondiscrete_normed_field 𝕜]
+{H : Type*}
+[topological_space H]
+{E : Type*}
+[normed_group E]
+[normed_space 𝕜 E]
+(I : model_with_corners 𝕜 E H)
+(G : Type*)
+[has_mul G]
+[topological_space G]
+[charted_space H G]extends smooth_manifold_with_corners I G : exprProp() :=
+  (smooth_mul : smooth (I.prod I) I (λ p : «expr × »(G, G), «expr * »(p.1, p.2)))
 
 section HasSmoothMul
 
@@ -99,9 +103,9 @@ section
 
 variable(I)
 
-@[toAdditive]
-theorem smooth_mul : Smooth (I.prod I) I fun p : G × G => p.1*p.2 :=
-  HasSmoothMul.smooth_mul
+-- error in Geometry.Manifold.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem smooth_mul : smooth (I.prod I) I (λ p : «expr × »(G, G), «expr * »(p.1, p.2)) :=
+has_smooth_mul.smooth_mul
 
 /-- If the multiplication is smooth, then it is continuous. This is not an instance for technical
 reasons, see note [Design choices about smooth algebraic structures]. -/
@@ -116,13 +120,12 @@ end
 theorem Smooth.mul {f : M → G} {g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f*g) :=
   (smooth_mul I).comp (hf.prod_mk hg)
 
-@[toAdditive]
-theorem smooth_mul_left {a : G} : Smooth I I fun b : G => a*b :=
-  smooth_const.mul smooth_id
+-- error in Geometry.Manifold.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem smooth_mul_left {a : G} : smooth I I (λ b : G, «expr * »(a, b)) := smooth_const.mul smooth_id
 
-@[toAdditive]
-theorem smooth_mul_right {a : G} : Smooth I I fun b : G => b*a :=
-  smooth_id.mul smooth_const
+-- error in Geometry.Manifold.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]] theorem smooth_mul_right {a : G} : smooth I I (λ b : G, «expr * »(b, a)) :=
+smooth_id.mul smooth_const
 
 @[toAdditive]
 theorem SmoothOn.mul {f : M → G} {g : M → G} {s : Set M} (hf : SmoothOn I' I f s) (hg : SmoothOn I' I g s) :
@@ -226,14 +229,11 @@ variable{𝕜 :
       E']{I' :
     ModelWithCorners 𝕜 E' H'}{G' : Type _}[Monoidₓ G'][TopologicalSpace G'][ChartedSpace H' G'][HasSmoothMul I' G']
 
-theorem smooth_pow : ∀ n : ℕ, Smooth I I fun a : G => a^n
-| 0 =>
-  by 
-    simp only [pow_zeroₓ]
-    exact smooth_const
-| k+1 =>
-  by 
-    simpa [pow_succₓ] using smooth_id.mul (smooth_pow _)
+-- error in Geometry.Manifold.Algebra.Monoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem smooth_pow : ∀ n : exprℕ(), smooth I I (λ a : G, «expr ^ »(a, n))
+| 0 := by { simp [] [] ["only"] ["[", expr pow_zero, "]"] [] [],
+  exact [expr smooth_const] }
+| «expr + »(k, 1) := by simpa [] [] [] ["[", expr pow_succ, "]"] [] ["using", expr smooth_id.mul (smooth_pow _)]
 
 /-- Morphism of additive smooth monoids. -/
 structure
@@ -311,12 +311,12 @@ variable{𝕜 :
     Type _}[TopologicalSpace H']{I' : ModelWithCorners 𝕜 E' H'}{M : Type _}[TopologicalSpace M][ChartedSpace H' M]
 
 @[toAdditive]
-theorem smooth_finset_prod' {ι} {s : Finset ι} {f : ι → M → G} (h : ∀ i _ : i ∈ s, Smooth I' I (f i)) :
+theorem smooth_finset_prod' {ι} {s : Finset ι} {f : ι → M → G} (h : ∀ i (_ : i ∈ s), Smooth I' I (f i)) :
   Smooth I' I (∏i in s, f i) :=
   Finset.prod_induction _ _ (fun f g hf hg => hf.mul hg) (@smooth_const _ _ _ _ _ _ _ I' _ _ _ _ _ _ _ _ I _ _ _ 1) h
 
 @[toAdditive]
-theorem smooth_finset_prod {ι} {s : Finset ι} {f : ι → M → G} (h : ∀ i _ : i ∈ s, Smooth I' I (f i)) :
+theorem smooth_finset_prod {ι} {s : Finset ι} {f : ι → M → G} (h : ∀ i (_ : i ∈ s), Smooth I' I (f i)) :
   Smooth I' I fun x => ∏i in s, f i x :=
   by 
     simp only [←Finset.prod_apply]

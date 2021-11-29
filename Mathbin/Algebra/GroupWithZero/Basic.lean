@@ -216,7 +216,7 @@ theorem eq_of_zero_eq_one (h : (0 : M₀) = 1) (a b : M₀) : a = b :=
   @Subsingleton.elimₓ _ (subsingleton_of_zero_eq_one h) a b
 
 /-- In a monoid with zero, either zero and one are nonequal, or zero is the only element. -/
-theorem zero_ne_one_or_forall_eq_0 : (0 : M₀) ≠ 1 ∨ ∀ a : M₀, a = 0 :=
+theorem zero_ne_one_or_forall_eq_0 : (0 : M₀) ≠ 1 ∨ ∀ (a : M₀), a = 0 :=
   not_or_of_imp eq_zero_of_zero_eq_one
 
 end 
@@ -931,24 +931,22 @@ theorem div_mul_cancel (a : G₀) {b : G₀} (h : b ≠ 0) : ((a / b)*b) = a :=
   by 
     rw [div_eq_mul_inv, inv_mul_cancel_right₀ h a]
 
-theorem div_mul_cancel_of_imp {a b : G₀} (h : b = 0 → a = 0) : ((a / b)*b) = a :=
-  Classical.by_cases
-    (fun hb : b = 0 =>
-      by 
-        simp )
-    (div_mul_cancel a)
+-- error in Algebra.GroupWithZero.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem div_mul_cancel_of_imp
+{a b : G₀}
+(h : «expr = »(b, 0) → «expr = »(a, 0)) : «expr = »(«expr * »(«expr / »(a, b), b), a) :=
+classical.by_cases (λ hb : «expr = »(b, 0), by simp [] [] [] ["[", "*", "]"] [] []) (div_mul_cancel a)
 
 @[simp]
 theorem mul_div_cancel (a : G₀) {b : G₀} (h : b ≠ 0) : (a*b) / b = a :=
   by 
     rw [div_eq_mul_inv, mul_inv_cancel_right₀ h a]
 
-theorem mul_div_cancel_of_imp {a b : G₀} (h : b = 0 → a = 0) : (a*b) / b = a :=
-  Classical.by_cases
-    (fun hb : b = 0 =>
-      by 
-        simp )
-    (mul_div_cancel a)
+-- error in Algebra.GroupWithZero.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mul_div_cancel_of_imp
+{a b : G₀}
+(h : «expr = »(b, 0) → «expr = »(a, 0)) : «expr = »(«expr / »(«expr * »(a, b), b), a) :=
+classical.by_cases (λ hb : «expr = »(b, 0), by simp [] [] [] ["[", "*", "]"] [] []) (mul_div_cancel a)
 
 attribute [local simp] div_eq_mul_inv mul_commₓ mul_assocₓ mul_left_commₓ
 
@@ -1115,11 +1113,12 @@ theorem div_div_self (a : G₀) : a / (a / a) = a :=
     rw [div_div_eq_mul_div]
     exact mul_self_div_self a
 
-theorem ne_zero_of_one_div_ne_zero {a : G₀} (h : 1 / a ≠ 0) : a ≠ 0 :=
-  fun ha : a = 0 =>
-    by 
-      rw [ha, div_zero] at h 
-      contradiction
+-- error in Algebra.GroupWithZero.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ne_zero_of_one_div_ne_zero {a : G₀} (h : «expr ≠ »(«expr / »(1, a), 0)) : «expr ≠ »(a, 0) :=
+assume ha : «expr = »(a, 0), begin
+  rw ["[", expr ha, ",", expr div_zero, "]"] ["at", ident h],
+  contradiction
+end
 
 theorem eq_zero_of_one_div_eq_zero {a : G₀} (h : 1 / a = 0) : a = 0 :=
   Classical.by_cases (fun ha => ha) fun ha => ((one_div_ne_zero ha) h).elim
@@ -1293,13 +1292,11 @@ theorem zero_left [MulZeroClass G₀] (x y : G₀) : SemiconjBy 0 x y :=
 
 variable[GroupWithZeroₓ G₀]{a x y x' y' : G₀}
 
-@[simp]
-theorem inv_symm_left_iff₀ : SemiconjBy (a⁻¹) x y ↔ SemiconjBy a y x :=
-  Classical.by_cases
-    (fun ha : a = 0 =>
-      by 
-        simp only [ha, inv_zero, SemiconjBy.zero_left])
-    fun ha => @units_inv_symm_left_iff _ _ (Units.mk0 a ha) _ _
+-- error in Algebra.GroupWithZero.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem inv_symm_left_iff₀ : «expr ↔ »(semiconj_by «expr ⁻¹»(a) x y, semiconj_by a y x) :=
+classical.by_cases (λ
+ ha : «expr = »(a, 0), by simp [] [] ["only"] ["[", expr ha, ",", expr inv_zero, ",", expr semiconj_by.zero_left, "]"] [] []) (λ
+ ha, @units_inv_symm_left_iff _ _ (units.mk0 a ha) _ _)
 
 theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy (a⁻¹) y x :=
   SemiconjBy.inv_symm_left_iff₀.2 h
@@ -1427,7 +1424,7 @@ variable{M : Type _}[Nontrivial M]
 
 /-- Constructs a `group_with_zero` structure on a `monoid_with_zero`
   consisting only of units and 0. -/
-noncomputable def groupWithZeroOfIsUnitOrEqZero [hM : MonoidWithZeroₓ M] (h : ∀ a : M, IsUnit a ∨ a = 0) :
+noncomputable def groupWithZeroOfIsUnitOrEqZero [hM : MonoidWithZeroₓ M] (h : ∀ (a : M), IsUnit a ∨ a = 0) :
   GroupWithZeroₓ M :=
   { hM with inv := fun a => if h0 : a = 0 then 0 else «expr↑ » (((h a).resolve_right h0).Unit⁻¹),
     inv_zero := dif_pos rfl,
@@ -1440,7 +1437,7 @@ noncomputable def groupWithZeroOfIsUnitOrEqZero [hM : MonoidWithZeroₓ M] (h : 
 
 /-- Constructs a `comm_group_with_zero` structure on a `comm_monoid_with_zero`
   consisting only of units and 0. -/
-noncomputable def commGroupWithZeroOfIsUnitOrEqZero [hM : CommMonoidWithZero M] (h : ∀ a : M, IsUnit a ∨ a = 0) :
+noncomputable def commGroupWithZeroOfIsUnitOrEqZero [hM : CommMonoidWithZero M] (h : ∀ (a : M), IsUnit a ∨ a = 0) :
   CommGroupWithZero M :=
   { groupWithZeroOfIsUnitOrEqZero h, hM with  }
 

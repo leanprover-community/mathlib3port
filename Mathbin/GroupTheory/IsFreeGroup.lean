@@ -33,7 +33,7 @@ That is, it has a family `generators G` of elements, such that a group homomorph
 class IsFreeGroup(G : Type u)[Groupₓ G] : Type (u + 1) where 
   Generators : Type u 
   of : generators → G 
-  unique_lift' : ∀ {X : Type u} [Groupₓ X] f : generators → X, ∃!F : G →* X, ∀ a, F (of a) = f a
+  unique_lift' : ∀ {X : Type u} [Groupₓ X] (f : generators → X), ∃!F : G →* X, ∀ a, F (of a) = f a
 
 -- error in GroupTheory.IsFreeGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 instance free_group_is_free_group {A} : is_free_group (free_group A) :=

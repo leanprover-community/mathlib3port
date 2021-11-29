@@ -134,11 +134,13 @@ section Module
 
 variable[HasScalar 𝕜 E][Module 𝕜 β]{s : Set E}{f : E → β}
 
-theorem convex_on_const (c : β) (hs : Convex 𝕜 s) : ConvexOn 𝕜 s fun x : E => c :=
-  ⟨hs, fun x y _ _ a b _ _ hab => (Convex.combo_self hab c).Ge⟩
+-- error in Analysis.Convex.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem convex_on_const (c : β) (hs : convex 𝕜 s) : convex_on 𝕜 s (λ x : E, c) :=
+⟨hs, λ x y _ _ a b _ _ hab, (convex.combo_self hab c).ge⟩
 
-theorem concave_on_const (c : β) (hs : Convex 𝕜 s) : ConcaveOn 𝕜 s fun x : E => c :=
-  @convex_on_const _ _ (OrderDual β) _ _ _ _ _ _ c hs
+-- error in Analysis.Convex.Function: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem concave_on_const (c : β) (hs : convex 𝕜 s) : concave_on 𝕜 s (λ x : E, c) :=
+@convex_on_const _ _ (order_dual β) _ _ _ _ _ _ c hs
 
 end Module
 

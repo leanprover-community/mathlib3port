@@ -121,39 +121,48 @@ instance coyoneda_preserves_limits (X : «expr ᵒᵖ» C) : preserves_limits (c
                                     refine' t.uniq ⟨unop X, _⟩ _ fun j => _ 
                                     exact congr_funₓ (w j) x } } } }
 
+-- error in CategoryTheory.Limits.Yoneda: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The yoneda embeddings jointly reflect limits. -/
-def yoneda_jointly_reflects_limits (J : Type v) [small_category J] (K : J ⥤ «expr ᵒᵖ» C) (c : cone K)
-  (t : ∀ X : C, is_limit ((yoneda.obj X).mapCone c)) : is_limit c :=
-  let s' : ∀ s : cone K, cone (K ⋙ yoneda.obj s.X.unop) :=
-    fun s => ⟨PUnit, fun j _ => (s.π.app j).unop, fun j₁ j₂ α => funext$ fun _ => Quiver.Hom.op_inj (s.w α).symm⟩
-  { lift := fun s => ((t s.X.unop).lift (s' s) PUnit.unit).op,
-    fac' := fun s j => Quiver.Hom.unop_inj (congr_funₓ ((t s.X.unop).fac (s' s) j) PUnit.unit),
-    uniq' :=
-      fun s m w =>
-        by 
-          apply Quiver.Hom.unop_inj 
-          suffices  : (fun x : PUnit => m.unop) = (t s.X.unop).lift (s' s)
-          ·
-            apply congr_funₓ this PUnit.unit 
-          apply (t _).uniq (s' s) _ fun j => _ 
-          ext 
-          exact Quiver.Hom.op_inj (w j) }
+def yoneda_jointly_reflects_limits
+(J : Type v)
+[small_category J]
+(K : «expr ⥤ »(J, «expr ᵒᵖ»(C)))
+(c : cone K)
+(t : ∀ X : C, is_limit ((yoneda.obj X).map_cone c)) : is_limit c :=
+let s' : ∀
+    s : cone K, cone «expr ⋙ »(K, yoneda.obj s.X.unop) := λ
+    s, ⟨punit, λ j _, (s.π.app j).unop, λ j₁ j₂ α, «expr $ »(funext, λ _, quiver.hom.op_inj (s.w α).symm)⟩ in
+{ lift := λ s, ((t s.X.unop).lift (s' s) punit.star).op,
+  fac' := λ s j, quiver.hom.unop_inj (congr_fun ((t s.X.unop).fac (s' s) j) punit.star),
+  uniq' := λ s m w, begin
+    apply [expr quiver.hom.unop_inj],
+    suffices [] [":", expr «expr = »(λ x : punit, m.unop, (t s.X.unop).lift (s' s))],
+    { apply [expr congr_fun this punit.star] },
+    apply [expr (t _).uniq (s' s) _ (λ j, _)],
+    ext [] [] [],
+    exact [expr quiver.hom.op_inj (w j)]
+  end }
 
+-- error in CategoryTheory.Limits.Yoneda: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The coyoneda embeddings jointly reflect limits. -/
-def coyoneda_jointly_reflects_limits (J : Type v) [small_category J] (K : J ⥤ C) (c : cone K)
-  (t : ∀ X : «expr ᵒᵖ» C, is_limit ((coyoneda.obj X).mapCone c)) : is_limit c :=
-  let s' : ∀ s : cone K, cone (K ⋙ coyoneda.obj (op s.X)) :=
-    fun s => ⟨PUnit, fun j _ => s.π.app j, fun j₁ j₂ α => funext$ fun _ => (s.w α).symm⟩
-  { lift := fun s => (t (op s.X)).lift (s' s) PUnit.unit, fac' := fun s j => congr_funₓ ((t _).fac (s' s) j) PUnit.unit,
-    uniq' :=
-      fun s m w =>
-        by 
-          suffices  : (fun x : PUnit => m) = (t _).lift (s' s)
-          ·
-            apply congr_funₓ this PUnit.unit 
-          apply (t _).uniq (s' s) _ fun j => _ 
-          ext 
-          exact w j }
+def coyoneda_jointly_reflects_limits
+(J : Type v)
+[small_category J]
+(K : «expr ⥤ »(J, C))
+(c : cone K)
+(t : ∀ X : «expr ᵒᵖ»(C), is_limit ((coyoneda.obj X).map_cone c)) : is_limit c :=
+let s' : ∀
+    s : cone K, cone «expr ⋙ »(K, coyoneda.obj (op s.X)) := λ
+    s, ⟨punit, λ j _, s.π.app j, λ j₁ j₂ α, «expr $ »(funext, λ _, (s.w α).symm)⟩ in
+{ lift := λ s, (t (op s.X)).lift (s' s) punit.star,
+  fac' := λ s j, congr_fun ((t _).fac (s' s) j) punit.star,
+  uniq' := λ s m w, begin
+    suffices [] [":", expr «expr = »(λ x : punit, m, (t _).lift (s' s))],
+    { apply [expr congr_fun this punit.star] },
+    apply [expr (t _).uniq (s' s) _ (λ j, _)],
+    ext [] [] [],
+    exact [expr w j]
+  end }
 
 variable{D : Type u}[small_category D]
 

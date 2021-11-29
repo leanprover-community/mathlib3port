@@ -57,13 +57,23 @@ section CosetMul
 
 variable[Mul α]
 
-@[toAdditive mem_left_add_coset]
-theorem mem_left_coset {s : Set α} {x : α} (a : α) (hxS : x ∈ s) : (a*x) ∈ a *l s :=
-  mem_image_of_mem (fun b : α => a*b) hxS
+-- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident mem_left_add_coset]]
+theorem mem_left_coset
+{s : set α}
+{x : α}
+(a : α)
+(hxS : «expr ∈ »(x, s)) : «expr ∈ »(«expr * »(a, x), «expr *l »(a, s)) :=
+mem_image_of_mem (λ b : α, «expr * »(a, b)) hxS
 
-@[toAdditive mem_right_add_coset]
-theorem mem_right_coset {s : Set α} {x : α} (a : α) (hxS : x ∈ s) : (x*a) ∈ s *r a :=
-  mem_image_of_mem (fun b : α => b*a) hxS
+-- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[ident mem_right_add_coset]]
+theorem mem_right_coset
+{s : set α}
+{x : α}
+(a : α)
+(hxS : «expr ∈ »(x, s)) : «expr ∈ »(«expr * »(x, a), «expr *r »(s, a)) :=
+mem_image_of_mem (λ b : α, «expr * »(b, a)) hxS
 
 /-- Equality of two left cosets `a * s` and `b * s`. -/
 @[toAdditive LeftAddCosetEquivalence "Equality of two left cosets `a + s` and `b + s`."]
@@ -209,13 +219,13 @@ theorem eq_cosets_of_normal (N : s.normal) (g : α) : g *l s = s *r g :=
         simp [mem_left_coset_iff, mem_right_coset_iff] <;> rw [N.mem_comm_iff]
 
 @[toAdditive normal_of_eq_add_cosets]
-theorem normal_of_eq_cosets (h : ∀ g : α, g *l s = s *r g) : s.normal :=
+theorem normal_of_eq_cosets (h : ∀ (g : α), g *l s = s *r g) : s.normal :=
   ⟨fun a ha g =>
       show ((g*a)*g⁻¹) ∈ (s : Set α)by 
         rw [←mem_right_coset_iff, ←h] <;> exact mem_left_coset g ha⟩
 
 @[toAdditive normal_iff_eq_add_cosets]
-theorem normal_iff_eq_cosets : s.normal ↔ ∀ g : α, g *l s = s *r g :=
+theorem normal_iff_eq_cosets : s.normal ↔ ∀ (g : α), g *l s = s *r g :=
   ⟨@eq_cosets_of_normal _ _ s, normal_of_eq_cosets s⟩
 
 @[toAdditive left_add_coset_eq_iff]
@@ -328,11 +338,11 @@ instance  : CoeTₓ α (Quotientₓ s) :=
   ⟨mk⟩
 
 @[elab_as_eliminator, toAdditive]
-theorem induction_on' {C : Quotientₓ s → Prop} (x : Quotientₓ s) (H : ∀ z : α, C z) : C x :=
+theorem induction_on' {C : Quotientₓ s → Prop} (x : Quotientₓ s) (H : ∀ (z : α), C z) : C x :=
   Quotientₓ.induction_on' x H
 
 @[toAdditive]
-theorem forall_coe {C : Quotientₓ s → Prop} : (∀ x : Quotientₓ s, C x) ↔ ∀ x : α, C x :=
+theorem forall_coe {C : Quotientₓ s → Prop} : (∀ (x : Quotientₓ s), C x) ↔ ∀ (x : α), C x :=
   ⟨fun hx x => hx _, Quot.ind⟩
 
 @[toAdditive]
@@ -373,22 +383,19 @@ theorem eq_class_eq_left_coset (s : Subgroup α) (g : α) : { x:α | (x : Quotie
       by 
         rw [mem_left_coset_iff, Set.mem_set_of_eq, eq_comm, QuotientGroup.eq, SetLike.mem_coe]
 
-@[toAdditive]
-theorem preimage_image_coe (N : Subgroup α) (s : Set α) :
-  coeₓ ⁻¹' ((coeₓ : α → Quotientₓ N) '' s) = ⋃x : N, (fun y : α => y*x) ⁻¹' s :=
-  by 
-    ext x 
-    simp only [QuotientGroup.eq, SetLike.exists, exists_prop, Set.mem_preimage, Set.mem_Union, Set.mem_image,
-      Subgroup.coe_mk, ←eq_inv_mul_iff_mul_eq]
-    exact
-      ⟨fun ⟨y, hs, hN⟩ =>
-          ⟨_, N.inv_mem hN,
-            by 
-              simpa using hs⟩,
-        fun ⟨z, hz, hxz⟩ =>
-          ⟨x*z, hxz,
-            by 
-              simpa using hz⟩⟩
+-- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[to_additive #[]]
+theorem preimage_image_coe
+(N : subgroup α)
+(s : set α) : «expr = »(«expr ⁻¹' »(coe, «expr '' »((coe : α → quotient N), s)), «expr⋃ , »((x : N), «expr ⁻¹' »(λ
+   y : α, «expr * »(y, x), s))) :=
+begin
+  ext [] [ident x] [],
+  simp [] [] ["only"] ["[", expr quotient_group.eq, ",", expr set_like.exists, ",", expr exists_prop, ",", expr set.mem_preimage, ",", expr set.mem_Union, ",", expr set.mem_image, ",", expr subgroup.coe_mk, ",", "<-", expr eq_inv_mul_iff_mul_eq, "]"] [] [],
+  exact [expr ⟨λ
+    ⟨y, hs, hN⟩, ⟨_, N.inv_mem hN, by simpa [] [] [] [] [] ["using", expr hs]⟩, λ
+    ⟨z, hz, hxz⟩, ⟨«expr * »(x, z), hxz, by simpa [] [] [] [] [] ["using", expr hz]⟩⟩]
+end
 
 end QuotientGroup
 
@@ -424,22 +431,21 @@ def right_coset_equiv_subgroup (g : α) : RightCoset («expr↑ » s) g ≃ s :=
         by 
           simp ⟩
 
+-- error in GroupTheory.Coset: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A (non-canonical) bijection between a group `α` and the product `(α/s) × s` -/
-@[toAdditive "A (non-canonical) bijection between an add_group `α` and the product `(α/s) × s`"]
-noncomputable def group_equiv_quotient_times_subgroup : α ≃ Quotientₓ s × s :=
-  calc α ≃ ΣL : Quotientₓ s, { x : α // (x : Quotientₓ s) = L } := (Equiv.sigmaPreimageEquiv QuotientGroup.mk).symm 
-    _ ≃ ΣL : Quotientₓ s, LeftCoset (Quotientₓ.out' L) s :=
-    Equiv.sigmaCongrRight
-      fun L =>
-        by 
-          rw [←eq_class_eq_left_coset]
-          show
-            (_root_.subtype fun x : α => Quotientₓ.mk' x = L) ≃
-              _root_.subtype fun x : α => Quotientₓ.mk' x = Quotientₓ.mk' _ 
-          simp [-Quotientₓ.eq']
-    _ ≃ ΣL : Quotientₓ s, s := Equiv.sigmaCongrRight fun L => left_coset_equiv_subgroup _ 
-    _ ≃ Quotientₓ s × s := Equiv.sigmaEquivProd _ _
-    
+@[to_additive #[expr "A (non-canonical) bijection between an add_group `α` and the product `(α/s) × s`"]]
+noncomputable
+def group_equiv_quotient_times_subgroup : «expr ≃ »(α, «expr × »(quotient s, s)) :=
+calc
+  «expr ≃ »(α, «exprΣ , »((L : quotient s), {x : α // «expr = »((x : quotient s), L)})) : (equiv.sigma_preimage_equiv quotient_group.mk).symm
+  «expr ≃ »(..., «exprΣ , »((L : quotient s), left_coset (quotient.out' L) s)) : equiv.sigma_congr_right (λ L, begin
+     rw ["<-", expr eq_class_eq_left_coset] [],
+     show [expr «expr ≃ »(_root_.subtype (λ
+        x : α, «expr = »(quotient.mk' x, L)), _root_.subtype (λ x : α, «expr = »(quotient.mk' x, quotient.mk' _)))],
+     simp [] [] [] ["[", "-", ident quotient.eq', "]"] [] []
+   end)
+  «expr ≃ »(..., «exprΣ , »((L : quotient s), s)) : equiv.sigma_congr_right (λ L, left_coset_equiv_subgroup _)
+  «expr ≃ »(..., «expr × »(quotient s, s)) : equiv.sigma_equiv_prod _ _
 
 variable{t : Subgroup α}
 

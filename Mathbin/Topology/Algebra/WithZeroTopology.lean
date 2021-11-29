@@ -51,17 +51,20 @@ protected def TopologicalSpace : TopologicalSpace Γ₀ :=
 
 attribute [local instance] LinearOrderedCommGroupWithZero.topologicalSpace
 
+-- error in Topology.Algebra.WithZeroTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The neighbourhoods {γ | γ < γ₀} of 0 form a directed set indexed by the invertible 
-elements γ₀. -/
-theorem directed_lt : Directed (· ≥ ·) fun γ₀ : Units Γ₀ => principal { γ:Γ₀ | γ < γ₀ } :=
-  by 
-    intro γ₁ γ₂ 
-    use LinearOrderₓ.min γ₁ γ₂ <;> dsimp only 
-    split  <;> rw [ge_iff_le, principal_mono] <;> intro x x_in
-    ·
-      calc x < «expr↑ » (LinearOrderₓ.min γ₁ γ₂) := x_in _ ≤ γ₁ := min_le_leftₓ γ₁ γ₂
-    ·
-      calc x < «expr↑ » (LinearOrderₓ.min γ₁ γ₂) := x_in _ ≤ γ₂ := min_le_rightₓ γ₁ γ₂
+elements γ₀. -/ theorem directed_lt : directed ((«expr ≥ »)) (λ γ₀ : units Γ₀, principal {γ : Γ₀ | «expr < »(γ, γ₀)}) :=
+begin
+  intros [ident γ₁, ident γ₂],
+  use [expr linear_order.min γ₁ γ₂]; dsimp ["only"] [] [] [],
+  split; rw ["[", expr ge_iff_le, ",", expr principal_mono, "]"] []; intros [ident x, ident x_in],
+  { calc
+      «expr < »(x, «expr↑ »(linear_order.min γ₁ γ₂)) : x_in
+      «expr ≤ »(..., γ₁) : min_le_left γ₁ γ₂ },
+  { calc
+      «expr < »(x, «expr↑ »(linear_order.min γ₁ γ₂)) : x_in
+      «expr ≤ »(..., γ₂) : min_le_right γ₁ γ₂ }
+end
 
 /-- At all points of a linearly ordered commutative group with a zero element adjoined,
 the pure filter is smaller than the filter given by nhds_fun. -/
@@ -73,7 +76,7 @@ theorem pure_le_nhds_fun : pure ≤ nhds_fun Γ₀ :=
 /-- For every point Γ₀, and every “neighbourhood” s of it (described by nhds_fun), there is a
 smaller “neighbourhood” t ⊆ s, such that s is a “neighbourhood“ of all the points in t. -/
 theorem nhds_fun_ok (x : Γ₀) {s} (s_in : s ∈ nhds_fun Γ₀ x) :
-  ∃ (t : _)(_ : t ∈ nhds_fun Γ₀ x), t ⊆ s ∧ ∀ y _ : y ∈ t, s ∈ nhds_fun Γ₀ y :=
+  ∃ (t : _)(_ : t ∈ nhds_fun Γ₀ x), t ⊆ s ∧ ∀ y (_ : y ∈ t), s ∈ nhds_fun Γ₀ y :=
   by 
     byCases' hx : x = 0
     ·
@@ -126,14 +129,16 @@ theorem singleton_nhds_of_ne_zero (γ : Γ₀) (h : γ ≠ 0) : ({γ} : Set Γ�
   by 
     simp [h]
 
+-- error in Topology.Algebra.WithZeroTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If U is a neighbourhood of 0 in a linearly ordered group with zero element adjoined,
 then there exists an invertible element γ₀ such that {γ | γ < γ₀} ⊆ U. -/
-theorem has_basis_nhds_zero : has_basis (𝓝 (0 : Γ₀)) (fun _ => True) fun γ₀ : Units Γ₀ => { γ:Γ₀ | γ < γ₀ } :=
-  ⟨by 
-      intro U 
-      rw [nhds_mk_of_nhds (nhds_fun Γ₀) 0 (pure_le_nhds_fun Γ₀) (nhds_fun_ok Γ₀)]
-      simp only [nhds_fun, if_true, eq_self_iff_true, exists_true_left]
-      simpRw [mem_infi_of_directed (directed_lt Γ₀), mem_principal]⟩
+theorem has_basis_nhds_zero : has_basis (expr𝓝() (0 : Γ₀)) (λ _, true) (λ γ₀ : units Γ₀, {γ : Γ₀ | «expr < »(γ, γ₀)}) :=
+⟨begin
+   intro [ident U],
+   rw [expr nhds_mk_of_nhds (nhds_fun Γ₀) 0 (pure_le_nhds_fun Γ₀) (nhds_fun_ok Γ₀)] [],
+   simp [] [] ["only"] ["[", expr nhds_fun, ",", expr if_true, ",", expr eq_self_iff_true, ",", expr exists_true_left, "]"] [] [],
+   simp_rw ["[", expr mem_infi_of_directed (directed_lt Γ₀), ",", expr mem_principal, "]"] []
+ end⟩
 
 /-- If γ is an invertible element of a linearly ordered group with zero element adjoined,
 then {x | x < γ} is a neighbourhood of 0. -/
@@ -144,7 +149,7 @@ theorem nhds_zero_of_units (γ : Units Γ₀) : { x:Γ₀ | x < γ } ∈ 𝓝 (0
     simp 
 
 theorem tendsto_zero {α : Type _} {F : Filter α} {f : α → Γ₀} :
-  tendsto f F (𝓝 (0 : Γ₀)) ↔ ∀ γ₀ : Units Γ₀, { x:α | f x < γ₀ } ∈ F :=
+  tendsto f F (𝓝 (0 : Γ₀)) ↔ ∀ (γ₀ : Units Γ₀), { x:α | f x < γ₀ } ∈ F :=
   by 
     simpa using has_basis_nhds_zero.tendsto_right_iff
 
@@ -153,13 +158,18 @@ then {x | x < γ} is a neighbourhood of 0. -/
 theorem nhds_zero_of_ne_zero (γ : Γ₀) (h : γ ≠ 0) : { x:Γ₀ | x < γ } ∈ 𝓝 (0 : Γ₀) :=
   nhds_zero_of_units (Units.mk0 _ h)
 
-theorem has_basis_nhds_units (γ : Units Γ₀) : has_basis (𝓝 (γ : Γ₀)) (fun i : Unit => True) fun i => {γ} :=
-  by 
-    rw [nhds_of_ne_zero _ γ.ne_zero]
-    exact has_basis_pure γ
+-- error in Topology.Algebra.WithZeroTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis_nhds_units (γ : units Γ₀) : has_basis (expr𝓝() (γ : Γ₀)) (λ i : unit, true) (λ i, {γ}) :=
+begin
+  rw [expr nhds_of_ne_zero _ γ.ne_zero] [],
+  exact [expr has_basis_pure γ]
+end
 
-theorem has_basis_nhds_of_ne_zero {x : Γ₀} (h : x ≠ 0) : has_basis (𝓝 x) (fun i : Unit => True) fun i => {x} :=
-  has_basis_nhds_units (Units.mk0 x h)
+-- error in Topology.Algebra.WithZeroTopology: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem has_basis_nhds_of_ne_zero
+{x : Γ₀}
+(h : «expr ≠ »(x, 0)) : has_basis (expr𝓝() x) (λ i : unit, true) (λ i, {x}) :=
+has_basis_nhds_units (units.mk0 x h)
 
 theorem tendsto_units {α : Type _} {F : Filter α} {f : α → Γ₀} {γ₀ : Units Γ₀} :
   tendsto f F (𝓝 (γ₀ : Γ₀)) ↔ { x:α | f x = γ₀ } ∈ F :=

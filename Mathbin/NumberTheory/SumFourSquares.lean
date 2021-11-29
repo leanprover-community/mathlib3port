@@ -133,7 +133,7 @@ let ⟨y, hy⟩ := h23 in
    simpa [] [] [] ["[", expr finset.sum_eq_multiset_sum, ",", expr fin4univ, ",", expr multiset.sum_cons, ",", expr f, ",", expr add_assoc, "]"] [] []
  end⟩
 
--- error in NumberTheory.SumFourSquares: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in NumberTheory.SumFourSquares: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 private
 theorem prime_sum_four_squares
 (p : exprℕ())
@@ -210,7 +210,7 @@ by haveI [ident hm0] [":", expr _root_.fact «expr < »(0, m)] [":=", expr ⟨(n
   «expr $ »(false.elim, nat.find_min hm hnm ⟨lt_trans hnm hmp, hn0, s, t, u, v, hstuv⟩))]
 
 /-- **Four squares theorem** -/
-theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, ((((a^2)+b^2)+c^2)+d^2) = n
+theorem sum_four_squares : ∀ (n : ℕ), ∃ a b c d : ℕ, ((((a^2)+b^2)+c^2)+d^2) = n
 | 0 => ⟨0, 0, 0, 0, rfl⟩
 | 1 => ⟨1, 0, 0, 0, rfl⟩
 | n@(k+2) =>

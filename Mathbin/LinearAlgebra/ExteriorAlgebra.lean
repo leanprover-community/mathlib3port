@@ -95,37 +95,27 @@ theorem comp_ι_sq_zero (g : ExteriorAlgebra R M →ₐ[R] A) (m : M) : (g (ι R
 
 variable(R)
 
+-- error in LinearAlgebra.ExteriorAlgebra: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Given a linear map `f : M →ₗ[R] A` into an `R`-algebra `A`, which satisfies the condition:
 `cond : ∀ m : M, f m * f m = 0`, this is the canonical lift of `f` to a morphism of `R`-algebras
 from `exterior_algebra R M` to `A`.
 -/
-@[simps symmApply]
-def lift : { f : M →ₗ[R] A // ∀ m, (f m*f m) = 0 } ≃ (ExteriorAlgebra R M →ₐ[R] A) :=
-  { toFun :=
-      fun f =>
-        RingQuot.liftAlgHom R
-          ⟨TensorAlgebra.lift R (f : M →ₗ[R] A),
-            fun x y h : rel R M x y =>
-              by 
-                induction h 
-                rw [AlgHom.map_zero, AlgHom.map_mul, TensorAlgebra.lift_ι_apply, f.prop]⟩,
-    invFun :=
-      fun F =>
-        ⟨F.to_linear_map.comp (ι R),
-          fun m =>
-            by 
-              rw [LinearMap.comp_apply, AlgHom.to_linear_map_apply, comp_ι_sq_zero]⟩,
-    left_inv :=
-      fun f =>
-        by 
-          ext 
-          simp [ι],
-    right_inv :=
-      fun F =>
-        by 
-          ext 
-          simp [ι] }
+@[simps #[ident symm_apply]]
+def lift : «expr ≃ »({f : «expr →ₗ[ ] »(M, R, A) // ∀
+ m, «expr = »(«expr * »(f m, f m), 0)}, «expr →ₐ[ ] »(exterior_algebra R M, R, A)) :=
+{ to_fun := λ
+  f, ring_quot.lift_alg_hom R ⟨tensor_algebra.lift R (f : «expr →ₗ[ ] »(M, R, A)), λ
+   (x y)
+   (h : rel R M x y), by { induction [expr h] [] [] [],
+     rw ["[", expr alg_hom.map_zero, ",", expr alg_hom.map_mul, ",", expr tensor_algebra.lift_ι_apply, ",", expr f.prop, "]"] [] }⟩,
+  inv_fun := λ
+  F, ⟨F.to_linear_map.comp (ι R), λ
+   m, by rw ["[", expr linear_map.comp_apply, ",", expr alg_hom.to_linear_map_apply, ",", expr comp_ι_sq_zero, "]"] []⟩,
+  left_inv := λ f, by { ext [] [] [],
+    simp [] [] [] ["[", expr ι, "]"] [] [] },
+  right_inv := λ F, by { ext [] [] [],
+    simp [] [] [] ["[", expr ι, "]"] [] [] } }
 
 @[simp]
 theorem ι_comp_lift (f : M →ₗ[R] A) (cond : ∀ m, (f m*f m) = 0) : (lift R ⟨f, cond⟩).toLinearMap.comp (ι R) = f :=

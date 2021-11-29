@@ -635,15 +635,15 @@ theorem Ico_union_right (hab : a ≤ b) : Ico a b ∪ {b} = Icc a b :=
   by 
     simpa only [dual_Ioc, dual_Icc] using Ioc_union_left hab.dual
 
-theorem mem_Ici_Ioi_of_subset_of_subset {s : Set α} (ho : Ioi a ⊆ s) (hc : s ⊆ Ici a) :
-  s ∈ ({Ici a, Ioi a} : Set (Set α)) :=
-  Classical.by_cases
-    (fun h : a ∈ s =>
-      Or.inl$
-        subset.antisymm hc$
-          by 
-            rw [←Ioi_union_left, union_subset_iff] <;> simp )
-    fun h => Or.inr$ subset.antisymm (fun x hx => lt_of_le_of_neₓ (hc hx) fun heq => h$ HEq.symm ▸ hx) ho
+-- error in Data.Set.Intervals.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_Ici_Ioi_of_subset_of_subset
+{s : set α}
+(ho : «expr ⊆ »(Ioi a, s))
+(hc : «expr ⊆ »(s, Ici a)) : «expr ∈ »(s, ({Ici a, Ioi a} : set (set α))) :=
+classical.by_cases (λ
+ h : «expr ∈ »(a, s), «expr $ »(or.inl, «expr $ »(subset.antisymm hc, by rw ["[", "<-", expr Ioi_union_left, ",", expr union_subset_iff, "]"] []; simp [] [] [] ["*"] [] []))) (λ
+ h, «expr $ »(or.inr, subset.antisymm (λ
+   x hx, lt_of_le_of_ne (hc hx) (λ heq, «expr $ »(h, «expr ▸ »(heq.symm, hx)))) ho))
 
 theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : Iio a ⊆ s) (hc : s ⊆ Iic a) :
   s ∈ ({Iic a, Iio a} : Set (Set α)) :=
@@ -1489,7 +1489,7 @@ theorem Ioo_inter_Ioo : Ioo a₁ b₁ ∩ Ioo a₂ b₂ = Ioo (a₁⊔a₂) (b�
 
 end Both
 
-theorem Icc_bot_top {α} [BoundedLattice α] : Icc (⊥ : α) ⊤ = univ :=
+theorem Icc_bot_top {α} [PartialOrderₓ α] [BoundedOrder α] : Icc (⊥ : α) ⊤ = univ :=
   by 
     simp 
 

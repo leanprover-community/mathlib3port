@@ -98,7 +98,7 @@ A morphism from the stalk of `F` at `x` to some object `Y` is completely determi
 composition with the `germ` morphisms.
 -/
 theorem stalk_hom_ext (F : X.presheaf C) {x} {Y : C} {f₁ f₂ : F.stalk x ⟶ Y}
-  (ih : ∀ U : opens X hxU : x ∈ U, F.germ ⟨x, hxU⟩ ≫ f₁ = F.germ ⟨x, hxU⟩ ≫ f₂) : f₁ = f₂ :=
+  (ih : ∀ (U : opens X) (hxU : x ∈ U), F.germ ⟨x, hxU⟩ ≫ f₁ = F.germ ⟨x, hxU⟩ ≫ f₂) : f₁ = f₂ :=
   colimit.hom_ext$
     fun U =>
       by 
@@ -284,7 +284,7 @@ theorem germ_eq (F : X.presheaf C) {U V : opens X} (x : X) (mU : x ∈ U) (mV : 
     exact ⟨(unop W).1, (unop W).2, iU.unop, iV.unop, e⟩
 
 theorem stalk_functor_map_injective_of_app_injective {F G : presheaf C X} (f : F ⟶ G)
-  (h : ∀ U : opens X, Function.Injective (f.app (op U))) (x : X) : Function.Injective ((stalk_functor C x).map f) :=
+  (h : ∀ (U : opens X), Function.Injective (f.app (op U))) (x : X) : Function.Injective ((stalk_functor C x).map f) :=
   fun s t hst =>
     by 
       rcases germ_exist F x s with ⟨U₁, hxU₁, s, rfl⟩
@@ -298,35 +298,40 @@ theorem stalk_functor_map_injective_of_app_injective {F G : presheaf C X} (f : F
 
 variable[has_limits C][preserves_limits (forget C)][reflects_isomorphisms (forget C)]
 
+-- error in Topology.Sheaves.Stalks: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Let `F` be a sheaf valued in a concrete category, whose forgetful functor reflects isomorphisms,
 preserves limits and filtered colimits. Then two sections who agree on every stalk must be equal.
 -/
-theorem section_ext (F : sheaf C X) (U : opens X) (s t : F.1.obj (op U)) (h : ∀ x : U, F.1.germ x s = F.1.germ x t) :
-  s = t :=
-  by 
-    choose V m i₁ i₂ heq using fun x : U => F.1.germ_eq x.1 x.2 x.2 s t (h x)
-    apply F.eq_of_locally_eq' V U i₁
-    ·
-      intro x hxU 
-      rw [opens.mem_coe, opens.mem_supr]
-      exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
-    ·
-      intro x 
-      rw [HEq, Subsingleton.elimₓ (i₁ x) (i₂ x)]
+theorem section_ext
+(F : sheaf C X)
+(U : opens X)
+(s t : F.1.obj (op U))
+(h : ∀ x : U, «expr = »(F.1.germ x s, F.1.germ x t)) : «expr = »(s, t) :=
+begin
+  choose [] [ident V] [ident m, ident i₁, ident i₂, ident heq] ["using", expr λ
+   x : U, F.1.germ_eq x.1 x.2 x.2 s t (h x)],
+  apply [expr F.eq_of_locally_eq' V U i₁],
+  { intros [ident x, ident hxU],
+    rw ["[", expr opens.mem_coe, ",", expr opens.mem_supr, "]"] [],
+    exact [expr ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩] },
+  { intro [ident x],
+    rw ["[", expr heq, ",", expr subsingleton.elim (i₁ x) (i₂ x), "]"] [] }
+end
 
-theorem app_injective_of_stalk_functor_map_injective {F : sheaf C X} {G : presheaf C X} (f : F.1 ⟶ G)
-  (h : ∀ x : X, Function.Injective ((stalk_functor C x).map f)) (U : opens X) : Function.Injective (f.app (op U)) :=
+theorem app_injective_of_stalk_functor_map_injective {F : sheaf C X} {G : presheaf C X} (f : F.1 ⟶ G) (U : opens X)
+  (h : ∀ (x : U), Function.Injective ((stalk_functor C x.val).map f)) : Function.Injective (f.app (op U)) :=
   fun s t hst =>
     section_ext F _ _ _$
       fun x =>
-        h x.1$
+        h x$
           by 
             rw [stalk_functor_map_germ_apply, stalk_functor_map_germ_apply, hst]
 
 theorem app_injective_iff_stalk_functor_map_injective {F : sheaf C X} {G : presheaf C X} (f : F.1 ⟶ G) :
-  (∀ x : X, Function.Injective ((stalk_functor C x).map f)) ↔ ∀ U : opens X, Function.Injective (f.app (op U)) :=
-  ⟨app_injective_of_stalk_functor_map_injective f, stalk_functor_map_injective_of_app_injective f⟩
+  (∀ (x : X), Function.Injective ((stalk_functor C x).map f)) ↔ ∀ (U : opens X), Function.Injective (f.app (op U)) :=
+  ⟨fun h U => app_injective_of_stalk_functor_map_injective f U fun x => h x.1,
+    stalk_functor_map_injective_of_app_injective f⟩
 
 -- error in Topology.Sheaves.Stalks: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- For surjectivity, we are given an arbitrary section `t` and need to find a preimage for it.
@@ -336,8 +341,8 @@ agree on `V`. -/
 theorem app_surjective_of_injective_of_locally_surjective
 {F G : sheaf C X}
 (f : «expr ⟶ »(F, G))
-(hinj : ∀ x : X, function.injective ((stalk_functor C x).map f))
 (U : opens X)
+(hinj : ∀ x : U, function.injective ((stalk_functor C x.1).map f))
 (hsurj : ∀
  (t)
  (x : U), «expr∃ , »((V : opens X)
@@ -359,16 +364,17 @@ begin
   { intros [ident x, ident y],
     apply [expr section_ext],
     intro [ident z],
-    apply [expr hinj z],
+    apply [expr hinj ⟨z, (iVU x).le ((inf_le_left : «expr ≤ »(«expr ⊓ »(V x, V y), V x)) z.2)⟩],
+    dsimp ["only"] [] [] [],
     erw ["[", expr stalk_functor_map_germ_apply, ",", expr stalk_functor_map_germ_apply, "]"] [],
     simp_rw ["[", "<-", expr comp_apply, ",", expr f.naturality, ",", expr comp_apply, ",", expr heq, ",", "<-", expr comp_apply, ",", "<-", expr G.1.map_comp, "]"] [],
     refl }
 end
 
-theorem app_surjective_of_stalk_functor_map_bijective {F G : sheaf C X} (f : F ⟶ G)
-  (h : ∀ x : X, Function.Bijective ((stalk_functor C x).map f)) (U : opens X) : Function.Surjective (f.app (op U)) :=
+theorem app_surjective_of_stalk_functor_map_bijective {F G : sheaf C X} (f : F ⟶ G) (U : opens X)
+  (h : ∀ (x : U), Function.Bijective ((stalk_functor C x.val).map f)) : Function.Surjective (f.app (op U)) :=
   by 
-    refine' app_surjective_of_injective_of_locally_surjective f (fun x => (h x).1) U fun t x => _ 
+    refine' app_surjective_of_injective_of_locally_surjective f U (fun x => (h x).1) fun t x => _ 
     obtain ⟨s₀, hs₀⟩ := (h x).2 (G.1.germ x t)
     obtain ⟨V₁, hxV₁, s₁, hs₁⟩ := F.1.germ_exist x.1 s₀ 
     subst hs₁ 
@@ -378,27 +384,14 @@ theorem app_surjective_of_stalk_functor_map_bijective {F G : sheaf C X} (f : F �
     use V₂, hxV₂, iV₂U, F.1.map iV₂V₁.op s₁ 
     rw [←comp_apply, f.naturality, comp_apply, HEq]
 
-theorem app_bijective_of_stalk_functor_map_bijective {F G : sheaf C X} (f : F ⟶ G)
-  (h : ∀ x : X, Function.Bijective ((stalk_functor C x).map f)) (U : opens X) : Function.Bijective (f.app (op U)) :=
-  ⟨app_injective_of_stalk_functor_map_injective f (fun x => (h x).1) U,
-    app_surjective_of_stalk_functor_map_bijective f h U⟩
+theorem app_bijective_of_stalk_functor_map_bijective {F G : sheaf C X} (f : F ⟶ G) (U : opens X)
+  (h : ∀ (x : U), Function.Bijective ((stalk_functor C x.val).map f)) : Function.Bijective (f.app (op U)) :=
+  ⟨app_injective_of_stalk_functor_map_injective f U fun x => (h x).1,
+    app_surjective_of_stalk_functor_map_bijective f U h⟩
 
-/--
-Let `F` and `G` be sheaves valued in a concrete category, whose forgetful functor reflects
-isomorphisms, preserves limits and filtered colimits. Then if the stalk maps of a morphism
-`f : F ⟶ G` are all isomorphisms, `f` must be an isomorphism.
--/
-theorem is_iso_of_stalk_functor_map_iso {F G : sheaf C X} (f : F ⟶ G) [∀ x : X, is_iso ((stalk_functor C x).map f)] :
-  is_iso f :=
+theorem app_is_iso_of_stalk_functor_map_iso {F G : sheaf C X} (f : F ⟶ G) (U : opens X)
+  [∀ (x : U), is_iso ((stalk_functor C x.val).map f)] : is_iso (f.app (op U)) :=
   by 
-    suffices  : is_iso ((sheaf.forget C X).map f)
-    ·
-      exact is_iso_of_fully_faithful (sheaf.forget C X) f 
-    suffices  : ∀ U : «expr ᵒᵖ» (opens X), is_iso (f.app U)
-    ·
-      exact @nat_iso.is_iso_of_is_iso_app _ _ _ _ F.1 G.1 f this 
-    intro U 
-    induction U using Opposite.rec 
     suffices  : is_iso ((forget C).map (f.app (op U)))
     ·
       exact is_iso_of_reflects_iso (f.app (op U)) (forget C)
@@ -406,7 +399,25 @@ theorem is_iso_of_stalk_functor_map_iso {F G : sheaf C X} (f : F ⟶ G) [∀ x :
     apply app_bijective_of_stalk_functor_map_bijective 
     intro x 
     apply (is_iso_iff_bijective _).mp 
-    exact functor.map_is_iso (forget C) ((stalk_functor C x).map f)
+    exact functor.map_is_iso (forget C) ((stalk_functor C x.1).map f)
+
+/--
+Let `F` and `G` be sheaves valued in a concrete category, whose forgetful functor reflects
+isomorphisms, preserves limits and filtered colimits. Then if the stalk maps of a morphism
+`f : F ⟶ G` are all isomorphisms, `f` must be an isomorphism.
+-/
+theorem is_iso_of_stalk_functor_map_iso {F G : sheaf C X} (f : F ⟶ G) [∀ (x : X), is_iso ((stalk_functor C x).map f)] :
+  is_iso f :=
+  by 
+    suffices  : is_iso ((sheaf.forget C X).map f)
+    ·
+      exact is_iso_of_fully_faithful (sheaf.forget C X) f 
+    suffices  : ∀ (U : «expr ᵒᵖ» (opens X)), is_iso (f.app U)
+    ·
+      exact @nat_iso.is_iso_of_is_iso_app _ _ _ _ F.1 G.1 f this 
+    intro U 
+    induction U using Opposite.rec 
+    apply app_is_iso_of_stalk_functor_map_iso
 
 /--
 Let `F` and `G` be sheaves valued in a concrete category, whose forgetful functor reflects
@@ -414,7 +425,7 @@ isomorphisms, preserves limits and filtered colimits. Then a morphism `f : F ⟶
 isomorphism if and only if all of its stalk maps are isomorphisms.
 -/
 theorem is_iso_iff_stalk_functor_map_iso {F G : sheaf C X} (f : F ⟶ G) :
-  is_iso f ↔ ∀ x : X, is_iso ((stalk_functor C x).map f) :=
+  is_iso f ↔ ∀ (x : X), is_iso ((stalk_functor C x).map f) :=
   by 
     split 
     ·

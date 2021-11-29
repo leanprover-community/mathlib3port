@@ -27,7 +27,7 @@ variable{δ : α → Type _}[DecidableEq α]
 /-- Given a finset `s` of `α` and for all `a : α` a finset `t a` of `δ a`, then one can define the
 finset `s.pi t` of all functions defined on elements of `s` taking values in `t a` for `a ∈ s`.
 Note that the elements of `s.pi t` are only partially defined, on `s`. -/
-def pi (s : Finset α) (t : ∀ a, Finset (δ a)) : Finset (∀ a _ : a ∈ s, δ a) :=
+def pi (s : Finset α) (t : ∀ a, Finset (δ a)) : Finset (∀ a (_ : a ∈ s), δ a) :=
   ⟨s.1.pi fun a => (t a).1, nodup_pi s.2 fun a _ => (t a).2⟩
 
 @[simp]
@@ -35,8 +35,8 @@ theorem pi_val (s : Finset α) (t : ∀ a, Finset (δ a)) : (s.pi t).1 = s.1.pi 
   rfl
 
 @[simp]
-theorem mem_pi {s : Finset α} {t : ∀ a, Finset (δ a)} {f : ∀ a _ : a ∈ s, δ a} :
-  f ∈ s.pi t ↔ ∀ a h : a ∈ s, f a h ∈ t a :=
+theorem mem_pi {s : Finset α} {t : ∀ a, Finset (δ a)} {f : ∀ a (_ : a ∈ s), δ a} :
+  f ∈ s.pi t ↔ ∀ a (h : a ∈ s), f a h ∈ t a :=
   mem_pi _ _ _
 
 /-- Given a function `f` defined on a finset `s`, define a new function on the finset `s ∪ {a}`,
@@ -74,32 +74,34 @@ theorem pi_cons_injective {a : α} {b : δ a} {s : Finset α} (hs : a ∉ s) : F
               this
 
 @[simp]
-theorem pi_empty {t : ∀ a : α, Finset (δ a)} : pi (∅ : Finset α) t = singleton (pi.empty δ) :=
+theorem pi_empty {t : ∀ (a : α), Finset (δ a)} : pi (∅ : Finset α) t = singleton (pi.empty δ) :=
   rfl
 
+-- error in Data.Finset.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem pi_insert [∀ a, DecidableEq (δ a)] {s : Finset α} {t : ∀ a : α, Finset (δ a)} {a : α} (ha : a ∉ s) :
-  pi (insert a s) t = (t a).bUnion fun b => (pi s t).Image (pi.cons s a b) :=
-  by 
-    apply eq_of_veq 
-    rw [←(pi (insert a s) t).2.eraseDup]
-    refine'
-      (fun s' h : s' = a ::ₘ s.1 =>
-          (_ :
-          erase_dup (Multiset.pi s' fun a => (t a).1) =
-            erase_dup
-              ((t a).1.bind$
-                fun b =>
-                  erase_dup$
-                    (Multiset.pi s.1 fun a : α => (t a).val).map$
-                      fun f a' h' => Multiset.Pi.cons s.1 a b f a' (h ▸ h'))))
-        _ (insert_val_of_not_mem ha)
-    subst s' 
-    rw [pi_cons]
-    congr 
-    funext b 
-    rw [Multiset.Nodup.erase_dup]
-    exact Multiset.nodup_map (Multiset.pi_cons_injective ha) (pi s t).2
+theorem pi_insert
+[∀ a, decidable_eq (δ a)]
+{s : finset α}
+{t : ∀ a : α, finset (δ a)}
+{a : α}
+(ha : «expr ∉ »(a, s)) : «expr = »(pi (insert a s) t, (t a).bUnion (λ b, (pi s t).image (pi.cons s a b))) :=
+begin
+  apply [expr eq_of_veq],
+  rw ["<-", expr (pi (insert a s) t).2.erase_dup] [],
+  refine [expr λ
+   (s')
+   (h : «expr = »(s', «expr ::ₘ »(a, s.1))), (_ : «expr = »(erase_dup (multiset.pi s' (λ
+      a, (t a).1)), erase_dup «expr $ »((t a).1.bind, λ
+     b, «expr $ »(erase_dup, «expr $ »((multiset.pi s.1 (λ
+         a : α, (t a).val)).map, λ
+       f a' h', multiset.pi.cons s.1 a b f a' «expr ▸ »(h, h')))))) _ (insert_val_of_not_mem ha)],
+  subst [expr s'],
+  rw [expr pi_cons] [],
+  congr,
+  funext [ident b],
+  rw [expr multiset.nodup.erase_dup] [],
+  exact [expr multiset.nodup_map (multiset.pi_cons_injective ha) (pi s t).2]
+end
 
 theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) : (s.pi fun a => ({f a} : Finset β)) = {fun a _ => f a} :=
   by 
@@ -115,11 +117,11 @@ theorem pi_singletons {β : Type _} (s : Finset α) (f : α → β) : (s.pi fun 
 theorem pi_const_singleton {β : Type _} (s : Finset α) (i : β) : (s.pi fun _ => ({i} : Finset β)) = {fun _ _ => i} :=
   pi_singletons s fun _ => i
 
-theorem pi_subset {s : Finset α} (t₁ t₂ : ∀ a, Finset (δ a)) (h : ∀ a _ : a ∈ s, t₁ a ⊆ t₂ a) : s.pi t₁ ⊆ s.pi t₂ :=
+theorem pi_subset {s : Finset α} (t₁ t₂ : ∀ a, Finset (δ a)) (h : ∀ a (_ : a ∈ s), t₁ a ⊆ t₂ a) : s.pi t₁ ⊆ s.pi t₂ :=
   fun g hg => mem_pi.2$ fun a ha => h a ha (mem_pi.mp hg a ha)
 
 theorem pi_disjoint_of_disjoint {δ : α → Type _} [∀ a, DecidableEq (δ a)] {s : Finset α}
-  [DecidableEq (∀ a _ : a ∈ s, δ a)] (t₁ t₂ : ∀ a, Finset (δ a)) {a : α} (ha : a ∈ s) (h : Disjoint (t₁ a) (t₂ a)) :
+  [DecidableEq (∀ a (_ : a ∈ s), δ a)] (t₁ t₂ : ∀ a, Finset (δ a)) {a : α} (ha : a ∈ s) (h : Disjoint (t₁ a) (t₂ a)) :
   Disjoint (s.pi t₁) (s.pi t₂) :=
   disjoint_iff_ne.2$
     fun f₁ hf₁ f₂ hf₂ eq₁₂ =>

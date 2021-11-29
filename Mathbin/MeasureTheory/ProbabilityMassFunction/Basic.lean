@@ -93,13 +93,14 @@ end Pure
 
 section Bind
 
-protected theorem bind.summable (p : Pmf α) (f : α → Pmf β) (b : β) : Summable fun a : α => p a*f a b :=
-  by 
-    refine' Nnreal.summable_of_le (fun a => _) p.summable_coe 
-    suffices  : (p a*f a b) ≤ p a*1
-    ·
-      simpa 
-    exact mul_le_mul_of_nonneg_left ((f a).coe_le_one _) (p a).2
+-- error in MeasureTheory.ProbabilityMassFunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected theorem bind.summable (p : pmf α) (f : α → pmf β) (b : β) : summable (λ a : α, «expr * »(p a, f a b)) :=
+begin
+  refine [expr nnreal.summable_of_le (assume a, _) p.summable_coe],
+  suffices [] [":", expr «expr ≤ »(«expr * »(p a, f a b), «expr * »(p a, 1))],
+  { simpa [] [] [] [] [] [] },
+  exact [expr mul_le_mul_of_nonneg_left ((f a).coe_le_one _) (p a).2]
+end
 
 /-- The monadic bind operation for `pmf`. -/
 def bind (p : Pmf α) (f : α → Pmf β) : Pmf β :=
@@ -167,10 +168,10 @@ section OuterMeasure
 
 open MeasureTheory MeasureTheory.OuterMeasure
 
+-- error in MeasureTheory.ProbabilityMassFunction.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Construct an `outer_measure` from a `pmf`, by assigning measure to each set `s : set α` equal
-  to the sum of `p x` for for each `x ∈ α` -/
-def to_outer_measure (p : Pmf α) : outer_measure α :=
-  outer_measure.sum fun x : α => p x • dirac x
+  to the sum of `p x` for for each `x ∈ α` -/ def to_outer_measure (p : pmf α) : outer_measure α :=
+outer_measure.sum (λ x : α, «expr • »(p x, dirac x))
 
 theorem to_outer_measure_apply (p : Pmf α) (s : Set α) :
   p.to_outer_measure s = ∑'x, s.indicator (fun x => (p x : ℝ≥0∞)) x :=
@@ -205,7 +206,7 @@ theorem to_outer_measure_caratheodory (p : Pmf α) : (to_outer_measure p).carath
   by 
     refine' eq_top_iff.2$ le_transₓ (le_Inf$ fun x hx => _) (le_sum_caratheodory _)
     obtain ⟨y, hy⟩ := hx 
-    exact ((le_of_eqₓ (dirac_caratheodory _).symm).trans (le_smul_caratheodory _ _)).trans (le_of_eqₓ hy)
+    exact ((le_of_eqₓ (dirac_caratheodory y).symm).trans (le_smul_caratheodory _ _)).trans (le_of_eqₓ hy)
 
 end OuterMeasure
 

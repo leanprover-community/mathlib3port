@@ -38,8 +38,9 @@ in `p`, otherwise
 def trailing_degree (p : Polynomial R) : WithTop ℕ :=
   p.support.inf some
 
-theorem trailing_degree_lt_wf : WellFounded fun p q : Polynomial R => trailing_degree p < trailing_degree q :=
-  InvImage.wfₓ trailing_degree (WithTop.well_founded_lt Nat.lt_wf)
+-- error in Data.Polynomial.Degree.TrailingDegree: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem trailing_degree_lt_wf : well_founded (λ p q : polynomial R, «expr < »(trailing_degree p, trailing_degree q)) :=
+inv_image.wf trailing_degree (with_top.well_founded_lt nat.lt_wf)
 
 /-- `nat_trailing_degree p` forces `trailing_degree p` to `ℕ`, by defining
 `nat_trailing_degree ⊤ = 0`. -/

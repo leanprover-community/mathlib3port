@@ -307,85 +307,92 @@ attribute [local reducible] FundamentalGroupoid
 
 attribute [local instance] Path.Homotopic.setoid
 
-instance  : CategoryTheory.Groupoid (FundamentalGroupoid X) :=
-  { Hom := fun x y => Path.Homotopic.Quotient x y, id := fun x => «expr⟦ ⟧» (Path.refl x),
-    comp := fun x y z => Quotientₓ.map₂ Path.trans fun p₀ : Path x y p₁ hp q₀ q₁ hq => Path.Homotopic.hcomp hp hq,
-    id_comp' :=
-      fun x y f =>
-        Quotientₓ.induction_on f
-          fun a =>
-            show «expr⟦ ⟧» ((Path.refl x).trans a) = «expr⟦ ⟧» a from Quotientₓ.sound ⟨Path.Homotopy.reflTrans a⟩,
-    comp_id' :=
-      fun x y f =>
-        Quotientₓ.induction_on f
-          fun a =>
-            show «expr⟦ ⟧» (a.trans (Path.refl y)) = «expr⟦ ⟧» a from Quotientₓ.sound ⟨Path.Homotopy.transRefl a⟩,
-    assoc' :=
-      fun w x y z f g h =>
-        Quotientₓ.induction_on₃ f g h
-          fun p q r =>
-            show «expr⟦ ⟧» ((p.trans q).trans r) = «expr⟦ ⟧» (p.trans (q.trans r)) from
-              Quotientₓ.sound ⟨Path.Homotopy.transAssoc p q r⟩,
-    inv :=
-      fun x y p =>
-        Quotientₓ.lift (fun l : Path x y => «expr⟦ ⟧» l.symm)
-          (by 
-            rintro a b ⟨h⟩
-            rw [Quotientₓ.eq]
-            exact ⟨h.symm₂⟩)
-          p,
-    inv_comp' :=
-      fun x y f =>
-        Quotientₓ.induction_on f
-          fun a =>
-            show «expr⟦ ⟧» (a.symm.trans a) = «expr⟦ ⟧» (Path.refl y) from
-              Quotientₓ.sound ⟨(Path.Homotopy.reflSymmTrans a).symm⟩,
-    comp_inv' :=
-      fun x y f =>
-        Quotientₓ.induction_on f
-          fun a =>
-            show «expr⟦ ⟧» (a.trans a.symm) = «expr⟦ ⟧» (Path.refl x) from
-              Quotientₓ.sound ⟨(Path.Homotopy.reflTransSymm a).symm⟩ }
+-- error in Topology.Homotopy.FundamentalGroupoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : category_theory.groupoid (fundamental_groupoid X) :=
+{ hom := λ x y, path.homotopic.quotient x y,
+  id := λ x, «expr⟦ ⟧»(path.refl x),
+  comp := λ x y z, quotient.map₂ path.trans (λ (p₀ : path x y) (p₁ hp q₀ q₁ hq), path.homotopic.hcomp hp hq),
+  id_comp' := λ
+  x
+  y
+  f, quotient.induction_on f (λ
+   a, show «expr = »(«expr⟦ ⟧»((path.refl x).trans a), «expr⟦ ⟧»(a)), from quotient.sound ⟨path.homotopy.refl_trans a⟩),
+  comp_id' := λ
+  x
+  y
+  f, quotient.induction_on f (λ
+   a, show «expr = »(«expr⟦ ⟧»(a.trans (path.refl y)), «expr⟦ ⟧»(a)), from quotient.sound ⟨path.homotopy.trans_refl a⟩),
+  assoc' := λ
+  w
+  x
+  y
+  z
+  f
+  g
+  h, quotient.induction_on₃ f g h (λ
+   p
+   q
+   r, show «expr = »(«expr⟦ ⟧»((p.trans q).trans r), «expr⟦ ⟧»(p.trans (q.trans r))), from quotient.sound ⟨path.homotopy.trans_assoc p q r⟩),
+  inv := λ
+  x
+  y
+  p, quotient.lift (λ
+   l : path x y, «expr⟦ ⟧»(l.symm)) (begin
+     rintros [ident a, ident b, "⟨", ident h, "⟩"],
+     rw [expr quotient.eq] [],
+     exact [expr ⟨h.symm₂⟩]
+   end) p,
+  inv_comp' := λ
+  x
+  y
+  f, quotient.induction_on f (λ
+   a, show «expr = »(«expr⟦ ⟧»(a.symm.trans a), «expr⟦ ⟧»(path.refl y)), from quotient.sound ⟨(path.homotopy.refl_symm_trans a).symm⟩),
+  comp_inv' := λ
+  x
+  y
+  f, quotient.induction_on f (λ
+   a, show «expr = »(«expr⟦ ⟧»(a.trans a.symm), «expr⟦ ⟧»(path.refl x)), from quotient.sound ⟨(path.homotopy.refl_trans_symm a).symm⟩) }
 
-theorem comp_eq (x y z : FundamentalGroupoid X) (p : x ⟶ y) (q : y ⟶ z) :
-  p ≫ q = Quotientₓ.map₂ Path.trans (fun p₀ : Path x y p₁ hp q₀ q₁ hq => Path.Homotopic.hcomp hp hq) p q :=
-  rfl
+-- error in Topology.Homotopy.FundamentalGroupoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem comp_eq
+(x y z : fundamental_groupoid X)
+(p : «expr ⟶ »(x, y))
+(q : «expr ⟶ »(y, z)) : «expr = »(«expr ≫ »(p, q), quotient.map₂ path.trans (λ
+  (p₀ : path x y)
+  (p₁ hp q₀ q₁ hq), path.homotopic.hcomp hp hq) p q) :=
+rfl
 
+-- error in Topology.Homotopy.FundamentalGroupoid: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 The functor sending a topological space `X` to its fundamental groupoid.
--/
-def fundamental_groupoid_functor : Top ⥤ CategoryTheory.Groupoidₓ :=
-  { obj := fun X => { α := FundamentalGroupoid X },
-    map :=
-      fun X Y f =>
-        { obj := f,
-          map :=
-            fun x y => Quotientₓ.map (fun q : Path x y => q.map f.continuous) fun p₀ p₁ h => Path.Homotopic.map h f,
-          map_id' := fun X => rfl,
-          map_comp' :=
-            fun x y z p q =>
-              Quotientₓ.induction_on₂ p q$
-                fun a b =>
-                  by 
-                    simp [comp_eq] },
-    map_id' :=
-      by 
-        intro X 
-        change _ = (⟨_, _, _, _⟩ : FundamentalGroupoid X ⥤ FundamentalGroupoid X)
-        congr 
-        ext x y p 
-        refine' Quotientₓ.induction_on p fun q => _ 
-        rw [Quotientₓ.map_mk]
-        convRHS => rw [←q.map_id]
-        rfl,
-    map_comp' :=
-      by 
-        intro X Y Z f g 
-        congr 
-        ext x y p 
-        refine' Quotientₓ.induction_on p fun q => _ 
-        simp only [Quotientₓ.map_mk, Path.map_map, Quotientₓ.eq]
-        rfl }
+-/ def fundamental_groupoid_functor : «expr ⥤ »(Top, category_theory.Groupoid) :=
+{ obj := λ X, { α := fundamental_groupoid X },
+  map := λ
+  X
+  Y
+  f, { obj := f,
+    map := λ x y, quotient.map (λ q : path x y, q.map f.continuous) (λ p₀ p₁ h, path.homotopic.map h f),
+    map_id' := λ X, rfl,
+    map_comp' := λ
+    x y z p q, «expr $ »(quotient.induction_on₂ p q, λ a b, by simp [] [] [] ["[", expr comp_eq, "]"] [] []) },
+  map_id' := begin
+    intro [ident X],
+    change [expr «expr = »(_, (⟨_, _, _, _⟩ : «expr ⥤ »(fundamental_groupoid X, fundamental_groupoid X)))] [] [],
+    congr' [] [],
+    ext [] [ident x, ident y, ident p] [],
+    refine [expr quotient.induction_on p (λ q, _)],
+    rw ["[", expr quotient.map_mk, "]"] [],
+    conv_rhs [] [] { rw ["[", "<-", expr q.map_id, "]"] },
+    refl
+  end,
+  map_comp' := begin
+    intros [ident X, ident Y, ident Z, ident f, ident g],
+    congr' [] [],
+    ext [] [ident x, ident y, ident p] [],
+    refine [expr quotient.induction_on p (λ q, _)],
+    simp [] [] ["only"] ["[", expr quotient.map_mk, ",", expr path.map_map, ",", expr quotient.eq, "]"] [] [],
+    refl
+  end }
 
 end FundamentalGroupoid
 

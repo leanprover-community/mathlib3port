@@ -46,20 +46,20 @@ abbrev diagram : DiscreteQuotient X ⥤ Profinite :=
 def as_limit_cone : CategoryTheory.Limits.Cone X.diagram :=
   { x, π := { app := fun S => ⟨S.proj, S.proj_is_locally_constant.continuous⟩ } }
 
+-- error in Topology.Category.Profinite.AsLimit: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 instance is_iso_as_limit_cone_lift : is_iso ((limit_cone_is_limit X.diagram).lift X.as_limit_cone) :=
-  is_iso_of_bijective _
-    (by 
-      refine' ⟨fun a b => _, fun a => _⟩
-      ·
-        intro h 
-        refine' DiscreteQuotient.eq_of_proj_eq fun S => _ 
-        applyFun fun f : (limit_cone X.diagram).x => f.val S  at h 
-        exact h
-      ·
-        obtain ⟨b, hb⟩ := DiscreteQuotient.exists_of_compat (fun S => a.val S) fun _ _ h => a.prop (hom_of_le h)
-        refine' ⟨b, _⟩
-        ext S : 3
-        apply hb)
+is_iso_of_bijective _ (begin
+   refine [expr ⟨λ a b, _, λ a, _⟩],
+   { intro [ident h],
+     refine [expr discrete_quotient.eq_of_proj_eq (λ S, _)],
+     apply_fun [expr λ f : (limit_cone X.diagram).X, f.val S] ["at", ident h] [],
+     exact [expr h] },
+   { obtain ["⟨", ident b, ",", ident hb, "⟩", ":=", expr discrete_quotient.exists_of_compat (λ
+       S, a.val S) (λ _ _ h, a.prop (hom_of_le h))],
+     refine [expr ⟨b, _⟩],
+     ext [] [ident S] [":", 3],
+     apply [expr hb] }
+ end)
 
 /--
 The isomorphism between `X` and the explicit limit of `X.diagram`,

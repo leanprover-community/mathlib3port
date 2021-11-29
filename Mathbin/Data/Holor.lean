@@ -58,19 +58,19 @@ def assoc_right : HolorIndex (ds₁ ++ ds₂ ++ ds₃) → HolorIndex (ds₁ ++ 
 def assoc_left : HolorIndex (ds₁ ++ (ds₂ ++ ds₃)) → HolorIndex (ds₁ ++ ds₂ ++ ds₃) :=
   cast (congr_argₓ HolorIndex (append_assoc ds₁ ds₂ ds₃).symm)
 
-theorem take_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assoc_right.take = t.take.take
+theorem take_take : ∀ (t : HolorIndex (ds₁ ++ ds₂ ++ ds₃)), t.assoc_right.take = t.take.take
 | ⟨is, h⟩ =>
   Subtype.eq$
     by 
       simp [assoc_right, take, cast_type, List.take_take, Nat.le_add_rightₓ, min_eq_leftₓ]
 
-theorem drop_take : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assoc_right.drop.take = t.take.drop
+theorem drop_take : ∀ (t : HolorIndex (ds₁ ++ ds₂ ++ ds₃)), t.assoc_right.drop.take = t.take.drop
 | ⟨is, h⟩ =>
   Subtype.eq
     (by 
       simp [assoc_right, take, drop, cast_type, List.drop_take])
 
-theorem drop_drop : ∀ t : HolorIndex (ds₁ ++ ds₂ ++ ds₃), t.assoc_right.drop.drop = t.drop
+theorem drop_drop : ∀ (t : HolorIndex (ds₁ ++ ds₂ ++ ds₃)), t.assoc_right.drop.drop = t.drop
 | ⟨is, h⟩ =>
   Subtype.eq
     (by 
@@ -157,18 +157,21 @@ def assoc_right : Holor α (ds₁ ++ ds₂ ++ ds₃) → Holor α (ds₁ ++ (ds�
 def assoc_left : Holor α (ds₁ ++ (ds₂ ++ ds₃)) → Holor α (ds₁ ++ ds₂ ++ ds₃) :=
   cast (congr_argₓ (Holor α) (append_assoc ds₁ ds₂ ds₃).symm)
 
-theorem mul_assoc0 [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
-  x ⊗ y ⊗ z = (x ⊗ (y ⊗ z)).assocLeft :=
-  funext
-    fun t : HolorIndex (ds₁ ++ ds₂ ++ ds₃) =>
-      by 
-        rw [assoc_left]
-        unfold mul 
-        rw [mul_assocₓ]
-        rw [←HolorIndex.take_take, ←HolorIndex.drop_take, ←HolorIndex.drop_drop]
-        rw [cast_type]
-        rfl 
-        rw [append_assoc]
+-- error in Data.Holor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mul_assoc0
+[semigroup α]
+(x : holor α ds₁)
+(y : holor α ds₂)
+(z : holor α ds₃) : «expr = »(«expr ⊗ »(«expr ⊗ »(x, y), z), «expr ⊗ »(x, «expr ⊗ »(y, z)).assoc_left) :=
+funext (assume t : holor_index «expr ++ »(«expr ++ »(ds₁, ds₂), ds₃), begin
+   rw [expr assoc_left] [],
+   unfold [ident mul] [],
+   rw [expr mul_assoc] [],
+   rw ["[", "<-", expr holor_index.take_take, ",", "<-", expr holor_index.drop_take, ",", "<-", expr holor_index.drop_drop, "]"] [],
+   rw [expr cast_type] [],
+   refl,
+   rw [expr append_assoc] []
+ end)
 
 theorem mul_assocₓ [Semigroupₓ α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
   HEq (mul (mul x y) z) (mul x (mul y z)) :=
@@ -195,18 +198,19 @@ theorem mul_scalar_mul [Monoidₓ α] (x : Holor α []) (y : Holor α ds) : x �
   by 
     simp [mul, HasScalar.smul, HolorIndex.take, HolorIndex.drop]
 
+-- error in Data.Holor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A slice is a subholor consisting of all entries with initial index i. -/
-def slice (x : Holor α (d :: ds)) (i : ℕ) (h : i < d) : Holor α ds :=
-  fun is : HolorIndex ds => x ⟨i :: is.1, forall₂.cons h is.2⟩
+def slice (x : holor α [«expr :: »/«expr :: »/«expr :: »](d, ds)) (i : exprℕ()) (h : «expr < »(i, d)) : holor α ds :=
+λ is : holor_index ds, x ⟨[«expr :: »/«expr :: »/«expr :: »](i, is.1), forall₂.cons h is.2⟩
 
 /-- The 1-dimensional "unit" holor with 1 in the `j`th position. -/
 def unit_vec [Monoidₓ α] [AddMonoidₓ α] (d : ℕ) (j : ℕ) : Holor α [d] :=
   fun ti => if ti.1 = [j] then 1 else 0
 
 theorem holor_index_cons_decomp (p : HolorIndex (d :: ds) → Prop) :
-  ∀ t : HolorIndex (d :: ds),
+  ∀ (t : HolorIndex (d :: ds)),
     (∀ i is,
-        ∀ h : t.1 = i :: is,
+        ∀ (h : t.1 = i :: is),
           p
             ⟨i :: is,
               by 
@@ -216,35 +220,38 @@ theorem holor_index_cons_decomp (p : HolorIndex (d :: ds) → Prop) :
 | ⟨[], hforall₂⟩, hp => absurd (forall₂_nil_left_iff.1 hforall₂) (cons_ne_nil d ds)
 | ⟨i :: is, hforall₂⟩, hp => hp i is rfl
 
+-- error in Data.Holor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Two holors are equal if all their slices are equal. -/
-theorem slice_eq (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) (h : slice x = slice y) : x = y :=
-  funext$
-    fun t : HolorIndex (d :: ds) =>
-      holor_index_cons_decomp (fun t => x t = y t) t$
-        fun i is hiis =>
-          have hiisdds : forall₂ (· < ·) (i :: is) (d :: ds) :=
-            by 
-              rw [←hiis]
-              exact t.2
-          have hid : i < d := (forall₂_cons.1 hiisdds).1
-          have hisds : forall₂ (· < ·) is ds := (forall₂_cons.1 hiisdds).2
-          calc x ⟨i :: is, _⟩ = slice x i hid ⟨is, hisds⟩ := congr_argₓ (fun t => x t) (Subtype.eq rfl)
-            _ = slice y i hid ⟨is, hisds⟩ :=
-            by 
-              rw [h]
-            _ = y ⟨i :: is, _⟩ := congr_argₓ (fun t => y t) (Subtype.eq rfl)
-            
+theorem slice_eq
+(x : holor α [«expr :: »/«expr :: »/«expr :: »](d, ds))
+(y : holor α [«expr :: »/«expr :: »/«expr :: »](d, ds))
+(h : «expr = »(slice x, slice y)) : «expr = »(x, y) :=
+«expr $ »(funext, λ
+ t : holor_index [«expr :: »/«expr :: »/«expr :: »](d, ds), «expr $ »(holor_index_cons_decomp (λ
+   t, «expr = »(x t, y t)) t, λ
+  i
+  is
+  hiis, have hiisdds : forall₂ ((«expr < »)) [«expr :: »/«expr :: »/«expr :: »](i, is) [«expr :: »/«expr :: »/«expr :: »](d, ds), begin
+    rw ["[", "<-", expr hiis, "]"] [],
+    exact [expr t.2]
+  end,
+  have hid : «expr < »(i, d), from (forall₂_cons.1 hiisdds).1,
+  have hisds : forall₂ ((«expr < »)) is ds, from (forall₂_cons.1 hiisdds).2,
+  calc
+    «expr = »(x ⟨[«expr :: »/«expr :: »/«expr :: »](i, is), _⟩, slice x i hid ⟨is, hisds⟩) : congr_arg (λ
+     t, x t) (subtype.eq rfl)
+    «expr = »(..., slice y i hid ⟨is, hisds⟩) : by rw [expr h] []
+    «expr = »(..., y ⟨[«expr :: »/«expr :: »/«expr :: »](i, is), _⟩) : congr_arg (λ t, y t) (subtype.eq rfl)))
 
-theorem slice_unit_vec_mul [Ringₓ α] {i : ℕ} {j : ℕ} (hid : i < d) (x : Holor α ds) :
-  slice (unit_vec d j ⊗ x) i hid = if i = j then x else 0 :=
-  funext$
-    fun t : HolorIndex ds =>
-      if h : i = j then
-        by 
-          simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h]
-      else
-        by 
-          simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h] <;> rfl
+-- error in Data.Holor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem slice_unit_vec_mul
+[ring α]
+{i : exprℕ()}
+{j : exprℕ()}
+(hid : «expr < »(i, d))
+(x : holor α ds) : «expr = »(slice «expr ⊗ »(unit_vec d j, x) i hid, if «expr = »(i, j) then x else 0) :=
+«expr $ »(funext, λ
+ t : holor_index ds, if h : «expr = »(i, j) then by simp [] [] [] ["[", expr slice, ",", expr mul, ",", expr holor_index.take, ",", expr unit_vec, ",", expr holor_index.drop, ",", expr h, "]"] [] [] else by simp [] [] [] ["[", expr slice, ",", expr mul, ",", expr holor_index.take, ",", expr unit_vec, ",", expr holor_index.drop, ",", expr h, "]"] [] []; refl)
 
 theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) :
   (slice x i hid+slice y i hid) = slice (x+y) i hid :=
@@ -334,7 +341,7 @@ theorem cprank_max_add [Monoidₓ α] [AddMonoidₓ α] :
     ·
       exact cprank_max_add hx₂ hy
 
-theorem cprank_max_mul [Ringₓ α] : ∀ n : ℕ x : Holor α [d] y : Holor α ds, cprank_max n y → cprank_max n (x ⊗ y)
+theorem cprank_max_mul [Ringₓ α] : ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), cprank_max n y → cprank_max n (x ⊗ y)
 | 0, x, _, cprank_max.zero =>
   by 
     simp [mul_zero x, cprank_max.zero]
@@ -368,11 +375,11 @@ by letI [] [] [":=", expr classical.dec_eq β]; exact [expr finset.induction_on 
     exact [expr cprank_max_add (h_cprank x (finset.mem_insert_self x s)) ih']
   end)]
 
-theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cprank_max ds.prod x
+theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ (x : Holor α ds), cprank_max ds.prod x
 | [], x => cprank_max_nil x
 | d :: ds, x =>
   have h_summands :
-    ∀ i : { x // x ∈ Finset.range d }, cprank_max ds.prod (unit_vec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) :=
+    ∀ (i : { x // x ∈ Finset.range d }), cprank_max ds.prod (unit_vec d i.1 ⊗ slice x i.1 (mem_range.1 i.2)) :=
     fun i => cprank_max_mul _ _ _ (cprank_max_upper_bound (slice x i.1 (mem_range.1 i.2)))
   have h_dds_prod : (List.cons d ds).Prod = Finset.card (Finset.range d)*Prod ds :=
     by 
@@ -396,7 +403,7 @@ theorem cprank_max_upper_bound [Ringₓ α] : ∀ {ds}, ∀ x : Holor α ds, cpr
 noncomputable def cprank [Ringₓ α] (x : Holor α ds) : Nat :=
   @Nat.findₓ (fun n => cprank_max n x) (Classical.decPred _) ⟨ds.prod, cprank_max_upper_bound x⟩
 
--- error in Data.Holor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in Data.Holor: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem cprank_upper_bound [ring α] : ∀ {ds}, ∀ x : holor α ds, «expr ≤ »(cprank x, ds.prod) :=
 λ
 (ds)

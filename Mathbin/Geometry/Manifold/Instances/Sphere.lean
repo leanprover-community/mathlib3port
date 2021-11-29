@@ -415,10 +415,13 @@ begin
   simp [] [] [] ["[", expr not_iff_not, ",", expr subtype.ext_iff, ",", expr hfxv, ",", expr real_inner_comm, "]"] [] []
 end
 
+-- error in Geometry.Manifold.Instances.Sphere: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The antipodal map is smooth. -/
-theorem times_cont_mdiff_neg_sphere {n : ℕ} [Fact (finrank ℝ E = n+1)] :
-  TimesContMdiff (𝓡 n) (𝓡 n) ∞ fun x : sphere (0 : E) 1 => -x :=
-  (times_cont_diff_neg.TimesContMdiff.comp times_cont_mdiff_coe_sphere).cod_restrict_sphere _
+theorem times_cont_mdiff_neg_sphere
+{n : exprℕ()}
+[fact «expr = »(finrank exprℝ() E, «expr + »(n, 1))] : times_cont_mdiff «expr𝓡 »(n) «expr𝓡 »(n) «expr∞»() (λ
+ x : sphere (0 : E) 1, «expr- »(x)) :=
+(times_cont_diff_neg.times_cont_mdiff.comp times_cont_mdiff_coe_sphere).cod_restrict_sphere _
 
 end SmoothManifold
 

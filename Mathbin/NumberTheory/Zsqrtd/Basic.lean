@@ -110,11 +110,11 @@ theorem add_def (x y x' y' : ℤ) : (⟨x, y⟩+⟨x', y'⟩ : ℤ√d) = ⟨x+x
   rfl
 
 @[simp]
-theorem add_re : ∀ z w : ℤ√d, (z+w).re = z.re+w.re
+theorem add_re : ∀ (z w : ℤ√d), (z+w).re = z.re+w.re
 | ⟨x, y⟩, ⟨x', y'⟩ => rfl
 
 @[simp]
-theorem add_im : ∀ z w : ℤ√d, (z+w).im = z.im+w.im
+theorem add_im : ∀ (z w : ℤ√d), (z+w).im = z.im+w.im
 | ⟨x, y⟩, ⟨x', y'⟩ => rfl
 
 @[simp]
@@ -143,11 +143,11 @@ instance  : Neg (ℤ√d) :=
   ⟨Zsqrtd.neg⟩
 
 @[simp]
-theorem neg_re : ∀ z : ℤ√d, (-z).re = -z.re
+theorem neg_re : ∀ (z : ℤ√d), (-z).re = -z.re
 | ⟨x, y⟩ => rfl
 
 @[simp]
-theorem neg_im : ∀ z : ℤ√d, (-z).im = -z.im
+theorem neg_im : ∀ (z : ℤ√d), (-z).im = -z.im
 | ⟨x, y⟩ => rfl
 
 /-- Multiplication in `ℤ√d` -/
@@ -158,11 +158,11 @@ instance  : Mul (ℤ√d) :=
   ⟨Zsqrtd.mul⟩
 
 @[simp]
-theorem mul_re : ∀ z w : ℤ√d, (z*w).re = (z.re*w.re)+(d*z.im)*w.im
+theorem mul_re : ∀ (z w : ℤ√d), (z*w).re = (z.re*w.re)+(d*z.im)*w.im
 | ⟨x, y⟩, ⟨x', y'⟩ => rfl
 
 @[simp]
-theorem mul_im : ∀ z w : ℤ√d, (z*w).im = (z.re*w.im)+z.im*w.re
+theorem mul_im : ∀ (z w : ℤ√d), (z*w).im = (z.re*w.im)+z.im*w.re
 | ⟨x, y⟩, ⟨x', y'⟩ => rfl
 
 instance  : CommRingₓ (ℤ√d) :=
@@ -229,11 +229,11 @@ def conj : ℤ√d → ℤ√d
 | ⟨x, y⟩ => ⟨x, -y⟩
 
 @[simp]
-theorem conj_re : ∀ z : ℤ√d, (conj z).re = z.re
+theorem conj_re : ∀ (z : ℤ√d), (conj z).re = z.re
 | ⟨x, y⟩ => rfl
 
 @[simp]
-theorem conj_im : ∀ z : ℤ√d, (conj z).im = -z.im
+theorem conj_im : ∀ (z : ℤ√d), (conj z).im = -z.im
 | ⟨x, y⟩ => rfl
 
 /-- `conj` as an `add_monoid_hom`. -/
@@ -450,11 +450,11 @@ theorem nonnegg_pos_neg {c d} {a b : ℕ} : nonnegg c d a (-b) ↔ sq_le b c a d
   by 
     rw [nonnegg_comm] <;> exact nonnegg_neg_pos
 
-theorem nonnegg_cases_right {c d} {a : ℕ} : ∀ {b : ℤ}, (∀ x : ℕ, b = -x → sq_le x c a d) → nonnegg c d a b
+theorem nonnegg_cases_right {c d} {a : ℕ} : ∀ {b : ℤ}, (∀ (x : ℕ), b = -x → sq_le x c a d) → nonnegg c d a b
 | (b : Nat), h => trivialₓ
 | -[1+ b], h => h (b+1) rfl
 
-theorem nonnegg_cases_left {c d} {b : ℕ} {a : ℤ} (h : ∀ x : ℕ, a = -x → sq_le x d b c) : nonnegg c d a b :=
+theorem nonnegg_cases_left {c d} {b : ℕ} {a : ℤ} (h : ∀ (x : ℕ), a = -x → sq_le x d b c) : nonnegg c d a b :=
   cast nonnegg_comm (nonnegg_cases_right h)
 
 section Norm
@@ -594,7 +594,7 @@ instance decidable_nonnegg c d a b : Decidable (nonnegg c d a b) :=
             rw [Int.of_nat_eq_coe] <;>
           unfold nonnegg sq_le <;> infer_instance
 
-instance decidable_nonneg : ∀ a : ℤ√d, Decidable (nonneg a)
+instance decidable_nonneg : ∀ (a : ℤ√d), Decidable (nonneg a)
 | ⟨a, b⟩ => Zsqrtd.decidableNonnegg _ _ _ _
 
 instance decidable_le (a b : ℤ√d) : Decidable (a ≤ b) :=
@@ -723,7 +723,7 @@ begin
   exact [expr h «expr + »(y, 1)]
 end
 
-protected theorem nonneg_total : ∀ a : ℤ√d, nonneg a ∨ nonneg (-a)
+protected theorem nonneg_total : ∀ (a : ℤ√d), nonneg a ∨ nonneg (-a)
 | ⟨(x : ℕ), (y : ℕ)⟩ => Or.inl trivialₓ
 | ⟨-[1+ x], -[1+ y]⟩ => Or.inr trivialₓ
 | ⟨0, -[1+ y]⟩ => Or.inr trivialₓ
@@ -850,7 +850,7 @@ theorem not_sq_le_succ c d y (h : 0 < c) : ¬sq_le (y+1) c 0 d :=
   integer. This is implemented as a typeclass because it's a necessary condition
   for much of the Pell equation theory. -/
 class nonsquare(x : ℕ) : Prop where 
-  ns{} : ∀ n : ℕ, x ≠ n*n
+  ns{} : ∀ (n : ℕ), x ≠ n*n
 
 parameter [dnsq : nonsquare d]
 

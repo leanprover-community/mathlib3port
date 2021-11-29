@@ -269,10 +269,10 @@ theorem block_diagonal_diagonal [DecidableEq m] (d : o → m → α) :
     simp only [block_diagonal_apply, diagonal]
     splitIfs <;> finish
 
-@[simp]
-theorem block_diagonal_one [DecidableEq m] [HasOne α] : block_diagonal (1 : o → Matrix m m α) = 1 :=
-  show (block_diagonal fun _ : o => diagonal fun _ : m => (1 : α)) = diagonal fun _ => 1by 
-    rw [block_diagonal_diagonal]
+-- error in Data.Matrix.Block: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem block_diagonal_one [decidable_eq m] [has_one α] : «expr = »(block_diagonal (1 : o → matrix m m α), 1) :=
+show «expr = »(block_diagonal (λ
+  _ : o, diagonal (λ _ : m, (1 : α))), diagonal (λ _, 1)), by rw ["[", expr block_diagonal_diagonal, "]"] []
 
 end HasZero
 
@@ -396,11 +396,13 @@ theorem block_diagonal'_diagonal [∀ i, DecidableEq (m' i)] (d : ∀ i, m' i �
     simp only [block_diagonal'_apply, diagonal]
     splitIfs <;> finish
 
+-- error in Data.Matrix.Block: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem block_diagonal'_one [∀ i, DecidableEq (m' i)] [HasOne α] :
-  block_diagonal' (1 : ∀ i, Matrix (m' i) (m' i) α) = 1 :=
-  show (block_diagonal' fun i : o => diagonal fun _ : m' i => (1 : α)) = diagonal fun _ => 1by 
-    rw [block_diagonal'_diagonal]
+theorem block_diagonal'_one
+[∀ i, decidable_eq (m' i)]
+[has_one α] : «expr = »(block_diagonal' (1 : ∀ i, matrix (m' i) (m' i) α), 1) :=
+show «expr = »(block_diagonal' (λ
+  i : o, diagonal (λ _ : m' i, (1 : α))), diagonal (λ _, 1)), by rw ["[", expr block_diagonal'_diagonal, "]"] []
 
 end HasZero
 

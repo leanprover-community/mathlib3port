@@ -79,9 +79,10 @@ theorem find_indexes_eq_map_indexes_values (p : α → Prop) [DecidablePred p] (
 
 section FoldlWithIndex
 
+-- error in Data.List.Indexes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Specification of `foldl_with_index_aux`. -/
-def foldl_with_index_aux_spec (f : ℕ → α → β → α) (start : ℕ) (a : α) (bs : List β) : α :=
-  foldl (fun a p : ℕ × β => f p.fst a p.snd) a$ enum_from start bs
+def foldl_with_index_aux_spec (f : exprℕ() → α → β → α) (start : exprℕ()) (a : α) (bs : list β) : α :=
+«expr $ »(foldl (λ (a) (p : «expr × »(exprℕ(), β)), f p.fst a p.snd) a, enum_from start bs)
 
 theorem foldl_with_index_aux_spec_cons (f : ℕ → α → β → α) start a b bs :
   foldl_with_index_aux_spec f start a (b :: bs) = foldl_with_index_aux_spec f (start+1) (f start a b) bs :=
@@ -96,10 +97,14 @@ theorem foldl_with_index_aux_eq_foldl_with_index_aux_spec (f : ℕ → α → β
     ·
       simp [foldl_with_index_aux, foldl_with_index_aux_spec_cons]
 
-theorem foldl_with_index_eq_foldl_enum (f : ℕ → α → β → α) (a : α) (bs : List β) :
-  foldl_with_index f a bs = foldl (fun a p : ℕ × β => f p.fst a p.snd) a (enum bs) :=
-  by 
-    simp only [foldl_with_index, foldl_with_index_aux_spec, foldl_with_index_aux_eq_foldl_with_index_aux_spec, enum]
+-- error in Data.List.Indexes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem foldl_with_index_eq_foldl_enum
+(f : exprℕ() → α → β → α)
+(a : α)
+(bs : list β) : «expr = »(foldl_with_index f a bs, foldl (λ
+  (a)
+  (p : «expr × »(exprℕ(), β)), f p.fst a p.snd) a (enum bs)) :=
+by simp [] [] ["only"] ["[", expr foldl_with_index, ",", expr foldl_with_index_aux_spec, ",", expr foldl_with_index_aux_eq_foldl_with_index_aux_spec, ",", expr enum, "]"] [] []
 
 end FoldlWithIndex
 
@@ -112,10 +117,16 @@ theorem mfoldr_with_index_eq_mfoldr_enum {α β} (f : ℕ → α → β → m β
   by 
     simp only [mfoldr_with_index, mfoldr_eq_foldr, foldr_with_index_eq_foldr_enum, uncurry]
 
-theorem mfoldl_with_index_eq_mfoldl_enum [IsLawfulMonad m] {α β} (f : ℕ → β → α → m β) (b : β) (as : List α) :
-  mfoldl_with_index f b as = mfoldl (fun b p : ℕ × α => f p.fst b p.snd) b (enum as) :=
-  by 
-    rw [mfoldl_with_index, mfoldl_eq_foldl, foldl_with_index_eq_foldl_enum]
+-- error in Data.List.Indexes: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mfoldl_with_index_eq_mfoldl_enum
+[is_lawful_monad m]
+{α β}
+(f : exprℕ() → β → α → m β)
+(b : β)
+(as : list α) : «expr = »(mfoldl_with_index f b as, mfoldl (λ
+  (b)
+  (p : «expr × »(exprℕ(), α)), f p.fst b p.snd) b (enum as)) :=
+by rw ["[", expr mfoldl_with_index, ",", expr mfoldl_eq_foldl, ",", expr foldl_with_index_eq_foldl_enum, "]"] []
 
 end MfoldWithIndex
 

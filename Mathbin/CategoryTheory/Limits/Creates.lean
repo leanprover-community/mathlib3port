@@ -302,6 +302,42 @@ def creates_colimit_of_reflects_iso
       exact [expr is_colimit.of_iso_colimit hd' (as_iso f)]
     end } }
 
+/--
+When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` creates the colimit for `K`
+it suffices to exhibit a lift of the chosen colimit cocone for `K ⋙ F`.
+-/
+def creates_colimit_of_fully_faithful_of_lift {K : J ⥤ C} {F : C ⥤ D} [full F] [faithful F] [has_colimit (K ⋙ F)]
+  (c : cocone K) (i : F.map_cocone c ≅ colimit.cocone (K ⋙ F)) : creates_colimit K F :=
+  creates_colimit_of_reflects_iso
+    fun c' t =>
+      { liftedCocone := c, validLift := i.trans (is_colimit.unique_up_to_iso (colimit.is_colimit _) t),
+        makesColimit :=
+          is_colimit.of_faithful F (is_colimit.of_iso_colimit (colimit.is_colimit _) i.symm) (fun s => F.preimage _)
+            fun s => F.image_preimage _ }
+
+/--
+When `F` is fully faithful, and `has_colimit (K ⋙ F)`, to show that `F` creates the colimit for `K`
+it suffices to show that the chosen colimit point is in the essential image of `F`.
+-/
+def creates_colimit_of_fully_faithful_of_iso {K : J ⥤ C} {F : C ⥤ D} [full F] [faithful F] [has_colimit (K ⋙ F)] (X : C)
+  (i : F.obj X ≅ colimit (K ⋙ F)) : creates_colimit K F :=
+  creates_colimit_of_fully_faithful_of_lift
+    ({ x,
+      ι :=
+        { app := fun j => F.preimage (colimit.ι (K ⋙ F) j ≫ i.inv),
+          naturality' :=
+            fun Y Z f =>
+              F.map_injective
+                (by 
+                  erw [category.comp_id]
+                  simp only [functor.map_comp, functor.image_preimage]
+                  erw [colimit.w_assoc (K ⋙ F)]) } } :
+    cocone K)
+    (by 
+      fapply cocones.ext 
+      exact i 
+      tidy)
+
 /-- `F` preserves the colimit of `K` if it creates the colimit and `K ⋙ F` has the colimit. -/
 instance (priority := 100)preserves_colimit_of_creates_colimit_and_has_colimit (K : J ⥤ C) (F : C ⥤ D)
   [creates_colimit K F] [has_colimit (K ⋙ F)] : preserves_colimit K F :=

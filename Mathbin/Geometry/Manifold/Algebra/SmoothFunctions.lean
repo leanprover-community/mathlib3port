@@ -261,23 +261,14 @@ inherit an algebra structure.
 
 variable{A : Type _}[NormedRing A][NormedAlgebra 𝕜 A][SmoothRing 𝓘(𝕜, A) A]
 
+-- error in Geometry.Manifold.Algebra.SmoothFunctions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Smooth constant functions as a `ring_hom`. -/
-def C : 𝕜 →+* C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
-  { toFun := fun c : 𝕜 => ⟨fun x => (algebraMap 𝕜 A) c, smooth_const⟩,
-    map_one' :=
-      by 
-        ext x <;> exact (algebraMap 𝕜 A).map_one,
-    map_mul' :=
-      fun c₁ c₂ =>
-        by 
-          ext x <;> exact (algebraMap 𝕜 A).map_mul _ _,
-    map_zero' :=
-      by 
-        ext x <;> exact (algebraMap 𝕜 A).map_zero,
-    map_add' :=
-      fun c₁ c₂ =>
-        by 
-          ext x <;> exact (algebraMap 𝕜 A).map_add _ _ }
+def C : «expr →+* »(𝕜, «exprC^ ⟮ , ; , ⟯»(«expr∞»(), I, N, «expr𝓘( , )»(𝕜, A), A)) :=
+{ to_fun := λ c : 𝕜, ⟨λ x, algebra_map 𝕜 A c, smooth_const⟩,
+  map_one' := by ext [] [ident x] []; exact [expr (algebra_map 𝕜 A).map_one],
+  map_mul' := λ c₁ c₂, by ext [] [ident x] []; exact [expr (algebra_map 𝕜 A).map_mul _ _],
+  map_zero' := by ext [] [ident x] []; exact [expr (algebra_map 𝕜 A).map_zero],
+  map_add' := λ c₁ c₂, by ext [] [ident x] []; exact [expr (algebra_map 𝕜 A).map_add _ _] }
 
 instance Algebra : Algebra 𝕜 C^∞⟮I, N; 𝓘(𝕜, A), A⟯ :=
   { SmoothMap.semiring with smul := fun r f => ⟨r • f, smooth_const.smul f.smooth⟩, toRingHom := SmoothMap.c,

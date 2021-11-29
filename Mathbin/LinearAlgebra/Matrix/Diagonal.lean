@@ -32,17 +32,19 @@ theorem proj_diagonal (i : n) (w : n → R) : (proj i).comp (to_lin' (diagonal w
   by 
     ext j <;> simp [mul_vec_diagonal]
 
-theorem diagonal_comp_std_basis (w : n → R) (i : n) :
-  (diagonal w).toLin'.comp (LinearMap.stdBasis R (fun _ : n => R) i) = w i • LinearMap.stdBasis R (fun _ : n => R) i :=
-  by 
-    ext j 
-    simpRw [LinearMap.comp_apply, to_lin'_apply, mul_vec_diagonal, LinearMap.smul_apply, Pi.smul_apply,
-      Algebra.id.smul_eq_mul]
-    byCases' i = j
-    ·
-      subst h
-    ·
-      rw [std_basis_ne R (fun _ : n => R) _ _ (Ne.symm h), _root_.mul_zero, _root_.mul_zero]
+-- error in LinearAlgebra.Matrix.Diagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem diagonal_comp_std_basis
+(w : n → R)
+(i : n) : «expr = »((diagonal w).to_lin'.comp (linear_map.std_basis R (λ
+   _ : n, R) i), «expr • »(w i, linear_map.std_basis R (λ _ : n, R) i)) :=
+begin
+  ext [] [ident j] [],
+  simp_rw ["[", expr linear_map.comp_apply, ",", expr to_lin'_apply, ",", expr mul_vec_diagonal, ",", expr linear_map.smul_apply, ",", expr pi.smul_apply, ",", expr algebra.id.smul_eq_mul, "]"] [],
+  by_cases [expr «expr = »(i, j)],
+  { subst [expr h] },
+  { rw ["[", expr std_basis_ne R (λ
+      _ : n, R) _ _ (ne.symm h), ",", expr _root_.mul_zero, ",", expr _root_.mul_zero, "]"] [] }
+end
 
 theorem diagonal_to_lin' (w : n → R) : (diagonal w).toLin' = LinearMap.pi fun i => w i • LinearMap.proj i :=
   by 
@@ -56,7 +58,7 @@ variable{m n : Type _}[Fintype m][Fintype n]
 
 variable{K : Type u}[Field K]
 
--- error in LinearAlgebra.Matrix.Diagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.Matrix.Diagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem ker_diagonal_to_lin'
 [decidable_eq m]
 (w : m → K) : «expr = »(ker (diagonal w).to_lin', «expr⨆ , »((i «expr ∈ » {i | «expr = »(w i, 0)}), range (linear_map.std_basis K (λ
@@ -80,7 +82,7 @@ theorem range_diagonal [DecidableEq m] (w : m → K) :
     funext i 
     rw [←LinearMap.range_comp, diagonal_comp_std_basis, ←range_smul']
 
--- error in LinearAlgebra.Matrix.Diagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.Matrix.Diagonal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem rank_diagonal
 [decidable_eq m]
 [decidable_eq K]

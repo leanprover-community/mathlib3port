@@ -33,7 +33,7 @@ begin
   ring []
 end
 
-theorem cos_ne_zero_iff {θ : ℂ} : cos θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (((2*k)+1)*π) / 2 :=
+theorem cos_ne_zero_iff {θ : ℂ} : cos θ ≠ 0 ↔ ∀ (k : ℤ), θ ≠ (((2*k)+1)*π) / 2 :=
   by 
     rw [←not_exists, not_iff_not, cos_eq_zero_iff]
 
@@ -52,7 +52,7 @@ theorem sin_eq_zero_iff {θ : ℂ} : sin θ = 0 ↔ ∃ k : ℤ, θ = k*π :=
       fieldSimp 
       ring
 
-theorem sin_ne_zero_iff {θ : ℂ} : sin θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k*π :=
+theorem sin_ne_zero_iff {θ : ℂ} : sin θ ≠ 0 ↔ ∀ (k : ℤ), θ ≠ k*π :=
   by 
     rw [←not_exists, not_iff_not, sin_eq_zero_iff]
 
@@ -66,7 +66,7 @@ begin
   simpa [] [] ["only"] ["[", expr zero_div, ",", expr zero_mul, ",", expr ne.def, ",", expr not_false_iff, "]"] ["with", ident field_simps] ["using", expr sin_eq_zero_iff]
 end
 
-theorem tan_ne_zero_iff {θ : ℂ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (k*π) / 2 :=
+theorem tan_ne_zero_iff {θ : ℂ} : tan θ ≠ 0 ↔ ∀ (k : ℤ), θ ≠ (k*π) / 2 :=
   by 
     rw [←not_exists, not_iff_not, tan_eq_zero_iff]
 
@@ -110,7 +110,7 @@ theorem sin_eq_sin_iff {x y : ℂ} : sin x = sin y ↔ ∃ k : ℤ, (y = ((2*k)*
 
 theorem tan_add {x y : ℂ}
   (h :
-    ((∀ k : ℤ, x ≠ (((2*k)+1)*π) / 2) ∧ ∀ l : ℤ, y ≠ (((2*l)+1)*π) / 2) ∨
+    ((∀ (k : ℤ), x ≠ (((2*k)+1)*π) / 2) ∧ ∀ (l : ℤ), y ≠ (((2*l)+1)*π) / 2) ∨
       (∃ k : ℤ, x = (((2*k)+1)*π) / 2) ∧ ∃ l : ℤ, y = (((2*l)+1)*π) / 2) :
   tan (x+y) = (tan x+tan y) / (1 - tan x*tan y) :=
   by 
@@ -128,13 +128,13 @@ theorem tan_add {x y : ℂ}
       rw [hx, hy, add_zeroₓ, zero_div, mul_div_assoc, mul_div_assoc, ←add_mulₓ ((2*(k : ℂ))+1) ((2*l)+1) (π / 2),
         ←mul_div_assoc, hxy]
 
-theorem tan_add' {x y : ℂ} (h : (∀ k : ℤ, x ≠ (((2*k)+1)*π) / 2) ∧ ∀ l : ℤ, y ≠ (((2*l)+1)*π) / 2) :
+theorem tan_add' {x y : ℂ} (h : (∀ (k : ℤ), x ≠ (((2*k)+1)*π) / 2) ∧ ∀ (l : ℤ), y ≠ (((2*l)+1)*π) / 2) :
   tan (x+y) = (tan x+tan y) / (1 - tan x*tan y) :=
   tan_add (Or.inl h)
 
 theorem tan_two_mul {z : ℂ} : tan (2*z) = (2*tan z) / (1 - (tan z^2)) :=
   by 
-    byCases' h : ∀ k : ℤ, z ≠ (((2*k)+1)*π) / 2
+    byCases' h : ∀ (k : ℤ), z ≠ (((2*k)+1)*π) / 2
     ·
       rw [two_mul, two_mul, sq, tan_add (Or.inl ⟨h, h⟩)]
     ·
@@ -143,7 +143,7 @@ theorem tan_two_mul {z : ℂ} : tan (2*z) = (2*tan z) / (1 - (tan z^2)) :=
 
 theorem tan_add_mul_I {x y : ℂ}
   (h :
-    ((∀ k : ℤ, x ≠ (((2*k)+1)*π) / 2) ∧ ∀ l : ℤ, (y*I) ≠ (((2*l)+1)*π) / 2) ∨
+    ((∀ (k : ℤ), x ≠ (((2*k)+1)*π) / 2) ∧ ∀ (l : ℤ), (y*I) ≠ (((2*l)+1)*π) / 2) ∨
       (∃ k : ℤ, x = (((2*k)+1)*π) / 2) ∧ ∃ l : ℤ, (y*I) = (((2*l)+1)*π) / 2) :
   tan (x+y*I) = (tan x+tanh y*I) / (1 - (tan x*tanh y)*I) :=
   by 
@@ -151,7 +151,7 @@ theorem tan_add_mul_I {x y : ℂ}
 
 theorem tan_eq {z : ℂ}
   (h :
-    ((∀ k : ℤ, (z.re : ℂ) ≠ (((2*k)+1)*π) / 2) ∧ ∀ l : ℤ, ((z.im : ℂ)*I) ≠ (((2*l)+1)*π) / 2) ∨
+    ((∀ (k : ℤ), (z.re : ℂ) ≠ (((2*k)+1)*π) / 2) ∧ ∀ (l : ℤ), ((z.im : ℂ)*I) ≠ (((2*l)+1)*π) / 2) ∨
       (∃ k : ℤ, (z.re : ℂ) = (((2*k)+1)*π) / 2) ∧ ∃ l : ℤ, ((z.im : ℂ)*I) = (((2*l)+1)*π) / 2) :
   tan z = (tan z.re+tanh z.im*I) / (1 - (tan z.re*tanh z.im)*I) :=
   by 
@@ -162,9 +162,9 @@ open_locale TopologicalSpace
 theorem continuous_on_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
   continuous_on_sin.div continuous_on_cos$ fun x => id
 
-@[continuity]
-theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
-  continuous_on_iff_continuous_restrict.1 continuous_on_tan
+-- error in Analysis.SpecialFunctions.Trigonometric.Complex: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_tan : continuous (λ x : {x | «expr ≠ »(cos x, 0)}, tan x) :=
+continuous_on_iff_continuous_restrict.1 continuous_on_tan
 
 theorem cos_eq_iff_quadratic {z w : ℂ} : cos z = w ↔ (((exp (z*I)^2) - (2*w)*exp (z*I))+1) = 0 :=
   by 
@@ -211,7 +211,7 @@ theorem cos_eq_zero_iff {θ : ℝ} : cos θ = 0 ↔ ∃ k : ℤ, θ = (((2*k)+1)
   by 
     exactModCast @Complex.cos_eq_zero_iff θ
 
-theorem cos_ne_zero_iff {θ : ℝ} : cos θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (((2*k)+1)*π) / 2 :=
+theorem cos_ne_zero_iff {θ : ℝ} : cos θ ≠ 0 ↔ ∀ (k : ℤ), θ ≠ (((2*k)+1)*π) / 2 :=
   by 
     rw [←not_exists, not_iff_not, cos_eq_zero_iff]
 

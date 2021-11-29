@@ -251,10 +251,8 @@ theorem snorm_zero : snorm (0 : α → F) p μ = 0 :=
     rw [←Ne.def] at h0 
     simp [snorm_eq_snorm' h0 h_top, ennreal.to_real_pos_iff.mpr ⟨lt_of_le_of_neₓ (zero_le _) h0.symm, h_top⟩]
 
-@[simp]
-theorem snorm_zero' : snorm (fun x : α => (0 : F)) p μ = 0 :=
-  by 
-    convert snorm_zero
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem snorm_zero' : «expr = »(snorm (λ x : α, (0 : F)) p μ, 0) := by convert [] [expr snorm_zero] []
 
 theorem zero_mem_ℒp : mem_ℒp (0 : α → E) p μ :=
   ⟨measurable_zero.AeMeasurable,
@@ -262,9 +260,8 @@ theorem zero_mem_ℒp : mem_ℒp (0 : α → E) p μ :=
       rw [snorm_zero]
       exact Ennreal.coe_lt_top⟩
 
-theorem zero_mem_ℒp' : mem_ℒp (fun x : α => (0 : E)) p μ :=
-  by 
-    convert zero_mem_ℒp
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem zero_mem_ℒp' : mem_ℒp (λ x : α, (0 : E)) p μ := by convert [] [expr zero_mem_ℒp] []
 
 variable[MeasurableSpace α]
 
@@ -301,63 +298,75 @@ end Zero
 
 section Const
 
-theorem snorm'_const (c : F) (hq_pos : 0 < q) : snorm' (fun x : α => c) q μ = (nnnorm c : ℝ≥0∞)*μ Set.Univ^1 / q :=
-  by 
-    rw [snorm', lintegral_const,
-      Ennreal.mul_rpow_of_nonneg _ _
-        (by 
-          simp [hq_pos.le] :
-        0 ≤ 1 / q)]
-    congr 
-    rw [←Ennreal.rpow_mul]
-    suffices hq_cancel : (q*1 / q) = 1
-    ·
-      rw [hq_cancel, Ennreal.rpow_one]
-    rw [one_div, mul_inv_cancel (ne_of_ltₓ hq_pos).symm]
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem snorm'_const
+(c : F)
+(hq_pos : «expr < »(0, q)) : «expr = »(snorm' (λ
+  x : α, c) q μ, «expr * »((nnnorm c : «exprℝ≥0∞»()), «expr ^ »(μ set.univ, «expr / »(1, q)))) :=
+begin
+  rw ["[", expr snorm', ",", expr lintegral_const, ",", expr ennreal.mul_rpow_of_nonneg _ _ (by simp [] [] [] ["[", expr hq_pos.le, "]"] [] [] : «expr ≤ »(0, «expr / »(1, q))), "]"] [],
+  congr,
+  rw ["<-", expr ennreal.rpow_mul] [],
+  suffices [ident hq_cancel] [":", expr «expr = »(«expr * »(q, «expr / »(1, q)), 1)],
+  by rw ["[", expr hq_cancel, ",", expr ennreal.rpow_one, "]"] [],
+  rw ["[", expr one_div, ",", expr mul_inv_cancel (ne_of_lt hq_pos).symm, "]"] []
+end
 
-theorem snorm'_const' [is_finite_measure μ] (c : F) (hc_ne_zero : c ≠ 0) (hq_ne_zero : q ≠ 0) :
-  snorm' (fun x : α => c) q μ = (nnnorm c : ℝ≥0∞)*μ Set.Univ^1 / q :=
-  by 
-    rw [snorm', lintegral_const, Ennreal.mul_rpow_of_ne_top _ (measure_ne_top μ Set.Univ)]
-    ·
-      congr 
-      rw [←Ennreal.rpow_mul]
-      suffices hp_cancel : (q*1 / q) = 1
-      ·
-        rw [hp_cancel, Ennreal.rpow_one]
-      rw [one_div, mul_inv_cancel hq_ne_zero]
-    ·
-      rw [Ne.def, Ennreal.rpow_eq_top_iff, Auto.not_or_eq, Auto.not_and_eq, Auto.not_and_eq]
-      split 
-      ·
-        left 
-        rwa [Ennreal.coe_eq_zero, nnnorm_eq_zero]
-      ·
-        exact Or.inl Ennreal.coe_ne_top
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem snorm'_const'
+[is_finite_measure μ]
+(c : F)
+(hc_ne_zero : «expr ≠ »(c, 0))
+(hq_ne_zero : «expr ≠ »(q, 0)) : «expr = »(snorm' (λ
+  x : α, c) q μ, «expr * »((nnnorm c : «exprℝ≥0∞»()), «expr ^ »(μ set.univ, «expr / »(1, q)))) :=
+begin
+  rw ["[", expr snorm', ",", expr lintegral_const, ",", expr ennreal.mul_rpow_of_ne_top _ (measure_ne_top μ set.univ), "]"] [],
+  { congr,
+    rw ["<-", expr ennreal.rpow_mul] [],
+    suffices [ident hp_cancel] [":", expr «expr = »(«expr * »(q, «expr / »(1, q)), 1)],
+    by rw ["[", expr hp_cancel, ",", expr ennreal.rpow_one, "]"] [],
+    rw ["[", expr one_div, ",", expr mul_inv_cancel hq_ne_zero, "]"] [] },
+  { rw ["[", expr ne.def, ",", expr ennreal.rpow_eq_top_iff, ",", expr auto.not_or_eq, ",", expr auto.not_and_eq, ",", expr auto.not_and_eq, "]"] [],
+    split,
+    { left,
+      rwa ["[", expr ennreal.coe_eq_zero, ",", expr nnnorm_eq_zero, "]"] [] },
+    { exact [expr or.inl ennreal.coe_ne_top] } }
+end
 
-theorem snorm_ess_sup_const (c : F) (hμ : μ ≠ 0) : snorm_ess_sup (fun x : α => c) μ = (nnnorm c : ℝ≥0∞) :=
-  by 
-    rw [snorm_ess_sup, ess_sup_const _ hμ]
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem snorm_ess_sup_const
+(c : F)
+(hμ : «expr ≠ »(μ, 0)) : «expr = »(snorm_ess_sup (λ x : α, c) μ, (nnnorm c : «exprℝ≥0∞»())) :=
+by rw ["[", expr snorm_ess_sup, ",", expr ess_sup_const _ hμ, "]"] []
 
-theorem snorm'_const_of_is_probability_measure (c : F) (hq_pos : 0 < q) [is_probability_measure μ] :
-  snorm' (fun x : α => c) q μ = (nnnorm c : ℝ≥0∞) :=
-  by 
-    simp [snorm'_const c hq_pos, measure_univ]
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem snorm'_const_of_is_probability_measure
+(c : F)
+(hq_pos : «expr < »(0, q))
+[is_probability_measure μ] : «expr = »(snorm' (λ x : α, c) q μ, (nnnorm c : «exprℝ≥0∞»())) :=
+by simp [] [] [] ["[", expr snorm'_const c hq_pos, ",", expr measure_univ, "]"] [] []
 
-theorem snorm_const (c : F) (h0 : p ≠ 0) (hμ : μ ≠ 0) :
-  snorm (fun x : α => c) p μ = (nnnorm c : ℝ≥0∞)*μ Set.Univ^1 / Ennreal.toReal p :=
-  by 
-    byCases' h_top : p = ∞
-    ·
-      simp [h_top, snorm_ess_sup_const c hμ]
-    simp [snorm_eq_snorm' h0 h_top, snorm'_const,
-      ennreal.to_real_pos_iff.mpr ⟨lt_of_le_of_neₓ (zero_le _) h0.symm, h_top⟩]
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem snorm_const
+(c : F)
+(h0 : «expr ≠ »(p, 0))
+(hμ : «expr ≠ »(μ, 0)) : «expr = »(snorm (λ
+  x : α, c) p μ, «expr * »((nnnorm c : «exprℝ≥0∞»()), «expr ^ »(μ set.univ, «expr / »(1, ennreal.to_real p)))) :=
+begin
+  by_cases [expr h_top, ":", expr «expr = »(p, «expr∞»())],
+  { simp [] [] [] ["[", expr h_top, ",", expr snorm_ess_sup_const c hμ, "]"] [] [] },
+  simp [] [] [] ["[", expr snorm_eq_snorm' h0 h_top, ",", expr snorm'_const, ",", expr ennreal.to_real_pos_iff.mpr ⟨lt_of_le_of_ne (zero_le _) h0.symm, h_top⟩, "]"] [] []
+end
 
-theorem snorm_const' (c : F) (h0 : p ≠ 0) (h_top : p ≠ ∞) :
-  snorm (fun x : α => c) p μ = (nnnorm c : ℝ≥0∞)*μ Set.Univ^1 / Ennreal.toReal p :=
-  by 
-    simp [snorm_eq_snorm' h0 h_top, snorm'_const,
-      ennreal.to_real_pos_iff.mpr ⟨lt_of_le_of_neₓ (zero_le _) h0.symm, h_top⟩]
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem snorm_const'
+(c : F)
+(h0 : «expr ≠ »(p, 0))
+(h_top : «expr ≠ »(p, «expr∞»())) : «expr = »(snorm (λ
+  x : α, c) p μ, «expr * »((nnnorm c : «exprℝ≥0∞»()), «expr ^ »(μ set.univ, «expr / »(1, ennreal.to_real p)))) :=
+begin
+  simp [] [] [] ["[", expr snorm_eq_snorm' h0 h_top, ",", expr snorm'_const, ",", expr ennreal.to_real_pos_iff.mpr ⟨lt_of_le_of_ne (zero_le _) h0.symm, h_top⟩, "]"] [] []
+end
 
 -- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem snorm_const_lt_top_iff
@@ -381,25 +390,31 @@ begin
   exact [expr ennreal.rpow_lt_top_of_nonneg (inv_nonneg.mpr hp.le) hμ_top]
 end
 
-theorem mem_ℒp_const (c : E) [is_finite_measure μ] : mem_ℒp (fun a : α => c) p μ :=
-  by 
-    refine' ⟨measurable_const.ae_measurable, _⟩
-    byCases' h0 : p = 0
-    ·
-      simp [h0]
-    byCases' hμ : μ = 0
-    ·
-      simp [hμ]
-    rw [snorm_const c h0 hμ]
-    refine' Ennreal.mul_lt_top Ennreal.coe_ne_top _ 
-    refine' (Ennreal.rpow_lt_top_of_nonneg _ (measure_ne_top μ Set.Univ)).Ne 
-    simp 
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_ℒp_const (c : E) [is_finite_measure μ] : mem_ℒp (λ a : α, c) p μ :=
+begin
+  refine [expr ⟨measurable_const.ae_measurable, _⟩],
+  by_cases [expr h0, ":", expr «expr = »(p, 0)],
+  { simp [] [] [] ["[", expr h0, "]"] [] [] },
+  by_cases [expr hμ, ":", expr «expr = »(μ, 0)],
+  { simp [] [] [] ["[", expr hμ, "]"] [] [] },
+  rw [expr snorm_const c h0 hμ] [],
+  refine [expr ennreal.mul_lt_top ennreal.coe_ne_top _],
+  refine [expr (ennreal.rpow_lt_top_of_nonneg _ (measure_ne_top μ set.univ)).ne],
+  simp [] [] [] [] [] []
+end
 
-theorem mem_ℒp_const_iff {p : ℝ≥0∞} {c : E} (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
-  mem_ℒp (fun x : α => c) p μ ↔ c = 0 ∨ μ Set.Univ < ∞ :=
-  by 
-    rw [←snorm_const_lt_top_iff hp_ne_zero hp_ne_top]
-    exact ⟨fun h => h.2, fun h => ⟨ae_measurable_const, h⟩⟩
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_ℒp_const_iff
+{p : «exprℝ≥0∞»()}
+{c : E}
+(hp_ne_zero : «expr ≠ »(p, 0))
+(hp_ne_top : «expr ≠ »(p, «expr∞»())) : «expr ↔ »(mem_ℒp (λ
+  x : α, c) p μ, «expr ∨ »(«expr = »(c, 0), «expr < »(μ set.univ, «expr∞»()))) :=
+begin
+  rw ["<-", expr snorm_const_lt_top_iff hp_ne_zero hp_ne_top] [],
+  exact [expr ⟨λ h, h.2, λ h, ⟨ae_measurable_const, h⟩⟩]
+end
 
 end Const
 
@@ -1104,16 +1119,30 @@ begin
   exact [expr snorm'_lt_top_of_snorm'_lt_top_of_exponent_le hfq_m hfq_lt_top (le_of_lt hp_pos) hpq_real]
 end
 
-theorem snorm'_sum_le [second_countable_topology E] {ι} {f : ι → α → E} {s : Finset ι}
-  (hfs : ∀ i, i ∈ s → AeMeasurable (f i) μ) (hq1 : 1 ≤ q) : snorm' (∑i in s, f i) q μ ≤ ∑i in s, snorm' (f i) q μ :=
-  Finset.le_sum_of_subadditive_on_pred (fun f : α → E => snorm' f q μ) (fun f => AeMeasurable f μ)
-    (snorm'_zero (zero_lt_one.trans_le hq1)) (fun f g hf hg => snorm'_add_le hf hg hq1) (fun x y => AeMeasurable.add) _
-    hfs
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem snorm'_sum_le
+[second_countable_topology E]
+{ι}
+{f : ι → α → E}
+{s : finset ι}
+(hfs : ∀ i, «expr ∈ »(i, s) → ae_measurable (f i) μ)
+(hq1 : «expr ≤ »(1, q)) : «expr ≤ »(snorm' «expr∑ in , »((i), s, f i) q μ, «expr∑ in , »((i), s, snorm' (f i) q μ)) :=
+finset.le_sum_of_subadditive_on_pred (λ
+ f : α → E, snorm' f q μ) (λ
+ f, ae_measurable f μ) (snorm'_zero (zero_lt_one.trans_le hq1)) (λ
+ f g hf hg, snorm'_add_le hf hg hq1) (λ x y, ae_measurable.add) _ hfs
 
-theorem snorm_sum_le [second_countable_topology E] {ι} {f : ι → α → E} {s : Finset ι}
-  (hfs : ∀ i, i ∈ s → AeMeasurable (f i) μ) (hp1 : 1 ≤ p) : snorm (∑i in s, f i) p μ ≤ ∑i in s, snorm (f i) p μ :=
-  Finset.le_sum_of_subadditive_on_pred (fun f : α → E => snorm f p μ) (fun f => AeMeasurable f μ) snorm_zero
-    (fun f g hf hg => snorm_add_le hf hg hp1) (fun x y => AeMeasurable.add) _ hfs
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem snorm_sum_le
+[second_countable_topology E]
+{ι}
+{f : ι → α → E}
+{s : finset ι}
+(hfs : ∀ i, «expr ∈ »(i, s) → ae_measurable (f i) μ)
+(hp1 : «expr ≤ »(1, p)) : «expr ≤ »(snorm «expr∑ in , »((i), s, f i) p μ, «expr∑ in , »((i), s, snorm (f i) p μ)) :=
+finset.le_sum_of_subadditive_on_pred (λ
+ f : α → E, snorm f p μ) (λ
+ f, ae_measurable f μ) snorm_zero (λ f g hf hg, snorm_add_le hf hg hp1) (λ x y, ae_measurable.add) _ hfs
 
 section SecondCountableTopology
 
@@ -1250,7 +1279,7 @@ end Monotonicity
 
 section IsROrC
 
-variable{𝕜 : Type _}[IsROrC 𝕜][MeasurableSpace 𝕜][OpensMeasurableSpace 𝕜]{f : α → 𝕜}
+variable{𝕜 : Type _}[IsROrC 𝕜]{f : α → 𝕜}
 
 -- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem mem_ℒp.re (hf : mem_ℒp f p μ) : mem_ℒp (λ x, is_R_or_C.re (f x)) p μ :=
@@ -1277,11 +1306,7 @@ end IsROrC
 section InnerProduct
 
 variable{E' 𝕜 :
-    Type
-      _}[IsROrC
-      𝕜][MeasurableSpace
-      𝕜][BorelSpace
-      𝕜][InnerProductSpace 𝕜 E'][MeasurableSpace E'][OpensMeasurableSpace E'][second_countable_topology E']
+    Type _}[IsROrC 𝕜][InnerProductSpace 𝕜 E'][MeasurableSpace E'][OpensMeasurableSpace E'][second_countable_topology E']
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E' _ x y
 
@@ -1721,14 +1746,16 @@ theorem snorm_ess_sup_indicator_le (s : Set α) (f : α → G) : snorm_ess_sup (
     rw [Ennreal.coe_le_coe, nnnorm_indicator_eq_indicator_nnnorm]
     exact Set.indicator_le_self s _ x
 
-theorem snorm_ess_sup_indicator_const_le (s : Set α) (c : G) : snorm_ess_sup (s.indicator fun x : α => c) μ ≤ ∥c∥₊ :=
-  by 
-    byCases' hμ0 : μ = 0
-    ·
-      rw [hμ0, snorm_ess_sup_measure_zero, Ennreal.coe_nonneg]
-      exact zero_le'
-    ·
-      exact (snorm_ess_sup_indicator_le s fun x => c).trans (snorm_ess_sup_const c hμ0).le
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem snorm_ess_sup_indicator_const_le
+(s : set α)
+(c : G) : «expr ≤ »(snorm_ess_sup (s.indicator (λ x : α, c)) μ, «expr∥ ∥₊»(c)) :=
+begin
+  by_cases [expr hμ0, ":", expr «expr = »(μ, 0)],
+  { rw ["[", expr hμ0, ",", expr snorm_ess_sup_measure_zero, ",", expr ennreal.coe_nonneg, "]"] [],
+    exact [expr zero_le'] },
+  { exact [expr (snorm_ess_sup_indicator_le s (λ x, c)).trans (snorm_ess_sup_const c hμ0).le] }
+end
 
 -- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem snorm_ess_sup_indicator_const_eq
@@ -2092,7 +2119,7 @@ theorem comp_mem_ℒp' (L : E →L[𝕜] F) {f : α → E} (hf : mem_ℒp f p μ
 
 section IsROrC
 
-variable{K : Type _}[IsROrC K][MeasurableSpace K][BorelSpace K]
+variable{K : Type _}[IsROrC K]
 
 theorem _root_.measure_theory.mem_ℒp.of_real {f : α → ℝ} (hf : mem_ℒp f p μ) : mem_ℒp (fun x => (f x : K)) p μ :=
   (@IsROrC.ofRealClm K _).comp_mem_ℒp' hf
@@ -2217,11 +2244,10 @@ namespace Lp
 
 section PosPart
 
-theorem lipschitz_with_pos_part : LipschitzWith 1 fun x : ℝ => max x 0 :=
-  LipschitzWith.of_dist_le_mul$
-    fun x y =>
-      by 
-        simp [dist, abs_max_sub_max_le_abs]
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem lipschitz_with_pos_part : lipschitz_with 1 (λ x : exprℝ(), max x 0) :=
+«expr $ »(lipschitz_with.of_dist_le_mul, λ
+ x y, by simp [] [] [] ["[", expr dist, ",", expr abs_max_sub_max_le_abs, "]"] [] [])
 
 /-- Positive part of a function in `L^p`. -/
 def pos_part (f : Lp ℝ p μ) : Lp ℝ p μ :=
@@ -2251,14 +2277,15 @@ theorem coe_fn_neg_part (f : Lp ℝ p μ) : ∀ᵐa ∂μ, neg_part f a = -min (
       by 
         rw [h, ←max_neg_neg, neg_zero]
 
-theorem continuous_pos_part [Fact (1 ≤ p)] : Continuous fun f : Lp ℝ p μ => pos_part f :=
-  LipschitzWith.continuous_comp_Lp _ _
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_pos_part [fact «expr ≤ »(1, p)] : continuous (λ f : Lp exprℝ() p μ, pos_part f) :=
+lipschitz_with.continuous_comp_Lp _ _
 
-theorem continuous_neg_part [Fact (1 ≤ p)] : Continuous fun f : Lp ℝ p μ => neg_part f :=
-  have eq : (fun f : Lp ℝ p μ => neg_part f) = fun f : Lp ℝ p μ => pos_part (-f) := rfl 
-  by 
-    rw [Eq]
-    exact continuous_pos_part.comp continuous_neg
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem continuous_neg_part [fact «expr ≤ »(1, p)] : continuous (λ f : Lp exprℝ() p μ, neg_part f) :=
+have eq : «expr = »(λ f : Lp exprℝ() p μ, neg_part f, λ f : Lp exprℝ() p μ, pos_part «expr- »(f)) := rfl,
+by { rw [expr eq] [],
+  exact [expr continuous_pos_part.comp continuous_neg] }
 
 end PosPart
 
@@ -2405,13 +2432,20 @@ theorem tendsto_Lp_of_tendsto_ℒp {ι} {fi : Filter ι} [hp : Fact (1 ≤ p)] {
   fi.tendsto f (𝓝 (f_lim_ℒp.to_Lp f_lim)) :=
   (tendsto_Lp_iff_tendsto_ℒp f f_lim f_lim_ℒp).mpr h_tendsto
 
-theorem cauchy_seq_Lp_iff_cauchy_seq_ℒp {ι} [Nonempty ι] [SemilatticeSup ι] [hp : Fact (1 ≤ p)] (f : ι → Lp E p μ) :
-  CauchySeq f ↔ tendsto (fun n : ι × ι => snorm (f n.fst - f n.snd) p μ) at_top (𝓝 0) :=
-  by 
-    simpRw [cauchy_seq_iff_tendsto_dist_at_top_0, dist_def]
-    rw [←Ennreal.zero_to_real, Ennreal.tendsto_to_real_iff (fun n => _) Ennreal.zero_ne_top]
-    rw [snorm_congr_ae (Lp.coe_fn_sub _ _).symm]
-    exact snorm_ne_top _
+-- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem cauchy_seq_Lp_iff_cauchy_seq_ℒp
+{ι}
+[nonempty ι]
+[semilattice_sup ι]
+[hp : fact «expr ≤ »(1, p)]
+(f : ι → Lp E p μ) : «expr ↔ »(cauchy_seq f, tendsto (λ
+  n : «expr × »(ι, ι), snorm «expr - »(f n.fst, f n.snd) p μ) at_top (expr𝓝() 0)) :=
+begin
+  simp_rw ["[", expr cauchy_seq_iff_tendsto_dist_at_top_0, ",", expr dist_def, "]"] [],
+  rw ["[", "<-", expr ennreal.zero_to_real, ",", expr ennreal.tendsto_to_real_iff (λ n, _) ennreal.zero_ne_top, "]"] [],
+  rw [expr snorm_congr_ae (Lp.coe_fn_sub _ _).symm] [],
+  exact [expr snorm_ne_top _]
+end
 
 -- error in MeasureTheory.Function.LpSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem complete_space_Lp_of_cauchy_complete_ℒp

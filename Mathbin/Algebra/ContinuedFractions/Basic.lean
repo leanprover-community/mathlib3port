@@ -176,7 +176,7 @@ equal to one.
 
 -/
 def GeneralizedContinuedFraction.IsSimpleContinuedFraction (g : GeneralizedContinuedFraction α) [HasOne α] : Prop :=
-  ∀ n : ℕ aₙ : α, g.partial_numerators.nth n = some aₙ → aₙ = 1
+  ∀ (n : ℕ) (aₙ : α), g.partial_numerators.nth n = some aₙ → aₙ = 1
 
 variable(α)
 
@@ -234,7 +234,7 @@ A simple continued fraction is a *(regular) continued fraction* ((r)cf) if all p
 `bᵢ` are positive, i.e. `0 < bᵢ`.
 -/
 def SimpleContinuedFraction.IsContinuedFraction [HasOne α] [HasZero α] [LT α] (s : SimpleContinuedFraction α) : Prop :=
-  ∀ n : ℕ bₙ : α, («expr↑ » s : GeneralizedContinuedFraction α).partialDenominators.nth n = some bₙ → 0 < bₙ
+  ∀ (n : ℕ) (bₙ : α), («expr↑ » s : GeneralizedContinuedFraction α).partialDenominators.nth n = some bₙ → 0 < bₙ
 
 variable(α)
 
@@ -350,9 +350,10 @@ def numerators (g : GeneralizedContinuedFraction K) : Streamₓ K :=
 def denominators (g : GeneralizedContinuedFraction K) : Streamₓ K :=
   g.continuants.map pair.b
 
+-- error in Algebra.ContinuedFractions.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Returns the convergents `Aₙ / Bₙ` of `g`, where `Aₙ, Bₙ` are the nth continuants of `g`. -/
-def convergents (g : GeneralizedContinuedFraction K) : Streamₓ K :=
-  fun n : ℕ => g.numerators n / g.denominators n
+def convergents (g : generalized_continued_fraction K) : stream K :=
+λ n : exprℕ(), «expr / »(g.numerators n, g.denominators n)
 
 /--
 Returns the approximation of the fraction described by the given sequence up to a given position n.

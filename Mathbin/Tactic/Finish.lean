@@ -75,7 +75,7 @@ we replace the goal `p` with `∀ f, (p → f) → f` and introduce.
 -/
 
 
-theorem by_contradiction_trick (p : Prop) (h : ∀ f : Prop, (p → f) → f) : p :=
+theorem by_contradiction_trick (p : Prop) (h : ∀ (f : Prop), (p → f) → f) : p :=
   h p id
 
 unsafe def preprocess_goal : tactic Unit :=

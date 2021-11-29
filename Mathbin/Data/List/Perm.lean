@@ -28,8 +28,8 @@ variable{α : Type uu}{β : Type vv}
   of each other. This is defined by induction using pairwise swaps. -/
 inductive perm : List α → List α → Prop
   | nil : perm [] []
-  | cons : ∀ x : α {l₁ l₂ : List α}, perm l₁ l₂ → perm (x :: l₁) (x :: l₂)
-  | swap : ∀ x y : α l : List α, perm (y :: x :: l) (x :: y :: l)
+  | cons : ∀ (x : α) {l₁ l₂ : List α}, perm l₁ l₂ → perm (x :: l₁) (x :: l₂)
+  | swap : ∀ (x y : α) (l : List α), perm (y :: x :: l) (x :: y :: l)
   | trans : ∀ {l₁ l₂ l₃ : List α}, perm l₁ l₂ → perm l₂ l₃ → perm l₁ l₃
 
 open perm(swap)
@@ -37,7 +37,7 @@ open perm(swap)
 infixl:50 " ~ " => perm
 
 @[refl]
-protected theorem perm.refl : ∀ l : List α, l ~ l
+protected theorem perm.refl : ∀ (l : List α), l ~ l
 | [] => perm.nil
 | x :: xs => (perm.refl xs).cons x
 
@@ -89,7 +89,7 @@ theorem perm.append_right {l₁ l₂ : List α} (t₁ : List α) (p : l₁ ~ l�
   perm.rec_on p (perm.refl ([] ++ t₁)) (fun x l₁ l₂ p₁ r₁ => r₁.cons x) (fun x y l => swap x y _)
     fun l₁ l₂ l₃ p₁ p₂ r₁ r₂ => r₁.trans r₂
 
-theorem perm.append_left {t₁ t₂ : List α} : ∀ l : List α, t₁ ~ t₂ → l ++ t₁ ~ l ++ t₂
+theorem perm.append_left {t₁ t₂ : List α} : ∀ (l : List α), t₁ ~ t₂ → l ++ t₁ ~ l ++ t₂
 | [], p => p
 | x :: xs, p => (perm.append_left xs p).cons x
 
@@ -150,7 +150,7 @@ theorem not_perm_nil_cons (x : α) (l : List α) : ¬[] ~ x :: l
     injection p.symm.eq_nil
 
 @[simp]
-theorem reverse_perm : ∀ l : List α, reverse l ~ l
+theorem reverse_perm : ∀ (l : List α), reverse l ~ l
 | [] => perm.nil
 | a :: l =>
   by 
@@ -431,7 +431,7 @@ theorem subperm.count_le [DecidableEq α] {l₁ l₂ : List α} (s : l₁ <+~ l�
   s.countp_le _
 
 theorem perm.foldl_eq' {f : β → α → β} {l₁ l₂ : List α} (p : l₁ ~ l₂) :
-  (∀ x _ : x ∈ l₁ y _ : y ∈ l₁ z, f (f z x) y = f (f z y) x) → ∀ b, foldl f b l₁ = foldl f b l₂ :=
+  (∀ x (_ : x ∈ l₁) y (_ : y ∈ l₁) z, f (f z x) y = f (f z y) x) → ∀ b, foldl f b l₁ = foldl f b l₂ :=
   perm_induction_on p (fun H b => rfl) (fun x t₁ t₂ p r H b => r (fun x hx y hy => H _ (Or.inr hx) _ (Or.inr hy)) _)
     (fun x y t₁ t₂ p r H b =>
       by 
@@ -866,7 +866,7 @@ begin
 end
 
 /-- The list version of `multiset.le_iff_count`. -/
-theorem subperm_ext_iff {l₁ l₂ : List α} : l₁ <+~ l₂ ↔ ∀ x _ : x ∈ l₁, count x l₁ ≤ count x l₂ :=
+theorem subperm_ext_iff {l₁ l₂ : List α} : l₁ <+~ l₂ ↔ ∀ x (_ : x ∈ l₁), count x l₁ ≤ count x l₂ :=
   by 
     refine' ⟨fun h x hx => subperm.count_le h x, fun h => _⟩
     suffices  : l₁ <+~ l₂.diff l₁ ++ l₁
@@ -1057,7 +1057,7 @@ theorem sublists_cons_perm_append (a : α) (l : List α) : sublists (a :: l) ~ s
     induction' sublists_aux l cons with b l IH <;> simp 
     exact (IH.cons _).trans perm_middle.symm
 
-theorem sublists_perm_sublists' : ∀ l : List α, sublists l ~ sublists' l
+theorem sublists_perm_sublists' : ∀ (l : List α), sublists l ~ sublists' l
 | [] => perm.refl _
 | a :: l =>
   let IH := sublists_perm_sublists' l 
@@ -1105,10 +1105,10 @@ theorem revzip_sublists' (l : List α) : ∀ l₁ l₂, (l₁, l₂) ∈ revzip 
         exact (IH _ _ h).cons _
 
 theorem perm_lookmap (f : α → Option α) {l₁ l₂ : List α}
-  (H : Pairwise (fun a b => ∀ c _ : c ∈ f a d _ : d ∈ f b, a = b ∧ c = d) l₁) (p : l₁ ~ l₂) :
+  (H : Pairwise (fun a b => ∀ c (_ : c ∈ f a) d (_ : d ∈ f b), a = b ∧ c = d) l₁) (p : l₁ ~ l₂) :
   lookmap f l₁ ~ lookmap f l₂ :=
   by 
-    let F := fun a b => ∀ c _ : c ∈ f a d _ : d ∈ f b, a = b ∧ c = d 
+    let F := fun a b => ∀ c (_ : c ∈ f a) d (_ : d ∈ f b), a = b ∧ c = d 
     change Pairwise F l₁ at H 
     induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ p₁ p₂ IH₁ IH₂
     ·

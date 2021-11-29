@@ -113,18 +113,19 @@ noncomputable def ClassGroup.mk0 [IsDedekindDomain R] : (Ideal R)⁰ →* ClassG
 
 variable{K}
 
-theorem QuotientGroup.mk'_eq_mk' {G : Type _} [Groupₓ G] {N : Subgroup G} [hN : N.normal] {x y : G} :
-  QuotientGroup.mk' N x = QuotientGroup.mk' N y ↔ ∃ (z : _)(_ : z ∈ N), (x*z) = y :=
-  (@Quotientₓ.eq _ (QuotientGroup.leftRel _) _ _).trans
-    ⟨fun h : (x⁻¹*y) ∈ N =>
-        ⟨_, h,
-          by 
-            rw [←mul_assocₓ, mul_right_invₓ, one_mulₓ]⟩,
-      fun ⟨z, z_mem, eq_y⟩ =>
-        by 
-          rw [←eq_y]
-          show (x⁻¹*x*z) ∈ N 
-          rwa [←mul_assocₓ, mul_left_invₓ, one_mulₓ]⟩
+-- error in RingTheory.ClassGroup: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem quotient_group.mk'_eq_mk'
+{G : Type*}
+[group G]
+{N : subgroup G}
+[hN : N.normal]
+{x
+ y : G} : «expr ↔ »(«expr = »(quotient_group.mk' N x, quotient_group.mk' N y), «expr∃ , »((z «expr ∈ » N), «expr = »(«expr * »(x, z), y))) :=
+(@quotient.eq _ (quotient_group.left_rel _) _ _).trans ⟨λ
+ h : «expr ∈ »(«expr * »(«expr ⁻¹»(x), y), N), ⟨_, h, by rw ["[", "<-", expr mul_assoc, ",", expr mul_right_inv, ",", expr one_mul, "]"] []⟩, λ
+ ⟨z, z_mem, eq_y⟩, by { rw ["<-", expr eq_y] [],
+   show [expr «expr ∈ »(«expr * »(«expr ⁻¹»(x), «expr * »(x, z)), N)],
+   rwa ["[", "<-", expr mul_assoc, ",", expr mul_left_inv, ",", expr one_mul, "]"] [] }⟩
 
 theorem ClassGroup.mk0_eq_mk0_iff_exists_fraction_ring [IsDedekindDomain R] {I J : (Ideal R)⁰} :
   ClassGroup.mk0 K I = ClassGroup.mk0 K J ↔ ∃ (x : _)(_ : x ≠ (0 : K)), (span_singleton R⁰ x*I) = J :=

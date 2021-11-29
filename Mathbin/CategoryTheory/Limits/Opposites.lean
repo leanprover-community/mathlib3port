@@ -28,7 +28,7 @@ variable{J : Type v}[small_category J]
 
 variable(F : J ⥤ «expr ᵒᵖ» C)
 
--- error in CategoryTheory.Limits.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in CategoryTheory.Limits.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If `F.left_op : Jᵒᵖ ⥤ C` has a colimit, we can construct a limit for `F : J ⥤ Cᵒᵖ`.
 -/ theorem has_limit_of_has_colimit_left_op [has_colimit F.left_op] : has_limit F :=
@@ -65,7 +65,7 @@ If `C` has colimits, we can construct limits for `Cᵒᵖ`.
 theorem has_limits_op_of_has_colimits [has_colimits C] : has_limits («expr ᵒᵖ» C) :=
   {  }
 
--- error in CategoryTheory.Limits.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in CategoryTheory.Limits.Opposites: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 If `F.left_op : Jᵒᵖ ⥤ C` has a limit, we can construct a colimit for `F : J ⥤ Cᵒᵖ`.
 -/ theorem has_colimit_of_has_limit_left_op [has_limit F.left_op] : has_colimit F :=

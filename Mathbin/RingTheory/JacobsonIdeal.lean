@@ -84,42 +84,27 @@ theorem jacobson_eq_self_of_is_maximal [H : is_maximal I] : I.jacobson = I :=
 instance (priority := 100)jacobson.is_maximal [H : is_maximal I] : is_maximal (jacobson I) :=
   ⟨⟨fun htop => H.1.1 (jacobson_eq_top_iff.1 htop), fun J hJ => H.1.2 _ (lt_of_le_of_ltₓ le_jacobson hJ)⟩⟩
 
-theorem mem_jacobson_iff {x : R} : x ∈ jacobson I ↔ ∀ y, ∃ z, (((x*y)*z)+z) - 1 ∈ I :=
-  ⟨fun hx y =>
-      Classical.by_cases
-        (fun hxy : I⊔span {(x*y)+1} = ⊤ =>
-          let ⟨p, hpi, q, hq, hpq⟩ := Submodule.mem_sup.1 ((eq_top_iff_one _).1 hxy)
-          let ⟨r, hr⟩ := mem_span_singleton.1 hq
-          ⟨r,
-            by 
-              rw [←one_mulₓ r, ←mul_assocₓ, ←add_mulₓ, mul_oneₓ, ←hr, ←hpq, ←neg_sub, add_sub_cancel] <;>
-                exact I.neg_mem hpi⟩)
-        fun hxy : I⊔span {(x*y)+1} ≠ ⊤ =>
-          let ⟨M, hm1, hm2⟩ := exists_le_maximal _ hxy 
-          suffices x ∉ M from (this$ mem_Inf.1 hx ⟨le_transₓ le_sup_left hm2, hm1⟩).elim 
-          fun hxm =>
-            hm1.1.1$
-              (eq_top_iff_one _).2$
-                add_sub_cancel' (x*y) 1 ▸
-                  M.sub_mem (le_sup_right.trans hm2$ mem_span_singleton.2 dvd_rfl) (M.mul_mem_right _ hxm),
-    fun hx =>
-      mem_Inf.2$
-        fun M ⟨him, hm⟩ =>
-          Classical.by_contradiction$
-            fun hxm =>
-              let ⟨y, hy⟩ := hm.exists_inv hxm 
-              let ⟨z, hz⟩ := hx (-y)
-              hm.1.1$
-                (eq_top_iff_one _).2$
-                  sub_sub_cancel (((x*-y)*z)+z) 1 ▸
-                    M.sub_mem
-                      (by 
-                        rw [←one_mulₓ z, ←mul_assocₓ, ←add_mulₓ, mul_oneₓ, mul_neg_eq_neg_mul_symm, neg_add_eq_sub,
-                          ←neg_sub, neg_mul_eq_neg_mul_symm, neg_mul_eq_mul_neg, mul_commₓ x y, mul_commₓ _ (-z)]
-                        rcases hy with ⟨i, hi, df⟩
-                        rw [←sub_eq_iff_eq_add.mpr df.symm, sub_sub, add_commₓ, ←sub_sub, sub_self, zero_sub]
-                        refine' M.mul_mem_left (-z) ((neg_mem_iff _).mpr hi))
-                      (him hz)⟩
+-- error in RingTheory.JacobsonIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_jacobson_iff
+{x : R} : «expr ↔ »(«expr ∈ »(x, jacobson I), ∀
+ y, «expr∃ , »((z), «expr ∈ »(«expr - »(«expr + »(«expr * »(«expr * »(x, y), z), z), 1), I))) :=
+⟨λ
+ hx
+ y, classical.by_cases (assume
+  hxy : «expr = »(«expr ⊔ »(I, span {«expr + »(«expr * »(x, y), 1)}), «expr⊤»()), let ⟨p, hpi, q, hq, hpq⟩ := submodule.mem_sup.1 ((eq_top_iff_one _).1 hxy) in
+  let ⟨r, hr⟩ := mem_span_singleton.1 hq in
+  ⟨r, by rw ["[", "<-", expr one_mul r, ",", "<-", expr mul_assoc, ",", "<-", expr add_mul, ",", expr mul_one, ",", "<-", expr hr, ",", "<-", expr hpq, ",", "<-", expr neg_sub, ",", expr add_sub_cancel, "]"] []; exact [expr I.neg_mem hpi]⟩) (assume
+  hxy : «expr ≠ »(«expr ⊔ »(I, span {«expr + »(«expr * »(x, y), 1)}), «expr⊤»()), let ⟨M, hm1, hm2⟩ := exists_le_maximal _ hxy in
+  suffices «expr ∉ »(x, M), from «expr $ »(this, mem_Inf.1 hx ⟨le_trans le_sup_left hm2, hm1⟩).elim,
+  λ
+  hxm, «expr $ »(hm1.1.1, «expr $ »((eq_top_iff_one _).2, «expr ▸ »(add_sub_cancel' «expr * »(x, y) 1, M.sub_mem «expr $ »(le_sup_right.trans hm2, mem_span_singleton.2 dvd_rfl) (M.mul_mem_right _ hxm))))), λ
+ hx, «expr $ »(mem_Inf.2, λ
+  (M)
+  ⟨him, hm⟩, «expr $ »(classical.by_contradiction, λ hxm, let ⟨y, hy⟩ := hm.exists_inv hxm, ⟨z, hz⟩ := hx «expr- »(y) in
+   «expr $ »(hm.1.1, «expr $ »((eq_top_iff_one _).2, «expr ▸ »(sub_sub_cancel «expr + »(«expr * »(«expr * »(x, «expr- »(y)), z), z) 1, M.sub_mem (by { rw ["[", "<-", expr one_mul z, ",", "<-", expr mul_assoc, ",", "<-", expr add_mul, ",", expr mul_one, ",", expr mul_neg_eq_neg_mul_symm, ",", expr neg_add_eq_sub, ",", "<-", expr neg_sub, ",", expr neg_mul_eq_neg_mul_symm, ",", expr neg_mul_eq_mul_neg, ",", expr mul_comm x y, ",", expr mul_comm _ «expr- »(z), "]"] [],
+         rcases [expr hy, "with", "⟨", ident i, ",", ident hi, ",", ident df, "⟩"],
+         rw ["[", "<-", expr sub_eq_iff_eq_add.mpr df.symm, ",", expr sub_sub, ",", expr add_comm, ",", "<-", expr sub_sub, ",", expr sub_self, ",", expr zero_sub, "]"] [],
+         refine [expr M.mul_mem_left «expr- »(z) ((neg_mem_iff _).mpr hi)] }) (him hz))))))⟩
 
 theorem exists_mul_sub_mem_of_sub_one_mem_jacobson {I : Ideal R} (r : R) (h : r - 1 ∈ jacobson I) :
   ∃ s, (r*s) - 1 ∈ I :=
@@ -137,7 +122,7 @@ theorem is_unit_of_sub_one_mem_jacobson_bot (r : R) (h : r - 1 ∈ jacobson (⊥
 /-- An ideal equals its Jacobson radical iff it is the intersection of a set of maximal ideals.
 Allowing the set to include ⊤ is equivalent, and is included only to simplify some proofs. -/
 theorem eq_jacobson_iff_Inf_maximal :
-  I.jacobson = I ↔ ∃ M : Set (Ideal R), (∀ J _ : J ∈ M, is_maximal J ∨ J = ⊤) ∧ I = Inf M :=
+  I.jacobson = I ↔ ∃ M : Set (Ideal R), (∀ J (_ : J ∈ M), is_maximal J ∨ J = ⊤) ∧ I = Inf M :=
   by 
     use fun hI => ⟨{ J:Ideal R | I ≤ J ∧ J.is_maximal }, ⟨fun _ hJ => Or.inl hJ.right, hI.symm⟩⟩
     rintro ⟨M, hM, hInf⟩
@@ -151,7 +136,7 @@ theorem eq_jacobson_iff_Inf_maximal :
       exact is_top.symm ▸ Submodule.mem_top
 
 theorem eq_jacobson_iff_Inf_maximal' :
-  I.jacobson = I ↔ ∃ M : Set (Ideal R), (∀ J _ : J ∈ M K : Ideal R, J < K → K = ⊤) ∧ I = Inf M :=
+  I.jacobson = I ↔ ∃ M : Set (Ideal R), (∀ J (_ : J ∈ M) (K : Ideal R), J < K → K = ⊤) ∧ I = Inf M :=
   eq_jacobson_iff_Inf_maximal.trans
     ⟨fun h =>
         let ⟨M, hM⟩ := h
@@ -164,7 +149,7 @@ theorem eq_jacobson_iff_Inf_maximal' :
 
 /-- An ideal `I` equals its Jacobson radical if and only if every element outside `I`
 also lies outside of a maximal ideal containing `I`. -/
-theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ x _ : x ∉ I, ∃ M : Ideal R, (I ≤ M ∧ M.is_maximal) ∧ x ∉ M :=
+theorem eq_jacobson_iff_not_mem : I.jacobson = I ↔ ∀ x (_ : x ∉ I), ∃ M : Ideal R, (I ≤ M ∧ M.is_maximal) ∧ x ∉ M :=
   by 
     split 
     ·
@@ -345,18 +330,16 @@ theorem is_local.le_jacobson {I J : Ideal R} (hi : is_local I) (hij : I ≤ J) (
   let ⟨M, hm, hjm⟩ := exists_le_maximal J hj 
   le_transₓ hjm$ le_of_eqₓ$ Eq.symm$ hi.1.eq_of_le hm.1.1$ Inf_le ⟨le_transₓ hij hjm, hm⟩
 
-theorem is_local.mem_jacobson_or_exists_inv {I : Ideal R} (hi : is_local I) (x : R) :
-  x ∈ jacobson I ∨ ∃ y, (y*x) - 1 ∈ I :=
-  Classical.by_cases
-    (fun h : I⊔span {x} = ⊤ =>
-      let ⟨p, hpi, q, hq, hpq⟩ := Submodule.mem_sup.1 ((eq_top_iff_one _).1 h)
-      let ⟨r, hr⟩ := mem_span_singleton.1 hq 
-      Or.inr
-        ⟨r,
-          by 
-            rw [←hpq, mul_commₓ, ←hr, ←neg_sub, add_sub_cancel] <;> exact I.neg_mem hpi⟩)
-    fun h : I⊔span {x} ≠ ⊤ =>
-      Or.inl$ le_transₓ le_sup_right (hi.le_jacobson le_sup_left h)$ mem_span_singleton.2$ dvd_refl x
+-- error in RingTheory.JacobsonIdeal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem is_local.mem_jacobson_or_exists_inv
+{I : ideal R}
+(hi : is_local I)
+(x : R) : «expr ∨ »(«expr ∈ »(x, jacobson I), «expr∃ , »((y), «expr ∈ »(«expr - »(«expr * »(y, x), 1), I))) :=
+classical.by_cases (assume
+ h : «expr = »(«expr ⊔ »(I, span {x}), «expr⊤»()), let ⟨p, hpi, q, hq, hpq⟩ := submodule.mem_sup.1 ((eq_top_iff_one _).1 h) in
+ let ⟨r, hr⟩ := mem_span_singleton.1 hq in
+ or.inr ⟨r, by rw ["[", "<-", expr hpq, ",", expr mul_comm, ",", "<-", expr hr, ",", "<-", expr neg_sub, ",", expr add_sub_cancel, "]"] []; exact [expr I.neg_mem hpi]⟩) (assume
+ h : «expr ≠ »(«expr ⊔ »(I, span {x}), «expr⊤»()), «expr $ »(or.inl, «expr $ »(le_trans le_sup_right (hi.le_jacobson le_sup_left h), «expr $ »(mem_span_singleton.2, dvd_refl x))))
 
 end IsLocal
 

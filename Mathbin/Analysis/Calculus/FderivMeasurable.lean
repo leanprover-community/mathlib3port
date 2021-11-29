@@ -75,10 +75,15 @@ namespace ContinuousLinearMap
 
 variable{𝕜 E F : Type _}[NondiscreteNormedField 𝕜][NormedGroup E][NormedSpace 𝕜 E][NormedGroup F][NormedSpace 𝕜 F]
 
-theorem measurable_apply₂ [MeasurableSpace E] [OpensMeasurableSpace E] [second_countable_topology E]
-  [second_countable_topology (E →L[𝕜] F)] [MeasurableSpace F] [BorelSpace F] :
-  Measurable fun p : (E →L[𝕜] F) × E => p.1 p.2 :=
-  is_bounded_bilinear_map_apply.Continuous.Measurable
+-- error in Analysis.Calculus.FderivMeasurable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable_apply₂
+[measurable_space E]
+[opens_measurable_space E]
+[second_countable_topology E]
+[second_countable_topology «expr →L[ ] »(E, 𝕜, F)]
+[measurable_space F]
+[borel_space F] : measurable (λ p : «expr × »(«expr →L[ ] »(E, 𝕜, F), E), p.1 p.2) :=
+is_bounded_bilinear_map_apply.continuous.measurable
 
 end ContinuousLinearMap
 
@@ -96,7 +101,8 @@ namespace FderivMeasurableAux
 at scale `r` by the linear map `L`, up to an error `ε`. We tweak the definition to make sure that
 this is an open set.-/
 def A (f : E → F) (L : E →L[𝕜] F) (r ε : ℝ) : Set E :=
-  { x | ∃ (r' : _)(_ : r' ∈ Ioc (r / 2) r), ∀ y z _ : y ∈ ball x r' _ : z ∈ ball x r', ∥f z - f y - L (z - y)∥ ≤ ε*r }
+  { x |
+    ∃ (r' : _)(_ : r' ∈ Ioc (r / 2) r), ∀ y z (_ : y ∈ ball x r') (_ : z ∈ ball x r'), ∥f z - f y - L (z - y)∥ ≤ ε*r }
 
 /-- The set `B f K r s ε` is the set of points `x` around which there exists a continuous linear map
 `L` belonging to `K` (a given set of continuous linear maps) that approximates well the

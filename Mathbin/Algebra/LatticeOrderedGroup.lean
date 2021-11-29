@@ -139,26 +139,30 @@ theorem inf_mul_sup [CovariantClass α α (·*·) (· ≤ ·)] (a b : α) : ((a�
 namespace LatticeOrderedCommGroup
 
 /--
-Let `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,
-the element `a ⊔ 0` is said to be the *positive component* of `a`, denoted `a⁺`.
+Let `α` be a lattice ordered commutative group with identity `1`. For an element `a` of type `α`,
+the element `a ⊔ 1` is said to be the *positive component* of `a`, denoted `a⁺`.
 -/
-@[toAdditive Pos
-      "Let `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,\n  the element `a ⊔ 0` is said to be the *positive component* of `a`, denoted `a⁺`."]
-def mpos (a : α) : α :=
-  a⊔1
+@[toAdditive
+      "\nLet `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,\nthe element `a ⊔ 0` is said to be the *positive component* of `a`, denoted `a⁺`.\n"]
+instance (priority := 100)has_one_lattice_has_pos_part : HasPosPart α :=
+  ⟨fun a => a⊔1⟩
 
-postfix:1000 "⁺" => mpos
+@[toAdditive pos_part_def]
+theorem m_pos_part_def (a : α) : a⁺ = a⊔1 :=
+  rfl
 
 /--
-Let `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,
-the element `(-a) ⊔ 0` is said to be the *negative component* of `a`, denoted `a⁻`.
+Let `α` be a lattice ordered commutative group with identity `1`. For an element `a` of type `α`,
+the element `(-a) ⊔ 1` is said to be the *negative component* of `a`, denoted `a⁻`.
 -/
-@[toAdditive neg
-      "Let `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,\n  the element `(-a) ⊔ 0` is said to be the *negative component* of `a`, denoted `a⁻`."]
-def mneg (a : α) : α :=
-  a⁻¹⊔1
+@[toAdditive
+      "\nLet `α` be a lattice ordered commutative group with identity `0`. For an element `a` of type `α`,\nthe element `(-a) ⊔ 0` is said to be the *negative component* of `a`, denoted `a⁻`.\n"]
+instance (priority := 100)has_one_lattice_has_neg_part : HasNegPart α :=
+  ⟨fun a => a⁻¹⊔1⟩
 
-postfix:1000 "⁻" => mneg
+@[toAdditive neg_part_def]
+theorem m_neg_part_def (a : α) : a⁻ = a⁻¹⊔1 :=
+  rfl
 
 /--
 Let `α` be a lattice ordered commutative group and let `a` be an element in `α` with absolute value
@@ -213,12 +217,11 @@ theorem m_le_neg (a : α) : a⁻¹ ≤ a⁻ :=
 /--
 Let `α` be a lattice ordered commutative group and let `a` be an element in `α`. Then the negative
 component `a⁻` of `a` is equal to the positive component `(-a)⁺` of `-a`.
--/
+"-/
 @[toAdditive]
 theorem neg_eq_pos_inv (a : α) : a⁻ = a⁻¹⁺ :=
   by 
-    unfold mneg 
-    unfold mpos
+    rw [m_neg_part_def, m_pos_part_def]
 
 /--
 Let `α` be a lattice ordered commutative group and let `a` be an element in `α`. Then the positive
@@ -252,8 +255,7 @@ $$a⁻ = -(a ⊓ 0).$$
 @[toAdditive]
 theorem neg_eq_inv_inf_one [CovariantClass α α (·*·) (· ≤ ·)] (a : α) : a⁻ = (a⊓1)⁻¹ :=
   by 
-    unfold LatticeOrderedCommGroup.mneg 
-    rw [←inv_inj, inv_sup_eq_inv_inf_inv, inv_invₓ, inv_invₓ, one_inv]
+    rw [m_neg_part_def, ←inv_inj, inv_sup_eq_inv_inf_inv, inv_invₓ, inv_invₓ, one_inv]
 
 /--
 Let `α` be a lattice ordered commutative group and let `a` be an element in `α` with positive
@@ -265,9 +267,7 @@ theorem pos_inv_neg [CovariantClass α α (·*·) (· ≤ ·)] (a : α) : a = a�
   by 
     rw [div_eq_mul_inv]
     apply eq_mul_inv_of_mul_eq 
-    unfold LatticeOrderedCommGroup.mneg 
-    rw [mul_sup_eq_mul_sup_mul, mul_oneₓ, mul_right_invₓ, sup_comm]
-    unfold LatticeOrderedCommGroup.mpos
+    rw [m_neg_part_def, mul_sup_eq_mul_sup_mul, mul_oneₓ, mul_right_invₓ, sup_comm, m_pos_part_def]
 
 @[toAdditive, nolint doc_blame_thm]
 theorem pos_div_neg' [CovariantClass α α (·*·) (· ≤ ·)] (a : α) : a⁺ / a⁻ = a :=
@@ -492,7 +492,7 @@ equal to its positive component `a⁺`.
 @[toAdditive pos_pos_id]
 theorem m_pos_pos_id (a : α) (h : 1 ≤ a) : a⁺ = a :=
   by 
-    unfold LatticeOrderedCommGroup.mpos 
+    rw [m_pos_part_def]
     apply sup_of_le_left h
 
 /--

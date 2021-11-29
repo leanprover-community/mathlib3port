@@ -46,7 +46,7 @@ protected theorem forall {q : { a // p a } → Prop} : (∀ x, q x) ↔ ∀ a b,
 
 /-- An alternative version of `subtype.forall`. This one is useful if Lean cannot figure out `q`
   when using `subtype.forall` from right to left. -/
-protected theorem forall' {q : ∀ x, p x → Prop} : (∀ x h, q x h) ↔ ∀ x : { a // p a }, q x x.2 :=
+protected theorem forall' {q : ∀ x, p x → Prop} : (∀ x h, q x h) ↔ ∀ (x : { a // p a }), q x x.2 :=
   (@Subtype.forall _ _ fun x => q x.1 x.2).symm
 
 @[simp]

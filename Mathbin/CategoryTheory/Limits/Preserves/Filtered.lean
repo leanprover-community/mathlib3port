@@ -29,7 +29,7 @@ A functor is said to preserve filtered colimits, if it preserves all colimits of
 `J` is a filtered category.
 -/
 class preserves_filtered_colimits(F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
-  PreservesFilteredColimits : ∀ J : Type v [small_category J] [is_filtered J], preserves_colimits_of_shape J F
+  PreservesFilteredColimits : ∀ (J : Type v) [small_category J] [is_filtered J], preserves_colimits_of_shape J F
 
 attribute [instance] preserves_filtered_colimits.preserves_filtered_colimits
 
@@ -49,7 +49,7 @@ A functor is said to preserve cofiltered limits, if it preserves all limits of s
 `J` is a cofiltered category.
 -/
 class preserves_cofiltered_limits(F : C ⥤ D) : Type max u₁ u₂ (v + 1) where 
-  PreservesCofilteredLimits : ∀ J : Type v [small_category J] [is_cofiltered J], preserves_limits_of_shape J F
+  PreservesCofilteredLimits : ∀ (J : Type v) [small_category J] [is_cofiltered J], preserves_limits_of_shape J F
 
 attribute [instance] preserves_cofiltered_limits.preserves_cofiltered_limits
 

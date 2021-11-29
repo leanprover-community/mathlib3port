@@ -82,12 +82,12 @@ Construct a term of `limit F : Type u` from a family of terms `x : Π j, F.obj j
 which are "coherent": `∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j'`.
 -/
 @[ext]
-noncomputable def limit.mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') :
+noncomputable def limit.mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' (f : j ⟶ j'), F.map f (x j) = x j') :
   (limit F : Type u) :=
   (limit_equiv_sections F).symm ⟨x, h⟩
 
 @[simp]
-theorem limit.π_mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' f : j ⟶ j', F.map f (x j) = x j') j :
+theorem limit.π_mk (F : J ⥤ Type u) (x : ∀ j, F.obj j) (h : ∀ j j' (f : j ⟶ j'), F.map f (x j) = x j') j :
   limit.π F j (limit.mk F x h) = x j :=
   by 
     dsimp [limit.mk]
@@ -146,14 +146,15 @@ def colimit_cocone (F : J ⥤ Type u) : cocone F :=
 
 attribute [local elab_with_expected_type] Quot.lift
 
+-- error in CategoryTheory.Limits.Types: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- (internal implementation) the fact that the proposed colimit cocone is the colimit -/
-def colimit_cocone_is_colimit (F : J ⥤ Type u) : is_colimit (colimit_cocone F) :=
-  { desc :=
-      fun s =>
-        Quot.lift (fun p : Σj, F.obj j => s.ι.app p.1 p.2)
-          fun ⟨j, x⟩ ⟨j', x'⟩ ⟨f, hf⟩ =>
-            by 
-              rw [hf] <;> exact (congr_funₓ (cocone.w s f) x).symm }
+def colimit_cocone_is_colimit (F : «expr ⥤ »(J, Type u)) : is_colimit (colimit_cocone F) :=
+{ desc := λ
+  s, quot.lift (λ
+   p : «exprΣ , »((j), F.obj j), s.ι.app p.1 p.2) (assume
+   ⟨j, x⟩
+   ⟨j', x'⟩
+   ⟨f, hf⟩, by rw [expr hf] []; exact [expr (congr_fun (cocone.w s f) x).symm]) }
 
 /--
 The category of types has all colimits.
@@ -272,7 +273,7 @@ theorem eqv_gen_quot_rel_of_rel (x y : Σj, F.obj j) : filtered_colimit.rel F x 
 attribute [local elabWithoutExpectedType] nat_trans.app
 
 /-- Recognizing filtered colimits of types. -/
-noncomputable def is_colimit_of (t : cocone F) (hsurj : ∀ x : t.X, ∃ i xi, x = t.ι.app i xi)
+noncomputable def is_colimit_of (t : cocone F) (hsurj : ∀ (x : t.X), ∃ i xi, x = t.ι.app i xi)
   (hinj : ∀ i j xi xj, t.ι.app i xi = t.ι.app j xj → ∃ (k : _)(f : i ⟶ k)(g : j ⟶ k), F.map f xi = F.map g xj) :
   is_colimit t :=
   by 

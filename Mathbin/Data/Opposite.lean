@@ -102,7 +102,7 @@ instance  [Inhabited α] : Inhabited («expr ᵒᵖ» α) :=
 
 /-- A recursor for `opposite`. Use as `induction x using opposite.rec`. -/
 @[simp]
-protected def rec {F : ∀ X : «expr ᵒᵖ» α, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X :=
+protected def rec {F : ∀ (X : «expr ᵒᵖ» α), Sort v} (h : ∀ X, F (op X)) : ∀ X, F X :=
   fun X => h (unop X)
 
 end Opposite

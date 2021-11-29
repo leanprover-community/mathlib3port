@@ -428,37 +428,36 @@ begin
   { rwa ["[", "<-", expr hxs, ",", expr h₀, ",", expr h₁, "]"] ["at", ident hperm] }
 end
 
-instance pi_injective.sampleable_ext : sampleable_ext { f : ℤ → ℤ // Function.Injective f } :=
-  { ProxyRepr := injective_function ℤ, interp := fun f => ⟨apply f, f.injective⟩,
-    sample :=
-      gen.sized$
-        fun sz =>
-          do 
-            let xs' := Int.range (-(2*sz)+2) ((2*sz)+2)
-            let ys ← gen.permutation_of xs' 
-            have Hinj : injective fun r : ℕ => (-((2*sz)+2 : ℤ))+«expr↑ » r :=
-                fun x y h => Int.coe_nat_inj (add_right_injective _ h)
-              let r : injective_function ℤ :=
-                injective_function.mk.{0} xs' ys.1 ys.2 (ys.2.nodup_iff.1$ nodup_map Hinj (nodup_range _))
-              pure r,
-    shrink := @injective_function.shrink ℤ _ _ }
+-- error in Testing.SlimCheck.Functions: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance pi_injective.sampleable_ext : sampleable_ext {f : exprℤ() → exprℤ() // function.injective f} :=
+{ proxy_repr := injective_function exprℤ(),
+  interp := λ f, ⟨apply f, f.injective⟩,
+  sample := «expr $ »(gen.sized, λ sz, do
+   let xs' := int.range «expr- »(«expr + »(«expr * »(2, sz), 2)) «expr + »(«expr * »(2, sz), 2),
+     ys ← gen.permutation_of xs',
+     have Hinj : injective (λ
+      r : exprℕ(), «expr + »(«expr- »((«expr + »(«expr * »(2, sz), 2) : exprℤ())), «expr↑ »(r))), from λ
+     x y h, int.coe_nat_inj (add_right_injective _ h),
+     let r : injective_function exprℤ() := injective_function.mk.{0} xs' ys.1 ys.2 «expr $ »(ys.2.nodup_iff.1, nodup_map Hinj (nodup_range _)) in
+     pure r),
+  shrink := @injective_function.shrink exprℤ() _ _ }
 
 end InjectiveFunction
 
 open Function
 
 instance injective.testable (f : α → β)
-  [I : testable (named_binder "x"$ ∀ x : α, named_binder "y"$ ∀ y : α, named_binder "H"$ f x = f y → x = y)] :
+  [I : testable (named_binder "x"$ ∀ (x : α), named_binder "y"$ ∀ (y : α), named_binder "H"$ f x = f y → x = y)] :
   testable (injective f) :=
   I
 
 instance monotone.testable [Preorderₓ α] [Preorderₓ β] (f : α → β)
-  [I : testable (named_binder "x"$ ∀ x : α, named_binder "y"$ ∀ y : α, named_binder "H"$ x ≤ y → f x ≤ f y)] :
+  [I : testable (named_binder "x"$ ∀ (x : α), named_binder "y"$ ∀ (y : α), named_binder "H"$ x ≤ y → f x ≤ f y)] :
   testable (Monotone f) :=
   I
 
 instance antitone.testable [Preorderₓ α] [Preorderₓ β] (f : α → β)
-  [I : testable (named_binder "x"$ ∀ x : α, named_binder "y"$ ∀ y : α, named_binder "H"$ x ≤ y → f y ≤ f x)] :
+  [I : testable (named_binder "x"$ ∀ (x : α), named_binder "y"$ ∀ (y : α), named_binder "H"$ x ≤ y → f y ≤ f x)] :
   testable (Antitone f) :=
   I
 

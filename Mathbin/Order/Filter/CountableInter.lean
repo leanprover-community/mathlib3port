@@ -21,11 +21,11 @@ variable{ι α : Type _}
 /-- A filter `l` has the countable intersection property if for any countable collection
 of sets `s ∈ l` their intersection belongs to `l` as well. -/
 class CountableInterFilter(l : Filter α) : Prop where 
-  countable_sInter_mem_sets' : ∀ {S : Set (Set α)} hSc : countable S hS : ∀ s _ : s ∈ S, s ∈ l, ⋂₀S ∈ l
+  countable_sInter_mem_sets' : ∀ {S : Set (Set α)} (hSc : countable S) (hS : ∀ s (_ : s ∈ S), s ∈ l), ⋂₀S ∈ l
 
 variable{l : Filter α}[CountableInterFilter l]
 
-theorem countable_sInter_mem_sets {S : Set (Set α)} (hSc : countable S) : ⋂₀S ∈ l ↔ ∀ s _ : s ∈ S, s ∈ l :=
+theorem countable_sInter_mem_sets {S : Set (Set α)} (hSc : countable S) : ⋂₀S ∈ l ↔ ∀ s (_ : s ∈ S), s ∈ l :=
   ⟨fun hS s hs => mem_of_superset hS (sInter_subset_of_mem hs), CountableInterFilter.countable_sInter_mem_sets' hSc⟩
 
 theorem countable_Inter_mem_sets [Encodable ι] {s : ι → Set α} : (⋂i, s i) ∈ l ↔ ∀ i, s i ∈ l :=
@@ -48,8 +48,8 @@ theorem eventually_countable_forall [Encodable ι] {p : α → ι → Prop} : (�
   by 
     simpa only [Filter.Eventually, set_of_forall] using @countable_Inter_mem_sets _ _ l _ _ fun i => { x | p x i }
 
-theorem eventually_countable_ball {S : Set ι} (hS : countable S) {p : ∀ x : α i _ : i ∈ S, Prop} :
-  (∀ᶠx in l, ∀ i _ : i ∈ S, p x i ‹_›) ↔ ∀ i _ : i ∈ S, ∀ᶠx in l, p x i ‹_› :=
+theorem eventually_countable_ball {S : Set ι} (hS : countable S) {p : ∀ (x : α) i (_ : i ∈ S), Prop} :
+  (∀ᶠx in l, ∀ i (_ : i ∈ S), p x i ‹_›) ↔ ∀ i (_ : i ∈ S), ∀ᶠx in l, p x i ‹_› :=
   by 
     simpa only [Filter.Eventually, set_of_forall] using @countable_bInter_mem _ _ l _ _ hS fun i hi => { x | p x i hi }
 
@@ -74,8 +74,8 @@ begin
   exact [expr eventually_le.countable_Union (λ i, h i i.2)]
 end
 
-theorem EventuallyEq.countable_bUnion {S : Set ι} (hS : countable S) {s t : ∀ i _ : i ∈ S, Set α}
-  (h : ∀ i _ : i ∈ S, s i ‹_› =ᶠ[l] t i ‹_›) : (⋃(i : _)(_ : i ∈ S), s i ‹_›) =ᶠ[l] ⋃(i : _)(_ : i ∈ S), t i ‹_› :=
+theorem EventuallyEq.countable_bUnion {S : Set ι} (hS : countable S) {s t : ∀ i (_ : i ∈ S), Set α}
+  (h : ∀ i (_ : i ∈ S), s i ‹_› =ᶠ[l] t i ‹_›) : (⋃(i : _)(_ : i ∈ S), s i ‹_›) =ᶠ[l] ⋃(i : _)(_ : i ∈ S), t i ‹_› :=
   (EventuallyLe.countable_bUnion hS fun i hi => (h i hi).le).antisymm
     (EventuallyLe.countable_bUnion hS fun i hi => (h i hi).symm.le)
 
@@ -100,8 +100,8 @@ begin
   exact [expr eventually_le.countable_Inter (λ i, h i i.2)]
 end
 
-theorem EventuallyEq.countable_bInter {S : Set ι} (hS : countable S) {s t : ∀ i _ : i ∈ S, Set α}
-  (h : ∀ i _ : i ∈ S, s i ‹_› =ᶠ[l] t i ‹_›) : (⋂(i : _)(_ : i ∈ S), s i ‹_›) =ᶠ[l] ⋂(i : _)(_ : i ∈ S), t i ‹_› :=
+theorem EventuallyEq.countable_bInter {S : Set ι} (hS : countable S) {s t : ∀ i (_ : i ∈ S), Set α}
+  (h : ∀ i (_ : i ∈ S), s i ‹_› =ᶠ[l] t i ‹_›) : (⋂(i : _)(_ : i ∈ S), s i ‹_›) =ᶠ[l] ⋂(i : _)(_ : i ∈ S), t i ‹_› :=
   (EventuallyLe.countable_bInter hS fun i hi => (h i hi).le).antisymm
     (EventuallyLe.countable_bInter hS fun i hi => (h i hi).symm.le)
 

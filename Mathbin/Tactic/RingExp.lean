@@ -220,7 +220,7 @@ unsafe inductive ex : ex_type → Type
 /--
 Return the proof information associated to the `ex`.
 -/
-unsafe def ex.info : ∀ {et : ex_type} ps : ex et, ex_info
+unsafe def ex.info : ∀ {et : ex_type} (ps : ex et), ex_info
 | Sum, ex.zero i => i
 | Sum, ex.sum i _ _ => i
 | Prod, ex.coeff i _ => i
@@ -268,7 +268,7 @@ We use this to combine intermediate normalisation proofs.
 Since `pretty` only depends on the subexpressions,
 which do not change, we do not set `pretty`.
 -/
-unsafe def ex.set_info : ∀ {et : ex_type} ps : ex et, Option expr → Option expr → ex et
+unsafe def ex.set_info : ∀ {et : ex_type} (ps : ex et), Option expr → Option expr → ex et
 | Sum, ex.zero i, o, pf => ex.zero (i.set o pf)
 | Sum, ex.sum i p ps, o, pf => ex.sum (i.set o pf) p ps
 | Prod, ex.coeff i x, o, pf => ex.coeff (i.set o pf) x
@@ -1642,12 +1642,14 @@ unsafe def make_eval_info (α : expr) : tactic eval_info :=
     let o ← mk_mapp `` HasOne.one [α, none]
     pure ⟨α, u, csr_instance, ha_instance, hm_instance, hp_instance, ring_instance, dr_instance, z, o⟩
 
+-- error in Tactic.RingExp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Use `e` to build the context for running `mx`. -/
-unsafe def run_ring_exp {α} (transp : transparency) (e : expr) (mx : ring_exp_m α) : tactic α :=
-  do 
-    let info_b ← infer_type e >>= make_eval_info 
-    let info_e ← mk_const `` Nat >>= make_eval_info
-    (fun x : _ × _ => x.1) <$> StateTₓ.run (ReaderTₓ.run mx ⟨info_b, info_e, transp⟩) []
+meta
+def run_ring_exp {α} (transp : transparency) (e : expr) (mx : ring_exp_m α) : tactic α :=
+do {
+info_b ← «expr >>= »(infer_type e, make_eval_info),
+  info_e ← «expr >>= »(mk_const (``nat), make_eval_info),
+  «expr <$> »(λ x : «expr × »(_, _), x.1, state_t.run (reader_t.run mx ⟨info_b, info_e, transp⟩) «expr[ , ]»([])) }
 
 /-- Repeatedly apply `eval_simple` on (sub)expressions. -/
 unsafe def normalize (transp : transparency) (e : expr) : tactic (expr × expr) :=

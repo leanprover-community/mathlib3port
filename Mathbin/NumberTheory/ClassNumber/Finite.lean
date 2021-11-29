@@ -46,16 +46,17 @@ variable{R S}(abv : AbsoluteValue R ℤ)
 
 variable{ι : Type _}[DecidableEq ι][Fintype ι](bS : Basis ι R S)
 
+-- error in NumberTheory.ClassNumber.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `b` is an `R`-basis of `S` of cardinality `n`, then `norm_bound abv b` is an integer
 such that for every `R`-integral element `a : S` with coordinates `≤ y`,
 we have algebra.norm a ≤ norm_bound abv b * y ^ n`. (See also `norm_le` and `norm_lt`). -/
-noncomputable def norm_bound : ℤ :=
-  let n := Fintype.card ι 
-  let i : ι := Nonempty.some bS.index_nonempty 
-  let m : ℤ :=
-    Finset.max' (Finset.univ.Image fun ijk : ι × ι × ι => abv (Algebra.leftMulMatrix bS (bS ijk.1) ijk.2.1 ijk.2.2))
-      ⟨_, Finset.mem_image.mpr ⟨⟨i, i, i⟩, Finset.mem_univ _, rfl⟩⟩
-  Nat.factorial n • (n • m^n)
+noncomputable
+def norm_bound : exprℤ() :=
+let n := fintype.card ι,
+    i : ι := nonempty.some bS.index_nonempty,
+    m : exprℤ() := finset.max' (finset.univ.image (λ
+      ijk : «expr × »(ι, «expr × »(ι, ι)), abv (algebra.left_mul_matrix bS (bS ijk.1) ijk.2.1 ijk.2.2))) ⟨_, finset.mem_image.mpr ⟨⟨i, i, i⟩, finset.mem_univ _, rfl⟩⟩ in
+«expr • »(nat.factorial n, «expr ^ »(«expr • »(n, m), n))
 
 theorem norm_bound_pos : 0 < norm_bound abv bS :=
   by 
@@ -129,7 +130,7 @@ end
 /-- A nonzero ideal has an element of minimal norm. -/
 theorem exists_min (I : (Ideal S)⁰) :
   ∃ (b : _)(_ : b ∈ (I : Ideal S)),
-    b ≠ 0 ∧ ∀ c _ : c ∈ (I : Ideal S), abv (Algebra.norm R c) < abv (Algebra.norm R b) → c = (0 : S) :=
+    b ≠ 0 ∧ ∀ c (_ : c ∈ (I : Ideal S)), abv (Algebra.norm R c) < abv (Algebra.norm R b) → c = (0 : S) :=
   by 
     obtain ⟨_, ⟨b, b_mem, b_ne_zero, rfl⟩, min⟩ :=
       @Int.exists_least_of_bdd (fun a => ∃ (b : _)(_ : b ∈ (I : Ideal S)), b ≠ (0 : S) ∧ abv (Algebra.norm R b) = a) _ _
@@ -170,12 +171,11 @@ noncomputable def distinct_elems : Finₓ (cardM bS adm).succ ↪ R :=
 
 variable[DecidableEq R]
 
+-- error in NumberTheory.ClassNumber.Finite: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `finset_approx` is a finite set such that each fractional ideal in the integral closure
-contains an element close to `finset_approx`. -/
-noncomputable def finset_approx : Finset R :=
-  ((Finset.univ.product Finset.univ).Image
-        fun xy : _ × _ => distinct_elems bS adm xy.1 - distinct_elems bS adm xy.2).erase
-    0
+contains an element close to `finset_approx`. -/ noncomputable def finset_approx : finset R :=
+((finset.univ.product finset.univ).image (λ
+  xy : «expr × »(_, _), «expr - »(distinct_elems bS adm xy.1, distinct_elems bS adm xy.2))).erase 0
 
 theorem finset_approx.zero_not_mem : (0 : R) ∉ finset_approx bS adm :=
   Finset.not_mem_erase _ _

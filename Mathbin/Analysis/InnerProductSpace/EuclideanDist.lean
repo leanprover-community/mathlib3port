@@ -49,8 +49,9 @@ theorem closed_ball_eq_preimage (x : E) (r : ℝ) :
   closed_ball x r = toEuclidean ⁻¹' Metric.ClosedBall (toEuclidean x) r :=
   rfl
 
-theorem ball_subset_closed_ball {x : E} {r : ℝ} : ball x r ⊆ closed_ball x r :=
-  fun y hy : _ < _ => le_of_ltₓ hy
+-- error in Analysis.InnerProductSpace.EuclideanDist: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ball_subset_closed_ball {x : E} {r : exprℝ()} : «expr ⊆ »(ball x r, closed_ball x r) :=
+λ (y) (hy : «expr < »(_, _)), le_of_lt hy
 
 theorem is_open_ball {x : E} {r : ℝ} : IsOpen (ball x r) :=
   Metric.is_open_ball.Preimage toEuclidean.Continuous
@@ -82,18 +83,22 @@ theorem exists_pos_lt_subset_ball {R : ℝ} {s : Set E} {x : E} (hR : 0 < R) (hs
     rcases exists_pos_lt_subset_ball hR (to_euclidean.is_closed_image.2 hs) h with ⟨r, hr, hsr⟩
     exact ⟨r, hr, image_subset_iff.1 hsr⟩
 
-theorem nhds_basis_closed_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (closed_ball x) :=
-  by 
-    rw [to_euclidean.to_homeomorph.nhds_eq_comap]
-    exact metric.nhds_basis_closed_ball.comap _
+-- error in Analysis.InnerProductSpace.EuclideanDist: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_closed_ball {x : E} : (expr𝓝() x).has_basis (λ r : exprℝ(), «expr < »(0, r)) (closed_ball x) :=
+begin
+  rw ["[", expr to_euclidean.to_homeomorph.nhds_eq_comap, "]"] [],
+  exact [expr metric.nhds_basis_closed_ball.comap _]
+end
 
 theorem closed_ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : closed_ball x r ∈ 𝓝 x :=
   nhds_basis_closed_ball.mem_of_mem hr
 
-theorem nhds_basis_ball {x : E} : (𝓝 x).HasBasis (fun r : ℝ => 0 < r) (ball x) :=
-  by 
-    rw [to_euclidean.to_homeomorph.nhds_eq_comap]
-    exact metric.nhds_basis_ball.comap _
+-- error in Analysis.InnerProductSpace.EuclideanDist: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem nhds_basis_ball {x : E} : (expr𝓝() x).has_basis (λ r : exprℝ(), «expr < »(0, r)) (ball x) :=
+begin
+  rw ["[", expr to_euclidean.to_homeomorph.nhds_eq_comap, "]"] [],
+  exact [expr metric.nhds_basis_ball.comap _]
+end
 
 theorem ball_mem_nhds {x : E} {r : ℝ} (hr : 0 < r) : ball x r ∈ 𝓝 x :=
   nhds_basis_ball.mem_of_mem hr

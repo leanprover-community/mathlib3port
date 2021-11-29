@@ -64,7 +64,7 @@ is the equalizer of the two morphisms
 `∏ F.obj (U i) ⟶ ∏ F.obj (U i) ⊓ (U j)`.
 -/
 def is_sheaf (F : presheaf C X) : Prop :=
-  ∀ ⦃ι : Type v⦄ U : ι → opens X, Nonempty (is_limit (sheaf_condition_equalizer_products.fork F U))
+  ∀ ⦃ι : Type v⦄ (U : ι → opens X), Nonempty (is_limit (sheaf_condition_equalizer_products.fork F U))
 
 /--
 The presheaf valued in `punit` over any topological space is a sheaf.

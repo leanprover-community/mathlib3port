@@ -51,7 +51,7 @@ Strictly speaking, this says that *any* initial object must be strict, rather th
 initial objects exist.
 -/
 class has_strict_initial_objects : Prop where 
-  out : ∀ {I A : C} f : A ⟶ I, is_initial I → is_iso f
+  out : ∀ {I A : C} (f : A ⟶ I), is_initial I → is_iso f
 
 variable{C}
 

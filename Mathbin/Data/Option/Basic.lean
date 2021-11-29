@@ -45,10 +45,10 @@ protected theorem exists {p : Option α → Prop} : (∃ x, p x) ↔ p none ∨ 
     fun h => h.elim (fun h => ⟨_, h⟩) fun ⟨x, hx⟩ => ⟨_, hx⟩⟩
 
 @[simp]
-theorem get_mem : ∀ {o : Option α} h : is_some o, Option.get h ∈ o
+theorem get_mem : ∀ {o : Option α} (h : is_some o), Option.get h ∈ o
 | some a, _ => rfl
 
-theorem get_of_mem {a : α} : ∀ {o : Option α} h : is_some o, a ∈ o → Option.get h = a
+theorem get_of_mem {a : α} : ∀ {o : Option α} (h : is_some o), a ∈ o → Option.get h = a
 | _, _, rfl => rfl
 
 @[simp]
@@ -56,7 +56,7 @@ theorem not_mem_none (a : α) : a ∉ (none : Option α) :=
   fun h => Option.noConfusion h
 
 @[simp]
-theorem some_get : ∀ {x : Option α} h : is_some x, some (Option.get h) = x
+theorem some_get : ∀ {x : Option α} (h : is_some x), some (Option.get h) = x
 | some x, hx => rfl
 
 @[simp]
@@ -127,7 +127,7 @@ theorem some_bind' (a : α) (f : α → Option β) : (some a).bind f = f a :=
   rfl
 
 @[simp]
-theorem bind_some : ∀ x : Option α, x >>= some = x :=
+theorem bind_some : ∀ (x : Option α), x >>= some = x :=
   @bind_pureₓ α Option _ _
 
 @[simp]
@@ -225,7 +225,7 @@ theorem map_eq_none' {x : Option α} {f : α → β} : x.map f = none ↔ x = no
   by 
     cases x <;> simp only [map_none', map_some', eq_self_iff_true]
 
-theorem map_congr {f g : α → β} {x : Option α} (h : ∀ a _ : a ∈ x, f a = g a) : Option.map f x = Option.map g x :=
+theorem map_congr {f g : α → β} {x : Option α} (h : ∀ a (_ : a ∈ x), f a = g a) : Option.map f x = Option.map g x :=
   by 
     cases x <;> simp only [map_none', map_some', h, mem_def]
 
@@ -267,7 +267,7 @@ theorem mem_of_mem_join {a : α} {x : Option (Option α)} (h : a ∈ x.join) : s
 
 section Pmap
 
-variable{p : α → Prop}(f : ∀ a : α, p a → β)(x : Option α)
+variable{p : α → Prop}(f : ∀ (a : α), p a → β)(x : Option α)
 
 @[simp]
 theorem pbind_eq_bind (f : α → Option β) (x : Option α) : (x.pbind fun a _ => f a) = x.bind f :=
@@ -289,20 +289,20 @@ theorem map_pbind (f : β → γ) (x : Option α) (g : ∀ a, a ∈ x → Option
   by 
     cases x <;> simp only [pbind, map_none']
 
-theorem pbind_map (f : α → β) (x : Option α) (g : ∀ b : β, b ∈ x.map f → Option γ) :
+theorem pbind_map (f : α → β) (x : Option α) (g : ∀ (b : β), b ∈ x.map f → Option γ) :
   pbind (Option.map f x) g = x.pbind fun a h => g (f a) (mem_map_of_mem _ h) :=
   by 
     cases x <;> rfl
 
 @[simp]
-theorem pmap_none (f : ∀ a : α, p a → β) {H} : pmap f (@none α) H = none :=
+theorem pmap_none (f : ∀ (a : α), p a → β) {H} : pmap f (@none α) H = none :=
   rfl
 
 @[simp]
-theorem pmap_some (f : ∀ a : α, p a → β) {x : α} (h : p x) : pmap f (some x) = fun _ => some (f x h) :=
+theorem pmap_some (f : ∀ (a : α), p a → β) {x : α} (h : p x) : pmap f (some x) = fun _ => some (f x h) :=
   rfl
 
-theorem mem_pmem {a : α} (h : ∀ a _ : a ∈ x, p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h :=
+theorem mem_pmem {a : α} (h : ∀ a (_ : a ∈ x), p a) (ha : a ∈ x) : f a (h a ha) ∈ pmap f x h :=
   by 
     rw [mem_def] at ha⊢
     subst ha 
@@ -323,7 +323,7 @@ theorem pmap_eq_map (p : α → Prop) (f : α → β) x H : @pmap _ _ p (fun a _
     cases x <;> simp only [map_none', map_some', pmap]
 
 theorem pmap_bind {α β γ} {x : Option α} {g : α → Option β} {p : β → Prop} {f : ∀ b, p b → γ} H
-  (H' : ∀ a : α b _ : b ∈ g a, b ∈ x >>= g) :
+  (H' : ∀ (a : α) b (_ : b ∈ g a), b ∈ x >>= g) :
   pmap f (x >>= g) H = x >>= fun a => pmap f (g a) fun b h => H _ (H' a _ h) :=
   by 
     cases x <;> simp only [pmap, none_bind, some_bind]
@@ -335,7 +335,7 @@ theorem bind_pmap {α β γ} {p : α → Prop} (f : ∀ a, p a → β) (x : Opti
 
 variable{f x}
 
-theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀ a _ : a ∈ x, f a H = none → x = none) :
+theorem pbind_eq_none {f : ∀ (a : α), a ∈ x → Option β} (h' : ∀ a (_ : a ∈ x), f a H = none → x = none) :
   x.pbind f = none ↔ x = none :=
   by 
     cases x
@@ -346,7 +346,7 @@ theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β} (h' : ∀ a _ : a 
       intro h 
       cases h' x rfl h
 
-theorem pbind_eq_some {f : ∀ a : α, a ∈ x → Option β} {y : β} :
+theorem pbind_eq_some {f : ∀ (a : α), a ∈ x → Option β} {y : β} :
   x.pbind f = some y ↔ ∃ (z : _)(_ : z ∈ x), f z H = some y :=
   by 
     cases x
@@ -475,7 +475,7 @@ theorem bex_ne_none {p : Option α → Prop} : (∃ (x : _)(_ : x ≠ none), p x
           rwa [some_get]⟩,
     fun ⟨x, hx⟩ => ⟨some x, some_ne_none x, hx⟩⟩
 
-theorem ball_ne_none {p : Option α → Prop} : (∀ x _ : x ≠ none, p x) ↔ ∀ x, p (some x) :=
+theorem ball_ne_none {p : Option α → Prop} : (∀ x (_ : x ≠ none), p x) ↔ ∀ x, p (some x) :=
   ⟨fun h x => h (some x) (some_ne_none x),
     fun h x hx =>
       by 

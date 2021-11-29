@@ -9,8 +9,8 @@ structure Cfilter(α σ : Type _)[PartialOrderₓ α] where
   f : σ → α 
   pt : σ 
   inf : σ → σ → σ 
-  inf_le_left : ∀ a b : σ, f (inf a b) ≤ f a 
-  inf_le_right : ∀ a b : σ, f (inf a b) ≤ f b
+  inf_le_left : ∀ (a b : σ), f (inf a b) ≤ f a 
+  inf_le_right : ∀ (a b : σ), f (inf a b) ≤ f b
 
 variable{α : Type _}{β : Type _}{σ : Type _}{τ : Type _}
 
@@ -231,51 +231,57 @@ protected def inf {f g : Filter α} (F : f.realizer) (G : g.realizer) : (f⊓g).
         rintro ⟨s, ⟨a, ha⟩, t, ⟨b, hb⟩, rfl⟩
         exact ⟨a, b, inter_subset_inter ha hb⟩⟩
 
-/-- Construct a realizer for the cofinite filter -/
-protected def cofinite [DecidableEq α] : (@cofinite α).Realizer :=
-  ⟨Finset α,
-    { f := fun s => { a | a ∉ s }, pt := ∅, inf := · ∪ ·, inf_le_left := fun s t a => mt (Finset.mem_union_left _),
-      inf_le_right := fun s t a => mt (Finset.mem_union_right _) },
-    filter_eq$
-      Set.ext$
-        fun x =>
-          ⟨fun ⟨s, h⟩ => s.finite_to_set.subset (compl_subset_comm.1 h),
-            fun ⟨fs⟩ =>
-              by 
-                exact
-                  ⟨(«expr ᶜ» x).toFinset,
-                    fun a h : a ∉ («expr ᶜ» x).toFinset =>
-                      Classical.by_contradiction$ fun h' => h (mem_to_finset.2 h')⟩⟩⟩
+-- error in Data.Analysis.Filter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- Construct a realizer for the cofinite filter -/ protected def cofinite [decidable_eq α] : (@cofinite α).realizer :=
+⟨finset α, { f := λ s, {a | «expr ∉ »(a, s)},
+   pt := «expr∅»(),
+   inf := («expr ∪ »),
+   inf_le_left := λ s t a, mt (finset.mem_union_left _),
+   inf_le_right := λ
+   s
+   t
+   a, mt (finset.mem_union_right _) }, «expr $ »(filter_eq, «expr $ »(set.ext, λ
+   x, ⟨λ
+    ⟨s, h⟩, s.finite_to_set.subset (compl_subset_comm.1 h), λ
+    ⟨fs⟩, by exactI [expr ⟨«expr ᶜ»(x).to_finset, λ
+      (a)
+      (h : «expr ∉ »(a, «expr ᶜ»(x).to_finset)), «expr $ »(classical.by_contradiction, λ
+       h', h (mem_to_finset.2 h'))⟩]⟩))⟩
 
+-- error in Data.Analysis.Filter: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Construct a realizer for filter bind -/
-protected def bind {f : Filter α} {m : α → Filter β} (F : f.realizer) (G : ∀ i, (m i).Realizer) : (f.bind m).Realizer :=
-  ⟨Σs : F.σ, ∀ i _ : i ∈ F.F s, (G i).σ,
-    { f := fun ⟨s, f⟩ => ⋃(i : _)(_ : i ∈ F.F s), (G i).f (f i H), pt := ⟨F.F.pt, fun i H => (G i).f.pt⟩,
-      inf :=
-        fun ⟨a, f⟩ ⟨b, f'⟩ =>
-          ⟨F.F.inf a b, fun i h => (G i).f.inf (f i (F.F.inf_le_left _ _ h)) (f' i (F.F.inf_le_right _ _ h))⟩,
-      inf_le_left :=
-        fun ⟨a, f⟩ ⟨b, f'⟩ x =>
-          show (x ∈ ⋃(i : α)(H : i ∈ F.F (F.F.inf a b)), _) → x ∈ ⋃(i : _)(H : i ∈ F.F a), (G i).f (f i H)by 
-            simp  <;> exact fun i h₁ h₂ => ⟨i, F.F.inf_le_left _ _ h₁, (G i).f.inf_le_left _ _ h₂⟩,
-      inf_le_right :=
-        fun ⟨a, f⟩ ⟨b, f'⟩ x =>
-          show (x ∈ ⋃(i : α)(H : i ∈ F.F (F.F.inf a b)), _) → x ∈ ⋃(i : _)(H : i ∈ F.F b), (G i).f (f' i H)by 
-            simp  <;> exact fun i h₁ h₂ => ⟨i, F.F.inf_le_right _ _ h₁, (G i).f.inf_le_right _ _ h₂⟩ },
-    filter_eq$
-      Set.ext$
-        fun x =>
-          by 
-            cases' F with _ F _ <;>
-              subst f <;>
-                simp [Cfilter.toFilter, mem_bind] <;>
-                  exact
-                    ⟨fun ⟨s, f, h⟩ =>
-                        ⟨F s, ⟨s, subset.refl _⟩,
-                          fun i H => (G i).mem_sets.2 ⟨f i H, fun a h' => h ⟨_, ⟨i, rfl⟩, _, ⟨H, rfl⟩, h'⟩⟩⟩,
-                      fun ⟨y, ⟨s, h⟩, f⟩ =>
-                        let ⟨f', h'⟩ := Classical.axiom_of_choice fun i : F s => (G i).mem_sets.1 (f i (h i.2))
-                        ⟨s, fun i h => f' ⟨i, h⟩, fun a ⟨_, ⟨i, rfl⟩, _, ⟨H, rfl⟩, m⟩ => h' ⟨_, H⟩ m⟩⟩⟩
+protected
+def bind {f : filter α} {m : α → filter β} (F : f.realizer) (G : ∀ i, (m i).realizer) : (f.bind m).realizer :=
+⟨«exprΣ , »((s : F.σ), ∀
+  i «expr ∈ » F.F s, (G i).σ), { f := λ ⟨s, f⟩, «expr⋃ , »((i «expr ∈ » F.F s), (G i).F (f i H)),
+   pt := ⟨F.F.pt, λ i H, (G i).F.pt⟩,
+   inf := λ
+   ⟨a, f⟩
+   ⟨b, f'⟩, ⟨F.F.inf a b, λ i h, (G i).F.inf (f i (F.F.inf_le_left _ _ h)) (f' i (F.F.inf_le_right _ _ h))⟩,
+   inf_le_left := λ
+   ⟨a, f⟩
+   ⟨b, f'⟩
+   (x), show «expr ∈ »(x, «expr⋃ , »((i : α)
+     (H : «expr ∈ »(i, F.F (F.F.inf a b))), _)) → «expr ∈ »(x, «expr⋃ , »((i)
+     (H : «expr ∈ »(i, F.F a)), (G i).F (f i H))), by simp [] [] [] [] [] []; exact [expr λ
+    i h₁ h₂, ⟨i, F.F.inf_le_left _ _ h₁, (G i).F.inf_le_left _ _ h₂⟩],
+   inf_le_right := λ
+   ⟨a, f⟩
+   ⟨b, f'⟩
+   (x), show «expr ∈ »(x, «expr⋃ , »((i : α)
+     (H : «expr ∈ »(i, F.F (F.F.inf a b))), _)) → «expr ∈ »(x, «expr⋃ , »((i)
+     (H : «expr ∈ »(i, F.F b)), (G i).F (f' i H))), by simp [] [] [] [] [] []; exact [expr λ
+    i
+    h₁
+    h₂, ⟨i, F.F.inf_le_right _ _ h₁, (G i).F.inf_le_right _ _ h₂⟩] }, «expr $ »(filter_eq, «expr $ »(set.ext, λ
+   x, by cases [expr F] ["with", "_", ident F, "_"]; subst [expr f]; simp [] [] [] ["[", expr cfilter.to_filter, ",", expr mem_bind, "]"] [] []; exact [expr ⟨λ
+     ⟨s, f, h⟩, ⟨F s, ⟨s, subset.refl _⟩, λ
+      i
+      H, (G i).mem_sets.2 ⟨f i H, λ
+       a
+       h', h ⟨_, ⟨i, rfl⟩, _, ⟨H, rfl⟩, h'⟩⟩⟩, λ
+     ⟨y, ⟨s, h⟩, f⟩, let ⟨f', h'⟩ := classical.axiom_of_choice (λ i : F s, (G i).mem_sets.1 (f i (h i.2))) in
+     ⟨s, λ i h, f' ⟨i, h⟩, λ (a) ⟨_, ⟨i, rfl⟩, _, ⟨H, rfl⟩, m⟩, h' ⟨_, H⟩ m⟩⟩]))⟩
 
 /-- Construct a realizer for indexed supremum -/
 protected def Sup {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆i, f i).Realizer :=
@@ -286,7 +292,7 @@ protected def Sup {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆i, f 
           by 
             simp [Filter.bind, eq_univ_iff_forall, supr_sets_eq]
   F'.of_equiv$
-    show (Σu : Unit, ∀ i : α, True → (F i).σ) ≃ ∀ i, (F i).σ from
+    show (Σu : Unit, ∀ (i : α), True → (F i).σ) ≃ ∀ i, (F i).σ from
       ⟨fun ⟨_, f⟩ i => f i ⟨⟩, fun f => ⟨(), fun i _ => f i⟩,
         fun ⟨⟨⟩, f⟩ =>
           by 
@@ -297,7 +303,7 @@ protected def Sup {f : α → Filter β} (F : ∀ i, (f i).Realizer) : (⨆i, f 
 protected def Prod {f g : Filter α} (F : f.realizer) (G : g.realizer) : (f.prod g).Realizer :=
   (F.comap _).inf (G.comap _)
 
-theorem le_iff {f g : Filter α} (F : f.realizer) (G : g.realizer) : f ≤ g ↔ ∀ b : G.σ, ∃ a : F.σ, F.F a ≤ G.F b :=
+theorem le_iff {f g : Filter α} (F : f.realizer) (G : g.realizer) : f ≤ g ↔ ∀ (b : G.σ), ∃ a : F.σ, F.F a ≤ G.F b :=
   ⟨fun H t => F.mem_sets.1 (H (G.mem_sets.2 ⟨t, subset.refl _⟩)),
     fun H x h =>
       F.mem_sets.2$
@@ -306,10 +312,10 @@ theorem le_iff {f g : Filter α} (F : f.realizer) (G : g.realizer) : f ≤ g ↔
         ⟨t, subset.trans h₂ h₁⟩⟩
 
 theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ : l₁.realizer) (L₂ : l₂.realizer) :
-  tendsto f l₁ l₂ ↔ ∀ b, ∃ a, ∀ x _ : x ∈ L₁.F a, f x ∈ L₂.F b :=
+  tendsto f l₁ l₂ ↔ ∀ b, ∃ a, ∀ x (_ : x ∈ L₁.F a), f x ∈ L₂.F b :=
   (le_iff (L₁.map f) L₂).trans$ forall_congrₓ$ fun b => exists_congr$ fun a => image_subset_iff
 
-theorem ne_bot_iff {f : Filter α} (F : f.realizer) : f ≠ ⊥ ↔ ∀ a : F.σ, (F.F a).Nonempty :=
+theorem ne_bot_iff {f : Filter α} (F : f.realizer) : f ≠ ⊥ ↔ ∀ (a : F.σ), (F.F a).Nonempty :=
   by 
     classical 
     rw [not_iff_comm, ←le_bot_iff, F.le_iff realizer.bot, not_forall]

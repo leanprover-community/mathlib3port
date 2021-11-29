@@ -44,25 +44,21 @@ theorem tendsto_coe_rat_at_top_iff [LinearOrderedField R] [Archimedean R] {f : �
         by 
           assumptionModCast⟩
 
-theorem at_top_countable_basis_of_archimedean [LinearOrderedSemiring R] [Archimedean R] :
-  (at_top : Filter R).HasCountableBasis (fun n : ℕ => True) fun n => Ici n :=
-  { Countable := countable_encodable _,
-    to_has_basis :=
-      at_top_basis.to_has_basis
-        (fun x hx =>
-          let ⟨n, hn⟩ := exists_nat_ge x
-          ⟨n, trivialₓ, Ici_subset_Ici.2 hn⟩)
-        fun n hn => ⟨n, trivialₓ, subset.rfl⟩ }
+-- error in Order.Filter.Archimedean: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem at_top_countable_basis_of_archimedean
+[linear_ordered_semiring R]
+[archimedean R] : (at_top : filter R).has_countable_basis (λ n : exprℕ(), true) (λ n, Ici n) :=
+{ countable := countable_encodable _,
+  to_has_basis := at_top_basis.to_has_basis (λ x hx, let ⟨n, hn⟩ := exists_nat_ge x in
+   ⟨n, trivial, Ici_subset_Ici.2 hn⟩) (λ n hn, ⟨n, trivial, subset.rfl⟩) }
 
-theorem at_bot_countable_basis_of_archimedean [LinearOrderedRing R] [Archimedean R] :
-  (at_bot : Filter R).HasCountableBasis (fun m : ℤ => True) fun m => Iic m :=
-  { Countable := countable_encodable _,
-    to_has_basis :=
-      at_bot_basis.to_has_basis
-        (fun x hx =>
-          let ⟨m, hm⟩ := exists_int_lt x
-          ⟨m, trivialₓ, Iic_subset_Iic.2 hm.le⟩)
-        fun m hm => ⟨m, trivialₓ, subset.rfl⟩ }
+-- error in Order.Filter.Archimedean: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem at_bot_countable_basis_of_archimedean
+[linear_ordered_ring R]
+[archimedean R] : (at_bot : filter R).has_countable_basis (λ m : exprℤ(), true) (λ m, Iic m) :=
+{ countable := countable_encodable _,
+  to_has_basis := at_bot_basis.to_has_basis (λ x hx, let ⟨m, hm⟩ := exists_int_lt x in
+   ⟨m, trivial, Iic_subset_Iic.2 hm.le⟩) (λ m hm, ⟨m, trivial, subset.rfl⟩) }
 
 instance (priority := 100)at_top_countably_generated_of_archimedean [LinearOrderedSemiring R] [Archimedean R] :
   (at_top : Filter R).IsCountablyGenerated :=

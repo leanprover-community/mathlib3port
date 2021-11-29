@@ -347,15 +347,17 @@ variable{R}{r : ℕ}(M : Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜
 
 open Sum Unit Finₓ TransvectionStruct
 
+-- error in LinearAlgebra.Matrix.Transvection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A list of transvections such that multiplying on the left with these transvections will replace
-the last column with zeroes. -/
-def list_transvec_col : List (Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜) :=
-  List.ofFn$ fun i : Finₓ r => transvection (inl i) (inr star)$ -M (inl i) (inr star) / M (inr star) (inr star)
+the last column with zeroes. -/ def list_transvec_col : list (matrix «expr ⊕ »(fin r, unit) «expr ⊕ »(fin r, unit) 𝕜) :=
+«expr $ »(list.of_fn, λ
+ i : fin r, «expr $ »(transvection (inl i) (inr star), «expr / »(«expr- »(M (inl i) (inr star)), M (inr star) (inr star))))
 
+-- error in LinearAlgebra.Matrix.Transvection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A list of transvections such that multiplying on the right with these transvections will replace
-the last row with zeroes. -/
-def list_transvec_row : List (Matrix (Sum (Finₓ r) Unit) (Sum (Finₓ r) Unit) 𝕜) :=
-  List.ofFn$ fun i : Finₓ r => transvection (inr star) (inl i)$ -M (inr star) (inl i) / M (inr star) (inr star)
+the last row with zeroes. -/ def list_transvec_row : list (matrix «expr ⊕ »(fin r, unit) «expr ⊕ »(fin r, unit) 𝕜) :=
+«expr $ »(list.of_fn, λ
+ i : fin r, «expr $ »(transvection (inr star) (inl i), «expr / »(«expr- »(M (inr star) (inl i)), M (inr star) (inr star))))
 
 -- error in LinearAlgebra.Matrix.Transvection: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- Multiplying by some of the matrices in `list_transvec_col M` does not change the last row. -/

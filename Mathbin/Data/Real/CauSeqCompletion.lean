@@ -231,7 +231,7 @@ variable(β : Type _)[Ringₓ β](abv : β → α)[IsAbsoluteValue abv]
 /-- A class stating that a ring with an absolute value is complete, i.e. every Cauchy
 sequence has a limit. -/
 class is_complete where 
-  IsComplete : ∀ s : CauSeq β abv, ∃ b : β, s ≈ const abv b
+  IsComplete : ∀ (s : CauSeq β abv), ∃ b : β, s ≈ const abv b
 
 end 
 
@@ -241,7 +241,7 @@ variable{β : Type _}[Ringₓ β]{abv : β → α}[IsAbsoluteValue abv]
 
 variable[is_complete β abv]
 
-theorem complete : ∀ s : CauSeq β abv, ∃ b : β, s ≈ const abv b :=
+theorem complete : ∀ (s : CauSeq β abv), ∃ b : β, s ≈ const abv b :=
   is_complete.is_complete
 
 /-- The limit of a Cauchy sequence in a complete ring. Chosen non-computably. -/
@@ -310,7 +310,7 @@ theorem lim_inv {f : CauSeq β abv} (hf : ¬lim_zero f) : lim (inv f hf) = lim f
       rwa [←lim_eq_zero_iff] at hf 
   lim_eq_of_equiv_const$
     show lim_zero (inv f hf - const abv (lim f⁻¹)) from
-      have h₁ : ∀ g f : CauSeq β abv hf : ¬lim_zero f, lim_zero (g - (f*inv f hf)*g) :=
+      have h₁ : ∀ (g f : CauSeq β abv) (hf : ¬lim_zero f), lim_zero (g - (f*inv f hf)*g) :=
         fun g f hf =>
           by 
             rw [←one_mulₓ g, ←mul_assocₓ, ←sub_mul, mul_oneₓ, mul_commₓ, mul_commₓ f] <;>

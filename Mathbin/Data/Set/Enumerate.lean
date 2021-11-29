@@ -56,19 +56,19 @@ theorem enumerate_eq_none : ∀
       exact [expr enumerate_eq_none h hm] } }
 end
 
-theorem enumerate_mem (h_sel : ∀ s a, sel s = some a → a ∈ s) : ∀ {s n a}, enumerate s n = some a → a ∈ s
-| s, 0, a => h_sel s a
-| s, n+1, a =>
-  by 
-    cases h : sel s 
-    case none => 
-      simp [enumerate_eq_none_of_sel, h]
-    case some a' => 
-      simp [enumerate, h]
-      exact
-        fun h' : enumerate _ (s \ {a'}) n = some a =>
-          have  : a ∈ s \ {a'} := enumerate_mem h' 
-          this.left
+-- error in Data.Set.Enumerate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem enumerate_mem
+(h_sel : ∀
+ s a, «expr = »(sel s, some a) → «expr ∈ »(a, s)) : ∀ {s n a}, «expr = »(enumerate s n, some a) → «expr ∈ »(a, s)
+| s, 0, a := h_sel s a
+| s, «expr + »(n, 1), a := begin
+  cases [expr h, ":", expr sel s] [],
+  case [ident none] { simp [] [] [] ["[", expr enumerate_eq_none_of_sel, ",", expr h, "]"] [] [] },
+  case [ident some, ":", ident a'] { simp [] [] [] ["[", expr enumerate, ",", expr h, "]"] [] [],
+    exact [expr λ
+     h' : «expr = »(enumerate _ «expr \ »(s, {a'}) n, some a), have «expr ∈ »(a, «expr \ »(s, {a'})), from enumerate_mem h',
+     this.left] }
+end
 
 -- error in Data.Set.Enumerate: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem enumerate_inj

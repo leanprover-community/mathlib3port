@@ -85,9 +85,9 @@ infixl:70 "⊓" => HasInf.inf
   with a join (a.k.a. lub / least upper bound, sup / supremum) operation
   `⊔` which is the least element larger than both factors. -/
 class SemilatticeSup(α : Type u) extends HasSup α, PartialOrderₓ α where 
-  le_sup_left : ∀ a b : α, a ≤ a⊔b 
-  le_sup_right : ∀ a b : α, b ≤ a⊔b 
-  sup_le : ∀ a b c : α, a ≤ c → b ≤ c → a⊔b ≤ c
+  le_sup_left : ∀ (a b : α), a ≤ a⊔b 
+  le_sup_right : ∀ (a b : α), b ≤ a⊔b 
+  sup_le : ∀ (a b c : α), a ≤ c → b ≤ c → a⊔b ≤ c
 
 /--
 A type with a commutative, associative and idempotent binary `sup` operation has the structure of a
@@ -95,8 +95,8 @@ join-semilattice.
 
 The partial order is defined so that `a ≤ b` unfolds to `a ⊔ b = b`; cf. `sup_eq_right`.
 -/
-def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ a b : α, a⊔b = b⊔a)
-  (sup_assoc : ∀ a b c : α, a⊔b⊔c = a⊔(b⊔c)) (sup_idem : ∀ a : α, a⊔a = a) : SemilatticeSup α :=
+def SemilatticeSup.mk' {α : Type _} [HasSup α] (sup_comm : ∀ (a b : α), a⊔b = b⊔a)
+  (sup_assoc : ∀ (a b c : α), a⊔b⊔c = a⊔(b⊔c)) (sup_idem : ∀ (a : α), a⊔a = a) : SemilatticeSup α :=
   { sup := ·⊔·, le := fun a b => a⊔b = b, le_refl := sup_idem,
     le_trans :=
       fun a b c hab hbc =>
@@ -157,9 +157,10 @@ theorem le_sup_of_le_right (h : c ≤ b) : c ≤ a⊔b :=
 theorem sup_le : a ≤ c → b ≤ c → a⊔b ≤ c :=
   SemilatticeSup.sup_le a b c
 
-@[simp]
-theorem sup_le_iff : a⊔b ≤ c ↔ a ≤ c ∧ b ≤ c :=
-  ⟨fun h : a⊔b ≤ c => ⟨le_transₓ le_sup_left h, le_transₓ le_sup_right h⟩, fun ⟨h₁, h₂⟩ => sup_le h₁ h₂⟩
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem sup_le_iff : «expr ↔ »(«expr ≤ »(«expr ⊔ »(a, b), c), «expr ∧ »(«expr ≤ »(a, c), «expr ≤ »(b, c))) :=
+⟨assume
+ h : «expr ≤ »(«expr ⊔ »(a, b), c), ⟨le_trans le_sup_left h, le_trans le_sup_right h⟩, assume ⟨h₁, h₂⟩, sup_le h₁ h₂⟩
 
 @[simp]
 theorem sup_eq_left : a⊔b = a ↔ b ≤ a :=
@@ -201,14 +202,10 @@ theorem le_of_sup_eq (h : a⊔b = b) : a ≤ b :=
     rw [←h]
     simp 
 
-theorem sup_ind [IsTotal α (· ≤ ·)] (a b : α) {p : α → Prop} (ha : p a) (hb : p b) : p (a⊔b) :=
-  (IsTotal.total a b).elim
-    (fun h : a ≤ b =>
-      by 
-        rwa [sup_eq_right.2 h])
-    fun h =>
-      by 
-        rwa [sup_eq_left.2 h]
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sup_ind [is_total α ((«expr ≤ »))] (a b : α) {p : α → exprProp()} (ha : p a) (hb : p b) : p «expr ⊔ »(a, b) :=
+(is_total.total a b).elim (λ
+ h : «expr ≤ »(a, b), by rwa [expr sup_eq_right.2 h] []) (λ h, by rwa [expr sup_eq_left.2 h] [])
 
 @[simp]
 theorem sup_lt_iff [IsTotal α (· ≤ ·)] {a b c : α} : b⊔c < a ↔ b < a ∧ c < a :=
@@ -339,9 +336,9 @@ end SemilatticeSup
   with a meet (a.k.a. glb / greatest lower bound, inf / infimum) operation
   `⊓` which is the greatest element smaller than both factors. -/
 class SemilatticeInf(α : Type u) extends HasInf α, PartialOrderₓ α where 
-  inf_le_left : ∀ a b : α, a⊓b ≤ a 
-  inf_le_right : ∀ a b : α, a⊓b ≤ b 
-  le_inf : ∀ a b c : α, a ≤ b → a ≤ c → a ≤ b⊓c
+  inf_le_left : ∀ (a b : α), a⊓b ≤ a 
+  inf_le_right : ∀ (a b : α), a⊓b ≤ b 
+  le_inf : ∀ (a b c : α), a ≤ b → a ≤ c → a ≤ b⊓c
 
 instance  α [SemilatticeInf α] : SemilatticeSup (OrderDual α) :=
   { OrderDual.partialOrder α, OrderDual.hasSup α with le_sup_left := SemilatticeInf.inf_le_left,
@@ -549,9 +546,9 @@ instance  α [Lattice α] : Lattice (OrderDual α) :=
 if `sup` and `inf` satisfy the lattice absorption laws `sup_inf_self` (`a ⊔ a ⊓ b = a`)
 and `inf_sup_self` (`a ⊓ (a ⊔ b) = a`). -/
 theorem semilattice_sup_mk'_partial_order_eq_semilattice_inf_mk'_partial_order {α : Type _} [HasSup α] [HasInf α]
-  (sup_comm : ∀ a b : α, a⊔b = b⊔a) (sup_assoc : ∀ a b c : α, a⊔b⊔c = a⊔(b⊔c)) (sup_idem : ∀ a : α, a⊔a = a)
-  (inf_comm : ∀ a b : α, a⊓b = b⊓a) (inf_assoc : ∀ a b c : α, a⊓b⊓c = a⊓(b⊓c)) (inf_idem : ∀ a : α, a⊓a = a)
-  (sup_inf_self : ∀ a b : α, a⊔a⊓b = a) (inf_sup_self : ∀ a b : α, a⊓(a⊔b) = a) :
+  (sup_comm : ∀ (a b : α), a⊔b = b⊔a) (sup_assoc : ∀ (a b c : α), a⊔b⊔c = a⊔(b⊔c)) (sup_idem : ∀ (a : α), a⊔a = a)
+  (inf_comm : ∀ (a b : α), a⊓b = b⊓a) (inf_assoc : ∀ (a b c : α), a⊓b⊓c = a⊓(b⊓c)) (inf_idem : ∀ (a : α), a⊓a = a)
+  (sup_inf_self : ∀ (a b : α), a⊔a⊓b = a) (inf_sup_self : ∀ (a b : α), a⊓(a⊔b) = a) :
   @SemilatticeSup.toPartialOrder _ (SemilatticeSup.mk' sup_comm sup_assoc sup_idem) =
     @SemilatticeInf.toPartialOrder _ (SemilatticeInf.mk' inf_comm inf_assoc inf_idem) :=
   PartialOrderₓ.ext$
@@ -570,11 +567,11 @@ laws relating the two operations has the structure of a lattice.
 
 The partial order is defined so that `a ≤ b` unfolds to `a ⊔ b = b`; cf. `sup_eq_right`.
 -/
-def Lattice.mk' {α : Type _} [HasSup α] [HasInf α] (sup_comm : ∀ a b : α, a⊔b = b⊔a)
-  (sup_assoc : ∀ a b c : α, a⊔b⊔c = a⊔(b⊔c)) (inf_comm : ∀ a b : α, a⊓b = b⊓a)
-  (inf_assoc : ∀ a b c : α, a⊓b⊓c = a⊓(b⊓c)) (sup_inf_self : ∀ a b : α, a⊔a⊓b = a)
-  (inf_sup_self : ∀ a b : α, a⊓(a⊔b) = a) : Lattice α :=
-  have sup_idem : ∀ b : α, b⊔b = b :=
+def Lattice.mk' {α : Type _} [HasSup α] [HasInf α] (sup_comm : ∀ (a b : α), a⊔b = b⊔a)
+  (sup_assoc : ∀ (a b c : α), a⊔b⊔c = a⊔(b⊔c)) (inf_comm : ∀ (a b : α), a⊓b = b⊓a)
+  (inf_assoc : ∀ (a b c : α), a⊓b⊓c = a⊓(b⊓c)) (sup_inf_self : ∀ (a b : α), a⊔a⊓b = a)
+  (inf_sup_self : ∀ (a b : α), a⊓(a⊔b) = a) : Lattice α :=
+  have sup_idem : ∀ (b : α), b⊔b = b :=
     fun b =>
       calc b⊔b = b⊔b⊓(b⊔b) :=
         by 
@@ -583,7 +580,7 @@ def Lattice.mk' {α : Type _} [HasSup α] [HasInf α] (sup_comm : ∀ a b : α, 
         by 
           rw [sup_inf_self]
         
-  have inf_idem : ∀ b : α, b⊓b = b :=
+  have inf_idem : ∀ (b : α), b⊓b = b :=
     fun b =>
       calc b⊓b = b⊓(b⊔b⊓b) :=
         by 
@@ -688,7 +685,7 @@ is the lattice of subsets of a set, and in fact this example is
 generic in the sense that every distributive lattice is realizable
 as a sublattice of a powerset lattice. -/
 class DistribLattice(α) extends Lattice α where 
-  le_sup_inf : ∀ x y z : α, (x⊔y)⊓(x⊔z) ≤ x⊔y⊓z
+  le_sup_inf : ∀ (x y z : α), (x⊔y)⊓(x⊔z) ≤ x⊔y⊓z
 
 section DistribLattice
 
@@ -700,9 +697,10 @@ theorem le_sup_inf : ∀ {x y z : α}, (x⊔y)⊓(x⊔z) ≤ x⊔y⊓z :=
 theorem sup_inf_left : x⊔y⊓z = (x⊔y)⊓(x⊔z) :=
   le_antisymmₓ sup_inf_le le_sup_inf
 
-theorem sup_inf_right : y⊓z⊔x = (y⊔x)⊓(z⊔x) :=
-  by 
-    simp only [sup_inf_left, fun y : α => @sup_comm α _ y x, eq_self_iff_true]
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem sup_inf_right : «expr = »(«expr ⊔ »(«expr ⊓ »(y, z), x), «expr ⊓ »(«expr ⊔ »(y, x), «expr ⊔ »(z, x))) :=
+by simp [] [] ["only"] ["[", expr sup_inf_left, ",", expr λ
+ y : α, @sup_comm α _ y x, ",", expr eq_self_iff_true, "]"] [] []
 
 theorem inf_sup_left : x⊓(y⊔z) = x⊓y⊔x⊓z :=
   calc x⊓(y⊔z) = x⊓(x⊔z)⊓(y⊔z) :=
@@ -725,9 +723,10 @@ theorem inf_sup_left : x⊓(y⊔z) = x⊓y⊔x⊓z :=
 instance  (α : Type _) [DistribLattice α] : DistribLattice (OrderDual α) :=
   { OrderDual.lattice α with le_sup_inf := fun x y z => le_of_eqₓ inf_sup_left.symm }
 
-theorem inf_sup_right : (y⊔z)⊓x = y⊓x⊔z⊓x :=
-  by 
-    simp only [inf_sup_left, fun y : α => @inf_comm α _ y x, eq_self_iff_true]
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem inf_sup_right : «expr = »(«expr ⊓ »(«expr ⊔ »(y, z), x), «expr ⊔ »(«expr ⊓ »(y, x), «expr ⊓ »(z, x))) :=
+by simp [] [] ["only"] ["[", expr inf_sup_left, ",", expr λ
+ y : α, @inf_comm α _ y x, ",", expr eq_self_iff_true, "]"] [] []
 
 theorem le_of_inf_le_sup_le (h₁ : x⊓z ≤ y⊓z) (h₂ : x⊔z ≤ y⊔z) : x ≤ y :=
   calc x ≤ y⊓z⊔x := le_sup_right 
@@ -766,7 +765,7 @@ theorem inf_eq_min [LinearOrderₓ α] {x y : α} : x⊓y = min x y :=
 See note [reducible non-instances]. -/
 @[reducible]
 def Lattice.toLinearOrder (α : Type u) [Lattice α] [DecidableEq α] [DecidableRel (· ≤ · : α → α → Prop)]
-  [DecidableRel (· < · : α → α → Prop)] (h : ∀ x y : α, x ≤ y ∨ y ≤ x) : LinearOrderₓ α :=
+  [DecidableRel (· < · : α → α → Prop)] (h : ∀ (x y : α), x ≤ y ∨ y ≤ x) : LinearOrderₓ α :=
   { ‹Lattice α› with decidableLe := ‹_›, DecidableEq := ‹_›, decidableLt := ‹_›, le_total := h, max := ·⊔·,
     max_def :=
       by 
@@ -874,15 +873,17 @@ protected theorem min [Preorderₓ α] [LinearOrderₓ β] {f g : α → β} (hf
 theorem le_map_sup [SemilatticeSup α] [SemilatticeSup β] {f : α → β} (h : Monotone f) (x y : α) : f x⊔f y ≤ f (x⊔y) :=
   sup_le (h le_sup_left) (h le_sup_right)
 
-theorem map_sup [SemilatticeSup α] [IsTotal α (· ≤ ·)] [SemilatticeSup β] {f : α → β} (hf : Monotone f) (x y : α) :
-  f (x⊔y) = f x⊔f y :=
-  (IsTotal.total x y).elim
-    (fun h : x ≤ y =>
-      by 
-        simp only [h, hf h, sup_of_le_right])
-    fun h =>
-      by 
-        simp only [h, hf h, sup_of_le_left]
+-- error in Order.Lattice: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem map_sup
+[semilattice_sup α]
+[is_total α ((«expr ≤ »))]
+[semilattice_sup β]
+{f : α → β}
+(hf : monotone f)
+(x y : α) : «expr = »(f «expr ⊔ »(x, y), «expr ⊔ »(f x, f y)) :=
+(is_total.total x y).elim (λ
+ h : «expr ≤ »(x, y), by simp [] [] ["only"] ["[", expr h, ",", expr hf h, ",", expr sup_of_le_right, "]"] [] []) (λ
+ h, by simp [] [] ["only"] ["[", expr h, ",", expr hf h, ",", expr sup_of_le_left, "]"] [] [])
 
 theorem map_inf_le [SemilatticeInf α] [SemilatticeInf β] {f : α → β} (h : Monotone f) (x y : α) : f (x⊓y) ≤ f x⊓f y :=
   le_inf (h inf_le_left) (h inf_le_right)

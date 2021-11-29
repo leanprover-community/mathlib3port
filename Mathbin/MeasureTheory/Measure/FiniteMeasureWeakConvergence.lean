@@ -129,8 +129,9 @@ instance  : Inhabited (finite_measure α) :=
 instance  : Add (finite_measure α) :=
   { add := fun μ ν => ⟨μ+ν, MeasureTheory.is_finite_measure_add⟩ }
 
-instance  : HasScalar ℝ≥0  (finite_measure α) :=
-  { smul := fun c :  ℝ≥0  μ => ⟨c • μ, MeasureTheory.is_finite_measure_smul_nnreal⟩ }
+-- error in MeasureTheory.Measure.FiniteMeasureWeakConvergence: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_scalar «exprℝ≥0»() (finite_measure α) :=
+{ smul := λ (c : «exprℝ≥0»()) (μ), ⟨«expr • »(c, μ), measure_theory.is_finite_measure_smul_nnreal⟩ }
 
 @[simp, normCast]
 theorem coe_zero : (coeₓ : finite_measure α → Measureₓ α) 0 = 0 :=

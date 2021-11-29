@@ -54,7 +54,7 @@ variable{ι : Type _}(b : Basis ι R M)
 open Submodule.IsPrincipal Submodule
 
 theorem eq_bot_of_generator_maximal_map_eq_zero (b : Basis ι R M) {N : Submodule R M} {ϕ : M →ₗ[R] R}
-  (hϕ : ∀ ψ : M →ₗ[R] R, N.map ϕ ≤ N.map ψ → N.map ψ = N.map ϕ) [(N.map ϕ).IsPrincipal]
+  (hϕ : ∀ (ψ : M →ₗ[R] R), N.map ϕ ≤ N.map ψ → N.map ψ = N.map ϕ) [(N.map ϕ).IsPrincipal]
   (hgen : generator (N.map ϕ) = 0) : N = ⊥ :=
   by 
     rw [Submodule.eq_bot_iff]
@@ -66,7 +66,7 @@ theorem eq_bot_of_generator_maximal_map_eq_zero (b : Basis ι R M) {N : Submodul
 
 theorem eq_bot_of_generator_maximal_submodule_image_eq_zero {N O : Submodule R M} (b : Basis ι R O) (hNO : N ≤ O)
   {ϕ : O →ₗ[R] R}
-  (hϕ : ∀ ψ : O →ₗ[R] R, ϕ.submodule_image N ≤ ψ.submodule_image N → ψ.submodule_image N = ϕ.submodule_image N)
+  (hϕ : ∀ (ψ : O →ₗ[R] R), ϕ.submodule_image N ≤ ψ.submodule_image N → ψ.submodule_image N = ϕ.submodule_image N)
   [(ϕ.submodule_image N).IsPrincipal] (hgen : generator (ϕ.submodule_image N) = 0) : N = ⊥ :=
   by 
     rw [Submodule.eq_bot_iff]

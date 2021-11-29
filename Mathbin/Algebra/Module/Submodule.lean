@@ -156,10 +156,11 @@ theorem smul_mem (r : R) (h : x ∈ p) : r • x ∈ p :=
 theorem smul_of_tower_mem [HasScalar S R] [HasScalar S M] [IsScalarTower S R M] (r : S) (h : x ∈ p) : r • x ∈ p :=
   p.to_sub_mul_action.smul_of_tower_mem r h
 
-theorem sum_mem {t : Finset ι} {f : ι → M} : (∀ c _ : c ∈ t, f c ∈ p) → (∑i in t, f i) ∈ p :=
+theorem sum_mem {t : Finset ι} {f : ι → M} : (∀ c (_ : c ∈ t), f c ∈ p) → (∑i in t, f i) ∈ p :=
   p.to_add_submonoid.sum_mem
 
-theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀ c _ : c ∈ t, f c ∈ p) : (∑i in t, r i • f i) ∈ p :=
+theorem sum_smul_mem {t : Finset ι} {f : ι → M} (r : ι → R) (hyp : ∀ c (_ : c ∈ t), f c ∈ p) :
+  (∑i in t, r i • f i) ∈ p :=
   Submodule.sum_mem _ fun i hi => Submodule.smul_mem _ _ (hyp i hi)
 
 @[simp]
@@ -398,13 +399,13 @@ variable[Ringₓ R][IsDomain R]
 
 variable[AddCommGroupₓ M][Module R M]{b : ι → M}
 
-theorem not_mem_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ c : R y _ : y ∈ N, ((c • x)+y) = (0 : M) → c = 0) :
+theorem not_mem_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ (c : R) y (_ : y ∈ N), ((c • x)+y) = (0 : M) → c = 0) :
   x ∉ N :=
   by 
     intro hx 
     simpa using ortho (-1) x hx
 
-theorem ne_zero_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ c : R y _ : y ∈ N, ((c • x)+y) = (0 : M) → c = 0) :
+theorem ne_zero_of_ortho {x : M} {N : Submodule R M} (ortho : ∀ (c : R) y (_ : y ∈ N), ((c • x)+y) = (0 : M) → c = 0) :
   x ≠ 0 :=
   mt (fun h => show x ∈ N from h.symm ▸ N.zero_mem) (not_mem_of_ortho ortho)
 

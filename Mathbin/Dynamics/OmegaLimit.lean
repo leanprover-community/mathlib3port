@@ -116,7 +116,7 @@ characterising ω-limits:
 /-- An element `y` is in the ω-limit set of `s` w.r.t. `f` if the
     preimages of an arbitrary neighbourhood of `y` frequently
     (w.r.t. `f`) intersects of `s`. -/
-theorem mem_omega_limit_iff_frequently (y : β) : y ∈ ω f ϕ s ↔ ∀ n _ : n ∈ 𝓝 y, ∃ᶠt in f, (s ∩ ϕ t ⁻¹' n).Nonempty :=
+theorem mem_omega_limit_iff_frequently (y : β) : y ∈ ω f ϕ s ↔ ∀ n (_ : n ∈ 𝓝 y), ∃ᶠt in f, (s ∩ ϕ t ⁻¹' n).Nonempty :=
   by 
     simpRw [frequently_iff, omega_limit_def, mem_Inter, mem_closure_iff_nhds]
     split 
@@ -135,7 +135,7 @@ theorem mem_omega_limit_iff_frequently (y : β) : y ∈ ω f ϕ s ↔ ∀ n _ : 
 /-- An element `y` is in the ω-limit set of `s` w.r.t. `f` if the
     forward images of `s` frequently (w.r.t. `f`) intersect arbitrary
     neighbourhoods of `y`. -/
-theorem mem_omega_limit_iff_frequently₂ (y : β) : y ∈ ω f ϕ s ↔ ∀ n _ : n ∈ 𝓝 y, ∃ᶠt in f, (ϕ t '' s ∩ n).Nonempty :=
+theorem mem_omega_limit_iff_frequently₂ (y : β) : y ∈ ω f ϕ s ↔ ∀ n (_ : n ∈ 𝓝 y), ∃ᶠt in f, (ϕ t '' s ∩ n).Nonempty :=
   by 
     simpRw [mem_omega_limit_iff_frequently, image_inter_nonempty_iff]
 

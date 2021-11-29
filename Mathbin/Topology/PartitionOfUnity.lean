@@ -93,7 +93,7 @@ structure PartitionOfUnity(ι X : Type _)[TopologicalSpace X](s : Set X := univ)
   toFun : ι → C(X, ℝ)
   locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : 0 ≤ to_fun 
-  sum_eq_one' : ∀ x _ : x ∈ s, (∑ᶠi, to_fun i x) = 1
+  sum_eq_one' : ∀ x (_ : x ∈ s), (∑ᶠi, to_fun i x) = 1
   sum_le_one' : ∀ x, (∑ᶠi, to_fun i x) ≤ 1
 
 /-- A `bump_covering ι X s` is an indexed family of functions `f i`, `i : ι`, such that
@@ -116,7 +116,7 @@ structure BumpCovering(ι X : Type _)[TopologicalSpace X](s : Set X := univ) whe
   locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : 0 ≤ to_fun 
   le_one' : to_fun ≤ 1 
-  eventually_eq_one' : ∀ x _ : x ∈ s, ∃ i, to_fun i =ᶠ[𝓝 x] 1
+  eventually_eq_one' : ∀ x (_ : x ∈ s), ∃ i, to_fun i =ᶠ[𝓝 x] 1
 
 variable{ι : Type u}{X : Type v}[TopologicalSpace X]
 

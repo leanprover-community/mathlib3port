@@ -65,7 +65,7 @@ class NormalizationMonoid(α : Type _)[CommCancelMonoidWithZero α] where
   normUnit : α → Units α 
   norm_unit_zero : norm_unit 0 = 1
   norm_unit_mul : ∀ {a b}, a ≠ 0 → b ≠ 0 → norm_unit (a*b) = norm_unit a*norm_unit b 
-  norm_unit_coe_units : ∀ u : Units α, norm_unit u = u⁻¹
+  norm_unit_coe_units : ∀ (u : Units α), norm_unit u = u⁻¹
 
 export NormalizationMonoid(normUnit norm_unit_zero norm_unit_mul norm_unit_coe_units)
 
@@ -79,29 +79,19 @@ variable[CommCancelMonoidWithZero α][NormalizationMonoid α]
 theorem norm_unit_one : norm_unit (1 : α) = 1 :=
   norm_unit_coe_units 1
 
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- Chooses an element of each associate class, by multiplying by `norm_unit` -/
-def normalize : MonoidWithZeroHom α α :=
-  { toFun := fun x => x*norm_unit x,
-    map_zero' :=
-      by 
-        simp ,
-    map_one' :=
-      by 
-        rw [norm_unit_one, Units.coe_one, mul_oneₓ],
-    map_mul' :=
-      fun x y =>
-        (Classical.by_cases
-            fun hx : x = 0 =>
-              by 
-                rw [hx, zero_mul, zero_mul, zero_mul])$
-          fun hx =>
-            (Classical.by_cases
-                fun hy : y = 0 =>
-                  by 
-                    rw [hy, mul_zero, zero_mul, mul_zero])$
-              fun hy =>
-                by 
-                  simp only [norm_unit_mul hx hy, Units.coe_mul] <;> simp only [mul_assocₓ, mul_left_commₓ y] }
+def normalize : monoid_with_zero_hom α α :=
+{ to_fun := λ x, «expr * »(x, norm_unit x),
+  map_zero' := by simp [] [] [] [] [] [],
+  map_one' := by rw ["[", expr norm_unit_one, ",", expr units.coe_one, ",", expr mul_one, "]"] [],
+  map_mul' := λ
+  x
+  y, «expr $ »(classical.by_cases (λ
+    hx : «expr = »(x, 0), by rw ["[", expr hx, ",", expr zero_mul, ",", expr zero_mul, ",", expr zero_mul, "]"] []), λ
+   hx, «expr $ »(classical.by_cases (λ
+     hy : «expr = »(y, 0), by rw ["[", expr hy, ",", expr mul_zero, ",", expr zero_mul, ",", expr mul_zero, "]"] []), λ
+    hy, by simp [] [] ["only"] ["[", expr norm_unit_mul hx hy, ",", expr units.coe_mul, "]"] [] []; simp [] [] ["only"] ["[", expr mul_assoc, ",", expr mul_left_comm y, "]"] [] [])) }
 
 theorem associated_normalize (x : α) : Associated x (normalize x) :=
   ⟨_, rfl⟩
@@ -150,22 +140,22 @@ theorem normalize_idem (x : α) : normalize (normalize x) = normalize x :=
   by 
     simp 
 
-theorem normalize_eq_normalize {a b : α} (hab : a ∣ b) (hba : b ∣ a) : normalize a = normalize b :=
-  by 
-    nontriviality α 
-    rcases associated_of_dvd_dvd hab hba with ⟨u, rfl⟩
-    refine'
-      Classical.by_cases
-        (by 
-          rintro rfl <;> simp only [zero_mul])
-        fun ha : a ≠ 0 => _ 
-    suffices  : (a*«expr↑ » (norm_unit a)) = ((a*«expr↑ » u)*«expr↑ » (norm_unit a))*«expr↑ » (u⁻¹)
-    ·
-      simpa only [normalize_apply, mul_assocₓ, norm_unit_mul ha u.ne_zero, norm_unit_coe_units]
-    calc (a*«expr↑ » (norm_unit a)) = ((a*«expr↑ » (norm_unit a))*«expr↑ » u)*«expr↑ » (u⁻¹) :=
-      (Units.mul_inv_cancel_right _ _).symm _ = ((a*«expr↑ » u)*«expr↑ » (norm_unit a))*«expr↑ » (u⁻¹) :=
-      by 
-        rw [mul_right_commₓ a]
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem normalize_eq_normalize
+{a b : α}
+(hab : «expr ∣ »(a, b))
+(hba : «expr ∣ »(b, a)) : «expr = »(normalize a, normalize b) :=
+begin
+  nontriviality [expr α] [],
+  rcases [expr associated_of_dvd_dvd hab hba, "with", "⟨", ident u, ",", ident rfl, "⟩"],
+  refine [expr classical.by_cases (by rintro [ident rfl]; simp [] [] ["only"] ["[", expr zero_mul, "]"] [] []) (assume
+    ha : «expr ≠ »(a, 0), _)],
+  suffices [] [":", expr «expr = »(«expr * »(a, «expr↑ »(norm_unit a)), «expr * »(«expr * »(«expr * »(a, «expr↑ »(u)), «expr↑ »(norm_unit a)), «expr↑ »(«expr ⁻¹»(u))))],
+  by simpa [] [] ["only"] ["[", expr normalize_apply, ",", expr mul_assoc, ",", expr norm_unit_mul ha u.ne_zero, ",", expr norm_unit_coe_units, "]"] [] [],
+  calc
+    «expr = »(«expr * »(a, «expr↑ »(norm_unit a)), «expr * »(«expr * »(«expr * »(a, «expr↑ »(norm_unit a)), «expr↑ »(u)), «expr↑ »(«expr ⁻¹»(u)))) : (units.mul_inv_cancel_right _ _).symm
+    «expr = »(..., «expr * »(«expr * »(«expr * »(a, «expr↑ »(u)), «expr↑ »(norm_unit a)), «expr↑ »(«expr ⁻¹»(u)))) : by rw [expr mul_right_comm a] []
+end
 
 theorem normalize_eq_normalize_iff {x y : α} : normalize x = normalize y ↔ x ∣ y ∧ y ∣ x :=
   ⟨fun h => ⟨Units.dvd_mul_right.1 ⟨_, h.symm⟩, Units.dvd_mul_right.1 ⟨_, h⟩⟩,
@@ -261,10 +251,10 @@ section GcdMonoid
 variable[CommCancelMonoidWithZero α]
 
 @[simp]
-theorem normalize_gcd [NormalizedGcdMonoid α] : ∀ a b : α, normalize (gcd a b) = gcd a b :=
+theorem normalize_gcd [NormalizedGcdMonoid α] : ∀ (a b : α), normalize (gcd a b) = gcd a b :=
   NormalizedGcdMonoid.normalize_gcd
 
-theorem gcd_mul_lcm [GcdMonoid α] : ∀ a b : α, Associated (gcd a b*lcm a b) (a*b) :=
+theorem gcd_mul_lcm [GcdMonoid α] : ∀ (a b : α), Associated (gcd a b*lcm a b) (a*b) :=
   GcdMonoid.gcd_mul_lcm
 
 section Gcd
@@ -354,21 +344,15 @@ theorem gcd_dvd_gcd [GcdMonoid α] {a b c d : α} (hab : a ∣ b) (hcd : c ∣ d
 theorem gcd_same [NormalizedGcdMonoid α] (a : α) : gcd a a = normalize a :=
   gcd_eq_normalize (gcd_dvd_left _ _) (dvd_gcd (dvd_refl a) (dvd_refl a))
 
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem gcd_mul_left [NormalizedGcdMonoid α] (a b c : α) : gcd (a*b) (a*c) = normalize a*gcd b c :=
-  Classical.by_cases
-      (by 
-        rintro rfl <;> simp only [zero_mul, gcd_zero_left, normalize_zero])$
-    fun ha : a ≠ 0 =>
-      suffices gcd (a*b) (a*c) = normalize (a*gcd b c)by 
-        simpa only [normalize.map_mul, normalize_gcd]
-      let ⟨d, Eq⟩ := dvd_gcd (dvd_mul_right a b) (dvd_mul_right a c)
-      gcd_eq_normalize
-        (Eq.symm ▸ mul_dvd_mul_left a$
-          show d ∣ gcd b c from
-            dvd_gcd ((mul_dvd_mul_iff_left ha).1$ Eq ▸ gcd_dvd_left _ _)
-              ((mul_dvd_mul_iff_left ha).1$ Eq ▸ gcd_dvd_right _ _))
-        (dvd_gcd (mul_dvd_mul_left a$ gcd_dvd_left _ _) (mul_dvd_mul_left a$ gcd_dvd_right _ _))
+theorem gcd_mul_left
+[normalized_gcd_monoid α]
+(a b c : α) : «expr = »(gcd «expr * »(a, b) «expr * »(a, c), «expr * »(normalize a, gcd b c)) :=
+«expr $ »(classical.by_cases (by rintro [ident rfl]; simp [] [] ["only"] ["[", expr zero_mul, ",", expr gcd_zero_left, ",", expr normalize_zero, "]"] [] []), assume
+ ha : «expr ≠ »(a, 0), suffices «expr = »(gcd «expr * »(a, b) «expr * »(a, c), normalize «expr * »(a, gcd b c)), by simpa [] [] ["only"] ["[", expr normalize.map_mul, ",", expr normalize_gcd, "]"] [] [],
+ let ⟨d, eq⟩ := dvd_gcd (dvd_mul_right a b) (dvd_mul_right a c) in
+ gcd_eq_normalize «expr $ »(«expr ▸ »(eq.symm, mul_dvd_mul_left a), show «expr ∣ »(d, gcd b c), from dvd_gcd «expr $ »((mul_dvd_mul_iff_left ha).1, «expr ▸ »(eq, gcd_dvd_left _ _)) «expr $ »((mul_dvd_mul_iff_left ha).1, «expr ▸ »(eq, gcd_dvd_right _ _))) (dvd_gcd «expr $ »(mul_dvd_mul_left a, gcd_dvd_left _ _) «expr $ »(mul_dvd_mul_left a, gcd_dvd_right _ _)))
 
 theorem gcd_mul_left' [GcdMonoid α] (a b c : α) : Associated (gcd (a*b) (a*c)) (a*gcd b c) :=
   by 
@@ -607,18 +591,14 @@ theorem dvd_lcm_right [GcdMonoid α] (a b : α) : b ∣ lcm a b :=
 theorem lcm_dvd [GcdMonoid α] {a b c : α} (hab : a ∣ b) (hcb : c ∣ b) : lcm a c ∣ b :=
   lcm_dvd_iff.2 ⟨hab, hcb⟩
 
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem lcm_eq_zero_iff [GcdMonoid α] (a b : α) : lcm a b = 0 ↔ a = 0 ∨ b = 0 :=
-  Iff.intro
-    (fun h : lcm a b = 0 =>
-      have  : Associated (a*b) 0 :=
-        (gcd_mul_lcm a b).symm.trans$
-          by 
-            rw [h, mul_zero]
-      by 
-        simpa only [associated_zero_iff_eq_zero, mul_eq_zero])
-    (by 
-      rintro (rfl | rfl) <;> [apply lcm_zero_left, apply lcm_zero_right])
+theorem lcm_eq_zero_iff
+[gcd_monoid α]
+(a b : α) : «expr ↔ »(«expr = »(lcm a b, 0), «expr ∨ »(«expr = »(a, 0), «expr = »(b, 0))) :=
+iff.intro (assume
+ h : «expr = »(lcm a b, 0), have associated «expr * »(a, b) 0 := «expr $ »((gcd_mul_lcm a b).symm.trans, by rw ["[", expr h, ",", expr mul_zero, "]"] []),
+ by simpa [] [] ["only"] ["[", expr associated_zero_iff_eq_zero, ",", expr mul_eq_zero, "]"] [] []) (by rintro ["(", ident rfl, "|", ident rfl, ")"]; [apply [expr lcm_zero_left], apply [expr lcm_zero_right]])
 
 @[simp]
 theorem normalize_lcm [NormalizedGcdMonoid α] (a b : α) : normalize (lcm a b) = lcm a b :=
@@ -686,21 +666,16 @@ theorem lcm_eq_one_iff [NormalizedGcdMonoid α] (a b : α) : lcm a b = 1 ↔ a �
       show lcm (Units.mkOfMulEqOne a c hc.symm : α) (Units.mkOfMulEqOne b d hd.symm) = 1by 
         rw [lcm_units_coe_left, normalize_coe_units]
 
+-- error in Algebra.GcdMonoid.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem lcm_mul_left [NormalizedGcdMonoid α] (a b c : α) : lcm (a*b) (a*c) = normalize a*lcm b c :=
-  Classical.by_cases
-      (by 
-        rintro rfl <;> simp only [zero_mul, lcm_zero_left, normalize_zero])$
-    fun ha : a ≠ 0 =>
-      suffices lcm (a*b) (a*c) = normalize (a*lcm b c)by 
-        simpa only [normalize.map_mul, normalize_lcm]
-      have  : a ∣ lcm (a*b) (a*c) := (dvd_mul_right _ _).trans (dvd_lcm_left _ _)
-      let ⟨d, Eq⟩ := this 
-      lcm_eq_normalize (lcm_dvd (mul_dvd_mul_left a (dvd_lcm_left _ _)) (mul_dvd_mul_left a (dvd_lcm_right _ _)))
-        (Eq.symm ▸
-          (mul_dvd_mul_left a$
-            lcm_dvd ((mul_dvd_mul_iff_left ha).1$ Eq ▸ dvd_lcm_left _ _)
-              ((mul_dvd_mul_iff_left ha).1$ Eq ▸ dvd_lcm_right _ _)))
+theorem lcm_mul_left
+[normalized_gcd_monoid α]
+(a b c : α) : «expr = »(lcm «expr * »(a, b) «expr * »(a, c), «expr * »(normalize a, lcm b c)) :=
+«expr $ »(classical.by_cases (by rintro [ident rfl]; simp [] [] ["only"] ["[", expr zero_mul, ",", expr lcm_zero_left, ",", expr normalize_zero, "]"] [] []), assume
+ ha : «expr ≠ »(a, 0), suffices «expr = »(lcm «expr * »(a, b) «expr * »(a, c), normalize «expr * »(a, lcm b c)), by simpa [] [] ["only"] ["[", expr normalize.map_mul, ",", expr normalize_lcm, "]"] [] [],
+ have «expr ∣ »(a, lcm «expr * »(a, b) «expr * »(a, c)), from (dvd_mul_right _ _).trans (dvd_lcm_left _ _),
+ let ⟨d, eq⟩ := this in
+ lcm_eq_normalize (lcm_dvd (mul_dvd_mul_left a (dvd_lcm_left _ _)) (mul_dvd_mul_left a (dvd_lcm_right _ _))) «expr ▸ »(eq.symm, «expr $ »(mul_dvd_mul_left a, lcm_dvd «expr $ »((mul_dvd_mul_iff_left ha).1, «expr ▸ »(eq, dvd_lcm_left _ _)) «expr $ »((mul_dvd_mul_iff_left ha).1, «expr ▸ »(eq, dvd_lcm_right _ _)))))
 
 @[simp]
 theorem lcm_mul_right [NormalizedGcdMonoid α] (a b c : α) : lcm (b*a) (c*a) = lcm b c*normalize a :=
@@ -1069,7 +1044,7 @@ let exists_gcd := λ a b, dvd_normalize_iff.2 (lcm_dvd (dvd.intro b rfl) (dvd.in
   ..(infer_instance : normalization_monoid α) }
 
 /-- Define a `gcd_monoid` structure on a monoid just from the existence of a `gcd`. -/
-noncomputable def gcdMonoidOfExistsGcd [DecidableEq α] (h : ∀ a b : α, ∃ c : α, ∀ d : α, d ∣ a ∧ d ∣ b ↔ d ∣ c) :
+noncomputable def gcdMonoidOfExistsGcd [DecidableEq α] (h : ∀ (a b : α), ∃ c : α, ∀ (d : α), d ∣ a ∧ d ∣ b ↔ d ∣ c) :
   GcdMonoid α :=
   gcdMonoidOfGcd (fun a b => Classical.some (h a b))
     (fun a b => ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).1)
@@ -1078,14 +1053,14 @@ noncomputable def gcdMonoidOfExistsGcd [DecidableEq α] (h : ∀ a b : α, ∃ c
 
 /-- Define a `normalized_gcd_monoid` structure on a monoid just from the existence of a `gcd`. -/
 noncomputable def normalizedGcdMonoidOfExistsGcd [NormalizationMonoid α] [DecidableEq α]
-  (h : ∀ a b : α, ∃ c : α, ∀ d : α, d ∣ a ∧ d ∣ b ↔ d ∣ c) : NormalizedGcdMonoid α :=
+  (h : ∀ (a b : α), ∃ c : α, ∀ (d : α), d ∣ a ∧ d ∣ b ↔ d ∣ c) : NormalizedGcdMonoid α :=
   normalizedGcdMonoidOfGcd (fun a b => normalize (Classical.some (h a b)))
     (fun a b => normalize_dvd_iff.2 ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).1)
     (fun a b => normalize_dvd_iff.2 ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).2)
     (fun a b c ac ab => dvd_normalize_iff.2 ((Classical.some_spec (h c b) a).1 ⟨ac, ab⟩)) fun a b => normalize_idem _
 
 /-- Define a `gcd_monoid` structure on a monoid just from the existence of an `lcm`. -/
-noncomputable def gcdMonoidOfExistsLcm [DecidableEq α] (h : ∀ a b : α, ∃ c : α, ∀ d : α, a ∣ d ∧ b ∣ d ↔ c ∣ d) :
+noncomputable def gcdMonoidOfExistsLcm [DecidableEq α] (h : ∀ (a b : α), ∃ c : α, ∀ (d : α), a ∣ d ∧ b ∣ d ↔ c ∣ d) :
   GcdMonoid α :=
   gcdMonoidOfLcm (fun a b => Classical.some (h a b))
     (fun a b => ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).1)
@@ -1094,7 +1069,7 @@ noncomputable def gcdMonoidOfExistsLcm [DecidableEq α] (h : ∀ a b : α, ∃ c
 
 /-- Define a `normalized_gcd_monoid` structure on a monoid just from the existence of an `lcm`. -/
 noncomputable def normalizedGcdMonoidOfExistsLcm [NormalizationMonoid α] [DecidableEq α]
-  (h : ∀ a b : α, ∃ c : α, ∀ d : α, a ∣ d ∧ b ∣ d ↔ c ∣ d) : NormalizedGcdMonoid α :=
+  (h : ∀ (a b : α), ∃ c : α, ∀ (d : α), a ∣ d ∧ b ∣ d ↔ c ∣ d) : NormalizedGcdMonoid α :=
   normalizedGcdMonoidOfLcm (fun a b => normalize (Classical.some (h a b)))
     (fun a b => dvd_normalize_iff.2 ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).1)
     (fun a b => dvd_normalize_iff.2 ((Classical.some_spec (h a b) (Classical.some (h a b))).2 dvd_rfl).2)

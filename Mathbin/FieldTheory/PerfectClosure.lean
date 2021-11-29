@@ -170,12 +170,13 @@ private theorem mul_aux_right (x y1 y2 : ℕ × K) (H : r K p y1 y2) :
       by 
         rw [←iterate_succ_apply, iterate_succ', iterate_succ', ←frobenius_mul] <;> apply r.intro
 
-instance  : Mul (PerfectClosure K p) :=
-  ⟨Quot.lift
-      (fun x : ℕ × K =>
-        Quot.lift (fun y : ℕ × K => mk K p (x.1+y.1, (frobenius K p^[y.1]) x.2*(frobenius K p^[x.1]) y.2))
-          (mul_aux_right K p x))
-      fun x1 x2 H : r K p x1 x2 => funext$ fun e => Quot.induction_on e$ fun y => mul_aux_left K p x1 x2 y H⟩
+-- error in FieldTheory.PerfectClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_mul (perfect_closure K p) :=
+⟨quot.lift (λ
+  x : «expr × »(exprℕ(), K), quot.lift (λ
+   y : «expr × »(exprℕ(), K), mk K p («expr + »(x.1, y.1), «expr * »(«expr ^[ ]»(frobenius K p, y.1) x.2, «expr ^[ ]»(frobenius K p, x.1) y.2))) (mul_aux_right K p x)) (λ
+  (x1 x2)
+  (H : r K p x1 x2), «expr $ »(funext, λ e, «expr $ »(quot.induction_on e, λ y, mul_aux_left K p x1 x2 y H)))⟩
 
 @[simp]
 theorem mk_mul_mk (x y : ℕ × K) :
@@ -245,26 +246,23 @@ private theorem add_aux_right (x y1 y2 : ℕ × K) (H : r K p y1 y2) :
       by 
         rw [←iterate_succ_apply, iterate_succ', iterate_succ', ←frobenius_add] <;> apply r.intro
 
-instance  : Add (PerfectClosure K p) :=
-  ⟨Quot.lift
-      (fun x : ℕ × K =>
-        Quot.lift (fun y : ℕ × K => mk K p (x.1+y.1, (frobenius K p^[y.1]) x.2+(frobenius K p^[x.1]) y.2))
-          (add_aux_right K p x))
-      fun x1 x2 H : r K p x1 x2 => funext$ fun e => Quot.induction_on e$ fun y => add_aux_left K p x1 x2 y H⟩
+-- error in FieldTheory.PerfectClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_add (perfect_closure K p) :=
+⟨quot.lift (λ
+  x : «expr × »(exprℕ(), K), quot.lift (λ
+   y : «expr × »(exprℕ(), K), mk K p («expr + »(x.1, y.1), «expr + »(«expr ^[ ]»(frobenius K p, y.1) x.2, «expr ^[ ]»(frobenius K p, x.1) y.2))) (add_aux_right K p x)) (λ
+  (x1 x2)
+  (H : r K p x1 x2), «expr $ »(funext, λ e, «expr $ »(quot.induction_on e, λ y, add_aux_left K p x1 x2 y H)))⟩
 
 @[simp]
 theorem mk_add_mk (x y : ℕ × K) :
   (mk K p x+mk K p y) = mk K p (x.1+y.1, (frobenius K p^[y.1]) x.2+(frobenius K p^[x.1]) y.2) :=
   rfl
 
-instance  : Neg (PerfectClosure K p) :=
-  ⟨Quot.lift (fun x : ℕ × K => mk K p (x.1, -x.2))
-      fun x y H : r K p x y =>
-        match x, y, H with 
-        | _, _, r.intro n x =>
-          Quot.sound$
-            by 
-              rw [←frobenius_neg] <;> apply r.intro⟩
+-- error in FieldTheory.PerfectClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_neg (perfect_closure K p) :=
+⟨quot.lift (λ x : «expr × »(exprℕ(), K), mk K p (x.1, «expr- »(x.2))) (λ (x y) (H : r K p x y), match x, y, H with
+  | _, _, r.intro n x := «expr $ »(quot.sound, by rw ["<-", expr frobenius_neg] []; apply [expr r.intro]) end)⟩
 
 @[simp]
 theorem neg_mk (x : ℕ × K) : -mk K p x = mk K p (x.1, -x.2) :=
@@ -431,7 +429,7 @@ theorem frobenius_mk (x : ℕ × K) :
     simp only [frobenius_def]
     cases' x with n x 
     dsimp only 
-    suffices  : ∀ p' : ℕ, mk K p (n, x) ^ p' = mk K p (n, x ^ p')
+    suffices  : ∀ (p' : ℕ), mk K p (n, x) ^ p' = mk K p (n, x ^ p')
     ·
       apply this 
     intro p 
@@ -468,16 +466,14 @@ section Field
 
 variable[Field K](p : ℕ)[Fact p.prime][CharP K p]
 
-instance  : HasInv (PerfectClosure K p) :=
-  ⟨Quot.lift (fun x : ℕ × K => Quot.mk (r K p) (x.1, x.2⁻¹))
-      fun x y H : r K p x y =>
-        match x, y, H with 
-        | _, _, r.intro n x =>
-          Quot.sound$
-            by 
-              simp only [frobenius_def]
-              rw [←inv_pow₀]
-              apply r.intro⟩
+-- error in FieldTheory.PerfectClosure: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+instance : has_inv (perfect_closure K p) :=
+⟨quot.lift (λ
+  x : «expr × »(exprℕ(), K), quot.mk (r K p) (x.1, «expr ⁻¹»(x.2))) (λ (x y) (H : r K p x y), match x, y, H with
+  | _, _, r.intro n x := «expr $ »(quot.sound, by { simp [] [] ["only"] ["[", expr frobenius_def, "]"] [] [],
+     rw ["<-", expr inv_pow₀] [],
+     apply [expr r.intro] })
+  end)⟩
 
 instance  : Field (PerfectClosure K p) :=
   { (inferInstance : HasInv (PerfectClosure K p)), (inferInstance : CommRingₓ (PerfectClosure K p)) with

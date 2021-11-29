@@ -79,27 +79,21 @@ def lift (s : cone F) : s.X ⟶ AddCommGroupₓₓ.of (∀ j, F.obj j) :=
 theorem lift_apply (s : cone F) (x : s.X) (j : J) : (lift F s) x j = s.π.app j x :=
   rfl
 
+-- error in Algebra.Category.Group.Biproducts: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Construct limit data for a product in `AddCommGroup`, using `AddCommGroup.of (Π j, F.obj j)`.
--/
-def product_limit_cone : limits.limit_cone F :=
-  { Cone :=
-      { x := AddCommGroupₓₓ.of (∀ j, F.obj j),
-        π := discrete.nat_trans fun j => Pi.evalAddMonoidHom (fun j => F.obj j) j },
-    IsLimit :=
-      { lift := lift F,
-        fac' :=
-          fun s j =>
-            by 
-              ext 
-              simp ,
-        uniq' :=
-          fun s m w =>
-            by 
-              ext x j 
-              dsimp only [has_limit.lift]
-              simp only [AddMonoidHom.coe_mk]
-              exact congr_argₓ (fun f : s.X ⟶ F.obj j => (f : s.X → F.obj j) x) (w j) } }
+-/ def product_limit_cone : limits.limit_cone F :=
+{ cone := { X := AddCommGroup.of (∀ j, F.obj j),
+    π := discrete.nat_trans (λ j, pi.eval_add_monoid_hom (λ j, F.obj j) j) },
+  is_limit := { lift := lift F,
+    fac' := λ s j, by { ext [] [] [],
+      simp [] [] [] [] [] [] },
+    uniq' := λ s m w, begin
+      ext [] [ident x, ident j] [],
+      dsimp ["only"] ["[", expr has_limit.lift, "]"] [] [],
+      simp [] [] ["only"] ["[", expr add_monoid_hom.coe_mk, "]"] [] [],
+      exact [expr congr_arg (λ f : «expr ⟶ »(s.X, F.obj j), (f : s.X → F.obj j) x) (w j)]
+    end } }
 
 end HasLimit
 

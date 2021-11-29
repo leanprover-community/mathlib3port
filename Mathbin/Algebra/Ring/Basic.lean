@@ -53,8 +53,8 @@ open Function
 over addition. -/
 @[protectProj, ancestor Mul Add]
 class Distrib(R : Type _) extends Mul R, Add R where 
-  left_distrib : ∀ a b c : R, (a*b+c) = (a*b)+a*c 
-  right_distrib : ∀ a b c : R, ((a+b)*c) = (a*c)+b*c
+  left_distrib : ∀ (a b c : R), (a*b+c) = (a*b)+a*c 
+  right_distrib : ∀ (a b c : R), ((a+b)*c) = (a*c)+b*c
 
 theorem left_distrib [Distrib R] (a b c : R) : (a*b+c) = (a*b)+a*c :=
   Distrib.left_distrib a b c
@@ -256,11 +256,11 @@ def Even (a : α) : Prop :=
 theorem even_iff_two_dvd {a : α} : Even a ↔ 2 ∣ a :=
   Iff.rfl
 
+-- error in Algebra.Ring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem range_two_mul (α : Type _) [Semiringₓ α] : (Set.Range fun x : α => 2*x) = { a | Even a } :=
-  by 
-    ext x 
-    simp [Even, eq_comm]
+theorem range_two_mul (α : Type*) [semiring α] : «expr = »(set.range (λ x : α, «expr * »(2, x)), {a | even a}) :=
+by { ext [] [ident x] [],
+  simp [] [] [] ["[", expr even, ",", expr eq_comm, "]"] [] [] }
 
 @[simp]
 theorem even_bit0 (a : α) : Even (bit0 a) :=
@@ -278,11 +278,13 @@ theorem odd_bit1 (a : α) : Odd (bit1 a) :=
     by 
       rw [bit1, bit0, two_mul]⟩
 
+-- error in Algebra.Ring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem range_two_mul_add_one (α : Type _) [Semiringₓ α] : (Set.Range fun x : α => (2*x)+1) = { a | Odd a } :=
-  by 
-    ext x 
-    simp [Odd, eq_comm]
+theorem range_two_mul_add_one
+(α : Type*)
+[semiring α] : «expr = »(set.range (λ x : α, «expr + »(«expr * »(2, x), 1)), {a | odd a}) :=
+by { ext [] [ident x] [],
+  simp [] [] [] ["[", expr odd, ",", expr eq_comm, "]"] [] [] }
 
 theorem dvd_add {a b c : α} (h₁ : a ∣ b) (h₂ : a ∣ c) : a ∣ b+c :=
   Dvd.elim h₁
@@ -424,11 +426,13 @@ include rα rβ
 
 variable(f : α →+* β){x y : α}{rα rβ}
 
-theorem congr_funₓ {f g : α →+* β} (h : f = g) (x : α) : f x = g x :=
-  congr_argₓ (fun h : α →+* β => h x) h
+-- error in Algebra.Ring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem congr_fun {f g : «expr →+* »(α, β)} (h : «expr = »(f, g)) (x : α) : «expr = »(f x, g x) :=
+congr_arg (λ h : «expr →+* »(α, β), h x) h
 
-theorem congr_argₓ (f : α →+* β) {x y : α} (h : x = y) : f x = f y :=
-  congr_argₓ (fun x : α => f x) h
+-- error in Algebra.Ring.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem congr_arg (f : «expr →+* »(α, β)) {x y : α} (h : «expr = »(x, y)) : «expr = »(f x, f y) :=
+congr_arg (λ x : α, f x) h
 
 theorem coe_inj ⦃f g : α →+* β⦄ (h : (f : α → β) = g) : f = g :=
   by 
@@ -904,7 +908,7 @@ theorem injective_iff' {α β} [Ringₓ α] [NonAssocSemiring β] (f : α →+* 
   (f : α →+ β).injective_iff'
 
 /-- Makes a ring homomorphism from a monoid homomorphism of rings which preserves addition. -/
-def mk' {γ} [NonAssocSemiring α] [Ringₓ γ] (f : α →* γ) (map_add : ∀ a b : α, f (a+b) = f a+f b) : α →+* γ :=
+def mk' {γ} [NonAssocSemiring α] [Ringₓ γ] (f : α →* γ) (map_add : ∀ (a b : α), f (a+b) = f a+f b) : α →+* γ :=
   { AddMonoidHom.mk' f map_add, f with toFun := f }
 
 end RingHom
@@ -1093,7 +1097,7 @@ theorem pred_ne_self [Ringₓ α] [Nontrivial α] (a : α) : a - 1 ≠ a :=
 
 /-- Left `mul` by a `k : α` over `[ring α]` is injective, if `k` is not a zero divisor.
 The typeclass that restricts all terms of `α` to have this property is `no_zero_divisors`. -/
-theorem is_left_regular_of_non_zero_divisor [Ringₓ α] (k : α) (h : ∀ x : α, (k*x) = 0 → x = 0) : IsLeftRegular k :=
+theorem is_left_regular_of_non_zero_divisor [Ringₓ α] (k : α) (h : ∀ (x : α), (k*x) = 0 → x = 0) : IsLeftRegular k :=
   by 
     intro x y h' 
     rw [←sub_eq_zero]
@@ -1102,7 +1106,7 @@ theorem is_left_regular_of_non_zero_divisor [Ringₓ α] (k : α) (h : ∀ x : �
 
 /-- Right `mul` by a `k : α` over `[ring α]` is injective, if `k` is not a zero divisor.
 The typeclass that restricts all terms of `α` to have this property is `no_zero_divisors`. -/
-theorem is_right_regular_of_non_zero_divisor [Ringₓ α] (k : α) (h : ∀ x : α, (x*k) = 0 → x = 0) : IsRightRegular k :=
+theorem is_right_regular_of_non_zero_divisor [Ringₓ α] (k : α) (h : ∀ (x : α), (x*k) = 0 → x = 0) : IsRightRegular k :=
   by 
     intro x y h' 
     simp only  at h' 

@@ -34,7 +34,7 @@ namespace Function
 /-- A function `f` is said to be `periodic` with period `c` if for all `x`, `f (x + c) = f x`. -/
 @[simp]
 def periodic [Add α] (f : α → β) (c : α) : Prop :=
-  ∀ x : α, f (x+c) = f x
+  ∀ (x : α), f (x+c) = f x
 
 theorem periodic.funext [Add α] (h : periodic f c) : (fun x => f (x+c)) = f :=
   funext h
@@ -233,7 +233,7 @@ theorem periodic_with_period_zero [AddZeroClass α] (f : α → β) : periodic f
   `f (x + c) = -f x`. -/
 @[simp]
 def antiperiodic [Add α] [Neg β] (f : α → β) (c : α) : Prop :=
-  ∀ x : α, f (x+c) = -f x
+  ∀ (x : α), f (x+c) = -f x
 
 theorem antiperiodic.funext [Add α] [Neg β] (h : antiperiodic f c) : (fun x => f (x+c)) = -f :=
   funext h

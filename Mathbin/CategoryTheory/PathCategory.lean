@@ -24,9 +24,9 @@ variable(V : Type u₁)[Quiver.{v₁ + 1} V]
 
 namespace Paths
 
+-- error in CategoryTheory.PathCategory: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 instance category_paths : category.{max u₁ v₁} (paths V) :=
-  { Hom := fun X Y : V => Quiver.Path X Y, id := fun X => Quiver.Path.nil,
-    comp := fun X Y Z f g => Quiver.Path.comp f g }
+{ hom := λ X Y : V, quiver.path X Y, id := λ X, quiver.path.nil, comp := λ X Y Z f g, quiver.path.comp f g }
 
 variable{V}
 
@@ -43,7 +43,7 @@ attribute [local ext] Functor.ext
 @[ext]
 theorem ext_functor {C} [category C] {F G : paths V ⥤ C} (h_obj : F.obj = G.obj)
   (h :
-    ∀ a b : V e : a ⟶ b,
+    ∀ (a b : V) (e : a ⟶ b),
       F.map e.to_path = eq_to_hom (congr_funₓ h_obj a) ≫ G.map e.to_path ≫ eq_to_hom (congr_funₓ h_obj.symm b)) :
   F = G :=
   by 
@@ -78,7 +78,7 @@ open Quiver
 
 /-- A path in a category can be composed to a single morphism. -/
 @[simp]
-def compose_path {X : C} : ∀ {Y : C} p : path X Y, X ⟶ Y
+def compose_path {X : C} : ∀ {Y : C} (p : path X Y), X ⟶ Y
 | _, path.nil => 𝟙 X
 | _, path.cons p e => compose_path p ≫ e
 

@@ -36,7 +36,7 @@ def Ordinal.out (o : Ordinal) : WellOrder :=
   ⟨o.out.α, fun x y => o.out.r x y, o.out.wo⟩
 
 /-- This is the same as `ordinal.type_out` but defined to use `ordinal.out`. -/
-theorem Ordinal.type_out' : ∀ o : Ordinal, Ordinal.type (Ordinal.out o).R = o :=
+theorem Ordinal.type_out' : ∀ (o : Ordinal), Ordinal.type (Ordinal.out o).R = o :=
   Ordinal.type_out
 
 /-- The definition of single-heap nim, which can be viewed as a pile of stones where each player can
@@ -76,7 +76,7 @@ theorem nim_wf_lemma {O₁ : Ordinal} (O₂ : O₁.out.α) : Ordinal.typein O₁
     nthRwRHS 0[←Ordinal.type_out O₁]
     exact Ordinal.typein_lt_type _ _
 
-instance nim_impartial : ∀ O : Ordinal, impartial (nim O)
+instance nim_impartial : ∀ (O : Ordinal), impartial (nim O)
 | O =>
   by 
     rw [impartial_def, nim_def, neg_def]
@@ -119,7 +119,7 @@ theorem exists_ordinal_move_left_eq (O : Ordinal) : ∀ i, ∃ (O' : _)(_ : O' <
     rw [nim_def]
     exact fun i => ⟨Ordinal.typein O.out.r i, ⟨nim_wf_lemma _, rfl⟩⟩
 
-theorem exists_move_left_eq (O : Ordinal) : ∀ O' _ : O' < O, ∃ i, (nim O).moveLeft i = nim O' :=
+theorem exists_move_left_eq (O : Ordinal) : ∀ O' (_ : O' < O), ∃ i, (nim O).moveLeft i = nim O' :=
   by 
     rw [nim_def]
     exact
@@ -213,7 +213,7 @@ end
 
 /-- The Grundy value of an impartial game, the ordinal which corresponds to the game of nim that the
  game is equivalent to -/
-noncomputable def grundy_value : ∀ G : Pgame.{u} [G.impartial], Ordinal.{u}
+noncomputable def grundy_value : ∀ (G : Pgame.{u}) [G.impartial], Ordinal.{u}
 | G =>
   fun hG =>
     by 

@@ -137,7 +137,7 @@ theorem witt_structure_rat_prop (Φ : MvPolynomial idx ℚ) (n : ℕ) :
     
 
 theorem witt_structure_rat_exists_unique (Φ : MvPolynomial idx ℚ) :
-  ∃!φ : ℕ → MvPolynomial (idx × ℕ) ℚ, ∀ n : ℕ, bind₁ φ (W_ ℚ n) = bind₁ (fun i => rename (Prod.mk i) (W_ ℚ n)) Φ :=
+  ∃!φ : ℕ → MvPolynomial (idx × ℕ) ℚ, ∀ (n : ℕ), bind₁ φ (W_ ℚ n) = bind₁ (fun i => rename (Prod.mk i) (W_ ℚ n)) Φ :=
   by 
     refine' ⟨wittStructureRat p Φ, _, _⟩
     ·
@@ -152,7 +152,7 @@ theorem witt_structure_rat_exists_unique (Φ : MvPolynomial idx ℚ) :
       rw [bind₁_bind₁]
       exact eval₂_hom_congr (RingHom.ext_rat _ _) (funext H) rfl
 
--- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 theorem witt_structure_rat_rec_aux
 (Φ : mv_polynomial idx exprℚ())
 (n : exprℕ()) : «expr = »(«expr * »(witt_structure_rat p Φ n, C («expr ^ »(p, n) : exprℚ())), «expr - »(bind₁ (λ
@@ -321,10 +321,12 @@ theorem eq_witt_structure_int (Φ : MvPolynomial idx ℤ) (φ : ℕ → MvPolyno
       intro n 
       apply witt_structure_rat_prop
 
-theorem witt_structure_int_exists_unique (Φ : MvPolynomial idx ℤ) :
-  ∃!φ : ℕ → MvPolynomial (idx × ℕ) ℤ,
-    ∀ n : ℕ, bind₁ φ (wittPolynomial p ℤ n) = bind₁ (fun i : idx => rename (Prod.mk i) (W_ ℤ n)) Φ :=
-  ⟨wittStructureInt p Φ, witt_structure_int_prop _ _, eq_witt_structure_int _ _⟩
+-- error in RingTheory.WittVector.StructurePolynomial: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem witt_structure_int_exists_unique
+(Φ : mv_polynomial idx exprℤ()) : «expr∃! , »((φ : exprℕ() → mv_polynomial «expr × »(idx, exprℕ()) exprℤ()), ∀
+ n : exprℕ(), «expr = »(bind₁ φ (witt_polynomial p exprℤ() n), bind₁ (λ
+   i : idx, rename (prod.mk i) (exprW_() exprℤ() n)) Φ)) :=
+⟨witt_structure_int p Φ, witt_structure_int_prop _ _, eq_witt_structure_int _ _⟩
 
 theorem witt_structure_prop (Φ : MvPolynomial idx ℤ) n :
   aeval (fun i => map (Int.castRingHom R) (wittStructureInt p Φ i)) (wittPolynomial p ℤ n) =

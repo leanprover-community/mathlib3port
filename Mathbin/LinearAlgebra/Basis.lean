@@ -320,7 +320,7 @@ end Map
 
 section MapCoeffs
 
-variable{R' : Type _}[Semiringₓ R'][Module R' M](f : R ≃+* R')(h : ∀ c x : M, f c • x = c • x)
+variable{R' : Type _}[Semiringₓ R'][Module R' M](f : R ≃+* R')(h : ∀ c (x : M), f c • x = c • x)
 
 include f h b
 
@@ -719,7 +719,7 @@ protected theorem smul_eq_zero [NoZeroDivisors R] (b : Basis ι R M) {c : R} {x 
   @smul_eq_zero _ _ _ _ _ b.no_zero_smul_divisors _ _
 
 theorem _root_.eq_bot_of_rank_eq_zero [NoZeroDivisors R] (b : Basis ι R M) (N : Submodule R M)
-  (rank_eq : ∀ {m : ℕ} v : Finₓ m → N, LinearIndependent R (coeₓ ∘ v : Finₓ m → M) → m = 0) : N = ⊥ :=
+  (rank_eq : ∀ {m : ℕ} (v : Finₓ m → N), LinearIndependent R (coeₓ ∘ v : Finₓ m → M) → m = 0) : N = ⊥ :=
   by 
     rw [Submodule.eq_bot_iff]
     intro x hx 
@@ -771,7 +771,7 @@ theorem singleton_repr (ι R : Type _) [Unique ι] [Semiringₓ R] x i : (Basis.
 
 theorem basis_singleton_iff {R M : Type _} [Ringₓ R] [Nontrivial R] [AddCommGroupₓ M] [Module R M]
   [NoZeroSmulDivisors R M] (ι : Type _) [Unique ι] :
-  Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ y : M, ∃ r : R, r • x = y :=
+  Nonempty (Basis ι R M) ↔ ∃ (x : _)(_ : x ≠ 0), ∀ (y : M), ∃ r : R, r • x = y :=
   by 
     fsplit
     ·
@@ -907,33 +907,30 @@ variable[AddCommMonoidₓ M][Module R M][AddCommMonoidₓ M'][Module R M']
 
 variable(b : Basis ι R M)(b' : Basis ι' R M')
 
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `b` is a basis for `M` and `b'` a basis for `M'`,
 and `f`, `g` form a bijection between the basis vectors,
 `b.equiv' b' f g hf hg hgf hfg` is a linear equivalence `M ≃ₗ[R] M'`, mapping `b i` to `f (b i)`.
 -/
-def equiv' (f : M → M') (g : M' → M) (hf : ∀ i, f (b i) ∈ range b') (hg : ∀ i, g (b' i) ∈ range b)
-  (hgf : ∀ i, g (f (b i)) = b i) (hfg : ∀ i, f (g (b' i)) = b' i) : M ≃ₗ[R] M' :=
-  { b.constr R (f ∘ b) with invFun := b'.constr R (g ∘ b'),
-    left_inv :=
-      have  : (b'.constr R (g ∘ b')).comp (b.constr R (f ∘ b)) = LinearMap.id :=
-        b.ext$
-          fun i =>
-            Exists.elim (hf i)
-              fun i' hi' =>
-                by 
-                  rw [LinearMap.comp_apply, b.constr_basis, Function.comp_apply, ←hi', b'.constr_basis,
-                    Function.comp_apply, hi', hgf, LinearMap.id_apply]
-      fun x => congr_argₓ (fun h : M →ₗ[R] M => h x) this,
-    right_inv :=
-      have  : (b.constr R (f ∘ b)).comp (b'.constr R (g ∘ b')) = LinearMap.id :=
-        b'.ext$
-          fun i =>
-            Exists.elim (hg i)
-              fun i' hi' =>
-                by 
-                  rw [LinearMap.comp_apply, b'.constr_basis, Function.comp_apply, ←hi', b.constr_basis,
-                    Function.comp_apply, hi', hfg, LinearMap.id_apply]
-      fun x => congr_argₓ (fun h : M' →ₗ[R] M' => h x) this }
+def equiv'
+(f : M → M')
+(g : M' → M)
+(hf : ∀ i, «expr ∈ »(f (b i), range b'))
+(hg : ∀ i, «expr ∈ »(g (b' i), range b))
+(hgf : ∀ i, «expr = »(g (f (b i)), b i))
+(hfg : ∀ i, «expr = »(f (g (b' i)), b' i)) : «expr ≃ₗ[ ] »(M, R, M') :=
+{ inv_fun := b'.constr R «expr ∘ »(g, b'),
+  left_inv := have «expr = »((b'.constr R «expr ∘ »(g, b')).comp (b.constr R «expr ∘ »(f, b)), linear_map.id), from «expr $ »(b.ext, λ
+   i, exists.elim (hf i) (λ
+    i'
+    hi', by rw ["[", expr linear_map.comp_apply, ",", expr b.constr_basis, ",", expr function.comp_apply, ",", "<-", expr hi', ",", expr b'.constr_basis, ",", expr function.comp_apply, ",", expr hi', ",", expr hgf, ",", expr linear_map.id_apply, "]"] [])),
+  λ x, congr_arg (λ h : «expr →ₗ[ ] »(M, R, M), h x) this,
+  right_inv := have «expr = »((b.constr R «expr ∘ »(f, b)).comp (b'.constr R «expr ∘ »(g, b')), linear_map.id), from «expr $ »(b'.ext, λ
+   i, exists.elim (hg i) (λ
+    i'
+    hi', by rw ["[", expr linear_map.comp_apply, ",", expr b'.constr_basis, ",", expr function.comp_apply, ",", "<-", expr hi', ",", expr b.constr_basis, ",", expr function.comp_apply, ",", expr hi', ",", expr hfg, ",", expr linear_map.id_apply, "]"] [])),
+  λ x, congr_arg (λ h : «expr →ₗ[ ] »(M', R, M'), h x) this,
+  ..b.constr R «expr ∘ »(f, b) }
 
 @[simp]
 theorem equiv'_apply (f : M → M') (g : M' → M) hf hg hgf hfg (i : ι) : b.equiv' b' f g hf hg hgf hfg (b i) = f (b i) :=
@@ -972,7 +969,7 @@ variable(b : Basis ι R M)
 
 namespace Basis
 
--- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.Basis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /--
 Any basis is a maximal linear independent set.
 -/ theorem maximal [nontrivial R] (b : basis ι R M) : b.linear_independent.maximal :=
@@ -1133,7 +1130,7 @@ section Finₓ
 and `y` and `N` together span the whole of `M`, then there is a basis for `M`
 whose basis vectors are given by `fin.cons y b`. -/
 noncomputable def mk_fin_cons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (Finₓ n) R N)
-  (hli : ∀ c : R x _ : x ∈ N, ((c • y)+x) = 0 → c = 0) (hsp : ∀ z : M, ∃ c : R, (z+c • y) ∈ N) :
+  (hli : ∀ (c : R) x (_ : x ∈ N), ((c • y)+x) = 0 → c = 0) (hsp : ∀ (z : M), ∃ c : R, (z+c • y) ∈ N) :
   Basis (Finₓ (n+1)) R M :=
   have span_b : Submodule.span R (Set.Range (N.subtype ∘ b)) = N :=
     by 
@@ -1152,7 +1149,7 @@ noncomputable def mk_fin_cons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (
 
 @[simp]
 theorem coe_mk_fin_cons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (Finₓ n) R N)
-  (hli : ∀ c : R x _ : x ∈ N, ((c • y)+x) = 0 → c = 0) (hsp : ∀ z : M, ∃ c : R, (z+c • y) ∈ N) :
+  (hli : ∀ (c : R) x (_ : x ∈ N), ((c • y)+x) = 0 → c = 0) (hsp : ∀ (z : M), ∃ c : R, (z+c • y) ∈ N) :
   (mk_fin_cons y b hli hsp : Finₓ (n+1) → M) = Finₓ.cons y (coeₓ ∘ b) :=
   coe_mk _ _
 
@@ -1160,14 +1157,14 @@ theorem coe_mk_fin_cons {n : ℕ} {N : Submodule R M} (y : M) (b : Basis (Finₓ
 and `y` and `N` together span the whole of `O`, then there is a basis for `O`
 whose basis vectors are given by `fin.cons y b`. -/
 noncomputable def mk_fin_cons_of_le {n : ℕ} {N O : Submodule R M} (y : M) (yO : y ∈ O) (b : Basis (Finₓ n) R N)
-  (hNO : N ≤ O) (hli : ∀ c : R x _ : x ∈ N, ((c • y)+x) = 0 → c = 0) (hsp : ∀ z _ : z ∈ O, ∃ c : R, (z+c • y) ∈ N) :
-  Basis (Finₓ (n+1)) R O :=
+  (hNO : N ≤ O) (hli : ∀ (c : R) x (_ : x ∈ N), ((c • y)+x) = 0 → c = 0)
+  (hsp : ∀ z (_ : z ∈ O), ∃ c : R, (z+c • y) ∈ N) : Basis (Finₓ (n+1)) R O :=
   mk_fin_cons ⟨y, yO⟩ (b.map (Submodule.comapSubtypeEquivOfLe hNO).symm)
     (fun c x hc hx => hli c x (Submodule.mem_comap.mp hc) (congr_argₓ coeₓ hx)) fun z => hsp z z.2
 
 @[simp]
 theorem coe_mk_fin_cons_of_le {n : ℕ} {N O : Submodule R M} (y : M) (yO : y ∈ O) (b : Basis (Finₓ n) R N) (hNO : N ≤ O)
-  (hli : ∀ c : R x _ : x ∈ N, ((c • y)+x) = 0 → c = 0) (hsp : ∀ z _ : z ∈ O, ∃ c : R, (z+c • y) ∈ N) :
+  (hli : ∀ (c : R) x (_ : x ∈ N), ((c • y)+x) = 0 → c = 0) (hsp : ∀ z (_ : z ∈ O), ∃ c : R, (z+c • y) ∈ N) :
   (mk_fin_cons_of_le y yO b hNO hli hsp : Finₓ (n+1) → O) = Finₓ.cons ⟨y, yO⟩ (Submodule.ofLe hNO ∘ b) :=
   coe_mk_fin_cons _ _ _ _
 

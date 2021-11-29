@@ -44,7 +44,7 @@ theorem deriv_exp : deriv exp = exp :=
   funext$ fun x => (has_deriv_at_exp x).deriv
 
 @[simp]
-theorem iter_deriv_exp : ∀ n : ℕ, (deriv^[n]) exp = exp
+theorem iter_deriv_exp : ∀ (n : ℕ), (deriv^[n]) exp = exp
 | 0 => rfl
 | n+1 =>
   by 
@@ -186,7 +186,7 @@ theorem deriv_exp : deriv exp = exp :=
   funext$ fun x => (has_deriv_at_exp x).deriv
 
 @[simp]
-theorem iter_deriv_exp : ∀ n : ℕ, (deriv^[n]) exp = exp
+theorem iter_deriv_exp : ∀ (n : ℕ), (deriv^[n]) exp = exp
 | 0 => rfl
 | n+1 =>
   by 

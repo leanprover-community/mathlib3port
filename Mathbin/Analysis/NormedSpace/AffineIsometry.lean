@@ -61,7 +61,7 @@ include V V₂
 /-- An `𝕜`-affine isometric embedding of one normed add-torsor over a normed `𝕜`-space into
 another. -/
 structure AffineIsometry extends P →ᵃ[𝕜] P₂ where 
-  norm_map : ∀ x : V, ∥linear x∥ = ∥x∥
+  norm_map : ∀ (x : V), ∥linear x∥ = ∥x∥
 
 omit V V₂
 
@@ -323,7 +323,7 @@ theorem coe_to_affine_isometry : «expr⇑ » e.to_affine_isometry = e :=
 linear part at one base point. Namely, this function takes a map `e : P₁ → P₂`, a linear isometry
 equivalence `e' : V₁ ≃ᵢₗ[k] V₂`, and a point `p` such that for any other point `p'` we have
 `e p' = e' (p' -ᵥ p) +ᵥ e p`. -/
-def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p : P₁) (h : ∀ p' : P₁, e p' = e' (p' -ᵥ p) +ᵥ e p) : P₁ ≃ᵃⁱ[𝕜] P₂ :=
+def mk' (e : P₁ → P₂) (e' : V₁ ≃ₗᵢ[𝕜] V₂) (p : P₁) (h : ∀ (p' : P₁), e p' = e' (p' -ᵥ p) +ᵥ e p) : P₁ ≃ᵃⁱ[𝕜] P₂ :=
   { AffineEquiv.mk' e e'.to_linear_equiv p h with norm_map := e'.norm_map }
 
 @[simp]

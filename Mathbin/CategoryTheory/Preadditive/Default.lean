@@ -51,13 +51,13 @@ variable(C : Type u)[category.{v} C]
 /-- A category is called preadditive if `P ⟶ Q` is an abelian group such that composition is
     linear in both variables. -/
 class preadditive where 
-  homGroup : ∀ P Q : C, AddCommGroupₓ (P ⟶ Q) :=  by 
+  homGroup : ∀ (P Q : C), AddCommGroupₓ (P ⟶ Q) :=  by 
   runTac 
     tactic.apply_instance 
-  add_comp' : ∀ P Q R : C f f' : P ⟶ Q g : Q ⟶ R, (f+f') ≫ g = (f ≫ g)+f' ≫ g :=  by 
+  add_comp' : ∀ (P Q R : C) (f f' : P ⟶ Q) (g : Q ⟶ R), (f+f') ≫ g = (f ≫ g)+f' ≫ g :=  by 
   runTac 
     obviously 
-  comp_add' : ∀ P Q R : C f : P ⟶ Q g g' : Q ⟶ R, (f ≫ g+g') = (f ≫ g)+f ≫ g' :=  by 
+  comp_add' : ∀ (P Q R : C) (f : P ⟶ Q) (g g' : Q ⟶ R), (f ≫ g+g') = (f ≫ g)+f ≫ g' :=  by 
   runTac 
     obviously
 
@@ -186,10 +186,10 @@ instance (priority := 100)preadditive_has_zero_morphisms : has_zero_morphisms C 
   { HasZero := inferInstance, comp_zero' := fun P Q f R => map_zero$ left_comp R f,
     zero_comp' := fun P Q R f => map_zero$ right_comp P f }
 
-theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} g : P ⟶ Q, g ≫ f = 0 → g = 0) : mono f :=
+theorem mono_of_cancel_zero {Q R : C} (f : Q ⟶ R) (h : ∀ {P : C} (g : P ⟶ Q), g ≫ f = 0 → g = 0) : mono f :=
   ⟨fun P g g' hg => sub_eq_zero.1$ h _$ (map_sub (right_comp P f) g g').trans$ sub_eq_zero.2 hg⟩
 
-theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) : mono f ↔ ∀ P : C g : P ⟶ Q, g ≫ f = 0 → g = 0 :=
+theorem mono_iff_cancel_zero {Q R : C} (f : Q ⟶ R) : mono f ↔ ∀ (P : C) (g : P ⟶ Q), g ≫ f = 0 → g = 0 :=
   ⟨fun m P g =>
       by 
         exact zero_of_comp_mono _,
@@ -201,10 +201,10 @@ theorem mono_of_kernel_zero {X Y : C} {f : X ⟶ Y} [has_limit (parallel_pair f 
       by 
         rw [←kernel.lift_ι f g h, w, limits.comp_zero]
 
-theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} g : Q ⟶ R, f ≫ g = 0 → g = 0) : epi f :=
+theorem epi_of_cancel_zero {P Q : C} (f : P ⟶ Q) (h : ∀ {R : C} (g : Q ⟶ R), f ≫ g = 0 → g = 0) : epi f :=
   ⟨fun R g g' hg => sub_eq_zero.1$ h _$ (map_sub (left_comp R f) g g').trans$ sub_eq_zero.2 hg⟩
 
-theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) : epi f ↔ ∀ R : C g : Q ⟶ R, f ≫ g = 0 → g = 0 :=
+theorem epi_iff_cancel_zero {P Q : C} (f : P ⟶ Q) : epi f ↔ ∀ (R : C) (g : Q ⟶ R), f ≫ g = 0 → g = 0 :=
   ⟨fun e R g =>
       by 
         exact zero_of_epi_comp _,

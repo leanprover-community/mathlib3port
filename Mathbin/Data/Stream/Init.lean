@@ -294,15 +294,17 @@ theorem bisim_simple (s₁ s₂ : Streamₓ α) : head s₁ = head s₂ → s₁
       (And.intro hh (And.intro ht₁ ht₂))
 
 theorem coinduction {s₁ s₂ : Streamₓ α} :
-  head s₁ = head s₂ → (∀ β : Type u fr : Streamₓ α → β, fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂)) → s₁ = s₂ :=
+  head s₁ = head s₂ → (∀ (β : Type u) (fr : Streamₓ α → β), fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂)) → s₁ = s₂ :=
   fun hh ht =>
     eq_of_bisim
-      (fun s₁ s₂ => head s₁ = head s₂ ∧ ∀ β : Type u fr : Streamₓ α → β, fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂))
+      (fun s₁ s₂ =>
+        head s₁ = head s₂ ∧ ∀ (β : Type u) (fr : Streamₓ α → β), fr s₁ = fr s₂ → fr (tail s₁) = fr (tail s₂))
       (fun s₁ s₂ h =>
         have h₁ : head s₁ = head s₂ := And.elim_left h 
         have h₂ : head (tail s₁) = head (tail s₂) := And.elim_right h α (@head α) h₁ 
         have h₃ :
-          ∀ β : Type u fr : Streamₓ α → β, fr (tail s₁) = fr (tail s₂) → fr (tail (tail s₁)) = fr (tail (tail s₂)) :=
+          ∀ (β : Type u) (fr : Streamₓ α → β),
+            fr (tail s₁) = fr (tail s₂) → fr (tail (tail s₁)) = fr (tail (tail s₂)) :=
           fun β fr => And.elim_right h β fun s => fr (tail s)
         And.intro h₁ (And.intro h₂ h₃))
       (And.intro hh ht)
@@ -372,7 +374,7 @@ theorem unfolds_eq (g : α → β) (f : α → α) (a : α) : unfolds g f a = g 
     unfold unfolds 
     rw [corec_eq]
 
-theorem nth_unfolds_head_tail : ∀ n : Nat s : Streamₓ α, nth n (unfolds head tail s) = nth n s :=
+theorem nth_unfolds_head_tail : ∀ (n : Nat) (s : Streamₓ α), nth n (unfolds head tail s) = nth n s :=
   by 
     intro n 
     induction' n with n' ih
@@ -383,7 +385,7 @@ theorem nth_unfolds_head_tail : ∀ n : Nat s : Streamₓ α, nth n (unfolds hea
       intro s 
       rw [nth_succ, nth_succ, unfolds_eq, tail_cons, ih]
 
-theorem unfolds_head_eq : ∀ s : Streamₓ α, unfolds head tail s = s :=
+theorem unfolds_head_eq : ∀ (s : Streamₓ α), unfolds head tail s = s :=
   fun s => Streamₓ.ext fun n => nth_unfolds_head_tail n s
 
 def interleave (s₁ s₂ : Streamₓ α) : Streamₓ α :=
@@ -410,7 +412,7 @@ theorem interleave_tail_tail (s₁ s₂ : Streamₓ α) : tail s₁⋈tail s₂ 
     rw [interleave_eq s₁ s₂]
     rfl
 
-theorem nth_interleave_left : ∀ n : Nat s₁ s₂ : Streamₓ α, nth (2*n) (s₁⋈s₂) = nth n s₁
+theorem nth_interleave_left : ∀ (n : Nat) (s₁ s₂ : Streamₓ α), nth (2*n) (s₁⋈s₂) = nth n s₁
 | 0, s₁, s₂ => rfl
 | succ n, s₁, s₂ =>
   by 
@@ -418,7 +420,7 @@ theorem nth_interleave_left : ∀ n : Nat s₁ s₂ : Streamₓ α, nth (2*n) (s
     rw [nth_succ, nth_succ, interleave_eq, tail_cons, tail_cons, nth_interleave_left]
     rfl
 
-theorem nth_interleave_right : ∀ n : Nat s₁ s₂ : Streamₓ α, nth ((2*n)+1) (s₁⋈s₂) = nth n s₂
+theorem nth_interleave_right : ∀ (n : Nat) (s₁ s₂ : Streamₓ α), nth ((2*n)+1) (s₁⋈s₂) = nth n s₂
 | 0, s₁, s₂ => rfl
 | succ n, s₁, s₂ =>
   by 
@@ -480,19 +482,18 @@ theorem even_interleave (s₁ s₂ : Streamₓ α) : even (s₁⋈s₂) = s₁ :
                 rw [interleave_eq, even_cons_cons, tail_cons]⟩)
     (Exists.introₓ s₂ rfl)
 
-theorem interleave_even_odd (s₁ : Streamₓ α) : even s₁⋈odd s₁ = s₁ :=
-  eq_of_bisim (fun s' s => s' = even s⋈odd s)
-    (fun s' s h : s' = even s⋈odd s =>
-      by 
-        rw [h]
-        constructor
-        ·
-          rfl
-        ·
-          simp [odd_eq, odd_eq, tail_interleave, tail_even])
-    rfl
+-- error in Data.Stream.Init: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem interleave_even_odd (s₁ : stream α) : «expr = »(«expr ⋈ »(even s₁, odd s₁), s₁) :=
+eq_of_bisim (λ
+ s'
+ s, «expr = »(s', «expr ⋈ »(even s, odd s))) (λ (s' s) (h : «expr = »(s', «expr ⋈ »(even s, odd s))), begin
+   rw [expr h] [],
+   constructor,
+   { refl },
+   { simp [] [] [] ["[", expr odd_eq, ",", expr odd_eq, ",", expr tail_interleave, ",", expr tail_even, "]"] [] [] }
+ end) rfl
 
-theorem nth_even : ∀ n : Nat s : Streamₓ α, nth n (even s) = nth (2*n) s
+theorem nth_even : ∀ (n : Nat) (s : Streamₓ α), nth n (even s) = nth (2*n) s
 | 0, s => rfl
 | succ n, s =>
   by 
@@ -500,7 +501,7 @@ theorem nth_even : ∀ n : Nat s : Streamₓ α, nth n (even s) = nth (2*n) s
     rw [nth_succ, nth_succ, tail_even, nth_even]
     rfl
 
-theorem nth_odd : ∀ n : Nat s : Streamₓ α, nth n (odd s) = nth ((2*n)+1) s :=
+theorem nth_odd : ∀ (n : Nat) (s : Streamₓ α), nth n (odd s) = nth ((2*n)+1) s :=
   fun n s =>
     by 
       rw [odd_eq, nth_even]
@@ -530,19 +531,19 @@ theorem cons_append_stream (a : α) (l : List α) (s : Streamₓ α) : append_st
 
 infixl:65 "++ₛ" => append_stream
 
-theorem append_append_stream : ∀ l₁ l₂ : List α s : Streamₓ α, l₁ ++ l₂++ₛs = l₁++ₛ(l₂++ₛs)
+theorem append_append_stream : ∀ (l₁ l₂ : List α) (s : Streamₓ α), l₁ ++ l₂++ₛs = l₁++ₛ(l₂++ₛs)
 | [], l₂, s => rfl
 | List.cons a l₁, l₂, s =>
   by 
     rw [List.cons_append, cons_append_stream, cons_append_stream, append_append_stream]
 
-theorem map_append_stream (f : α → β) : ∀ l : List α s : Streamₓ α, map f (l++ₛs) = List.map f l++ₛmap f s
+theorem map_append_stream (f : α → β) : ∀ (l : List α) (s : Streamₓ α), map f (l++ₛs) = List.map f l++ₛmap f s
 | [], s => rfl
 | List.cons a l, s =>
   by 
     rw [cons_append_stream, List.map_consₓ, map_cons, cons_append_stream, map_append_stream]
 
-theorem drop_append_stream : ∀ l : List α s : Streamₓ α, drop l.length (l++ₛs) = s
+theorem drop_append_stream : ∀ (l : List α) (s : Streamₓ α), drop l.length (l++ₛs) = s
 | [], s =>
   by 
     rfl
@@ -554,17 +555,21 @@ theorem append_stream_head_tail (s : Streamₓ α) : [head s]++ₛtail s = s :=
   by 
     rw [cons_append_stream, nil_append_stream, Streamₓ.eta]
 
-theorem mem_append_stream_right : ∀ {a : α} l : List α {s : Streamₓ α}, a ∈ s → a ∈ l++ₛs
+theorem mem_append_stream_right : ∀ {a : α} (l : List α) {s : Streamₓ α}, a ∈ s → a ∈ l++ₛs
 | a, [], s, h => h
 | a, List.cons b l, s, h =>
   have ih : a ∈ l++ₛs := mem_append_stream_right l h 
   mem_cons_of_mem _ ih
 
-theorem mem_append_stream_left : ∀ {a : α} {l : List α} s : Streamₓ α, a ∈ l → a ∈ l++ₛs
-| a, [], s, h => absurd h (List.not_mem_nil _)
-| a, List.cons b l, s, h =>
-  Or.elim (List.eq_or_mem_of_mem_consₓ h) (fun aeqb : a = b => Exists.introₓ 0 aeqb)
-    fun ainl : a ∈ l => mem_cons_of_mem b (mem_append_stream_left s ainl)
+-- error in Data.Stream.Init: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mem_append_stream_left : ∀
+{a : α}
+{l : list α}
+(s : stream α), «expr ∈ »(a, l) → «expr ∈ »(a, «expr ++ₛ »(l, s))
+| a, «expr[ , ]»([]), s, h := absurd h (list.not_mem_nil _)
+| a, list.cons b l, s, h := or.elim (list.eq_or_mem_of_mem_cons h) (λ
+ aeqb : «expr = »(a, b), exists.intro 0 aeqb) (λ
+ ainl : «expr ∈ »(a, l), mem_cons_of_mem b (mem_append_stream_left s ainl))
 
 def approx : Nat → Streamₓ α → List α
 | 0, s => []
@@ -576,14 +581,14 @@ theorem approx_zero (s : Streamₓ α) : approx 0 s = [] :=
 theorem approx_succ (n : Nat) (s : Streamₓ α) : approx (succ n) s = head s :: approx n (tail s) :=
   rfl
 
-theorem nth_approx : ∀ n : Nat s : Streamₓ α, List.nth (approx (succ n) s) n = some (nth n s)
+theorem nth_approx : ∀ (n : Nat) (s : Streamₓ α), List.nth (approx (succ n) s) n = some (nth n s)
 | 0, s => rfl
 | n+1, s =>
   by 
     rw [approx_succ, add_one, List.nth, nth_approx]
     rfl
 
-theorem append_approx_drop : ∀ n : Nat s : Streamₓ α, append_stream (approx n s) (drop n s) = s :=
+theorem append_approx_drop : ∀ (n : Nat) (s : Streamₓ α), append_stream (approx n s) (drop n s) = s :=
   by 
     intro n 
     induction' n with n' ih
@@ -620,11 +625,11 @@ private theorem cycle_g_cons (a : α) (a₁ : α) (l₁ : List α) (a₀ : α) (
   cycle_g (a, a₁ :: l₁, a₀, l₀) = (a₁, l₁, a₀, l₀) :=
   rfl
 
-def cycle : ∀ l : List α, l ≠ [] → Streamₓ α
+def cycle : ∀ (l : List α), l ≠ [] → Streamₓ α
 | [], h => absurd rfl h
 | List.cons a l, h => corec cycle_f cycle_g (a, l, a, l)
 
-theorem cycle_eq : ∀ l : List α h : l ≠ [], cycle l h = l++ₛcycle l h
+theorem cycle_eq : ∀ (l : List α) (h : l ≠ []), cycle l h = l++ₛcycle l h
 | [], h => absurd rfl h
 | List.cons a l, h =>
   have gen : ∀ l' a', corec cycle_f cycle_g (a', l', a, l) = a' :: l'++ₛcorec cycle_f cycle_g (a, l, a, l) :=
@@ -641,7 +646,7 @@ theorem cycle_eq : ∀ l : List α h : l ≠ [], cycle l h = l++ₛcycle l h
         rfl 
   gen l a
 
-theorem mem_cycle {a : α} {l : List α} : ∀ h : l ≠ [], a ∈ l → a ∈ cycle l h :=
+theorem mem_cycle {a : α} {l : List α} : ∀ (h : l ≠ []), a ∈ l → a ∈ cycle l h :=
   fun h ainl =>
     by 
       rw [cycle_eq]
@@ -660,7 +665,7 @@ theorem tails_eq (s : Streamₓ α) : tails s = tail s :: tails (tail s) :=
   by 
     unfold tails <;> rw [corec_eq] <;> rfl
 
-theorem nth_tails : ∀ n : Nat s : Streamₓ α, nth n (tails s) = drop n (tail s) :=
+theorem nth_tails : ∀ (n : Nat) (s : Streamₓ α), nth n (tails s) = drop n (tail s) :=
   by 
     intro n 
     induction' n with n' ih
@@ -699,7 +704,7 @@ theorem inits_tail (s : Streamₓ α) : inits (tail s) = inits_core [head (tail 
   rfl
 
 theorem cons_nth_inits_core :
-  ∀ a : α n : Nat l : List α s : Streamₓ α, a :: nth n (inits_core l s) = nth n (inits_core (a :: l) s) :=
+  ∀ (a : α) (n : Nat) (l : List α) (s : Streamₓ α), a :: nth n (inits_core l s) = nth n (inits_core (a :: l) s) :=
   by 
     intro a n 
     induction' n with n' ih
@@ -711,7 +716,7 @@ theorem cons_nth_inits_core :
       rw [nth_succ, inits_core_eq, tail_cons, ih, inits_core_eq (a :: l) s]
       rfl
 
-theorem nth_inits : ∀ n : Nat s : Streamₓ α, nth n (inits s) = approx (succ n) s :=
+theorem nth_inits : ∀ (n : Nat) (s : Streamₓ α), nth n (inits s) = approx (succ n) s :=
   by 
     intro n 
     induction' n with n' ih
@@ -756,8 +761,11 @@ theorem composition (g : Streamₓ (β → δ)) (f : Streamₓ (α → β)) (s :
 theorem homomorphism (f : α → β) (a : α) : pure f⊛pure a = pure (f a) :=
   rfl
 
-theorem interchange (fs : Streamₓ (α → β)) (a : α) : fs⊛pure a = (pure fun f : α → β => f a)⊛fs :=
-  rfl
+-- error in Data.Stream.Init: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem interchange
+(fs : stream (α → β))
+(a : α) : «expr = »(«expr ⊛ »(fs, pure a), «expr ⊛ »(pure (λ f : α → β, f a), fs)) :=
+rfl
 
 theorem map_eq_apply (f : α → β) (s : Streamₓ α) : map f s = pure f⊛s :=
   rfl

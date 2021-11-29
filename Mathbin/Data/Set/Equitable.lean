@@ -31,14 +31,14 @@ theorem equitable_on_empty [LE β] [Add β] [HasOne β] (f : α → β) : equita
   fun a _ ha => (Set.not_mem_empty _ ha).elim
 
 theorem equitable_on_iff_exists_le_le_add_one {s : Set α} {f : α → ℕ} :
-  s.equitable_on f ↔ ∃ b, ∀ a _ : a ∈ s, b ≤ f a ∧ f a ≤ b+1 :=
+  s.equitable_on f ↔ ∃ b, ∀ a (_ : a ∈ s), b ≤ f a ∧ f a ≤ b+1 :=
   by 
     refine' ⟨_, fun ⟨b, hb⟩ x y hx hy => (hb x hx).2.trans (add_le_add_right (hb y hy).1 _)⟩
     obtain rfl | ⟨x, hx⟩ := s.eq_empty_or_nonempty
     ·
       simp 
     intro hs 
-    byCases' h : ∀ y _ : y ∈ s, f x ≤ f y
+    byCases' h : ∀ y (_ : y ∈ s), f x ≤ f y
     ·
       exact ⟨f x, fun y hy => ⟨h _ hy, hs hy hx⟩⟩
     pushNeg  at h 
@@ -53,7 +53,7 @@ theorem equitable_on_iff_exists_image_subset_Icc {s : Set α} {f : α → ℕ} :
     simpa only [image_subset_iff] using equitable_on_iff_exists_le_le_add_one
 
 theorem equitable_on_iff_exists_eq_eq_add_one {s : Set α} {f : α → ℕ} :
-  s.equitable_on f ↔ ∃ b, ∀ a _ : a ∈ s, f a = b ∨ f a = b+1 :=
+  s.equitable_on f ↔ ∃ b, ∀ a (_ : a ∈ s), f a = b ∨ f a = b+1 :=
   by 
     simpRw [equitable_on_iff_exists_le_le_add_one, Nat.le_and_le_add_one_iff]
 
@@ -79,12 +79,12 @@ open Set
 namespace Finset
 
 theorem equitable_on_iff_le_le_add_one {s : Finset α} {f : α → ℕ} :
-  equitable_on (s : Set α) f ↔ ∀ a _ : a ∈ s, (∑i in s, f i) / s.card ≤ f a ∧ f a ≤ ((∑i in s, f i) / s.card)+1 :=
+  equitable_on (s : Set α) f ↔ ∀ a (_ : a ∈ s), (∑i in s, f i) / s.card ≤ f a ∧ f a ≤ ((∑i in s, f i) / s.card)+1 :=
   by 
     rw [Set.equitable_on_iff_exists_le_le_add_one]
     refine' ⟨_, fun h => ⟨_, h⟩⟩
     rintro ⟨b, hb⟩
-    byCases' h : ∀ a _ : a ∈ s, f a = b+1
+    byCases' h : ∀ a (_ : a ∈ s), f a = b+1
     ·
       intro a ha 
       rw [h _ ha, sum_const_nat h, Nat.mul_div_cancel_leftₓ _ (card_pos.2 ⟨a, ha⟩)]
@@ -107,7 +107,7 @@ theorem equitable_on_iff_le_le_add_one {s : Finset α} {f : α → ℕ} :
     exact fun _ _ => rfl
 
 theorem equitable_on_iff {s : Finset α} {f : α → ℕ} :
-  equitable_on (s : Set α) f ↔ ∀ a _ : a ∈ s, f a = (∑i in s, f i) / s.card ∨ f a = ((∑i in s, f i) / s.card)+1 :=
+  equitable_on (s : Set α) f ↔ ∀ a (_ : a ∈ s), f a = (∑i in s, f i) / s.card ∨ f a = ((∑i in s, f i) / s.card)+1 :=
   by 
     simpRw [equitable_on_iff_le_le_add_one, Nat.le_and_le_add_one_iff]
 

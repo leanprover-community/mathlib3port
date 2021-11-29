@@ -182,13 +182,13 @@ theorem aleph'_succ {o : Ordinal.{u}} : aleph' o.succ = (aleph' o).succ :=
     (Cardinal.succ_le.2$ aleph'_lt.2$ Ordinal.lt_succ_self _)
 
 @[simp]
-theorem aleph'_nat : ∀ n : ℕ, aleph' n = n
+theorem aleph'_nat : ∀ (n : ℕ), aleph' n = n
 | 0 => aleph'_zero
 | n+1 =>
   show aleph' (Ordinal.succ n) = n.succ by 
     rw [aleph'_succ, aleph'_nat, nat_succ]
 
-theorem aleph'_le_of_limit {o : Ordinal.{u}} (l : o.is_limit) {c} : aleph' o ≤ c ↔ ∀ o' _ : o' < o, aleph' o' ≤ c :=
+theorem aleph'_le_of_limit {o : Ordinal.{u}} (l : o.is_limit) {c} : aleph' o ≤ c ↔ ∀ o' (_ : o' < o), aleph' o' ≤ c :=
   ⟨fun h o' h' => le_transₓ (aleph'_le.2$ le_of_ltₓ h') h,
     fun h =>
       by 
@@ -670,16 +670,15 @@ theorem powerlt_omega_le (c : Cardinal) : c ^< ω ≤ max c ω :=
 /-! ### Computing cardinality of various types -/
 
 
-theorem mk_list_eq_mk (α : Type u) [Infinite α] : # (List α) = # α :=
-  have H1 : ω ≤ # α := omega_le_mk α 
-  Eq.symm$
-    le_antisymmₓ ⟨⟨fun x => [x], fun x y H => (List.cons.injₓ H).1⟩⟩$
-      calc # (List α) = Sum fun n : ℕ => # α^(n : Cardinal.{u}) := mk_list_eq_sum_pow α 
-        _ ≤ Sum fun n : ℕ => # α := sum_le_sum _ _$ fun n => pow_le H1$ nat_lt_omega n 
-        _ = # α :=
-        by 
-          simp [H1]
-        
+-- error in SetTheory.CardinalOrdinal: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem mk_list_eq_mk (α : Type u) [infinite α] : «expr = »(«expr#»() (list α), «expr#»() α) :=
+have H1 : «expr ≤ »(exprω(), «expr#»() α) := omega_le_mk α,
+«expr $ »(eq.symm, «expr $ »(le_antisymm ⟨⟨λ x, «expr[ , ]»([x]), λ x y H, (list.cons.inj H).1⟩⟩, calc
+    «expr = »(«expr#»() (list α), sum (λ
+      n : exprℕ(), «expr ^ »(«expr#»() α, (n : cardinal.{u})))) : mk_list_eq_sum_pow α
+    «expr ≤ »(..., sum (λ
+      n : exprℕ(), «expr#»() α)) : «expr $ »(sum_le_sum _ _, λ n, «expr $ »(pow_le H1, nat_lt_omega n))
+    «expr = »(..., «expr#»() α) : by simp [] [] [] ["[", expr H1, "]"] [] []))
 
 theorem mk_finset_eq_mk (α : Type u) [Infinite α] : # (Finset α) = # α :=
   Eq.symm$
@@ -824,7 +823,7 @@ begin
 end
 
 theorem extend_function_finite {α β : Type _} [Fintype α] {s : Set α} (f : s ↪ β) (h : Nonempty (α ≃ β)) :
-  ∃ g : α ≃ β, ∀ x : s, g x = f x :=
+  ∃ g : α ≃ β, ∀ (x : s), g x = f x :=
   by 
     apply extend_function f 
     cases' id h with g 

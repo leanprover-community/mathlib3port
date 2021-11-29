@@ -14,10 +14,10 @@ variable{C : Type u₁}[category.{v₁} C]{D : Type u₂}[category.{v₂} D]
 /-- A unbundled functor. -/
 class functorial(F : C → D) : Type max v₁ v₂ u₁ u₂ where 
   map : ∀ {X Y : C}, (X ⟶ Y) → (F X ⟶ F Y)
-  map_id' : ∀ X : C, map (𝟙 X) = 𝟙 (F X) :=  by 
+  map_id' : ∀ (X : C), map (𝟙 X) = 𝟙 (F X) :=  by 
   runTac 
     obviously 
-  map_comp' : ∀ {X Y Z : C} f : X ⟶ Y g : Y ⟶ Z, map (f ≫ g) = map f ≫ map g :=  by 
+  map_comp' : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), map (f ≫ g) = map f ≫ map g :=  by 
   runTac 
     obviously
 

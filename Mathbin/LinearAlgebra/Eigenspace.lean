@@ -290,7 +290,7 @@ end
     We use the eigenvalues as indexing set to ensure that there is only one eigenvector for each
     eigenvalue in the image of `xs`. -/
 theorem eigenvectors_linear_independent (f : End K V) (μs : Set K) (xs : μs → V)
-  (h_eigenvec : ∀ μ : μs, f.has_eigenvector μ (xs μ)) : LinearIndependent K xs :=
+  (h_eigenvec : ∀ (μ : μs), f.has_eigenvector μ (xs μ)) : LinearIndependent K xs :=
   CompleteLattice.Independent.linear_independent _
     (f.eigenspaces_independent.comp (coeₓ : μs → K) Subtype.coe_injective) (fun μ => (h_eigenvec μ).1)
     fun μ => (h_eigenvec μ).2
@@ -414,7 +414,7 @@ theorem generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le [FiniteDi
 /-- If `f` maps a subspace `p` into itself, then the generalized eigenspace of the restriction
     of `f` to `p` is the part of the generalized eigenspace of `f` that lies in `p`. -/
 theorem generalized_eigenspace_restrict (f : End R M) (p : Submodule R M) (k : ℕ) (μ : R)
-  (hfp : ∀ x : M, x ∈ p → f x ∈ p) :
+  (hfp : ∀ (x : M), x ∈ p → f x ∈ p) :
   generalized_eigenspace (LinearMap.restrict f hfp) μ k = Submodule.comap p.subtype (f.generalized_eigenspace μ k) :=
   by 
     simp only [generalized_eigenspace, PreorderHom.coe_fun_mk, ←LinearMap.ker_comp]
@@ -428,7 +428,7 @@ theorem generalized_eigenspace_restrict (f : End R M) (p : Submodule R M) (k : �
 
 /-- If `p` is an invariant submodule of an endomorphism `f`, then the `μ`-eigenspace of the
 restriction of `f` to `p` is a submodule of the `μ`-eigenspace of `f`. -/
-theorem eigenspace_restrict_le_eigenspace (f : End R M) {p : Submodule R M} (hfp : ∀ x _ : x ∈ p, f x ∈ p) (μ : R) :
+theorem eigenspace_restrict_le_eigenspace (f : End R M) {p : Submodule R M} (hfp : ∀ x (_ : x ∈ p), f x ∈ p) (μ : R) :
   (eigenspace (f.restrict hfp) μ).map p.subtype ≤ f.eigenspace μ :=
   by 
     rintro a ⟨x, hx, rfl⟩
@@ -454,7 +454,7 @@ end
 
 /-- If an invariant subspace `p` of an endomorphism `f` is disjoint from the `μ`-eigenspace of `f`,
 then the restriction of `f` to `p` has trivial `μ`-eigenspace. -/
-theorem eigenspace_restrict_eq_bot {f : End R M} {p : Submodule R M} (hfp : ∀ x _ : x ∈ p, f x ∈ p) {μ : R}
+theorem eigenspace_restrict_eq_bot {f : End R M} {p : Submodule R M} (hfp : ∀ x (_ : x ∈ p), f x ∈ p) {μ : R}
   (hμp : Disjoint (f.eigenspace μ) p) : eigenspace (f.restrict hfp) μ = ⊥ :=
   by 
     rw [eq_bot_iff]

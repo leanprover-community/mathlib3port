@@ -42,9 +42,9 @@ structure PicardLindelof(E : Type _)[NormedGroup E][NormedSpace ℝ E] where
   t₀ : Icc t_min t_max 
   x₀ : E
   (c r l :  ℝ≥0 )
-  lipschitz' : ∀ t _ : t ∈ Icc t_min t_max, LipschitzOnWith L (to_fun t) (closed_ball x₀ R)
-  cont : ∀ x _ : x ∈ closed_ball x₀ R, ContinuousOn (fun t => to_fun t x) (Icc t_min t_max)
-  norm_le' : ∀ t _ : t ∈ Icc t_min t_max x _ : x ∈ closed_ball x₀ R, ∥to_fun t x∥ ≤ C 
+  lipschitz' : ∀ t (_ : t ∈ Icc t_min t_max), LipschitzOnWith L (to_fun t) (closed_ball x₀ R)
+  cont : ∀ x (_ : x ∈ closed_ball x₀ R), ContinuousOn (fun t => to_fun t x) (Icc t_min t_max)
+  norm_le' : ∀ t (_ : t ∈ Icc t_min t_max) x (_ : x ∈ closed_ball x₀ R), ∥to_fun t x∥ ≤ C 
   C_mul_le_R : ((C : ℝ)*max (t_max - t₀) (t₀ - t_min)) ≤ R
 
 namespace PicardLindelof
@@ -351,11 +351,11 @@ end PicardLindelof
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
 theorem exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous [CompleteSpace E] [second_countable_topology E]
   {v : ℝ → E → E} {t_min t₀ t_max : ℝ} (ht₀ : t₀ ∈ Icc t_min t_max) (x₀ : E) {C R : ℝ} (hR : 0 ≤ R) {L :  ℝ≥0 }
-  (Hlip : ∀ t _ : t ∈ Icc t_min t_max, LipschitzOnWith L (v t) (closed_ball x₀ R))
-  (Hcont : ∀ x _ : x ∈ closed_ball x₀ R, ContinuousOn (fun t => v t x) (Icc t_min t_max))
-  (Hnorm : ∀ t _ : t ∈ Icc t_min t_max x _ : x ∈ closed_ball x₀ R, ∥v t x∥ ≤ C)
+  (Hlip : ∀ t (_ : t ∈ Icc t_min t_max), LipschitzOnWith L (v t) (closed_ball x₀ R))
+  (Hcont : ∀ x (_ : x ∈ closed_ball x₀ R), ContinuousOn (fun t => v t x) (Icc t_min t_max))
+  (Hnorm : ∀ t (_ : t ∈ Icc t_min t_max) x (_ : x ∈ closed_ball x₀ R), ∥v t x∥ ≤ C)
   (Hmul_le : (C*max (t_max - t₀) (t₀ - t_min)) ≤ R) :
-  ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t _ : t ∈ Icc t_min t_max, HasDerivWithinAt f (v t (f t)) (Icc t_min t_max) t :=
+  ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t (_ : t ∈ Icc t_min t_max), HasDerivWithinAt f (v t (f t)) (Icc t_min t_max) t :=
   by 
     lift C to  ℝ≥0  using (norm_nonneg _).trans$ Hnorm t₀ ht₀ x₀ (mem_closed_ball_self hR)
     lift R to  ℝ≥0  using hR 

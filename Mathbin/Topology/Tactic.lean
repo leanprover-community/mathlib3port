@@ -29,9 +29,8 @@ unsafe def continuity : user_attribute :=
 
 attribute [continuity] continuous_id continuous_const
 
-@[continuity]
-theorem continuous_id' {α : Type _} [TopologicalSpace α] : Continuous fun a : α => a :=
-  continuous_id
+-- error in Topology.Tactic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[continuity #[]] theorem continuous_id' {α : Type*} [topological_space α] : continuous (λ a : α, a) := continuous_id
 
 namespace Tactic
 

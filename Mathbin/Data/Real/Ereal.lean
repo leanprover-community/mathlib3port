@@ -114,7 +114,7 @@ directly will unfold `ereal` to `option` which is undesirable.
 
 When working in term mode, note that pattern matching can be used directly. -/
 @[elab_as_eliminator]
-protected def rec {C : Ereal → Sort _} (h_bot : C ⊥) (h_real : ∀ a : ℝ, C a) (h_top : C ⊤) : ∀ a : Ereal, C a
+protected def rec {C : Ereal → Sort _} (h_bot : C ⊥) (h_real : ∀ (a : ℝ), C a) (h_top : C ⊤) : ∀ (a : Ereal), C a
 | ⊥ => h_bot
 | (a : ℝ) => h_real a
 | ⊤ => h_top
@@ -252,7 +252,7 @@ theorem coe_to_real_le {x : Ereal} (h : x ≠ ⊥) : «expr↑ » x.to_real ≤ 
     ·
       simp only [le_reflₓ, coe_to_real h' h]
 
-theorem eq_top_iff_forall_lt (x : Ereal) : x = ⊤ ↔ ∀ y : ℝ, (y : Ereal) < x :=
+theorem eq_top_iff_forall_lt (x : Ereal) : x = ⊤ ↔ ∀ (y : ℝ), (y : Ereal) < x :=
   by 
     split 
     ·
@@ -263,7 +263,7 @@ theorem eq_top_iff_forall_lt (x : Ereal) : x = ⊤ ↔ ∀ y : ℝ, (y : Ereal) 
       intro h 
       exact ⟨x.to_real, le_coe_to_real h⟩
 
-theorem eq_bot_iff_forall_lt (x : Ereal) : x = ⊥ ↔ ∀ y : ℝ, x < (y : Ereal) :=
+theorem eq_bot_iff_forall_lt (x : Ereal) : x = ⊥ ↔ ∀ (y : ℝ), x < (y : Ereal) :=
   by 
     split 
     ·
@@ -362,7 +362,7 @@ theorem coe_ennreal_ne_bot (x : ℝ≥0∞) : (x : Ereal) ≠ ⊥ :=
   (bot_lt_coe_ennreal x).ne'
 
 @[simp, normCast]
-theorem coe_ennreal_add : ∀ x y : Ennreal, ((x+y : ℝ≥0∞) : Ereal) = x+y
+theorem coe_ennreal_add : ∀ (x y : Ennreal), ((x+y : ℝ≥0∞) : Ereal) = x+y
 | ⊤, y => rfl
 | x, ⊤ =>
   by 
@@ -376,7 +376,7 @@ theorem coe_ennreal_zero : ((0 : ℝ≥0∞) : Ereal) = 0 :=
 /-! ### Order -/
 
 
-theorem exists_rat_btwn_of_lt : ∀ {a b : Ereal} hab : a < b, ∃ x : ℚ, a < (x : ℝ) ∧ ((x : ℝ) : Ereal) < b
+theorem exists_rat_btwn_of_lt : ∀ {a b : Ereal} (hab : a < b), ∃ x : ℚ, a < (x : ℝ) ∧ ((x : ℝ) : Ereal) < b
 | ⊤, b, h => (not_top_lt h).elim
 | (a : ℝ), ⊥, h => (lt_irreflₓ _ ((bot_lt_coe a).trans h)).elim
 | (a : ℝ), (b : ℝ), h =>
@@ -450,7 +450,8 @@ theorem bot_add_coe (x : ℝ) : ((⊥ : Ereal)+x) = ⊥ :=
 theorem coe_add_bot (x : ℝ) : ((x : Ereal)+⊥) = ⊥ :=
   rfl
 
-theorem to_real_add : ∀ {x y : Ereal} hx : x ≠ ⊤ h'x : x ≠ ⊥ hy : y ≠ ⊤ h'y : y ≠ ⊥, to_real (x+y) = to_real x+to_real y
+theorem to_real_add :
+  ∀ {x y : Ereal} (hx : x ≠ ⊤) (h'x : x ≠ ⊥) (hy : y ≠ ⊤) (h'y : y ≠ ⊥), to_real (x+y) = to_real x+to_real y
 | ⊥, y, hx, h'x, hy, h'y => (h'x rfl).elim
 | ⊤, y, hx, h'x, hy, h'y => (hx rfl).elim
 | x, ⊤, hx, h'x, hy, h'y => (hy rfl).elim
@@ -548,7 +549,7 @@ theorem neg_zero : -(0 : Ereal) = 0 :=
 
 /-- `- -a = a` on `ereal`. -/
 @[simp]
-protected theorem neg_negₓ : ∀ a : Ereal, - -a = a
+protected theorem neg_negₓ : ∀ (a : Ereal), - -a = a
 | ⊥ => rfl
 | ⊤ => rfl
 | (a : ℝ) =>
@@ -607,7 +608,7 @@ theorem neg_eg_zero_iff {x : Ereal} : -x = 0 ↔ x = 0 :=
     simp [eq_comm]
 
 /-- if `-a ≤ b` then `-b ≤ a` on `ereal`. -/
-protected theorem neg_le_of_neg_le : ∀ {a b : Ereal} h : -a ≤ b, -b ≤ a
+protected theorem neg_le_of_neg_le : ∀ {a b : Ereal} (h : -a ≤ b), -b ≤ a
 | ⊥, ⊥, h => h
 | ⊥, some b, h =>
   by 

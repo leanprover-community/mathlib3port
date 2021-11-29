@@ -171,7 +171,7 @@ end
 
 theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
   (∃ s : ℕ → Set α, (∀ n, p (s n)) ∧ (⋃n, s n) = univ) ↔
-    ∃ S : Set (Set α), countable S ∧ (∀ s _ : s ∈ S, p s) ∧ ⋃₀S = univ :=
+    ∃ S : Set (Set α), countable S ∧ (∀ s (_ : s ∈ S), p s) ∧ ⋃₀S = univ :=
   exists_seq_supr_eq_top_iff_countable h
 
 theorem countable_of_injective_of_countable_image {s : Set α} {f : α → β} (hf : inj_on f s) (hs : countable (f '' s)) :
@@ -195,11 +195,11 @@ begin
   exact [expr countable_Union (by simpa [] [] [] [] [] ["using", expr ht])]
 end
 
-theorem countable.sUnion {s : Set (Set α)} (hs : countable s) (h : ∀ a _ : a ∈ s, countable a) : countable (⋃₀s) :=
+theorem countable.sUnion {s : Set (Set α)} (hs : countable s) (h : ∀ a (_ : a ∈ s), countable a) : countable (⋃₀s) :=
   by 
     rw [sUnion_eq_bUnion] <;> exact hs.bUnion h
 
-theorem countable_Union_Prop {p : Prop} {t : p → Set β} (ht : ∀ h : p, countable (t h)) : countable (⋃h : p, t h) :=
+theorem countable_Union_Prop {p : Prop} {t : p → Set β} (ht : ∀ (h : p), countable (t h)) : countable (⋃h : p, t h) :=
   by 
     byCases' p <;> simp [h, ht]
 
@@ -234,27 +234,39 @@ theorem countable_is_top (α : Type _) [PartialOrderₓ α] : countable { x:α |
 theorem countable_is_bot (α : Type _) [PartialOrderₓ α] : countable { x:α | IsBot x } :=
   (finite_is_bot α).Countable
 
+-- error in Data.Set.Countable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The set of finite subsets of a countable set is countable. -/
-theorem countable_set_of_finite_subset {s : Set α} : countable s → countable { t | finite t ∧ t ⊆ s }
-| ⟨h⟩ =>
-  by 
-    skip 
-    refine' countable.mono _ (countable_range fun t : Finset s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })
-    rintro t ⟨⟨ht⟩, ts⟩
-    skip 
-    refine' ⟨finset.univ.map (embedding_of_subset _ _ ts), Set.ext$ fun a => _⟩
-    suffices  : a ∈ s ∧ a ∈ t ↔ a ∈ t
-    ·
-      simpa 
-    exact ⟨And.right, fun h => ⟨ts h, h⟩⟩
+theorem countable_set_of_finite_subset {s : set α} : countable s → countable {t | «expr ∧ »(finite t, «expr ⊆ »(t, s))}
+| ⟨h⟩ := begin
+  resetI,
+  refine [expr countable.mono _ (countable_range (λ
+     t : finset s, {a | «expr∃ , »((h : «expr ∈ »(a, s)), «expr ∈ »(subtype.mk a h, t))}))],
+  rintro [ident t, "⟨", "⟨", ident ht, "⟩", ",", ident ts, "⟩"],
+  resetI,
+  refine [expr ⟨finset.univ.map (embedding_of_subset _ _ ts), «expr $ »(set.ext, λ a, _)⟩],
+  suffices [] [":", expr «expr ↔ »(«expr ∧ »(«expr ∈ »(a, s), «expr ∈ »(a, t)), «expr ∈ »(a, t))],
+  by simpa [] [] [] [] [] [],
+  exact [expr ⟨and.right, λ h, ⟨ts h, h⟩⟩]
+end
 
-theorem countable_pi {π : α → Type _} [Fintype α] {s : ∀ a, Set (π a)} (hs : ∀ a, countable (s a)) :
-  countable { f:∀ a, π a | ∀ a, f a ∈ s a } :=
-  countable.mono
-      (show { f:∀ a, π a | ∀ a, f a ∈ s a } ⊆ range fun f : ∀ a, s a => fun a => (f a).1 from
-        fun f hf => ⟨fun a => ⟨f a, hf a⟩, funext$ fun a => rfl⟩)$
-    have  : Trunc (Encodable (∀ a : α, s a)) := @Encodable.fintypePi α _ _ _ fun a => (hs a).toEncodable 
-    Trunc.induction_on this$ fun h => @countable_range _ _ h _
+-- error in Data.Set.Countable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem countable_pi
+{π : α → Type*}
+[fintype α]
+{s : ∀ a, set (π a)}
+(hs : ∀ a, countable (s a)) : countable {f : ∀ a, π a | ∀ a, «expr ∈ »(f a, s a)} :=
+«expr $ »(countable.mono (show «expr ⊆ »({f : ∀
+   a, π a | ∀
+   a, «expr ∈ »(f a, s a)}, range (λ
+    f : ∀
+    a, s a, λ
+    a, (f a).1)), from assume
+  f
+  hf, ⟨λ
+   a, ⟨f a, hf a⟩, «expr $ »(funext, assume
+    a, rfl)⟩), have trunc (encodable (∀
+   a : α, s a)), from @encodable.fintype_pi α _ _ _ (assume a, (hs a).to_encodable),
+ «expr $ »(trunc.induction_on this, assume h, @countable_range _ _ h _))
 
 -- error in Data.Set.Countable: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 protected

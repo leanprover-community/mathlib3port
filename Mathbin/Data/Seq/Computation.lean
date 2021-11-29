@@ -116,7 +116,7 @@ theorem destruct_ret (a : α) : destruct (return a) = Sum.inl a :=
   rfl
 
 @[simp]
-theorem destruct_think : ∀ s : Computation α, destruct (think s) = Sum.inr s
+theorem destruct_think : ∀ (s : Computation α), destruct (think s) = Sum.inr s
 | ⟨f, al⟩ => rfl
 
 @[simp]
@@ -622,13 +622,14 @@ theorem destruct_map (f : α → β) s : destruct (map f s) = lmap f (rmap (map 
   simp [] [] [] ["[", expr e, ",", expr stream.map_id, "]"] [] []
 end
 
-theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Computation α, map (g ∘ f) s = map g (map f s)
-| ⟨s, al⟩ =>
-  by 
-    apply Subtype.eq <;> dsimp [map]
-    rw [Streamₓ.map_map]
-    apply congr_argₓ fun f : _ → Option γ => Streamₓ.map f s 
-    ext ⟨⟩ <;> rfl
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem map_comp (f : α → β) (g : β → γ) : ∀ s : computation α, «expr = »(map «expr ∘ »(g, f) s, map g (map f s))
+| ⟨s, al⟩ := begin
+  apply [expr subtype.eq]; dsimp [] ["[", expr map, "]"] [] [],
+  rw [expr stream.map_map] [],
+  apply [expr congr_arg (λ f : _ → option γ, stream.map f s)],
+  ext [] ["⟨", "⟩"] []; refl
+end
 
 @[simp]
 theorem ret_bind a (f : α → Computation β) : bind (return a) f = f a :=
@@ -673,35 +674,34 @@ theorem bind_ret (f : α → β) s : bind s (return ∘ f) = map f s :=
     ·
       exact Or.inr ⟨s, rfl, rfl⟩
 
-@[simp]
-theorem bind_ret' (s : Computation α) : bind s return = s :=
-  by 
-    rw [bind_ret] <;> change fun x : α => x with @id α <;> rw [map_id]
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem bind_ret' (s : computation α) : «expr = »(bind s return, s) :=
+by rw [expr bind_ret] []; change [expr λ x : α, x] ["with", expr @id α] []; rw [expr map_id] []
 
+-- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem bind_assoc (s : Computation α) (f : α → Computation β) (g : β → Computation γ) :
-  bind (bind s f) g = bind s fun x : α => bind (f x) g :=
-  by 
-    apply eq_of_bisim fun c₁ c₂ => c₁ = c₂ ∨ ∃ s, c₁ = bind (bind s f) g ∧ c₂ = bind s fun x : α => bind (f x) g
-    ·
-      intro c₁ c₂ h 
-      exact
-        match c₁, c₂, h with 
-        | _, _, Or.inl (Eq.refl c) =>
-          by 
-            cases' destruct c with b cb <;> simp 
-        | _, _, Or.inr ⟨s, rfl, rfl⟩ =>
-          by 
-            apply cases_on s <;> intro s <;> simp 
-            ·
-              generalize f s = fs 
-              apply cases_on fs <;> intro t <;> simp 
-              ·
-                cases' destruct (g t) with b cb <;> simp 
-            ·
-              exact Or.inr ⟨s, rfl, rfl⟩
-    ·
-      exact Or.inr ⟨s, rfl, rfl⟩
+theorem bind_assoc
+(s : computation α)
+(f : α → computation β)
+(g : β → computation γ) : «expr = »(bind (bind s f) g, bind s (λ x : α, bind (f x) g)) :=
+begin
+  apply [expr eq_of_bisim (λ
+    c₁
+    c₂, «expr ∨ »(«expr = »(c₁, c₂), «expr∃ , »((s), «expr ∧ »(«expr = »(c₁, bind (bind s f) g), «expr = »(c₂, bind s (λ
+         x : α, bind (f x) g))))))],
+  { intros [ident c₁, ident c₂, ident h],
+    exact [expr match c₁, c₂, h with
+     | _, _, or.inl (eq.refl c) := by cases [expr destruct c] ["with", ident b, ident cb]; simp [] [] [] [] [] []
+     | ._, ._, or.inr ⟨s, rfl, rfl⟩ := begin
+       apply [expr cases_on s]; intros [ident s]; simp [] [] [] [] [] [],
+       { generalize [] [":"] [expr «expr = »(f s, fs)],
+         apply [expr cases_on fs]; intros [ident t]; simp [] [] [] [] [] [],
+         { cases [expr destruct (g t)] ["with", ident b, ident cb]; simp [] [] [] [] [] [] } },
+       { exact [expr or.inr ⟨s, rfl, rfl⟩] }
+     end
+     end] },
+  { exact [expr or.inr ⟨s, rfl, rfl⟩] }
+end
 
 -- error in Data.Seq.Computation: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem results_bind
@@ -792,11 +792,11 @@ theorem return_def a : (_root_.return a : Computation α) = return a :=
   rfl
 
 @[simp]
-theorem map_ret' {α β} : ∀ f : α → β a, f <$> return a = return (f a) :=
+theorem map_ret' {α β} : ∀ (f : α → β) a, f <$> return a = return (f a) :=
   map_ret
 
 @[simp]
-theorem map_think' {α β} : ∀ f : α → β s, f <$> think s = think (f <$> s) :=
+theorem map_think' {α β} : ∀ (f : α → β) s, f <$> think s = think (f <$> s) :=
   map_think
 
 theorem mem_map (f : α → β) {a} {s : Computation α} (m : a ∈ s) : f a ∈ map f s :=
@@ -1095,8 +1095,8 @@ theorem lift_rel_think_right (R : α → β → Prop) (ca : Computation α) (cb 
   by 
     rw [←lift_rel.swap R, ←lift_rel.swap R] <;> apply lift_rel_think_left
 
-theorem lift_rel_mem_cases {R : α → β → Prop} {ca cb} (Ha : ∀ a _ : a ∈ ca, lift_rel R ca cb)
-  (Hb : ∀ b _ : b ∈ cb, lift_rel R ca cb) : lift_rel R ca cb :=
+theorem lift_rel_mem_cases {R : α → β → Prop} {ca cb} (Ha : ∀ a (_ : a ∈ ca), lift_rel R ca cb)
+  (Hb : ∀ b (_ : b ∈ cb), lift_rel R ca cb) : lift_rel R ca cb :=
   ⟨fun a ma => (Ha _ ma).left ma, fun b mb => (Hb _ mb).right mb⟩
 
 theorem lift_rel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb' : Computation β} (ha : ca ~ ca')

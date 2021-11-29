@@ -45,12 +45,12 @@ include V
 nontrivial weighted subtractions (where the sum of weights is 0) are
 0. -/
 def AffineIndependent (p : ι → P) : Prop :=
-  ∀ s : Finset ι w : ι → k, (∑i in s, w i) = 0 → s.weighted_vsub p w = (0 : V) → ∀ i _ : i ∈ s, w i = 0
+  ∀ (s : Finset ι) (w : ι → k), (∑i in s, w i) = 0 → s.weighted_vsub p w = (0 : V) → ∀ i (_ : i ∈ s), w i = 0
 
 /-- The definition of `affine_independent`. -/
 theorem affine_independent_def (p : ι → P) :
   AffineIndependent k p ↔
-    ∀ s : Finset ι w : ι → k, (∑i in s, w i) = 0 → s.weighted_vsub p w = (0 : V) → ∀ i _ : i ∈ s, w i = 0 :=
+    ∀ (s : Finset ι) (w : ι → k), (∑i in s, w i) = 0 → s.weighted_vsub p w = (0 : V) → ∀ i (_ : i ∈ s), w i = 0 :=
   Iff.rfl
 
 /-- A family with at most one point is affinely independent. -/
@@ -61,7 +61,7 @@ theorem affine_independent_of_subsingleton [Subsingleton ι] (p : ι → P) : Af
 only if no nontrivial weighted subtractions over `finset.univ` (where
 the sum of the weights is 0) are 0. -/
 theorem affine_independent_iff_of_fintype [Fintype ι] (p : ι → P) :
-  AffineIndependent k p ↔ ∀ w : ι → k, (∑i, w i) = 0 → Finset.univ.weightedVsub p w = (0 : V) → ∀ i, w i = 0 :=
+  AffineIndependent k p ↔ ∀ (w : ι → k), (∑i, w i) = 0 → Finset.univ.weightedVsub p w = (0 : V) → ∀ i, w i = 0 :=
   by 
     split 
     ·
@@ -129,7 +129,7 @@ begin
     exact [expr finset.eq_zero_of_sum_eq_zero hw h2b i hi] }
 end
 
--- error in LinearAlgebra.AffineSpace.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in LinearAlgebra.AffineSpace.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- A set is affinely independent if and only if the differences from
 a base point in that set are linearly independent. -/
 theorem affine_independent_set_iff_linear_independent_vsub
@@ -219,6 +219,28 @@ begin
     simpa [] [] [] ["[", expr w2, "]"] [] ["using", expr hws] }
 end
 
+-- error in LinearAlgebra.AffineSpace.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- A finite family is affinely independent if and only if any affine
+combinations (with sum of weights 1) that evaluate to the same point are equal. -/
+theorem affine_independent_iff_eq_of_fintype_affine_combination_eq
+[fintype ι]
+(p : ι → P) : «expr ↔ »(affine_independent k p, ∀
+ w1
+ w2 : ι → k, «expr = »(«expr∑ , »((i), w1 i), 1) → «expr = »(«expr∑ , »((i), w2 i), 1) → «expr = »(finset.univ.affine_combination p w1, finset.univ.affine_combination p w2) → «expr = »(w1, w2)) :=
+begin
+  rw [expr affine_independent_iff_indicator_eq_of_affine_combination_eq] [],
+  split,
+  { intros [ident h, ident w1, ident w2, ident hw1, ident hw2, ident hweq],
+    simpa [] [] ["only"] ["[", expr set.indicator_univ, ",", expr finset.coe_univ, "]"] [] ["using", expr h _ _ w1 w2 hw1 hw2 hweq] },
+  { intros [ident h, ident s1, ident s2, ident w1, ident w2, ident hw1, ident hw2, ident hweq],
+    have [ident hw1'] [":", expr «expr = »(«expr∑ , »((i), (s1 : set ι).indicator w1 i), 1)] [],
+    { rwa [expr set.sum_indicator_subset _ (finset.subset_univ s1)] ["at", ident hw1] },
+    have [ident hw2'] [":", expr «expr = »(«expr∑ , »((i), (s2 : set ι).indicator w2 i), 1)] [],
+    { rwa [expr set.sum_indicator_subset _ (finset.subset_univ s2)] ["at", ident hw2] },
+    rw ["[", expr finset.affine_combination_indicator_subset w1 p (finset.subset_univ s1), ",", expr finset.affine_combination_indicator_subset w2 p (finset.subset_univ s2), "]"] ["at", ident hweq],
+    exact [expr h _ _ hw1' hw2' hweq] }
+end
+
 variable{k}
 
 /-- If we single out one member of an affine-independent family of points and affinely transport
@@ -277,11 +299,15 @@ begin
   rw ["[", "<-", expr ha fs' w' hw's hs' (f i0) ((finset.mem_map' _).2 hi0), ",", expr hw', "]"] []
 end
 
+-- error in LinearAlgebra.AffineSpace.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a family is affinely independent, so is any subfamily indexed
 by a subtype of the index type. -/
-protected theorem AffineIndependent.subtype {p : ι → P} (ha : AffineIndependent k p) (s : Set ι) :
-  AffineIndependent k fun i : s => p i :=
-  ha.comp_embedding (embedding.subtype _)
+protected
+theorem affine_independent.subtype
+{p : ι → P}
+(ha : affine_independent k p)
+(s : set ι) : affine_independent k (λ i : s, p i) :=
+ha.comp_embedding (embedding.subtype _)
 
 -- error in LinearAlgebra.AffineSpace.Independent: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- If an indexed family of points is affinely independent, so is the
@@ -468,7 +494,7 @@ theorem exists_nontrivial_relation_sum_zero_of_not_affine_ind {t : Finset V} (h 
     obtain ⟨w, hw, hwt, i, hi⟩ := h 
     simp only [Finset.weighted_vsub_eq_weighted_vsub_of_point_of_sum_eq_zero _ w (coeₓ : t → V) hw 0, vsub_eq_sub,
       Finset.weighted_vsub_of_point_apply, sub_zero] at hwt 
-    let f : ∀ x : V, x ∈ t → k := fun x hx => w ⟨x, hx⟩
+    let f : ∀ (x : V), x ∈ t → k := fun x hx => w ⟨x, hx⟩
     refine'
       ⟨fun x => if hx : x ∈ t then f x hx else (0 : k), _, _,
         by 

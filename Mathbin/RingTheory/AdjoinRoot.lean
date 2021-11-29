@@ -70,7 +70,7 @@ def mk : Polynomial R →+* AdjoinRoot f :=
   Ideal.Quotient.mk _
 
 @[elab_as_eliminator]
-theorem induction_on {C : AdjoinRoot f → Prop} (x : AdjoinRoot f) (ih : ∀ p : Polynomial R, C (mk f p)) : C x :=
+theorem induction_on {C : AdjoinRoot f → Prop} (x : AdjoinRoot f) (ih : ∀ (p : Polynomial R), C (mk f p)) : C x :=
   Quotientₓ.induction_on' x ih
 
 /-- Embedding of the original ring `R` into `adjoin_root f`. -/
@@ -262,14 +262,14 @@ variable[CommRingₓ R]{g : Polynomial R}
 theorem is_integral_root' (hg : g.monic) : IsIntegral R (root g) :=
   ⟨g, hg, eval₂_root g⟩
 
+-- error in RingTheory.AdjoinRoot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `adjoin_root.mod_by_monic_hom` sends the equivalence class of `f` mod `g` to `f %ₘ g`.
 
 This is a well-defined right inverse to `adjoin_root.mk`, see `adjoin_root.mk_left_inverse`. -/
-def mod_by_monic_hom [Nontrivial R] (hg : g.monic) : AdjoinRoot g →ₗ[R] Polynomial R :=
-  (Submodule.liftq _ (Polynomial.modByMonicHom hg)
-        fun f hf : f ∈ (Ideal.span {g}).restrictScalars R =>
-          (mem_ker_mod_by_monic hg).mpr (Ideal.mem_span_singleton.mp hf)).comp$
-    (Submodule.Quotient.restrictScalarsEquiv R (Ideal.span {g} : Ideal (Polynomial R))).symm.toLinearMap
+def mod_by_monic_hom [nontrivial R] (hg : g.monic) : «expr →ₗ[ ] »(adjoin_root g, R, polynomial R) :=
+«expr $ »((submodule.liftq _ (polynomial.mod_by_monic_hom hg) (λ
+   (f)
+   (hf : «expr ∈ »(f, (ideal.span {g}).restrict_scalars R)), (mem_ker_mod_by_monic hg).mpr (ideal.mem_span_singleton.mp hf))).comp, (submodule.quotient.restrict_scalars_equiv R (ideal.span {g} : ideal (polynomial R))).symm.to_linear_map)
 
 @[simp]
 theorem mod_by_monic_hom_mk [Nontrivial R] (hg : g.monic) (f : Polynomial R) : mod_by_monic_hom hg (mk g f) = f %ₘ g :=
@@ -369,7 +369,7 @@ begin
   { rwa ["[", expr ne.def, ",", expr C_eq_zero, ",", expr inv_eq_zero, ",", expr leading_coeff_eq_zero, "]"] [] }
 end
 
--- error in RingTheory.AdjoinRoot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in RingTheory.AdjoinRoot: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The elements `1, root f, ..., root f ^ (d - 1)` form a basis for `adjoin_root f`,
 where `f` is an irreducible polynomial over a field of degree `d`. -/
 def power_basis_aux (hf : «expr ≠ »(f, 0)) : basis (fin f.nat_degree) K (adjoin_root f) :=

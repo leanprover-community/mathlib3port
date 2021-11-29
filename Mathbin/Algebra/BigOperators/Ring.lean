@@ -109,55 +109,37 @@ end
 
 open_locale Classical
 
+-- error in Algebra.BigOperators.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The product of `f a + g a` over all of `s` is the sum
   over the powerset of `s` of the product of `f` over a subset `t` times
   the product of `g` over the complement of `t`  -/
-theorem prod_add (f g : α → β) (s : Finset α) :
-  (∏a in s, f a+g a) = ∑t in s.powerset, (∏a in t, f a)*∏a in s \ t, g a :=
-  calc (∏a in s, f a+g a) = ∏a in s, ∑p in ({True, False} : Finset Prop), if p then f a else g a :=
-    by 
-      simp 
-    _ =
-      ∑p in (s.pi fun _ => {True, False} : Finset (∀ a _ : a ∈ s, Prop)),
-        ∏a in s.attach, if p a.1 a.2 then f a.1 else g a.1 :=
-    prod_sum 
-    _ = ∑t in s.powerset, (∏a in t, f a)*∏a in s \ t, g a :=
-    by 
-      refine' Eq.symm (sum_bij (fun t _ a _ => a ∈ t) _ _ _ _)
-      ·
-        simp [subset_iff] <;> tauto
-      ·
-        intro t ht 
-        erw [prod_ite (fun a : { a // a ∈ s } => f a.1) fun a : { a // a ∈ s } => g a.1]
-        refine'
-            congr_arg2 _
-              (prod_bij (fun a : α ha : a ∈ t => ⟨a, mem_powerset.1 ht ha⟩) _ _ _
-                fun b hb =>
-                  ⟨b,
-                    by 
-                      cases b <;> finish⟩)
-              (prod_bij
-                (fun a : α ha : a ∈ s \ t =>
-                  ⟨a,
-                    by 
-                      simp_all ⟩)
-                _ _ _
-                fun b hb =>
-                  ⟨b,
-                    by 
-                      cases b <;> finish⟩) <;>
-          intros  <;> simp_all  <;> simp_all 
-      ·
-        finish [Function.funext_iffₓ, Finset.ext_iff, subset_iff]
-      ·
-        intro f hf 
-        exact
-          ⟨s.filter fun a : α => ∃ h : a ∈ s, f a h,
-            by 
-              simp ,
-            by 
-              funext  <;> intros  <;> simp ⟩
-    
+theorem prod_add
+(f g : α → β)
+(s : finset α) : «expr = »(«expr∏ in , »((a), s, «expr + »(f a, g a)), «expr∑ in , »((t), s.powerset, «expr * »(«expr∏ in , »((a), t, f a), «expr∏ in , »((a), «expr \ »(s, t), g a)))) :=
+calc
+  «expr = »(«expr∏ in , »((a), s, «expr + »(f a, g a)), «expr∏ in , »((a), s, «expr∑ in , »((p), ({true, false} : finset exprProp()), if p then f a else g a))) : by simp [] [] [] [] [] []
+  «expr = »(..., «expr∑ in , »((p), (s.pi (λ
+     _, {true, false}) : finset (∀
+     a «expr ∈ » s, exprProp())), «expr∏ in , »((a), s.attach, if p a.1 a.2 then f a.1 else g a.1))) : prod_sum
+  «expr = »(..., «expr∑ in , »((t), s.powerset, «expr * »(«expr∏ in , »((a), t, f a), «expr∏ in , »((a), «expr \ »(s, t), g a)))) : begin
+    refine [expr eq.symm (sum_bij (λ t _ a _, «expr ∈ »(a, t)) _ _ _ _)],
+    { simp [] [] [] ["[", expr subset_iff, "]"] [] []; tauto [] },
+    { intros [ident t, ident ht],
+      erw ["[", expr prod_ite (λ a : {a // «expr ∈ »(a, s)}, f a.1) (λ a : {a // «expr ∈ »(a, s)}, g a.1), "]"] [],
+      refine [expr congr_arg2 _ (prod_bij (λ
+         (a : α)
+         (ha : «expr ∈ »(a, t)), ⟨a, mem_powerset.1 ht ha⟩) _ _ _ (λ
+         b
+         hb, ⟨b, by cases [expr b] []; finish [] []⟩)) (prod_bij (λ
+         (a : α)
+         (ha : «expr ∈ »(a, «expr \ »(s, t))), ⟨a, by simp [] [] [] ["*"] [] ["at", "*"]⟩) _ _ _ (λ
+         b
+         hb, ⟨b, by cases [expr b] []; finish [] []⟩))]; intros []; simp [] [] [] ["*"] [] ["at", "*"]; simp [] [] [] ["*"] [] ["at", "*"] },
+    { finish ["[", expr function.funext_iff, ",", expr finset.ext_iff, ",", expr subset_iff, "]"] [] },
+    { assume [binders (f hf)],
+      exact [expr ⟨s.filter (λ
+         a : α, «expr∃ , »((h : «expr ∈ »(a, s)), f a h)), by simp [] [] [] [] [] [], by funext []; intros []; simp [] [] [] ["*"] [] []⟩] }
+  end
 
 -- error in Algebra.BigOperators.Ring: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- `∏ i, (f i + g i) = (∏ i, f i) + ∑ i, g i * (∏ j < i, f j + g j) * (∏ j > i, f j)`. -/
@@ -222,7 +204,7 @@ theorem prod_pow_eq_pow_sum {x : β} {f : α → ℕ} : ∀ {s : Finset α}, (�
       intro a s has H 
       rw [Finset.prod_insert has, Finset.sum_insert has, pow_addₓ, H]
 
-theorem dvd_sum {b : β} {s : Finset α} {f : α → β} (h : ∀ x _ : x ∈ s, b ∣ f x) : b ∣ ∑x in s, f x :=
+theorem dvd_sum {b : β} {s : Finset α} {f : α → β} (h : ∀ x (_ : x ∈ s), b ∣ f x) : b ∣ ∑x in s, f x :=
   Multiset.dvd_sum
     fun y hy =>
       by 

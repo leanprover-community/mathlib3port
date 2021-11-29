@@ -65,15 +65,16 @@ See https://stacks.math.columbia.edu/tag/00Z4, or [nlab], or [MM92] Chapter III,
 Definition 1.
 -/
 structure grothendieck_topology where 
-  Sieves : ∀ X : C, Set (sieve X)
+  Sieves : ∀ (X : C), Set (sieve X)
   top_mem' : ∀ X, ⊤ ∈ sieves X 
-  pullback_stable' : ∀ ⦃X Y : C⦄ ⦃S : sieve X⦄ f : Y ⟶ X, S ∈ sieves X → S.pullback f ∈ sieves Y 
+  pullback_stable' : ∀ ⦃X Y : C⦄ ⦃S : sieve X⦄ (f : Y ⟶ X), S ∈ sieves X → S.pullback f ∈ sieves Y 
   transitive' :
-  ∀ ⦃X⦄ ⦃S : sieve X⦄ hS : S ∈ sieves X R : sieve X, (∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄, S f → R.pullback f ∈ sieves Y) → R ∈ sieves X
+  ∀ ⦃X⦄ ⦃S : sieve X⦄ (hS : S ∈ sieves X) (R : sieve X),
+    (∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄, S f → R.pullback f ∈ sieves Y) → R ∈ sieves X
 
 namespace GrothendieckTopology
 
-instance  : CoeFun (grothendieck_topology C) fun _ => ∀ X : C, Set (sieve X) :=
+instance  : CoeFun (grothendieck_topology C) fun _ => ∀ (X : C), Set (sieve X) :=
   ⟨sieves⟩
 
 variable{C}{X Y : C}{S R : sieve X}
@@ -86,7 +87,7 @@ We prove this explicitly rather than deriving it so that it is in terms of the c
 the projection `.sieves`.
 -/
 @[ext]
-theorem ext {J₁ J₂ : grothendieck_topology C} (h : (J₁ : ∀ X : C, Set (sieve X)) = J₂) : J₁ = J₂ :=
+theorem ext {J₁ J₂ : grothendieck_topology C} (h : (J₁ : ∀ (X : C), Set (sieve X)) = J₂) : J₁ = J₂ :=
   by 
     cases J₁ 
     cases J₂ 
@@ -142,7 +143,7 @@ theorem intersection_covering_iff : R⊓S ∈ J X ↔ R ∈ J X ∧ S ∈ J X :=
     fun t => intersection_covering _ t.1 t.2⟩
 
 theorem bind_covering {S : sieve X} {R : ∀ ⦃Y : C⦄ ⦃f : Y ⟶ X⦄, S f → sieve Y} (hS : S ∈ J X)
-  (hR : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ H : S f, R H ∈ J Y) : sieve.bind S R ∈ J X :=
+  (hR : ∀ ⦃Y⦄ ⦃f : Y ⟶ X⦄ (H : S f), R H ∈ J Y) : sieve.bind S R ∈ J X :=
   J.transitive hS _ fun Y f hf => superset_covering J (sieve.le_pullback_bind S R f hf) (hR hf)
 
 /--
@@ -176,7 +177,7 @@ The transitivity axiom in 'arrow' form: If `S` covers `f` and every arrow in `S`
 `R`, then `R` covers `f`.
 -/
 theorem arrow_trans (f : Y ⟶ X) (S R : sieve X) (h : J.covers S f) :
-  (∀ {Z : C} g : Z ⟶ X, S g → J.covers R g) → J.covers R f :=
+  (∀ {Z : C} (g : Z ⟶ X), S g → J.covers R g) → J.covers R f :=
   by 
     intro k 
     apply J.transitive h 
@@ -234,9 +235,16 @@ theorem trivial_covering : S ∈ trivialₓ C X ↔ S = ⊤ :=
   Set.mem_singleton_iff
 
 /-- See https://stacks.math.columbia.edu/tag/00Z6 -/
+instance  : LE (grothendieck_topology C) :=
+  { le := fun J₁ J₂ => (J₁ : ∀ (X : C), Set (sieve X)) ≤ (J₂ : ∀ (X : C), Set (sieve X)) }
+
+theorem le_def {J₁ J₂ : grothendieck_topology C} : J₁ ≤ J₂ ↔ (J₁ : ∀ (X : C), Set (sieve X)) ≤ J₂ :=
+  Iff.rfl
+
+/-- See https://stacks.math.columbia.edu/tag/00Z6 -/
 instance  : PartialOrderₓ (grothendieck_topology C) :=
-  { le := fun J₁ J₂ => (J₁ : ∀ X : C, Set (sieve X)) ≤ (J₂ : ∀ X : C, Set (sieve X)), le_refl := fun J₁ => le_reflₓ _,
-    le_trans := fun J₁ J₂ J₃ h₁₂ h₂₃ => le_transₓ h₁₂ h₂₃,
+  { grothendieck_topology.has_le with le_refl := fun J₁ => le_def.mpr (le_reflₓ _),
+    le_trans := fun J₁ J₂ J₃ h₁₂ h₂₃ => le_def.mpr (le_transₓ h₁₂ h₂₃),
     le_antisymm := fun J₁ J₂ h₁₂ h₂₁ => grothendieck_topology.ext (le_antisymmₓ h₁₂ h₂₁) }
 
 /-- See https://stacks.math.columbia.edu/tag/00Z7 -/
@@ -325,7 +333,7 @@ The dense Grothendieck topology.
 See https://ncatlab.org/nlab/show/dense+topology, or [MM92] Chapter III, Section 2, example (e).
 -/
 def dense : grothendieck_topology C :=
-  { Sieves := fun X S => ∀ {Y : C} f : Y ⟶ X, ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f), top_mem' := fun X Y f => ⟨Y, 𝟙 Y, ⟨⟩⟩,
+  { Sieves := fun X S => ∀ {Y : C} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f), top_mem' := fun X Y f => ⟨Y, 𝟙 Y, ⟨⟩⟩,
     pullback_stable' :=
       by 
         intro X Y S h H Z f 
@@ -344,7 +352,7 @@ def dense : grothendieck_topology C :=
             by 
               simpa using H₄⟩ }
 
-theorem dense_covering : S ∈ dense X ↔ ∀ {Y} f : Y ⟶ X, ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f) :=
+theorem dense_covering : S ∈ dense X ↔ ∀ {Y} (f : Y ⟶ X), ∃ (Z : _)(g : Z ⟶ Y), S (g ≫ f) :=
   Iff.rfl
 
 /--
@@ -353,7 +361,7 @@ NB. Any category with pullbacks obviously satisfies the right Ore condition, see
 `right_ore_of_pullbacks`.
 -/
 def right_ore_condition (C : Type u) [category.{v} C] : Prop :=
-  ∀ {X Y Z : C} yx : Y ⟶ X zx : Z ⟶ X, ∃ (W : _)(wy : W ⟶ Y)(wz : W ⟶ Z), wy ≫ yx = wz ≫ zx
+  ∀ {X Y Z : C} (yx : Y ⟶ X) (zx : Z ⟶ X), ∃ (W : _)(wy : W ⟶ Y)(wz : W ⟶ Z), wy ≫ yx = wz ≫ zx
 
 theorem right_ore_of_pullbacks [limits.has_pullbacks C] : right_ore_condition C :=
   fun X Y Z yx zx => ⟨_, _, _, limits.pullback.condition⟩
@@ -390,7 +398,7 @@ variable{J}
 instance  : Coe (J.cover X) (sieve X) :=
   ⟨fun S => S.1⟩
 
-instance  : CoeFun (J.cover X) fun S => ∀ ⦃Y⦄ f : Y ⟶ X, Prop :=
+instance  : CoeFun (J.cover X) fun S => ∀ ⦃Y⦄ (f : Y ⟶ X), Prop :=
   ⟨fun S Y f => (S : sieve X) f⟩
 
 @[simp]
@@ -401,18 +409,20 @@ theorem condition (S : J.cover X) : (S : sieve X) ∈ J X :=
   S.2
 
 @[ext]
-theorem ext (S T : J.cover X) (h : ∀ ⦃Y⦄ f : Y ⟶ X, S f ↔ T f) : S = T :=
+theorem ext (S T : J.cover X) (h : ∀ ⦃Y⦄ (f : Y ⟶ X), S f ↔ T f) : S = T :=
   Subtype.ext$ sieve.ext h
 
-instance  : SemilatticeInfTop (J.cover X) :=
-  { (inferInstance : Preorderₓ _) with inf := fun S T => ⟨S⊓T, J.intersection_covering S.condition T.condition⟩,
-    le_antisymm := fun S T h1 h2 => ext _ _$ fun Y f => ⟨h1 _, h2 _⟩, inf_le_left := fun S T Y f hf => hf.1,
-    inf_le_right := fun S T Y f hf => hf.2, le_inf := fun S T W h1 h2 Y f h => ⟨h1 _ h, h2 _ h⟩,
-    top := ⟨⊤, J.top_mem _⟩,
+instance  : OrderTop (J.cover X) :=
+  { (inferInstance : Preorderₓ _) with top := ⟨⊤, J.top_mem _⟩,
     le_top :=
       fun S Y f h =>
         by 
           tauto }
+
+instance  : SemilatticeInf (J.cover X) :=
+  { (inferInstance : Preorderₓ _) with inf := fun S T => ⟨S⊓T, J.intersection_covering S.condition T.condition⟩,
+    le_antisymm := fun S T h1 h2 => ext _ _$ fun Y f => ⟨h1 _, h2 _⟩, inf_le_left := fun S T Y f hf => hf.1,
+    inf_le_right := fun S T Y f hf => hf.2, le_inf := fun S T W h1 h2 Y f h => ⟨h1 _ h, h2 _ h⟩ }
 
 instance  : Inhabited (J.cover X) :=
   ⟨⊤⟩
@@ -512,11 +522,11 @@ def pullback_comp {X Y Z : C} (S : J.cover X) (f : Z ⟶ Y) (g : Y ⟶ X) :
           simp 
 
 /-- Combine a family of covers over a cover. -/
-def bind {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.Y) : J.cover X :=
+def bind {X : C} (S : J.cover X) (T : ∀ (I : S.arrow), J.cover I.Y) : J.cover X :=
   ⟨sieve.bind S fun Y f hf => T ⟨Y, f, hf⟩, J.bind_covering S.condition fun _ _ _ => (T _).condition⟩
 
 /-- The canonical moprhism from `S.bind T` to `T`. -/
-def bind_to_base {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.Y) : S.bind T ⟶ S :=
+def bind_to_base {X : C} (S : J.cover X) (T : ∀ (I : S.arrow), J.cover I.Y) : S.bind T ⟶ S :=
   hom_of_le$
     by 
       rintro Y f ⟨Z, e1, e2, h1, h2, h3⟩
@@ -526,42 +536,42 @@ def bind_to_base {X : C} (S : J.cover X) (T : ∀ I : S.arrow, J.cover I.Y) : S.
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the object `B`. -/
-noncomputable def arrow.middle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.Y} (I : (S.bind T).arrow) : C :=
+noncomputable def arrow.middle {X : C} {S : J.cover X} {T : ∀ (I : S.arrow), J.cover I.Y} (I : (S.bind T).arrow) : C :=
   I.hf.some
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `A ⟶ B`. -/
-noncomputable def arrow.to_middle_hom {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.Y} (I : (S.bind T).arrow) :
-  I.Y ⟶ I.middle :=
+noncomputable def arrow.to_middle_hom {X : C} {S : J.cover X} {T : ∀ (I : S.arrow), J.cover I.Y}
+  (I : (S.bind T).arrow) : I.Y ⟶ I.middle :=
   I.hf.some_spec.some
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `B ⟶ X`. -/
-noncomputable def arrow.from_middle_hom {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.Y}
+noncomputable def arrow.from_middle_hom {X : C} {S : J.cover X} {T : ∀ (I : S.arrow), J.cover I.Y}
   (I : (S.bind T).arrow) : I.middle ⟶ X :=
   I.hf.some_spec.some_spec.some
 
-theorem arrow.from_middle_condition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.Y} (I : (S.bind T).arrow) :
+theorem arrow.from_middle_condition {X : C} {S : J.cover X} {T : ∀ (I : S.arrow), J.cover I.Y} (I : (S.bind T).arrow) :
   S I.from_middle_hom :=
   I.hf.some_spec.some_spec.some_spec.some
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `B ⟶ X`, as an arrow. -/
-noncomputable def arrow.from_middle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.Y} (I : (S.bind T).arrow) :
+noncomputable def arrow.from_middle {X : C} {S : J.cover X} {T : ∀ (I : S.arrow), J.cover I.Y} (I : (S.bind T).arrow) :
   S.arrow :=
   ⟨_, I.from_middle_hom, I.from_middle_condition⟩
 
-theorem arrow.to_middle_condition {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.Y} (I : (S.bind T).arrow) :
+theorem arrow.to_middle_condition {X : C} {S : J.cover X} {T : ∀ (I : S.arrow), J.cover I.Y} (I : (S.bind T).arrow) :
   (T I.from_middle) I.to_middle_hom :=
   I.hf.some_spec.some_spec.some_spec.some_spec.1
 
 /-- An arrow in bind has the form `A ⟶ B ⟶ X` where `A ⟶ B` is an arrow in `T I` for some `I`.
  and `B ⟶ X` is an arrow of `S`. This is the hom `A ⟶ B`, as an arrow. -/
-noncomputable def arrow.to_middle {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.Y} (I : (S.bind T).arrow) :
+noncomputable def arrow.to_middle {X : C} {S : J.cover X} {T : ∀ (I : S.arrow), J.cover I.Y} (I : (S.bind T).arrow) :
   (T I.from_middle).arrow :=
   ⟨_, I.to_middle_hom, I.to_middle_condition⟩
 
-theorem arrow.middle_spec {X : C} {S : J.cover X} {T : ∀ I : S.arrow, J.cover I.Y} (I : (S.bind T).arrow) :
+theorem arrow.middle_spec {X : C} {S : J.cover X} {T : ∀ (I : S.arrow), J.cover I.Y} (I : (S.bind T).arrow) :
   I.to_middle_hom ≫ I.from_middle_hom = I.f :=
   I.hf.some_spec.some_spec.some_spec.some_spec.2
 

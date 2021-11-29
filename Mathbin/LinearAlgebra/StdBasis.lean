@@ -37,7 +37,7 @@ variable(R :
     Type _){ι : Type _}[Semiringₓ R](φ : ι → Type _)[∀ i, AddCommMonoidₓ (φ i)][∀ i, Module R (φ i)][DecidableEq ι]
 
 /-- The standard basis of the product of `φ`. -/
-def std_basis : ∀ i : ι, φ i →ₗ[R] ∀ i, φ i :=
+def std_basis : ∀ (i : ι), φ i →ₗ[R] ∀ i, φ i :=
   single
 
 theorem std_basis_apply (i : ι) (b : φ i) : std_basis R φ i b = update 0 i b :=
@@ -152,17 +152,16 @@ theorem disjoint_std_basis_std_basis (I J : Set ι) (h : Disjoint I J) :
     ·
       exact hI i hiI
 
-theorem std_basis_eq_single {a : R} :
-  (fun i : ι => (std_basis R (fun _ : ι => R) i) a) = fun i : ι => Finsupp.single i a :=
-  by 
-    ext i j 
-    rw [std_basis_apply, Finsupp.single_apply]
-    splitIfs
-    ·
-      rw [h, Function.update_same]
-    ·
-      rw [Function.update_noteq (Ne.symm h)]
-      rfl
+-- error in LinearAlgebra.StdBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem std_basis_eq_single {a : R} : «expr = »(λ i : ι, std_basis R (λ _ : ι, R) i a, λ i : ι, finsupp.single i a) :=
+begin
+  ext [] [ident i, ident j] [],
+  rw ["[", expr std_basis_apply, ",", expr finsupp.single_apply, "]"] [],
+  split_ifs [] [],
+  { rw ["[", expr h, ",", expr function.update_same, "]"] [] },
+  { rw ["[", expr function.update_noteq (ne.symm h), "]"] [],
+    refl }
+end
 
 end LinearMap
 
@@ -227,26 +226,27 @@ protected noncomputable def Basis (s : ∀ j, Basis (ιs j) R (Ms j)) : Basis (�
     refine' Basis.of_repr (_ ≪≫ₗ (Finsupp.sigmaFinsuppLequivPiFinsupp R).symm)
     exact LinearEquiv.piCongrRight fun j => (s j).repr
 
+-- error in LinearAlgebra.StdBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 @[simp]
-theorem basis_repr_std_basis [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)) j i :
-  (Pi.basis s).repr (std_basis R _ j (s j i)) = Finsupp.single ⟨j, i⟩ 1 :=
-  by 
-    ext ⟨j', i'⟩
-    byCases' hj : j = j'
-    ·
-      subst hj 
-      simp only [Pi.basis, LinearEquiv.trans_apply, Basis.repr_self, std_basis_same, LinearEquiv.Pi_congr_right_apply,
-        Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply]
-      symm 
-      exact
-        Basis.Finsupp.single_apply_left (fun i i' h : (⟨j, i⟩ : Σj, ιs j) = ⟨j, i'⟩ => eq_of_heq (Sigma.mk.inj h).2) _ _
-          _ 
-    simp only [Pi.basis, LinearEquiv.trans_apply, Finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply,
-      LinearEquiv.Pi_congr_right_apply]
-    dsimp 
-    rw [std_basis_ne _ _ _ _ (Ne.symm hj), LinearEquiv.map_zero, Finsupp.zero_apply, Finsupp.single_eq_of_ne]
-    rintro ⟨⟩
-    contradiction
+theorem basis_repr_std_basis
+[decidable_eq η]
+(s : ∀ j, basis (ιs j) R (Ms j))
+(j i) : «expr = »((pi.basis s).repr (std_basis R _ j (s j i)), finsupp.single ⟨j, i⟩ 1) :=
+begin
+  ext [] ["⟨", ident j', ",", ident i', "⟩"] [],
+  by_cases [expr hj, ":", expr «expr = »(j, j')],
+  { subst [expr hj],
+    simp [] [] ["only"] ["[", expr pi.basis, ",", expr linear_equiv.trans_apply, ",", expr basis.repr_self, ",", expr std_basis_same, ",", expr linear_equiv.Pi_congr_right_apply, ",", expr finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply, "]"] [] [],
+    symmetry,
+    exact [expr basis.finsupp.single_apply_left (λ
+      (i i')
+      (h : «expr = »((⟨j, i⟩ : «exprΣ , »((j), ιs j)), ⟨j, i'⟩)), eq_of_heq (sigma.mk.inj h).2) _ _ _] },
+  simp [] [] ["only"] ["[", expr pi.basis, ",", expr linear_equiv.trans_apply, ",", expr finsupp.sigma_finsupp_lequiv_pi_finsupp_symm_apply, ",", expr linear_equiv.Pi_congr_right_apply, "]"] [] [],
+  dsimp [] [] [] [],
+  rw ["[", expr std_basis_ne _ _ _ _ (ne.symm hj), ",", expr linear_equiv.map_zero, ",", expr finsupp.zero_apply, ",", expr finsupp.single_eq_of_ne, "]"] [],
+  rintros ["⟨", "⟩"],
+  contradiction
+end
 
 @[simp]
 theorem basis_apply [DecidableEq η] (s : ∀ j, Basis (ιs j) R (Ms j)) ji :
@@ -266,14 +266,13 @@ section
 variable(R η)
 
 /-- The basis on `η → R` where the `i`th basis vector is `function.update 0 i 1`. -/
-noncomputable def basis_fun : Basis η R (∀ j : η, R) :=
+noncomputable def basis_fun : Basis η R (∀ (j : η), R) :=
   Basis.ofEquivFun (LinearEquiv.refl _ _)
 
-@[simp]
-theorem basis_fun_apply [DecidableEq η] i : basis_fun R η i = std_basis R (fun i : η => R) i 1 :=
-  by 
-    simp only [basis_fun, Basis.coe_of_equiv_fun, LinearEquiv.refl_symm, LinearEquiv.refl_apply, std_basis_apply]
-    congr
+-- error in LinearAlgebra.StdBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+@[simp] theorem basis_fun_apply [decidable_eq η] (i) : «expr = »(basis_fun R η i, std_basis R (λ i : η, R) i 1) :=
+by { simp [] [] ["only"] ["[", expr basis_fun, ",", expr basis.coe_of_equiv_fun, ",", expr linear_equiv.refl_symm, ",", expr linear_equiv.refl_apply, ",", expr std_basis_apply, "]"] [] [],
+  congr }
 
 @[simp]
 theorem basis_fun_repr (x : η → R) (i : η) : (Pi.basisFun R η).repr x i = x i :=
@@ -290,9 +289,9 @@ namespace Matrix
 
 variable(R : Type _)(n : Type _)(m : Type _)[Fintype m][Fintype n][Semiringₓ R]
 
-/-- The standard basis of `matrix n m R`. -/
-noncomputable def std_basis : Basis (n × m) R (Matrix n m R) :=
-  Basis.reindex (Pi.basis fun i : n => Pi.basisFun R m) (Equiv.sigmaEquivProd _ _)
+-- error in LinearAlgebra.StdBasis: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+/-- The standard basis of `matrix n m R`. -/ noncomputable def std_basis : basis «expr × »(n, m) R (matrix n m R) :=
+basis.reindex (pi.basis (λ i : n, pi.basis_fun R m)) (equiv.sigma_equiv_prod _ _)
 
 variable{n m}
 

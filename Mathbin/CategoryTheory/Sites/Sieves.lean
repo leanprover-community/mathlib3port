@@ -95,18 +95,18 @@ theorem pullback_singleton [has_pullbacks C] (g : Z ⟶ X) :
 inductive of_arrows {ι : Type _} (Y : ι → C) (f : ∀ i, Y i ⟶ X) : presieve X
   | mk (i : ι) : of_arrows (f i)
 
-theorem of_arrows_punit : (of_arrows _ fun _ : PUnit => f) = singleton f :=
-  by 
-    ext Y g 
-    split 
-    ·
-      rintro ⟨_⟩
-      apply singleton.mk
-    ·
-      rintro ⟨_⟩
-      exact of_arrows.mk PUnit.unit
+-- error in CategoryTheory.Sites.Sieves: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of_arrows_punit : «expr = »(of_arrows _ (λ _ : punit, f), singleton f) :=
+begin
+  ext [] [ident Y, ident g] [],
+  split,
+  { rintro ["⟨", "_", "⟩"],
+    apply [expr singleton.mk] },
+  { rintro ["⟨", "_", "⟩"],
+    exact [expr of_arrows.mk punit.star] }
+end
 
-theorem of_arrows_pullback [has_pullbacks C] {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X) :
+theorem of_arrows_pullback [has_pullbacks C] {ι : Type _} (Z : ι → C) (g : ∀ (i : ι), Z i ⟶ X) :
   (of_arrows (fun i => pullback (g i) f) fun i => pullback.snd) = pullback_arrows f (of_arrows Z g) :=
   by 
     ext T h 
@@ -119,19 +119,30 @@ theorem of_arrows_pullback [has_pullbacks C] {ι : Type _} (Z : ι → C) (g : �
       cases' hk₁ with i hi 
       apply of_arrows.mk
 
-theorem of_arrows_bind {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X) (j : ∀ ⦃Y⦄ f : Y ⟶ X, of_arrows Z g f → Type _)
-  (W : ∀ ⦃Y⦄ f : Y ⟶ X H, j f H → C) (k : ∀ ⦃Y⦄ f : Y ⟶ X H i, W f H i ⟶ Y) :
-  ((of_arrows Z g).bind fun Y f H => of_arrows (W f H) (k f H)) =
-    of_arrows (fun i : Σi, j _ (of_arrows.mk i) => W (g i.1) _ i.2) fun ij => k (g ij.1) _ ij.2 ≫ g ij.1 :=
-  by 
-    ext Y f 
-    split 
-    ·
-      rintro ⟨_, _, _, ⟨i⟩, ⟨i'⟩, rfl⟩
-      exact of_arrows.mk (Sigma.mk _ _)
-    ·
-      rintro ⟨i⟩
-      exact bind_comp _ (of_arrows.mk _) (of_arrows.mk _)
+-- error in CategoryTheory.Sites.Sieves: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem of_arrows_bind
+{ι : Type*}
+(Z : ι → C)
+(g : ∀ i : ι, «expr ⟶ »(Z i, X))
+(j : ∀ {{Y}} (f : «expr ⟶ »(Y, X)), of_arrows Z g f → Type*)
+(W : ∀ {{Y}} (f : «expr ⟶ »(Y, X)) (H), j f H → C)
+(k : ∀
+ {{Y}}
+ (f : «expr ⟶ »(Y, X))
+ (H
+  i), «expr ⟶ »(W f H i, Y)) : «expr = »((of_arrows Z g).bind (λ
+  Y
+  f
+  H, of_arrows (W f H) (k f H)), of_arrows (λ
+  i : «exprΣ , »((i), j _ (of_arrows.mk i)), W (g i.1) _ i.2) (λ ij, «expr ≫ »(k (g ij.1) _ ij.2, g ij.1))) :=
+begin
+  ext [] [ident Y, ident f] [],
+  split,
+  { rintro ["⟨", "_", ",", "_", ",", "_", ",", "⟨", ident i, "⟩", ",", "⟨", ident i', "⟩", ",", ident rfl, "⟩"],
+    exact [expr of_arrows.mk (sigma.mk _ _)] },
+  { rintro ["⟨", ident i, "⟩"],
+    exact [expr bind_comp _ (of_arrows.mk _) (of_arrows.mk _)] }
+end
 
 /-- Given a presieve on `F(X)`, we can define a presieve on `X` by taking the preimage via `F`. -/
 def functor_pullback (R : presieve (F.obj X)) : presieve X :=
@@ -209,7 +220,7 @@ left-composition.
 -/
 structure sieve{C : Type u₁}[category.{v₁} C](X : C) where 
   Arrows : presieve X 
-  downward_closed' : ∀ {Y Z f} hf : arrows f g : Z ⟶ Y, arrows (g ≫ f)
+  downward_closed' : ∀ {Y Z f} (hf : arrows f) (g : Z ⟶ Y), arrows (g ≫ f)
 
 namespace Sieve
 
@@ -228,10 +239,10 @@ theorem arrows_ext : ∀ {R S : sieve X}, R.arrows = S.arrows → R = S
 | ⟨Ra, _⟩, ⟨Sa, _⟩, rfl => rfl
 
 @[ext]
-protected theorem ext {R S : sieve X} (h : ∀ ⦃Y⦄ f : Y ⟶ X, R f ↔ S f) : R = S :=
+protected theorem ext {R S : sieve X} (h : ∀ ⦃Y⦄ (f : Y ⟶ X), R f ↔ S f) : R = S :=
   arrows_ext$ funext$ fun x => funext$ fun f => propext$ h f
 
-protected theorem ext_iff {R S : sieve X} : R = S ↔ ∀ ⦃Y⦄ f : Y ⟶ X, R f ↔ S f :=
+protected theorem ext_iff {R S : sieve X} : R = S ↔ ∀ ⦃Y⦄ (f : Y ⟶ X), R f ↔ S f :=
   ⟨fun h Y f => h ▸ Iff.rfl, sieve.ext⟩
 
 open Lattice
@@ -247,7 +258,7 @@ protected def Sup (𝒮 : Set (sieve X)) : sieve X :=
 
 /-- The infimum of a collection of sieves: the intersection of them all. -/
 protected def Inf (𝒮 : Set (sieve X)) : sieve X :=
-  { Arrows := fun Y => { f | ∀ S _ : S ∈ 𝒮, sieve.arrows S f },
+  { Arrows := fun Y => { f | ∀ S (_ : S ∈ 𝒮), sieve.arrows S f },
     downward_closed' := fun Y Z f hf g S H => S.downward_closed (hf S H) g }
 
 /-- The union of two sieves is a sieve. -/
@@ -270,7 +281,7 @@ Sieves on an object `X` form a complete lattice.
 We generate this directly rather than using the galois insertion for nicer definitional properties.
 -/
 instance  : CompleteLattice (sieve X) :=
-  { le := fun S R => ∀ ⦃Y⦄ f : Y ⟶ X, S f → R f, le_refl := fun S f q => id,
+  { le := fun S R => ∀ ⦃Y⦄ (f : Y ⟶ X), S f → R f, le_refl := fun S f q => id,
     le_trans := fun S₁ S₂ S₃ S₁₂ S₂₃ Y f h => S₂₃ _ (S₁₂ _ h),
     le_antisymm := fun S R p q => sieve.ext fun Y f => ⟨p _, q _⟩,
     top := { Arrows := fun _ => Set.Univ, downward_closed' := fun Y Z f g h => ⟨⟩ },
@@ -292,7 +303,7 @@ instance sieve_inhabited : Inhabited (sieve X) :=
   ⟨⊤⟩
 
 @[simp]
-theorem Inf_apply {Ss : Set (sieve X)} {Y} (f : Y ⟶ X) : Inf Ss f ↔ ∀ S : sieve X H : S ∈ Ss, S f :=
+theorem Inf_apply {Ss : Set (sieve X)} {Y} (f : Y ⟶ X) : Inf Ss f ↔ ∀ (S : sieve X) (H : S ∈ Ss), S f :=
   Iff.rfl
 
 @[simp]
@@ -640,8 +651,19 @@ theorem functor_pullback_inter (S R : sieve (F.obj X)) :
   (S⊓R).FunctorPullback F = S.functor_pullback F⊓R.functor_pullback F :=
   rfl
 
+@[simp]
 theorem functor_pushforward_bot (F : C ⥤ D) (X : C) : (⊥ : sieve X).FunctorPushforward F = ⊥ :=
   (functor_galois_connection F X).l_bot
+
+@[simp]
+theorem functor_pushforward_top (F : C ⥤ D) (X : C) : (⊤ : sieve X).FunctorPushforward F = ⊤ :=
+  by 
+    refine' (generate_sieve _).symm.trans _ 
+    apply generate_of_contains_split_epi (𝟙 (F.obj X))
+    refine'
+      ⟨X, 𝟙 _, 𝟙 _, trivialₓ,
+        by 
+          simp ⟩
 
 @[simp]
 theorem functor_pullback_bot (F : C ⥤ D) (X : C) : (⊥ : sieve (F.obj X)).FunctorPullback F = ⊥ :=

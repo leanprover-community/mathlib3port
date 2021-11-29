@@ -227,10 +227,11 @@ abbrev snd (t : pullback_cone f g) : t.X ⟶ Y :=
 
 /-- This is a slightly more convenient method to verify that a pullback cone is a limit cone. It
     only asks for a proof of facts that carry any mathematical content -/
-def is_limit_aux (t : pullback_cone f g) (lift : ∀ s : pullback_cone f g, s.X ⟶ t.X)
-  (fac_left : ∀ s : pullback_cone f g, lift s ≫ t.fst = s.fst)
-  (fac_right : ∀ s : pullback_cone f g, lift s ≫ t.snd = s.snd)
-  (uniq : ∀ s : pullback_cone f g m : s.X ⟶ t.X w : ∀ j : walking_cospan, m ≫ t.π.app j = s.π.app j, m = lift s) :
+def is_limit_aux (t : pullback_cone f g) (lift : ∀ (s : pullback_cone f g), s.X ⟶ t.X)
+  (fac_left : ∀ (s : pullback_cone f g), lift s ≫ t.fst = s.fst)
+  (fac_right : ∀ (s : pullback_cone f g), lift s ≫ t.snd = s.snd)
+  (uniq :
+    ∀ (s : pullback_cone f g) (m : s.X ⟶ t.X) (w : ∀ (j : walking_cospan), m ≫ t.π.app j = s.π.app j), m = lift s) :
   is_limit t :=
   { lift,
     fac' :=
@@ -248,7 +249,7 @@ def is_limit_aux (t : pullback_cone f g) (lift : ∀ s : pullback_cone f g, s.X 
     same `s` for all parts. -/
 def is_limit_aux' (t : pullback_cone f g)
   (create :
-    ∀ s : pullback_cone f g,
+    ∀ (s : pullback_cone f g),
       { l // l ≫ t.fst = s.fst ∧ l ≫ t.snd = s.snd ∧ ∀ {m}, m ≫ t.fst = s.fst → m ≫ t.snd = s.snd → m = l }) :
   limits.is_limit t :=
   pullback_cone.is_limit_aux t (fun s => (create s).1) (fun s => (create s).2.1) (fun s => (create s).2.2.1)
@@ -290,7 +291,7 @@ theorem condition (t : pullback_cone f g) : fst t ≫ f = snd t ≫ g :=
 /-- To check whether a morphism is equalized by the maps of a pullback cone, it suffices to check
   it for `fst t` and `snd t` -/
 theorem equalizer_ext (t : pullback_cone f g) {W : C} {k l : W ⟶ t.X} (h₀ : k ≫ fst t = l ≫ fst t)
-  (h₁ : k ≫ snd t = l ≫ snd t) : ∀ j : walking_cospan, k ≫ t.π.app j = l ≫ t.π.app j
+  (h₁ : k ≫ snd t = l ≫ snd t) : ∀ (j : walking_cospan), k ≫ t.π.app j = l ≫ t.π.app j
 | some walking_pair.left => h₀
 | some walking_pair.right => h₁
 | none =>
@@ -325,9 +326,10 @@ def is_limit.lift' {t : pullback_cone f g} (ht : is_limit t) {W : C} (h : W ⟶ 
 This is a more convenient formulation to show that a `pullback_cone` constructed using
 `pullback_cone.mk` is a limit cone.
 -/
-def is_limit.mk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (eq : fst ≫ f = snd ≫ g) (lift : ∀ s : pullback_cone f g, s.X ⟶ W)
-  (fac_left : ∀ s : pullback_cone f g, lift s ≫ fst = s.fst) (fac_right : ∀ s : pullback_cone f g, lift s ≫ snd = s.snd)
-  (uniq : ∀ s : pullback_cone f g m : s.X ⟶ W w_fst : m ≫ fst = s.fst w_snd : m ≫ snd = s.snd, m = lift s) :
+def is_limit.mk {W : C} {fst : W ⟶ X} {snd : W ⟶ Y} (eq : fst ≫ f = snd ≫ g) (lift : ∀ (s : pullback_cone f g), s.X ⟶ W)
+  (fac_left : ∀ (s : pullback_cone f g), lift s ≫ fst = s.fst)
+  (fac_right : ∀ (s : pullback_cone f g), lift s ≫ snd = s.snd)
+  (uniq : ∀ (s : pullback_cone f g) (m : s.X ⟶ W) (w_fst : m ≫ fst = s.fst) (w_snd : m ≫ snd = s.snd), m = lift s) :
   is_limit (mk fst snd Eq) :=
   is_limit_aux _ lift fac_left fac_right fun s m w => uniq s m (w walking_cospan.left) (w walking_cospan.right)
 
@@ -415,10 +417,11 @@ abbrev inr (t : pushout_cocone f g) : Z ⟶ t.X :=
 
 /-- This is a slightly more convenient method to verify that a pushout cocone is a colimit cocone.
     It only asks for a proof of facts that carry any mathematical content -/
-def is_colimit_aux (t : pushout_cocone f g) (desc : ∀ s : pushout_cocone f g, t.X ⟶ s.X)
-  (fac_left : ∀ s : pushout_cocone f g, t.inl ≫ desc s = s.inl)
-  (fac_right : ∀ s : pushout_cocone f g, t.inr ≫ desc s = s.inr)
-  (uniq : ∀ s : pushout_cocone f g m : t.X ⟶ s.X w : ∀ j : walking_span, t.ι.app j ≫ m = s.ι.app j, m = desc s) :
+def is_colimit_aux (t : pushout_cocone f g) (desc : ∀ (s : pushout_cocone f g), t.X ⟶ s.X)
+  (fac_left : ∀ (s : pushout_cocone f g), t.inl ≫ desc s = s.inl)
+  (fac_right : ∀ (s : pushout_cocone f g), t.inr ≫ desc s = s.inr)
+  (uniq :
+    ∀ (s : pushout_cocone f g) (m : t.X ⟶ s.X) (w : ∀ (j : walking_span), t.ι.app j ≫ m = s.ι.app j), m = desc s) :
   is_colimit t :=
   { desc,
     fac' :=
@@ -434,7 +437,7 @@ def is_colimit_aux (t : pushout_cocone f g) (desc : ∀ s : pushout_cocone f g, 
     same `s` for all parts. -/
 def is_colimit_aux' (t : pushout_cocone f g)
   (create :
-    ∀ s : pushout_cocone f g,
+    ∀ (s : pushout_cocone f g),
       { l // t.inl ≫ l = s.inl ∧ t.inr ≫ l = s.inr ∧ ∀ {m}, t.inl ≫ m = s.inl → t.inr ≫ m = s.inr → m = l }) :
   is_colimit t :=
   is_colimit_aux t (fun s => (create s).1) (fun s => (create s).2.1) (fun s => (create s).2.2.1)
@@ -476,7 +479,7 @@ theorem condition (t : pushout_cocone f g) : f ≫ inl t = g ≫ inr t :=
 /-- To check whether a morphism is coequalized by the maps of a pushout cocone, it suffices to check
   it for `inl t` and `inr t` -/
 theorem coequalizer_ext (t : pushout_cocone f g) {W : C} {k l : t.X ⟶ W} (h₀ : inl t ≫ k = inl t ≫ l)
-  (h₁ : inr t ≫ k = inr t ≫ l) : ∀ j : walking_span, t.ι.app j ≫ k = t.ι.app j ≫ l
+  (h₁ : inr t ≫ k = inr t ≫ l) : ∀ (j : walking_span), t.ι.app j ≫ k = t.ι.app j ≫ l
 | some walking_pair.left => h₀
 | some walking_pair.right => h₁
 | none =>
@@ -512,9 +515,9 @@ This is a more convenient formulation to show that a `pushout_cocone` constructe
 `pushout_cocone.mk` is a colimit cocone.
 -/
 def is_colimit.mk {W : C} {inl : Y ⟶ W} {inr : Z ⟶ W} (eq : f ≫ inl = g ≫ inr)
-  (desc : ∀ s : pushout_cocone f g, W ⟶ s.X) (fac_left : ∀ s : pushout_cocone f g, inl ≫ desc s = s.inl)
-  (fac_right : ∀ s : pushout_cocone f g, inr ≫ desc s = s.inr)
-  (uniq : ∀ s : pushout_cocone f g m : W ⟶ s.X w_inl : inl ≫ m = s.inl w_inr : inr ≫ m = s.inr, m = desc s) :
+  (desc : ∀ (s : pushout_cocone f g), W ⟶ s.X) (fac_left : ∀ (s : pushout_cocone f g), inl ≫ desc s = s.inl)
+  (fac_right : ∀ (s : pushout_cocone f g), inr ≫ desc s = s.inr)
+  (uniq : ∀ (s : pushout_cocone f g) (m : W ⟶ s.X) (w_inl : inl ≫ m = s.inl) (w_inr : inr ≫ m = s.inr), m = desc s) :
   is_colimit (mk inl inr Eq) :=
   is_colimit_aux _ desc fac_left fac_right fun s m w => uniq s m (w walking_cospan.left) (w walking_cospan.right)
 

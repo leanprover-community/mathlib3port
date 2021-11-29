@@ -63,7 +63,7 @@ begin
   exact [expr is_unit_of_mul_eq_one _ _ heq']
 end
 
--- error in AlgebraicGeometry.RingedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+-- error in AlgebraicGeometry.RingedSpace: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If a section `f` is a unit in each stalk, `f` must be a unit. -/
 theorem is_unit_of_is_unit_germ
 (U : opens X)

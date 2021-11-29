@@ -57,7 +57,7 @@ alias lipschitz_with_iff_dist_le_mul ↔ LipschitzWith.dist_le_mul LipschitzWith
 /-- A function `f` is Lipschitz continuous with constant `K ≥ 0` on `s` if for all `x, y` in `s`
 we have `dist (f x) (f y) ≤ K * dist x y` -/
 def LipschitzOnWith [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K :  ℝ≥0 ) (f : α → β) (s : Set α) :=
-  ∀ ⦃x⦄ hx : x ∈ s ⦃y⦄ hy : y ∈ s, edist (f x) (f y) ≤ K*edist x y
+  ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), edist (f x) (f y) ≤ K*edist x y
 
 @[simp]
 theorem lipschitz_on_with_empty [PseudoEmetricSpace α] [PseudoEmetricSpace β] (K :  ℝ≥0 ) (f : α → β) :
@@ -69,7 +69,7 @@ theorem LipschitzOnWith.mono [PseudoEmetricSpace α] [PseudoEmetricSpace β] {K 
   fun x x_in y y_in => hf (h x_in) (h y_in)
 
 theorem lipschitz_on_with_iff_dist_le_mul [PseudoMetricSpace α] [PseudoMetricSpace β] {K :  ℝ≥0 } {s : Set α}
-  {f : α → β} : LipschitzOnWith K f s ↔ ∀ x _ : x ∈ s y _ : y ∈ s, dist (f x) (f y) ≤ K*dist x y :=
+  {f : α → β} : LipschitzOnWith K f s ↔ ∀ x (_ : x ∈ s) y (_ : y ∈ s), dist (f x) (f y) ≤ K*dist x y :=
   by 
     simp only [LipschitzOnWith, edist_nndist, dist_nndist]
     normCast
@@ -141,10 +141,9 @@ protected theorem UniformContinuous (hf : LipschitzWith K f) : UniformContinuous
 protected theorem Continuous (hf : LipschitzWith K f) : Continuous f :=
   hf.uniform_continuous.continuous
 
-protected theorem const (b : β) : LipschitzWith 0 fun a : α => b :=
-  fun x y =>
-    by 
-      simp only [edist_self, zero_le]
+-- error in Topology.MetricSpace.Lipschitz: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+protected theorem const (b : β) : lipschitz_with 0 (λ a : α, b) :=
+assume x y, by simp [] [] ["only"] ["[", expr edist_self, ",", expr zero_le, "]"] [] []
 
 protected theorem id : LipschitzWith 1 (@id α) :=
   LipschitzWith.of_edist_le$ fun x y => le_reflₓ _
@@ -223,7 +222,7 @@ protected theorem mul {f g : End α} {Kf Kg} (hf : LipschitzWith Kf f) (hg : Lip
 /-- The product of a list of Lipschitz continuous endomorphisms is a Lipschitz continuous
 endomorphism. -/
 protected theorem list_prod (f : ι → End α) (K : ι →  ℝ≥0 ) (h : ∀ i, LipschitzWith (K i) (f i)) :
-  ∀ l : List ι, LipschitzWith (l.map K).Prod (l.map f).Prod
+  ∀ (l : List ι), LipschitzWith (l.map K).Prod (l.map f).Prod
 | [] =>
   by 
     simp [types_id, LipschitzWith.id]
@@ -232,7 +231,7 @@ protected theorem list_prod (f : ι → End α) (K : ι →  ℝ≥0 ) (h : ∀ 
     simp only [List.map_consₓ, List.prod_cons]
     exact (h i).mul (list_prod l)
 
-protected theorem pow {f : End α} {K} (h : LipschitzWith K f) : ∀ n : ℕ, LipschitzWith (K ^ n) (f ^ n : End α)
+protected theorem pow {f : End α} {K} (h : LipschitzWith K f) : ∀ (n : ℕ), LipschitzWith (K ^ n) (f ^ n : End α)
 | 0 => LipschitzWith.id
 | n+1 =>
   by 
@@ -308,11 +307,15 @@ theorem dist_iterate_succ_le_geometric {f : α → α} (hf : LipschitzWith K f) 
     rw [iterate_succ, mul_commₓ]
     simpa only [Nnreal.coe_pow] using (hf.iterate n).dist_le_mul x (f x)
 
-theorem _root_.lipschitz_with_max : LipschitzWith 1 fun p : ℝ × ℝ => max p.1 p.2 :=
-  LipschitzWith.of_le_add$ fun p₁ p₂ => sub_le_iff_le_add'.1$ (le_abs_self _).trans (abs_max_sub_max_le_max _ _ _ _)
+-- error in Topology.MetricSpace.Lipschitz: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem _root_.lipschitz_with_max : lipschitz_with 1 (λ p : «expr × »(exprℝ(), exprℝ()), max p.1 p.2) :=
+«expr $ »(lipschitz_with.of_le_add, λ
+ p₁ p₂, «expr $ »(sub_le_iff_le_add'.1, (le_abs_self _).trans (abs_max_sub_max_le_max _ _ _ _)))
 
-theorem _root_.lipschitz_with_min : LipschitzWith 1 fun p : ℝ × ℝ => min p.1 p.2 :=
-  LipschitzWith.of_le_add$ fun p₁ p₂ => sub_le_iff_le_add'.1$ (le_abs_self _).trans (abs_min_sub_min_le_max _ _ _ _)
+-- error in Topology.MetricSpace.Lipschitz: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem _root_.lipschitz_with_min : lipschitz_with 1 (λ p : «expr × »(exprℝ(), exprℝ()), min p.1 p.2) :=
+«expr $ »(lipschitz_with.of_le_add, λ
+ p₁ p₂, «expr $ »(sub_le_iff_le_add'.1, (le_abs_self _).trans (abs_min_sub_min_le_max _ _ _ _)))
 
 end Metric
 

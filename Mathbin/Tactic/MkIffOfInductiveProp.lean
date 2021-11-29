@@ -30,6 +30,7 @@ unsafe def select : ℕ → ℕ → tactic Unit
 | m+1, n+1 => right >> select m n
 | n+1, 0 => failure
 
+-- error in Tactic.MkIffOfInductiveProp: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- `compact_relation bs as_ps`: Produce a relation of the form:
 ```lean
 R as := ∃ bs, Λ_i a_i = p_i[bs]
@@ -39,17 +40,16 @@ hence `a_i = b_j`. We need to take care when there are `p_i` and `p_j` with `p_i
 
 TODO: this is a variant of `compact_relation` in `coinductive_predicates.lean`, export it there.
 -/
-unsafe def compact_relation : List expr → List (expr × expr) → List (Option expr) × List (expr × expr)
-| [], ps => ([], ps)
-| b :: bs, ps =>
-  match ps.span fun ap : expr × expr => ¬ap.2 =ₐ b with 
-  | (_, []) =>
-    let (bs, ps) := compact_relation bs ps
-    (b :: bs, ps)
-  | (ps₁, (a, _) :: ps₂) =>
-    let i := a.instantiate_local b.local_uniq_name 
-    let (bs, ps) := compact_relation (bs.map i) ((ps₁ ++ ps₂).map fun ⟨a, p⟩ => (a, i p))
-    (none :: bs, ps)
+meta
+def compact_relation : list expr → list «expr × »(expr, expr) → «expr × »(list (option expr), list «expr × »(expr, expr))
+| «expr[ , ]»([]), ps := («expr[ , ]»([]), ps)
+| «expr :: »(b, bs), ps := match ps.span (λ ap : «expr × »(expr, expr), «expr¬ »(«expr =ₐ »(ap.2, b))) with
+| (_, «expr[ , ]»([])) := let (bs, ps) := compact_relation bs ps in
+(«expr :: »(b, bs), ps)
+| (ps₁, «expr :: »((a, _), ps₂)) := let i := a.instantiate_local b.local_uniq_name,
+    (bs, ps) := compact_relation (bs.map i) («expr ++ »(ps₁, ps₂).map (λ ⟨a, p⟩, (a, i p))) in
+(«expr :: »(none, bs), ps)
+end
 
 @[nolint doc_blame]
 unsafe def constr_to_prop (univs : List level) (g : List expr) (idxs : List expr) (c : Name) :

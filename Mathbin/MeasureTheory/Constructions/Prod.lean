@@ -200,20 +200,23 @@ theorem measurable_measure_prod_mk_right {μ : Measureₓ α} [sigma_finite μ] 
   Measurable fun y => μ ((fun x => (x, y)) ⁻¹' s) :=
   measurable_measure_prod_mk_left (measurable_set_swap_iff.mpr hs)
 
-theorem Measurable.map_prod_mk_left [sigma_finite ν] : Measurable fun x : α => map (Prod.mk x) ν :=
-  by 
-    apply measurable_of_measurable_coe 
-    intro s hs 
-    simpRw [map_apply measurable_prod_mk_left hs]
-    exact measurable_measure_prod_mk_left hs
+-- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable.map_prod_mk_left [sigma_finite ν] : measurable (λ x : α, map (prod.mk x) ν) :=
+begin
+  apply [expr measurable_of_measurable_coe],
+  intros [ident s, ident hs],
+  simp_rw ["[", expr map_apply measurable_prod_mk_left hs, "]"] [],
+  exact [expr measurable_measure_prod_mk_left hs]
+end
 
-theorem Measurable.map_prod_mk_right {μ : Measureₓ α} [sigma_finite μ] :
-  Measurable fun y : β => map (fun x : α => (x, y)) μ :=
-  by 
-    apply measurable_of_measurable_coe 
-    intro s hs 
-    simpRw [map_apply measurable_prod_mk_right hs]
-    exact measurable_measure_prod_mk_right hs
+-- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem measurable.map_prod_mk_right {μ : measure α} [sigma_finite μ] : measurable (λ y : β, map (λ x : α, (x, y)) μ) :=
+begin
+  apply [expr measurable_of_measurable_coe],
+  intros [ident s, ident hs],
+  simp_rw ["[", expr map_apply measurable_prod_mk_right hs, "]"] [],
+  exact [expr measurable_measure_prod_mk_right hs]
+end
 
 -- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 /-- The Lebesgue integral is measurable. This shows that the integrand of (the right-hand-side of)
@@ -300,7 +303,7 @@ begin
     apply [expr measurable_measure_prod_mk_left],
     exact [expr (s n).measurable_set_fiber x] },
   have [ident h2f'] [":", expr tendsto f' at_top (expr𝓝() (λ x : α, «expr∫ , ∂ »((y : β), f x y, ν)))] [],
-  { rw ["[", expr tendsto_pi, "]"] [],
+  { rw ["[", expr tendsto_pi_nhds, "]"] [],
     intro [ident x],
     by_cases [expr hfx, ":", expr integrable (f x) ν],
     { have [] [":", expr ∀ n, integrable (s' n x) ν] [],
@@ -349,11 +352,13 @@ namespace MeasureTheory
 
 namespace Measureₓ
 
+-- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- The binary product of measures. They are defined for arbitrary measures, but we basically
   prove all properties under the assumption that at least one of them is σ-finite. -/
 @[irreducible]
-protected def Prod (μ : Measureₓ α) (ν : Measureₓ β) : Measureₓ (α × β) :=
-  bind μ$ fun x : α => map (Prod.mk x) ν
+protected
+def prod (μ : measure α) (ν : measure β) : measure «expr × »(α, β) :=
+«expr $ »(bind μ, λ x : α, map (prod.mk x) ν)
 
 instance prod.measure_space {α β} [measure_space α] [measure_space β] : measure_space (α × β) :=
   { volume := volume.Prod volume }
@@ -651,12 +656,19 @@ begin
   rw ["[", expr lintegral_congr_ae this, ",", expr lintegral_indicator _ (hf.1 hs), ",", expr set_lintegral_const, ",", expr hf.measure_preimage hs, ",", expr mul_comm, "]"] []
 end
 
+-- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
 /-- If `f : α → β` sends the measure `μa` to `μb` and `g : γ → δ` sends the measure `μc` to `μd`,
 then `prod.map f g` sends `μa.prod μc` to `μb.prod μd`. -/
-protected theorem Prod [sigma_finite μb] [sigma_finite μd] {f : α → β} {g : γ → δ} (hf : measure_preserving f μa μb)
-  (hg : measure_preserving g μc μd) : measure_preserving (Prod.mapₓ f g) (μa.prod μc) (μb.prod μd) :=
-  have  : Measurable (uncurry$ fun _ : α => g) := hg.1.comp measurable_snd 
-  hf.skew_product this$ Filter.eventually_of_forall$ fun _ => hg.map_eq
+protected
+theorem prod
+[sigma_finite μb]
+[sigma_finite μd]
+{f : α → β}
+{g : γ → δ}
+(hf : measure_preserving f μa μb)
+(hg : measure_preserving g μc μd) : measure_preserving (prod.map f g) (μa.prod μc) (μb.prod μd) :=
+have measurable «expr $ »(uncurry, λ _ : α, g), from hg.1.comp measurable_snd,
+«expr $ »(hf.skew_product this, «expr $ »(filter.eventually_of_forall, λ _, hg.map_eq))
 
 end MeasurePreserving
 
@@ -666,19 +678,28 @@ open MeasureTheory.Measure
 
 section 
 
-theorem AeMeasurable.prod_swap [sigma_finite μ] [sigma_finite ν] {f : β × α → γ} (hf : AeMeasurable f (ν.prod μ)) :
-  AeMeasurable (fun z : α × β => f z.swap) (μ.prod ν) :=
-  by 
-    rw [←prod_swap] at hf 
-    exact hf.comp_measurable measurable_swap
+-- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ae_measurable.prod_swap
+[sigma_finite μ]
+[sigma_finite ν]
+{f : «expr × »(β, α) → γ}
+(hf : ae_measurable f (ν.prod μ)) : ae_measurable (λ z : «expr × »(α, β), f z.swap) (μ.prod ν) :=
+by { rw ["<-", expr prod_swap] ["at", ident hf],
+  exact [expr hf.comp_measurable measurable_swap] }
 
-theorem AeMeasurable.fst [sigma_finite ν] {f : α → γ} (hf : AeMeasurable f μ) :
-  AeMeasurable (fun z : α × β => f z.1) (μ.prod ν) :=
-  hf.comp_measurable' measurable_fst prod_fst_absolutely_continuous
+-- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ae_measurable.fst
+[sigma_finite ν]
+{f : α → γ}
+(hf : ae_measurable f μ) : ae_measurable (λ z : «expr × »(α, β), f z.1) (μ.prod ν) :=
+hf.comp_measurable' measurable_fst prod_fst_absolutely_continuous
 
-theorem AeMeasurable.snd [sigma_finite ν] {f : β → γ} (hf : AeMeasurable f ν) :
-  AeMeasurable (fun z : α × β => f z.2) (μ.prod ν) :=
-  hf.comp_measurable' measurable_snd prod_snd_absolutely_continuous
+-- error in MeasureTheory.Constructions.Prod: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Parser.Term.explicitBinder'
+theorem ae_measurable.snd
+[sigma_finite ν]
+{f : β → γ}
+(hf : ae_measurable f ν) : ae_measurable (λ z : «expr × »(α, β), f z.2) (μ.prod ν) :=
+hf.comp_measurable' measurable_snd prod_snd_absolutely_continuous
 
 /-- The Bochner integral is a.e.-measurable.
   This shows that the integrand of (the right-hand-side of) Fubini's theorem is a.e.-measurable. -/
@@ -1012,7 +1033,8 @@ end
   `integrable_prod_iff` can be useful to show that the function in question in integrable.
   `measure_theory.integrable.integral_prod_right` is useful to show that the inner integral
   of the right-hand side is integrable. -/
-theorem integral_prod : ∀ f : α × β → E hf : integrable f (μ.prod ν), (∫z, f z ∂μ.prod ν) = ∫x, ∫y, f (x, y) ∂ν ∂μ :=
+theorem integral_prod :
+  ∀ (f : α × β → E) (hf : integrable f (μ.prod ν)), (∫z, f z ∂μ.prod ν) = ∫x, ∫y, f (x, y) ∂ν ∂μ :=
   by 
     apply integrable.induction
     ·
