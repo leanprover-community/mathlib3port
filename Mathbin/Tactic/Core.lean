@@ -44,9 +44,9 @@ unsafe def trans_conv (t₁ t₂ : expr → tactic (expr × expr)) (e : expr) : 
 
 end Tactic
 
-namespace Expr
-
 open Tactic
+
+namespace Expr
 
 /-- Given an expr `α` representing a type with numeral structure,
 `of_nat α n` creates the `α`-valued numeral expression corresponding to `n`. -/
@@ -110,6 +110,28 @@ unsafe def kreplace (e old new : expr) (md := semireducible) (unify := tt) : tac
     pure$ e.instantiate_var new
 
 end Expr
+
+namespace Name
+
+/--
+`pre.contains_sorry_aux nm` checks whether `sorry` occurs in the value of the declaration `nm`
+or (recusively) in any declarations occurring in the value of `nm` with namespace `pre`.
+Auxiliary function for `name.contains_sorry`. -/
+unsafe def contains_sorry_aux (pre : Name) : Name → tactic Bool
+| nm =>
+  do 
+    let env ← get_env 
+    let decl ← get_decl nm 
+    let ff ← return decl.value.contains_sorry | return tt
+    (decl.value.list_names_with_prefix pre).mfold ff$ fun n b => if b then return tt else n.contains_sorry_aux
+
+/-- `nm.contains_sorry` checks whether `sorry` occurs in the value of the declaration `nm` or
+  in any declarations `nm._proof_i` (or to be more precise: any declaration in namespace `nm`).
+  See also `expr.contains_sorry`. -/
+unsafe def contains_sorry (nm : Name) : tactic Bool :=
+  nm.contains_sorry_aux nm
+
+end Name
 
 namespace InteractionMonad
 
@@ -1176,7 +1198,7 @@ and fail otherwise.
 unsafe def sorry_if_contains_sorry : tactic Unit :=
   do 
     let g ← target 
-    guardₓ g.contains_sorry <|> fail "goal does not contain `sorrry`"
+    guardₓ g.contains_sorry <|> fail "goal does not contain `sorry`"
     tactic.admit
 
 /-- Fail if the target contains a metavariable. -/

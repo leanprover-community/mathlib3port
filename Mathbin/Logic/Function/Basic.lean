@@ -753,7 +753,7 @@ protected theorem right (hf : injective2 f) ⦃a₁ a₂ b₁ b₂⦄ (h : f a�
   (hf h).2
 
 theorem eq_iff (hf : injective2 f) ⦃a₁ a₂ b₁ b₂⦄ : f a₁ b₁ = f a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ :=
-  ⟨fun h => hf h, fun ⟨h1, h2⟩ => congr_arg2 f h1 h2⟩
+  ⟨fun h => hf h, fun ⟨h1, h2⟩ => congr_arg2ₓ f h1 h2⟩
 
 end Injective2
 

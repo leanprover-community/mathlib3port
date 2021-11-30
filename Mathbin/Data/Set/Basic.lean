@@ -2401,8 +2401,6 @@ noncomputable def range_splitting (f : α → β) : range f → α :=
 theorem apply_range_splitting (f : α → β) (x : range f) : f (range_splitting f x) = x :=
   x.2.some_spec
 
-attribute [irreducible] range_splitting
-
 @[simp]
 theorem comp_range_splitting (f : α → β) : f ∘ range_splitting f = coeₓ :=
   by 

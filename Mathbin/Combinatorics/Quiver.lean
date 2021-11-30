@@ -129,8 +129,6 @@ Given an arrow in `Vᵒᵖ`, we can take the "unopposite" back in `V`.
 def hom.unop {V} [Quiver V] {X Y : «expr ᵒᵖ» V} (f : X ⟶ Y) : unop Y ⟶ unop X :=
   f
 
-attribute [irreducible] Quiver.opposite
-
 /-- A type synonym for the symmetrized quiver (with an arrow both ways for each original arrow).
     NB: this does not work for `Prop`-valued quivers. It requires `[quiver.{v+1} V]`. -/
 @[nolint has_inhabited_instance]

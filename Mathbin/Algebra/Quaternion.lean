@@ -1,6 +1,6 @@
 import Mathbin.Tactic.RingExp 
 import Mathbin.Algebra.Algebra.Basic 
-import Mathbin.Algebra.Opposites 
+import Mathbin.Algebra.Ring.Opposite 
 import Mathbin.Data.Equiv.Ring
 
 /-!

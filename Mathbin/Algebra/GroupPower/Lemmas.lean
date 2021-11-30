@@ -510,22 +510,6 @@ theorem one_add_mul_le_pow' (Hsq : 0 ≤ a*a) (Hsq' : 0 ≤ (1+a)*1+a) (H : 0 �
       simp only [pow_succₓ, mul_assocₓ]
     
 
-private theorem pow_lt_pow_of_lt_one_aux (h : 0 < a) (ha : a < 1) (i : ℕ) : ∀ k : ℕ, (a ^ (i+k)+1) < a ^ i
-| 0 =>
-  by 
-    rw [←one_mulₓ (a ^ i), add_zeroₓ, pow_succₓ]
-    exact mul_lt_mul ha (le_reflₓ _) (pow_pos h _) zero_le_one
-| k+1 =>
-  by 
-    rw [←one_mulₓ (a ^ i), pow_succₓ]
-    apply mul_lt_mul ha _ _ zero_le_one
-    ·
-      apply le_of_ltₓ 
-      apply pow_lt_pow_of_lt_one_aux
-    ·
-      show 0 < a ^ (i+k+1)+0
-      apply pow_pos h
-
 private theorem pow_le_pow_of_le_one_aux (h : 0 ≤ a) (ha : a ≤ 1) (i : ℕ) : ∀ k : ℕ, (a ^ i+k) ≤ a ^ i
 | 0 =>
   by 
@@ -534,22 +518,6 @@ private theorem pow_le_pow_of_le_one_aux (h : 0 ≤ a) (ha : a ≤ 1) (i : ℕ) 
   by 
     rw [←add_assocₓ, ←one_mulₓ (a ^ i), pow_succₓ]
     exact mul_le_mul ha (pow_le_pow_of_le_one_aux _) (pow_nonneg h _) zero_le_one
-
-theorem pow_lt_pow_of_lt_one (h : 0 < a) (ha : a < 1) {i j : ℕ} (hij : i < j) : a ^ j < a ^ i :=
-  let ⟨k, hk⟩ := Nat.exists_eq_add_of_lt hij 
-  by 
-    rw [hk] <;> exact pow_lt_pow_of_lt_one_aux h ha _ _
-
--- error in Algebra.GroupPower.Lemmas: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-theorem pow_lt_pow_iff_of_lt_one
-{n m : exprℕ()}
-(hpos : «expr < »(0, a))
-(h : «expr < »(a, 1)) : «expr ↔ »(«expr < »(«expr ^ »(a, m), «expr ^ »(a, n)), «expr < »(n, m)) :=
-begin
-  have [] [":", expr strict_mono (λ
-    n : order_dual exprℕ(), «expr ^ »(a, (id n : exprℕ())))] [":=", expr λ m n, pow_lt_pow_of_lt_one hpos h],
-  exact [expr this.lt_iff_lt]
-end
 
 theorem pow_le_pow_of_le_one (h : 0 ≤ a) (ha : a ≤ 1) {i j : ℕ} (hij : i ≤ j) : a ^ j ≤ a ^ i :=
   let ⟨k, hk⟩ := Nat.exists_eq_add_of_le hij 

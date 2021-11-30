@@ -74,15 +74,13 @@ class have_lebesgue_decomposition (μ ν : Measureₓ α) : Prop where
 /-- If a pair of measures `have_lebesgue_decomposition`, then `singular_part` chooses the
 measure from `have_lebesgue_decomposition`, otherwise it returns the zero measure. For sigma-finite
 measures, `μ = μ.singular_part ν + ν.with_density (μ.rn_deriv ν)`. -/
-@[irreducible]
-def singular_part (μ ν : Measureₓ α) : Measureₓ α :=
+irreducible_def singular_part (μ ν : Measureₓ α) : Measureₓ α :=
   if h : have_lebesgue_decomposition μ ν then (Classical.some h.lebesgue_decomposition).1 else 0
 
 /-- If a pair of measures `have_lebesgue_decomposition`, then `rn_deriv` chooses the
 measurable function from `have_lebesgue_decomposition`, otherwise it returns the zero function.
 For sigma-finite measures, `μ = μ.singular_part ν + ν.with_density (μ.rn_deriv ν)`.-/
-@[irreducible]
-def rn_deriv (μ ν : Measureₓ α) : α → ℝ≥0∞ :=
+irreducible_def rn_deriv (μ ν : Measureₓ α) : α → ℝ≥0∞ :=
   if h : have_lebesgue_decomposition μ ν then (Classical.some h.lebesgue_decomposition).2 else 0
 
 theorem have_lebesgue_decomposition_spec (μ ν : Measureₓ α) [h : have_lebesgue_decomposition μ ν] :

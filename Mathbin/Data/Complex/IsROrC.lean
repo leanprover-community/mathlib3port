@@ -1181,27 +1181,3 @@ end LinearMaps
 
 end IsROrC
 
-section Normalization
-
-variable {K : Type _} [IsROrC K]
-
-variable {E : Type _} [NormedGroup E] [NormedSpace K E]
-
-open IsROrC
-
--- error in Data.Complex.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
-/-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to unit length. -/
-@[simp]
-theorem norm_smul_inv_norm
-{x : E}
-(hx : «expr ≠ »(x, 0)) : «expr = »(«expr∥ ∥»(«expr • »((«expr ⁻¹»(«expr∥ ∥»(x)) : K), x)), 1) :=
-begin
-  have [ident h] [":", expr «expr = »(«expr∥ ∥»((«expr∥ ∥»(x) : K)), «expr∥ ∥»(x))] [],
-  { rw [expr norm_eq_abs] [],
-    exact [expr abs_of_nonneg (norm_nonneg _)] },
-  have [] [":", expr «expr ≠ »(«expr∥ ∥»(x), 0)] [":=", expr by simp [] [] [] ["[", expr hx, "]"] [] []],
-  field_simp [] ["[", expr norm_smul, ",", expr h, "]"] [] []
-end
-
-end Normalization
-

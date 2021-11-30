@@ -77,8 +77,6 @@ theorem op_unop (x : «expr ᵒᵖ» α) : op (unop x) = x :=
 theorem unop_op (x : α) : unop (op x) = x :=
   rfl
 
-attribute [irreducible] Opposite
-
 /-- The type-level equivalence between a type and its opposite. -/
 def equiv_to_opposite : α ≃ «expr ᵒᵖ» α :=
   { toFun := op, invFun := unop, left_inv := unop_op, right_inv := op_unop }

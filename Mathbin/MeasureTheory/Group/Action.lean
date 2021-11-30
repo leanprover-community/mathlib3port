@@ -44,7 +44,7 @@ variable [HasScalar M α] {m : MeasurableSpace α} {μ ν : Measureₓ α}
 
 @[toAdditive]
 instance add [smul_invariant_measure M α μ] [smul_invariant_measure M α ν] : smul_invariant_measure M α (μ+ν) :=
-  ⟨fun c s hs => show (_+_) = _+_ from congr_arg2 (·+·) (measure_preimage_smul μ c hs) (measure_preimage_smul ν c hs)⟩
+  ⟨fun c s hs => show (_+_) = _+_ from congr_arg2ₓ (·+·) (measure_preimage_smul μ c hs) (measure_preimage_smul ν c hs)⟩
 
 @[toAdditive]
 instance smul [smul_invariant_measure M α μ] (c : ℝ≥0∞) : smul_invariant_measure M α (c • μ) :=

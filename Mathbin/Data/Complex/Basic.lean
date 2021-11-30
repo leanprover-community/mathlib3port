@@ -926,7 +926,7 @@ With `z ≤ w` iff `w - z` is real and nonnegative, `ℂ` is an ordered ring.
 -/
 protected def OrderedCommRing : OrderedCommRing ℂ :=
   { Complex.partialOrder, Complex.commRing with zero_le_one := ⟨zero_le_one, rfl⟩,
-    add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg2 (·+·) rfl h.2⟩,
+    add_le_add_left := fun w z h y => ⟨add_le_add_left h.1 _, congr_arg2ₓ (·+·) rfl h.2⟩,
     mul_pos :=
       fun z w hz hw =>
         by 

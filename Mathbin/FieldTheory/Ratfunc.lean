@@ -87,8 +87,7 @@ If `q = 0`, then `mk` returns 0.
 This is an auxiliary definition used to define an `algebra` structure on `ratfunc`;
 the `simp` normal form of `mk p q` is `algebra_map _ _ p / algebra_map _ _ q`.
 -/
-@[irreducible]
-protected def mk (p q : Polynomial K) : Ratfunc K :=
+protected irreducible_def mk (p q : Polynomial K) : Ratfunc K :=
   of_fraction_ring (algebraMap _ _ p / algebraMap _ _ q)
 
 theorem mk_eq_div' (p q : Polynomial K) : Ratfunc.mk p q = of_fraction_ring (algebraMap _ _ p / algebraMap _ _ q) :=
@@ -135,8 +134,7 @@ for all elements of `ratfunc K` by setting `lift_on (p / q) f _ = f p q`.
 The value of `f p 0` for any `p` is never used and in principle this may be anything,
 although many usages of `lift_on` assume `f p 0 = f 0 1`.
 -/
-@[irreducible]
-protected def lift_on {P : Sort v} (x : Ratfunc K) (f : ∀ p q : Polynomial K, P)
+protected irreducible_def lift_on {P : Sort v} (x : Ratfunc K) (f : ∀ p q : Polynomial K, P)
   (H : ∀ {p q p' q'} hq : q ≠ 0 hq' : q' ≠ 0, ((p*q') = p'*q) → f p q = f p' q') : P :=
   Localization.liftOn (to_fraction_ring x) (fun p q => f p q)
     fun p p' q q' h =>
@@ -197,19 +195,20 @@ theorem lift_on'_mk {P : Sort v} (p q : Polynomial K) (f : ∀ p q : Polynomial 
   by 
     rw [Ratfunc.liftOn', Ratfunc.lift_on_mk _ _ _ f0]
 
+-- error in FieldTheory.Ratfunc: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
 /-- Induction principle for `ratfunc K`: if `f p q : P (ratfunc.mk p q)` for all `p q`,
 then `P` holds on all elements of `ratfunc K`.
 
 See also `induction_on`, which is a recursion principle defined in terms of `algebra_map`.
 -/
 @[irreducible]
-protected theorem induction_on' {P : Ratfunc K → Prop} :
-  ∀ x : Ratfunc K f : ∀ p q : Polynomial K hq : q ≠ 0, P (Ratfunc.mk p q), P x
-| ⟨x⟩, f =>
-  Localization.induction_on x
-    fun ⟨p, q⟩ =>
-      by 
-        simpa only [mk_coe_def, Localization.mk_eq_mk'] using f p q (mem_non_zero_divisors_iff_ne_zero.mp q.2)
+protected
+theorem induction_on'
+{P : ratfunc K → exprProp()} : ∀
+(x : ratfunc K)
+(f : ∀ (p q : polynomial K) (hq : «expr ≠ »(q, 0)), P (ratfunc.mk p q)), P x
+| ⟨x⟩, f := localization.induction_on x (λ
+ ⟨p, q⟩, by simpa [] [] ["only"] ["[", expr mk_coe_def, ",", expr localization.mk_eq_mk', "]"] [] ["using", expr f p q (mem_non_zero_divisors_iff_ne_zero.mp q.2)])
 
 end Rec
 
@@ -219,8 +218,7 @@ section Field
 
 
 /-- The zero rational function. -/
-@[irreducible]
-protected def zero : Ratfunc K :=
+protected irreducible_def zero : Ratfunc K :=
   ⟨0⟩
 
 instance : HasZero (Ratfunc K) :=
@@ -231,8 +229,7 @@ theorem of_fraction_ring_zero : (of_fraction_ring 0 : Ratfunc K) = 0 :=
     unfold HasZero.zero Ratfunc.zero
 
 /-- Addition of rational functions. -/
-@[irreducible]
-protected def add : Ratfunc K → Ratfunc K → Ratfunc K
+protected irreducible_def add : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p+q⟩
 
 instance : Add (Ratfunc K) :=
@@ -244,8 +241,7 @@ theorem of_fraction_ring_add (p q : FractionRing (Polynomial K)) :
     unfold Add.add Ratfunc.add
 
 /-- Subtraction of rational functions. -/
-@[irreducible]
-protected def sub : Ratfunc K → Ratfunc K → Ratfunc K
+protected irreducible_def sub : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p - q⟩
 
 instance : Sub (Ratfunc K) :=
@@ -257,8 +253,7 @@ theorem of_fraction_ring_sub (p q : FractionRing (Polynomial K)) :
     unfold Sub.sub Ratfunc.sub
 
 /-- Additive inverse of a rational function. -/
-@[irreducible]
-protected def neg : Ratfunc K → Ratfunc K
+protected irreducible_def neg : Ratfunc K → Ratfunc K
 | ⟨p⟩ => ⟨-p⟩
 
 instance : Neg (Ratfunc K) :=
@@ -269,8 +264,7 @@ theorem of_fraction_ring_neg (p : FractionRing (Polynomial K)) : of_fraction_rin
     unfold Neg.neg Ratfunc.neg
 
 /-- The multiplicative unit of rational functions. -/
-@[irreducible]
-protected def one : Ratfunc K :=
+protected irreducible_def one : Ratfunc K :=
   ⟨1⟩
 
 instance : HasOne (Ratfunc K) :=
@@ -281,8 +275,7 @@ theorem of_fraction_ring_one : (of_fraction_ring 1 : Ratfunc K) = 1 :=
     unfold HasOne.one Ratfunc.one
 
 /-- Multiplication of rational functions. -/
-@[irreducible]
-protected def mul : Ratfunc K → Ratfunc K → Ratfunc K
+protected irreducible_def mul : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p*q⟩
 
 instance : Mul (Ratfunc K) :=
@@ -296,8 +289,7 @@ theorem of_fraction_ring_mul (p q : FractionRing (Polynomial K)) :
 include hdomain
 
 /-- Division of rational functions. -/
-@[irreducible]
-protected def div : Ratfunc K → Ratfunc K → Ratfunc K
+protected irreducible_def div : Ratfunc K → Ratfunc K → Ratfunc K
 | ⟨p⟩, ⟨q⟩ => ⟨p / q⟩
 
 instance : Div (Ratfunc K) :=
@@ -309,8 +301,7 @@ theorem of_fraction_ring_div (p q : FractionRing (Polynomial K)) :
     unfold Div.div Ratfunc.div
 
 /-- Multiplicative inverse of a rational function. -/
-@[irreducible]
-protected def inv : Ratfunc K → Ratfunc K
+protected irreducible_def inv : Ratfunc K → Ratfunc K
 | ⟨p⟩ => ⟨p⁻¹⟩
 
 instance : HasInv (Ratfunc K) :=

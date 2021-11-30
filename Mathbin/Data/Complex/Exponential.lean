@@ -539,8 +539,6 @@ j, finset.sum_congr rfl (λ m hm, begin
  end),
 by rw [expr lim_mul_lim] []; exact [expr eq.symm (lim_eq_lim_of_equiv (by dsimp [] [] [] []; simp [] [] ["only"] ["[", expr hj, "]"] [] []; exact [expr cauchy_product (is_cau_abs_exp x) (is_cau_exp y)]))]
 
-attribute [irreducible] Complex.exp
-
 theorem exp_list_sum (l : List ℂ) : exp l.sum = (l.map exp).Prod :=
   @MonoidHom.map_list_prod (Multiplicative ℂ) ℂ _ _ ⟨exp, exp_zero, exp_add⟩ l
 

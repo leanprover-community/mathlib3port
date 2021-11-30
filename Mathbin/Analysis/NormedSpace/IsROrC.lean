@@ -32,6 +32,29 @@ theorem IsROrC.norm_coe_norm {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedG
 variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedGroup E] [NormedSpace 𝕜 E]
 
 -- error in Analysis.NormedSpace.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to unit length. -/
+@[simp]
+theorem norm_smul_inv_norm
+{x : E}
+(hx : «expr ≠ »(x, 0)) : «expr = »(«expr∥ ∥»(«expr • »((«expr ⁻¹»(«expr∥ ∥»(x)) : 𝕜), x)), 1) :=
+begin
+  have [] [":", expr «expr ≠ »(«expr∥ ∥»(x), 0)] [":=", expr by simp [] [] [] ["[", expr hx, "]"] [] []],
+  field_simp [] ["[", expr norm_smul, "]"] [] []
+end
+
+-- error in Analysis.NormedSpace.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
+/-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to length `r`. -/
+theorem norm_smul_inv_norm'
+{r : exprℝ()}
+(r_nonneg : «expr ≤ »(0, r))
+{x : E}
+(hx : «expr ≠ »(x, 0)) : «expr = »(«expr∥ ∥»(«expr • »((«expr * »(r, «expr ⁻¹»(«expr∥ ∥»(x))) : 𝕜), x)), r) :=
+begin
+  have [] [":", expr «expr ≠ »(«expr∥ ∥»(x), 0)] [":=", expr by simp [] [] [] ["[", expr hx, "]"] [] []],
+  field_simp [] ["[", expr norm_smul, ",", expr is_R_or_C.norm_of_real, ",", expr is_R_or_C.norm_eq_abs, ",", expr r_nonneg, "]"] [] []
+end
+
+-- error in Analysis.NormedSpace.IsROrC: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 theorem linear_map.bound_of_sphere_bound
 {r : exprℝ()}
 (r_pos : «expr < »(0, r))
@@ -45,13 +68,9 @@ begin
     simp [] [] ["only"] ["[", expr linear_map.map_zero, ",", expr norm_zero, ",", expr mul_zero, "]"] [] [] },
   set [] [ident z₁] [] [":="] [expr «expr • »((«expr * »(r, «expr ⁻¹»(«expr∥ ∥»(z))) : 𝕜), z)] ["with", ident hz₁],
   have [ident norm_f_z₁] [":", expr «expr ≤ »(«expr∥ ∥»(f z₁), c)] [],
-  { apply [expr h z₁],
-    rw ["[", expr mem_sphere_zero_iff_norm, ",", expr hz₁, ",", expr norm_smul, ",", expr normed_field.norm_mul, "]"] [],
-    simp [] [] ["only"] ["[", expr normed_field.norm_inv, ",", expr is_R_or_C.norm_coe_norm, "]"] [] [],
-    rw ["[", expr mul_assoc, ",", expr inv_mul_cancel (norm_pos_iff.mpr z_zero).ne.symm, ",", expr mul_one, "]"] [],
-    unfold_coes [],
-    simp [] [] ["only"] ["[", expr norm_algebra_map_eq, ",", expr ring_hom.to_fun_eq_coe, "]"] [] [],
-    exact [expr abs_of_pos r_pos] },
+  { apply [expr h],
+    rw [expr mem_sphere_zero_iff_norm] [],
+    exact [expr norm_smul_inv_norm' r_pos.le z_zero] },
   have [ident r_ne_zero] [":", expr «expr ≠ »((r : 𝕜), 0)] [":=", expr (algebra_map exprℝ() 𝕜).map_ne_zero.mpr r_pos.ne.symm],
   have [ident eq] [":", expr «expr = »(f z, «expr * »(«expr / »(«expr∥ ∥»(z), r), f z₁))] [],
   { rw ["[", expr hz₁, ",", expr linear_map.map_smul, ",", expr smul_eq_mul, "]"] [],
@@ -64,10 +83,8 @@ begin
 end
 
 theorem LinearMap.bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)
-  (h : ∀ z _ : z ∈ closed_ball (0 : E) r, ∥f z∥ ≤ c) : ∀ z : E, ∥f z∥ ≤ (c / r)*∥z∥ :=
-  by 
-    apply LinearMap.bound_of_sphere_bound r_pos c f 
-    exact fun z hz => h z hz.le
+  (h : ∀ z _ : z ∈ closed_ball (0 : E) r, ∥f z∥ ≤ c) (z : E) : ∥f z∥ ≤ (c / r)*∥z∥ :=
+  f.bound_of_sphere_bound r_pos c (fun z hz => h z hz.le) z
 
 theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →L[𝕜] 𝕜)
   (h : ∀ z _ : z ∈ closed_ball (0 : E) r, ∥f z∥ ≤ c) : ∥f∥ ≤ c / r :=

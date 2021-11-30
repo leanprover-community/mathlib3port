@@ -70,20 +70,16 @@ theorem exists_iff_exists_finsupp (P : Polynomial R → Prop) : (∃ p, P p) ↔
   ⟨fun ⟨⟨p⟩, hp⟩ => ⟨p, hp⟩, fun ⟨q, hq⟩ => ⟨⟨q⟩, hq⟩⟩
 
 /-- The function version of `monomial`. Use `monomial` instead of this one. -/
-@[irreducible]
-def monomial_fun (n : ℕ) (a : R) : Polynomial R :=
+irreducible_def monomial_fun (n : ℕ) (a : R) : Polynomial R :=
   ⟨Finsupp.single n a⟩
 
-@[irreducible]
-private def add : Polynomial R → Polynomial R → Polynomial R
+private irreducible_def add : Polynomial R → Polynomial R → Polynomial R
 | ⟨a⟩, ⟨b⟩ => ⟨a+b⟩
 
-@[irreducible]
-private def neg {R : Type u} [Ringₓ R] : Polynomial R → Polynomial R
+private irreducible_def neg {R : Type u} [Ringₓ R] : Polynomial R → Polynomial R
 | ⟨a⟩ => ⟨-a⟩
 
-@[irreducible]
-private def mul : Polynomial R → Polynomial R → Polynomial R
+private irreducible_def mul : Polynomial R → Polynomial R → Polynomial R
 | ⟨a⟩, ⟨b⟩ => ⟨a*b⟩
 
 instance : HasZero (Polynomial R) :=
@@ -706,8 +702,7 @@ theorem sum_smul_index {S : Type _} [AddCommMonoidₓ S] (p : Polynomial R) (b :
     exact Finsupp.sum_smul_index hf
 
 /-- `erase p n` is the polynomial `p` in which the `X^n` term has been erased. -/
-@[irreducible]
-def erase (n : ℕ) : Polynomial R → Polynomial R
+irreducible_def erase (n : ℕ) : Polynomial R → Polynomial R
 | ⟨p⟩ => ⟨p.erase n⟩
 
 @[simp]

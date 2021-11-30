@@ -101,8 +101,6 @@ instance [h : Fact (p.splits (algebraMap F E))] : Algebra p.splitting_field E :=
 instance [h : Fact (p.splits (algebraMap F E))] : IsScalarTower F p.splitting_field E :=
   IsScalarTower.of_algebra_map_eq fun x => ((is_splitting_field.lift p.splitting_field p h.1).commutes x).symm
 
-attribute [irreducible] gal.algebra
-
 /-- Restrict from a superfield automorphism into a member of `gal p`. -/
 def restrict [Fact (p.splits (algebraMap F E))] : (E ≃ₐ[F] E) →* p.gal :=
   AlgEquiv.restrictNormalHom p.splitting_field

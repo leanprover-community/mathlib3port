@@ -53,7 +53,7 @@ open CategoryTheory.Iso
 
 namespace CategoryTheory
 
--- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:990:29: unsupported: (notation) in structure
+-- error in CategoryTheory.Monoidal.Category: ././Mathport/Syntax/Translate/Basic.lean:998:29: unsupported: (notation) in structure
 /--
 In a monoidal category, we can take the tensor product of objects, `X ⊗ Y` and of morphisms `f ⊗ g`.
 Tensor product does not need to be strictly associative on objects, but there is a

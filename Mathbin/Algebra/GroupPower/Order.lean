@@ -233,6 +233,18 @@ theorem pow_lt_pow (h : 1 < a) (h2 : n < m) : a ^ n < a ^ m :=
 theorem pow_lt_pow_iff (h : 1 < a) : a ^ n < a ^ m ↔ n < m :=
   (strict_mono_pow h).lt_iff_lt
 
+theorem strict_anti_pow (h₀ : 0 < a) (h₁ : a < 1) : StrictAnti fun n : ℕ => a ^ n :=
+  strict_anti_nat_of_succ_lt$
+    fun n =>
+      by 
+        simpa only [pow_succₓ, one_mulₓ] using mul_lt_mul h₁ le_rfl (pow_pos h₀ n) zero_le_one
+
+theorem pow_lt_pow_iff_of_lt_one (h₀ : 0 < a) (h₁ : a < 1) : a ^ m < a ^ n ↔ n < m :=
+  (strict_anti_pow h₀ h₁).lt_iff_lt
+
+theorem pow_lt_pow_of_lt_one (h : 0 < a) (ha : a < 1) {i j : ℕ} (hij : i < j) : a ^ j < a ^ i :=
+  (pow_lt_pow_iff_of_lt_one h ha).2 hij
+
 @[mono]
 theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i : ℕ, a ^ i ≤ b ^ i
 | 0 =>
@@ -243,14 +255,8 @@ theorem pow_le_pow_of_le_left {a b : R} (ha : 0 ≤ a) (hab : a ≤ b) : ∀ i :
     rw [pow_succₓ, pow_succₓ]
     exact mul_le_mul hab (pow_le_pow_of_le_left _) (pow_nonneg ha _) (le_transₓ ha hab)
 
-theorem one_lt_pow (ha : 1 < a) : ∀ {n : ℕ}, n ≠ 0 → 1 < a ^ n
-| 0, h => (h rfl).elim
-| 1, h => (pow_oneₓ a).symm.subst ha
-| n+2, h =>
-  by 
-    nontriviality R 
-    rw [←one_mulₓ (1 : R), pow_succₓ]
-    exact mul_lt_mul ha (one_lt_pow (Nat.succ_ne_zero _)).le zero_lt_one (zero_lt_one.trans ha).le
+theorem one_lt_pow (ha : 1 < a) {n : ℕ} (hn : n ≠ 0) : 1 < a ^ n :=
+  pow_zeroₓ a ▸ pow_lt_pow ha (pos_iff_ne_zero.2 hn)
 
 theorem pow_le_one : ∀ n : ℕ h₀ : 0 ≤ a h₁ : a ≤ 1, a ^ n ≤ 1
 | 0, h₀, h₁ => (pow_zeroₓ a).le

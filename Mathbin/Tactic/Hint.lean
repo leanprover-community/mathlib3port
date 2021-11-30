@@ -70,7 +70,7 @@ add_hint_tactic fconstructor
 
 add_hint_tactic injectionsAndClear
 
--- error in Tactic.Hint: ././Mathport/Syntax/Translate/Basic.lean:1266:43: in add_hint_tactic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
+-- error in Tactic.Hint: ././Mathport/Syntax/Translate/Basic.lean:1274:43: in add_hint_tactic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: no declaration of attribute [parenthesizer] found for 'Lean.Meta.solveByElim'
 add_hint_tactic [expr "solve_by_elim", [expr `[solve_by_elim [] [] [] []]]]
 
 add_hint_tactic unfoldCoes

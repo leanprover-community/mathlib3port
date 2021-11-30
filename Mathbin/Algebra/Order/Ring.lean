@@ -787,16 +787,14 @@ theorem mul_le_iff_le_one_left (hb : 0 < b) : (a*b) ≤ b ↔ a ≤ 1 :=
     fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_left hb).1 h.not_lt)⟩
 
 theorem mul_lt_iff_lt_one_left (hb : 0 < b) : (a*b) < b ↔ a < 1 :=
-  ⟨fun h => lt_of_not_geₓ (mt (le_mul_iff_one_le_left hb).2 h.not_le),
-    fun h => lt_of_not_geₓ (mt (le_mul_iff_one_le_left hb).1 h.not_le)⟩
+  lt_iff_lt_of_le_iff_le$ le_mul_iff_one_le_left hb
 
 theorem mul_le_iff_le_one_right (hb : 0 < b) : (b*a) ≤ b ↔ a ≤ 1 :=
   ⟨fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_right hb).2 h.not_lt),
     fun h => le_of_not_ltₓ (mt (lt_mul_iff_one_lt_right hb).1 h.not_lt)⟩
 
 theorem mul_lt_iff_lt_one_right (hb : 0 < b) : (b*a) < b ↔ a < 1 :=
-  ⟨fun h => lt_of_not_geₓ (mt (le_mul_iff_one_le_right hb).2 h.not_le),
-    fun h => lt_of_not_geₓ (mt (le_mul_iff_one_le_right hb).1 h.not_le)⟩
+  lt_iff_lt_of_le_iff_le$ le_mul_iff_one_le_right hb
 
 theorem nonpos_of_mul_nonneg_left (h : 0 ≤ a*b) (hb : b < 0) : a ≤ 0 :=
   le_of_not_gtₓ fun ha => absurd h (mul_neg_of_pos_of_neg ha hb).not_le

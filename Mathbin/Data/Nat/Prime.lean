@@ -1308,6 +1308,14 @@ theorem prime_three : prime 3 :=
   by 
     normNum
 
+/-- See note [fact non-instances].-/
+theorem fact_prime_two : Fact (prime 2) :=
+  ⟨prime_two⟩
+
+/-- See note [fact non-instances].-/
+theorem fact_prime_three : Fact (prime 3) :=
+  ⟨prime_three⟩
+
 end Nat
 
 namespace Nat

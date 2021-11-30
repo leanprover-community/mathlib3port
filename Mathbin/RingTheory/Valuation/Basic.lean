@@ -762,7 +762,5 @@ theorem supp_quot_supp : supp (v.on_quot (le_reflₓ _)) = 0 :=
 
 end Supp
 
-attribute [irreducible] AddValuation
-
 end AddValuation
 

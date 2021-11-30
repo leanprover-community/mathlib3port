@@ -716,8 +716,8 @@ noncomputable def disjoint_union (e e' : trivialization F proj) (H : Disjoint e.
             rw [e.target_eq, e'.target_eq] at hx 
             exact H ⟨hx.1.1, hx.2.1⟩,
     BaseSet := e.base_set ∪ e'.base_set, open_base_set := IsOpen.union e.open_base_set e'.open_base_set,
-    source_eq := congr_arg2 (· ∪ ·) e.source_eq e'.source_eq,
-    target_eq := (congr_arg2 (· ∪ ·) e.target_eq e'.target_eq).trans union_prod.symm,
+    source_eq := congr_arg2ₓ (· ∪ ·) e.source_eq e'.source_eq,
+    target_eq := (congr_arg2ₓ (· ∪ ·) e.target_eq e'.target_eq).trans union_prod.symm,
     proj_to_fun :=
       by 
         rintro p (hp | hp')

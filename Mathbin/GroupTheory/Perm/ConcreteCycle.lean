@@ -534,7 +534,7 @@ def iso_cycle' : { f : perm α // is_cycle f } ≃ { s : Cycle α // s.nodup ∧
           simp [Cycle.form_perm_eq_form_perm_iff, iff_not_comm.mp hs.nontrivial_iff, iff_not_comm.mp hs'.nontrivial_iff,
             ht] }
 
--- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:1096:9: unsupported: advanced notation (l:(foldr `, ` (h t, list.cons h t) list.nil `]`))
+-- error in GroupTheory.Perm.ConcreteCycle: ././Mathport/Syntax/Translate/Basic.lean:1104:9: unsupported: advanced notation (l:(foldr `, ` (h t, list.cons h t) list.nil `]`))
 notation
 `c[`
 l:(foldr `, ` (h t, list.cons h t) list.nil `]`) := cycle.form_perm «expr↑ »(l) (cycle.nodup_coe_iff.mpr exprdec_trivial())

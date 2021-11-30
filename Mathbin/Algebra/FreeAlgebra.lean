@@ -361,8 +361,6 @@ definition.
 -/
 
 
-attribute [irreducible] ι lift
-
 @[simp]
 theorem lift_comp_ι (g : FreeAlgebra R X →ₐ[R] A) : lift R ((g : FreeAlgebra R X → A) ∘ ι R) = g :=
   by 

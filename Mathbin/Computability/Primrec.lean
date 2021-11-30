@@ -1381,7 +1381,7 @@ open nat(Primrec')
 
 open Nat.Primrec'
 
--- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:1230:6: unsupported: hide command
+-- error in Computability.Primrec: ././Mathport/Syntax/Translate/Basic.lean:1238:6: unsupported: hide command
 hide ite
 
 theorem to_prim {n f} (pf : @primrec' n f) : Primrec f :=

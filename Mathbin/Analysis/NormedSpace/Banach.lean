@@ -268,8 +268,7 @@ theorem exists_nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj
 controlled right inverse. In general, it is not possible to ensure that such a right inverse
 is linear (take for instance the map from `E` to `E/F` where `F` is a closed subspace of `E`
 without a closed complement. Then it doesn't have a continuous linear right inverse.) -/
-@[irreducible]
-noncomputable def nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
+noncomputable irreducible_def nonlinear_right_inverse_of_surjective (f : E →L[𝕜] F) (hsurj : f.range = ⊤) :
   nonlinear_right_inverse f :=
   Classical.some (exists_nonlinear_right_inverse_of_surjective f hsurj)
 

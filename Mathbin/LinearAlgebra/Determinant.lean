@@ -132,8 +132,6 @@ theorem det_aux_def (b : Basis ι A M) (f : M →ₗ[A] M) :
   LinearMap.detAux (Trunc.mk b) f = Matrix.det (LinearMap.toMatrix b b f) :=
   rfl
 
-attribute [irreducible] LinearMap.detAux
-
 theorem det_aux_def' {ι' : Type _} [Fintype ι'] [DecidableEq ι'] (tb : Trunc$ Basis ι A M) (b' : Basis ι' A M)
   (f : M →ₗ[A] M) : LinearMap.detAux tb f = Matrix.det (LinearMap.toMatrix b' b' f) :=
   by 
@@ -158,8 +156,7 @@ open_locale Classical
 
 If there is no finite basis on `M`, the result is `1` instead.
 -/
-@[irreducible]
-protected def det : (M →ₗ[A] M) →* A :=
+protected irreducible_def det : (M →ₗ[A] M) →* A :=
   if H : ∃ s : Finset M, Nonempty (Basis s A M) then LinearMap.detAux (Trunc.mk H.some_spec.some) else 1
 
 theorem coe_det [DecidableEq M] :

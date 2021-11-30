@@ -53,7 +53,7 @@ The notation `![a, b, ...]` expands to `vec_cons a (vec_cons b ...)`.
 def vec_cons {n : ℕ} (h : α) (t : Finₓ n → α) : Finₓ n.succ → α :=
   Finₓ.cons h t
 
--- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:1096:9: unsupported: advanced notation (l:(foldr `, ` (h t, vec_cons h t) vec_empty `]`))
+-- error in Data.Fin.VecNotation: ././Mathport/Syntax/Translate/Basic.lean:1104:9: unsupported: advanced notation (l:(foldr `, ` (h t, vec_cons h t) vec_empty `]`))
 notation `![` l:(foldr `, ` (h t, vec_cons h t) vec_empty `]`) := l
 
 /-- `vec_head v` gives the first entry of the vector `v` -/

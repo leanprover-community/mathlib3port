@@ -2,7 +2,8 @@ import Mathbin.Algebra.Order.AbsoluteValue
 import Mathbin.Algebra.FieldPower 
 import Mathbin.RingTheory.Int.Basic 
 import Mathbin.Tactic.Basic 
-import Mathbin.Tactic.RingExp
+import Mathbin.Tactic.RingExp 
+import Mathbin.NumberTheory.Divisors
 
 /-!
 # p-adic norm
@@ -586,6 +587,41 @@ begin
     haveI [ident Hp] [":", expr fact p.prime] [":=", expr ⟨hp.2⟩],
     rw ["[", expr padic_val_nat_eq_factors_count, ",", expr multiset.coe_count, "]"] [] }
 end
+
+theorem range_pow_padic_val_nat_subset_divisors {n : ℕ} (p : ℕ) [Fact p.prime] (hn : n ≠ 0) :
+  (Finset.range (padicValNat p n+1)).Image (pow p) ⊆ n.divisors :=
+  by 
+    intro t ht 
+    simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht 
+    obtain ⟨k, hk, rfl⟩ := ht 
+    rw [Nat.mem_divisors]
+    exact
+      ⟨(pow_dvd_pow p$
+              by 
+                linarith).trans
+          pow_padic_val_nat_dvd,
+        hn⟩
+
+theorem range_pow_padic_val_nat_subset_divisors' {n : ℕ} (p : ℕ) [h : Fact p.prime] :
+  ((Finset.range (padicValNat p n)).Image fun t => p^t+1) ⊆ n.divisors \ {1} :=
+  by 
+    rcases eq_or_ne n 0 with (rfl | hn)
+    ·
+      simp 
+    intro t ht 
+    simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht 
+    obtain ⟨k, hk, rfl⟩ := ht 
+    rw [Finset.mem_sdiff, Nat.mem_divisors]
+    refine'
+      ⟨⟨(pow_dvd_pow p$
+                by 
+                  linarith).trans
+            pow_padic_val_nat_dvd,
+          hn⟩,
+        _⟩
+    rw [Finset.mem_singleton]
+    nthRw 1[←one_pow (k+1)]
+    exact (Nat.pow_lt_pow_of_lt_left h.1.one_lt$ Nat.succ_posₓ k).ne'
 
 end padicValNat
 

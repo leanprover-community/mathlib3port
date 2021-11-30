@@ -691,7 +691,7 @@ localized [Dioph] notation:35 x " D∨ " y => Dioph.or_dioph x y
 
 localized [Dioph] notation:30 "D∃" => Dioph.vec_ex1_dioph
 
--- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:1266:43: in localized: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
+-- error in NumberTheory.Dioph: ././Mathport/Syntax/Translate/Basic.lean:1274:43: in localized: ././Mathport/Syntax/Translate/Basic.lean:265:9: unsupported: advanced prec syntax
 localized [expr "prefix `&`:max := of_nat'", [command <some 4>], "in", ident dioph]
 
 theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [is_lt m n] : dioph_fn fun v : Vector3 ℕ n => v («expr& » m) :=

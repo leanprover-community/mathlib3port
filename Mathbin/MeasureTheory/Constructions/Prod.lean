@@ -351,8 +351,7 @@ namespace Measureₓ
 
 /-- The binary product of measures. They are defined for arbitrary measures, but we basically
   prove all properties under the assumption that at least one of them is σ-finite. -/
-@[irreducible]
-protected def Prod (μ : Measureₓ α) (ν : Measureₓ β) : Measureₓ (α × β) :=
+protected irreducible_def Prod (μ : Measureₓ α) (ν : Measureₓ β) : Measureₓ (α × β) :=
   bind μ$ fun x : α => map (Prod.mk x) ν
 
 instance prod.measure_space {α β} [measure_space α] [measure_space β] : measure_space (α × β) :=

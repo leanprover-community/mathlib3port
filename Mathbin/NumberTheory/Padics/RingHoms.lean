@@ -422,8 +422,6 @@ begin
     exact [expr (dvd_pow_self _ hc0.ne').mul_left _] }
 end
 
-attribute [irreducible] appr
-
 /-- A ring hom from `ℤ_[p]` to `zmod (p^n)`, with underlying function `padic_int.appr n`. -/
 def to_zmod_pow (n : ℕ) : ℤ_[p] →+* Zmod (p^n) :=
   to_zmod_hom (p^n) (fun x => appr x n)

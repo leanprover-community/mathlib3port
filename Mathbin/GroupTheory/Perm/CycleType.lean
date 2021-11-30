@@ -423,7 +423,7 @@ theorem zero_eq : vectors_prod_eq_one G 0 = {Vector.nil} :=
 theorem one_eq : vectors_prod_eq_one G 1 = {Vector.nil.cons 1} :=
   by 
     simpRw [Set.eq_singleton_iff_unique_mem, mem_iff, Vector.to_list_singleton, List.prod_singleton, Vector.head_cons]
-    exact ⟨rfl, fun v hv => v.cons_head_tail.symm.trans (congr_arg2 Vector.cons hv v.tail.eq_nil)⟩
+    exact ⟨rfl, fun v hv => v.cons_head_tail.symm.trans (congr_arg2ₓ Vector.cons hv v.tail.eq_nil)⟩
 
 instance zero_unique : Unique (vectors_prod_eq_one G 0) :=
   by 
@@ -448,7 +448,7 @@ def vector_equiv : Vector G n ≃ vectors_prod_eq_one G (n+1) :=
     right_inv :=
       fun v =>
         Subtype.ext
-          ((congr_arg2 Vector.cons
+          ((congr_arg2ₓ Vector.cons
                 (eq_inv_of_mul_eq_one
                     (by 
                       rw [←List.prod_cons, ←Vector.to_list_cons, v.1.cons_head_tail]

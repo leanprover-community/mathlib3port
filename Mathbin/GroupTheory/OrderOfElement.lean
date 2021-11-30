@@ -700,14 +700,14 @@ def submonoidOfIdempotent {M : Type _} [LeftCancelMonoid M] [Fintype M] (S : Set
       Nat.rec
         (by 
           rwa [zero_addₓ, pow_oneₓ])
-        fun n ih => (congr_arg2 (· ∈ ·) (pow_succₓ a (n+1)).symm hS2).mp (Set.mul_mem_mul ha ih)
+        fun n ih => (congr_arg2ₓ (· ∈ ·) (pow_succₓ a (n+1)).symm hS2).mp (Set.mul_mem_mul ha ih)
   { Carrier := S,
     one_mem' :=
       by 
         obtain ⟨a, ha⟩ := hS1 
         rw [←pow_order_of_eq_one a, ←tsub_add_cancel_of_le (succ_le_of_lt (order_of_pos a))]
         exact pow_mem a ha (orderOf a - 1),
-    mul_mem' := fun a b ha hb => (congr_arg2 (· ∈ ·) rfl hS2).mp (Set.mul_mem_mul ha hb) }
+    mul_mem' := fun a b ha hb => (congr_arg2ₓ (· ∈ ·) rfl hS2).mp (Set.mul_mem_mul ha hb) }
 
 /-- A nonempty idempotent subset of a finite group is a subgroup -/
 def subgroupOfIdempotent {G : Type _} [Groupₓ G] [Fintype G] (S : Set G) (hS1 : S.nonempty) (hS2 : (S*S) = S) :

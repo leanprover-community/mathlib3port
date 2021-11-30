@@ -933,7 +933,7 @@ instance {α : Type _} [Fintype α] : Fintype (Option α) :=
 
 @[simp]
 theorem Fintype.card_option {α : Type _} [Fintype α] : Fintype.card (Option α) = Fintype.card α+1 :=
-  (Finset.card_cons _).trans$ congr_arg2 _ (card_map _) rfl
+  (Finset.card_cons _).trans$ congr_arg2ₓ _ (card_map _) rfl
 
 instance {α : Type _} (β : α → Type _) [Fintype α] [∀ a, Fintype (β a)] : Fintype (Sigma β) :=
   ⟨univ.Sigma fun _ => univ,
@@ -1465,9 +1465,15 @@ instance Quotientₓ.fintype [Fintype α] (s : Setoidₓ α) [DecidableRel (· �
 instance Finset.fintype [Fintype α] : Fintype (Finset α) :=
   ⟨univ.Powerset, fun x => Finset.mem_powerset.2 (Finset.subset_univ _)⟩
 
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
 @[irreducible]
-instance Function.Embedding.fintype {α β} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] : Fintype (α ↪ β) :=
-  Fintype.ofEquiv _ (Equiv.subtypeInjectiveEquivEmbedding α β)
+instance function.embedding.fintype
+{α β}
+[fintype α]
+[fintype β]
+[decidable_eq α]
+[decidable_eq β] : fintype «expr ↪ »(α, β) :=
+fintype.of_equiv _ (equiv.subtype_injective_equiv_embedding α β)
 
 instance [DecidableEq α] [Fintype α] {n : ℕ} : Fintype (Sym.Sym' α n) :=
   Quotientₓ.fintype _
@@ -2158,11 +2164,9 @@ theorem Fintype.exists_ne_map_eq_of_infinite [Infinite α] [Fintype β] (f : α 
     contrapose 
     apply hf
 
-@[irreducible]
-instance Function.Embedding.is_empty {α β} [Infinite α] [Fintype β] : IsEmpty (α ↪ β) :=
-  ⟨fun f =>
-      let ⟨x, y, Ne, feq⟩ := Fintype.exists_ne_map_eq_of_infinite f 
-      Ne$ f.injective feq⟩
+-- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
+@[irreducible] instance function.embedding.is_empty {α β} [infinite α] [fintype β] : is_empty «expr ↪ »(α, β) :=
+⟨λ f, let ⟨x, y, ne, feq⟩ := fintype.exists_ne_map_eq_of_infinite f in «expr $ »(ne, f.injective feq)⟩
 
 -- error in Data.Fintype.Basic: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception
 @[priority 100]

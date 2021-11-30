@@ -151,7 +151,7 @@ This tactic additionally filters out all unused arguments of type `parse _`.
 We skip all declarations that contain `sorry` in their value. -/
 private unsafe def unused_arguments (d : declaration) : tactic (Option Stringₓ) :=
   do 
-    let ff ← return d.value.contains_sorry | return none 
+    let ff ← d.to_name.contains_sorry | return none 
     let ns := check_unused_arguments d 
     let tt ← return ns.is_some | return none 
     let ns := ns.iget 

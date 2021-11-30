@@ -27,6 +27,9 @@ instance HasMem : HasMem α (Option α) :=
 theorem mem_def {a : α} {b : Option α} : a ∈ b ↔ b = some a :=
   Iff.rfl
 
+theorem mem_iff {a : α} {b : Option α} : a ∈ b ↔ b = a :=
+  Iff.rfl
+
 theorem is_none_iff_eq_none {o : Option α} : o.is_none = tt ↔ o = none :=
   ⟨Option.eq_none_of_is_none, fun e => e.symm ▸ rfl⟩
 

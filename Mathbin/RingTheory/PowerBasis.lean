@@ -340,8 +340,6 @@ noncomputable
 def alg_hom.fintype (pb : power_basis A S) : fintype «expr →ₐ[ ] »(S, A, B) :=
 by letI [] [] [":=", expr classical.dec_eq B]; exact [expr fintype.of_equiv _ pb.lift_equiv'.symm]
 
-attribute [local irreducible] PowerBasis.lift
-
 /-- `pb.equiv_of_root pb' h₁ h₂` is an equivalence of algebras with the same power basis,
 where "the same" means that `pb` is a root of `pb'`s minimal polynomial and vice versa.
 

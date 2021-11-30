@@ -226,6 +226,13 @@ into an automated theorem prover for first order logic. -/
 class Fact (p : Prop) : Prop where 
   out{} : p
 
+/--
+In most cases, we should not have global instances of `fact`; typeclass search only reads the head
+symbol and then tries any instances, which means that adding any such instance will cause slowdowns
+everywhere. We instead make them as lemmata and make them local instances as required.
+-/
+library_note "fact non-instances"
+
 theorem Fact.elim {p : Prop} (h : Fact p) : p :=
   h.1
 
@@ -922,7 +929,7 @@ theorem Eq.congr_right {x y z : α} (h : x = y) : z = x ↔ z = y :=
   by 
     rw [h]
 
-theorem congr_arg2 {α β γ : Type _} (f : α → β → γ) {x x' : α} {y y' : β} (hx : x = x') (hy : y = y') :
+theorem congr_arg2ₓ {α β γ : Sort _} (f : α → β → γ) {x x' : α} {y y' : β} (hx : x = x') (hy : y = y') :
   f x y = f x' y' :=
   by 
     subst hx 

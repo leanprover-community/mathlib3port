@@ -678,10 +678,12 @@ end Mul
 section Pow
 
 theorem pow_antitone_exp {a :  ℝ≥0 } (m n : ℕ) (mn : m ≤ n) (a1 : a ≤ 1) : a ^ n ≤ a ^ m :=
+  pow_le_pow_of_le_one (zero_le a) a1 mn
+
+theorem exists_pow_lt_of_lt_one {a b :  ℝ≥0 } (ha : 0 < a) (hb : b < 1) : ∃ n : ℕ, b ^ n < a :=
   by 
-    rcases le_iff_exists_add.mp mn with ⟨k, rfl⟩
-    rw [←mul_oneₓ (a ^ m), pow_addₓ]
-    refine' mul_le_mul rfl.le (pow_le_one _ (zero_le a) a1) _ _ <;> exact pow_nonneg (zero_le _) _
+    simpa only [←coe_pow, Nnreal.coe_lt_coe] using
+      exists_pow_lt_of_lt_one (Nnreal.coe_pos.2 ha) (Nnreal.coe_lt_coe.2 hb)
 
 theorem exists_mem_Ico_zpow {x :  ℝ≥0 } {y :  ℝ≥0 } (hx : x ≠ 0) (hy : 1 < y) :
   ∃ n : ℤ, x ∈ Set.Ico (y ^ n) (y ^ n+1) :=

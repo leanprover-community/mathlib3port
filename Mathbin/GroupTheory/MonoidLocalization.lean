@@ -187,9 +187,8 @@ instance Inhabited : Inhabited (Localization S) :=
 
 /-- Multiplication in a localization is defined as `⟨a, b⟩ * ⟨c, d⟩ = ⟨a * c, b * d⟩`. -/
 @[toAdditive
-      "Addition in an `add_localization` is defined as `⟨a, b⟩ + ⟨c, d⟩ = ⟨a + c, b + d⟩`.\n\nShould not be confused with the ring localization counterpart `localization.add`, which maps\n`⟨a, b⟩ + ⟨c, d⟩` to `⟨d * a + b * c, b * d⟩`.",
-  irreducible]
-protected def mul : Localization S → Localization S → Localization S :=
+      "Addition in an `add_localization` is defined as `⟨a, b⟩ + ⟨c, d⟩ = ⟨a + c, b + d⟩`.\n\nShould not be confused with the ring localization counterpart `localization.add`, which maps\n`⟨a, b⟩ + ⟨c, d⟩` to `⟨d * a + b * c, b * d⟩`."]
+protected irreducible_def mul : Localization S → Localization S → Localization S :=
   (r S).CommMonoid.mul
 
 @[toAdditive]
@@ -198,9 +197,8 @@ instance : Mul (Localization S) :=
 
 /-- The identity element of a localization is defined as `⟨1, 1⟩`. -/
 @[toAdditive
-      "The identity element of an `add_localization` is defined as `⟨0, 0⟩`.\n\nShould not be confused with the ring localization counterpart `localization.zero`,\nwhich is defined as `⟨0, 1⟩`.",
-  irreducible]
-protected def one : Localization S :=
+      "The identity element of an `add_localization` is defined as `⟨0, 0⟩`.\n\nShould not be confused with the ring localization counterpart `localization.zero`,\nwhich is defined as `⟨0, 1⟩`."]
+protected irreducible_def one : Localization S :=
   (r S).CommMonoid.one
 
 @[toAdditive]
@@ -213,9 +211,8 @@ This is a separate `irreducible` def to ensure the elaborator doesn't waste its 
 trying to unify some huge recursive definition with itself, but unfolded one step less.
 -/
 @[toAdditive
-      "Multiplication with a natural in an `add_localization` is defined as `n • ⟨a, b⟩ = ⟨n • a, n • b⟩`.\n\nThis is a separate `irreducible` def to ensure the elaborator doesn't waste its time\ntrying to unify some huge recursive definition with itself, but unfolded one step less.",
-  irreducible]
-protected def npow : ℕ → Localization S → Localization S :=
+      "Multiplication with a natural in an `add_localization` is defined as `n • ⟨a, b⟩ = ⟨n • a, n • b⟩`.\n\nThis is a separate `irreducible` def to ensure the elaborator doesn't waste its time\ntrying to unify some huge recursive definition with itself, but unfolded one step less."]
+protected irreducible_def npow : ℕ → Localization S → Localization S :=
   (r S).CommMonoid.npow
 
 attribute [local semireducible] Localization.mul Localization.one Localization.npow
@@ -262,8 +259,6 @@ def rec {p : Localization S → Sort u} (f : ∀ a : M b : S, p (mk a b))
         cases z 
         exact H h)
     x
-
-attribute [irreducible] Localization
 
 @[toAdditive]
 theorem mk_mul (a c : M) (b d : S) : (mk a b*mk c d) = mk (a*c) (b*d) :=

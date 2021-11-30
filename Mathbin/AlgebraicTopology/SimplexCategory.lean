@@ -67,8 +67,8 @@ theorem mk_len (n : SimplexCategory.{u}) : [n.len] = n :=
     rfl
 
 /-- Morphisms in the simplex_category. -/
-@[irreducible, nolint has_inhabited_instance]
-protected def hom (a b : SimplexCategory.{u}) : Type u :=
+@[nolint has_inhabited_instance]
+protected irreducible_def hom (a b : SimplexCategory.{u}) : Type u :=
   Ulift (Finₓ (a.len+1) →ₘ Finₓ (b.len+1))
 
 namespace Hom

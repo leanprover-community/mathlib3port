@@ -69,32 +69,25 @@ namespace RingQuot
 
 variable (r : R → R → Prop)
 
-@[irreducible]
-private def zero : RingQuot r :=
+private irreducible_def zero : RingQuot r :=
   ⟨Quot.mk _ 0⟩
 
-@[irreducible]
-private def one : RingQuot r :=
+private irreducible_def one : RingQuot r :=
   ⟨Quot.mk _ 1⟩
 
-@[irreducible]
-private def add : RingQuot r → RingQuot r → RingQuot r
+private irreducible_def add : RingQuot r → RingQuot r → RingQuot r
 | ⟨a⟩, ⟨b⟩ => ⟨Quot.map₂ (·+·) rel.add_right rel.add_left a b⟩
 
-@[irreducible]
-private def mul : RingQuot r → RingQuot r → RingQuot r
+private irreducible_def mul : RingQuot r → RingQuot r → RingQuot r
 | ⟨a⟩, ⟨b⟩ => ⟨Quot.map₂ (·*·) rel.mul_right rel.mul_left a b⟩
 
-@[irreducible]
-private def neg {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r
+private irreducible_def neg {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r
 | ⟨a⟩ => ⟨Quot.map (fun a => -a) rel.neg a⟩
 
-@[irreducible]
-private def sub {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r → RingQuot r
+private irreducible_def sub {R : Type u₁} [Ringₓ R] (r : R → R → Prop) : RingQuot r → RingQuot r → RingQuot r
 | ⟨a⟩, ⟨b⟩ => ⟨Quot.map₂ Sub.sub rel.sub_right rel.sub_left a b⟩
 
-@[irreducible]
-private def smul [Algebra S R] (n : S) : RingQuot r → RingQuot r
+private irreducible_def smul [Algebra S R] (n : S) : RingQuot r → RingQuot r
 | ⟨a⟩ => ⟨Quot.map (fun a => n • a) (rel.smul n) a⟩
 
 instance : HasZero (RingQuot r) :=
@@ -459,8 +452,7 @@ theorem rel.star ⦃a b : R⦄ (h : rel r a b) : rel r (star a) (star b) :=
       rw [star_mul, star_mul]
       exact rel.mul_left h_ih
 
-@[irreducible]
-private def star' : RingQuot r → RingQuot r
+private irreducible_def star' : RingQuot r → RingQuot r
 | ⟨a⟩ => ⟨Quot.map (star : R → R) (rel.star r hr) a⟩
 
 theorem star'_quot (hr : ∀ a b, r a b → r (star a) (star b)) {a} :
@@ -607,8 +599,6 @@ theorem eq_lift_alg_hom_comp_mk_alg_hom {s : A → A → Prop} (f : RingQuot s �
   ((lift_alg_hom S).apply_symm_apply f).symm
 
 end Algebra
-
-attribute [irreducible] mk_ring_hom mk_alg_hom lift lift_alg_hom
 
 end RingQuot
 

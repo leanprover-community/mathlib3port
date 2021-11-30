@@ -1463,8 +1463,6 @@ mk_simp_attribute integral_simps := "Simp set for integral rules."
 
 attribute [integral_simps] integral_neg integral_smul L1.integral_add L1.integral_sub L1.integral_smul L1.integral_neg
 
-attribute [irreducible] integral L1.integral
-
 section IntegralTrim
 
 variable {H β γ : Type _} [NormedGroup H] [MeasurableSpace H] {m m0 : MeasurableSpace β} {μ : Measureₓ β}

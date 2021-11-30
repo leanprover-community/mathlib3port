@@ -1,4 +1,5 @@
 import Mathbin.Algebra.Group.Pi 
+import Mathbin.Algebra.Ring.Opposite 
 import Mathbin.Data.Equiv.MulAdd 
 import Mathbin.Data.Finset.Fold 
 import Mathbin.Data.Fintype.Basic 
@@ -640,18 +641,18 @@ theorem prod_apply_dite {s : Finset α} {p : α → Prop} {hp : DecidablePred p}
           h
             (if hx : p x.1 then f x.1 hx else
               g x.1 hx))*∏x in (s.filter fun x => ¬p x).attach, h (if hx : p x.1 then f x.1 hx else g x.1 hx) :=
-    congr_arg2 _ prod_attach.symm prod_attach.symm 
+    congr_arg2ₓ _ prod_attach.symm prod_attach.symm 
     _ =
       (∏x in (s.filter p).attach,
           h (f x.1 (mem_filter.mp x.2).2))*∏x in (s.filter fun x => ¬p x).attach, h (g x.1 (mem_filter.mp x.2).2) :=
-    congr_arg2 _ (prod_congr rfl fun x hx => congr_argₓ h (dif_pos (mem_filter.mp x.2).2))
+    congr_arg2ₓ _ (prod_congr rfl fun x hx => congr_argₓ h (dif_pos (mem_filter.mp x.2).2))
       (prod_congr rfl fun x hx => congr_argₓ h (dif_neg (mem_filter.mp x.2).2))
     
 
 @[toAdditive]
 theorem prod_apply_ite {s : Finset α} {p : α → Prop} {hp : DecidablePred p} (f g : α → γ) (h : γ → β) :
   (∏x in s, h (if p x then f x else g x)) = (∏x in s.filter p, h (f x))*∏x in s.filter fun x => ¬p x, h (g x) :=
-  trans (prod_apply_dite _ _ _) (congr_arg2 _ (@prod_attach _ _ _ _ (h ∘ f)) (@prod_attach _ _ _ _ (h ∘ g)))
+  trans (prod_apply_dite _ _ _) (congr_arg2ₓ _ (@prod_attach _ _ _ _ (h ∘ f)) (@prod_attach _ _ _ _ (h ∘ g)))
 
 @[toAdditive]
 theorem prod_dite {s : Finset α} {p : α → Prop} {hp : DecidablePred p} (f : ∀ x : α, p x → β) (g : ∀ x : α, ¬p x → β) :

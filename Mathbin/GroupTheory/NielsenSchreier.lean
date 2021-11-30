@@ -48,7 +48,7 @@ open_locale Classical
 
 universe v u
 
--- error in GroupTheory.NielsenSchreier: ././Mathport/Syntax/Translate/Basic.lean:882:11: unsupported: unusual advanced open style
+-- error in GroupTheory.NielsenSchreier: ././Mathport/Syntax/Translate/Basic.lean:886:11: unsupported: unusual advanced open style
 open category_theory category_theory.action_category category_theory.single_obj quiver is_free_group as fgp
 
 /-- `is_free_groupoid.generators G` is a type synonym for `G`. We think of this as

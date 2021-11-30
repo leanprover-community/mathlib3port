@@ -35,7 +35,7 @@ open MonoidalCategory
 
 variable (V : Type v) [category.{w} V] [monoidal_category V]
 
--- error in CategoryTheory.Enriched.Basic: ././Mathport/Syntax/Translate/Basic.lean:990:29: unsupported: (notation) in structure
+-- error in CategoryTheory.Enriched.Basic: ././Mathport/Syntax/Translate/Basic.lean:998:29: unsupported: (notation) in structure
 /--
 A `V`-category is a category enriched in a monoidal category `V`.
 

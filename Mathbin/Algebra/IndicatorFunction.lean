@@ -449,7 +449,7 @@ theorem _root_.finset.prod_mul_indicator_eq_prod_filter (s : Finset ι) (f : ι 
     refine' (Finset.prod_filter_mul_prod_filter_not s (fun i => g i ∈ t i) _).symm.trans _ 
     refine' Eq.trans _ (mul_oneₓ _)
     exact
-      congr_arg2 (·*·) (Finset.prod_congr rfl$ fun x hx => mul_indicator_of_mem (Finset.mem_filter.1 hx).2 _)
+      congr_arg2ₓ (·*·) (Finset.prod_congr rfl$ fun x hx => mul_indicator_of_mem (Finset.mem_filter.1 hx).2 _)
         (Finset.prod_eq_one$ fun x hx => mul_indicator_of_not_mem (Finset.mem_filter.1 hx).2 _)
 
 @[toAdditive]

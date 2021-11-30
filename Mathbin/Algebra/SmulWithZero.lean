@@ -1,4 +1,5 @@
 import Mathbin.Algebra.GroupPower.Basic 
+import Mathbin.Algebra.Ring.Opposite 
 import Mathbin.GroupTheory.GroupAction.Opposite
 
 /-!

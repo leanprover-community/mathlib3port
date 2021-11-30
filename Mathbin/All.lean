@@ -116,6 +116,7 @@ import Mathbin.Algebra.Group.Ext
 import Mathbin.Algebra.Group.Hom 
 import Mathbin.Algebra.Group.HomInstances 
 import Mathbin.Algebra.Group.InjSurj 
+import Mathbin.Algebra.Group.Opposite 
 import Mathbin.Algebra.Group.Pi 
 import Mathbin.Algebra.Group.Prod 
 import Mathbin.Algebra.Group.Semiconj 
@@ -231,6 +232,7 @@ import Mathbin.Algebra.Ring.Basic
 import Mathbin.Algebra.Ring.BooleanRing 
 import Mathbin.Algebra.Ring.CompTypeclasses 
 import Mathbin.Algebra.Ring.Default 
+import Mathbin.Algebra.Ring.Opposite 
 import Mathbin.Algebra.Ring.Pi 
 import Mathbin.Algebra.Ring.Prod 
 import Mathbin.Algebra.Ring.Ulift 

@@ -86,8 +86,6 @@ theorem lift_unique (f : X → A) (F : NonUnitalAlgHom R (FreeNonUnitalNonAssocA
   F ∘ of R = f ↔ F = lift R f :=
   (lift R).symm_apply_eq
 
-attribute [irreducible] of lift
-
 @[simp]
 theorem lift_of_apply (f : X → A) x : lift R f (of R x) = f x :=
   by 

@@ -800,8 +800,6 @@ begin
     apply [expr linear_independent_le_basis v _ li] }
 end
 
-attribute [irreducible] Module.rank
-
 theorem Basis.mk_range_eq_dim (v : Basis ι R M) : # (range v) = Module.rank R M :=
   v.reindex_range.mk_eq_dim''
 

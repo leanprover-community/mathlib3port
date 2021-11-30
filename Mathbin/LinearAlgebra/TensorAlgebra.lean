@@ -121,8 +121,6 @@ theorem lift_unique {A : Type _} [Semiringₓ A] [Algebra R A] (f : M →ₗ[R] 
   g.to_linear_map.comp (ι R) = f ↔ g = lift R f :=
   (lift R).symm_apply_eq
 
-attribute [irreducible] ι lift
-
 @[simp]
 theorem lift_comp_ι {A : Type _} [Semiringₓ A] [Algebra R A] (g : TensorAlgebra R M →ₐ[R] A) :
   lift R (g.to_linear_map.comp (ι R)) = g :=

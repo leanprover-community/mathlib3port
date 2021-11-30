@@ -32,7 +32,7 @@ variable [TopologicalSpace α]
 
 @[simp]
 theorem nhds_bind_nhds_within {a : α} {s : Set α} : ((𝓝 a).bind fun x => 𝓝[s] x) = 𝓝[s] a :=
-  bind_inf_principal.trans$ congr_arg2 _ nhds_bind_nhds rfl
+  bind_inf_principal.trans$ congr_arg2ₓ _ nhds_bind_nhds rfl
 
 @[simp]
 theorem eventually_nhds_nhds_within {a : α} {s : Set α} {p : α → Prop} :

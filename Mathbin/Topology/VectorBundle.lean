@@ -59,7 +59,7 @@ variable (R : Type _) {B : Type _} (F : Type _) (E : B → Type _) [Semiringₓ 
 
 section 
 
--- error in Topology.VectorBundle: ././Mathport/Syntax/Translate/Basic.lean:1004:11: unsupported: advanced extends in structure
+-- error in Topology.VectorBundle: ././Mathport/Syntax/Translate/Basic.lean:1012:11: unsupported: advanced extends in structure
 /-- Local trivialization for vector bundles. -/
 @[nolint #[ident has_inhabited_instance]]
 structure topological_vector_bundle.trivializationextends to_fiber_bundle_trivialization : topological_fiber_bundle.trivialization F (proj E) :=

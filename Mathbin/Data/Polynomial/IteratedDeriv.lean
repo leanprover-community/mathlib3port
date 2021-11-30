@@ -268,7 +268,7 @@ theorem iterated_deriv_mul :
       by 
         rw [sum_range_succ' _ n.succ, choose_zero_right, tsub_zero]
     congr 
-    refine' (sum_range_succ' _ _).trans (congr_arg2 (·+·) _ _)
+    refine' (sum_range_succ' _ _).trans (congr_arg2ₓ (·+·) _ _)
     ·
       rw [sum_range_succ, Nat.choose_succ_self, cast_zero, C.map_zero, zero_mul, zero_mul, add_zeroₓ]
       refine' sum_congr rfl fun k hk => _ 

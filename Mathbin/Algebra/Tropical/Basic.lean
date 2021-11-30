@@ -89,8 +89,6 @@ theorem left_inverse_trop : Function.LeftInverse (trop : R → Tropical R) untro
 theorem right_inverse_trop : Function.RightInverse (trop : R → Tropical R) untrop :=
   trop_untrop
 
-attribute [irreducible] Tropical
-
 /-- Reinterpret `x : R` as an element of `tropical R`.
 See `tropical.trop_order_iso` for the order-preserving equivalence. -/
 def trop_equiv : R ≃ Tropical R :=

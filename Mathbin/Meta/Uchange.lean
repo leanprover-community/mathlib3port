@@ -19,8 +19,8 @@ universe u v
 Unlike `unchecked_cast`, it can cast across universes. The VM implementation
 is guaranteed to be the identity.
 -/
-@[inline, irreducible]
-unsafe def unchecked_cast' {α : Sort u} {β : Sort v} (a : α) : β :=
+@[inline]
+unsafe irreducible_def unchecked_cast' {α : Sort u} {β : Sort v} (a : α) : β :=
   Plift.down$ @cast (α → β → Plift β) (β → α → Plift β) undefined (fun _ a => Plift.up a) (cast undefined PUnit.unit) a
 
 /--

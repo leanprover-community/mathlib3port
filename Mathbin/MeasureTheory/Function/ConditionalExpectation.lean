@@ -1708,8 +1708,7 @@ variable {𝕜} {m m0 : MeasurableSpace α} {μ : Measureₓ α} [IsScalarTower 
   {f g : α → F'} {s : Set α}
 
 /-- Conditional expectation of a function. Its value is 0 if the function is not integrable. -/
-@[irreducible]
-def condexp (hm : m ≤ m0) (μ : Measureₓ α) [sigma_finite (μ.trim hm)] (f : α → F') : α → F' :=
+irreducible_def condexp (hm : m ≤ m0) (μ : Measureₓ α) [sigma_finite (μ.trim hm)] (f : α → F') : α → F' :=
   if measurable[m] f ∧ integrable f μ then f else ae_measurable'_condexp_L1.mk (condexp_L1 hm μ f)
 
 localized [MeasureTheory] notation μ "[" f "|" hm "]" => MeasureTheory.condexp hm μ f

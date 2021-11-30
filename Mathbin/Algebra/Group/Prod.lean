@@ -1,4 +1,4 @@
-import Mathbin.Algebra.Opposites
+import Mathbin.Algebra.Group.Opposite
 
 /-!
 # Monoid, group etc structures on `M × N`

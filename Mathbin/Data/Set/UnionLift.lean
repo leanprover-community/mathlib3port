@@ -155,7 +155,5 @@ theorem lift_cover_coe {i : ι} (x : S i) : lift_cover S f hf hS x = f i x :=
 theorem lift_cover_of_mem {i : ι} {x : α} (hx : (x : α) ∈ S i) : lift_cover S f hf hS x = f i ⟨x, hx⟩ :=
   Union_lift_of_mem ⟨x, trivialₓ⟩ hx
 
-attribute [irreducible] Union_lift lift_cover
-
 end Set
 

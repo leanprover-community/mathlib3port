@@ -108,14 +108,6 @@ theorem top_add (a : α) : (⊤+a) = ⊤ :=
 theorem add_top (a : α) : (a+⊤) = ⊤ :=
   trans (add_commₓ _ _) (top_add _)
 
-@[simp]
-theorem min_top_left (a : α) : min (⊤ : α) a = a :=
-  min_eq_rightₓ le_top
-
-@[simp]
-theorem min_top_right (a : α) : min a ⊤ = a :=
-  min_eq_leftₓ le_top
-
 end LinearOrderedAddCommMonoidWithTop
 
 /-- Pullback an `ordered_comm_monoid` under an injective map.

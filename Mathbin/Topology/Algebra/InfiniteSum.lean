@@ -55,8 +55,7 @@ def Summable (f : β → α) : Prop :=
   ∃ a, HasSum f a
 
 /-- `∑' i, f i` is the sum of `f` it exists, or 0 otherwise -/
-@[irreducible]
-def tsum {β} (f : β → α) :=
+irreducible_def tsum {β} (f : β → α) :=
   if h : Summable f then Classical.some h else 0
 
 notation3  "∑'" (...) ", " r:(scoped f => tsum f) => r

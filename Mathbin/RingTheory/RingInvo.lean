@@ -1,5 +1,5 @@
 import Mathbin.Data.Equiv.Ring 
-import Mathbin.Algebra.Opposites
+import Mathbin.Algebra.Ring.Opposite
 
 /-!
 # Ring involutions

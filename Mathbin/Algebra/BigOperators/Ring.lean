@@ -130,7 +130,7 @@ theorem prod_add (f g : α → β) (s : Finset α) :
         intro t ht 
         erw [prod_ite (fun a : { a // a ∈ s } => f a.1) fun a : { a // a ∈ s } => g a.1]
         refine'
-            congr_arg2 _
+            congr_arg2ₓ _
               (prod_bij (fun a : α ha : a ∈ t => ⟨a, mem_powerset.1 ht ha⟩) _ _ _
                 fun b hb =>
                   ⟨b,

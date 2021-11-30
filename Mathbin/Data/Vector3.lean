@@ -35,7 +35,7 @@ def cons {α} {n} (a : α) (v : Vector3 α n) : Vector3 α (succ n) :=
       exact a 
       exact v
 
--- error in Data.Vector3: ././Mathport/Syntax/Translate/Basic.lean:1266:43: in localized: ././Mathport/Syntax/Translate/Basic.lean:1096:9: unsupported: advanced notation (l:(foldr `, ` (h t, vector3.cons h t) nil `]`))
+-- error in Data.Vector3: ././Mathport/Syntax/Translate/Basic.lean:1274:43: in localized: ././Mathport/Syntax/Translate/Basic.lean:1104:9: unsupported: advanced notation (l:(foldr `, ` (h t, vector3.cons h t) nil `]`))
 localized [expr "notation `[` l:(foldr `, ` (h t, vector3.cons h t) nil `]`) := l", [command <some 0>], "in", ident vector3]
 
 @[simp]

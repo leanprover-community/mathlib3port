@@ -111,7 +111,7 @@ protected def volume {E : Type _} [NormedGroup E] [NormedSpace ℝ E] : ι →�
 
 theorem volume_apply {E : Type _} [NormedGroup E] [NormedSpace ℝ E] (I : box ι) (x : E) :
   box_additive_map.volume I x = (∏j, I.upper j - I.lower j) • x :=
-  congr_arg2 (· • ·) I.volume_apply rfl
+  congr_arg2ₓ (· • ·) I.volume_apply rfl
 
 end BoxAdditiveMap
 

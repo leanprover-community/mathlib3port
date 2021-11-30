@@ -94,13 +94,10 @@ end HasLimits
 
 open HasLimits
 
-/-- The category of R-modules has all limits. -/
-@[irreducible]
-instance has_limits : has_limits (ModuleCat.{v} R) :=
-  { HasLimitsOfShape :=
-      fun J 𝒥 =>
-        by 
-          exact { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
+-- error in Algebra.Category.Module.Limits: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
+/-- The category of R-modules has all limits. -/ @[irreducible] instance has_limits : has_limits (Module.{v} R) :=
+{ has_limits_of_shape := λ
+  J 𝒥, by exactI [expr { has_limit := λ F, has_limit.mk { cone := limit_cone F, is_limit := limit_cone_is_limit F } }] }
 
 /--
 An auxiliary declaration to speed up typechecking.

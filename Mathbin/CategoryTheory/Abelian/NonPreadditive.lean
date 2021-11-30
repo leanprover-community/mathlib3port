@@ -123,173 +123,93 @@ theorem is_iso_of_mono_of_epi [mono f] [epi f] : is_iso f :=
 
 end MonoEpiIso
 
+-- error in CategoryTheory.Abelian.NonPreadditive: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
 /-- The pullback of two monomorphisms exists. -/
 @[irreducible]
-theorem pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [mono a] [mono b] : has_limit (cospan a b) :=
-  let ⟨P, f, haf, i⟩ := non_preadditive_abelian.normal_mono a 
-  let ⟨Q, g, hbg, i'⟩ := non_preadditive_abelian.normal_mono b 
-  let ⟨a', ha'⟩ :=
-    kernel_fork.is_limit.lift' i (kernel.ι (prod.lift f g))$
-      calc kernel.ι (prod.lift f g) ≫ f = kernel.ι (prod.lift f g) ≫ prod.lift f g ≫ limits.prod.fst :=
-        by 
-          rw [prod.lift_fst]
-        _ = (0 : kernel (prod.lift f g) ⟶ P ⨯ Q) ≫ limits.prod.fst :=
-        by 
-          rw [kernel.condition_assoc]
-        _ = 0 := zero_comp 
-        
-  let ⟨b', hb'⟩ :=
-    kernel_fork.is_limit.lift' i' (kernel.ι (prod.lift f g))$
-      calc kernel.ι (prod.lift f g) ≫ g = kernel.ι (prod.lift f g) ≫ prod.lift f g ≫ limits.prod.snd :=
-        by 
-          rw [prod.lift_snd]
-        _ = (0 : kernel (prod.lift f g) ⟶ P ⨯ Q) ≫ limits.prod.snd :=
-        by 
-          rw [kernel.condition_assoc]
-        _ = 0 := zero_comp 
-        
-  has_limit.mk
-    { Cone :=
-        pullback_cone.mk a' b'$
-          by 
-            simp  at ha' hb' 
-            rw [ha', hb'],
-      IsLimit :=
-        pullback_cone.is_limit.mk _
-          (fun s =>
-            kernel.lift (prod.lift f g) (pullback_cone.snd s ≫ b)$
-              prod.hom_ext
-                (calc ((pullback_cone.snd s ≫ b) ≫ prod.lift f g) ≫ limits.prod.fst = pullback_cone.snd s ≫ b ≫ f :=
-                  by 
-                    simp only [prod.lift_fst, category.assoc]
-                  _ = pullback_cone.fst s ≫ a ≫ f :=
-                  by 
-                    rw [pullback_cone.condition_assoc]
-                  _ = pullback_cone.fst s ≫ 0 :=
-                  by 
-                    rw [haf]
-                  _ = 0 ≫ limits.prod.fst :=
-                  by 
-                    rw [comp_zero, zero_comp]
-                  )
-                (calc ((pullback_cone.snd s ≫ b) ≫ prod.lift f g) ≫ limits.prod.snd = pullback_cone.snd s ≫ b ≫ g :=
-                  by 
-                    simp only [prod.lift_snd, category.assoc]
-                  _ = pullback_cone.snd s ≫ 0 :=
-                  by 
-                    rw [hbg]
-                  _ = 0 ≫ limits.prod.snd :=
-                  by 
-                    rw [comp_zero, zero_comp]
-                  ))
-          (fun s =>
-            (cancel_mono a).1$
-              by 
-                rw [kernel_fork.ι_of_ι] at ha' 
-                simp [ha', pullback_cone.condition s])
-          (fun s =>
-            (cancel_mono b).1$
-              by 
-                rw [kernel_fork.ι_of_ι] at hb' 
-                simp [hb'])
-          fun s m h₁ h₂ =>
-            (cancel_mono (kernel.ι (prod.lift f g))).1$
-              calc m ≫ kernel.ι (prod.lift f g) = m ≫ a' ≫ a :=
-                by 
-                  congr 
-                  exact ha'.symm 
-                _ = pullback_cone.fst s ≫ a :=
-                by 
-                  rw [←category.assoc, h₁]
-                _ = pullback_cone.snd s ≫ b := pullback_cone.condition s 
-                _ = kernel.lift (prod.lift f g) (pullback_cone.snd s ≫ b) _ ≫ kernel.ι (prod.lift f g) :=
-                by 
-                  rw [kernel.lift_ι]
-                 }
+theorem pullback_of_mono
+{X Y Z : C}
+(a : «expr ⟶ »(X, Z))
+(b : «expr ⟶ »(Y, Z))
+[mono a]
+[mono b] : has_limit (cospan a b) :=
+let ⟨P, f, haf, i⟩ := non_preadditive_abelian.normal_mono a in
+let ⟨Q, g, hbg, i'⟩ := non_preadditive_abelian.normal_mono b in
+let ⟨a', ha'⟩ := «expr $ »(kernel_fork.is_limit.lift' i (kernel.ι (prod.lift f g)), calc
+       «expr = »(«expr ≫ »(kernel.ι (prod.lift f g), f), «expr ≫ »(kernel.ι (prod.lift f g), «expr ≫ »(prod.lift f g, limits.prod.fst))) : by rw [expr prod.lift_fst] []
+       «expr = »(..., «expr ≫ »((0 : «expr ⟶ »(kernel (prod.lift f g), «expr ⨯ »(P, Q))), limits.prod.fst)) : by rw [expr kernel.condition_assoc] []
+       «expr = »(..., 0) : zero_comp) in
+let ⟨b', hb'⟩ := «expr $ »(kernel_fork.is_limit.lift' i' (kernel.ι (prod.lift f g)), calc
+       «expr = »(«expr ≫ »(kernel.ι (prod.lift f g), g), «expr ≫ »(kernel.ι (prod.lift f g), «expr ≫ »(prod.lift f g, limits.prod.snd))) : by rw [expr prod.lift_snd] []
+       «expr = »(..., «expr ≫ »((0 : «expr ⟶ »(kernel (prod.lift f g), «expr ⨯ »(P, Q))), limits.prod.snd)) : by rw [expr kernel.condition_assoc] []
+       «expr = »(..., 0) : zero_comp) in
+has_limit.mk { cone := «expr $ »(pullback_cone.mk a' b', by { simp [] [] [] [] [] ["at", ident ha', ident hb'],
+     rw ["[", expr ha', ",", expr hb', "]"] [] }),
+  is_limit := pullback_cone.is_limit.mk _ (λ
+   s, «expr $ »(kernel.lift (prod.lift f g) «expr ≫ »(pullback_cone.snd s, b), prod.hom_ext (calc
+       «expr = »(«expr ≫ »(«expr ≫ »(«expr ≫ »(pullback_cone.snd s, b), prod.lift f g), limits.prod.fst), «expr ≫ »(pullback_cone.snd s, «expr ≫ »(b, f))) : by simp [] [] ["only"] ["[", expr prod.lift_fst, ",", expr category.assoc, "]"] [] []
+       «expr = »(..., «expr ≫ »(pullback_cone.fst s, «expr ≫ »(a, f))) : by rw [expr pullback_cone.condition_assoc] []
+       «expr = »(..., «expr ≫ »(pullback_cone.fst s, 0)) : by rw [expr haf] []
+       «expr = »(..., «expr ≫ »(0, limits.prod.fst)) : by rw ["[", expr comp_zero, ",", expr zero_comp, "]"] []) (calc
+       «expr = »(«expr ≫ »(«expr ≫ »(«expr ≫ »(pullback_cone.snd s, b), prod.lift f g), limits.prod.snd), «expr ≫ »(pullback_cone.snd s, «expr ≫ »(b, g))) : by simp [] [] ["only"] ["[", expr prod.lift_snd, ",", expr category.assoc, "]"] [] []
+       «expr = »(..., «expr ≫ »(pullback_cone.snd s, 0)) : by rw [expr hbg] []
+       «expr = »(..., «expr ≫ »(0, limits.prod.snd)) : by rw ["[", expr comp_zero, ",", expr zero_comp, "]"] []))) (λ
+   s, «expr $ »((cancel_mono a).1, by { rw [expr kernel_fork.ι_of_ι] ["at", ident ha'],
+      simp [] [] [] ["[", expr ha', ",", expr pullback_cone.condition s, "]"] [] [] })) (λ
+   s, «expr $ »((cancel_mono b).1, by { rw [expr kernel_fork.ι_of_ι] ["at", ident hb'],
+      simp [] [] [] ["[", expr hb', "]"] [] [] })) (λ
+   s
+   m
+   h₁
+   h₂, «expr $ »((cancel_mono (kernel.ι (prod.lift f g))).1, calc
+      «expr = »(«expr ≫ »(m, kernel.ι (prod.lift f g)), «expr ≫ »(m, «expr ≫ »(a', a))) : by { congr,
+        exact [expr ha'.symm] }
+      «expr = »(..., «expr ≫ »(pullback_cone.fst s, a)) : by rw ["[", "<-", expr category.assoc, ",", expr h₁, "]"] []
+      «expr = »(..., «expr ≫ »(pullback_cone.snd s, b)) : pullback_cone.condition s
+      «expr = »(..., «expr ≫ »(kernel.lift (prod.lift f g) «expr ≫ »(pullback_cone.snd s, b) _, kernel.ι (prod.lift f g))) : by rw [expr kernel.lift_ι] [])) }
 
+-- error in CategoryTheory.Abelian.NonPreadditive: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
 /-- The pushout of two epimorphisms exists. -/
 @[irreducible]
-theorem pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [epi a] [epi b] : has_colimit (span a b) :=
-  let ⟨P, f, hfa, i⟩ := non_preadditive_abelian.normal_epi a 
-  let ⟨Q, g, hgb, i'⟩ := non_preadditive_abelian.normal_epi b 
-  let ⟨a', ha'⟩ :=
-    cokernel_cofork.is_colimit.desc' i (cokernel.π (coprod.desc f g))$
-      calc f ≫ cokernel.π (coprod.desc f g) = coprod.inl ≫ coprod.desc f g ≫ cokernel.π (coprod.desc f g) :=
-        by 
-          rw [coprod.inl_desc_assoc]
-        _ = coprod.inl ≫ (0 : P ⨿ Q ⟶ cokernel (coprod.desc f g)) :=
-        by 
-          rw [cokernel.condition]
-        _ = 0 := has_zero_morphisms.comp_zero _ _ 
-        
-  let ⟨b', hb'⟩ :=
-    cokernel_cofork.is_colimit.desc' i' (cokernel.π (coprod.desc f g))$
-      calc g ≫ cokernel.π (coprod.desc f g) = coprod.inr ≫ coprod.desc f g ≫ cokernel.π (coprod.desc f g) :=
-        by 
-          rw [coprod.inr_desc_assoc]
-        _ = coprod.inr ≫ (0 : P ⨿ Q ⟶ cokernel (coprod.desc f g)) :=
-        by 
-          rw [cokernel.condition]
-        _ = 0 := has_zero_morphisms.comp_zero _ _ 
-        
-  has_colimit.mk
-    { Cocone :=
-        pushout_cocone.mk a' b'$
-          by 
-            simp only [cofork.π_of_π] at ha' hb' 
-            rw [ha', hb'],
-      IsColimit :=
-        pushout_cocone.is_colimit.mk _
-          (fun s =>
-            cokernel.desc (coprod.desc f g) (b ≫ pushout_cocone.inr s)$
-              coprod.hom_ext
-                (calc coprod.inl ≫ coprod.desc f g ≫ b ≫ pushout_cocone.inr s = f ≫ b ≫ pushout_cocone.inr s :=
-                  by 
-                    rw [coprod.inl_desc_assoc]
-                  _ = f ≫ a ≫ pushout_cocone.inl s :=
-                  by 
-                    rw [pushout_cocone.condition]
-                  _ = 0 ≫ pushout_cocone.inl s :=
-                  by 
-                    rw [reassoc_of hfa]
-                  _ = coprod.inl ≫ 0 :=
-                  by 
-                    rw [comp_zero, zero_comp]
-                  )
-                (calc coprod.inr ≫ coprod.desc f g ≫ b ≫ pushout_cocone.inr s = g ≫ b ≫ pushout_cocone.inr s :=
-                  by 
-                    rw [coprod.inr_desc_assoc]
-                  _ = 0 ≫ pushout_cocone.inr s :=
-                  by 
-                    rw [reassoc_of hgb]
-                  _ = coprod.inr ≫ 0 :=
-                  by 
-                    rw [comp_zero, zero_comp]
-                  ))
-          (fun s =>
-            (cancel_epi a).1$
-              by 
-                rw [cokernel_cofork.π_of_π] at ha' 
-                simp [reassoc_of ha', pushout_cocone.condition s])
-          (fun s =>
-            (cancel_epi b).1$
-              by 
-                rw [cokernel_cofork.π_of_π] at hb' 
-                simp [reassoc_of hb'])
-          fun s m h₁ h₂ =>
-            (cancel_epi (cokernel.π (coprod.desc f g))).1$
-              calc cokernel.π (coprod.desc f g) ≫ m = (a ≫ a') ≫ m :=
-                by 
-                  congr 
-                  exact ha'.symm 
-                _ = a ≫ pushout_cocone.inl s :=
-                by 
-                  rw [category.assoc, h₁]
-                _ = b ≫ pushout_cocone.inr s := pushout_cocone.condition s 
-                _ = cokernel.π (coprod.desc f g) ≫ cokernel.desc (coprod.desc f g) (b ≫ pushout_cocone.inr s) _ :=
-                by 
-                  rw [cokernel.π_desc]
-                 }
+theorem pushout_of_epi
+{X Y Z : C}
+(a : «expr ⟶ »(X, Y))
+(b : «expr ⟶ »(X, Z))
+[epi a]
+[epi b] : has_colimit (span a b) :=
+let ⟨P, f, hfa, i⟩ := non_preadditive_abelian.normal_epi a in
+let ⟨Q, g, hgb, i'⟩ := non_preadditive_abelian.normal_epi b in
+let ⟨a', ha'⟩ := «expr $ »(cokernel_cofork.is_colimit.desc' i (cokernel.π (coprod.desc f g)), calc
+       «expr = »(«expr ≫ »(f, cokernel.π (coprod.desc f g)), «expr ≫ »(coprod.inl, «expr ≫ »(coprod.desc f g, cokernel.π (coprod.desc f g)))) : by rw [expr coprod.inl_desc_assoc] []
+       «expr = »(..., «expr ≫ »(coprod.inl, (0 : «expr ⟶ »(«expr ⨿ »(P, Q), cokernel (coprod.desc f g))))) : by rw [expr cokernel.condition] []
+       «expr = »(..., 0) : has_zero_morphisms.comp_zero _ _) in
+let ⟨b', hb'⟩ := «expr $ »(cokernel_cofork.is_colimit.desc' i' (cokernel.π (coprod.desc f g)), calc
+       «expr = »(«expr ≫ »(g, cokernel.π (coprod.desc f g)), «expr ≫ »(coprod.inr, «expr ≫ »(coprod.desc f g, cokernel.π (coprod.desc f g)))) : by rw [expr coprod.inr_desc_assoc] []
+       «expr = »(..., «expr ≫ »(coprod.inr, (0 : «expr ⟶ »(«expr ⨿ »(P, Q), cokernel (coprod.desc f g))))) : by rw [expr cokernel.condition] []
+       «expr = »(..., 0) : has_zero_morphisms.comp_zero _ _) in
+has_colimit.mk { cocone := «expr $ »(pushout_cocone.mk a' b', by { simp [] [] ["only"] ["[", expr cofork.π_of_π, "]"] [] ["at", ident ha', ident hb'],
+     rw ["[", expr ha', ",", expr hb', "]"] [] }),
+  is_colimit := pushout_cocone.is_colimit.mk _ (λ
+   s, «expr $ »(cokernel.desc (coprod.desc f g) «expr ≫ »(b, pushout_cocone.inr s), coprod.hom_ext (calc
+       «expr = »(«expr ≫ »(coprod.inl, «expr ≫ »(coprod.desc f g, «expr ≫ »(b, pushout_cocone.inr s))), «expr ≫ »(f, «expr ≫ »(b, pushout_cocone.inr s))) : by rw [expr coprod.inl_desc_assoc] []
+       «expr = »(..., «expr ≫ »(f, «expr ≫ »(a, pushout_cocone.inl s))) : by rw [expr pushout_cocone.condition] []
+       «expr = »(..., «expr ≫ »(0, pushout_cocone.inl s)) : by rw [expr reassoc_of hfa] []
+       «expr = »(..., «expr ≫ »(coprod.inl, 0)) : by rw ["[", expr comp_zero, ",", expr zero_comp, "]"] []) (calc
+       «expr = »(«expr ≫ »(coprod.inr, «expr ≫ »(coprod.desc f g, «expr ≫ »(b, pushout_cocone.inr s))), «expr ≫ »(g, «expr ≫ »(b, pushout_cocone.inr s))) : by rw [expr coprod.inr_desc_assoc] []
+       «expr = »(..., «expr ≫ »(0, pushout_cocone.inr s)) : by rw [expr reassoc_of hgb] []
+       «expr = »(..., «expr ≫ »(coprod.inr, 0)) : by rw ["[", expr comp_zero, ",", expr zero_comp, "]"] []))) (λ
+   s, «expr $ »((cancel_epi a).1, by { rw [expr cokernel_cofork.π_of_π] ["at", ident ha'],
+      simp [] [] [] ["[", expr reassoc_of ha', ",", expr pushout_cocone.condition s, "]"] [] [] })) (λ
+   s, «expr $ »((cancel_epi b).1, by { rw [expr cokernel_cofork.π_of_π] ["at", ident hb'],
+      simp [] [] [] ["[", expr reassoc_of hb', "]"] [] [] })) (λ
+   s
+   m
+   h₁
+   h₂, «expr $ »((cancel_epi (cokernel.π (coprod.desc f g))).1, calc
+      «expr = »(«expr ≫ »(cokernel.π (coprod.desc f g), m), «expr ≫ »(«expr ≫ »(a, a'), m)) : by { congr,
+        exact [expr ha'.symm] }
+      «expr = »(..., «expr ≫ »(a, pushout_cocone.inl s)) : by rw ["[", expr category.assoc, ",", expr h₁, "]"] []
+      «expr = »(..., «expr ≫ »(b, pushout_cocone.inr s)) : pushout_cocone.condition s
+      «expr = »(..., «expr ≫ »(cokernel.π (coprod.desc f g), cokernel.desc (coprod.desc f g) «expr ≫ »(b, pushout_cocone.inr s) _)) : by rw [expr cokernel.π_desc] [])) }
 
 section 
 
@@ -299,55 +219,27 @@ attribute [local instance] pullback_of_mono
 private abbrev P {X Y : C} (f g : X ⟶ Y) [mono (prod.lift (𝟙 X) f)] [mono (prod.lift (𝟙 X) g)] : C :=
   pullback (prod.lift (𝟙 X) f) (prod.lift (𝟙 X) g)
 
+-- error in CategoryTheory.Abelian.NonPreadditive: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
 /-- The equalizer of `f` and `g` exists. -/
 @[irreducible]
-theorem has_limit_parallel_pair {X Y : C} (f g : X ⟶ Y) : has_limit (parallel_pair f g) :=
-  have huv : (pullback.fst : P f g ⟶ X) = pullback.snd :=
-    calc (pullback.fst : P f g ⟶ X) = pullback.fst ≫ 𝟙 _ := Eq.symm$ category.comp_id _ 
-      _ = pullback.fst ≫ prod.lift (𝟙 X) f ≫ limits.prod.fst :=
-      by 
-        rw [prod.lift_fst]
-      _ = pullback.snd ≫ prod.lift (𝟙 X) g ≫ limits.prod.fst :=
-      by 
-        rw [pullback.condition_assoc]
-      _ = pullback.snd :=
-      by 
-        rw [prod.lift_fst, category.comp_id]
-      
-  have hvu : (pullback.fst : P f g ⟶ X) ≫ f = pullback.snd ≫ g :=
-    calc (pullback.fst : P f g ⟶ X) ≫ f = pullback.fst ≫ prod.lift (𝟙 X) f ≫ limits.prod.snd :=
-      by 
-        rw [prod.lift_snd]
-      _ = pullback.snd ≫ prod.lift (𝟙 X) g ≫ limits.prod.snd :=
-      by 
-        rw [pullback.condition_assoc]
-      _ = pullback.snd ≫ g :=
-      by 
-        rw [prod.lift_snd]
-      
-  have huu : (pullback.fst : P f g ⟶ X) ≫ f = pullback.fst ≫ g :=
-    by 
-      rw [hvu, ←huv]
-  has_limit.mk
-    { Cone := fork.of_ι pullback.fst huu,
-      IsLimit :=
-        fork.is_limit.mk _
-          (fun s =>
-            pullback.lift (fork.ι s) (fork.ι s)$
-              prod.hom_ext
-                (by 
-                  simp only [prod.lift_fst, category.assoc])
-                (by 
-                  simp only [fork.app_zero_right, fork.app_zero_left, prod.lift_snd, category.assoc]))
-          (fun s =>
-            by 
-              simp only [fork.ι_of_ι, pullback.lift_fst])
-          fun s m h =>
-            pullback.hom_ext
-              (by 
-                simpa only [pullback.lift_fst] using h walking_parallel_pair.zero)
-              (by 
-                simpa only [huv.symm, pullback.lift_fst] using h walking_parallel_pair.zero) }
+theorem has_limit_parallel_pair {X Y : C} (f g : «expr ⟶ »(X, Y)) : has_limit (parallel_pair f g) :=
+have huv : «expr = »((pullback.fst : «expr ⟶ »(P f g, X)), pullback.snd), from calc
+  «expr = »((pullback.fst : «expr ⟶ »(P f g, X)), «expr ≫ »(pullback.fst, «expr𝟙»() _)) : «expr $ »(eq.symm, category.comp_id _)
+  «expr = »(..., «expr ≫ »(pullback.fst, «expr ≫ »(prod.lift («expr𝟙»() X) f, limits.prod.fst))) : by rw [expr prod.lift_fst] []
+  «expr = »(..., «expr ≫ »(pullback.snd, «expr ≫ »(prod.lift («expr𝟙»() X) g, limits.prod.fst))) : by rw [expr pullback.condition_assoc] []
+  «expr = »(..., pullback.snd) : by rw ["[", expr prod.lift_fst, ",", expr category.comp_id, "]"] [],
+have hvu : «expr = »(«expr ≫ »((pullback.fst : «expr ⟶ »(P f g, X)), f), «expr ≫ »(pullback.snd, g)), from calc
+  «expr = »(«expr ≫ »((pullback.fst : «expr ⟶ »(P f g, X)), f), «expr ≫ »(pullback.fst, «expr ≫ »(prod.lift («expr𝟙»() X) f, limits.prod.snd))) : by rw [expr prod.lift_snd] []
+  «expr = »(..., «expr ≫ »(pullback.snd, «expr ≫ »(prod.lift («expr𝟙»() X) g, limits.prod.snd))) : by rw [expr pullback.condition_assoc] []
+  «expr = »(..., «expr ≫ »(pullback.snd, g)) : by rw [expr prod.lift_snd] [],
+have huu : «expr = »(«expr ≫ »((pullback.fst : «expr ⟶ »(P f g, X)), f), «expr ≫ »(pullback.fst, g)), by rw ["[", expr hvu, ",", "<-", expr huv, "]"] [],
+has_limit.mk { cone := fork.of_ι pullback.fst huu,
+  is_limit := fork.is_limit.mk _ (λ
+   s, «expr $ »(pullback.lift (fork.ι s) (fork.ι s), prod.hom_ext (by simp [] [] ["only"] ["[", expr prod.lift_fst, ",", expr category.assoc, "]"] [] []) (by simp [] [] ["only"] ["[", expr fork.app_zero_right, ",", expr fork.app_zero_left, ",", expr prod.lift_snd, ",", expr category.assoc, "]"] [] []))) (λ
+   s, by simp [] [] ["only"] ["[", expr fork.ι_of_ι, ",", expr pullback.lift_fst, "]"] [] []) (λ
+   s
+   m
+   h, pullback.hom_ext (by simpa [] [] ["only"] ["[", expr pullback.lift_fst, "]"] [] ["using", expr h walking_parallel_pair.zero]) (by simpa [] [] ["only"] ["[", expr huv.symm, ",", expr pullback.lift_fst, "]"] [] ["using", expr h walking_parallel_pair.zero])) }
 
 end 
 
@@ -359,55 +251,27 @@ attribute [local instance] pushout_of_epi
 private abbrev Q {X Y : C} (f g : X ⟶ Y) [epi (coprod.desc (𝟙 Y) f)] [epi (coprod.desc (𝟙 Y) g)] : C :=
   pushout (coprod.desc (𝟙 Y) f) (coprod.desc (𝟙 Y) g)
 
+-- error in CategoryTheory.Abelian.NonPreadditive: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
 /-- The coequalizer of `f` and `g` exists. -/
 @[irreducible]
-theorem has_colimit_parallel_pair {X Y : C} (f g : X ⟶ Y) : has_colimit (parallel_pair f g) :=
-  have huv : (pushout.inl : Y ⟶ Q f g) = pushout.inr :=
-    calc (pushout.inl : Y ⟶ Q f g) = 𝟙 _ ≫ pushout.inl := Eq.symm$ category.id_comp _ 
-      _ = (coprod.inl ≫ coprod.desc (𝟙 Y) f) ≫ pushout.inl :=
-      by 
-        rw [coprod.inl_desc]
-      _ = (coprod.inl ≫ coprod.desc (𝟙 Y) g) ≫ pushout.inr :=
-      by 
-        simp only [category.assoc, pushout.condition]
-      _ = pushout.inr :=
-      by 
-        rw [coprod.inl_desc, category.id_comp]
-      
-  have hvu : f ≫ (pushout.inl : Y ⟶ Q f g) = g ≫ pushout.inr :=
-    calc f ≫ (pushout.inl : Y ⟶ Q f g) = (coprod.inr ≫ coprod.desc (𝟙 Y) f) ≫ pushout.inl :=
-      by 
-        rw [coprod.inr_desc]
-      _ = (coprod.inr ≫ coprod.desc (𝟙 Y) g) ≫ pushout.inr :=
-      by 
-        simp only [category.assoc, pushout.condition]
-      _ = g ≫ pushout.inr :=
-      by 
-        rw [coprod.inr_desc]
-      
-  have huu : f ≫ (pushout.inl : Y ⟶ Q f g) = g ≫ pushout.inl :=
-    by 
-      rw [hvu, huv]
-  has_colimit.mk
-    { Cocone := cofork.of_π pushout.inl huu,
-      IsColimit :=
-        cofork.is_colimit.mk _
-          (fun s =>
-            pushout.desc (cofork.π s) (cofork.π s)$
-              coprod.hom_ext
-                (by 
-                  simp only [coprod.inl_desc_assoc])
-                (by 
-                  simp only [cofork.right_app_one, coprod.inr_desc_assoc, cofork.left_app_one]))
-          (fun s =>
-            by 
-              simp only [pushout.inl_desc, cofork.π_of_π])
-          fun s m h =>
-            pushout.hom_ext
-              (by 
-                simpa only [pushout.inl_desc] using h walking_parallel_pair.one)
-              (by 
-                simpa only [huv.symm, pushout.inl_desc] using h walking_parallel_pair.one) }
+theorem has_colimit_parallel_pair {X Y : C} (f g : «expr ⟶ »(X, Y)) : has_colimit (parallel_pair f g) :=
+have huv : «expr = »((pushout.inl : «expr ⟶ »(Y, Q f g)), pushout.inr), from calc
+  «expr = »((pushout.inl : «expr ⟶ »(Y, Q f g)), «expr ≫ »(«expr𝟙»() _, pushout.inl)) : «expr $ »(eq.symm, category.id_comp _)
+  «expr = »(..., «expr ≫ »(«expr ≫ »(coprod.inl, coprod.desc («expr𝟙»() Y) f), pushout.inl)) : by rw [expr coprod.inl_desc] []
+  «expr = »(..., «expr ≫ »(«expr ≫ »(coprod.inl, coprod.desc («expr𝟙»() Y) g), pushout.inr)) : by simp [] [] ["only"] ["[", expr category.assoc, ",", expr pushout.condition, "]"] [] []
+  «expr = »(..., pushout.inr) : by rw ["[", expr coprod.inl_desc, ",", expr category.id_comp, "]"] [],
+have hvu : «expr = »(«expr ≫ »(f, (pushout.inl : «expr ⟶ »(Y, Q f g))), «expr ≫ »(g, pushout.inr)), from calc
+  «expr = »(«expr ≫ »(f, (pushout.inl : «expr ⟶ »(Y, Q f g))), «expr ≫ »(«expr ≫ »(coprod.inr, coprod.desc («expr𝟙»() Y) f), pushout.inl)) : by rw [expr coprod.inr_desc] []
+  «expr = »(..., «expr ≫ »(«expr ≫ »(coprod.inr, coprod.desc («expr𝟙»() Y) g), pushout.inr)) : by simp [] [] ["only"] ["[", expr category.assoc, ",", expr pushout.condition, "]"] [] []
+  «expr = »(..., «expr ≫ »(g, pushout.inr)) : by rw [expr coprod.inr_desc] [],
+have huu : «expr = »(«expr ≫ »(f, (pushout.inl : «expr ⟶ »(Y, Q f g))), «expr ≫ »(g, pushout.inl)), by rw ["[", expr hvu, ",", expr huv, "]"] [],
+has_colimit.mk { cocone := cofork.of_π pushout.inl huu,
+  is_colimit := cofork.is_colimit.mk _ (λ
+   s, «expr $ »(pushout.desc (cofork.π s) (cofork.π s), coprod.hom_ext (by simp [] [] ["only"] ["[", expr coprod.inl_desc_assoc, "]"] [] []) (by simp [] [] ["only"] ["[", expr cofork.right_app_one, ",", expr coprod.inr_desc_assoc, ",", expr cofork.left_app_one, "]"] [] []))) (λ
+   s, by simp [] [] ["only"] ["[", expr pushout.inl_desc, ",", expr cofork.π_of_π, "]"] [] []) (λ
+   s
+   m
+   h, pushout.hom_ext (by simpa [] [] ["only"] ["[", expr pushout.inl_desc, "]"] [] ["using", expr h walking_parallel_pair.one]) (by simpa [] [] ["only"] ["[", expr huv.symm, ",", expr pushout.inl_desc, "]"] [] ["using", expr h walking_parallel_pair.one])) }
 
 end 
 

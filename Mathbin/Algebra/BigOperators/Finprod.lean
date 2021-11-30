@@ -83,14 +83,13 @@ open_locale Classical
 
 /-- Sum of `f x` as `x` ranges over the elements of the support of `f`, if it's finite. Zero
 otherwise. -/
-@[irreducible]
-noncomputable def finsum {M α} [AddCommMonoidₓ M] (f : α → M) : M :=
+noncomputable irreducible_def finsum {M α} [AddCommMonoidₓ M] (f : α → M) : M :=
   if h : finite (support (f ∘ Plift.down)) then ∑i in h.to_finset, f i.down else 0
 
 /-- Product of `f x` as `x` ranges over the elements of the multiplicative support of `f`, if it's
 finite. One otherwise. -/
-@[irreducible, toAdditive]
-noncomputable def finprod (f : α → M) : M :=
+@[toAdditive]
+noncomputable irreducible_def finprod (f : α → M) : M :=
   if h : finite (mul_support (f ∘ Plift.down)) then ∏i in h.to_finset, f i.down else 1
 
 end 

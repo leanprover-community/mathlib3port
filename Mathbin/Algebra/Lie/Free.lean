@@ -278,8 +278,6 @@ theorem of_comp_lift (f : X → L) : lift R f ∘ of R = f :=
 theorem lift_unique (f : X → L) (g : FreeLieAlgebra R X →ₗ⁅R⁆ L) : g ∘ of R = f ↔ g = lift R f :=
   (lift R).symm_apply_eq
 
-attribute [irreducible] of lift
-
 @[simp]
 theorem lift_of_apply (f : X → L) x : lift R f (of R x) = f x :=
   by 

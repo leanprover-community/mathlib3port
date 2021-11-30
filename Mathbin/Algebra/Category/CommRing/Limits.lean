@@ -78,13 +78,10 @@ end HasLimits
 
 open HasLimits
 
-/-- The category of rings has all limits. -/
-@[irreducible]
-instance has_limits : has_limits SemiRing :=
-  { HasLimitsOfShape :=
-      fun J 𝒥 =>
-        by 
-          exact { HasLimit := fun F => has_limit.mk { Cone := limit_cone F, IsLimit := limit_cone_is_limit F } } }
+-- error in Algebra.Category.CommRing.Limits: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
+/-- The category of rings has all limits. -/ @[irreducible] instance has_limits : has_limits SemiRing :=
+{ has_limits_of_shape := λ
+  J 𝒥, by exactI [expr { has_limit := λ F, has_limit.mk { cone := limit_cone F, is_limit := limit_cone_is_limit F } }] }
 
 /--
 An auxiliary declaration to speed up typechecking.
@@ -194,13 +191,10 @@ The chosen cone is a limit cone.
 def limit_cone_is_limit (F : J ⥤ CommSemiRing) : is_limit (limit_cone F) :=
   lifted_limit_is_limit _
 
-/-- The category of rings has all limits. -/
-@[irreducible]
-instance has_limits : has_limits CommSemiRing.{u} :=
-  { HasLimitsOfShape :=
-      fun J 𝒥 =>
-        by 
-          exact { HasLimit := fun F => has_limit_of_created F (forget₂ CommSemiRing SemiRing.{u}) } }
+-- error in Algebra.Category.CommRing.Limits: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
+/-- The category of rings has all limits. -/ @[irreducible] instance has_limits : has_limits CommSemiRing.{u} :=
+{ has_limits_of_shape := λ
+  J 𝒥, by exactI [expr { has_limit := λ F, has_limit_of_created F (forget₂ CommSemiRing SemiRing.{u}) }] }
 
 /--
 The forgetful functor from rings to semirings preserves all limits.
@@ -285,13 +279,9 @@ The chosen cone is a limit cone.
 def limit_cone_is_limit (F : J ⥤ Ringₓₓ) : is_limit (limit_cone F) :=
   lifted_limit_is_limit _
 
-/-- The category of rings has all limits. -/
-@[irreducible]
-instance has_limits : has_limits Ringₓₓ :=
-  { HasLimitsOfShape :=
-      fun J 𝒥 =>
-        by 
-          exact { HasLimit := fun F => has_limit_of_created F (forget₂ Ringₓₓ SemiRing) } }
+-- error in Algebra.Category.CommRing.Limits: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
+/-- The category of rings has all limits. -/ @[irreducible] instance has_limits : has_limits Ring :=
+{ has_limits_of_shape := λ J 𝒥, by exactI [expr { has_limit := λ F, has_limit_of_created F (forget₂ Ring SemiRing) }] }
 
 /--
 The forgetful functor from rings to semirings preserves all limits.
@@ -389,13 +379,10 @@ The chosen cone is a limit cone.
 def limit_cone_is_limit (F : J ⥤ CommRingₓₓ) : is_limit (limit_cone F) :=
   lifted_limit_is_limit _
 
-/-- The category of commutative rings has all limits. -/
-@[irreducible]
-instance has_limits : has_limits CommRingₓₓ.{u} :=
-  { HasLimitsOfShape :=
-      fun J 𝒥 =>
-        by 
-          exact { HasLimit := fun F => has_limit_of_created F (forget₂ CommRingₓₓ Ringₓₓ.{u}) } }
+-- error in Algebra.Category.CommRing.Limits: ././Mathport/Syntax/Translate/Basic.lean:927:38: unsupported irreducible non-definition
+/-- The category of commutative rings has all limits. -/ @[irreducible] instance has_limits : has_limits CommRing.{u} :=
+{ has_limits_of_shape := λ
+  J 𝒥, by exactI [expr { has_limit := λ F, has_limit_of_created F (forget₂ CommRing Ring.{u}) }] }
 
 /--
 The forgetful functor from commutative rings to rings preserves all limits.

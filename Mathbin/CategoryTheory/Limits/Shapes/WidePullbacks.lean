@@ -95,7 +95,15 @@ def wide_cospan (B : C) (objs : J → C) (arrows : ∀ j : J, objs j ⟶ B) : wi
           ·
             apply 𝟙 _
           ·
-            exact arrows j }
+            exact arrows j,
+    map_comp' :=
+      fun _ _ _ f g =>
+        by 
+          cases f
+          ·
+            simpa 
+          cases g 
+          simpa }
 
 /-- Every diagram is naturally isomorphic (actually, equal) to a `wide_cospan` -/
 def diagram_iso_wide_cospan (F : wide_pullback_shape J ⥤ C) :

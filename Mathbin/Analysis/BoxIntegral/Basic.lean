@@ -118,7 +118,7 @@ theorem integral_sum_disj_union (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[�
   by 
     refine'
       (prepartition.sum_disj_union_boxes h _).trans
-        (congr_arg2 (·+·) (sum_congr rfl$ fun J hJ => _) (sum_congr rfl$ fun J hJ => _))
+        (congr_arg2ₓ (·+·) (sum_congr rfl$ fun J hJ => _) (sum_congr rfl$ fun J hJ => _))
     ·
       rw [disj_union_tag_of_mem_left _ hJ]
     ·

@@ -112,7 +112,7 @@ protected theorem injective {α β} (f : α ↪ β) : injective f :=
   f.inj'
 
 @[simp]
-theorem apply_eq_iff_eq {α β : Type _} (f : α ↪ β) (x y : α) : f x = f y ↔ x = y :=
+theorem apply_eq_iff_eq {α β} (f : α ↪ β) (x y : α) : f x = f y ↔ x = y :=
   f.injective.eq_iff
 
 /-- The identity map as a `function.embedding`. -/
@@ -175,10 +175,20 @@ theorem set_value_eq {α β} (f : α ↪ β) (a : α) (b : β) [∀ a', Decidabl
   by 
     simp [set_value]
 
-/-- Embedding into `option` -/
+/-- Embedding into `option α` using `some`. -/
 @[simps (config := { fullyApplied := ff })]
 protected def some {α} : α ↪ Option α :=
   ⟨some, Option.some_injective α⟩
+
+/-- Embedding into `option α` using `coe`. Usually the correct synctatical form for `simp`. -/
+@[simps (config := { fullyApplied := ff })]
+def coeOption {α} : α ↪ Option α :=
+  ⟨coeₓ, Option.some_injective α⟩
+
+/-- Embedding into `with_top α`. -/
+@[simps]
+def coe_with_top {α} : α ↪ WithTop α :=
+  { embedding.some with toFun := coeₓ }
 
 /-- Given an embedding `f : α ↪ β` and a point outside of `set.range f`, construct an embedding
 `option α ↪ β`. -/

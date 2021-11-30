@@ -145,8 +145,6 @@ theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m : M, (f m*f m) = algebraMa
     rw [lift_symm_apply]
     simp only 
 
-attribute [irreducible] CliffordAlgebra ι lift
-
 @[simp]
 theorem lift_comp_ι (g : CliffordAlgebra Q →ₐ[R] A) : lift Q ⟨g.to_linear_map.comp (ι Q), comp_ι_sq_scalar _⟩ = g :=
   by 

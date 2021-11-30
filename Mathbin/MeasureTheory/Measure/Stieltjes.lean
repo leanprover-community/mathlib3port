@@ -52,8 +52,7 @@ theorem right_continuous (x : ℝ) : ContinuousWithinAt f (Ici x) x :=
 
 /-- The limit of a Stieltjes function to the left of `x` (it exists by monotonicity). The fact that
 it is indeed a left limit is asserted in `tendsto_left_lim` -/
-@[irreducible]
-def left_lim (x : ℝ) :=
+irreducible_def left_lim (x : ℝ) :=
   Sup (f '' Iio x)
 
 theorem tendsto_left_lim (x : ℝ) : tendsto f (𝓝[Iio x] x) (𝓝 (f.left_lim x)) :=
@@ -282,8 +281,7 @@ end
 
 /-- The measure associated to a Stieltjes function, giving mass `f b - f a` to the
 interval `(a, b]`. -/
-@[irreducible]
-protected def Measureₓ : Measureₓ ℝ :=
+protected irreducible_def Measureₓ : Measureₓ ℝ :=
   { toOuterMeasure := f.outer,
     m_Union := fun s hs => f.outer.Union_eq_of_caratheodory$ fun i => f.borel_le_measurable _ (hs i),
     trimmed := f.outer_trim }

@@ -30,8 +30,8 @@ include h
 
 /-- The limit of a bounded-below subadditive sequence. The fact that the sequence indeed tends to
 this limit is given in `subadditive.tendsto_lim` -/
-@[irreducible, nolint unused_arguments]
-protected def limₓ :=
+@[nolint unused_arguments]
+protected irreducible_def limₓ :=
   Inf ((fun n : ℕ => u n / n) '' Ici 1)
 
 theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) : h.lim ≤ u n / n :=

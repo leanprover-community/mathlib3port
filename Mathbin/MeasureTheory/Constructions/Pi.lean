@@ -316,8 +316,7 @@ theorem pi_caratheodory : MeasurableSpace.pi ≤ (outer_measure.pi fun i => (μ 
 
 /-- `measure.pi μ` is the finite product of the measures `{μ i | i : ι}`.
   It is defined to be measure corresponding to `measure_theory.outer_measure.pi`. -/
-@[irreducible]
-protected def pi : Measureₓ (∀ i, α i) :=
+protected irreducible_def pi : Measureₓ (∀ i, α i) :=
   to_measure (outer_measure.pi fun i => (μ i).toOuterMeasure) (pi_caratheodory μ)
 
 -- error in MeasureTheory.Constructions.Pi: ././Mathport/Syntax/Translate/Basic.lean:177:17: failed to parenthesize: parenthesize: uncaught backtrack exception

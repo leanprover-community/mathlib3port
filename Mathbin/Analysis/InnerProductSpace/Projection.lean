@@ -1,5 +1,6 @@
+import Mathbin.Analysis.Convex.Basic 
 import Mathbin.Analysis.InnerProductSpace.Basic 
-import Mathbin.Analysis.Convex.Basic
+import Mathbin.Analysis.NormedSpace.IsROrC
 
 /-!
 # The orthogonal projection
@@ -1218,15 +1219,14 @@ variable {n : ℕ} (hn : finrank 𝕜 E = n) {ι : Type _} [Fintype ι] [Decidab
 
 /-- Exhibit a bijection between `fin n` and the index set of a certain basis of an `n`-dimensional
 inner product space `E`.  This should not be accessed directly, but only via the subsequent API. -/
-@[irreducible]
-def DirectSum.SubmoduleIsInternal.sigmaOrthonormalBasisIndexEquiv : (Σi, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
+irreducible_def DirectSum.SubmoduleIsInternal.sigmaOrthonormalBasisIndexEquiv :
+  (Σi, OrthonormalBasisIndex 𝕜 (V i)) ≃ Finₓ n :=
   let b := hV.collected_basis fun i => orthonormalBasis 𝕜 (V i)
   Fintype.equivFinOfCardEq$ (FiniteDimensional.finrank_eq_card_basis b).symm.trans hn
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. -/
-@[irreducible]
-def DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis : Basis (Finₓ n) 𝕜 E :=
+irreducible_def DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis : Basis (Finₓ n) 𝕜 E :=
   (hV.collected_basis fun i => orthonormalBasis 𝕜 (V i)).reindex (hV.sigma_orthonormal_basis_index_equiv hn)
 
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
@@ -1254,8 +1254,6 @@ theorem DirectSum.SubmoduleIsInternal.subordinate_orthonormal_basis_subordinate 
   by 
     simpa only [DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasis, Basis.coe_reindex] using
       hV.collected_basis_mem (fun i => orthonormalBasis 𝕜 (V i)) ((hV.sigma_orthonormal_basis_index_equiv hn).symm a)
-
-attribute [irreducible] DirectSum.SubmoduleIsInternal.subordinateOrthonormalBasisIndex
 
 end SubordinateOrthonormalBasis
 

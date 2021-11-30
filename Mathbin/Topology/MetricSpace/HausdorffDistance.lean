@@ -190,8 +190,7 @@ end InfEdist
 
 /-- The Hausdorff edistance between two sets is the smallest `r` such that each set
 is contained in the `r`-neighborhood of the other one -/
-@[irreducible]
-def Hausdorff_edist {α : Type u} [PseudoEmetricSpace α] (s t : Set α) : ℝ≥0∞ :=
+irreducible_def Hausdorff_edist {α : Type u} [PseudoEmetricSpace α] (s t : Set α) : ℝ≥0∞ :=
   (⨆(x : _)(_ : x ∈ s), inf_edist x t)⊔⨆(y : _)(_ : y ∈ t), inf_edist y s
 
 theorem Hausdorff_edist_def {α : Type u} [PseudoEmetricSpace α] (s t : Set α) :

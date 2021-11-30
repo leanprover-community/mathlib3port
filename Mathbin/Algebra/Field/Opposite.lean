@@ -1,5 +1,5 @@
 import Mathbin.Algebra.Field.Basic 
-import Mathbin.Algebra.Opposites
+import Mathbin.Algebra.Ring.Opposite
 
 /-!
 # Field structure on the multiplicative opposite

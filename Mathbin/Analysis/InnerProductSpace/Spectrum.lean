@@ -211,8 +211,6 @@ begin
   simpa [] [] [] ["[", expr re_μ, "]"] [] ["using", expr key]
 end
 
-attribute [irreducible] eigenvector_basis eigenvalues
-
 @[simp]
 theorem apply_eigenvector_basis (i : Finₓ n) :
   T (hT.eigenvector_basis hn i) = (hT.eigenvalues hn i : 𝕜) • hT.eigenvector_basis hn i :=

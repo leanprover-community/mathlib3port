@@ -262,7 +262,7 @@ private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.prime] [hp2 : Fact (p 
     by 
       simp only [val_nat_cast] <;> simp [sum_add_distrib, mul_sum.symm, Nat.cast_add, Nat.cast_mul, Nat.cast_sum, hp2]
     _ = _ :=
-    congr_arg2 (·+·)
+    congr_arg2ₓ (·+·)
       (calc
         ((∑x in Ico 1 (p / 2).succ, ((a*x : ℕ) : Zmod p).val : ℕ) : Zmod 2) =
           ∑x in Ico 1 (p / 2).succ,
@@ -471,9 +471,7 @@ theorem quadratic_reciprocity [hp1 : Fact (p % 2 = 1)] [hq1 : Fact (q % 2 = 1)] 
     rw [eisenstein_lemma q hp1.1 hpq0, eisenstein_lemma p hq1.1 hqp0, ←pow_addₓ,
       sum_mul_div_add_sum_mul_div_eq_mul q p hpq0, mul_commₓ]
 
-@[local instance]
-theorem fact_prime_two : Fact (Nat.Prime 2) :=
-  ⟨Nat.prime_two⟩
+attribute [local instance] Nat.fact_prime_two
 
 theorem legendre_sym_two [hp1 : Fact (p % 2 = 1)] : legendre_sym 2 p = (-1^(p / 4)+p / 2) :=
   have hp2 : p ≠ 2 :=
@@ -527,7 +525,7 @@ theorem legendre_sym_two [hp1 : Fact (p % 2 = 1)] : legendre_sym 2 p = (-1^(p / 
   by 
     rw [gauss_lemma p (prime_ne_zero p 2 hp2), neg_one_pow_eq_pow_mod_two,
       @neg_one_pow_eq_pow_mod_two _ _ ((p / 4)+p / 2)]
-    refine' congr_arg2 _ rfl ((eq_iff_modeq_nat 2).1 _)
+    refine' congr_arg2ₓ _ rfl ((eq_iff_modeq_nat 2).1 _)
     rw [show 4 = 2*2 from rfl, ←Nat.div_div_eq_div_mulₓ, hp22, Nat.cast_add, ←sub_eq_iff_eq_add', sub_eq_add_neg,
       neg_eq_self_mod_two, ←Nat.cast_add, ←card_disjoint_union hdisj, hunion, hcard]
 

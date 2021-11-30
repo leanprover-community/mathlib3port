@@ -856,8 +856,6 @@ Perhaps we can make the others irreducible too?
 -/
 
 
-attribute [irreducible] Polynomial.eval₂
-
 section HomEval₂
 
 variable [CommSemiringₓ S] [CommSemiringₓ T]

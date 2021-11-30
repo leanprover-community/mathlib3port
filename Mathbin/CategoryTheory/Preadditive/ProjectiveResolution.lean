@@ -205,8 +205,6 @@ theorem lift_commutes {Y Z : C} (f : Y ⟶ Z) (P : ProjectiveResolution Y) (Q : 
       dsimp 
       simp 
 
-attribute [irreducible] lift
-
 end ProjectiveResolution
 
 end 
@@ -276,8 +274,6 @@ def lift_comp_homotopy {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (P : ProjectiveRe
   (R : ProjectiveResolution Z) : Homotopy (lift (f ≫ g) P R) (lift f P Q ≫ lift g Q R) :=
   by 
     apply lift_homotopy (f ≫ g) <;> simp 
-
-attribute [irreducible] lift_homotopy_zero lift_homotopy lift_id_homotopy lift_comp_homotopy
 
 /-- Any two projective resolutions are homotopy equivalent. -/
 def HomotopyEquiv {X : C} (P Q : ProjectiveResolution X) : HomotopyEquiv P.complex Q.complex :=

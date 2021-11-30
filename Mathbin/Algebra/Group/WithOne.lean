@@ -99,8 +99,6 @@ instance [CommSemigroupₓ α] : CommMonoidₓ (WithOne α) :=
 
 section 
 
-attribute [local irreducible] WithOne WithZero
-
 /-- `coe` as a bundled morphism -/
 @[toAdditive "`coe` as a bundled morphism", simps apply]
 def coe_mul_hom [Mul α] : MulHom α (WithOne α) :=
@@ -173,8 +171,6 @@ theorem map_comp {γ : Type w} [Mul γ] (f : MulHom α β) (g : MulHom β γ) : 
     cases x <;> rfl
 
 end Map
-
-attribute [irreducible] WithOne
 
 @[simp, normCast, toAdditive]
 theorem coe_mul [Mul α] (a b : α) : ((a*b : α) : WithOne α) = a*b :=
@@ -380,8 +376,6 @@ instance [Semiringₓ α] : Semiringₓ (WithZero α) :=
               try 
                 rfl 
           exact congr_argₓ some (right_distrib _ _ _) }
-
-attribute [irreducible] WithZero
 
 end WithZero
 

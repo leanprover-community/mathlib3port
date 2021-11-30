@@ -703,8 +703,7 @@ theorem compl_frontier_eq_union_interior {s : Set α} : «expr ᶜ» (Frontier s
 /-- A set is called a neighborhood of `a` if it contains an open set around `a`. The set of all
 neighborhoods of `a` forms a filter, the neighborhood filter at `a`, is here defined as the
 infimum over the principal filters of all open sets containing `a`. -/
-@[irreducible]
-def nhds (a : α) : Filter α :=
+irreducible_def nhds (a : α) : Filter α :=
   ⨅(s : _)(_ : s ∈ { s:Set α | a ∈ s ∧ IsOpen s }), 𝓟 s
 
 localized [TopologicalSpace] notation "𝓝" => nhds

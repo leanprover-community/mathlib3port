@@ -43,24 +43,19 @@ theorem ext_cauchy {x y : Real} : x.cauchy = y.cauchy → x = y :=
 def equiv_Cauchy : ℝ ≃ CauSeq.Completion.Cauchy :=
   ⟨Real.cauchy, Real.of_cauchy, fun ⟨_⟩ => rfl, fun _ => rfl⟩
 
-@[irreducible]
-private def zero : ℝ :=
+private irreducible_def zero : ℝ :=
   ⟨0⟩
 
-@[irreducible]
-private def one : ℝ :=
+private irreducible_def one : ℝ :=
   ⟨1⟩
 
-@[irreducible]
-private def add : ℝ → ℝ → ℝ
+private irreducible_def add : ℝ → ℝ → ℝ
 | ⟨a⟩, ⟨b⟩ => ⟨a+b⟩
 
-@[irreducible]
-private def neg : ℝ → ℝ
+private irreducible_def neg : ℝ → ℝ
 | ⟨a⟩ => ⟨-a⟩
 
-@[irreducible]
-private def mul : ℝ → ℝ → ℝ
+private irreducible_def mul : ℝ → ℝ → ℝ
 | ⟨a⟩, ⟨b⟩ => ⟨a*b⟩
 
 instance : HasZero ℝ :=
@@ -226,8 +221,7 @@ def mk (x : CauSeq ℚ abs) : ℝ :=
 theorem mk_eq {f g : CauSeq ℚ abs} : mk f = mk g ↔ f ≈ g :=
   ext_cauchy_iff.trans mk_eq
 
-@[irreducible]
-private def lt : ℝ → ℝ → Prop
+private irreducible_def lt : ℝ → ℝ → Prop
 | ⟨x⟩, ⟨y⟩ =>
   Quotientₓ.liftOn₂ x y (· < ·)$
     fun f₁ g₁ f₂ g₂ hf hg =>
@@ -271,8 +265,7 @@ theorem mk_pos {f : CauSeq ℚ abs} : 0 < mk f ↔ Pos f :=
   by 
     rw [←mk_zero, mk_lt] <;> exact iff_of_eq (congr_argₓ Pos (sub_zero f))
 
-@[irreducible]
-private def le (x y : ℝ) : Prop :=
+private irreducible_def le (x y : ℝ) : Prop :=
   x < y ∨ x = y
 
 instance : LE ℝ :=
@@ -431,8 +424,7 @@ instance : IsDomain ℝ :=
 instance : StarOrderedRing ℝ :=
   { star_mul_self_nonneg := fun r => mul_self_nonneg r }
 
-@[irreducible]
-private noncomputable def inv' : ℝ → ℝ
+private noncomputable irreducible_def inv' : ℝ → ℝ
 | ⟨a⟩ => ⟨a⁻¹⟩
 
 noncomputable instance : HasInv ℝ :=

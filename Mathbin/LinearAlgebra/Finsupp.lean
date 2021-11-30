@@ -925,8 +925,6 @@ def Span.repr (w : Set M) (x : span R w) : w →₀ R :=
 theorem Span.finsupp_total_repr {w : Set M} (x : span R w) : Finsupp.total w M R coeₓ (Span.repr R w x) = x :=
   ((Finsupp.mem_span_iff_total _ _ _).mp x.2).some_spec
 
-attribute [irreducible] Span.repr
-
 end 
 
 theorem Submodule.finsupp_sum_mem {ι β : Type _} [HasZero β] (S : Submodule R M) (f : ι →₀ β) (g : ι → β → M)

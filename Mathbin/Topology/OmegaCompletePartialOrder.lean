@@ -32,8 +32,6 @@ theorem is_ωSup_iff_is_lub {α : Type u} [Preorderₓ α] {c : chain α} {x : �
 
 variable (α : Type u) [OmegaCompletePartialOrder α]
 
-attribute [local irreducible] Set
-
 /-- The characteristic function of open sets is monotone and preserves
 the limits of chains. -/
 def IsOpen (s : Set α) : Prop :=

@@ -325,8 +325,7 @@ variable (K L M)
 include hL
 
 /-- A (random) hom from an algebraic extension of K into an algebraically closed extension of K -/
-@[irreducible]
-noncomputable def lift : L →ₐ[K] M :=
+noncomputable irreducible_def lift : L →ₐ[K] M :=
   (lift.SubfieldWithHom.maximalSubfieldWithHom M hL).emb.comp$
     Eq.recOnₓ (lift.SubfieldWithHom.maximal_subfield_with_hom_eq_top M hL).symm Algebra.toTop
 

@@ -1271,6 +1271,24 @@ theorem eq_bot_of_disjoint_absorbs {a b : α} (w : Disjoint a b) (h : a⊔b = a)
 
 end BoundedOrder
 
+section LinearOrderₓ
+
+variable [LinearOrderₓ α]
+
+theorem min_top_left [OrderTop α] (a : α) : min (⊤ : α) a = a :=
+  min_eq_rightₓ le_top
+
+theorem min_top_right [OrderTop α] (a : α) : min a ⊤ = a :=
+  min_eq_leftₓ le_top
+
+theorem max_bot_left [OrderBot α] (a : α) : max (⊥ : α) a = a :=
+  max_eq_rightₓ bot_le
+
+theorem max_bot_right [OrderBot α] (a : α) : max a ⊥ = a :=
+  max_eq_leftₓ bot_le
+
+end LinearOrderₓ
+
 section DistribLatticeBot
 
 variable [DistribLattice α] [OrderBot α] {a b c : α}

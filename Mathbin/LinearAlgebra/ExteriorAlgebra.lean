@@ -143,8 +143,6 @@ theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m, (f m*f m) = 0) (g : Exter
     rw [lift_symm_apply]
     simp only 
 
-attribute [irreducible] ι lift
-
 variable {R M}
 
 @[simp]

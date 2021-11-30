@@ -258,8 +258,6 @@ instance : OrderedAddCommMonoid ℚ :=
   by 
     infer_instance
 
-attribute [irreducible] Rat.Le
-
 theorem num_pos_iff_pos {a : ℚ} : 0 < a.num ↔ 0 < a :=
   lt_iff_lt_of_le_iff_le$
     by 

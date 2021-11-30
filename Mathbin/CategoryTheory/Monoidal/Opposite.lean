@@ -49,8 +49,6 @@ theorem op_inj_iff (x y : C) : mop x = mop y ↔ x = y :=
 theorem unop_inj_iff (x y : «expr ᴹᵒᵖ» C) : unmop x = unmop y ↔ x = y :=
   Iff.rfl
 
-attribute [irreducible] monoidal_opposite
-
 @[simp]
 theorem mop_unmop (X : «expr ᴹᵒᵖ» C) : mop (unmop X) = X :=
   rfl

@@ -65,8 +65,7 @@ def of_complex (Z : C) : ChainComplex C ℕ :=
 In any abelian category with enough projectives,
 `ProjectiveResolution.of Z` constructs a projection resolution of the object `Z`.
 -/
-@[irreducible]
-def of (Z : C) : ProjectiveResolution Z :=
+irreducible_def of (Z : C) : ProjectiveResolution Z :=
   { complex := of_complex Z,
     π :=
       ChainComplex.mkHom _ _ (projective.π Z) 0

@@ -38,9 +38,9 @@ variable (F : Type v) [Field F] [MulSemiringAction M F] [MulSemiringAction G F] 
 /-- The subfield of F fixed by the field endomorphism `m`. -/
 def FixedBy.subfield : Subfield F :=
   { Carrier := fixed_by M F m, zero_mem' := smul_zero m,
-    add_mem' := fun x y hx hy => (smul_add m x y).trans$ congr_arg2 _ hx hy,
+    add_mem' := fun x y hx hy => (smul_add m x y).trans$ congr_arg2ₓ _ hx hy,
     neg_mem' := fun x hx => (smul_neg m x).trans$ congr_argₓ _ hx, one_mem' := smul_one m,
-    mul_mem' := fun x y hx hy => (smul_mul' m x y).trans$ congr_arg2 _ hx hy,
+    mul_mem' := fun x y hx hy => (smul_mul' m x y).trans$ congr_arg2ₓ _ hx hy,
     inv_mem' := fun x hx => (smul_inv'' m x).trans$ congr_argₓ _ hx }
 
 section InvariantSubfields

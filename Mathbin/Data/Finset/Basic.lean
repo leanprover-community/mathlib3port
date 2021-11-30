@@ -577,6 +577,10 @@ theorem mem_cons {a s h b} : b ∈ @cons α a s h ↔ b = a ∨ b ∈ s :=
     rcases s with ⟨⟨s⟩⟩ <;> apply List.mem_cons_iffₓ
 
 @[simp]
+theorem mem_cons_self (a : α) (s : Finset α) {h} : a ∈ cons a s h :=
+  mem_cons.2$ Or.inl rfl
+
+@[simp]
 theorem cons_val {a : α} {s : Finset α} (h : a ∉ s) : (cons a s h).1 = a ::ₘ s.1 :=
   rfl
 

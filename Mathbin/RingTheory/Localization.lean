@@ -692,8 +692,7 @@ section
 Should not be confused with `add_localization.add`, which is defined as
 `⟨a, b⟩ + ⟨c, d⟩ = ⟨a + c, b + d⟩`.
 -/
-@[irreducible]
-protected def add (z w : Localization M) : Localization M :=
+protected irreducible_def add (z w : Localization M) : Localization M :=
   (Localization.liftOn₂ z w fun a b c d => mk (((b : R)*c)+d*a) (b*d))$
     fun a a' b b' c c' d d' h1 h2 =>
       mk_eq_mk_iff.2
@@ -724,8 +723,7 @@ theorem add_mk_self a b c : ((mk a b : Localization M)+mk c b) = mk (a+c) b :=
     ring
 
 /-- Negation in a ring localization is defined as `-⟨a, b⟩ = ⟨-a, b⟩`. -/
-@[irreducible]
-protected def neg (z : Localization M) : Localization M :=
+protected irreducible_def neg (z : Localization M) : Localization M :=
   (Localization.liftOn z fun a b => mk (-a) b)$
     fun a b c d h =>
       mk_eq_mk_iff.2
@@ -747,8 +745,7 @@ theorem neg_mk a b : -(mk a b : Localization M) = mk (-a) b :=
 /-- The zero element in a ring localization is defined as `⟨0, 1⟩`.
 
 Should not be confused with `add_localization.zero` which is `⟨0, 0⟩`. -/
-@[irreducible]
-protected def zero : Localization M :=
+protected irreducible_def zero : Localization M :=
   mk 0 1
 
 instance : HasZero (Localization M) :=
@@ -766,8 +763,8 @@ theorem mk_zero b : (mk 0 b : Localization M) = 0 :=
     
 
 /-- Scalar multiplication in a ring localization is defined as `c • ⟨a, b⟩ = ⟨c • a, c • b⟩`. -/
-@[irreducible]
-protected def smul {S : Type _} [HasScalar S R] [IsScalarTower S R R] (c : S) (z : Localization M) : Localization M :=
+protected irreducible_def smul {S : Type _} [HasScalar S R] [IsScalarTower S R R] (c : S) (z : Localization M) :
+  Localization M :=
   (Localization.liftOn z fun a b => mk (c • a) b)$
     fun a a' b b' h =>
       mk_eq_mk_iff.2
@@ -1716,8 +1713,7 @@ protected theorem IsDomain : IsDomain K :=
 attribute [local instance] Classical.decEq
 
 /-- The inverse of an element in the field of fractions of an integral domain. -/
-@[irreducible]
-protected noncomputable def inv (z : K) : K :=
+protected noncomputable irreducible_def inv (z : K) : K :=
   if h : z = 0 then 0 else
     mk' K («expr↑ » (sec (nonZeroDivisors A) z).2)
       ⟨(sec _ z).1,

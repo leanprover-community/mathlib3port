@@ -60,8 +60,7 @@ section Defs
 a type `α` and `l` is a filter on `α`, means that eventually for `l`, `∥f∥` is bounded by `C * ∥g∥`.
 In other words, `∥f∥ / ∥g∥` is eventually bounded by `C`, modulo division by zero issues that are
 avoided by this definition. Probably you want to use `is_O` instead of this relation. -/
-@[irreducible]
-def is_O_with (c : ℝ) (f : α → E) (g : α → F) (l : Filter α) : Prop :=
+irreducible_def is_O_with (c : ℝ) (f : α → E) (g : α → F) (l : Filter α) : Prop :=
   ∀ᶠx in l, ∥f x∥ ≤ c*∥g x∥
 
 /-- Definition of `is_O_with`. We record it in a lemma as we will set `is_O_with` to be irreducible
@@ -76,8 +75,7 @@ alias is_O_with_iff ↔ Asymptotics.IsOWith.bound Asymptotics.IsOWith.of_bound
 a filter on `α`, means that eventually for `l`, `∥f∥` is bounded by a constant multiple of `∥g∥`.
 In other words, `∥f∥ / ∥g∥` is eventually bounded, modulo division by zero issues that are avoided
 by this definition. -/
-@[irreducible]
-def is_O (f : α → E) (g : α → F) (l : Filter α) : Prop :=
+irreducible_def is_O (f : α → E) (g : α → F) (l : Filter α) : Prop :=
   ∃ c : ℝ, is_O_with c f g l
 
 /-- Definition of `is_O` in terms of `is_O_with`. We record it in a lemma as we will set
@@ -102,8 +100,7 @@ theorem is_O.bound {f : α → E} {g : α → F} {l : Filter α} : is_O f g l �
 a filter on `α`, means that eventually for `l`, `∥f∥` is bounded by an arbitrarily small constant
 multiple of `∥g∥`. In other words, `∥f∥ / ∥g∥` tends to `0` along `l`, modulo division by zero
 issues that are avoided by this definition. -/
-@[irreducible]
-def is_o (f : α → E) (g : α → F) (l : Filter α) : Prop :=
+irreducible_def is_o (f : α → E) (g : α → F) (l : Filter α) : Prop :=
   ∀ ⦃c : ℝ⦄, 0 < c → is_O_with c f g l
 
 /-- Definition of `is_o` in terms of `is_O_with`. We record it in a lemma as we will set

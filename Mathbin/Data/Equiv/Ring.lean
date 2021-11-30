@@ -1,6 +1,6 @@
 import Mathbin.Data.Equiv.MulAdd 
 import Mathbin.Algebra.Field.Basic 
-import Mathbin.Algebra.Opposites 
+import Mathbin.Algebra.Ring.Opposite 
 import Mathbin.Algebra.BigOperators.Basic
 
 /-!

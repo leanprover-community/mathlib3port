@@ -397,7 +397,7 @@ theorem r_cond.mono {ι : Type _} {r : (ι → ℝ) → Ioi (0 : ℝ)} (h : l₁
 
 theorem r_cond.min {ι : Type _} {r₁ r₂ : (ι → ℝ) → Ioi (0 : ℝ)} (h₁ : l.r_cond r₁) (h₂ : l.r_cond r₂) :
   l.r_cond fun x => min (r₁ x) (r₂ x) :=
-  fun hR x => congr_arg2 min (h₁ hR x) (h₂ hR x)
+  fun hR x => congr_arg2ₓ min (h₁ hR x) (h₂ hR x)
 
 @[mono]
 theorem to_filter_distortion_mono (I : box ι) (h : l₁ ≤ l₂) (hc : c₁ ≤ c₂) :
