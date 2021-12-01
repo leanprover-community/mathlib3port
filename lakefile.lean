@@ -53,6 +53,6 @@ package mathlib3port (dir) {
   defaultFacet := PackageFacet.oleans
   dependencies := #[{
     name := "lean3port",
-    src := Source.git "https://github.com/leanprover-community/lean3port.git" "master"
+    src := Source.git "https://github.com/leanprover-community/lean3port.git" "fc17055f3535e176358f651af1eefb5f6ede0f84"
   }]
 }
